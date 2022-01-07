@@ -29,20 +29,20 @@ open TopologicalSpace
 
 open_locale TopologicalSpace
 
-/--  The type of open subgroups of a topological additive group. -/
+/-- The type of open subgroups of a topological additive group. -/
 @[ancestor AddSubgroup]
 structure OpenAddSubgroup (G : Type _) [AddGroupₓ G] [TopologicalSpace G] extends AddSubgroup G where
   is_open' : IsOpen carrier
 
-/--  The type of open subgroups of a topological group. -/
+/-- The type of open subgroups of a topological group. -/
 @[ancestor Subgroup, to_additive]
 structure OpenSubgroup (G : Type _) [Groupₓ G] [TopologicalSpace G] extends Subgroup G where
   is_open' : IsOpen carrier
 
-/--  Reinterpret an `open_subgroup` as a `subgroup`. -/
+/-- Reinterpret an `open_subgroup` as a `subgroup`. -/
 add_decl_doc OpenSubgroup.toSubgroup
 
-/--  Reinterpret an `open_add_subgroup` as an `add_subgroup`. -/
+/-- Reinterpret an `open_add_subgroup` as an `add_subgroup`. -/
 add_decl_doc OpenAddSubgroup.toAddSubgroup
 
 namespace OpenAddSubgroup
@@ -113,7 +113,7 @@ protected theorem inv_mem {g : G} (h : g ∈ U) : g⁻¹ ∈ U :=
   U.inv_mem' h
 
 @[to_additive]
-protected theorem mul_mem {g₁ g₂ : G} (h₁ : g₁ ∈ U) (h₂ : g₂ ∈ U) : (g₁*g₂) ∈ U :=
+protected theorem mul_mem {g₁ g₂ : G} (h₁ : g₁ ∈ U) (h₂ : g₂ ∈ U) : g₁ * g₂ ∈ U :=
   U.mul_mem' h₁ h₂
 
 @[to_additive]
@@ -133,23 +133,23 @@ instance : Inhabited (OpenSubgroup G) :=
 @[to_additive]
 theorem IsClosed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) := by
   apply is_open_compl_iff.1
-  refine' is_open_iff_forall_mem_open.2 fun x hx => ⟨(fun y => y*x⁻¹) ⁻¹' U, _, _, _⟩
-  ·
-    intro u hux
+  refine' is_open_iff_forall_mem_open.2 fun x hx => ⟨(fun y => y * x⁻¹) ⁻¹' U, _, _, _⟩
+  · intro u hux
     simp only [Set.mem_preimage, Set.mem_compl_iff, mem_coe] at hux hx⊢
     refine' mt (fun hu => _) hx
     convert U.mul_mem (U.inv_mem hux) hu
     simp
-  ·
-    exact U.is_open.preimage (continuous_mul_right _)
-  ·
-    simp [U.one_mem]
+    
+  · exact U.is_open.preimage (continuous_mul_right _)
+    
+  · simp [U.one_mem]
+    
 
 section
 
 variable {H : Type _} [Groupₓ H] [TopologicalSpace H]
 
-/--  The product of two open subgroups as an open subgroup of the product group. -/
+/-- The product of two open subgroups as an open subgroup of the product group. -/
 @[to_additive "The product of two open subgroups as an open subgroup of the product group."]
 def Prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
   { (U : Subgroup G).Prod (V : Subgroup H) with Carrier := (U : Set G).Prod (V : Set H),
@@ -168,8 +168,10 @@ instance : SemilatticeInf (OpenSubgroup G) :=
     inf_le_left := fun U V => Set.inter_subset_left _ _, inf_le_right := fun U V => Set.inter_subset_right _ _,
     le_inf := fun U V W hV hW => Set.subset_inter hV hW }
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ] instance : OrderTop ( OpenSubgroup G ) where top := ⊤ le_top U := Set.subset_univ _
+@[to_additive]
+instance : OrderTop (OpenSubgroup G) where
+  top := ⊤
+  le_top := fun U => Set.subset_univ _
 
 @[simp, norm_cast, to_additive]
 theorem coe_inf : (↑(U⊓V) : Set G) = (U : Set G) ∩ V :=
@@ -185,7 +187,7 @@ theorem coe_subgroup_le : (U : Subgroup G) ≤ (V : Subgroup G) ↔ U ≤ V :=
 
 variable {N : Type _} [Groupₓ N] [TopologicalSpace N]
 
-/--  The preimage of an `open_subgroup` along a continuous `monoid` homomorphism
+/-- The preimage of an `open_subgroup` along a continuous `monoid` homomorphism
   is an `open_subgroup`. -/
 @[to_additive
       "The preimage of an `open_add_subgroup` along a continuous `add_monoid` homomorphism\nis an `open_add_subgroup`."]
@@ -216,7 +218,8 @@ variable {G : Type _} [Groupₓ G] [TopologicalSpace G] [HasContinuousMul G] (H 
 theorem is_open_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : Set G) := by
   simp only [is_open_iff_mem_nhds, SetLike.mem_coe] at hg⊢
   intro x hx
-  have : Filter.Tendsto (fun y => y*x⁻¹*g) (𝓝 x) (𝓝 $ x*x⁻¹*g) := (continuous_id.mul continuous_const).Tendsto _
+  have : Filter.Tendsto (fun y => y * (x⁻¹ * g)) (𝓝 x) (𝓝 $ x * (x⁻¹ * g)) :=
+    (continuous_id.mul continuous_const).Tendsto _
   rw [mul_inv_cancel_left] at this
   have := Filter.mem_map'.1 (this hg)
   replace hg : g ∈ H := SetLike.mem_coe.1 (mem_of_mem_nhds hg)

@@ -1,4 +1,4 @@
-import Mathbin.Data.Sum
+import Mathbin.Data.Sum.Basic
 import Mathbin.Order.Basic
 
 /-!
@@ -177,37 +177,39 @@ theorem trans_trichotomous_right [IsTrans α r] [IsTrichotomous α r] {a b c : �
   exfalso
   exact h₂ h₃
 
-/--  Construct a partial order from a `is_strict_order` relation.
+/-- Construct a partial order from a `is_strict_order` relation.
 
 See note [reducible non-instances]. -/
 @[reducible]
-def partialOrderOfSO r [IsStrictOrder α r] : PartialOrderₓ α :=
-  { le := fun x y => x = y ∨ r x y, lt := r, le_refl := fun x => Or.inl rfl,
-    le_trans := fun x y z h₁ h₂ =>
-      match y, z, h₁, h₂ with
-      | _, _, Or.inl rfl, h₂ => h₂
-      | _, _, h₁, Or.inl rfl => h₁
-      | _, _, Or.inr h₁, Or.inr h₂ => Or.inr (trans h₁ h₂),
-    le_antisymm := fun x y h₁ h₂ =>
-      match y, h₁, h₂ with
-      | _, Or.inl rfl, h₂ => rfl
-      | _, h₁, Or.inl rfl => rfl
-      | _, Or.inr h₁, Or.inr h₂ => (asymm h₁ h₂).elim,
-    lt_iff_le_not_le := fun x y =>
-      ⟨fun h =>
-        ⟨Or.inr h,
-          not_orₓ
-            (fun e => by
-              rw [e] at h <;> exact irrefl _ h)
-            (asymm h)⟩,
-        fun ⟨h₁, h₂⟩ => h₁.resolve_left fun e => h₂ $ e ▸ Or.inl rfl⟩ }
+def partialOrderOfSO r [IsStrictOrder α r] : PartialOrderₓ α where
+  le := fun x y => x = y ∨ r x y
+  lt := r
+  le_refl := fun x => Or.inl rfl
+  le_trans := fun x y z h₁ h₂ =>
+    match y, z, h₁, h₂ with
+    | _, _, Or.inl rfl, h₂ => h₂
+    | _, _, h₁, Or.inl rfl => h₁
+    | _, _, Or.inr h₁, Or.inr h₂ => Or.inr (trans h₁ h₂)
+  le_antisymm := fun x y h₁ h₂ =>
+    match y, h₁, h₂ with
+    | _, Or.inl rfl, h₂ => rfl
+    | _, h₁, Or.inl rfl => rfl
+    | _, Or.inr h₁, Or.inr h₂ => (asymm h₁ h₂).elim
+  lt_iff_le_not_le := fun x y =>
+    ⟨fun h =>
+      ⟨Or.inr h,
+        not_orₓ
+          (fun e => by
+            rw [e] at h <;> exact irrefl _ h)
+          (asymm h)⟩,
+      fun ⟨h₁, h₂⟩ => h₁.resolve_left fun e => h₂ $ e ▸ Or.inl rfl⟩
 
-/--  This is basically the same as `is_strict_total_order`, but that definition has a redundant
+/-- This is basically the same as `is_strict_total_order`, but that definition has a redundant
 assumption `is_incomp_trans α lt`. -/
 @[algebra]
 class IsStrictTotalOrder' (α : Type u) (lt : α → α → Prop) extends IsTrichotomous α lt, IsStrictOrder α lt : Prop
 
-/--  Construct a linear order from an `is_strict_total_order'` relation.
+/-- Construct a linear order from an `is_strict_total_order'` relation.
 
 See note [reducible non-instances]. -/
 @[reducible]
@@ -229,7 +231,7 @@ theorem IsStrictTotalOrder'.swap r [IsStrictTotalOrder' α r] : IsStrictTotalOrd
 instance [LinearOrderₓ α] : IsStrictTotalOrder' α (· < ·) :=
   {  }
 
-/--  A connected order is one satisfying the condition `a < c → a < b ∨ b < c`.
+/-- A connected order is one satisfying the condition `a < c → a < b ∨ b < c`.
   This is recognizable as an intuitionistic substitute for `a ≤ b ∨ b ≤ a` on
   the constructive reals, and is also known as negative transitivity,
   since the contrapositive asserts transitivity of the relation `¬ a < b`.  -/
@@ -267,7 +269,7 @@ instance [LinearOrderₓ α] : IsIncompTrans α (· < ·) := by
 instance [LinearOrderₓ α] : IsStrictWeakOrder α (· < ·) := by
   infer_instance
 
-/--  An extensional relation is one in which an element is determined by its set
+/-- An extensional relation is one in which an element is determined by its set
   of predecessors. It is named for the `x ∈ y` relation in set theory, whose
   extensionality is one of the first axioms of ZFC. -/
 @[algebra]
@@ -277,7 +279,7 @@ class IsExtensional (α : Type u) (r : α → α → Prop) : Prop where
 instance (priority := 100) is_extensional_of_is_strict_total_order' [IsStrictTotalOrder' α r] : IsExtensional α r :=
   ⟨fun a b H => ((@trichotomous _ r _ a b).resolve_left $ mt (H _).2 (irrefl a)).resolve_right $ mt (H _).1 (irrefl b)⟩
 
-/--  A well order is a well-founded linear order. -/
+/-- A well order is a well-founded linear order. -/
 @[algebra]
 class IsWellOrder (α : Type u) (r : α → α → Prop) extends IsStrictTotalOrder' α r : Prop where
   wf : WellFounded r
@@ -302,86 +304,68 @@ instance (priority := 100) IsWellOrder.is_irrefl {α} (r : α → α → Prop) [
 instance (priority := 100) IsWellOrder.is_asymm {α} (r : α → α → Prop) [IsWellOrder α r] : IsAsymm α r := by
   infer_instance
 
-/--  Construct a decidable linear order from a well-founded linear order. -/
+/-- Construct a decidable linear order from a well-founded linear order. -/
 noncomputable def IsWellOrder.linearOrder (r : α → α → Prop) [IsWellOrder α r] : LinearOrderₓ α := by
   let this' := fun x y => Classical.dec ¬r x y
   exact linearOrderOfSTO' r
 
--- failed to format: format: uncaught backtrack exception
-instance
-  EmptyRelation.is_well_order
-  [ Subsingleton α ] : IsWellOrder α EmptyRelation
-  where
-    trichotomous a b := Or.inr $ Or.inl $ Subsingleton.elimₓ _ _
-      irrefl a := id
-      trans a b c := False.elim
-      wf := ⟨ fun a => ⟨ _ , fun y => False.elim ⟩ ⟩
+instance EmptyRelation.is_well_order [Subsingleton α] : IsWellOrder α EmptyRelation where
+  trichotomous := fun a b => Or.inr $ Or.inl $ Subsingleton.elimₓ _ _
+  irrefl := fun a => id
+  trans := fun a b c => False.elim
+  wf := ⟨fun a => ⟨_, fun y => False.elim⟩⟩
 
 instance Nat.Lt.is_well_order : IsWellOrder ℕ (· < ·) :=
   ⟨Nat.lt_wf⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  Sum.Lex.is_well_order
-  [ IsWellOrder α r ] [ IsWellOrder β s ] : IsWellOrder ( Sum α β ) ( Sum.Lex r s )
-  where
-    trichotomous a b := by cases a <;> cases b <;> simp <;> apply trichotomous
-      irrefl a := by cases a <;> simp <;> apply irrefl
-      trans a b c := by cases a <;> cases b <;> simp <;> cases c <;> simp <;> apply trans
-      wf := Sum.lex_wf IsWellOrder.wf IsWellOrder.wf
+instance Sum.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOrder (Sum α β) (Sum.Lex r s) where
+  trichotomous := fun a b => by
+    cases a <;> cases b <;> simp <;> apply trichotomous
+  irrefl := fun a => by
+    cases a <;> simp <;> apply irrefl
+  trans := fun a b c => by
+    cases a <;> cases b <;> simp <;> cases c <;> simp <;> apply trans
+  wf := Sum.lex_wf IsWellOrder.wf IsWellOrder.wf
 
--- failed to format: format: uncaught backtrack exception
-instance
-  Prod.Lex.is_well_order
-  [ IsWellOrder α r ] [ IsWellOrder β s ] : IsWellOrder ( α × β ) ( Prod.Lex r s )
-  where
-    trichotomous
-        ⟨ a₁ , a₂ ⟩ ⟨ b₁ , b₂ ⟩
-        :=
-        match
-          @ trichotomous _ r _ a₁ b₁
-          with
-          | Or.inl h₁ => Or.inl $ Prod.Lex.left _ _ h₁
-            | Or.inr ( Or.inr h₁ ) => Or.inr $ Or.inr $ Prod.Lex.left _ _ h₁
-            |
-              Or.inr ( Or.inl e )
-              =>
-              e
-                ▸
-                match
-                  @ trichotomous _ s _ a₂ b₂
-                  with
-                  | Or.inl h => Or.inl $ Prod.Lex.right _ h
-                    | Or.inr ( Or.inr h ) => Or.inr $ Or.inr $ Prod.Lex.right _ h
-                    | Or.inr ( Or.inl e ) => e ▸ Or.inr $ Or.inl rfl
-      irrefl ⟨ a₁ , a₂ ⟩ h := by cases' h with _ _ _ _ h _ _ _ h <;> [ exact irrefl _ h , exact irrefl _ h ]
-      trans
-        a b c h₁ h₂
-        :=
-        by
-          cases' h₁ with a₁ a₂ b₁ b₂ ab a₁ b₁ b₂ ab <;> cases' h₂ with _ _ c₁ c₂ bc _ _ c₂ bc
-            · exact Prod.Lex.left _ _ ( trans ab bc )
-            · exact Prod.Lex.left _ _ ab
-            · exact Prod.Lex.left _ _ bc
-            · exact Prod.Lex.right _ ( trans ab bc )
-      wf := Prod.lex_wf IsWellOrder.wf IsWellOrder.wf
+instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOrder (α × β) (Prod.Lex r s) where
+  trichotomous := fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ =>
+    match @trichotomous _ r _ a₁ b₁ with
+    | Or.inl h₁ => Or.inl $ Prod.Lex.left _ _ h₁
+    | Or.inr (Or.inr h₁) => Or.inr $ Or.inr $ Prod.Lex.left _ _ h₁
+    | Or.inr (Or.inl e) =>
+      e ▸
+        match @trichotomous _ s _ a₂ b₂ with
+        | Or.inl h => Or.inl $ Prod.Lex.right _ h
+        | Or.inr (Or.inr h) => Or.inr $ Or.inr $ Prod.Lex.right _ h
+        | Or.inr (Or.inl e) => e ▸ Or.inr $ Or.inl rfl
+  irrefl := fun ⟨a₁, a₂⟩ h => by
+    cases' h with _ _ _ _ h _ _ _ h <;> [exact irrefl _ h, exact irrefl _ h]
+  trans := fun a b c h₁ h₂ => by
+    cases' h₁ with a₁ a₂ b₁ b₂ ab a₁ b₁ b₂ ab <;> cases' h₂ with _ _ c₁ c₂ bc _ _ c₂ bc
+    · exact Prod.Lex.left _ _ (trans ab bc)
+      
+    · exact Prod.Lex.left _ _ ab
+      
+    · exact Prod.Lex.left _ _ bc
+      
+    · exact Prod.Lex.right _ (trans ab bc)
+      
+  wf := Prod.lex_wf IsWellOrder.wf IsWellOrder.wf
 
-/--  An unbounded or cofinal set -/
+/-- An unbounded or cofinal set -/
 def Unbounded (r : α → α → Prop) (s : Set α) : Prop :=
   ∀ a, ∃ b ∈ s, ¬r b a
 
-/--  A bounded or final set -/
+/-- A bounded or final set -/
 def Bounded (r : α → α → Prop) (s : Set α) : Prop :=
   ∃ a, ∀, ∀ b ∈ s, ∀, r b a
 
 @[simp]
 theorem not_bounded_iff {r : α → α → Prop} (s : Set α) : ¬Bounded r s ↔ Unbounded r s := by
-  classical
   simp only [Bounded, Unbounded, not_forall, not_exists, exists_prop, not_and, not_not]
 
 @[simp]
 theorem not_unbounded_iff {r : α → α → Prop} (s : Set α) : ¬Unbounded r s ↔ Bounded r s := by
-  classical
   rw [not_iff_comm, not_bounded_iff]
 
 namespace Prod

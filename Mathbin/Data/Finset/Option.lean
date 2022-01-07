@@ -26,7 +26,7 @@ open Function
 
 namespace Option
 
-/--  Construct an empty or singleton finset from an `option` -/
+/-- Construct an empty or singleton finset from an `option` -/
 def to_finset (o : Option α) : Finset α :=
   o.elim ∅ singleton
 
@@ -49,7 +49,7 @@ end Option
 
 namespace Finset
 
-/--  Given a finset on `α`, lift it to being a finset on `option α`
+/-- Given a finset on `α`, lift it to being a finset on `option α`
 using `option.some` and then insert `option.none`. -/
 def insert_none : Finset α ↪o Finset (Option α) :=
   (OrderEmbedding.ofMapLeIff fun s =>
@@ -70,12 +70,12 @@ theorem some_mem_insert_none {s : Finset α} {a : α} : some a ∈ s.insert_none
   simp
 
 @[simp]
-theorem card_insert_none (s : Finset α) : s.insert_none.card = s.card+1 := by
+theorem card_insert_none (s : Finset α) : s.insert_none.card = s.card + 1 := by
   simp [insert_none]
 
-/--  Given `s : finset (option α)`, `s.erase_none : finset α` is the set of `x : α` such that
+/-- Given `s : finset (option α)`, `s.erase_none : finset α` is the set of `x : α` such that
 `some x ∈ s`. -/
-def erase_none : Finset (Option α) →ₘ Finset α :=
+def erase_none : Finset (Option α) →o Finset α :=
   (Finset.mapEmbedding (Equivₓ.optionIsSomeEquiv α).toEmbedding).toOrderHom.comp ⟨Finset.subtype _, subtype_mono⟩
 
 @[simp]

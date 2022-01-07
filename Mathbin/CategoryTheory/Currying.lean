@@ -16,47 +16,44 @@ universe v₁ v₂ v₃ u₁ u₂ u₃
 
 variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D] {E : Type u₃} [category.{v₃} E]
 
-/-- 
-The uncurrying functor, taking a functor `C ⥤ (D ⥤ E)` and producing a functor `(C × D) ⥤ E`.
+/-- The uncurrying functor, taking a functor `C ⥤ (D ⥤ E)` and producing a functor `(C × D) ⥤ E`.
 -/
-def uncurry : (C ⥤ D ⥤ E) ⥤ C × D ⥤ E :=
-  { obj := fun F =>
-      { obj := fun X => (F.obj X.1).obj X.2, map := fun X Y f => (F.map f.1).app X.2 ≫ (F.obj Y.1).map f.2,
-        map_comp' := fun X Y Z f g => by
-          simp only [prod_comp_fst, prod_comp_snd, functor.map_comp, nat_trans.comp_app, category.assoc]
-          slice_lhs 2 3 => rw [← nat_trans.naturality]
-          rw [category.assoc] },
-    map := fun F G T =>
-      { app := fun X => (T.app X.1).app X.2,
-        naturality' := fun X Y f => by
-          simp only [prod_comp_fst, prod_comp_snd, category.comp_id, category.assoc, Functor.map_id, functor.map_comp,
-            nat_trans.id_app, nat_trans.comp_app]
-          slice_lhs 2 3 => rw [nat_trans.naturality]
-          slice_lhs 1 2 => rw [← nat_trans.comp_app, nat_trans.naturality, nat_trans.comp_app]
-          rw [category.assoc] } }
+def uncurry : (C ⥤ D ⥤ E) ⥤ C × D ⥤ E where
+  obj := fun F =>
+    { obj := fun X => (F.obj X.1).obj X.2, map := fun X Y f => (F.map f.1).app X.2 ≫ (F.obj Y.1).map f.2,
+      map_comp' := fun X Y Z f g => by
+        simp only [prod_comp_fst, prod_comp_snd, functor.map_comp, nat_trans.comp_app, category.assoc]
+        slice_lhs 2 3 => rw [← nat_trans.naturality]
+        rw [category.assoc] }
+  map := fun F G T =>
+    { app := fun X => (T.app X.1).app X.2,
+      naturality' := fun X Y f => by
+        simp only [prod_comp_fst, prod_comp_snd, category.comp_id, category.assoc, Functor.map_id, functor.map_comp,
+          nat_trans.id_app, nat_trans.comp_app]
+        slice_lhs 2 3 => rw [nat_trans.naturality]
+        slice_lhs 1 2 => rw [← nat_trans.comp_app, nat_trans.naturality, nat_trans.comp_app]
+        rw [category.assoc] }
 
-/-- 
-The object level part of the currying functor. (See `curry` for the functorial version.)
+/-- The object level part of the currying functor. (See `curry` for the functorial version.)
 -/
-def curry_obj (F : C × D ⥤ E) : C ⥤ D ⥤ E :=
-  { obj := fun X => { obj := fun Y => F.obj (X, Y), map := fun Y Y' g => F.map (𝟙 X, g) },
-    map := fun X X' f => { app := fun Y => F.map (f, 𝟙 Y) } }
+def curry_obj (F : C × D ⥤ E) : C ⥤ D ⥤ E where
+  obj := fun X => { obj := fun Y => F.obj (X, Y), map := fun Y Y' g => F.map (𝟙 X, g) }
+  map := fun X X' f => { app := fun Y => F.map (f, 𝟙 Y) }
 
-/-- 
-The currying functor, taking a functor `(C × D) ⥤ E` and producing a functor `C ⥤ (D ⥤ E)`.
+/-- The currying functor, taking a functor `(C × D) ⥤ E` and producing a functor `C ⥤ (D ⥤ E)`.
 -/
-def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E :=
-  { obj := fun F => curry_obj F,
-    map := fun F G T =>
-      { app := fun X =>
-          { app := fun Y => T.app (X, Y),
-            naturality' := fun Y Y' g => by
-              dsimp [curry_obj]
-              rw [nat_trans.naturality] },
-        naturality' := fun X X' f => by
-          ext
-          dsimp [curry_obj]
-          rw [nat_trans.naturality] } }
+def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where
+  obj := fun F => curry_obj F
+  map := fun F G T =>
+    { app := fun X =>
+        { app := fun Y => T.app (X, Y),
+          naturality' := fun Y Y' g => by
+            dsimp [curry_obj]
+            rw [nat_trans.naturality] },
+      naturality' := fun X X' f => by
+        ext
+        dsimp [curry_obj]
+        rw [nat_trans.naturality] }
 
 @[simp]
 theorem uncurry.obj_obj {F : C ⥤ D ⥤ E} {X : C × D} : (uncurry.obj F).obj X = (F.obj X.1).obj X.2 :=
@@ -88,8 +85,7 @@ theorem curry.obj_map_app {F : C × D ⥤ E} {X X' : C} {f : X ⟶ X'} {Y} : ((c
 theorem curry.map_app_app {F G : C × D ⥤ E} {α : F ⟶ G} {X} {Y} : ((curry.map α).app X).app Y = α.app (X, Y) :=
   rfl
 
-/-- 
-The equivalence of functor categories given by currying/uncurrying.
+/-- The equivalence of functor categories given by currying/uncurrying.
 -/
 @[simps]
 def currying : C ⥤ D ⥤ E ≌ C × D ⥤ E :=
@@ -116,6 +112,15 @@ def currying : C ⥤ D ⥤ E ≌ C × D ⥤ E :=
             tidy))
       (by
         tidy))
+
+/-- `F.flip` is isomorphic to uncurrying `F`, swapping the variables, and currying. -/
+@[simps]
+def flip_iso_curry_swap_uncurry (F : C ⥤ D ⥤ E) : F.flip ≅ curry.obj (Prod.swap _ _ ⋙ uncurry.obj F) :=
+  (nat_iso.of_components fun d =>
+      (nat_iso.of_components fun c => eq_to_iso rfl) $ by
+        tidy) $
+    by
+    tidy
 
 end CategoryTheory
 

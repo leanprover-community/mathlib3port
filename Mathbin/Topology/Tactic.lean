@@ -22,10 +22,11 @@ used by `continuity`.
 -/
 
 
-/--  User attribute used to mark tactics used by `continuity`. -/
+/-- User attribute used to mark tactics used by `continuity`. -/
 @[user_attribute]
-unsafe def continuity : user_attribute :=
-  { Name := `continuity, descr := "lemmas usable to prove continuity" }
+unsafe def continuity : user_attribute where
+  Name := `continuity
+  descr := "lemmas usable to prove continuity"
 
 attribute [continuity] continuous_id continuous_const
 
@@ -35,9 +36,8 @@ theorem continuous_id' {α : Type _} [TopologicalSpace α] : Continuous fun a : 
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-Tactic to apply `continuous.comp` when appropriate.
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Tactic to apply `continuous.comp` when appropriate.
 
 Applying `continuous.comp` is not always a good idea, so we have some
 extra logic here to try to avoid bad cases.
@@ -56,7 +56,7 @@ extra logic here to try to avoid bad cases.
 unsafe def apply_continuous.comp : tactic Unit :=
   sorry
 
-/--  List of tactics used by `continuity` internally. -/
+/-- List of tactics used by `continuity` internally. -/
 unsafe def continuity_tactics (md : transparency := reducible) : List (tactic Stringₓ) :=
   [intros1 >>= fun ns => pure ("intros " ++ " ".intercalate (ns.map fun e => e.to_string)),
     apply_rules [pquote.1 continuity] 50 { md } >> pure "apply_rules continuity",
@@ -66,8 +66,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-/-- 
-Solve goals of the form `continuous f`. `continuity?` reports back the proof term it found.
+/-- Solve goals of the form `continuous f`. `continuity?` reports back the proof term it found.
 -/
 unsafe def continuity (bang : parse $ optionalₓ (tk "!")) (trace : parse $ optionalₓ (tk "?"))
     (cfg : tidy.cfg := {  }) : tactic Unit :=
@@ -76,12 +75,11 @@ unsafe def continuity (bang : parse $ optionalₓ (tk "!")) (trace : parse $ opt
   let trace_fn := if trace.is_some then show_term else id
   trace_fn continuity_core
 
-/--  Version of `continuity` for use with auto_param. -/
+/-- Version of `continuity` for use with auto_param. -/
 unsafe def continuity' : tactic Unit :=
   continuity none none {  }
 
-/-- 
-`continuity` solves goals of the form `continuous f` by applying lemmas tagged with the
+/-- `continuity` solves goals of the form `continuous f` by applying lemmas tagged with the
 `continuity` user attribute.
 
 ```

@@ -34,8 +34,7 @@ variable {n : Type w} [DecidableEq n] [Fintype n]
 
 open Finset
 
-/-- 
-The "characteristic matrix" of `M : matrix n n R` is the matrix of polynomials $t I - M$.
+/-- The "characteristic matrix" of `M : matrix n n R` is the matrix of polynomials $t I - M$.
 The determinant of this matrix is the characteristic polynomial.
 -/
 def charmatrix (M : Matrix n n R) : Matrix n n (Polynomial R) :=
@@ -55,14 +54,14 @@ theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix 
   ext k i j
   simp only [mat_poly_equiv_coeff_apply, coeff_sub, Pi.sub_apply]
   by_cases' h : i = j
-  ·
-    subst h
+  · subst h
     rw [charmatrix_apply_eq, coeff_sub]
     simp only [coeff_X, coeff_C]
     split_ifs <;> simp
-  ·
-    rw [charmatrix_apply_ne _ _ _ h, coeff_X, coeff_neg, coeff_C, coeff_C]
+    
+  · rw [charmatrix_apply_ne _ _ _ h, coeff_X, coeff_neg, coeff_C, coeff_C]
     split_ifs <;> simp [h]
+    
 
 theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
     charmatrix (reindex e e M) = reindex e e (charmatrix M) := by
@@ -71,8 +70,7 @@ theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m
   all_goals
     simp [h]
 
-/-- 
-The characteristic polynomial of a matrix `M` is given by $\det (t I - M)$.
+/-- The characteristic polynomial of a matrix `M` is given by $\det (t I - M)$.
 -/
 def Matrix.charpoly (M : Matrix n n R) : Polynomial R :=
   (charmatrix M).det
@@ -82,14 +80,14 @@ theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n 
   unfold Matrix.charpoly
   rw [charmatrix_reindex, Matrix.det_reindex_self]
 
-/-- 
-The **Cayley-Hamilton Theorem**, that the characteristic polynomial of a matrix,
+/-- The **Cayley-Hamilton Theorem**, that the characteristic polynomial of a matrix,
 applied to the matrix itself, is zero.
 
 This holds over any commutative ring.
 -/
 theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 := by
-  have h : M.charpoly • (1 : Matrix n n (Polynomial R)) = adjugate (charmatrix M)*charmatrix M := (adjugate_mul _).symm
+  have h : M.charpoly • (1 : Matrix n n (Polynomial R)) = adjugate (charmatrix M) * charmatrix M :=
+    (adjugate_mul _).symm
   apply_fun matPolyEquiv  at h
   simp only [mat_poly_equiv.map_mul, mat_poly_equiv_charmatrix] at h
   apply_fun fun p => p.eval M  at h

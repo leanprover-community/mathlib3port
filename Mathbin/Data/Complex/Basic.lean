@@ -14,7 +14,7 @@ open_locale BigOperators
 /-! ### Definition and basic arithmmetic -/
 
 
-/--  Complex numbers consist of two `real`s: a real part `re` and an imaginary part `im`. -/
+/-- Complex numbers consist of two `real`s: a real part `re` and an imaginary part `im`. -/
 structure Complex : Type where
   re : ℝ
   im : ℝ
@@ -28,20 +28,13 @@ open_locale ComplexConjugate
 noncomputable instance : DecidableEq ℂ :=
   Classical.decEq _
 
-/--  The equivalence between the complex numbers and `ℝ × ℝ`. -/
-def equiv_real_prod : ℂ ≃ ℝ × ℝ :=
-  { toFun := fun z => ⟨z.re, z.im⟩, invFun := fun p => ⟨p.1, p.2⟩, left_inv := fun ⟨x, y⟩ => rfl,
-    right_inv := fun ⟨x, y⟩ => rfl }
-
-@[simp]
-theorem equiv_real_prod_apply (z : ℂ) : equiv_real_prod z = (z.re, z.im) :=
-  rfl
-
-theorem equiv_real_prod_symm_re (x y : ℝ) : (equiv_real_prod.symm (x, y)).re = x :=
-  rfl
-
-theorem equiv_real_prod_symm_im (x y : ℝ) : (equiv_real_prod.symm (x, y)).im = y :=
-  rfl
+/-- The equivalence between the complex numbers and `ℝ × ℝ`. -/
+@[simps]
+def equiv_real_prod : ℂ ≃ ℝ × ℝ where
+  toFun := fun z => ⟨z.re, z.im⟩
+  invFun := fun p => ⟨p.1, p.2⟩
+  left_inv := fun ⟨x, y⟩ => rfl
+  right_inv := fun ⟨x, y⟩ => rfl
 
 @[simp]
 theorem eta : ∀ z : ℂ, Complex.mk z.re z.im = z
@@ -75,8 +68,10 @@ theorem of_real_inj {z w : ℝ} : (z : ℂ) = w ↔ z = w :=
 
 theorem of_real_injective : Function.Injective (coeₓ : ℝ → ℂ) := fun z w => congr_argₓ re
 
--- failed to format: format: uncaught backtrack exception
-instance : CanLift ℂ ℝ where cond z := z.im = 0 coe := coeₓ prf z hz := ⟨ z.re , ext rfl hz.symm ⟩
+instance : CanLift ℂ ℝ where
+  cond := fun z => z.im = 0
+  coe := coeₓ
+  prf := fun z hz => ⟨z.re, ext rfl hz.symm⟩
 
 instance : HasZero ℂ :=
   ⟨(0 : ℝ)⟩
@@ -119,14 +114,14 @@ theorem of_real_one : ((1 : ℝ) : ℂ) = 1 :=
   rfl
 
 instance : Add ℂ :=
-  ⟨fun z w => ⟨z.re+w.re, z.im+w.im⟩⟩
+  ⟨fun z w => ⟨z.re + w.re, z.im + w.im⟩⟩
 
 @[simp]
-theorem add_re (z w : ℂ) : (z+w).re = z.re+w.re :=
+theorem add_re (z w : ℂ) : (z + w).re = z.re + w.re :=
   rfl
 
 @[simp]
-theorem add_im (z w : ℂ) : (z+w).im = z.im+w.im :=
+theorem add_im (z w : ℂ) : (z + w).im = z.im + w.im :=
   rfl
 
 @[simp]
@@ -146,7 +141,7 @@ theorem bit1_im (z : ℂ) : (bit1 z).im = bit0 z.im :=
   add_zeroₓ _
 
 @[simp, norm_cast]
-theorem of_real_add (r s : ℝ) : ((r+s : ℝ) : ℂ) = r+s :=
+theorem of_real_add (r s : ℝ) : ((r + s : ℝ) : ℂ) = r + s :=
   ext_iff.2 $ by
     simp
 
@@ -180,34 +175,34 @@ instance : Sub ℂ :=
   ⟨fun z w => ⟨z.re - w.re, z.im - w.im⟩⟩
 
 instance : Mul ℂ :=
-  ⟨fun z w => ⟨(z.re*w.re) - z.im*w.im, (z.re*w.im)+z.im*w.re⟩⟩
+  ⟨fun z w => ⟨z.re * w.re - z.im * w.im, z.re * w.im + z.im * w.re⟩⟩
 
 @[simp]
-theorem mul_re (z w : ℂ) : (z*w).re = (z.re*w.re) - z.im*w.im :=
+theorem mul_re (z w : ℂ) : (z * w).re = z.re * w.re - z.im * w.im :=
   rfl
 
 @[simp]
-theorem mul_im (z w : ℂ) : (z*w).im = (z.re*w.im)+z.im*w.re :=
+theorem mul_im (z w : ℂ) : (z * w).im = z.re * w.im + z.im * w.re :=
   rfl
 
 @[simp, norm_cast]
-theorem of_real_mul (r s : ℝ) : ((r*s : ℝ) : ℂ) = r*s :=
+theorem of_real_mul (r s : ℝ) : ((r * s : ℝ) : ℂ) = r * s :=
   ext_iff.2 $ by
     simp
 
-theorem of_real_mul_re (r : ℝ) (z : ℂ) : ((↑r)*z).re = r*z.re := by
+theorem of_real_mul_re (r : ℝ) (z : ℂ) : (↑r * z).re = r * z.re := by
   simp
 
-theorem of_real_mul_im (r : ℝ) (z : ℂ) : ((↑r)*z).im = r*z.im := by
+theorem of_real_mul_im (r : ℝ) (z : ℂ) : (↑r * z).im = r * z.im := by
   simp
 
-theorem of_real_mul' (r : ℝ) (z : ℂ) : ((↑r)*z) = ⟨r*z.re, r*z.im⟩ :=
+theorem of_real_mul' (r : ℝ) (z : ℂ) : ↑r * z = ⟨r * z.re, r * z.im⟩ :=
   ext (of_real_mul_re _ _) (of_real_mul_im _ _)
 
 /-! ### The imaginary unit, `I` -/
 
 
-/--  The imaginary unit. -/
+/-- The imaginary unit. -/
 def I : ℂ :=
   ⟨0, 1⟩
 
@@ -220,23 +215,23 @@ theorem I_im : I.im = 1 :=
   rfl
 
 @[simp]
-theorem I_mul_I : (I*I) = -1 :=
+theorem I_mul_I : I * I = -1 :=
   ext_iff.2 $ by
     simp
 
-theorem I_mul (z : ℂ) : (I*z) = ⟨-z.im, z.re⟩ :=
+theorem I_mul (z : ℂ) : I * z = ⟨-z.im, z.re⟩ :=
   ext_iff.2 $ by
     simp
 
 theorem I_ne_zero : (I : ℂ) ≠ 0 :=
   mt (congr_argₓ im) zero_ne_one.symm
 
-theorem mk_eq_add_mul_I (a b : ℝ) : Complex.mk a b = a+b*I :=
+theorem mk_eq_add_mul_I (a b : ℝ) : Complex.mk a b = a + b * I :=
   ext_iff.2 $ by
     simp
 
 @[simp]
-theorem re_add_im (z : ℂ) : ((z.re : ℂ)+z.im*I) = z :=
+theorem re_add_im (z : ℂ) : (z.re : ℂ) + z.im * I = z :=
   ext_iff.2 $ by
     simp
 
@@ -245,42 +240,46 @@ theorem re_add_im (z : ℂ) : ((z.re : ℂ)+z.im*I) = z :=
 
 instance : CommRingₓ ℂ := by
   refine_struct
-      { zero := (0 : ℂ), add := ·+·, neg := Neg.neg, sub := Sub.sub, one := 1, mul := ·*·,
+      { zero := (0 : ℂ), add := · + ·, neg := Neg.neg, sub := Sub.sub, one := 1, mul := · * ·,
         zero_add := fun z => by
           apply ext_iff.2
           simp ,
         add_zero := fun z => by
           apply ext_iff.2
           simp ,
-        nsmul := fun n z => ⟨n • z.re - 0*z.im, (n • z.im)+0*z.re⟩, npow := @npowRec _ ⟨(1 : ℂ)⟩ ⟨·*·⟩,
-        zsmul := fun n z => ⟨n • z.re - 0*z.im, (n • z.im)+0*z.re⟩ } <;>
+        nsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩, npow := @npowRec _ ⟨(1 : ℂ)⟩ ⟨· * ·⟩,
+        zsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩ } <;>
     intros <;>
       try
           rfl <;>
         apply ext_iff.2 <;>
           constructor <;>
             simp <;>
-              ·
-                first |
+              · first |
                   ring1|
                   ring_nf
+                
 
-/--  This shortcut instance ensures we do not find `ring` via the noncomputable `complex.field`
+/-- This shortcut instance ensures we do not find `ring` via the noncomputable `complex.field`
 instance. -/
 instance : Ringₓ ℂ := by
   infer_instance
 
-/--  The "real part" map, considered as an additive group homomorphism. -/
-def re_add_group_hom : ℂ →+ ℝ :=
-  { toFun := re, map_zero' := zero_re, map_add' := add_re }
+/-- The "real part" map, considered as an additive group homomorphism. -/
+def re_add_group_hom : ℂ →+ ℝ where
+  toFun := re
+  map_zero' := zero_re
+  map_add' := add_re
 
 @[simp]
 theorem coe_re_add_group_hom : (re_add_group_hom : ℂ → ℝ) = re :=
   rfl
 
-/--  The "imaginary part" map, considered as an additive group homomorphism. -/
-def im_add_group_hom : ℂ →+ ℝ :=
-  { toFun := im, map_zero' := zero_im, map_add' := add_im }
+/-- The "imaginary part" map, considered as an additive group homomorphism. -/
+def im_add_group_hom : ℂ →+ ℝ where
+  toFun := im
+  map_zero' := zero_im
+  map_add' := add_im
 
 @[simp]
 theorem coe_im_add_group_hom : (im_add_group_hom : ℂ → ℝ) = im :=
@@ -291,24 +290,23 @@ theorem I_pow_bit0 (n : ℕ) : I ^ bit0 n = -1 ^ n := by
   rw [pow_bit0', I_mul_I]
 
 @[simp]
-theorem I_pow_bit1 (n : ℕ) : I ^ bit1 n = (-1 ^ n)*I := by
+theorem I_pow_bit1 (n : ℕ) : I ^ bit1 n = -1 ^ n * I := by
   rw [pow_bit1', I_mul_I]
 
 /-! ### Complex conjugation -/
 
 
--- failed to format: format: uncaught backtrack exception
-/--
-    This defines the complex conjugate as the `star` operation of the `star_ring ℂ`. It
-    is recommended to use the ring automorphism version `star_ring_aut`, available under the
-    notation `conj` in the locale `complex_conjugate`. -/
-  instance
-    : StarRing ℂ
-    where
-      star z := ⟨ z.re , - z.im ⟩
-        star_involutive x := by simp only [ eta , neg_negₓ ]
-        star_mul a b := by ext <;> simp [ add_commₓ ] <;> ring
-        star_add a b := by ext <;> simp [ add_commₓ ]
+/-- This defines the complex conjugate as the `star` operation of the `star_ring ℂ`. It
+is recommended to use the ring automorphism version `star_ring_aut`, available under the
+notation `conj` in the locale `complex_conjugate`. -/
+instance : StarRing ℂ where
+  star := fun z => ⟨z.re, -z.im⟩
+  star_involutive := fun x => by
+    simp only [eta, neg_negₓ]
+  star_mul := fun a b => by
+    ext <;> simp [add_commₓ] <;> ring
+  star_add := fun a b => by
+    ext <;> simp [add_commₓ]
 
 @[simp]
 theorem conj_re (z : ℂ) : (conj z).re = z.re :=
@@ -360,33 +358,33 @@ theorem star_def : (HasStar.star : ℂ → ℂ) = conj :=
 /-! ### Norm squared -/
 
 
-/--  The norm squared function. -/
+/-- The norm squared function. -/
 @[pp_nodot]
-def norm_sq : MonoidWithZeroHom ℂ ℝ :=
-  { toFun := fun z => (z.re*z.re)+z.im*z.im,
-    map_zero' := by
-      simp ,
-    map_one' := by
-      simp ,
-    map_mul' := fun z w => by
-      dsimp
-      ring }
+def norm_sq : MonoidWithZeroHom ℂ ℝ where
+  toFun := fun z => z.re * z.re + z.im * z.im
+  map_zero' := by
+    simp
+  map_one' := by
+    simp
+  map_mul' := fun z w => by
+    dsimp
+    ring
 
-theorem norm_sq_apply (z : ℂ) : norm_sq z = (z.re*z.re)+z.im*z.im :=
+theorem norm_sq_apply (z : ℂ) : norm_sq z = z.re * z.re + z.im * z.im :=
   rfl
 
 @[simp]
-theorem norm_sq_of_real (r : ℝ) : norm_sq r = r*r := by
+theorem norm_sq_of_real (r : ℝ) : norm_sq r = r * r := by
   simp [norm_sq]
 
 @[simp]
-theorem norm_sq_mk (x y : ℝ) : norm_sq ⟨x, y⟩ = (x*x)+y*y :=
+theorem norm_sq_mk (x y : ℝ) : norm_sq ⟨x, y⟩ = x * x + y * y :=
   rfl
 
-theorem norm_sq_add_mul_I (x y : ℝ) : norm_sq (x+y*I) = (x ^ 2)+y ^ 2 := by
+theorem norm_sq_add_mul_I (x y : ℝ) : norm_sq (x + y * I) = x ^ 2 + y ^ 2 := by
   rw [← mk_eq_add_mul_I, norm_sq_mk, sq, sq]
 
-theorem norm_sq_eq_conj_mul_self {z : ℂ} : (norm_sq z : ℂ) = conj z*z := by
+theorem norm_sq_eq_conj_mul_self {z : ℂ} : (norm_sq z : ℂ) = conj z * z := by
   ext <;> simp [norm_sq, mul_commₓ]
 
 @[simp]
@@ -422,27 +420,27 @@ theorem norm_sq_neg (z : ℂ) : norm_sq (-z) = norm_sq z := by
 theorem norm_sq_conj (z : ℂ) : norm_sq (conj z) = norm_sq z := by
   simp [norm_sq]
 
-theorem norm_sq_mul (z w : ℂ) : norm_sq (z*w) = norm_sq z*norm_sq w :=
+theorem norm_sq_mul (z w : ℂ) : norm_sq (z * w) = norm_sq z * norm_sq w :=
   norm_sq.map_mul z w
 
-theorem norm_sq_add (z w : ℂ) : norm_sq (z+w) = (norm_sq z+norm_sq w)+2*(z*conj w).re := by
+theorem norm_sq_add (z w : ℂ) : norm_sq (z + w) = norm_sq z + norm_sq w + 2 * (z * conj w).re := by
   dsimp [norm_sq] <;> ring
 
-theorem re_sq_le_norm_sq (z : ℂ) : (z.re*z.re) ≤ norm_sq z :=
+theorem re_sq_le_norm_sq (z : ℂ) : z.re * z.re ≤ norm_sq z :=
   le_add_of_nonneg_right (mul_self_nonneg _)
 
-theorem im_sq_le_norm_sq (z : ℂ) : (z.im*z.im) ≤ norm_sq z :=
+theorem im_sq_le_norm_sq (z : ℂ) : z.im * z.im ≤ norm_sq z :=
   le_add_of_nonneg_left (mul_self_nonneg _)
 
-theorem mul_conj (z : ℂ) : (z*conj z) = norm_sq z :=
+theorem mul_conj (z : ℂ) : z * conj z = norm_sq z :=
   ext_iff.2 $ by
     simp [norm_sq, mul_commₓ, sub_eq_neg_add, add_commₓ]
 
-theorem add_conj (z : ℂ) : (z+conj z) = (2*z.re : ℝ) :=
+theorem add_conj (z : ℂ) : z + conj z = (2 * z.re : ℝ) :=
   ext_iff.2 $ by
     simp [two_mul]
 
-/--  The coercion `ℝ → ℂ` as a `ring_hom`. -/
+/-- The coercion `ℝ → ℂ` as a `ring_hom`. -/
 def of_real : ℝ →+* ℂ :=
   ⟨coeₓ, of_real_one, of_real_mul, of_real_zero, of_real_add⟩
 
@@ -469,13 +467,13 @@ theorem of_real_sub (r s : ℝ) : ((r - s : ℝ) : ℂ) = r - s :=
 
 @[simp, norm_cast]
 theorem of_real_pow (r : ℝ) (n : ℕ) : ((r ^ n : ℝ) : ℂ) = r ^ n := by
-  induction n <;> simp [of_real_mul, pow_succₓ]
+  induction n <;> simp [*, of_real_mul, pow_succₓ]
 
-theorem sub_conj (z : ℂ) : z - conj z = (2*z.im : ℝ)*I :=
+theorem sub_conj (z : ℂ) : z - conj z = (2 * z.im : ℝ) * I :=
   ext_iff.2 $ by
     simp [two_mul, sub_eq_add_neg]
 
-theorem norm_sq_sub (z w : ℂ) : norm_sq (z - w) = (norm_sq z+norm_sq w) - 2*(z*conj w).re := by
+theorem norm_sq_sub (z w : ℂ) : norm_sq (z - w) = norm_sq z + norm_sq w - 2 * (z * conj w).re := by
   rw [sub_eq_add_neg, norm_sq_add]
   simp only [RingEquiv.map_neg, mul_neg_eq_neg_mul_symm, neg_re, Tactic.Ring.add_neg_eq_sub, norm_sq_neg]
 
@@ -483,9 +481,9 @@ theorem norm_sq_sub (z w : ℂ) : norm_sq (z - w) = (norm_sq z+norm_sq w) - 2*(z
 
 
 noncomputable instance : HasInv ℂ :=
-  ⟨fun z => conj z*(norm_sq z⁻¹ : ℝ)⟩
+  ⟨fun z => conj z * (norm_sq z⁻¹ : ℝ)⟩
 
-theorem inv_def (z : ℂ) : z⁻¹ = conj z*(norm_sq z⁻¹ : ℝ) :=
+theorem inv_def (z : ℂ) : z⁻¹ = conj z * (norm_sq z⁻¹ : ℝ) :=
   rfl
 
 @[simp]
@@ -504,7 +502,7 @@ theorem of_real_inv (r : ℝ) : ((r⁻¹ : ℝ) : ℂ) = r⁻¹ :=
 protected theorem inv_zero : (0⁻¹ : ℂ) = 0 := by
   rw [← of_real_zero, ← of_real_inv, inv_zero]
 
-protected theorem mul_inv_cancel {z : ℂ} (h : z ≠ 0) : (z*z⁻¹) = 1 := by
+protected theorem mul_inv_cancel {z : ℂ} (h : z ≠ 0) : z * z⁻¹ = 1 := by
   rw [inv_def, ← mul_assocₓ, mul_conj, ← of_real_mul, mul_inv_cancel (mt norm_sq_eq_zero.1 h), of_real_one]
 
 /-! ### Field instance and lemmas -/
@@ -519,13 +517,13 @@ theorem I_zpow_bit0 (n : ℤ) : I ^ bit0 n = -1 ^ n := by
   rw [zpow_bit0', I_mul_I]
 
 @[simp]
-theorem I_zpow_bit1 (n : ℤ) : I ^ bit1 n = (-1 ^ n)*I := by
+theorem I_zpow_bit1 (n : ℤ) : I ^ bit1 n = -1 ^ n * I := by
   rw [zpow_bit1', I_mul_I]
 
-theorem div_re (z w : ℂ) : (z / w).re = ((z.re*w.re) / norm_sq w)+(z.im*w.im) / norm_sq w := by
+theorem div_re (z w : ℂ) : (z / w).re = z.re * w.re / norm_sq w + z.im * w.im / norm_sq w := by
   simp [div_eq_mul_inv, mul_assocₓ, sub_eq_add_neg]
 
-theorem div_im (z w : ℂ) : (z / w).im = (z.im*w.re) / norm_sq w - (z.re*w.im) / norm_sq w := by
+theorem div_im (z w : ℂ) : (z / w).im = z.im * w.re / norm_sq w - z.re * w.im / norm_sq w := by
   simp [div_eq_mul_inv, mul_assocₓ, sub_eq_add_neg, add_commₓ]
 
 @[simp, norm_cast]
@@ -537,7 +535,7 @@ theorem of_real_zpow (r : ℝ) (n : ℤ) : ((r ^ n : ℝ) : ℂ) = (r : ℂ) ^ n
   of_real.map_zpow r n
 
 @[simp]
-theorem div_I (z : ℂ) : z / I = -z*I :=
+theorem div_I (z : ℂ) : z / I = -(z * I) :=
   (div_eq_iff_mul_eq I_ne_zero).2 $ by
     simp [mul_assocₓ]
 
@@ -599,19 +597,19 @@ instance char_zero_complex : CharZero ℂ :=
   char_zero_of_inj_zero $ fun n h => by
     rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
 
-/--  A complex number `z` plus its conjugate `conj z` is `2` times its real part. -/
-theorem re_eq_add_conj (z : ℂ) : (z.re : ℂ) = (z+conj z) / 2 := by
+/-- A complex number `z` plus its conjugate `conj z` is `2` times its real part. -/
+theorem re_eq_add_conj (z : ℂ) : (z.re : ℂ) = (z + conj z) / 2 := by
   simp only [add_conj, of_real_mul, of_real_one, of_real_bit0, mul_div_cancel_left (z.re : ℂ) two_ne_zero']
 
-/--  A complex number `z` minus its conjugate `conj z` is `2i` times its imaginary part. -/
-theorem im_eq_sub_conj (z : ℂ) : (z.im : ℂ) = (z - conj z) / 2*I := by
+/-- A complex number `z` minus its conjugate `conj z` is `2i` times its imaginary part. -/
+theorem im_eq_sub_conj (z : ℂ) : (z.im : ℂ) = (z - conj z) / (2 * I) := by
   simp only [sub_conj, of_real_mul, of_real_one, of_real_bit0, mul_right_commₓ,
-    mul_div_cancel_left _ (mul_ne_zero two_ne_zero' I_ne_zero : (2*I) ≠ 0)]
+    mul_div_cancel_left _ (mul_ne_zero two_ne_zero' I_ne_zero : 2 * I ≠ 0)]
 
 /-! ### Absolute value -/
 
 
-/--  The complex absolute value function, defined as the square root of the norm squared. -/
+/-- The complex absolute value function, defined as the square root of the norm squared. -/
 @[pp_nodot]
 noncomputable def abs (z : ℂ) : ℝ :=
   (norm_sq z).sqrt
@@ -626,12 +624,13 @@ theorem abs_of_nonneg {r : ℝ} (h : 0 ≤ r) : abs r = r :=
   (abs_of_real _).trans (abs_of_nonneg h)
 
 theorem abs_of_nat (n : ℕ) : Complex.abs n = n :=
-  calc Complex.abs n = Complex.abs (n : ℝ) := by
-    rw [of_real_nat_cast]
+  calc
+    Complex.abs n = Complex.abs (n : ℝ) := by
+      rw [of_real_nat_cast]
     _ = _ := abs_of_nonneg (Nat.cast_nonneg n)
     
 
-theorem mul_self_abs (z : ℂ) : (abs z*abs z) = norm_sq z :=
+theorem mul_self_abs (z : ℂ) : abs z * abs z = norm_sq z :=
   Real.mul_self_sqrt (norm_sq_nonneg _)
 
 theorem sq_abs (z : ℂ) : abs z ^ 2 = norm_sq z :=
@@ -659,12 +658,13 @@ theorem abs_I : abs I = 1 := by
 
 @[simp]
 theorem abs_two : abs 2 = 2 :=
-  calc abs 2 = abs (2 : ℝ) := by
-    rw [of_real_bit0, of_real_one]
+  calc
+    abs 2 = abs (2 : ℝ) := by
+      rw [of_real_bit0, of_real_one]
     _ = (2 : ℝ) :=
-    abs_of_nonneg
-      (by
-        norm_num)
+      abs_of_nonneg
+        (by
+          norm_num)
     
 
 theorem abs_nonneg (z : ℂ) : 0 ≤ abs z :=
@@ -682,7 +682,7 @@ theorem abs_conj (z : ℂ) : abs (conj z) = abs z := by
   simp [abs]
 
 @[simp]
-theorem abs_mul (z w : ℂ) : abs (z*w) = abs z*abs w := by
+theorem abs_mul (z w : ℂ) : abs (z * w) = abs z * abs w := by
   rw [abs, norm_sq_mul, Real.sqrt_mul (norm_sq_nonneg _)] <;> rfl
 
 @[simp]
@@ -707,19 +707,19 @@ theorem re_le_abs (z : ℂ) : z.re ≤ abs z :=
 theorem im_le_abs (z : ℂ) : z.im ≤ abs z :=
   (abs_le.1 (abs_im_le_abs _)).2
 
-/-- 
-The **triangle inequality** for complex numbers.
+/-- The **triangle inequality** for complex numbers.
 -/
-theorem abs_add (z w : ℂ) : abs (z+w) ≤ abs z+abs w :=
+theorem abs_add (z w : ℂ) : abs (z + w) ≤ abs z + abs w :=
   (mul_self_le_mul_self_iff (abs_nonneg _) (add_nonneg (abs_nonneg _) (abs_nonneg _))).2 $ by
     rw [mul_self_abs, add_mul_self_eq, mul_self_abs, mul_self_abs, add_right_commₓ, norm_sq_add, add_le_add_iff_left,
       mul_assocₓ, mul_le_mul_left (@zero_lt_two ℝ _ _)]
-    simpa [-mul_re] using re_le_abs (z*conj w)
+    simpa [-mul_re] using re_le_abs (z * conj w)
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : IsAbsoluteValue abs
-  where abv_nonneg := abs_nonneg abv_eq_zero _ := abs_eq_zero abv_add := abs_add abv_mul := abs_mul
+instance : IsAbsoluteValue abs where
+  abv_nonneg := abs_nonneg
+  abv_eq_zero := fun _ => abs_eq_zero
+  abv_add := abs_add
+  abv_mul := abs_mul
 
 open IsAbsoluteValue
 
@@ -738,7 +738,7 @@ theorem abs_neg : ∀ z, abs (-z) = abs z :=
 theorem abs_sub_comm : ∀ z w, abs (z - w) = abs (w - z) :=
   abv_sub abs
 
-theorem abs_sub_le : ∀ a b c, abs (a - c) ≤ abs (a - b)+abs (b - c) :=
+theorem abs_sub_le : ∀ a b c, abs (a - c) ≤ abs (a - b) + abs (b - c) :=
   abv_sub_le abs
 
 @[simp]
@@ -752,8 +752,8 @@ theorem abs_div : ∀ z w, abs (z / w) = abs z / abs w :=
 theorem abs_abs_sub_le_abs_sub : ∀ z w, |abs z - abs w| ≤ abs (z - w) :=
   abs_abv_sub_le_abv_sub abs
 
-theorem abs_le_abs_re_add_abs_im (z : ℂ) : abs z ≤ |z.re|+|z.im| := by
-  simpa [re_add_im] using abs_add z.re (z.im*I)
+theorem abs_le_abs_re_add_abs_im (z : ℂ) : abs z ≤ |z.re| + |z.im| := by
+  simpa [re_add_im] using abs_add z.re (z.im * I)
 
 theorem abs_re_div_abs_le_one (z : ℂ) : |z.re / z.abs| ≤ 1 :=
   if hz : z = 0 then by
@@ -778,18 +778,19 @@ theorem int_cast_abs (n : ℤ) : ↑|n| = abs n := by
 theorem norm_sq_eq_abs (x : ℂ) : norm_sq x = abs x ^ 2 := by
   rw [abs, sq, Real.mul_self_sqrt (norm_sq_nonneg _)]
 
-/-- 
-We put a partial order on ℂ so that `z ≤ w` exactly if `w - z` is real and nonnegative.
+/-- We put a partial order on ℂ so that `z ≤ w` exactly if `w - z` is real and nonnegative.
 Complex numbers with different imaginary parts are incomparable.
 -/
-protected def PartialOrderₓ : PartialOrderₓ ℂ :=
-  { le := fun z w => z.re ≤ w.re ∧ z.im = w.im, lt := fun z w => z.re < w.re ∧ z.im = w.im,
-    lt_iff_le_not_le := fun z w => by
-      dsimp
-      rw [lt_iff_le_not_leₓ]
-      tauto,
-    le_refl := fun x => ⟨le_rfl, rfl⟩, le_trans := fun x y z h₁ h₂ => ⟨h₁.1.trans h₂.1, h₁.2.trans h₂.2⟩,
-    le_antisymm := fun z w h₁ h₂ => ext (h₁.1.antisymm h₂.1) h₁.2 }
+protected def PartialOrderₓ : PartialOrderₓ ℂ where
+  le := fun z w => z.re ≤ w.re ∧ z.im = w.im
+  lt := fun z w => z.re < w.re ∧ z.im = w.im
+  lt_iff_le_not_le := fun z w => by
+    dsimp
+    rw [lt_iff_le_not_leₓ]
+    tauto
+  le_refl := fun x => ⟨le_rfl, rfl⟩
+  le_trans := fun x y z h₁ h₂ => ⟨h₁.1.trans h₂.1, h₁.2.trans h₂.2⟩
+  le_antisymm := fun z w h₁ h₂ => ext (h₁.1.antisymm h₂.1) h₁.2
 
 section ComplexOrder
 
@@ -823,30 +824,28 @@ theorem not_le_iff {z w : ℂ} : ¬z ≤ w ↔ w.re < z.re ∨ z.im ≠ w.im := 
 theorem not_le_zero_iff {z : ℂ} : ¬z ≤ 0 ↔ 0 < z.re ∨ z.im ≠ 0 :=
   not_le_iff
 
-/-- 
-With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is an ordered ring.
+/-- With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is an ordered ring.
 -/
 protected def OrderedCommRing : OrderedCommRing ℂ :=
   { Complex.partialOrder, Complex.commRing with zero_le_one := ⟨zero_le_one, rfl⟩,
-    add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg2ₓ (·+·) rfl h.2⟩,
+    add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg2ₓ (· + ·) rfl h.2⟩,
     mul_pos := fun z w hz hw => by
       simp [lt_def, mul_re, mul_im, ← hz.2, ← hw.2, mul_pos hz.1 hw.1] }
 
 localized [ComplexOrder] attribute [instance] Complex.orderedCommRing
 
-/-- 
-With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is a star ordered ring.
+/-- With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is a star ordered ring.
 (That is, an ordered ring in which every element of the form `star z * z` is nonnegative.)
 
 In fact, the nonnegative elements are precisely those of this form.
 This hold in any `C^*`-algebra, e.g. `ℂ`,
 but we don't yet have `C^*`-algebras in mathlib.
 -/
-protected def StarOrderedRing : StarOrderedRing ℂ :=
-  { star_mul_self_nonneg := fun z =>
-      ⟨by
-        simp [add_nonneg, mul_self_nonneg], by
-        simp [mul_commₓ]⟩ }
+protected def StarOrderedRing : StarOrderedRing ℂ where
+  star_mul_self_nonneg := fun z =>
+    ⟨by
+      simp [add_nonneg, mul_self_nonneg], by
+      simp [mul_commₓ]⟩
 
 localized [ComplexOrder] attribute [instance] Complex.starOrderedRing
 
@@ -869,11 +868,11 @@ theorem is_cau_seq_im (f : CauSeq ℂ abs) : IsCauSeq abs' fun n => (f n).im := 
         simpa using abs_im_le_abs (f j - f i))
       (H _ ij)
 
-/--  The real part of a complex Cauchy sequence, as a real Cauchy sequence. -/
+/-- The real part of a complex Cauchy sequence, as a real Cauchy sequence. -/
 noncomputable def cau_seq_re (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
   ⟨_, is_cau_seq_re f⟩
 
-/--  The imaginary part of a complex Cauchy sequence, as a real Cauchy sequence. -/
+/-- The imaginary part of a complex Cauchy sequence, as a real Cauchy sequence. -/
 noncomputable def cau_seq_im (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
   ⟨_, is_cau_seq_im f⟩
 
@@ -881,7 +880,7 @@ theorem is_cau_seq_abs {f : ℕ → ℂ} (hf : IsCauSeq abs f) : IsCauSeq abs' (
   let ⟨i, hi⟩ := hf ε ε0
   ⟨i, fun j hj => lt_of_le_of_ltₓ (abs_abs_sub_le_abs_sub _ _) (hi j hj)⟩
 
-/--  The limit of a Cauchy sequence of complex numbers. -/
+/-- The limit of a Cauchy sequence of complex numbers. -/
 noncomputable def lim_aux (f : CauSeq ℂ abs) : ℂ :=
   ⟨CauSeq.lim (cau_seq_re f), CauSeq.lim (cau_seq_im f)⟩
 
@@ -900,16 +899,17 @@ noncomputable instance : CauSeq.IsComplete ℂ abs :=
 
 open CauSeq
 
-theorem lim_eq_lim_im_add_lim_re (f : CauSeq ℂ abs) : limₓ f = (↑limₓ (cau_seq_re f))+(↑limₓ (cau_seq_im f))*I :=
+theorem lim_eq_lim_im_add_lim_re (f : CauSeq ℂ abs) : limₓ f = ↑limₓ (cau_seq_re f) + ↑limₓ (cau_seq_im f) * I :=
   lim_eq_of_equiv_const $
-    calc f ≈ _ := equiv_lim_aux f
-      _ = CauSeq.const abs ((↑limₓ (cau_seq_re f))+(↑limₓ (cau_seq_im f))*I) :=
-      CauSeq.ext fun _ =>
-        Complex.ext
-          (by
-            simp [lim_aux, cau_seq_re])
-          (by
-            simp [lim_aux, cau_seq_im])
+    calc
+      f ≈ _ := equiv_lim_aux f
+      _ = CauSeq.const abs (↑limₓ (cau_seq_re f) + ↑limₓ (cau_seq_im f) * I) :=
+        CauSeq.ext fun _ =>
+          Complex.ext
+            (by
+              simp [lim_aux, cau_seq_re])
+            (by
+              simp [lim_aux, cau_seq_im])
       
 
 theorem lim_re (f : CauSeq ℂ abs) : limₓ (cau_seq_re f) = (limₓ f).re := by
@@ -923,7 +923,7 @@ theorem is_cau_seq_conj (f : CauSeq ℂ abs) : IsCauSeq abs fun n => conj (f n) 
   ⟨i, fun j hj => by
     rw [← RingEquiv.map_sub, abs_conj] <;> exact hi j hj⟩
 
-/--  The complex conjugate of a complex Cauchy sequence, as a complex Cauchy sequence. -/
+/-- The complex conjugate of a complex Cauchy sequence, as a complex Cauchy sequence. -/
 noncomputable def cau_seq_conj (f : CauSeq ℂ abs) : CauSeq ℂ abs :=
   ⟨_, is_cau_seq_conj f⟩
 
@@ -934,7 +934,7 @@ theorem lim_conj (f : CauSeq ℂ abs) : limₓ (cau_seq_conj f) = conj (limₓ f
     (by
       simp [cau_seq_conj, (lim_im _).symm, cau_seq_im, (lim_neg _).symm] <;> rfl)
 
-/--  The absolute value of a complex Cauchy sequence, as a real Cauchy sequence. -/
+/-- The absolute value of a complex Cauchy sequence, as a real Cauchy sequence. -/
 noncomputable def cau_seq_abs (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
   ⟨_, is_cau_seq_abs f.2⟩
 
@@ -943,391 +943,13 @@ theorem lim_abs (f : CauSeq ℂ abs) : limₓ (cau_seq_abs f) = abs (limₓ f) :
     let ⟨i, hi⟩ := equiv_lim f ε ε0
     ⟨i, fun j hj => lt_of_le_of_ltₓ (abs_abs_sub_le_abs_sub _ _) (hi j hj)⟩
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  []
-  [(Term.attributes
-    "@["
-    [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))
-     ","
-     (Term.attrInstance (Term.attrKind []) (Attr.normCast "norm_cast" []))]
-    "]")]
-  []
-  []
-  []
-  [])
- (Command.theorem
-  "theorem"
-  (Command.declId `of_real_prod [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`α] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [`α])] [] ")")
-    (Term.explicitBinder "(" [`f] [":" (Term.arrow `α "→" (Data.Real.Basic.termℝ "ℝ"))] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.paren
-      "("
-      [(Term.paren
-        "("
-        [(Algebra.BigOperators.Basic.«term∏_in_,_»
-          "∏"
-          (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-          " in "
-          `s
-          ", "
-          (Term.app `f [`i]))
-         [(Term.typeAscription ":" (Data.Real.Basic.termℝ "ℝ"))]]
-        ")")
-       [(Term.typeAscription ":" (Data.Complex.Basic.termℂ "ℂ"))]]
-      ")")
-     "="
-     (Algebra.BigOperators.Basic.«term∏_in_,_»
-      "∏"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      " in "
-      `s
-      ", "
-      (Term.paren "(" [(Term.app `f [`i]) [(Term.typeAscription ":" (Data.Complex.Basic.termℂ "ℂ"))]] ")")))))
-  (Command.declValSimple ":=" (Term.app `RingHom.map_prod [`of_real (Term.hole "_") (Term.hole "_")]) [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `RingHom.map_prod [`of_real (Term.hole "_") (Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-  `of_real
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `RingHom.map_prod
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.paren
-    "("
-    [(Term.paren
-      "("
-      [(Algebra.BigOperators.Basic.«term∏_in_,_»
-        "∏"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-        " in "
-        `s
-        ", "
-        (Term.app `f [`i]))
-       [(Term.typeAscription ":" (Data.Real.Basic.termℝ "ℝ"))]]
-      ")")
-     [(Term.typeAscription ":" (Data.Complex.Basic.termℂ "ℂ"))]]
-    ")")
-   "="
-   (Algebra.BigOperators.Basic.«term∏_in_,_»
-    "∏"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-    " in "
-    `s
-    ", "
-    (Term.paren "(" [(Term.app `f [`i]) [(Term.typeAscription ":" (Data.Complex.Basic.termℂ "ℂ"))]] ")")))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∏_in_,_»
-   "∏"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-   " in "
-   `s
-   ", "
-   (Term.paren "(" [(Term.app `f [`i]) [(Term.typeAscription ":" (Data.Complex.Basic.termℂ "ℂ"))]] ")"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∏_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.paren "(" [(Term.app `f [`i]) [(Term.typeAscription ":" (Data.Complex.Basic.termℂ "ℂ"))]] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Data.Complex.Basic.termℂ "ℂ")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Complex.Basic.termℂ', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Term.app `f [`i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-@[ simp , norm_cast ]
-  theorem
-    of_real_prod
-    { α : Type _ } ( s : Finset α ) ( f : α → ℝ ) : ( ( ∏ i in s , f i : ℝ ) : ℂ ) = ∏ i in s , ( f i : ℂ )
-    := RingHom.map_prod of_real _ _
+@[simp, norm_cast]
+theorem of_real_prod {α : Type _} (s : Finset α) (f : α → ℝ) : ((∏ i in s, f i : ℝ) : ℂ) = ∏ i in s, (f i : ℂ) :=
+  RingHom.map_prod of_real _ _
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  []
-  [(Term.attributes
-    "@["
-    [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))
-     ","
-     (Term.attrInstance (Term.attrKind []) (Attr.normCast "norm_cast" []))]
-    "]")]
-  []
-  []
-  []
-  [])
- (Command.theorem
-  "theorem"
-  (Command.declId `of_real_sum [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`α] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [`α])] [] ")")
-    (Term.explicitBinder "(" [`f] [":" (Term.arrow `α "→" (Data.Real.Basic.termℝ "ℝ"))] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.paren
-      "("
-      [(Term.paren
-        "("
-        [(Algebra.BigOperators.Basic.«term∑_in_,_»
-          "∑"
-          (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-          " in "
-          `s
-          ", "
-          (Term.app `f [`i]))
-         [(Term.typeAscription ":" (Data.Real.Basic.termℝ "ℝ"))]]
-        ")")
-       [(Term.typeAscription ":" (Data.Complex.Basic.termℂ "ℂ"))]]
-      ")")
-     "="
-     (Algebra.BigOperators.Basic.«term∑_in_,_»
-      "∑"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      " in "
-      `s
-      ", "
-      (Term.paren "(" [(Term.app `f [`i]) [(Term.typeAscription ":" (Data.Complex.Basic.termℂ "ℂ"))]] ")")))))
-  (Command.declValSimple ":=" (Term.app `RingHom.map_sum [`of_real (Term.hole "_") (Term.hole "_")]) [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `RingHom.map_sum [`of_real (Term.hole "_") (Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-  `of_real
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `RingHom.map_sum
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.paren
-    "("
-    [(Term.paren
-      "("
-      [(Algebra.BigOperators.Basic.«term∑_in_,_»
-        "∑"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-        " in "
-        `s
-        ", "
-        (Term.app `f [`i]))
-       [(Term.typeAscription ":" (Data.Real.Basic.termℝ "ℝ"))]]
-      ")")
-     [(Term.typeAscription ":" (Data.Complex.Basic.termℂ "ℂ"))]]
-    ")")
-   "="
-   (Algebra.BigOperators.Basic.«term∑_in_,_»
-    "∑"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-    " in "
-    `s
-    ", "
-    (Term.paren "(" [(Term.app `f [`i]) [(Term.typeAscription ":" (Data.Complex.Basic.termℂ "ℂ"))]] ")")))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∑_in_,_»
-   "∑"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-   " in "
-   `s
-   ", "
-   (Term.paren "(" [(Term.app `f [`i]) [(Term.typeAscription ":" (Data.Complex.Basic.termℂ "ℂ"))]] ")"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∑_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.paren "(" [(Term.app `f [`i]) [(Term.typeAscription ":" (Data.Complex.Basic.termℂ "ℂ"))]] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Data.Complex.Basic.termℂ "ℂ")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Complex.Basic.termℂ', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Term.app `f [`i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-@[ simp , norm_cast ]
-  theorem
-    of_real_sum
-    { α : Type _ } ( s : Finset α ) ( f : α → ℝ ) : ( ( ∑ i in s , f i : ℝ ) : ℂ ) = ∑ i in s , ( f i : ℂ )
-    := RingHom.map_sum of_real _ _
+@[simp, norm_cast]
+theorem of_real_sum {α : Type _} (s : Finset α) (f : α → ℝ) : ((∑ i in s, f i : ℝ) : ℂ) = ∑ i in s, (f i : ℂ) :=
+  RingHom.map_sum of_real _ _
 
 end Complex
 

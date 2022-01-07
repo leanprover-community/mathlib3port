@@ -39,8 +39,7 @@ open Expr
 
 namespace Generalizes
 
-/-- 
-Input:
+/-- Input:
 
 - Target expression `e`.
 - List of expressions `jᵢ` to be generalised, along with a name for the local
@@ -68,8 +67,7 @@ unsafe def step1 (md : transparency) (unify : Bool) (e : expr) (to_generalize : 
     pure (e, k :: ks)
   to_generalize.mfoldr go (e, [])
 
-/-- 
-Input: for each equation that should be generated: the equation name, the
+/-- Input: for each equation that should be generated: the equation name, the
 argument `jᵢ` and the corresponding local constant `kᵢ` from step 1.
 
 Output: for each element of the input list a new local constant of type
@@ -91,8 +89,7 @@ unsafe def step2 (md : transparency) (to_generalize : List (Name × expr × expr
     let eq ← mk_local' n BinderInfo.default eq_type
     pure (Eq, eq_proof)
 
-/-- 
-Input: The `jᵢ`; the local constants `kᵢ` from step 1; the equations and their
+/-- Input: The `jᵢ`; the local constants `kᵢ` from step 1; the equations and their
 proofs from step 2.
 
 This step is the first one that changes the goal (and also the last one
@@ -116,8 +113,7 @@ end Generalizes
 
 open Generalizes
 
-/-- 
-Generalizes the target over each of the expressions in `args`. Given
+/-- Generalizes the target over each of the expressions in `args`. Given
 `args = [(a₁, h₁, arg₁), ...]`, this changes the target to
 
     ∀ (a₁ : T₁) ... (h₁ : a₁ = arg₁) ..., U
@@ -151,8 +147,7 @@ unsafe def generalizes' (args : List (Name × Option Name × expr)) (md := semir
   let js := args.map (Prod.snd ∘ Prod.snd)
   step3 e js ks eqs eq_proofs
 
-/-- 
-Like `generalizes'`, but also introduces the generalized constants and their
+/-- Like `generalizes'`, but also introduces the generalized constants and their
 associated equations into the context.
 -/
 unsafe def generalizes_intro (args : List (Name × Option Name × expr)) (md := semireducible) (unify := tt) :
@@ -187,8 +182,7 @@ private unsafe def generalizes_arg_parser : lean.parser (Name × Option Name × 
 private unsafe def generalizes_args_parser : lean.parser (List (Name × Option Name × pexpr)) :=
   with_desc "[(id :)? expr = id, ...]" $ tk "[" *> sep_by (tk ",") generalizes_arg_parser <* tk "]"
 
-/-- 
-Generalizes the target over multiple expressions. For example, given the goal
+/-- Generalizes the target over multiple expressions. For example, given the goal
 
     P : ∀ n, fin n → Prop
     n : ℕ

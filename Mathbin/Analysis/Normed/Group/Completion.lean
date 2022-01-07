@@ -33,12 +33,12 @@ instance [SemiNormedGroup E] : NormedGroup (completion E) :=
     dist_eq := by
       intro x y
       apply completion.induction_on₂ x y <;> clear x y
-      ·
-        refine' is_closed_eq (completion.uniform_continuous_extension₂ _).Continuous _
+      · refine' is_closed_eq (completion.uniform_continuous_extension₂ _).Continuous _
         exact Continuous.comp completion.continuous_extension continuous_sub
-      ·
-        intro x y
-        rw [← completion.coe_sub, norm_coe, Metric.Completion.dist_eq, dist_eq_norm] }
+        
+      · intro x y
+        rw [← completion.coe_sub, norm_coe, Metric.Completion.dist_eq, dist_eq_norm]
+         }
 
 end Completion
 

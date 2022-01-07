@@ -12,15 +12,15 @@ namespace Tactic
 
 namespace Ringₓ
 
-/--  The normal form that `ring` uses is mediated by the function `horner a x n b := a * x ^ n + b`.
+/-- The normal form that `ring` uses is mediated by the function `horner a x n b := a * x ^ n + b`.
 The reason we use a definition rather than the (more readable) expression on the right is because
 this expression contains a number of typeclass arguments in different positions, while `horner`
 contains only one `comm_semiring` instance at the top level. See also `horner_expr` for a
 description of normal form. -/
 def horner {α} [CommSemiringₓ α] (a x : α) (n : ℕ) (b : α) :=
-  (a*x ^ n)+b
+  a * x ^ n + b
 
-/--  This cache contains data required by the `ring` tactic during execution. -/
+/-- This cache contains data required by the `ring` tactic during execution. -/
 unsafe structure cache where
   α : expr
   Univ : level
@@ -30,25 +30,23 @@ unsafe structure cache where
   nc : ref instance_cache
   atoms : ref (Buffer expr)
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler monad
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler alternative
-/--  The monad that `ring` works in. This is a reader monad containing a mutable cache (using `ref`
+/-- The monad that `ring` works in. This is a reader monad containing a mutable cache (using `ref`
 for mutability), as well as the list of atoms-up-to-defeq encountered thus far, used for atom
 sorting. -/
 unsafe def ring_m (α : Type) : Type :=
-  ReaderTₓ cache tactic α deriving [anonymous], [anonymous]
+  ReaderTₓ cache tactic α deriving Monadₓ, Alternativeₓ
 
-/--  Get the `ring` data from the monad. -/
+/-- Get the `ring` data from the monad. -/
 unsafe def get_cache : ring_m cache :=
   ReaderTₓ.read
 
-/--  Get an already encountered atom by its index. -/
+/-- Get an already encountered atom by its index. -/
 unsafe def get_atom (n : ℕ) : ring_m expr :=
   ⟨fun c => do
     let es ← read_ref c.atoms
     pure (es.read' n)⟩
 
-/--  Get the index corresponding to an atomic expression, if it has already been encountered, or
+/-- Get the index corresponding to an atomic expression, if it has already been encountered, or
 put it in the list of atoms and return the new index, otherwise. -/
 unsafe def add_atom (e : expr) : ring_m ℕ :=
   ⟨fun c => do
@@ -56,12 +54,12 @@ unsafe def add_atom (e : expr) : ring_m ℕ :=
     let es ← read_ref c.atoms
     (es.iterate failed fun n e' t => t <|> is_def_eq e e' red $> n) <|> es.size <$ write_ref c.atoms (es.push_back e)⟩
 
-/--  Lift a tactic into the `ring_m` monad. -/
+/-- Lift a tactic into the `ring_m` monad. -/
 @[inline]
 unsafe def lift {α} (m : tactic α) : ring_m α :=
   ReaderTₓ.lift m
 
-/--  Run a `ring_m` tactic in the tactic monad. This version of `ring_m.run` uses an external
+/-- Run a `ring_m` tactic in the tactic monad. This version of `ring_m.run` uses an external
 atoms ref, so that subexpressions can be named across multiple `ring_m` calls. -/
 unsafe def ring_m.run' (red : transparency) (atoms : ref (Buffer expr)) (e : expr) {α} (m : ring_m α) : tactic α := do
   let α ← infer_type e
@@ -73,11 +71,11 @@ unsafe def ring_m.run' (red : transparency) (atoms : ref (Buffer expr)) (e : exp
   let nc ← mk_instance_cache (quote.1 ℕ)
   using_new_ref ic $ fun r => using_new_ref nc $ fun nr => ReaderTₓ.run m ⟨α, u, c, red, r, nr, atoms⟩
 
-/--  Run a `ring_m` tactic in the tactic monad. -/
+/-- Run a `ring_m` tactic in the tactic monad. -/
 unsafe def ring_m.run (red : transparency) (e : expr) {α} (m : ring_m α) : tactic α :=
   using_new_ref mkBuffer $ fun atoms => ring_m.run' red atoms e m
 
-/--  Lift an instance cache tactic (probably from `norm_num`) to the `ring_m` monad. This version
+/-- Lift an instance cache tactic (probably from `norm_num`) to the `ring_m` monad. This version
 is abstract over the instance cache in question (either the ring `α`, or `ℕ` for exponents). -/
 @[inline]
 unsafe def ic_lift' (icf : cache → ref instance_cache) {α} (f : instance_cache → tactic (instance_cache × α)) :
@@ -88,25 +86,25 @@ unsafe def ic_lift' (icf : cache → ref instance_cache) {α} (f : instance_cach
     let (ic', a) ← f ic
     a <$ write_ref r ic'⟩
 
-/--  Lift an instance cache tactic (probably from `norm_num`) to the `ring_m` monad. This uses
+/-- Lift an instance cache tactic (probably from `norm_num`) to the `ring_m` monad. This uses
 the instance cache corresponding to the ring `α`. -/
 @[inline]
 unsafe def ic_lift {α} : (instance_cache → tactic (instance_cache × α)) → ring_m α :=
   ic_lift' cache.ic
 
-/--  Lift an instance cache tactic (probably from `norm_num`) to the `ring_m` monad. This uses
+/-- Lift an instance cache tactic (probably from `norm_num`) to the `ring_m` monad. This uses
 the instance cache corresponding to `ℕ`, which is used for computations in the exponent. -/
 @[inline]
 unsafe def nc_lift {α} : (instance_cache → tactic (instance_cache × α)) → ring_m α :=
   ic_lift' cache.nc
 
-/--  Apply a theorem that expects a `comm_semiring` instance. This is a special case of
+/-- Apply a theorem that expects a `comm_semiring` instance. This is a special case of
 `ic_lift mk_app`, but it comes up often because `horner` and all its theorems have this assumption;
 it also does not require the tactic monad which improves access speed a bit. -/
 unsafe def cache.cs_app (c : cache) (n : Name) : List expr → expr :=
   (@expr.const tt n [c.univ] c.α c.comm_semiring_inst).mk_app
 
-/--  Every expression in the language of commutative semirings can be viewed as a sum of monomials,
+/-- Every expression in the language of commutative semirings can be viewed as a sum of monomials,
 where each monomial is a product of powers of atoms. We fix a global order on atoms (up to
 definitional equality), and then separate the terms according to their smallest atom. So the top
 level expression is `a * x^n + b` where `x` is the smallest atom and `n > 0` is a numeral, and
@@ -130,14 +128,14 @@ unsafe inductive horner_expr : Type
   | const (e : expr) (coeff : ℚ) : horner_expr
   | xadd (e : expr) (a : horner_expr) (x : expr × ℕ) (n : expr × ℕ) (b : horner_expr) : horner_expr
 
-/--  Get the expression corresponding to a `horner_expr`. This can be calculated recursively from
+/-- Get the expression corresponding to a `horner_expr`. This can be calculated recursively from
 the structure, but we cache the exprs in all subterms so that this function can be computed in
 constant time. -/
 unsafe def horner_expr.e : horner_expr → expr
   | horner_expr.const e _ => e
   | horner_expr.xadd e _ _ _ _ => e
 
-/--  Is this expr the constant `0`? -/
+/-- Is this expr the constant `0`? -/
 unsafe def horner_expr.is_zero : horner_expr → Bool
   | horner_expr.const _ c => c = 0
   | _ => ff
@@ -148,19 +146,19 @@ unsafe instance : Coe horner_expr expr :=
 unsafe instance : CoeFun horner_expr fun _ => expr → expr :=
   ⟨fun e => ⇑(e : expr)⟩
 
-/--  Construct a `xadd` node, generating the cached expr using the input cache. -/
+/-- Construct a `xadd` node, generating the cached expr using the input cache. -/
 unsafe def horner_expr.xadd' (c : cache) (a : horner_expr) (x : expr × ℕ) (n : expr × ℕ) (b : horner_expr) :
     horner_expr :=
   horner_expr.xadd (c.cs_app `` horner [a, x.1, n.1, b]) a x n b
 
 open HornerExpr
 
-/--  Pretty printer for `horner_expr`. -/
+/-- Pretty printer for `horner_expr`. -/
 unsafe def horner_expr.to_string : horner_expr → Stringₓ
   | const e c => toString (e, c)
   | xadd e a x (_, n) b => "(" ++ a.to_string ++ ") * (" ++ toString x.1 ++ ")^" ++ toString n ++ " + " ++ b.to_string
 
-/--  Pretty printer for `horner_expr`. -/
+/-- Pretty printer for `horner_expr`. -/
 unsafe def horner_expr.pp : horner_expr → tactic format
   | const e c => pp (e, c)
   | xadd e a x (_, n) b => do
@@ -172,7 +170,7 @@ unsafe def horner_expr.pp : horner_expr → tactic format
 unsafe instance : has_to_tactic_format horner_expr :=
   ⟨horner_expr.pp⟩
 
-/--  Reflexivity conversion for a `horner_expr`. -/
+/-- Reflexivity conversion for a `horner_expr`. -/
 unsafe def horner_expr.refl_conv (e : horner_expr) : ring_m (horner_expr × expr) := do
   let p ← lift $ mk_eq_refl e
   return (e, p)
@@ -180,11 +178,11 @@ unsafe def horner_expr.refl_conv (e : horner_expr) : ring_m (horner_expr × expr
 theorem zero_horner {α} [CommSemiringₓ α] x n b : @horner α _ 0 x n b = b := by
   simp [horner]
 
-theorem horner_horner {α} [CommSemiringₓ α] a₁ x n₁ n₂ b n' (h : (n₁+n₂) = n') :
+theorem horner_horner {α} [CommSemiringₓ α] a₁ x n₁ n₂ b n' (h : n₁ + n₂ = n') :
     @horner α _ (horner a₁ x n₁ 0) x n₂ b = horner a₁ x n' b := by
   simp [h.symm, horner, pow_addₓ, mul_assocₓ]
 
-/--  Evaluate `horner a n x b` where `a` and `b` are already in normal form. -/
+/-- Evaluate `horner a n x b` where `a` and `b` are already in normal form. -/
 unsafe def eval_horner : horner_expr → expr × ℕ → expr × ℕ → horner_expr → ring_m (horner_expr × expr)
   | ha@(const a coeff), x, n, b => do
     let c ← get_cache
@@ -193,36 +191,36 @@ unsafe def eval_horner : horner_expr → expr × ℕ → expr × ℕ → horner_
     let c ← get_cache
     if x₁.2 = x.2 ∧ b₁.e.to_nat = some 0 then do
         let (n', h) ← nc_lift $ fun nc => norm_num.prove_add_nat' nc n₁.1 n.1
-        return (xadd' c a₁ x (n', n₁.2+n.2) b, c.cs_app `` horner_horner [a₁, x.1, n₁.1, n.1, b, n', h])
+        return (xadd' c a₁ x (n', n₁.2 + n.2) b, c.cs_app `` horner_horner [a₁, x.1, n₁.1, n.1, b, n', h])
       else (xadd' c ha x n b).refl_conv
 
-theorem const_add_horner {α} [CommSemiringₓ α] k a x n b b' (h : (k+b) = b') :
-    (k+@horner α _ a x n b) = horner a x n b' := by
+theorem const_add_horner {α} [CommSemiringₓ α] k a x n b b' (h : k + b = b') :
+    k + @horner α _ a x n b = horner a x n b' := by
   simp [h.symm, horner] <;> cc
 
-theorem horner_add_const {α} [CommSemiringₓ α] a x n b k b' (h : (b+k) = b') :
-    (@horner α _ a x n b+k) = horner a x n b' := by
+theorem horner_add_const {α} [CommSemiringₓ α] a x n b k b' (h : b + k = b') :
+    @horner α _ a x n b + k = horner a x n b' := by
   simp [h.symm, horner, add_assocₓ]
 
-theorem horner_add_horner_lt {α} [CommSemiringₓ α] a₁ x n₁ b₁ a₂ n₂ b₂ k a' b' (h₁ : (n₁+k) = n₂)
-    (h₂ : (a₁+horner a₂ x k 0 : α) = a') (h₃ : (b₁+b₂) = b') :
-    (@horner α _ a₁ x n₁ b₁+horner a₂ x n₂ b₂) = horner a' x n₁ b' := by
+theorem horner_add_horner_lt {α} [CommSemiringₓ α] a₁ x n₁ b₁ a₂ n₂ b₂ k a' b' (h₁ : n₁ + k = n₂)
+    (h₂ : (a₁ + horner a₂ x k 0 : α) = a') (h₃ : b₁ + b₂ = b') :
+    @horner α _ a₁ x n₁ b₁ + horner a₂ x n₂ b₂ = horner a' x n₁ b' := by
   simp [h₂.symm, h₃.symm, h₁.symm, horner, pow_addₓ, mul_addₓ, mul_commₓ, mul_left_commₓ] <;> cc
 
-theorem horner_add_horner_gt {α} [CommSemiringₓ α] a₁ x n₁ b₁ a₂ n₂ b₂ k a' b' (h₁ : (n₂+k) = n₁)
-    (h₂ : (horner a₁ x k 0+a₂ : α) = a') (h₃ : (b₁+b₂) = b') :
-    (@horner α _ a₁ x n₁ b₁+horner a₂ x n₂ b₂) = horner a' x n₂ b' := by
+theorem horner_add_horner_gt {α} [CommSemiringₓ α] a₁ x n₁ b₁ a₂ n₂ b₂ k a' b' (h₁ : n₂ + k = n₁)
+    (h₂ : (horner a₁ x k 0 + a₂ : α) = a') (h₃ : b₁ + b₂ = b') :
+    @horner α _ a₁ x n₁ b₁ + horner a₂ x n₂ b₂ = horner a' x n₂ b' := by
   simp [h₂.symm, h₃.symm, h₁.symm, horner, pow_addₓ, mul_addₓ, mul_commₓ, mul_left_commₓ] <;> cc
 
-theorem horner_add_horner_eq {α} [CommSemiringₓ α] a₁ x n b₁ a₂ b₂ a' b' t (h₁ : (a₁+a₂) = a') (h₂ : (b₁+b₂) = b')
-    (h₃ : horner a' x n b' = t) : (@horner α _ a₁ x n b₁+horner a₂ x n b₂) = t := by
+theorem horner_add_horner_eq {α} [CommSemiringₓ α] a₁ x n b₁ a₂ b₂ a' b' t (h₁ : a₁ + a₂ = a') (h₂ : b₁ + b₂ = b')
+    (h₃ : horner a' x n b' = t) : @horner α _ a₁ x n b₁ + horner a₂ x n b₂ = t := by
   simp [h₃.symm, h₂.symm, h₁.symm, horner, add_mulₓ, mul_commₓ (x ^ n)] <;> cc
 
-/--  Evaluate `a + b` where `a` and `b` are already in normal form. -/
+/-- Evaluate `a + b` where `a` and `b` are already in normal form. -/
 unsafe def eval_add : horner_expr → horner_expr → ring_m (horner_expr × expr)
   | const e₁ c₁, const e₂ c₂ =>
     ic_lift $ fun ic => do
-      let n := c₁+c₂
+      let n := c₁ + c₂
       let (ic, e) ← ic.of_rat n
       let (ic, p) ← norm_num.prove_add_rat ic e₁ e₂ e c₁ c₂ n
       return (ic, const e n, p)
@@ -291,7 +289,7 @@ theorem horner_neg {α} [CommRingₓ α] a x n b a' b' (h₁ : -a = a') (h₂ : 
     -@horner α _ a x n b = horner a' x n b' := by
   simp [h₂.symm, h₁.symm, horner] <;> cc
 
-/--  Evaluate `-a` where `a` is already in normal form. -/
+/-- Evaluate `-a` where `a` is already in normal form. -/
 unsafe def eval_neg : horner_expr → ring_m (horner_expr × expr)
   | const e coeff => do
     let (e', p) ← ic_lift $ fun ic => norm_num.prove_neg ic e
@@ -303,39 +301,39 @@ unsafe def eval_neg : horner_expr → ring_m (horner_expr × expr)
     let p ← ic_lift $ fun ic => ic.mk_app `` horner_neg [a, x.1, n.1, b, a', b', h₁, h₂]
     return (xadd' c a' x n b', p)
 
-theorem horner_const_mul {α} [CommSemiringₓ α] c a x n b a' b' (h₁ : (c*a) = a') (h₂ : (c*b) = b') :
-    (c*@horner α _ a x n b) = horner a' x n b' := by
+theorem horner_const_mul {α} [CommSemiringₓ α] c a x n b a' b' (h₁ : c * a = a') (h₂ : c * b = b') :
+    c * @horner α _ a x n b = horner a' x n b' := by
   simp [h₂.symm, h₁.symm, horner, mul_addₓ, mul_assocₓ]
 
-theorem horner_mul_const {α} [CommSemiringₓ α] a x n b c a' b' (h₁ : (a*c) = a') (h₂ : (b*c) = b') :
-    (@horner α _ a x n b*c) = horner a' x n b' := by
+theorem horner_mul_const {α} [CommSemiringₓ α] a x n b c a' b' (h₁ : a * c = a') (h₂ : b * c = b') :
+    @horner α _ a x n b * c = horner a' x n b' := by
   simp [h₂.symm, h₁.symm, horner, add_mulₓ, mul_right_commₓ]
 
-/--  Evaluate `k * a` where `k` is a rational numeral and `a` is in normal form. -/
+/-- Evaluate `k * a` where `k` is a rational numeral and `a` is in normal form. -/
 unsafe def eval_const_mul (k : expr × ℚ) : horner_expr → ring_m (horner_expr × expr)
   | const e coeff => do
     let (e', p) ← ic_lift $ fun ic => norm_num.prove_mul_rat ic k.1 e k.2 coeff
-    return (const e' (k.2*coeff), p)
+    return (const e' (k.2 * coeff), p)
   | xadd e a x n b => do
     let c ← get_cache
     let (a', h₁) ← eval_const_mul a
     let (b', h₂) ← eval_const_mul b
     return (xadd' c a' x n b', c.cs_app `` horner_const_mul [k.1, a, x.1, n.1, b, a', b', h₁, h₂])
 
-theorem horner_mul_horner_zero {α} [CommSemiringₓ α] a₁ x n₁ b₁ a₂ n₂ aa t (h₁ : (@horner α _ a₁ x n₁ b₁*a₂) = aa)
-    (h₂ : horner aa x n₂ 0 = t) : (horner a₁ x n₁ b₁*horner a₂ x n₂ 0) = t := by
+theorem horner_mul_horner_zero {α} [CommSemiringₓ α] a₁ x n₁ b₁ a₂ n₂ aa t (h₁ : @horner α _ a₁ x n₁ b₁ * a₂ = aa)
+    (h₂ : horner aa x n₂ 0 = t) : horner a₁ x n₁ b₁ * horner a₂ x n₂ 0 = t := by
   rw [← h₂, ← h₁] <;> simp [horner, mul_addₓ, mul_commₓ, mul_left_commₓ, mul_assocₓ]
 
 theorem horner_mul_horner {α} [CommSemiringₓ α] a₁ x n₁ b₁ a₂ n₂ b₂ aa haa ab bb t
-    (h₁ : (@horner α _ a₁ x n₁ b₁*a₂) = aa) (h₂ : horner aa x n₂ 0 = haa) (h₃ : (a₁*b₂) = ab) (h₄ : (b₁*b₂) = bb)
-    (H : (haa+horner ab x n₁ bb) = t) : (horner a₁ x n₁ b₁*horner a₂ x n₂ b₂) = t := by
+    (h₁ : @horner α _ a₁ x n₁ b₁ * a₂ = aa) (h₂ : horner aa x n₂ 0 = haa) (h₃ : a₁ * b₂ = ab) (h₄ : b₁ * b₂ = bb)
+    (H : haa + horner ab x n₁ bb = t) : horner a₁ x n₁ b₁ * horner a₂ x n₂ b₂ = t := by
   rw [← H, ← h₂, ← h₁, ← h₃, ← h₄] <;> simp [horner, mul_addₓ, mul_commₓ, mul_left_commₓ, mul_assocₓ]
 
-/--  Evaluate `a * b` where `a` and `b` are in normal form. -/
+/-- Evaluate `a * b` where `a` and `b` are in normal form. -/
 unsafe def eval_mul : horner_expr → horner_expr → ring_m (horner_expr × expr)
   | const e₁ c₁, const e₂ c₂ => do
     let (e', p) ← ic_lift $ fun ic => norm_num.prove_mul_rat ic e₁ e₂ c₁ c₂
-    return (const e' (c₁*c₂), p)
+    return (const e' (c₁ * c₂), p)
   | const e₁ c₁, e₂ =>
     if c₁ = 0 then do
       let c ← get_cache
@@ -378,14 +376,14 @@ unsafe def eval_mul : horner_expr → horner_expr → ring_m (horner_expr × exp
                     c.cs_app `` horner_mul_horner
                       [a₁, x₁.1, n₁.1, b₁, a₂, n₂.1, b₂, aa, haa, ab, bb, t, h₁, h₂, h₃, h₄, H])
 
-theorem horner_pow {α} [CommSemiringₓ α] a x n m n' a' (h₁ : (n*m) = n') (h₂ : a ^ m = a') :
+theorem horner_pow {α} [CommSemiringₓ α] a x n m n' a' (h₁ : n * m = n') (h₂ : a ^ m = a') :
     @horner α _ a x n 0 ^ m = horner a' x n' 0 := by
   simp [h₁.symm, h₂.symm, horner, mul_powₓ, pow_mulₓ]
 
-theorem pow_succₓ {α} [CommSemiringₓ α] a n b c (h₁ : (a : α) ^ n = b) (h₂ : (b*a) = c) : (a ^ n+1) = c := by
+theorem pow_succₓ {α} [CommSemiringₓ α] a n b c (h₁ : (a : α) ^ n = b) (h₂ : b * a = c) : a ^ (n + 1) = c := by
   rw [← h₂, ← h₁, pow_succ'ₓ]
 
-/--  Evaluate `a ^ n` where `a` is in normal form and `n` is a natural numeral. -/
+/-- Evaluate `a ^ n` where `a` is in normal form and `n` is a natural numeral. -/
 unsafe def eval_pow : horner_expr → expr × ℕ → ring_m (horner_expr × expr)
   | e, (_, 0) => do
     let c ← get_cache
@@ -406,7 +404,7 @@ unsafe def eval_pow : horner_expr → expr × ℕ → ring_m (horner_expr × exp
         let (n', h₁) ← nc_lift $ fun nc => norm_num.prove_mul_rat nc n.1 m.1 n.2 m.2
         let (a', h₂) ← eval_pow a m
         let α0 ← ic_lift $ fun ic => ic.mk_app `` HasZero.zero []
-        return (xadd' c a' x (n', n.2*m.2) (const α0 0), c.cs_app `` horner_pow [a, x.1, n.1, m.1, n', a', h₁, h₂])
+        return (xadd' c a' x (n', n.2 * m.2) (const α0 0), c.cs_app `` horner_pow [a, x.1, n.1, m.1, n', a', h₁, h₂])
       | _ => do
         let e₂ ← nc_lift $ fun nc => nc.of_nat (m.2 - 1)
         let (tl, hl) ← eval_pow he (e₂, m.2 - 1)
@@ -416,7 +414,7 @@ unsafe def eval_pow : horner_expr → expr × ℕ → ring_m (horner_expr × exp
 theorem horner_atom {α} [CommSemiringₓ α] (x : α) : x = horner 1 x 1 0 := by
   simp [horner]
 
-/--  Evaluate `a` where `a` is an atom. -/
+/-- Evaluate `a` where `a` is an atom. -/
 unsafe def eval_atom (e : expr) : ring_m (horner_expr × expr) := do
   let c ← get_cache
   let i ← add_atom e
@@ -428,16 +426,16 @@ theorem subst_into_pow {α} [Monoidₓ α] l r tl tr t (prl : (l : α) = tl) (pr
     l ^ r = t := by
   rw [prl, prr, prt]
 
-theorem unfold_sub {α} [AddGroupₓ α] (a b c : α) (h : (a+-b) = c) : a - b = c := by
+theorem unfold_sub {α} [AddGroupₓ α] (a b c : α) (h : a + -b = c) : a - b = c := by
   rw [sub_eq_add_neg, h]
 
-theorem unfold_div {α} [DivisionRing α] (a b c : α) (h : (a*b⁻¹) = c) : a / b = c := by
+theorem unfold_div {α} [DivisionRing α] (a b c : α) (h : a * b⁻¹ = c) : a / b = c := by
   rw [div_eq_mul_inv, h]
 
-/--  Evaluate a ring expression `e` recursively to normal form, together with a proof of
+/-- Evaluate a ring expression `e` recursively to normal form, together with a proof of
 equality. -/
 unsafe def eval : expr → ring_m (horner_expr × expr)
-  | quote.1 ((%%ₓe₁)+%%ₓe₂) => do
+  | quote.1 ((%%ₓe₁) + %%ₓe₂) => do
     let (e₁', p₁) ← eval e₁
     let (e₂', p₂) ← eval e₂
     let (e', p') ← eval_add e₁' e₂'
@@ -457,7 +455,7 @@ unsafe def eval : expr → ring_m (horner_expr × expr)
     let (e₂, p₂) ← eval_neg e₁
     let p ← ic_lift $ fun ic => ic.mk_app `` NormNum.subst_into_neg [e, e₁, e₂, p₁, p₂]
     return (e₂, p)
-  | quote.1 ((%%ₓe₁)*%%ₓe₂) => do
+  | quote.1 ((%%ₓe₁) * %%ₓe₂) => do
     let (e₁', p₁) ← eval e₁
     let (e₂', p₂) ← eval e₂
     let (e', p') ← eval_mul e₁' e₂'
@@ -495,31 +493,29 @@ unsafe def eval : expr → ring_m (horner_expr × expr)
     | some n => (const e (Rat.ofInt n)).refl_conv
     | none => eval_atom e
 
-/--  Evaluate a ring expression `e` recursively to normal form, together with a proof of
+/-- Evaluate a ring expression `e` recursively to normal form, together with a proof of
 equality. -/
 unsafe def eval' (red : transparency) (atoms : ref (Buffer expr)) (e : expr) : tactic (expr × expr) :=
   ring_m.run' red atoms e $ do
     let (e', p) ← eval e
     return (e', p)
 
-theorem horner_def' {α} [CommSemiringₓ α] a x n b : @horner α _ a x n b = ((x ^ n)*a)+b := by
+theorem horner_def' {α} [CommSemiringₓ α] a x n b : @horner α _ a x n b = x ^ n * a + b := by
   simp [horner, mul_commₓ]
 
-theorem mul_assoc_rev {α} [Semigroupₓ α] (a b c : α) : (a*b*c) = (a*b)*c := by
+theorem mul_assoc_rev {α} [Semigroupₓ α] (a b c : α) : a * (b * c) = a * b * c := by
   simp [mul_assocₓ]
 
-theorem pow_add_rev {α} [Monoidₓ α] (a : α) (m n : ℕ) : ((a ^ m)*a ^ n) = a ^ m+n := by
+theorem pow_add_rev {α} [Monoidₓ α] (a : α) (m n : ℕ) : a ^ m * a ^ n = a ^ (m + n) := by
   simp [pow_addₓ]
 
-theorem pow_add_rev_right {α} [Monoidₓ α] (a b : α) (m n : ℕ) : ((b*a ^ m)*a ^ n) = b*a ^ m+n := by
+theorem pow_add_rev_right {α} [Monoidₓ α] (a b : α) (m n : ℕ) : b * a ^ m * a ^ n = b * a ^ (m + n) := by
   simp [pow_addₓ, mul_assocₓ]
 
-theorem add_neg_eq_sub {α} [AddGroupₓ α] (a b : α) : (a+-b) = a - b :=
+theorem add_neg_eq_sub {α} [AddGroupₓ α] (a b : α) : a + -b = a - b :=
   (sub_eq_add_neg a b).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_reflect
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
-/--  If `ring` fails to close the goal, it falls back on normalizing the expression to a "pretty"
+/-- If `ring` fails to close the goal, it falls back on normalizing the expression to a "pretty"
 form so that you can see why it failed. This setting adjusts the resulting form:
 
   * `raw` is the form that `ring` actually uses internally, with iterated applications of `horner`.
@@ -534,12 +530,12 @@ inductive normalize_mode
   | raw
   | SOP
   | horner
-  deriving [anonymous], [anonymous]
+  deriving has_reflect, DecidableEq
 
 instance : Inhabited normalize_mode :=
   ⟨normalize_mode.horner⟩
 
-/--  A `ring`-based normalization simplifier that rewrites ring expressions into the specified mode.
+/-- A `ring`-based normalization simplifier that rewrites ring expressions into the specified mode.
   See `normalize`. This version takes a list of atoms to persist across multiple calls. -/
 unsafe def normalize' (atoms : ref (Buffer expr)) (red : transparency) (mode := normalize_mode.horner) (e : expr) :
     tactic (expr × expr) := do
@@ -587,7 +583,7 @@ unsafe def normalize' (atoms : ref (Buffer expr)) (red : transparency) (mode := 
         pure (e', pr))
       e
 
-/--  A `ring`-based normalization simplifier that rewrites ring expressions into the specified mode.
+/-- A `ring`-based normalization simplifier that rewrites ring expressions into the specified mode.
 
   * `raw` is the form that `ring` actually uses internally, with iterated applications of `horner`.
     Not very readable but useful if you don't want any postprocessing.
@@ -608,19 +604,19 @@ open Tactic.Ring
 
 setup_tactic_parser
 
-/--  Tactic for solving equations in the language of *commutative* (semi)rings.
+/-- Tactic for solving equations in the language of *commutative* (semi)rings.
   This version of `ring` fails if the target is not an equality
   that is provable by the axioms of commutative (semi)rings. -/
 unsafe def ring1 (red : parse (tk "!")?) : tactic Unit :=
   let transp := if red.is_some then semireducible else reducible
   do
   let quote.1 ((%%ₓe₁) = %%ₓe₂) ← target >>= instantiate_mvars
-  let ((e₁', p₁), (e₂', p₂)) ← ring_m.run transp e₁ $ (Prod.mk <$> eval e₁)<*>eval e₂
+  let ((e₁', p₁), (e₂', p₂)) ← ring_m.run transp e₁ $ Prod.mk <$> eval e₁ <*> eval e₂
   is_def_eq e₁' e₂'
   let p ← mk_eq_symm p₂ >>= mk_eq_trans p₁
   tactic.exact p
 
-/--  Parser for `ring_nf`'s `mode` argument, which can only be the "keywords" `raw`, `horner` or
+/-- Parser for `ring_nf`'s `mode` argument, which can only be the "keywords" `raw`, `horner` or
 `SOP`. (Because these are not actually keywords we use a name parser and postprocess the result.)
 -/
 unsafe def ring.mode : lean.parser ring.normalize_mode :=
@@ -633,7 +629,7 @@ unsafe def ring.mode : lean.parser ring.normalize_mode :=
       | some `raw => pure ring.normalize_mode.raw
       | _ => failed
 
-/--  Simplification tactic for expressions in the language of commutative (semi)rings,
+/-- Simplification tactic for expressions in the language of commutative (semi)rings,
 which rewrites all ring expressions into a normal form. When writing a normal form,
 `ring_nf SOP` will use sum-of-products form instead of horner form.
 `ring_nf!` will use a more aggressive reducibility setting to identify atoms.
@@ -645,7 +641,7 @@ unsafe def ring_nf (red : parse (tk "!")?) (SOP : parse ring.mode) (loc : parse 
     fail "ring_nf failed to simplify"
   when loc.include_goal $ try tactic.reflexivity
 
-/--  Tactic for solving equations in the language of *commutative* (semi)rings.
+/-- Tactic for solving equations in the language of *commutative* (semi)rings.
 `ring!` will use a more aggressive reducibility setting to identify atoms.
 
 If the goal is not solvable, it falls back to rewriting all ring expressions
@@ -681,15 +677,13 @@ open tactic.ring (normalize normalize_mode.horner)
 
 local postfix:9001 "?" => optionalₓ
 
-/-- 
-Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.
+/-- Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.
 -/
 unsafe def ring_nf (red : parse (lean.parser.tk "!")?) (SOP : parse ring.mode) : conv Unit :=
   let transp := if red.is_some then semireducible else reducible
   replace_lhs (normalize transp SOP) <|> fail "ring_nf failed to simplify"
 
-/-- 
-Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.
+/-- Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.
 -/
 unsafe def Ringₓ (red : parse (lean.parser.tk "!")?) : conv Unit :=
   let transp := if red.is_some then semireducible else reducible

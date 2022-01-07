@@ -34,30 +34,26 @@ section antisymm
 
 variable {α : Type u} {β : Type v}
 
-/--  **The Schröder-Bernstein Theorem**:
+/-- **The Schröder-Bernstein Theorem**:
 Given injections `α → β` and `β → α`, we can get a bijection `α → β`. -/
 theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injective f) (hg : Function.Injective g) :
     ∃ h : α → β, bijective h := by
   cases' is_empty_or_nonempty β with hβ hβ
-  ·
-    have : IsEmpty α
-    exact Function.is_empty f
+  · have : IsEmpty α := Function.is_empty f
     exact ⟨_, ((Equivₓ.equivEmpty α).trans (Equivₓ.equivEmpty β).symm).Bijective⟩
-  set F : Set α →ₘ Set α :=
+    
+  set F : Set α →o Set α :=
     { toFun := fun s => (g '' (f '' s)ᶜ)ᶜ,
       monotone' := fun s t hst =>
         compl_subset_compl.mpr $ image_subset _ $ compl_subset_compl.mpr $ image_subset _ hst }
   set s : Set α := F.lfp
-  have hs : (g '' (f '' s)ᶜ)ᶜ = s
-  exact F.map_lfp
-  have hns : g '' (f '' s)ᶜ = sᶜ
-  exact
+  have hs : (g '' (f '' s)ᶜ)ᶜ = s := F.map_lfp
+  have hns : g '' (f '' s)ᶜ = sᶜ :=
     compl_injective
       (by
         simp [hs])
   set g' := inv_fun g
-  have g'g : left_inverse g' g
-  exact left_inverse_inv_fun hg
+  have g'g : left_inverse g' g := left_inverse_inv_fun hg
   have hg'ns : g' '' sᶜ = (f '' s)ᶜ := by
     rw [← hns, g'g.image_image]
   set h : α → β := s.piecewise f g'
@@ -65,26 +61,23 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
     rw [← range_iff_surjective, range_piecewise, hg'ns, union_compl_self]
   have : injective h := by
     refine' (injective_piecewise_iff _).2 ⟨hf.inj_on _, _, _⟩
-    ·
-      intro x hx y hy hxy
-      obtain ⟨x', hx', rfl⟩ : x ∈ g '' (f '' s)ᶜ
-      ·
+    · intro x hx y hy hxy
+      obtain ⟨x', hx', rfl⟩ : x ∈ g '' (f '' s)ᶜ := by
         rwa [hns]
-      obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ
-      ·
+      obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by
         rwa [hns]
       rw [g'g _, g'g _] at hxy
       rw [hxy]
-    ·
-      intro x hx y hy hxy
-      obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ
-      ·
+      
+    · intro x hx y hy hxy
+      obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by
         rwa [hns]
       rw [g'g _] at hxy
       exact hy' ⟨x, hx, hxy⟩
+      
   exact ⟨h, ‹injective h›, ‹surjective h›⟩
 
-/--  **The Schröder-Bernstein Theorem**: Given embeddings `α ↪ β` and `β ↪ α`, there exists an
+/-- **The Schröder-Bernstein Theorem**: Given embeddings `α ↪ β` and `β ↪ α`, there exists an
 equivalence `α ≃ β`. -/
 theorem antisymm : (α ↪ β) → (β ↪ α) → Nonempty (α ≃ β)
   | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩ =>
@@ -101,7 +94,7 @@ parameter {ι : Type u}{β : ι → Type v}
 private def sets :=
   { s : Set (∀ i, β i) | ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀ i, (x : ∀ i, β i) i = y i → x = y }
 
-/--  The cardinals are well-ordered. We express it here by the fact that in any set of cardinals
+/-- The cardinals are well-ordered. We express it here by the fact that in any set of cardinals
 there is an element that injects into the others. See `cardinal.linear_order` for (one of) the
 lattice instance. -/
 theorem min_injective (I : Nonempty ι) : ∃ i, Nonempty (∀ j, β i ↪ β j) :=
@@ -120,31 +113,30 @@ theorem min_injective (I : Nonempty ι) : ∃ i, Nonempty (∀ j, β i ↪ β j)
         have : f ∈ s :=
           have : insert f s ∈ sets := fun x hx y hy => by
             cases hx <;> cases hy
-            ·
-              simp [hx, hy]
-            ·
-              subst x
+            · simp [hx, hy]
+              
+            · subst x
               exact fun i e => (hf i y hy e.symm).elim
-            ·
-              subst y
+              
+            · subst y
               exact fun i e => (hf i x hx e).elim
-            ·
-              exact hs x hx y hy
+              
+            · exact hs x hx y hy
+              
           ms _ this (subset_insert f s) ▸ mem_insert _ _
         let ⟨i⟩ := I
         hf i f this rfl
   let ⟨f, hf⟩ := Classical.axiom_of_choice e
   ⟨i,
     ⟨fun j =>
-      ⟨fun a => f a j, fun a b e' =>
+      ⟨fun a => f a j, fun a b e' => by
         let ⟨sa, ea⟩ := hf a
         let ⟨sb, eb⟩ := hf b
-        by
         rw [← ea, ← eb, hs _ sa _ sb _ e']⟩⟩⟩
 
 end Wo
 
-/--  The cardinals are totally ordered. See `cardinal.linear_order` for (one of) the lattice
+/-- The cardinals are totally ordered. See `cardinal.linear_order` for (one of) the lattice
 instance. -/
 theorem Total {α : Type u} {β : Type v} : Nonempty (α ↪ β) ∨ Nonempty (β ↪ α) :=
   match @min_injective Bool (fun b => cond b (Ulift α) (Ulift.{max u v, v} β)) ⟨tt⟩ with

@@ -45,12 +45,11 @@ unsafe def mono_function.to_tactic_format : mono_function → tactic format
 unsafe instance has_to_tactic_format_mono_function : has_to_tactic_format mono_function where
   to_tactic_format := mono_function.to_tactic_format
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler traversable
 unsafe structure ac_mono_ctx' (rel : Type) where
   to_rel : rel
   function : mono_function
   (left right rel_def : expr)
-  deriving [anonymous]
+  deriving Traversable
 
 @[reducible]
 unsafe def ac_mono_ctx :=
@@ -142,8 +141,7 @@ unsafe def match_prefix : List expr → List expr → tactic (List expr × List 
       return ([], x :: xs, y :: ys)
   | xs, ys => return ([], xs, ys)
 
-/-- 
-`(prefix,left,right,suffix) ← match_assoc unif l r` finds the
+/-- `(prefix,left,right,suffix) ← match_assoc unif l r` finds the
 longest prefix and suffix common to `l` and `r` and
 returns them along with the differences  -/
 unsafe def match_assoc (l : List expr) (r : List expr) : tactic (List expr × List expr × List expr × List expr) := do
@@ -365,7 +363,7 @@ unsafe def side_conditions (e : expr) : tactic format := do
 
 open Monadₓ
 
-/--  tactic-facing function, similar to `interactive.tactic.generalize` with the
+/-- tactic-facing function, similar to `interactive.tactic.generalize` with the
 exception that meta variables -/
 private unsafe def monotonicity.generalize' (h : Name) (v : expr) (x : Name) : tactic (expr × expr) := do
   let tgt ← target
@@ -448,8 +446,7 @@ unsafe def mono_aux (dir : parse side) : tactic Unit := do
   let rs ← find_lemma asms t ns
   focus1 $ () <$ best_match rs fun law => tactic.refine $ to_pexpr law
 
-/-- 
-- `mono` applies a monotonicity rule.
+/-- - `mono` applies a monotonicity rule.
 - `mono*` applies monotonicity rules repetitively.
 - `mono with x ≤ y` or `mono with [0 ≤ x,0 ≤ y]` creates an assertion for the listed
   propositions. Those help to select the right monotonicity rule.
@@ -507,11 +504,10 @@ unsafe def mono (many : parse (tk "*")?) (dir : parse side)
 add_tactic_doc
   { Name := "mono", category := DocCategory.tactic, declNames := [`tactic.interactive.mono], tags := ["monotonicity"] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-transforms a goal of the form `f x ≼ f y` into `x ≤ y` using lemmas
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- transforms a goal of the form `f x ≼ f y` into `x ≤ y` using lemmas
 marked as `monotonic`.
 
 Special care is taken when `f` is the repeated application of an
@@ -541,7 +537,7 @@ unsafe def ac_mono_aux (cfg : mono_cfg := {  }) : tactic Unit :=
 
 open Sum Nat
 
-/--  (repeat_until_or_at_most n t u): repeat tactic `t` at most n times or until u succeeds -/
+/-- (repeat_until_or_at_most n t u): repeat tactic `t` at most n times or until u succeeds -/
 unsafe def repeat_until_or_at_most : Nat → tactic Unit → tactic Unit → tactic Unit
   | 0, t, _ => fail "too many applications"
   | succ n, t, u => u <|> t >> repeat_until_or_at_most n t u
@@ -549,13 +545,11 @@ unsafe def repeat_until_or_at_most : Nat → tactic Unit → tactic Unit → tac
 unsafe def repeat_until : tactic Unit → tactic Unit → tactic Unit :=
   repeat_until_or_at_most 100000
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler _root_.has_reflect
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler _root_.inhabited
 inductive rep_arity : Type
   | one
   | exactly (n : ℕ)
   | many
-  deriving [anonymous], [anonymous]
+  deriving _root_.has_reflect, _root_.inhabited
 
 unsafe def repeat_or_not : rep_arity → tactic Unit → Option (tactic Unit) → tactic Unit
   | rep_arity.one, tac, none => tac
@@ -571,9 +565,7 @@ unsafe def assert_or_rule : lean.parser (Sum pexpr pexpr) :=
 unsafe def arity : lean.parser rep_arity :=
   rep_arity.many <$ tk "*" <|> rep_arity.exactly <$> (tk "^" *> small_nat) <|> pure rep_arity.one
 
-/-- 
-
-`ac_mono` reduces the `f x ⊑ f y`, for some relation `⊑` and a
+/-- `ac_mono` reduces the `f x ⊑ f y`, for some relation `⊑` and a
 monotonic function `f` to `x ≺ y`.
 
 `ac_mono*` unwraps monotonic functions until it can't.

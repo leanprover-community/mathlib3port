@@ -17,9 +17,9 @@ namespace Int
 
 attribute [local semireducible] Int.Nonneg
 
-/--  List enumerating `[m, n)`. This is the ℤ variant of `list.Ico`. -/
+/-- List enumerating `[m, n)`. This is the ℤ variant of `list.Ico`. -/
 def range (m n : ℤ) : List ℤ :=
-  (List.range (to_nat (n - m))).map $ fun r => m+r
+  (List.range (to_nat (n - m))).map $ fun r => m + r
 
 theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
   ⟨fun H =>
@@ -37,7 +37,7 @@ theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
           rw [← coe_nat_lt, to_nat_of_nonneg (sub_nonneg_of_le h1),
               to_nat_of_nonneg (sub_nonneg_of_le (le_of_ltₓ (lt_of_le_of_ltₓ h1 h2)))] <;>
             exact sub_lt_sub_right h2 _,
-        show (m+_) = _ by
+        show m + _ = _ by
           rw [to_nat_of_nonneg (sub_nonneg_of_le h1), add_sub_cancel'_right]⟩⟩
 
 instance decidable_le_lt (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m ≤ r → r < n → P r) :=
@@ -45,7 +45,7 @@ instance decidable_le_lt (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Deci
     simp only [mem_range_iff, and_imp]
 
 instance decidable_le_le (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m ≤ r → r ≤ n → P r) :=
-  decidableOfIff (∀, ∀ r ∈ range m (n+1), ∀, P r) $ by
+  decidableOfIff (∀, ∀ r ∈ range m (n + 1), ∀, P r) $ by
     simp only [mem_range_iff, and_imp, lt_add_one_iff]
 
 instance decidable_lt_lt (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m < r → r < n → P r) :=

@@ -19,9 +19,9 @@ section Monoidₓ
 
 variable [Monoidₓ α] [Monoidₓ β]
 
-/--  We say that `a` is conjugate to `b` if for some unit `c` we have `c * a * c⁻¹ = b`. -/
+/-- We say that `a` is conjugate to `b` if for some unit `c` we have `c * a * c⁻¹ = b`. -/
 def IsConj (a b : α) :=
-  ∃ c : Units α, SemiconjBy (↑c) a b
+  ∃ c : (α)ˣ, SemiconjBy (↑c) a b
 
 @[refl]
 theorem IsConj.refl (a : α) : IsConj a a :=
@@ -33,7 +33,7 @@ theorem IsConj.symm {a b : α} : IsConj a b → IsConj b a
 
 @[trans]
 theorem IsConj.trans {a b c : α} : IsConj a b → IsConj b c → IsConj a c
-  | ⟨c₁, hc₁⟩, ⟨c₂, hc₂⟩ => ⟨c₂*c₁, hc₂.mul_left hc₁⟩
+  | ⟨c₁, hc₁⟩, ⟨c₂, hc₂⟩ => ⟨c₂ * c₁, hc₂.mul_left hc₁⟩
 
 @[simp]
 theorem is_conj_iff_eq {α : Type _} [CommMonoidₓ α] {a b : α} : IsConj a b ↔ a = b :=
@@ -54,7 +54,7 @@ section Groupₓ
 variable [Groupₓ α]
 
 @[simp]
-theorem is_conj_iff {a b : α} : IsConj a b ↔ ∃ c : α, ((c*a)*c⁻¹) = b :=
+theorem is_conj_iff {a b : α} : IsConj a b ↔ ∃ c : α, c * a * c⁻¹ = b :=
   ⟨fun ⟨c, hc⟩ => ⟨c, mul_inv_eq_iff_eq_mul.2 hc⟩, fun ⟨c, hc⟩ =>
     ⟨⟨c, c⁻¹, mul_inv_selfₓ c, inv_mul_selfₓ c⟩, mul_inv_eq_iff_eq_mul.1 hc⟩⟩
 
@@ -65,41 +65,42 @@ theorem is_conj_one_right {a : α} : IsConj 1 a ↔ a = 1 :=
 
 @[simp]
 theorem is_conj_one_left {a : α} : IsConj a 1 ↔ a = 1 :=
-  calc IsConj a 1 ↔ IsConj 1 a := ⟨IsConj.symm, IsConj.symm⟩
+  calc
+    IsConj a 1 ↔ IsConj 1 a := ⟨IsConj.symm, IsConj.symm⟩
     _ ↔ a = 1 := is_conj_one_right
     
 
 @[simp]
-theorem conj_inv {a b : α} : ((b*a)*b⁻¹)⁻¹ = (b*a⁻¹)*b⁻¹ :=
+theorem conj_inv {a b : α} : (b * a * b⁻¹)⁻¹ = b * a⁻¹ * b⁻¹ :=
   ((MulAut.conj b).map_inv a).symm
 
 @[simp]
-theorem conj_mul {a b c : α} : (((b*a)*b⁻¹)*(b*c)*b⁻¹) = (b*a*c)*b⁻¹ :=
+theorem conj_mul {a b c : α} : b * a * b⁻¹ * (b * c * b⁻¹) = b * (a * c) * b⁻¹ :=
   ((MulAut.conj b).map_mul a c).symm
 
 @[simp]
-theorem conj_pow {i : ℕ} {a b : α} : ((a*b)*a⁻¹) ^ i = (a*b ^ i)*a⁻¹ := by
+theorem conj_pow {i : ℕ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻¹ := by
   induction' i with i hi
-  ·
-    simp
-  ·
-    simp [pow_succₓ, hi]
+  · simp
+    
+  · simp [pow_succₓ, hi]
+    
 
 @[simp]
-theorem conj_zpow {i : ℤ} {a b : α} : ((a*b)*a⁻¹) ^ i = (a*b ^ i)*a⁻¹ := by
+theorem conj_zpow {i : ℤ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻¹ := by
   induction i
-  ·
-    simp
-  ·
-    simp [zpow_neg_succ_of_nat, conj_pow]
+  · simp
+    
+  · simp [zpow_neg_succ_of_nat, conj_pow]
+    
 
-theorem conj_injective {x : α} : Function.Injective fun g : α => (x*g)*x⁻¹ :=
+theorem conj_injective {x : α} : Function.Injective fun g : α => x * g * x⁻¹ :=
   (MulAut.conj x).Injective
 
 end Groupₓ
 
 @[simp]
-theorem is_conj_iff₀ [GroupWithZeroₓ α] {a b : α} : IsConj a b ↔ ∃ c : α, c ≠ 0 ∧ ((c*a)*c⁻¹) = b :=
+theorem is_conj_iff₀ [GroupWithZeroₓ α] {a b : α} : IsConj a b ↔ ∃ c : α, c ≠ 0 ∧ c * a * c⁻¹ = b :=
   ⟨fun ⟨c, hc⟩ =>
     ⟨c, by
       rw [← Units.coe_inv', Units.mul_inv_eq_iff_eq_mul]
@@ -111,15 +112,16 @@ theorem is_conj_iff₀ [GroupWithZeroₓ α] {a b : α} : IsConj a b ↔ ∃ c :
 
 namespace IsConj
 
-/--  The setoid of the relation `is_conj` iff there is a unit `u` such that `u * x = y * u` -/
-protected def Setoidₓ (α : Type _) [Monoidₓ α] : Setoidₓ α :=
-  { R := IsConj, iseqv := ⟨IsConj.refl, fun a b => IsConj.symm, fun a b c => IsConj.trans⟩ }
+/-- The setoid of the relation `is_conj` iff there is a unit `u` such that `u * x = y * u` -/
+protected def Setoidₓ (α : Type _) [Monoidₓ α] : Setoidₓ α where
+  R := IsConj
+  iseqv := ⟨IsConj.refl, fun a b => IsConj.symm, fun a b c => IsConj.trans⟩
 
 end IsConj
 
 attribute [local instance] IsConj.setoid
 
-/--  The quotient type of conjugacy classes of a group. -/
+/-- The quotient type of conjugacy classes of a group. -/
 def ConjClasses (α : Type _) [Monoidₓ α] : Type _ :=
   Quotientₓ (IsConj.setoid α)
 
@@ -129,7 +131,7 @@ section Monoidₓ
 
 variable [Monoidₓ α] [Monoidₓ β]
 
-/--  The canonical quotient map from a monoid `α` into the `conj_classes` of `α` -/
+/-- The canonical quotient map from a monoid `α` into the `conj_classes` of `α` -/
 protected def mk {α : Type _} [Monoidₓ α] (a : α) : ConjClasses α :=
   ⟦a⟧
 
@@ -160,7 +162,7 @@ theorem one_eq_mk_one : (1 : ConjClasses α) = ConjClasses.mk 1 :=
 theorem exists_rep (a : ConjClasses α) : ∃ a0 : α, ConjClasses.mk a0 = a :=
   Quot.exists_rep a
 
-/--  A `monoid_hom` maps conjugacy classes of one group to conjugacy classes of another. -/
+/-- A `monoid_hom` maps conjugacy classes of one group to conjugacy classes of another. -/
 def map (f : α →* β) : ConjClasses α → ConjClasses β :=
   Quotientₓ.lift (ConjClasses.mk ∘ f) fun a b ab => mk_eq_mk_iff_is_conj.2 (f.map_is_conj ab)
 
@@ -179,7 +181,7 @@ theorem mk_injective : Function.Injective (@ConjClasses.mk α _) := fun _ _ =>
 theorem mk_bijective : Function.Bijective (@ConjClasses.mk α _) :=
   ⟨mk_injective, mk_surjective⟩
 
-/--  The bijection between a `comm_group` and its `conj_classes`. -/
+/-- The bijection between a `comm_group` and its `conj_classes`. -/
 def mk_equiv : α ≃ ConjClasses α :=
   ⟨ConjClasses.mk, Quotientₓ.lift id fun a : α b => is_conj_iff_eq.1, Quotientₓ.lift_mk _ _, by
     rw [Function.RightInverse, Function.LeftInverse, forall_is_conj]
@@ -194,84 +196,9 @@ section Monoidₓ
 
 variable [Monoidₓ α]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment "/--" " Given an element `a`, `conjugates a` is the set of conjugates. -/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.def
-  "def"
-  (Command.declId `ConjugatesOf [])
-  (Command.optDeclSig [(Term.explicitBinder "(" [`a] [":" `α] [] ")")] [(Term.typeSpec ":" (Term.app `Set [`α]))])
-  (Command.declValSimple ":=" (Set.«term{_|_}» "{" `b "|" (Term.app `IsConj [`a `b]) "}") [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}» "{" `b "|" (Term.app `IsConj [`a `b]) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `IsConj [`a `b])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `b
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `IsConj
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Given an element `a`, `conjugates a` is the set of conjugates. -/
-  def ConjugatesOf ( a : α ) : Set α := { b | IsConj a b }
+def ConjugatesOf (a : α) : Set α :=
+  { b | IsConj a b }
 
 theorem mem_conjugates_of_self {a : α} : a ∈ ConjugatesOf a :=
   IsConj.refl _
@@ -292,7 +219,7 @@ variable [Monoidₓ α]
 
 attribute [local instance] IsConj.setoid
 
-/--  Given a conjugacy class `a`, `carrier a` is the set it represents. -/
+/-- Given a conjugacy class `a`, `carrier a` is the set it represents. -/
 def carrier : ConjClasses α → Set α :=
   Quotientₓ.lift ConjugatesOf fun a : α b ab => IsConj.conjugates_of_eq ab
 

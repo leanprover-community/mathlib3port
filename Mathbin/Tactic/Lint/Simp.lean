@@ -13,7 +13,7 @@ This files defines several linters that prevent common mistakes when declaring s
 
 open Tactic Expr
 
-/--  `simp_lhs_rhs ty` returns the left-hand and right-hand side of a simp lemma with type `ty`. -/
+/-- `simp_lhs_rhs ty` returns the left-hand and right-hand side of a simp lemma with type `ty`. -/
 private unsafe def simp_lhs_rhs : expr → tactic (expr × expr)
   | ty => do
     let ty ← head_beta ty
@@ -26,12 +26,11 @@ private unsafe def simp_lhs_rhs : expr → tactic (expr × expr)
         simp_lhs_rhs (b.instantiate_var l)
       | ty => pure (ty, quote.1 True)
 
-/--  `simp_lhs ty` returns the left-hand side of a simp lemma with type `ty`. -/
+/-- `simp_lhs ty` returns the left-hand side of a simp lemma with type `ty`. -/
 private unsafe def simp_lhs (ty : expr) : tactic expr :=
   Prod.fst <$> simp_lhs_rhs ty
 
-/-- 
-`simp_is_conditional_core ty` returns `none` if `ty` is a conditional simp
+/-- `simp_is_conditional_core ty` returns `none` if `ty` is a conditional simp
 lemma, and `some lhs` otherwise.
 -/
 private unsafe def simp_is_conditional_core : expr → tactic (Option expr)
@@ -47,8 +46,7 @@ private unsafe def simp_is_conditional_core : expr → tactic (Option expr)
         if bi ≠ BinderInfo.inst_implicit ∧ ¬(lhs.abstract_local l.local_uniq_name).has_var then pure none else pure lhs
       | ty => pure ty
 
-/-- 
-`simp_is_conditional ty` returns true iff the simp lemma with type `ty` is conditional.
+/-- `simp_is_conditional ty` returns true iff the simp lemma with type `ty` is conditional.
 -/
 private unsafe def simp_is_conditional (ty : expr) : tactic Bool :=
   Option.isNone <$> simp_is_conditional_core ty
@@ -56,12 +54,12 @@ private unsafe def simp_is_conditional (ty : expr) : tactic Bool :=
 private unsafe def heuristic_simp_lemma_extraction (prf : expr) : tactic (List Name) :=
   prf.list_constant.to_list.mfilter is_simp_lemma
 
-/--  Checks whether two expressions are equal for the simplifier. That is,
+/-- Checks whether two expressions are equal for the simplifier. That is,
 they are reducibly-definitional equal, and they have the same head symbol. -/
 unsafe def is_simp_eq (a b : expr) : tactic Bool :=
   if a.get_app_fn.const_name ≠ b.get_app_fn.const_name then pure ff else succeeds $ is_def_eq a b transparency.reducible
 
-/--  Reports declarations that are simp lemmas whose left-hand side is not in simp-normal form. -/
+/-- Reports declarations that are simp lemmas whose left-hand side is not in simp-normal form. -/
 unsafe def simp_nf_linter (timeout := 200000) (d : declaration) : tactic (Option Stringₓ) := do
   let tt ← is_simp_lemma d.to_name | pure none
   let tt ← is_valid_simp_lemma_cnst d.to_name | pure none
@@ -112,8 +110,7 @@ unsafe def simp_nf_linter (timeout := 200000) (d : declaration) : tactic (Option
                           "`set_option trace.simplify.rewrite true`"
                   else pure none
 
-/-- 
-This note gives you some tips to debug any errors that the simp-normal form linter raises.
+/-- This note gives you some tips to debug any errors that the simp-normal form linter raises.
 
 The reason that a lemma was considered faulty is because its left-hand side is not in simp-normal
 form.
@@ -161,13 +158,14 @@ Here are some tips depending on the error raised by the linter:
 -/
 library_note "simp-normal form"
 
-/--  A linter for simp lemmas whose lhs is not in simp-normal form, and which hence never fire. -/
+/-- A linter for simp lemmas whose lhs is not in simp-normal form, and which hence never fire. -/
 @[linter]
-unsafe def linter.simp_nf : linter :=
-  { test := simp_nf_linter, auto_decls := tt,
-    no_errors_found := "All left-hand sides of simp lemmas are in simp-normal form.",
-    errors_found :=
-      "SOME SIMP LEMMAS ARE NOT IN SIMP-NORMAL FORM.\nsee note [simp-normal form] for tips how to debug this.\nhttps://leanprover-community.github.io/mathlib_docs/notes.html#simp-normal%20form" }
+unsafe def linter.simp_nf : linter where
+  test := simp_nf_linter
+  auto_decls := tt
+  no_errors_found := "All left-hand sides of simp lemmas are in simp-normal form."
+  errors_found :=
+    "SOME SIMP LEMMAS ARE NOT IN SIMP-NORMAL FORM.\nsee note [simp-normal form] for tips how to debug this.\nhttps://leanprover-community.github.io/mathlib_docs/notes.html#simp-normal%20form"
 
 private unsafe def simp_var_head (d : declaration) : tactic (Option Stringₓ) := do
   let tt ← is_simp_lemma d.to_name | pure none
@@ -177,17 +175,17 @@ private unsafe def simp_var_head (d : declaration) : tactic (Option Stringₓ) :
   let head_sym ← pp head_sym
   pure $ format.to_string $ "Left-hand side has variable as head symbol: " ++ head_sym
 
-/-- 
-A linter for simp lemmas whose lhs has a variable as head symbol,
+/-- A linter for simp lemmas whose lhs has a variable as head symbol,
 and which hence never fire.
 -/
 @[linter]
-unsafe def linter.simp_var_head : linter :=
-  { test := simp_var_head, auto_decls := tt,
-    no_errors_found := "No left-hand sides of a simp lemma has a variable as head symbol.",
-    errors_found :=
-      "LEFT-HAND SIDE HAS VARIABLE AS HEAD SYMBOL.\n" ++
-        "Some simp lemmas have a variable as head symbol of the left-hand side:" }
+unsafe def linter.simp_var_head : linter where
+  test := simp_var_head
+  auto_decls := tt
+  no_errors_found := "No left-hand sides of a simp lemma has a variable as head symbol."
+  errors_found :=
+    "LEFT-HAND SIDE HAS VARIABLE AS HEAD SYMBOL.\n" ++
+      "Some simp lemmas have a variable as head symbol of the left-hand side:"
 
 private unsafe def simp_comm (d : declaration) : tactic (Option Stringₓ) := do
   let tt ← is_simp_lemma d.to_name | pure none
@@ -201,9 +199,11 @@ private unsafe def simp_comm (d : declaration) : tactic (Option Stringₓ) := do
       let ff ← succeeds $ unify lhs' rhs' transparency.reducible | pure none
       pure $ "should not be marked simp"
 
-/--  A linter for commutativity lemmas that are marked simp. -/
+/-- A linter for commutativity lemmas that are marked simp. -/
 @[linter]
-unsafe def linter.simp_comm : linter :=
-  { test := simp_comm, auto_decls := tt, no_errors_found := "No commutativity lemma is marked simp.",
-    errors_found := "COMMUTATIVITY LEMMA IS SIMP.\n" ++ "Some commutativity lemmas are simp lemmas:" }
+unsafe def linter.simp_comm : linter where
+  test := simp_comm
+  auto_decls := tt
+  no_errors_found := "No commutativity lemma is marked simp."
+  errors_found := "COMMUTATIVITY LEMMA IS SIMP.\n" ++ "Some commutativity lemmas are simp lemmas:"
 

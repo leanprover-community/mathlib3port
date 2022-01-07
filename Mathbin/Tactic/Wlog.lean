@@ -13,7 +13,7 @@ private unsafe def update_pp_name : expr → Name → expr
 private unsafe def elim_or : ℕ → expr → tactic (List expr)
   | 0, h => fail "zero cases"
   | 1, h => return [h]
-  | n+1, h => do
+  | n + 1, h => do
     let [(_, [hl], []), (_, [hr], [])] ← induction h
     let [gl, gr] ← get_goals
     set_goals [gr]
@@ -84,7 +84,7 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
         fail ("The permutations `xs_i` in `using [xs_1, …, xs_n]` must be permutations of the same" ++ " variables.")
     perms.mmap fun p => p.mmap get_local
 
-/--  Without loss of generality: reduces to one goal under variables permutations.
+/-- Without loss of generality: reduces to one goal under variables permutations.
 
 Given a goal of the form `g xs`, a predicate `p` over a set of variables, as well as variable
 permutations `xs_i`. Then `wlog` produces goals of the form
@@ -207,7 +207,7 @@ unsafe def wlog (h : parse (ident)?) (pat : parse (tk ":" *> texpr)?) (cases : p
             let (cases_pr, [g]) ← local_proof name_h cases skip
             return (pat, cases_pr, some g, vars, perms)
   let name_fn :=
-    if perms.length = 2 then fun _ => `invariant else fun i => mkSimpleName ("invariant_" ++ toString (i+1))
+    if perms.length = 2 then fun _ => `invariant else fun i => mkSimpleName ("invariant_" ++ toString (i + 1))
   with_enable_tags $
       tactic.focus1 $ do
         let t ← get_main_tag

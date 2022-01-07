@@ -42,7 +42,7 @@ topology are defined elsewhere; see `analysis.normed_space.add_torsor` and
 
 open_locale Affine
 
-/--  An `affine_map k P1 P2` (notation: `P1 →ᵃ[k] P2`) is a map from `P1` to `P2` that
+/-- An `affine_map k P1 P2` (notation: `P1 →ᵃ[k] P2`) is a map from `P1` to `P2` that
 induces a corresponding linear map from `V1` to `V2`. -/
 structure AffineMap (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _) [Ringₓ k] [AddCommGroupₓ V1]
   [Module k V1] [affine_space V1 P1] [AddCommGroupₓ V2] [Module k V2] [affine_space V2 P2] where
@@ -62,9 +62,11 @@ namespace LinearMap
 variable {k : Type _} {V₁ : Type _} {V₂ : Type _} [Ringₓ k] [AddCommGroupₓ V₁] [Module k V₁] [AddCommGroupₓ V₂]
   [Module k V₂] (f : V₁ →ₗ[k] V₂)
 
-/--  Reinterpret a linear map as an affine map. -/
-def to_affine_map : V₁ →ᵃ[k] V₂ :=
-  { toFun := f, linear := f, map_vadd' := fun p v => f.map_add v p }
+/-- Reinterpret a linear map as an affine map. -/
+def to_affine_map : V₁ →ᵃ[k] V₂ where
+  toFun := f
+  linear := f
+  map_vadd' := fun p v => f.map_add v p
 
 @[simp]
 theorem coe_to_affine_map : ⇑f.to_affine_map = f :=
@@ -85,32 +87,32 @@ variable {k : Type _} {V1 : Type _} {P1 : Type _} {V2 : Type _} {P2 : Type _} {V
 
 include V1 V2
 
-/--  Constructing an affine map and coercing back to a function
+/-- Constructing an affine map and coercing back to a function
 produces the same map. -/
 @[simp]
 theorem coe_mk (f : P1 → P2) linear add : ((mk f linear add : P1 →ᵃ[k] P2) : P1 → P2) = f :=
   rfl
 
-/--  `to_fun` is the same as the result of coercing to a function. -/
+/-- `to_fun` is the same as the result of coercing to a function. -/
 @[simp]
 theorem to_fun_eq_coe (f : P1 →ᵃ[k] P2) : f.to_fun = ⇑f :=
   rfl
 
-/--  An affine map on the result of adding a vector to a point produces
+/-- An affine map on the result of adding a vector to a point produces
 the same result as the linear map applied to that vector, added to the
 affine map applied to that point. -/
 @[simp]
 theorem map_vadd (f : P1 →ᵃ[k] P2) (p : P1) (v : V1) : f (v +ᵥ p) = f.linear v +ᵥ f p :=
   f.map_vadd' p v
 
-/--  The linear map on the result of subtracting two points is the
+/-- The linear map on the result of subtracting two points is the
 result of subtracting the result of the affine map on those two
 points. -/
 @[simp]
 theorem linear_map_vsub (f : P1 →ᵃ[k] P2) (p1 p2 : P1) : f.linear (p1 -ᵥ p2) = f p1 -ᵥ f p2 := by
   conv_rhs => rw [← vsub_vadd p1 p2, map_vadd, vadd_vsub]
 
-/--  Two affine maps are equal if they coerce to the same function. -/
+/-- Two affine maps are equal if they coerce to the same function. -/
 @[ext]
 theorem ext {f g : P1 →ᵃ[k] P2} (h : ∀ p, f p = g p) : f = g := by
   rcases f with ⟨f, f_linear, f_add⟩
@@ -135,11 +137,12 @@ protected theorem congr_funₓ {f g : P1 →ᵃ[k] P2} (h : f = g) (x : P1) : f 
 
 variable (k P1)
 
-/--  Constant function as an `affine_map`. -/
-def const (p : P2) : P1 →ᵃ[k] P2 :=
-  { toFun := Function.const P1 p, linear := 0,
-    map_vadd' := fun p v => by
-      simp }
+/-- Constant function as an `affine_map`. -/
+def const (p : P2) : P1 →ᵃ[k] P2 where
+  toFun := Function.const P1 p
+  linear := 0
+  map_vadd' := fun p v => by
+    simp
 
 @[simp]
 theorem coe_const (p : P2) : ⇑const k P1 p = Function.const P1 p :=
@@ -153,25 +156,26 @@ variable {k P1}
 
 theorem linear_eq_zero_iff_exists_const (f : P1 →ᵃ[k] P2) : f.linear = 0 ↔ ∃ q, f = const k P1 q := by
   refine' ⟨fun h => _, fun h => _⟩
-  ·
-    inhabit P1
+  · inhabit P1
     use f (default P1)
     ext
     rw [coe_const, Function.const_applyₓ, ← @vsub_eq_zero_iff_eq V2, ← f.linear_map_vsub, h, LinearMap.zero_apply]
-  ·
-    rcases h with ⟨q, rfl⟩
+    
+  · rcases h with ⟨q, rfl⟩
     exact const_linear k P1 q
+    
 
 instance Nonempty : Nonempty (P1 →ᵃ[k] P2) :=
   (AddTorsor.nonempty : Nonempty P2).elim $ fun p => ⟨const k P1 p⟩
 
-/--  Construct an affine map by verifying the relation between the map and its linear part at one
+/-- Construct an affine map by verifying the relation between the map and its linear part at one
 base point. Namely, this function takes a map `f : P₁ → P₂`, a linear map `f' : V₁ →ₗ[k] V₂`, and
 a point `p` such that for any other point `p'` we have `f p' = f' (p' -ᵥ p) +ᵥ f p`. -/
-def mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p : P1) (h : ∀ p' : P1, f p' = f' (p' -ᵥ p) +ᵥ f p) : P1 →ᵃ[k] P2 :=
-  { toFun := f, linear := f',
-    map_vadd' := fun p' v => by
-      rw [h, h p', vadd_vsub_assoc, f'.map_add, vadd_vadd] }
+def mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p : P1) (h : ∀ p' : P1, f p' = f' (p' -ᵥ p) +ᵥ f p) : P1 →ᵃ[k] P2 where
+  toFun := f
+  linear := f'
+  map_vadd' := fun p' v => by
+    rw [h, h p', vadd_vsub_assoc, f'.map_add, vadd_vadd]
 
 @[simp]
 theorem coe_mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) p h : ⇑mk' f f' p h = f :=
@@ -181,21 +185,24 @@ theorem coe_mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) p h : ⇑mk' f f' p h = f
 theorem mk'_linear (f : P1 → P2) (f' : V1 →ₗ[k] V2) p h : (mk' f f' p h).linear = f' :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
 /-- The set of affine maps to a vector space is an additive commutative group. -/
-  instance
-    : AddCommGroupₓ ( P1 →ᵃ[ k ] V2 )
-    where
-      zero := ⟨ 0 , 0 , fun p v => ( zero_vadd _ _ ) . symm ⟩
-        add f g := ⟨ f + g , f.linear + g.linear , fun p v => by simp [ add_add_add_commₓ ] ⟩
-        sub f g := ⟨ f - g , f.linear - g.linear , fun p v => by simp [ sub_add_comm ] ⟩
-        sub_eq_add_neg f g := ext $ fun p => sub_eq_add_neg _ _
-        neg f := ⟨ - f , - f.linear , fun p v => by simp [ add_commₓ ] ⟩
-        add_assoc f₁ f₂ f₃ := ext $ fun p => add_assocₓ _ _ _
-        zero_add f := ext $ fun p => zero_addₓ ( f p )
-        add_zero f := ext $ fun p => add_zeroₓ ( f p )
-        add_comm f g := ext $ fun p => add_commₓ ( f p ) ( g p )
-        add_left_neg f := ext $ fun p => add_left_negₓ ( f p )
+instance : AddCommGroupₓ (P1 →ᵃ[k] V2) where
+  zero := ⟨0, 0, fun p v => (zero_vadd _ _).symm⟩
+  add := fun f g =>
+    ⟨f + g, f.linear + g.linear, fun p v => by
+      simp [add_add_add_commₓ]⟩
+  sub := fun f g =>
+    ⟨f - g, f.linear - g.linear, fun p v => by
+      simp [sub_add_comm]⟩
+  sub_eq_add_neg := fun f g => ext $ fun p => sub_eq_add_neg _ _
+  neg := fun f =>
+    ⟨-f, -f.linear, fun p v => by
+      simp [add_commₓ]⟩
+  add_assoc := fun f₁ f₂ f₃ => ext $ fun p => add_assocₓ _ _ _
+  zero_add := fun f => ext $ fun p => zero_addₓ (f p)
+  add_zero := fun f => ext $ fun p => add_zeroₓ (f p)
+  add_comm := fun f g => ext $ fun p => add_commₓ (f p) (g p)
+  add_left_neg := fun f => ext $ fun p => add_left_negₓ (f p)
 
 @[simp, norm_cast]
 theorem coe_zero : ⇑(0 : P1 →ᵃ[k] V2) = 0 :=
@@ -206,7 +213,7 @@ theorem zero_linear : (0 : P1 →ᵃ[k] V2).linear = 0 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_add (f g : P1 →ᵃ[k] V2) : (⇑f+g) = f+g :=
+theorem coe_add (f g : P1 →ᵃ[k] V2) : ⇑(f + g) = f + g :=
   rfl
 
 @[simp, norm_cast]
@@ -218,7 +225,7 @@ theorem coe_sub (f g : P1 →ᵃ[k] V2) : ⇑(f - g) = f - g :=
   rfl
 
 @[simp]
-theorem add_linear (f g : P1 →ᵃ[k] V2) : (f+g).linear = f.linear+g.linear :=
+theorem add_linear (f g : P1 →ᵃ[k] V2) : (f + g).linear = f.linear + g.linear :=
   rfl
 
 @[simp]
@@ -229,28 +236,19 @@ theorem sub_linear (f g : P1 →ᵃ[k] V2) : (f - g).linear = f.linear - g.linea
 theorem neg_linear (f : P1 →ᵃ[k] V2) : (-f).linear = -f.linear :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-/--
-    The space of affine maps from `P1` to `P2` is an affine space over the space of affine maps
-    from `P1` to the vector space `V2` corresponding to `P2`. -/
-  instance
-    : affine_space ( P1 →ᵃ[ k ] V2 ) ( P1 →ᵃ[ k ] P2 )
-    where
-      vadd f g := ⟨ fun p => f p +ᵥ g p , f.linear + g.linear , fun p v => by simp [ vadd_vadd , add_right_commₓ ] ⟩
-        zero_vadd f := ext $ fun p => zero_vadd _ ( f p )
-        add_vadd f₁ f₂ f₃ := ext $ fun p => add_vadd ( f₁ p ) ( f₂ p ) ( f₃ p )
-        vsub
-          f g
-          :=
-          ⟨
-            fun p => f p -ᵥ g p
-              ,
-              f.linear - g.linear
-              ,
-              fun p v => by simp [ vsub_vadd_eq_vsub_sub , vadd_vsub_assoc , add_sub , sub_add_eq_add_sub ]
-            ⟩
-        vsub_vadd' f g := ext $ fun p => vsub_vadd ( f p ) ( g p )
-        vadd_vsub' f g := ext $ fun p => vadd_vsub ( f p ) ( g p )
+/-- The space of affine maps from `P1` to `P2` is an affine space over the space of affine maps
+from `P1` to the vector space `V2` corresponding to `P2`. -/
+instance : affine_space (P1 →ᵃ[k] V2) (P1 →ᵃ[k] P2) where
+  vadd := fun f g =>
+    ⟨fun p => f p +ᵥ g p, f.linear + g.linear, fun p v => by
+      simp [vadd_vadd, add_right_commₓ]⟩
+  zero_vadd := fun f => ext $ fun p => zero_vadd _ (f p)
+  add_vadd := fun f₁ f₂ f₃ => ext $ fun p => add_vadd (f₁ p) (f₂ p) (f₃ p)
+  vsub := fun f g =>
+    ⟨fun p => f p -ᵥ g p, f.linear - g.linear, fun p v => by
+      simp [vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, add_sub, sub_add_eq_add_sub]⟩
+  vsub_vadd' := fun f g => ext $ fun p => vsub_vadd (f p) (g p)
+  vadd_vsub' := fun f g => ext $ fun p => vadd_vsub (f p) (g p)
 
 @[simp]
 theorem vadd_apply (f : P1 →ᵃ[k] V2) (g : P1 →ᵃ[k] P2) (p : P1) : (f +ᵥ g) p = f p +ᵥ g p :=
@@ -260,9 +258,11 @@ theorem vadd_apply (f : P1 →ᵃ[k] V2) (g : P1 →ᵃ[k] P2) (p : P1) : (f +�
 theorem vsub_apply (f g : P1 →ᵃ[k] P2) (p : P1) : (f -ᵥ g : P1 →ᵃ[k] V2) p = f p -ᵥ g p :=
   rfl
 
-/--  `prod.fst` as an `affine_map`. -/
-def fst : P1 × P2 →ᵃ[k] P1 :=
-  { toFun := Prod.fst, linear := LinearMap.fst k V1 V2, map_vadd' := fun _ _ => rfl }
+/-- `prod.fst` as an `affine_map`. -/
+def fst : P1 × P2 →ᵃ[k] P1 where
+  toFun := Prod.fst
+  linear := LinearMap.fst k V1 V2
+  map_vadd' := fun _ _ => rfl
 
 @[simp]
 theorem coe_fst : ⇑(fst : P1 × P2 →ᵃ[k] P1) = Prod.fst :=
@@ -272,9 +272,11 @@ theorem coe_fst : ⇑(fst : P1 × P2 →ᵃ[k] P1) = Prod.fst :=
 theorem fst_linear : (fst : P1 × P2 →ᵃ[k] P1).linear = LinearMap.fst k V1 V2 :=
   rfl
 
-/--  `prod.snd` as an `affine_map`. -/
-def snd : P1 × P2 →ᵃ[k] P2 :=
-  { toFun := Prod.snd, linear := LinearMap.snd k V1 V2, map_vadd' := fun _ _ => rfl }
+/-- `prod.snd` as an `affine_map`. -/
+def snd : P1 × P2 →ᵃ[k] P2 where
+  toFun := Prod.snd
+  linear := LinearMap.snd k V1 V2
+  map_vadd' := fun _ _ => rfl
 
 @[simp]
 theorem coe_snd : ⇑(snd : P1 × P2 →ᵃ[k] P2) = Prod.snd :=
@@ -288,11 +290,13 @@ variable (k P1)
 
 omit V2
 
-/--  Identity map as an affine map. -/
-def id : P1 →ᵃ[k] P1 :=
-  { toFun := id, linear := LinearMap.id, map_vadd' := fun p v => rfl }
+/-- Identity map as an affine map. -/
+def id : P1 →ᵃ[k] P1 where
+  toFun := id
+  linear := LinearMap.id
+  map_vadd' := fun p v => rfl
 
-/--  The identity affine map acts as the identity. -/
+/-- The identity affine map acts as the identity. -/
 @[simp]
 theorem coe_id : ⇑id k P1 = _root_.id :=
   rfl
@@ -303,7 +307,7 @@ theorem id_linear : (id k P1).linear = LinearMap.id :=
 
 variable {P1}
 
-/--  The identity affine map acts as the identity. -/
+/-- The identity affine map acts as the identity. -/
 theorem id_apply (p : P1) : id k P1 p = p :=
   rfl
 
@@ -314,20 +318,21 @@ instance : Inhabited (P1 →ᵃ[k] P1) :=
 
 include V2 V3
 
-/--  Composition of affine maps. -/
-def comp (f : P2 →ᵃ[k] P3) (g : P1 →ᵃ[k] P2) : P1 →ᵃ[k] P3 :=
-  { toFun := f ∘ g, linear := f.linear.comp g.linear,
-    map_vadd' := by
-      intro p v
-      rw [Function.comp_app, g.map_vadd, f.map_vadd]
-      rfl }
+/-- Composition of affine maps. -/
+def comp (f : P2 →ᵃ[k] P3) (g : P1 →ᵃ[k] P2) : P1 →ᵃ[k] P3 where
+  toFun := f ∘ g
+  linear := f.linear.comp g.linear
+  map_vadd' := by
+    intro p v
+    rw [Function.comp_app, g.map_vadd, f.map_vadd]
+    rfl
 
-/--  Composition of affine maps acts as applying the two functions. -/
+/-- Composition of affine maps acts as applying the two functions. -/
 @[simp]
 theorem coe_comp (f : P2 →ᵃ[k] P3) (g : P1 →ᵃ[k] P2) : ⇑f.comp g = f ∘ g :=
   rfl
 
-/--  Composition of affine maps acts as applying the two functions. -/
+/-- Composition of affine maps acts as applying the two functions. -/
 theorem comp_apply (f : P2 →ᵃ[k] P3) (g : P1 →ᵃ[k] P2) (p : P1) : f.comp g p = f (g p) :=
   rfl
 
@@ -357,17 +362,19 @@ instance : Monoidₓ (P1 →ᵃ[k] P1) where
   mul_assoc := comp_assoc
 
 @[simp]
-theorem coe_mul (f g : P1 →ᵃ[k] P1) : (⇑f*g) = f ∘ g :=
+theorem coe_mul (f g : P1 →ᵃ[k] P1) : ⇑(f * g) = f ∘ g :=
   rfl
 
 @[simp]
 theorem coe_one : ⇑(1 : P1 →ᵃ[k] P1) = _root_.id :=
   rfl
 
-/--  `affine_map.linear` on endomorphisms is a `monoid_hom`. -/
+/-- `affine_map.linear` on endomorphisms is a `monoid_hom`. -/
 @[simps]
-def linear_hom : (P1 →ᵃ[k] P1) →* V1 →ₗ[k] V1 :=
-  { toFun := linear, map_one' := rfl, map_mul' := fun _ _ => rfl }
+def linear_hom : (P1 →ᵃ[k] P1) →* V1 →ₗ[k] V1 where
+  toFun := linear
+  map_one' := rfl
+  map_mul' := fun _ _ => rfl
 
 include V2
 
@@ -391,19 +398,19 @@ theorem image_vsub_image {s t : Set P1} (f : P1 →ᵃ[k] P2) : f '' s -ᵥ f ''
   ext v
   simp only [Set.mem_vsub, Set.mem_image, exists_exists_and_eq_and, exists_and_distrib_left, ← f.linear_map_vsub]
   constructor
-  ·
-    rintro ⟨x, hx, y, hy, hv⟩
+  · rintro ⟨x, hx, y, hy, hv⟩
     exact ⟨x -ᵥ y, ⟨x, hx, y, hy, rfl⟩, hv⟩
-  ·
-    rintro ⟨-, ⟨x, hx, y, hy, rfl⟩, rfl⟩
+    
+  · rintro ⟨-, ⟨x, hx, y, hy, rfl⟩, rfl⟩
     exact ⟨x, hx, y, hy, rfl⟩
+    
 
 omit V2
 
 /-! ### Definition of `affine_map.line_map` and lemmas about it -/
 
 
-/--  The affine map from `k` to `P1` sending `0` to `p₀` and `1` to `p₁`. -/
+/-- The affine map from `k` to `P1` sending `0` to `p₀` and `1` to `p₁`. -/
 def line_map (p₀ p₁ : P1) : k →ᵃ[k] P1 :=
   ((LinearMap.id : k →ₗ[k] k).smulRight (p₁ -ᵥ p₀)).toAffineMap +ᵥ const k k p₀
 
@@ -413,18 +420,18 @@ theorem coe_line_map (p₀ p₁ : P1) : (line_map p₀ p₁ : k → P1) = fun c 
 theorem line_map_apply (p₀ p₁ : P1) (c : k) : line_map p₀ p₁ c = c • (p₁ -ᵥ p₀) +ᵥ p₀ :=
   rfl
 
-theorem line_map_apply_module' (p₀ p₁ : V1) (c : k) : line_map p₀ p₁ c = (c • (p₁ - p₀))+p₀ :=
+theorem line_map_apply_module' (p₀ p₁ : V1) (c : k) : line_map p₀ p₁ c = c • (p₁ - p₀) + p₀ :=
   rfl
 
-theorem line_map_apply_module (p₀ p₁ : V1) (c : k) : line_map p₀ p₁ c = ((1 - c) • p₀)+c • p₁ := by
+theorem line_map_apply_module (p₀ p₁ : V1) (c : k) : line_map p₀ p₁ c = (1 - c) • p₀ + c • p₁ := by
   simp [line_map_apply_module', smul_sub, sub_smul] <;> abel
 
 omit V1
 
-theorem line_map_apply_ring' (a b c : k) : line_map a b c = (c*b - a)+a :=
+theorem line_map_apply_ring' (a b c : k) : line_map a b c = c * (b - a) + a :=
   rfl
 
-theorem line_map_apply_ring (a b c : k) : line_map a b c = ((1 - c)*a)+c*b :=
+theorem line_map_apply_ring (a b c : k) : line_map a b c = (1 - c) * a + c * b :=
   line_map_apply_module a b c
 
 include V1
@@ -505,15 +512,15 @@ theorem line_map_vsub_line_map (p₁ p₂ p₃ p₄ : P1) (c : k) :
   let this' : affine_space (V1 × V1) (P1 × P1) := Prod.addTorsor <;>
     exact ((fst : P1 × P1 →ᵃ[k] P1) -ᵥ (snd : P1 × P1 →ᵃ[k] P1)).apply_line_map (_, _) (_, _) c
 
-/--  Decomposition of an affine map in the special case when the point space and vector space
+/-- Decomposition of an affine map in the special case when the point space and vector space
 are the same. -/
-theorem decomp (f : V1 →ᵃ[k] V2) : (f : V1 → V2) = f.linear+fun z => f 0 := by
+theorem decomp (f : V1 →ᵃ[k] V2) : (f : V1 → V2) = f.linear + fun z => f 0 := by
   ext x
   calc f x = f.linear x +ᵥ f 0 := by
-    simp [← f.map_vadd]_ = (f.linear.to_fun+fun z : V1 => f 0) x := by
-    simp
+      simp [← f.map_vadd]_ = (f.linear.to_fun + fun z : V1 => f 0) x := by
+      simp
 
-/--  Decomposition of an affine map in the special case when the point space and vector space
+/-- Decomposition of an affine map in the special case when the point space and vector space
 are the same. -/
 theorem decomp' (f : V1 →ᵃ[k] V2) : (f.linear : V1 → V2) = f - fun z => f 0 := by
   rw [decomp] <;> simp only [LinearMap.map_zero, Pi.add_apply, add_sub_cancel, zero_addₓ]
@@ -522,7 +529,7 @@ omit V1
 
 theorem image_interval {k : Type _} [LinearOrderedField k] (f : k →ᵃ[k] k) (a b : k) :
     f '' Set.Interval a b = Set.Interval (f a) (f b) := by
-  have : ⇑f = (fun x => x+f 0) ∘ fun x => x*f 1 - f 0 := by
+  have : ⇑f = (fun x => x + f 0) ∘ fun x => x * (f 1 - f 0) := by
     ext x
     change f x = x • (f 1 -ᵥ f 0) +ᵥ f 0
     rw [← f.linear_map_vsub, ← f.linear.map_smul, ← f.map_vadd]
@@ -537,9 +544,11 @@ variable {ι : Type _} {V : ∀ i : ι, Type _} {P : ∀ i : ι, Type _} [∀ i,
 
 include V
 
-/--  Evaluation at a point as an affine map. -/
-def proj (i : ι) : (∀ i : ι, P i) →ᵃ[k] P i :=
-  { toFun := fun f => f i, linear := @LinearMap.proj k ι _ V _ _ i, map_vadd' := fun p v => rfl }
+/-- Evaluation at a point as an affine map. -/
+def proj (i : ι) : (∀ i : ι, P i) →ᵃ[k] P i where
+  toFun := fun f => f i
+  linear := @LinearMap.proj k ι _ V _ _ i
+  map_vadd' := fun p v => rfl
 
 @[simp]
 theorem proj_apply (i : ι) (f : ∀ i, P i) : @proj k _ ι V P _ _ _ i f = f i :=
@@ -563,20 +572,18 @@ variable {k : Type _} {V1 : Type _} {P1 : Type _} {V2 : Type _} [CommRingₓ k] 
 
 include V1
 
--- failed to format: format: uncaught backtrack exception
-/--
-    If `k` is a commutative ring, then the set of affine maps with codomain in a `k`-module
-    is a `k`-module. -/
-  instance
-    : Module k ( P1 →ᵃ[ k ] V2 )
-    where
-      smul c f := ⟨ c • f , c • f.linear , fun p v => by simp [ smul_add ] ⟩
-        one_smul f := ext $ fun p => one_smul _ _
-        mul_smul c₁ c₂ f := ext $ fun p => mul_smul _ _ _
-        smul_add c f g := ext $ fun p => smul_add _ _ _
-        smul_zero c := ext $ fun p => smul_zero _
-        add_smul c₁ c₂ f := ext $ fun p => add_smul _ _ _
-        zero_smul f := ext $ fun p => zero_smul _ _
+/-- If `k` is a commutative ring, then the set of affine maps with codomain in a `k`-module
+is a `k`-module. -/
+instance : Module k (P1 →ᵃ[k] V2) where
+  smul := fun c f =>
+    ⟨c • f, c • f.linear, fun p v => by
+      simp [smul_add]⟩
+  one_smul := fun f => ext $ fun p => one_smul _ _
+  mul_smul := fun c₁ c₂ f => ext $ fun p => mul_smul _ _ _
+  smul_add := fun c f g => ext $ fun p => smul_add _ _ _
+  smul_zero := fun c => ext $ fun p => smul_zero _
+  add_smul := fun c₁ c₂ f => ext $ fun p => add_smul _ _ _
+  zero_smul := fun f => ext $ fun p => zero_smul _ _
 
 @[simp]
 theorem coe_smul (c : k) (f : P1 →ᵃ[k] V2) : ⇑(c • f) = c • f :=
@@ -586,25 +593,26 @@ theorem coe_smul (c : k) (f : P1 →ᵃ[k] V2) : ⇑(c • f) = c • f :=
 theorem smul_linear (t : k) (f : P1 →ᵃ[k] V2) : (t • f).linear = t • f.linear :=
   rfl
 
-/--  The space of affine maps between two modules is linearly equivalent to the product of the
+/-- The space of affine maps between two modules is linearly equivalent to the product of the
 domain with the space of linear maps, by taking the value of the affine map at `(0 : V1)` and the
 linear part. -/
 @[simps]
-def to_const_prod_linear_map : (V1 →ᵃ[k] V2) ≃ₗ[k] V2 × (V1 →ₗ[k] V2) :=
-  { toFun := fun f => ⟨f 0, f.linear⟩, invFun := fun p => p.2.toAffineMap+const k V1 p.1,
-    left_inv := fun f => by
-      ext
-      rw [f.decomp]
-      simp ,
-    right_inv := by
-      rintro ⟨v, f⟩
-      ext <;> simp ,
-    map_add' := by
-      simp ,
-    map_smul' := by
-      simp }
+def to_const_prod_linear_map : (V1 →ᵃ[k] V2) ≃ₗ[k] V2 × (V1 →ₗ[k] V2) where
+  toFun := fun f => ⟨f 0, f.linear⟩
+  invFun := fun p => p.2.toAffineMap + const k V1 p.1
+  left_inv := fun f => by
+    ext
+    rw [f.decomp]
+    simp
+  right_inv := by
+    rintro ⟨v, f⟩
+    ext <;> simp
+  map_add' := by
+    simp
+  map_smul' := by
+    simp
 
-/--  `homothety c r` is the homothety (also known as dilation) about `c` with scale factor `r`. -/
+/-- `homothety c r` is the homothety (also known as dilation) about `c` with scale factor `r`. -/
 def homothety (c : P1) (r : k) : P1 →ᵃ[k] P1 :=
   r • (id k P1 -ᵥ const k P1 c) +ᵥ const k P1 c
 
@@ -626,7 +634,7 @@ theorem homothety_one (c : P1) : homothety c (1 : k) = id k P1 := by
 theorem homothety_apply_same (c : P1) (r : k) : homothety c r c = c :=
   line_map_same_apply c r
 
-theorem homothety_mul (c : P1) (r₁ r₂ : k) : homothety c (r₁*r₂) = (homothety c r₁).comp (homothety c r₂) := by
+theorem homothety_mul (c : P1) (r₁ r₂ : k) : homothety c (r₁ * r₂) = (homothety c r₁).comp (homothety c r₂) := by
   ext p
   simp [homothety_apply, mul_smul]
 
@@ -636,11 +644,11 @@ theorem homothety_zero (c : P1) : homothety c (0 : k) = const k P1 c := by
   simp [homothety_apply]
 
 @[simp]
-theorem homothety_add (c : P1) (r₁ r₂ : k) : homothety c (r₁+r₂) = r₁ • (id k P1 -ᵥ const k P1 c) +ᵥ homothety c r₂ :=
+theorem homothety_add (c : P1) (r₁ r₂ : k) : homothety c (r₁ + r₂) = r₁ • (id k P1 -ᵥ const k P1 c) +ᵥ homothety c r₂ :=
   by
   simp only [homothety_def, add_smul, vadd_vadd]
 
-/--  `homothety` as a multiplicative monoid homomorphism. -/
+/-- `homothety` as a multiplicative monoid homomorphism. -/
 def homothety_hom (c : P1) : k →* P1 →ᵃ[k] P1 :=
   ⟨homothety c, homothety_one c, homothety_mul c⟩
 
@@ -648,7 +656,7 @@ def homothety_hom (c : P1) : k →* P1 →ᵃ[k] P1 :=
 theorem coe_homothety_hom (c : P1) : ⇑(homothety_hom c : k →* _) = homothety c :=
   rfl
 
-/--  `homothety` as an affine map. -/
+/-- `homothety` as an affine map. -/
 def homothety_affine (c : P1) : k →ᵃ[k] P1 →ᵃ[k] P1 :=
   ⟨homothety c, (LinearMap.lsmul k _).flip (id k P1 -ᵥ const k P1 c), Function.swap (homothety_add c)⟩
 

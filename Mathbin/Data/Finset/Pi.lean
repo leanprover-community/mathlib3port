@@ -17,14 +17,14 @@ section Pi
 
 variable {α : Type _}
 
-/--  The empty dependent product function, defined on the empty set. The assumption `a ∈ ∅` is never
+/-- The empty dependent product function, defined on the empty set. The assumption `a ∈ ∅` is never
 satisfied. -/
 def pi.empty (β : α → Sort _) (a : α) (h : a ∈ (∅ : Finset α)) : β a :=
   Multiset.Pi.emptyₓ β a h
 
 variable {δ : α → Type _} [DecidableEq α]
 
-/--  Given a finset `s` of `α` and for all `a : α` a finset `t a` of `δ a`, then one can define the
+/-- Given a finset `s` of `α` and for all `a : α` a finset `t a` of `δ a`, then one can define the
 finset `s.pi t` of all functions defined on elements of `s` taking values in `t a` for `a ∈ s`.
 Note that the elements of `s.pi t` are only partially defined, on `s`. -/
 def pi (s : Finset α) (t : ∀ a, Finset (δ a)) : Finset (∀, ∀ a ∈ s, ∀, δ a) :=
@@ -39,7 +39,7 @@ theorem mem_pi {s : Finset α} {t : ∀ a, Finset (δ a)} {f : ∀, ∀ a ∈ s,
     f ∈ s.pi t ↔ ∀ a h : a ∈ s, f a h ∈ t a :=
   mem_pi _ _ _
 
-/--  Given a function `f` defined on a finset `s`, define a new function on the finset `s ∪ {a}`,
+/-- Given a function `f` defined on a finset `s`, define a new function on the finset `s ∪ {a}`,
 equal to `f` on `s` and sending `a` to a given value `b`. This function is denoted
 `s.pi.cons a b f`. If `a` already belongs to `s`, the new function takes the value `b` at `a`
 anyway. -/
@@ -101,8 +101,8 @@ theorem pi_singletons {β : Type _} (s : Finset α) (f : α → β) : (s.pi fun 
   by
   rw [eq_singleton_iff_unique_mem]
   constructor
-  ·
-    simp
+  · simp
+    
   intro a ha
   ext i hi
   rw [mem_pi] at ha

@@ -11,7 +11,7 @@ Performs Skolemization, that is, given `h : ∀ a:α, ∃ b:β, p a b |- G` prod
 
 namespace Tactic
 
-/--  Given `α : Sort u`, `nonemp : nonempty α`, `p : α → Prop`, a context of local variables
+/-- Given `α : Sort u`, `nonemp : nonempty α`, `p : α → Prop`, a context of local variables
 `ctxt`, and a pair of an element `val : α` and `spec : p val`,
 `mk_sometimes u α nonemp p ctx (val, spec)` produces another pair `val', spec'`
 such that `val'` does not have any free variables from elements of `ctxt` whose types are
@@ -30,7 +30,7 @@ unsafe def mk_sometimes (u : level) (α nonemp p : expr) : List expr → expr ×
             expr.const `` Function.sometimes_spec [u] t α nonemp p val' e spec)
         else (val, spec)
 
-/--  Changes `(h : ∀xs, ∃a:α, p a) ⊢ g` to `(d : ∀xs, a) (s : ∀xs, p (d xs)) ⊢ g` and
+/-- Changes `(h : ∀xs, ∃a:α, p a) ⊢ g` to `(d : ∀xs, a) (s : ∀xs, p (d xs)) ⊢ g` and
 `(h : ∀xs, p xs ∧ q xs) ⊢ g` to `(d : ∀xs, p xs) (s : ∀xs, q xs) ⊢ g`.
 `choose1` returns a pair of the second local constant it introduces,
 and the error result (see below).
@@ -89,7 +89,7 @@ unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tact
       pure (hq, none)
     | _ => fail "expected a term of the shape `∀xs, ∃a, p xs a` or `∀xs, p xs ∧ q xs`"
 
-/--  Changes `(h : ∀xs, ∃as, p as ∧ q as) ⊢ g` to a list of functions `as`,
+/-- Changes `(h : ∀xs, ∃as, p as ∧ q as) ⊢ g` to a list of functions `as`,
 and a final hypothesis on `p as` and `q as`. If `nondep` is true then the functions will
 be made to not depend on propositional arguments, when possible.
 
@@ -122,7 +122,10 @@ namespace Interactive
 
 setup_tactic_parser
 
-/--  `choose a b h h' using hyp` takes an hypothesis `hyp` of the form
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+/-- `choose a b h h' using hyp` takes an hypothesis `hyp` of the form
 `∀ (x : X) (y : Y), ∃ (a : A) (b : B), P x y a b ∧ Q x y a b`
 for some `P Q : X → Y → A → B → Prop` and outputs
 into context a function `a : X → Y → A`, `b : X → Y → B` and two assumptions:
@@ -160,8 +163,8 @@ begin
 end
 ```
 -/
-unsafe def choose (nondep : parse (tk "!")?) (first : parse ident) (names : parse (ident)*)
-    (tgt : parse (tk "using" *> texpr)?) : tactic Unit := do
+unsafe def choose (nondep : parse («expr ?» (tk "!"))) (first : parse ident) (names : parse («expr *» ident))
+    (tgt : parse («expr ?» (tk "using" *> texpr))) : tactic Unit := do
   let tgt ←
     match tgt with
       | none => get_local `this

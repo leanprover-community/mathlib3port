@@ -10,9 +10,11 @@ The lexicographic order on `list α` is defined by `L < M` iff
 
 ## See also
 
-The lexicographic order on a product type can be found in `order.lexicographic`.
-
-The lexicographic order on a sigma type can be found in `data.sigma.lex`.
+Related files are:
+* `data.finset.colex`: Colexicographic order on finite sets.
+* `data.psigma.order`: Lexicographic order on `Σ' i, α i`.
+* `data.sigma.order`: Lexicographic order on `Σ i, α i`.
+* `order.lexicographic`: Lexicographic order on `α × β`.
 -/
 
 
@@ -27,7 +29,7 @@ variable {α : Type u}
 /-! ### lexicographic ordering -/
 
 
-/--  Given a strict order `<` on `α`, the lexicographic strict order on `list α`, for which
+/-- Given a strict order `<` on `α`, the lexicographic strict order on `list α`, for which
 `[a0, ..., an] < [b0, ..., b_k]` if `a0 < b0` or `a0 = b0` and `[a1, ..., an] < [b1, ..., bk]`.
 The definition is given for any relation `r`, not only strict orders. -/
 inductive lex (r : α → α → Prop) : List α → List α → Prop
@@ -56,12 +58,12 @@ instance IsOrderConnected (r : α → α → Prop) [IsOrderConnected α r] [IsTr
     | a :: l₁, b :: l₂, c :: l₃, rel h => (IsOrderConnected.conn _ b _ h).imp rel rel
     | a :: l₁, b :: l₂, _ :: l₃, cons h => by
       rcases trichotomous_of r a b with (ab | rfl | ab)
-      ·
-        exact Or.inl (rel ab)
-      ·
-        exact (_match _ l₂ _ h).imp cons cons
-      ·
-        exact Or.inr (rel ab)⟩
+      · exact Or.inl (rel ab)
+        
+      · exact (_match _ l₂ _ h).imp cons cons
+        
+      · exact Or.inr (rel ab)
+        ⟩
 
 instance IsTrichotomous (r : α → α → Prop) [IsTrichotomous α r] : IsTrichotomous (List α) (lex r) :=
   ⟨fun l₁ =>
@@ -71,12 +73,12 @@ instance IsTrichotomous (r : α → α → Prop) [IsTrichotomous α r] : IsTrich
     | a :: l₁, [] => Or.inr (Or.inr nil)
     | a :: l₁, b :: l₂ => by
       rcases trichotomous_of r a b with (ab | rfl | ab)
-      ·
-        exact Or.inl (rel ab)
-      ·
-        exact (_match l₁ l₂).imp cons (Or.imp (congr_argₓ _) cons)
-      ·
-        exact Or.inr (Or.inr (rel ab))⟩
+      · exact Or.inl (rel ab)
+        
+      · exact (_match l₁ l₂).imp cons (Or.imp (congr_argₓ _) cons)
+        
+      · exact Or.inr (Or.inr (rel ab))
+        ⟩
 
 instance IsAsymm (r : α → α → Prop) [IsAsymm α r] : IsAsymm (List α) (lex r) :=
   ⟨fun l₁ =>
@@ -84,8 +86,7 @@ instance IsAsymm (r : α → α → Prop) [IsAsymm α r] : IsAsymm (List α) (le
     | a :: l₁, b :: l₂, lex.rel h₁, lex.rel h₂ => asymm h₁ h₂
     | a :: l₁, b :: l₂, lex.rel h₁, lex.cons h₂ => asymm h₁ h₁
     | a :: l₁, b :: l₂, lex.cons h₁, lex.rel h₂ => asymm h₂ h₂
-    | a :: l₁, b :: l₂, lex.cons h₁, lex.cons h₂ => by
-      exact _match _ _ h₁ h₂⟩
+    | a :: l₁, b :: l₂, lex.cons h₁, lex.cons h₂ => _match _ _ h₁ h₂⟩
 
 instance IsStrictTotalOrder (r : α → α → Prop) [IsStrictTotalOrder' α r] : IsStrictTotalOrder' (List α) (lex r) :=
   { is_strict_weak_order_of_is_order_connected with }
@@ -98,18 +99,18 @@ instance DecidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r]
   | a :: l₁, b :: l₂ => by
     have := DecidableRel l₁ l₂
     refine' decidableOfIff (r a b ∨ a = b ∧ lex r l₁ l₂) ⟨fun h => _, fun h => _⟩
-    ·
-      rcases h with (h | ⟨rfl, h⟩)
-      ·
-        exact lex.rel h
-      ·
-        exact lex.cons h
-    ·
-      rcases h with (_ | ⟨_, _, _, h⟩ | ⟨_, _, _, _, h⟩)
-      ·
-        exact Or.inr ⟨rfl, h⟩
-      ·
-        exact Or.inl h
+    · rcases h with (h | ⟨rfl, h⟩)
+      · exact lex.rel h
+        
+      · exact lex.cons h
+        
+      
+    · rcases h with (_ | ⟨_, _, _, h⟩ | ⟨_, _, _, _, h⟩)
+      · exact Or.inr ⟨rfl, h⟩
+        
+      · exact Or.inl h
+        
+      
 
 theorem append_right (r : α → α → Prop) : ∀ {s₁ s₂} t, lex r s₁ s₂ → lex r s₁ (s₂ ++ t)
   | _, _, t, nil => nil
@@ -133,20 +134,20 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
     lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ :=
   ⟨to_ne, fun h => by
     induction' l₁ with a l₁ IH generalizing l₂ <;> cases' l₂ with b l₂
-    ·
-      contradiction
-    ·
-      apply nil
-    ·
-      exact (not_lt_of_geₓ H).elim (succ_pos _)
-    ·
-      by_cases' ab : a = b
-      ·
-        subst b
+    · contradiction
+      
+    · apply nil
+      
+    · exact (not_lt_of_geₓ H).elim (succ_pos _)
+      
+    · by_cases' ab : a = b
+      · subst b
         apply cons
         exact IH (le_of_succ_le_succ H) (mt (congr_argₓ _) h)
-      ·
-        exact rel ab⟩
+        
+      · exact rel ab
+        
+      ⟩
 
 theorem ne_iff {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) : lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ := by
   classical <;> exact Decidable.List.Lex.ne_iff H

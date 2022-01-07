@@ -4,8 +4,7 @@ open Tactic
 
 namespace Tactic.Interactive
 
-/-- 
-`show_term { tac }` runs the tactic `tac`,
+/-- `show_term { tac }` runs the tactic `tac`,
 and then prints the term that was constructed.
 
 This is useful for

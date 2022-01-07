@@ -12,8 +12,7 @@ open Expr Lean.Parser
 
 local postfix:9001 "?" => optionalₓ
 
-/-- 
-This is a "finishing" tactic modification of `simp`. It has two forms.
+/-- This is a "finishing" tactic modification of `simp`. It has two forms.
 
 * `simpa [rules, ...] using e` will simplify the goal and the type of
   `e` using `rules`, then try to close the goal using `e`.

@@ -9,11 +9,11 @@ This file defines a simple distance function on naturals from truncated substrac
 
 namespace Nat
 
-/--  Distance (absolute value of difference) between natural numbers. -/
+/-- Distance (absolute value of difference) between natural numbers. -/
 def dist (n m : ℕ) :=
-  (n - m)+m - n
+  n - m + (m - n)
 
-theorem dist.def (n m : ℕ) : dist n m = (n - m)+m - n :=
+theorem dist.def (n m : ℕ) : dist n m = n - m + (m - n) :=
   rfl
 
 theorem dist_comm (n m : ℕ) : dist n m = dist m n := by
@@ -40,16 +40,16 @@ theorem dist_eq_sub_of_le_right {n m : ℕ} (h : m ≤ n) : dist n m = n - m := 
   rw [dist_comm]
   apply dist_eq_sub_of_le h
 
-theorem dist_tri_left (n m : ℕ) : m ≤ dist n m+n :=
+theorem dist_tri_left (n m : ℕ) : m ≤ dist n m + n :=
   le_transₓ le_tsub_add (add_le_add_right (Nat.le_add_leftₓ _ _) _)
 
-theorem dist_tri_right (n m : ℕ) : m ≤ n+dist n m := by
+theorem dist_tri_right (n m : ℕ) : m ≤ n + dist n m := by
   rw [add_commₓ] <;> apply dist_tri_left
 
-theorem dist_tri_left' (n m : ℕ) : n ≤ dist n m+m := by
+theorem dist_tri_left' (n m : ℕ) : n ≤ dist n m + m := by
   rw [dist_comm] <;> apply dist_tri_left
 
-theorem dist_tri_right' (n m : ℕ) : n ≤ m+dist n m := by
+theorem dist_tri_right' (n m : ℕ) : n ≤ m + dist n m := by
   rw [dist_comm] <;> apply dist_tri_right
 
 theorem dist_zero_right (n : ℕ) : dist n 0 = n :=
@@ -58,38 +58,39 @@ theorem dist_zero_right (n : ℕ) : dist n 0 = n :=
 theorem dist_zero_left (n : ℕ) : dist 0 n = n :=
   Eq.trans (dist_eq_sub_of_le (zero_le n)) (tsub_zero n)
 
-theorem dist_add_add_right (n k m : ℕ) : dist (n+k) (m+k) = dist n m :=
-  calc dist (n+k) (m+k) = ((n+k) - m+k)+(m+k) - n+k := rfl
-    _ = (n - m)+(m+k) - n+k := by
-    rw [add_tsub_add_eq_tsub_right]
-    _ = (n - m)+m - n := by
-    rw [add_tsub_add_eq_tsub_right]
+theorem dist_add_add_right (n k m : ℕ) : dist (n + k) (m + k) = dist n m :=
+  calc
+    dist (n + k) (m + k) = n + k - (m + k) + (m + k - (n + k)) := rfl
+    _ = n - m + (m + k - (n + k)) := by
+      rw [add_tsub_add_eq_tsub_right]
+    _ = n - m + (m - n) := by
+      rw [add_tsub_add_eq_tsub_right]
     
 
-theorem dist_add_add_left (k n m : ℕ) : dist (k+n) (k+m) = dist n m := by
+theorem dist_add_add_left (k n m : ℕ) : dist (k + n) (k + m) = dist n m := by
   rw [add_commₓ k n, add_commₓ k m]
   apply dist_add_add_right
 
-theorem dist_eq_intro {n m k l : ℕ} (h : (n+m) = k+l) : dist n k = dist l m :=
-  calc dist n k = dist (n+m) (k+m) := by
-    rw [dist_add_add_right]
-    _ = dist (k+l) (k+m) := by
-    rw [h]
+theorem dist_eq_intro {n m k l : ℕ} (h : n + m = k + l) : dist n k = dist l m :=
+  calc
+    dist n k = dist (n + m) (k + m) := by
+      rw [dist_add_add_right]
+    _ = dist (k + l) (k + m) := by
+      rw [h]
     _ = dist l m := by
-    rw [dist_add_add_left]
+      rw [dist_add_add_left]
     
 
-theorem dist.triangle_inequality (n m k : ℕ) : dist n k ≤ dist n m+dist m k :=
-  have : (dist n m+dist m k) = ((n - m)+m - k)+(k - m)+m - n := by
+theorem dist.triangle_inequality (n m k : ℕ) : dist n k ≤ dist n m + dist m k := by
+  have : dist n m + dist m k = n - m + (m - k) + (k - m + (m - n)) := by
     simp [dist.def, add_commₓ, add_left_commₓ]
-  by
   rw [this, dist.def]
   exact add_le_add tsub_le_tsub_add_tsub tsub_le_tsub_add_tsub
 
-theorem dist_mul_right (n k m : ℕ) : dist (n*k) (m*k) = dist n m*k := by
+theorem dist_mul_right (n k m : ℕ) : dist (n * k) (m * k) = dist n m * k := by
   rw [dist.def, dist.def, right_distrib, tsub_mul, tsub_mul]
 
-theorem dist_mul_left (k n m : ℕ) : dist (k*n) (k*m) = k*dist n m := by
+theorem dist_mul_left (k n m : ℕ) : dist (k * n) (k * m) = k * dist n m := by
   rw [mul_commₓ k n, mul_commₓ k m, dist_mul_right, mul_commₓ]
 
 theorem dist_succ_succ {i j : Nat} : dist (succ i) (succ j) = dist i j := by

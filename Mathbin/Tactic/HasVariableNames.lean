@@ -26,8 +26,7 @@ local attribute [instance, priority 1000] foo
 
 universe u v
 
-/-- 
-Type class for associating a type `α` with typical variable names for elements
+/-- Type class for associating a type `α` with typical variable names for elements
 of `α`. See `tactic.typical_variable_names`.
 -/
 class HasVariableNames (α : Sort u) : Type where
@@ -38,8 +37,7 @@ class HasVariableNames (α : Sort u) : Type where
 
 namespace Tactic
 
-/-- 
-`typical_variable_names t` obtains typical names for variables of type `t`.
+/-- `typical_variable_names t` obtains typical names for variables of type `t`.
 The returned list is guaranteed to be nonempty. Fails if there is no instance
 `has_typical_variable_names t`.
 
@@ -57,8 +55,7 @@ end Tactic
 
 namespace HasVariableNames
 
-/-- 
-`@make_listlike_instance α _ β` creates an instance `has_variable_names β` from
+/-- `@make_listlike_instance α _ β` creates an instance `has_variable_names β` from
 an instance `has_variable_names α`. If `α` has associated names `a`, `b`, ...,
 the generated instance for `β` has names `as`, `bs`, ... This can be used to
 create instances for 'containers' such as lists or sets.
@@ -67,8 +64,7 @@ def make_listlike_instance (α : Sort u) [HasVariableNames α] {β : Sort v} : H
   ⟨(names α).map $ fun n => n.append_suffix "s", by
     simp [names_nonempty]⟩
 
-/-- 
-`@make_inheriting_instance α _ β` creates an instance `has_variable_names β`
+/-- `@make_inheriting_instance α _ β` creates an instance `has_variable_names β`
 from an instance `has_variable_names α`. The generated instance contains the
 same variable names as that of `α`. This can be used to create instances for
 'wrapper' types like `option` and `subtype`.

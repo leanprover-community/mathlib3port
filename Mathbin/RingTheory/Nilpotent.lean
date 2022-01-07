@@ -21,7 +21,7 @@ universe u v
 
 variable {R S : Type u} {x y : R}
 
-/--  An element is said to be nilpotent if some natural-number-power of it equals zero.
+/-- An element is said to be nilpotent if some natural-number-power of it equals zero.
 
 Note that we require only the bare minimum assumptions for the definition to make sense. Even
 `monoid_with_zero` is too strong since nilpotency is important in the study of rings that are only
@@ -49,7 +49,7 @@ theorem IsNilpotent.map [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] {r : R} {F :
   use hr.some
   rw [← map_pow, hr.some_spec, map_zero]
 
-/--  A structure that has zero and pow is reduced if it has no nonzero nilpotent elements. -/
+/-- A structure that has zero and pow is reduced if it has no nonzero nilpotent elements. -/
 class IsReduced (R : Type _) [HasZero R] [Pow R ℕ] : Prop where
   eq_zero : ∀ x : R, IsNilpotent x → x = 0
 
@@ -66,6 +66,14 @@ theorem IsNilpotent.eq_zero [HasZero R] [Pow R ℕ] [IsReduced R] (h : IsNilpote
 theorem is_nilpotent_iff_eq_zero [MonoidWithZeroₓ R] [IsReduced R] : IsNilpotent x ↔ x = 0 :=
   ⟨fun h => h.eq_zero, fun h => h.symm ▸ IsNilpotent.zero⟩
 
+theorem is_reduced_of_injective [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] {F : Type _} [MonoidWithZeroHomClass F R S]
+    (f : F) (hf : Function.Injective f) [_root_.is_reduced S] : _root_.is_reduced R := by
+  constructor
+  intro x hx
+  apply hf
+  rw [map_zero]
+  exact (hx.map f).eq_zero
+
 namespace Commute
 
 section Semiringₓ
@@ -74,27 +82,27 @@ variable [Semiringₓ R] (h_comm : Commute x y)
 
 include h_comm
 
-theorem is_nilpotent_add (hx : IsNilpotent x) (hy : IsNilpotent y) : IsNilpotent (x+y) := by
+theorem is_nilpotent_add (hx : IsNilpotent x) (hy : IsNilpotent y) : IsNilpotent (x + y) := by
   obtain ⟨n, hn⟩ := hx
   obtain ⟨m, hm⟩ := hy
-  use (n+m) - 1
+  use n + m - 1
   rw [h_comm.add_pow']
   apply Finset.sum_eq_zero
   rintro ⟨i, j⟩ hij
-  suffices ((x ^ i)*y ^ j) = 0 by
+  suffices x ^ i * y ^ j = 0 by
     simp only [this, nsmul_eq_mul, mul_zero]
   cases' Nat.le_or_le_of_add_eq_add_pred (finset.nat.mem_antidiagonal.mp hij) with hi hj
-  ·
-    rw [pow_eq_zero_of_le hi hn, zero_mul]
-  ·
-    rw [pow_eq_zero_of_le hj hm, mul_zero]
+  · rw [pow_eq_zero_of_le hi hn, zero_mul]
+    
+  · rw [pow_eq_zero_of_le hj hm, mul_zero]
+    
 
-theorem is_nilpotent_mul_left (h : IsNilpotent x) : IsNilpotent (x*y) := by
+theorem is_nilpotent_mul_left (h : IsNilpotent x) : IsNilpotent (x * y) := by
   obtain ⟨n, hn⟩ := h
   use n
   rw [h_comm.mul_pow, hn, zero_mul]
 
-theorem is_nilpotent_mul_right (h : IsNilpotent y) : IsNilpotent (x*y) := by
+theorem is_nilpotent_mul_right (h : IsNilpotent y) : IsNilpotent (x * y) := by
   rw [h_comm.eq]
   exact h_comm.symm.is_nilpotent_mul_left h
 
@@ -120,7 +128,7 @@ section CommSemiringₓ
 
 variable [CommSemiringₓ R]
 
-/--  The nilradical of a commutative semiring is the ideal of nilpotent elements. -/
+/-- The nilradical of a commutative semiring is the ideal of nilpotent elements. -/
 def nilradical (R : Type _) [CommSemiringₓ R] : Ideal R :=
   (0 : Ideal R).radical
 

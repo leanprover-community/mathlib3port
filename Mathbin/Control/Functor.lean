@@ -53,32 +53,32 @@ theorem Functor.ext {F} :
 
 end Functor
 
-/--  Introduce the `id` functor. Incidentally, this is `pure` for
+/-- Introduce the `id` functor. Incidentally, this is `pure` for
 `id` as a `monad` and as an `applicative` functor. -/
 def id.mk {α : Sort u} : α → id α :=
   id
 
 namespace Functor
 
-/--  `const α` is the constant functor, mapping every type to `α`. When
+/-- `const α` is the constant functor, mapping every type to `α`. When
 `α` has a monoid structure, `const α` has an `applicative` instance.
 (If `α` has an additive monoid structure, see `functor.add_const`.) -/
 @[nolint unused_arguments]
 def const (α : Type _) (β : Type _) :=
   α
 
-/--  `const.mk` is the canonical map `α → const α β` (the identity), and
+/-- `const.mk` is the canonical map `α → const α β` (the identity), and
 it can be used as a pattern to extract this value. -/
 @[matchPattern]
 def const.mk {α β} (x : α) : const α β :=
   x
 
-/--  `const.mk'` is `const.mk` but specialized to map `α` to
+/-- `const.mk'` is `const.mk` but specialized to map `α` to
 `const α punit`, where `punit` is the terminal object in `Type*`. -/
 def const.mk' {α} (x : α) : const α PUnit :=
   x
 
-/--  Extract the element of `α` from the `const` functor. -/
+/-- Extract the element of `α` from the `const` functor. -/
 def const.run {α β} (x : const α β) : α :=
   x
 
@@ -87,7 +87,7 @@ namespace Const
 protected theorem ext {α β} {x y : const α β} (h : x.run = y.run) : x = y :=
   h
 
-/--  The map operation of the `const γ` functor. -/
+/-- The map operation of the `const γ` functor. -/
 @[nolint unused_arguments]
 protected def map {γ α β} (f : α → β) (x : const γ β) : const γ α :=
   x
@@ -103,20 +103,20 @@ instance {α β} [Inhabited α] : Inhabited (const α β) :=
 
 end Const
 
-/--  `add_const α` is a synonym for constant functor `const α`, mapping
+/-- `add_const α` is a synonym for constant functor `const α`, mapping
 every type to `α`. When `α` has a additive monoid structure,
 `add_const α` has an `applicative` instance. (If `α` has a
 multiplicative monoid structure, see `functor.const`.) -/
 def add_const (α : Type _) :=
   const α
 
-/--  `add_const.mk` is the canonical map `α → add_const α β`, which is the identity,
+/-- `add_const.mk` is the canonical map `α → add_const α β`, which is the identity,
 where `add_const α β = const α β`. It can be used as a pattern to extract this value. -/
 @[matchPattern]
 def add_const.mk {α β} (x : α) : add_const α β :=
   x
 
-/--  Extract the element of `α` from the constant functor. -/
+/-- Extract the element of `α` from the constant functor. -/
 def add_const.run {α β} : add_const α β → α :=
   id
 
@@ -129,19 +129,19 @@ instance add_const.is_lawful_functor {γ} : IsLawfulFunctor (add_const γ) :=
 instance {α β} [Inhabited α] : Inhabited (add_const α β) :=
   ⟨(default _ : α)⟩
 
-/--  `functor.comp` is a wrapper around `function.comp` for types.
+/-- `functor.comp` is a wrapper around `function.comp` for types.
     It prevents Lean's type class resolution mechanism from trying
     a `functor (comp F id)` when `functor F` would do. -/
 def comp (F : Type u → Type w) (G : Type v → Type u) (α : Type v) : Type w :=
   F $ G α
 
-/--  Construct a term of `comp F G α` from a term of `F (G α)`, which is the same type.
+/-- Construct a term of `comp F G α` from a term of `F (G α)`, which is the same type.
 Can be used as a pattern to extract a term of `F (G α)`. -/
 @[matchPattern]
 def comp.mk {F : Type u → Type w} {G : Type v → Type u} {α : Type v} (x : F (G α)) : comp F G α :=
   x
 
-/--  Extract a term of `F (G α)` from a term of `comp F G α`, which is the same type. -/
+/-- Extract a term of `F (G α)` from a term of `comp F G α`, which is the same type. -/
 def comp.run {F : Type u → Type w} {G : Type v → Type u} {α : Type v} (x : comp F G α) : F (G α) :=
   x
 
@@ -157,7 +157,7 @@ instance {α} [Inhabited (F (G α))] : Inhabited (comp F G α) :=
 
 variable [Functor F] [Functor G]
 
-/--  The map operation for the composition `comp F G` of functors `F` and `G`. -/
+/-- The map operation for the composition `comp F G` of functors `F` and `G`. -/
 protected def map {α β : Type v} (h : α → β) : comp F G α → comp F G β
   | comp.mk x => comp.mk ((· <$> ·) h <$> x)
 
@@ -206,7 +206,7 @@ variable {F : Type u → Type w} {G : Type v → Type u}
 
 variable [Applicativeₓ F] [Applicativeₓ G]
 
-/--  The `<*>` operation for the composition of applicative functors. -/
+/-- The `<*>` operation for the composition of applicative functors. -/
 protected def seq {α β : Type v} : comp F G (α → β) → comp F G α → comp F G β
   | comp.mk f, comp.mk x => comp.mk $ (· <*> ·) <$> f <*> x
 
@@ -232,12 +232,12 @@ end Comp
 
 variable {F : Type u → Type u} [Functor F]
 
-/--  If we consider `x : F α` to, in some sense, contain values of type `α`,
+/-- If we consider `x : F α` to, in some sense, contain values of type `α`,
 predicate `liftp p x` holds iff every value contained by `x` satisfies `p`. -/
 def liftp {α : Type u} (p : α → Prop) (x : F α) : Prop :=
   ∃ u : F (Subtype p), Subtype.val <$> u = x
 
-/--  If we consider `x : F α` to, in some sense, contain values of type `α`, then
+/-- If we consider `x : F α` to, in some sense, contain values of type `α`, then
 `liftr r x y` relates `x` and `y` iff (1) `x` and `y` have the same shape and
 (2) we can pair values `a` from `x` and `b` from `y` so that `r a b` holds. -/
 def liftr {α : Type u} (r : α → α → Prop) (x y : F α) : Prop :=
@@ -245,7 +245,7 @@ def liftr {α : Type u} (r : α → α → Prop) (x y : F α) : Prop :=
     (fun t : { p : α × α // r p.fst p.snd } => t.val.fst) <$> u = x ∧
       (fun t : { p : α × α // r p.fst p.snd } => t.val.snd) <$> u = y
 
-/--  If we consider `x : F α` to, in some sense, contain values of type `α`, then
+/-- If we consider `x : F α` to, in some sense, contain values of type `α`, then
 `supp x` is the set of values of type `α` that `x` contains. -/
 def supp {α : Type u} (x : F α) : Set α :=
   { y : α | ∀ ⦃p⦄, liftp p x → p y }

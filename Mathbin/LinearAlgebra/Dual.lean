@@ -40,11 +40,10 @@ variable (R : Type _) (M : Type _)
 
 variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler add_comm_monoid
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler module R
-/--  The dual space of an R-module M is the R-module of linear maps `M → R`. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler module R
+/-- The dual space of an R-module M is the R-module of linear maps `M → R`. -/
 def dual :=
-  M →ₗ[R] R deriving [anonymous], [anonymous]
+  M →ₗ[R] R deriving AddCommMonoidₓ, [anonymous]
 
 instance {S : Type _} [CommRingₓ S] {N : Type _} [AddCommGroupₓ N] [Module S N] : AddCommGroupₓ (dual S N) := by
   unfold dual
@@ -61,7 +60,7 @@ instance : Inhabited (dual R M) := by
 instance : CoeFun (dual R M) fun _ => M → R :=
   ⟨LinearMap.toFun⟩
 
-/--  Maps a module M to the dual of the dual of M. See `module.erange_coe` and
+/-- Maps a module M to the dual of the dual of M. See `module.erange_coe` and
 `module.eval_equiv`. -/
 def eval : M →ₗ[R] dual R (dual R M) :=
   LinearMap.flip LinearMap.id
@@ -73,7 +72,7 @@ theorem eval_apply (v : M) (a : dual R M) : eval R M v a = a v := by
 
 variable {R M} {M' : Type _} [AddCommMonoidₓ M'] [Module R M']
 
-/--  The transposition of linear maps, as a linear map from `M →ₗ[R] M'` to
+/-- The transposition of linear maps, as a linear map from `M →ₗ[R] M'` to
 `dual R M' →ₗ[R] dual R M`. -/
 def transpose : (M →ₗ[R] M') →ₗ[R] dual R M' →ₗ[R] dual R M :=
   (LinearMap.llcomp R M M' R).flip
@@ -104,7 +103,7 @@ variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [DecidableEq ι]
 
 variable (b : Basis ι R M)
 
-/--  The linear map from a vector space equipped with basis to its dual vector space,
+/-- The linear map from a vector space equipped with basis to its dual vector space,
 taking basis elements to corresponding dual basis elements. -/
 def to_dual : M →ₗ[R] Module.Dual R M :=
   b.constr ℕ $ fun v => b.constr ℕ $ fun w => if w = v then (1 : R) else 0
@@ -118,20 +117,20 @@ theorem to_dual_total_left (f : ι →₀ R) (i : ι) : b.to_dual (Finsupp.total
   rw [Finsupp.total_apply, Finsupp.sum, LinearMap.map_sum, LinearMap.sum_apply]
   simp_rw [LinearMap.map_smul, LinearMap.smul_apply, to_dual_apply, smul_eq_mul, mul_boole, Finset.sum_ite_eq']
   split_ifs with h
-  ·
-    rfl
-  ·
-    rw [finsupp.not_mem_support_iff.mp h]
+  · rfl
+    
+  · rw [finsupp.not_mem_support_iff.mp h]
+    
 
 @[simp]
 theorem to_dual_total_right (f : ι →₀ R) (i : ι) : b.to_dual (b i) (Finsupp.total ι M R b f) = f i := by
   rw [Finsupp.total_apply, Finsupp.sum, LinearMap.map_sum]
   simp_rw [LinearMap.map_smul, to_dual_apply, smul_eq_mul, mul_boole, Finset.sum_ite_eq]
   split_ifs with h
-  ·
-    rfl
-  ·
-    rw [finsupp.not_mem_support_iff.mp h]
+  · rfl
+    
+  · rw [finsupp.not_mem_support_iff.mp h]
+    
 
 theorem to_dual_apply_left (m : M) (i : ι) : b.to_dual m (b i) = b.repr m i := by
   rw [← b.to_dual_total_left, b.total_repr]
@@ -143,7 +142,7 @@ theorem coe_to_dual_self (i : ι) : b.to_dual (b i) = b.coord i := by
   ext
   apply to_dual_apply_right
 
-/--  `h.to_dual_flip v` is the linear map sending `w` to `h.to_dual w v`. -/
+/-- `h.to_dual_flip v` is the linear map sending `w` to `h.to_dual w v`. -/
 def to_dual_flip (m : M) : M →ₗ[R] R :=
   b.to_dual.flip m
 
@@ -171,17 +170,17 @@ theorem to_dual_range [fin : Fintype ι] : b.to_dual.range = ⊤ := by
   intro f
   rw [LinearMap.mem_range]
   let lin_comb : ι →₀ R := Finsupp.onFinset fin.elems (fun i => f.to_fun (b i)) _
-  ·
-    use Finsupp.total ι M R b lin_comb
+  · use Finsupp.total ι M R b lin_comb
     apply b.ext
-    ·
-      intro i
+    · intro i
       rw [b.to_dual_eq_repr _ i, repr_total b]
-      ·
-        rfl
-  ·
-    intro a _
+      · rfl
+        
+      
+    
+  · intro a _
     apply fin.complete
+    
 
 end CommSemiringₓ
 
@@ -191,12 +190,12 @@ variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [DecidableEq ι]
 
 variable (b : Basis ι R M)
 
-/--  A vector space is linearly equivalent to its dual space. -/
+/-- A vector space is linearly equivalent to its dual space. -/
 @[simps]
 def to_dual_equiv [Fintype ι] : M ≃ₗ[R] dual R M :=
   LinearEquiv.ofBijective b.to_dual (ker_eq_bot.mp b.to_dual_ker) (range_eq_top.mp b.to_dual_range)
 
-/--  Maps a basis for `V` to a basis for the dual space. -/
+/-- Maps a basis for `V` to a basis for the dual space. -/
 def dual_basis [Fintype ι] : Basis ι R (dual R M) :=
   b.map b.to_dual_equiv
 
@@ -207,12 +206,12 @@ theorem dual_basis_apply_self [Fintype ι] (i j : ι) : b.dual_basis i (b j) = i
 theorem total_dual_basis [Fintype ι] (f : ι →₀ R) (i : ι) : Finsupp.total ι (dual R M) R b.dual_basis f (b i) = f i :=
   by
   rw [Finsupp.total_apply, Finsupp.sum_fintype, LinearMap.sum_apply]
-  ·
-    simp_rw [LinearMap.smul_apply, smul_eq_mul, dual_basis_apply_self, mul_boole, Finset.sum_ite_eq,
+  · simp_rw [LinearMap.smul_apply, smul_eq_mul, dual_basis_apply_self, mul_boole, Finset.sum_ite_eq,
       if_pos (Finset.mem_univ i)]
-  ·
-    intro
+    
+  · intro
     rw [zero_smul]
+    
 
 theorem dual_basis_repr [Fintype ι] (l : dual R M) (i : ι) : b.dual_basis.repr l i = l (b i) := by
   rw [← total_dual_basis b, Basis.total_repr b.dual_basis l]
@@ -245,7 +244,7 @@ theorem eval_range {ι : Type _} [Fintype ι] (b : Basis ι R M) : (eval R M).ra
   rw [← b.to_dual_to_dual, range_comp, b.to_dual_range, map_top, to_dual_range _]
   infer_instance
 
-/--  A module with a basis is linearly equivalent to the dual of its dual space. -/
+/-- A module with a basis is linearly equivalent to the dual of its dual space. -/
 def eval_equiv {ι : Type _} [Fintype ι] (b : Basis ι R M) : M ≃ₗ[R] dual R (dual R M) :=
   LinearEquiv.ofBijective (eval R M) (ker_eq_bot.mp b.eval_ker) (range_eq_top.mp b.eval_range)
 
@@ -256,7 +255,7 @@ theorem eval_equiv_to_linear_map {ι : Type _} [Fintype ι] (b : Basis ι R M) :
 
 end CommRingₓ
 
-/--  `simp` normal form version of `total_dual_basis` -/
+/-- `simp` normal form version of `total_dual_basis` -/
 @[simp]
 theorem total_coord [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Fintype ι] (b : Basis ι R M) (f : ι →₀ R) (i : ι) :
     Finsupp.total ι (dual R M) R b.coord f (b i) = f i := by
@@ -294,7 +293,7 @@ theorem erange_coe [FiniteDimensional K V] : (eval K V).range = ⊤ := by
 
 variable (K V)
 
-/--  A vector space is linearly equivalent to the dual of its dual space. -/
+/-- A vector space is linearly equivalent to the dual of its dual space. -/
 def eval_equiv [FiniteDimensional K V] : V ≃ₗ[K] dual K (dual K V) :=
   LinearEquiv.ofBijective (eval K V) (ker_eq_bot.mp eval_ker) (range_eq_top.mp erange_coe)
 
@@ -314,178 +313,12 @@ variable {R M ι : Type _}
 
 variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [DecidableEq ι]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment "/--" " `e` and `ε` have characteristic properties of a basis and its dual -/")]
-  [(Term.attributes
-    "@["
-    [(Term.attrInstance (Term.attrKind []) (Mathlib.Tactic.Lint.nolint "nolint" [`has_inhabited_instance]))]
-    "]")]
-  []
-  []
-  []
-  [])
- (Command.structure
-  (Command.structureTk "structure")
-  (Command.declId `DualPair [])
-  [(Term.explicitBinder "(" [`e] [":" (Term.arrow `ι "→" `M)] [] ")")
-   (Term.explicitBinder "(" [`ε] [":" (Term.arrow `ι "→" (Term.app `dual [`R `M]))] [] ")")]
-  []
-  []
-  ["where"
-   []
-   (Command.structFields
-    [(Command.structSimpleBinder
-      (Command.declModifiers [] [] [] [] [] [])
-      `eval
-      []
-      (Command.optDeclSig
-       []
-       [(Term.typeSpec
-         ":"
-         (Term.forall
-          "∀"
-          [(Term.simpleBinder [`i `j] [(Term.typeSpec ":" `ι)])]
-          ","
-          («term_=_»
-           (Term.app `ε [`i (Term.app `e [`j])])
-           "="
-           (termIfThenElse "if" («term_=_» `i "=" `j) "then" (numLit "1") "else" (numLit "0")))))])
-      [])
-     (Command.structSimpleBinder
-      (Command.declModifiers [] [] [] [] [] [])
-      `Total
-      []
-      (Command.optDeclSig
-       []
-       [(Term.typeSpec
-         ":"
-         (Term.forall
-          "∀"
-          [(Term.implicitBinder "{" [`m] [":" `M] "}")]
-          ","
-          (Term.arrow
-           (Term.forall "∀" [(Term.simpleBinder [`i] [])] "," («term_=_» (Term.app `ε [`i `m]) "=" (numLit "0")))
-           "→"
-           («term_=_» `m "=" (numLit "0")))))])
-      [])
-     (Command.structInstBinder
-      (Command.declModifiers [] [] [] [] [] [])
-      "["
-      [`Finite]
-      []
-      (Command.declSig
-       []
-       (Term.typeSpec
-        ":"
-        (Term.forall
-         "∀"
-         [(Term.simpleBinder [`m] [(Term.typeSpec ":" `M)])]
-         ","
-         (Term.app `Fintype [(Set.«term{_|_}» "{" `i "|" («term_≠_» (Term.app `ε [`i `m]) "≠" (numLit "0")) "}")]))))
-      "]")])]
-  (Command.optDeriving [])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.optDeriving', expected 'Lean.Parser.Command.optDeriving.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structFields', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structFields', expected 'Lean.Parser.Command.structFields.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structInstBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structInstBinder', expected 'Lean.Parser.Command.structExplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structInstBinder', expected 'Lean.Parser.Command.structExplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structInstBinder', expected 'Lean.Parser.Command.structImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structInstBinder', expected 'Lean.Parser.Command.structImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structInstBinder', expected 'Lean.Parser.Command.structInstBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.forall
-   "∀"
-   [(Term.simpleBinder [`m] [(Term.typeSpec ":" `M)])]
-   ","
-   (Term.app `Fintype [(Set.«term{_|_}» "{" `i "|" («term_≠_» (Term.app `ε [`i `m]) "≠" (numLit "0")) "}")]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.forall', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.forall', expected 'Lean.Parser.Term.forall.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `Fintype [(Set.«term{_|_}» "{" `i "|" («term_≠_» (Term.app `ε [`i `m]) "≠" (numLit "0")) "}")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}» "{" `i "|" («term_≠_» (Term.app `ε [`i `m]) "≠" (numLit "0")) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_≠_» (Term.app `ε [`i `m]) "≠" (numLit "0"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_≠_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "0")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  (Term.app `ε [`i `m])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `m
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `ε
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structInstBinder', expected 'Lean.Parser.Command.structSimpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structInstBinder', expected 'Lean.Parser.Command.structSimpleBinder'-/-- failed to format: format: uncaught backtrack exception
-/-- `e` and `ε` have characteristic properties of a basis and its dual -/ @[ nolint has_inhabited_instance ]
-  structure
-    DualPair
-    ( e : ι → M ) ( ε : ι → dual R M )
-    where
-      eval : ∀ i j : ι , ε i e j = if i = j then 1 else 0
-        Total : ∀ { m : M } , ∀ i , ε i m = 0 → m = 0
-        [ Finite : ∀ m : M , Fintype { i | ε i m ≠ 0 } ]
+/-- `e` and `ε` have characteristic properties of a basis and its dual -/
+@[nolint has_inhabited_instance]
+structure DualPair (e : ι → M) (ε : ι → dual R M) where
+  eval : ∀ i j : ι, ε i (e j) = if i = j then 1 else 0
+  Total : ∀ {m : M}, (∀ i, ε i m = 0) → m = 0
+  [Finite : ∀ m : M, Fintype { i | ε i m ≠ 0 }]
 
 end DualPair
 
@@ -499,22 +332,22 @@ variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
 
 variable {e : ι → M} {ε : ι → dual R M}
 
-/--  The coefficients of `v` on the basis `e` -/
-def coeffs [DecidableEq ι] (h : DualPair e ε) (m : M) : ι →₀ R :=
-  { toFun := fun i => ε i m,
-    support := by
-      have := h.finite m
-      exact { i : ι | ε i m ≠ 0 }.toFinset,
-    mem_support_to_fun := by
-      intro i
-      rw [Set.mem_to_finset]
-      exact Iff.rfl }
+/-- The coefficients of `v` on the basis `e` -/
+def coeffs [DecidableEq ι] (h : DualPair e ε) (m : M) : ι →₀ R where
+  toFun := fun i => ε i m
+  support :=
+    have := h.finite m
+    { i : ι | ε i m ≠ 0 }.toFinset
+  mem_support_to_fun := by
+    intro i
+    rw [Set.mem_to_finset]
+    exact Iff.rfl
 
 @[simp]
 theorem coeffs_apply [DecidableEq ι] (h : DualPair e ε) (m : M) (i : ι) : h.coeffs m i = ε i m :=
   rfl
 
-/--  linear combinations of elements of `e`.
+/-- linear combinations of elements of `e`.
 This is a convenient abbreviation for `finsupp.total _ M R e l` -/
 def lc {ι} (e : ι → M) (l : ι →₀ R) : M :=
   l.sum fun i : ι a : R => a • e i
@@ -530,28 +363,28 @@ theorem dual_lc (l : ι →₀ R) (i : ι) : ε i (DualPair.lc e l) = l i := by
   erw [LinearMap.map_sum]
   simp only [h.eval, map_smul, smul_eq_mul]
   rw [Finset.sum_eq_single i]
-  ·
-    simp
-  ·
-    intro q q_in q_ne
+  · simp
+    
+  · intro q q_in q_ne
     simp [q_ne.symm]
-  ·
-    intro p_not_in
+    
+  · intro p_not_in
     simp [Finsupp.not_mem_support_iff.1 p_not_in]
+    
 
 @[simp]
 theorem coeffs_lc (l : ι →₀ R) : h.coeffs (DualPair.lc e l) = l := by
   ext i
   rw [h.coeffs_apply, h.dual_lc]
 
-/--  For any m : M n, \sum_{p ∈ Q n} (ε p m) • e p = m -/
+/-- For any m : M n, \sum_{p ∈ Q n} (ε p m) • e p = m -/
 @[simp]
 theorem lc_coeffs (m : M) : DualPair.lc e (h.coeffs m) = m := by
   refine' eq_of_sub_eq_zero (h.total _)
   intro i
   simp [-sub_eq_add_neg, LinearMap.map_sub, h.dual_lc, sub_eq_zero]
 
-/--  `(h : dual_pair e ε).basis` shows the family of vectors `e` forms a basis. -/
+/-- `(h : dual_pair e ε).basis` shows the family of vectors `e` forms a basis. -/
 @[simps]
 def Basis : Basis ι R M :=
   Basis.of_repr
@@ -592,7 +425,7 @@ variable {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ M] [Module R
 
 variable {W : Submodule R M}
 
-/--  The `dual_restrict` of a submodule `W` of `M` is the linear map from the
+/-- The `dual_restrict` of a submodule `W` of `M` is the linear map from the
   dual of `M` to the dual of `W` such that the domain of each linear map is
   restricted to `W`. -/
 def dual_restrict (W : Submodule R M) : Module.Dual R M →ₗ[R] Module.Dual R W :=
@@ -602,7 +435,7 @@ def dual_restrict (W : Submodule R M) : Module.Dual R M →ₗ[R] Module.Dual R 
 theorem dual_restrict_apply (W : Submodule R M) (φ : Module.Dual R M) (x : W) : W.dual_restrict φ x = φ (x : M) :=
   rfl
 
-/--  The `dual_annihilator` of a submodule `W` is the set of linear maps `φ` such
+/-- The `dual_annihilator` of a submodule `W` is the set of linear maps `φ` such
   that `φ w = 0` for all `w ∈ W`. -/
 def dual_annihilator {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (W : Submodule R M) :
     Submodule R $ Module.Dual R M :=
@@ -622,16 +455,16 @@ theorem dual_annihilator_sup_eq_inf_dual_annihilator (U V : Submodule R M) :
   ext φ
   rw [mem_inf, mem_dual_annihilator, mem_dual_annihilator, mem_dual_annihilator]
   constructor <;> intro h
-  ·
-    refine' ⟨_, _⟩ <;> intro x hx
+  · refine' ⟨_, _⟩ <;> intro x hx
     exact h x (mem_sup.2 ⟨x, hx, 0, zero_mem _, add_zeroₓ _⟩)
     exact h x (mem_sup.2 ⟨0, zero_mem _, x, hx, zero_addₓ _⟩)
-  ·
-    simp_rw [mem_sup]
+    
+  · simp_rw [mem_sup]
     rintro _ ⟨x, hx, y, hy, rfl⟩
     rw [LinearMap.map_add, h.1 _ hx, h.2 _ hy, add_zeroₓ]
+    
 
-/--  The pullback of a submodule in the dual space along the evaluation map. -/
+/-- The pullback of a submodule in the dual space along the evaluation map. -/
 def dual_annihilator_comap (Φ : Submodule R (Module.Dual R M)) : Submodule R M :=
   Φ.dual_annihilator.comap (Module.Dual.eval R M)
 
@@ -649,7 +482,7 @@ universe u v w
 
 variable {K : Type u} {V : Type v} [Field K] [AddCommGroupₓ V] [Module K V]
 
-/--  Given a subspace `W` of `V` and an element of its dual `φ`, `dual_lift W φ` is
+/-- Given a subspace `W` of `V` and an element of its dual `φ`, `dual_lift W φ` is
 the natural extension of `φ` to an element of the dual of `V`.
 That is, `dual_lift W φ` sends `w ∈ W` to `φ x` and `x` in the complement of `W` to `0`. -/
 noncomputable def dual_lift (W : Subspace K V) : Module.Dual K W →ₗ[K] Module.Dual K V :=
@@ -685,14 +518,14 @@ theorem dual_restrict_surjective : Function.Surjective W.dual_restrict :=
 theorem dual_lift_injective : Function.Injective W.dual_lift :=
   W.dual_restrict_left_inverse.injective
 
-/--  The quotient by the `dual_annihilator` of a subspace is isomorphic to the
+/-- The quotient by the `dual_annihilator` of a subspace is isomorphic to the
   dual of that subspace. -/
 noncomputable def quot_annihilator_equiv (W : Subspace K V) :
     (Module.Dual K V ⧸ W.dual_annihilator) ≃ₗ[K] Module.Dual K W :=
   (quot_equiv_of_eq _ _ W.dual_restrict_ker_eq_dual_annihilator).symm.trans $
     W.dual_restrict.quot_ker_equiv_of_surjective dual_restrict_surjective
 
-/--  The natural isomorphism forom the dual of a subspace `W` to `W.dual_lift.range`. -/
+/-- The natural isomorphism forom the dual of a subspace `W` to `W.dual_lift.range`. -/
 noncomputable def dual_equiv_dual (W : Subspace K V) : Module.Dual K W ≃ₗ[K] W.dual_lift.range :=
   LinearEquiv.ofInjective _ dual_lift_injective
 
@@ -720,12 +553,12 @@ variable [FiniteDimensional K V] [FiniteDimensional K V₁]
 theorem dual_finrank_eq : finrank K (Module.Dual K V) = finrank K V :=
   LinearEquiv.finrank_eq (Basis.ofVectorSpace K V).toDualEquiv.symm
 
-/--  The quotient by the dual is isomorphic to its dual annihilator.  -/
+/-- The quotient by the dual is isomorphic to its dual annihilator.  -/
 noncomputable def quot_dual_equiv_annihilator (W : Subspace K V) :
     (Module.Dual K V ⧸ W.dual_lift.range) ≃ₗ[K] W.dual_annihilator :=
   linear_equiv.quot_equiv_of_quot_equiv $ LinearEquiv.trans W.quot_annihilator_equiv W.dual_equiv_dual
 
-/--  The quotient by a subspace is isomorphic to its dual annihilator. -/
+/-- The quotient by a subspace is isomorphic to its dual annihilator. -/
 noncomputable def quot_equiv_annihilator (W : Subspace K V) : (V ⧸ W) ≃ₗ[K] W.dual_annihilator := by
   refine' _ ≪≫ₗ W.quot_dual_equiv_annihilator
   refine' linear_equiv.quot_equiv_of_equiv _ (Basis.ofVectorSpace K V).toDualEquiv
@@ -740,7 +573,7 @@ theorem finrank_dual_annihilator_comap_eq {Φ : Subspace K (Module.Dual K V)} :
   exact LinearEquiv.finrank_eq (LinearEquiv.ofSubmodule' _ _)
 
 theorem finrank_add_finrank_dual_annihilator_comap_eq (W : Subspace K (Module.Dual K V)) :
-    (finrank K W+finrank K W.dual_annihilator_comap) = finrank K V := by
+    finrank K W + finrank K W.dual_annihilator_comap = finrank K V := by
   rw [finrank_dual_annihilator_comap_eq, W.quot_equiv_annihilator.finrank_eq.symm, add_commₓ,
     Submodule.finrank_quotient_add_finrank, Subspace.dual_finrank_eq]
 
@@ -754,7 +587,7 @@ variable [AddCommGroupₓ M₁] [Module R M₁] [AddCommGroupₓ M₂] [Module R
 
 open Module
 
-/--  Given a linear map `f : M₁ →ₗ[R] M₂`, `f.dual_map` is the linear map between the dual of
+/-- Given a linear map `f : M₁ →ₗ[R] M₂`, `f.dual_map` is the linear map between the dual of
 `M₂` and `M₁` such that it maps the functional `φ` to `φ ∘ f`. -/
 def LinearMap.dualMap (f : M₁ →ₗ[R] M₂) : dual R M₂ →ₗ[R] dual R M₁ :=
   LinearMap.lcomp R R f
@@ -772,7 +605,7 @@ theorem LinearMap.dual_map_comp_dual_map {M₃ : Type _} [AddCommGroupₓ M₃] 
     (g : M₂ →ₗ[R] M₃) : f.dual_map.comp g.dual_map = (g.comp f).dualMap :=
   rfl
 
-/--  The `linear_equiv` version of `linear_map.dual_map`. -/
+/-- The `linear_equiv` version of `linear_map.dual_map`. -/
 def LinearEquiv.dualMap (f : M₁ ≃ₗ[R] M₂) : dual R M₂ ≃ₗ[R] dual R M₁ :=
   { f.to_linear_map.dual_map with invFun := f.symm.to_linear_map.dual_map,
     left_inv := by
@@ -810,16 +643,16 @@ variable (f : M₁ →ₗ[R] M₂)
 theorem ker_dual_map_eq_dual_annihilator_range : f.dual_map.ker = f.range.dual_annihilator := by
   ext φ
   constructor <;> intro hφ
-  ·
-    rw [mem_ker] at hφ
+  · rw [mem_ker] at hφ
     rw [Submodule.mem_dual_annihilator]
     rintro y ⟨x, rfl⟩
     rw [← dual_map_apply, hφ, zero_apply]
-  ·
-    ext x
+    
+  · ext x
     rw [dual_map_apply]
     rw [Submodule.mem_dual_annihilator] at hφ
     exact hφ (f x) ⟨x, rfl⟩
+    
 
 theorem range_dual_map_le_dual_annihilator_ker : f.dual_map.range ≤ f.ker.dual_annihilator := by
   rintro _ ⟨ψ, rfl⟩
@@ -843,7 +676,7 @@ theorem finrank_range_dual_map_eq_finrank_range (f : V₁ →ₗ[K] V₂) : finr
   rw [(Subspace.quotEquivAnnihilator f.range).finrank_eq, ← ker_dual_map_eq_dual_annihilator_range] at this
   conv_rhs at this => rw [← Subspace.dual_finrank_eq]
   refine' add_left_injective (finrank K f.dual_map.ker) _
-  change (_+_) = _+_
+  change _ + _ = _ + _
   rw [finrank_range_add_finrank_ker f.dual_map, add_commₓ, this]
 
 theorem range_dual_map_eq_dual_annihilator_ker [FiniteDimensional K V₁] (f : V₁ →ₗ[K] V₂) :

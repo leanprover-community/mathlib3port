@@ -30,14 +30,14 @@ section LieSubalgebra
 
 variable (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
-/--  A Lie subalgebra of a Lie algebra is submodule that is closed under the Lie bracket.
+/-- A Lie subalgebra of a Lie algebra is submodule that is closed under the Lie bracket.
 This is a sufficient condition for the subset itself to form a Lie algebra. -/
 structure LieSubalgebra extends Submodule R L where
   lie_mem' : ∀ {x y}, x ∈ carrier → y ∈ carrier → ⁅x,y⁆ ∈ carrier
 
 attribute [nolint doc_blame] LieSubalgebra.toSubmodule
 
-/--  The zero algebra is a subalgebra of any Lie algebra. -/
+/-- The zero algebra is a subalgebra of any Lie algebra. -/
 instance : HasZero (LieSubalgebra R L) :=
   ⟨{ (0 : Submodule R L) with
       lie_mem' := fun x y hx hy => by
@@ -53,19 +53,27 @@ instance : Coe (LieSubalgebra R L) (Submodule R L) :=
 instance : HasMem L (LieSubalgebra R L) :=
   ⟨fun x L' => x ∈ (L' : Set L)⟩
 
--- failed to format: format: uncaught backtrack exception
 /-- A Lie subalgebra forms a new Lie ring. -/
-  instance
-    lieSubalgebraLieRing
-    ( L' : LieSubalgebra R L ) : LieRing L'
-    where
-      bracket x y := ⟨ ⁅ x.val , y.val ⁆ , L'.lie_mem' x.property y.property ⟩
-        lie_add := by intros apply SetCoe.ext apply lie_add
-        add_lie := by intros apply SetCoe.ext apply add_lie
-        lie_self := by intros apply SetCoe.ext apply lie_self
-        leibniz_lie := by intros apply SetCoe.ext apply leibniz_lie
+instance lieSubalgebraLieRing (L' : LieSubalgebra R L) : LieRing L' where
+  bracket := fun x y => ⟨⁅x.val,y.val⁆, L'.lie_mem' x.property y.property⟩
+  lie_add := by
+    intros
+    apply SetCoe.ext
+    apply lie_add
+  add_lie := by
+    intros
+    apply SetCoe.ext
+    apply add_lie
+  lie_self := by
+    intros
+    apply SetCoe.ext
+    apply lie_self
+  leibniz_lie := by
+    intros
+    apply SetCoe.ext
+    apply leibniz_lie
 
-/--  A Lie subalgebra forms a new Lie algebra. -/
+/-- A Lie subalgebra forms a new Lie algebra. -/
 instance lieSubalgebraLieAlgebra (L' : LieSubalgebra R L) : LieAlgebra R L' where
   lie_smul := by
     intros
@@ -83,7 +91,7 @@ theorem zero_mem : (0 : L) ∈ L' :=
 theorem smul_mem (t : R) {x : L} (h : x ∈ L') : t • x ∈ L' :=
   (L' : Submodule R L).smul_mem t h
 
-theorem add_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (x+y : L) ∈ L' :=
+theorem add_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (x + y : L) ∈ L' :=
   (L' : Submodule R L).add_mem hx hy
 
 theorem sub_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (x - y : L) ∈ L' :=
@@ -167,17 +175,13 @@ variable {M : Type w} [AddCommGroupₓ M] [LieRingModule L M]
 
 variable {N : Type w₁} [AddCommGroupₓ N] [LieRingModule L N] [Module R N] [LieModule R L N]
 
--- failed to format: format: uncaught backtrack exception
-/--
-    Given a Lie algebra `L` containing a Lie subalgebra `L' ⊆ L`, together with a Lie ring module
-    `M` of `L`, we may regard `M` as a Lie ring module of `L'` by restriction. -/
-  instance
-    : LieRingModule L' M
-    where
-      bracket x m := ⁅ ( x : L ) , m ⁆
-        add_lie x y m := add_lie x y m
-        lie_add x y m := lie_add x y m
-        leibniz_lie x y m := leibniz_lie x y m
+/-- Given a Lie algebra `L` containing a Lie subalgebra `L' ⊆ L`, together with a Lie ring module
+`M` of `L`, we may regard `M` as a Lie ring module of `L'` by restriction. -/
+instance : LieRingModule L' M where
+  bracket := fun x m => ⁅(x : L),m⁆
+  add_lie := fun x y m => add_lie x y m
+  lie_add := fun x y m => lie_add x y m
+  leibniz_lie := fun x y m => leibniz_lie x y m
 
 @[simp]
 theorem coe_bracket_of_module (x : L') (m : M) : ⁅x,m⁆ = ⁅(x : L),m⁆ :=
@@ -185,17 +189,15 @@ theorem coe_bracket_of_module (x : L') (m : M) : ⁅x,m⁆ = ⁅(x : L),m⁆ :=
 
 variable [Module R M] [LieModule R L M]
 
--- failed to format: format: uncaught backtrack exception
-/--
-    Given a Lie algebra `L` containing a Lie subalgebra `L' ⊆ L`, together with a Lie module `M` of
-    `L`, we may regard `M` as a Lie module of `L'` by restriction. -/
-  instance
-    : LieModule R L' M
-    where
-      smul_lie t x m := by simp only [ coe_bracket_of_module , smul_lie , Submodule.coe_smul_of_tower ]
-        lie_smul t x m := by simp only [ coe_bracket_of_module , lie_smul ]
+/-- Given a Lie algebra `L` containing a Lie subalgebra `L' ⊆ L`, together with a Lie module `M` of
+`L`, we may regard `M` as a Lie module of `L'` by restriction. -/
+instance : LieModule R L' M where
+  smul_lie := fun t x m => by
+    simp only [coe_bracket_of_module, smul_lie, Submodule.coe_smul_of_tower]
+  lie_smul := fun t x m => by
+    simp only [coe_bracket_of_module, lie_smul]
 
-/--  An `L`-equivariant map of Lie modules `M → N` is `L'`-equivariant for any Lie subalgebra
+/-- An `L`-equivariant map of Lie modules `M → N` is `L'`-equivariant for any Lie subalgebra
 `L' ⊆ L`. -/
 def _root_.lie_module_hom.restrict_lie (f : M →ₗ⁅R,L⁆ N) (L' : LieSubalgebra R L) : M →ₗ⁅R,L'⁆ N :=
   { (f : M →ₗ[R] N) with map_lie' := fun x m => f.map_lie (↑x) m }
@@ -206,7 +208,7 @@ theorem _root_.lie_module_hom.coe_restrict_lie (f : M →ₗ⁅R,L⁆ N) : ⇑f.
 
 end LieModule
 
-/--  The embedding of a Lie subalgebra into the ambient space as a morphism of Lie algebras. -/
+/-- The embedding of a Lie subalgebra into the ambient space as a morphism of Lie algebras. -/
 def incl : L' →ₗ⁅R⁆ L :=
   { (L' : Submodule R L).Subtype with
     map_lie' := fun x y => by
@@ -217,7 +219,7 @@ def incl : L' →ₗ⁅R⁆ L :=
 theorem coe_incl : ⇑L'.incl = coeₓ :=
   rfl
 
-/--  The embedding of a Lie subalgebra into the ambient space as a morphism of Lie modules. -/
+/-- The embedding of a Lie subalgebra into the ambient space as a morphism of Lie modules. -/
 def incl' : L' →ₗ⁅R,L'⁆ L :=
   { (L' : Submodule R L).Subtype with
     map_lie' := fun x y => by
@@ -235,7 +237,7 @@ variable (f : L →ₗ⁅R⁆ L₂)
 
 namespace LieHom
 
-/--  The range of a morphism of Lie algebras is a Lie subalgebra. -/
+/-- The range of a morphism of Lie algebras is a Lie subalgebra. -/
 def range : LieSubalgebra R L₂ :=
   { (f : L →ₗ[R] L₂).range with
     lie_mem' := fun x y =>
@@ -259,7 +261,7 @@ theorem mem_range (x : L₂) : x ∈ f.range ↔ ∃ y : L, f y = x :=
 theorem mem_range_self (x : L) : f x ∈ f.range :=
   LinearMap.mem_range_self f x
 
-/--  We can restrict a morphism to a (surjective) map to its range. -/
+/-- We can restrict a morphism to a (surjective) map to its range. -/
 def range_restrict : L →ₗ⁅R⁆ f.range :=
   { (f : L →ₗ[R] L₂).range_restrict with
     map_lie' := fun x y => by
@@ -282,13 +284,13 @@ end LieHom
 theorem Submodule.exists_lie_subalgebra_coe_eq_iff (p : Submodule R L) :
     (∃ K : LieSubalgebra R L, ↑K = p) ↔ ∀ x y : L, x ∈ p → y ∈ p → ⁅x,y⁆ ∈ p := by
   constructor
-  ·
-    rintro ⟨K, rfl⟩
+  · rintro ⟨K, rfl⟩
     exact K.lie_mem'
-  ·
-    intro h
+    
+  · intro h
     use { p with lie_mem' := h }
     exact LieSubalgebra.coe_to_submodule_mk p _
+    
 
 namespace LieSubalgebra
 
@@ -299,7 +301,7 @@ theorem incl_range : K.incl.range = K := by
   rw [← coe_to_submodule_eq_iff]
   exact (K : Submodule R L).range_subtype
 
-/--  The image of a Lie subalgebra under a Lie algebra morphism is a Lie subalgebra of the
+/-- The image of a Lie subalgebra under a Lie algebra morphism is a Lie subalgebra of the
 codomain. -/
 def map : LieSubalgebra R L₂ :=
   { (K : Submodule R L).map (f : L →ₗ[R] L₂) with
@@ -322,14 +324,13 @@ theorem mem_map_submodule (e : L ≃ₗ⁅R⁆ L₂) (x : L₂) :
     x ∈ K.map (e : L →ₗ⁅R⁆ L₂) ↔ x ∈ (K : Submodule R L).map (e : L →ₗ[R] L₂) :=
   Iff.rfl
 
-/--  The preimage of a Lie subalgebra under a Lie algebra morphism is a Lie subalgebra of the
+/-- The preimage of a Lie subalgebra under a Lie algebra morphism is a Lie subalgebra of the
 domain. -/
 def comap : LieSubalgebra R L :=
   { (K₂ : Submodule R L₂).comap (f : L →ₗ[R] L₂) with
     lie_mem' := fun x y hx hy => by
       suffices ⁅f x,f y⁆ ∈ K₂ by
-        ·
-          simp [this]
+        simp [this]
       exact K₂.lie_mem hx hy }
 
 section LatticeStructure
@@ -384,11 +385,11 @@ instance : HasInf (LieSubalgebra R L) :=
   ⟨fun K K' =>
     { (K⊓K' : Submodule R L) with lie_mem' := fun x y hx hy => mem_inter (K.lie_mem hx.1 hy.1) (K'.lie_mem hx.2 hy.2) }⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:802:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
+-- ././Mathport/Syntax/Translate/Basic.lean:825:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
 instance : HasInfₓ (LieSubalgebra R L) :=
   ⟨fun S =>
     { Inf
-        "././Mathport/Syntax/Translate/Basic.lean:802:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
+        "././Mathport/Syntax/Translate/Basic.lean:825:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
       lie_mem' := fun x y hx hy => by
         simp only [Submodule.mem_carrier, mem_Inter, Submodule.Inf_coe, mem_set_of_eq, forall_apply_eq_imp_iff₂,
           exists_imp_distrib] at *
@@ -399,314 +400,19 @@ instance : HasInfₓ (LieSubalgebra R L) :=
 theorem inf_coe : (↑(K⊓K') : Set L) = K ∩ K' :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:802:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
+-- ././Mathport/Syntax/Translate/Basic.lean:825:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubalgebra R L)) :
     (↑Inf S : Submodule R L) =
       Inf
-        "././Mathport/Syntax/Translate/Basic.lean:802:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
+        "././Mathport/Syntax/Translate/Basic.lean:825:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (s «expr ∈ » S)
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  []
-  [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
-  []
-  []
-  []
-  [])
- (Command.theorem
-  "theorem"
-  (Command.declId `Inf_coe [])
-  (Command.declSig
-   [(Term.explicitBinder "(" [`S] [":" (Term.app `Set [(Term.app `LieSubalgebra [`R `L])])] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.paren
-      "("
-      [(Init.Coe.«term↑_» "↑" (Term.app `Inf [`S])) [(Term.typeAscription ":" (Term.app `Set [`L]))]]
-      ")")
-     "="
-     (Set.Data.Set.Lattice.«term⋂_,_»
-      "⋂"
-      (Lean.explicitBinders
-       [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `s)] ":" (Term.hole "_") ")")
-        (Lean.bracketedExplicitBinders "(" [(Lean.binderIdent "_")] ":" (Init.Core.«term_∈_» `s " ∈ " `S) ")")])
-      ", "
-      (Term.paren "(" [`s [(Term.typeAscription ":" (Term.app `Set [`L]))]] ")")))))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group
-        (Tactic.rwSeq
-         "rw"
-         []
-         (Tactic.rwRuleSeq
-          "["
-          [(Tactic.rwRule ["←"] `coe_to_submodule)
-           ","
-           (Tactic.rwRule [] `Inf_coe_to_submodule)
-           ","
-           (Tactic.rwRule [] `Submodule.Inf_coe)]
-          "]")
-         [])
-        [])
-       (group (Tactic.ext "ext" [(Tactic.rcasesPat.one `x)] []) [])
-       (group
-        (Tactic.simpa
-         "simpa"
-         []
-         ["only"]
-         ["["
-          [(Tactic.simpLemma [] [] `mem_Inter)
-           ","
-           (Tactic.simpLemma [] [] `mem_set_of_eq)
-           ","
-           (Tactic.simpLemma [] [] `forall_apply_eq_imp_iff₂)
-           ","
-           (Tactic.simpLemma [] [] `exists_imp_distrib)]
-          "]"]
-         []
-         [])
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.rwSeq
-        "rw"
-        []
-        (Tactic.rwRuleSeq
-         "["
-         [(Tactic.rwRule ["←"] `coe_to_submodule)
-          ","
-          (Tactic.rwRule [] `Inf_coe_to_submodule)
-          ","
-          (Tactic.rwRule [] `Submodule.Inf_coe)]
-         "]")
-        [])
-       [])
-      (group (Tactic.ext "ext" [(Tactic.rcasesPat.one `x)] []) [])
-      (group
-       (Tactic.simpa
-        "simpa"
-        []
-        ["only"]
-        ["["
-         [(Tactic.simpLemma [] [] `mem_Inter)
-          ","
-          (Tactic.simpLemma [] [] `mem_set_of_eq)
-          ","
-          (Tactic.simpLemma [] [] `forall_apply_eq_imp_iff₂)
-          ","
-          (Tactic.simpLemma [] [] `exists_imp_distrib)]
-         "]"]
-        []
-        [])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simpa
-   "simpa"
-   []
-   ["only"]
-   ["["
-    [(Tactic.simpLemma [] [] `mem_Inter)
-     ","
-     (Tactic.simpLemma [] [] `mem_set_of_eq)
-     ","
-     (Tactic.simpLemma [] [] `forall_apply_eq_imp_iff₂)
-     ","
-     (Tactic.simpLemma [] [] `exists_imp_distrib)]
-    "]"]
-   []
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpa', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `exists_imp_distrib
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `forall_apply_eq_imp_iff₂
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `mem_set_of_eq
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `mem_Inter
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.ext "ext" [(Tactic.rcasesPat.one `x)] [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.ext', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.rwSeq
-   "rw"
-   []
-   (Tactic.rwRuleSeq
-    "["
-    [(Tactic.rwRule ["←"] `coe_to_submodule)
-     ","
-     (Tactic.rwRule [] `Inf_coe_to_submodule)
-     ","
-     (Tactic.rwRule [] `Submodule.Inf_coe)]
-    "]")
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwSeq', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Submodule.Inf_coe
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Inf_coe_to_submodule
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `coe_to_submodule
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«←»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.paren "(" [(Init.Coe.«term↑_» "↑" (Term.app `Inf [`S])) [(Term.typeAscription ":" (Term.app `Set [`L]))]] ")")
-   "="
-   (Set.Data.Set.Lattice.«term⋂_,_»
-    "⋂"
-    (Lean.explicitBinders
-     [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `s)] ":" (Term.hole "_") ")")
-      (Lean.bracketedExplicitBinders "(" [(Lean.binderIdent "_")] ":" (Init.Core.«term_∈_» `s " ∈ " `S) ")")])
-    ", "
-    (Term.paren "(" [`s [(Term.typeAscription ":" (Term.app `Set [`L]))]] ")")))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.Data.Set.Lattice.«term⋂_,_»
-   "⋂"
-   (Lean.explicitBinders
-    [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `s)] ":" (Term.hole "_") ")")
-     (Lean.bracketedExplicitBinders "(" [(Lean.binderIdent "_")] ":" (Init.Core.«term_∈_» `s " ∈ " `S) ")")])
-   ", "
-   (Term.paren "(" [`s [(Term.typeAscription ":" (Term.app `Set [`L]))]] ")"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Lattice.«term⋂_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.paren "(" [`s [(Term.typeAscription ":" (Term.app `Set [`L]))]] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `Set [`L])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `L
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `Set
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-@[ simp ]
-  theorem
-    Inf_coe
-    ( S : Set LieSubalgebra R L ) : ( ↑ Inf S : Set L ) = ⋂ ( s : _ ) ( _ : s ∈ S ) , ( s : Set L )
-    :=
-      by
-        rw [ ← coe_to_submodule , Inf_coe_to_submodule , Submodule.Inf_coe ]
-          ext x
-          simpa only [ mem_Inter , mem_set_of_eq , forall_apply_eq_imp_iff₂ , exists_imp_distrib ]
+@[simp]
+theorem Inf_coe (S : Set (LieSubalgebra R L)) : (↑Inf S : Set L) = ⋂ s ∈ S, (s : Set L) := by
+  rw [← coe_to_submodule, Inf_coe_to_submodule, Submodule.Inf_coe]
+  ext x
+  simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp_distrib]
 
 theorem Inf_glb (S : Set (LieSubalgebra R L)) : IsGlb S (Inf S) := by
   have h : ∀ K K' : LieSubalgebra R L, (K : Set L) ≤ K' ↔ K ≤ K' := by
@@ -716,7 +422,7 @@ theorem Inf_glb (S : Set (LieSubalgebra R L)) : IsGlb S (Inf S) := by
   simp only [Inf_coe]
   exact is_glb_binfi
 
-/--  The set of Lie subalgebras of a Lie algebra form a complete lattice.
+/-- The set of Lie subalgebras of a Lie algebra form a complete lattice.
 
 We provide explicit values for the fields `bot`, `top`, `inf` to get more convenient definitions
 than we would otherwise obtain from `complete_lattice_of_Inf`. -/
@@ -729,19 +435,16 @@ instance : CompleteLattice (LieSubalgebra R L) :=
     top := ⊤, le_top := fun _ _ _ => trivialₓ, inf := ·⊓·, le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩,
     inf_le_left := fun _ _ _ => And.left, inf_le_right := fun _ _ _ => And.right }
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : AddCommMonoidₓ ( LieSubalgebra R L )
-  where
-    add := · ⊔ ·
-      add_assoc _ _ _ := sup_assoc
-      zero := ⊥
-      zero_add _ := bot_sup_eq
-      add_zero _ := sup_bot_eq
-      add_comm _ _ := sup_comm
+instance : AddCommMonoidₓ (LieSubalgebra R L) where
+  add := ·⊔·
+  add_assoc := fun _ _ _ => sup_assoc
+  zero := ⊥
+  zero_add := fun _ => bot_sup_eq
+  add_zero := fun _ => sup_bot_eq
+  add_comm := fun _ _ => sup_comm
 
 @[simp]
-theorem add_eq_sup : (K+K') = K⊔K' :=
+theorem add_eq_sup : K + K' = K⊔K' :=
   rfl
 
 @[norm_cast, simp]
@@ -778,7 +481,7 @@ section NestedSubalgebras
 
 variable (h : K ≤ K')
 
-/--  Given two nested Lie subalgebras `K ⊆ K'`, the inclusion `K ↪ K'` is a morphism of Lie
+/-- Given two nested Lie subalgebras `K ⊆ K'`, the inclusion `K ↪ K'` is a morphism of Lie
 algebras. -/
 def hom_of_le : K →ₗ⁅R⁆ K' :=
   { Submodule.ofLe h with map_lie' := fun x y => rfl }
@@ -793,7 +496,7 @@ theorem hom_of_le_apply (x : K) : hom_of_le h x = ⟨x.1, h x.2⟩ :=
 theorem hom_of_le_injective : Function.Injective (hom_of_le h) := fun x y => by
   simp only [hom_of_le_apply, imp_self, Subtype.mk_eq_mk, SetLike.coe_eq_coe, Subtype.val_eq_coe]
 
-/--  Given two nested Lie subalgebras `K ⊆ K'`, we can view `K` as a Lie subalgebra of `K'`,
+/-- Given two nested Lie subalgebras `K ⊆ K'`, we can view `K` as a Lie subalgebra of `K'`,
 regarded as Lie algebra in its own right. -/
 def of_le : LieSubalgebra R K' :=
   (hom_of_le h).range
@@ -802,13 +505,13 @@ def of_le : LieSubalgebra R K' :=
 theorem mem_of_le (x : K') : x ∈ of_le h ↔ (x : L) ∈ K := by
   simp only [of_le, hom_of_le_apply, LieHom.mem_range]
   constructor
-  ·
-    rintro ⟨y, rfl⟩
+  · rintro ⟨y, rfl⟩
     exact y.property
-  ·
-    intro h
+    
+  · intro h
     use ⟨(x : L), h⟩
     simp
+    
 
 theorem of_le_eq_comap_incl : of_le h = K.comap K'.incl := by
   ext
@@ -828,77 +531,9 @@ section LieSpan
 
 variable (R L) (s : Set L)
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment "/--" " The Lie subalgebra of a Lie algebra `L` generated by a subset `s ⊆ L`. -/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.def
-  "def"
-  (Command.declId `lie_span [])
-  (Command.optDeclSig [] [(Term.typeSpec ":" (Term.app `LieSubalgebra [`R `L]))])
-  (Command.declValSimple ":=" (Term.app `Inf [(Set.«term{_|_}» "{" `N "|" (Init.Core.«term_⊆_» `s " ⊆ " `N) "}")]) [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `Inf [(Set.«term{_|_}» "{" `N "|" (Init.Core.«term_⊆_» `s " ⊆ " `N) "}")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}» "{" `N "|" (Init.Core.«term_⊆_» `s " ⊆ " `N) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Init.Core.«term_⊆_» `s " ⊆ " `N)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_⊆_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `N
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- The Lie subalgebra of a Lie algebra `L` generated by a subset `s ⊆ L`. -/
-  def lie_span : LieSubalgebra R L := Inf { N | s ⊆ N }
+def lie_span : LieSubalgebra R L :=
+  Inf { N | s ⊆ N }
 
 variable {R L s}
 
@@ -919,12 +554,12 @@ theorem submodule_span_le_lie_span : Submodule.span R s ≤ lie_span R L s := by
 
 theorem lie_span_le {K} : lie_span R L s ≤ K ↔ s ⊆ K := by
   constructor
-  ·
-    exact Set.Subset.trans subset_lie_span
-  ·
-    intro hs m hm
+  · exact Set.Subset.trans subset_lie_span
+    
+  · intro hs m hm
     rw [mem_lie_span] at hm
     exact hm _ hs
+    
 
 theorem lie_span_mono {t : Set L} (h : s ⊆ t) : lie_span R L s ≤ lie_span R L t := by
   rw [lie_span_le]
@@ -937,19 +572,21 @@ theorem coe_lie_span_submodule_eq_iff {p : Submodule R L} :
     (lie_span R L (p : Set L) : Submodule R L) = p ↔ ∃ K : LieSubalgebra R L, ↑K = p := by
   rw [p.exists_lie_subalgebra_coe_eq_iff]
   constructor <;> intro h
-  ·
-    intro x m hm
+  · intro x m hm
     rw [← h, mem_coe_submodule]
     exact lie_mem _ (subset_lie_span hm)
-  ·
-    rw [← coe_to_submodule_mk p h, coe_to_submodule, coe_to_submodule_eq_iff, lie_span_eq]
+    
+  · rw [← coe_to_submodule_mk p h, coe_to_submodule, coe_to_submodule_eq_iff, lie_span_eq]
+    
 
 variable (R L)
 
-/--  `lie_span` forms a Galois insertion with the coercion from `lie_subalgebra` to `set`. -/
-protected def gi : GaloisInsertion (lie_span R L : Set L → LieSubalgebra R L) coeₓ :=
-  { choice := fun s _ => lie_span R L s, gc := fun s t => lie_span_le, le_l_u := fun s => subset_lie_span,
-    choice_eq := fun s h => rfl }
+/-- `lie_span` forms a Galois insertion with the coercion from `lie_subalgebra` to `set`. -/
+protected def gi : GaloisInsertion (lie_span R L : Set L → LieSubalgebra R L) coeₓ where
+  choice := fun s _ => lie_span R L s
+  gc := fun s t => lie_span_le
+  le_l_u := fun s => subset_lie_span
+  choice_eq := fun s h => rfl
 
 @[simp]
 theorem span_empty : lie_span R L (∅ : Set L) = ⊥ :=
@@ -964,182 +601,8 @@ variable {L}
 theorem span_union (s t : Set L) : lie_span R L (s ∪ t) = lie_span R L s⊔lie_span R L t :=
   (LieSubalgebra.gi R L).gc.l_sup
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `span_Union [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`ι] [] "}")
-    (Term.explicitBinder "(" [`s] [":" (Term.arrow `ι "→" (Term.app `Set [`L]))] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app
-      `lie_span
-      [`R
-       `L
-       (Set.Data.Set.Lattice.«term⋃_,_»
-        "⋃"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-        ", "
-        (Term.app `s [`i]))])
-     "="
-     (Order.CompleteLattice.«term⨆_,_»
-      "⨆"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      ", "
-      (Term.app `lie_span [`R `L (Term.app `s [`i])])))))
-  (Command.declValSimple ":=" (Term.proj (Term.proj (Term.app `LieSubalgebra.gi [`R `L]) "." `gc) "." `l_supr) [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.proj (Term.proj (Term.app `LieSubalgebra.gi [`R `L]) "." `gc) "." `l_supr)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.proj (Term.app `LieSubalgebra.gi [`R `L]) "." `gc)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `LieSubalgebra.gi [`R `L])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `L
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `R
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `LieSubalgebra.gi
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `LieSubalgebra.gi [`R `L]) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.app
-    `lie_span
-    [`R
-     `L
-     (Set.Data.Set.Lattice.«term⋃_,_»
-      "⋃"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      ", "
-      (Term.app `s [`i]))])
-   "="
-   (Order.CompleteLattice.«term⨆_,_»
-    "⨆"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-    ", "
-    (Term.app `lie_span [`R `L (Term.app `s [`i])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Order.CompleteLattice.«term⨆_,_»
-   "⨆"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-   ", "
-   (Term.app `lie_span [`R `L (Term.app `s [`i])]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.CompleteLattice.«term⨆_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `lie_span [`R `L (Term.app `s [`i])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `s [`i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `s [`i]) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `L
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `R
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `lie_span
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  span_Union
-  { ι } ( s : ι → Set L ) : lie_span R L ⋃ i , s i = ⨆ i , lie_span R L s i
-  := LieSubalgebra.gi R L . gc . l_supr
+theorem span_Union {ι} (s : ι → Set L) : lie_span R L (⋃ i, s i) = ⨆ i, lie_span R L (s i) :=
+  (LieSubalgebra.gi R L).gc.l_supr
 
 end LieSpan
 
@@ -1153,7 +616,7 @@ variable {R : Type u} {L₁ : Type v} {L₂ : Type w}
 
 variable [CommRingₓ R] [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂]
 
-/--  An injective Lie algebra morphism is an equivalence onto its range. -/
+/-- An injective Lie algebra morphism is an equivalence onto its range. -/
 noncomputable def of_injective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) : L₁ ≃ₗ⁅R⁆ f.range :=
   { LinearEquiv.ofInjective (↑f) $ by
       rwa [LieHom.coe_to_linear_map] with
@@ -1167,7 +630,7 @@ theorem of_injective_apply (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective
 
 variable (L₁' L₁'' : LieSubalgebra R L₁) (L₂' : LieSubalgebra R L₂)
 
-/--  Lie subalgebras that are equal as sets are equivalent as Lie algebras. -/
+/-- Lie subalgebras that are equal as sets are equivalent as Lie algebras. -/
 def of_eq (h : (L₁' : Set L₁) = L₁'') : L₁' ≃ₗ⁅R⁆ L₁'' :=
   { LinearEquiv.ofEq (↑L₁') (↑L₁'')
       (by
@@ -1184,19 +647,19 @@ theorem of_eq_apply (L L' : LieSubalgebra R L₁) (h : (L : Set L₁) = L') (x :
 
 variable (e : L₁ ≃ₗ⁅R⁆ L₂)
 
-/--  An equivalence of Lie algebras restricts to an equivalence from any Lie subalgebra onto its
+/-- An equivalence of Lie algebras restricts to an equivalence from any Lie subalgebra onto its
 image. -/
-def of_subalgebra : L₁'' ≃ₗ⁅R⁆ (L₁''.map e : LieSubalgebra R L₂) :=
-  { LinearEquiv.ofSubmodule (e : L₁ ≃ₗ[R] L₂) (↑L₁'') with
+def lie_subalgebra_map : L₁'' ≃ₗ⁅R⁆ (L₁''.map e : LieSubalgebra R L₂) :=
+  { LinearEquiv.submoduleMap (e : L₁ ≃ₗ[R] L₂) (↑L₁'') with
     map_lie' := fun x y => by
       apply SetCoe.ext
       exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) (↑x) (↑y) }
 
 @[simp]
-theorem of_subalgebra_apply (x : L₁'') : ↑e.of_subalgebra _ x = e x :=
+theorem lie_subalgebra_map_apply (x : L₁'') : ↑e.lie_subalgebra_map _ x = e x :=
   rfl
 
-/--  An equivalence of Lie algebras restricts to an equivalence from any Lie subalgebra onto its
+/-- An equivalence of Lie algebras restricts to an equivalence from any Lie subalgebra onto its
 image. -/
 def of_subalgebras (h : L₁'.map (↑e) = L₂') : L₁' ≃ₗ⁅R⁆ L₂' :=
   { LinearEquiv.ofSubmodules (e : L₁ ≃ₗ[R] L₂) (↑L₁') (↑L₂')

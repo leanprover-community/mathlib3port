@@ -14,7 +14,7 @@ universe v u
 
 namespace CategoryTheory
 
-/--  A class for unbundled homs used to define a category. `hom` must
+/-- A class for unbundled homs used to define a category. `hom` must
 take two types `α`, `β` and instances of the corresponding structures,
 and return a predicate on `α → β`. -/
 class unbundled_hom {c : Type u → Type u} (hom : ∀ {α β}, c α → c β → (α → β) → Prop) where
@@ -29,17 +29,16 @@ variable (c : Type u → Type u) (hom : ∀ ⦃α β⦄, c α → c β → (α �
 
 include 𝒞
 
--- failed to format: format: uncaught backtrack exception
-instance
-  bundled_hom
-  : bundled_hom fun α β Iα : c α Iβ : c β => Subtype ( hom Iα Iβ )
-  where
-    toFun _ _ _ _ := Subtype.val
-      id α Iα := ⟨ id , hom_id hom Iα ⟩
-      id_to_fun := by intros <;> rfl
-      comp _ _ _ _ _ _ g f := ⟨ g . 1 ∘ f . 1 , hom_comp c g . 2 f . 2 ⟩
-      comp_to_fun := by intros <;> rfl
-      hom_ext := by intros <;> apply Subtype.eq
+instance bundled_hom : bundled_hom fun α β Iα : c α Iβ : c β => Subtype (hom Iα Iβ) where
+  toFun := fun _ _ _ _ => Subtype.val
+  id := fun α Iα => ⟨id, hom_id hom Iα⟩
+  id_to_fun := by
+    intros <;> rfl
+  comp := fun _ _ _ _ _ _ g f => ⟨g.1 ∘ f.1, hom_comp c g.2 f.2⟩
+  comp_to_fun := by
+    intros <;> rfl
+  hom_ext := by
+    intros <;> apply Subtype.eq
 
 section HasForget₂
 
@@ -49,7 +48,7 @@ include 𝒞'
 
 variable (obj : ∀ ⦃α⦄, c α → c' α) (map : ∀ ⦃α β Iα Iβ f⦄, @hom α β Iα Iβ f → hom' (obj Iα) (obj Iβ) f)
 
-/--  A custom constructor for forgetful functor
+/-- A custom constructor for forgetful functor
 between concrete categories defined using `unbundled_hom`. -/
 def mk_has_forget₂ : has_forget₂ (bundled c) (bundled c') :=
   bundled_hom.mk_has_forget₂ obj (fun X Y f => ⟨f.val, map f.property⟩) fun _ _ _ => rfl

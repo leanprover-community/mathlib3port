@@ -27,13 +27,14 @@ namespace Functor
 
 variable (f : Type u → Type v) [Functor f] [IsLawfulFunctor f]
 
-/--  Apply a functor to an `equiv`. -/
-def map_equiv (h : α ≃ β) : f α ≃ f β :=
-  { toFun := map h, invFun := map h.symm,
-    left_inv := fun x => by
-      simp [map_map],
-    right_inv := fun x => by
-      simp [map_map] }
+/-- Apply a functor to an `equiv`. -/
+def map_equiv (h : α ≃ β) : f α ≃ f β where
+  toFun := map h
+  invFun := map h.symm
+  left_inv := fun x => by
+    simp [map_map]
+  right_inv := fun x => by
+    simp [map_map]
 
 @[simp]
 theorem map_equiv_apply (h : α ≃ β) (x : f α) : (map_equiv f h : f α ≃ f β) x = map h x :=
@@ -55,13 +56,14 @@ namespace Bifunctor
 
 variable {α' β' : Type v} (F : Type u → Type v → Type w) [Bifunctor F] [IsLawfulBifunctor F]
 
-/--  Apply a bifunctor to a pair of `equiv`s. -/
-def map_equiv (h : α ≃ β) (h' : α' ≃ β') : F α α' ≃ F β β' :=
-  { toFun := bimap h h', invFun := bimap h.symm h'.symm,
-    left_inv := fun x => by
-      simp [bimap_bimap, id_bimap],
-    right_inv := fun x => by
-      simp [bimap_bimap, id_bimap] }
+/-- Apply a bifunctor to a pair of `equiv`s. -/
+def map_equiv (h : α ≃ β) (h' : α' ≃ β') : F α α' ≃ F β β' where
+  toFun := bimap h h'
+  invFun := bimap h.symm h'.symm
+  left_inv := fun x => by
+    simp [bimap_bimap, id_bimap]
+  right_inv := fun x => by
+    simp [bimap_bimap, id_bimap]
 
 @[simp]
 theorem map_equiv_apply (h : α ≃ β) (h' : α' ≃ β') (x : F α α') :

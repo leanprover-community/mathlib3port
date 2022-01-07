@@ -18,30 +18,22 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [Topological
 -- ././Mathport/Syntax/Translate/Basic.lean:169:9: warning: unsupported option default_priority
 set_option default_priority 100
 
-/--  A smooth (semi)ring is a (semi)ring `R` where addition and multiplication are smooth.
+/-- A smooth (semi)ring is a (semi)ring `R` where addition and multiplication are smooth.
 If `R` is a ring, then negation is automatically smooth, as it is multiplication with `-1`. -/
 class SmoothRing (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiringₓ R] [TopologicalSpace R] [ChartedSpace H R] extends
   HasSmoothAdd I R : Prop where
-  smooth_mul : Smooth (I.prod I) I fun p : R × R => p.1*p.2
+  smooth_mul : Smooth (I.prod I) I fun p : R × R => p.1 * p.2
 
 instance SmoothRing.to_has_smooth_mul (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiringₓ R] [TopologicalSpace R]
     [ChartedSpace H R] [h : SmoothRing I R] : HasSmoothMul I R :=
   { h with }
 
--- failed to format: format: uncaught backtrack exception
-instance
-  SmoothRing.to_lie_add_group
-  ( I : ModelWithCorners 𝕜 E H )
-      ( R : Type _ )
-      [ Ringₓ R ]
-      [ TopologicalSpace R ]
-      [ ChartedSpace H R ]
-      [ SmoothRing I R ]
-    : LieAddGroup I R
-  where
-    compatible e e' := HasGroupoid.compatible ( timesContDiffGroupoid ⊤ I )
-      smooth_add := smooth_add I
-      smooth_neg := by simpa only [ neg_one_mul ] using @ smooth_mul_left 𝕜 _ H _ E _ _ I R _ _ _ _ ( - 1 )
+instance SmoothRing.to_lie_add_group (I : ModelWithCorners 𝕜 E H) (R : Type _) [Ringₓ R] [TopologicalSpace R]
+    [ChartedSpace H R] [SmoothRing I R] : LieAddGroup I R where
+  compatible := fun e e' => HasGroupoid.compatible (timesContDiffGroupoid ⊤ I)
+  smooth_add := smooth_add I
+  smooth_neg := by
+    simpa only [neg_one_mul] using @smooth_mul_left 𝕜 _ H _ E _ _ I R _ _ _ _ (-1)
 
 end SmoothRing
 
@@ -57,7 +49,7 @@ instance field_smooth_ring {𝕜 : Type _} [NondiscreteNormedField 𝕜] : Smoot
 variable {𝕜 R E H : Type _} [TopologicalSpace R] [TopologicalSpace H] [NondiscreteNormedField 𝕜] [NormedGroup E]
   [NormedSpace 𝕜 E] [ChartedSpace H R] (I : ModelWithCorners 𝕜 E H)
 
-/--  A smooth (semi)ring is a topological (semi)ring. This is not an instance for technical reasons,
+/-- A smooth (semi)ring is a topological (semi)ring. This is not an instance for technical reasons,
 see note [Design choices about smooth algebraic structures]. -/
 theorem topological_ring_of_smooth [Semiringₓ R] [SmoothRing I R] : TopologicalRing R :=
   { has_continuous_mul_of_smooth I, has_continuous_add_of_smooth I with }

@@ -18,7 +18,7 @@ variable {α : Type u} {β : α → Type v}
 
 namespace Multiset
 
-/--  Multiset of keys of an association multiset. -/
+/-- Multiset of keys of an association multiset. -/
 def keys (s : Multiset (Sigma β)) : Multiset α :=
   s.map Sigma.fst
 
@@ -26,7 +26,7 @@ def keys (s : Multiset (Sigma β)) : Multiset α :=
 theorem coe_keys {l : List (Sigma β)} : keys (l : Multiset (Sigma β)) = (l.keys : Multiset α) :=
   rfl
 
-/--  `nodupkeys s` means that `s` has no duplicate keys. -/
+/-- `nodupkeys s` means that `s` has no duplicate keys. -/
 def nodupkeys (s : Multiset (Sigma β)) : Prop :=
   Quot.liftOn s List.Nodupkeys fun s t p => propext $ perm_nodupkeys p
 
@@ -39,17 +39,17 @@ end Multiset
 /-! ### finmap -/
 
 
-/--  `finmap β` is the type of finite maps over a multiset. It is effectively
+/-- `finmap β` is the type of finite maps over a multiset. It is effectively
   a quotient of `alist β` by permutation of the underlying list. -/
 structure Finmap (β : α → Type v) : Type max u v where
   entries : Multiset (Sigma β)
   Nodupkeys : entries.nodupkeys
 
-/--  The quotient map from `alist` to `finmap`. -/
+/-- The quotient map from `alist` to `finmap`. -/
 def Alist.toFinmap (s : Alist β) : Finmap β :=
   ⟨s.entries, s.nodupkeys⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:333:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
 local notation:999 "⟦" a "⟧" => Alist.toFinmap a
 
 theorem Alist.to_finmap_eq {s₁ s₂ : Alist β} : ⟦s₁⟧ = ⟦s₂⟧ ↔ s₁.entries ~ s₂.entries := by
@@ -59,7 +59,7 @@ theorem Alist.to_finmap_eq {s₁ s₂ : Alist β} : ⟦s₁⟧ = ⟦s₂⟧ ↔ 
 theorem Alist.to_finmap_entries (s : Alist β) : ⟦s⟧.entries = s.entries :=
   rfl
 
-/--  Given `l : list (sigma β)`, create a term of type `finmap β` by removing
+/-- Given `l : list (sigma β)`, create a term of type `finmap β` by removing
 entries with duplicate keys. -/
 def List.toFinmap [DecidableEq α] (s : List (Sigma β)) : Finmap β :=
   s.to_alist.to_finmap
@@ -71,34 +71,30 @@ open Alist
 /-! ### lifting from alist -/
 
 
-/--  Lift a permutation-respecting function on `alist` to `finmap`. -/
+/-- Lift a permutation-respecting function on `alist` to `finmap`. -/
 @[elab_as_eliminator]
 def lift_on {γ} (s : Finmap β) (f : Alist β → γ) (H : ∀ a b : Alist β, a.entries ~ b.entries → f a = f b) : γ := by
   refine'
     (Quotientₓ.liftOn s.1 (fun l => (⟨_, fun nd => f ⟨l, nd⟩⟩ : Part γ)) fun l₁ l₂ p => Part.ext' (perm_nodupkeys p) _ :
           Part γ).get
       _
-  ·
-    exact fun h₁ h₂ =>
-      H _ _
-        (by
-          exact p)
-  ·
-    have := s.nodupkeys
+  · exact fun h₁ h₂ => H _ _ p
+    
+  · have := s.nodupkeys
     rcases s.entries with ⟨l⟩
     exact id
+    
 
 @[simp]
 theorem lift_on_to_finmap {γ} (s : Alist β) (f : Alist β → γ) H : lift_on (⟦s⟧) f H = f s := by
   cases s <;> rfl
 
-/--  Lift a permutation-respecting function on 2 `alist`s to 2 `finmap`s. -/
+/-- Lift a permutation-respecting function on 2 `alist`s to 2 `finmap`s. -/
 @[elab_as_eliminator]
 def lift_on₂ {γ} (s₁ s₂ : Finmap β) (f : Alist β → Alist β → γ)
     (H : ∀ a₁ b₁ a₂ b₂ : Alist β, a₁.entries ~ a₂.entries → b₁.entries ~ b₂.entries → f a₁ b₁ = f a₂ b₂) : γ :=
-  lift_on s₁ (fun l₁ => lift_on s₂ (f l₁) fun b₁ b₂ p => H _ _ _ _ (perm.refl _) p) fun a₁ a₂ p =>
+  lift_on s₁ (fun l₁ => lift_on s₂ (f l₁) fun b₁ b₂ p => H _ _ _ _ (perm.refl _) p) fun a₁ a₂ p => by
     have H' : f a₁ = f a₂ := funext fun _ => H _ _ _ _ p (perm.refl _)
-    by
     simp only [H']
 
 @[simp]
@@ -138,7 +134,7 @@ theorem ext_iff {s t : Finmap β} : s.entries = t.entries ↔ s = t :=
 /-! ### mem -/
 
 
-/--  The predicate `a ∈ s` means that `s` has a value associated to the key `a`. -/
+/-- The predicate `a ∈ s` means that `s` has a value associated to the key `a`. -/
 instance : HasMem α (Finmap β) :=
   ⟨fun a s => a ∈ s.entries.keys⟩
 
@@ -152,7 +148,7 @@ theorem mem_to_finmap {a : α} {s : Alist β} : a ∈ ⟦s⟧ ↔ a ∈ s :=
 /-! ### keys -/
 
 
-/--  The set of keys of a finite map. -/
+/-- The set of keys of a finite map. -/
 def keys (s : Finmap β) : Finset α :=
   ⟨s.entries.keys, induction_on s keys_nodup⟩
 
@@ -170,7 +166,7 @@ theorem mem_keys {a : α} {s : Finmap β} : a ∈ s.keys ↔ a ∈ s :=
 /-! ### empty -/
 
 
-/--  The empty map. -/
+/-- The empty map. -/
 instance : HasEmptyc (Finmap β) :=
   ⟨⟨0, nodupkeys_nil⟩⟩
 
@@ -195,7 +191,7 @@ theorem keys_empty : (∅ : Finmap β).keys = ∅ :=
 /-! ### singleton -/
 
 
-/--  The singleton map. -/
+/-- The singleton map. -/
 def singleton (a : α) (b : β a) : Finmap β :=
   ⟦Alist.singleton a b⟧
 
@@ -217,7 +213,7 @@ instance has_decidable_eq [∀ a, DecidableEq (β a)] : DecidableEq (Finmap β)
 /-! ### lookup -/
 
 
-/--  Look up the value associated to a key in a map. -/
+/-- Look up the value associated to a key in a map. -/
 def lookup (a : α) (s : Finmap β) : Option (β a) :=
   lift_on s (lookup a) fun s t => perm_lookup
 
@@ -263,7 +259,7 @@ theorem ext_lookup {s₁ s₂ : Finmap β} : (∀ x, s₁.lookup x = s₂.lookup
 /-! ### replace -/
 
 
-/--  Replace a key with a given value in a finite map.
+/-- Replace a key with a given value in a finite map.
   If the key is not present it does nothing. -/
 def replace (a : α) (b : β a) (s : Finmap β) : Finmap β :=
   (lift_on s fun t => ⟦replace a b t⟧) $ fun s₁ s₂ p => to_finmap_eq.2 $ perm_replace p
@@ -287,12 +283,12 @@ end
 /-! ### foldl -/
 
 
-/--  Fold a commutative function over the key-value pairs in the map -/
+/-- Fold a commutative function over the key-value pairs in the map -/
 def foldl {δ : Type w} (f : δ → ∀ a, β a → δ) (H : ∀ d a₁ b₁ a₂ b₂, f (f d a₁ b₁) a₂ b₂ = f (f d a₂ b₂) a₁ b₁) (d : δ)
     (m : Finmap β) : δ :=
   m.entries.foldl (fun d s => f d s.1 s.2) (fun d s t => H _ _ _ _ _) d
 
-/--  `any f s` returns `tt` iff there exists a value `v` in `s` such that `f v = tt`. -/
+/-- `any f s` returns `tt` iff there exists a value `v` in `s` such that `f v = tt`. -/
 def any (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
   s.foldl (fun x y z => x ∨ f y z)
     (by
@@ -300,7 +296,7 @@ def any (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
       simp [Or.right_comm])
     ff
 
-/--  `all f s` returns `tt` iff `f v = tt` for all values `v` in `s`. -/
+/-- `all f s` returns `tt` iff `f v = tt` for all values `v` in `s`. -/
 def all (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
   s.foldl (fun x y z => x ∧ f y z)
     (by
@@ -315,7 +311,7 @@ section
 
 variable [DecidableEq α]
 
-/--  Erase a key from the map. If the key is not present it does nothing. -/
+/-- Erase a key from the map. If the key is not present it does nothing. -/
 def erase (a : α) (s : Finmap β) : Finmap β :=
   (lift_on s fun t => ⟦erase a t⟧) $ fun s₁ s₂ p => to_finmap_eq.2 $ perm_erase p
 
@@ -357,7 +353,7 @@ theorem erase_erase {a a' : α} {s : Finmap β} : erase a (erase a' s) = erase a
 /-! ### sdiff -/
 
 
-/--  `sdiff s s'` consists of all key-value pairs from `s` and `s'` where the keys are in `s` or
+/-- `sdiff s s'` consists of all key-value pairs from `s` and `s'` where the keys are in `s` or
 `s'` but not both. -/
 def sdiff (s s' : Finmap β) : Finmap β :=
   s'.foldl (fun s x _ => s.erase x) (fun a₀ a₁ _ a₂ _ => erase_erase) s
@@ -368,7 +364,7 @@ instance : HasSdiff (Finmap β) :=
 /-! ### insert -/
 
 
-/--  Insert a key-value pair into a finite map, replacing any existing pair with
+/-- Insert a key-value pair into a finite map, replacing any existing pair with
   the same key. -/
 def insert (a : α) (b : β a) (s : Finmap β) : Finmap β :=
   (lift_on s fun t => ⟦insert a b t⟧) $ fun s₁ s₂ p => to_finmap_eq.2 $ perm_insert p
@@ -412,8 +408,8 @@ theorem to_finmap_cons (a : α) (b : β a) (xs : List (Sigma β)) :
 
 theorem mem_list_to_finmap (a : α) (xs : List (Sigma β)) : a ∈ xs.to_finmap ↔ ∃ b : β a, Sigma.mk a b ∈ xs := by
   induction' xs with x xs <;> [skip, cases x] <;>
-    simp only [to_finmap_cons, not_mem_empty, exists_or_distrib, not_mem_nil, to_finmap_nil, exists_false, mem_cons_iff,
-        mem_insert, exists_and_distrib_left] <;>
+    simp only [to_finmap_cons, *, not_mem_empty, exists_or_distrib, not_mem_nil, to_finmap_nil, exists_false,
+        mem_cons_iff, mem_insert, exists_and_distrib_left] <;>
       apply or_congr _ Iff.rfl
   conv => lhs rw [← and_trueₓ (a = x_fst)]
   apply and_congr_right
@@ -427,7 +423,7 @@ theorem insert_singleton_eq {a : α} {b b' : β a} : insert a b (singleton a b')
 /-! ### extract -/
 
 
-/--  Erase a key from the map, and return the corresponding value, if found. -/
+/-- Erase a key from the map, and return the corresponding value, if found. -/
 def extract (a : α) (s : Finmap β) : Option (β a) × Finmap β :=
   (lift_on s fun t => Prod.map id to_finmap (extract a t)) $ fun s₁ s₂ p => by
     simp [perm_lookup p, to_finmap_eq, perm_erase p]
@@ -440,7 +436,7 @@ theorem extract_eq_lookup_erase (a : α) (s : Finmap β) : extract a s = (lookup
 /-! ### union -/
 
 
-/--  `s₁ ∪ s₂` is the key-based union of two finite maps. It is left-biased: if
+/-- `s₁ ∪ s₂` is the key-based union of two finite maps. It is left-biased: if
 there exists an `a ∈ s₁`, `lookup a (s₁ ∪ s₂) = lookup a s₁`. -/
 def union (s₁ s₂ : Finmap β) : Finmap β :=
   (lift_on₂ s₁ s₂ fun s₁ s₂ => ⟦s₁ ∪ s₂⟧) $ fun s₁ s₂ s₃ s₄ p₁₃ p₂₄ => to_finmap_eq.mpr $ perm_union p₁₃ p₂₄
@@ -471,10 +467,10 @@ theorem lookup_union_right {a} {s₁ s₂ : Finmap β} : a ∉ s₁ → lookup a
 
 theorem lookup_union_left_of_not_in {a} {s₁ s₂ : Finmap β} (h : a ∉ s₂) : lookup a (s₁ ∪ s₂) = lookup a s₁ := by
   by_cases' h' : a ∈ s₁
-  ·
-    rw [lookup_union_left h']
-  ·
-    rw [lookup_union_right h', lookup_eq_none.mpr h, lookup_eq_none.mpr h']
+  · rw [lookup_union_left h']
+    
+  · rw [lookup_union_right h', lookup_eq_none.mpr h, lookup_eq_none.mpr h']
+    
 
 @[simp]
 theorem mem_lookup_union {a} {b : β a} {s₁ s₂ : Finmap β} :
@@ -507,20 +503,20 @@ theorem erase_union_singleton (a : α) (b : β a) (s : Finmap β) (h : s.lookup 
     s.erase a ∪ singleton a b = s :=
   ext_lookup fun x => by
     by_cases' h' : x = a
-    ·
-      subst a
+    · subst a
       rw [lookup_union_right not_mem_erase_self, lookup_singleton_eq, h]
-    ·
-      have : x ∉ singleton a b := by
+      
+    · have : x ∉ singleton a b := by
         rwa [mem_singleton]
       rw [lookup_union_left_of_not_in this, lookup_erase_ne h']
+      
 
 end
 
 /-! ### disjoint -/
 
 
-/--  `disjoint s₁ s₂` holds if `s₁` and `s₂` have no keys in common. -/
+/-- `disjoint s₁ s₂` holds if `s₁` and `s₂` have no keys in common. -/
 def Disjoint (s₁ s₂ : Finmap β) : Prop :=
   ∀, ∀ x ∈ s₁, ∀, ¬x ∈ s₂
 
@@ -555,17 +551,16 @@ theorem union_cancel {s₁ s₂ s₃ : Finmap β} (h : Disjoint s₁ s₃) (h' :
   ⟨fun h'' => by
     apply ext_lookup
     intro x
-    have : (s₁ ∪ s₃).lookup x = (s₂ ∪ s₃).lookup x
-    exact h'' ▸ rfl
+    have : (s₁ ∪ s₃).lookup x = (s₂ ∪ s₃).lookup x := h'' ▸ rfl
     by_cases' hs₁ : x ∈ s₁
-    ·
-      rwa [lookup_union_left hs₁, lookup_union_left_of_not_in (h _ hs₁)] at this
-    ·
-      by_cases' hs₂ : x ∈ s₂
-      ·
-        rwa [lookup_union_left_of_not_in (h' _ hs₂), lookup_union_left hs₂] at this
-      ·
-        rw [lookup_eq_none.mpr hs₁, lookup_eq_none.mpr hs₂],
+    · rwa [lookup_union_left hs₁, lookup_union_left_of_not_in (h _ hs₁)] at this
+      
+    · by_cases' hs₂ : x ∈ s₂
+      · rwa [lookup_union_left_of_not_in (h' _ hs₂), lookup_union_left hs₂] at this
+        
+      · rw [lookup_eq_none.mpr hs₁, lookup_eq_none.mpr hs₂]
+        
+      ,
     fun h => h ▸ rfl⟩
 
 end

@@ -7,22 +7,23 @@ private unsafe def loc.to_string_aux : Option Name → Stringₓ
   | none => "⊢"
   | some x => toString x
 
-/--  pretty print a `loc` -/
+/-- pretty print a `loc` -/
 unsafe def loc.to_string : loc → Stringₓ
   | loc.ns [] => ""
   | loc.ns [none] => ""
   | loc.ns ls => Stringₓ.join $ List.intersperse " " (" at" :: ls.map loc.to_string_aux)
   | loc.wildcard => " at *"
 
-/--  shift `pos` `n` columns to the left -/
-unsafe def pos.move_left (p : Pos) (n : ℕ) : Pos :=
-  { line := p.line, column := p.column - n }
+/-- shift `pos` `n` columns to the left -/
+unsafe def pos.move_left (p : Pos) (n : ℕ) : Pos where
+  line := p.line
+  column := p.column - n
 
 namespace Tactic
 
 open List
 
-/--  parse structure instance of the shape `{ field1 := value1, .. , field2 := value2 }` -/
+/-- parse structure instance of the shape `{ field1 := value1, .. , field2 := value2 }` -/
 unsafe def struct_inst : lean.parser pexpr := do
   tk "{"
   let ls ←
@@ -33,7 +34,7 @@ unsafe def struct_inst : lean.parser pexpr := do
   let (names, values) := unzip fields
   pure $ pexpr.mk_structure_instance { field_names := names, field_values := values, sources := srcs }
 
-/--  pretty print structure instance -/
+/-- pretty print structure instance -/
 unsafe def struct.to_tactic_format (e : pexpr) : tactic format := do
   let r ← e.get_structure_instance_info
   let fs ←
@@ -46,27 +47,28 @@ unsafe def struct.to_tactic_format (e : pexpr) : tactic format := do
   let x : format := format.join $ List.intersperse ", " (fs ++ ss)
   pure f! " \{{x}}"
 
-/--  Attribute containing a table that accumulates multiple `squeeze_simp` suggestions -/
+/-- Attribute containing a table that accumulates multiple `squeeze_simp` suggestions -/
 @[user_attribute]
 private unsafe def squeeze_loc_attr :
-    user_attribute Unit (Option (List (Pos × Stringₓ × List simp_arg_type × Stringₓ))) :=
-  { Name := `_squeeze_loc, parser := fail "this attribute should not be used",
-    descr := "table to accumulate multiple `squeeze_simp` suggestions" }
+    user_attribute Unit (Option (List (Pos × Stringₓ × List simp_arg_type × Stringₓ))) where
+  Name := `_squeeze_loc
+  parser := fail "this attribute should not be used"
+  descr := "table to accumulate multiple `squeeze_simp` suggestions"
 
-/--  dummy declaration used as target of `squeeze_loc` attribute -/
+/-- dummy declaration used as target of `squeeze_loc` attribute -/
 def squeeze_loc_attr_carrier :=
   ()
 
 run_cmd
   squeeze_loc_attr.Set `` squeeze_loc_attr_carrier none tt
 
-/--  Format a list of arguments for use with `simp` and friends. This omits the
+/-- Format a list of arguments for use with `simp` and friends. This omits the
 list entirely if it is empty. -/
 unsafe def render_simp_arg_list : List simp_arg_type → tactic format
   | [] => pure ""
   | args => (· ++ ·) " " <$> to_line_wrap_format <$> args.mmap pp
 
-/--  Emit a suggestion to the user. If inside a `squeeze_scope` block,
+/-- Emit a suggestion to the user. If inside a `squeeze_scope` block,
 the suggestions emitted through `mk_suggestion` will be aggregated so that
 every tactic that makes a suggestion can consider multiple execution of the
 same invocation.
@@ -84,7 +86,7 @@ unsafe def mk_suggestion (p : Pos) (pre post : Stringₓ) (args : List simp_arg_
 
 local postfix:9001 "?" => optionalₓ
 
-/--  translate a `pexpr` into a `simp` configuration -/
+/-- translate a `pexpr` into a `simp` configuration -/
 unsafe def parse_config : Option pexpr → tactic (simp_config_ext × format)
   | none => pure ({  }, "")
   | some cfg => do
@@ -92,7 +94,7 @@ unsafe def parse_config : Option pexpr → tactic (simp_config_ext × format)
     let fmt ← has_to_tactic_format.to_tactic_format cfg
     Prod.mk <$> eval_expr simp_config_ext e <*> struct.to_tactic_format cfg
 
-/--  translate a `pexpr` into a `dsimp` configuration -/
+/-- translate a `pexpr` into a `dsimp` configuration -/
 unsafe def parse_dsimp_config : Option pexpr → tactic (dsimp_config × format)
   | none => pure ({  }, "")
   | some cfg => do
@@ -100,7 +102,7 @@ unsafe def parse_dsimp_config : Option pexpr → tactic (dsimp_config × format)
     let fmt ← has_to_tactic_format.to_tactic_format cfg
     Prod.mk <$> eval_expr dsimp_config e <*> struct.to_tactic_format cfg
 
-/--  `same_result proof tac` runs tactic `tac` and checks if the proof
+/-- `same_result proof tac` runs tactic `tac` and checks if the proof
 produced by `tac` is equivalent to `proof`. -/
 unsafe def same_result (pr : proof_state) (tac : tactic Unit) : tactic Bool := do
   let s ← get_proof_state_after tac
@@ -117,8 +119,7 @@ private unsafe def filter_simp_set_aux (tac : Bool → List simp_arg_type → ta
 initialize
   registerTraceClass.1 `squeeze.deleted
 
-/-- 
-`filter_simp_set g call_simp user_args simp_args` returns `args'` such that, when calling
+/-- `filter_simp_set g call_simp user_args simp_args` returns `args'` such that, when calling
 `call_simp tt /- only -/ args'` on the goal `g` (`g` is a meta var) we end up in the same
 state as if we had called `call_simp ff (user_args ++ simp_args)` and removing any one
 element of `args'` changes the resulting proof.
@@ -133,12 +134,12 @@ unsafe def filter_simp_set (tac : Bool → List simp_arg_type → tactic Unit) (
         dbg_trace "deleting provided arguments {← ds}")
   pure (user_args' ++ simp_args')
 
-/--  make a `simp_arg_type` that references the name given as an argument -/
+/-- make a `simp_arg_type` that references the name given as an argument -/
 unsafe def name.to_simp_args (n : Name) : tactic simp_arg_type := do
   let e ← resolve_name' n
   pure $ simp_arg_type.expr e
 
-/--  tactic combinator to create a `simp`-like tactic that minimizes its
+/-- tactic combinator to create a `simp`-like tactic that minimizes its
 argument list.
 
  * `slow`: adds all rfl-lemmas from the environment to the initial list (this is a slower but more
@@ -173,10 +174,9 @@ unsafe def squeeze_simp_core (slow no_dflt : Bool) (args : List simp_arg_type)
 
 namespace Interactive
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
-deriving instance [anonymous] for simp_arg_type
+deriving instance DecidableEq for simp_arg_type
 
-/--  Turn a `simp_arg_type` into a string. -/
+/-- Turn a `simp_arg_type` into a string. -/
 unsafe instance simp_arg_type.has_to_string : HasToString simp_arg_type :=
   ⟨fun a =>
     match a with
@@ -185,7 +185,7 @@ unsafe instance simp_arg_type.has_to_string : HasToString simp_arg_type :=
     | simp_arg_type.expr e => toString e
     | simp_arg_type.symm_expr e => "←" ++ toString e⟩
 
-/--  combinator meant to aggregate the suggestions issued by multiple calls
+/-- combinator meant to aggregate the suggestions issued by multiple calls
 of `squeeze_simp` (due, for instance, to `;`).
 
 Can be used as:
@@ -223,8 +223,7 @@ unsafe def squeeze_scope (tac : itactic) : tactic Unit := do
           mk_suggestion p pre post (suggs.foldl List.unionₓ []) tt
           pure ()
 
-/-- 
-`squeeze_simp`, `squeeze_simpa` and `squeeze_dsimp` perform the same
+/-- `squeeze_simp`, `squeeze_simpa` and `squeeze_dsimp` perform the same
 task with the difference that `squeeze_simp` relates to `simp` while
 `squeeze_simpa` relates to `simpa` and `squeeze_dsimp` relates to
 `dsimp`. The following applies to `squeeze_simp`, `squeeze_simpa` and
@@ -290,7 +289,7 @@ unsafe def squeeze_simp (key : parse cur_pos) (slow_and_accurate : parse (tk "?"
       let loc := loc.to_string locat
       mk_suggestion (key.move_left 1) (s! "Try this: simp{use_iota_eqn} only") (s! "{attrs }{loc }{c}") args
 
-/--  see `squeeze_simp` -/
+/-- see `squeeze_simp` -/
 unsafe def squeeze_simpa (key : parse cur_pos) (slow_and_accurate : parse (tk "?")?) (use_iota_eqn : parse (tk "!")?)
     (no_dflt : parse only_flag) (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
     (tgt : parse (tk "using" *> texpr)?) (cfg : parse (struct_inst)?) : tactic Unit := do
@@ -309,7 +308,7 @@ unsafe def squeeze_simpa (key : parse cur_pos) (slow_and_accurate : parse (tk "?
       let tgt' := tgt'.get_or_else ""
       mk_suggestion (key.move_left 1) (s! "Try this: simpa{use_iota_eqn} only") (s! "{attrs }{tgt' }{c}") args
 
-/--  `squeeze_dsimp` behaves like `dsimp` (including all its arguments)
+/-- `squeeze_dsimp` behaves like `dsimp` (including all its arguments)
 and prints a `dsimp only` invocation to skip the search through the
 `simp` lemma list. See the doc string of `squeeze_simp` for examples.
  -/

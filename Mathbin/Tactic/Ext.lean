@@ -12,8 +12,7 @@ open Lean.Parser Nat Tactic
 initialize
   registerTraceClass.1 `ext
 
-/-- 
-`derive_struct_ext_lemma n` generates two extensionality lemmas based on
+/-- `derive_struct_ext_lemma n` generates two extensionality lemmas based on
 the equality of all non-propositional projections.
 
 On the following:
@@ -156,8 +155,7 @@ unsafe def equiv_type_constr (n n' : Name) : tactic Unit := do
 
 section PerformanceHack
 
-/-- 
-For performance reasons, it is inadvisable to use `user_attribute.get_param`.
+/-- For performance reasons, it is inadvisable to use `user_attribute.get_param`.
 The parameter is stored as a reflected expression.  When calling `get_param`,
 the stored parameter is evaluated using `eval_expr`, which first compiles the
 expression into VM bytecode. The unevaluated expression is available using
@@ -197,45 +195,45 @@ attribute [local semireducible] reflected
 private unsafe def hacky_name_reflect : has_reflect Name := fun n => quote.1 (id (%%ₓexpr.const n []) : Name)
 
 @[user_attribute]
-private unsafe def ext_attr_core : user_attribute (name_map Name) Name :=
-  { Name := `_ext_core, descr := "(internal attribute used by ext)",
-    cache_cfg :=
-      { dependencies := [],
-        mk_cache := fun ns =>
-          ns.mfoldl
-            (fun m n => do
-              let ext_l ← ext_attr_core.get_param_untyped n
-              pure (m.insert n ext_l.app_arg.const_name))
-            mk_name_map },
-    parser := failure }
+private unsafe def ext_attr_core : user_attribute (name_map Name) Name where
+  Name := `_ext_core
+  descr := "(internal attribute used by ext)"
+  cache_cfg :=
+    { dependencies := [],
+      mk_cache := fun ns =>
+        ns.mfoldl
+          (fun m n => do
+            let ext_l ← ext_attr_core.get_param_untyped n
+            pure (m.insert n ext_l.app_arg.const_name))
+          mk_name_map }
+  parser := failure
 
 end PerformanceHack
 
-/--  Private attribute used to tag extensionality lemmas. -/
+/-- Private attribute used to tag extensionality lemmas. -/
 @[user_attribute]
-private unsafe def ext_lemma_attr_core : user_attribute :=
-  { Name := `_ext_lemma_core, descr := "(internal attribute used by ext)", parser := failure }
+private unsafe def ext_lemma_attr_core : user_attribute where
+  Name := `_ext_lemma_core
+  descr := "(internal attribute used by ext)"
+  parser := failure
 
-/-- 
-Returns the extensionality lemmas in the environment, as a map from structure
+/-- Returns the extensionality lemmas in the environment, as a map from structure
 name to lemma name.
 -/
 unsafe def get_ext_lemmas : tactic (name_map Name) :=
   ext_attr_core.get_cache
 
-/-- 
-Returns the extensionality lemmas in the environment, as a list of lemma names.
+/-- Returns the extensionality lemmas in the environment, as a list of lemma names.
 -/
 unsafe def get_ext_lemma_names : tactic (List Name) :=
   attribute.get_instances ext_lemma_attr_core.Name
 
-/--  Marks `lem` as an extensionality lemma corresponding to type constructor `constr`;
+/-- Marks `lem` as an extensionality lemma corresponding to type constructor `constr`;
 if `persistent` is true then this is a global attribute, else local. -/
 unsafe def add_ext_lemma (constr lem : Name) (persistent : Bool) : tactic Unit :=
   ext_attr_core.Set constr lem persistent >> ext_lemma_attr_core.Set lem () persistent
 
-/-- 
-Tag lemmas of the form:
+/-- Tag lemmas of the form:
 
 ```lean
 @[ext]
@@ -303,25 +301,26 @@ x = y ↔ x.x = y.x ∧ x.y = y.y ∧ x.z == y.z ∧ x.k = y.k
 
 -/
 @[user_attribute]
-unsafe def extensional_attribute : user_attribute Unit (Option Name) :=
-  { Name := `ext, descr := "lemmas usable by `ext` tactic", parser := optionalₓ ident,
-    before_unset := some $ fun _ _ => pure (),
-    after_set :=
-      some $ fun n _ b => do
-        let add ← extensional_attribute.get_param n
-        unset_attribute `ext n
-        let e ← get_env
-        let n ← if (e.structure_fields n).isSome then derive_struct_ext_lemma n else pure n
-        let s ← mk_const n >>= infer_type >>= get_ext_subject
-        match add with
-          | none => add_ext_lemma s n b
-          | some add => equiv_type_constr s add >> add_ext_lemma add n b }
+unsafe def extensional_attribute : user_attribute Unit (Option Name) where
+  Name := `ext
+  descr := "lemmas usable by `ext` tactic"
+  parser := optionalₓ ident
+  before_unset := some $ fun _ _ => pure ()
+  after_set :=
+    some $ fun n _ b => do
+      let add ← extensional_attribute.get_param n
+      unset_attribute `ext n
+      let e ← get_env
+      let n ← if (e.structure_fields n).isSome then derive_struct_ext_lemma n else pure n
+      let s ← mk_const n >>= infer_type >>= get_ext_subject
+      match add with
+        | none => add_ext_lemma s n b
+        | some add => equiv_type_constr s add >> add_ext_lemma add n b
 
 add_tactic_doc
   { Name := "ext", category := DocCategory.attr, declNames := [`extensional_attribute], tags := ["rewrite", "logic"] }
 
-/-- 
-When possible, `ext` lemmas are stated without a full set of arguments. As an example, for bundled
+/-- When possible, `ext` lemmas are stated without a full set of arguments. As an example, for bundled
 homs `f`, `g`, and `of`, `f.comp of = g.comp of → f = g` is a better `ext` lemma than
 `(∀ x, f (of x) = g (of x)) → f = g`, as the former allows a second type-specific extensionality
 lemmas to be applied to `f.comp of = g.comp of`.
@@ -370,14 +369,14 @@ theorem PUnit.extₓ {x y : PUnit} : x = y := by
 
 namespace Tactic
 
-/--  Helper structure for `ext` and `ext1`. `lemmas` keeps track of extensionality lemmas
+/-- Helper structure for `ext` and `ext1`. `lemmas` keeps track of extensionality lemmas
   applied so far. -/
 unsafe structure ext_state : Type where
   patts : List rcases_patt := []
   trace_msg : List Stringₓ := []
   fuel : Option ℕ := none
 
-/--  Helper function for `try_intros`. Additionally populates the `trace_msg` field
+/-- Helper function for `try_intros`. Additionally populates the `trace_msg` field
   of `ext_state`. -/
 private unsafe def try_intros_core : StateTₓ ext_state tactic Unit := do
   let ⟨patts, trace_msg, fuel⟩ ← get
@@ -397,13 +396,13 @@ private unsafe def try_intros_core : StateTₓ ext_state tactic Unit := do
           modifyₓ fun ⟨_, trace_msg, fuel⟩ => ⟨xs, trace_msg ++ [msg], fuel⟩
           try_intros_core
 
-/--  Try to introduce as many arguments as possible, using the given patterns to destruct the
+/-- Try to introduce as many arguments as possible, using the given patterns to destruct the
   introduced variables. Returns the unused patterns. -/
 unsafe def try_intros (patts : List rcases_patt) : tactic (List rcases_patt) :=
   let σ := ext_state.mk patts [] none
   (ext_state.patts ∘ Prod.snd) <$> StateTₓ.run try_intros_core σ
 
-/--  Apply one extensionality lemma, and destruct the arguments using the patterns
+/-- Apply one extensionality lemma, and destruct the arguments using the patterns
   in the ext_state. -/
 unsafe def ext1_core (cfg : apply_cfg := {  }) : StateTₓ ext_state tactic Unit := do
   let ⟨patts, trace_msg, _⟩ ← get
@@ -442,7 +441,7 @@ unsafe def ext1_core (cfg : apply_cfg := {  }) : StateTₓ ext_state tactic Unit
   modifyₓ fun ⟨patts, trace_msg, fuel⟩ => ⟨patts, trace_msg ++ new_msgs, fuel⟩
   try_intros_core
 
-/--  Apply multiple extensionality lemmas, destructing the arguments using the given patterns. -/
+/-- Apply multiple extensionality lemmas, destructing the arguments using the given patterns. -/
 unsafe def ext_core (cfg : apply_cfg := {  }) : StateTₓ ext_state tactic Unit := do
   let acc@⟨_, _, fuel⟩ ← get
   match fuel with
@@ -452,14 +451,14 @@ unsafe def ext_core (cfg : apply_cfg := {  }) : StateTₓ ext_state tactic Unit 
       modifyₓ fun ⟨patts, lemmas, _⟩ => ⟨patts, lemmas, Nat.pred <$> n⟩
       ext_core <|> pure ()
 
-/--  Apply one extensionality lemma, and destruct the arguments using the given patterns.
+/-- Apply one extensionality lemma, and destruct the arguments using the given patterns.
   Returns the unused patterns. -/
 unsafe def ext1 (xs : List rcases_patt) (cfg : apply_cfg := {  }) (trace : Bool := ff) : tactic (List rcases_patt) := do
   let ⟨_, σ⟩ ← StateTₓ.run (ext1_core cfg) { patts := xs }
   when trace $ tactic.trace $ "Try this: " ++ ", ".intercalate σ.trace_msg
   pure σ.patts
 
-/--  Apply multiple extensionality lemmas, destructing the arguments using the given patterns.
+/-- Apply multiple extensionality lemmas, destructing the arguments using the given patterns.
   `ext ps (some n)` applies at most `n` extensionality lemmas. Returns the unused patterns. -/
 unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : apply_cfg := {  }) (trace : Bool := ff) :
     tactic (List rcases_patt) := do
@@ -471,8 +470,7 @@ local postfix:9001 "?" => optionalₓ
 
 local postfix:9001 "*" => many
 
-/-- 
-`ext1 id` selects and apply one extensionality lemma (with attribute
+/-- `ext1 id` selects and apply one extensionality lemma (with attribute
 `ext`), using `id`, if provided, to name a local constant
 introduced by the lemma. If `id` is omitted, the local constant is
 named automatically, as per `intro`. Placing a `?` after `ext1`
@@ -482,8 +480,7 @@ applications that can replace the call to `ext1`.
 unsafe def interactive.ext1 (trace : parse (tk "?")?) (xs : parse (rcases_patt_parse_hi)*) : tactic Unit :=
   ext1 xs {  } trace.is_some $> ()
 
-/-- 
-- `ext` applies as many extensionality lemmas as possible;
+/-- - `ext` applies as many extensionality lemmas as possible;
 - `ext ids`, with `ids` a list of identifiers, finds extentionality and applies them
   until it runs out of identifiers in `ids` to name the local constants.
 - `ext` can also be given an `rcases` pattern in place of an identifier.
@@ -548,8 +545,7 @@ unsafe def interactive.ext :
   | trace, [], none => repeat1 (ext1 [] {  } trace.is_some $> ())
   | trace, xs, n => ext xs n {  } trace.is_some $> ()
 
-/-- 
-* `ext1 id` selects and apply one extensionality lemma (with
+/-- * `ext1 id` selects and apply one extensionality lemma (with
   attribute `ext`), using `id`, if provided, to name a
   local constant introduced by the lemma. If `id` is omitted, the
   local constant is named automatically, as per `intro`.

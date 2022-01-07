@@ -25,19 +25,18 @@ information.
 -/
 
 
-/--  A rudimentary hash function on strings. -/
+/-- A rudimentary hash function on strings. -/
 def Stringₓ.hash (s : Stringₓ) : ℕ :=
-  s.fold 1 fun h c => ((33*h)+c.val) % unsignedSz
+  s.fold 1 fun h c => (33 * h + c.val) % unsignedSz
 
-/--  `mk_hashed_name nspace id` hashes the string `id` to a value `i` and returns the name
+/-- `mk_hashed_name nspace id` hashes the string `id` to a value `i` and returns the name
 `nspace._i` -/
 unsafe def string.mk_hashed_name (nspace : Name) (id : Stringₓ) : Name :=
   nspace <.> ("_" ++ toString id.hash)
 
 open Tactic
 
-/-- 
-`copy_doc_string fr to` copies the docstring from the declaration named `fr`
+/-- `copy_doc_string fr to` copies the docstring from the declaration named `fr`
 to each declaration named in the list `to`. -/
 unsafe def tactic.copy_doc_string (fr : Name) (to : List Name) : tactic Unit := do
   let fr_ds ← doc_string fr
@@ -45,8 +44,7 @@ unsafe def tactic.copy_doc_string (fr : Name) (to : List Name) : tactic Unit := 
 
 open Lean Lean.Parser Interactive
 
-/-- 
-`copy_doc_string source → target_1 target_2 ... target_n` copies the doc string of the
+/-- `copy_doc_string source → target_1 target_2 ... target_n` copies the doc string of the
 declaration named `source` to each of `target_1`, `target_2`, ..., `target_n`.
  -/
 @[user_command]
@@ -61,14 +59,15 @@ unsafe def copy_doc_string_cmd (_ : parse (tk "copy_doc_string")) : parser Unit 
 /-! ### The `library_note` command -/
 
 
-/--  A user attribute `library_note` for tagging decls of type `string × string` for use in note
+/-- A user attribute `library_note` for tagging decls of type `string × string` for use in note
 output. -/
 @[user_attribute]
-unsafe def library_note_attr : user_attribute :=
-  { Name := `library_note, descr := "Notes about library features to be included in documentation", parser := failed }
+unsafe def library_note_attr : user_attribute where
+  Name := `library_note
+  descr := "Notes about library features to be included in documentation"
+  parser := failed
 
-/-- 
-`mk_reflected_definition name val` constructs a definition declaration by reflection.
+/-- `mk_reflected_definition name val` constructs a definition declaration by reflection.
 
 Example: ``mk_reflected_definition `foo 17`` constructs the definition
 declaration corresponding to `def foo : ℕ := 17`
@@ -77,7 +76,7 @@ unsafe def mk_reflected_definition (decl_name : Name) {type} [reflected type] (b
     declaration :=
   mk_definition decl_name (reflect type).collect_univ_params (reflect type) (reflect body)
 
-/--  If `note_name` and `note` are `pexpr`s representing strings,
+/-- If `note_name` and `note` are `pexpr`s representing strings,
 `add_library_note note_name note` adds a declaration of type `string × string` and tags it with
 the `library_note` attribute. -/
 unsafe def tactic.add_library_note (note_name note : Stringₓ) : tactic Unit := do
@@ -87,8 +86,7 @@ unsafe def tactic.add_library_note (note_name note : Stringₓ) : tactic Unit :=
 
 open Tactic
 
-/-- 
-A command to add library notes. Syntax:
+/-- A command to add library notes. Syntax:
 ```
 /--
 note message
@@ -103,7 +101,7 @@ unsafe def library_note (mi : interactive.decl_meta_info) (_ : parse (tk "librar
   let some doc_string ← pure mi.doc_string | fail "library_note requires a doc string"
   add_library_note note_name doc_string
 
-/--  Collects all notes in the current environment.
+/-- Collects all notes in the current environment.
 Returns a list of pairs `(note_id, note_content)` -/
 unsafe def tactic.get_library_notes : tactic (List (Stringₓ × Stringₓ)) :=
   attribute.get_instances `library_note >>= List.mmapₓ fun dcl => mk_const dcl >>= eval_expr (Stringₓ × Stringₓ)
@@ -111,17 +109,15 @@ unsafe def tactic.get_library_notes : tactic (List (Stringₓ × Stringₓ)) :=
 /-! ### The `add_tactic_doc_entry` command -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_reflect
-/--  The categories of tactic doc entry. -/
+/-- The categories of tactic doc entry. -/
 inductive DocCategory
   | tactic
   | cmd
   | hole_cmd
   | attr
-  deriving [anonymous], [anonymous]
+  deriving DecidableEq, has_reflect
 
-/--  Format a `doc_category` -/
+/-- Format a `doc_category` -/
 unsafe def doc_category.to_string : DocCategory → Stringₓ
   | DocCategory.tactic => "tactic"
   | DocCategory.cmd => "command"
@@ -131,8 +127,7 @@ unsafe def doc_category.to_string : DocCategory → Stringₓ
 unsafe instance : has_to_format DocCategory :=
   ⟨↑doc_category.to_string⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_reflect
-/--  The information used to generate a tactic doc entry -/
+/-- The information used to generate a tactic doc entry -/
 structure TacticDocEntry where
   Name : Stringₓ
   category : DocCategory
@@ -140,9 +135,9 @@ structure TacticDocEntry where
   tags : List Stringₓ := []
   description : Stringₓ := ""
   inheritDescriptionFrom : Option _root_.name := none
-  deriving [anonymous]
+  deriving has_reflect
 
-/--  Turns a `tactic_doc_entry` into a JSON representation. -/
+/-- Turns a `tactic_doc_entry` into a JSON representation. -/
 unsafe def tactic_doc_entry.to_json (d : TacticDocEntry) : json :=
   json.object
     [("name", d.name), ("category", d.category.to_string), ("decl_names", d.decl_names.map (json.of_string ∘ toString)),
@@ -151,14 +146,13 @@ unsafe def tactic_doc_entry.to_json (d : TacticDocEntry) : json :=
 unsafe instance : HasToString TacticDocEntry :=
   ⟨json.unparse ∘ tactic_doc_entry.to_json⟩
 
-/--  `update_description_from tde inh_id` replaces the `description` field of `tde` with the
+/-- `update_description_from tde inh_id` replaces the `description` field of `tde` with the
     doc string of the declaration named `inh_id`. -/
 unsafe def tactic_doc_entry.update_description_from (tde : TacticDocEntry) (inh_id : Name) : tactic TacticDocEntry := do
   let ds ← doc_string inh_id <|> fail (toString inh_id ++ " has no doc string")
   return { tde with description := ds }
 
-/-- 
-`update_description tde` replaces the `description` field of `tde` with:
+/-- `update_description tde` replaces the `description` field of `tde` with:
 
 * the doc string of `tde.inherit_description_from`, if this field has a value
 * the doc string of the entry in `tde.decl_names`, if this field has length 1
@@ -170,17 +164,19 @@ unsafe def tactic_doc_entry.update_description (tde : TacticDocEntry) : tactic T
   | none, [inh_id] => tde.update_description_from inh_id
   | none, _ => return tde
 
-/--  A user attribute `tactic_doc` for tagging decls of type `tactic_doc_entry`
+/-- A user attribute `tactic_doc` for tagging decls of type `tactic_doc_entry`
 for use in doc output -/
 @[user_attribute]
-unsafe def tactic_doc_entry_attr : user_attribute :=
-  { Name := `tactic_doc, descr := "Information about a tactic to be included in documentation", parser := failed }
+unsafe def tactic_doc_entry_attr : user_attribute where
+  Name := `tactic_doc
+  descr := "Information about a tactic to be included in documentation"
+  parser := failed
 
-/--  Collects everything in the environment tagged with the attribute `tactic_doc`. -/
+/-- Collects everything in the environment tagged with the attribute `tactic_doc`. -/
 unsafe def tactic.get_tactic_doc_entries : tactic (List TacticDocEntry) :=
   attribute.get_instances `tactic_doc >>= List.mmapₓ fun dcl => mk_const dcl >>= eval_expr TacticDocEntry
 
-/--  `add_tactic_doc tde` adds a declaration to the environment
+/-- `add_tactic_doc tde` adds a declaration to the environment
 with `tde` as its body and tags it with the `tactic_doc`
 attribute. If `tde.decl_names` has exactly one entry `` `decl`` and
 if `tde.description` is the empty string, `add_tactic_doc` uses the doc
@@ -194,8 +190,7 @@ unsafe def tactic.add_tactic_doc (tde : TacticDocEntry) : tactic Unit := do
   add_decl $ mk_definition decl_name [] (quote.1 TacticDocEntry) (reflect tde)
   tactic_doc_entry_attr decl_name () tt none
 
-/-- 
-A command used to add documentation for a tactic, command, hole command, or attribute.
+/-- A command used to add documentation for a tactic, command, hole command, or attribute.
 
 Usage: after defining an interactive tactic, command, or attribute,
 add its documentation as follows.
@@ -246,8 +241,7 @@ unsafe def add_tactic_doc_command (mi : interactive.decl_meta_info) (_ : parse $
     | none => e
   tactic.add_tactic_doc e
 
-/-- 
-At various places in mathlib, we leave implementation notes that are referenced from many other
+/-- At various places in mathlib, we leave implementation notes that are referenced from many other
 files. To keep track of these notes, we use the command `library_note`. This makes it easy to
 retrieve a list of all notes, e.g. for documentation output.
 
@@ -301,8 +295,7 @@ add_tactic_doc
     declNames := [`copy_doc_string_cmd, `tactic.copy_doc_string], tags := ["documentation"],
     inheritDescriptionFrom := `copy_doc_string_cmd }
 
-/-- 
-The congruence closure tactic `cc` tries to solve the goal by chaining
+/-- The congruence closure tactic `cc` tries to solve the goal by chaining
 equalities from context and applying congruence (i.e. if `a = b`, then `f a = f b`).
 It is a finishing tactic, i.e. it is meant to close
 the current goal, not to make some inconclusive progress.
@@ -346,8 +339,7 @@ add_tactic_doc
   { Name := "cc (congruence closure)", category := DocCategory.tactic, declNames := [`tactic.interactive.cc],
     tags := ["core", "finishing"] }
 
-/-- 
-`conv {...}` allows the user to perform targeted rewriting on a goal or hypothesis,
+/-- `conv {...}` allows the user to perform targeted rewriting on a goal or hypothesis,
 by focusing on particular subexpressions.
 
 See <https://leanprover-community.github.io/extras/conv.html> for more details.
@@ -403,8 +395,7 @@ add_tactic_doc
   { Name := "simp", category := DocCategory.tactic, declNames := [`tactic.interactive.simp],
     tags := ["core", "simplification"] }
 
-/-- 
-Accepts terms with the type `component tactic_state string` or `html empty` and
+/-- Accepts terms with the type `component tactic_state string` or `html empty` and
 renders them interactively.
 Requires a compatible version of the vscode extension to view the resulting widget.
 
@@ -427,8 +418,7 @@ component.ignore_props $ component.mk_simple int int 0 (λ _ x y, (x + y, none))
 add_tactic_doc
   { Name := "#html", category := DocCategory.cmd, declNames := [`show_widget_cmd], tags := ["core", "widgets"] }
 
-/-- 
-The `add_decl_doc` command is used to add a doc string to an existing declaration.
+/-- The `add_decl_doc` command is used to add a doc string to an existing declaration.
 
 ```lean
 def foo := 5

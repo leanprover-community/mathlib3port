@@ -14,7 +14,7 @@ import Mathbin.Data.Bitvec.Core
 
 namespace PosNum
 
-/--  Bitwise "or" for `pos_num`. -/
+/-- Bitwise "or" for `pos_num`. -/
 def lor : PosNum → PosNum → PosNum
   | 1, bit0 q => bit1 q
   | 1, q => q
@@ -25,7 +25,7 @@ def lor : PosNum → PosNum → PosNum
   | bit1 p, bit0 q => bit1 (lor p q)
   | bit1 p, bit1 q => bit1 (lor p q)
 
-/--  Bitwise "and" for `pos_num`. -/
+/-- Bitwise "and" for `pos_num`. -/
 def land : PosNum → PosNum → Num
   | 1, bit0 q => 0
   | 1, _ => 1
@@ -36,7 +36,7 @@ def land : PosNum → PosNum → Num
   | bit1 p, bit0 q => Num.bit0 (land p q)
   | bit1 p, bit1 q => Num.bit1 (land p q)
 
-/--  Bitwise `λ a b, a && !b` for `pos_num`. For example, `ldiff 5 9 = 4`:
+/-- Bitwise `λ a b, a && !b` for `pos_num`. For example, `ldiff 5 9 = 4`:
 
      101
     1001
@@ -54,7 +54,7 @@ def ldiff : PosNum → PosNum → Num
   | bit1 p, bit0 q => Num.bit1 (ldiff p q)
   | bit1 p, bit1 q => Num.bit0 (ldiff p q)
 
-/--  Bitwise "xor" for `pos_num`. -/
+/-- Bitwise "xor" for `pos_num`. -/
 def lxor : PosNum → PosNum → Num
   | 1, 1 => 0
   | 1, bit0 q => Num.pos (bit1 q)
@@ -66,51 +66,51 @@ def lxor : PosNum → PosNum → Num
   | bit1 p, bit0 q => Num.bit1 (lxor p q)
   | bit1 p, bit1 q => Num.bit0 (lxor p q)
 
-/--  `a.test_bit n` is `tt` iff the `n`-th bit (starting from the LSB) in the binary representation
+/-- `a.test_bit n` is `tt` iff the `n`-th bit (starting from the LSB) in the binary representation
       of `a` is active. If the size of `a` is less than `n`, this evaluates to `ff`. -/
 def test_bit : PosNum → Nat → Bool
   | 1, 0 => tt
-  | 1, n+1 => ff
+  | 1, n + 1 => ff
   | bit0 p, 0 => ff
-  | bit0 p, n+1 => test_bit p n
+  | bit0 p, n + 1 => test_bit p n
   | bit1 p, 0 => tt
-  | bit1 p, n+1 => test_bit p n
+  | bit1 p, n + 1 => test_bit p n
 
-/--  `n.one_bits 0` is the list of indices of active bits in the binary representation of `n`. -/
+/-- `n.one_bits 0` is the list of indices of active bits in the binary representation of `n`. -/
 def one_bits : PosNum → Nat → List Nat
   | 1, d => [d]
-  | bit0 p, d => one_bits p (d+1)
-  | bit1 p, d => d :: one_bits p (d+1)
+  | bit0 p, d => one_bits p (d + 1)
+  | bit1 p, d => d :: one_bits p (d + 1)
 
-/--  Left-shift the binary representation of a `pos_num`. -/
+/-- Left-shift the binary representation of a `pos_num`. -/
 def shiftl (p : PosNum) : Nat → PosNum
   | 0 => p
-  | n+1 => bit0 (shiftl n)
+  | n + 1 => bit0 (shiftl n)
 
-/--  Right-shift the binary representation of a `pos_num`. -/
+/-- Right-shift the binary representation of a `pos_num`. -/
 def shiftr : PosNum → Nat → Num
   | p, 0 => Num.pos p
-  | 1, n+1 => 0
-  | bit0 p, n+1 => shiftr p n
-  | bit1 p, n+1 => shiftr p n
+  | 1, n + 1 => 0
+  | bit0 p, n + 1 => shiftr p n
+  | bit1 p, n + 1 => shiftr p n
 
 end PosNum
 
 namespace Num
 
-/--  Bitwise "or" for `num`. -/
+/-- Bitwise "or" for `num`. -/
 def lor : Num → Num → Num
   | 0, q => q
   | p, 0 => p
   | Pos p, Pos q => Pos (p.lor q)
 
-/--  Bitwise "and" for `num`. -/
+/-- Bitwise "and" for `num`. -/
 def land : Num → Num → Num
   | 0, q => 0
   | p, 0 => 0
   | Pos p, Pos q => p.land q
 
-/--  Bitwise `λ a b, a && !b` for `num`. For example, `ldiff 5 9 = 4`:
+/-- Bitwise `λ a b, a && !b` for `num`. For example, `ldiff 5 9 = 4`:
 
      101
     1001
@@ -123,47 +123,43 @@ def ldiff : Num → Num → Num
   | p, 0 => p
   | Pos p, Pos q => p.ldiff q
 
-/--  Bitwise "xor" for `num`. -/
+/-- Bitwise "xor" for `num`. -/
 def lxor : Num → Num → Num
   | 0, q => q
   | p, 0 => p
   | Pos p, Pos q => p.lxor q
 
-/--  Left-shift the binary representation of a `num`. -/
+/-- Left-shift the binary representation of a `num`. -/
 def shiftl : Num → Nat → Num
   | 0, n => 0
   | Pos p, n => Pos (p.shiftl n)
 
-/--  Right-shift the binary representation of a `pos_num`. -/
+/-- Right-shift the binary representation of a `pos_num`. -/
 def shiftr : Num → Nat → Num
   | 0, n => 0
   | Pos p, n => p.shiftr n
 
-/--  `a.test_bit n` is `tt` iff the `n`-th bit (starting from the LSB) in the binary representation
+/-- `a.test_bit n` is `tt` iff the `n`-th bit (starting from the LSB) in the binary representation
       of `a` is active. If the size of `a` is less than `n`, this evaluates to `ff`. -/
 def test_bit : Num → Nat → Bool
   | 0, n => ff
   | Pos p, n => p.test_bit n
 
-/--  `n.one_bits` is the list of indices of active bits in the binary representation of `n`. -/
+/-- `n.one_bits` is the list of indices of active bits in the binary representation of `n`. -/
 def one_bits : Num → List Nat
   | 0 => []
   | Pos p => p.one_bits 0
 
 end Num
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_reflect
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
-/--  This is a nonzero (and "non minus one") version of `snum`.
+/-- This is a nonzero (and "non minus one") version of `snum`.
     See the documentation of `snum` for more details. -/
 inductive Nzsnum : Type
   | msb : Bool → Nzsnum
   | bit : Bool → Nzsnum → Nzsnum
-  deriving [anonymous], [anonymous]
+  deriving has_reflect, DecidableEq
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_reflect
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
-/--  Alternative representation of integers using a sign bit at the end.
+/-- Alternative representation of integers using a sign bit at the end.
   The convention on sign here is to have the argument to `msb` denote
   the sign of the MSB itself, with all higher bits set to the negation
   of this sign. The result is interpreted in two's complement.
@@ -180,7 +176,7 @@ inductive Nzsnum : Type
 inductive Snum : Type
   | zero : Bool → Snum
   | nz : Nzsnum → Snum
-  deriving [anonymous], [anonymous]
+  deriving has_reflect, DecidableEq
 
 instance : Coe Nzsnum Snum :=
   ⟨Snum.nz⟩
@@ -208,12 +204,12 @@ and the negation of the MSB is sign-extended to all higher bits.
 
 namespace Nzsnum
 
-/--  Sign of a `nzsnum`. -/
+/-- Sign of a `nzsnum`. -/
 def sign : Nzsnum → Bool
   | msb b => bnot b
   | b :: p => sign p
 
-/--  Bitwise `not` for `nzsnum`. -/
+/-- Bitwise `not` for `nzsnum`. -/
 @[matchPattern]
 def Not : Nzsnum → Nzsnum
   | msb b => msb (bnot b)
@@ -221,20 +217,20 @@ def Not : Nzsnum → Nzsnum
 
 prefix:100 "~" => Not
 
-/--  Add an inactive bit at the end of a `nzsnum`. This mimics `pos_num.bit0`. -/
+/-- Add an inactive bit at the end of a `nzsnum`. This mimics `pos_num.bit0`. -/
 def bit0 : Nzsnum → Nzsnum :=
   bit ff
 
-/--  Add an active bit at the end of a `nzsnum`. This mimics `pos_num.bit1`. -/
+/-- Add an active bit at the end of a `nzsnum`. This mimics `pos_num.bit1`. -/
 def bit1 : Nzsnum → Nzsnum :=
   bit tt
 
-/--  The `head` of a `nzsnum` is the boolean value of its LSB. -/
+/-- The `head` of a `nzsnum` is the boolean value of its LSB. -/
 def head : Nzsnum → Bool
   | msb b => b
   | b :: p => b
 
-/--  The `tail` of a `nzsnum` is the `snum` obtained by removing the LSB.
+/-- The `tail` of a `nzsnum` is the `snum` obtained by removing the LSB.
       Edge cases: `tail 1 = 0` and `tail (-2) = -1`. -/
 def tail : Nzsnum → Snum
   | msb b => Snum.zero (bnot b)
@@ -246,12 +242,12 @@ namespace Snum
 
 open Nzsnum
 
-/--  Sign of a `snum`. -/
+/-- Sign of a `snum`. -/
 def sign : Snum → Bool
   | zero z => z
   | nz p => p.sign
 
-/--  Bitwise `not` for `snum`. -/
+/-- Bitwise `not` for `snum`. -/
 @[matchPattern]
 def Not : Snum → Snum
   | zero z => zero (bnot z)
@@ -259,17 +255,17 @@ def Not : Snum → Snum
 
 prefix:0 "~" => Not
 
-/--  Add a bit at the end of a `snum`. This mimics `nzsnum.bit`. -/
+/-- Add a bit at the end of a `snum`. This mimics `nzsnum.bit`. -/
 @[matchPattern]
 def bit : Bool → Snum → Snum
   | b, zero z => if b = z then zero b else msb b
   | b, nz p => p.bit b
 
-/--  Add an inactive bit at the end of a `snum`. This mimics `znum.bit0`. -/
+/-- Add an inactive bit at the end of a `snum`. This mimics `znum.bit0`. -/
 def bit0 : Snum → Snum :=
   bit ff
 
-/--  Add an active bit at the end of a `snum`. This mimics `znum.bit1`. -/
+/-- Add an active bit at the end of a `snum`. This mimics `znum.bit1`. -/
 def bit1 : Snum → Snum :=
   bit tt
 
@@ -285,7 +281,7 @@ namespace Nzsnum
 
 open Snum
 
-/--  A dependent induction principle for `nzsnum`, with base cases
+/-- A dependent induction principle for `nzsnum`, with base cases
       `0 : snum` and `(-1) : snum`. -/
 def drec' {C : Snum → Sort _} (z : ∀ b, C (Snum.zero b)) (s : ∀ b p, C p → C (b :: p)) : ∀ p : Nzsnum, C p
   | msb b => by
@@ -298,48 +294,48 @@ namespace Snum
 
 open Nzsnum
 
-/--  The `head` of a `snum` is the boolean value of its LSB. -/
+/-- The `head` of a `snum` is the boolean value of its LSB. -/
 def head : Snum → Bool
   | zero z => z
   | nz p => p.head
 
-/--  The `tail` of a `snum` is obtained by removing the LSB.
+/-- The `tail` of a `snum` is obtained by removing the LSB.
       Edge cases: `tail 1 = 0`, `tail (-2) = -1`, `tail 0 = 0` and `tail (-1) = -1`. -/
 def tail : Snum → Snum
   | zero z => zero z
   | nz p => p.tail
 
-/--  A dependent induction principle for `snum` which avoids relying on `nzsnum`. -/
+/-- A dependent induction principle for `snum` which avoids relying on `nzsnum`. -/
 def drec' {C : Snum → Sort _} (z : ∀ b, C (Snum.zero b)) (s : ∀ b p, C p → C (b :: p)) : ∀ p, C p
   | zero b => z b
   | nz p => p.drec' z s
 
-/--  An induction principle for `snum` which avoids relying on `nzsnum`. -/
+/-- An induction principle for `snum` which avoids relying on `nzsnum`. -/
 def rec' {α} (z : Bool → α) (s : Bool → Snum → α → α) : Snum → α :=
   drec' z s
 
-/--  `snum.test_bit n a` is `tt` iff the `n`-th bit (starting from the LSB) of `a` is active.
+/-- `snum.test_bit n a` is `tt` iff the `n`-th bit (starting from the LSB) of `a` is active.
       If the size of `a` is less than `n`, this evaluates to `ff`. -/
 def test_bit : Nat → Snum → Bool
   | 0, p => head p
-  | n+1, p => test_bit n (tail p)
+  | n + 1, p => test_bit n (tail p)
 
-/--  The successor of a `snum` (i.e. the operation adding one). -/
+/-- The successor of a `snum` (i.e. the operation adding one). -/
 def succ : Snum → Snum :=
   rec' (fun b => cond b 0 1) fun b p succp => cond b (ff :: succp) (tt :: p)
 
-/--  The predecessor of a `snum` (i.e. the operation of removing one). -/
+/-- The predecessor of a `snum` (i.e. the operation of removing one). -/
 def pred : Snum → Snum :=
   rec' (fun b => cond b (~1) (~0)) fun b p predp => cond b (ff :: p) (tt :: predp)
 
-/--  The opposite of a `snum`. -/
+/-- The opposite of a `snum`. -/
 protected def neg (n : Snum) : Snum :=
   succ (~n)
 
 instance : Neg Snum :=
   ⟨Snum.neg⟩
 
-/--  `snum.czadd a b n` is `n + a - b` (where `a` and `b` should be read as either 0 or 1).
+/-- `snum.czadd a b n` is `n + a - b` (where `a` and `b` should be read as either 0 or 1).
       This is useful to implement the carry system in `cadd`. -/
 def czadd : Bool → Bool → Snum → Snum
   | ff, ff, p => p
@@ -351,32 +347,32 @@ end Snum
 
 namespace Snum
 
-/--  `a.bits n` is the vector of the `n` first bits of `a` (starting from the LSB). -/
+/-- `a.bits n` is the vector of the `n` first bits of `a` (starting from the LSB). -/
 def bits : Snum → ∀ n, Vector Bool n
   | p, 0 => Vector.nil
-  | p, n+1 => head p::ᵥbits (tail p) n
+  | p, n + 1 => head p::ᵥbits (tail p) n
 
 def cadd : Snum → Snum → Bool → Snum :=
   (rec' fun a p c => czadd c a p) $ fun a p IH =>
     (rec' fun b c => czadd c b (a :: p)) $ fun b q _ c => Bitvec.xor3 a b c :: IH q (Bitvec.carry a b c)
 
-/--  Add two `snum`s. -/
+/-- Add two `snum`s. -/
 protected def add (a b : Snum) : Snum :=
   cadd a b ff
 
 instance : Add Snum :=
   ⟨Snum.add⟩
 
-/--  Substract two `snum`s. -/
+/-- Substract two `snum`s. -/
 protected def sub (a b : Snum) : Snum :=
-  a+-b
+  a + -b
 
 instance : Sub Snum :=
   ⟨Snum.sub⟩
 
-/--  Multiply two `snum`s. -/
+/-- Multiply two `snum`s. -/
 protected def mul (a : Snum) : Snum → Snum :=
-  (rec' fun b => cond b (-a) 0) $ fun b q IH => cond b (bit0 IH+a) (bit0 IH)
+  (rec' fun b => cond b (-a) 0) $ fun b q IH => cond b (bit0 IH + a) (bit0 IH)
 
 instance : Mul Snum :=
   ⟨Snum.mul⟩

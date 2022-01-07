@@ -29,7 +29,7 @@ section Prod
 
 variable {s s' : Finset α} {t t' : Finset β}
 
-/--  `product s t` is the set of pairs `(a, b)` such that `a ∈ s` and `b ∈ t`. -/
+/-- `product s t` is the set of pairs `(a, b)` such that `a ∈ s` and `b ∈ t`. -/
 protected def product (s : Finset α) (t : Finset β) : Finset (α × β) :=
   ⟨_, nodup_product s.2 t.2⟩
 
@@ -70,7 +70,7 @@ theorem product_eq_bUnion_right [DecidableEq α] [DecidableEq β] (s : Finset α
     simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iffₓ, And.left_comm,
       exists_and_distrib_left, exists_eq_right, exists_eq_left]
 
-/--  See also `finset.sup_product_left`. -/
+/-- See also `finset.sup_product_left`. -/
 @[simp]
 theorem product_bUnion [DecidableEq γ] (s : Finset α) (t : Finset β) (f : α × β → Finset γ) :
     (s.product t).bUnion f = s.bUnion fun a => t.bUnion fun b => f (a, b) := by
@@ -78,7 +78,7 @@ theorem product_bUnion [DecidableEq γ] (s : Finset α) (t : Finset β) (f : α 
   simp_rw [product_eq_bUnion, bUnion_bUnion, image_bUnion]
 
 @[simp]
-theorem card_product (s : Finset α) (t : Finset β) : card (s.product t) = card s*card t :=
+theorem card_product (s : Finset α) (t : Finset β) : card (s.product t) = card s * card t :=
   Multiset.card_product _ _
 
 theorem filter_product (p : α → Prop) (q : β → Prop) [DecidablePred p] [DecidablePred q] :
@@ -90,29 +90,29 @@ theorem filter_product (p : α → Prop) (q : β → Prop) [DecidablePred p] [De
 theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q : β → Prop) [DecidablePred p]
     [DecidablePred q] :
     ((s.product t).filter fun x : α × β => p x.1 ↔ q x.2).card =
-      ((s.filter p).card*(t.filter q).card)+(s.filter (Not ∘ p)).card*(t.filter (Not ∘ q)).card :=
+      (s.filter p).card * (t.filter q).card + (s.filter (Not ∘ p)).card * (t.filter (Not ∘ q)).card :=
   by
   classical
   rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_eq]
-  ·
-    apply congr_argₓ
+  · apply congr_argₓ
     ext ⟨a, b⟩
     simp only [filter_union_right, mem_filter, mem_product]
     constructor <;> intro h <;> use h.1
     simp only [Function.comp_app, and_selfₓ, h.2, em (q b)]
     cases h.2 <;>
-      ·
-        try
+      · try
           simp at h_1
         simp [h_1]
-  ·
-    rw [disjoint_iff]
+        
+    
+  · rw [disjoint_iff]
     change _ ∩ _ = ∅
     ext ⟨a, b⟩
     rw [mem_inter]
     simp only [and_imp, mem_filter, not_and, not_not, Function.comp_app, iff_falseₓ, mem_product, not_mem_empty]
     intros
     assumption
+    
 
 theorem empty_product (t : Finset β) : (∅ : Finset α).product t = ∅ :=
   rfl
@@ -166,12 +166,12 @@ section Diag
 
 variable (s : Finset α) [DecidableEq α]
 
-/--  Given a finite set `s`, the diagonal, `s.diag` is the set of pairs of the form `(a, a)` for
+/-- Given a finite set `s`, the diagonal, `s.diag` is the set of pairs of the form `(a, a)` for
 `a ∈ s`. -/
 def diag :=
   (s.product s).filter fun a : α × α => a.fst = a.snd
 
-/--  Given a finite set `s`, the off-diagonal, `s.off_diag` is the set of pairs `(a, b)` with `a ≠ b`
+/-- Given a finite set `s`, the off-diagonal, `s.off_diag` is the set of pairs `(a, b)` with `a ≠ b`
 for `a, b ∈ s`. -/
 def off_diag :=
   (s.product s).filter fun a : α × α => a.fst ≠ a.snd
@@ -190,24 +190,24 @@ theorem mem_off_diag (x : α × α) : x ∈ s.off_diag ↔ x.1 ∈ s ∧ x.2 ∈
 
 @[simp]
 theorem diag_card : (diag s).card = s.card := by
-  suffices diag s = s.image fun a => (a, a)by
+  suffices diag s = s.image fun a => (a, a) by
     rw [this]
     apply card_image_of_inj_on
     exact fun x1 h1 x2 h2 h3 => (Prod.mk.inj h3).1
   ext ⟨a₁, a₂⟩
   rw [mem_diag]
   constructor <;> intro h <;> rw [Finset.mem_image] at *
-  ·
-    use a₁, h.1, prod.mk.inj_iff.mpr ⟨rfl, h.2⟩
-  ·
-    rcases h with ⟨a, h1, h2⟩
+  · use a₁, h.1, prod.mk.inj_iff.mpr ⟨rfl, h.2⟩
+    
+  · rcases h with ⟨a, h1, h2⟩
     have h := Prod.mk.inj h2
     rw [← h.1, ← h.2]
     use h1
+    
 
 @[simp]
-theorem off_diag_card : (off_diag s).card = (s.card*s.card) - s.card := by
-  suffices ((diag s).card+(off_diag s).card) = s.card*s.card by
+theorem off_diag_card : (off_diag s).card = s.card * s.card - s.card := by
+  suffices (diag s).card + (off_diag s).card = s.card * s.card by
     nth_rw 2[← s.diag_card]
     simp only [diag_card] at *
     rw [tsub_eq_of_eq_add_rev]

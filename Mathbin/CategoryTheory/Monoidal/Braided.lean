@@ -27,8 +27,7 @@ universe v v₁ v₂ v₃ u u₁ u₂ u₃
 
 namespace CategoryTheory
 
-/-- 
-A braided monoidal category is a monoidal category equipped with a braiding isomorphism
+/-- A braided monoidal category is a monoidal category equipped with a braiding isomorphism
 `β_ X Y : X ⊗ Y ≅ Y ⊗ X`
 which is natural in both arguments,
 and also satisfies the two hexagon identities.
@@ -97,30 +96,30 @@ theorem braiding_left_unitor_aux₂ (X : C) :
     ((β_ X (𝟙_ C)).Hom ⊗ 𝟙 (𝟙_ C)) ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) = (ρ_ X).Hom ⊗ 𝟙 (𝟙_ C) :=
   calc
     ((β_ X (𝟙_ C)).Hom ⊗ 𝟙 (𝟙_ C)) ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) =
-      ((β_ X (𝟙_ C)).Hom ⊗ 𝟙 (𝟙_ C)) ≫ (α_ _ _ _).Hom ≫ (α_ _ _ _).inv ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) :=
-    by
-    simp
+        ((β_ X (𝟙_ C)).Hom ⊗ 𝟙 (𝟙_ C)) ≫ (α_ _ _ _).Hom ≫ (α_ _ _ _).inv ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) :=
+      by
+      simp
     _ =
-      ((β_ X (𝟙_ C)).Hom ⊗ 𝟙 (𝟙_ C)) ≫
-        (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ (β_ X _).Hom) ≫ (𝟙 _ ⊗ (β_ X _).inv) ≫ (α_ _ _ _).inv ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) :=
-    by
-    slice_rhs 3 4 => rw [← id_tensor_comp, iso.hom_inv_id, tensor_id]
-    rw [id_comp]
+        ((β_ X (𝟙_ C)).Hom ⊗ 𝟙 (𝟙_ C)) ≫
+          (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ (β_ X _).Hom) ≫ (𝟙 _ ⊗ (β_ X _).inv) ≫ (α_ _ _ _).inv ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) :=
+      by
+      slice_rhs 3 4 => rw [← id_tensor_comp, iso.hom_inv_id, tensor_id]
+      rw [id_comp]
     _ =
-      (α_ _ _ _).Hom ≫
-        (β_ _ _).Hom ≫ (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ (β_ X _).inv) ≫ (α_ _ _ _).inv ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) :=
-    by
-    slice_lhs 1 3 => rw [← hexagon_forward]
-    simp only [assoc]
+        (α_ _ _ _).Hom ≫
+          (β_ _ _).Hom ≫ (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ (β_ X _).inv) ≫ (α_ _ _ _).inv ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) :=
+      by
+      slice_lhs 1 3 => rw [← hexagon_forward]
+      simp only [assoc]
     _ = (α_ _ _ _).Hom ≫ (β_ _ _).Hom ≫ ((λ_ _).Hom ⊗ 𝟙 X) ≫ (β_ X _).inv := by
-    rw [braiding_left_unitor_aux₁]
+      rw [braiding_left_unitor_aux₁]
     _ = (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ (λ_ _).Hom) ≫ (β_ _ _).Hom ≫ (β_ X _).inv := by
-    slice_lhs 2 3 => rw [← braiding_naturality]
-    simp only [assoc]
+      slice_lhs 2 3 => rw [← braiding_naturality]
+      simp only [assoc]
     _ = (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ (λ_ _).Hom) := by
-    rw [iso.hom_inv_id, comp_id]
+      rw [iso.hom_inv_id, comp_id]
     _ = (ρ_ X).Hom ⊗ 𝟙 (𝟙_ C) := by
-    rw [triangle]
+      rw [triangle]
     
 
 @[simp]
@@ -138,30 +137,30 @@ theorem braiding_right_unitor_aux₂ (X : C) :
     (𝟙 (𝟙_ C) ⊗ (β_ (𝟙_ C) X).Hom) ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) = 𝟙 (𝟙_ C) ⊗ (λ_ X).Hom :=
   calc
     (𝟙 (𝟙_ C) ⊗ (β_ (𝟙_ C) X).Hom) ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) =
-      (𝟙 (𝟙_ C) ⊗ (β_ (𝟙_ C) X).Hom) ≫ (α_ _ _ _).inv ≫ (α_ _ _ _).Hom ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) :=
-    by
-    simp
+        (𝟙 (𝟙_ C) ⊗ (β_ (𝟙_ C) X).Hom) ≫ (α_ _ _ _).inv ≫ (α_ _ _ _).Hom ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) :=
+      by
+      simp
     _ =
-      (𝟙 (𝟙_ C) ⊗ (β_ (𝟙_ C) X).Hom) ≫
-        (α_ _ _ _).inv ≫ ((β_ _ X).Hom ⊗ 𝟙 _) ≫ ((β_ _ X).inv ⊗ 𝟙 _) ≫ (α_ _ _ _).Hom ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) :=
-    by
-    slice_rhs 3 4 => rw [← comp_tensor_id, iso.hom_inv_id, tensor_id]
-    rw [id_comp]
+        (𝟙 (𝟙_ C) ⊗ (β_ (𝟙_ C) X).Hom) ≫
+          (α_ _ _ _).inv ≫ ((β_ _ X).Hom ⊗ 𝟙 _) ≫ ((β_ _ X).inv ⊗ 𝟙 _) ≫ (α_ _ _ _).Hom ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) :=
+      by
+      slice_rhs 3 4 => rw [← comp_tensor_id, iso.hom_inv_id, tensor_id]
+      rw [id_comp]
     _ =
-      (α_ _ _ _).inv ≫
-        (β_ _ _).Hom ≫ (α_ _ _ _).inv ≫ ((β_ _ X).inv ⊗ 𝟙 _) ≫ (α_ _ _ _).Hom ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) :=
-    by
-    slice_lhs 1 3 => rw [← hexagon_reverse]
-    simp only [assoc]
+        (α_ _ _ _).inv ≫
+          (β_ _ _).Hom ≫ (α_ _ _ _).inv ≫ ((β_ _ X).inv ⊗ 𝟙 _) ≫ (α_ _ _ _).Hom ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) :=
+      by
+      slice_lhs 1 3 => rw [← hexagon_reverse]
+      simp only [assoc]
     _ = (α_ _ _ _).inv ≫ (β_ _ _).Hom ≫ (𝟙 X ⊗ (ρ_ _).Hom) ≫ (β_ _ X).inv := by
-    rw [braiding_right_unitor_aux₁]
+      rw [braiding_right_unitor_aux₁]
     _ = (α_ _ _ _).inv ≫ ((ρ_ _).Hom ⊗ 𝟙 _) ≫ (β_ _ X).Hom ≫ (β_ _ _).inv := by
-    slice_lhs 2 3 => rw [← braiding_naturality]
-    simp only [assoc]
+      slice_lhs 2 3 => rw [← braiding_naturality]
+      simp only [assoc]
     _ = (α_ _ _ _).inv ≫ ((ρ_ _).Hom ⊗ 𝟙 _) := by
-    rw [iso.hom_inv_id, comp_id]
+      rw [iso.hom_inv_id, comp_id]
     _ = 𝟙 (𝟙_ C) ⊗ (λ_ X).Hom := by
-    rw [triangle_assoc_comp_right]
+      rw [triangle_assoc_comp_right]
     
 
 @[simp]
@@ -170,8 +169,7 @@ theorem braiding_right_unitor (X : C) : (β_ (𝟙_ C) X).Hom ≫ (ρ_ X).Hom = 
 
 end
 
-/-- 
-A symmetric monoidal category is a braided monoidal category for which the braiding is symmetric.
+/-- A symmetric monoidal category is a braided monoidal category for which the braiding is symmetric.
 
 See https://stacks.math.columbia.edu/tag/0FFW.
 -/
@@ -190,8 +188,7 @@ variable (D : Type u₂) [category.{v₂} D] [monoidal_category D] [braided_cate
 
 variable (E : Type u₃) [category.{v₃} E] [monoidal_category E] [braided_category E]
 
-/-- 
-A lax braided functor between braided monoidal categories is a lax monoidal functor
+/-- A lax braided functor between braided monoidal categories is a lax monoidal functor
 which preserves the braiding.
 -/
 structure lax_braided_functor extends lax_monoidal_functor C D where
@@ -203,7 +200,7 @@ restate_axiom lax_braided_functor.braided'
 
 namespace LaxBraidedFunctor
 
-/--  The identity lax braided monoidal functor. -/
+/-- The identity lax braided monoidal functor. -/
 @[simps]
 def id : lax_braided_functor C C :=
   { monoidal_functor.id C with }
@@ -213,7 +210,7 @@ instance : Inhabited (lax_braided_functor C C) :=
 
 variable {C D E}
 
-/--  The composition of lax braided monoidal functors. -/
+/-- The composition of lax braided monoidal functors. -/
 @[simps]
 def comp (F : lax_braided_functor C D) (G : lax_braided_functor D E) : lax_braided_functor C E :=
   { lax_monoidal_functor.comp F.to_lax_monoidal_functor G.to_lax_monoidal_functor with
@@ -231,8 +228,7 @@ theorem comp_to_nat_trans {F G H : lax_braided_functor C D} {α : F ⟶ G} {β :
     (α ≫ β).toNatTrans = @category_struct.comp (C ⥤ D) _ _ _ _ α.to_nat_trans β.to_nat_trans :=
   rfl
 
-/-- 
-Interpret a natural isomorphism of the underlyling lax monoidal functors as an
+/-- Interpret a natural isomorphism of the underlyling lax monoidal functors as an
 isomorphism of the lax braided monoidal functors.
 -/
 @[simps]
@@ -241,8 +237,7 @@ def mk_iso {F G : lax_braided_functor C D} (i : F.to_lax_monoidal_functor ≅ G.
 
 end LaxBraidedFunctor
 
-/-- 
-A braided functor between braided monoidal categories is a monoidal functor
+/-- A braided functor between braided monoidal categories is a monoidal functor
 which preserves the braiding.
 -/
 structure braided_functor extends monoidal_functor C D where
@@ -256,7 +251,7 @@ attribute [simp] braided_functor.braided
 
 namespace BraidedFunctor
 
-/--  Turn a braided functor into a lax braided functor. -/
+/-- Turn a braided functor into a lax braided functor. -/
 @[simps]
 def to_lax_braided_functor (F : braided_functor C D) : lax_braided_functor C D :=
   { F with
@@ -264,7 +259,7 @@ def to_lax_braided_functor (F : braided_functor C D) : lax_braided_functor C D :
       rw [F.braided]
       simp }
 
-/--  The identity braided monoidal functor. -/
+/-- The identity braided monoidal functor. -/
 @[simps]
 def id : braided_functor C C :=
   { monoidal_functor.id C with }
@@ -274,7 +269,7 @@ instance : Inhabited (braided_functor C C) :=
 
 variable {C D E}
 
-/--  The composition of braided monoidal functors. -/
+/-- The composition of braided monoidal functors. -/
 @[simps]
 def comp (F : braided_functor C D) (G : braided_functor D E) : braided_functor C E :=
   { monoidal_functor.comp F.to_monoidal_functor G.to_monoidal_functor with }
@@ -287,8 +282,7 @@ theorem comp_to_nat_trans {F G H : braided_functor C D} {α : F ⟶ G} {β : G �
     (α ≫ β).toNatTrans = @category_struct.comp (C ⥤ D) _ _ _ _ α.to_nat_trans β.to_nat_trans :=
   rfl
 
-/-- 
-Interpret a natural isomorphism of the underlyling monoidal functors as an
+/-- Interpret a natural isomorphism of the underlyling monoidal functors as an
 isomorphism of the braided monoidal functors.
 -/
 @[simps]
@@ -305,13 +299,12 @@ instance comm_monoid_discrete : CommMonoidₓ (discrete M) := by
   dsimp [discrete]
   infer_instance
 
--- failed to format: format: uncaught backtrack exception
-instance : braided_category ( discrete M ) where braiding X Y := eq_to_iso ( mul_commₓ X Y )
+instance : braided_category (discrete M) where
+  braiding := fun X Y => eq_to_iso (mul_commₓ X Y)
 
 variable {M} {N : Type u} [CommMonoidₓ N]
 
-/-- 
-A multiplicative morphism between commutative monoids gives a braided functor between
+/-- A multiplicative morphism between commutative monoids gives a braided functor between
 the corresponding discrete braided monoidal categories.
 -/
 @[simps]

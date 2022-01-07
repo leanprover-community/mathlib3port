@@ -28,7 +28,7 @@ section Ringₓ
 
 variable [Ringₓ R] [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 
-/--  If a free module is finite, then any basis is finite. -/
+/-- If a free module is finite, then any basis is finite. -/
 noncomputable instance [Nontrivial R] [Module.Finite R M] : Fintype (Module.Free.ChooseBasisIndex R M) := by
   obtain ⟨h⟩ := id ‹Module.Finite R M›
   choose s hs using h
@@ -48,7 +48,7 @@ instance [Nontrivial R] [Module.Finite R M] [Module.Finite R N] : Module.Free R 
 
 variable {R M}
 
-/--  A free module with a basis indexed by a `fintype` is finite. -/
+/-- A free module with a basis indexed by a `fintype` is finite. -/
 theorem _root_.module.finite.of_basis {R : Type _} {M : Type _} {ι : Type _} [CommRingₓ R] [AddCommGroupₓ M]
     [Module R M] [Fintype ι] (b : Basis ι R M) : Module.Finite R M := by
   classical

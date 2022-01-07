@@ -17,14 +17,16 @@ The code is inspired by code from Gabriel Ebner from the
 open Lean Lean.Parser Interactive Tactic Native
 
 @[user_attribute]
-unsafe def localized_attr : user_attribute (rb_lmap Name Stringₓ) Unit :=
-  { Name := "_localized", descr := "(interal) attribute that flags localized commands", parser := failed,
-    cache_cfg :=
-      ⟨fun ns => do
-        let dcls ← ns.mmap fun n => mk_const n >>= eval_expr (Name × Stringₓ)
-        return $ rb_lmap.of_list dcls, []⟩ }
+unsafe def localized_attr : user_attribute (rb_lmap Name Stringₓ) Unit where
+  Name := "_localized"
+  descr := "(interal) attribute that flags localized commands"
+  parser := failed
+  cache_cfg :=
+    ⟨fun ns => do
+      let dcls ← ns.mmap fun n => mk_const n >>= eval_expr (Name × Stringₓ)
+      return $ rb_lmap.of_list dcls, []⟩
 
-/--  Get all commands in the given locale and return them as a list of strings -/
+/-- Get all commands in the given locale and return them as a list of strings -/
 unsafe def get_localized (ns : List Name) : tactic (List Stringₓ) := do
   let m ← localized_attr.get_cache
   ns.mfoldl
@@ -34,14 +36,14 @@ unsafe def get_localized (ns : List Name) : tactic (List Stringₓ) := do
         | new_l => return $ l.append new_l)
       []
 
-/--  Execute all commands in the given locale -/
+/-- Execute all commands in the given locale -/
 @[user_command]
 unsafe def open_locale_cmd (_ : parse $ tk "open_locale") : parser Unit := do
   let ns ← many ident
   let cmds ← get_localized ns
   cmds.mmap' emit_code_here
 
-/--  Add a new command to a locale and execute it right now.
+/-- Add a new command to a locale and execute it right now.
   The new command is added as a declaration to the environment with name `_localized_decl.<number>`.
   This declaration has attribute `_localized` and as value a name-string pair. -/
 @[user_command]
@@ -54,14 +56,14 @@ unsafe def localized_cmd (_ : parse $ tk "localized") : parser Unit := do
   tk "in"
   let nm ← ident
   let env ← get_env
-  let dummy_decl_name := mkNumName `_localized_decl ((Stringₓ.hash (cmd ++ nm.to_string)+env.fingerprint) % unsignedSz)
+  let dummy_decl_name :=
+    mkNumName `_localized_decl ((Stringₓ.hash (cmd ++ nm.to_string) + env.fingerprint) % unsignedSz)
   add_decl
       (declaration.defn dummy_decl_name [] (quote.1 (Name × Stringₓ)) (reflect (⟨nm, cmd⟩ : Name × Stringₓ))
         (ReducibilityHints.regular 1 tt) ff)
   localized_attr dummy_decl_name Unit.star tt
 
-/-- 
-This consists of two user-commands which allow you to declare notation and commands localized to a
+/-- This consists of two user-commands which allow you to declare notation and commands localized to a
 locale.
 
 * Declare notation which is localized to a locale using:
@@ -107,7 +109,7 @@ add_tactic_doc
   { Name := "localized notation", category := DocCategory.cmd, declNames := [`localized_cmd, `open_locale_cmd],
     tags := ["notation", "type classes"] }
 
-/--  Print all commands in a given locale -/
+/-- Print all commands in a given locale -/
 unsafe def print_localized_commands (ns : List Name) : tactic Unit := do
   let cmds ← get_localized ns
   cmds.mmap' trace

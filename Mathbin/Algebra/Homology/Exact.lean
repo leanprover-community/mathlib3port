@@ -45,8 +45,7 @@ variable [has_images V]
 
 namespace CategoryTheory
 
-/-- 
-Two morphisms `f : A ⟶ B`, `g : B ⟶ C` are called exact if `w : f ≫ g = 0` and the natural map
+/-- Two morphisms `f : A ⟶ B`, `g : B ⟶ C` are called exact if `w : f ≫ g = 0` and the natural map
 `image_to_kernel f g w : image_subobject f ⟶ kernel_subobject g` is an epimorphism.
 
 In any preadditive category, this is equivalent to `w : f ≫ g = 0` and `homology f g w ≅ 0`.
@@ -69,8 +68,7 @@ variable [has_zero_object V] [preadditive V] [has_kernels V] [has_cokernels V]
 
 open_locale ZeroObject
 
-/-- 
-In any preadditive category,
+/-- In any preadditive category,
 composable morphisms `f g` are exact iff they compose to zero and the homology vanishes.
 -/
 theorem preadditive.exact_iff_homology_zero {A B C : V} (f : A ⟶ B) (g : B ⟶ C) :
@@ -175,8 +173,7 @@ theorem exact_epi_comp [exact g h] [epi f] : exact (f ≫ g) h := by
 theorem exact_iso_comp [is_iso f] : exact (f ≫ g) h ↔ exact g h :=
   ⟨fun w => by
     rw [← is_iso.inv_hom_id_assoc f g]
-    exact exact_epi_comp, fun w => by
-    exact exact_epi_comp⟩
+    exact exact_epi_comp, fun w => exact_epi_comp⟩
 
 theorem exact_comp_mono [exact f g] [mono h] : exact f (g ≫ h) := by
   refine'
@@ -189,8 +186,7 @@ theorem exact_comp_mono [exact f g] [mono h] : exact f (g ≫ h) := by
 theorem exact_comp_iso [is_iso h] : exact f (g ≫ h) ↔ exact f g :=
   ⟨fun w => by
     rw [← category.comp_id g, ← is_iso.hom_inv_id h, ← category.assoc]
-    exact exact_comp_mono, fun w => by
-    exact exact_comp_mono⟩
+    exact exact_comp_mono, fun w => exact_comp_mono⟩
 
 theorem exact_kernel_subobject_arrow : exact (kernel_subobject f).arrow f := by
   refine'
@@ -282,10 +278,10 @@ instance exact_of_zero {A C : V} (f : A ⟶ 0) (g : 0 ⟶ C) : exact f g := by
   obtain rfl : g = 0 := by
     ext
   fconstructor
-  ·
-    simp
-  ·
-    exact image_to_kernel_epi_of_zero_of_mono 0
+  · simp
+    
+  · exact image_to_kernel_epi_of_zero_of_mono 0
+    
 
 instance exact_zero_mono {B C : V} (f : B ⟶ C) [mono f] : exact (0 : 0 ⟶ B) f :=
   ⟨by

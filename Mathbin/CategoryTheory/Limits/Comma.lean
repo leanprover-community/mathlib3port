@@ -36,87 +36,85 @@ variable {L : A ⥤ T} {R : B ⥤ T}
 
 variable (F : J ⥤ comma L R)
 
-/--  (Implementation). An auxiliary cone which is useful in order to construct limits
+/-- (Implementation). An auxiliary cone which is useful in order to construct limits
 in the comma category. -/
 @[simps]
 def limit_auxiliary_cone (c₁ : cone (F ⋙ fst L R)) : cone ((F ⋙ snd L R) ⋙ R) :=
   (cones.postcompose (whisker_left F (comma.nat_trans L R) : _)).obj (L.map_cone c₁)
 
-/-- 
-If `R` preserves the appropriate limit, then given a cone for `F ⋙ fst L R : J ⥤ L` and a
+/-- If `R` preserves the appropriate limit, then given a cone for `F ⋙ fst L R : J ⥤ L` and a
 limit cone for `F ⋙ snd L R : J ⥤ R` we can build a cone for `F` which will turn out to be a limit
 cone.
 -/
 @[simps]
 def cone_of_preserves [preserves_limit (F ⋙ snd L R) R] (c₁ : cone (F ⋙ fst L R)) {c₂ : cone (F ⋙ snd L R)}
-    (t₂ : is_limit c₂) : cone F :=
-  { x := { left := c₁.X, right := c₂.X, Hom := (is_limit_of_preserves R t₂).lift (limit_auxiliary_cone _ c₁) },
-    π :=
-      { app := fun j =>
-          { left := c₁.π.app j, right := c₂.π.app j,
-            w' := ((is_limit_of_preserves R t₂).fac (limit_auxiliary_cone F c₁) j).symm },
-        naturality' := fun j₁ j₂ t => by
-          ext <;> dsimp <;> simp [← c₁.w t, ← c₂.w t] } }
+    (t₂ : is_limit c₂) : cone F where
+  x := { left := c₁.X, right := c₂.X, Hom := (is_limit_of_preserves R t₂).lift (limit_auxiliary_cone _ c₁) }
+  π :=
+    { app := fun j =>
+        { left := c₁.π.app j, right := c₂.π.app j,
+          w' := ((is_limit_of_preserves R t₂).fac (limit_auxiliary_cone F c₁) j).symm },
+      naturality' := fun j₁ j₂ t => by
+        ext <;> dsimp <;> simp [← c₁.w t, ← c₂.w t] }
 
-/--  Provided that `R` preserves the appropriate limit, then the cone in `cone_of_preserves` is a
+/-- Provided that `R` preserves the appropriate limit, then the cone in `cone_of_preserves` is a
 limit. -/
 def cone_of_preserves_is_limit [preserves_limit (F ⋙ snd L R) R] {c₁ : cone (F ⋙ fst L R)} (t₁ : is_limit c₁)
-    {c₂ : cone (F ⋙ snd L R)} (t₂ : is_limit c₂) : is_limit (cone_of_preserves F c₁ t₂) :=
-  { lift := fun s =>
-      { left := t₁.lift ((fst L R).mapCone s), right := t₂.lift ((snd L R).mapCone s),
-        w' :=
-          (is_limit_of_preserves R t₂).hom_ext $ fun j => by
-            rw [cone_of_preserves_X_hom, assoc, assoc, (is_limit_of_preserves R t₂).fac, limit_auxiliary_cone_π_app, ←
-              L.map_comp_assoc, t₁.fac, R.map_cone_π_app, ← R.map_comp, t₂.fac]
-            exact (s.π.app j).w },
-    uniq' := fun s m w =>
-      comma_morphism.ext _ _
-        (t₁.uniq ((fst L R).mapCone s) _ fun j => by
-          simp [← w])
-        (t₂.uniq ((snd L R).mapCone s) _ fun j => by
-          simp [← w]) }
+    {c₂ : cone (F ⋙ snd L R)} (t₂ : is_limit c₂) : is_limit (cone_of_preserves F c₁ t₂) where
+  lift := fun s =>
+    { left := t₁.lift ((fst L R).mapCone s), right := t₂.lift ((snd L R).mapCone s),
+      w' :=
+        (is_limit_of_preserves R t₂).hom_ext $ fun j => by
+          rw [cone_of_preserves_X_hom, assoc, assoc, (is_limit_of_preserves R t₂).fac, limit_auxiliary_cone_π_app, ←
+            L.map_comp_assoc, t₁.fac, R.map_cone_π_app, ← R.map_comp, t₂.fac]
+          exact (s.π.app j).w }
+  uniq' := fun s m w =>
+    comma_morphism.ext _ _
+      (t₁.uniq ((fst L R).mapCone s) _ fun j => by
+        simp [← w])
+      (t₂.uniq ((snd L R).mapCone s) _ fun j => by
+        simp [← w])
 
-/--  (Implementation). An auxiliary cocone which is useful in order to construct colimits
+/-- (Implementation). An auxiliary cocone which is useful in order to construct colimits
 in the comma category. -/
 @[simps]
 def colimit_auxiliary_cocone (c₂ : cocone (F ⋙ snd L R)) : cocone ((F ⋙ fst L R) ⋙ L) :=
   (cocones.precompose (whisker_left F (comma.nat_trans L R) : _)).obj (R.map_cocone c₂)
 
-/-- 
-If `L` preserves the appropriate colimit, then given a colimit cocone for `F ⋙ fst L R : J ⥤ L` and
+/-- If `L` preserves the appropriate colimit, then given a colimit cocone for `F ⋙ fst L R : J ⥤ L` and
 a cocone for `F ⋙ snd L R : J ⥤ R` we can build a cocone for `F` which will turn out to be a
 colimit cocone.
 -/
 @[simps]
 def cocone_of_preserves [preserves_colimit (F ⋙ fst L R) L] {c₁ : cocone (F ⋙ fst L R)} (t₁ : is_colimit c₁)
-    (c₂ : cocone (F ⋙ snd L R)) : cocone F :=
-  { x := { left := c₁.X, right := c₂.X, Hom := (is_colimit_of_preserves L t₁).desc (colimit_auxiliary_cocone _ c₂) },
-    ι :=
-      { app := fun j =>
-          { left := c₁.ι.app j, right := c₂.ι.app j,
-            w' := (is_colimit_of_preserves L t₁).fac (colimit_auxiliary_cocone _ c₂) j },
-        naturality' := fun j₁ j₂ t => by
-          ext <;> dsimp <;> simp [← c₁.w t, ← c₂.w t] } }
+    (c₂ : cocone (F ⋙ snd L R)) : cocone F where
+  x := { left := c₁.X, right := c₂.X, Hom := (is_colimit_of_preserves L t₁).desc (colimit_auxiliary_cocone _ c₂) }
+  ι :=
+    { app := fun j =>
+        { left := c₁.ι.app j, right := c₂.ι.app j,
+          w' := (is_colimit_of_preserves L t₁).fac (colimit_auxiliary_cocone _ c₂) j },
+      naturality' := fun j₁ j₂ t => by
+        ext <;> dsimp <;> simp [← c₁.w t, ← c₂.w t] }
 
-/--  Provided that `L` preserves the appropriate colimit, then the cocone in `cocone_of_preserves` is
+/-- Provided that `L` preserves the appropriate colimit, then the cocone in `cocone_of_preserves` is
 a colimit. -/
 def cocone_of_preserves_is_colimit [preserves_colimit (F ⋙ fst L R) L] {c₁ : cocone (F ⋙ fst L R)} (t₁ : is_colimit c₁)
-    {c₂ : cocone (F ⋙ snd L R)} (t₂ : is_colimit c₂) : is_colimit (cocone_of_preserves F t₁ c₂) :=
-  { desc := fun s =>
-      { left := t₁.desc ((fst L R).mapCocone s), right := t₂.desc ((snd L R).mapCocone s),
-        w' :=
-          (is_colimit_of_preserves L t₁).hom_ext $ fun j => by
-            rw [cocone_of_preserves_X_hom, (is_colimit_of_preserves L t₁).fac_assoc, colimit_auxiliary_cocone_ι_app,
-              assoc, ← R.map_comp, t₂.fac, L.map_cocone_ι_app, ← L.map_comp_assoc, t₁.fac]
-            exact (s.ι.app j).w },
-    uniq' := fun s m w =>
-      comma_morphism.ext _ _
-        (t₁.uniq ((fst L R).mapCocone s) _
-          (by
-            simp [← w]))
-        (t₂.uniq ((snd L R).mapCocone s) _
-          (by
-            simp [← w])) }
+    {c₂ : cocone (F ⋙ snd L R)} (t₂ : is_colimit c₂) : is_colimit (cocone_of_preserves F t₁ c₂) where
+  desc := fun s =>
+    { left := t₁.desc ((fst L R).mapCocone s), right := t₂.desc ((snd L R).mapCocone s),
+      w' :=
+        (is_colimit_of_preserves L t₁).hom_ext $ fun j => by
+          rw [cocone_of_preserves_X_hom, (is_colimit_of_preserves L t₁).fac_assoc, colimit_auxiliary_cocone_ι_app,
+            assoc, ← R.map_comp, t₂.fac, L.map_cocone_ι_app, ← L.map_comp_assoc, t₁.fac]
+          exact (s.ι.app j).w }
+  uniq' := fun s m w =>
+    comma_morphism.ext _ _
+      (t₁.uniq ((fst L R).mapCocone s) _
+        (by
+          simp [← w]))
+      (t₂.uniq ((snd L R).mapCocone s) _
+        (by
+          simp [← w]))
 
 instance has_limit (F : J ⥤ comma L R) [has_limit (F ⋙ fst L R)] [has_limit (F ⋙ snd L R)]
     [preserves_limit (F ⋙ snd L R) R] : has_limit F :=

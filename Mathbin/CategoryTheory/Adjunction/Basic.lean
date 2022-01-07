@@ -37,8 +37,7 @@ attribute [local elabWithoutExpectedType] whisker_left whisker_right
 
 variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
-/-- 
-`F ⊣ G` represents the data of an adjunction between two functors
+/-- `F ⊣ G` represents the data of an adjunction between two functors
 `F : C ⥤ D` and `G : D ⥤ C`. `F` is the left adjoint and `G` is the right adjoint.
 
 To construct an `adjunction` between two functors, it's often easier to instead use the
@@ -63,29 +62,29 @@ structure adjunction (F : C ⥤ D) (G : D ⥤ C) where
 
 infixl:15 " ⊣ " => adjunction
 
-/--  A class giving a chosen right adjoint to the functor `left`. -/
+/-- A class giving a chosen right adjoint to the functor `left`. -/
 class is_left_adjoint (left : C ⥤ D) where
   right : D ⥤ C
   adj : left ⊣ right
 
-/--  A class giving a chosen left adjoint to the functor `right`. -/
+/-- A class giving a chosen left adjoint to the functor `right`. -/
 class is_right_adjoint (right : D ⥤ C) where
   left : C ⥤ D
   adj : left ⊣ right
 
-/--  Extract the left adjoint from the instance giving the chosen adjoint. -/
+/-- Extract the left adjoint from the instance giving the chosen adjoint. -/
 def left_adjoint (R : D ⥤ C) [is_right_adjoint R] : C ⥤ D :=
   is_right_adjoint.left R
 
-/--  Extract the right adjoint from the instance giving the chosen adjoint. -/
+/-- Extract the right adjoint from the instance giving the chosen adjoint. -/
 def right_adjoint (L : C ⥤ D) [is_left_adjoint L] : D ⥤ C :=
   is_left_adjoint.right L
 
-/--  The adjunction associated to a functor known to be a left adjoint. -/
+/-- The adjunction associated to a functor known to be a left adjoint. -/
 def adjunction.of_left_adjoint (left : C ⥤ D) [is_left_adjoint left] : adjunction left (right_adjoint left) :=
   is_left_adjoint.adj
 
-/--  The adjunction associated to a functor known to be a right adjoint. -/
+/-- The adjunction associated to a functor known to be a right adjoint. -/
 def adjunction.of_right_adjoint (right : C ⥤ D) [is_right_adjoint right] : adjunction (left_adjoint right) right :=
   is_right_adjoint.adj
 
@@ -100,6 +99,12 @@ attribute [simp] hom_equiv_unit hom_equiv_counit
 section
 
 variable {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G) {X' X : C} {Y Y' : D}
+
+theorem hom_equiv_id (X : C) : adj.hom_equiv X _ (𝟙 _) = adj.unit.app X := by
+  simp
+
+theorem hom_equiv_symm_id (X : D) : (adj.hom_equiv _ X).symm (𝟙 _) = adj.counit.app X := by
+  simp
 
 @[simp]
 theorem hom_equiv_naturality_left_symm (f : X' ⟶ X) (g : X ⟶ G.obj Y) :
@@ -173,8 +178,7 @@ end Adjunction
 
 namespace Adjunction
 
-/-- 
-This is an auxiliary data structure useful for constructing adjunctions.
+/-- This is an auxiliary data structure useful for constructing adjunctions.
 See `adjunction.mk_of_hom_equiv`.
 This structure won't typically be used anywhere else.
 -/
@@ -212,8 +216,7 @@ theorem hom_equiv_naturality_right_symm (f : X ⟶ G.obj Y) (g : Y ⟶ Y') :
 
 end CoreHomEquiv
 
-/-- 
-This is an auxiliary data structure useful for constructing adjunctions.
+/-- This is an auxiliary data structure useful for constructing adjunctions.
 See `adjunction.mk_of_unit_counit`.
 This structure won't typically be used anywhere else.
 -/
@@ -242,7 +245,7 @@ end CoreUnitCounit
 
 variable {F : C ⥤ D} {G : D ⥤ C}
 
-/--  Construct an adjunction between `F` and `G` out of a natural bijection between each
+/-- Construct an adjunction between `F` and `G` out of a natural bijection between each
 `F.obj X ⟶ Y` and `X ⟶ G.obj Y`. -/
 @[simps]
 def mk_of_hom_equiv (adj : core_hom_equiv F G) : F ⊣ G :=
@@ -266,7 +269,7 @@ def mk_of_hom_equiv (adj : core_hom_equiv F G) : F ⊣ G :=
     hom_equiv_counit' := fun X Y f => by
       erw [← adj.hom_equiv_naturality_left_symm] <;> simp }
 
-/--  Construct an adjunction between functors `F` and `G` given a unit and counit for the adjunction
+/-- Construct an adjunction between functors `F` and `G` given a unit and counit for the adjunction
 satisfying the triangle identities. -/
 @[simps]
 def mk_of_unit_counit (adj : core_unit_counit F G) : F ⊣ G :=
@@ -290,69 +293,74 @@ def mk_of_unit_counit (adj : core_unit_counit F G) : F ⊣ G :=
           simp only [id_comp] at t
           exact t } }
 
-/--  The adjunction between the identity functor on a category and itself. -/
-def id : 𝟭 C ⊣ 𝟭 C :=
-  { homEquiv := fun X Y => Equivₓ.refl _, Unit := 𝟙 _, counit := 𝟙 _ }
+/-- The adjunction between the identity functor on a category and itself. -/
+def id : 𝟭 C ⊣ 𝟭 C where
+  homEquiv := fun X Y => Equivₓ.refl _
+  Unit := 𝟙 _
+  counit := 𝟙 _
 
 instance : Inhabited (adjunction (𝟭 C) (𝟭 C)) :=
   ⟨id⟩
 
-/--  If F and G are naturally isomorphic functors, establish an equivalence of hom-sets. -/
+/-- If F and G are naturally isomorphic functors, establish an equivalence of hom-sets. -/
 @[simps]
-def equiv_homset_left_of_nat_iso {F F' : C ⥤ D} (iso : F ≅ F') {X : C} {Y : D} : (F.obj X ⟶ Y) ≃ (F'.obj X ⟶ Y) :=
-  { toFun := fun f => iso.inv.app _ ≫ f, invFun := fun g => iso.hom.app _ ≫ g,
-    left_inv := fun f => by
-      simp ,
-    right_inv := fun g => by
-      simp }
+def equiv_homset_left_of_nat_iso {F F' : C ⥤ D} (iso : F ≅ F') {X : C} {Y : D} : (F.obj X ⟶ Y) ≃ (F'.obj X ⟶ Y) where
+  toFun := fun f => iso.inv.app _ ≫ f
+  invFun := fun g => iso.hom.app _ ≫ g
+  left_inv := fun f => by
+    simp
+  right_inv := fun g => by
+    simp
 
-/--  If G and H are naturally isomorphic functors, establish an equivalence of hom-sets. -/
+/-- If G and H are naturally isomorphic functors, establish an equivalence of hom-sets. -/
 @[simps]
-def equiv_homset_right_of_nat_iso {G G' : D ⥤ C} (iso : G ≅ G') {X : C} {Y : D} : (X ⟶ G.obj Y) ≃ (X ⟶ G'.obj Y) :=
-  { toFun := fun f => f ≫ iso.hom.app _, invFun := fun g => g ≫ iso.inv.app _,
-    left_inv := fun f => by
-      simp ,
-    right_inv := fun g => by
-      simp }
+def equiv_homset_right_of_nat_iso {G G' : D ⥤ C} (iso : G ≅ G') {X : C} {Y : D} : (X ⟶ G.obj Y) ≃ (X ⟶ G'.obj Y) where
+  toFun := fun f => f ≫ iso.hom.app _
+  invFun := fun g => g ≫ iso.inv.app _
+  left_inv := fun f => by
+    simp
+  right_inv := fun g => by
+    simp
 
-/--  Transport an adjunction along an natural isomorphism on the left. -/
+/-- Transport an adjunction along an natural isomorphism on the left. -/
 def of_nat_iso_left {F G : C ⥤ D} {H : D ⥤ C} (adj : F ⊣ H) (iso : F ≅ G) : G ⊣ H :=
   adjunction.mk_of_hom_equiv
     { homEquiv := fun X Y => (equiv_homset_left_of_nat_iso iso.symm).trans (adj.hom_equiv X Y) }
 
-/--  Transport an adjunction along an natural isomorphism on the right. -/
+/-- Transport an adjunction along an natural isomorphism on the right. -/
 def of_nat_iso_right {F : C ⥤ D} {G H : D ⥤ C} (adj : F ⊣ G) (iso : G ≅ H) : F ⊣ H :=
   adjunction.mk_of_hom_equiv { homEquiv := fun X Y => (adj.hom_equiv X Y).trans (equiv_homset_right_of_nat_iso iso) }
 
-/--  Transport being a right adjoint along a natural isomorphism. -/
-def right_adjoint_of_nat_iso {F G : C ⥤ D} (h : F ≅ G) [r : is_right_adjoint F] : is_right_adjoint G :=
-  { left := r.left, adj := of_nat_iso_right r.adj h }
+/-- Transport being a right adjoint along a natural isomorphism. -/
+def right_adjoint_of_nat_iso {F G : C ⥤ D} (h : F ≅ G) [r : is_right_adjoint F] : is_right_adjoint G where
+  left := r.left
+  adj := of_nat_iso_right r.adj h
 
-/--  Transport being a left adjoint along a natural isomorphism. -/
-def left_adjoint_of_nat_iso {F G : C ⥤ D} (h : F ≅ G) [r : is_left_adjoint F] : is_left_adjoint G :=
-  { right := r.right, adj := of_nat_iso_left r.adj h }
+/-- Transport being a left adjoint along a natural isomorphism. -/
+def left_adjoint_of_nat_iso {F G : C ⥤ D} (h : F ≅ G) [r : is_left_adjoint F] : is_left_adjoint G where
+  right := r.right
+  adj := of_nat_iso_left r.adj h
 
 section
 
 variable {E : Type u₃} [ℰ : category.{v₃} E] (H : D ⥤ E) (I : E ⥤ D)
 
-/-- 
-Composition of adjunctions.
+/-- Composition of adjunctions.
 
 See https://stacks.math.columbia.edu/tag/0DV0.
 -/
-def comp (adj₁ : F ⊣ G) (adj₂ : H ⊣ I) : F ⋙ H ⊣ I ⋙ G :=
-  { homEquiv := fun X Z => Equivₓ.trans (adj₂.hom_equiv _ _) (adj₁.hom_equiv _ _),
-    Unit := adj₁.unit ≫ (whisker_left F $ whisker_right adj₂.unit G) ≫ (functor.associator _ _ _).inv,
-    counit := (functor.associator _ _ _).Hom ≫ (whisker_left I $ whisker_right adj₁.counit H) ≫ adj₂.counit }
+def comp (adj₁ : F ⊣ G) (adj₂ : H ⊣ I) : F ⋙ H ⊣ I ⋙ G where
+  homEquiv := fun X Z => Equivₓ.trans (adj₂.hom_equiv _ _) (adj₁.hom_equiv _ _)
+  Unit := adj₁.unit ≫ (whisker_left F $ whisker_right adj₂.unit G) ≫ (functor.associator _ _ _).inv
+  counit := (functor.associator _ _ _).Hom ≫ (whisker_left I $ whisker_right adj₁.counit H) ≫ adj₂.counit
 
-/--  If `F` and `G` are left adjoints then `F ⋙ G` is a left adjoint too. -/
+/-- If `F` and `G` are left adjoints then `F ⋙ G` is a left adjoint too. -/
 instance left_adjoint_of_comp {E : Type u₃} [ℰ : category.{v₃} E] (F : C ⥤ D) (G : D ⥤ E) [Fl : is_left_adjoint F]
     [Gl : is_left_adjoint G] : is_left_adjoint (F ⋙ G) where
   right := Gl.right ⋙ Fl.right
   adj := comp _ _ Fl.adj Gl.adj
 
-/--  If `F` and `G` are right adjoints then `F ⋙ G` is a right adjoint too. -/
+/-- If `F` and `G` are right adjoints then `F ⋙ G` is a right adjoint too. -/
 instance right_adjoint_of_comp {E : Type u₃} [ℰ : category.{v₃} E] {F : C ⥤ D} {G : D ⥤ E} [Fr : is_right_adjoint F]
     [Gr : is_right_adjoint G] : is_right_adjoint (F ⋙ G) where
   left := Gr.left ⋙ Fr.left
@@ -373,19 +381,20 @@ include he
 private theorem he' {X Y Y'} f g : (e X Y').symm (f ≫ G.map g) = (e X Y).symm f ≫ g := by
   intros <;> rw [Equivₓ.symm_apply_eq, he] <;> simp
 
-/--  Construct a left adjoint functor to `G`, given the functor's value on objects `F_obj` and
+/-- Construct a left adjoint functor to `G`, given the functor's value on objects `F_obj` and
 a bijection `e` between `F_obj X ⟶ Y` and `X ⟶ G.obj Y` satisfying a naturality law
 `he : ∀ X Y Y' g h, e X Y' (h ≫ g) = e X Y h ≫ G.map g`.
 Dual to `right_adjoint_of_equiv`. -/
 @[simps]
-def left_adjoint_of_equiv : C ⥤ D :=
-  { obj := F_obj, map := fun X X' f => (e X (F_obj X')).symm (f ≫ e X' (F_obj X') (𝟙 _)),
-    map_comp' := fun X X' X'' f f' => by
-      rw [Equivₓ.symm_apply_eq, he, Equivₓ.apply_symm_apply]
-      conv => rhs rw [assoc, ← he, id_comp, Equivₓ.apply_symm_apply]
-      simp }
+def left_adjoint_of_equiv : C ⥤ D where
+  obj := F_obj
+  map := fun X X' f => (e X (F_obj X')).symm (f ≫ e X' (F_obj X') (𝟙 _))
+  map_comp' := fun X X' X'' f f' => by
+    rw [Equivₓ.symm_apply_eq, he, Equivₓ.apply_symm_apply]
+    conv => rhs rw [assoc, ← he, id_comp, Equivₓ.apply_symm_apply]
+    simp
 
-/--  Show that the functor given by `left_adjoint_of_equiv` is indeed left adjoint to `G`. Dual
+/-- Show that the functor given by `left_adjoint_of_equiv` is indeed left adjoint to `G`. Dual
 to `adjunction_of_equiv_right`. -/
 @[simps]
 def adjunction_of_equiv_left : left_adjoint_of_equiv e he ⊣ G :=
@@ -411,19 +420,20 @@ include he
 private theorem he' {X' X Y} f g : F.map f ≫ (e X Y).symm g = (e X' Y).symm (f ≫ g) := by
   intros <;> rw [Equivₓ.eq_symm_apply, he] <;> simp
 
-/--  Construct a right adjoint functor to `F`, given the functor's value on objects `G_obj` and
+/-- Construct a right adjoint functor to `F`, given the functor's value on objects `G_obj` and
 a bijection `e` between `F.obj X ⟶ Y` and `X ⟶ G_obj Y` satisfying a naturality law
 `he : ∀ X Y Y' g h, e X' Y (F.map f ≫ g) = f ≫ e X Y g`.
 Dual to `left_adjoint_of_equiv`. -/
 @[simps]
-def right_adjoint_of_equiv : D ⥤ C :=
-  { obj := G_obj, map := fun Y Y' g => (e (G_obj Y) Y') ((e (G_obj Y) Y).symm (𝟙 _) ≫ g),
-    map_comp' := fun Y Y' Y'' g g' => by
-      rw [← Equivₓ.eq_symm_apply, ← he' e he, Equivₓ.symm_apply_apply]
-      conv => rhs rw [← assoc, he' e he, comp_id, Equivₓ.symm_apply_apply]
-      simp }
+def right_adjoint_of_equiv : D ⥤ C where
+  obj := G_obj
+  map := fun Y Y' g => (e (G_obj Y) Y') ((e (G_obj Y) Y).symm (𝟙 _) ≫ g)
+  map_comp' := fun Y Y' Y'' g g' => by
+    rw [← Equivₓ.eq_symm_apply, ← he' e he, Equivₓ.symm_apply_apply]
+    conv => rhs rw [← assoc, he' e he, comp_id, Equivₓ.symm_apply_apply]
+    simp
 
-/--  Show that the functor given by `right_adjoint_of_equiv` is indeed right adjoint to `F`. Dual
+/-- Show that the functor given by `right_adjoint_of_equiv` is indeed right adjoint to `F`. Dual
 to `adjunction_of_equiv_left`. -/
 @[simps]
 def adjunction_of_equiv_right : F ⊣ right_adjoint_of_equiv e he :=
@@ -437,25 +447,24 @@ def adjunction_of_equiv_right : F ⊣ right_adjoint_of_equiv e he :=
 
 end ConstructRight
 
-/-- 
-If the unit and counit of a given adjunction are (pointwise) isomorphisms, then we can upgrade the
+/-- If the unit and counit of a given adjunction are (pointwise) isomorphisms, then we can upgrade the
 adjunction to an equivalence.
 -/
 @[simps]
 noncomputable def to_equivalence (adj : F ⊣ G) [∀ X, is_iso (adj.unit.app X)] [∀ Y, is_iso (adj.counit.app Y)] :
-    C ≌ D :=
-  { Functor := F, inverse := G,
-    unitIso :=
-      nat_iso.of_components (fun X => as_iso (adj.unit.app X))
-        (by
-          simp ),
-    counitIso :=
-      nat_iso.of_components (fun Y => as_iso (adj.counit.app Y))
-        (by
-          simp ) }
+    C ≌ D where
+  Functor := F
+  inverse := G
+  unitIso :=
+    nat_iso.of_components (fun X => as_iso (adj.unit.app X))
+      (by
+        simp )
+  counitIso :=
+    nat_iso.of_components (fun Y => as_iso (adj.counit.app Y))
+      (by
+        simp )
 
-/-- 
-If the unit and counit for the adjunction corresponding to a right adjoint functor are (pointwise)
+/-- If the unit and counit for the adjunction corresponding to a right adjoint functor are (pointwise)
 isomorphisms, then the functor is an equivalence of categories.
 -/
 @[simps]
@@ -470,7 +479,7 @@ open Adjunction
 
 namespace Equivalenceₓ
 
-/--  The adjunction given by an equivalence of categories. (To obtain the opposite adjunction,
+/-- The adjunction given by an equivalence of categories. (To obtain the opposite adjunction,
 simply use `e.symm.to_adjunction`. -/
 def to_adjunction (e : C ≌ D) : e.functor ⊣ e.inverse :=
   mk_of_unit_counit
@@ -488,11 +497,11 @@ end Equivalenceₓ
 
 namespace Functor
 
-/--  An equivalence `E` is left adjoint to its inverse. -/
+/-- An equivalence `E` is left adjoint to its inverse. -/
 def adjunction (E : C ⥤ D) [is_equivalence E] : E ⊣ E.inv :=
   E.as_equivalence.toAdjunction
 
-/--  If `F` is an equivalence, it's a left adjoint. -/
+/-- If `F` is an equivalence, it's a left adjoint. -/
 instance (priority := 10) left_adjoint_of_equivalence {F : C ⥤ D} [is_equivalence F] : is_left_adjoint F where
   right := _
   adj := functor.adjunction F
@@ -501,7 +510,7 @@ instance (priority := 10) left_adjoint_of_equivalence {F : C ⥤ D} [is_equivale
 theorem right_adjoint_of_is_equivalence {F : C ⥤ D} [is_equivalence F] : right_adjoint F = inv F :=
   rfl
 
-/--  If `F` is an equivalence, it's a right adjoint. -/
+/-- If `F` is an equivalence, it's a right adjoint. -/
 instance (priority := 10) right_adjoint_of_equivalence {F : C ⥤ D} [is_equivalence F] : is_right_adjoint F where
   left := _
   adj := functor.adjunction F.inv

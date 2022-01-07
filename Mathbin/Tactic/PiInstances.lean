@@ -11,7 +11,7 @@ namespace Tactic
 
 open Tactic.Interactive
 
-/--  Attempt to clear a goal obtained by refining a `pi_instance` goal. -/
+/-- Attempt to clear a goal obtained by refining a `pi_instance` goal. -/
 unsafe def pi_instance_derive_field : tactic Unit := do
   let b ← target >>= is_prop
   let field ← get_current_field
@@ -40,8 +40,7 @@ unsafe def pi_instance_derive_field : tactic Unit := do
             fail "args"
         return ()
 
-/-- 
-`pi_instance` constructs an instance of `my_class (Π i : I, f i)`
+/-- `pi_instance` constructs an instance of `my_class (Π i : I, f i)`
 where we know `Π i, my_class (f i)`. If an order relation is required,
 it defaults to `pi.partial_order`. Any field of the instance that
 `pi_instance` cannot construct is left untouched and generated as a new goal.

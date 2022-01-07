@@ -44,8 +44,10 @@ open Lean.Parser Tactic Interactive Parser
 namespace Tactic.Alias
 
 @[user_attribute]
-unsafe def alias_attr : user_attribute :=
-  { Name := `alias, descr := "This definition is an alias of another.", Parser := failed }
+unsafe def alias_attr : user_attribute where
+  Name := `alias
+  descr := "This definition is an alias of another."
+  Parser := failed
 
 unsafe def alias_direct (d : declaration) (doc : Stringₓ) (al : Name) : tactic Unit := do
   updateex_env $ fun env =>
@@ -59,7 +61,7 @@ unsafe def alias_direct (d : declaration) (doc : Stringₓ) (al : Name) : tactic
   add_doc_string al doc
 
 unsafe def mk_iff_mp_app (iffmp : Name) : expr → (ℕ → expr) → tactic expr
-  | expr.pi n bi e t, f => expr.lam n bi e <$> mk_iff_mp_app t fun n => f (n+1) (expr.var n)
+  | expr.pi n bi e t, f => expr.lam n bi e <$> mk_iff_mp_app t fun n => f (n + 1) (expr.var n)
   | quote.1 ((%%ₓa) ↔ %%ₓb), f => pure $ @expr.const tt iffmp [] a b (f 0)
   | _, f => fail "Target theorem must have the form `Π x y z, a ↔ b`"
 
@@ -87,8 +89,7 @@ unsafe def make_left_right : Name → tactic (Name × Name)
           p <.> "_".intercalate (left ++ "of" :: right ++ suffix))
   | _ => failed
 
-/-- 
-The `alias` command can be used to create copies
+/-- The `alias` command can be used to create copies
 of a theorem or definition with different names.
 
 Syntax:

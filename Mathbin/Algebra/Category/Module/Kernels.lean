@@ -21,12 +21,12 @@ section
 
 variable {M N : ModuleCat.{v} R} (f : M ⟶ N)
 
-/--  The kernel cone induced by the concrete kernel. -/
+/-- The kernel cone induced by the concrete kernel. -/
 def kernel_cone : kernel_fork f :=
   kernel_fork.of_ι (as_hom f.ker.subtype) $ by
     tidy
 
-/--  The kernel of a linear map is a kernel in the categorical sense. -/
+/-- The kernel of a linear map is a kernel in the categorical sense. -/
 def kernel_is_limit : is_limit (kernel_cone f) :=
   fork.is_limit.mk _
     (fun s =>
@@ -37,18 +37,17 @@ def kernel_is_limit : is_limit (kernel_cone f) :=
           rfl)
     (fun s => LinearMap.subtype_comp_cod_restrict _ _ _) fun s m h =>
     LinearMap.ext $ fun x =>
-      Subtype.ext_iff_val.2 $
+      Subtype.ext_iff_val.2 $ by
         have h₁ : (m ≫ (kernel_cone f).π.app zero).toFun = (s.π.app zero).toFun := by
           congr
           exact h zero
-        by
         convert @congr_funₓ _ _ _ _ h₁ x
 
-/--  The cokernel cocone induced by the projection onto the quotient. -/
+/-- The cokernel cocone induced by the projection onto the quotient. -/
 def cokernel_cocone : cokernel_cofork f :=
   cokernel_cofork.of_π (as_hom f.range.mkq) $ LinearMap.range_mkq_comp _
 
-/--  The projection onto the quotient is a cokernel in the categorical sense. -/
+/-- The projection onto the quotient is a cokernel in the categorical sense. -/
 def cokernel_is_colimit : is_colimit (cokernel_cocone f) :=
   cofork.is_colimit.mk _
     (fun s => f.range.liftq (cofork.π s) $ LinearMap.range_le_ker_iff.2 $ cokernel_cofork.condition s)
@@ -60,11 +59,11 @@ def cokernel_is_colimit : is_colimit (cokernel_cocone f) :=
 
 end
 
-/--  The category of R-modules has kernels, given by the inclusion of the kernel submodule. -/
+/-- The category of R-modules has kernels, given by the inclusion of the kernel submodule. -/
 theorem has_kernels_Module : has_kernels (ModuleCat R) :=
   ⟨fun X Y f => has_limit.mk ⟨_, kernel_is_limit f⟩⟩
 
-/--  The category or R-modules has cokernels, given by the projection onto the quotient. -/
+/-- The category or R-modules has cokernels, given by the projection onto the quotient. -/
 theorem has_cokernels_Module : has_cokernels (ModuleCat R) :=
   ⟨fun X Y f => has_colimit.mk ⟨_, cokernel_is_colimit f⟩⟩
 
@@ -76,8 +75,7 @@ attribute [local instance] has_cokernels_Module
 
 variable {G H : ModuleCat.{v} R} (f : G ⟶ H)
 
-/-- 
-The categorical kernel of a morphism in `Module`
+/-- The categorical kernel of a morphism in `Module`
 agrees with the usual module-theoretical kernel.
 -/
 noncomputable def kernel_iso_ker {G H : ModuleCat.{v} R} (f : G ⟶ H) : kernel f ≅ ModuleCat.of R f.ker :=
@@ -91,8 +89,7 @@ theorem kernel_iso_ker_inv_kernel_ι : (kernel_iso_ker f).inv ≫ kernel.ι f = 
 theorem kernel_iso_ker_hom_ker_subtype : (kernel_iso_ker f).hom ≫ f.ker.subtype = kernel.ι f :=
   is_limit.cone_point_unique_up_to_iso_inv_comp _ (limit.is_limit _) zero
 
-/-- 
-The categorical cokernel of a morphism in `Module`
+/-- The categorical cokernel of a morphism in `Module`
 agrees with the usual module-theoretical quotient.
 -/
 noncomputable def cokernel_iso_range_quotient {G H : ModuleCat.{v} R} (f : G ⟶ H) :

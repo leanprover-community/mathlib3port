@@ -41,7 +41,7 @@ universe u v w w₁ w₂ w₃
 
 variable (R : Type u) (A : Type v) (B : Type w) (C : Type w₁)
 
-/--  A morphism respecting addition, multiplication, and scalar multiplication. When these arise from
+/-- A morphism respecting addition, multiplication, and scalar multiplication. When these arise from
 algebra structures, this is the same as a not-necessarily-unital morphism of algebras. -/
 structure NonUnitalAlgHom [Monoidₓ R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [NonUnitalNonAssocSemiring B]
   [DistribMulAction R B] extends A →+[R] B, MulHom A B
@@ -60,7 +60,7 @@ variable [NonUnitalNonAssocSemiring B] [DistribMulAction R B]
 
 variable [NonUnitalNonAssocSemiring C] [DistribMulAction R C]
 
-/--  see Note [function coercion] -/
+/-- see Note [function coercion] -/
 instance : CoeFun (NonUnitalAlgHom R A B) fun _ => A → B :=
   ⟨to_fun⟩
 
@@ -142,11 +142,11 @@ theorem map_smul (f : NonUnitalAlgHom R A B) (c : R) (x : A) : f (c • x) = c �
   f.to_distrib_mul_action_hom.map_smul c x
 
 @[simp]
-theorem map_add (f : NonUnitalAlgHom R A B) (x y : A) : f (x+y) = f x+f y :=
+theorem map_add (f : NonUnitalAlgHom R A B) (x y : A) : f (x + y) = f x + f y :=
   f.to_distrib_mul_action_hom.map_add x y
 
 @[simp]
-theorem map_mul (f : NonUnitalAlgHom R A B) (x y : A) : f (x*y) = f x*f y :=
+theorem map_mul (f : NonUnitalAlgHom R A B) (x y : A) : f (x * y) = f x * f y :=
   f.to_mul_hom.map_mul x y
 
 @[simp]
@@ -180,7 +180,7 @@ theorem one_apply (a : A) : (1 : NonUnitalAlgHom R A A) a = a :=
 instance : Inhabited (NonUnitalAlgHom R A B) :=
   ⟨0⟩
 
-/--  The composition of morphisms is a morphism. -/
+/-- The composition of morphisms is a morphism. -/
 def comp (f : NonUnitalAlgHom R B C) (g : NonUnitalAlgHom R A B) : NonUnitalAlgHom R A C :=
   { (f : MulHom B C).comp (g : MulHom A B), (f : B →+[R] C).comp (g : A →+[R] B) with }
 
@@ -192,7 +192,7 @@ theorem coe_comp (f : NonUnitalAlgHom R B C) (g : NonUnitalAlgHom R A B) :
 theorem comp_apply (f : NonUnitalAlgHom R B C) (g : NonUnitalAlgHom R A B) (x : A) : f.comp g x = f (g x) :=
   rfl
 
-/--  The inverse of a bijective morphism is a morphism. -/
+/-- The inverse of a bijective morphism is a morphism. -/
 def inverse (f : NonUnitalAlgHom R A B) (g : B → A) (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) :
     NonUnitalAlgHom R B A :=
   { (f : MulHom A B).inverse g h₁ h₂, (f : A →+[R] B).inverse g h₁ h₂ with }
@@ -208,7 +208,7 @@ namespace AlgHom
 
 variable {R A B} [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A] [Algebra R B]
 
-/--  A unital morphism of algebras is a `non_unital_alg_hom`. -/
+/-- A unital morphism of algebras is a `non_unital_alg_hom`. -/
 def to_non_unital_alg_hom (f : A →ₐ[R] B) : NonUnitalAlgHom R A B :=
   { f with map_smul' := f.map_smul }
 

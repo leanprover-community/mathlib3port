@@ -35,7 +35,7 @@ section CommRingₓ
 
 variable {R : Type _} {M : Type _} [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] {I : R →+* R}
 
-/--  The proposition that two elements of a sesquilinear form space are orthogonal -/
+/-- The proposition that two elements of a sesquilinear form space are orthogonal -/
 def is_ortho (B : M →ₗ[R] M →ₛₗ[I] R) x y : Prop :=
   B x y = 0
 
@@ -59,36 +59,36 @@ variable {R : Type _} {M : Type _} [CommRingₓ R] [IsDomain R] [AddCommGroupₓ
 theorem ortho_smul_left {x y} {a : R} (ha : a ≠ 0) : is_ortho B x y ↔ is_ortho B (a • x) y := by
   dunfold is_ortho
   constructor <;> intro H
-  ·
-    rw [map_smul, smul_apply, H, smul_zero]
-  ·
-    rw [map_smul, smul_apply, smul_eq_zero] at H
+  · rw [map_smul, smul_apply, H, smul_zero]
+    
+  · rw [map_smul, smul_apply, smul_eq_zero] at H
     cases H
-    ·
-      trivial
-    ·
-      exact H
+    · trivial
+      
+    · exact H
+      
+    
 
 theorem ortho_smul_right {x y} {a : R} {ha : a ≠ 0} : is_ortho B x y ↔ is_ortho B x (a • y) := by
   dunfold is_ortho
   constructor <;> intro H
-  ·
-    rw [map_smulₛₗ, H, smul_zero]
-  ·
-    rw [map_smulₛₗ, smul_eq_zero] at H
+  · rw [map_smulₛₗ, H, smul_zero]
+    
+  · rw [map_smulₛₗ, smul_eq_zero] at H
     cases H
-    ·
-      rw [RingEquiv.to_ring_hom_eq_coe, RingEquiv.coe_to_ring_hom] at H
+    · rw [RingEquiv.to_ring_hom_eq_coe, RingEquiv.coe_to_ring_hom] at H
       exfalso
       exact ha (I.map_eq_zero_iff.mp H)
-    ·
-      exact H
+      
+    · exact H
+      
+    
 
 end IsDomain
 
 variable {R : Type _} {M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] {I : R →+* R} {B : M →ₗ[R] M →ₛₗ[I] R}
 
-/--  The proposition that a sesquilinear form is reflexive -/
+/-- The proposition that a sesquilinear form is reflexive -/
 def IsRefl (B : M →ₗ[R] M →ₛₗ[I] R) : Prop :=
   ∀ x y, B x y = 0 → B y x = 0
 
@@ -103,7 +103,7 @@ theorem ortho_comm {x y} : is_ortho B x y ↔ is_ortho B y x :=
 
 end IsRefl
 
-/--  The proposition that a sesquilinear form is symmetric -/
+/-- The proposition that a sesquilinear form is symmetric -/
 def IsSymm (B : M →ₗ[R] M →ₛₗ[I] R) : Prop :=
   ∀ x y, I (B x y) = B y x
 
@@ -125,7 +125,7 @@ theorem ortho_comm {x y} : is_ortho B x y ↔ is_ortho B y x :=
 
 end IsSymm
 
-/--  The proposition that a sesquilinear form is alternating -/
+/-- The proposition that a sesquilinear form is alternating -/
 def is_alt (B : M →ₗ[R] M →ₛₗ[I] R) : Prop :=
   ∀ x : M, B x x = 0
 
@@ -139,8 +139,7 @@ theorem self_eq_zero x : B x x = 0 :=
   H x
 
 theorem neg x y : -B x y = B y x := by
-  have H1 : B (y+x) (y+x) = 0 := by
-    exact self_eq_zero H (y+x)
+  have H1 : B (y + x) (y + x) = 0 := self_eq_zero H (y + x)
   simp [map_add, self_eq_zero H] at H1
   rw [add_eq_zero_iff_neg_eq] at H1
   exact H1

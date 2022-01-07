@@ -35,7 +35,7 @@ pequiv, partial equivalence
 
 universe u v w x
 
-/--  A `pequiv` is a partial equivalence, a representation of a bijection between a subset
+/-- A `pequiv` is a partial equivalence, a representation of a bijection between a subset
   of `α` and a subset of `β`. See also `local_equiv` for a version that requires `to_fun` and
 `inv_fun` to be globally defined functions and has `source` and `target` sets as extra fields. -/
 structure Pequiv (α : Type u) (β : Type v) where
@@ -60,7 +60,7 @@ theorem coe_mk_apply (f₁ : α → Option β) (f₂ : β → Option α) h (x : 
 
 @[ext]
 theorem ext : ∀ {f g : α ≃. β} h : ∀ x, f x = g x, f = g
-  | ⟨f₁, f₂, hf⟩, ⟨g₁, g₂, hg⟩, h =>
+  | ⟨f₁, f₂, hf⟩, ⟨g₁, g₂, hg⟩, h => by
     have h : f₁ = g₁ := funext h
     have : ∀ b, f₂ b = g₂ b := by
       subst h
@@ -68,27 +68,30 @@ theorem ext : ∀ {f g : α ≃. β} h : ∀ x, f x = g x, f = g
       have hf := fun a => hf a b
       have hg := fun a => hg a b
       cases' h : g₂ b with a
-      ·
-        simp only [h, Option.not_mem_none, false_iffₓ] at hg
+      · simp only [h, Option.not_mem_none, false_iffₓ] at hg
         simp only [hg, iff_falseₓ] at hf
         rwa [Option.eq_none_iff_forall_not_mem]
-      ·
-        rw [← Option.mem_def, hf, ← hg, h, Option.mem_def]
-    by
-    simp [funext_iff]
+        
+      · rw [← Option.mem_def, hf, ← hg, h, Option.mem_def]
+        
+    simp [*, funext_iff]
 
 theorem ext_iff {f g : α ≃. β} : f = g ↔ ∀ x, f x = g x :=
   ⟨congr_funₓ ∘ congr_argₓ _, ext⟩
 
-/--  The identity map as a partial equivalence. -/
+/-- The identity map as a partial equivalence. -/
 @[refl]
-protected def refl (α : Type _) : α ≃. α :=
-  { toFun := some, invFun := some, inv := fun _ _ => eq_comm }
+protected def refl (α : Type _) : α ≃. α where
+  toFun := some
+  invFun := some
+  inv := fun _ _ => eq_comm
 
-/--  The inverse partial equivalence. -/
+/-- The inverse partial equivalence. -/
 @[symm]
-protected def symm (f : α ≃. β) : β ≃. α :=
-  { toFun := f.2, invFun := f.1, inv := fun _ _ => (f.inv _ _).symm }
+protected def symm (f : α ≃. β) : β ≃. α where
+  toFun := f.2
+  invFun := f.1
+  inv := fun _ _ => (f.inv _ _).symm
 
 theorem mem_iff_mem (f : α ≃. β) : ∀ {a : α} {b : β}, a ∈ f.symm b ↔ b ∈ f a :=
   f.3
@@ -96,12 +99,13 @@ theorem mem_iff_mem (f : α ≃. β) : ∀ {a : α} {b : β}, a ∈ f.symm b ↔
 theorem eq_some_iff (f : α ≃. β) : ∀ {a : α} {b : β}, f.symm b = some a ↔ f a = some b :=
   f.3
 
-/--  Composition of partial equivalences `f : α ≃. β` and `g : β ≃. γ`. -/
+/-- Composition of partial equivalences `f : α ≃. β` and `g : β ≃. γ`. -/
 @[trans]
-protected def trans (f : α ≃. β) (g : β ≃. γ) : α ≃. γ :=
-  { toFun := fun a => (f a).bind g, invFun := fun a => (g.symm a).bind f.symm,
-    inv := fun a b => by
-      simp_all [And.comm, eq_some_iff f, eq_some_iff g] }
+protected def trans (f : α ≃. β) (g : β ≃. γ) : α ≃. γ where
+  toFun := fun a => (f a).bind g
+  invFun := fun a => (g.symm a).bind f.symm
+  inv := fun a b => by
+    simp_all [And.comm, eq_some_iff f, eq_some_iff g]
 
 @[simp]
 theorem refl_apply (a : α) : Pequiv.refl α a = some a :=
@@ -144,25 +148,24 @@ theorem trans_refl (f : α ≃. β) : f.trans (Pequiv.refl β) = f := by
 protected theorem inj (f : α ≃. β) {a₁ a₂ : α} {b : β} (h₁ : b ∈ f a₁) (h₂ : b ∈ f a₂) : a₁ = a₂ := by
   rw [← mem_iff_mem] at * <;> cases h : f.symm b <;> simp_all
 
-/--  If the domain of a `pequiv` is `α` except a point, its forward direction is injective. -/
+/-- If the domain of a `pequiv` is `α` except a point, its forward direction is injective. -/
 theorem injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α) (h : ∀ a₁ : α, a₁ ≠ a₂ → is_some (f a₁)) : injective f :=
   has_left_inverse.injective
     ⟨fun b => Option.recOn b a₂ fun b' => Option.recOn (f.symm b') a₂ id, fun x => by
       classical
       cases hfx : f x
-      ·
-        have : x = a₂
-        exact
+      · have : x = a₂ :=
           not_imp_comm.1 (h x)
             (hfx.symm ▸ by
               simp )
         simp [this]
-      ·
-        simp only [hfx]
+        
+      · simp only [hfx]
         rw [(eq_some_iff f).2 hfx]
-        rfl⟩
+        rfl
+        ⟩
 
-/--  If the domain of a `pequiv` is all of `α`, its forward direction is injective. -/
+/-- If the domain of a `pequiv` is all of `α`, its forward direction is injective. -/
 theorem injective_of_forall_is_some {f : α ≃. β} (h : ∀ a : α, is_some (f a)) : injective f :=
   (Classical.em (Nonempty α)).elim (fun hn => injective_of_forall_ne_is_some f (Classical.choice hn) fun a _ => h a)
     fun hn x => (hn ⟨x⟩).elim
@@ -171,34 +174,35 @@ section OfSet
 
 variable (s : Set α) [DecidablePred (· ∈ s)]
 
-/--  Creates a `pequiv` that is the identity on `s`, and `none` outside of it. -/
-def of_set (s : Set α) [DecidablePred (· ∈ s)] : α ≃. α :=
-  { toFun := fun a => if a ∈ s then some a else none, invFun := fun a => if a ∈ s then some a else none,
-    inv := fun a b => by
-      split_ifs with hb ha ha
-      ·
-        simp [eq_comm]
-      ·
-        simp [ne_of_mem_of_not_mem hb ha]
-      ·
-        simp [ne_of_mem_of_not_mem ha hb]
-      ·
-        simp }
+/-- Creates a `pequiv` that is the identity on `s`, and `none` outside of it. -/
+def of_set (s : Set α) [DecidablePred (· ∈ s)] : α ≃. α where
+  toFun := fun a => if a ∈ s then some a else none
+  invFun := fun a => if a ∈ s then some a else none
+  inv := fun a b => by
+    split_ifs with hb ha ha
+    · simp [eq_comm]
+      
+    · simp [ne_of_mem_of_not_mem hb ha]
+      
+    · simp [ne_of_mem_of_not_mem ha hb]
+      
+    · simp
+      
 
 theorem mem_of_set_self_iff {s : Set α} [DecidablePred (· ∈ s)] {a : α} : a ∈ of_set s a ↔ a ∈ s := by
-  dsimp [of_set] <;> split_ifs <;> simp
+  dsimp [of_set] <;> split_ifs <;> simp [*]
 
 theorem mem_of_set_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} : a ∈ of_set s b ↔ a = b ∧ a ∈ s := by
   dsimp [of_set]
   split_ifs
-  ·
-    simp only [iff_self_and, Option.mem_def, eq_comm]
+  · simp only [iff_self_and, Option.mem_def, eq_comm]
     rintro rfl
     exact h
-  ·
-    simp only [false_iffₓ, not_and, Option.not_mem_none]
+    
+  · simp only [false_iffₓ, not_and, Option.not_mem_none]
     rintro rfl
     exact h
+    
 
 @[simp]
 theorem of_set_eq_some_iff {s : Set α} {h : DecidablePred (· ∈ s)} {a b : α} : of_set s b = some a ↔ a = b ∧ a ∈ s :=
@@ -230,477 +234,20 @@ end OfSet
 theorem symm_trans_rev (f : α ≃. β) (g : β ≃. γ) : (f.trans g).symm = g.symm.trans f.symm :=
   rfl
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `self_trans_symm [])
-  (Command.declSig
-   [(Term.explicitBinder "(" [`f] [":" (Data.Pequiv.«term_≃._» `α " ≃. " `β)] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app `f.trans [`f.symm])
-     "="
-     (Term.app `of_set [(Set.«term{_|_}» "{" `a "|" (Term.proj (Term.app `f [`a]) "." `isSome) "}")]))))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group (Tactic.ext "ext" [] []) [])
-       (group (Tactic.dsimp "dsimp" [] [] ["[" [(Tactic.simpLemma [] [] `Pequiv.trans)] "]"] [] []) [])
-       (group
-        (Tactic.simp
-         "simp"
-         []
-         ["only"]
-         ["["
-          [(Tactic.simpLemma [] [] (Term.app `eq_some_iff [`f]))
-           ","
-           (Tactic.simpLemma [] [] `Option.is_some_iff_exists)
-           ","
-           (Tactic.simpLemma [] [] `Option.mem_def)
-           ","
-           (Tactic.simpLemma [] [] `bind_eq_some')
-           ","
-           (Tactic.simpLemma [] [] `of_set_eq_some_iff)]
-          "]"]
-         [])
-        [])
-       (group (Tactic.constructor "constructor") [])
-       (group
-        (Tactic.«tactic·._»
-         "·"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(group
-             (Tactic.rintro
-              "rintro"
-              [(Tactic.rintroPat.one
-                (Tactic.rcasesPat.tuple
-                 "⟨"
-                 [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b)]) [])
-                  ","
-                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hb₁)]) [])
-                  ","
-                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hb₂)]) [])]
-                 "⟩"))]
-              [])
-             [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.anonymousCtor "⟨" [(Term.app `Pequiv.inj [(Term.hole "_") `hb₂ `hb₁]) "," `b "," `hb₂] "⟩"))
-             [])])))
-        [])
-       (group
-        (Tactic.«tactic·._»
-         "·"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(group
-             (Tactic.simp
-              "simp"
-              ["("
-               "config"
-               ":="
-               (Term.structInst
-                "{"
-                []
-                [(group
-                  (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0)
-                  [])]
-                (Term.optEllipsis [])
-                []
-                "}")
-               ")"]
-              []
-              []
-              [])
-             [])])))
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.ext "ext" [] []) [])
-      (group (Tactic.dsimp "dsimp" [] [] ["[" [(Tactic.simpLemma [] [] `Pequiv.trans)] "]"] [] []) [])
-      (group
-       (Tactic.simp
-        "simp"
-        []
-        ["only"]
-        ["["
-         [(Tactic.simpLemma [] [] (Term.app `eq_some_iff [`f]))
-          ","
-          (Tactic.simpLemma [] [] `Option.is_some_iff_exists)
-          ","
-          (Tactic.simpLemma [] [] `Option.mem_def)
-          ","
-          (Tactic.simpLemma [] [] `bind_eq_some')
-          ","
-          (Tactic.simpLemma [] [] `of_set_eq_some_iff)]
-         "]"]
-        [])
-       [])
-      (group (Tactic.constructor "constructor") [])
-      (group
-       (Tactic.«tactic·._»
-        "·"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group
-            (Tactic.rintro
-             "rintro"
-             [(Tactic.rintroPat.one
-               (Tactic.rcasesPat.tuple
-                "⟨"
-                [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b)]) [])
-                 ","
-                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hb₁)]) [])
-                 ","
-                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hb₂)]) [])]
-                "⟩"))]
-             [])
-            [])
-           (group
-            (Tactic.exact
-             "exact"
-             (Term.anonymousCtor "⟨" [(Term.app `Pequiv.inj [(Term.hole "_") `hb₂ `hb₁]) "," `b "," `hb₂] "⟩"))
-            [])])))
-       [])
-      (group
-       (Tactic.«tactic·._»
-        "·"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group
-            (Tactic.simp
-             "simp"
-             ["("
-              "config"
-              ":="
-              (Term.structInst
-               "{"
-               []
-               [(group
-                 (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0)
-                 [])]
-               (Term.optEllipsis [])
-               []
-               "}")
-              ")"]
-             []
-             []
-             [])
-            [])])))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic·._»
-   "·"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simp
-        "simp"
-        ["("
-         "config"
-         ":="
-         (Term.structInst
-          "{"
-          []
-          [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-          (Term.optEllipsis [])
-          []
-          "}")
-         ")"]
-        []
-        []
-        [])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp
-   "simp"
-   ["("
-    "config"
-    ":="
-    (Term.structInst
-     "{"
-     []
-     [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-     (Term.optEllipsis [])
-     []
-     "}")
-    ")"]
-   []
-   []
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'Lean.Parser.Tactic.discharger'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  self_trans_symm
-  ( f : α ≃. β ) : f.trans f.symm = of_set { a | f a . isSome }
-  :=
-    by
-      ext
-        dsimp [ Pequiv.trans ]
-        simp only [ eq_some_iff f , Option.is_some_iff_exists , Option.mem_def , bind_eq_some' , of_set_eq_some_iff ]
-        constructor
-        · rintro ⟨ b , hb₁ , hb₂ ⟩ exact ⟨ Pequiv.inj _ hb₂ hb₁ , b , hb₂ ⟩
-        · simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = of_set { a | (f a).isSome } := by
+  ext
+  dsimp [Pequiv.trans]
+  simp only [eq_some_iff f, Option.is_some_iff_exists, Option.mem_def, bind_eq_some', of_set_eq_some_iff]
+  constructor
+  · rintro ⟨b, hb₁, hb₂⟩
+    exact ⟨Pequiv.inj _ hb₂ hb₁, b, hb₂⟩
+    
+  · simp (config := { contextual := true })
+    
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `symm_trans_self [])
-  (Command.declSig
-   [(Term.explicitBinder "(" [`f] [":" (Data.Pequiv.«term_≃._» `α " ≃. " `β)] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app `f.symm.trans [`f])
-     "="
-     (Term.app `of_set [(Set.«term{_|_}» "{" `b "|" (Term.proj (Term.app `f.symm [`b]) "." `isSome) "}")]))))
-  (Command.declValSimple
-   ":="
-   («term_$__»
-    `symm_injective
-    "$"
-    (Term.byTactic
-     "by"
-     (Tactic.tacticSeq
-      (Tactic.tacticSeq1Indented
-       [(group
-         (Tactic.simp
-          "simp"
-          []
-          []
-          ["["
-           [(Tactic.simpLemma [] [] `symm_trans_rev)
-            ","
-            (Tactic.simpLemma [] [] `self_trans_symm)
-            ","
-            (Tactic.simpErase "-" `symm_symm)]
-           "]"]
-          [])
-         [])]))))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_$__»
-   `symm_injective
-   "$"
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group
-        (Tactic.simp
-         "simp"
-         []
-         []
-         ["["
-          [(Tactic.simpLemma [] [] `symm_trans_rev)
-           ","
-           (Tactic.simpLemma [] [] `self_trans_symm)
-           ","
-           (Tactic.simpErase "-" `symm_symm)]
-          "]"]
-         [])
-        [])]))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simp
-        "simp"
-        []
-        []
-        ["["
-         [(Tactic.simpLemma [] [] `symm_trans_rev)
-          ","
-          (Tactic.simpLemma [] [] `self_trans_symm)
-          ","
-          (Tactic.simpErase "-" `symm_symm)]
-         "]"]
-        [])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp
-   "simp"
-   []
-   []
-   ["["
-    [(Tactic.simpLemma [] [] `symm_trans_rev)
-     ","
-     (Tactic.simpLemma [] [] `self_trans_symm)
-     ","
-     (Tactic.simpErase "-" `symm_symm)]
-    "]"]
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpErase', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpErase', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `symm_symm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `self_trans_symm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `symm_trans_rev
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-  `symm_injective
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.app `f.symm.trans [`f])
-   "="
-   (Term.app `of_set [(Set.«term{_|_}» "{" `b "|" (Term.proj (Term.app `f.symm [`b]) "." `isSome) "}")]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `of_set [(Set.«term{_|_}» "{" `b "|" (Term.proj (Term.app `f.symm [`b]) "." `isSome) "}")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}» "{" `b "|" (Term.proj (Term.app `f.symm [`b]) "." `isSome) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.proj (Term.app `f.symm [`b]) "." `isSome)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `f.symm [`b])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `b
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f.symm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `f.symm [`b]) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  symm_trans_self
-  ( f : α ≃. β ) : f.symm.trans f = of_set { b | f.symm b . isSome }
-  := symm_injective $ by simp [ symm_trans_rev , self_trans_symm , - symm_symm ]
+theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = of_set { b | (f.symm b).isSome } :=
+  symm_injective $ by
+    simp [symm_trans_rev, self_trans_symm, -symm_symm]
 
 theorem trans_symm_eq_iff_forall_is_some {f : α ≃. β} : f.trans f.symm = Pequiv.refl α ↔ ∀ a, is_some (f a) := by
   rw [self_trans_symm, of_set_eq_refl, Set.eq_univ_iff_forall] <;> rfl
@@ -738,17 +285,18 @@ section Single
 
 variable [DecidableEq α] [DecidableEq β] [DecidableEq γ]
 
-/--  Create a `pequiv` which sends `a` to `b` and `b` to `a`, but is otherwise `none`. -/
-def single (a : α) (b : β) : α ≃. β :=
-  { toFun := fun x => if x = a then some b else none, invFun := fun x => if x = b then some a else none,
-    inv := fun _ _ => by
-      simp <;> split_ifs <;> cc }
+/-- Create a `pequiv` which sends `a` to `b` and `b` to `a`, but is otherwise `none`. -/
+def single (a : α) (b : β) : α ≃. β where
+  toFun := fun x => if x = a then some b else none
+  invFun := fun x => if x = b then some a else none
+  inv := fun _ _ => by
+    simp <;> split_ifs <;> cc
 
 theorem mem_single (a : α) (b : β) : b ∈ single a b a :=
   if_pos rfl
 
 theorem mem_single_iff (a₁ a₂ : α) (b₁ b₂ : β) : b₁ ∈ single a₂ b₂ a₁ ↔ a₁ = a₂ ∧ b₁ = b₂ := by
-  dsimp [single] <;> split_ifs <;> simp [eq_comm]
+  dsimp [single] <;> split_ifs <;> simp [*, eq_comm]
 
 @[simp]
 theorem symm_single (a : α) (b : β) : (single a b).symm = single b a :=
@@ -797,24 +345,19 @@ end Single
 
 section Order
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : PartialOrderₓ ( α ≃. β )
-  where
-    le f g := ∀ a : α b : β , b ∈ f a → b ∈ g a
-      le_refl _ _ _ := id
-      le_trans f g h fg gh a b := gh a b ∘ fg a b
-      le_antisymm
-        f g fg gf
-        :=
-        ext
-          (
-            by
-              intro a
-                cases' h : g a with b
-                · exact eq_none_iff_forall_not_mem . 2 fun b hb => Option.not_mem_none b $ h ▸ fg a b hb
-                · exact gf _ _ h
-            )
+instance : PartialOrderₓ (α ≃. β) where
+  le := fun f g => ∀ a : α b : β, b ∈ f a → b ∈ g a
+  le_refl := fun _ _ _ => id
+  le_trans := fun f g h fg gh a b => gh a b ∘ fg a b
+  le_antisymm := fun f g fg gf =>
+    ext
+      (by
+        intro a
+        cases' h : g a with b
+        · exact eq_none_iff_forall_not_mem.2 fun b hb => Option.not_mem_none b $ h ▸ fg a b hb
+          
+        · exact gf _ _ h
+          )
 
 theorem le_def {f g : α ≃. β} : f ≤ g ↔ ∀ a : α b : β, b ∈ f a → b ∈ g a :=
   Iff.rfl
@@ -828,18 +371,37 @@ instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
       { toFun := fun a => if f a = g a then f a else none,
         invFun := fun b => if f.symm b = g.symm b then f.symm b else none,
         inv := fun a b => by
-          have := @mem_iff_mem _ _ f a b
-          have := @mem_iff_mem _ _ g a b
-          split_ifs <;> finish },
+          have hf := @mem_iff_mem _ _ f a b
+          have hg := @mem_iff_mem _ _ g a b
+          split_ifs with h1 h2 h2 <;>
+            try
+              simp [hf]
+          · contrapose! h2
+            rw [h2]
+            rw [← h1, hf, h2] at hg
+            simp only [mem_def, true_iffₓ, eq_self_iff_true] at hg
+            rw [hg]
+            
+          · contrapose! h1
+            rw [h1] at *
+            rw [← h2] at hg
+            simp only [mem_def, eq_self_iff_true, iff_trueₓ] at hf hg
+            rw [hf, hg]
+             },
     inf_le_left := fun _ _ _ _ => by
       simp <;> split_ifs <;> cc,
     inf_le_right := fun _ _ _ _ => by
       simp <;> split_ifs <;> cc,
     le_inf := fun f g h fg gh a b => by
-      have := fg a b
-      have := gh a b
-      simp [le_def]
-      split_ifs <;> finish }
+      intro H
+      have hf := fg a b H
+      have hg := gh a b H
+      simp only [Option.mem_def, Pequiv.coe_mk_apply]
+      split_ifs with h1
+      · exact hf
+        
+      · exact h1 (hf.trans hg.symm)
+         }
 
 end Order
 
@@ -849,11 +411,12 @@ namespace Equivₓ
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
-/--  Turns an `equiv` into a `pequiv` of the whole type. -/
-def to_pequiv (f : α ≃ β) : α ≃. β :=
-  { toFun := some ∘ f, invFun := some ∘ f.symm,
-    inv := by
-      simp [Equivₓ.eq_symm_apply, eq_comm] }
+/-- Turns an `equiv` into a `pequiv` of the whole type. -/
+def to_pequiv (f : α ≃ β) : α ≃. β where
+  toFun := some ∘ f
+  invFun := some ∘ f.symm
+  inv := by
+    simp [Equivₓ.eq_symm_apply, eq_comm]
 
 @[simp]
 theorem to_pequiv_refl : (Equivₓ.refl α).toPequiv = Pequiv.refl α :=

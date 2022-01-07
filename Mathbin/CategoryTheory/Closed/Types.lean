@@ -33,28 +33,17 @@ instance (X : Type v₁) : is_left_adjoint (types.binary_product_functor.obj X) 
 instance : has_finite_products (Type v₁) :=
   has_finite_products_of_has_products _
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : cartesian_closed ( Type v₁ )
-  where closed X := { isAdj := adjunction.left_adjoint_of_nat_iso ( types.binary_product_iso_prod . app X ) }
+instance : cartesian_closed (Type v₁) where
+  closed := fun X => { isAdj := adjunction.left_adjoint_of_nat_iso (types.binary_product_iso_prod.app X) }
 
 instance {C : Type u₁} [category.{v₁} C] : has_finite_products (C ⥤ Type u₁) :=
   has_finite_products_of_has_products _
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { C : Type v₁ } [ small_category C ] : cartesian_closed ( C ⥤ Type v₁ )
-  where
-    closed
-      F
-      :=
-      {
-        isAdj
-          :=
-          by
-            let this' := functor_category.prod_preserves_colimits F
-              apply is_left_adjoint_of_preserves_colimits ( prod.functor.obj F )
-        }
+instance {C : Type v₁} [small_category C] : cartesian_closed (C ⥤ Type v₁) where
+  closed := fun F =>
+    { isAdj := by
+        let this' := functor_category.prod_preserves_colimits F
+        apply is_left_adjoint_of_preserves_colimits (prod.functor.obj F) }
 
 end CartesianClosed
 

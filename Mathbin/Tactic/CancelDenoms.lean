@@ -26,51 +26,51 @@ namespace CancelFactors
 /-! ### Lemmas used in the procedure -/
 
 
-theorem mul_subst {α} [CommRingₓ α] {n1 n2 k e1 e2 t1 t2 : α} (h1 : (n1*e1) = t1) (h2 : (n2*e2) = t2)
-    (h3 : (n1*n2) = k) : (k*e1*e2) = t1*t2 :=
-  have h3 : (n1*n2) = k := h3
-  by
+theorem mul_subst {α} [CommRingₓ α] {n1 n2 k e1 e2 t1 t2 : α} (h1 : n1 * e1 = t1) (h2 : n2 * e2 = t2)
+    (h3 : n1 * n2 = k) : k * (e1 * e2) = t1 * t2 := by
+  have h3 : n1 * n2 = k := h3
   rw [← h3, mul_commₓ n1, mul_assocₓ n2, ← mul_assocₓ n1, h1, ← mul_assocₓ n2, mul_commₓ n2, mul_assocₓ, h2]
 
-theorem div_subst {α} [Field α] {n1 n2 k e1 e2 t1 : α} (h1 : (n1*e1) = t1) (h2 : n2 / e2 = 1) (h3 : (n1*n2) = k) :
-    (k*e1 / e2) = t1 := by
+theorem div_subst {α} [Field α] {n1 n2 k e1 e2 t1 : α} (h1 : n1 * e1 = t1) (h2 : n2 / e2 = 1) (h3 : n1 * n2 = k) :
+    k * (e1 / e2) = t1 := by
   rw [← h3, mul_assocₓ, mul_div_comm, h2, ← mul_assocₓ, h1, mul_commₓ, one_mulₓ]
 
-theorem cancel_factors_eq_div {α} [Field α] {n e e' : α} (h : (n*e) = e') (h2 : n ≠ 0) : e = e' / n :=
+theorem cancel_factors_eq_div {α} [Field α] {n e e' : α} (h : n * e = e') (h2 : n ≠ 0) : e = e' / n :=
   eq_div_of_mul_eq h2 $ by
     rwa [mul_commₓ] at h
 
-theorem add_subst {α} [Ringₓ α] {n e1 e2 t1 t2 : α} (h1 : (n*e1) = t1) (h2 : (n*e2) = t2) : (n*e1+e2) = t1+t2 := by
-  simp [left_distrib]
+theorem add_subst {α} [Ringₓ α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) : n * (e1 + e2) = t1 + t2 :=
+  by
+  simp [left_distrib, *]
 
-theorem sub_subst {α} [Ringₓ α] {n e1 e2 t1 t2 : α} (h1 : (n*e1) = t1) (h2 : (n*e2) = t2) : (n*e1 - e2) = t1 - t2 := by
-  simp [left_distrib, sub_eq_add_neg]
+theorem sub_subst {α} [Ringₓ α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) : n * (e1 - e2) = t1 - t2 :=
+  by
+  simp [left_distrib, *, sub_eq_add_neg]
 
-theorem neg_subst {α} [Ringₓ α] {n e t : α} (h1 : (n*e) = t) : (n*-e) = -t := by
-  simp
+theorem neg_subst {α} [Ringₓ α] {n e t : α} (h1 : n * e = t) : n * -e = -t := by
+  simp [*]
 
-theorem cancel_factors_lt {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : (ad*a) = a') (hb : (bd*b) = b')
-    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a < b) = (((1 / gcd)*bd*a') < (1 / gcd)*ad*b') := by
+theorem cancel_factors_lt {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
+    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a < b) = (1 / gcd * (bd * a') < 1 / gcd * (ad * b')) := by
   rw [mul_lt_mul_left, ← ha, ← hb, ← mul_assocₓ, ← mul_assocₓ, mul_commₓ bd, mul_lt_mul_left]
   exact mul_pos had hbd
   exact one_div_pos.2 hgcd
 
-theorem cancel_factors_le {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : (ad*a) = a') (hb : (bd*b) = b')
-    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a ≤ b) = (((1 / gcd)*bd*a') ≤ (1 / gcd)*ad*b') := by
+theorem cancel_factors_le {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
+    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a ≤ b) = (1 / gcd * (bd * a') ≤ 1 / gcd * (ad * b')) := by
   rw [mul_le_mul_left, ← ha, ← hb, ← mul_assocₓ, ← mul_assocₓ, mul_commₓ bd, mul_le_mul_left]
   exact mul_pos had hbd
   exact one_div_pos.2 hgcd
 
-theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : (ad*a) = a') (hb : (bd*b) = b')
-    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a = b) = (((1 / gcd)*bd*a') = (1 / gcd)*ad*b') := by
+theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
+    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a = b) = (1 / gcd * (bd * a') = 1 / gcd * (ad * b')) := by
   rw [← ha, ← hb, ← mul_assocₓ bd, ← mul_assocₓ ad, mul_commₓ bd]
   ext
   constructor
-  ·
-    rintro rfl
+  · rintro rfl
     rfl
-  ·
-    intro h
+    
+  · intro h
     simp only [← mul_assocₓ] at h
     refine' mul_left_cancel₀ (mul_ne_zero _ _) h
     apply mul_ne_zero
@@ -80,6 +80,7 @@ theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α
         first |
           assumption|
           exact zero_lt_one
+    
 
 open Tactic Expr
 
@@ -88,13 +89,12 @@ open Tactic Expr
 
 open Tree
 
-/-- 
-`find_cancel_factor e` produces a natural number `n`, such that multiplying `e` by `n` will
+/-- `find_cancel_factor e` produces a natural number `n`, such that multiplying `e` by `n` will
 be able to cancel all the numeric denominators in `e`. The returned `tree` describes how to
 distribute the value `n` over products inside `e`.
 -/
 unsafe def find_cancel_factor : expr → ℕ × Tree ℕ
-  | quote.1 ((%%ₓe1)+%%ₓe2) =>
+  | quote.1 ((%%ₓe1) + %%ₓe2) =>
     let (v1, t1) := find_cancel_factor e1
     let (v2, t2) := find_cancel_factor e2
     let lcm := v1.lcm v2
@@ -104,10 +104,10 @@ unsafe def find_cancel_factor : expr → ℕ × Tree ℕ
     let (v2, t2) := find_cancel_factor e2
     let lcm := v1.lcm v2
     (lcm, node lcm t1 t2)
-  | quote.1 ((%%ₓe1)*%%ₓe2) =>
+  | quote.1 ((%%ₓe1) * %%ₓe2) =>
     let (v1, t1) := find_cancel_factor e1
     let (v2, t2) := find_cancel_factor e2
-    let pd := v1*v2
+    let pd := v1 * v2
     (pd, node pd t1 t2)
   | quote.1 ((%%ₓe1) / %%ₓe2) =>
     match e2.to_nonneg_rat with
@@ -119,15 +119,14 @@ unsafe def find_cancel_factor : expr → ℕ × Tree ℕ
   | quote.1 (-%%ₓe) => find_cancel_factor e
   | _ => (1, node 1 Tree.nil Tree.nil)
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-`mk_prod_prf n tr e` produces a proof of `n*e = e'`, where numeric denominators have been
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- `mk_prod_prf n tr e` produces a proof of `n*e = e'`, where numeric denominators have been
 canceled in `e'`, distributing `n` proportionally according to `tr`.
 -/
 unsafe def mk_prod_prf : ℕ → Tree ℕ → expr → tactic expr
-  | v, node _ lhs rhs, quote.1 ((%%ₓe1)+%%ₓe2) => do
+  | v, node _ lhs rhs, quote.1 ((%%ₓe1) + %%ₓe2) => do
     let v1 ← mk_prod_prf v lhs e1
     let v2 ← mk_prod_prf v rhs e2
     mk_app `` add_subst [v1, v2]
@@ -135,14 +134,14 @@ unsafe def mk_prod_prf : ℕ → Tree ℕ → expr → tactic expr
     let v1 ← mk_prod_prf v lhs e1
     let v2 ← mk_prod_prf v rhs e2
     mk_app `` sub_subst [v1, v2]
-  | v, node n (lhs@(node ln _ _)) rhs, quote.1 ((%%ₓe1)*%%ₓe2) => do
+  | v, node n (lhs@(node ln _ _)) rhs, quote.1 ((%%ₓe1) * %%ₓe2) => do
     let tp ← infer_type e1
     let v1 ← mk_prod_prf ln lhs e1
     let v2 ← mk_prod_prf (v / ln) rhs e2
     let ln' ← tp.of_nat ln
     let vln' ← tp.of_nat (v / ln)
     let v' ← tp.of_nat v
-    let ntp ← to_expr (pquote.1 (((%%ₓln')*%%ₓvln') = %%ₓv'))
+    let ntp ← to_expr (pquote.1 (((%%ₓln') * %%ₓvln') = %%ₓv'))
     let (_, npf) ← solve_aux ntp sorry
     mk_app `` mul_subst [v1, v2, npf]
   | v, node n lhs rhs@(node rn _ _), quote.1 ((%%ₓe1) / %%ₓe2) => do
@@ -154,7 +153,7 @@ unsafe def mk_prod_prf : ℕ → Tree ℕ → expr → tactic expr
     let v' ← tp.of_nat v
     let ntp ← to_expr (pquote.1 (((%%ₓrn') / %%ₓe2) = 1))
     let (_, npf) ← solve_aux ntp sorry
-    let ntp2 ← to_expr (pquote.1 (((%%ₓvrn')*%%ₓn') = %%ₓv'))
+    let ntp2 ← to_expr (pquote.1 (((%%ₓvrn') * %%ₓn') = %%ₓv'))
     let (_, npf2) ← solve_aux ntp2 sorry
     mk_app `` div_subst [v1, npf, npf2]
   | v, t, quote.1 (-%%ₓe) => do
@@ -163,11 +162,10 @@ unsafe def mk_prod_prf : ℕ → Tree ℕ → expr → tactic expr
   | v, _, e => do
     let tp ← infer_type e
     let v' ← tp.of_nat v
-    let e' ← to_expr (pquote.1 ((%%ₓv')*%%ₓe))
+    let e' ← to_expr (pquote.1 ((%%ₓv') * %%ₓe))
     mk_app `eq.refl [e']
 
-/-- 
-Given `e`, a term with rational division, produces a natural number `n` and a proof of `n*e = e'`,
+/-- Given `e`, a term with rational division, produces a natural number `n` and a proof of `n*e = e'`,
 where `e'` has no division. Assumes "well-behaved" division.
 -/
 unsafe def derive (e : expr) : tactic (ℕ × expr) :=
@@ -175,9 +173,8 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
   Prod.mk n <$> mk_prod_prf n t e <|>
     throwError "cancel_factors.derive failed to normalize {← e}. Are you sure this is well-behaved division?"
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-Given `e`, a term with rational divison, produces a natural number `n` and a proof of `e = e' / n`,
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Given `e`, a term with rational divison, produces a natural number `n` and a proof of `e = e' / n`,
 where `e'` has no divison. Assumes "well-behaved" division.
 -/
 unsafe def derive_div (e : expr) : tactic (ℕ × expr) := do
@@ -188,8 +185,7 @@ unsafe def derive_div (e : expr) : tactic (ℕ × expr) := do
   let (_, pn) ← solve_aux tgt sorry
   Prod.mk n <$> mk_mapp `` cancel_factors_eq_div [none, none, n', none, none, p, pn]
 
-/-- 
-`find_comp_lemma e` arranges `e` in the form `lhs R rhs`, where `R ∈ {<, ≤, =}`, and returns
+/-- `find_comp_lemma e` arranges `e` in the form `lhs R rhs`, where `R ∈ {<, ≤, =}`, and returns
 `lhs`, `rhs`, and the `cancel_factors` lemma corresponding to `R`.
 -/
 unsafe def find_comp_lemma : expr → Option (expr × expr × Name)
@@ -200,11 +196,10 @@ unsafe def find_comp_lemma : expr → Option (expr × expr × Name)
   | quote.1 ((%%ₓa) > %%ₓb) => (b, a, `` cancel_factors_lt)
   | _ => none
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-`cancel_denominators_in_type h` assumes that `h` is of the form `lhs R rhs`,
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- `cancel_denominators_in_type h` assumes that `h` is of the form `lhs R rhs`,
 where `R ∈ {<, ≤, =, ≥, >}`.
 It produces an expression `h'` of the form `lhs' R rhs'` and a proof that `h = h'`.
 Numeric denominators have been canceled in `lhs'` and `rhs'`.
@@ -237,8 +232,7 @@ setup_tactic_parser
 
 open Tactic Expr CancelFactors
 
-/-- 
-`cancel_denoms` attempts to remove numerals from the denominators of fractions.
+/-- `cancel_denoms` attempts to remove numerals from the denominators of fractions.
 It works on propositions that are field-valued inequalities.
 
 ```lean

@@ -41,21 +41,21 @@ variable {r : α → α → Prop}
 
 theorem IsRefl.reflexive [IsRefl α r] : Reflexive r := fun x => IsRefl.refl x
 
-/--  To show a reflexive relation `r : α → α → Prop` holds over `x y : α`,
+/-- To show a reflexive relation `r : α → α → Prop` holds over `x y : α`,
 it suffices to show it holds when `x ≠ y`. -/
 theorem Reflexive.rel_of_ne_imp (h : Reflexive r) {x y : α} (hr : x ≠ y → r x y) : r x y := by
   by_cases' hxy : x = y
-  ·
-    exact hxy ▸ h x
-  ·
-    exact hr hxy
+  · exact hxy ▸ h x
+    
+  · exact hr hxy
+    
 
-/--  If a reflexive relation `r : α → α → Prop` holds over `x y : α`,
+/-- If a reflexive relation `r : α → α → Prop` holds over `x y : α`,
 then it holds whether or not `x ≠ y`. -/
 theorem Reflexive.ne_imp_iff (h : Reflexive r) {x y : α} : x ≠ y → r x y ↔ r x y :=
   ⟨h.rel_of_ne_imp, fun hr _ => hr⟩
 
-/--  If a reflexive relation `r : α → α → Prop` holds over `x y : α`,
+/-- If a reflexive relation `r : α → α → Prop` holds over `x y : α`,
 then it holds whether or not `x ≠ y`. Unlike `reflexive.ne_imp_iff`, this uses `[is_refl α r]`. -/
 theorem reflexive_ne_imp_iff [IsRefl α r] {x y : α} : x ≠ y → r x y ↔ r x y :=
   IsRefl.reflexive.ne_imp_iff
@@ -86,8 +86,7 @@ section Comp
 
 variable {r : α → β → Prop} {p : β → γ → Prop} {q : γ → δ → Prop}
 
-/-- 
-The composition of two relations, yielding a new relation.  The result
+/-- The composition of two relations, yielding a new relation.  The result
 relates a term of `α` and a term of `γ` if there is an intermediate
 term of `β` related to both.
 -/
@@ -102,16 +101,14 @@ theorem comp_eq : r ∘r (· = ·) = r :=
 theorem eq_comp : (· = ·) ∘r r = r :=
   funext $ fun a => funext $ fun b => propext $ Iff.intro (fun ⟨c, Eq, h⟩ => Eq.symm ▸ h) fun h => ⟨a, rfl, h⟩
 
-theorem iff_comp {r : Prop → α → Prop} : (· ↔ ·) ∘r r = r :=
+theorem iff_comp {r : Prop → α → Prop} : (· ↔ ·) ∘r r = r := by
   have : (· ↔ ·) = (· = ·) := by
     funext a b <;> exact iff_eq_eq
-  by
   rw [this, eq_comp]
 
-theorem comp_iff {r : α → Prop → Prop} : r ∘r (· ↔ ·) = r :=
+theorem comp_iff {r : α → Prop → Prop} : r ∘r (· ↔ ·) = r := by
   have : (· ↔ ·) = (· = ·) := by
     funext a b <;> exact iff_eq_eq
-  by
   rw [this, comp_eq]
 
 theorem comp_assoc : (r ∘r p) ∘r q = r ∘r p ∘r q := by
@@ -130,8 +127,7 @@ theorem flip_comp : flip (r ∘r p) = flip p ∘r flip r := by
 
 end Comp
 
-/-- 
-The map of a relation `r` through a pair of functions pushes the
+/-- The map of a relation `r` through a pair of functions pushes the
 relation to the codomains of the functions.  The resulting relation is
 defined by having pairs of terms related if they have preimages
 related by `r`.
@@ -141,7 +137,7 @@ protected def map (r : α → β → Prop) (f : α → γ) (g : β → δ) : γ 
 
 variable {r : α → α → Prop} {a b c d : α}
 
-/--  `refl_trans_gen r`: reflexive transitive closure of `r` -/
+/-- `refl_trans_gen r`: reflexive transitive closure of `r` -/
 @[mk_iff Relation.ReflTransGen.cases_tail_iff]
 inductive refl_trans_gen (r : α → α → Prop) (a : α) : α → Prop
   | refl : refl_trans_gen a
@@ -149,13 +145,13 @@ inductive refl_trans_gen (r : α → α → Prop) (a : α) : α → Prop
 
 attribute [refl] refl_trans_gen.refl
 
-/--  `refl_gen r`: reflexive closure of `r` -/
+/-- `refl_gen r`: reflexive closure of `r` -/
 @[mk_iff]
 inductive refl_gen (r : α → α → Prop) (a : α) : α → Prop
   | refl : refl_gen a
   | single {b} : r a b → refl_gen b
 
-/--  `trans_gen r`: transitive closure of `r` -/
+/-- `trans_gen r`: transitive closure of `r` -/
 @[mk_iff]
 inductive trans_gen (r : α → α → Prop) (a : α) : α → Prop
   | single {b} : r a b → trans_gen b
@@ -191,10 +187,10 @@ theorem head (hab : r a b) (hbc : refl_trans_gen r b c) : refl_trans_gen r a c :
 theorem Symmetric (h : Symmetric r) : Symmetric (refl_trans_gen r) := by
   intro x y h
   induction' h with z w a b c
-  ·
-    rfl
-  ·
-    apply Relation.ReflTransGen.head (h b) c
+  · rfl
+    
+  · apply Relation.ReflTransGen.head (h b) c
+    
 
 theorem cases_tail : refl_trans_gen r a b → b = a ∨ ∃ c, refl_trans_gen r a c ∧ r c b :=
   (cases_tail_iff r a b).1
@@ -224,38 +220,38 @@ theorem trans_induction_on {P : ∀ {a b : α}, refl_trans_gen r a b → Prop} {
 
 theorem cases_head (h : refl_trans_gen r a b) : a = b ∨ ∃ c, r a c ∧ refl_trans_gen r c b := by
   induction h using Relation.ReflTransGen.head_induction_on
-  ·
-    left
+  · left
     rfl
-  ·
-    right
+    
+  · right
     exists _
     constructor <;> assumption
+    
 
 theorem cases_head_iff : refl_trans_gen r a b ↔ a = b ∨ ∃ c, r a c ∧ refl_trans_gen r c b := by
   use cases_head
   rintro (rfl | ⟨c, hac, hcb⟩)
-  ·
-    rfl
-  ·
-    exact head hac hcb
+  · rfl
+    
+  · exact head hac hcb
+    
 
 theorem total_of_right_unique (U : Relator.RightUnique r) (ab : refl_trans_gen r a b) (ac : refl_trans_gen r a c) :
     refl_trans_gen r b c ∨ refl_trans_gen r c b := by
   induction' ab with b d ab bd IH
-  ·
-    exact Or.inl ac
-  ·
-    rcases IH with (IH | IH)
-    ·
-      rcases cases_head IH with (rfl | ⟨e, be, ec⟩)
-      ·
-        exact Or.inr (single bd)
-      ·
-        cases U bd be
+  · exact Or.inl ac
+    
+  · rcases IH with (IH | IH)
+    · rcases cases_head IH with (rfl | ⟨e, be, ec⟩)
+      · exact Or.inr (single bd)
+        
+      · cases U bd be
         exact Or.inl ec
-    ·
-      exact Or.inr (IH.tail bd)
+        
+      
+    · exact Or.inr (IH.tail bd)
+      
+    
 
 end ReflTransGen
 
@@ -326,12 +322,12 @@ theorem trans_right (hab : refl_trans_gen r a b) (hbc : trans_gen r b c) : trans
 theorem tail'_iff : trans_gen r a c ↔ ∃ b, refl_trans_gen r a b ∧ r b c := by
   refine' ⟨fun h => _, fun ⟨b, hab, hbc⟩ => tail' hab hbc⟩
   cases' h with _ hac b _ hab hbc
-  ·
-    exact
+  · exact
       ⟨_, by
         rfl, hac⟩
-  ·
-    exact ⟨_, hab.to_refl, hbc⟩
+    
+  · exact ⟨_, hab.to_refl, hbc⟩
+    
 
 theorem head'_iff : trans_gen r a c ↔ ∃ b, r a b ∧ refl_trans_gen r b c := by
   refine' ⟨fun h => _, fun ⟨b, hab, hbc⟩ => head' hab hbc⟩
@@ -391,18 +387,18 @@ theorem refl_trans_gen_iff_eq (h : ∀ b, ¬r a b) : refl_trans_gen r a b ↔ b 
 
 theorem refl_trans_gen_iff_eq_or_trans_gen : refl_trans_gen r a b ↔ b = a ∨ trans_gen r a b := by
   refine' ⟨fun h => _, fun h => _⟩
-  ·
-    cases' h with c _ hac hcb
-    ·
-      exact Or.inl rfl
-    ·
-      exact Or.inr (trans_gen.tail' hac hcb)
-  ·
-    rcases h with (rfl | h)
-    ·
-      rfl
-    ·
-      exact h.to_refl
+  · cases' h with c _ hac hcb
+    · exact Or.inl rfl
+      
+    · exact Or.inr (trans_gen.tail' hac hcb)
+      
+    
+  · rcases h with (rfl | h)
+    · rfl
+      
+    · exact h.to_refl
+      
+    
 
 theorem refl_trans_gen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → p (f a) (f b))
     (hab : refl_trans_gen r a b) : refl_trans_gen p (f a) (f b) :=
@@ -418,8 +414,8 @@ theorem refl_trans_gen_eq_self (refl : Reflexive r) (trans : Transitive r) : ref
       propext $
         ⟨fun h => by
           induction' h with b c h₁ h₂ IH
-          ·
-            apply refl
+          · apply refl
+            
           exact trans IH h₂, single⟩
 
 theorem reflexive_refl_trans_gen : Reflexive (refl_trans_gen r) := fun a => refl
@@ -439,8 +435,7 @@ theorem refl_trans_gen_closed {p : α → α → Prop} :
 
 end ReflTransGen
 
-/-- 
-The join of a relation on a single type is a new relation for which
+/-- The join of a relation on a single type is a new relation for which
 pairs of terms are related if there is a third term they are both
 related to.  For example, if `r` is a relation representing rewrites
 in a term rewriting system, then *confluence* is the property that if
@@ -453,7 +448,7 @@ section Join
 
 open ReflTransGen ReflGen
 
-/--  A sufficient condition for the Church-Rosser property. -/
+/-- A sufficient condition for the Church-Rosser property. -/
 theorem church_rosser (h : ∀ a b c, r a b → r a c → ∃ d, refl_gen r b d ∧ refl_trans_gen r c d)
     (hab : refl_trans_gen r a b) (hac : refl_trans_gen r a c) : join (refl_trans_gen r) b c := by
   induction hab
@@ -470,17 +465,17 @@ theorem church_rosser (h : ∀ a b c, r a b → r a c → ∃ d, refl_gen r b d 
       case refl_trans_gen.tail f b hdf hfb ih =>
         rcases ih with ⟨a, hea, hfa⟩
         cases' hfa with _ hfa
-        ·
-          exact ⟨b, hea.tail hfb, refl_gen.refl⟩
-        ·
-          rcases h _ _ _ hfb hfa with ⟨c, hbc, hac⟩
+        · exact ⟨b, hea.tail hfb, refl_gen.refl⟩
+          
+        · rcases h _ _ _ hfb hfa with ⟨c, hbc, hac⟩
           exact ⟨c, hea.trans hac, hbc⟩
+          
     rcases this with ⟨a, hea, hba⟩
     cases' hba with _ hba
-    ·
-      exact ⟨b, hea, hcb⟩
-    ·
-      exact ⟨a, hea, hcb.tail hba⟩
+    · exact ⟨b, hea, hcb⟩
+      
+    · exact ⟨a, hea, hcb.tail hba⟩
+      
 
 theorem join_of_single (h : Reflexive r) (hab : r a b) : join r a b :=
   ⟨b, hab, h b⟩
@@ -508,10 +503,10 @@ theorem join_of_equivalence {r' : α → α → Prop} (hr : Equivalenceₓ r) (h
 theorem refl_trans_gen_of_transitive_reflexive {r' : α → α → Prop} (hr : Reflexive r) (ht : Transitive r)
     (h : ∀ a b, r' a b → r a b) (h' : refl_trans_gen r' a b) : r a b := by
   induction' h' with b c hab hbc ih
-  ·
-    exact hr _
-  ·
-    exact ht ih (h _ _ hbc)
+  · exact hr _
+    
+  · exact ht ih (h _ _ hbc)
+    
 
 theorem refl_trans_gen_of_equivalence {r' : α → α → Prop} (hr : Equivalenceₓ r) :
     (∀ a b, r' a b → r a b) → refl_trans_gen r' a b → r a b :=

@@ -36,8 +36,7 @@ which allows you to run an arbitrary tactic and modify the returned results.
 
 namespace Tactic
 
-/-- 
-`intercept_result m t`
+/-- `intercept_result m t`
 attempts to run a tactic `t`,
 intercepts any results `t` assigns to the goals,
 and runs `m : expr → tactic expr` on each of the expressions
@@ -60,8 +59,7 @@ unsafe def intercept_result {α} (m : expr → tactic expr) (t : tactic α) : ta
       unsafe.type_context.run $ unsafe.type_context.assign g g''
   pure a
 
-/-- 
-`dsimp_result t`
+/-- `dsimp_result t`
 attempts to run a tactic `t`,
 intercepts any results it assigns to the goals,
 and runs `dsimp` on those results
@@ -71,8 +69,7 @@ unsafe def dsimp_result {α} (t : tactic α) (cfg : dsimp_config := { failIfUnch
     (attr_names : List Name := []) (hs : List simp_arg_type := []) : tactic α :=
   intercept_result (fun g => g.dsimp cfg no_defaults attr_names hs) t
 
-/-- 
-`simp_result t`
+/-- `simp_result t`
 attempts to run a tactic `t`,
 intercepts any results `t` assigns to the goals,
 and runs `simp` on those results
@@ -87,8 +84,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-/-- 
-`dsimp_result { tac }`
+/-- `dsimp_result { tac }`
 attempts to run a tactic block `tac`,
 intercepts any results the tactic block would have assigned to the goals,
 and runs `dsimp` on those results
@@ -101,8 +97,7 @@ unsafe def dsimp_result (no_defaults : parse only_flag) (hs : parse simp_arg_lis
     (t : itactic) : itactic :=
   tactic.dsimp_result t { failIfUnchanged := ff } no_defaults attr_names hs
 
-/-- 
-`simp_result { tac }`
+/-- `simp_result { tac }`
 attempts to run a tactic block `tac`,
 intercepts any results the tactic block would have assigned to the goals,
 and runs `simp` on those results
@@ -115,8 +110,7 @@ unsafe def simp_result (no_defaults : parse only_flag) (hs : parse simp_arg_list
     (t : itactic) : itactic :=
   tactic.simp_result t { failIfUnchanged := ff } failed no_defaults attr_names hs
 
-/-- 
-`simp_result { tac }`
+/-- `simp_result { tac }`
 attempts to run a tactic block `tac`,
 intercepts any results the tactic block would have assigned to the goals,
 and runs `simp` on those results

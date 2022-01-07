@@ -15,22 +15,22 @@ namespace CategoryTheory
 
 open CategoryTheory.MonoidalCategory
 
-/--  A type synonym for the monoidal opposite. Use the notation `Cᴹᵒᵖ`. -/
+/-- A type synonym for the monoidal opposite. Use the notation `Cᴹᵒᵖ`. -/
 @[nolint has_inhabited_instance]
 def monoidal_opposite (C : Type u₁) :=
   C
 
 namespace MonoidalOpposite
 
--- ././Mathport/Syntax/Translate/Basic.lean:333:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
 notation:999 C "ᴹᵒᵖ" => monoidal_opposite C
 
-/--  Think of an object of `C` as an object of `Cᴹᵒᵖ`. -/
+/-- Think of an object of `C` as an object of `Cᴹᵒᵖ`. -/
 @[pp_nodot]
 def mop (X : C) : Cᴹᵒᵖ :=
   X
 
-/--  Think of an object of `Cᴹᵒᵖ` as an object of `C`. -/
+/-- Think of an object of `Cᴹᵒᵖ` as an object of `C`. -/
 @[pp_nodot]
 def unmop (X : Cᴹᵒᵖ) : C :=
   X
@@ -55,11 +55,10 @@ theorem mop_unmop (X : Cᴹᵒᵖ) : mop (unmop X) = X :=
 theorem unmop_mop (X : C) : unmop (mop X) = X :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  monoidal_opposite_category
-  [ I : category .{ v₁ } C ] : category ( C ᴹᵒᵖ )
-  where Hom X Y := unmop X ⟶ unmop Y id X := 𝟙 ( unmop X ) comp X Y Z f g := f ≫ g
+instance monoidal_opposite_category [I : category.{v₁} C] : category (Cᴹᵒᵖ) where
+  Hom := fun X Y => unmop X ⟶ unmop Y
+  id := fun X => 𝟙 (unmop X)
+  comp := fun X Y Z f g => f ≫ g
 
 end MonoidalOpposite
 
@@ -71,11 +70,11 @@ open CategoryTheory.MonoidalOpposite
 
 variable [category.{v₁} C]
 
-/--  The monoidal opposite of a morphism `f : X ⟶ Y` is just `f`, thought of as `mop X ⟶ mop Y`. -/
+/-- The monoidal opposite of a morphism `f : X ⟶ Y` is just `f`, thought of as `mop X ⟶ mop Y`. -/
 def Quiver.Hom.mop {X Y : C} (f : X ⟶ Y) : @Quiver.Hom (Cᴹᵒᵖ) _ (mop X) (mop Y) :=
   f
 
-/--  We can think of a morphism `f : mop X ⟶ mop Y` as a morphism `X ⟶ Y`. -/
+/-- We can think of a morphism `f : mop X ⟶ mop Y` as a morphism `X ⟶ Y`. -/
 def Quiver.Hom.unmop {X Y : Cᴹᵒᵖ} (f : X ⟶ Y) : unmop X ⟶ unmop Y :=
   f
 
@@ -123,10 +122,13 @@ namespace Iso
 
 variable {X Y : C}
 
-/--  An isomorphism in `C` gives an isomorphism in `Cᴹᵒᵖ`. -/
+/-- An isomorphism in `C` gives an isomorphism in `Cᴹᵒᵖ`. -/
 @[simps]
-def mop (f : X ≅ Y) : mop X ≅ mop Y :=
-  { Hom := f.hom.mop, inv := f.inv.mop, hom_inv_id' := unmop_inj f.hom_inv_id, inv_hom_id' := unmop_inj f.inv_hom_id }
+def mop (f : X ≅ Y) : mop X ≅ mop Y where
+  Hom := f.hom.mop
+  inv := f.inv.mop
+  hom_inv_id' := unmop_inj f.hom_inv_id
+  inv_hom_id' := unmop_inj f.inv_hom_id
 
 end Iso
 
@@ -134,22 +136,35 @@ variable [monoidal_category.{v₁} C]
 
 open Opposite MonoidalCategory
 
--- failed to format: format: uncaught backtrack exception
-instance
-  monoidal_category_op
-  : monoidal_category ( C ᵒᵖ )
-  where
-    tensorObj X Y := op ( unop X ⊗ unop Y )
-      tensorHom X₁ Y₁ X₂ Y₂ f g := ( f.unop ⊗ g.unop ) . op
-      tensorUnit := op ( 𝟙_ C )
-      associator X Y Z := ( α_ ( unop X ) ( unop Y ) ( unop Z ) ) . symm . op
-      leftUnitor X := ( λ_ ( unop X ) ) . symm . op
-      rightUnitor X := ( ρ_ ( unop X ) ) . symm . op
-      associator_naturality' := by intros apply Quiver.Hom.unop_inj simp [ associator_inv_naturality ]
-      left_unitor_naturality' := by intros apply Quiver.Hom.unop_inj simp [ left_unitor_inv_naturality ]
-      right_unitor_naturality' := by intros apply Quiver.Hom.unop_inj simp [ right_unitor_inv_naturality ]
-      triangle' := by intros apply Quiver.Hom.unop_inj dsimp simp
-      pentagon' := by intros apply Quiver.Hom.unop_inj dsimp simp [ pentagon_inv ]
+instance monoidal_category_op : monoidal_category (Cᵒᵖ) where
+  tensorObj := fun X Y => op (unop X ⊗ unop Y)
+  tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (f.unop ⊗ g.unop).op
+  tensorUnit := op (𝟙_ C)
+  associator := fun X Y Z => (α_ (unop X) (unop Y) (unop Z)).symm.op
+  leftUnitor := fun X => (λ_ (unop X)).symm.op
+  rightUnitor := fun X => (ρ_ (unop X)).symm.op
+  associator_naturality' := by
+    intros
+    apply Quiver.Hom.unop_inj
+    simp [associator_inv_naturality]
+  left_unitor_naturality' := by
+    intros
+    apply Quiver.Hom.unop_inj
+    simp [left_unitor_inv_naturality]
+  right_unitor_naturality' := by
+    intros
+    apply Quiver.Hom.unop_inj
+    simp [right_unitor_inv_naturality]
+  triangle' := by
+    intros
+    apply Quiver.Hom.unop_inj
+    dsimp
+    simp
+  pentagon' := by
+    intros
+    apply Quiver.Hom.unop_inj
+    dsimp
+    simp [pentagon_inv]
 
 theorem op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
   rfl
@@ -157,22 +172,35 @@ theorem op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
 theorem op_tensor_unit : 𝟙_ (Cᵒᵖ) = op (𝟙_ C) :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  monoidal_category_mop
-  : monoidal_category ( C ᴹᵒᵖ )
-  where
-    tensorObj X Y := mop ( unmop Y ⊗ unmop X )
-      tensorHom X₁ Y₁ X₂ Y₂ f g := ( g.unmop ⊗ f.unmop ) . mop
-      tensorUnit := mop ( 𝟙_ C )
-      associator X Y Z := ( α_ ( unmop Z ) ( unmop Y ) ( unmop X ) ) . symm . mop
-      leftUnitor X := ( ρ_ ( unmop X ) ) . mop
-      rightUnitor X := ( λ_ ( unmop X ) ) . mop
-      associator_naturality' := by intros apply unmop_inj simp [ associator_inv_naturality ]
-      left_unitor_naturality' := by intros apply unmop_inj simp [ right_unitor_naturality ]
-      right_unitor_naturality' := by intros apply unmop_inj simp [ left_unitor_naturality ]
-      triangle' := by intros apply unmop_inj dsimp simp
-      pentagon' := by intros apply unmop_inj dsimp simp [ pentagon_inv ]
+instance monoidal_category_mop : monoidal_category (Cᴹᵒᵖ) where
+  tensorObj := fun X Y => mop (unmop Y ⊗ unmop X)
+  tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (g.unmop ⊗ f.unmop).mop
+  tensorUnit := mop (𝟙_ C)
+  associator := fun X Y Z => (α_ (unmop Z) (unmop Y) (unmop X)).symm.mop
+  leftUnitor := fun X => (ρ_ (unmop X)).mop
+  rightUnitor := fun X => (λ_ (unmop X)).mop
+  associator_naturality' := by
+    intros
+    apply unmop_inj
+    simp [associator_inv_naturality]
+  left_unitor_naturality' := by
+    intros
+    apply unmop_inj
+    simp [right_unitor_naturality]
+  right_unitor_naturality' := by
+    intros
+    apply unmop_inj
+    simp [left_unitor_naturality]
+  triangle' := by
+    intros
+    apply unmop_inj
+    dsimp
+    simp
+  pentagon' := by
+    intros
+    apply unmop_inj
+    dsimp
+    simp [pentagon_inv]
 
 theorem mop_tensor_obj (X Y : Cᴹᵒᵖ) : X ⊗ Y = mop (unmop Y ⊗ unmop X) :=
   rfl

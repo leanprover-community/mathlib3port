@@ -23,19 +23,19 @@ copy the attribute to the additive version.
 -/
 
 
-/--  User attribute used to mark tactics used by `measurability`. -/
+/-- User attribute used to mark tactics used by `measurability`. -/
 @[user_attribute]
-unsafe def measurability : user_attribute :=
-  { Name := `measurability, descr := "lemmas usable to prove (ae)-measurability" }
+unsafe def measurability : user_attribute where
+  Name := `measurability
+  descr := "lemmas usable to prove (ae)-measurability"
 
 attribute [measurability]
   measurable_id measurable_id' ae_measurable_id ae_measurable_id' measurable_const ae_measurable_const AeMeasurable.measurable_mk MeasurableSet.empty MeasurableSet.univ MeasurableSet.compl Subsingleton.measurable_set MeasurableSet.Union MeasurableSet.Inter MeasurableSet.Union_Prop MeasurableSet.Inter_Prop MeasurableSet.union MeasurableSet.inter MeasurableSet.diff MeasurableSet.symm_diff MeasurableSet.ite MeasurableSet.cond MeasurableSet.disjointed MeasurableSet.const MeasurableSet.insert measurable_set_eq Set.Finite.measurable_set Finset.measurable_set Set.Countable.measurable_set MeasurableSpace.measurable_set_top
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-Tactic to apply `measurable.comp` when appropriate.
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Tactic to apply `measurable.comp` when appropriate.
 
 Applying `measurable.comp` is not always a good idea, so we have some
 extra logic here to try to avoid bad cases.
@@ -54,9 +54,8 @@ extra logic here to try to avoid bad cases.
 unsafe def apply_measurable.comp : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-Tactic to apply `measurable.comp_ae_measurable` when appropriate.
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Tactic to apply `measurable.comp_ae_measurable` when appropriate.
 
 Applying `measurable.comp_ae_measurable` is not always a good idea, so we have some
 extra logic here to try to avoid bad cases.
@@ -75,8 +74,7 @@ extra logic here to try to avoid bad cases.
 unsafe def apply_measurable.comp_ae_measurable : tactic Unit :=
   sorry
 
-/-- 
-We don't want the intro1 tactic to apply to a goal of the form `measurable f`, `ae_measurable f μ`
+/-- We don't want the intro1 tactic to apply to a goal of the form `measurable f`, `ae_measurable f μ`
 or `measurable_set s`. This tactic tests the target to see if it matches that form.
  -/
 unsafe def goal_is_not_measurable : tactic Unit := do
@@ -87,8 +85,8 @@ unsafe def goal_is_not_measurable : tactic Unit := do
     | quote.1 (MeasurableSet (%%ₓl)) => failed
     | _ => skip
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/--  List of tactics used by `measurability` internally. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- List of tactics used by `measurability` internally. -/
 unsafe def measurability_tactics (md : transparency := semireducible) : List (tactic Stringₓ) :=
   [propositional_goal >> apply_assumption >> pure "apply_assumption",
     goal_is_not_measurable >> intro1 >>= fun ns => pure ("intro " ++ ns.to_string),
@@ -101,8 +99,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-/-- 
-Solve goals of the form `measurable f`, `ae_measurable f μ` or `measurable_set s`.
+/-- Solve goals of the form `measurable f`, `ae_measurable f μ` or `measurable_set s`.
 `measurability?` reports back the proof term it found.
 -/
 unsafe def measurability (bang : parse $ optionalₓ (tk "!")) (trace : parse $ optionalₓ (tk "?"))
@@ -112,12 +109,11 @@ unsafe def measurability (bang : parse $ optionalₓ (tk "!")) (trace : parse $ 
   let trace_fn := if trace.is_some then show_term else id
   trace_fn measurability_core
 
-/--  Version of `measurability` for use with auto_param. -/
+/-- Version of `measurability` for use with auto_param. -/
 unsafe def measurability' : tactic Unit :=
   measurability none none {  }
 
-/-- 
-`measurability` solves goals of the form `measurable f`, `ae_measurable f μ` or `measurable_set s`
+/-- `measurability` solves goals of the form `measurable f`, `ae_measurable f μ` or `measurable_set s`
 by applying lemmas tagged with the `measurability` user attribute.
 
 You can also use `measurability!`, which applies lemmas with `{ md := semireducible }`.

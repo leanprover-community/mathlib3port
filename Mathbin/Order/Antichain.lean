@@ -20,7 +20,7 @@ variable {α β : Type _} {r r₁ r₂ : α → α → Prop} {r' : β → β →
 
 protected theorem Symmetric.compl (h : Symmetric r) : Symmetric (rᶜ) := fun x y hr hr' => hr $ h hr'
 
-/--  An antichain is a set such that no two distinct elements are related. -/
+/-- An antichain is a set such that no two distinct elements are related. -/
 def IsAntichain (r : α → α → Prop) (s : Set α) : Prop :=
   s.pairwise (rᶜ)
 
@@ -44,12 +44,12 @@ protected theorem IsAntisymm (h : IsAntichain r univ) : IsAntisymm α r :=
 protected theorem Subsingleton [IsTrichotomous α r] (h : IsAntichain r s) : s.subsingleton := by
   rintro a ha b hb
   obtain hab | hab | hab := trichotomous_of r a b
-  ·
-    exact h.eq_of_related ha hb hab
-  ·
-    exact hab
-  ·
-    exact (h.eq_of_related hb ha hab).symm
+  · exact h.eq_of_related ha hb hab
+    
+  · exact hab
+    
+  · exact (h.eq_of_related hb ha hab).symm
+    
 
 protected theorem flip (hs : IsAntichain r s) : IsAntichain (flip r) s := fun a ha b hb h => hs hb ha h.symm
 
@@ -79,79 +79,9 @@ theorem insert_of_symmetric (hs : IsAntichain r s) (hr : Symmetric r) (h : ∀ �
     IsAntichain r (insert a s) :=
   (is_antichain_insert_of_symmetric hr).2 ⟨hs, h⟩
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment "/--" " Turns a set into an antichain by keeping only the \"maximal\" elements. -/")]
-  []
-  [(Command.protected "protected")]
-  []
-  []
-  [])
- (Command.def
-  "def"
-  (Command.declId `mk [])
-  (Command.optDeclSig
-   [(Term.explicitBinder "(" [`r] [":" (Term.arrow `α "→" (Term.arrow `α "→" (Term.prop "Prop")))] [] ")")
-    (Term.explicitBinder "(" [`s] [":" (Term.app `Set [`α])] [] ")")]
-   [(Term.typeSpec ":" (Term.app `Set [`α]))])
-  (Command.declValSimple
-   ":="
-   (Set.«term{_|_}_1»
-    "{"
-    («term_∈_» `a "∈" `s)
-    "|"
-    (Term.forall
-     "∀"
-     [(Term.strictImplicitBinder "⦃" [`b] [] "⦄")]
-     ","
-     (Term.arrow (Init.Core.«term_∈_» `b " ∈ " `s) "→" (Term.arrow (Term.app `r [`a `b]) "→" («term_=_» `a "=" `b))))
-    "}")
-   [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}_1»
-   "{"
-   («term_∈_» `a "∈" `s)
-   "|"
-   (Term.forall
-    "∀"
-    [(Term.strictImplicitBinder "⦃" [`b] [] "⦄")]
-    ","
-    (Term.arrow (Init.Core.«term_∈_» `b " ∈ " `s) "→" (Term.arrow (Term.app `r [`a `b]) "→" («term_=_» `a "=" `b))))
-   "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}_1»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.forall', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/-- Turns a set into an antichain by keeping only the "maximal" elements. -/ protected
-  def mk ( r : α → α → Prop ) ( s : Set α ) : Set α := { a ∈ s | ∀ ⦃ b ⦄ , b ∈ s → r a b → a = b }
+/-- Turns a set into an antichain by keeping only the "maximal" elements. -/
+protected def mk (r : α → α → Prop) (s : Set α) : Set α :=
+  { a ∈ s | ∀ ⦃b⦄, b ∈ s → r a b → a = b }
 
 theorem mk_is_antichain (r : α → α → Prop) (s : Set α) : IsAntichain r (IsAntichain.Mk r s) := fun a ha b hb hab h =>
   hab $ ha.2 hb.1 h
@@ -159,7 +89,7 @@ theorem mk_is_antichain (r : α → α → Prop) (s : Set α) : IsAntichain r (I
 theorem mk_subset : IsAntichain.Mk r s ⊆ s :=
   sep_subset _ _
 
-/--  If `is_antichain.mk r s` is included in but *shadows* the antichain `t`, then it is actually
+/-- If `is_antichain.mk r s` is included in but *shadows* the antichain `t`, then it is actually
 equal to `t`. -/
 theorem mk_max (ht : IsAntichain r t) (h : IsAntichain.Mk r s ⊆ t)
     (hs : ∀ ⦃a⦄, a ∈ t → ∃ b ∈ IsAntichain.Mk r s, r a b) : t = IsAntichain.Mk r s := by

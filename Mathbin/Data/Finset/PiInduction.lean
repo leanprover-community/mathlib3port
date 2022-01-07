@@ -25,7 +25,7 @@ variable {ι : Type _} {α : ι → Type _} [Fintype ι] [DecidableEq ι] [∀ i
 
 namespace Finset
 
-/--  General theorem for `finset.induction_on_pi`-style induction principles. -/
+/-- General theorem for `finset.induction_on_pi`-style induction principles. -/
 theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     (H_ex : ∀ i s : Finset (α i) hs : s.nonempty, ∃ x ∈ s, r i x (s.erase x)) {p : (∀ i, Finset (α i)) → Prop}
     (f : ∀ i, Finset (α i)) (h0 : p fun _ => ∅)
@@ -33,20 +33,17 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
   induction' hs : univ.sigma f using Finset.strongInductionOn with s ihs generalizing f
   subst s
   cases' eq_empty_or_nonempty (univ.sigma f) with he hne
-  ·
-    convert h0
+  · convert h0
     simpa [funext_iff] using he
-  ·
-    rcases sigma_nonempty.1 hne with ⟨i, -, hi⟩
+    
+  · rcases sigma_nonempty.1 hne with ⟨i, -, hi⟩
     rcases H_ex i (f i) hi with ⟨x, x_mem, hr⟩
     set g := update f i ((f i).erase x) with hg
     clear_value g
     have hx' : x ∉ g i := by
-      ·
-        rw [hg, update_same]
-        apply not_mem_erase
-    obtain rfl : f = update g i (insert x (g i))
-    ·
+      rw [hg, update_same]
+      apply not_mem_erase
+    obtain rfl : f = update g i (insert x (g i)) := by
       rw [hg, update_idem, update_same, insert_erase x_mem, update_eq_self]
     clear hg
     rw [update_same, erase_insert hx'] at hr
@@ -59,8 +56,9 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
         by
         simp [hx']⟩,
       (@le_update_iff _ _ _ _ g g i _).2 ⟨subset_insert _ _, fun _ _ => le_rfl⟩]
+    
 
-/--  Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
+/-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
 `i : ι`, and `x ∉ g i`, `p g` implies `p (update g i (insert x (g i)))`.
 
@@ -70,7 +68,7 @@ theorem induction_on_pi {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset
     (step : ∀ g : ∀ i, Finset (α i) i : ι x : α i hx : x ∉ g i, p g → p (update g i (insert x (g i)))) : p f :=
   induction_on_pi_of_choice (fun i x s => x ∉ s) (fun i s ⟨x, hx⟩ => ⟨x, hx, not_mem_erase x s⟩) f h0 step
 
-/--  Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
+/-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
 `i : ι`, and an element`x : α i` that is strictly greater than all elements of `g i`, `p g` implies
 `p (update g i (insert x (g i)))`.
@@ -84,7 +82,7 @@ theorem induction_on_pi_max [∀ i, LinearOrderₓ (α i)] {p : (∀ i, Finset (
   induction_on_pi_of_choice (fun i x s => ∀, ∀ y ∈ s, ∀, y < x)
     (fun i s hs => ⟨s.max' hs, s.max'_mem hs, fun y => s.lt_max'_of_mem_erase_max' _⟩) f h0 step
 
-/--  Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
+/-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
 `i : ι`, and an element`x : α i` that is strictly less than all elements of `g i`, `p g` implies
 `p (update g i (insert x (g i)))`.

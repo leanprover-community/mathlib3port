@@ -23,8 +23,7 @@ want to import `data.rat.basic` there.
 -/
 
 
-/-- 
-`rat.mk_numeral q` embeds `q` as a numeral expression inside a type with 0, 1, +, -, and /
+/-- `rat.mk_numeral q` embeds `q` as a numeral expression inside a type with 0, 1, +, -, and /
 
 `type`: an expression representing the target type. This must live in Type 0.
 `has_zero`, `has_one`, `has_add`: expressions of the type `has_zero %%type`, etc.
@@ -39,7 +38,7 @@ unsafe def rat.mk_numeral (type has_zero has_one has_add has_neg has_div : expr)
       let dene := denom.mk_numeral type HasZero HasOne Add
       quote.1 (@Div.div.{0} (%%ₓtype) (%%ₓDiv) (%%ₓnume) (%%ₓdene))
 
-/--  `rat.reflect q` represents the rational number `q` as a numeral expression of type `ℚ`. -/
+/-- `rat.reflect q` represents the rational number `q` as a numeral expression of type `ℚ`. -/
 protected unsafe def rat.reflect : ℚ → expr :=
   rat.mk_numeral (quote.1 ℚ)
     (quote.1
@@ -67,7 +66,7 @@ unsafe instance : has_reflect ℚ :=
 
 end
 
-/--  Evaluates an expression as a rational number,
+/-- Evaluates an expression as a rational number,
 if that expression represents a numeral or the quotient of two numerals. -/
 protected unsafe def expr.to_nonneg_rat : expr → Option ℚ
   | quote.1 ((%%ₓe₁) / %%ₓe₂) => do
@@ -78,7 +77,7 @@ protected unsafe def expr.to_nonneg_rat : expr → Option ℚ
     let n ← e.to_nat
     return (Rat.ofInt n)
 
-/--  Evaluates an expression as a rational number,
+/-- Evaluates an expression as a rational number,
 if that expression represents a numeral, the quotient of two numerals,
 the negation of a numeral, or the negation of the quotient of two numerals. -/
 protected unsafe def expr.to_rat : expr → Option ℚ
@@ -87,22 +86,22 @@ protected unsafe def expr.to_rat : expr → Option ℚ
     some (-q)
   | e => e.to_nonneg_rat
 
-/--  Evaluates an expression into a rational number, if that expression is built up from
+/-- Evaluates an expression into a rational number, if that expression is built up from
   numerals, +, -, *, /, ⁻¹  -/
 protected unsafe def expr.eval_rat : expr → Option ℚ
   | quote.1 HasZero.zero => some 0
   | quote.1 HasOne.one => some 1
-  | quote.1 (bit0 (%%ₓq)) => (·*·) 2 <$> q.eval_rat
-  | quote.1 (bit1 (%%ₓq)) => (·+·) 1 <$> (·*·) 2 <$> q.eval_rat
-  | quote.1 ((%%ₓa)+%%ₓb) => (·+·) <$> a.eval_rat <*> b.eval_rat
+  | quote.1 (bit0 (%%ₓq)) => (· * ·) 2 <$> q.eval_rat
+  | quote.1 (bit1 (%%ₓq)) => (· + ·) 1 <$> (· * ·) 2 <$> q.eval_rat
+  | quote.1 ((%%ₓa) + %%ₓb) => (· + ·) <$> a.eval_rat <*> b.eval_rat
   | quote.1 ((%%ₓa) - %%ₓb) => Sub.sub <$> a.eval_rat <*> b.eval_rat
-  | quote.1 ((%%ₓa)*%%ₓb) => (·*·) <$> a.eval_rat <*> b.eval_rat
+  | quote.1 ((%%ₓa) * %%ₓb) => (· * ·) <$> a.eval_rat <*> b.eval_rat
   | quote.1 ((%%ₓa) / %%ₓb) => (· / ·) <$> a.eval_rat <*> b.eval_rat
   | quote.1 (-%%ₓa) => Neg.neg <$> a.eval_rat
   | quote.1 ((%%ₓa)⁻¹) => HasInv.inv <$> a.eval_rat
   | _ => none
 
-/--  `expr.of_rat α q` embeds `q` as a numeral expression inside the type `α`.
+/-- `expr.of_rat α q` embeds `q` as a numeral expression inside the type `α`.
 Lean will try to infer the correct type classes on `α`, and the tactic will fail if it cannot.
 This function is similar to `rat.mk_numeral` but it takes fewer hypotheses and is tactic valued.
 -/
@@ -114,7 +113,7 @@ protected unsafe def expr.of_rat (α : expr) : ℚ → tactic expr
         let e₂ ← expr.of_nat α d
         tactic.mk_app `` Div.div [e₁, e₂]
   | ⟨-[1+ n], d, h, c⟩ => do
-    let e₁ ← expr.of_nat α (n+1)
+    let e₁ ← expr.of_nat α (n + 1)
     let e ←
       if d = 1 then return e₁
         else do
@@ -126,7 +125,7 @@ namespace Tactic
 
 namespace InstanceCache
 
-/--  `c.of_rat q` embeds `q` as a numeral expression inside the type `α`.
+/-- `c.of_rat q` embeds `q` as a numeral expression inside the type `α`.
 Lean will try to infer the correct type classes on `c.α`, and the tactic will fail if it cannot.
 This function is similar to `rat.mk_numeral` but it takes fewer hypotheses and is tactic valued.
 -/
@@ -139,9 +138,9 @@ protected unsafe def of_rat (c : instance_cache) : ℚ → tactic (instance_cach
       c.mk_app `` Div.div [e₁, e₂]
   | ⟨-[1+ n], d, _, _⟩ => do
     let (c, e) ←
-      if d = 1 then c.of_nat (n+1)
+      if d = 1 then c.of_nat (n + 1)
         else do
-          let (c, e₁) ← c.of_nat (n+1)
+          let (c, e₁) ← c.of_nat (n + 1)
           let (c, e₂) ← c.of_nat d
           c.mk_app `` Div.div [e₁, e₂]
     c.mk_app `` Neg.neg [e]

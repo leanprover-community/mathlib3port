@@ -32,7 +32,7 @@ namespace LinearMap
 
 section Basic
 
-/--  The characteristic polynomial of `f : M →ₗ[R] M`. -/
+/-- The characteristic polynomial of `f : M →ₗ[R] M`. -/
 def charpoly : Polynomial R :=
   (to_matrix (choose_basis R M) (choose_basis R M) f).charpoly
 
@@ -50,7 +50,7 @@ end Coeff
 
 section CayleyHamilton
 
-/--  The Cayley-Hamilton Theorem, that the characteristic polynomial of a linear map, applied to
+/-- The Cayley-Hamilton Theorem, that the characteristic polynomial of a linear map, applied to
 the linear map itself, is zero. -/
 theorem aeval_self_charpoly : aeval f f.charpoly = 0 := by
   apply (LinearEquiv.map_eq_zero_iff (algEquivMatrix _).toLinearEquiv).1

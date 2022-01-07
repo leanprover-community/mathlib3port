@@ -48,7 +48,7 @@ section Preorderₓ
 
 variable [Preorderₓ α]
 
-/--  A pair of filters `l₁`, `l₂` has `tendsto_Ixx_class Ixx` property if `Ixx a b` tends to
+/-- A pair of filters `l₁`, `l₂` has `tendsto_Ixx_class Ixx` property if `Ixx a b` tends to
 `l₂.lift' powerset` as `a` and `b` tend to `l₁`. In all instances `Ixx` is one of `Icc`, `Ico`,
 `Ioc`, or `Ioo`. The instances provide the best `l₂` for a given `l₁`. In many cases `l₁ = l₂` but
 sometimes we can drop an endpoint from an interval: e.g., we prove `tendsto_Ixx_class Ico (𝓟 $ Iic
@@ -192,18 +192,18 @@ section LinearOrderₓ
 
 variable [LinearOrderₓ α]
 
--- ././Mathport/Syntax/Translate/Basic.lean:669:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:669:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 instance tendsto_Icc_interval_interval {a b : α} :
-    tendsto_Ixx_class Icc (𝓟 "././Mathport/Syntax/Translate/Basic.lean:669:47: unsupported (impossible)")
-      (𝓟 "././Mathport/Syntax/Translate/Basic.lean:669:47: unsupported (impossible)") :=
+    tendsto_Ixx_class Icc (𝓟 "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)")
+      (𝓟 "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :=
   Filter.tendsto_Icc_Icc_Icc
 
--- ././Mathport/Syntax/Translate/Basic.lean:669:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:669:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 instance tendsto_Ioc_interval_interval {a b : α} :
-    tendsto_Ixx_class Ioc (𝓟 "././Mathport/Syntax/Translate/Basic.lean:669:47: unsupported (impossible)")
-      (𝓟 "././Mathport/Syntax/Translate/Basic.lean:669:47: unsupported (impossible)") :=
+    tendsto_Ixx_class Ioc (𝓟 "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)")
+      (𝓟 "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :=
   Filter.tendsto_Ioc_Icc_Icc
 
 instance tendsto_interval_of_Icc {l : Filter α} [tendsto_Ixx_class Icc l l] : tendsto_Ixx_class interval l l := by
@@ -212,17 +212,17 @@ instance tendsto_interval_of_Icc {l : Filter α} [tendsto_Ixx_class Icc l l] : t
   exact mem_prod_self_iff.1 (mem_map.1 (tendsto_fst.Icc tendsto_snd hs))
   refine' ⟨t, htl, fun p hp => _⟩
   cases le_totalₓ p.1 p.2
-  ·
-    rw [mem_preimage, interval_of_le h]
+  · rw [mem_preimage, interval_of_le h]
     exact hts p hp
-  ·
-    rw [mem_preimage, interval_of_ge h]
+    
+  · rw [mem_preimage, interval_of_ge h]
     exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩
+    
 
--- ././Mathport/Syntax/Translate/Basic.lean:669:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 theorem tendsto.interval {l : Filter α} [tendsto_Ixx_class Icc l l] {f g : β → α} {lb : Filter β} (hf : tendsto f lb l)
     (hg : tendsto g lb l) :
-    tendsto (fun x => "././Mathport/Syntax/Translate/Basic.lean:669:47: unsupported (impossible)") lb
+    tendsto (fun x => "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") lb
       (l.lift' powerset) :=
   tendsto_Ixx_class.tendsto_Ixx.comp $ hf.prod_mk hg
 

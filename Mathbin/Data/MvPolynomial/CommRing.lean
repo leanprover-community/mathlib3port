@@ -130,7 +130,7 @@ theorem eval₂_neg : (-p).eval₂ f g = -p.eval₂ f g :=
 theorem hom_C (f : MvPolynomial σ ℤ →+* S) (n : ℤ) : f (C n) = (n : S) :=
   (f.comp C).eq_int_cast n
 
-/--  A ring homomorphism f : Z[X_1, X_2, ...] → R
+/-- A ring homomorphism f : Z[X_1, X_2, ...] → R
 is determined by the evaluations f(X_1), f(X_2), ... -/
 @[simp]
 theorem eval₂_hom_X {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →+* S) (x : MvPolynomial R ℤ) :
@@ -146,14 +146,15 @@ theorem eval₂_hom_X {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →
     rw [eval₂_mul, eval₂_X, hp]
     exact (f.map_mul _ _).symm
 
-/--  Ring homomorphisms out of integer polynomials on a type `σ` are the same as
+/-- Ring homomorphisms out of integer polynomials on a type `σ` are the same as
 functions out of the type `σ`, -/
-def hom_equiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S) :=
-  { toFun := fun f => ⇑f ∘ X, invFun := fun f => eval₂_hom (Int.castRingHom S) f,
-    left_inv := fun f => RingHom.ext $ eval₂_hom_X _ _,
-    right_inv := fun f =>
-      funext $ fun x => by
-        simp only [coe_eval₂_hom, Function.comp_app, eval₂_X] }
+def hom_equiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S) where
+  toFun := fun f => ⇑f ∘ X
+  invFun := fun f => eval₂_hom (Int.castRingHom S) f
+  left_inv := fun f => RingHom.ext $ eval₂_hom_X _ _
+  right_inv := fun f =>
+    funext $ fun x => by
+      simp only [coe_eval₂_hom, Function.comp_app, eval₂_X]
 
 end Eval₂
 
@@ -169,10 +170,10 @@ theorem degree_of_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k
   have h := support_sub σ f g hm
   simp only [mem_support_iff, Ne.def, coeff_sub, sub_eq_zero] at hm
   cases' Finset.mem_union.1 h with cf cg
-  ·
-    exact hm (hf m cf hc)
-  ·
-    exact hm (hg m cg hc)
+  · exact hm (hf m cf hc)
+    
+  · exact hm (hg m cg hc)
+    
 
 end DegreeOf
 
@@ -183,11 +184,12 @@ theorem total_degree_neg (a : MvPolynomial σ R) : (-a).totalDegree = a.total_de
   simp only [total_degree, support_neg]
 
 theorem total_degree_sub (a b : MvPolynomial σ R) : (a - b).totalDegree ≤ max a.total_degree b.total_degree :=
-  calc (a - b).totalDegree = (a+-b).totalDegree := by
-    rw [sub_eq_add_neg]
+  calc
+    (a - b).totalDegree = (a + -b).totalDegree := by
+      rw [sub_eq_add_neg]
     _ ≤ max a.total_degree (-b).totalDegree := total_degree_add a (-b)
     _ = max a.total_degree b.total_degree := by
-    rw [total_degree_neg]
+      rw [total_degree_neg]
     
 
 end TotalDegree

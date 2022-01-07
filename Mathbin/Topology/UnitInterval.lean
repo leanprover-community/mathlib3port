@@ -22,7 +22,7 @@ open Set
 /-! ### The unit interval -/
 
 
-/--  The unit interval `[0,1]` in ℝ. -/
+/-- The unit interval `[0,1]` in ℝ. -/
 abbrev UnitInterval : Set ℝ :=
   Set.Icc 0 1
 
@@ -77,23 +77,23 @@ theorem coe_ne_one {x : I} : (x : ℝ) ≠ 1 ↔ x ≠ 1 :=
 instance : Nonempty I :=
   ⟨0⟩
 
-theorem mul_mem (x y : I) : ((x : ℝ)*y) ∈ I :=
+theorem mul_mem (x y : I) : (x : ℝ) * y ∈ I :=
   ⟨mul_nonneg x.2.1 y.2.1, (mul_le_mul x.2.2 y.2.2 y.2.1 zero_le_one).trans_eq $ one_mulₓ 1⟩
 
 instance : Mul I :=
-  ⟨fun x y => ⟨x*y, mul_mem x y⟩⟩
+  ⟨fun x y => ⟨x * y, mul_mem x y⟩⟩
 
 @[simp, norm_cast]
-theorem coe_mul {x y : I} : ((x*y : I) : ℝ) = x*y :=
+theorem coe_mul {x y : I} : ((x * y : I) : ℝ) = x * y :=
   rfl
 
-theorem mul_le_left {x y : I} : (x*y) ≤ x :=
+theorem mul_le_left {x y : I} : x * y ≤ x :=
   Subtype.coe_le_coe.mp $ (mul_le_mul_of_nonneg_left y.2.2 x.2.1).trans_eq $ mul_oneₓ x
 
-theorem mul_le_right {x y : I} : (x*y) ≤ y :=
+theorem mul_le_right {x y : I} : x * y ≤ y :=
   Subtype.coe_le_coe.mp $ (mul_le_mul_of_nonneg_right x.2.2 y.2.1).trans_eq $ one_mulₓ y
 
-/--  Unit interval central symmetry. -/
+/-- Unit interval central symmetry. -/
 def symm : I → I := fun t => ⟨1 - t.val, mem_iff_one_sub_mem.mp t.property⟩
 
 localized [UnitInterval] notation "σ" => UnitInterval.symm
@@ -124,7 +124,7 @@ theorem continuous_symm : Continuous σ := by
 instance : ConnectedSpace I :=
   Subtype.connected_space ⟨nonempty_Icc.mpr zero_le_one, is_preconnected_Icc⟩
 
-/--  Verify there is an instance for `compact_space I`. -/
+/-- Verify there is an instance for `compact_space I`. -/
 example : CompactSpace I := by
   infer_instance
 
@@ -140,26 +140,26 @@ theorem le_one (x : I) : (x : ℝ) ≤ 1 :=
 theorem one_minus_le_one (x : I) : 1 - (x : ℝ) ≤ 1 := by
   simpa using x.2.1
 
-/--  like `unit_interval.nonneg`, but with the inequality in `I`. -/
+/-- like `unit_interval.nonneg`, but with the inequality in `I`. -/
 theorem nonneg' {t : I} : 0 ≤ t :=
   t.2.1
 
-/--  like `unit_interval.le_one`, but with the inequality in `I`. -/
+/-- like `unit_interval.le_one`, but with the inequality in `I`. -/
 theorem le_one' {t : I} : t ≤ 1 :=
   t.2.2
 
-theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : (a*t) ∈ I ↔ t ∈ Set.Icc (0 : ℝ) (1 / a) := by
+theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ Set.Icc (0 : ℝ) (1 / a) := by
   constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor
-  ·
-    exact nonneg_of_mul_nonneg_left h₁ ha
-  ·
-    rwa [le_div_iff ha, mul_commₓ]
-  ·
-    exact mul_nonneg ha.le h₁
-  ·
-    rwa [le_div_iff ha, mul_commₓ] at h₂
+  · exact nonneg_of_mul_nonneg_left h₁ ha
+    
+  · rwa [le_div_iff ha, mul_commₓ]
+    
+  · exact mul_nonneg ha.le h₁
+    
+  · rwa [le_div_iff ha, mul_commₓ] at h₂
+    
 
-theorem two_mul_sub_one_mem_iff {t : ℝ} : (2*t) - 1 ∈ I ↔ t ∈ Set.Icc (1 / 2 : ℝ) 1 := by
+theorem two_mul_sub_one_mem_iff {t : ℝ} : 2 * t - 1 ∈ I ↔ t ∈ Set.Icc (1 / 2 : ℝ) 1 := by
   constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith
 
 end UnitInterval
@@ -174,11 +174,11 @@ theorem proj_Icc_eq_one {x : ℝ} : proj_Icc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1
 
 namespace Tactic.Interactive
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/--  A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`. -/
 unsafe def UnitInterval : tactic Unit :=
   sorry <|> sorry <|> sorry <|> sorry
 
@@ -188,15 +188,13 @@ section
 
 variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [TopologicalRing 𝕜]
 
-/-- 
-The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.
+/-- The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.
 -/
 theorem affine_homeomorph_image_I (a b : 𝕜) (h : 0 < a) :
-    affineHomeomorph a b h.ne.symm '' Set.Icc 0 1 = Set.Icc b (a+b) := by
+    affineHomeomorph a b h.ne.symm '' Set.Icc 0 1 = Set.Icc b (a + b) := by
   simp [h]
 
-/-- 
-The affine homeomorphism from a nontrivial interval `[a,b]` to `[0,1]`.
+/-- The affine homeomorphism from a nontrivial interval `[a,b]` to `[0,1]`.
 -/
 def iccHomeoI (a b : 𝕜) (h : a < b) : Set.Icc a b ≃ₜ Set.Icc (0 : 𝕜) (1 : 𝕜) := by
   let e := Homeomorph.image (affineHomeomorph (b - a) a (sub_pos.mpr h).Ne.symm) (Set.Icc 0 1)
@@ -210,7 +208,7 @@ theorem Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : Set.Icc a b) : ((icc
 
 @[simp]
 theorem Icc_homeo_I_symm_apply_coe (a b : 𝕜) (h : a < b) (x : Set.Icc (0 : 𝕜) (1 : 𝕜)) :
-    ((iccHomeoI a b h).symm x : 𝕜) = ((b - a)*x)+a :=
+    ((iccHomeoI a b h).symm x : 𝕜) = (b - a) * x + a :=
   rfl
 
 end

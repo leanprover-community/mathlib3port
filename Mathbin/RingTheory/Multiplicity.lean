@@ -23,11 +23,11 @@ open Nat Part
 
 open_locale BigOperators
 
-/--  `multiplicity a b` returns the largest natural number `n` such that
+/-- `multiplicity a b` returns the largest natural number `n` such that
   `a ^ n ∣ b`, as an `enat` or natural with infinity. If `∀ n, a ^ n ∣ b`,
   then it returns `⊤`-/
 def multiplicity [CommMonoidₓ α] [DecidableRel (· ∣ · : α → α → Prop)] (a b : α) : Enat :=
-  Enat.find $ fun n => ¬(a ^ n+1) ∣ b
+  Enat.find $ fun n => ¬a ^ (n + 1) ∣ b
 
 namespace multiplicity
 
@@ -35,31 +35,31 @@ section CommMonoidₓ
 
 variable [CommMonoidₓ α]
 
-/--  `multiplicity.finite a b` indicates that the multiplicity of `a` in `b` is finite. -/
+/-- `multiplicity.finite a b` indicates that the multiplicity of `a` in `b` is finite. -/
 @[reducible]
 def finite (a b : α) : Prop :=
-  ∃ n : ℕ, ¬(a ^ n+1) ∣ b
+  ∃ n : ℕ, ¬a ^ (n + 1) ∣ b
 
 theorem finite_iff_dom [DecidableRel (· ∣ · : α → α → Prop)] {a b : α} : finite a b ↔ (multiplicity a b).Dom :=
   Iff.rfl
 
-theorem finite_def {a b : α} : finite a b ↔ ∃ n : ℕ, ¬(a ^ n+1) ∣ b :=
+theorem finite_def {a b : α} : finite a b ↔ ∃ n : ℕ, ¬a ^ (n + 1) ∣ b :=
   Iff.rfl
 
 @[norm_cast]
 theorem int.coe_nat_multiplicity (a b : ℕ) : multiplicity (a : ℤ) (b : ℤ) = multiplicity a b := by
   apply Part.ext'
-  ·
-    repeat'
+  · repeat'
       rw [← finite_iff_dom, finite_def]
     norm_cast
-  ·
-    intro h1 h2
+    
+  · intro h1 h2
     apply _root_.le_antisymm <;>
-      ·
-        apply Nat.find_mono
+      · apply Nat.find_mono
         norm_cast
         simp
+        
+    
 
 theorem not_finite_iff_forall {a b : α} : ¬finite a b ↔ ∀ n : ℕ, a ^ n ∣ b :=
   ⟨fun h n =>
@@ -74,16 +74,16 @@ theorem not_finite_iff_forall {a b : α} : ¬finite a b ↔ ∀ n : ℕ, a ^ n �
 
 theorem not_unit_of_finite {a b : α} (h : finite a b) : ¬IsUnit a :=
   let ⟨n, hn⟩ := h
-  mt (is_unit_iff_forall_dvd.1 ∘ IsUnit.pow (n+1)) $ fun h => hn (h b)
+  mt (is_unit_iff_forall_dvd.1 ∘ IsUnit.pow (n + 1)) $ fun h => hn (h b)
 
-theorem finite_of_finite_mul_left {a b c : α} : finite a (b*c) → finite a c := fun ⟨n, hn⟩ =>
+theorem finite_of_finite_mul_left {a b c : α} : finite a (b * c) → finite a c := fun ⟨n, hn⟩ =>
   ⟨n, fun h =>
     hn
       (h.trans
         (by
           simp [mul_powₓ]))⟩
 
-theorem finite_of_finite_mul_right {a b c : α} : finite a (b*c) → finite a b := by
+theorem finite_of_finite_mul_right {a b c : α} : finite a (b * c) → finite a b := by
   rw [mul_commₓ] <;> exact finite_of_finite_mul_left
 
 variable [DecidableRel (· ∣ · : α → α → Prop)]
@@ -110,14 +110,17 @@ theorem is_greatest' {a b : α} {m : ℕ} (h : finite a b) (hm : get (multiplici
     (by
       rwa [← Enat.coe_lt_coe, Enat.coe_get] at hm)
 
-theorem Unique {a b : α} {k : ℕ} (hk : a ^ k ∣ b) (hsucc : ¬(a ^ k+1) ∣ b) : (k : Enat) = multiplicity a b :=
-  le_antisymmₓ (le_of_not_gtₓ fun hk' => IsGreatest hk' hk) $
+theorem pos_of_dvd {a b : α} (hfin : finite a b) (hdiv : a ∣ b) : 0 < (multiplicity a b).get hfin := by
+  refine' zero_lt_iff.2 fun h => _
+  simpa [hdiv] using is_greatest' hfin (lt_one_iff.mpr h)
+
+theorem Unique {a b : α} {k : ℕ} (hk : a ^ k ∣ b) (hsucc : ¬a ^ (k + 1) ∣ b) : (k : Enat) = multiplicity a b :=
+  le_antisymmₓ (le_of_not_gtₓ fun hk' => IsGreatest hk' hk) $ by
     have : finite a b := ⟨k, hsucc⟩
-    by
     rw [Enat.le_coe_iff]
     exact ⟨this, Nat.find_min'ₓ _ hsucc⟩
 
-theorem unique' {a b : α} {k : ℕ} (hk : a ^ k ∣ b) (hsucc : ¬(a ^ k+1) ∣ b) : k = get (multiplicity a b) ⟨k, hsucc⟩ :=
+theorem unique' {a b : α} {k : ℕ} (hk : a ^ k ∣ b) (hsucc : ¬a ^ (k + 1) ∣ b) : k = get (multiplicity a b) ⟨k, hsucc⟩ :=
   by
   rw [← Enat.coe_inj, Enat.coe_get, Unique hk hsucc]
 
@@ -130,7 +133,7 @@ theorem pow_dvd_iff_le_multiplicity {a b : α} {k : ℕ} : a ^ k ∣ b ↔ (k : 
 theorem multiplicity_lt_iff_neg_dvd {a b : α} {k : ℕ} : multiplicity a b < (k : Enat) ↔ ¬a ^ k ∣ b := by
   rw [pow_dvd_iff_le_multiplicity, not_leₓ]
 
-theorem eq_coe_iff {a b : α} {n : ℕ} : multiplicity a b = (n : Enat) ↔ a ^ n ∣ b ∧ ¬(a ^ n+1) ∣ b := by
+theorem eq_coe_iff {a b : α} {n : ℕ} : multiplicity a b = (n : Enat) ↔ a ^ n ∣ b ∧ ¬a ^ (n + 1) ∣ b := by
   rw [← Enat.some_eq_coe]
   exact
     ⟨fun h =>
@@ -180,10 +183,10 @@ theorem get_one_right {a : α} (ha : finite a 1) : get (multiplicity a 1) ha = 0
   simpa [is_unit_iff_dvd_one.symm] using not_unit_of_finite ha
 
 @[simp]
-theorem unit_left (a : α) (u : Units α) : multiplicity (u : α) a = ⊤ :=
+theorem unit_left (a : α) (u : (α)ˣ) : multiplicity (u : α) a = ⊤ :=
   is_unit_left a u.is_unit
 
-theorem unit_right {a : α} (ha : ¬IsUnit a) (u : Units α) : multiplicity a u = 0 :=
+theorem unit_right {a : α} (ha : ¬IsUnit a) (u : (α)ˣ) : multiplicity a u = 0 :=
   is_unit_right ha u.is_unit
 
 theorem multiplicity_eq_zero_of_not_dvd {a b : α} (ha : ¬a ∣ b) : multiplicity a b = 0 := by
@@ -199,6 +202,19 @@ theorem ne_top_iff_finite {a b : α} : multiplicity a b ≠ ⊤ ↔ finite a b :
 theorem lt_top_iff_finite {a b : α} : multiplicity a b < ⊤ ↔ finite a b := by
   rw [lt_top_iff_ne_top, ne_top_iff_finite]
 
+theorem exists_eq_pow_mul_and_not_dvd {a b : α} (hfin : finite a b) :
+    ∃ c : α, b = a ^ (multiplicity a b).get hfin * c ∧ ¬a ∣ c := by
+  obtain ⟨c, hc⟩ := multiplicity.pow_multiplicity_dvd hfin
+  refine' ⟨c, hc, _⟩
+  rintro ⟨k, hk⟩
+  rw [hk, ← mul_assocₓ, ← pow_succ'ₓ] at hc
+  have h₁ : a ^ ((multiplicity a b).get hfin + 1) ∣ b := ⟨k, hc⟩
+  exact
+    (multiplicity.eq_coe_iff.1
+          (by
+            simp )).2
+      h₁
+
 open_locale Classical
 
 theorem multiplicity_le_multiplicity_iff {a b c d : α} :
@@ -206,9 +222,8 @@ theorem multiplicity_le_multiplicity_iff {a b c d : α} :
   ⟨fun h n hab => pow_dvd_of_le_multiplicity (le_transₓ (le_multiplicity_of_pow_dvd hab) h), fun h =>
     if hab : finite a b then by
       rw [← Enat.coe_get (finite_iff_dom.1 hab)] <;> exact le_multiplicity_of_pow_dvd (h _ (pow_multiplicity_dvd _))
-    else
+    else by
       have : ∀ n : ℕ, c ^ n ∣ d := fun n => h n (not_finite_iff_forall.1 hab _)
-      by
       rw [eq_top_iff_not_finite.2 hab, eq_top_iff_not_finite.2 (not_finite_iff_forall.2 this)]⟩
 
 theorem multiplicity_le_multiplicity_of_dvd_left {a b c : α} (hdvd : a ∣ b) : multiplicity b c ≤ multiplicity a c :=
@@ -232,7 +247,7 @@ theorem dvd_iff_multiplicity_pos {a b : α} : (0 : Enat) < multiplicity a b ↔ 
   ⟨dvd_of_multiplicity_pos, fun hdvd =>
     lt_of_le_of_neₓ (zero_le _) fun heq =>
       IsGreatest
-        (show multiplicity a b < ↑1by
+        (show multiplicity a b < ↑1 by
           simpa only [HEq, Nat.cast_zero] using enat.coe_lt_coe.mpr zero_lt_one)
         (by
           rwa [pow_oneₓ a])⟩
@@ -252,7 +267,7 @@ theorem finite_nat_iff {a b : ℕ} : finite a b ↔ a ≠ 1 ∧ 0 < b := by
               decide!
           not_lt_of_geₓ (le_of_dvd (Nat.pos_of_ne_zeroₓ hb) (h b)) (lt_pow_self ha_gt_one b),
       fun h => by
-      cases h <;> simp ⟩
+      cases h <;> simp [*]⟩
 
 end CommMonoidₓ
 
@@ -282,7 +297,7 @@ section CommSemiringₓ
 
 variable [CommSemiringₓ α] [DecidableRel (· ∣ · : α → α → Prop)]
 
-theorem min_le_multiplicity_add {p a b : α} : min (multiplicity p a) (multiplicity p b) ≤ multiplicity p (a+b) :=
+theorem min_le_multiplicity_add {p a b : α} : min (multiplicity p a) (multiplicity p b) ≤ multiplicity p (a + b) :=
   (le_totalₓ (multiplicity p a) (multiplicity p b)).elim
     (fun h => by
       rw [min_eq_leftₓ h, multiplicity_le_multiplicity_iff] <;>
@@ -314,10 +329,9 @@ protected theorem neg (a b : α) : multiplicity a (-b) = multiplicity a b :=
                 (mt (dvd_neg _ _).1 (is_greatest' _ (lt_succ_self _)))))
 
 theorem multiplicity_add_of_gt {p a b : α} (h : multiplicity p b < multiplicity p a) :
-    multiplicity p (a+b) = multiplicity p b := by
+    multiplicity p (a + b) = multiplicity p b := by
   apply le_antisymmₓ
-  ·
-    apply Enat.le_of_lt_add_one
+  · apply Enat.le_of_lt_add_one
     cases' enat.ne_top_iff.mp (Enat.ne_top_of_lt h) with k hk
     rw [hk]
     rw_mod_cast [multiplicity_lt_iff_neg_dvd]
@@ -328,25 +342,26 @@ theorem multiplicity_add_of_gt {p a b : α} (h : multiplicity p b < multiplicity
     apply_mod_cast Nat.lt_succ_selfₓ
     rw [pow_dvd_iff_le_multiplicity, Nat.cast_add, ← hk, Nat.cast_one]
     exact Enat.add_one_le_of_lt h
-  ·
-    convert min_le_multiplicity_add
+    
+  · convert min_le_multiplicity_add
     rw [min_eq_rightₓ (le_of_ltₓ h)]
+    
 
 theorem multiplicity_sub_of_gt {p a b : α} (h : multiplicity p b < multiplicity p a) :
     multiplicity p (a - b) = multiplicity p b := by
   rw [sub_eq_add_neg, multiplicity_add_of_gt] <;> rwa [multiplicity.neg]
 
 theorem multiplicity_add_eq_min {p a b : α} (h : multiplicity p a ≠ multiplicity p b) :
-    multiplicity p (a+b) = min (multiplicity p a) (multiplicity p b) := by
+    multiplicity p (a + b) = min (multiplicity p a) (multiplicity p b) := by
   rcases lt_trichotomyₓ (multiplicity p a) (multiplicity p b) with (hab | hab | hab)
-  ·
-    rw [add_commₓ, multiplicity_add_of_gt hab, min_eq_leftₓ]
+  · rw [add_commₓ, multiplicity_add_of_gt hab, min_eq_leftₓ]
     exact le_of_ltₓ hab
-  ·
-    contradiction
-  ·
-    rw [multiplicity_add_of_gt hab, min_eq_rightₓ]
+    
+  · contradiction
+    
+  · rw [multiplicity_add_of_gt hab, min_eq_rightₓ]
     exact le_of_ltₓ hab
+    
 
 end CommRingₓ
 
@@ -355,10 +370,10 @@ section CancelCommMonoidWithZero
 variable [CancelCommMonoidWithZero α]
 
 theorem finite_mul_aux {p : α} (hp : Prime p) :
-    ∀ {n m : ℕ} {a b : α}, ¬(p ^ n+1) ∣ a → ¬(p ^ m+1) ∣ b → ¬(p ^ (n+m)+1) ∣ a*b
+    ∀ {n m : ℕ} {a b : α}, ¬p ^ (n + 1) ∣ a → ¬p ^ (m + 1) ∣ b → ¬p ^ (n + m + 1) ∣ a * b
   | n, m => fun a b ha hb ⟨s, hs⟩ =>
-    have : p ∣ a*b :=
-      ⟨(p ^ n+m)*s, by
+    have : p ∣ a * b :=
+      ⟨p ^ (n + m) * s, by
         simp [hs, pow_addₓ, mul_commₓ, mul_assocₓ, mul_left_commₓ]⟩
     (hp.2.2 a b this).elim
       (fun ⟨x, hx⟩ =>
@@ -369,14 +384,14 @@ theorem finite_mul_aux {p : α} (hp : Prime p) :
           tsub_lt_self hn0
             (by
               decide)
-        have hpx : ¬(p ^ (n - 1)+1) ∣ x := fun ⟨y, hy⟩ =>
+        have hpx : ¬p ^ (n - 1 + 1) ∣ x := fun ⟨y, hy⟩ =>
           ha
             (hx.symm ▸
               ⟨y,
                 mul_right_cancel₀ hp.1 $ by
                   rw [tsub_add_cancel_of_le (succ_le_of_lt hn0)] at hy <;>
                     simp [hy, pow_addₓ, mul_commₓ, mul_assocₓ, mul_left_commₓ]⟩)
-        have : 1 ≤ n+m := le_transₓ hn0 (Nat.le_add_rightₓ n m)
+        have : 1 ≤ n + m := le_transₓ hn0 (Nat.le_add_rightₓ n m)
         finite_mul_aux hpx hb
           ⟨s,
             mul_right_cancel₀ hp.1
@@ -392,7 +407,7 @@ theorem finite_mul_aux {p : α} (hp : Prime p) :
         tsub_lt_self hm0
           (by
             decide)
-      have hpx : ¬(p ^ (m - 1)+1) ∣ x := fun ⟨y, hy⟩ =>
+      have hpx : ¬p ^ (m - 1 + 1) ∣ x := fun ⟨y, hy⟩ =>
         hb
           (hx.symm ▸
             ⟨y,
@@ -407,17 +422,17 @@ theorem finite_mul_aux {p : α} (hp : Prime p) :
               clear _fun_match _fun_match finite_mul_aux
               simp_all [mul_commₓ, mul_assocₓ, mul_left_commₓ, pow_addₓ])⟩
 
-theorem finite_mul {p a b : α} (hp : Prime p) : finite p a → finite p b → finite p (a*b) := fun ⟨n, hn⟩ ⟨m, hm⟩ =>
-  ⟨n+m, finite_mul_aux hp hn hm⟩
+theorem finite_mul {p a b : α} (hp : Prime p) : finite p a → finite p b → finite p (a * b) := fun ⟨n, hn⟩ ⟨m, hm⟩ =>
+  ⟨n + m, finite_mul_aux hp hn hm⟩
 
-theorem finite_mul_iff {p a b : α} (hp : Prime p) : finite p (a*b) ↔ finite p a ∧ finite p b :=
+theorem finite_mul_iff {p a b : α} (hp : Prime p) : finite p (a * b) ↔ finite p a ∧ finite p b :=
   ⟨fun h => ⟨finite_of_finite_mul_right h, finite_of_finite_mul_left h⟩, fun h => finite_mul hp h.1 h.2⟩
 
 theorem finite_pow {p a : α} (hp : Prime p) : ∀ {k : ℕ} ha : finite p a, finite p (a ^ k)
   | 0, ha =>
     ⟨0, by
       simp [mt is_unit_iff_dvd_one.2 hp.2.1]⟩
-  | k+1, ha => by
+  | k + 1, ha => by
     rw [pow_succₓ] <;> exact finite_mul hp ha (finite_pow ha)
 
 variable [DecidableRel (· ∣ · : α → α → Prop)]
@@ -448,33 +463,33 @@ theorem get_multiplicity_self {a : α} (ha : finite a a) : get (multiplicity a a
               ⟨b, by
                 clear _fun_match <;> simp_all ⟩⟩)
 
-protected theorem mul' {p a b : α} (hp : Prime p) (h : (multiplicity p (a*b)).Dom) :
-    get (multiplicity p (a*b)) h =
-      get (multiplicity p a) ((finite_mul_iff hp).1 h).1+get (multiplicity p b) ((finite_mul_iff hp).1 h).2 :=
+protected theorem mul' {p a b : α} (hp : Prime p) (h : (multiplicity p (a * b)).Dom) :
+    get (multiplicity p (a * b)) h =
+      get (multiplicity p a) ((finite_mul_iff hp).1 h).1 + get (multiplicity p b) ((finite_mul_iff hp).1 h).2 :=
+  by
   have hdiva : p ^ get (multiplicity p a) ((finite_mul_iff hp).1 h).1 ∣ a := pow_multiplicity_dvd _
   have hdivb : p ^ get (multiplicity p b) ((finite_mul_iff hp).1 h).2 ∣ b := pow_multiplicity_dvd _
   have hpoweq :
-    (p ^ get (multiplicity p a) ((finite_mul_iff hp).1 h).1+get (multiplicity p b) ((finite_mul_iff hp).1 h).2) =
-      (p ^ get (multiplicity p a) ((finite_mul_iff hp).1 h).1)*p ^ get (multiplicity p b) ((finite_mul_iff hp).1 h).2 :=
+    p ^ (get (multiplicity p a) ((finite_mul_iff hp).1 h).1 + get (multiplicity p b) ((finite_mul_iff hp).1 h).2) =
+      p ^ get (multiplicity p a) ((finite_mul_iff hp).1 h).1 * p ^ get (multiplicity p b) ((finite_mul_iff hp).1 h).2 :=
     by
     simp [pow_addₓ]
   have hdiv :
-    (p ^ get (multiplicity p a) ((finite_mul_iff hp).1 h).1+get (multiplicity p b) ((finite_mul_iff hp).1 h).2) ∣ a*b :=
+    p ^ (get (multiplicity p a) ((finite_mul_iff hp).1 h).1 + get (multiplicity p b) ((finite_mul_iff hp).1 h).2) ∣
+      a * b :=
     by
     rw [hpoweq] <;> apply mul_dvd_mul <;> assumption
   have hsucc :
-    ¬(p ^ (get (multiplicity p a) ((finite_mul_iff hp).1 h).1+get (multiplicity p b) ((finite_mul_iff hp).1 h).2)+1) ∣
-        a*b :=
-    fun h => by
-    exact
-      not_orₓ (is_greatest' _ (lt_succ_self _)) (is_greatest' _ (lt_succ_self _))
-        (_root_.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul hp hdiva hdivb h)
-  by
+    ¬p ^ (get (multiplicity p a) ((finite_mul_iff hp).1 h).1 + get (multiplicity p b) ((finite_mul_iff hp).1 h).2 + 1) ∣
+        a * b :=
+    fun h =>
+    not_orₓ (is_greatest' _ (lt_succ_self _)) (is_greatest' _ (lt_succ_self _))
+      (_root_.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul hp hdiva hdivb h)
   rw [← Enat.coe_inj, Enat.coe_get, eq_coe_iff] <;> exact ⟨hdiv, hsucc⟩
 
 open_locale Classical
 
-protected theorem mul {p a b : α} (hp : Prime p) : multiplicity p (a*b) = multiplicity p a+multiplicity p b :=
+protected theorem mul {p a b : α} (hp : Prime p) : multiplicity p (a * b) = multiplicity p a + multiplicity p b :=
   if h : finite p a ∧ finite p b then by
     rw [← Enat.coe_get (finite_iff_dom.1 h.1), ← Enat.coe_get (finite_iff_dom.1 h.2), ←
         Enat.coe_get (finite_iff_dom.1 (finite_mul hp h.1 h.2)), ← Nat.cast_add, Enat.coe_inj, multiplicity.mul' hp] <;>
@@ -483,432 +498,24 @@ protected theorem mul {p a b : α} (hp : Prime p) : multiplicity p (a*b) = multi
     rw [eq_top_iff_not_finite.2 (mt (finite_mul_iff hp).1 h)]
     cases' not_and_distrib.1 h with h h <;> simp [eq_top_iff_not_finite.2 h]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `Finset.prod [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`β] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.implicitBinder "{" [`p] [":" `α] "}")
-    (Term.explicitBinder "(" [`hp] [":" (Term.app `Prime [`p])] [] ")")
-    (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [`β])] [] ")")
-    (Term.explicitBinder "(" [`f] [":" (Term.arrow `β "→" `α)] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app
-      `multiplicity
-      [`p
-       (Algebra.BigOperators.Basic.«term∏_in_,_»
-        "∏"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-        " in "
-        `s
-        ", "
-        (Term.app `f [`x]))])
-     "="
-     (Algebra.BigOperators.Basic.«term∑_in_,_»
-      "∑"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-      " in "
-      `s
-      ", "
-      (Term.app `multiplicity [`p (Term.app `f [`x])])))))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group (Tactic.classical "classical") [])
-       (group
-        (Tactic.induction'
-         "induction'"
-         [(Tactic.casesTarget [] `s)]
-         ["using" `Finset.induction]
-         ["with"
-          [(Lean.binderIdent `a)
-           (Lean.binderIdent `s)
-           (Lean.binderIdent `has)
-           (Lean.binderIdent `ih)
-           (Lean.binderIdent `h)]]
-         [])
-        [])
-       (group
-        (Tactic.«tactic·._»
-         "·"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(group
-             (Tactic.simp
-              "simp"
-              []
-              ["only"]
-              ["[" [(Tactic.simpLemma [] [] `Finset.sum_empty) "," (Tactic.simpLemma [] [] `Finset.prod_empty)] "]"]
-              [])
-             [])
-            (group (Tactic.convert "convert" [] (Term.app `one_right [`hp.not_unit]) []) [])])))
-        [])
-       (group
-        (Tactic.«tactic·._»
-         "·"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(group
-             (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `has) "," (Tactic.simpLemma [] ["←"] `ih)] "]"] [])
-             [])
-            (group (Tactic.convert "convert" [] (Term.app `multiplicity.mul [`hp]) []) [])])))
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.classical "classical") [])
-      (group
-       (Tactic.induction'
-        "induction'"
-        [(Tactic.casesTarget [] `s)]
-        ["using" `Finset.induction]
-        ["with"
-         [(Lean.binderIdent `a)
-          (Lean.binderIdent `s)
-          (Lean.binderIdent `has)
-          (Lean.binderIdent `ih)
-          (Lean.binderIdent `h)]]
-        [])
-       [])
-      (group
-       (Tactic.«tactic·._»
-        "·"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group
-            (Tactic.simp
-             "simp"
-             []
-             ["only"]
-             ["[" [(Tactic.simpLemma [] [] `Finset.sum_empty) "," (Tactic.simpLemma [] [] `Finset.prod_empty)] "]"]
-             [])
-            [])
-           (group (Tactic.convert "convert" [] (Term.app `one_right [`hp.not_unit]) []) [])])))
-       [])
-      (group
-       (Tactic.«tactic·._»
-        "·"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group
-            (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `has) "," (Tactic.simpLemma [] ["←"] `ih)] "]"] [])
-            [])
-           (group (Tactic.convert "convert" [] (Term.app `multiplicity.mul [`hp]) []) [])])))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic·._»
-   "·"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `has) "," (Tactic.simpLemma [] ["←"] `ih)] "]"] [])
-       [])
-      (group (Tactic.convert "convert" [] (Term.app `multiplicity.mul [`hp]) []) [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.convert "convert" [] (Term.app `multiplicity.mul [`hp]) [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.convert', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `multiplicity.mul [`hp])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hp
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `multiplicity.mul
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `has) "," (Tactic.simpLemma [] ["←"] `ih)] "]"] [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `ih
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«←»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `has
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.«tactic·._»
-   "·"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simp
-        "simp"
-        []
-        ["only"]
-        ["[" [(Tactic.simpLemma [] [] `Finset.sum_empty) "," (Tactic.simpLemma [] [] `Finset.prod_empty)] "]"]
-        [])
-       [])
-      (group (Tactic.convert "convert" [] (Term.app `one_right [`hp.not_unit]) []) [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.convert "convert" [] (Term.app `one_right [`hp.not_unit]) [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.convert', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `one_right [`hp.not_unit])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hp.not_unit
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `one_right
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.simp
-   "simp"
-   []
-   ["only"]
-   ["[" [(Tactic.simpLemma [] [] `Finset.sum_empty) "," (Tactic.simpLemma [] [] `Finset.prod_empty)] "]"]
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Finset.prod_empty
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Finset.sum_empty
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.induction'
-   "induction'"
-   [(Tactic.casesTarget [] `s)]
-   ["using" `Finset.induction]
-   ["with"
-    [(Lean.binderIdent `a) (Lean.binderIdent `s) (Lean.binderIdent `has) (Lean.binderIdent `ih) (Lean.binderIdent `h)]]
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.induction'', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.binderIdent', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.binderIdent', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.binderIdent', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.binderIdent', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.binderIdent', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.casesTarget', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.classical "classical")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.classical', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.app
-    `multiplicity
-    [`p
-     (Algebra.BigOperators.Basic.«term∏_in_,_»
-      "∏"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-      " in "
-      `s
-      ", "
-      (Term.app `f [`x]))])
-   "="
-   (Algebra.BigOperators.Basic.«term∑_in_,_»
-    "∑"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-    " in "
-    `s
-    ", "
-    (Term.app `multiplicity [`p (Term.app `f [`x])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∑_in_,_»
-   "∑"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-   " in "
-   `s
-   ", "
-   (Term.app `multiplicity [`p (Term.app `f [`x])]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∑_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `multiplicity [`p (Term.app `f [`x])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `f [`x])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `f [`x]) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `p
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `multiplicity
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  Finset.prod
-  { β : Type _ } { p : α } ( hp : Prime p ) ( s : Finset β ) ( f : β → α )
-    : multiplicity p ∏ x in s , f x = ∑ x in s , multiplicity p f x
-  :=
-    by
-      classical
-        induction' s using Finset.induction with a s has ih h
-        · simp only [ Finset.sum_empty , Finset.prod_empty ] convert one_right hp.not_unit
-        · simp [ has , ← ih ] convert multiplicity.mul hp
+theorem Finset.prod {β : Type _} {p : α} (hp : Prime p) (s : Finset β) (f : β → α) :
+    multiplicity p (∏ x in s, f x) = ∑ x in s, multiplicity p (f x) := by
+  classical
+  induction' s using Finset.induction with a s has ih h
+  · simp only [Finset.sum_empty, Finset.prod_empty]
+    convert one_right hp.not_unit
+    
+  · simp [has, ← ih]
+    convert multiplicity.mul hp
+    
 
 protected theorem pow' {p a : α} (hp : Prime p) (ha : finite p a) :
-    ∀ {k : ℕ}, get (multiplicity p (a ^ k)) (finite_pow hp ha) = k*get (multiplicity p a) ha
+    ∀ {k : ℕ}, get (multiplicity p (a ^ k)) (finite_pow hp ha) = k * get (multiplicity p a) ha
   | 0 => by
     simp [one_right hp.not_unit]
-  | k+1 =>
-    have : multiplicity p (a ^ k+1) = multiplicity p (a*a ^ k) := by
+  | k + 1 => by
+    have : multiplicity p (a ^ (k + 1)) = multiplicity p (a * a ^ k) := by
       rw [pow_succₓ]
-    by
     rw [get_eq_get_of_eq _ _ this, multiplicity.mul' hp, pow', add_mulₓ, one_mulₓ, add_commₓ]
 
 theorem pow {p a : α} (hp : Prime p) : ∀ {k : ℕ}, multiplicity p (a ^ k) = k • multiplicity p a
@@ -932,7 +539,7 @@ section Valuation
 
 variable {R : Type _} [CommRingₓ R] [IsDomain R] {p : R} [DecidableRel (HasDvd.Dvd : R → R → Prop)]
 
-/--  `multiplicity` of a prime inan integral domain as an additive valuation to `enat`. -/
+/-- `multiplicity` of a prime inan integral domain as an additive valuation to `enat`. -/
 noncomputable def AddValuation (hp : Prime p) : AddValuation R Enat :=
   AddValuation.of (multiplicity p) (multiplicity.zero _) (one_right hp.not_unit) (fun _ _ => min_le_multiplicity_add)
     fun a b => multiplicity.mul hp

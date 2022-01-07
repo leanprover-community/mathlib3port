@@ -20,8 +20,7 @@ namespace Tactic.Interactive
 
 open Interactive Interactive.Types Tactic
 
-/-- 
-`simp_rw` functions as a mix of `simp` and `rw`. Like `rw`, it applies each
+/-- `simp_rw` functions as a mix of `simp` and `rw`. Like `rw`, it applies each
 rewrite rule in the given order, but like `simp` it repeatedly applies these
 rules and also under binders like `∀ x, ...`, `∃ x, ...` and `λ x, ...`.
 

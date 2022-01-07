@@ -87,8 +87,7 @@ open Expr
 
 namespace UnfoldCases
 
-/-- 
-  Given an equation `f x = y`, this tactic tries to infer an expression that can be
+/-- Given an equation `f x = y`, this tactic tries to infer an expression that can be
   used to do distinction by cases on to make progress.
 
   Pre-condition: assumes that the outer-most application cannot be beta-reduced
@@ -101,8 +100,7 @@ unsafe def find_splitting_expr : expr → tactic expr
     throwError "expected an expression of the form: f x = y. Got:
       {← e}"
 
-/-- 
-  Tries to finish the current goal using the `inner` tactic. If the tactic
+/-- Tries to finish the current goal using the `inner` tactic. If the tactic
   fails, it tries to find an expression on which to do a distinction by
   cases and calls itself recursively.
 
@@ -125,8 +123,7 @@ unsafe def unfold_cases_core (inner : interactive.itactic) : tactic Unit :=
           all_goals $ (dsimp_target >> unfold_cases_core <|> skip)
           skip
 
-/-- 
-  Given a target of the form `⊢ f x₁ ... xₙ = y`, unfolds `f` using a delta reduction.
+/-- Given a target of the form `⊢ f x₁ ... xₙ = y`, unfolds `f` using a delta reduction.
 -/
 unsafe def unfold_tgt : expr → tactic Unit
   | quote.1 ((%%ₓl@(app _ _)) = %%ₓr) =>
@@ -145,8 +142,7 @@ namespace Interactive
 
 open UnfoldCases
 
-/-- 
-  This tactic unfolds the definition of a function or `match` expression.
+/-- This tactic unfolds the definition of a function or `match` expression.
   Then it recursively introduces a distinction by cases. The decision what expression
   to do the distinction on is driven by the pattern matching expression.
 

@@ -8,12 +8,12 @@ setup_tactic_parser
 
 open tactic.interactive (get_current_field refine_struct)
 
-/--  makes the substructure axiom name from field name, by postfacing with `_mem`-/
+/-- makes the substructure axiom name from field name, by postfacing with `_mem`-/
 def mk_mem_name (sub : Name) : Name → Name
   | mk_string n _ => mk_string (n ++ "_mem") sub
   | n => n
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 unsafe def derive_field_subtype : tactic Unit := do
   let field ← get_current_field
   let b ← target >>= is_prop
@@ -43,7 +43,7 @@ unsafe def derive_field_subtype : tactic Unit := do
 
 namespace Interactive
 
-/--  builds instances for algebraic substructures
+/-- builds instances for algebraic substructures
 
 Example:
 ```lean

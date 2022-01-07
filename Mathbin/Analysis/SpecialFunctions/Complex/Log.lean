@@ -16,11 +16,11 @@ open Set Filter
 
 open_locale Real TopologicalSpace
 
-/--  Inverse of the `exp` function. Returns values such that `(log x).im > - π` and `(log x).im ≤ π`.
+/-- Inverse of the `exp` function. Returns values such that `(log x).im > - π` and `(log x).im ≤ π`.
   `log 0 = 0`-/
 @[pp_nodot]
 noncomputable def log (x : ℂ) : ℂ :=
-  x.abs.log+arg x*I
+  x.abs.log + arg x * I
 
 theorem log_re (x : ℂ) : x.log.re = x.abs.log := by
   simp [log]
@@ -72,70 +72,70 @@ theorem log_zero : log 0 = 0 := by
 theorem log_one : log 1 = 0 := by
   simp [log]
 
-theorem log_neg_one : log (-1) = π*I := by
+theorem log_neg_one : log (-1) = π * I := by
   simp [log]
 
-theorem log_I : log I = (π / 2)*I := by
+theorem log_I : log I = π / 2 * I := by
   simp [log]
 
-theorem log_neg_I : log (-I) = (-(π / 2))*I := by
+theorem log_neg_I : log (-I) = -(π / 2) * I := by
   simp [log]
 
-theorem two_pi_I_ne_zero : ((2*π)*I : ℂ) ≠ 0 := by
+theorem two_pi_I_ne_zero : (2 * π * I : ℂ) ≠ 0 := by
   norm_num [Real.pi_ne_zero, I_ne_zero]
 
-theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n*(2*π)*I := by
+theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * I) := by
   constructor
-  ·
-    intro h
+  · intro h
     rcases exists_unique_add_zsmul_mem_Ioc Real.two_pi_pos x.im (-π) with ⟨n, hn, -⟩
     use -n
     rw [Int.cast_neg, ← neg_mul_eq_neg_mul, eq_neg_iff_add_eq_zero]
-    have : (x+n*(2*π)*I).im ∈ Ioc (-π) π := by
+    have : (x + n * (2 * π * I)).im ∈ Ioc (-π) π := by
       simpa [two_mul, mul_addₓ] using hn
     rw [← log_exp this.1 this.2, exp_periodic.int_mul n, h, log_one]
-  ·
-    rintro ⟨n, rfl⟩
+    
+  · rintro ⟨n, rfl⟩
     exact (exp_periodic.int_mul n).Eq.trans exp_zero
+    
 
 theorem exp_eq_exp_iff_exp_sub_eq_one {x y : ℂ} : exp x = exp y ↔ exp (x - y) = 1 := by
   rw [exp_sub, div_eq_one_iff_eq (exp_ne_zero _)]
 
-theorem exp_eq_exp_iff_exists_int {x y : ℂ} : exp x = exp y ↔ ∃ n : ℤ, x = y+n*(2*π)*I := by
+theorem exp_eq_exp_iff_exists_int {x y : ℂ} : exp x = exp y ↔ ∃ n : ℤ, x = y + n * (2 * π * I) := by
   simp only [exp_eq_exp_iff_exp_sub_eq_one, exp_eq_one_iff, sub_eq_iff_eq_add']
 
 @[simp]
 theorem countable_preimage_exp {s : Set ℂ} : countable (exp ⁻¹' s) ↔ countable s := by
   refine' ⟨fun hs => _, fun hs => _⟩
-  ·
-    refine' ((hs.image exp).insert 0).mono _
+  · refine' ((hs.image exp).insert 0).mono _
     rw [image_preimage_eq_inter_range, range_exp, ← diff_eq, ← union_singleton, diff_union_self]
     exact subset_union_left _ _
-  ·
-    rw [← bUnion_preimage_singleton]
+    
+  · rw [← bUnion_preimage_singleton]
     refine' hs.bUnion fun z hz => _
     rcases em (∃ w, exp w = z) with (⟨w, rfl⟩ | hne)
-    ·
-      simp only [preimage, mem_singleton_iff, exp_eq_exp_iff_exists_int, set_of_exists]
+    · simp only [preimage, mem_singleton_iff, exp_eq_exp_iff_exists_int, set_of_exists]
       exact countable_Union fun m => countable_singleton _
-    ·
-      push_neg  at hne
+      
+    · push_neg  at hne
       simp [preimage, hne]
+      
+    
 
 alias countable_preimage_exp ↔ _ Set.Countable.preimage_cexp
 
 theorem tendsto_log_nhds_within_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
-    tendsto log (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 $ Real.log (abs z) - π*I) := by
+    tendsto log (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 $ Real.log (abs z) - π * I) := by
   have :=
     (continuous_of_real.continuous_at.comp_continuous_within_at (continuous_abs.continuous_within_at.log _)).Tendsto.add
       (((continuous_of_real.tendsto _).comp $ tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero hre him).mul
         tendsto_const_nhds)
   convert this
-  ·
-    simp [sub_eq_add_neg]
-  ·
-    lift z to ℝ using him
+  · simp [sub_eq_add_neg]
+    
+  · lift z to ℝ using him
     simpa using hre.ne
+    
 
 theorem continuous_within_at_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
     ContinuousWithinAt log { z : ℂ | 0 ≤ z.im } z := by
@@ -145,12 +145,12 @@ theorem continuous_within_at_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
             continuous_within_at_arg_of_re_neg_of_im_zero hre him).mul
         tendsto_const_nhds)
   convert this
-  ·
-    lift z to ℝ using him
+  · lift z to ℝ using him
     simpa using hre.ne
+    
 
 theorem tendsto_log_nhds_within_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
-    tendsto log (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 $ Real.log (abs z)+π*I) := by
+    tendsto log (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 $ Real.log (abs z) + π * I) := by
   simpa only [log, arg_eq_pi_iff.2 ⟨hre, him⟩] using (continuous_within_at_log_of_re_neg_of_im_zero hre him).Tendsto
 
 end Complex
@@ -165,17 +165,16 @@ variable {α : Type _}
 
 theorem continuous_at_clog {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousAt log x := by
   refine' ContinuousAt.add _ _
-  ·
-    refine' continuous_of_real.continuous_at.comp _
+  · refine' continuous_of_real.continuous_at.comp _
     refine' (Real.continuous_at_log _).comp complex.continuous_abs.continuous_at
     rw [abs_ne_zero]
     rintro rfl
     simpa using h
-  ·
-    have h_cont_mul : Continuous fun x : ℂ => x*I
-    exact continuous_id'.mul continuous_const
+    
+  · have h_cont_mul : Continuous fun x : ℂ => x * I := continuous_id'.mul continuous_const
     refine' h_cont_mul.continuous_at.comp (continuous_of_real.continuous_at.comp _)
     exact continuous_at_arg h
+    
 
 theorem Filter.Tendsto.clog {l : Filter α} {f : α → ℂ} {x : ℂ} (h : tendsto f l (𝓝 x)) (hx : 0 < x.re ∨ x.im ≠ 0) :
     tendsto (fun t => log (f t)) l (𝓝 $ log x) :=

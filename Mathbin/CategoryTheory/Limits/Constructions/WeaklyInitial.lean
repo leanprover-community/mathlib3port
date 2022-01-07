@@ -22,16 +22,14 @@ open Limits
 
 variable {C : Type u} [category.{v} C]
 
-/-- 
-If `C` has (small) products and a small weakly initial set of objects, then it has a weakly initial
+/-- If `C` has (small) products and a small weakly initial set of objects, then it has a weakly initial
 object.
 -/
 theorem has_weakly_initial_of_weakly_initial_set_and_has_products [has_products C] {ι : Type v} {B : ι → C}
     (hB : ∀ A : C, ∃ i, Nonempty (B i ⟶ A)) : ∃ T : C, ∀ X, Nonempty (T ⟶ X) :=
   ⟨∏ B, fun X => ⟨pi.π _ _ ≫ (hB X).some_spec.some⟩⟩
 
-/-- 
-If `C` has (small) wide equalizers and a weakly initial object, then it has an initial object.
+/-- If `C` has (small) wide equalizers and a weakly initial object, then it has an initial object.
 
 The initial object is constructed as the wide equalizer of all endomorphisms on the given weakly
 initial object.

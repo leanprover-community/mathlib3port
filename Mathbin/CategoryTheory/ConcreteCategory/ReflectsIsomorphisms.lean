@@ -11,15 +11,14 @@ universe u
 
 namespace CategoryTheory
 
--- failed to format: format: uncaught backtrack exception
-instance : reflects_isomorphisms ( forget ( Type u ) ) where reflects X Y f i := i
+instance : reflects_isomorphisms (forget (Type u)) where
+  reflects := fun X Y f i => i
 
 variable (C : Type (u + 1)) [category C] [concrete_category.{u} C]
 
 variable (D : Type (u + 1)) [category D] [concrete_category.{u} D]
 
-/-- 
-A `forget₂ C D` forgetful functor between concrete categories `C` and `D`
+/-- A `forget₂ C D` forgetful functor between concrete categories `C` and `D`
 where `forget C` reflects isomorphisms, itself reflects isomorphisms.
 -/
 theorem reflects_isomorphisms_forget₂ [has_forget₂ C D] [reflects_isomorphisms (forget C)] :

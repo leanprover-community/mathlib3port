@@ -17,7 +17,7 @@ namespace Function
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
-/--  We say that `f : α → β` semiconjugates `ga : α → α` to `gb : β → β` if `f ∘ ga = gb ∘ f`.
+/-- We say that `f : α → β` semiconjugates `ga : α → α` to `gb : β → β` if `f ∘ ga = gb ∘ f`.
 We use `∀ x, f (ga x) = gb (f x)` as the definition, so given `h : function.semiconj f ga gb` and
 `a : α`, we have `h a : f (ga a) = gb (f a)` and `h.comp_eq : f ∘ ga = gb ∘ f`. -/
 def semiconj (f : α → β) (ga : α → α) (gb : β → β) : Prop :=
@@ -49,7 +49,7 @@ theorem inverses_right (h : semiconj f ga gb) (ha : RightInverse ga' ga) (hb : l
 
 end Semiconj
 
-/--  Two maps `f g : α → α` commute if `f (g x) = g (f x)` for all `x : α`.
+/-- Two maps `f g : α → α` commute if `f (g x) = g (f x)` for all `x : α`.
 Given `h : function.commute f g` and `a : α`, we have `h a : f (g a) = g (f a)` and
 `h.comp_eq : f ∘ g = g ∘ f`. -/
 def commute (f g : α → α) : Prop :=
@@ -82,7 +82,7 @@ theorem id_left : commute id f :=
 
 end Commute
 
-/--  A map `f` semiconjugates a binary operation `ga` to a binary operation `gb` if
+/-- A map `f` semiconjugates a binary operation `ga` to a binary operation `gb` if
 for all `x`, `y` we have `f (ga x y) = gb (f x) (f y)`. E.g., a `monoid_hom`
 semiconjugates `(*)` to `(*)`. -/
 def semiconj₂ (f : α → β) (ga : α → α → α) (gb : β → β → β) : Prop :=

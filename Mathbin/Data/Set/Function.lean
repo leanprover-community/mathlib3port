@@ -38,7 +38,7 @@ namespace Set
 /-! ### Restrict -/
 
 
-/--  Restrict domain of a function `f` to a set `s`. Same as `subtype.restrict` but this version
+/-- Restrict domain of a function `f` to a set `s`. Same as `subtype.restrict` but this version
 takes an argument `↥s` instead of `subtype s`. -/
 def restrict (f : α → β) (s : Set α) : s → β := fun x => f x
 
@@ -56,13 +56,13 @@ theorem range_restrict (f : α → β) (s : Set α) : Set.Range (restrict f s) =
 theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coeₓ ⁻¹' t) = f '' (t ∩ s) := by
   rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ a _ : a ∉ s, β) :
     restrict (fun a => if h : a ∈ s then f a h else g a h) s = fun a => f a a.2 :=
   funext $ fun a => dif_pos a.2
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ a _ : a ∉ s, β) :
     restrict (fun a => if h : a ∈ s then f a h else g a h) (sᶜ) = fun a => g a a.2 :=
@@ -111,7 +111,7 @@ theorem range_extend {f : α → β} (hf : injective f) (g : α → γ) (g' : β
   rintro z (⟨x, rfl⟩ | ⟨y, hy, rfl⟩)
   exacts[⟨f x, extend_apply hf _ _ _⟩, ⟨y, extend_apply' _ _ _ hy⟩]
 
-/--  Restrict codomain of a function `f` to a set `s`. Same as `subtype.coind` but this version
+/-- Restrict codomain of a function `f` to a set `s`. Same as `subtype.coind` but this version
 has codomain `↥s` instead of `subtype s`. -/
 def cod_restrict (f : α → β) (s : Set β) (h : ∀ x, f x ∈ s) : α → s := fun x => ⟨f x, h x⟩
 
@@ -131,7 +131,7 @@ alias injective_cod_restrict ↔ _ Function.Injective.cod_restrict
 /-! ### Equality on a set -/
 
 
-/--  Two functions `f₁ f₂ : α → β` are equal on `s`
+/-- Two functions `f₁ f₂ : α → β` are equal on `s`
   if `f₁ x = f₂ x` for all `x ∈ a`. -/
 def eq_on (f₁ f₂ : α → β) (s : Set α) : Prop :=
   ∀ ⦃x⦄, x ∈ s → f₁ x = f₂ x
@@ -206,12 +206,12 @@ end Order
 /-! ### maps to -/
 
 
-/--  `maps_to f a b` means that the image of `a` is contained in `b`. -/
+/-- `maps_to f a b` means that the image of `a` is contained in `b`. -/
 @[reducible]
 def maps_to (f : α → β) (s : Set α) (t : Set β) : Prop :=
   ∀ ⦃x⦄, x ∈ s → f x ∈ t
 
-/--  Given a map `f` sending `s : set α` into `t : set β`, restrict domain of `f` to `s`
+/-- Given a map `f` sending `s : set α` into `t : set β`, restrict domain of `f` to `s`
 and the codomain to `t`. Same as `subtype.map`. -/
 def maps_to.restrict (f : α → β) (s : Set α) (t : Set β) (h : maps_to f s t) : s → t :=
   Subtype.map f h
@@ -251,17 +251,17 @@ theorem maps_to_id (s : Set α) : maps_to id s s := fun x => id
 
 theorem maps_to.iterate {f : α → α} {s : Set α} (h : maps_to f s s) : ∀ n, maps_to (f^[n]) s s
   | 0 => fun _ => id
-  | n+1 => (maps_to.iterate n).comp h
+  | n + 1 => (maps_to.iterate n).comp h
 
 theorem maps_to.iterate_restrict {f : α → α} {s : Set α} (h : maps_to f s s) (n : ℕ) :
     h.restrict f s s^[n] = (h.iterate n).restrict _ _ _ := by
   funext x
   rw [Subtype.ext_iff, maps_to.coe_restrict_apply]
   induction' n with n ihn generalizing x
-  ·
-    rfl
-  ·
-    simp [Nat.iterate, ihn]
+  · rfl
+    
+  · simp [Nat.iterate, ihn]
+    
 
 theorem maps_to.mono (hs : s₂ ⊆ s₁) (ht : t₁ ⊆ t₂) (hf : maps_to f s₁ t₁) : maps_to f s₂ t₂ := fun x hx =>
   ht (hf $ hs hx)
@@ -319,7 +319,7 @@ theorem maps_to.mem_iff (h : maps_to f s t) (hc : maps_to f (sᶜ) (tᶜ)) {x} :
 /-! ### Injectivity on a set -/
 
 
-/--  `f` is injective on `a` if the restriction of `f` to `a` is injective. -/
+/-- `f` is injective on `a` if the restriction of `f` to `a` is injective. -/
 @[reducible]
 def inj_on (f : α → β) (s : Set α) : Prop :=
   ∀ ⦃x₁ : α⦄, x₁ ∈ s → ∀ ⦃x₂ : α⦄, x₂ ∈ s → f x₁ = f x₂ → x₁ = x₂
@@ -347,20 +347,19 @@ theorem inj_on.mono (h : s₁ ⊆ s₂) (ht : inj_on f s₂) : inj_on f s₁ := 
 theorem inj_on_union (h : Disjoint s₁ s₂) :
     inj_on f (s₁ ∪ s₂) ↔ inj_on f s₁ ∧ inj_on f s₂ ∧ ∀, ∀ x ∈ s₁, ∀, ∀ y ∈ s₂, ∀, f x ≠ f y := by
   refine' ⟨fun H => ⟨H.mono $ subset_union_left _ _, H.mono $ subset_union_right _ _, _⟩, _⟩
-  ·
-    intro x hx y hy hxy
+  · intro x hx y hy hxy
     obtain rfl : x = y
     exact H (Or.inl hx) (Or.inr hy) hxy
     exact h ⟨hx, hy⟩
-  ·
-    rintro ⟨h₁, h₂, h₁₂⟩
+    
+  · rintro ⟨h₁, h₂, h₁₂⟩
     rintro x (hx | hx) y (hy | hy) hxy
     exacts[h₁ hx hy hxy, (h₁₂ _ hx _ hy hxy).elim, (h₁₂ _ hy _ hx hxy.symm).elim, h₂ hx hy hxy]
+    
 
 theorem inj_on_insert {f : α → β} {s : Set α} {a : α} (has : a ∉ s) :
-    Set.InjOn f (insert a s) ↔ Set.InjOn f s ∧ f a ∉ f '' s :=
+    Set.InjOn f (insert a s) ↔ Set.InjOn f s ∧ f a ∉ f '' s := by
   have : Disjoint s {a} := fun x ⟨hxs, (hxa : x = a)⟩ => has (hxa ▸ hxs)
-  by
   rw [← union_singleton, inj_on_union this]
   simp
 
@@ -400,7 +399,7 @@ theorem inj_on.cancel_left (hg : t.inj_on g) (hf₁ : s.maps_to f₁ t) (hf₂ :
 /-! ### Surjectivity on a set -/
 
 
-/--  `f` is surjective from `a` to `b` if `b` is contained in the image of `a`. -/
+/-- `f` is surjective from `a` to `b` if `b` is contained in the image of `a`. -/
 @[reducible]
 def surj_on (f : α → β) (s : Set α) (t : Set β) : Prop :=
   t ⊆ f '' s
@@ -445,8 +444,7 @@ theorem surj_on.inter_inter (h₁ : surj_on f s₁ t₁) (h₂ : surj_on f s₂ 
   intro y hy
   rcases h₁ hy.1 with ⟨x₁, hx₁, rfl⟩
   rcases h₂ hy.2 with ⟨x₂, hx₂, heq⟩
-  have : x₁ = x₂
-  exact h (Or.inl hx₁) (Or.inr hx₂) HEq.symm
+  have : x₁ = x₂ := h (Or.inl hx₁) (Or.inr hx₂) HEq.symm
   subst x₂
   exact mem_image_of_mem f ⟨hx₁, hx₂⟩
 
@@ -496,7 +494,7 @@ theorem eq_on_comp_right_iff : s.eq_on (g₁ ∘ f) (g₂ ∘ f) ↔ (f '' s).Eq
 /-! ### Bijectivity -/
 
 
-/--  `f` is bijective from `s` to `t` if `f` is injective on `s` and `f '' s = t`. -/
+/-- `f` is bijective from `s` to `t` if `f` is injective on `s` and `f '' s = t`. -/
 @[reducible]
 def bij_on (f : α → β) (s : Set α) (t : Set β) : Prop :=
   maps_to f s t ∧ inj_on f s ∧ surj_on f s t
@@ -563,7 +561,7 @@ theorem bij_on.compl (hst : bij_on f s t) (hf : bijective f) : bij_on f (sᶜ) (
 /-! ### left inverse -/
 
 
-/--  `g` is a left inverse to `f` on `a` means that `g (f x) = x` for all `x ∈ a`. -/
+/-- `g` is a left inverse to `f` on `a` means that `g (f x) = x` for all `x ∈ a`. -/
 @[reducible]
 def left_inv_on (f' : β → α) (f : α → β) (s : Set α) : Prop :=
   ∀ ⦃x⦄, x ∈ s → f' (f x) = x
@@ -581,7 +579,8 @@ theorem left_inv_on.congr_right (h₁ : left_inv_on f₁' f₁ s) (heq : eq_on f
   HEq hx ▸ h₁ hx
 
 theorem left_inv_on.inj_on (h : left_inv_on f₁' f s) : inj_on f s := fun x₁ h₁ x₂ h₂ heq =>
-  calc x₁ = f₁' (f x₁) := Eq.symm $ h h₁
+  calc
+    x₁ = f₁' (f x₁) := Eq.symm $ h h₁
     _ = f₁' (f x₂) := congr_argₓ f₁' HEq
     _ = x₂ := h h₂
     
@@ -589,14 +588,14 @@ theorem left_inv_on.inj_on (h : left_inv_on f₁' f s) : inj_on f s := fun x₁ 
 theorem left_inv_on.surj_on (h : left_inv_on f' f s) (hf : maps_to f s t) : surj_on f' t s := fun x hx =>
   ⟨f x, hf hx, h hx⟩
 
-theorem left_inv_on.maps_to (h : left_inv_on f' f s) (hf : surj_on f s t) : maps_to f' t s := fun y hy =>
+theorem left_inv_on.maps_to (h : left_inv_on f' f s) (hf : surj_on f s t) : maps_to f' t s := fun y hy => by
   let ⟨x, hs, hx⟩ := hf hy
-  by
   rwa [← hx, h hs]
 
 theorem left_inv_on.comp (hf' : left_inv_on f' f s) (hg' : left_inv_on g' g t) (hf : maps_to f s t) :
     left_inv_on (f' ∘ g') (g ∘ f) s := fun x h =>
-  calc (f' ∘ g') ((g ∘ f) x) = f' (f x) := congr_argₓ f' (hg' (hf h))
+  calc
+    (f' ∘ g') ((g ∘ f) x) = f' (f x) := congr_argₓ f' (hg' (hf h))
     _ = x := hf' h
     
 
@@ -604,17 +603,17 @@ theorem left_inv_on.mono (hf : left_inv_on f' f s) (ht : s₁ ⊆ s) : left_inv_
 
 theorem left_inv_on.image_inter' (hf : left_inv_on f' f s) : f '' (s₁ ∩ s) = f' ⁻¹' s₁ ∩ f '' s := by
   apply subset.antisymm
-  ·
-    rintro _ ⟨x, ⟨h₁, h⟩, rfl⟩
+  · rintro _ ⟨x, ⟨h₁, h⟩, rfl⟩
     exact
       ⟨by
         rwa [mem_preimage, hf h], mem_image_of_mem _ h⟩
-  ·
-    rintro _ ⟨h₁, ⟨x, h, rfl⟩⟩
+    
+  · rintro _ ⟨h₁, ⟨x, h, rfl⟩⟩
     exact
       mem_image_of_mem _
         ⟨by
           rwa [← hf h], h⟩
+    
 
 theorem left_inv_on.image_inter (hf : left_inv_on f' f s) : f '' (s₁ ∩ s) = f' ⁻¹' (s₁ ∩ s) ∩ f '' s := by
   rw [hf.image_inter']
@@ -634,7 +633,7 @@ theorem left_inv_on.image_image' (hf : left_inv_on f' f s) (hs : s₁ ⊆ s) : f
 /-! ### Right inverse -/
 
 
-/--  `g` is a right inverse to `f` on `b` if `f (g x) = x` for all `x ∈ b`. -/
+/-- `g` is a right inverse to `f` on `b` if `f (g x) = x` for all `x ∈ b`. -/
 @[reducible]
 def right_inv_on (f' : β → α) (f : α → β) (t : Set β) : Prop :=
   left_inv_on f f' t
@@ -673,20 +672,20 @@ theorem inj_on.right_inv_on_of_left_inv_on (hf : inj_on f s) (hf' : left_inv_on 
 
 theorem eq_on_of_left_inv_on_of_right_inv_on (h₁ : left_inv_on f₁' f s) (h₂ : right_inv_on f₂' f t)
     (h : maps_to f₂' t s) : eq_on f₁' f₂' t := fun y hy =>
-  calc f₁' y = (f₁' ∘ f ∘ f₂') y := congr_argₓ f₁' (h₂ hy).symm
+  calc
+    f₁' y = (f₁' ∘ f ∘ f₂') y := congr_argₓ f₁' (h₂ hy).symm
     _ = f₂' y := h₁ (h hy)
     
 
 theorem surj_on.left_inv_on_of_right_inv_on (hf : surj_on f s t) (hf' : right_inv_on f f' s) : left_inv_on f f' t :=
-  fun y hy =>
+  fun y hy => by
   let ⟨x, hx, HEq⟩ := hf hy
-  by
   rw [← HEq, hf' hx]
 
 /-! ### Two-side inverses -/
 
 
-/--  `g` is an inverse to `f` viewed as a map from `a` to `b` -/
+/-- `g` is an inverse to `f` viewed as a map from `a` to `b` -/
 @[reducible]
 def inv_on (g : β → α) (f : α → β) (s : Set α) (t : Set β) : Prop :=
   left_inv_on g f s ∧ right_inv_on g f t
@@ -697,7 +696,7 @@ theorem inv_on.symm (h : inv_on f' f s t) : inv_on f f' t s :=
 theorem inv_on.mono (h : inv_on f' f s t) (hs : s₁ ⊆ s) (ht : t₁ ⊆ t) : inv_on f' f s₁ t₁ :=
   ⟨h.1.mono hs, h.2.mono ht⟩
 
-/--  If functions `f'` and `f` are inverse on `s` and `t`, `f` maps `s` into `t`, and `f'` maps `t`
+/-- If functions `f'` and `f` are inverse on `s` and `t`, `f` maps `s` into `t`, and `f'` maps `t`
 into `s`, then `f` is a bijection between `s` and `t`. The `maps_to` arguments can be deduced from
 `surj_on` statements using `left_inv_on.maps_to` and `right_inv_on.maps_to`. -/
 theorem inv_on.bij_on (h : inv_on f' f s t) (hf : maps_to f s t) (hf' : maps_to f' t s) : bij_on f s t :=
@@ -732,40 +731,39 @@ theorem surj_on.bij_on_subset [Nonempty α] (h : surj_on f s t) : bij_on f (inv_
   rintro _ ⟨y, hy, rfl⟩
   rwa [h.right_inv_on_inv_fun_on hy]
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (s' «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (s' «expr ⊆ » s)
 theorem surj_on_iff_exists_bij_on_subset : surj_on f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), bij_on f s' t := by
   constructor
-  ·
-    rcases eq_empty_or_nonempty t with (rfl | ht)
-    ·
-      exact fun _ => ⟨∅, empty_subset _, bij_on_empty f⟩
-    ·
-      intro h
+  · rcases eq_empty_or_nonempty t with (rfl | ht)
+    · exact fun _ => ⟨∅, empty_subset _, bij_on_empty f⟩
+      
+    · intro h
       have : Nonempty α := ⟨Classical.some (h.comap_nonempty ht)⟩
       exact ⟨_, h.maps_to_inv_fun_on.image_subset, h.bij_on_subset⟩
-  ·
-    rintro ⟨s', hs', hfs'⟩
+      
+    
+  · rintro ⟨s', hs', hfs'⟩
     exact hfs'.surj_on.mono hs' (subset.refl _)
+    
 
 theorem preimage_inv_fun_of_mem [n : Nonempty α] {f : α → β} (hf : injective f) {s : Set α}
     (h : Classical.choice n ∈ s) : inv_fun f ⁻¹' s = f '' s ∪ range fᶜ := by
   ext x
   rcases em (x ∈ range f) with (⟨a, rfl⟩ | hx)
-  ·
-    simp [left_inverse_inv_fun hf _, hf.mem_set_image]
-  ·
-    simp [mem_preimage, inv_fun_neg hx, h, hx]
+  · simp [left_inverse_inv_fun hf _, hf.mem_set_image]
+    
+  · simp [mem_preimage, inv_fun_neg hx, h, hx]
+    
 
 theorem preimage_inv_fun_of_not_mem [n : Nonempty α] {f : α → β} (hf : injective f) {s : Set α}
     (h : Classical.choice n ∉ s) : inv_fun f ⁻¹' s = f '' s := by
   ext x
   rcases em (x ∈ range f) with (⟨a, rfl⟩ | hx)
-  ·
-    rw [mem_preimage, left_inverse_inv_fun hf, hf.mem_set_image]
-  ·
-    have : x ∉ f '' s
-    exact fun h' => hx (image_subset_range _ _ h')
+  · rw [mem_preimage, left_inverse_inv_fun hf, hf.mem_set_image]
+    
+  · have : x ∉ f '' s := fun h' => hx (image_subset_range _ _ h')
     simp only [mem_preimage, inv_fun_neg hx, h, this]
+    
 
 end Set
 
@@ -817,11 +815,11 @@ theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ inse
   simp [piecewise]
   ext i
   by_cases' h : i = j
-  ·
-    rw [h]
+  · rw [h]
     simp
-  ·
-    by_cases' h' : i ∈ s <;> simp [h, h']
+    
+  · by_cases' h' : i ∈ s <;> simp [h, h']
+    
 
 @[simp]
 theorem piecewise_eq_of_mem {i : α} (hi : i ∈ s) : s.piecewise f g i = f i :=
@@ -835,34 +833,34 @@ theorem piecewise_singleton (x : α) [∀ y, Decidable (y ∈ ({x} : Set α))] [
     piecewise {x} f g = Function.update g x (f x) := by
   ext y
   by_cases' hy : y = x
-  ·
-    subst y
+  · subst y
     simp
-  ·
-    simp [hy]
+    
+  · simp [hy]
+    
 
 theorem piecewise_eq_on (f g : α → β) : eq_on (s.piecewise f g) f s := fun _ => piecewise_eq_of_mem _ _ _
 
 theorem piecewise_eq_on_compl (f g : α → β) : eq_on (s.piecewise f g) g (sᶜ) := fun _ => piecewise_eq_of_not_mem _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ≤ g i) (h₂ : ∀ i _ : i ∉ s, f₂ i ≤ g i) : s.piecewise f₁ f₂ ≤ g := fun i =>
   if h : i ∈ s then by
-    simp
+    simp [*]
   else by
-    simp
+    simp [*]
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀, ∀ i ∈ s, ∀, g i ≤ f₁ i) (h₂ : ∀ i _ : i ∉ s, g i ≤ f₂ i) : g ≤ s.piecewise f₁ f₂ :=
   @piecewise_le α (fun i => OrderDual (δ i)) _ s _ _ _ _ h₁ h₂
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
     {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ≤ g₁ i) (h₂ : ∀ i _ : i ∉ s, f₂ i ≤ g₂ i) :
     s.piecewise f₁ f₂ ≤ s.piecewise g₁ g₂ := by
-  apply piecewise_le <;> intros <;> simp
+  apply piecewise_le <;> intros <;> simp [*]
 
 @[simp]
 theorem piecewise_insert_of_ne {i j : α} (h : i ≠ j) [∀ i, Decidable (i ∈ insert j s)] :
@@ -893,11 +891,11 @@ theorem eq_on_piecewise {f f' g : α → β} {t} : eq_on (s.piecewise f f') g t 
   by
   simp only [eq_on, ← forall_and_distrib]
   refine' forall_congrₓ fun a => _
-  by_cases' a ∈ s <;> simp
+  by_cases' a ∈ s <;> simp [*]
 
 theorem eq_on.piecewise_ite' {f f' g : α → β} {t t'} (h : eq_on f g (t ∩ s)) (h' : eq_on f' g (t' ∩ sᶜ)) :
     eq_on (s.piecewise f f') g (s.ite t t') := by
-  simp [eq_on_piecewise]
+  simp [eq_on_piecewise, *]
 
 theorem eq_on.piecewise_ite {f f' g : α → β} {t t'} (h : eq_on f g t) (h' : eq_on f' g t') :
     eq_on (s.piecewise f f') g (s.ite t t') :=
@@ -905,7 +903,7 @@ theorem eq_on.piecewise_ite {f f' g : α → β} {t t'} (h : eq_on f g t) (h' : 
 
 theorem piecewise_preimage (f g : α → β) t : s.piecewise f g ⁻¹' t = s.ite (f ⁻¹' t) (g ⁻¹' t) :=
   ext $ fun x => by
-    by_cases' x ∈ s <;> simp [Set.Ite]
+    by_cases' x ∈ s <;> simp [*, Set.Ite]
 
 theorem apply_piecewise {δ' : α → Sort _} (h : ∀ i, δ i → δ' i) {x : α} :
     h x (s.piecewise f g x) = s.piecewise (fun x => h x (f x)) (fun x => h x (g x)) x := by
@@ -934,13 +932,13 @@ theorem piecewise_same : s.piecewise f f = f := by
 theorem range_piecewise (f g : α → β) : range (s.piecewise f g) = f '' s ∪ g '' sᶜ := by
   ext y
   constructor
-  ·
-    rintro ⟨x, rfl⟩
+  · rintro ⟨x, rfl⟩
     by_cases' h : x ∈ s <;> [left, right] <;> use x <;> simp [h]
-  ·
-    rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all
+    
+  · rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all
+    
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (y «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y «expr ∉ » s)
 theorem injective_piecewise_iff {f g : α → β} :
     injective (s.piecewise f g) ↔ inj_on f s ∧ inj_on g (sᶜ) ∧ ∀, ∀ x ∈ s, ∀ y _ : y ∉ s, f x ≠ g y := by
   rw [injective_iff_inj_on_univ, ← union_compl_self s, inj_on_union (@disjoint_compl_right _ s _),
@@ -962,7 +960,7 @@ theorem pi_piecewise {ι : Type _} {α : ι → Type _} (s s' : Set ι) (t t' : 
   ext x
   simp only [mem_pi, mem_inter_eq, ← forall_and_distrib]
   refine' forall_congrₓ fun i => _
-  by_cases' hi : i ∈ s' <;> simp
+  by_cases' hi : i ∈ s' <;> simp [*]
 
 theorem univ_pi_piecewise {ι : Type _} {α : ι → Type _} (s : Set ι) (t : ∀ i, Set (α i)) [∀ x, Decidable (x ∈ s)] :
     pi univ (s.piecewise t fun _ => univ) = pi s t := by
@@ -1067,7 +1065,7 @@ theorem update_comp_eq_of_not_mem_range' {α β : Sort _} {γ : β → Sort _} [
     {i : β} (a : γ i) (h : i ∉ Set.Range f) : (fun j => (Function.update g i a) (f j)) = fun j => g (f j) :=
   update_comp_eq_of_forall_ne' _ _ $ fun x hx => h ⟨x, hx⟩
 
-/--  Non-dependent version of `function.update_comp_eq_of_not_mem_range'` -/
+/-- Non-dependent version of `function.update_comp_eq_of_not_mem_range'` -/
 theorem update_comp_eq_of_not_mem_range {α β γ : Sort _} [DecidableEq β] (g : β → γ) {f : α → β} {i : β} (a : γ)
     (h : i ∉ Set.Range f) : Function.update g i a ∘ f = g ∘ f :=
   update_comp_eq_of_not_mem_range' g a h

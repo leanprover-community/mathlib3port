@@ -28,8 +28,7 @@ open Category
 
 variable {C : Type u} [category.{v} C]
 
-/-- 
-Given any pullback diagram of the form
+/-- Given any pullback diagram of the form
 
 Z  ⟶  X₁
 ↓      ↓
@@ -45,8 +44,7 @@ class coproduct_disjoint (X₁ X₂ : C) where
   mono_inl : ∀ X X₁ : X₁ ⟶ X X₂ : X₂ ⟶ X cX : is_colimit (binary_cofan.mk X₁ X₂), mono X₁
   mono_inr : ∀ X X₁ : X₁ ⟶ X X₂ : X₂ ⟶ X cX : is_colimit (binary_cofan.mk X₁ X₂), mono X₂
 
-/-- 
-If the coproduct of `X₁` and `X₂` is disjoint, then given any pullback square
+/-- If the coproduct of `X₁` and `X₂` is disjoint, then given any pullback square
 
 Z  ⟶  X₁
 ↓      ↓
@@ -59,8 +57,7 @@ def is_initial_of_is_pullback_of_is_coproduct {Z X₁ X₂ X : C} [coproduct_dis
     (cZ : is_limit (pullback_cone.mk _ _ comm)) : is_initial Z :=
   coproduct_disjoint.is_initial_of_is_pullback_of_is_coproduct cX cZ
 
-/-- 
-If the coproduct of `X₁` and `X₂` is disjoint, then given any pullback square
+/-- If the coproduct of `X₁` and `X₂` is disjoint, then given any pullback square
 
 Z  ⟶  X₁
 ↓       ↓
@@ -73,8 +70,7 @@ noncomputable def is_initial_of_is_pullback_of_coproduct {Z X₁ X₂ : C} [has_
     (cZ : is_limit (pullback_cone.mk _ _ comm)) : is_initial Z :=
   coproduct_disjoint.is_initial_of_is_pullback_of_is_coproduct (coprod_is_coprod _ _) cZ
 
-/-- 
-If the coproduct of `X₁` and `X₂` is disjoint, then provided `X₁ ⟶ X ← X₂` is a coproduct the
+/-- If the coproduct of `X₁` and `X₂` is disjoint, then provided `X₁ ⟶ X ← X₂` is a coproduct the
 pullback is an initial object:
 
         X₁
@@ -85,8 +81,7 @@ noncomputable def is_initial_of_pullback_of_is_coproduct {X X₁ X₂ : C} [copr
     {pX₂ : X₂ ⟶ X} [has_pullback pX₁ pX₂] (cX : is_colimit (binary_cofan.mk pX₁ pX₂)) : is_initial (pullback pX₁ pX₂) :=
   coproduct_disjoint.is_initial_of_is_pullback_of_is_coproduct cX (pullback_is_pullback _ _)
 
-/-- 
-If the coproduct of `X₁` and `X₂` is disjoint, the pullback of `X₁ ⟶ X₁ ⨿ X₂` and `X₂ ⟶ X₁ ⨿ X₂`
+/-- If the coproduct of `X₁` and `X₂` is disjoint, the pullback of `X₁ ⟶ X₁ ⨿ X₂` and `X₂ ⟶ X₁ ⨿ X₂`
 is initial.
 -/
 noncomputable def is_initial_of_pullback_of_coproduct {X₁ X₂ : C} [has_binary_coproduct X₁ X₂]
@@ -100,13 +95,13 @@ instance {X₁ X₂ : C} [has_binary_coproduct X₁ X₂] [coproduct_disjoint X�
 instance {X₁ X₂ : C} [has_binary_coproduct X₁ X₂] [coproduct_disjoint X₁ X₂] : mono (coprod.inr : X₂ ⟶ X₁ ⨿ X₂) :=
   coproduct_disjoint.mono_inr _ _ _ (coprod_is_coprod _ _)
 
-/--  `C` has disjoint coproducts if every coproduct is disjoint. -/
+/-- `C` has disjoint coproducts if every coproduct is disjoint. -/
 class coproducts_disjoint (C : Type u) [category.{v} C] where
   CoproductDisjoint : ∀ X Y : C, coproduct_disjoint X Y
 
 attribute [instance] coproducts_disjoint.coproduct_disjoint
 
-/--  If `C` has disjoint coproducts, any morphism out of initial is mono. Note it isn't true in
+/-- If `C` has disjoint coproducts, any morphism out of initial is mono. Note it isn't true in
 general that `C` has strict initial objects, for instance consider the category of types and
 partial functions. -/
 theorem initial_mono_class_of_disjoint_coproducts [coproducts_disjoint C] : initial_mono_class C :=

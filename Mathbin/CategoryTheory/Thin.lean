@@ -29,7 +29,7 @@ section
 
 variable [category_struct.{v₁} C] [∀ X Y : C, Subsingleton (X ⟶ Y)]
 
-/--  Construct a category instance from a category_struct, using the fact that
+/-- Construct a category instance from a category_struct, using the fact that
     hom spaces are subsingletons to prove the axioms. -/
 def thin_category : category C :=
   {  }
@@ -40,13 +40,14 @@ variable [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
 variable [∀ X Y : C, Subsingleton (X ⟶ Y)]
 
-/--  If `C` is a thin category, then `D ⥤ C` is a thin category. -/
+/-- If `C` is a thin category, then `D ⥤ C` is a thin category. -/
 instance functor_thin (F₁ F₂ : D ⥤ C) : Subsingleton (F₁ ⟶ F₂) :=
   ⟨fun α β => nat_trans.ext α β (funext fun _ => Subsingleton.elimₓ _ _)⟩
 
-/--  To show `X ≅ Y` in a thin category, it suffices to just give any morphism in each direction. -/
-def iso_of_both_ways {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) : X ≅ Y :=
-  { Hom := f, inv := g }
+/-- To show `X ≅ Y` in a thin category, it suffices to just give any morphism in each direction. -/
+def iso_of_both_ways {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) : X ≅ Y where
+  Hom := f
+  inv := g
 
 instance subsingleton_iso {X Y : C} : Subsingleton (X ≅ Y) :=
   ⟨by

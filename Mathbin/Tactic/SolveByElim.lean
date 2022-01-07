@@ -22,8 +22,7 @@ namespace Tactic
 
 namespace SolveByElim
 
-/-- 
-`mk_assumption_set` builds a collection of lemmas for use in
+/-- `mk_assumption_set` builds a collection of lemmas for use in
 the backtracking search in `solve_by_elim`.
 
 * By default, it includes all local hypotheses, along with `rfl`, `trivial`, `congr_fun` and
@@ -88,8 +87,7 @@ unsafe def mk_assumption_set (no_dflt : Bool) (hs : List simp_arg_type) (attr : 
           if e.has_meta_var then return h else return (return e)
     return (hs, locals)
 
-/-- 
-Configuration options for `solve_by_elim`.
+/-- Configuration options for `solve_by_elim`.
 
 * `accept : list expr → tactic unit` determines whether the current branch should be explored.
    At each step, before the lemmas are applied,
@@ -115,23 +113,21 @@ unsafe structure basic_opt extends apply_any_opt where
 initialize
   registerTraceClass.1 `solve_by_elim
 
-/-- 
-A helper function for trace messages, prepending '....' depending on the current search depth.
+/-- A helper function for trace messages, prepending '....' depending on the current search depth.
 -/
 unsafe def solve_by_elim_trace (n : ℕ) (f : format) : tactic Unit :=
-  trace_if_enabled `solve_by_elim ((f!"[solve_by_elim {(List.repeat '.' (n+1)).asString} ") ++ f ++ "]")
+  trace_if_enabled `solve_by_elim ((f!"[solve_by_elim {(List.repeat '.' (n + 1)).asString} ") ++ f ++ "]")
 
-/--  A helper function to generate trace messages on successful applications. -/
+/-- A helper function to generate trace messages on successful applications. -/
 unsafe def on_success (g : format) (n : ℕ) (e : expr) : tactic Unit := do
   let pp ← pp e
   solve_by_elim_trace n f! "✅ `{pp }` solves `⊢ {g}`"
 
-/--  A helper function to generate trace messages on unsuccessful applications. -/
+/-- A helper function to generate trace messages on unsuccessful applications. -/
 unsafe def on_failure (g : format) (n : ℕ) : tactic Unit :=
   solve_by_elim_trace n f! "❌ failed to solve `⊢ {g}`"
 
-/-- 
-A helper function to generate the tactic that print trace messages.
+/-- A helper function to generate the tactic that print trace messages.
 This function exists to ensure the target is pretty printed only as necessary.
 -/
 unsafe def trace_hooks (n : ℕ) : tactic ((expr → tactic Unit) × tactic Unit) :=
@@ -140,8 +136,7 @@ unsafe def trace_hooks (n : ℕ) : tactic ((expr → tactic Unit) × tactic Unit
     return (on_success g n, on_failure g n)
   else return (fun _ => skip, skip)
 
-/-- 
-The internal implementation of `solve_by_elim`, with a limiting counter.
+/-- The internal implementation of `solve_by_elim`, with a limiting counter.
 -/
 unsafe def solve_by_elim_aux (opt : basic_opt) (original_goals : List expr) (lemmas : List (tactic expr))
     (ctx : tactic (List expr)) : ℕ → tactic Unit
@@ -156,8 +151,7 @@ unsafe def solve_by_elim_aux (opt : basic_opt) (original_goals : List expr) (lem
               on_failure <|>
             opt.discharger >> solve_by_elim_aux (n - 1)
 
-/-- 
-Arguments for `solve_by_elim`:
+/-- Arguments for `solve_by_elim`:
 * By default `solve_by_elim` operates only on the first goal,
   but with `backtrack_all_goals := true`, it operates on all goals at once,
   backtracking across goals as needed,
@@ -178,8 +172,7 @@ unsafe structure opt extends basic_opt where
   lemma_thunks : Option (List (tactic expr)) := lemmas.map fun l => l.map return
   ctx_thunk : tactic (List expr) := local_context
 
-/-- 
-If no lemmas have been specified, generate the default set
+/-- If no lemmas have been specified, generate the default set
 (local hypotheses, along with `rfl`, `trivial`, `congr_arg`, and `congr_fun`).
 -/
 unsafe def opt.get_lemma_thunks (opt : opt) : tactic (List (tactic expr) × tactic (List expr)) :=
@@ -191,8 +184,7 @@ end SolveByElim
 
 open SolveByElim
 
-/-- 
-`solve_by_elim` repeatedly tries `apply`ing a lemma
+/-- `solve_by_elim` repeatedly tries `apply`ing a lemma
 from the list of assumptions (passed via the `opt` argument),
 recursively operating on any generated subgoals, backtracking as necessary.
 
@@ -232,8 +224,7 @@ setup_tactic_parser
 
 namespace Interactive
 
-/-- 
-`apply_assumption` looks for an assumption of the form `... → ∀ _, ... → head`
+/-- `apply_assumption` looks for an assumption of the form `... → ∀ _, ... → head`
 where `head` matches the current goal.
 
 If this fails, `apply_assumption` will call `symmetry` and try again.
@@ -260,8 +251,8 @@ add_tactic_doc
   { Name := "apply_assumption", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_assumption],
     tags := ["context management", "lemma application"] }
 
-/-- 
-`solve_by_elim` calls `apply` on the main goal to find an assumption whose head matches
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+/-- `solve_by_elim` calls `apply` on the main goal to find an assumption whose head matches
 and then repeatedly calls `apply` on the generated subgoals until no subgoals remain,
 performing at most `max_depth` recursive steps.
 
@@ -297,7 +288,7 @@ optional arguments passed via a configuration argument as `solve_by_elim { ... }
     or filtering complete results
     (by testing for the absence of metavariables, and then the filtering condition).
 -/
-unsafe def solve_by_elim (all_goals : parse $ (tk "*")?) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
+unsafe def solve_by_elim (all_goals : parse $ «expr ?» (tk "*")) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
     (attr_names : parse with_ident_list) (opt : solve_by_elim.opt := {  }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set no_dflt hs attr_names
   tactic.solve_by_elim

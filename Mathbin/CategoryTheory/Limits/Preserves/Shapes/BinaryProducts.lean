@@ -30,8 +30,7 @@ section
 
 variable {P X Y Z : C} (f : P ⟶ X) (g : P ⟶ Y)
 
-/-- 
-The map of a binary fan is a limit iff the fork consisting of the mapped morphisms is a limit. This
+/-- The map of a binary fan is a limit iff the fork consisting of the mapped morphisms is a limit. This
 essentially lets us commute `binary_fan.mk` with `functor.map_cone`.
 -/
 def is_limit_map_cone_binary_fan_equiv :
@@ -43,20 +42,19 @@ def is_limit_map_cone_binary_fan_equiv :
           rintro (_ | _)
           tidy)))
 
-/--  The property of preserving products expressed in terms of binary fans. -/
+/-- The property of preserving products expressed in terms of binary fans. -/
 def map_is_limit_of_preserves_of_is_limit [preserves_limit (pair X Y) G] (l : is_limit (binary_fan.mk f g)) :
     is_limit (binary_fan.mk (G.map f) (G.map g)) :=
   is_limit_map_cone_binary_fan_equiv G f g (preserves_limit.preserves l)
 
-/--  The property of reflecting products expressed in terms of binary fans. -/
+/-- The property of reflecting products expressed in terms of binary fans. -/
 def is_limit_of_reflects_of_map_is_limit [reflects_limit (pair X Y) G]
     (l : is_limit (binary_fan.mk (G.map f) (G.map g))) : is_limit (binary_fan.mk f g) :=
   reflects_limit.reflects ((is_limit_map_cone_binary_fan_equiv G f g).symm l)
 
 variable (X Y) [has_binary_product X Y]
 
-/-- 
-If `G` preserves binary products and `C` has them, then the binary fan constructed of the mapped
+/-- If `G` preserves binary products and `C` has them, then the binary fan constructed of the mapped
 morphisms of the binary product cone is a limit.
 -/
 def is_limit_of_has_binary_product_of_preserves_limit [preserves_limit (pair X Y) G] :
@@ -65,8 +63,7 @@ def is_limit_of_has_binary_product_of_preserves_limit [preserves_limit (pair X Y
 
 variable [has_binary_product (G.obj X) (G.obj Y)]
 
-/-- 
-If the product comparison map for `G` at `(X,Y)` is an isomorphism, then `G` preserves the
+/-- If the product comparison map for `G` at `(X,Y)` is an isomorphism, then `G` preserves the
 pair of `(X,Y)`.
 -/
 def preserves_limit_pair.of_iso_prod_comparison [i : is_iso (prod_comparison G X Y)] : preserves_limit (pair X Y) G :=
@@ -78,8 +75,7 @@ def preserves_limit_pair.of_iso_prod_comparison [i : is_iso (prod_comparison G X
 
 variable [preserves_limit (pair X Y) G]
 
-/-- 
-If `G` preserves the product of `(X,Y)`, then the product comparison map for `G` at `(X,Y)` is
+/-- If `G` preserves the product of `(X,Y)`, then the product comparison map for `G` at `(X,Y)` is
 an isomorphism.
 -/
 def preserves_limit_pair.iso : G.obj (X ⨯ Y) ≅ G.obj X ⨯ G.obj Y :=
@@ -99,8 +95,7 @@ section
 
 variable {P X Y Z : C} (f : X ⟶ P) (g : Y ⟶ P)
 
-/-- 
-The map of a binary cofan is a colimit iff
+/-- The map of a binary cofan is a colimit iff
 the cofork consisting of the mapped morphisms is a colimit.
 This essentially lets us commute `binary_cofan.mk` with `functor.map_cocone`.
 -/
@@ -113,20 +108,19 @@ def is_colimit_map_cocone_binary_cofan_equiv :
           rintro (_ | _)
           tidy)))
 
-/--  The property of preserving coproducts expressed in terms of binary cofans. -/
+/-- The property of preserving coproducts expressed in terms of binary cofans. -/
 def map_is_colimit_of_preserves_of_is_colimit [preserves_colimit (pair X Y) G] (l : is_colimit (binary_cofan.mk f g)) :
     is_colimit (binary_cofan.mk (G.map f) (G.map g)) :=
   is_colimit_map_cocone_binary_cofan_equiv G f g (preserves_colimit.preserves l)
 
-/--  The property of reflecting coproducts expressed in terms of binary cofans. -/
+/-- The property of reflecting coproducts expressed in terms of binary cofans. -/
 def is_colimit_of_reflects_of_map_is_colimit [reflects_colimit (pair X Y) G]
     (l : is_colimit (binary_cofan.mk (G.map f) (G.map g))) : is_colimit (binary_cofan.mk f g) :=
   reflects_colimit.reflects ((is_colimit_map_cocone_binary_cofan_equiv G f g).symm l)
 
 variable (X Y) [has_binary_coproduct X Y]
 
-/-- 
-If `G` preserves binary coproducts and `C` has them, then the binary cofan constructed of the mapped
+/-- If `G` preserves binary coproducts and `C` has them, then the binary cofan constructed of the mapped
 morphisms of the binary product cocone is a colimit.
 -/
 def is_colimit_of_has_binary_coproduct_of_preserves_colimit [preserves_colimit (pair X Y) G] :
@@ -135,8 +129,7 @@ def is_colimit_of_has_binary_coproduct_of_preserves_colimit [preserves_colimit (
 
 variable [has_binary_coproduct (G.obj X) (G.obj Y)]
 
-/-- 
-If the coproduct comparison map for `G` at `(X,Y)` is an isomorphism, then `G` preserves the
+/-- If the coproduct comparison map for `G` at `(X,Y)` is an isomorphism, then `G` preserves the
 pair of `(X,Y)`.
 -/
 def preserves_colimit_pair.of_iso_coprod_comparison [i : is_iso (coprod_comparison G X Y)] :
@@ -148,8 +141,7 @@ def preserves_colimit_pair.of_iso_coprod_comparison [i : is_iso (coprod_comparis
 
 variable [preserves_colimit (pair X Y) G]
 
-/-- 
-If `G` preserves the coproduct of `(X,Y)`, then the coproduct comparison map for `G` at `(X,Y)` is
+/-- If `G` preserves the coproduct of `(X,Y)`, then the coproduct comparison map for `G` at `(X,Y)` is
 an isomorphism.
 -/
 def preserves_colimit_pair.iso : G.obj X ⨿ G.obj Y ≅ G.obj (X ⨿ Y) :=

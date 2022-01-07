@@ -22,11 +22,11 @@ variable (J : Type u₁) [category.{v₁} J]
 
 variable {C : Type u₂} [category.{v₂} C]
 
-/-- 
-The functor sending `X : C` to the constant functor `J ⥤ C` sending everything to `X`.
+/-- The functor sending `X : C` to the constant functor `J ⥤ C` sending everything to `X`.
 -/
-def const : C ⥤ J ⥤ C :=
-  { obj := fun X => { obj := fun j => X, map := fun j j' f => 𝟙 X }, map := fun X Y f => { app := fun j => f } }
+def const : C ⥤ J ⥤ C where
+  obj := fun X => { obj := fun j => X, map := fun j j' f => 𝟙 X }
+  map := fun X Y f => { app := fun j => f }
 
 namespace Const
 
@@ -46,12 +46,12 @@ theorem obj_map (X : C) {j j' : J} (f : j ⟶ j') : ((const J).obj X).map f = �
 theorem map_app {X Y : C} (f : X ⟶ Y) (j : J) : ((const J).map f).app j = f :=
   rfl
 
-/-- 
-The contant functor `Jᵒᵖ ⥤ Cᵒᵖ` sending everything to `op X`
+/-- The contant functor `Jᵒᵖ ⥤ Cᵒᵖ` sending everything to `op X`
 is (naturally isomorphic to) the opposite of the constant functor `J ⥤ C` sending everything to `X`.
 -/
-def op_obj_op (X : C) : (const (Jᵒᵖ)).obj (op X) ≅ ((const J).obj X).op :=
-  { Hom := { app := fun j => 𝟙 _ }, inv := { app := fun j => 𝟙 _ } }
+def op_obj_op (X : C) : (const (Jᵒᵖ)).obj (op X) ≅ ((const J).obj X).op where
+  Hom := { app := fun j => 𝟙 _ }
+  inv := { app := fun j => 𝟙 _ }
 
 @[simp]
 theorem op_obj_op_hom_app (X : C) (j : Jᵒᵖ) : (op_obj_op X).Hom.app j = 𝟙 _ :=
@@ -61,13 +61,13 @@ theorem op_obj_op_hom_app (X : C) (j : Jᵒᵖ) : (op_obj_op X).Hom.app j = 𝟙
 theorem op_obj_op_inv_app (X : C) (j : Jᵒᵖ) : (op_obj_op X).inv.app j = 𝟙 _ :=
   rfl
 
-/-- 
-The contant functor `Jᵒᵖ ⥤ C` sending everything to `unop X`
+/-- The contant functor `Jᵒᵖ ⥤ C` sending everything to `unop X`
 is (naturally isomorphic to) the opposite of
 the constant functor `J ⥤ Cᵒᵖ` sending everything to `X`.
 -/
-def op_obj_unop (X : Cᵒᵖ) : (const (Jᵒᵖ)).obj (unop X) ≅ ((const J).obj X).leftOp :=
-  { Hom := { app := fun j => 𝟙 _ }, inv := { app := fun j => 𝟙 _ } }
+def op_obj_unop (X : Cᵒᵖ) : (const (Jᵒᵖ)).obj (unop X) ≅ ((const J).obj X).leftOp where
+  Hom := { app := fun j => 𝟙 _ }
+  inv := { app := fun j => 𝟙 _ }
 
 @[simp]
 theorem op_obj_unop_hom_app (X : Cᵒᵖ) (j : Jᵒᵖ) : (op_obj_unop.{v₁, v₂} X).Hom.app j = 𝟙 _ :=
@@ -88,18 +88,17 @@ section
 
 variable {D : Type u₃} [category.{v₃} D]
 
-/--  These are actually equal, of course, but not definitionally equal
+/-- These are actually equal, of course, but not definitionally equal
   (the equality requires F.map (𝟙 _) = 𝟙 _). A natural isomorphism is
   more convenient than an equality between functors (compare id_to_iso). -/
 @[simps]
-def const_comp (X : C) (F : C ⥤ D) : (const J).obj X ⋙ F ≅ (const J).obj (F.obj X) :=
-  { Hom := { app := fun _ => 𝟙 _ }, inv := { app := fun _ => 𝟙 _ } }
+def const_comp (X : C) (F : C ⥤ D) : (const J).obj X ⋙ F ≅ (const J).obj (F.obj X) where
+  Hom := { app := fun _ => 𝟙 _ }
+  inv := { app := fun _ => 𝟙 _ }
 
--- failed to format: format: uncaught backtrack exception
 /-- If `J` is nonempty, then the constant functor over `J` is faithful. -/
-  instance
-    [ Nonempty J ] : faithful ( const J : C ⥤ J ⥤ C )
-    where map_injective' X Y f g e := nat_trans.congr_app e ( Classical.arbitrary J )
+instance [Nonempty J] : faithful (const J : C ⥤ J ⥤ C) where
+  map_injective' := fun X Y f g e => nat_trans.congr_app e (Classical.arbitrary J)
 
 end
 

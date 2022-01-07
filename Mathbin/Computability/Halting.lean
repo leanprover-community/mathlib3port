@@ -29,34 +29,34 @@ theorem merge' {f g} (hf : Nat.Partrec f) (hg : Nat.Partrec g) :
   refine' ⟨_, this, fun n => _⟩
   suffices
   refine' ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩
-  ·
-    intro h
+  · intro h
     rw [Nat.rfind_opt_dom]
     simp only [dom_iff_mem, code.evaln_complete, Option.mem_def] at h
     obtain ⟨x, k, e⟩ | ⟨x, k, e⟩ := h
-    ·
-      refine' ⟨k, x, _⟩
+    · refine' ⟨k, x, _⟩
       simp only [e, Option.some_orelse, Option.mem_def]
-    ·
-      refine' ⟨k, _⟩
+      
+    · refine' ⟨k, _⟩
       cases' cf.evaln k n with y
-      ·
-        exact
+      · exact
           ⟨x, by
             simp only [e, Option.mem_def, Option.none_orelseₓ]⟩
-      ·
-        exact
+        
+      · exact
           ⟨y, by
             simp only [Option.some_orelse, Option.mem_def]⟩
+        
+      
+    
   intro x h
   obtain ⟨k, e⟩ := Nat.rfind_opt_spec h
   revert e
   simp only [Option.mem_def] <;> cases' e' : cf.evaln k n with y <;> simp <;> intro
-  ·
-    exact Or.inr (code.evaln_sound e)
-  ·
-    subst y
+  · exact Or.inr (code.evaln_sound e)
+    
+  · subst y
     exact Or.inl (code.evaln_sound e')
+    
 
 end Nat.Partrec
 
@@ -73,15 +73,13 @@ open nat.partrec (code)
 open Nat.Partrec.Code
 
 theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
-    ∃ k : α →. σ, Partrec k ∧ ∀ a, (∀, ∀ x ∈ k a, ∀, x ∈ f a ∨ x ∈ g a) ∧ ((k a).Dom ↔ (f a).Dom ∨ (g a).Dom) :=
+    ∃ k : α →. σ, Partrec k ∧ ∀ a, (∀, ∀ x ∈ k a, ∀, x ∈ f a ∨ x ∈ g a) ∧ ((k a).Dom ↔ (f a).Dom ∨ (g a).Dom) := by
   let ⟨k, hk, H⟩ := Nat.Partrec.merge' (bind_decode₂_iff.1 hf) (bind_decode₂_iff.1 hg)
-  by
   let k' := fun a => (k (encode a)).bind fun n => decode σ n
   refine' ⟨k', ((nat_iff.2 hk).comp Computable.encode).bind (computable.decode.of_option.comp snd).to₂, fun a => _⟩
   suffices
   refine' ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩
-  ·
-    intro h
+  · intro h
     rw [bind_dom]
     have hk : (k (encode a)).Dom :=
       (H _).2.2
@@ -90,16 +88,17 @@ theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
     exists hk
     simp only [exists_prop, mem_map_iff, mem_coe, mem_bind_iff, Option.mem_def] at H
     obtain ⟨a', ha', y, hy, e⟩ | ⟨a', ha', y, hy, e⟩ := (H _).1 _ ⟨hk, rfl⟩ <;>
-      ·
-        simp only [e.symm, encodek]
+      · simp only [e.symm, encodek]
+        
+    
   intro x h'
   simp only [k', exists_prop, mem_coe, mem_bind_iff, Option.mem_def] at h'
   obtain ⟨n, hn, hx⟩ := h'
   have := (H _).1 _ hn
   simp [mem_decode₂, encode_injective.eq_iff] at this
   obtain ⟨a', ha, rfl⟩ | ⟨a', ha, rfl⟩ := this <;> simp only [encodek] at hx <;> rw [hx] at ha
-  ·
-    exact Or.inl ha
+  · exact Or.inl ha
+    
   exact Or.inr ha
 
 theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) (H : ∀ a, ∀ x ∈ f a, ∀, ∀ y ∈ g a, ∀, x = y) :
@@ -110,14 +109,14 @@ theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) (H : ∀ a, �
       have : (k a).Dom := (K _).2.2 (h.imp Exists.fst Exists.fst)
       refine' ⟨this, _⟩
       cases' h with h h <;> cases' (K _).1 _ ⟨this, rfl⟩ with h' h'
-      ·
-        exact mem_unique h' h
-      ·
-        exact (H _ _ h _ h').symm
-      ·
-        exact H _ _ h' _ h
-      ·
-        exact mem_unique h' h⟩⟩
+      · exact mem_unique h' h
+        
+      · exact (H _ _ h _ h').symm
+        
+      · exact H _ _ h' _ h
+        
+      · exact mem_unique h' h
+        ⟩⟩
 
 theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computable c) (hf : Partrec f) (hg : Partrec g) :
     Partrec fun a => cond (c a) (f a) (g a) :=
@@ -139,12 +138,11 @@ theorem sum_cases {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ 
 
 end Partrec
 
-/--  A computable predicate is one whose indicator function is computable. -/
+/-- A computable predicate is one whose indicator function is computable. -/
 def ComputablePred {α} [Primcodable α] (p : α → Prop) :=
-  ∃ D : DecidablePred p, by
-    exact Computable fun a => to_bool (p a)
+  ∃ D : DecidablePred p, Computable fun a => to_bool (p a)
 
-/--  A recursively enumerable predicate is one which is the domain of a computable partial function.
+/-- A recursively enumerable predicate is one which is the domain of a computable partial function.
  -/
 def RePred {α} [Primcodable α] (p : α → Prop) :=
   Partrec fun a => Part.assert (p a) fun _ => Part.some ()
@@ -172,8 +170,7 @@ open nat.partrec (code)
 open Nat.Partrec.Code Computable
 
 theorem computable_iff {p : α → Prop} : ComputablePred p ↔ ∃ f : α → Bool, Computable f ∧ p = fun a => f a :=
-  ⟨fun ⟨D, h⟩ => by
-    exact ⟨_, h, funext $ fun a => propext (to_bool_iff _).symm⟩, by
+  ⟨fun ⟨D, h⟩ => ⟨_, h, funext $ fun a => propext (to_bool_iff _).symm⟩, by
     rintro ⟨f, h, rfl⟩ <;>
       exact
         ⟨by
@@ -205,13 +202,13 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
       (Partrec.cond (h.comp fst) ((Partrec.nat_iff.2 hg).comp snd).to₂ ((Partrec.nat_iff.2 hf).comp snd).to₂).to₂
   simp at e
   by_cases' H : eval c ∈ C
-  ·
-    simp only [H, if_true] at e
+  · simp only [H, if_true] at e
     rwa [← e]
-  ·
-    simp only [H, if_false] at e
+    
+  · simp only [H, if_false] at e
     rw [e] at H
     contradiction
+    
 
 theorem rice₂ (C : Set code) (H : ∀ cf cg, eval cf = eval cg → (cf ∈ C ↔ cg ∈ C)) :
     (ComputablePred fun c => c ∈ C) ↔ C = ∅ ∨ C = Set.Univ := by
@@ -235,156 +232,8 @@ theorem rice₂ (C : Set code) (H : ∀ cf cg, eval cf = eval cg → (cf ∈ C �
 theorem halting_problem_re n : RePred fun c => (eval c n).Dom :=
   (eval_part.comp Computable.id (Computable.const _)).dom_re
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `halting_problem [])
-  (Command.declSig
-   [(Term.simpleBinder [`n] [])]
-   (Term.typeSpec
-    ":"
-    («term¬_»
-     "¬"
-     (Term.app
-      `ComputablePred
-      [(Term.fun
-        "fun"
-        (Term.basicFun [(Term.simpleBinder [`c] [])] "=>" (Term.proj (Term.app `eval [`c `n]) "." `Dom)))]))))
-  (Command.declValEqns
-   (Term.matchAltsWhereDecls
-    (Term.matchAlts
-     [(Term.matchAlt
-       "|"
-       [`h]
-       "=>"
-       (Term.app
-        `rice
-        [(Set.«term{_|_}» "{" `f "|" (Term.proj (Term.app `f [`n]) "." `Dom) "}")
-         `h
-         `Nat.Partrec.zero
-         `Nat.Partrec.none
-         `trivialₓ]))])
-    []))
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAltsWhereDecls', expected 'Lean.Parser.Term.matchAltsWhereDecls.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlts', expected 'Lean.Parser.Term.matchAlts.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'Lean.Parser.Term.matchAlt.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app
-   `rice
-   [(Set.«term{_|_}» "{" `f "|" (Term.proj (Term.app `f [`n]) "." `Dom) "}")
-    `h
-    `Nat.Partrec.zero
-    `Nat.Partrec.none
-    `trivialₓ])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `trivialₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `Nat.Partrec.none
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `Nat.Partrec.zero
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `h
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Set.«term{_|_}» "{" `f "|" (Term.proj (Term.app `f [`n]) "." `Dom) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.proj (Term.app `f [`n]) "." `Dom)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `f [`n])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `f [`n]) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  halting_problem
-  n : ¬ ComputablePred fun c => eval c n . Dom
-  | h => rice { f | f n . Dom } h Nat.Partrec.zero Nat.Partrec.none trivialₓ
+theorem halting_problem n : ¬ComputablePred fun c => (eval c n).Dom
+  | h => rice { f | (f n).Dom } h Nat.Partrec.zero Nat.Partrec.none trivialₓ
 
 @[nolint decidable_classical]
 theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
@@ -392,15 +241,15 @@ theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
   ⟨fun h => ⟨h.to_re, h.not.to_re⟩, fun ⟨h₁, h₂⟩ =>
     ⟨‹_›, by
       obtain ⟨k, pk, hk⟩ := Partrec.merge (h₁.map (Computable.const tt).to₂) (h₂.map (Computable.const ff).to₂) _
-      ·
-        refine' Partrec.of_eq pk fun n => Part.eq_some_iff.2 _
+      · refine' Partrec.of_eq pk fun n => Part.eq_some_iff.2 _
         rw [hk]
         simp
         apply Decidable.em
-      ·
-        intro a x hx y hy
+        
+      · intro a x hx y hy
         simp at hx hy
-        cases hy.1 hx.1⟩⟩
+        cases hy.1 hx.1
+        ⟩⟩
 
 theorem computable_iff_re_compl_re' {p : α → Prop} : ComputablePred p ↔ RePred p ∧ RePred fun a => ¬p a := by
   classical <;> exact computable_iff_re_compl_re
@@ -414,12 +263,12 @@ namespace Nat
 
 open Vector Part
 
-/--  A simplified basis for `partrec`. -/
+/-- A simplified basis for `partrec`. -/
 inductive partrec' : ∀ {n}, (Vector ℕ n →. ℕ) → Prop
   | prim {n f} : @primrec' n f → @partrec' n f
   | comp {m n f} (g : Finₓ n → Vector ℕ m →. ℕ) :
     partrec' f → (∀ i, partrec' (g i)) → partrec' fun v => (m_of_fn fun i => g i v) >>= f
-  | rfind {n} {f : Vector ℕ (n+1) → ℕ} : @partrec' (n+1) f → partrec' fun v => rfind fun n => some (f (n::ᵥv) = 0)
+  | rfind {n} {f : Vector ℕ (n + 1) → ℕ} : @partrec' (n + 1) f → partrec' fun v => rfind fun n => some (f (n::ᵥv) = 0)
 
 end Nat
 
@@ -455,19 +304,19 @@ theorem tail {n f} (hf : @partrec' n f) : @partrec' n.succ fun v => f v.tail :=
   (hf.comp _ fun i => @prim _ _ $ Nat.Primrec'.nth i.succ).of_eq $ fun v => by
     simp <;> rw [← of_fn_nth v.tail] <;> congr <;> funext i <;> simp
 
-protected theorem bind {n f g} (hf : @partrec' n f) (hg : @partrec' (n+1) g) :
+protected theorem bind {n f g} (hf : @partrec' n f) (hg : @partrec' (n + 1) g) :
     @partrec' n fun v => (f v).bind fun a => g (a::ᵥv) :=
-  (@comp n (n+1) g (fun i => Finₓ.cases f (fun i v => some (v.nth i)) i) hg fun i => by
-        refine' Finₓ.cases _ (fun i => _) i <;> simp
+  (@comp n (n + 1) g (fun i => Finₓ.cases f (fun i v => some (v.nth i)) i) hg fun i => by
+        refine' Finₓ.cases _ (fun i => _) i <;> simp [*]
         exact prim (Nat.Primrec'.nth _)).of_eq $
     fun v => by
     simp [m_of_fn, Part.bind_assoc, pure]
 
-protected theorem map {n f} {g : Vector ℕ (n+1) → ℕ} (hf : @partrec' n f) (hg : @partrec' (n+1) g) :
+protected theorem map {n f} {g : Vector ℕ (n + 1) → ℕ} (hf : @partrec' n f) (hg : @partrec' (n + 1) g) :
     @partrec' n fun v => (f v).map fun a => g (a::ᵥv) := by
   simp [(Part.bind_some_eq_map _ _).symm] <;> exact hf.bind hg
 
-/--  Analogous to `nat.partrec'` for `ℕ`-valued functions, a predicate for partial recursive
+/-- Analogous to `nat.partrec'` for `ℕ`-valued functions, a predicate for partial recursive
   vector-valued functions.-/
 def vec {n m} (f : Vector ℕ n → Vector ℕ m) :=
   ∀ i, partrec' fun v => (f v).nth i
@@ -480,7 +329,7 @@ protected theorem cons {n m} {f : Vector ℕ n → ℕ} {g} (hf : @partrec' n f)
   fun i =>
   Finₓ.cases
     (by
-      simp )
+      simp [*])
     (fun i => by
       simp only [hg i, nth_cons_succ])
     i
@@ -496,7 +345,7 @@ theorem comp₁ {n} (f : ℕ →. ℕ) {g : Vector ℕ n → ℕ} (hf : @partrec
     @partrec' n fun v => f (g v) := by
   simpa using hf.comp' (partrec'.cons hg partrec'.nil)
 
-theorem rfind_opt {n} {f : Vector ℕ (n+1) → ℕ} (hf : @partrec' (n+1) f) :
+theorem rfind_opt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @partrec' (n + 1) f) :
     @partrec' n fun v => Nat.rfindOpt fun a => of_nat (Option ℕ) (f (a::ᵥv)) :=
   ((rfind $
             (of_prim (Primrec.nat_sub.comp (Primrec.const 1) Primrec.vector_head)).comp₁ (fun n => Part.some (1 - n))
@@ -507,19 +356,19 @@ theorem rfind_opt {n} {f : Vector ℕ (n+1) → ℕ} (hf : @partrec' (n+1) f) :
       simp only [Nat.rfindOpt, exists_prop, tsub_eq_zero_iff_le, Pfun.coe_val, Part.mem_bind_iff, Part.mem_some_iff,
         Option.mem_def, Part.mem_coe]
       refine' exists_congr fun a => (and_congr (iff_of_eq _) Iff.rfl).trans (and_congr_right fun h => _)
-      ·
-        congr
+      · congr
         funext n
         simp only [Part.some_inj, Pfun.coe_val]
         cases f (n::ᵥv) <;> simp [Nat.succ_le_succₓ] <;> rfl
-      ·
-        have := Nat.rfind_spec h
+        
+      · have := Nat.rfind_spec h
         simp only [Pfun.coe_val, Part.mem_some_iff] at this
         cases' f (a::ᵥv) with c
-        ·
-          cases this
+        · cases this
+          
         rw [← Option.some_inj, eq_comm]
         rfl
+        
 
 open Nat.Partrec.Code
 

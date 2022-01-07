@@ -12,12 +12,15 @@ universe u
 
 namespace AddCommGroupₓₓ
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : preadditive AddCommGroupₓₓ
-  where
-    add_comp' P Q R f f' g := show ( f + f' ) ≫ g = ( f ≫ g ) + f' ≫ g by ext simp
-      comp_add' P Q R f g g' := show ( f ≫ g + g' ) = ( f ≫ g ) + f ≫ g' by ext simp
+instance : preadditive AddCommGroupₓₓ where
+  add_comp' := fun P Q R f f' g =>
+    show (f + f') ≫ g = f ≫ g + f' ≫ g by
+      ext
+      simp
+  comp_add' := fun P Q R f g g' =>
+    show f ≫ (g + g') = f ≫ g + f ≫ g' by
+      ext
+      simp
 
 end AddCommGroupₓₓ
 

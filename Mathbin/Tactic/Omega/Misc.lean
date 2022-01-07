@@ -15,7 +15,7 @@ theorem pred_mono_2' {c : Prop → Prop → Prop} {a1 a2 b1 b2 : Prop} : (a1 ↔
   fun h1 h2 => by
   rw [h1, h2]
 
-/--  Update variable assignment for a specific variable
+/-- Update variable assignment for a specific variable
     and leave everything else unchanged -/
 def update (m : Nat) (a : α) (v : Nat → α) : Nat → α
   | n => if n = m then a else v n
@@ -30,31 +30,31 @@ theorem update_eq_of_ne {m : Nat} {a : α} {v : Nat → α} (k : Nat) : k ≠ m 
   unfold update
   rw [if_neg h1]
 
-/--  Assign a new value to the zeroth variable, and push all
+/-- Assign a new value to the zeroth variable, and push all
     other assignments up by 1 -/
 def update_zero (a : α) (v : Nat → α) : Nat → α
   | 0 => a
-  | k+1 => v k
+  | k + 1 => v k
 
 open Tactic
 
-/--  Intro with a fresh name -/
+/-- Intro with a fresh name -/
 unsafe def intro_fresh : tactic Unit := do
   let n ← mk_fresh_name
   intro n
   skip
 
-/--  Revert an expr if it passes the given test -/
+/-- Revert an expr if it passes the given test -/
 unsafe def revert_cond (t : expr → tactic Unit) (x : expr) : tactic Unit :=
   t x >> revert x >> skip <|> skip
 
-/--  Revert all exprs in the context that pass the given test -/
+/-- Revert all exprs in the context that pass the given test -/
 unsafe def revert_cond_all (t : expr → tactic Unit) : tactic Unit := do
   let hs ← local_context
   mmap (revert_cond t) hs
   skip
 
-/--  Try applying a tactic to each of the element in a list
+/-- Try applying a tactic to each of the element in a list
     until success, and return the first successful result -/
 unsafe def app_first {α β : Type} (t : α → tactic β) : List α → tactic β
   | [] => failed

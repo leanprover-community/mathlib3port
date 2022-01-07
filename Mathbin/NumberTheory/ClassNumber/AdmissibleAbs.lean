@@ -18,7 +18,7 @@ namespace AbsoluteValue
 
 open Int
 
-/--  We can partition a finite family into `partition_card ε` sets, such that the remainders
+/-- We can partition a finite family into `partition_card ε` sets, such that the remainders
 in each set are close together. -/
 theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb : b ≠ 0) (A : Finₓ n → ℤ) :
     ∃ t : Finₓ n → Finₓ ⌈1 / ε⌉₊, ∀ i₀ i₁, t i₀ = t i₁ → ↑abs (A i₁ % b - A i₀ % b) < abs b • ε := by
@@ -30,12 +30,12 @@ theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb :
     intro i
     exact floor_nonneg.mpr (div_nonneg (cast_nonneg.mpr (mod_nonneg _ hb)) hbε.le)
   refine' ⟨fun i => ⟨nat_abs (floor ((A i % b : ℤ) / abs b • ε : ℝ)), _⟩, _⟩
-  ·
-    rw [← coe_nat_lt, nat_abs_of_nonneg (hfloor i), floor_lt]
+  · rw [← coe_nat_lt, nat_abs_of_nonneg (hfloor i), floor_lt]
     apply lt_of_lt_of_leₓ _ (Nat.le_ceil _)
     rw [Algebra.smul_def, RingHom.eq_int_cast, ← div_div_eq_div_mul, div_lt_div_right hε, div_lt_iff hb', one_mulₓ,
       cast_lt]
     exact Int.mod_lt _ hb
+    
   intro i₀ i₁ hi
   have hi : (⌊↑(A i₀ % b) / abs b • ε⌋.natAbs : ℤ) = ⌊↑(A i₁ % b) / abs b • ε⌋.natAbs :=
     congr_argₓ (coeₓ : ℕ → ℤ) (subtype.mk_eq_mk.mp hi)
@@ -44,7 +44,7 @@ theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb :
   rw [abs_sub_comm, ← sub_div, abs_div, abs_of_nonneg hbε.le, div_lt_iff hbε, one_mulₓ] at hi
   rwa [Int.cast_abs, Int.cast_sub]
 
-/--  `abs : ℤ → ℤ` is an admissible absolute value -/
+/-- `abs : ℤ → ℤ` is an admissible absolute value -/
 noncomputable def abs_is_admissible : is_admissible AbsoluteValue.abs :=
   { AbsoluteValue.abs_is_euclidean with card := fun ε => ⌈1 / ε⌉₊,
     exists_partition' := fun n ε hε b hb => exists_partition_int n hε hb }

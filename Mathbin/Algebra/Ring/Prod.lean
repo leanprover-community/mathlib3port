@@ -20,36 +20,39 @@ variable {R : Type _} {R' : Type _} {S : Type _} {S' : Type _} {T : Type _} {T' 
 
 namespace Prod
 
-/--  Product of two distributive types is distributive. -/
+/-- Product of two distributive types is distributive. -/
 instance [Distrib R] [Distrib S] : Distrib (R × S) :=
   { Prod.hasAdd, Prod.hasMul with left_distrib := fun a b c => mk.inj_iff.mpr ⟨left_distrib _ _ _, left_distrib _ _ _⟩,
     right_distrib := fun a b c => mk.inj_iff.mpr ⟨right_distrib _ _ _, right_distrib _ _ _⟩ }
 
-/--  Product of two `non_unital_non_assoc_semiring`s is a `non_unital_non_assoc_semiring`. -/
+/-- Product of two `non_unital_non_assoc_semiring`s is a `non_unital_non_assoc_semiring`. -/
 instance [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S] : NonUnitalNonAssocSemiring (R × S) :=
   { Prod.addCommMonoid, Prod.mulZeroClass, Prod.distrib with }
 
-/--  Product of two `non_unital_semiring`s is a `non_unital_semiring`. -/
+/-- Product of two `non_unital_semiring`s is a `non_unital_semiring`. -/
 instance [NonUnitalSemiring R] [NonUnitalSemiring S] : NonUnitalSemiring (R × S) :=
   { Prod.nonUnitalNonAssocSemiring, Prod.semigroup with }
 
-/--  Product of two `non_assoc_semiring`s is a `non_assoc_semiring`. -/
+/-- Product of two `non_assoc_semiring`s is a `non_assoc_semiring`. -/
 instance [NonAssocSemiring R] [NonAssocSemiring S] : NonAssocSemiring (R × S) :=
   { Prod.nonUnitalNonAssocSemiring, Prod.mulOneClass with }
 
-/--  Product of two semirings is a semiring. -/
+/-- Product of two semirings is a semiring. -/
 instance [Semiringₓ R] [Semiringₓ S] : Semiringₓ (R × S) :=
   { Prod.addCommMonoid, Prod.monoidWithZero, Prod.distrib with }
 
-/--  Product of two commutative semirings is a commutative semiring. -/
+/-- Product of two commutative semirings is a commutative semiring. -/
 instance [CommSemiringₓ R] [CommSemiringₓ S] : CommSemiringₓ (R × S) :=
   { Prod.semiring, Prod.commMonoid with }
 
-/--  Product of two rings is a ring. -/
+instance [NonUnitalNonAssocRing R] [NonUnitalNonAssocRing S] : NonUnitalNonAssocRing (R × S) :=
+  { Prod.addCommGroup, Prod.nonUnitalNonAssocSemiring with }
+
+/-- Product of two rings is a ring. -/
 instance [Ringₓ R] [Ringₓ S] : Ringₓ (R × S) :=
   { Prod.addCommGroup, Prod.semiring with }
 
-/--  Product of two commutative rings is a commutative ring. -/
+/-- Product of two commutative rings is a commutative ring. -/
 instance [CommRingₓ R] [CommRingₓ S] : CommRingₓ (R × S) :=
   { Prod.ring, Prod.commMonoid with }
 
@@ -59,11 +62,11 @@ namespace RingHom
 
 variable (R S) [NonAssocSemiring R] [NonAssocSemiring S]
 
-/--  Given semirings `R`, `S`, the natural projection homomorphism from `R × S` to `R`.-/
+/-- Given semirings `R`, `S`, the natural projection homomorphism from `R × S` to `R`.-/
 def fst : R × S →+* R :=
   { MonoidHom.fst R S, AddMonoidHom.fst R S with toFun := Prod.fst }
 
-/--  Given semirings `R`, `S`, the natural projection homomorphism from `R × S` to `S`.-/
+/-- Given semirings `R`, `S`, the natural projection homomorphism from `R × S` to `S`.-/
 def snd : R × S →+* S :=
   { MonoidHom.snd R S, AddMonoidHom.snd R S with toFun := Prod.snd }
 
@@ -81,7 +84,7 @@ section Prod
 
 variable [NonAssocSemiring T] (f : R →+* S) (g : R →+* T)
 
-/--  Combine two ring homomorphisms `f : R →+* S`, `g : R →+* T` into `f.prod g : R →+* S × T`
+/-- Combine two ring homomorphisms `f : R →+* S`, `g : R →+* T` into `f.prod g : R →+* S × T`
 given by `(f.prod g) x = (f x, g x)` -/
 protected def Prod (f : R →+* S) (g : R →+* T) : R →+* S × T :=
   { MonoidHom.prod (f : R →* S) (g : R →* T), AddMonoidHom.prod (f : R →+ S) (g : R →+ T) with
@@ -111,7 +114,7 @@ variable [NonAssocSemiring R'] [NonAssocSemiring S'] [NonAssocSemiring T]
 
 variable (f : R →+* R') (g : S →+* S')
 
-/--  `prod.map` as a `ring_hom`. -/
+/-- `prod.map` as a `ring_hom`. -/
 def prod_mapₓ : R × S →* R' × S' :=
   (f.comp (fst R S)).Prod (g.comp (snd R S))
 
@@ -134,7 +137,7 @@ namespace RingEquiv
 
 variable {R S} [NonAssocSemiring R] [NonAssocSemiring S]
 
-/--  Swapping components as an equivalence of (semi)rings. -/
+/-- Swapping components as an equivalence of (semi)rings. -/
 def prod_comm : R × S ≃+* S × R :=
   { AddEquiv.prodComm, MulEquiv.prodComm with }
 
@@ -156,43 +159,45 @@ theorem snd_comp_coe_prod_comm : (RingHom.snd S R).comp (↑(prod_comm : R × S 
 
 variable (R S) [Subsingleton S]
 
-/--  A ring `R` is isomorphic to `R × S` when `S` is the zero ring -/
+/-- A ring `R` is isomorphic to `R × S` when `S` is the zero ring -/
 @[simps]
-def prod_zero_ring : R ≃+* R × S :=
-  { toFun := fun x => (x, 0), invFun := Prod.fst,
-    map_add' := by
-      simp ,
-    map_mul' := by
-      simp ,
-    left_inv := fun x => rfl,
-    right_inv := fun x => by
-      cases x <;> simp }
+def prod_zero_ring : R ≃+* R × S where
+  toFun := fun x => (x, 0)
+  invFun := Prod.fst
+  map_add' := by
+    simp
+  map_mul' := by
+    simp
+  left_inv := fun x => rfl
+  right_inv := fun x => by
+    cases x <;> simp
 
-/--  A ring `R` is isomorphic to `S × R` when `S` is the zero ring -/
+/-- A ring `R` is isomorphic to `S × R` when `S` is the zero ring -/
 @[simps]
-def zero_ring_prod : R ≃+* S × R :=
-  { toFun := fun x => (0, x), invFun := Prod.snd,
-    map_add' := by
-      simp ,
-    map_mul' := by
-      simp ,
-    left_inv := fun x => rfl,
-    right_inv := fun x => by
-      cases x <;> simp }
+def zero_ring_prod : R ≃+* S × R where
+  toFun := fun x => (0, x)
+  invFun := Prod.snd
+  map_add' := by
+    simp
+  map_mul' := by
+    simp
+  left_inv := fun x => rfl
+  right_inv := fun x => by
+    cases x <;> simp
 
 end RingEquiv
 
-/--  The product of two nontrivial rings is not a domain -/
+/-- The product of two nontrivial rings is not a domain -/
 theorem false_of_nontrivial_of_product_domain (R S : Type _) [Ringₓ R] [Ringₓ S] [IsDomain (R × S)] [Nontrivial R]
     [Nontrivial S] : False := by
   have :=
     IsDomain.eq_zero_or_eq_zero_of_mul_eq_zero
-      (show (((0 : R), (1 : S))*(1, 0)) = 0 by
+      (show ((0 : R), (1 : S)) * (1, 0) = 0 by
         simp )
   rw [Prod.mk_eq_zero, Prod.mk_eq_zero] at this
   rcases this with (⟨_, h⟩ | ⟨h, _⟩)
-  ·
-    exact zero_ne_one h.symm
-  ·
-    exact zero_ne_one h.symm
+  · exact zero_ne_one h.symm
+    
+  · exact zero_ne_one h.symm
+    
 

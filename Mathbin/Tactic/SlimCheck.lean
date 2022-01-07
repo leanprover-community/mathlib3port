@@ -117,11 +117,11 @@ initialize
 
 open Expr
 
-/--  Tree structure representing a `testable` instance. -/
+/-- Tree structure representing a `testable` instance. -/
 unsafe inductive instance_tree
   | node : Name → expr → List instance_tree → instance_tree
 
-/--  Gather information about a `testable` instance. Given
+/-- Gather information about a `testable` instance. Given
 an expression of type `testable ?p`, gather the
 name of the `testable` instances that it is built from
 and the proposition that they test. -/
@@ -136,7 +136,7 @@ unsafe def summarize_instance : expr → tactic instance_tree
   | e => do
     failed
 
-/--  format a `instance_tree` -/
+/-- format a `instance_tree` -/
 unsafe def instance_tree.to_format : instance_tree → tactic format
   | instance_tree.node n p xs => do
     let xs ← format.join <$> (xs.mmap $ fun t => flip format.indent 2 <$> instance_tree.to_format t)
@@ -147,8 +147,7 @@ unsafe def instance_tree.to_format : instance_tree → tactic format
 unsafe instance instance_tree.has_to_tactic_format : has_to_tactic_format instance_tree :=
   ⟨instance_tree.to_format⟩
 
-/-- 
-`slim_check` considers a proof goal and tries to generate examples
+/-- `slim_check` considers a proof goal and tries to generate examples
 that would contradict the statement.
 
 Let's consider the following proof goal.

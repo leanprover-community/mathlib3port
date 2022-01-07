@@ -15,7 +15,7 @@ open_locale Classical
 noncomputable section
 
 instance : ConditionallyCompleteLinearOrder ℤ :=
-  { Int.linearOrder, latticeOfLinearOrder with
+  { Int.linearOrder, LinearOrderₓ.toLattice with
     sup := fun s =>
       if h : s.nonempty ∧ BddAbove s then greatest_of_bdd (Classical.some h.2) (Classical.some_spec h.2) h.1 else 0,
     inf := fun s =>
@@ -46,10 +46,10 @@ namespace Int
 theorem cSup_eq_greatest_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀, ∀ z ∈ s, ∀, z ≤ b)
     (Hinh : ∃ z : ℤ, z ∈ s) : Sup s = greatest_of_bdd b Hb Hinh := by
   convert dif_pos _ using 1
-  ·
-    convert coe_greatest_of_bdd_eq _ (Classical.some_spec (⟨b, Hb⟩ : BddAbove s)) _
-  ·
-    exact ⟨Hinh, b, Hb⟩
+  · convert coe_greatest_of_bdd_eq _ (Classical.some_spec (⟨b, Hb⟩ : BddAbove s)) _
+    
+  · exact ⟨Hinh, b, Hb⟩
+    
 
 @[simp]
 theorem cSup_empty : Sup (∅ : Set ℤ) = 0 :=
@@ -65,10 +65,10 @@ theorem cSup_of_not_bdd_above {s : Set ℤ} (h : ¬BddAbove s) : Sup s = 0 :=
 theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀, ∀ z ∈ s, ∀, b ≤ z)
     (Hinh : ∃ z : ℤ, z ∈ s) : Inf s = least_of_bdd b Hb Hinh := by
   convert dif_pos _ using 1
-  ·
-    convert coe_least_of_bdd_eq _ (Classical.some_spec (⟨b, Hb⟩ : BddBelow s)) _
-  ·
-    exact ⟨Hinh, b, Hb⟩
+  · convert coe_least_of_bdd_eq _ (Classical.some_spec (⟨b, Hb⟩ : BddBelow s)) _
+    
+  · exact ⟨Hinh, b, Hb⟩
+    
 
 @[simp]
 theorem cInf_empty : Inf (∅ : Set ℤ) = 0 :=

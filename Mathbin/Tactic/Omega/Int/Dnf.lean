@@ -13,7 +13,7 @@ namespace Int
 
 open_locale Omega.Int
 
-/--  push_neg p returns the result of normalizing ¬ p by
+/-- push_neg p returns the result of normalizing ¬ p by
     pushing the outermost negation all the way down,
     until it reaches either a negation or an atom -/
 @[simp]
@@ -23,18 +23,18 @@ def push_neg : preform → preform
   | ¬* p => p
   | p => ¬* p
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 theorem push_neg_equiv : ∀ {p : preform}, preform.equiv (push_neg p) (¬* p) := by
   run_tac
     preform.induce sorry
-  ·
-    simp only [not_not, push_neg, preform.holds]
-  ·
-    simp only [preform.holds, push_neg, not_or_distrib, ihp v, ihq v]
-  ·
-    simp only [preform.holds, push_neg, not_and_distrib, ihp v, ihq v]
+  · simp only [not_not, push_neg, preform.holds]
+    
+  · simp only [preform.holds, push_neg, not_or_distrib, ihp v, ihq v]
+    
+  · simp only [preform.holds, push_neg, not_and_distrib, ihp v, ihq v]
+    
 
-/--  NNF transformation -/
+/-- NNF transformation -/
 def nnf : preform → preform
   | ¬* p => push_neg (nnf p)
   | p ∨* q => nnf p ∨* nnf q
@@ -50,33 +50,33 @@ def is_nnf : preform → Prop
   | p ∧* q => is_nnf p ∧ is_nnf q
   | _ => False
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 theorem is_nnf_push_neg : ∀ p : preform, is_nnf p → is_nnf (push_neg p) := by
   run_tac
     preform.induce sorry
-  ·
-    cases p <;>
+  · cases p <;>
       try
           cases h1 <;>
         trivial
-  ·
-    cases h1
+    
+  · cases h1
     constructor <;>
-        [·
-          apply ihp,
-        ·
-          apply ihq] <;>
+        [· apply ihp
+          ,
+        · apply ihq
+          ] <;>
       assumption
-  ·
-    cases h1
+    
+  · cases h1
     constructor <;>
-        [·
-          apply ihp,
-        ·
-          apply ihq] <;>
+        [· apply ihp
+          ,
+        · apply ihq
+          ] <;>
       assumption
+    
 
-/--  Argument is free of negations -/
+/-- Argument is free of negations -/
 def neg_free : preform → Prop
   | t =* s => True
   | t ≤* s => True
@@ -84,31 +84,31 @@ def neg_free : preform → Prop
   | p ∧* q => neg_free p ∧ neg_free q
   | _ => False
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 theorem is_nnf_nnf : ∀ p : preform, is_nnf (nnf p) := by
   run_tac
     preform.induce sorry
-  ·
-    apply is_nnf_push_neg _ ih
-  ·
-    constructor <;> assumption
-  ·
-    constructor <;> assumption
+  · apply is_nnf_push_neg _ ih
+    
+  · constructor <;> assumption
+    
+  · constructor <;> assumption
+    
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 theorem nnf_equiv : ∀ {p : preform}, preform.equiv (nnf p) p := by
   run_tac
     preform.induce sorry
-  ·
-    rw [push_neg_equiv]
+  · rw [push_neg_equiv]
     apply not_iff_not_of_iff
     apply ih
-  ·
-    apply pred_mono_2' (ihp v) (ihq v)
-  ·
-    apply pred_mono_2' (ihp v) (ihq v)
+    
+  · apply pred_mono_2' (ihp v) (ihq v)
+    
+  · apply pred_mono_2' (ihp v) (ihq v)
+    
 
-/--  Eliminate all negations from preform -/
+/-- Eliminate all negations from preform -/
 @[simp]
 def neg_elim : preform → preform
   | ¬* t =* s => (t.add_one ≤* s) ∨* s.add_one ≤* t
@@ -117,70 +117,70 @@ def neg_elim : preform → preform
   | p ∧* q => neg_elim p ∧* neg_elim q
   | p => p
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 theorem neg_free_neg_elim : ∀ p : preform, is_nnf p → neg_free (neg_elim p) := by
   run_tac
     preform.induce sorry
-  ·
-    cases p <;>
+  · cases p <;>
       try
           cases h1 <;>
         try
           trivial
     constructor <;> trivial
-  ·
-    cases h1
+    
+  · cases h1
     constructor <;>
-        [·
-          apply ihp,
-        ·
-          apply ihq] <;>
+        [· apply ihp
+          ,
+        · apply ihq
+          ] <;>
       assumption
-  ·
-    cases h1
+    
+  · cases h1
     constructor <;>
-        [·
-          apply ihp,
-        ·
-          apply ihq] <;>
+        [· apply ihp
+          ,
+        · apply ihq
+          ] <;>
       assumption
+    
 
 theorem le_and_le_iff_eq {α : Type} [PartialOrderₓ α] {a b : α} : a ≤ b ∧ b ≤ a ↔ a = b := by
   constructor <;> intro h1
-  ·
-    cases h1
+  · cases h1
     apply le_antisymmₓ <;> assumption
-  ·
-    constructor <;> apply le_of_eqₓ <;> rw [h1]
+    
+  · constructor <;> apply le_of_eqₓ <;> rw [h1]
+    
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 theorem implies_neg_elim : ∀ {p : preform}, preform.implies p (neg_elim p) := by
   run_tac
     preform.induce sorry
-  ·
-    cases' p with t s t s <;>
+  · cases' p with t s t s <;>
       try
         apply h
-    ·
-      simp only [le_and_le_iff_eq.symm, not_and_distrib, not_leₓ, preterm.val, preform.holds] at h
+    · simp only [le_and_le_iff_eq.symm, not_and_distrib, not_leₓ, preterm.val, preform.holds] at h
       simp only [Int.add_one_le_iff, preterm.add_one, preterm.val, preform.holds, neg_elim]
       rw [or_comm]
       assumption
-    ·
-      simp only [not_leₓ, Int.add_one_le_iff, preterm.add_one, not_leₓ, preterm.val, preform.holds, neg_elim] at *
+      
+    · simp only [not_leₓ, Int.add_one_le_iff, preterm.add_one, not_leₓ, preterm.val, preform.holds, neg_elim] at *
       assumption
-  ·
-    simp only [neg_elim]
+      
+    
+  · simp only [neg_elim]
     cases h <;>
-        [·
-          left
-          apply ihp,
-        ·
-          right
-          apply ihq] <;>
+        [· left
+          apply ihp
+          ,
+        · right
+          apply ihq
+          ] <;>
       assumption
-  ·
-    apply And.imp (ihp _) (ihq _) h
+    
+  · apply And.imp (ihp _) (ihq _) h
+    
 
 @[simp]
 def dnf_core : preform → List clause
@@ -190,52 +190,52 @@ def dnf_core : preform → List clause
   | t ≤* s => [([], [term.sub (canonize s) (canonize t)])]
   | ¬* _ => []
 
-/--  DNF transformation -/
+/-- DNF transformation -/
 def dnf (p : preform) : List clause :=
   dnf_core $ neg_elim $ nnf p
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 theorem exists_clause_holds {v : Nat → Int} :
     ∀ {p : preform}, neg_free p → p.holds v → ∃ c ∈ dnf_core p, clause.holds v c := by
   run_tac
     preform.induce sorry
-  ·
-    apply List.exists_mem_cons_ofₓ
+  · apply List.exists_mem_cons_ofₓ
     constructor
-    ·
-      simp only [preterm.val, preform.holds] at h2
+    · simp only [preterm.val, preform.holds] at h2
       rw [List.forall_mem_singleton]
       simp only [h2, Omega.Int.val_canonize, Omega.Term.val_sub, sub_self]
-    ·
-      apply List.forall_mem_nil
-  ·
-    apply List.exists_mem_cons_ofₓ
+      
+    · apply List.forall_mem_nil
+      
+    
+  · apply List.exists_mem_cons_ofₓ
     constructor
-    ·
-      apply List.forall_mem_nil
-    ·
-      simp only [preterm.val, preform.holds] at h2
+    · apply List.forall_mem_nil
+      
+    · simp only [preterm.val, preform.holds] at h2
       rw [List.forall_mem_singleton]
       simp only [val_canonize, preterm.val, term.val_sub]
       rw [le_sub, sub_zero]
       assumption
-  ·
-    cases h1
-  ·
-    cases' h2 with h2 h2 <;>
-        [·
-          cases' ihp h1.left h2 with c h3,
-        ·
-          cases' ihq h1.right h2 with c h3] <;>
+      
+    
+  · cases h1
+    
+  · cases' h2 with h2 h2 <;>
+        [· cases' ihp h1.left h2 with c h3
+          ,
+        · cases' ihq h1.right h2 with c h3
+          ] <;>
       cases' h3 with h3 h4 <;> refine' ⟨c, list.mem_append.elim_right _, h4⟩ <;> [left, right] <;> assumption
-  ·
-    rcases ihp h1.left h2.left with ⟨cp, hp1, hp2⟩
+    
+  · rcases ihp h1.left h2.left with ⟨cp, hp1, hp2⟩
     rcases ihq h1.right h2.right with ⟨cq, hq1, hq2⟩
     refine' ⟨clause.append cp cq, ⟨_, clause.holds_append hp2 hq2⟩⟩
     simp only [dnf_core, List.mem_mapₓ]
     refine' ⟨(cp, cq), ⟨_, rfl⟩⟩
     rw [List.mem_product]
     constructor <;> assumption
+    
 
 theorem clauses_sat_dnf_core {p : preform} : neg_free p → p.sat → clauses.sat (dnf_core p) := by
   intro h1 h2

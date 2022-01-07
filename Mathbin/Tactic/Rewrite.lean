@@ -191,8 +191,7 @@ private unsafe def assoc_rw_core (rs : parse rw_rules) (loca : parse location) :
       try reflexivity >>
     try (returnopt rs.end_pos >>= save_info)
 
-/-- 
-`assoc_rewrite [h₀,← h₁] at ⊢ h₂` behaves like `rewrite [h₀,← h₁] at ⊢ h₂`
+/-- `assoc_rewrite [h₀,← h₁] at ⊢ h₂` behaves like `rewrite [h₀,← h₁] at ⊢ h₂`
 with the exception that associativity is used implicitly to make rewriting
 possible.
 
@@ -211,7 +210,7 @@ end
 unsafe def assoc_rewrite (q : parse rw_rules) (l : parse location) : tactic Unit :=
   propagate_tags (assoc_rw_core q l)
 
-/--  synonym for `assoc_rewrite` -/
+/-- synonym for `assoc_rewrite` -/
 unsafe def assoc_rw (q : parse rw_rules) (l : parse location) : tactic Unit :=
   assoc_rewrite q l
 

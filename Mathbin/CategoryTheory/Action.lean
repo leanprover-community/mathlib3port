@@ -24,23 +24,24 @@ universe u
 
 variable (M : Type _) [Monoidₓ M] (X : Type u) [MulAction M X]
 
-/--  A multiplicative action M ↻ X viewed as a functor mapping the single object of M to X
+/-- A multiplicative action M ↻ X viewed as a functor mapping the single object of M to X
   and an element `m : M` to the map `X → X` given by multiplication by `m`. -/
 @[simps]
-def action_as_functor : single_obj M ⥤ Type u :=
-  { obj := fun _ => X, map := fun _ _ => · • ·, map_id' := fun _ => funext $ MulAction.one_smul,
-    map_comp' := fun _ _ _ f g => funext $ fun x => (smul_smul g f x).symm }
+def action_as_functor : single_obj M ⥤ Type u where
+  obj := fun _ => X
+  map := fun _ _ => · • ·
+  map_id' := fun _ => funext $ MulAction.one_smul
+  map_comp' := fun _ _ _ f g => funext $ fun x => (smul_smul g f x).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler category
-/--  A multiplicative action M ↻ X induces a category strucure on X, where a morphism
+/-- A multiplicative action M ↻ X induces a category strucure on X, where a morphism
  from x to y is a scalar taking x to y. Due to implementation details, the object type
  of this category is not equal to X, but is in bijection with X. -/
 def action_category :=
-  (action_as_functor M X).Elements deriving [anonymous]
+  (action_as_functor M X).Elements deriving category
 
 namespace ActionCategory
 
-/--  The projection from the action category to the monoid, mapping a morphism to its
+/-- The projection from the action category to the monoid, mapping a morphism to its
   label. -/
 def π : action_category M X ⥤ single_obj M :=
   category_of_elements.π _
@@ -55,7 +56,7 @@ theorem π_obj (p : action_category M X) : (π M X).obj p = single_obj.star M :=
 
 variable {M X}
 
-/--  The canonical map `action_category M X → X`. It is given by `λ x, x.snd`, but
+/-- The canonical map `action_category M X → X`. It is given by `λ x, x.snd`, but
   has a more explicit type. -/
 protected def back : action_category M X → X := fun x => x.snd
 
@@ -72,9 +73,12 @@ theorem back_coe (x : action_category M X) : ↑x.back = x := by
 
 variable (M X)
 
-/--  An object of the action category given by M ↻ X corresponds to an element of X. -/
-def obj_equiv : X ≃ action_category M X :=
-  { toFun := coeₓ, invFun := fun x => x.back, left_inv := coe_back, right_inv := back_coe }
+/-- An object of the action category given by M ↻ X corresponds to an element of X. -/
+def obj_equiv : X ≃ action_category M X where
+  toFun := coeₓ
+  invFun := fun x => x.back
+  left_inv := coe_back
+  right_inv := back_coe
 
 theorem hom_as_subtype (p q : action_category M X) : (p ⟶ q) = { m : M // m • p.back = q.back } :=
   rfl
@@ -87,7 +91,7 @@ instance [Nonempty X] : Nonempty (action_category M X) :=
 
 variable {X} (x : X)
 
-/--  The stabilizer of a point is isomorphic to the endomorphism monoid at the
+/-- The stabilizer of a point is isomorphic to the endomorphism monoid at the
   corresponding point. In fact they are definitionally equivalent. -/
 def stabilizer_iso_End : stabilizer.submonoid M x ≃* End (↑x : action_category M X) :=
   MulEquiv.refl _
@@ -107,7 +111,7 @@ protected theorem id_val (x : action_category M X) : Subtype.val (𝟙 x) = 1 :=
   rfl
 
 @[simp]
-protected theorem comp_val {x y z : action_category M X} (f : x ⟶ y) (g : y ⟶ z) : (f ≫ g).val = g.val*f.val :=
+protected theorem comp_val {x y z : action_category M X} (f : x ⟶ y) (g : y ⟶ z) : (f ≫ g).val = g.val * f.val :=
   rfl
 
 instance [is_pretransitive M X] [Nonempty X] : is_connected (action_category M X) :=
@@ -121,11 +125,11 @@ variable {G : Type _} [Groupₓ G] [MulAction G X]
 noncomputable instance : groupoid (action_category G X) :=
   CategoryTheory.groupoidOfElements _
 
-/--  Any subgroup of `G` is a vertex group in its action groupoid. -/
+/-- Any subgroup of `G` is a vertex group in its action groupoid. -/
 def End_mul_equiv_subgroup (H : Subgroup G) : End (obj_equiv G (G ⧸ H) (↑(1 : G))) ≃* H :=
   MulEquiv.trans (stabilizer_iso_End G ((1 : G) : G ⧸ H)).symm (MulEquiv.subgroupCongr $ stabilizer_quotient H)
 
-/--  A target vertex `t` and a scalar `g` determine a morphism in the action groupoid. -/
+/-- A target vertex `t` and a scalar `g` determine a morphism in the action groupoid. -/
 def hom_of_pair (t : X) (g : G) : ↑(g⁻¹ • t) ⟶ (t : action_category G X) :=
   Subtype.mk g (smul_inv_smul g t)
 
@@ -133,7 +137,7 @@ def hom_of_pair (t : X) (g : G) : ↑(g⁻¹ • t) ⟶ (t : action_category G X
 theorem hom_of_pair.val (t : X) (g : G) : (hom_of_pair t g).val = g :=
   rfl
 
-/--  Any morphism in the action groupoid is given by some pair. -/
+/-- Any morphism in the action groupoid is given by some pair. -/
 protected def cases {P : ∀ ⦃a b : action_category G X⦄, (a ⟶ b) → Sort _} (hyp : ∀ t g, P (hom_of_pair t g)) ⦃a b⦄
     (f : a ⟶ b) : P f := by
   refine' cast _ (hyp b.back f.val)
@@ -145,7 +149,7 @@ protected def cases {P : ∀ ⦃a b : action_category G X⦄, (a ⟶ b) → Sort
 
 variable {H : Type _} [Groupₓ H]
 
-/--  Given `G` acting on `X`, a functor from the corresponding action groupoid to a group `H`
+/-- Given `G` acting on `X`, a functor from the corresponding action groupoid to a group `H`
     can be curried to a group homomorphism `G →* (X → H) ⋊ G`. -/
 @[simps]
 def curry (F : action_category G X ⥤ single_obj H) : G →* (X → H) ⋊[mulAutArrow] G :=
@@ -162,20 +166,21 @@ def curry (F : action_category G X ⥤ single_obj H) : G →* (X → H) ⋊[mulA
       funext
       exact F_map_eq.symm.trans (F.map_comp (hom_of_pair (g⁻¹ • b) h) (hom_of_pair b g)) }
 
-/--  Given `G` acting on `X`, a group homomorphism `φ : G →* (X → H) ⋊ G` can be uncurried to
+/-- Given `G` acting on `X`, a group homomorphism `φ : G →* (X → H) ⋊ G` can be uncurried to
     a functor from the action groupoid to `H`, provided that `φ g = (_, g)` for all `g`. -/
 @[simps]
-def uncurry (F : G →* (X → H) ⋊[mulAutArrow] G) (sane : ∀ g, (F g).right = g) : action_category G X ⥤ single_obj H :=
-  { obj := fun _ => (), map := fun a b f => (F f.val).left b.back,
-    map_id' := by
-      intro x
-      rw [action_category.id_val, F.map_one]
-      rfl,
-    map_comp' := by
-      intro x y z f g
-      revert y z g
-      refine' action_category.cases _
-      simp [single_obj.comp_as_mul, sane] }
+def uncurry (F : G →* (X → H) ⋊[mulAutArrow] G) (sane : ∀ g, (F g).right = g) : action_category G X ⥤ single_obj H where
+  obj := fun _ => ()
+  map := fun a b f => (F f.val).left b.back
+  map_id' := by
+    intro x
+    rw [action_category.id_val, F.map_one]
+    rfl
+  map_comp' := by
+    intro x y z f g
+    revert y z g
+    refine' action_category.cases _
+    simp [single_obj.comp_as_mul, sane]
 
 end Groupₓ
 

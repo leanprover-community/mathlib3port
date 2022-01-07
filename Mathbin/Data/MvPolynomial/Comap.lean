@@ -23,8 +23,7 @@ namespace MvPolynomial
 
 variable {σ : Type _} {τ : Type _} {υ : Type _} {R : Type _} [CommSemiringₓ R]
 
-/-- 
-Given an algebra hom `f : mv_polynomial σ R →ₐ[R] mv_polynomial τ R`
+/-- Given an algebra hom `f : mv_polynomial σ R →ₐ[R] mv_polynomial τ R`
 and a variable evaluation `v : τ → R`,
 `comap f v` produces a variable evaluation `σ → R`.
 -/
@@ -52,17 +51,17 @@ theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (g 
     (x : υ → R) : comap (g.comp f) x = comap f (comap g x) := by
   funext i
   trans aeval x (aeval (fun i => g (X i)) (f (X i)))
-  ·
-    apply eval₂_hom_congr rfl rfl
+  · apply eval₂_hom_congr rfl rfl
     rw [AlgHom.comp_apply]
-    suffices g = aeval fun i => g (X i)by
+    suffices g = aeval fun i => g (X i) by
       rw [← this]
     exact aeval_unique g
-  ·
-    simp only [comap, aeval_eq_eval₂_hom, map_eval₂_hom, AlgHom.comp_apply]
+    
+  · simp only [comap, aeval_eq_eval₂_hom, map_eval₂_hom, AlgHom.comp_apply]
     refine' eval₂_hom_congr _ rfl rfl
     ext r
     apply aeval_C
+    
 
 theorem comap_comp (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R) :
     comap (g.comp f) = comap f ∘ comap g := by
@@ -79,24 +78,24 @@ theorem comap_rename (f : σ → τ) (x : τ → R) : comap (rename f) x = x ∘
   ext i
   simp only [rename_X, comap_apply, aeval_X]
 
-/-- 
-If two polynomial types over the same coefficient ring `R` are equivalent,
+/-- If two polynomial types over the same coefficient ring `R` are equivalent,
 there is a bijection between the types of functions from their variable types to `R`.
 -/
-noncomputable def comap_equiv (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) : (τ → R) ≃ (σ → R) :=
-  { toFun := comap f, invFun := comap f.symm,
-    left_inv := by
-      intro x
-      rw [← comap_comp_apply]
-      apply comap_eq_id_of_eq_id
-      intro
-      simp only [AlgHom.id_apply, AlgEquiv.comp_symm],
-    right_inv := by
-      intro x
-      rw [← comap_comp_apply]
-      apply comap_eq_id_of_eq_id
-      intro
-      simp only [AlgHom.id_apply, AlgEquiv.symm_comp] }
+noncomputable def comap_equiv (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) : (τ → R) ≃ (σ → R) where
+  toFun := comap f
+  invFun := comap f.symm
+  left_inv := by
+    intro x
+    rw [← comap_comp_apply]
+    apply comap_eq_id_of_eq_id
+    intro
+    simp only [AlgHom.id_apply, AlgEquiv.comp_symm]
+  right_inv := by
+    intro x
+    rw [← comap_comp_apply]
+    apply comap_eq_id_of_eq_id
+    intro
+    simp only [AlgHom.id_apply, AlgEquiv.symm_comp]
 
 @[simp]
 theorem comap_equiv_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) : (comap_equiv f : (τ → R) → σ → R) = comap f :=

@@ -21,14 +21,14 @@ namespace Matrix
 
 variable (m n R)
 
-/--  The matrix with variable `X (i,j)` at location `(i,j)`. -/
+/-- The matrix with variable `X (i,j)` at location `(i,j)`. -/
 @[simp]
 noncomputable def mv_polynomial_X [CommSemiringₓ R] : Matrix m n (MvPolynomial (m × n) R)
   | i, j => MvPolynomial.x (i, j)
 
 variable {m n R S}
 
-/--  Any matrix `A` can be expressed as the evaluation of `matrix.mv_polynomial_X`.
+/-- Any matrix `A` can be expressed as the evaluation of `matrix.mv_polynomial_X`.
 
 This is of particular use when `mv_polynomial (m × n) R` is an integral domain but `S` is
 not, as if the `mv_polynomial.eval₂` can be pulled to the outside of a goal, it can be solved in
@@ -37,21 +37,21 @@ theorem mv_polynomial_X_map_eval₂ [CommSemiringₓ R] [CommSemiringₓ S] (f :
     (mv_polynomial_X m n R).map (MvPolynomial.eval₂ f $ fun p : m × n => A p.1 p.2) = A :=
   ext $ fun i j => MvPolynomial.eval₂_X _ (fun p : m × n => A p.1 p.2) (i, j)
 
-/--  A variant of `matrix.mv_polynomial_X_map_eval₂` with a bundled `ring_hom` on the LHS. -/
+/-- A variant of `matrix.mv_polynomial_X_map_eval₂` with a bundled `ring_hom` on the LHS. -/
 theorem mv_polynomial_X_map_matrix_eval [Fintype m] [DecidableEq m] [CommSemiringₓ R] (A : Matrix m m R) :
     (MvPolynomial.eval $ fun p : m × m => A p.1 p.2).mapMatrix (mv_polynomial_X m m R) = A :=
   mv_polynomial_X_map_eval₂ _ A
 
 variable (R)
 
-/--  A variant of `matrix.mv_polynomial_X_map_eval₂` with a bundled `alg_hom` on the LHS. -/
+/-- A variant of `matrix.mv_polynomial_X_map_eval₂` with a bundled `alg_hom` on the LHS. -/
 theorem mv_polynomial_X_map_matrix_aeval [Fintype m] [DecidableEq m] [CommSemiringₓ R] [CommSemiringₓ S] [Algebra R S]
     (A : Matrix m m S) : (MvPolynomial.aeval $ fun p : m × m => A p.1 p.2).mapMatrix (mv_polynomial_X m m R) = A :=
   mv_polynomial_X_map_eval₂ _ A
 
 variable (m R)
 
-/--  In a nontrivial ring, `matrix.mv_polynomial_X m m R` has non-zero determinant. -/
+/-- In a nontrivial ring, `matrix.mv_polynomial_X m m R` has non-zero determinant. -/
 theorem det_mv_polynomial_X_ne_zero [DecidableEq m] [Fintype m] [CommRingₓ R] [Nontrivial R] :
     det (mv_polynomial_X m m R) ≠ 0 := by
   intro h_det

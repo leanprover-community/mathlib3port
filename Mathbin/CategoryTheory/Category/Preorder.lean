@@ -28,24 +28,18 @@ namespace Preorderₓ
 
 open CategoryTheory
 
--- failed to format: format: uncaught backtrack exception
-/--
-    The category structure coming from a preorder. There is a morphism `X ⟶ Y` if and only if `X ≤ Y`.
-    
-    Because we don't allow morphisms to live in `Prop`,
-    we have to define `X ⟶ Y` as `ulift (plift (X ≤ Y))`.
-    See `category_theory.hom_of_le` and `category_theory.le_of_hom`.
-    
-    See https://stacks.math.columbia.edu/tag/00D3.
-    -/
-  instance
-    ( priority := 100 )
-    small_category
-    ( α : Type u ) [ Preorderₓ α ] : small_category α
-    where
-      Hom U V := Ulift ( Plift ( U ≤ V ) )
-        id X := ⟨ ⟨ le_reflₓ X ⟩ ⟩
-        comp X Y Z f g := ⟨ ⟨ le_transₓ _ _ _ f.down.down g.down.down ⟩ ⟩
+/-- The category structure coming from a preorder. There is a morphism `X ⟶ Y` if and only if `X ≤ Y`.
+
+Because we don't allow morphisms to live in `Prop`,
+we have to define `X ⟶ Y` as `ulift (plift (X ≤ Y))`.
+See `category_theory.hom_of_le` and `category_theory.le_of_hom`.
+
+See https://stacks.math.columbia.edu/tag/00D3.
+-/
+instance (priority := 100) small_category (α : Type u) [Preorderₓ α] : small_category α where
+  Hom := fun U V => Ulift (Plift (U ≤ V))
+  id := fun X => ⟨⟨le_reflₓ X⟩⟩
+  comp := fun X Y Z f g => ⟨⟨le_transₓ _ _ _ f.down.down g.down.down⟩⟩
 
 end Preorderₓ
 
@@ -55,8 +49,7 @@ open Opposite
 
 variable {X : Type u} [Preorderₓ X]
 
-/-- 
-Express an inequality as a morphism in the corresponding preorder category.
+/-- Express an inequality as a morphism in the corresponding preorder category.
 -/
 def hom_of_le {x y : X} (h : x ≤ y) : x ⟶ y :=
   Ulift.up (Plift.up h)
@@ -71,8 +64,7 @@ theorem hom_of_le_refl {x : X} : (le_reflₓ x).Hom = 𝟙 x :=
 theorem hom_of_le_comp {x y z : X} (h : x ≤ y) (k : y ≤ z) : h.hom ≫ k.hom = (h.trans k).Hom :=
   rfl
 
-/-- 
-Extract the underlying inequality from a morphism in a preorder category.
+/-- Extract the underlying inequality from a morphism in a preorder category.
 -/
 theorem le_of_hom {x y : X} (h : x ⟶ y) : x ≤ y :=
   h.down.down
@@ -89,7 +81,7 @@ theorem hom_of_le_le_of_hom {x y : X} (h : x ⟶ y) : h.le.hom = h := by
   cases h
   rfl
 
-/--  Construct a morphism in the opposite of a preorder category from an inequality. -/
+/-- Construct a morphism in the opposite of a preorder category from an inequality. -/
 def op_hom_of_le {x y : Xᵒᵖ} (h : unop x ≤ unop y) : y ⟶ x :=
   h.hom.op
 
@@ -108,18 +100,17 @@ section
 
 variable {X : Type u} {Y : Type v} [Preorderₓ X] [Preorderₓ Y]
 
-/-- 
-A monotone function between preorders induces a functor between the associated categories.
+/-- A monotone function between preorders induces a functor between the associated categories.
 -/
-def Monotone.functor {f : X → Y} (h : Monotone f) : X ⥤ Y :=
-  { obj := f, map := fun x₁ x₂ g => (h g.le).Hom }
+def Monotone.functor {f : X → Y} (h : Monotone f) : X ⥤ Y where
+  obj := f
+  map := fun x₁ x₂ g => (h g.le).Hom
 
 @[simp]
 theorem Monotone.functor_obj {f : X → Y} (h : Monotone f) : h.functor.obj = f :=
   rfl
 
-/-- 
-A galois connection between preorders induces an adjunction between the associated categories.
+/-- A galois connection between preorders induces an adjunction between the associated categories.
 -/
 def GaloisConnection.adjunction {l : X → Y} {u : Y → X} (gc : GaloisConnection l u) :
     gc.monotone_l.functor ⊣ gc.monotone_u.functor :=
@@ -137,38 +128,39 @@ section Preorderₓ
 
 variable {X : Type u} {Y : Type v} [Preorderₓ X] [Preorderₓ Y]
 
-/-- 
-A functor between preorder categories is monotone.
+/-- A functor between preorder categories is monotone.
 -/
 @[mono]
 theorem functor.monotone (f : X ⥤ Y) : Monotone f.obj := fun x y hxy => (f.map hxy.hom).le
 
-/-- 
-An adjunction between preorder categories induces a galois connection.
+/-- An adjunction between preorder categories induces a galois connection.
 -/
 theorem adjunction.gc {L : X ⥤ Y} {R : Y ⥤ X} (adj : L ⊣ R) : GaloisConnection L.obj R.obj := fun x y =>
   ⟨fun h => ((adj.hom_equiv x y).toFun h.hom).le, fun h => ((adj.hom_equiv x y).invFun h.hom).le⟩
 
-/-- 
-The embedding of `Preorder` into `Cat`.
+/-- The embedding of `Preorder` into `Cat`.
 -/
 @[simps]
-def Preorder_to_Cat : Preorderₓₓ.{u} ⥤ Cat :=
-  { obj := fun X => Cat.of X.1, map := fun X Y f => f.monotone.functor,
-    map_id' := fun X => by
-      apply CategoryTheory.Functor.ext
-      tidy,
-    map_comp' := fun X Y Z f g => by
-      apply CategoryTheory.Functor.ext
-      tidy }
+def Preorder_to_Cat : Preorderₓₓ.{u} ⥤ Cat where
+  obj := fun X => Cat.of X.1
+  map := fun X Y f => f.monotone.functor
+  map_id' := fun X => by
+    apply CategoryTheory.Functor.ext
+    tidy
+  map_comp' := fun X Y Z f g => by
+    apply CategoryTheory.Functor.ext
+    tidy
 
--- failed to format: format: uncaught backtrack exception
-instance : faithful Preorder_to_Cat .{ u } where map_injective' X Y f g h := by ext x exact functor.congr_obj h x
+instance : faithful Preorder_to_Cat.{u} where
+  map_injective' := fun X Y f g h => by
+    ext x
+    exact functor.congr_obj h x
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : full Preorder_to_Cat .{ u }
-  where Preimage X Y f := ⟨ f.obj , f.monotone ⟩ witness' X Y f := by apply CategoryTheory.Functor.ext tidy
+instance : full Preorder_to_Cat.{u} where
+  Preimage := fun X Y f => ⟨f.obj, f.monotone⟩
+  witness' := fun X Y f => by
+    apply CategoryTheory.Functor.ext
+    tidy
 
 end Preorderₓ
 
@@ -179,15 +171,16 @@ variable {X : Type u} {Y : Type v} [PartialOrderₓ X] [PartialOrderₓ Y]
 theorem iso.to_eq {x y : X} (f : x ≅ y) : x = y :=
   le_antisymmₓ f.hom.le f.inv.le
 
-/-- 
-A categorical equivalence between partial orders is just an order isomorphism.
+/-- A categorical equivalence between partial orders is just an order isomorphism.
 -/
-def equivalence.to_order_iso (e : X ≌ Y) : X ≃o Y :=
-  { toFun := e.functor.obj, invFun := e.inverse.obj, left_inv := fun a => (e.unit_iso.app a).to_eq.symm,
-    right_inv := fun b => (e.counit_iso.app b).to_eq,
-    map_rel_iff' := fun a a' =>
-      ⟨fun h => ((equivalence.unit e).app a ≫ e.inverse.map h.hom ≫ (equivalence.unit_inv e).app a').le,
-        fun h : a ≤ a' => (e.functor.map h.hom).le⟩ }
+def equivalence.to_order_iso (e : X ≌ Y) : X ≃o Y where
+  toFun := e.functor.obj
+  invFun := e.inverse.obj
+  left_inv := fun a => (e.unit_iso.app a).to_eq.symm
+  right_inv := fun b => (e.counit_iso.app b).to_eq
+  map_rel_iff' := fun a a' =>
+    ⟨fun h => ((equivalence.unit e).app a ≫ e.inverse.map h.hom ≫ (equivalence.unit_inv e).app a').le, fun h : a ≤ a' =>
+      (e.functor.map h.hom).le⟩
 
 @[simp]
 theorem equivalence.to_order_iso_apply (e : X ≌ Y) (x : X) : e.to_order_iso x = e.functor.obj x :=

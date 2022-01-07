@@ -38,7 +38,7 @@ section Cycles
 
 variable [has_kernels V]
 
-/--  The cycles at index `i`, as a subobject. -/
+/-- The cycles at index `i`, as a subobject. -/
 def cycles (i : ι) : subobject (C.X i) :=
   kernel_subobject (C.d_from i)
 
@@ -50,8 +50,7 @@ theorem cycles_arrow_d_from (i : ι) : (C.cycles i).arrow ≫ C.d_from i = 0 := 
 theorem cycles_eq_kernel_subobject {i j : ι} (r : c.rel i j) : C.cycles i = kernel_subobject (C.d i j) :=
   C.kernel_from_eq_kernel r
 
-/-- 
-The underlying object of `C.cycles i` is isomorphic to `kernel (C.d i j)`,
+/-- The underlying object of `C.cycles i` is isomorphic to `kernel (C.d i j)`,
 for any `j` such that `rel i j`.
 -/
 def cycles_iso_kernel {i j : ι} (r : c.rel i j) : (C.cycles i : V) ≅ kernel (C.d i j) :=
@@ -68,7 +67,7 @@ section Boundaries
 
 variable [has_images V]
 
-/--  The boundaries at index `i`, as a subobject. -/
+/-- The boundaries at index `i`, as a subobject. -/
 abbrev boundaries (C : HomologicalComplex V c) (j : ι) : subobject (C.X j) :=
   image_subobject (C.d_to j)
 
@@ -76,8 +75,7 @@ theorem boundaries_eq_image_subobject [has_equalizers V] {i j : ι} (r : c.rel i
     C.boundaries j = image_subobject (C.d i j) :=
   C.image_to_eq_image r
 
-/-- 
-The underlying object of `C.boundaries j` is isomorphic to `image (C.d i j)`,
+/-- The underlying object of `C.boundaries j` is isomorphic to `image (C.d i j)`,
 for any `i` such that `rel i j`.
 -/
 def boundaries_iso_image [has_equalizers V] {i j : ι} (r : c.rel i j) : (C.boundaries j : V) ≅ image (C.d i j) :=
@@ -97,13 +95,12 @@ variable [has_kernels V] [has_images V]
 theorem boundaries_le_cycles (C : HomologicalComplex V c) (i : ι) : C.boundaries i ≤ C.cycles i :=
   image_le_kernel _ _ (C.d_to_comp_d_from i)
 
-/-- 
-The canonical map from `boundaries i` to `cycles i`.
+/-- The canonical map from `boundaries i` to `cycles i`.
 -/
 abbrev boundaries_to_cycles (C : HomologicalComplex V c) (i : ι) : (C.boundaries i : V) ⟶ (C.cycles i : V) :=
   imageToKernel _ _ (C.d_to_comp_d_from i)
 
-/--  Prefer `boundaries_to_cycles`. -/
+/-- Prefer `boundaries_to_cycles`. -/
 @[simp]
 theorem image_to_kernel_as_boundaries_to_cycles (C : HomologicalComplex V c) (i : ι) h :
     (C.boundaries i).ofLe (C.cycles i) h = C.boundaries_to_cycles i :=
@@ -117,8 +114,7 @@ theorem boundaries_to_cycles_arrow (C : HomologicalComplex V c) (i : ι) :
 
 variable [has_cokernels V]
 
-/-- 
-The homology of a complex at index `i`.
+/-- The homology of a complex at index `i`.
 -/
 abbrev homology (C : HomologicalComplex V c) (i : ι) : V :=
   homology (C.d_to i) (C.d_from i) (C.d_to_comp_d_from i)
@@ -138,8 +134,7 @@ variable [has_zero_object V] [has_kernels V]
 
 variable {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
-/-- 
-The morphism between cycles induced by a chain map.
+/-- The morphism between cycles induced by a chain map.
 -/
 abbrev cyclesMap (f : C₁ ⟶ C₂) (i : ι) : (C₁.cycles i : V) ⟶ (C₂.cycles i : V) :=
   subobject.factor_thru _ ((C₁.cycles i).arrow ≫ f.f i)
@@ -163,10 +158,11 @@ theorem cycles_map_comp (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) : cycle
 
 variable (V c)
 
-/--  Cycles as a functor. -/
+/-- Cycles as a functor. -/
 @[simps]
-def cyclesFunctor (i : ι) : HomologicalComplex V c ⥤ V :=
-  { obj := fun C => C.cycles i, map := fun C₁ C₂ f => cyclesMap f i }
+def cyclesFunctor (i : ι) : HomologicalComplex V c ⥤ V where
+  obj := fun C => C.cycles i
+  map := fun C₁ C₂ f => cyclesMap f i
 
 end
 
@@ -179,18 +175,18 @@ variable [has_zero_object V] [has_images V] [has_image_maps V]
 
 variable {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
-/-- 
-The morphism between boundaries induced by a chain map.
+/-- The morphism between boundaries induced by a chain map.
 -/
 abbrev boundariesMap (f : C₁ ⟶ C₂) (i : ι) : (C₁.boundaries i : V) ⟶ (C₂.boundaries i : V) :=
   image_subobject_map (f.sq_to i)
 
 variable (V c)
 
-/--  Boundaries as a functor. -/
+/-- Boundaries as a functor. -/
 @[simps]
-def boundariesFunctor (i : ι) : HomologicalComplex V c ⥤ V :=
-  { obj := fun C => C.boundaries i, map := fun C₁ C₂ f => image_subobject_map (f.sq_to i) }
+def boundariesFunctor (i : ι) : HomologicalComplex V c ⥤ V where
+  obj := fun C => C.boundaries i
+  map := fun C₁ C₂ f => image_subobject_map (f.sq_to i)
 
 end
 
@@ -211,38 +207,41 @@ theorem boundaries_to_cycles_naturality (i : ι) :
 
 variable (V c)
 
-/--  The natural transformation from the boundaries functor to the cycles functor. -/
+/-- The natural transformation from the boundaries functor to the cycles functor. -/
 @[simps]
-def boundariesToCyclesNatTrans (i : ι) : boundariesFunctor V c i ⟶ cyclesFunctor V c i :=
-  { app := fun C => C.boundaries_to_cycles i, naturality' := fun C₁ C₂ f => boundaries_to_cycles_naturality f i }
+def boundariesToCyclesNatTrans (i : ι) : boundariesFunctor V c i ⟶ cyclesFunctor V c i where
+  app := fun C => C.boundaries_to_cycles i
+  naturality' := fun C₁ C₂ f => boundaries_to_cycles_naturality f i
 
-/--  The `i`-th homology, as a functor to `V`. -/
+/-- The `i`-th homology, as a functor to `V`. -/
 @[simps]
-def homologyFunctor [has_cokernels V] (i : ι) : HomologicalComplex V c ⥤ V :=
-  { obj := fun C => C.homology i, map := fun C₁ C₂ f => _root_.homology.map _ _ (f.sq_to i) (f.sq_from i) rfl,
-    map_id' := by
-      intros
-      ext1
-      simp only [homology.π_map, kernel_subobject_map_id, hom.sq_from_id, category.id_comp, category.comp_id],
-    map_comp' := by
-      intros
-      ext1
-      simp only [hom.sq_from_comp, kernel_subobject_map_comp, homology.π_map_assoc, homology.π_map, category.assoc] }
+def homologyFunctor [has_cokernels V] (i : ι) : HomologicalComplex V c ⥤ V where
+  obj := fun C => C.homology i
+  map := fun C₁ C₂ f => _root_.homology.map _ _ (f.sq_to i) (f.sq_from i) rfl
+  map_id' := by
+    intros
+    ext1
+    simp only [homology.π_map, kernel_subobject_map_id, hom.sq_from_id, category.id_comp, category.comp_id]
+  map_comp' := by
+    intros
+    ext1
+    simp only [hom.sq_from_comp, kernel_subobject_map_comp, homology.π_map_assoc, homology.π_map, category.assoc]
 
-/--  The homology functor from `ι`-indexed complexes to `ι`-graded objects in `V`. -/
+/-- The homology functor from `ι`-indexed complexes to `ι`-graded objects in `V`. -/
 @[simps]
-def gradedHomologyFunctor [has_cokernels V] : HomologicalComplex V c ⥤ graded_object ι V :=
-  { obj := fun C i => C.homology i, map := fun C C' f i => (homologyFunctor V c i).map f,
-    map_id' := by
-      intros
-      ext
-      simp only [pi.id_apply, homology.π_map, homology_functor_map, kernel_subobject_map_id, hom.sq_from_id,
-        category.id_comp, category.comp_id],
-    map_comp' := by
-      intros
-      ext
-      simp only [hom.sq_from_comp, kernel_subobject_map_comp, homology.π_map_assoc, pi.comp_apply, homology.π_map,
-        homology_functor_map, category.assoc] }
+def gradedHomologyFunctor [has_cokernels V] : HomologicalComplex V c ⥤ graded_object ι V where
+  obj := fun C i => C.homology i
+  map := fun C C' f i => (homologyFunctor V c i).map f
+  map_id' := by
+    intros
+    ext
+    simp only [pi.id_apply, homology.π_map, homology_functor_map, kernel_subobject_map_id, hom.sq_from_id,
+      category.id_comp, category.comp_id]
+  map_comp' := by
+    intros
+    ext
+    simp only [hom.sq_from_comp, kernel_subobject_map_comp, homology.π_map_assoc, pi.comp_apply, homology.π_map,
+      homology_functor_map, category.assoc]
 
 end
 

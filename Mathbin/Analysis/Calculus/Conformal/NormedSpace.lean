@@ -45,7 +45,7 @@ section LocConformality
 
 open LinearIsometry ContinuousLinearMap
 
-/--  A map `f` is said to be conformal if it has a conformal differential `f'`. -/
+/-- A map `f` is said to be conformal if it has a conformal differential `f'`. -/
 def ConformalAt (f : X → Y) (x : X) :=
   ∃ f' : X →L[ℝ] Y, HasFderivAt f f' x ∧ IsConformalMap f'
 
@@ -55,26 +55,26 @@ theorem conformal_at_id (x : X) : ConformalAt id x :=
 theorem conformal_at_const_smul {c : ℝ} (h : c ≠ 0) (x : X) : ConformalAt (fun x' : X => c • x') x :=
   ⟨c • ContinuousLinearMap.id ℝ X, (has_fderiv_at_id x).const_smul c, is_conformal_map_const_smul h⟩
 
-/--  A function is a conformal map if and only if its differential is a conformal linear map-/
+/-- A function is a conformal map if and only if its differential is a conformal linear map-/
 theorem conformal_at_iff_is_conformal_map_fderiv {f : X → Y} {x : X} :
     ConformalAt f x ↔ IsConformalMap (fderiv ℝ f x) := by
   constructor
-  ·
-    rintro ⟨c, hf, hf'⟩
+  · rintro ⟨c, hf, hf'⟩
     rw [hf.fderiv]
     exact hf'
-  ·
-    intro H
+    
+  · intro H
     by_cases' h : DifferentiableAt ℝ f x
-    ·
-      exact ⟨fderiv ℝ f x, h.has_fderiv_at, H⟩
-    ·
-      cases' subsingleton_or_nontrivial X with w w <;> skip
-      ·
-        exact ⟨(0 : X →L[ℝ] Y), has_fderiv_at_of_subsingleton f x, is_conformal_map_of_subsingleton 0⟩
-      ·
-        exfalso
+    · exact ⟨fderiv ℝ f x, h.has_fderiv_at, H⟩
+      
+    · cases' subsingleton_or_nontrivial X with w w <;> skip
+      · exact ⟨(0 : X →L[ℝ] Y), has_fderiv_at_of_subsingleton f x, is_conformal_map_of_subsingleton 0⟩
+        
+      · exfalso
         exact H.ne_zero (fderiv_zero_of_not_differentiable_at h)
+        
+      
+    
 
 namespace ConformalAt
 
@@ -102,7 +102,7 @@ end LocConformality
 
 section GlobalConformality
 
-/--  A map `f` is conformal if it's conformal at every point. -/
+/-- A map `f` is conformal if it's conformal at every point. -/
 def Conformal (f : X → Y) :=
   ∀ x : X, ConformalAt f x
 

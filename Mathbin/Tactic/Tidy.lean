@@ -6,11 +6,12 @@ namespace Tactic
 
 namespace Tidy
 
-/--  Tag interactive tactics (locally) with `[tidy]` to add them to the list of default tactics
+/-- Tag interactive tactics (locally) with `[tidy]` to add them to the list of default tactics
 called by `tidy`. -/
 @[user_attribute]
-unsafe def tidy_attribute : user_attribute :=
-  { Name := `tidy, descr := "A tactic that should be called by `tidy`." }
+unsafe def tidy_attribute : user_attribute where
+  Name := `tidy
+  descr := "A tactic that should be called by `tidy`."
 
 add_tactic_doc
   { Name := "tidy", category := DocCategory.attr, declNames := [`tactic.tidy.tidy_attribute], tags := ["search"] }
@@ -26,14 +27,14 @@ unsafe def ext1_wrapper : tactic Stringₓ := do
   let ng' ← num_goals
   return $ if ng' > ng then "tactic.ext1 [] {new_goals := tactic.new_goals.all}" else "ext1"
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 unsafe def default_tactics : List (tactic Stringₓ) :=
   [reflexivity >> pure "refl", sorry >> pure "exact dec_trivial", propositional_goal >> assumption >> pure "assumption",
     intros1 >>= fun ns => pure ("intros " ++ (" ".intercalate $ ns.map $ fun e => e.to_string)), auto_cases,
@@ -64,7 +65,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-/--  Use a variety of conservative tactics to solve goals.
+/-- Use a variety of conservative tactics to solve goals.
 
 `tidy?` reports back the tactic script it found. As an example
 ```lean
@@ -90,15 +91,16 @@ add_tactic_doc
   { Name := "tidy", category := DocCategory.tactic, declNames := [`tactic.interactive.tidy],
     tags := ["search", "Try this", "finishing"] }
 
-/--  Invoking the hole command `tidy` ("Use `tidy` to complete the goal") runs the tactic of
+/-- Invoking the hole command `tidy` ("Use `tidy` to complete the goal") runs the tactic of
 the same name, replacing the hole with the tactic script `tidy` produces.
 -/
 @[hole_command]
-unsafe def tidy_hole_cmd : hole_command :=
-  { Name := "tidy", descr := "Use `tidy` to complete the goal.",
-    action := fun _ => do
-      let script ← tidy.core
-      return [("begin " ++ ", ".intercalate script ++ " end", "by tidy")] }
+unsafe def tidy_hole_cmd : hole_command where
+  Name := "tidy"
+  descr := "Use `tidy` to complete the goal."
+  action := fun _ => do
+    let script ← tidy.core
+    return [("begin " ++ ", ".intercalate script ++ " end", "by tidy")]
 
 add_tactic_doc
   { Name := "tidy", category := DocCategory.hole_cmd, declNames := [`tactic.tidy_hole_cmd], tags := ["search"] }

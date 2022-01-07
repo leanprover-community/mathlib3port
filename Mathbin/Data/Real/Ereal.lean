@@ -47,17 +47,12 @@ See https://isabelle.in.tum.de/dist/library/HOL/HOL-Library/Extended_Real.html
 
 open_locale Ennreal Nnreal
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_top
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler comm_monoid_with_zero
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_Sup
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_Inf
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler complete_linear_order
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler linear_ordered_add_comm_monoid_with_top
-/--  ereal : The type `[-∞, ∞]` -/
+/-- ereal : The type `[-∞, ∞]` -/
 def Ereal :=
-  WithTop (WithBot ℝ)deriving [anonymous], [anonymous], [anonymous], [anonymous], [anonymous], [anonymous]
+  WithTop (WithBot ℝ)deriving HasTop, CommMonoidWithZero, HasSupₓ, HasInfₓ, CompleteLinearOrder,
+  LinearOrderedAddCommMonoidWithTop
 
-/--  The canonical inclusion froms reals to ereals. Do not use directly: as this is registered as
+/-- The canonical inclusion froms reals to ereals. Do not use directly: as this is registered as
 a coercion, use the coercion instead. -/
 def Real.toEreal : ℝ → Ereal :=
   some ∘ some
@@ -93,7 +88,7 @@ protected theorem coe_eq_coe_iff {x y : ℝ} : (x : Ereal) = (y : Ereal) ↔ x =
   unfold_coes
   simp [Real.toEreal, Option.some_inj]
 
-/--  The canonical map from nonnegative extended reals to extended reals -/
+/-- The canonical map from nonnegative extended reals to extended reals -/
 def _root_.ennreal.to_ereal : ℝ≥0∞ → Ereal
   | ⊤ => ⊤
   | some x => x.1
@@ -107,7 +102,7 @@ instance : HasZero Ereal :=
 instance : Inhabited Ereal :=
   ⟨0⟩
 
-/--  A recursor for `ereal` in terms of the coercion.
+/-- A recursor for `ereal` in terms of the coercion.
 
 A typical invocation looks like `induction x using ereal.rec`. Note that using `induction`
 directly will unfold `ereal` to `option` which is undesirable.
@@ -122,15 +117,19 @@ protected def rec {C : Ereal → Sort _} (h_bot : C ⊥) (h_real : ∀ a : ℝ, 
 /-! ### Real coercion -/
 
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : CanLift Ereal ℝ
-  where
-    coe := coeₓ
-      cond r := r ≠ ⊤ ∧ r ≠ ⊥
-      prf x hx := by induction x using Ereal.rec · simpa using hx · simp · simpa using hx
+instance : CanLift Ereal ℝ where
+  coe := coeₓ
+  cond := fun r => r ≠ ⊤ ∧ r ≠ ⊥
+  prf := fun x hx => by
+    induction x using Ereal.rec
+    · simpa using hx
+      
+    · simp
+      
+    · simpa using hx
+      
 
-/--  The map from extended reals to reals sending infinities to zero. -/
+/-- The map from extended reals to reals sending infinities to zero. -/
 def to_real : Ereal → ℝ
   | ⊥ => 0
   | ⊤ => 0
@@ -202,7 +201,7 @@ theorem top_ne_zero : (⊤ : Ereal) ≠ 0 :=
   (coe_ne_top 0).symm
 
 @[simp, norm_cast]
-theorem coe_add (x y : ℝ) : ((x+y : ℝ) : Ereal) = (x : Ereal)+(y : Ereal) :=
+theorem coe_add (x y : ℝ) : ((x + y : ℝ) : Ereal) = (x : Ereal) + (y : Ereal) :=
   rfl
 
 @[simp]
@@ -212,55 +211,55 @@ theorem coe_zero : ((0 : ℝ) : Ereal) = 0 :=
 theorem to_real_le_to_real {x y : Ereal} (h : x ≤ y) (hx : x ≠ ⊥) (hy : y ≠ ⊤) : x.to_real ≤ y.to_real := by
   lift x to ℝ
   lift y to ℝ
-  ·
-    simpa using h
-  ·
-    simp [hy, ((bot_lt_iff_ne_bot.2 hx).trans_le h).ne']
-  ·
-    simp [hx, (h.trans_lt (lt_top_iff_ne_top.2 hy)).Ne]
+  · simpa using h
+    
+  · simp [hy, ((bot_lt_iff_ne_bot.2 hx).trans_le h).ne']
+    
+  · simp [hx, (h.trans_lt (lt_top_iff_ne_top.2 hy)).Ne]
+    
 
 theorem coe_to_real {x : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) : (x.to_real : Ereal) = x := by
   induction x using Ereal.rec
-  ·
-    simpa using h'x
-  ·
-    rfl
-  ·
-    simpa using hx
+  · simpa using h'x
+    
+  · rfl
+    
+  · simpa using hx
+    
 
 theorem le_coe_to_real {x : Ereal} (h : x ≠ ⊤) : x ≤ x.to_real := by
   by_cases' h' : x = ⊥
-  ·
-    simp only [h', bot_le]
-  ·
-    simp only [le_reflₓ, coe_to_real h h']
+  · simp only [h', bot_le]
+    
+  · simp only [le_reflₓ, coe_to_real h h']
+    
 
 theorem coe_to_real_le {x : Ereal} (h : x ≠ ⊥) : ↑x.to_real ≤ x := by
   by_cases' h' : x = ⊤
-  ·
-    simp only [h', le_top]
-  ·
-    simp only [le_reflₓ, coe_to_real h' h]
+  · simp only [h', le_top]
+    
+  · simp only [le_reflₓ, coe_to_real h' h]
+    
 
 theorem eq_top_iff_forall_lt (x : Ereal) : x = ⊤ ↔ ∀ y : ℝ, (y : Ereal) < x := by
   constructor
-  ·
-    rintro rfl
+  · rintro rfl
     exact Ereal.coe_lt_top
-  ·
-    contrapose!
+    
+  · contrapose!
     intro h
     exact ⟨x.to_real, le_coe_to_real h⟩
+    
 
 theorem eq_bot_iff_forall_lt (x : Ereal) : x = ⊥ ↔ ∀ y : ℝ, x < (y : Ereal) := by
   constructor
-  ·
-    rintro rfl
+  · rintro rfl
     exact bot_lt_coe
-  ·
-    contrapose!
+    
+  · contrapose!
     intro h
     exact ⟨x.to_real, coe_to_real_le h⟩
+    
 
 /-! ### ennreal coercion -/
 
@@ -335,7 +334,7 @@ theorem coe_ennreal_ne_bot (x : ℝ≥0∞) : (x : Ereal) ≠ ⊥ :=
   (bot_lt_coe_ennreal x).ne'
 
 @[simp, norm_cast]
-theorem coe_ennreal_add : ∀ x y : Ennreal, ((x+y : ℝ≥0∞) : Ereal) = x+y
+theorem coe_ennreal_add : ∀ x y : Ennreal, ((x + y : ℝ≥0∞) : Ereal) = x + y
   | ⊤, y => rfl
   | x, ⊤ => by
     simp
@@ -373,46 +372,47 @@ theorem lt_iff_exists_real_btwn {a b : Ereal} : a < b ↔ ∃ x : ℝ, a < x ∧
     ⟨(x : ℝ), ax, xb⟩,
     fun ⟨x, ax, xb⟩ => ax.trans xb⟩
 
-/--  The set of numbers in `ereal` that are not equal to `±∞` is equivalent to `ℝ`. -/
-def ne_top_bot_equiv_real : ({⊥, ⊤} : Set Ereal).Compl ≃ ℝ :=
-  { toFun := fun x => Ereal.toReal x,
-    invFun := fun x =>
-      ⟨x, by
-        simp ⟩,
-    left_inv := fun ⟨x, hx⟩ =>
-      Subtype.eq $ by
-        lift x to ℝ
-        ·
-          simp
-        ·
-          simpa [not_or_distrib, and_comm] using hx,
-    right_inv := fun x => by
-      simp }
+/-- The set of numbers in `ereal` that are not equal to `±∞` is equivalent to `ℝ`. -/
+def ne_top_bot_equiv_real : ({⊥, ⊤} : Set Ereal).Compl ≃ ℝ where
+  toFun := fun x => Ereal.toReal x
+  invFun := fun x =>
+    ⟨x, by
+      simp ⟩
+  left_inv := fun ⟨x, hx⟩ =>
+    Subtype.eq $ by
+      lift x to ℝ
+      · simp
+        
+      · simpa [not_or_distrib, and_comm] using hx
+        
+  right_inv := fun x => by
+    simp
 
 /-! ### Addition -/
 
 
 @[simp]
-theorem add_top (x : Ereal) : (x+⊤) = ⊤ :=
+theorem add_top (x : Ereal) : x + ⊤ = ⊤ :=
   add_top _
 
 @[simp]
-theorem top_add (x : Ereal) : (⊤+x) = ⊤ :=
+theorem top_add (x : Ereal) : ⊤ + x = ⊤ :=
   top_add _
 
 @[simp]
-theorem bot_add_bot : ((⊥ : Ereal)+⊥) = ⊥ :=
+theorem bot_add_bot : (⊥ : Ereal) + ⊥ = ⊥ :=
   rfl
 
 @[simp]
-theorem bot_add_coe (x : ℝ) : ((⊥ : Ereal)+x) = ⊥ :=
+theorem bot_add_coe (x : ℝ) : (⊥ : Ereal) + x = ⊥ :=
   rfl
 
 @[simp]
-theorem coe_add_bot (x : ℝ) : ((x : Ereal)+⊥) = ⊥ :=
+theorem coe_add_bot (x : ℝ) : (x : Ereal) + ⊥ = ⊥ :=
   rfl
 
-theorem to_real_add : ∀ {x y : Ereal} hx : x ≠ ⊤ h'x : x ≠ ⊥ hy : y ≠ ⊤ h'y : y ≠ ⊥, to_real (x+y) = to_real x+to_real y
+theorem to_real_add :
+    ∀ {x y : Ereal} hx : x ≠ ⊤ h'x : x ≠ ⊥ hy : y ≠ ⊤ h'y : y ≠ ⊥, to_real (x + y) = to_real x + to_real y
   | ⊥, y, hx, h'x, hy, h'y => (h'x rfl).elim
   | ⊤, y, hx, h'x, hy, h'y => (hx rfl).elim
   | x, ⊤, hx, h'x, hy, h'y => (hy rfl).elim
@@ -420,61 +420,62 @@ theorem to_real_add : ∀ {x y : Ereal} hx : x ≠ ⊤ h'x : x ≠ ⊥ hy : y �
   | (x : ℝ), (y : ℝ), hx, h'x, hy, h'y => by
     simp [← Ereal.coe_add]
 
-theorem add_lt_add_right_coe {x y : Ereal} (h : x < y) (z : ℝ) : (x+z) < y+z := by
+theorem add_lt_add_right_coe {x y : Ereal} (h : x < y) (z : ℝ) : x + z < y + z := by
   induction x using Ereal.rec <;> induction y using Ereal.rec
-  ·
-    exact (lt_irreflₓ _ h).elim
-  ·
-    simp only [bot_lt_coe, bot_add_coe, ← coe_add]
-  ·
-    simp
-  ·
-    exact (lt_irreflₓ _ (h.trans (bot_lt_coe x))).elim
-  ·
-    norm_cast  at h⊢
+  · exact (lt_irreflₓ _ h).elim
+    
+  · simp only [bot_lt_coe, bot_add_coe, ← coe_add]
+    
+  · simp
+    
+  · exact (lt_irreflₓ _ (h.trans (bot_lt_coe x))).elim
+    
+  · norm_cast  at h⊢
     exact add_lt_add_right h _
-  ·
-    simp only [← coe_add, top_add, coe_lt_top]
-  ·
-    exact (lt_irreflₓ _ (h.trans_le le_top)).elim
-  ·
-    exact (lt_irreflₓ _ (h.trans_le le_top)).elim
-  ·
-    exact (lt_irreflₓ _ (h.trans_le le_top)).elim
+    
+  · simp only [← coe_add, top_add, coe_lt_top]
+    
+  · exact (lt_irreflₓ _ (h.trans_le le_top)).elim
+    
+  · exact (lt_irreflₓ _ (h.trans_le le_top)).elim
+    
+  · exact (lt_irreflₓ _ (h.trans_le le_top)).elim
+    
 
-theorem add_lt_add_of_lt_of_le {x y z t : Ereal} (h : x < y) (h' : z ≤ t) (hz : z ≠ ⊥) (ht : t ≠ ⊤) : (x+z) < y+t := by
+theorem add_lt_add_of_lt_of_le {x y z t : Ereal} (h : x < y) (h' : z ≤ t) (hz : z ≠ ⊥) (ht : t ≠ ⊤) : x + z < y + t :=
+  by
   induction z using Ereal.rec
-  ·
-    simpa only using hz
-  ·
-    calc (x+z) < y+z := add_lt_add_right_coe h _ _ ≤ y+t := add_le_add (le_reflₓ _) h'
-  ·
-    exact (ht (top_le_iff.1 h')).elim
+  · simpa only using hz
+    
+  · calc x + z < y + z := add_lt_add_right_coe h _ _ ≤ y + t := add_le_add (le_reflₓ _) h'
+    
+  · exact (ht (top_le_iff.1 h')).elim
+    
 
-theorem add_lt_add_left_coe {x y : Ereal} (h : x < y) (z : ℝ) : ((z : Ereal)+x) < z+y := by
+theorem add_lt_add_left_coe {x y : Ereal} (h : x < y) (z : ℝ) : (z : Ereal) + x < z + y := by
   simpa [add_commₓ] using add_lt_add_right_coe h z
 
-theorem add_lt_add {x y z t : Ereal} (h1 : x < y) (h2 : z < t) : (x+z) < y+t := by
+theorem add_lt_add {x y z t : Ereal} (h1 : x < y) (h2 : z < t) : x + z < y + t := by
   induction y using Ereal.rec
-  ·
-    exact (lt_irreflₓ _ (bot_le.trans_lt h1)).elim
-  ·
-    calc (x+z) ≤ y+z := add_le_add h1.le (le_reflₓ _)_ < y+t := add_lt_add_left_coe h2 _
-  ·
-    simp [lt_top_iff_ne_top, WithTop.add_eq_top, h1.ne, (h2.trans_le le_top).Ne]
+  · exact (lt_irreflₓ _ (bot_le.trans_lt h1)).elim
+    
+  · calc x + z ≤ y + z := add_le_add h1.le (le_reflₓ _)_ < y + t := add_lt_add_left_coe h2 _
+    
+  · simp [lt_top_iff_ne_top, WithTop.add_eq_top, h1.ne, (h2.trans_le le_top).Ne]
+    
 
 @[simp]
-theorem add_eq_top_iff {x y : Ereal} : (x+y) = ⊤ ↔ x = ⊤ ∨ y = ⊤ := by
+theorem add_eq_top_iff {x y : Ereal} : x + y = ⊤ ↔ x = ⊤ ∨ y = ⊤ := by
   induction x using Ereal.rec <;> induction y using Ereal.rec <;> simp [← Ereal.coe_add]
 
 @[simp]
-theorem add_lt_top_iff {x y : Ereal} : (x+y) < ⊤ ↔ x < ⊤ ∧ y < ⊤ := by
+theorem add_lt_top_iff {x y : Ereal} : x + y < ⊤ ↔ x < ⊤ ∧ y < ⊤ := by
   simp [lt_top_iff_ne_top, not_or_distrib]
 
 /-! ### Negation -/
 
 
-/--  negation on `ereal` -/
+/-- negation on `ereal` -/
 protected def neg : Ereal → Ereal
   | ⊥ => ⊤
   | ⊤ => ⊥
@@ -500,7 +501,7 @@ theorem neg_zero : -(0 : Ereal) = 0 := by
   change ((-0 : ℝ) : Ereal) = 0
   simp
 
-/--  `- -a = a` on `ereal`. -/
+/-- `- -a = a` on `ereal`. -/
 @[simp]
 protected theorem neg_negₓ : ∀ a : Ereal, - -a = a
   | ⊥ => rfl
@@ -525,7 +526,7 @@ theorem to_real_neg : ∀ {a : Ereal}, to_real (-a) = -to_real a
     simp
   | (x : ℝ) => rfl
 
-/--  Even though `ereal` is not an additive group, `-a = b ↔ -b = a` still holds -/
+/-- Even though `ereal` is not an additive group, `-a = b ↔ -b = a` still holds -/
 theorem neg_eq_iff_neg_eq {a b : Ereal} : -a = b ↔ -b = a :=
   ⟨by
     intro h
@@ -550,7 +551,7 @@ theorem neg_eg_zero_iff {x : Ereal} : -x = 0 ↔ x = 0 := by
   rw [neg_eq_iff_neg_eq]
   simp [eq_comm]
 
-/--  if `-a ≤ b` then `-b ≤ a` on `ereal`. -/
+/-- if `-a ≤ b` then `-b ≤ a` on `ereal`. -/
 protected theorem neg_le_of_neg_le : ∀ {a b : Ereal} h : -a ≤ b, -b ≤ a
   | ⊥, ⊥, h => h
   | ⊥, some b, h => by
@@ -563,11 +564,11 @@ protected theorem neg_le_of_neg_le : ∀ {a b : Ereal} h : -a ≤ b, -b ≤ a
     norm_cast  at h⊢
     exact _root_.neg_le_of_neg_le h
 
-/--  `-a ≤ b ↔ -b ≤ a` on `ereal`. -/
+/-- `-a ≤ b ↔ -b ≤ a` on `ereal`. -/
 protected theorem neg_le {a b : Ereal} : -a ≤ b ↔ -b ≤ a :=
   ⟨Ereal.neg_le_of_neg_le, Ereal.neg_le_of_neg_le⟩
 
-/--  `a ≤ -b → b ≤ -a` on ereal -/
+/-- `a ≤ -b → b ≤ -a` on ereal -/
 theorem le_neg_of_le_neg {a b : Ereal} (h : a ≤ -b) : b ≤ -a := by
   rwa [← Ereal.neg_neg b, Ereal.neg_le, Ereal.neg_neg]
 
@@ -579,10 +580,13 @@ theorem neg_le_neg_iff {a b : Ereal} : -a ≤ -b ↔ b ≤ a := by
 theorem coe_neg (x : ℝ) : ((-x : ℝ) : Ereal) = -(x : Ereal) :=
   rfl
 
-/--  Negation as an order reversing isomorphism on `ereal`. -/
-def neg_order_iso : Ereal ≃o OrderDual Ereal :=
-  { toFun := Ereal.neg, invFun := Ereal.neg, left_inv := Ereal.neg_neg, right_inv := Ereal.neg_neg,
-    map_rel_iff' := fun x y => neg_le_neg_iff }
+/-- Negation as an order reversing isomorphism on `ereal`. -/
+def neg_order_iso : Ereal ≃o OrderDual Ereal where
+  toFun := Ereal.neg
+  invFun := Ereal.neg
+  left_inv := Ereal.neg_neg
+  right_inv := Ereal.neg_neg
+  map_rel_iff' := fun x y => neg_le_neg_iff
 
 theorem neg_lt_of_neg_lt {a b : Ereal} (h : -a < b) : -b < a := by
   apply lt_of_le_of_neₓ (Ereal.neg_le_of_neg_le h.le)
@@ -596,11 +600,11 @@ theorem neg_lt_iff_neg_lt {a b : Ereal} : -a < b ↔ -b < a :=
 /-! ### Subtraction -/
 
 
-/--  Subtraction on `ereal`, defined by `x - y = x + (-y)`. Since addition is badly behaved at some
+/-- Subtraction on `ereal`, defined by `x - y = x + (-y)`. Since addition is badly behaved at some
 points, so is subtraction. There is no standard algebraic typeclass involving subtraction that is
 registered on `ereal` because of this bad behavior. -/
 protected noncomputable def sub (x y : Ereal) : Ereal :=
-  x+-y
+  x + -y
 
 noncomputable instance : Sub Ereal :=
   ⟨Ereal.sub⟩
@@ -627,15 +631,15 @@ theorem coe_sub_bot (x : ℝ) : (x : Ereal) - ⊤ = ⊥ :=
 
 @[simp]
 theorem sub_zero (x : Ereal) : x - 0 = x := by
-  change (x+-0) = x
+  change x + -0 = x
   simp
 
 @[simp]
 theorem zero_sub (x : Ereal) : 0 - x = -x := by
-  change (0+-x) = -x
+  change 0 + -x = -x
   simp
 
-theorem sub_eq_add_neg (x y : Ereal) : x - y = x+-y :=
+theorem sub_eq_add_neg (x y : Ereal) : x - y = x + -y :=
   rfl
 
 theorem sub_le_sub {x y z t : Ereal} (h : x ≤ y) (h' : t ≤ z) : x - z ≤ y - t :=
@@ -651,34 +655,32 @@ theorem sub_lt_sub_of_lt_of_le {x y z t : Ereal} (h : x < y) (h' : z ≤ t) (hz 
 theorem coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal (x : ℝ) :
     (x : Ereal) = Real.toNnreal x - Real.toNnreal (-x) := by
   rcases le_or_ltₓ 0 x with (h | h)
-  ·
-    have : Real.toNnreal x = ⟨x, h⟩ := by
-      ·
-        ext
-        simp [h]
+  · have : Real.toNnreal x = ⟨x, h⟩ := by
+      ext
+      simp [h]
     simp only [Real.to_nnreal_of_nonpos (neg_nonpos.mpr h), this, sub_zero, Ennreal.coe_zero, coe_ennreal_zero, coe_coe]
     rfl
-  ·
-    have : (x : Ereal) = -(-x : ℝ) := by
+    
+  · have : (x : Ereal) = -(-x : ℝ) := by
       simp
     conv_lhs => rw [this]
     have : Real.toNnreal (-x) = ⟨-x, neg_nonneg.mpr h.le⟩ := by
-      ·
-        ext
-        simp [neg_nonneg.mpr h.le]
+      ext
+      simp [neg_nonneg.mpr h.le]
     simp only [Real.to_nnreal_of_nonpos h.le, this, zero_sub, neg_eq_neg_iff, coe_neg, Ennreal.coe_zero,
       coe_ennreal_zero, coe_coe]
     rfl
+    
 
 theorem to_real_sub {x y : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) (hy : y ≠ ⊤) (h'y : y ≠ ⊥) :
     to_real (x - y) = to_real x - to_real y := by
   rw [Ereal.sub_eq_add_neg, to_real_add hx h'x, to_real_neg]
-  ·
-    rfl
-  ·
-    simpa using hy
-  ·
-    simpa using h'y
+  · rfl
+    
+  · simpa using hy
+    
+  · simpa using h'y
+    
 
 /-! ### Multiplication -/
 
@@ -688,34 +690,34 @@ theorem coe_one : ((1 : ℝ) : Ereal) = 1 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_mul (x y : ℝ) : ((x*y : ℝ) : Ereal) = (x : Ereal)*(y : Ereal) :=
+theorem coe_mul (x y : ℝ) : ((x * y : ℝ) : Ereal) = (x : Ereal) * (y : Ereal) :=
   Eq.trans (WithBot.coe_eq_coe.mpr WithBot.coe_mul) WithTop.coe_mul
 
 @[simp]
-theorem mul_top (x : Ereal) (h : x ≠ 0) : (x*⊤) = ⊤ :=
+theorem mul_top (x : Ereal) (h : x ≠ 0) : x * ⊤ = ⊤ :=
   WithTop.mul_top h
 
 @[simp]
-theorem top_mul (x : Ereal) (h : x ≠ 0) : (⊤*x) = ⊤ :=
+theorem top_mul (x : Ereal) (h : x ≠ 0) : ⊤ * x = ⊤ :=
   WithTop.top_mul h
 
 @[simp]
-theorem bot_mul_bot : ((⊥ : Ereal)*⊥) = ⊥ :=
+theorem bot_mul_bot : (⊥ : Ereal) * ⊥ = ⊥ :=
   rfl
 
 @[simp]
-theorem bot_mul_coe (x : ℝ) (h : x ≠ 0) : ((⊥ : Ereal)*x) = ⊥ :=
+theorem bot_mul_coe (x : ℝ) (h : x ≠ 0) : (⊥ : Ereal) * x = ⊥ :=
   WithTop.coe_mul.symm.trans $ WithBot.coe_eq_coe.mpr $ WithBot.bot_mul $ Function.Injective.ne (@Option.some.injₓ _) h
 
 @[simp]
-theorem coe_mul_bot (x : ℝ) (h : x ≠ 0) : ((x : Ereal)*⊥) = ⊥ :=
+theorem coe_mul_bot (x : ℝ) (h : x ≠ 0) : (x : Ereal) * ⊥ = ⊥ :=
   WithTop.coe_mul.symm.trans $ WithBot.coe_eq_coe.mpr $ WithBot.mul_bot $ Function.Injective.ne (@Option.some.injₓ _) h
 
 @[simp]
 theorem to_real_one : to_real 1 = 1 :=
   rfl
 
-theorem to_real_mul : ∀ {x y : Ereal}, to_real (x*y) = to_real x*to_real y
+theorem to_real_mul : ∀ {x y : Ereal}, to_real (x * y) = to_real x * to_real y
   | ⊤, y => by
     by_cases' hy : y = 0 <;> simp [hy]
   | x, ⊤ => by

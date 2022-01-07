@@ -40,7 +40,7 @@ In this section we define `alexandroff X` to be the disjoint union of `X` and `�
 -/
 
 
-/--  The Alexandroff extension of an arbitrary topological space `X` -/
+/-- The Alexandroff extension of an arbitrary topological space `X` -/
 def Alexandroff (X : Type _) :=
   Option X
 
@@ -48,7 +48,7 @@ namespace Alexandroff
 
 variable {X : Type _}
 
-/--  The point at infinity -/
+/-- The point at infinity -/
 def infty : Alexandroff X :=
   none
 
@@ -75,7 +75,7 @@ theorem coe_ne_infty (x : X) : (x : Alexandroff X) ≠ ∞ :=
 theorem infty_ne_coe (x : X) : ∞ ≠ (x : Alexandroff X) :=
   fun.
 
-/--  Recursor for `alexandroff` using the preferred forms `∞` and `↑x`. -/
+/-- Recursor for `alexandroff` using the preferred forms `∞` and `↑x`. -/
 @[elab_as_eliminator]
 protected def rec (C : Alexandroff X → Sort _) (h₁ : C ∞) (h₂ : ∀ x : X, C x) : ∀ z : Alexandroff X, C z :=
   Option.rec h₁ h₂
@@ -104,8 +104,10 @@ theorem compl_image_coe (s : Set X) : (coeₓ '' s : Set (Alexandroff X))ᶜ = c
 theorem ne_infty_iff_exists {x : Alexandroff X} : x ≠ ∞ ↔ ∃ y : X, (y : Alexandroff X) = x := by
   induction x using Alexandroff.rec <;> simp
 
--- failed to format: format: uncaught backtrack exception
-instance : CanLift ( Alexandroff X ) X where coe := coeₓ cond x := x ≠ ∞ prf x := ne_infty_iff_exists . 1
+instance : CanLift (Alexandroff X) X where
+  coe := coeₓ
+  cond := fun x => x ≠ ∞
+  prf := fun x => ne_infty_iff_exists.1
 
 theorem not_mem_range_coe_iff {x : Alexandroff X} : x ∉ range (coeₓ : X → Alexandroff X) ↔ x = ∞ := by
   rw [← mem_compl_iff, compl_range_coe, mem_singleton_iff]
@@ -137,38 +139,24 @@ that `coe` has dense range, so it is a dense embedding.
 
 variable [TopologicalSpace X]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : TopologicalSpace ( Alexandroff X )
-  where
-    IsOpen
-        s
-        :=
-        ( ∞ ∈ s → IsCompact ( ( ( coeₓ : X → Alexandroff X ) ⁻¹' s ) ᶜ ) )
-          ∧
-          IsOpen ( ( coeₓ : X → Alexandroff X ) ⁻¹' s )
-      is_open_univ := by simp
-      is_open_inter
-        s t
-        :=
-        by
-          rintro ⟨ hms , hs ⟩ ⟨ hmt , ht ⟩
-            refine' ⟨ _ , hs.inter ht ⟩
-            rintro ⟨ hms' , hmt' ⟩
-            simpa [ compl_inter ] using ( hms hms' ) . union ( hmt hmt' )
-      is_open_sUnion
-        S ho
-        :=
-        by
-          suffices
-              IsOpen ( coeₓ ⁻¹' ⋃₀ S : Set X )
-                by
-                  refine' ⟨ _ , this ⟩
-                    rintro ⟨ s , hsS : s ∈ S , hs : ∞ ∈ s ⟩
-                    refine' compact_of_is_closed_subset ( ( ho s hsS ) . 1 hs ) this.is_closed_compl _
-                    exact compl_subset_compl.mpr ( preimage_mono $ subset_sUnion_of_mem hsS )
-            rw [ preimage_sUnion ]
-            exact is_open_bUnion fun s hs => ( ho s hs ) . 2
+instance : TopologicalSpace (Alexandroff X) where
+  IsOpen := fun s =>
+    (∞ ∈ s → IsCompact (((coeₓ : X → Alexandroff X) ⁻¹' s)ᶜ)) ∧ IsOpen ((coeₓ : X → Alexandroff X) ⁻¹' s)
+  is_open_univ := by
+    simp
+  is_open_inter := fun s t => by
+    rintro ⟨hms, hs⟩ ⟨hmt, ht⟩
+    refine' ⟨_, hs.inter ht⟩
+    rintro ⟨hms', hmt'⟩
+    simpa [compl_inter] using (hms hms').union (hmt hmt')
+  is_open_sUnion := fun S ho => by
+    suffices IsOpen (coeₓ ⁻¹' ⋃₀S : Set X) by
+      refine' ⟨_, this⟩
+      rintro ⟨s, hsS : s ∈ S, hs : ∞ ∈ s⟩
+      refine' compact_of_is_closed_subset ((ho s hsS).1 hs) this.is_closed_compl _
+      exact compl_subset_compl.mpr (preimage_mono $ subset_sUnion_of_mem hsS)
+    rw [preimage_sUnion]
+    exact is_open_bUnion fun s hs => (ho s hs).2
 
 variable {s : Set (Alexandroff X)} {t : Set X}
 
@@ -186,9 +174,8 @@ theorem is_open_iff_of_mem (h : ∞ ∈ s) :
 theorem is_open_iff_of_not_mem (h : ∞ ∉ s) : IsOpen s ↔ IsOpen (coeₓ ⁻¹' s : Set X) := by
   simp [is_open_def, h]
 
-theorem is_closed_iff_of_mem (h : ∞ ∈ s) : IsClosed s ↔ IsClosed (coeₓ ⁻¹' s : Set X) :=
+theorem is_closed_iff_of_mem (h : ∞ ∈ s) : IsClosed s ↔ IsClosed (coeₓ ⁻¹' s : Set X) := by
   have : ∞ ∉ sᶜ := fun H => H h
-  by
   rw [← is_open_compl_iff, is_open_iff_of_not_mem this, ← is_open_compl_iff, preimage_compl]
 
 theorem is_closed_iff_of_not_mem (h : ∞ ∉ s) :
@@ -208,7 +195,7 @@ theorem is_open_compl_image_coe {s : Set X} : IsOpen ((coeₓ '' s : Set (Alexan
 theorem is_closed_image_coe {s : Set X} : IsClosed (coeₓ '' s : Set (Alexandroff X)) ↔ IsClosed s ∧ IsCompact s := by
   rw [← is_open_compl_iff, is_open_compl_image_coe]
 
-/--  An open set in `alexandroff X` constructed from a closed compact set in `X` -/
+/-- An open set in `alexandroff X` constructed from a closed compact set in `X` -/
 def opens_of_compl (s : Set X) (h₁ : IsClosed s) (h₂ : IsCompact s) : TopologicalSpace.Opens (Alexandroff X) :=
   ⟨(coeₓ '' s)ᶜ, is_open_compl_image_coe.2 ⟨h₁, h₂⟩⟩
 
@@ -243,23 +230,23 @@ theorem nhds_within_coe (s : Set (Alexandroff X)) (x : X) : 𝓝[s] ↑x = map c
 theorem comap_coe_nhds (x : X) : comap (coeₓ : X → Alexandroff X) (𝓝 x) = 𝓝 x :=
   (open_embedding_coe.to_inducing.nhds_eq_comap x).symm
 
-/--  If `x` is not an isolated point of `X`, then `x : alexandroff X` is not an isolated point
+/-- If `x` is not an isolated point of `X`, then `x : alexandroff X` is not an isolated point
 of `alexandroff X`. -/
 instance nhds_within_compl_coe_ne_bot (x : X) [h : ne_bot (𝓝[≠] x)] : ne_bot (𝓝[≠] (x : Alexandroff X)) := by
   simpa [nhds_within_coe, preimage, coe_eq_coe] using h.map coeₓ
 
 theorem nhds_within_compl_infty_eq : 𝓝[≠] (∞ : Alexandroff X) = map coeₓ (coclosed_compact X) := by
   refine' (nhds_within_basis_open ∞ _).ext (has_basis_coclosed_compact.map _) _ _
-  ·
-    rintro s ⟨hs, hso⟩
+  · rintro s ⟨hs, hso⟩
     refine' ⟨_, (is_open_iff_of_mem hs).mp hso, _⟩
     simp
-  ·
-    rintro s ⟨h₁, h₂⟩
+    
+  · rintro s ⟨h₁, h₂⟩
     refine' ⟨_, ⟨mem_compl infty_not_mem_image_coe, is_open_compl_image_coe.2 ⟨h₁, h₂⟩⟩, _⟩
     simp [compl_image_coe, ← diff_eq, subset_preimage_image]
+    
 
-/--  If `X` is a non-compact space, then `∞` is not an isolated point of `alexandroff X`. -/
+/-- If `X` is a non-compact space, then `∞` is not an isolated point of `alexandroff X`. -/
 instance nhds_within_compl_infty_ne_bot [NoncompactSpace X] : ne_bot (𝓝[≠] (∞ : Alexandroff X)) := by
   rw [nhds_within_compl_infty_eq]
   infer_instance
@@ -311,7 +298,7 @@ theorem continuous_at_coe {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X �
     ContinuousAt f x ↔ ContinuousAt (f ∘ coeₓ) x := by
   rw [ContinuousAt, nhds_coe_eq, tendsto_map'_iff, ContinuousAt]
 
-/--  If `X` is not a compact space, then the natural embedding `X → alexandroff X` has dense range.
+/-- If `X` is not a compact space, then the natural embedding `X → alexandroff X` has dense range.
 -/
 theorem dense_range_coe [NoncompactSpace X] : DenseRange (coeₓ : X → Alexandroff X) := by
   rw [DenseRange, ← compl_infty]
@@ -332,56 +319,51 @@ Finally, if the original space `X` is *not* compact and is a preconnected space,
 -/
 
 
-/--  For any topological space `X`, its one point compactification is a compact space. -/
+/-- For any topological space `X`, its one point compactification is a compact space. -/
 instance : CompactSpace (Alexandroff X) where
   compact_univ := by
     refine' is_compact_iff_ultrafilter_le_nhds.2 fun f hf => _
     clear hf
     by_cases' hf : (f : Filter (Alexandroff X)) ≤ 𝓝 ∞
-    ·
-      exact ⟨∞, mem_univ _, hf⟩
-    ·
-      simp only [ultrafilter_le_nhds_infty, not_forall, not_not] at hf
+    · exact ⟨∞, mem_univ _, hf⟩
+      
+    · simp only [ultrafilter_le_nhds_infty, not_forall, not_not] at hf
       rcases hf with ⟨s, h₁, h₂, hsf⟩
-      have hf : range (coeₓ : X → Alexandroff X) ∈ f
-      exact mem_of_superset hsf (image_subset_range _ _)
-      have hsf' : s ∈ f.comap coe_injective hf
-      exact (f.mem_comap _ _).2 hsf
+      have hf : range (coeₓ : X → Alexandroff X) ∈ f := mem_of_superset hsf (image_subset_range _ _)
+      have hsf' : s ∈ f.comap coe_injective hf := (f.mem_comap _ _).2 hsf
       rcases h₂.ultrafilter_le_nhds _ (le_principal_iff.2 hsf') with ⟨a, has, hle⟩
       rw [Ultrafilter.coe_comap, ← comap_coe_nhds, comap_le_comap_iff hf] at hle
       exact ⟨a, mem_univ _, hle⟩
+      
 
-/--  The one point compactification of a `t0_space` space is a `t0_space`. -/
+/-- The one point compactification of a `t0_space` space is a `t0_space`. -/
 instance [T0Space X] : T0Space (Alexandroff X) := by
   refine' ⟨fun x y hxy => _⟩
   induction x using Alexandroff.rec <;> induction y using Alexandroff.rec
-  ·
-    exact (hxy rfl).elim
-  ·
-    use {∞}ᶜ
+  · exact (hxy rfl).elim
+    
+  · use {∞}ᶜ
     simp [is_closed_infty]
-  ·
-    use {∞}ᶜ
+    
+  · use {∞}ᶜ
     simp [is_closed_infty]
-  ·
-    rcases T0Space.t0 x y (mt coe_eq_coe.mpr hxy) with ⟨U, hUo, hU⟩
+    
+  · rcases T0Space.t0 x y (mt coe_eq_coe.mpr hxy) with ⟨U, hUo, hU⟩
     refine' ⟨coeₓ '' U, is_open_image_coe.2 hUo, _⟩
     simpa [coe_eq_coe]
+    
 
--- failed to format: format: uncaught backtrack exception
 /-- The one point compactification of a `t1_space` space is a `t1_space`. -/
-  instance
-    [ T1Space X ] : T1Space ( Alexandroff X )
-    where
-      t1
-        z
-        :=
-        by
-          induction z using Alexandroff.rec
-            · exact is_closed_infty
-            · simp only [ ← image_singleton , is_closed_image_coe ] exact ⟨ is_closed_singleton , is_compact_singleton ⟩
+instance [T1Space X] : T1Space (Alexandroff X) where
+  t1 := fun z => by
+    induction z using Alexandroff.rec
+    · exact is_closed_infty
+      
+    · simp only [← image_singleton, is_closed_image_coe]
+      exact ⟨is_closed_singleton, is_compact_singleton⟩
+      
 
-/--  The one point compactification of a locally compact Hausdorff space is a normal (hence,
+/-- The one point compactification of a locally compact Hausdorff space is a normal (hence,
 Hausdorff and regular) topological space. -/
 instance [LocallyCompactSpace X] [T2Space X] : NormalSpace (Alexandroff X) := by
   have key : ∀ z : X, ∃ u v : Set (Alexandroff X), IsOpen u ∧ IsOpen v ∧ ↑z ∈ u ∧ ∞ ∈ v ∧ u ∩ v = ∅ := by
@@ -394,17 +376,17 @@ instance [LocallyCompactSpace X] [T2Space X] : NormalSpace (Alexandroff X) := by
     exact image_subset _ subset_closure
   refine' @normal_of_compact_t2 _ _ _ ⟨fun x y hxy => _⟩
   induction x using Alexandroff.rec <;> induction y using Alexandroff.rec
-  ·
-    exact (hxy rfl).elim
-  ·
-    rcases key y with ⟨u, v, hu, hv, hxu, hyv, huv⟩
+  · exact (hxy rfl).elim
+    
+  · rcases key y with ⟨u, v, hu, hv, hxu, hyv, huv⟩
     exact ⟨v, u, hv, hu, hyv, hxu, inter_comm u v ▸ huv⟩
-  ·
-    exact key x
-  ·
-    exact separated_by_open_embedding open_embedding_coe (mt coe_eq_coe.mpr hxy)
+    
+  · exact key x
+    
+  · exact separated_by_open_embedding open_embedding_coe (mt coe_eq_coe.mpr hxy)
+    
 
-/--  If `X` is not a compact space, then `alexandroff X` is a connected space. -/
+/-- If `X` is not a compact space, then `alexandroff X` is a connected space. -/
 instance [PreconnectedSpace X] [NoncompactSpace X] : ConnectedSpace (Alexandroff X) where
   to_preconnected_space := dense_embedding_coe.to_dense_inducing.PreconnectedSpace
   to_nonempty := inferInstance

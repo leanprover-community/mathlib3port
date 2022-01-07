@@ -27,7 +27,7 @@ variable {α : Type _} [LinearOrderedRing α] [FloorRing α]
 
 theorem tendsto_floor_at_top : tendsto (floor : α → ℤ) at_top at_top :=
   floor_mono.tendsto_at_top_at_top $ fun b =>
-    ⟨(b+1 : ℤ), by
+    ⟨(b + 1 : ℤ), by
       rw [floor_coe]
       exact (lt_add_one _).le⟩
 
@@ -45,7 +45,7 @@ theorem tendsto_ceil_at_bot : tendsto (ceil : α → ℤ) at_bot at_bot :=
 
 variable [TopologicalSpace α]
 
-theorem continuous_on_floor (n : ℤ) : ContinuousOn (fun x => floor x : α → α) (Ico n (n+1) : Set α) :=
+theorem continuous_on_floor (n : ℤ) : ContinuousOn (fun x => floor x : α → α) (Ico n (n + 1) : Set α) :=
   (continuous_on_congr $ floor_eq_on_Ico' n).mpr continuous_on_const
 
 theorem continuous_on_ceil (n : ℤ) : ContinuousOn (fun x => ceil x : α → α) (Ioc (n - 1) n : Set α) :=
@@ -62,7 +62,7 @@ theorem tendsto_ceil_left' [OrderClosedTopology α] (n : ℤ) : tendsto (fun x =
 theorem tendsto_floor_right [OrderClosedTopology α] (n : ℤ) : tendsto (fun x => floor x : α → α) (𝓝[≥] n) (𝓝[≥] n) :=
   tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (tendsto_floor_right' _)
     (by
-      refine' eventually_nhds_with_of_forall $ fun x hx : (n : α) ≤ x => _
+      refine' eventually_nhds_within_of_forall $ fun x hx : (n : α) ≤ x => _
       change _ ≤ _
       norm_cast
       convert ← floor_mono hx
@@ -72,7 +72,7 @@ theorem tendsto_floor_right [OrderClosedTopology α] (n : ℤ) : tendsto (fun x 
 theorem tendsto_ceil_left [OrderClosedTopology α] (n : ℤ) : tendsto (fun x => ceil x : α → α) (𝓝[≤] n) (𝓝[≤] n) :=
   tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (tendsto_ceil_left' _)
     (by
-      refine' eventually_nhds_with_of_forall $ fun x hx : x ≤ (n : α) => _
+      refine' eventually_nhds_within_of_forall $ fun x hx : x ≤ (n : α) => _
       change _ ≤ _
       norm_cast
       convert ← ceil_mono hx
@@ -91,10 +91,11 @@ theorem tendsto_floor_left [OrderClosedTopology α] (n : ℤ) :
       infer_instance
   ring
 
-theorem tendsto_ceil_right [OrderClosedTopology α] (n : ℤ) : tendsto (fun x => ceil x : α → α) (𝓝[>] n) (𝓝[≥] n+1) := by
+theorem tendsto_ceil_right [OrderClosedTopology α] (n : ℤ) :
+    tendsto (fun x => ceil x : α → α) (𝓝[>] n) (𝓝[≥] (n + 1)) := by
   rw [← nhds_within_Ioc_eq_nhds_within_Ioi (lt_add_one (n : α))]
   convert
-      (tendsto_nhds_within_congr $ fun x hx => (ceil_eq_on_Ioc' (n+1) x hx).symm)
+      (tendsto_nhds_within_congr $ fun x hx => (ceil_eq_on_Ioc' (n + 1) x hx).symm)
         (tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ tendsto_const_nhds
           (eventually_of_forall fun _ => mem_Ici.mpr $ le_reflₓ _)) <;>
     first |
@@ -107,19 +108,20 @@ theorem tendsto_floor_left' [OrderClosedTopology α] (n : ℤ) : tendsto (fun x 
   rw [← nhds_within_univ]
   exact tendsto_nhds_within_mono_right (subset_univ _) (tendsto_floor_left n)
 
-theorem tendsto_ceil_right' [OrderClosedTopology α] (n : ℤ) : tendsto (fun x => ceil x : α → α) (𝓝[>] n) (𝓝 (n+1)) := by
+theorem tendsto_ceil_right' [OrderClosedTopology α] (n : ℤ) : tendsto (fun x => ceil x : α → α) (𝓝[>] n) (𝓝 (n + 1)) :=
+  by
   rw [← nhds_within_univ]
   exact tendsto_nhds_within_mono_right (subset_univ _) (tendsto_ceil_right n)
 
-theorem continuous_on_fract [TopologicalAddGroup α] (n : ℤ) : ContinuousOn (fract : α → α) (Ico n (n+1) : Set α) :=
+theorem continuous_on_fract [TopologicalAddGroup α] (n : ℤ) : ContinuousOn (fract : α → α) (Ico n (n + 1) : Set α) :=
   continuous_on_id.sub (continuous_on_floor n)
 
 theorem tendsto_fract_left' [OrderClosedTopology α] [TopologicalAddGroup α] (n : ℤ) :
     tendsto (fract : α → α) (𝓝[<] n) (𝓝 1) := by
   convert (tendsto_nhds_within_of_tendsto_nhds tendsto_id).sub (tendsto_floor_left' n) <;>
-    [·
-      norm_cast
-      ring,
+    [· norm_cast
+      ring
+      ,
     infer_instance, infer_instance]
 
 theorem tendsto_fract_left [OrderClosedTopology α] [TopologicalAddGroup α] (n : ℤ) :
@@ -145,8 +147,7 @@ theorem ContinuousOn.comp_fract' {β γ : Type _} [OrderTopology α] [Topologica
   rw [continuous_iff_continuous_at]
   rintro ⟨s, t⟩
   by_cases' ht : t = floor t
-  ·
-    rw [ht]
+  · rw [ht]
     rw [← continuous_within_at_univ]
     have : (univ : Set (β × α)) ⊆ Set.Prod univ (Iio $ floor t) ∪ Set.Prod univ (Ici $ floor t) := by
       rintro p -
@@ -154,8 +155,7 @@ theorem ContinuousOn.comp_fract' {β γ : Type _} [OrderTopology α] [Topologica
       exact ⟨True.intro, lt_or_leₓ _ _⟩
     refine' ContinuousWithinAt.mono _ this
     refine' ContinuousWithinAt.union _ _
-    ·
-      simp only [ContinuousWithinAt, fract_coe, nhds_within_prod_eq, nhds_within_univ, id.def, comp_app, Prod.map_mkₓ]
+    · simp only [ContinuousWithinAt, fract_coe, nhds_within_prod_eq, nhds_within_univ, id.def, comp_app, Prod.map_mkₓ]
       have : (uncurry f) (s, 0) = (uncurry f) (s, (1 : α)) := by
         simp [uncurry, hf]
       rw [this]
@@ -167,8 +167,8 @@ theorem ContinuousOn.comp_fract' {β γ : Type _} [OrderTopology α] [Topologica
       rw [nhds_within_prod_eq, nhds_within_univ]
       rw [nhds_within_Icc_eq_nhds_within_Iic (@zero_lt_one α _ _)]
       exact tendsto_id.prod_map (tendsto_nhds_within_mono_right Iio_subset_Iic_self $ tendsto_fract_left _)
-    ·
-      simp only [ContinuousWithinAt, fract_coe, nhds_within_prod_eq, nhds_within_univ, id.def, comp_app, Prod.map_mkₓ]
+      
+    · simp only [ContinuousWithinAt, fract_coe, nhds_within_prod_eq, nhds_within_univ, id.def, comp_app, Prod.map_mkₓ]
       refine'
         (h _
                 ⟨True.intro, by
@@ -176,9 +176,9 @@ theorem ContinuousOn.comp_fract' {β γ : Type _} [OrderTopology α] [Topologica
           _
       rw [nhds_within_prod_eq, nhds_within_univ, nhds_within_Icc_eq_nhds_within_Ici (@zero_lt_one α _ _)]
       exact tendsto_id.prod_map (tendsto_fract_right _)
-  ·
-    have : t ∈ Ioo (floor t : α) ((floor t : α)+1)
-    exact ⟨lt_of_le_of_neₓ (floor_le t) (Ne.symm ht), lt_floor_add_one _⟩
+      
+    
+  · have : t ∈ Ioo (floor t : α) ((floor t : α) + 1) := ⟨lt_of_le_of_neₓ (floor_le t) (Ne.symm ht), lt_floor_add_one _⟩
     apply (h ((Prod.map _ fract) _) ⟨trivialₓ, ⟨fract_nonneg _, (fract_lt_one _).le⟩⟩).Tendsto.comp
     simp only [nhds_prod_eq, nhds_within_prod_eq, nhds_within_univ, id.def, Prod.map_mkₓ]
     exact
@@ -187,6 +187,7 @@ theorem ContinuousOn.comp_fract' {β γ : Type _} [OrderTopology α] [Topologica
           (((continuous_on_fract _ _ (Ioo_subset_Ico_self this)).mono Ioo_subset_Ico_self).ContinuousAt
             (Ioo_mem_nhds this.1 this.2))
           (eventually_of_forall fun x => ⟨fract_nonneg _, (fract_lt_one _).le⟩))
+    
 
 theorem ContinuousOn.comp_fract {β : Type _} [OrderTopology α] [TopologicalAddGroup α] [TopologicalSpace β] {f : α → β}
     (h : ContinuousOn f I) (hf : f 0 = f 1) : Continuous (f ∘ fract) := by

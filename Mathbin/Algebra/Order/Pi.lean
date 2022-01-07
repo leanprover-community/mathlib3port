@@ -19,43 +19,43 @@ variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
-/--  The product of a family of ordered commutative monoids is an ordered commutative monoid. -/
+/-- The product of a family of ordered commutative monoids is an ordered commutative monoid. -/
 @[to_additive
       "The product of a family of ordered additive commutative monoids is\n  an ordered additive commutative monoid."]
 instance OrderedCommMonoid {ι : Type _} {Z : ι → Type _} [∀ i, OrderedCommMonoid (Z i)] :
     OrderedCommMonoid (∀ i, Z i) :=
   { Pi.partialOrder, Pi.commMonoid with mul_le_mul_left := fun f g w h i => mul_le_mul_left' (w i) _ }
 
-/--  The product of a family of canonically ordered monoids is a canonically ordered monoid. -/
+/-- The product of a family of canonically ordered monoids is a canonically ordered monoid. -/
 @[to_additive
       "The product of a family of canonically ordered additive monoids is\n  a canonically ordered additive monoid."]
 instance {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i)] : CanonicallyOrderedMonoid (∀ i, Z i) :=
   { Pi.orderBot, Pi.orderedCommMonoid with
     le_iff_exists_mul := fun f g => by
       fconstructor
-      ·
-        intro w
+      · intro w
         fconstructor
-        ·
-          exact fun i => (le_iff_exists_mul.mp (w i)).some
-        ·
-          ext i
+        · exact fun i => (le_iff_exists_mul.mp (w i)).some
+          
+        · ext i
           exact (le_iff_exists_mul.mp (w i)).some_spec
-      ·
-        rintro ⟨h, rfl⟩
-        exact fun i => le_mul_right (le_reflₓ _) }
+          
+        
+      · rintro ⟨h, rfl⟩
+        exact fun i => le_mul_right (le_reflₓ _)
+         }
 
 @[to_additive]
 instance OrderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid $ f i] : OrderedCancelCommMonoid (∀ i : I, f i) := by
   refine_struct
-      { Pi.partialOrder, Pi.monoid with mul := ·*·, one := (1 : ∀ i, f i), le := · ≤ ·, lt := · < ·,
+      { Pi.partialOrder, Pi.monoid with mul := · * ·, one := (1 : ∀ i, f i), le := · ≤ ·, lt := · < ·,
         npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive]
 instance OrderedCommGroup [∀ i, OrderedCommGroup $ f i] : OrderedCommGroup (∀ i : I, f i) :=
-  { Pi.commGroup, Pi.orderedCommMonoid with mul := ·*·, one := (1 : ∀ i, f i), le := · ≤ ·, lt := · < ·,
+  { Pi.commGroup, Pi.orderedCommMonoid with mul := · * ·, one := (1 : ∀ i, f i), le := · ≤ ·, lt := · < ·,
     npow := Monoidₓ.npow }
 
 end Pi

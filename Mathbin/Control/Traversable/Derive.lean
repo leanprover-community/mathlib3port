@@ -8,7 +8,7 @@ unsafe def with_prefix : Option Name → Name → Name
   | none, n => n
   | some p, n => p ++ n
 
-/--  similar to `nested_traverse` but for `functor` -/
+/-- similar to `nested_traverse` but for `functor` -/
 unsafe def nested_map (f v : expr) : expr → tactic expr
   | t => do
     let t ← instantiate_mvars t
@@ -20,7 +20,7 @@ unsafe def nested_map (f v : expr) : expr → tactic expr
           mk_mapp `` Functor.map [t.app_fn, _inst, none, none, f']
         else fail f! "type {t } is not a functor with respect to variable {v}")
 
-/--  similar to `traverse_field` but for `functor` -/
+/-- similar to `traverse_field` but for `functor` -/
 unsafe def map_field (n : Name) (cl f α β e : expr) : tactic expr := do
   let t ← infer_type e >>= whnf
   if t.get_app_fn.const_name = n then fail "recursive types not supported"
@@ -32,7 +32,7 @@ unsafe def map_field (n : Name) (cl f α β e : expr) : tactic expr := do
           pure $ f' e
         else is_def_eq t.app_fn cl >> mk_app `` comp.mk [e] <|> pure e
 
-/--  similar to `traverse_constructor` but for `functor` -/
+/-- similar to `traverse_constructor` but for `functor` -/
 unsafe def map_constructor (c n : Name) (f α β : expr) (args₀ : List expr) (args₁ : List (Bool × expr))
     (rec_call : List expr) : tactic expr := do
   let g ← target
@@ -45,7 +45,7 @@ unsafe def map_constructor (c n : Name) (f α β : expr) (args₀ : List expr) (
   let r := constr.mk_app (args₀ ++ args')
   return r
 
-/--  derive the `map` definition of a `functor` -/
+/-- derive the `map` definition of a `functor` -/
 unsafe def mk_map (type : Name) := do
   let ls ← local_context
   let [α, β, f, x] ← tactic.intro_lst [`α, `β, `f, `x]
@@ -72,7 +72,7 @@ unsafe def mk_mapp' (fn : expr) (args : List expr) : tactic expr := do
   let t ← infer_type fn >>= whnf
   mk_mapp_aux' fn t args
 
-/--  derive the equations for a specific `map` definition -/
+/-- derive the equations for a specific `map` definition -/
 unsafe def derive_map_equations (pre : Option Name) (n : Name) (vs : List expr) (tgt : expr) : tactic Unit := do
   let e ← get_env
   ((e.constructors_of n).enumFrom 1).mmap' $ fun ⟨i, c⟩ => do
@@ -122,14 +122,14 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit := do
       let tgt ← pis vs tgt
       derive_map_equations pre n vs tgt
 
-/--  `seq_apply_constructor f [x,y,z]` synthesizes `f <*> x <*> y <*> z` -/
+/-- `seq_apply_constructor f [x,y,z]` synthesizes `f <*> x <*> y <*> z` -/
 private unsafe def seq_apply_constructor : expr → List (Sum expr expr) → tactic (List (tactic expr) × expr)
   | e, Sum.inr x :: xs =>
     Prod.map (cons intro1) id <$> (to_expr (pquote.1 ((%%ₓe) <*> %%ₓx)) >>= flip seq_apply_constructor xs)
   | e, Sum.inl x :: xs => Prod.map (cons $ pure x) id <$> seq_apply_constructor e xs
   | e, [] => return ([], e)
 
-/--  ``nested_traverse f α (list (array n (list α)))`` synthesizes the expression
+/-- ``nested_traverse f α (list (array n (list α)))`` synthesizes the expression
 `traverse (traverse (traverse f))`. `nested_traverse` assumes that `α` appears in
 `(list (array n (list α)))` -/
 unsafe def nested_traverse (f v : expr) : expr → tactic expr
@@ -143,8 +143,7 @@ unsafe def nested_traverse (f v : expr) : expr → tactic expr
           mk_mapp `` Traversable.traverse [t.app_fn, _inst, none, none, none, none, f']
         else fail f! "type {t } is not traversable with respect to variable {v}")
 
-/-- 
-For a sum type `inductive foo (α : Type) | foo1 : list α → ℕ → foo | ...`
+/-- For a sum type `inductive foo (α : Type) | foo1 : list α → ℕ → foo | ...`
 ``traverse_field `foo appl_inst f `α `(x : list α)`` synthesizes
 `traverse f x` as part of traversing `foo1`. -/
 unsafe def traverse_field (n : Name) (appl_inst cl f v e : expr) : tactic (Sum expr expr) := do
@@ -156,8 +155,7 @@ unsafe def traverse_field (n : Name) (appl_inst cl f v e : expr) : tactic (Sum e
         pure $ Sum.inr $ f' e
       else is_def_eq t.app_fn cl >> Sum.inr <$> mk_app `` comp.mk [e] <|> pure (Sum.inl e)
 
-/-- 
-For a sum type `inductive foo (α : Type) | foo1 : list α → ℕ → foo | ...`
+/-- For a sum type `inductive foo (α : Type) | foo1 : list α → ℕ → foo | ...`
 ``traverse_constructor `foo1 `foo appl_inst f `α `β [`(x : list α), `(y : ℕ)]``
 synthesizes `foo1 <$> traverse f x <*> pure y.` -/
 unsafe def traverse_constructor (c n : Name) (appl_inst f α β : expr) (args₀ : List expr) (args₁ : List (Bool × expr))
@@ -181,7 +179,7 @@ unsafe def traverse_constructor (c n : Name) (appl_inst f α β : expr) (args₀
   set_goals gs
   return r
 
-/--  derive the `traverse` definition of a `traversable` instance -/
+/-- derive the `traverse` definition of a `traversable` instance -/
 unsafe def mk_traverse (type : Name) := do
   do
     let ls ← local_context
@@ -200,7 +198,7 @@ unsafe def mk_traverse (type : Name) := do
 
 open Applicativeₓ
 
-/--  derive the equations for a specific `traverse` definition -/
+/-- derive the equations for a specific `traverse` definition -/
 unsafe def derive_traverse_equations (pre : Option Name) (n : Name) (vs : List expr) (tgt : expr) : tactic Unit := do
   let e ← get_env
   ((e.constructors_of n).enumFrom 1).mmap' $ fun ⟨i, c⟩ => do

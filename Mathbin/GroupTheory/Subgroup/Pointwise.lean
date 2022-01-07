@@ -27,13 +27,13 @@ section Monoidₓ
 
 variable [Monoidₓ α] [MulDistribMulAction α G]
 
-/--  The action on a subgroup corresponding to applying the action to every element.
+/-- The action on a subgroup corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwise_mul_action : MulAction α (Subgroup G) :=
-  { smul := fun a S => S.map (MulDistribMulAction.toMonoidEnd _ _ a),
-    one_smul := fun S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id,
-    mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm }
+protected def pointwise_mul_action : MulAction α (Subgroup G) where
+  smul := fun a S => S.map (MulDistribMulAction.toMonoidEnd _ _ a)
+  one_smul := fun S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
+  mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] Subgroup.pointwiseMulAction
 
@@ -58,10 +58,7 @@ theorem mem_smul_pointwise_iff_exists (m : G) (a : α) (S : Subgroup G) : m ∈ 
 
 instance pointwise_central_scalar [MulDistribMulAction (αᵐᵒᵖ) G] [IsCentralScalar α G] :
     IsCentralScalar α (Subgroup G) :=
-  ⟨fun a S =>
-    (congr_argₓ fun f => S.map f) $
-      MonoidHom.ext $ by
-        exact op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_argₓ fun f => S.map f) $ MonoidHom.ext $ op_smul_eq_smul _⟩
 
 end Monoidₓ
 
@@ -91,10 +88,10 @@ theorem pointwise_smul_subset_iff {a : α} {S T : Subgroup G} : a • S ≤ T �
 theorem subset_pointwise_smul_iff {a : α} {S T : Subgroup G} : S ≤ a • T ↔ a⁻¹ • S ≤ T :=
   subset_set_smul_iff
 
-/--  Applying a `mul_distrib_mul_action` results in an isomorphic subgroup -/
+/-- Applying a `mul_distrib_mul_action` results in an isomorphic subgroup -/
 @[simps]
 def equiv_smul (a : α) (H : Subgroup G) : H ≃* (a • H : Subgroup G) :=
-  (MulDistribMulAction.toMulEquiv G a).subgroupEquivMap H
+  (MulDistribMulAction.toMulEquiv G a).subgroupMap H
 
 end Groupₓ
 
@@ -134,13 +131,13 @@ section Monoidₓ
 
 variable [Monoidₓ α] [DistribMulAction α A]
 
-/--  The action on an additive subgroup corresponding to applying the action to every element.
+/-- The action on an additive subgroup corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwise_mul_action : MulAction α (AddSubgroup A) :=
-  { smul := fun a S => S.map (DistribMulAction.toAddMonoidEnd _ _ a),
-    one_smul := fun S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id,
-    mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm }
+protected def pointwise_mul_action : MulAction α (AddSubgroup A) where
+  smul := fun a S => S.map (DistribMulAction.toAddMonoidEnd _ _ a)
+  one_smul := fun S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
+  mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] AddSubgroup.pointwiseMulAction
 
@@ -162,10 +159,7 @@ theorem mem_smul_pointwise_iff_exists (m : A) (a : α) (S : AddSubgroup A) : m �
 
 instance pointwise_central_scalar [DistribMulAction (αᵐᵒᵖ) A] [IsCentralScalar α A] :
     IsCentralScalar α (AddSubgroup A) :=
-  ⟨fun a S =>
-    (congr_argₓ fun f => S.map f) $
-      AddMonoidHom.ext $ by
-        exact op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_argₓ fun f => S.map f) $ AddMonoidHom.ext $ op_smul_eq_smul _⟩
 
 end Monoidₓ
 

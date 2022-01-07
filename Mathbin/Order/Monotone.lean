@@ -62,36 +62,36 @@ section MonotoneDef
 
 variable [Preorderₓ α] [Preorderₓ β]
 
-/--  A function `f` is monotone if `a ≤ b` implies `f a ≤ f b`. -/
+/-- A function `f` is monotone if `a ≤ b` implies `f a ≤ f b`. -/
 def Monotone (f : α → β) : Prop :=
   ∀ ⦃a b⦄, a ≤ b → f a ≤ f b
 
-/--  A function `f` is antitone if `a ≤ b` implies `f b ≤ f a`. -/
+/-- A function `f` is antitone if `a ≤ b` implies `f b ≤ f a`. -/
 def Antitone (f : α → β) : Prop :=
   ∀ ⦃a b⦄, a ≤ b → f b ≤ f a
 
-/--  A function `f` is monotone on `s` if, for all `a, b ∈ s`, `a ≤ b` implies `f a ≤ f b`. -/
+/-- A function `f` is monotone on `s` if, for all `a, b ∈ s`, `a ≤ b` implies `f a ≤ f b`. -/
 def MonotoneOn (f : α → β) (s : Set α) : Prop :=
   ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a ≤ b → f a ≤ f b
 
-/--  A function `f` is antitone on `s` if, for all `a, b ∈ s`, `a ≤ b` implies `f b ≤ f a`. -/
+/-- A function `f` is antitone on `s` if, for all `a, b ∈ s`, `a ≤ b` implies `f b ≤ f a`. -/
 def AntitoneOn (f : α → β) (s : Set α) : Prop :=
   ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a ≤ b → f b ≤ f a
 
-/--  A function `f` is strictly monotone if `a < b` implies `f a < f b`. -/
+/-- A function `f` is strictly monotone if `a < b` implies `f a < f b`. -/
 def StrictMono (f : α → β) : Prop :=
   ∀ ⦃a b⦄, a < b → f a < f b
 
-/--  A function `f` is strictly antitone if `a < b` implies `f b < f a`. -/
+/-- A function `f` is strictly antitone if `a < b` implies `f b < f a`. -/
 def StrictAnti (f : α → β) : Prop :=
   ∀ ⦃a b⦄, a < b → f b < f a
 
-/--  A function `f` is strictly monotone on `s` if, for all `a, b ∈ s`, `a < b` implies
+/-- A function `f` is strictly monotone on `s` if, for all `a, b ∈ s`, `a < b` implies
 `f a < f b`. -/
 def StrictMonoOn (f : α → β) (s : Set α) : Prop :=
   ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f a < f b
 
-/--  A function `f` is strictly antitone on `s` if, for all `a, b ∈ s`, `a < b` implies
+/-- A function `f` is strictly antitone on `s` if, for all `a, b ∈ s`, `a < b` implies
 `f b < f a`. -/
 def StrictAntiOn (f : α → β) (s : Set α) : Prop :=
   ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f b < f a
@@ -329,14 +329,14 @@ protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : �
     StrictMono fun x => if p x then f x else g x := by
   intro x y h
   by_cases' hy : p y
-  ·
-    have hx : p x := hp h hy
+  · have hx : p x := hp h hy
     simpa [hx, hy] using hf h
+    
   by_cases' hx : p x
-  ·
-    simpa [hx, hy] using hfg hx hy h
-  ·
-    simpa [hx, hy] using hg h
+  · simpa [hx, hy] using hfg hx hy h
+    
+  · simpa [hx, hy] using hg h
+    
 
 protected theorem StrictMono.ite (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop} [DecidablePred p]
     (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, f x ≤ g x) : StrictMono fun x => if p x then f x else g x :=
@@ -519,89 +519,89 @@ section Preorderₓ
 variable [Preorderₓ α]
 
 theorem Nat.rel_of_forall_rel_succ_of_le_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℕ → β} {a : ℕ}
-    (h : ∀ n, a ≤ n → r (f n) (f (n+1))) ⦃b c : ℕ⦄ (hab : a ≤ b) (hbc : b < c) : r (f b) (f c) := by
+    (h : ∀ n, a ≤ n → r (f n) (f (n + 1))) ⦃b c : ℕ⦄ (hab : a ≤ b) (hbc : b < c) : r (f b) (f c) := by
   induction' hbc with k b_lt_k r_b_k
   exacts[h _ hab, trans r_b_k (h _ (hab.trans_lt b_lt_k).le)]
 
 theorem Nat.rel_of_forall_rel_succ_of_le_of_le (r : β → β → Prop) [IsRefl β r] [IsTrans β r] {f : ℕ → β} {a : ℕ}
-    (h : ∀ n, a ≤ n → r (f n) (f (n+1))) ⦃b c : ℕ⦄ (hab : a ≤ b) (hbc : b ≤ c) : r (f b) (f c) :=
+    (h : ∀ n, a ≤ n → r (f n) (f (n + 1))) ⦃b c : ℕ⦄ (hab : a ≤ b) (hbc : b ≤ c) : r (f b) (f c) :=
   hbc.eq_or_lt.elim (fun h => h ▸ refl _) (Nat.rel_of_forall_rel_succ_of_le_of_lt r h hab)
 
-theorem Nat.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℕ → β} (h : ∀ n, r (f n) (f (n+1)))
+theorem Nat.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℕ → β} (h : ∀ n, r (f n) (f (n + 1)))
     ⦃a b : ℕ⦄ (hab : a < b) : r (f a) (f b) :=
   Nat.rel_of_forall_rel_succ_of_le_of_lt r (fun n _ => h n) le_rfl hab
 
 theorem Nat.rel_of_forall_rel_succ_of_le (r : β → β → Prop) [IsRefl β r] [IsTrans β r] {f : ℕ → β}
-    (h : ∀ n, r (f n) (f (n+1))) ⦃a b : ℕ⦄ (hab : a ≤ b) : r (f a) (f b) :=
+    (h : ∀ n, r (f n) (f (n + 1))) ⦃a b : ℕ⦄ (hab : a ≤ b) : r (f a) (f b) :=
   Nat.rel_of_forall_rel_succ_of_le_of_le r (fun n _ => h n) le_rfl hab
 
-theorem monotone_nat_of_le_succ {f : ℕ → α} (hf : ∀ n, f n ≤ f (n+1)) : Monotone f :=
+theorem monotone_nat_of_le_succ {f : ℕ → α} (hf : ∀ n, f n ≤ f (n + 1)) : Monotone f :=
   Nat.rel_of_forall_rel_succ_of_le (· ≤ ·) hf
 
-theorem antitone_nat_of_succ_le {f : ℕ → α} (hf : ∀ n, f (n+1) ≤ f n) : Antitone f :=
+theorem antitone_nat_of_succ_le {f : ℕ → α} (hf : ∀ n, f (n + 1) ≤ f n) : Antitone f :=
   @monotone_nat_of_le_succ (OrderDual α) _ _ hf
 
-theorem strict_mono_nat_of_lt_succ {f : ℕ → α} (hf : ∀ n, f n < f (n+1)) : StrictMono f :=
+theorem strict_mono_nat_of_lt_succ {f : ℕ → α} (hf : ∀ n, f n < f (n + 1)) : StrictMono f :=
   Nat.rel_of_forall_rel_succ_of_lt (· < ·) hf
 
-theorem strict_anti_nat_of_succ_lt {f : ℕ → α} (hf : ∀ n, f (n+1) < f n) : StrictAnti f :=
+theorem strict_anti_nat_of_succ_lt {f : ℕ → α} (hf : ∀ n, f (n + 1) < f n) : StrictAnti f :=
   @strict_mono_nat_of_lt_succ (OrderDual α) _ f hf
 
-theorem Int.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℤ → β} (h : ∀ n, r (f n) (f (n+1)))
+theorem Int.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℤ → β} (h : ∀ n, r (f n) (f (n + 1)))
     ⦃a b : ℤ⦄ (hab : a < b) : r (f a) (f b) := by
   rcases hab.dest with ⟨n, rfl⟩
   clear hab
   induction' n with n ihn
-  ·
-    rw [Int.coe_nat_one]
+  · rw [Int.coe_nat_one]
     apply h
-  ·
-    rw [Int.coe_nat_succ, ← Int.add_assoc]
+    
+  · rw [Int.coe_nat_succ, ← Int.add_assoc]
     exact trans ihn (h _)
+    
 
 theorem Int.rel_of_forall_rel_succ_of_le (r : β → β → Prop) [IsRefl β r] [IsTrans β r] {f : ℤ → β}
-    (h : ∀ n, r (f n) (f (n+1))) ⦃a b : ℤ⦄ (hab : a ≤ b) : r (f a) (f b) :=
+    (h : ∀ n, r (f n) (f (n + 1))) ⦃a b : ℤ⦄ (hab : a ≤ b) : r (f a) (f b) :=
   hab.eq_or_lt.elim (fun h => h ▸ refl _) fun h' => Int.rel_of_forall_rel_succ_of_lt r h h'
 
-theorem monotone_int_of_le_succ {f : ℤ → α} (hf : ∀ n, f n ≤ f (n+1)) : Monotone f :=
+theorem monotone_int_of_le_succ {f : ℤ → α} (hf : ∀ n, f n ≤ f (n + 1)) : Monotone f :=
   Int.rel_of_forall_rel_succ_of_le (· ≤ ·) hf
 
-theorem antitone_int_of_succ_le {f : ℤ → α} (hf : ∀ n, f (n+1) ≤ f n) : Antitone f :=
+theorem antitone_int_of_succ_le {f : ℤ → α} (hf : ∀ n, f (n + 1) ≤ f n) : Antitone f :=
   Int.rel_of_forall_rel_succ_of_le (· ≥ ·) hf
 
-theorem strict_mono_int_of_lt_succ {f : ℤ → α} (hf : ∀ n, f n < f (n+1)) : StrictMono f :=
+theorem strict_mono_int_of_lt_succ {f : ℤ → α} (hf : ∀ n, f n < f (n + 1)) : StrictMono f :=
   Int.rel_of_forall_rel_succ_of_lt (· < ·) hf
 
-theorem strict_anti_int_of_succ_lt {f : ℤ → α} (hf : ∀ n, f (n+1) < f n) : StrictAnti f :=
+theorem strict_anti_int_of_succ_lt {f : ℤ → α} (hf : ∀ n, f (n + 1) < f n) : StrictAnti f :=
   Int.rel_of_forall_rel_succ_of_lt (· > ·) hf
 
-/--  If `f` is a monotone function from `ℕ` to a preorder such that `x` lies between `f n` and
+/-- If `f` is a monotone function from `ℕ` to a preorder such that `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
-theorem Monotone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Monotone f) (n : ℕ) {x : α} (h1 : f n < x) (h2 : x < f (n+1))
+theorem Monotone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Monotone f) (n : ℕ) {x : α} (h1 : f n < x) (h2 : x < f (n + 1))
     (a : ℕ) : f a ≠ x := by
   rintro rfl
   exact (hf.reflect_lt h1).not_le (Nat.le_of_lt_succₓ $ hf.reflect_lt h2)
 
-/--  If `f` is an antitone function from `ℕ` to a preorder such that `x` lies between `f (n + 1)` and
+/-- If `f` is an antitone function from `ℕ` to a preorder such that `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
-theorem Antitone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Antitone f) (n : ℕ) {x : α} (h1 : f (n+1) < x) (h2 : x < f n)
+theorem Antitone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Antitone f) (n : ℕ) {x : α} (h1 : f (n + 1) < x) (h2 : x < f n)
     (a : ℕ) : f a ≠ x := by
   rintro rfl
   exact (hf.reflect_lt h2).not_le (Nat.le_of_lt_succₓ $ hf.reflect_lt h1)
 
-/--  If `f` is a monotone function from `ℤ` to a preorder and `x` lies between `f n` and
+/-- If `f` is a monotone function from `ℤ` to a preorder and `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
-theorem Monotone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Monotone f) (n : ℤ) {x : α} (h1 : f n < x) (h2 : x < f (n+1))
+theorem Monotone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Monotone f) (n : ℤ) {x : α} (h1 : f n < x) (h2 : x < f (n + 1))
     (a : ℤ) : f a ≠ x := by
   rintro rfl
-  exact (hf.reflect_lt h1).not_le (Int.le_of_lt_add_one $ hf.reflect_lt h2)
+  exact (hf.reflect_lt h1).not_le (Int.le_of_lt_add_oneₓ $ hf.reflect_lt h2)
 
-/--  If `f` is an antitone function from `ℤ` to a preorder and `x` lies between `f (n + 1)` and
+/-- If `f` is an antitone function from `ℤ` to a preorder and `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
-theorem Antitone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Antitone f) (n : ℤ) {x : α} (h1 : f (n+1) < x) (h2 : x < f n)
+theorem Antitone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Antitone f) (n : ℤ) {x : α} (h1 : f (n + 1) < x) (h2 : x < f n)
     (a : ℤ) : f a ≠ x := by
   rintro rfl
-  exact (hf.reflect_lt h2).not_le (Int.le_of_lt_add_one $ hf.reflect_lt h1)
+  exact (hf.reflect_lt h2).not_le (Int.le_of_lt_add_oneₓ $ hf.reflect_lt h1)
 
 theorem StrictMono.id_le {φ : ℕ → ℕ} (h : StrictMono φ) : ∀ n, n ≤ φ n := fun n =>
   Nat.recOn n (Nat.zero_leₓ _) fun n hn => Nat.succ_le_of_ltₓ (hn.trans_lt $ h $ Nat.lt_succ_selfₓ n)

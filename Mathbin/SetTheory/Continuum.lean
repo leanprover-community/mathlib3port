@@ -18,14 +18,14 @@ universe u v
 
 open_locale Cardinal
 
-/--  Cardinality of continuum. -/
+/-- Cardinality of continuum. -/
 def continuum : Cardinal.{u} :=
-  2^omega.{u}
+  2 ^ omega.{u}
 
 localized [Cardinal] notation "𝔠" => Cardinal.continuum
 
 @[simp]
-theorem two_power_omega : (2^omega.{u} : Cardinal.{u}) = 𝔠 :=
+theorem two_power_omega : (2 ^ omega.{u} : Cardinal.{u}) = 𝔠 :=
   rfl
 
 @[simp]
@@ -61,23 +61,23 @@ theorem continuum_ne_zero : 𝔠 ≠ 0 :=
 
 
 @[simp]
-theorem omega_add_continuum : (ω+𝔠) = 𝔠 :=
+theorem omega_add_continuum : ω + 𝔠 = 𝔠 :=
   add_eq_right omega_le_continuum omega_le_continuum
 
 @[simp]
-theorem continuum_add_omega : (𝔠+ω) = 𝔠 :=
+theorem continuum_add_omega : 𝔠 + ω = 𝔠 :=
   (add_commₓ _ _).trans omega_add_continuum
 
 @[simp]
-theorem continuum_add_self : (𝔠+𝔠) = 𝔠 :=
+theorem continuum_add_self : 𝔠 + 𝔠 = 𝔠 :=
   add_eq_right omega_le_continuum le_rfl
 
 @[simp]
-theorem nat_add_continuum (n : ℕ) : ((↑n)+𝔠) = 𝔠 :=
+theorem nat_add_continuum (n : ℕ) : ↑n + 𝔠 = 𝔠 :=
   add_eq_right omega_le_continuum (nat_lt_continuum n).le
 
 @[simp]
-theorem continuum_add_nat (n : ℕ) : (𝔠+n) = 𝔠 :=
+theorem continuum_add_nat (n : ℕ) : 𝔠 + n = 𝔠 :=
   (add_commₓ _ _).trans (nat_add_continuum n)
 
 /-!
@@ -86,23 +86,23 @@ theorem continuum_add_nat (n : ℕ) : (𝔠+n) = 𝔠 :=
 
 
 @[simp]
-theorem continuum_mul_self : (𝔠*𝔠) = 𝔠 :=
+theorem continuum_mul_self : 𝔠 * 𝔠 = 𝔠 :=
   mul_eq_left omega_le_continuum le_rfl continuum_ne_zero
 
 @[simp]
-theorem continuum_mul_omega : (𝔠*ω) = 𝔠 :=
+theorem continuum_mul_omega : 𝔠 * ω = 𝔠 :=
   mul_eq_left omega_le_continuum omega_le_continuum omega_ne_zero
 
 @[simp]
-theorem omega_mul_continuum : (ω*𝔠) = 𝔠 :=
+theorem omega_mul_continuum : ω * 𝔠 = 𝔠 :=
   (mul_commₓ _ _).trans continuum_mul_omega
 
 @[simp]
-theorem nat_mul_continuum {n : ℕ} (hn : n ≠ 0) : ((↑n)*𝔠) = 𝔠 :=
+theorem nat_mul_continuum {n : ℕ} (hn : n ≠ 0) : ↑n * 𝔠 = 𝔠 :=
   mul_eq_right omega_le_continuum (nat_lt_continuum n).le (Nat.cast_ne_zero.2 hn)
 
 @[simp]
-theorem continuum_mul_nat {n : ℕ} (hn : n ≠ 0) : (𝔠*n) = 𝔠 :=
+theorem continuum_mul_nat {n : ℕ} (hn : n ≠ 0) : 𝔠 * n = 𝔠 :=
   (mul_commₓ _ _).trans (nat_mul_continuum hn)
 
 /-!
@@ -111,15 +111,15 @@ theorem continuum_mul_nat {n : ℕ} (hn : n ≠ 0) : (𝔠*n) = 𝔠 :=
 
 
 @[simp]
-theorem omega_power_omega : (omega.{u}^omega.{u}) = 𝔠 :=
+theorem omega_power_omega : omega.{u} ^ omega.{u} = 𝔠 :=
   power_self_eq le_rfl
 
 @[simp]
-theorem nat_power_omega {n : ℕ} (hn : 2 ≤ n) : (n^omega.{u} : Cardinal.{u}) = 𝔠 :=
+theorem nat_power_omega {n : ℕ} (hn : 2 ≤ n) : (n ^ omega.{u} : Cardinal.{u}) = 𝔠 :=
   nat_power_eq le_rfl hn
 
 @[simp]
-theorem continuum_power_omega : (continuum.{u}^omega.{u}) = 𝔠 := by
+theorem continuum_power_omega : continuum.{u} ^ omega.{u} = 𝔠 := by
   rw [← two_power_omega, ← power_mul, mul_eq_left le_rfl le_rfl omega_ne_zero]
 
 end Cardinal

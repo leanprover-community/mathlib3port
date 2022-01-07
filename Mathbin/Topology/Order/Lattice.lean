@@ -19,16 +19,14 @@ topological, lattice
 -/
 
 
-/-- 
-Let `L` be a topological space and let `L×L` be equipped with the product topology and let
+/-- Let `L` be a topological space and let `L×L` be equipped with the product topology and let
 `⊓:L×L → L` be an infimum. Then `L` is said to have *(jointly) continuous infimum* if the map
 `⊓:L×L → L` is continuous.
 -/
 class HasContinuousInf (L : Type _) [TopologicalSpace L] [HasInf L] : Prop where
   continuous_inf : Continuous fun p : L × L => p.1⊓p.2
 
-/-- 
-Let `L` be a topological space and let `L×L` be equipped with the product topology and let
+/-- Let `L` be a topological space and let `L×L` be equipped with the product topology and let
 `⊓:L×L → L` be a supremum. Then `L` is said to have *(jointly) continuous supremum* if the map
 `⊓:L×L → L` is continuous.
 -/
@@ -43,8 +41,7 @@ instance (priority := 100) OrderDual.has_continuous_inf (L : Type _) [Topologica
     [HasContinuousSup L] : HasContinuousInf (OrderDual L) where
   continuous_inf := @HasContinuousSup.continuous_sup L _ _ _
 
-/-- 
-Let `L` be a lattice equipped with a topology such that `L` has continuous infimum and supremum.
+/-- Let `L` be a lattice equipped with a topology such that `L` has continuous infimum and supremum.
 Then `L` is said to be a *topological lattice*.
 -/
 class TopologicalLattice (L : Type _) [TopologicalSpace L] [Lattice L] extends HasContinuousInf L, HasContinuousSup L

@@ -21,49 +21,49 @@ def dnf_core : preform → List clause
   | t ≤* s => [([], [term.sub (canonize s) (canonize t)])]
   | ¬* _ => []
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 theorem exists_clause_holds_core {v : Nat → Nat} :
     ∀ {p : preform}, p.neg_free → p.sub_free → p.holds v → ∃ c ∈ dnf_core p, clause.holds (fun x => ↑v x) c := by
   run_tac
     preform.induce sorry
-  ·
-    apply List.exists_mem_cons_ofₓ
+  · apply List.exists_mem_cons_ofₓ
     constructor
     rw [List.forall_mem_singleton]
     cases' h0 with ht hs
     simp only [val_canonize ht, val_canonize hs, term.val_sub, preform.holds, sub_eq_add_neg] at *
     rw [h2, add_neg_selfₓ]
     apply List.forall_mem_nil
-  ·
-    apply List.exists_mem_cons_ofₓ
+    
+  · apply List.exists_mem_cons_ofₓ
     constructor
     apply List.forall_mem_nil
     rw [List.forall_mem_singleton]
     simp only [val_canonize h0.left, val_canonize h0.right, term.val_sub, preform.holds, sub_eq_add_neg] at *
     rw [← sub_eq_add_neg, le_sub, sub_zero, Int.coe_nat_le]
     assumption
-  ·
-    cases h1
-  ·
-    cases' h2 with h2 h2 <;>
-        [·
-          cases' ihp h1.left h0.left h2 with c h3,
-        ·
-          cases' ihq h1.right h0.right h2 with c h3] <;>
+    
+  · cases h1
+    
+  · cases' h2 with h2 h2 <;>
+        [· cases' ihp h1.left h0.left h2 with c h3
+          ,
+        · cases' ihq h1.right h0.right h2 with c h3
+          ] <;>
       cases' h3 with h3 h4 <;> refine' ⟨c, list.mem_append.elim_right _, h4⟩ <;> [left, right] <;> assumption
-  ·
-    rcases ihp h1.left h0.left h2.left with ⟨cp, hp1, hp2⟩
+    
+  · rcases ihp h1.left h0.left h2.left with ⟨cp, hp1, hp2⟩
     rcases ihq h1.right h0.right h2.right with ⟨cq, hq1, hq2⟩
     refine' ⟨clause.append cp cq, ⟨_, clause.holds_append hp2 hq2⟩⟩
     simp only [dnf_core, List.mem_mapₓ]
     refine' ⟨(cp, cq), ⟨_, rfl⟩⟩
     rw [List.mem_product]
     constructor <;> assumption
+    
 
 def term.vars_core (is : List Int) : List Bool :=
   is.map fun i => if i = 0 then ff else tt
 
-/--  Return a list of bools that encodes which variables have nonzero coefficients -/
+/-- Return a list of bools that encodes which variables have nonzero coefficients -/
 def term.vars (t : term) : List Bool :=
   term.vars_core t.snd
 
@@ -72,7 +72,7 @@ def bools.or : List Bool → List Bool → List Bool
   | bs1, [] => bs1
   | b1 :: bs1, b2 :: bs2 => (b1 || b2) :: bools.or bs1 bs2
 
-/--  Return a list of bools that encodes which variables have nonzero coefficients in any one of the
+/-- Return a list of bools that encodes which variables have nonzero coefficients in any one of the
 input terms. -/
 def terms.vars : List term → List Bool
   | [] => []
@@ -82,8 +82,8 @@ open_locale List.Func
 
 def nonneg_consts_core : Nat → List Bool → List term
   | _, [] => []
-  | k, ff :: bs => nonneg_consts_core (k+1) bs
-  | k, tt :: bs => ⟨0, [] {k ↦ 1}⟩ :: nonneg_consts_core (k+1) bs
+  | k, ff :: bs => nonneg_consts_core (k + 1) bs
+  | k, tt :: bs => ⟨0, [] {k ↦ 1}⟩ :: nonneg_consts_core (k + 1) bs
 
 def nonneg_consts (bs : List Bool) : List term :=
   nonneg_consts_core 0 bs
@@ -95,7 +95,7 @@ def nonnegate : clause → clause
     let bs := bools.or xs ys
     (eqs, nonneg_consts bs ++ les)
 
-/--  DNF transformation -/
+/-- DNF transformation -/
 def dnf (p : preform) : List clause :=
   (dnf_core p).map nonnegate
 
@@ -103,16 +103,16 @@ theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
     ∀ m bs, ∀, ∀ t ∈ nonneg_consts_core m bs, ∀, 0 ≤ term.val v t
   | _, [] => fun _ h2 => by
     cases h2
-  | k, ff :: bs => holds_nonneg_consts_core (k+1) bs
+  | k, ff :: bs => holds_nonneg_consts_core (k + 1) bs
   | k, tt :: bs => by
     simp only [nonneg_consts_core]
     rw [List.forall_mem_consₓ]
     constructor
-    ·
-      simp only [term.val, one_mulₓ, zero_addₓ, coeffs.val_set]
+    · simp only [term.val, one_mulₓ, zero_addₓ, coeffs.val_set]
       apply h1
-    ·
-      apply holds_nonneg_consts_core (k+1) bs
+      
+    · apply holds_nonneg_consts_core (k + 1) bs
+      
 
 theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} :
     (∀ x, 0 ≤ v x) → ∀, ∀ t ∈ nonneg_consts bs, ∀, 0 ≤ term.val v t

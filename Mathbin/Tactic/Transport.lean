@@ -22,10 +22,9 @@ mk_simp_attribute transport_simps :=
 attribute [transport_simps]
   eq_rec_constant eq_mp_eq_cast cast_eq Equivₓ.to_fun_as_coe Equivₓ.arrow_congr'_apply Equivₓ.symm_apply_apply Equivₓ.apply_eq_iff_eq_symm_apply
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-Given `s : S α` for some structure `S` depending on a type `α`,
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Given `s : S α` for some structure `S` depending on a type `α`,
 and an equivalence `e : α ≃ β`,
 try to produce an `S β`,
 by transporting data and axioms across `e` using `equiv_rw`.
@@ -56,8 +55,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-/-- 
-Given a goal `⊢ S β` for some type class `S`, and an equivalence `e : α ≃ β`.
+/-- Given a goal `⊢ S β` for some type class `S`, and an equivalence `e : α ≃ β`.
 `transport using e` will look for a hypothesis `s : S α`,
 and attempt to close the goal by transporting `s` across the equivalence `e`.
 

@@ -28,16 +28,18 @@ variable [AddCommMonoidₓ M] [Module R M] [Module A M] [IsScalarTower R A M]
 
 variable {A}
 
-/--  The `R`-algebra morphism `A → End (M)` corresponding to the representation of the algebra `A`
+/-- The `R`-algebra morphism `A → End (M)` corresponding to the representation of the algebra `A`
 on the `R`-module `M`.
 
 This is a stronger version of `distrib_mul_action.to_linear_map`, and could also have been
 called `algebra.to_module_End`. -/
-def lsmul : A →ₐ[R] Module.End R M :=
-  { toFun := DistribMulAction.toLinearMap R M, map_one' := LinearMap.ext $ fun _ => one_smul A _,
-    map_mul' := fun a b => LinearMap.ext $ smul_assoc a b, map_zero' := LinearMap.ext $ fun _ => zero_smul A _,
-    map_add' := fun a b => LinearMap.ext $ fun _ => add_smul _ _ _,
-    commutes' := fun r => LinearMap.ext $ algebra_map_smul A r }
+def lsmul : A →ₐ[R] Module.End R M where
+  toFun := DistribMulAction.toLinearMap R M
+  map_one' := LinearMap.ext $ fun _ => one_smul A _
+  map_mul' := fun a b => LinearMap.ext $ smul_assoc a b
+  map_zero' := LinearMap.ext $ fun _ => zero_smul A _
+  map_add' := fun a b => LinearMap.ext $ fun _ => add_smul _ _ _
+  commutes' := fun r => LinearMap.ext $ algebra_map_smul A r
 
 @[simp]
 theorem lsmul_coe (a : A) : (lsmul R M a : M → M) = (· • ·) a :=
@@ -76,7 +78,7 @@ theorem of_algebra_map_eq [Algebra R A] (h : ∀ x, algebraMap R A x = algebraMa
   ⟨fun x y z => by
     simp_rw [Algebra.smul_def, RingHom.map_mul, mul_assocₓ, h]⟩
 
-/--  See note [partially-applied ext lemmas]. -/
+/-- See note [partially-applied ext lemmas]. -/
 theorem of_algebra_map_eq' [Algebra R A] (h : algebraMap R A = (algebraMap S A).comp (algebraMap R S)) :
     IsScalarTower R S A :=
   of_algebra_map_eq $ RingHom.ext_iff.1 h
@@ -104,13 +106,14 @@ instance subalgebra' (S₀ : Subalgebra R S) : IsScalarTower R S₀ A :=
 theorem algebra.ext {S : Type u} {A : Type v} [CommSemiringₓ S] [Semiringₓ A] (h1 h2 : Algebra S A)
     (h :
       ∀ r : S x : A,
-        by
-          have := h1 <;> exact r • x = r • x) :
+        (have := h1
+          r • x) =
+          r • x) :
     h1 = h2 :=
   Algebra.algebra_ext _ _ $ fun r => by
     simpa only [@Algebra.smul_def _ _ _ _ h1, @Algebra.smul_def _ _ _ _ h2, mul_oneₓ] using h r 1
 
-/--  In a tower, the canonical map from the middle element to the top element is an
+/-- In a tower, the canonical map from the middle element to the top element is an
 algebra homomorphism over the bottom element. -/
 def to_alg_hom : S →ₐ[R] A :=
   { algebraMap S A with commutes' := fun _ => (algebra_map_apply _ _ _ _).symm }
@@ -170,7 +173,7 @@ open IsScalarTower
 
 namespace AlgHom
 
-/--  R ⟶ S induces S-Alg ⥤ R-Alg -/
+/-- R ⟶ S induces S-Alg ⥤ R-Alg -/
 def restrict_scalars (f : A →ₐ[S] B) : A →ₐ[R] B :=
   { (f : A →+* B) with
     commutes' := fun r => by
@@ -195,7 +198,7 @@ end AlgHom
 
 namespace AlgEquiv
 
-/--  R ⟶ S induces S-Alg ⥤ R-Alg -/
+/-- R ⟶ S induces S-Alg ⥤ R-Alg -/
 def restrict_scalars (f : A ≃ₐ[S] B) : A ≃ₐ[R] B :=
   { (f : A ≃+* B) with
     commutes' := fun r => by
@@ -232,7 +235,7 @@ variable [Algebra R S] [Algebra S A] [Algebra R A] [Algebra S B] [Algebra R B]
 
 variable [IsScalarTower R S A] [IsScalarTower R S B]
 
-/--  Given a scalar tower `R`, `S`, `A` of algebras, reinterpret an `S`-subalgebra of `A` an as an
+/-- Given a scalar tower `R`, `S`, `A` of algebras, reinterpret an `S`-subalgebra of `A` an as an
 `R`-subalgebra. -/
 def restrict_scalars (U : Subalgebra S A) : Subalgebra R A :=
   { U with
@@ -262,7 +265,7 @@ theorem restrict_scalars_injective : Function.Injective (restrict_scalars R : Su
   ext $ fun x => by
     rw [← mem_restrict_scalars R, H, mem_restrict_scalars]
 
-/--  Produces an `R`-algebra map from `U.restrict_scalars R` given an `S`-algebra map from `U`.
+/-- Produces an `R`-algebra map from `U.restrict_scalars R` given an `S`-algebra map from `U`.
 
 This is a special case of `alg_hom.restrict_scalars` that can be helpful in elaboration. -/
 @[simp]
@@ -286,10 +289,10 @@ theorem adjoin_range_to_alg_hom (t : Set A) :
   Subalgebra.ext $ fun z =>
     show
       z ∈ Subsemiring.closure (Set.Range (algebraMap (to_alg_hom R S A).range A) ∪ t : Set A) ↔
-        z ∈ Subsemiring.closure (Set.Range (algebraMap S A) ∪ t : Set A) from
-      suffices Set.Range (algebraMap (to_alg_hom R S A).range A) = Set.Range (algebraMap S A)by
-        rw [this]
+        z ∈ Subsemiring.closure (Set.Range (algebraMap S A) ∪ t : Set A)
       by
+      suffices Set.Range (algebraMap (to_alg_hom R S A).range A) = Set.Range (algebraMap S A) by
+        rw [this]
       ext z
       exact ⟨fun ⟨⟨x, y, h1⟩, h2⟩ => ⟨y, h2 ▸ h1⟩, fun ⟨y, hy⟩ => ⟨⟨z, y, hy⟩, rfl⟩⟩
 
@@ -334,9 +337,8 @@ theorem smul_mem_span_smul {s : Set S} (hs : span R s = ⊤) {t : Set A} {k : S}
 theorem smul_mem_span_smul' {s : Set S} (hs : span R s = ⊤) {t : Set A} {k : S} {x : A} (hx : x ∈ span R (s • t)) :
     k • x ∈ span R (s • t) :=
   span_induction hx
-    (fun x hx =>
+    (fun x hx => by
       let ⟨p, q, hp, hq, hpq⟩ := Set.mem_smul.1 hx
-      by
       rw [← hpq, smul_smul]
       exact smul_mem_span_smul_of_mem (hs.symm ▸ mem_top) hq)
     (by

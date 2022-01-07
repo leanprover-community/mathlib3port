@@ -10,15 +10,15 @@ Supplementary theorems about the `string` type.
 
 namespace Stringₓ
 
-/--  `<` on string iterators. This coincides with `<` on strings as lists. -/
+/-- `<` on string iterators. This coincides with `<` on strings as lists. -/
 def ltb : iterator → iterator → Bool
   | s₁, s₂ => by
     cases s₂.has_next
-    ·
-      exact ff
+    · exact ff
+      
     cases h₁ : s₁.has_next
-    ·
-      exact tt
+    · exact tt
+      
     exact
       if s₁.curr = s₂.curr then
         have : s₁.next.2.length < s₁.2.length :=
@@ -35,30 +35,29 @@ instance decidable_lt : @DecidableRel Stringₓ (· < ·) := by
 
 @[simp]
 theorem lt_iff_to_list_lt : ∀ {s₁ s₂ : Stringₓ}, s₁ < s₂ ↔ s₁.to_list < s₂.to_list
-  | ⟨i₁⟩, ⟨i₂⟩ =>
+  | ⟨i₁⟩, ⟨i₂⟩ => by
     suffices ∀ {p₁ p₂ s₁ s₂}, ltb ⟨p₁, s₁⟩ ⟨p₂, s₂⟩ ↔ s₁ < s₂ from this
-    by
     intros
     induction' s₁ with a s₁ IH generalizing p₁ p₂ s₂ <;> cases' s₂ with b s₂ <;> rw [ltb] <;> simp [iterator.has_next]
-    ·
-      rfl
-    ·
-      exact iff_of_true rfl List.Lex.nil
-    ·
-      exact iff_of_false Bool.ff_ne_tt (not_lt_of_lt List.Lex.nil)
-    ·
-      dsimp [iterator.has_next, iterator.curr, iterator.next]
+    · rfl
+      
+    · exact iff_of_true rfl List.Lex.nil
+      
+    · exact iff_of_false Bool.ff_ne_tt (not_lt_of_lt List.Lex.nil)
+      
+    · dsimp [iterator.has_next, iterator.curr, iterator.next]
       split_ifs
-      ·
-        subst b
+      · subst b
         exact IH.trans list.lex.cons_iff.symm
-      ·
-        simp
+        
+      · simp
         refine' ⟨List.Lex.rel, fun e => _⟩
         cases e
-        ·
-          cases h rfl
+        · cases h rfl
+          
         assumption
+        
+      
 
 instance LE : LE Stringₓ :=
   ⟨fun s₁ s₂ => ¬s₂ < s₁⟩
@@ -99,31 +98,37 @@ theorem head_empty : "".head = default _ :=
 @[simp]
 theorem popn_empty {n : ℕ} : "".popn n = "" := by
   induction' n with n hn
-  ·
-    rfl
-  ·
-    rcases hs : "" with ⟨_ | ⟨hd, tl⟩⟩
-    ·
-      rw [hs] at hn
+  · rfl
+    
+  · rcases hs : "" with ⟨_ | ⟨hd, tl⟩⟩
+    · rw [hs] at hn
       conv_rhs => rw [← hn]
       simp only [popn, mk_iterator, iterator.nextn, iterator.next]
-    ·
-      simpa only [← to_list_inj] using hs
+      
+    · simpa only [← to_list_inj] using hs
+      
+    
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : LinearOrderₓ Stringₓ
-  where
-    lt := · < ·
-      le := · ≤ ·
-      decidableLt := by infer_instance
-      decidableLe := Stringₓ.decidableLe
-      DecidableEq := by infer_instance
-      le_refl a := le_iff_to_list_le . 2 le_rfl
-      le_trans a b c := by simp only [ le_iff_to_list_le ] exact fun h₁ h₂ => h₁.trans h₂
-      le_total a b := by simp only [ le_iff_to_list_le ] exact le_totalₓ _ _
-      le_antisymm a b := by simp only [ le_iff_to_list_le , ← to_list_inj ] apply le_antisymmₓ
-      lt_iff_le_not_le a b := by simp only [ le_iff_to_list_le , lt_iff_to_list_lt , lt_iff_le_not_leₓ ]
+instance : LinearOrderₓ Stringₓ where
+  lt := · < ·
+  le := · ≤ ·
+  decidableLt := by
+    infer_instance
+  decidableLe := Stringₓ.decidableLe
+  DecidableEq := by
+    infer_instance
+  le_refl := fun a => le_iff_to_list_le.2 le_rfl
+  le_trans := fun a b c => by
+    simp only [le_iff_to_list_le]
+    exact fun h₁ h₂ => h₁.trans h₂
+  le_total := fun a b => by
+    simp only [le_iff_to_list_le]
+    exact le_totalₓ _ _
+  le_antisymm := fun a b => by
+    simp only [le_iff_to_list_le, ← to_list_inj]
+    apply le_antisymmₓ
+  lt_iff_le_not_le := fun a b => by
+    simp only [le_iff_to_list_le, lt_iff_to_list_lt, lt_iff_le_not_leₓ]
 
 end Stringₓ
 

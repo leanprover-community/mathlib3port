@@ -54,8 +54,9 @@ theorem run_with_cont_t (f : (β → m r) → α → m r) (x : ContT r m α) : r
 protected theorem ext {x y : ContT r m α} (h : ∀ f, x.run f = y.run f) : x = y := by
   ext <;> apply h
 
--- failed to format: format: uncaught backtrack exception
-instance : Monadₓ ( ContT r m ) where pure α x f := f x bind α β x f g := x $ fun i => f i g
+instance : Monadₓ (ContT r m) where
+  pure := fun α x f => f x
+  bind := fun α β x f g => x $ fun i => f i g
 
 instance : IsLawfulMonad (ContT r m) where
   id_map := by
@@ -72,16 +73,16 @@ instance : IsLawfulMonad (ContT r m) where
 
 def monad_lift [Monadₓ m] {α} : m α → ContT r m α := fun x f => x >>= f
 
--- failed to format: format: uncaught backtrack exception
-instance [ Monadₓ m ] : HasMonadLift m ( ContT r m ) where monadLift α := ContT.monadLift
+instance [Monadₓ m] : HasMonadLift m (ContT r m) where
+  monadLift := fun α => ContT.monadLift
 
 theorem monad_lift_bind [Monadₓ m] [IsLawfulMonad m] {α β} (x : m α) (f : α → m β) :
     (monad_lift (x >>= f) : ContT r m β) = monad_lift x >>= monad_lift ∘ f := by
   ext
   simp only [monad_lift, HasMonadLift.monadLift, · ∘ ·, · >>= ·, bind_assoc, id.def, run, ContT.monadLift]
 
--- failed to format: format: uncaught backtrack exception
-instance : MonadCont ( ContT r m ) where callCc α β f g := f ⟨ fun x h => g x ⟩ g
+instance : MonadCont (ContT r m) where
+  callCc := fun α β f g => f ⟨fun x h => g x⟩ g
 
 instance : IsLawfulMonadCont (ContT r m) where
   call_cc_bind_right := by
@@ -91,15 +92,12 @@ instance : IsLawfulMonadCont (ContT r m) where
   call_cc_dummy := by
     intros <;> ext <;> rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ε [ MonadExcept ε m ] : MonadExcept ε ( ContT r m )
-  where throw x e f := throw e catch α act h f := catch ( act f ) fun e => h e f
+instance ε [MonadExcept ε m] : MonadExcept ε (ContT r m) where
+  throw := fun x e f => throw e
+  catch := fun α act h f => catch (act f) fun e => h e f
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : MonadRun ( fun α => ( α → m r ) → Ulift .{ u , v } ( m r ) ) ( ContT .{ u , v , u } r m )
-  where run α f x := ⟨ f x ⟩
+instance : MonadRun (fun α => (α → m r) → Ulift.{u, v} (m r)) (ContT.{u, v, u} r m) where
+  run := fun α f x => ⟨f x⟩
 
 end ContT
 
@@ -115,8 +113,8 @@ theorem ExceptTₓ.goto_mk_label {α β ε : Type _} (x : label (Except.{u, u} �
 def ExceptTₓ.callCc {ε} [MonadCont m] {α β : Type _} (f : label α (ExceptTₓ ε m) β → ExceptTₓ ε m α) : ExceptTₓ ε m α :=
   ExceptTₓ.mk (call_cc $ fun x : label _ m β => ExceptTₓ.run $ f (ExceptTₓ.mkLabel x) : m (Except ε α))
 
--- failed to format: format: uncaught backtrack exception
-instance { ε } [ MonadCont m ] : MonadCont ( ExceptTₓ ε m ) where callCc α β := ExceptTₓ.callCc
+instance {ε} [MonadCont m] : MonadCont (ExceptTₓ ε m) where
+  callCc := fun α β => ExceptTₓ.callCc
 
 instance {ε} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ExceptTₓ ε m) where
   call_cc_bind_right := by
@@ -147,8 +145,8 @@ theorem OptionTₓ.goto_mk_label {α β : Type _} (x : label (Option.{u} α) m �
 def OptionTₓ.callCc [MonadCont m] {α β : Type _} (f : label α (OptionTₓ m) β → OptionTₓ m α) : OptionTₓ m α :=
   OptionTₓ.mk (call_cc $ fun x : label _ m β => OptionTₓ.run $ f (OptionTₓ.mkLabel x) : m (Option α))
 
--- failed to format: format: uncaught backtrack exception
-instance [ MonadCont m ] : MonadCont ( OptionTₓ m ) where callCc α β := OptionTₓ.callCc
+instance [MonadCont m] : MonadCont (OptionTₓ m) where
+  callCc := fun α β => OptionTₓ.callCc
 
 instance [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (OptionTₓ m) where
   call_cc_bind_right := by
@@ -180,8 +178,8 @@ def WriterT.callCc [MonadCont m] {α β ω : Type _} [HasOne ω] (f : label α (
     WriterT ω m α :=
   ⟨call_cc (WriterT.run ∘ f ∘ WriterT.mkLabelₓ : label (α × ω) m β → m (α × ω))⟩
 
--- failed to format: format: uncaught backtrack exception
-instance ω [ Monadₓ m ] [ HasOne ω ] [ MonadCont m ] : MonadCont ( WriterT ω m ) where callCc α β := WriterT.callCc
+instance ω [Monadₓ m] [HasOne ω] [MonadCont m] : MonadCont (WriterT ω m) where
+  callCc := fun α β => WriterT.callCc
 
 def StateTₓ.mkLabelₓ {α β σ : Type u} : label (α × σ) m (β × σ) → label α (StateTₓ σ m) β
   | ⟨f⟩ => ⟨fun a => ⟨fun s => f (a, s)⟩⟩
@@ -193,8 +191,8 @@ theorem StateTₓ.goto_mk_label {α β σ : Type u} (x : label (α × σ) m (β 
 def StateTₓ.callCc {σ} [MonadCont m] {α β : Type _} (f : label α (StateTₓ σ m) β → StateTₓ σ m α) : StateTₓ σ m α :=
   ⟨fun r => call_cc fun f' => (f $ StateTₓ.mkLabelₓ f').run r⟩
 
--- failed to format: format: uncaught backtrack exception
-instance { σ } [ MonadCont m ] : MonadCont ( StateTₓ σ m ) where callCc α β := StateTₓ.callCc
+instance {σ} [MonadCont m] : MonadCont (StateTₓ σ m) where
+  callCc := fun α β => StateTₓ.callCc
 
 instance {σ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (StateTₓ σ m) where
   call_cc_bind_right := by
@@ -225,8 +223,8 @@ theorem ReaderTₓ.goto_mk_label {α ρ β} (x : label α m β) (i : α) :
 def ReaderTₓ.callCc {ε} [MonadCont m] {α β : Type _} (f : label α (ReaderTₓ ε m) β → ReaderTₓ ε m α) : ReaderTₓ ε m α :=
   ⟨fun r => call_cc fun f' => (f $ ReaderTₓ.mkLabelₓ _ f').run r⟩
 
--- failed to format: format: uncaught backtrack exception
-instance { ρ } [ MonadCont m ] : MonadCont ( ReaderTₓ ρ m ) where callCc α β := ReaderTₓ.callCc
+instance {ρ} [MonadCont m] : MonadCont (ReaderTₓ ρ m) where
+  callCc := fun α β => ReaderTₓ.callCc
 
 instance {ρ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ReaderTₓ ρ m) where
   call_cc_bind_right := by
@@ -245,13 +243,14 @@ instance {ρ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ReaderT�
     ext
     rfl
 
-/--  reduce the equivalence between two continuation passing monads to the equivalence between
+/-- reduce the equivalence between two continuation passing monads to the equivalence between
 their underlying monad -/
 def ContT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ r₁ : Type u₀} {α₂ r₂ : Type u₁}
-    (F : m₁ r₁ ≃ m₂ r₂) (G : α₁ ≃ α₂) : ContT r₁ m₁ α₁ ≃ ContT r₂ m₂ α₂ :=
-  { toFun := fun f r => F $ f $ fun x => F.symm $ r $ G x, invFun := fun f r => F.symm $ f $ fun x => F $ r $ G.symm x,
-    left_inv := fun f => by
-      funext r <;> simp ,
-    right_inv := fun f => by
-      funext r <;> simp }
+    (F : m₁ r₁ ≃ m₂ r₂) (G : α₁ ≃ α₂) : ContT r₁ m₁ α₁ ≃ ContT r₂ m₂ α₂ where
+  toFun := fun f r => F $ f $ fun x => F.symm $ r $ G x
+  invFun := fun f r => F.symm $ f $ fun x => F $ r $ G.symm x
+  left_inv := fun f => by
+    funext r <;> simp
+  right_inv := fun f => by
+    funext r <;> simp
 

@@ -35,7 +35,7 @@ variable [CancelCommMonoidWithZero α] [NormalizedGcdMonoid α]
 
 section Lcm
 
-/--  Least common multiple of a finite set -/
+/-- Least common multiple of a finite set -/
 def lcm (s : Finset β) (f : β → α) : α :=
   s.fold GcdMonoid.lcm 1 f
 
@@ -63,8 +63,8 @@ theorem dvd_lcm {b : β} (hb : b ∈ s) : f b ∣ s.lcm f :=
 @[simp]
 theorem lcm_insert [DecidableEq β] {b : β} : (insert b s : Finset β).lcm f = GcdMonoid.lcm (f b) (s.lcm f) := by
   by_cases' h : b ∈ s
-  ·
-    rw [insert_eq_of_mem h, (lcm_eq_right_iff (f b) (s.lcm f) (Multiset.normalize_lcm (s.1.map f))).2 (dvd_lcm h)]
+  · rw [insert_eq_of_mem h, (lcm_eq_right_iff (f b) (s.lcm f) (Multiset.normalize_lcm (s.1.map f))).2 (dvd_lcm h)]
+    
   apply fold_insert h
 
 @[simp]
@@ -102,7 +102,7 @@ end Lcm
 
 section Gcd
 
-/--  Greatest common divisor of a finite set -/
+/-- Greatest common divisor of a finite set -/
 def gcd (s : Finset β) (f : β → α) : α :=
   s.fold GcdMonoid.gcd 0 f
 
@@ -129,8 +129,8 @@ theorem dvd_gcd {a : α} : (∀, ∀ b ∈ s, ∀, a ∣ f b) → a ∣ s.gcd f 
 @[simp]
 theorem gcd_insert [DecidableEq β] {b : β} : (insert b s : Finset β).gcd f = GcdMonoid.gcd (f b) (s.gcd f) := by
   by_cases' h : b ∈ s
-  ·
-    rw [insert_eq_of_mem h, (gcd_eq_right_iff (f b) (s.gcd f) (Multiset.normalize_gcd (s.1.map f))).2 (gcd_dvd h)]
+  · rw [insert_eq_of_mem h, (gcd_eq_right_iff (f b) (s.gcd f) (Multiset.normalize_gcd (s.1.map f))).2 (gcd_dvd h)]
+    
   apply fold_insert h
 
 @[simp]
@@ -168,50 +168,50 @@ theorem gcd_eq_gcd_image [DecidableEq α] [IsIdempotent α GcdMonoid.gcd] : s.gc
 theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 := by
   rw [gcd_def, Multiset.gcd_eq_zero_iff]
   constructor <;> intro h
-  ·
-    intro b bs
+  · intro b bs
     apply h (f b)
     simp only [Multiset.mem_map, mem_def.1 bs]
     use b
     simp [mem_def.1 bs]
-  ·
-    intro a as
+    
+  · intro a as
     rw [Multiset.mem_map] at as
     rcases as with ⟨b, ⟨bs, rfl⟩⟩
     apply h b (mem_def.1 bs)
+    
 
 theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] : s.gcd f = (s.filter fun x => f x ≠ 0).gcd f :=
   by
   classical
   trans ((s.filter fun x => f x = 0) ∪ s.filter fun x => f x ≠ 0).gcd f
-  ·
-    rw [filter_union_filter_neg_eq]
+  · rw [filter_union_filter_neg_eq]
+    
   rw [gcd_union]
   trans GcdMonoid.gcd (0 : α) _
-  ·
-    refine' congr (congr rfl _) rfl
+  · refine' congr (congr rfl _) rfl
     apply s.induction_on
-    ·
-      simp
+    · simp
+      
     intro a s has h
     rw [filter_insert]
     split_ifs with h1 <;> simp [h, h1]
+    
   simp [gcd_zero_left, normalize_gcd]
 
-theorem gcd_mul_left {a : α} : (s.gcd fun x => a*f x) = normalize a*s.gcd f := by
+theorem gcd_mul_left {a : α} : (s.gcd fun x => a * f x) = normalize a * s.gcd f := by
   classical
   apply s.induction_on
-  ·
-    simp
+  · simp
+    
   intro b t hbt h
   rw [gcd_insert, gcd_insert, h, ← gcd_mul_left]
   apply ((normalize_associated a).mul_right _).gcd_eq_right
 
-theorem gcd_mul_right {a : α} : (s.gcd fun x => f x*a) = s.gcd f*normalize a := by
+theorem gcd_mul_right {a : α} : (s.gcd fun x => f x * a) = s.gcd f * normalize a := by
   classical
   apply s.induction_on
-  ·
-    simp
+  · simp
+    
   intro b t hbt h
   rw [gcd_insert, gcd_insert, h, ← gcd_mul_right]
   apply ((normalize_associated a).mul_left _).gcd_eq_right
@@ -231,8 +231,8 @@ theorem gcd_eq_of_dvd_sub {s : Finset β} {f g : β → α} {a : α} (h : ∀ x 
   classical
   revert h
   apply s.induction_on
-  ·
-    simp
+  · simp
+    
   intro b s bs hi h
   rw [gcd_insert, gcd_insert, gcd_comm (f b), ← gcd_assoc, hi fun x hx => h _ (mem_insert_of_mem hx), gcd_comm a,
     gcd_assoc, gcd_comm a (GcdMonoid.gcd _ _), gcd_comm (g b), gcd_assoc _ _ a, gcd_comm _ a]

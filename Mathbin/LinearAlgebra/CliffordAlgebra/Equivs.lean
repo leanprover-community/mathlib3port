@@ -1,6 +1,8 @@
 import Mathbin.Algebra.QuaternionBasis
 import Mathbin.Data.Complex.Module
 import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
+import Mathbin.Algebra.DualNumber
+import Mathbin.LinearAlgebra.QuadraticForm.Prod
 
 /-!
 # Other constructions isomorphic to Clifford Algebras
@@ -42,6 +44,11 @@ and vice-versa:
 * `clifford_algebra_quaternion.to_quaternion_involute_reverse`
 * `clifford_algebra_quaternion.of_quaternion_conj`
 
+## Dual numbers
+
+* `clifford_algebra_dual_number.equiv`: `R[ε]` is is equivalent as an `R`-algebra to a clifford
+  algebra over `R` where `Q = 0`.
+
 -/
 
 
@@ -60,7 +67,7 @@ variable {R : Type _} [CommRingₓ R]
 theorem ι_eq_zero : ι (0 : QuadraticForm R Unit) = 0 :=
   Subsingleton.elimₓ _ _
 
-/--  Since the vector space is empty the ring is commutative. -/
+/-- Since the vector space is empty the ring is commutative. -/
 instance : CommRingₓ (CliffordAlgebra (0 : QuadraticForm R Unit)) :=
   { CliffordAlgebra.ring _ with
     mul_comm := fun x y => by
@@ -94,7 +101,7 @@ theorem involute_eq_id : (involute : CliffordAlgebra (0 : QuadraticForm R Unit) 
   ext
   simp
 
-/--  The clifford algebra over a 0-dimensional vector space is isomorphic to its scalars. -/
+/-- The clifford algebra over a 0-dimensional vector space is isomorphic to its scalars. -/
 protected def Equivₓ : CliffordAlgebra (0 : QuadraticForm R Unit) ≃ₐ[R] R :=
   AlgEquiv.ofAlgHom
     (CliffordAlgebra.lift (0 : QuadraticForm R Unit) $
@@ -116,15 +123,15 @@ namespace CliffordAlgebraComplex
 
 open_locale ComplexConjugate
 
-/--  The quadratic form sending elements to the negation of their square. -/
+/-- The quadratic form sending elements to the negation of their square. -/
 def Q : QuadraticForm ℝ ℝ :=
-  -QuadraticForm.linMulLin LinearMap.id LinearMap.id
+  -QuadraticForm.sq
 
 @[simp]
-theorem Q_apply (r : ℝ) : Q r = -r*r :=
+theorem Q_apply (r : ℝ) : Q r = -(r * r) :=
   rfl
 
-/--  Intermediate result for `clifford_algebra_complex.equiv`: clifford algebras over
+/-- Intermediate result for `clifford_algebra_complex.equiv`: clifford algebras over
 `clifford_algebra_complex.Q` above can be converted to `ℂ`. -/
 def to_complex : CliffordAlgebra Q →ₐ[ℝ] ℂ :=
   CliffordAlgebra.lift Q
@@ -137,7 +144,7 @@ def to_complex : CliffordAlgebra Q →ₐ[ℝ] ℂ :=
 theorem to_complex_ι (r : ℝ) : to_complex (ι Q r) = r • Complex.i :=
   CliffordAlgebra.lift_ι_apply _ _ r
 
-/--  `clifford_algebra.involute` is analogous to `complex.conj`. -/
+/-- `clifford_algebra.involute` is analogous to `complex.conj`. -/
 @[simp]
 theorem to_complex_involute (c : CliffordAlgebra Q) : to_complex c.involute = conj (to_complex c) := by
   have : to_complex (involute (ι Q 1)) = conj (to_complex (ι Q 1)) := by
@@ -147,7 +154,7 @@ theorem to_complex_involute (c : CliffordAlgebra Q) : to_complex c.involute = co
   ext : 2
   exact this
 
-/--  Intermediate result for `clifford_algebra_complex.equiv`: `ℂ` can be converted to
+/-- Intermediate result for `clifford_algebra_complex.equiv`: `ℂ` can be converted to
 `clifford_algebra_complex.Q` above can be converted to. -/
 def of_complex : ℂ →ₐ[ℝ] CliffordAlgebra Q :=
   Complex.lift
@@ -178,13 +185,13 @@ theorem of_complex_comp_to_complex : of_complex.comp to_complex = AlgHom.id ℝ 
 theorem of_complex_to_complex (c : CliffordAlgebra Q) : of_complex (to_complex c) = c :=
   AlgHom.congr_fun of_complex_comp_to_complex c
 
-/--  The clifford algebras over `clifford_algebra_complex.Q` is isomorphic as an `ℝ`-algebra to
+/-- The clifford algebras over `clifford_algebra_complex.Q` is isomorphic as an `ℝ`-algebra to
 `ℂ`. -/
 @[simps]
 protected def Equivₓ : CliffordAlgebra Q ≃ₐ[ℝ] ℂ :=
   AlgEquiv.ofAlgHom to_complex of_complex to_complex_comp_of_complex of_complex_comp_to_complex
 
-/--  The clifford algebra is commutative since it is isomorphic to the complex numbers.
+/-- The clifford algebra is commutative since it is isomorphic to the complex numbers.
 
 TODO: prove this is true for all `clifford_algebra`s over a 1-dimensional vector space. -/
 instance : CommRingₓ (CliffordAlgebra Q) :=
@@ -193,7 +200,7 @@ instance : CommRingₓ (CliffordAlgebra Q) :=
       CliffordAlgebraComplex.equiv.Injective $ by
         rw [AlgEquiv.map_mul, mul_commₓ, AlgEquiv.map_mul] }
 
-/--  `reverse` is a no-op over `clifford_algebra_complex.Q`. -/
+/-- `reverse` is a no-op over `clifford_algebra_complex.Q`. -/
 theorem reverse_apply (x : CliffordAlgebra Q) : x.reverse = x := by
   induction x using CliffordAlgebra.induction
   case h_grade0 r =>
@@ -209,7 +216,7 @@ theorem reverse_apply (x : CliffordAlgebra Q) : x.reverse = x := by
 theorem reverse_eq_id : (reverse : CliffordAlgebra Q →ₗ[ℝ] _) = LinearMap.id :=
   LinearMap.ext reverse_apply
 
-/--  `complex.conj` is analogous to `clifford_algebra.involute`. -/
+/-- `complex.conj` is analogous to `clifford_algebra.involute`. -/
 @[simp]
 theorem of_complex_conj (c : ℂ) : of_complex (conj c) = (of_complex c).involute :=
   CliffordAlgebraComplex.equiv.Injective $ by
@@ -230,35 +237,35 @@ open QuaternionAlgebra
 
 variable {R : Type _} [CommRingₓ R] (c₁ c₂ : R)
 
-/--  `Q c₁ c₂` is a quadratic form over `R × R` such that `clifford_algebra (Q c₁ c₂)` is isomorphic
+/-- `Q c₁ c₂` is a quadratic form over `R × R` such that `clifford_algebra (Q c₁ c₂)` is isomorphic
 as an `R`-algebra to `ℍ[R,c₁,c₂]`. -/
 def Q : QuadraticForm R (R × R) :=
-  (c₁ •
-      QuadraticForm.linMulLin (LinearMap.fst _ _ _)
-        (LinearMap.fst _ _ _))+c₂ • QuadraticForm.linMulLin (LinearMap.snd _ _ _) (LinearMap.snd _ _ _)
+  (c₁ • QuadraticForm.sq).Prod (c₂ • QuadraticForm.sq)
 
 @[simp]
-theorem Q_apply (v : R × R) : Q c₁ c₂ v = (c₁*v.1*v.1)+c₂*v.2*v.2 :=
+theorem Q_apply (v : R × R) : Q c₁ c₂ v = c₁ * (v.1 * v.1) + c₂ * (v.2 * v.2) :=
   rfl
 
-/--  The quaternion basis vectors within the algebra. -/
+/-- The quaternion basis vectors within the algebra. -/
 @[simps i j k]
-def quaternion_basis : QuaternionAlgebra.Basis (CliffordAlgebra (Q c₁ c₂)) c₁ c₂ :=
-  { i := ι (Q c₁ c₂) (1, 0), j := ι (Q c₁ c₂) (0, 1), k := ι (Q c₁ c₂) (1, 0)*ι (Q c₁ c₂) (0, 1),
-    i_mul_i := by
-      rw [ι_sq_scalar, Q_apply, ← Algebra.algebra_map_eq_smul_one]
-      simp ,
-    j_mul_j := by
-      rw [ι_sq_scalar, Q_apply, ← Algebra.algebra_map_eq_smul_one]
-      simp ,
-    i_mul_j := rfl,
-    j_mul_i := by
-      rw [eq_neg_iff_add_eq_zero, ι_mul_ι_add_swap, QuadraticForm.polar]
-      simp }
+def quaternion_basis : QuaternionAlgebra.Basis (CliffordAlgebra (Q c₁ c₂)) c₁ c₂ where
+  i := ι (Q c₁ c₂) (1, 0)
+  j := ι (Q c₁ c₂) (0, 1)
+  k := ι (Q c₁ c₂) (1, 0) * ι (Q c₁ c₂) (0, 1)
+  i_mul_i := by
+    rw [ι_sq_scalar, Q_apply, ← Algebra.algebra_map_eq_smul_one]
+    simp
+  j_mul_j := by
+    rw [ι_sq_scalar, Q_apply, ← Algebra.algebra_map_eq_smul_one]
+    simp
+  i_mul_j := rfl
+  j_mul_i := by
+    rw [eq_neg_iff_add_eq_zero, ι_mul_ι_add_swap, QuadraticForm.polar]
+    simp
 
 variable {c₁ c₂}
 
-/--  Intermediate result of `clifford_algebra_quaternion.equiv`: clifford algebras over
+/-- Intermediate result of `clifford_algebra_quaternion.equiv`: clifford algebras over
 `clifford_algebra_quaternion.Q` can be converted to `ℍ[R,c₁,c₂]`. -/
 def to_quaternion : CliffordAlgebra (Q c₁ c₂) →ₐ[R] ℍ[R,c₁,c₂] :=
   CliffordAlgebra.lift (Q c₁ c₂)
@@ -278,7 +285,7 @@ def to_quaternion : CliffordAlgebra (Q c₁ c₂) →ₐ[R] ℍ[R,c₁,c₂] :=
 theorem to_quaternion_ι (v : R × R) : to_quaternion (ι (Q c₁ c₂) v) = (⟨0, v.1, v.2, 0⟩ : ℍ[R,c₁,c₂]) :=
   CliffordAlgebra.lift_ι_apply _ _ v
 
-/--  The "clifford conjugate" (aka `involute ∘ reverse = reverse ∘ involute`) maps to the quaternion
+/-- The "clifford conjugate" (aka `involute ∘ reverse = reverse ∘ involute`) maps to the quaternion
 conjugate. -/
 theorem to_quaternion_involute_reverse (c : CliffordAlgebra (Q c₁ c₂)) :
     to_quaternion (involute (reverse c)) = QuaternionAlgebra.conj (to_quaternion c) := by
@@ -293,15 +300,15 @@ theorem to_quaternion_involute_reverse (c : CliffordAlgebra (Q c₁ c₂)) :
   case h_add x₁ x₂ hx₁ hx₂ =>
     simp only [reverse.map_add, AlgHom.map_add, hx₁, hx₂, QuaternionAlgebra.conj_add]
 
-/--  Map a quaternion into the clifford algebra. -/
+/-- Map a quaternion into the clifford algebra. -/
 def of_quaternion : ℍ[R,c₁,c₂] →ₐ[R] CliffordAlgebra (Q c₁ c₂) :=
   (quaternion_basis c₁ c₂).liftHom
 
 @[simp]
 theorem of_quaternion_mk (a₁ a₂ a₃ a₄ : R) :
     of_quaternion (⟨a₁, a₂, a₃, a₄⟩ : ℍ[R,c₁,c₂]) =
-      ((algebraMap R _
-              a₁+a₂ • ι (Q c₁ c₂) (1, 0))+a₃ • ι (Q c₁ c₂) (0, 1))+a₄ • ι (Q c₁ c₂) (1, 0)*ι (Q c₁ c₂) (0, 1) :=
+      algebraMap R _ a₁ + a₂ • ι (Q c₁ c₂) (1, 0) + a₃ • ι (Q c₁ c₂) (0, 1) +
+        a₄ • (ι (Q c₁ c₂) (1, 0) * ι (Q c₁ c₂) (0, 1)) :=
   rfl
 
 @[simp]
@@ -329,13 +336,13 @@ theorem to_quaternion_comp_of_quaternion : to_quaternion.comp of_quaternion = Al
 theorem to_quaternion_of_quaternion (q : ℍ[R,c₁,c₂]) : to_quaternion (of_quaternion q) = q :=
   AlgHom.congr_fun (to_quaternion_comp_of_quaternion : _ = AlgHom.id R ℍ[R,c₁,c₂]) q
 
-/--  The clifford algebra over `clifford_algebra_quaternion.Q c₁ c₂` is isomorphic as an `R`-algebra
+/-- The clifford algebra over `clifford_algebra_quaternion.Q c₁ c₂` is isomorphic as an `R`-algebra
 to `ℍ[R,c₁,c₂]`. -/
 @[simps]
 protected def Equivₓ : CliffordAlgebra (Q c₁ c₂) ≃ₐ[R] ℍ[R,c₁,c₂] :=
   AlgEquiv.ofAlgHom to_quaternion of_quaternion to_quaternion_comp_of_quaternion of_quaternion_comp_to_quaternion
 
-/--  The quaternion conjugate maps to the "clifford conjugate" (aka
+/-- The quaternion conjugate maps to the "clifford conjugate" (aka
 `involute ∘ reverse = reverse ∘ involute`). -/
 @[simp]
 theorem of_quaternion_conj (q : ℍ[R,c₁,c₂]) : of_quaternion q.conj = (of_quaternion q).reverse.involute :=
@@ -346,4 +353,43 @@ theorem of_quaternion_conj (q : ℍ[R,c₁,c₂]) : of_quaternion q.conj = (of_q
 attribute [protected] Q
 
 end CliffordAlgebraQuaternion
+
+/-! ### The clifford algebra isomorphic to the dual numbers -/
+
+
+namespace CliffordAlgebraDualNumber
+
+open_locale DualNumber
+
+open DualNumber TrivSqZeroExt
+
+variable {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
+
+theorem ι_mul_ι r₁ r₂ : ι (0 : QuadraticForm R R) r₁ * ι (0 : QuadraticForm R R) r₂ = 0 := by
+  rw [← mul_oneₓ r₁, ← mul_oneₓ r₂, ← smul_eq_mul R, ← smul_eq_mul R, LinearMap.map_smul, LinearMap.map_smul,
+    smul_mul_smul, ι_sq_scalar, QuadraticForm.zero_apply, RingHom.map_zero, smul_zero]
+
+/-- The clifford algebra over a 1-dimensional vector space with 0 quadratic form is isomorphic to
+the dual numbers. -/
+protected def Equivₓ : CliffordAlgebra (0 : QuadraticForm R R) ≃ₐ[R] (R)[ε] :=
+  AlgEquiv.ofAlgHom (CliffordAlgebra.lift (0 : QuadraticForm R R) ⟨inr_hom R _, fun m => inr_mul_inr _ m m⟩)
+    (DualNumber.lift ⟨ι _ (1 : R), ι_mul_ι (1 : R) 1⟩)
+    (by
+      ext x : 1
+      dsimp
+      rw [lift_apply_eps, Subtype.coe_mk, lift_ι_apply, inr_hom_apply, eps])
+    (by
+      ext : 2
+      dsimp
+      rw [lift_ι_apply, inr_hom_apply, ← eps, lift_apply_eps, Subtype.coe_mk])
+
+@[simp]
+theorem equiv_ι (r : R) : CliffordAlgebraDualNumber.equiv (ι _ r) = r • ε :=
+  (lift_ι_apply _ _ r).trans (inr_eq_smul_eps _)
+
+@[simp]
+theorem equiv_symm_eps : CliffordAlgebraDualNumber.equiv.symm (eps : (R)[ε]) = ι (0 : QuadraticForm R R) 1 :=
+  DualNumber.lift_apply_eps _
+
+end CliffordAlgebraDualNumber
 

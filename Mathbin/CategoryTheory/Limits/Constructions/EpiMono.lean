@@ -14,23 +14,23 @@ Dualise and apply to functor categories.
 -/
 
 
-universe v u₁ u₂
+universe v₁ v₂ u₁ u₂
 
 namespace CategoryTheory
 
 open Category Limits
 
-variable {C : Type u₁} {D : Type u₂} [category.{v} C] [category.{v} D]
+variable {C : Type u₁} {D : Type u₂} [category.{v₁} C] [category.{v₂} D]
 
 variable (F : C ⥤ D)
 
-/--  If `F` preserves pullbacks, then it preserves monomorphisms. -/
+/-- If `F` preserves pullbacks, then it preserves monomorphisms. -/
 instance preserves_mono {X Y : C} (f : X ⟶ Y) [preserves_limit (cospan f f) F] [mono f] : mono (F.map f) := by
   have := is_limit_pullback_cone_map_of_is_limit F _ (pullback_cone.is_limit_mk_id_id f)
   simp_rw [F.map_id]  at this
   apply pullback_cone.mono_of_is_limit_mk_id_id _ this
 
-/--  If `F` reflects pullbacks, then it reflects monomorphisms. -/
+/-- If `F` reflects pullbacks, then it reflects monomorphisms. -/
 theorem reflects_mono {X Y : C} (f : X ⟶ Y) [reflects_limit (cospan f f) F] [mono (F.map f)] : mono f := by
   have := pullback_cone.is_limit_mk_id_id (F.map f)
   simp_rw [← F.map_id]  at this

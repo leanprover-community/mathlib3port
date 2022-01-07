@@ -2,8 +2,8 @@ import Mathbin.Tactic.Monotonicity.Default
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/--  Apply the function `f` given by `e : pexpr` to the local hypothesis `hyp`, which must either be
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Apply the function `f` given by `e : pexpr` to the local hypothesis `hyp`, which must either be
 of the form `a = b` or `a ≤ b`, replacing the type of `hyp` with `f a = f b` or `f a ≤ f b`. If
 `hyp` names an inequality then a new goal `monotone f` is created, unless the name of a proof of
 this fact is passed as the optional argument `mono_lem`, or the `mono` tactic can prove it.
@@ -38,8 +38,7 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
   let hyp ← note hyp.local_pp_name none prf
   try $ tactic.dsimp_hyp hyp simp_lemmas.mk [] { eta := False, beta := True }
 
-/-- 
-Attempt to "apply" a function `f` represented by the argument `e : pexpr` to the goal.
+/-- Attempt to "apply" a function `f` represented by the argument `e : pexpr` to the goal.
 
 If the goal is of the form `a ≠ b`, we obtain the new goal `f a ≠ f b`.
 If the goal is of the form `a = b`, we obtain a new goal `f a = f b`, and a subsidiary goal
@@ -74,8 +73,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-/-- 
-Apply a function to an equality or inequality in either a local hypothesis or the goal.
+/-- Apply a function to an equality or inequality in either a local hypothesis or the goal.
 
 * If we have `h : a = b`, then `apply_fun f at h` will replace this with `h : f a = f b`.
 * If we have `h : a ≤ b`, then `apply_fun f at h` will replace this with `h : f a ≤ f b`,

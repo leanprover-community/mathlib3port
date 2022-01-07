@@ -29,11 +29,11 @@ section Equalizer
 
 variable (f g : X ⟶ Y) [has_equalizer f g]
 
-/--  The equalizer of morphisms `f g : X ⟶ Y` as a `subobject X`. -/
+/-- The equalizer of morphisms `f g : X ⟶ Y` as a `subobject X`. -/
 abbrev equalizer_subobject : subobject X :=
   subobject.mk (equalizer.ι f g)
 
-/--  The underlying object of `equalizer_subobject f g` is (up to isomorphism!)
+/-- The underlying object of `equalizer_subobject f g` is (up to isomorphism!)
 the same as the chosen object `equalizer f g`. -/
 def equalizer_subobject_iso : (equalizer_subobject f g : C) ≅ equalizer f g :=
   subobject.underlying_iso (equalizer.ι f g)
@@ -67,11 +67,11 @@ section Kernel
 
 variable [has_zero_morphisms C] (f : X ⟶ Y) [has_kernel f]
 
-/--  The kernel of a morphism `f : X ⟶ Y` as a `subobject X`. -/
+/-- The kernel of a morphism `f : X ⟶ Y` as a `subobject X`. -/
 abbrev kernel_subobject : subobject X :=
   subobject.mk (kernel.ι f)
 
-/--  The underlying object of `kernel_subobject f` is (up to isomorphism!)
+/-- The underlying object of `kernel_subobject f` is (up to isomorphism!)
 the same as the chosen object `kernel f`. -/
 def kernel_subobject_iso : (kernel_subobject f : C) ≅ kernel f :=
   subobject.underlying_iso (kernel.ι f)
@@ -98,7 +98,7 @@ theorem kernel_subobject_factors_iff {W : C} (h : W ⟶ X) : (kernel_subobject f
     rw [← subobject.factor_thru_arrow _ _ w, category.assoc, kernel_subobject_arrow_comp, comp_zero],
     kernel_subobject_factors f h⟩
 
-/--  A factorisation of `h : W ⟶ X` through `kernel_subobject f`, assuming `h ≫ f = 0`. -/
+/-- A factorisation of `h : W ⟶ X` through `kernel_subobject f`, assuming `h ≫ f = 0`. -/
 def factor_thru_kernel_subobject {W : C} (h : W ⟶ X) (w : h ≫ f = 0) : W ⟶ kernel_subobject f :=
   (kernel_subobject f).factorThru h (kernel_subobject_factors f h w)
 
@@ -118,7 +118,7 @@ section
 
 variable {f} {X' Y' : C} {f' : X' ⟶ Y'} [has_kernel f']
 
-/--  A commuting square induces a morphism between the kernel subobjects. -/
+/-- A commuting square induces a morphism between the kernel subobjects. -/
 def kernel_subobject_map (sq : arrow.mk f ⟶ arrow.mk f') : (kernel_subobject f : C) ⟶ (kernel_subobject f' : C) :=
   subobject.factor_thru _ ((kernel_subobject f).arrow ≫ sq.left)
     (kernel_subobject_factors _ _
@@ -160,8 +160,7 @@ theorem le_kernel_subobject (A : subobject X) (h : A.arrow ≫ f = 0) : A ≤ ke
     (by
       simp )
 
-/-- 
-The isomorphism between the kernel of `f ≫ g` and the kernel of `g`,
+/-- The isomorphism between the kernel of `f ≫ g` and the kernel of `g`,
 when `f` is an isomorphism.
 -/
 def kernel_subobject_iso_comp {X' : C} (f : X' ⟶ X) [is_iso f] (g : X ⟶ Y) [has_kernel g] :
@@ -178,14 +177,14 @@ theorem kernel_subobject_iso_comp_inv_arrow {X' : C} (f : X' ⟶ X) [is_iso f] (
     (kernel_subobject_iso_comp f g).inv ≫ (kernel_subobject (f ≫ g)).arrow = (kernel_subobject g).arrow ≫ inv f := by
   simp [kernel_subobject_iso_comp]
 
-/--  The kernel of `f` is always a smaller subobject than the kernel of `f ≫ h`. -/
+/-- The kernel of `f` is always a smaller subobject than the kernel of `f ≫ h`. -/
 theorem kernel_subobject_comp_le (f : X ⟶ Y) [has_kernel f] {Z : C} (h : Y ⟶ Z) [has_kernel (f ≫ h)] :
     kernel_subobject f ≤ kernel_subobject (f ≫ h) :=
   le_kernel_subobject _ _
     (by
       simp )
 
-/--  Postcomposing by an monomorphism does not change the kernel subobject. -/
+/-- Postcomposing by an monomorphism does not change the kernel subobject. -/
 @[simp]
 theorem kernel_subobject_comp_mono (f : X ⟶ Y) [has_kernel f] {Z : C} (h : Y ⟶ Z) [mono h] :
     kernel_subobject (f ≫ h) = kernel_subobject f :=
@@ -199,10 +198,10 @@ theorem kernel_subobject_comp_mono (f : X ⟶ Y) [has_kernel f] {Z : C} (h : Y �
 instance kernel_subobject_comp_mono_is_iso (f : X ⟶ Y) [has_kernel f] {Z : C} (h : Y ⟶ Z) [mono h] :
     is_iso (subobject.of_le _ _ (kernel_subobject_comp_le f h)) := by
   rw [of_le_mk_le_mk_of_comm (kernel_comp_mono f h).inv]
-  ·
-    infer_instance
-  ·
-    simp
+  · infer_instance
+    
+  · simp
+    
 
 end Kernel
 
@@ -210,11 +209,11 @@ section Image
 
 variable (f : X ⟶ Y) [has_image f]
 
-/--  The image of a morphism `f g : X ⟶ Y` as a `subobject Y`. -/
+/-- The image of a morphism `f g : X ⟶ Y` as a `subobject Y`. -/
 abbrev image_subobject : subobject Y :=
   subobject.mk (image.ι f)
 
-/--  The underlying object of `image_subobject f` is (up to isomorphism!)
+/-- The underlying object of `image_subobject f` is (up to isomorphism!)
 the same as the chosen object `image f`. -/
 def image_subobject_iso : (image_subobject f : C) ≅ image f :=
   subobject.underlying_iso (image.ι f)
@@ -227,7 +226,7 @@ theorem image_subobject_arrow : (image_subobject_iso f).Hom ≫ image.ι f = (im
 theorem image_subobject_arrow' : (image_subobject_iso f).inv ≫ (image_subobject f).arrow = image.ι f := by
   simp [image_subobject_iso]
 
-/--  A factorisation of `f : X ⟶ Y` through `image_subobject f`. -/
+/-- A factorisation of `f : X ⟶ Y` through `image_subobject f`. -/
 def factor_thru_image_subobject : X ⟶ image_subobject f :=
   factor_thru_image f ≫ (image_subobject_iso f).inv
 
@@ -260,7 +259,7 @@ theorem factor_thru_image_subobject_comp_self_assoc {W W' : C} (k : W ⟶ W') (k
   ext
   simp
 
-/--  The image of `h ≫ f` is always a smaller subobject than the image of `f`. -/
+/-- The image of `h ≫ f` is always a smaller subobject than the image of `f`. -/
 theorem image_subobject_comp_le {X' : C} (h : X' ⟶ X) (f : X ⟶ Y) [has_image f] [has_image (h ≫ f)] :
     image_subobject (h ≫ f) ≤ image_subobject f :=
   subobject.mk_le_mk_of_comm (image.pre_comp h f)
@@ -292,8 +291,7 @@ variable [has_equalizers C]
 
 attribute [local instance] epi_comp
 
-/-- 
-The morphism `image_subobject (h ≫ f) ⟶ image_subobject f`
+/-- The morphism `image_subobject (h ≫ f) ⟶ image_subobject f`
 is an epimorphism when `h` is an epimorphism.
 In general this does not imply that `image_subobject (h ≫ f) = image_subobject f`,
 although it will when the ambient category is abelian.
@@ -301,10 +299,10 @@ although it will when the ambient category is abelian.
 instance image_subobject_comp_le_epi_of_epi {X' : C} (h : X' ⟶ X) [epi h] (f : X ⟶ Y) [has_image f]
     [has_image (h ≫ f)] : epi (subobject.of_le _ _ (image_subobject_comp_le h f)) := by
   rw [of_le_mk_le_mk_of_comm (image.pre_comp h f)]
-  ·
-    infer_instance
-  ·
-    simp
+  · infer_instance
+    
+  · simp
+    
 
 end
 
@@ -312,7 +310,7 @@ section
 
 variable [has_equalizers C]
 
-/--  Postcomposing by an isomorphism gives an isomorphism between image subobjects. -/
+/-- Postcomposing by an isomorphism gives an isomorphism between image subobjects. -/
 def image_subobject_comp_iso (f : X ⟶ Y) [has_image f] {Y' : C} (h : Y ⟶ Y') [is_iso h] :
     (image_subobject (f ≫ h) : C) ≅ (image_subobject f : C) :=
   image_subobject_iso _ ≪≫ (image.comp_iso _ _).symm ≪≫ (image_subobject_iso _).symm
@@ -329,7 +327,7 @@ theorem image_subobject_comp_iso_inv_arrow (f : X ⟶ Y) [has_image f] {Y' : C} 
 
 end
 
-/--  Precomposing by an isomorphism does not change the image subobject. -/
+/-- Precomposing by an isomorphism does not change the image subobject. -/
 theorem image_subobject_iso_comp [has_equalizers C] {X' : C} (h : X' ⟶ X) [is_iso h] (f : X ⟶ Y) [has_image f] :
     image_subobject (h ≫ f) = image_subobject f :=
   le_antisymmₓ (image_subobject_comp_le h f)
@@ -349,7 +347,7 @@ theorem image_subobject_le_mk {A B : C} {X : C} (g : X ⟶ B) [mono g] (f : A �
     (by
       simp [w])
 
-/--  Given a commutative square between morphisms `f` and `g`,
+/-- Given a commutative square between morphisms `f` and `g`,
 we have a morphism in the category from `image_subobject f` to `image_subobject g`. -/
 def image_subobject_map {W X Y Z : C} {f : W ⟶ X} [has_image f] {g : Y ⟶ Z} [has_image g] (sq : arrow.mk f ⟶ arrow.mk g)
     [has_image_map sq] : (image_subobject f : C) ⟶ (image_subobject g : C) :=

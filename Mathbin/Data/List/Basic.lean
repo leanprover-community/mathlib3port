@@ -11,7 +11,7 @@ namespace List
 
 universe u v w x
 
-variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
+variable {ι : Type _} {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 
 attribute [inline] List.headₓ
 
@@ -82,14 +82,14 @@ theorem ne_nil_of_mem {a : α} {l : List α} (h : a ∈ l) : l ≠ [] := by
 
 theorem mem_split {a : α} {l : List α} (h : a ∈ l) : ∃ s t : List α, l = s ++ a :: t := by
   induction' l with b l ih
-  ·
-    cases h
+  · cases h
+    
   rcases h with (rfl | h)
-  ·
-    exact ⟨[], l, rfl⟩
-  ·
-    rcases ih h with ⟨s, t, rfl⟩
+  · exact ⟨[], l, rfl⟩
+    
+  · rcases ih h with ⟨s, t, rfl⟩
     exact ⟨b :: s, t, rfl⟩
+    
 
 theorem mem_of_ne_of_mem {a y : α} {l : List α} (h₁ : a ≠ y) (h₂ : a ∈ y :: l) : a ∈ l :=
   Or.elim (eq_or_mem_of_mem_cons h₂) (fun e => absurd e h₁) fun r => r
@@ -108,21 +108,21 @@ theorem ne_and_not_mem_of_not_mem_cons {a y : α} {l : List α} : a ∉ y :: l �
 @[simp]
 theorem mem_map {f : α → β} {b : β} {l : List α} : b ∈ map f l ↔ ∃ a, a ∈ l ∧ f a = b := by
   induction' l with a l ihl
-  ·
+  · constructor
+    · rintro ⟨_⟩
+      
+    · rintro ⟨a, ⟨_⟩, _⟩
+      
+    
+  · refine' (or_congr eq_comm ihl).trans _
     constructor
-    ·
-      rintro ⟨_⟩
-    ·
-      rintro ⟨a, ⟨_⟩, _⟩
-  ·
-    refine' (or_congr eq_comm ihl).trans _
-    constructor
-    ·
-      rintro (h | ⟨c, hcl, h⟩)
+    · rintro (h | ⟨c, hcl, h⟩)
       exacts[⟨a, Or.inl rfl, h⟩, ⟨c, Or.inr hcl, h⟩]
-    ·
-      rintro ⟨c, hc | hc, h⟩
+      
+    · rintro ⟨c, hc | hc, h⟩
       exacts[Or.inl $ (congr_argₓ f hc.symm).trans h, Or.inr ⟨c, hc, h⟩]
+      
+    
 
 alias mem_map ↔ List.exists_of_mem_mapₓ _
 
@@ -138,14 +138,14 @@ theorem mem_map_of_injective {f : α → β} (H : injective f) {a : α} {l : Lis
 theorem forall_mem_map_iff {f : α → β} {l : List α} {P : β → Prop} :
     (∀, ∀ i ∈ l.map f, ∀, P i) ↔ ∀, ∀ j ∈ l, ∀, P (f j) := by
   constructor
-  ·
-    intro H j hj
+  · intro H j hj
     exact H (f j) (mem_map_of_mem f hj)
-  ·
-    intro H i hi
+    
+  · intro H i hi
     rcases mem_map.1 hi with ⟨j, hj, ji⟩
     rw [← ji]
     exact H j hj
+    
 
 @[simp]
 theorem map_eq_nil {f : α → β} {l : List α} : List.map f l = [] ↔ l = [] :=
@@ -188,24 +188,18 @@ theorem map_bind (g : β → List γ) (f : α → β) : ∀ l : List α, (List.m
   | a :: l => by
     simp only [cons_bind, map_cons, map_bind l]
 
--- failed to format: format: uncaught backtrack exception
-/--
-    If each element of a list can be lifted to some type, then the whole list can be lifted to this
-    type. -/
-  instance
-    [ h : CanLift α β ] : CanLift ( List α ) ( List β )
-    where
-      coe := List.map h.coe
-        cond l := ∀ , ∀ x ∈ l , ∀ , CanLift.Cond β x
-        prf
-          l H
-          :=
-          by
-            induction' l with a l ihl
-              · exact ⟨ [ ] , rfl ⟩
-              rcases ihl fun x hx => H x ( Or.inr hx ) with ⟨ l , rfl ⟩
-              rcases CanLift.prf a ( H a ( Or.inl rfl ) ) with ⟨ a , rfl ⟩
-              exact ⟨ a :: l , rfl ⟩
+/-- If each element of a list can be lifted to some type, then the whole list can be lifted to this
+type. -/
+instance [h : CanLift α β] : CanLift (List α) (List β) where
+  coe := List.map h.coe
+  cond := fun l => ∀, ∀ x ∈ l, ∀, CanLift.Cond β x
+  prf := fun l H => by
+    induction' l with a l ihl
+    · exact ⟨[], rfl⟩
+      
+    rcases ihl fun x hx => H x (Or.inr hx) with ⟨l, rfl⟩
+    rcases CanLift.prf a (H a (Or.inl rfl)) with ⟨a, rfl⟩
+    exact ⟨a :: l, rfl⟩
 
 /-! ### length -/
 
@@ -243,33 +237,33 @@ theorem length_eq_one {l : List α} : length l = 1 ↔ ∃ a, l = [a] :=
     | [a], _ => ⟨a, rfl⟩,
     fun ⟨a, e⟩ => e.symm ▸ rfl⟩
 
-theorem exists_of_length_succ {n} : ∀ l : List α, (l.length = n+1) → ∃ h t, l = h :: t
+theorem exists_of_length_succ {n} : ∀ l : List α, l.length = n + 1 → ∃ h t, l = h :: t
   | [], H => absurd H.symm $ succ_ne_zero n
   | h :: t, H => ⟨h, t, rfl⟩
 
 @[simp]
 theorem length_injective_iff : injective (List.length : List α → ℕ) ↔ Subsingleton α := by
   constructor
-  ·
-    intro h
+  · intro h
     refine' ⟨fun x y => _⟩
-    suffices [x] = [y]by
+    suffices [x] = [y] by
       simpa using this
     apply h
     rfl
-  ·
-    intro hα l1 l2 hl
+    
+  · intro hα l1 l2 hl
     induction l1 generalizing l2 <;> cases l2
-    ·
-      rfl
-    ·
-      cases hl
-    ·
-      cases hl
+    · rfl
+      
+    · cases hl
+      
+    · cases hl
+      
     congr
     exact Subsingleton.elimₓ _ _
     apply l1_ih
     simpa using hl
+    
 
 @[simp]
 theorem length_injective [Subsingleton α] : injective (length : List α → ℕ) :=
@@ -371,13 +365,13 @@ theorem append_subset_of_subset_of_subset {l₁ l₂ l : List α} (l₁subl : l�
 @[simp]
 theorem append_subset_iff {l₁ l₂ l : List α} : l₁ ++ l₂ ⊆ l ↔ l₁ ⊆ l ∧ l₂ ⊆ l := by
   constructor
-  ·
-    intro h
+  · intro h
     simp only [subset_def] at *
-    constructor <;> intros <;> simp
-  ·
-    rintro ⟨h1, h2⟩
+    constructor <;> intros <;> simp [*]
+    
+  · rintro ⟨h1, h2⟩
     apply append_subset_of_subset_of_subset h1 h2
+    
 
 theorem eq_nil_of_subset_nil : ∀ {l : List α}, l ⊆ [] → l = []
   | [], s => rfl
@@ -436,24 +430,24 @@ theorem append_eq_append_iff {a b c d : List α} :
   case nil =>
     rw [nil_append]
     constructor
-    ·
-      rintro rfl
+    · rintro rfl
       left
       exact ⟨_, rfl, rfl⟩
-    ·
-      rintro (⟨a', rfl, rfl⟩ | ⟨a', H, rfl⟩)
-      ·
+      
+    · rintro (⟨a', rfl, rfl⟩ | ⟨a', H, rfl⟩)
+      · rfl
+        
+      · rw [← append_assoc, ← H]
         rfl
-      ·
-        rw [← append_assoc, ← H]
-        rfl
+        
+      
   case cons a as ih =>
     cases c
-    ·
-      simp only [cons_append, nil_append, false_andₓ, exists_false, false_orₓ, exists_eq_left']
+    · simp only [cons_append, nil_append, false_andₓ, exists_false, false_orₓ, exists_eq_left']
       exact eq_comm
-    ·
-      simp only [cons_append, @eq_comm _ a, ih, and_assoc, and_or_distrib_left, exists_and_distrib_left]
+      
+    · simp only [cons_append, @eq_comm _ a, ih, and_assoc, and_or_distrib_left, exists_and_distrib_left]
+      
 
 @[simp]
 theorem take_append_drop : ∀ n : ℕ l : List α, take n l ++ drop n l = l
@@ -466,9 +460,8 @@ theorem append_inj : ∀ {s₁ s₂ t₁ t₂ : List α}, s₁ ++ t₁ = s₂ ++
   | a :: s₁, [], t₁, t₂, h, hl => List.noConfusion $ eq_nil_of_length_eq_zero hl
   | [], b :: s₂, t₁, t₂, h, hl => List.noConfusion $ eq_nil_of_length_eq_zero hl.symm
   | a :: s₁, b :: s₂, t₁, t₂, h, hl =>
-    List.noConfusion h $ fun ab hap =>
+    List.noConfusion h $ fun ab hap => by
       let ⟨e1, e2⟩ := @append_inj s₁ s₂ t₁ t₂ hap (succ.inj hl)
-      by
       rw [ab, e1, e2] <;> exact ⟨rfl, rfl⟩
 
 theorem append_inj_right {s₁ s₂ t₁ t₂ : List α} (h : s₁ ++ t₁ = s₂ ++ t₂) (hl : length s₁ = length s₂) : t₁ = t₂ :=
@@ -479,9 +472,8 @@ theorem append_inj_left {s₁ s₂ t₁ t₂ : List α} (h : s₁ ++ t₁ = s₂
 
 theorem append_inj' {s₁ s₂ t₁ t₂ : List α} (h : s₁ ++ t₁ = s₂ ++ t₂) (hl : length t₁ = length t₂) : s₁ = s₂ ∧ t₁ = t₂ :=
   append_inj h $
-    @Nat.add_right_cancel _ (length t₁) _ $
+    @Nat.add_right_cancel _ (length t₁) _ $ by
       let hap := congr_argₓ length h
-      by
       simp only [length_append] at hap <;> rwa [← hl] at hap
 
 theorem append_inj_right' {s₁ s₂ t₁ t₂ : List α} (h : s₁ ++ t₁ = s₂ ++ t₂) (hl : length t₁ = length t₂) : t₁ = t₂ :=
@@ -520,13 +512,13 @@ theorem map_eq_append_split {f : α → β} {l : List α} {s₁ s₂ : List β} 
 
 
 @[simp]
-theorem repeat_succ (a : α) n : repeat a (n+1) = a :: repeat a n :=
+theorem repeat_succ (a : α) n : repeat a (n + 1) = a :: repeat a n :=
   rfl
 
 theorem mem_repeat {a b : α} : ∀ {n}, b ∈ repeat a n ↔ n ≠ 0 ∧ b = a
   | 0 => by
     simp
-  | n+1 => by
+  | n + 1 => by
     simp [mem_repeat]
 
 theorem eq_of_mem_repeat {a b : α} {n} (h : b ∈ repeat a n) : b = a :=
@@ -543,21 +535,21 @@ theorem eq_repeat' {a : α} {l : List α} : l = repeat a l.length ↔ ∀, ∀ b
 theorem eq_repeat {a : α} {n} {l : List α} : l = repeat a n ↔ length l = n ∧ ∀, ∀ b ∈ l, ∀, b = a :=
   ⟨fun h => h.symm ▸ ⟨length_repeat _ _, fun b => eq_of_mem_repeat⟩, fun ⟨e, al⟩ => e ▸ eq_repeat_of_mem al⟩
 
-theorem repeat_add (a : α) m n : repeat a (m+n) = repeat a m ++ repeat a n := by
-  induction m <;> simp only [zero_addₓ, succ_add, repeat] <;> constructor <;> rfl
+theorem repeat_add (a : α) m n : repeat a (m + n) = repeat a m ++ repeat a n := by
+  induction m <;> simp only [*, zero_addₓ, succ_add, repeat] <;> constructor <;> rfl
 
 theorem repeat_subset_singleton (a : α) n : repeat a n ⊆ [a] := fun b h => mem_singleton.2 (eq_of_mem_repeat h)
 
 @[simp]
 theorem map_const (l : List α) (b : β) : map (Function.const α b) l = repeat b l.length := by
-  induction l <;> [rfl, simp only [map]] <;> constructor <;> rfl
+  induction l <;> [rfl, simp only [*, map]] <;> constructor <;> rfl
 
 theorem eq_of_mem_map_const {b₁ b₂ : β} {l : List α} (h : b₁ ∈ map (Function.const α b₂) l) : b₁ = b₂ := by
   rw [map_const] at h <;> exact eq_of_mem_repeat h
 
 @[simp]
 theorem map_repeat (f : α → β) (a : α) n : map f (repeat a n) = repeat (f a) n := by
-  induction n <;> [rfl, simp only [repeat, map]] <;> constructor <;> rfl
+  induction n <;> [rfl, simp only [*, repeat, map]] <;> constructor <;> rfl
 
 @[simp]
 theorem tail_repeat (a : α) n : tail (repeat a n) = repeat a n.pred := by
@@ -565,7 +557,7 @@ theorem tail_repeat (a : α) n : tail (repeat a n) = repeat a n.pred := by
 
 @[simp]
 theorem join_repeat_nil (n : ℕ) : join (repeat [] n) = @nil α := by
-  induction n <;> [rfl, simp only [repeat, join, append_nil]]
+  induction n <;> [rfl, simp only [*, repeat, join, append_nil]]
 
 theorem repeat_left_injective {n : ℕ} (hn : n ≠ 0) : Function.Injective fun a : α => repeat a n := fun a b h =>
   (eq_repeat.1 h).2 _ $ mem_repeat.2 ⟨hn, rfl⟩
@@ -577,7 +569,7 @@ theorem repeat_left_inj {a b : α} {n : ℕ} (hn : n ≠ 0) : repeat a n = repea
 theorem repeat_left_inj' {a b : α} : ∀ {n}, repeat a n = repeat b n ↔ n = 0 ∨ a = b
   | 0 => by
     simp
-  | n+1 =>
+  | n + 1 =>
     (repeat_left_inj n.succ_ne_zero).trans $ by
       simp only [n.succ_ne_zero, false_orₓ]
 
@@ -591,7 +583,7 @@ theorem repeat_right_inj {a : α} {n m : ℕ} : repeat a n = repeat a m ↔ n = 
 /-! ### pure -/
 
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem mem_pure {α} (x y : α) : x ∈ (pure y : List α) ↔ x = y := by
   simp [pure, List.ret]
@@ -621,7 +613,7 @@ theorem map_eq_bind {α β} (f : α → β) (l : List α) : map f l = l.bind fun
 
 theorem bind_assoc {α β} (l : List α) (f : α → List β) (g : β → List γ) :
     (l.bind f).bind g = l.bind fun x => (f x).bind g := by
-  induction l <;> simp
+  induction l <;> simp [*]
 
 /-! ### concat -/
 
@@ -634,7 +626,7 @@ theorem concat_cons (a b : α) (l : List α) : concat (a :: l) b = a :: concat l
 
 @[simp]
 theorem concat_eq_append (a : α) (l : List α) : concat l a = l ++ [a] := by
-  induction l <;> simp only [concat] <;> constructor <;> rfl
+  induction l <;> simp only [*, concat] <;> constructor <;> rfl
 
 theorem init_eq_of_concat_eq {a : α} {l₁ l₂ : List α} : concat l₁ a = concat l₂ a → l₁ = l₂ := by
   intro h
@@ -670,11 +662,11 @@ attribute [local simp] reverse_core
 @[simp]
 theorem reverse_cons (a : α) (l : List α) : reverse (a :: l) = reverse l ++ [a] :=
   have aux : ∀ l₁ l₂, reverse_core l₁ l₂ ++ [a] = reverse_core l₁ (l₂ ++ [a]) := by
-    intro l₁ <;> induction l₁ <;> intros <;> [rfl, simp only [reverse_core, cons_append]]
+    intro l₁ <;> induction l₁ <;> intros <;> [rfl, simp only [*, reverse_core, cons_append]]
   (aux l nil).symm
 
 theorem reverse_core_eq (l₁ l₂ : List α) : reverse_core l₁ l₂ = reverse l₁ ++ l₂ := by
-  induction l₁ generalizing l₂ <;> [rfl, simp only [reverse_core, reverse_cons, append_assoc]] <;> rfl
+  induction l₁ generalizing l₂ <;> [rfl, simp only [*, reverse_core, reverse_cons, append_assoc]] <;> rfl
 
 theorem reverse_cons' (a : α) (l : List α) : reverse (a :: l) = concat (reverse l) a := by
   simp only [reverse_cons, concat_eq_append]
@@ -685,14 +677,14 @@ theorem reverse_singleton (a : α) : reverse [a] = [a] :=
 
 @[simp]
 theorem reverse_append (s t : List α) : reverse (s ++ t) = reverse t ++ reverse s := by
-  induction s <;> [rw [nil_append, reverse_nil, append_nil], simp only [cons_append, reverse_cons, append_assoc]]
+  induction s <;> [rw [nil_append, reverse_nil, append_nil], simp only [*, cons_append, reverse_cons, append_assoc]]
 
 theorem reverse_concat (l : List α) (a : α) : reverse (concat l a) = a :: reverse l := by
   rw [concat_eq_append, reverse_append, reverse_singleton, singleton_append]
 
 @[simp]
 theorem reverse_reverse (l : List α) : reverse (reverse l) = l := by
-  induction l <;> [rfl, simp only [reverse_cons, reverse_append]] <;> rfl
+  induction l <;> [rfl, simp only [*, reverse_cons, reverse_append]] <;> rfl
 
 @[simp]
 theorem reverse_involutive : involutive (@reverse α) := fun l => reverse_reverse l
@@ -717,11 +709,11 @@ theorem concat_eq_reverse_cons (a : α) (l : List α) : concat l a = reverse (a 
 
 @[simp]
 theorem length_reverse (l : List α) : length (reverse l) = length l := by
-  induction l <;> [rfl, simp only [reverse_cons, length_append, length]]
+  induction l <;> [rfl, simp only [*, reverse_cons, length_append, length]]
 
 @[simp]
 theorem map_reverse (f : α → β) (l : List α) : map f (reverse l) = reverse (map f l) := by
-  induction l <;> [rfl, simp only [map, reverse_cons, map_append]]
+  induction l <;> [rfl, simp only [*, map, reverse_cons, map_append]]
 
 theorem map_reverse_core (f : α → β) (l₁ l₂ : List α) :
     map f (reverse_core l₁ l₂) = reverse_core (map f l₁) (map f l₂) := by
@@ -730,7 +722,7 @@ theorem map_reverse_core (f : α → β) (l₁ l₂ : List α) :
 @[simp]
 theorem mem_reverse {a : α} {l : List α} : a ∈ reverse l ↔ a ∈ l := by
   induction l <;> [rfl,
-    simp only [reverse_cons, mem_append, mem_singleton, mem_cons_iff, not_mem_nil, false_orₓ, or_falseₓ, or_comm]]
+    simp only [*, reverse_cons, mem_append, mem_singleton, mem_cons_iff, not_mem_nil, false_orₓ, or_falseₓ, or_comm]]
 
 @[simp]
 theorem reverse_repeat (a : α) n : reverse (repeat a n) = repeat a n :=
@@ -773,7 +765,7 @@ theorem last_cons {a : α} {l : List α} : ∀ h₁ : a :: l ≠ nil h₂ : l �
 
 @[simp]
 theorem last_append {a : α} (l : List α) (h : l ++ [a] ≠ []) : last (l ++ [a]) h = a := by
-  induction l <;> [rfl, simp only [cons_append, last_cons _ fun H => cons_ne_nil _ _ (append_eq_nil.1 H).2]]
+  induction l <;> [rfl, simp only [cons_append, last_cons _ fun H => cons_ne_nil _ _ (append_eq_nil.1 H).2, *]]
 
 theorem last_concat {a : α} (l : List α) (h : concat l a ≠ []) : last (concat l a) h = a := by
   simp only [concat_eq_append, last_append]
@@ -814,10 +806,10 @@ theorem last_repeat_succ (a m : ℕ) :
       a :=
   by
   induction' m with k IH
-  ·
-    simp
-  ·
-    simpa only [repeat_succ, last]
+  · simp
+    
+  · simpa only [repeat_succ, last]
+    
 
 /-! ### last' -/
 
@@ -967,26 +959,26 @@ theorem head'_map (f : α → β) l : head' (map f l) = (head' l).map f := by
 
 theorem tail_append_of_ne_nil (l l' : List α) (h : l ≠ []) : (l ++ l').tail = l.tail ++ l' := by
   cases l
-  ·
-    contradiction
-  ·
-    simp
+  · contradiction
+    
+  · simp
+    
 
 @[simp]
 theorem nth_le_tail (l : List α) i (h : i < l.tail.length)
-    (h' : (i+1) < l.length := by
+    (h' : i + 1 < l.length := by
       simpa [← lt_tsub_iff_right] using h) :
-    l.tail.nth_le i h = l.nth_le (i+1) h' := by
+    l.tail.nth_le i h = l.nth_le (i + 1) h' := by
   cases l
-  ·
-    cases h
-  ·
-    simpa
+  · cases h
+    
+  · simpa
+    
 
 /-! ### Induction from the right -/
 
 
-/--  Induction principle from the right for lists: if a property holds for the empty list, and
+/-- Induction principle from the right for lists: if a property holds for the empty list, and
 for `l ++ [a]` if it holds for `l`, then it holds for all lists. The principle is given for
 a `Sort`-valued predicate, i.e., it can also be used to construct data. -/
 @[elab_as_eliminator]
@@ -994,13 +986,13 @@ def reverse_rec_on {C : List α → Sort _} (l : List α) (H0 : C []) (H1 : ∀ 
   by
   rw [← reverse_reverse l]
   induction reverse l
-  ·
-    exact H0
-  ·
-    rw [reverse_cons]
+  · exact H0
+    
+  · rw [reverse_cons]
     exact H1 _ _ ih
+    
 
-/--  Bidirectional induction principle for lists: if a property holds for the empty list, the
+/-- Bidirectional induction principle for lists: if a property holds for the empty list, the
 singleton list, and `a :: (l ++ [b])` from `l`, then it holds for all lists. This can be used to
 prove statements about palindromes. The principle is given for a `Sort`-valued predicate, i.e., it
 can also be used to construct data. -/
@@ -1008,19 +1000,17 @@ def bidirectional_rec {C : List α → Sort _} (H0 : C []) (H1 : ∀ a : α, C [
     (Hn : ∀ a : α l : List α b : α, C l → C (a :: (l ++ [b]))) : ∀ l, C l
   | [] => H0
   | [a] => H1 a
-  | a :: b :: l =>
+  | a :: b :: l => by
     let l' := init (b :: l)
     let b' := last (b :: l) (cons_ne_nil _ _)
     have : length l' < length (a :: b :: l) := by
-      change _ < length l+2
+      change _ < length l + 2
       simp
-    by
     rw [← init_append_last (cons_ne_nil b l)]
-    have : C l'
-    exact bidirectional_rec l'
+    have : C l' := bidirectional_rec l'
     exact Hn a l' b' ‹C l'›
 
-/--  Like `bidirectional_rec`, but with the list parameter placed first. -/
+/-- Like `bidirectional_rec`, but with the list parameter placed first. -/
 @[elab_as_eliminator]
 def bidirectional_rec_on {C : List α → Sort _} (l : List α) (H0 : C []) (H1 : ∀ a : α, C [a])
     (Hn : ∀ a : α l : List α b : α, C l → C (a :: (l ++ [b]))) : C l :=
@@ -1096,40 +1086,40 @@ theorem append_sublist_append_left {l₁ l₂ : List α} : ∀ l, l ++ l₁ <+ l
 
 theorem sublist.append_right {l₁ l₂ : List α} (h : l₁ <+ l₂) l : l₁ ++ l <+ l₂ ++ l := by
   induction' h with _ _ a _ ih _ _ a _ ih
-  ·
-    rfl
-  ·
-    apply sublist_cons_of_sublist a ih
-  ·
-    apply ih.cons_cons a
+  · rfl
+    
+  · apply sublist_cons_of_sublist a ih
+    
+  · apply ih.cons_cons a
+    
 
 theorem sublist_or_mem_of_sublist {l l₁ l₂ : List α} {a : α} (h : l <+ l₁ ++ a :: l₂) : l <+ l₁ ++ l₂ ∨ a ∈ l := by
   induction' l₁ with b l₁ IH generalizing l
-  ·
-    cases h
-    ·
-      left
+  · cases h
+    · left
       exact ‹l <+ l₂›
-    ·
-      right
+      
+    · right
       apply mem_cons_self
-  ·
-    cases' h with _ _ _ h _ _ _ h
-    ·
-      exact Or.imp_left (sublist_cons_of_sublist _) (IH h)
-    ·
-      exact (IH h).imp (sublist.cons_cons _) (mem_cons_of_mem _)
+      
+    
+  · cases' h with _ _ _ h _ _ _ h
+    · exact Or.imp_left (sublist_cons_of_sublist _) (IH h)
+      
+    · exact (IH h).imp (sublist.cons_cons _) (mem_cons_of_mem _)
+      
+    
 
 theorem sublist.reverse {l₁ l₂ : List α} (h : l₁ <+ l₂) : l₁.reverse <+ l₂.reverse := by
   induction' h with _ _ _ _ ih _ _ a _ ih
-  ·
-    rfl
-  ·
-    rw [reverse_cons]
+  · rfl
+    
+  · rw [reverse_cons]
     exact sublist_append_of_sublist_left ih
-  ·
-    rw [reverse_cons, reverse_cons]
+    
+  · rw [reverse_cons, reverse_cons]
     exact ih.append_right [a]
+    
 
 @[simp]
 theorem reverse_sublist_iff {l₁ l₂ : List α} : l₁.reverse <+ l₂.reverse ↔ l₁ <+ l₂ :=
@@ -1169,7 +1159,7 @@ theorem sublist_nil_iff_eq_nil {l : List α} : l <+ [] ↔ l = [] :=
 theorem repeat_sublist_repeat (a : α) {m n} : repeat a m <+ repeat a n ↔ m ≤ n :=
   ⟨fun h => by
     simpa only [length_repeat] using length_le_of_sublist h, fun h => by
-    induction h <;> [rfl, simp only [repeat_succ, sublist.cons]]⟩
+    induction h <;> [rfl, simp only [*, repeat_succ, sublist.cons]]⟩
 
 theorem eq_of_sublist_of_length_eq : ∀ {l₁ l₂ : List α}, l₁ <+ l₂ → length l₁ = length l₂ → l₁ = l₂
   | _, _, sublist.slnil, h => rfl
@@ -1225,20 +1215,20 @@ theorem index_of_cons_ne {a b : α} (l : List α) : a ≠ b → index_of a (b ::
 
 theorem index_of_eq_length {a : α} {l : List α} : index_of a l = length l ↔ a ∉ l := by
   induction' l with b l ih
-  ·
-    exact iff_of_true rfl (not_mem_nil _)
+  · exact iff_of_true rfl (not_mem_nil _)
+    
   simp only [length, mem_cons_iff, index_of_cons]
   split_ifs
-  ·
-    exact
+  · exact
       iff_of_false
         (by
           rintro ⟨⟩)
         fun H => H $ Or.inl h
-  ·
-    simp only [h, false_orₓ]
+    
+  · simp only [h, false_orₓ]
     rw [← ih]
     exact succ_inj'
+    
 
 @[simp]
 theorem index_of_of_not_mem {l : List α} {a : α} : a ∉ l → index_of a l = length l :=
@@ -1246,13 +1236,13 @@ theorem index_of_of_not_mem {l : List α} {a : α} : a ∉ l → index_of a l = 
 
 theorem index_of_le_length {a : α} {l : List α} : index_of a l ≤ length l := by
   induction' l with b l ih
-  ·
-    rfl
+  · rfl
+    
   simp only [length, index_of_cons]
   by_cases' h : a = b
-  ·
-    rw [if_pos h]
+  · rw [if_pos h]
     exact Nat.zero_leₓ _
+    
   rw [if_neg h]
   exact succ_le_succ ih
 
@@ -1269,15 +1259,15 @@ theorem nth_le_of_mem : ∀ {a} {l : List α}, a ∈ l → ∃ n h, nth_le l n h
   | a, _ :: l, Or.inl rfl => ⟨0, succ_pos _, rfl⟩
   | a, b :: l, Or.inr m =>
     let ⟨n, h, e⟩ := nth_le_of_mem m
-    ⟨n+1, succ_lt_succ h, e⟩
+    ⟨n + 1, succ_lt_succ h, e⟩
 
 theorem nth_le_nth : ∀ {l : List α} {n} h, nth l n = some (nth_le l n h)
   | a :: l, 0, h => rfl
-  | a :: l, n+1, h => @nth_le_nth l n _
+  | a :: l, n + 1, h => @nth_le_nth l n _
 
 theorem nth_len_le : ∀ {l : List α} {n}, length l ≤ n → nth l n = none
   | [], n, h => rfl
-  | a :: l, n+1, h => nth_len_le (le_of_succ_le_succ h)
+  | a :: l, n + 1, h => nth_len_le (le_of_succ_le_succ h)
 
 theorem nth_eq_some {l : List α} {n a} : nth l n = some a ↔ ∃ h, nth_le l n h = a :=
   ⟨fun e =>
@@ -1292,14 +1282,14 @@ theorem nth_eq_some {l : List α} {n a} : nth l n = some a ↔ ∃ h, nth_le l n
 theorem nth_eq_none_iff : ∀ {l : List α} {n}, nth l n = none ↔ length l ≤ n := by
   intros
   constructor
-  ·
-    intro h
+  · intro h
     by_contra h'
     have h₂ : ∃ h, l.nth_le n h = l.nth_le n (lt_of_not_geₓ h') := ⟨lt_of_not_geₓ h', rfl⟩
     rw [← nth_eq_some, h] at h₂
     cases h₂
-  ·
-    solve_by_elim [nth_len_le]
+    
+  · solve_by_elim [nth_len_le]
+    
 
 theorem nth_of_mem {a} {l : List α} (h : a ∈ l) : ∃ n, nth l n = some a :=
   let ⟨n, h, e⟩ := nth_le_of_mem h
@@ -1308,7 +1298,7 @@ theorem nth_of_mem {a} {l : List α} (h : a ∈ l) : ∃ n, nth l n = some a :=
 
 theorem nth_le_mem : ∀ l : List α n h, nth_le l n h ∈ l
   | a :: l, 0, h => mem_cons_self _ _
-  | a :: l, n+1, h => mem_cons_of_mem _ (nth_le_mem l _ _)
+  | a :: l, n + 1, h => mem_cons_of_mem _ (nth_le_mem l _ _)
 
 theorem nth_mem {l : List α} {n a} (e : nth l n = some a) : a ∈ l :=
   let ⟨h, e⟩ := nth_eq_some.1 e
@@ -1326,10 +1316,9 @@ theorem nth_zero (l : List α) : l.nth 0 = l.head' := by
 theorem nth_injective {α : Type u} {xs : List α} {i j : ℕ} (h₀ : i < xs.length) (h₁ : nodup xs)
     (h₂ : xs.nth i = xs.nth j) : i = j := by
   induction' xs with x xs generalizing i j
-  ·
-    cases h₀
-  ·
-    cases i <;> cases j
+  · cases h₀
+    
+  · cases i <;> cases j
     case' Nat.zero, Nat.zero =>
       rfl
     case' Nat.succ, Nat.succ =>
@@ -1344,18 +1333,19 @@ theorem nth_injective {α : Type u} {xs : List α} {i j : ℕ} (h₀ : i < xs.le
       first |
         exact ⟨_, h₂.symm⟩|
         exact ⟨_, h₂⟩
+    
 
 @[simp]
 theorem nth_map (f : α → β) : ∀ l n, nth (map f l) n = (nth l n).map f
   | [], n => rfl
   | a :: l, 0 => rfl
-  | a :: l, n+1 => nth_map l n
+  | a :: l, n + 1 => nth_map l n
 
 theorem nth_le_map (f : α → β) {l n} H1 H2 : nth_le (map f l) n H1 = f (nth_le l n H2) :=
   Option.some.injₓ $ by
     rw [← nth_le_nth, nth_map, nth_le_nth] <;> rfl
 
-/--  A version of `nth_le_map` that can be used for rewriting. -/
+/-- A version of `nth_le_map` that can be used for rewriting. -/
 theorem nth_le_map_rev (f : α → β) {l n} H : f (nth_le l n H) = nth_le (map f l) n ((length_map f l).symm ▸ H) :=
   (nth_le_map f _ _).symm
 
@@ -1363,7 +1353,7 @@ theorem nth_le_map_rev (f : α → β) {l n} H : f (nth_le l n H) = nth_le (map 
 theorem nth_le_map' (f : α → β) {l n} H : nth_le (map f l) n H = f (nth_le l n (length_map f l ▸ H)) :=
   nth_le_map f _ _
 
-/--  If one has `nth_le L i hi` in a formula and `h : L = L'`, one can not `rw h` in the formula as
+/-- If one has `nth_le L i hi` in a formula and `h : L = L'`, one can not `rw h` in the formula as
 `hi` gives `i < L.length` and not `i < L'.length`. The lemma `nth_le_of_eq` can be used to make
 such a rewrite, with `rw (nth_le_of_eq h)`. -/
 theorem nth_le_of_eq {L L' : List α} (h : L = L') {i : ℕ} (hi : i < L.length) : nth_le L i hi = nth_le L' i (h ▸ hi) :=
@@ -1372,9 +1362,8 @@ theorem nth_le_of_eq {L L' : List α} (h : L = L') {i : ℕ} (hi : i < L.length)
   exact h
 
 @[simp]
-theorem nth_le_singleton (a : α) {n : ℕ} (hn : n < 1) : nth_le [a] n hn = a :=
+theorem nth_le_singleton (a : α) {n : ℕ} (hn : n < 1) : nth_le [a] n hn = a := by
   have hn0 : n = 0 := le_zero_iff.1 (le_of_lt_succ hn)
-  by
   subst hn0 <;> rfl
 
 theorem nth_le_zero [Inhabited α] {L : List α} (h : 0 < L.length) : L.nth_le 0 h = L.head := by
@@ -1385,7 +1374,7 @@ theorem nth_le_zero [Inhabited α] {L : List α} (h : 0 < L.length) : L.nth_le 0
 theorem nth_le_append : ∀ {l₁ l₂ : List α} {n : ℕ} hn₁ hn₂, (l₁ ++ l₂).nthLe n hn₁ = l₁.nth_le n hn₂
   | [], _, n, hn₁, hn₂ => (Nat.not_lt_zeroₓ _ hn₂).elim
   | a :: l, _, 0, hn₁, hn₂ => rfl
-  | a :: l, _, n+1, hn₁, hn₂ => by
+  | a :: l, _, n + 1, hn₁, hn₂ => by
     simp only [nth_le, cons_append] <;> exact nth_le_append _ _
 
 theorem nth_le_append_right_aux {l₁ l₂ : List α} {n : ℕ} (h₁ : l₁.length ≤ n) (h₂ : n < (l₁ ++ l₂).length) :
@@ -1398,7 +1387,7 @@ theorem nth_le_append_right :
     ∀ {l₁ l₂ : List α} {n : ℕ} h₁ : l₁.length ≤ n h₂,
       (l₁ ++ l₂).nthLe n h₂ = l₂.nth_le (n - l₁.length) (nth_le_append_right_aux h₁ h₂)
   | [], _, n, h₁, h₂ => rfl
-  | a :: l, _, n+1, h₁, h₂ => by
+  | a :: l, _, n + 1, h₁, h₂ => by
     dsimp
     conv => rhs congr skip rw [tsub_add_eq_tsub_tsub, tsub_right_comm, add_tsub_cancel_right]
     rw [nth_le_append_right (nat.lt_succ_iff.mp h₁)]
@@ -1407,22 +1396,21 @@ theorem nth_le_append_right :
 theorem nth_le_repeat (a : α) {n m : ℕ} (h : m < (List.repeat a n).length) : (List.repeat a n).nthLe m h = a :=
   eq_of_mem_repeat (nth_le_mem _ _ _)
 
-theorem nth_append {l₁ l₂ : List α} {n : ℕ} (hn : n < l₁.length) : (l₁ ++ l₂).nth n = l₁.nth n :=
+theorem nth_append {l₁ l₂ : List α} {n : ℕ} (hn : n < l₁.length) : (l₁ ++ l₂).nth n = l₁.nth n := by
   have hn' : n < (l₁ ++ l₂).length :=
     lt_of_lt_of_leₓ hn
       (by
         rw [length_append] <;> exact Nat.le_add_rightₓ _ _)
-  by
   rw [nth_le_nth hn, nth_le_nth hn', nth_le_append]
 
 theorem nth_append_right {l₁ l₂ : List α} {n : ℕ} (hn : l₁.length ≤ n) : (l₁ ++ l₂).nth n = l₂.nth (n - l₁.length) := by
   by_cases' hl : n < (l₁ ++ l₂).length
-  ·
-    rw [nth_le_nth hl, nth_le_nth, nth_le_append_right hn]
-  ·
-    rw [nth_len_le (le_of_not_ltₓ hl), nth_len_le]
+  · rw [nth_le_nth hl, nth_le_nth, nth_le_append_right hn]
+    
+  · rw [nth_len_le (le_of_not_ltₓ hl), nth_len_le]
     rw [not_ltₓ, length_append] at hl
     exact le_tsub_of_add_le_left hl
+    
 
 theorem last_eq_nth_le :
     ∀ l : List α h : l ≠ [], last l h = l.nth_le (l.length - 1) (Nat.sub_ltₓ (length_pos_of_ne_nil h) one_pos)
@@ -1459,7 +1447,7 @@ theorem ext : ∀ {l₁ l₂ : List α}, (∀ n, nth l₁ n = nth l₂ n) → l�
     have h0 := h 0 <;> contradiction
   | a :: l₁, a' :: l₂, h => by
     have h0 : some a = some a' := h 0 <;>
-      injection h0 with aa <;> simp only [aa, ext fun n => h (n+1)] <;> constructor <;> rfl
+      injection h0 with aa <;> simp only [aa, ext fun n => h (n + 1)] <;> constructor <;> rfl
 
 theorem ext_le {l₁ l₂ : List α} (hl : length l₁ = length l₂) (h : ∀ n h₁ h₂, nth_le l₁ n h₁ = nth_le l₂ n h₂) :
     l₁ = l₂ :=
@@ -1469,9 +1457,8 @@ theorem ext_le {l₁ l₂ : List α} (hl : length l₁ = length l₂) (h : ∀ n
         h n h₁
           (by
             rwa [← hl])]
-    else
+    else by
       let h₁ := le_of_not_gtₓ h₁
-      by
       rw [nth_len_le h₁, nth_len_le]
       rwa [← hl]
 
@@ -1484,20 +1471,18 @@ theorem index_of_nth_le [DecidableEq α] {a : α} : ∀ {l : List α} h, nth_le 
 theorem index_of_nth [DecidableEq α] {a : α} {l : List α} (h : a ∈ l) : nth l (index_of a l) = some a := by
   rw [nth_le_nth, index_of_nth_le (index_of_lt_length.2 h)]
 
-theorem nth_le_reverse_aux1 : ∀ l r : List α i h1 h2, nth_le (reverse_core l r) (i+length l) h1 = nth_le r i h2
+theorem nth_le_reverse_aux1 : ∀ l r : List α i h1 h2, nth_le (reverse_core l r) (i + length l) h1 = nth_le r i h2
   | [], r, i => fun h1 h2 => rfl
   | a :: l, r, i => by
-    rw [show (i+length (a :: l)) = (i+1)+length l from add_right_commₓ i (length l) 1] <;>
-      exact fun h1 h2 => nth_le_reverse_aux1 l (a :: r) (i+1) h1 (succ_lt_succ h2)
+    rw [show i + length (a :: l) = i + 1 + length l from add_right_commₓ i (length l) 1] <;>
+      exact fun h1 h2 => nth_le_reverse_aux1 l (a :: r) (i + 1) h1 (succ_lt_succ h2)
 
 theorem index_of_inj [DecidableEq α] {l : List α} {x y : α} (hx : x ∈ l) (hy : y ∈ l) :
     index_of x l = index_of y l ↔ x = y :=
-  ⟨fun h =>
+  ⟨fun h => by
     have : nth_le l (index_of x l) (index_of_lt_length.2 hx) = nth_le l (index_of y l) (index_of_lt_length.2 hy) := by
       simp only [h]
-    by
-    simpa only [index_of_nth_le],
-    fun h => by
+    simpa only [index_of_nth_le], fun h => by
     subst h⟩
 
 theorem nth_le_reverse_aux2 :
@@ -1507,13 +1492,14 @@ theorem nth_le_reverse_aux2 :
     have aux := nth_le_reverse_aux1 l (a :: r) 0
     rw [zero_addₓ] at aux
     exact aux _ (zero_lt_succ _)
-  | a :: l, r, i+1, h1, h2 => by
+  | a :: l, r, i + 1, h1, h2 => by
     have aux := nth_le_reverse_aux2 l (a :: r) i
     have heq :=
-      calc (length (a :: l) - 1 - i+1) = length l - 1+i := by
-        rw [add_commₓ] <;> rfl
+      calc
+        length (a :: l) - 1 - (i + 1) = length l - (1 + i) := by
+          rw [add_commₓ] <;> rfl
         _ = length l - 1 - i := by
-        rw [← tsub_add_eq_tsub_tsub]
+          rw [← tsub_add_eq_tsub_tsub]
         
     rw [← HEq] at aux
     apply aux
@@ -1526,10 +1512,10 @@ theorem nth_le_reverse' (l : List α) (n : ℕ) (hn : n < l.reverse.length) hn' 
     l.reverse.nth_le n hn = l.nth_le (l.length - 1 - n) hn' := by
   rw [eq_comm]
   convert nth_le_reverse l.reverse _ _ _ using 1
-  ·
-    simp
-  ·
-    simpa
+  · simp
+    
+  · simpa
+    
 
 theorem eq_cons_of_length_one {l : List α} (h : l.length = 1) : l = [l.nth_le 0 (h.symm ▸ zero_lt_one)] := by
   refine'
@@ -1543,10 +1529,10 @@ theorem eq_cons_of_length_one {l : List α} (h : l.length = 1) : l = [l.nth_le 0
 
 theorem modify_nth_tail_modify_nth_tail {f g : List α → List α} (m : ℕ) :
     ∀ n l : List α,
-      (l.modify_nth_tail f n).modifyNthTail g (m+n) = l.modify_nth_tail (fun l => (f l).modifyNthTail g m) n
+      (l.modify_nth_tail f n).modifyNthTail g (m + n) = l.modify_nth_tail (fun l => (f l).modifyNthTail g m) n
   | 0, l => rfl
-  | n+1, [] => rfl
-  | n+1, a :: l => congr_argₓ (List.cons a) (modify_nth_tail_modify_nth_tail n l)
+  | n + 1, [] => rfl
+  | n + 1, a :: l => congr_argₓ (List.cons a) (modify_nth_tail_modify_nth_tail n l)
 
 theorem modify_nth_tail_modify_nth_tail_le {f g : List α → List α} (m n : ℕ) (l : List α) (h : n ≤ m) :
     (l.modify_nth_tail f n).modifyNthTail g m = l.modify_nth_tail (fun l => (f l).modifyNthTail g (m - n)) n := by
@@ -1559,27 +1545,27 @@ theorem modify_nth_tail_modify_nth_tail_same {f g : List α → List α} (n : �
 
 theorem modify_nth_tail_id : ∀ n l : List α, l.modify_nth_tail id n = l
   | 0, l => rfl
-  | n+1, [] => rfl
-  | n+1, a :: l => congr_argₓ (List.cons a) (modify_nth_tail_id n l)
+  | n + 1, [] => rfl
+  | n + 1, a :: l => congr_argₓ (List.cons a) (modify_nth_tail_id n l)
 
 theorem remove_nth_eq_nth_tail : ∀ n l : List α, remove_nth l n = modify_nth_tail tail n l
   | 0, l => by
     cases l <;> rfl
-  | n+1, [] => rfl
-  | n+1, a :: l => congr_argₓ (cons _) (remove_nth_eq_nth_tail _ _)
+  | n + 1, [] => rfl
+  | n + 1, a :: l => congr_argₓ (cons _) (remove_nth_eq_nth_tail _ _)
 
 theorem update_nth_eq_modify_nth (a : α) : ∀ n l : List α, update_nth l n a = modify_nth (fun _ => a) n l
   | 0, l => by
     cases l <;> rfl
-  | n+1, [] => rfl
-  | n+1, b :: l => congr_argₓ (cons _) (update_nth_eq_modify_nth _ _)
+  | n + 1, [] => rfl
+  | n + 1, b :: l => congr_argₓ (cons _) (update_nth_eq_modify_nth _ _)
 
 theorem modify_nth_eq_update_nth (f : α → α) :
     ∀ n l : List α, modify_nth f n l = ((fun a => update_nth l n (f a)) <$> nth l n).getOrElse l
   | 0, l => by
     cases l <;> rfl
-  | n+1, [] => rfl
-  | n+1, b :: l =>
+  | n + 1, [] => rfl
+  | n + 1, b :: l =>
     (congr_argₓ (cons b) (modify_nth_eq_update_nth n l)).trans $ by
       cases nth l n <;> rfl
 
@@ -1587,11 +1573,11 @@ theorem nth_modify_nth (f : α → α) :
     ∀ n l : List α m, nth (modify_nth f n l) m = (fun a => if n = m then f a else a) <$> nth l m
   | n, l, 0 => by
     cases l <;> cases n <;> rfl
-  | n, [], m+1 => by
+  | n, [], m + 1 => by
     cases n <;> rfl
-  | 0, a :: l, m+1 => by
+  | 0, a :: l, m + 1 => by
     cases nth l m <;> rfl
-  | n+1, a :: l, m+1 =>
+  | n + 1, a :: l, m + 1 =>
     (nth_modify_nth n l m).trans $ by
       cases' nth l m with b <;>
         by_cases' n = m <;>
@@ -1600,8 +1586,8 @@ theorem nth_modify_nth (f : α → α) :
 theorem modify_nth_tail_length (f : List α → List α) (H : ∀ l, length (f l) = length l) :
     ∀ n l, length (modify_nth_tail f n l) = length l
   | 0, l => H _
-  | n+1, [] => rfl
-  | n+1, a :: l => @congr_argₓ _ _ _ _ (·+1) (modify_nth_tail_length _ _)
+  | n + 1, [] => rfl
+  | n + 1, a :: l => @congr_argₓ _ _ _ _ (· + 1) (modify_nth_tail_length _ _)
 
 @[simp]
 theorem modify_nth_length (f : α → α) : ∀ n l, length (modify_nth f n l) = length l :=
@@ -1642,11 +1628,11 @@ theorem update_nth_comm (a b : α) :
   | _, _, [], _ => by
     simp
   | 0, 0, x :: t, h => absurd rfl h
-  | n+1, 0, x :: t, h => by
+  | n + 1, 0, x :: t, h => by
     simp [List.updateNth]
-  | 0, m+1, x :: t, h => by
+  | 0, m + 1, x :: t, h => by
     simp [List.updateNth]
-  | n+1, m+1, x :: t, h => by
+  | n + 1, m + 1, x :: t, h => by
     simp only [update_nth, true_andₓ, eq_self_iff_true]
     exact update_nth_comm t fun h' => h $ nat.succ_inj'.mpr h'
 
@@ -1667,7 +1653,7 @@ theorem nth_le_update_nth_of_ne {l : List α} {i j : ℕ} (h : i ≠ j) (a : α)
 theorem mem_or_eq_of_mem_update_nth : ∀ {l : List α} {n : ℕ} {a b : α} h : a ∈ l.update_nth n b, a ∈ l ∨ a = b
   | [], n, a, b, h => False.elim h
   | c :: l, 0, a, b, h => ((mem_cons_iff _ _ _).1 h).elim Or.inr (Or.inl ∘ mem_cons_of_mem _)
-  | c :: l, n+1, a, b, h =>
+  | c :: l, n + 1, a, b, h =>
     ((mem_cons_iff _ _ _).1 h).elim (fun h => h ▸ Or.inl (mem_cons_self _ _)) fun h =>
       (mem_or_eq_of_mem_update_nth h).elim (Or.inl ∘ mem_cons_of_mem _) Or.inr
 
@@ -1680,1273 +1666,140 @@ theorem insert_nth_zero (s : List α) (x : α) : insert_nth 0 x s = x :: s :=
   rfl
 
 @[simp]
-theorem insert_nth_succ_nil (n : ℕ) (a : α) : insert_nth (n+1) a [] = [] :=
+theorem insert_nth_succ_nil (n : ℕ) (a : α) : insert_nth (n + 1) a [] = [] :=
   rfl
 
 @[simp]
-theorem insert_nth_succ_cons (s : List α) (hd x : α) (n : ℕ) : insert_nth (n+1) x (hd :: s) = hd :: insert_nth n x s :=
+theorem insert_nth_succ_cons (s : List α) (hd x : α) (n : ℕ) :
+    insert_nth (n + 1) x (hd :: s) = hd :: insert_nth n x s :=
   rfl
 
-theorem length_insert_nth : ∀ n as, n ≤ length as → length (insert_nth n a as) = length as+1
+theorem length_insert_nth : ∀ n as, n ≤ length as → length (insert_nth n a as) = length as + 1
   | 0, as, h => rfl
-  | n+1, [], h => (Nat.not_succ_le_zeroₓ _ h).elim
-  | n+1, a' :: as, h => congr_argₓ Nat.succ $ length_insert_nth n as (Nat.le_of_succ_le_succₓ h)
+  | n + 1, [], h => (Nat.not_succ_le_zeroₓ _ h).elim
+  | n + 1, a' :: as, h => congr_argₓ Nat.succ $ length_insert_nth n as (Nat.le_of_succ_le_succₓ h)
 
 theorem remove_nth_insert_nth (n : ℕ) (l : List α) : (l.insert_nth n a).removeNth n = l := by
   rw [remove_nth_eq_nth_tail, insert_nth, modify_nth_tail_modify_nth_tail_same] <;> exact modify_nth_tail_id _ _
 
 theorem insert_nth_remove_nth_of_ge :
-    ∀ n m as, n < length as → n ≤ m → insert_nth m a (as.remove_nth n) = (as.insert_nth (m+1) a).removeNth n
+    ∀ n m as, n < length as → n ≤ m → insert_nth m a (as.remove_nth n) = (as.insert_nth (m + 1) a).removeNth n
   | 0, 0, [], has, _ => (lt_irreflₓ _ has).elim
   | 0, 0, a :: as, has, hmn => by
     simp [remove_nth, insert_nth]
-  | 0, m+1, a :: as, has, hmn => rfl
-  | n+1, m+1, a :: as, has, hmn =>
+  | 0, m + 1, a :: as, has, hmn => rfl
+  | n + 1, m + 1, a :: as, has, hmn =>
     congr_argₓ (cons a) $ insert_nth_remove_nth_of_ge n m as (Nat.lt_of_succ_lt_succₓ has) (Nat.le_of_succ_le_succₓ hmn)
 
 theorem insert_nth_remove_nth_of_le :
-    ∀ n m as, n < length as → m ≤ n → insert_nth m a (as.remove_nth n) = (as.insert_nth m a).removeNth (n+1)
+    ∀ n m as, n < length as → m ≤ n → insert_nth m a (as.remove_nth n) = (as.insert_nth m a).removeNth (n + 1)
   | n, 0, a :: as, has, hmn => rfl
-  | n+1, m+1, a :: as, has, hmn =>
+  | n + 1, m + 1, a :: as, has, hmn =>
     congr_argₓ (cons a) $ insert_nth_remove_nth_of_le n m as (Nat.lt_of_succ_lt_succₓ has) (Nat.le_of_succ_le_succₓ hmn)
 
 theorem insert_nth_comm (a b : α) :
     ∀ i j : ℕ l : List α h : i ≤ j hj : j ≤ length l,
-      (l.insert_nth i a).insertNth (j+1) b = (l.insert_nth j b).insertNth i a
+      (l.insert_nth i a).insertNth (j + 1) b = (l.insert_nth j b).insertNth i a
   | 0, j, l => by
     simp [insert_nth]
-  | i+1, 0, l => fun h => (Nat.not_lt_zeroₓ _ h).elim
-  | i+1, j+1, [] => by
+  | i + 1, 0, l => fun h => (Nat.not_lt_zeroₓ _ h).elim
+  | i + 1, j + 1, [] => by
     simp
-  | i+1, j+1, c :: l => fun h₀ h₁ => by
+  | i + 1, j + 1, c :: l => fun h₀ h₁ => by
     simp [insert_nth] <;> exact insert_nth_comm i j l (Nat.le_of_succ_le_succₓ h₀) (Nat.le_of_succ_le_succₓ h₁)
 
 theorem mem_insert_nth {a b : α} : ∀ {n : ℕ} {l : List α} hi : n ≤ l.length, a ∈ l.insert_nth n b ↔ a = b ∨ a ∈ l
   | 0, as, h => Iff.rfl
-  | n+1, [], h => (Nat.not_succ_le_zeroₓ _ h).elim
-  | n+1, a' :: as, h => by
+  | n + 1, [], h => (Nat.not_succ_le_zeroₓ _ h).elim
+  | n + 1, a' :: as, h => by
     dsimp [List.insertNthₓ]
     erw [List.mem_cons_iff, mem_insert_nth (Nat.le_of_succ_le_succₓ h), List.mem_cons_iff, ← Or.assoc, or_comm (a = a'),
       Or.assoc]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `inj_on_insert_nth_index_of_not_mem [])
-  (Command.declSig
-   [(Term.explicitBinder "(" [`l] [":" (Term.app `List [`α])] [] ")")
-    (Term.explicitBinder "(" [`x] [":" `α] [] ")")
-    (Term.explicitBinder "(" [`hx] [":" (Init.Core.«term_∉_» `x " ∉ " `l)] [] ")")]
-   (Term.typeSpec
-    ":"
-    (Term.app
-     `Set.InjOn
-     [(Term.fun "fun" (Term.basicFun [(Term.simpleBinder [`k] [])] "=>" (Term.app `insert_nth [`k `x `l])))
-      (Set.«term{_|_}» "{" `n "|" («term_≤_» `n "≤" `l.length) "}")])))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group
-        (Tactic.induction'
-         "induction'"
-         [(Tactic.casesTarget [] `l)]
-         []
-         ["with" [(Lean.binderIdent `hd) (Lean.binderIdent `tl) (Lean.binderIdent `IH)]]
-         [])
-        [])
-       (group
-        (Tactic.«tactic·._»
-         "·"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(group (Tactic.intro "intro" [`n `hn `m `hm `h]) [])
-            (group
-             (Tactic.simp
-              "simp"
-              []
-              ["only"]
-              ["["
-               [(Tactic.simpLemma [] [] `Set.mem_singleton_iff)
-                ","
-                (Tactic.simpLemma [] [] `Set.set_of_eq_eq_singleton)
-                ","
-                (Tactic.simpLemma [] [] `length)
-                ","
-                (Tactic.simpLemma [] [] `nonpos_iff_eq_zero)]
-               "]"]
-              [(Tactic.location "at" (Tactic.locationHyp [`hn `hm] []))])
-             [])
-            (group
-             (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `hn) "," (Tactic.simpLemma [] [] `hm)] "]"] [])
-             [])])))
-        [])
-       (group
-        (Tactic.«tactic·._»
-         "·"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(group (Tactic.intro "intro" [`n `hn `m `hm `h]) [])
-            (group
-             (Tactic.simp
-              "simp"
-              []
-              ["only"]
-              ["[" [(Tactic.simpLemma [] [] `length) "," (Tactic.simpLemma [] [] `Set.mem_set_of_eq)] "]"]
-              [(Tactic.location "at" (Tactic.locationHyp [`hn `hm] []))])
-             [])
-            (group
-             (Tactic.simp
-              "simp"
-              []
-              ["only"]
-              ["[" [(Tactic.simpLemma [] [] `mem_cons_iff) "," (Tactic.simpLemma [] [] `not_or_distrib)] "]"]
-              [(Tactic.location "at" (Tactic.locationHyp [`hx] []))])
-             [])
-            (group
-             (Tactic.«tactic_<;>_»
-              (Tactic.cases "cases" [(Tactic.casesTarget [] `n)] [] [])
-              "<;>"
-              (Tactic.cases "cases" [(Tactic.casesTarget [] `m)] [] []))
-             [])
-            (group
-             (Tactic.«tactic·._»
-              "·"
-              (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.tacticRfl "rfl") [])])))
-             [])
-            (group
-             (Tactic.«tactic·._»
-              "·"
-              (Tactic.tacticSeq
-               (Tactic.tacticSeq1Indented
-                [(group
-                  (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] `hx.left)] "]"] [] ["using" `h])
-                  [])])))
-             [])
-            (group
-             (Tactic.«tactic·._»
-              "·"
-              (Tactic.tacticSeq
-               (Tactic.tacticSeq1Indented
-                [(group
-                  (Tactic.simpa
-                   "simpa"
-                   []
-                   []
-                   ["[" [(Tactic.simpLemma [] [] (Term.app `Ne.symm [`hx.left]))] "]"]
-                   []
-                   ["using" `h])
-                  [])])))
-             [])
-            (group
-             (Tactic.«tactic·._»
-              "·"
-              (Tactic.tacticSeq
-               (Tactic.tacticSeq1Indented
-                [(group
-                  (Tactic.simp
-                   "simp"
-                   []
-                   ["only"]
-                   ["["
-                    [(Tactic.simpLemma [] [] `true_andₓ)
-                     ","
-                     (Tactic.simpLemma [] [] `eq_self_iff_true)
-                     ","
-                     (Tactic.simpLemma [] [] `insert_nth_succ_cons)]
-                    "]"]
-                   [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
-                  [])
-                 (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Nat.succ_inj')] "]") []) [])
-                 (group (Tactic.refine' "refine'" (Term.app `IH [`hx.right (Term.hole "_") (Term.hole "_") `h])) [])
-                 (group
-                  (Tactic.«tactic·._»
-                   "·"
-                   (Tactic.tacticSeq
-                    (Tactic.tacticSeq1Indented
-                     [(group
-                       (Tactic.simpa
-                        "simpa"
-                        []
-                        []
-                        ["[" [(Tactic.simpLemma [] [] `Nat.succ_le_succ_iff)] "]"]
-                        []
-                        ["using" `hn])
-                       [])])))
-                  [])
-                 (group
-                  (Tactic.«tactic·._»
-                   "·"
-                   (Tactic.tacticSeq
-                    (Tactic.tacticSeq1Indented
-                     [(group
-                       (Tactic.simpa
-                        "simpa"
-                        []
-                        []
-                        ["[" [(Tactic.simpLemma [] [] `Nat.succ_le_succ_iff)] "]"]
-                        []
-                        ["using" `hm])
-                       [])])))
-                  [])])))
-             [])])))
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.induction'
-        "induction'"
-        [(Tactic.casesTarget [] `l)]
-        []
-        ["with" [(Lean.binderIdent `hd) (Lean.binderIdent `tl) (Lean.binderIdent `IH)]]
-        [])
-       [])
-      (group
-       (Tactic.«tactic·._»
-        "·"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group (Tactic.intro "intro" [`n `hn `m `hm `h]) [])
-           (group
-            (Tactic.simp
-             "simp"
-             []
-             ["only"]
-             ["["
-              [(Tactic.simpLemma [] [] `Set.mem_singleton_iff)
-               ","
-               (Tactic.simpLemma [] [] `Set.set_of_eq_eq_singleton)
-               ","
-               (Tactic.simpLemma [] [] `length)
-               ","
-               (Tactic.simpLemma [] [] `nonpos_iff_eq_zero)]
-              "]"]
-             [(Tactic.location "at" (Tactic.locationHyp [`hn `hm] []))])
-            [])
-           (group
-            (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `hn) "," (Tactic.simpLemma [] [] `hm)] "]"] [])
-            [])])))
-       [])
-      (group
-       (Tactic.«tactic·._»
-        "·"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group (Tactic.intro "intro" [`n `hn `m `hm `h]) [])
-           (group
-            (Tactic.simp
-             "simp"
-             []
-             ["only"]
-             ["[" [(Tactic.simpLemma [] [] `length) "," (Tactic.simpLemma [] [] `Set.mem_set_of_eq)] "]"]
-             [(Tactic.location "at" (Tactic.locationHyp [`hn `hm] []))])
-            [])
-           (group
-            (Tactic.simp
-             "simp"
-             []
-             ["only"]
-             ["[" [(Tactic.simpLemma [] [] `mem_cons_iff) "," (Tactic.simpLemma [] [] `not_or_distrib)] "]"]
-             [(Tactic.location "at" (Tactic.locationHyp [`hx] []))])
-            [])
-           (group
-            (Tactic.«tactic_<;>_»
-             (Tactic.cases "cases" [(Tactic.casesTarget [] `n)] [] [])
-             "<;>"
-             (Tactic.cases "cases" [(Tactic.casesTarget [] `m)] [] []))
-            [])
-           (group
-            (Tactic.«tactic·._»
-             "·"
-             (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.tacticRfl "rfl") [])])))
-            [])
-           (group
-            (Tactic.«tactic·._»
-             "·"
-             (Tactic.tacticSeq
-              (Tactic.tacticSeq1Indented
-               [(group
-                 (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] `hx.left)] "]"] [] ["using" `h])
-                 [])])))
-            [])
-           (group
-            (Tactic.«tactic·._»
-             "·"
-             (Tactic.tacticSeq
-              (Tactic.tacticSeq1Indented
-               [(group
-                 (Tactic.simpa
-                  "simpa"
-                  []
-                  []
-                  ["[" [(Tactic.simpLemma [] [] (Term.app `Ne.symm [`hx.left]))] "]"]
-                  []
-                  ["using" `h])
-                 [])])))
-            [])
-           (group
-            (Tactic.«tactic·._»
-             "·"
-             (Tactic.tacticSeq
-              (Tactic.tacticSeq1Indented
-               [(group
-                 (Tactic.simp
-                  "simp"
-                  []
-                  ["only"]
-                  ["["
-                   [(Tactic.simpLemma [] [] `true_andₓ)
-                    ","
-                    (Tactic.simpLemma [] [] `eq_self_iff_true)
-                    ","
-                    (Tactic.simpLemma [] [] `insert_nth_succ_cons)]
-                   "]"]
-                  [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
-                 [])
-                (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Nat.succ_inj')] "]") []) [])
-                (group (Tactic.refine' "refine'" (Term.app `IH [`hx.right (Term.hole "_") (Term.hole "_") `h])) [])
-                (group
-                 (Tactic.«tactic·._»
-                  "·"
-                  (Tactic.tacticSeq
-                   (Tactic.tacticSeq1Indented
-                    [(group
-                      (Tactic.simpa
-                       "simpa"
-                       []
-                       []
-                       ["[" [(Tactic.simpLemma [] [] `Nat.succ_le_succ_iff)] "]"]
-                       []
-                       ["using" `hn])
-                      [])])))
-                 [])
-                (group
-                 (Tactic.«tactic·._»
-                  "·"
-                  (Tactic.tacticSeq
-                   (Tactic.tacticSeq1Indented
-                    [(group
-                      (Tactic.simpa
-                       "simpa"
-                       []
-                       []
-                       ["[" [(Tactic.simpLemma [] [] `Nat.succ_le_succ_iff)] "]"]
-                       []
-                       ["using" `hm])
-                      [])])))
-                 [])])))
-            [])])))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic·._»
-   "·"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.intro "intro" [`n `hn `m `hm `h]) [])
-      (group
-       (Tactic.simp
-        "simp"
-        []
-        ["only"]
-        ["[" [(Tactic.simpLemma [] [] `length) "," (Tactic.simpLemma [] [] `Set.mem_set_of_eq)] "]"]
-        [(Tactic.location "at" (Tactic.locationHyp [`hn `hm] []))])
-       [])
-      (group
-       (Tactic.simp
-        "simp"
-        []
-        ["only"]
-        ["[" [(Tactic.simpLemma [] [] `mem_cons_iff) "," (Tactic.simpLemma [] [] `not_or_distrib)] "]"]
-        [(Tactic.location "at" (Tactic.locationHyp [`hx] []))])
-       [])
-      (group
-       (Tactic.«tactic_<;>_»
-        (Tactic.cases "cases" [(Tactic.casesTarget [] `n)] [] [])
-        "<;>"
-        (Tactic.cases "cases" [(Tactic.casesTarget [] `m)] [] []))
-       [])
-      (group
-       (Tactic.«tactic·._» "·" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.tacticRfl "rfl") [])])))
-       [])
-      (group
-       (Tactic.«tactic·._»
-        "·"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] `hx.left)] "]"] [] ["using" `h]) [])])))
-       [])
-      (group
-       (Tactic.«tactic·._»
-        "·"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group
-            (Tactic.simpa
-             "simpa"
-             []
-             []
-             ["[" [(Tactic.simpLemma [] [] (Term.app `Ne.symm [`hx.left]))] "]"]
-             []
-             ["using" `h])
-            [])])))
-       [])
-      (group
-       (Tactic.«tactic·._»
-        "·"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group
-            (Tactic.simp
-             "simp"
-             []
-             ["only"]
-             ["["
-              [(Tactic.simpLemma [] [] `true_andₓ)
-               ","
-               (Tactic.simpLemma [] [] `eq_self_iff_true)
-               ","
-               (Tactic.simpLemma [] [] `insert_nth_succ_cons)]
-              "]"]
-             [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
-            [])
-           (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Nat.succ_inj')] "]") []) [])
-           (group (Tactic.refine' "refine'" (Term.app `IH [`hx.right (Term.hole "_") (Term.hole "_") `h])) [])
-           (group
-            (Tactic.«tactic·._»
-             "·"
-             (Tactic.tacticSeq
-              (Tactic.tacticSeq1Indented
-               [(group
-                 (Tactic.simpa
-                  "simpa"
-                  []
-                  []
-                  ["[" [(Tactic.simpLemma [] [] `Nat.succ_le_succ_iff)] "]"]
-                  []
-                  ["using" `hn])
-                 [])])))
-            [])
-           (group
-            (Tactic.«tactic·._»
-             "·"
-             (Tactic.tacticSeq
-              (Tactic.tacticSeq1Indented
-               [(group
-                 (Tactic.simpa
-                  "simpa"
-                  []
-                  []
-                  ["[" [(Tactic.simpLemma [] [] `Nat.succ_le_succ_iff)] "]"]
-                  []
-                  ["using" `hm])
-                 [])])))
-            [])])))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic·._»
-   "·"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simp
-        "simp"
-        []
-        ["only"]
-        ["["
-         [(Tactic.simpLemma [] [] `true_andₓ)
-          ","
-          (Tactic.simpLemma [] [] `eq_self_iff_true)
-          ","
-          (Tactic.simpLemma [] [] `insert_nth_succ_cons)]
-         "]"]
-        [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
-       [])
-      (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Nat.succ_inj')] "]") []) [])
-      (group (Tactic.refine' "refine'" (Term.app `IH [`hx.right (Term.hole "_") (Term.hole "_") `h])) [])
-      (group
-       (Tactic.«tactic·._»
-        "·"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group
-            (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] `Nat.succ_le_succ_iff)] "]"] [] ["using" `hn])
-            [])])))
-       [])
-      (group
-       (Tactic.«tactic·._»
-        "·"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group
-            (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] `Nat.succ_le_succ_iff)] "]"] [] ["using" `hm])
-            [])])))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic·._»
-   "·"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] `Nat.succ_le_succ_iff)] "]"] [] ["using" `hm])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] `Nat.succ_le_succ_iff)] "]"] [] ["using" `hm])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpa', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Nat.succ_le_succ_iff
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.«tactic·._»
-   "·"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] `Nat.succ_le_succ_iff)] "]"] [] ["using" `hn])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] `Nat.succ_le_succ_iff)] "]"] [] ["using" `hn])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpa', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hn
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Nat.succ_le_succ_iff
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.refine' "refine'" (Term.app `IH [`hx.right (Term.hole "_") (Term.hole "_") `h]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.refine'', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `IH [`hx.right (Term.hole "_") (Term.hole "_") `h])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `h
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-  `hx.right
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `IH
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Nat.succ_inj')] "]") [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwSeq', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Nat.succ_inj'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.simp
-   "simp"
-   []
-   ["only"]
-   ["["
-    [(Tactic.simpLemma [] [] `true_andₓ)
-     ","
-     (Tactic.simpLemma [] [] `eq_self_iff_true)
-     ","
-     (Tactic.simpLemma [] [] `insert_nth_succ_cons)]
-    "]"]
-   [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.location', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `h
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `insert_nth_succ_cons
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `eq_self_iff_true
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `true_andₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.«tactic·._»
-   "·"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] (Term.app `Ne.symm [`hx.left]))] "]"] [] ["using" `h])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] (Term.app `Ne.symm [`hx.left]))] "]"] [] ["using" `h])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpa', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `h
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `Ne.symm [`hx.left])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hx.left
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `Ne.symm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.«tactic·._»
-   "·"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] `hx.left)] "]"] [] ["using" `h]) [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simpa "simpa" [] [] ["[" [(Tactic.simpLemma [] [] `hx.left)] "]"] [] ["using" `h])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpa', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `h
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hx.left
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.«tactic·._» "·" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.tacticRfl "rfl") [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.tacticRfl "rfl")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticRfl', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.«tactic_<;>_»
-   (Tactic.cases "cases" [(Tactic.casesTarget [] `n)] [] [])
-   "<;>"
-   (Tactic.cases "cases" [(Tactic.casesTarget [] `m)] [] []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.cases "cases" [(Tactic.casesTarget [] `m)] [] [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.cases', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.casesTarget', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `m
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-  (Tactic.cases "cases" [(Tactic.casesTarget [] `n)] [] [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.cases', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.casesTarget', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.simp
-   "simp"
-   []
-   ["only"]
-   ["[" [(Tactic.simpLemma [] [] `mem_cons_iff) "," (Tactic.simpLemma [] [] `not_or_distrib)] "]"]
-   [(Tactic.location "at" (Tactic.locationHyp [`hx] []))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.location', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hx
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `not_or_distrib
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `mem_cons_iff
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.simp
-   "simp"
-   []
-   ["only"]
-   ["[" [(Tactic.simpLemma [] [] `length) "," (Tactic.simpLemma [] [] `Set.mem_set_of_eq)] "]"]
-   [(Tactic.location "at" (Tactic.locationHyp [`hn `hm] []))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.location', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `hn
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Set.mem_set_of_eq
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `length
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.intro "intro" [`n `hn `m `hm `h])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.intro', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `h
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `hm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `m
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `hn
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.«tactic·._»
-   "·"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.intro "intro" [`n `hn `m `hm `h]) [])
-      (group
-       (Tactic.simp
-        "simp"
-        []
-        ["only"]
-        ["["
-         [(Tactic.simpLemma [] [] `Set.mem_singleton_iff)
-          ","
-          (Tactic.simpLemma [] [] `Set.set_of_eq_eq_singleton)
-          ","
-          (Tactic.simpLemma [] [] `length)
-          ","
-          (Tactic.simpLemma [] [] `nonpos_iff_eq_zero)]
-         "]"]
-        [(Tactic.location "at" (Tactic.locationHyp [`hn `hm] []))])
-       [])
-      (group
-       (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `hn) "," (Tactic.simpLemma [] [] `hm)] "]"] [])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `hn) "," (Tactic.simpLemma [] [] `hm)] "]"] [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hn
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.simp
-   "simp"
-   []
-   ["only"]
-   ["["
-    [(Tactic.simpLemma [] [] `Set.mem_singleton_iff)
-     ","
-     (Tactic.simpLemma [] [] `Set.set_of_eq_eq_singleton)
-     ","
-     (Tactic.simpLemma [] [] `length)
-     ","
-     (Tactic.simpLemma [] [] `nonpos_iff_eq_zero)]
-    "]"]
-   [(Tactic.location "at" (Tactic.locationHyp [`hn `hm] []))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.location', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `hn
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `nonpos_iff_eq_zero
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `length
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Set.set_of_eq_eq_singleton
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Set.mem_singleton_iff
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.intro "intro" [`n `hn `m `hm `h])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.intro', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `h
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `hm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `m
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `hn
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.induction'
-   "induction'"
-   [(Tactic.casesTarget [] `l)]
-   []
-   ["with" [(Lean.binderIdent `hd) (Lean.binderIdent `tl) (Lean.binderIdent `IH)]]
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.induction'', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.binderIdent', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.binderIdent', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.binderIdent', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.casesTarget', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `l
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Term.app
-   `Set.InjOn
-   [(Term.fun "fun" (Term.basicFun [(Term.simpleBinder [`k] [])] "=>" (Term.app `insert_nth [`k `x `l])))
-    (Set.«term{_|_}» "{" `n "|" («term_≤_» `n "≤" `l.length) "}")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}» "{" `n "|" («term_≤_» `n "≤" `l.length) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_≤_» `n "≤" `l.length)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_≤_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `l.length
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  inj_on_insert_nth_index_of_not_mem
-  ( l : List α ) ( x : α ) ( hx : x ∉ l ) : Set.InjOn fun k => insert_nth k x l { n | n ≤ l.length }
-  :=
-    by
-      induction' l with hd tl IH
-        ·
-          intro n hn m hm h
-            simp only [ Set.mem_singleton_iff , Set.set_of_eq_eq_singleton , length , nonpos_iff_eq_zero ] at hn hm
-            simp [ hn , hm ]
-        ·
-          intro n hn m hm h
-            simp only [ length , Set.mem_set_of_eq ] at hn hm
-            simp only [ mem_cons_iff , not_or_distrib ] at hx
-            cases n <;> cases m
-            · rfl
-            · simpa [ hx.left ] using h
-            · simpa [ Ne.symm hx.left ] using h
-            ·
-              simp only [ true_andₓ , eq_self_iff_true , insert_nth_succ_cons ] at h
-                rw [ Nat.succ_inj' ]
-                refine' IH hx.right _ _ h
-                · simpa [ Nat.succ_le_succ_iff ] using hn
-                · simpa [ Nat.succ_le_succ_iff ] using hm
+theorem inj_on_insert_nth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :
+    Set.InjOn (fun k => insert_nth k x l) { n | n ≤ l.length } := by
+  induction' l with hd tl IH
+  · intro n hn m hm h
+    simp only [Set.mem_singleton_iff, Set.set_of_eq_eq_singleton, length, nonpos_iff_eq_zero] at hn hm
+    simp [hn, hm]
+    
+  · intro n hn m hm h
+    simp only [length, Set.mem_set_of_eq] at hn hm
+    simp only [mem_cons_iff, not_or_distrib] at hx
+    cases n <;> cases m
+    · rfl
+      
+    · simpa [hx.left] using h
+      
+    · simpa [Ne.symm hx.left] using h
+      
+    · simp only [true_andₓ, eq_self_iff_true, insert_nth_succ_cons] at h
+      rw [Nat.succ_inj']
+      refine' IH hx.right _ _ h
+      · simpa [Nat.succ_le_succ_iff] using hn
+        
+      · simpa [Nat.succ_le_succ_iff] using hm
+        
+      
+    
 
 theorem insert_nth_of_length_lt (l : List α) (x : α) (n : ℕ) (h : l.length < n) : insert_nth n x l = l := by
   induction' l with hd tl IH generalizing n
-  ·
-    cases n
-    ·
-      simpa using h
-    ·
-      simp
-  ·
-    cases n
-    ·
-      simpa using h
-    ·
-      simp only [Nat.succ_lt_succ_iff, length] at h
+  · cases n
+    · simpa using h
+      
+    · simp
+      
+    
+  · cases n
+    · simpa using h
+      
+    · simp only [Nat.succ_lt_succ_iff, length] at h
       simpa using IH _ h
+      
+    
 
 @[simp]
 theorem insert_nth_length_self (l : List α) (x : α) : insert_nth l.length x l = l ++ [x] := by
   induction' l with hd tl IH
-  ·
-    simp
-  ·
-    simpa using IH
+  · simp
+    
+  · simpa using IH
+    
 
 theorem length_le_length_insert_nth (l : List α) (x : α) (n : ℕ) : l.length ≤ (insert_nth n x l).length := by
   cases' le_or_ltₓ n l.length with hn hn
-  ·
-    rw [length_insert_nth _ _ hn]
+  · rw [length_insert_nth _ _ hn]
     exact (Nat.lt_succ_selfₓ _).le
-  ·
-    rw [insert_nth_of_length_lt _ _ _ hn]
+    
+  · rw [insert_nth_of_length_lt _ _ _ hn]
+    
 
-theorem length_insert_nth_le_succ (l : List α) (x : α) (n : ℕ) : (insert_nth n x l).length ≤ l.length+1 := by
+theorem length_insert_nth_le_succ (l : List α) (x : α) (n : ℕ) : (insert_nth n x l).length ≤ l.length + 1 := by
   cases' le_or_ltₓ n l.length with hn hn
-  ·
-    rw [length_insert_nth _ _ hn]
-  ·
-    rw [insert_nth_of_length_lt _ _ _ hn]
+  · rw [length_insert_nth _ _ hn]
+    
+  · rw [insert_nth_of_length_lt _ _ _ hn]
     exact (Nat.lt_succ_selfₓ _).le
+    
 
 theorem nth_le_insert_nth_of_lt (l : List α) (x : α) (n k : ℕ) (hn : k < n) (hk : k < l.length)
     (hk' : k < (insert_nth n x l).length := hk.trans_le (length_le_length_insert_nth _ _ _)) :
     (insert_nth n x l).nthLe k hk' = l.nth_le k hk := by
   induction' n with n IH generalizing k l
-  ·
-    simpa using hn
-  ·
-    cases' l with hd tl
-    ·
-      simp
-    ·
-      cases k
-      ·
-        simp
-      ·
-        rw [Nat.succ_lt_succ_iff] at hn
+  · simpa using hn
+    
+  · cases' l with hd tl
+    · simp
+      
+    · cases k
+      · simp
+        
+      · rw [Nat.succ_lt_succ_iff] at hn
         simpa using IH _ _ hn _
+        
+      
+    
 
 @[simp]
 theorem nth_le_insert_nth_self (l : List α) (x : α) (n : ℕ) (hn : n ≤ l.length)
@@ -2954,41 +1807,41 @@ theorem nth_le_insert_nth_self (l : List α) (x : α) (n : ℕ) (hn : n ≤ l.le
       rwa [length_insert_nth _ _ hn, Nat.lt_succ_iffₓ]) :
     (insert_nth n x l).nthLe n hn' = x := by
   induction' l with hd tl IH generalizing n
-  ·
-    simp only [length, nonpos_iff_eq_zero] at hn
+  · simp only [length, nonpos_iff_eq_zero] at hn
     simp [hn]
-  ·
-    cases n
-    ·
-      simp
-    ·
-      simp only [Nat.succ_le_succ_iff, length] at hn
+    
+  · cases n
+    · simp
+      
+    · simp only [Nat.succ_le_succ_iff, length] at hn
       simpa using IH _ hn
+      
+    
 
-theorem nth_le_insert_nth_add_succ (l : List α) (x : α) (n k : ℕ) (hk' : (n+k) < l.length)
-    (hk : ((n+k)+1) < (insert_nth n x l).length := by
+theorem nth_le_insert_nth_add_succ (l : List α) (x : α) (n k : ℕ) (hk' : n + k < l.length)
+    (hk : n + k + 1 < (insert_nth n x l).length := by
       rwa [length_insert_nth _ _ (le_self_add.trans hk'.le), Nat.succ_lt_succ_iff]) :
-    (insert_nth n x l).nthLe ((n+k)+1) hk = nth_le l (n+k) hk' := by
+    (insert_nth n x l).nthLe (n + k + 1) hk = nth_le l (n + k) hk' := by
   induction' l with hd tl IH generalizing n k
-  ·
-    simpa using hk'
-  ·
-    cases n
-    ·
-      simpa
-    ·
-      simpa [succ_add] using IH _ _ _
+  · simpa using hk'
+    
+  · cases n
+    · simpa
+      
+    · simpa [succ_add] using IH _ _ _
+      
+    
 
 theorem insert_nth_injective (n : ℕ) (x : α) : Function.Injective (insert_nth n x) := by
   induction' n with n IH
-  ·
-    have : insert_nth 0 x = cons x := funext fun _ => rfl
+  · have : insert_nth 0 x = cons x := funext fun _ => rfl
     simp [this]
-  ·
-    rintro (_ | ⟨a, as⟩) (_ | ⟨b, bs⟩) h <;>
+    
+  · rintro (_ | ⟨a, as⟩) (_ | ⟨b, bs⟩) h <;>
       first |
         simpa [IH.eq_iff] using h|
         rfl
+    
 
 end InsertNth
 
@@ -3000,13 +1853,12 @@ theorem map_nil (f : α → β) : map f [] = [] :=
   rfl
 
 theorem map_eq_foldr (f : α → β) (l : List α) : map f l = foldr (fun a bs => f a :: bs) [] l := by
-  induction l <;> simp
+  induction l <;> simp [*]
 
 theorem map_congr {f g : α → β} : ∀ {l : List α}, (∀, ∀ x ∈ l, ∀, f x = g x) → map f l = map g l
   | [], _ => rfl
-  | a :: l, h =>
+  | a :: l, h => by
     let ⟨h₁, h₂⟩ := forall_mem_cons.1 h
-    by
     rw [map, map, h₁, map_congr h₂]
 
 theorem map_eq_map_iff {f g : α → β} {l : List α} : map f l = map g l ↔ ∀, ∀ x ∈ l, ∀, f x = g x := by
@@ -3019,10 +1871,10 @@ theorem map_eq_map_iff {f g : α → β} {l : List α} : map f l = map g l ↔ �
   exact h
 
 theorem map_concat (f : α → β) (a : α) (l : List α) : map f (concat l a) = concat (map f l) (f a) := by
-  induction l <;> [rfl, simp only [concat_eq_append, cons_append, map, map_append]] <;> constructor <;> rfl
+  induction l <;> [rfl, simp only [*, concat_eq_append, cons_append, map, map_append]] <;> constructor <;> rfl
 
 theorem map_id' {f : α → α} (h : ∀ x, f x = x) (l : List α) : map f l = l := by
-  induction l <;> [rfl, simp only [map]] <;> constructor <;> rfl
+  induction l <;> [rfl, simp only [*, map]] <;> constructor <;> rfl
 
 theorem eq_nil_of_map_eq_nil {f : α → β} {l : List α} (h : map f l = nil) : l = nil :=
   eq_nil_of_length_eq_zero $ by
@@ -3030,10 +1882,11 @@ theorem eq_nil_of_map_eq_nil {f : α → β} {l : List α} (h : map f l = nil) :
 
 @[simp]
 theorem map_join (f : α → β) (L : List (List α)) : map f (join L) = join (map (map f) L) := by
-  induction L <;> [rfl, simp only [join, map, map_append]]
+  induction L <;> [rfl, simp only [*, join, map, map_append]]
 
 theorem bind_ret_eq_map (f : α → β) (l : List α) : l.bind (List.ret ∘ f) = map f l := by
-  unfold List.bind <;> induction l <;> simp only [map, join, List.ret, cons_append, nil_append] <;> constructor <;> rfl
+  unfold List.bind <;>
+    induction l <;> simp only [map, join, List.ret, cons_append, nil_append, *] <;> constructor <;> rfl
 
 @[simp]
 theorem map_eq_map {α β} (f : α → β) (l : List α) : f <$> l = map f l :=
@@ -3046,29 +1899,27 @@ theorem map_tail (f : α → β) l : map f (tail l) = tail (map f l) := by
 @[simp]
 theorem map_injective_iff {f : α → β} : injective (map f) ↔ injective f := by
   constructor <;> intro h x y hxy
-  ·
-    suffices [x] = [y]by
+  · suffices [x] = [y] by
       simpa using this
     apply h
     simp [hxy]
-  ·
-    induction y generalizing x
+    
+  · induction y generalizing x
     simpa using hxy
     cases x
     simpa using hxy
     simp at hxy
     simp [y_ih hxy.2, h hxy.1]
+    
 
-/-- 
-A single `list.map` of a composition of functions is equal to
+/-- A single `list.map` of a composition of functions is equal to
 composing a `list.map` with another `list.map`, fully applied.
 This is the reverse direction of `list.map_map`.
 -/
 theorem comp_map (h : β → γ) (g : α → β) (l : List α) : map (h ∘ g) l = map h (map g l) :=
   (map_map _ _ _).symm
 
-/-- 
-Composing a `list.map` with another `list.map` is equal to
+/-- Composing a `list.map` with another `list.map` is equal to
 a single `list.map` of composed functions.
 -/
 @[simp]
@@ -3076,26 +1927,26 @@ theorem map_comp_map (g : β → γ) (f : α → β) : map g ∘ map f = map (g 
   ext l
   rw [comp_map]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 theorem map_filter_eq_foldr (f : α → β) (p : α → Prop) [DecidablePred p] (as : List α) :
     map f (filter p as) = foldr (fun a bs => if p a then f a :: bs else bs) [] as := by
   induction as
-  ·
-    rfl
-  ·
-    simp [apply_ite (map f)]
+  · rfl
+    
+  · simp [*, apply_ite (map f)]
+    
 
 theorem last_map (f : α → β) {l : List α} (hl : l ≠ []) : (l.map f).last (mt eq_nil_of_map_eq_nil hl) = f (l.last hl) :=
   by
   induction' l with l_ih l_tl l_ih
-  ·
-    apply (hl rfl).elim
-  ·
-    cases l_tl
-    ·
-      simp
-    ·
-      simpa using l_ih
+  · apply (hl rfl).elim
+    
+  · cases l_tl
+    · simp
+      
+    · simpa using l_ih
+      
+    
 
 /-! ### map₂ -/
 
@@ -3106,7 +1957,7 @@ theorem nil_map₂ (f : α → β → γ) (l : List β) : map₂ f [] l = [] := 
 theorem map₂_nil (f : α → β → γ) (l : List α) : map₂ f l [] = [] := by
   cases l <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem map₂_flip (f : α → β → γ) : ∀ as bs, map₂ (flip f) bs as = map₂ f as bs
   | [], [] => rfl
@@ -3126,7 +1977,7 @@ theorem take_zero (l : List α) : take 0 l = [] :=
 @[simp]
 theorem take_nil : ∀ n, take n [] = ([] : List α)
   | 0 => rfl
-  | n+1 => rfl
+  | n + 1 => rfl
 
 theorem take_cons n (a : α) (l : List α) : take (succ n) (a :: l) = a :: take n l :=
   rfl
@@ -3141,8 +1992,8 @@ theorem take_length : ∀ l : List α, take (length l) l = l
 theorem take_all_of_le : ∀ {n} {l : List α}, length l ≤ n → take n l = l
   | 0, [], h => rfl
   | 0, a :: l, h => absurd h (not_le_of_gtₓ (zero_lt_succ _))
-  | n+1, [], h => rfl
-  | n+1, a :: l, h => by
+  | n + 1, [], h => rfl
+  | n + 1, a :: l, h => by
     change a :: take n l = a :: l
     rw [take_all_of_le (le_of_succ_le_succ h)]
 
@@ -3177,31 +2028,31 @@ theorem map_take {α β : Type _} (f : α → β) : ∀ L : List α i : ℕ, (L.
     simp
   | L, 0 => by
     simp
-  | h :: t, n+1 => by
+  | h :: t, n + 1 => by
     dsimp
     rw [map_take]
 
-/--  Taking the first `n` elements in `l₁ ++ l₂` is the same as appending the first `n` elements
+/-- Taking the first `n` elements in `l₁ ++ l₂` is the same as appending the first `n` elements
 of `l₁` to the first `n - l₁.length` elements of `l₂`. -/
 theorem take_append_eq_append_take {l₁ l₂ : List α} {n : ℕ} :
     take n (l₁ ++ l₂) = take n l₁ ++ take (n - l₁.length) l₂ := by
   induction l₁ generalizing n
-  ·
-    simp
+  · simp
+    
   cases n
-  ·
-    simp
-  simp
+  · simp
+    
+  simp [*]
 
 theorem take_append_of_le_length {l₁ l₂ : List α} {n : ℕ} (h : n ≤ l₁.length) : (l₁ ++ l₂).take n = l₁.take n := by
   simp [take_append_eq_append_take, tsub_eq_zero_iff_le.mpr h]
 
-/--  Taking the first `l₁.length + i` elements in `l₁ ++ l₂` is the same as appending the first
+/-- Taking the first `l₁.length + i` elements in `l₁ ++ l₂` is the same as appending the first
 `i` elements of `l₂` to `l₁`. -/
-theorem take_append {l₁ l₂ : List α} (i : ℕ) : take (l₁.length+i) (l₁ ++ l₂) = l₁ ++ take i l₂ := by
+theorem take_append {l₁ l₂ : List α} (i : ℕ) : take (l₁.length + i) (l₁ ++ l₂) = l₁ ++ take i l₂ := by
   simp [take_append_eq_append_take, take_all_of_le le_self_add]
 
-/--  The `i`-th element of a list coincides with the `i`-th element of any of its prefixes of
+/-- The `i`-th element of a list coincides with the `i`-th element of any of its prefixes of
 length `> i`. Version designed to rewrite from the big list to the small list. -/
 theorem nth_le_take (L : List α) {i j : ℕ} (hi : i < L.length) (hj : i < j) :
     nth_le L i hi =
@@ -3213,7 +2064,7 @@ theorem nth_le_take (L : List α) {i j : ℕ} (hi : i < L.length) (hj : i < j) :
   rw [nth_le_of_eq (take_append_drop j L).symm hi]
   exact nth_le_append _ _
 
-/--  The `i`-th element of a list coincides with the `i`-th element of any of its prefixes of
+/-- The `i`-th element of a list coincides with the `i`-th element of any of its prefixes of
 length `> i`. Version designed to rewrite from the small list to the big list. -/
 theorem nth_le_take' (L : List α) {i j : ℕ} (hi : i < (L.take j).length) :
     nth_le (L.take j) i hi =
@@ -3227,34 +2078,34 @@ theorem nth_le_take' (L : List α) {i j : ℕ} (hi : i < (L.take j).length) :
 
 theorem nth_take {l : List α} {n m : ℕ} (h : m < n) : (l.take n).nth m = l.nth m := by
   induction' n with n hn generalizing l m
-  ·
-    simp only [Nat.nat_zero_eq_zero] at h
+  · simp only [Nat.nat_zero_eq_zero] at h
     exact absurd h (not_lt_of_le m.zero_le)
-  ·
-    cases' l with hd tl
-    ·
-      simp only [take_nil]
-    ·
-      cases m
-      ·
-        simp only [nth, take]
-      ·
-        simpa only using hn (Nat.lt_of_succ_lt_succₓ h)
+    
+  · cases' l with hd tl
+    · simp only [take_nil]
+      
+    · cases m
+      · simp only [nth, take]
+        
+      · simpa only using hn (Nat.lt_of_succ_lt_succₓ h)
+        
+      
+    
 
 @[simp]
-theorem nth_take_of_succ {l : List α} {n : ℕ} : (l.take (n+1)).nth n = l.nth n :=
+theorem nth_take_of_succ {l : List α} {n : ℕ} : (l.take (n + 1)).nth n = l.nth n :=
   nth_take (Nat.lt_succ_selfₓ n)
 
-theorem take_succ {l : List α} {n : ℕ} : l.take (n+1) = l.take n ++ (l.nth n).toList := by
+theorem take_succ {l : List α} {n : ℕ} : l.take (n + 1) = l.take n ++ (l.nth n).toList := by
   induction' l with hd tl hl generalizing n
-  ·
-    simp only [Option.toList, nth, take_nil, append_nil]
-  ·
-    cases n
-    ·
-      simp only [Option.toList, nth, eq_self_iff_true, and_selfₓ, take, nil_append]
-    ·
-      simp only [hl, cons_append, nth, eq_self_iff_true, and_selfₓ, take]
+  · simp only [Option.toList, nth, take_nil, append_nil]
+    
+  · cases n
+    · simp only [Option.toList, nth, eq_self_iff_true, and_selfₓ, take, nil_append]
+      
+    · simp only [hl, cons_append, nth, eq_self_iff_true, and_selfₓ, take]
+      
+    
 
 @[simp]
 theorem take_eq_nil_iff {l : List α} {k : ℕ} : l.take k = [] ↔ l = [] ∨ k = 0 := by
@@ -3262,14 +2113,14 @@ theorem take_eq_nil_iff {l : List α} {k : ℕ} : l.take k = [] ↔ l = [] ∨ k
 
 theorem init_eq_take (l : List α) : l.init = l.take l.length.pred := by
   cases' l with x l
-  ·
-    simp [init]
-  ·
-    induction' l with hd tl hl generalizing x
-    ·
-      simp [init]
-    ·
-      simp [init, hl]
+  · simp [init]
+    
+  · induction' l with hd tl hl generalizing x
+    · simp [init]
+      
+    · simp [init, hl]
+      
+    
 
 theorem init_take {n : ℕ} {l : List α} (h : n < l.length) : (l.take n).init = l.take n.pred := by
   simp [init_eq_take, min_eq_left_of_ltₓ h, take_take, pred_le]
@@ -3294,43 +2145,44 @@ theorem drop_eq_nil_of_le {l : List α} {k : ℕ} (h : l.length ≤ k) : l.drop 
 theorem drop_eq_nil_iff_le {l : List α} {k : ℕ} : l.drop k = [] ↔ l.length ≤ k := by
   refine' ⟨fun h => _, drop_eq_nil_of_le⟩
   induction' k with k hk generalizing l
-  ·
-    simp only [drop] at h
+  · simp only [drop] at h
     simp [h]
-  ·
-    cases l
-    ·
-      simp
-    ·
-      simp only [drop] at h
+    
+  · cases l
+    · simp
+      
+    · simp only [drop] at h
       simpa [Nat.succ_le_succ_iff] using hk h
+      
+    
 
-theorem tail_drop (l : List α) (n : ℕ) : (l.drop n).tail = l.drop (n+1) := by
+theorem tail_drop (l : List α) (n : ℕ) : (l.drop n).tail = l.drop (n + 1) := by
   induction' l with hd tl hl generalizing n
-  ·
-    simp
-  ·
-    cases n
-    ·
-      simp
-    ·
-      simp [hl]
+  · simp
+    
+  · cases n
+    · simp
+      
+    · simp [hl]
+      
+    
 
-theorem cons_nth_le_drop_succ {l : List α} {n : ℕ} (hn : n < l.length) : l.nth_le n hn :: l.drop (n+1) = l.drop n := by
+theorem cons_nth_le_drop_succ {l : List α} {n : ℕ} (hn : n < l.length) : l.nth_le n hn :: l.drop (n + 1) = l.drop n :=
+  by
   induction' l with hd tl hl generalizing n
-  ·
-    exact
+  · exact
       absurd n.zero_le
         (not_le_of_lt
           (by
             simpa using hn))
-  ·
-    cases n
-    ·
-      simp
-    ·
-      simp only [Nat.succ_lt_succ_iff, List.length] at hn
+    
+  · cases n
+    · simp
+      
+    · simp only [Nat.succ_lt_succ_iff, List.length] at hn
       simpa [List.nthLe, List.dropₓ] using hl hn
+      
+    
 
 theorem drop_nil : ∀ n, drop n [] = ([] : List α) := fun _ => drop_eq_nil_of_le (Nat.zero_leₓ _)
 
@@ -3339,10 +2191,10 @@ theorem drop_one : ∀ l : List α, drop 1 l = tail l
   | [] => rfl
   | a :: l => rfl
 
-theorem drop_add : ∀ m n l : List α, drop (m+n) l = drop m (drop n l)
+theorem drop_add : ∀ m n l : List α, drop (m + n) l = drop m (drop n l)
   | m, 0, l => rfl
-  | m, n+1, [] => (drop_nil _).symm
-  | m, n+1, a :: l => drop_add m n _
+  | m, n + 1, [] => (drop_nil _).symm
+  | m, n + 1, a :: l => drop_add m n _
 
 @[simp]
 theorem drop_left : ∀ l₁ l₂ : List α, drop (length l₁) (l₁ ++ l₂) = l₂
@@ -3352,42 +2204,43 @@ theorem drop_left : ∀ l₁ l₂ : List α, drop (length l₁) (l₁ ++ l₂) =
 theorem drop_left' {l₁ l₂ : List α} {n} (h : length l₁ = n) : drop n (l₁ ++ l₂) = l₂ := by
   rw [← h] <;> apply drop_left
 
-theorem drop_eq_nth_le_cons : ∀ {n} {l : List α} h, drop n l = nth_le l n h :: drop (n+1) l
+theorem drop_eq_nth_le_cons : ∀ {n} {l : List α} h, drop n l = nth_le l n h :: drop (n + 1) l
   | 0, a :: l, h => rfl
-  | n+1, a :: l, h => @drop_eq_nth_le_cons n _ _
+  | n + 1, a :: l, h => @drop_eq_nth_le_cons n _ _
 
 @[simp]
 theorem drop_length (l : List α) : l.drop l.length = [] :=
-  calc l.drop l.length = (l ++ []).drop l.length := by
-    simp
+  calc
+    l.drop l.length = (l ++ []).drop l.length := by
+      simp
     _ = [] := drop_left _ _
     
 
-/--  Dropping the elements up to `n` in `l₁ ++ l₂` is the same as dropping the elements up to `n`
+/-- Dropping the elements up to `n` in `l₁ ++ l₂` is the same as dropping the elements up to `n`
 in `l₁`, dropping the elements up to `n - l₁.length` in `l₂`, and appending them. -/
 theorem drop_append_eq_append_drop {l₁ l₂ : List α} {n : ℕ} :
     drop n (l₁ ++ l₂) = drop n l₁ ++ drop (n - l₁.length) l₂ := by
   induction l₁ generalizing n
-  ·
-    simp
+  · simp
+    
   cases n
-  ·
-    simp
-  simp
+  · simp
+    
+  simp [*]
 
 theorem drop_append_of_le_length {l₁ l₂ : List α} {n : ℕ} (h : n ≤ l₁.length) : (l₁ ++ l₂).drop n = l₁.drop n ++ l₂ :=
   by
   simp [drop_append_eq_append_drop, tsub_eq_zero_iff_le.mpr h]
 
-/--  Dropping the elements up to `l₁.length + i` in `l₁ + l₂` is the same as dropping the elements
+/-- Dropping the elements up to `l₁.length + i` in `l₁ + l₂` is the same as dropping the elements
 up to `i` in `l₂`. -/
-theorem drop_append {l₁ l₂ : List α} (i : ℕ) : drop (l₁.length+i) (l₁ ++ l₂) = drop i l₂ := by
+theorem drop_append {l₁ l₂ : List α} (i : ℕ) : drop (l₁.length + i) (l₁ ++ l₂) = drop i l₂ := by
   simp [drop_append_eq_append_drop, take_all_of_le le_self_add]
 
-/--  The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
+/-- The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
 dropping the first `i` elements. Version designed to rewrite from the big list to the small list. -/
-theorem nth_le_drop (L : List α) {i j : ℕ} (h : (i+j) < L.length) :
-    nth_le L (i+j) h =
+theorem nth_le_drop (L : List α) {i j : ℕ} (h : i + j < L.length) :
+    nth_le L (i + j) h =
       nth_le (L.drop i) j
         (by
           have A : i < L.length := lt_of_le_of_ltₓ (Nat.Le.intro rfl) h
@@ -3398,13 +2251,13 @@ theorem nth_le_drop (L : List α) {i j : ℕ} (h : (i+j) < L.length) :
     simp [le_of_ltₓ (lt_of_le_of_ltₓ (Nat.Le.intro rfl) h)]
   rw [nth_le_of_eq (take_append_drop i L).symm h, nth_le_append_right] <;> simp [A]
 
-/--   The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
+/-- The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
 dropping the first `i` elements. Version designed to rewrite from the small list to the big list. -/
 theorem nth_le_drop' (L : List α) {i j : ℕ} (h : j < (L.drop i).length) :
-    nth_le (L.drop i) j h = nth_le L (i+j) (lt_tsub_iff_left.mp (length_drop i L ▸ h)) := by
+    nth_le (L.drop i) j h = nth_le L (i + j) (lt_tsub_iff_left.mp (length_drop i L ▸ h)) := by
   rw [nth_le_drop]
 
-theorem nth_drop (L : List α) (i j : ℕ) : nth (L.drop i) j = nth L (i+j) := by
+theorem nth_drop (L : List α) (i j : ℕ) : nth (L.drop i) j = nth L (i + j) := by
   ext
   simp only [nth_eq_some, nth_le_drop', Option.mem_def]
   constructor <;>
@@ -3413,26 +2266,26 @@ theorem nth_drop (L : List α) (i j : ℕ) : nth (L.drop i) j = nth L (i+j) := b
         simpa [lt_tsub_iff_left] using h, ha⟩
 
 @[simp]
-theorem drop_drop (n : ℕ) : ∀ m l : List α, drop n (drop m l) = drop (n+m) l
+theorem drop_drop (n : ℕ) : ∀ m l : List α, drop n (drop m l) = drop (n + m) l
   | m, [] => by
     simp
   | 0, l => by
     simp
-  | m+1, a :: l =>
-    calc drop n (drop (m+1) (a :: l)) = drop n (drop m l) := rfl
-      _ = drop (n+m) l := drop_drop m l
-      _ = drop (n+m+1) (a :: l) := rfl
+  | m + 1, a :: l =>
+    calc
+      drop n (drop (m + 1) (a :: l)) = drop n (drop m l) := rfl
+      _ = drop (n + m) l := drop_drop m l
+      _ = drop (n + (m + 1)) (a :: l) := rfl
       
 
-theorem drop_take : ∀ m : ℕ n : ℕ l : List α, drop m (take (m+n) l) = take n (drop m l)
+theorem drop_take : ∀ m : ℕ n : ℕ l : List α, drop m (take (m + n) l) = take n (drop m l)
   | 0, n, _ => by
     simp
-  | m+1, n, nil => by
+  | m + 1, n, nil => by
     simp
-  | m+1, n, _ :: l =>
-    have h : ((m+1)+n) = (m+n)+1 := by
+  | m + 1, n, _ :: l => by
+    have h : m + 1 + n = m + n + 1 := by
       ac_rfl
-    by
     simpa [take_cons, h] using drop_take m n l
 
 theorem map_drop {α β : Type _} (f : α → β) : ∀ L : List α i : ℕ, (L.drop i).map f = (L.map f).drop i
@@ -3440,46 +2293,46 @@ theorem map_drop {α β : Type _} (f : α → β) : ∀ L : List α i : ℕ, (L.
     simp
   | L, 0 => by
     simp
-  | h :: t, n+1 => by
+  | h :: t, n + 1 => by
     dsimp
     rw [map_drop]
 
 theorem modify_nth_tail_eq_take_drop (f : List α → List α) (H : f [] = []) :
     ∀ n l, modify_nth_tail f n l = take n l ++ f (drop n l)
   | 0, l => rfl
-  | n+1, [] => H.symm
-  | n+1, b :: l => congr_argₓ (cons b) (modify_nth_tail_eq_take_drop n l)
+  | n + 1, [] => H.symm
+  | n + 1, b :: l => congr_argₓ (cons b) (modify_nth_tail_eq_take_drop n l)
 
 theorem modify_nth_eq_take_drop (f : α → α) : ∀ n l, modify_nth f n l = take n l ++ modify_head f (drop n l) :=
   modify_nth_tail_eq_take_drop _ rfl
 
 theorem modify_nth_eq_take_cons_drop (f : α → α) {n l} h :
-    modify_nth f n l = take n l ++ f (nth_le l n h) :: drop (n+1) l := by
+    modify_nth f n l = take n l ++ f (nth_le l n h) :: drop (n + 1) l := by
   rw [modify_nth_eq_take_drop, drop_eq_nth_le_cons h] <;> rfl
 
 theorem update_nth_eq_take_cons_drop (a : α) {n l} (h : n < length l) :
-    update_nth l n a = take n l ++ a :: drop (n+1) l := by
+    update_nth l n a = take n l ++ a :: drop (n + 1) l := by
   rw [update_nth_eq_modify_nth, modify_nth_eq_take_cons_drop _ h]
 
 theorem reverse_take {α} {xs : List α} (n : ℕ) (h : n ≤ xs.length) :
     xs.reverse.take n = (xs.drop (xs.length - n)).reverse := by
   induction xs generalizing n <;> simp only [reverse_cons, drop, reverse_nil, zero_tsub, length, take_nil]
   cases' h.lt_or_eq_dec with h' h'
-  ·
-    replace h' := le_of_succ_le_succ h'
+  · replace h' := le_of_succ_le_succ h'
     rwa [take_append_of_le_length, xs_ih _ h']
-    rw [show (xs_tl.length+1) - n = succ (xs_tl.length - n) from _, drop]
-    ·
-      rwa [succ_eq_add_one, ← tsub_add_eq_add_tsub]
-    ·
-      rwa [length_reverse]
-  ·
-    subst h'
+    rw [show xs_tl.length + 1 - n = succ (xs_tl.length - n) from _, drop]
+    · rwa [succ_eq_add_one, ← tsub_add_eq_add_tsub]
+      
+    · rwa [length_reverse]
+      
+    
+  · subst h'
     rw [length, tsub_self, drop]
-    suffices (xs_tl.length+1) = (xs_tl.reverse ++ [xs_hd]).length by
+    suffices xs_tl.length + 1 = (xs_tl.reverse ++ [xs_hd]).length by
       rw [this, take_length, reverse_cons]
     rw [length_append, length_reverse]
     rfl
+    
 
 @[simp]
 theorem update_nth_eq_nil (l : List α) (n : ℕ) (a : α) : l.update_nth n a = [] ↔ l = [] := by
@@ -3492,16 +2345,16 @@ variable [Inhabited α]
 @[simp]
 theorem take'_length : ∀ n l, length (@take' α _ n l) = n
   | 0, l => rfl
-  | n+1, l => congr_argₓ succ (take'_length _ _)
+  | n + 1, l => congr_argₓ succ (take'_length _ _)
 
 @[simp]
 theorem take'_nil : ∀ n, take' n (@nil α) = repeat (default _) n
   | 0 => rfl
-  | n+1 => congr_argₓ (cons _) (take'_nil _)
+  | n + 1 => congr_argₓ (cons _) (take'_nil _)
 
 theorem take'_eq_take : ∀ {n} {l : List α}, n ≤ length l → take' n l = take n l
   | 0, l, h => rfl
-  | n+1, a :: l, h => congr_argₓ (cons _) $ take'_eq_take $ le_of_succ_le_succ h
+  | n + 1, a :: l, h => congr_argₓ (cons _) $ take'_eq_take $ le_of_succ_le_succ h
 
 @[simp]
 theorem take'_left (l₁ l₂ : List α) : take' (length l₁) (l₁ ++ l₂) = l₁ :=
@@ -3521,16 +2374,16 @@ end Take'
 theorem foldl_ext (f g : α → β → α) (a : α) {l : List β} (H : ∀ a : α, ∀, ∀ b ∈ l, ∀, f a b = g a b) :
     foldl f a l = foldl g a l := by
   induction' l with hd tl ih generalizing a
-  ·
-    rfl
+  · rfl
+    
   unfold foldl
   rw [ih fun a b bin => H a b $ mem_cons_of_mem _ bin, H a hd (mem_cons_self _ _)]
 
 theorem foldr_ext (f g : α → β → β) (b : β) {l : List α} (H : ∀, ∀ a ∈ l, ∀, ∀ b : β, f a b = g a b) :
     foldr f b l = foldr g b l := by
   induction' l with hd tl ih
-  ·
-    rfl
+  · rfl
+    
   simp only [mem_cons_iff, or_imp_distrib, forall_and_distrib, forall_eq] at H
   simp only [foldr, ih H.2, H.1]
 
@@ -3575,11 +2428,10 @@ theorem foldr_join (f : α → β → β) : ∀ b : β L : List (List α), foldr
     simp only [join, foldr_append, foldr_join a L, foldr_cons]
 
 theorem foldl_reverse (f : α → β → α) (a : α) (l : List β) : foldl f a (reverse l) = foldr (fun x y => f y x) a l := by
-  induction l <;> [rfl, simp only [reverse_cons, foldl_append, foldl_cons, foldl_nil, foldr]]
+  induction l <;> [rfl, simp only [*, reverse_cons, foldl_append, foldl_cons, foldl_nil, foldr]]
 
-theorem foldr_reverse (f : α → β → β) (a : β) (l : List α) : foldr f a (reverse l) = foldl (fun x y => f y x) a l :=
+theorem foldr_reverse (f : α → β → β) (a : β) (l : List α) : foldr f a (reverse l) = foldl (fun x y => f y x) a l := by
   let t := foldl_reverse (fun x y => f y x) a (reverse l)
-  by
   rw [reverse_reverse l] at t <;> rwa [t]
 
 @[simp]
@@ -3595,80 +2447,91 @@ theorem reverse_foldl {l : List α} : reverse (foldl (fun t h => h :: t) [] l) =
 @[simp]
 theorem foldl_map (g : β → γ) (f : α → γ → α) (a : α) (l : List β) :
     foldl f a (map g l) = foldl (fun x y => f x (g y)) a l := by
-  revert a <;> induction l <;> intros <;> [rfl, simp only [map, foldl]]
+  revert a <;> induction l <;> intros <;> [rfl, simp only [*, map, foldl]]
 
 @[simp]
 theorem foldr_map (g : β → γ) (f : γ → α → α) (a : α) (l : List β) : foldr f a (map g l) = foldr (f ∘ g) a l := by
-  revert a <;> induction l <;> intros <;> [rfl, simp only [map, foldr]]
+  revert a <;> induction l <;> intros <;> [rfl, simp only [*, map, foldr]]
 
 theorem foldl_map' {α β : Type u} (g : α → β) (f : α → α → α) (f' : β → β → β) (a : α) (l : List α)
     (h : ∀ x y, f' (g x) (g y) = g (f x y)) : List.foldlₓ f' (g a) (l.map g) = g (List.foldlₓ f a l) := by
   induction l generalizing a
-  ·
-    simp
-  ·
-    simp [l_ih, h]
+  · simp
+    
+  · simp [l_ih, h]
+    
 
 theorem foldr_map' {α β : Type u} (g : α → β) (f : α → α → α) (f' : β → β → β) (a : α) (l : List α)
     (h : ∀ x y, f' (g x) (g y) = g (f x y)) : List.foldr f' (g a) (l.map g) = g (List.foldr f a l) := by
   induction l generalizing a
-  ·
-    simp
-  ·
-    simp [l_ih, h]
+  · simp
+    
+  · simp [l_ih, h]
+    
 
 theorem foldl_hom (l : List γ) (f : α → β) (op : α → γ → α) (op' : β → γ → β) (a : α)
     (h : ∀ a x, f (op a x) = op' (f a) x) : foldl op' (f a) l = f (foldl op a l) :=
   Eq.symm $ by
     revert a
-    induction l <;> intros <;> [rfl, simp only [foldl]]
+    induction l <;> intros <;> [rfl, simp only [*, foldl]]
 
 theorem foldr_hom (l : List γ) (f : α → β) (op : γ → α → α) (op' : γ → β → β) (a : α)
     (h : ∀ x a, f (op x a) = op' x (f a)) : foldr op' (f a) l = f (foldr op a l) := by
   revert a
-  induction l <;> intros <;> [rfl, simp only [foldr]]
+  induction l <;> intros <;> [rfl, simp only [*, foldr]]
+
+theorem foldl_hom₂ (l : List ι) (f : α → β → γ) (op₁ : α → ι → α) (op₂ : β → ι → β) (op₃ : γ → ι → γ) (a : α) (b : β)
+    (h : ∀ a b i, f (op₁ a i) (op₂ b i) = op₃ (f a b) i) : foldl op₃ (f a b) l = f (foldl op₁ a l) (foldl op₂ b l) :=
+  Eq.symm $ by
+    revert a b
+    induction l <;> intros <;> [rfl, simp only [*, foldl]]
+
+theorem foldr_hom₂ (l : List ι) (f : α → β → γ) (op₁ : ι → α → α) (op₂ : ι → β → β) (op₃ : ι → γ → γ) (a : α) (b : β)
+    (h : ∀ a b i, f (op₁ i a) (op₂ i b) = op₃ i (f a b)) : foldr op₃ (f a b) l = f (foldr op₁ a l) (foldr op₂ b l) := by
+  revert a
+  induction l <;> intros <;> [rfl, simp only [*, foldr]]
 
 theorem injective_foldl_comp {α : Type _} {l : List (α → α)} {f : α → α} (hl : ∀, ∀ f ∈ l, ∀, Function.Injective f)
     (hf : Function.Injective f) : Function.Injective (@List.foldlₓ (α → α) (α → α) Function.comp f l) := by
   induction l generalizing f
-  ·
-    exact hf
-  ·
-    apply l_ih fun _ h => hl _ (List.mem_cons_of_memₓ _ h)
+  · exact hf
+    
+  · apply l_ih fun _ h => hl _ (List.mem_cons_of_memₓ _ h)
     apply Function.Injective.comp hf
     apply hl _ (List.mem_cons_selfₓ _ _)
+    
 
-/--  Induction principle for values produced by a `foldr`: if a property holds
+/-- Induction principle for values produced by a `foldr`: if a property holds
 for the seed element `b : β` and for all incremental `op : α → β → β`
 performed on the elements `(a : α) ∈ l`. The principle is given for
 a `Sort`-valued predicate, i.e., it can also be used to construct data. -/
 def foldr_rec_on {C : β → Sort _} (l : List α) (op : α → β → β) (b : β) (hb : C b)
     (hl : ∀ b : β hb : C b a : α ha : a ∈ l, C (op a b)) : C (foldr op b l) := by
   induction' l with hd tl IH
-  ·
-    exact hb
-  ·
-    refine' hl _ _ hd (mem_cons_self hd tl)
+  · exact hb
+    
+  · refine' hl _ _ hd (mem_cons_self hd tl)
     refine' IH _
     intro y hy x hx
     exact hl y hy x (mem_cons_of_mem hd hx)
+    
 
-/--  Induction principle for values produced by a `foldl`: if a property holds
+/-- Induction principle for values produced by a `foldl`: if a property holds
 for the seed element `b : β` and for all incremental `op : β → α → β`
 performed on the elements `(a : α) ∈ l`. The principle is given for
 a `Sort`-valued predicate, i.e., it can also be used to construct data. -/
 def foldl_rec_on {C : β → Sort _} (l : List α) (op : β → α → β) (b : β) (hb : C b)
     (hl : ∀ b : β hb : C b a : α ha : a ∈ l, C (op b a)) : C (foldl op b l) := by
   induction' l with hd tl IH generalizing b
-  ·
-    exact hb
-  ·
-    refine' IH _ _ _
-    ·
-      intro y hy x hx
+  · exact hb
+    
+  · refine' IH _ _ _
+    · intro y hy x hx
       exact hl y hy x (mem_cons_of_mem hd hx)
-    ·
-      exact hl b hb hd (mem_cons_self hd tl)
+      
+    · exact hl b hb hd (mem_cons_self hd tl)
+      
+    
 
 @[simp]
 theorem foldr_rec_on_nil {C : β → Sort _} (op : α → β → β) b (hb : C b) hl : foldr_rec_on [] op b hb hl = hb :=
@@ -3689,7 +2552,7 @@ section Scanl
 
 variable {f : β → α → β} {b : β} {a : α} {l : List α}
 
-theorem length_scanl : ∀ a l, length (scanl f a l) = l.length+1
+theorem length_scanl : ∀ a l, length (scanl f a l) = l.length + 1
   | a, [] => rfl
   | a, x :: l => by
     erw [length_cons, length_cons, length_scanl]
@@ -3705,59 +2568,59 @@ theorem scanl_cons : scanl f b (a :: l) = [b] ++ scanl f (f b a) l := by
 @[simp]
 theorem nth_zero_scanl : (scanl f b l).nth 0 = some b := by
   cases l
-  ·
-    simp only [nth, scanl_nil]
-  ·
-    simp only [nth, scanl_cons, singleton_append]
+  · simp only [nth, scanl_nil]
+    
+  · simp only [nth, scanl_cons, singleton_append]
+    
 
 @[simp]
 theorem nth_le_zero_scanl {h : 0 < (scanl f b l).length} : (scanl f b l).nthLe 0 h = b := by
   cases l
-  ·
-    simp only [nth_le, scanl_nil]
-  ·
-    simp only [nth_le, scanl_cons, singleton_append]
+  · simp only [nth_le, scanl_nil]
+    
+  · simp only [nth_le, scanl_cons, singleton_append]
+    
 
 theorem nth_succ_scanl {i : ℕ} :
-    (scanl f b l).nth (i+1) = ((scanl f b l).nth i).bind fun x => (l.nth i).map fun y => f x y := by
+    (scanl f b l).nth (i + 1) = ((scanl f b l).nth i).bind fun x => (l.nth i).map fun y => f x y := by
   induction' l with hd tl hl generalizing b i
-  ·
-    symm
+  · symm
     simp only [Option.bind_eq_none', nth, forall_2_true_iff, not_false_iff, Option.map_none'ₓ, scanl_nil,
       Option.not_mem_none, forall_true_iff]
-  ·
-    simp only [nth, scanl_cons, singleton_append]
+    
+  · simp only [nth, scanl_cons, singleton_append]
     cases i
-    ·
-      simp only [Option.map_some'ₓ, nth_zero_scanl, nth, Option.some_bind']
-    ·
-      simp only [hl, nth]
+    · simp only [Option.map_some'ₓ, nth_zero_scanl, nth, Option.some_bind']
+      
+    · simp only [hl, nth]
+      
+    
 
-theorem nth_le_succ_scanl {i : ℕ} {h : (i+1) < (scanl f b l).length} :
-    (scanl f b l).nthLe (i+1) h =
+theorem nth_le_succ_scanl {i : ℕ} {h : i + 1 < (scanl f b l).length} :
+    (scanl f b l).nthLe (i + 1) h =
       f ((scanl f b l).nthLe i (Nat.lt_of_succ_ltₓ h))
         (l.nth_le i (Nat.lt_of_succ_lt_succₓ (lt_of_lt_of_leₓ h (le_of_eqₓ (length_scanl b l))))) :=
   by
   induction' i with i hi generalizing b l
-  ·
-    cases l
-    ·
-      simp only [length, zero_addₓ, scanl_nil] at h
+  · cases l
+    · simp only [length, zero_addₓ, scanl_nil] at h
       exact absurd h (lt_irreflₓ 1)
-    ·
-      simp only [scanl_cons, singleton_append, nth_le_zero_scanl, nth_le]
-  ·
-    cases l
-    ·
-      simp only [length, add_lt_iff_neg_right, scanl_nil] at h
+      
+    · simp only [scanl_cons, singleton_append, nth_le_zero_scanl, nth_le]
+      
+    
+  · cases l
+    · simp only [length, add_lt_iff_neg_right, scanl_nil] at h
       exact absurd h (not_lt_of_lt Nat.succ_pos')
-    ·
-      simp_rw [scanl_cons]
+      
+    · simp_rw [scanl_cons]
       rw [nth_le_append_right _]
-      ·
-        simpa only [hi, length, succ_add_sub_one]
-      ·
-        simp only [length, Nat.zero_leₓ, le_add_iff_nonneg_left]
+      · simpa only [hi, length, succ_add_sub_one]
+        
+      · simp only [length, Nat.zero_leₓ, le_add_iff_nonneg_left]
+        
+      
+    
 
 end Scanl
 
@@ -3769,9 +2632,8 @@ theorem scanr_nil (f : α → β → β) (b : β) : scanr f b [] = [b] :=
 theorem scanr_aux_cons (f : α → β → β) (b : β) :
     ∀ a : α l : List α, scanr_aux f b (a :: l) = (foldr f b (a :: l), scanr f b l)
   | a, [] => rfl
-  | a, x :: l =>
+  | a, x :: l => by
     let t := scanr_aux_cons x l
-    by
     simp only [scanr, scanr_aux, t, foldr_cons]
 
 @[simp]
@@ -3852,10 +2714,11 @@ include ha
 theorem foldl_assoc : ∀ {l : List α} {a₁ a₂}, (l<*>a₁*a₂) = a₁*l<*>a₂
   | [], a₁, a₂ => rfl
   | a :: l, a₁, a₂ =>
-    calc ((a :: l)<*>a₁*a₂) = l<*>a₁*a₂*a := by
-      simp only [foldl_cons, ha.assoc]
+    calc
+      ((a :: l)<*>a₁*a₂) = l<*>a₁*a₂*a := by
+        simp only [foldl_cons, ha.assoc]
       _ = a₁*(a :: l)<*>a₂ := by
-      rw [foldl_assoc, foldl_cons]
+        rw [foldl_assoc, foldl_cons]
       
 
 theorem foldl_op_eq_op_foldr_assoc : ∀ {l : List α} {a₁ a₂}, ((l<*>a₁)*a₂) = a₁*l.foldr (·*·) a₂
@@ -3894,7 +2757,7 @@ theorem mfoldr_cons {f : α → β → m β} {b a l} : mfoldr f b (a :: l) = mfo
   rfl
 
 theorem mfoldr_eq_foldr (f : α → β → m β) b l : mfoldr f b l = foldr (fun a mb => mb >>= f a) (pure b) l := by
-  induction l <;> simp
+  induction l <;> simp [*]
 
 attribute [simp] mmap mmap'
 
@@ -3903,13 +2766,13 @@ variable [IsLawfulMonad m]
 theorem mfoldl_eq_foldl (f : β → α → m β) b l : mfoldl f b l = foldl (fun mb a => mb >>= fun b => f b a) (pure b) l :=
   by
   suffices h : ∀ mb : m β, (mb >>= fun b => mfoldl f b l) = foldl (fun mb a => mb >>= fun b => f b a) mb l
-  ·
-    simp [← h (pure b)]
+  · simp [← h (pure b)]
+    
   induction l <;> intro
-  ·
-    simp
-  ·
-    simp' only [mfoldl, foldl, ← l_ih] with functor_norm
+  · simp
+    
+  · simp' only [mfoldl, foldl, ← l_ih] with functor_norm
+    
 
 @[simp]
 theorem mfoldl_append {f : β → α → m β} : ∀ {b l₁ l₂}, mfoldl f b (l₁ ++ l₂) = mfoldl f b l₁ >>= fun x => mfoldl f x l₂
@@ -3957,7 +2820,7 @@ theorem split_at_eq_take_drop : ∀ n : ℕ l : List α, split_at n l = (take n 
 theorem split_on_nil {α : Type u} [DecidableEq α] (a : α) : [].splitOn a = [[]] :=
   rfl
 
-/--  An auxiliary definition for proving a specification lemma for `split_on_p`.
+/-- An auxiliary definition for proving a specification lemma for `split_on_p`.
 
 `split_on_p_aux' P xs ys` splits the list `ys ++ xs` at every element satisfying `P`,
 where `ys` is an accumulating parameter for the initial segment of elements not satisfying `P`.
@@ -3966,25 +2829,25 @@ def split_on_p_aux' {α : Type u} (P : α → Prop) [DecidablePred P] : List α 
   | [], xs => [xs]
   | h :: t, xs => if P h then xs :: split_on_p_aux' t [] else split_on_p_aux' t (xs ++ [h])
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 theorem split_on_p_aux_eq {α : Type u} (P : α → Prop) [DecidablePred P] (xs ys : List α) :
     split_on_p_aux' P xs ys = split_on_p_aux P xs ((· ++ ·) ys) := by
   induction' xs with a t ih generalizing ys <;> simp only [append_nil, eq_self_iff_true, and_selfₓ]
   split_ifs <;> rw [ih]
-  ·
-    refine' ⟨rfl, rfl⟩
-  ·
-    congr
+  · refine' ⟨rfl, rfl⟩
+    
+  · congr
     ext
     simp
+    
 
 theorem split_on_p_aux_nil {α : Type u} (P : α → Prop) [DecidablePred P] (xs : List α) :
     split_on_p_aux P xs id = split_on_p_aux' P xs [] := by
   rw [split_on_p_aux_eq]
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
-/--  The original list `L` can be recovered by joining the lists produced by `split_on_p p L`,
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+/-- The original list `L` can be recovered by joining the lists produced by `split_on_p p L`,
 interspersed with the elements `L.filter p`. -/
 theorem split_on_p_spec {α : Type u} (p : α → Prop) [DecidablePred p] (as : List α) :
     join (zip_with (· ++ ·) (split_on_p p as) (((as.filter p).map fun x => [x]) ++ [[]])) = as := by
@@ -3994,12 +2857,12 @@ theorem split_on_p_spec {α : Type u} (p : α → Prop) [DecidablePred p] (as : 
     rw [this]
     rfl
   induction as <;> intro <;> simp only [split_on_p_aux', append_nil]
-  split_ifs <;> simp [zip_with, join]
+  split_ifs <;> simp [zip_with, join, *]
 
 /-! ### map for partial functions -/
 
 
-/--  Partial map. If `f : Π a, p a → β` is a partial function defined on
+/-- Partial map. If `f : Π a, p a → β` is a partial function defined on
   `a : α` satisfying `p`, then `pmap f l h` is essentially the same as `map f l`
   but is defined only when all members of `l` satisfy `p`, using the proof
   to apply `f`. -/
@@ -4008,22 +2871,22 @@ def pmap {p : α → Prop} (f : ∀ a, p a → β) : ∀ l : List α, (∀, ∀ 
   | [], H => []
   | a :: l, H => f a (forall_mem_cons.1 H).1 :: pmap l (forall_mem_cons.1 H).2
 
-/--  "Attach" the proof that the elements of `l` are in `l` to produce a new list
+/-- "Attach" the proof that the elements of `l` are in `l` to produce a new list
   with the same elements but in the type `{x // x ∈ l}`. -/
 def attach (l : List α) : List { x // x ∈ l } :=
   pmap Subtype.mk l fun a => id
 
 theorem sizeof_lt_sizeof_of_mem [SizeOf α] {x : α} {l : List α} (hx : x ∈ l) : sizeof x < sizeof l := by
   induction' l with h t ih <;> cases hx
-  ·
-    rw [hx]
+  · rw [hx]
     exact lt_add_of_lt_of_nonneg (lt_one_add _) (Nat.zero_leₓ _)
-  ·
-    exact lt_add_of_pos_of_le (zero_lt_one_add _) (le_of_ltₓ (ih hx))
+    
+  · exact lt_add_of_pos_of_le (zero_lt_one_add _) (le_of_ltₓ (ih hx))
+    
 
 @[simp]
 theorem pmap_eq_map (p : α → Prop) (f : α → β) (l : List α) H : @pmap _ _ p (fun a _ => f a) l H = map f l := by
-  induction l <;> [rfl, simp only [pmap, map]] <;> constructor <;> rfl
+  induction l <;> [rfl, simp only [*, pmap, map]] <;> constructor <;> rfl
 
 theorem pmap_congr {p q : α → Prop} {f : ∀ a, p a → β} {g : ∀ a, q a → β} (l : List α) {H₁ H₂}
     (h : ∀ a h₁ h₂, f a h₁ = g a h₂) : pmap f l H₁ = pmap g l H₂ := by
@@ -4031,11 +2894,11 @@ theorem pmap_congr {p q : α → Prop} {f : ∀ a, p a → β} {g : ∀ a, q a �
 
 theorem map_pmap {p : α → Prop} (g : β → γ) (f : ∀ a, p a → β) l H :
     map g (pmap f l H) = pmap (fun a h => g (f a h)) l H := by
-  induction l <;> [rfl, simp only [pmap, map]] <;> constructor <;> rfl
+  induction l <;> [rfl, simp only [*, pmap, map]] <;> constructor <;> rfl
 
 theorem pmap_map {p : β → Prop} (g : ∀ b, p b → γ) (f : α → β) l H :
     pmap g (map f l) H = pmap (fun a h => g (f a) h) l fun a h => H _ (mem_map_of_mem _ h) := by
-  induction l <;> [rfl, simp only [pmap, map]] <;> constructor <;> rfl
+  induction l <;> [rfl, simp only [*, pmap, map]] <;> constructor <;> rfl
 
 theorem pmap_eq_map_attach {p : α → Prop} (f : ∀ a, p a → β) l H : pmap f l H = l.attach.map fun x => f x.1 (H _ x.2) :=
   by
@@ -4051,9 +2914,9 @@ theorem mem_attach (l : List α) : ∀ x, x ∈ l.attach
         mem_map.1
           (by
             rw [attach_map_val] <;> exact h) <;>
-      ·
-        rcases this with ⟨⟨_, _⟩, m, rfl⟩
+      · rcases this with ⟨⟨_, _⟩, m, rfl⟩
         exact m
+        
 
 @[simp]
 theorem mem_pmap {p : α → Prop} {f : ∀ a, p a → β} {l H b} : b ∈ pmap f l H ↔ ∃ (a : _)(h : a ∈ l), f a (H a h) = b :=
@@ -4062,7 +2925,7 @@ theorem mem_pmap {p : α → Prop} {f : ∀ a, p a → β} {l H b} : b ∈ pmap 
 
 @[simp]
 theorem length_pmap {p : α → Prop} {f : ∀ a, p a → β} {l H} : length (pmap f l H) = length l := by
-  induction l <;> [rfl, simp only [pmap, length]]
+  induction l <;> [rfl, simp only [*, pmap, length]]
 
 @[simp]
 theorem length_attach (L : List α) : L.attach.length = L.length :=
@@ -4079,22 +2942,22 @@ theorem attach_eq_nil (l : List α) : l.attach = [] ↔ l = [] :=
 theorem last_pmap {α β : Type _} (p : α → Prop) (f : ∀ a, p a → β) (l : List α) (hl₁ : ∀, ∀ a ∈ l, ∀, p a)
     (hl₂ : l ≠ []) : (l.pmap f hl₁).last (mt List.pmap_eq_nil.1 hl₂) = f (l.last hl₂) (hl₁ _ (List.last_mem hl₂)) := by
   induction' l with l_hd l_tl l_ih
-  ·
-    apply (hl₂ rfl).elim
-  ·
-    cases l_tl
-    ·
-      simp
-    ·
-      apply l_ih
+  · apply (hl₂ rfl).elim
+    
+  · cases l_tl
+    · simp
+      
+    · apply l_ih
+      
+    
 
 theorem nth_pmap {p : α → Prop} (f : ∀ a, p a → β) {l : List α} (h : ∀, ∀ a ∈ l, ∀, p a) (n : ℕ) :
     nth (pmap f l h) n = Option.pmap f (nth l n) fun x H => h x (nth_mem H) := by
   induction' l with hd tl hl generalizing n
-  ·
-    simp
-  ·
-    cases n <;> simp [hl]
+  · simp
+    
+  · cases n <;> simp [hl]
+    
 
 theorem nth_le_pmap {p : α → Prop} (f : ∀ a, p a → β) {l : List α} (h : ∀, ∀ a ∈ l, ∀, p a) {n : ℕ}
     (hn : n < (pmap f l h).length) :
@@ -4102,15 +2965,15 @@ theorem nth_le_pmap {p : α → Prop} (f : ∀ a, p a → β) {l : List α} (h :
       f (nth_le l n (@length_pmap _ _ p f l h ▸ hn)) (h _ (nth_le_mem l n (@length_pmap _ _ p f l h ▸ hn))) :=
   by
   induction' l with hd tl hl generalizing n
-  ·
-    simp only [length, pmap] at hn
+  · simp only [length, pmap] at hn
     exact absurd hn (not_lt_of_le n.zero_le)
-  ·
-    cases n
-    ·
-      simp
-    ·
-      simpa [hl]
+    
+  · cases n
+    · simp
+      
+    · simpa [hl]
+      
+    
 
 /-! ### find -/
 
@@ -4134,41 +2997,41 @@ theorem find_cons_of_neg l (h : ¬p a) : find p (a :: l) = find p l :=
 @[simp]
 theorem find_eq_none : find p l = none ↔ ∀, ∀ x ∈ l, ∀, ¬p x := by
   induction' l with a l IH
-  ·
-    exact iff_of_true rfl (forall_mem_nil _)
+  · exact iff_of_true rfl (forall_mem_nil _)
+    
   rw [forall_mem_cons]
   by_cases' h : p a
-  ·
-    simp only [find_cons_of_pos _ h, h, not_true, false_andₓ]
-  ·
-    rwa [find_cons_of_neg _ h, iff_true_intro h, true_andₓ]
+  · simp only [find_cons_of_pos _ h, h, not_true, false_andₓ]
+    
+  · rwa [find_cons_of_neg _ h, iff_true_intro h, true_andₓ]
+    
 
 theorem find_some (H : find p l = some a) : p a := by
   induction' l with b l IH
-  ·
-    contradiction
+  · contradiction
+    
   by_cases' h : p b
-  ·
-    rw [find_cons_of_pos _ h] at H
+  · rw [find_cons_of_pos _ h] at H
     cases H
     exact h
-  ·
-    rw [find_cons_of_neg _ h] at H
+    
+  · rw [find_cons_of_neg _ h] at H
     exact IH H
+    
 
 @[simp]
 theorem find_mem (H : find p l = some a) : a ∈ l := by
   induction' l with b l IH
-  ·
-    contradiction
+  · contradiction
+    
   by_cases' h : p b
-  ·
-    rw [find_cons_of_pos _ h] at H
+  · rw [find_cons_of_pos _ h] at H
     cases H
     apply mem_cons_self
-  ·
-    rw [find_cons_of_neg _ h] at H
+    
+  · rw [find_cons_of_neg _ h] at H
     exact mem_cons_of_mem _ (IH H)
+    
 
 end Find
 
@@ -4204,10 +3067,10 @@ theorem lookmap_congr {f g : α → Option α} : ∀ {l : List α}, (∀, ∀ a 
   | a :: l, H => by
     cases' forall_mem_cons.1 H with H₁ H₂
     cases' h : g a with b
-    ·
-      simp [h, H₁.trans h, lookmap_congr H₂]
-    ·
-      simp [lookmap_cons_some _ _ h, lookmap_cons_some _ _ (H₁.trans h)]
+    · simp [h, H₁.trans h, lookmap_congr H₂]
+      
+    · simp [lookmap_cons_some _ _ h, lookmap_cons_some _ _ (H₁.trans h)]
+      
 
 theorem lookmap_of_forall_not {l : List α} (H : ∀, ∀ a ∈ l, ∀, f a = none) : l.lookmap f = l :=
   (lookmap_congr H).trans (lookmap_none l)
@@ -4216,10 +3079,10 @@ theorem lookmap_map_eq (g : α → β) (h : ∀ a, ∀ b ∈ f a, ∀, g a = g b
   | [] => rfl
   | a :: l => by
     cases' h' : f a with b
-    ·
-      simp [h', lookmap_map_eq]
-    ·
-      simp [lookmap_cons_some _ _ h', h _ _ h']
+    · simp [h', lookmap_map_eq]
+      
+    · simp [lookmap_cons_some _ _ h', h _ _ h']
+      
 
 theorem lookmap_id' (h : ∀ a, ∀ b ∈ f a, ∀, a = b) (l : List α) : l.lookmap f = l := by
   rw [← map_id (l.lookmap f), lookmap_map_eq, map_id] <;> exact h
@@ -4250,49 +3113,49 @@ theorem filter_map_cons (f : α → Option β) (a : α) (l : List α) :
     filter_map f (a :: l) = Option.casesOn (f a) (filter_map f l) fun b => b :: filter_map f l := by
   generalize eq : f a = b
   cases b
-  ·
-    rw [filter_map_cons_none _ _ Eq]
-  ·
-    rw [filter_map_cons_some _ _ _ Eq]
+  · rw [filter_map_cons_none _ _ Eq]
+    
+  · rw [filter_map_cons_some _ _ _ Eq]
+    
 
 theorem filter_map_append {α β : Type _} (l l' : List α) (f : α → Option β) :
     filter_map f (l ++ l') = filter_map f l ++ filter_map f l' := by
   induction' l with hd tl hl generalizing l'
-  ·
-    simp
-  ·
-    rw [cons_append, filter_map, filter_map]
+  · simp
+    
+  · rw [cons_append, filter_map, filter_map]
     cases f hd <;> simp only [filter_map, hl, cons_append, eq_self_iff_true, and_selfₓ]
+    
 
 theorem filter_map_eq_map (f : α → β) : filter_map (some ∘ f) = map f := by
   funext l
   induction' l with a l IH
-  ·
-    rfl
+  · rfl
+    
   simp only [filter_map_cons_some (some ∘ f) _ _ rfl, IH, map_cons]
   constructor <;> rfl
 
 theorem filter_map_eq_filter (p : α → Prop) [DecidablePred p] : filter_map (Option.guard p) = filter p := by
   funext l
   induction' l with a l IH
-  ·
-    rfl
+  · rfl
+    
   by_cases' pa : p a
-  ·
-    simp only [filter_map, Option.guard, IH, if_pos pa, filter_cons_of_pos _ pa]
+  · simp only [filter_map, Option.guard, IH, if_pos pa, filter_cons_of_pos _ pa]
     constructor <;> rfl
-  ·
-    simp only [filter_map, Option.guard, IH, if_neg pa, filter_cons_of_neg _ pa]
+    
+  · simp only [filter_map, Option.guard, IH, if_neg pa, filter_cons_of_neg _ pa]
+    
 
 theorem filter_map_filter_map (f : α → Option β) (g : β → Option γ) (l : List α) :
     filter_map g (filter_map f l) = filter_map (fun x => (f x).bind g) l := by
   induction' l with a l IH
-  ·
-    rfl
+  · rfl
+    
   cases' h : f a with b
-  ·
-    rw [filter_map_cons_none _ _ h, filter_map_cons_none, IH]
+  · rw [filter_map_cons_none _ _ h, filter_map_cons_none, IH]
     simp only [h, Option.none_bind']
+    
   rw [filter_map_cons_some _ _ _ h]
   cases' h' : g b with c <;> [rw [filter_map_cons_none _ _ h', filter_map_cons_none, IH],
       rw [filter_map_cons_some _ _ _ h', filter_map_cons_some, IH]] <;>
@@ -4316,10 +3179,10 @@ theorem filter_map_filter (p : α → Prop) [DecidablePred p] (f : α → Option
   funext x
   show (Option.guard p x).bind f = ite (p x) (f x) none
   by_cases' h : p x
-  ·
-    simp only [Option.guard, if_pos h, Option.some_bind']
-  ·
-    simp only [Option.guard, if_neg h, Option.none_bind']
+  · simp only [Option.guard, if_pos h, Option.some_bind']
+    
+  · simp only [Option.guard, if_neg h, Option.none_bind']
+    
 
 @[simp]
 theorem filter_map_some (l : List α) : filter_map some l = l := by
@@ -4328,31 +3191,31 @@ theorem filter_map_some (l : List α) : filter_map some l = l := by
 @[simp]
 theorem mem_filter_map (f : α → Option β) (l : List α) {b : β} : b ∈ filter_map f l ↔ ∃ a, a ∈ l ∧ f a = some b := by
   induction' l with a l IH
-  ·
-    constructor
-    ·
-      intro H
+  · constructor
+    · intro H
       cases H
-    ·
-      rintro ⟨_, H, _⟩
+      
+    · rintro ⟨_, H, _⟩
       cases H
+      
+    
   cases' h : f a with b'
-  ·
-    have : f a ≠ some b := by
+  · have : f a ≠ some b := by
       rw [h]
       intro
       contradiction
     simp only [filter_map_cons_none _ _ h, IH, mem_cons_iff, or_and_distrib_right, exists_or_distrib, exists_eq_left,
       this, false_orₓ]
-  ·
-    have : f a = some b ↔ b = b' := by
+    
+  · have : f a = some b ↔ b = b' := by
       constructor <;> intro t
-      ·
-        rw [t] at h <;> injection h
-      ·
-        exact t.symm ▸ h
+      · rw [t] at h <;> injection h
+        
+      · exact t.symm ▸ h
+        
     simp only [filter_map_cons_some _ _ _ h, IH, mem_cons_iff, or_and_distrib_right, exists_or_distrib, this,
       exists_eq_left]
+    
 
 theorem map_filter_map_of_inv (f : α → Option β) (g : β → α) (H : ∀ x : α, (f x).map g = some x) (l : List α) :
     map g (filter_map f l) = l := by
@@ -4385,47 +3248,47 @@ theorem reduce_option_nil : @reduce_option α [] = [] :=
 theorem reduce_option_map {l : List (Option α)} {f : α → β} :
     reduce_option (map (Option.map f) l) = map f (reduce_option l) := by
   induction' l with hd tl hl
-  ·
-    simp only [reduce_option_nil, map_nil]
-  ·
-    cases hd <;> simpa only [true_andₓ, Option.map_some'ₓ, map, eq_self_iff_true, reduce_option_cons_of_some] using hl
+  · simp only [reduce_option_nil, map_nil]
+    
+  · cases hd <;> simpa only [true_andₓ, Option.map_some'ₓ, map, eq_self_iff_true, reduce_option_cons_of_some] using hl
+    
 
 theorem reduce_option_append (l l' : List (Option α)) : (l ++ l').reduceOption = l.reduce_option ++ l'.reduce_option :=
   filter_map_append l l' id
 
 theorem reduce_option_length_le (l : List (Option α)) : l.reduce_option.length ≤ l.length := by
   induction' l with hd tl hl
-  ·
-    simp only [reduce_option_nil, length]
-  ·
-    cases hd
-    ·
-      exact Nat.le_succ_of_leₓ hl
-    ·
-      simpa only [length, add_le_add_iff_right, reduce_option_cons_of_some] using hl
+  · simp only [reduce_option_nil, length]
+    
+  · cases hd
+    · exact Nat.le_succ_of_leₓ hl
+      
+    · simpa only [length, add_le_add_iff_right, reduce_option_cons_of_some] using hl
+      
+    
 
 theorem reduce_option_length_eq_iff {l : List (Option α)} :
     l.reduce_option.length = l.length ↔ ∀, ∀ x ∈ l, ∀, Option.isSome x := by
   induction' l with hd tl hl
-  ·
-    simp only [forall_const, reduce_option_nil, not_mem_nil, forall_prop_of_false, eq_self_iff_true, length,
+  · simp only [forall_const, reduce_option_nil, not_mem_nil, forall_prop_of_false, eq_self_iff_true, length,
       not_false_iff]
-  ·
-    cases hd
-    ·
-      simp only [mem_cons_iff, forall_eq_or_imp, Bool.coe_sort_ff, false_andₓ, reduce_option_cons_of_none, length,
+    
+  · cases hd
+    · simp only [mem_cons_iff, forall_eq_or_imp, Bool.coe_sort_ff, false_andₓ, reduce_option_cons_of_none, length,
         Option.is_some_none, iff_falseₓ]
       intro H
       have := reduce_option_length_le tl
       rw [H] at this
       exact absurd (Nat.lt_succ_selfₓ _) (not_lt_of_le this)
-    ·
-      simp only [hl, true_andₓ, mem_cons_iff, forall_eq_or_imp, add_left_injₓ, Bool.coe_sort_tt, length,
+      
+    · simp only [hl, true_andₓ, mem_cons_iff, forall_eq_or_imp, add_left_injₓ, Bool.coe_sort_tt, length,
         Option.is_some_some, reduce_option_cons_of_some]
+      
+    
 
 theorem reduce_option_length_lt_iff {l : List (Option α)} : l.reduce_option.length < l.length ↔ none ∈ l := by
   rw [(reduce_option_length_le l).lt_iff_ne, Ne, reduce_option_length_eq_iff]
-  induction l <;> simp
+  induction l <;> simp [*]
   rw [eq_comm, ← Option.not_is_some_iff_eq_none, Decidable.imp_iff_not_or]
 
 theorem reduce_option_singleton (x : Option α) : [x].reduceOption = x.to_list := by
@@ -4434,11 +3297,11 @@ theorem reduce_option_singleton (x : Option α) : [x].reduceOption = x.to_list :
 theorem reduce_option_concat (l : List (Option α)) (x : Option α) :
     (l.concat x).reduceOption = l.reduce_option ++ x.to_list := by
   induction' l with hd tl hl generalizing x
-  ·
-    cases x <;> simp [Option.toList]
-  ·
-    simp only [concat_eq_append, reduce_option_append] at hl
+  · cases x <;> simp [Option.toList]
+    
+  · simp only [concat_eq_append, reduce_option_append] at hl
     cases hd <;> simp [hl, reduce_option_append]
+    
 
 theorem reduce_option_concat_of_some (l : List (Option α)) (x : α) :
     (l.concat (some x)).reduceOption = l.reduce_option.concat x := by
@@ -4460,7 +3323,7 @@ variable {p : α → Prop} [DecidablePred p]
 
 theorem filter_eq_foldr (p : α → Prop) [DecidablePred p] (l : List α) :
     filter p l = foldr (fun a out => if p a then a :: out else out) [] l := by
-  induction l <;> simp [filter]
+  induction l <;> simp [*, filter]
 
 theorem filter_congr {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
     ∀ {l : List α}, (∀, ∀ x ∈ l, ∀, p x ↔ q x) → filter p l = filter q l
@@ -4513,19 +3376,19 @@ theorem monotone_filter_left (p : α → Prop) [DecidablePred p] ⦃l l' : List 
 
 theorem filter_eq_self {l} : filter p l = l ↔ ∀, ∀ a ∈ l, ∀, p a := by
   induction' l with a l ih
-  ·
-    exact iff_of_true rfl (forall_mem_nil _)
+  · exact iff_of_true rfl (forall_mem_nil _)
+    
   rw [forall_mem_cons]
   by_cases' p a
-  ·
-    rw [filter_cons_of_pos _ h, cons_inj, ih, and_iff_right h]
-  ·
-    rw [filter_cons_of_neg _ h]
+  · rw [filter_cons_of_pos _ h, cons_inj, ih, and_iff_right h]
+    
+  · rw [filter_cons_of_neg _ h]
     refine' iff_of_false _ (mt And.left h)
     intro e
     have := filter_sublist l
     rw [e] at this
     exact not_lt_of_geₓ (length_le_of_sublist this) (lt_succ_self _)
+    
 
 theorem filter_eq_nil {l} : filter p l = [] ↔ ∀, ∀ a ∈ l, ∀, ¬p a := by
   simp only [eq_nil_iff_forall_not_mem, mem_filter, not_and]
@@ -4538,22 +3401,22 @@ theorem sublist.filter {l₁ l₂} (s : l₁ <+ l₂) : filter p l₁ <+ filter 
 theorem monotone_filter_right (l : List α) ⦃p q : α → Prop⦄ [DecidablePred p] [DecidablePred q] (h : p ≤ q) :
     l.filter p <+ l.filter q := by
   induction' l with hd tl IH
-  ·
-    rfl
-  ·
-    by_cases' hp : p hd
-    ·
-      rw [filter_cons_of_pos _ hp, filter_cons_of_pos _ (h _ hp)]
+  · rfl
+    
+  · by_cases' hp : p hd
+    · rw [filter_cons_of_pos _ hp, filter_cons_of_pos _ (h _ hp)]
       exact IH.cons_cons hd
-    ·
-      rw [filter_cons_of_neg _ hp]
+      
+    · rw [filter_cons_of_neg _ hp]
       by_cases' hq : q hd
-      ·
-        rw [filter_cons_of_pos _ hq]
+      · rw [filter_cons_of_pos _ hq]
         exact sublist_cons_of_sublist hd IH
-      ·
-        rw [filter_cons_of_neg _ hq]
+        
+      · rw [filter_cons_of_neg _ hq]
         exact IH
+        
+      
+    
 
 theorem map_filter (f : β → α) (l : List β) : filter p (map f l) = map f (filter (p ∘ f) l) := by
   rw [← filter_map_eq_map, filter_filter_map, filter_map_filter] <;> rfl
@@ -4594,575 +3457,6 @@ theorem take_while_append_drop : ∀ l : List α, take_while p l ++ drop_while p
 
 end Filter
 
-/-! ### prefix, suffix, infix -/
-
-
-@[simp]
-theorem prefix_append (l₁ l₂ : List α) : l₁ <+: l₁ ++ l₂ :=
-  ⟨l₂, rfl⟩
-
-@[simp]
-theorem suffix_append (l₁ l₂ : List α) : l₂ <:+ l₁ ++ l₂ :=
-  ⟨l₁, rfl⟩
-
-theorem infix_append (l₁ l₂ l₃ : List α) : l₂ <:+: l₁ ++ l₂ ++ l₃ :=
-  ⟨l₁, l₃, rfl⟩
-
-@[simp]
-theorem infix_append' (l₁ l₂ l₃ : List α) : l₂ <:+: l₁ ++ (l₂ ++ l₃) := by
-  rw [← List.append_assoc] <;> apply infix_append
-
-theorem nil_prefix (l : List α) : [] <+: l :=
-  ⟨l, rfl⟩
-
-theorem nil_suffix (l : List α) : [] <:+ l :=
-  ⟨l, append_nil _⟩
-
-@[refl]
-theorem prefix_refl (l : List α) : l <+: l :=
-  ⟨[], append_nil _⟩
-
-@[refl]
-theorem suffix_refl (l : List α) : l <:+ l :=
-  ⟨[], rfl⟩
-
-@[simp]
-theorem suffix_cons (a : α) : ∀ l, l <:+ a :: l :=
-  suffix_append [a]
-
-theorem prefix_concat (a : α) l : l <+: concat l a := by
-  simp
-
-theorem is_prefix.is_infix {l₁ l₂ : List α} : l₁ <+: l₂ → l₁ <:+: l₂ := fun ⟨t, h⟩ => ⟨[], t, h⟩
-
-theorem is_suffix.is_infix {l₁ l₂ : List α} : l₁ <:+ l₂ → l₁ <:+: l₂ := fun ⟨t, h⟩ =>
-  ⟨t, [], by
-    simp only [h, append_nil]⟩
-
-@[refl]
-theorem infix_refl (l : List α) : l <:+: l :=
-  (prefix_refl l).IsInfix
-
-theorem nil_infix (l : List α) : [] <:+: l :=
-  (nil_prefix l).IsInfix
-
-theorem infix_cons {L₁ L₂ : List α} {x : α} : L₁ <:+: L₂ → L₁ <:+: x :: L₂ := fun ⟨LP, LS, H⟩ => ⟨x :: LP, LS, H ▸ rfl⟩
-
-@[trans]
-theorem is_prefix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <+: l₂ → l₂ <+: l₃ → l₁ <+: l₃
-  | l, _, _, ⟨r₁, rfl⟩, ⟨r₂, rfl⟩ => ⟨r₁ ++ r₂, (append_assoc _ _ _).symm⟩
-
-@[trans]
-theorem is_suffix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+ l₂ → l₂ <:+ l₃ → l₁ <:+ l₃
-  | l, _, _, ⟨l₁, rfl⟩, ⟨l₂, rfl⟩ => ⟨l₂ ++ l₁, append_assoc _ _ _⟩
-
-@[trans]
-theorem is_infix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+: l₂ → l₂ <:+: l₃ → l₁ <:+: l₃
-  | l, _, _, ⟨l₁, r₁, rfl⟩, ⟨l₂, r₂, rfl⟩ =>
-    ⟨l₂ ++ l₁, r₁ ++ r₂, by
-      simp only [append_assoc]⟩
-
-protected theorem is_infix.sublist {l₁ l₂ : List α} : l₁ <:+: l₂ → l₁ <+ l₂ := fun ⟨s, t, h⟩ => by
-  rw [← h] <;> exact (sublist_append_right _ _).trans (sublist_append_left _ _)
-
-protected theorem is_prefix.sublist {l₁ l₂ : List α} (h : l₁ <+: l₂) : l₁ <+ l₂ :=
-  h.is_infix.sublist
-
-protected theorem is_suffix.sublist {l₁ l₂ : List α} (h : l₁ <:+ l₂) : l₁ <+ l₂ :=
-  h.is_infix.sublist
-
-@[simp]
-theorem reverse_suffix {l₁ l₂ : List α} : reverse l₁ <:+ reverse l₂ ↔ l₁ <+: l₂ :=
-  ⟨fun ⟨r, e⟩ =>
-    ⟨reverse r, by
-      rw [← reverse_reverse l₁, ← reverse_append, e, reverse_reverse]⟩,
-    fun ⟨r, e⟩ =>
-    ⟨reverse r, by
-      rw [← reverse_append, e]⟩⟩
-
-@[simp]
-theorem reverse_prefix {l₁ l₂ : List α} : reverse l₁ <+: reverse l₂ ↔ l₁ <:+ l₂ := by
-  rw [← reverse_suffix] <;> simp only [reverse_reverse]
-
-theorem infix.length_le {l₁ l₂ : List α} (s : l₁ <:+: l₂) : length l₁ ≤ length l₂ :=
-  length_le_of_sublist s.sublist
-
-theorem eq_nil_of_infix_nil {l : List α} (s : l <:+: []) : l = [] :=
-  eq_nil_of_sublist_nil s.sublist
-
-@[simp]
-theorem eq_nil_iff_infix_nil {l : List α} : l <:+: [] ↔ l = [] :=
-  ⟨eq_nil_of_infix_nil, fun h => h ▸ infix_refl _⟩
-
-theorem eq_nil_of_prefix_nil {l : List α} (s : l <+: []) : l = [] :=
-  eq_nil_of_infix_nil s.is_infix
-
-@[simp]
-theorem eq_nil_iff_prefix_nil {l : List α} : l <+: [] ↔ l = [] :=
-  ⟨eq_nil_of_prefix_nil, fun h => h ▸ prefix_refl _⟩
-
-theorem eq_nil_of_suffix_nil {l : List α} (s : l <:+ []) : l = [] :=
-  eq_nil_of_infix_nil s.is_infix
-
-@[simp]
-theorem eq_nil_iff_suffix_nil {l : List α} : l <:+ [] ↔ l = [] :=
-  ⟨eq_nil_of_suffix_nil, fun h => h ▸ suffix_refl _⟩
-
-theorem infix_iff_prefix_suffix (l₁ l₂ : List α) : l₁ <:+: l₂ ↔ ∃ t, l₁ <+: t ∧ t <:+ l₂ :=
-  ⟨fun ⟨s, t, e⟩ =>
-    ⟨l₁ ++ t, ⟨_, rfl⟩, by
-      rw [← e, append_assoc] <;> exact ⟨_, rfl⟩⟩,
-    fun ⟨_, ⟨t, rfl⟩, ⟨s, e⟩⟩ =>
-    ⟨s, t, by
-      rw [append_assoc] <;> exact e⟩⟩
-
-theorem eq_of_infix_of_length_eq {l₁ l₂ : List α} (s : l₁ <:+: l₂) : length l₁ = length l₂ → l₁ = l₂ :=
-  eq_of_sublist_of_length_eq s.sublist
-
-theorem eq_of_prefix_of_length_eq {l₁ l₂ : List α} (s : l₁ <+: l₂) : length l₁ = length l₂ → l₁ = l₂ :=
-  eq_of_sublist_of_length_eq s.sublist
-
-theorem eq_of_suffix_of_length_eq {l₁ l₂ : List α} (s : l₁ <:+ l₂) : length l₁ = length l₂ → l₁ = l₂ :=
-  eq_of_sublist_of_length_eq s.sublist
-
-theorem prefix_of_prefix_length_le : ∀ {l₁ l₂ l₃ : List α}, l₁ <+: l₃ → l₂ <+: l₃ → length l₁ ≤ length l₂ → l₁ <+: l₂
-  | [], l₂, l₃, h₁, h₂, _ => nil_prefix _
-  | a :: l₁, b :: l₂, _, ⟨r₁, rfl⟩, ⟨r₂, e⟩, ll => by
-    injection e with _ e'
-    subst b
-    rcases prefix_of_prefix_length_le ⟨_, rfl⟩ ⟨_, e'⟩ (le_of_succ_le_succ ll) with ⟨r₃, rfl⟩
-    exact ⟨r₃, rfl⟩
-
-theorem prefix_or_prefix_of_prefix {l₁ l₂ l₃ : List α} (h₁ : l₁ <+: l₃) (h₂ : l₂ <+: l₃) : l₁ <+: l₂ ∨ l₂ <+: l₁ :=
-  (le_totalₓ (length l₁) (length l₂)).imp (prefix_of_prefix_length_le h₁ h₂) (prefix_of_prefix_length_le h₂ h₁)
-
-theorem suffix_of_suffix_length_le {l₁ l₂ l₃ : List α} (h₁ : l₁ <:+ l₃) (h₂ : l₂ <:+ l₃) (ll : length l₁ ≤ length l₂) :
-    l₁ <:+ l₂ :=
-  reverse_prefix.1 $
-    prefix_of_prefix_length_le (reverse_prefix.2 h₁) (reverse_prefix.2 h₂)
-      (by
-        simp [ll])
-
-theorem suffix_or_suffix_of_suffix {l₁ l₂ l₃ : List α} (h₁ : l₁ <:+ l₃) (h₂ : l₂ <:+ l₃) : l₁ <:+ l₂ ∨ l₂ <:+ l₁ :=
-  (prefix_or_prefix_of_prefix (reverse_prefix.2 h₁) (reverse_prefix.2 h₂)).imp reverse_prefix.1 reverse_prefix.1
-
-theorem suffix_cons_iff {x : α} {l₁ l₂ : List α} : l₁ <:+ x :: l₂ ↔ l₁ = x :: l₂ ∨ l₁ <:+ l₂ := by
-  constructor
-  ·
-    rintro ⟨⟨hd, tl⟩, hl₃⟩
-    ·
-      exact Or.inl hl₃
-    ·
-      simp only [cons_append] at hl₃
-      exact Or.inr ⟨_, hl₃.2⟩
-  ·
-    rintro (rfl | hl₁)
-    ·
-      exact (x :: l₂).suffix_refl
-    ·
-      exact hl₁.trans (l₂.suffix_cons _)
-
-theorem infix_of_mem_join : ∀ {L : List (List α)} {l}, l ∈ L → l <:+: join L
-  | _ :: L, l, Or.inl rfl => infix_append [] _ _
-  | l' :: L, l, Or.inr h => is_infix.trans (infix_of_mem_join h) $ (suffix_append _ _).IsInfix
-
-theorem prefix_append_right_inj {l₁ l₂ : List α} l : l ++ l₁ <+: l ++ l₂ ↔ l₁ <+: l₂ :=
-  exists_congr $ fun r => by
-    rw [append_assoc, append_right_inj]
-
-theorem prefix_cons_inj {l₁ l₂ : List α} a : a :: l₁ <+: a :: l₂ ↔ l₁ <+: l₂ :=
-  prefix_append_right_inj [a]
-
-theorem take_prefix n (l : List α) : take n l <+: l :=
-  ⟨_, take_append_drop _ _⟩
-
-theorem take_sublist n (l : List α) : take n l <+ l :=
-  (take_prefix n l).Sublist
-
-theorem take_subset n (l : List α) : take n l ⊆ l :=
-  (take_sublist n l).Subset
-
-theorem mem_of_mem_take {n} {l : List α} {x : α} (h : x ∈ l.take n) : x ∈ l :=
-  take_subset n l h
-
-theorem drop_suffix n (l : List α) : drop n l <:+ l :=
-  ⟨_, take_append_drop _ _⟩
-
-theorem drop_sublist n (l : List α) : drop n l <+ l :=
-  (drop_suffix n l).Sublist
-
-theorem drop_subset n (l : List α) : drop n l ⊆ l :=
-  (drop_sublist n l).Subset
-
-theorem mem_of_mem_drop {n} {l : List α} {x : α} (h : x ∈ l.drop n) : x ∈ l :=
-  drop_subset n l h
-
-theorem init_prefix : ∀ l : List α, l.init <+: l
-  | [] =>
-    ⟨nil, by
-      rw [init, List.append_nil]⟩
-  | a :: l => ⟨_, init_append_last (cons_ne_nil a l)⟩
-
-theorem init_sublist (l : List α) : l.init <+ l :=
-  (init_prefix l).Sublist
-
-theorem init_subset (l : List α) : l.init ⊆ l :=
-  (init_sublist l).Subset
-
-theorem mem_of_mem_init {l : List α} {a : α} (h : a ∈ l.init) : a ∈ l :=
-  init_subset l h
-
-theorem tail_suffix (l : List α) : tail l <:+ l := by
-  rw [← drop_one] <;> apply drop_suffix
-
-theorem tail_sublist (l : List α) : l.tail <+ l :=
-  (tail_suffix l).Sublist
-
-theorem tail_subset (l : List α) : tail l ⊆ l :=
-  (tail_sublist l).Subset
-
-theorem mem_of_mem_tail {l : List α} {a : α} (h : a ∈ l.tail) : a ∈ l :=
-  tail_subset l h
-
-theorem prefix_iff_eq_append {l₁ l₂ : List α} : l₁ <+: l₂ ↔ l₁ ++ drop (length l₁) l₂ = l₂ :=
-  ⟨by
-    rintro ⟨r, rfl⟩ <;> rw [drop_left], fun e => ⟨_, e⟩⟩
-
-theorem suffix_iff_eq_append {l₁ l₂ : List α} : l₁ <:+ l₂ ↔ take (length l₂ - length l₁) l₂ ++ l₁ = l₂ :=
-  ⟨by
-    rintro ⟨r, rfl⟩ <;> simp only [length_append, add_tsub_cancel_right, take_left], fun e => ⟨_, e⟩⟩
-
-theorem prefix_iff_eq_take {l₁ l₂ : List α} : l₁ <+: l₂ ↔ l₁ = take (length l₁) l₂ :=
-  ⟨fun h => append_right_cancel $ (prefix_iff_eq_append.1 h).trans (take_append_drop _ _).symm, fun e =>
-    e.symm ▸ take_prefix _ _⟩
-
-theorem suffix_iff_eq_drop {l₁ l₂ : List α} : l₁ <:+ l₂ ↔ l₁ = drop (length l₂ - length l₁) l₂ :=
-  ⟨fun h => append_left_cancel $ (suffix_iff_eq_append.1 h).trans (take_append_drop _ _).symm, fun e =>
-    e.symm ▸ drop_suffix _ _⟩
-
-instance decidable_prefix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <+: l₂)
-  | [], l₂ => is_true ⟨l₂, rfl⟩
-  | a :: l₁, [] => is_false $ fun ⟨t, te⟩ => List.noConfusion te
-  | a :: l₁, b :: l₂ =>
-    if h : a = b then
-      @decidableOfIff _ _
-        (by
-          rw [← h, prefix_cons_inj])
-        (decidable_prefix l₁ l₂)
-    else
-      is_false $ fun ⟨t, te⟩ =>
-        h $ by
-          injection te
-
-instance decidable_suffix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+ l₂)
-  | [], l₂ => is_true ⟨l₂, append_nil _⟩
-  | a :: l₁, [] =>
-    is_false $
-      mt (length_le_of_sublist ∘ is_suffix.sublist)
-        (by
-          decide)
-  | l₁, l₂ =>
-    let len1 := length l₁
-    let len2 := length l₂
-    if hl : len1 ≤ len2 then decidableOfIff' (l₁ = drop (len2 - len1) l₂) suffix_iff_eq_drop
-    else is_false $ fun h => hl $ length_le_of_sublist $ h.sublist
-
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:514:6: unsupported: specialize @hyp
-theorem prefix_take_le_iff {L : List (List (Option α))} {m n : ℕ} (hm : m < L.length) : take m L <+: take n L ↔ m ≤ n :=
-  by
-  simp only [prefix_iff_eq_take, length_take]
-  induction' m with m IH generalizing L n
-  ·
-    simp only [min_eq_leftₓ, eq_self_iff_true, Nat.zero_leₓ, take]
-  ·
-    cases n
-    ·
-      simp only [Nat.nat_zero_eq_zero, nonpos_iff_eq_zero, take, take_nil]
-      constructor
-      ·
-        cases L
-        ·
-          exact absurd hm (not_lt_of_le m.succ.zero_le)
-        ·
-          simp only [forall_prop_of_false, not_false_iff, take]
-      ·
-        intro h
-        contradiction
-    ·
-      cases' L with l ls
-      ·
-        exact absurd hm (not_lt_of_le m.succ.zero_le)
-      ·
-        simp only [length] at hm
-        specialize IH ls n (Nat.lt_of_succ_lt_succₓ hm)
-        simp only [le_of_ltₓ (Nat.lt_of_succ_lt_succₓ hm), min_eq_leftₓ] at IH
-        simp only [le_of_ltₓ hm, IH, true_andₓ, min_eq_leftₓ, eq_self_iff_true, length, take]
-        exact ⟨Nat.succ_le_succₓ, Nat.le_of_succ_le_succₓ⟩
-
-theorem cons_prefix_iff {l l' : List α} {x y : α} : x :: l <+: y :: l' ↔ x = y ∧ l <+: l' := by
-  constructor
-  ·
-    rintro ⟨L, hL⟩
-    simp only [cons_append] at hL
-    exact ⟨hL.left, ⟨L, hL.right⟩⟩
-  ·
-    rintro ⟨rfl, h⟩
-    rwa [prefix_cons_inj]
-
-theorem map_prefix {l l' : List α} (f : α → β) (h : l <+: l') : l.map f <+: l'.map f := by
-  induction' l with hd tl hl generalizing l'
-  ·
-    simp only [nil_prefix, map_nil]
-  ·
-    cases' l' with hd' tl'
-    ·
-      simpa only using eq_nil_of_prefix_nil h
-    ·
-      rw [cons_prefix_iff] at h
-      simp only [h, prefix_cons_inj, hl, map]
-
-theorem is_prefix.filter_map {l l' : List α} (h : l <+: l') (f : α → Option β) : l.filter_map f <+: l'.filter_map f :=
-  by
-  induction' l with hd tl hl generalizing l'
-  ·
-    simp only [nil_prefix, filter_map_nil]
-  ·
-    cases' l' with hd' tl'
-    ·
-      simpa only using eq_nil_of_prefix_nil h
-    ·
-      rw [cons_prefix_iff] at h
-      rw [← @singleton_append _ hd _, ← @singleton_append _ hd' _, filter_map_append, filter_map_append, h.left,
-        prefix_append_right_inj]
-      exact hl h.right
-
-theorem is_prefix.reduce_option {l l' : List (Option α)} (h : l <+: l') : l.reduce_option <+: l'.reduce_option :=
-  h.filter_map id
-
-theorem is_prefix.filter (p : α → Prop) [DecidablePred p] ⦃l l' : List α⦄ (h : l <+: l') : filter p l <+: filter p l' :=
-  by
-  obtain ⟨xs, rfl⟩ := h
-  rw [filter_append]
-  exact prefix_append _ _
-
-theorem is_suffix.filter (p : α → Prop) [DecidablePred p] ⦃l l' : List α⦄ (h : l <:+ l') : filter p l <:+ filter p l' :=
-  by
-  obtain ⟨xs, rfl⟩ := h
-  rw [filter_append]
-  exact suffix_append _ _
-
-theorem is_infix.filter (p : α → Prop) [DecidablePred p] ⦃l l' : List α⦄ (h : l <:+: l') :
-    filter p l <:+: filter p l' := by
-  obtain ⟨xs, ys, rfl⟩ := h
-  rw [filter_append, filter_append]
-  exact infix_append _ _ _
-
-@[simp]
-theorem mem_inits : ∀ s t : List α, s ∈ inits t ↔ s <+: t
-  | s, [] =>
-    suffices s = nil ↔ s <+: nil by
-      simpa only [inits, mem_singleton]
-    ⟨fun h => h.symm ▸ prefix_refl [], eq_nil_of_prefix_nil⟩
-  | s, a :: t =>
-    suffices (s = nil ∨ ∃ l ∈ inits t, a :: l = s) ↔ s <+: a :: t by
-      simpa
-    ⟨fun o =>
-      match s, o with
-      | _, Or.inl rfl => ⟨_, rfl⟩
-      | s, Or.inr ⟨r, hr, hs⟩ =>
-        let ⟨s, ht⟩ := (mem_inits _ _).1 hr
-        by
-        rw [← hs, ← ht] <;> exact ⟨s, rfl⟩,
-      fun mi =>
-      match s, mi with
-      | [], ⟨_, rfl⟩ => Or.inl rfl
-      | b :: s, ⟨r, hr⟩ =>
-        List.noConfusion hr $ fun ba st : s ++ r = t =>
-          Or.inr $ by
-            rw [ba] <;> exact ⟨_, (mem_inits _ _).2 ⟨_, st⟩, rfl⟩⟩
-
-@[simp]
-theorem mem_tails : ∀ s t : List α, s ∈ tails t ↔ s <:+ t
-  | s, [] => by
-    simp only [tails, mem_singleton] <;>
-      exact
-        ⟨fun h => by
-          rw [h] <;> exact suffix_refl [], eq_nil_of_suffix_nil⟩
-  | s, a :: t => by
-    simp only [tails, mem_cons_iff, mem_tails s t] <;>
-      exact
-        show s = a :: t ∨ s <:+ t ↔ s <:+ a :: t from
-          ⟨fun o =>
-            match s, t, o with
-            | _, t, Or.inl rfl => suffix_refl _
-            | s, _, Or.inr ⟨l, rfl⟩ => ⟨a :: l, rfl⟩,
-            fun e =>
-            match s, t, e with
-            | _, t, ⟨[], rfl⟩ => Or.inl rfl
-            | s, t, ⟨b :: l, he⟩ => List.noConfusion he fun ab lt => Or.inr ⟨l, lt⟩⟩
-
-theorem inits_cons (a : α) (l : List α) : inits (a :: l) = [] :: l.inits.map fun t => a :: t := by
-  simp
-
-theorem tails_cons (a : α) (l : List α) : tails (a :: l) = (a :: l) :: l.tails := by
-  simp
-
-@[simp]
-theorem inits_append : ∀ s t : List α, inits (s ++ t) = s.inits ++ t.inits.tail.map fun l => s ++ l
-  | [], [] => by
-    simp
-  | [], a :: t => by
-    simp
-  | a :: s, t => by
-    simp [inits_append s t]
-
-@[simp]
-theorem tails_append : ∀ s t : List α, tails (s ++ t) = (s.tails.map fun l => l ++ t) ++ t.tails.tail
-  | [], [] => by
-    simp
-  | [], a :: t => by
-    simp
-  | a :: s, t => by
-    simp [tails_append s t]
-
-theorem inits_eq_tails : ∀ l : List α, l.inits = (reverse $ map reverse $ tails $ reverse l)
-  | [] => by
-    simp
-  | a :: l => by
-    simp [inits_eq_tails l, map_eq_map_iff]
-
-theorem tails_eq_inits : ∀ l : List α, l.tails = (reverse $ map reverse $ inits $ reverse l)
-  | [] => by
-    simp
-  | a :: l => by
-    simp [tails_eq_inits l, append_left_inj]
-
-theorem inits_reverse (l : List α) : inits (reverse l) = reverse (map reverse l.tails) := by
-  rw [tails_eq_inits l]
-  simp [reverse_involutive.comp_self]
-
-theorem tails_reverse (l : List α) : tails (reverse l) = reverse (map reverse l.inits) := by
-  rw [inits_eq_tails l]
-  simp [reverse_involutive.comp_self]
-
-theorem map_reverse_inits (l : List α) : map reverse l.inits = (reverse $ tails $ reverse l) := by
-  rw [inits_eq_tails l]
-  simp [reverse_involutive.comp_self]
-
-theorem map_reverse_tails (l : List α) : map reverse l.tails = (reverse $ inits $ reverse l) := by
-  rw [tails_eq_inits l]
-  simp [reverse_involutive.comp_self]
-
-@[simp]
-theorem length_tails (l : List α) : length (tails l) = length l+1 := by
-  induction' l with x l IH
-  ·
-    simp
-  ·
-    simpa using IH
-
-@[simp]
-theorem length_inits (l : List α) : length (inits l) = length l+1 := by
-  simp [inits_eq_tails]
-
-@[simp]
-theorem nth_le_tails (l : List α) (n : ℕ) (hn : n < length (tails l)) : nth_le (tails l) n hn = l.drop n := by
-  induction' l with x l IH generalizing n
-  ·
-    simp
-  ·
-    cases n
-    ·
-      simp
-    ·
-      simpa using IH n _
-
-@[simp]
-theorem nth_le_inits (l : List α) (n : ℕ) (hn : n < length (inits l)) : nth_le (inits l) n hn = l.take n := by
-  induction' l with x l IH generalizing n
-  ·
-    simp
-  ·
-    cases n
-    ·
-      simp
-    ·
-      simpa using IH n _
-
-instance decidable_infix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+: l₂)
-  | [], l₂ => is_true ⟨[], l₂, rfl⟩
-  | a :: l₁, [] =>
-    is_false $ fun ⟨s, t, te⟩ =>
-      absurd te $ append_ne_nil_of_ne_nil_left _ _ $ append_ne_nil_of_ne_nil_right _ _ $ fun h => List.noConfusion h
-  | l₁, l₂ =>
-    decidableOfDecidableOfIff (List.decidableBex (fun t => l₁ <+: t) (tails l₂)) $ by
-      refine' (exists_congr fun t => _).trans (infix_iff_prefix_suffix _ _).symm <;>
-        exact ⟨fun ⟨h1, h2⟩ => ⟨h2, (mem_tails _ _).1 h1⟩, fun ⟨h2, h1⟩ => ⟨(mem_tails _ _).2 h1, h2⟩⟩
-
-/-! ### insert -/
-
-
-section Insert
-
-variable [DecidableEq α]
-
-@[simp]
-theorem insert_nil (a : α) : insert a nil = [a] :=
-  rfl
-
-theorem insert.def (a : α) (l : List α) : insert a l = if a ∈ l then l else a :: l :=
-  rfl
-
-@[simp]
-theorem insert_of_mem {a : α} {l : List α} (h : a ∈ l) : insert a l = l := by
-  simp only [insert.def, if_pos h]
-
-@[simp]
-theorem insert_of_not_mem {a : α} {l : List α} (h : a ∉ l) : insert a l = a :: l := by
-  simp only [insert.def, if_neg h] <;> constructor <;> rfl
-
-@[simp]
-theorem mem_insert_iff {a b : α} {l : List α} : a ∈ insert b l ↔ a = b ∨ a ∈ l := by
-  by_cases' h' : b ∈ l
-  ·
-    simp only [insert_of_mem h']
-    apply (or_iff_right_of_imp _).symm
-    exact fun e => e.symm ▸ h'
-  simp only [insert_of_not_mem h', mem_cons_iff]
-
-@[simp]
-theorem suffix_insert (a : α) (l : List α) : l <:+ insert a l := by
-  by_cases' a ∈ l <;> [simp only [insert_of_mem h], simp only [insert_of_not_mem h, suffix_cons]]
-
-theorem infix_insert (a : α) (l : List α) : l <:+: insert a l :=
-  (suffix_insert a l).IsInfix
-
-theorem sublist_insert (a : α) (l : List α) : l <+ insert a l :=
-  (suffix_insert a l).Sublist
-
-theorem subset_insert (a : α) (l : List α) : l ⊆ insert a l :=
-  (sublist_insert a l).Subset
-
-@[simp]
-theorem mem_insert_self (a : α) (l : List α) : a ∈ insert a l :=
-  mem_insert_iff.2 (Or.inl rfl)
-
-theorem mem_insert_of_mem {a b : α} {l : List α} (h : a ∈ l) : a ∈ insert b l :=
-  mem_insert_iff.2 (Or.inr h)
-
-theorem eq_or_mem_of_mem_insert {a b : α} {l : List α} (h : a ∈ insert b l) : a = b ∨ a ∈ l :=
-  mem_insert_iff.1 h
-
-@[simp]
-theorem length_insert_of_mem {a : α} {l : List α} (h : a ∈ l) : length (insert a l) = length l := by
-  rw [insert_of_mem h]
-
-@[simp]
-theorem length_insert_of_not_mem {a : α} {l : List α} (h : a ∉ l) : length (insert a l) = length l+1 := by
-  rw [insert_of_not_mem h] <;> rfl
-
-end Insert
-
 /-! ### erasep -/
 
 
@@ -5191,36 +3485,42 @@ theorem erasep_of_forall_not {l : List α} (h : ∀, ∀ a ∈ l, ∀, ¬p a) : 
 theorem exists_of_erasep {l : List α} {a} (al : a ∈ l) (pa : p a) :
     ∃ a l₁ l₂, (∀, ∀ b ∈ l₁, ∀, ¬p b) ∧ p a ∧ l = l₁ ++ a :: l₂ ∧ l.erasep p = l₁ ++ l₂ := by
   induction' l with b l IH
-  ·
-    cases al
+  · cases al
+    
   by_cases' pb : p b
-  ·
-    exact
+  · exact
       ⟨b, [], l, forall_mem_nil _, pb, by
         simp [pb]⟩
-  ·
-    rcases al with (rfl | al)
-    ·
-      exact pb.elim pa
+    
+  · rcases al with (rfl | al)
+    · exact pb.elim pa
+      
     rcases IH al with ⟨c, l₁, l₂, h₁, h₂, h₃, h₄⟩
     exact
       ⟨c, b :: l₁, l₂, forall_mem_cons.2 ⟨pb, h₁⟩, h₂, by
         rw [h₃] <;> rfl, by
         simp [pb, h₄]⟩
+    
 
 theorem exists_or_eq_self_of_erasep (p : α → Prop) [DecidablePred p] (l : List α) :
     l.erasep p = l ∨ ∃ a l₁ l₂, (∀, ∀ b ∈ l₁, ∀, ¬p b) ∧ p a ∧ l = l₁ ++ a :: l₂ ∧ l.erasep p = l₁ ++ l₂ := by
   by_cases' h : ∃ a ∈ l, p a
-  ·
-    rcases h with ⟨a, ha, pa⟩
+  · rcases h with ⟨a, ha, pa⟩
     exact Or.inr (exists_of_erasep ha pa)
-  ·
-    simp at h
+    
+  · simp at h
     exact Or.inl (erasep_of_forall_not h)
+    
 
 @[simp]
 theorem length_erasep_of_mem {l : List α} {a} (al : a ∈ l) (pa : p a) : length (l.erasep p) = pred (length l) := by
   rcases exists_of_erasep al pa with ⟨_, l₁, l₂, _, _, e₁, e₂⟩ <;> rw [e₂] <;> simp [-add_commₓ, e₁] <;> rfl
+
+@[simp]
+theorem length_erasep_add_one {l : List α} {a} (al : a ∈ l) (pa : p a) : (l.erasep p).length + 1 = l.length := by
+  let ⟨_, l₁, l₂, _, _, h₁, h₂⟩ := exists_of_erasep al pa
+  rw [h₂, h₁, length_append, length_append]
+  rfl
 
 theorem erasep_append_left {a : α} (pa : p a) : ∀ {l₁ : List α} l₂, a ∈ l₁ → (l₁ ++ l₂).erasep p = l₁.erasep p ++ l₂
   | x :: xs, l₂, h => by
@@ -5236,9 +3536,9 @@ theorem erasep_append_right : ∀ {l₁ : List α} l₂, (∀, ∀ b ∈ l₁, �
 
 theorem erasep_sublist (l : List α) : l.erasep p <+ l := by
   rcases exists_or_eq_self_of_erasep p l with (h | ⟨c, l₁, l₂, h₁, h₂, h₃, h₄⟩) <;> [rw [h],
-    ·
-      rw [h₄, h₃]
-      simp ]
+    · rw [h₄, h₃]
+      simp
+      ]
 
 theorem erasep_subset (l : List α) : l.erasep p ⊆ l :=
   (erasep_sublist l).Subset
@@ -5261,15 +3561,15 @@ theorem mem_of_mem_erasep {a : α} {l : List α} : a ∈ l.erasep p → a ∈ l 
 theorem mem_erasep_of_neg {a : α} {l : List α} (pa : ¬p a) : a ∈ l.erasep p ↔ a ∈ l :=
   ⟨mem_of_mem_erasep, fun al => by
     rcases exists_or_eq_self_of_erasep p l with (h | ⟨c, l₁, l₂, h₁, h₂, h₃, h₄⟩)
-    ·
-      rwa [h]
-    ·
-      rw [h₄]
+    · rwa [h]
+      
+    · rw [h₄]
       rw [h₃] at al
       have : a ≠ c := by
         rintro rfl
         exact pa.elim h₂
-      simpa [this] using al⟩
+      simpa [this] using al
+      ⟩
 
 theorem erasep_map (f : β → α) : ∀ l : List β, (map f l).erasep p = map f (l.erasep (p ∘ f))
   | [] => rfl
@@ -5308,9 +3608,9 @@ theorem erase_cons_tail {a b : α} (l : List α) (h : b ≠ a) : (b :: l).erase 
 
 theorem erase_eq_erasep (a : α) (l : List α) : l.erase a = l.erasep (Eq a) := by
   induction' l with b l
-  ·
-    rfl
-  by_cases' a = b <;> [simp [h], simp [h, Ne.symm h]]
+  · rfl
+    
+  by_cases' a = b <;> [simp [h], simp [h, Ne.symm h, *]]
 
 @[simp]
 theorem erase_of_not_mem {a : α} {l : List α} (h : a ∉ l) : l.erase a = l := by
@@ -5324,6 +3624,10 @@ theorem exists_erase_eq {a : α} {l : List α} (h : a ∈ l) : ∃ l₁ l₂, a 
 @[simp]
 theorem length_erase_of_mem {a : α} {l : List α} (h : a ∈ l) : length (l.erase a) = pred (length l) := by
   rw [erase_eq_erasep] <;> exact length_erasep_of_mem h rfl
+
+@[simp]
+theorem length_erase_add_one {a : α} {l : List α} (h : a ∈ l) : (l.erase a).length + 1 = l.length := by
+  rw [erase_eq_erasep, length_erasep_add_one h rfl]
 
 theorem erase_append_left {a : α} {l₁ : List α} l₂ (h : a ∈ l₁) : (l₁ ++ l₂).erase a = l₁.erase a ++ l₂ := by
   simp [erase_eq_erasep] <;>
@@ -5377,7 +3681,7 @@ theorem map_erase [DecidableEq β] {f : α → β} (finj : injective f) {a : α}
 
 theorem map_foldl_erase [DecidableEq β] {f : α → β} (finj : injective f) {l₁ l₂ : List α} :
     map f (foldl List.eraseₓ l₁ l₂) = foldl (fun l a => l.erase (f a)) (map f l₁) l₂ := by
-  induction l₂ generalizing l₁ <;> [rfl, simp only [foldl_cons, map_erase finj]]
+  induction l₂ generalizing l₁ <;> [rfl, simp only [foldl_cons, map_erase finj, *]]
 
 end Erase
 
@@ -5401,17 +3705,17 @@ theorem diff_cons (l₁ l₂ : List α) (a : α) : l₁.diff (a :: l₂) = (l₁
 
 theorem diff_cons_right (l₁ l₂ : List α) (a : α) : l₁.diff (a :: l₂) = (l₁.diff l₂).erase a := by
   induction' l₂ with b l₂ ih generalizing l₁ a
-  ·
-    simp_rw [diff_cons, diff_nil]
-  ·
-    rw [diff_cons, diff_cons, erase_comm, ← diff_cons, ih, ← diff_cons]
+  · simp_rw [diff_cons, diff_nil]
+    
+  · rw [diff_cons, diff_cons, erase_comm, ← diff_cons, ih, ← diff_cons]
+    
 
 theorem diff_erase (l₁ l₂ : List α) (a : α) : (l₁.diff l₂).erase a = (l₁.erase a).diff l₂ := by
   rw [← diff_cons_right, diff_cons]
 
 @[simp]
 theorem nil_diff (l : List α) : [].diff l = [] := by
-  induction l <;> [rfl, simp only [diff_cons, erase_of_not_mem (not_mem_nil _)]]
+  induction l <;> [rfl, simp only [*, diff_cons, erase_of_not_mem (not_mem_nil _)]]
 
 theorem diff_eq_foldl : ∀ l₁ l₂ : List α, l₁.diff l₂ = foldl List.eraseₓ l₁ l₂
   | l₁, [] => rfl
@@ -5429,7 +3733,8 @@ theorem map_diff [DecidableEq β] {f : α → β} (finj : injective f) {l₁ l�
 theorem diff_sublist : ∀ l₁ l₂ : List α, l₁.diff l₂ <+ l₁
   | l₁, [] => sublist.refl _
   | l₁, a :: l₂ =>
-    calc l₁.diff (a :: l₂) = (l₁.erase a).diff l₂ := diff_cons _ _ _
+    calc
+      l₁.diff (a :: l₂) = (l₁.erase a).diff l₂ := diff_cons _ _ _
       _ <+ l₁.erase a := diff_sublist _ _
       _ <+ l₁ := List.erase_sublist _ _
       
@@ -5471,11 +3776,11 @@ theorem length_enum : ∀ l : List α, length (enum l) = length l :=
   length_enum_from _
 
 @[simp]
-theorem enum_from_nth : ∀ n l : List α m, nth (enum_from n l) m = (fun a => (n+m, a)) <$> nth l m
+theorem enum_from_nth : ∀ n l : List α m, nth (enum_from n l) m = (fun a => (n + m, a)) <$> nth l m
   | n, [], m => rfl
   | n, a :: l, 0 => rfl
-  | n, a :: l, m+1 =>
-    (enum_from_nth (n+1) l m).trans $ by
+  | n, a :: l, m + 1 =>
+    (enum_from_nth (n + 1) l m).trans $ by
       rw [add_right_commₓ] <;> rfl
 
 @[simp]
@@ -5492,27 +3797,26 @@ theorem enum_map_snd : ∀ l : List α, map Prod.snd (enum l) = l :=
   enum_from_map_snd _
 
 theorem mem_enum_from {x : α} {i : ℕ} :
-    ∀ {j : ℕ} xs : List α, (i, x) ∈ xs.enum_from j → j ≤ i ∧ (i < j+xs.length) ∧ x ∈ xs
+    ∀ {j : ℕ} xs : List α, (i, x) ∈ xs.enum_from j → j ≤ i ∧ i < j + xs.length ∧ x ∈ xs
   | j, [] => by
     simp [enum_from]
-  | j, y :: ys =>
-    suffices i = j ∧ x = y ∨ (i, x) ∈ enum_from (j+1) ys → j ≤ i ∧ (i < j+length ys+1) ∧ (x = y ∨ x ∈ ys)by
+  | j, y :: ys => by
+    suffices i = j ∧ x = y ∨ (i, x) ∈ enum_from (j + 1) ys → j ≤ i ∧ i < j + (length ys + 1) ∧ (x = y ∨ x ∈ ys) by
       simpa [enum_from, mem_enum_from ys]
-    by
     rintro (h | h)
-    ·
-      refine' ⟨le_of_eqₓ h.1.symm, h.1 ▸ _, Or.inl h.2⟩
+    · refine' ⟨le_of_eqₓ h.1.symm, h.1 ▸ _, Or.inl h.2⟩
       apply Nat.lt_add_of_pos_rightₓ <;> simp
-    ·
-      obtain ⟨hji, hijlen, hmem⟩ := mem_enum_from _ h
+      
+    · obtain ⟨hji, hijlen, hmem⟩ := mem_enum_from _ h
       refine' ⟨_, _, _⟩
-      ·
-        exact le_transₓ (Nat.le_succₓ _) hji
-      ·
-        convert hijlen using 1
+      · exact le_transₓ (Nat.le_succₓ _) hji
+        
+      · convert hijlen using 1
         ac_rfl
-      ·
-        simp [hmem]
+        
+      · simp [hmem]
+        
+      
 
 section Choose
 
@@ -5635,20 +3939,20 @@ variable (f : α → Option β → γ) (as : List α)
 theorem map₂_left_nil_right : map₂_left f as [] = as.map fun a => f a none := by
   cases as <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 theorem map₂_left_eq_map₂_left' : ∀ as bs, map₂_left f as bs = (map₂_left' f as bs).fst
   | [], bs => by
     simp
   | a :: as, [] => by
     simp
   | a :: as, b :: bs => by
-    simp
+    simp [*]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 theorem map₂_left_eq_map₂ : ∀ as bs, length as ≤ length bs → map₂_left f as bs = map₂ (fun a b => f a (some b)) as bs
   | [], [], h => by
     simp
@@ -5659,7 +3963,7 @@ theorem map₂_left_eq_map₂ : ∀ as bs, length as ≤ length bs → map₂_le
     contradiction
   | a :: as, b :: bs, h => by
     simp at h
-    simp
+    simp [*]
 
 end Map₂Left
 
@@ -5691,7 +3995,7 @@ theorem map₂_right_eq_map₂_right' : map₂_right f as bs = (map₂_right' f 
 
 theorem map₂_right_eq_map₂ (h : length bs ≤ length as) : map₂_right f as bs = map₂ (fun a b => f (some a) b) as bs := by
   have : (fun a b => flip f a (some b)) = flip fun a b => f (some a) b := rfl
-  simp only [map₂_right, map₂_left_eq_map₂, map₂_flip]
+  simp only [map₂_right, map₂_left_eq_map₂, map₂_flip, *]
 
 end Map₂Right
 
@@ -5760,16 +4064,16 @@ section ToChunks
 theorem to_chunks_nil n : @to_chunks α n [] = [] := by
   cases n <;> rfl
 
-theorem to_chunks_aux_eq n : ∀ xs i, @to_chunks_aux α n xs i = (xs.take i, (xs.drop i).toChunks (n+1))
+theorem to_chunks_aux_eq n : ∀ xs i, @to_chunks_aux α n xs i = (xs.take i, (xs.drop i).toChunks (n + 1))
   | [], i => by
     cases i <;> rfl
   | x :: xs, 0 => by
     rw [to_chunks_aux, drop, to_chunks] <;> cases to_chunks_aux n xs n <;> rfl
-  | x :: xs, i+1 => by
+  | x :: xs, i + 1 => by
     rw [to_chunks_aux, to_chunks_aux_eq] <;> rfl
 
 theorem to_chunks_eq_cons' n :
-    ∀ {xs : List α} h : xs ≠ [], xs.to_chunks (n+1) = xs.take (n+1) :: (xs.drop (n+1)).toChunks (n+1)
+    ∀ {xs : List α} h : xs ≠ [], xs.to_chunks (n + 1) = xs.take (n + 1) :: (xs.drop (n + 1)).toChunks (n + 1)
   | [], e => (e rfl).elim
   | x :: xs, _ => by
     rw [to_chunks, to_chunks_aux_eq] <;> rfl
@@ -5777,16 +4081,16 @@ theorem to_chunks_eq_cons' n :
 theorem to_chunks_eq_cons :
     ∀ {n} {xs : List α} n0 : n ≠ 0 x0 : xs ≠ [], xs.to_chunks n = xs.take n :: (xs.drop n).toChunks n
   | 0, _, e => (e rfl).elim
-  | n+1, xs, _ => to_chunks_eq_cons' _
+  | n + 1, xs, _ => to_chunks_eq_cons' _
 
 theorem to_chunks_aux_join {n} : ∀ {xs i l L}, @to_chunks_aux α n xs i = (l, L) → l ++ L.join = xs
   | [], _, _, _, rfl => rfl
   | x :: xs, i, l, L, e => by
     cases i <;> [cases' e' : to_chunks_aux n xs n with l L, cases' e' : to_chunks_aux n xs i with l L] <;>
-      ·
-        rw [to_chunks_aux, e', to_chunks_aux] at e
+      · rw [to_chunks_aux, e', to_chunks_aux] at e
         cases e
         exact (congr_argₓ (cons x) (to_chunks_aux_join e') : _)
+        
 
 @[simp]
 theorem to_chunks_join : ∀ n xs, (@to_chunks α n xs).join = xs
@@ -5794,28 +4098,28 @@ theorem to_chunks_join : ∀ n xs, (@to_chunks α n xs).join = xs
     cases n <;> rfl
   | 0, x :: xs => by
     simp only [to_chunks, join] <;> rw [append_nil]
-  | n+1, x :: xs => by
+  | n + 1, x :: xs => by
     rw [to_chunks]
     cases' e : to_chunks_aux n xs n with l L
     exact (congr_argₓ (cons x) (to_chunks_aux_join e) : _)
 
 theorem to_chunks_length_le : ∀ n xs, n ≠ 0 → ∀ l : List α, l ∈ @to_chunks α n xs → l.length ≤ n
   | 0, _, e, _ => (e rfl).elim
-  | n+1, xs, _, l => by
+  | n + 1, xs, _, l => by
     refine' (measure_wf length).induction xs _
     intro xs IH h
     by_cases' x0 : xs = []
-    ·
-      subst xs
+    · subst xs
       cases h
+      
     rw [to_chunks_eq_cons' _ x0] at h
     rcases h with (rfl | h)
-    ·
-      apply length_take_le
-    ·
-      refine' IH _ _ h
+    · apply length_take_le
+      
+    · refine' IH _ _ h
       simp only [Measureₓ, InvImage, length_drop]
       exact tsub_lt_self (length_pos_iff_ne_nil.2 x0) (succ_pos _)
+      
 
 end ToChunks
 
@@ -5842,30 +4146,30 @@ theorem nth_le_attach (L : List α) i (H : i < L.attach.length) :
     (L.attach.nth_le i H).1 = L.nth_le i (length_attach L ▸ H) :=
   calc
     (L.attach.nth_le i H).1 =
-      (L.attach.map Subtype.val).nthLe i
-        (by
-          simpa using H) :=
-    by
-    rw [nth_le_map']
+        (L.attach.map Subtype.val).nthLe i
+          (by
+            simpa using H) :=
+      by
+      rw [nth_le_map']
     _ = L.nth_le i _ := by
-    congr <;> apply attach_map_val
+      congr <;> apply attach_map_val
     
 
 @[simp]
 theorem mem_map_swap (x : α) (y : β) (xs : List (α × β)) : (y, x) ∈ map Prod.swap xs ↔ (x, y) ∈ xs := by
   induction' xs with x xs
-  ·
-    simp only [not_mem_nil, map_nil]
-  ·
-    cases' x with a b
+  · simp only [not_mem_nil, map_nil]
+    
+  · cases' x with a b
     simp only [mem_cons_iff, Prod.mk.inj_iffₓ, map, Prod.swap_prod_mkₓ, Prod.exists, xs_ih, and_comm]
+    
 
-theorem slice_eq (xs : List α) (n m : ℕ) : slice n m xs = xs.take n ++ xs.drop (n+m) := by
+theorem slice_eq (xs : List α) (n m : ℕ) : slice n m xs = xs.take n ++ xs.drop (n + m) := by
   induction n generalizing xs
-  ·
-    simp [slice]
-  ·
-    cases xs <;> simp [slice, Nat.succ_add]
+  · simp [slice]
+    
+  · cases xs <;> simp [slice, *, Nat.succ_add]
+    
 
 theorem sizeof_slice_lt [SizeOf α] (i j : ℕ) (hj : 0 < j) (xs : List α) (hi : i < xs.length) :
     sizeof (List.sliceₓ i j xs) < sizeof xs := by
@@ -5874,14 +4178,12 @@ theorem sizeof_slice_lt [SizeOf α] (i j : ℕ) (hj : 0 < j) (xs : List α) (hi 
     cases hi
   case list.cons x xs xs_ih i j h =>
     cases i <;> simp only [-slice_eq, List.sliceₓ]
-    ·
-      cases j
+    · cases j
       cases h
       dsimp only [drop]
       unfold_wf
       apply @lt_of_le_of_ltₓ _ _ _ xs.sizeof
-      ·
-        clear * -
+      · clear * -
         induction xs generalizing j <;> unfold_wf
         case list.nil j =>
           rfl
@@ -5891,12 +4193,14 @@ theorem sizeof_slice_lt [SizeOf α] (i j : ℕ) (hj : 0 < j) (xs : List α) (hi 
           trans
           apply xs_ih
           simp
+        
       unfold_wf
       apply zero_lt_one_add
-    ·
-      unfold_wf
+      
+    · unfold_wf
       apply xs_ih _ _ h
       apply lt_of_succ_lt_succ hi
+      
 
 end List
 

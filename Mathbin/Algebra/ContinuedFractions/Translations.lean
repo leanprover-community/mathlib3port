@@ -71,7 +71,7 @@ continued fraction.
 
 variable {K : Type _} {g : GeneralizedContinuedFraction K} {n : ℕ} [DivisionRing K]
 
-theorem nth_cont_eq_succ_nth_cont_aux : g.continuants n = g.continuants_aux (n+1) :=
+theorem nth_cont_eq_succ_nth_cont_aux : g.continuants n = g.continuants_aux (n + 1) :=
   rfl
 
 theorem num_eq_conts_a : g.numerators n = (g.continuants n).a :=
@@ -119,14 +119,14 @@ theorem zeroth_convergent_eq_h : g.convergents 0 = g.h := by
   simp [convergent_eq_num_div_denom, num_eq_conts_a, denom_eq_conts_b, div_one]
 
 theorem second_continuant_aux_eq {gp : pair K} (zeroth_s_eq : g.s.nth 0 = some gp) :
-    g.continuants_aux 2 = ⟨(gp.b*g.h)+gp.a, gp.b⟩ := by
+    g.continuants_aux 2 = ⟨gp.b * g.h + gp.a, gp.b⟩ := by
   simp [zeroth_s_eq, continuants_aux, next_continuants, next_denominator, next_numerator]
 
 theorem first_continuant_eq {gp : pair K} (zeroth_s_eq : g.s.nth 0 = some gp) :
-    g.continuants 1 = ⟨(gp.b*g.h)+gp.a, gp.b⟩ := by
+    g.continuants 1 = ⟨gp.b * g.h + gp.a, gp.b⟩ := by
   simp [nth_cont_eq_succ_nth_cont_aux, second_continuant_aux_eq zeroth_s_eq]
 
-theorem first_numerator_eq {gp : pair K} (zeroth_s_eq : g.s.nth 0 = some gp) : g.numerators 1 = (gp.b*g.h)+gp.a := by
+theorem first_numerator_eq {gp : pair K} (zeroth_s_eq : g.s.nth 0 = some gp) : g.numerators 1 = gp.b * g.h + gp.a := by
   simp [num_eq_conts_a, first_continuant_eq zeroth_s_eq]
 
 theorem first_denominator_eq {gp : pair K} (zeroth_s_eq : g.s.nth 0 = some gp) : g.denominators 1 = gp.b := by

@@ -12,9 +12,8 @@ instances for types in the core library.
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-Tries to derive an `inhabited` instance for inductives and structures.
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Tries to derive an `inhabited` instance for inductives and structures.
 
 For example:
 ```
@@ -42,8 +41,7 @@ unsafe def inhabited_instance : derive_handler :=
 
 end Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-deriving instance [anonymous] for VmDeclKind, VmObjKind, Tactic.NewGoals, Tactic.Transparency, Tactic.ApplyCfg,
+deriving instance Inhabited for VmDeclKind, VmObjKind, Tactic.NewGoals, Tactic.Transparency, Tactic.ApplyCfg,
   SmtPreConfig, EmatchConfig, CcConfig, SmtConfig, Rsimp.Config, Tactic.DunfoldConfig, Tactic.DsimpConfig,
   Tactic.UnfoldProjConfig, Tactic.SimpIntrosConfig, Tactic.DeltaConfig, Tactic.SimpConfig, Tactic.RewriteCfg,
   Interactive.Loc, Tactic.UnfoldConfig, ParamInfo, SubsingletonInfo, FunInfo, Format.Color, Pos,

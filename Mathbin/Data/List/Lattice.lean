@@ -1,4 +1,5 @@
 import Mathbin.Data.List.Count
+import Mathbin.Data.List.Infix
 
 /-!
 # Lattice structure of lists
@@ -111,14 +112,14 @@ theorem disjoint_take_drop {m n : ℕ} (hl : l.nodup) (h : m ≤ n) : Disjoint (
       cases n <;>
         simp only [disjoint_cons_left, mem_cons_iff, disjoint_cons_right, drop, true_orₓ, eq_self_iff_true, not_true,
           false_andₓ, disjoint_nil_left, take]
-    ·
-      cases h
+    · cases h
+      
     cases' hl with _ _ h₀ h₁
     constructor
-    ·
-      intro h
+    · intro h
       exact h₀ _ (mem_of_mem_drop h) rfl
-    solve_by_elim (config := { max_depth := 4 }) [le_of_succ_le_succ]
+      
+    solve_by_elim(config := { max_depth := 4 }) [le_of_succ_le_succ]
 
 end Disjoint
 
@@ -139,7 +140,7 @@ theorem cons_union (l₁ l₂ : List α) (a : α) : a :: l₁ ∪ l₂ = insert 
 
 @[simp]
 theorem mem_union : a ∈ l₁ ∪ l₂ ↔ a ∈ l₁ ∨ a ∈ l₂ := by
-  induction l₁ <;> simp only [nil_union, not_mem_nil, false_orₓ, cons_union, mem_insert_iff, mem_cons_iff, or_assoc]
+  induction l₁ <;> simp only [nil_union, not_mem_nil, false_orₓ, cons_union, mem_insert_iff, mem_cons_iff, or_assoc, *]
 
 theorem mem_union_left (h : a ∈ l₁) (l₂ : List α) : a ∈ l₁ ∪ l₂ :=
   mem_union.2 (Or.inl h)
@@ -252,8 +253,8 @@ theorem cons_bag_inter_of_pos (l₁ : List α) (h : a ∈ l₂) : (a :: l₁).ba
 @[simp]
 theorem cons_bag_inter_of_neg (l₁ : List α) (h : a ∉ l₂) : (a :: l₁).bagInter l₂ = l₁.bag_inter l₂ := by
   cases l₂
-  ·
-    simp only [bag_inter_nil]
+  · simp only [bag_inter_nil]
+    
   simp only [erase_of_not_mem h, List.bagInterₓ, if_neg h]
 
 @[simp]
@@ -262,19 +263,19 @@ theorem mem_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bag_inter
     simp only [nil_bag_inter, not_mem_nil, false_andₓ]
   | b :: l₁, l₂ => by
     by_cases' b ∈ l₂
-    ·
-      rw [cons_bag_inter_of_pos _ h, mem_cons_iff, mem_cons_iff, mem_bag_inter]
+    · rw [cons_bag_inter_of_pos _ h, mem_cons_iff, mem_cons_iff, mem_bag_inter]
       by_cases' ba : a = b
-      ·
-        simp only [ba, h, eq_self_iff_true, true_orₓ, true_andₓ]
-      ·
-        simp only [mem_erase_of_ne ba, ba, false_orₓ]
-    ·
-      rw [cons_bag_inter_of_neg _ h, mem_bag_inter, mem_cons_iff, or_and_distrib_right]
+      · simp only [ba, h, eq_self_iff_true, true_orₓ, true_andₓ]
+        
+      · simp only [mem_erase_of_ne ba, ba, false_orₓ]
+        
+      
+    · rw [cons_bag_inter_of_neg _ h, mem_bag_inter, mem_cons_iff, or_and_distrib_right]
       symm
       apply or_iff_right_of_imp
       rintro ⟨rfl, h'⟩
       exact h.elim h'
+      
 
 @[simp]
 theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, count a (l₁.bag_inter l₂) = min (count a l₁) (count a l₂)
@@ -285,36 +286,36 @@ theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, count a (l₁.bag_
   | h₁ :: l₁, h₂ :: l₂ => by
     simp only [List.bagInterₓ, List.mem_cons_iff]
     by_cases' p₁ : h₂ = h₁ <;> by_cases' p₂ : h₁ = a
-    ·
-      simp only [p₁, p₂, count_bag_inter, min_succ_succ, erase_cons_head, if_true, mem_cons_iff, count_cons_self,
+    · simp only [p₁, p₂, count_bag_inter, min_succ_succ, erase_cons_head, if_true, mem_cons_iff, count_cons_self,
         true_orₓ, eq_self_iff_true]
-    ·
-      simp only [p₁, Ne.symm p₂, count_bag_inter, count_cons, erase_cons_head, if_true, mem_cons_iff, true_orₓ,
+      
+    · simp only [p₁, Ne.symm p₂, count_bag_inter, count_cons, erase_cons_head, if_true, mem_cons_iff, true_orₓ,
         eq_self_iff_true, if_false]
-    ·
-      rw [p₂] at p₁
+      
+    · rw [p₂] at p₁
       by_cases' p₃ : a ∈ l₂
-      ·
-        simp only [p₁, Ne.symm p₁, p₂, p₃, erase_cons, count_bag_inter, Eq.symm (min_succ_succ _ _),
+      · simp only [p₁, Ne.symm p₁, p₂, p₃, erase_cons, count_bag_inter, Eq.symm (min_succ_succ _ _),
           succ_pred_eq_of_pos (count_pos.2 p₃), if_true, mem_cons_iff, false_orₓ, count_cons_self, eq_self_iff_true,
           if_false, Ne.def, not_false_iff, count_erase_self, List.count_cons_of_ne]
-      ·
-        simp [Ne.symm p₁, p₂, p₃]
-    ·
-      by_cases' p₄ : h₁ ∈ l₂ <;>
+        
+      · simp [Ne.symm p₁, p₂, p₃]
+        
+      
+    · by_cases' p₄ : h₁ ∈ l₂ <;>
         simp only [Ne.symm p₁, Ne.symm p₂, p₄, count_bag_inter, if_true, if_false, mem_cons_iff, false_orₓ,
           eq_self_iff_true, Ne.def, not_false_iff, count_erase_of_ne, count_cons_of_ne]
+      
 
 theorem bag_inter_sublist_left : ∀ l₁ l₂ : List α, l₁.bag_inter l₂ <+ l₁
   | [], l₂ => by
     simp [nil_sublist]
   | b :: l₁, l₂ => by
     by_cases' b ∈ l₂ <;> simp [h]
-    ·
-      exact (bag_inter_sublist_left _ _).cons_cons _
-    ·
-      apply sublist_cons_of_sublist
+    · exact (bag_inter_sublist_left _ _).cons_cons _
+      
+    · apply sublist_cons_of_sublist
       apply bag_inter_sublist_left
+      
 
 theorem bag_inter_nil_iff_inter_nil : ∀ l₁ l₂ : List α, l₁.bag_inter l₂ = [] ↔ l₁ ∩ l₂ = []
   | [], l₂ => by

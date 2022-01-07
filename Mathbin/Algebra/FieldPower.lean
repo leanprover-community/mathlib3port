@@ -63,50 +63,49 @@ theorem zpow_pos_of_pos {a : K} (ha : 0 < a) : ∀ z : ℤ, 0 < a ^ z
 
 theorem zpow_le_of_le {x : K} (hx : 1 ≤ x) {a b : ℤ} (h : a ≤ b) : x ^ a ≤ x ^ b := by
   induction' a with a a <;> induction' b with b b
-  ·
-    simp only [of_nat_eq_coe, zpow_coe_nat]
+  · simp only [of_nat_eq_coe, zpow_coe_nat]
     apply pow_le_pow hx
     apply le_of_coe_nat_le_coe_nat h
-  ·
-    apply absurd h
+    
+  · apply absurd h
     apply not_le_of_gtₓ
     exact lt_of_lt_of_leₓ (neg_succ_lt_zero _) (of_nat_nonneg _)
-  ·
-    simp only [zpow_neg_succ_of_nat, one_div, of_nat_eq_coe, zpow_coe_nat]
+    
+  · simp only [zpow_neg_succ_of_nat, one_div, of_nat_eq_coe, zpow_coe_nat]
     apply le_transₓ (inv_le_one _) <;> apply one_le_pow_of_one_le hx
-  ·
-    simp only [zpow_neg_succ_of_nat]
+    
+  · simp only [zpow_neg_succ_of_nat]
     apply (inv_le_inv _ _).2
-    ·
-      apply pow_le_pow hx
-      have : -(↑a+1 : ℤ) ≤ -(↑b+1 : ℤ)
-      exact h
+    · apply pow_le_pow hx
+      have : -(↑(a + 1) : ℤ) ≤ -(↑(b + 1) : ℤ) := h
       have h' := le_of_neg_le_neg this
       apply le_of_coe_nat_le_coe_nat h'
+      
     repeat'
       apply pow_pos (lt_of_lt_of_leₓ zero_lt_one hx)
+    
 
 theorem pow_le_max_of_min_le {x : K} (hx : 1 ≤ x) {a b c : ℤ} (h : min a b ≤ c) : x ^ -c ≤ max (x ^ -a) (x ^ -b) := by
   wlog hle : a ≤ b
-  have hnle : -b ≤ -a
-  exact neg_le_neg hle
-  have hfle : x ^ -b ≤ x ^ -a
-  exact zpow_le_of_le hx hnle
+  have hnle : -b ≤ -a := neg_le_neg hle
+  have hfle : x ^ -b ≤ x ^ -a := zpow_le_of_le hx hnle
   have : x ^ -c ≤ x ^ -a := by
     apply zpow_le_of_le hx
     simpa only [min_eq_leftₓ hle, neg_le_neg_iff] using h
   simpa only [max_eq_leftₓ hfle]
 
 theorem zpow_le_one_of_nonpos {p : K} (hp : 1 ≤ p) {z : ℤ} (hz : z ≤ 0) : p ^ z ≤ 1 :=
-  calc p ^ z ≤ p ^ 0 := zpow_le_of_le hp hz
+  calc
+    p ^ z ≤ p ^ 0 := zpow_le_of_le hp hz
     _ = 1 := by
-    simp
+      simp
     
 
 theorem one_le_zpow_of_nonneg {p : K} (hp : 1 ≤ p) {z : ℤ} (hz : 0 ≤ z) : 1 ≤ p ^ z :=
-  calc p ^ z ≥ p ^ 0 := zpow_le_of_le hp hz
+  calc
+    p ^ z ≥ p ^ 0 := zpow_le_of_le hp hz
     _ = 1 := by
-    simp
+      simp
     
 
 theorem zpow_bit0_nonneg (a : K) (n : ℤ) : 0 ≤ a ^ bit0 n := by
@@ -135,19 +134,19 @@ theorem zpow_bit1_nonneg_iff : 0 ≤ a ^ bit1 n ↔ 0 ≤ a :=
 theorem zpow_bit1_nonpos_iff : a ^ bit1 n ≤ 0 ↔ a ≤ 0 := by
   rw [le_iff_lt_or_eqₓ, zpow_bit1_neg_iff]
   constructor
-  ·
-    rintro (h | h)
-    ·
-      exact h.le
-    ·
-      exact (zpow_eq_zero h).le
-  ·
-    intro h
+  · rintro (h | h)
+    · exact h.le
+      
+    · exact (zpow_eq_zero h).le
+      
+    
+  · intro h
     rcases eq_or_lt_of_le h with (rfl | h)
-    ·
-      exact Or.inr (zero_zpow _ (bit1_ne_zero n))
-    ·
-      exact Or.inl h
+    · exact Or.inr (zero_zpow _ (bit1_ne_zero n))
+      
+    · exact Or.inl h
+      
+    
 
 @[simp]
 theorem zpow_bit1_pos_iff : 0 < a ^ bit1 n ↔ 0 < a :=
@@ -155,10 +154,10 @@ theorem zpow_bit1_pos_iff : 0 < a ^ bit1 n ↔ 0 < a :=
 
 theorem Even.zpow_nonneg {n : ℤ} (hn : Even n) (a : K) : 0 ≤ a ^ n := by
   cases' le_or_ltₓ 0 a with h h
-  ·
-    exact zpow_nonneg h _
-  ·
-    exact (hn.zpow_neg a).subst (zpow_nonneg (neg_nonneg_of_nonpos h.le) _)
+  · exact zpow_nonneg h _
+    
+  · exact (hn.zpow_neg a).subst (zpow_nonneg (neg_nonneg_of_nonpos h.le) _)
+    
 
 theorem Even.zpow_pos (hn : Even n) (ha : a ≠ 0) : 0 < a ^ n := by
   cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit0_pos ha k
@@ -210,14 +209,16 @@ theorem Nat.zpow_ne_zero_of_pos {p : ℕ} (h : 0 < p) (n : ℤ) : (p : K) ^ n �
 theorem zpow_strict_mono {x : K} (hx : 1 < x) : StrictMono fun n : ℤ => x ^ n :=
   strict_mono_int_of_lt_succ $ fun n =>
     have xpos : 0 < x := zero_lt_one.trans hx
-    calc x ^ n < (x ^ n)*x := lt_mul_of_one_lt_right (zpow_pos_of_pos xpos _) hx
-      _ = x ^ n+1 := (zpow_add_one₀ xpos.ne' _).symm
+    calc
+      x ^ n < x ^ n * x := lt_mul_of_one_lt_right (zpow_pos_of_pos xpos _) hx
+      _ = x ^ (n + 1) := (zpow_add_one₀ xpos.ne' _).symm
       
 
 theorem zpow_strict_anti {x : K} (h₀ : 0 < x) (h₁ : x < 1) : StrictAnti fun n : ℤ => x ^ n :=
   strict_anti_int_of_succ_lt $ fun n =>
-    calc (x ^ n+1) = (x ^ n)*x := zpow_add_one₀ h₀.ne' _
-      _ < (x ^ n)*1 := (mul_lt_mul_left $ zpow_pos_of_pos h₀ _).2 h₁
+    calc
+      x ^ (n + 1) = x ^ n * x := zpow_add_one₀ h₀.ne' _
+      _ < x ^ n * 1 := (mul_lt_mul_left $ zpow_pos_of_pos h₀ _).2 h₁
       _ = x ^ n := mul_oneₓ _
       
 
@@ -236,19 +237,20 @@ theorem pos_div_pow_pos {a b : K} (ha : 0 < a) (hb : 0 < b) (k : ℕ) : 0 < a / 
 @[simp]
 theorem div_pow_le {a b : K} (ha : 0 < a) (hb : 1 ≤ b) (k : ℕ) : a / b ^ k ≤ a :=
   (div_le_iff $ pow_pos (lt_of_lt_of_leₓ zero_lt_one hb) k).mpr
-    (calc a = a*1 := (mul_oneₓ a).symm
-      _ ≤ a*b ^ k := (mul_le_mul_left ha).mpr $ one_le_pow_of_one_le hb _
+    (calc
+      a = a * 1 := (mul_oneₓ a).symm
+      _ ≤ a * b ^ k := (mul_le_mul_left ha).mpr $ one_le_pow_of_one_le hb _
       )
 
 theorem zpow_injective {x : K} (h₀ : 0 < x) (h₁ : x ≠ 1) : Function.Injective ((· ^ ·) x : ℤ → K) := by
   intro m n h
   rcases h₁.lt_or_lt with (H | H)
-  ·
-    apply (zpow_strict_mono (one_lt_inv h₀ H)).Injective
+  · apply (zpow_strict_mono (one_lt_inv h₀ H)).Injective
     show x⁻¹ ^ m = x⁻¹ ^ n
     rw [← zpow_neg_one, ← zpow_mul₀, ← zpow_mul₀, mul_commₓ _ m, mul_commₓ _ n, zpow_mul₀, zpow_mul₀, h]
-  ·
-    exact (zpow_strict_mono H).Injective h
+    
+  · exact (zpow_strict_mono H).Injective h
+    
 
 @[simp]
 theorem zpow_inj {x : K} (h₀ : 0 < x) (h₁ : x ≠ 1) {m n : ℤ} : x ^ m = x ^ n ↔ m = n :=

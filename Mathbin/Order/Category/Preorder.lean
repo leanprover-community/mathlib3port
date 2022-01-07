@@ -7,7 +7,7 @@ import Mathbin.Order.Hom.Basic
 
 open CategoryTheory
 
-/--  The category of preorders. -/
+/-- The category of preorders. -/
 def Preorderₓₓ :=
   bundled Preorderₓ
 
@@ -19,14 +19,12 @@ instance : bundled_hom @OrderHom where
   comp := @OrderHom.comp
   hom_ext := @OrderHom.ext
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler large_category
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler concrete_category
-deriving instance [anonymous], [anonymous] for Preorderₓₓ
+deriving instance large_category, concrete_category for Preorderₓₓ
 
 instance : CoeSort Preorderₓₓ (Type _) :=
   bundled.has_coe_to_sort
 
-/--  Construct a bundled Preorder from the underlying type and typeclass. -/
+/-- Construct a bundled Preorder from the underlying type and typeclass. -/
 def of (α : Type _) [Preorderₓ α] : Preorderₓₓ :=
   bundled.of α
 

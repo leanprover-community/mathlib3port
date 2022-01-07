@@ -25,8 +25,7 @@ universe u v w
 
 open Function
 
-/-- 
-`p` is many-one reducible to `q` if there is a computable function translating questions about `p`
+/-- `p` is many-one reducible to `q` if there is a computable function translating questions about `p`
 to questions about `q`.
 -/
 def ManyOneReducible {α β} [Primcodable α] [Primcodable β] (p : α → Prop) (q : β → Prop) :=
@@ -58,8 +57,7 @@ theorem reflexive_many_one_reducible {α} [Primcodable α] : Reflexive (@ManyOne
 theorem transitive_many_one_reducible {α} [Primcodable α] : Transitive (@ManyOneReducible α α _ _) := fun p q r =>
   ManyOneReducible.trans
 
-/-- 
-`p` is one-one reducible to `q` if there is an injective computable function translating questions
+/-- `p` is one-one reducible to `q` if there is an injective computable function translating questions
 about `p` to questions about `q`.
 -/
 def OneOneReducible {α β} [Primcodable α] [Primcodable β] (p : α → Prop) (q : β → Prop) :=
@@ -127,11 +125,11 @@ theorem computable_of_one_one_reducible {p : α → Prop} {q : β → Prop} (h :
 
 end ComputablePred
 
-/--  `p` and `q` are many-one equivalent if each one is many-one reducible to the other. -/
+/-- `p` and `q` are many-one equivalent if each one is many-one reducible to the other. -/
 def ManyOneEquiv {α β} [Primcodable α] [Primcodable β] (p : α → Prop) (q : β → Prop) :=
   p ≤₀ q ∧ q ≤₀ p
 
-/--  `p` and `q` are one-one equivalent if each one is one-one reducible to the other. -/
+/-- `p` and `q` are one-one equivalent if each one is one-one reducible to the other. -/
 def OneOneEquiv {α β} [Primcodable α] [Primcodable β] (p : α → Prop) (q : β → Prop) :=
   p ≤₁ q ∧ q ≤₁ p
 
@@ -173,7 +171,7 @@ theorem OneOneEquiv.to_many_one {α β} [Primcodable α] [Primcodable β] {p : �
     OneOneEquiv p q → ManyOneEquiv p q
   | ⟨pq, qp⟩ => ⟨pq.to_many_one, qp.to_many_one⟩
 
-/--  a computable bijection -/
+/-- a computable bijection -/
 def Equivₓ.Computable {α β} [Primcodable α] [Primcodable β] (e : α ≃ β) :=
   Computable e ∧ Computable e.symm
 
@@ -266,158 +264,10 @@ variable {β : Type v} [Primcodable β] [Inhabited β]
 
 variable {γ : Type w} [Primcodable γ] [Inhabited γ]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment "/--" "\nComputable and injective mapping of predicates to sets of natural numbers.\n-/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.def
-  "def"
-  (Command.declId `ToNat [])
-  (Command.optDeclSig
-   [(Term.explicitBinder "(" [`p] [":" (Term.app `Set [`α])] [] ")")]
-   [(Term.typeSpec ":" (Term.app `Set [(termℕ "ℕ")]))])
-  (Command.declValSimple
-   ":="
-   (Set.«term{_|_}»
-    "{"
-    `n
-    "|"
-    (Term.app
-     `p
-     [(Term.app (Term.proj (Term.app `Encodable.decode [`α `n]) "." `getOrElse) [(Term.app `default [`α])])])
-    "}")
-   [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}»
-   "{"
-   `n
-   "|"
-   (Term.app `p [(Term.app (Term.proj (Term.app `Encodable.decode [`α `n]) "." `getOrElse) [(Term.app `default [`α])])])
-   "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `p [(Term.app (Term.proj (Term.app `Encodable.decode [`α `n]) "." `getOrElse) [(Term.app `default [`α])])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app (Term.proj (Term.app `Encodable.decode [`α `n]) "." `getOrElse) [(Term.app `default [`α])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `default [`α])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `α
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `default
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `default [`α]) []] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  (Term.proj (Term.app `Encodable.decode [`α `n]) "." `getOrElse)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `Encodable.decode [`α `n])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `α
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `Encodable.decode
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `Encodable.decode [`α `n]) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Term.app
-   (Term.proj (Term.paren "(" [(Term.app `Encodable.decode [`α `n]) []] ")") "." `getOrElse)
-   [(Term.paren "(" [(Term.app `default [`α]) []] ")")])
-  []]
- ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `p
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-    Computable and injective mapping of predicates to sets of natural numbers.
-    -/
-  def ToNat ( p : Set α ) : Set ℕ := { n | p Encodable.decode α n . getOrElse default α }
+/-- Computable and injective mapping of predicates to sets of natural numbers.
+-/
+def ToNat (p : Set α) : Set ℕ :=
+  { n | p ((Encodable.decode α n).getOrElse (default α)) }
 
 @[simp]
 theorem to_nat_many_one_reducible {p : Set α} : ToNat p ≤₀ p :=
@@ -442,13 +292,13 @@ theorem to_nat_many_one_equiv {p : Set α} : ManyOneEquiv (ToNat p) p := by
 theorem many_one_equiv_to_nat (p : Set α) (q : Set β) : ManyOneEquiv (ToNat p) (ToNat q) ↔ ManyOneEquiv p q := by
   simp [ManyOneEquiv]
 
-/--  A many-one degree is an equivalence class of sets up to many-one equivalence. -/
+/-- A many-one degree is an equivalence class of sets up to many-one equivalence. -/
 def ManyOneDegree : Type :=
   Quotientₓ (⟨ManyOneEquiv, equivalence_of_many_one_equiv⟩ : Setoidₓ (Set ℕ))
 
 namespace ManyOneDegree
 
-/--  The many-one degree of a set on a primcodable type. -/
+/-- The many-one degree of a set on a primcodable type. -/
 def of (p : α → Prop) : ManyOneDegree :=
   Quotientₓ.mk' (ToNat p)
 
@@ -456,8 +306,7 @@ def of (p : α → Prop) : ManyOneDegree :=
 protected theorem ind_on {C : ManyOneDegree → Prop} (d : ManyOneDegree) (h : ∀ p : Set ℕ, C (of p)) : C d :=
   Quotientₓ.induction_on' d h
 
-/-- 
-Lifts a function on sets of natural numbers to many-one degrees.
+/-- Lifts a function on sets of natural numbers to many-one degrees.
 -/
 @[elab_as_eliminator, reducible]
 protected def lift_on {φ} (d : ManyOneDegree) (f : Set ℕ → φ) (h : ∀ p q, ManyOneEquiv p q → f p = f q) : φ :=
@@ -468,8 +317,7 @@ protected theorem lift_on_eq {φ} (p : Set ℕ) (f : Set ℕ → φ) (h : ∀ p 
     (of p).liftOn f h = f p :=
   rfl
 
-/-- 
-Lifts a binary function on sets of natural numbers to many-one degrees.
+/-- Lifts a binary function on sets of natural numbers to many-one degrees.
 -/
 @[elab_as_eliminator, reducible, simp]
 protected def lift_on₂ {φ} (d₁ d₂ : ManyOneDegree) (f : Set ℕ → Set ℕ → φ)
@@ -501,8 +349,7 @@ theorem of_eq_of {p : α → Prop} {q : β → Prop} : of p = of q ↔ ManyOneEq
 instance : Inhabited ManyOneDegree :=
   ⟨of (∅ : Set ℕ)⟩
 
-/-- 
-For many-one degrees `d₁` and `d₂`, `d₁ ≤ d₂` if the sets in `d₁` are many-one reducible to the
+/-- For many-one degrees `d₁` and `d₂`, `d₁ ≤ d₂` if the sets in `d₁` are many-one reducible to the
 sets in `d₂`.
 -/
 instance : LE ManyOneDegree :=
@@ -528,12 +375,13 @@ private theorem le_transₓ {d₁ d₂ d₃ : ManyOneDegree} : d₁ ≤ d₂ →
   induction d₃ using ManyOneDegree.ind_on
   apply ManyOneReducible.trans
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : PartialOrderₓ ManyOneDegree
-  where le := · ≤ · le_refl := le_reflₓ le_trans _ _ _ := le_transₓ le_antisymm _ _ := le_antisymmₓ
+instance : PartialOrderₓ ManyOneDegree where
+  le := · ≤ ·
+  le_refl := le_reflₓ
+  le_trans := fun _ _ _ => le_transₓ
+  le_antisymm := fun _ _ => le_antisymmₓ
 
-/--  The join of two degrees, induced by the disjoint union of two underlying sets. -/
+/-- The join of two degrees, induced by the disjoint union of two underlying sets. -/
 instance : Add ManyOneDegree :=
   ⟨fun d₁ d₂ =>
     d₁.lift_on₂ d₂ (fun a b => of (a ⊕' b))
@@ -547,7 +395,7 @@ instance : Add ManyOneDegree :=
               (hr₂.trans one_one_reducible.disjoin_right.to_many_one)⟩)⟩
 
 @[simp]
-theorem add_of (p : Set α) (q : Set β) : of (p ⊕' q) = of p+of q :=
+theorem add_of (p : Set α) (q : Set β) : of (p ⊕' q) = of p + of q :=
   of_eq_of.mpr
     ⟨disjoin_many_one_reducible (many_one_reducible_to_nat.trans OneOneReducible.disjoin_left.to_many_one)
         (many_one_reducible_to_nat.trans OneOneReducible.disjoin_right.to_many_one),
@@ -555,26 +403,26 @@ theorem add_of (p : Set α) (q : Set β) : of (p ⊕' q) = of p+of q :=
         (to_nat_many_one_reducible.trans OneOneReducible.disjoin_right.to_many_one)⟩
 
 @[simp]
-protected theorem add_le {d₁ d₂ d₃ : ManyOneDegree} : (d₁+d₂) ≤ d₃ ↔ d₁ ≤ d₃ ∧ d₂ ≤ d₃ := by
+protected theorem add_le {d₁ d₂ d₃ : ManyOneDegree} : d₁ + d₂ ≤ d₃ ↔ d₁ ≤ d₃ ∧ d₂ ≤ d₃ := by
   induction d₁ using ManyOneDegree.ind_on
   induction d₂ using ManyOneDegree.ind_on
   induction d₃ using ManyOneDegree.ind_on
   simpa only [← add_of, of_le_of] using disjoin_le
 
 @[simp]
-protected theorem le_add_left (d₁ d₂ : ManyOneDegree) : d₁ ≤ d₁+d₂ :=
+protected theorem le_add_left (d₁ d₂ : ManyOneDegree) : d₁ ≤ d₁ + d₂ :=
   (ManyOneDegree.add_le.1
       (by
         rfl)).1
 
 @[simp]
-protected theorem le_add_right (d₁ d₂ : ManyOneDegree) : d₂ ≤ d₁+d₂ :=
+protected theorem le_add_right (d₁ d₂ : ManyOneDegree) : d₂ ≤ d₁ + d₂ :=
   (ManyOneDegree.add_le.1
       (by
         rfl)).2
 
 instance : SemilatticeSup ManyOneDegree :=
-  { ManyOneDegree.partialOrder with sup := ·+·, le_sup_left := ManyOneDegree.le_add_left,
+  { ManyOneDegree.partialOrder with sup := · + ·, le_sup_left := ManyOneDegree.le_add_left,
     le_sup_right := ManyOneDegree.le_add_right, sup_le := fun a b c h₁ h₂ => ManyOneDegree.add_le.2 ⟨h₁, h₂⟩ }
 
 end ManyOneDegree

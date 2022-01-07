@@ -1,7 +1,5 @@
-import Mathbin.Data.Sum
-import Mathbin.Logic.Function.Basic
 import Mathbin.Control.Functor
-import Mathbin.Tactic.Core
+import Mathbin.Data.Sum.Basic
 
 /-!
 # Functors with two arguments
@@ -24,13 +22,13 @@ universe u₀ u₁ u₂ v₀ v₁ v₂
 
 open Function
 
-/--  Lawless bifunctor. This typeclass only holds the data for the bimap. -/
+/-- Lawless bifunctor. This typeclass only holds the data for the bimap. -/
 class Bifunctor (F : Type u₀ → Type u₁ → Type u₂) where
   bimap : ∀ {α α' β β'}, (α → α') → (β → β') → F α β → F α' β'
 
 export Bifunctor (bimap)
 
-/--  Bifunctor. This typeclass asserts that a lawless `bifunctor` is lawful. -/
+/-- Bifunctor. This typeclass asserts that a lawless `bifunctor` is lawful. -/
 class IsLawfulBifunctor (F : Type u₀ → Type u₁ → Type u₂) [Bifunctor F] where
   id_bimap : ∀ {α β} x : F α β, bimap id id x = x
   bimap_bimap :
@@ -49,12 +47,12 @@ variable {F : Type u₀ → Type u₁ → Type u₂} [Bifunctor F]
 
 namespace Bifunctor
 
-/--  Left map of a bifunctor. -/
+/-- Left map of a bifunctor. -/
 @[reducible]
 def fst {α α' β} (f : α → α') : F α β → F α' β :=
   bimap f id
 
-/--  Right map of a bifunctor. -/
+/-- Right map of a bifunctor. -/
 @[reducible]
 def snd {α β β'} (f : β → β') : F α β → F α β' :=
   bimap id f
@@ -98,14 +96,14 @@ instance : Bifunctor Prod where
 instance : IsLawfulBifunctor Prod := by
   refine' { .. } <;> intros <;> cases x <;> rfl
 
--- failed to format: format: uncaught backtrack exception
-instance Bifunctor.const : Bifunctor const where bimap α α' β β f _ := f
+instance Bifunctor.const : Bifunctor const where
+  bimap := fun α α' β β f _ => f
 
 instance IsLawfulBifunctor.const : IsLawfulBifunctor const := by
   refine' { .. } <;> intros <;> rfl
 
--- failed to format: format: uncaught backtrack exception
-instance Bifunctor.flip : Bifunctor ( flip F ) where bimap α α' β β' f f' x := ( bimap f' f x : F β' α' )
+instance Bifunctor.flip : Bifunctor (flip F) where
+  bimap := fun α α' β β' f f' x => (bimap f' f x : F β' α')
 
 instance IsLawfulBifunctor.flip [IsLawfulBifunctor F] : IsLawfulBifunctor (flip F) := by
   refine' { .. } <;> intros <;> simp' [bimap] with functor_norm
@@ -118,8 +116,8 @@ instance : IsLawfulBifunctor Sum := by
 
 open Bifunctor Functor
 
--- failed to format: format: uncaught backtrack exception
-instance ( priority := 10 ) Bifunctor.functor { α } : Functor ( F α ) where map _ _ := snd
+instance (priority := 10) Bifunctor.functor {α} : Functor (F α) where
+  map := fun _ _ => snd
 
 instance (priority := 10) Bifunctor.is_lawful_functor [IsLawfulBifunctor F] {α} : IsLawfulFunctor (F α) := by
   refine' { .. } <;> intros <;> simp' [Functor.map] with functor_norm
@@ -128,10 +126,8 @@ section Bicompl
 
 variable (G : Type _ → Type u₀) (H : Type _ → Type u₁) [Functor G] [Functor H]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : Bifunctor ( bicompl F G H )
-  where bimap α α' β β' f f' x := ( bimap ( map f ) ( map f' ) x : F ( G α' ) ( H β' ) )
+instance : Bifunctor (bicompl F G H) where
+  bimap := fun α α' β β' f f' x => (bimap (map f) (map f') x : F (G α') (H β'))
 
 instance [IsLawfulFunctor G] [IsLawfulFunctor H] [IsLawfulBifunctor F] : IsLawfulBifunctor (bicompl F G H) := by
   constructor <;> intros <;> simp' [bimap, map_id, map_comp_map] with functor_norm
@@ -142,8 +138,8 @@ section Bicompr
 
 variable (G : Type u₂ → Type _) [Functor G]
 
--- failed to format: format: uncaught backtrack exception
-instance : Bifunctor ( bicompr G F ) where bimap α α' β β' f f' x := ( map ( bimap f f' ) x : G ( F α' β' ) )
+instance : Bifunctor (bicompr G F) where
+  bimap := fun α α' β β' f f' x => (map (bimap f f') x : G (F α' β'))
 
 instance [IsLawfulFunctor G] [IsLawfulBifunctor F] : IsLawfulBifunctor (bicompr G F) := by
   constructor <;> intros <;> simp' [bimap] with functor_norm

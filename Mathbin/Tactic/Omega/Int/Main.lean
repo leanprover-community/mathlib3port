@@ -13,9 +13,9 @@ run_cmd
   mk_simp_attr `sugar
 
 attribute [sugar]
-  Ne not_leₓ not_ltₓ Int.lt_iff_add_one_le or_falseₓ false_orₓ and_trueₓ true_andₓ Ge Gt mul_addₓ add_mulₓ one_mulₓ mul_oneₓ mul_commₓ sub_eq_add_neg imp_iff_not_or iff_iff_not_or_and_or_not
+  Ne not_leₓ not_ltₓ Int.lt_iff_add_one_leₓ or_falseₓ false_orₓ and_trueₓ true_andₓ Ge Gt mul_addₓ add_mulₓ one_mulₓ mul_oneₓ mul_commₓ sub_eq_add_neg imp_iff_not_or iff_iff_not_or_and_or_not
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 unsafe def desugar :=
   sorry
 
@@ -26,22 +26,22 @@ theorem univ_close_of_unsat_clausify (m : Nat) (p : preform) : clauses.unsat (dn
     apply unsat_of_clauses_unsat
     exact h1
 
-/--  Given a (p : preform), return the expr of a (t : univ_close m p) -/
+/-- Given a (p : preform), return the expr of a (t : univ_close m p) -/
 unsafe def prove_univ_close (m : Nat) (p : preform) : tactic expr := do
   let x ← prove_unsats (dnf (¬* p))
   return (quote.1 (univ_close_of_unsat_clausify (%%ₓquote.1 m) (%%ₓquote.1 p) (%%ₓx)))
 
-/--  Reification to imtermediate shadow syntax that retains exprs -/
+/-- Reification to imtermediate shadow syntax that retains exprs -/
 unsafe def to_exprterm : expr → tactic exprterm
   | quote.1 (-%%ₓx) =>
     (do
         let z ← eval_expr' Int x
         return (exprterm.cst (-z : Int))) <|>
       return $ exprterm.exp (-1 : Int) x
-  | quote.1 ((%%ₓmx)*%%ₓzx) => do
+  | quote.1 ((%%ₓmx) * %%ₓzx) => do
     let z ← eval_expr' Int zx
     return (exprterm.exp z mx)
-  | quote.1 ((%%ₓt1x)+%%ₓt2x) => do
+  | quote.1 ((%%ₓt1x) + %%ₓt2x) => do
     let t1 ← to_exprterm t1x
     let t2 ← to_exprterm t2x
     return (exprterm.add t1 t2)
@@ -51,7 +51,7 @@ unsafe def to_exprterm : expr → tactic exprterm
         return (exprterm.cst z)) <|>
       return $ exprterm.exp 1 x
 
-/--  Reification to imtermediate shadow syntax that retains exprs -/
+/-- Reification to imtermediate shadow syntax that retains exprs -/
 unsafe def to_exprform : expr → tactic exprform
   | quote.1 ((%%ₓtx1) = %%ₓtx2) => do
     let t1 ← to_exprterm tx1
@@ -75,13 +75,13 @@ unsafe def to_exprform : expr → tactic exprform
   | quote.1 (_ → %%ₓpx) => to_exprform px
   | x => trace "Cannot reify expr : " >> trace x >> failed
 
-/--  List of all unreified exprs -/
+/-- List of all unreified exprs -/
 unsafe def exprterm.exprs : exprterm → List expr
   | exprterm.cst _ => []
   | exprterm.exp _ x => [x]
   | exprterm.add t s => List.unionₓ t.exprs s.exprs
 
-/--  List of all unreified exprs -/
+/-- List of all unreified exprs -/
 unsafe def exprform.exprs : exprform → List expr
   | exprform.eq t s => List.unionₓ t.exprs s.exprs
   | exprform.le t s => List.unionₓ t.exprs s.exprs
@@ -89,7 +89,7 @@ unsafe def exprform.exprs : exprform → List expr
   | exprform.or p q => List.unionₓ p.exprs q.exprs
   | exprform.and p q => List.unionₓ p.exprs q.exprs
 
-/--  Reification to an intermediate shadow syntax which eliminates exprs,
+/-- Reification to an intermediate shadow syntax which eliminates exprs,
     but still includes non-canonical terms -/
 unsafe def exprterm.to_preterm (xs : List expr) : exprterm → tactic preterm
   | exprterm.cst k => return (&k)
@@ -101,7 +101,7 @@ unsafe def exprterm.to_preterm (xs : List expr) : exprterm → tactic preterm
     let b ← xb.to_preterm
     return (a+*b)
 
-/--  Reification to an intermediate shadow syntax which eliminates exprs,
+/-- Reification to an intermediate shadow syntax which eliminates exprs,
     but still includes non-canonical terms -/
 unsafe def exprform.to_preform (xs : List expr) : exprform → tactic preform
   | exprform.eq xa xb => do
@@ -124,7 +124,7 @@ unsafe def exprform.to_preform (xs : List expr) : exprform → tactic preform
     let q ← xq.to_preform
     return (p ∧* q)
 
-/--  Reification to an intermediate shadow syntax which eliminates exprs,
+/-- Reification to an intermediate shadow syntax which eliminates exprs,
     but still includes non-canonical terms. -/
 unsafe def to_preform (x : expr) : tactic (preform × Nat) := do
   let xf ← to_exprform x
@@ -132,17 +132,17 @@ unsafe def to_preform (x : expr) : tactic (preform × Nat) := do
   let f ← xf.to_preform xs
   return (f, xs.length)
 
-/--  Return expr of proof of current LIA goal -/
+/-- Return expr of proof of current LIA goal -/
 unsafe def prove : tactic expr := do
   let (p, m) ← target >>= to_preform
   trace_if_enabled `omega p
   prove_univ_close m p
 
-/--  Succeed iff argument is the expr of ℤ -/
+/-- Succeed iff argument is the expr of ℤ -/
 unsafe def eq_int (x : expr) : tactic Unit :=
   if x = quote.1 Int then skip else failed
 
-/--  Check whether argument is expr of a well-formed formula of LIA-/
+/-- Check whether argument is expr of a well-formed formula of LIA-/
 unsafe def wff : expr → tactic Unit
   | quote.1 ¬%%ₓpx => wff px
   | quote.1 ((%%ₓpx) ∨ %%ₓqx) => wff px >> wff qx
@@ -160,11 +160,11 @@ unsafe def wff : expr → tactic Unit
   | quote.1 False => skip
   | _ => failed
 
-/--  Succeed iff argument is expr of term whose type is wff -/
+/-- Succeed iff argument is expr of term whose type is wff -/
 unsafe def wfx (x : expr) : tactic Unit :=
   infer_type x >>= wff
 
-/--  Intro all universal quantifiers over ℤ -/
+/-- Intro all universal quantifiers over ℤ -/
 unsafe def intro_ints_core : tactic Unit := do
   let x ← target
   match x with
@@ -175,7 +175,7 @@ unsafe def intro_ints : tactic Unit := do
   let expr.pi _ _ (quote.1 Int) _ ← target
   intro_ints_core
 
-/--  If the goal has universal quantifiers over integers, introduce all of them.
+/-- If the goal has universal quantifiers over integers, introduce all of them.
 Otherwise, revert all hypotheses that are formulas of linear integer arithmetic. -/
 unsafe def preprocess : tactic Unit :=
   intro_ints <|> revert_cond_all wfx >> desugar
@@ -186,7 +186,7 @@ end Omega
 
 open Omega.Int
 
-/--  The core omega tactic for integers. -/
+/-- The core omega tactic for integers. -/
 unsafe def omega_int (is_manual : Bool) : tactic Unit :=
   (desugar; if is_manual then skip else preprocess); prove >>= apply >> skip
 

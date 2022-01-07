@@ -3,7 +3,7 @@ import Mathbin.Data.Rbtree.Init
 
 universe u
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 unsafe def tactic.interactive.blast_disjs : tactic Unit :=
   sorry
 
@@ -28,7 +28,7 @@ inductive is_searchable (lt : α → α → Prop) : Rbnode α → Option α → 
   | black_s {l r v lo hi} (hs₁ : is_searchable l lo (some v)) (hs₂ : is_searchable r (some v) hi) :
     is_searchable (black_node l v r) lo hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 
@@ -60,11 +60,11 @@ theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
     intros <;>
       run_tac
         is_searchable_tactic
-  ·
-    cases lo <;> simp_all [lift]
+  · cases lo <;> simp_all [lift]
     apply lt_of_lt_of_incomp
     assumption
     exact ⟨hc.2, hc.1⟩
+    
   all_goals
     apply t_ih_rchild hc hs_hs₂
 
@@ -76,11 +76,11 @@ theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
     intros <;>
       run_tac
         is_searchable_tactic
-  ·
-    cases hi <;> simp_all [lift]
+  · cases hi <;> simp_all [lift]
     apply lt_of_incomp_of_lt
     assumption
     assumption
+    
   all_goals
     apply t_ih_lchild hc hs_hs₁
 
@@ -90,10 +90,10 @@ theorem is_searchable_some_low_of_is_searchable_of_lt {t} [IsTrans α lt] :
     intros <;>
       run_tac
         is_searchable_tactic
-  ·
-    cases hi <;> simp_all [lift]
+  · cases hi <;> simp_all [lift]
     apply trans_of lt hlt
     assumption
+    
   all_goals
     apply t_ih_lchild hlt hs_hs₁
 
@@ -103,8 +103,8 @@ theorem is_searchable_none_low_of_is_searchable_some_low {t} :
     intros <;>
       run_tac
         is_searchable_tactic
-  ·
-    simp [lift]
+  · simp [lift]
+    
   all_goals
     apply t_ih_lchild hlt_hs₁
 
@@ -114,11 +114,11 @@ theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
     intros <;>
       run_tac
         is_searchable_tactic
-  ·
-    cases lo <;> simp_all [lift]
+  · cases lo <;> simp_all [lift]
     apply trans_of lt
     assumption
     assumption
+    
   all_goals
     apply t_ih_rchild hlt hs_hs₂
 
@@ -128,8 +128,8 @@ theorem is_searchable_none_high_of_is_searchable_some_high {t} :
     intros <;>
       run_tac
         is_searchable_tactic
-  ·
-    cases lo <;> simp [lift]
+  · cases lo <;> simp [lift]
+    
   all_goals
     apply t_ih_rchild hlt_hs₂
 
@@ -150,52 +150,52 @@ theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
       apply lo_lt_hi
       assumption
     cases_type* or.1
-    ·
-      have h₃ : lift lt lo (some x) ∧ lift lt (some x) (some t_val) := by
+    · have h₃ : lift lt lo (some x) ∧ lift lt (some x) (some t_val) := by
         apply t_ih_lchild
         assumption
         assumption
       cases' h₃ with lo_x x_val
       constructor
       show lift lt lo (some x)
-      ·
-        assumption
+      · assumption
+        
       show lift lt (some x) hi
-      ·
-        cases' hi with hi <;> simp [lift] at *
+      · cases' hi with hi <;> simp [lift] at *
         apply trans_of lt x_val val_hi
-    ·
-      cases h₂
+        
+      
+    · cases h₂
       cases' lo with lo <;> cases' hi with hi <;> simp [lift] at *
-      ·
-        apply lt_of_incomp_of_lt _ val_hi
-        simp
-      ·
-        apply lt_of_lt_of_incomp lo_val
-        simp
+      · apply lt_of_incomp_of_lt _ val_hi
+        simp [*]
+        
+      · apply lt_of_lt_of_incomp lo_val
+        simp [*]
+        
       constructor
-      ·
-        apply lt_of_lt_of_incomp lo_val
-        simp
-      ·
-        apply lt_of_incomp_of_lt _ val_hi
-        simp
-    ·
-      have h₃ : lift lt (some t_val) (some x) ∧ lift lt (some x) hi := by
+      · apply lt_of_lt_of_incomp lo_val
+        simp [*]
+        
+      · apply lt_of_incomp_of_lt _ val_hi
+        simp [*]
+        
+      
+    · have h₃ : lift lt (some t_val) (some x) ∧ lift lt (some x) hi := by
         apply t_ih_rchild
         assumption
         assumption
       cases' h₃ with val_x x_hi
       cases' lo with lo <;> cases' hi with hi <;> simp [lift] at *
-      ·
-        assumption
-      ·
-        apply trans_of lt lo_val val_x
+      · assumption
+        
+      · apply trans_of lt lo_val val_x
+        
       constructor
-      ·
-        apply trans_of lt lo_val val_x
-      ·
-        assumption
+      · apply trans_of lt lo_val val_x
+        
+      · assumption
+        
+      
 
 theorem lt_of_mem_left [IsStrictWeakOrder α lt] {y : α} {t l r : Rbnode α} :
     ∀ {lo hi}, is_searchable lt t lo hi → is_node_of t l y r → ∀ {x}, mem lt x l → lt x y := by
@@ -248,10 +248,10 @@ theorem depth_min : ∀ {c n} {t : Rbnode α}, is_red_black t c n → n ≤ dept
     apply le_minₓ <;> assumption
 
 private def upper : color → Nat → Nat
-  | red, n => (2*n)+1
-  | black, n => 2*n
+  | red, n => 2 * n + 1
+  | black, n => 2 * n
 
-private theorem upper_le : ∀ c n, upper c n ≤ (2*n)+1
+private theorem upper_le : ∀ c n, upper c n ≤ 2 * n + 1
   | red, n => by
     apply le_reflₓ
   | black, n => by
@@ -263,26 +263,24 @@ theorem depth_max' : ∀ {c n} {t : Rbnode α}, is_red_black t c n → depth max
   case leaf_rb =>
     simp [max, depth, upper, Nat.mul_zero]
   case red_rb =>
-    suffices succ (max (depth max h_l) (depth max h_r)) ≤ (2*h_n)+1by
+    suffices succ (max (depth max h_l) (depth max h_r)) ≤ 2 * h_n + 1 by
       simp_all [depth, upper]
     apply succ_le_succ
     apply max_leₓ <;> assumption
   case black_rb =>
-    have : depth max h_l ≤ (2*h_n)+1
-    exact le_transₓ h_ih_rb_l (upper_le _ _)
-    have : depth max h_r ≤ (2*h_n)+1
-    exact le_transₓ h_ih_rb_r (upper_le _ _)
-    suffices new : (max (depth max h_l) (depth max h_r)+1) ≤ (2*h_n)+2*1
-    ·
-      simp_all [depth, upper, succ_eq_add_one, Nat.left_distrib]
+    have : depth max h_l ≤ 2 * h_n + 1 := le_transₓ h_ih_rb_l (upper_le _ _)
+    have : depth max h_r ≤ 2 * h_n + 1 := le_transₓ h_ih_rb_r (upper_le _ _)
+    suffices new : max (depth max h_l) (depth max h_r) + 1 ≤ 2 * h_n + 2 * 1
+    · simp_all [depth, upper, succ_eq_add_one, Nat.left_distrib]
+      
     apply succ_le_succ
     apply max_leₓ <;> assumption
 
-theorem depth_max {c n} {t : Rbnode α} (h : is_red_black t c n) : depth max t ≤ (2*n)+1 :=
+theorem depth_max {c n} {t : Rbnode α} (h : is_red_black t c n) : depth max t ≤ 2 * n + 1 :=
   le_transₓ (depth_max' h) (upper_le _ _)
 
-theorem balanced {c n} {t : Rbnode α} (h : is_red_black t c n) : depth max t ≤ (2*depth min t)+1 := by
-  have : ((2*depth min t)+1) ≥ (2*n)+1 := by
+theorem balanced {c n} {t : Rbnode α} (h : is_red_black t c n) : depth max t ≤ 2 * depth min t + 1 := by
+  have : 2 * depth min t + 1 ≥ 2 * n + 1 := by
     apply succ_le_succ
     apply Nat.mul_le_mul_leftₓ
     apply depth_min h

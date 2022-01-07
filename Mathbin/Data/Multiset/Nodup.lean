@@ -1,3 +1,4 @@
+import Mathbin.Data.Multiset.Bind
 import Mathbin.Data.Multiset.Powerset
 import Mathbin.Data.Multiset.Range
 
@@ -12,7 +13,7 @@ open List
 
 variable {α β γ : Type _}
 
-/--  `nodup s` means that `s` has no duplicates, i.e. the multiplicity of
+/-- `nodup s` means that `s` has no duplicates, i.e. the multiplicity of
   any element is at most 1. -/
 def nodup (s : Multiset α) : Prop :=
   Quot.liftOn s nodup fun s t p => propext p.nodup_iff
@@ -67,10 +68,7 @@ theorem count_eq_one_of_mem [DecidableEq α] {a : α} {s : Multiset α} (d : nod
   le_antisymmₓ (nodup_iff_count_le_one.1 d a) (count_pos.2 h)
 
 theorem nodup_iff_pairwise {α} {s : Multiset α} : nodup s ↔ Pairwise (· ≠ ·) s :=
-  Quotientₓ.induction_on s $ fun l =>
-    (pairwise_coe_iff_pairwise
-        (by
-          exact fun a b => Ne.symm)).symm
+  Quotientₓ.induction_on s $ fun l => (pairwise_coe_iff_pairwise fun a b => Ne.symm).symm
 
 theorem pairwise_of_nodup {r : α → α → Prop} {s : Multiset α} :
     (∀, ∀ a ∈ s, ∀, ∀, ∀ b ∈ s, ∀, a ≠ b → r a b) → nodup s → Pairwise r s :=
@@ -81,13 +79,13 @@ theorem forall_of_pairwise {r : α → α → Prop} (H : Symmetric r) {s : Multi
   let ⟨l, hl₁, hl₂⟩ := hs
   hl₁.symm ▸ List.forall_of_pairwise H hl₂
 
-theorem nodup_add {s t : Multiset α} : nodup (s+t) ↔ nodup s ∧ nodup t ∧ Disjoint s t :=
+theorem nodup_add {s t : Multiset α} : nodup (s + t) ↔ nodup s ∧ nodup t ∧ Disjoint s t :=
   Quotientₓ.induction_on₂ s t $ fun l₁ l₂ => nodup_append
 
-theorem disjoint_of_nodup_add {s t : Multiset α} (d : nodup (s+t)) : Disjoint s t :=
+theorem disjoint_of_nodup_add {s t : Multiset α} (d : nodup (s + t)) : Disjoint s t :=
   (nodup_add.1 d).2.2
 
-theorem nodup_add_of_nodup {s t : Multiset α} (d₁ : nodup s) (d₂ : nodup t) : nodup (s+t) ↔ Disjoint s t := by
+theorem nodup_add_of_nodup {s t : Multiset α} (d₁ : nodup s) (d₂ : nodup t) : nodup (s + t) ↔ Disjoint s t := by
   simp [nodup_add, d₁, d₂]
 
 theorem nodup_of_nodup_map (f : α → β) {s : Multiset α} : nodup (map f s) → nodup s :=
@@ -214,12 +212,13 @@ theorem map_eq_map_of_bij_of_nodup (f : α → γ) (g : β → γ) {s : Multiset
       fun x => by
       simp only [mem_map, true_andₓ, Subtype.exists, eq_comm, mem_attach] <;>
         exact ⟨i_surj _, fun ⟨y, hy⟩ => hy.snd.symm ▸ hi _ _⟩
-  calc s.map f = s.pmap (fun x _ => f x) fun _ => id := by
-    rw [pmap_eq_map]
+  calc
+    s.map f = s.pmap (fun x _ => f x) fun _ => id := by
+      rw [pmap_eq_map]
     _ = s.attach.map fun x => f x.1 := by
-    rw [pmap_eq_map_attach]
+      rw [pmap_eq_map_attach]
     _ = t.map g := by
-    rw [this, Multiset.map_map] <;> exact map_congr fun x _ => h _ _
+      rw [this, Multiset.map_map] <;> exact map_congr fun x _ => h _ _
     
 
 end Multiset

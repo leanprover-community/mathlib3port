@@ -26,8 +26,7 @@ namespace CategoryTheory
 
 variable (C : Type u₁) [category.{v} C]
 
-/-- 
-A category (with morphisms in `Type v`) is well-powered if `subobject X` is `v`-small for every `X`.
+/-- A category (with morphisms in `Type v`) is well-powered if `subobject X` is `v`-small for every `X`.
 
 We show in `well_powered_of_mono_over_essentially_small` and `mono_over_essentially_small`
 that this is the case if and only if `mono_over X` is `v`-essentially small for every `X`.
@@ -71,12 +70,10 @@ theorem well_powered_of_equiv (e : C ≌ D) [well_powered C] : well_powered D :=
     (essentially_small_congr (mono_over.congr X e.symm)).2 $ by
       infer_instance
 
-/--  Being well-powered is preserved by equivalences, as long as the two categories involved have
+/-- Being well-powered is preserved by equivalences, as long as the two categories involved have
     their morphisms in the same universe. -/
 theorem well_powered_congr (e : C ≌ D) : well_powered C ↔ well_powered D :=
-  ⟨fun i => by
-    exact well_powered_of_equiv e, fun i => by
-    exact well_powered_of_equiv e.symm⟩
+  ⟨fun i => well_powered_of_equiv e, fun i => well_powered_of_equiv e.symm⟩
 
 end Equivalenceₓ
 

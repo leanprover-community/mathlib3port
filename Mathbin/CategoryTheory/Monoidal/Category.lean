@@ -53,59 +53,58 @@ open CategoryTheory.Iso
 
 namespace CategoryTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:1127:29: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:1127:29: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:1127:29: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:1127:29: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr𝟙_»
--- ././Mathport/Syntax/Translate/Basic.lean:1127:29: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr𝟙_»
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«exprλ_»
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«exprλ_»
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr𝟙_»
--- ././Mathport/Syntax/Translate/Basic.lean:1127:29: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr𝟙_»
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `exprρ_
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `exprρ_
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr𝟙_»
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«exprλ_»
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `exprρ_
-/-- 
-In a monoidal category, we can take the tensor product of objects, `X ⊗ Y` and of morphisms `f ⊗ g`.
+-- ././Mathport/Syntax/Translate/Basic.lean:1151:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:1151:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:1151:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:1151:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr𝟙_»
+-- ././Mathport/Syntax/Translate/Basic.lean:1151:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr𝟙_»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«exprλ_»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«exprλ_»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr𝟙_»
+-- ././Mathport/Syntax/Translate/Basic.lean:1151:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr𝟙_»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprρ_
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprρ_
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr𝟙_»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«exprλ_»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprρ_
+/-- In a monoidal category, we can take the tensor product of objects, `X ⊗ Y` and of morphisms `f ⊗ g`.
 Tensor product does not need to be strictly associative on objects, but there is a
 specified associator, `α_ X Y Z : (X ⊗ Y) ⊗ Z ≅ X ⊗ (Y ⊗ Z)`. There is a tensor unit `𝟙_ C`,
 with specified left and right unitor isomorphisms `λ_ X : 𝟙_ C ⊗ X ≅ X` and `ρ_ X : X ⊗ 𝟙_ C ≅ X`.
@@ -175,15 +174,16 @@ notation "λ_" => left_unitor
 
 notation "ρ_" => right_unitor
 
-/--  The tensor product of two isomorphisms is an isomorphism. -/
+/-- The tensor product of two isomorphisms is an isomorphism. -/
 @[simps]
 def tensor_iso {C : Type u} {X Y X' Y' : C} [category.{v} C] [monoidal_category.{v} C] (f : X ≅ Y) (g : X' ≅ Y') :
-    X ⊗ X' ≅ Y ⊗ Y' :=
-  { Hom := f.hom ⊗ g.hom, inv := f.inv ⊗ g.inv,
-    hom_inv_id' := by
-      rw [← tensor_comp, iso.hom_inv_id, iso.hom_inv_id, ← tensor_id],
-    inv_hom_id' := by
-      rw [← tensor_comp, iso.inv_hom_id, iso.inv_hom_id, ← tensor_id] }
+    X ⊗ X' ≅ Y ⊗ Y' where
+  Hom := f.hom ⊗ g.hom
+  inv := f.inv ⊗ g.inv
+  hom_inv_id' := by
+    rw [← tensor_comp, iso.hom_inv_id, iso.hom_inv_id, ← tensor_id]
+  inv_hom_id' := by
+    rw [← tensor_comp, iso.inv_hom_id, iso.inv_hom_id, ← tensor_id]
 
 infixr:70 " ⊗ " => tensor_iso
 
@@ -428,13 +428,15 @@ section
 
 variable (C : Type u) [category.{v} C] [monoidal_category.{v} C]
 
-/--  The tensor product expressed as a functor. -/
-def tensor : C × C ⥤ C :=
-  { obj := fun X => X.1 ⊗ X.2, map := fun {X Y : C × C} f : X ⟶ Y => f.1 ⊗ f.2 }
+/-- The tensor product expressed as a functor. -/
+def tensor : C × C ⥤ C where
+  obj := fun X => X.1 ⊗ X.2
+  map := fun {X Y : C × C} f : X ⟶ Y => f.1 ⊗ f.2
 
-/--  The left-associated triple tensor product as a functor. -/
-def left_assoc_tensor : C × C × C ⥤ C :=
-  { obj := fun X => (X.1 ⊗ X.2.1) ⊗ X.2.2, map := fun {X Y : C × C × C} f : X ⟶ Y => (f.1 ⊗ f.2.1) ⊗ f.2.2 }
+/-- The left-associated triple tensor product as a functor. -/
+def left_assoc_tensor : C × C × C ⥤ C where
+  obj := fun X => (X.1 ⊗ X.2.1) ⊗ X.2.2
+  map := fun {X Y : C × C × C} f : X ⟶ Y => (f.1 ⊗ f.2.1) ⊗ f.2.2
 
 @[simp]
 theorem left_assoc_tensor_obj X : (left_assoc_tensor C).obj X = (X.1 ⊗ X.2.1) ⊗ X.2.2 :=
@@ -444,9 +446,10 @@ theorem left_assoc_tensor_obj X : (left_assoc_tensor C).obj X = (X.1 ⊗ X.2.1) 
 theorem left_assoc_tensor_map {X Y} (f : X ⟶ Y) : (left_assoc_tensor C).map f = (f.1 ⊗ f.2.1) ⊗ f.2.2 :=
   rfl
 
-/--  The right-associated triple tensor product as a functor. -/
-def right_assoc_tensor : C × C × C ⥤ C :=
-  { obj := fun X => X.1 ⊗ X.2.1 ⊗ X.2.2, map := fun {X Y : C × C × C} f : X ⟶ Y => f.1 ⊗ f.2.1 ⊗ f.2.2 }
+/-- The right-associated triple tensor product as a functor. -/
+def right_assoc_tensor : C × C × C ⥤ C where
+  obj := fun X => X.1 ⊗ X.2.1 ⊗ X.2.2
+  map := fun {X Y : C × C × C} f : X ⟶ Y => f.1 ⊗ f.2.1 ⊗ f.2.2
 
 @[simp]
 theorem right_assoc_tensor_obj X : (right_assoc_tensor C).obj X = X.1 ⊗ X.2.1 ⊗ X.2.2 :=
@@ -456,15 +459,17 @@ theorem right_assoc_tensor_obj X : (right_assoc_tensor C).obj X = X.1 ⊗ X.2.1 
 theorem right_assoc_tensor_map {X Y} (f : X ⟶ Y) : (right_assoc_tensor C).map f = f.1 ⊗ f.2.1 ⊗ f.2.2 :=
   rfl
 
-/--  The functor `λ X, 𝟙_ C ⊗ X`. -/
-def tensor_unit_left : C ⥤ C :=
-  { obj := fun X => 𝟙_ C ⊗ X, map := fun {X Y : C} f : X ⟶ Y => 𝟙 (𝟙_ C) ⊗ f }
+/-- The functor `λ X, 𝟙_ C ⊗ X`. -/
+def tensor_unit_left : C ⥤ C where
+  obj := fun X => 𝟙_ C ⊗ X
+  map := fun {X Y : C} f : X ⟶ Y => 𝟙 (𝟙_ C) ⊗ f
 
-/--  The functor `λ X, X ⊗ 𝟙_ C`. -/
-def tensor_unit_right : C ⥤ C :=
-  { obj := fun X => X ⊗ 𝟙_ C, map := fun {X Y : C} f : X ⟶ Y => f ⊗ 𝟙 (𝟙_ C) }
+/-- The functor `λ X, X ⊗ 𝟙_ C`. -/
+def tensor_unit_right : C ⥤ C where
+  obj := fun X => X ⊗ 𝟙_ C
+  map := fun {X Y : C} f : X ⟶ Y => f ⊗ 𝟙 (𝟙_ C)
 
-/--  The associator as a natural isomorphism. -/
+/-- The associator as a natural isomorphism. -/
 @[simps]
 def associator_nat_iso : left_assoc_tensor C ≅ right_assoc_tensor C :=
   nat_iso.of_components
@@ -475,7 +480,7 @@ def associator_nat_iso : left_assoc_tensor C ≅ right_assoc_tensor C :=
       intros
       apply monoidal_category.associator_naturality)
 
-/--  The left unitor as a natural isomorphism. -/
+/-- The left unitor as a natural isomorphism. -/
 @[simps]
 def left_unitor_nat_iso : tensor_unit_left C ≅ 𝟭 C :=
   nat_iso.of_components
@@ -486,7 +491,7 @@ def left_unitor_nat_iso : tensor_unit_left C ≅ 𝟭 C :=
       intros
       apply monoidal_category.left_unitor_naturality)
 
-/--  The right unitor as a natural isomorphism. -/
+/-- The right unitor as a natural isomorphism. -/
 @[simps]
 def right_unitor_nat_iso : tensor_unit_right C ≅ 𝟭 C :=
   nat_iso.of_components
@@ -501,13 +506,13 @@ section
 
 variable {C}
 
-/--  Tensoring on the left with a fixed object, as a functor. -/
+/-- Tensoring on the left with a fixed object, as a functor. -/
 @[simps]
-def tensor_left (X : C) : C ⥤ C :=
-  { obj := fun Y => X ⊗ Y, map := fun Y Y' f => 𝟙 X ⊗ f }
+def tensor_left (X : C) : C ⥤ C where
+  obj := fun Y => X ⊗ Y
+  map := fun Y Y' f => 𝟙 X ⊗ f
 
-/-- 
-Tensoring on the left with `X ⊗ Y` is naturally isomorphic to
+/-- Tensoring on the left with `X ⊗ Y` is naturally isomorphic to
 tensoring on the left with `Y`, and then again with `X`.
 -/
 def tensor_left_tensor (X Y : C) : tensor_left (X ⊗ Y) ≅ tensor_left Y ⋙ tensor_left X :=
@@ -524,45 +529,47 @@ theorem tensor_left_tensor_hom_app (X Y Z : C) : (tensor_left_tensor X Y).Hom.ap
 theorem tensor_left_tensor_inv_app (X Y Z : C) : (tensor_left_tensor X Y).inv.app Z = (associator X Y Z).inv := by
   simp [tensor_left_tensor]
 
-/--  Tensoring on the right with a fixed object, as a functor. -/
+/-- Tensoring on the right with a fixed object, as a functor. -/
 @[simps]
-def tensor_right (X : C) : C ⥤ C :=
-  { obj := fun Y => Y ⊗ X, map := fun Y Y' f => f ⊗ 𝟙 X }
+def tensor_right (X : C) : C ⥤ C where
+  obj := fun Y => Y ⊗ X
+  map := fun Y Y' f => f ⊗ 𝟙 X
 
 variable (C)
 
-/-- 
-Tensoring on the left, as a functor from `C` into endofunctors of `C`.
+/-- Tensoring on the left, as a functor from `C` into endofunctors of `C`.
 
 TODO: show this is a op-monoidal functor.
 -/
 @[simps]
-def tensoring_left : C ⥤ C ⥤ C :=
-  { obj := tensor_left, map := fun X Y f => { app := fun Z => f ⊗ 𝟙 Z } }
+def tensoring_left : C ⥤ C ⥤ C where
+  obj := tensor_left
+  map := fun X Y f => { app := fun Z => f ⊗ 𝟙 Z }
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : faithful ( tensoring_left C )
-  where map_injective' X Y f g h := by injections with h replace h := congr_funₓ h ( 𝟙_ C ) simpa using h
+instance : faithful (tensoring_left C) where
+  map_injective' := fun X Y f g h => by
+    injections with h
+    replace h := congr_funₓ h (𝟙_ C)
+    simpa using h
 
-/-- 
-Tensoring on the right, as a functor from `C` into endofunctors of `C`.
+/-- Tensoring on the right, as a functor from `C` into endofunctors of `C`.
 
 We later show this is a monoidal functor.
 -/
 @[simps]
-def tensoring_right : C ⥤ C ⥤ C :=
-  { obj := tensor_right, map := fun X Y f => { app := fun Z => 𝟙 Z ⊗ f } }
+def tensoring_right : C ⥤ C ⥤ C where
+  obj := tensor_right
+  map := fun X Y f => { app := fun Z => 𝟙 Z ⊗ f }
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : faithful ( tensoring_right C )
-  where map_injective' X Y f g h := by injections with h replace h := congr_funₓ h ( 𝟙_ C ) simpa using h
+instance : faithful (tensoring_right C) where
+  map_injective' := fun X Y f g h => by
+    injections with h
+    replace h := congr_funₓ h (𝟙_ C)
+    simpa using h
 
 variable {C}
 
-/-- 
-Tensoring on the right with `X ⊗ Y` is naturally isomorphic to
+/-- Tensoring on the right with `X ⊗ Y` is naturally isomorphic to
 tensoring on the right with `X`, and then again with `Y`.
 -/
 def tensor_right_tensor (X Y : C) : tensor_right (X ⊗ Y) ≅ tensor_right X ⋙ tensor_right Y :=
@@ -581,29 +588,29 @@ theorem tensor_right_tensor_inv_app (X Y Z : C) : (tensor_right_tensor X Y).inv.
 
 variable {C}
 
-/-- 
-Any property closed under `𝟙_` and `⊗` induces a full monoidal subcategory of `C`, where
+/-- Any property closed under `𝟙_` and `⊗` induces a full monoidal subcategory of `C`, where
 the category on the subtype is given by `full_subcategory`.
 -/
 def full_monoidal_subcategory (P : C → Prop) (h_id : P (𝟙_ C)) (h_tensor : ∀ {X Y}, P X → P Y → P (X ⊗ Y)) :
-    monoidal_category { X : C // P X } :=
-  { tensorObj := fun X Y => ⟨X ⊗ Y, h_tensor X.2 Y.2⟩,
-    tensorHom := fun X₁ Y₁ X₂ Y₂ f g => by
-      change X₁.1 ⊗ X₂.1 ⟶ Y₁.1 ⊗ Y₂.1
-      change X₁.1 ⟶ Y₁.1 at f
-      change X₂.1 ⟶ Y₂.1 at g
-      exact f ⊗ g,
-    tensorUnit := ⟨𝟙_ C, h_id⟩,
-    associator := fun X Y Z =>
-      ⟨(α_ X.1 Y.1 Z.1).Hom, (α_ X.1 Y.1 Z.1).inv, hom_inv_id (α_ X.1 Y.1 Z.1), inv_hom_id (α_ X.1 Y.1 Z.1)⟩,
-    leftUnitor := fun X => ⟨(λ_ X.1).Hom, (λ_ X.1).inv, hom_inv_id (λ_ X.1), inv_hom_id (λ_ X.1)⟩,
-    rightUnitor := fun X => ⟨(ρ_ X.1).Hom, (ρ_ X.1).inv, hom_inv_id (ρ_ X.1), inv_hom_id (ρ_ X.1)⟩,
-    tensor_id' := fun X Y => tensor_id X.1 Y.1,
-    tensor_comp' := fun X₁ Y₁ Z₁ X₂ Y₂ Z₂ f₁ f₂ g₁ g₂ => tensor_comp f₁ f₂ g₁ g₂,
-    associator_naturality' := fun X₁ X₂ X₃ Y₁ Y₂ Y₃ f₁ f₂ f₃ => associator_naturality f₁ f₂ f₃,
-    left_unitor_naturality' := fun X Y f => left_unitor_naturality f,
-    right_unitor_naturality' := fun X Y f => right_unitor_naturality f,
-    pentagon' := fun W X Y Z => pentagon W.1 X.1 Y.1 Z.1, triangle' := fun X Y => triangle X.1 Y.1 }
+    monoidal_category { X : C // P X } where
+  tensorObj := fun X Y => ⟨X ⊗ Y, h_tensor X.2 Y.2⟩
+  tensorHom := fun X₁ Y₁ X₂ Y₂ f g => by
+    change X₁.1 ⊗ X₂.1 ⟶ Y₁.1 ⊗ Y₂.1
+    change X₁.1 ⟶ Y₁.1 at f
+    change X₂.1 ⟶ Y₂.1 at g
+    exact f ⊗ g
+  tensorUnit := ⟨𝟙_ C, h_id⟩
+  associator := fun X Y Z =>
+    ⟨(α_ X.1 Y.1 Z.1).Hom, (α_ X.1 Y.1 Z.1).inv, hom_inv_id (α_ X.1 Y.1 Z.1), inv_hom_id (α_ X.1 Y.1 Z.1)⟩
+  leftUnitor := fun X => ⟨(λ_ X.1).Hom, (λ_ X.1).inv, hom_inv_id (λ_ X.1), inv_hom_id (λ_ X.1)⟩
+  rightUnitor := fun X => ⟨(ρ_ X.1).Hom, (ρ_ X.1).inv, hom_inv_id (ρ_ X.1), inv_hom_id (ρ_ X.1)⟩
+  tensor_id' := fun X Y => tensor_id X.1 Y.1
+  tensor_comp' := fun X₁ Y₁ Z₁ X₂ Y₂ Z₂ f₁ f₂ g₁ g₂ => tensor_comp f₁ f₂ g₁ g₂
+  associator_naturality' := fun X₁ X₂ X₃ Y₁ Y₂ Y₃ f₁ f₂ f₃ => associator_naturality f₁ f₂ f₃
+  left_unitor_naturality' := fun X Y f => left_unitor_naturality f
+  right_unitor_naturality' := fun X Y f => right_unitor_naturality f
+  pentagon' := fun W X Y Z => pentagon W.1 X.1 Y.1 Z.1
+  triangle' := fun X Y => triangle X.1 Y.1
 
 end
 

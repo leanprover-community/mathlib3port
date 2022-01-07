@@ -14,11 +14,13 @@ open Denumerable
 instance : Infinite ℚ :=
   Infinite.of_injective (coeₓ : ℕ → ℚ) Nat.cast_injective
 
-private def denumerable_aux : ℚ ≃ { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.Coprime x.2 } :=
-  { toFun := fun x => ⟨⟨x.1, x.2⟩, x.3, x.4⟩, invFun := fun x => ⟨x.1.1, x.1.2, x.2.1, x.2.2⟩,
-    left_inv := fun ⟨_, _, _, _⟩ => rfl, right_inv := fun ⟨⟨_, _⟩, _, _⟩ => rfl }
+private def denumerable_aux : ℚ ≃ { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.Coprime x.2 } where
+  toFun := fun x => ⟨⟨x.1, x.2⟩, x.3, x.4⟩
+  invFun := fun x => ⟨x.1.1, x.1.2, x.2.1, x.2.2⟩
+  left_inv := fun ⟨_, _, _, _⟩ => rfl
+  right_inv := fun ⟨⟨_, _⟩, _, _⟩ => rfl
 
-/--  **Denumerability of the Rational Numbers** -/
+/-- **Denumerability of the Rational Numbers** -/
 instance : Denumerable ℚ := by
   let T := { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.Coprime x.2 }
   let this' : Infinite T := Infinite.of_injective _ denumerable_aux.injective

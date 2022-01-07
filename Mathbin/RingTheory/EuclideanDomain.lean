@@ -44,13 +44,17 @@ end GcdMonoid
 
 namespace EuclideanDomain
 
-/--  Create a `gcd_monoid` whose `gcd_monoid.gcd` matches `euclidean_domain.gcd`. -/
-def GcdMonoid R [EuclideanDomain R] : GcdMonoid R :=
-  { gcd := gcd, lcm := lcm, gcd_dvd_left := gcd_dvd_left, gcd_dvd_right := gcd_dvd_right,
-    dvd_gcd := fun a b c => dvd_gcd,
-    gcd_mul_lcm := fun a b => by
-      rw [EuclideanDomain.gcd_mul_lcm],
-    lcm_zero_left := lcm_zero_left, lcm_zero_right := lcm_zero_right }
+/-- Create a `gcd_monoid` whose `gcd_monoid.gcd` matches `euclidean_domain.gcd`. -/
+def GcdMonoid R [EuclideanDomain R] : GcdMonoid R where
+  gcd := gcd
+  lcm := lcm
+  gcd_dvd_left := gcd_dvd_left
+  gcd_dvd_right := gcd_dvd_right
+  dvd_gcd := fun a b c => dvd_gcd
+  gcd_mul_lcm := fun a b => by
+    rw [EuclideanDomain.gcd_mul_lcm]
+  lcm_zero_left := lcm_zero_left
+  lcm_zero_right := lcm_zero_right
 
 variable {α : Type _} [EuclideanDomain α] [DecidableEq α]
 

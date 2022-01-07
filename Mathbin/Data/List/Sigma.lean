@@ -31,7 +31,7 @@ variable {α : Type u} {β : α → Type v}
 /-! ### `keys` -/
 
 
-/--  List of keys from a list of key-value pairs -/
+/-- List of keys from a list of key-value pairs -/
 def keys : List (Sigma β) → List α :=
   map Sigma.fst
 
@@ -69,7 +69,7 @@ theorem not_eq_key {a} {l : List (Sigma β)} : a ∉ l.keys ↔ ∀ s : Sigma β
 /-! ### `nodupkeys` -/
 
 
-/--  Determines whether the store uses a key several times. -/
+/-- Determines whether the store uses a key several times. -/
 def nodupkeys (l : List (Sigma β)) : Prop :=
   l.keys.nodup
 
@@ -125,8 +125,8 @@ theorem nodup_enum_map_fst (l : List α) : (l.enum.map Prod.fst).Nodup := by
 
 theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.nodup) (nd₁ : l₁.nodup) (h : ∀ x, x ∈ l₀ ↔ x ∈ l₁) : l₀ ~ l₁ := by
   induction' l₀ with x xs generalizing l₁ <;> cases' l₁ with y ys
-  ·
-    constructor
+  · constructor
+    
   iterate 2 
     first |
       specialize h x|
@@ -138,68 +138,68 @@ theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.nodup) (nd₁ : l₁
   cases nd₀
   cases nd₁
   by_cases' h' : x = y
-  ·
-    subst y
+  · subst y
     constructor
     apply l₀_ih ‹_› ‹nodup ys›
     intro a
     specialize h a
     simp at h
     by_cases' h' : a = x
-    ·
-      subst a
+    · subst a
       rw [← not_iff_not]
       constructor <;> intro <;> assumption
-    ·
-      simp [h'] at h
+      
+    · simp [h'] at h
       exact h
-  ·
-    trans x :: y :: ys.erase x
-    ·
-      constructor
+      
+    
+  · trans x :: y :: ys.erase x
+    · constructor
       apply l₀_ih ‹_›
-      ·
-        simp
+      · simp
         constructor
-        ·
-          intro
+        · intro
           apply nd₁_left
           apply mem_of_mem_erase ‹_›
+          
         apply nodup_erase_of_nodup <;> assumption
-      ·
-        intro a
+        
+      · intro a
         specialize h a
         simp at h
         by_cases' h' : a = x
-        ·
-          subst a
+        · subst a
           rw [← not_iff_not]
           constructor <;> intro
-          simp [mem_erase_of_nodup]
+          simp [mem_erase_of_nodup, *]
           assumption
-        ·
-          simp [h'] at h
+          
+        · simp [h'] at h
           simp [h]
           apply or_congr
           rfl
-          simp [mem_erase_of_ne]
+          simp [mem_erase_of_ne, *]
+          
+        
+      
     trans y :: x :: ys.erase x
-    ·
-      constructor
-    ·
-      constructor
+    · constructor
+      
+    · constructor
       symm
       apply perm_cons_erase
       specialize h x
       simp [h'] at h
       exact h
+      
+    
 
 variable [DecidableEq α]
 
 /-! ### `lookup` -/
 
 
-/--  `lookup a l` is the first value in `l` corresponding to the key `a`,
+/-- `lookup a l` is the first value in `l` corresponding to the key `a`,
   or `none` if no such element exists. -/
 def lookup (a : α) : List (Sigma β) → Option (β a)
   | [] => none
@@ -222,11 +222,11 @@ theorem lookup_is_some {a : α} : ∀ {l : List (Sigma β)}, (lookup a l).isSome
     simp
   | ⟨a', b⟩ :: l => by
     by_cases' h : a = a'
-    ·
-      subst a'
+    · subst a'
       simp
-    ·
-      simp [h, lookup_is_some]
+      
+    · simp [h, lookup_is_some]
+      
 
 theorem lookup_eq_none {a : α} {l : List (Sigma β)} : lookup a l = none ↔ a ∉ l.keys := by
   simp [← lookup_is_some, Option.is_none_iff_eq_none]
@@ -234,13 +234,13 @@ theorem lookup_eq_none {a : α} {l : List (Sigma β)} : lookup a l = none ↔ a 
 theorem of_mem_lookup {a : α} {b : β a} : ∀ {l : List (Sigma β)}, b ∈ lookup a l → Sigma.mk a b ∈ l
   | ⟨a', b'⟩ :: l, H => by
     by_cases' h : a = a'
-    ·
-      subst a'
+    · subst a'
       simp at H
       simp [H]
-    ·
-      simp [h] at H
+      
+    · simp [h] at H
       exact Or.inr (of_mem_lookup H)
+      
 
 theorem mem_lookup {a} {b : β a} {l : List (Sigma β)} (nd : l.nodupkeys) (h : Sigma.mk a b ∈ l) : b ∈ lookup a l := by
   cases' option.is_some_iff_exists.mp (lookup_is_some.mpr (mem_keys_of_mem h)) with b' h'
@@ -251,11 +251,11 @@ theorem map_lookup_eq_find (a : α) : ∀ l : List (Sigma β), (lookup a l).map 
   | [] => rfl
   | ⟨a', b'⟩ :: l => by
     by_cases' h : a = a'
-    ·
-      subst a'
+    · subst a'
       simp
-    ·
-      simp [h, map_lookup_eq_find]
+      
+    · simp [h, map_lookup_eq_find]
+      
 
 theorem mem_lookup_iff {a : α} {b : β a} {l : List (Sigma β)} (nd : l.nodupkeys) : b ∈ lookup a l ↔ Sigma.mk a b ∈ l :=
   ⟨of_mem_lookup, mem_lookup nd⟩
@@ -272,7 +272,7 @@ theorem lookup_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.nodupkeys) (nd₁
 /-! ### `lookup_all` -/
 
 
-/--  `lookup_all a l` is the list of all values in `l` corresponding to the key `a`. -/
+/-- `lookup_all a l` is the list of all values in `l` corresponding to the key `a`. -/
 def lookup_all (a : α) : List (Sigma β) → List (β a)
   | [] => []
   | ⟨a', b⟩ :: l => if h : a' = a then Eq.recOnₓ h b :: lookup_all l else lookup_all l
@@ -294,44 +294,44 @@ theorem lookup_all_eq_nil {a : α} : ∀ {l : List (Sigma β)}, lookup_all a l =
     simp
   | ⟨a', b⟩ :: l => by
     by_cases' h : a = a'
-    ·
-      subst a'
+    · subst a'
       simp
-    ·
-      simp [h, lookup_all_eq_nil]
+      
+    · simp [h, lookup_all_eq_nil]
+      
 
 theorem head_lookup_all (a : α) : ∀ l : List (Sigma β), head' (lookup_all a l) = lookup a l
   | [] => by
     simp
   | ⟨a', b⟩ :: l => by
     by_cases' h : a = a' <;>
-      [·
-        subst h
-        simp ,
-      simp ]
+      [· subst h
+        simp
+        ,
+      simp [*]]
 
 theorem mem_lookup_all {a : α} {b : β a} : ∀ {l : List (Sigma β)}, b ∈ lookup_all a l ↔ Sigma.mk a b ∈ l
   | [] => by
     simp
   | ⟨a', b'⟩ :: l => by
     by_cases' h : a = a' <;>
-      [·
-        subst h
-        simp ,
-      simp ]
+      [· subst h
+        simp [*]
+        ,
+      simp [*]]
 
 theorem lookup_all_sublist (a : α) : ∀ l : List (Sigma β), (lookup_all a l).map (Sigma.mk a) <+ l
   | [] => by
     simp
   | ⟨a', b'⟩ :: l => by
     by_cases' h : a = a'
-    ·
-      subst h
+    · subst h
       simp
       exact (lookup_all_sublist l).cons2 _ _ _
-    ·
-      simp [h]
+      
+    · simp [h]
       exact (lookup_all_sublist l).cons _ _ _
+      
 
 theorem lookup_all_length_le_one (a : α) {l : List (Sigma β)} (h : l.nodupkeys) : length (lookup_all a l) ≤ 1 := by
   have := nodup_of_sublist ((lookup_all_sublist a l).map _) h <;>
@@ -360,7 +360,7 @@ theorem perm_lookup_all (a : α) {l₁ l₂ : List (Sigma β)} (nd₁ : l₁.nod
 /-! ### `kreplace` -/
 
 
-/--  Replaces the first value with key `a` by `b`. -/
+/-- Replaces the first value with key `a` by `b`. -/
 def kreplace (a : α) (b : β a) : List (Sigma β) → List (Sigma β) :=
   lookmap $ fun s => if a = s.1 then some ⟨a, b⟩ else none
 
@@ -370,371 +370,38 @@ theorem kreplace_of_forall_not (a : α) (b : β a) {l : List (Sigma β)} (H : �
     rintro ⟨a', b'⟩ h
     dsimp
     split_ifs
-    ·
-      subst a'
+    · subst a'
       exact H _ h
-    ·
-      rfl
+      
+    · rfl
+      
 
 theorem kreplace_self {a : α} {b : β a} {l : List (Sigma β)} (nd : nodupkeys l) (h : Sigma.mk a b ∈ l) :
     kreplace a b l = l := by
   refine' (lookmap_congr _).trans (lookmap_id' (Option.guard fun s => a = s.1) _ _)
-  ·
-    rintro ⟨a', b'⟩ h'
+  · rintro ⟨a', b'⟩ h'
     dsimp [Option.guard]
     split_ifs
-    ·
-      subst a'
+    · subst a'
       exact ⟨rfl, heq_of_eq $ nd.eq_of_mk_mem h h'⟩
-    ·
-      rfl
-  ·
-    rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩
+      
+    · rfl
+      
+    
+  · rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩
     dsimp [Option.guard]
     split_ifs
-    ·
-      subst a₁
+    · subst a₁
       rintro ⟨⟩
       simp
-    ·
-      rintro ⟨⟩
+      
+    · rintro ⟨⟩
+      
+    
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `keys_kreplace [])
-  (Command.declSig
-   [(Term.explicitBinder "(" [`a] [":" `α] [] ")") (Term.explicitBinder "(" [`b] [":" (Term.app `β [`a])] [] ")")]
-   (Term.typeSpec
-    ":"
-    (Term.forall
-     "∀"
-     [(Term.simpleBinder [`l] [(Term.typeSpec ":" (Term.app `List [(Term.app `Sigma [`β])]))])]
-     ","
-     («term_=_» (Term.proj (Term.app `kreplace [`a `b `l]) "." `keys) "=" `l.keys))))
-  (Command.declValSimple
-   ":="
-   («term_$__»
-    (Term.app `lookmap_map_eq [(Term.hole "_") (Term.hole "_")])
-    "$"
-    (Term.byTactic
-     "by"
-     (Tactic.tacticSeq
-      (Tactic.tacticSeq1Indented
-       [(group
-         (Tactic.«tactic_<;>_»
-          (Tactic.rintro
-           "rintro"
-           [(Tactic.rintroPat.one
-             (Tactic.rcasesPat.tuple
-              "⟨"
-              [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `a₁)]) [])
-               ","
-               (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])]
-              "⟩"))
-            (Tactic.rintroPat.one
-             (Tactic.rcasesPat.tuple
-              "⟨"
-              [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `a₂)]) [])
-               ","
-               (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])]
-              "⟩"))]
-           [])
-          "<;>"
-          (Tactic.«tactic_<;>_»
-           (Tactic.dsimp "dsimp" [] [] [] [] [])
-           "<;>"
-           (Tactic.«tactic_<;>_»
-            (Tactic.splitIfs "split_ifs" [] [])
-            "<;>"
-            (Tactic.simp
-             "simp"
-             ["("
-              "config"
-              ":="
-              (Term.structInst
-               "{"
-               []
-               [(group
-                 (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0)
-                 [])]
-               (Term.optEllipsis [])
-               []
-               "}")
-              ")"]
-             []
-             ["[" [(Tactic.simpLemma [] [] `h)] "]"]
-             []))))
-         [])]))))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_$__»
-   (Term.app `lookmap_map_eq [(Term.hole "_") (Term.hole "_")])
-   "$"
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group
-        (Tactic.«tactic_<;>_»
-         (Tactic.rintro
-          "rintro"
-          [(Tactic.rintroPat.one
-            (Tactic.rcasesPat.tuple
-             "⟨"
-             [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `a₁)]) [])
-              ","
-              (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])]
-             "⟩"))
-           (Tactic.rintroPat.one
-            (Tactic.rcasesPat.tuple
-             "⟨"
-             [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `a₂)]) [])
-              ","
-              (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])]
-             "⟩"))]
-          [])
-         "<;>"
-         (Tactic.«tactic_<;>_»
-          (Tactic.dsimp "dsimp" [] [] [] [] [])
-          "<;>"
-          (Tactic.«tactic_<;>_»
-           (Tactic.splitIfs "split_ifs" [] [])
-           "<;>"
-           (Tactic.simp
-            "simp"
-            ["("
-             "config"
-             ":="
-             (Term.structInst
-              "{"
-              []
-              [(group
-                (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0)
-                [])]
-              (Term.optEllipsis [])
-              []
-              "}")
-             ")"]
-            []
-            ["[" [(Tactic.simpLemma [] [] `h)] "]"]
-            []))))
-        [])]))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.«tactic_<;>_»
-        (Tactic.rintro
-         "rintro"
-         [(Tactic.rintroPat.one
-           (Tactic.rcasesPat.tuple
-            "⟨"
-            [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `a₁)]) [])
-             ","
-             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])]
-            "⟩"))
-          (Tactic.rintroPat.one
-           (Tactic.rcasesPat.tuple
-            "⟨"
-            [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `a₂)]) [])
-             ","
-             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])]
-            "⟩"))]
-         [])
-        "<;>"
-        (Tactic.«tactic_<;>_»
-         (Tactic.dsimp "dsimp" [] [] [] [] [])
-         "<;>"
-         (Tactic.«tactic_<;>_»
-          (Tactic.splitIfs "split_ifs" [] [])
-          "<;>"
-          (Tactic.simp
-           "simp"
-           ["("
-            "config"
-            ":="
-            (Term.structInst
-             "{"
-             []
-             [(group
-               (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0)
-               [])]
-             (Term.optEllipsis [])
-             []
-             "}")
-            ")"]
-           []
-           ["[" [(Tactic.simpLemma [] [] `h)] "]"]
-           []))))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic_<;>_»
-   (Tactic.rintro
-    "rintro"
-    [(Tactic.rintroPat.one
-      (Tactic.rcasesPat.tuple
-       "⟨"
-       [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `a₁)]) [])
-        ","
-        (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])]
-       "⟩"))
-     (Tactic.rintroPat.one
-      (Tactic.rcasesPat.tuple
-       "⟨"
-       [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `a₂)]) [])
-        ","
-        (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])]
-       "⟩"))]
-    [])
-   "<;>"
-   (Tactic.«tactic_<;>_»
-    (Tactic.dsimp "dsimp" [] [] [] [] [])
-    "<;>"
-    (Tactic.«tactic_<;>_»
-     (Tactic.splitIfs "split_ifs" [] [])
-     "<;>"
-     (Tactic.simp
-      "simp"
-      ["("
-       "config"
-       ":="
-       (Term.structInst
-        "{"
-        []
-        [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-        (Term.optEllipsis [])
-        []
-        "}")
-       ")"]
-      []
-      ["[" [(Tactic.simpLemma [] [] `h)] "]"]
-      []))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic_<;>_»
-   (Tactic.dsimp "dsimp" [] [] [] [] [])
-   "<;>"
-   (Tactic.«tactic_<;>_»
-    (Tactic.splitIfs "split_ifs" [] [])
-    "<;>"
-    (Tactic.simp
-     "simp"
-     ["("
-      "config"
-      ":="
-      (Term.structInst
-       "{"
-       []
-       [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-       (Term.optEllipsis [])
-       []
-       "}")
-      ")"]
-     []
-     ["[" [(Tactic.simpLemma [] [] `h)] "]"]
-     [])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic_<;>_»
-   (Tactic.splitIfs "split_ifs" [] [])
-   "<;>"
-   (Tactic.simp
-    "simp"
-    ["("
-     "config"
-     ":="
-     (Term.structInst
-      "{"
-      []
-      [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-      (Term.optEllipsis [])
-      []
-      "}")
-     ")"]
-    []
-    ["[" [(Tactic.simpLemma [] [] `h)] "]"]
-    []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp
-   "simp"
-   ["("
-    "config"
-    ":="
-    (Term.structInst
-     "{"
-     []
-     [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-     (Term.optEllipsis [])
-     []
-     "}")
-    ")"]
-   []
-   ["[" [(Tactic.simpLemma [] [] `h)] "]"]
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `h
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'Lean.Parser.Tactic.discharger'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  keys_kreplace
-  ( a : α ) ( b : β a ) : ∀ l : List Sigma β , kreplace a b l . keys = l.keys
-  :=
-    lookmap_map_eq _ _
-      $
-      by
-        rintro ⟨ a₁ , b₂ ⟩ ⟨ a₂ , b₂ ⟩
-          <;>
-          dsimp <;> split_ifs <;> simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ h ]
+theorem keys_kreplace (a : α) (b : β a) : ∀ l : List (Sigma β), (kreplace a b l).keys = l.keys :=
+  lookmap_map_eq _ _ $ by
+    rintro ⟨a₁, b₂⟩ ⟨a₂, b₂⟩ <;> dsimp <;> split_ifs <;> simp (config := { contextual := true })[h]
 
 theorem kreplace_nodupkeys (a : α) (b : β a) {l : List (Sigma β)} : (kreplace a b l).Nodupkeys ↔ l.nodupkeys := by
   simp [nodupkeys, keys_kreplace]
@@ -750,7 +417,7 @@ theorem perm.kreplace {a : α} {b : β a} {l₁ l₂ : List (Sigma β)} (nd : l�
 /-! ### `kerase` -/
 
 
-/--  Remove the first pair with the key `a`. -/
+/-- Remove the first pair with the key `a`. -/
 def kerase (a : α) : List (Sigma β) → List (Sigma β) :=
   erasep $ fun s => a = s.1
 
@@ -769,9 +436,9 @@ theorem kerase_cons_ne {a} {s : Sigma β} {l : List (Sigma β)} (h : a ≠ s.1) 
 @[simp]
 theorem kerase_of_not_mem_keys {a} {l : List (Sigma β)} (h : a ∉ l.keys) : kerase a l = l := by
   induction' l with _ _ ih <;> [rfl,
-    ·
-      simp [not_or_distrib] at h
-      simp [h.1, ih h.2]]
+    · simp [not_or_distrib] at h
+      simp [h.1, ih h.2]
+      ]
 
 theorem kerase_sublist (a : α) (l : List (Sigma β)) : kerase a l <+ l :=
   erasep_sublist _
@@ -789,15 +456,14 @@ theorem exists_of_kerase {a : α} {l : List (Sigma β)} (h : a ∈ l.keys) :
     cases h
   case list.cons hd tl ih =>
     by_cases' e : a = hd.1
-    ·
-      subst e
+    · subst e
       exact
         ⟨hd.2, [], tl, by
           simp , by
           cases hd <;> rfl, by
           simp ⟩
-    ·
-      simp at h
+      
+    · simp at h
       cases h
       case or.inl h =>
         exact absurd h e
@@ -807,6 +473,7 @@ theorem exists_of_kerase {a : α} {l : List (Sigma β)} (h : a ∈ l.keys) :
           ⟨b, hd :: tl₁, tl₂, not_mem_cons_of_ne_of_not_mem e h₁, by
             rw [h₂] <;> rfl, by
             simp [e, h₃]⟩
+      
 
 @[simp]
 theorem mem_keys_kerase_of_ne {a₁ a₂} {l : List (Sigma β)} (h : a₁ ≠ a₂) : a₁ ∈ (kerase a₂ l).keys ↔ a₁ ∈ l.keys :=
@@ -823,22 +490,22 @@ theorem keys_kerase {a} {l : List (Sigma β)} : (kerase a l).keys = l.keys.erase
 
 theorem kerase_kerase {a a'} {l : List (Sigma β)} : (kerase a' l).kerase a = (kerase a l).kerase a' := by
   by_cases' a = a'
-  ·
-    subst a'
+  · subst a'
+    
   induction' l with x xs
-  ·
-    rfl
-  ·
-    by_cases' a' = x.1
-    ·
-      subst a'
+  · rfl
+    
+  · by_cases' a' = x.1
+    · subst a'
       simp [kerase_cons_ne h, kerase_cons_eq rfl]
+      
     by_cases' h' : a = x.1
-    ·
-      subst a
+    · subst a
       simp [kerase_cons_eq rfl, kerase_cons_ne (Ne.symm h)]
-    ·
-      simp [kerase_cons_ne]
+      
+    · simp [kerase_cons_ne, *]
+      
+    
 
 theorem kerase_nodupkeys (a : α) {l : List (Sigma β)} : nodupkeys l → (kerase a l).Nodupkeys :=
   nodupkeys_of_sublist $ kerase_sublist _ _
@@ -856,11 +523,11 @@ theorem not_mem_keys_kerase a {l : List (Sigma β)} (nd : l.nodupkeys) : a ∉ (
   case list.cons hd tl ih =>
     simp at nd
     by_cases' h : a = hd.1
-    ·
-      subst h
+    · subst h
       simp [nd.1]
-    ·
-      simp [h, ih nd.2]
+      
+    · simp [h, ih nd.2]
+      
 
 @[simp]
 theorem lookup_kerase a {l : List (Sigma β)} (nd : l.nodupkeys) : lookup a (kerase a l) = none :=
@@ -874,17 +541,17 @@ theorem lookup_kerase_ne {a a'} {l : List (Sigma β)} (h : a ≠ a') : lookup a 
   case list.cons hd tl ih =>
     cases' hd with ah bh
     by_cases' h₁ : a = ah <;> by_cases' h₂ : a' = ah
-    ·
-      substs h₁ h₂
+    · substs h₁ h₂
       cases Ne.irrefl h
-    ·
-      subst h₁
+      
+    · subst h₁
       simp [h₂]
-    ·
-      subst h₂
+      
+    · subst h₂
       simp [h]
-    ·
-      simp [h₁, h₂, ih]
+      
+    · simp [h₁, h₂, ih]
+      
 
 theorem kerase_append_left {a} : ∀ {l₁ l₂ : List (Sigma β)}, a ∈ l₁.keys → kerase a (l₁ ++ l₂) = kerase a l₁ ++ l₂
   | [], _, h => by
@@ -922,15 +589,15 @@ theorem sizeof_kerase {α} {β : α → Type _} [DecidableEq α] [SizeOf (Sigma 
     sizeof (List.kerase x xs) ≤ sizeof xs := by
   unfold_wf
   induction' xs with y ys
-  ·
-    simp
-  ·
-    by_cases' x = y.1 <;> simp [List.sizeof]
+  · simp
+    
+  · by_cases' x = y.1 <;> simp [*, List.sizeof]
+    
 
 /-! ### `kinsert` -/
 
 
-/--  Insert the pair `⟨a, b⟩` and erase the first pair with the key `a`. -/
+/-- Insert the pair `⟨a, b⟩` and erase the first pair with the key `a`. -/
 def kinsert (a : α) (b : β a) (l : List (Sigma β)) : List (Sigma β) :=
   ⟨a, b⟩ :: kerase a l
 
@@ -959,7 +626,7 @@ theorem lookup_kinsert_ne {a a'} {b' : β a'} {l : List (Sigma β)} (h : a ≠ a
 /-! ### `kextract` -/
 
 
-/--  Finds the first entry with a given key `a` and returns its value (as an `option` because there
+/-- Finds the first entry with a given key `a` and returns its value (as an `option` because there
 might be no entry with key `a`) alongside with the rest of the entries. -/
 def kextract (a : α) : List (Sigma β) → Option (β a) × List (Sigma β)
   | [] => (none, [])
@@ -976,16 +643,16 @@ theorem kextract_eq_lookup_kerase (a : α) : ∀ l : List (Sigma β), kextract a
     simp [kextract]
     dsimp
     split_ifs
-    ·
-      subst a'
+    · subst a'
       simp [kerase]
-    ·
-      simp [kextract, Ne.symm h, kextract_eq_lookup_kerase l, kerase]
+      
+    · simp [kextract, Ne.symm h, kextract_eq_lookup_kerase l, kerase]
+      
 
 /-! ### `erase_dupkeys` -/
 
 
-/--  Remove entries with duplicate keys from `l : list (sigma β)`. -/
+/-- Remove entries with duplicate keys from `l : list (sigma β)`. -/
 def erase_dupkeys : List (Sigma β) → List (Sigma β) :=
   List.foldr (fun x => kinsert x.1 x.2) []
 
@@ -1001,45 +668,45 @@ theorem nodupkeys_erase_dupkeys (l : List (Sigma β)) : nodupkeys (erase_dupkeys
     apply nodup_nil
   clear hl
   induction' l with x xs
-  ·
-    apply this
-  ·
-    cases x
+  · apply this
+    
+  · cases x
     simp [erase_dupkeys]
     constructor
-    ·
-      simp [keys_kerase]
+    · simp [keys_kerase]
       apply mem_erase_of_nodup l_ih
+      
     apply kerase_nodupkeys _ l_ih
+    
 
 theorem lookup_erase_dupkeys (a : α) (l : List (Sigma β)) : lookup a (erase_dupkeys l) = lookup a l := by
   induction l
   rfl
   cases' l_hd with a' b
   by_cases' a = a'
-  ·
-    subst a'
+  · subst a'
     rw [erase_dupkeys_cons, lookup_kinsert, lookup_cons_eq]
-  ·
-    rw [erase_dupkeys_cons, lookup_kinsert_ne h, l_ih, lookup_cons_ne]
+    
+  · rw [erase_dupkeys_cons, lookup_kinsert_ne h, l_ih, lookup_cons_ne]
     exact h
+    
 
 theorem sizeof_erase_dupkeys {α} {β : α → Type _} [DecidableEq α] [SizeOf (Sigma β)] (xs : List (Sigma β)) :
     sizeof (List.eraseDupkeys xs) ≤ sizeof xs := by
   unfold_wf
   induction' xs with x xs
-  ·
-    simp [List.eraseDupkeys]
-  ·
-    simp only [erase_dupkeys_cons, List.sizeof, kinsert_def, add_le_add_iff_left, Sigma.eta]
+  · simp [List.eraseDupkeys]
+    
+  · simp only [erase_dupkeys_cons, List.sizeof, kinsert_def, add_le_add_iff_left, Sigma.eta]
     trans
     apply sizeof_kerase
     assumption
+    
 
 /-! ### `kunion` -/
 
 
-/--  `kunion l₁ l₂` is the append to l₁ of l₂ after, for each key in l₁, the
+/-- `kunion l₁ l₂` is the append to l₁ of l₂ after, for each key in l₁, the
 first matching pair in l₂ is erased. -/
 def kunion : List (Sigma β) → List (Sigma β) → List (Sigma β)
   | [], l₂ => l₂
@@ -1105,17 +772,17 @@ theorem perm.kunion {l₁ l₂ l₃ l₄ : List (Sigma β)} (nd₃ : l₃.nodupk
 @[simp]
 theorem lookup_kunion_left {a} {l₁ l₂ : List (Sigma β)} (h : a ∈ l₁.keys) : lookup a (kunion l₁ l₂) = lookup a l₁ := by
   induction' l₁ with s _ ih generalizing l₂ <;> simp at h <;> cases h <;> cases' s with a'
-  ·
-    subst h
+  · subst h
     simp
-  ·
-    rw [kunion_cons]
+    
+  · rw [kunion_cons]
     by_cases' h' : a = a'
-    ·
-      subst h'
+    · subst h'
       simp
-    ·
-      simp [h', ih h]
+      
+    · simp [h', ih h]
+      
+    
 
 @[simp]
 theorem lookup_kunion_right {a} {l₁ l₂ : List (Sigma β)} (h : a ∉ l₁.keys) : lookup a (kunion l₁ l₂) = lookup a l₂ := by
@@ -1135,13 +802,13 @@ theorem mem_lookup_kunion {a} {b : β a} {l₁ l₂ : List (Sigma β)} :
   case list.cons s _ ih =>
     cases' s with a'
     by_cases' h₁ : a = a'
-    ·
-      subst h₁
+    · subst h₁
       simp
-    ·
-      let h₂ := @ih (kerase a' l₂)
+      
+    · let h₂ := @ih (kerase a' l₂)
       simp [h₁] at h₂
       simp [h₁, h₂]
+      
 
 theorem mem_lookup_kunion_middle {a} {b : β a} {l₁ l₂ l₃ : List (Sigma β)} (h₁ : b ∈ lookup a (kunion l₁ l₃))
     (h₂ : a ∉ keys l₂) : b ∈ lookup a (kunion (kunion l₁ l₂) l₃) :=

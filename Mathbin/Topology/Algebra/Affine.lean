@@ -26,22 +26,22 @@ section Ringₓ
 
 variable [Ringₓ R] [Module R E] [Module R F]
 
-/--  An affine map is continuous iff its underlying linear map is continuous. See also
+/-- An affine map is continuous iff its underlying linear map is continuous. See also
 `affine_map.continuous_linear_iff`. -/
 theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linear := by
   constructor
-  ·
-    intro hc
+  · intro hc
     rw [decomp' f]
     have := hc.sub continuous_const
     exact this
-  ·
-    intro hc
+    
+  · intro hc
     rw [decomp f]
     have := hc.add continuous_const
     exact this
+    
 
-/--  The line map is continuous. -/
+/-- The line map is continuous. -/
 @[continuity]
 theorem line_map_continuous [TopologicalSpace R] [HasContinuousSmul R F] {p v : F} :
     Continuous (⇑(line_map p v : R →ᵃ[R] F)) :=
@@ -55,7 +55,7 @@ variable [CommRingₓ R] [Module R F] [TopologicalSpace R] [HasContinuousSmul R 
 
 @[continuity]
 theorem homothety_continuous (x : F) (t : R) : Continuous $ homothety x t := by
-  suffices ⇑homothety x t = fun y => (t • (y - x))+x by
+  suffices ⇑homothety x t = fun y => t • (y - x) + x by
     rw [this]
     continuity
   ext y

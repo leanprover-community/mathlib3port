@@ -19,8 +19,7 @@ open ContinuousMap Filter
 
 open_locale UnitInterval
 
-/-- 
-The special case of the Weierstrass approximation theorem for the interval `[0,1]`.
+/-- The special case of the Weierstrass approximation theorem for the interval `[0,1]`.
 This is just a matter of unravelling definitions and using the Bernstein approximations.
 -/
 theorem polynomial_functions_closure_eq_top' : (polynomialFunctions I).topologicalClosure = ⊤ := by
@@ -37,8 +36,7 @@ theorem polynomial_functions_closure_eq_top' : (polynomialFunctions I).topologic
   dsimp [bernstein, polynomialFunctions]
   simp
 
-/-- 
-The **Weierstrass Approximation Theorem**:
+/-- The **Weierstrass Approximation Theorem**:
 polynomials functions on `[a, b] ⊆ ℝ` are dense in `C([a,b],ℝ)`
 
 (While we could deduce this as an application of the Stone-Weierstrass theorem,
@@ -47,8 +45,7 @@ so we may as well get this done first.)
 -/
 theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (Set.Icc a b)).topologicalClosure = ⊤ := by
   by_cases' h : a < b
-  ·
-    let W : C(Set.Icc a b, ℝ) →ₐ[ℝ] C(I, ℝ) := comp_right_alg_hom ℝ (iccHomeoI a b h).symm.toContinuousMap
+  · let W : C(Set.Icc a b, ℝ) →ₐ[ℝ] C(I, ℝ) := comp_right_alg_hom ℝ (iccHomeoI a b h).symm.toContinuousMap
     let W' : C(Set.Icc a b, ℝ) ≃ₜ C(I, ℝ) := comp_right_homeomorph ℝ (iccHomeoI a b h).symm
     have w : (W : C(Set.Icc a b, ℝ) → C(I, ℝ)) = W' := rfl
     have p := polynomial_functions_closure_eq_top'
@@ -57,14 +54,14 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (
     rw [Subalgebra.topological_closure_comap'_homeomorph _ W W' w] at p
     rw [polynomialFunctions.comap'_comp_right_alg_hom_Icc_homeo_I] at p
     exact p
-  ·
-    have : Subsingleton (Set.Icc a b) :=
+    
+  · have : Subsingleton (Set.Icc a b) :=
       ⟨fun x y => le_antisymmₓ ((x.2.2.trans (not_lt.mp h)).trans y.2.1) ((y.2.2.trans (not_lt.mp h)).trans x.2.1)⟩
     have := ContinuousMap.subsingleton_subalgebra (Set.Icc a b) ℝ
     apply Subsingleton.elimₓ
+    
 
-/-- 
-An alternative statement of Weierstrass' theorem.
+/-- An alternative statement of Weierstrass' theorem.
 
 Every real-valued continuous function on `[a,b]` is a uniform limit of polynomials.
 -/
@@ -73,8 +70,7 @@ theorem continuous_map_mem_polynomial_functions_closure (a b : ℝ) (f : C(Set.I
   rw [polynomial_functions_closure_eq_top _ _]
   simp
 
-/-- 
-An alternative statement of Weierstrass' theorem,
+/-- An alternative statement of Weierstrass' theorem,
 for those who like their epsilons.
 
 Every real-valued continuous function on `[a,b]` is within any `ε > 0` of some polynomial.
@@ -87,8 +83,7 @@ theorem exists_polynomial_near_continuous_map (a b : ℝ) (f : C(Set.Icc a b, �
   rw [Metric.mem_ball, dist_eq_norm] at H
   exact ⟨m, H⟩
 
-/-- 
-Another alternative statement of Weierstrass's theorem,
+/-- Another alternative statement of Weierstrass's theorem,
 for those who like epsilons, but not bundled continuous functions.
 
 Every real-valued function `ℝ → ℝ` which is continuous on `[a,b]`

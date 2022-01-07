@@ -26,7 +26,7 @@ variable {R S : Type _} [EuclideanDomain R] [OrderedSemiring S]
 
 variable (abv : AbsoluteValue R S)
 
-/--  An absolute value `abv : R → S` is Euclidean if it is compatible with the
+/-- An absolute value `abv : R → S` is Euclidean if it is compatible with the
 `euclidean_domain` structure on `R`, namely `abv` is strictly monotone with respect to the well
 founded relation `≺` on `R`. -/
 structure is_euclidean : Prop where
@@ -52,7 +52,7 @@ section Int
 
 open Int
 
-/--  `abs : ℤ → ℤ` is a Euclidean absolute value -/
+/-- `abs : ℤ → ℤ` is a Euclidean absolute value -/
 protected theorem abs_is_euclidean : is_euclidean (AbsoluteValue.abs : AbsoluteValue ℤ ℤ) :=
   { map_lt_map_iff' := fun x y =>
       show abs x < abs y ↔ nat_abs x < nat_abs y by

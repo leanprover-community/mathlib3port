@@ -26,8 +26,7 @@ open List
 
 namespace Multiset
 
-/-- 
-The `finset` of `l : list α` that, given `m : multiset α`, have the property `⟦l⟧ = m`.
+/-- The `finset` of `l : list α` that, given `m : multiset α`, have the property `⟦l⟧ = m`.
 -/
 def lists : Multiset α → Finset (List α) := fun s =>
   Quotientₓ.liftOn s (fun l => l.permutations.to_finset) fun l l' h : l ~ l' => by
@@ -51,11 +50,11 @@ instance fintypeNodupList [Fintype α] : Fintype { l : List α // l.nodup } :=
     suffices (∃ a : Finset α, a.val = ↑l) ↔ l.nodup by
       simpa
     constructor
-    ·
-      rintro ⟨s, hs⟩
+    · rintro ⟨s, hs⟩
       simpa [← Multiset.coe_nodup, ← hs] using s.nodup
-    ·
-      intro hl
+      
+    · intro hl
       refine' ⟨⟨↑l, hl⟩, _⟩
       simp
+      
 

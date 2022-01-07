@@ -40,7 +40,7 @@ open MonoidalCategory
 variable {C : Type u₁} [category.{v₁} C] [monoidal_category.{v₁} C] {D : Type u₂} [category.{v₂} D]
   [monoidal_category.{v₂} D]
 
-/--  An unbundled description of lax monoidal functors. -/
+/-- An unbundled description of lax monoidal functors. -/
 class lax_monoidal (F : C → D) [functorial.{v₁, v₂} F] where
   ε {} : 𝟙_ D ⟶ F (𝟙_ C)
   μ {} : ∀ X Y : C, F X ⊗ F Y ⟶ F (X ⊗ Y)
@@ -74,8 +74,7 @@ attribute [simp] lax_monoidal.associativity
 
 namespace LaxMonoidalFunctor
 
-/-- 
-Construct a bundled `lax_monoidal_functor` from the object level function
+/-- Construct a bundled `lax_monoidal_functor` from the object level function
 and `functorial` and `lax_monoidal` typeclasses.
 -/
 @[simps]
@@ -89,8 +88,9 @@ instance (F : lax_monoidal_functor.{v₁, v₂} C D) : lax_monoidal.{v₁, v₂}
 
 section
 
--- failed to format: format: uncaught backtrack exception
-instance lax_monoidal_id : lax_monoidal .{ v₁ , v₁ } ( id : C → C ) where ε := 𝟙 _ μ X Y := 𝟙 _
+instance lax_monoidal_id : lax_monoidal.{v₁, v₁} (id : C → C) where
+  ε := 𝟙 _
+  μ := fun X Y => 𝟙 _
 
 end
 

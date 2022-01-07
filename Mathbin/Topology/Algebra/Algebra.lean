@@ -1,5 +1,5 @@
 import Mathbin.Algebra.Algebra.Subalgebra
-import Mathbin.Topology.Algebra.Module
+import Mathbin.Topology.Algebra.Module.Basic
 
 /-!
 # Topological (sub)algebras
@@ -34,12 +34,12 @@ variable [Semiringₓ A]
 theorem continuous_algebra_map_iff_smul [Algebra R A] [TopologicalRing A] :
     Continuous (algebraMap R A) ↔ Continuous fun p : R × A => p.1 • p.2 := by
   refine' ⟨fun h => _, fun h => _⟩
-  ·
-    simp only [Algebra.smul_def]
+  · simp only [Algebra.smul_def]
     exact (h.comp continuous_fst).mul continuous_snd
-  ·
-    rw [algebra_map_eq_smul_one']
+    
+  · rw [algebra_map_eq_smul_one']
     exact h.comp (continuous_id.prod_mk continuous_const)
+    
 
 @[continuity]
 theorem continuous_algebra_map [Algebra R A] [TopologicalRing A] [HasContinuousSmul R A] :
@@ -62,7 +62,7 @@ variable [Semiringₓ A]
 
 variable [Algebra R A] [TopologicalRing A]
 
-/--  The closure of a subalgebra in a topological algebra as a subalgebra. -/
+/-- The closure of a subalgebra in a topological algebra as a subalgebra. -/
 def Subalgebra.topologicalClosure (s : Subalgebra R A) : Subalgebra R A :=
   { s.to_subsemiring.topological_closure with Carrier := Closure (s : Set A),
     algebra_map_mem' := fun r => s.to_subsemiring.subring_topological_closure (s.algebra_map_mem r) }
@@ -89,8 +89,7 @@ theorem Subalgebra.topological_closure_minimal (s : Subalgebra R A) {t : Subalge
     (ht : IsClosed (t : Set A)) : s.topological_closure ≤ t :=
   closure_minimal h ht
 
-/-- 
-This is really a statement about topological algebra isomorphisms,
+/-- This is really a statement about topological algebra isomorphisms,
 but we don't have those, so we use the clunky approach of talking about
 an algebra homomorphism, and a separate homeomorphism,
 along with a witness that as functions they are the same.

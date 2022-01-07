@@ -30,10 +30,10 @@ theorem smul_univ_pi [∀ i, HasScalar K (R i)] (r : K) (t : ∀ i, Set (R i)) :
     r • pi (univ : Set ι) t = pi (univ : Set ι) (r • t) :=
   subset.antisymm (smul_pi_subset _ _ _) $ fun x h => by
     refine' ⟨fun i => Classical.some (h i $ Set.mem_univ _), fun i hi => _, funext $ fun i => _⟩
-    ·
-      exact (Classical.some_spec (h i _)).left
-    ·
-      exact (Classical.some_spec (h i _)).right
+    · exact (Classical.some_spec (h i _)).left
+      
+    · exact (Classical.some_spec (h i _)).right
+      
 
 @[to_additive]
 theorem smul_pi [Groupₓ K] [∀ i, MulAction K (R i)] (r : K) (S : Set ι) (t : ∀ i, Set (R i)) :

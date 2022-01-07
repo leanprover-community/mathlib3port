@@ -5,11 +5,12 @@ namespace Tactic
 
 namespace Hint
 
-/--  An attribute marking a `tactic unit` or `tactic string` which should be used by the `hint`
+/-- An attribute marking a `tactic unit` or `tactic string` which should be used by the `hint`
 tactic. -/
 @[user_attribute]
-unsafe def hint_tactic_attribute : user_attribute :=
-  { Name := `hint_tactic, descr := "A tactic that should be tried by `hint`." }
+unsafe def hint_tactic_attribute : user_attribute where
+  Name := `hint_tactic
+  descr := "A tactic that should be tried by `hint`."
 
 add_tactic_doc
   { Name := "hint_tactic", category := DocCategory.attr, declNames := [`tactic.hint.hint_tactic_attribute],
@@ -21,8 +22,7 @@ private unsafe def add_tactic_hint (n : Name) (t : expr) : tactic Unit := do
   add_decl $ declaration.defn n [] (quote.1 (tactic Stringₓ)) t ReducibilityHints.opaque ff
   hint_tactic_attribute n () tt
 
-/-- 
-`add_hint_tactic t` runs the tactic `t` whenever `hint` is invoked.
+/-- `add_hint_tactic t` runs the tactic `t` whenever `hint` is invoked.
 The typical use case is `add_hint_tactic "foo"` for some interactive tactic `foo`.
 -/
 @[user_command]
@@ -73,8 +73,7 @@ add_hint_tactic unfold_aux
 
 end Hint
 
-/-- 
-Report a list of tactics that can make progress against the current goal,
+/-- Report a list of tactics that can make progress against the current goal,
 and for each such tactic, the number of remaining goals afterwards.
 -/
 unsafe def hint : tactic (List (Stringₓ × ℕ)) := do
@@ -83,8 +82,7 @@ unsafe def hint : tactic (List (Stringₓ × ℕ)) := do
 
 namespace Interactive
 
-/-- 
-Report a list of tactics that can make progress against the current goal.
+/-- Report a list of tactics that can make progress against the current goal.
 -/
 unsafe def hint : tactic Unit := do
   let hints ← tactic.hint
@@ -98,8 +96,7 @@ unsafe def hint : tactic Unit := do
           trace "the following tactics make progress:\n----"
           hints.mmap' fun p => tactic.trace f! "Try this: {p.1}"
 
-/-- 
-`hint` lists possible tactics which will make progress (that is, not fail) against the current goal.
+/-- `hint` lists possible tactics which will make progress (that is, not fail) against the current goal.
 
 ```lean
 example {P Q : Prop} (p : P) (h : P → Q) : Q :=

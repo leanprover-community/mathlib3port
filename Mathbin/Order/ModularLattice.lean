@@ -28,7 +28,7 @@ any distributive lattice.
 
 variable {α : Type _}
 
-/--  A modular lattice is one with a limited associativity between `⊓` and `⊔`. -/
+/-- A modular lattice is one with a limited associativity between `⊓` and `⊔`. -/
 class IsModularLattice (α) [Lattice α] : Prop where
   sup_inf_le_assoc_of_le : ∀ {x : α} y : α {z : α}, x ≤ z → (x⊔y)⊓z ≤ x⊔y⊓z
 
@@ -61,16 +61,18 @@ theorem IsModularLattice.sup_inf_sup_assoc : (x⊔z)⊓(y⊔z) = (x⊔z)⊓y⊔z
 theorem eq_of_le_of_inf_le_of_sup_le (hxy : x ≤ y) (hinf : y⊓z ≤ x⊓z) (hsup : y⊔z ≤ x⊔z) : x = y :=
   le_antisymmₓ hxy $
     have h : y ≤ x⊔z :=
-      calc y ≤ y⊔z := le_sup_left
+      calc
+        y ≤ y⊔z := le_sup_left
         _ ≤ x⊔z := hsup
         
-    calc y ≤ (x⊔z)⊓y := le_inf h (le_reflₓ _)
+    calc
+      y ≤ (x⊔z)⊓y := le_inf h (le_reflₓ _)
       _ = x⊔z⊓y := sup_inf_assoc_of_le _ hxy
       _ ≤ x⊔z⊓x :=
-      sup_le_sup_left
-        (by
-          rw [inf_comm, @inf_comm _ _ z] <;> exact hinf)
-        _
+        sup_le_sup_left
+          (by
+            rw [inf_comm, @inf_comm _ _ z] <;> exact hinf)
+          _
       _ ≤ x := sup_le (le_reflₓ _) inf_le_right
       
 
@@ -81,7 +83,7 @@ theorem sup_lt_sup_of_lt_of_inf_le_inf (hxy : x < y) (hinf : y⊓z ≤ x⊓z) : 
 theorem inf_lt_inf_of_lt_of_sup_le_sup (hxy : x < y) (hinf : y⊔z ≤ x⊔z) : x⊓z < y⊓z :=
   @sup_lt_sup_of_lt_of_inf_le_inf (OrderDual α) _ _ _ _ _ hxy hinf
 
-/--  A generalization of the theorem that if `N` is a submodule of `M` and
+/-- A generalization of the theorem that if `N` is a submodule of `M` and
   `N` and `M / N` are both Artinian, then `M` is Artinian. -/
 theorem well_founded_lt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [PartialOrderₓ γ]
     (h₁ : WellFounded (· < · : β → β → Prop)) (h₂ : WellFounded (· < · : γ → γ → Prop)) (K : α) (f₁ : β → α)
@@ -89,17 +91,17 @@ theorem well_founded_lt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [Pa
     (hf : ∀ a, f₁ (f₂ a) = a⊓K) (hg : ∀ a, g₁ (g₂ a) = a⊔K) : WellFounded (· < · : α → α → Prop) :=
   Subrelation.wfₓ
     (fun A B hAB =>
-      show Prod.Lex (· < ·) (· < ·) (f₂ A, g₂ A) (f₂ B, g₂ B)by
+      show Prod.Lex (· < ·) (· < ·) (f₂ A, g₂ A) (f₂ B, g₂ B) by
         simp only [Prod.lex_def, lt_iff_le_not_leₓ, ← gci.l_le_l_iff, ← gi.u_le_u_iff, hf, hg, le_antisymm_iffₓ]
         simp only [gci.l_le_l_iff, gi.u_le_u_iff, ← lt_iff_le_not_leₓ, ← le_antisymm_iffₓ]
         cases' lt_or_eq_of_leₓ (inf_le_inf_right K (le_of_ltₓ hAB)) with h h
-        ·
-          exact Or.inl h
-        ·
-          exact Or.inr ⟨h, sup_lt_sup_of_lt_of_inf_le_inf hAB (le_of_eqₓ h.symm)⟩)
+        · exact Or.inl h
+          
+        · exact Or.inr ⟨h, sup_lt_sup_of_lt_of_inf_le_inf hAB (le_of_eqₓ h.symm)⟩
+          )
     (InvImage.wfₓ _ (Prod.lex_wf h₁ h₂))
 
-/--  A generalization of the theorem that if `N` is a submodule of `M` and
+/-- A generalization of the theorem that if `N` is a submodule of `M` and
   `N` and `M / N` are both Noetherian, then `M` is Noetherian.  -/
 theorem well_founded_gt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [PartialOrderₓ γ]
     (h₁ : WellFounded (· > · : β → β → Prop)) (h₂ : WellFounded (· > · : γ → γ → Prop)) (K : α) (f₁ : β → α)
@@ -108,27 +110,27 @@ theorem well_founded_gt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [Pa
   @well_founded_lt_exact_sequence (OrderDual α) _ _ (OrderDual γ) (OrderDual β) _ _ h₂ h₁ K g₁ g₂ f₁ f₂ gi.dual gci.dual
     hg hf
 
-/--  The diamond isomorphism between the intervals `[a ⊓ b, a]` and `[b, a ⊔ b]` -/
-def infIccOrderIsoIccSup (a b : α) : Set.Icc (a⊓b) a ≃o Set.Icc b (a⊔b) :=
-  { toFun := fun x => ⟨x⊔b, ⟨le_sup_right, sup_le_sup_right x.prop.2 b⟩⟩,
-    invFun := fun x => ⟨a⊓x, ⟨inf_le_inf_left a x.prop.1, inf_le_left⟩⟩,
-    left_inv := fun x =>
-      Subtype.ext
-        (by
-          change a⊓(↑x⊔b) = ↑x
-          rw [sup_comm, ← inf_sup_assoc_of_le _ x.prop.2, sup_eq_right.2 x.prop.1]),
-    right_inv := fun x =>
-      Subtype.ext
-        (by
-          change a⊓↑x⊔b = ↑x
-          rw [inf_comm, inf_sup_assoc_of_le _ x.prop.1, inf_eq_left.2 x.prop.2]),
-    map_rel_iff' := fun x y => by
-      simp only [Subtype.mk_le_mk, Equivₓ.coe_fn_mk, and_trueₓ, le_sup_right]
-      rw [← Subtype.coe_le_coe]
-      refine' ⟨fun h => _, fun h => sup_le_sup_right h _⟩
-      rw [← sup_eq_right.2 x.prop.1, inf_sup_assoc_of_le _ x.prop.2, sup_comm, ← sup_eq_right.2 y.prop.1,
-        inf_sup_assoc_of_le _ y.prop.2, @sup_comm _ _ b]
-      exact inf_le_inf_left _ h }
+/-- The diamond isomorphism between the intervals `[a ⊓ b, a]` and `[b, a ⊔ b]` -/
+def infIccOrderIsoIccSup (a b : α) : Set.Icc (a⊓b) a ≃o Set.Icc b (a⊔b) where
+  toFun := fun x => ⟨x⊔b, ⟨le_sup_right, sup_le_sup_right x.prop.2 b⟩⟩
+  invFun := fun x => ⟨a⊓x, ⟨inf_le_inf_left a x.prop.1, inf_le_left⟩⟩
+  left_inv := fun x =>
+    Subtype.ext
+      (by
+        change a⊓(↑x⊔b) = ↑x
+        rw [sup_comm, ← inf_sup_assoc_of_le _ x.prop.2, sup_eq_right.2 x.prop.1])
+  right_inv := fun x =>
+    Subtype.ext
+      (by
+        change a⊓↑x⊔b = ↑x
+        rw [inf_comm, inf_sup_assoc_of_le _ x.prop.1, inf_eq_left.2 x.prop.2])
+  map_rel_iff' := fun x y => by
+    simp only [Subtype.mk_le_mk, Equivₓ.coe_fn_mk, and_trueₓ, le_sup_right]
+    rw [← Subtype.coe_le_coe]
+    refine' ⟨fun h => _, fun h => sup_le_sup_right h _⟩
+    rw [← sup_eq_right.2 x.prop.1, inf_sup_assoc_of_le _ x.prop.2, sup_comm, ← sup_eq_right.2 y.prop.1,
+      inf_sup_assoc_of_le _ y.prop.2, @sup_comm _ _ b]
+    exact inf_le_inf_left _ h
 
 end IsModularLattice
 
@@ -136,7 +138,7 @@ namespace IsCompl
 
 variable [Lattice α] [BoundedOrder α] [IsModularLattice α]
 
-/--  The diamond isomorphism between the intervals `set.Iic a` and `set.Ici b`. -/
+/-- The diamond isomorphism between the intervals `set.Iic a` and `set.Ici b`. -/
 def Iic_order_iso_Ici {a b : α} (h : IsCompl a b) : Set.Iic a ≃o Set.Ici b :=
   (OrderIso.setCongr (Set.Iic a) (Set.Icc (a⊓b) a) (h.inf_eq_bot.symm ▸ Set.Icc_bot.symm)).trans $
     (infIccOrderIsoIccSup a b).trans (OrderIso.setCongr (Set.Icc b (a⊔b)) (Set.Ici b) (h.sup_eq_top.symm ▸ Set.Icc_top))
@@ -188,26 +190,26 @@ instance is_complemented_Iic : IsComplemented (Set.Iic a) :=
     let ⟨y, hy⟩ := exists_is_compl x
     ⟨⟨y⊓a, Set.mem_Iic.2 inf_le_right⟩, by
       constructor
-      ·
-        change x⊓(y⊓a) ≤ ⊥
+      · change x⊓(y⊓a) ≤ ⊥
         rw [← inf_assoc]
         exact le_transₓ inf_le_left hy.1
-      ·
-        change a ≤ x⊔y⊓a
-        rw [← sup_inf_assoc_of_le _ (Set.mem_Iic.1 hx), top_le_iff.1 hy.2, top_inf_eq]⟩⟩
+        
+      · change a ≤ x⊔y⊓a
+        rw [← sup_inf_assoc_of_le _ (Set.mem_Iic.1 hx), top_le_iff.1 hy.2, top_inf_eq]
+        ⟩⟩
 
 instance is_complemented_Ici : IsComplemented (Set.Ici a) :=
   ⟨fun ⟨x, hx⟩ =>
     let ⟨y, hy⟩ := exists_is_compl x
     ⟨⟨y⊔a, Set.mem_Ici.2 le_sup_right⟩, by
       constructor
-      ·
-        change x⊓(y⊔a) ≤ a
+      · change x⊓(y⊔a) ≤ a
         rw [← inf_sup_assoc_of_le _ (Set.mem_Ici.1 hx), le_bot_iff.1 hy.1, bot_sup_eq]
-      ·
-        change ⊤ ≤ x⊔(y⊔a)
+        
+      · change ⊤ ≤ x⊔(y⊔a)
         rw [← sup_assoc]
-        exact le_transₓ hy.2 le_sup_left⟩⟩
+        exact le_transₓ hy.2 le_sup_left
+        ⟩⟩
 
 end IsComplemented
 

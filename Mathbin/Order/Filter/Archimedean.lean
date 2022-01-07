@@ -107,36 +107,38 @@ variable [LinearOrderedSemiring R] [Archimedean R]
 
 variable {l : Filter α} {f : α → R} {r : R}
 
-/--  If a function tends to infinity along a filter, then this function multiplied by a positive
+/-- If a function tends to infinity along a filter, then this function multiplied by a positive
 constant (on the left) also tends to infinity. The archimedean assumption is convenient to get a
 statement that works on `ℕ`, `ℤ` and `ℝ`, although not necessary (a version in ordered fields is
 given in `filter.tendsto.const_mul_at_top`). -/
-theorem Filter.Tendsto.const_mul_at_top' (hr : 0 < r) (hf : tendsto f l at_top) : tendsto (fun x => r*f x) l at_top :=
+theorem Filter.Tendsto.const_mul_at_top' (hr : 0 < r) (hf : tendsto f l at_top) : tendsto (fun x => r * f x) l at_top :=
   by
   apply tendsto_at_top.2 fun b => _
   obtain ⟨n : ℕ, hn : 1 ≤ n • r⟩ := Archimedean.arch 1 hr
   rw [nsmul_eq_mul'] at hn
-  filter_upwards [tendsto_at_top.1 hf (n*max b 0)]
+  filter_upwards [tendsto_at_top.1 hf (n * max b 0)]
   intro x hx
-  calc b ≤ 1*max b 0 := by
-    rw [one_mulₓ]
-    exact le_max_leftₓ _ _ _ ≤ (r*n)*max b 0 := mul_le_mul_of_nonneg_right hn (le_max_rightₓ _ _)_ = r*n*max b 0 := by
-    rw [mul_assocₓ]_ ≤ r*f x := mul_le_mul_of_nonneg_left hx (le_of_ltₓ hr)
+  calc b ≤ 1 * max b 0 := by
+      rw [one_mulₓ]
+      exact le_max_leftₓ _ _ _ ≤ r * n * max b 0 :=
+      mul_le_mul_of_nonneg_right hn (le_max_rightₓ _ _)_ = r * (n * max b 0) := by
+      rw [mul_assocₓ]_ ≤ r * f x := mul_le_mul_of_nonneg_left hx (le_of_ltₓ hr)
 
-/--  If a function tends to infinity along a filter, then this function multiplied by a positive
+/-- If a function tends to infinity along a filter, then this function multiplied by a positive
 constant (on the right) also tends to infinity. The archimedean assumption is convenient to get a
 statement that works on `ℕ`, `ℤ` and `ℝ`, although not necessary (a version in ordered fields is
 given in `filter.tendsto.at_top_mul_const`). -/
-theorem Filter.Tendsto.at_top_mul_const' (hr : 0 < r) (hf : tendsto f l at_top) : tendsto (fun x => f x*r) l at_top :=
+theorem Filter.Tendsto.at_top_mul_const' (hr : 0 < r) (hf : tendsto f l at_top) : tendsto (fun x => f x * r) l at_top :=
   by
   apply tendsto_at_top.2 fun b => _
   obtain ⟨n : ℕ, hn : 1 ≤ n • r⟩ := Archimedean.arch 1 hr
-  have hn' : 1 ≤ (n : R)*r := by
+  have hn' : 1 ≤ (n : R) * r := by
     rwa [nsmul_eq_mul] at hn
-  filter_upwards [tendsto_at_top.1 hf (max b 0*n)]
+  filter_upwards [tendsto_at_top.1 hf (max b 0 * n)]
   intro x hx
-  calc b ≤ max b 0*1 := by
-    rw [mul_oneₓ]
-    exact le_max_leftₓ _ _ _ ≤ max b 0*n*r := mul_le_mul_of_nonneg_left hn' (le_max_rightₓ _ _)_ = (max b 0*n)*r := by
-    rw [mul_assocₓ]_ ≤ f x*r := mul_le_mul_of_nonneg_right hx (le_of_ltₓ hr)
+  calc b ≤ max b 0 * 1 := by
+      rw [mul_oneₓ]
+      exact le_max_leftₓ _ _ _ ≤ max b 0 * (n * r) :=
+      mul_le_mul_of_nonneg_left hn' (le_max_rightₓ _ _)_ = max b 0 * n * r := by
+      rw [mul_assocₓ]_ ≤ f x * r := mul_le_mul_of_nonneg_right hx (le_of_ltₓ hr)
 

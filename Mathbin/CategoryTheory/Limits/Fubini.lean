@@ -43,8 +43,7 @@ variable {C : Type u} [category.{v} C]
 
 variable (F : J ⥤ K ⥤ C)
 
-/-- 
-A structure carrying a diagram of cones over the functors `F.obj j`.
+/-- A structure carrying a diagram of cones over the functors `F.obj j`.
 -/
 structure diagram_of_cones where
   obj : ∀ j : J, cone (F.obj j)
@@ -58,86 +57,85 @@ structure diagram_of_cones where
 
 variable {F}
 
-/-- 
-Extract the functor `J ⥤ C` consisting of the cone points and the maps between them,
+/-- Extract the functor `J ⥤ C` consisting of the cone points and the maps between them,
 from a `diagram_of_cones`.
 -/
 @[simps]
-def diagram_of_cones.cone_points (D : diagram_of_cones F) : J ⥤ C :=
-  { obj := fun j => (D.obj j).x, map := fun j j' f => (D.map f).Hom, map_id' := fun j => D.id j,
-    map_comp' := fun j₁ j₂ j₃ f g => D.comp f g }
+def diagram_of_cones.cone_points (D : diagram_of_cones F) : J ⥤ C where
+  obj := fun j => (D.obj j).x
+  map := fun j j' f => (D.map f).Hom
+  map_id' := fun j => D.id j
+  map_comp' := fun j₁ j₂ j₃ f g => D.comp f g
 
-/-- 
-Given a diagram `D` of limit cones over the `F.obj j`, and a cone over `uncurry.obj F`,
+/-- Given a diagram `D` of limit cones over the `F.obj j`, and a cone over `uncurry.obj F`,
 we can construct a cone over the diagram consisting of the cone points from `D`.
 -/
 @[simps]
 def cone_of_cone_uncurry {D : diagram_of_cones F} (Q : ∀ j, is_limit (D.obj j)) (c : cone (uncurry.obj F)) :
-    cone D.cone_points :=
-  { x := c.X,
-    π :=
-      { app := fun j =>
-          (Q j).lift
-            { x := c.X,
-              π :=
-                { app := fun k => c.π.app (j, k),
-                  naturality' := fun k k' f => by
-                    dsimp
-                    simp only [category.id_comp]
-                    have := @nat_trans.naturality _ _ _ _ _ _ c.π (j, k) (j, k') (𝟙 j, f)
-                    dsimp  at this
-                    simp only [category.id_comp, CategoryTheory.Functor.map_id, nat_trans.id_app] at this
-                    exact this } },
-        naturality' := fun j j' f =>
-          (Q j').hom_ext
-            (by
-              dsimp
-              intro k
-              simp only [limits.cone_morphism.w, limits.cones.postcompose_obj_π, limits.is_limit.fac_assoc,
-                limits.is_limit.fac, nat_trans.comp_app, category.id_comp, category.assoc]
-              have := @nat_trans.naturality _ _ _ _ _ _ c.π (j, k) (j', k) (f, 𝟙 k)
-              dsimp  at this
-              simp only [category.id_comp, category.comp_id, CategoryTheory.Functor.map_id, nat_trans.id_app] at this
-              exact this) } }
+    cone D.cone_points where
+  x := c.X
+  π :=
+    { app := fun j =>
+        (Q j).lift
+          { x := c.X,
+            π :=
+              { app := fun k => c.π.app (j, k),
+                naturality' := fun k k' f => by
+                  dsimp
+                  simp only [category.id_comp]
+                  have := @nat_trans.naturality _ _ _ _ _ _ c.π (j, k) (j, k') (𝟙 j, f)
+                  dsimp  at this
+                  simp only [category.id_comp, CategoryTheory.Functor.map_id, nat_trans.id_app] at this
+                  exact this } },
+      naturality' := fun j j' f =>
+        (Q j').hom_ext
+          (by
+            dsimp
+            intro k
+            simp only [limits.cone_morphism.w, limits.cones.postcompose_obj_π, limits.is_limit.fac_assoc,
+              limits.is_limit.fac, nat_trans.comp_app, category.id_comp, category.assoc]
+            have := @nat_trans.naturality _ _ _ _ _ _ c.π (j, k) (j', k) (f, 𝟙 k)
+            dsimp  at this
+            simp only [category.id_comp, category.comp_id, CategoryTheory.Functor.map_id, nat_trans.id_app] at this
+            exact this) }
 
-/-- 
-`cone_of_cone_uncurry Q c` is a limit cone when `c` is a limit cone.`
+/-- `cone_of_cone_uncurry Q c` is a limit cone when `c` is a limit cone.`
 -/
 def cone_of_cone_uncurry_is_limit {D : diagram_of_cones F} (Q : ∀ j, is_limit (D.obj j)) {c : cone (uncurry.obj F)}
-    (P : is_limit c) : is_limit (cone_of_cone_uncurry Q c) :=
-  { lift := fun s =>
-      P.lift
-        { x := s.X,
-          π :=
-            { app := fun p => s.π.app p.1 ≫ (D.obj p.1).π.app p.2,
-              naturality' := fun p p' f => by
-                dsimp
-                simp only [category.id_comp, category.assoc]
-                rcases p with ⟨j, k⟩
-                rcases p' with ⟨j', k'⟩
-                rcases f with ⟨fj, fk⟩
-                dsimp
-                slice_rhs 3 4 => rw [← nat_trans.naturality]
-                slice_rhs 2 3 => rw [← (D.obj j).π.naturality]
-                simp only [functor.const.obj_map, category.id_comp, category.assoc]
-                have w := (D.map fj).w k'
-                dsimp  at w
-                rw [← w]
-                have n := s.π.naturality fj
-                dsimp  at n
-                simp only [category.id_comp] at n
-                rw [n]
-                simp } },
-    fac' := fun s j => by
-      apply (Q j).hom_ext
-      intro k
-      simp ,
-    uniq' := fun s m w => by
-      refine' P.uniq { x := s.X, π := _ } m _
-      rintro ⟨j, k⟩
-      dsimp
-      rw [← w j]
-      simp }
+    (P : is_limit c) : is_limit (cone_of_cone_uncurry Q c) where
+  lift := fun s =>
+    P.lift
+      { x := s.X,
+        π :=
+          { app := fun p => s.π.app p.1 ≫ (D.obj p.1).π.app p.2,
+            naturality' := fun p p' f => by
+              dsimp
+              simp only [category.id_comp, category.assoc]
+              rcases p with ⟨j, k⟩
+              rcases p' with ⟨j', k'⟩
+              rcases f with ⟨fj, fk⟩
+              dsimp
+              slice_rhs 3 4 => rw [← nat_trans.naturality]
+              slice_rhs 2 3 => rw [← (D.obj j).π.naturality]
+              simp only [functor.const.obj_map, category.id_comp, category.assoc]
+              have w := (D.map fj).w k'
+              dsimp  at w
+              rw [← w]
+              have n := s.π.naturality fj
+              dsimp  at n
+              simp only [category.id_comp] at n
+              rw [n]
+              simp } }
+  fac' := fun s j => by
+    apply (Q j).hom_ext
+    intro k
+    simp
+  uniq' := fun s m w => by
+    refine' P.uniq { x := s.X, π := _ } m _
+    rintro ⟨j, k⟩
+    dsimp
+    rw [← w j]
+    simp
 
 section
 
@@ -145,14 +143,14 @@ variable (F)
 
 variable [has_limits_of_shape K C]
 
-/-- 
-Given a functor `F : J ⥤ K ⥤ C`, with all needed limits,
+/-- Given a functor `F : J ⥤ K ⥤ C`, with all needed limits,
 we can construct a diagram consisting of the limit cone over each functor `F.obj j`,
 and the universal cone morphisms between these.
 -/
 @[simps]
-noncomputable def diagram_of_cones.mk_of_has_limits : diagram_of_cones F :=
-  { obj := fun j => limit.cone (F.obj j), map := fun j j' f => { Hom := lim.map (F.map f) } }
+noncomputable def diagram_of_cones.mk_of_has_limits : diagram_of_cones F where
+  obj := fun j => limit.cone (F.obj j)
+  map := fun j j' f => { Hom := lim.map (F.map f) }
 
 noncomputable instance diagram_of_cones_inhabited : Inhabited (diagram_of_cones F) :=
   ⟨diagram_of_cones.mk_of_has_limits F⟩
@@ -165,8 +163,7 @@ variable [has_limit (uncurry.obj F)]
 
 variable [has_limit (F ⋙ lim)]
 
-/-- 
-The Fubini theorem for a functor `F : J ⥤ K ⥤ C`,
+/-- The Fubini theorem for a functor `F : J ⥤ K ⥤ C`,
 showing that the limit of `uncurry.obj F` can be computed as
 the limit of the limits of the functors `F.obj j`.
 -/
@@ -205,8 +202,7 @@ variable [has_limit G]
 
 variable [has_limit (curry.obj G ⋙ lim)]
 
-/-- 
-The Fubini theorem for a functor `G : J × K ⥤ C`,
+/-- The Fubini theorem for a functor `G : J × K ⥤ C`,
 showing that the limit of `G` can be computed as
 the limit of the limits of the functors `G.obj (j, _)`.
 -/
@@ -236,13 +232,13 @@ variable [has_limits C]
 
 open CategoryTheory.prod
 
-/-- 
-A variant of the Fubini theorem for a functor `G : J × K ⥤ C`,
+/-- A variant of the Fubini theorem for a functor `G : J × K ⥤ C`,
 showing that $\lim_k \lim_j G(j,k) ≅ \lim_j \lim_k G(j,k)$.
 -/
 noncomputable def limit_curry_swap_comp_lim_iso_limit_curry_comp_lim :
     limit (curry.obj (swap K J ⋙ G) ⋙ lim) ≅ limit (curry.obj G ⋙ lim) :=
-  calc limit (curry.obj (swap K J ⋙ G) ⋙ lim) ≅ limit (swap K J ⋙ G) := (limit_iso_limit_curry_comp_lim _).symm
+  calc
+    limit (curry.obj (swap K J ⋙ G) ⋙ lim) ≅ limit (swap K J ⋙ G) := (limit_iso_limit_curry_comp_lim _).symm
     _ ≅ limit G := has_limit.iso_of_equivalence (braiding K J) (iso.refl _)
     _ ≅ limit (curry.obj G ⋙ lim) := limit_iso_limit_curry_comp_lim _
     

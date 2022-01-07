@@ -49,7 +49,7 @@ theorem subtype_congr_hom.card_range {α : Type _} (p : α → Prop) [DecidableP
     Fintype.card (subtype_congr_hom p).range = Fintype.card (perm { a // p a } × perm { a // ¬p a }) :=
   Fintype.card_eq.mpr ⟨(of_injective (subtype_congr_hom p) (subtype_congr_hom_injective p)).symm⟩
 
-/--  **Cayley's theorem**: Every group G is isomorphic to a subgroup of the symmetric group acting on
+/-- **Cayley's theorem**: Every group G is isomorphic to a subgroup of the symmetric group acting on
 `G`. Note that we generalize this to an arbitrary "faithful" group action by `G`. Setting `H = G`
 recovers the usual statement of Cayley's theorem via `right_cancel_monoid.to_has_faithful_scalar` -/
 noncomputable def subgroup_of_mul_action (G H : Type _) [Groupₓ G] [MulAction G H] [HasFaithfulScalar G H] :

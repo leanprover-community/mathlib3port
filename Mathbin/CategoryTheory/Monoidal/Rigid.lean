@@ -51,7 +51,7 @@ namespace CategoryTheory
 
 variable {C : Type u₁} [category.{v₁} C] [monoidal_category C]
 
-/--  An exact pairing is a pair of objects `X Y : C` which admit
+/-- An exact pairing is a pair of objects `X Y : C` which admit
   a coevaluation and evaluation morphism which fulfill two triangle equalities. -/
 class exact_pairing (X Y : C) where
   coevaluation {} : 𝟙_ C ⟶ X ⊗ Y
@@ -91,12 +91,12 @@ instance exact_pairing_unit : exact_pairing (𝟙_ C) (𝟙_ C) where
       monoidal_category.unitors_equal]
     simp
 
-/--  A class of objects which have a right dual. -/
+/-- A class of objects which have a right dual. -/
 class has_right_dual (X : C) where
   rightDual : C
   [exact : exact_pairing X right_dual]
 
-/--  A class of objects with have a left dual. -/
+/-- A class of objects with have a left dual. -/
 class has_left_dual (Y : C) where
   leftDual : C
   [exact : exact_pairing left_dual Y]
@@ -131,11 +131,11 @@ theorem left_dual_right_dual {X : C} [has_right_dual X] : ᘁ(X)ᘁ = X :=
 theorem right_dual_left_dual {X : C} [has_left_dual X] : (ᘁ(X))ᘁ = X :=
   rfl
 
-/--  The right adjoint mate `fᘁ : Xᘁ ⟶ Yᘁ` of a morphism `f : X ⟶ Y`. -/
+/-- The right adjoint mate `fᘁ : Xᘁ ⟶ Yᘁ` of a morphism `f : X ⟶ Y`. -/
 def right_adjoint_mate {X Y : C} [has_right_dual X] [has_right_dual Y] (f : X ⟶ Y) : (Y)ᘁ ⟶ (X)ᘁ :=
   (ρ_ _).inv ≫ (𝟙 _ ⊗ η_ _ _) ≫ (𝟙 _ ⊗ f ⊗ 𝟙 _) ≫ (α_ _ _ _).inv ≫ (ε_ _ _ ⊗ 𝟙 _) ≫ (λ_ _).Hom
 
-/--  The left adjoint mate `ᘁf : ᘁY ⟶ ᘁX` of a morphism `f : X ⟶ Y`. -/
+/-- The left adjoint mate `ᘁf : ᘁY ⟶ ᘁX` of a morphism `f : X ⟶ Y`. -/
 def left_adjoint_mate {X Y : C} [has_left_dual X] [has_left_dual Y] (f : X ⟶ Y) : ᘁ(Y) ⟶ ᘁ(X) :=
   (λ_ _).inv ≫ (η_ ᘁ(X) X ⊗ 𝟙 _) ≫ ((𝟙 _ ⊗ f) ⊗ 𝟙 _) ≫ (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ ε_ _ _) ≫ (ρ_ _).Hom
 
@@ -168,7 +168,7 @@ theorem left_adjoint_mate_comp {X Y Z : C} [has_left_dual X] [has_left_dual Y] {
     id_tensor_comp_tensor_id _ g, category.assoc, category.assoc, category.assoc, category.assoc,
     tensor_id_comp_id_tensor_assoc, ← right_unitor_naturality, id_tensor_comp_tensor_id_assoc]
 
-/--  The composition of right adjoint mates is the adjoint mate of the composition. -/
+/-- The composition of right adjoint mates is the adjoint mate of the composition. -/
 @[reassoc]
 theorem comp_right_adjoint_mate {X Y Z : C} [has_right_dual X] [has_right_dual Y] [has_right_dual Z] {f : X ⟶ Y}
     {g : Y ⟶ Z} : (f ≫ g)ᘁ = gᘁ ≫ fᘁ := by
@@ -204,7 +204,7 @@ theorem comp_right_adjoint_mate {X Y Z : C} [has_right_dual X] [has_right_dual Y
     category.assoc, ← category.assoc]
   simp
 
-/--  The composition of left adjoint mates is the adjoint mate of the composition. -/
+/-- The composition of left adjoint mates is the adjoint mate of the composition. -/
 @[reassoc]
 theorem comp_left_adjoint_mate {X Y Z : C} [has_left_dual X] [has_left_dual Y] [has_left_dual Z] {f : X ⟶ Y}
     {g : Y ⟶ Z} : (ᘁf ≫ g) = (ᘁg) ≫ ᘁf := by
@@ -240,21 +240,23 @@ theorem comp_left_adjoint_mate {X Y Z : C} [has_left_dual X] [has_left_dual Y] [
     category.assoc, ← category.assoc]
   simp
 
-/--  Right duals are isomorphic. -/
-def right_dual_iso {X Y₁ Y₂ : C} (_ : exact_pairing X Y₁) (_ : exact_pairing X Y₂) : Y₁ ≅ Y₂ :=
-  { Hom := @right_adjoint_mate C _ _ X X ⟨Y₂⟩ ⟨Y₁⟩ (𝟙 X), inv := @right_adjoint_mate C _ _ X X ⟨Y₁⟩ ⟨Y₂⟩ (𝟙 X),
-    hom_inv_id' := by
-      rw [← comp_right_adjoint_mate, category.comp_id, right_adjoint_mate_id],
-    inv_hom_id' := by
-      rw [← comp_right_adjoint_mate, category.comp_id, right_adjoint_mate_id] }
+/-- Right duals are isomorphic. -/
+def right_dual_iso {X Y₁ Y₂ : C} (_ : exact_pairing X Y₁) (_ : exact_pairing X Y₂) : Y₁ ≅ Y₂ where
+  Hom := @right_adjoint_mate C _ _ X X ⟨Y₂⟩ ⟨Y₁⟩ (𝟙 X)
+  inv := @right_adjoint_mate C _ _ X X ⟨Y₁⟩ ⟨Y₂⟩ (𝟙 X)
+  hom_inv_id' := by
+    rw [← comp_right_adjoint_mate, category.comp_id, right_adjoint_mate_id]
+  inv_hom_id' := by
+    rw [← comp_right_adjoint_mate, category.comp_id, right_adjoint_mate_id]
 
-/--  Left duals are isomorphic. -/
-def left_dual_iso {X₁ X₂ Y : C} (p₁ : exact_pairing X₁ Y) (p₂ : exact_pairing X₂ Y) : X₁ ≅ X₂ :=
-  { Hom := @left_adjoint_mate C _ _ Y Y ⟨X₂⟩ ⟨X₁⟩ (𝟙 Y), inv := @left_adjoint_mate C _ _ Y Y ⟨X₁⟩ ⟨X₂⟩ (𝟙 Y),
-    hom_inv_id' := by
-      rw [← comp_left_adjoint_mate, category.comp_id, left_adjoint_mate_id],
-    inv_hom_id' := by
-      rw [← comp_left_adjoint_mate, category.comp_id, left_adjoint_mate_id] }
+/-- Left duals are isomorphic. -/
+def left_dual_iso {X₁ X₂ Y : C} (p₁ : exact_pairing X₁ Y) (p₂ : exact_pairing X₂ Y) : X₁ ≅ X₂ where
+  Hom := @left_adjoint_mate C _ _ Y Y ⟨X₂⟩ ⟨X₁⟩ (𝟙 Y)
+  inv := @left_adjoint_mate C _ _ Y Y ⟨X₁⟩ ⟨X₂⟩ (𝟙 Y)
+  hom_inv_id' := by
+    rw [← comp_left_adjoint_mate, category.comp_id, left_adjoint_mate_id]
+  inv_hom_id' := by
+    rw [← comp_left_adjoint_mate, category.comp_id, left_adjoint_mate_id]
 
 @[simp]
 theorem right_dual_iso_id {X Y : C} (p : exact_pairing X Y) : right_dual_iso p p = iso.refl Y := by
@@ -266,11 +268,11 @@ theorem left_dual_iso_id {X Y : C} (p : exact_pairing X Y) : left_dual_iso p p =
   ext
   simp only [left_dual_iso, iso.refl_hom, left_adjoint_mate_id]
 
-/--  A right rigid monoidal category is one in which every object has a right dual. -/
+/-- A right rigid monoidal category is one in which every object has a right dual. -/
 class right_rigid_category (C : Type u) [category.{v} C] [monoidal_category.{v} C] where
   [rightDual : ∀ X : C, has_right_dual X]
 
-/--  A left rigid monoidal category is one in which every object has a right dual. -/
+/-- A left rigid monoidal category is one in which every object has a right dual. -/
 class left_rigid_category (C : Type u) [category.{v} C] [monoidal_category.{v} C] where
   [leftDual : ∀ X : C, has_left_dual X]
 
@@ -278,7 +280,7 @@ attribute [instance] right_rigid_category.right_dual
 
 attribute [instance] left_rigid_category.left_dual
 
-/--  A rigid monoidal category is a monoidal category which is left rigid and right rigid. -/
+/-- A rigid monoidal category is a monoidal category which is left rigid and right rigid. -/
 class rigid_category (C : Type u) [category.{v} C] [monoidal_category.{v} C] extends right_rigid_category C,
   left_rigid_category C
 

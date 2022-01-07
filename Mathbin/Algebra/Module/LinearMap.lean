@@ -61,18 +61,18 @@ variable {M : Type _} {M₁ : Type _} {M₂ : Type _} {M₃ : Type _}
 
 variable {N₁ : Type _} {N₂ : Type _} {N₃ : Type _} {ι : Type _}
 
-/--  A map `f` between modules over a semiring is linear if it satisfies the two properties
+/-- A map `f` between modules over a semiring is linear if it satisfies the two properties
 `f (x + y) = f x + f y` and `f (c • x) = c • f x`. The predicate `is_linear_map R f` asserts this
 property. A bundled version is available with `linear_map`, and should be favored over
 `is_linear_map` most of the time. -/
 structure IsLinearMap (R : Type u) {M : Type v} {M₂ : Type w} [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
   [Module R M] [Module R M₂] (f : M → M₂) : Prop where
-  map_add : ∀ x y, f (x+y) = f x+f y
+  map_add : ∀ x y, f (x + y) = f x + f y
   map_smul : ∀ c : R x, f (c • x) = c • f x
 
 section
 
-/--  A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ : R →+* S`
+/-- A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ : R →+* S`
 is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
 `f (c • x) = (σ c) • f x`. Elements of `linear_map σ M M₂` (available under the notation
 `M →ₛₗ[σ] M₂`) are bundled versions of such maps. For plain linear maps (i.e. for which
@@ -84,7 +84,7 @@ structure LinearMap {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] (�
 
 end
 
-/--  The `add_hom` underlying a `linear_map`. -/
+/-- The `add_hom` underlying a `linear_map`. -/
 add_decl_doc LinearMap.toAddHom
 
 notation:25 M " →ₛₗ[" σ:25 "] " M₂:0 => LinearMap σ M M₂
@@ -109,20 +109,21 @@ variable [Module R M] [Module R M₂] [Module S M₃]
 
 variable {σ : R →+* S}
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : AddMonoidHomClass ( M →ₛₗ[ σ ] M₃ ) M M₃
-  where
-    coe := LinearMap.toFun
-      coe_injective' f g h := by cases f <;> cases g <;> congr
-      map_add := LinearMap.map_add'
-      map_zero f := show f.to_fun 0 = 0 by rw [ ← zero_smul R ( 0 : M ) , f.map_smul' ] simp
+instance : AddMonoidHomClass (M →ₛₗ[σ] M₃) M M₃ where
+  coe := LinearMap.toFun
+  coe_injective' := fun f g h => by
+    cases f <;> cases g <;> congr
+  map_add := LinearMap.map_add'
+  map_zero := fun f =>
+    show f.to_fun 0 = 0 by
+      rw [← zero_smul R (0 : M), f.map_smul']
+      simp
 
-/--  The `distrib_mul_action_hom` underlying a `linear_map`. -/
+/-- The `distrib_mul_action_hom` underlying a `linear_map`. -/
 def to_distrib_mul_action_hom (f : M →ₗ[R] M₂) : DistribMulActionHom R M M₂ :=
   { f with map_zero' := show f 0 = 0 from map_zero f }
 
-/--  Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly.
+/-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly.
 -/
 instance : CoeFun (M →ₛₗ[σ] M₃) fun _ => M → M₃ :=
   ⟨LinearMap.toFun⟩
@@ -135,10 +136,12 @@ theorem to_fun_eq_coe {f : M →ₛₗ[σ] M₃} : f.to_fun = (f : M → M₃) :
 theorem ext {f g : M →ₛₗ[σ] M₃} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
 
-/--  Copy of a `linear_map` with a new `to_fun` equal to the old one. Useful to fix definitional
+/-- Copy of a `linear_map` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (f : M →ₛₗ[σ] M₃) (f' : M → M₃) (h : f' = ⇑f) : M →ₛₗ[σ] M₃ :=
-  { toFun := f', map_add' := h.symm ▸ f.map_add', map_smul' := h.symm ▸ f.map_smul' }
+protected def copy (f : M →ₛₗ[σ] M₃) (f' : M → M₃) (h : f' = ⇑f) : M →ₛₗ[σ] M₃ where
+  toFun := f'
+  map_add' := h.symm ▸ f.map_add'
+  map_smul' := h.symm ▸ f.map_smul'
 
 initialize_simps_projections LinearMap (toFun → apply)
 
@@ -146,7 +149,7 @@ initialize_simps_projections LinearMap (toFun → apply)
 theorem coe_mk {σ : R →+* S} (f : M → M₃) h₁ h₂ : ((LinearMap.mk f h₁ h₂ : M →ₛₗ[σ] M₃) : M → M₃) = f :=
   rfl
 
-/--  Identity map as a `linear_map` -/
+/-- Identity map as a `linear_map` -/
 def id : M →ₗ[R] M :=
   { DistribMulActionHom.id R with toFun := id }
 
@@ -183,7 +186,7 @@ theorem coe_injective : @injective (M →ₛₗ[σ] M₃) (M → M₃) coeFn :=
 protected theorem congr_argₓ {x x' : M} : x = x' → f x = f x' :=
   FunLike.congr_arg f
 
-/--  If two linear maps are equal, they are equal at each point. -/
+/-- If two linear maps are equal, they are equal at each point. -/
 protected theorem congr_funₓ (h : f = g) (x : M) : f x = g x :=
   FunLike.congr_fun h x
 
@@ -196,7 +199,7 @@ theorem mk_coe (f : M →ₛₗ[σ] M₃) h₁ h₂ : (LinearMap.mk f h₁ h₂ 
 
 variable (fₗ gₗ f g)
 
-protected theorem map_add (x y : M) : f (x+y) = f x+f y :=
+protected theorem map_add (x y : M) : f (x + y) = f x + f y :=
   map_add f x y
 
 @[simp]
@@ -227,31 +230,31 @@ open_locale Pointwise
 @[simp]
 theorem image_smul_setₛₗ (c : R) (s : Set M) : f '' (c • s) = σ c • f '' s := by
   apply Set.Subset.antisymm
-  ·
-    rintro x ⟨y, ⟨z, zs, rfl⟩, rfl⟩
+  · rintro x ⟨y, ⟨z, zs, rfl⟩, rfl⟩
     exact ⟨f z, Set.mem_image_of_mem _ zs, (f.map_smulₛₗ _ _).symm⟩
-  ·
-    rintro x ⟨y, ⟨z, hz, rfl⟩, rfl⟩
+    
+  · rintro x ⟨y, ⟨z, hz, rfl⟩, rfl⟩
     exact (Set.mem_image _ _ _).2 ⟨c • z, Set.smul_mem_smul_set hz, f.map_smulₛₗ _ _⟩
+    
 
 theorem image_smul_set (c : R) (s : Set M) : fₗ '' (c • s) = c • fₗ '' s := by
   simp
 
 theorem preimage_smul_setₛₗ {c : R} (hc : IsUnit c) (s : Set M₃) : f ⁻¹' (σ c • s) = c • f ⁻¹' s := by
   apply Set.Subset.antisymm
-  ·
-    rintro x ⟨y, ys, hy⟩
+  · rintro x ⟨y, ys, hy⟩
     refine' ⟨(hc.unit.inv : R) • x, _, _⟩
-    ·
-      simp only [← hy, smul_smul, Set.mem_preimage, Units.inv_eq_coe_inv, map_smulₛₗ, ← σ.map_mul, IsUnit.coe_inv_mul,
+    · simp only [← hy, smul_smul, Set.mem_preimage, Units.inv_eq_coe_inv, map_smulₛₗ, ← σ.map_mul, IsUnit.coe_inv_mul,
         one_smul, RingHom.map_one, ys]
-    ·
-      simp only [smul_smul, IsUnit.mul_coe_inv, one_smul, Units.inv_eq_coe_inv]
-  ·
-    rintro x ⟨y, hy, rfl⟩
+      
+    · simp only [smul_smul, IsUnit.mul_coe_inv, one_smul, Units.inv_eq_coe_inv]
+      
+    
+  · rintro x ⟨y, hy, rfl⟩
     refine'
       ⟨f y, hy, by
         simp only [RingHom.id_apply, LinearMap.map_smulₛₗ]⟩
+    
 
 theorem preimage_smul_set {c : R} (hc : IsUnit c) (s : Set M₂) : fₗ ⁻¹' (c • s) = c • fₗ ⁻¹' s :=
   fₗ.preimage_smul_setₛₗ hc s
@@ -260,8 +263,7 @@ end Pointwise
 
 variable (M M₂)
 
-/-- 
-A typeclass for `has_scalar` structures which can be moved through a `linear_map`.
+/-- A typeclass for `has_scalar` structures which can be moved through a `linear_map`.
 This typeclass is generated automatically from a `is_scalar_tower` instance, but exists so that
 we can also add an instance for `add_comm_group.int_module`, allowing `z •` to be moved even if
 `R` does not support negation.
@@ -282,9 +284,11 @@ theorem map_smul_of_tower {R S : Type _} [Semiringₓ S] [HasScalar R M] [Module
     [compatible_smul M M₂ R S] (fₗ : M →ₗ[S] M₂) (c : R) (x : M) : fₗ (c • x) = c • fₗ x :=
   compatible_smul.map_smul fₗ c x
 
-/--  convert a linear map to an additive map -/
-def to_add_monoid_hom : M →+ M₃ :=
-  { toFun := f, map_zero' := f.map_zero, map_add' := f.map_add }
+/-- convert a linear map to an additive map -/
+def to_add_monoid_hom : M →+ M₃ where
+  toFun := f
+  map_zero' := f.map_zero
+  map_add' := f.map_add
 
 @[simp]
 theorem to_add_monoid_hom_coe : ⇑f.to_add_monoid_hom = f :=
@@ -294,14 +298,16 @@ section RestrictScalars
 
 variable (R) [Module S M] [Module S M₂] [compatible_smul M M₂ R S]
 
-/--  If `M` and `M₂` are both `R`-modules and `S`-modules and `R`-module structures
+/-- If `M` and `M₂` are both `R`-modules and `S`-modules and `R`-module structures
 are defined by an action of `R` on `S` (formally, we have two scalar towers), then any `S`-linear
 map from `M` to `M₂` is `R`-linear.
 
 See also `linear_map.map_smul_of_tower`. -/
 @[simps]
-def restrict_scalars (fₗ : M →ₗ[S] M₂) : M →ₗ[R] M₂ :=
-  { toFun := fₗ, map_add' := fₗ.map_add, map_smul' := fₗ.map_smul_of_tower }
+def restrict_scalars (fₗ : M →ₗ[S] M₂) : M →ₗ[R] M₂ where
+  toFun := fₗ
+  map_add' := fₗ.map_add
+  map_smul' := fₗ.map_smul_of_tower
 
 theorem restrict_scalars_injective : Function.Injective (restrict_scalars R : (M →ₗ[S] M₂) → M →ₗ[R] M₂) :=
   fun fₗ gₗ h => ext (LinearMap.congr_fun h : _)
@@ -314,177 +320,14 @@ end RestrictScalars
 
 variable {R}
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  []
-  [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
-  []
-  []
-  []
-  [])
- (Command.theorem
-  "theorem"
-  (Command.declId `map_sum [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`ι] [] "}")
-    (Term.implicitBinder "{" [`t] [":" (Term.app `Finset [`ι])] "}")
-    (Term.implicitBinder "{" [`g] [":" (Term.arrow `ι "→" `M)] "}")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app
-      `f
-      [(Algebra.BigOperators.Basic.«term∑_in_,_»
-        "∑"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-        " in "
-        `t
-        ", "
-        (Term.app `g [`i]))])
-     "="
-     (Algebra.BigOperators.Basic.«term∑_in_,_»
-      "∑"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      " in "
-      `t
-      ", "
-      (Term.app `f [(Term.app `g [`i])])))))
-  (Command.declValSimple ":=" (Term.app `f.to_add_monoid_hom.map_sum [(Term.hole "_") (Term.hole "_")]) [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `f.to_add_monoid_hom.map_sum [(Term.hole "_") (Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f.to_add_monoid_hom.map_sum
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.app
-    `f
-    [(Algebra.BigOperators.Basic.«term∑_in_,_»
-      "∑"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      " in "
-      `t
-      ", "
-      (Term.app `g [`i]))])
-   "="
-   (Algebra.BigOperators.Basic.«term∑_in_,_»
-    "∑"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-    " in "
-    `t
-    ", "
-    (Term.app `f [(Term.app `g [`i])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∑_in_,_»
-   "∑"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-   " in "
-   `t
-   ", "
-   (Term.app `f [(Term.app `g [`i])]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∑_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `f [(Term.app `g [`i])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `g [`i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `g
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `g [`i]) []] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `t
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-@[ simp ]
-  theorem
-    map_sum
-    { ι } { t : Finset ι } { g : ι → M } : f ∑ i in t , g i = ∑ i in t , f g i
-    := f.to_add_monoid_hom.map_sum _ _
+@[simp]
+theorem map_sum {ι} {t : Finset ι} {g : ι → M} : f (∑ i in t, g i) = ∑ i in t, f (g i) :=
+  f.to_add_monoid_hom.map_sum _ _
 
 theorem to_add_monoid_hom_injective : Function.Injective (to_add_monoid_hom : (M →ₛₗ[σ] M₃) → M →+ M₃) := fun f g h =>
   ext $ AddMonoidHom.congr_fun h
 
-/--  If two `σ`-linear maps from `R` are equal on `1`, then they are equal. -/
+/-- If two `σ`-linear maps from `R` are equal on `1`, then they are equal. -/
 @[ext]
 theorem ext_ring {f g : R →ₛₗ[σ] M₃} (h : f 1 = g 1) : f = g :=
   ext $ fun x => by
@@ -495,7 +338,7 @@ theorem ext_ring_iff {σ : R →+* R} {f g : R →ₛₗ[σ] M} : f = g ↔ f 1 
 
 end
 
-/--  Interpret a `ring_hom` `f` as an `f`-semilinear map. -/
+/-- Interpret a `ring_hom` `f` as an `f`-semilinear map. -/
 @[simps]
 def _root_.ring_hom.to_semilinear_map (f : R →+* S) : R →ₛₗ[f] S :=
   { f with toFun := f, map_smul' := f.map_mul }
@@ -516,13 +359,13 @@ variable (f : M₂ →ₛₗ[σ₂₃] M₃) (g : M₁ →ₛₗ[σ₁₂] M₂)
 
 include module_M₁ module_M₂ module_M₃
 
-/--  Composition of two linear maps is a linear map -/
-def comp : M₁ →ₛₗ[σ₁₃] M₃ :=
-  { toFun := f ∘ g,
-    map_add' := by
-      simp only [map_add, forall_const, eq_self_iff_true, comp_app],
-    map_smul' := fun r x => by
-      rw [comp_app, map_smulₛₗ, map_smulₛₗ, RingHomCompTriple.comp_apply] }
+/-- Composition of two linear maps is a linear map -/
+def comp : M₁ →ₛₗ[σ₁₃] M₃ where
+  toFun := f ∘ g
+  map_add' := by
+    simp only [map_add, forall_const, eq_self_iff_true, comp_app]
+  map_smul' := fun r x => by
+    rw [comp_app, map_smulₛₗ, map_smulₛₗ, RingHomCompTriple.comp_apply]
 
 omit module_M₁ module_M₂ module_M₃
 
@@ -556,14 +399,14 @@ end
 
 variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
 
-/--  If a function `g` is a left and right inverse of a linear map `f`, then `g` is linear itself. -/
+/-- If a function `g` is a left and right inverse of a linear map `f`, then `g` is linear itself. -/
 def inverse [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R} [RingHomInvPair σ σ'] (f : M →ₛₗ[σ] M₂) (g : M₂ → M)
     (h₁ : left_inverse g f) (h₂ : RightInverse g f) : M₂ →ₛₗ[σ'] M := by
   dsimp [left_inverse, Function.RightInverse]  at h₁ h₂ <;>
     exact
       { toFun := g,
         map_add' := fun x y => by
-          rw [← h₁ (g (x+y)), ← h₁ (g x+g y)] <;> simp [h₂],
+          rw [← h₁ (g (x + y)), ← h₁ (g x + g y)] <;> simp [h₂],
         map_smul' := fun a b => by
           rw [← h₁ (g (a • b)), ← h₁ (σ' a • g b)]
           simp [h₂] }
@@ -595,7 +438,7 @@ instance compatible_smul.int_module {S : Type _} [Semiringₓ S] [Module S M] [M
       simp [sub_smul, ih]⟩
 
 instance compatible_smul.units {R S : Type _} [Monoidₓ R] [MulAction R M] [MulAction R M₂] [Semiringₓ S] [Module S M]
-    [Module S M₂] [compatible_smul M M₂ R S] : compatible_smul M M₂ (Units R) S :=
+    [Module S M₂] [compatible_smul M M₂ R S] : compatible_smul M M₂ (R)ˣ S :=
   ⟨fun fₗ c x => (compatible_smul.map_smul fₗ (c : R) x : _)⟩
 
 end AddCommGroupₓ
@@ -604,11 +447,14 @@ end LinearMap
 
 namespace Module
 
-/--  `g : R →+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
+/-- `g : R →+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
 @[simps]
-def comp_hom.to_linear_map {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R →+* S) : by
-    have := comp_hom S g <;> exact R →ₗ[R] S := by
-  exact { toFun := (g : R → S), map_add' := g.map_add, map_smul' := g.map_mul }
+def comp_hom.to_linear_map {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R →+* S) :
+    have := comp_hom S g
+    R →ₗ[R] S where
+  toFun := (g : R → S)
+  map_add' := g.map_add
+  map_smul' := g.map_mul
 
 end Module
 
@@ -616,7 +462,7 @@ namespace DistribMulActionHom
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [Module R M] [Module R M₂]
 
-/--  A `distrib_mul_action_hom` between two modules is a linear map. -/
+/-- A `distrib_mul_action_hom` between two modules is a linear map. -/
 def to_linear_map (fₗ : M →+[R] M₂) : M →ₗ[R] M₂ :=
   { fₗ with }
 
@@ -647,9 +493,11 @@ variable [Module R M] [Module R M₂]
 
 include R
 
-/--  Convert an `is_linear_map` predicate to a `linear_map` -/
-def mk' (f : M → M₂) (H : IsLinearMap R f) : M →ₗ[R] M₂ :=
-  { toFun := f, map_add' := H.1, map_smul' := H.2 }
+/-- Convert an `is_linear_map` predicate to a `linear_map` -/
+def mk' (f : M → M₂) (H : IsLinearMap R f) : M →ₗ[R] M₂ where
+  toFun := f
+  map_add' := H.1
+  map_smul' := H.2
 
 @[simp]
 theorem mk'_apply {f : M → M₂} (H : IsLinearMap R f) (x : M) : mk' f H x = f x :=
@@ -699,14 +547,16 @@ end AddCommGroupₓ
 
 end IsLinearMap
 
-/--  Linear endomorphisms of a module, with associated ring structure
+/-- Linear endomorphisms of a module, with associated ring structure
 `module.End.semiring` and algebra structure `module.End.algebra`. -/
 abbrev Module.End (R : Type u) (M : Type v) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :=
   M →ₗ[R] M
 
-/--  Reinterpret an additive homomorphism as a `ℕ`-linear map. -/
-def AddMonoidHom.toNatLinearMap [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] (f : M →+ M₂) : M →ₗ[ℕ] M₂ :=
-  { toFun := f, map_add' := f.map_add, map_smul' := f.map_nat_module_smul }
+/-- Reinterpret an additive homomorphism as a `ℕ`-linear map. -/
+def AddMonoidHom.toNatLinearMap [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] (f : M →+ M₂) : M →ₗ[ℕ] M₂ where
+  toFun := f
+  map_add' := f.map_add
+  map_smul' := f.map_nat_module_smul
 
 theorem AddMonoidHom.to_nat_linear_map_injective [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] :
     Function.Injective (@AddMonoidHom.toNatLinearMap M M₂ _ _) := by
@@ -714,9 +564,11 @@ theorem AddMonoidHom.to_nat_linear_map_injective [AddCommMonoidₓ M] [AddCommMo
   ext
   exact LinearMap.congr_fun h x
 
-/--  Reinterpret an additive homomorphism as a `ℤ`-linear map. -/
-def AddMonoidHom.toIntLinearMap [AddCommGroupₓ M] [AddCommGroupₓ M₂] (f : M →+ M₂) : M →ₗ[ℤ] M₂ :=
-  { toFun := f, map_add' := f.map_add, map_smul' := f.map_int_module_smul }
+/-- Reinterpret an additive homomorphism as a `ℤ`-linear map. -/
+def AddMonoidHom.toIntLinearMap [AddCommGroupₓ M] [AddCommGroupₓ M₂] (f : M →+ M₂) : M →ₗ[ℤ] M₂ where
+  toFun := f
+  map_add' := f.map_add
+  map_smul' := f.map_int_module_smul
 
 theorem AddMonoidHom.to_int_linear_map_injective [AddCommGroupₓ M] [AddCommGroupₓ M₂] :
     Function.Injective (@AddMonoidHom.toIntLinearMap M M₂ _ _) := by
@@ -729,7 +581,7 @@ theorem AddMonoidHom.coe_to_int_linear_map [AddCommGroupₓ M] [AddCommGroupₓ 
     ⇑f.to_int_linear_map = f :=
   rfl
 
-/--  Reinterpret an additive homomorphism as a `ℚ`-linear map. -/
+/-- Reinterpret an additive homomorphism as a `ℚ`-linear map. -/
 def AddMonoidHom.toRatLinearMap [AddCommGroupₓ M] [Module ℚ M] [AddCommGroupₓ M₂] [Module ℚ M₂] (f : M →+ M₂) :
     M →ₗ[ℚ] M₂ :=
   { f with map_smul' := f.map_rat_module_smul }
@@ -764,7 +616,7 @@ variable [Module R₁ N₁] [Module R₂ N₂] [Module R₃ N₃]
 
 variable {σ₁₂ : R₁ →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R₁ →+* R₃} [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
-/--  The constant 0 map is linear. -/
+/-- The constant 0 map is linear. -/
 instance : HasZero (M →ₛₗ[σ₁₂] M₂) :=
   ⟨{ toFun := 0,
       map_add' := by
@@ -792,48 +644,44 @@ instance : Inhabited (M →ₛₗ[σ₁₂] M₂) :=
 theorem default_def : default (M →ₛₗ[σ₁₂] M₂) = 0 :=
   rfl
 
-/--  The sum of two linear maps is linear. -/
+/-- The sum of two linear maps is linear. -/
 instance : Add (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun f g =>
-    { toFun := f+g,
+    { toFun := f + g,
       map_add' := by
         simp [add_commₓ, add_left_commₓ],
       map_smul' := by
         simp [smul_add] }⟩
 
 @[simp]
-theorem add_apply (f g : M →ₛₗ[σ₁₂] M₂) (x : M) : (f+g) x = f x+g x :=
+theorem add_apply (f g : M →ₛₗ[σ₁₂] M₂) (x : M) : (f + g) x = f x + g x :=
   rfl
 
-theorem add_comp (f : M →ₛₗ[σ₁₂] M₂) (g h : M₂ →ₛₗ[σ₂₃] M₃) : ((h+g).comp f : M →ₛₗ[σ₁₃] M₃) = h.comp f+g.comp f :=
+theorem add_comp (f : M →ₛₗ[σ₁₂] M₂) (g h : M₂ →ₛₗ[σ₂₃] M₃) : ((h + g).comp f : M →ₛₗ[σ₁₃] M₃) = h.comp f + g.comp f :=
   rfl
 
-theorem comp_add (f g : M →ₛₗ[σ₁₂] M₂) (h : M₂ →ₛₗ[σ₂₃] M₃) : (h.comp (f+g) : M →ₛₗ[σ₁₃] M₃) = h.comp f+h.comp g :=
+theorem comp_add (f g : M →ₛₗ[σ₁₂] M₂) (h : M₂ →ₛₗ[σ₂₃] M₃) : (h.comp (f + g) : M →ₛₗ[σ₁₃] M₃) = h.comp f + h.comp g :=
   ext $ fun _ => h.map_add _ _
 
--- failed to format: format: uncaught backtrack exception
 /-- The type of linear maps is an additive monoid. -/
-  instance
-    : AddCommMonoidₓ ( M →ₛₗ[ σ₁₂ ] M₂ )
-    where
-      zero := 0
-        add := · + ·
-        add_assoc f g h := LinearMap.ext $ fun x => add_assocₓ _ _ _
-        zero_add f := LinearMap.ext $ fun x => zero_addₓ _
-        add_zero f := LinearMap.ext $ fun x => add_zeroₓ _
-        add_comm f g := LinearMap.ext $ fun x => add_commₓ _ _
-        nsmul
-          n f
-          :=
-          {
-            toFun := fun x => n • f x ,
-              map_add' := fun x y => by rw [ f.map_add , smul_add ] ,
-              map_smul' := fun c x => by rw [ f.map_smulₛₗ ] simp [ smul_comm n ( σ₁₂ c ) ( f x ) ]
-            }
-        nsmul_zero' f := LinearMap.ext $ fun x => AddCommMonoidₓ.nsmul_zero' _
-        nsmul_succ' n f := LinearMap.ext $ fun x => AddCommMonoidₓ.nsmul_succ' _ _
+instance : AddCommMonoidₓ (M →ₛₗ[σ₁₂] M₂) where
+  zero := 0
+  add := · + ·
+  add_assoc := fun f g h => LinearMap.ext $ fun x => add_assocₓ _ _ _
+  zero_add := fun f => LinearMap.ext $ fun x => zero_addₓ _
+  add_zero := fun f => LinearMap.ext $ fun x => add_zeroₓ _
+  add_comm := fun f g => LinearMap.ext $ fun x => add_commₓ _ _
+  nsmul := fun n f =>
+    { toFun := fun x => n • f x,
+      map_add' := fun x y => by
+        rw [f.map_add, smul_add],
+      map_smul' := fun c x => by
+        rw [f.map_smulₛₗ]
+        simp [smul_comm n (σ₁₂ c) (f x)] }
+  nsmul_zero' := fun f => LinearMap.ext $ fun x => AddCommMonoidₓ.nsmul_zero' _
+  nsmul_succ' := fun n f => LinearMap.ext $ fun x => AddCommMonoidₓ.nsmul_succ' _ _
 
-/--  The negation of a linear map is linear. -/
+/-- The negation of a linear map is linear. -/
 instance : Neg (M →ₛₗ[σ₁₂] N₂) :=
   ⟨fun f =>
     { toFun := -f,
@@ -858,7 +706,7 @@ theorem comp_neg (f : M →ₛₗ[σ₁₂] N₂) (g : N₂ →ₛₗ[σ₂₃] 
 
 omit σ₁₃
 
-/--  The negation of a linear map is linear. -/
+/-- The negation of a linear map is linear. -/
 instance : Sub (M →ₛₗ[σ₁₂] N₂) :=
   ⟨fun f g =>
     { toFun := f - g,
@@ -881,9 +729,9 @@ theorem comp_sub (f g : M →ₛₗ[σ₁₂] N₂) (h : N₂ →ₛₗ[σ₂₃
 
 omit σ₁₃
 
-/--  The type of linear maps is an additive group. -/
+/-- The type of linear maps is an additive group. -/
 instance : AddCommGroupₓ (M →ₛₗ[σ₁₂] N₂) :=
-  { LinearMap.addCommMonoid with zero := 0, add := ·+·, neg := Neg.neg, sub := Sub.sub,
+  { LinearMap.addCommMonoid with zero := 0, add := · + ·, neg := Neg.neg, sub := Sub.sub,
     sub_eq_add_neg := fun f g => LinearMap.ext $ fun m => sub_eq_add_neg _ _,
     add_left_neg := fun f => LinearMap.ext $ fun m => add_left_negₓ _,
     nsmul := fun n f =>
@@ -940,25 +788,18 @@ theorem coe_smul (a : S) (f : M →ₛₗ[σ₁₂] M₂) : ⇑(a • f) = a •
 instance [SmulCommClass S T M₂] : SmulCommClass S T (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun a b f => ext $ fun x => smul_comm _ _ _⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  [ HasScalar S T ] [ IsScalarTower S T M₂ ] : IsScalarTower S T ( M →ₛₗ[ σ₁₂ ] M₂ )
-  where smul_assoc _ _ _ := ext $ fun _ => smul_assoc _ _ _
+instance [HasScalar S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →ₛₗ[σ₁₂] M₂) where
+  smul_assoc := fun _ _ _ => ext $ fun _ => smul_assoc _ _ _
 
--- failed to format: format: uncaught backtrack exception
-instance
-  [ DistribMulAction ( S ᵐᵒᵖ ) M₂ ] [ SmulCommClass R₂ ( S ᵐᵒᵖ ) M₂ ] [ IsCentralScalar S M₂ ]
-    : IsCentralScalar S ( M →ₛₗ[ σ₁₂ ] M₂ )
-  where op_smul_eq_smul a b := ext $ fun x => op_smul_eq_smul _ _
+instance [DistribMulAction (Sᵐᵒᵖ) M₂] [SmulCommClass R₂ (Sᵐᵒᵖ) M₂] [IsCentralScalar S M₂] :
+    IsCentralScalar S (M →ₛₗ[σ₁₂] M₂) where
+  op_smul_eq_smul := fun a b => ext $ fun x => op_smul_eq_smul _ _
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : DistribMulAction S ( M →ₛₗ[ σ₁₂ ] M₂ )
-  where
-    one_smul f := ext $ fun _ => one_smul _ _
-      mul_smul c c' f := ext $ fun _ => mul_smul _ _ _
-      smul_add c f g := ext $ fun x => smul_add _ _ _
-      smul_zero c := ext $ fun x => smul_zero _
+instance : DistribMulAction S (M →ₛₗ[σ₁₂] M₂) where
+  one_smul := fun f => ext $ fun _ => one_smul _ _
+  mul_smul := fun c c' f => ext $ fun _ => mul_smul _ _ _
+  smul_add := fun c f g => ext $ fun x => smul_add _ _ _
+  smul_zero := fun c => ext $ fun x => smul_zero _
 
 include σ₁₃
 
@@ -977,10 +818,9 @@ section Module
 
 variable [Semiringₓ S] [Module S M₂] [SmulCommClass R₂ S M₂]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : Module S ( M →ₛₗ[ σ₁₂ ] M₂ )
-  where add_smul a b f := ext $ fun x => add_smul _ _ _ zero_smul f := ext $ fun x => zero_smul _ _
+instance : Module S (M →ₛₗ[σ₁₂] M₂) where
+  add_smul := fun a b f => ext $ fun x => add_smul _ _ _
+  zero_smul := fun f => ext $ fun x => zero_smul _ _
 
 instance [NoZeroSmulDivisors S M₂] : NoZeroSmulDivisors S (M →ₛₗ[σ₁₂] M₂) :=
   coe_injective.NoZeroSmulDivisors _ rfl coe_smul
@@ -1009,7 +849,7 @@ instance : Mul (Module.End R M) :=
 theorem one_eq_id : (1 : Module.End R M) = id :=
   rfl
 
-theorem mul_eq_comp (f g : Module.End R M) : (f*g) = f.comp g :=
+theorem mul_eq_comp (f g : Module.End R M) : f * g = f.comp g :=
   rfl
 
 @[simp]
@@ -1017,29 +857,25 @@ theorem one_apply (x : M) : (1 : Module.End R M) x = x :=
   rfl
 
 @[simp]
-theorem mul_apply (f g : Module.End R M) (x : M) : (f*g) x = f (g x) :=
+theorem mul_apply (f g : Module.End R M) (x : M) : (f * g) x = f (g x) :=
   rfl
 
 theorem coe_one : ⇑(1 : Module.End R M) = _root_.id :=
   rfl
 
-theorem coe_mul (f g : Module.End R M) : (⇑f*g) = f ∘ g :=
+theorem coe_mul (f g : Module.End R M) : ⇑(f * g) = f ∘ g :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  _root_.module.End.monoid
-  : Monoidₓ ( Module.End R M )
-  where
-    mul := · * ·
-      one := ( 1 : M →ₗ[ R ] M )
-      mul_assoc f g h := LinearMap.ext $ fun x => rfl
-      mul_one := comp_id
-      one_mul := id_comp
+instance _root_.module.End.monoid : Monoidₓ (Module.End R M) where
+  mul := · * ·
+  one := (1 : M →ₗ[R] M)
+  mul_assoc := fun f g h => LinearMap.ext $ fun x => rfl
+  mul_one := comp_id
+  one_mul := id_comp
 
 instance _root_.module.End.semiring : Semiringₓ (Module.End R M) :=
-  { _root_.module.End.monoid, LinearMap.addCommMonoid with mul := ·*·, one := (1 : M →ₗ[R] M), zero := 0, add := ·+·,
-    npow := @npowRec _ ⟨(1 : M →ₗ[R] M)⟩ ⟨·*·⟩, mul_zero := comp_zero, zero_mul := zero_comp,
+  { _root_.module.End.monoid, LinearMap.addCommMonoid with mul := · * ·, one := (1 : M →ₗ[R] M), zero := 0,
+    add := · + ·, npow := @npowRec _ ⟨(1 : M →ₗ[R] M)⟩ ⟨· * ·⟩, mul_zero := comp_zero, zero_mul := zero_comp,
     left_distrib := fun f g h => comp_add _ _ _, right_distrib := fun f g h => add_comp _ _ _ }
 
 instance _root_.module.End.ring : Ringₓ (Module.End R N₁) :=
@@ -1065,33 +901,28 @@ end
 /-! ### Action by a module endomorphism. -/
 
 
--- failed to format: format: uncaught backtrack exception
-/--
-    The tautological action by `module.End R M` (aka `M →ₗ[R] M`) on `M`.
-    
-    This generalizes `function.End.apply_mul_action`. -/
-  instance
-    apply_module
-    : Module ( Module.End R M ) M
-    where
-      smul := · $ ·
-        smul_zero := LinearMap.map_zero
-        smul_add := LinearMap.map_add
-        add_smul := LinearMap.add_apply
-        zero_smul := ( LinearMap.zero_apply : ∀ m , ( 0 : M →ₗ[ R ] M ) m = 0 )
-        one_smul _ := rfl
-        mul_smul _ _ _ := rfl
+/-- The tautological action by `module.End R M` (aka `M →ₗ[R] M`) on `M`.
+
+This generalizes `function.End.apply_mul_action`. -/
+instance apply_module : Module (Module.End R M) M where
+  smul := · $ ·
+  smul_zero := LinearMap.map_zero
+  smul_add := LinearMap.map_add
+  add_smul := LinearMap.add_apply
+  zero_smul := (LinearMap.zero_apply : ∀ m, (0 : M →ₗ[R] M) m = 0)
+  one_smul := fun _ => rfl
+  mul_smul := fun _ _ _ => rfl
 
 @[simp]
 protected theorem smul_def (f : Module.End R M) (a : M) : f • a = f a :=
   rfl
 
-/--  `linear_map.apply_module` is faithful. -/
+/-- `linear_map.apply_module` is faithful. -/
 instance apply_has_faithful_scalar : HasFaithfulScalar (Module.End R M) M :=
   ⟨fun _ _ => LinearMap.ext⟩
 
--- failed to format: format: uncaught backtrack exception
-instance apply_smul_comm_class : SmulCommClass R ( Module.End R M ) M where smul_comm r e m := ( e.map_smul r m ) . symm
+instance apply_smul_comm_class : SmulCommClass R (Module.End R M) M where
+  smul_comm := fun r e m => (e.map_smul r m).symm
 
 instance apply_smul_comm_class' : SmulCommClass (Module.End R M) R M where
   smul_comm := LinearMap.map_smul
@@ -1109,20 +940,23 @@ variable (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 variable [Monoidₓ S] [DistribMulAction S M] [SmulCommClass S R M]
 
-/--  Each element of the monoid defines a linear map.
+/-- Each element of the monoid defines a linear map.
 
 This is a stronger version of `distrib_mul_action.to_add_monoid_hom`. -/
 @[simps]
-def to_linear_map (s : S) : M →ₗ[R] M :=
-  { toFun := HasScalar.smul s, map_add' := smul_add s, map_smul' := fun a b => smul_comm _ _ _ }
+def to_linear_map (s : S) : M →ₗ[R] M where
+  toFun := HasScalar.smul s
+  map_add' := smul_add s
+  map_smul' := fun a b => smul_comm _ _ _
 
-/--  Each element of the monoid defines a module endomorphism.
+/-- Each element of the monoid defines a module endomorphism.
 
 This is a stronger version of `distrib_mul_action.to_add_monoid_End`. -/
 @[simps]
-def to_module_End : S →* Module.End R M :=
-  { toFun := to_linear_map R M, map_one' := LinearMap.ext $ one_smul _,
-    map_mul' := fun a b => LinearMap.ext $ mul_smul _ _ }
+def to_module_End : S →* Module.End R M where
+  toFun := to_linear_map R M
+  map_one' := LinearMap.ext $ one_smul _
+  map_mul' := fun a b => LinearMap.ext $ mul_smul _ _
 
 end DistribMulAction
 
@@ -1132,7 +966,7 @@ variable (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 variable [Semiringₓ S] [Module S M] [SmulCommClass S R M]
 
-/--  Each element of the monoid defines a module endomorphism.
+/-- Each element of the monoid defines a module endomorphism.
 
 This is a stronger version of `distrib_mul_action.to_module_End`. -/
 @[simps]

@@ -17,7 +17,7 @@ section Sort
 
 variable (r : α → α → Prop) [DecidableRel r] [IsTrans α r] [IsAntisymm α r] [IsTotal α r]
 
-/--  `sort s` constructs a sorted list from the multiset `s`.
+/-- `sort s` constructs a sorted list from the multiset `s`.
   (Uses merge sort algorithm.) -/
 def sort (s : Multiset α) : List α :=
   Quot.liftOn s (merge_sort r) $ fun a b h =>

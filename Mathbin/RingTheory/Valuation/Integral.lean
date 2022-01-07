@@ -34,14 +34,14 @@ theorem mem_of_integral {x : R} (hx : IsIntegral O x) : x ∈ v.integer :=
     refine' ne_of_gtₓ _ hpx
     rw [v.map_neg, v.map_pow]
     refine' v.map_sum_lt' (zero_lt_one₀.trans_le (one_le_pow_of_one_le' hvx.le _)) fun i hi => _
-    rw [eval₂_mul, eval₂_pow, eval₂_C, eval₂_X, v.map_mul, v.map_pow, ← one_mulₓ (v x^p.nat_degree)]
+    rw [eval₂_mul, eval₂_pow, eval₂_C, eval₂_X, v.map_mul, v.map_pow, ← one_mulₓ (v x ^ p.nat_degree)]
     cases' (hv.2 $ p.coeff i).lt_or_eq with hvpi hvpi
-    ·
-      exact mul_lt_mul₀ hvpi (pow_lt_pow₀ hvx $ Finset.mem_range.1 hi)
-    ·
-      erw [hvpi]
+    · exact mul_lt_mul₀ hvpi (pow_lt_pow₀ hvx $ Finset.mem_range.1 hi)
+      
+    · erw [hvpi]
       rw [one_mulₓ, one_mulₓ]
       exact pow_lt_pow₀ hvx (Finset.mem_range.1 hi)
+      
 
 protected theorem integralClosure : integralClosure O R = ⊥ :=
   bot_unique $ fun r hr =>

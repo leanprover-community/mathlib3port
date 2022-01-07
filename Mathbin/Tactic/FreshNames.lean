@@ -1,5 +1,4 @@
-import Mathbin.Data.Sum
-import Mathbin.Meta.RbMap
+import Mathbin.Data.Sum.Basic
 import Mathbin.Tactic.Dependencies
 
 /-!
@@ -24,11 +23,10 @@ private unsafe def get_unused_name_reserved_aux (n : Name) (reserved : name_set)
       let new_suffix :=
         match suffix with
         | none => some 1
-        | some n => some (n+1)
+        | some n => some (n + 1)
       get_unused_name_reserved_aux new_suffix
 
-/-- 
-`get_unused_name_reserved ns reserved` returns the first name from `ns` that
+/-- `get_unused_name_reserved ns reserved` returns the first name from `ns` that
 occurs neither in `reserved` nor in the environment. If there is no such name in
 `ns`, it returns a name of the form `n_i`, where `n` is the first name from `ns`
 and `i` is a natural number (like `tactic.get_unused_name`). If `ns` is empty,
@@ -69,16 +67,14 @@ unsafe def get_unused_name_reserved (ns : List Name) (reserved : name_set) : tac
       | x :: _ => x
     get_unused_name_reserved_aux fallback reserved none
 
-/-- 
-`intro_fresh_reserved ns reserved` introduces a hypothesis. The hypothesis
+/-- `intro_fresh_reserved ns reserved` introduces a hypothesis. The hypothesis
 receives a fresh name from `ns`, excluding the names in `reserved`. `ns` must be
 nonempty. See `tactic.get_unused_name_reserved` for the full algorithm.
 -/
 unsafe def intro_fresh_reserved (ns : List Name) (reserved : name_set) : tactic expr :=
   get_unused_name_reserved ns reserved >>= intro
 
-/-- 
-`intro_lst_fresh_reserved ns reserved` introduces one hypothesis for every
+/-- `intro_lst_fresh_reserved ns reserved` introduces one hypothesis for every
 element of `ns`. If the element is `sum.inl n`, the hypothesis receives the name
 `n` (which may or may not be fresh). If the element is `sum.inr ns'`, the
 hypothesis receives a fresh name from `ns`, excluding the names in `reserved`.
@@ -97,8 +93,7 @@ unsafe def intro_lst_fresh_reserved (ns : List (Sum Name (List Name))) (reserved
     | Sum.inl n => intro n
     | Sum.inr ns => intro_fresh_reserved ns reserved
 
-/-- 
-`rename_fresh renames reserved`, given a map `renames` which associates the
+/-- `rename_fresh renames reserved`, given a map `renames` which associates the
 unique names of some hypotheses `hᵢ` with either a name `nᵢ` or a nonempty (!)
 name list `nsᵢ`, renames each `hᵢ` as follows:
 

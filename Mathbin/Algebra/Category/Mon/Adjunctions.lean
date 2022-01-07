@@ -20,18 +20,20 @@ universe u
 
 open CategoryTheory
 
-/--  The functor of adjoining a neutral element `one` to a semigroup.
+/-- The functor of adjoining a neutral element `one` to a semigroup.
  -/
 @[to_additive "The functor of adjoining a neutral element `zero` to a semigroup", simps]
-def adjoinOne : Semigroupₓₓ.{u} ⥤ Mon.{u} :=
-  { obj := fun S => Mon.of (WithOne S), map := fun X Y => WithOne.map, map_id' := fun X => WithOne.map_id,
-    map_comp' := fun X Y Z => WithOne.map_comp }
+def adjoinOne : Semigroupₓₓ.{u} ⥤ Mon.{u} where
+  obj := fun S => Mon.of (WithOne S)
+  map := fun X Y => WithOne.map
+  map_id' := fun X => WithOne.map_id
+  map_comp' := fun X Y Z => WithOne.map_comp
 
 @[to_additive hasForgetToAddSemigroup]
 instance hasForgetToSemigroup : has_forget₂ Mon Semigroupₓₓ where
   forget₂ := { obj := fun M => Semigroupₓₓ.of M, map := fun M N => MonoidHom.toMulHom }
 
-/--  The adjoin_one-forgetful adjunction from `Semigroup` to `Mon`.-/
+/-- The adjoin_one-forgetful adjunction from `Semigroup` to `Mon`.-/
 @[to_additive "The adjoin_one-forgetful adjunction from `AddSemigroup` to `AddMon`"]
 def adjoinOneAdj : adjoinOne ⊣ forget₂ Mon.{u} Semigroupₓₓ.{u} :=
   adjunction.mk_of_hom_equiv
@@ -42,24 +44,25 @@ def adjoinOneAdj : adjoinOne ⊣ forget₂ Mon.{u} Semigroupₓₓ.{u} :=
         simp only [Equivₓ.symm_symm, adjoin_one_map, coe_comp]
         simp_rw [WithOne.map]
         apply WithOne.cases_on x
-        ·
-          rfl
-        ·
-          simp }
+        · rfl
+          
+        · simp
+           }
 
-/--  The free functor `Type u ⥤ Mon` sending a type `X` to the free monoid on `X`. -/
-def free : Type u ⥤ Mon.{u} :=
-  { obj := fun α => Mon.of (FreeMonoid α), map := fun X Y => FreeMonoid.map,
-    map_id' := by
-      intros
-      ext1
-      rfl,
-    map_comp' := by
-      intros
-      ext1
-      rfl }
+/-- The free functor `Type u ⥤ Mon` sending a type `X` to the free monoid on `X`. -/
+def free : Type u ⥤ Mon.{u} where
+  obj := fun α => Mon.of (FreeMonoid α)
+  map := fun X Y => FreeMonoid.map
+  map_id' := by
+    intros
+    ext1
+    rfl
+  map_comp' := by
+    intros
+    ext1
+    rfl
 
-/--  The free-forgetful adjunction for monoids. -/
+/-- The free-forgetful adjunction for monoids. -/
 def adj : free ⊣ forget Mon.{u} :=
   adjunction.mk_of_hom_equiv
     { homEquiv := fun X G => FreeMonoid.lift.symm,

@@ -71,7 +71,7 @@ instance {α : Type _} [∀ i, HasScalar α $ f i] [∀ i, HasScalar (αᵐᵒ�
     IsCentralScalar α (∀ i, f i) :=
   ⟨fun r m => funext $ fun i => op_smul_eq_smul _ _⟩
 
-/--  If `f i` has a faithful scalar action for a given `i`, then so does `Π i, f i`. This is
+/-- If `f i` has a faithful scalar action for a given `i`, then so does `Π i, f i`. This is
 not an instance as `i` cannot be inferred. -/
 @[to_additive Pi.has_faithful_vadd_at]
 theorem has_faithful_scalar_at {α : Type _} [∀ i, HasScalar α $ f i] [∀ i, Nonempty (f i)] (i : I)
@@ -88,20 +88,18 @@ instance HasFaithfulScalar {α : Type _} [Nonempty I] [∀ i, HasScalar α $ f i
   let ⟨i⟩ := ‹Nonempty I›
   has_faithful_scalar_at i
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    MulAction
-    α { m : Monoidₓ α } [ ∀ i , MulAction α $ f i ] : @ MulAction α ( ∀ i : I , f i ) m
-    where smul := · • · mul_smul r s f := funext $ fun i => mul_smul _ _ _ one_smul f := funext $ fun i => one_smul α _
+@[to_additive]
+instance MulAction α {m : Monoidₓ α} [∀ i, MulAction α $ f i] : @MulAction α (∀ i : I, f i) m where
+  smul := · • ·
+  mul_smul := fun r s f => funext $ fun i => mul_smul _ _ _
+  one_smul := fun f => funext $ fun i => one_smul α _
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    mul_action'
-    { g : I → Type _ } { m : ∀ i , Monoidₓ ( f i ) } [ ∀ i , MulAction ( f i ) ( g i ) ]
-      : @ MulAction ( ∀ i , f i ) ( ∀ i : I , g i ) ( @ Pi.monoid I f m )
-    where smul := · • · mul_smul r s f := funext $ fun i => mul_smul _ _ _ one_smul f := funext $ fun i => one_smul _ _
+@[to_additive]
+instance mul_action' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} [∀ i, MulAction (f i) (g i)] :
+    @MulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) where
+  smul := · • ·
+  mul_smul := fun r s f => funext $ fun i => mul_smul _ _ _
+  one_smul := fun f => funext $ fun i => one_smul _ _
 
 instance DistribMulAction α {m : Monoidₓ α} {n : ∀ i, AddMonoidₓ $ f i} [∀ i, DistribMulAction α $ f i] :
     @DistribMulAction α (∀ i : I, f i) m (@Pi.addMonoid I f n) :=
@@ -124,7 +122,7 @@ theorem single_smul {α} [Monoidₓ α] [∀ i, AddMonoidₓ $ f i] [∀ i, Dist
     (r : α) (x : f i) : single i (r • x) = r • single i x :=
   single_op (fun i : I => ((· • ·) r : f i → f i)) (fun j => smul_zero _) _ _
 
-/--  A version of `pi.single_smul` for non-dependent functions. It is useful in cases Lean fails
+/-- A version of `pi.single_smul` for non-dependent functions. It is useful in cases Lean fails
 to apply `pi.single_smul`. -/
 theorem single_smul' {α β} [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction α β] [DecidableEq I] (i : I) (r : α) (x : β) :
     single i (r • x) = r • single i x :=

@@ -18,7 +18,7 @@ universe u v w
 
 variable {α : Type u}
 
-/--  Add an extra element `1` to a type -/
+/-- Add an extra element `1` to a type -/
 @[to_additive "Add an extra element `0` to a type"]
 def WithOne α :=
   Option α
@@ -35,7 +35,7 @@ instance : HasOne (WithOne α) :=
 
 @[to_additive]
 instance [Mul α] : Mul (WithOne α) :=
-  ⟨Option.liftOrGet (·*·)⟩
+  ⟨Option.liftOrGet (· * ·)⟩
 
 @[to_additive]
 instance [HasInv α] : HasInv (WithOne α) :=
@@ -69,8 +69,11 @@ theorem one_ne_coe {a : α} : (1 : WithOne α) ≠ a :=
 theorem ne_one_iff_exists {x : WithOne α} : x ≠ 1 ↔ ∃ a : α, ↑a = x :=
   Option.ne_none_iff_exists
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ] instance : CanLift ( WithOne α ) α where coe := coeₓ cond a := a ≠ 1 prf a := ne_one_iff_exists . 1
+@[to_additive]
+instance : CanLift (WithOne α) α where
+  coe := coeₓ
+  cond := fun a => a ≠ 1
+  prf := fun a => ne_one_iff_exists.1
 
 @[simp, norm_cast, to_additive]
 theorem coe_inj {a b : α} : (a : WithOne α) = b ↔ a = b :=
@@ -82,10 +85,10 @@ protected theorem cases_on {P : WithOne α → Prop} : ∀ x : WithOne α, P 1 �
 
 @[to_additive]
 instance [Mul α] : MulOneClass (WithOne α) where
-  mul := ·*·
+  mul := · * ·
   one := 1
-  one_mul := show ∀ x : WithOne α, (1*x) = x from (Option.lift_or_get_is_left_id _).1
-  mul_one := show ∀ x : WithOne α, (x*1) = x from (Option.lift_or_get_is_right_id _).1
+  one_mul := show ∀ x : WithOne α, 1 * x = x from (Option.lift_or_get_is_left_id _).1
+  mul_one := show ∀ x : WithOne α, x * 1 = x from (Option.lift_or_get_is_right_id _).1
 
 @[to_additive]
 instance [Semigroupₓ α] : Monoidₓ (WithOne α) :=
@@ -100,10 +103,11 @@ instance [CommSemigroupₓ α] : CommMonoidₓ (WithOne α) :=
 
 section
 
-/--  `coe` as a bundled morphism -/
+/-- `coe` as a bundled morphism -/
 @[to_additive "`coe` as a bundled morphism", simps apply]
-def coe_mul_hom [Mul α] : MulHom α (WithOne α) :=
-  { toFun := coeₓ, map_mul' := fun x y => rfl }
+def coe_mul_hom [Mul α] : MulHom α (WithOne α) where
+  toFun := coeₓ
+  map_mul' := fun x y => rfl
 
 end
 
@@ -111,24 +115,25 @@ section lift
 
 variable [Mul α] {β : Type v} [MulOneClass β]
 
-/--  Lift a semigroup homomorphism `f` to a bundled monoid homorphism. -/
+/-- Lift a semigroup homomorphism `f` to a bundled monoid homorphism. -/
 @[to_additive "Lift an add_semigroup homomorphism `f` to a bundled add_monoid homorphism."]
-def lift : MulHom α β ≃ (WithOne α →* β) :=
-  { toFun := fun f =>
-      { toFun := fun x => Option.casesOn x 1 f, map_one' := rfl,
-        map_mul' := fun x y =>
-          WithOne.cases_on x
+def lift : MulHom α β ≃ (WithOne α →* β) where
+  toFun := fun f =>
+    { toFun := fun x => Option.casesOn x 1 f, map_one' := rfl,
+      map_mul' := fun x y =>
+        WithOne.cases_on x
+            (by
+              rw [one_mulₓ]
+              exact (one_mulₓ _).symm) $
+          fun x =>
+          WithOne.cases_on y
               (by
-                rw [one_mulₓ]
-                exact (one_mulₓ _).symm) $
-            fun x =>
-            WithOne.cases_on y
-                (by
-                  rw [mul_oneₓ]
-                  exact (mul_oneₓ _).symm) $
-              fun y => f.map_mul x y },
-    invFun := fun F => F.to_mul_hom.comp coe_mul_hom, left_inv := fun f => MulHom.ext $ fun x => rfl,
-    right_inv := fun F => MonoidHom.ext $ fun x => WithOne.cases_on x F.map_one.symm $ fun x => rfl }
+                rw [mul_oneₓ]
+                exact (mul_oneₓ _).symm) $
+            fun y => f.map_mul x y }
+  invFun := fun F => F.to_mul_hom.comp coe_mul_hom
+  left_inv := fun f => MulHom.ext $ fun x => rfl
+  right_inv := fun F => MonoidHom.ext $ fun x => WithOne.cases_on x F.map_one.symm $ fun x => rfl
 
 variable (f : MulHom α β)
 
@@ -150,7 +155,7 @@ section Map
 
 variable {β : Type v} [Mul α] [Mul β]
 
-/--  Given a multiplicative map from `α → β` returns a monoid homomorphism
+/-- Given a multiplicative map from `α → β` returns a monoid homomorphism
   from `with_one α` to `with_one β` -/
 @[to_additive
       "Given an additive map from `α → β` returns an add_monoid homomorphism\n  from `with_zero α` to `with_zero β`"]
@@ -170,7 +175,7 @@ theorem map_comp {γ : Type w} [Mul γ] (f : MulHom α β) (g : MulHom β γ) : 
 end Map
 
 @[simp, norm_cast, to_additive]
-theorem coe_mul [Mul α] (a b : α) : ((a*b : α) : WithOne α) = a*b :=
+theorem coe_mul [Mul α] (a b : α) : ((a * b : α) : WithOne α) = a * b :=
   rfl
 
 @[simp, norm_cast, to_additive]
@@ -189,20 +194,20 @@ theorem coe_one [HasOne α] : ((1 : α) : WithZero α) = 1 :=
   rfl
 
 instance [Mul α] : MulZeroClass (WithZero α) :=
-  { WithZero.hasZero with mul := fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a*b) o₂, zero_mul := fun a => rfl,
+  { WithZero.hasZero with mul := fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a * b) o₂, zero_mul := fun a => rfl,
     mul_zero := fun a => by
       cases a <;> rfl }
 
 @[simp, norm_cast]
-theorem coe_mul {α : Type u} [Mul α] {a b : α} : ((a*b : α) : WithZero α) = a*b :=
+theorem coe_mul {α : Type u} [Mul α] {a b : α} : ((a * b : α) : WithZero α) = a * b :=
   rfl
 
 @[simp]
-theorem zero_mul {α : Type u} [Mul α] (a : WithZero α) : (0*a) = 0 :=
+theorem zero_mul {α : Type u} [Mul α] (a : WithZero α) : 0 * a = 0 :=
   rfl
 
 @[simp]
-theorem mul_zero {α : Type u} [Mul α] (a : WithZero α) : (a*0) = 0 := by
+theorem mul_zero {α : Type u} [Mul α] (a : WithZero α) : a * 0 = 0 := by
   cases a <;> rfl
 
 instance [Semigroupₓ α] : SemigroupWithZero (WithZero α) :=
@@ -237,7 +242,7 @@ instance [HasOne α] [Pow α ℕ] : Pow (WithZero α) ℕ :=
   ⟨fun x n =>
     match x, n with
     | none, 0 => 1
-    | none, n+1 => 0
+    | none, n + 1 => 0
     | some x, n => ↑(x ^ n)⟩
 
 @[simp, norm_cast]
@@ -258,7 +263,7 @@ instance [Monoidₓ α] : MonoidWithZeroₓ (WithZero α) :=
 instance [CommMonoidₓ α] : CommMonoidWithZero (WithZero α) :=
   { WithZero.monoidWithZero, WithZero.commSemigroup with }
 
-/--  Given an inverse operation on `α` there is an inverse operation
+/-- Given an inverse operation on `α` there is an inverse operation
   on `with_zero α` sending `0` to `0`-/
 instance [HasInv α] : HasInv (WithZero α) :=
   ⟨fun a => Option.map HasInv.inv a⟩
@@ -317,10 +322,10 @@ variable [Groupₓ α]
 
 @[simp]
 theorem inv_one : (1 : WithZero α)⁻¹ = 1 :=
-  show ((1⁻¹ : α) : WithZero α) = 1by
+  show ((1⁻¹ : α) : WithZero α) = 1 by
     simp
 
-/--  if `G` is a group then `with_zero G` is a group with zero. -/
+/-- if `G` is a group then `with_zero G` is a group with zero. -/
 instance : GroupWithZeroₓ (WithZero α) :=
   { WithZero.monoidWithZero, WithZero.divInvMonoid, WithZero.nontrivial with inv_zero := inv_zero,
     mul_inv_cancel := fun a ha => by
@@ -337,8 +342,8 @@ instance [Semiringₓ α] : Semiringₓ (WithZero α) :=
   { WithZero.addCommMonoid, WithZero.mulZeroClass, WithZero.monoidWithZero with
     left_distrib := fun a b c => by
       cases' a with a
-      ·
-        rfl
+      · rfl
+        
       cases' b with b <;>
         cases' c with c <;>
           try
@@ -346,9 +351,9 @@ instance [Semiringₓ α] : Semiringₓ (WithZero α) :=
       exact congr_argₓ some (left_distrib _ _ _),
     right_distrib := fun a b c => by
       cases' c with c
-      ·
-        change ((a+b)*0) = (a*0)+b*0
+      · change (a + b) * 0 = a * 0 + b * 0
         simp
+        
       cases' a with a <;>
         cases' b with b <;>
           try

@@ -1,4 +1,4 @@
-import Mathbin.LinearAlgebra.TensorProduct
+import Mathbin.LinearAlgebra.TensorProductBasis
 import Mathbin.RingTheory.Adjoin.Basic
 
 /-!
@@ -71,7 +71,7 @@ variable [AddCommMonoidₓ P] [Module R P] [Module A P] [IsScalarTower R A P]
 theorem smul_eq_lsmul_rtensor (a : A) (x : M ⊗[R] N) : a • x = (lsmul R M a).rtensor N x :=
   rfl
 
-/--  Heterobasic version of `tensor_product.curry`:
+/-- Heterobasic version of `tensor_product.curry`:
 
 Given a linear map `M ⊗[R] N →[A] P`, compose it with the canonical
 bilinear map `M →[A] N →[R] M ⊗[R] N` to form a bilinear map `M →[A] N →[R] P`. -/
@@ -79,10 +79,10 @@ bilinear map `M →[A] N →[R] M ⊗[R] N` to form a bilinear map `M →[A] N �
 def curry (f : M ⊗[R] N →ₗ[A] P) : M →ₗ[A] N →ₗ[R] P :=
   { curry (f.restrict_scalars R) with map_smul' := fun c x => LinearMap.ext $ fun y => f.map_smul c (x ⊗ₜ y) }
 
-theorem restrict_scalars_curry (f : M ⊗[R] N →ₗ[A] P) : restrict_scalars R (curry f) = curry (f.restrict_scalars R) :=
+theorem restrict_scalars_curry (f : M ⊗[R] N →ₗ[A] P) : RestrictScalars R (curry f) = curry (f.restrict_scalars R) :=
   rfl
 
-/--  Just as `tensor_product.ext` is marked `ext` instead of `tensor_product.ext'`, this is
+/-- Just as `tensor_product.ext` is marked `ext` instead of `tensor_product.ext'`, this is
 a better `ext` lemma than `tensor_product.algebra_tensor_module.ext` below.
 
 See note [partially-applied ext lemmas]. -/
@@ -105,7 +105,7 @@ variable [AddCommMonoidₓ N] [Module R N]
 
 variable [AddCommMonoidₓ P] [Module R P] [Module A P] [IsScalarTower R A P]
 
-/--  Heterobasic version of `tensor_product.lift`:
+/-- Heterobasic version of `tensor_product.lift`:
 
 Constructing a linear map `M ⊗[R] N →[A] P` given a bilinear map `M →[A] N →[R] P` with the
 property that its composition with the canonical bilinear map `M →[A] N →[R] M ⊗[R] N` is
@@ -116,7 +116,8 @@ def lift (f : M →ₗ[A] N →ₗ[R] P) : M ⊗[R] N →ₗ[A] P :=
     map_smul' := fun c =>
       show
         ∀ x : M ⊗[R] N,
-          (lift (f.restrict_scalars R)).comp (lsmul R _ c) x = (lsmul R _ c).comp (lift (f.restrict_scalars R)) x from
+          (lift (f.restrict_scalars R)).comp (lsmul R _ c) x = (lsmul R _ c).comp (lift (f.restrict_scalars R)) x
+        from
         ext_iff.1 $
           TensorProduct.ext' $ fun x y => by
             simp only [comp_apply, Algebra.lsmul_coe, smul_tmul', lift.tmul, coe_restrict_scalars_eq_coe, f.map_smul,
@@ -128,30 +129,32 @@ theorem lift_tmul (f : M →ₗ[A] N →ₗ[R] P) (x : M) (y : N) : lift f (x �
 
 variable (R A M N P)
 
-/--  Heterobasic version of `tensor_product.uncurry`:
+/-- Heterobasic version of `tensor_product.uncurry`:
 
 Linearly constructing a linear map `M ⊗[R] N →[A] P` given a bilinear map `M →[A] N →[R] P`
 with the property that its composition with the canonical bilinear map `M →[A] N →[R] M ⊗[R] N` is
 the given bilinear map `M →[A] N →[R] P`. -/
 @[simps]
-def uncurry : (M →ₗ[A] N →ₗ[R] P) →ₗ[A] M ⊗[R] N →ₗ[A] P :=
-  { toFun := lift,
-    map_add' := fun f g =>
-      ext $ fun x y => by
-        simp only [lift_tmul, add_apply],
-    map_smul' := fun c f =>
-      ext $ fun x y => by
-        simp only [lift_tmul, smul_apply, RingHom.id_apply] }
+def uncurry : (M →ₗ[A] N →ₗ[R] P) →ₗ[A] M ⊗[R] N →ₗ[A] P where
+  toFun := lift
+  map_add' := fun f g =>
+    ext $ fun x y => by
+      simp only [lift_tmul, add_apply]
+  map_smul' := fun c f =>
+    ext $ fun x y => by
+      simp only [lift_tmul, smul_apply, RingHom.id_apply]
 
-/--  Heterobasic version of `tensor_product.lcurry`:
+/-- Heterobasic version of `tensor_product.lcurry`:
 
 Given a linear map `M ⊗[R] N →[A] P`, compose it with the canonical
 bilinear map `M →[A] N →[R] M ⊗[R] N` to form a bilinear map `M →[A] N →[R] P`. -/
 @[simps]
-def lcurry : (M ⊗[R] N →ₗ[A] P) →ₗ[A] M →ₗ[A] N →ₗ[R] P :=
-  { toFun := curry, map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
+def lcurry : (M ⊗[R] N →ₗ[A] P) →ₗ[A] M →ₗ[A] N →ₗ[R] P where
+  toFun := curry
+  map_add' := fun f g => rfl
+  map_smul' := fun c f => rfl
 
-/--  Heterobasic version of `tensor_product.lift.equiv`:
+/-- Heterobasic version of `tensor_product.lift.equiv`:
 
 A linear equivalence constructing a linear map `M ⊗[R] N →[A] P` given a
 bilinear map `M →[A] N →[R] P` with the property that its composition with the
@@ -163,7 +166,7 @@ def lift.equiv : (M →ₗ[A] N →ₗ[R] P) ≃ₗ[A] M ⊗[R] N →ₗ[A] P :=
 
 variable (R A M N P)
 
-/--  Heterobasic version of `tensor_product.mk`:
+/-- Heterobasic version of `tensor_product.mk`:
 
 The canonical bilinear map `M →[A] N →[R] M ⊗[R] N`. -/
 @[simps]
@@ -172,7 +175,7 @@ def mk : M →ₗ[A] N →ₗ[R] M ⊗[R] N :=
 
 attribute [local ext] TensorProduct.ext
 
-/--  Heterobasic version of `tensor_product.assoc`:
+/-- Heterobasic version of `tensor_product.assoc`:
 
 Linear equivalence between `(M ⊗[A] N) ⊗[R] P` and `M ⊗[A] (N ⊗[R] P)`. -/
 def assoc : (M ⊗[A] P) ⊗[R] N ≃ₗ[A] M ⊗[A] P ⊗[R] N :=
@@ -218,13 +221,14 @@ variable (r : R) (f g : M →ₗ[R] N)
 
 variable (A)
 
-/--  `base_change A f` for `f : M →ₗ[R] N` is the `A`-linear map `A ⊗[R] M →ₗ[A] A ⊗[R] N`. -/
-def base_change (f : M →ₗ[R] N) : A ⊗[R] M →ₗ[A] A ⊗[R] N :=
-  { toFun := f.ltensor A, map_add' := (f.ltensor A).map_add,
-    map_smul' := fun a x =>
-      show (f.ltensor A) (rtensor M (Algebra.lmul R A a) x) = (rtensor N ((Algebra.lmul R A) a)) ((ltensor A f) x)by
-        rw [← comp_apply, ← comp_apply]
-        simp only [ltensor_comp_rtensor, rtensor_comp_ltensor] }
+/-- `base_change A f` for `f : M →ₗ[R] N` is the `A`-linear map `A ⊗[R] M →ₗ[A] A ⊗[R] N`. -/
+def base_change (f : M →ₗ[R] N) : A ⊗[R] M →ₗ[A] A ⊗[R] N where
+  toFun := f.ltensor A
+  map_add' := (f.ltensor A).map_add
+  map_smul' := fun a x =>
+    show (f.ltensor A) (rtensor M (Algebra.lmul R A a) x) = (rtensor N ((Algebra.lmul R A) a)) ((ltensor A f) x) by
+      rw [← comp_apply, ← comp_apply]
+      simp only [ltensor_comp_rtensor, rtensor_comp_ltensor]
 
 variable {A}
 
@@ -236,7 +240,7 @@ theorem base_change_eq_ltensor : (f.base_change A : A ⊗ M → A ⊗ N) = f.lte
   rfl
 
 @[simp]
-theorem base_change_add : (f+g).baseChange A = f.base_change A+g.base_change A := by
+theorem base_change_add : (f + g).baseChange A = f.base_change A + g.base_change A := by
   ext
   simp [base_change_eq_ltensor]
 
@@ -252,10 +256,12 @@ theorem base_change_smul : (r • f).baseChange A = r • f.base_change A := by
 
 variable (R A M N)
 
-/--  `base_change` as a linear map. -/
+/-- `base_change` as a linear map. -/
 @[simps]
-def base_change_hom : (M →ₗ[R] N) →ₗ[R] A ⊗[R] M →ₗ[A] A ⊗[R] N :=
-  { toFun := base_change A, map_add' := base_change_add, map_smul' := base_change_smul }
+def base_change_hom : (M →ₗ[R] N) →ₗ[R] A ⊗[R] M →ₗ[A] A ⊗[R] N where
+  toFun := base_change A
+  map_add' := base_change_add
+  map_smul' := base_change_smul
 
 end Semiringₓ
 
@@ -300,8 +306,7 @@ variable {B : Type v₂} [Semiringₓ B] [Algebra R B]
 -/
 
 
-/-- 
-(Implementation detail)
+/-- (Implementation detail)
 The multiplication map on `A ⊗[R] B`,
 for a fixed pure tensor in the first argument,
 as an `R`-linear map.
@@ -310,11 +315,10 @@ def mul_aux (a₁ : A) (b₁ : B) : A ⊗[R] B →ₗ[R] A ⊗[R] B :=
   TensorProduct.map (lmul_left R a₁) (lmul_left R b₁)
 
 @[simp]
-theorem mul_aux_apply (a₁ a₂ : A) (b₁ b₂ : B) : (mul_aux a₁ b₁) (a₂ ⊗ₜ[R] b₂) = (a₁*a₂) ⊗ₜ[R] b₁*b₂ :=
+theorem mul_aux_apply (a₁ a₂ : A) (b₁ b₂ : B) : (mul_aux a₁ b₁) (a₂ ⊗ₜ[R] b₂) = (a₁ * a₂) ⊗ₜ[R] (b₁ * b₂) :=
   rfl
 
-/-- 
-(Implementation detail)
+/-- (Implementation detail)
 The multiplication map on `A ⊗[R] B`,
 as an `R`-bilinear map.
 -/
@@ -335,7 +339,7 @@ def mul : A ⊗[R] B →ₗ[R] A ⊗[R] B →ₗ[R] A ⊗[R] B :=
         simp only [mul_aux_apply, LinearMap.smul_apply, smul_tmul, smul_tmul', smul_mul_assoc]
 
 @[simp]
-theorem mul_apply (a₁ a₂ : A) (b₁ b₂ : B) : mul (a₁ ⊗ₜ[R] b₁) (a₂ ⊗ₜ[R] b₂) = (a₁*a₂) ⊗ₜ[R] b₁*b₂ :=
+theorem mul_apply (a₁ a₂ : A) (b₁ b₂ : B) : mul (a₁ ⊗ₜ[R] b₁) (a₂ ⊗ₜ[R] b₂) = (a₁ * a₂) ⊗ₜ[R] (b₁ * b₂) :=
   rfl
 
 theorem mul_assoc' (mul : A ⊗[R] B →ₗ[R] A ⊗[R] B →ₗ[R] A ⊗[R] B)
@@ -345,26 +349,26 @@ theorem mul_assoc' (mul : A ⊗[R] B →ₗ[R] A ⊗[R] B →ₗ[R] A ⊗[R] B)
     ∀ x y z : A ⊗[R] B, mul (mul x y) z = mul x (mul y z) := by
   intros
   apply TensorProduct.induction_on x
-  ·
-    simp only [LinearMap.map_zero, LinearMap.zero_apply]
+  · simp only [LinearMap.map_zero, LinearMap.zero_apply]
+    
   apply TensorProduct.induction_on y
-  ·
-    simp only [LinearMap.map_zero, forall_const, LinearMap.zero_apply]
+  · simp only [LinearMap.map_zero, forall_const, LinearMap.zero_apply]
+    
   apply TensorProduct.induction_on z
-  ·
-    simp only [LinearMap.map_zero, forall_const]
-  ·
-    intros
+  · simp only [LinearMap.map_zero, forall_const]
+    
+  · intros
     simp only [h]
-  ·
-    intros
-    simp only [LinearMap.map_add]
-  ·
-    intros
-    simp only [LinearMap.map_add, LinearMap.add_apply]
-  ·
-    intros
-    simp only [LinearMap.map_add, LinearMap.add_apply]
+    
+  · intros
+    simp only [LinearMap.map_add, *]
+    
+  · intros
+    simp only [LinearMap.map_add, *, LinearMap.add_apply]
+    
+  · intros
+    simp only [LinearMap.map_add, *, LinearMap.add_apply]
+    
 
 theorem mul_assocₓ (x y z : A ⊗[R] B) : mul (mul x y) z = mul x (mul y z) :=
   mul_assoc' mul
@@ -373,308 +377,16 @@ theorem mul_assocₓ (x y z : A ⊗[R] B) : mul (mul x y) z = mul x (mul y z) :=
       simp only [mul_apply, mul_assocₓ])
     x y z
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `one_mulₓ [])
-  (Command.declSig
-   [(Term.explicitBinder "(" [`x] [":" (LinearAlgebra.TensorProduct.«term_⊗[_]_» `A " ⊗[" `R "] " `B)] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app `mul [(TensorProduct.LinearAlgebra.TensorProduct.«term_⊗ₜ_» (numLit "1") " ⊗ₜ " (numLit "1")) `x])
-     "="
-     `x)))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group
-        (Tactic.«tactic_<;>_»
-         (Tactic.apply "apply" (Term.app `TensorProduct.induction_on [`x]))
-         "<;>"
-         (Tactic.simp
-          "simp"
-          ["("
-           "config"
-           ":="
-           (Term.structInst
-            "{"
-            []
-            [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-            (Term.optEllipsis [])
-            []
-            "}")
-           ")"]
-          []
-          []
-          []))
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.«tactic_<;>_»
-        (Tactic.apply "apply" (Term.app `TensorProduct.induction_on [`x]))
-        "<;>"
-        (Tactic.simp
-         "simp"
-         ["("
-          "config"
-          ":="
-          (Term.structInst
-           "{"
-           []
-           [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-           (Term.optEllipsis [])
-           []
-           "}")
-          ")"]
-         []
-         []
-         []))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic_<;>_»
-   (Tactic.apply "apply" (Term.app `TensorProduct.induction_on [`x]))
-   "<;>"
-   (Tactic.simp
-    "simp"
-    ["("
-     "config"
-     ":="
-     (Term.structInst
-      "{"
-      []
-      [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-      (Term.optEllipsis [])
-      []
-      "}")
-     ")"]
-    []
-    []
-    []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp
-   "simp"
-   ["("
-    "config"
-    ":="
-    (Term.structInst
-     "{"
-     []
-     [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-     (Term.optEllipsis [])
-     []
-     "}")
-    ")"]
-   []
-   []
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'Lean.Parser.Tactic.discharger'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  one_mulₓ
-  ( x : A ⊗[ R ] B ) : mul 1 ⊗ₜ 1 x = x
-  := by apply TensorProduct.induction_on x <;> simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+theorem one_mulₓ (x : A ⊗[R] B) : mul (1 ⊗ₜ 1) x = x := by
+  apply TensorProduct.induction_on x <;> simp (config := { contextual := true })
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `mul_oneₓ [])
-  (Command.declSig
-   [(Term.explicitBinder "(" [`x] [":" (LinearAlgebra.TensorProduct.«term_⊗[_]_» `A " ⊗[" `R "] " `B)] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app `mul [`x (TensorProduct.LinearAlgebra.TensorProduct.«term_⊗ₜ_» (numLit "1") " ⊗ₜ " (numLit "1"))])
-     "="
-     `x)))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group
-        (Tactic.«tactic_<;>_»
-         (Tactic.apply "apply" (Term.app `TensorProduct.induction_on [`x]))
-         "<;>"
-         (Tactic.simp
-          "simp"
-          ["("
-           "config"
-           ":="
-           (Term.structInst
-            "{"
-            []
-            [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-            (Term.optEllipsis [])
-            []
-            "}")
-           ")"]
-          []
-          []
-          []))
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.«tactic_<;>_»
-        (Tactic.apply "apply" (Term.app `TensorProduct.induction_on [`x]))
-        "<;>"
-        (Tactic.simp
-         "simp"
-         ["("
-          "config"
-          ":="
-          (Term.structInst
-           "{"
-           []
-           [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-           (Term.optEllipsis [])
-           []
-           "}")
-          ")"]
-         []
-         []
-         []))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic_<;>_»
-   (Tactic.apply "apply" (Term.app `TensorProduct.induction_on [`x]))
-   "<;>"
-   (Tactic.simp
-    "simp"
-    ["("
-     "config"
-     ":="
-     (Term.structInst
-      "{"
-      []
-      [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-      (Term.optEllipsis [])
-      []
-      "}")
-     ")"]
-    []
-    []
-    []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp
-   "simp"
-   ["("
-    "config"
-    ":="
-    (Term.structInst
-     "{"
-     []
-     [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-     (Term.optEllipsis [])
-     []
-     "}")
-    ")"]
-   []
-   []
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'Lean.Parser.Tactic.discharger'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  mul_oneₓ
-  ( x : A ⊗[ R ] B ) : mul x 1 ⊗ₜ 1 = x
-  := by apply TensorProduct.induction_on x <;> simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+theorem mul_oneₓ (x : A ⊗[R] B) : mul x (1 ⊗ₜ 1) = x := by
+  apply TensorProduct.induction_on x <;> simp (config := { contextual := true })
 
 instance : Semiringₓ (A ⊗[R] B) :=
   { (by
       infer_instance : AddCommMonoidₓ (A ⊗[R] B)) with
-    zero := 0, add := ·+·, one := 1 ⊗ₜ 1, mul := fun a b => mul a b, one_mul := one_mulₓ, mul_one := mul_oneₓ,
+    zero := 0, add := · + ·, one := 1 ⊗ₜ 1, mul := fun a b => mul a b, one_mul := one_mulₓ, mul_one := mul_oneₓ,
     mul_assoc := mul_assocₓ,
     zero_mul := by
       simp ,
@@ -689,31 +401,30 @@ theorem one_def : (1 : A ⊗[R] B) = (1 : A) ⊗ₜ (1 : B) :=
   rfl
 
 @[simp]
-theorem tmul_mul_tmul (a₁ a₂ : A) (b₁ b₂ : B) : ((a₁ ⊗ₜ[R] b₁)*a₂ ⊗ₜ[R] b₂) = (a₁*a₂) ⊗ₜ[R] b₁*b₂ :=
+theorem tmul_mul_tmul (a₁ a₂ : A) (b₁ b₂ : B) : a₁ ⊗ₜ[R] b₁ * a₂ ⊗ₜ[R] b₂ = (a₁ * a₂) ⊗ₜ[R] (b₁ * b₂) :=
   rfl
 
 @[simp]
 theorem tmul_pow (a : A) (b : B) (k : ℕ) : a ⊗ₜ[R] b ^ k = (a ^ k) ⊗ₜ[R] (b ^ k) := by
   induction' k with k ih
-  ·
-    simp [one_def]
-  ·
-    simp [pow_succₓ, ih]
+  · simp [one_def]
+    
+  · simp [pow_succₓ, ih]
+    
 
-/-- 
-The algebra map `R →+* (A ⊗[R] B)` giving `A ⊗[R] B` the structure of an `R`-algebra.
+/-- The algebra map `R →+* (A ⊗[R] B)` giving `A ⊗[R] B` the structure of an `R`-algebra.
 -/
-def tensor_algebra_map : R →+* A ⊗[R] B :=
-  { toFun := fun r => algebraMap R A r ⊗ₜ[R] 1,
-    map_one' := by
-      simp
-      rfl,
-    map_mul' := by
-      simp ,
-    map_zero' := by
-      simp [zero_tmul],
-    map_add' := by
-      simp [add_tmul] }
+def tensor_algebra_map : R →+* A ⊗[R] B where
+  toFun := fun r => algebraMap R A r ⊗ₜ[R] 1
+  map_one' := by
+    simp
+    rfl
+  map_mul' := by
+    simp
+  map_zero' := by
+    simp [zero_tmul]
+  map_add' := by
+    simp [add_tmul]
 
 instance : Algebra R (A ⊗[R] B) :=
   { tensor_algebra_map,
@@ -721,27 +432,27 @@ instance : Algebra R (A ⊗[R] B) :=
       infer_instance : Module R (A ⊗[R] B)) with
     commutes' := fun r x => by
       apply TensorProduct.induction_on x
-      ·
-        simp
-      ·
-        intro a b
+      · simp
+        
+      · intro a b
         simp [tensor_algebra_map, Algebra.commutes]
-      ·
-        intro y y' h h'
+        
+      · intro y y' h h'
         simp at h h'
-        simp [mul_addₓ, add_mulₓ, h, h'],
+        simp [mul_addₓ, add_mulₓ, h, h']
+        ,
     smul_def' := fun r x => by
       apply TensorProduct.induction_on x
-      ·
-        simp [smul_zero]
-      ·
-        intro a b
+      · simp [smul_zero]
+        
+      · intro a b
         rw [tensor_algebra_map, ← tmul_smul, ← smul_tmul, Algebra.smul_def r a]
         simp
-      ·
-        intros
+        
+      · intros
         dsimp
-        simp [smul_add, mul_addₓ] }
+        simp [smul_add, mul_addₓ, *]
+         }
 
 @[simp]
 theorem algebra_map_apply (r : R) : (algebraMap R (A ⊗[R] B)) r = (algebraMap R A) r ⊗ₜ[R] 1 :=
@@ -755,41 +466,41 @@ theorem ext {g h : A ⊗[R] B →ₐ[R] C} (H : ∀ a b, g (a ⊗ₜ b) = h (a �
   ext
   simp [H]
 
-/--  The algebra morphism `A →ₐ[R] A ⊗[R] B` sending `a` to `a ⊗ₜ 1`. -/
-def include_left : A →ₐ[R] A ⊗[R] B :=
-  { toFun := fun a => a ⊗ₜ 1,
-    map_zero' := by
-      simp ,
-    map_add' := by
-      simp [add_tmul],
-    map_one' := rfl,
-    map_mul' := by
-      simp ,
-    commutes' := by
-      simp }
+/-- The algebra morphism `A →ₐ[R] A ⊗[R] B` sending `a` to `a ⊗ₜ 1`. -/
+def include_left : A →ₐ[R] A ⊗[R] B where
+  toFun := fun a => a ⊗ₜ 1
+  map_zero' := by
+    simp
+  map_add' := by
+    simp [add_tmul]
+  map_one' := rfl
+  map_mul' := by
+    simp
+  commutes' := by
+    simp
 
 @[simp]
 theorem include_left_apply (a : A) : (include_left : A →ₐ[R] A ⊗[R] B) a = a ⊗ₜ 1 :=
   rfl
 
-/--  The algebra morphism `B →ₐ[R] A ⊗[R] B` sending `b` to `1 ⊗ₜ b`. -/
-def include_right : B →ₐ[R] A ⊗[R] B :=
-  { toFun := fun b => 1 ⊗ₜ b,
-    map_zero' := by
-      simp ,
-    map_add' := by
-      simp [tmul_add],
-    map_one' := rfl,
-    map_mul' := by
-      simp ,
-    commutes' := fun r => by
-      simp only [algebra_map_apply]
-      trans r • (1 : A) ⊗ₜ[R] (1 : B)
-      ·
-        rw [← tmul_smul, Algebra.smul_def]
-        simp
-      ·
-        simp [Algebra.smul_def] }
+/-- The algebra morphism `B →ₐ[R] A ⊗[R] B` sending `b` to `1 ⊗ₜ b`. -/
+def include_right : B →ₐ[R] A ⊗[R] B where
+  toFun := fun b => 1 ⊗ₜ b
+  map_zero' := by
+    simp
+  map_add' := by
+    simp [tmul_add]
+  map_one' := rfl
+  map_mul' := by
+    simp
+  commutes' := fun r => by
+    simp only [algebra_map_apply]
+    trans r • (1 : A) ⊗ₜ[R] (1 : B)
+    · rw [← tmul_smul, Algebra.smul_def]
+      simp
+      
+    · simp [Algebra.smul_def]
+      
 
 @[simp]
 theorem include_right_apply (b : B) : (include_right : B →ₐ[R] A ⊗[R] B) b = 1 ⊗ₜ b :=
@@ -826,34 +537,32 @@ instance : CommRingₓ (A ⊗[R] B) :=
       infer_instance : Ringₓ (A ⊗[R] B)) with
     mul_comm := fun x y => by
       apply TensorProduct.induction_on x
-      ·
-        simp
-      ·
-        intro a₁ b₁
+      · simp
+        
+      · intro a₁ b₁
         apply TensorProduct.induction_on y
-        ·
-          simp
-        ·
-          intro a₂ b₂
+        · simp
+          
+        · intro a₂ b₂
           simp [mul_commₓ]
-        ·
-          intro a₂ b₂ ha hb
+          
+        · intro a₂ b₂ ha hb
           simp [mul_addₓ, add_mulₓ, ha, hb]
-      ·
-        intro x₁ x₂ h₁ h₂
-        simp [mul_addₓ, add_mulₓ, h₁, h₂] }
+          
+        
+      · intro x₁ x₂ h₁ h₂
+        simp [mul_addₓ, add_mulₓ, h₁, h₂]
+         }
 
 end CommRingₓ
 
-/-- 
-Verify that typeclass search finds the ring structure on `A ⊗[ℤ] B`
+/-- Verify that typeclass search finds the ring structure on `A ⊗[ℤ] B`
 when `A` and `B` are merely rings, by treating both as `ℤ`-algebras.
 -/
 example {A : Type v₁} [Ringₓ A] {B : Type v₂} [Ringₓ B] : Ringₓ (A ⊗[ℤ] B) := by
   infer_instance
 
-/-- 
-Verify that typeclass search finds the comm_ring structure on `A ⊗[ℤ] B`
+/-- Verify that typeclass search finds the comm_ring structure on `A ⊗[ℤ] B`
 when `A` and `B` are merely comm_rings, by treating both as `ℤ`-algebras.
 -/
 example {A : Type v₁} [CommRingₓ A] {B : Type v₂} [CommRingₓ B] : CommRingₓ (A ⊗[ℤ] B) := by
@@ -878,12 +587,11 @@ variable {C : Type v₃} [Semiringₓ C] [Algebra R C]
 
 variable {D : Type v₄} [Semiringₓ D] [Algebra R D]
 
-/-- 
-Build an algebra morphism from a linear map out of a tensor product,
+/-- Build an algebra morphism from a linear map out of a tensor product,
 and evidence of multiplicativity on pure tensors.
 -/
 def alg_hom_of_linear_map_tensor_product (f : A ⊗[R] B →ₗ[R] C)
-    (w₁ : ∀ a₁ a₂ : A b₁ b₂ : B, f ((a₁*a₂) ⊗ₜ b₁*b₂) = f (a₁ ⊗ₜ b₁)*f (a₂ ⊗ₜ b₂))
+    (w₁ : ∀ a₁ a₂ : A b₁ b₂ : B, f ((a₁ * a₂) ⊗ₜ (b₁ * b₂)) = f (a₁ ⊗ₜ b₁) * f (a₂ ⊗ₜ b₂))
     (w₂ : ∀ r, f ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R C) r) : A ⊗[R] B →ₐ[R] C :=
   { f with
     map_one' := by
@@ -893,22 +601,22 @@ def alg_hom_of_linear_map_tensor_product (f : A ⊗[R] B →ₗ[R] C)
     map_mul' := fun x y => by
       rw [LinearMap.to_fun_eq_coe]
       apply TensorProduct.induction_on x
-      ·
-        rw [zero_mul, map_zero, zero_mul]
-      ·
-        intro a₁ b₁
+      · rw [zero_mul, map_zero, zero_mul]
+        
+      · intro a₁ b₁
         apply TensorProduct.induction_on y
-        ·
-          rw [mul_zero, map_zero, mul_zero]
-        ·
-          intro a₂ b₂
+        · rw [mul_zero, map_zero, mul_zero]
+          
+        · intro a₂ b₂
           rw [tmul_mul_tmul, w₁]
-        ·
-          intro x₁ x₂ h₁ h₂
+          
+        · intro x₁ x₂ h₁ h₂
           rw [mul_addₓ, map_add, map_add, mul_addₓ, h₁, h₂]
-      ·
-        intro x₁ x₂ h₁ h₂
-        rw [add_mulₓ, map_add, map_add, add_mulₓ, h₁, h₂],
+          
+        
+      · intro x₁ x₂ h₁ h₂
+        rw [add_mulₓ, map_add, map_add, add_mulₓ, h₁, h₂]
+        ,
     commutes' := fun r => by
       rw [LinearMap.to_fun_eq_coe, algebra_map_apply, w₂] }
 
@@ -917,12 +625,11 @@ theorem alg_hom_of_linear_map_tensor_product_apply f w₁ w₂ x :
     (alg_hom_of_linear_map_tensor_product f w₁ w₂ : A ⊗[R] B →ₐ[R] C) x = f x :=
   rfl
 
-/-- 
-Build an algebra equivalence from a linear equivalence out of a tensor product,
+/-- Build an algebra equivalence from a linear equivalence out of a tensor product,
 and evidence of multiplicativity on pure tensors.
 -/
 def alg_equiv_of_linear_equiv_tensor_product (f : A ⊗[R] B ≃ₗ[R] C)
-    (w₁ : ∀ a₁ a₂ : A b₁ b₂ : B, f ((a₁*a₂) ⊗ₜ b₁*b₂) = f (a₁ ⊗ₜ b₁)*f (a₂ ⊗ₜ b₂))
+    (w₁ : ∀ a₁ a₂ : A b₁ b₂ : B, f ((a₁ * a₂) ⊗ₜ (b₁ * b₂)) = f (a₁ ⊗ₜ b₁) * f (a₂ ⊗ₜ b₂))
     (w₂ : ∀ r, f ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R C) r) : A ⊗[R] B ≃ₐ[R] C :=
   { alg_hom_of_linear_map_tensor_product (f : A ⊗[R] B →ₗ[R] C) w₁ w₂, f with }
 
@@ -931,50 +638,51 @@ theorem alg_equiv_of_linear_equiv_tensor_product_apply f w₁ w₂ x :
     (alg_equiv_of_linear_equiv_tensor_product f w₁ w₂ : A ⊗[R] B ≃ₐ[R] C) x = f x :=
   rfl
 
-/-- 
-Build an algebra equivalence from a linear equivalence out of a triple tensor product,
+/-- Build an algebra equivalence from a linear equivalence out of a triple tensor product,
 and evidence of multiplicativity on pure tensors.
 -/
 def alg_equiv_of_linear_equiv_triple_tensor_product (f : (A ⊗[R] B) ⊗[R] C ≃ₗ[R] D)
-    (w₁ : ∀ a₁ a₂ : A b₁ b₂ : B c₁ c₂ : C, f (((a₁*a₂) ⊗ₜ b₁*b₂) ⊗ₜ c₁*c₂) = f (a₁ ⊗ₜ b₁ ⊗ₜ c₁)*f (a₂ ⊗ₜ b₂ ⊗ₜ c₂))
+    (w₁ :
+      ∀ a₁ a₂ : A b₁ b₂ : B c₁ c₂ : C,
+        f ((a₁ * a₂) ⊗ₜ (b₁ * b₂) ⊗ₜ (c₁ * c₂)) = f (a₁ ⊗ₜ b₁ ⊗ₜ c₁) * f (a₂ ⊗ₜ b₂ ⊗ₜ c₂))
     (w₂ : ∀ r, f (((algebraMap R A) r ⊗ₜ[R] (1 : B)) ⊗ₜ[R] (1 : C)) = (algebraMap R D) r) : (A ⊗[R] B) ⊗[R] C ≃ₐ[R] D :=
   { f with toFun := f,
     map_mul' := fun x y => by
       apply TensorProduct.induction_on x
-      ·
-        simp only [map_zero, zero_mul]
-      ·
-        intro ab₁ c₁
+      · simp only [map_zero, zero_mul]
+        
+      · intro ab₁ c₁
         apply TensorProduct.induction_on y
-        ·
-          simp only [map_zero, mul_zero]
-        ·
-          intro ab₂ c₂
+        · simp only [map_zero, mul_zero]
+          
+        · intro ab₂ c₂
           apply TensorProduct.induction_on ab₁
-          ·
-            simp only [zero_tmul, map_zero, zero_mul]
-          ·
-            intro a₁ b₁
+          · simp only [zero_tmul, map_zero, zero_mul]
+            
+          · intro a₁ b₁
             apply TensorProduct.induction_on ab₂
-            ·
-              simp only [zero_tmul, map_zero, mul_zero]
-            ·
-              intros
+            · simp only [zero_tmul, map_zero, mul_zero]
+              
+            · intros
               simp only [tmul_mul_tmul, w₁]
-            ·
-              intro x₁ x₂ h₁ h₂
+              
+            · intro x₁ x₂ h₁ h₂
               simp only [tmul_mul_tmul] at h₁ h₂
               simp only [tmul_mul_tmul, mul_addₓ, add_tmul, map_add, h₁, h₂]
-          ·
-            intro x₁ x₂ h₁ h₂
+              
+            
+          · intro x₁ x₂ h₁ h₂
             simp only [tmul_mul_tmul] at h₁ h₂
             simp only [tmul_mul_tmul, add_mulₓ, add_tmul, map_add, h₁, h₂]
-        ·
-          intro x₁ x₂ h₁ h₂
+            
+          
+        · intro x₁ x₂ h₁ h₂
           simp only [tmul_mul_tmul, map_add, mul_addₓ, add_mulₓ, h₁, h₂]
-      ·
-        intro x₁ x₂ h₁ h₂
-        simp only [tmul_mul_tmul, map_add, mul_addₓ, add_mulₓ, h₁, h₂],
+          
+        
+      · intro x₁ x₂ h₁ h₂
+        simp only [tmul_mul_tmul, map_add, mul_addₓ, add_mulₓ, h₁, h₂]
+        ,
     commutes' := fun r => by
       simp [w₂] }
 
@@ -999,8 +707,7 @@ section
 
 variable (R A)
 
-/-- 
-The base ring is a left identity for the tensor product of algebra, up to algebra isomorphism.
+/-- The base ring is a left identity for the tensor product of algebra, up to algebra isomorphism.
 -/
 protected def lid : R ⊗[R] A ≃ₐ[R] A :=
   alg_equiv_of_linear_equiv_tensor_product (TensorProduct.lid R A)
@@ -1013,8 +720,7 @@ protected def lid : R ⊗[R] A ≃ₐ[R] A :=
 theorem lid_tmul (r : R) (a : A) : (TensorProduct.lid R A : R ⊗ A → A) (r ⊗ₜ a) = r • a := by
   simp [TensorProduct.lid]
 
-/-- 
-The base ring is a right identity for the tensor product of algebra, up to algebra isomorphism.
+/-- The base ring is a right identity for the tensor product of algebra, up to algebra isomorphism.
 -/
 protected def rid : A ⊗[R] R ≃ₐ[R] A :=
   alg_equiv_of_linear_equiv_tensor_product (TensorProduct.rid R A)
@@ -1031,8 +737,7 @@ section
 
 variable (R A B)
 
-/-- 
-The tensor product of R-algebras is commutative, up to algebra isomorphism.
+/-- The tensor product of R-algebras is commutative, up to algebra isomorphism.
 -/
 protected def comm : A ⊗[R] B ≃ₐ[R] B ⊗[R] A :=
   alg_equiv_of_linear_equiv_tensor_product (TensorProduct.comm R A B)
@@ -1040,11 +745,11 @@ protected def comm : A ⊗[R] B ≃ₐ[R] B ⊗[R] A :=
       simp )
     fun r => by
     trans r • (1 : B) ⊗ₜ[R] (1 : A)
-    ·
-      rw [← tmul_smul, Algebra.smul_def]
+    · rw [← tmul_smul, Algebra.smul_def]
       simp
-    ·
-      simp [Algebra.smul_def]
+      
+    · simp [Algebra.smul_def]
+      
 
 @[simp]
 theorem comm_tmul (a : A) (b : B) : (TensorProduct.comm R A B : A ⊗[R] B → B ⊗[R] A) (a ⊗ₜ b) = b ⊗ₜ a := by
@@ -1060,8 +765,8 @@ section
 variable {R A B C}
 
 theorem assoc_aux_1 (a₁ a₂ : A) (b₁ b₂ : B) (c₁ c₂ : C) :
-    (TensorProduct.assoc R A B C) (((a₁*a₂) ⊗ₜ[R] b₁*b₂) ⊗ₜ[R] c₁*c₂) =
-      (TensorProduct.assoc R A B C) ((a₁ ⊗ₜ[R] b₁) ⊗ₜ[R] c₁)*(TensorProduct.assoc R A B C) ((a₂ ⊗ₜ[R] b₂) ⊗ₜ[R] c₂) :=
+    (TensorProduct.assoc R A B C) (((a₁ * a₂) ⊗ₜ[R] (b₁ * b₂)) ⊗ₜ[R] (c₁ * c₂)) =
+      (TensorProduct.assoc R A B C) ((a₁ ⊗ₜ[R] b₁) ⊗ₜ[R] c₁) * (TensorProduct.assoc R A B C) ((a₂ ⊗ₜ[R] b₂) ⊗ₜ[R] c₂) :=
   rfl
 
 theorem assoc_aux_2 (r : R) :
@@ -1072,7 +777,7 @@ end
 
 variable {R A B C D}
 
-/--  The tensor product of a pair of algebra morphisms. -/
+/-- The tensor product of a pair of algebra morphisms. -/
 def map (f : A →ₐ[R] B) (g : C →ₐ[R] D) : A ⊗[R] C →ₐ[R] B ⊗[R] D :=
   alg_hom_of_linear_map_tensor_product (TensorProduct.map f.to_linear_map g.to_linear_map)
     (by
@@ -1094,8 +799,19 @@ theorem map_comp_include_right (f : A →ₐ[R] B) (g : C →ₐ[R] D) : (map f 
   AlgHom.ext $ by
     simp
 
-/-- 
-Construct an isomorphism between tensor products of R-algebras
+theorem map_range (f : A →ₐ[R] B) (g : C →ₐ[R] D) :
+    (map f g).range = (include_left.comp f).range⊔(include_right.comp g).range := by
+  apply le_antisymmₓ
+  · rw [← map_top, ← adjoin_tmul_eq_top, ← adjoin_image, adjoin_le_iff]
+    rintro _ ⟨_, ⟨a, b, rfl⟩, rfl⟩
+    rw [map_tmul, ← _root_.mul_one (f a), ← _root_.one_mul (g b), ← tmul_mul_tmul]
+    exact mul_mem_sup (AlgHom.mem_range_self _ a) (AlgHom.mem_range_self _ b)
+    
+  · rw [← map_comp_include_left f g, ← map_comp_include_right f g]
+    exact sup_le (AlgHom.range_comp_le_range _ _) (AlgHom.range_comp_le_range _ _)
+    
+
+/-- Construct an isomorphism between tensor products of R-algebras
 from isomorphisms between the tensor factors.
 -/
 def congr (f : A ≃ₐ[R] B) (g : C ≃ₐ[R] D) : A ⊗[R] C ≃ₐ[R] B ⊗[R] D :=
@@ -1128,7 +844,7 @@ variable (f : A →ₐ[R] S) (g : B →ₐ[R] S)
 
 variable (R)
 
-/--  `algebra.lmul'` is an alg_hom on commutative rings. -/
+/-- `algebra.lmul'` is an alg_hom on commutative rings. -/
 def lmul' : S ⊗[R] S →ₐ[R] S :=
   alg_hom_of_linear_map_tensor_product (Algebra.lmul' R)
     (fun a₁ a₂ b₁ b₂ => by
@@ -1142,7 +858,7 @@ theorem lmul'_to_linear_map : (lmul' R : _ →ₐ[R] S).toLinearMap = Algebra.lm
   rfl
 
 @[simp]
-theorem lmul'_apply_tmul (a b : S) : lmul' R (a ⊗ₜ[R] b) = a*b :=
+theorem lmul'_apply_tmul (a b : S) : lmul' R (a ⊗ₜ[R] b) = a * b :=
   lmul'_apply
 
 @[simp]
@@ -1153,15 +869,14 @@ theorem lmul'_comp_include_left : (lmul' R : _ →ₐ[R] S).comp include_left = 
 theorem lmul'_comp_include_right : (lmul' R : _ →ₐ[R] S).comp include_right = AlgHom.id R S :=
   AlgHom.ext $ fun _ => (lmul'_apply_tmul _ _).trans (_root_.one_mul _)
 
-/-- 
-If `S` is commutative, for a pair of morphisms `f : A →ₐ[R] S`, `g : B →ₐ[R] S`,
+/-- If `S` is commutative, for a pair of morphisms `f : A →ₐ[R] S`, `g : B →ₐ[R] S`,
 We obtain a map `A ⊗[R] B →ₐ[R] S` that commutes with `f`, `g` via `a ⊗ b ↦ f(a) * g(b)`.
 -/
 def product_map : A ⊗[R] B →ₐ[R] S :=
   (lmul' R).comp (TensorProduct.map f g)
 
 @[simp]
-theorem product_map_apply_tmul (a : A) (b : B) : product_map f g (a ⊗ₜ b) = f a*g b := by
+theorem product_map_apply_tmul (a : A) (b : B) : product_map f g (a ⊗ₜ b) = f a * g b := by
   unfold product_map lmul'
   simp
 
@@ -1181,9 +896,18 @@ theorem product_map_right : (product_map f g).comp include_right = g :=
   AlgHom.ext $ by
     simp
 
+theorem product_map_range : (product_map f g).range = f.range⊔g.range := by
+  rw [product_map, AlgHom.range_comp, map_range, map_sup, ← AlgHom.range_comp, ← AlgHom.range_comp, ← AlgHom.comp_assoc,
+    ← AlgHom.comp_assoc, lmul'_comp_include_left, lmul'_comp_include_right, AlgHom.id_comp, AlgHom.id_comp]
+
 end
 
 end TensorProduct
 
 end Algebra
+
+theorem Subalgebra.finite_dimensional_sup {K L : Type _} [Field K] [CommRingₓ L] [Algebra K L] (E1 E2 : Subalgebra K L)
+    [FiniteDimensional K E1] [FiniteDimensional K E2] : FiniteDimensional K (↥(E1⊔E2)) := by
+  rw [← E1.range_val, ← E2.range_val, ← Algebra.TensorProduct.product_map_range]
+  exact (Algebra.TensorProduct.productMap E1.val E2.val).toLinearMap.finite_dimensional_range
 

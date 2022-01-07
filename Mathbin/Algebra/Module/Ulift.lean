@@ -45,23 +45,30 @@ instance is_scalar_tower' [HasScalar R M] [HasScalar M N] [HasScalar R N] [IsSca
 instance is_scalar_tower'' [HasScalar R M] [HasScalar M N] [HasScalar R N] [IsScalarTower R M N] :
     IsScalarTower R M (Ulift N) :=
   ⟨fun x y z =>
-    show up ((x • y) • z.down) = ⟨x • y • z.down⟩by
+    show up ((x • y) • z.down) = ⟨x • y • z.down⟩ by
       rw [smul_assoc]⟩
 
 instance [HasScalar R M] [HasScalar (Rᵐᵒᵖ) M] [IsCentralScalar R M] : IsCentralScalar R (Ulift M) :=
   ⟨fun r m => congr_argₓ up $ op_smul_eq_smul r m.down⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  MulAction
-  [ Monoidₓ R ] [ MulAction R M ] : MulAction ( Ulift R ) M
-  where smul := · • · mul_smul r s f := by cases r cases s simp [ mul_smul ] one_smul f := by simp [ one_smul ]
+instance MulAction [Monoidₓ R] [MulAction R M] : MulAction (Ulift R) M where
+  smul := · • ·
+  mul_smul := fun r s f => by
+    cases r
+    cases s
+    simp [mul_smul]
+  one_smul := fun f => by
+    simp [one_smul]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  mul_action'
-  [ Monoidₓ R ] [ MulAction R M ] : MulAction R ( Ulift M )
-  where smul := · • · mul_smul r s f := by cases f ext simp [ mul_smul ] one_smul f := by ext simp [ one_smul ]
+instance mul_action' [Monoidₓ R] [MulAction R M] : MulAction R (Ulift M) where
+  smul := · • ·
+  mul_smul := fun r s f => by
+    cases f
+    ext
+    simp [mul_smul]
+  one_smul := fun f => by
+    ext
+    simp [one_smul]
 
 instance DistribMulAction [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction (Ulift R) M :=
   { Ulift.mulAction with
@@ -117,15 +124,17 @@ instance module' [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (U
     ext1
     apply zero_smul
 
-/-- 
-The `R`-linear equivalence between `ulift M` and `M`.
+/-- The `R`-linear equivalence between `ulift M` and `M`.
 -/
-def module_equiv [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Ulift M ≃ₗ[R] M :=
-  { toFun := Ulift.down, invFun := Ulift.up, map_smul' := fun r x => rfl, map_add' := fun x y => rfl,
-    left_inv := by
-      tidy,
-    right_inv := by
-      tidy }
+def module_equiv [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Ulift M ≃ₗ[R] M where
+  toFun := Ulift.down
+  invFun := Ulift.up
+  map_smul' := fun r x => rfl
+  map_add' := fun x y => rfl
+  left_inv := by
+    tidy
+  right_inv := by
+    tidy
 
 end Ulift
 

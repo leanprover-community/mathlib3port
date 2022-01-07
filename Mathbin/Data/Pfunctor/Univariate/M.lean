@@ -20,7 +20,7 @@ local prefix:0 "♯" =>
   cast
     (by
       first |
-        simp |
+        simp [*]|
         cc|
         solve_by_elim)
 
@@ -28,12 +28,12 @@ namespace Pfunctor
 
 namespace Approx
 
-/--  `cofix_a F n` is an `n` level approximation of a M-type -/
+/-- `cofix_a F n` is an `n` level approximation of a M-type -/
 inductive cofix_a : ℕ → Type u
   | continue : cofix_a 0
   | intro {n} : ∀ a, (F.B a → cofix_a n) → cofix_a (succ n)
 
-/--  default inhabitant of `cofix_a` -/
+/-- default inhabitant of `cofix_a` -/
 protected def cofix_a.default [Inhabited F.A] : ∀ n, cofix_a F n
   | 0 => cofix_a.continue
   | succ n => cofix_a.intro (default _) $ fun _ => cofix_a.default n
@@ -46,29 +46,27 @@ theorem cofix_a_eq_zero : ∀ x y : cofix_a F 0, x = y
 
 variable {F}
 
-/-- 
-The label of the root of the tree for a non-trivial
+/-- The label of the root of the tree for a non-trivial
 approximation of the cofix of a pfunctor.
 -/
 def head' : ∀ {n}, cofix_a F (succ n) → F.A
   | n, cofix_a.intro i _ => i
 
-/--  for a non-trivial approximation, return all the subtrees of the root -/
+/-- for a non-trivial approximation, return all the subtrees of the root -/
 def children' : ∀ {n} x : cofix_a F (succ n), F.B (head' x) → cofix_a F n
   | n, cofix_a.intro a f => f
 
-theorem approx_eta {n : ℕ} (x : cofix_a F (n+1)) : x = cofix_a.intro (head' x) (children' x) := by
+theorem approx_eta {n : ℕ} (x : cofix_a F (n + 1)) : x = cofix_a.intro (head' x) (children' x) := by
   cases x <;> rfl
 
-/--  Relation between two approximations of the cofix of a pfunctor
+/-- Relation between two approximations of the cofix of a pfunctor
 that state they both contain the same data until one of them is truncated -/
-inductive agree : ∀ {n : ℕ}, cofix_a F n → cofix_a F (n+1) → Prop
+inductive agree : ∀ {n : ℕ}, cofix_a F n → cofix_a F (n + 1) → Prop
   | continue (x : cofix_a F 0) (y : cofix_a F 1) : agree x y
-  | intro {n} {a} (x : F.B a → cofix_a F n) (x' : F.B a → cofix_a F (n+1)) :
+  | intro {n} {a} (x : F.B a → cofix_a F n) (x' : F.B a → cofix_a F (n + 1)) :
     (∀ i : F.B a, agree (x i) (x' i)) → agree (cofix_a.intro a x) (cofix_a.intro a x')
 
-/-- 
-Given an infinite series of approximations `approx`,
+/-- Given an infinite series of approximations `approx`,
 `all_agree approx` states that they are all consistent with each other.
 -/
 def all_agree (x : ∀ n, cofix_a F n) :=
@@ -78,34 +76,34 @@ def all_agree (x : ∀ n, cofix_a F n) :=
 theorem agree_trival {x : cofix_a F 0} {y : cofix_a F 1} : agree x y := by
   constructor
 
-theorem agree_children {n : ℕ} (x : cofix_a F (succ n)) (y : cofix_a F (succ n+1)) {i j} (h₀ : HEq i j)
+theorem agree_children {n : ℕ} (x : cofix_a F (succ n)) (y : cofix_a F (succ n + 1)) {i j} (h₀ : HEq i j)
     (h₁ : agree x y) : agree (children' x i) (children' y j) := by
   cases' h₁ with _ _ _ _ _ _ hagree
   cases h₀
   apply hagree
 
-/--  `truncate a` turns `a` into a more limited approximation -/
-def truncate : ∀ {n : ℕ}, cofix_a F (n+1) → cofix_a F n
+/-- `truncate a` turns `a` into a more limited approximation -/
+def truncate : ∀ {n : ℕ}, cofix_a F (n + 1) → cofix_a F n
   | 0, cofix_a.intro _ _ => cofix_a.continue
   | succ n, cofix_a.intro i f => cofix_a.intro i $ truncate ∘ f
 
 theorem truncate_eq_of_agree {n : ℕ} (x : cofix_a F n) (y : cofix_a F (succ n)) (h : agree x y) : truncate y = x := by
   induction n generalizing x y <;> cases x <;> cases y
-  ·
-    rfl
-  ·
-    cases' h with _ _ _ _ _ h₀ h₁
+  · rfl
+    
+  · cases' h with _ _ _ _ _ h₀ h₁
     cases h
     simp only [truncate, Function.comp, true_andₓ, eq_self_iff_true, heq_iff_eq]
     ext y
     apply n_ih
     apply h₁
+    
 
 variable {X : Type w}
 
 variable (f : X → F.obj X)
 
-/--  `s_corec f i n` creates an approximation of height `n`
+/-- `s_corec f i n` creates an approximation of height `n`
 of the final coalgebra of `f` -/
 def s_corec : ∀ i : X n, cofix_a F n
   | _, 0 => cofix_a.continue
@@ -119,7 +117,7 @@ theorem P_corec (i : X) (n : ℕ) : agree (s_corec f i n) (s_corec f i (succ n))
   introv
   apply n_ih
 
-/--  `path F` provides indices to access internal nodes in `corec F` -/
+/-- `path F` provides indices to access internal nodes in `corec F` -/
 def path (F : Pfunctor.{u}) :=
   List F.Idx
 
@@ -136,7 +134,7 @@ instance : Subsingleton (cofix_a F 0) :=
 
 theorem head_succ' (n m : ℕ) (x : ∀ n, cofix_a F n) (Hconsistent : all_agree x) :
     head' (x (succ n)) = head' (x (succ m)) := by
-  suffices ∀ n, head' (x (succ n)) = head' (x 1)by
+  suffices ∀ n, head' (x (succ n)) = head' (x 1) by
     simp [this]
   clear m n
   intro
@@ -144,12 +142,11 @@ theorem head_succ' (n m : ℕ) (x : ∀ n, cofix_a F n) (Hconsistent : all_agree
   cases' h₁ : x 1 with _ i₁ f₁
   dsimp only [head']
   induction' n with n
-  ·
-    rw [h₁] at h₀
+  · rw [h₁] at h₀
     cases h₀
     trivial
-  ·
-    have H := Hconsistent (succ n)
+    
+  · have H := Hconsistent (succ n)
     cases' h₂ : x (succ n) with _ i₂ f₂
     rw [h₀, h₂] at H
     apply n_ih (truncate ∘ f₀)
@@ -160,19 +157,20 @@ theorem head_succ' (n m : ℕ) (x : ∀ n, cofix_a F n) (Hconsistent : all_agree
     dsimp only [comp_app]
     rw [truncate_eq_of_agree]
     apply hagree
+    
 
 end Approx
 
 open Approx
 
-/--  Internal definition for `M`. It is needed to avoid name clashes
+/-- Internal definition for `M`. It is needed to avoid name clashes
 between `M.mk` and `M.cases_on` and the declarations generated for
 the structure -/
 structure M_intl where
   approx : ∀ n, cofix_a F n
   consistent : all_agree approx
 
-/--  For polynomial functor `F`, `M F` is its final coalgebra -/
+/-- For polynomial functor `F`, `M F` is its final coalgebra -/
 def M :=
   M_intl F
 
@@ -184,7 +182,7 @@ instance M.inhabited [Inhabited F.A] : Inhabited (M F) :=
   ⟨{ approx := fun n => default _, consistent := M.default_consistent _ }⟩
 
 instance M_intl.inhabited [Inhabited F.A] : Inhabited (M_intl F) :=
-  show Inhabited (M F)by
+  show Inhabited (M F) by
     infer_instance
 
 namespace M
@@ -201,18 +199,19 @@ variable (f : X → F.obj X)
 
 variable {F}
 
-/--  Corecursor for the M-type defined by `F`. -/
-protected def corec (i : X) : M F :=
-  { approx := s_corec f i, consistent := P_corec _ _ }
+/-- Corecursor for the M-type defined by `F`. -/
+protected def corec (i : X) : M F where
+  approx := s_corec f i
+  consistent := P_corec _ _
 
 variable {F}
 
-/--  given a tree generated by `F`, `head` gives us the first piece of data
+/-- given a tree generated by `F`, `head` gives us the first piece of data
 it contains -/
 def head (x : M F) :=
   head' (x.1 1)
 
-/--  return all the subtrees of the root of a tree `x : M F` -/
+/-- return all the subtrees of the root of a tree `x : M F` -/
 def children (x : M F) (i : F.B (head x)) : M F :=
   let H := fun n : ℕ => @head_succ' _ n 0 x.1 x.2
   { approx := fun n =>
@@ -230,7 +229,7 @@ def children (x : M F) (i : F.B (head x)) : M F :=
       symm
       apply cast_heq }
 
-/--  select a subtree using a `i : F.Idx` or return an arbitrary tree if
+/-- select a subtree using a `i : F.Idx` or return an arbitrary tree if
 `i` designates no subtree of `x` -/
 def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.Idx) (x : M F) : M F :=
   if H' : i.1 = head x then
@@ -244,22 +243,22 @@ def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.Idx) (x : M F) : M F :=
 theorem head_succ (n m : ℕ) (x : M F) : head' (x.approx (succ n)) = head' (x.approx (succ m)) :=
   head_succ' n m _ x.consistent
 
-theorem head_eq_head' : ∀ x : M F n : ℕ, head x = head' (x.approx $ n+1)
+theorem head_eq_head' : ∀ x : M F n : ℕ, head x = head' (x.approx $ n + 1)
   | ⟨x, h⟩, n => head_succ' _ _ _ h
 
-theorem head'_eq_head : ∀ x : M F n : ℕ, head' (x.approx $ n+1) = head x
+theorem head'_eq_head : ∀ x : M F n : ℕ, head' (x.approx $ n + 1) = head x
   | ⟨x, h⟩, n => head_succ' _ _ _ h
 
-theorem truncate_approx (x : M F) (n : ℕ) : truncate (x.approx $ n+1) = x.approx n :=
+theorem truncate_approx (x : M F) (n : ℕ) : truncate (x.approx $ n + 1) = x.approx n :=
   truncate_eq_of_agree _ _ (x.consistent _)
 
-/--  unfold an M-type -/
+/-- unfold an M-type -/
 def dest : M F → F.obj (M F)
   | x => ⟨head x, fun i => children x i⟩
 
 namespace Approx
 
-/--  generates the approximations needed for `M.mk` -/
+/-- generates the approximations needed for `M.mk` -/
 protected def s_mk (x : F.obj $ M F) : ∀ n, cofix_a F n
   | 0 => cofix_a.continue
   | succ n => cofix_a.intro x.1 fun i => (x.2 i).approx n
@@ -274,11 +273,12 @@ protected theorem P_mk (x : F.obj $ M F) : all_agree (approx.s_mk x)
 
 end Approx
 
-/--  constructor for M-types -/
-protected def mk (x : F.obj $ M F) : M F :=
-  { approx := approx.s_mk x, consistent := approx.P_mk x }
+/-- constructor for M-types -/
+protected def mk (x : F.obj $ M F) : M F where
+  approx := approx.s_mk x
+  consistent := approx.P_mk x
 
-/--  `agree' n` relates two trees of type `M F` that
+/-- `agree' n` relates two trees of type `M F` that
 are the same up to dept `n` -/
 inductive agree' : ℕ → M F → M F → Prop
   | trivialₓ (x y : M F) : agree' 0 x y
@@ -303,8 +303,8 @@ theorem mk_dest (x : M F) : M.mk (dest x) = x := by
   intro n
   dsimp only [M.mk]
   induction' n with n
-  ·
-    apply Subsingleton.elimₓ
+  · apply Subsingleton.elimₓ
+    
   dsimp only [approx.s_mk, dest, head]
   cases' h : x.approx (succ n) with _ hd ch
   have h' : hd = head' (x.approx 1) := by
@@ -314,32 +314,32 @@ theorem mk_dest (x : M F) : M.mk (dest x) = x := by
   rw [h']
   intros
   congr
-  ·
-    ext a
+  · ext a
     dsimp only [children]
     h_generalize! hh : a = a''
     rw [h]
     intros
     cases hh
     rfl
+    
 
 theorem mk_inj {x y : F.obj $ M F} (h : M.mk x = M.mk y) : x = y := by
   rw [← dest_mk x, h, dest_mk]
 
-/--  destructor for M-types -/
+/-- destructor for M-types -/
 protected def cases {r : M F → Sort w} (f : ∀ x : F.obj $ M F, r (M.mk x)) (x : M F) : r x :=
-  suffices r (M.mk (dest x))by
+  suffices r (M.mk (dest x)) by
     have := Classical.propDecidable
     have := Inhabited.mk x
     rw [← mk_dest x]
     exact this
   f _
 
-/--  destructor for M-types -/
+/-- destructor for M-types -/
 protected def cases_on {r : M F → Sort w} (x : M F) (f : ∀ x : F.obj $ M F, r (M.mk x)) : r x :=
   M.cases f x
 
-/--  destructor for M-types, similar to `cases_on` but also
+/-- destructor for M-types, similar to `cases_on` but also
 gives access directly to the root and subtrees on an M-type -/
 protected def cases_on' {r : M F → Sort w} (x : M F) (f : ∀ a f, r (M.mk ⟨a, f⟩)) : r x :=
   M.cases_on x fun ⟨a, g⟩ => f a _
@@ -358,13 +358,11 @@ theorem agree'_refl {n : ℕ} (x : M F) : agree' n x x := by
   intros
   apply n_ih
 
-theorem agree_iff_agree' {n : ℕ} (x y : M F) : agree (x.approx n) (y.approx $ n+1) ↔ agree' n x y := by
+theorem agree_iff_agree' {n : ℕ} (x y : M F) : agree (x.approx n) (y.approx $ n + 1) ↔ agree' n x y := by
   constructor <;> intro h
-  ·
-    induction n generalizing x y
+  · induction n generalizing x y
     constructor
-    ·
-      induction x using Pfunctor.M.casesOn'
+    · induction x using Pfunctor.M.casesOn'
       induction y using Pfunctor.M.casesOn'
       simp only [approx_mk] at h
       cases' h with _ _ _ _ _ _ hagree
@@ -374,11 +372,11 @@ theorem agree_iff_agree' {n : ℕ} (x y : M F) : agree (x.approx n) (y.approx $ 
       intro i
       apply n_ih
       apply hagree
-  ·
-    induction n generalizing x y
+      
+    
+  · induction n generalizing x y
     constructor
-    ·
-      cases h
+    · cases h
       induction x using Pfunctor.M.casesOn'
       induction y using Pfunctor.M.casesOn'
       simp only [approx_mk]
@@ -389,7 +387,9 @@ theorem agree_iff_agree' {n : ℕ} (x y : M F) : agree (x.approx n) (y.approx $ 
       constructor
       intro i
       apply n_ih
-      simp
+      simp [*]
+      
+    
 
 @[simp]
 theorem cases_mk {r : M F → Sort _} (x : F.obj $ M F) (f : ∀ x : F.obj $ M F, r (M.mk x)) :
@@ -417,7 +417,7 @@ theorem cases_on_mk' {r : M F → Sort _} {a} (x : F.B a → M F) (f : ∀ a f :
     Pfunctor.M.casesOn' (M.mk ⟨a, x⟩) f = f a x :=
   cases_mk ⟨_, x⟩ _
 
-/--  `is_path p x` tells us if `p` is a valid path through `x` -/
+/-- `is_path p x` tells us if `p` is a valid path through `x` -/
 inductive is_path : path F → M F → Prop
   | nil (x : M F) : is_path [] x
   | cons (xs : path F) {a} (x : M F) (f : F.B a → M F) (i : F.B a) :
@@ -445,7 +445,7 @@ theorem is_path_cons' {xs : path F} {a} {f : F.B a → M F} {i : F.B a} (h : is_
   cases this
   assumption
 
-/--  follow a path through a value of `M F` and return the subtree
+/-- follow a path through a value of `M F` and return the subtree
 found at the end of the path if it is a valid path for that value and
 return a default tree -/
 def isubtree [DecidableEq F.A] [Inhabited (M F)] : path F → M F → M F
@@ -462,25 +462,23 @@ def isubtree [DecidableEq F.A] [Inhabited (M F)] : path F → M F → M F
       else default (M F) :
         (fun x => M F) (M.mk ⟨a', f⟩))
 
-/--  similar to `isubtree` but returns the data at the end of the path instead
+/-- similar to `isubtree` but returns the data at the end of the path instead
 of the whole subtree -/
 def iselect [DecidableEq F.A] [Inhabited (M F)] (ps : path F) : M F → F.A := fun x : M F => head $ isubtree ps x
 
 theorem iselect_eq_default [DecidableEq F.A] [Inhabited (M F)] (ps : path F) (x : M F) (h : ¬is_path ps x) :
     iselect ps x = head (default $ M F) := by
   induction ps generalizing x
-  ·
-    exfalso
+  · exfalso
     apply h
     constructor
-  ·
-    cases' ps_hd with a i
+    
+  · cases' ps_hd with a i
     induction x using Pfunctor.M.casesOn'
     simp only [iselect, isubtree] at ps_ih⊢
     by_cases' h'' : a = x_a
     subst x_a
-    ·
-      simp only [dif_pos, eq_self_iff_true, cases_on_mk']
+    · simp only [dif_pos, eq_self_iff_true, cases_on_mk']
       rw [ps_ih]
       intro h'
       apply h
@@ -488,16 +486,19 @@ theorem iselect_eq_default [DecidableEq F.A] [Inhabited (M F)] (ps : path F) (x 
         try
           rfl
       apply h'
-    ·
-      simp
+      
+    · simp [*]
+      
+    
 
 @[simp]
 theorem head_mk (x : F.obj (M F)) : head (M.mk x) = x.1 :=
   Eq.symm $
-    calc x.1 = (dest (M.mk x)).1 := by
-      rw [dest_mk]
+    calc
+      x.1 = (dest (M.mk x)).1 := by
+        rw [dest_mk]
       _ = head (M.mk x) := by
-      rfl
+        rfl
       
 
 theorem children_mk {a} (x : F.B a → M F) (i : F.B (head (M.mk ⟨a, x⟩))) :
@@ -538,53 +539,47 @@ theorem corec_def {X} (f : X → F.obj X) (x₀ : X) : M.corec f x₀ = M.mk (M.
   dsimp only [M.corec, M.mk]
   congr with n
   cases' n with n
-  ·
-    dsimp only [s_corec, approx.s_mk]
+  · dsimp only [s_corec, approx.s_mk]
     rfl
-  ·
-    dsimp only [s_corec, approx.s_mk]
+    
+  · dsimp only [s_corec, approx.s_mk]
     cases h : f x₀
     dsimp only [· <$> ·, Pfunctor.map]
     congr
+    
 
--- failed to format: format: uncaught backtrack exception
-theorem
-  ext_aux
-  [ Inhabited ( M F ) ]
-      [ DecidableEq F.A ]
-      { n : ℕ }
-      ( x y z : M F )
-      ( hx : agree' n z x )
-      ( hy : agree' n z y )
-      ( hrec : ∀ ps : path F , n = ps.length → iselect ps x = iselect ps y )
-    : x.approx ( n + 1 ) = y.approx ( n + 1 )
-  :=
-    by
-      induction' n with n generalizing x y z
-        ·
-          specialize hrec [ ] rfl
-            induction x using Pfunctor.M.casesOn'
-            induction y using Pfunctor.M.casesOn'
-            simp only [ iselect_nil ] at hrec
-            subst hrec
-            simp only [ approx_mk , true_andₓ , eq_self_iff_true , heq_iff_eq ]
-            apply Subsingleton.elimₓ
-        ·
-          cases hx
-            cases hy
-            induction x using Pfunctor.M.casesOn'
-            induction y using Pfunctor.M.casesOn'
-            subst z
-            iterate 3 have := mk_inj ‹ _ › repeat' cases this
-            simp only [ approx_mk , true_andₓ , eq_self_iff_true , heq_iff_eq ]
-            ext i
-            apply n_ih
-            · solve_by_elim
-            · solve_by_elim
-            introv h
-            specialize hrec ( ⟨ _ , i ⟩ :: ps ) ( congr_argₓ _ h )
-            simp only [ iselect_cons ] at hrec
-            exact hrec
+theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx : agree' n z x) (hy : agree' n z y)
+    (hrec : ∀ ps : path F, n = ps.length → iselect ps x = iselect ps y) : x.approx (n + 1) = y.approx (n + 1) := by
+  induction' n with n generalizing x y z
+  · specialize hrec [] rfl
+    induction x using Pfunctor.M.casesOn'
+    induction y using Pfunctor.M.casesOn'
+    simp only [iselect_nil] at hrec
+    subst hrec
+    simp only [approx_mk, true_andₓ, eq_self_iff_true, heq_iff_eq]
+    apply Subsingleton.elimₓ
+    
+  · cases hx
+    cases hy
+    induction x using Pfunctor.M.casesOn'
+    induction y using Pfunctor.M.casesOn'
+    subst z
+    iterate 3 
+      have := mk_inj ‹_›
+      repeat'
+        cases this
+    simp only [approx_mk, true_andₓ, eq_self_iff_true, heq_iff_eq]
+    ext i
+    apply n_ih
+    · solve_by_elim
+      
+    · solve_by_elim
+      
+    introv h
+    specialize hrec (⟨_, i⟩ :: ps) (congr_argₓ _ h)
+    simp only [iselect_cons] at hrec
+    exact hrec
+    
 
 open Pfunctor.Approx
 
@@ -592,24 +587,26 @@ variable {F}
 
 attribute [local instance] Classical.propDecidable
 
--- failed to format: format: uncaught backtrack exception
-theorem
-  ext
-  [ Inhabited ( M F ) ] ( x y : M F ) ( H : ∀ ps : path F , iselect ps x = iselect ps y ) : x = y
-  :=
-    by
-      apply ext'
-        intro i
-        induction' i with i
-        · cases x.approx 0 cases y.approx 0 constructor
-        ·
-          apply ext_aux x y x
-            · rw [ ← agree_iff_agree' ] apply x.consistent
-            · rw [ ← agree_iff_agree' , i_ih ] apply y.consistent
-            introv H'
-            dsimp only [ iselect ] at H
-            cases H'
-            apply H ps
+theorem ext [Inhabited (M F)] (x y : M F) (H : ∀ ps : path F, iselect ps x = iselect ps y) : x = y := by
+  apply ext'
+  intro i
+  induction' i with i
+  · cases x.approx 0
+    cases y.approx 0
+    constructor
+    
+  · apply ext_aux x y x
+    · rw [← agree_iff_agree']
+      apply x.consistent
+      
+    · rw [← agree_iff_agree', i_ih]
+      apply y.consistent
+      
+    introv H'
+    dsimp only [iselect]  at H
+    cases H'
+    apply H ps
+    
 
 section Bisim
 
@@ -617,7 +614,7 @@ variable (R : M F → M F → Prop)
 
 local infixl:50 " ~ " => R
 
-/--  Bisimulation is the standard proof technique for equality between
+/-- Bisimulation is the standard proof technique for equality between
 infinite tree-like structures -/
 structure is_bisimulation : Prop where
   head : ∀ {a a'} {f f'}, M.mk ⟨a, f⟩ ~ M.mk ⟨a', f'⟩ → a = a'
@@ -636,9 +633,9 @@ theorem nth_of_bisim [Inhabited (M F)] (bisim : is_bisimulation R) s₁ s₂ (ps
   have : a = a' := bisim.head h₀
   subst a'
   induction' ps with i ps generalizing a f f'
-  ·
-    exists rfl, a, f, f', rfl, rfl
+  · exists rfl, a, f, f', rfl, rfl
     apply bisim.tail h₀
+    
   cases' i with a' i
   have : a = a' := by
     cases hh <;> cases is_path_cons hh <;> rfl
@@ -655,25 +652,25 @@ theorem nth_of_bisim [Inhabited (M F)] (bisim : is_bisimulation R) s₁ s₂ (ps
   rw [← h, ← h']
   apply or_of_or_of_imp_of_imp hh is_path_cons' is_path_cons'
 
--- failed to format: format: uncaught backtrack exception
-theorem
-  eq_of_bisim
-  [ Nonempty ( M F ) ] ( bisim : is_bisimulation R ) : ∀ s₁ s₂ , s₁ ~ s₂ → s₁ = s₂
-  :=
-    by
-      inhabit M F
-        introv Hr
-        apply ext
-        introv
-        by_cases' h : is_path ps s₁ ∨ is_path ps s₂
-        · have H := nth_of_bisim R bisim _ _ ps Hr h exact H.left
-        · rw [ not_or_distrib ] at h cases' h with h₀ h₁ simp only [ iselect_eq_default , not_false_iff ]
+theorem eq_of_bisim [Nonempty (M F)] (bisim : is_bisimulation R) : ∀ s₁ s₂, s₁ ~ s₂ → s₁ = s₂ := by
+  inhabit M F
+  introv Hr
+  apply ext
+  introv
+  by_cases' h : is_path ps s₁ ∨ is_path ps s₂
+  · have H := nth_of_bisim R bisim _ _ ps Hr h
+    exact H.left
+    
+  · rw [not_or_distrib] at h
+    cases' h with h₀ h₁
+    simp only [iselect_eq_default, *, not_false_iff]
+    
 
 end Bisim
 
 universe u' v'
 
-/--  corecursor for `M F` with swapped arguments -/
+/-- corecursor for `M F` with swapped arguments -/
 def corec_on {X : Type _} (x₀ : X) (f : X → F.obj X) : M F :=
   M.corec f x₀
 
@@ -682,25 +679,24 @@ variable {P : Pfunctor.{u}} {α : Type u}
 theorem dest_corec (g : α → P.obj α) (x : α) : M.dest (M.corec g x) = M.corec g <$> g x := by
   rw [corec_def, dest_mk]
 
--- failed to format: format: uncaught backtrack exception
-theorem
-  bisim
-  ( R : M P → M P → Prop )
-      ( h : ∀ x y , R x y → ∃ a f f' , M.dest x = ⟨ a , f ⟩ ∧ M.dest y = ⟨ a , f' ⟩ ∧ ∀ i , R ( f i ) ( f' i ) )
-    : ∀ x y , R x y → x = y
-  :=
-    by
-      introv h'
-        have := Inhabited.mk x.head
-        apply eq_of_bisim R _ _ _ h'
-        clear h' x y
-        constructor <;> introv ih <;> rcases h _ _ ih with ⟨ a'' , g , g' , h₀ , h₁ , h₂ ⟩ <;> clear h
-        ·
-          replace h₀ := congr_argₓ Sigma.fst h₀
-            replace h₁ := congr_argₓ Sigma.fst h₁
-            simp only [ dest_mk ] at h₀ h₁
-            rw [ h₀ , h₁ ]
-        · simp only [ dest_mk ] at h₀ h₁ cases h₀ cases h₁ apply h₂
+theorem bisim (R : M P → M P → Prop)
+    (h : ∀ x y, R x y → ∃ a f f', M.dest x = ⟨a, f⟩ ∧ M.dest y = ⟨a, f'⟩ ∧ ∀ i, R (f i) (f' i)) :
+    ∀ x y, R x y → x = y := by
+  introv h'
+  have := Inhabited.mk x.head
+  apply eq_of_bisim R _ _ _ h'
+  clear h' x y
+  constructor <;> introv ih <;> rcases h _ _ ih with ⟨a'', g, g', h₀, h₁, h₂⟩ <;> clear h
+  · replace h₀ := congr_argₓ Sigma.fst h₀
+    replace h₁ := congr_argₓ Sigma.fst h₁
+    simp only [dest_mk] at h₀ h₁
+    rw [h₀, h₁]
+    
+  · simp only [dest_mk] at h₀ h₁
+    cases h₀
+    cases h₁
+    apply h₂
+    
 
 theorem bisim' {α : Type _} (Q : α → Prop) (u v : α → M P)
     (h :
@@ -738,12 +734,12 @@ theorem corec_unique (g : α → P.obj α) (f : α → M P) (hyp : ∀ x, M.dest
   intro i
   exact ⟨f' i, trivialₓ, rfl, rfl⟩
 
-/--  corecursor where the state of the computation can be sent downstream
+/-- corecursor where the state of the computation can be sent downstream
 in the form of a recursive call -/
 def corec₁ {α : Type u} (F : ∀ X, (α → X) → α → P.obj X) : α → M P :=
   M.corec (F _ id)
 
-/--  corecursor where it is possible to return a fully formed value at any point
+/-- corecursor where it is possible to return a fully formed value at any point
 of the computation -/
 def corec' {α : Type u} (F : ∀ {X : Type u}, (α → X) → α → Sum (M P) (P.obj X)) (x : α) : M P :=
   corec₁

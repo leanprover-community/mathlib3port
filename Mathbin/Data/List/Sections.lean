@@ -16,20 +16,20 @@ variable {α β : Type _}
 
 theorem mem_sections {L : List (List α)} {f} : f ∈ sections L ↔ forall₂ (· ∈ ·) f L := by
   refine' ⟨fun h => _, fun h => _⟩
-  ·
-    induction L generalizing f
-    ·
-      cases mem_singleton.1 h
+  · induction L generalizing f
+    · cases mem_singleton.1 h
       exact forall₂.nil
+      
     simp only [sections, bind_eq_bind, mem_bind, mem_map] at h
     rcases h with ⟨_, _, _, _, rfl⟩
-    simp only [forall₂_cons, true_andₓ]
-  ·
-    induction' h with a l f L al fL fs
-    ·
-      exact Or.inl rfl
+    simp only [*, forall₂_cons, true_andₓ]
+    
+  · induction' h with a l f L al fL fs
+    · exact Or.inl rfl
+      
     simp only [sections, bind_eq_bind, mem_bind, mem_map]
     exact ⟨_, fs, _, al, rfl, rfl⟩
+    
 
 theorem mem_sections_length {L : List (List α)} {f} (h : f ∈ sections L) : length f = length L :=
   forall₂_length_eq (mem_sections.1 h)

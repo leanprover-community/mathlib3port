@@ -37,12 +37,12 @@ theorem quotient_map_proj_Icc : QuotientMap (proj_Icc a b h) :=
 theorem continuous_Icc_extend_iff {f : Icc a b → β} : Continuous (Icc_extend h f) ↔ Continuous f :=
   quotient_map_proj_Icc.continuous_iff.symm
 
-/--  See Note [continuity lemma statement]. -/
+/-- See Note [continuity lemma statement]. -/
 theorem Continuous.Icc_extend {f : γ → Icc a b → β} {g : γ → α} (hf : Continuous (↿f)) (hg : Continuous g) :
     Continuous fun a => Icc_extend h (f a) (g a) :=
   hf.comp $ continuous_id.prod_mk $ continuous_proj_Icc.comp hg
 
-/--  A useful special case of `continuous.Icc_extend`. -/
+/-- A useful special case of `continuous.Icc_extend`. -/
 @[continuity]
 theorem Continuous.Icc_extend' {f : Icc a b → β} (hf : Continuous f) : Continuous (Icc_extend h f) :=
   hf.comp continuous_proj_Icc

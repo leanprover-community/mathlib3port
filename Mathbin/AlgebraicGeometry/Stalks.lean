@@ -33,14 +33,12 @@ open Top.Presheaf
 
 namespace AlgebraicGeometry.PresheafedSpace
 
-/-- 
-The stalk at `x` of a `PresheafedSpace`.
+/-- The stalk at `x` of a `PresheafedSpace`.
 -/
-def stalk (X : PresheafedSpace C) (x : X) : C :=
+abbrev stalk (X : PresheafedSpace C) (x : X) : C :=
   X.presheaf.stalk x
 
-/-- 
-A morphism of presheafed spaces induces a morphism of stalks.
+/-- A morphism of presheafed spaces induces a morphism of stalks.
 -/
 def stalk_map {X Y : PresheafedSpace C} (α : X ⟶ Y) (x : X) : Y.stalk (α.base x) ⟶ X.stalk x :=
   (stalk_functor C (α.base x)).map α.c ≫ X.presheaf.stalk_pushforward C α.base x
@@ -52,14 +50,13 @@ theorem stalk_map_germ {X Y : PresheafedSpace C} (α : X ⟶ Y) (U : opens Y.car
 
 section Restrict
 
-/-- 
-For an open embedding `f : U ⟶ X` and a point `x : U`, we get an isomorphism between the stalk
+/-- For an open embedding `f : U ⟶ X` and a point `x : U`, we get an isomorphism between the stalk
 of `X` at `f x` and the stalk of the restriction of `X` along `f` at t `x`.
 -/
 def restrict_stalk_iso {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) (x : U) :
-    (X.restrict h).stalk x ≅ X.stalk (f x) := by
+    (X.restrict h).stalk x ≅ X.stalk (f x) :=
   have := initial_of_adjunction (h.is_open_map.adjunction_nhds x)
-  exact final.colimit_iso (h.is_open_map.functor_nhds x).op ((open_nhds.inclusion (f x)).op ⋙ X.presheaf)
+  final.colimit_iso (h.is_open_map.functor_nhds x).op ((open_nhds.inclusion (f x)).op ⋙ X.presheaf)
 
 @[simp, elementwise, reassoc]
 theorem restrict_stalk_iso_hom_eq_germ {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f)
@@ -123,8 +120,7 @@ theorem comp {X Y Z : PresheafedSpace C} (α : X ⟶ Y) (β : Y ⟶ Z) (x : X) :
   erw [CategoryTheory.Functor.map_id]
   erw [id_comp, id_comp]
 
-/-- 
-If `α = β` and `x = x'`, we would like to say that `stalk_map α x = stalk_map β x'`.
+/-- If `α = β` and `x = x'`, we would like to say that `stalk_map α x = stalk_map β x'`.
 Unfortunately, this equality is not well-formed, as their types are not _definitionally_ the same.
 To get a proper congruence lemma, we therefore have to introduce these `eq_to_hom` arrows on
 either side of the equality.
@@ -135,7 +131,7 @@ theorem congr {X Y : PresheafedSpace C} (α β : X ⟶ Y) (h₁ : α = β) (x x'
           (show X.stalk x = X.stalk x' by
             rw [h₂]) =
       eq_to_hom
-          (show Y.stalk (α.base x) = Y.stalk (β.base x')by
+          (show Y.stalk (α.base x) = Y.stalk (β.base x') by
             rw [h₁, h₂]) ≫
         stalk_map β x' :=
   stalk_hom_ext _ $ fun U hx => by
@@ -146,7 +142,7 @@ theorem congr {X Y : PresheafedSpace C} (α β : X ⟶ Y) (h₁ : α = β) (x x'
 theorem congr_hom {X Y : PresheafedSpace C} (α β : X ⟶ Y) (h : α = β) (x : X) :
     stalk_map α x =
       eq_to_hom
-          (show Y.stalk (α.base x) = Y.stalk (β.base x)by
+          (show Y.stalk (α.base x) = Y.stalk (β.base x) by
             rw [h]) ≫
         stalk_map β x :=
   by
@@ -158,7 +154,7 @@ theorem congr_point {X Y : PresheafedSpace C} (α : X ⟶ Y) (x x' : X) (h : x =
           (show X.stalk x = X.stalk x' by
             rw [h]) =
       eq_to_hom
-          (show Y.stalk (α.base x) = Y.stalk (α.base x')by
+          (show Y.stalk (α.base x) = Y.stalk (α.base x') by
             rw [h]) ≫
         stalk_map α x' :=
   by
@@ -171,23 +167,30 @@ instance is_iso {X Y : PresheafedSpace C} (α : X ⟶ Y) [is_iso α] (x : X) : i
       rw [is_iso.hom_inv_id α, id_base, Top.id_app]
     refine'
       ⟨eq_to_hom
-            (show X.stalk x = X.stalk ((α ≫ β).base x)by
+            (show X.stalk x = X.stalk ((α ≫ β).base x) by
               rw [h_eq]) ≫
           (stalk_map β (α.base x) : _),
         _, _⟩
-    ·
-      rw [← category.assoc, congr_point α x ((α ≫ β).base x) h_eq.symm, category.assoc]
+    · rw [← category.assoc, congr_point α x ((α ≫ β).base x) h_eq.symm, category.assoc]
       erw [← stalk_map.comp β α (α.base x)]
       rw [congr_hom _ _ (is_iso.inv_hom_id α), stalk_map.id, eq_to_hom_trans_assoc, eq_to_hom_refl, category.id_comp]
-    ·
-      rw [category.assoc, ← stalk_map.comp, congr_hom _ _ (is_iso.hom_inv_id α), stalk_map.id, eq_to_hom_trans_assoc,
+      
+    · rw [category.assoc, ← stalk_map.comp, congr_hom _ _ (is_iso.hom_inv_id α), stalk_map.id, eq_to_hom_trans_assoc,
         eq_to_hom_refl, category.id_comp]
+      
 
-/-- 
-An isomorphism between presheafed spaces induces an isomorphism of stalks.
+/-- An isomorphism between presheafed spaces induces an isomorphism of stalks.
 -/
 def stalk_iso {X Y : PresheafedSpace C} (α : X ≅ Y) (x : X) : Y.stalk (α.hom.base x) ≅ X.stalk x :=
   as_iso (stalk_map α.hom x)
+
+@[simp, reassoc, elementwise]
+theorem stalk_specializes_stalk_map {X Y : PresheafedSpace C} (f : X ⟶ Y) {x y : X} (h : x ⤳ y) :
+    Y.presheaf.stalk_specializes (f.base.map_specialization h) ≫ stalk_map f x =
+      stalk_map f y ≫ X.presheaf.stalk_specializes h :=
+  by
+  delta' PresheafedSpace.stalk_map
+  simp [stalk_map]
 
 end StalkMap
 

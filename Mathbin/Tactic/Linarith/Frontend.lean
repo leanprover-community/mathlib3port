@@ -117,8 +117,7 @@ namespace Linarith
 /-! ### Control -/
 
 
-/-- 
-If `e` is a comparison `a R b` or the negation of a comparison `¬ a R b`, found in the target,
+/-- If `e` is a comparison `a R b` or the negation of a comparison `¬ a R b`, found in the target,
 `get_contr_lemma_name_and_type e` returns the name of a lemma that will change the goal to an
 implication, along with the type of `a` and `b`.
 
@@ -138,8 +137,7 @@ unsafe def get_contr_lemma_name_and_type : expr → Option (Name × expr)
   | quote.1 ¬@Gt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
   | _ => none
 
-/-- 
-`apply_contr_lemma` inspects the target to see if it can be moved to a hypothesis by negation.
+/-- `apply_contr_lemma` inspects the target to see if it can be moved to a hypothesis by negation.
 For example, a goal `⊢ a ≤ b` can become `a > b ⊢ false`.
 If this is the case, it applies the appropriate lemma and introduces the new hypothesis.
 It returns the type of the terms in the comparison (e.g. the type of `a` and `b` above) and the
@@ -155,8 +153,7 @@ unsafe def apply_contr_lemma : tactic (Option (expr × expr)) := do
       return $ some (tp, v)
     | none => return none
 
-/-- 
-`partition_by_type l` takes a list `l` of proofs of comparisons. It sorts these proofs by
+/-- `partition_by_type l` takes a list `l` of proofs of comparisons. It sorts these proofs by
 the type of the variables in the comparison, e.g. `(a : ℚ) < 1` and `(b : ℤ) > c` will be separated.
 Returns a map from a type to a list of comparisons over that type.
 -/
@@ -167,16 +164,14 @@ unsafe def partition_by_type (l : List expr) : tactic (rb_lmap expr expr) :=
       return $ m.insert tp h)
     mk_rb_map
 
-/-- 
-Given a list `ls` of lists of proofs of comparisons, `try_linarith_on_lists cfg ls` will try to
+/-- Given a list `ls` of lists of proofs of comparisons, `try_linarith_on_lists cfg ls` will try to
 prove `false` by calling `linarith` on each list in succession. It will stop at the first proof of
 `false`, and fail if no contradiction is found with any list.
 -/
 unsafe def try_linarith_on_lists (cfg : linarith_config) (ls : List (List expr)) : tactic expr :=
   first $ ls.map $ prove_false_by_linarith cfg <|> fail "linarith failed to find a contradiction"
 
-/-- 
-Given a list `hyps` of proofs of comparisons, `run_linarith_on_pfs cfg hyps pref_type`
+/-- Given a list `hyps` of proofs of comparisons, `run_linarith_on_pfs cfg hyps pref_type`
 preprocesses `hyps` according to the list of preprocessors in `cfg`.
 This results in a list of branches (typically only one),
 each of which must succeed in order to close the goal.
@@ -202,8 +197,7 @@ unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr) (pref_
       set_goals [hs.1]
       single_process hs.2 >>= exact
 
-/-- 
-`filter_hyps_to_type restr_type hyps` takes a list of proofs of comparisons `hyps`, and filters it
+/-- `filter_hyps_to_type restr_type hyps` takes a list of proofs of comparisons `hyps`, and filters it
 to only those that are comparisons over the type `restr_type`.
 -/
 unsafe def filter_hyps_to_type (restr_type : expr) (hyps : List expr) : tactic (List expr) :=
@@ -213,7 +207,7 @@ unsafe def filter_hyps_to_type (restr_type : expr) (hyps : List expr) : tactic (
       | some (_, htype) => succeeds $ unify htype restr_type
       | none => return ff
 
-/--  A hack to allow users to write `{restr_type := ℚ}` in configuration structures. -/
+/-- A hack to allow users to write `{restr_type := ℚ}` in configuration structures. -/
 unsafe def get_restrict_type (e : expr) : tactic expr := do
   let m ← mk_mvar
   unify (quote.1 (some (%%ₓm) : Option Type)) e
@@ -226,8 +220,7 @@ end Linarith
 
 open Linarith
 
-/-- 
-`linarith reduce_semi only_on hyps cfg` tries to close the goal using linear arithmetic. It fails
+/-- `linarith reduce_semi only_on hyps cfg` tries to close the goal using linear arithmetic. It fails
 if it does not succeed at doing this.
 
 * If `reduce_semi` is true, it will unfold semireducible definitions when trying to match atomic
@@ -262,8 +255,7 @@ unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pe
 
 setup_tactic_parser
 
-/-- 
-Tries to prove a goal of `false` by linear arithmetic on hypotheses.
+/-- Tries to prove a goal of `false` by linear arithmetic on hypotheses.
 If the goal is a linear (in)equality, tries to prove it by contradiction.
 If the goal is not `false` or an inequality, applies `exfalso` and tries linarith on the
 hypotheses.
@@ -287,8 +279,7 @@ unsafe def tactic.interactive.linarith (red : parse (tk "!")?) (restr : parse (t
 
 add_hint_tactic linarith
 
-/-- 
-`linarith` attempts to find a contradiction between hypotheses that are linear (in)equalities.
+/-- `linarith` attempts to find a contradiction between hypotheses that are linear (in)equalities.
 Equivalently, it can prove a linear inequality by assuming its negation and proving `false`.
 
 In theory, `linarith` should prove any goal that is true in the theory of linear arithmetic over
@@ -342,8 +333,7 @@ add_tactic_doc
   { Name := "linarith", category := DocCategory.tactic, declNames := [`tactic.interactive.linarith],
     tags := ["arithmetic", "decision procedure", "finishing"] }
 
-/-- 
-An extension of `linarith` with some preprocessing to allow it to solve some nonlinear arithmetic
+/-- An extension of `linarith` with some preprocessing to allow it to solve some nonlinear arithmetic
 problems. (Based on Coq's `nra` tactic.) See `linarith` for the available syntax of options,
 which are inherited by `nlinarith`; that is, `nlinarith!` and `nlinarith only [h1, h2]` all work as
 in `linarith`. The preprocessing is as follows:

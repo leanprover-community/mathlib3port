@@ -18,8 +18,7 @@ variable [DenselyOrdered α]
 
 theorem Ioo.infinite {a b : α} (h : a < b) : Infinite (Ioo a b) := by
   rintro (f : finite (Ioo a b))
-  obtain ⟨m, hm₁, hm₂⟩ : ∃ m ∈ Ioo a b, ∀, ∀ x ∈ Ioo a b, ∀, ¬x < m
-  ·
+  obtain ⟨m, hm₁, hm₂⟩ : ∃ m ∈ Ioo a b, ∀, ∀ x ∈ Ioo a b, ∀, ¬x < m := by
     simpa [h] using Finset.exists_minimal f.to_finset
   obtain ⟨z, hz₁, hz₂⟩ : ∃ z, a < z ∧ z < m := exists_between hm₁.1
   exact hm₂ z ⟨hz₁, lt_transₓ hz₂ hm₁.2⟩ hz₂
@@ -41,8 +40,7 @@ variable [NoBotOrder α]
 
 theorem Iio.infinite {b : α} : Infinite (Iio b) := by
   rintro (f : finite (Iio b))
-  obtain ⟨m, hm₁, hm₂⟩ : ∃ m < b, ∀, ∀ x < b, ∀, ¬x < m
-  ·
+  obtain ⟨m, hm₁, hm₂⟩ : ∃ m < b, ∀, ∀ x < b, ∀, ¬x < m := by
     simpa using Finset.exists_minimal f.to_finset
   obtain ⟨z, hz⟩ : ∃ z, z < m := no_bot _
   exact hm₂ z (lt_transₓ hz hm₁) hz

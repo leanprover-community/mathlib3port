@@ -26,26 +26,26 @@ open Filter Set
 
 variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y]
 
-/--  Extend a function from a set `A`. The resulting function `g` is such that
+/-- Extend a function from a set `A`. The resulting function `g` is such that
 at any `x₀`, if `f` converges to some `y` as `x` tends to `x₀` within `A`,
 then `g x₀` is defined to be one of these `y`. Else, `g x₀` could be anything. -/
 def extendFrom (A : Set X) (f : X → Y) : X → Y := fun x => @limₓ _ ⟨f x⟩ (𝓝[A] x) f
 
-/--  If `f` converges to some `y` as `x` tends to `x₀` within `A`,
+/-- If `f` converges to some `y` as `x` tends to `x₀` within `A`,
 then `f` tends to `extend_from A f x` as `x` tends to `x₀`. -/
 theorem tendsto_extend_from {A : Set X} {f : X → Y} {x : X} (h : ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) :
     tendsto f (𝓝[A] x) (𝓝 $ extendFrom A f x) :=
   tendsto_nhds_lim h
 
 theorem extend_from_eq [T2Space Y] {A : Set X} {f : X → Y} {x : X} {y : Y} (hx : x ∈ Closure A)
-    (hf : tendsto f (𝓝[A] x) (𝓝 y)) : extendFrom A f x = y := by
+    (hf : tendsto f (𝓝[A] x) (𝓝 y)) : extendFrom A f x = y :=
   have := mem_closure_iff_nhds_within_ne_bot.mp hx
-  exact tendsto_nhds_unique (tendsto_nhds_lim ⟨y, hf⟩) hf
+  tendsto_nhds_unique (tendsto_nhds_lim ⟨y, hf⟩) hf
 
 theorem extend_from_extends [T2Space Y] {f : X → Y} {A : Set X} (hf : ContinuousOn f A) :
     ∀, ∀ x ∈ A, ∀, extendFrom A f x = f x := fun x x_in => extend_from_eq (subset_closure x_in) (hf x x_in)
 
-/--  If `f` is a function to a regular space `Y` which has a limit within `A` at any
+/-- If `f` is a function to a regular space `Y` which has a limit within `A` at any
 point of a set `B ⊆ closure A`, then `extend_from A f` is continuous on `B`. -/
 theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (hB : B ⊆ Closure A)
     (hf : ∀, ∀ x ∈ B, ∀, ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) : ContinuousOn (extendFrom A f) B := by
@@ -54,8 +54,7 @@ theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (
   suffices ∀, ∀ V' ∈ 𝓝 (φ x), ∀, IsClosed V' → φ ⁻¹' V' ∈ 𝓝[B] x by
     simpa [ContinuousWithinAt, (closed_nhds_basis _).tendsto_right_iff]
   intro V' V'_in V'_closed
-  obtain ⟨V, V_in, V_op, hV⟩ : ∃ V ∈ 𝓝 x, IsOpen V ∧ V ∩ A ⊆ f ⁻¹' V'
-  ·
+  obtain ⟨V, V_in, V_op, hV⟩ : ∃ V ∈ 𝓝 x, IsOpen V ∧ V ∩ A ⊆ f ⁻¹' V' := by
     have := tendsto_extend_from (hf x x_in)
     rcases(nhds_within_basis_open x A).tendsto_left_iff.mp this V' V'_in with ⟨V, ⟨hxV, V_op⟩, hV⟩
     use V, IsOpen.mem_nhds V_op hxV, V_op, hV
@@ -69,7 +68,7 @@ theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (
     simpa [inter_comm] using inter_mem_nhds_within _ hVy
   exact V'_closed.mem_of_tendsto limy (mem_of_superset this hV)
 
-/--  If a function `f` to a regular space `Y` has a limit within a
+/-- If a function `f` to a regular space `Y` has a limit within a
 dense set `A` for any `x`, then `extend_from A f` is continuous. -/
 theorem continuous_extend_from [RegularSpace Y] {f : X → Y} {A : Set X} (hA : Dense A)
     (hf : ∀ x, ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) : Continuous (extendFrom A f) := by

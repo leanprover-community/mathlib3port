@@ -30,8 +30,7 @@ section Equalizers
 
 variable {X Y Z : C} {f g : X ⟶ Y} {h : Z ⟶ X} (w : h ≫ f = h ≫ g)
 
-/-- 
-The map of a fork is a limit iff the fork consisting of the mapped morphisms is a limit. This
+/-- The map of a fork is a limit iff the fork consisting of the mapped morphisms is a limit. This
 essentially lets us commute `fork.of_ι` with `functor.map_cone`.
 -/
 def is_limit_map_cone_fork_equiv :
@@ -47,7 +46,7 @@ def is_limit_map_cone_fork_equiv :
         (by
           simp )))
 
-/--  The property of preserving equalizers expressed in terms of forks. -/
+/-- The property of preserving equalizers expressed in terms of forks. -/
 def is_limit_fork_map_of_is_limit [preserves_limit (parallel_pair f g) G] (l : is_limit (fork.of_ι h w)) :
     is_limit
       (fork.of_ι (G.map h)
@@ -56,7 +55,7 @@ def is_limit_fork_map_of_is_limit [preserves_limit (parallel_pair f g) G] (l : i
         fork (G.map f) (G.map g)) :=
   is_limit_map_cone_fork_equiv G w (preserves_limit.preserves l)
 
-/--  The property of reflecting equalizers expressed in terms of forks. -/
+/-- The property of reflecting equalizers expressed in terms of forks. -/
 def is_limit_of_is_limit_fork_map [reflects_limit (parallel_pair f g) G]
     (l :
       is_limit
@@ -69,8 +68,7 @@ def is_limit_of_is_limit_fork_map [reflects_limit (parallel_pair f g) G]
 
 variable (f g) [has_equalizer f g]
 
-/-- 
-If `G` preserves equalizers and `C` has them, then the fork constructed of the mapped morphisms of
+/-- If `G` preserves equalizers and `C` has them, then the fork constructed of the mapped morphisms of
 a fork is a limit.
 -/
 def is_limit_of_has_equalizer_of_preserves_limit [preserves_limit (parallel_pair f g) G] :
@@ -82,8 +80,7 @@ def is_limit_of_has_equalizer_of_preserves_limit [preserves_limit (parallel_pair
 
 variable [has_equalizer (G.map f) (G.map g)]
 
-/-- 
-If the equalizer comparison map for `G` at `(f,g)` is an isomorphism, then `G` preserves the
+/-- If the equalizer comparison map for `G` at `(f,g)` is an isomorphism, then `G` preserves the
 equalizer of `(f,g)`.
 -/
 def preserves_equalizer.of_iso_comparison [i : is_iso (equalizer_comparison f g G)] :
@@ -95,8 +92,7 @@ def preserves_equalizer.of_iso_comparison [i : is_iso (equalizer_comparison f g 
 
 variable [preserves_limit (parallel_pair f g) G]
 
-/-- 
-If `G` preserves the equalizer of `(f,g)`, then the equalizer comparison map for `G` at `(f,g)` is
+/-- If `G` preserves the equalizer of `(f,g)`, then the equalizer comparison map for `G` at `(f,g)` is
 an isomorphism.
 -/
 def preserves_equalizer.iso : G.obj (equalizer f g) ≅ equalizer (G.map f) (G.map g) :=
@@ -116,8 +112,7 @@ section Coequalizers
 
 variable {X Y Z : C} {f g : X ⟶ Y} {h : Y ⟶ Z} (w : f ≫ h = g ≫ h)
 
-/-- 
-The map of a cofork is a colimit iff the cofork consisting of the mapped morphisms is a colimit.
+/-- The map of a cofork is a colimit iff the cofork consisting of the mapped morphisms is a colimit.
 This essentially lets us commute `cofork.of_π` with `functor.map_cocone`.
 -/
 def is_colimit_map_cocone_cofork_equiv :
@@ -134,7 +129,7 @@ def is_colimit_map_cocone_cofork_equiv :
           dsimp
           simp )))
 
-/--  The property of preserving coequalizers expressed in terms of coforks. -/
+/-- The property of preserving coequalizers expressed in terms of coforks. -/
 def is_colimit_cofork_map_of_is_colimit [preserves_colimit (parallel_pair f g) G] (l : is_colimit (cofork.of_π h w)) :
     is_colimit
       (cofork.of_π (G.map h)
@@ -143,7 +138,7 @@ def is_colimit_cofork_map_of_is_colimit [preserves_colimit (parallel_pair f g) G
         cofork (G.map f) (G.map g)) :=
   is_colimit_map_cocone_cofork_equiv G w (preserves_colimit.preserves l)
 
-/--  The property of reflecting coequalizers expressed in terms of coforks. -/
+/-- The property of reflecting coequalizers expressed in terms of coforks. -/
 def is_colimit_of_is_colimit_cofork_map [reflects_colimit (parallel_pair f g) G]
     (l :
       is_colimit
@@ -156,8 +151,7 @@ def is_colimit_of_is_colimit_cofork_map [reflects_colimit (parallel_pair f g) G]
 
 variable (f g) [has_coequalizer f g]
 
-/-- 
-If `G` preserves coequalizers and `C` has them, then the cofork constructed of the mapped morphisms
+/-- If `G` preserves coequalizers and `C` has them, then the cofork constructed of the mapped morphisms
 of a cofork is a colimit.
 -/
 def is_colimit_of_has_coequalizer_of_preserves_colimit [preserves_colimit (parallel_pair f g) G] :
@@ -166,8 +160,7 @@ def is_colimit_of_has_coequalizer_of_preserves_colimit [preserves_colimit (paral
 
 variable [has_coequalizer (G.map f) (G.map g)]
 
-/-- 
-If the coequalizer comparison map for `G` at `(f,g)` is an isomorphism, then `G` preserves the
+/-- If the coequalizer comparison map for `G` at `(f,g)` is an isomorphism, then `G` preserves the
 coequalizer of `(f,g)`.
 -/
 def of_iso_comparison [i : is_iso (coequalizer_comparison f g G)] : preserves_colimit (parallel_pair f g) G := by
@@ -178,8 +171,7 @@ def of_iso_comparison [i : is_iso (coequalizer_comparison f g G)] : preserves_co
 
 variable [preserves_colimit (parallel_pair f g) G]
 
-/-- 
-If `G` preserves the coequalizer of `(f,g)`, then the coequalizer comparison map for `G` at `(f,g)`
+/-- If `G` preserves the coequalizer of `(f,g)`, then the coequalizer comparison map for `G` at `(f,g)`
 is an isomorphism.
 -/
 def preserves_coequalizer.iso : coequalizer (G.map f) (G.map g) ≅ G.obj (coequalizer f g) :=
@@ -194,7 +186,7 @@ instance : is_iso (coequalizer_comparison f g G) := by
   rw [← preserves_coequalizer.iso_hom]
   infer_instance
 
-/--  Any functor preserves coequalizers of split pairs. -/
+/-- Any functor preserves coequalizers of split pairs. -/
 instance (priority := 1) preserves_split_coequalizers (f g : X ⟶ Y) [has_split_coequalizer f g] :
     preserves_colimit (parallel_pair f g) G := by
   apply preserves_colimit_of_preserves_colimit_cocone (has_split_coequalizer.is_split_coequalizer f g).isCoequalizer

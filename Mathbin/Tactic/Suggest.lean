@@ -21,7 +21,7 @@ namespace Suggest
 
 open SolveByElim
 
-/--  Map a name (typically a head symbol) to a "canonical" definitional synonym.
+/-- Map a name (typically a head symbol) to a "canonical" definitional synonym.
 Given a name `n`, we want a name `n'` such that a sufficiently applied
 expression with head symbol `n` is always definitionally equal to an expression
 with head symbol `n'`.
@@ -41,8 +41,7 @@ unsafe def normalize_synonym : Name → Name
   | `not => `false
   | n => n
 
-/-- 
-Compute the head symbol of an expression, then normalise synonyms.
+/-- Compute the head symbol of an expression, then normalise synonyms.
 
 This is only used when analysing the goal, so it is okay to do more expensive analysis here.
 -/
@@ -56,10 +55,7 @@ unsafe def allowed_head_symbols : expr → List Name
   | expr.const n _ => [normalize_synonym n]
   | _ => [`_]
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/-- 
-A declaration can match the head symbol of the current goal in four possible ways:
+/-- A declaration can match the head symbol of the current goal in four possible ways:
 * `ex`  : an exact match
 * `mp`  : the declaration returns an `iff`, and the right hand side matches the goal
 * `mpr` : the declaration returns an `iff`, and the left hand side matches the goal
@@ -70,18 +66,18 @@ inductive head_symbol_match
   | mp
   | mpr
   | both
-  deriving [anonymous], [anonymous]
+  deriving DecidableEq, Inhabited
 
 open HeadSymbolMatch
 
-/--  a textual representation of a `head_symbol_match`, for trace debugging. -/
+/-- a textual representation of a `head_symbol_match`, for trace debugging. -/
 def head_symbol_match.to_string : head_symbol_match → Stringₓ
   | ex => "exact"
   | mp => "iff.mp"
   | mpr => "iff.mpr"
   | both => "iff.mp and iff.mpr"
 
-/--  Determine if, and in which way, a given expression matches the specified head symbol. -/
+/-- Determine if, and in which way, a given expression matches the specified head symbol. -/
 unsafe def match_head_symbol (hs : name_set) : expr → Option head_symbol_match
   | expr.pi _ _ _ t => match_head_symbol t
   | quote.1 ((%%ₓa) ↔ %%ₓb) =>
@@ -96,7 +92,7 @@ unsafe def match_head_symbol (hs : name_set) : expr → Option head_symbol_match
   | expr.const n _ => if hs.contains (normalize_synonym n) then some ex else none
   | _ => if hs.contains `_ then some ex else none
 
-/--  A package of `declaration` metadata, including the way in which its type matches the head symbol
+/-- A package of `declaration` metadata, including the way in which its type matches the head symbol
 which we are searching for. -/
 unsafe structure decl_data where
   d : declaration
@@ -104,15 +100,14 @@ unsafe structure decl_data where
   m : head_symbol_match
   l : ℕ
 
-/-- 
-Generate a `decl_data` from the given declaration if
+/-- Generate a `decl_data` from the given declaration if
 it matches the head symbol `hs` for the current goal.
 -/
 unsafe def process_declaration (hs : name_set) (d : declaration) : Option decl_data :=
   let n := d.to_name
   if !d.is_trusted || n.is_internal then none else (fun m => ⟨d, n, m, n.length⟩) <$> match_head_symbol hs d.type
 
-/--  Retrieve all library definitions with a given head symbol. -/
+/-- Retrieve all library definitions with a given head symbol. -/
 unsafe def library_defs (hs : name_set) : tactic (List decl_data) := do
   trace_if_enabled `suggest f! "Looking for lemmas with head symbols {hs}."
   let env ← get_env
@@ -122,8 +117,7 @@ unsafe def library_defs (hs : name_set) : tactic (List decl_data) := do
   trace_if_enabled `suggest $ defs.map fun ⟨d, n, m, l⟩ => (n, m.to_string)
   return defs
 
-/-- 
-We unpack any element of a list of `decl_data` corresponding to an `↔` statement that could apply
+/-- We unpack any element of a list of `decl_data` corresponding to an `↔` statement that could apply
 in both directions into two separate elements.
 
 This ensures that both directions can be independently returned by `suggest`,
@@ -135,7 +129,7 @@ unsafe def unpack_iff_both : List decl_data → List decl_data
   | ⟨d, n, both, l⟩ :: L => ⟨d, n, mp, l⟩ :: ⟨d, n, mpr, l⟩ :: unpack_iff_both L
   | ⟨d, n, m, l⟩ :: L => ⟨d, n, m, l⟩ :: unpack_iff_both L
 
-/--  An extension to the option structure for `solve_by_elim`.
+/-- An extension to the option structure for `solve_by_elim`.
 * `compulsory_hyps` specifies a list of local hypotheses which must appear in any solution.
   These are useful for constraining the results from `library_search` and `suggest`.
 * `try_this` is a flag (default: `tt`) that controls whether a "Try this:"-line should be traced.
@@ -144,8 +138,7 @@ unsafe structure suggest_opt extends opt where
   compulsory_hyps : List expr := []
   try_this : Bool := tt
 
-/-- 
-Convert a `suggest_opt` structure to a `opt` structure suitable for `solve_by_elim`,
+/-- Convert a `suggest_opt` structure to a `opt` structure suitable for `solve_by_elim`,
 by setting the `accept` parameter to require that all complete solutions
 use everything in `compulsory_hyps`.
 -/
@@ -154,8 +147,7 @@ unsafe def suggest_opt.mk_accept (o : suggest_opt) : opt :=
     accept := fun gs =>
       o.accept gs >> (guardₓ $ o.compulsory_hyps.all fun h => gs.any fun g => g.contains_expr_or_mvar h) }
 
-/-- 
-Apply the lemma `e`, then attempt to close all goals using
+/-- Apply the lemma `e`, then attempt to close all goals using
 `solve_by_elim opt`, failing if `close_goals = tt`
 and there are any goals remaining.
 
@@ -174,8 +166,7 @@ unsafe def apply_and_solve (close_goals : Bool) (opt : suggest_opt := {  }) (e :
       let ng' ← num_goals
       return (ng - ng')
 
-/-- 
-Apply the declaration `d` (or the forward and backward implications separately, if it is an `iff`),
+/-- Apply the declaration `d` (or the forward and backward implications separately, if it is an `iff`),
 and then attempt to solve the subgoal using `apply_and_solve`.
 
 Returns the number of subgoals successfully closed.
@@ -194,7 +185,7 @@ unsafe def apply_declaration (close_goals : Bool) (opt : suggest_opt := {  }) (d
       tac l
     | both => undefined
 
-/--  An `application` records the result of a successful application of a library lemma. -/
+/-- An `application` records the result of a successful application of a library lemma. -/
 unsafe structure application where
   State : tactic_state
   script : Stringₓ
@@ -245,8 +236,7 @@ private unsafe def suggest_core' (opt : suggest_opt := {  }) : tactic (mllist ta
         | none => mllist.nil
       return (results.append results_symm)
 
-/-- 
-The core `suggest` tactic.
+/-- The core `suggest` tactic.
 It attempts to apply a declaration from the library,
 then solve new goals using `solve_by_elim`.
 
@@ -263,8 +253,7 @@ It returns a list of `application`s consisting of fields:
 unsafe def suggest_core (opt : suggest_opt := {  }) : mllist tactic application :=
   (mllist.monad_lift (suggest_core' opt)).join
 
-/-- 
-See `suggest_core`.
+/-- See `suggest_core`.
 
 Returns a list of at most `limit` `application`s,
 sorted by number of goals, and then (reverse) number of hypotheses used.
@@ -276,8 +265,7 @@ unsafe def suggest (limit : Option ℕ := none) (opt : suggest_opt := {  }) : ta
       L.qsort fun d₁ d₂ =>
         d₁.num_goals < d₂.num_goals ∨ d₁.num_goals = d₂.num_goals ∧ d₁.hyps_used.length ≥ d₂.hyps_used.length
 
-/-- 
-Returns a list of at most `limit` strings, of the form `Try this: exact ...` or
+/-- Returns a list of at most `limit` strings, of the form `Try this: exact ...` or
 `Try this: refine ...`, which make progress on the current goal using a declaration
 from the library.
 -/
@@ -285,8 +273,7 @@ unsafe def suggest_scripts (limit : Option ℕ := none) (opt : suggest_opt := { 
   let L ← suggest limit opt
   return $ L.map application.script
 
-/-- 
-Returns a string of the form `Try this: exact ...`, which closes the current goal.
+/-- Returns a string of the form `Try this: exact ...`, which closes the current goal.
 -/
 unsafe def library_search (opt : suggest_opt := {  }) : tactic Stringₓ :=
   (suggest_core opt).mfirst fun a => do
@@ -303,8 +290,8 @@ open SolveByElim
 initialize
   registerTraceClass.1 `silence_suggest
 
-/-- 
-`suggest` tries to apply suitable theorems/defs from the library, and generates
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+/-- `suggest` tries to apply suitable theorems/defs from the library, and generates
 a list of `exact ...` or `refine ...` scripts that could be used at this step.
 It leaves the tactic state unchanged. It is intended as a complement of the search
 function in your editor, the `#find` tactic, and `library_search`.
@@ -327,7 +314,7 @@ end
 ```
 You can also use `suggest with attr` to include all lemmas with the attribute `attr`.
 -/
-unsafe def suggest (n : parse (with_desc "n" small_nat)?) (hs : parse simp_arg_list)
+unsafe def suggest (n : parse («expr ?» (with_desc "n" small_nat))) (hs : parse simp_arg_list)
     (attr_names : parse with_ident_list) (use : parse $ (tk "using" *> many ident_ <|> return []))
     (opt : suggest_opt := {  }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set ff hs attr_names
@@ -338,8 +325,7 @@ unsafe def suggest (n : parse (with_desc "n" small_nat)?) (hs : parse simp_arg_l
   if !opt.try_this || is_trace_enabled_for `silence_suggest then skip
     else if L.length = 0 then fail "There are no applicable declarations" else L.mmap trace >> skip
 
-/-- 
-`suggest` lists possible usages of the `refine` tactic and leaves the tactic state unchanged.
+/-- `suggest` lists possible usages of the `refine` tactic and leaves the tactic state unchanged.
 It is intended as a complement of the search function in your editor, the `#find` tactic, and
 `library_search`.
 
@@ -379,8 +365,7 @@ add_tactic_doc
 initialize
   registerTraceClass.1 `silence_library_search
 
-/-- 
-`library_search` is a tactic to identify existing lemmas in the library. It tries to close the
+/-- `library_search` is a tactic to identify existing lemmas in the library. It tries to close the
 current goal by applying a lemma from the library, then discharging any new goals using
 `solve_by_elim`.
 
@@ -431,7 +416,7 @@ add_tactic_doc
 
 end Interactive
 
-/--  Invoking the hole command `library_search` ("Use `library_search` to complete the goal") calls
+/-- Invoking the hole command `library_search` ("Use `library_search` to complete the goal") calls
 the tactic `library_search` to produce a proof term with the type of the hole.
 
 Running it on
@@ -449,11 +434,12 @@ nat.one_pos
 ```
 -/
 @[hole_command]
-unsafe def library_search_hole_cmd : hole_command :=
-  { Name := "library_search", descr := "Use `library_search` to complete the goal.",
-    action := fun _ => do
-      let script ← library_search
-      return [((script.get_rest "Try this: exact ").getOrElse script, "by library_search")] }
+unsafe def library_search_hole_cmd : hole_command where
+  Name := "library_search"
+  descr := "Use `library_search` to complete the goal."
+  action := fun _ => do
+    let script ← library_search
+    return [((script.get_rest "Try this: exact ").getOrElse script, "by library_search")]
 
 add_tactic_doc
   { Name := "library_search", category := DocCategory.hole_cmd, declNames := [`tactic.library_search_hole_cmd],

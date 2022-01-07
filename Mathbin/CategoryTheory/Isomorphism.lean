@@ -33,8 +33,7 @@ namespace CategoryTheory
 
 open Category
 
-/-- 
-An isomorphism (a.k.a. an invertible morphism) between two objects of a category.
+/-- An isomorphism (a.k.a. an invertible morphism) between two objects of a category.
 The inverse morphism is bundled.
 
 See also `category_theory.core` for the category with the same objects and isomorphisms playing
@@ -70,18 +69,22 @@ namespace Iso
 theorem ext ⦃α β : X ≅ Y⦄ (w : α.hom = β.hom) : α = β :=
   suffices α.inv = β.inv by
     cases α <;> cases β <;> cc
-  calc α.inv = α.inv ≫ β.hom ≫ β.inv := by
-    rw [iso.hom_inv_id, category.comp_id]
+  calc
+    α.inv = α.inv ≫ β.hom ≫ β.inv := by
+      rw [iso.hom_inv_id, category.comp_id]
     _ = (α.inv ≫ α.hom) ≫ β.inv := by
-    rw [category.assoc, ← w]
+      rw [category.assoc, ← w]
     _ = β.inv := by
-    rw [iso.inv_hom_id, category.id_comp]
+      rw [iso.inv_hom_id, category.id_comp]
     
 
-/--  Inverse isomorphism. -/
+/-- Inverse isomorphism. -/
 @[symm]
-def symm (I : X ≅ Y) : Y ≅ X :=
-  { Hom := I.inv, inv := I.hom, hom_inv_id' := I.inv_hom_id', inv_hom_id' := I.hom_inv_id' }
+def symm (I : X ≅ Y) : Y ≅ X where
+  Hom := I.inv
+  inv := I.hom
+  hom_inv_id' := I.inv_hom_id'
+  inv_hom_id' := I.hom_inv_id'
 
 @[simp]
 theorem symm_hom (α : X ≅ Y) : α.symm.hom = α.inv :=
@@ -105,10 +108,11 @@ theorem symm_symm_eq {X Y : C} (α : X ≅ Y) : α.symm.symm = α := by
 theorem symm_eq_iff {X Y : C} {α β : X ≅ Y} : α.symm = β.symm ↔ α = β :=
   ⟨fun h => symm_symm_eq α ▸ symm_symm_eq β ▸ congr_argₓ symm h, congr_argₓ symm⟩
 
-/--  Identity isomorphism. -/
+/-- Identity isomorphism. -/
 @[refl, simps]
-def refl (X : C) : X ≅ X :=
-  { Hom := 𝟙 X, inv := 𝟙 X }
+def refl (X : C) : X ≅ X where
+  Hom := 𝟙 X
+  inv := 𝟙 X
 
 instance : Inhabited (X ≅ X) :=
   ⟨iso.refl X⟩
@@ -117,10 +121,11 @@ instance : Inhabited (X ≅ X) :=
 theorem refl_symm (X : C) : (iso.refl X).symm = iso.refl X :=
   rfl
 
-/--  Composition of two isomorphisms -/
+/-- Composition of two isomorphisms -/
 @[trans, simps]
-def trans (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z :=
-  { Hom := α.hom ≫ β.hom, inv := β.inv ≫ α.inv }
+def trans (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z where
+  Hom := α.hom ≫ β.hom
+  inv := β.inv ≫ α.inv
 
 infixr:80 " ≪≫ " => iso.trans
 
@@ -197,12 +202,11 @@ theorem hom_eq_inv (α : X ≅ Y) (β : Y ≅ X) : α.hom = β.inv ↔ β.hom = 
 
 end Iso
 
-/--  `is_iso` typeclass expressing that a morphism is invertible. -/
+/-- `is_iso` typeclass expressing that a morphism is invertible. -/
 class is_iso (f : X ⟶ Y) : Prop where
   out : ∃ inv : Y ⟶ X, f ≫ inv = 𝟙 X ∧ inv ≫ f = 𝟙 Y
 
-/-- 
-The inverse of a morphism `f` when we have `[is_iso f]`.
+/-- The inverse of a morphism `f` when we have `[is_iso f]`.
 -/
 noncomputable def inv (f : X ⟶ Y) [I : is_iso f] :=
   Classical.some I.1
@@ -221,7 +225,7 @@ end IsIso
 
 open IsIso
 
-/--  Reinterpret a morphism `f` with an `is_iso f` instance as an `iso`. -/
+/-- Reinterpret a morphism `f` with an `is_iso f` instance as an `iso`. -/
 noncomputable def as_iso (f : X ⟶ Y) [h : is_iso f] : X ≅ Y :=
   ⟨f, inv f, hom_inv_id f, inv_hom_id f⟩
 
@@ -235,37 +239,13 @@ theorem as_iso_inv (f : X ⟶ Y) [is_iso f] : (as_iso f).inv = inv f :=
 
 namespace IsIso
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ( priority := 100 )
-  epi_of_iso
-  ( f : X ⟶ Y ) [ is_iso f ] : epi f
-  where left_cancellation Z g h w := by rw [ ← is_iso.inv_hom_id_assoc f g , w , is_iso.inv_hom_id_assoc f h ]
+instance (priority := 100) epi_of_iso (f : X ⟶ Y) [is_iso f] : epi f where
+  left_cancellation := fun Z g h w => by
+    rw [← is_iso.inv_hom_id_assoc f g, w, is_iso.inv_hom_id_assoc f h]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ( priority := 100 )
-  mono_of_iso
-  ( f : X ⟶ Y ) [ is_iso f ] : mono f
-  where
-    right_cancellation
-      Z g h w
-      :=
-      by
-        rw
-          [
-            ← category.comp_id g
-              ,
-              ← category.comp_id h
-              ,
-              ← is_iso.hom_inv_id f
-              ,
-              ← category.assoc
-              ,
-              w
-              ,
-              ← category.assoc
-            ]
+instance (priority := 100) mono_of_iso (f : X ⟶ Y) [is_iso f] : mono f where
+  right_cancellation := fun Z g h w => by
+    rw [← category.comp_id g, ← category.comp_id h, ← is_iso.hom_inv_id f, ← category.assoc, w, ← category.assoc]
 
 @[ext]
 theorem inv_eq_of_hom_inv_id {f : X ⟶ Y} [is_iso f] {g : Y ⟶ X} (hom_inv_id : f ≫ g = 𝟙 X) : inv f = g := by
@@ -423,14 +403,15 @@ variable {D : Type u₂}
 
 variable [category.{v₂} D]
 
-/--  A functor `F : C ⥤ D` sends isomorphisms `i : X ≅ Y` to isomorphisms `F.obj X ≅ F.obj Y` -/
+/-- A functor `F : C ⥤ D` sends isomorphisms `i : X ≅ Y` to isomorphisms `F.obj X ≅ F.obj Y` -/
 @[simps]
-def map_iso (F : C ⥤ D) {X Y : C} (i : X ≅ Y) : F.obj X ≅ F.obj Y :=
-  { Hom := F.map i.hom, inv := F.map i.inv,
-    hom_inv_id' := by
-      rw [← map_comp, iso.hom_inv_id, ← map_id],
-    inv_hom_id' := by
-      rw [← map_comp, iso.inv_hom_id, ← map_id] }
+def map_iso (F : C ⥤ D) {X Y : C} (i : X ≅ Y) : F.obj X ≅ F.obj Y where
+  Hom := F.map i.hom
+  inv := F.map i.inv
+  hom_inv_id' := by
+    rw [← map_comp, iso.hom_inv_id, ← map_id]
+  inv_hom_id' := by
+    rw [← map_comp, iso.inv_hom_id, ← map_id]
 
 @[simp]
 theorem map_iso_symm (F : C ⥤ D) {X Y : C} (i : X ≅ Y) : F.map_iso i.symm = (F.map_iso i).symm :=

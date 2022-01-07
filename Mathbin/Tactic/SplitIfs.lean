@@ -79,7 +79,7 @@ namespace Interactive
 
 open Interactive Interactive.Types Expr Lean.Parser
 
-/--  Splits all if-then-else-expressions into multiple goals.
+/-- Splits all if-then-else-expressions into multiple goals.
 
 Given a goal of the form `g (if p then x else y)`, `split_ifs` will produce
 two goals: `p ⊢ g x` and `¬p ⊢ g y`.

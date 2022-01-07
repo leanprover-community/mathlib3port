@@ -12,16 +12,16 @@ and proves several theorems about it.
 
 namespace Rat
 
-/--  Square root function on rational numbers, defined by taking the (integer) square root of the
+/-- Square root function on rational numbers, defined by taking the (integer) square root of the
 numerator and the square root (on natural numbers) of the denominator. -/
 @[pp_nodot]
 def sqrt (q : ℚ) : ℚ :=
   Rat.mk (Int.sqrt q.num) (Nat.sqrt q.denom)
 
-theorem sqrt_eq (q : ℚ) : Rat.sqrt (q*q) = |q| := by
+theorem sqrt_eq (q : ℚ) : Rat.sqrt (q * q) = |q| := by
   rw [sqrt, mul_self_num, mul_self_denom, Int.sqrt_eq, Nat.sqrt_eq, abs_def]
 
-theorem exists_mul_self (x : ℚ) : (∃ q, (q*q) = x) ↔ (Rat.sqrt x*Rat.sqrt x) = x :=
+theorem exists_mul_self (x : ℚ) : (∃ q, q * q = x) ↔ Rat.sqrt x * Rat.sqrt x = x :=
   ⟨fun ⟨n, hn⟩ => by
     rw [← hn, sqrt_eq, abs_mul_abs_self], fun h => ⟨Rat.sqrt x, h⟩⟩
 

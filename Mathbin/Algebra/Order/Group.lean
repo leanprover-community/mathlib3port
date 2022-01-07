@@ -22,80 +22,64 @@ universe u
 variable {α : Type u}
 
 @[to_additive]
-instance Groupₓ.CovariantClassLe.to_contravariant_class_le [Groupₓ α] [LE α] [CovariantClass α α (·*·) (· ≤ ·)] :
-    ContravariantClass α α (·*·) (· ≤ ·) :=
+instance Groupₓ.CovariantClassLe.to_contravariant_class_le [Groupₓ α] [LE α] [CovariantClass α α (· * ·) (· ≤ ·)] :
+    ContravariantClass α α (· * ·) (· ≤ ·) :=
   Groupₓ.covconv
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    Groupₓ.Swap.CovariantClassLe.to_contravariant_class_le
-    [ Groupₓ α ] [ LE α ] [ CovariantClass α α ( swap ( · * · ) ) ( · ≤ · ) ]
-      : ContravariantClass α α ( swap ( · * · ) ) ( · ≤ · )
-    where
-      elim
-        a b c bc
-        :=
-        calc
-          b = ( b * a ) * a ⁻¹ := eq_mul_inv_of_mul_eq rfl
-            _ ≤ ( c * a ) * a ⁻¹ := mul_le_mul_right' bc ( a ⁻¹ )
-            _ = c := mul_inv_eq_of_eq_mul rfl
+@[to_additive]
+instance Groupₓ.Swap.CovariantClassLe.to_contravariant_class_le [Groupₓ α] [LE α]
+    [CovariantClass α α (swap (· * ·)) (· ≤ ·)] : ContravariantClass α α (swap (· * ·)) (· ≤ ·) where
+  elim := fun a b c bc =>
+    calc
+      b = b * a * a⁻¹ := eq_mul_inv_of_mul_eq rfl
+      _ ≤ c * a * a⁻¹ := mul_le_mul_right' bc (a⁻¹)
+      _ = c := mul_inv_eq_of_eq_mul rfl
+      
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    Groupₓ.CovariantClassLt.to_contravariant_class_lt
-    [ Groupₓ α ] [ LT α ] [ CovariantClass α α ( · * · ) ( · < · ) ] : ContravariantClass α α ( · * · ) ( · < · )
-    where
-      elim
-        a b c bc
-        :=
-        calc
-          b = a ⁻¹ * a * b := eq_inv_mul_of_mul_eq rfl
-            _ < a ⁻¹ * a * c := mul_lt_mul_left' bc ( a ⁻¹ )
-            _ = c := inv_mul_cancel_leftₓ a c
+@[to_additive]
+instance Groupₓ.CovariantClassLt.to_contravariant_class_lt [Groupₓ α] [LT α] [CovariantClass α α (· * ·) (· < ·)] :
+    ContravariantClass α α (· * ·) (· < ·) where
+  elim := fun a b c bc =>
+    calc
+      b = a⁻¹ * (a * b) := eq_inv_mul_of_mul_eq rfl
+      _ < a⁻¹ * (a * c) := mul_lt_mul_left' bc (a⁻¹)
+      _ = c := inv_mul_cancel_leftₓ a c
+      
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    Groupₓ.Swap.CovariantClassLt.to_contravariant_class_lt
-    [ Groupₓ α ] [ LT α ] [ CovariantClass α α ( swap ( · * · ) ) ( · < · ) ]
-      : ContravariantClass α α ( swap ( · * · ) ) ( · < · )
-    where
-      elim
-        a b c bc
-        :=
-        calc
-          b = ( b * a ) * a ⁻¹ := eq_mul_inv_of_mul_eq rfl
-            _ < ( c * a ) * a ⁻¹ := mul_lt_mul_right' bc ( a ⁻¹ )
-            _ = c := mul_inv_eq_of_eq_mul rfl
+@[to_additive]
+instance Groupₓ.Swap.CovariantClassLt.to_contravariant_class_lt [Groupₓ α] [LT α]
+    [CovariantClass α α (swap (· * ·)) (· < ·)] : ContravariantClass α α (swap (· * ·)) (· < ·) where
+  elim := fun a b c bc =>
+    calc
+      b = b * a * a⁻¹ := eq_mul_inv_of_mul_eq rfl
+      _ < c * a * a⁻¹ := mul_lt_mul_right' bc (a⁻¹)
+      _ = c := mul_inv_eq_of_eq_mul rfl
+      
 
-/--  An ordered additive commutative group is an additive commutative group
+/-- An ordered additive commutative group is an additive commutative group
 with a partial order in which addition is strictly monotone. -/
 @[protect_proj, ancestor AddCommGroupₓ PartialOrderₓ]
 class OrderedAddCommGroup (α : Type u) extends AddCommGroupₓ α, PartialOrderₓ α where
-  add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, (c+a) ≤ c+b
+  add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, c + a ≤ c + b
 
-/--  An ordered commutative group is an commutative group
+/-- An ordered commutative group is an commutative group
 with a partial order in which multiplication is strictly monotone. -/
 @[protect_proj, ancestor CommGroupₓ PartialOrderₓ]
 class OrderedCommGroup (α : Type u) extends CommGroupₓ α, PartialOrderₓ α where
-  mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, (c*a) ≤ c*b
+  mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, c * a ≤ c * b
 
 attribute [to_additive] OrderedCommGroup
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    OrderedCommGroup.to_covariant_class_left_le
-    ( α : Type u ) [ OrderedCommGroup α ] : CovariantClass α α ( · * · ) ( · ≤ · )
-    where elim a b c bc := OrderedCommGroup.mul_le_mul_left b c bc a
+@[to_additive]
+instance OrderedCommGroup.to_covariant_class_left_le (α : Type u) [OrderedCommGroup α] :
+    CovariantClass α α (· * ·) (· ≤ ·) where
+  elim := fun a b c bc => OrderedCommGroup.mul_le_mul_left b c bc a
 
 /-- The units of an ordered commutative monoid form an ordered commutative group. -/
 @[to_additive]
-instance Units.orderedCommGroup [OrderedCommMonoid α] : OrderedCommGroup (Units α) :=
+instance Units.orderedCommGroup [OrderedCommMonoid α] : OrderedCommGroup (α)ˣ :=
   { Units.partialOrder, Units.commGroup with
-    mul_le_mul_left := fun a b h c => (mul_le_mul_left' (h : (a : α) ≤ b) _ : ((c : α)*a) ≤ c*b) }
+    mul_le_mul_left := fun a b h c => (mul_le_mul_left' (h : (a : α) ≤ b) _ : (c : α) * a ≤ c * b) }
 
 @[to_additive]
 instance (priority := 100) OrderedCommGroup.toOrderedCancelCommMonoid (α : Type u) [s : OrderedCommGroup α] :
@@ -106,7 +90,7 @@ instance (priority := 100) OrderedCommGroup.toOrderedCancelCommMonoid (α : Type
 @[to_additive]
 instance (priority := 100) OrderedCommGroup.has_exists_mul_of_le (α : Type u) [OrderedCommGroup α] :
     HasExistsMulOfLe α :=
-  ⟨fun a b hab => ⟨b*a⁻¹, (mul_inv_cancel_comm_assoc a b).symm⟩⟩
+  ⟨fun a b hab => ⟨b * a⁻¹, (mul_inv_cancel_comm_assoc a b).symm⟩⟩
 
 @[to_additive]
 instance [h : HasInv α] : HasInv (OrderDual α) :=
@@ -138,45 +122,45 @@ variable [Groupₓ α]
 
 section TypeclassesLeftLe
 
-variable [LE α] [CovariantClass α α (·*·) (· ≤ ·)] {a b c d : α}
+variable [LE α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b c d : α}
 
-/--   Uses `left` co(ntra)variant. -/
+/-- Uses `left` co(ntra)variant. -/
 @[simp, to_additive Left.neg_nonpos_iff]
 theorem Left.inv_le_one_iff : a⁻¹ ≤ 1 ↔ 1 ≤ a := by
   rw [← mul_le_mul_iff_left a]
   simp
 
-/--   Uses `left` co(ntra)variant. -/
+/-- Uses `left` co(ntra)variant. -/
 @[simp, to_additive Left.nonneg_neg_iff]
 theorem Left.one_le_inv_iff : 1 ≤ a⁻¹ ↔ a ≤ 1 := by
   rw [← mul_le_mul_iff_left a]
   simp
 
 @[simp, to_additive]
-theorem le_inv_mul_iff_mul_le : (b ≤ a⁻¹*c) ↔ (a*b) ≤ c := by
+theorem le_inv_mul_iff_mul_le : b ≤ a⁻¹ * c ↔ a * b ≤ c := by
   rw [← mul_le_mul_iff_left a]
   simp
 
 @[simp, to_additive]
-theorem inv_mul_le_iff_le_mul : (b⁻¹*a) ≤ c ↔ a ≤ b*c := by
+theorem inv_mul_le_iff_le_mul : b⁻¹ * a ≤ c ↔ a ≤ b * c := by
   rw [← mul_le_mul_iff_left b, mul_inv_cancel_left]
 
 @[to_additive neg_le_iff_add_nonneg']
-theorem inv_le_iff_one_le_mul' : a⁻¹ ≤ b ↔ 1 ≤ a*b :=
+theorem inv_le_iff_one_le_mul' : a⁻¹ ≤ b ↔ 1 ≤ a * b :=
   (mul_le_mul_iff_left a).symm.trans $ by
     rw [mul_inv_selfₓ]
 
 @[to_additive]
-theorem le_inv_iff_mul_le_one_left : a ≤ b⁻¹ ↔ (b*a) ≤ 1 :=
+theorem le_inv_iff_mul_le_one_left : a ≤ b⁻¹ ↔ b * a ≤ 1 :=
   (mul_le_mul_iff_left b).symm.trans $ by
     rw [mul_inv_selfₓ]
 
 @[to_additive]
-theorem le_inv_mul_iff_le : (1 ≤ b⁻¹*a) ↔ b ≤ a := by
+theorem le_inv_mul_iff_le : 1 ≤ b⁻¹ * a ↔ b ≤ a := by
   rw [← mul_le_mul_iff_left b, mul_oneₓ, mul_inv_cancel_left]
 
 @[to_additive]
-theorem inv_mul_le_one_iff : (a⁻¹*b) ≤ 1 ↔ b ≤ a :=
+theorem inv_mul_le_one_iff : a⁻¹ * b ≤ 1 ↔ b ≤ a :=
   trans inv_mul_le_iff_le_mul $ by
     rw [mul_oneₓ]
 
@@ -184,43 +168,43 @@ end TypeclassesLeftLe
 
 section TypeclassesLeftLt
 
-variable [LT α] [CovariantClass α α (·*·) (· < ·)] {a b c : α}
+variable [LT α] [CovariantClass α α (· * ·) (· < ·)] {a b c : α}
 
-/--   Uses `left` co(ntra)variant. -/
+/-- Uses `left` co(ntra)variant. -/
 @[simp, to_additive Left.neg_pos_iff]
 theorem Left.one_lt_inv_iff : 1 < a⁻¹ ↔ a < 1 := by
   rw [← mul_lt_mul_iff_left a, mul_inv_selfₓ, mul_oneₓ]
 
-/--   Uses `left` co(ntra)variant. -/
+/-- Uses `left` co(ntra)variant. -/
 @[simp, to_additive Left.neg_neg_iff]
 theorem Left.inv_lt_one_iff : a⁻¹ < 1 ↔ 1 < a := by
   rw [← mul_lt_mul_iff_left a, mul_inv_selfₓ, mul_oneₓ]
 
 @[simp, to_additive]
-theorem lt_inv_mul_iff_mul_lt : (b < a⁻¹*c) ↔ (a*b) < c := by
+theorem lt_inv_mul_iff_mul_lt : b < a⁻¹ * c ↔ a * b < c := by
   rw [← mul_lt_mul_iff_left a]
   simp
 
 @[simp, to_additive]
-theorem inv_mul_lt_iff_lt_mul : (b⁻¹*a) < c ↔ a < b*c := by
+theorem inv_mul_lt_iff_lt_mul : b⁻¹ * a < c ↔ a < b * c := by
   rw [← mul_lt_mul_iff_left b, mul_inv_cancel_left]
 
 @[to_additive]
-theorem inv_lt_iff_one_lt_mul' : a⁻¹ < b ↔ 1 < a*b :=
+theorem inv_lt_iff_one_lt_mul' : a⁻¹ < b ↔ 1 < a * b :=
   (mul_lt_mul_iff_left a).symm.trans $ by
     rw [mul_inv_selfₓ]
 
 @[to_additive]
-theorem lt_inv_iff_mul_lt_one' : a < b⁻¹ ↔ (b*a) < 1 :=
+theorem lt_inv_iff_mul_lt_one' : a < b⁻¹ ↔ b * a < 1 :=
   (mul_lt_mul_iff_left b).symm.trans $ by
     rw [mul_inv_selfₓ]
 
 @[to_additive]
-theorem lt_inv_mul_iff_lt : (1 < b⁻¹*a) ↔ b < a := by
+theorem lt_inv_mul_iff_lt : 1 < b⁻¹ * a ↔ b < a := by
   rw [← mul_lt_mul_iff_left b, mul_oneₓ, mul_inv_cancel_left]
 
 @[to_additive]
-theorem inv_mul_lt_one_iff : (a⁻¹*b) < 1 ↔ b < a :=
+theorem inv_mul_lt_one_iff : a⁻¹ * b < 1 ↔ b < a :=
   trans inv_mul_lt_iff_lt_mul $ by
     rw [mul_oneₓ]
 
@@ -228,51 +212,51 @@ end TypeclassesLeftLt
 
 section TypeclassesRightLe
 
-variable [LE α] [CovariantClass α α (swap (·*·)) (· ≤ ·)] {a b c : α}
+variable [LE α] [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c : α}
 
-/--   Uses `right` co(ntra)variant. -/
+/-- Uses `right` co(ntra)variant. -/
 @[simp, to_additive Right.neg_nonpos_iff]
 theorem Right.inv_le_one_iff : a⁻¹ ≤ 1 ↔ 1 ≤ a := by
   rw [← mul_le_mul_iff_right a]
   simp
 
-/--   Uses `right` co(ntra)variant. -/
+/-- Uses `right` co(ntra)variant. -/
 @[simp, to_additive Right.nonneg_neg_iff]
 theorem Right.one_le_inv_iff : 1 ≤ a⁻¹ ↔ a ≤ 1 := by
   rw [← mul_le_mul_iff_right a]
   simp
 
 @[to_additive neg_le_iff_add_nonneg]
-theorem inv_le_iff_one_le_mul : a⁻¹ ≤ b ↔ 1 ≤ b*a :=
+theorem inv_le_iff_one_le_mul : a⁻¹ ≤ b ↔ 1 ≤ b * a :=
   (mul_le_mul_iff_right a).symm.trans $ by
     rw [inv_mul_selfₓ]
 
 @[to_additive]
-theorem le_inv_iff_mul_le_one_right : a ≤ b⁻¹ ↔ (a*b) ≤ 1 :=
+theorem le_inv_iff_mul_le_one_right : a ≤ b⁻¹ ↔ a * b ≤ 1 :=
   (mul_le_mul_iff_right b).symm.trans $ by
     rw [inv_mul_selfₓ]
 
 @[simp, to_additive]
-theorem mul_inv_le_iff_le_mul : (a*b⁻¹) ≤ c ↔ a ≤ c*b :=
+theorem mul_inv_le_iff_le_mul : a * b⁻¹ ≤ c ↔ a ≤ c * b :=
   (mul_le_mul_iff_right b).symm.trans $ by
     rw [inv_mul_cancel_right]
 
 @[simp, to_additive]
-theorem le_mul_inv_iff_mul_le : (c ≤ a*b⁻¹) ↔ (c*b) ≤ a :=
+theorem le_mul_inv_iff_mul_le : c ≤ a * b⁻¹ ↔ c * b ≤ a :=
   (mul_le_mul_iff_right b).symm.trans $ by
     rw [inv_mul_cancel_right]
 
 @[simp, to_additive]
-theorem mul_inv_le_one_iff_le : (a*b⁻¹) ≤ 1 ↔ a ≤ b :=
+theorem mul_inv_le_one_iff_le : a * b⁻¹ ≤ 1 ↔ a ≤ b :=
   mul_inv_le_iff_le_mul.trans $ by
     rw [one_mulₓ]
 
 @[to_additive]
-theorem le_mul_inv_iff_le : (1 ≤ a*b⁻¹) ↔ b ≤ a := by
+theorem le_mul_inv_iff_le : 1 ≤ a * b⁻¹ ↔ b ≤ a := by
   rw [← mul_le_mul_iff_right b, one_mulₓ, inv_mul_cancel_right]
 
 @[to_additive]
-theorem mul_inv_le_one_iff : (b*a⁻¹) ≤ 1 ↔ b ≤ a :=
+theorem mul_inv_le_one_iff : b * a⁻¹ ≤ 1 ↔ b ≤ a :=
   trans mul_inv_le_iff_le_mul $ by
     rw [one_mulₓ]
 
@@ -280,47 +264,47 @@ end TypeclassesRightLe
 
 section TypeclassesRightLt
 
-variable [LT α] [CovariantClass α α (swap (·*·)) (· < ·)] {a b c : α}
+variable [LT α] [CovariantClass α α (swap (· * ·)) (· < ·)] {a b c : α}
 
-/--   Uses `right` co(ntra)variant. -/
+/-- Uses `right` co(ntra)variant. -/
 @[simp, to_additive Right.neg_neg_iff]
 theorem Right.inv_lt_one_iff : a⁻¹ < 1 ↔ 1 < a := by
   rw [← mul_lt_mul_iff_right a, inv_mul_selfₓ, one_mulₓ]
 
-/--   Uses `right` co(ntra)variant. -/
+/-- Uses `right` co(ntra)variant. -/
 @[simp, to_additive Right.neg_pos_iff]
 theorem Right.one_lt_inv_iff : 1 < a⁻¹ ↔ a < 1 := by
   rw [← mul_lt_mul_iff_right a, inv_mul_selfₓ, one_mulₓ]
 
 @[to_additive]
-theorem inv_lt_iff_one_lt_mul : a⁻¹ < b ↔ 1 < b*a :=
+theorem inv_lt_iff_one_lt_mul : a⁻¹ < b ↔ 1 < b * a :=
   (mul_lt_mul_iff_right a).symm.trans $ by
     rw [inv_mul_selfₓ]
 
 @[to_additive]
-theorem lt_inv_iff_mul_lt_one : a < b⁻¹ ↔ (a*b) < 1 :=
+theorem lt_inv_iff_mul_lt_one : a < b⁻¹ ↔ a * b < 1 :=
   (mul_lt_mul_iff_right b).symm.trans $ by
     rw [inv_mul_selfₓ]
 
 @[simp, to_additive]
-theorem mul_inv_lt_iff_lt_mul : (a*b⁻¹) < c ↔ a < c*b := by
+theorem mul_inv_lt_iff_lt_mul : a * b⁻¹ < c ↔ a < c * b := by
   rw [← mul_lt_mul_iff_right b, inv_mul_cancel_right]
 
 @[simp, to_additive]
-theorem lt_mul_inv_iff_mul_lt : (c < a*b⁻¹) ↔ (c*b) < a :=
+theorem lt_mul_inv_iff_mul_lt : c < a * b⁻¹ ↔ c * b < a :=
   (mul_lt_mul_iff_right b).symm.trans $ by
     rw [inv_mul_cancel_right]
 
 @[simp, to_additive]
-theorem inv_mul_lt_one_iff_lt : (a*b⁻¹) < 1 ↔ a < b := by
+theorem inv_mul_lt_one_iff_lt : a * b⁻¹ < 1 ↔ a < b := by
   rw [← mul_lt_mul_iff_right b, inv_mul_cancel_right, one_mulₓ]
 
 @[to_additive]
-theorem lt_mul_inv_iff_lt : (1 < a*b⁻¹) ↔ b < a := by
+theorem lt_mul_inv_iff_lt : 1 < a * b⁻¹ ↔ b < a := by
   rw [← mul_lt_mul_iff_right b, one_mulₓ, inv_mul_cancel_right]
 
 @[to_additive]
-theorem mul_inv_lt_one_iff : (b*a⁻¹) < 1 ↔ b < a :=
+theorem mul_inv_lt_one_iff : b * a⁻¹ < 1 ↔ b < a :=
   trans mul_inv_lt_iff_lt_mul $ by
     rw [one_mulₓ]
 
@@ -328,7 +312,7 @@ end TypeclassesRightLt
 
 section TypeclassesLeftRightLe
 
-variable [LE α] [CovariantClass α α (·*·) (· ≤ ·)] [CovariantClass α α (swap (·*·)) (· ≤ ·)] {a b c d : α}
+variable [LE α] [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c d : α}
 
 @[simp, to_additive]
 theorem inv_le_inv_iff : a⁻¹ ≤ b⁻¹ ↔ b ≤ a := by
@@ -341,10 +325,11 @@ section
 
 variable (α)
 
-/--  `x ↦ x⁻¹` as an order-reversing equivalence. -/
+/-- `x ↦ x⁻¹` as an order-reversing equivalence. -/
 @[to_additive "`x ↦ -x` as an order-reversing equivalence.", simps]
-def OrderIso.inv : α ≃o OrderDual α :=
-  { toEquiv := (Equivₓ.inv α).trans OrderDual.toDual, map_rel_iff' := fun a b => @inv_le_inv_iff α _ _ _ _ _ _ }
+def OrderIso.inv : α ≃o OrderDual α where
+  toEquiv := (Equivₓ.inv α).trans OrderDual.toDual
+  map_rel_iff' := fun a b => @inv_le_inv_iff α _ _ _ _ _ _
 
 end
 
@@ -361,7 +346,7 @@ theorem le_inv' : a ≤ b⁻¹ ↔ b ≤ a⁻¹ :=
   (OrderIso.inv α).le_symm_apply
 
 @[to_additive]
-theorem mul_inv_le_inv_mul_iff : ((a*b⁻¹) ≤ d⁻¹*c) ↔ (d*a) ≤ c*b := by
+theorem mul_inv_le_inv_mul_iff : a * b⁻¹ ≤ d⁻¹ * c ↔ d * a ≤ c * b := by
   rw [← mul_le_mul_iff_left d, ← mul_le_mul_iff_right b, mul_inv_cancel_left, mul_assocₓ, inv_mul_cancel_right]
 
 @[simp, to_additive]
@@ -378,7 +363,7 @@ end TypeclassesLeftRightLe
 
 section TypeclassesLeftRightLt
 
-variable [LT α] [CovariantClass α α (·*·) (· < ·)] [CovariantClass α α (swap (·*·)) (· < ·)] {a b c d : α}
+variable [LT α] [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· < ·)] {a b c d : α}
 
 @[simp, to_additive]
 theorem inv_lt_inv_iff : a⁻¹ < b⁻¹ ↔ b < a := by
@@ -402,7 +387,7 @@ alias inv_lt' ↔ inv_lt_of_inv_lt' _
 attribute [to_additive neg_lt_of_neg_lt] inv_lt_of_inv_lt'
 
 @[to_additive]
-theorem mul_inv_lt_inv_mul_iff : ((a*b⁻¹) < d⁻¹*c) ↔ (d*a) < c*b := by
+theorem mul_inv_lt_inv_mul_iff : a * b⁻¹ < d⁻¹ * c ↔ d * a < c * b := by
   rw [← mul_lt_mul_iff_left d, ← mul_lt_mul_iff_right b, mul_inv_cancel_left, mul_assocₓ, inv_mul_cancel_right]
 
 @[simp, to_additive]
@@ -419,7 +404,7 @@ variable [Preorderₓ α]
 
 section LeftLe
 
-variable [CovariantClass α α (·*·) (· ≤ ·)] {a : α}
+variable [CovariantClass α α (· * ·) (· ≤ ·)] {a : α}
 
 @[to_additive]
 theorem Left.inv_le_self (h : 1 ≤ a) : a⁻¹ ≤ a :=
@@ -435,7 +420,7 @@ end LeftLe
 
 section LeftLt
 
-variable [CovariantClass α α (·*·) (· < ·)] {a : α}
+variable [CovariantClass α α (· * ·) (· < ·)] {a : α}
 
 @[to_additive]
 theorem Left.inv_lt_self (h : 1 < a) : a⁻¹ < a :=
@@ -451,7 +436,7 @@ end LeftLt
 
 section RightLe
 
-variable [CovariantClass α α (swap (·*·)) (· ≤ ·)] {a : α}
+variable [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a : α}
 
 @[to_additive]
 theorem Right.inv_le_self (h : 1 ≤ a) : a⁻¹ ≤ a :=
@@ -465,7 +450,7 @@ end RightLe
 
 section RightLt
 
-variable [CovariantClass α α (swap (·*·)) (· < ·)] {a : α}
+variable [CovariantClass α α (swap (· * ·)) (· < ·)] {a : α}
 
 @[to_additive]
 theorem Right.inv_lt_self (h : 1 < a) : a⁻¹ < a :=
@@ -487,36 +472,36 @@ variable [CommGroupₓ α]
 
 section LE
 
-variable [LE α] [CovariantClass α α (·*·) (· ≤ ·)] {a b c d : α}
+variable [LE α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b c d : α}
 
 @[to_additive]
-theorem inv_mul_le_iff_le_mul' : (c⁻¹*a) ≤ b ↔ a ≤ b*c := by
+theorem inv_mul_le_iff_le_mul' : c⁻¹ * a ≤ b ↔ a ≤ b * c := by
   rw [inv_mul_le_iff_le_mul, mul_commₓ]
 
 @[simp, to_additive]
-theorem mul_inv_le_iff_le_mul' : (a*b⁻¹) ≤ c ↔ a ≤ b*c := by
+theorem mul_inv_le_iff_le_mul' : a * b⁻¹ ≤ c ↔ a ≤ b * c := by
   rw [← inv_mul_le_iff_le_mul, mul_commₓ]
 
 @[to_additive add_neg_le_add_neg_iff]
-theorem mul_inv_le_mul_inv_iff' : ((a*b⁻¹) ≤ c*d⁻¹) ↔ (a*d) ≤ c*b := by
+theorem mul_inv_le_mul_inv_iff' : a * b⁻¹ ≤ c * d⁻¹ ↔ a * d ≤ c * b := by
   rw [mul_commₓ c, mul_inv_le_inv_mul_iff, mul_commₓ]
 
 end LE
 
 section LT
 
-variable [LT α] [CovariantClass α α (·*·) (· < ·)] {a b c d : α}
+variable [LT α] [CovariantClass α α (· * ·) (· < ·)] {a b c d : α}
 
 @[to_additive]
-theorem inv_mul_lt_iff_lt_mul' : (c⁻¹*a) < b ↔ a < b*c := by
+theorem inv_mul_lt_iff_lt_mul' : c⁻¹ * a < b ↔ a < b * c := by
   rw [inv_mul_lt_iff_lt_mul, mul_commₓ]
 
 @[simp, to_additive]
-theorem mul_inv_lt_iff_le_mul' : (a*b⁻¹) < c ↔ a < b*c := by
+theorem mul_inv_lt_iff_le_mul' : a * b⁻¹ < c ↔ a < b * c := by
   rw [← inv_mul_lt_iff_lt_mul, mul_commₓ]
 
 @[to_additive add_neg_lt_add_neg_iff]
-theorem mul_inv_lt_mul_inv_iff' : ((a*b⁻¹) < c*d⁻¹) ↔ (a*d) < c*b := by
+theorem mul_inv_lt_mul_inv_iff' : a * b⁻¹ < c * d⁻¹ ↔ a * d < c * b := by
   rw [mul_commₓ c, mul_inv_lt_inv_mul_iff, mul_commₓ]
 
 end LT
@@ -613,12 +598,12 @@ alias lt_of_mul_lt_mul_left' ← OrderedCommGroup.lt_of_mul_lt_mul_left
 
 attribute [to_additive OrderedAddCommGroup.lt_of_add_lt_add_left] OrderedCommGroup.lt_of_mul_lt_mul_left
 
-/--  Pullback an `ordered_comm_group` under an injective map.
+/-- Pullback an `ordered_comm_group` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.orderedAddCommGroup "Pullback an `ordered_add_comm_group` under an injective map."]
 def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [HasOne β] [Mul β] [HasInv β] [Div β]
-    (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x*y) = f x*f y)
+    (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
     (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : OrderedCommGroup β :=
   { PartialOrderₓ.lift f hf, hf.ordered_comm_monoid f one mul, hf.comm_group f one mul inv div with }
 
@@ -628,7 +613,7 @@ variable [Groupₓ α] [LE α]
 
 section Right
 
-variable [CovariantClass α α (swap (·*·)) (· ≤ ·)] {a b c d : α}
+variable [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c d : α}
 
 @[simp, to_additive]
 theorem div_le_div_iff_right (c : α) : a / c ≤ b / c ↔ a ≤ b := by
@@ -651,24 +636,25 @@ theorem div_le_one' : a / b ≤ 1 ↔ a ≤ b := by
 alias sub_nonpos ↔ le_of_sub_nonpos sub_nonpos_of_le
 
 @[to_additive]
-theorem le_div_iff_mul_le : a ≤ c / b ↔ (a*b) ≤ c := by
+theorem le_div_iff_mul_le : a ≤ c / b ↔ a * b ≤ c := by
   rw [← mul_le_mul_iff_right b, div_eq_mul_inv, inv_mul_cancel_right]
 
 alias le_sub_iff_add_le ↔ add_le_of_le_sub_right le_sub_right_of_add_le
 
 @[to_additive]
-theorem div_le_iff_le_mul : a / c ≤ b ↔ a ≤ b*c := by
+theorem div_le_iff_le_mul : a / c ≤ b ↔ a ≤ b * c := by
   rw [← mul_le_mul_iff_right c, div_eq_mul_inv, inv_mul_cancel_right]
 
 instance (priority := 100) AddGroupₓ.toHasOrderedSub {α : Type _} [AddGroupₓ α] [LE α]
-    [CovariantClass α α (swap (·+·)) (· ≤ ·)] : HasOrderedSub α :=
+    [CovariantClass α α (swap (· + ·)) (· ≤ ·)] : HasOrderedSub α :=
   ⟨fun a b c => sub_le_iff_le_add⟩
 
-/--  `equiv.mul_right` as an `order_iso`. See also `order_embedding.mul_right`. -/
+/-- `equiv.mul_right` as an `order_iso`. See also `order_embedding.mul_right`. -/
 @[to_additive "`equiv.add_right` as an `order_iso`. See also `order_embedding.add_right`.",
   simps (config := { simpRhs := tt }) toEquiv apply]
-def OrderIso.mulRight (a : α) : α ≃o α :=
-  { map_rel_iff' := fun _ _ => mul_le_mul_iff_right a, toEquiv := Equivₓ.mulRight a }
+def OrderIso.mulRight (a : α) : α ≃o α where
+  map_rel_iff' := fun _ _ => mul_le_mul_iff_right a
+  toEquiv := Equivₓ.mulRight a
 
 @[simp, to_additive]
 theorem OrderIso.mul_right_symm (a : α) : (OrderIso.mulRight a).symm = OrderIso.mulRight (a⁻¹) := by
@@ -679,20 +665,21 @@ end Right
 
 section Left
 
-variable [CovariantClass α α (·*·) (· ≤ ·)]
+variable [CovariantClass α α (· * ·) (· ≤ ·)]
 
-/--  `equiv.mul_left` as an `order_iso`. See also `order_embedding.mul_left`. -/
+/-- `equiv.mul_left` as an `order_iso`. See also `order_embedding.mul_left`. -/
 @[to_additive "`equiv.add_left` as an `order_iso`. See also `order_embedding.add_left`.",
   simps (config := { simpRhs := tt }) toEquiv apply]
-def OrderIso.mulLeft (a : α) : α ≃o α :=
-  { map_rel_iff' := fun _ _ => mul_le_mul_iff_left a, toEquiv := Equivₓ.mulLeft a }
+def OrderIso.mulLeft (a : α) : α ≃o α where
+  map_rel_iff' := fun _ _ => mul_le_mul_iff_left a
+  toEquiv := Equivₓ.mulLeft a
 
 @[simp, to_additive]
 theorem OrderIso.mul_left_symm (a : α) : (OrderIso.mulLeft a).symm = OrderIso.mulLeft (a⁻¹) := by
   ext x
   rfl
 
-variable [CovariantClass α α (swap (·*·)) (· ≤ ·)] {a b c : α}
+variable [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c : α}
 
 @[simp, to_additive]
 theorem div_le_div_iff_left (a : α) : a / b ≤ a / c ↔ c ≤ b := by
@@ -713,30 +700,30 @@ variable [CommGroupₓ α]
 
 section LE
 
-variable [LE α] [CovariantClass α α (·*·) (· ≤ ·)] {a b c d : α}
+variable [LE α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b c d : α}
 
 @[to_additive sub_le_sub_iff]
-theorem div_le_div_iff' : a / b ≤ c / d ↔ (a*d) ≤ c*b := by
+theorem div_le_div_iff' : a / b ≤ c / d ↔ a * d ≤ c * b := by
   simpa only [div_eq_mul_inv] using mul_inv_le_mul_inv_iff'
 
 @[to_additive]
-theorem le_div_iff_mul_le' : b ≤ c / a ↔ (a*b) ≤ c := by
+theorem le_div_iff_mul_le' : b ≤ c / a ↔ a * b ≤ c := by
   rw [le_div_iff_mul_le, mul_commₓ]
 
 alias le_sub_iff_add_le' ↔ add_le_of_le_sub_left le_sub_left_of_add_le
 
 @[to_additive]
-theorem div_le_iff_le_mul' : a / b ≤ c ↔ a ≤ b*c := by
+theorem div_le_iff_le_mul' : a / b ≤ c ↔ a ≤ b * c := by
   rw [div_le_iff_le_mul, mul_commₓ]
 
 alias sub_le_iff_le_add' ↔ le_add_of_sub_left_le sub_left_le_of_le_add
 
 @[simp, to_additive]
-theorem inv_le_div_iff_le_mul : b⁻¹ ≤ a / c ↔ c ≤ a*b :=
+theorem inv_le_div_iff_le_mul : b⁻¹ ≤ a / c ↔ c ≤ a * b :=
   le_div_iff_mul_le.trans inv_mul_le_iff_le_mul'
 
 @[to_additive]
-theorem inv_le_div_iff_le_mul' : a⁻¹ ≤ b / c ↔ c ≤ a*b := by
+theorem inv_le_div_iff_le_mul' : a⁻¹ ≤ b / c ↔ c ≤ a * b := by
   rw [inv_le_div_iff_le_mul, mul_commₓ]
 
 @[to_additive sub_le]
@@ -751,7 +738,7 @@ end LE
 
 section Preorderₓ
 
-variable [Preorderₓ α] [CovariantClass α α (·*·) (· ≤ ·)] {a b c d : α}
+variable [Preorderₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b c d : α}
 
 @[to_additive sub_le_sub]
 theorem div_le_div'' (hab : a ≤ b) (hcd : c ≤ d) : a / d ≤ b / c := by
@@ -768,7 +755,7 @@ variable [Groupₓ α] [LT α]
 
 section Right
 
-variable [CovariantClass α α (swap (·*·)) (· < ·)] {a b c d : α}
+variable [CovariantClass α α (swap (· * ·)) (· < ·)] {a b c d : α}
 
 @[simp, to_additive]
 theorem div_lt_div_iff_right (c : α) : a / c < b / c ↔ a < b := by
@@ -793,13 +780,13 @@ alias sub_neg ↔ lt_of_sub_neg sub_neg_of_lt
 alias sub_neg ← sub_lt_zero
 
 @[to_additive]
-theorem lt_div_iff_mul_lt : a < c / b ↔ (a*b) < c := by
+theorem lt_div_iff_mul_lt : a < c / b ↔ a * b < c := by
   rw [← mul_lt_mul_iff_right b, div_eq_mul_inv, inv_mul_cancel_right]
 
 alias lt_sub_iff_add_lt ↔ add_lt_of_lt_sub_right lt_sub_right_of_add_lt
 
 @[to_additive]
-theorem div_lt_iff_lt_mul : a / c < b ↔ a < b*c := by
+theorem div_lt_iff_lt_mul : a / c < b ↔ a < b * c := by
   rw [← mul_lt_mul_iff_right c, div_eq_mul_inv, inv_mul_cancel_right]
 
 alias sub_lt_iff_lt_add ↔ lt_add_of_sub_right_lt sub_right_lt_of_lt_add
@@ -808,7 +795,7 @@ end Right
 
 section Left
 
-variable [CovariantClass α α (·*·) (· < ·)] [CovariantClass α α (swap (·*·)) (· < ·)] {a b c : α}
+variable [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· < ·)] {a b c : α}
 
 @[simp, to_additive]
 theorem div_lt_div_iff_left (a : α) : a / b < a / c ↔ c < b := by
@@ -816,7 +803,7 @@ theorem div_lt_div_iff_left (a : α) : a / b < a / c ↔ c < b := by
     inv_lt_inv_iff]
 
 @[simp, to_additive]
-theorem inv_lt_div_iff_lt_mul : a⁻¹ < b / c ↔ c < a*b := by
+theorem inv_lt_div_iff_lt_mul : a⁻¹ < b / c ↔ c < a * b := by
   rw [div_eq_mul_inv, lt_mul_inv_iff_mul_lt, inv_mul_lt_iff_lt_mul]
 
 @[to_additive sub_lt_sub_left]
@@ -833,26 +820,26 @@ variable [CommGroupₓ α]
 
 section LT
 
-variable [LT α] [CovariantClass α α (·*·) (· < ·)] {a b c d : α}
+variable [LT α] [CovariantClass α α (· * ·) (· < ·)] {a b c d : α}
 
 @[to_additive sub_lt_sub_iff]
-theorem div_lt_div_iff' : a / b < c / d ↔ (a*d) < c*b := by
+theorem div_lt_div_iff' : a / b < c / d ↔ a * d < c * b := by
   simpa only [div_eq_mul_inv] using mul_inv_lt_mul_inv_iff'
 
 @[to_additive]
-theorem lt_div_iff_mul_lt' : b < c / a ↔ (a*b) < c := by
+theorem lt_div_iff_mul_lt' : b < c / a ↔ a * b < c := by
   rw [lt_div_iff_mul_lt, mul_commₓ]
 
 alias lt_sub_iff_add_lt' ↔ add_lt_of_lt_sub_left lt_sub_left_of_add_lt
 
 @[to_additive]
-theorem div_lt_iff_lt_mul' : a / b < c ↔ a < b*c := by
+theorem div_lt_iff_lt_mul' : a / b < c ↔ a < b * c := by
   rw [div_lt_iff_lt_mul, mul_commₓ]
 
 alias sub_lt_iff_lt_add' ↔ lt_add_of_sub_left_lt sub_left_lt_of_lt_add
 
 @[to_additive]
-theorem inv_lt_div_iff_lt_mul' : b⁻¹ < a / c ↔ c < a*b :=
+theorem inv_lt_div_iff_lt_mul' : b⁻¹ < a / c ↔ c < a * b :=
   lt_div_iff_mul_lt.trans inv_mul_lt_iff_lt_mul'
 
 @[to_additive sub_lt]
@@ -867,7 +854,7 @@ end LT
 
 section Preorderₓ
 
-variable [Preorderₓ α] [CovariantClass α α (·*·) (· < ·)] {a b c d : α}
+variable [Preorderₓ α] [CovariantClass α α (· * ·) (· < ·)] {a b c d : α}
 
 @[to_additive sub_lt_sub]
 theorem div_lt_div'' (hab : a < b) (hcd : c < d) : a / d < b / c := by
@@ -880,30 +867,30 @@ end CommGroupₓ
 
 section LinearOrderₓ
 
-variable [Groupₓ α] [LinearOrderₓ α] [CovariantClass α α (·*·) (· ≤ ·)]
+variable [Groupₓ α] [LinearOrderₓ α] [CovariantClass α α (· * ·) (· ≤ ·)]
 
 section VariableNames
 
 variable {a b c : α}
 
 @[to_additive]
-theorem le_of_forall_one_lt_lt_mul (h : ∀ ε : α, 1 < ε → a < b*ε) : a ≤ b :=
+theorem le_of_forall_one_lt_lt_mul (h : ∀ ε : α, 1 < ε → a < b * ε) : a ≤ b :=
   le_of_not_ltₓ fun h₁ =>
     lt_irreflₓ a
       (by
         simpa using h _ (lt_inv_mul_iff_lt.mpr h₁))
 
 @[to_additive]
-theorem le_iff_forall_one_lt_lt_mul : a ≤ b ↔ ∀ ε, 1 < ε → a < b*ε :=
+theorem le_iff_forall_one_lt_lt_mul : a ≤ b ↔ ∀ ε, 1 < ε → a < b * ε :=
   ⟨fun h ε => lt_mul_of_le_of_one_lt h, le_of_forall_one_lt_lt_mul⟩
 
 @[to_additive]
-theorem div_le_inv_mul_iff [CovariantClass α α (swap (·*·)) (· ≤ ·)] : (a / b ≤ a⁻¹*b) ↔ a ≤ b := by
+theorem div_le_inv_mul_iff [CovariantClass α α (swap (· * ·)) (· ≤ ·)] : a / b ≤ a⁻¹ * b ↔ a ≤ b := by
   rw [div_eq_mul_inv, mul_inv_le_inv_mul_iff]
   exact ⟨fun h => not_lt.mp fun k => not_lt.mpr h (mul_lt_mul''' k k), fun h => mul_le_mul' h h⟩
 
 @[simp, to_additive]
-theorem div_le_div_flip {α : Type _} [CommGroupₓ α] [LinearOrderₓ α] [CovariantClass α α (·*·) (· ≤ ·)] {a b : α} :
+theorem div_le_div_flip {α : Type _} [CommGroupₓ α] [LinearOrderₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α} :
     a / b ≤ b / a ↔ a ≤ b := by
   rw [div_eq_mul_inv b, mul_commₓ]
   exact div_le_inv_mul_iff
@@ -921,14 +908,15 @@ section DenselyOrdered
 variable [DenselyOrdered α] {a b c : α}
 
 @[to_additive]
-theorem le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b*ε) : a ≤ b :=
+theorem le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b * ε) : a ≤ b :=
   le_of_forall_le_of_dense $ fun c hc =>
-    calc a ≤ b*b⁻¹*c := h _ (lt_inv_mul_iff_lt.mpr hc)
+    calc
+      a ≤ b * (b⁻¹ * c) := h _ (lt_inv_mul_iff_lt.mpr hc)
       _ = c := mul_inv_cancel_left b c
       
 
 @[to_additive]
-theorem le_of_forall_lt_one_mul_le (h : ∀, ∀ ε < 1, ∀, (a*ε) ≤ b) : a ≤ b :=
+theorem le_of_forall_lt_one_mul_le (h : ∀, ∀ ε < 1, ∀, a * ε ≤ b) : a ≤ b :=
   @le_of_forall_one_lt_le_mul (OrderDual α) _ _ _ _ _ _ h
 
 @[to_additive]
@@ -937,11 +925,11 @@ theorem le_of_forall_one_lt_div_le (h : ∀ ε : α, 1 < ε → a / ε ≤ b) : 
     simpa only [div_eq_mul_inv, inv_invₓ] using h (ε⁻¹) (Left.one_lt_inv_iff.2 ε1)
 
 @[to_additive]
-theorem le_iff_forall_one_lt_le_mul : a ≤ b ↔ ∀ ε, 1 < ε → a ≤ b*ε :=
+theorem le_iff_forall_one_lt_le_mul : a ≤ b ↔ ∀ ε, 1 < ε → a ≤ b * ε :=
   ⟨fun h ε ε_pos => le_mul_of_le_of_one_le h ε_pos.le, le_of_forall_one_lt_le_mul⟩
 
 @[to_additive]
-theorem le_iff_forall_lt_one_mul_le : a ≤ b ↔ ∀, ∀ ε < 1, ∀, (a*ε) ≤ b :=
+theorem le_iff_forall_lt_one_mul_le : a ≤ b ↔ ∀, ∀ ε < 1, ∀, a * ε ≤ b :=
   @le_iff_forall_one_lt_le_mul (OrderDual α) _ _ _ _ _ _
 
 end DenselyOrdered
@@ -953,21 +941,21 @@ end LinearOrderₓ
 -/
 
 
-/--  A linearly ordered additive commutative group is an
+/-- A linearly ordered additive commutative group is an
 additive commutative group with a linear order in which
 addition is monotone. -/
 @[protect_proj, ancestor OrderedAddCommGroup LinearOrderₓ]
 class LinearOrderedAddCommGroup (α : Type u) extends OrderedAddCommGroup α, LinearOrderₓ α
 
-/--  A linearly ordered commutative monoid with an additively absorbing `⊤` element.
+/-- A linearly ordered commutative monoid with an additively absorbing `⊤` element.
   Instances should include number systems with an infinite element adjoined.` -/
 @[protect_proj, ancestor LinearOrderedAddCommMonoidWithTop SubNegMonoidₓ Nontrivial]
 class LinearOrderedAddCommGroupWithTop (α : Type _) extends LinearOrderedAddCommMonoidWithTop α, SubNegMonoidₓ α,
   Nontrivial α where
   neg_top : -(⊤ : α) = ⊤
-  add_neg_cancel : ∀ a : α, a ≠ ⊤ → (a+-a) = 0
+  add_neg_cancel : ∀ a : α, a ≠ ⊤ → a + -a = 0
 
-/--  A linearly ordered commutative group is a
+/-- A linearly ordered commutative group is a
 commutative group with a linear order in which
 multiplication is monotone. -/
 @[protect_proj, ancestor OrderedCommGroup LinearOrderₓ, to_additive]
@@ -986,18 +974,18 @@ instance (priority := 100) LinearOrderedCommGroup.toLinearOrderedCancelCommMonoi
   { ‹LinearOrderedCommGroup α› with le_of_mul_le_mul_left := fun x y z => le_of_mul_le_mul_left',
     mul_left_cancel := fun x y z => mul_left_cancelₓ }
 
-/--  Pullback a `linear_ordered_comm_group` under an injective map.
+/-- Pullback a `linear_ordered_comm_group` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.linearOrderedAddCommGroup
       "Pullback a `linear_ordered_add_comm_group` under an injective map."]
 def Function.Injective.linearOrderedCommGroup {β : Type _} [HasOne β] [Mul β] [HasInv β] [Div β] (f : β → α)
-    (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x*y) = f x*f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹)
+    (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) : LinearOrderedCommGroup β :=
   { LinearOrderₓ.lift f hf, hf.ordered_comm_group f one mul inv div with }
 
 @[to_additive LinearOrderedAddCommGroup.add_lt_add_left]
-theorem LinearOrderedCommGroup.mul_lt_mul_left' (a b : α) (h : a < b) (c : α) : (c*a) < c*b :=
+theorem LinearOrderedCommGroup.mul_lt_mul_left' (a b : α) (h : a < b) (c : α) : c * a < c * b :=
   mul_lt_mul_left' h c
 
 @[to_additive min_neg_neg]
@@ -1039,16 +1027,16 @@ theorem eq_one_of_inv_eq' (h : a⁻¹ = a) : a = 1 :=
 theorem exists_one_lt' [Nontrivial α] : ∃ a : α, 1 < a := by
   obtain ⟨y, hy⟩ := Decidable.exists_ne (1 : α)
   cases hy.lt_or_lt
-  ·
-    exact ⟨y⁻¹, one_lt_inv'.mpr h⟩
-  ·
-    exact ⟨y, h⟩
+  · exact ⟨y⁻¹, one_lt_inv'.mpr h⟩
+    
+  · exact ⟨y, h⟩
+    
 
 @[to_additive]
 instance (priority := 100) LinearOrderedCommGroup.to_no_top_order [Nontrivial α] : NoTopOrder α :=
   ⟨by
     obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt'
-    exact fun a => ⟨a*y, lt_mul_of_one_lt_right' a hy⟩⟩
+    exact fun a => ⟨a * y, lt_mul_of_one_lt_right' a hy⟩⟩
 
 @[to_additive]
 instance (priority := 100) LinearOrderedCommGroup.to_no_bot_order [Nontrivial α] : NoBotOrder α :=
@@ -1062,7 +1050,7 @@ section CovariantAddLe
 
 section Neg
 
-/--  `abs a` is the absolute value of `a`. -/
+/-- `abs a` is the absolute value of `a`. -/
 @[to_additive]
 instance (priority := 100) hasInvLatticeHasAbs [HasInv α] [Lattice α] : HasAbs α :=
   ⟨fun a => a⊔a⁻¹⟩
@@ -1115,18 +1103,19 @@ theorem eq_or_eq_neg_of_abs_eq {a b : α} (h : |a| = b) : a = b ∨ a = -b := by
 
 theorem abs_eq_abs {a b : α} : |a| = |b| ↔ a = b ∨ a = -b := by
   refine' ⟨fun h => _, fun h => _⟩
-  ·
-    obtain rfl | rfl := eq_or_eq_neg_of_abs_eq h <;>
+  · obtain rfl | rfl := eq_or_eq_neg_of_abs_eq h <;>
       simpa only [neg_eq_iff_neg_eq, neg_inj, Or.comm, @eq_comm _ (-b)] using abs_choice b
-  ·
-    cases h <;> simp only [h, abs_neg]
+    
+  · cases h <;> simp only [h, abs_neg]
+    
 
 theorem abs_sub_comm (a b : α) : |a - b| = |b - a| :=
-  calc |a - b| = |-(b - a)| := congr_argₓ _ (neg_sub b a).symm
+  calc
+    |a - b| = |-(b - a)| := congr_argₓ _ (neg_sub b a).symm
     _ = |b - a| := abs_neg (b - a)
     
 
-variable [CovariantClass α α (·+·) (· ≤ ·)] {a b c : α}
+variable [CovariantClass α α (· + ·) (· ≤ ·)] {a b c : α}
 
 theorem abs_of_nonneg (h : 0 ≤ a) : |a| = a :=
   max_eq_leftₓ $ (neg_nonpos.2 h).trans h
@@ -1147,12 +1136,12 @@ theorem abs_zero : |0| = (0 : α) :=
 @[simp]
 theorem abs_pos : 0 < |a| ↔ a ≠ 0 := by
   rcases lt_trichotomyₓ a 0 with (ha | rfl | ha)
-  ·
-    simp [abs_of_neg ha, neg_pos, ha.ne, ha]
-  ·
-    simp
-  ·
-    simp [abs_of_pos ha, ha, ha.ne.symm]
+  · simp [abs_of_neg ha, neg_pos, ha.ne, ha]
+    
+  · simp
+    
+  · simp [abs_of_pos ha, ha, ha.ne.symm]
+    
 
 theorem abs_pos_of_pos (h : 0 < a) : 0 < |a| :=
   abs_pos.2 h.ne.symm
@@ -1162,10 +1151,10 @@ theorem abs_pos_of_neg (h : a < 0) : 0 < |a| :=
 
 theorem neg_abs_le_self (a : α) : -|a| ≤ a := by
   cases' le_totalₓ 0 a with h h
-  ·
-    calc -|a| = -a := congr_argₓ Neg.neg (abs_of_nonneg h)_ ≤ 0 := neg_nonpos.mpr h _ ≤ a := h
-  ·
-    calc -|a| = - -a := congr_argₓ Neg.neg (abs_of_nonpos h)_ ≤ a := (neg_negₓ a).le
+  · calc -|a| = -a := congr_argₓ Neg.neg (abs_of_nonneg h)_ ≤ 0 := neg_nonpos.mpr h _ ≤ a := h
+    
+  · calc -|a| = - -a := congr_argₓ Neg.neg (abs_of_nonpos h)_ ≤ a := (neg_negₓ a).le
+    
 
 theorem abs_nonneg (a : α) : 0 ≤ |a| :=
   (le_totalₓ 0 a).elim (fun h => h.trans (le_abs_self a)) fun h => (neg_nonneg.2 h).trans $ neg_le_abs_self a
@@ -1182,7 +1171,7 @@ theorem abs_eq_zero : |a| = 0 ↔ a = 0 :=
 theorem abs_nonpos_iff {a : α} : |a| ≤ 0 ↔ a = 0 :=
   (abs_nonneg a).le_iff_eq.trans abs_eq_zero
 
-variable [CovariantClass α α (swap (·+·)) (· ≤ ·)]
+variable [CovariantClass α α (swap (· + ·)) (· ≤ ·)]
 
 theorem abs_lt : |a| < b ↔ -b < a ∧ a < b :=
   max_lt_iff.trans $
@@ -1197,12 +1186,12 @@ theorem lt_of_abs_lt (h : |a| < b) : a < b :=
 
 theorem max_sub_min_eq_abs' (a b : α) : max a b - min a b = |a - b| := by
   cases' le_totalₓ a b with ab ba
-  ·
-    rw [max_eq_rightₓ ab, min_eq_leftₓ ab, abs_of_nonpos, neg_sub]
+  · rw [max_eq_rightₓ ab, min_eq_leftₓ ab, abs_of_nonpos, neg_sub]
     rwa [sub_nonpos]
-  ·
-    rw [max_eq_leftₓ ba, min_eq_rightₓ ba, abs_of_nonneg]
+    
+  · rw [max_eq_leftₓ ba, min_eq_rightₓ ba, abs_of_nonneg]
     rwa [sub_nonneg]
+    
 
 theorem max_sub_min_eq_abs (a b : α) : max a b - min a b = |b - a| := by
   rw [abs_sub_comm]
@@ -1228,15 +1217,14 @@ theorem neg_le_of_abs_le (h : |a| ≤ b) : -b ≤ a :=
 theorem le_of_abs_le (h : |a| ≤ b) : a ≤ b :=
   (abs_le.mp h).2
 
-/-- 
-The **triangle inequality** in `linear_ordered_add_comm_group`s.
+/-- The **triangle inequality** in `linear_ordered_add_comm_group`s.
 -/
-theorem abs_add (a b : α) : |a+b| ≤ |a|+|b| :=
+theorem abs_add (a b : α) : |a + b| ≤ |a| + |b| :=
   abs_le.2
     ⟨(neg_add |a| |b|).symm ▸ add_le_add (neg_le.2 $ neg_le_abs_self _) (neg_le.2 $ neg_le_abs_self _),
       add_le_add (le_abs_self _) (le_abs_self _)⟩
 
-theorem abs_sub (a b : α) : |a - b| ≤ |a|+|b| := by
+theorem abs_sub (a b : α) : |a - b| ≤ |a| + |b| := by
   rw [sub_eq_add_neg, ← abs_neg b]
   exact abs_add a _
 
@@ -1260,9 +1248,10 @@ theorem sub_lt_of_abs_sub_lt_right (h : |a - b| < c) : a - c < b :=
 
 theorem abs_sub_abs_le_abs_sub (a b : α) : |a| - |b| ≤ |a - b| :=
   sub_le_iff_le_add.2 $
-    calc |a| = |(a - b)+b| := by
-      rw [sub_add_cancel]
-      _ ≤ |a - b|+|b| := abs_add _ _
+    calc
+      |a| = |a - b + b| := by
+        rw [sub_add_cancel]
+      _ ≤ |a - b| + |b| := abs_add _ _
       
 
 theorem abs_abs_sub_abs_le_abs_sub (a b : α) : ||a| - |b|| ≤ |a - b| :=
@@ -1283,13 +1272,14 @@ theorem abs_le_max_abs_abs (hab : a ≤ b) (hbc : b ≤ c) : |b| ≤ max |a| |c|
 theorem eq_of_abs_sub_eq_zero {a b : α} (h : |a - b| = 0) : a = b :=
   sub_eq_zero.1 $ abs_eq_zero.1 h
 
-theorem abs_sub_le (a b c : α) : |a - c| ≤ |a - b|+|b - c| :=
-  calc |a - c| = |(a - b)+b - c| := by
-    rw [sub_add_sub_cancel]
-    _ ≤ |a - b|+|b - c| := abs_add _ _
+theorem abs_sub_le (a b c : α) : |a - c| ≤ |a - b| + |b - c| :=
+  calc
+    |a - c| = |a - b + (b - c)| := by
+      rw [sub_add_sub_cancel]
+    _ ≤ |a - b| + |b - c| := abs_add _ _
     
 
-theorem abs_add_three (a b c : α) : |(a+b)+c| ≤ (|a|+|b|)+|c| :=
+theorem abs_add_three (a b c : α) : |a + b + c| ≤ |a| + |b| + |c| :=
   (abs_add _ _).trans (add_le_add_right (abs_add _ _) _)
 
 theorem dist_bdd_within_interval {a b lb ub : α} (hal : lb ≤ a) (hau : a ≤ ub) (hbl : lb ≤ b) (hbu : b ≤ ub) :
@@ -1302,18 +1292,18 @@ theorem eq_of_abs_sub_nonpos (h : |a - b| ≤ 0) : a = b :=
 theorem max_sub_max_le_max (a b c d : α) : max a b - max c d ≤ max (a - c) (b - d) := by
   simp only [sub_le_iff_le_add, max_le_iff]
   constructor
-  calc a = (a - c)+c := (sub_add_cancel a c).symm _ ≤ max (a - c) (b - d)+max c d :=
-    add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)
-  calc b = (b - d)+d := (sub_add_cancel b d).symm _ ≤ max (a - c) (b - d)+max c d :=
-    add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _)
+  calc a = a - c + c := (sub_add_cancel a c).symm _ ≤ max (a - c) (b - d) + max c d :=
+      add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)
+  calc b = b - d + d := (sub_add_cancel b d).symm _ ≤ max (a - c) (b - d) + max c d :=
+      add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _)
 
 theorem abs_max_sub_max_le_max (a b c d : α) : |max a b - max c d| ≤ max |a - c| |b - d| := by
   refine' abs_sub_le_iff.2 ⟨_, _⟩
-  ·
+  · exact (max_sub_max_le_max _ _ _ _).trans (max_le_max (le_abs_self _) (le_abs_self _))
+    
+  · rw [abs_sub_comm a c, abs_sub_comm b d]
     exact (max_sub_max_le_max _ _ _ _).trans (max_le_max (le_abs_self _) (le_abs_self _))
-  ·
-    rw [abs_sub_comm a c, abs_sub_comm b d]
-    exact (max_sub_max_le_max _ _ _ _).trans (max_le_max (le_abs_self _) (le_abs_self _))
+    
 
 theorem abs_min_sub_min_le_max (a b c d : α) : |min a b - min c d| ≤ max |a - c| |b - d| := by
   simpa only [max_neg_neg, neg_sub_neg, abs_sub_comm] using abs_max_sub_max_le_max (-a) (-b) (-c) (-d)
@@ -1326,16 +1316,16 @@ instance WithTop.linearOrderedAddCommGroupWithTop : LinearOrderedAddCommGroupWit
     neg_top := @Option.map_none _ _ fun a : α => -a,
     add_neg_cancel := by
       rintro (a | a) ha
-      ·
-        exact (ha rfl).elim
-      ·
-        exact with_top.coe_add.symm.trans (WithTop.coe_eq_coe.2 (add_neg_selfₓ a)) }
+      · exact (ha rfl).elim
+        
+      · exact with_top.coe_add.symm.trans (WithTop.coe_eq_coe.2 (add_neg_selfₓ a))
+         }
 
 end LinearOrderedAddCommGroup
 
 namespace AddCommGroupₓ
 
-/--  A collection of elements in an `add_comm_group` designated as "non-negative".
+/-- A collection of elements in an `add_comm_group` designated as "non-negative".
 This is useful for constructing an `ordered_add_commm_group`
 by choosing a positive cone in an exisiting `add_comm_group`. -/
 @[nolint has_inhabited_instance]
@@ -1346,17 +1336,17 @@ structure positive_cone (α : Type _) [AddCommGroupₓ α] where
     run_tac
       order_laws_tac
   zero_nonneg : nonneg 0
-  add_nonneg : ∀ {a b}, nonneg a → nonneg b → nonneg (a+b)
+  add_nonneg : ∀ {a b}, nonneg a → nonneg b → nonneg (a + b)
   nonneg_antisymm : ∀ {a}, nonneg a → nonneg (-a) → a = 0
 
-/--  A positive cone in an `add_comm_group` induces a linear order if
+/-- A positive cone in an `add_comm_group` induces a linear order if
 for every `a`, either `a` or `-a` is non-negative. -/
 @[nolint has_inhabited_instance]
 structure total_positive_cone (α : Type _) [AddCommGroupₓ α] extends positive_cone α where
   nonnegDecidable : DecidablePred nonneg
   nonneg_total : ∀ a : α, nonneg a ∨ nonneg (-a)
 
-/--  Forget that a `total_positive_cone` is total. -/
+/-- Forget that a `total_positive_cone` is total. -/
 add_decl_doc total_positive_cone.to_positive_cone
 
 end AddCommGroupₓ
@@ -1365,7 +1355,7 @@ namespace OrderedAddCommGroup
 
 open AddCommGroupₓ
 
-/--  Construct an `ordered_add_comm_group` by
+/-- Construct an `ordered_add_comm_group` by
 designating a positive cone in an existing `add_comm_group`. -/
 def mk_of_positive_cone {α : Type _} [AddCommGroupₓ α] (C : positive_cone α) : OrderedAddCommGroup α :=
   { ‹AddCommGroupₓ α› with le := fun a b => C.nonneg (b - a), lt := fun a b => C.pos (b - a),
@@ -1389,7 +1379,7 @@ namespace LinearOrderedAddCommGroup
 
 open AddCommGroupₓ
 
-/--  Construct a `linear_ordered_add_comm_group` by
+/-- Construct a `linear_ordered_add_comm_group` by
 designating a positive cone in an existing `add_comm_group`
 such that for every `a`, either `a` or `-a` is non-negative. -/
 def mk_of_positive_cone {α : Type _} [AddCommGroupₓ α] (C : total_positive_cone α) : LinearOrderedAddCommGroup α :=

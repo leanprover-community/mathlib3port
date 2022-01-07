@@ -16,7 +16,7 @@ namespace Dlist
 
 variable (α : Type _)
 
-/--  The natural equivalence between lists and difference lists, using
+/-- The natural equivalence between lists and difference lists, using
 `dlist.of_list` and `dlist.to_list`. -/
 def list_equiv_dlist : List α ≃ Dlist α := by
   refine' { toFun := Dlist.ofList, invFun := Dlist.toList, .. } <;>

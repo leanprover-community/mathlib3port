@@ -23,12 +23,12 @@ universe u v w
 
 variable {α : Type u}
 
-/--  Predicate for semiring homomorphisms (deprecated -- use the bundled `ring_hom` version). -/
+/-- Predicate for semiring homomorphisms (deprecated -- use the bundled `ring_hom` version). -/
 structure IsSemiringHom {α : Type u} {β : Type v} [Semiringₓ α] [Semiringₓ β] (f : α → β) : Prop where
   map_zero {} : f 0 = 0
   map_one {} : f 1 = 1
-  map_add {} : ∀ {x y}, f (x+y) = f x+f y
-  map_mul {} : ∀ {x y}, f (x*y) = f x*f y
+  map_add {} : ∀ {x y}, f (x + y) = f x + f y
+  map_mul {} : ∀ {x y}, f (x * y) = f x * f y
 
 namespace IsSemiringHom
 
@@ -36,11 +36,11 @@ variable {β : Type v} [Semiringₓ α] [Semiringₓ β]
 
 variable {f : α → β} (hf : IsSemiringHom f) {x y : α}
 
-/--  The identity map is a semiring homomorphism. -/
+/-- The identity map is a semiring homomorphism. -/
 theorem id : IsSemiringHom (@id α) := by
   refine' { .. } <;> intros <;> rfl
 
-/--  The composition of two semiring homomorphisms is a semiring homomorphism. -/
+/-- The composition of two semiring homomorphisms is a semiring homomorphism. -/
 theorem comp (hf : IsSemiringHom f) {γ} [Semiringₓ γ] {g : β → γ} (hg : IsSemiringHom g) : IsSemiringHom (g ∘ f) :=
   { map_zero := by
       simpa [map_zero hf] using map_zero hg,
@@ -51,57 +51,59 @@ theorem comp (hf : IsSemiringHom f) {γ} [Semiringₓ γ] {g : β → γ} (hg : 
     map_mul := fun x y => by
       simp [map_mul hf, map_mul hg] }
 
-/--  A semiring homomorphism is an additive monoid homomorphism. -/
+/-- A semiring homomorphism is an additive monoid homomorphism. -/
 theorem to_is_add_monoid_hom (hf : IsSemiringHom f) : IsAddMonoidHom f :=
   { ‹IsSemiringHom f› with }
 
-/--  A semiring homomorphism is a monoid homomorphism. -/
+/-- A semiring homomorphism is a monoid homomorphism. -/
 theorem to_is_monoid_hom (hf : IsSemiringHom f) : IsMonoidHom f :=
   { ‹IsSemiringHom f› with }
 
 end IsSemiringHom
 
-/--  Predicate for ring homomorphisms (deprecated -- use the bundled `ring_hom` version). -/
+/-- Predicate for ring homomorphisms (deprecated -- use the bundled `ring_hom` version). -/
 structure IsRingHom {α : Type u} {β : Type v} [Ringₓ α] [Ringₓ β] (f : α → β) : Prop where
   map_one {} : f 1 = 1
-  map_mul {} : ∀ {x y}, f (x*y) = f x*f y
-  map_add {} : ∀ {x y}, f (x+y) = f x+f y
+  map_mul {} : ∀ {x y}, f (x * y) = f x * f y
+  map_add {} : ∀ {x y}, f (x + y) = f x + f y
 
 namespace IsRingHom
 
 variable {β : Type v} [Ringₓ α] [Ringₓ β]
 
-/--  A map of rings that is a semiring homomorphism is also a ring homomorphism. -/
+/-- A map of rings that is a semiring homomorphism is also a ring homomorphism. -/
 theorem of_semiring {f : α → β} (H : IsSemiringHom f) : IsRingHom f :=
   { H with }
 
 variable {f : α → β} (hf : IsRingHom f) {x y : α}
 
-/--  Ring homomorphisms map zero to zero. -/
+/-- Ring homomorphisms map zero to zero. -/
 theorem map_zero (hf : IsRingHom f) : f 0 = 0 :=
-  calc f 0 = f (0+0) - f 0 := by
-    rw [hf.map_add] <;> simp
+  calc
+    f 0 = f (0 + 0) - f 0 := by
+      rw [hf.map_add] <;> simp
     _ = 0 := by
-    simp
+      simp
     
 
-/--  Ring homomorphisms preserve additive inverses. -/
+/-- Ring homomorphisms preserve additive inverses. -/
 theorem map_neg (hf : IsRingHom f) : f (-x) = -f x :=
-  calc f (-x) = f ((-x)+x) - f x := by
-    rw [hf.map_add] <;> simp
+  calc
+    f (-x) = f (-x + x) - f x := by
+      rw [hf.map_add] <;> simp
     _ = -f x := by
-    simp [hf.map_zero]
+      simp [hf.map_zero]
     
 
-/--  Ring homomorphisms preserve subtraction. -/
+/-- Ring homomorphisms preserve subtraction. -/
 theorem map_sub (hf : IsRingHom f) : f (x - y) = f x - f y := by
   simp [sub_eq_add_neg, hf.map_add, hf.map_neg]
 
-/--  The identity map is a ring homomorphism. -/
+/-- The identity map is a ring homomorphism. -/
 theorem id : IsRingHom (@id α) := by
   refine' { .. } <;> intros <;> rfl
 
-/--  The composition of two ring homomorphisms is a ring homomorphism. -/
+/-- The composition of two ring homomorphisms is a ring homomorphism. -/
 theorem comp (hf : IsRingHom f) {γ} [Ringₓ γ] {g : β → γ} (hg : IsRingHom g) : IsRingHom (g ∘ f) :=
   { map_add := fun x y => by
       simp [map_add hf] <;> rw [map_add hg] <;> rfl,
@@ -110,7 +112,7 @@ theorem comp (hf : IsRingHom f) {γ} [Ringₓ γ] {g : β → γ} (hg : IsRingHo
     map_one := by
       simp [map_one hf] <;> exact map_one hg }
 
-/--  A ring homomorphism is also a semiring homomorphism. -/
+/-- A ring homomorphism is also a semiring homomorphism. -/
 theorem to_is_semiring_hom (hf : IsRingHom f) : IsSemiringHom f :=
   { ‹IsRingHom f› with map_zero := map_zero hf }
 
@@ -127,7 +129,7 @@ section
 
 include rα rβ
 
-/--  Interpret `f : α → β` with `is_semiring_hom f` as a ring homomorphism. -/
+/-- Interpret `f : α → β` with `is_semiring_hom f` as a ring homomorphism. -/
 def of {f : α → β} (hf : IsSemiringHom f) : α →+* β :=
   { MonoidHom.of hf.to_is_monoid_hom, AddMonoidHom.of hf.to_is_add_monoid_hom with toFun := f }
 

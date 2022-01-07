@@ -16,7 +16,7 @@ open CategoryTheory
 
 variable (C : Type _) {D E : Type _} [category C] [category D] [category E] {F : D ⥤ E} {G : E ⥤ D}
 
-/--  Given an adjunction `F ⊣ G`, this provides the natural adjunction
+/-- Given an adjunction `F ⊣ G`, this provides the natural adjunction
   `(whiskering_right C _ _).obj F ⊣ (whiskering_right C _ _).obj G`. -/
 @[simps unit_app_app counit_app_app]
 protected def whisker_right (adj : F ⊣ G) : (whiskering_right C D E).obj F ⊣ (whiskering_right C E D).obj G :=
@@ -44,7 +44,7 @@ protected def whisker_right (adj : F ⊣ G) : (whiskering_right C D E).obj F ⊣
         dsimp
         simp }
 
-/--  Given an adjunction `F ⊣ G`, this provides the natural adjunction
+/-- Given an adjunction `F ⊣ G`, this provides the natural adjunction
   `(whiskering_left _ _ C).obj G ⊣ (whiskering_left _ _ C).obj F`. -/
 @[simps unit_app_app counit_app_app]
 protected def whisker_left (adj : F ⊣ G) : (whiskering_left E D C).obj G ⊣ (whiskering_left D E C).obj F :=
@@ -59,11 +59,10 @@ protected def whisker_left (adj : F ⊣ G) : (whiskering_left E D C).obj G ⊣ (
       counit :=
         { app := fun X => (functor.associator _ _ _).inv ≫ whisker_right adj.counit X ≫ (functor.left_unitor _).Hom,
           naturality' := by
-            ·
-              intros
-              ext
-              dsimp
-              simp },
+            intros
+            ext
+            dsimp
+            simp },
       left_triangle' := by
         ext x
         dsimp

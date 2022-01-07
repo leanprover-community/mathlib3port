@@ -33,10 +33,10 @@ variable [OrderedCommRing R] [OrderedRing A] [Algebra R A] [OrderedSmul R A]
 theorem algebra_map_monotone : Monotone (algebraMap R A) := fun a b h => by
   rw [Algebra.algebra_map_eq_smul_one, Algebra.algebra_map_eq_smul_one, ← sub_nonneg, ← sub_smul]
   trans (b - a) • (0 : A)
-  ·
-    simp
-  ·
-    exact smul_le_smul_of_nonneg zero_le_one (sub_nonneg.mpr h)
+  · simp
+    
+  · exact smul_le_smul_of_nonneg zero_le_one (sub_nonneg.mpr h)
+    
 
 end OrderedAlgebra
 
@@ -44,13 +44,9 @@ section Instances
 
 variable {R : Type _} [LinearOrderedCommRing R]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  LinearOrderedCommRing.to_ordered_smul
-  : OrderedSmul R R
-  where
-    smul_lt_smul_of_pos := OrderedSemiring.mul_lt_mul_of_pos_left
-      lt_of_smul_lt_smul_of_pos a b c w₁ w₂ := ( mul_lt_mul_left w₂ ) . mp w₁
+instance LinearOrderedCommRing.to_ordered_smul : OrderedSmul R R where
+  smul_lt_smul_of_pos := OrderedSemiring.mul_lt_mul_of_pos_left
+  lt_of_smul_lt_smul_of_pos := fun a b c w₁ w₂ => (mul_lt_mul_left w₂).mp w₁
 
 end Instances
 

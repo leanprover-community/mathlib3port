@@ -27,28 +27,27 @@ open Tactic
 
 namespace Zify
 
-/-- 
-The `zify` attribute is used by the `zify` tactic. It applies to lemmas that shift propositions
+/-- The `zify` attribute is used by the `zify` tactic. It applies to lemmas that shift propositions
 between `nat` and `int`.
 
 `zify` lemmas should have the form `∀ a₁ ... aₙ : ℕ, Pz (a₁ : ℤ) ... (aₙ : ℤ) ↔ Pn a₁ ... aₙ`.
 For example, `int.coe_nat_le_coe_nat_iff : ∀ (m n : ℕ), ↑m ≤ ↑n ↔ m ≤ n` is a `zify` lemma.
 -/
 @[user_attribute]
-unsafe def zify_attr : user_attribute simp_lemmas Unit :=
-  { Name := `zify, descr := "Used to tag lemmas for use in the `zify` tactic",
-    cache_cfg :=
-      { mk_cache := fun ns =>
-          mmap
-              (fun n => do
-                let c ← mk_const n
-                return (c, tt))
-              ns >>=
-            simp_lemmas.mk.append_with_symm,
-        dependencies := [] } }
+unsafe def zify_attr : user_attribute simp_lemmas Unit where
+  Name := `zify
+  descr := "Used to tag lemmas for use in the `zify` tactic"
+  cache_cfg :=
+    { mk_cache := fun ns =>
+        mmap
+            (fun n => do
+              let c ← mk_const n
+              return (c, tt))
+            ns >>=
+          simp_lemmas.mk.append_with_symm,
+      dependencies := [] }
 
-/-- 
-Given an expression `e`, `lift_to_z e` looks for subterms of `e` that are propositions "about"
+/-- Given an expression `e`, `lift_to_z e` looks for subterms of `e` that are propositions "about"
 natural numbers and change them to propositions about integers.
 
 Returns an expression `e'` and a proof that `e = e'`.
@@ -71,8 +70,7 @@ end Zify
 theorem Int.coe_nat_ne_coe_nat_iff (a b : ℕ) : (a : ℤ) ≠ b ↔ a ≠ b := by
   simp
 
-/-- 
-`zify extra_lems e` is used to shift propositions in `e` from `ℕ` to `ℤ`.
+/-- `zify extra_lems e` is used to shift propositions in `e` from `ℕ` to `ℤ`.
 This is often useful since `ℤ` has well-behaved subtraction.
 
 The list of extra lemmas is used in the `push_cast` step.
@@ -83,8 +81,7 @@ unsafe def tactic.zify (extra_lems : List simp_arg_type) : expr → tactic (expr
   let (z2, p2) ← norm_cast.derive_push_cast extra_lems z1
   Prod.mk z2 <$> mk_eq_trans p1 p2
 
-/-- 
-A variant of `tactic.zify` that takes `h`, a proof of a proposition about natural numbers,
+/-- A variant of `tactic.zify` that takes `h`, a proof of a proposition about natural numbers,
 and returns a proof of the zified version of that propositon.
 -/
 unsafe def tactic.zify_proof (extra_lems : List simp_arg_type) (h : expr) : tactic expr := do
@@ -95,8 +92,7 @@ section
 
 setup_tactic_parser
 
-/-- 
-The `zify` tactic is used to shift propositions from `ℕ` to `ℤ`.
+/-- The `zify` tactic is used to shift propositions from `ℕ` to `ℤ`.
 This is often useful since `ℤ` has well-behaved subtraction.
 
 ```lean

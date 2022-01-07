@@ -1,5 +1,5 @@
-import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Tactic.NoncommRing
+import Mathbin.FieldTheory.IsAlgClosed.Basic
 
 /-!
 # Spectrum of an element in an algebra
@@ -24,14 +24,12 @@ This theory will serve as the foundation for spectral theory in Banach algebras.
   units (of `R`) in `σ (a*b)` coincide with those in `σ (b*a)`.
 * `spectrum.scalar_eq`: in a nontrivial algebra over a field, the spectrum of a scalar is
   a singleton.
+* `spectrum.subset_polynomial_aeval`, `spectrum.map_polynomial_aeval_of_degree_pos`,
+  `spectrum.map_polynomial_aeval_of_nonempty`: variations on the spectral mapping theorem.
 
 ## Notations
 
 * `σ a` : `spectrum R a` of `a : A`
-
-## TODO
-
-* Prove the *spectral mapping theorem* for the polynomial functional calculus
 -/
 
 
@@ -41,15 +39,15 @@ section Defs
 
 variable (R : Type u) {A : Type v}
 
-variable [CommRingₓ R] [Ringₓ A] [Algebra R A]
+variable [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
 
-/--  Given a commutative ring `R` and an `R`-algebra `A`, the *resolvent set* of `a : A`
+/-- Given a commutative ring `R` and an `R`-algebra `A`, the *resolvent set* of `a : A`
 is the `set R` consisting of those `r : R` for which `r•1 - a` is a unit of the
 algebra `A`.  -/
 def ResolventSet (a : A) : Set R :=
   { r : R | IsUnit (algebraMap R A r - a) }
 
-/--  Given a commutative ring `R` and an `R`-algebra `A`, the *spectrum* of `a : A`
+/-- Given a commutative ring `R` and an `R`-algebra `A`, the *spectrum* of `a : A`
 is the `set R` consisting of those `r : R` for which `r•1 - a` is not a unit of the
 algebra `A`.
 
@@ -59,7 +57,7 @@ def Spectrum (a : A) : Set R :=
 
 variable {R}
 
-/--  Given an `a : A` where `A` is an `R`-algebra, the *resolvent* is
+/-- Given an `a : A` where `A` is an `R`-algebra, the *resolvent* is
     a map `R → A` which sends `r : R` to `(algebra_map R A r - a)⁻¹` when
     `r ∈ resolvent R A` and `0` when `r ∈ spectrum R A`. -/
 noncomputable def resolvent (a : A) (r : R) : A :=
@@ -67,7 +65,7 @@ noncomputable def resolvent (a : A) (r : R) : A :=
 
 end Defs
 
-theorem IsUnit.smul_sub_iff_sub_inv_smul {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A] {r : Units R}
+theorem IsUnit.smul_sub_iff_sub_inv_smul {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A] {r : (R)ˣ}
     {a : A} : IsUnit (r • 1 - a) ↔ IsUnit (1 - r⁻¹ • a) := by
   have a_eq : a = r • r⁻¹ • a := by
     simp
@@ -93,8 +91,8 @@ theorem not_mem_iff {r : R} {a : A} : r ∉ σ a ↔ IsUnit (↑ₐ r - a) := by
   apply not_iff_not.mp
   simp [Set.not_not_mem, mem_iff]
 
-theorem mem_resolvent_set_of_left_right_inverse {r : R} {a b c : A} (h₁ : ((↑ₐ r - a)*b) = 1) (h₂ : (c*↑ₐ r - a) = 1) :
-    r ∈ ResolventSet R a :=
+theorem mem_resolvent_set_of_left_right_inverse {r : R} {a b c : A} (h₁ : (↑ₐ r - a) * b = 1)
+    (h₂ : c * (↑ₐ r - a) = 1) : r ∈ ResolventSet R a :=
   Units.is_unit
     ⟨↑ₐ r - a, b, h₁, by
       rwa [← left_inv_eq_right_invₓ h₂ h₁]⟩
@@ -105,15 +103,15 @@ theorem mem_resolvent_set_iff {r : R} {a : A} : r ∈ ResolventSet R a ↔ IsUni
 theorem resolvent_eq {a : A} {r : R} (h : r ∈ ResolventSet R a) : resolvent a r = ↑h.unit⁻¹ :=
   Ring.inverse_unit h.unit
 
-theorem add_mem_iff {a : A} {r s : R} : r ∈ σ a ↔ (r+s) ∈ σ (↑ₐ s+a) := by
+theorem add_mem_iff {a : A} {r s : R} : r ∈ σ a ↔ r + s ∈ σ (↑ₐ s + a) := by
   apply not_iff_not.mpr
   simp only [mem_resolvent_set_iff]
-  have h_eq : (↑ₐ (r+s) - ↑ₐ s+a) = ↑ₐ r - a := by
+  have h_eq : ↑ₐ (r + s) - (↑ₐ s + a) = ↑ₐ r - a := by
     simp
     noncomm_ring
   rw [h_eq]
 
-theorem smul_mem_smul_iff {a : A} {s : R} {r : Units R} : r • s ∈ σ (r • a) ↔ s ∈ σ a := by
+theorem smul_mem_smul_iff {a : A} {s : R} {r : (R)ˣ} : r • s ∈ σ (r • a) ↔ s ∈ σ a := by
   apply not_iff_not.mpr
   simp only [mem_resolvent_set_iff, Algebra.algebra_map_eq_smul_one]
   have h_eq : (r • s) • (1 : A) = r • s • 1 := by
@@ -122,62 +120,59 @@ theorem smul_mem_smul_iff {a : A} {s : R} {r : Units R} : r • s ∈ σ (r • 
 
 open_locale Pointwise
 
-theorem unit_smul_eq_smul (a : A) (r : Units R) : σ (r • a) = r • σ a := by
+theorem unit_smul_eq_smul (a : A) (r : (R)ˣ) : σ (r • a) = r • σ a := by
   ext
   have x_eq : x = r • r⁻¹ • x := by
     simp
   nth_rw 0[x_eq]
   rw [smul_mem_smul_iff]
   constructor
-  ·
-    exact fun h =>
+  · exact fun h =>
       ⟨r⁻¹ • x,
         ⟨h, by
           simp ⟩⟩
-  ·
-    rintro ⟨_, _, x'_eq⟩
+    
+  · rintro ⟨_, _, x'_eq⟩
     simpa [← x'_eq]
+    
 
-theorem left_add_coset_eq (a : A) (r : R) : LeftAddCoset r (σ a) = σ (↑ₐ r+a) := by
+theorem left_add_coset_eq (a : A) (r : R) : LeftAddCoset r (σ a) = σ (↑ₐ r + a) := by
   ext
   rw [mem_left_add_coset_iff, neg_add_eq_sub, add_mem_iff]
   nth_rw 1[← sub_add_cancel x r]
 
-theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : Units R} : ↑r ∈ σ (a*b) ↔ ↑r ∈ σ (b*a) := by
+theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : (R)ˣ} : ↑r ∈ σ (a * b) ↔ ↑r ∈ σ (b * a) := by
   apply not_iff_not.mpr
   simp only [mem_resolvent_set_iff, Algebra.algebra_map_eq_smul_one]
-  have coe_smul_eq : ↑r • 1 = r • (1 : A)
-  exact rfl
+  have coe_smul_eq : ↑r • 1 = r • (1 : A) := rfl
   rw [coe_smul_eq]
   simp only [IsUnit.smul_sub_iff_sub_inv_smul]
-  have right_inv_of_swap : ∀ {x y z : A} h : ((1 - x*y)*z) = 1, ((1 - y*x)*1+(y*z)*x) = 1
-  exact fun x y z h =>
-    calc ((1 - y*x)*1+(y*z)*x) = (1 - y*x)+(y*(1 - x*y)*z)*x := by
-      noncomm_ring
+  have right_inv_of_swap : ∀ {x y z : A} h : (1 - x * y) * z = 1, (1 - y * x) * (1 + y * z * x) = 1 := fun x y z h =>
+    calc
+      (1 - y * x) * (1 + y * z * x) = 1 - y * x + y * ((1 - x * y) * z) * x := by
+        noncomm_ring
       _ = 1 := by
-      simp [h]
+        simp [h]
       
-  have left_inv_of_swap : ∀ {x y z : A} h : (z*1 - x*y) = 1, ((1+(y*z)*x)*1 - y*x) = 1
-  exact fun x y z h =>
-    calc ((1+(y*z)*x)*1 - y*x) = (1 - y*x)+(y*z*1 - x*y)*x := by
-      noncomm_ring
+  have left_inv_of_swap : ∀ {x y z : A} h : z * (1 - x * y) = 1, (1 + y * z * x) * (1 - y * x) = 1 := fun x y z h =>
+    calc
+      (1 + y * z * x) * (1 - y * x) = 1 - y * x + y * (z * (1 - x * y)) * x := by
+        noncomm_ring
       _ = 1 := by
-      simp [h]
+        simp [h]
       
-  have is_unit_one_sub_mul_of_swap : ∀ {x y : A} h : IsUnit (1 - x*y), IsUnit (1 - y*x)
-  exact fun x y h => by
+  have is_unit_one_sub_mul_of_swap : ∀ {x y : A} h : IsUnit (1 - x * y), IsUnit (1 - y * x) := fun x y h => by
     let h₁ := right_inv_of_swap h.unit.val_inv
     let h₂ := left_inv_of_swap h.unit.inv_val
-    exact ⟨⟨1 - y*x, 1+(y*h.unit.inv)*x, h₁, h₂⟩, rfl⟩
-  have is_unit_one_sub_mul_iff_swap : ∀ {x y : A}, IsUnit (1 - x*y) ↔ IsUnit (1 - y*x) := by
-    ·
-      intros
-      constructor
-      repeat'
-        apply is_unit_one_sub_mul_of_swap
+    exact ⟨⟨1 - y * x, 1 + y * h.unit.inv * x, h₁, h₂⟩, rfl⟩
+  have is_unit_one_sub_mul_iff_swap : ∀ {x y : A}, IsUnit (1 - x * y) ↔ IsUnit (1 - y * x) := by
+    intros
+    constructor
+    repeat'
+      apply is_unit_one_sub_mul_of_swap
   rw [← smul_mul_assoc, ← mul_smul_comm (r⁻¹) b a, is_unit_one_sub_mul_iff_swap]
 
-theorem preimage_units_mul_eq_swap_mul {a b : A} : (coeₓ : Units R → R) ⁻¹' σ (a*b) = coeₓ ⁻¹' σ (b*a) := by
+theorem preimage_units_mul_eq_swap_mul {a b : A} : (coeₓ : (R)ˣ → R) ⁻¹' σ (a * b) = coeₓ ⁻¹' σ (b * a) := by
   ext
   exact unit_mem_mul_iff_mem_swap_mul
 
@@ -193,7 +188,7 @@ local notation "σ" => Spectrum 𝕜
 
 local notation "↑ₐ" => algebraMap 𝕜 A
 
-/--  Without the assumption `nontrivial A`, then `0 : A` would be invertible. -/
+/-- Without the assumption `nontrivial A`, then `0 : A` would be invertible. -/
 @[simp]
 theorem zero_eq [Nontrivial A] : σ (0 : A) = {0} := by
   refine'
@@ -209,51 +204,130 @@ theorem zero_eq [Nontrivial A] : σ (0 : A) = {0} := by
 @[simp]
 theorem scalar_eq [Nontrivial A] (k : 𝕜) : σ (↑ₐ k) = {k} := by
   have coset_eq : LeftAddCoset k {0} = {k} := by
-    ·
-      ext
-      constructor
-      ·
-        intro hx
-        simp [LeftAddCoset] at hx
-        exact hx
-      ·
-        intro hx
-        simp at hx
-        exact
-          ⟨0,
-            ⟨Set.mem_singleton 0, by
-              simp [hx]⟩⟩
-  calc σ (↑ₐ k) = σ (↑ₐ k+0) := by
-    simp _ = LeftAddCoset k (σ (0 : A)) := by
-    rw [← left_add_coset_eq]_ = LeftAddCoset k {0} := by
-    rw [zero_eq]_ = {k} := coset_eq
+    ext
+    constructor
+    · intro hx
+      simp [LeftAddCoset] at hx
+      exact hx
+      
+    · intro hx
+      simp at hx
+      exact
+        ⟨0,
+          ⟨Set.mem_singleton 0, by
+            simp [hx]⟩⟩
+      
+  calc σ (↑ₐ k) = σ (↑ₐ k + 0) := by
+      simp _ = LeftAddCoset k (σ (0 : A)) := by
+      rw [← left_add_coset_eq]_ = LeftAddCoset k {0} := by
+      rw [zero_eq]_ = {k} := coset_eq
 
 @[simp]
 theorem one_eq [Nontrivial A] : σ (1 : A) = {1} :=
-  calc σ (1 : A) = σ (↑ₐ 1) := by
-    simp [Algebra.algebra_map_eq_smul_one]
+  calc
+    σ (1 : A) = σ (↑ₐ 1) := by
+      simp [Algebra.algebra_map_eq_smul_one]
     _ = {1} := scalar_eq 1
     
 
 open_locale Pointwise
 
-/--  the assumption `(σ a).nonempty` is necessary and cannot be removed without
+/-- the assumption `(σ a).nonempty` is necessary and cannot be removed without
     further conditions on the algebra `A` and scalar field `𝕜`. -/
 theorem smul_eq_smul [Nontrivial A] (k : 𝕜) (a : A) (ha : (σ a).Nonempty) : σ (k • a) = k • σ a := by
   rcases eq_or_ne k 0 with (rfl | h)
-  ·
-    simpa [ha, zero_smul_set]
-  ·
-    exact unit_smul_eq_smul a (Units.mk0 k h)
+  · simpa [ha, zero_smul_set]
+    
+  · exact unit_smul_eq_smul a (Units.mk0 k h)
+    
 
-theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a*b) \ {0} = σ (b*a) \ {0} := by
-  suffices h : ∀ x y : A, σ (x*y) \ {0} ⊆ σ (y*x) \ {0}
-  ·
-    exact Set.eq_of_subset_of_subset (h a b) (h b a)
-  ·
-    rintro _ _ k ⟨k_mem, k_neq⟩
+theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} := by
+  suffices h : ∀ x y : A, σ (x * y) \ {0} ⊆ σ (y * x) \ {0}
+  · exact Set.eq_of_subset_of_subset (h a b) (h b a)
+    
+  · rintro _ _ k ⟨k_mem, k_neq⟩
     change k with ↑Units.mk0 k k_neq at k_mem
     exact ⟨unit_mem_mul_iff_mem_swap_mul.mp k_mem, k_neq⟩
+    
+
+open Polynomial
+
+/-- Half of the spectral mapping theorem for polynomials. We prove it separately
+because it holds over any field, whereas `spectrum.map_polynomial_aeval_of_degree_pos` and
+`spectrum.map_polynomial_aeval_of_nonempty` need the field to be algebraically closed. -/
+theorem subset_polynomial_aeval (a : A) (p : Polynomial 𝕜) : (fun k => eval k p) '' σ a ⊆ σ (aeval a p) := by
+  rintro _ ⟨k, hk, rfl⟩
+  let q := C (eval k p) - p
+  have hroot : is_root q k := by
+    simp only [eval_C, eval_sub, sub_self, is_root.def]
+  rw [← mul_div_eq_iff_is_root, ← neg_mul_neg, neg_sub] at hroot
+  have aeval_q_eq : ↑ₐ (eval k p) - aeval a p = aeval a q := by
+    simp only [aeval_C, AlgHom.map_sub, sub_left_inj]
+  rw [mem_iff, aeval_q_eq, ← hroot, aeval_mul]
+  have hcomm := (Commute.all (C k - X) (-(q / (X - C k)))).map (aeval a)
+  apply mt fun h => (hcomm.is_unit_mul_iff.mp h).1
+  simpa only [aeval_X, aeval_C, AlgHom.map_sub] using hk
+
+theorem exists_mem_of_not_is_unit_aeval_prod {p : Polynomial 𝕜} {a : A} (hp : p ≠ 0)
+    (h : ¬IsUnit (aeval a (Multiset.map (fun x : 𝕜 => X - C x) p.roots).Prod)) : ∃ k : 𝕜, k ∈ σ a ∧ eval k p = 0 := by
+  rw [← Multiset.prod_to_list, AlgHom.map_list_prod] at h
+  replace h := mt List.prod_is_unit h
+  simp only [not_forall, exists_prop, aeval_C, Multiset.mem_to_list, List.mem_mapₓ, aeval_X, exists_exists_and_eq_and,
+    Multiset.mem_map, AlgHom.map_sub] at h
+  rcases h with ⟨r, r_mem, r_nu⟩
+  exact
+    ⟨r, by
+      rwa [mem_iff, ← IsUnit.sub_iff], by
+      rwa [← is_root.def, ← mem_roots hp]⟩
+
+/-- The *spectral mapping theorem* for polynomials.  Note: the assumption `degree p > 0`
+is necessary in case `σ a = ∅`, for then the left-hand side is `∅` and the right-hand side,
+assuming `[nontrivial A]`, is `{k}` where `p = polynomial.C k`. -/
+theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : Polynomial 𝕜) (hdeg : 0 < degree p) :
+    σ (aeval a p) = (fun k => eval k p) '' σ a := by
+  refine' Set.eq_of_subset_of_subset (fun k hk => _) (subset_polynomial_aeval a p)
+  have hprod := eq_prod_roots_of_splits_id (IsAlgClosed.splits (C k - p))
+  have h_ne : C k - p ≠ 0 :=
+    ne_zero_of_degree_gt
+      (by
+        rwa [degree_sub_eq_right_of_degree_lt (lt_of_le_of_ltₓ degree_C_le hdeg)])
+  have lead_ne := leading_coeff_ne_zero.mpr h_ne
+  have lead_unit := (Units.map ↑ₐ.toMonoidHom (Units.mk0 _ lead_ne)).IsUnit
+  have p_a_eq : aeval a (C k - p) = ↑ₐ k - aeval a p := by
+    simp only [aeval_C, AlgHom.map_sub, sub_left_inj]
+  rw [mem_iff, ← p_a_eq, hprod, aeval_mul, ((Commute.all _ _).map (aeval a)).is_unit_mul_iff, aeval_C] at hk
+  replace hk := exists_mem_of_not_is_unit_aeval_prod h_ne (not_and.mp hk lead_unit)
+  rcases hk with ⟨r, r_mem, r_ev⟩
+  exact
+    ⟨r, r_mem,
+      symm
+        (by
+          simpa [eval_sub, eval_C, sub_eq_zero] using r_ev)⟩
+
+/-- In this version of the spectral mapping theorem, we assume the spectrum
+is nonempty instead of assuming the degree of the polynomial is positive. Note: the
+assumption `[nontrivial A]` is necessary for the same reason as in `spectrum.zero_eq`. -/
+theorem map_polynomial_aeval_of_nonempty [IsAlgClosed 𝕜] [Nontrivial A] (a : A) (p : Polynomial 𝕜)
+    (hnon : (σ a).Nonempty) : σ (aeval a p) = (fun k => eval k p) '' σ a := by
+  refine' Or.elim (le_or_gtₓ (degree p) 0) (fun h => _) (map_polynomial_aeval_of_degree_pos a p)
+  · rw [eq_C_of_degree_le_zero h]
+    simp only [Set.image_congr, eval_C, aeval_C, scalar_eq, Set.Nonempty.image_const hnon]
+    
+
+variable (𝕜)
+
+/-- Every element `a` in a nontrivial finite-dimensional algebra `A`
+over an algebraically closed field `𝕜` has non-empty spectrum. -/
+theorem nonempty_of_is_alg_closed_of_finite_dimensional [IsAlgClosed 𝕜] [Nontrivial A] [I : FiniteDimensional 𝕜 A]
+    (a : A) : ∃ k : 𝕜, k ∈ σ a := by
+  obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := is_integral_of_noetherian (IsNoetherian.iff_fg.2 I) a
+  have nu : ¬IsUnit (aeval a p) := by
+    rw [← aeval_def] at h_eval_p
+    rw [h_eval_p]
+    simp
+  rw [eq_prod_roots_of_monic_of_splits_id h_mon (IsAlgClosed.splits p)] at nu
+  obtain ⟨k, hk, _⟩ := exists_mem_of_not_is_unit_aeval_prod (monic.ne_zero h_mon) nu
+  exact ⟨k, hk⟩
 
 end ScalarField
 

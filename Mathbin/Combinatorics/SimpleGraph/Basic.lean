@@ -70,8 +70,7 @@ open Finset
 
 universe u v w
 
-/-- 
-A simple graph is an irreflexive symmetric relation `adj` on a vertex type `V`.
+/-- A simple graph is an irreflexive symmetric relation `adj` on a vertex type `V`.
 The relation describes which pairs of vertices are adjacent.
 There is exactly one edge for every pair of adjacent edges;
 see `simple_graph.edge_set` for the corresponding edge set.
@@ -86,13 +85,13 @@ structure SimpleGraph (V : Type u) where
     run_tac
       obviously
 
-/-- 
-Construct the simple graph induced by the given relation. It
+/-- Construct the simple graph induced by the given relation. It
 symmetrizes the relation and makes it irreflexive.
 -/
-def SimpleGraph.fromRel {V : Type u} (r : V → V → Prop) : SimpleGraph V :=
-  { Adj := fun a b => a ≠ b ∧ (r a b ∨ r b a), symm := fun a b ⟨hn, hr⟩ => ⟨hn.symm, hr.symm⟩,
-    loopless := fun a ⟨hn, _⟩ => hn rfl }
+def SimpleGraph.fromRel {V : Type u} (r : V → V → Prop) : SimpleGraph V where
+  Adj := fun a b => a ≠ b ∧ (r a b ∨ r b a)
+  symm := fun a b ⟨hn, hr⟩ => ⟨hn.symm, hr.symm⟩
+  loopless := fun a ⟨hn, _⟩ => hn rfl
 
 noncomputable instance {V : Type u} [Fintype V] : Fintype (SimpleGraph V) := by
   classical
@@ -103,17 +102,16 @@ theorem SimpleGraph.from_rel_adj {V : Type u} (r : V → V → Prop) (v w : V) :
     (SimpleGraph.fromRel r).Adj v w ↔ v ≠ w ∧ (r v w ∨ r w v) :=
   Iff.rfl
 
-/--  The complete graph on a type `V` is the simple graph with all pairs of distinct vertices
+/-- The complete graph on a type `V` is the simple graph with all pairs of distinct vertices
 adjacent. In `mathlib`, this is usually referred to as `⊤`. -/
-def completeGraph (V : Type u) : SimpleGraph V :=
-  { Adj := Ne }
+def completeGraph (V : Type u) : SimpleGraph V where
+  Adj := Ne
 
-/--  The graph with no edges on a given vertex type `V`. `mathlib` prefers the notation `⊥`. -/
-def emptyGraph (V : Type u) : SimpleGraph V :=
-  { Adj := fun i j => False }
+/-- The graph with no edges on a given vertex type `V`. `mathlib` prefers the notation `⊥`. -/
+def emptyGraph (V : Type u) : SimpleGraph V where
+  Adj := fun i j => False
 
-/-- 
-Two vertices are adjacent in the complete bipartite graph on two vertex types
+/-- Two vertices are adjacent in the complete bipartite graph on two vertex types
 if and only if they are not from the same side.
 Bipartite graphs in general may be regarded as being subgraphs of one of these.
 
@@ -121,14 +119,14 @@ TODO also introduce complete multi-partite graphs, where the vertex type is a si
 indexed family of vertex types
 -/
 @[simps]
-def completeBipartiteGraph (V W : Type _) : SimpleGraph (Sum V W) :=
-  { Adj := fun v w => v.is_left ∧ w.is_right ∨ v.is_right ∧ w.is_left,
-    symm := by
-      intro v w
-      cases v <;> cases w <;> simp ,
-    loopless := by
-      intro v
-      cases v <;> simp }
+def completeBipartiteGraph (V W : Type _) : SimpleGraph (Sum V W) where
+  Adj := fun v w => v.is_left ∧ w.is_right ∨ v.is_right ∧ w.is_left
+  symm := by
+    intro v w
+    cases v <;> cases w <;> simp
+  loopless := by
+    intro v
+    cases v <;> simp
 
 namespace SimpleGraph
 
@@ -155,9 +153,11 @@ protected theorem adj.ne {G : SimpleGraph V} {a b : V} (h : G.adj a b) : a ≠ b
 protected theorem adj.ne' {G : SimpleGraph V} {a b : V} (h : G.adj a b) : b ≠ a :=
   h.ne.symm
 
+theorem ne_of_adj_of_not_adj {v w x : V} (h : G.adj v x) (hn : ¬G.adj w x) : v ≠ w := fun h' => hn (h' ▸ h)
+
 section Order
 
-/--  The relation that one `simple_graph` is a subgraph of another.
+/-- The relation that one `simple_graph` is a subgraph of another.
 Note that this should be spelled `≤`. -/
 def is_subgraph (x y : SimpleGraph V) : Prop :=
   ∀ ⦃v w : V⦄, x.adj v w → y.adj v w
@@ -169,7 +169,7 @@ instance : LE (SimpleGraph V) :=
 theorem is_subgraph_eq_le : (is_subgraph : SimpleGraph V → SimpleGraph V → Prop) = (· ≤ ·) :=
   rfl
 
-/--  The supremum of two graphs `x ⊔ y` has edges where either `x` or `y` have edges. -/
+/-- The supremum of two graphs `x ⊔ y` has edges where either `x` or `y` have edges. -/
 instance : HasSup (SimpleGraph V) :=
   ⟨fun x y =>
     { Adj := x.adj⊔y.adj,
@@ -180,7 +180,7 @@ instance : HasSup (SimpleGraph V) :=
 theorem sup_adj (x y : SimpleGraph V) (v w : V) : (x⊔y).Adj v w ↔ x.adj v w ∨ y.adj v w :=
   Iff.rfl
 
-/--  The infimum of two graphs `x ⊓ y` has edges where both `x` and `y` have edges. -/
+/-- The infimum of two graphs `x ⊓ y` has edges where both `x` and `y` have edges. -/
 instance : HasInf (SimpleGraph V) :=
   ⟨fun x y =>
     { Adj := x.adj⊓y.adj,
@@ -191,8 +191,7 @@ instance : HasInf (SimpleGraph V) :=
 theorem inf_adj (x y : SimpleGraph V) (v w : V) : (x⊓y).Adj v w ↔ x.adj v w ∧ y.adj v w :=
   Iff.rfl
 
-/-- 
-We define `Gᶜ` to be the `simple_graph V` such that no two adjacent vertices in `G`
+/-- We define `Gᶜ` to be the `simple_graph V` such that no two adjacent vertices in `G`
 are adjacent in the complement, and every nonadjacent pair of vertices is adjacent
 (still ensuring that vertices are not adjacent to themselves).
 -/
@@ -208,7 +207,7 @@ instance : HasCompl (SimpleGraph V) :=
 theorem compl_adj (G : SimpleGraph V) (v w : V) : Gᶜ.Adj v w ↔ v ≠ w ∧ ¬G.adj v w :=
   Iff.rfl
 
-/--  The difference of two graphs `x \ y` has the edges of `x` with the edges of `y` removed. -/
+/-- The difference of two graphs `x \ y` has the edges of `x` with the edges of `y` removed. -/
 instance : HasSdiff (SimpleGraph V) :=
   ⟨fun x y =>
     { Adj := x.adj \ y.adj,
@@ -291,7 +290,7 @@ end Decidable
 
 end Order
 
-/--  `G.support` is the set of vertices that form edges in `G`. -/
+/-- `G.support` is the set of vertices that form edges in `G`. -/
 def support : Set V :=
   Rel.Dom G.adj
 
@@ -301,7 +300,7 @@ theorem mem_support {v : V} : v ∈ G.support ↔ ∃ w, G.adj v w :=
 theorem support_mono {G G' : SimpleGraph V} (h : G ≤ G') : G.support ⊆ G'.support :=
   Rel.dom_mono h
 
-/--  `G.neighbor_set v` is the set of vertices adjacent to `v` in `G`. -/
+/-- `G.neighbor_set v` is the set of vertices adjacent to `v` in `G`. -/
 def neighbor_set (v : V) : Set V :=
   SetOf (G.adj v)
 
@@ -309,8 +308,7 @@ instance neighbor_set.mem_decidable (v : V) [DecidableRel G.adj] : DecidablePred
   unfold neighbor_set
   infer_instance
 
-/-- 
-The edges of G consist of the unordered pairs of vertices related by
+/-- The edges of G consist of the unordered pairs of vertices related by
 `G.adj`.
 
 The way `edge_set` is defined is such that `mem_edge_set` is proved by `refl`.
@@ -323,8 +321,7 @@ def edge_set : Set (Sym2 V) :=
 theorem mem_edge_set : ⟦(v, w)⟧ ∈ G.edge_set ↔ G.adj v w :=
   Iff.rfl
 
-/-- 
-Two vertices are adjacent iff there is an edge between them.  The
+/-- Two vertices are adjacent iff there is an edge between them. The
 condition `v ≠ w` ensures they are different endpoints of the edge,
 which is necessary since when `v = w` the existential
 `∃ (e ∈ G.edge_set), v ∈ e ∧ w ∈ e` is satisfied by every edge
@@ -332,13 +329,13 @@ incident to `v`.
 -/
 theorem adj_iff_exists_edge {v w : V} : G.adj v w ↔ v ≠ w ∧ ∃ e ∈ G.edge_set, v ∈ e ∧ w ∈ e := by
   refine' ⟨fun _ => ⟨G.ne_of_adj ‹_›, ⟦(v, w)⟧, _⟩, _⟩
-  ·
-    simpa
-  ·
-    rintro ⟨hne, e, he, hv⟩
+  · simpa
+    
+  · rintro ⟨hne, e, he, hv⟩
     rw [Sym2.mem_and_mem_iff hne] at hv
     subst e
     rwa [mem_edge_set] at he
+    
 
 theorem adj_iff_exists_edge_coe : G.adj a b ↔ ∃ e : G.edge_set, ↑e = ⟦(a, b)⟧ := by
   simp only [mem_edge_set, exists_prop, SetCoe.exists, exists_eq_right, Subtype.coe_mk]
@@ -356,60 +353,9 @@ instance edges_fintype [DecidableEq V] [Fintype V] [DecidableRel G.adj] : Fintyp
 /-! ### Incidence set -/
 
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment "/--" " Set of edges incident to a given vertex, aka incidence set. -/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.def
-  "def"
-  (Command.declId `incidence_set [])
-  (Command.optDeclSig
-   [(Term.explicitBinder "(" [`v] [":" `V] [] ")")]
-   [(Term.typeSpec ":" (Term.app `Set [(Term.app `Sym2 [`V])]))])
-  (Command.declValSimple
-   ":="
-   (Set.«term{_|_}_1» "{" («term_∈_» `e "∈" `G.edge_set) "|" (Init.Core.«term_∈_» `v " ∈ " `e) "}")
-   [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}_1» "{" («term_∈_» `e "∈" `G.edge_set) "|" (Init.Core.«term_∈_» `v " ∈ " `e) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}_1»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_∈_»', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Set of edges incident to a given vertex, aka incidence set. -/
-  def incidence_set ( v : V ) : Set Sym2 V := { e ∈ G.edge_set | v ∈ e }
+def incidence_set (v : V) : Set (Sym2 V) :=
+  { e ∈ G.edge_set | v ∈ e }
 
 theorem incidence_set_subset (v : V) : G.incidence_set v ⊆ G.edge_set := fun _ h => h.1
 
@@ -440,8 +386,7 @@ theorem adj_of_mem_incidence_set (h : a ≠ b) (ha : e ∈ G.incidence_set a) (h
 instance decidable_mem_incidence_set [DecidableEq V] [DecidableRel G.adj] (v : V) :
     DecidablePred (· ∈ G.incidence_set v) := fun e => And.decidable
 
-/-- 
-The `edge_set` of the graph as a `finset`.
+/-- The `edge_set` of the graph as a `finset`.
 -/
 def edge_finset [DecidableEq V] [Fintype V] [DecidableRel G.adj] : Finset (Sym2 V) :=
   Set.toFinset G.edge_set
@@ -472,12 +417,12 @@ theorem adj_incidence_set_inter {v : V} {e : Sym2 V} (he : e ∈ G.edge_set) (h 
   ext e'
   simp only [incidence_set, Set.mem_sep_eq, Set.mem_inter_eq, Set.mem_singleton_iff]
   refine' ⟨fun h' => _, _⟩
-  ·
-    rw [← Sym2.other_spec h]
+  · rw [← Sym2.other_spec h]
     exact (Sym2.mem_and_mem_iff (edge_other_ne G he h).symm).mp ⟨h'.1.2, h'.2.2⟩
-  ·
-    rintro rfl
+    
+  · rintro rfl
     exact ⟨⟨he, h⟩, he, Sym2.other_mem _⟩
+    
 
 theorem compl_neighbor_set_disjoint (G : SimpleGraph V) (v : V) : Disjoint (G.neighbor_set v) (Gᶜ.NeighborSet v) := by
   rw [Set.disjoint_iff]
@@ -492,8 +437,18 @@ theorem neighbor_set_union_compl_neighbor_set_eq (G : SimpleGraph V) (v : V) :
   simp_rw [Set.mem_union, mem_neighbor_set, compl_adj, Set.mem_compl_eq, Set.mem_singleton_iff]
   tauto
 
-/-- 
-The set of common neighbors between two vertices `v` and `w` in a graph `G` is the
+theorem card_neighbor_set_union_compl_neighbor_set [Fintype V] (G : SimpleGraph V) (v : V)
+    [h : Fintype (G.neighbor_set v ∪ Gᶜ.NeighborSet v : Set V)] :
+    (@Set.toFinset _ (G.neighbor_set v ∪ Gᶜ.NeighborSet v) h).card = Fintype.card V - 1 := by
+  classical
+  simp_rw [neighbor_set_union_compl_neighbor_set_eq, Set.to_finset_compl, Finset.card_compl, Set.to_finset_card,
+    Set.card_singleton]
+
+theorem neighbor_set_compl (G : SimpleGraph V) (v : V) : Gᶜ.NeighborSet v = G.neighbor_set vᶜ \ {v} := by
+  ext w
+  simp [and_comm, eq_comm]
+
+/-- The set of common neighbors between two vertices `v` and `w` in a graph `G` is the
 intersection of the neighbor sets of `v` and `w`.
 -/
 def common_neighbors (v w : V) : Set V :=
@@ -521,12 +476,15 @@ theorem common_neighbors_subset_neighbor_set_right (v w : V) : G.common_neighbor
 instance decidable_mem_common_neighbors [DecidableRel G.adj] (v w : V) : DecidablePred (· ∈ G.common_neighbors v w) :=
   fun a => And.decidable
 
+theorem common_neighbors_top_eq {v w : V} : (⊤ : SimpleGraph V).CommonNeighbors v w = Set.Univ \ {v, w} := by
+  ext u
+  simp [common_neighbors, eq_comm, not_or_distrib.symm]
+
 section Incidence
 
 variable [DecidableEq V]
 
-/-- 
-Given an edge incident to a particular vertex, get the other vertex on the edge.
+/-- Given an edge incident to a particular vertex, get the other vertex on the edge.
 -/
 def other_vertex_of_incident {v : V} {e : Sym2 V} (h : e ∈ G.incidence_set v) : V :=
   h.2.other'
@@ -546,20 +504,69 @@ theorem incidence_other_neighbor_edge {v w : V} (h : w ∈ G.neighbor_set v) :
     G.other_vertex_of_incident (G.mem_incidence_iff_neighbor.mpr h) = w :=
   Sym2.congr_right.mp (Sym2.other_spec' (G.mem_incidence_iff_neighbor.mpr h).right)
 
-/-- 
-There is an equivalence between the set of edges incident to a given
+/-- There is an equivalence between the set of edges incident to a given
 vertex and the set of vertices adjacent to the vertex.
 -/
 @[simps]
-def incidence_set_equiv_neighbor_set (v : V) : G.incidence_set v ≃ G.neighbor_set v :=
-  { toFun := fun e => ⟨G.other_vertex_of_incident e.2, G.incidence_other_prop e.2⟩,
-    invFun := fun w => ⟨⟦(v, w.1)⟧, G.mem_incidence_iff_neighbor.mpr w.2⟩,
-    left_inv := fun x => by
-      simp [other_vertex_of_incident],
-    right_inv := fun ⟨w, hw⟩ => by
-      simp }
+def incidence_set_equiv_neighbor_set (v : V) : G.incidence_set v ≃ G.neighbor_set v where
+  toFun := fun e => ⟨G.other_vertex_of_incident e.2, G.incidence_other_prop e.2⟩
+  invFun := fun w => ⟨⟦(v, w.1)⟧, G.mem_incidence_iff_neighbor.mpr w.2⟩
+  left_inv := fun x => by
+    simp [other_vertex_of_incident]
+  right_inv := fun ⟨w, hw⟩ => by
+    simp
 
 end Incidence
+
+/-! ## Edge deletion -/
+
+
+/-- Given a set of vertex pairs, remove all of the corresponding edges from the edge set.
+It is fine to delete edges outside the edge set. -/
+def delete_edges (s : Set (Sym2 V)) : SimpleGraph V where
+  Adj := G.adj \ Sym2.ToRel s
+  symm := fun a b => by
+    simp [adj_comm, Sym2.eq_swap]
+
+@[simp]
+theorem delete_edges_adj (s : Set (Sym2 V)) (v w : V) : (G.delete_edges s).Adj v w ↔ G.adj v w ∧ ¬⟦(v, w)⟧ ∈ s :=
+  Iff.rfl
+
+theorem sdiff_eq_delete_edges (G G' : SimpleGraph V) : G \ G' = G.delete_edges G'.edge_set := by
+  ext
+  simp
+
+theorem compl_eq_delete_edges : Gᶜ = (⊤ : SimpleGraph V).deleteEdges G.edge_set := by
+  ext
+  simp
+
+@[simp]
+theorem delete_edges_delete_edges (s s' : Set (Sym2 V)) : (G.delete_edges s).deleteEdges s' = G.delete_edges (s ∪ s') :=
+  by
+  ext
+  simp [and_assoc, not_or_distrib]
+
+@[simp]
+theorem delete_edges_empty_eq : G.delete_edges ∅ = G := by
+  ext
+  simp
+
+@[simp]
+theorem delete_edges_univ_eq : G.delete_edges Set.Univ = ⊥ := by
+  ext
+  simp
+
+theorem delete_edges_le (s : Set (Sym2 V)) : G.delete_edges s ≤ G := by
+  intro
+  simp (config := { contextual := true })
+
+theorem delete_edges_le_of_le {s s' : Set (Sym2 V)} (h : s ⊆ s') : G.delete_edges s' ≤ G.delete_edges s := fun v w => by
+  simp (config := { contextual := true })only [delete_edges_adj, and_imp, true_andₓ]
+  exact fun ha hn hs => hn (h hs)
+
+theorem delete_edges_eq_inter_edge_set (s : Set (Sym2 V)) : G.delete_edges s = G.delete_edges (s ∩ G.edge_set) := by
+  ext
+  simp (config := { contextual := true })[imp_false]
 
 section FiniteAt
 
@@ -577,19 +584,20 @@ Use `neighbor_finset_eq_filter` to rewrite this definition as a `filter`.
 
 variable (v) [Fintype (G.neighbor_set v)]
 
-/-- 
-`G.neighbors v` is the `finset` version of `G.adj v` in case `G` is
+/-- `G.neighbors v` is the `finset` version of `G.adj v` in case `G` is
 locally finite at `v`.
 -/
 def neighbor_finset : Finset V :=
   (G.neighbor_set v).toFinset
 
+theorem neighbor_finset_def : G.neighbor_finset v = (G.neighbor_set v).toFinset :=
+  rfl
+
 @[simp]
 theorem mem_neighbor_finset (w : V) : w ∈ G.neighbor_finset v ↔ G.adj v w :=
   Set.mem_to_finset
 
-/-- 
-`G.degree v` is the number of vertices adjacent to `v`.
+/-- `G.degree v` is the number of vertices adjacent to `v`.
 -/
 def degree : ℕ :=
   (G.neighbor_finset v).card
@@ -601,11 +609,15 @@ theorem card_neighbor_set_eq_degree : Fintype.card (G.neighbor_set v) = G.degree
 theorem degree_pos_iff_exists_adj : 0 < G.degree v ↔ ∃ w, G.adj v w := by
   simp only [degree, card_pos, Finset.Nonempty, mem_neighbor_finset]
 
+theorem degree_compl [Fintype (Gᶜ.NeighborSet v)] [Fintype V] : Gᶜ.degree v = Fintype.card V - 1 - G.degree v := by
+  classical
+  rw [← card_neighbor_set_union_compl_neighbor_set G v, Set.to_finset_union]
+  simp [card_disjoint_union (set.to_finset_disjoint_iff.mpr (compl_neighbor_set_disjoint G v))]
+
 instance incidence_set_fintype [DecidableEq V] : Fintype (G.incidence_set v) :=
   Fintype.ofEquiv (G.neighbor_set v) (G.incidence_set_equiv_neighbor_set v).symm
 
-/-- 
-This is the `finset` version of `incidence_set`.
+/-- This is the `finset` version of `incidence_set`.
 -/
 def incidence_finset [DecidableEq V] : Finset (Sym2 V) :=
   (G.incidence_set v).toFinset
@@ -623,8 +635,7 @@ end FiniteAt
 
 section LocallyFinite
 
-/-- 
-A graph is locally finite if every vertex has a finite neighbor set.
+/-- A graph is locally finite if every vertex has a finite neighbor set.
 -/
 @[reducible]
 def locally_finite :=
@@ -632,14 +643,20 @@ def locally_finite :=
 
 variable [locally_finite G]
 
-/-- 
-A locally finite simple graph is regular of degree `d` if every vertex has degree `d`.
+/-- A locally finite simple graph is regular of degree `d` if every vertex has degree `d`.
 -/
 def is_regular_of_degree (d : ℕ) : Prop :=
   ∀ v : V, G.degree v = d
 
-theorem is_regular_of_degree_eq {d : ℕ} (h : G.is_regular_of_degree d) (v : V) : G.degree v = d :=
+variable {G}
+
+theorem is_regular_of_degree.degree_eq {d : ℕ} (h : G.is_regular_of_degree d) (v : V) : G.degree v = d :=
   h v
+
+theorem is_regular_of_degree.compl [Fintype V] [DecidableEq V] {G : SimpleGraph V} [DecidableRel G.adj] {k : ℕ}
+    (h : G.is_regular_of_degree k) : Gᶜ.IsRegularOfDegree (Fintype.card V - 1 - k) := by
+  intro v
+  rw [degree_compl, h v]
 
 end LocallyFinite
 
@@ -659,25 +676,31 @@ theorem neighbor_finset_eq_filter {v : V} [DecidableRel G.adj] : G.neighbor_fins
   ext
   simp
 
+theorem neighbor_finset_compl [DecidableEq V] [DecidableRel G.adj] (v : V) :
+    Gᶜ.neighborFinset v = G.neighbor_finset vᶜ \ {v} := by
+  simp only [neighbor_finset, neighbor_set_compl, Set.to_finset_sdiff, Set.to_finset_compl, Set.to_finset_singleton]
+
 @[simp]
 theorem complete_graph_degree [DecidableEq V] (v : V) : (⊤ : SimpleGraph V).degree v = Fintype.card V - 1 := by
   convert univ.card.pred_eq_sub_one
   erw [degree, neighbor_finset_eq_filter, filter_ne, card_erase_of_mem (mem_univ v)]
 
-theorem complete_graph_is_regular [DecidableEq V] : (⊤ : SimpleGraph V).IsRegularOfDegree (Fintype.card V - 1) := by
+theorem bot_degree (v : V) : (⊥ : SimpleGraph V).degree v = 0 := by
+  erw [degree, neighbor_finset_eq_filter, filter_false]
+  exact Finset.card_empty
+
+theorem is_regular_of_degree.top [DecidableEq V] : (⊤ : SimpleGraph V).IsRegularOfDegree (Fintype.card V - 1) := by
   intro v
   simp
 
-/-- 
-The minimum degree of all vertices (and `0` if there are no vertices).
+/-- The minimum degree of all vertices (and `0` if there are no vertices).
 The key properties of this are given in `exists_minimal_degree_vertex`, `min_degree_le_degree`
 and `le_min_degree_of_forall_le_degree`.
 -/
 def min_degree [DecidableRel G.adj] : ℕ :=
   Option.getOrElse (univ.Image fun v => G.degree v).min 0
 
-/-- 
-There exists a vertex of minimal degree. Note the assumption of being nonempty is necessary, as
+/-- There exists a vertex of minimal degree. Note the assumption of being nonempty is necessary, as
 the lemma implies there exists a vertex.
 -/
 theorem exists_minimal_degree_vertex [DecidableRel G.adj] [Nonempty V] : ∃ v, G.min_degree = G.degree v := by
@@ -687,15 +710,14 @@ theorem exists_minimal_degree_vertex [DecidableRel G.adj] [Nonempty V] : ∃ v, 
     ⟨v, by
       simp [min_degree, ht]⟩
 
-/--  The minimum degree in the graph is at most the degree of any particular vertex. -/
+/-- The minimum degree in the graph is at most the degree of any particular vertex. -/
 theorem min_degree_le_degree [DecidableRel G.adj] (v : V) : G.min_degree ≤ G.degree v := by
   obtain ⟨t, ht⟩ := Finset.min_of_mem (mem_image_of_mem (fun v => G.degree v) (mem_univ v))
   have := Finset.min_le_of_mem (mem_image_of_mem _ (mem_univ v)) ht
   rw [Option.mem_def] at ht
   rwa [min_degree, ht, Option.get_or_else_some]
 
-/-- 
-In a nonempty graph, if `k` is at most the degree of every vertex, it is at most the minimum
+/-- In a nonempty graph, if `k` is at most the degree of every vertex, it is at most the minimum
 degree. Note the assumption that the graph is nonempty is necessary as long as `G.min_degree` is
 defined to be a natural.
 -/
@@ -705,16 +727,14 @@ theorem le_min_degree_of_forall_le_degree [DecidableRel G.adj] [Nonempty V] (k :
   rw [hv]
   apply h
 
-/-- 
-The maximum degree of all vertices (and `0` if there are no vertices).
+/-- The maximum degree of all vertices (and `0` if there are no vertices).
 The key properties of this are given in `exists_maximal_degree_vertex`, `degree_le_max_degree`
 and `max_degree_le_of_forall_degree_le`.
 -/
 def max_degree [DecidableRel G.adj] : ℕ :=
   Option.getOrElse (univ.Image fun v => G.degree v).max 0
 
-/-- 
-There exists a vertex of maximal degree. Note the assumption of being nonempty is necessary, as
+/-- There exists a vertex of maximal degree. Note the assumption of being nonempty is necessary, as
 the lemma implies there exists a vertex.
 -/
 theorem exists_maximal_degree_vertex [DecidableRel G.adj] [Nonempty V] : ∃ v, G.max_degree = G.degree v := by
@@ -727,28 +747,27 @@ theorem exists_maximal_degree_vertex [DecidableRel G.adj] [Nonempty V] : ∃ v, 
   rw [max_degree, ht]
   rfl
 
-/--  The maximum degree in the graph is at least the degree of any particular vertex. -/
+/-- The maximum degree in the graph is at least the degree of any particular vertex. -/
 theorem degree_le_max_degree [DecidableRel G.adj] (v : V) : G.degree v ≤ G.max_degree := by
   obtain ⟨t, ht : _ = _⟩ := Finset.max_of_mem (mem_image_of_mem (fun v => G.degree v) (mem_univ v))
   have := Finset.le_max_of_mem (mem_image_of_mem _ (mem_univ v)) ht
   rwa [max_degree, ht, Option.get_or_else_some]
 
-/-- 
-In a graph, if `k` is at least the degree of every vertex, then it is at least the maximum
+/-- In a graph, if `k` is at least the degree of every vertex, then it is at least the maximum
 degree.
 -/
 theorem max_degree_le_of_forall_degree_le [DecidableRel G.adj] (k : ℕ) (h : ∀ v, G.degree v ≤ k) : G.max_degree ≤ k :=
   by
   by_cases' hV : (univ : Finset V).Nonempty
-  ·
-    have : Nonempty V := univ_nonempty_iff.mp hV
+  · have : Nonempty V := univ_nonempty_iff.mp hV
     obtain ⟨v, hv⟩ := G.exists_maximal_degree_vertex
     rw [hv]
     apply h
-  ·
-    rw [not_nonempty_iff_eq_empty] at hV
+    
+  · rw [not_nonempty_iff_eq_empty] at hV
     rw [max_degree, hV, image_empty]
     exact zero_le k
+    
 
 theorem degree_lt_card_verts [DecidableRel G.adj] (v : V) : G.degree v < Fintype.card V := by
   classical
@@ -758,8 +777,7 @@ theorem degree_lt_card_verts [DecidableRel G.adj] (v : V) : G.degree v < Fintype
     ⟨v, by
       simp , Finset.subset_univ _⟩
 
-/-- 
-The maximum degree of a nonempty graph is less than the number of vertices. Note that the assumption
+/-- The maximum degree of a nonempty graph is less than the number of vertices. Note that the assumption
 that `V` is nonempty is necessary, as otherwise this would assert the existence of a
 natural number less than zero.
 -/
@@ -782,8 +800,7 @@ theorem card_common_neighbors_lt_card_verts [DecidableRel G.adj] (v w : V) :
     Fintype.card (G.common_neighbors v w) < Fintype.card V :=
   Nat.lt_of_le_of_ltₓ (G.card_common_neighbors_le_degree_left _ _) (G.degree_lt_card_verts v)
 
-/-- 
-If the condition `G.adj v w` fails, then `card_common_neighbors_le_degree` is
+/-- If the condition `G.adj v w` fails, then `card_common_neighbors_le_degree` is
 the best we can do in general.
 -/
 theorem adj.card_common_neighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.adj] {v w : V} (h : G.adj v w) :
@@ -794,32 +811,39 @@ theorem adj.card_common_neighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.
   rw [Finset.ssubset_iff]
   use w
   constructor
-  ·
-    rw [Set.mem_to_finset]
+  · rw [Set.mem_to_finset]
     apply not_mem_common_neighbors_right
-  ·
-    rw [Finset.insert_subset]
+    
+  · rw [Finset.insert_subset]
     constructor
-    ·
-      simpa
-    ·
-      rw [neighbor_finset, ← Set.subset_iff_to_finset_subset]
+    · simpa
+      
+    · rw [neighbor_finset, ← Set.subset_iff_to_finset_subset]
       exact G.common_neighbors_subset_neighbor_set_left _ _
+      
+    
+
+theorem card_common_neighbors_top [DecidableEq V] {v w : V} (h : v ≠ w) :
+    Fintype.card ((⊤ : SimpleGraph V).CommonNeighbors v w) = Fintype.card V - 2 := by
+  simp only [common_neighbors_top_eq, ← Set.to_finset_card, Set.to_finset_sdiff]
+  rw [Finset.card_sdiff]
+  · simp [Finset.card_univ, h]
+    
+  · simp only [← Set.subset_iff_to_finset_subset, Set.subset_univ]
+    
 
 end Finite
 
 section Maps
 
-/-- 
-A graph homomorphism is a map on vertex sets that respects adjacency relations.
+/-- A graph homomorphism is a map on vertex sets that respects adjacency relations.
 
 The notation `G →g G'` represents the type of graph homomorphisms.
 -/
 abbrev hom :=
   RelHom G.adj G'.adj
 
-/-- 
-A graph embedding is an embedding `f` such that for vertices `v w : V`,
+/-- A graph embedding is an embedding `f` such that for vertices `v w : V`,
 `G.adj f(v) f(w) ↔ G.adj v w `. Its image is an induced subgraph of G'.
 
 The notation `G ↪g G'` represents the type of graph embeddings.
@@ -827,8 +851,7 @@ The notation `G ↪g G'` represents the type of graph embeddings.
 abbrev embedding :=
   RelEmbedding G.adj G'.adj
 
-/-- 
-A graph isomorphism is an bijective map on vertex sets that respects adjacency relations.
+/-- A graph isomorphism is an bijective map on vertex sets that respects adjacency relations.
 
 The notation `G ≃g G'` represents the type of graph isomorphisms.
 -/
@@ -845,7 +868,7 @@ namespace Hom
 
 variable {G G'} (f : G →g G')
 
-/--  The identity homomorphism from a graph to itself. -/
+/-- The identity homomorphism from a graph to itself. -/
 abbrev id : G →g G :=
   RelHom.id _
 
@@ -858,20 +881,21 @@ theorem map_mem_edge_set {e : Sym2 V} (h : e ∈ G.edge_set) : e.map f ∈ G'.ed
 theorem apply_mem_neighbor_set {v w : V} (h : w ∈ G.neighbor_set v) : f w ∈ G'.neighbor_set (f v) :=
   map_adj f h
 
-/--  The map between edge sets induced by a homomorphism.
+/-- The map between edge sets induced by a homomorphism.
 The underlying map on edges is given by `sym2.map`. -/
 @[simps]
 def map_edge_set (e : G.edge_set) : G'.edge_set :=
   ⟨Sym2.map f e, f.map_mem_edge_set e.property⟩
 
-/--  The map between neighbor sets induced by a homomorphism. -/
+/-- The map between neighbor sets induced by a homomorphism. -/
 @[simps]
 def map_neighbor_set (v : V) (w : G.neighbor_set v) : G'.neighbor_set (f v) :=
   ⟨f w, f.apply_mem_neighbor_set w.property⟩
 
-/--  The induced map for spanning subgraphs, which is the identity on vertices. -/
-def map_spanning_subgraphs {G G' : SimpleGraph V} (h : G ≤ G') : G →g G' :=
-  { toFun := fun x => x, map_rel' := h }
+/-- The induced map for spanning subgraphs, which is the identity on vertices. -/
+def map_spanning_subgraphs {G G' : SimpleGraph V} (h : G ≤ G') : G →g G' where
+  toFun := fun x => x
+  map_rel' := h
 
 theorem map_edge_set.injective (hinj : Function.Injective f) : Function.Injective f.map_edge_set := by
   rintro ⟨e₁, h₁⟩ ⟨e₂, h₂⟩
@@ -882,12 +906,12 @@ theorem map_edge_set.injective (hinj : Function.Injective f) : Function.Injectiv
 
 variable {G'' : SimpleGraph X}
 
-/--  Composition of graph homomorphisms. -/
+/-- Composition of graph homomorphisms. -/
 abbrev comp (f' : G' →g G'') (f : G →g G') : G →g G'' :=
   f'.comp f
 
 @[simp]
-theorem coe_comp (f' : G' →g G'') (f : G →g G') : ⇑f'.comp f = (f' ∘ f) :=
+theorem coe_comp (f' : G' →g G'') (f : G →g G') : ⇑f'.comp f = f' ∘ f :=
   rfl
 
 end Hom
@@ -896,11 +920,11 @@ namespace Embedding
 
 variable {G G'} (f : G ↪g G')
 
-/--  The identity embedding from a graph to itself. -/
+/-- The identity embedding from a graph to itself. -/
 abbrev refl : G ↪g G :=
   RelEmbedding.refl _
 
-/--  An embedding of graphs gives rise to a homomorphism of graphs. -/
+/-- An embedding of graphs gives rise to a homomorphism of graphs. -/
 abbrev to_hom : G →g G' :=
   f.to_rel_hom
 
@@ -913,34 +937,36 @@ theorem map_mem_edge_set_iff {e : Sym2 V} : e.map f ∈ G'.edge_set ↔ e ∈ G.
 theorem apply_mem_neighbor_set_iff {v w : V} : f w ∈ G'.neighbor_set (f v) ↔ w ∈ G.neighbor_set v :=
   map_adj_iff f
 
-/--  A graph embedding induces an embedding of edge sets. -/
+/-- A graph embedding induces an embedding of edge sets. -/
 @[simps]
-def map_edge_set : G.edge_set ↪ G'.edge_set :=
-  { toFun := hom.map_edge_set f, inj' := hom.map_edge_set.injective f f.inj' }
+def map_edge_set : G.edge_set ↪ G'.edge_set where
+  toFun := hom.map_edge_set f
+  inj' := hom.map_edge_set.injective f f.inj'
 
-/--  A graph embedding induces an embedding of neighbor sets. -/
+/-- A graph embedding induces an embedding of neighbor sets. -/
 @[simps]
-def map_neighbor_set (v : V) : G.neighbor_set v ↪ G'.neighbor_set (f v) :=
-  { toFun := fun w => ⟨f w, f.apply_mem_neighbor_set_iff.mpr w.2⟩,
-    inj' := by
-      rintro ⟨w₁, h₁⟩ ⟨w₂, h₂⟩ h
-      rw [Subtype.mk_eq_mk] at h⊢
-      exact f.inj' h }
+def map_neighbor_set (v : V) : G.neighbor_set v ↪ G'.neighbor_set (f v) where
+  toFun := fun w => ⟨f w, f.apply_mem_neighbor_set_iff.mpr w.2⟩
+  inj' := by
+    rintro ⟨w₁, h₁⟩ ⟨w₂, h₂⟩ h
+    rw [Subtype.mk_eq_mk] at h⊢
+    exact f.inj' h
 
-/--  Embeddings of types induce embeddings of complete graphs on those types. -/
-def complete_graph.of_embedding {α β : Type _} (f : α ↪ β) : completeGraph α ↪g completeGraph β :=
-  { toFun := f, inj' := f.inj',
-    map_rel_iff' := by
-      simp }
+/-- Embeddings of types induce embeddings of complete graphs on those types. -/
+def complete_graph.of_embedding {α β : Type _} (f : α ↪ β) : completeGraph α ↪g completeGraph β where
+  toFun := f
+  inj' := f.inj'
+  map_rel_iff' := by
+    simp
 
 variable {G'' : SimpleGraph X}
 
-/--  Composition of graph embeddings. -/
+/-- Composition of graph embeddings. -/
 abbrev comp (f' : G' ↪g G'') (f : G ↪g G') : G ↪g G'' :=
   f.trans f'
 
 @[simp]
-theorem coe_comp (f' : G' ↪g G'') (f : G ↪g G') : ⇑f'.comp f = (f' ∘ f) :=
+theorem coe_comp (f' : G' ↪g G'') (f : G ↪g G') : ⇑f'.comp f = f' ∘ f :=
   rfl
 
 end Embedding
@@ -949,19 +975,19 @@ namespace Iso
 
 variable {G G'} (f : G ≃g G')
 
-/--  The identity isomorphism of a graph with itself. -/
+/-- The identity isomorphism of a graph with itself. -/
 abbrev refl : G ≃g G :=
   RelIso.refl _
 
-/--  An isomorphism of graphs gives rise to an embedding of graphs. -/
+/-- An isomorphism of graphs gives rise to an embedding of graphs. -/
 abbrev to_embedding : G ↪g G' :=
   f.to_rel_embedding
 
-/--  An isomorphism of graphs gives rise to a homomorphism of graphs. -/
+/-- An isomorphism of graphs gives rise to a homomorphism of graphs. -/
 abbrev to_hom : G →g G' :=
   f.to_embedding.to_hom
 
-/--  The inverse of a graph isomorphism. --/
+/-- The inverse of a graph isomorphism. --/
 abbrev symm : G' ≃g G :=
   f.symm
 
@@ -974,49 +1000,50 @@ theorem map_mem_edge_set_iff {e : Sym2 V} : e.map f ∈ G'.edge_set ↔ e ∈ G.
 theorem apply_mem_neighbor_set_iff {v w : V} : f w ∈ G'.neighbor_set (f v) ↔ w ∈ G.neighbor_set v :=
   map_adj_iff f
 
-/--  An isomorphism of graphs induces an equivalence of edge sets. -/
+/-- An isomorphism of graphs induces an equivalence of edge sets. -/
 @[simps]
-def map_edge_set : G.edge_set ≃ G'.edge_set :=
-  { toFun := hom.map_edge_set f, invFun := hom.map_edge_set f.symm,
-    left_inv := by
-      rintro ⟨e, h⟩
-      simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
-        Subtype.coe_mk, coe_coe]
-      apply congr_funₓ
-      convert Sym2.map_id
-      exact funext fun _ => RelIso.symm_apply_apply _ _,
-    right_inv := by
-      rintro ⟨e, h⟩
-      simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
-        Subtype.coe_mk, coe_coe]
-      apply congr_funₓ
-      convert Sym2.map_id
-      exact funext fun _ => RelIso.apply_symm_apply _ _ }
+def map_edge_set : G.edge_set ≃ G'.edge_set where
+  toFun := hom.map_edge_set f
+  invFun := hom.map_edge_set f.symm
+  left_inv := by
+    rintro ⟨e, h⟩
+    simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
+      Subtype.coe_mk, coe_coe]
+    apply congr_funₓ
+    convert Sym2.map_id
+    exact funext fun _ => RelIso.symm_apply_apply _ _
+  right_inv := by
+    rintro ⟨e, h⟩
+    simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
+      Subtype.coe_mk, coe_coe]
+    apply congr_funₓ
+    convert Sym2.map_id
+    exact funext fun _ => RelIso.apply_symm_apply _ _
 
-/--  A graph isomorphism induces an equivalence of neighbor sets. -/
+/-- A graph isomorphism induces an equivalence of neighbor sets. -/
 @[simps]
-def map_neighbor_set (v : V) : G.neighbor_set v ≃ G'.neighbor_set (f v) :=
-  { toFun := fun w => ⟨f w, f.apply_mem_neighbor_set_iff.mpr w.2⟩,
-    invFun := fun w =>
-      ⟨f.symm w, by
-        convert f.symm.apply_mem_neighbor_set_iff.mpr w.2
-        simp only [RelIso.symm_apply_apply]⟩,
-    left_inv := fun w => by
-      simp ,
-    right_inv := fun w => by
-      simp }
+def map_neighbor_set (v : V) : G.neighbor_set v ≃ G'.neighbor_set (f v) where
+  toFun := fun w => ⟨f w, f.apply_mem_neighbor_set_iff.mpr w.2⟩
+  invFun := fun w =>
+    ⟨f.symm w, by
+      convert f.symm.apply_mem_neighbor_set_iff.mpr w.2
+      simp only [RelIso.symm_apply_apply]⟩
+  left_inv := fun w => by
+    simp
+  right_inv := fun w => by
+    simp
 
 theorem card_eq_of_iso [Fintype V] [Fintype W] (f : G ≃g G') : Fintype.card V = Fintype.card W := by
   convert (Fintype.of_equiv_card f.to_equiv).symm
 
 variable {G'' : SimpleGraph X}
 
-/--  Composition of graph isomorphisms. -/
+/-- Composition of graph isomorphisms. -/
 abbrev comp (f' : G' ≃g G'') (f : G ≃g G') : G ≃g G'' :=
   f.trans f'
 
 @[simp]
-theorem coe_comp (f' : G' ≃g G'') (f : G ≃g G') : ⇑f'.comp f = (f' ∘ f) :=
+theorem coe_comp (f' : G' ≃g G'') (f : G ≃g G') : ⇑f'.comp f = f' ∘ f :=
   rfl
 
 end Iso

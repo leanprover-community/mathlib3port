@@ -25,7 +25,7 @@ namespace Real
 
 variable {x y : ℝ}
 
-/--  The real logarithm function, equal to the inverse of the exponential for `x > 0`,
+/-- The real logarithm function, equal to the inverse of the exponential for `x > 0`,
 to `log |x|` for `x < 0`, and to `0` for `0`. We use this unconventional extension to
 `(-∞, 0]` as it gives the formula `log (x * y) = log x + log y` for all nonzero `x` and `y`, and
 the derivative of `log` is `1/x` away from `0`. -/
@@ -76,10 +76,10 @@ theorem log_one : log 1 = 0 :=
 @[simp]
 theorem log_abs (x : ℝ) : log |x| = log x := by
   by_cases' h : x = 0
-  ·
-    simp [h]
-  ·
-    rw [← exp_eq_exp, exp_log_eq_abs h, exp_log_eq_abs (abs_pos.2 h).ne', abs_abs]
+  · simp [h]
+    
+  · rw [← exp_eq_exp, exp_log_eq_abs h, exp_log_eq_abs (abs_pos.2 h).ne', abs_abs]
+    
 
 @[simp]
 theorem log_neg_eq_log (x : ℝ) : log (-x) = log x := by
@@ -89,7 +89,7 @@ theorem surj_on_log' : surj_on log (Iio 0) univ := fun x _ =>
   ⟨-exp x, neg_lt_zero.2 $ exp_pos x, by
     rw [log_neg_eq_log, log_exp]⟩
 
-theorem log_mul (hx : x ≠ 0) (hy : y ≠ 0) : log (x*y) = log x+log y :=
+theorem log_mul (hx : x ≠ 0) (hy : y ≠ 0) : log (x * y) = log x + log y :=
   exp_injective $ by
     rw [exp_log_eq_abs (mul_ne_zero hx hy), exp_add, exp_log_eq_abs hx, exp_log_eq_abs hy, abs_mul]
 
@@ -100,8 +100,8 @@ theorem log_div (hx : x ≠ 0) (hy : y ≠ 0) : log (x / y) = log x - log y :=
 @[simp]
 theorem log_inv (x : ℝ) : log (x⁻¹) = -log x := by
   by_cases' hx : x = 0
-  ·
-    simp [hx]
+  · simp [hx]
+    
   rw [← exp_eq_exp, exp_log_eq_abs (inv_ne_zero hx), exp_neg, exp_log_eq_abs hx, abs_inv]
 
 theorem log_le_log (h : 0 < x) (h₁ : 0 < y) : Real.log x ≤ Real.log y ↔ x ≤ y := by
@@ -151,8 +151,8 @@ theorem log_nonpos_iff (hx : 0 < x) : log x ≤ 0 ↔ x ≤ 1 := by
 
 theorem log_nonpos_iff' (hx : 0 ≤ x) : log x ≤ 0 ↔ x ≤ 1 := by
   rcases hx.eq_or_lt with (rfl | hx)
-  ·
-    simp [le_reflₓ, zero_le_one]
+  · simp [le_reflₓ, zero_le_one]
+    
   exact log_nonpos_iff hx
 
 theorem log_nonpos (hx : 0 ≤ x) (h'x : x ≤ 1) : log x ≤ 0 :=
@@ -178,21 +178,42 @@ theorem log_ne_zero_of_pos_of_ne_one {x : ℝ} (hx_pos : 0 < x) (hx : x ≠ 1) :
 @[simp]
 theorem log_eq_zero {x : ℝ} : log x = 0 ↔ x = 0 ∨ x = 1 ∨ x = -1 := by
   constructor
-  ·
-    intro h
+  · intro h
     rcases lt_trichotomyₓ x 0 with (x_lt_zero | rfl | x_gt_zero)
-    ·
-      refine' Or.inr (Or.inr (eq_neg_iff_eq_neg.mp _))
+    · refine' Or.inr (Or.inr (eq_neg_iff_eq_neg.mp _))
       rw [← log_neg_eq_log x] at h
       exact (eq_one_of_pos_of_log_eq_zero (neg_pos.mpr x_lt_zero) h).symm
-    ·
-      exact Or.inl rfl
-    ·
-      exact Or.inr (Or.inl (eq_one_of_pos_of_log_eq_zero x_gt_zero h))
-  ·
-    rintro (rfl | rfl | rfl) <;> simp only [log_one, log_zero, log_neg_eq_log]
+      
+    · exact Or.inl rfl
+      
+    · exact Or.inr (Or.inl (eq_one_of_pos_of_log_eq_zero x_gt_zero h))
+      
+    
+  · rintro (rfl | rfl | rfl) <;> simp only [log_one, log_zero, log_neg_eq_log]
+    
 
-/--  The real logarithm function tends to `+∞` at `+∞`. -/
+theorem log_le_sub_one_of_pos {x : ℝ} (hx : 0 < x) : log x ≤ x - 1 := by
+  rw [le_sub_iff_add_le]
+  convert add_one_le_exp (log x)
+  rw [exp_log hx]
+
+theorem log_div_self_antitone_on : AntitoneOn (fun x : ℝ => log x / x) { x | exp 1 ≤ x } := by
+  simp only [AntitoneOn, mem_set_of_eq]
+  intro x hex y hey hxy
+  have x_pos : 0 < x := (exp_pos 1).trans_le hex
+  have y_pos : 0 < y := (exp_pos 1).trans_le hey
+  have hlogx : 1 ≤ log x := by
+    rwa [le_log_iff_exp_le x_pos]
+  have hyx : 0 ≤ y / x - 1 := by
+    rwa [le_sub_iff_add_le, le_div_iff x_pos, zero_addₓ, one_mulₓ]
+  rw [div_le_iff y_pos, ← sub_le_sub_iff_right (log x)]
+  calc log y - log x = log (y / x) := by
+      rw [log_div y_pos.ne' x_pos.ne']_ ≤ y / x - 1 :=
+      log_le_sub_one_of_pos (div_pos y_pos x_pos)_ ≤ log x * (y / x - 1) :=
+      le_mul_of_one_le_left hyx hlogx _ = log x / x * y - log x := by
+      ring
+
+/-- The real logarithm function tends to `+∞` at `+∞`. -/
 theorem tendsto_log_at_top : tendsto log at_top at_top :=
   tendsto_comp_exp_at_top.1 $ by
     simpa only [log_exp] using tendsto_id
@@ -223,6 +244,17 @@ theorem continuous_at_log_iff : ContinuousAt log x ↔ x ≠ 0 := by
   refine' ⟨_, continuous_at_log⟩
   rintro h rfl
   exact not_tendsto_nhds_of_tendsto_at_bot tendsto_log_nhds_within_zero _ (h.tendsto.mono_left inf_le_left)
+
+open_locale BigOperators
+
+theorem log_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
+    log (∏ i in s, f i) = ∑ i in s, log (f i) := by
+  classical
+  induction' s using Finset.induction_on with a s ha ih
+  · simp
+    
+  simp only [Finset.mem_insert, forall_eq_or_imp] at hf
+  simp [ha, ih hf.2, log_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
 
 end Real
 

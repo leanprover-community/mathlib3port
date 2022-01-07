@@ -17,27 +17,35 @@ universe u
 
 namespace Groupₓₓ
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive AddGroupₓₓ.hasZeroObject ]
-  instance
-    : has_zero_object Groupₓₓ
-    where
-      zero := 1
-        uniqueTo X := ⟨ ⟨ 1 ⟩ , fun f => by ext cases x erw [ MonoidHom.map_one ] rfl ⟩
-        uniqueFrom X := ⟨ ⟨ 1 ⟩ , fun f => by ext ⟩
+@[to_additive AddGroupₓₓ.hasZeroObject]
+instance : has_zero_object Groupₓₓ where
+  zero := 1
+  uniqueTo := fun X =>
+    ⟨⟨1⟩, fun f => by
+      ext
+      cases x
+      erw [MonoidHom.map_one]
+      rfl⟩
+  uniqueFrom := fun X =>
+    ⟨⟨1⟩, fun f => by
+      ext⟩
 
 end Groupₓₓ
 
 namespace CommGroupₓₓ
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive AddCommGroupₓₓ.hasZeroObject ]
-  instance
-    : has_zero_object CommGroupₓₓ
-    where
-      zero := 1
-        uniqueTo X := ⟨ ⟨ 1 ⟩ , fun f => by ext cases x erw [ MonoidHom.map_one ] rfl ⟩
-        uniqueFrom X := ⟨ ⟨ 1 ⟩ , fun f => by ext ⟩
+@[to_additive AddCommGroupₓₓ.hasZeroObject]
+instance : has_zero_object CommGroupₓₓ where
+  zero := 1
+  uniqueTo := fun X =>
+    ⟨⟨1⟩, fun f => by
+      ext
+      cases x
+      erw [MonoidHom.map_one]
+      rfl⟩
+  uniqueFrom := fun X =>
+    ⟨⟨1⟩, fun f => by
+      ext⟩
 
 end CommGroupₓₓ
 

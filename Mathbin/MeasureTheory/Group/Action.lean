@@ -21,13 +21,13 @@ namespace MeasureTheory
 
 variable {G M α : Type _}
 
-/--  A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
+/-- A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
 class vadd_invariant_measure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace α} (μ : Measureₓ α) : Prop where
   measure_preimage_vadd {} : ∀ c : M ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c +ᵥ x) ⁻¹' s) = μ s
 
-/--  A measure `μ : measure α` is invariant under a multiplicative action of `M` on `α` if for any
+/-- A measure `μ : measure α` is invariant under a multiplicative action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c • x` is equal to
 the measure of `s`. -/
 @[to_additive]
@@ -43,8 +43,9 @@ instance zero [MeasurableSpace α] [HasScalar M α] : smul_invariant_measure M �
 variable [HasScalar M α] {m : MeasurableSpace α} {μ ν : Measureₓ α}
 
 @[to_additive]
-instance add [smul_invariant_measure M α μ] [smul_invariant_measure M α ν] : smul_invariant_measure M α (μ+ν) :=
-  ⟨fun c s hs => show (_+_) = _+_ from congr_arg2ₓ (·+·) (measure_preimage_smul μ c hs) (measure_preimage_smul ν c hs)⟩
+instance add [smul_invariant_measure M α μ] [smul_invariant_measure M α ν] : smul_invariant_measure M α (μ + ν) :=
+  ⟨fun c s hs =>
+    show _ + _ = _ + _ from congr_arg2ₓ (· + ·) (measure_preimage_smul μ c hs) (measure_preimage_smul ν c hs)⟩
 
 @[to_additive]
 instance smul [smul_invariant_measure M α μ] (c : ℝ≥0∞) : smul_invariant_measure M α (c • μ) :=
@@ -59,7 +60,7 @@ end SmulInvariantMeasure
 variable (G) {m : MeasurableSpace α} [Groupₓ G] [MulAction G α] [MeasurableSpace G] [HasMeasurableSmul G α] (c : G)
   (μ : Measureₓ α)
 
-/--  Equivalent definitions of a measure invariant under a multiplicative action of a group.
+/-- Equivalent definitions of a measure invariant under a multiplicative action of a group.
 
 - 0: `smul_invariant_measure G α μ`;
 
@@ -98,13 +99,13 @@ theorem smul_invariant_measure_tfae :
   tfae_have 5 → 3
   exact fun H c s hs => H c s
   tfae_have 3 → 2
-  ·
-    intro H c s hs
+  · intro H c s hs
     rw [preimage_smul]
     exact H (c⁻¹) s hs
+    
   tfae_finish
 
-/--  Equivalent definitions of a measure invariant under an additive action of a group.
+/-- Equivalent definitions of a measure invariant under an additive action of a group.
 
 - 0: `vadd_invariant_measure G α μ`;
 
@@ -144,7 +145,7 @@ section IsMinimal
 variable (G) {μ} [TopologicalSpace G] [TopologicalSpace α] [HasContinuousSmul G α] [MulAction.IsMinimal G α]
   {K U : Set α}
 
-/--  If measure `μ` is invariant under a group action and is nonzero on a compact set `K`, then it is
+/-- If measure `μ` is invariant under a group action and is nonzero on a compact set `K`, then it is
 positive on any nonempty open set. In case of a regular measure, one can assume `μ ≠ 0` instead of
 `μ K ≠ 0`, see `measure_theory.measure_is_open_pos_of_smul_invariant_of_ne_zero`. -/
 @[to_additive]
@@ -157,7 +158,7 @@ theorem measure_is_open_pos_of_smul_invariant_of_compact_ne_zero (hK : IsCompact
         (measure_bUnion_null_iff t.countable_to_set).2 $ fun _ _ => by
           rwa [measure_smul_set]
 
-/--  If measure `μ` is invariant under an additive group action and is nonzero on a compact set `K`,
+/-- If measure `μ` is invariant under an additive group action and is nonzero on a compact set `K`,
 then it is positive on any nonempty open set. In case of a regular measure, one can assume `μ ≠ 0`
 instead of `μ K ≠ 0`, see `measure_theory.measure_is_open_pos_of_vadd_invariant_of_ne_zero`. -/
 add_decl_doc measure_is_open_pos_of_vadd_invariant_of_compact_ne_zero

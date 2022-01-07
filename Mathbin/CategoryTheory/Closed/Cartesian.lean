@@ -36,35 +36,31 @@ open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
 attribute [local instance] monoidal_of_has_finite_products
 
-/-- 
-An object `X` is *exponentiable* if `(X × -)` is a left adjoint.
+/-- An object `X` is *exponentiable* if `(X × -)` is a left adjoint.
 We define this as being `closed` in the cartesian monoidal structure.
 -/
 abbrev exponentiable {C : Type u} [category.{v} C] [has_finite_products C] (X : C) :=
   closed X
 
-/-- 
-If `X` and `Y` are exponentiable then `X ⨯ Y` is.
+/-- If `X` and `Y` are exponentiable then `X ⨯ Y` is.
 This isn't an instance because it's not usually how we want to construct exponentials, we'll usually
 prove all objects are exponential uniformly.
 -/
 def binary_product_exponentiable {C : Type u} [category.{v} C] [has_finite_products C] {X Y : C} (hX : exponentiable X)
-    (hY : exponentiable Y) : exponentiable (X ⨯ Y) :=
-  { isAdj := by
-      have := hX.is_adj
-      have := hY.is_adj
-      exact adjunction.left_adjoint_of_nat_iso (monoidal_category.tensor_left_tensor _ _).symm }
+    (hY : exponentiable Y) : exponentiable (X ⨯ Y) where
+  isAdj := by
+    have := hX.is_adj
+    have := hY.is_adj
+    exact adjunction.left_adjoint_of_nat_iso (monoidal_category.tensor_left_tensor _ _).symm
 
-/-- 
-The terminal object is always exponentiable.
+/-- The terminal object is always exponentiable.
 This isn't an instance because most of the time we'll prove cartesian closed for all objects
 at once, rather than just for this one.
 -/
 def terminal_exponentiable {C : Type u} [category.{v} C] [has_finite_products C] : exponentiable (⊤_ C) :=
   unit_closed
 
-/-- 
-A category `C` is cartesian closed if it has finite products and every object is exponentiable.
+/-- A category `C` is cartesian closed if it has finite products and every object is exponentiable.
 We define this as `monoidal_closed` with respect to the cartesian monoidal structure.
 -/
 abbrev cartesian_closed (C : Type u) [category.{v} C] [has_finite_products C] :=
@@ -76,19 +72,19 @@ section Exp
 
 variable [has_finite_products C] [exponentiable A]
 
-/--  This is (-)^A. -/
+/-- This is (-)^A. -/
 def exp : C ⥤ C :=
   (@closed.is_adj _ _ _ A _).right
 
-/--  The adjunction between A ⨯ - and (-)^A. -/
+/-- The adjunction between A ⨯ - and (-)^A. -/
 def exp.adjunction : prod.functor.obj A ⊣ exp A :=
   closed.is_adj.adj
 
-/--  The evaluation natural transformation. -/
+/-- The evaluation natural transformation. -/
 def ev : exp A ⋙ prod.functor.obj A ⟶ 𝟭 C :=
   (exp.adjunction A).counit
 
-/--  The coevaluation natural transformation. -/
+/-- The coevaluation natural transformation. -/
 def coev : 𝟭 C ⟶ prod.functor.obj A ⋙ exp A :=
   (exp.adjunction A).Unit
 
@@ -109,7 +105,7 @@ theorem coev_naturality {X Y : C} (f : X ⟶ Y) :
     f ≫ (coev A).app Y = (coev A).app X ≫ (exp A).map (limits.prod.map (𝟙 A) f) :=
   (coev A).naturality f
 
-notation:20 A " ⟹ " B:20 => (exp A).obj B
+notation:20 A " ⟹ " B:19 => (exp A).obj B
 
 notation:30 B " ^^ " A:30 => (exp A).obj B
 
@@ -132,11 +128,11 @@ namespace CartesianClosed
 
 variable [has_finite_products C] [exponentiable A]
 
-/--  Currying in a cartesian closed category. -/
+/-- Currying in a cartesian closed category. -/
 def curry : (A ⨯ Y ⟶ X) → (Y ⟶ A ⟹ X) :=
   (exp.adjunction A).homEquiv _ _
 
-/--  Uncurrying in a cartesian closed category. -/
+/-- Uncurrying in a cartesian closed category. -/
 def uncurry : (Y ⟶ A ⟹ X) → (A ⨯ Y ⟶ X) :=
   ((exp.adjunction A).homEquiv _ _).symm
 
@@ -203,8 +199,7 @@ open CartesianClosed
 
 variable [has_finite_products C] [exponentiable A]
 
-/-- 
-Show that the exponential of the terminal object is isomorphic to itself, i.e. `X^1 ≅ X`.
+/-- Show that the exponential of the terminal object is isomorphic to itself, i.e. `X^1 ≅ X`.
 
 The typeclass argument is explicit: any instance can be used.
 -/
@@ -218,7 +213,7 @@ def exp_terminal_iso_self [exponentiable (⊤_ C)] : (⊤_ C) ⟹ X ≅ X :=
     fun Z W f g => by
     rw [uncurry_natural_left, prod.left_unitor_inv_naturality_assoc f]
 
-/--  The internal element which points at the given morphism. -/
+/-- The internal element which points at the given morphism. -/
 def internalize_hom (f : A ⟶ Y) : ⊤_ C ⟶ A ⟹ Y :=
   cartesian_closed.curry (limits.prod.fst ≫ f)
 
@@ -226,7 +221,7 @@ section Pre
 
 variable {B}
 
-/--  Pre-compose an internal hom with an external hom. -/
+/-- Pre-compose an internal hom with an external hom. -/
 def pre (f : B ⟶ A) [exponentiable B] : exp A ⟶ exp B :=
   transfer_nat_trans_self (exp.adjunction _) (exp.adjunction _) (prod.functor.map f)
 
@@ -253,55 +248,56 @@ theorem pre_map {A₁ A₂ A₃ : C} [exponentiable A₁] [exponentiable A₂] [
 
 end Pre
 
-/--  The internal hom functor given by the cartesian closed structure. -/
-def internal_hom [cartesian_closed C] : Cᵒᵖ ⥤ C ⥤ C :=
-  { obj := fun X => exp X.unop, map := fun X Y f => pre f.unop }
+/-- The internal hom functor given by the cartesian closed structure. -/
+def internal_hom [cartesian_closed C] : Cᵒᵖ ⥤ C ⥤ C where
+  obj := fun X => exp X.unop
+  map := fun X Y f => pre f.unop
 
-/--  If an initial object `I` exists in a CCC, then `A ⨯ I ≅ I`. -/
+/-- If an initial object `I` exists in a CCC, then `A ⨯ I ≅ I`. -/
 @[simps]
-def zero_mul {I : C} (t : is_initial I) : A ⨯ I ≅ I :=
-  { Hom := limits.prod.snd, inv := t.to _,
-    hom_inv_id' := by
-      have : (limits.prod.snd : A ⨯ I ⟶ I) = cartesian_closed.uncurry (t.to _)
-      rw [← curry_eq_iff]
-      apply t.hom_ext
-      rw [this, ← uncurry_natural_right, ← eq_curry_iff]
-      apply t.hom_ext,
-    inv_hom_id' := t.hom_ext _ _ }
+def zero_mul {I : C} (t : is_initial I) : A ⨯ I ≅ I where
+  Hom := limits.prod.snd
+  inv := t.to _
+  hom_inv_id' := by
+    have : (limits.prod.snd : A ⨯ I ⟶ I) = cartesian_closed.uncurry (t.to _)
+    rw [← curry_eq_iff]
+    apply t.hom_ext
+    rw [this, ← uncurry_natural_right, ← eq_curry_iff]
+    apply t.hom_ext
+  inv_hom_id' := t.hom_ext _ _
 
-/--  If an initial object `0` exists in a CCC, then `0 ⨯ A ≅ 0`. -/
+/-- If an initial object `0` exists in a CCC, then `0 ⨯ A ≅ 0`. -/
 def mul_zero {I : C} (t : is_initial I) : I ⨯ A ≅ I :=
   limits.prod.braiding _ _ ≪≫ zero_mul t
 
-/--  If an initial object `0` exists in a CCC then `0^B ≅ 1` for any `B`. -/
-def pow_zeroₓ {I : C} (t : is_initial I) [cartesian_closed C] : I ⟹ B ≅ ⊤_ C :=
-  { Hom := default _, inv := cartesian_closed.curry ((mul_zero t).Hom ≫ t.to _),
-    hom_inv_id' := by
-      rw [← curry_natural_left, curry_eq_iff, ← cancel_epi (mul_zero t).inv]
-      ·
-        apply t.hom_ext
-      ·
-        infer_instance
-      ·
-        infer_instance }
+/-- If an initial object `0` exists in a CCC then `0^B ≅ 1` for any `B`. -/
+def pow_zeroₓ {I : C} (t : is_initial I) [cartesian_closed C] : I ⟹ B ≅ ⊤_ C where
+  Hom := default _
+  inv := cartesian_closed.curry ((mul_zero t).Hom ≫ t.to _)
+  hom_inv_id' := by
+    rw [← curry_natural_left, curry_eq_iff, ← cancel_epi (mul_zero t).inv]
+    · apply t.hom_ext
+      
+    · infer_instance
+      
+    · infer_instance
+      
 
-/--  In a CCC with binary coproducts, the distribution morphism is an isomorphism. -/
-def prod_coprod_distrib [has_binary_coproducts C] [cartesian_closed C] (X Y Z : C) : (Z ⨯ X) ⨿ Z ⨯ Y ≅ Z ⨯ X ⨿ Y :=
-  { Hom := coprod.desc (limits.prod.map (𝟙 _) coprod.inl) (limits.prod.map (𝟙 _) coprod.inr),
-    inv :=
-      cartesian_closed.uncurry (coprod.desc (cartesian_closed.curry coprod.inl) (cartesian_closed.curry coprod.inr)),
-    hom_inv_id' := by
-      apply coprod.hom_ext
-      rw [coprod.inl_desc_assoc, comp_id, ← uncurry_natural_left, coprod.inl_desc, uncurry_curry]
-      rw [coprod.inr_desc_assoc, comp_id, ← uncurry_natural_left, coprod.inr_desc, uncurry_curry],
-    inv_hom_id' := by
-      rw [← uncurry_natural_right, ← eq_curry_iff]
-      apply coprod.hom_ext
-      rw [coprod.inl_desc_assoc, ← curry_natural_right, coprod.inl_desc, ← curry_natural_left, comp_id]
-      rw [coprod.inr_desc_assoc, ← curry_natural_right, coprod.inr_desc, ← curry_natural_left, comp_id] }
+/-- In a CCC with binary coproducts, the distribution morphism is an isomorphism. -/
+def prod_coprod_distrib [has_binary_coproducts C] [cartesian_closed C] (X Y Z : C) : (Z ⨯ X) ⨿ Z ⨯ Y ≅ Z ⨯ X ⨿ Y where
+  Hom := coprod.desc (limits.prod.map (𝟙 _) coprod.inl) (limits.prod.map (𝟙 _) coprod.inr)
+  inv := cartesian_closed.uncurry (coprod.desc (cartesian_closed.curry coprod.inl) (cartesian_closed.curry coprod.inr))
+  hom_inv_id' := by
+    apply coprod.hom_ext
+    rw [coprod.inl_desc_assoc, comp_id, ← uncurry_natural_left, coprod.inl_desc, uncurry_curry]
+    rw [coprod.inr_desc_assoc, comp_id, ← uncurry_natural_left, coprod.inr_desc, uncurry_curry]
+  inv_hom_id' := by
+    rw [← uncurry_natural_right, ← eq_curry_iff]
+    apply coprod.hom_ext
+    rw [coprod.inl_desc_assoc, ← curry_natural_right, coprod.inl_desc, ← curry_natural_left, comp_id]
+    rw [coprod.inr_desc_assoc, ← curry_natural_right, coprod.inr_desc, ← curry_natural_left, comp_id]
 
-/-- 
-If an initial object `I` exists in a CCC then it is a strict initial object,
+/-- If an initial object `I` exists in a CCC then it is a strict initial object,
 i.e. any morphism to `I` is an iso.
 This actually shows a slightly stronger version: any morphism to an initial object from an
 exponentiable object is an isomorphism.
@@ -315,7 +311,7 @@ theorem strict_initial {I : C} (t : is_initial I) (f : A ⟶ I) : is_iso f := by
 instance to_initial_is_iso [has_initial C] (f : A ⟶ ⊥_ C) : is_iso f :=
   strict_initial initial_is_initial _
 
-/--  If an initial object `0` exists in a CCC then every morphism from it is monic. -/
+/-- If an initial object `0` exists in a CCC then every morphism from it is monic. -/
 theorem initial_mono {I : C} (B : C) (t : is_initial I) [cartesian_closed C] : mono (t.to B) :=
   ⟨fun B g h _ => by
     have := strict_initial t g
@@ -331,40 +327,39 @@ section Functor
 
 variable [has_finite_products D]
 
-/-- 
-Transport the property of being cartesian closed across an equivalence of categories.
+/-- Transport the property of being cartesian closed across an equivalence of categories.
 
 Note we didn't require any coherence between the choice of finite products here, since we transport
 along the `prod_comparison` isomorphism.
 -/
-def cartesian_closed_of_equiv (e : C ≌ D) [h : cartesian_closed C] : cartesian_closed D :=
-  { closed := fun X =>
-      { isAdj := by
-          have q : exponentiable (e.inverse.obj X) := inferInstance
-          have : is_left_adjoint (prod.functor.obj (e.inverse.obj X)) := q.is_adj
-          have : e.functor ⋙ prod.functor.obj X ⋙ e.inverse ≅ prod.functor.obj (e.inverse.obj X)
-          apply nat_iso.of_components _ _
-          intro Y
-          ·
-            apply as_iso (prod_comparison e.inverse X (e.functor.obj Y)) ≪≫ _
-            apply prod.map_iso (iso.refl _) (e.unit_iso.app Y).symm
-          ·
-            intro Y Z g
-            dsimp [prod_comparison]
-            simp [prod.comp_lift, ← e.inverse.map_comp, ← e.inverse.map_comp_assoc]
-            dsimp
-            simp
-          ·
-            have : is_left_adjoint (e.functor ⋙ prod.functor.obj X ⋙ e.inverse) := by
-              exact adjunction.left_adjoint_of_nat_iso this.symm
-            have : is_left_adjoint (e.inverse ⋙ e.functor ⋙ prod.functor.obj X ⋙ e.inverse) := by
-              exact adjunction.left_adjoint_of_comp e.inverse _
-            have : (e.inverse ⋙ e.functor ⋙ prod.functor.obj X ⋙ e.inverse) ⋙ e.functor ≅ prod.functor.obj X := by
-              apply iso_whisker_right e.counit_iso (prod.functor.obj X ⋙ e.inverse ⋙ e.functor) ≪≫ _
-              change prod.functor.obj X ⋙ e.inverse ⋙ e.functor ≅ prod.functor.obj X
-              apply iso_whisker_left (prod.functor.obj X) e.counit_iso
-            skip
-            apply adjunction.left_adjoint_of_nat_iso this } }
+def cartesian_closed_of_equiv (e : C ≌ D) [h : cartesian_closed C] : cartesian_closed D where
+  closed := fun X =>
+    { isAdj := by
+        have q : exponentiable (e.inverse.obj X) := inferInstance
+        have : is_left_adjoint (prod.functor.obj (e.inverse.obj X)) := q.is_adj
+        have : e.functor ⋙ prod.functor.obj X ⋙ e.inverse ≅ prod.functor.obj (e.inverse.obj X)
+        apply nat_iso.of_components _ _
+        intro Y
+        · apply as_iso (prod_comparison e.inverse X (e.functor.obj Y)) ≪≫ _
+          apply prod.map_iso (iso.refl _) (e.unit_iso.app Y).symm
+          
+        · intro Y Z g
+          dsimp [prod_comparison]
+          simp [prod.comp_lift, ← e.inverse.map_comp, ← e.inverse.map_comp_assoc]
+          dsimp
+          simp
+          
+        · have : is_left_adjoint (e.functor ⋙ prod.functor.obj X ⋙ e.inverse) :=
+            adjunction.left_adjoint_of_nat_iso this.symm
+          have : is_left_adjoint (e.inverse ⋙ e.functor ⋙ prod.functor.obj X ⋙ e.inverse) :=
+            adjunction.left_adjoint_of_comp e.inverse _
+          have : (e.inverse ⋙ e.functor ⋙ prod.functor.obj X ⋙ e.inverse) ⋙ e.functor ≅ prod.functor.obj X := by
+            apply iso_whisker_right e.counit_iso (prod.functor.obj X ⋙ e.inverse ⋙ e.functor) ≪≫ _
+            change prod.functor.obj X ⋙ e.inverse ⋙ e.functor ≅ prod.functor.obj X
+            apply iso_whisker_left (prod.functor.obj X) e.counit_iso
+          skip
+          apply adjunction.left_adjoint_of_nat_iso this
+           }
 
 end Functor
 

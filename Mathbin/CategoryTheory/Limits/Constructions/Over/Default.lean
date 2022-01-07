@@ -24,41 +24,41 @@ variable {X : C}
 
 namespace CategoryTheory.Over
 
-/--  Make sure we can derive pullbacks in `over B`. -/
+/-- Make sure we can derive pullbacks in `over B`. -/
 example {B : C} [has_pullbacks C] : has_pullbacks (over B) := by
   infer_instance
 
-/--  Make sure we can derive equalizers in `over B`. -/
+/-- Make sure we can derive equalizers in `over B`. -/
 example {B : C} [has_equalizers C] : has_equalizers (over B) := by
   infer_instance
 
 instance has_finite_limits {B : C} [has_finite_wide_pullbacks C] : has_finite_limits (over B) := by
   apply @finite_limits_from_equalizers_and_finite_products _ _ _ _
-  ·
-    exact construct_products.over_finite_products_of_finite_wide_pullbacks
-  ·
-    apply @has_equalizers_of_pullbacks_and_binary_products _ _ _ _
-    ·
-      have : has_pullbacks C :=
+  · exact construct_products.over_finite_products_of_finite_wide_pullbacks
+    
+  · apply @has_equalizers_of_pullbacks_and_binary_products _ _ _ _
+    · have : has_pullbacks C :=
         ⟨by
           infer_instance⟩
       exact construct_products.over_binary_product_of_pullback
-    ·
-      infer_instance
+      
+    · infer_instance
+      
+    
 
 instance has_limits {B : C} [has_wide_pullbacks C] : has_limits (over B) := by
   apply @limits_from_equalizers_and_products _ _ _ _
-  ·
-    exact construct_products.over_products_of_wide_pullbacks
-  ·
-    apply @has_equalizers_of_pullbacks_and_binary_products _ _ _ _
-    ·
-      have : has_pullbacks C :=
+  · exact construct_products.over_products_of_wide_pullbacks
+    
+  · apply @has_equalizers_of_pullbacks_and_binary_products _ _ _ _
+    · have : has_pullbacks C :=
         ⟨by
           infer_instance⟩
       exact construct_products.over_binary_product_of_pullback
-    ·
-      infer_instance
+      
+    · infer_instance
+      
+    
 
 end CategoryTheory.Over
 

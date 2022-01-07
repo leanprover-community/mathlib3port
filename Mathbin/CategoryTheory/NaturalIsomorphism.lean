@@ -38,17 +38,18 @@ variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
 namespace Iso
 
-/--  The application of a natural isomorphism to an object. We put this definition in a different
+/-- The application of a natural isomorphism to an object. We put this definition in a different
 namespace, so that we can use `α.app` -/
 @[simps]
-def app {F G : C ⥤ D} (α : F ≅ G) (X : C) : F.obj X ≅ G.obj X :=
-  { Hom := α.hom.app X, inv := α.inv.app X,
-    hom_inv_id' := by
-      rw [← comp_app, iso.hom_inv_id]
-      rfl,
-    inv_hom_id' := by
-      rw [← comp_app, iso.inv_hom_id]
-      rfl }
+def app {F G : C ⥤ D} (α : F ≅ G) (X : C) : F.obj X ≅ G.obj X where
+  Hom := α.hom.app X
+  inv := α.inv.app X
+  hom_inv_id' := by
+    rw [← comp_app, iso.hom_inv_id]
+    rfl
+  inv_hom_id' := by
+    rw [← comp_app, iso.inv_hom_id]
+    rfl
 
 @[simp, reassoc]
 theorem hom_inv_id_app {F G : C ⥤ D} (α : F ≅ G) (X : C) : α.hom.app X ≫ α.inv.app X = 𝟙 (F.obj X) :=
@@ -147,8 +148,7 @@ theorem naturality_1 (α : F ≅ G) (f : X ⟶ Y) : α.inv.app X ≫ F.map f ≫
 theorem naturality_2 (α : F ≅ G) (f : X ⟶ Y) : α.hom.app X ≫ G.map f ≫ α.inv.app Y = F.map f := by
   rw [naturality, ← category.assoc, ← nat_trans.comp_app, α.hom_inv_id, id_app, category.id_comp]
 
-/-- 
-The components of a natural isomorphism are isomorphisms.
+/-- The components of a natural isomorphism are isomorphisms.
 -/
 instance is_iso_app_of_is_iso (α : F ⟶ G) [is_iso α] X : is_iso (α.app X) :=
   ⟨⟨(inv α).app X,
@@ -161,19 +161,18 @@ theorem is_iso_inv_app (α : F ⟶ G) [is_iso α] X : (inv α).app X = inv (α.a
   rw [← nat_trans.comp_app]
   simp
 
-/-- 
-Construct a natural isomorphism between functors by giving object level isomorphisms,
+/-- Construct a natural isomorphism between functors by giving object level isomorphisms,
 and checking naturality only in the forward direction.
 -/
 def of_components (app : ∀ X : C, F.obj X ≅ G.obj X)
-    (naturality : ∀ {X Y : C} f : X ⟶ Y, F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f) : F ≅ G :=
-  { Hom := { app := fun X => (app X).Hom },
-    inv :=
-      { app := fun X => (app X).inv,
-        naturality' := fun X Y f => by
-          have h := congr_argₓ (fun f => (app X).inv ≫ f ≫ (app Y).inv) (naturality f).symm
-          simp only [iso.inv_hom_id_assoc, iso.hom_inv_id, assoc, comp_id, cancel_mono] at h
-          exact h } }
+    (naturality : ∀ {X Y : C} f : X ⟶ Y, F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f) : F ≅ G where
+  Hom := { app := fun X => (app X).Hom }
+  inv :=
+    { app := fun X => (app X).inv,
+      naturality' := fun X Y f => by
+        have h := congr_argₓ (fun f => (app X).inv ≫ f ≫ (app Y).inv) (naturality f).symm
+        simp only [iso.inv_hom_id_assoc, iso.hom_inv_id, assoc, comp_id, cancel_mono] at h
+        exact h }
 
 @[simp]
 theorem of_components.app (app' : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
@@ -190,8 +189,7 @@ theorem of_components.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality 
     (of_components app naturality).inv.app X = (app X).inv := by
   simp [of_components]
 
-/-- 
-A natural transformation is an isomorphism if all its components are isomorphisms.
+/-- A natural transformation is an isomorphism if all its components are isomorphisms.
 -/
 theorem is_iso_of_is_iso_app (α : F ⟶ G) [∀ X : C, is_iso (α.app X)] : is_iso α :=
   ⟨(is_iso.of_iso
@@ -199,14 +197,14 @@ theorem is_iso_of_is_iso_app (α : F ⟶ G) [∀ X : C, is_iso (α.app X)] : is_
           (by
             tidy))).1⟩
 
-/--  Horizontal composition of natural isomorphisms. -/
+/-- Horizontal composition of natural isomorphisms. -/
 def hcomp {F G : C ⥤ D} {H I : D ⥤ E} (α : F ≅ G) (β : H ≅ I) : F ⋙ H ≅ G ⋙ I := by
   refine' ⟨α.hom ◫ β.hom, α.inv ◫ β.inv, _, _⟩
-  ·
-    ext
+  · ext
     rw [← nat_trans.exchange]
     simp
     rfl
+    
   ext
   rw [← nat_trans.exchange]
   simp

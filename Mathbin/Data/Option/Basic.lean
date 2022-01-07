@@ -79,11 +79,14 @@ theorem get_or_else_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some
 theorem mem_unique {o : Option α} {a b : α} (ha : a ∈ o) (hb : b ∈ o) : a = b :=
   Option.some.injₓ $ ha.symm.trans hb
 
+theorem eq_of_mem_of_mem {a : α} {o1 o2 : Option α} (h1 : a ∈ o1) (h2 : a ∈ o2) : o1 = o2 :=
+  h1.trans h2.symm
+
 theorem mem.left_unique : Relator.LeftUnique (· ∈ · : α → Option α → Prop) := fun a o b => mem_unique
 
 theorem some_injective (α : Type _) : Function.Injective (@some α) := fun _ _ => some_inj.mp
 
-/--  `option.map f` is injective if `f` is injective. -/
+/-- `option.map f` is injective if `f` is injective. -/
 theorem map_injective {f : α → β} (Hf : Function.Injective f) : Function.Injective (Option.map f)
   | none, none, H => rfl
   | some a₁, some a₂, H => by
@@ -297,28 +300,28 @@ variable {f x}
 theorem pbind_eq_none {f : ∀ a : α, a ∈ x → Option β} (h' : ∀, ∀ a ∈ x, ∀, f a H = none → x = none) :
     x.pbind f = none ↔ x = none := by
   cases x
-  ·
-    simp
-  ·
-    simp only [pbind, iff_falseₓ]
+  · simp
+    
+  · simp only [pbind, iff_falseₓ]
     intro h
     cases h' x rfl h
+    
 
 theorem pbind_eq_some {f : ∀ a : α, a ∈ x → Option β} {y : β} : x.pbind f = some y ↔ ∃ z ∈ x, f z H = some y := by
   cases x
-  ·
-    simp
-  ·
-    simp only [pbind]
+  · simp
+    
+  · simp only [pbind]
     constructor
-    ·
-      intro h
+    · intro h
       use x
       simpa only [mem_def, exists_prop_of_true] using h
-    ·
-      rintro ⟨z, H, hz⟩
+      
+    · rintro ⟨z, H, hz⟩
       simp only [mem_def] at H
       simpa only [H] using hz
+      
+    
 
 @[simp]
 theorem pmap_eq_none_iff {h} : pmap f x h = none ↔ x = none := by
@@ -327,18 +330,18 @@ theorem pmap_eq_none_iff {h} : pmap f x h = none ↔ x = none := by
 @[simp]
 theorem pmap_eq_some_iff {hf} {y : β} : pmap f x hf = some y ↔ ∃ (a : α)(H : x = some a), f a (hf a H) = y := by
   cases x
-  ·
-    simp only [not_mem_none, exists_false, pmap, not_false_iff, exists_prop_of_false]
-  ·
-    constructor
-    ·
-      intro h
+  · simp only [not_mem_none, exists_false, pmap, not_false_iff, exists_prop_of_false]
+    
+  · constructor
+    · intro h
       simp only [pmap] at h
       exact ⟨x, rfl, h⟩
-    ·
-      rintro ⟨a, H, rfl⟩
+      
+    · rintro ⟨a, H, rfl⟩
       simp only [mem_def] at H
       simp only [H, pmap]
+      
+    
 
 @[simp]
 theorem join_pmap_eq_pmap_join {f : ∀ a, p a → β} {x : Option (Option α)} H :
@@ -413,14 +416,14 @@ theorem ne_none_iff_exists {o : Option α} : o ≠ none ↔ ∃ x : α, some x =
 theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = some x :=
   ne_none_iff_exists.trans $ exists_congr $ fun _ => eq_comm
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (x «expr ≠ » none)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » none)
 theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx, hp⟩ =>
     ⟨get $ ne_none_iff_is_some.1 hx, by
       rwa [some_get]⟩,
     fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (x «expr ≠ » none)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » none)
 theorem ball_ne_none {p : Option α → Prop} : (∀ x _ : x ≠ none, p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x), fun h x hx => by
     simpa only [some_get] using h (get $ ne_none_iff_is_some.1 hx)⟩
@@ -460,7 +463,7 @@ theorem lift_or_get_none_right {f} {a : Option α} : lift_or_get f a none = a :=
 theorem lift_or_get_some_some {f} {a b : α} : lift_or_get f (some a) (some b) = f a b :=
   rfl
 
-/--  Given an element of `a : option α`, a default element `b : β` and a function `α → β`, apply this
+/-- Given an element of `a : option α`, a default element `b : β` and a function `α → β`, apply this
 function to `a` if it comes from `α`, and return `b` otherwise. -/
 def cases_on' : Option α → β → (α → β) → β
   | none, n, s => n
@@ -486,11 +489,33 @@ theorem cases_on'_none_coe (f : Option α → β) (o : Option α) : cases_on' o 
 theorem get_or_else_map (f : α → β) (x : α) (o : Option α) : get_or_else (o.map f) (f x) = f (get_or_else o x) := by
   cases o <;> rfl
 
+theorem orelse_eq_some (o o' : Option α) (x : α) : (o <|> o') = some x ↔ o = some x ∨ o = none ∧ o' = some x := by
+  cases o
+  · simp only [true_andₓ, false_orₓ, eq_self_iff_true, none_orelse]
+    
+  · simp only [some_orelse, or_falseₓ, false_andₓ]
+    
+
+theorem orelse_eq_some' (o o' : Option α) (x : α) : o.orelse o' = some x ↔ o = some x ∨ o = none ∧ o' = some x :=
+  Option.orelse_eq_some o o' x
+
+@[simp]
+theorem orelse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o' = none := by
+  cases o
+  · simp only [true_andₓ, none_orelse, eq_self_iff_true]
+    
+  · simp only [some_orelse, false_andₓ]
+    
+
+@[simp]
+theorem orelse_eq_none' (o o' : Option α) : o.orelse o' = none ↔ o = none ∧ o' = none :=
+  Option.orelse_eq_none o o'
+
 section
 
 open_locale Classical
 
-/--  An arbitrary `some a` with `a : α` if `α` is nonempty, and otherwise `none`. -/
+/-- An arbitrary `some a` with `a : α` if `α` is nonempty, and otherwise `none`. -/
 noncomputable def choice (α : Type _) : Option α :=
   if h : Nonempty α then some h.some else none
 
@@ -504,14 +529,14 @@ theorem choice_eq_none (α : Type _) [IsEmpty α] : choice α = none :=
 
 theorem choice_is_some_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonempty α := by
   fconstructor
-  ·
-    intro h
+  · intro h
     exact ⟨Option.getₓ h⟩
-  ·
-    intro h
+    
+  · intro h
     dsimp only [choice]
     rw [dif_pos h]
     exact is_some_some
+    
 
 end
 

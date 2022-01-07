@@ -13,7 +13,7 @@ universe v u
 
 variable (α : Sort u)
 
-/--  The type of objects of the opposite of `α`; used to define the opposite category.
+/-- The type of objects of the opposite of `α`; used to define the opposite category.
 
   In order to avoid confusion between `α` and its opposite type, we
   set up the type of objects `opposite α` using the following pattern,
@@ -38,19 +38,19 @@ variable (α : Sort u)
 def Opposite : Sort u :=
   α
 
--- ././Mathport/Syntax/Translate/Basic.lean:333:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
 notation:999 α "ᵒᵖ" => Opposite α
 
 namespace Opposite
 
 variable {α}
 
-/--  The canonical map `α → αᵒᵖ`. -/
+/-- The canonical map `α → αᵒᵖ`. -/
 @[pp_nodot]
 def op : α → αᵒᵖ :=
   id
 
-/--  The canonical map `αᵒᵖ → α`. -/
+/-- The canonical map `αᵒᵖ → α`. -/
 @[pp_nodot]
 def unop : αᵒᵖ → α :=
   id
@@ -75,9 +75,12 @@ theorem op_unop (x : αᵒᵖ) : op (unop x) = x :=
 theorem unop_op (x : α) : unop (op x) = x :=
   rfl
 
-/--  The type-level equivalence between a type and its opposite. -/
-def equiv_to_opposite : α ≃ αᵒᵖ :=
-  { toFun := op, invFun := unop, left_inv := unop_op, right_inv := op_unop }
+/-- The type-level equivalence between a type and its opposite. -/
+def equiv_to_opposite : α ≃ αᵒᵖ where
+  toFun := op
+  invFun := unop
+  left_inv := unop_op
+  right_inv := op_unop
 
 @[simp]
 theorem equiv_to_opposite_coe : (equiv_to_opposite : α → αᵒᵖ) = op :=
@@ -96,7 +99,7 @@ theorem unop_eq_iff_eq_op {x} {y : α} : unop x = y ↔ x = op y :=
 instance [Inhabited α] : Inhabited (αᵒᵖ) :=
   ⟨op (default _)⟩
 
-/--  A recursor for `opposite`. Use as `induction x using opposite.rec`. -/
+/-- A recursor for `opposite`. Use as `induction x using opposite.rec`. -/
 @[simp]
 protected def rec {F : ∀ X : αᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X := fun X => h (unop X)
 
@@ -108,13 +111,13 @@ open Opposite
 
 namespace OpInduction
 
-/--  Test if `e : expr` is of type `opposite α` for some `α`. -/
+/-- Test if `e : expr` is of type `opposite α` for some `α`. -/
 unsafe def is_opposite (e : expr) : tactic Bool := do
   let t ← infer_type e
   let quote.1 (Opposite _) ← whnf t | return ff
   return tt
 
-/--  Find the first hypothesis of type `opposite _`. Fail if no such hypothesis exist in the local
+/-- Find the first hypothesis of type `opposite _`. Fail if no such hypothesis exist in the local
 context. -/
 unsafe def find_opposite_hyp : tactic Name := do
   let lc ← local_context
@@ -125,7 +128,7 @@ end OpInduction
 
 open OpInduction
 
-/--  A version of `induction x using opposite.rec` which finds the appropriate hypothesis
+/-- A version of `induction x using opposite.rec` which finds the appropriate hypothesis
 automatically, for use with `local attribute [tidy] op_induction'`. This is necessary because
 `induction x` is not able to deduce that `opposite.rec` should be used. -/
 unsafe def op_induction' : tactic Unit := do

@@ -90,19 +90,19 @@ theorem max_eq_left_iff : max a b = a ↔ b ≤ a :=
 theorem max_eq_right_iff : max a b = b ↔ a ≤ b :=
   sup_eq_right
 
-/--  For elements `a` and `b` of a linear order, either `min a b = a` and `a ≤ b`,
+/-- For elements `a` and `b` of a linear order, either `min a b = a` and `a ≤ b`,
     or `min a b = b` and `b < a`.
     Use cases on this lemma to automate linarith in inequalities -/
 theorem min_cases (a b : α) : min a b = a ∧ a ≤ b ∨ min a b = b ∧ b < a := by
   by_cases' a ≤ b
-  ·
-    left
+  · left
     exact ⟨min_eq_leftₓ h, h⟩
-  ·
-    right
+    
+  · right
     exact ⟨min_eq_rightₓ (le_of_ltₓ (not_le.mp h)), not_le.mp h⟩
+    
 
-/--  For elements `a` and `b` of a linear order, either `max a b = a` and `b ≤ a`,
+/-- For elements `a` and `b` of a linear order, either `max a b = a` and `b ≤ a`,
     or `max a b = b` and `a < b`.
     Use cases on this lemma to automate linarith in inequalities -/
 theorem max_cases (a b : α) : max a b = a ∧ b ≤ a ∨ max a b = b ∧ a < b :=
@@ -110,23 +110,23 @@ theorem max_cases (a b : α) : max a b = a ∧ b ≤ a ∨ max a b = b ∧ a < b
 
 theorem min_eq_iff : min a b = c ↔ a = c ∧ a ≤ b ∨ b = c ∧ b ≤ a := by
   constructor
-  ·
-    intro h
+  · intro h
     refine' Or.imp (fun h' => _) (fun h' => _) (le_totalₓ a b) <;>
       exact
         ⟨by
           simpa [h'] using h, h'⟩
-  ·
-    rintro (⟨rfl, h⟩ | ⟨rfl, h⟩) <;> simp [h]
+    
+  · rintro (⟨rfl, h⟩ | ⟨rfl, h⟩) <;> simp [h]
+    
 
 theorem max_eq_iff : max a b = c ↔ a = c ∧ b ≤ a ∨ b = c ∧ a ≤ b :=
   @min_eq_iff (OrderDual α) _ a b c
 
-/--  An instance asserting that `max a a = a` -/
+/-- An instance asserting that `max a a = a` -/
 instance max_idem : IsIdempotent α max := by
   infer_instance
 
-/--  An instance asserting that `min a a = a` -/
+/-- An instance asserting that `min a a = a` -/
 instance min_idem : IsIdempotent α min := by
   infer_instance
 
@@ -158,7 +158,7 @@ theorem min_lt_max : min a b < max a b ↔ a ≠ b :=
   inf_lt_sup
 
 theorem max_lt_max (h₁ : a < c) (h₂ : b < d) : max a b < max c d := by
-  simp [lt_max_iff, max_lt_iff]
+  simp [lt_max_iff, max_lt_iff, *]
 
 theorem min_lt_min (h₁ : a < c) (h₂ : b < d) : min a b < min c d :=
   @max_lt_max (OrderDual α) _ _ _ _ _ h₁ h₂
@@ -209,7 +209,7 @@ theorem max_rec' (p : α → Prop) {x y : α} (hx : p x) (hy : p y) : p (max x y
   max_rec (fun _ => hx) fun _ => hy
 
 theorem min_choice (a b : α) : min a b = a ∨ min a b = b := by
-  cases le_totalₓ a b <;> simp
+  cases le_totalₓ a b <;> simp [*]
 
 theorem max_choice (a b : α) : max a b = a ∨ max a b = b :=
   @min_choice (OrderDual α) _ a b

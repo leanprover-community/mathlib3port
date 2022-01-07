@@ -28,8 +28,7 @@ open MonoidalCategory
 variable {C : Type u₁} [category.{v₁} C] [monoidal_category.{v₁} C] {D : Type u₂} [category.{v₂} D]
   [monoidal_category.{v₂} D]
 
-/-- 
-A monoidal natural transformation is a natural transformation between (lax) monoidal functors
+/-- A monoidal natural transformation is a natural transformation between (lax) monoidal functors
 additionally satisfying:
 `F.μ X Y ≫ app (X ⊗ Y) = (app X ⊗ app Y) ≫ G.μ X Y`
 -/
@@ -52,8 +51,7 @@ attribute [simp, reassoc] monoidal_nat_trans.unit
 
 namespace MonoidalNatTrans
 
-/-- 
-The identity monoidal natural transformation.
+/-- The identity monoidal natural transformation.
 -/
 @[simps]
 def id (F : lax_monoidal_functor C D) : monoidal_nat_trans F F :=
@@ -62,19 +60,17 @@ def id (F : lax_monoidal_functor C D) : monoidal_nat_trans F F :=
 instance (F : lax_monoidal_functor C D) : Inhabited (monoidal_nat_trans F F) :=
   ⟨id F⟩
 
-/-- 
-Vertical composition of monoidal natural transformations.
+/-- Vertical composition of monoidal natural transformations.
 -/
 @[simps]
 def vcomp {F G H : lax_monoidal_functor C D} (α : monoidal_nat_trans F G) (β : monoidal_nat_trans G H) :
     monoidal_nat_trans F H :=
   { nat_trans.vcomp α.to_nat_trans β.to_nat_trans with }
 
--- failed to format: format: uncaught backtrack exception
-instance
-  category_lax_monoidal_functor
-  : category ( lax_monoidal_functor C D )
-  where Hom := monoidal_nat_trans id := id comp F G H α β := vcomp α β
+instance category_lax_monoidal_functor : category (lax_monoidal_functor C D) where
+  Hom := monoidal_nat_trans
+  id := id
+  comp := fun F G H α β => vcomp α β
 
 @[simp]
 theorem comp_to_nat_trans_lax {F G H : lax_monoidal_functor C D} {α : F ⟶ G} {β : G ⟶ H} :
@@ -91,8 +87,7 @@ theorem comp_to_nat_trans {F G H : monoidal_functor C D} {α : F ⟶ G} {β : G 
 
 variable {E : Type u₃} [category.{v₃} E] [monoidal_category.{v₃} E]
 
-/-- 
-Horizontal composition of monoidal natural transformations.
+/-- Horizontal composition of monoidal natural transformations.
 -/
 @[simps]
 def hcomp {F G : lax_monoidal_functor C D} {H K : lax_monoidal_functor D E} (α : monoidal_nat_trans F G)
@@ -113,24 +108,22 @@ namespace MonoidalNatIso
 
 variable {F G : lax_monoidal_functor C D}
 
-/-- 
-Construct a monoidal natural isomorphism from object level isomorphisms,
+/-- Construct a monoidal natural isomorphism from object level isomorphisms,
 and the monoidal naturality in the forward direction.
 -/
 def of_components (app : ∀ X : C, F.obj X ≅ G.obj X)
     (naturality : ∀ {X Y : C} f : X ⟶ Y, F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f)
     (unit : F.ε ≫ (app (𝟙_ C)).Hom = G.ε)
-    (tensor : ∀ X Y, F.μ X Y ≫ (app (X ⊗ Y)).Hom = ((app X).Hom ⊗ (app Y).Hom) ≫ G.μ X Y) : F ≅ G :=
-  { Hom := { app := fun X => (app X).Hom },
-    inv :=
-      { (nat_iso.of_components app @naturality).inv with app := fun X => (app X).inv,
-        unit' := by
-          dsimp
-          rw [← Unit, assoc, iso.hom_inv_id, comp_id],
-        tensor' := fun X Y => by
-          dsimp
-          rw [iso.comp_inv_eq, assoc, tensor, ← tensor_comp_assoc, iso.inv_hom_id, iso.inv_hom_id, tensor_id,
-            id_comp] } }
+    (tensor : ∀ X Y, F.μ X Y ≫ (app (X ⊗ Y)).Hom = ((app X).Hom ⊗ (app Y).Hom) ≫ G.μ X Y) : F ≅ G where
+  Hom := { app := fun X => (app X).Hom }
+  inv :=
+    { (nat_iso.of_components app @naturality).inv with app := fun X => (app X).inv,
+      unit' := by
+        dsimp
+        rw [← Unit, assoc, iso.hom_inv_id, comp_id],
+      tensor' := fun X Y => by
+        dsimp
+        rw [iso.comp_inv_eq, assoc, tensor, ← tensor_comp_assoc, iso.inv_hom_id, iso.inv_hom_id, tensor_id, id_comp] }
 
 @[simp]
 theorem of_components.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality unit tensor X :

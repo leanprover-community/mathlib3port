@@ -38,7 +38,7 @@ noncomputable section
 
 open LinearIsometry ContinuousLinearMap
 
-/--  A continuous linear map `f'` is said to be conformal if it's
+/-- A continuous linear map `f'` is said to be conformal if it's
     a nonzero multiple of a linear isometry. -/
 def IsConformalMap {R : Type _} {X Y : Type _} [NormedField R] [SemiNormedGroup X] [SemiNormedGroup Y]
     [SemiNormedSpace R X] [SemiNormedSpace R Y] (f' : X →L[R] Y) :=
@@ -83,13 +83,12 @@ theorem comp {f' : M →L[R] N} {g' : N →L[R] G} (hg' : IsConformalMap g') (hf
     IsConformalMap (g'.comp f') := by
   rcases hf' with ⟨cf, hcf, lif, hlif⟩
   rcases hg' with ⟨cg, hcg, lig, hlig⟩
-  refine' ⟨cg*cf, mul_ne_zero hcg hcf, lig.comp lif, funext fun x => _⟩
+  refine' ⟨cg * cf, mul_ne_zero hcg hcf, lig.comp lif, funext fun x => _⟩
   simp only [coe_comp', LinearIsometry.coe_comp, hlif, hlig, Pi.smul_apply, Function.comp_app, LinearIsometry.map_smul,
     smul_smul]
 
-theorem injective {f' : M' →L[R] N} (h : IsConformalMap f') : Function.Injective f' :=
+theorem injective {f' : M' →L[R] N} (h : IsConformalMap f') : Function.Injective f' := by
   let ⟨c, hc, li, hf'⟩ := h
-  by
   simp only [hf', Pi.smul_def] <;> exact (smul_right_injective _ hc).comp li.injective
 
 theorem ne_zero [Nontrivial M'] {f' : M' →L[R] N} (hf' : IsConformalMap f') : f' ≠ 0 := by

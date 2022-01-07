@@ -1,4 +1,4 @@
-import Mathbin.Topology.Algebra.Module
+import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Algebra.Algebra.Subalgebra
 import Mathbin.Tactic.FieldSimp
@@ -39,10 +39,11 @@ variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
 @[to_additive]
 instance Mul [Mul β] [HasContinuousMul β] : Mul C(α, β) :=
-  ⟨fun f g => ⟨f*g, continuous_mul.comp (f.continuous.prod_mk g.continuous : _)⟩⟩
+  ⟨fun f g => ⟨f * g, continuous_mul.comp (f.continuous.prod_mk g.continuous : _)⟩⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_mul [Mul β] [HasContinuousMul β] (f g : C(α, β)) : ((f*g : C(α, β)) : α → β) = (f : α → β)*(g : α → β) :=
+theorem coe_mul [Mul β] [HasContinuousMul β] (f g : C(α, β)) :
+    ((f * g : C(α, β)) : α → β) = (f : α → β) * (g : α → β) :=
   rfl
 
 @[to_additive]
@@ -55,7 +56,7 @@ theorem coe_one [HasOne β] : ((1 : C(α, β)) : α → β) = (1 : α → β) :=
 
 @[simp, to_additive]
 theorem mul_comp {α : Type _} {β : Type _} {γ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
-    [Semigroupₓ γ] [HasContinuousMul γ] (f₁ f₂ : C(β, γ)) (g : C(α, β)) : (f₁*f₂).comp g = f₁.comp g*f₂.comp g := by
+    [Semigroupₓ γ] [HasContinuousMul γ] (f₁ f₂ : C(β, γ)) (g : C(α, β)) : (f₁ * f₂).comp g = f₁.comp g * f₂.comp g := by
   ext
   simp
 
@@ -79,14 +80,15 @@ the structure of a group.
 
 section Subtype
 
-/--  The `submonoid` of continuous maps `α → β`. -/
+/-- The `submonoid` of continuous maps `α → β`. -/
 @[to_additive "The `add_submonoid` of continuous maps `α → β`. "]
 def continuousSubmonoid (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] [Monoidₓ β]
-    [HasContinuousMul β] : Submonoid (α → β) :=
-  { Carrier := { f : α → β | Continuous f }, one_mem' := @continuous_const _ _ _ _ 1,
-    mul_mem' := fun f g fc gc => Continuous.comp HasContinuousMul.continuous_mul (Continuous.prod_mk fc gc : _) }
+    [HasContinuousMul β] : Submonoid (α → β) where
+  Carrier := { f : α → β | Continuous f }
+  one_mem' := @continuous_const _ _ _ _ 1
+  mul_mem' := fun f g fc gc => Continuous.comp HasContinuousMul.continuous_mul (Continuous.prod_mk fc gc : _)
 
-/--  The subgroup of continuous maps `α → β`. -/
+/-- The subgroup of continuous maps `α → β`. -/
 @[to_additive "The `add_subgroup` of continuous maps `α → β`. "]
 def continuousSubgroup (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] [Groupₓ β]
     [TopologicalGroup β] : Subgroup (α → β) :=
@@ -112,28 +114,33 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
     mul_one := fun a => by
       ext <;> exact mul_oneₓ _ }
 
-/--  Coercion to a function as an `monoid_hom`. Similar to `monoid_hom.coe_fn`. -/
+/-- Coercion to a function as an `monoid_hom`. Similar to `monoid_hom.coe_fn`. -/
 @[to_additive "Coercion to a function as an `add_monoid_hom`. Similar to `add_monoid_hom.coe_fn`.", simps]
 def coe_fn_monoid_hom {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Monoidₓ β]
-    [HasContinuousMul β] : C(α, β) →* α → β :=
-  { toFun := coeFn, map_one' := coe_one, map_mul' := coe_mul }
+    [HasContinuousMul β] : C(α, β) →* α → β where
+  toFun := coeFn
+  map_one' := coe_one
+  map_mul' := coe_mul
 
-/--  Composition on the left by a (continuous) homomorphism of topological monoids, as a
+/-- Composition on the left by a (continuous) homomorphism of topological monoids, as a
 `monoid_hom`. Similar to `monoid_hom.comp_left`. -/
 @[to_additive
       "Composition on the left by a (continuous) homomorphism of topological `add_monoid`s,\nas an `add_monoid_hom`. Similar to `add_monoid_hom.comp_left`.",
   simps]
 protected def _root_.monoid_hom.comp_left_continuous (α : Type _) {β : Type _} {γ : Type _} [TopologicalSpace α]
     [TopologicalSpace β] [Monoidₓ β] [HasContinuousMul β] [TopologicalSpace γ] [Monoidₓ γ] [HasContinuousMul γ]
-    (g : β →* γ) (hg : Continuous g) : C(α, β) →* C(α, γ) :=
-  { toFun := fun f => (⟨g, hg⟩ : C(β, γ)).comp f, map_one' := ext $ fun x => g.map_one,
-    map_mul' := fun f₁ f₂ => ext $ fun x => g.map_mul _ _ }
+    (g : β →* γ) (hg : Continuous g) : C(α, β) →* C(α, γ) where
+  toFun := fun f => (⟨g, hg⟩ : C(β, γ)).comp f
+  map_one' := ext $ fun x => g.map_one
+  map_mul' := fun f₁ f₂ => ext $ fun x => g.map_mul _ _
 
-/--  Composition on the right as a `monoid_hom`. Similar to `monoid_hom.comp_hom'`. -/
+/-- Composition on the right as a `monoid_hom`. Similar to `monoid_hom.comp_hom'`. -/
 @[to_additive "Composition on the right as an `add_monoid_hom`. Similar to\n`add_monoid_hom.comp_hom'`.", simps]
 def comp_monoid_hom' {α : Type _} {β : Type _} {γ : Type _} [TopologicalSpace α] [TopologicalSpace β]
-    [TopologicalSpace γ] [Monoidₓ γ] [HasContinuousMul γ] (g : C(α, β)) : C(β, γ) →* C(α, γ) :=
-  { toFun := fun f => f.comp g, map_one' := one_comp g, map_mul' := fun f₁ f₂ => mul_comp f₁ f₂ g }
+    [TopologicalSpace γ] [Monoidₓ γ] [HasContinuousMul γ] (g : C(α, β)) : C(β, γ) →* C(α, γ) where
+  toFun := fun f => f.comp g
+  map_one' := one_comp g
+  map_mul' := fun f₁ f₂ => mul_comp f₁ f₂ g
 
 @[simp, norm_cast]
 theorem coe_pow {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Monoidₓ β] [HasContinuousMul β]
@@ -158,470 +165,16 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
 open_locale BigOperators
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  []
-  [(Term.attributes
-    "@["
-    [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))
-     ","
-     (Term.attrInstance (Term.attrKind []) (Attr.toAdditive "to_additive" [] []))]
-    "]")]
-  []
-  []
-  []
-  [])
- (Command.theorem
-  "theorem"
-  (Command.declId `coe_prod [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`α] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.implicitBinder "{" [`β] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.instBinder "[" [] (Term.app `CommMonoidₓ [`β]) "]")
-    (Term.instBinder "[" [] (Term.app `TopologicalSpace [`α]) "]")
-    (Term.instBinder "[" [] (Term.app `TopologicalSpace [`β]) "]")
-    (Term.instBinder "[" [] (Term.app `HasContinuousMul [`β]) "]")
-    (Term.implicitBinder "{" [`ι] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [`ι])] [] ")")
-    (Term.explicitBinder
-     "("
-     [`f]
-     [":" (Term.arrow `ι "→" (Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `α ", " `β ")"))]
-     []
-     ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Init.Coe.«term⇑_»
-      "⇑"
-      (Algebra.BigOperators.Basic.«term∏_in_,_»
-       "∏"
-       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-       " in "
-       `s
-       ", "
-       (Term.app `f [`i])))
-     "="
-     (Algebra.BigOperators.Basic.«term∏_in_,_»
-      "∏"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      " in "
-      `s
-      ", "
-      (Term.paren "(" [(Term.app `f [`i]) [(Term.typeAscription ":" (Term.arrow `α "→" `β))]] ")")))))
-  (Command.declValSimple
-   ":="
-   (Term.app
-    (Term.proj
-     (Term.paren
-      "("
-      [`coe_fn_monoid_hom
-       [(Term.typeAscription
-         ":"
-         (Algebra.Group.Hom.«term_→*_»
-          (Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `α ", " `β ")")
-          " →* "
-          (Term.hole "_")))]]
-      ")")
-     "."
-     `map_prod)
-    [`f `s])
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app
-   (Term.proj
-    (Term.paren
-     "("
-     [`coe_fn_monoid_hom
-      [(Term.typeAscription
-        ":"
-        (Algebra.Group.Hom.«term_→*_»
-         (Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `α ", " `β ")")
-         " →* "
-         (Term.hole "_")))]]
-     ")")
-    "."
-    `map_prod)
-   [`f `s])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  (Term.proj
-   (Term.paren
-    "("
-    [`coe_fn_monoid_hom
-     [(Term.typeAscription
-       ":"
-       (Algebra.Group.Hom.«term_→*_»
-        (Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `α ", " `β ")")
-        " →* "
-        (Term.hole "_")))]]
-    ")")
-   "."
-   `map_prod)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.paren
-   "("
-   [`coe_fn_monoid_hom
-    [(Term.typeAscription
-      ":"
-      (Algebra.Group.Hom.«term_→*_»
-       (Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `α ", " `β ")")
-       " →* "
-       (Term.hole "_")))]]
-   ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.Group.Hom.«term_→*_»
-   (Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `α ", " `β ")")
-   " →* "
-   (Term.hole "_"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.Group.Hom.«term_→*_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 25 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
-  (Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `α ", " `β ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.ContinuousFunction.Basic.«termC(_,_)»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `β
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `α
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 26 >? 1024, (none, [anonymous]) <=? (some 25, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  `coe_fn_monoid_hom
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Init.Coe.«term⇑_»
-    "⇑"
-    (Algebra.BigOperators.Basic.«term∏_in_,_»
-     "∏"
-     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-     " in "
-     `s
-     ", "
-     (Term.app `f [`i])))
-   "="
-   (Algebra.BigOperators.Basic.«term∏_in_,_»
-    "∏"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-    " in "
-    `s
-    ", "
-    (Term.paren "(" [(Term.app `f [`i]) [(Term.typeAscription ":" (Term.arrow `α "→" `β))]] ")")))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∏_in_,_»
-   "∏"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-   " in "
-   `s
-   ", "
-   (Term.paren "(" [(Term.app `f [`i]) [(Term.typeAscription ":" (Term.arrow `α "→" `β))]] ")"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∏_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.paren "(" [(Term.app `f [`i]) [(Term.typeAscription ":" (Term.arrow `α "→" `β))]] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.arrow `α "→" `β)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.arrow', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `β
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 25 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
-  `α
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 25, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Term.app `f [`i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-@[ simp , to_additive ]
-  theorem
-    coe_prod
-    { α : Type _ }
-        { β : Type _ }
-        [ CommMonoidₓ β ]
-        [ TopologicalSpace α ]
-        [ TopologicalSpace β ]
-        [ HasContinuousMul β ]
-        { ι : Type _ }
-        ( s : Finset ι )
-        ( f : ι → C( α , β ) )
-      : ⇑ ∏ i in s , f i = ∏ i in s , ( f i : α → β )
-    := ( coe_fn_monoid_hom : C( α , β ) →* _ ) . map_prod f s
+@[simp, to_additive]
+theorem coe_prod {α : Type _} {β : Type _} [CommMonoidₓ β] [TopologicalSpace α] [TopologicalSpace β]
+    [HasContinuousMul β] {ι : Type _} (s : Finset ι) (f : ι → C(α, β)) : (⇑∏ i in s, f i) = ∏ i in s, (f i : α → β) :=
+  (coe_fn_monoid_hom : C(α, β) →* _).map_prod f s
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  []
-  [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.toAdditive "to_additive" [] []))] "]")]
-  []
-  []
-  []
-  [])
- (Command.theorem
-  "theorem"
-  (Command.declId `prod_apply [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`α] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.implicitBinder "{" [`β] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.instBinder "[" [] (Term.app `CommMonoidₓ [`β]) "]")
-    (Term.instBinder "[" [] (Term.app `TopologicalSpace [`α]) "]")
-    (Term.instBinder "[" [] (Term.app `TopologicalSpace [`β]) "]")
-    (Term.instBinder "[" [] (Term.app `HasContinuousMul [`β]) "]")
-    (Term.implicitBinder "{" [`ι] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [`ι])] [] ")")
-    (Term.explicitBinder
-     "("
-     [`f]
-     [":" (Term.arrow `ι "→" (Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `α ", " `β ")"))]
-     []
-     ")")
-    (Term.explicitBinder "(" [`a] [":" `α] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app
-      (Algebra.BigOperators.Basic.«term∏_in_,_»
-       "∏"
-       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-       " in "
-       `s
-       ", "
-       (Term.app `f [`i]))
-      [`a])
-     "="
-     (Algebra.BigOperators.Basic.«term∏_in_,_»
-      "∏"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      " in "
-      `s
-      ", "
-      (Term.app `f [`i `a])))))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.simp "simp" [] [] [] []) [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.simp "simp" [] [] [] []) [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp "simp" [] [] [] [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.app
-    (Algebra.BigOperators.Basic.«term∏_in_,_»
-     "∏"
-     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-     " in "
-     `s
-     ", "
-     (Term.app `f [`i]))
-    [`a])
-   "="
-   (Algebra.BigOperators.Basic.«term∏_in_,_»
-    "∏"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-    " in "
-    `s
-    ", "
-    (Term.app `f [`i `a])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∏_in_,_»
-   "∏"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-   " in "
-   `s
-   ", "
-   (Term.app `f [`i `a]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∏_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `f [`i `a])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  theorem
-    prod_apply
-    { α : Type _ }
-        { β : Type _ }
-        [ CommMonoidₓ β ]
-        [ TopologicalSpace α ]
-        [ TopologicalSpace β ]
-        [ HasContinuousMul β ]
-        { ι : Type _ }
-        ( s : Finset ι )
-        ( f : ι → C( α , β ) )
-        ( a : α )
-      : ∏ i in s , f i a = ∏ i in s , f i a
-    := by simp
+@[to_additive]
+theorem prod_apply {α : Type _} {β : Type _} [CommMonoidₓ β] [TopologicalSpace α] [TopologicalSpace β]
+    [HasContinuousMul β] {ι : Type _} (s : Finset ι) (f : ι → C(α, β)) (a : α) : (∏ i in s, f i) a = ∏ i in s, f i a :=
+  by
+  simp
 
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Groupₓ β] [TopologicalGroup β] :
@@ -674,12 +227,12 @@ the structure of a ring.
 
 section Subtype
 
-/--  The subsemiring of continuous maps `α → β`. -/
+/-- The subsemiring of continuous maps `α → β`. -/
 def continuousSubsemiring (α : Type _) (R : Type _) [TopologicalSpace α] [TopologicalSpace R] [Semiringₓ R]
     [TopologicalRing R] : Subsemiring (α → R) :=
   { continuousAddSubmonoid α R, continuousSubmonoid α R with }
 
-/--  The subring of continuous maps `α → β`. -/
+/-- The subring of continuous maps `α → β`. -/
 def continuousSubring (α : Type _) (R : Type _) [TopologicalSpace α] [TopologicalSpace R] [Ringₓ R]
     [TopologicalRing R] : Subring (α → R) :=
   { continuousSubsemiring α R, continuousAddSubgroup α R with }
@@ -708,7 +261,7 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
     CommRingₓ C(α, β) :=
   { ContinuousMap.semiring, ContinuousMap.addCommGroup, ContinuousMap.commMonoid with }
 
-/--  Composition on the left by a (continuous) homomorphism of topological rings, as a `ring_hom`.
+/-- Composition on the left by a (continuous) homomorphism of topological rings, as a `ring_hom`.
 Similar to `ring_hom.comp_left`. -/
 @[simps]
 protected def _root_.ring_hom.comp_left_continuous (α : Type _) {β : Type _} {γ : Type _} [TopologicalSpace α]
@@ -716,7 +269,7 @@ protected def _root_.ring_hom.comp_left_continuous (α : Type _) {β : Type _} {
     (g : β →+* γ) (hg : Continuous g) : C(α, β) →+* C(α, γ) :=
   { g.to_monoid_hom.comp_left_continuous α hg, g.to_add_monoid_hom.comp_left_continuous α hg with }
 
-/--  Coercion to a function as a `ring_hom`. -/
+/-- Coercion to a function as a `ring_hom`. -/
 @[simps]
 def coe_fn_ring_hom {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Ringₓ β] [TopologicalRing β] :
     C(α, β) →+* α → β :=
@@ -748,7 +301,7 @@ variable (M : Type _) [TopologicalSpace M] [AddCommGroupₓ M]
 
 variable [Module R M] [HasContinuousSmul R M] [TopologicalAddGroup M]
 
-/--  The `R`-submodule of continuous maps `α → M`. -/
+/-- The `R`-submodule of continuous maps `α → M`. -/
 def continuousSubmodule : Submodule R (α → M) :=
   { continuousAddSubgroup α M with Carrier := { f : α → M | Continuous f },
     smul_mem' := fun c f hf => continuous_smul.comp (Continuous.prod_mk (continuous_const : Continuous fun x => c) hf) }
@@ -780,22 +333,30 @@ variable [HasContinuousAdd M] [Module R M] [HasContinuousSmul R M]
 
 variable [HasContinuousAdd M₂] [Module R M₂] [HasContinuousSmul R M₂]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  Module
-  : Module R C( α , M )
-  where
-    smul := · • ·
-      smul_add c f g := by ext exact smul_add c ( f x ) ( g x )
-      add_smul c₁ c₂ f := by ext exact add_smul c₁ c₂ ( f x )
-      mul_smul c₁ c₂ f := by ext exact mul_smul c₁ c₂ ( f x )
-      one_smul f := by ext exact one_smul R ( f x )
-      zero_smul f := by ext exact zero_smul _ _
-      smul_zero r := by ext exact smul_zero _
+instance Module : Module R C(α, M) where
+  smul := · • ·
+  smul_add := fun c f g => by
+    ext
+    exact smul_add c (f x) (g x)
+  add_smul := fun c₁ c₂ f => by
+    ext
+    exact add_smul c₁ c₂ (f x)
+  mul_smul := fun c₁ c₂ f => by
+    ext
+    exact mul_smul c₁ c₂ (f x)
+  one_smul := fun f => by
+    ext
+    exact one_smul R (f x)
+  zero_smul := fun f => by
+    ext
+    exact zero_smul _ _
+  smul_zero := fun r => by
+    ext
+    exact smul_zero _
 
 variable (R)
 
-/--  Composition on the left by a continuous linear map, as a `linear_map`.
+/-- Composition on the left by a continuous linear map, as a `linear_map`.
 Similar to `linear_map.comp_left`. -/
 @[simps]
 protected def _root_.continuous_linear_map.comp_left_continuous (α : Type _) [TopologicalSpace α] (g : M →L[R] M₂) :
@@ -803,7 +364,7 @@ protected def _root_.continuous_linear_map.comp_left_continuous (α : Type _) [T
   { g.to_linear_map.to_add_monoid_hom.comp_left_continuous α g.continuous with
     map_smul' := fun c f => ext $ fun x => g.map_smul' c _ }
 
-/--  Coercion to a function as a `linear_map`. -/
+/-- Coercion to a function as a `linear_map`. -/
 @[simps]
 def coe_fn_linear_map : C(α, M) →ₗ[R] α → M :=
   { (coe_fn_add_monoid_hom : C(α, M) →+ _) with toFun := coeFn, map_smul' := coe_smul }
@@ -827,7 +388,7 @@ section Subtype
 variable {α : Type _} [TopologicalSpace α] {R : Type _} [CommSemiringₓ R] {A : Type _} [TopologicalSpace A]
   [Semiringₓ A] [Algebra R A] [TopologicalRing A]
 
-/--  The `R`-subalgebra of continuous maps `α → A`. -/
+/-- The `R`-subalgebra of continuous maps `α → A`. -/
 def continuousSubalgebra : Subalgebra R (α → A) :=
   { continuousSubsemiring α A with Carrier := { f : α → A | Continuous f },
     algebra_map_mem' := fun r => (continuous_const : Continuous $ fun x : α => algebraMap R A r) }
@@ -840,17 +401,17 @@ variable {α : Type _} [TopologicalSpace α] {R : Type _} [CommSemiringₓ R] {A
   [Semiringₓ A] [Algebra R A] [TopologicalRing A] {A₂ : Type _} [TopologicalSpace A₂] [Semiringₓ A₂] [Algebra R A₂]
   [TopologicalRing A₂]
 
-/--  Continuous constant functions as a `ring_hom`. -/
-def ContinuousMap.c : R →+* C(α, A) :=
-  { toFun := fun c : R => ⟨fun x : α => (algebraMap R A) c, continuous_const⟩,
-    map_one' := by
-      ext x <;> exact (algebraMap R A).map_one,
-    map_mul' := fun c₁ c₂ => by
-      ext x <;> exact (algebraMap R A).map_mul _ _,
-    map_zero' := by
-      ext x <;> exact (algebraMap R A).map_zero,
-    map_add' := fun c₁ c₂ => by
-      ext x <;> exact (algebraMap R A).map_add _ _ }
+/-- Continuous constant functions as a `ring_hom`. -/
+def ContinuousMap.c : R →+* C(α, A) where
+  toFun := fun c : R => ⟨fun x : α => (algebraMap R A) c, continuous_const⟩
+  map_one' := by
+    ext x <;> exact (algebraMap R A).map_one
+  map_mul' := fun c₁ c₂ => by
+    ext x <;> exact (algebraMap R A).map_mul _ _
+  map_zero' := by
+    ext x <;> exact (algebraMap R A).map_zero
+  map_add' := fun c₁ c₂ => by
+    ext x <;> exact (algebraMap R A).map_add _ _
 
 @[simp]
 theorem ContinuousMap.C_apply (r : R) (a : α) : ContinuousMap.c r a = algebraMap R A r :=
@@ -858,37 +419,40 @@ theorem ContinuousMap.C_apply (r : R) (a : α) : ContinuousMap.c r a = algebraMa
 
 variable [TopologicalSpace R] [HasContinuousSmul R A] [HasContinuousSmul R A₂]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ContinuousMap.algebra
-  : Algebra R C( α , A )
-  where
-    toRingHom := ContinuousMap.c
-      commutes' c f := by ext x <;> exact Algebra.commutes' _ _
-      smul_def' c f := by ext x <;> exact Algebra.smul_def' _ _
+instance ContinuousMap.algebra : Algebra R C(α, A) where
+  toRingHom := ContinuousMap.c
+  commutes' := fun c f => by
+    ext x <;> exact Algebra.commutes' _ _
+  smul_def' := fun c f => by
+    ext x <;> exact Algebra.smul_def' _ _
 
 variable (R)
 
-/--  Composition on the left by a (continuous) homomorphism of topological `R`-algebras, as an
+/-- Composition on the left by a (continuous) homomorphism of topological `R`-algebras, as an
 `alg_hom`. Similar to `alg_hom.comp_left`. -/
 @[simps]
 protected def AlgHom.compLeftContinuous {α : Type _} [TopologicalSpace α] (g : A →ₐ[R] A₂) (hg : Continuous g) :
     C(α, A) →ₐ[R] C(α, A₂) :=
   { g.to_ring_hom.comp_left_continuous α hg with commutes' := fun c => ContinuousMap.ext $ fun _ => g.commutes' _ }
 
-/--  Coercion to a function as an `alg_hom`. -/
+/-- Coercion to a function as an `alg_hom`. -/
 @[simps]
-def ContinuousMap.coeFnAlgHom : C(α, A) →ₐ[R] α → A :=
-  { toFun := coeFn, commutes' := fun r => rfl, map_zero' := ContinuousMap.coe_zero, map_one' := ContinuousMap.coe_one,
-    map_add' := ContinuousMap.coe_add, map_mul' := ContinuousMap.coe_mul }
+def ContinuousMap.coeFnAlgHom : C(α, A) →ₐ[R] α → A where
+  toFun := coeFn
+  commutes' := fun r => rfl
+  map_zero' := ContinuousMap.coe_zero
+  map_one' := ContinuousMap.coe_one
+  map_add' := ContinuousMap.coe_add
+  map_mul' := ContinuousMap.coe_mul
 
--- failed to format: format: uncaught backtrack exception
-instance : IsScalarTower R A C( α , A ) where smul_assoc _ _ _ := by ext simp
+instance : IsScalarTower R A C(α, A) where
+  smul_assoc := fun _ _ _ => by
+    ext
+    simp
 
 variable {R}
 
-/-- 
-A version of `separates_points` for subalgebras of the continuous functions,
+/-- A version of `separates_points` for subalgebras of the continuous functions,
 used for stating the Stone-Weierstrass theorem.
 -/
 abbrev Subalgebra.SeparatesPoints (s : Subalgebra R C(α, A)) : Prop :=
@@ -907,8 +471,7 @@ theorem algebra_map_apply (k : R) (a : α) : algebraMap R C(α, A) k a = k • 1
 
 variable {𝕜 : Type _} [TopologicalSpace 𝕜]
 
-/-- 
-A set of continuous maps "separates points strongly"
+/-- A set of continuous maps "separates points strongly"
 if for each pair of distinct points there is a function with specified values on them.
 
 We give a slightly unusual formulation, where the specified values are given by some
@@ -925,8 +488,7 @@ def Set.SeparatesPointsStrongly (s : Set C(α, 𝕜)) : Prop :=
 
 variable [Field 𝕜] [TopologicalRing 𝕜]
 
-/-- 
-Working in continuous functions into a topological field,
+/-- Working in continuous functions into a topological field,
 a subalgebra of functions that separates points also separates points strongly.
 
 By the hypothesis, we can find a function `f` so `f x ≠ f y`.
@@ -935,28 +497,28 @@ By an affine transformation in the field we can arrange so that `f x = a` and `f
 theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h : s.separates_points) :
     (s : Set C(α, 𝕜)).SeparatesPointsStrongly := fun v x y => by
   by_cases' n : x = y
-  ·
-    subst n
+  · subst n
     use (v x • 1 : C(α, 𝕜))
-    ·
-      apply s.smul_mem
+    · apply s.smul_mem
       apply s.one_mem
-    ·
-      simp [coe_fn_coe_base']
+      
+    · simp [coe_fn_coe_base']
+      
+    
   obtain ⟨f, ⟨f, ⟨m, rfl⟩⟩, w⟩ := h n
   replace w : f x - f y ≠ 0 := sub_ne_zero_of_ne w
   let a := v x
   let b := v y
-  let f' := (((b - a)*(f x - f y)⁻¹) • (ContinuousMap.c (f x) - f))+ContinuousMap.c a
+  let f' := ((b - a) * (f x - f y)⁻¹) • (ContinuousMap.c (f x) - f) + ContinuousMap.c a
   refine' ⟨⟨f', _⟩, _, _⟩
-  ·
-    simp only [f', SetLike.mem_coe, Subalgebra.mem_to_submodule]
-    solve_by_elim (config := { max_depth := 6 }) [Subalgebra.add_mem, Subalgebra.smul_mem, Subalgebra.sub_mem,
+  · simp only [f', SetLike.mem_coe, Subalgebra.mem_to_submodule]
+    solve_by_elim(config := { max_depth := 6 }) [Subalgebra.add_mem, Subalgebra.smul_mem, Subalgebra.sub_mem,
       Subalgebra.algebra_map_mem]
-  ·
-    simp [f', coe_fn_coe_base']
-  ·
-    simp [f', coe_fn_coe_base', inv_mul_cancel_right₀ w]
+    
+  · simp [f', coe_fn_coe_base']
+    
+  · simp [f', coe_fn_coe_base', inv_mul_cancel_right₀ w]
+    
 
 end ContinuousMap
 
@@ -965,8 +527,7 @@ theorem ContinuousMap.subsingleton_subalgebra (α : Type _) [TopologicalSpace α
   fconstructor
   intro s₁ s₂
   by_cases' n : Nonempty α
-  ·
-    obtain ⟨x⟩ := n
+  · obtain ⟨x⟩ := n
     ext f
     have h : f = algebraMap R C(α, R) (f x) := by
       ext x'
@@ -974,13 +535,14 @@ theorem ContinuousMap.subsingleton_subalgebra (α : Type _) [TopologicalSpace α
       congr
     rw [h]
     simp only [Subalgebra.algebra_map_mem]
-  ·
-    ext f
+    
+  · ext f
     have h : f = 0 := by
       ext x'
       exact False.elim (n ⟨x'⟩)
     subst h
     simp only [Subalgebra.zero_mem]
+    
 
 end AlgebraStructure
 
@@ -999,30 +561,22 @@ instance has_scalar' {α : Type _} [TopologicalSpace α] {R : Type _} [Semiring�
     [TopologicalSpace M] [AddCommMonoidₓ M] [Module R M] [HasContinuousSmul R M] : HasScalar C(α, R) C(α, M) :=
   ⟨fun f g => ⟨fun x => f x • g x, Continuous.smul f.2 g.2⟩⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  module'
-  { α : Type _ }
-      [ TopologicalSpace α ]
-      ( R : Type _ )
-      [ Ringₓ R ]
-      [ TopologicalSpace R ]
-      [ TopologicalRing R ]
-      ( M : Type _ )
-      [ TopologicalSpace M ]
-      [ AddCommMonoidₓ M ]
-      [ HasContinuousAdd M ]
-      [ Module R M ]
-      [ HasContinuousSmul R M ]
-    : Module C( α , R ) C( α , M )
-  where
-    smul := · • ·
-      smul_add c f g := by ext x <;> exact smul_add ( c x ) ( f x ) ( g x )
-      add_smul c₁ c₂ f := by ext x <;> exact add_smul ( c₁ x ) ( c₂ x ) ( f x )
-      mul_smul c₁ c₂ f := by ext x <;> exact mul_smul ( c₁ x ) ( c₂ x ) ( f x )
-      one_smul f := by ext x <;> exact one_smul R ( f x )
-      zero_smul f := by ext x <;> exact zero_smul _ _
-      smul_zero r := by ext x <;> exact smul_zero _
+instance module' {α : Type _} [TopologicalSpace α] (R : Type _) [Ringₓ R] [TopologicalSpace R] [TopologicalRing R]
+    (M : Type _) [TopologicalSpace M] [AddCommMonoidₓ M] [HasContinuousAdd M] [Module R M] [HasContinuousSmul R M] :
+    Module C(α, R) C(α, M) where
+  smul := · • ·
+  smul_add := fun c f g => by
+    ext x <;> exact smul_add (c x) (f x) (g x)
+  add_smul := fun c₁ c₂ f => by
+    ext x <;> exact add_smul (c₁ x) (c₂ x) (f x)
+  mul_smul := fun c₁ c₂ f => by
+    ext x <;> exact mul_smul (c₁ x) (c₂ x) (f x)
+  one_smul := fun f => by
+    ext x <;> exact one_smul R (f x)
+  zero_smul := fun f => by
+    ext x <;> exact zero_smul _ _
+  smul_zero := fun r => by
+    ext x <;> exact smul_zero _
 
 end ContinuousMap
 
@@ -1038,10 +592,10 @@ section
 
 variable {R : Type _} [LinearOrderedField R]
 
-theorem min_eq_half_add_sub_abs_sub {x y : R} : min x y = 2⁻¹*(x+y) - |x - y| := by
+theorem min_eq_half_add_sub_abs_sub {x y : R} : min x y = 2⁻¹ * (x + y - |x - y|) := by
   cases' le_totalₓ x y with h h <;> field_simp [h, abs_of_nonneg, abs_of_nonpos, mul_two] <;> abel
 
-theorem max_eq_half_add_add_abs_sub {x y : R} : max x y = 2⁻¹*(x+y)+|x - y| := by
+theorem max_eq_half_add_add_abs_sub {x y : R} : max x y = 2⁻¹ * (x + y + |x - y|) := by
   cases' le_totalₓ x y with h h <;> field_simp [h, abs_of_nonneg, abs_of_nonpos, mul_two] <;> abel
 
 end
@@ -1054,11 +608,11 @@ variable {α : Type _} [TopologicalSpace α]
 
 variable {β : Type _} [LinearOrderedField β] [TopologicalSpace β] [OrderTopology β] [TopologicalRing β]
 
-theorem inf_eq (f g : C(α, β)) : f⊓g = (2⁻¹ : β) • ((f+g) - |f - g|) :=
+theorem inf_eq (f g : C(α, β)) : f⊓g = (2⁻¹ : β) • (f + g - |f - g|) :=
   ext fun x => by
     simpa using min_eq_half_add_sub_abs_sub
 
-theorem sup_eq (f g : C(α, β)) : f⊔g = (2⁻¹ : β) • (f+g)+|f - g| :=
+theorem sup_eq (f g : C(α, β)) : f⊔g = (2⁻¹ : β) • (f + g + |f - g|) :=
   ext fun x => by
     simpa [mul_addₓ] using @max_eq_half_add_add_abs_sub _ _ (f x) (g x)
 

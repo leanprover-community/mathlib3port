@@ -20,7 +20,7 @@ section Sort
 
 variable (r : α → α → Prop) [DecidableRel r] [IsTrans α r] [IsAntisymm α r] [IsTotal α r]
 
-/--  `sort s` constructs a sorted list from the unordered set `s`.
+/-- `sort s` constructs a sorted list from the unordered set `s`.
   (Uses merge sort algorithm.) -/
 def sort (s : Finset α) : List α :=
   sort r s.1
@@ -67,14 +67,14 @@ theorem sorted_zero_eq_min'_aux (s : Finset α) (h : 0 < (s.sort (· ≤ ·)).le
     (s.sort (· ≤ ·)).nthLe 0 h = s.min' H := by
   let l := s.sort (· ≤ ·)
   apply le_antisymmₓ
-  ·
-    have : s.min' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.min'_mem H)
+  · have : s.min' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.min'_mem H)
     obtain ⟨i, i_lt, hi⟩ : ∃ (i : _)(hi : i < l.length), l.nth_le i hi = s.min' H := List.mem_iff_nth_le.1 this
     rw [← hi]
     exact (s.sort_sorted (· ≤ ·)).rel_nth_le_of_le _ _ (Nat.zero_leₓ i)
-  ·
-    have : l.nth_le 0 h ∈ s := (Finset.mem_sort (· ≤ ·)).1 (List.nth_le_mem l 0 h)
+    
+  · have : l.nth_le 0 h ∈ s := (Finset.mem_sort (· ≤ ·)).1 (List.nth_le_mem l 0 h)
     exact s.min'_le _ this
+    
 
 theorem sorted_zero_eq_min' {s : Finset α} {h : 0 < (s.sort (· ≤ ·)).length} :
     (s.sort (· ≤ ·)).nthLe 0 h =
@@ -95,15 +95,15 @@ theorem sorted_last_eq_max'_aux (s : Finset α) (h : (s.sort (· ≤ ·)).length
     (H : s.nonempty) : (s.sort (· ≤ ·)).nthLe ((s.sort (· ≤ ·)).length - 1) h = s.max' H := by
   let l := s.sort (· ≤ ·)
   apply le_antisymmₓ
-  ·
-    have : l.nth_le ((s.sort (· ≤ ·)).length - 1) h ∈ s := (Finset.mem_sort (· ≤ ·)).1 (List.nth_le_mem l _ h)
+  · have : l.nth_le ((s.sort (· ≤ ·)).length - 1) h ∈ s := (Finset.mem_sort (· ≤ ·)).1 (List.nth_le_mem l _ h)
     exact s.le_max' _ this
-  ·
-    have : s.max' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.max'_mem H)
+    
+  · have : s.max' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.max'_mem H)
     obtain ⟨i, i_lt, hi⟩ : ∃ (i : _)(hi : i < l.length), l.nth_le i hi = s.max' H := List.mem_iff_nth_le.1 this
     rw [← hi]
     have : i ≤ l.length - 1 := Nat.le_pred_of_lt i_lt
     exact (s.sort_sorted (· ≤ ·)).rel_nth_le_of_le _ _ (Nat.le_pred_of_lt i_lt)
+    
 
 theorem sorted_last_eq_max' {s : Finset α} {h : (s.sort (· ≤ ·)).length - 1 < (s.sort (· ≤ ·)).length} :
     (s.sort (· ≤ ·)).nthLe ((s.sort (· ≤ ·)).length - 1) h =
@@ -120,7 +120,7 @@ theorem max'_eq_sorted_last {s : Finset α} {h : s.nonempty} :
           simpa using Nat.sub_ltₓ (card_pos.mpr h) zero_lt_one) :=
   (sorted_last_eq_max'_aux _ _ _).symm
 
-/--  Given a finset `s` of cardinality `k` in a linear order `α`, the map `order_iso_of_fin s h`
+/-- Given a finset `s` of cardinality `k` in a linear order `α`, the map `order_iso_of_fin s h`
 is the increasing bijection between `fin k` and `s` as an `order_iso`. Here, `h` is a proof that
 the cardinality of `s` is `k`. We use this instead of an iso `fin s.card ≃o s` to avoid
 casting issues in further uses of this function. -/
@@ -128,7 +128,7 @@ def order_iso_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Finₓ k ≃o 
   OrderIso.trans (Finₓ.cast ((length_sort (· ≤ ·)).trans h).symm) $
     (s.sort_sorted_lt.nth_le_iso _).trans $ OrderIso.setCongr _ _ $ Set.ext $ fun x => mem_sort _
 
-/--  Given a finset `s` of cardinality `k` in a linear order `α`, the map `order_emb_of_fin s h` is
+/-- Given a finset `s` of cardinality `k` in a linear order `α`, the map `order_emb_of_fin s h` is
 the increasing bijection between `fin k` and `s` as an order embedding into `α`. Here, `h` is a
 proof that the cardinality of `s` is `k`. We use this instead of an embedding `fin s.card ↪o α` to
 avoid casting issues in further uses of this function. -/
@@ -160,41 +160,41 @@ theorem order_emb_of_fin_mem (s : Finset α) {k : ℕ} (h : s.card = k) (i : Fin
 theorem range_order_emb_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Set.Range (s.order_emb_of_fin h) = s := by
   simp [order_emb_of_fin, Set.range_comp coeₓ (s.order_iso_of_fin h)]
 
-/--  The bijection `order_emb_of_fin s h` sends `0` to the minimum of `s`. -/
+/-- The bijection `order_emb_of_fin s h` sends `0` to the minimum of `s`. -/
 theorem order_emb_of_fin_zero {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0 < k) :
     order_emb_of_fin s h ⟨0, hz⟩ = s.min' (card_pos.mp (h.symm ▸ hz)) := by
   simp only [order_emb_of_fin_apply, Subtype.coe_mk, sorted_zero_eq_min']
 
-/--  The bijection `order_emb_of_fin s h` sends `k-1` to the maximum of `s`. -/
+/-- The bijection `order_emb_of_fin s h` sends `k-1` to the maximum of `s`. -/
 theorem order_emb_of_fin_last {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0 < k) :
     order_emb_of_fin s h ⟨k - 1, Buffer.lt_aux_2 hz⟩ = s.max' (card_pos.mp (h.symm ▸ hz)) := by
   simp [order_emb_of_fin_apply, max'_eq_sorted_last, h]
 
-/--  `order_emb_of_fin {a} h` sends any argument to `a`. -/
+/-- `order_emb_of_fin {a} h` sends any argument to `a`. -/
 @[simp]
 theorem order_emb_of_fin_singleton (a : α) (i : Finₓ 1) : order_emb_of_fin {a} (card_singleton a) i = a := by
   rw [Subsingleton.elimₓ i ⟨0, zero_lt_one⟩, order_emb_of_fin_zero _ zero_lt_one, min'_singleton]
 
-/--  Any increasing map `f` from `fin k` to a finset of cardinality `k` has to coincide with
+/-- Any increasing map `f` from `fin k` to a finset of cardinality `k` has to coincide with
 the increasing bijection `order_emb_of_fin s h`. -/
 theorem order_emb_of_fin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : Finₓ k → α} (hfs : ∀ x, f x ∈ s)
     (hmono : StrictMono f) : f = s.order_emb_of_fin h := by
   apply Finₓ.strict_mono_unique hmono (s.order_emb_of_fin h).StrictMono
   rw [range_order_emb_of_fin, ← Set.image_univ, ← coe_fin_range, ← coe_image, coe_inj]
   refine' eq_of_subset_of_card_le (fun x hx => _) _
-  ·
-    rcases mem_image.1 hx with ⟨x, hx, rfl⟩
+  · rcases mem_image.1 hx with ⟨x, hx, rfl⟩
     exact hfs x
-  ·
-    rw [h, card_image_of_injective _ hmono.injective, fin_range_card]
+    
+  · rw [h, card_image_of_injective _ hmono.injective, fin_range_card]
+    
 
-/--  An order embedding `f` from `fin k` to a finset of cardinality `k` has to coincide with
+/-- An order embedding `f` from `fin k` to a finset of cardinality `k` has to coincide with
 the increasing bijection `order_emb_of_fin s h`. -/
 theorem order_emb_of_fin_unique' {s : Finset α} {k : ℕ} (h : s.card = k) {f : Finₓ k ↪o α} (hfs : ∀ x, f x ∈ s) :
     f = s.order_emb_of_fin h :=
   RelEmbedding.ext $ Function.funext_iffₓ.1 $ order_emb_of_fin_unique h hfs f.strict_mono
 
-/--  Two parametrizations `order_emb_of_fin` of the same set take the same value on `i` and `j` if
+/-- Two parametrizations `order_emb_of_fin` of the same set take the same value on `i` and `j` if
 and only if `i = j`. Since they can be defined on a priori not defeq types `fin k` and `fin l`
 (although necessarily `k = l`), the conclusion is rather written `(i : ℕ) = (j : ℕ)`. -/
 @[simp]
@@ -203,16 +203,16 @@ theorem order_emb_of_fin_eq_order_emb_of_fin_iff {k l : ℕ} {s : Finset α} {i 
   substs k l
   exact (s.order_emb_of_fin rfl).eq_iff_eq.trans (Finₓ.ext_iff _ _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem card_le_of_interleaved {s t : Finset α} (h : ∀ x y _ : x ∈ s _ : y ∈ s, x < y → ∃ z ∈ t, x < z ∧ z < y) :
-    s.card ≤ t.card+1 := by
-  have h1 : ∀ i : Finₓ (s.card - 1), ((↑i)+1) < (s.sort (· ≤ ·)).length := by
+    s.card ≤ t.card + 1 := by
+  have h1 : ∀ i : Finₓ (s.card - 1), ↑i + 1 < (s.sort (· ≤ ·)).length := by
     intro i
     rw [Finset.length_sort, ← lt_tsub_iff_right]
     exact i.2
   have h0 : ∀ i : Finₓ (s.card - 1), ↑i < (s.sort (· ≤ ·)).length := fun i => lt_of_le_of_ltₓ (Nat.le_succₓ i) (h1 i)
   have p := fun i : Finₓ (s.card - 1) =>
-    h ((s.sort (· ≤ ·)).nthLe i (h0 i)) ((s.sort (· ≤ ·)).nthLe (i+1) (h1 i))
+    h ((s.sort (· ≤ ·)).nthLe i (h0 i)) ((s.sort (· ≤ ·)).nthLe (i + 1) (h1 i))
       ((Finset.mem_sort (· ≤ ·)).mp (List.nth_le_mem _ _ (h0 i)))
       ((Finset.mem_sort (· ≤ ·)).mp (List.nth_le_mem _ _ (h1 i)))
       (s.sort_sorted_lt.rel_nth_le_of_lt (h0 i) (h1 i) (Nat.lt_succ_selfₓ i))

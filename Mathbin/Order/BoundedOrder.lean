@@ -43,12 +43,12 @@ universe u v
 
 variable {α : Type u} {β : Type v}
 
-/--  Typeclass for the `⊤` (`\top`) notation -/
+/-- Typeclass for the `⊤` (`\top`) notation -/
 @[notation_class]
 class HasTop (α : Type u) where
   top : α
 
-/--  Typeclass for the `⊥` (`\bot`) notation -/
+/-- Typeclass for the `⊥` (`\bot`) notation -/
 @[notation_class]
 class HasBot (α : Type u) where
   bot : α
@@ -65,7 +65,7 @@ instance (priority := 100) has_bot_nonempty (α : Type u) [HasBot α] : Nonempty
 
 attribute [matchPattern] HasBot.bot HasTop.top
 
-/--  An order is an `order_top` if it has a greatest element.
+/-- An order is an `order_top` if it has a greatest element.
 We state this using a data mixin, holding the value of `⊤` and the greatest element constraint. -/
 @[ancestor HasTop]
 class OrderTop (α : Type u) [LE α] extends HasTop α where
@@ -105,8 +105,8 @@ theorem lt_top_iff_ne_top : a < ⊤ ↔ a ≠ ⊤ :=
 
 theorem eq_top_or_lt_top (a : α) : a = ⊤ ∨ a < ⊤ := by
   by_cases' h : a = ⊤
-  ·
-    exact Or.inl h
+  · exact Or.inl h
+    
   right
   rw [lt_top_iff_ne_top]
   exact h
@@ -140,10 +140,12 @@ theorem StrictMono.maximal_preimage_top [LinearOrderₓ α] [Preorderₓ β] [Or
 theorem OrderTop.ext_top {α} {hA : PartialOrderₓ α} (A : OrderTop α) {hB : PartialOrderₓ α} (B : OrderTop α)
     (H :
       ∀ x y : α,
-        by
-          have := hA <;> exact x ≤ y ↔ x ≤ y) :
-    (by
-        have := A <;> exact ⊤ : α) =
+        (have := hA
+          x ≤ y) ↔
+          x ≤ y) :
+    (have := A
+      ⊤ :
+        α) =
       ⊤ :=
   top_unique $ by
     rw [← H] <;> apply le_top
@@ -155,7 +157,7 @@ theorem OrderTop.ext {α} [PartialOrderₓ α] {A B : OrderTop α} : A = B := by
   congr
   exact le_antisymmₓ (hb _) (ha _)
 
-/--  An order is an `order_bot` if it has a least element.
+/-- An order is an `order_bot` if it has a least element.
 We state this using a data mixin, holding the value of `⊥` and the least element constraint. -/
 @[ancestor HasBot]
 class OrderBot (α : Type u) [LE α] extends HasBot α where
@@ -199,8 +201,8 @@ theorem bot_lt_iff_ne_bot : ⊥ < a ↔ a ≠ ⊥ := by
 
 theorem eq_bot_or_bot_lt (a : α) : a = ⊥ ∨ ⊥ < a := by
   by_cases' h : a = ⊥
-  ·
-    exact Or.inl h
+  · exact Or.inl h
+    
   right
   rw [bot_lt_iff_ne_bot]
   exact h
@@ -232,10 +234,12 @@ theorem StrictMono.minimal_preimage_bot [LinearOrderₓ α] [PartialOrderₓ β]
 theorem OrderBot.ext_bot {α} {hA : PartialOrderₓ α} (A : OrderBot α) {hB : PartialOrderₓ α} (B : OrderBot α)
     (H :
       ∀ x y : α,
-        by
-          have := hA <;> exact x ≤ y ↔ x ≤ y) :
-    (by
-        have := A <;> exact ⊥ : α) =
+        (have := hA
+          x ≤ y) ↔
+          x ≤ y) :
+    (have := A
+      ⊥ :
+        α) =
       ⊥ :=
   bot_unique $ by
     rw [← H] <;> apply bot_le
@@ -314,7 +318,7 @@ end SemilatticeInfBot
 /-! ### Bounded order -/
 
 
-/--  A bounded order describes an order `(≤)` with a top and bottom element,
+/-- A bounded order describes an order `(≤)` with a top and bottom element,
   denoted `⊤` and `⊥` respectively. -/
 @[ancestor OrderTop OrderBot]
 class BoundedOrder (α : Type u) [LE α] extends OrderTop α, OrderBot α
@@ -327,44 +331,40 @@ theorem BoundedOrder.ext {α} [PartialOrderₓ α] {A B : BoundedOrder α} : A =
   injection ht with h
   injection hb with h'
   convert rfl
-  ·
-    exact h.symm
-  ·
-    exact h'.symm
+  · exact h.symm
+    
+  · exact h'.symm
+    
 
--- failed to format: format: uncaught backtrack exception
 /-- Propositions form a distributive lattice. -/
-  instance
-    Prop.distribLattice
-    : DistribLattice Prop
-    where
-      le a b := a → b
-        le_refl _ := id
-        le_trans a b c f g := g ∘ f
-        le_antisymm a b Hab Hba := propext ⟨ Hab , Hba ⟩
-        sup := Or
-        le_sup_left := @ Or.inl
-        le_sup_right := @ Or.inr
-        sup_le a b c := Or.ndrec
-        inf := And
-        inf_le_left := @ And.left
-        inf_le_right := @ And.right
-        le_inf a b c Hab Hac Ha := And.intro ( Hab Ha ) ( Hac Ha )
-        le_sup_inf a b c H := or_iff_not_imp_left . 2 $ fun Ha => ⟨ H . 1 . resolve_left Ha , H . 2 . resolve_left Ha ⟩
+instance Prop.distribLattice : DistribLattice Prop where
+  le := fun a b => a → b
+  le_refl := fun _ => id
+  le_trans := fun a b c f g => g ∘ f
+  le_antisymm := fun a b Hab Hba => propext ⟨Hab, Hba⟩
+  sup := Or
+  le_sup_left := @Or.inl
+  le_sup_right := @Or.inr
+  sup_le := fun a b c => Or.ndrec
+  inf := And
+  inf_le_left := @And.left
+  inf_le_right := @And.right
+  le_inf := fun a b c Hab Hac Ha => And.intro (Hab Ha) (Hac Ha)
+  le_sup_inf := fun a b c H => or_iff_not_imp_left.2 $ fun Ha => ⟨H.1.resolve_left Ha, H.2.resolve_left Ha⟩
 
--- failed to format: format: uncaught backtrack exception
 /-- Propositions form a bounded order. -/
-  instance
-    Prop.boundedOrder
-    : BoundedOrder Prop
-    where top := True le_top a Ha := True.intro bot := False bot_le := @ False.elim
+instance Prop.boundedOrder : BoundedOrder Prop where
+  top := True
+  le_top := fun a Ha => True.intro
+  bot := False
+  bot_le := @False.elim
 
 noncomputable instance Prop.linearOrder : LinearOrderₓ Prop :=
   @Lattice.toLinearOrder Prop _ (Classical.decEq _) (Classical.decRel _) (Classical.decRel _) $ fun p q => by
     change (p → q) ∨ (q → p)
     tauto!
 
--- ././Mathport/Syntax/Translate/Basic.lean:470:4: warning: unsupported binary notation `«->»
+-- ././Mathport/Syntax/Translate/Basic.lean:473:4: warning: unsupported binary notation `«->»
 @[simp]
 theorem le_Prop_eq : (· ≤ · : Prop → Prop → Prop) = «->» · · :=
   rfl
@@ -444,25 +444,24 @@ theorem subsingleton_of_bot_eq_top (hα : (⊥ : α) = (⊤ : α)) : Subsingleto
   subsingleton_of_top_le_bot (ge_of_eq hα)
 
 theorem subsingleton_iff_bot_eq_top : (⊥ : α) = (⊤ : α) ↔ Subsingleton α :=
-  ⟨subsingleton_of_bot_eq_top, fun h => by
-    exact Subsingleton.elimₓ ⊥ ⊤⟩
+  ⟨subsingleton_of_bot_eq_top, fun h => Subsingleton.elimₓ ⊥ ⊤⟩
 
 end Subsingleton
 
 /-! ### `with_bot`, `with_top` -/
 
 
-/--  Attach `⊥` to a type. -/
+/-- Attach `⊥` to a type. -/
 def WithBot (α : Type _) :=
   Option α
 
 namespace WithBot
 
--- failed to format: format: uncaught backtrack exception
-unsafe
-  instance
-    { α } [ has_to_format α ] : has_to_format ( WithBot α )
-    where to_format x := match x with | none => "⊥" | some x => to_fmt x
+unsafe instance {α} [has_to_format α] : has_to_format (WithBot α) where
+  to_format := fun x =>
+    match x with
+    | none => "⊥"
+    | some x => to_fmt x
 
 instance : CoeTₓ α (WithBot α) :=
   ⟨some⟩
@@ -487,7 +486,7 @@ theorem bot_ne_coe (a : α) : ⊥ ≠ (a : WithBot α) :=
 theorem coe_ne_bot (a : α) : (a : WithBot α) ≠ ⊥ :=
   fun.
 
-/--  Recursor for `with_bot` using the preferred forms `⊥` and `↑a`. -/
+/-- Recursor for `with_bot` using the preferred forms `⊥` and `↑a`. -/
 @[elab_as_eliminator]
 def rec_bot_coe {C : WithBot α → Sort _} (h₁ : C ⊥) (h₂ : ∀ a : α, C a) : ∀ n : WithBot α, C n :=
   Option.rec h₁ h₂
@@ -499,7 +498,7 @@ theorem coe_eq_coe {a b : α} : (a : WithBot α) = b ↔ a = b := by
 theorem ne_bot_iff_exists {x : WithBot α} : x ≠ ⊥ ↔ ∃ a : α, ↑a = x :=
   Option.ne_none_iff_exists
 
-/--  Deconstruct a `x : with_bot α` to the underlying value in `α`, given a proof that `x ≠ ⊥`. -/
+/-- Deconstruct a `x : with_bot α` to the underlying value in `α`, given a proof that `x ≠ ⊥`. -/
 def unbot : ∀ x : WithBot α, x ≠ ⊥ → α
   | ⊥, h => absurd rfl h
   | some x, h => x
@@ -514,19 +513,11 @@ theorem coe_unbot {α : Type _} (x : WithBot α) (h : x ≠ ⊥) : (x.unbot h : 
 theorem unbot_coe (x : α) (h : (x : WithBot α) ≠ ⊥ := coe_ne_bot _) : (x : WithBot α).unbot h = x :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ( priority := 10 )
-  LE
-  [ LE α ] : LE ( WithBot α )
-  where le o₁ o₂ : Option α := ∀ , ∀ a ∈ o₁ , ∀ , ∃ b ∈ o₂ , a ≤ b
+instance (priority := 10) LE [LE α] : LE (WithBot α) where
+  le := fun o₁ o₂ : Option α => ∀, ∀ a ∈ o₁, ∀, ∃ b ∈ o₂, a ≤ b
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ( priority := 10 )
-  LT
-  [ LT α ] : LT ( WithBot α )
-  where lt o₁ o₂ : Option α := ∃ b ∈ o₂ , ∀ , ∀ a ∈ o₁ , ∀ , a < b
+instance (priority := 10) LT [LT α] : LT (WithBot α) where
+  lt := fun o₁ o₂ : Option α => ∃ b ∈ o₂, ∀, ∀ a ∈ o₁, ∀, a < b
 
 @[simp]
 theorem some_lt_some [LT α] {a b : α} : @LT.lt (WithBot α) _ (some a) (some b) ↔ a < b := by
@@ -540,42 +531,35 @@ theorem not_lt_none [LT α] (a : Option α) : ¬@LT.lt (WithBot α) _ a none := 
 theorem bot_lt_coe [LT α] (a : α) : (⊥ : WithBot α) < a :=
   none_lt_some a
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : CanLift ( WithBot α ) α
-  where coe := coeₓ cond r := r ≠ ⊥ prf x hx := ⟨ Option.getₓ $ Option.ne_none_iff_is_some . 1 hx , Option.some_getₓ _ ⟩
+instance : CanLift (WithBot α) α where
+  coe := coeₓ
+  cond := fun r => r ≠ ⊥
+  prf := fun x hx => ⟨Option.getₓ $ Option.ne_none_iff_is_some.1 hx, Option.some_getₓ _⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  [ Preorderₓ α ] : Preorderₓ ( WithBot α )
-  where
-    le := · ≤ ·
-      lt := · < ·
-      lt_iff_le_not_le
-        :=
-        by
-          intros
-            <;>
-            cases a <;> cases b <;> simp [ lt_iff_le_not_leₓ ] <;> simp [ · ≤ · , · < · ] <;> constructor <;> rfl
-      le_refl o a ha := ⟨ a , ha , le_reflₓ _ ⟩
-      le_trans
-        o₁ o₂ o₃ h₁ h₂ a ha
-        :=
-        let ⟨ b , hb , ab ⟩ := h₁ a ha let ⟨ c , hc , bc ⟩ := h₂ b hb ⟨ c , hc , le_transₓ ab bc ⟩
+instance [Preorderₓ α] : Preorderₓ (WithBot α) where
+  le := · ≤ ·
+  lt := · < ·
+  lt_iff_le_not_le := by
+    intros <;> cases a <;> cases b <;> simp [lt_iff_le_not_leₓ] <;> simp [· ≤ ·, · < ·] <;> constructor <;> rfl
+  le_refl := fun o a ha => ⟨a, ha, le_reflₓ _⟩
+  le_trans := fun o₁ o₂ o₃ h₁ h₂ a ha =>
+    let ⟨b, hb, ab⟩ := h₁ a ha
+    let ⟨c, hc, bc⟩ := h₂ b hb
+    ⟨c, hc, le_transₓ ab bc⟩
 
 instance PartialOrderₓ [PartialOrderₓ α] : PartialOrderₓ (WithBot α) :=
   { WithBot.preorder with
     le_antisymm := fun o₁ o₂ h₁ h₂ => by
       cases' o₁ with a
-      ·
-        cases' o₂ with b
-        ·
-          rfl
+      · cases' o₂ with b
+        · rfl
+          
         rcases h₂ b rfl with ⟨_, ⟨⟩, _⟩
-      ·
-        rcases h₁ a rfl with ⟨b, ⟨⟩, h₁'⟩
+        
+      · rcases h₁ a rfl with ⟨b, ⟨⟩, h₁'⟩
         rcases h₂ b rfl with ⟨_, ⟨⟩, h₂'⟩
-        rw [le_antisymmₓ h₁' h₂'] }
+        rw [le_antisymmₓ h₁' h₂']
+         }
 
 instance OrderBot [LE α] : OrderBot (WithBot α) :=
   { WithBot.hasBot with bot_le := fun a a' h => Option.noConfusion h }
@@ -613,7 +597,7 @@ instance decidable_le [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (Wi
     if h : x ≤ y then is_true (some_le_some.2 h)
     else
       is_false $ by
-        simp
+        simp [*]
   | some x, none =>
     is_false $ fun h => by
       rcases h x rfl with ⟨y, ⟨_⟩, _⟩
@@ -625,27 +609,21 @@ instance decidable_lt [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (With
   | some x, some y =>
     if h : x < y then
       is_true $ by
-        simp
+        simp [*]
     else
       is_false $ by
-        simp
+        simp [*]
   | x, none =>
     is_false $ by
       rintro ⟨a, ⟨⟨⟩⟩⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  [ PartialOrderₓ α ] [ IsTotal α ( · ≤ · ) ] : IsTotal ( WithBot α ) ( · ≤ · )
-  where
-    Total
-      a b
-      :=
-      match
-        a , b
-        with
-        | none , _ => Or.inl bot_le
-          | _ , none => Or.inr bot_le
-          | some x , some y => by simp only [ some_le_some , total_of ]
+instance [PartialOrderₓ α] [IsTotal α (· ≤ ·)] : IsTotal (WithBot α) (· ≤ ·) where
+  Total := fun a b =>
+    match a, b with
+    | none, _ => Or.inl bot_le
+    | _, none => Or.inr bot_le
+    | some x, some y => by
+      simp only [some_le_some, total_of]
 
 instance SemilatticeSup [SemilatticeSup α] : SemilatticeSup (WithBot α) :=
   { WithBot.orderBot, WithBot.partialOrder with sup := Option.liftOrGet (·⊔·),
@@ -655,14 +633,14 @@ instance SemilatticeSup [SemilatticeSup α] : SemilatticeSup (WithBot α) :=
       cases ha <;> cases o₁ <;> simp [Option.liftOrGet],
     sup_le := fun o₁ o₂ o₃ h₁ h₂ a ha => by
       cases' o₁ with b <;> cases' o₂ with c <;> cases ha
-      ·
-        exact h₂ a rfl
-      ·
-        exact h₁ a rfl
-      ·
-        rcases h₁ b rfl with ⟨d, ⟨⟩, h₁'⟩
+      · exact h₂ a rfl
+        
+      · exact h₁ a rfl
+        
+      · rcases h₁ b rfl with ⟨d, ⟨⟩, h₁'⟩
         simp at h₂
-        exact ⟨d, rfl, sup_le h₁' h₂⟩ }
+        exact ⟨d, rfl, sup_le h₁' h₂⟩
+         }
 
 theorem coe_sup [SemilatticeSup α] (a b : α) : ((a⊔b : α) : WithBot α) = a⊔b :=
   rfl
@@ -692,11 +670,11 @@ instance Lattice [Lattice α] : Lattice (WithBot α) :=
 instance LinearOrderₓ [LinearOrderₓ α] : LinearOrderₓ (WithBot α) :=
   Lattice.toLinearOrder _ $ fun o₁ o₂ => by
     cases' o₁ with a
-    ·
-      exact Or.inl bot_le
+    · exact Or.inl bot_le
+      
     cases' o₂ with b
-    ·
-      exact Or.inr bot_le
+    · exact Or.inr bot_le
+      
     simp [le_totalₓ]
 
 @[norm_cast]
@@ -707,11 +685,10 @@ theorem coe_min [LinearOrderₓ α] (x y : α) : ((min x y : α) : WithBot α) =
 theorem coe_max [LinearOrderₓ α] (x y : α) : ((max x y : α) : WithBot α) = max x y :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  OrderTop
-  [ LE α ] [ OrderTop α ] : OrderTop ( WithBot α )
-  where top := some ⊤ le_top o a ha := by cases ha <;> exact ⟨ _ , rfl , le_top ⟩
+instance OrderTop [LE α] [OrderTop α] : OrderTop (WithBot α) where
+  top := some ⊤
+  le_top := fun o a ha => by
+    cases ha <;> exact ⟨_, rfl, le_top⟩
 
 instance BoundedOrder [LE α] [OrderTop α] : BoundedOrder (WithBot α) :=
   { WithBot.orderTop, WithBot.orderBot with }
@@ -727,8 +704,8 @@ theorem well_founded_lt [Preorderₓ α] (h : WellFounded (· < · : α → α �
             (show
               ∀ b : α,
                 (∀ c, c < b → (c : WithBot α) < a → Acc (· < · : WithBot α → WithBot α → Prop) c) →
-                  (b : WithBot α) < a → Acc (· < · : WithBot α → WithBot α → Prop) b from
-              fun b ih hba =>
+                  (b : WithBot α) < a → Acc (· < · : WithBot α → WithBot α → Prop) b
+              from fun b ih hba =>
               Acc.intro _ fun c =>
                 Option.recOn c (fun _ => acc_bot) fun c hc => ih _ (some_lt_some.1 hc) (lt_transₓ hc hba))⟩
 
@@ -746,27 +723,27 @@ instance DenselyOrdered [LT α] [DenselyOrdered α] [NoBotOrder α] : DenselyOrd
 instance {α : Type _} [LT α] [NoTopOrder α] [Nonempty α] : NoTopOrder (WithBot α) :=
   ⟨by
     apply WithBot.recBotCoe
-    ·
-      apply ‹Nonempty α›.elim
+    · apply ‹Nonempty α›.elim
       exact fun a => ⟨a, WithBot.bot_lt_coe a⟩
-    ·
-      intro a
+      
+    · intro a
       obtain ⟨b, ha⟩ := no_top a
-      exact ⟨b, with_bot.coe_lt_coe.mpr ha⟩⟩
+      exact ⟨b, with_bot.coe_lt_coe.mpr ha⟩
+      ⟩
 
 end WithBot
 
-/--  Attach `⊤` to a type. -/
+/-- Attach `⊤` to a type. -/
 def WithTop (α : Type _) :=
   Option α
 
 namespace WithTop
 
--- failed to format: format: uncaught backtrack exception
-unsafe
-  instance
-    { α } [ has_to_format α ] : has_to_format ( WithTop α )
-    where to_format x := match x with | none => "⊤" | some x => to_fmt x
+unsafe instance {α} [has_to_format α] : has_to_format (WithTop α) where
+  to_format := fun x =>
+    match x with
+    | none => "⊤"
+    | some x => to_fmt x
 
 instance : CoeTₓ α (WithTop α) :=
   ⟨some⟩
@@ -783,7 +760,7 @@ theorem none_eq_top : (none : WithTop α) = (⊤ : WithTop α) :=
 theorem some_eq_coe (a : α) : (some a : WithTop α) = (↑a : WithTop α) :=
   rfl
 
-/--  Recursor for `with_top` using the preferred forms `⊤` and `↑a`. -/
+/-- Recursor for `with_top` using the preferred forms `⊤` and `↑a`. -/
 @[elab_as_eliminator]
 def rec_top_coe {C : WithTop α → Sort _} (h₁ : C ⊤) (h₂ : ∀ a : α, C a) : ∀ n : WithTop α, C n :=
   Option.rec h₁ h₂
@@ -803,7 +780,7 @@ theorem coe_ne_top {a : α} : (a : WithTop α) ≠ ⊤ :=
 theorem ne_top_iff_exists {x : WithTop α} : x ≠ ⊤ ↔ ∃ a : α, ↑a = x :=
   Option.ne_none_iff_exists
 
-/--  Deconstruct a `x : with_top α` to the underlying value in `α`, given a proof that `x ≠ ⊤`. -/
+/-- Deconstruct a `x : with_top α` to the underlying value in `α`, given a proof that `x ≠ ⊤`. -/
 def untop : ∀ x : WithTop α, x ≠ ⊤ → α :=
   WithBot.unbot
 
@@ -817,19 +794,11 @@ theorem coe_untop {α : Type _} (x : WithTop α) (h : x ≠ ⊤) : (x.untop h : 
 theorem untop_coe (x : α) (h : (x : WithTop α) ≠ ⊤ := coe_ne_top) : (x : WithTop α).untop h = x :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ( priority := 10 )
-  LT
-  [ LT α ] : LT ( WithTop α )
-  where lt o₁ o₂ : Option α := ∃ b ∈ o₁ , ∀ , ∀ a ∈ o₂ , ∀ , b < a
+instance (priority := 10) LT [LT α] : LT (WithTop α) where
+  lt := fun o₁ o₂ : Option α => ∃ b ∈ o₁, ∀, ∀ a ∈ o₂, ∀, b < a
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ( priority := 10 )
-  LE
-  [ LE α ] : LE ( WithTop α )
-  where le o₁ o₂ : Option α := ∀ , ∀ a ∈ o₂ , ∀ , ∃ b ∈ o₁ , b ≤ a
+instance (priority := 10) LE [LE α] : LE (WithTop α) where
+  le := fun o₁ o₂ : Option α => ∀, ∀ a ∈ o₂, ∀, ∃ b ∈ o₁, b ≤ a
 
 @[simp]
 theorem some_lt_some [LT α] {a b : α} : @LT.lt (WithTop α) _ (some a) (some b) ↔ a < b := by
@@ -850,37 +819,35 @@ theorem some_lt_none [LT α] (a : α) : @LT.lt (WithTop α) _ (some a) none := b
 @[simp]
 theorem not_none_lt [LT α] (a : Option α) : ¬@LT.lt (WithTop α) _ none a := fun ⟨_, h, _⟩ => Option.not_mem_none _ h
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : CanLift ( WithTop α ) α
-  where coe := coeₓ cond r := r ≠ ⊤ prf x hx := ⟨ Option.getₓ $ Option.ne_none_iff_is_some . 1 hx , Option.some_getₓ _ ⟩
+instance : CanLift (WithTop α) α where
+  coe := coeₓ
+  cond := fun r => r ≠ ⊤
+  prf := fun x hx => ⟨Option.getₓ $ Option.ne_none_iff_is_some.1 hx, Option.some_getₓ _⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  [ Preorderₓ α ] : Preorderₓ ( WithTop α )
-  where
-    le o₁ o₂ : Option α := ∀ , ∀ a ∈ o₂ , ∀ , ∃ b ∈ o₁ , b ≤ a
-      lt := · < ·
-      lt_iff_le_not_le := by intros <;> cases a <;> cases b <;> simp [ lt_iff_le_not_leₓ ] <;> simp [ · < · , · ≤ · ]
-      le_refl o a ha := ⟨ a , ha , le_reflₓ _ ⟩
-      le_trans
-        o₁ o₂ o₃ h₁ h₂ c hc
-        :=
-        let ⟨ b , hb , bc ⟩ := h₂ c hc let ⟨ a , ha , ab ⟩ := h₁ b hb ⟨ a , ha , le_transₓ ab bc ⟩
+instance [Preorderₓ α] : Preorderₓ (WithTop α) where
+  le := fun o₁ o₂ : Option α => ∀, ∀ a ∈ o₂, ∀, ∃ b ∈ o₁, b ≤ a
+  lt := · < ·
+  lt_iff_le_not_le := by
+    intros <;> cases a <;> cases b <;> simp [lt_iff_le_not_leₓ] <;> simp [· < ·, · ≤ ·]
+  le_refl := fun o a ha => ⟨a, ha, le_reflₓ _⟩
+  le_trans := fun o₁ o₂ o₃ h₁ h₂ c hc =>
+    let ⟨b, hb, bc⟩ := h₂ c hc
+    let ⟨a, ha, ab⟩ := h₁ b hb
+    ⟨a, ha, le_transₓ ab bc⟩
 
 instance PartialOrderₓ [PartialOrderₓ α] : PartialOrderₓ (WithTop α) :=
   { WithTop.preorder with
     le_antisymm := fun o₁ o₂ h₁ h₂ => by
       cases' o₂ with b
-      ·
-        cases' o₁ with a
-        ·
-          rfl
+      · cases' o₁ with a
+        · rfl
+          
         rcases h₂ a rfl with ⟨_, ⟨⟩, _⟩
-      ·
-        rcases h₁ b rfl with ⟨a, ⟨⟩, h₁'⟩
+        
+      · rcases h₁ b rfl with ⟨a, ⟨⟩, h₁'⟩
         rcases h₂ a rfl with ⟨_, ⟨⟩, h₂'⟩
-        rw [le_antisymmₓ h₁' h₂'] }
+        rw [le_antisymmₓ h₁' h₂']
+         }
 
 instance OrderTop [LE α] : OrderTop (WithTop α) :=
   { WithTop.hasTop with le_top := fun a a' h => Option.noConfusion h }
@@ -933,19 +900,13 @@ instance decidable_le [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (Wi
 instance decidable_lt [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithTop α) (· < ·) := fun x y =>
   @WithBot.decidableLt (OrderDual α) _ _ y x
 
--- failed to format: format: uncaught backtrack exception
-instance
-  [ PartialOrderₓ α ] [ IsTotal α ( · ≤ · ) ] : IsTotal ( WithTop α ) ( · ≤ · )
-  where
-    Total
-      a b
-      :=
-      match
-        a , b
-        with
-        | none , _ => Or.inr le_top
-          | _ , none => Or.inl le_top
-          | some x , some y => by simp only [ some_le_some , total_of ]
+instance [PartialOrderₓ α] [IsTotal α (· ≤ ·)] : IsTotal (WithTop α) (· ≤ ·) where
+  Total := fun a b =>
+    match a, b with
+    | none, _ => Or.inr le_top
+    | _, none => Or.inl le_top
+    | some x, some y => by
+      simp only [some_le_some, total_of]
 
 instance SemilatticeInf [SemilatticeInf α] : SemilatticeInf (WithTop α) :=
   { WithTop.partialOrder with inf := Option.liftOrGet (·⊓·),
@@ -955,14 +916,14 @@ instance SemilatticeInf [SemilatticeInf α] : SemilatticeInf (WithTop α) :=
       cases ha <;> cases o₁ <;> simp [Option.liftOrGet],
     le_inf := fun o₁ o₂ o₃ h₁ h₂ a ha => by
       cases' o₂ with b <;> cases' o₃ with c <;> cases ha
-      ·
-        exact h₂ a rfl
-      ·
-        exact h₁ a rfl
-      ·
-        rcases h₁ b rfl with ⟨d, ⟨⟩, h₁'⟩
+      · exact h₂ a rfl
+        
+      · exact h₁ a rfl
+        
+      · rcases h₁ b rfl with ⟨d, ⟨⟩, h₁'⟩
         simp at h₂
-        exact ⟨d, rfl, le_inf h₁' h₂⟩ }
+        exact ⟨d, rfl, le_inf h₁' h₂⟩
+         }
 
 theorem coe_inf [SemilatticeInf α] (a b : α) : ((a⊓b : α) : WithTop α) = a⊓b :=
   rfl
@@ -992,11 +953,11 @@ instance Lattice [Lattice α] : Lattice (WithTop α) :=
 instance LinearOrderₓ [LinearOrderₓ α] : LinearOrderₓ (WithTop α) :=
   Lattice.toLinearOrder _ $ fun o₁ o₂ => by
     cases' o₁ with a
-    ·
-      exact Or.inr le_top
+    · exact Or.inr le_top
+      
     cases' o₂ with b
-    ·
-      exact Or.inl le_top
+    · exact Or.inl le_top
+      
     simp [le_totalₓ]
 
 @[simp, norm_cast]
@@ -1007,11 +968,10 @@ theorem coe_min [LinearOrderₓ α] (x y : α) : ((min x y : α) : WithTop α) =
 theorem coe_max [LinearOrderₓ α] (x y : α) : ((max x y : α) : WithTop α) = max x y :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  OrderBot
-  [ LE α ] [ OrderBot α ] : OrderBot ( WithTop α )
-  where bot := some ⊥ bot_le o a ha := by cases ha <;> exact ⟨ _ , rfl , bot_le ⟩
+instance OrderBot [LE α] [OrderBot α] : OrderBot (WithTop α) where
+  bot := some ⊥
+  bot_le := fun o a ha => by
+    cases ha <;> exact ⟨_, rfl, bot_le⟩
 
 instance BoundedOrder [LE α] [OrderBot α] : BoundedOrder (WithTop α) :=
   { WithTop.orderTop, WithTop.orderBot with }
@@ -1022,10 +982,8 @@ theorem well_founded_lt {α : Type _} [Preorderₓ α] (h : WellFounded (· < ·
     Acc.intro _
       (WellFounded.induction h a
         (show
-          ∀ b,
-            (∀ c, c < b → ∀ d : WithTop α, d < some c → Acc (· < ·) d) →
-              ∀ y : WithTop α, y < some b → Acc (· < ·) y from
-          fun b ih c =>
+          ∀ b, (∀ c, c < b → ∀ d : WithTop α, d < some c → Acc (· < ·) d) → ∀ y : WithTop α, y < some b → Acc (· < ·) y
+          from fun b ih c =>
           Option.recOn c (fun hc => (not_lt_of_geₓ le_top hc).elim) fun c hc => Acc.intro _ (ih _ (some_lt_some.1 hc))))
   ⟨fun a =>
     Option.recOn a (Acc.intro _ fun y => Option.recOn y (fun h => (lt_irreflₓ _ h).elim) fun _ _ => acc_some _)
@@ -1053,13 +1011,13 @@ theorem lt_iff_exists_coe_btwn [PartialOrderₓ α] [DenselyOrdered α] [NoTopOr
 instance {α : Type _} [LT α] [NoBotOrder α] [Nonempty α] : NoBotOrder (WithTop α) :=
   ⟨by
     apply WithTop.recTopCoe
-    ·
-      apply ‹Nonempty α›.elim
+    · apply ‹Nonempty α›.elim
       exact fun a => ⟨a, WithTop.coe_lt_top a⟩
-    ·
-      intro a
+      
+    · intro a
       obtain ⟨b, ha⟩ := no_bot a
-      exact ⟨b, with_top.coe_lt_coe.mpr ha⟩⟩
+      exact ⟨b, with_top.coe_lt_coe.mpr ha⟩
+      ⟩
 
 end WithTop
 
@@ -1068,17 +1026,19 @@ end WithTop
 
 namespace Subtype
 
-/--  A subtype remains a `⊥`-order if the property holds at `⊥`.
+/-- A subtype remains a `⊥`-order if the property holds at `⊥`.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def OrderBot [Preorderₓ α] [OrderBot α] {P : α → Prop} (Pbot : P ⊥) : OrderBot { x : α // P x } :=
-  { bot := ⟨⊥, Pbot⟩, bot_le := fun _ => bot_le }
+protected def OrderBot [Preorderₓ α] [OrderBot α] {P : α → Prop} (Pbot : P ⊥) : OrderBot { x : α // P x } where
+  bot := ⟨⊥, Pbot⟩
+  bot_le := fun _ => bot_le
 
-/--  A subtype remains a `⊤`-order if the property holds at `⊤`.
+/-- A subtype remains a `⊤`-order if the property holds at `⊤`.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def OrderTop [Preorderₓ α] [OrderTop α] {P : α → Prop} (Ptop : P ⊤) : OrderTop { x : α // P x } :=
-  { top := ⟨⊤, Ptop⟩, le_top := fun _ => le_top }
+protected def OrderTop [Preorderₓ α] [OrderTop α] {P : α → Prop} (Ptop : P ⊤) : OrderTop { x : α // P x } where
+  top := ⟨⊤, Ptop⟩
+  le_top := fun _ => le_top
 
 end Subtype
 
@@ -1133,7 +1093,7 @@ section SemilatticeInfBot
 
 variable [SemilatticeInf α] [OrderBot α]
 
-/--  Two elements of a lattice are disjoint if their inf is the bottom element.
+/-- Two elements of a lattice are disjoint if their inf is the bottom element.
   (This generalizes disjoint sets, viewed as members of the subset lattice.) -/
 def Disjoint (a b : α) : Prop :=
   a⊓b ≤ ⊥
@@ -1308,24 +1268,26 @@ end Disjoint
 theorem inf_eq_bot_iff_le_compl [DistribLattice α] [BoundedOrder α] {a b c : α} (h₁ : b⊔c = ⊤) (h₂ : b⊓c = ⊥) :
     a⊓b = ⊥ ↔ a ≤ c :=
   ⟨fun h =>
-    calc a ≤ a⊓(b⊔c) := by
-      simp [h₁]
+    calc
+      a ≤ a⊓(b⊔c) := by
+        simp [h₁]
       _ = a⊓b⊔a⊓c := by
-      simp [inf_sup_left]
+        simp [inf_sup_left]
       _ ≤ c := by
-      simp [h, inf_le_right]
+        simp [h, inf_le_right]
       ,
     fun h =>
     bot_unique $
-      calc a⊓b ≤ b⊓c := by
-        rw [inf_comm]
-        exact inf_le_inf_left _ h
+      calc
+        a⊓b ≤ b⊓c := by
+          rw [inf_comm]
+          exact inf_le_inf_left _ h
         _ = ⊥ := h₂
         ⟩
 
 section IsCompl
 
-/--  Two elements `x` and `y` are complements of each other if `x ⊔ y = ⊤` and `x ⊓ y = ⊥`. -/
+/-- Two elements `x` and `y` are complements of each other if `x ⊔ y = ⊤` and `x ⊓ y = ⊥`. -/
 structure IsCompl [Lattice α] [BoundedOrder α] (x y : α) : Prop where
   inf_le_bot : x⊓y ≤ ⊥
   top_le_sup : ⊤ ≤ x⊔y
@@ -1366,10 +1328,11 @@ end BoundedOrder
 variable [DistribLattice α] [BoundedOrder α] {a b x y z : α}
 
 theorem inf_left_le_of_le_sup_right (h : IsCompl x y) (hle : a ≤ b⊔y) : a⊓x ≤ b :=
-  calc a⊓x ≤ (b⊔y)⊓x := inf_le_inf hle le_rfl
+  calc
+    a⊓x ≤ (b⊔y)⊓x := inf_le_inf hle le_rfl
     _ = b⊓x⊔y⊓x := inf_sup_right
     _ = b⊓x := by
-    rw [h.symm.inf_eq_bot, sup_bot_eq]
+      rw [h.symm.inf_eq_bot, sup_bot_eq]
     _ ≤ b := inf_le_left
     
 
@@ -1447,7 +1410,7 @@ theorem eq_bot_of_top_is_compl (h : IsCompl ⊤ x) : x = ⊥ :=
 
 end
 
-/--  A complemented bounded lattice is one where every element has a (not necessarily unique)
+/-- A complemented bounded lattice is one where every element has a (not necessarily unique)
 complement. -/
 class IsComplemented (α) [Lattice α] [BoundedOrder α] : Prop where
   exists_is_compl : ∀ a : α, ∃ b : α, IsCompl a b
@@ -1480,8 +1443,11 @@ end Nontrivial
 
 namespace Bool
 
--- failed to format: format: uncaught backtrack exception
-instance : BoundedOrder Bool where top := tt le_top x := le_tt bot := ff bot_le x := ff_le
+instance : BoundedOrder Bool where
+  top := tt
+  le_top := fun x => le_tt
+  bot := ff
+  bot_le := fun x => ff_le
 
 end Bool
 

@@ -15,12 +15,11 @@ unsafe def tactic_script.to_string : tactic_script Stringₓ → Stringₓ
   | tactic_script.work n a l c =>
     "work_on_goal " ++ toString n ++ " { " ++ ", ".intercalate (a :: l.map tactic_script.to_string) ++ " }"
 
--- failed to format: format: uncaught backtrack exception
-unsafe instance : HasToString ( tactic_script Stringₓ ) where toString s := s.to_string
+unsafe instance : HasToString (tactic_script Stringₓ) where
+  toString := fun s => s.to_string
 
--- failed to format: format: uncaught backtrack exception
-unsafe
-  instance tactic_script_unit_has_to_string : HasToString ( tactic_script Unit ) where toString s := "[chain tactic]"
+unsafe instance tactic_script_unit_has_to_string : HasToString (tactic_script Unit) where
+  toString := fun s => "[chain tactic]"
 
 unsafe def abstract_if_success (tac : expr → tactic α) (g : expr) : tactic α := do
   let type ← infer_type g
@@ -41,8 +40,7 @@ unsafe def abstract_if_success (tac : expr → tactic α) (g : expr) : tactic α
       return a
 
 mutual
-  /-- 
-  `chain_many tac` recursively tries `tac` on all goals, working depth-first on generated subgoals,
+  /-- `chain_many tac` recursively tries `tac` on all goals, working depth-first on generated subgoals,
   until it no longer succeeds on any goal. `chain_many` automatically makes auxiliary definitions.
   -/
   unsafe def chain_single {α} (tac : tactic α) : expr → tactic (α × List (tactic_script α))
@@ -51,8 +49,7 @@ mutual
       let a ← tac
       let l ← get_goals >>= chain_many
       return (a, l)
-  /-- 
-  `chain_many tac` recursively tries `tac` on all goals, working depth-first on generated subgoals,
+  /-- `chain_many tac` recursively tries `tac` on all goals, working depth-first on generated subgoals,
   until it no longer succeeds on any goal. `chain_many` automatically makes auxiliary definitions.
   -/
   unsafe def chain_many {α} (tac : tactic α) : List expr → tactic (List (tactic_script α))
@@ -63,8 +60,7 @@ mutual
           return (tactic_script.base a :: l)) <|>
         return []
     | gs => chain_iter gs []
-  /-- 
-  `chain_many tac` recursively tries `tac` on all goals, working depth-first on generated subgoals,
+  /-- `chain_many tac` recursively tries `tac` on all goals, working depth-first on generated subgoals,
   until it no longer succeeds on any goal. `chain_many` automatically makes auxiliary definitions.
   -/
   unsafe def chain_iter {α} (tac : tactic α) : List expr → List expr → tactic (List (tactic_script α))

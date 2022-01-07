@@ -39,20 +39,20 @@ variable [Field F] [Field K] [AddCommGroupₓ A]
 
 variable [Algebra F K] [Module K A] [Module F A] [IsScalarTower F K A]
 
-/--  Tower law: if `A` is a `K`-vector space and `K` is a field extension of `F` then
+/-- Tower law: if `A` is a `K`-vector space and `K` is a field extension of `F` then
 `dim_F(A) = dim_F(K) * dim_K(A)`. -/
 theorem dim_mul_dim' :
-    (Cardinal.lift.{w} (Module.rank F K)*Cardinal.lift.{v} (Module.rank K A)) = Cardinal.lift.{v} (Module.rank F A) :=
+    Cardinal.lift.{w} (Module.rank F K) * Cardinal.lift.{v} (Module.rank K A) = Cardinal.lift.{v} (Module.rank F A) :=
+  by
   let b := Basis.ofVectorSpace F K
   let c := Basis.ofVectorSpace K A
-  by
   rw [← (Module.rank F K).lift_id, ← b.mk_eq_dim, ← (Module.rank K A).lift_id, ← c.mk_eq_dim, ← lift_umax.{w, v}, ←
     (b.smul c).mk_eq_dim, mk_prod, lift_mul, lift_lift, lift_lift, lift_lift, lift_lift, lift_umax]
 
-/--  Tower law: if `A` is a `K`-vector space and `K` is a field extension of `F` then
+/-- Tower law: if `A` is a `K`-vector space and `K` is a field extension of `F` then
 `dim_F(A) = dim_F(K) * dim_K(A)`. -/
 theorem dim_mul_dim (F : Type u) (K A : Type v) [Field F] [Field K] [AddCommGroupₓ A] [Algebra F K] [Module K A]
-    [Module F A] [IsScalarTower F K A] : (Module.rank F K*Module.rank K A) = Module.rank F A := by
+    [Module F A] [IsScalarTower F K A] : Module.rank F K * Module.rank K A = Module.rank F A := by
   convert dim_mul_dim' F K A <;> rw [lift_id]
 
 namespace FiniteDimensional
@@ -71,18 +71,18 @@ theorem right [hf : FiniteDimensional F A] : FiniteDimensional K A :=
         rw [Submodule.restrict_scalars_top, eq_top_iff, ← hb, Submodule.span_le]
         exact Submodule.subset_span⟩⟩
 
-/--  Tower law: if `A` is a `K`-algebra and `K` is a field extension of `F` then
+/-- Tower law: if `A` is a `K`-algebra and `K` is a field extension of `F` then
 `dim_F(A) = dim_F(K) * dim_K(A)`. -/
-theorem finrank_mul_finrank [FiniteDimensional F K] : (finrank F K*finrank K A) = finrank F A := by
+theorem finrank_mul_finrank [FiniteDimensional F K] : finrank F K * finrank K A = finrank F A := by
   by_cases' hA : FiniteDimensional K A
-  ·
-    skip
+  · skip
     let b := Basis.ofVectorSpace F K
     let c := Basis.ofVectorSpace K A
     rw [finrank_eq_card_basis b, finrank_eq_card_basis c, finrank_eq_card_basis (b.smul c), Fintype.card_prod]
-  ·
-    rw [finrank_of_infinite_dimensional hA, mul_zero, finrank_of_infinite_dimensional]
+    
+  · rw [finrank_of_infinite_dimensional hA, mul_zero, finrank_of_infinite_dimensional]
     exact mt (@right F K A _ _ _ _ _ _ _) hA
+    
 
 instance LinearMap (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroupₓ V] [Module F V] [AddCommGroupₓ W]
     [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] : FiniteDimensional F (V →ₗ[F] W) :=
@@ -92,10 +92,9 @@ instance LinearMap (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGrou
 
 theorem finrank_linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroupₓ V] [Module F V]
     [AddCommGroupₓ W] [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] :
-    finrank F (V →ₗ[F] W) = finrank F V*finrank F W :=
+    finrank F (V →ₗ[F] W) = finrank F V * finrank F W := by
   let b := Basis.ofVectorSpace F V
   let c := Basis.ofVectorSpace F W
-  by
   rw [LinearEquiv.finrank_eq (LinearMap.toMatrix b c), Matrix.finrank_matrix, finrank_eq_card_basis b,
     finrank_eq_card_basis c, mul_commₓ]
 
@@ -107,9 +106,10 @@ theorem finrank_linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Fi
     [FiniteDimensional F K] [AddCommGroupₓ V] [Module F V] [FiniteDimensional F V] :
     finrank K (V →ₗ[F] K) = finrank F V :=
   (Nat.mul_right_inj $ show 0 < finrank F K from finrank_pos).1 $
-    calc (finrank F K*finrank K (V →ₗ[F] K)) = finrank F (V →ₗ[F] K) := finrank_mul_finrank _ _ _
-      _ = finrank F V*finrank F K := finrank_linear_map F V K
-      _ = finrank F K*finrank F V := mul_commₓ _ _
+    calc
+      finrank F K * finrank K (V →ₗ[F] K) = finrank F (V →ₗ[F] K) := finrank_mul_finrank _ _ _
+      _ = finrank F V * finrank F K := finrank_linear_map F V K
+      _ = finrank F K * finrank F V := mul_commₓ _ _
       
 
 end FiniteDimensional

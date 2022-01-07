@@ -70,539 +70,17 @@ section rootsOfUnity
 
 variable {k l : ℕ+}
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment
-    "/--"
-    " `roots_of_unity k M` is the subgroup of elements `m : units M` that satisfy `m ^ k = 1` -/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.def
-  "def"
-  (Command.declId `rootsOfUnity [])
-  (Command.optDeclSig
-   [(Term.explicitBinder "(" [`k] [":" (Data.Pnat.Basic.«termℕ+» "ℕ+")] [] ")")
-    (Term.explicitBinder "(" [`M] [":" (Term.type "Type" [(Level.hole "_")])] [] ")")
-    (Term.instBinder "[" [] (Term.app `CommMonoidₓ [`M]) "]")]
-   [(Term.typeSpec ":" (Term.app `Subgroup [(Term.app `Units [`M])]))])
-  (Command.declValSimple
-   ":="
-   (Term.structInst
-    "{"
-    []
-    [(group
-      (Term.structInstField
-       (Term.structInstLVal `Carrier [])
-       ":="
-       (Set.«term{_|_}»
-        "{"
-        `ζ
-        "|"
-        («term_=_»
-         (Cardinal.SetTheory.Cofinality.«term_^_»
-          `ζ
-          "^"
-          (Term.paren "(" [`k [(Term.typeAscription ":" (termℕ "ℕ"))]] ")"))
-         "="
-         (numLit "1"))
-        "}"))
-      [","])
-     (group (Term.structInstField (Term.structInstLVal `one_mem' []) ":=" (Term.app `one_pow [(Term.hole "_")])) [","])
-     (group
-      (Term.structInstField
-       (Term.structInstLVal `mul_mem' [])
-       ":="
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [(Term.simpleBinder [`ζ `ξ `hζ `hξ] [])]
-         "=>"
-         (Term.byTactic
-          "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(group
-              (Tactic.simpAll
-               "simp_all"
-               []
-               ["only"]
-               ["["
-                [(Tactic.simpLemma [] [] `Set.mem_set_of_eq)
-                 ","
-                 (Tactic.simpLemma [] [] `mul_powₓ)
-                 ","
-                 (Tactic.simpLemma [] [] `one_mulₓ)]
-                "]"])
-              [])]))))))
-      [","])
-     (group
-      (Term.structInstField
-       (Term.structInstLVal `inv_mem' [])
-       ":="
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [(Term.simpleBinder [`ζ `hζ] [])]
-         "=>"
-         (Term.byTactic
-          "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(group
-              (Tactic.simpAll
-               "simp_all"
-               []
-               ["only"]
-               ["["
-                [(Tactic.simpLemma [] [] `Set.mem_set_of_eq)
-                 ","
-                 (Tactic.simpLemma [] [] `inv_pow)
-                 ","
-                 (Tactic.simpLemma [] [] `one_inv)]
-                "]"])
-              [])]))))))
-      [])]
-    (Term.optEllipsis [])
-    []
-    "}")
-   [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.structInst
-   "{"
-   []
-   [(group
-     (Term.structInstField
-      (Term.structInstLVal `Carrier [])
-      ":="
-      (Set.«term{_|_}»
-       "{"
-       `ζ
-       "|"
-       («term_=_»
-        (Cardinal.SetTheory.Cofinality.«term_^_»
-         `ζ
-         "^"
-         (Term.paren "(" [`k [(Term.typeAscription ":" (termℕ "ℕ"))]] ")"))
-        "="
-        (numLit "1"))
-       "}"))
-     [","])
-    (group (Term.structInstField (Term.structInstLVal `one_mem' []) ":=" (Term.app `one_pow [(Term.hole "_")])) [","])
-    (group
-     (Term.structInstField
-      (Term.structInstLVal `mul_mem' [])
-      ":="
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [(Term.simpleBinder [`ζ `ξ `hζ `hξ] [])]
-        "=>"
-        (Term.byTactic
-         "by"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(group
-             (Tactic.simpAll
-              "simp_all"
-              []
-              ["only"]
-              ["["
-               [(Tactic.simpLemma [] [] `Set.mem_set_of_eq)
-                ","
-                (Tactic.simpLemma [] [] `mul_powₓ)
-                ","
-                (Tactic.simpLemma [] [] `one_mulₓ)]
-               "]"])
-             [])]))))))
-     [","])
-    (group
-     (Term.structInstField
-      (Term.structInstLVal `inv_mem' [])
-      ":="
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [(Term.simpleBinder [`ζ `hζ] [])]
-        "=>"
-        (Term.byTactic
-         "by"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(group
-             (Tactic.simpAll
-              "simp_all"
-              []
-              ["only"]
-              ["["
-               [(Tactic.simpLemma [] [] `Set.mem_set_of_eq)
-                ","
-                (Tactic.simpLemma [] [] `inv_pow)
-                ","
-                (Tactic.simpLemma [] [] `one_inv)]
-               "]"])
-             [])]))))))
-     [])]
-   (Term.optEllipsis [])
-   []
-   "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.structInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.optEllipsis', expected 'Lean.Parser.Term.optEllipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun
-   "fun"
-   (Term.basicFun
-    [(Term.simpleBinder [`ζ `hζ] [])]
-    "=>"
-    (Term.byTactic
-     "by"
-     (Tactic.tacticSeq
-      (Tactic.tacticSeq1Indented
-       [(group
-         (Tactic.simpAll
-          "simp_all"
-          []
-          ["only"]
-          ["["
-           [(Tactic.simpLemma [] [] `Set.mem_set_of_eq)
-            ","
-            (Tactic.simpLemma [] [] `inv_pow)
-            ","
-            (Tactic.simpLemma [] [] `one_inv)]
-           "]"])
-         [])])))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simpAll
-        "simp_all"
-        []
-        ["only"]
-        ["["
-         [(Tactic.simpLemma [] [] `Set.mem_set_of_eq)
-          ","
-          (Tactic.simpLemma [] [] `inv_pow)
-          ","
-          (Tactic.simpLemma [] [] `one_inv)]
-         "]"])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simpAll
-   "simp_all"
-   []
-   ["only"]
-   ["["
-    [(Tactic.simpLemma [] [] `Set.mem_set_of_eq)
-     ","
-     (Tactic.simpLemma [] [] `inv_pow)
-     ","
-     (Tactic.simpLemma [] [] `one_inv)]
-    "]"])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpAll', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `one_inv
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `inv_pow
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Set.mem_set_of_eq
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstLVal', expected 'Lean.Parser.Term.structInstLVal.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«,»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun
-   "fun"
-   (Term.basicFun
-    [(Term.simpleBinder [`ζ `ξ `hζ `hξ] [])]
-    "=>"
-    (Term.byTactic
-     "by"
-     (Tactic.tacticSeq
-      (Tactic.tacticSeq1Indented
-       [(group
-         (Tactic.simpAll
-          "simp_all"
-          []
-          ["only"]
-          ["["
-           [(Tactic.simpLemma [] [] `Set.mem_set_of_eq)
-            ","
-            (Tactic.simpLemma [] [] `mul_powₓ)
-            ","
-            (Tactic.simpLemma [] [] `one_mulₓ)]
-           "]"])
-         [])])))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simpAll
-        "simp_all"
-        []
-        ["only"]
-        ["["
-         [(Tactic.simpLemma [] [] `Set.mem_set_of_eq)
-          ","
-          (Tactic.simpLemma [] [] `mul_powₓ)
-          ","
-          (Tactic.simpLemma [] [] `one_mulₓ)]
-         "]"])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simpAll
-   "simp_all"
-   []
-   ["only"]
-   ["["
-    [(Tactic.simpLemma [] [] `Set.mem_set_of_eq)
-     ","
-     (Tactic.simpLemma [] [] `mul_powₓ)
-     ","
-     (Tactic.simpLemma [] [] `one_mulₓ)]
-    "]"])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpAll', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `one_mulₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `mul_powₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Set.mem_set_of_eq
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstLVal', expected 'Lean.Parser.Term.structInstLVal.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«,»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `one_pow [(Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `one_pow
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstLVal', expected 'Lean.Parser.Term.structInstLVal.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«,»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}»
-   "{"
-   `ζ
-   "|"
-   («term_=_»
-    (Cardinal.SetTheory.Cofinality.«term_^_» `ζ "^" (Term.paren "(" [`k [(Term.typeAscription ":" (termℕ "ℕ"))]] ")"))
-    "="
-    (numLit "1"))
-   "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_=_»
-   (Cardinal.SetTheory.Cofinality.«term_^_» `ζ "^" (Term.paren "(" [`k [(Term.typeAscription ":" (termℕ "ℕ"))]] ")"))
-   "="
-   (numLit "1"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "1")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  (Cardinal.SetTheory.Cofinality.«term_^_» `ζ "^" (Term.paren "(" [`k [(Term.typeAscription ":" (termℕ "ℕ"))]] ")"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Cardinal.SetTheory.Cofinality.«term_^_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.paren "(" [`k [(Term.typeAscription ":" (termℕ "ℕ"))]] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (termℕ "ℕ")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'termℕ', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  `k
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 0, term))
-  `ζ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1 >? 1024, (none, [anonymous]) <=? (some 0, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 0, (some 0, term) <=? (some 50, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Cardinal.SetTheory.Cofinality.«term_^_» `ζ "^" (Term.paren "(" [`k [(Term.typeAscription ":" (termℕ "ℕ"))]] ")")) []]
- ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/-- `roots_of_unity k M` is the subgroup of elements `m : units M` that satisfy `m ^ k = 1` -/
-  def
-    rootsOfUnity
-    ( k : ℕ+ ) ( M : Type _ ) [ CommMonoidₓ M ] : Subgroup Units M
-    :=
-      {
-        Carrier := { ζ | ζ ^ ( k : ℕ ) = 1 } ,
-          one_mem' := one_pow _ ,
-          mul_mem' := fun ζ ξ hζ hξ => by simp_all only [ Set.mem_set_of_eq , mul_powₓ , one_mulₓ ] ,
-          inv_mem' := fun ζ hζ => by simp_all only [ Set.mem_set_of_eq , inv_pow , one_inv ]
-        }
+/-- `roots_of_unity k M` is the subgroup of elements `m : Mˣ` that satisfy `m ^ k = 1` -/
+def rootsOfUnity (k : ℕ+) (M : Type _) [CommMonoidₓ M] : Subgroup (M)ˣ where
+  Carrier := { ζ | ζ ^ (k : ℕ) = 1 }
+  one_mem' := one_pow _
+  mul_mem' := fun ζ ξ hζ hξ => by
+    simp_all only [Set.mem_set_of_eq, mul_powₓ, one_mulₓ]
+  inv_mem' := fun ζ hζ => by
+    simp_all only [Set.mem_set_of_eq, inv_pow, one_inv]
 
 @[simp]
-theorem mem_roots_of_unity (k : ℕ+) (ζ : Units M) : ζ ∈ rootsOfUnity k M ↔ (ζ^(k : ℕ)) = 1 :=
+theorem mem_roots_of_unity (k : ℕ+) (ζ : (M)ˣ) : ζ ∈ rootsOfUnity k M ↔ ζ ^ (k : ℕ) = 1 :=
   Iff.rfl
 
 theorem roots_of_unity_le_of_dvd (h : k ∣ l) : rootsOfUnity k M ≤ rootsOfUnity l M := by
@@ -610,24 +88,24 @@ theorem roots_of_unity_le_of_dvd (h : k ∣ l) : rootsOfUnity k M ≤ rootsOfUni
   intro ζ h
   simp_all only [mem_roots_of_unity, Pnat.mul_coe, pow_mulₓ, one_pow]
 
-theorem map_roots_of_unity (f : Units M →* Units N) (k : ℕ+) : (rootsOfUnity k M).map f ≤ rootsOfUnity k N := by
+theorem map_roots_of_unity (f : (M)ˣ →* (N)ˣ) (k : ℕ+) : (rootsOfUnity k M).map f ≤ rootsOfUnity k N := by
   rintro _ ⟨ζ, h, rfl⟩
   simp_all only [← map_pow, mem_roots_of_unity, SetLike.mem_coe, MonoidHom.map_one]
 
 variable [CommRingₓ R]
 
 @[norm_cast]
-theorem rootsOfUnity.coe_pow (ζ : rootsOfUnity k R) (m : ℕ) : ↑(ζ^m) = (ζ^m : R) := by
-  change ↑(↑(ζ^m) : Units R) = (↑(ζ : Units R)^m)
+theorem rootsOfUnity.coe_pow (ζ : rootsOfUnity k R) (m : ℕ) : ↑(ζ ^ m) = (ζ ^ m : R) := by
+  change ↑(↑(ζ ^ m) : (R)ˣ) = ↑(ζ : (R)ˣ) ^ m
   rw [Subgroup.coe_pow, Units.coe_pow]
 
 variable [CommRingₓ S]
 
-/--  Restrict a ring homomorphism between integral domains to the nth roots of unity -/
+/-- Restrict a ring homomorphism between integral domains to the nth roots of unity -/
 def RingHom.restrictRootsOfUnity (σ : R →+* S) (n : ℕ+) : rootsOfUnity n R →* rootsOfUnity n S :=
-  let h : ∀ ξ : rootsOfUnity n R, (σ ξ^(n : ℕ)) = 1 := fun ξ => by
-    change (σ (ξ : Units R)^(n : ℕ)) = 1
-    rw [← σ.map_pow, ← Units.coe_pow, show ((ξ : Units R)^(n : ℕ)) = 1 from ξ.2, Units.coe_one, σ.map_one]
+  let h : ∀ ξ : rootsOfUnity n R, σ ξ ^ (n : ℕ) = 1 := fun ξ => by
+    change σ (ξ : (R)ˣ) ^ (n : ℕ) = 1
+    rw [← σ.map_pow, ← Units.coe_pow, show (ξ : (R)ˣ) ^ (n : ℕ) = 1 from ξ.2, Units.coe_one, σ.map_one]
   { toFun := fun ξ =>
       ⟨@unitOfInvertible _ _ _ (invertibleOfPowEqOne _ _ (h ξ) n.2), by
         ext
@@ -646,16 +124,17 @@ theorem RingHom.restrict_roots_of_unity_coe_apply (σ : R →+* S) (ζ : rootsOf
     ↑σ.restrict_roots_of_unity k ζ = σ (↑ζ) :=
   rfl
 
-/--  Restrict a ring isomorphism between integral domains to the nth roots of unity -/
-def RingEquiv.restrictRootsOfUnity (σ : R ≃+* S) (n : ℕ+) : rootsOfUnity n R ≃* rootsOfUnity n S :=
-  { toFun := σ.to_ring_hom.restrict_roots_of_unity n, invFun := σ.symm.to_ring_hom.restrict_roots_of_unity n,
-    left_inv := fun ξ => by
-      ext
-      exact σ.symm_apply_apply ξ,
-    right_inv := fun ξ => by
-      ext
-      exact σ.apply_symm_apply ξ,
-    map_mul' := (σ.to_ring_hom.restrict_roots_of_unity n).map_mul }
+/-- Restrict a ring isomorphism between integral domains to the nth roots of unity -/
+def RingEquiv.restrictRootsOfUnity (σ : R ≃+* S) (n : ℕ+) : rootsOfUnity n R ≃* rootsOfUnity n S where
+  toFun := σ.to_ring_hom.restrict_roots_of_unity n
+  invFun := σ.symm.to_ring_hom.restrict_roots_of_unity n
+  left_inv := fun ξ => by
+    ext
+    exact σ.symm_apply_apply ξ
+  right_inv := fun ξ => by
+    ext
+    exact σ.apply_symm_apply ξ
+  map_mul' := (σ.to_ring_hom.restrict_roots_of_unity n).map_mul
 
 @[simp]
 theorem RingEquiv.restrict_roots_of_unity_coe_apply (σ : R ≃+* S) (ζ : rootsOfUnity k R) :
@@ -669,12 +148,12 @@ theorem RingEquiv.restrict_roots_of_unity_symm (σ : R ≃+* S) :
 
 variable [IsDomain R]
 
-theorem mem_roots_of_unity_iff_mem_nth_roots {ζ : Units R} : ζ ∈ rootsOfUnity k R ↔ (ζ : R) ∈ nth_roots k (1 : R) := by
+theorem mem_roots_of_unity_iff_mem_nth_roots {ζ : (R)ˣ} : ζ ∈ rootsOfUnity k R ↔ (ζ : R) ∈ nth_roots k (1 : R) := by
   simp only [mem_roots_of_unity, mem_nth_roots k.pos, Units.ext_iff, Units.coe_one, Units.coe_pow]
 
 variable (k R)
 
-/--  Equivalence between the `k`-th roots of unity in `R` and the `k`-th roots of `1`.
+/-- Equivalence between the `k`-th roots of unity in `R` and the `k`-th roots of `1`.
 
 This is implemented as equivalence of subtypes,
 because `roots_of_unity` is a subgroup of the group of units,
@@ -682,24 +161,24 @@ whereas `nth_roots` is a multiset. -/
 def rootsOfUnityEquivNthRoots : rootsOfUnity k R ≃ { x // x ∈ nth_roots k (1 : R) } := by
   refine'
     { toFun := fun x => ⟨x, mem_roots_of_unity_iff_mem_nth_roots.mp x.2⟩,
-      invFun := fun x => ⟨⟨x, x^(k - 1 : ℕ), _, _⟩, _⟩, left_inv := _, right_inv := _ }
+      invFun := fun x => ⟨⟨x, x ^ (k - 1 : ℕ), _, _⟩, _⟩, left_inv := _, right_inv := _ }
   swap 4
-  ·
-    rintro ⟨x, hx⟩
+  · rintro ⟨x, hx⟩
     ext
     rfl
+    
   swap 4
-  ·
-    rintro ⟨x, hx⟩
+  · rintro ⟨x, hx⟩
     ext
     rfl
+    
   all_goals
     rcases x with ⟨x, hx⟩
     rw [mem_nth_roots k.pos] at hx
     simp only [Subtype.coe_mk, ← pow_succₓ, ← pow_succ'ₓ, hx, tsub_add_cancel_of_le (show 1 ≤ (k : ℕ) from k.one_le)]
-  ·
-    show ((_ : Units R)^(k : ℕ)) = 1
+  · show (_ : (R)ˣ) ^ (k : ℕ) = 1
     simp only [Units.ext_iff, hx, Units.coe_mk, Units.coe_one, Subtype.coe_mk, Units.coe_pow]
+    
 
 variable {k R}
 
@@ -722,8 +201,9 @@ instance rootsOfUnity.is_cyclic : IsCyclic (rootsOfUnity k R) :=
     (Units.ext.comp Subtype.val_injective)
 
 theorem card_roots_of_unity : Fintype.card (rootsOfUnity k R) ≤ k :=
-  calc Fintype.card (rootsOfUnity k R) = Fintype.card { x // x ∈ nth_roots k (1 : R) } :=
-    Fintype.card_congr (rootsOfUnityEquivNthRoots R k)
+  calc
+    Fintype.card (rootsOfUnity k R) = Fintype.card { x // x ∈ nth_roots k (1 : R) } :=
+      Fintype.card_congr (rootsOfUnityEquivNthRoots R k)
     _ ≤ (nth_roots k (1 : R)).attach.card := Multiset.card_le_of_le (Multiset.erase_dup_le _)
     _ = (nth_roots k (1 : R)).card := Multiset.card_attach
     _ ≤ k := card_nth_roots k 1
@@ -731,7 +211,7 @@ theorem card_roots_of_unity : Fintype.card (rootsOfUnity k R) ≤ k :=
 
 variable {k R}
 
-theorem RingHom.map_root_of_unity_eq_pow_self (σ : R →+* R) (ζ : rootsOfUnity k R) : ∃ m : ℕ, σ ζ = (ζ^m) := by
+theorem RingHom.map_root_of_unity_eq_pow_self (σ : R →+* R) (ζ : rootsOfUnity k R) : ∃ m : ℕ, σ ζ = ζ ^ m := by
   obtain ⟨m, hm⟩ := (σ.restrict_roots_of_unity k).map_cyclic
   rw [← σ.restrict_roots_of_unity_coe_apply, hm, zpow_eq_mod_order_of, ←
     Int.to_nat_of_nonneg (m.mod_nonneg (int.coe_nat_ne_zero.mpr (pos_iff_ne_zero.mp (order_of_pos ζ)))), zpow_coe_nat,
@@ -740,17 +220,17 @@ theorem RingHom.map_root_of_unity_eq_pow_self (σ : R →+* R) (ζ : rootsOfUnit
 
 end rootsOfUnity
 
-/--  An element `ζ` is a primitive `k`-th root of unity if `ζ ^ k = 1`,
+/-- An element `ζ` is a primitive `k`-th root of unity if `ζ ^ k = 1`,
 and if `l` satisfies `ζ ^ l = 1` then `k ∣ l`. -/
 structure IsPrimitiveRoot (ζ : M) (k : ℕ) : Prop where
-  pow_eq_one : (ζ^(k : ℕ)) = 1
-  dvd_of_pow_eq_one : ∀ l : ℕ, (ζ^l) = 1 → k ∣ l
+  pow_eq_one : ζ ^ (k : ℕ) = 1
+  dvd_of_pow_eq_one : ∀ l : ℕ, ζ ^ l = 1 → k ∣ l
 
 section primitiveRoots
 
 variable {k : ℕ}
 
-/--  `primitive_roots k R` is the finset of primitive `k`-th roots of unity
+/-- `primitive_roots k R` is the finset of primitive `k`-th roots of unity
 in the integral domain `R`. -/
 def primitiveRoots (k : ℕ) (R : Type _) [CommRingₓ R] [IsDomain R] : Finset R :=
   (nth_roots k (1 : R)).toFinset.filter fun ζ => IsPrimitiveRoot ζ k
@@ -768,10 +248,10 @@ namespace IsPrimitiveRoot
 
 variable {k l : ℕ}
 
-theorem iff_def (ζ : M) (k : ℕ) : IsPrimitiveRoot ζ k ↔ (ζ^k) = 1 ∧ ∀ l : ℕ, (ζ^l) = 1 → k ∣ l :=
+theorem iff_def (ζ : M) (k : ℕ) : IsPrimitiveRoot ζ k ↔ ζ ^ k = 1 ∧ ∀ l : ℕ, ζ ^ l = 1 → k ∣ l :=
   ⟨fun ⟨h1, h2⟩ => ⟨h1, h2⟩, fun ⟨h1, h2⟩ => ⟨h1, h2⟩⟩
 
-theorem mk_of_lt (ζ : M) (hk : 0 < k) (h1 : (ζ^k) = 1) (h : ∀ l : ℕ, 0 < l → l < k → (ζ^l) ≠ 1) : IsPrimitiveRoot ζ k :=
+theorem mk_of_lt (ζ : M) (hk : 0 < k) (h1 : ζ ^ k = 1) (h : ∀ l : ℕ, 0 < l → l < k → ζ ^ l ≠ 1) : IsPrimitiveRoot ζ k :=
   by
   refine' ⟨h1, _⟩
   intro l hl
@@ -792,19 +272,19 @@ variable {ζ : M} (h : IsPrimitiveRoot ζ k)
 theorem of_subsingleton [Subsingleton M] (x : M) : IsPrimitiveRoot x 1 :=
   ⟨Subsingleton.elimₓ _ _, fun _ _ => one_dvd _⟩
 
-theorem pow_eq_one_iff_dvd (l : ℕ) : (ζ^l) = 1 ↔ k ∣ l :=
+theorem pow_eq_one_iff_dvd (l : ℕ) : ζ ^ l = 1 ↔ k ∣ l :=
   ⟨h.dvd_of_pow_eq_one l, by
     rintro ⟨i, rfl⟩
     simp only [pow_mulₓ, h.pow_eq_one, one_pow, Pnat.mul_coe]⟩
 
 theorem IsUnit (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) : IsUnit ζ := by
-  apply is_unit_of_mul_eq_one ζ (ζ^k - 1)
+  apply is_unit_of_mul_eq_one ζ (ζ ^ (k - 1))
   rw [← pow_succₓ, tsub_add_cancel_of_le h0.nat_succ_le, h.pow_eq_one]
 
-theorem pow_ne_one_of_pos_of_lt (h0 : 0 < l) (hl : l < k) : (ζ^l) ≠ 1 :=
+theorem pow_ne_one_of_pos_of_lt (h0 : 0 < l) (hl : l < k) : ζ ^ l ≠ 1 :=
   mt (Nat.le_of_dvdₓ h0 ∘ h.dvd_of_pow_eq_one _) $ not_le_of_lt hl
 
-theorem pow_inj (h : IsPrimitiveRoot ζ k) ⦃i j : ℕ⦄ (hi : i < k) (hj : j < k) (H : (ζ^i) = (ζ^j)) : i = j := by
+theorem pow_inj (h : IsPrimitiveRoot ζ k) ⦃i j : ℕ⦄ (hi : i < k) (hj : j < k) (H : ζ ^ i = ζ ^ j) : i = j := by
   wlog hij : i ≤ j
   apply le_antisymmₓ hij
   rw [← tsub_eq_zero_iff_le]
@@ -819,22 +299,22 @@ theorem one : IsPrimitiveRoot (1 : M) 1 :=
 @[simp]
 theorem one_right_iff : IsPrimitiveRoot ζ 1 ↔ ζ = 1 := by
   constructor
-  ·
-    intro h
+  · intro h
     rw [← pow_oneₓ ζ, h.pow_eq_one]
-  ·
-    rintro rfl
+    
+  · rintro rfl
     exact one
+    
 
 @[simp]
-theorem coe_units_iff {ζ : Units M} : IsPrimitiveRoot (ζ : M) k ↔ IsPrimitiveRoot ζ k := by
+theorem coe_units_iff {ζ : (M)ˣ} : IsPrimitiveRoot (ζ : M) k ↔ IsPrimitiveRoot ζ k := by
   simp only [iff_def, Units.ext_iff, Units.coe_pow, Units.coe_one]
 
-theorem pow_of_coprime (h : IsPrimitiveRoot ζ k) (i : ℕ) (hi : i.coprime k) : IsPrimitiveRoot (ζ^i) k := by
+theorem pow_of_coprime (h : IsPrimitiveRoot ζ k) (i : ℕ) (hi : i.coprime k) : IsPrimitiveRoot (ζ ^ i) k := by
   by_cases' h0 : k = 0
-  ·
-    subst k
+  · subst k
     simp_all only [pow_oneₓ, Nat.coprime_zero_rightₓ]
+    
   rcases h.is_unit (Nat.pos_of_ne_zeroₓ h0) with ⟨ζ, rfl⟩
   rw [← Units.coe_pow]
   rw [coe_units_iff] at h⊢
@@ -849,11 +329,11 @@ theorem pow_of_coprime (h : IsPrimitiveRoot ζ k) (i : ℕ) (hi : i.coprime k) :
   simp only [zpow_mul, hl, h.pow_eq_one, one_zpow, one_pow, one_mulₓ, zpow_coe_nat]
 
 theorem pow_of_prime (h : IsPrimitiveRoot ζ k) {p : ℕ} (hprime : Nat.Prime p) (hdiv : ¬p ∣ k) :
-    IsPrimitiveRoot (ζ^p) k :=
+    IsPrimitiveRoot (ζ ^ p) k :=
   h.pow_of_coprime p (hprime.coprime_iff_not_dvd.2 hdiv)
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([1]) }
-theorem pow_iff_coprime (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) (i : ℕ) : IsPrimitiveRoot (ζ^i) k ↔ i.coprime k := by
+theorem pow_iff_coprime (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) (i : ℕ) : IsPrimitiveRoot (ζ ^ i) k ↔ i.coprime k := by
   refine' ⟨_, h.pow_of_coprime i⟩
   intro hi
   obtain ⟨a, ha⟩ := i.gcd_dvd_left k
@@ -871,23 +351,28 @@ protected theorem orderOf (ζ : M) : IsPrimitiveRoot ζ (orderOf ζ) :=
 theorem Unique {ζ : M} (hk : IsPrimitiveRoot ζ k) (hl : IsPrimitiveRoot ζ l) : k = l := by
   wlog hkl : k ≤ l
   rcases hkl.eq_or_lt with (rfl | hkl)
-  ·
-    rfl
+  · rfl
+    
   rcases k.eq_zero_or_pos with (rfl | hk')
-  ·
-    exact (zero_dvd_iff.mp $ hk.dvd_of_pow_eq_one l hl.pow_eq_one).symm
+  · exact (zero_dvd_iff.mp $ hk.dvd_of_pow_eq_one l hl.pow_eq_one).symm
+    
   exact absurd hk.pow_eq_one (hl.pow_ne_one_of_pos_of_lt hk' hkl)
 
 theorem eq_order_of : k = orderOf ζ :=
   h.unique (IsPrimitiveRoot.order_of ζ)
 
-protected theorem Iff (hk : 0 < k) : IsPrimitiveRoot ζ k ↔ (ζ^k) = 1 ∧ ∀ l : ℕ, 0 < l → l < k → (ζ^l) ≠ 1 := by
+protected theorem Iff (hk : 0 < k) : IsPrimitiveRoot ζ k ↔ ζ ^ k = 1 ∧ ∀ l : ℕ, 0 < l → l < k → ζ ^ l ≠ 1 := by
   refine' ⟨fun h => ⟨h.pow_eq_one, fun l hl' hl => _⟩, fun ⟨hζ, hl⟩ => IsPrimitiveRoot.mk_of_lt ζ hk hζ hl⟩
   rw [h.eq_order_of] at hl
   exact pow_ne_one_of_lt_order_of' hl'.ne' hl
 
 protected theorem not_iff : ¬IsPrimitiveRoot ζ k ↔ orderOf ζ ≠ k :=
   ⟨fun h hk => h $ hk ▸ IsPrimitiveRoot.order_of ζ, fun h hk => h.symm $ hk.unique $ IsPrimitiveRoot.order_of ζ⟩
+
+theorem pow_of_dvd (h : IsPrimitiveRoot ζ k) {p : ℕ} (hp : p ≠ 0) (hdiv : p ∣ k) : IsPrimitiveRoot (ζ ^ p) (k / p) := by
+  suffices orderOf (ζ ^ p) = k / p by
+    exact this ▸ IsPrimitiveRoot.order_of (ζ ^ p)
+  rw [order_of_pow' _ hp, ← eq_order_of h, Nat.gcd_eq_rightₓ hdiv]
 
 end CommMonoidₓ
 
@@ -905,25 +390,25 @@ section CommGroupₓ
 
 variable {ζ : G}
 
-theorem zpow_eq_one (h : IsPrimitiveRoot ζ k) : (ζ^(k : ℤ)) = 1 := by
+theorem zpow_eq_one (h : IsPrimitiveRoot ζ k) : ζ ^ (k : ℤ) = 1 := by
   rw [zpow_coe_nat]
   exact h.pow_eq_one
 
-theorem zpow_eq_one_iff_dvd (h : IsPrimitiveRoot ζ k) (l : ℤ) : (ζ^l) = 1 ↔ (k : ℤ) ∣ l := by
+theorem zpow_eq_one_iff_dvd (h : IsPrimitiveRoot ζ k) (l : ℤ) : ζ ^ l = 1 ↔ (k : ℤ) ∣ l := by
   by_cases' h0 : 0 ≤ l
-  ·
-    lift l to ℕ using h0
+  · lift l to ℕ using h0
     rw [zpow_coe_nat]
     norm_cast
     exact h.pow_eq_one_iff_dvd l
-  ·
-    have : 0 ≤ -l := by
+    
+  · have : 0 ≤ -l := by
       simp only [not_leₓ, neg_nonneg] at h0⊢
       exact le_of_ltₓ h0
     lift -l to ℕ using this with l' hl'
     rw [← dvd_neg, ← hl']
     norm_cast
     rw [← h.pow_eq_one_iff_dvd, ← inv_inj, ← zpow_neg, ← hl', zpow_coe_nat, one_inv]
+    
 
 theorem inv (h : IsPrimitiveRoot ζ k) : IsPrimitiveRoot (ζ⁻¹) k :=
   { pow_eq_one := by
@@ -940,12 +425,12 @@ theorem inv_iff : IsPrimitiveRoot (ζ⁻¹) k ↔ IsPrimitiveRoot ζ k := by
   rw [← inv_invₓ ζ]
   exact inv h
 
-theorem zpow_of_gcd_eq_one (h : IsPrimitiveRoot ζ k) (i : ℤ) (hi : i.gcd k = 1) : IsPrimitiveRoot (ζ^i) k := by
+theorem zpow_of_gcd_eq_one (h : IsPrimitiveRoot ζ k) (i : ℤ) (hi : i.gcd k = 1) : IsPrimitiveRoot (ζ ^ i) k := by
   by_cases' h0 : 0 ≤ i
-  ·
-    lift i to ℕ using h0
+  · lift i to ℕ using h0
     rw [zpow_coe_nat]
     exact h.pow_of_coprime i hi
+    
   have : 0 ≤ -i := by
     simp only [not_leₓ, neg_nonneg] at h0⊢
     exact le_of_ltₓ h0
@@ -965,25 +450,25 @@ section CommGroupWithZero
 
 variable {ζ : G₀}
 
-theorem zpow_eq_one₀ (h : IsPrimitiveRoot ζ k) : (ζ^(k : ℤ)) = 1 := by
+theorem zpow_eq_one₀ (h : IsPrimitiveRoot ζ k) : ζ ^ (k : ℤ) = 1 := by
   rw [zpow_coe_nat]
   exact h.pow_eq_one
 
-theorem zpow_eq_one_iff_dvd₀ (h : IsPrimitiveRoot ζ k) (l : ℤ) : (ζ^l) = 1 ↔ (k : ℤ) ∣ l := by
+theorem zpow_eq_one_iff_dvd₀ (h : IsPrimitiveRoot ζ k) (l : ℤ) : ζ ^ l = 1 ↔ (k : ℤ) ∣ l := by
   by_cases' h0 : 0 ≤ l
-  ·
-    lift l to ℕ using h0
+  · lift l to ℕ using h0
     rw [zpow_coe_nat]
     norm_cast
     exact h.pow_eq_one_iff_dvd l
-  ·
-    have : 0 ≤ -l := by
+    
+  · have : 0 ≤ -l := by
       simp only [not_leₓ, neg_nonneg] at h0⊢
       exact le_of_ltₓ h0
     lift -l to ℕ using this with l' hl'
     rw [← dvd_neg, ← hl']
     norm_cast
     rw [← h.pow_eq_one_iff_dvd, ← inv_inj₀, ← zpow_neg₀, ← hl', zpow_coe_nat, inv_one]
+    
 
 theorem inv' (h : IsPrimitiveRoot ζ k) : IsPrimitiveRoot (ζ⁻¹) k :=
   { pow_eq_one := by
@@ -1000,12 +485,12 @@ theorem inv_iff' : IsPrimitiveRoot (ζ⁻¹) k ↔ IsPrimitiveRoot ζ k := by
   rw [← inv_inv₀ ζ]
   exact inv' h
 
-theorem zpow_of_gcd_eq_one₀ (h : IsPrimitiveRoot ζ k) (i : ℤ) (hi : i.gcd k = 1) : IsPrimitiveRoot (ζ^i) k := by
+theorem zpow_of_gcd_eq_one₀ (h : IsPrimitiveRoot ζ k) (i : ℤ) (hi : i.gcd k = 1) : IsPrimitiveRoot (ζ ^ i) k := by
   by_cases' h0 : 0 ≤ i
-  ·
-    lift i to ℕ using h0
+  · lift i to ℕ using h0
     rw [zpow_coe_nat]
     exact h.pow_of_coprime i hi
+    
   have : 0 ≤ -i := by
     simp only [not_leₓ, neg_nonneg] at h0⊢
     exact le_of_ltₓ h0
@@ -1064,20 +549,20 @@ theorem primitive_roots_zero : primitiveRoots 0 R = ∅ := by
 theorem primitive_roots_one : primitiveRoots 1 R = {(1 : R)} := by
   apply Finset.eq_singleton_iff_unique_mem.2
   constructor
-  ·
-    simp only [IsPrimitiveRoot.one_right_iff, mem_primitive_roots zero_lt_one]
-  ·
-    intro x hx
+  · simp only [IsPrimitiveRoot.one_right_iff, mem_primitive_roots zero_lt_one]
+    
+  · intro x hx
     rw [mem_primitive_roots zero_lt_one, IsPrimitiveRoot.one_right_iff] at hx
     exact hx
+    
 
 theorem eq_neg_one_of_two_right (h : IsPrimitiveRoot ζ 2) : ζ = -1 := by
   apply (eq_or_eq_neg_of_sq_eq_sq ζ 1 _).resolve_left
-  ·
-    rw [← pow_oneₓ ζ]
+  · rw [← pow_oneₓ ζ]
     apply h.pow_ne_one_of_pos_of_lt <;> decide
-  ·
-    simp only [h.pow_eq_one, one_pow]
+    
+  · simp only [h.pow_eq_one, one_pow]
+    
 
 end IsDomain
 
@@ -1085,7 +570,7 @@ section IsDomain
 
 variable [CommRingₓ R]
 
-variable {ζ : Units R} (h : IsPrimitiveRoot ζ k)
+variable {ζ : (R)ˣ} (h : IsPrimitiveRoot ζ k)
 
 theorem neg_one (p : ℕ) [Nontrivial R] [h : CharP R p] (hp : p ≠ 2) : IsPrimitiveRoot (-1 : R) 2 := by
   convert IsPrimitiveRoot.order_of (-1 : R)
@@ -1095,7 +580,7 @@ theorem neg_one (p : ℕ) [Nontrivial R] [h : CharP R p] (hp : p ≠ 2) : IsPrim
 protected theorem mem_roots_of_unity {n : ℕ+} (h : IsPrimitiveRoot ζ n) : ζ ∈ rootsOfUnity n R :=
   h.pow_eq_one
 
-/--  The (additive) monoid equivalence between `zmod k`
+/-- The (additive) monoid equivalence between `zmod k`
 and the powers of a primitive root of unity `ζ`. -/
 def zmod_equiv_zpowers (h : IsPrimitiveRoot ζ k) : Zmod k ≃+ Additive (Subgroup.zpowers ζ) :=
   AddEquiv.ofBijective
@@ -1116,27 +601,27 @@ def zmod_equiv_zpowers (h : IsPrimitiveRoot ζ k) : Zmod k ≃+ Additive (Subgro
         rfl⟩)
     (by
       constructor
-      ·
-        rw [AddMonoidHom.injective_iff]
+      · rw [AddMonoidHom.injective_iff]
         intro i hi
         rw [Subtype.ext_iff] at hi
         have := (h.zpow_eq_one_iff_dvd _).mp hi
         rw [← (CharP.int_cast_eq_zero_iff (Zmod k) k _).mpr this, eq_comm]
         exact Zmod.int_cast_right_inverse i
-      ·
-        rintro ⟨ξ, i, rfl⟩
+        
+      · rintro ⟨ξ, i, rfl⟩
         refine' ⟨Int.castAddHom _ i, _⟩
         rw [AddMonoidHom.lift_of_right_inverse_comp_apply]
-        rfl)
+        rfl
+        )
 
 @[simp]
 theorem zmod_equiv_zpowers_apply_coe_int (i : ℤ) :
-    h.zmod_equiv_zpowers i = Additive.ofMul (⟨ζ^i, i, rfl⟩ : Subgroup.zpowers ζ) :=
+    h.zmod_equiv_zpowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) :=
   AddMonoidHom.lift_of_right_inverse_comp_apply _ _ Zmod.int_cast_right_inverse _ _
 
 @[simp]
 theorem zmod_equiv_zpowers_apply_coe_nat (i : ℕ) :
-    h.zmod_equiv_zpowers i = Additive.ofMul (⟨ζ^i, i, rfl⟩ : Subgroup.zpowers ζ) := by
+    h.zmod_equiv_zpowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) := by
   have : (i : Zmod k) = (i : ℤ) := by
     norm_cast
   simp only [this, zmod_equiv_zpowers_apply_coe_int, zpow_coe_nat]
@@ -1144,26 +629,26 @@ theorem zmod_equiv_zpowers_apply_coe_nat (i : ℕ) :
 
 @[simp]
 theorem zmod_equiv_zpowers_symm_apply_zpow (i : ℤ) :
-    h.zmod_equiv_zpowers.symm (Additive.ofMul (⟨ζ^i, i, rfl⟩ : Subgroup.zpowers ζ)) = i := by
+    h.zmod_equiv_zpowers.symm (Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ)) = i := by
   rw [← h.zmod_equiv_zpowers.symm_apply_apply i, zmod_equiv_zpowers_apply_coe_int]
 
 @[simp]
-theorem zmod_equiv_zpowers_symm_apply_zpow' (i : ℤ) : h.zmod_equiv_zpowers.symm ⟨ζ^i, i, rfl⟩ = i :=
+theorem zmod_equiv_zpowers_symm_apply_zpow' (i : ℤ) : h.zmod_equiv_zpowers.symm ⟨ζ ^ i, i, rfl⟩ = i :=
   h.zmod_equiv_zpowers_symm_apply_zpow i
 
 @[simp]
 theorem zmod_equiv_zpowers_symm_apply_pow (i : ℕ) :
-    h.zmod_equiv_zpowers.symm (Additive.ofMul (⟨ζ^i, i, rfl⟩ : Subgroup.zpowers ζ)) = i := by
+    h.zmod_equiv_zpowers.symm (Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ)) = i := by
   rw [← h.zmod_equiv_zpowers.symm_apply_apply i, zmod_equiv_zpowers_apply_coe_nat]
 
 @[simp]
-theorem zmod_equiv_zpowers_symm_apply_pow' (i : ℕ) : h.zmod_equiv_zpowers.symm ⟨ζ^i, i, rfl⟩ = i :=
+theorem zmod_equiv_zpowers_symm_apply_pow' (i : ℕ) : h.zmod_equiv_zpowers.symm ⟨ζ ^ i, i, rfl⟩ = i :=
   h.zmod_equiv_zpowers_symm_apply_pow i
 
-/--  If there is a `n`-th primitive root of unity in `R` and `b` divides `n`,
+/-- If there is a `n`-th primitive root of unity in `R` and `b` divides `n`,
 then there is a `b`-th primitive root of unity in `R`. -/
-theorem pow {ζ : R} {n : ℕ} {a b : ℕ} (hn : 0 < n) (h : IsPrimitiveRoot ζ n) (hprod : n = a*b) :
-    IsPrimitiveRoot (ζ^a) b := by
+theorem pow {ζ : R} {n : ℕ} {a b : ℕ} (hn : 0 < n) (h : IsPrimitiveRoot ζ n) (hprod : n = a * b) :
+    IsPrimitiveRoot (ζ ^ a) b := by
   subst n
   simp only [iff_def, ← pow_mulₓ, h.pow_eq_one, eq_self_iff_true, true_andₓ]
   intro l hl
@@ -1175,20 +660,19 @@ theorem pow {ζ : R} {n : ℕ} {a b : ℕ} (hn : 0 < n) (h : IsPrimitiveRoot ζ 
 
 variable [IsDomain R]
 
-theorem zpowers_eq {k : ℕ+} {ζ : Units R} (h : IsPrimitiveRoot ζ k) : Subgroup.zpowers ζ = rootsOfUnity k R := by
+theorem zpowers_eq {k : ℕ+} {ζ : (R)ˣ} (h : IsPrimitiveRoot ζ k) : Subgroup.zpowers ζ = rootsOfUnity k R := by
   apply SetLike.coe_injective
   have : Fact (0 < (k : ℕ)) := ⟨k.pos⟩
   have F : Fintype (Subgroup.zpowers ζ) := Fintype.ofEquiv _ h.zmod_equiv_zpowers.toEquiv
   refine'
-    @Set.eq_of_subset_of_card_le (Units R) (Subgroup.zpowers ζ) (rootsOfUnity k R) F (rootsOfUnity.fintype R k)
+    @Set.eq_of_subset_of_card_le (R)ˣ (Subgroup.zpowers ζ) (rootsOfUnity k R) F (rootsOfUnity.fintype R k)
       (Subgroup.zpowers_subset $ show ζ ∈ rootsOfUnity k R from h.pow_eq_one) _
   calc Fintype.card (rootsOfUnity k R) ≤ k := card_roots_of_unity R k _ = Fintype.card (Zmod k) :=
-    (Zmod.card k).symm _ = Fintype.card (Subgroup.zpowers ζ) := Fintype.card_congr h.zmod_equiv_zpowers.toEquiv
+      (Zmod.card k).symm _ = Fintype.card (Subgroup.zpowers ζ) := Fintype.card_congr h.zmod_equiv_zpowers.toEquiv
 
-theorem eq_pow_of_mem_roots_of_unity {k : ℕ+} {ζ ξ : Units R} (h : IsPrimitiveRoot ζ k) (hξ : ξ ∈ rootsOfUnity k R) :
-    ∃ (i : ℕ)(hi : i < k), (ζ^i) = ξ := by
-  obtain ⟨n, rfl⟩ : ∃ n : ℤ, (ζ^n) = ξ
-  ·
+theorem eq_pow_of_mem_roots_of_unity {k : ℕ+} {ζ ξ : (R)ˣ} (h : IsPrimitiveRoot ζ k) (hξ : ξ ∈ rootsOfUnity k R) :
+    ∃ (i : ℕ)(hi : i < k), ζ ^ i = ξ := by
+  obtain ⟨n, rfl⟩ : ∃ n : ℤ, ζ ^ n = ξ := by
     rwa [← h.zpowers_eq] at hξ
   have hk0 : (0 : ℤ) < k := by
     exact_mod_cast k.pos
@@ -1196,17 +680,17 @@ theorem eq_pow_of_mem_roots_of_unity {k : ℕ+} {ζ ξ : Units R} (h : IsPrimiti
   have hi0 : 0 ≤ i := Int.mod_nonneg _ (ne_of_gtₓ hk0)
   lift i to ℕ using hi0 with i₀ hi₀
   refine' ⟨i₀, _, _⟩
-  ·
-    zify
+  · zify
     rw [hi₀]
     exact Int.mod_lt_of_pos _ hk0
-  ·
-    have aux := h.zpow_eq_one
+    
+  · have aux := h.zpow_eq_one
     rw [← coe_coe] at aux
     rw [← zpow_coe_nat, hi₀, ← Int.mod_add_div n k, zpow_add, zpow_mul, aux, one_zpow, mul_oneₓ]
+    
 
-theorem eq_pow_of_pow_eq_one {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (hξ : (ξ^k) = 1) (h0 : 0 < k) :
-    ∃ i < k, (ζ^i) = ξ := by
+theorem eq_pow_of_pow_eq_one {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (hξ : ξ ^ k = 1) (h0 : 0 < k) :
+    ∃ i < k, ζ ^ i = ξ := by
   obtain ⟨ζ, rfl⟩ := h.is_unit h0
   obtain ⟨ξ, rfl⟩ := is_unit_of_pow_eq_one ξ k hξ h0
   obtain ⟨k, rfl⟩ : ∃ k' : ℕ+, k = k' := ⟨⟨k, h0⟩, rfl⟩
@@ -1215,54 +699,53 @@ theorem eq_pow_of_pow_eq_one {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (h
   apply h.eq_pow_of_mem_roots_of_unity
   rw [mem_roots_of_unity, Units.ext_iff, Units.coe_pow, hξ, Units.coe_one]
 
-theorem is_primitive_root_iff' {k : ℕ+} {ζ ξ : Units R} (h : IsPrimitiveRoot ζ k) :
-    IsPrimitiveRoot ξ k ↔ ∃ i < (k : ℕ), ∃ hi : i.coprime k, (ζ^i) = ξ := by
+theorem is_primitive_root_iff' {k : ℕ+} {ζ ξ : (R)ˣ} (h : IsPrimitiveRoot ζ k) :
+    IsPrimitiveRoot ξ k ↔ ∃ i < (k : ℕ), ∃ hi : i.coprime k, ζ ^ i = ξ := by
   constructor
-  ·
-    intro hξ
+  · intro hξ
     obtain ⟨i, hik, rfl⟩ := h.eq_pow_of_mem_roots_of_unity hξ.pow_eq_one
     rw [h.pow_iff_coprime k.pos] at hξ
     exact ⟨i, hik, hξ, rfl⟩
-  ·
-    rintro ⟨i, -, hi, rfl⟩
+    
+  · rintro ⟨i, -, hi, rfl⟩
     exact h.pow_of_coprime i hi
+    
 
 theorem is_primitive_root_iff {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) :
-    IsPrimitiveRoot ξ k ↔ ∃ i < k, ∃ hi : i.coprime k, (ζ^i) = ξ := by
+    IsPrimitiveRoot ξ k ↔ ∃ i < k, ∃ hi : i.coprime k, ζ ^ i = ξ := by
   constructor
-  ·
-    intro hξ
+  · intro hξ
     obtain ⟨i, hik, rfl⟩ := h.eq_pow_of_pow_eq_one hξ.pow_eq_one h0
     rw [h.pow_iff_coprime h0] at hξ
     exact ⟨i, hik, hξ, rfl⟩
-  ·
-    rintro ⟨i, -, hi, rfl⟩
+    
+  · rintro ⟨i, -, hi, rfl⟩
     exact h.pow_of_coprime i hi
+    
 
 theorem card_roots_of_unity' {n : ℕ+} (h : IsPrimitiveRoot ζ n) : Fintype.card (rootsOfUnity n R) = n := by
   have : Fact (0 < ↑n) := ⟨n.pos⟩
   let e := h.zmod_equiv_zpowers
   have F : Fintype (Subgroup.zpowers ζ) := Fintype.ofEquiv _ e.to_equiv
   calc Fintype.card (rootsOfUnity n R) = Fintype.card (Subgroup.zpowers ζ) :=
-    Fintype.card_congr $ by
-      rw [h.zpowers_eq]_ = Fintype.card (Zmod n) :=
-    Fintype.card_congr e.to_equiv.symm _ = n := Zmod.card n
+      Fintype.card_congr $ by
+        rw [h.zpowers_eq]_ = Fintype.card (Zmod n) :=
+      Fintype.card_congr e.to_equiv.symm _ = n := Zmod.card n
 
 theorem card_roots_of_unity {ζ : R} {n : ℕ+} (h : IsPrimitiveRoot ζ n) : Fintype.card (rootsOfUnity n R) = n := by
   obtain ⟨ζ, hζ⟩ := h.is_unit n.pos
   rw [← hζ, IsPrimitiveRoot.coe_units_iff] at h
   exact h.card_roots_of_unity'
 
-/--  The cardinality of the multiset `nth_roots ↑n (1 : R)` is `n`
+/-- The cardinality of the multiset `nth_roots ↑n (1 : R)` is `n`
 if there is a primitive root of unity in `R`. -/
 theorem card_nth_roots {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nth_roots n (1 : R)).card = n := by
   cases' Nat.eq_zero_or_posₓ n with hzero hpos
-  ·
-    simp only [hzero, Multiset.card_zero, nth_roots_zero]
+  · simp only [hzero, Multiset.card_zero, nth_roots_zero]
+    
   rw [eq_iff_le_not_lt]
   use card_nth_roots n 1
-  ·
-    rw [not_ltₓ]
+  · rw [not_ltₓ]
     have hcard : Fintype.card { x // x ∈ nth_roots n (1 : R) } ≤ (nth_roots n (1 : R)).attach.card :=
       Multiset.card_le_of_le (Multiset.erase_dup_le _)
     rw [Multiset.card_attach] at hcard
@@ -1270,20 +753,20 @@ theorem card_nth_roots {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nth_root
     set m := Nat.toPnat' n
     rw [← Fintype.card_congr (rootsOfUnityEquivNthRoots R m), card_roots_of_unity h] at hcard
     exact hcard
+    
 
-/--  The multiset `nth_roots ↑n (1 : R)` has no repeated elements
+/-- The multiset `nth_roots ↑n (1 : R)` has no repeated elements
 if there is a primitive root of unity in `R`. -/
 theorem nth_roots_nodup {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nth_roots n (1 : R)).Nodup := by
   cases' Nat.eq_zero_or_posₓ n with hzero hpos
-  ·
-    simp only [hzero, Multiset.nodup_zero, nth_roots_zero]
+  · simp only [hzero, Multiset.nodup_zero, nth_roots_zero]
+    
   apply (@Multiset.erase_dup_eq_self R _ _).1
   rw [eq_iff_le_not_lt]
   constructor
-  ·
-    exact Multiset.erase_dup_le (nth_roots n (1 : R))
-  ·
-    by_contra ha
+  · exact Multiset.erase_dup_le (nth_roots n (1 : R))
+    
+  · by_contra ha
     replace ha := Multiset.card_lt_of_lt ha
     rw [card_nth_roots h] at ha
     have hrw : (nth_roots n (1 : R)).eraseDup.card = Fintype.card { x // x ∈ nth_roots n (1 : R) } := by
@@ -1295,6 +778,7 @@ theorem nth_roots_nodup {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nth_roo
     set m := Nat.toPnat' n
     rw [hrw, ← Fintype.card_congr (rootsOfUnityEquivNthRoots R m), card_roots_of_unity h] at ha
     exact Nat.lt_asymmₓ ha ha
+    
 
 @[simp]
 theorem card_nth_roots_finset {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nth_roots_finset n R).card = n := by
@@ -1302,37 +786,37 @@ theorem card_nth_roots_finset {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (n
 
 open_locale Nat
 
-/--  If an integral domain has a primitive `k`-th root of unity, then it has `φ k` of them. -/
+/-- If an integral domain has a primitive `k`-th root of unity, then it has `φ k` of them. -/
 theorem card_primitive_roots {ζ : R} {k : ℕ} (h : IsPrimitiveRoot ζ k) : (primitiveRoots k R).card = φ k := by
   by_cases' h0 : k = 0
-  ·
-    simp [h0]
+  · simp [h0]
+    
   symm
-  refine' Finset.card_congr (fun i _ => ζ^i) _ _ _
-  ·
-    simp only [true_andₓ, and_imp, mem_filter, mem_range, mem_univ]
+  refine' Finset.card_congr (fun i _ => ζ ^ i) _ _ _
+  · simp only [true_andₓ, and_imp, mem_filter, mem_range, mem_univ]
     rintro i - hi
     rw [mem_primitive_roots (Nat.pos_of_ne_zeroₓ h0)]
     exact h.pow_of_coprime i hi.symm
-  ·
-    simp only [true_andₓ, and_imp, mem_filter, mem_range, mem_univ]
+    
+  · simp only [true_andₓ, and_imp, mem_filter, mem_range, mem_univ]
     rintro i j hi - hj - H
     exact h.pow_inj hi hj H
-  ·
-    simp only [exists_prop, true_andₓ, mem_filter, mem_range, mem_univ]
+    
+  · simp only [exists_prop, true_andₓ, mem_filter, mem_range, mem_univ]
     intro ξ hξ
     rw [mem_primitive_roots (Nat.pos_of_ne_zeroₓ h0), h.is_primitive_root_iff (Nat.pos_of_ne_zeroₓ h0)] at hξ
     rcases hξ with ⟨i, hin, hi, H⟩
     exact ⟨i, ⟨hin, hi.symm⟩, H⟩
+    
 
-/--  The sets `primitive_roots k R` are pairwise disjoint. -/
+/-- The sets `primitive_roots k R` are pairwise disjoint. -/
 theorem Disjoint {k l : ℕ} (h : k ≠ l) : Disjoint (primitiveRoots k R) (primitiveRoots l R) := by
   by_cases' hk : k = 0
-  ·
-    simp [hk]
+  · simp [hk]
+    
   by_cases' hl : l = 0
-  ·
-    simp [hl]
+  · simp [hl]
+    
   intro z
   simp only [Finset.inf_eq_inter, Finset.mem_inter, mem_primitive_roots, Nat.pos_of_ne_zeroₓ hk, Nat.pos_of_ne_zeroₓ hl,
     iff_def]
@@ -1340,15 +824,14 @@ theorem Disjoint {k l : ℕ} (h : k ≠ l) : Disjoint (primitiveRoots k R) (prim
   apply_rules [h, Nat.dvd_antisymm, Hzk, Hzl, hzk, hzl]
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([1]) }
-/--  `nth_roots n` as a `finset` is equal to the union of `primitive_roots i R` for `i ∣ n`
+/-- `nth_roots n` as a `finset` is equal to the union of `primitive_roots i R` for `i ∣ n`
 if there is a primitive root of unity in `R`.
 This holds for any `nat`, not just `pnat`, see `nth_roots_one_eq_bUnion_primitive_roots`. -/
 theorem nth_roots_one_eq_bUnion_primitive_roots' {ζ : R} {n : ℕ+} (h : IsPrimitiveRoot ζ n) :
     nth_roots_finset n R = (Nat.divisors (↑n)).bUnion fun i => primitiveRoots i R := by
   symm
   apply Finset.eq_of_subset_of_card_le
-  ·
-    intro x
+  · intro x
     simp only [nth_roots_finset, ← Multiset.to_finset_eq (nth_roots_nodup h), exists_prop, Finset.mem_bUnion,
       Finset.mem_filter, Finset.mem_range, mem_nth_roots, Finset.mem_mk, Nat.mem_divisors, and_trueₓ, Ne.def,
       Pnat.ne_zero, Pnat.pos, not_false_iff]
@@ -1359,28 +842,29 @@ theorem nth_roots_one_eq_bUnion_primitive_roots' {ζ : R} {n : ℕ+} (h : IsPrim
       exact n.ne_zero
     rw [mem_primitive_roots hazero] at ha
     rw [hd, pow_mulₓ, ha.pow_eq_one, one_pow]
-  ·
-    apply le_of_eqₓ
+    
+  · apply le_of_eqₓ
     rw [h.card_nth_roots_finset, Finset.card_bUnion]
-    ·
-      rw [← Nat.sum_totient n, Nat.filter_dvd_eq_divisors (Pnat.ne_zero n), sum_congr rfl]
+    · rw [← Nat.sum_totient n, Nat.filter_dvd_eq_divisors (Pnat.ne_zero n), sum_congr rfl]
       simp only [Finset.mem_filter, Finset.mem_range, Nat.mem_divisors]
       rintro k ⟨H, hk⟩
       have hdvd := H
       rcases H with ⟨d, hd⟩
       rw [mul_commₓ] at hd
       rw [(h.pow n.pos hd).card_primitive_roots]
-    ·
-      intro i hi j hj hdiff
+      
+    · intro i hi j hj hdiff
       exact Disjoint hdiff
+      
+    
 
-/--  `nth_roots n` as a `finset` is equal to the union of `primitive_roots i R` for `i ∣ n`
+/-- `nth_roots n` as a `finset` is equal to the union of `primitive_roots i R` for `i ∣ n`
 if there is a primitive root of unity in `R`. -/
 theorem nth_roots_one_eq_bUnion_primitive_roots {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
     nth_roots_finset n R = (Nat.divisors n).bUnion fun i => primitiveRoots i R := by
   by_cases' hn : n = 0
-  ·
-    simp [hn]
+  · simp [hn]
+    
   exact @nth_roots_one_eq_bUnion_primitive_roots' _ _ _ _ ⟨n, Nat.pos_of_ne_zeroₓ hn⟩ h
 
 end IsDomain
@@ -1397,12 +881,12 @@ include n μ h hpos
 
 /-- `μ` is integral over `ℤ`. -/
 theorem IsIntegral : IsIntegral ℤ μ := by
-  use (X^n) - 1
+  use X ^ n - 1
   constructor
-  ·
-    exact monic_X_pow_sub_C 1 (ne_of_ltₓ hpos).symm
-  ·
-    simp only [((IsPrimitiveRoot.iff_def μ n).mp h).left, eval₂_one, eval₂_X_pow, eval₂_sub, sub_self]
+  · exact monic_X_pow_sub_C 1 (ne_of_ltₓ hpos).symm
+    
+  · simp only [((IsPrimitiveRoot.iff_def μ n).mp h).left, eval₂_one, eval₂_X_pow, eval₂_sub, sub_self]
+    
 
 end CommRingₓ
 
@@ -1415,135 +899,134 @@ variable [CharZero K]
 omit hpos
 
 /-- The minimal polynomial of a root of unity `μ` divides `X ^ n - 1`. -/
-theorem minpoly_dvd_X_pow_sub_one : minpoly ℤ μ ∣ (X^n) - 1 := by
+theorem minpoly_dvd_X_pow_sub_one : minpoly ℤ μ ∣ X ^ n - 1 := by
   by_cases' hpos : n = 0
-  ·
-    simp [hpos]
+  · simp [hpos]
+    
   apply
     minpoly.gcd_domain_dvd ℚ (IsIntegral h (Nat.pos_of_ne_zeroₓ hpos))
       (Polynomial.Monic.is_primitive (monic_X_pow_sub_C 1 (ne_of_ltₓ (Nat.pos_of_ne_zeroₓ hpos)).symm))
   simp only [((IsPrimitiveRoot.iff_def μ n).mp h).left, aeval_X_pow, RingHom.eq_int_cast, Int.cast_one, aeval_one,
     AlgHom.map_sub, sub_self]
 
-/--  The reduction modulo `p` of the minimal polynomial of a root of unity `μ` is separable. -/
+/-- The reduction modulo `p` of the minimal polynomial of a root of unity `μ` is separable. -/
 theorem separable_minpoly_mod {p : ℕ} [Fact p.prime] (hdiv : ¬p ∣ n) :
     separable (map (Int.castRingHom (Zmod p)) (minpoly ℤ μ)) := by
-  have hdvd : map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ (X^n) - 1 := by
+  have hdvd : map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ X ^ n - 1 := by
     simpa [Polynomial.map_pow, map_X, Polynomial.map_one, Polynomial.map_sub] using
       RingHom.map_dvd (map_ring_hom (Int.castRingHom (Zmod p))) (minpoly_dvd_X_pow_sub_one h)
   refine' separable.of_dvd (separable_X_pow_sub_C 1 _ one_ne_zero) hdvd
   by_contra hzero
   exact hdiv ((Zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 hzero)
 
-/--  The reduction modulo `p` of the minimal polynomial of a root of unity `μ` is squarefree. -/
+/-- The reduction modulo `p` of the minimal polynomial of a root of unity `μ` is squarefree. -/
 theorem squarefree_minpoly_mod {p : ℕ} [Fact p.prime] (hdiv : ¬p ∣ n) :
     Squarefree (map (Int.castRingHom (Zmod p)) (minpoly ℤ μ)) :=
   (separable_minpoly_mod h hdiv).Squarefree
 
 theorem minpoly_dvd_expand {p : ℕ} (hprime : Nat.Prime p) (hdiv : ¬p ∣ n) :
-    minpoly ℤ μ ∣ expand ℤ p (minpoly ℤ (μ^p)) := by
+    minpoly ℤ μ ∣ expand ℤ p (minpoly ℤ (μ ^ p)) := by
   by_cases' hn : n = 0
-  ·
-    simp_all
+  · simp_all
+    
   have hpos := Nat.pos_of_ne_zeroₓ hn
   apply minpoly.gcd_domain_dvd ℚ (h.is_integral hpos)
-  ·
-    apply monic.is_primitive
+  · apply monic.is_primitive
     rw [Polynomial.Monic, leading_coeff, nat_degree_expand, mul_commₓ, coeff_expand_mul' (Nat.Prime.pos hprime), ←
       leading_coeff, ← Polynomial.Monic]
     exact minpoly.monic (IsIntegral (pow_of_prime h hprime hdiv) hpos)
-  ·
-    rw [aeval_def, coe_expand, ← comp, eval₂_eq_eval_map, map_comp, Polynomial.map_pow, map_X, eval_comp, eval_pow,
+    
+  · rw [aeval_def, coe_expand, ← comp, eval₂_eq_eval_map, map_comp, Polynomial.map_pow, map_X, eval_comp, eval_pow,
       eval_X, ← eval₂_eq_eval_map, ← aeval_def]
     exact minpoly.aeval _ _
+    
 
 theorem minpoly_dvd_pow_mod {p : ℕ} [hprime : Fact p.prime] (hdiv : ¬p ∣ n) :
-    map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ (map (Int.castRingHom (Zmod p)) (minpoly ℤ (μ^p))^p) := by
-  set Q := minpoly ℤ (μ^p)
-  have hfrob : (map (Int.castRingHom (Zmod p)) Q^p) = map (Int.castRingHom (Zmod p)) (expand ℤ p Q) := by
+    map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ map (Int.castRingHom (Zmod p)) (minpoly ℤ (μ ^ p)) ^ p := by
+  set Q := minpoly ℤ (μ ^ p)
+  have hfrob : map (Int.castRingHom (Zmod p)) Q ^ p = map (Int.castRingHom (Zmod p)) (expand ℤ p Q) := by
     rw [← Zmod.expand_card, map_expand]
   rw [hfrob]
   apply RingHom.map_dvd (map_ring_hom (Int.castRingHom (Zmod p)))
   exact minpoly_dvd_expand h hprime.1 hdiv
 
 theorem minpoly_dvd_mod_p {p : ℕ} [hprime : Fact p.prime] (hdiv : ¬p ∣ n) :
-    map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ map (Int.castRingHom (Zmod p)) (minpoly ℤ (μ^p)) :=
+    map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ map (Int.castRingHom (Zmod p)) (minpoly ℤ (μ ^ p)) :=
   (UniqueFactorizationMonoid.dvd_pow_iff_dvd_of_squarefree (squarefree_minpoly_mod h hdiv) hprime.1.ne_zero).1
     (minpoly_dvd_pow_mod h hdiv)
 
-/--  If `p` is a prime that does not divide `n`,
+/-- If `p` is a prime that does not divide `n`,
 then the minimal polynomials of a primitive `n`-th root of unity `μ`
 and of `μ ^ p` are the same. -/
-theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.prime] (hdiv : ¬p ∣ n) : minpoly ℤ μ = minpoly ℤ (μ^p) := by
+theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.prime] (hdiv : ¬p ∣ n) : minpoly ℤ μ = minpoly ℤ (μ ^ p) := by
   by_cases' hn : n = 0
-  ·
-    simp_all
+  · simp_all
+    
   have hpos := Nat.pos_of_ne_zeroₓ hn
   by_contra hdiff
   set P := minpoly ℤ μ
-  set Q := minpoly ℤ (μ^p)
+  set Q := minpoly ℤ (μ ^ p)
   have Pmonic : P.monic := minpoly.monic (h.is_integral hpos)
   have Qmonic : Q.monic := minpoly.monic ((h.pow_of_prime hprime.1 hdiv).IsIntegral hpos)
   have Pirr : Irreducible P := minpoly.irreducible (h.is_integral hpos)
   have Qirr : Irreducible Q := minpoly.irreducible ((h.pow_of_prime hprime.1 hdiv).IsIntegral hpos)
-  have PQprim : is_primitive (P*Q) := Pmonic.is_primitive.mul Qmonic.is_primitive
-  have prod : (P*Q) ∣ (X^n) - 1 := by
+  have PQprim : is_primitive (P * Q) := Pmonic.is_primitive.mul Qmonic.is_primitive
+  have prod : P * Q ∣ X ^ n - 1 := by
     rw
-      [is_primitive.int.dvd_iff_map_cast_dvd_map_cast (P*Q) ((X^n) - 1) PQprim
+      [is_primitive.int.dvd_iff_map_cast_dvd_map_cast (P * Q) (X ^ n - 1) PQprim
         (monic_X_pow_sub_C (1 : ℤ) (ne_of_gtₓ hpos)).IsPrimitive,
       Polynomial.map_mul]
     refine' IsCoprime.mul_dvd _ _ _
-    ·
-      have aux := is_primitive.int.irreducible_iff_irreducible_map_cast Pmonic.is_primitive
+    · have aux := is_primitive.int.irreducible_iff_irreducible_map_cast Pmonic.is_primitive
       refine' (dvd_or_coprime _ _ (aux.1 Pirr)).resolve_left _
       rw [map_dvd_map (Int.castRingHom ℚ) Int.cast_injective Pmonic]
       intro hdiv
       refine' hdiff (eq_of_monic_of_associated Pmonic Qmonic _)
       exact associated_of_dvd_dvd hdiv (Pirr.dvd_symm Qirr hdiv)
-    ·
-      apply (map_dvd_map (Int.castRingHom ℚ) Int.cast_injective Pmonic).2
+      
+    · apply (map_dvd_map (Int.castRingHom ℚ) Int.cast_injective Pmonic).2
       exact minpoly_dvd_X_pow_sub_one h
-    ·
-      apply (map_dvd_map (Int.castRingHom ℚ) Int.cast_injective Qmonic).2
+      
+    · apply (map_dvd_map (Int.castRingHom ℚ) Int.cast_injective Qmonic).2
       exact minpoly_dvd_X_pow_sub_one (pow_of_prime h hprime.1 hdiv)
+      
   replace prod := RingHom.map_dvd (map_ring_hom (Int.castRingHom (Zmod p))) Prod
   rw [coe_map_ring_hom, Polynomial.map_mul, Polynomial.map_sub, Polynomial.map_one, Polynomial.map_pow, map_X] at prod
   obtain ⟨R, hR⟩ := minpoly_dvd_mod_p h hdiv
   rw [hR, ← mul_assocₓ, ← Polynomial.map_mul, ← sq, Polynomial.map_pow] at prod
-  have habs : (map (Int.castRingHom (Zmod p)) P^2) ∣ (map (Int.castRingHom (Zmod p)) P^2)*R := by
+  have habs : map (Int.castRingHom (Zmod p)) P ^ 2 ∣ map (Int.castRingHom (Zmod p)) P ^ 2 * R := by
     use R
   replace habs :=
     lt_of_lt_of_leₓ (Enat.coe_lt_coe.2 one_lt_two) (multiplicity.le_multiplicity_of_pow_dvd (dvd_trans habs Prod))
-  have hfree : Squarefree ((X^n) - 1 : Polynomial (Zmod p)) := by
-    exact (separable_X_pow_sub_C 1 (fun h => hdiv $ (Zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 h) one_ne_zero).Squarefree
-  cases' (multiplicity.squarefree_iff_multiplicity_le_one ((X^n) - 1)).1 hfree (map (Int.castRingHom (Zmod p)) P) with
+  have hfree : Squarefree (X ^ n - 1 : Polynomial (Zmod p)) :=
+    (separable_X_pow_sub_C 1 (fun h => hdiv $ (Zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 h) one_ne_zero).Squarefree
+  cases' (multiplicity.squarefree_iff_multiplicity_le_one (X ^ n - 1)).1 hfree (map (Int.castRingHom (Zmod p)) P) with
     hle hunit
-  ·
-    rw [Nat.cast_one] at habs
+  · rw [Nat.cast_one] at habs
     exact hle.not_lt habs
-  ·
-    replace hunit := degree_eq_zero_of_is_unit hunit
+    
+  · replace hunit := degree_eq_zero_of_is_unit hunit
     rw [degree_map_eq_of_leading_coeff_ne_zero (Int.castRingHom (Zmod p)) _] at hunit
-    ·
-      exact (minpoly.degree_pos (IsIntegral h hpos)).ne' hunit
+    · exact (minpoly.degree_pos (IsIntegral h hpos)).ne' hunit
+      
     simp only [Pmonic, RingHom.eq_int_cast, monic.leading_coeff, Int.cast_one, Ne.def, not_false_iff, one_ne_zero]
+    
 
-/--  If `m : ℕ` is coprime with `n`,
+/-- If `m : ℕ` is coprime with `n`,
 then the minimal polynomials of a primitive `n`-th root of unity `μ`
 and of `μ ^ m` are the same. -/
-theorem minpoly_eq_pow_coprime {m : ℕ} (hcop : Nat.Coprime m n) : minpoly ℤ μ = minpoly ℤ (μ^m) := by
+theorem minpoly_eq_pow_coprime {m : ℕ} (hcop : Nat.Coprime m n) : minpoly ℤ μ = minpoly ℤ (μ ^ m) := by
   revert n hcop
   refine' UniqueFactorizationMonoid.induction_on_prime m _ _ _
-  ·
-    intro n hn h
+  · intro n hn h
     congr
     simpa [(Nat.coprime_zero_leftₓ n).mp hn] using h
-  ·
-    intro u hunit n hcop h
+    
+  · intro u hunit n hcop h
     congr
     simp [nat.is_unit_iff.mp hunit]
-  ·
-    intro a p ha hprime hind n hcop h
+    
+  · intro a p ha hprime hind n hcop h
     rw [hind (Nat.Coprime.coprime_mul_left hcop) h]
     clear hind
     replace hprime := Nat.prime_iff.2 hprime
@@ -1552,31 +1035,33 @@ theorem minpoly_eq_pow_coprime {m : ℕ} (hcop : Nat.Coprime m n) : minpoly ℤ 
     rw [minpoly_eq_pow (h.pow_of_coprime a (Nat.Coprime.coprime_mul_left hcop)) hdiv]
     congr 1
     ring_exp
+    
 
-/--  If `m : ℕ` is coprime with `n`,
+/-- If `m : ℕ` is coprime with `n`,
 then the minimal polynomial of a primitive `n`-th root of unity `μ`
 has `μ ^ m` as root. -/
-theorem pow_is_root_minpoly {m : ℕ} (hcop : Nat.Coprime m n) : is_root (map (Int.castRingHom K) (minpoly ℤ μ)) (μ^m) :=
-  by
-  simpa [minpoly_eq_pow_coprime h hcop, eval_map, aeval_def (μ^m) _] using minpoly.aeval ℤ (μ^m)
+theorem pow_is_root_minpoly {m : ℕ} (hcop : Nat.Coprime m n) :
+    is_root (map (Int.castRingHom K) (minpoly ℤ μ)) (μ ^ m) := by
+  simpa [minpoly_eq_pow_coprime h hcop, eval_map, aeval_def (μ ^ m) _] using minpoly.aeval ℤ (μ ^ m)
 
-/--  `primitive_roots n K` is a subset of the roots of the minimal polynomial of a primitive
+/-- `primitive_roots n K` is a subset of the roots of the minimal polynomial of a primitive
 `n`-th root of unity `μ`. -/
 theorem is_roots_of_minpoly : primitiveRoots n K ⊆ (map (Int.castRingHom K) (minpoly ℤ μ)).roots.toFinset := by
   by_cases' hn : n = 0
-  ·
-    simp_all
+  · simp_all
+    
   have hpos := Nat.pos_of_ne_zeroₓ hn
   intro x hx
   obtain ⟨m, hle, hcop, rfl⟩ := (is_primitive_root_iff h hpos).1 ((mem_primitive_roots hpos).1 hx)
   simpa [Multiset.mem_to_finset, mem_roots (map_monic_ne_zero $ minpoly.monic $ IsIntegral h hpos)] using
     pow_is_root_minpoly h hcop
 
-/--  The degree of the minimal polynomial of `μ` is at least `totient n`. -/
+/-- The degree of the minimal polynomial of `μ` is at least `totient n`. -/
 theorem totient_le_degree_minpoly : Nat.totient n ≤ (minpoly ℤ μ).natDegree :=
   let P : Polynomial ℤ := minpoly ℤ μ
   let P_K : Polynomial K := map (Int.castRingHom K) P
-  calc n.totient = (primitiveRoots n K).card := h.card_primitive_roots.symm
+  calc
+    n.totient = (primitiveRoots n K).card := h.card_primitive_roots.symm
     _ ≤ P_K.roots.to_finset.card := Finset.card_le_of_subset (is_roots_of_minpoly h)
     _ ≤ P_K.roots.card := Multiset.to_finset_card_le _
     _ ≤ P_K.nat_degree := card_roots' _

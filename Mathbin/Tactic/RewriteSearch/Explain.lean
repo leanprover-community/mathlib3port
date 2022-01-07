@@ -12,14 +12,12 @@ namespace Tactic.RewriteSearch
 
 universe u
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/-- 
-A `dir_pair` is a pair of items designed to be accessed according to
+/-- A `dir_pair` is a pair of items designed to be accessed according to
 `dir`, a "direction" defined in the `expr_lens` library.
 -/
 structure dir_pair (α : Type u) where
   (l R : α)
-  deriving [anonymous]
+  deriving Inhabited
 
 namespace DirPair
 
@@ -27,21 +25,21 @@ open ExprLens
 
 variable {α β : Type} (p : dir_pair α)
 
-/--  Get one side of the pair, picking the side according to the direction. -/
+/-- Get one side of the pair, picking the side according to the direction. -/
 def get : dir → α
   | dir.F => p.l
   | dir.A => p.r
 
-/--  Set one side of the pair, picking the side according to the direction. -/
+/-- Set one side of the pair, picking the side according to the direction. -/
 def Set : dir → α → dir_pair α
   | dir.F, v => ⟨v, p.r⟩
   | dir.A, v => ⟨p.l, v⟩
 
-/--  Convert the pair to a list of its elements. -/
+/-- Convert the pair to a list of its elements. -/
 def to_list : List α :=
   [p.l, p.r]
 
-/--  Convert the pair to a readable string format. -/
+/-- Convert the pair to a readable string format. -/
 def toString [HasToString α] (p : dir_pair α) : Stringₓ :=
   toString p.l ++ "-" ++ toString p.r
 
@@ -50,11 +48,11 @@ instance HasToString [HasToString α] : HasToString (dir_pair α) :=
 
 end DirPair
 
-/--  Helper for getting the nth item in a list of rules -/
+/-- Helper for getting the nth item in a list of rules -/
 private unsafe def nth_rule (rs : List (expr × Bool)) (i : ℕ) : expr × Bool :=
   (rs.nth i).iget
 
-/--  Convert a rule into the string of Lean code used to refer to this rule. -/
+/-- Convert a rule into the string of Lean code used to refer to this rule. -/
 private unsafe def pp_rule (r : expr × Bool) : tactic Stringₓ := do
   let pp ← pp r.1
   return $ (if r.2 then "←" else "") ++ toString pp
@@ -62,13 +60,13 @@ private unsafe def pp_rule (r : expr × Bool) : tactic Stringₓ := do
 private unsafe def how.to_rewrite (rs : List (expr × Bool)) : how → Option (expr × Bool)
   | h => nth_rule rs h.rule_index
 
-/--  Explain a single rewrite using `nth_rewrite`. -/
+/-- Explain a single rewrite using `nth_rewrite`. -/
 private unsafe def explain_using_location (rs : List (expr × Bool)) (s : side) : how → tactic (Option Stringₓ)
   | h => do
     let rule ← pp_rule $ nth_rule rs h.rule_index
     return $ some ("nth_rewrite_" ++ s.to_xhs ++ " " ++ toString h.location ++ " " ++ rule)
 
-/--  Explain a list of rewrites using `nth_rewrite`. -/
+/-- Explain a list of rewrites using `nth_rewrite`. -/
 private unsafe def using_location.explain_rewrites (rs : List (expr × Bool)) (s : side) (steps : List how) :
     tactic Stringₓ := do
   let rules ← steps.mmap $ fun h : how => Option.toList <$> explain_using_location rs s h
@@ -76,7 +74,7 @@ private unsafe def using_location.explain_rewrites (rs : List (expr × Bool)) (s
 
 namespace UsingConv
 
-/--  `app_addr` represents a tree structure that `conv` tactics use for a rewrite. -/
+/-- `app_addr` represents a tree structure that `conv` tactics use for a rewrite. -/
 inductive app_addr
   | node (children : dir_pair (Option app_addr)) : app_addr
   | rw : List ℕ → app_addr
@@ -87,9 +85,7 @@ private unsafe def app_addr.to_string : app_addr → Stringₓ
   | node c => "(node " ++ ((c.to_list.filter_map id).map app_addr.to_string).toString ++ ")"
   | rw rws => "(rw " ++ rws.to_string ++ ")"
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/-- 
-A data structure for the result of a splice operation.
+/-- A data structure for the result of a splice operation.
 obstructed:  There was more of the addr to be added left, but we hit a rw
 contained:   The added addr was already contained, and did not terminate at an existing rw
 new:         The added addr terminated at an existing rw or we could create a new one for it
@@ -98,7 +94,7 @@ inductive splice_result
   | obstructed
   | contained
   | new (addr : app_addr)
-  deriving [anonymous]
+  deriving Inhabited
 
 open SpliceResult
 
@@ -127,11 +123,11 @@ private unsafe def to_congr_form : List ExprLens.Dir → tactic (List ExprLens.D
   | [dir.F] => fail "app list ends in side.L!"
   | dir.F :: dir.F :: _ => fail "app list has repeated side.L!"
 
-/--  Attempt to add new rewrites into the `app_addr` tree. -/
+/-- Attempt to add new rewrites into the `app_addr` tree. -/
 private unsafe def splice_in (a : Option app_addr) (rws : List ℕ) (s : List ExprLens.Dir) : tactic splice_result :=
   splice_in_aux rws a <$> to_congr_form s
 
-/--  Construct a single `erw` tactic for the given rules. -/
+/-- Construct a single `erw` tactic for the given rules. -/
 private unsafe def build_rw_tactic (rs : List (expr × Bool)) (hs : List ℕ) : tactic Stringₓ := do
   let rws ← (hs.map $ nth_rule rs).mmap pp_rule
   return $ "erw [" ++ Stringₓ.intercalate ", " rws ++ "]"
@@ -154,12 +150,11 @@ private unsafe def explain_tree_aux (rs : List (expr × Bool)) : app_addr → ta
         | (none, some sa) => ["congr", "skip"].append sa
         | (some sf, some sa) => (["congr"].append sf).append (["skip"].append sf)
 
-/--  Construct a string of Lean code that does a rewrite for the provided tree. -/
+/-- Construct a string of Lean code that does a rewrite for the provided tree. -/
 private unsafe def explain_tree (rs : List (expr × Bool)) (tree : app_addr) : tactic (List Stringₓ) :=
   List.join <$> Option.toList <$> explain_tree_aux rs tree
 
-/-- 
-Gather all rewrites into trees, then generate a line of code for each tree.
+/-- Gather all rewrites into trees, then generate a line of code for each tree.
 The return value has one `conv_x` tactic on each line.
 -/
 private unsafe def explanation_lines (rs : List (expr × Bool)) (s : side) :
@@ -183,7 +178,7 @@ private unsafe def explanation_lines (rs : List (expr × Bool)) (s : side) :
         let lines ← explanation_lines none rest_if_fail
         return $ line ++ lines
 
-/--  Explain a list of rewrites using `conv_x` tactics. -/
+/-- Explain a list of rewrites using `conv_x` tactics. -/
 unsafe def explain_rewrites (rs : List (expr × Bool)) (s : side) (hows : List how) : tactic Stringₓ :=
   Stringₓ.intercalate ",\n  " <$> explanation_lines rs s none hows
 
@@ -193,8 +188,7 @@ private unsafe def explain_rewrites_concisely (steps : List (expr × Bool)) (nee
   let rules ← Stringₓ.intercalate ", " <$> steps.mmap pp_rule
   return $ "erw [" ++ rules ++ "]" ++ if needs_refl then ", refl" else ""
 
-/-- 
-Fails if we can't just use rewrite.
+/-- Fails if we can't just use rewrite.
 Otherwise, returns 'tt' if we need a `refl` at the end.
 -/
 private unsafe def check_if_simple_rewrite_succeeds (rewrites : List (expr × Bool)) (goal : expr) : tactic Bool :=
@@ -204,11 +198,11 @@ private unsafe def check_if_simple_rewrite_succeeds (rewrites : List (expr × Bo
     rewrites.mmap' $ fun q => rewrite_target q.1 { symm := q.2, md := semireducible }
     reflexivity reducible >> return ff <|> reflexivity >> return tt
 
-/--  Construct a list of rewrites from a proof unit. -/
+/-- Construct a list of rewrites from a proof unit. -/
 unsafe def proof_unit.rewrites (u : proof_unit) (rs : List (expr × Bool)) : List (expr × Bool) :=
   u.steps.filter_map $ how.to_rewrite rs
 
-/--  Construct an explanation string from a proof unit. -/
+/-- Construct an explanation string from a proof unit. -/
 unsafe def proof_unit.explain (u : proof_unit) (rs : List (expr × Bool)) (explain_using_conv : Bool) : tactic Stringₓ :=
   if explain_using_conv then using_conv.explain_rewrites rs u.side u.steps
   else using_location.explain_rewrites rs u.side u.steps
@@ -238,8 +232,7 @@ private unsafe def explain_proof_concisely (rules : List (expr × Bool)) (proof 
   let needs_refl ← check_if_simple_rewrite_succeeds rws goal
   explain_rewrites_concisely rws needs_refl
 
-/-- 
-Trace a human-readable explanation in Lean code of a proof generated by rewrite search.
+/-- Trace a human-readable explanation in Lean code of a proof generated by rewrite search.
 Emit it as "Try this: <code>" with each successive line of code indented.
 -/
 unsafe def explain_search_result (cfg : config) (rules : List (expr × Bool)) (proof : expr) (units : List proof_unit) :

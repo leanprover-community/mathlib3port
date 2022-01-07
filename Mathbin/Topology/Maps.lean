@@ -45,7 +45,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 section Inducing
 
-/--  A function `f : α → β` between topological spaces is inducing if the topology on `α` is induced
+/-- A function `f : α → β` between topological spaces is inducing if the topology on `α` is induced
 by the topology on `β` through `f`, meaning that a set `s : set α` is open iff it is the preimage
 under `f` of some open set `t : set β`. -/
 structure Inducing [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f : α → β) : Prop where
@@ -117,10 +117,14 @@ end Inducing
 
 section Embedding
 
-/--  A function between topological spaces is an embedding if it is injective,
+/-- A function between topological spaces is an embedding if it is injective,
   and for all `s : set α`, `s` is open iff it is the preimage of an open set. -/
 structure Embedding [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f : α → β) extends Inducing f : Prop where
   inj : Function.Injective f
+
+theorem Function.Injective.embedding_induced [t : TopologicalSpace β] {f : α → β} (hf : Function.Injective f) :
+    @Embedding α β (t.induced f) t f :=
+  { induced := rfl, inj := hf }
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
@@ -167,7 +171,7 @@ theorem Embedding.closure_eq_preimage_closure_image {e : α → β} (he : Embedd
 
 end Embedding
 
-/--  A function between topological spaces is a quotient map if it is surjective,
+/-- A function between topological spaces is a quotient map if it is surjective,
   and for all `s : set β`, `s` is open iff its preimage is an open set. -/
 def QuotientMap {α : Type _} {β : Type _} [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f : α → β) : Prop :=
   Function.Surjective f ∧ tβ = tα.coinduced f
@@ -214,7 +218,7 @@ protected theorem is_closed_preimage (hf : QuotientMap f) {s : Set β} : IsClose
 
 end QuotientMap
 
-/--  A map `f : α → β` is said to be an *open map*, if the image of any open `U : set α`
+/-- A map `f : α → β` is said to be an *open map*, if the image of any open `U : set α`
 is open in `β`. -/
 def IsOpenMap [TopologicalSpace α] [TopologicalSpace β] (f : α → β) :=
   ∀ U : Set α, IsOpen U → IsOpen (f '' U)
@@ -239,8 +243,12 @@ theorem image_mem_nhds (hf : IsOpenMap f) {x : α} {s : Set α} (hx : s ∈ 𝓝
   let ⟨t, hts, ht, hxt⟩ := mem_nhds_iff.1 hx
   mem_of_superset (IsOpen.mem_nhds (hf t ht) (mem_image_of_mem _ hxt)) (image_subset _ hts)
 
+theorem maps_to_interior (hf : IsOpenMap f) {s : Set α} {t : Set β} (h : maps_to f s t) :
+    maps_to f (Interior s) (Interior t) :=
+  maps_to'.2 $ interior_maximal (h.mono interior_subset subset.rfl).image_subset (hf _ is_open_interior)
+
 theorem image_interior_subset (hf : IsOpenMap f) (s : Set α) : f '' Interior s ⊆ Interior (f '' s) :=
-  interior_maximal (image_subset _ interior_subset) (hf _ is_open_interior)
+  (hf.maps_to_interior (maps_to_image f s)).image_subset
 
 theorem nhds_le (hf : IsOpenMap f) (a : α) : 𝓝 (f a) ≤ (𝓝 a).map f :=
   le_map $ fun s => hf.image_mem_nhds
@@ -248,27 +256,53 @@ theorem nhds_le (hf : IsOpenMap f) (a : α) : 𝓝 (f a) ≤ (𝓝 a).map f :=
 theorem of_nhds_le (hf : ∀ a, 𝓝 (f a) ≤ map f (𝓝 a)) : IsOpenMap f := fun s hs =>
   is_open_iff_mem_nhds.2 $ fun b ⟨a, has, hab⟩ => hab ▸ hf _ (image_mem_map $ IsOpen.mem_nhds hs has)
 
-theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv : left_inverse f f')
-    (r_inv : RightInverse f f') : IsOpenMap f := by
-  intro s hs
-  rw [image_eq_preimage_of_inverse r_inv l_inv]
-  exact hs.preimage h
+theorem of_sections {f : α → β} (h : ∀ x, ∃ g : β → α, ContinuousAt g (f x) ∧ g (f x) = x ∧ RightInverse g f) :
+    IsOpenMap f :=
+  of_nhds_le $ fun x =>
+    let ⟨g, hgc, hgx, hgf⟩ := h x
+    calc
+      𝓝 (f x) = map f (map g (𝓝 (f x))) := by
+        rw [map_map, hgf.comp_eq_id, map_id]
+      _ ≤ map f (𝓝 (g (f x))) := map_mono hgc
+      _ = map f (𝓝 x) := by
+        rw [hgx]
+      
 
-/--  A continuous surjective open map is a quotient map. -/
+theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv : left_inverse f f')
+    (r_inv : RightInverse f f') : IsOpenMap f :=
+  of_sections $ fun x => ⟨f', h.continuous_at, r_inv _, l_inv⟩
+
+/-- A continuous surjective open map is a quotient map. -/
 theorem to_quotient_map {f : α → β} (open_map : IsOpenMap f) (cont : Continuous f) (surj : surjective f) :
     QuotientMap f :=
   quotient_map_iff.2 ⟨surj, fun s => ⟨fun h => h.preimage cont, fun h => surj.image_preimage s ▸ open_map _ h⟩⟩
 
-theorem interior_preimage_subset_preimage_interior {s : Set β} (hf : IsOpenMap f) :
-    Interior (f ⁻¹' s) ⊆ f ⁻¹' Interior s := by
-  rw [← Set.image_subset_iff]
-  refine' interior_maximal _ (hf _ is_open_interior)
-  rw [Set.image_subset_iff]
-  exact interior_subset
+theorem interior_preimage_subset_preimage_interior (hf : IsOpenMap f) {s : Set β} :
+    Interior (f ⁻¹' s) ⊆ f ⁻¹' Interior s :=
+  hf.maps_to_interior (maps_to_preimage _ _)
 
-theorem preimage_interior_eq_interior_preimage {s : Set β} (hf₁ : Continuous f) (hf₂ : IsOpenMap f) :
+theorem preimage_interior_eq_interior_preimage (hf₁ : IsOpenMap f) (hf₂ : Continuous f) (s : Set β) :
     f ⁻¹' Interior s = Interior (f ⁻¹' s) :=
-  subset.antisymm (preimage_interior_subset_interior_preimage hf₁) (interior_preimage_subset_preimage_interior hf₂)
+  subset.antisymm (preimage_interior_subset_interior_preimage hf₂) (interior_preimage_subset_preimage_interior hf₁)
+
+theorem preimage_closure_subset_closure_preimage (hf : IsOpenMap f) {s : Set β} : f ⁻¹' Closure s ⊆ Closure (f ⁻¹' s) :=
+  by
+  rw [← compl_subset_compl]
+  simp only [← interior_compl, ← preimage_compl, hf.interior_preimage_subset_preimage_interior]
+
+theorem preimage_closure_eq_closure_preimage (hf : IsOpenMap f) (hfc : Continuous f) (s : Set β) :
+    f ⁻¹' Closure s = Closure (f ⁻¹' s) :=
+  hf.preimage_closure_subset_closure_preimage.antisymm (hfc.closure_preimage_subset s)
+
+theorem preimage_frontier_subset_frontier_preimage (hf : IsOpenMap f) {s : Set β} :
+    f ⁻¹' Frontier s ⊆ Frontier (f ⁻¹' s) := by
+  simpa only [frontier_eq_closure_inter_closure, preimage_inter] using
+    inter_subset_inter hf.preimage_closure_subset_closure_preimage hf.preimage_closure_subset_closure_preimage
+
+theorem preimage_frontier_eq_frontier_preimage (hf : IsOpenMap f) (hfc : Continuous f) (s : Set β) :
+    f ⁻¹' Frontier s = Frontier (f ⁻¹' s) := by
+  simp only [frontier_eq_closure_inter_closure, preimage_inter, preimage_compl,
+    hf.preimage_closure_eq_closure_preimage hfc]
 
 end IsOpenMap
 
@@ -280,12 +314,13 @@ theorem is_open_map_iff_interior [TopologicalSpace α] [TopologicalSpace β] {f 
     IsOpenMap f ↔ ∀ s, f '' Interior s ⊆ Interior (f '' s) :=
   ⟨IsOpenMap.image_interior_subset, fun hs u hu =>
     subset_interior_iff_open.mp $
-      calc f '' u = f '' Interior u := by
-        rw [hu.interior_eq]
+      calc
+        f '' u = f '' Interior u := by
+          rw [hu.interior_eq]
         _ ⊆ Interior (f '' u) := hs u
         ⟩
 
-/--  An inducing map with an open range is an open map. -/
+/-- An inducing map with an open range is an open map. -/
 protected theorem Inducing.is_open_map [TopologicalSpace α] [TopologicalSpace β] {f : α → β} (hi : Inducing f)
     (ho : IsOpen (range f)) : IsOpenMap f :=
   IsOpenMap.of_nhds_le $ fun x => (hi.map_nhds_of_mem _ $ IsOpen.mem_nhds ho $ mem_range_self _).Ge
@@ -294,7 +329,7 @@ section IsClosedMap
 
 variable [TopologicalSpace α] [TopologicalSpace β]
 
-/--  A map `f : α → β` is said to be a *closed map*, if the image of any closed `U : set α`
+/-- A map `f : α → β` is said to be a *closed map*, if the image of any closed `U : set α`
 is closed in `β`. -/
 def IsClosedMap (f : α → β) :=
   ∀ U : Set α, IsClosed U → IsClosed (f '' U)
@@ -327,10 +362,10 @@ theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv :
 theorem of_nonempty {f : α → β} (h : ∀ s, IsClosed s → s.nonempty → IsClosed (f '' s)) : IsClosedMap f := by
   intro s hs
   cases' eq_empty_or_nonempty s with h2s h2s
-  ·
-    simp_rw [h2s, image_empty, is_closed_empty]
-  ·
-    exact h s hs h2s
+  · simp_rw [h2s, image_empty, is_closed_empty]
+    
+  · exact h s hs h2s
+    
 
 theorem closed_range {f : α → β} (hf : IsClosedMap f) : IsClosed (range f) :=
   @image_univ _ _ f ▸ hf _ is_closed_univ
@@ -348,16 +383,17 @@ theorem is_closed_map_iff_closure_image [TopologicalSpace α] [TopologicalSpace 
     IsClosedMap f ↔ ∀ s, Closure (f '' s) ⊆ f '' Closure s :=
   ⟨IsClosedMap.closure_image_subset, fun hs c hc =>
     is_closed_of_closure_subset $
-      calc Closure (f '' c) ⊆ f '' Closure c := hs c
+      calc
+        Closure (f '' c) ⊆ f '' Closure c := hs c
         _ = f '' c := by
-        rw [hc.closure_eq]
+          rw [hc.closure_eq]
         ⟩
 
 section OpenEmbedding
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
-/--  An open embedding is an embedding with open image. -/
+/-- An open embedding is an embedding with open image. -/
 structure OpenEmbedding (f : α → β) extends Embedding f : Prop where
   open_range : IsOpen $ range f
 
@@ -409,11 +445,11 @@ theorem open_embedding_of_open_embedding_compose {α β γ : Type _} [Topologica
   by
   have hf := hg.to_embedding.continuous_iff.mpr h.continuous
   constructor
-  ·
-    exact embedding_of_embedding_compose hf hg.continuous h.to_embedding
-  ·
-    rw [hg.open_iff_image_open, ← Set.image_univ, ← Set.image_comp, ← h.open_iff_image_open]
+  · exact embedding_of_embedding_compose hf hg.continuous h.to_embedding
+    
+  · rw [hg.open_iff_image_open, ← Set.image_univ, ← Set.image_comp, ← h.open_iff_image_open]
     exact is_open_univ
+    
 
 theorem open_embedding_iff_open_embedding_compose {α β γ : Type _} [TopologicalSpace α] [TopologicalSpace β]
     [TopologicalSpace γ] (f : α → β) {g : β → γ} (hg : OpenEmbedding g) : OpenEmbedding (g ∘ f) ↔ OpenEmbedding f :=
@@ -425,7 +461,7 @@ section ClosedEmbedding
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
-/--  A closed embedding is an embedding with closed image. -/
+/-- A closed embedding is an embedding with closed image. -/
 structure ClosedEmbedding (f : α → β) extends Embedding f : Prop where
   closed_range : IsClosed $ range f
 
@@ -474,7 +510,7 @@ theorem closed_embedding_id : ClosedEmbedding (@id α) :=
 theorem ClosedEmbedding.comp {g : β → γ} {f : α → β} (hg : ClosedEmbedding g) (hf : ClosedEmbedding f) :
     ClosedEmbedding (g ∘ f) :=
   ⟨hg.to_embedding.comp hf.to_embedding,
-    show IsClosed (range (g ∘ f))by
+    show IsClosed (range (g ∘ f)) by
       rw [range_comp, ← hg.closed_iff_image_closed] <;> exact hf.closed_range⟩
 
 theorem ClosedEmbedding.closure_image_eq {f : α → β} (hf : ClosedEmbedding f) (s : Set α) :

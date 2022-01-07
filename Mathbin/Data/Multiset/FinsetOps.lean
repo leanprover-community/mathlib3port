@@ -17,7 +17,7 @@ variable {α : Type _} [DecidableEq α]
 /-! ### finset insert -/
 
 
-/--  `ndinsert a s` is the lift of the list `insert` operation. This operation
+/-- `ndinsert a s` is the lift of the list `insert` operation. This operation
   does not respect multiplicities, unlike `cons`, but it is suitable as
   an insert operation on `finset`. -/
 def ndinsert (a : α) (s : Multiset α) : Multiset α :=
@@ -59,7 +59,7 @@ theorem length_ndinsert_of_mem {a : α} {s : Multiset α} (h : a ∈ s) : card (
   simp [h]
 
 @[simp]
-theorem length_ndinsert_of_not_mem {a : α} {s : Multiset α} (h : a ∉ s) : card (ndinsert a s) = card s+1 := by
+theorem length_ndinsert_of_not_mem {a : α} {s : Multiset α} (h : a ∉ s) : card (ndinsert a s) = card s + 1 := by
   simp [h]
 
 theorem erase_dup_cons {a : α} {s : Multiset α} : erase_dup (a ::ₘ s) = ndinsert a (erase_dup s) := by
@@ -89,14 +89,14 @@ theorem attach_ndinsert (a : α) (s : Multiset α) :
     by
     intro t ht
     by_cases' a ∈ s
-    ·
-      rw [ndinsert_of_mem h] at ht
+    · rw [ndinsert_of_mem h] at ht
       subst ht
       rw [Eq, map_id, ndinsert_of_mem (mem_attach _ _)]
-    ·
-      rw [ndinsert_of_not_mem h] at ht
+      
+    · rw [ndinsert_of_not_mem h] at ht
       subst ht
       simp [attach_cons, h]
+      
   this _ rfl
 
 @[simp]
@@ -113,7 +113,7 @@ theorem disjoint_ndinsert_right {a : α} {s t : Multiset α} : Disjoint s (ndins
 /-! ### finset union -/
 
 
-/--  `ndunion s t` is the lift of the list `union` operation. This operation
+/-- `ndunion s t` is the lift of the list `union` operation. This operation
   does not respect multiplicities, unlike `s ∪ t`, but it is suitable as
   a union operation on `finset`. (`s ∪ t` would also work as a union operation
   on finset, but this is more efficient.) -/
@@ -142,222 +142,15 @@ theorem le_ndunion_right (s t : Multiset α) : t ≤ ndunion s t :=
 theorem subset_ndunion_right (s t : Multiset α) : t ⊆ ndunion s t :=
   subset_of_le (le_ndunion_right s t)
 
-theorem ndunion_le_add (s t : Multiset α) : ndunion s t ≤ s+t :=
+theorem ndunion_le_add (s t : Multiset α) : ndunion s t ≤ s + t :=
   Quotientₓ.induction_on₂ s t $ fun l₁ l₂ => (union_sublist_append _ _).Subperm
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `ndunion_le [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`s `t `u] [":" (Term.app `Multiset [`α])] "}")]
-   (Term.typeSpec
-    ":"
-    («term_↔_»
-     («term_≤_» (Term.app `ndunion [`s `t]) "≤" `u)
-     "↔"
-     («term_∧_» (Init.Core.«term_⊆_» `s " ⊆ " `u) "∧" («term_≤_» `t "≤" `u)))))
-  (Command.declValSimple
-   ":="
-   (Term.app
-    `Multiset.induction_on
-    [`s
-     (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.simp "simp" [] [] [] []) [])])))
-     (Term.byTactic
-      "by"
-      (Tactic.tacticSeq
-       (Tactic.tacticSeq1Indented
-        [(group
-          (Tactic.simp
-           "simp"
-           ["("
-            "config"
-            ":="
-            (Term.structInst
-             "{"
-             []
-             [(group
-               (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0)
-               [])]
-             (Term.optEllipsis [])
-             []
-             "}")
-            ")"]
-           []
-           ["["
-            [(Tactic.simpLemma [] [] `ndinsert_le)
-             ","
-             (Tactic.simpLemma [] [] `and_comm)
-             ","
-             (Tactic.simpLemma [] [] `And.left_comm)]
-            "]"]
-           [])
-          [])])))])
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app
-   `Multiset.induction_on
-   [`s
-    (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.simp "simp" [] [] [] []) [])])))
-    (Term.byTactic
-     "by"
-     (Tactic.tacticSeq
-      (Tactic.tacticSeq1Indented
-       [(group
-         (Tactic.simp
-          "simp"
-          ["("
-           "config"
-           ":="
-           (Term.structInst
-            "{"
-            []
-            [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-            (Term.optEllipsis [])
-            []
-            "}")
-           ")"]
-          []
-          ["["
-           [(Tactic.simpLemma [] [] `ndinsert_le)
-            ","
-            (Tactic.simpLemma [] [] `and_comm)
-            ","
-            (Tactic.simpLemma [] [] `And.left_comm)]
-           "]"]
-          [])
-         [])])))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simp
-        "simp"
-        ["("
-         "config"
-         ":="
-         (Term.structInst
-          "{"
-          []
-          [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-          (Term.optEllipsis [])
-          []
-          "}")
-         ")"]
-        []
-        ["["
-         [(Tactic.simpLemma [] [] `ndinsert_le)
-          ","
-          (Tactic.simpLemma [] [] `and_comm)
-          ","
-          (Tactic.simpLemma [] [] `And.left_comm)]
-         "]"]
-        [])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp
-   "simp"
-   ["("
-    "config"
-    ":="
-    (Term.structInst
-     "{"
-     []
-     [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-     (Term.optEllipsis [])
-     []
-     "}")
-    ")"]
-   []
-   ["["
-    [(Tactic.simpLemma [] [] `ndinsert_le)
-     ","
-     (Tactic.simpLemma [] [] `and_comm)
-     ","
-     (Tactic.simpLemma [] [] `And.left_comm)]
-    "]"]
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `And.left_comm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `and_comm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `ndinsert_le
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'Lean.Parser.Tactic.discharger'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  ndunion_le
-  { s t u : Multiset α } : ndunion s t ≤ u ↔ s ⊆ u ∧ t ≤ u
-  :=
-    Multiset.induction_on
-      s
-        by simp
-        by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ ndinsert_le , and_comm , And.left_comm ]
+theorem ndunion_le {s t u : Multiset α} : ndunion s t ≤ u ↔ s ⊆ u ∧ t ≤ u :=
+  Multiset.induction_on s
+    (by
+      simp )
+    (by
+      simp (config := { contextual := true })[ndinsert_le, and_comm, And.left_comm])
 
 theorem subset_ndunion_left (s t : Multiset α) : s ⊆ ndunion s t := fun a h => mem_ndunion.2 $ Or.inl h
 
@@ -374,13 +167,13 @@ theorem nodup_ndunion (s : Multiset α) {t : Multiset α} : nodup t → nodup (n
 theorem ndunion_eq_union {s t : Multiset α} (d : nodup s) : ndunion s t = s ∪ t :=
   le_antisymmₓ (ndunion_le_union _ _) $ union_le (le_ndunion_left _ d) (le_ndunion_right _ _)
 
-theorem erase_dup_add (s t : Multiset α) : erase_dup (s+t) = ndunion s (erase_dup t) :=
+theorem erase_dup_add (s t : Multiset α) : erase_dup (s + t) = ndunion s (erase_dup t) :=
   Quotientₓ.induction_on₂ s t $ fun l₁ l₂ => congr_argₓ coeₓ $ erase_dup_append _ _
 
 /-! ### finset inter -/
 
 
-/--  `ndinter s t` is the lift of the list `∩` operation. This operation
+/-- `ndinter s t` is the lift of the list `∩` operation. This operation
   does not respect multiplicities, unlike `s ∩ t`, but it is suitable as
   an intersection operation on `finset`. (`s ∩ t` would also work as a union operation
   on finset, but this is more efficient.) -/

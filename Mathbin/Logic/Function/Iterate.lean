@@ -13,7 +13,7 @@ In this file we prove simple properties of `nat.iterate f n` a.k.a. `f^[n]`:
 * `injective.iterate`, `surjective.iterate`, `bijective.iterate` :
   iterates of an injective/surjective/bijective function belong to the same class;
 
-* `left_inverse.iterate`, `right_inverse.iterate`, `commute.iterate_left`, `comute.iterate_right`,
+* `left_inverse.iterate`, `right_inverse.iterate`, `commute.iterate_left`, `commute.iterate_right`,
   `commute.iterate_iterate`:
   some properties of pairs of functions survive under iterations
 
@@ -50,22 +50,22 @@ theorem iterate_id (n : ℕ) : (id : α → α)^[n] = id :=
   Nat.recOn n rfl $ fun n ihn => by
     rw [iterate_succ, ihn, comp.left_id]
 
-theorem iterate_add : ∀ m n : ℕ, f^[m+n] = f^[m] ∘ f^[n]
+theorem iterate_add : ∀ m n : ℕ, f^[m + n] = f^[m] ∘ f^[n]
   | m, 0 => rfl
   | m, Nat.succ n => by
     rw [Nat.add_succ, iterate_succ, iterate_succ, iterate_add]
 
-theorem iterate_add_apply (m n : ℕ) (x : α) : (f^[m+n]) x = (f^[m]) ((f^[n]) x) := by
+theorem iterate_add_apply (m n : ℕ) (x : α) : (f^[m + n]) x = (f^[m]) ((f^[n]) x) := by
   rw [iterate_add]
 
 @[simp]
 theorem iterate_one : f^[1] = f :=
   funext $ fun a => rfl
 
-theorem iterate_mul (m : ℕ) : ∀ n, f^[m*n] = f^[m]^[n]
+theorem iterate_mul (m : ℕ) : ∀ n, f^[m * n] = f^[m]^[n]
   | 0 => by
     simp only [Nat.mul_zero, iterate_zero]
-  | n+1 => by
+  | n + 1 => by
     simp only [Nat.mul_succ, Nat.mul_one, iterate_one, iterate_add, iterate_mul n]
 
 variable {f}
@@ -89,15 +89,15 @@ theorem iterate_right {f : α → β} {ga : α → α} {gb : β → β} (h : sem
     semiconj f (ga^[n]) (gb^[n]) :=
   Nat.recOn n id_right $ fun n ihn => ihn.comp_right h
 
-theorem iterate_left {g : ℕ → α → α} (H : ∀ n, semiconj f (g n) (g $ n+1)) (n k : ℕ) :
-    semiconj (f^[n]) (g k) (g $ n+k) := by
+theorem iterate_left {g : ℕ → α → α} (H : ∀ n, semiconj f (g n) (g $ n + 1)) (n k : ℕ) :
+    semiconj (f^[n]) (g k) (g $ n + k) := by
   induction' n with n ihn generalizing k
-  ·
-    rw [Nat.zero_add]
+  · rw [Nat.zero_add]
     exact id_left
-  ·
-    rw [Nat.succ_eq_add_one, Nat.add_right_comm, Nat.add_assoc]
-    exact (H k).compLeft (ihn (k+1))
+    
+  · rw [Nat.succ_eq_add_one, Nat.add_right_comm, Nat.add_assoc]
+    exact (H k).compLeft (ihn (k + 1))
+    
 
 end Semiconj
 
@@ -120,8 +120,8 @@ theorem iterate_eq_of_map_eq (h : commute f g) (n : ℕ) {x} (hx : f x = g x) : 
 
 theorem comp_iterate (h : commute f g) (n : ℕ) : (f ∘ g)^[n] = f^[n] ∘ g^[n] := by
   induction' n with n ihn
-  ·
-    rfl
+  · rfl
+    
   funext x
   simp only [ihn, (h.iterate_right n).Eq, iterate_succ, comp_app]
 
@@ -155,7 +155,7 @@ theorem iterate_pred_comp_of_pos {n : ℕ} (hn : 0 < n) : f^[n.pred] ∘ f = f^[
 theorem comp_iterate_pred_of_pos {n : ℕ} (hn : 0 < n) : f ∘ f^[n.pred] = f^[n] := by
   rw [← iterate_succ', Nat.succ_pred_eq_of_posₓ hn]
 
-/--  A recursor for the iterate of a function. -/
+/-- A recursor for the iterate of a function. -/
 def iterate.rec (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) (n : ℕ) : p ((f^[n]) a) :=
   Nat.rec ha
     (fun m => by

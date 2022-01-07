@@ -37,116 +37,51 @@ variable [AddCommGroupₓ Q] [Module R Q] [LieRingModule L Q] [LieModule R L Q]
 
 attribute [local ext] TensorProduct.ext
 
-/--  It is useful to define the bracket via this auxiliary function so that we have a type-theoretic
+/-- It is useful to define the bracket via this auxiliary function so that we have a type-theoretic
 expression of the fact that `L` acts by linear endomorphisms. It simplifies the proofs in
 `lie_ring_module` below. -/
 def has_bracket_aux (x : L) : Module.End R (M ⊗[R] N) :=
-  (to_endomorphism R L M x).rtensor N+(to_endomorphism R L N x).ltensor M
+  (to_endomorphism R L M x).rtensor N + (to_endomorphism R L N x).ltensor M
 
--- failed to format: format: uncaught backtrack exception
 /-- The tensor product of two Lie modules is a Lie ring module. -/
-  instance
-    LieRingModule
-    : LieRingModule L ( M ⊗[ R ] N )
-    where
-      bracket x := has_bracket_aux x
-        add_lie
-          x y t
-          :=
-          by
-            simp
-                only
-                [
-                  has_bracket_aux , LinearMap.ltensor_add , LinearMap.rtensor_add , LieHom.map_add , LinearMap.add_apply
-                  ]
-              abel
-        lie_add x := LinearMap.map_add _
-        leibniz_lie
-          x y t
-          :=
-          by
-            suffices
-                ( has_bracket_aux x ) . comp ( has_bracket_aux y )
-                    =
-                    has_bracket_aux ⁅ x , y ⁆ + ( has_bracket_aux y ) . comp ( has_bracket_aux x )
-                  by simp only [ ← LinearMap.add_apply ] rw [ ← LinearMap.comp_apply , this ] rfl
-              ext m n
-              simp
-                only
-                [
-                  has_bracket_aux
-                    ,
-                    LieRing.of_associative_ring_bracket
-                    ,
-                    LinearMap.mul_apply
-                    ,
-                    mk_apply
-                    ,
-                    LinearMap.ltensor_sub
-                    ,
-                    LinearMap.compr₂_apply
-                    ,
-                    Function.comp_app
-                    ,
-                    LinearMap.coe_comp
-                    ,
-                    LinearMap.rtensor_tmul
-                    ,
-                    LieHom.map_lie
-                    ,
-                    to_endomorphism_apply_apply
-                    ,
-                    LinearMap.add_apply
-                    ,
-                    LinearMap.map_add
-                    ,
-                    LinearMap.rtensor_sub
-                    ,
-                    LinearMap.sub_apply
-                    ,
-                    LinearMap.ltensor_tmul
-                  ]
-              abel
+instance LieRingModule : LieRingModule L (M ⊗[R] N) where
+  bracket := fun x => has_bracket_aux x
+  add_lie := fun x y t => by
+    simp only [has_bracket_aux, LinearMap.ltensor_add, LinearMap.rtensor_add, LieHom.map_add, LinearMap.add_apply]
+    abel
+  lie_add := fun x => LinearMap.map_add _
+  leibniz_lie := fun x y t => by
+    suffices
+      (has_bracket_aux x).comp (has_bracket_aux y) =
+        has_bracket_aux ⁅x,y⁆ + (has_bracket_aux y).comp (has_bracket_aux x)
+      by
+      simp only [← LinearMap.add_apply]
+      rw [← LinearMap.comp_apply, this]
+      rfl
+    ext m n
+    simp only [has_bracket_aux, LieRing.of_associative_ring_bracket, LinearMap.mul_apply, mk_apply,
+      LinearMap.ltensor_sub, LinearMap.compr₂_apply, Function.comp_app, LinearMap.coe_comp, LinearMap.rtensor_tmul,
+      LieHom.map_lie, to_endomorphism_apply_apply, LinearMap.add_apply, LinearMap.map_add, LinearMap.rtensor_sub,
+      LinearMap.sub_apply, LinearMap.ltensor_tmul]
+    abel
 
--- failed to format: format: uncaught backtrack exception
 /-- The tensor product of two Lie modules is a Lie module. -/
-  instance
-    LieModule
-    : LieModule R L ( M ⊗[ R ] N )
-    where
-      smul_lie
-          c x t
-          :=
-          by
-            change has_bracket_aux ( c • x ) _ = c • has_bracket_aux _ _
-              simp
-                only
-                [
-                  has_bracket_aux
-                    ,
-                    smul_add
-                    ,
-                    LinearMap.rtensor_smul
-                    ,
-                    LinearMap.smul_apply
-                    ,
-                    LinearMap.ltensor_smul
-                    ,
-                    LieHom.map_smul
-                    ,
-                    LinearMap.add_apply
-                  ]
-        lie_smul c x := LinearMap.map_smul _ c
+instance LieModule : LieModule R L (M ⊗[R] N) where
+  smul_lie := fun c x t => by
+    change has_bracket_aux (c • x) _ = c • has_bracket_aux _ _
+    simp only [has_bracket_aux, smul_add, LinearMap.rtensor_smul, LinearMap.smul_apply, LinearMap.ltensor_smul,
+      LieHom.map_smul, LinearMap.add_apply]
+  lie_smul := fun c x => LinearMap.map_smul _ c
 
 @[simp]
-theorem lie_tmul_right (x : L) (m : M) (n : N) : ⁅x,m ⊗ₜ[R] n⁆ = (⁅x,m⁆ ⊗ₜ n)+m ⊗ₜ ⁅x,n⁆ :=
+theorem lie_tmul_right (x : L) (m : M) (n : N) : ⁅x,m ⊗ₜ[R] n⁆ = ⁅x,m⁆ ⊗ₜ n + m ⊗ₜ ⁅x,n⁆ :=
   show has_bracket_aux x (m ⊗ₜ[R] n) = _ by
     simp only [has_bracket_aux, LinearMap.rtensor_tmul, to_endomorphism_apply_apply, LinearMap.add_apply,
       LinearMap.ltensor_tmul]
 
 variable (R L M N P Q)
 
-/--  The universal property for tensor product of modules of a Lie algebra: the `R`-linear
+/-- The universal property for tensor product of modules of a Lie algebra: the `R`-linear
 tensor-hom adjunction is equivariant with respect to the `L` action. -/
 def lift : (M →ₗ[R] N →ₗ[R] P) ≃ₗ⁅R,L⁆ M ⊗[R] N →ₗ[R] P :=
   { TensorProduct.lift.equiv R M N P with
@@ -160,7 +95,7 @@ def lift : (M →ₗ[R] N →ₗ[R] P) ≃ₗ⁅R,L⁆ M ⊗[R] N →ₗ[R] P :=
 theorem lift_apply (f : M →ₗ[R] N →ₗ[R] P) (m : M) (n : N) : lift R L M N P f (m ⊗ₜ n) = f m n :=
   lift.equiv_apply R M N P f m n
 
-/--  A weaker form of the universal property for tensor product of modules of a Lie algebra.
+/-- A weaker form of the universal property for tensor product of modules of a Lie algebra.
 
 Note that maps `f` of type `M →ₗ⁅R,L⁆ N →ₗ[R] P` are exactly those `R`-bilinear maps satisfying
 `⁅x, f m n⁆ = f ⁅x, m⁆ n + f m ⁅x, n⁆` for all `x, m, n` (see e.g, `lie_module_hom.map_lie₂`). -/
@@ -182,21 +117,21 @@ theorem lift_lie_apply (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) (m : M) (n : N) : l
 
 variable {R L M N P Q}
 
-/--  A pair of Lie module morphisms `f : M → P` and `g : N → Q`, induce a Lie module morphism:
+/-- A pair of Lie module morphisms `f : M → P` and `g : N → Q`, induce a Lie module morphism:
 `M ⊗ N → P ⊗ Q`. -/
 def map (f : M →ₗ⁅R,L⁆ P) (g : N →ₗ⁅R,L⁆ Q) : M ⊗[R] N →ₗ⁅R,L⁆ P ⊗[R] Q :=
   { map (f : M →ₗ[R] P) (g : N →ₗ[R] Q) with
     map_lie' := fun x t => by
       simp only [LinearMap.to_fun_eq_coe]
       apply t.induction_on
-      ·
-        simp only [LinearMap.map_zero, lie_zero]
-      ·
-        intro m n
+      · simp only [LinearMap.map_zero, lie_zero]
+        
+      · intro m n
         simp only [LieModuleHom.coe_to_linear_map, lie_tmul_right, LieModuleHom.map_lie, map_tmul, LinearMap.map_add]
-      ·
-        intro t₁ t₂ ht₁ ht₂
-        simp only [ht₁, ht₂, lie_add, LinearMap.map_add] }
+        
+      · intro t₁ t₂ ht₁ ht₂
+        simp only [ht₁, ht₂, lie_add, LinearMap.map_add]
+         }
 
 @[simp]
 theorem coe_linear_map_map (f : M →ₗ⁅R,L⁆ P) (g : N →ₗ⁅R,L⁆ Q) :
@@ -207,7 +142,7 @@ theorem coe_linear_map_map (f : M →ₗ⁅R,L⁆ P) (g : N →ₗ⁅R,L⁆ Q) :
 theorem map_tmul (f : M →ₗ⁅R,L⁆ P) (g : N →ₗ⁅R,L⁆ Q) (m : M) (n : N) : map f g (m ⊗ₜ n) = f m ⊗ₜ g n :=
   map_tmul f g m n
 
-/--  Given Lie submodules `M' ⊆ M` and `N' ⊆ N`, this is the natural map: `M' ⊗ N' → M ⊗ N`. -/
+/-- Given Lie submodules `M' ⊆ M` and `N' ⊆ N`, this is the natural map: `M' ⊗ N' → M ⊗ N`. -/
 def map_incl (M' : LieSubmodule R L M) (N' : LieSubmodule R L N) : M' ⊗[R] N' →ₗ⁅R,L⁆ M ⊗[R] N :=
   map M'.incl N'.incl
 
@@ -229,7 +164,7 @@ variable [LieRing L] [LieAlgebra R L]
 
 variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
-/--  The action of the Lie algebra on one of its modules, regarded as a morphism of Lie modules. -/
+/-- The action of the Lie algebra on one of its modules, regarded as a morphism of Lie modules. -/
 def to_module_hom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
   TensorProduct.LieModule.liftLie R L L M M
     { (to_endomorphism R L M : L →ₗ[R] M →ₗ[R] M) with
@@ -260,7 +195,7 @@ variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
 variable (I : LieIdeal R L) (N : LieSubmodule R L M)
 
-/--  A useful alternative characterisation of Lie ideal operations on Lie submodules.
+/-- A useful alternative characterisation of Lie ideal operations on Lie submodules.
 
 Given a Lie ideal `I ⊆ L` and a Lie submodule `N ⊆ M`, by tensoring the inclusion maps and then
 applying the action of `L` on `M`, we obtain morphism of Lie modules `f : I ⊗ N → L ⊗ M → M`.
@@ -274,20 +209,20 @@ theorem lie_ideal_oper_eq_tensor_map_range :
   congr
   ext m
   constructor
-  ·
-    rintro ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩
+  · rintro ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩
     use x ⊗ₜ n
     constructor
-    ·
-      use ⟨x, hx⟩, ⟨n, hn⟩
+    · use ⟨x, hx⟩, ⟨n, hn⟩
       simp
-    ·
-      simp
-  ·
-    rintro ⟨t, ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩, h⟩
+      
+    · simp
+      
+    
+  · rintro ⟨t, ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩, h⟩
     rw [← h]
     use ⟨x, hx⟩, ⟨n, hn⟩
     simp
+    
 
 end LieSubmodule
 

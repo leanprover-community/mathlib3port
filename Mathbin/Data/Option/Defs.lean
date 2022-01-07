@@ -14,7 +14,7 @@ variable {α : Type _} {β : Type _}
 
 attribute [inline] Option.isSome Option.isNone
 
-/--  An elimination principle for `option`. It is a nondependent version of `option.rec_on`. -/
+/-- An elimination principle for `option`. It is a nondependent version of `option.rec_on`. -/
 @[simp]
 protected def elim : Option α → β → (α → β) → β
   | some x, y, f => f x
@@ -36,8 +36,10 @@ theorem is_none_iff_eq_none {o : Option α} : o.is_none = tt ↔ o = none :=
 theorem some_inj {a b : α} : some a = some b ↔ a = b := by
   simp
 
-/-- 
-`o = none` is decidable even if the wrapped type does not have decidable equality.
+theorem mem_some_iff {α : Type _} {a b : α} : a ∈ some b ↔ b = a := by
+  simp
+
+/-- `o = none` is decidable even if the wrapped type does not have decidable equality.
 
 This is not an instance because it is not definitionally equal to `option.decidable_eq`.
 Try to use `o.is_none` or `o.is_some` instead.
@@ -59,7 +61,7 @@ instance decidable_exists_mem {p : α → Prop} [DecidablePred p] : ∀ o : Opti
       cases h
   | some a => if h : p a then is_true $ ⟨_, rfl, h⟩ else is_false $ fun ⟨_, ⟨rfl, hn⟩⟩ => h hn
 
-/--  Inhabited `get` function. Returns `a` if the input is `some a`, otherwise returns `default`. -/
+/-- Inhabited `get` function. Returns `a` if the input is `some a`, otherwise returns `default`. -/
 @[reducible]
 def iget [Inhabited α] : Option α → α
   | some x => x
@@ -69,15 +71,15 @@ def iget [Inhabited α] : Option α → α
 theorem iget_some [Inhabited α] {a : α} : (some a).iget = a :=
   rfl
 
-/--  `guard p a` returns `some a` if `p a` holds, otherwise `none`. -/
+/-- `guard p a` returns `some a` if `p a` holds, otherwise `none`. -/
 def guardₓ (p : α → Prop) [DecidablePred p] (a : α) : Option α :=
   if p a then some a else none
 
-/--  `filter p o` returns `some a` if `o` is `some a` and `p a` holds, otherwise `none`. -/
+/-- `filter p o` returns `some a` if `o` is `some a` and `p a` holds, otherwise `none`. -/
 def filter (p : α → Prop) [DecidablePred p] (o : Option α) : Option α :=
   o.bind (guardₓ p)
 
-/--  Cast of `option` to `list `. Returns `[a]` if the input is `some a`, and `[]` if it is
+/-- Cast of `option` to `list `. Returns `[a]` if the input is `some a`, and `[]` if it is
 `none`. -/
 def to_list : Option α → List α
   | none => []
@@ -87,7 +89,7 @@ def to_list : Option α → List α
 theorem mem_to_list {a : α} {o : Option α} : a ∈ to_list o ↔ a ∈ o := by
   cases o <;> simp [to_list, eq_comm]
 
-/--  Two arguments failsafe function. Returns `f a b` if the inputs are `some a` and `some b`, and
+/-- Two arguments failsafe function. Returns `f a b` if the inputs are `some a` and `some b`, and
 "does nothing" otherwise. -/
 def lift_or_get (f : α → α → α) : Option α → Option α → Option α
   | none, none => none
@@ -115,15 +117,15 @@ instance lift_or_get_is_right_id (f : α → α → α) : IsRightId (Option α) 
   ⟨fun a => by
     cases a <;> simp [lift_or_get]⟩
 
-/--  Lifts a relation `α → β → Prop` to a relation `option α → option β → Prop` by just adding
+/-- Lifts a relation `α → β → Prop` to a relation `option α → option β → Prop` by just adding
 `none ~ none`. -/
 inductive rel (r : α → β → Prop) : Option α → Option β → Prop
-  | /--  If `a ~ b`, then `some a ~ some b` -/
+  | /-- If `a ~ b`, then `some a ~ some b` -/
   some {a b} : r a b → rel (some a) (some b)
-  | /--  `none ~ none` -/
+  | /-- `none ~ none` -/
   none : rel none none
 
-/--  Partial bind. If for some `x : option α`, `f : Π (a : α), a ∈ x → option β` is a
+/-- Partial bind. If for some `x : option α`, `f : Π (a : α), a ∈ x → option β` is a
   partial function defined on `a : α` giving an `option β`, where `some a = x`,
   then `pbind x f h` is essentially the same as `bind x f`
   but is defined only when all `x = some a`, using the proof to apply `f`. -/
@@ -132,7 +134,7 @@ def pbind : ∀ x : Option α, (∀ a : α, a ∈ x → Option β) → Option β
   | none, _ => none
   | some a, f => f a rfl
 
-/--  Partial map. If `f : Π a, p a → β` is a partial function defined on `a : α` satisfying `p`,
+/-- Partial map. If `f : Π a, p a → β` is a partial function defined on `a : α` satisfying `p`,
 then `pmap f x h` is essentially the same as `map f x` but is defined only when all members of `x`
 satisfy `p`, using the proof to apply `f`. -/
 @[simp]
@@ -140,7 +142,7 @@ def pmap {p : α → Prop} (f : ∀ a : α, p a → β) : ∀ x : Option α, (�
   | none, _ => none
   | some a, H => some (f a (H a (mem_def.mpr rfl)))
 
-/--  Flatten an `option` of `option`, a specialization of `mjoin`. -/
+/-- Flatten an `option` of `option`, a specialization of `mjoin`. -/
 @[simp]
 def join : Option (Option α) → Option α := fun x => bind x id
 
@@ -149,23 +151,23 @@ protected def traverse.{u, v} {F : Type u → Type v} [Applicativeₓ F] {α β 
   | none => pure none
   | some x => some <$> f x
 
-/--  If you maybe have a monadic computation in a `[monad m]` which produces a term of type `α`, then
+/-- If you maybe have a monadic computation in a `[monad m]` which produces a term of type `α`, then
 there is a naturally associated way to always perform a computation in `m` which maybe produces a
 result. -/
 def maybe.{u, v} {m : Type u → Type v} [Monadₓ m] {α : Type u} : Option (m α) → m (Option α)
   | none => return none
   | some fn => some <$> fn
 
-/--  Map a monadic function `f : α → m β` over an `o : option α`, maybe producing a result. -/
+/-- Map a monadic function `f : α → m β` over an `o : option α`, maybe producing a result. -/
 def mmap.{u, v, w} {m : Type u → Type v} [Monadₓ m] {α : Type w} {β : Type u} (f : α → m β) (o : Option α) :
     m (Option β) :=
   (o.map f).maybe
 
-/--  A monadic analogue of `option.elim`. -/
+/-- A monadic analogue of `option.elim`. -/
 def melim {α β : Type _} {m : Type _ → Type _} [Monadₓ m] (x : m (Option α)) (y : m β) (z : α → m β) : m β :=
   x >>= fun o => Option.elim o y z
 
-/--  A monadic analogue of `option.get_or_else`. -/
+/-- A monadic analogue of `option.get_or_else`. -/
 def mget_or_else {α : Type _} {m : Type _ → Type _} [Monadₓ m] (x : m (Option α)) (y : m α) : m α :=
   melim x y pure
 

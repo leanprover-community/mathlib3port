@@ -37,7 +37,7 @@ boolean ring, generalized boolean algebra, boolean algebra, symmetric difference
 -/
 
 
-/--  The symmetric difference operator on a type with `⊔` and `\` is `(A \ B) ⊔ (B \ A)`. -/
+/-- The symmetric difference operator on a type with `⊔` and `\` is `(A \ B) ⊔ (B \ A)`. -/
 def symmDiff {α : Type _} [HasSup α] [HasSdiff α] (A B : α) : α :=
   A \ B⊔B \ A
 
@@ -105,45 +105,47 @@ theorem sdiff_symm_diff_self : a \ a Δ b = a⊓b := by
 
 theorem symm_diff_eq_iff_sdiff_eq {a b c : α} (ha : a ≤ c) : a Δ b = c ↔ c \ a = b := by
   constructor <;> intro h
-  ·
-    have hba : Disjoint (a⊓b) c := by
+  · have hba : Disjoint (a⊓b) c := by
       rw [← h, Disjoint.comm]
       exact disjoint_symm_diff_inf _ _
     have hca : _ := congr_argₓ (· \ a) h
     rw [symm_diff_sdiff_left] at hca
     rw [← hca, sdiff_eq_self_iff_disjoint]
     exact hba.of_disjoint_inf_of_le ha
-  ·
-    have hd : Disjoint a b := by
+    
+  · have hd : Disjoint a b := by
       rw [← h]
       exact disjoint_sdiff_self_right
     rw [symm_diff_def, hd.sdiff_eq_left, hd.sdiff_eq_right, ← h, sup_sdiff_cancel_right ha]
+    
 
 theorem Disjoint.symm_diff_eq_sup {a b : α} (h : Disjoint a b) : a Δ b = a⊔b := by
   rw [· Δ ·, h.sdiff_eq_left, h.sdiff_eq_right]
 
 theorem symm_diff_eq_sup : a Δ b = a⊔b ↔ Disjoint a b := by
   constructor <;> intro h
-  ·
-    rw [symm_diff_eq_sup_sdiff_inf, sdiff_eq_self_iff_disjoint] at h
+  · rw [symm_diff_eq_sup_sdiff_inf, sdiff_eq_self_iff_disjoint] at h
     exact h.of_disjoint_inf_of_le le_sup_left
-  ·
-    exact h.symm_diff_eq_sup
+    
+  · exact h.symm_diff_eq_sup
+    
 
 theorem symm_diff_symm_diff_left : a Δ b Δ c = a \ (b⊔c)⊔b \ (a⊔c)⊔c \ (a⊔b)⊔a⊓b⊓c :=
-  calc a Δ b Δ c = a Δ b \ c⊔c \ a Δ b := symm_diff_def _ _
+  calc
+    a Δ b Δ c = a Δ b \ c⊔c \ a Δ b := symm_diff_def _ _
     _ = a \ (b⊔c)⊔b \ (a⊔c)⊔(c \ (a⊔b)⊔c⊓a⊓b) := by
-    rw [sdiff_symm_diff', @sup_comm _ _ (c⊓a⊓b), symm_diff_sdiff]
+      rw [sdiff_symm_diff', @sup_comm _ _ (c⊓a⊓b), symm_diff_sdiff]
     _ = a \ (b⊔c)⊔b \ (a⊔c)⊔c \ (a⊔b)⊔a⊓b⊓c := by
-    ac_rfl
+      ac_rfl
     
 
 theorem symm_diff_symm_diff_right : a Δ (b Δ c) = a \ (b⊔c)⊔b \ (a⊔c)⊔c \ (a⊔b)⊔a⊓b⊓c :=
-  calc a Δ (b Δ c) = a \ b Δ c⊔b Δ c \ a := symm_diff_def _ _
+  calc
+    a Δ (b Δ c) = a \ b Δ c⊔b Δ c \ a := symm_diff_def _ _
     _ = a \ (b⊔c)⊔a⊓b⊓c⊔(b \ (c⊔a)⊔c \ (b⊔a)) := by
-    rw [sdiff_symm_diff', @sup_comm _ _ (a⊓b⊓c), symm_diff_sdiff]
+      rw [sdiff_symm_diff', @sup_comm _ _ (a⊓b⊓c), symm_diff_sdiff]
     _ = a \ (b⊔c)⊔b \ (a⊔c)⊔c \ (a⊔b)⊔a⊓b⊓c := by
-    ac_rfl
+      ac_rfl
     
 
 theorem symm_diff_assoc : a Δ b Δ c = a Δ (b Δ c) := by
@@ -163,11 +165,11 @@ theorem symm_diff_symm_diff_self' : a Δ b Δ a = b := by
 @[simp]
 theorem symm_diff_right_inj : a Δ b = a Δ c ↔ b = c := by
   constructor <;> intro h
-  ·
-    have H1 := congr_argₓ ((· Δ ·) a) h
+  · have H1 := congr_argₓ ((· Δ ·) a) h
     rwa [symm_diff_symm_diff_self, symm_diff_symm_diff_self] at H1
-  ·
-    rw [h]
+    
+  · rw [h]
+    
 
 @[simp]
 theorem symm_diff_left_inj : a Δ b = c Δ b ↔ a = c := by
@@ -175,10 +177,11 @@ theorem symm_diff_left_inj : a Δ b = c Δ b ↔ a = c := by
 
 @[simp]
 theorem symm_diff_eq_left : a Δ b = a ↔ b = ⊥ :=
-  calc a Δ b = a ↔ a Δ b = a Δ ⊥ := by
-    rw [symm_diff_bot]
+  calc
+    a Δ b = a ↔ a Δ b = a Δ ⊥ := by
+      rw [symm_diff_bot]
     _ ↔ b = ⊥ := by
-    rw [symm_diff_right_inj]
+      rw [symm_diff_right_inj]
     
 
 @[simp]
@@ -187,10 +190,11 @@ theorem symm_diff_eq_right : a Δ b = b ↔ a = ⊥ := by
 
 @[simp]
 theorem symm_diff_eq_bot : a Δ b = ⊥ ↔ a = b :=
-  calc a Δ b = ⊥ ↔ a Δ b = a Δ a := by
-    rw [symm_diff_self]
+  calc
+    a Δ b = ⊥ ↔ a Δ b = a Δ a := by
+      rw [symm_diff_self]
     _ ↔ a = b := by
-    rw [symm_diff_right_inj, eq_comm]
+      rw [symm_diff_right_inj, eq_comm]
     
 
 theorem Disjoint.disjoint_symm_diff_of_disjoint {a b c : α} (ha : Disjoint a c) (hb : Disjoint b c) :
@@ -233,17 +237,18 @@ theorem symm_diff_compl_self : a Δ aᶜ = ⊤ := by
   rw [symm_diff_comm, compl_symm_diff_self]
 
 theorem symm_diff_symm_diff_right' : a Δ (b Δ c) = a⊓b⊓c⊔a⊓bᶜ⊓cᶜ⊔aᶜ⊓b⊓cᶜ⊔aᶜ⊓bᶜ⊓c :=
-  calc a Δ (b Δ c) = a⊓(b⊓c⊔bᶜ⊓cᶜ)⊔(b⊓cᶜ⊔c⊓bᶜ)⊓aᶜ := by
-    rw [symm_diff_eq, compl_symm_diff, symm_diff_eq]
+  calc
+    a Δ (b Δ c) = a⊓(b⊓c⊔bᶜ⊓cᶜ)⊔(b⊓cᶜ⊔c⊓bᶜ)⊓aᶜ := by
+      rw [symm_diff_eq, compl_symm_diff, symm_diff_eq]
     _ = a⊓b⊓c⊔a⊓bᶜ⊓cᶜ⊔b⊓cᶜ⊓aᶜ⊔c⊓bᶜ⊓aᶜ := by
-    rw [inf_sup_left, inf_sup_right, ← sup_assoc, ← inf_assoc, ← inf_assoc]
+      rw [inf_sup_left, inf_sup_right, ← sup_assoc, ← inf_assoc, ← inf_assoc]
     _ = a⊓b⊓c⊔a⊓bᶜ⊓cᶜ⊔aᶜ⊓b⊓cᶜ⊔aᶜ⊓bᶜ⊓c := by
-    congr 1
-    ·
       congr 1
-      rw [inf_comm, inf_assoc]
-    ·
-      apply inf_left_right_swap
+      · congr 1
+        rw [inf_comm, inf_assoc]
+        
+      · apply inf_left_right_swap
+        
     
 
 end BooleanAlgebra

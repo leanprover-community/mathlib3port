@@ -23,7 +23,7 @@ Simon Hudon.
 
 open Native Tactic Interactive Lean.Parser
 
-/--  Clears all the hypotheses in `hyps`. The tactic fails if any of the `hyps`
+/-- Clears all the hypotheses in `hyps`. The tactic fails if any of the `hyps`
 is not a local or if the target depends on any of the `hyps`. It also fails if
 `hyps` contains duplicates.
 
@@ -49,8 +49,7 @@ unsafe def tactic.clear' (clear_dependent : Bool) (hyps : List expr) : tactic Un
 
 namespace Tactic.Interactive
 
-/-- 
-An improved version of the standard `clear` tactic. `clear` is sensitive to the
+/-- An improved version of the standard `clear` tactic. `clear` is sensitive to the
 order of its arguments: `clear x y` may fail even though both `x` and `y` could
 be cleared (if the type of `y` depends on `x`). `clear'` lifts this limitation.
 
@@ -67,8 +66,7 @@ unsafe def clear' (p : parse (many ident)) : tactic Unit := do
   let hyps ← p.mmap get_local
   tactic.clear' False hyps
 
-/-- 
-A variant of `clear'` which clears not only the given hypotheses, but also any
+/-- A variant of `clear'` which clears not only the given hypotheses, but also any
 other hypotheses depending on them.
 
 ```lean

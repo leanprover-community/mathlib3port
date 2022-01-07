@@ -33,9 +33,10 @@ variable {a b : α}
 instance [SemilatticeInf α] : SemilatticeInf (Ico a b) :=
   Subtype.semilatticeInf fun x y hx hy => ⟨le_inf hx.1 hy.1, lt_of_le_of_ltₓ inf_le_left hx.2⟩
 
-/--  `Ico a b` has a bottom element whenever `a < b`. -/
-def OrderBot [PartialOrderₓ α] (h : a < b) : OrderBot (Ico a b) :=
-  { bot := ⟨a, ⟨le_reflₓ a, h⟩⟩, bot_le := fun x => x.prop.1 }
+/-- `Ico a b` has a bottom element whenever `a < b`. -/
+def OrderBot [PartialOrderₓ α] (h : a < b) : OrderBot (Ico a b) where
+  bot := ⟨a, ⟨le_reflₓ a, h⟩⟩
+  bot_le := fun x => x.prop.1
 
 end Ico
 
@@ -53,9 +54,10 @@ variable {a b : α}
 instance [SemilatticeSup α] : SemilatticeSup (Ioc a b) :=
   Subtype.semilatticeSup fun x y hx hy => ⟨lt_of_lt_of_leₓ hx.1 le_sup_left, sup_le hx.2 hy.2⟩
 
-/--  `Ioc a b` has a top element whenever `a < b`. -/
-def OrderTop [PartialOrderₓ α] (h : a < b) : OrderTop (Ioc a b) :=
-  { top := ⟨b, ⟨h, le_reflₓ b⟩⟩, le_top := fun x => x.prop.2 }
+/-- `Ioc a b` has a top element whenever `a < b`. -/
+def OrderTop [PartialOrderₓ α] (h : a < b) : OrderTop (Ioc a b) where
+  top := ⟨b, ⟨h, le_reflₓ b⟩⟩
+  le_top := fun x => x.prop.2
 
 end Ioc
 
@@ -79,17 +81,17 @@ instance [SemilatticeSup α] : SemilatticeSup (Iic a) :=
 instance [Lattice α] : Lattice (Iic a) :=
   { Iic.semilattice_inf, Iic.semilattice_sup with }
 
--- failed to format: format: uncaught backtrack exception
-instance [ Preorderₓ α ] : OrderTop ( Iic a ) where top := ⟨ a , le_reflₓ a ⟩ le_top x := x.prop
+instance [Preorderₓ α] : OrderTop (Iic a) where
+  top := ⟨a, le_reflₓ a⟩
+  le_top := fun x => x.prop
 
 @[simp]
 theorem coe_top [PartialOrderₓ α] {a : α} : ↑(⊤ : Iic a) = a :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  [ Preorderₓ α ] [ OrderBot α ] : OrderBot ( Iic a )
-  where bot := ⟨ ⊥ , bot_le ⟩ bot_le ⟨ _ , _ ⟩ := Subtype.mk_le_mk . 2 bot_le
+instance [Preorderₓ α] [OrderBot α] : OrderBot (Iic a) where
+  bot := ⟨⊥, bot_le⟩
+  bot_le := fun ⟨_, _⟩ => Subtype.mk_le_mk.2 bot_le
 
 @[simp]
 theorem coe_bot [Preorderₓ α] [OrderBot α] {a : α} : ↑(⊥ : Iic a) = (⊥ : α) :=
@@ -118,17 +120,17 @@ instance [SemilatticeSup α] : SemilatticeSup (Ici a) :=
 instance [Lattice α] : Lattice (Ici a) :=
   { Ici.semilattice_inf, Ici.semilattice_sup with }
 
--- failed to format: format: uncaught backtrack exception
-instance [ Preorderₓ α ] : OrderBot ( Ici a ) where bot := ⟨ a , le_reflₓ a ⟩ bot_le x := x.prop
+instance [Preorderₓ α] : OrderBot (Ici a) where
+  bot := ⟨a, le_reflₓ a⟩
+  bot_le := fun x => x.prop
 
 @[simp]
 theorem coe_bot [PartialOrderₓ α] {a : α} : ↑(⊥ : Ici a) = a :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  [ Preorderₓ α ] [ OrderTop α ] : OrderTop ( Ici a )
-  where top := ⟨ ⊤ , le_top ⟩ le_top ⟨ _ , _ ⟩ := Subtype.mk_le_mk . 2 le_top
+instance [Preorderₓ α] [OrderTop α] : OrderTop (Ici a) where
+  top := ⟨⊤, le_top⟩
+  le_top := fun ⟨_, _⟩ => Subtype.mk_le_mk.2 le_top
 
 @[simp]
 theorem coe_top [Preorderₓ α] [OrderTop α] {a : α} : ↑(⊤ : Ici a) = (⊤ : α) :=
@@ -155,15 +157,17 @@ instance [SemilatticeSup α] {a b : α} : SemilatticeSup (Icc a b) :=
 instance [Lattice α] {a b : α} : Lattice (Icc a b) :=
   { Icc.semilattice_inf, Icc.semilattice_sup with }
 
-/--  `Icc a b` has a bottom element whenever `a ≤ b`. -/
-def OrderBot [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderBot (Icc a b) :=
-  { bot := ⟨a, ⟨le_reflₓ a, h⟩⟩, bot_le := fun x => x.prop.1 }
+/-- `Icc a b` has a bottom element whenever `a ≤ b`. -/
+def OrderBot [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderBot (Icc a b) where
+  bot := ⟨a, ⟨le_reflₓ a, h⟩⟩
+  bot_le := fun x => x.prop.1
 
-/--  `Icc a b` has a top element whenever `a ≤ b`. -/
-def OrderTop [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderTop (Icc a b) :=
-  { top := ⟨b, ⟨h, le_reflₓ b⟩⟩, le_top := fun x => x.prop.2 }
+/-- `Icc a b` has a top element whenever `a ≤ b`. -/
+def OrderTop [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderTop (Icc a b) where
+  top := ⟨b, ⟨h, le_reflₓ b⟩⟩
+  le_top := fun x => x.prop.2
 
-/--  `Icc a b` is a `bounded_order` whenever `a ≤ b`. -/
+/-- `Icc a b` is a `bounded_order` whenever `a ≤ b`. -/
 def BoundedOrder [Preorderₓ α] {a b : α} (h : a ≤ b) : BoundedOrder (Icc a b) :=
   { Icc.order_top h, Icc.order_bot h with }
 

@@ -37,7 +37,7 @@ open Complex
 
 variable {e : ℂ → ℂ} {e' : ℂ} {z : ℝ}
 
-/--  If a complex function is differentiable at a real point, then the induced real function is also
+/-- If a complex function is differentiable at a real point, then the induced real function is also
 differentiable at this point, with a derivative equal to the real part of the complex derivative. -/
 theorem HasStrictDerivAt.real_of_complex (h : HasStrictDerivAt e e' z) :
     HasStrictDerivAt (fun x : ℝ => (e x).re) e'.re z := by
@@ -47,7 +47,7 @@ theorem HasStrictDerivAt.real_of_complex (h : HasStrictDerivAt e e' z) :
   have C : HasStrictFderivAt re re_clm (e (of_real_clm z)) := re_clm.has_strict_fderiv_at
   simpa using (C.comp z (B.comp z A)).HasStrictDerivAt
 
-/--  If a complex function is differentiable at a real point, then the induced real function is also
+/-- If a complex function is differentiable at a real point, then the induced real function is also
 differentiable at this point, with a derivative equal to the real part of the complex derivative. -/
 theorem HasDerivAt.real_of_complex (h : HasDerivAt e e' z) : HasDerivAt (fun x : ℝ => (e x).re) e'.re z := by
   have A : HasFderivAt (coeₓ : ℝ → ℂ) of_real_clm z := of_real_clm.has_fderiv_at
@@ -58,11 +58,9 @@ theorem HasDerivAt.real_of_complex (h : HasDerivAt e e' z) : HasDerivAt (fun x :
 
 theorem TimesContDiffAt.real_of_complex {n : WithTop ℕ} (h : TimesContDiffAt ℂ n e z) :
     TimesContDiffAt ℝ n (fun x : ℝ => (e x).re) z := by
-  have A : TimesContDiffAt ℝ n (coeₓ : ℝ → ℂ) z
-  exact of_real_clm.times_cont_diff.times_cont_diff_at
+  have A : TimesContDiffAt ℝ n (coeₓ : ℝ → ℂ) z := of_real_clm.times_cont_diff.times_cont_diff_at
   have B : TimesContDiffAt ℝ n e z := h.restrict_scalars ℝ
-  have C : TimesContDiffAt ℝ n re (e z)
-  exact re_clm.times_cont_diff.times_cont_diff_at
+  have C : TimesContDiffAt ℝ n re (e z) := re_clm.times_cont_diff.times_cont_diff_at
   exact C.comp z (B.comp z A)
 
 theorem TimesContDiff.real_of_complex {n : WithTop ℕ} (h : TimesContDiff ℂ n e) :
@@ -72,15 +70,15 @@ theorem TimesContDiff.real_of_complex {n : WithTop ℕ} (h : TimesContDiff ℂ n
 variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E]
 
 theorem HasStrictDerivAt.complex_to_real_fderiv' {f : ℂ → E} {x : ℂ} {f' : E} (h : HasStrictDerivAt f f' x) :
-    HasStrictFderivAt f (re_clm.smulRight f'+I • im_clm.smulRight f') x := by
+    HasStrictFderivAt f (re_clm.smulRight f' + I • im_clm.smulRight f') x := by
   simpa only [Complex.restrict_scalars_one_smul_right'] using h.has_strict_fderiv_at.restrict_scalars ℝ
 
 theorem HasDerivAt.complex_to_real_fderiv' {f : ℂ → E} {x : ℂ} {f' : E} (h : HasDerivAt f f' x) :
-    HasFderivAt f (re_clm.smulRight f'+I • im_clm.smulRight f') x := by
+    HasFderivAt f (re_clm.smulRight f' + I • im_clm.smulRight f') x := by
   simpa only [Complex.restrict_scalars_one_smul_right'] using h.has_fderiv_at.restrict_scalars ℝ
 
 theorem HasDerivWithinAt.complex_to_real_fderiv' {f : ℂ → E} {s : Set ℂ} {x : ℂ} {f' : E}
-    (h : HasDerivWithinAt f f' s x) : HasFderivWithinAt f (re_clm.smulRight f'+I • im_clm.smulRight f') s x := by
+    (h : HasDerivWithinAt f f' s x) : HasFderivWithinAt f (re_clm.smulRight f' + I • im_clm.smulRight f') s x := by
   simpa only [Complex.restrict_scalars_one_smul_right'] using h.has_fderiv_within_at.restrict_scalars ℝ
 
 theorem HasStrictDerivAt.complex_to_real_fderiv {f : ℂ → ℂ} {f' x : ℂ} (h : HasStrictDerivAt f f' x) :
@@ -108,7 +106,7 @@ open_locale ComplexConjugate
 
 variable ()
 
-/--  A real differentiable function of the complex plane into some complex normed space `E` is
+/-- A real differentiable function of the complex plane into some complex normed space `E` is
     conformal at a point `z` if it is holomorphic at that point with a nonvanishing differential.
     This is a version of the Cauchy-Riemann equations. -/
 theorem DifferentiableAt.conformal_at {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedSpace ℂ E] {z : ℂ}
@@ -119,7 +117,7 @@ theorem DifferentiableAt.conformal_at {E : Type _} [NormedGroup E] [NormedSpace 
   contrapose! hf' with w
   simp [w]
 
-/--  A complex function is conformal if and only if the function is holomorphic or antiholomorphic
+/-- A complex function is conformal if and only if the function is holomorphic or antiholomorphic
     with a nonvanishing differential. -/
 theorem conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj {f : ℂ → ℂ} {z : ℂ} :
     ConformalAt f z ↔ (DifferentiableAt ℂ f z ∨ DifferentiableAt ℂ (f ∘ conj) (conj z)) ∧ fderiv ℝ f z ≠ 0 := by
@@ -129,8 +127,8 @@ theorem conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj {f : �
   intro h
   have h_diff := h.imp_symm fderiv_zero_of_not_differentiable_at
   apply or_congr
-  ·
-    rw [differentiable_at_iff_restrict_scalars ℝ h_diff]
+  · rw [differentiable_at_iff_restrict_scalars ℝ h_diff]
+    
   rw [← conj_conj z] at h_diff
   rw [differentiable_at_iff_restrict_scalars ℝ (h_diff.comp _ conj_cle.differentiable_at)]
   refine' exists_congr fun g => rfl.congr _

@@ -53,16 +53,14 @@ theorem map_fst' (f : α → γ) (g : β → δ) : Prod.fst ∘ map f g = f ∘ 
 theorem map_snd' (f : α → γ) (g : β → δ) : Prod.snd ∘ map f g = g ∘ Prod.snd :=
   funext $ map_snd f g
 
-/-- 
-Composing a `prod.map` with another `prod.map` is equal to
+/-- Composing a `prod.map` with another `prod.map` is equal to
 a single `prod.map` of composed functions.
 -/
 theorem map_comp_map {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) :
     Prod.map g g' ∘ Prod.map f f' = Prod.map (g ∘ f) (g' ∘ f') :=
   rfl
 
-/-- 
-Composing a `prod.map` with another `prod.map` is equal to
+/-- Composing a `prod.map` with another `prod.map` is equal to
 a single `prod.map` of composed functions, fully applied.
 -/
 theorem map_map {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) (x : α × γ) :
@@ -80,8 +78,8 @@ theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : 
 
 theorem mk.inj_right {α β : Type _} (b : β) : Function.Injective (fun a => Prod.mk a b : α → α × β) := by
   intro b₁ b₂ h
-  ·
-    simpa only [and_trueₓ, eq_self_iff_true, mk.inj_iff] using h
+  · simpa only [and_trueₓ, eq_self_iff_true, mk.inj_iff] using h
+    
 
 theorem ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 := by
   rw [← @mk.eta _ _ p, ← @mk.eta _ _ q, mk.inj_iff]
@@ -104,7 +102,7 @@ theorem fst_injective [Subsingleton β] : Function.Injective (@fst α β) := fun
 
 theorem snd_injective [Subsingleton α] : Function.Injective (@snd α β) := fun x y h => ext (Subsingleton.elimₓ _ _) h
 
-/--  Swap the factors of a product. `swap (a, b) = (b, a)` -/
+/-- Swap the factors of a product. `swap (a, b) = (b, a)` -/
 def swap : α × β → β × α := fun p => (p.2, p.1)
 
 @[simp]
@@ -163,7 +161,7 @@ theorem snd_eq_iff : ∀ {p : α × β} {x : β}, p.2 = x ↔ p = (p.1, x)
 theorem lex_def (r : α → α → Prop) (s : β → β → Prop) {p q : α × β} :
     Prod.Lex r s p q ↔ r p.1 q.1 ∨ p.1 = q.1 ∧ s p.2 q.2 :=
   ⟨fun h => by
-    cases h <;> simp , fun h =>
+    cases h <;> simp [*], fun h =>
     match p, q, h with
     | (a, b), (c, d), Or.inl h => lex.left _ _ h
     | (a, b), (c, d), Or.inr ⟨e, h⟩ => by

@@ -12,7 +12,7 @@ section ZipWith
 
 variable {α β γ : Type _} {n : ℕ} (f : α → β → γ)
 
-/--  Apply the function `f : α → β → γ` to each corresponding pair of elements from two vectors. -/
+/-- Apply the function `f : α → β → γ` to each corresponding pair of elements from two vectors. -/
 def zip_with : Vector α n → Vector β n → Vector γ n := fun x y =>
   ⟨List.zipWithₓ f x.1 y.1, by
     simp ⟩
@@ -38,7 +38,7 @@ theorem zip_with_tail (x : Vector α n) (y : Vector β n) :
 
 @[to_additive]
 theorem prod_mul_prod_eq_prod_zip_with [CommMonoidₓ α] (x y : Vector α n) :
-    (x.to_list.prod*y.to_list.prod) = (Vector.zipWith (·*·) x y).toList.Prod :=
+    x.to_list.prod * y.to_list.prod = (Vector.zipWith (· * ·) x y).toList.Prod :=
   List.prod_mul_prod_eq_prod_zip_with_of_length_eq x.to_list y.to_list
     ((to_list_length x).trans (to_list_length y).symm)
 

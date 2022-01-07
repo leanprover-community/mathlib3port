@@ -51,10 +51,11 @@ protected def bind [Mul ω] (x : WriterT ω m α) (f : α → WriterT ω m β) :
   ⟨do
     let x ← x.run
     let x' ← (f x.1).run
-    pure (x'.1, x.2*x'.2)⟩
+    pure (x'.1, x.2 * x'.2)⟩
 
--- failed to format: format: uncaught backtrack exception
-instance [ HasOne ω ] [ Mul ω ] : Monadₓ ( WriterT ω m ) where pure α := WriterT.pure bind α β := WriterT.bind
+instance [HasOne ω] [Mul ω] : Monadₓ (WriterT ω m) where
+  pure := fun α => WriterT.pure
+  bind := fun α β => WriterT.bind
 
 instance [Monoidₓ ω] [IsLawfulMonad m] : IsLawfulMonad (WriterT ω m) where
   id_map := by
@@ -87,17 +88,15 @@ instance m m' [Monadₓ m] [Monadₓ m'] : MonadFunctorₓ m m' (WriterT ω m) (
 protected def adapt {ω' : Type u} {α : Type u} (f : ω → ω') : WriterT ω m α → WriterT ω' m α := fun x =>
   ⟨Prod.map id f <$> x.run⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ε [ HasOne ω ] [ Monadₓ m ] [ MonadExcept ε m ] : MonadExcept ε ( WriterT ω m )
-  where throw α := WriterT.lift ∘ throw catch α x c := ⟨ catch x.run fun e => ( c e ) . run ⟩
+instance ε [HasOne ω] [Monadₓ m] [MonadExcept ε m] : MonadExcept ε (WriterT ω m) where
+  throw := fun α => WriterT.lift ∘ throw
+  catch := fun α x c => ⟨catch x.run fun e => (c e).run⟩
 
 end
 
 end WriterT
 
-/-- 
-An implementation of [MonadReader](
+/-- An implementation of [MonadReader](
 https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader-Class.html#t:MonadReader).
 It does not contain `local` because this function cannot be lifted using `monad_lift`.
 Instead, the `monad_reader_adapter` class provides the more general `adapt_reader` function.
@@ -115,29 +114,23 @@ class MonadWriter (ω : outParam (Type u)) (m : Type u → Type v) where
 
 export MonadWriter ()
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { ω : Type u } { m : Type u → Type v } [ Monadₓ m ] : MonadWriter ω ( WriterT ω m )
-  where tell := WriterT.tell listen α := WriterT.listen pass α := WriterT.pass
+instance {ω : Type u} {m : Type u → Type v} [Monadₓ m] : MonadWriter ω (WriterT ω m) where
+  tell := WriterT.tell
+  listen := fun α => WriterT.listen
+  pass := fun α => WriterT.pass
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { ω ρ : Type u } { m : Type u → Type v } [ Monadₓ m ] [ MonadWriter ω m ] : MonadWriter ω ( ReaderTₓ ρ m )
-  where
-    tell x := monad_lift ( tell x : m PUnit )
-      listen α ⟨ cmd ⟩ := ⟨ fun r => listen ( cmd r ) ⟩
-      pass α ⟨ cmd ⟩ := ⟨ fun r => pass ( cmd r ) ⟩
+instance {ω ρ : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (ReaderTₓ ρ m) where
+  tell := fun x => monad_lift (tell x : m PUnit)
+  listen := fun α ⟨cmd⟩ => ⟨fun r => listen (cmd r)⟩
+  pass := fun α ⟨cmd⟩ => ⟨fun r => pass (cmd r)⟩
 
 def swapRight {α β γ} : (α × β) × γ → (α × γ) × β
   | ⟨⟨x, y⟩, z⟩ => ((x, z), y)
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { ω σ : Type u } { m : Type u → Type v } [ Monadₓ m ] [ MonadWriter ω m ] : MonadWriter ω ( StateTₓ σ m )
-  where
-    tell x := monad_lift ( tell x : m PUnit )
-      listen α ⟨ cmd ⟩ := ⟨ fun r => swapRight <$> listen ( cmd r ) ⟩
-      pass α ⟨ cmd ⟩ := ⟨ fun r => pass ( swapRight <$> cmd r ) ⟩
+instance {ω σ : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (StateTₓ σ m) where
+  tell := fun x => monad_lift (tell x : m PUnit)
+  listen := fun α ⟨cmd⟩ => ⟨fun r => swapRight <$> listen (cmd r)⟩
+  pass := fun α ⟨cmd⟩ => ⟨fun r => pass (swapRight <$> cmd r)⟩
 
 open Function
 
@@ -145,27 +138,21 @@ def ExceptTₓ.passAux {ε α ω} : Except ε (α × (ω → ω)) → Except ε 
   | Except.error a => (Except.error a, id)
   | Except.ok (x, y) => (Except.ok x, y)
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { ω ε : Type u } { m : Type u → Type v } [ Monadₓ m ] [ MonadWriter ω m ] : MonadWriter ω ( ExceptTₓ ε m )
-  where
-    tell x := monad_lift ( tell x : m PUnit )
-      listen α ⟨ cmd ⟩ := ⟨ ( uncurry fun x y => flip Prod.mk y <$> x ) <$> listen cmd ⟩
-      pass α ⟨ cmd ⟩ := ⟨ pass ( ExceptTₓ.passAux <$> cmd ) ⟩
+instance {ω ε : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (ExceptTₓ ε m) where
+  tell := fun x => monad_lift (tell x : m PUnit)
+  listen := fun α ⟨cmd⟩ => ⟨(uncurry fun x y => flip Prod.mk y <$> x) <$> listen cmd⟩
+  pass := fun α ⟨cmd⟩ => ⟨pass (ExceptTₓ.passAux <$> cmd)⟩
 
 def OptionTₓ.passAux {α ω} : Option (α × (ω → ω)) → Option α × (ω → ω)
   | none => (none, id)
   | some (x, y) => (some x, y)
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { ω : Type u } { m : Type u → Type v } [ Monadₓ m ] [ MonadWriter ω m ] : MonadWriter ω ( OptionTₓ m )
-  where
-    tell x := monad_lift ( tell x : m PUnit )
-      listen α ⟨ cmd ⟩ := ⟨ ( uncurry fun x y => flip Prod.mk y <$> x ) <$> listen cmd ⟩
-      pass α ⟨ cmd ⟩ := ⟨ pass ( OptionTₓ.passAux <$> cmd ) ⟩
+instance {ω : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (OptionTₓ m) where
+  tell := fun x => monad_lift (tell x : m PUnit)
+  listen := fun α ⟨cmd⟩ => ⟨(uncurry fun x y => flip Prod.mk y <$> x) <$> listen cmd⟩
+  pass := fun α ⟨cmd⟩ => ⟨pass (OptionTₓ.passAux <$> cmd)⟩
 
-/--  Adapt a monad stack, changing the type of its top-most environment.
+/-- Adapt a monad stack, changing the type of its top-most environment.
 
 This class is comparable to
 [Control.Lens.Magnify](https://hackage.haskell.org/package/lens-4.15.4/docs/Control-Lens-Zoom.html#t:Magnify),
@@ -188,7 +175,7 @@ section
 
 variable {ω ω' : Type u} {m m' : Type u → Type v}
 
-/--  Transitivity.
+/-- Transitivity.
 
 This instance generates the type-class problem with a metavariable argument (which is why this
 is marked as `[nolint dangerous_instance]`).
@@ -209,11 +196,12 @@ end
 instance (ω : Type u) m out [MonadRun out m] : MonadRun (fun α => out (α × ω)) (WriterT ω m) :=
   ⟨fun α x => run $ x.run⟩
 
-/--  reduce the equivalence between two writer monads to the equivalence between
+/-- reduce the equivalence between two writer monads to the equivalence between
 their underlying monad -/
 def WriterT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ ω₁ : Type u₀} {α₂ ω₂ : Type u₁}
-    (F : m₁ (α₁ × ω₁) ≃ m₂ (α₂ × ω₂)) : WriterT ω₁ m₁ α₁ ≃ WriterT ω₂ m₂ α₂ :=
-  { toFun := fun ⟨f⟩ => ⟨F f⟩, invFun := fun ⟨f⟩ => ⟨F.symm f⟩,
-    left_inv := fun ⟨f⟩ => congr_argₓ WriterT.mk $ F.left_inv _,
-    right_inv := fun ⟨f⟩ => congr_argₓ WriterT.mk $ F.right_inv _ }
+    (F : m₁ (α₁ × ω₁) ≃ m₂ (α₂ × ω₂)) : WriterT ω₁ m₁ α₁ ≃ WriterT ω₂ m₂ α₂ where
+  toFun := fun ⟨f⟩ => ⟨F f⟩
+  invFun := fun ⟨f⟩ => ⟨F.symm f⟩
+  left_inv := fun ⟨f⟩ => congr_argₓ WriterT.mk $ F.left_inv _
+  right_inv := fun ⟨f⟩ => congr_argₓ WriterT.mk $ F.right_inv _
 

@@ -13,42 +13,36 @@ namespace GeneralizedContinuedFraction
 
 variable {K : Type _} {g : GeneralizedContinuedFraction K} {n m : ℕ}
 
-/--  If a gcf terminated at position `n`, it also terminated at `m ≥ n`.-/
+/-- If a gcf terminated at position `n`, it also terminated at `m ≥ n`.-/
 theorem terminated_stable (n_le_m : n ≤ m) (terminated_at_n : g.terminated_at n) : g.terminated_at m :=
   g.s.terminated_stable n_le_m terminated_at_n
 
 variable [DivisionRing K]
 
 theorem continuants_aux_stable_step_of_terminated (terminated_at_n : g.terminated_at n) :
-    g.continuants_aux (n+2) = g.continuants_aux (n+1) := by
+    g.continuants_aux (n + 2) = g.continuants_aux (n + 1) := by
   rw [terminated_at_iff_s_none] at terminated_at_n
   simp only [terminated_at_n, continuants_aux]
 
-theorem continuants_aux_stable_of_terminated (succ_n_le_m : (n+1) ≤ m) (terminated_at_n : g.terminated_at n) :
-    g.continuants_aux m = g.continuants_aux (n+1) := by
+theorem continuants_aux_stable_of_terminated (succ_n_le_m : n + 1 ≤ m) (terminated_at_n : g.terminated_at n) :
+    g.continuants_aux m = g.continuants_aux (n + 1) := by
   induction' succ_n_le_m with m succ_n_le_m IH
-  ·
-    rfl
-  ·
-    have : g.continuants_aux (m+1) = g.continuants_aux m := by
-      ·
-        have : n ≤ m - 1
-        exact Nat.le_pred_of_lt succ_n_le_m
-        have : g.terminated_at (m - 1)
-        exact terminated_stable this terminated_at_n
-        have stable_step : g.continuants_aux ((m - 1)+2) = g.continuants_aux ((m - 1)+1)
-        exact continuants_aux_stable_step_of_terminated this
-        have one_le_m : 1 ≤ m
-        exact Nat.one_le_of_lt succ_n_le_m
-        have : ((m - 1)+2) = (m+2) - 1
-        exact tsub_add_eq_add_tsub one_le_m
-        have : ((m - 1)+1) = (m+1) - 1
-        exact tsub_add_eq_add_tsub one_le_m
-        simpa [*] using stable_step
+  · rfl
+    
+  · have : g.continuants_aux (m + 1) = g.continuants_aux m := by
+      have : n ≤ m - 1 := Nat.le_pred_of_lt succ_n_le_m
+      have : g.terminated_at (m - 1) := terminated_stable this terminated_at_n
+      have stable_step : g.continuants_aux (m - 1 + 2) = g.continuants_aux (m - 1 + 1) :=
+        continuants_aux_stable_step_of_terminated this
+      have one_le_m : 1 ≤ m := Nat.one_le_of_lt succ_n_le_m
+      have : m - 1 + 2 = m + 2 - 1 := tsub_add_eq_add_tsub one_le_m
+      have : m - 1 + 1 = m + 1 - 1 := tsub_add_eq_add_tsub one_le_m
+      simpa [*] using stable_step
     exact Eq.trans this IH
+    
 
 theorem convergents'_aux_stable_step_of_terminated {s : Seqₓₓ $ pair K} (terminated_at_n : s.terminated_at n) :
-    convergents'_aux s (n+1) = convergents'_aux s n := by
+    convergents'_aux s (n + 1) = convergents'_aux s n := by
   change s.nth n = none at terminated_at_n
   induction' n with n IH generalizing s
   case nat.zero =>
@@ -65,21 +59,20 @@ theorem convergents'_aux_stable_step_of_terminated {s : Seqₓₓ $ pair K} (ter
 theorem convergents'_aux_stable_of_terminated {s : Seqₓₓ $ pair K} (n_le_m : n ≤ m)
     (terminated_at_n : s.terminated_at n) : convergents'_aux s m = convergents'_aux s n := by
   induction' n_le_m with m n_le_m IH generalizing s
-  ·
-    rfl
-  ·
-    cases' s_head_eq : s.head with gp_head
+  · rfl
+    
+  · cases' s_head_eq : s.head with gp_head
     case option.none =>
       cases n <;> simp only [convergents'_aux, s_head_eq]
     case option.some =>
-      have : convergents'_aux s (n+1) = convergents'_aux s n
-      exact convergents'_aux_stable_step_of_terminated terminated_at_n
+      have : convergents'_aux s (n + 1) = convergents'_aux s n :=
+        convergents'_aux_stable_step_of_terminated terminated_at_n
       rw [← this]
       have : s.tail.terminated_at n := by
         simpa only [Seqₓₓ.TerminatedAt, Seqₓₓ.nth_tail] using s.le_stable n.le_succ terminated_at_n
-      have : convergents'_aux s.tail m = convergents'_aux s.tail n
-      exact IH this
+      have : convergents'_aux s.tail m = convergents'_aux s.tail n := IH this
       simp only [convergents'_aux, s_head_eq, this]
+    
 
 theorem continuants_stable_of_terminated (n_le_m : n ≤ m) (terminated_at_n : g.terminated_at n) :
     g.continuants m = g.continuants n := by

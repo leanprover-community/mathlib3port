@@ -54,7 +54,7 @@ variable {α R : Type _} [MeasurableSpace α] [LinearOrderedSemiring R] [FloorSe
 
 theorem Nat.measurable_floor : Measurable (Nat.floor : R → ℕ) :=
   measurable_to_encodable $ fun n => by
-    cases eq_or_ne ⌊n⌋₊ 0 <;> simp [Nat.preimage_floor_of_ne_zero]
+    cases eq_or_ne ⌊n⌋₊ 0 <;> simp [*, Nat.preimage_floor_of_ne_zero]
 
 @[measurability]
 theorem Measurable.nat_floor (hf : Measurable f) : Measurable fun x => ⌊f x⌋₊ :=
@@ -62,7 +62,7 @@ theorem Measurable.nat_floor (hf : Measurable f) : Measurable fun x => ⌊f x⌋
 
 theorem Nat.measurable_ceil : Measurable (Nat.ceil : R → ℕ) :=
   measurable_to_encodable $ fun n => by
-    cases eq_or_ne ⌈n⌉₊ 0 <;> simp [Nat.preimage_ceil_of_ne_zero]
+    cases eq_or_ne ⌈n⌉₊ 0 <;> simp [*, Nat.preimage_ceil_of_ne_zero]
 
 @[measurability]
 theorem Measurable.nat_ceil (hf : Measurable f) : Measurable fun x => ⌈f x⌉₊ :=

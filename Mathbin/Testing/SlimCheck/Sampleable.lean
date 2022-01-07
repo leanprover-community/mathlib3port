@@ -97,17 +97,17 @@ variable (α : Type u)
 
 local infixl:50 " ≺ " => HasWellFounded.R
 
-/--  `sizeof_lt x y` compares the sizes of `x` and `y`. -/
+/-- `sizeof_lt x y` compares the sizes of `x` and `y`. -/
 def sizeof_lt {α} [SizeOf α] (x y : α) :=
   sizeof x < sizeof y
 
-/--  `shrink_fn α` is the type of functions that shrink an
+/-- `shrink_fn α` is the type of functions that shrink an
 argument of type `α` -/
 @[reducible]
 def shrink_fn (α : Type _) [SizeOf α] :=
   ∀ x : α, LazyList { y : α // sizeof_lt y x }
 
-/--  `sampleable α` provides ways of creating examples of type `α`,
+/-- `sampleable α` provides ways of creating examples of type `α`,
 and given such an example `x : α`, gives us a way to shrink it
 and find simpler examples.  -/
 class sampleable where
@@ -119,7 +119,7 @@ attribute [instance] hasWellFoundedOfHasSizeof defaultHasSizeof
 
 attribute [instance] sampleable.wf
 
-/--  `sampleable_functor F` makes it possible to create samples of and
+/-- `sampleable_functor F` makes it possible to create samples of and
 shrink `F α` given a sampling function and a shrinking function for
 arbitrary `α` -/
 class sampleable_functor (F : Type u → Type v) [Functor F] where
@@ -128,7 +128,7 @@ class sampleable_functor (F : Type u → Type v) [Functor F] where
   shrink : ∀ α [SizeOf α], shrink_fn α → shrink_fn (F α)
   pRepr : ∀ α, HasRepr α → HasRepr (F α)
 
-/--  `sampleable_bifunctor F` makes it possible to create samples of
+/-- `sampleable_bifunctor F` makes it possible to create samples of
 and shrink `F α β` given a sampling function and a shrinking function
 for arbitrary `α` and `β` -/
 class sampleable_bifunctor (F : Type u → Type v → Type w) [Bifunctor F] where
@@ -139,12 +139,12 @@ class sampleable_bifunctor (F : Type u → Type v → Type w) [Bifunctor F] wher
 
 export Sampleable (sample shrink)
 
-/--  This function helps infer the proxy representation and
+/-- This function helps infer the proxy representation and
 interpretation in `sampleable_ext` instances. -/
 unsafe def sampleable.mk_trivial_interp : tactic Unit :=
   tactic.refine (pquote.1 id)
 
-/--  `sampleable_ext` generalizes the behavior of `sampleable`
+/-- `sampleable_ext` generalizes the behavior of `sampleable`
 and makes it possible to express instances for types that
 do not lend themselves to introspection, such as `ℕ → ℕ`.
 If we test a quantification over functions the
@@ -213,7 +213,7 @@ instance sampleable_ext.bifunctor {α β} {F} [Bifunctor F] [sampleable_bifuncto
 
 end Prio
 
-/--  `nat.shrink' k n` creates a list of smaller natural numbers by
+/-- `nat.shrink' k n` creates a list of smaller natural numbers by
 successively dividing `n` by 2 and subtracting the difference from
 `k`. For example, `nat.shrink 100 = [50, 75, 88, 94, 97, 99]`. -/
 def nat.shrink' (k : ℕ) :
@@ -223,7 +223,7 @@ def nat.shrink' (k : ℕ) :
     else
       have h₂ : 0 < n := by
         linarith
-      have : (1*n) / 2 < n :=
+      have : 1 * n / 2 < n :=
         Nat.div_lt_of_lt_mul
           (Nat.mul_lt_mul_of_pos_rightₓ
             (by
@@ -238,14 +238,14 @@ def nat.shrink' (k : ℕ) :
       have h₁ : k - m < k := Nat.sub_ltₓ (lt_of_lt_of_leₓ h₂ hn) h₃
       nat.shrink' m h₀ (⟨k - m, h₁⟩ :: ls)
 
-/--  `nat.shrink n` creates a list of smaller natural numbers by
+/-- `nat.shrink n` creates a list of smaller natural numbers by
 successively dividing by 2 and subtracting the difference from
 `n`. For example, `nat.shrink 100 = [50, 75, 88, 94, 97, 99]`. -/
 def nat.shrink (n : ℕ) : List { m : ℕ // HasWellFounded.R m n } :=
   if h : n > 0 then
     have : ∀ k, 1 < k → n / k < n := fun k hk =>
       Nat.div_lt_of_lt_mul
-        (suffices (1*n) < k*n by
+        (suffices 1 * n < k * n by
           simpa
         Nat.mul_lt_mul_of_pos_rightₓ hk h)
     ⟨n / 11,
@@ -261,61 +261,30 @@ def nat.shrink (n : ℕ) : List { m : ℕ // HasWellFounded.R m n } :=
 
 open Gen
 
--- failed to format: format: uncaught backtrack exception
-/--
-    Transport a `sampleable` instance from a type `α` to a type `β` using
-    functions between the two, going in both directions.
-    
-    Function `g` is used to define the well-founded order that
-    `shrink` is expected to follow.
-    -/
-  def
-    sampleable.lift
-    ( α : Type u )
-        { β : Type u }
-        [ sampleable α ]
-        ( f : α → β )
-        ( g : β → α )
-        ( h : ∀ a : α , sizeof ( g ( f a ) ) ≤ sizeof a )
-      : sampleable β
-    :=
-      {
-        wf := ⟨ sizeof ∘ g ⟩ ,
-          sample := f <$> sample α ,
-          shrink
-            :=
-            fun
-              x
-                =>
-                have
-                  : ∀ a , sizeof a < sizeof ( g x ) → sizeof ( g ( f a ) ) < sizeof ( g x )
-                    :=
-                    by introv h' <;> solve_by_elim [ lt_of_le_of_ltₓ ]
-                  Subtype.map f this <$> shrink ( g x )
-        }
+/-- Transport a `sampleable` instance from a type `α` to a type `β` using
+functions between the two, going in both directions.
 
--- failed to format: format: uncaught backtrack exception
-instance
-  nat.sampleable
-  : sampleable ℕ
-  where
-    sample
-        :=
-        sized
-          $
-          fun
-            sz
-              =>
-              freq
-                [
-                    ( 1 , coeₓ <$> choose_any ( Finₓ $ succ ( sz ^ 3 ) ) )
-                      ,
-                      ( 3 , coeₓ <$> choose_any ( Finₓ $ succ sz ) )
-                    ]
-                  ( by decide )
-      shrink x := LazyList.ofList $ nat.shrink x
+Function `g` is used to define the well-founded order that
+`shrink` is expected to follow.
+-/
+def sampleable.lift (α : Type u) {β : Type u} [sampleable α] (f : α → β) (g : β → α)
+    (h : ∀ a : α, sizeof (g (f a)) ≤ sizeof a) : sampleable β where
+  wf := ⟨sizeof ∘ g⟩
+  sample := f <$> sample α
+  shrink := fun x =>
+    have : ∀ a, sizeof a < sizeof (g x) → sizeof (g (f a)) < sizeof (g x) := by
+      introv h' <;> solve_by_elim [lt_of_le_of_ltₓ]
+    Subtype.map f this <$> shrink (g x)
 
-/--  `iterate_shrink p x` takes a decidable predicate `p` and a
+instance nat.sampleable : sampleable ℕ where
+  sample :=
+    sized $ fun sz =>
+      freq [(1, coeₓ <$> choose_any (Finₓ $ succ (sz ^ 3))), (3, coeₓ <$> choose_any (Finₓ $ succ sz))]
+        (by
+          decide)
+  shrink := fun x => LazyList.ofList $ nat.shrink x
+
+/-- `iterate_shrink p x` takes a decidable predicate `p` and a
 value `x` of some sampleable type and recursively shrinks `x`.
 It first calls `shrink x` to get a list of candidate sample,
 finds the first that satisfies `p` and recursively tries
@@ -336,61 +305,51 @@ instance pnat.sampleable : sampleable ℕ+ :=
   sampleable.lift ℕ Nat.succPnat Pnat.natPred $ fun a => by
     unfold_wf <;> simp only [Pnat.natPred, succ_pnat, Pnat.mk_coe, tsub_zero, succ_sub_succ_eq_sub]
 
-/--  Redefine `sizeof` for `int` to make it easier to use with `nat` -/
+/-- Redefine `sizeof` for `int` to make it easier to use with `nat` -/
 def int.has_sizeof : SizeOf ℤ :=
   ⟨Int.natAbs⟩
 
 attribute [local instance] int.has_sizeof
 
--- failed to format: format: uncaught backtrack exception
-instance
-  int.sampleable
-  : sampleable ℤ
-  where
-    wf := _
-      sample
-        :=
-        sized
-          $
-          fun
-            sz
-              =>
-              freq
-                [
-                    (
-                        1
-                          ,
-                            Subtype.val
-                              <$>
-                              choose ( - ( sz ^ 3 ) + 1 : ℤ ) ( ( sz ^ 3 ) + 1 ) ( neg_le_self ( by decide ) )
-                        )
-                      ,
-                      ( 3 , Subtype.val <$> choose ( - sz + 1 ) ( sz + 1 ) ( neg_le_self ( by decide ) ) )
-                    ]
-                  ( by decide )
-      shrink
-        x
-        :=
-        LazyList.ofList
-          $
-          ( nat.shrink $ Int.natAbs x ) . bind
-            $
-            fun
-              ⟨ y , h ⟩
-                =>
-                [ ⟨ y , h ⟩ , ⟨ - y , by dsimp [ sizeof , SizeOf.sizeof ] <;> rw [ Int.nat_abs_neg ] <;> exact h ⟩ ]
+instance int.sampleable : sampleable ℤ where
+  wf := _
+  sample :=
+    sized $ fun sz =>
+      freq
+        [(1,
+            Subtype.val <$>
+              choose (-(sz ^ 3 + 1) : ℤ) (sz ^ 3 + 1)
+                (neg_le_self
+                  (by
+                    decide))),
+          (3,
+            Subtype.val <$>
+              choose (-(sz + 1)) (sz + 1)
+                (neg_le_self
+                  (by
+                    decide)))]
+        (by
+          decide)
+  shrink := fun x =>
+    LazyList.ofList $
+      (nat.shrink $ Int.natAbs x).bind $ fun ⟨y, h⟩ =>
+        [⟨y, h⟩,
+          ⟨-y, by
+            dsimp [sizeof, SizeOf.sizeof] <;> rw [Int.nat_abs_neg] <;> exact h⟩]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  bool.sampleable
-  : sampleable Bool
-  where
-    wf := ⟨ fun b => if b then 1 else 0 ⟩
-      sample := do let x ← choose_any Bool return x
-      shrink b := if h : b then LazyList.singleton ⟨ ff , by cases h <;> unfold_wf ⟩ else LazyList.nil
+instance bool.sampleable : sampleable Bool where
+  wf := ⟨fun b => if b then 1 else 0⟩
+  sample := do
+    let x ← choose_any Bool
+    return x
+  shrink := fun b =>
+    if h : b then
+      LazyList.singleton
+        ⟨ff, by
+          cases h <;> unfold_wf⟩
+    else LazyList.nil
 
-/-- 
-Provided two shrinking functions `prod.shrink` shrinks a pair `(x, y)` by
+/-- Provided two shrinking functions `prod.shrink` shrinks a pair `(x, y)` by
 first shrinking `x` and pairing the results with `y` and then shrinking
 `y` and pairing the results with `x`.
 
@@ -410,362 +369,19 @@ def prod.shrink {α β} [SizeOf α] [SizeOf β] (shr_a : shrink_fn α) (shr_b : 
           dsimp [sizeof_lt] <;> unfold_wf <;> apply h
     xs₀.append xs₁
 
--- failed to format: format: uncaught backtrack exception
-instance
-  prod.sampleable
-  : sampleable_bifunctor .{ u , v } Prod
-  where
-    wf := _
-      sample
-        α β sama samb
-        :=
-        do
-          let ⟨ x ⟩ ← ( Uliftable.up $ sama : gen ( Ulift .{ max u v } α ) )
-            let ⟨ y ⟩ ← ( Uliftable.up $ samb : gen ( Ulift .{ max u v } β ) )
-            pure ( x , y )
-      shrink := @ prod.shrink
-      pRepr := @ Prod.hasRepr
+instance prod.sampleable : sampleable_bifunctor.{u, v} Prod where
+  wf := _
+  sample := fun α β sama samb => do
+    let ⟨x⟩ ← (Uliftable.up $ sama : gen (Ulift.{max u v} α))
+    let ⟨y⟩ ← (Uliftable.up $ samb : gen (Ulift.{max u v} β))
+    pure (x, y)
+  shrink := @prod.shrink
+  pRepr := @Prod.hasRepr
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.instance
-  (Term.attrKind [])
-  "instance"
-  []
-  [(Command.declId `sigma.sampleable [])]
-  (Command.declSig
-   [(Term.implicitBinder "{" [`α `β] [] "}")
-    (Term.instBinder "[" [] (Term.app `sampleable [`α]) "]")
-    (Term.instBinder "[" [] (Term.app `sampleable [`β]) "]")]
-   (Term.typeSpec
-    ":"
-    (Term.app
-     `sampleable
-     [(Init.Data.Sigma.Basic.«termΣ_,_»
-       "Σ"
-       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent "_")] [":" `α]))
-       ", "
-       `β)])))
-  (Command.declValSimple
-   ":="
-   («term_$__»
-    (Term.app
-     `sampleable.lift
-     [(«term_×_» `α "×" `β)
-      (Term.fun
-       "fun"
-       (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.anonymousCtor "⟨" [`x "," `y] "⟩")))
-      (Term.fun
-       "fun"
-       (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.anonymousCtor "⟨" [`x "," `y] "⟩")))])
-    "$"
-    (Term.fun
-     "fun"
-     (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.app `le_reflₓ [(Term.hole "_")]))))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_$__»
-   (Term.app
-    `sampleable.lift
-    [(«term_×_» `α "×" `β)
-     (Term.fun
-      "fun"
-      (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.anonymousCtor "⟨" [`x "," `y] "⟩")))
-     (Term.fun
-      "fun"
-      (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.anonymousCtor "⟨" [`x "," `y] "⟩")))])
-   "$"
-   (Term.fun
-    "fun"
-    (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.app `le_reflₓ [(Term.hole "_")]))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun
-   "fun"
-   (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.app `le_reflₓ [(Term.hole "_")])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `le_reflₓ [(Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `le_reflₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.simpleBinder'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor "⟨" [`x "," `y] "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `y
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-  (Term.app
-   `sampleable.lift
-   [(«term_×_» `α "×" `β)
-    (Term.fun
-     "fun"
-     (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.anonymousCtor "⟨" [`x "," `y] "⟩")))
-    (Term.fun
-     "fun"
-     (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.anonymousCtor "⟨" [`x "," `y] "⟩")))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun
-   "fun"
-   (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.anonymousCtor "⟨" [`x "," `y] "⟩")))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor "⟨" [`x "," `y] "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `y
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.simpleBinder'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor "⟨" [`x "," `y] "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `y
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-  (Term.fun
-   "fun"
-   (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.anonymousCtor "⟨" [`x "," `y] "⟩")))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor "⟨" [`x "," `y] "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `y
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.simpleBinder'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor "⟨" [`x "," `y] "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `y
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Term.fun
-   "fun"
-   (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.anonymousCtor "⟨" [`x "," `y] "⟩")))
-  []]
- ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_×_»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_×_»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_×_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_×_»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_×_»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  («term_×_» `α "×" `β)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_×_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `β
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 35 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 35, term))
-  `α
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 36 >? 1024, (none, [anonymous]) <=? (some 35, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 35, (some 35, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_×_» `α "×" `β) []] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `sampleable.lift
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 10, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Term.app
-   `sampleable.lift
-   [(Term.paren "(" [(«term_×_» `α "×" `β) []] ")")
-    (Term.paren
-     "("
-     [(Term.fun
-       "fun"
-       (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.anonymousCtor "⟨" [`x "," `y] "⟩")))
-      []]
-     ")")
-    (Term.fun
-     "fun"
-     (Term.basicFun [(Term.anonymousCtor "⟨" [`x "," `y] "⟩")] "=>" (Term.anonymousCtor "⟨" [`x "," `y] "⟩")))])
-  []]
- ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Term.app
-   `sampleable
-   [(Init.Data.Sigma.Basic.«termΣ_,_»
-     "Σ"
-     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent "_")] [":" `α]))
-     ", "
-     `β)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Init.Data.Sigma.Basic.«termΣ_,_»
-   "Σ"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent "_")] [":" `α]))
-   ", "
-   `β)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `β
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-instance
-  sigma.sampleable
-  { α β } [ sampleable α ] [ sampleable β ] : sampleable Σ _ : α , β
-  := sampleable.lift α × β fun ⟨ x , y ⟩ => ⟨ x , y ⟩ fun ⟨ x , y ⟩ => ⟨ x , y ⟩ $ fun ⟨ x , y ⟩ => le_reflₓ _
+instance sigma.sampleable {α β} [sampleable α] [sampleable β] : sampleable (Σ _ : α, β) :=
+  (sampleable.lift (α × β) (fun ⟨x, y⟩ => ⟨x, y⟩) fun ⟨x, y⟩ => ⟨x, y⟩) $ fun ⟨x, y⟩ => le_reflₓ _
 
-/--  shrinking function for sum types -/
+/-- shrinking function for sum types -/
 def sum.shrink {α β} [SizeOf α] [SizeOf β] (shrink_α : shrink_fn α) (shrink_β : shrink_fn β) : shrink_fn (Sum α β)
   | Sum.inr x =>
     (shrink_β x).map $
@@ -776,58 +392,51 @@ def sum.shrink {α β} [SizeOf α] [SizeOf β] (shrink_α : shrink_fn α) (shrin
       Subtype.map Sum.inl $ fun a => by
         dsimp [sizeof_lt] <;> unfold_wf <;> solve_by_elim
 
--- failed to format: format: uncaught backtrack exception
-instance
-  sum.sampleable
-  : sampleable_bifunctor .{ u , v } Sum
-  where
-    wf := _
-      sample
-        α : Type u β : Type v sam_α sam_β
-        :=
-        @ Uliftable.upMap gen .{ u } gen .{ max u v } _ _ _ _ ( @ Sum.inl α β ) sam_α
-          <|>
-          @ Uliftable.upMap gen .{ v } gen .{ max v u } _ _ _ _ ( @ Sum.inr α β ) sam_β
-      shrink α β Iα Iβ shr_α shr_β := @ sum.shrink _ _ Iα Iβ shr_α shr_β
-      pRepr := @ Sum.hasRepr
+instance sum.sampleable : sampleable_bifunctor.{u, v} Sum where
+  wf := _
+  sample := fun α : Type u β : Type v sam_α sam_β =>
+    @Uliftable.upMap gen.{u} gen.{max u v} _ _ _ _ (@Sum.inl α β) sam_α <|>
+      @Uliftable.upMap gen.{v} gen.{max v u} _ _ _ _ (@Sum.inr α β) sam_β
+  shrink := fun α β Iα Iβ shr_α shr_β => @sum.shrink _ _ Iα Iβ shr_α shr_β
+  pRepr := @Sum.hasRepr
 
 instance rat.sampleable : sampleable ℚ :=
   (sampleable.lift (ℤ × ℕ+) (fun x => Prod.casesOn x Rat.mkPnat) fun r => (r.num, ⟨r.denom, r.pos⟩)) $ by
     intro i
     rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp [Rat.mkPnat]
     mono*
-    ·
-      rw [← Int.coe_nat_le, ← Int.abs_eq_nat_abs, ← Int.abs_eq_nat_abs]
+    · rw [← Int.coe_nat_le, ← Int.abs_eq_nat_abs, ← Int.abs_eq_nat_abs]
       apply Int.abs_div_le_abs
-    ·
-      change _ - 1 ≤ y - 1
+      
+    · change _ - 1 ≤ y - 1
       apply tsub_le_tsub_right
       apply Nat.div_le_of_le_mulₓ
-      suffices (1*y) ≤ x.nat_abs.gcd y*y by
+      suffices 1 * y ≤ x.nat_abs.gcd y * y by
         simpa
       apply Nat.mul_le_mul_rightₓ
       apply gcd_pos_of_pos_right _ hy
+      
 
-/--  `sampleable_char` can be specialized into customized `sampleable char` instances.
+/-- `sampleable_char` can be specialized into customized `sampleable char` instances.
 
 The resulting instance has `1 / length` chances of making an unrestricted choice of characters
 and it otherwise chooses a character from `characters` with uniform probabilities.  -/
-def sampleable_char (length : Nat) (characters : Stringₓ) : sampleable Charₓ :=
-  { sample := do
-      let x ←
-        choose_nat 0 length
-            (by
-              decide)
-      if x.val = 0 then do
-          let n ← sample ℕ
-          pure $ Charₓ.ofNat n
-        else do
-          let i ←
-            choose_nat 0 (characters.length - 1)
-                (by
-                  decide)
-          pure (characters.mk_iterator.nextn i).curr,
-    shrink := fun _ => LazyList.nil }
+def sampleable_char (length : Nat) (characters : Stringₓ) : sampleable Charₓ where
+  sample := do
+    let x ←
+      choose_nat 0 length
+          (by
+            decide)
+    if x.val = 0 then do
+        let n ← sample ℕ
+        pure $ Charₓ.ofNat n
+      else do
+        let i ←
+          choose_nat 0 (characters.length - 1)
+              (by
+                decide)
+        pure (characters.mk_iterator.nextn i).curr
+  shrink := fun _ => LazyList.nil
 
 instance char.sampleable : sampleable Charₓ :=
   sampleable_char 3 " 0123abcABC:,;`\\/"
@@ -841,24 +450,24 @@ variable [SizeOf α] (shr : ∀ x : α, LazyList { y : α // sizeof_lt y x })
 theorem list.sizeof_drop_lt_sizeof_of_lt_length {xs : List α} {k} (hk : 0 < k) (hk' : k < xs.length) :
     sizeof (List.dropₓ k xs) < sizeof xs := by
   induction' xs with x xs generalizing k
-  ·
-    cases hk'
+  · cases hk'
+    
   cases k
-  ·
-    cases hk
+  · cases hk
+    
   have : sizeof xs < sizeof (x :: xs) := by
     unfold_wf
     linarith
   cases k
-  ·
-    simp only [this, List.dropₓ]
-  ·
-    simp only [List.dropₓ]
+  · simp only [this, List.dropₓ]
+    
+  · simp only [List.dropₓ]
     trans
-    ·
-      solve_by_elim [xs_ih, lt_of_succ_lt_succ hk', zero_lt_succ]
-    ·
-      assumption
+    · solve_by_elim [xs_ih, lt_of_succ_lt_succ hk', zero_lt_succ]
+      
+    · assumption
+      
+    
 
 theorem list.sizeof_cons_lt_right (a b : α) {xs : List α} (h : sizeof a < sizeof b) :
     sizeof (a :: xs) < sizeof (b :: xs) := by
@@ -871,18 +480,17 @@ theorem list.sizeof_cons_lt_left (x : α) {xs xs' : List α} (h : sizeof xs < si
 theorem list.sizeof_append_lt_left {xs ys ys' : List α} (h : sizeof ys < sizeof ys') :
     sizeof (xs ++ ys) < sizeof (xs ++ ys') := by
   induction xs
-  ·
-    apply h
-  ·
-    unfold_wf
+  · apply h
+    
+  · unfold_wf
     simp only [List.sizeof, add_lt_add_iff_left]
     exact xs_ih
+    
 
 theorem list.one_le_sizeof (xs : List α) : 1 ≤ sizeof xs := by
   cases xs <;> unfold_wf <;> linarith
 
-/-- 
-`list.shrink_removes` shrinks a list by removing chunks of size `k` in
+/-- `list.shrink_removes` shrinks a list by removing chunks of size `k` in
 the middle of the list.
 -/
 def list.shrink_removes (k : ℕ) (hk : 0 < k) :
@@ -894,16 +502,16 @@ def list.shrink_removes (k : ℕ) (hk : 0 < k) :
         have : 1 < xs.sizeof := by
           subst_vars
           cases xs
-          ·
-            contradiction
+          · contradiction
+            
           unfold_wf
           apply lt_of_lt_of_leₓ
-          show 1 < (1+SizeOf.sizeof xs_hd)+1
-          ·
-            linarith
-          ·
-            mono
+          show 1 < 1 + SizeOf.sizeof xs_hd + 1
+          · linarith
+            
+          · mono
             apply list.one_le_sizeof
+            
         LazyList.singleton ⟨[], this⟩
       else
         have h₂ : k < xs.length := hn ▸ lt_of_le_of_neₓ (le_of_not_gtₓ hkn) hkn'
@@ -921,8 +529,7 @@ def list.shrink_removes (k : ℕ) (hk : 0 < k) :
             intro a h <;> rw [← List.take_append_dropₓ k xs, ← h₃, ← h₄] <;> solve_by_elim [list.sizeof_append_lt_left]
           LazyList.cons ⟨xs₂, this⟩ $ Subtype.map ((· ++ ·) xs₁) h₅ <$> list.shrink_removes xs₂ (n - k) h₁
 
-/-- 
-`list.shrink_one xs` shrinks list `xs` by shrinking only one item in
+/-- `list.shrink_one xs` shrinks list `xs` by shrinking only one item in
 the list.
 -/
 def list.shrink_one : shrink_fn (List α)
@@ -931,7 +538,7 @@ def list.shrink_one : shrink_fn (List α)
     LazyList.append ((Subtype.map (fun x' => x' :: xs) fun a => list.sizeof_cons_lt_right _ _) <$> shr x)
       ((Subtype.map ((· :: ·) x) fun _ => list.sizeof_cons_lt_left _) <$> list.shrink_one xs)
 
-/--  `list.shrink_with shrink_f xs` shrinks `xs` by first
+/-- `list.shrink_with shrink_f xs` shrinks `xs` by first
 considering `xs` with chunks removed in the middle (starting with
 chunks of size `xs.length` and halving down to `1`) and then
 shrinks only one element of the list.
@@ -946,20 +553,19 @@ def list.shrink_with (xs : List α) : LazyList { ys : List α // sizeof_lt ys xs
 
 end ListShrink
 
--- failed to format: format: uncaught backtrack exception
-instance
-  list.sampleable
-  : sampleable_functor List .{ u }
-  where
-    wf := _ sample α sam_α := list_of sam_α shrink α Iα shr_α := @ list.shrink_with _ Iα shr_α pRepr := @ List.hasRepr
+instance list.sampleable : sampleable_functor List.{u} where
+  wf := _
+  sample := fun α sam_α => list_of sam_α
+  shrink := fun α Iα shr_α => @list.shrink_with _ Iα shr_α
+  pRepr := @List.hasRepr
 
--- failed to format: format: uncaught backtrack exception
-instance
-  Prop.sampleable_ext
-  : sampleable_ext Prop
-  where ProxyRepr := Bool interp := coeₓ sample := choose_any Bool shrink _ := LazyList.nil
+instance Prop.sampleable_ext : sampleable_ext Prop where
+  ProxyRepr := Bool
+  interp := coeₓ
+  sample := choose_any Bool
+  shrink := fun _ => LazyList.nil
 
-/--  `no_shrink` is a type annotation to signal that
+/-- `no_shrink` is a type annotation to signal that
 a certain type is not to be shrunk. It can be useful in
 combination with other types: e.g. `xs : list (no_shrink ℤ)`
 will result in the list being cut down but individual
@@ -970,11 +576,11 @@ def no_shrink (α : Type _) :=
 instance no_shrink.inhabited {α} [Inhabited α] : Inhabited (no_shrink α) :=
   ⟨(default α : α)⟩
 
-/--  Introduction of the `no_shrink` type. -/
+/-- Introduction of the `no_shrink` type. -/
 def no_shrink.mk {α} (x : α) : no_shrink α :=
   x
 
-/--  Selector of the `no_shrink` type. -/
+/-- Selector of the `no_shrink` type. -/
 def no_shrink.get {α} (x : no_shrink α) : α :=
   x
 
@@ -987,7 +593,7 @@ instance string.sampleable : sampleable Stringₓ :=
       let x ← list_of (sample Charₓ)
       pure x.as_string }
 
-/--  implementation of `sampleable (tree α)` -/
+/-- implementation of `sampleable (tree α)` -/
 def tree.sample (sample : gen α) : ℕ → gen (Tree α)
   | n =>
     if h : n > 0 then
@@ -995,10 +601,10 @@ def tree.sample (sample : gen α) : ℕ → gen (Tree α)
         div_lt_self h
           (by
             norm_num)
-      ((Tree.node <$> sample)<*>tree.sample (n / 2))<*>tree.sample (n / 2)
+      Tree.node <$> sample <*> tree.sample (n / 2) <*> tree.sample (n / 2)
     else pure Tree.nil
 
-/--  `rec_shrink x f_rec` takes the recursive call `f_rec` introduced
+/-- `rec_shrink x f_rec` takes the recursive call `f_rec` introduced
 by `well_founded.fix` and turns it into a shrinking function whose
 result is adequate to use in a recursive call. -/
 def rec_shrink {α : Type _} [SizeOf α] (t : α) (sh : ∀ x : α, sizeof_lt x t → LazyList { y : α // sizeof_lt y x }) :
@@ -1012,8 +618,7 @@ theorem tree.one_le_sizeof {α} [SizeOf α] (t : Tree α) : 1 ≤ sizeof t := by
 instance : Functor Tree where
   map := @Tree.mapₓ
 
-/-- 
-Recursion principle for shrinking tree-like structures.
+/-- Recursion principle for shrinking tree-like structures.
 -/
 def rec_shrink_with [SizeOf α]
     (shrink_a : ∀ x : α, shrink_fn { y : α // sizeof_lt y x } → List (LazyList { y : α // sizeof_lt y x })) :
@@ -1032,7 +637,7 @@ theorem rec_shrink_with_eq [SizeOf α]
   ext ⟨y, h⟩
   rfl
 
-/--  `tree.shrink_with shrink_f t` shrinks `xs` by using the empty tree,
+/-- `tree.shrink_with shrink_f t` shrinks `xs` by using the empty tree,
 each subtrees, and by shrinking the subtree to recombine them.
 
 This strategy is taken directly from Haskell's QuickCheck -/
@@ -1054,29 +659,25 @@ def tree.shrink_with [SizeOf α] (shrink_a : shrink_fn α) : shrink_fn (Tree α)
           ⟨Tree.node y t'₀ t'₁, by
             revert hy <;> dsimp [sizeof_lt] <;> unfold_wf <;> intro <;> linarith⟩]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  sampleable_tree
-  : sampleable_functor Tree
-  where
-    wf := _
-      sample α sam_α := sized $ tree.sample sam_α
-      shrink α Iα shr_α := @ tree.shrink_with _ Iα shr_α
-      pRepr := @ Tree.hasRepr
+instance sampleable_tree : sampleable_functor Tree where
+  wf := _
+  sample := fun α sam_α => sized $ tree.sample sam_α
+  shrink := fun α Iα shr_α => @tree.shrink_with _ Iα shr_α
+  pRepr := @Tree.hasRepr
 
-/--  Type tag that signals to `slim_check` to use small values for a given type. -/
+/-- Type tag that signals to `slim_check` to use small values for a given type. -/
 def small (α : Type _) :=
   α
 
-/--  Add the `small` type tag -/
+/-- Add the `small` type tag -/
 def small.mk {α} (x : α) : small α :=
   x
 
-/--  Type tag that signals to `slim_check` to use large values for a given type. -/
+/-- Type tag that signals to `slim_check` to use large values for a given type. -/
 def large (α : Type _) :=
   α
 
-/--  Add the `large` type tag -/
+/-- Add the `large` type tag -/
 def large.mk {α} (x : α) : large α :=
   x
 
@@ -1092,27 +693,23 @@ instance small.inhabited [Inhabited α] : Inhabited (small α) :=
 instance large.inhabited [Inhabited α] : Inhabited (large α) :=
   ⟨(default α : α)⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  small.sampleable_functor
-  : sampleable_functor small
-  where wf := _ sample α samp := gen.resize ( fun n => ( n / 5 ) + 5 ) samp shrink α _ := id pRepr α := id
+instance small.sampleable_functor : sampleable_functor small where
+  wf := _
+  sample := fun α samp => gen.resize (fun n => n / 5 + 5) samp
+  shrink := fun α _ => id
+  pRepr := fun α => id
 
--- failed to format: format: uncaught backtrack exception
-instance
-  large.sampleable_functor
-  : sampleable_functor large
-  where wf := _ sample α samp := gen.resize ( fun n => n * 5 ) samp shrink α _ := id pRepr α := id
+instance large.sampleable_functor : sampleable_functor large where
+  wf := _
+  sample := fun α samp => gen.resize (fun n => n * 5) samp
+  shrink := fun α _ => id
+  pRepr := fun α => id
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ulift.sampleable_functor
-  : sampleable_functor Ulift .{ u , v }
-  where
-    wf α h := ⟨ fun ⟨ x ⟩ => @ sizeof α h x ⟩
-      sample α samp := Uliftable.upMap Ulift.up $ samp
-      shrink α _ shr ⟨ x ⟩ := ( shr x ) . map ( Subtype.map Ulift.up fun a h => h )
-      pRepr α h := ⟨ @ reprₓ α h ∘ Ulift.down ⟩
+instance ulift.sampleable_functor : sampleable_functor Ulift.{u, v} where
+  wf := fun α h => ⟨fun ⟨x⟩ => @sizeof α h x⟩
+  sample := fun α samp => Uliftable.upMap Ulift.up $ samp
+  shrink := fun α _ shr ⟨x⟩ => (shr x).map (Subtype.map Ulift.up fun a h => h)
+  pRepr := fun α h => ⟨@reprₓ α h ∘ Ulift.down⟩
 
 /-!
 ## Subtype instances
@@ -1131,58 +728,53 @@ of `j`.
 /-! ### Subtypes of `ℕ` -/
 
 
--- failed to format: format: uncaught backtrack exception
-instance
-  nat_le.sampleable
-  { y } : SlimCheck.Sampleable { x : ℕ // x ≤ y }
-  where
-    sample := do let ⟨ x , h ⟩ ← SlimCheck.Gen.chooseNat 0 y ( by decide ) pure ⟨ x , h . 2 ⟩
-      shrink
-        ⟨ x , h ⟩
-        :=
-        ( fun a : Subtype _ => Subtype.recOn a $ fun x' h' => ⟨ ⟨ x' , le_transₓ ( le_of_ltₓ h' ) h ⟩ , h' ⟩ )
-          <$>
-          shrink x
+instance nat_le.sampleable {y} : SlimCheck.Sampleable { x : ℕ // x ≤ y } where
+  sample := do
+    let ⟨x, h⟩ ←
+      SlimCheck.Gen.chooseNat 0 y
+          (by
+            decide)
+    pure ⟨x, h.2⟩
+  shrink := fun ⟨x, h⟩ =>
+    (fun a : Subtype _ => Subtype.recOn a $ fun x' h' => ⟨⟨x', le_transₓ (le_of_ltₓ h') h⟩, h'⟩) <$> shrink x
 
--- failed to format: format: uncaught backtrack exception
-instance
-  nat_ge.sampleable
-  { x } : SlimCheck.Sampleable { y : ℕ // x ≤ y }
-  where
-    sample := do let ( y : ℕ ) ← SlimCheck.Sampleable.sample ℕ pure ⟨ x + y , by norm_num ⟩
-      shrink
-        ⟨ y , h ⟩
-        :=
-        (
-            fun
-              a : { y' // sizeof y' < sizeof ( y - x ) }
-                =>
-                Subtype.recOn a $ fun δ h' => ⟨ ⟨ x + δ , Nat.le_add_rightₓ _ _ ⟩ , lt_tsub_iff_left . mp h' ⟩
-            )
-          <$>
-          shrink ( y - x )
+instance nat_ge.sampleable {x} : SlimCheck.Sampleable { y : ℕ // x ≤ y } where
+  sample := do
+    let (y : ℕ) ← SlimCheck.Sampleable.sample ℕ
+    pure
+        ⟨x + y, by
+          norm_num⟩
+  shrink := fun ⟨y, h⟩ =>
+    (fun a : { y' // sizeof y' < sizeof (y - x) } =>
+        Subtype.recOn a $ fun δ h' => ⟨⟨x + δ, Nat.le_add_rightₓ _ _⟩, lt_tsub_iff_left.mp h'⟩) <$>
+      shrink (y - x)
 
--- failed to format: format: uncaught backtrack exception
-instance
-  nat_gt.sampleable
-  { x } : SlimCheck.Sampleable { y : ℕ // x < y }
-  where
-    sample := do let ( y : ℕ ) ← SlimCheck.Sampleable.sample ℕ pure ⟨ ( x + y ) + 1 , by linarith ⟩ shrink x := shrink _
+instance nat_gt.sampleable {x} : SlimCheck.Sampleable { y : ℕ // x < y } where
+  sample := do
+    let (y : ℕ) ← SlimCheck.Sampleable.sample ℕ
+    pure
+        ⟨x + y + 1, by
+          linarith⟩
+  shrink := fun x => shrink _
 
 /-! ### Subtypes of any `linear_ordered_add_comm_group` -/
 
 
--- failed to format: format: uncaught backtrack exception
-instance
-  le.sampleable
-  { y : α } [ sampleable α ] [ LinearOrderedAddCommGroup α ] : SlimCheck.Sampleable { x : α // x ≤ y }
-  where sample := do let x ← sample α pure ⟨ y - | x | , sub_le_self _ ( abs_nonneg _ ) ⟩ shrink _ := LazyList.nil
+instance le.sampleable {y : α} [sampleable α] [LinearOrderedAddCommGroup α] :
+    SlimCheck.Sampleable { x : α // x ≤ y } where
+  sample := do
+    let x ← sample α
+    pure ⟨y - |x|, sub_le_self _ (abs_nonneg _)⟩
+  shrink := fun _ => LazyList.nil
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ge.sampleable
-  { x : α } [ sampleable α ] [ LinearOrderedAddCommGroup α ] : SlimCheck.Sampleable { y : α // x ≤ y }
-  where sample := do let y ← sample α pure ⟨ x + | y | , by norm_num [ abs_nonneg ] ⟩ shrink _ := LazyList.nil
+instance ge.sampleable {x : α} [sampleable α] [LinearOrderedAddCommGroup α] :
+    SlimCheck.Sampleable { y : α // x ≤ y } where
+  sample := do
+    let y ← sample α
+    pure
+        ⟨x + |y|, by
+          norm_num [abs_nonneg]⟩
+  shrink := fun _ => LazyList.nil
 
 /-!
 ### Subtypes of `ℤ`
@@ -1195,7 +787,7 @@ instance int_le.sampleable {y : ℤ} : SlimCheck.Sampleable { x : ℤ // x ≤ y
   sampleable.lift ℕ
     (fun n =>
       ⟨y - n,
-        Int.sub_left_le_of_le_add $ by
+        Int.sub_left_le_of_le_addₓ $ by
           simp ⟩)
     (fun ⟨i, h⟩ => (y - i).natAbs) fun n => by
     unfold_wf <;> simp [int_le.sampleable._match_1] <;> ring
@@ -1203,7 +795,7 @@ instance int_le.sampleable {y : ℤ} : SlimCheck.Sampleable { x : ℤ // x ≤ y
 instance int_ge.sampleable {x : ℤ} : SlimCheck.Sampleable { y : ℤ // x ≤ y } :=
   sampleable.lift ℕ
     (fun n =>
-      ⟨x+n, by
+      ⟨x + n, by
         simp ⟩)
     (fun ⟨i, h⟩ => (i - x).natAbs) fun n => by
     unfold_wf <;> simp [int_ge.sampleable._match_1] <;> ring
@@ -1211,8 +803,8 @@ instance int_ge.sampleable {x : ℤ} : SlimCheck.Sampleable { y : ℤ // x ≤ y
 instance int_lt.sampleable {y} : SlimCheck.Sampleable { x : ℤ // x < y } :=
   sampleable.lift ℕ
     (fun n =>
-      ⟨y - n+1,
-        Int.sub_left_lt_of_lt_add $ by
+      ⟨y - (n + 1),
+        Int.sub_left_lt_of_lt_addₓ $ by
           linarith [Int.coe_nat_nonneg n]⟩)
     (fun ⟨i, h⟩ => (y - i - 1).natAbs) fun n => by
     unfold_wf <;> simp [int_lt.sampleable._match_1] <;> ring
@@ -1220,7 +812,7 @@ instance int_lt.sampleable {y} : SlimCheck.Sampleable { x : ℤ // x < y } :=
 instance int_gt.sampleable {x} : SlimCheck.Sampleable { y : ℤ // x < y } :=
   sampleable.lift ℕ
     (fun n =>
-      ⟨x+n+1, by
+      ⟨x + (n + 1), by
         linarith⟩)
     (fun ⟨i, h⟩ => (i - x - 1).natAbs) fun n => by
     unfold_wf <;> simp [int_gt.sampleable._match_1] <;> ring
@@ -1228,24 +820,19 @@ instance int_gt.sampleable {x} : SlimCheck.Sampleable { y : ℤ // x < y } :=
 /-! ### Subtypes of any `list` -/
 
 
--- failed to format: format: uncaught backtrack exception
-instance
-  perm.slim_check
-  { xs : List α } : SlimCheck.Sampleable { ys : List α // List.Perm xs ys }
-  where sample := permutation_of xs shrink _ := LazyList.nil
+instance perm.slim_check {xs : List α} : SlimCheck.Sampleable { ys : List α // List.Perm xs ys } where
+  sample := permutation_of xs
+  shrink := fun _ => LazyList.nil
 
--- failed to format: format: uncaught backtrack exception
-instance
-  perm'.slim_check
-  { xs : List α } : SlimCheck.Sampleable { ys : List α // List.Perm ys xs }
-  where sample := Subtype.map id ( @ List.Perm.symm α _ ) <$> permutation_of xs shrink _ := LazyList.nil
+instance perm'.slim_check {xs : List α} : SlimCheck.Sampleable { ys : List α // List.Perm ys xs } where
+  sample := Subtype.map id (@List.Perm.symm α _) <$> permutation_of xs
+  shrink := fun _ => LazyList.nil
 
 setup_tactic_parser
 
 open Tactic
 
-/-- 
-Print (at most) 10 samples of a given type to stdout for debugging.
+/-- Print (at most) 10 samples of a given type to stdout for debugging.
 -/
 def print_samples {t : Type u} [HasRepr t] (g : gen t) : Io Unit := do
   let xs ←
@@ -1255,7 +842,7 @@ def print_samples {t : Type u} [HasRepr t] (g : gen t) : Io Unit := do
           pure ⟨xs.map reprₓ⟩
   xs.mmap' Io.putStrLn
 
-/--  Create a `gen α` expression from the argument of `#sample` -/
+/-- Create a `gen α` expression from the argument of `#sample` -/
 unsafe def mk_generator (e : expr) : tactic (expr × expr) := do
   let t ← infer_type e
   match t with
@@ -1268,8 +855,7 @@ unsafe def mk_generator (e : expr) : tactic (expr × expr) := do
       let gen ← mk_mapp `` sampleable_ext.sample [none, samp_inst]
       pure (repr_inst, gen)
 
-/-- 
-`#sample my_type`, where `my_type` has an instance of `sampleable`, prints ten random
+/-- `#sample my_type`, where `my_type` has an instance of `sampleable`, prints ten random
 values of type `my_type` of using an increasing size parameter.
 
 ```lean

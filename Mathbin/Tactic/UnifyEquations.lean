@@ -22,8 +22,7 @@ namespace Tactic
 
 namespace UnifyEquations
 
-/-- 
-The result of a unification step:
+/-- The result of a unification step:
 
 - `simplified hs` means that the step succeeded and produced some new (simpler)
   equations `hs`. `hs` can be empty.
@@ -38,8 +37,7 @@ unsafe inductive unification_step_result : Type
 
 export UnificationStepResult ()
 
-/-- 
-A unification step is a tactic that attempts to simplify a given equation and
+/-- A unification step is a tactic that attempts to simplify a given equation and
 returns a `unification_step_result`. The inputs are:
 
 - `equ`, the equation being processed. Must be a local constant.
@@ -55,8 +53,7 @@ So `equ : @eq.{u} lhs_type lhs rhs` or `equ : @heq.{u} lhs_type lhs rhs_type rhs
 unsafe def unification_step : Type :=
   ∀ equ lhs_type rhs_type lhs rhs lhs_whnf rhs_whnf : expr u : level, tactic unification_step_result
 
-/-- 
-For `equ : t == u` with `t : T` and `u : U`, if `T` and `U` are defeq,
+/-- For `equ : t == u` with `t : T` and `u : U`, if `T` and `U` are defeq,
 we replace `equ` with `equ : t = u`.
 -/
 unsafe def unify_heterogeneous : unification_step := fun equ lhs_type rhs_type lhs rhs _ _ _ =>
@@ -69,8 +66,7 @@ unsafe def unify_heterogeneous : unification_step := fun equ lhs_type rhs_type l
       pure $ simplified [equ'.local_pp_name]) <|>
     pure not_simplified
 
-/-- 
-For `equ : t = u`, if `t` and `u` are defeq, we delete `equ`.
+/-- For `equ : t = u`, if `t` and `u` are defeq, we delete `equ`.
 -/
 unsafe def unify_defeq : unification_step := fun equ lhs_type _ _ _ lhs_whnf rhs_whnf _ =>
   (do
@@ -79,8 +75,7 @@ unsafe def unify_defeq : unification_step := fun equ lhs_type _ _ _ lhs_whnf rhs
       pure $ simplified []) <|>
     pure not_simplified
 
-/-- 
-For `equ : x = t` or `equ : t = x`, where `x` is a local constant, we
+/-- For `equ : x = t` or `equ : t = x`, where `x` is a local constant, we
 substitute `x` with `t` in the goal.
 -/
 unsafe def unify_var : unification_step := fun equ type _ lhs rhs lhs_whnf rhs_whnf u =>
@@ -130,8 +125,7 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
       exact pr
       return (none, ns)
 
-/-- 
-Given `equ : C x₁ ... xₙ = D y₁ ... yₘ` with `C` and `D` constructors of the
+/-- Given `equ : C x₁ ... xₙ = D y₁ ... yₘ` with `C` and `D` constructors of the
 same datatype `I`:
 
 - If `C ≠ D`, we solve the goal by contradiction using the no-confusion rule.
@@ -147,8 +141,7 @@ unsafe def unify_constructor_headed : unification_step := fun equ _ _ _ _ _ _ _ 
           | some next => simplified $ next.map expr.local_pp_name) <|>
     pure not_simplified
 
-/-- 
-For `type = I x₁ ... xₙ`, where `I` is an inductive type, `get_sizeof type`
+/-- For `type = I x₁ ... xₙ`, where `I` is an inductive type, `get_sizeof type`
 returns the constant `I.sizeof`. Fails if `type` is not of this form or if no
 such constant exists.
 -/
@@ -156,25 +149,23 @@ unsafe def get_sizeof (type : expr) : tactic pexpr := do
   let n ← get_app_fn_const_whnf type semireducible ff
   resolve_name $ n ++ `sizeof
 
-theorem add_add_one_ne (n m : ℕ) : (n+m+1) ≠ n := by
+theorem add_add_one_ne (n m : ℕ) : n + (m + 1) ≠ n := by
   apply ne_of_gtₓ
   apply Nat.lt_add_of_pos_rightₓ
   apply Nat.pos_of_ne_zeroₓ
   contradiction
 
-/-- 
-`match_n_plus_m n e` matches `e` of the form `nat.succ (... (nat.succ e')...)`.
+/-- `match_n_plus_m n e` matches `e` of the form `nat.succ (... (nat.succ e')...)`.
 It returns `n` plus the number of `succ` constructors and `e'`. The matching is
 performed up to normalisation with transparency `md`.
 -/
 unsafe def match_n_plus_m md : ℕ → expr → tactic (ℕ × expr) := fun n e => do
   let e ← whnf e md
   match e with
-    | quote.1 (Nat.succ (%%ₓe)) => match_n_plus_m (n+1) e
+    | quote.1 (Nat.succ (%%ₓe)) => match_n_plus_m (n + 1) e
     | _ => pure (n, e)
 
-/-- 
-Given `equ : n + m = n` or `equ : n = n + m` with `n` and `m` natural numbers
+/-- Given `equ : n + m = n` or `equ : n = n + m` with `n` and `m` natural numbers
 and `m` a nonzero literal, this tactic produces a proof of `false`. More
 precisely, the two sides of the equation must be of the form
 `nat.succ (... (nat.succ e)...)` with different numbers of `nat.succ`
@@ -196,12 +187,11 @@ unsafe def contradict_n_eq_n_plus_m (md : transparency) (equ lhs rhs : expr) : t
         pure (equ, rhs_n, lhs_n)
   let diff := lhs_n - rhs_n
   let rhs_n_expr := reflect rhs_n
-  let n ← to_expr (pquote.1 ((%%ₓcommon)+%%ₓrhs_n_expr))
+  let n ← to_expr (pquote.1 ((%%ₓcommon) + %%ₓrhs_n_expr))
   let m := reflect (diff - 1)
   pure (quote.1 (add_add_one_ne (%%ₓn) (%%ₓm) (%%ₓequ)))
 
-/-- 
-Given `equ : t = u` with `t, u : I` and `I.sizeof t ≠ I.sizeof u`, we solve the
+/-- Given `equ : t = u` with `t, u : I` and `I.sizeof t ≠ I.sizeof u`, we solve the
 goal by contradiction.
 -/
 unsafe def unify_cyclic : unification_step := fun equ type _ _ _ lhs_whnf rhs_whnf _ =>
@@ -219,8 +209,7 @@ unsafe def unify_cyclic : unification_step := fun equ type _ _ _ lhs_whnf rhs_wh
       pure goal_solved) <|>
     pure not_simplified
 
-/-- 
-`orelse_step s t` first runs the unification step `s`. If this was successful
+/-- `orelse_step s t` first runs the unification step `s`. If this was successful
 (i.e. `s` simplified or solved the goal), it returns the result of `s`.
 Otherwise, it runs `t` and returns its result.
 -/
@@ -232,8 +221,7 @@ unsafe def orelse_step (s t : unification_step) : unification_step :=
     | goal_solved => pure r
     | not_simplified => t equ lhs_type rhs_type lhs rhs lhs_whnf rhs_whnf u
 
-/-- 
-For `equ : t = u`, try the following methods in order: `unify_defeq`,
+/-- For `equ : t = u`, try the following methods in order: `unify_defeq`,
 `unify_var`, `unify_constructor_headed`, `unify_cyclic`. If any of them is
 successful, stop and return its result. If none is successful, fail.
 -/
@@ -245,8 +233,7 @@ end UnifyEquations
 
 open UnifyEquations
 
-/-- 
-If `equ` is the display name of a local constant with type `t = u` or `t == u`,
+/-- If `equ` is the display name of a local constant with type `t = u` or `t == u`,
 then `unify_equation_once equ` simplifies it once using
 `unify_equations.unify_homogeneous` or `unify_equations.unify_heterogeneous`.
 
@@ -268,8 +255,7 @@ unsafe def unify_equation_once (equ : Name) : tactic unification_step_result := 
       throwError "Expected {(← equ)} to be an equation, but its type is
         {← t}."
 
-/-- 
-Given a list of display names of local hypotheses that are (homogeneous or
+/-- Given a list of display names of local hypotheses that are (homogeneous or
 heterogeneous) equations, `unify_equations` performs first-order unification on
 each hypothesis in order. See `tactic.interactive.unify_equations` for an
 example and an explanation of what unification does.
@@ -291,8 +277,7 @@ namespace Interactive
 
 open Lean.Parser
 
-/-- 
-`unify_equations eq₁ ... eqₙ` performs a form of first-order unification on the
+/-- `unify_equations eq₁ ... eqₙ` performs a form of first-order unification on the
 hypotheses `eqᵢ`. The `eqᵢ` must be homogeneous or heterogeneous equations.
 Unification means that the equations are simplified using various facts about
 constructors. For instance, consider this goal:

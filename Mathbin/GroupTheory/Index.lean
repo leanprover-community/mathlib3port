@@ -32,12 +32,12 @@ open_locale Cardinal
 
 variable {G : Type _} [Groupₓ G] (H K L : Subgroup G)
 
-/--  The index of a subgroup as a natural number, and returns 0 if the index is infinite. -/
+/-- The index of a subgroup as a natural number, and returns 0 if the index is infinite. -/
 @[to_additive "The index of a subgroup as a natural number,\nand returns 0 if the index is infinite."]
 noncomputable def index : ℕ :=
   Nat.card (G ⧸ H)
 
-/--  The relative index of a subgroup as a natural number,
+/-- The relative index of a subgroup as a natural number,
   and returns 0 if the relative index is infinite. -/
 @[to_additive
       "The relative index of a subgroup as a natural number,\n  and returns 0 if the relative index is infinite."]
@@ -55,15 +55,15 @@ theorem index_comap_of_surjective {G' : Type _} [Groupₓ G'] {f : G' →* G} (h
         (by
           rw [f.map_mul, f.map_inv]))
   refine' Cardinal.to_nat_congr (Equivₓ.ofBijective (Quotientₓ.map' f fun x y => (key x y).mp) ⟨_, _⟩)
-  ·
-    simp_rw [← Quotientₓ.eq']  at key
+  · simp_rw [← Quotientₓ.eq']  at key
     refine' Quotientₓ.ind' fun x => _
     refine' Quotientₓ.ind' fun y => _
     exact (key x y).mpr
-  ·
-    refine' Quotientₓ.ind' fun x => _
+    
+  · refine' Quotientₓ.ind' fun x => _
     obtain ⟨y, hy⟩ := hf x
     exact ⟨y, (Quotientₓ.map'_mk' f _ y).trans (congr_argₓ Quotientₓ.mk' hy)⟩
+    
 
 @[to_additive]
 theorem index_comap {G' : Type _} [Groupₓ G'] (f : G' →* G) : (H.comap f).index = H.relindex f.range :=
@@ -76,7 +76,7 @@ theorem index_comap {G' : Type _} [Groupₓ G'] (f : G' →* G) : (H.comap f).in
 variable {H K L}
 
 @[to_additive]
-theorem relindex_mul_index (h : H ≤ K) : (H.relindex K*K.index) = H.index :=
+theorem relindex_mul_index (h : H ≤ K) : H.relindex K * K.index = H.index :=
   ((mul_commₓ _ _).trans (Cardinal.to_nat_mul _ _).symm).trans
     (congr_argₓ Cardinal.toNat (Equivₓ.cardinal_eq (quotient_equiv_prod_of_le h))).symm
 
@@ -91,7 +91,7 @@ theorem relindex_subgroup_of (hKL : K ≤ L) : (H.subgroup_of L).relindex (K.sub
 variable (H K L)
 
 @[to_additive]
-theorem relindex_mul_relindex (hHK : H ≤ K) (hKL : K ≤ L) : (H.relindex K*K.relindex L) = H.relindex L := by
+theorem relindex_mul_relindex (hHK : H ≤ K) (hKL : K ≤ L) : H.relindex K * K.relindex L = H.relindex L := by
   rw [← relindex_subgroup_of hKL]
   exact relindex_mul_index fun x hx => hHK hx
 
@@ -101,6 +101,10 @@ theorem inf_relindex_right : (H⊓K).relindex K = H.relindex K := by
 
 theorem inf_relindex_left : (H⊓K).relindex H = K.relindex H := by
   rw [inf_comm, inf_relindex_right]
+
+theorem relindex_inf_mul_relindex : H.relindex (K⊓L) * K.relindex L = (H⊓K).relindex L := by
+  rw [← inf_relindex_right H (K⊓L), ← inf_relindex_right K L, ← inf_relindex_right (H⊓K) L, inf_assoc,
+    relindex_mul_relindex (H⊓(K⊓L)) (K⊓L) L inf_le_right inf_le_right]
 
 theorem inf_relindex_eq_relindex_sup [K.normal] : (H⊓K).relindex H = K.relindex (H⊔K) :=
   Cardinal.to_nat_congr (QuotientGroup.quotientInfEquivProdNormalQuotient H K).toEquiv
@@ -154,12 +158,12 @@ theorem relindex_self : H.relindex H = 1 := by
   rw [relindex, subgroup_of_self, index_top]
 
 @[simp, to_additive card_mul_index]
-theorem card_mul_index : (Nat.card H*H.index) = Nat.card G := by
+theorem card_mul_index : Nat.card H * H.index = Nat.card G := by
   rw [← relindex_bot_left, ← index_bot]
   exact relindex_mul_index bot_le
 
 @[to_additive]
-theorem index_map {G' : Type _} [Groupₓ G'] (f : G →* G') : (H.map f).index = (H⊔f.ker).index*f.range.index := by
+theorem index_map {G' : Type _} [Groupₓ G'] (f : G →* G') : (H.map f).index = (H⊔f.ker).index * f.range.index := by
   rw [← comap_map_eq, index_comap, relindex_mul_index (H.map_le_range f)]
 
 @[to_additive]
@@ -183,7 +187,7 @@ theorem index_eq_card [Fintype (G ⧸ H)] : H.index = Fintype.card (G ⧸ H) :=
   Nat.card_eq_fintype_card
 
 @[to_additive index_mul_card]
-theorem index_mul_card [Fintype G] [hH : Fintype H] : (H.index*Fintype.card H) = Fintype.card G := by
+theorem index_mul_card [Fintype G] [hH : Fintype H] : H.index * Fintype.card H = Fintype.card G := by
   rw [← relindex_bot_left_eq_card, ← index_bot_eq_card, mul_commₓ] <;> exact relindex_mul_index bot_le
 
 @[to_additive]
@@ -203,6 +207,10 @@ theorem relindex_eq_zero_of_le_right (hKL : K ≤ L) (hHK : H.relindex K = 0) : 
       (le_of_not_ltₓ fun h =>
         Cardinal.mk_ne_zero _ ((Cardinal.cast_to_nat_of_lt_omega h).symm.trans (Cardinal.nat_cast_inj.mpr hHK)))
       (quotient_subgroup_of_embedding_of_le H hKL).cardinal_le)
+
+theorem relindex_ne_zero_trans (hHK : H.relindex K ≠ 0) (hKL : K.relindex L ≠ 0) : H.relindex L ≠ 0 := fun h =>
+  mul_ne_zero (mt (relindex_eq_zero_of_le_right (show K⊓L ≤ K from inf_le_left)) hHK) hKL
+    ((relindex_inf_mul_relindex H K L).trans (relindex_eq_zero_of_le_left inf_le_left h))
 
 @[simp]
 theorem index_eq_one : H.index = 1 ↔ H = ⊤ :=

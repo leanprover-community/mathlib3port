@@ -21,7 +21,7 @@ variable [NormedGroup V] [NormedSpace 𝕜 V]
 
 variable [NormedGroup W] [NormedSpace 𝕜 W]
 
-/--  A continuous affine map between normed vector spaces is smooth. -/
+/-- A continuous affine map between normed vector spaces is smooth. -/
 theorem TimesContDiff {n : WithTop ℕ} (f : V →A[𝕜] W) : TimesContDiff 𝕜 n f := by
   rw [f.decomp]
   apply f.cont_linear.times_cont_diff.add

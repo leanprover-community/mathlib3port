@@ -24,7 +24,7 @@ instance : fun_like (my_hom A B) A (λ _, B) :=
 { coe := my_hom.to_fun, coe_injective' := λ f g h, by cases f; cases g; congr' }
 
 /-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly. -/
-instance : has_coe_to_fun (my_hom A B) := to_fun.to_coe_fn
+instance : has_coe_to_fun (my_hom A B) (λ _, A → B) := to_fun.to_coe_fn
 
 @[simp] lemma to_fun_eq_coe {f : my_hom A B} : f.to_fun = (f : A → B) := rfl
 
@@ -111,7 +111,7 @@ instead of linearly increasing the work per `my_hom`-related declaration.
 
 attribute [instance] coeFnTrans
 
-/--  The class `fun_like F α β` expresses that terms of type `F` have an
+/-- The class `fun_like F α β` expresses that terms of type `F` have an
 injective coercion to functions from `α` to `β`.
 
 This typeclass is used in the definition of the homomorphism typeclasses,

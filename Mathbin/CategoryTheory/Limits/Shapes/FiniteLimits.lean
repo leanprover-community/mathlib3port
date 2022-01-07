@@ -20,8 +20,7 @@ namespace CategoryTheory.Limits
 
 variable (C : Type u) [category.{v} C]
 
-/-- 
-A category has all finite limits if every functor `J ⥤ C` with a `fin_category J` instance
+/-- A category has all finite limits if every functor `J ⥤ C` with a `fin_category J` instance
 has a limit.
 
 This is often called 'finitely complete'.
@@ -35,16 +34,15 @@ instance (priority := 100) has_limits_of_shape_of_has_finite_limits (J : Type v)
 
 instance (priority := 100) has_finite_limits_of_has_limits_of_size [has_limits_of_size.{v', u'} C] :
     has_finite_limits C :=
-  ⟨fun J hJ hJ' => by
+  ⟨fun J hJ hJ' =>
     have := has_limits_of_size_shrink.{0, 0} C
-    exact has_limits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
+    has_limits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
 
-/--  If `C` has all limits, it has finite limits. -/
+/-- If `C` has all limits, it has finite limits. -/
 instance (priority := 100) has_finite_limits_of_has_limits [has_limits C] : has_finite_limits C :=
   inferInstance
 
-/-- 
-A category has all finite colimits if every functor `J ⥤ C` with a `fin_category J` instance
+/-- A category has all finite colimits if every functor `J ⥤ C` with a `fin_category J` instance
 has a colimit.
 
 This is often called 'finitely cocomplete'.
@@ -58,11 +56,11 @@ instance (priority := 100) has_limits_of_shape_of_has_finite_colimits (J : Type 
 
 instance (priority := 100) has_finite_colimits_of_has_colimits_of_size [has_colimits_of_size.{v', u'} C] :
     has_finite_colimits C :=
-  ⟨fun J hJ hJ' => by
+  ⟨fun J hJ hJ' =>
     have := has_colimits_of_size_shrink.{0, 0} C
-    exact has_colimits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
+    has_colimits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
 
-/--  If `C` has all colimits, it has finite colimits. -/
+/-- If `C` has all colimits, it has finite colimits. -/
 instance (priority := 100) has_finite_colimits_of_has_colimits [has_colimits C] : has_finite_colimits C :=
   inferInstance
 
@@ -70,11 +68,10 @@ section
 
 open WalkingParallelPair WalkingParallelPairHom
 
--- failed to format: format: uncaught backtrack exception
-instance
-  fintype_walking_parallel_pair
-  : Fintype walking_parallel_pair
-  where elems := [ walking_parallel_pair.zero , walking_parallel_pair.one ] . toFinset complete x := by cases x <;> simp
+instance fintype_walking_parallel_pair : Fintype walking_parallel_pair where
+  elems := [walking_parallel_pair.zero, walking_parallel_pair.one].toFinset
+  complete := fun x => by
+    cases x <;> simp
 
 attribute [local tidy] tactic.case_bash
 
@@ -91,11 +88,11 @@ end
 instance : fin_category walking_parallel_pair :=
   {  }
 
-/--  Equalizers are finite limits, so if `C` has all finite limits, it also has all equalizers -/
+/-- Equalizers are finite limits, so if `C` has all finite limits, it also has all equalizers -/
 example [has_finite_limits C] : has_equalizers C := by
   infer_instance
 
-/--  Coequalizers are finite colimits, of if `C` has all finite colimits, it also has all
+/-- Coequalizers are finite colimits, of if `C` has all finite colimits, it also has all
     coequalizers -/
 example [has_finite_colimits C] : has_coequalizers C := by
   infer_instance
@@ -113,19 +110,19 @@ instance fintype_obj [Fintype J] : Fintype (wide_pullback_shape J) := by
 instance fintype_hom [DecidableEq J] (j j' : wide_pullback_shape J) : Fintype (j ⟶ j') where
   elems := by
     cases j'
-    ·
-      cases j
-      ·
-        exact {hom.id none}
-      ·
-        exact {hom.term j}
-    ·
-      by_cases' some j' = j
-      ·
-        rw [h]
+    · cases j
+      · exact {hom.id none}
+        
+      · exact {hom.term j}
+        
+      
+    · by_cases' some j' = j
+      · rw [h]
         exact {hom.id j}
-      ·
-        exact ∅
+        
+      · exact ∅
+        
+      
   complete := by
     tidy
 
@@ -140,19 +137,19 @@ instance fintype_obj [Fintype J] : Fintype (wide_pushout_shape J) := by
 instance fintype_hom [DecidableEq J] (j j' : wide_pushout_shape J) : Fintype (j ⟶ j') where
   elems := by
     cases j
-    ·
-      cases j'
-      ·
-        exact {hom.id none}
-      ·
-        exact {hom.init j'}
-    ·
-      by_cases' some j = j'
-      ·
-        rw [h]
+    · cases j'
+      · exact {hom.id none}
+        
+      · exact {hom.init j'}
+        
+      
+    · by_cases' some j = j'
+      · rw [h]
         exact {hom.id j'}
-      ·
-        exact ∅
+        
+      · exact ∅
+        
+      
   complete := by
     tidy
 
@@ -164,8 +161,7 @@ instance fin_category_wide_pullback [DecidableEq J] [Fintype J] : fin_category (
 instance fin_category_wide_pushout [DecidableEq J] [Fintype J] : fin_category (wide_pushout_shape J) where
   fintypeHom := wide_pushout_shape.fintype_hom
 
-/-- 
-`has_finite_wide_pullbacks` represents a choice of wide pullback
+/-- `has_finite_wide_pullbacks` represents a choice of wide pullback
 for every finite collection of morphisms
 -/
 class has_finite_wide_pullbacks : Prop where
@@ -176,8 +172,7 @@ instance has_limits_of_shape_wide_pullback_shape (J : Type v) [Fintype J] [has_f
   have := @has_finite_wide_pullbacks.out C _ _ J (Classical.decEq _)
   infer_instance
 
-/-- 
-`has_finite_wide_pushouts` represents a choice of wide pushout
+/-- `has_finite_wide_pushouts` represents a choice of wide pushout
 for every finite collection of morphisms
 -/
 class has_finite_wide_pushouts : Prop where
@@ -188,33 +183,28 @@ instance has_colimits_of_shape_wide_pushout_shape (J : Type v) [Fintype J] [has_
   have := @has_finite_wide_pushouts.out C _ _ J (Classical.decEq _)
   infer_instance
 
-/-- 
-Finite wide pullbacks are finite limits, so if `C` has all finite limits,
+/-- Finite wide pullbacks are finite limits, so if `C` has all finite limits,
 it also has finite wide pullbacks
 -/
 theorem has_finite_wide_pullbacks_of_has_finite_limits [has_finite_limits C] : has_finite_wide_pullbacks C :=
-  ⟨fun J _ _ => by
-    exact has_finite_limits.out _⟩
+  ⟨fun J _ _ => has_finite_limits.out _⟩
 
-/-- 
-Finite wide pushouts are finite colimits, so if `C` has all finite colimits,
+/-- Finite wide pushouts are finite colimits, so if `C` has all finite colimits,
 it also has finite wide pushouts
 -/
 theorem has_finite_wide_pushouts_of_has_finite_limits [has_finite_colimits C] : has_finite_wide_pushouts C :=
-  ⟨fun J _ _ => by
-    exact has_finite_colimits.out _⟩
+  ⟨fun J _ _ => has_finite_colimits.out _⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  fintype_walking_pair
-  : Fintype walking_pair
-  where elems := { walking_pair.left , walking_pair.right } complete x := by cases x <;> simp
+instance fintype_walking_pair : Fintype walking_pair where
+  elems := {walking_pair.left, walking_pair.right}
+  complete := fun x => by
+    cases x <;> simp
 
-/--  Pullbacks are finite limits, so if `C` has all finite limits, it also has all pullbacks -/
+/-- Pullbacks are finite limits, so if `C` has all finite limits, it also has all pullbacks -/
 example [has_finite_wide_pullbacks C] : has_pullbacks C := by
   infer_instance
 
-/--  Pushouts are finite colimits, so if `C` has all finite colimits, it also has all pushouts -/
+/-- Pushouts are finite colimits, so if `C` has all finite colimits, it also has all pushouts -/
 example [has_finite_wide_pushouts C] : has_pushouts C := by
   infer_instance
 

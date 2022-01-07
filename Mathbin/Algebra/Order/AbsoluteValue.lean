@@ -15,12 +15,12 @@ This file defines a bundled type of absolute values `absolute_value R S`.
 -/
 
 
-/--  `absolute_value R S` is the type of absolute values on `R` mapping to `S`:
+/-- `absolute_value R S` is the type of absolute values on `R` mapping to `S`:
 the maps that preserve `*`, are nonnegative, positive definite and satisfy the triangle equality. -/
 structure AbsoluteValue (R S : Type _) [Semiringₓ R] [OrderedSemiring S] extends MulHom R S where
   nonneg' : ∀ x, 0 ≤ to_fun x
   eq_zero' : ∀ x, to_fun x = 0 ↔ x = 0
-  add_le' : ∀ x y, to_fun (x+y) ≤ to_fun x+to_fun y
+  add_le' : ∀ x y, to_fun (x + y) ≤ to_fun x + to_fun y
 
 namespace AbsoluteValue
 
@@ -46,11 +46,11 @@ protected theorem nonneg (x : R) : 0 ≤ abv x :=
 protected theorem eq_zero {x : R} : abv x = 0 ↔ x = 0 :=
   abv.eq_zero' x
 
-protected theorem add_le (x y : R) : abv (x+y) ≤ abv x+abv y :=
+protected theorem add_le (x y : R) : abv (x + y) ≤ abv x + abv y :=
   abv.add_le' x y
 
 @[simp]
-protected theorem map_mul (x y : R) : abv (x*y) = abv x*abv y :=
+protected theorem map_mul (x y : R) : abv (x * y) = abv x * abv y :=
   abv.map_mul' x y
 
 protected theorem Pos {x : R} (hx : x ≠ 0) : 0 < abv x :=
@@ -73,7 +73,7 @@ section OrderedRing
 
 variable {R S : Type _} [Ringₓ R] [OrderedRing S] (abv : AbsoluteValue R S)
 
-protected theorem sub_le (a b c : R) : abv (a - c) ≤ abv (a - b)+abv (b - c) := by
+protected theorem sub_le (a b c : R) : abv (a - c) ≤ abv (a - b) + abv (b - c) := by
   simpa [sub_eq_add_neg, add_assocₓ] using abv.add_le (a - b) (b - c)
 
 protected theorem le_sub (a b : R) : abv a - abv b ≤ abv (a - b) :=
@@ -90,10 +90,14 @@ section LinearOrderedRing
 
 variable {R S : Type _} [Semiringₓ R] [LinearOrderedRing S] (abv : AbsoluteValue R S)
 
-/--  `absolute_value.abs` is `abs` as a bundled `absolute_value`. -/
+/-- `absolute_value.abs` is `abs` as a bundled `absolute_value`. -/
 @[simps]
-protected def abs : AbsoluteValue S S :=
-  { toFun := abs, nonneg' := abs_nonneg, eq_zero' := fun _ => abs_eq_zero, add_le' := abs_add, map_mul' := abs_mul }
+protected def abs : AbsoluteValue S S where
+  toFun := abs
+  nonneg' := abs_nonneg
+  eq_zero' := fun _ => abs_eq_zero
+  add_le' := abs_add
+  map_mul' := abs_mul
 
 instance : Inhabited (AbsoluteValue S S) :=
   ⟨AbsoluteValue.abs⟩
@@ -105,7 +109,7 @@ protected theorem map_one : abv 1 = 1 :=
   (mul_right_inj' $ abv.ne_zero one_ne_zero).1 $ by
     rw [← abv.map_mul, mul_oneₓ, mul_oneₓ]
 
-/--  Absolute values from a nontrivial `R` to a linear ordered ring preserve `*`, `0` and `1`. -/
+/-- Absolute values from a nontrivial `R` to a linear ordered ring preserve `*`, `0` and `1`. -/
 def to_monoid_with_zero_hom : MonoidWithZeroHom R S :=
   { abv with toFun := abv, map_zero' := abv.map_zero, map_one' := abv.map_one }
 
@@ -113,7 +117,7 @@ def to_monoid_with_zero_hom : MonoidWithZeroHom R S :=
 theorem coe_to_monoid_with_zero_hom : ⇑abv.to_monoid_with_zero_hom = abv :=
   rfl
 
-/--  Absolute values from a nontrivial `R` to a linear ordered ring preserve `*` and `1`. -/
+/-- Absolute values from a nontrivial `R` to a linear ordered ring preserve `*` and `1`. -/
 def to_monoid_hom : MonoidHom R S :=
   { abv with toFun := abv, map_one' := abv.map_one }
 
@@ -136,8 +140,8 @@ variable {R S : Type _} [Ringₓ R] [LinearOrderedCommRing S] (abv : AbsoluteVal
 @[simp]
 protected theorem map_neg (a : R) : abv (-a) = abv a := by
   by_cases' ha : a = 0
-  ·
-    simp [ha]
+  · simp [ha]
+    
   refine'
     (mul_self_eq_mul_self_iff.mp
           (by
@@ -179,7 +183,7 @@ end AbsoluteValue
 
 section IsAbsoluteValue
 
-/--  A function `f` is an absolute value if it is nonnegative, zero only at 0, additive, and
+/-- A function `f` is an absolute value if it is nonnegative, zero only at 0, additive, and
 multiplicative.
 
 See also the type `absolute_value` which represents a bundled version of absolute values.
@@ -187,8 +191,8 @@ See also the type `absolute_value` which represents a bundled version of absolut
 class IsAbsoluteValue {S} [OrderedSemiring S] {R} [Semiringₓ R] (f : R → S) : Prop where
   abv_nonneg {} : ∀ x, 0 ≤ f x
   abv_eq_zero {} : ∀ {x}, f x = 0 ↔ x = 0
-  abv_add {} : ∀ x y, f (x+y) ≤ f x+f y
-  abv_mul {} : ∀ x y, f (x*y) = f x*f y
+  abv_add {} : ∀ x y, f (x + y) ≤ f x + f y
+  abv_mul {} : ∀ x y, f (x * y) = f x * f y
 
 namespace IsAbsoluteValue
 
@@ -198,18 +202,21 @@ variable {S : Type _} [OrderedSemiring S]
 
 variable {R : Type _} [Semiringₓ R] (abv : R → S) [IsAbsoluteValue abv]
 
--- failed to format: format: uncaught backtrack exception
 /-- A bundled absolute value is an absolute value. -/
-  instance
-    absolute_value.is_absolute_value
-    ( abv : AbsoluteValue R S ) : IsAbsoluteValue abv
-    where abv_nonneg := abv.nonneg abv_eq_zero _ := abv.eq_zero abv_add := abv.add_le abv_mul := abv.map_mul
+instance absolute_value.is_absolute_value (abv : AbsoluteValue R S) : IsAbsoluteValue abv where
+  abv_nonneg := abv.nonneg
+  abv_eq_zero := fun _ => abv.eq_zero
+  abv_add := abv.add_le
+  abv_mul := abv.map_mul
 
-/--  Convert an unbundled `is_absolute_value` to a bundled `absolute_value`. -/
+/-- Convert an unbundled `is_absolute_value` to a bundled `absolute_value`. -/
 @[simps]
-def to_absolute_value : AbsoluteValue R S :=
-  { toFun := abv, add_le' := abv_add abv, eq_zero' := fun _ => abv_eq_zero abv, nonneg' := abv_nonneg abv,
-    map_mul' := abv_mul abv }
+def to_absolute_value : AbsoluteValue R S where
+  toFun := abv
+  add_le' := abv_add abv
+  eq_zero' := fun _ => abv_eq_zero abv
+  nonneg' := abv_nonneg abv
+  map_mul' := abv_mul abv
 
 theorem abv_zero : abv 0 = 0 :=
   (abv_eq_zero abv).2 rfl
@@ -225,11 +232,11 @@ variable {S : Type _} [LinearOrderedRing S]
 
 variable {R : Type _} [Semiringₓ R] (abv : R → S) [IsAbsoluteValue abv]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  abs_is_absolute_value
-  { S } [ LinearOrderedRing S ] : IsAbsoluteValue ( abs : S → S )
-  where abv_nonneg := abs_nonneg abv_eq_zero _ := abs_eq_zero abv_add := abs_add abv_mul := abs_mul
+instance abs_is_absolute_value {S} [LinearOrderedRing S] : IsAbsoluteValue (abs : S → S) where
+  abv_nonneg := abs_nonneg
+  abv_eq_zero := fun _ => abs_eq_zero
+  abv_add := abs_add
+  abv_mul := abs_mul
 
 end LinearOrderedRing
 
@@ -245,7 +252,7 @@ theorem abv_one [Nontrivial R] : abv 1 = 1 :=
   (mul_right_inj' $ mt (abv_eq_zero abv).1 one_ne_zero).1 $ by
     rw [← abv_mul abv, mul_oneₓ, mul_oneₓ]
 
-/--  `abv` as a `monoid_with_zero_hom`. -/
+/-- `abv` as a `monoid_with_zero_hom`. -/
 def abv_hom [Nontrivial R] : MonoidWithZeroHom R S :=
   ⟨abv, abv_zero abv, abv_one abv, abv_mul abv⟩
 
@@ -270,7 +277,7 @@ theorem abv_neg (a : R) : abv (-a) = abv a := by
 theorem abv_sub (a b : R) : abv (a - b) = abv (b - a) := by
   rw [← neg_sub, abv_neg abv]
 
-theorem abv_sub_le (a b c : R) : abv (a - c) ≤ abv (a - b)+abv (b - c) := by
+theorem abv_sub_le (a b c : R) : abv (a - c) ≤ abv (a - b) + abv (b - c) := by
   simpa [sub_eq_add_neg, add_assocₓ] using abv_add abv (a - b) (b - c)
 
 theorem sub_abv_le_abv_sub (a b : R) : abv a - abv b ≤ abv (a - b) :=

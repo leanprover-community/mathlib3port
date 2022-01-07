@@ -36,11 +36,11 @@ namespace Nnreal
 
 variable {x y : ℝ≥0 }
 
-/--  Square root of a nonnegative real number. -/
+/-- Square root of a nonnegative real number. -/
 @[pp_nodot]
 noncomputable def sqrt : ℝ≥0 ≃o ℝ≥0 :=
   OrderIso.symm $
-    (StrictMono.orderIsoOfSurjective (fun x => x*x) fun x y h => mul_self_lt_mul_self x.2 h) $
+    (StrictMono.orderIsoOfSurjective (fun x => x * x) fun x y h => mul_self_lt_mul_self x.2 h) $
       (continuous_id.mul continuous_id).Surjective tendsto_mul_self_at_top $ by
         simp [order_bot.at_bot_eq]
 
@@ -50,13 +50,13 @@ theorem sqrt_le_sqrt_iff : sqrt x ≤ sqrt y ↔ x ≤ y :=
 theorem sqrt_lt_sqrt_iff : sqrt x < sqrt y ↔ x < y :=
   sqrt.lt_iff_lt
 
-theorem sqrt_eq_iff_sq_eq : sqrt x = y ↔ (y*y) = x :=
+theorem sqrt_eq_iff_sq_eq : sqrt x = y ↔ y * y = x :=
   sqrt.toEquiv.apply_eq_iff_eq_symm_apply.trans eq_comm
 
-theorem sqrt_le_iff : sqrt x ≤ y ↔ x ≤ y*y :=
+theorem sqrt_le_iff : sqrt x ≤ y ↔ x ≤ y * y :=
   sqrt.to_galois_connection _ _
 
-theorem le_sqrt_iff : x ≤ sqrt y ↔ (x*x) ≤ y :=
+theorem le_sqrt_iff : x ≤ sqrt y ↔ x * x ≤ y :=
   (sqrt.symm.to_galois_connection _ _).symm
 
 @[simp]
@@ -73,11 +73,11 @@ theorem sqrt_one : sqrt 1 = 1 :=
   sqrt_eq_iff_sq_eq.2 $ mul_oneₓ 1
 
 @[simp]
-theorem mul_self_sqrt (x : ℝ≥0 ) : (sqrt x*sqrt x) = x :=
+theorem mul_self_sqrt (x : ℝ≥0 ) : sqrt x * sqrt x = x :=
   sqrt.symm_apply_apply x
 
 @[simp]
-theorem sqrt_mul_self (x : ℝ≥0 ) : sqrt (x*x) = x :=
+theorem sqrt_mul_self (x : ℝ≥0 ) : sqrt (x * x) = x :=
   sqrt.apply_symm_apply x
 
 @[simp]
@@ -88,10 +88,10 @@ theorem sq_sqrt (x : ℝ≥0 ) : sqrt x ^ 2 = x := by
 theorem sqrt_sq (x : ℝ≥0 ) : sqrt (x ^ 2) = x := by
   rw [sq, sqrt_mul_self x]
 
-theorem sqrt_mul (x y : ℝ≥0 ) : sqrt (x*y) = sqrt x*sqrt y := by
+theorem sqrt_mul (x y : ℝ≥0 ) : sqrt (x * y) = sqrt x * sqrt y := by
   rw [sqrt_eq_iff_sq_eq, mul_mul_mul_commₓ, mul_self_sqrt, mul_self_sqrt]
 
-/--  `nnreal.sqrt` as a `monoid_with_zero_hom`. -/
+/-- `nnreal.sqrt` as a `monoid_with_zero_hom`. -/
 noncomputable def sqrt_hom : MonoidWithZeroHom ℝ≥0 ℝ≥0 :=
   ⟨sqrt, sqrt_zero, sqrt_one, sqrt_mul⟩
 
@@ -108,20 +108,20 @@ end Nnreal
 
 namespace Real
 
-/--  An auxiliary sequence of rational numbers that converges to `real.sqrt (mk f)`.
+/-- An auxiliary sequence of rational numbers that converges to `real.sqrt (mk f)`.
 Currently this sequence is not used in `mathlib`.  -/
 def sqrt_aux (f : CauSeq ℚ abs) : ℕ → ℚ
   | 0 => Rat.mkNat (f 0).num.toNat.sqrt (f 0).denom.sqrt
-  | n+1 =>
+  | n + 1 =>
     let s := sqrt_aux n
-    max 0 $ (s+f (n+1) / s) / 2
+    max 0 $ (s + f (n + 1) / s) / 2
 
 theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrt_aux f i
   | 0 => by
     rw [sqrt_aux, Rat.mk_nat_eq, Rat.mk_eq_div] <;> apply div_nonneg <;> exact Int.cast_nonneg.2 (Int.of_nat_nonneg _)
-  | n+1 => le_max_leftₓ _ _
+  | n + 1 => le_max_leftₓ _ _
 
-/--  The square root of a real number. This returns 0 for negative inputs. -/
+/-- The square root of a real number. This returns 0 for negative inputs. -/
 @[pp_nodot]
 noncomputable def sqrt (x : ℝ) : ℝ :=
   Nnreal.sqrt (Real.toNnreal x)
@@ -143,17 +143,41 @@ theorem sqrt_nonneg (x : ℝ) : 0 ≤ sqrt x :=
   Nnreal.coe_nonneg _
 
 @[simp]
-theorem mul_self_sqrt (h : 0 ≤ x) : (sqrt x*sqrt x) = x := by
+theorem mul_self_sqrt (h : 0 ≤ x) : sqrt x * sqrt x = x := by
   rw [sqrt, ← Nnreal.coe_mul, Nnreal.mul_self_sqrt, Real.coe_to_nnreal _ h]
 
 @[simp]
-theorem sqrt_mul_self (h : 0 ≤ x) : sqrt (x*x) = x :=
+theorem sqrt_mul_self (h : 0 ≤ x) : sqrt (x * x) = x :=
   (mul_self_inj_of_nonneg (sqrt_nonneg _) h).1 (mul_self_sqrt (mul_self_nonneg _))
 
-theorem sqrt_eq_iff_mul_self_eq (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = y ↔ (y*y) = x :=
+theorem sqrt_eq_cases : sqrt x = y ↔ y * y = x ∧ 0 ≤ y ∨ x < 0 ∧ y = 0 := by
+  constructor
+  · rintro rfl
+    cases' le_or_ltₓ 0 x with hle hlt
+    · exact Or.inl ⟨mul_self_sqrt hle, sqrt_nonneg x⟩
+      
+    · exact Or.inr ⟨hlt, sqrt_eq_zero_of_nonpos hlt.le⟩
+      
+    
+  · rintro (⟨rfl, hy⟩ | ⟨hx, rfl⟩)
+    exacts[sqrt_mul_self hy, sqrt_eq_zero_of_nonpos hx.le]
+    
+
+theorem sqrt_eq_iff_mul_self_eq (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = y ↔ y * y = x :=
   ⟨fun h => by
     rw [← h, mul_self_sqrt hx], fun h => by
     rw [← h, sqrt_mul_self hy]⟩
+
+theorem sqrt_eq_iff_mul_self_eq_of_pos (h : 0 < y) : sqrt x = y ↔ y * y = x := by
+  simp [sqrt_eq_cases, h.ne', h.le]
+
+@[simp]
+theorem sqrt_eq_one : sqrt x = 1 ↔ x = 1 :=
+  calc
+    sqrt x = 1 ↔ 1 * 1 = x := sqrt_eq_iff_mul_self_eq_of_pos zero_lt_one
+    _ ↔ x = 1 := by
+      rw [eq_comm, mul_oneₓ]
+    
 
 @[simp]
 theorem sq_sqrt (h : 0 ≤ x) : sqrt x ^ 2 = x := by
@@ -166,7 +190,7 @@ theorem sqrt_sq (h : 0 ≤ x) : sqrt (x ^ 2) = x := by
 theorem sqrt_eq_iff_sq_eq (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = y ↔ y ^ 2 = x := by
   rw [sq, sqrt_eq_iff_mul_self_eq hx hy]
 
-theorem sqrt_mul_self_eq_abs (x : ℝ) : sqrt (x*x) = |x| := by
+theorem sqrt_mul_self_eq_abs (x : ℝ) : sqrt (x * x) = |x| := by
   rw [← abs_mul_abs_self x, sqrt_mul_self (abs_nonneg _)]
 
 theorem sqrt_sq_eq_abs (x : ℝ) : sqrt (x ^ 2) = |x| := by
@@ -219,11 +243,11 @@ theorem abs_le_sqrt (h : x ^ 2 ≤ y) : |x| ≤ sqrt y := by
 
 theorem sq_le (h : 0 ≤ y) : x ^ 2 ≤ y ↔ -sqrt y ≤ x ∧ x ≤ sqrt y := by
   constructor
-  ·
-    simpa only [abs_le] using abs_le_sqrt
-  ·
-    rw [← abs_le, ← sq_abs]
+  · simpa only [abs_le] using abs_le_sqrt
+    
+  · rw [← abs_le, ← sq_abs]
     exact (le_sqrt (abs_nonneg x) h).mp
+    
 
 theorem neg_sqrt_le_of_sq_le (h : x ^ 2 ≤ y) : -sqrt y ≤ x :=
   ((sq_le ((sq_nonneg x).trans h)).mp h).1
@@ -257,11 +281,11 @@ theorem sqrt_pos : 0 < sqrt x ↔ 0 < x :=
       sqrt_eq_zero')
 
 @[simp]
-theorem sqrt_mul (hx : 0 ≤ x) (y : ℝ) : sqrt (x*y) = sqrt x*sqrt y := by
+theorem sqrt_mul (hx : 0 ≤ x) (y : ℝ) : sqrt (x * y) = sqrt x * sqrt y := by
   simp_rw [sqrt, ← Nnreal.coe_mul, Nnreal.coe_eq, Real.to_nnreal_mul hx, Nnreal.sqrt_mul]
 
 @[simp]
-theorem sqrt_mul' x {y : ℝ} (hy : 0 ≤ y) : sqrt (x*y) = sqrt x*sqrt y := by
+theorem sqrt_mul' x {y : ℝ} (hy : 0 ≤ y) : sqrt (x * y) = sqrt x * sqrt y := by
   rw [mul_commₓ, sqrt_mul hy, mul_commₓ]
 
 @[simp]
@@ -275,10 +299,10 @@ theorem sqrt_div (hx : 0 ≤ x) (y : ℝ) : sqrt (x / y) = sqrt x / sqrt y := by
 @[simp]
 theorem div_sqrt : x / sqrt x = sqrt x := by
   cases le_or_ltₓ x 0
-  ·
-    rw [sqrt_eq_zero'.mpr h, div_zero]
-  ·
-    rw [div_eq_iff (sqrt_ne_zero'.mpr h), mul_self_sqrt h.le]
+  · rw [sqrt_eq_zero'.mpr h, div_zero]
+    
+  · rw [div_eq_iff (sqrt_ne_zero'.mpr h), mul_self_sqrt h.le]
+    
 
 theorem sqrt_div_self' : sqrt x / x = 1 / sqrt x := by
   rw [← div_sqrt, one_div_div, div_sqrt]
@@ -291,11 +315,11 @@ theorem lt_sqrt (hx : 0 ≤ x) (hy : 0 ≤ y) : x < sqrt y ↔ x ^ 2 < y := by
 
 theorem sq_lt : x ^ 2 < y ↔ -sqrt y < x ∧ x < sqrt y := by
   constructor
-  ·
-    simpa only [← sqrt_lt_sqrt_iff (sq_nonneg x), sqrt_sq_eq_abs] using abs_lt.mp
-  ·
-    rw [← abs_lt, ← sq_abs]
+  · simpa only [← sqrt_lt_sqrt_iff (sq_nonneg x), sqrt_sq_eq_abs] using abs_lt.mp
+    
+  · rw [← abs_lt, ← sq_abs]
     exact fun h => (lt_sqrt (abs_nonneg x) (sqrt_pos.mp (lt_of_le_of_ltₓ (abs_nonneg x) h)).le).mp h
+    
 
 theorem neg_sqrt_lt_of_sq_lt (h : x ^ 2 < y) : -sqrt y < x :=
   (sq_lt.mp h).1

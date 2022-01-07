@@ -22,13 +22,13 @@ namespace NormFin
 
 open NormNum
 
-/--  `normalize_fin n a b` means that `a : fin n` is equivalent to `b : ℕ` in the modular sense -
+/-- `normalize_fin n a b` means that `a : fin n` is equivalent to `b : ℕ` in the modular sense -
 that is, `↑a ≡ b (mod n)`. This is used for translating the algebraic operations: addition,
 multiplication, zero and one, which use modulo for reduction. -/
 def normalize_fin (n : ℕ) (a : Finₓ n) (b : ℕ) :=
   a.1 = b % n
 
-/--  `normalize_fin_lt n a b` means that `a : fin n` is equivalent to `b : ℕ` in the embedding
+/-- `normalize_fin_lt n a b` means that `a : fin n` is equivalent to `b : ℕ` in the embedding
 sense - that is, `↑a = b`. This is used for operations that treat `fin n` as the subset
 `{0, ..., n-1}` of `ℕ`. For example, `fin.succ : fin n → fin (n+1)` is thought of as the successor
 function, but it does not lift to a map `zmod n → zmod (n+1)`; this addition only makes sense if
@@ -55,32 +55,32 @@ theorem normalize_fin_lt.lt {n a b} (h : normalize_fin_lt n a b) : b < n := by
 theorem normalize_fin_lt.of {n a b} (h : normalize_fin_lt n a b) : normalize_fin n a b :=
   h.trans $ Eq.symm $ Nat.mod_eq_of_ltₓ h.lt
 
-theorem normalize_fin.zero n : normalize_fin (n+1) 0 0 := by
+theorem normalize_fin.zero n : normalize_fin (n + 1) 0 0 := by
   rw [normalize_fin]
   norm_num
 
-theorem normalize_fin_lt.zero n : normalize_fin_lt (n+1) 0 0 :=
+theorem normalize_fin_lt.zero n : normalize_fin_lt (n + 1) 0 0 :=
   refl _
 
-theorem normalize_fin.one n : normalize_fin (n+1) 1 1 :=
+theorem normalize_fin.one n : normalize_fin (n + 1) 1 1 :=
   refl _
 
 theorem normalize_fin.add {n} {a b : Finₓ n} {a' b' c' : ℕ} (ha : normalize_fin n a a') (hb : normalize_fin n b b')
-    (h : (a'+b') = c') : normalize_fin n (a+b) c' := by
+    (h : a' + b' = c') : normalize_fin n (a + b) c' := by
   simp only [normalize_fin, ← h] at * <;> rw [Nat.add_modₓ, ← ha, ← hb, Finₓ.add_def]
 
 theorem normalize_fin.mul {n} {a b : Finₓ n} {a' b' c' : ℕ} (ha : normalize_fin n a a') (hb : normalize_fin n b b')
-    (h : (a'*b') = c') : normalize_fin n (a*b) c' := by
+    (h : a' * b' = c') : normalize_fin n (a * b) c' := by
   simp only [normalize_fin, ← h] at * <;> rw [Nat.mul_modₓ, ← ha, ← hb, Finₓ.mul_def]
 
 theorem normalize_fin.bit0 {n} {a : Finₓ n} {a' : ℕ} (h : normalize_fin n a a') : normalize_fin n (bit0 a) (bit0 a') :=
   h.add h rfl
 
-theorem normalize_fin.bit1 {n} {a : Finₓ (n+1)} {a' : ℕ} (h : normalize_fin (n+1) a a') :
-    normalize_fin (n+1) (bit1 a) (bit1 a') :=
+theorem normalize_fin.bit1 {n} {a : Finₓ (n + 1)} {a' : ℕ} (h : normalize_fin (n + 1) a a') :
+    normalize_fin (n + 1) (bit1 a) (bit1 a') :=
   h.bit0.add (normalize_fin.one _) rfl
 
-theorem normalize_fin_lt.succ {n} {a : Finₓ n} {a' b : ℕ} (h : normalize_fin_lt n a a') (e : (a'+1) = b) :
+theorem normalize_fin_lt.succ {n} {a : Finₓ n} {a' b : ℕ} (h : normalize_fin_lt n a a') (e : a' + 1 = b) :
     normalize_fin_lt n.succ (Finₓ.succ a) b := by
   simpa [normalize_fin_lt, ← e] using h
 
@@ -101,27 +101,27 @@ theorem normalize_fin.cast {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : normalize_f
   convert ← normalize_fin_lt.cast h
 
 theorem normalize_fin_lt.cast_add {n m} {a : Finₓ n} {a' : ℕ} (h : normalize_fin_lt n a a') :
-    normalize_fin_lt (n+m) (Finₓ.castAdd m a) a' := by
+    normalize_fin_lt (n + m) (Finₓ.castAdd m a) a' := by
   simpa [normalize_fin_lt] using h
 
 theorem normalize_fin_lt.cast_succ {n} {a : Finₓ n} {a' : ℕ} (h : normalize_fin_lt n a a') :
-    normalize_fin_lt (n+1) (Finₓ.castSucc a) a' :=
+    normalize_fin_lt (n + 1) (Finₓ.castSucc a) a' :=
   normalize_fin_lt.cast_add h
 
 theorem normalize_fin_lt.add_nat {n m m'} (hm : m = m') {a : Finₓ n} {a' b : ℕ} (h : normalize_fin_lt n a a')
-    (e : (a'+m') = b) : normalize_fin_lt (n+m) (@Finₓ.addNat n m a) b := by
+    (e : a' + m' = b) : normalize_fin_lt (n + m) (@Finₓ.addNat n m a) b := by
   simpa [normalize_fin_lt, ← e, ← hm] using h
 
 theorem normalize_fin_lt.nat_add {n m n'} (hn : n = n') {a : Finₓ m} {a' b : ℕ} (h : normalize_fin_lt m a a')
-    (e : (n'+a') = b) : normalize_fin_lt (n+m) (@Finₓ.natAdd n m a) b := by
+    (e : n' + a' = b) : normalize_fin_lt (n + m) (@Finₓ.natAdd n m a) b := by
   simpa [normalize_fin_lt, ← e, ← hn] using h
 
 theorem normalize_fin.reduce {n} {a : Finₓ n} {n' a' b k nk : ℕ} (hn : n = n') (h : normalize_fin n a a')
-    (e1 : (n'*k) = nk) (e2 : (nk+b) = a') : normalize_fin n a b := by
+    (e1 : n' * k = nk) (e2 : nk + b = a') : normalize_fin n a b := by
   rwa [← e2, ← e1, ← hn, normalize_fin, add_commₓ, Nat.add_mul_mod_self_leftₓ] at h
 
 theorem normalize_fin_lt.reduce {n} {a : Finₓ n} {n' a' b k nk : ℕ} (hn : n = n') (h : normalize_fin n a a')
-    (e1 : (n'*k) = nk) (e2 : (nk+b) = a') (hl : b < n') : normalize_fin_lt n a b :=
+    (e1 : n' * k = nk) (e2 : nk + b = a') (hl : b < n') : normalize_fin_lt n a b :=
   normalize_fin_lt.mk hn (h.reduce hn e1 e2) hl
 
 theorem normalize_fin.eq {n} {a b : Finₓ n} {c : ℕ} (ha : normalize_fin n a c) (hb : normalize_fin n b c) : a = b :=
@@ -135,17 +135,15 @@ theorem normalize_fin.le {n} {a b : Finₓ n} {a' b' : ℕ} (ha : normalize_fin 
     (h : a' ≤ b') : a ≤ b := by
   have ha' := normalize_fin_lt.mk rfl ha (h.trans_lt hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler monad
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler alternative
-/--  The monad for the `norm_fin` internal tactics. The state consists of an instance cache for `ℕ`,
+/-- The monad for the `norm_fin` internal tactics. The state consists of an instance cache for `ℕ`,
 and a tuple `(nn, n', p)` where `p` is a proof of `n = n'` and `nn` is `n` evaluated to a natural
 number. (`n` itself is implicit.)  It is in an `option` because it is lazily initialized - for many
 `n` we will never need this information, and indeed eagerly computing it would make some reductions
 fail spuriously if `n` is not a numeral. -/
 unsafe def eval_fin_m (α : Type) : Type :=
-  StateTₓ (instance_cache × Option (ℕ × expr × expr)) tactic α deriving [anonymous], [anonymous]
+  StateTₓ (instance_cache × Option (ℕ × expr × expr)) tactic α deriving Monadₓ, Alternativeₓ
 
-/--  Lifts a tactic into the `eval_fin_m` monad. -/
+/-- Lifts a tactic into the `eval_fin_m` monad. -/
 @[inline]
 unsafe def eval_fin_m.lift {α} (m : tactic α) : eval_fin_m α :=
   ⟨fun ⟨ic, r⟩ => do
@@ -155,14 +153,14 @@ unsafe def eval_fin_m.lift {α} (m : tactic α) : eval_fin_m α :=
 unsafe instance {α} : Coe (tactic α) (eval_fin_m α) :=
   ⟨eval_fin_m.lift⟩
 
-/--  Lifts an `instance_cache` tactic into the `eval_fin_m` monad. -/
+/-- Lifts an `instance_cache` tactic into the `eval_fin_m` monad. -/
 @[inline]
 unsafe def eval_fin_m.lift_ic {α} (m : instance_cache → tactic (instance_cache × α)) : eval_fin_m α :=
   ⟨fun ⟨ic, r⟩ => do
     let (ic, a) ← m ic
     pure (a, ic, r)⟩
 
-/--  Evaluates a monadic action with a fresh `n` cache, and restore the old cache on completion of
+/-- Evaluates a monadic action with a fresh `n` cache, and restore the old cache on completion of
 the action. This is used when evaluating a tactic in the context of a different `n` than the parent
 context. For example if we are evaluating `fin.succ a`, then `a : fin n` and
 `fin.succ a : fin (n+1)`, so the parent cache will be about `n+1` and we need a separate cache for
@@ -173,7 +171,7 @@ unsafe def eval_fin_m.reset {α} (m : eval_fin_m α) : eval_fin_m α :=
     let (a, ic, _) ← m.run ⟨ic, none⟩
     pure (a, ic, r)⟩
 
-/--  Given `n`, returns a tuple `(nn, n', p)` where `p` is a proof of `n = n'` and `nn` is `n`
+/-- Given `n`, returns a tuple `(nn, n', p)` where `p` is a proof of `n = n'` and `nn` is `n`
 evaluated to a natural number. The result of the evaluation is cached for future references.
 Future calls to this function must use the same value of `n`, unless it is in a sub-context
 created by `eval_fin_m.reset`. -/
@@ -187,14 +185,14 @@ unsafe def eval_fin_m.eval_n (n : expr) : eval_fin_m (ℕ × expr × expr) :=
       pure (np, ic, some np)
     | some np => pure (np, ic, some np)⟩
 
-/--  Run an `eval_fin_m` action with a new cache and discard the cache after evaluation. -/
+/-- Run an `eval_fin_m` action with a new cache and discard the cache after evaluation. -/
 @[inline]
 unsafe def eval_fin_m.run {α} (m : eval_fin_m α) : tactic α := do
   let ic ← mk_instance_cache (quote.1 ℕ)
   let (a, _) ← StateTₓ.run m (ic, none)
   pure a
 
-/--  The expression constructors recognized by the `eval_fin` evaluator. This is used instead of a
+/-- The expression constructors recognized by the `eval_fin` evaluator. This is used instead of a
 direct expr pattern match because expr pattern matches generate very large terms under the
 hood so going via an intermediate inductive type like this is more efficient. -/
 unsafe inductive match_fin_result
@@ -217,7 +215,7 @@ section
 
 open MatchFinResult
 
-/--  Match a fin expression of the form `(coe_fn f a)` where `f` is some fin function. Several fin
+/-- Match a fin expression of the form `(coe_fn f a)` where `f` is some fin function. Several fin
 functions are written this way: for example `cast_le : n ≤ m → fin n ↪o fin m` is not actually a
 function but rather an order embedding with a coercion to a function. -/
 unsafe def match_fin_coe_fn (a : expr) : expr → Option match_fin_result
@@ -229,7 +227,7 @@ unsafe def match_fin_coe_fn (a : expr) : expr → Option match_fin_result
   | quote.1 (@Finₓ.natAdd (%%ₓn) (%%ₓm)) => some (nat_add n m a)
   | _ => none
 
-/--  Match a fin expression to a `match_fin_result`, for easier pattern matching in the
+/-- Match a fin expression to a `match_fin_result`, for easier pattern matching in the
 evaluator. -/
 unsafe def match_fin : expr → Option match_fin_result
   | quote.1 (@HasZero.zero _ (@Finₓ.hasZero (%%ₓn))) => some (zero n)
@@ -245,7 +243,7 @@ unsafe def match_fin : expr → Option match_fin_result
 
 end
 
-/--  `reduce_fin lt n a (a', pa)` expects that `pa : normalize_fin n a a'` where `a'`
+/-- `reduce_fin lt n a (a', pa)` expects that `pa : normalize_fin n a a'` where `a'`
 is a natural numeral, and produces `(b, pb)` where `pb : normalize_fin n a b` if `lt` is false, or
 `pb : normalize_fin_lt n a b` if `lt` is true. In either case, `b` will be chosen to be less than
 `n`, but if `lt` is true then we also prove it. This requires that `n` can be evaluated to a
@@ -272,7 +270,7 @@ unsafe def reduce_fin' : Bool → expr → expr → expr × expr → eval_fin_m 
               pure (ic, b, (quote.1 @normalize_fin_lt.reduce).mk_app [n, a, n', a', b, k, nk, pn, pa, pe1, pe2, p])
             else pure (ic, b, (quote.1 @normalize_fin.reduce).mk_app [n, a, n', a', b, k, nk, pn, pa, pe1, pe2])
 
-/--  `eval_fin_lt' eval_fin n a` expects that `a : fin n`, and produces `(b, p)` where
+/-- `eval_fin_lt' eval_fin n a` expects that `a : fin n`, and produces `(b, p)` where
 `p : normalize_fin_lt n a b`. (It is mutually recursive with `eval_fin` which is why it takes the
 function as an argument.) -/
 unsafe def eval_fin_lt' (eval_fin : expr → eval_fin_m (expr × expr)) : expr → expr → eval_fin_m (expr × expr)
@@ -314,12 +312,12 @@ unsafe def eval_fin_lt' (eval_fin : expr → eval_fin_m (expr × expr)) : expr �
         let p ← eval_fin_m.lift_ic fun ic => prove_lt_nat ic a' n'
         pure (a', (quote.1 @normalize_fin_lt.mk).mk_app [n, a, a', n', pn, pa, p])
 
-/--  Get `n` such that `a : fin n`. -/
+/-- Get `n` such that `a : fin n`. -/
 unsafe def get_fin_type (a : expr) : tactic expr := do
   let quote.1 (Finₓ (%%ₓn)) ← infer_type a
   pure n
 
-/--  Given `a : fin n`, `eval_fin a` returns `(b, p)` where `p : normalize_fin n a b`. This function
+/-- Given `a : fin n`, `eval_fin a` returns `(b, p)` where `p : normalize_fin n a b`. This function
 does no reduction of the numeral `b`; for example `eval_fin (5 + 5 : fin 6)` returns `10`. It works
 even if `n` is a variable, for example `eval_fin (5 + 5 : fin (n+1))` also returns `10`. -/
 unsafe def eval_fin : expr → eval_fin_m (expr × expr)
@@ -352,19 +350,19 @@ unsafe def eval_fin : expr → eval_fin_m (expr × expr)
         let (a', pa) ← eval_fin_lt' eval_fin n a
         pure (a', (quote.1 @normalize_fin_lt.of).mk_app [n, a, a', pa])
 
-/--  `eval_fin_lt n a` expects that `a : fin n`, and produces `(b, p)` where
+/-- `eval_fin_lt n a` expects that `a : fin n`, and produces `(b, p)` where
 `p : normalize_fin_lt n a b`. -/
 unsafe def eval_fin_lt : expr → expr → eval_fin_m (expr × expr) :=
   eval_fin_lt' eval_fin
 
-/--  Given `a : fin n`, `eval_fin ff n a` returns `(b, p)` where `p : normalize_fin n a b`, and
+/-- Given `a : fin n`, `eval_fin ff n a` returns `(b, p)` where `p : normalize_fin n a b`, and
 `eval_fin tt n a` returns `p : normalize_fin_lt n a b`. Unlike `eval_fin`, this also does reduction
 of the numeral `b`; for example `reduce_fin ff 6 (5 + 5 : fin 6)` returns `4`. As a result, it
 fails if `n` is a variable, for example `reduce_fin ff (n+1) (5 + 5 : fin (n+1))` fails. -/
 unsafe def reduce_fin (lt : Bool) (n a : expr) : eval_fin_m (expr × expr) :=
   eval_fin a >>= reduce_fin' lt n a
 
-/--  If `a b : fin n` and `a'` and `b'` are as returned by `eval_fin`,
+/-- If `a b : fin n` and `a'` and `b'` are as returned by `eval_fin`,
 then `prove_lt_fin' n a b a' b'` proves `a < b`. -/
 unsafe def prove_lt_fin' : expr → expr → expr → expr × expr → expr × expr → eval_fin_m expr
   | n, a, b, a', b' => do
@@ -373,7 +371,7 @@ unsafe def prove_lt_fin' : expr → expr → expr → expr × expr → expr × e
     let p ← eval_fin_m.lift_ic fun ic => prove_lt_nat ic a' b'
     pure ((quote.1 @normalize_fin.lt).mk_app [n, a, b, a', b', pa, pb, p])
 
-/--  If `a b : fin n` and `a'` and `b'` are as returned by `eval_fin`,
+/-- If `a b : fin n` and `a'` and `b'` are as returned by `eval_fin`,
 then `prove_le_fin' n a b a' b'` proves `a ≤ b`. -/
 unsafe def prove_le_fin' : expr → expr → expr → expr × expr → expr × expr → eval_fin_m expr
   | n, a, b, a', b' => do
@@ -382,7 +380,7 @@ unsafe def prove_le_fin' : expr → expr → expr → expr × expr → expr × e
     let p ← eval_fin_m.lift_ic fun ic => prove_le_nat ic a' b'
     pure ((quote.1 @normalize_fin.le).mk_app [n, a, b, a', b', pa, pb, p])
 
-/--  If `a b : fin n` and `a'` and `b'` are as returned by `eval_fin`,
+/-- If `a b : fin n` and `a'` and `b'` are as returned by `eval_fin`,
 then `prove_eq_fin' n a b a' b'` proves `a = b`. -/
 unsafe def prove_eq_fin' : expr → expr → expr → expr × expr → expr × expr → eval_fin_m expr
   | n, a, b, (a', pa), (b', pb) =>
@@ -394,21 +392,21 @@ unsafe def prove_eq_fin' : expr → expr → expr → expr × expr → expr × e
       guardₓ (a' =ₐ b')
       pure ((quote.1 @normalize_fin.eq).mk_app [n, a, b, a', pa, pb])
 
-/--  Given a function with the type of `prove_eq_fin'`, evaluates it with the given `a` and `b`. -/
+/-- Given a function with the type of `prove_eq_fin'`, evaluates it with the given `a` and `b`. -/
 unsafe def eval_prove_fin (f : expr → expr → expr → expr × expr → expr × expr → eval_fin_m expr) (a b : expr) :
     tactic expr := do
   let n ← get_fin_type a
   eval_fin_m.run $ eval_fin a >>= fun a' => eval_fin b >>= f n a b a'
 
-/--  If `a b : fin n`, then `prove_eq_fin a b` proves `a = b`. -/
+/-- If `a b : fin n`, then `prove_eq_fin a b` proves `a = b`. -/
 unsafe def prove_eq_fin : expr → expr → tactic expr :=
   eval_prove_fin prove_eq_fin'
 
-/--  If `a b : fin n`, then `prove_lt_fin a b` proves `a < b`. -/
+/-- If `a b : fin n`, then `prove_lt_fin a b` proves `a < b`. -/
 unsafe def prove_lt_fin : expr → expr → tactic expr :=
   eval_prove_fin prove_lt_fin'
 
-/--  If `a b : fin n`, then `prove_le_fin a b` proves `a ≤ b`. -/
+/-- If `a b : fin n`, then `prove_le_fin a b` proves `a ≤ b`. -/
 unsafe def prove_le_fin : expr → expr → tactic expr :=
   eval_prove_fin prove_le_fin'
 
@@ -416,7 +414,7 @@ section
 
 open NormNum.MatchNumeralResult
 
-/--  Given expressions `n` and `m` such that `n` is definitionally equal to `m.succ`, and
+/-- Given expressions `n` and `m` such that `n` is definitionally equal to `m.succ`, and
 a natural numeral `a`, proves `(b, ⊢ normalize_fin n b a)`, where `n` and `m` are both used
 in the construction of the numeral `b : fin n`. -/
 unsafe def mk_fin_numeral (n m : expr) : expr → Option (expr × expr)
@@ -443,7 +441,7 @@ unsafe def mk_fin_numeral (n m : expr) : expr → Option (expr × expr)
 
 end
 
-/--  The common prep work for the cases in `eval_ineq`. Given inputs `a b : fin n`, it calls
+/-- The common prep work for the cases in `eval_ineq`. Given inputs `a b : fin n`, it calls
 `f n a' b' na nb` where `a'` and `b'` are the result of `eval_fin` and `na` and `nb` are
 `a' % n` and `b' % n` as natural numbers. -/
 unsafe def eval_rel {α} (a b : expr) (f : expr → expr × expr → expr × expr → ℕ → ℕ → eval_fin_m α) : tactic α := do
@@ -456,7 +454,7 @@ unsafe def eval_rel {α} (a b : expr) (f : expr → expr × expr → expr × exp
       let nb ← eval_fin_m.lift b'.to_nat
       f n (a', pa) (b', pb) (na % nn) (nb % nn)
 
-/--  Given `a b : fin n`, proves either `(n, tt, p)` where `p : a < b` or
+/-- Given `a b : fin n`, proves either `(n, tt, p)` where `p : a < b` or
 `(n, ff, p)` where `p : b ≤ a`. -/
 unsafe def prove_lt_ge_fin : expr → expr → tactic (expr × Bool × expr)
   | a, b =>
@@ -464,7 +462,7 @@ unsafe def prove_lt_ge_fin : expr → expr → tactic (expr × Bool × expr)
       if na < nb then Prod.mk n <$> Prod.mk tt <$> prove_lt_fin' n a b a' b'
       else Prod.mk n <$> Prod.mk ff <$> prove_le_fin' n b a b' a'
 
-/--  Given `a b : fin n`, proves either `(n, tt, p)` where `p : a = b` or
+/-- Given `a b : fin n`, proves either `(n, tt, p)` where `p : a = b` or
 `(n, ff, p)` where `p : a ≠ b`. -/
 unsafe def prove_eq_ne_fin : expr → expr → tactic (expr × Bool × expr)
   | a, b =>
@@ -478,7 +476,7 @@ unsafe def prove_eq_ne_fin : expr → expr → tactic (expr × Bool × expr)
           let p ← prove_lt_fin' n b a b' a'
           pure (n, ff, (quote.1 (@ne_of_gtₓ (Finₓ (%%ₓn)) _)).mk_app [a, b, p])
 
-/--  A `norm_num` extension that evaluates equalities and inequalities on the type `fin n`.
+/-- A `norm_num` extension that evaluates equalities and inequalities on the type `fin n`.
 
 ```
 example : (5 : fin 7) = fin.succ (fin.succ 3) := by norm_num
@@ -502,7 +500,7 @@ unsafe def eval_ineq : expr → tactic (expr × expr)
     if Eq then false_intro (quote.1 (not_not_intro (%%ₓp : (%%ₓa : Finₓ (%%ₓn)) = %%ₓb))) else true_intro p
   | _ => failed
 
-/--  Evaluates `e : fin n` to a natural number less than `n`. Returns `none` if it is not a natural
+/-- Evaluates `e : fin n` to a natural number less than `n`. Returns `none` if it is not a natural
 number or greater than `n`. -/
 unsafe def as_numeral (n e : expr) : eval_fin_m (Option ℕ) :=
   match e.to_nat with
@@ -511,7 +509,7 @@ unsafe def as_numeral (n e : expr) : eval_fin_m (Option ℕ) :=
     let (nn, _) ← eval_fin_m.eval_n n
     pure $ if Ne < nn then some Ne else none
 
-/--  Given `a : fin n`, returns `(b, ⊢ a = b)` where `b` is a normalized fin numeral. Fails if `a`
+/-- Given `a : fin n`, returns `(b, ⊢ a = b)` where `b` is a normalized fin numeral. Fails if `a`
 is already normalized. -/
 unsafe def eval_fin_num (a : expr) : tactic (expr × expr) := do
   let n ← get_fin_type a
@@ -519,9 +517,9 @@ unsafe def eval_fin_num (a : expr) : tactic (expr × expr) := do
       as_numeral n a >>= fun o => guardb o.is_none
       let (a', pa) ← eval_fin a
       let (a', pa) ← reduce_fin' ff n a (a', pa) <|> pure (a', pa)
-      let (nm+1, _) ← eval_fin_m.eval_n n | failure
+      let (nm + 1, _) ← eval_fin_m.eval_n n | failure
       let m' ← eval_fin_m.lift_ic fun ic => ic.of_nat nm
-      let n' ← eval_fin_m.lift_ic fun ic => ic.of_nat (nm+1)
+      let n' ← eval_fin_m.lift_ic fun ic => ic.of_nat (nm + 1)
       let (b, pb) ← mk_fin_numeral n' m' a'
       pure (b, (quote.1 @normalize_fin.eq).mk_app [n, a, b, a', pa, pb])
 
@@ -531,7 +529,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-/--  Rewrites occurrences of fin expressions to normal form anywhere in the goal.
+/-- Rewrites occurrences of fin expressions to normal form anywhere in the goal.
 The `norm_num` extension will only rewrite fin expressions if they appear in equalities and
 inequalities. For example if the goal is `P (2 + 2 : fin 3)` then `norm_num` will not do anything
 but `norm_fin` will reduce the goal to `P 1`.
@@ -543,8 +541,7 @@ as a plugin.) -/
 unsafe def norm_fin (hs : parse simp_arg_list) : tactic Unit :=
   try (simp_top_down tactic.norm_fin.eval_fin_num) >> try (norm_num hs (loc.ns [none]))
 
-/-- 
-Rewrites occurrences of fin expressions to normal form anywhere in the goal.
+/-- Rewrites occurrences of fin expressions to normal form anywhere in the goal.
 The `norm_num` extension will only rewrite fin expressions if they appear in equalities and
 inequalities. For example if the goal is `P (2 + 2 : fin 3)` then `norm_num` will not do anything
 but `norm_fin` will reduce the goal to `P 1`.

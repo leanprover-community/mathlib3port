@@ -14,7 +14,7 @@ In this file we define a typeclass `is_empty`, which expresses that a type has n
 
 variable {α β γ : Sort _}
 
-/--  `is_empty α` expresses that `α` is empty. -/
+/-- `is_empty α` expresses that `α` is empty. -/
 @[protect_proj]
 class IsEmpty (α : Sort _) : Prop where
   False : α → False
@@ -55,22 +55,22 @@ instance [IsEmpty α] [IsEmpty β] : IsEmpty (Psum α β) :=
 instance {α β} [IsEmpty α] [IsEmpty β] : IsEmpty (Sum α β) :=
   ⟨fun x => Sum.rec IsEmpty.false IsEmpty.false x⟩
 
-/--  subtypes of an empty type are empty -/
+/-- subtypes of an empty type are empty -/
 instance [IsEmpty α] (p : α → Prop) : IsEmpty (Subtype p) :=
   ⟨fun x => IsEmpty.false x.1⟩
 
-/--  subtypes by an all-false predicate are false. -/
+/-- subtypes by an all-false predicate are false. -/
 theorem Subtype.is_empty_of_false {p : α → Prop} (hp : ∀ a, ¬p a) : IsEmpty (Subtype p) :=
   ⟨fun x => hp _ x.2⟩
 
-/--  subtypes by false are false. -/
+/-- subtypes by false are false. -/
 instance Subtype.is_empty_false : IsEmpty { a : α // False } :=
   Subtype.is_empty_of_false fun a => id
 
 example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) := by
   infer_instance
 
-/--  Eliminate out of a type that `is_empty` (without using projection notation). -/
+/-- Eliminate out of a type that `is_empty` (without using projection notation). -/
 @[elab_as_eliminator]
 def isEmptyElim [IsEmpty α] {p : α → Sort _} (a : α) : p a :=
   (IsEmpty.false a).elim
@@ -82,11 +82,11 @@ namespace IsEmpty
 
 open Function
 
-/--  Eliminate out of a type that `is_empty` (using projection notation). -/
+/-- Eliminate out of a type that `is_empty` (using projection notation). -/
 protected def elim (h : IsEmpty α) {p : α → Sort _} (a : α) : p a :=
   isEmptyElim a
 
-/--  Non-dependent version of `is_empty.elim`. Helpful if the elaborator cannot elaborate `h.elim a`
+/-- Non-dependent version of `is_empty.elim`. Helpful if the elaborator cannot elaborate `h.elim a`
   correctly. -/
 protected def elim' {β : Sort _} (h : IsEmpty α) (a : α) : β :=
   h.elim a

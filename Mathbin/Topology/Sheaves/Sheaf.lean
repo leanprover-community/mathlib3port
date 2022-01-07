@@ -57,8 +57,7 @@ namespace Presheaf
 
 open SheafConditionEqualizerProducts
 
-/-- 
-The sheaf condition for a `F : presheaf C X` requires that the morphism
+/-- The sheaf condition for a `F : presheaf C X` requires that the morphism
 `F.obj U ⟶ ∏ F.obj (U i)` (where `U` is some open set which is the union of the `U i`)
 is the equalizer of the two morphisms
 `∏ F.obj (U i) ⟶ ∏ F.obj (U i) ⊓ (U j)`.
@@ -66,13 +65,11 @@ is the equalizer of the two morphisms
 def is_sheaf (F : presheaf C X) : Prop :=
   ∀ ⦃ι : Type v⦄ U : ι → opens X, Nonempty (is_limit (sheaf_condition_equalizer_products.fork F U))
 
-/-- 
-The presheaf valued in `punit` over any topological space is a sheaf.
+/-- The presheaf valued in `punit` over any topological space is a sheaf.
 -/
 theorem is_sheaf_punit (F : presheaf (CategoryTheory.Discrete PUnit) X) : F.is_sheaf := fun ι U => ⟨punit_cone_is_limit⟩
 
-/-- 
-Transfer the sheaf condition across an isomorphism of presheaves.
+/-- Transfer the sheaf condition across an isomorphism of presheaves.
 -/
 theorem is_sheaf_of_iso {F G : presheaf C X} (α : F ≅ G) (h : F.is_sheaf) : G.is_sheaf := fun ι U =>
   ⟨is_limit.of_iso_limit ((is_limit.postcompose_inv_equiv _ _).symm (h U).some)
@@ -85,26 +82,21 @@ end Presheaf
 
 variable (C X)
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler category
-/-- 
-A `sheaf C X` is a presheaf of objects from `C` over a (bundled) topological space `X`,
+/-- A `sheaf C X` is a presheaf of objects from `C` over a (bundled) topological space `X`,
 satisfying the sheaf condition.
 -/
 def sheaf : Type max u v :=
-  { F : presheaf C X // F.is_sheaf }deriving [anonymous]
+  { F : presheaf C X // F.is_sheaf }deriving category
 
 instance sheaf_inhabited : Inhabited (sheaf (CategoryTheory.Discrete PUnit) X) :=
   ⟨⟨functor.star _, presheaf.is_sheaf_punit _⟩⟩
 
 namespace Sheaf
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler full
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler faithful
-/-- 
-The forgetful functor from sheaves to presheaves.
+/-- The forgetful functor from sheaves to presheaves.
 -/
 def forget : Top.Sheaf C X ⥤ Top.Presheaf C X :=
-  full_subcategory_inclusion presheaf.is_sheaf deriving [anonymous], [anonymous]
+  full_subcategory_inclusion presheaf.is_sheaf deriving full, faithful
 
 @[simp]
 theorem id_app (F : sheaf C X) t : (𝟙 F : F ⟶ F).app t = 𝟙 _ :=

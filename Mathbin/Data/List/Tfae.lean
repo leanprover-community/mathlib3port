@@ -11,8 +11,7 @@ This file allows to state that all propositions in a list are equivalent. It is 
 
 namespace List
 
-/-- 
-tfae: The Following (propositions) Are Equivalent.
+/-- tfae: The Following (propositions) Are Equivalent.
 
 The `tfae_have` and `tfae_finish` tactics can be useful in proofs with `tfae` goals.
 -/
@@ -34,14 +33,14 @@ theorem tfae_cons_of_mem {a b} {l : List Prop} (h : b ∈ l) : tfae (a :: l) ↔
       fun p hp q hq => H _ (Or.inr hp) _ (Or.inr hq)⟩,
     by
     rintro ⟨ab, H⟩ p (rfl | hp) q (rfl | hq)
-    ·
-      rfl
-    ·
-      exact ab.trans (H _ h _ hq)
-    ·
-      exact (ab.trans (H _ h _ hp)).symm
-    ·
-      exact H _ hp _ hq⟩
+    · rfl
+      
+    · exact ab.trans (H _ h _ hq)
+      
+    · exact (ab.trans (H _ h _ hp)).symm
+      
+    · exact H _ hp _ hq
+      ⟩
 
 theorem tfae_cons_cons {a b} {l : List Prop} : tfae (a :: b :: l) ↔ (a ↔ b) ∧ tfae (b :: l) :=
   tfae_cons_of_mem (Or.inl rfl)
@@ -49,14 +48,14 @@ theorem tfae_cons_cons {a b} {l : List Prop} : tfae (a :: b :: l) ↔ (a ↔ b) 
 theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀, ∀ a ∈ l, ∀, a ↔ b) : tfae l := fun a₁ h₁ a₂ h₂ =>
   (h _ h₁).trans (h _ h₂).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:470:4: warning: unsupported binary notation `«->»
+-- ././Mathport/Syntax/Translate/Basic.lean:473:4: warning: unsupported binary notation `«->»
 theorem tfae_of_cycle {a b} {l : List Prop} :
     List.Chain («->» · ·) a (b :: l) → (ilast' b l → a) → tfae (a :: b :: l) := by
   induction' l with c l IH generalizing a b <;>
     simp only [tfae_cons_cons, tfae_singleton, and_trueₓ, chain_cons, chain.nil] at *
-  ·
-    intro a b
+  · intro a b
     exact Iff.intro a b
+    
   rintro ⟨ab, ⟨bc, ch⟩⟩ la
   have := IH ⟨bc, ch⟩ (ab ∘ la)
   exact ⟨⟨ab, la ∘ (this.2 c (Or.inl rfl) _ (ilast'_mem _ _)).1 ∘ bc⟩, this⟩

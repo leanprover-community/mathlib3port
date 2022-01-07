@@ -21,17 +21,15 @@ universe u
 
 @[ext, to_additive]
 theorem Monoidₓ.ext {M : Type u} ⦃m₁ m₂ : Monoidₓ M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ := by
-  have h₁ : (@Monoidₓ.toMulOneClass _ m₁).one = (@Monoidₓ.toMulOneClass _ m₂).one
-  exact congr_argₓ (@MulOneClass.one M) (MulOneClass.ext h_mul)
+  have h₁ : (@Monoidₓ.toMulOneClass _ m₁).one = (@Monoidₓ.toMulOneClass _ m₂).one :=
+    congr_argₓ (@MulOneClass.one M) (MulOneClass.ext h_mul)
   set f : @MonoidHom M M (@Monoidₓ.toMulOneClass _ m₁) (@Monoidₓ.toMulOneClass _ m₂) :=
     { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_funₓ (congr_funₓ h_mul x) y }
   have hpow : m₁.npow = m₂.npow := by
-    ·
-      ext n x
-      exact @MonoidHom.map_pow M M m₁ m₂ f x n
-  (
-    cases m₁
-    cases m₂)
+    ext n x
+    exact @MonoidHom.map_pow M M m₁ m₂ f x n
+  cases m₁
+  cases m₂
   congr <;> assumption
 
 @[to_additive]
@@ -84,8 +82,8 @@ theorem CancelCommMonoid.ext {M : Type _} ⦃m₁ m₂ : CancelCommMonoid M⦄ (
 @[ext, to_additive]
 theorem DivInvMonoidₓ.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoidₓ M⦄ (h_mul : m₁.mul = m₂.mul) (h_inv : m₁.inv = m₂.inv) :
     m₁ = m₂ := by
-  have h₁ : (@DivInvMonoidₓ.toMonoid _ m₁).one = (@DivInvMonoidₓ.toMonoid _ m₂).one
-  exact congr_argₓ (@Monoidₓ.one M) (Monoidₓ.ext h_mul)
+  have h₁ : (@DivInvMonoidₓ.toMonoid _ m₁).one = (@DivInvMonoidₓ.toMonoid _ m₂).one :=
+    congr_argₓ (@Monoidₓ.one M) (Monoidₓ.ext h_mul)
   set f :
     @MonoidHom M M
       (by
@@ -101,9 +99,8 @@ theorem DivInvMonoidₓ.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoidₓ M⦄ (h_
   have hdiv : m₁.div = m₂.div := by
     ext a b
     exact @MonoidHom.map_div' M M m₁ m₂ f (congr_funₓ h_inv) a b
-  (
-    cases m₁
-    cases m₂)
+  cases m₁
+  cases m₂
   congr
   exacts[h_mul, h₁, hpow, h_inv, hdiv, hzpow]
 

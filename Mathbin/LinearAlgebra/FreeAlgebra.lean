@@ -14,7 +14,7 @@ universe u v
 
 namespace FreeAlgebra
 
-/--  The `free_monoid X` basis on the `free_algebra R X`,
+/-- The `free_monoid X` basis on the `free_algebra R X`,
 mapping `[x₁, x₂, ..., xₙ]` to the "monomial" `1 • x₁ * x₂ * ⋯ * xₙ` -/
 @[simps]
 noncomputable def basis_free_monoid (R : Type u) (X : Type v) [CommRingₓ R] :

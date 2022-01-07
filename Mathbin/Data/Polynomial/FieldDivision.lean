@@ -31,44 +31,28 @@ section NormalizationMonoid
 
 variable [NormalizationMonoid R]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : NormalizationMonoid ( Polynomial R )
-  where
-    normUnit
-        p
-        :=
-        ⟨
-          C ( ↑ norm_unit p.leading_coeff )
-            ,
-            C ( ↑ norm_unit p.leading_coeff ⁻¹ )
-            ,
-            by rw [ ← RingHom.map_mul , Units.mul_inv , C_1 ]
-            ,
-            by rw [ ← RingHom.map_mul , Units.inv_mul , C_1 ]
-          ⟩
-      norm_unit_zero := Units.ext ( by simp )
-      norm_unit_mul
-        p q hp0 hq0
-        :=
-        Units.ext
-          (
-            by
-              dsimp
-                rw [ Ne.def , ← leading_coeff_eq_zero ] at *
-                rw [ leading_coeff_mul , norm_unit_mul hp0 hq0 , Units.coe_mul , C_mul ]
-            )
-      norm_unit_coe_units
-        u
-        :=
-        Units.ext
-          (
-            by
-              rw [ ← mul_oneₓ ( u ⁻¹ ) , Units.coe_mul , Units.eq_inv_mul_iff_mul_eq ]
-                dsimp
-                rcases Polynomial.is_unit_iff . 1 ⟨ u , rfl ⟩ with ⟨ _ , ⟨ w , rfl ⟩ , h2 ⟩
-                rw [ ← h2 , leading_coeff_C , norm_unit_coe_units , ← C_mul , Units.mul_inv , C_1 ]
-            )
+instance : NormalizationMonoid (Polynomial R) where
+  normUnit := fun p =>
+    ⟨C (↑norm_unit p.leading_coeff), C (↑norm_unit p.leading_coeff⁻¹), by
+      rw [← RingHom.map_mul, Units.mul_inv, C_1], by
+      rw [← RingHom.map_mul, Units.inv_mul, C_1]⟩
+  norm_unit_zero :=
+    Units.ext
+      (by
+        simp )
+  norm_unit_mul := fun p q hp0 hq0 =>
+    Units.ext
+      (by
+        dsimp
+        rw [Ne.def, ← leading_coeff_eq_zero] at *
+        rw [leading_coeff_mul, norm_unit_mul hp0 hq0, Units.coe_mul, C_mul])
+  norm_unit_coe_units := fun u =>
+    Units.ext
+      (by
+        rw [← mul_oneₓ (u⁻¹), Units.coe_mul, Units.eq_inv_mul_iff_mul_eq]
+        dsimp
+        rcases Polynomial.is_unit_iff.1 ⟨u, rfl⟩ with ⟨_, ⟨w, rfl⟩, h2⟩
+        rw [← h2, leading_coeff_C, norm_unit_coe_units, ← C_mul, Units.mul_inv, C_1])
 
 @[simp]
 theorem coe_norm_unit {p : Polynomial R} : (norm_unit p : Polynomial R) = C (↑norm_unit p.leading_coeff) := by
@@ -83,244 +67,18 @@ theorem monic.normalize_eq_self {p : Polynomial R} (hp : p.monic) : normalize p 
 
 end NormalizationMonoid
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `prod_multiset_root_eq_finset_root [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`p] [":" (Term.app `Polynomial [`R])] "}")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.proj
-      (Term.app
-       `Multiset.map
-       [(Term.fun
-         "fun"
-         (Term.basicFun [(Term.simpleBinder [`a] [(Term.typeSpec ":" `R)])] "=>" («term_-_» `X "-" (Term.app `C [`a]))))
-        `p.roots])
-      "."
-      `Prod)
-     "="
-     (Algebra.BigOperators.Basic.«term∏_in_,_»
-      "∏"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] []))
-      " in "
-      `p.roots.to_finset
-      ", "
-      (Cardinal.SetTheory.Cardinal.«term_^_»
-       («term_-_» `X "-" (Term.app `C [`a]))
-       "^"
-       (Term.app `root_multiplicity [`a `p]))))))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group
-        (Tactic.simp
-         "simp"
-         []
-         ["only"]
-         ["[" [(Tactic.simpLemma [] [] `count_roots) "," (Tactic.simpLemma [] [] `Finset.prod_multiset_map_count)] "]"]
-         [])
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simp
-        "simp"
-        []
-        ["only"]
-        ["[" [(Tactic.simpLemma [] [] `count_roots) "," (Tactic.simpLemma [] [] `Finset.prod_multiset_map_count)] "]"]
-        [])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp
-   "simp"
-   []
-   ["only"]
-   ["[" [(Tactic.simpLemma [] [] `count_roots) "," (Tactic.simpLemma [] [] `Finset.prod_multiset_map_count)] "]"]
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Finset.prod_multiset_map_count
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `count_roots
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.proj
-    (Term.app
-     `Multiset.map
-     [(Term.fun
-       "fun"
-       (Term.basicFun [(Term.simpleBinder [`a] [(Term.typeSpec ":" `R)])] "=>" («term_-_» `X "-" (Term.app `C [`a]))))
-      `p.roots])
-    "."
-    `Prod)
-   "="
-   (Algebra.BigOperators.Basic.«term∏_in_,_»
-    "∏"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] []))
-    " in "
-    `p.roots.to_finset
-    ", "
-    (Cardinal.SetTheory.Cardinal.«term_^_»
-     («term_-_» `X "-" (Term.app `C [`a]))
-     "^"
-     (Term.app `root_multiplicity [`a `p]))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∏_in_,_»
-   "∏"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] []))
-   " in "
-   `p.roots.to_finset
-   ", "
-   (Cardinal.SetTheory.Cardinal.«term_^_»
-    («term_-_» `X "-" (Term.app `C [`a]))
-    "^"
-    (Term.app `root_multiplicity [`a `p])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∏_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Cardinal.SetTheory.Cardinal.«term_^_»
-   («term_-_» `X "-" (Term.app `C [`a]))
-   "^"
-   (Term.app `root_multiplicity [`a `p]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Cardinal.SetTheory.Cardinal.«term_^_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `root_multiplicity [`a `p])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `p
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `root_multiplicity
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 0, term))
-  («term_-_» `X "-" (Term.app `C [`a]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `C [`a])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `C
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 66 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
-  `X
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 65 >? 1024, (none, [anonymous]) <=? (some 65, term)
-[PrettyPrinter.parenthesize] ...precedences are 1 >? 65, (some 66, term) <=? (some 0, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 0, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `p.roots.to_finset
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  prod_multiset_root_eq_finset_root
-  { p : Polynomial R }
-    : Multiset.map fun a : R => X - C a p.roots . Prod = ∏ a in p.roots.to_finset , X - C a ^ root_multiplicity a p
-  := by simp only [ count_roots , Finset.prod_multiset_map_count ]
+theorem prod_multiset_root_eq_finset_root {p : Polynomial R} :
+    (Multiset.map (fun a : R => X - C a) p.roots).Prod = ∏ a in p.roots.to_finset, (X - C a) ^ root_multiplicity a p :=
+  by
+  simp only [count_roots, Finset.prod_multiset_map_count]
 
-theorem roots_C_mul (p : Polynomial R) {a : R} (hzero : a ≠ 0) : (C a*p).roots = p.roots := by
+theorem roots_C_mul (p : Polynomial R) {a : R} (hzero : a ≠ 0) : (C a * p).roots = p.roots := by
   by_cases' hpzero : p = 0
-  ·
-    simp only [hpzero, mul_zero]
+  · simp only [hpzero, mul_zero]
+    
   rw [Multiset.ext]
   intro b
-  have prodzero : (C a*p) ≠ 0 := by
+  have prodzero : C a * p ≠ 0 := by
     simp only [hpzero, or_falseₓ, Ne.def, mul_eq_zero, C_eq_zero, hzero, not_false_iff]
   rw [count_roots, count_roots, root_multiplicity_mul prodzero]
   have mulzero : root_multiplicity b (C a) = 0 := by
@@ -347,13 +105,13 @@ theorem degree_pos_of_ne_zero_of_nonunit (hp0 : p ≠ 0) (hp : ¬IsUnit p) : 0 <
               (by
                 simpa using hp0))))
 
-theorem monic_mul_leading_coeff_inv (h : p ≠ 0) : monic (p*C (leading_coeff p⁻¹)) := by
+theorem monic_mul_leading_coeff_inv (h : p ≠ 0) : monic (p * C (leading_coeff p⁻¹)) := by
   rw [monic, leading_coeff_mul, leading_coeff_C,
     mul_inv_cancel (show leading_coeff p ≠ 0 from mt leading_coeff_eq_zero.1 h)]
 
-theorem degree_mul_leading_coeff_inv (p : Polynomial R) (h : q ≠ 0) : degree (p*C (leading_coeff q⁻¹)) = degree p :=
-  have h₁ : leading_coeff q⁻¹ ≠ 0 := inv_ne_zero (mt leading_coeff_eq_zero.1 h)
+theorem degree_mul_leading_coeff_inv (p : Polynomial R) (h : q ≠ 0) : degree (p * C (leading_coeff q⁻¹)) = degree p :=
   by
+  have h₁ : leading_coeff q⁻¹ ≠ 0 := inv_ne_zero (mt leading_coeff_eq_zero.1 h)
   rw [degree_mul, degree_C h₁, add_zeroₓ]
 
 end DivisionRing
@@ -365,7 +123,7 @@ variable [Field R] {p q : Polynomial R}
 theorem is_unit_iff_degree_eq_zero : IsUnit p ↔ degree p = 0 :=
   ⟨degree_eq_zero_of_is_unit, fun h =>
     have : degree p ≤ 0 := by
-      simp [le_reflₓ]
+      simp [*, le_reflₓ]
     have hc : coeff p 0 ≠ 0 := fun hc => by
       rw [eq_C_of_degree_le_zero this, hc] at h <;> simpa using h
     is_unit_iff_dvd_one.2
@@ -374,7 +132,7 @@ theorem is_unit_iff_degree_eq_zero : IsUnit p ↔ degree p = 0 :=
         rw [← C_mul, _root_.mul_inv_cancel hc, C_1]⟩⟩
 
 theorem irreducible_of_monic {p : Polynomial R} (hp1 : p.monic) (hp2 : p ≠ 1) :
-    Irreducible p ↔ ∀ f g : Polynomial R, f.monic → g.monic → (f*g) = p → f = 1 ∨ g = 1 :=
+    Irreducible p ↔ ∀ f g : Polynomial R, f.monic → g.monic → f * g = p → f = 1 ∨ g = 1 :=
   ⟨fun hp3 f g hf hg hfg =>
     Or.cases_on (hp3.is_unit_or_is_unit hfg.symm) (fun huf : IsUnit f => Or.inl $ eq_one_of_is_unit_of_monic hf huf)
       fun hug : IsUnit g => Or.inr $ eq_one_of_is_unit_of_monic hg hug,
@@ -387,22 +145,22 @@ theorem irreducible_of_monic {p : Polynomial R} (hp1 : p.monic) (hp2 : p ≠ 1) 
         rw [hp, hg, mul_zero] at hp1
         exact not_monic_zero hp1
       (Or.imp (fun hf => is_unit_of_mul_eq_one _ _ hf) fun hg => is_unit_of_mul_eq_one _ _ hg) $
-        hp3 (f*C (f.leading_coeff⁻¹)) (g*C (g.leading_coeff⁻¹)) (monic_mul_leading_coeff_inv hf)
+        hp3 (f * C (f.leading_coeff⁻¹)) (g * C (g.leading_coeff⁻¹)) (monic_mul_leading_coeff_inv hf)
             (monic_mul_leading_coeff_inv hg) $
           by
           rw [mul_assocₓ, mul_left_commₓ _ g, ← mul_assocₓ, ← C_mul, ← mul_inv₀, ← leading_coeff_mul, ← hp,
             monic.def.1 hp1, inv_one, C_1, mul_oneₓ]⟩⟩
 
-/--  Division of polynomials. See polynomial.div_by_monic for more details.-/
+/-- Division of polynomials. See polynomial.div_by_monic for more details.-/
 def div (p q : Polynomial R) :=
-  C (leading_coeff q⁻¹)*p /ₘ q*C (leading_coeff q⁻¹)
+  C (leading_coeff q⁻¹) * (p /ₘ (q * C (leading_coeff q⁻¹)))
 
-/--  Remainder of polynomial division, see the lemma `quotient_mul_add_remainder_eq_aux`.
+/-- Remainder of polynomial division, see the lemma `quotient_mul_add_remainder_eq_aux`.
 See polynomial.mod_by_monic for more details. -/
 def mod (p q : Polynomial R) :=
-  p %ₘ q*C (leading_coeff q⁻¹)
+  p %ₘ (q * C (leading_coeff q⁻¹))
 
-private theorem quotient_mul_add_remainder_eq_aux (p q : Polynomial R) : ((q*div p q)+mod p q) = p :=
+private theorem quotient_mul_add_remainder_eq_aux (p q : Polynomial R) : q * div p q + mod p q = p :=
   if h : q = 0 then by
     simp only [h, zero_mul, mod, mod_by_monic_zero, zero_addₓ]
   else by
@@ -418,24 +176,24 @@ instance : Div (Polynomial R) :=
 instance : Mod (Polynomial R) :=
   ⟨mod⟩
 
-theorem div_def : p / q = C (leading_coeff q⁻¹)*p /ₘ q*C (leading_coeff q⁻¹) :=
+theorem div_def : p / q = C (leading_coeff q⁻¹) * (p /ₘ (q * C (leading_coeff q⁻¹))) :=
   rfl
 
-theorem mod_def : p % q = p %ₘ q*C (leading_coeff q⁻¹) :=
+theorem mod_def : p % q = p %ₘ (q * C (leading_coeff q⁻¹)) :=
   rfl
 
 theorem mod_by_monic_eq_mod (p : Polynomial R) (hq : monic q) : p %ₘ q = p % q :=
-  show p %ₘ q = p %ₘ q*C (leading_coeff q⁻¹)by
+  show p %ₘ q = p %ₘ (q * C (leading_coeff q⁻¹)) by
     simp only [monic.def.1 hq, inv_one, mul_oneₓ, C_1]
 
 theorem div_by_monic_eq_div (p : Polynomial R) (hq : monic q) : p /ₘ q = p / q :=
-  show p /ₘ q = C (leading_coeff q⁻¹)*p /ₘ q*C (leading_coeff q⁻¹)by
+  show p /ₘ q = C (leading_coeff q⁻¹) * (p /ₘ (q * C (leading_coeff q⁻¹))) by
     simp only [monic.def.1 hq, inv_one, C_1, one_mulₓ, mul_oneₓ]
 
 theorem mod_X_sub_C_eq_C_eval (p : Polynomial R) (a : R) : p % (X - C a) = C (p.eval a) :=
   mod_by_monic_eq_mod p (monic_X_sub_C a) ▸ mod_by_monic_X_sub_C_eq_C_eval _ _
 
-theorem mul_div_eq_iff_is_root : ((X - C a)*p / (X - C a)) = p ↔ is_root p a :=
+theorem mul_div_eq_iff_is_root : (X - C a) * (p / (X - C a)) = p ↔ is_root p a :=
   div_by_monic_eq_div p (monic_X_sub_C a) ▸ mul_div_by_monic_eq_iff_is_root
 
 instance : EuclideanDomain (Polynomial R) :=
@@ -448,30 +206,28 @@ instance : EuclideanDomain (Polynomial R) :=
     mul_left_not_lt := fun p q hq => not_lt_of_geₓ (degree_le_mul_left _ hq) }
 
 theorem mod_eq_self_iff (hq0 : q ≠ 0) : p % q = p ↔ degree p < degree q :=
-  ⟨fun h => h ▸ EuclideanDomain.mod_lt _ hq0, fun h =>
-    have : ¬degree (q*C (leading_coeff q⁻¹)) ≤ degree p :=
+  ⟨fun h => h ▸ EuclideanDomain.mod_lt _ hq0, fun h => by
+    have : ¬degree (q * C (leading_coeff q⁻¹)) ≤ degree p :=
       not_le_of_gtₓ $ by
         rwa [degree_mul_leading_coeff_inv q hq0]
-    by
     rw [mod_def, mod_by_monic, dif_pos (monic_mul_leading_coeff_inv hq0)]
     unfold div_mod_by_monic_aux
     simp only [this, false_andₓ, if_false]⟩
 
 theorem div_eq_zero_iff (hq0 : q ≠ 0) : p / q = 0 ↔ degree p < degree q :=
   ⟨fun h => by
-    have := EuclideanDomain.div_add_mod p q <;> rwa [h, mul_zero, zero_addₓ, mod_eq_self_iff hq0] at this, fun h =>
-    have hlt : degree p < degree (q*C (leading_coeff q⁻¹)) := by
+    have := EuclideanDomain.div_add_mod p q <;> rwa [h, mul_zero, zero_addₓ, mod_eq_self_iff hq0] at this, fun h => by
+    have hlt : degree p < degree (q * C (leading_coeff q⁻¹)) := by
       rwa [degree_mul_leading_coeff_inv q hq0]
-    have hm : monic (q*C (leading_coeff q⁻¹)) := monic_mul_leading_coeff_inv hq0
-    by
+    have hm : monic (q * C (leading_coeff q⁻¹)) := monic_mul_leading_coeff_inv hq0
     rw [div_def, (div_by_monic_eq_zero_iff hm).2 hlt, mul_zero]⟩
 
-theorem degree_add_div (hq0 : q ≠ 0) (hpq : degree q ≤ degree p) : (degree q+degree (p / q)) = degree p :=
-  have : degree (p % q) < degree (q*p / q) :=
-    calc degree (p % q) < degree q := EuclideanDomain.mod_lt _ hq0
+theorem degree_add_div (hq0 : q ≠ 0) (hpq : degree q ≤ degree p) : degree q + degree (p / q) = degree p := by
+  have : degree (p % q) < degree (q * (p / q)) :=
+    calc
+      degree (p % q) < degree q := EuclideanDomain.mod_lt _ hq0
       _ ≤ _ := degree_le_mul_left _ (mt (div_eq_zero_iff hq0).1 (not_lt_of_geₓ hpq))
       
-  by
   conv_rhs => rw [← EuclideanDomain.div_add_mod p q, degree_add_eq_left_of_degree_lt this, degree_mul]
 
 theorem degree_div_le (p q : Polynomial R) : degree (p / q) ≤ degree p :=
@@ -480,10 +236,9 @@ theorem degree_div_le (p q : Polynomial R) : degree (p / q) ≤ degree p :=
   else by
     rw [div_def, mul_commₓ, degree_mul_leading_coeff_inv _ hq] <;> exact degree_div_by_monic_le _ _
 
-theorem degree_div_lt (hp : p ≠ 0) (hq : 0 < degree q) : degree (p / q) < degree p :=
+theorem degree_div_lt (hp : p ≠ 0) (hq : 0 < degree q) : degree (p / q) < degree p := by
   have hq0 : q ≠ 0 := fun hq0 => by
     simpa [hq0] using hq
-  by
   rw [div_def, mul_commₓ, degree_mul_leading_coeff_inv _ hq0] <;>
     exact
       degree_div_by_monic_lt _ (monic_mul_leading_coeff_inv hq0) hp
@@ -572,10 +327,7 @@ theorem map_ne_zero [Semiringₓ S] [Nontrivial S] {f : R →+* S} (hp : p ≠ 0
   mt (map_eq_zero f).1 hp
 
 theorem mem_roots_map [Field k] {f : R →+* k} {x : k} (hp : p ≠ 0) : x ∈ (p.map f).roots ↔ p.eval₂ f x = 0 := by
-  rw
-    [mem_roots
-      (show p.map f ≠ 0 by
-        exact map_ne_zero hp)]
+  rw [mem_roots (show p.map f ≠ 0 from map_ne_zero hp)]
   dsimp only [is_root]
   rw [Polynomial.eval_map]
 
@@ -583,50 +335,49 @@ theorem mem_root_set [Field k] [Algebra R k] {x : k} (hp : p ≠ 0) : x ∈ p.ro
   Iff.trans Multiset.mem_to_finset (mem_roots_map hp)
 
 theorem root_set_C_mul_X_pow {R S : Type _} [Field R] [Field S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R}
-    (ha : a ≠ 0) : (C a*X^n).RootSet S = {0} := by
+    (ha : a ≠ 0) : (C a * X ^ n).RootSet S = {0} := by
   ext x
   rw [Set.mem_singleton_iff, mem_root_set, aeval_mul, aeval_C, aeval_X_pow, mul_eq_zero]
-  ·
-    simp_rw [RingHom.map_eq_zero, pow_eq_zero_iff (Nat.pos_of_ne_zeroₓ hn), or_iff_right_iff_imp]
+  · simp_rw [RingHom.map_eq_zero, pow_eq_zero_iff (Nat.pos_of_ne_zeroₓ hn), or_iff_right_iff_imp]
     exact fun ha' => (ha ha').elim
-  ·
-    exact mul_ne_zero (mt C_eq_zero.mp ha) (pow_ne_zero n X_ne_zero)
+    
+  · exact mul_ne_zero (mt C_eq_zero.mp ha) (pow_ne_zero n X_ne_zero)
+    
 
 theorem root_set_monomial {R S : Type _} [Field R] [Field S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R} (ha : a ≠ 0) :
     (monomial n a).RootSet S = {0} := by
   rw [← C_mul_X_pow_eq_monomial, root_set_C_mul_X_pow hn ha]
 
 theorem root_set_X_pow {R S : Type _} [Field R] [Field S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) :
-    (X^n : Polynomial R).RootSet S = {0} := by
-  rw [← one_mulₓ (X^n : Polynomial R), ← C_1, root_set_C_mul_X_pow hn]
+    (X ^ n : Polynomial R).RootSet S = {0} := by
+  rw [← one_mulₓ (X ^ n : Polynomial R), ← C_1, root_set_C_mul_X_pow hn]
   exact one_ne_zero
 
 theorem exists_root_of_degree_eq_one (h : degree p = 1) : ∃ x, is_root p x :=
-  ⟨-(p.coeff 0 / p.coeff 1),
+  ⟨-(p.coeff 0 / p.coeff 1), by
     have : p.coeff 1 ≠ 0 := by
       rw [← nat_degree_eq_of_degree_eq_some h] <;>
         exact
           mt leading_coeff_eq_zero.1 fun h0 => by
             simpa [h0] using h
-    by
     conv in p =>
         rw
           [eq_X_add_C_of_degree_le_one
-            (show degree p ≤ 1by
+            (show degree p ≤ 1 by
               rw [h] <;> exact le_reflₓ _)] <;>
       simp [is_root, mul_div_cancel' _ this]⟩
 
-theorem coeff_inv_units (u : Units (Polynomial R)) (n : ℕ) :
-    (↑u : Polynomial R).coeff n⁻¹ = (↑u⁻¹ : Polynomial R).coeff n := by
+theorem coeff_inv_units (u : (Polynomial R)ˣ) (n : ℕ) : (↑u : Polynomial R).coeff n⁻¹ = (↑u⁻¹ : Polynomial R).coeff n :=
+  by
   rw [eq_C_of_degree_eq_zero (degree_coe_units u), eq_C_of_degree_eq_zero (degree_coe_units (u⁻¹)), coeff_C, coeff_C,
     inv_eq_one_div]
   split_ifs
-  ·
-    rw [div_eq_iff_mul_eq (coeff_coe_units_zero_ne_zero u), coeff_zero_eq_eval_zero, coeff_zero_eq_eval_zero, ←
+  · rw [div_eq_iff_mul_eq (coeff_coe_units_zero_ne_zero u), coeff_zero_eq_eval_zero, coeff_zero_eq_eval_zero, ←
         eval_mul, ← Units.coe_mul, inv_mul_selfₓ] <;>
       simp
-  ·
-    simp
+    
+  · simp
+    
 
 theorem monic_normalize (hp0 : p ≠ 0) : monic (normalize p) := by
   rw [Ne.def, ← leading_coeff_eq_zero, ← Ne.def, ← is_unit_iff_ne_zero] at hp0
@@ -635,34 +386,33 @@ theorem monic_normalize (hp0 : p ≠ 0) : monic (normalize p) := by
 
 theorem leading_coeff_div (hpq : q.degree ≤ p.degree) : (p / q).leadingCoeff = p.leading_coeff / q.leading_coeff := by
   by_cases' hq : q = 0
-  ·
-    simp [hq]
+  · simp [hq]
+    
   rw [div_def, leading_coeff_mul, leading_coeff_C,
     leading_coeff_div_by_monic_of_monic (monic_mul_leading_coeff_inv hq) _, mul_commₓ, div_eq_mul_inv]
   rwa [degree_mul_leading_coeff_inv q hq]
 
-theorem div_C_mul : (p / C a*q) = C (a⁻¹)*p / q := by
+theorem div_C_mul : p / (C a * q) = C (a⁻¹) * (p / q) := by
   by_cases' ha : a = 0
-  ·
-    simp [ha]
+  · simp [ha]
+    
   simp only [div_def, leading_coeff_mul, mul_inv₀, leading_coeff_C, C.map_mul, mul_assocₓ]
   congr 3
   rw [mul_left_commₓ q, ← mul_assocₓ, ← C.map_mul, mul_inv_cancel ha, C.map_one, one_mulₓ]
 
-theorem C_mul_dvd (ha : a ≠ 0) : (C a*p) ∣ q ↔ p ∣ q :=
+theorem C_mul_dvd (ha : a ≠ 0) : C a * p ∣ q ↔ p ∣ q :=
   ⟨fun h => dvd_trans (dvd_mul_left _ _) h, fun ⟨r, hr⟩ =>
-    ⟨C (a⁻¹)*r, by
+    ⟨C (a⁻¹) * r, by
       rw [mul_assocₓ, mul_left_commₓ p, ← mul_assocₓ, ← C.map_mul, _root_.mul_inv_cancel ha, C.map_one, one_mulₓ, hr]⟩⟩
 
-theorem dvd_C_mul (ha : a ≠ 0) : (p ∣ Polynomial.c a*q) ↔ p ∣ q :=
+theorem dvd_C_mul (ha : a ≠ 0) : p ∣ Polynomial.c a * q ↔ p ∣ q :=
   ⟨fun ⟨r, hr⟩ =>
-    ⟨C (a⁻¹)*r, by
+    ⟨C (a⁻¹) * r, by
       rw [mul_left_commₓ p, ← hr, ← mul_assocₓ, ← C.map_mul, _root_.inv_mul_cancel ha, C.map_one, one_mulₓ]⟩,
     fun h => dvd_trans h (dvd_mul_left _ _)⟩
 
-theorem coe_norm_unit_of_ne_zero (hp : p ≠ 0) : (norm_unit p : Polynomial R) = C (p.leading_coeff⁻¹) :=
+theorem coe_norm_unit_of_ne_zero (hp : p ≠ 0) : (norm_unit p : Polynomial R) = C (p.leading_coeff⁻¹) := by
   have : p.leading_coeff ≠ 0 := mt leading_coeff_eq_zero.mp hp
-  by
   simp [CommGroupWithZero.coe_norm_unit _ this]
 
 theorem normalize_monic (h : monic p) : normalize p = p := by
@@ -711,7 +461,7 @@ theorem pairwise_coprime_X_sub {α : Type u} [Field α] {I : Type v} {s : I → 
     rw [neg_mul_eq_neg_mul_symm, ← sub_eq_add_neg, ← mul_sub, sub_sub_sub_cancel_left, ← Polynomial.C_sub, ←
       Polynomial.C_mul, inv_mul_cancel h, Polynomial.C_1]⟩
 
-/--  If `f` is a polynomial over a field, and `a : K` satisfies `f' a ≠ 0`,
+/-- If `f` is a polynomial over a field, and `a : K` satisfies `f' a ≠ 0`,
 then `f / (X - a)` is coprime with `X - a`.
 Note that we do not assume `f a = 0`, because `f / (X - a) = (f - f a) / (X - a)`. -/
 theorem is_coprime_of_is_root_of_eval_derivative_ne_zero {K : Type _} [Field K] (f : Polynomial K) (a : K)
@@ -722,7 +472,7 @@ theorem is_coprime_of_is_root_of_eval_derivative_ne_zero {K : Type _} [Field K] 
         (irreducible_of_degree_eq_one (Polynomial.degree_X_sub_C a)))
       _
   contrapose! hf' with h
-  have key : ((X - C a)*f /ₘ (X - C a)) = f - f %ₘ (X - C a) := by
+  have key : (X - C a) * (f /ₘ (X - C a)) = f - f %ₘ (X - C a) := by
     rw [eq_sub_iff_add_eq, ← eq_sub_iff_add_eq', mod_by_monic_eq_sub_mul_div]
     exact monic_X_sub_C a
   replace key := congr_argₓ derivative key
@@ -732,12 +482,12 @@ theorem is_coprime_of_is_root_of_eval_derivative_ne_zero {K : Type _} [Field K] 
   rw [← dvd_iff_mod_by_monic_eq_zero (monic_X_sub_C _), mod_by_monic_X_sub_C_eq_C_eval] at this
   rw [← C_inj, this, C_0]
 
-/--  The product `∏ (X - a)` for `a` inside the multiset `p.roots` divides `p`. -/
+/-- The product `∏ (X - a)` for `a` inside the multiset `p.roots` divides `p`. -/
 theorem prod_multiset_X_sub_C_dvd (p : Polynomial R) : (Multiset.map (fun a : R => X - C a) p.roots).Prod ∣ p := by
   rw [prod_multiset_root_eq_finset_root]
   have hcoprime : Pairwise (IsCoprime on fun a : R => Polynomial.x - C (id a)) :=
     pairwise_coprime_X_sub Function.injective_id
-  have H : Pairwise (IsCoprime on fun a : R => Polynomial.x - C (id a)^root_multiplicity a p) := by
+  have H : Pairwise (IsCoprime on fun a : R => (Polynomial.x - C (id a)) ^ root_multiplicity a p) := by
     intro a b hdiff
     exact (hcoprime a b hdiff).pow
   apply Finset.prod_dvd_of_coprime (H.set_pairwise (↑Multiset.toFinset p.roots : Set R))

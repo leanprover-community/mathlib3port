@@ -45,13 +45,14 @@ variable (h : β → G γ)
 
 variable (f : β → γ)
 
-/--  The natural applicative transformation from the identity functor
+/-- The natural applicative transformation from the identity functor
 to `F`, defined by `pure : Π {α}, α → F α`. -/
-def pure_transformation : ApplicativeTransformation id F :=
-  { app := @pure F _, preserves_pure' := fun α x => rfl,
-    preserves_seq' := fun α β f x => by
-      simp only [map_pure, seq_pure]
-      rfl }
+def pure_transformation : ApplicativeTransformation id F where
+  app := @pure F _
+  preserves_pure' := fun α x => rfl
+  preserves_seq' := fun α β f x => by
+    simp only [map_pure, seq_pure]
+    rfl
 
 @[simp]
 theorem pure_transformation_apply {α} (x : id α) : pure_transformation F x = pure x :=

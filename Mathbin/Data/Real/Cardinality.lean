@@ -46,14 +46,14 @@ namespace Cardinal
 
 variable {c : ℝ} {f g : ℕ → Bool} {n : ℕ}
 
-/--  The body of the sum in `cantor_function`.
+/-- The body of the sum in `cantor_function`.
 `cantor_function_aux c f n = c ^ n` if `f n = tt`;
 `cantor_function_aux c f n = 0` if `f n = ff`. -/
 def cantor_function_aux (c : ℝ) (f : ℕ → Bool) (n : ℕ) : ℝ :=
-  cond (f n) (c^n) 0
+  cond (f n) (c ^ n) 0
 
 @[simp]
-theorem cantor_function_aux_tt (h : f n = tt) : cantor_function_aux c f n = (c^n) := by
+theorem cantor_function_aux_tt (h : f n = tt) : cantor_function_aux c f n = c ^ n := by
   simp [cantor_function_aux, h]
 
 @[simp]
@@ -68,121 +68,19 @@ theorem cantor_function_aux_eq (h : f n = g n) : cantor_function_aux c f n = can
   simp [cantor_function_aux, h]
 
 theorem cantor_function_aux_succ (f : ℕ → Bool) :
-    (fun n => cantor_function_aux c f (n+1)) = fun n => c*cantor_function_aux c (fun n => f (n+1)) n := by
+    (fun n => cantor_function_aux c f (n + 1)) = fun n => c * cantor_function_aux c (fun n => f (n + 1)) n := by
   ext n
-  cases h : f (n+1) <;> simp [h, pow_succₓ]
+  cases h : f (n + 1) <;> simp [h, pow_succₓ]
 
 theorem summable_cantor_function (f : ℕ → Bool) (h1 : 0 ≤ c) (h2 : c < 1) : Summable (cantor_function_aux c f) := by
   apply (summable_geometric_of_lt_1 h1 h2).summable_of_eq_zero_or_self
   intro n
   cases h : f n <;> simp [h]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment
-    "/--"
-    " `cantor_function c (f : ℕ → bool)` is `Σ n, f n * c ^ n`, where `tt` is interpreted as `1` and\n`ff` is interpreted as `0`. It is implemented using `cantor_function_aux`. -/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.def
-  "def"
-  (Command.declId `cantor_function [])
-  (Command.optDeclSig
-   [(Term.explicitBinder "(" [`c] [":" (Data.Real.Basic.termℝ "ℝ")] [] ")")
-    (Term.explicitBinder "(" [`f] [":" (Term.arrow (termℕ "ℕ") "→" `Bool)] [] ")")]
-   [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))])
-  (Command.declValSimple
-   ":="
-   (Topology.Algebra.InfiniteSum.«term∑'_,_»
-    "∑'"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] []))
-    ", "
-    (Term.app `cantor_function_aux [`c `f `n]))
-   [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Topology.Algebra.InfiniteSum.«term∑'_,_»
-   "∑'"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] []))
-   ", "
-   (Term.app `cantor_function_aux [`c `f `n]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.Algebra.InfiniteSum.«term∑'_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `cantor_function_aux [`c `f `n])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `c
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `cantor_function_aux
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-    `cantor_function c (f : ℕ → bool)` is `Σ n, f n * c ^ n`, where `tt` is interpreted as `1` and
-    `ff` is interpreted as `0`. It is implemented using `cantor_function_aux`. -/
-  def cantor_function ( c : ℝ ) ( f : ℕ → Bool ) : ℝ := ∑' n , cantor_function_aux c f n
+/-- `cantor_function c (f : ℕ → bool)` is `Σ n, f n * c ^ n`, where `tt` is interpreted as `1` and
+`ff` is interpreted as `0`. It is implemented using `cantor_function_aux`. -/
+def cantor_function (c : ℝ) (f : ℕ → Bool) : ℝ :=
+  ∑' n, cantor_function_aux c f n
 
 theorem cantor_function_le (h1 : 0 ≤ c) (h2 : c < 1) (h3 : ∀ n, f n → g n) :
     cantor_function c f ≤ cantor_function c g := by
@@ -194,12 +92,12 @@ theorem cantor_function_le (h1 : 0 ≤ c) (h2 : c < 1) (h3 : ∀ n, f n → g n)
   simp [h, h3]
 
 theorem cantor_function_succ (f : ℕ → Bool) (h1 : 0 ≤ c) (h2 : c < 1) :
-    cantor_function c f = cond (f 0) 1 0+c*cantor_function c fun n => f (n+1) := by
+    cantor_function c f = cond (f 0) 1 0 + c * cantor_function c fun n => f (n + 1) := by
   rw [cantor_function, tsum_eq_zero_add (summable_cantor_function f h1 h2)]
   rw [cantor_function_aux_succ, tsum_mul_left, cantor_function_aux, pow_zeroₓ]
   rfl
 
-/--  `cantor_function c` is strictly increasing with if `0 < c < 1/2`, if we endow `ℕ → bool` with a
+/-- `cantor_function c` is strictly increasing with if `0 < c < 1/2`, if we endow `ℕ → bool` with a
 lexicographic order. The lexicographic order doesn't exist for these infinitary products, so we
 explicitly write out what it means. -/
 theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g : ℕ → Bool}
@@ -208,8 +106,7 @@ theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g 
     apply h2.trans
     norm_num
   induction' n with n ih generalizing f g
-  ·
-    let f_max : ℕ → Bool := fun n => Nat.rec ff (fun _ _ => tt) n
+  · let f_max : ℕ → Bool := fun n => Nat.rec ff (fun _ _ => tt) n
     have hf_max : ∀ n, f n → f_max n := by
       intro n hn
       cases n
@@ -227,30 +124,31 @@ theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g 
     refine' lt_of_lt_of_leₓ _ (cantor_function_le (le_of_ltₓ h1) h3 hg_min)
     have : c / (1 - c) < 1 := by
       rw [div_lt_one, lt_sub_iff_add_lt]
-      ·
-        convert add_lt_add h2 h2
+      · convert add_lt_add h2 h2
         norm_num
+        
       rwa [sub_pos]
     convert this
-    ·
-      rw [cantor_function_succ _ (le_of_ltₓ h1) h3, div_eq_mul_inv, ← tsum_geometric_of_lt_1 (le_of_ltₓ h1) h3]
+    · rw [cantor_function_succ _ (le_of_ltₓ h1) h3, div_eq_mul_inv, ← tsum_geometric_of_lt_1 (le_of_ltₓ h1) h3]
       apply zero_addₓ
-    ·
-      convert tsum_eq_single 0 _
-      ·
-        infer_instance
-      ·
-        intro n hn
+      
+    · convert tsum_eq_single 0 _
+      · infer_instance
+        
+      · intro n hn
         cases n
         contradiction
         rfl
+        
+      
+    
   rw [cantor_function_succ f (le_of_ltₓ h1) h3, cantor_function_succ g (le_of_ltₓ h1) h3]
   rw [hn 0 $ zero_lt_succ n]
   apply add_lt_add_left
   rw [mul_lt_mul_left h1]
   exact ih (fun k hk => hn _ $ succ_lt_succ hk) fn gn
 
-/--  `cantor_function c` is injective if `0 < c < 1/2`. -/
+/-- `cantor_function c` is injective if `0 < c < 1/2`. -/
 theorem cantor_function_injective (h1 : 0 < c) (h2 : c < 1 / 2) : Function.Injective (cantor_function c) := by
   intro f g hfg
   classical
@@ -268,46 +166,46 @@ theorem cantor_function_injective (h1 : 0 < c) (h2 : c < 1 / 2) : Function.Injec
     apply of_not_not
     exact Nat.find_minₓ this hk
   cases fn : f n
-  ·
-    apply ne_of_ltₓ
+  · apply ne_of_ltₓ
     refine' increasing_cantor_function h1 h2 hn fn _
     apply eq_tt_of_not_eq_ff
     rw [← fn]
     apply Ne.symm
     exact Nat.find_specₓ this
-  ·
-    apply ne_of_gtₓ
+    
+  · apply ne_of_gtₓ
     refine' increasing_cantor_function h1 h2 (fun k hk => (hn k hk).symm) _ fn
     apply eq_ff_of_not_eq_tt
     rw [← fn]
     apply Ne.symm
     exact Nat.find_specₓ this
+    
 
-/--  The cardinality of the reals, as a type. -/
+/-- The cardinality of the reals, as a type. -/
 theorem mk_real : # ℝ = 𝔠 := by
   apply le_antisymmₓ
-  ·
-    rw [real.equiv_Cauchy.cardinal_eq]
+  · rw [real.equiv_Cauchy.cardinal_eq]
     apply mk_quotient_le.trans
     apply (mk_subtype_le _).trans_eq
     rw [← power_def, mk_nat, mk_rat, omega_power_omega]
-  ·
-    convert mk_le_of_injective (cantor_function_injective _ _)
+    
+  · convert mk_le_of_injective (cantor_function_injective _ _)
     rw [← power_def, mk_bool, mk_nat, two_power_omega]
     exact 1 / 3
     norm_num
     norm_num
+    
 
-/--  The cardinality of the reals, as a set. -/
+/-- The cardinality of the reals, as a set. -/
 theorem mk_univ_real : # (Set.Univ : Set ℝ) = 𝔠 := by
   rw [mk_univ, mk_real]
 
-/--  **Non-Denumerability of the Continuum**: The reals are not countable. -/
+/-- **Non-Denumerability of the Continuum**: The reals are not countable. -/
 theorem not_countable_real : ¬countable (Set.Univ : Set ℝ) := by
   rw [← mk_set_le_omega, not_leₓ, mk_univ_real]
   apply cantor
 
-/--  The cardinality of the interval (a, ∞). -/
+/-- The cardinality of the interval (a, ∞). -/
 theorem mk_Ioi_real (a : ℝ) : # (Ioi a) = 𝔠 := by
   refine' le_antisymmₓ (mk_real ▸ mk_set_le _) _
   rw [← not_ltₓ]
@@ -319,7 +217,7 @@ theorem mk_Ioi_real (a : ℝ) : # (Ioi a) = 𝔠 := by
   rw [← hu]
   refine' lt_of_le_of_ltₓ (mk_union_le _ _) _
   refine' lt_of_le_of_ltₓ (add_le_add_right (mk_union_le _ _) _) _
-  have h2 : (fun x => (a+a) - x) '' Ioi a = Iio a := by
+  have h2 : (fun x => a + a - x) '' Ioi a = Iio a := by
     convert image_const_sub_Ioi _ _
     simp
   rw [← h2]
@@ -328,23 +226,23 @@ theorem mk_Ioi_real (a : ℝ) : # (Ioi a) = 𝔠 := by
   rw [mk_singleton]
   exact one_lt_omega.trans (cantor _)
 
-/--  The cardinality of the interval [a, ∞). -/
+/-- The cardinality of the interval [a, ∞). -/
 theorem mk_Ici_real (a : ℝ) : # (Ici a) = 𝔠 :=
   le_antisymmₓ (mk_real ▸ mk_set_le _) (mk_Ioi_real a ▸ mk_le_mk_of_subset Ioi_subset_Ici_self)
 
-/--  The cardinality of the interval (-∞, a). -/
+/-- The cardinality of the interval (-∞, a). -/
 theorem mk_Iio_real (a : ℝ) : # (Iio a) = 𝔠 := by
   refine' le_antisymmₓ (mk_real ▸ mk_set_le _) _
-  have h2 : (fun x => (a+a) - x) '' Iio a = Ioi a := by
+  have h2 : (fun x => a + a - x) '' Iio a = Ioi a := by
     convert image_const_sub_Iio _ _
     simp
   exact mk_Ioi_real a ▸ h2 ▸ mk_image_le
 
-/--  The cardinality of the interval (-∞, a]. -/
+/-- The cardinality of the interval (-∞, a]. -/
 theorem mk_Iic_real (a : ℝ) : # (Iic a) = 𝔠 :=
   le_antisymmₓ (mk_real ▸ mk_set_le _) (mk_Iio_real a ▸ mk_le_mk_of_subset Iio_subset_Iic_self)
 
-/--  The cardinality of the interval (a, b). -/
+/-- The cardinality of the interval (a, b). -/
 theorem mk_Ioo_real {a b : ℝ} (h : a < b) : # (Ioo a b) = 𝔠 := by
   refine' le_antisymmₓ (mk_real ▸ mk_set_le _) _
   have h1 : # ((fun x => x - a) '' Ioo a b) ≤ # (Ioo a b) := mk_image_le
@@ -355,15 +253,15 @@ theorem mk_Ioo_real {a b : ℝ} (h : a < b) : # (Ioo a b) = 𝔠 := by
   refine' le_transₓ _ h2
   rw [image_inv_Ioo_0_left h, mk_Ioi_real]
 
-/--  The cardinality of the interval [a, b). -/
+/-- The cardinality of the interval [a, b). -/
 theorem mk_Ico_real {a b : ℝ} (h : a < b) : # (Ico a b) = 𝔠 :=
   le_antisymmₓ (mk_real ▸ mk_set_le _) (mk_Ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Ico_self)
 
-/--  The cardinality of the interval [a, b]. -/
+/-- The cardinality of the interval [a, b]. -/
 theorem mk_Icc_real {a b : ℝ} (h : a < b) : # (Icc a b) = 𝔠 :=
   le_antisymmₓ (mk_real ▸ mk_set_le _) (mk_Ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Icc_self)
 
-/--  The cardinality of the interval (a, b]. -/
+/-- The cardinality of the interval (a, b]. -/
 theorem mk_Ioc_real {a b : ℝ} (h : a < b) : # (Ioc a b) = 𝔠 :=
   le_antisymmₓ (mk_real ▸ mk_set_le _) (mk_Ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Ioc_self)
 

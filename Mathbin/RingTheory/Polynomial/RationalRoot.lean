@@ -51,7 +51,7 @@ variable [Algebra A K] [IsFractionRing A K]
 
 open IsFractionRing IsLocalization Polynomial UniqueFactorizationMonoid
 
-/--  Rational root theorem part 1:
+/-- Rational root theorem part 1:
 if `r : f.codomain` is a root of a polynomial over the ufd `A`,
 then the numerator of `r` divides the constant coefficient -/
 theorem num_dvd_of_is_root {p : Polynomial A} {r : K} (hr : aeval r p = 0) : Num A r ∣ p.coeff 0 := by
@@ -59,28 +59,28 @@ theorem num_dvd_of_is_root {p : Polynomial A} {r : K} (hr : aeval r p = 0) : Num
     simp only [coeff_scale_roots, tsub_zero] at this
     have := Classical.propDecidable
     by_cases' hr : Num A r = 0
-    ·
-      obtain ⟨u, hu⟩ := (is_unit_denom_of_num_eq_zero hr).pow p.nat_degree
+    · obtain ⟨u, hu⟩ := (is_unit_denom_of_num_eq_zero hr).pow p.nat_degree
       rw [← hu] at this
       exact units.dvd_mul_right.mp this
-    ·
-      refine' dvd_of_dvd_mul_left_of_no_prime_factors hr _ this
+      
+    · refine' dvd_of_dvd_mul_left_of_no_prime_factors hr _ this
       intro q dvd_num dvd_denom_pow hq
       apply hq.not_unit
       exact num_denom_reduced A r dvd_num (hq.dvd_of_dvd_pow dvd_denom_pow)
+      
   convert dvd_term_of_is_root_of_dvd_terms 0 (num_is_root_scale_roots_of_aeval_eq_zero hr) _
-  ·
-    rw [pow_zeroₓ, mul_oneₓ]
+  · rw [pow_zeroₓ, mul_oneₓ]
+    
   intro j hj
   apply dvd_mul_of_dvd_right
   convert pow_dvd_pow (Num A r) (Nat.succ_le_of_ltₓ (bot_lt_iff_ne_bot.mpr hj))
   exact (pow_oneₓ _).symm
 
-/--  Rational root theorem part 2:
+/-- Rational root theorem part 2:
 if `r : f.codomain` is a root of a polynomial over the ufd `A`,
 then the denominator of `r` divides the leading coefficient -/
 theorem denom_dvd_of_is_root {p : Polynomial A} {r : K} (hr : aeval r p = 0) : (denom A r : A) ∣ p.leading_coeff := by
-  suffices (denom A r : A) ∣ p.leading_coeff*Num A r^p.nat_degree by
+  suffices (denom A r : A) ∣ p.leading_coeff * Num A r ^ p.nat_degree by
     refine' dvd_of_dvd_mul_left_of_no_prime_factors (mem_non_zero_divisors_iff_ne_zero.mp (denom A r).2) _ this
     intro q dvd_denom dvd_num_pow hq
     apply hq.not_unit
@@ -89,18 +89,18 @@ theorem denom_dvd_of_is_root {p : Polynomial A} {r : K} (hr : aeval r p = 0) : (
   apply dvd_term_of_is_root_of_dvd_terms _ (num_is_root_scale_roots_of_aeval_eq_zero hr)
   intro j hj
   by_cases' h : j < p.nat_degree
-  ·
-    rw [coeff_scale_roots]
+  · rw [coeff_scale_roots]
     refine' (dvd_mul_of_dvd_right _ _).mul_right _
     convert pow_dvd_pow _ (nat.succ_le_iff.mpr (lt_tsub_iff_left.mpr _))
-    ·
-      exact (pow_oneₓ _).symm
+    · exact (pow_oneₓ _).symm
+      
     simpa using h
+    
   rw [← nat_degree_scale_roots p (denom A r)] at *
   rw [coeff_eq_zero_of_nat_degree_lt (lt_of_le_of_neₓ (le_of_not_gtₓ h) hj.symm), zero_mul]
   exact dvd_zero _
 
-/--  Integral root theorem:
+/-- Integral root theorem:
 if `r : f.codomain` is a root of a monic polynomial over the ufd `A`,
 then `r` is an integer -/
 theorem is_integer_of_is_root_of_monic {p : Polynomial A} (hp : monic p) {r : K} (hr : aeval r p = 0) :

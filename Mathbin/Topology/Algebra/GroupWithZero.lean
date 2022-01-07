@@ -66,7 +66,7 @@ theorem Continuous.div_const (hf : Continuous f) {y : G₀} : Continuous fun x =
 
 end DivConst
 
-/--  A type with `0` and `has_inv` such that `λ x, x⁻¹` is continuous at all nonzero points. Any
+/-- A type with `0` and `has_inv` such that `λ x, x⁻¹` is continuous at all nonzero points. Any
 normed (semi)field has this property. -/
 class HasContinuousInv₀ (G₀ : Type _) [HasZero G₀] [HasInv G₀] [TopologicalSpace G₀] where
   continuous_at_inv₀ : ∀ ⦃x : G₀⦄, x ≠ 0 → ContinuousAt HasInv.inv x
@@ -93,7 +93,7 @@ theorem tendsto_inv₀ {x : G₀} (hx : x ≠ 0) : tendsto HasInv.inv (𝓝 x) (
 theorem continuous_on_inv₀ : ContinuousOn (HasInv.inv : G₀ → G₀) ({0}ᶜ) := fun x hx =>
   (continuous_at_inv₀ hx).ContinuousWithinAt
 
-/--  If a function converges to a nonzero value, its inverse converges to the inverse of this value.
+/-- If a function converges to a nonzero value, its inverse converges to the inverse of this value.
 We use the name `tendsto.inv₀` as `tendsto.inv` is already used in multiplicative topological
 groups. -/
 theorem Filter.Tendsto.inv₀ {a : G₀} (hf : tendsto f l (𝓝 a)) (ha : a ≠ 0) : tendsto (fun x => f x⁻¹) l (𝓝 (a⁻¹)) :=
@@ -142,7 +142,7 @@ theorem ContinuousWithinAt.div (hf : ContinuousWithinAt f s a) (hg : ContinuousW
 theorem ContinuousOn.div (hf : ContinuousOn f s) (hg : ContinuousOn g s) (h₀ : ∀, ∀ x ∈ s, ∀, g x ≠ 0) :
     ContinuousOn (f / g) s := fun x hx => (hf x hx).div (hg x hx) (h₀ x hx)
 
-/--  Continuity at a point of the result of dividing two functions continuous at that point, where
+/-- Continuity at a point of the result of dividing two functions continuous at that point, where
 the denominator is nonzero. -/
 theorem ContinuousAt.div (hf : ContinuousAt f a) (hg : ContinuousAt g a) (h₀ : g a ≠ 0) : ContinuousAt (f / g) a :=
   hf.div hg h₀
@@ -151,153 +151,10 @@ theorem ContinuousAt.div (hf : ContinuousAt f a) (hg : ContinuousAt g a) (h₀ :
 theorem Continuous.div (hf : Continuous f) (hg : Continuous g) (h₀ : ∀ x, g x ≠ 0) : Continuous (f / g) := by
   simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ h₀)
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `continuous_on_div [])
-  (Command.declSig
-   []
-   (Term.typeSpec
-    ":"
-    (Term.app
-     `ContinuousOn
-     [(Term.fun
-       "fun"
-       (Term.basicFun
-        [(Term.simpleBinder [`p] [(Term.typeSpec ":" («term_×_» `G₀ "×" `G₀))])]
-        "=>"
-        («term_/_» (Term.proj `p "." (fieldIdx "1")) "/" (Term.proj `p "." (fieldIdx "2")))))
-      (Set.«term{_|_}» "{" `p "|" («term_≠_» (Term.proj `p "." (fieldIdx "2")) "≠" (numLit "0")) "}")])))
-  (Command.declValSimple
-   ":="
-   («term_$__»
-    (Term.app (Term.proj `continuous_on_fst "." `div) [`continuous_on_snd])
-    "$"
-    (Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_")] [])] "=>" `id)))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_$__»
-   (Term.app (Term.proj `continuous_on_fst "." `div) [`continuous_on_snd])
-   "$"
-   (Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_")] [])] "=>" `id)))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_")] [])] "=>" `id))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `id
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-  (Term.app (Term.proj `continuous_on_fst "." `div) [`continuous_on_snd])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `continuous_on_snd
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  (Term.proj `continuous_on_fst "." `div)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `continuous_on_fst
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Term.app
-   `ContinuousOn
-   [(Term.fun
-     "fun"
-     (Term.basicFun
-      [(Term.simpleBinder [`p] [(Term.typeSpec ":" («term_×_» `G₀ "×" `G₀))])]
-      "=>"
-      («term_/_» (Term.proj `p "." (fieldIdx "1")) "/" (Term.proj `p "." (fieldIdx "2")))))
-    (Set.«term{_|_}» "{" `p "|" («term_≠_» (Term.proj `p "." (fieldIdx "2")) "≠" (numLit "0")) "}")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}» "{" `p "|" («term_≠_» (Term.proj `p "." (fieldIdx "2")) "≠" (numLit "0")) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_≠_» (Term.proj `p "." (fieldIdx "2")) "≠" (numLit "0"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_≠_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "0")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  (Term.proj `p "." (fieldIdx "2"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `p
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  continuous_on_div
-  : ContinuousOn fun p : G₀ × G₀ => p . 1 / p . 2 { p | p . 2 ≠ 0 }
-  := continuous_on_fst . div continuous_on_snd $ fun _ => id
+theorem continuous_on_div : ContinuousOn (fun p : G₀ × G₀ => p.1 / p.2) { p | p.2 ≠ 0 } :=
+  continuous_on_fst.div continuous_on_snd $ fun _ => id
 
-/--  The function `f x / g x` is discontinuous when `g x = 0`.
+/-- The function `f x / g x` is discontinuous when `g x = 0`.
 However, under appropriate conditions, `h x (f x / g x)` is still continuous.
 The condition is that if `g a = 0` then `h x y` must tend to `h a 0` when `x` tends to `a`,
 with no information about `y`. This is represented by the `⊤` filter.
@@ -308,14 +165,14 @@ theorem ContinuousAt.comp_div_cases {f g : α → G₀} (h : α → G₀ → β)
     ContinuousAt (fun x => h x (f x / g x)) a := by
   show ContinuousAt (↿h ∘ fun x => (x, f x / g x)) a
   by_cases' hga : g a = 0
-  ·
-    rw [ContinuousAt]
+  · rw [ContinuousAt]
     simp_rw [comp_app, hga, div_zero]
     exact (h2h hga).comp (continuous_at_id.prod_mk tendsto_top)
-  ·
-    exact ContinuousAt.comp (hh hga) (continuous_at_id.prod (hf.div hg hga))
+    
+  · exact ContinuousAt.comp (hh hga) (continuous_at_id.prod (hf.div hg hga))
+    
 
-/--  `h x (f x / g x)` is continuous under certain conditions, even if the denominator is sometimes
+/-- `h x (f x / g x)` is continuous under certain conditions, even if the denominator is sometimes
   `0`. See docstring of `continuous_at.comp_div_cases`. -/
 theorem Continuous.comp_div_cases {f g : α → G₀} (h : α → G₀ → β) (hf : Continuous f) (hg : Continuous g)
     (hh : ∀ a, g a ≠ 0 → ContinuousAt (↿h) (a, f a / g a)) (h2h : ∀ a, g a = 0 → tendsto (↿h) (𝓝 a ×ᶠ ⊤) (𝓝 (h a 0))) :
@@ -331,31 +188,31 @@ namespace Homeomorph
 
 variable [TopologicalSpace α] [GroupWithZeroₓ α] [HasContinuousMul α]
 
-/--  Left multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
+/-- Left multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
 protected def mul_left₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
   { Equivₓ.mulLeft₀ c hc with continuous_to_fun := continuous_mul_left _, continuous_inv_fun := continuous_mul_left _ }
 
-/--  Right multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
+/-- Right multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
 protected def mul_right₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
   { Equivₓ.mulRight₀ c hc with continuous_to_fun := continuous_mul_right _,
     continuous_inv_fun := continuous_mul_right _ }
 
 @[simp]
-theorem coe_mul_left₀ (c : α) (hc : c ≠ 0) : ⇑Homeomorph.mulLeft₀ c hc = (·*·) c :=
+theorem coe_mul_left₀ (c : α) (hc : c ≠ 0) : ⇑Homeomorph.mulLeft₀ c hc = (· * ·) c :=
   rfl
 
 @[simp]
-theorem mul_left₀_symm_apply (c : α) (hc : c ≠ 0) : ((Homeomorph.mulLeft₀ c hc).symm : α → α) = (·*·) (c⁻¹) :=
+theorem mul_left₀_symm_apply (c : α) (hc : c ≠ 0) : ((Homeomorph.mulLeft₀ c hc).symm : α → α) = (· * ·) (c⁻¹) :=
   rfl
 
 @[simp]
-theorem coe_mul_right₀ (c : α) (hc : c ≠ 0) : ⇑Homeomorph.mulRight₀ c hc = fun x => x*c :=
+theorem coe_mul_right₀ (c : α) (hc : c ≠ 0) : ⇑Homeomorph.mulRight₀ c hc = fun x => x * c :=
   rfl
 
 @[simp]
-theorem mul_right₀_symm_apply (c : α) (hc : c ≠ 0) : ((Homeomorph.mulRight₀ c hc).symm : α → α) = fun x => x*c⁻¹ :=
+theorem mul_right₀_symm_apply (c : α) (hc : c ≠ 0) : ((Homeomorph.mulRight₀ c hc).symm : α → α) = fun x => x * c⁻¹ :=
   rfl
 
 end Homeomorph
@@ -366,13 +223,12 @@ variable [GroupWithZeroₓ G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G�
 
 theorem continuous_at_zpow (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) : ContinuousAt (fun x => x ^ m) x := by
   cases m
-  ·
-    simpa only [zpow_of_nat] using continuous_at_pow x m
-  ·
-    simp only [zpow_neg_succ_of_nat]
-    have hx : x ≠ 0
-    exact h.resolve_right (Int.neg_succ_of_nat_lt_zero m).not_le
-    exact (continuous_at_pow x (m+1)).inv₀ (pow_ne_zero _ hx)
+  · simpa only [zpow_of_nat] using continuous_at_pow x m
+    
+  · simp only [zpow_neg_succ_of_nat]
+    have hx : x ≠ 0 := h.resolve_right (Int.neg_succ_of_nat_lt_zero m).not_le
+    exact (continuous_at_pow x (m + 1)).inv₀ (pow_ne_zero _ hx)
+    
 
 theorem continuous_on_zpow (m : ℤ) : ContinuousOn (fun x : G₀ => x ^ m) ({0}ᶜ) := fun x hx =>
   (continuous_at_zpow _ _ (Or.inl hx)).ContinuousWithinAt

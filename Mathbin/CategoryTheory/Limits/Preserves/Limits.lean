@@ -13,7 +13,7 @@ The duals of these are also given. For functors which preserve (co)limits of spe
 -/
 
 
-universe v u₁ u₂
+universe w' w v₁ v₂ u₁ u₂
 
 noncomputable section
 
@@ -21,13 +21,13 @@ namespace CategoryTheory
 
 open Category Limits
 
-variable {C : Type u₁} [category.{v} C]
+variable {C : Type u₁} [category.{v₁} C]
 
-variable {D : Type u₂} [category.{v} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 variable (G : C ⥤ D)
 
-variable {J : Type v} [small_category J]
+variable {J : Type w} [category.{w'} J]
 
 variable (F : J ⥤ C)
 
@@ -44,8 +44,7 @@ theorem preserves_lift_map_cone (c₁ c₂ : cone F) (t : is_limit c₁) :
 
 variable [has_limit F] [has_limit (F ⋙ G)]
 
-/-- 
-If `G` preserves limits, we have an isomorphism from the image of the limit of a functor `F`
+/-- If `G` preserves limits, we have an isomorphism from the image of the limit of a functor `F`
 to the limit of the functor `F ⋙ G`.
 -/
 def preserves_limit_iso : G.obj (limit F) ≅ limit (F ⋙ G) :=
@@ -67,7 +66,7 @@ theorem lift_comp_preserves_limits_iso_hom (t : cone F) :
 
 variable [preserves_limits_of_shape J G] [has_limits_of_shape J D] [has_limits_of_shape J C]
 
-/--  If `C, D` has all limits of shape `J`, and `G` preserves them, then `preserves_limit_iso` is
+/-- If `C, D` has all limits of shape `J`, and `G` preserves them, then `preserves_limit_iso` is
 functorial wrt `F`. -/
 @[simps]
 def preserves_limit_nat_iso : lim ⋙ G ≅ (whiskering_right J C D).obj G ⋙ lim :=
@@ -94,8 +93,7 @@ theorem preserves_desc_map_cocone (c₁ c₂ : cocone F) (t : is_colimit c₁) :
 
 variable [has_colimit F] [has_colimit (F ⋙ G)]
 
-/-- 
-If `G` preserves colimits, we have an isomorphism from the image of the colimit of a functor `F`
+/-- If `G` preserves colimits, we have an isomorphism from the image of the colimit of a functor `F`
 to the colimit of the functor `F ⋙ G`.
 -/
 def preserves_colimit_iso : G.obj (colimit F) ≅ colimit (F ⋙ G) :=
@@ -119,7 +117,7 @@ theorem preserves_colimits_iso_inv_comp_desc (t : cocone F) :
 
 variable [preserves_colimits_of_shape J G] [has_colimits_of_shape J D] [has_colimits_of_shape J C]
 
-/--  If `C, D` has all colimits of shape `J`, and `G` preserves them, then `preserves_colimit_iso`
+/-- If `C, D` has all colimits of shape `J`, and `G` preserves them, then `preserves_colimit_iso`
 is functorial wrt `F`. -/
 @[simps]
 def preserves_colimit_nat_iso : colim ⋙ G ≅ (whiskering_right J C D).obj G ⋙ colim :=

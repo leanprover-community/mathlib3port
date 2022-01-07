@@ -37,13 +37,13 @@ theorem tail_drop (n : Nat) (s : Streamₓ α) : tail (drop n s) = drop n (tail 
     unfold tail drop
     simp [nth, Nat.add_comm, Nat.add_left_comm]
 
-theorem nth_drop (n m : Nat) (s : Streamₓ α) : nth (drop m s) n = nth s (n+m) :=
+theorem nth_drop (n m : Nat) (s : Streamₓ α) : nth (drop m s) n = nth s (n + m) :=
   rfl
 
 theorem tail_eq_drop (s : Streamₓ α) : tail s = drop 1 s :=
   rfl
 
-theorem drop_drop (n m : Nat) (s : Streamₓ α) : drop n (drop m s) = drop (n+m) s :=
+theorem drop_drop (n m : Nat) (s : Streamₓ α) : drop n (drop m s) = drop (n + m) s :=
   funext fun i => by
     unfold drop
     rw [Nat.add_assoc]
@@ -77,13 +77,13 @@ theorem mem_cons_of_mem {a : α} {s : Streamₓ α} (b : α) : a ∈ s → a ∈
 
 theorem eq_or_mem_of_mem_cons {a b : α} {s : Streamₓ α} : a ∈ b :: s → a = b ∨ a ∈ s := fun ⟨n, h⟩ => by
   cases' n with n'
-  ·
-    left
+  · left
     exact h
-  ·
-    right
+    
+  · right
     rw [nth_succ, tail_cons] at h
     exact ⟨n', h⟩
+    
 
 theorem mem_of_nth_eq {n : Nat} {s : Streamₓ α} {a : α} : a = nth s n → a ∈ s := fun h => Exists.introₓ n h
 
@@ -181,16 +181,16 @@ theorem head_iterate (f : α → α) (a : α) : head (iterate f a) = a :=
 theorem tail_iterate (f : α → α) (a : α) : tail (iterate f a) = iterate f (f a) := by
   funext n
   induction' n with n' ih
-  ·
-    rfl
-  ·
-    unfold tail iterate
+  · rfl
+    
+  · unfold tail iterate
     unfold tail iterate  at ih
     rw [add_one] at ih
     dsimp  at ih
     rw [add_one]
     dsimp
     rw [ih]
+    
 
 theorem iterate_eq (f : α → α) (a : α) : iterate f a = a :: iterate f (f a) := by
   rw [← Streamₓ.eta (iterate f a)]
@@ -213,9 +213,9 @@ def is_bisimulation :=
   ∀ ⦃s₁ s₂⦄, s₁ ~ s₂ → head s₁ = head s₂ ∧ tail s₁ ~ tail s₂
 
 theorem nth_of_bisim (bisim : is_bisimulation R) :
-    ∀ {s₁ s₂} n, s₁ ~ s₂ → nth s₁ n = nth s₂ n ∧ drop (n+1) s₁ ~ drop (n+1) s₂
+    ∀ {s₁ s₂} n, s₁ ~ s₂ → nth s₁ n = nth s₂ n ∧ drop (n + 1) s₁ ~ drop (n + 1) s₂
   | s₁, s₂, 0, h => bisim h
-  | s₁, s₂, n+1, h =>
+  | s₁, s₂, n + 1, h =>
     match bisim h with
     | ⟨h₁, trel⟩ => nth_of_bisim n trel
 
@@ -260,14 +260,14 @@ attribute [local reducible] Streamₓ
 theorem map_iterate (f : α → α) (a : α) : iterate f (f a) = map f (iterate f a) := by
   funext n
   induction' n with n' ih
-  ·
-    rfl
-  ·
-    unfold map iterate nth
+  · rfl
+    
+  · unfold map iterate nth
     dsimp
     unfold map iterate nth  at ih
     dsimp  at ih
     rw [ih]
+    
 
 section Corec
 
@@ -300,12 +300,12 @@ theorem unfolds_eq (g : α → β) (f : α → α) (a : α) : unfolds g f a = g 
 theorem nth_unfolds_head_tail : ∀ n : Nat s : Streamₓ α, nth (unfolds head tail s) n = nth s n := by
   intro n
   induction' n with n' ih
-  ·
-    intro s
+  · intro s
     rfl
-  ·
-    intro s
+    
+  · intro s
     rw [nth_succ, nth_succ, unfolds_eq, tail_cons, ih]
+    
 
 theorem unfolds_head_eq : ∀ s : Streamₓ α, unfolds head tail s = s := fun s =>
   Streamₓ.ext fun n => nth_unfolds_head_tail n s
@@ -326,27 +326,27 @@ theorem interleave_tail_tail (s₁ s₂ : Streamₓ α) : tail s₁⋈tail s₂ 
   rw [interleave_eq s₁ s₂]
   rfl
 
-theorem nth_interleave_left : ∀ n : Nat s₁ s₂ : Streamₓ α, nth (s₁⋈s₂) (2*n) = nth s₁ n
+theorem nth_interleave_left : ∀ n : Nat s₁ s₂ : Streamₓ α, nth (s₁⋈s₂) (2 * n) = nth s₁ n
   | 0, s₁, s₂ => rfl
   | succ n, s₁, s₂ => by
-    change nth (s₁⋈s₂) (succ (succ (2*n))) = nth s₁ (succ n)
+    change nth (s₁⋈s₂) (succ (succ (2 * n))) = nth s₁ (succ n)
     rw [nth_succ, nth_succ, interleave_eq, tail_cons, tail_cons, nth_interleave_left]
     rfl
 
-theorem nth_interleave_right : ∀ n : Nat s₁ s₂ : Streamₓ α, nth (s₁⋈s₂) ((2*n)+1) = nth s₂ n
+theorem nth_interleave_right : ∀ n : Nat s₁ s₂ : Streamₓ α, nth (s₁⋈s₂) (2 * n + 1) = nth s₂ n
   | 0, s₁, s₂ => rfl
   | succ n, s₁, s₂ => by
-    change nth (s₁⋈s₂) (succ (succ ((2*n)+1))) = nth s₂ (succ n)
+    change nth (s₁⋈s₂) (succ (succ (2 * n + 1))) = nth s₂ (succ n)
     rw [nth_succ, nth_succ, interleave_eq, tail_cons, tail_cons, nth_interleave_right]
     rfl
 
 theorem mem_interleave_left {a : α} {s₁ : Streamₓ α} (s₂ : Streamₓ α) : a ∈ s₁ → a ∈ s₁⋈s₂ := fun ⟨n, h⟩ =>
-  Exists.introₓ (2*n)
+  Exists.introₓ (2 * n)
     (by
       rw [h, nth_interleave_left])
 
 theorem mem_interleave_right {a : α} {s₁ : Streamₓ α} (s₂ : Streamₓ α) : a ∈ s₂ → a ∈ s₁⋈s₂ := fun ⟨n, h⟩ =>
-  Exists.introₓ ((2*n)+1)
+  Exists.introₓ (2 * n + 1)
     (by
       rw [h, nth_interleave_right])
 
@@ -374,12 +374,12 @@ theorem even_interleave (s₁ s₂ : Streamₓ α) : even (s₁⋈s₂) = s₁ :
     (fun s₁' s₁ ⟨s₂, h₁⟩ => by
       rw [h₁]
       constructor
-      ·
-        rfl
-      ·
-        exact
+      · rfl
+        
+      · exact
           ⟨tail s₂, by
-            rw [interleave_eq, even_cons_cons, tail_cons]⟩)
+            rw [interleave_eq, even_cons_cons, tail_cons]⟩
+        )
     (Exists.introₓ s₂ rfl)
 
 theorem interleave_even_odd (s₁ : Streamₓ α) : even s₁⋈odd s₁ = s₁ :=
@@ -387,30 +387,30 @@ theorem interleave_even_odd (s₁ : Streamₓ α) : even s₁⋈odd s₁ = s₁ 
     (fun s' s h : s' = even s⋈odd s => by
       rw [h]
       constructor
-      ·
-        rfl
-      ·
-        simp [odd_eq, odd_eq, tail_interleave, tail_even])
+      · rfl
+        
+      · simp [odd_eq, odd_eq, tail_interleave, tail_even]
+        )
     rfl
 
-theorem nth_even : ∀ n : Nat s : Streamₓ α, nth (even s) n = nth s (2*n)
+theorem nth_even : ∀ n : Nat s : Streamₓ α, nth (even s) n = nth s (2 * n)
   | 0, s => rfl
   | succ n, s => by
-    change nth (even s) (succ n) = nth s (succ (succ (2*n)))
+    change nth (even s) (succ n) = nth s (succ (succ (2 * n)))
     rw [nth_succ, nth_succ, tail_even, nth_even]
     rfl
 
-theorem nth_odd : ∀ n : Nat s : Streamₓ α, nth (odd s) n = nth s ((2*n)+1) := fun n s => by
+theorem nth_odd : ∀ n : Nat s : Streamₓ α, nth (odd s) n = nth s (2 * n + 1) := fun n s => by
   rw [odd_eq, nth_even]
   rfl
 
 theorem mem_of_mem_even (a : α) (s : Streamₓ α) : a ∈ even s → a ∈ s := fun ⟨n, h⟩ =>
-  Exists.introₓ (2*n)
+  Exists.introₓ (2 * n)
     (by
       rw [h, nth_even])
 
 theorem mem_of_mem_odd (a : α) (s : Streamₓ α) : a ∈ odd s → a ∈ s := fun ⟨n, h⟩ =>
-  Exists.introₓ ((2*n)+1)
+  Exists.introₓ (2 * n + 1)
     (by
       rw [h, nth_odd])
 
@@ -461,37 +461,37 @@ theorem take_succ (n : Nat) (s : Streamₓ α) : take (succ n) s = head s :: tak
 
 @[simp]
 theorem length_take (n : ℕ) (s : Streamₓ α) : (take n s).length = n := by
-  induction n generalizing s <;> simp
+  induction n generalizing s <;> simp [*]
 
 theorem nth_take_succ : ∀ n : Nat s : Streamₓ α, List.nth (take (succ n) s) n = some (nth s n)
   | 0, s => rfl
-  | n+1, s => by
+  | n + 1, s => by
     rw [take_succ, add_one, List.nth, nth_take_succ]
     rfl
 
 theorem append_take_drop : ∀ n : Nat s : Streamₓ α, append_stream (take n s) (drop n s) = s := by
   intro n
   induction' n with n' ih
-  ·
-    intro s
+  · intro s
     rfl
-  ·
-    intro s
+    
+  · intro s
     rw [take_succ, drop_succ, cons_append_stream, ih (tail s), Streamₓ.eta]
+    
 
 theorem take_theorem (s₁ s₂ : Streamₓ α) : (∀ n : Nat, take n s₁ = take n s₂) → s₁ = s₂ := by
   intro h
   apply Streamₓ.ext
   intro n
   induction' n with n ih
-  ·
-    have aux := h 1
+  · have aux := h 1
     simp [take] at aux
     exact aux
-  ·
-    have h₁ : some (nth s₁ (succ n)) = some (nth s₂ (succ n)) := by
+    
+  · have h₁ : some (nth s₁ (succ n)) = some (nth s₂ (succ n)) := by
       rw [← nth_take_succ, ← nth_take_succ, h (succ (succ n))]
     injection h₁
+    
 
 protected theorem cycle_g_cons (a : α) (a₁ : α) (l₁ : List α) (a₀ : α) (l₀ : List α) :
     Streamₓ.cycleG (a, a₁ :: l₁, a₀, l₀) = (a₁, l₁, a₀, l₀) :=
@@ -507,14 +507,14 @@ theorem cycle_eq : ∀ l : List α h : l ≠ [], cycle l h = l++ₛcycle l h
       by
       intro l'
       induction' l' with a₁ l₁ ih
-      ·
-        intros
+      · intros
         rw [corec_eq]
         rfl
-      ·
-        intros
+        
+      · intros
         rw [corec_eq, Streamₓ.cycle_g_cons, ih a₁]
         rfl
+        
     gen l a
 
 theorem mem_cycle {a : α} {l : List α} : ∀ h : l ≠ [], a ∈ l → a ∈ cycle l h := fun h ainl => by
@@ -531,12 +531,12 @@ theorem tails_eq (s : Streamₓ α) : tails s = tail s :: tails (tail s) := by
 theorem nth_tails : ∀ n : Nat s : Streamₓ α, nth (tails s) n = drop n (tail s) := by
   intro n
   induction' n with n' ih
-  ·
-    intros
+  · intros
     rfl
-  ·
-    intro s
+    
+  · intro s
     rw [nth_succ, drop_succ, tails_eq, tail_cons, ih]
+    
 
 theorem tails_eq_iterate (s : Streamₓ α) : tails s = iterate tail (tail s) :=
   rfl
@@ -558,33 +558,33 @@ theorem cons_nth_inits_core :
     ∀ a : α n : Nat l : List α s : Streamₓ α, a :: nth (inits_core l s) n = nth (inits_core (a :: l) s) n := by
   intro a n
   induction' n with n' ih
-  ·
-    intros
+  · intros
     rfl
-  ·
-    intro l s
+    
+  · intro l s
     rw [nth_succ, inits_core_eq, tail_cons, ih, inits_core_eq (a :: l) s]
     rfl
+    
 
 theorem nth_inits : ∀ n : Nat s : Streamₓ α, nth (inits s) n = take (succ n) s := by
   intro n
   induction' n with n' ih
-  ·
-    intros
+  · intros
     rfl
-  ·
-    intros
+    
+  · intros
     rw [nth_succ, take_succ, ← ih, tail_inits, inits_tail, cons_nth_inits_core]
+    
 
 theorem inits_eq (s : Streamₓ α) : inits s = [head s] :: map (List.cons (head s)) (inits (tail s)) := by
   apply Streamₓ.ext
   intro n
   cases n
-  ·
+  · rfl
+    
+  · rw [nth_inits, nth_succ, tail_cons, nth_map, nth_inits]
     rfl
-  ·
-    rw [nth_inits, nth_succ, tail_cons, nth_map, nth_inits]
-    rfl
+    
 
 theorem zip_inits_tails (s : Streamₓ α) : zip append_stream (inits s) (tails s) = const s := by
   apply Streamₓ.ext

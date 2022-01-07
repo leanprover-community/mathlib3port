@@ -20,7 +20,7 @@ It is defined on a star algebra `A` over the base ring `R`.
 -/
 
 
-/--  If `A` is a module over a commutative `R` with compatible actions,
+/-- If `A` is a module over a commutative `R` with compatible actions,
 then `star` is a semilinear equivalence. -/
 @[simps]
 def starLinearEquiv (R : Type _) {A : Type _} [CommRingₓ R] [StarRing R] [Semiringₓ A] [StarRing A] [Module R A]

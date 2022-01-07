@@ -29,7 +29,7 @@ open Measureₓ Function Set
 
 variable {μa : Measureₓ α} {μb : Measureₓ β} {μc : Measureₓ γ} {μd : Measureₓ δ}
 
-/--  `f` is a measure preserving map w.r.t. measures `μa` and `μb` if `f` is measurable
+/-- `f` is a measure preserving map w.r.t. measures `μa` and `μb` if `f` is measurable
 and `map f μa = μb`. -/
 @[protect_proj]
 structure measure_preserving (f : α → β)
@@ -99,31 +99,30 @@ theorem measure_preimage_emb {f : α → β} (hf : measure_preserving f μa μb)
 
 protected theorem iterate {f : α → α} (hf : measure_preserving f μa μa) : ∀ n, measure_preserving (f^[n]) μa μa
   | 0 => measure_preserving.id μa
-  | n+1 => (iterate n).comp hf
+  | n + 1 => (iterate n).comp hf
 
 variable {μ : Measureₓ α} {f : α → α} {s : Set α}
 
-/--  If `μ univ < n * μ s` and `f` is a map preserving measure `μ`,
+/-- If `μ univ < n * μ s` and `f` is a map preserving measure `μ`,
 then for some `x ∈ s` and `0 < m < n`, `f^[m] x ∈ s`. -/
 theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : measure_preserving f μ μ) (hs : MeasurableSet s) {n : ℕ}
-    (hvol : μ (univ : Set α) < n*μ s) : ∃ x ∈ s, ∃ m ∈ Ioo 0 n, (f^[m]) x ∈ s := by
+    (hvol : μ (univ : Set α) < n * μ s) : ∃ x ∈ s, ∃ m ∈ Ioo 0 n, (f^[m]) x ∈ s := by
   have A : ∀ m, MeasurableSet (f^[m] ⁻¹' s) := fun m => (hf.iterate m).Measurable hs
-  have B : ∀ m, μ (f^[m] ⁻¹' s) = μ s
-  exact fun m => (hf.iterate m).measure_preimage hs
+  have B : ∀ m, μ (f^[m] ⁻¹' s) = μ s := fun m => (hf.iterate m).measure_preimage hs
   have : μ (univ : Set α) < (Finset.range n).Sum fun m => μ (f^[m] ⁻¹' s) := by
     simpa only [B, nsmul_eq_mul, Finset.sum_const, Finset.card_range]
   rcases exists_nonempty_inter_of_measure_univ_lt_sum_measure μ (fun m hm => A m) this with
     ⟨i, hi, j, hj, hij, x, hxi, hxj⟩
   wlog (discharger := tactic.skip) hlt : i < j := hij.lt_or_lt using i j, j i
-  ·
-    simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj
+  · simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj
     refine' ⟨(f^[i]) x, hxi, j - i, ⟨tsub_pos_of_lt hlt, lt_of_le_of_ltₓ (j.sub_le i) hj⟩, _⟩
     rwa [← iterate_add_apply, tsub_add_cancel_of_le hlt.le]
-  ·
-    exact fun hi hj hij hxi hxj => this hj hi hij.symm hxj hxi
+    
+  · exact fun hi hj hij hxi hxj => this hj hi hij.symm hxj hxi
+    
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (m «expr ≠ » 0)
-/--  A self-map preserving a finite measure is conservative: if `μ s ≠ 0`, then at least one point
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (m «expr ≠ » 0)
+/-- A self-map preserving a finite measure is conservative: if `μ s ≠ 0`, then at least one point
 `x ∈ s` comes back to `s` under iterations of `f`. Actually, a.e. point of `s` comes back to `s`
 infinitely many times, see `measure_theory.measure_preserving.conservative` and theorems about
 `measure_theory.conservative`. -/

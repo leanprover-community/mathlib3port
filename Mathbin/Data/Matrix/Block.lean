@@ -23,7 +23,7 @@ namespace Matrix
 
 section BlockMatrices
 
-/--  We can form a single large matrix by flattening smaller 'block' matrices of compatible
+/-- We can form a single large matrix by flattening smaller 'block' matrices of compatible
 dimensions. -/
 def from_blocks (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α) :
     Matrix (Sum n o) (Sum l m) α :=
@@ -49,19 +49,19 @@ theorem from_blocks_apply₂₂ (A : Matrix n l α) (B : Matrix n m α) (C : Mat
     (j : m) : from_blocks A B C D (Sum.inr i) (Sum.inr j) = D i j :=
   rfl
 
-/--  Given a matrix whose row and column indexes are sum types, we can extract the corresponding
+/-- Given a matrix whose row and column indexes are sum types, we can extract the corresponding
 "top left" submatrix. -/
 def to_blocks₁₁ (M : Matrix (Sum n o) (Sum l m) α) : Matrix n l α := fun i j => M (Sum.inl i) (Sum.inl j)
 
-/--  Given a matrix whose row and column indexes are sum types, we can extract the corresponding
+/-- Given a matrix whose row and column indexes are sum types, we can extract the corresponding
 "top right" submatrix. -/
 def to_blocks₁₂ (M : Matrix (Sum n o) (Sum l m) α) : Matrix n m α := fun i j => M (Sum.inl i) (Sum.inr j)
 
-/--  Given a matrix whose row and column indexes are sum types, we can extract the corresponding
+/-- Given a matrix whose row and column indexes are sum types, we can extract the corresponding
 "bottom left" submatrix. -/
 def to_blocks₂₁ (M : Matrix (Sum n o) (Sum l m) α) : Matrix o l α := fun i j => M (Sum.inr i) (Sum.inl j)
 
-/--  Given a matrix whose row and column indexes are sum types, we can extract the corresponding
+/-- Given a matrix whose row and column indexes are sum types, we can extract the corresponding
 "bottom right" submatrix. -/
 def to_blocks₂₂ (M : Matrix (Sum n o) (Sum l m) α) : Matrix o m α := fun i j => M (Sum.inr i) (Sum.inr j)
 
@@ -104,11 +104,11 @@ theorem from_blocks_conj_transpose [HasStar α] (A : Matrix n l α) (B : Matrix 
     (D : Matrix o m α) : (from_blocks A B C D)ᴴ = from_blocks (A)ᴴ (C)ᴴ (B)ᴴ (D)ᴴ := by
   simp only [conj_transpose, from_blocks_transpose, from_blocks_map]
 
-/--  A 2x2 block matrix is block diagonal if the blocks outside of the diagonal vanish -/
+/-- A 2x2 block matrix is block diagonal if the blocks outside of the diagonal vanish -/
 def is_two_block_diagonal [HasZero α] (A : Matrix (Sum n o) (Sum l m) α) : Prop :=
   to_blocks₁₂ A = 0 ∧ to_blocks₂₁ A = 0
 
-/--  Let `p` pick out certain rows and `q` pick out certain columns of a matrix `M`. Then
+/-- Let `p` pick out certain rows and `q` pick out certain columns of a matrix `M`. Then
   `to_block M p q` is the corresponding block matrix. -/
 def to_block (M : Matrix m n α) (p : m → Prop) (q : n → Prop) : Matrix { a // p a } { a // q a } α :=
   M.minor coeₓ coeₓ
@@ -118,7 +118,7 @@ theorem to_block_apply (M : Matrix m n α) (p : m → Prop) (q : n → Prop) (i 
     to_block M p q i j = M (↑i) (↑j) :=
   rfl
 
-/--  Let `b` map rows and columns of a square matrix `M` to blocks. Then
+/-- Let `b` map rows and columns of a square matrix `M` to blocks. Then
   `to_square_block M b k` is the block `k` matrix. -/
 def to_square_block (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
     Matrix { a // b a = k } { a // b a = k } α :=
@@ -129,7 +129,7 @@ theorem to_square_block_def (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (
     to_square_block M b k = fun i j => M (↑i) (↑j) :=
   rfl
 
-/--  Alternate version with `b : m → nat`. Let `b` map rows and columns of a square matrix `M` to
+/-- Alternate version with `b : m → nat`. Let `b` map rows and columns of a square matrix `M` to
   blocks. Then `to_square_block' M b k` is the block `k` matrix. -/
 def to_square_block' (M : Matrix m m α) (b : m → Nat) (k : Nat) : Matrix { a // b a = k } { a // b a = k } α :=
   M.minor coeₓ coeₓ
@@ -139,7 +139,7 @@ theorem to_square_block_def' (M : Matrix m m α) (b : m → Nat) (k : Nat) :
     to_square_block' M b k = fun i j => M (↑i) (↑j) :=
   rfl
 
-/--  Let `p` pick out certain rows and columns of a square matrix `M`. Then
+/-- Let `p` pick out certain rows and columns of a square matrix `M`. Then
   `to_square_block_prop M p` is the corresponding block matrix. -/
 def to_square_block_prop (M : Matrix m m α) (p : m → Prop) : Matrix { a // p a } { a // p a } α :=
   M.minor coeₓ coeₓ
@@ -158,7 +158,7 @@ theorem from_blocks_smul (x : α) (A : Matrix n l α) (B : Matrix n m α) (C : M
 
 theorem from_blocks_add (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α) (A' : Matrix n l α)
     (B' : Matrix n m α) (C' : Matrix o l α) (D' : Matrix o m α) :
-    (from_blocks A B C D+from_blocks A' B' C' D') = from_blocks (A+A') (B+B') (C+C') (D+D') := by
+    from_blocks A B C D + from_blocks A' B' C' D' = from_blocks (A + A') (B + B') (C + C') (D + D') := by
   ext i j
   rcases i with ⟨⟩ <;> rcases j with ⟨⟩ <;> rfl
 
@@ -166,7 +166,7 @@ theorem from_blocks_multiply {p q : Type _} [Fintype l] [Fintype m] (A : Matrix 
     (C : Matrix o l α) (D : Matrix o m α) (A' : Matrix l p α) (B' : Matrix l q α) (C' : Matrix m p α)
     (D' : Matrix m q α) :
     from_blocks A B C D ⬝ from_blocks A' B' C' D' =
-      from_blocks ((A ⬝ A')+B ⬝ C') ((A ⬝ B')+B ⬝ D') ((C ⬝ A')+D ⬝ C') ((C ⬝ B')+D ⬝ D') :=
+      from_blocks (A ⬝ A' + B ⬝ C') (A ⬝ B' + B ⬝ D') (C ⬝ A' + D ⬝ C') (C ⬝ B' + D ⬝ D') :=
   by
   ext i j
   rcases i with ⟨⟩ <;>
@@ -196,7 +196,7 @@ section HasZero
 
 variable [HasZero α] [HasZero β]
 
-/--  `matrix.block_diagonal M` turns a homogenously-indexed collection of matrices
+/-- `matrix.block_diagonal M` turns a homogenously-indexed collection of matrices
 `M : o → matrix m n α'` into a `m × o`-by-`n × o` block matrix which has the entries of `M` along
 the diagonal and zero elsewhere.
 
@@ -228,10 +228,10 @@ theorem block_diagonal_transpose : (block_diagonal M)ᵀ = block_diagonal fun k 
   ext
   simp only [transpose_apply, block_diagonal_apply, eq_comm]
   split_ifs with h
-  ·
-    rw [h]
-  ·
-    rfl
+  · rw [h]
+    
+  · rfl
+    
 
 @[simp]
 theorem block_diagonal_conj_transpose {α : Type _} [Semiringₓ α] [StarRing α] (M : o → Matrix m n α) :
@@ -248,18 +248,19 @@ theorem block_diagonal_zero : block_diagonal (0 : o → Matrix m n α) = 0 := by
 theorem block_diagonal_diagonal [DecidableEq m] (d : o → m → α) :
     (block_diagonal fun k => diagonal (d k)) = diagonal fun ik => d ik.2 ik.1 := by
   ext ⟨i, k⟩ ⟨j, k'⟩
-  simp only [block_diagonal_apply, diagonal]
-  split_ifs <;> finish
+  simp only [block_diagonal_apply, diagonal, Prod.mk.inj_iffₓ, ← ite_and]
+  congr 1
+  rw [and_comm]
 
 @[simp]
 theorem block_diagonal_one [DecidableEq m] [HasOne α] : block_diagonal (1 : o → Matrix m m α) = 1 :=
-  show (block_diagonal fun _ : o => diagonal fun _ : m => (1 : α)) = diagonal fun _ => 1by
+  show (block_diagonal fun _ : o => diagonal fun _ : m => (1 : α)) = diagonal fun _ => 1 by
     rw [block_diagonal_diagonal]
 
 end HasZero
 
 @[simp]
-theorem block_diagonal_add [AddMonoidₓ α] : block_diagonal (M+N) = block_diagonal M+block_diagonal N := by
+theorem block_diagonal_add [AddMonoidₓ α] : block_diagonal (M + N) = block_diagonal M + block_diagonal N := by
   ext
   simp only [block_diagonal_apply, Pi.add_apply]
   split_ifs <;> simp
@@ -298,315 +299,13 @@ section HasZero
 
 variable [HasZero α] [HasZero β]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment
-    "/--"
-    " `matrix.block_diagonal' M` turns `M : Π i, matrix (m i) (n i) α` into a\n`Σ i, m i`-by-`Σ i, n i` block matrix which has the entries of `M` along the diagonal\nand zero elsewhere.\n\nThis is the dependently-typed version of `matrix.block_diagonal`. -/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.def
-  "def"
-  (Command.declId `block_diagonal' [])
-  (Command.optDeclSig
-   []
-   [(Term.typeSpec
-     ":"
-     (Term.app
-      `Matrix
-      [(Init.Data.Sigma.Basic.«termΣ_,_»
-        "Σ"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-        ", "
-        (Term.app `m' [`i]))
-       (Init.Data.Sigma.Basic.«termΣ_,_»
-        "Σ"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-        ", "
-        (Term.app `n' [`i]))
-       `α]))])
-  (Command.declValEqns
-   (Term.matchAltsWhereDecls
-    (Term.matchAlts
-     [(Term.matchAlt
-       "|"
-       [(Term.anonymousCtor "⟨" [`k "," `i] "⟩") "," (Term.anonymousCtor "⟨" [`k' "," `j] "⟩")]
-       "=>"
-       (termDepIfThenElse
-        "if"
-        `h
-        ":"
-        («term_=_» `k "=" `k')
-        "then"
-        (Term.app `M [`k `i (Term.app `cast [(Term.app `congr_argₓ [`n' `h.symm]) `j])])
-        "else"
-        (numLit "0")))])
-    []))
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAltsWhereDecls', expected 'Lean.Parser.Term.matchAltsWhereDecls.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlts', expected 'Lean.Parser.Term.matchAlts.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'Lean.Parser.Term.matchAlt.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (termDepIfThenElse
-   "if"
-   `h
-   ":"
-   («term_=_» `k "=" `k')
-   "then"
-   (Term.app `M [`k `i (Term.app `cast [(Term.app `congr_argₓ [`n' `h.symm]) `j])])
-   "else"
-   (numLit "0"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'termDepIfThenElse', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "0")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `M [`k `i (Term.app `cast [(Term.app `congr_argₓ [`n' `h.symm]) `j])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `cast [(Term.app `congr_argₓ [`n' `h.symm]) `j])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `j
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `congr_argₓ [`n' `h.symm])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `h.symm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `n'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `congr_argₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `congr_argₓ [`n' `h.symm]) []] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `cast
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Term.app `cast [(Term.paren "(" [(Term.app `congr_argₓ [`n' `h.symm]) []] ")") `j]) []]
- ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `k
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `M
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_=_» `k "=" `k')
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `k'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  `k
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor "⟨" [`k' "," `j] "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `j
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `k'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor "⟨" [`k "," `i] "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `k
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.optDeclSig', expected 'Lean.Parser.Command.optDeclSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Term.app
-   `Matrix
-   [(Init.Data.Sigma.Basic.«termΣ_,_»
-     "Σ"
-     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-     ", "
-     (Term.app `m' [`i]))
-    (Init.Data.Sigma.Basic.«termΣ_,_»
-     "Σ"
-     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-     ", "
-     (Term.app `n' [`i]))
-    `α])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `α
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Init.Data.Sigma.Basic.«termΣ_,_»
-   "Σ"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-   ", "
-   (Term.app `n' [`i]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `n' [`i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `n'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-    `matrix.block_diagonal' M` turns `M : Π i, matrix (m i) (n i) α` into a
-    `Σ i, m i`-by-`Σ i, n i` block matrix which has the entries of `M` along the diagonal
-    and zero elsewhere.
-    
-    This is the dependently-typed version of `matrix.block_diagonal`. -/
-  def
-    block_diagonal'
-    : Matrix Σ i , m' i Σ i , n' i α
-    | ⟨ k , i ⟩ , ⟨ k' , j ⟩ => if h : k = k' then M k i cast congr_argₓ n' h.symm j else 0
+/-- `matrix.block_diagonal' M` turns `M : Π i, matrix (m i) (n i) α` into a
+`Σ i, m i`-by-`Σ i, n i` block matrix which has the entries of `M` along the diagonal
+and zero elsewhere.
+
+This is the dependently-typed version of `matrix.block_diagonal`. -/
+def block_diagonal' : Matrix (Σ i, m' i) (Σ i, n' i) α
+  | ⟨k, i⟩, ⟨k', j⟩ => if h : k = k' then M k i (cast (congr_argₓ n' h.symm) j) else 0
 
 theorem block_diagonal'_eq_block_diagonal (M : o → Matrix m n α) {k k'} i j :
     block_diagonal M (i, k) (j, k') = block_diagonal' M ⟨k, i⟩ ⟨k', j⟩ :=
@@ -641,15 +340,15 @@ theorem block_diagonal'_transpose : (block_diagonal' M)ᵀ = block_diagonal' fun
   simp only [transpose_apply, block_diagonal'_apply, eq_comm]
   dsimp only
   split_ifs with h₁ h₂ h₂
-  ·
-    subst h₁
+  · subst h₁
     rfl
-  ·
-    exact (h₂ h₁.symm).elim
-  ·
-    exact (h₁ h₂.symm).elim
-  ·
-    rfl
+    
+  · exact (h₂ h₁.symm).elim
+    
+  · exact (h₁ h₂.symm).elim
+    
+  · rfl
+    
 
 @[simp]
 theorem block_diagonal'_conj_transpose {α} [Semiringₓ α] [StarRing α] (M : ∀ i, Matrix (m' i) (n' i) α) :
@@ -667,18 +366,27 @@ theorem block_diagonal'_diagonal [∀ i, DecidableEq (m' i)] (d : ∀ i, m' i �
     (block_diagonal' fun k => diagonal (d k)) = diagonal fun ik => d ik.1 ik.2 := by
   ext ⟨i, k⟩ ⟨j, k'⟩
   simp only [block_diagonal'_apply, diagonal]
-  split_ifs <;> finish
+  split_ifs <;>
+    try
+        rfl <;>
+      exfalso
+  · exact h_2 ⟨h, (cast_eq_iff_heq.mp h_1.symm).symm⟩
+    
+  · exact h_1 (cast_eq_iff_heq.mpr h_2.right.symm).symm
+    
+  · tauto
+    
 
 @[simp]
 theorem block_diagonal'_one [∀ i, DecidableEq (m' i)] [HasOne α] :
     block_diagonal' (1 : ∀ i, Matrix (m' i) (m' i) α) = 1 :=
-  show (block_diagonal' fun i : o => diagonal fun _ : m' i => (1 : α)) = diagonal fun _ => 1by
+  show (block_diagonal' fun i : o => diagonal fun _ : m' i => (1 : α)) = diagonal fun _ => 1 by
     rw [block_diagonal'_diagonal]
 
 end HasZero
 
 @[simp]
-theorem block_diagonal'_add [AddMonoidₓ α] : block_diagonal' (M+N) = block_diagonal' M+block_diagonal' N := by
+theorem block_diagonal'_add [AddMonoidₓ α] : block_diagonal' (M + N) = block_diagonal' M + block_diagonal' N := by
   ext
   simp only [block_diagonal'_apply, Pi.add_apply]
   split_ifs <;> simp
@@ -700,13 +408,13 @@ theorem block_diagonal'_mul {p : o → Type _} [Semiringₓ α] [∀ i, Fintype 
   ext ⟨k, i⟩ ⟨k', j⟩
   simp only [block_diagonal'_apply, mul_apply, ← Finset.univ_sigma_univ, Finset.sum_sigma]
   rw [Fintype.sum_eq_single k]
-  ·
-    split_ifs <;> simp
-  ·
-    intro j' hj'
+  · split_ifs <;> simp
+    
+  · intro j' hj'
     exact
       Finset.sum_eq_zero fun _ _ => by
         rw [dif_neg hj'.symm, zero_mul]
+    
 
 @[simp]
 theorem block_diagonal'_smul {R : Type _} [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] (x : R) :

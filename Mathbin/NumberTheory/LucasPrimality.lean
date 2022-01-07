@@ -29,8 +29,7 @@ to `1`.
 -/
 
 
-/-- 
-If `a^(p-1) = 1 mod p`, but `a^((p-1)/q) ≠ 1 mod p` for all prime factors `q` of `p-1`, then `p`
+/-- If `a^(p-1) = 1 mod p`, but `a^((p-1)/q) ≠ 1 mod p` for all prime factors `q` of `p-1`, then `p`
 is prime. This is true because `a` has order `p-1` in the multiplicative group mod `p`, so this
 group must itself have order `p-1`, which only happens when `p` is prime.
 -/
@@ -49,11 +48,11 @@ theorem lucas_primality (p : ℕ) (a : Zmod p) (ha : a ^ (p - 1) = 1)
   have fhp0 : Fact (0 < p) := ⟨h0.bot_lt⟩
   rw [Nat.prime_iff_card_units]
   refine' le_antisymmₓ (Nat.card_units_zmod_lt_sub_one hp1) _
-  have hp' : ((p - 2)+1) = p - 1 := tsub_add_eq_add_tsub hp1
-  let a' : Units (Zmod p) :=
+  have hp' : p - 2 + 1 = p - 1 := tsub_add_eq_add_tsub hp1
+  let a' : (Zmod p)ˣ :=
     Units.mkOfMulEqOne a (a ^ (p - 2))
       (by
         rw [← pow_succₓ, hp', ha])
   calc p - 1 = orderOf a := order_of_a.symm _ = orderOf a' :=
-    order_of_injective (Units.coeHom (Zmod p)) Units.ext a' _ ≤ Fintype.card (Units (Zmod p)) := order_of_le_card_univ
+      order_of_injective (Units.coeHom (Zmod p)) Units.ext a' _ ≤ Fintype.card (Zmod p)ˣ := order_of_le_card_univ
 

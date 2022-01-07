@@ -23,7 +23,7 @@ open_locale Classical BigOperators MatrixGroups
 
 attribute [local instance] Fintype.card_fin_even
 
-/--  The open upper half plane -/
+/-- The open upper half plane -/
 abbrev UpperHalfPlane :=
   { point : ℂ // 0 < point.im }
 
@@ -31,11 +31,11 @@ localized [UpperHalfPlane] notation "ℍ" => UpperHalfPlane
 
 namespace UpperHalfPlane
 
-/--  Imaginary part -/
+/-- Imaginary part -/
 def im (z : ℍ) :=
   (z : ℂ).im
 
-/--  Real part -/
+/-- Real part -/
 def re (z : ℍ) :=
   (z : ℂ).re
 
@@ -63,17 +63,18 @@ theorem norm_sq_pos (z : ℍ) : 0 < Complex.normSq (z : ℂ) := by
 theorem norm_sq_ne_zero (z : ℍ) : Complex.normSq (z : ℂ) ≠ 0 :=
   (norm_sq_pos z).ne'
 
-/--  Numerator of the formula for a fractional linear transformation -/
+/-- Numerator of the formula for a fractional linear transformation -/
 @[simp]
 def Num (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
-  (g 0 0*z)+g 0 1
+  g 0 0 * z + g 0 1
 
-/--  Denominator of the formula for a fractional linear transformation -/
+/-- Denominator of the formula for a fractional linear transformation -/
 @[simp]
 def denom (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
-  (g 1 0*z)+g 1 1
+  g 1 0 * z + g 1 1
 
-theorem linear_ne_zero (cd : Finₓ 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (((cd 0 : ℂ)*z)+cd 1) ≠ 0 := by
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+theorem linear_ne_zero (cd : Finₓ 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : ℂ) * z + cd 1 ≠ 0 := by
   contrapose! h
   have : cd 0 = 0 := by
     apply_fun Complex.im  at h
@@ -92,7 +93,7 @@ theorem norm_sq_denom_pos (g : SL(2,ℝ)) (z : ℍ) : 0 < Complex.normSq (denom 
 theorem norm_sq_denom_ne_zero (g : SL(2,ℝ)) (z : ℍ) : Complex.normSq (denom g z) ≠ 0 :=
   ne_of_gtₓ (norm_sq_denom_pos g z)
 
-/--  Fractional linear transformation -/
+/-- Fractional linear transformation -/
 def smul_aux' (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
   Num g z / denom g z
 
@@ -102,38 +103,41 @@ theorem smul_aux'_im (g : SL(2,ℝ)) (z : ℍ) : (smul_aux' g z).im = z.im / (de
   have : NsqBot ≠ 0 := by
     simp only [denom_ne_zero g z, MonoidWithZeroHom.map_eq_zero, Ne.def, not_false_iff]
   field_simp [smul_aux']
-  convert congr_argₓ (fun x => (x*z.im)*NsqBot^2) g.det_coe using 1
-  ·
-    rw [det_fin_two (↑g)]
+  convert congr_argₓ (fun x => x * z.im * NsqBot ^ 2) g.det_coe using 1
+  · rw [det_fin_two (↑g)]
     ring
-  ·
-    ring
+    
+  · ring
+    
 
-/--  Fractional linear transformation -/
+/-- Fractional linear transformation -/
 def smul_aux (g : SL(2,ℝ)) (z : ℍ) : ℍ :=
   ⟨smul_aux' g z, by
     rw [smul_aux'_im]
     exact div_pos z.im_pos (complex.norm_sq_pos.mpr (denom_ne_zero g z))⟩
 
-theorem denom_cocycle (x y : SL(2,ℝ)) (z : ℍ) : denom (x*y) z = denom x (smul_aux y z)*denom y z := by
-  change _ = ((_*_ / _)+_)*_
+theorem denom_cocycle (x y : SL(2,ℝ)) (z : ℍ) : denom (x * y) z = denom x (smul_aux y z) * denom y z := by
+  change _ = (_ * (_ / _) + _) * _
   field_simp [denom_ne_zero, -denom, -Num]
   simp [Matrix.mul, dot_product, Finₓ.sum_univ_succ]
   ring
 
-theorem mul_smul' (x y : SL(2,ℝ)) (z : ℍ) : smul_aux (x*y) z = smul_aux x (smul_aux y z) := by
+theorem mul_smul' (x y : SL(2,ℝ)) (z : ℍ) : smul_aux (x * y) z = smul_aux x (smul_aux y z) := by
   ext1
-  change _ / _ = ((_*_ / _)+_)*_
+  change _ / _ = (_ * (_ / _) + _) * _
   rw [denom_cocycle]
   field_simp [denom_ne_zero, -denom, -Num]
   simp [Matrix.mul, dot_product, Finₓ.sum_univ_succ]
   ring
 
--- failed to format: format: uncaught backtrack exception
 /-- The action of `SL(2, ℝ)` on the upper half-plane by fractional linear transformations. -/
-  instance
-    : MulAction SL( 2 , ℝ ) ℍ
-    where smul := smul_aux one_smul z := by ext1 change _ / _ = _ simp mul_smul := mul_smul'
+instance : MulAction SL(2,ℝ) ℍ where
+  smul := smul_aux
+  one_smul := fun z => by
+    ext1
+    change _ / _ = _
+    simp
+  mul_smul := mul_smul'
 
 @[simp]
 theorem coe_smul (g : SL(2,ℝ)) (z : ℍ) : ↑(g • z) = Num g z / denom g z :=

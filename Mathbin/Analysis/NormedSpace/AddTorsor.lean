@@ -18,7 +18,7 @@ open_locale Nnreal TopologicalSpace
 
 open Filter
 
-/--  A `semi_normed_add_torsor V P` is a torsor of an additive seminormed group
+/-- A `semi_normed_add_torsor V P` is a torsor of an additive seminormed group
 action by a `semi_normed_group V` on points `P`. We bundle the pseudometric space
 structure and require the distance to be the same as results from the
 norm (which in fact implies the distance yields a pseudometric space, but
@@ -28,7 +28,7 @@ class SemiNormedAddTorsor (V : outParam $ Type _) (P : Type _) [outParam $ SemiN
   [PseudoMetricSpace P] extends AddTorsor V P where
   dist_eq_norm' : ∀ x y : P, dist x y = ∥(x -ᵥ y : V)∥
 
-/--  A `normed_add_torsor V P` is a torsor of an additive normed group
+/-- A `normed_add_torsor V P` is a torsor of an additive normed group
 action by a `normed_group V` on points `P`. We bundle the metric space
 structure and require the distance to be the same as results from the
 norm (which in fact implies the distance yields a metric space, but
@@ -38,7 +38,7 @@ class NormedAddTorsor (V : outParam $ Type _) (P : Type _) [outParam $ NormedGro
   AddTorsor V P where
   dist_eq_norm' : ∀ x y : P, dist x y = ∥(x -ᵥ y : V)∥
 
-/--  A `normed_add_torsor` is a `semi_normed_add_torsor`. -/
+/-- A `normed_add_torsor` is a `semi_normed_add_torsor`. -/
 instance (priority := 100) NormedAddTorsor.toSemiNormedAddTorsor {V P : Type _} [NormedGroup V] [MetricSpace P]
     [β : NormedAddTorsor V P] : SemiNormedAddTorsor V P :=
   { β with }
@@ -47,11 +47,11 @@ variable {α V P : Type _} [SemiNormedGroup V] [PseudoMetricSpace P] [SemiNormed
 
 variable {W Q : Type _} [NormedGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
 
-/--  A `semi_normed_group` is a `semi_normed_add_torsor` over itself. -/
+/-- A `semi_normed_group` is a `semi_normed_add_torsor` over itself. -/
 instance (priority := 100) SemiNormedGroup.normedAddTorsor : SemiNormedAddTorsor V V where
   dist_eq_norm' := dist_eq_norm
 
-/--  A `normed_group` is a `normed_add_torsor` over itself. -/
+/-- A `normed_group` is a `normed_add_torsor` over itself. -/
 instance (priority := 100) NormedGroup.normedAddTorsor : NormedAddTorsor W W where
   dist_eq_norm' := dist_eq_norm
 
@@ -61,7 +61,7 @@ section
 
 variable (V W)
 
-/--  The distance equals the norm of subtracting two points. In this
+/-- The distance equals the norm of subtracting two points. In this
 lemma, it is necessary to have `V` as an explicit argument; otherwise
 `rw dist_eq_norm_vsub` sometimes doesn't work. -/
 theorem dist_eq_norm_vsub (x y : P) : dist x y = ∥x -ᵥ y∥ :=
@@ -85,22 +85,22 @@ theorem dist_vadd_left (v : V) (x : P) : dist (v +ᵥ x) x = ∥v∥ := by
 theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ∥v∥ := by
   rw [dist_comm, dist_vadd_left]
 
-/--  Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
+/-- Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
 addition/subtraction of `x : P`. -/
 @[simps]
-def Isometric.vaddConst (x : P) : V ≃ᵢ P :=
-  { toEquiv := Equivₓ.vaddConst x,
-    isometry_to_fun := isometry_emetric_iff_metric.2 $ fun _ _ => dist_vadd_cancel_right _ _ _ }
+def Isometric.vaddConst (x : P) : V ≃ᵢ P where
+  toEquiv := Equivₓ.vaddConst x
+  isometry_to_fun := isometry_emetric_iff_metric.2 $ fun _ _ => dist_vadd_cancel_right _ _ _
 
 section
 
 variable (P)
 
-/--  Self-isometry of a (semi)normed add torsor given by addition of a constant vector `x`. -/
+/-- Self-isometry of a (semi)normed add torsor given by addition of a constant vector `x`. -/
 @[simps]
-def Isometric.constVadd (x : V) : P ≃ᵢ P :=
-  { toEquiv := Equivₓ.constVadd P x,
-    isometry_to_fun := isometry_emetric_iff_metric.2 $ fun _ _ => dist_vadd_cancel_left _ _ _ }
+def Isometric.constVadd (x : V) : P ≃ᵢ P where
+  toEquiv := Equivₓ.constVadd P x
+  isometry_to_fun := isometry_emetric_iff_metric.2 $ fun _ _ => dist_vadd_cancel_left _ _ _
 
 end
 
@@ -108,12 +108,12 @@ end
 theorem dist_vsub_cancel_left (x y z : P) : dist (x -ᵥ y) (x -ᵥ z) = dist y z := by
   rw [dist_eq_norm, vsub_sub_vsub_cancel_left, dist_comm, dist_eq_norm_vsub V]
 
-/--  Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
+/-- Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
 subtraction from `x : P`. -/
 @[simps]
-def Isometric.constVsub (x : P) : P ≃ᵢ V :=
-  { toEquiv := Equivₓ.constVsub x,
-    isometry_to_fun := isometry_emetric_iff_metric.2 $ fun y z => dist_vsub_cancel_left _ _ _ }
+def Isometric.constVsub (x : P) : P ≃ᵢ V where
+  toEquiv := Equivₓ.constVsub x
+  isometry_to_fun := isometry_emetric_iff_metric.2 $ fun y z => dist_vsub_cancel_left _ _ _
 
 @[simp]
 theorem dist_vsub_cancel_right (x y z : P) : dist (x -ᵥ z) (y -ᵥ z) = dist x y :=
@@ -137,76 +137,78 @@ theorem vadd_sphere (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.Sphere y r = Metri
 
 end Pointwise
 
-theorem dist_vadd_vadd_le (v v' : V) (p p' : P) : dist (v +ᵥ p) (v' +ᵥ p') ≤ dist v v'+dist p p' := by
+theorem dist_vadd_vadd_le (v v' : V) (p p' : P) : dist (v +ᵥ p) (v' +ᵥ p') ≤ dist v v' + dist p p' := by
   simpa using dist_triangle (v +ᵥ p) (v' +ᵥ p) (v' +ᵥ p')
 
-theorem dist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : dist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ dist p₁ p₃+dist p₂ p₄ := by
+theorem dist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : dist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ dist p₁ p₃ + dist p₂ p₄ := by
   rw [dist_eq_norm, vsub_sub_vsub_comm, dist_eq_norm_vsub V, dist_eq_norm_vsub V]
   exact norm_sub_le _ _
 
-theorem nndist_vadd_vadd_le (v v' : V) (p p' : P) : nndist (v +ᵥ p) (v' +ᵥ p') ≤ nndist v v'+nndist p p' := by
+theorem nndist_vadd_vadd_le (v v' : V) (p p' : P) : nndist (v +ᵥ p) (v' +ᵥ p') ≤ nndist v v' + nndist p p' := by
   simp only [← Nnreal.coe_le_coe, Nnreal.coe_add, ← dist_nndist, dist_vadd_vadd_le]
 
-theorem nndist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : nndist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ nndist p₁ p₃+nndist p₂ p₄ := by
+theorem nndist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : nndist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ nndist p₁ p₃ + nndist p₂ p₄ := by
   simp only [← Nnreal.coe_le_coe, Nnreal.coe_add, ← dist_nndist, dist_vsub_vsub_le]
 
-theorem edist_vadd_vadd_le (v v' : V) (p p' : P) : edist (v +ᵥ p) (v' +ᵥ p') ≤ edist v v'+edist p p' := by
+theorem edist_vadd_vadd_le (v v' : V) (p p' : P) : edist (v +ᵥ p) (v' +ᵥ p') ≤ edist v v' + edist p p' := by
   simp only [edist_nndist]
   apply_mod_cast nndist_vadd_vadd_le
 
-theorem edist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : edist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ edist p₁ p₃+edist p₂ p₄ := by
+theorem edist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : edist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ edist p₁ p₃ + edist p₂ p₄ := by
   simp only [edist_nndist]
   apply_mod_cast nndist_vsub_vsub_le
 
 omit V
 
-/--  The pseudodistance defines a pseudometric space structure on the torsor. This
+/-- The pseudodistance defines a pseudometric space structure on the torsor. This
 is not an instance because it depends on `V` to define a `metric_space
 P`. -/
 def pseudoMetricSpaceOfNormedGroupOfAddTorsor (V P : Type _) [SemiNormedGroup V] [AddTorsor V P] :
-    PseudoMetricSpace P :=
-  { dist := fun x y => ∥(x -ᵥ y : V)∥,
-    dist_self := fun x => by
-      simp ,
-    dist_comm := fun x y => by
-      simp only [← neg_vsub_eq_vsub_rev y x, norm_neg],
-    dist_triangle := by
-      intro x y z
-      change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥+∥y -ᵥ z∥
-      rw [← vsub_add_vsub_cancel]
-      apply norm_add_le }
+    PseudoMetricSpace P where
+  dist := fun x y => ∥(x -ᵥ y : V)∥
+  dist_self := fun x => by
+    simp
+  dist_comm := fun x y => by
+    simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
+  dist_triangle := by
+    intro x y z
+    change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥ + ∥y -ᵥ z∥
+    rw [← vsub_add_vsub_cancel]
+    apply norm_add_le
 
-/--  The distance defines a metric space structure on the torsor. This
+/-- The distance defines a metric space structure on the torsor. This
 is not an instance because it depends on `V` to define a `metric_space
 P`. -/
-def metricSpaceOfNormedGroupOfAddTorsor (V P : Type _) [NormedGroup V] [AddTorsor V P] : MetricSpace P :=
-  { dist := fun x y => ∥(x -ᵥ y : V)∥,
-    dist_self := fun x => by
-      simp ,
-    eq_of_dist_eq_zero := fun x y h => by
-      simpa using h,
-    dist_comm := fun x y => by
-      simp only [← neg_vsub_eq_vsub_rev y x, norm_neg],
-    dist_triangle := by
-      intro x y z
-      change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥+∥y -ᵥ z∥
-      rw [← vsub_add_vsub_cancel]
-      apply norm_add_le }
+def metricSpaceOfNormedGroupOfAddTorsor (V P : Type _) [NormedGroup V] [AddTorsor V P] : MetricSpace P where
+  dist := fun x y => ∥(x -ᵥ y : V)∥
+  dist_self := fun x => by
+    simp
+  eq_of_dist_eq_zero := fun x y h => by
+    simpa using h
+  dist_comm := fun x y => by
+    simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
+  dist_triangle := by
+    intro x y z
+    change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥ + ∥y -ᵥ z∥
+    rw [← vsub_add_vsub_cancel]
+    apply norm_add_le
 
 include V
 
 theorem LipschitzWith.vadd [PseudoEmetricSpace α] {f : α → V} {g : α → P} {Kf Kg : ℝ≥0 } (hf : LipschitzWith Kf f)
-    (hg : LipschitzWith Kg g) : LipschitzWith (Kf+Kg) (f +ᵥ g) := fun x y =>
-  calc edist (f x +ᵥ g x) (f y +ᵥ g y) ≤ edist (f x) (f y)+edist (g x) (g y) := edist_vadd_vadd_le _ _ _ _
-    _ ≤ (Kf*edist x y)+Kg*edist x y := add_le_add (hf x y) (hg x y)
-    _ = (Kf+Kg)*edist x y := (add_mulₓ _ _ _).symm
+    (hg : LipschitzWith Kg g) : LipschitzWith (Kf + Kg) (f +ᵥ g) := fun x y =>
+  calc
+    edist (f x +ᵥ g x) (f y +ᵥ g y) ≤ edist (f x) (f y) + edist (g x) (g y) := edist_vadd_vadd_le _ _ _ _
+    _ ≤ Kf * edist x y + Kg * edist x y := add_le_add (hf x y) (hg x y)
+    _ = (Kf + Kg) * edist x y := (add_mulₓ _ _ _).symm
     
 
 theorem LipschitzWith.vsub [PseudoEmetricSpace α] {f g : α → P} {Kf Kg : ℝ≥0 } (hf : LipschitzWith Kf f)
-    (hg : LipschitzWith Kg g) : LipschitzWith (Kf+Kg) (f -ᵥ g) := fun x y =>
-  calc edist (f x -ᵥ g x) (f y -ᵥ g y) ≤ edist (f x) (f y)+edist (g x) (g y) := edist_vsub_vsub_le _ _ _ _
-    _ ≤ (Kf*edist x y)+Kg*edist x y := add_le_add (hf x y) (hg x y)
-    _ = (Kf+Kg)*edist x y := (add_mulₓ _ _ _).symm
+    (hg : LipschitzWith Kg g) : LipschitzWith (Kf + Kg) (f -ᵥ g) := fun x y =>
+  calc
+    edist (f x -ᵥ g x) (f y -ᵥ g y) ≤ edist (f x) (f y) + edist (g x) (g y) := edist_vsub_vsub_le _ _ _ _
+    _ ≤ Kf * edist x y + Kg * edist x y := add_le_add (hf x y) (hg x y)
+    _ = (Kf + Kg) * edist x y := (add_mulₓ _ _ _).symm
     
 
 theorem uniform_continuous_vadd : UniformContinuous fun x : V × P => x.1 +ᵥ x.2 :=
@@ -265,41 +267,41 @@ variable {𝕜 : Type _} [NormedField 𝕜] [SemiNormedSpace 𝕜 V]
 open AffineMap
 
 @[simp]
-theorem dist_center_homothety (p₁ p₂ : P) (c : 𝕜) : dist p₁ (homothety p₁ c p₂) = ∥c∥*dist p₁ p₂ := by
+theorem dist_center_homothety (p₁ p₂ : P) (c : 𝕜) : dist p₁ (homothety p₁ c p₂) = ∥c∥ * dist p₁ p₂ := by
   simp [homothety_def, norm_smul, ← dist_eq_norm_vsub, dist_comm]
 
 @[simp]
-theorem dist_homothety_center (p₁ p₂ : P) (c : 𝕜) : dist (homothety p₁ c p₂) p₁ = ∥c∥*dist p₁ p₂ := by
+theorem dist_homothety_center (p₁ p₂ : P) (c : 𝕜) : dist (homothety p₁ c p₂) p₁ = ∥c∥ * dist p₁ p₂ := by
   rw [dist_comm, dist_center_homothety]
 
 @[simp]
-theorem dist_homothety_self (p₁ p₂ : P) (c : 𝕜) : dist (homothety p₁ c p₂) p₂ = ∥1 - c∥*dist p₁ p₂ := by
+theorem dist_homothety_self (p₁ p₂ : P) (c : 𝕜) : dist (homothety p₁ c p₂) p₂ = ∥1 - c∥ * dist p₁ p₂ := by
   rw [homothety_eq_line_map, ← line_map_apply_one_sub, ← homothety_eq_line_map, dist_homothety_center, dist_comm]
 
 @[simp]
-theorem dist_self_homothety (p₁ p₂ : P) (c : 𝕜) : dist p₂ (homothety p₁ c p₂) = ∥1 - c∥*dist p₁ p₂ := by
+theorem dist_self_homothety (p₁ p₂ : P) (c : 𝕜) : dist p₂ (homothety p₁ c p₂) = ∥1 - c∥ * dist p₁ p₂ := by
   rw [dist_comm, dist_homothety_self]
 
 variable [Invertible (2 : 𝕜)]
 
 @[simp]
-theorem dist_left_midpoint (p₁ p₂ : P) : dist p₁ (midpoint 𝕜 p₁ p₂) = ∥(2 : 𝕜)∥⁻¹*dist p₁ p₂ := by
+theorem dist_left_midpoint (p₁ p₂ : P) : dist p₁ (midpoint 𝕜 p₁ p₂) = ∥(2 : 𝕜)∥⁻¹ * dist p₁ p₂ := by
   rw [midpoint, ← homothety_eq_line_map, dist_center_homothety, inv_of_eq_inv, ← NormedField.norm_inv]
 
 @[simp]
-theorem dist_midpoint_left (p₁ p₂ : P) : dist (midpoint 𝕜 p₁ p₂) p₁ = ∥(2 : 𝕜)∥⁻¹*dist p₁ p₂ := by
+theorem dist_midpoint_left (p₁ p₂ : P) : dist (midpoint 𝕜 p₁ p₂) p₁ = ∥(2 : 𝕜)∥⁻¹ * dist p₁ p₂ := by
   rw [dist_comm, dist_left_midpoint]
 
 @[simp]
-theorem dist_midpoint_right (p₁ p₂ : P) : dist (midpoint 𝕜 p₁ p₂) p₂ = ∥(2 : 𝕜)∥⁻¹*dist p₁ p₂ := by
+theorem dist_midpoint_right (p₁ p₂ : P) : dist (midpoint 𝕜 p₁ p₂) p₂ = ∥(2 : 𝕜)∥⁻¹ * dist p₁ p₂ := by
   rw [midpoint_comm, dist_midpoint_left, dist_comm]
 
 @[simp]
-theorem dist_right_midpoint (p₁ p₂ : P) : dist p₂ (midpoint 𝕜 p₁ p₂) = ∥(2 : 𝕜)∥⁻¹*dist p₁ p₂ := by
+theorem dist_right_midpoint (p₁ p₂ : P) : dist p₂ (midpoint 𝕜 p₁ p₂) = ∥(2 : 𝕜)∥⁻¹ * dist p₁ p₂ := by
   rw [dist_comm, dist_midpoint_right]
 
 theorem dist_midpoint_midpoint_le' (p₁ p₂ p₃ p₄ : P) :
-    dist (midpoint 𝕜 p₁ p₂) (midpoint 𝕜 p₃ p₄) ≤ (dist p₁ p₃+dist p₂ p₄) / ∥(2 : 𝕜)∥ := by
+    dist (midpoint 𝕜 p₁ p₂) (midpoint 𝕜 p₃ p₄) ≤ (dist p₁ p₃ + dist p₂ p₄) / ∥(2 : 𝕜)∥ := by
   rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, midpoint_vsub_midpoint] <;>
     try
       infer_instance
@@ -311,12 +313,12 @@ end NormedSpace
 variable [SemiNormedSpace ℝ V] [NormedSpace ℝ W]
 
 theorem dist_midpoint_midpoint_le (p₁ p₂ p₃ p₄ : V) :
-    dist (midpoint ℝ p₁ p₂) (midpoint ℝ p₃ p₄) ≤ (dist p₁ p₃+dist p₂ p₄) / 2 := by
+    dist (midpoint ℝ p₁ p₂) (midpoint ℝ p₃ p₄) ≤ (dist p₁ p₃ + dist p₂ p₄) / 2 := by
   simpa using dist_midpoint_midpoint_le' p₁ p₂ p₃ p₄
 
 include W
 
-/--  A continuous map between two normed affine spaces is an affine map provided that
+/-- A continuous map between two normed affine spaces is an affine map provided that
 it sends midpoints to midpoints. -/
 def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = midpoint ℝ (f x) (f y)) (hfc : Continuous f) :
     P →ᵃ[ℝ] Q :=

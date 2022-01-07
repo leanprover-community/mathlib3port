@@ -20,7 +20,7 @@ private def remove_none_aux (x : α) : β :=
   if h : (e (some x)).isSome then Option.getₓ h
   else
     Option.getₓ $
-      show (e none).isSome from by
+      show (e none).isSome by
         rw [← Option.ne_none_iff_is_some]
         intro hn
         rw [Option.not_is_some_iff_eq_none, ← hn] at h
@@ -37,25 +37,27 @@ private theorem remove_none_aux_inv (x : α) : remove_none_aux e.symm (remove_no
   Option.some_injective _
     (by
       cases h1 : e.symm (some (remove_none_aux e x)) <;> cases h2 : e (some x)
-      ·
-        rw [remove_none_aux_none _ h1]
+      · rw [remove_none_aux_none _ h1]
         exact (e.eq_symm_apply.mpr h2).symm
-      ·
-        rw [remove_none_aux_some _ ⟨_, h2⟩] at h1
+        
+      · rw [remove_none_aux_some _ ⟨_, h2⟩] at h1
         simpa using h1
-      ·
-        rw [remove_none_aux_none _ h2] at h1
+        
+      · rw [remove_none_aux_none _ h2] at h1
         simpa using h1
-      ·
-        rw [remove_none_aux_some _ ⟨_, h1⟩]
+        
+      · rw [remove_none_aux_some _ ⟨_, h1⟩]
         rw [remove_none_aux_some _ ⟨_, h2⟩]
-        simp )
+        simp
+        )
 
-/--  Given an equivalence between two `option` types, eliminate `none` from that equivalence by
+/-- Given an equivalence between two `option` types, eliminate `none` from that equivalence by
 mapping `e.symm none` to `e none`. -/
-def remove_none : α ≃ β :=
-  { toFun := remove_none_aux e, invFun := remove_none_aux e.symm, left_inv := remove_none_aux_inv e,
-    right_inv := remove_none_aux_inv e.symm }
+def remove_none : α ≃ β where
+  toFun := remove_none_aux e
+  invFun := remove_none_aux e.symm
+  left_inv := remove_none_aux_inv e
+  right_inv := remove_none_aux_inv e.symm
 
 @[simp]
 theorem remove_none_symm : (remove_none e).symm = remove_none e.symm :=
@@ -75,15 +77,15 @@ theorem option_symm_apply_none_iff : e.symm none = none ↔ e none = none :=
 
 theorem some_remove_none_iff {x : α} : some (remove_none e x) = e none ↔ e.symm none = some x := by
   cases' h : e (some x) with a
-  ·
-    rw [remove_none_none _ h]
+  · rw [remove_none_none _ h]
     simpa using (congr_argₓ e.symm h).symm
-  ·
-    rw [remove_none_some _ ⟨a, h⟩]
+    
+  · rw [remove_none_some _ ⟨a, h⟩]
     have := congr_argₓ e.symm h
     rw [symm_apply_apply] at this
     simp only [false_iffₓ, apply_eq_iff_eq]
     simp [this]
+    
 
 @[simp]
 theorem remove_none_map_equiv {α β : Type _} (e : α ≃ β) : remove_none (EquivFunctor.mapEquiv Option e) = e :=

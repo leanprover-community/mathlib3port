@@ -1,4 +1,4 @@
-import Mathbin.Topology.Algebra.WeakDualTopology
+import Mathbin.Topology.Algebra.Module.WeakDual
 import Mathbin.Analysis.NormedSpace.Dual
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 
@@ -37,7 +37,7 @@ TODOs:
 * Add that in finite dimensions, the weak-* topology and the dual norm topology coincide.
 * Add that in infinite dimensions, the weak-* topology is strictly coarser than the dual norm
   topology.
-* Add Banach-Alaoglu theorem (general version maybe in `topology.algebra.weak_dual_topology`).
+* Add Banach-Alaoglu theorem (general version maybe in `topology.algebra.module.weak_dual`).
 * Add metrizability of the dual unit ball (more generally bounded subsets) of `weak_dual 𝕜 E`
   under the assumption of separability of `E`. Sequential Banach-Alaoglu theorem would then follow
   from the general one.
@@ -48,7 +48,7 @@ No new notation is introduced.
 
 ## Implementation notes
 
-Weak-* topology is defined generally in the file `topology.algebra.weak_dual_topology`.
+Weak-* topology is defined generally in the file `topology.algebra.module.weak_dual`.
 
 When `E` is a normed space, the duals `dual 𝕜 E` and `weak_dual 𝕜 E` are type synonyms with
 different topology instances.
@@ -87,12 +87,12 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
 
 variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
-/--  For normed spaces `E`, there is a canonical map `dual 𝕜 E → weak_dual 𝕜 E` (the "identity"
+/-- For normed spaces `E`, there is a canonical map `dual 𝕜 E → weak_dual 𝕜 E` (the "identity"
 mapping). It is a linear equivalence. -/
 def NormedSpace.Dual.toWeakDual : dual 𝕜 E ≃ₗ[𝕜] WeakDual 𝕜 E :=
   LinearEquiv.refl 𝕜 (E →L[𝕜] 𝕜)
 
-/--  For normed spaces `E`, there is a canonical map `weak_dual 𝕜 E → dual 𝕜 E` (the "identity"
+/-- For normed spaces `E`, there is a canonical map `weak_dual 𝕜 E → dual 𝕜 E` (the "identity"
 mapping). It is a linear equivalence. Here it is implemented as the inverse of the linear
 equivalence `normed_space.dual.to_weak_dual` in the other direction. -/
 def WeakDual.toNormedDual : WeakDual 𝕜 E ≃ₗ[𝕜] dual 𝕜 E :=
@@ -118,13 +118,13 @@ theorem to_weak_dual_continuous : Continuous fun x' : dual 𝕜 E => x'.to_weak_
   intro z
   exact (inclusion_in_double_dual 𝕜 E z).Continuous
 
-/--  For a normed space `E`, according to `to_weak_dual_continuous` the "identity mapping"
+/-- For a normed space `E`, according to `to_weak_dual_continuous` the "identity mapping"
 `dual 𝕜 E → weak_dual 𝕜 E` is continuous. This definition implements it as a continuous linear
 map. -/
 def continuous_linear_map_to_weak_dual : dual 𝕜 E →L[𝕜] WeakDual 𝕜 E :=
   { to_weak_dual with cont := to_weak_dual_continuous }
 
-/--  The weak-star topology is coarser than the dual-norm topology. -/
+/-- The weak-star topology is coarser than the dual-norm topology. -/
 theorem dual_norm_topology_le_weak_dual_topology :
     (by
         infer_instance : TopologicalSpace (dual 𝕜 E)) ≤
@@ -150,7 +150,7 @@ theorem to_normed_dual.preimage_closed_unit_ball :
 
 variable (𝕜)
 
-/--  The polar set `polar 𝕜 s` of `s : set E` seen as a subset of the dual of `E` with the
+/-- The polar set `polar 𝕜 s` of `s : set E` seen as a subset of the dual of `E` with the
 weak-star topology is `weak_dual.polar 𝕜 s`. -/
 def Polar (s : Set E) : Set (WeakDual 𝕜 E) :=
   to_normed_dual ⁻¹' Polar 𝕜 s
@@ -167,7 +167,7 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
 
 variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
-/--  The polar `polar 𝕜 s` of a set `s : E` is a closed subset when the weak star topology
+/-- The polar `polar 𝕜 s` of a set `s : E` is a closed subset when the weak star topology
 is used, i.e., when `polar 𝕜 s` is interpreted as a subset of `weak_dual 𝕜 E`. -/
 theorem WeakDual.is_closed_polar (s : Set E) : IsClosed (WeakDual.Polar 𝕜 s) := by
   rw [WeakDual.Polar, polar_eq_Inter, preimage_bInter]

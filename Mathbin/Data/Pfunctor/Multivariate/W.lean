@@ -47,9 +47,9 @@ open Typevec
 
 open_locale Mvfunctor
 
-variable {n : ℕ} (P : Mvpfunctor.{u} (n+1))
+variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 
-/--  A path from the root of a tree to one of its node -/
+/-- A path from the root of a tree to one of its node -/
 inductive W_path : P.last.W → Fin2 n → Type u
   | root (a : P.A) (f : P.last.B a → P.last.W) (i : Fin2 n) (c : P.drop.B a i) : W_path ⟨a, f⟩ i
   | child (a : P.A) (f : P.last.B a → P.last.W) (i : Fin2 n) (j : P.last.B a) (c : W_path (f j) i) : W_path ⟨a, f⟩ i
@@ -58,7 +58,7 @@ instance W_path.inhabited (x : P.last.W) {i} [I : Inhabited (P.drop.B x.head i)]
   ⟨match x, I with
     | ⟨a, f⟩, I => W_path.root a f i (@default _ I)⟩
 
-/--  Specialized destructor on `W_path` -/
+/-- Specialized destructor on `W_path` -/
 def W_path_cases_on {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
     (g : ∀ j : P.last.B a, P.W_path (f j) ⟹ α) : P.W_path ⟨a, f⟩ ⟹ α := by
   intro i x
@@ -68,11 +68,11 @@ def W_path_cases_on {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g'
   case W_path.child _ _ i j c =>
     exact g j i c
 
-/--  Specialized destructor on `W_path` -/
+/-- Specialized destructor on `W_path` -/
 def W_path_dest_left {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.W_path ⟨a, f⟩ ⟹ α) : P.drop.B a ⟹ α :=
   fun i c => h i (W_path.root a f i c)
 
-/--  Specialized destructor on `W_path` -/
+/-- Specialized destructor on `W_path` -/
 def W_path_dest_right {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.W_path ⟨a, f⟩ ⟹ α) :
     ∀ j : P.last.B a, P.W_path (f j) ⟹ α := fun j i c => h i (W_path.child a f i j c)
 
@@ -93,14 +93,15 @@ theorem comp_W_path_cases_on {α β : Typevec n} (h : α ⟹ β) {a : P.A} {f : 
     h ⊚ P.W_path_cases_on g' g = P.W_path_cases_on (h ⊚ g') fun i => h ⊚ g i := by
   ext i x <;> cases x <;> rfl
 
-/--  Polynomial functor for the W-type of `P`. `A` is a data-less well-founded
+/-- Polynomial functor for the W-type of `P`. `A` is a data-less well-founded
 tree whereas, for a given `a : A`, `B a` is a valid path in tree `a` so
 that `Wp.obj α` is made of a tree and a function from its valid paths to
 the values it contains  -/
-def Wp : Mvpfunctor n :=
-  { A := P.last.W, B := P.W_path }
+def Wp : Mvpfunctor n where
+  A := P.last.W
+  B := P.W_path
 
-/--  W-type of `P` -/
+/-- W-type of `P` -/
 @[nolint has_inhabited_instance]
 def W (α : Typevec n) : Type _ :=
   P.Wp.obj α
@@ -113,11 +114,11 @@ First, describe operations on `W` as a polynomial functor.
 -/
 
 
-/--  Constructor for `Wp` -/
+/-- Constructor for `Wp` -/
 def Wp_mk {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (f' : P.W_path ⟨a, f⟩ ⟹ α) : P.W α :=
   ⟨⟨a, f⟩, f'⟩
 
-/--  Recursor for `Wp` -/
+/-- Recursor for `Wp` -/
 def Wp_rec {α : Typevec n} {C : Type _}
     (g : ∀ a : P.A f : P.last.B a → P.last.W, P.W_path ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) :
     ∀ x : P.last.W f' : P.W_path x ⟹ α, C
@@ -144,13 +145,13 @@ Now think of W as defined inductively by the data ⟨a, f', f⟩ where
  -/
 
 
-/--  Constructor for `W` -/
+/-- Constructor for `W` -/
 def W_mk {α : Typevec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) : P.W α :=
   let g : P.last.B a → P.last.W := fun i => (f i).fst
   let g' : P.W_path ⟨a, g⟩ ⟹ α := P.W_path_cases_on f' fun i => (f i).snd
   ⟨⟨a, g⟩, g'⟩
 
-/--  Recursor for `W` -/
+/-- Recursor for `W` -/
 def W_rec {α : Typevec n} {C : Type _} (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) :
     P.W α → C
   | ⟨a, f'⟩ =>
@@ -158,7 +159,7 @@ def W_rec {α : Typevec n} {C : Type _} (g : ∀ a : P.A, P.drop.B a ⟹ α → 
       g a (P.W_path_dest_left h) (fun i => ⟨f i, P.W_path_dest_right h i⟩) h'
     P.Wp_rec g' a f'
 
-/--  Defining equation for the recursor of `W` -/
+/-- Defining equation for the recursor of `W` -/
 theorem W_rec_eq {α : Typevec n} {C : Type _}
     (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) (a : P.A) (f' : P.drop.B a ⟹ α)
     (f : P.last.B a → P.W α) : P.W_rec g (P.W_mk a f' f) = g a f' f fun i => P.W_rec g (f i) := by
@@ -168,7 +169,7 @@ theorem W_rec_eq {α : Typevec n} {C : Type _}
   dsimp only [W_path_dest_left_W_path_cases_on, W_path_dest_right_W_path_cases_on]
   congr <;> ext1 i <;> cases f i <;> rfl
 
-/--  Induction principle for `W` -/
+/-- Induction principle for `W` -/
 theorem W_ind {α : Typevec n} {C : P.W α → Prop}
     (ih : ∀ a : P.A f' : P.drop.B a ⟹ α f : P.last.B a → P.W α, (∀ i, C (f i)) → C (P.W_mk a f' f)) : ∀ x, C x := by
   intro x
@@ -187,7 +188,7 @@ theorem W_cases {α : Typevec n} {C : P.W α → Prop}
     (ih : ∀ a : P.A f' : P.drop.B a ⟹ α f : P.last.B a → P.W α, C (P.W_mk a f' f)) : ∀ x, C x :=
   P.W_ind fun a f' f ih' => ih a f' f
 
-/--  W-types are functorial -/
+/-- W-types are functorial -/
 def W_map {α β : Typevec n} (g : α ⟹ β) : P.W α → P.W β := fun x => g <$$> x
 
 theorem W_mk_eq {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (g' : P.drop.B a ⟹ α)
@@ -213,7 +214,7 @@ theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B 
   have h := Mvpfunctor.map_eq P.Wp g
   rw [h, comp_W_path_cases_on]
 
-/--  Constructor of a value of `P.obj (α ::: β)` from components.
+/-- Constructor of a value of `P.obj (α ::: β)` from components.
 Useful to avoid complicated type annotation -/
 @[reducible]
 def obj_append1 {α : Typevec n} {β : Type _} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) : P.obj (α ::: β) :=
@@ -230,11 +231,11 @@ the qpf axioms are expressed in terms of `map` on `P`.
 -/
 
 
-/--  Constructor for the W-type of `P` -/
+/-- Constructor for the W-type of `P` -/
 def W_mk' {α : Typevec n} : P.obj (α ::: P.W α) → P.W α
   | ⟨a, f⟩ => P.W_mk a (drop_fun f) (last_fun f)
 
-/--  Destructor for the W-type of `P` -/
+/-- Destructor for the W-type of `P` -/
 def W_dest' {α : Typevec.{u} n} : P.W α → P.obj (α.append1 (P.W α)) :=
   P.W_rec fun a f' f _ => ⟨a, split_fun f' f⟩
 

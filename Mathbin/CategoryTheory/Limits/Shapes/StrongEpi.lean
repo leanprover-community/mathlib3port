@@ -33,7 +33,7 @@ variable {C : Type u} [category.{v} C]
 
 variable {P Q : C}
 
-/--  A strong epimorphism `f` is an epimorphism such that every commutative square with `f` at the
+/-- A strong epimorphism `f` is an epimorphism such that every commutative square with `f` at the
     top and a monomorphism at the bottom has a lift. -/
 class strong_epi (f : P ⟶ Q) : Prop where
   Epi : epi f
@@ -48,7 +48,7 @@ section
 
 variable {R : C} (f : P ⟶ Q) (g : Q ⟶ R)
 
-/--  The composition of two strong epimorphisms is a strong epimorphism. -/
+/-- The composition of two strong epimorphisms is a strong epimorphism. -/
 theorem strong_epi_comp [strong_epi f] [strong_epi g] : strong_epi (f ≫ g) :=
   { Epi := epi_comp _ _,
     HasLift := by
@@ -64,7 +64,7 @@ theorem strong_epi_comp [strong_epi f] [strong_epi g] : strong_epi (f ≫ g) :=
             simp , by
             simp ⟩ }
 
-/--  If `f ≫ g` is a strong epimorphism, then so is g. -/
+/-- If `f ≫ g` is a strong epimorphism, then so is g. -/
 theorem strong_epi_of_strong_epi [strong_epi (f ≫ g)] : strong_epi g :=
   { Epi := epi_of_epi f g,
     HasLift := by
@@ -80,17 +80,19 @@ theorem strong_epi_of_strong_epi [strong_epi (f ≫ g)] : strong_epi g :=
             by
             simp ⟩ }
 
--- failed to format: format: uncaught backtrack exception
 /-- An isomorphism is in particular a strong epimorphism. -/
-  instance
-    ( priority := 100 )
-    strong_epi_of_is_iso
-    [ is_iso f ] : strong_epi f
-    where Epi := by infer_instance HasLift X Y u v z _ h := arrow.has_lift.mk ⟨ inv f ≫ u , by simp , by simp [ h ] ⟩
+instance (priority := 100) strong_epi_of_is_iso [is_iso f] : strong_epi f where
+  Epi := by
+    infer_instance
+  HasLift := fun X Y u v z _ h =>
+    arrow.has_lift.mk
+      ⟨inv f ≫ u, by
+        simp , by
+        simp [h]⟩
 
 end
 
-/--  A strong epimorphism that is a monomorphism is an isomorphism. -/
+/-- A strong epimorphism that is a monomorphism is an isomorphism. -/
 theorem is_iso_of_mono_of_strong_epi (f : P ⟶ Q) [mono f] [strong_epi f] : is_iso f :=
   ⟨⟨arrow.lift $
         arrow.hom_mk' $

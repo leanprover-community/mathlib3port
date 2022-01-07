@@ -81,20 +81,20 @@ theorem tendsto_abv_eval₂_at_top {R S k α : Type _} [Semiringₓ R] [Ringₓ 
   by
   revert hf
   refine' degree_pos_induction_on p hd _ _ _ <;> clear hd p
-  ·
-    rintro c - hc
+  · rintro c - hc
     rw [leading_coeff_mul_X, leading_coeff_C] at hc
     simpa [abv_mul abv] using hz.const_mul_at_top ((abv_pos abv).2 hc)
-  ·
-    intro p hpd ihp hf
+    
+  · intro p hpd ihp hf
     rw [leading_coeff_mul_X] at hf
     simpa [abv_mul abv] using (ihp hf).at_top_mul_at_top hz
-  ·
-    intro p a hd ihp hf
+    
+  · intro p a hd ihp hf
     rw [add_commₓ, leading_coeff_add_of_degree_lt (degree_C_le.trans_lt hd)] at hf
     refine' tendsto_at_top_of_add_const_right (abv (-f a)) _
     refine' tendsto_at_top_mono (fun _ => abv_add abv _ _) _
     simpa using ihp hf
+    
 
 theorem tendsto_abv_at_top {R k α : Type _} [Ringₓ R] [LinearOrderedField k] (abv : R → k) [IsAbsoluteValue abv]
     (p : Polynomial R) (h : 0 < degree p) {l : Filter α} {z : α → R} (hz : tendsto (abv ∘ z) l at_top) :

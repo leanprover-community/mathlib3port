@@ -28,34 +28,34 @@ namespace CategoryTheory.Limits
 
 variable (J : Type v)
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/--  A wide pullback shape for any type `J` can be written simply as `option J`. -/
+/-- A wide pullback shape for any type `J` can be written simply as `option J`. -/
 def wide_pullback_shape :=
-  Option J deriving [anonymous]
+  Option J deriving Inhabited
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/--  A wide pushout shape for any type `J` can be written simply as `option J`. -/
+/-- A wide pushout shape for any type `J` can be written simply as `option J`. -/
 def wide_pushout_shape :=
-  Option J deriving [anonymous]
+  Option J deriving Inhabited
 
 namespace WidePullbackShape
 
 variable {J}
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
-/--  The type of arrows for the shape indexing a wide pullback. -/
+/-- The type of arrows for the shape indexing a wide pullback. -/
 inductive hom : wide_pullback_shape J → wide_pullback_shape J → Type v
   | id : ∀ X, hom X X
   | term : ∀ j : J, hom (some j) none
-  deriving [anonymous]
+  deriving DecidableEq
 
 attribute [nolint unused_arguments] hom.decidable_eq
 
--- failed to format: format: uncaught backtrack exception
-instance
-  struct
-  : category_struct ( wide_pullback_shape J )
-  where Hom := hom id j := hom.id j comp j₁ j₂ j₃ f g := by cases f exact g cases g apply hom.term _
+instance struct : category_struct (wide_pullback_shape J) where
+  Hom := hom
+  id := fun j => hom.id j
+  comp := fun j₁ j₂ j₃ f g => by
+    cases f
+    exact g
+    cases g
+    apply hom.term _
 
 instance hom.inhabited : Inhabited (hom none none) :=
   ⟨hom.id (none : wide_pullback_shape J)⟩
@@ -75,27 +75,26 @@ theorem hom_id (X : wide_pullback_shape J) : hom.id X = 𝟙 X :=
 
 variable {C : Type u} [category.{v} C]
 
-/-- 
-Construct a functor out of the wide pullback shape given a J-indexed collection of arrows to a
+/-- Construct a functor out of the wide pullback shape given a J-indexed collection of arrows to a
 fixed object.
 -/
 @[simps]
-def wide_cospan (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : wide_pullback_shape J ⥤ C :=
-  { obj := fun j => Option.casesOn j B objs,
-    map := fun X Y f => by
-      cases' f with _ j
-      ·
-        apply 𝟙 _
-      ·
-        exact arrows j,
-    map_comp' := fun _ _ _ f g => by
-      cases f
-      ·
-        simpa
-      cases g
-      simpa }
+def wide_cospan (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : wide_pullback_shape J ⥤ C where
+  obj := fun j => Option.casesOn j B objs
+  map := fun X Y f => by
+    cases' f with _ j
+    · apply 𝟙 _
+      
+    · exact arrows j
+      
+  map_comp' := fun _ _ _ f g => by
+    cases f
+    · simpa
+      
+    cases g
+    simpa
 
-/--  Every diagram is naturally isomorphic (actually, equal) to a `wide_cospan` -/
+/-- Every diagram is naturally isomorphic (actually, equal) to a `wide_cospan` -/
 def diagram_iso_wide_cospan (F : wide_pullback_shape J ⥤ C) :
     F ≅ wide_cospan (F.obj none) (fun j => F.obj (some j)) fun j => F.map (hom.term j) :=
   (nat_iso.of_components fun j =>
@@ -104,7 +103,7 @@ def diagram_iso_wide_cospan (F : wide_pullback_shape J ⥤ C) :
     by
     tidy
 
-/--  Construct a cone over a wide cospan. -/
+/-- Construct a cone over a wide cospan. -/
 @[simps]
 def mk_cone {F : wide_pullback_shape J ⥤ C} {X : C} (f : X ⟶ F.obj none) (π : ∀ j, X ⟶ F.obj (some j))
     (w : ∀ j, π j ≫ F.map (hom.term j) = f) : cone F :=
@@ -123,20 +122,22 @@ namespace WidePushoutShape
 
 variable {J}
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
-/--  The type of arrows for the shape indexing a wide psuhout. -/
+/-- The type of arrows for the shape indexing a wide psuhout. -/
 inductive hom : wide_pushout_shape J → wide_pushout_shape J → Type v
   | id : ∀ X, hom X X
   | init : ∀ j : J, hom none (some j)
-  deriving [anonymous]
+  deriving DecidableEq
 
 attribute [nolint unused_arguments] hom.decidable_eq
 
--- failed to format: format: uncaught backtrack exception
-instance
-  struct
-  : category_struct ( wide_pushout_shape J )
-  where Hom := hom id j := hom.id j comp j₁ j₂ j₃ f g := by cases f exact g cases g apply hom.init _
+instance struct : category_struct (wide_pushout_shape J) where
+  Hom := hom
+  id := fun j => hom.id j
+  comp := fun j₁ j₂ j₃ f g => by
+    cases f
+    exact g
+    cases g
+    apply hom.init _
 
 instance hom.inhabited : Inhabited (hom none none) :=
   ⟨hom.id (none : wide_pushout_shape J)⟩
@@ -156,23 +157,22 @@ theorem hom_id (X : wide_pushout_shape J) : hom.id X = 𝟙 X :=
 
 variable {C : Type u} [category.{v} C]
 
-/-- 
-Construct a functor out of the wide pushout shape given a J-indexed collection of arrows from a
+/-- Construct a functor out of the wide pushout shape given a J-indexed collection of arrows from a
 fixed object.
 -/
 @[simps]
-def wide_span (B : C) (objs : J → C) (arrows : ∀ j : J, B ⟶ objs j) : wide_pushout_shape J ⥤ C :=
-  { obj := fun j => Option.casesOn j B objs,
-    map := fun X Y f => by
-      cases' f with _ j
-      ·
-        apply 𝟙 _
-      ·
-        exact arrows j,
-    map_comp' := by
-      rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _) <;> simpa }
+def wide_span (B : C) (objs : J → C) (arrows : ∀ j : J, B ⟶ objs j) : wide_pushout_shape J ⥤ C where
+  obj := fun j => Option.casesOn j B objs
+  map := fun X Y f => by
+    cases' f with _ j
+    · apply 𝟙 _
+      
+    · exact arrows j
+      
+  map_comp' := by
+    rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _) <;> simpa
 
-/--  Every diagram is naturally isomorphic (actually, equal) to a `wide_span` -/
+/-- Every diagram is naturally isomorphic (actually, equal) to a `wide_span` -/
 def diagram_iso_wide_span (F : wide_pushout_shape J ⥤ C) :
     F ≅ wide_span (F.obj none) (fun j => F.obj (some j)) fun j => F.map (hom.init j) :=
   (nat_iso.of_components fun j =>
@@ -181,7 +181,7 @@ def diagram_iso_wide_span (F : wide_pushout_shape J ⥤ C) :
     by
     tidy
 
-/--  Construct a cocone over a wide span. -/
+/-- Construct a cocone over a wide span. -/
 @[simps]
 def mk_cocone {F : wide_pushout_shape J ⥤ C} {X : C} (f : F.obj none ⟶ X) (ι : ∀ j, F.obj (some j) ⟶ X)
     (w : ∀ j, F.map (hom.init j) ≫ ι j = f) : cocone F :=
@@ -198,30 +198,30 @@ end WidePushoutShape
 
 variable (C : Type u) [category.{v} C]
 
-/--  `has_wide_pullbacks` represents a choice of wide pullback for every collection of morphisms -/
+/-- `has_wide_pullbacks` represents a choice of wide pullback for every collection of morphisms -/
 abbrev has_wide_pullbacks : Prop :=
   ∀ J : Type v, has_limits_of_shape (wide_pullback_shape J) C
 
-/--  `has_wide_pushouts` represents a choice of wide pushout for every collection of morphisms -/
+/-- `has_wide_pushouts` represents a choice of wide pushout for every collection of morphisms -/
 abbrev has_wide_pushouts : Prop :=
   ∀ J : Type v, has_colimits_of_shape (wide_pushout_shape J) C
 
 variable {C J}
 
-/--  `has_wide_pullback B objs arrows` means that `wide_cospan B objs arrows` has a limit. -/
+/-- `has_wide_pullback B objs arrows` means that `wide_cospan B objs arrows` has a limit. -/
 abbrev has_wide_pullback (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : Prop :=
   has_limit (wide_pullback_shape.wide_cospan B objs arrows)
 
-/--  `has_wide_pushout B objs arrows` means that `wide_span B objs arrows` has a colimit. -/
+/-- `has_wide_pushout B objs arrows` means that `wide_span B objs arrows` has a colimit. -/
 abbrev has_wide_pushout (B : C) (objs : J → C) (arrows : ∀ j : J, B ⟶ objs j) : Prop :=
   has_colimit (wide_pushout_shape.wide_span B objs arrows)
 
-/--  A choice of wide pullback. -/
+/-- A choice of wide pullback. -/
 noncomputable abbrev wide_pullback (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B)
     [has_wide_pullback B objs arrows] : C :=
   limit (wide_pullback_shape.wide_cospan B objs arrows)
 
-/--  A choice of wide pushout. -/
+/-- A choice of wide pushout. -/
 noncomputable abbrev wide_pushout (B : C) (objs : J → C) (arrows : ∀ j : J, B ⟶ objs j)
     [has_wide_pushout B objs arrows] : C :=
   colimit (wide_pushout_shape.wide_span B objs arrows)
@@ -234,11 +234,11 @@ variable {C} {B : C} {objs : J → C} (arrows : ∀ j : J, objs j ⟶ B)
 
 variable [has_wide_pullback B objs arrows]
 
-/--  The `j`-th projection from the pullback. -/
+/-- The `j`-th projection from the pullback. -/
 noncomputable abbrev π (j : J) : wide_pullback _ _ arrows ⟶ objs j :=
   limit.π (wide_pullback_shape.wide_cospan _ _ _) (Option.some j)
 
-/--  The unique map to the base from the pullback. -/
+/-- The unique map to the base from the pullback. -/
 noncomputable abbrev base : wide_pullback _ _ arrows ⟶ B :=
   limit.π (wide_pullback_shape.wide_cospan _ _ _) Option.none
 
@@ -248,12 +248,10 @@ theorem π_arrow (j : J) : π arrows j ≫ arrows _ = base arrows := by
 
 variable {arrows}
 
-/--  Lift a collection of morphisms to a morphism to the pullback. -/
+/-- Lift a collection of morphisms to a morphism to the pullback. -/
 noncomputable abbrev lift {X : C} (f : X ⟶ B) (fs : ∀ j : J, X ⟶ objs j) (w : ∀ j, fs j ≫ arrows j = f) :
     X ⟶ wide_pullback _ _ arrows :=
-  limit.lift (wide_pullback_shape.wide_cospan _ _ _)
-    (wide_pullback_shape.mk_cone f fs $ by
-      exact w)
+  limit.lift (wide_pullback_shape.wide_cospan _ _ _) (wide_pullback_shape.mk_cone f fs $ w)
 
 variable (arrows)
 
@@ -272,15 +270,12 @@ theorem liftBase : lift f fs w ≫ base arrows = f := by
 theorem eq_lift_of_comp_eq (g : X ⟶ wide_pullback _ _ arrows) :
     (∀ j : J, g ≫ π arrows j = fs j) → g ≫ base arrows = f → g = lift f fs w := by
   intro h1 h2
-  apply
-    (limit.is_limit (wide_pullback_shape.wide_cospan B objs arrows)).uniq
-      (wide_pullback_shape.mk_cone f fs $ by
-        exact w)
+  apply (limit.is_limit (wide_pullback_shape.wide_cospan B objs arrows)).uniq (wide_pullback_shape.mk_cone f fs $ w)
   rintro (_ | _)
-  ·
-    apply h2
-  ·
-    apply h1
+  · apply h2
+    
+  · apply h1
+    
 
 theorem hom_eq_lift (g : X ⟶ wide_pullback _ _ arrows) :
     g =
@@ -297,10 +292,10 @@ theorem hom_ext (g1 g2 : X ⟶ wide_pullback _ _ arrows) :
   intro h1 h2
   apply limit.hom_ext
   rintro (_ | _)
-  ·
-    apply h2
-  ·
-    apply h1
+  · apply h2
+    
+  · apply h1
+    
 
 end WidePullback
 
@@ -310,11 +305,11 @@ variable {C} {B : C} {objs : J → C} (arrows : ∀ j : J, B ⟶ objs j)
 
 variable [has_wide_pushout B objs arrows]
 
-/--  The `j`-th inclusion to the pushout. -/
+/-- The `j`-th inclusion to the pushout. -/
 noncomputable abbrev ι (j : J) : objs j ⟶ wide_pushout _ _ arrows :=
   colimit.ι (wide_pushout_shape.wide_span _ _ _) (Option.some j)
 
-/--  The unique map from the head to the pushout. -/
+/-- The unique map from the head to the pushout. -/
 noncomputable abbrev head : B ⟶ wide_pushout B objs arrows :=
   colimit.ι (wide_pushout_shape.wide_span _ _ _) Option.none
 
@@ -324,12 +319,10 @@ theorem arrow_ι (j : J) : arrows j ≫ ι arrows j = head arrows := by
 
 variable {arrows}
 
-/--  Descend a collection of morphisms to a morphism from the pushout. -/
+/-- Descend a collection of morphisms to a morphism from the pushout. -/
 noncomputable abbrev desc {X : C} (f : B ⟶ X) (fs : ∀ j : J, objs j ⟶ X) (w : ∀ j, arrows j ≫ fs j = f) :
     wide_pushout _ _ arrows ⟶ X :=
-  colimit.desc (wide_pushout_shape.wide_span B objs arrows)
-    (wide_pushout_shape.mk_cocone f fs $ by
-      exact w)
+  colimit.desc (wide_pushout_shape.wide_span B objs arrows) (wide_pushout_shape.mk_cocone f fs $ w)
 
 variable (arrows)
 
@@ -348,15 +341,12 @@ theorem head_desc : head arrows ≫ desc f fs w = f := by
 theorem eq_desc_of_comp_eq (g : wide_pushout _ _ arrows ⟶ X) :
     (∀ j : J, ι arrows j ≫ g = fs j) → head arrows ≫ g = f → g = desc f fs w := by
   intro h1 h2
-  apply
-    (colimit.is_colimit (wide_pushout_shape.wide_span B objs arrows)).uniq
-      (wide_pushout_shape.mk_cocone f fs $ by
-        exact w)
+  apply (colimit.is_colimit (wide_pushout_shape.wide_span B objs arrows)).uniq (wide_pushout_shape.mk_cocone f fs $ w)
   rintro (_ | _)
-  ·
-    apply h2
-  ·
-    apply h1
+  · apply h2
+    
+  · apply h1
+    
 
 theorem hom_eq_desc (g : wide_pushout _ _ arrows ⟶ X) :
     g =
@@ -373,10 +363,10 @@ theorem hom_ext (g1 g2 : wide_pushout _ _ arrows ⟶ X) :
   intro h1 h2
   apply colimit.hom_ext
   rintro (_ | _)
-  ·
-    apply h2
-  ·
-    apply h1
+  · apply h2
+    
+  · apply h1
+    
 
 end WidePushout
 

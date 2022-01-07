@@ -2,7 +2,7 @@ import Mathbin.Tactic.Core
 
 namespace Tactic
 
-/--  `copy_attribute' attr_name src tgt p d_name` copy (user) attribute `attr_name` from
+/-- `copy_attribute' attr_name src tgt p d_name` copy (user) attribute `attr_name` from
    `src` to `tgt` if it is defined for `src`; unlike `copy_attribute` the primed version also copies
    the parameter of the user attribute, in the user attribute case. Make it persistent if `p` is
    `tt`; if `p` is `none`, the copied attribute is made persistent iff it is persistent on `src`  -/
@@ -25,7 +25,7 @@ unsafe def copy_attribute' (attr_name : Name) (src : Name) (tgt : Name) (p : Opt
 
 open Expr
 
-/--  Auxilliary function for `additive_test`. The bool argument *only* matters when applied
+/-- Auxilliary function for `additive_test`. The bool argument *only* matters when applied
 to exactly a constant. -/
 unsafe def additive_test_aux (f : Name → Option Name) (ignore : name_map $ List ℕ) : Bool → expr → Bool
   | b, var n => tt
@@ -36,15 +36,14 @@ unsafe def additive_test_aux (f : Name → Option Name) (ignore : name_map $ Lis
   | b, app e f =>
     additive_test_aux tt e &&
       match ignore.find e.get_app_fn.const_name with
-      | some l => if (e.get_app_num_args+1) ∈ l then tt else additive_test_aux ff f
+      | some l => if e.get_app_num_args + 1 ∈ l then tt else additive_test_aux ff f
       | none => additive_test_aux ff f
   | b, lam n bi e t => additive_test_aux ff t
   | b, pi n bi e t => additive_test_aux ff t
   | b, elet n g e f => additive_test_aux ff e && additive_test_aux ff f
   | b, macro d args => tt
 
-/-- 
-`additive_test f replace_all ignore e` tests whether the expression `e` contains no constant
+/-- `additive_test f replace_all ignore e` tests whether the expression `e` contains no constant
 `nm` that is not applied to any arguments, and such that `f nm = none`.
 This is used in `@[to_additive]` for deciding which subexpressions to transform: we only transform
 constants if `additive_test` applied to their first argument returns `tt`.
@@ -57,7 +56,7 @@ If `replace_all` is `tt` the test always return `tt`.
 unsafe def additive_test (f : Name → Option Name) (replace_all : Bool) (ignore : name_map $ List ℕ) (e : expr) : Bool :=
   if replace_all then tt else additive_test_aux f ignore ff e
 
-/--  transform the declaration `src` and all declarations `pre._proof_i` occurring in `src`
+/-- transform the declaration `src` and all declarations `pre._proof_i` occurring in `src`
 using the dictionary `f`.
 `replace_all`, `trace`, `ignore` and `reorder` are configuration options.
 `pre` is the declaration that got the `@[to_additive]` attribute and `tgt_pre` is the target of this
@@ -97,8 +96,7 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
       if env.is_protected src then add_protected_decl decl else add_decl decl
       decorate_error "proof doesn't type-check. " $ type_check decl.value
 
-/-- 
-Make a new copy of a declaration,
+/-- Make a new copy of a declaration,
 replacing fragments of the names of identifiers in the type and the body using the function `f`.
 This is used to implement `@[to_additive]`.
 -/
@@ -116,8 +114,7 @@ unsafe def transform_decl_with_prefix_fun (f : Name → Option Name) (replace_al
       set_env (e.add_eqn_lemma tgt_eqn)
   attrs.mmap' fun n => copy_attribute' n src tgt
 
-/-- 
-Make a new copy of a declaration, replacing fragments of the names of identifiers in the type and
+/-- Make a new copy of a declaration, replacing fragments of the names of identifiers in the type and
 the body using the dictionary `dict`.
 This is used to implement `@[to_additive]`.
 -/

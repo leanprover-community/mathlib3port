@@ -20,16 +20,17 @@ namespace Iso
 
 variable {C : Type u} [category.{v} C]
 
-/--  If `X` is isomorphic to `X₁` and `Y` is isomorphic to `Y₁`, then
+/-- If `X` is isomorphic to `X₁` and `Y` is isomorphic to `Y₁`, then
 there is a natural bijection between `X ⟶ Y` and `X₁ ⟶ Y₁`. See also `equiv.arrow_congr`. -/
-def hom_congr {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) : (X ⟶ Y) ≃ (X₁ ⟶ Y₁) :=
-  { toFun := fun f => α.inv ≫ f ≫ β.hom, invFun := fun f => α.hom ≫ f ≫ β.inv,
-    left_inv := fun f =>
-      show α.hom ≫ (α.inv ≫ f ≫ β.hom) ≫ β.inv = f by
-        rw [category.assoc, category.assoc, β.hom_inv_id, α.hom_inv_id_assoc, category.comp_id],
-    right_inv := fun f =>
-      show α.inv ≫ (α.hom ≫ f ≫ β.inv) ≫ β.hom = f by
-        rw [category.assoc, category.assoc, β.inv_hom_id, α.inv_hom_id_assoc, category.comp_id] }
+def hom_congr {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) : (X ⟶ Y) ≃ (X₁ ⟶ Y₁) where
+  toFun := fun f => α.inv ≫ f ≫ β.hom
+  invFun := fun f => α.hom ≫ f ≫ β.inv
+  left_inv := fun f =>
+    show α.hom ≫ (α.inv ≫ f ≫ β.hom) ≫ β.inv = f by
+      rw [category.assoc, category.assoc, β.hom_inv_id, α.hom_inv_id_assoc, category.comp_id]
+  right_inv := fun f =>
+    show α.inv ≫ (α.hom ≫ f ≫ β.inv) ≫ β.hom = f by
+      rw [category.assoc, category.assoc, β.inv_hom_id, α.inv_hom_id_assoc, category.comp_id]
 
 @[simp]
 theorem hom_congr_apply {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) (f : X ⟶ Y) : α.hom_congr β f = α.inv ≫ f ≫ β.hom :=
@@ -54,7 +55,7 @@ theorem hom_congr_symm {X₁ Y₁ X₂ Y₂ : C} (α : X₁ ≅ X₂) (β : Y₁
 
 variable {X Y : C} (α : X ≅ Y)
 
-/--  An isomorphism between two objects defines a monoid isomorphism between their
+/-- An isomorphism between two objects defines a monoid isomorphism between their
 monoid of endomorphisms. -/
 def conj : End X ≃* End Y :=
   { hom_congr α α with map_mul' := fun f g => hom_congr_comp α α α g f }
@@ -90,7 +91,7 @@ theorem self_symm_conj (f : End Y) : α.conj (α.symm.conj f) = f :=
 theorem conj_pow (f : End X) (n : ℕ) : α.conj (f ^ n) = α.conj f ^ n :=
   α.conj.to_monoid_hom.map_pow f n
 
-/--  `conj` defines a group isomorphisms between groups of automorphisms -/
+/-- `conj` defines a group isomorphisms between groups of automorphisms -/
 def conj_Aut : Aut X ≃* Aut Y :=
   (Aut.units_End_equiv_Aut X).symm.trans $ (Units.mapEquiv α.conj).trans $ Aut.units_End_equiv_Aut Y
 
@@ -106,7 +107,7 @@ theorem trans_conj_Aut {Z : C} (β : Y ≅ Z) (f : Aut X) : (α ≪≫ β).conjA
   simp only [conj_Aut_apply, iso.trans_symm, iso.trans_assoc]
 
 @[simp]
-theorem conj_Aut_mul (f g : Aut X) : α.conj_Aut (f*g) = α.conj_Aut f*α.conj_Aut g :=
+theorem conj_Aut_mul (f g : Aut X) : α.conj_Aut (f * g) = α.conj_Aut f * α.conj_Aut g :=
   α.conj_Aut.map_mul f g
 
 @[simp]

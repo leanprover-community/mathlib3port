@@ -49,7 +49,7 @@ of finite discrete spaces.
 
 variable (X : Type _) [TopologicalSpace X]
 
-/--  The type of discrete quotients of a topological space. -/
+/-- The type of discrete quotients of a topological space. -/
 @[ext]
 structure DiscreteQuotient where
   Rel : X → X → Prop
@@ -60,35 +60,35 @@ namespace DiscreteQuotient
 
 variable {X} (S : DiscreteQuotient X)
 
-/--  Construct a discrete quotient from a clopen set. -/
-def of_clopen {A : Set X} (h : IsClopen A) : DiscreteQuotient X :=
-  { Rel := fun x y => x ∈ A ∧ y ∈ A ∨ x ∉ A ∧ y ∉ A,
-    Equiv :=
-      ⟨by
-        tauto!, by
-        tauto!, by
-        tauto!⟩,
-    clopen := by
-      intro x
-      by_cases' hx : x ∈ A
-      ·
-        apply IsClopen.union
-        ·
-          convert h
-          ext
-          exact ⟨fun i => i.2, fun i => ⟨hx, i⟩⟩
-        ·
-          convert is_clopen_empty
-          tidy
-      ·
-        apply IsClopen.union
-        ·
-          convert is_clopen_empty
-          tidy
-        ·
-          convert IsClopen.compl h
-          ext
-          exact ⟨fun i => i.2, fun i => ⟨hx, i⟩⟩ }
+/-- Construct a discrete quotient from a clopen set. -/
+def of_clopen {A : Set X} (h : IsClopen A) : DiscreteQuotient X where
+  Rel := fun x y => x ∈ A ∧ y ∈ A ∨ x ∉ A ∧ y ∉ A
+  Equiv :=
+    ⟨by
+      tauto!, by
+      tauto!, by
+      tauto!⟩
+  clopen := by
+    intro x
+    by_cases' hx : x ∈ A
+    · apply IsClopen.union
+      · convert h
+        ext
+        exact ⟨fun i => i.2, fun i => ⟨hx, i⟩⟩
+        
+      · convert is_clopen_empty
+        tidy
+        
+      
+    · apply IsClopen.union
+      · convert is_clopen_empty
+        tidy
+        
+      · convert IsClopen.compl h
+        ext
+        exact ⟨fun i => i.2, fun i => ⟨hx, i⟩⟩
+        
+      
 
 theorem refl : ∀ x : X, S.rel x x :=
   S.equiv.1
@@ -99,7 +99,7 @@ theorem symm : ∀ x y : X, S.rel x y → S.rel y x :=
 theorem trans : ∀ x y z : X, S.rel x y → S.rel y z → S.rel x z :=
   S.equiv.2.2
 
-/--  The setoid whose quotient yields the discrete quotient. -/
+/-- The setoid whose quotient yields the discrete quotient. -/
 def Setoidₓ : Setoidₓ X :=
   ⟨S.rel, S.equiv⟩
 
@@ -109,7 +109,7 @@ instance : CoeSort (DiscreteQuotient X) (Type _) :=
 instance : TopologicalSpace S :=
   ⊥
 
-/--  The projection from `X` to the given discrete quotient. -/
+/-- The projection from `X` to the given discrete quotient. -/
 def proj : X → S :=
   Quotientₓ.mk'
 
@@ -140,19 +140,26 @@ theorem fiber_open (A : Set S) : IsOpen (S.proj ⁻¹' A) :=
 theorem fiber_clopen (A : Set S) : IsClopen (S.proj ⁻¹' A) :=
   ⟨fiber_open _ _, fiber_closed _ _⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : PartialOrderₓ ( DiscreteQuotient X )
-  where
-    le A B := ∀ x y : X , A.rel x y → B.rel x y
-      le_refl a := by tauto
-      le_trans a b c h1 h2 := by tauto
-      le_antisymm a b h1 h2 := by ext tauto
+instance : PartialOrderₓ (DiscreteQuotient X) where
+  le := fun A B => ∀ x y : X, A.rel x y → B.rel x y
+  le_refl := fun a => by
+    tauto
+  le_trans := fun a b c h1 h2 => by
+    tauto
+  le_antisymm := fun a b h1 h2 => by
+    ext
+    tauto
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : OrderTop ( DiscreteQuotient X )
-  where top := ⟨ fun a b => True , ⟨ by tauto , by tauto , by tauto ⟩ , fun _ => is_clopen_univ ⟩ le_top a := by tauto
+instance : OrderTop (DiscreteQuotient X) where
+  top :=
+    ⟨fun a b => True,
+      ⟨by
+        tauto, by
+        tauto, by
+        tauto⟩,
+      fun _ => is_clopen_univ⟩
+  le_top := fun a => by
+    tauto
 
 instance : SemilatticeInf (DiscreteQuotient X) :=
   { DiscreteQuotient.partialOrder with
@@ -176,11 +183,11 @@ section Comap
 
 variable {Y : Type _} [TopologicalSpace Y] {f : Y → X} (cont : Continuous f)
 
-/--  Comap a discrete quotient along a continuous map. -/
-def comap : DiscreteQuotient Y :=
-  { Rel := fun a b => S.rel (f a) (f b),
-    Equiv := ⟨fun a => S.refl _, fun a b h => S.symm _ _ h, fun a b c h1 h2 => S.trans _ _ _ h1 h2⟩,
-    clopen := fun y => ⟨IsOpen.preimage cont (S.clopen _).1, IsClosed.preimage cont (S.clopen _).2⟩ }
+/-- Comap a discrete quotient along a continuous map. -/
+def comap : DiscreteQuotient Y where
+  Rel := fun a b => S.rel (f a) (f b)
+  Equiv := ⟨fun a => S.refl _, fun a b h => S.symm _ _ h, fun a b c h1 h2 => S.trans _ _ _ h1 h2⟩
+  clopen := fun y => ⟨IsOpen.preimage cont (S.clopen _).1, IsClosed.preimage cont (S.clopen _).2⟩
 
 @[simp]
 theorem comap_id : S.comap (continuous_id : Continuous (id : X → X)) = S := by
@@ -200,7 +207,7 @@ end Comap
 
 section OfLe
 
-/--  The map induced by a refinement of a discrete quotient. -/
+/-- The map induced by a refinement of a discrete quotient. -/
 def of_le {A B : DiscreteQuotient X} (h : A ≤ B) : A → B := fun a =>
   Quotientₓ.liftOn' a (fun x => B.proj x) fun a b i => Quotientₓ.sound' (h _ _ i)
 
@@ -214,7 +221,7 @@ theorem of_le_refl_apply {A : DiscreteQuotient X} (a : A) : of_le (le_reflₓ A)
 
 @[simp]
 theorem of_le_comp {A B C : DiscreteQuotient X} (h1 : A ≤ B) (h2 : B ≤ C) :
-    of_le (le_transₓ h1 h2) = (of_le h2 ∘ of_le h1) := by
+    of_le (le_transₓ h1 h2) = of_le h2 ∘ of_le h1 := by
   ext ⟨⟩
   rfl
 
@@ -226,7 +233,7 @@ theorem of_le_continuous {A B : DiscreteQuotient X} (h : A ≤ B) : Continuous (
   continuous_of_discrete_topology
 
 @[simp]
-theorem of_le_proj {A B : DiscreteQuotient X} (h : A ≤ B) : (of_le h ∘ A.proj) = B.proj := by
+theorem of_le_proj {A B : DiscreteQuotient X} (h : A ≤ B) : of_le h ∘ A.proj = B.proj := by
   ext
   exact Quotientₓ.sound' (B.refl _)
 
@@ -237,8 +244,7 @@ theorem of_le_proj_apply {A B : DiscreteQuotient X} (h : A ≤ B) (x : X) : of_l
 
 end OfLe
 
-/-- 
-When X is discrete, there is a `order_bot` instance on `discrete_quotient X`
+/-- When X is discrete, there is a `order_bot` instance on `discrete_quotient X`
 -/
 instance [DiscreteTopology X] : OrderBot (DiscreteQuotient X) where
   bot := { Rel := · = ·, Equiv := eq_equivalence, clopen := fun x => is_clopen_discrete _ }
@@ -258,8 +264,7 @@ section Map
 variable {Y : Type _} [TopologicalSpace Y] {f : Y → X} (cont : Continuous f) (A : DiscreteQuotient Y)
   (B : DiscreteQuotient X)
 
-/-- 
-Given `cont : continuous f`, `le_comap cont A B` is defined as `A ≤ B.comap f`.
+/-- Given `cont : continuous f`, `le_comap cont A B` is defined as `A ≤ B.comap f`.
 Mathematically this means that `f` descends to a morphism `A → B`.
 -/
 def le_comap : Prop :=
@@ -277,7 +282,7 @@ theorem le_comap_comp {Z : Type _} [TopologicalSpace Z] {g : Z → Y} {cont' : C
 theorem le_comap_trans {C : DiscreteQuotient X} : le_comap cont A B → B ≤ C → le_comap cont A C := fun h1 h2 =>
   le_transₓ h1 $ comap_mono _ h2
 
-/--  Map a discrete quotient along a continuous map. -/
+/-- Map a discrete quotient along a continuous map. -/
 def map (cond : le_comap cont A B) : A → B :=
   Quotientₓ.map' f cond
 
@@ -285,7 +290,7 @@ theorem map_continuous (cond : le_comap cont A B) : Continuous (map cond) :=
   continuous_of_discrete_topology
 
 @[simp]
-theorem map_proj (cond : le_comap cont A B) : (map cond ∘ A.proj) = (B.proj ∘ f) :=
+theorem map_proj (cond : le_comap cont A B) : map cond ∘ A.proj = B.proj ∘ f :=
   rfl
 
 @[simp]
@@ -299,13 +304,13 @@ theorem map_id : map (le_comap_id A) = id := by
 
 @[simp]
 theorem map_comp {Z : Type _} [TopologicalSpace Z] {g : Z → Y} {cont' : Continuous g} {C : DiscreteQuotient Z}
-    (h1 : le_comap cont' C A) (h2 : le_comap cont A B) : map (le_comap_comp h1 h2) = (map h2 ∘ map h1) := by
+    (h1 : le_comap cont' C A) (h2 : le_comap cont A B) : map (le_comap_comp h1 h2) = map h2 ∘ map h1 := by
   ext ⟨⟩
   rfl
 
 @[simp]
 theorem of_le_map {C : DiscreteQuotient X} (cond : le_comap cont A B) (h : B ≤ C) :
-    map (le_comap_trans cond h) = (of_le h ∘ map cond) := by
+    map (le_comap_trans cond h) = of_le h ∘ map cond := by
   ext ⟨⟩
   rfl
 
@@ -317,7 +322,7 @@ theorem of_le_map_apply {C : DiscreteQuotient X} (cond : le_comap cont A B) (h :
 
 @[simp]
 theorem map_of_le {C : DiscreteQuotient Y} (cond : le_comap cont A B) (h : C ≤ A) :
-    map (le_transₓ h cond) = (map cond ∘ of_le h) := by
+    map (le_transₓ h cond) = map cond ∘ of_le h := by
   ext ⟨⟩
   rfl
 
@@ -350,30 +355,30 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
   obtain ⟨x, hx⟩ :=
     IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed (fun Q : DiscreteQuotient X => Q.proj ⁻¹' {Qs _})
       (fun A B => _) (fun i => _) (fun i => (fiber_closed _ _).IsCompact) fun i => fiber_closed _ _
-  ·
-    refine' ⟨x, fun Q => _⟩
+  · refine' ⟨x, fun Q => _⟩
     specialize hx _ ⟨Q, rfl⟩
     dsimp  at hx
     rcases proj_surjective _ (Qs Q) with ⟨y, hy⟩
     rw [← hy] at *
     rw [fiber_eq] at hx
     exact Quotientₓ.sound' (Q.symm y x hx)
-  ·
-    refine' ⟨A⊓B, fun a ha => _, fun a ha => _⟩
-    ·
-      dsimp only
+    
+  · refine' ⟨A⊓B, fun a ha => _, fun a ha => _⟩
+    · dsimp only
       erw [← compat (A⊓B) A inf_le_left]
       exact fiber_le_of_le _ _ ha
-    ·
-      dsimp only
+      
+    · dsimp only
       erw [← compat (A⊓B) B inf_le_right]
       exact fiber_le_of_le _ _ ha
-  ·
-    obtain ⟨x, hx⟩ := i.proj_surjective (Qs i)
+      
+    
+  · obtain ⟨x, hx⟩ := i.proj_surjective (Qs i)
     refine' ⟨x, _⟩
     dsimp only
     rw [← hx, fiber_eq]
     apply i.refl
+    
 
 noncomputable instance [CompactSpace X] : Fintype S := by
   have cond : IsCompact (⊤ : Set X) := compact_univ
@@ -403,22 +408,22 @@ namespace LocallyConstant
 
 variable {X} {α : Type _} (f : LocallyConstant X α)
 
-/--  Any locally constant function induces a discrete quotient. -/
-def DiscreteQuotient : DiscreteQuotient X :=
-  { Rel := fun a b => f b = f a,
-    Equiv :=
-      ⟨by
-        tauto, by
-        tauto, fun a b c h1 h2 => by
-        rw [h2, h1]⟩,
-    clopen := fun x => f.is_locally_constant.is_clopen_fiber _ }
+/-- Any locally constant function induces a discrete quotient. -/
+def DiscreteQuotient : DiscreteQuotient X where
+  Rel := fun a b => f b = f a
+  Equiv :=
+    ⟨by
+      tauto, by
+      tauto, fun a b c h1 h2 => by
+      rw [h2, h1]⟩
+  clopen := fun x => f.is_locally_constant.is_clopen_fiber _
 
-/--  The function from the discrete quotient associated to a locally constant function. -/
+/-- The function from the discrete quotient associated to a locally constant function. -/
 def lift : f.discrete_quotient → α := fun a => Quotientₓ.liftOn' a f fun a b h => h.symm
 
 theorem lift_is_locally_constant : _root_.is_locally_constant f.lift := fun A => trivialₓ
 
-/--  A locally constant version of `locally_constant.lift`. -/
+/-- A locally constant version of `locally_constant.lift`. -/
 def locally_constant_lift : LocallyConstant f.discrete_quotient α :=
   ⟨f.lift, f.lift_is_locally_constant⟩
 
@@ -427,7 +432,7 @@ theorem lift_eq_coe : f.lift = f.locally_constant_lift :=
   rfl
 
 @[simp]
-theorem factors : (f.locally_constant_lift ∘ f.discrete_quotient.proj) = f := by
+theorem factors : f.locally_constant_lift ∘ f.discrete_quotient.proj = f := by
   ext
   rfl
 

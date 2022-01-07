@@ -35,14 +35,15 @@ namespace MeasurableEquiv
 variable {G G₀ α : Type _} [MeasurableSpace G] [MeasurableSpace G₀] [MeasurableSpace α] [Groupₓ G] [GroupWithZeroₓ G₀]
   [MulAction G α] [MulAction G₀ α] [HasMeasurableSmul G α] [HasMeasurableSmul G₀ α]
 
-/--  If a group `G` acts on `α` by measurable maps, then each element `c : G` defines a measurable
+/-- If a group `G` acts on `α` by measurable maps, then each element `c : G` defines a measurable
 automorphism of `α`. -/
 @[to_additive
       "If an additive group `G` acts on `α` by measurable maps, then each element `c : G`\ndefines a measurable automorphism of `α`.",
   simps (config := { fullyApplied := ff }) toEquiv apply]
-def smul (c : G) : α ≃ᵐ α :=
-  { toEquiv := MulAction.toPerm c, measurable_to_fun := measurable_const_smul c,
-    measurable_inv_fun := measurable_const_smul (c⁻¹) }
+def smul (c : G) : α ≃ᵐ α where
+  toEquiv := MulAction.toPerm c
+  measurable_to_fun := measurable_const_smul c
+  measurable_inv_fun := measurable_const_smul (c⁻¹)
 
 @[to_additive]
 theorem _root_.measurable_embedding_const_smul (c : G) : MeasurableEmbedding ((· • ·) c : α → α) :=
@@ -52,7 +53,7 @@ theorem _root_.measurable_embedding_const_smul (c : G) : MeasurableEmbedding ((�
 theorem symm_smul (c : G) : (smul c : α ≃ᵐ α).symm = smul (c⁻¹) :=
   ext rfl
 
-/--  If a group with zero `G₀` acts on `α` by measurable maps, then each nonzero element `c : G₀`
+/-- If a group with zero `G₀` acts on `α` by measurable maps, then each nonzero element `c : G₀`
 defines a measurable automorphism of `α` -/
 def smul₀ (c : G₀) (hc : c ≠ 0) : α ≃ᵐ α :=
   MeasurableEquiv.smul (Units.mk0 c hc)
@@ -72,7 +73,7 @@ section Mul
 
 variable [HasMeasurableMul G] [HasMeasurableMul G₀]
 
-/--  If `G` is a group with measurable multiplication, then left multiplication by `g : G` is a
+/-- If `G` is a group with measurable multiplication, then left multiplication by `g : G` is a
 measurable automorphism of `G`. -/
 @[to_additive
       "If `G` is an additive group with measurable addition, then addition of `g : G`\non the left is a measurable automorphism of `G`."]
@@ -80,7 +81,7 @@ def mul_left (g : G) : G ≃ᵐ G :=
   smul g
 
 @[simp, to_additive]
-theorem coe_mul_left (g : G) : ⇑mul_left g = (·*·) g :=
+theorem coe_mul_left (g : G) : ⇑mul_left g = (· * ·) g :=
   rfl
 
 @[simp, to_additive]
@@ -92,23 +93,24 @@ theorem to_equiv_mul_left (g : G) : (mul_left g).toEquiv = Equivₓ.mulLeft g :=
   rfl
 
 @[to_additive]
-theorem _root_.measurable_embedding_mul_left (g : G) : MeasurableEmbedding ((·*·) g) :=
+theorem _root_.measurable_embedding_mul_left (g : G) : MeasurableEmbedding ((· * ·) g) :=
   (mul_left g).MeasurableEmbedding
 
-/--  If `G` is a group with measurable multiplication, then right multiplication by `g : G` is a
+/-- If `G` is a group with measurable multiplication, then right multiplication by `g : G` is a
 measurable automorphism of `G`. -/
 @[to_additive
       "If `G` is an additive group with measurable addition, then addition of `g : G`\non the right is a measurable automorphism of `G`."]
-def mul_right (g : G) : G ≃ᵐ G :=
-  { toEquiv := Equivₓ.mulRight g, measurable_to_fun := measurable_mul_const g,
-    measurable_inv_fun := measurable_mul_const (g⁻¹) }
+def mul_right (g : G) : G ≃ᵐ G where
+  toEquiv := Equivₓ.mulRight g
+  measurable_to_fun := measurable_mul_const g
+  measurable_inv_fun := measurable_mul_const (g⁻¹)
 
 @[to_additive]
-theorem _root_.measurable_embedding_mul_right (g : G) : MeasurableEmbedding fun x => x*g :=
+theorem _root_.measurable_embedding_mul_right (g : G) : MeasurableEmbedding fun x => x * g :=
   (mul_right g).MeasurableEmbedding
 
 @[simp, to_additive]
-theorem coe_mul_right (g : G) : ⇑mul_right g = fun x => x*g :=
+theorem coe_mul_right (g : G) : ⇑mul_right g = fun x => x * g :=
   rfl
 
 @[simp, to_additive]
@@ -119,16 +121,16 @@ theorem symm_mul_right (g : G) : (mul_right g).symm = mul_right (g⁻¹) :=
 theorem to_equiv_mul_right (g : G) : (mul_right g).toEquiv = Equivₓ.mulRight g :=
   rfl
 
-/--  If `G₀` is a group with zero with measurable multiplication, then left multiplication by a
+/-- If `G₀` is a group with zero with measurable multiplication, then left multiplication by a
 nonzero element `g : G₀` is a measurable automorphism of `G₀`. -/
 def mul_left₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀ :=
   smul₀ g hg
 
-theorem _root_.measurable_embedding_mul_left₀ {g : G₀} (hg : g ≠ 0) : MeasurableEmbedding ((·*·) g) :=
+theorem _root_.measurable_embedding_mul_left₀ {g : G₀} (hg : g ≠ 0) : MeasurableEmbedding ((· * ·) g) :=
   (mul_left₀ g hg).MeasurableEmbedding
 
 @[simp]
-theorem coe_mul_left₀ {g : G₀} (hg : g ≠ 0) : ⇑mul_left₀ g hg = (·*·) g :=
+theorem coe_mul_left₀ {g : G₀} (hg : g ≠ 0) : ⇑mul_left₀ g hg = (· * ·) g :=
   rfl
 
 @[simp]
@@ -139,17 +141,18 @@ theorem symm_mul_left₀ {g : G₀} (hg : g ≠ 0) : (mul_left₀ g hg).symm = m
 theorem to_equiv_mul_left₀ {g : G₀} (hg : g ≠ 0) : (mul_left₀ g hg).toEquiv = Equivₓ.mulLeft₀ g hg :=
   rfl
 
-/--  If `G₀` is a group with zero with measurable multiplication, then right multiplication by a
+/-- If `G₀` is a group with zero with measurable multiplication, then right multiplication by a
 nonzero element `g : G₀` is a measurable automorphism of `G₀`. -/
-def mul_right₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀ :=
-  { toEquiv := Equivₓ.mulRight₀ g hg, measurable_to_fun := measurable_mul_const g,
-    measurable_inv_fun := measurable_mul_const (g⁻¹) }
+def mul_right₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀ where
+  toEquiv := Equivₓ.mulRight₀ g hg
+  measurable_to_fun := measurable_mul_const g
+  measurable_inv_fun := measurable_mul_const (g⁻¹)
 
-theorem _root_.measurable_embedding_mul_right₀ {g : G₀} (hg : g ≠ 0) : MeasurableEmbedding fun x => x*g :=
+theorem _root_.measurable_embedding_mul_right₀ {g : G₀} (hg : g ≠ 0) : MeasurableEmbedding fun x => x * g :=
   (mul_right₀ g hg).MeasurableEmbedding
 
 @[simp]
-theorem coe_mul_right₀ {g : G₀} (hg : g ≠ 0) : ⇑mul_right₀ g hg = fun x => x*g :=
+theorem coe_mul_right₀ {g : G₀} (hg : g ≠ 0) : ⇑mul_right₀ g hg = fun x => x * g :=
   rfl
 
 @[simp]
@@ -164,16 +167,20 @@ end Mul
 
 variable (G G₀)
 
-/--  Inversion as a measurable automorphism of a group. -/
+/-- Inversion as a measurable automorphism of a group. -/
 @[to_additive "Negation as a measurable automorphism of an additive group.",
   simps (config := { fullyApplied := ff }) toEquiv apply]
-def inv [HasMeasurableInv G] : G ≃ᵐ G :=
-  { toEquiv := Equivₓ.inv G, measurable_to_fun := measurable_inv, measurable_inv_fun := measurable_inv }
+def inv [HasMeasurableInv G] : G ≃ᵐ G where
+  toEquiv := Equivₓ.inv G
+  measurable_to_fun := measurable_inv
+  measurable_inv_fun := measurable_inv
 
-/--  Inversion as a measurable automorphism of a group with zero. -/
+/-- Inversion as a measurable automorphism of a group with zero. -/
 @[simps (config := { fullyApplied := ff }) toEquiv apply]
-def inv₀ [HasMeasurableInv G₀] : G₀ ≃ᵐ G₀ :=
-  { toEquiv := Equivₓ.inv₀ G₀, measurable_to_fun := measurable_inv, measurable_inv_fun := measurable_inv }
+def inv₀ [HasMeasurableInv G₀] : G₀ ≃ᵐ G₀ where
+  toEquiv := Equivₓ.inv₀ G₀
+  measurable_to_fun := measurable_inv
+  measurable_inv_fun := measurable_inv
 
 variable {G G₀}
 

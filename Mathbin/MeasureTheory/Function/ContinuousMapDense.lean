@@ -52,9 +52,9 @@ namespace MeasureTheory.lp
 
 variable [NormedSpace ℝ E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (u «expr ⊇ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (F «expr ⊆ » s)
-/--  A function in `Lp` can be approximated in `Lp` by continuous functions. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (u «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (F «expr ⊆ » s)
+/-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem bounded_continuous_function_dense [μ.weakly_regular] :
     (BoundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
   have hp₀ : 0 < p := lt_of_lt_of_leₓ Ennreal.zero_lt_one _i.elim
@@ -63,24 +63,23 @@ theorem bounded_continuous_function_dense [μ.weakly_regular] :
     simpa [← Ennreal.to_real_lt_to_real Ennreal.zero_ne_top hp] using hp₀
   suffices
     ∀ c : E {s : Set α} hs : MeasurableSet s hμs : μ s < ⊤,
-      (Lp.simple_func.indicator_const p hs hμs.ne c : Lp E p μ) ∈
-        (BoundedContinuousFunction E p μ).topologicalClosure by
+      (Lp.simple_func.indicator_const p hs hμs.ne c : Lp E p μ) ∈ (BoundedContinuousFunction E p μ).topologicalClosure
+    by
     rw [AddSubgroup.eq_top_iff']
     refine' Lp.induction hp _ _ _ _
-    ·
-      exact this
-    ·
-      exact fun f g hf hg hfg' => AddSubgroup.add_mem _
-    ·
-      exact AddSubgroup.is_closed_topological_closure _
+    · exact this
+      
+    · exact fun f g hf hg hfg' => AddSubgroup.add_mem _
+      
+    · exact AddSubgroup.is_closed_topological_closure _
+      
   intro c s hs hsμ
   refine' mem_closure_iff_frequently.mpr _
   rw [metric.nhds_basis_closed_ball.frequently_iff]
   intro ε hε
-  obtain ⟨η, hη_pos, hη_le⟩ : ∃ η, 0 < η ∧ (↑∥bit0 ∥c∥∥₊*(2*η)^1 / p.to_real : ℝ) ≤ ε
-  ·
-    have : Filter.Tendsto (fun x : ℝ≥0 => ∥bit0 ∥c∥∥₊*(2*x)^1 / p.to_real) (𝓝 0) (𝓝 0) := by
-      have : Filter.Tendsto (fun x : ℝ≥0 => 2*x) (𝓝 0) (𝓝 (2*0)) := filter.tendsto_id.const_mul 2
+  obtain ⟨η, hη_pos, hη_le⟩ : ∃ η, 0 < η ∧ (↑(∥bit0 ∥c∥∥₊ * (2 * η) ^ (1 / p.to_real)) : ℝ) ≤ ε := by
+    have : Filter.Tendsto (fun x : ℝ≥0 => ∥bit0 ∥c∥∥₊ * (2 * x) ^ (1 / p.to_real)) (𝓝 0) (𝓝 0) := by
+      have : Filter.Tendsto (fun x : ℝ≥0 => 2 * x) (𝓝 0) (𝓝 (2 * 0)) := filter.tendsto_id.const_mul 2
       convert ((Nnreal.continuous_at_rpow_const (Or.inr hp₀')).Tendsto.comp this).const_mul _
       simp [hp₀''.ne']
     let ε' : ℝ≥0 := ⟨ε, hε.le⟩
@@ -91,30 +90,28 @@ theorem bounded_continuous_function_dense [μ.weakly_regular] :
     refine' ⟨η, hη, _⟩
     exact_mod_cast hδε' hηδ
   have hη_pos' : (0 : ℝ≥0∞) < η := Ennreal.coe_pos.2 hη_pos
-  obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _)(_ : u ⊇ s), IsOpen u ∧ μ u < μ s+↑η
-  ·
+  obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _)(_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ↑η := by
     refine' s.exists_is_open_lt_of_lt _ _
     simpa using Ennreal.add_lt_add_left hsμ.ne hη_pos'
-  obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F : _)(_ : F ⊆ s), IsClosed F ∧ μ s < μ F+↑η :=
+  obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F : _)(_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ↑η :=
     hs.exists_is_closed_lt_add hsμ.ne hη_pos'.ne'
   have : Disjoint (uᶜ) F := by
     rw [Set.disjoint_iff_inter_eq_empty, Set.inter_comm, ← Set.subset_compl_iff_disjoint]
     simpa using Fs.trans su
-  have h_μ_sdiff : μ (u \ F) ≤ 2*η := by
+  have h_μ_sdiff : μ (u \ F) ≤ 2 * η := by
     have hFμ : μ F < ⊤ := (measure_mono Fs).trans_lt hsμ
     refine' Ennreal.le_of_add_le_add_left hFμ.ne _
-    have : μ u < (μ F+↑η)+↑η
-    exact μu.trans (Ennreal.add_lt_add_right Ennreal.coe_ne_top μF)
+    have : μ u < μ F + ↑η + ↑η := μu.trans (Ennreal.add_lt_add_right Ennreal.coe_ne_top μF)
     convert this.le using 1
-    ·
-      rw [add_commₓ, ← measure_union, Set.diff_union_of_subset (Fs.trans su)]
-      ·
-        exact disjoint_sdiff_self_left
-      ·
-        exact (u_open.sdiff F_closed).MeasurableSet
-      ·
-        exact F_closed.measurable_set
-    have : ((2 : ℝ≥0∞)*η) = η+η := by
+    · rw [add_commₓ, ← measure_union, Set.diff_union_of_subset (Fs.trans su)]
+      · exact disjoint_sdiff_self_left
+        
+      · exact (u_open.sdiff F_closed).MeasurableSet
+        
+      · exact F_closed.measurable_set
+        
+      
+    have : (2 : ℝ≥0∞) * η = η + η := by
       simpa using add_mulₓ (1 : ℝ≥0∞) 1 η
     rw [this]
     abel
@@ -124,24 +121,24 @@ theorem bounded_continuous_function_dense [μ.weakly_regular] :
   have gc_bd : ∀ x, ∥g x • c - s.indicator (fun x => c) x∥ ≤ ∥(u \ F).indicator (fun x => bit0 ∥c∥) x∥ := by
     intro x
     by_cases' hu : x ∈ u
-    ·
-      rw [← Set.diff_union_of_subset (Fs.trans su)] at hu
+    · rw [← Set.diff_union_of_subset (Fs.trans su)] at hu
       cases' hu with hFu hF
-      ·
-        refine' (norm_sub_le _ _).trans _
+      · refine' (norm_sub_le _ _).trans _
         refine' (add_le_add_left (norm_indicator_le_norm_self (fun x => c) x) _).trans _
-        have h₀ : ((g x*∥c∥)+∥c∥) ≤ 2*∥c∥ := by
+        have h₀ : g x * ∥c∥ + ∥c∥ ≤ 2 * ∥c∥ := by
           nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
-        have h₁ : ((2 : ℝ)*∥c∥) = bit0 ∥c∥ := by
+        have h₁ : (2 : ℝ) * ∥c∥ = bit0 ∥c∥ := by
           simpa using add_mulₓ (1 : ℝ) 1 ∥c∥
         simp [hFu, norm_smul, h₀, ← h₁, g_norm x]
-      ·
-        simp [hgF hF, Fs hF]
-    ·
-      have : x ∉ s := fun h => hu (su h)
+        
+      · simp [hgF hF, Fs hF]
+        
+      
+    · have : x ∉ s := fun h => hu (su h)
       simp [hgu hu, this]
-  have gc_snorm : snorm ((fun x => g x • c) - s.indicator fun x => c) p μ ≤ (↑∥bit0 ∥c∥∥₊*(2*η)^1 / p.to_real : ℝ≥0∞) :=
-    by
+      
+  have gc_snorm :
+    snorm ((fun x => g x • c) - s.indicator fun x => c) p μ ≤ (↑(∥bit0 ∥c∥∥₊ * (2 * η) ^ (1 / p.to_real)) : ℝ≥0∞) := by
     refine' (snorm_mono_ae (Filter.eventually_of_forall gc_bd)).trans _
     rw [snorm_indicator_const (u_open.sdiff F_closed).MeasurableSet hp₀.ne' hp]
     push_cast [← Ennreal.coe_rpow_of_nonneg _ hp₀']
@@ -152,18 +149,18 @@ theorem bounded_continuous_function_dense [μ.weakly_regular] :
       ⟨(gc_cont.ae_measurable μ).sub (measurable_const.indicator hs).AeMeasurable, gc_snorm.trans_lt Ennreal.coe_lt_top⟩
     simpa using this.add (mem_ℒp_indicator_const p hs c (Or.inr hsμ.ne))
   refine' ⟨gc_mem_ℒp.to_Lp _, _, _⟩
-  ·
-    rw [mem_closed_ball_iff_norm]
+  · rw [mem_closed_ball_iff_norm]
     refine' le_transₓ _ hη_le
     rw [simple_func.coe_indicator_const, indicator_const_Lp, ← mem_ℒp.to_Lp_sub, Lp.norm_to_Lp]
     exact Ennreal.to_real_le_coe_of_le_coe gc_snorm
-  ·
-    rw [SetLike.mem_coe, mem_bounded_continuous_function_iff]
+    
+  · rw [SetLike.mem_coe, mem_bounded_continuous_function_iff]
     refine' ⟨BoundedContinuousFunction.ofNormedGroup _ gc_cont ∥c∥ _, rfl⟩
     intro x
-    have h₀ : (g x*∥c∥) ≤ ∥c∥ := by
+    have h₀ : g x * ∥c∥ ≤ ∥c∥ := by
       nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
     simp [norm_smul, g_norm x, h₀]
+    
 
 end MeasureTheory.lp
 
@@ -175,7 +172,7 @@ theorem to_Lp_dense_range [μ.weakly_regular] [is_finite_measure μ] :
     DenseRange (⇑(to_Lp p μ 𝕜 : (α →ᵇ E) →L[𝕜] Lp E p μ)) := by
   have : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
-  suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤by
+  suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤ by
     exact congr_argₓ coeₓ this
   simp [range_to_Lp p μ, MeasureTheory.lp.bounded_continuous_function_dense E hp]
 
@@ -187,7 +184,7 @@ theorem to_Lp_dense_range [CompactSpace α] [μ.weakly_regular] [is_finite_measu
     DenseRange (⇑(to_Lp p μ 𝕜 : C(α, E) →L[𝕜] Lp E p μ)) := by
   have : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
-  suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤by
+  suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤ by
     exact congr_argₓ coeₓ this
   simp [range_to_Lp p μ, MeasureTheory.lp.bounded_continuous_function_dense E hp]
 

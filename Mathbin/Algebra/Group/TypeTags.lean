@@ -19,23 +19,23 @@ universe u v
 
 variable {α : Type u} {β : Type v}
 
-/--  If `α` carries some multiplicative structure, then `additive α` carries the corresponding
+/-- If `α` carries some multiplicative structure, then `additive α` carries the corresponding
 additive structure. -/
 def Additive (α : Type _) :=
   α
 
-/--  If `α` carries some additive structure, then `multiplicative α` carries the corresponding
+/-- If `α` carries some additive structure, then `multiplicative α` carries the corresponding
 multiplicative structure. -/
 def Multiplicative (α : Type _) :=
   α
 
 namespace Additive
 
-/--  Reinterpret `x : α` as an element of `additive α`. -/
+/-- Reinterpret `x : α` as an element of `additive α`. -/
 def of_mul : α ≃ Additive α :=
   ⟨fun x => x, fun x => x, fun x => rfl, fun x => rfl⟩
 
-/--  Reinterpret `x : additive α` as an element of `α`. -/
+/-- Reinterpret `x : additive α` as an element of `α`. -/
 def to_mul : Additive α ≃ α :=
   of_mul.symm
 
@@ -51,11 +51,11 @@ end Additive
 
 namespace Multiplicative
 
-/--  Reinterpret `x : α` as an element of `multiplicative α`. -/
+/-- Reinterpret `x : α` as an element of `multiplicative α`. -/
 def of_add : α ≃ Multiplicative α :=
   ⟨fun x => x, fun x => x, fun x => rfl, fun x => rfl⟩
 
-/--  Reinterpret `x : multiplicative α` as an element of `α`. -/
+/-- Reinterpret `x : multiplicative α` as an element of `α`. -/
 def to_add : Multiplicative α ≃ α :=
   of_add.symm
 
@@ -97,26 +97,26 @@ instance [Nontrivial α] : Nontrivial (Additive α) :=
 instance [Nontrivial α] : Nontrivial (Multiplicative α) :=
   Multiplicative.ofAdd.Injective.Nontrivial
 
--- failed to format: format: uncaught backtrack exception
-instance Additive.hasAdd [ Mul α ] : Add ( Additive α ) where add x y := Additive.ofMul ( x.to_mul * y.to_mul )
+instance Additive.hasAdd [Mul α] : Add (Additive α) where
+  add := fun x y => Additive.ofMul (x.to_mul * y.to_mul)
 
--- failed to format: format: uncaught backtrack exception
-instance [ Add α ] : Mul ( Multiplicative α ) where mul x y := Multiplicative.ofAdd ( x.to_add + y.to_add )
+instance [Add α] : Mul (Multiplicative α) where
+  mul := fun x y => Multiplicative.ofAdd (x.to_add + y.to_add)
 
 @[simp]
-theorem of_add_add [Add α] (x y : α) : Multiplicative.ofAdd (x+y) = Multiplicative.ofAdd x*Multiplicative.ofAdd y :=
+theorem of_add_add [Add α] (x y : α) : Multiplicative.ofAdd (x + y) = Multiplicative.ofAdd x * Multiplicative.ofAdd y :=
   rfl
 
 @[simp]
-theorem to_add_mul [Add α] (x y : Multiplicative α) : (x*y).toAdd = x.to_add+y.to_add :=
+theorem to_add_mul [Add α] (x y : Multiplicative α) : (x * y).toAdd = x.to_add + y.to_add :=
   rfl
 
 @[simp]
-theorem of_mul_mul [Mul α] (x y : α) : Additive.ofMul (x*y) = Additive.ofMul x+Additive.ofMul y :=
+theorem of_mul_mul [Mul α] (x y : α) : Additive.ofMul (x * y) = Additive.ofMul x + Additive.ofMul y :=
   rfl
 
 @[simp]
-theorem to_mul_add [Mul α] (x y : Additive α) : (x+y).toMul = x.to_mul*y.to_mul :=
+theorem to_mul_add [Mul α] (x y : Additive α) : (x + y).toMul = x.to_mul * y.to_mul :=
   rfl
 
 instance [Semigroupₓ α] : AddSemigroupₓ (Additive α) :=
@@ -175,41 +175,41 @@ theorem to_add_one [HasZero α] : (1 : Multiplicative α).toAdd = 0 :=
 
 instance [MulOneClass α] : AddZeroClass (Additive α) where
   zero := 0
-  add := ·+·
+  add := · + ·
   zero_add := one_mulₓ
   add_zero := mul_oneₓ
 
 instance [AddZeroClass α] : MulOneClass (Multiplicative α) where
   one := 1
-  mul := ·*·
+  mul := · * ·
   one_mul := zero_addₓ
   mul_one := add_zeroₓ
 
 instance [h : Monoidₓ α] : AddMonoidₓ (Additive α) :=
-  { Additive.addZeroClass, Additive.addSemigroup with zero := 0, add := ·+·, nsmul := @Monoidₓ.npow α h,
+  { Additive.addZeroClass, Additive.addSemigroup with zero := 0, add := · + ·, nsmul := @Monoidₓ.npow α h,
     nsmul_zero' := Monoidₓ.npow_zero', nsmul_succ' := Monoidₓ.npow_succ' }
 
 instance [h : AddMonoidₓ α] : Monoidₓ (Multiplicative α) :=
-  { Multiplicative.mulOneClass, Multiplicative.semigroup with one := 1, mul := ·*·, npow := @AddMonoidₓ.nsmul α h,
+  { Multiplicative.mulOneClass, Multiplicative.semigroup with one := 1, mul := · * ·, npow := @AddMonoidₓ.nsmul α h,
     npow_zero' := AddMonoidₓ.nsmul_zero', npow_succ' := AddMonoidₓ.nsmul_succ' }
 
 instance [LeftCancelMonoid α] : AddLeftCancelMonoid (Additive α) :=
-  { Additive.addMonoid, Additive.addLeftCancelSemigroup with }
+  { Additive.addMonoid, Additive.addLeftCancelSemigroup with zero := 0, add := · + · }
 
 instance [AddLeftCancelMonoid α] : LeftCancelMonoid (Multiplicative α) :=
-  { Multiplicative.monoid, Multiplicative.leftCancelSemigroup with }
+  { Multiplicative.monoid, Multiplicative.leftCancelSemigroup with one := 1, mul := · * · }
 
 instance [RightCancelMonoid α] : AddRightCancelMonoid (Additive α) :=
-  { Additive.addMonoid, Additive.addRightCancelSemigroup with }
+  { Additive.addMonoid, Additive.addRightCancelSemigroup with zero := 0, add := · + · }
 
 instance [AddRightCancelMonoid α] : RightCancelMonoid (Multiplicative α) :=
-  { Multiplicative.monoid, Multiplicative.rightCancelSemigroup with }
+  { Multiplicative.monoid, Multiplicative.rightCancelSemigroup with one := 1, mul := · * · }
 
 instance [CommMonoidₓ α] : AddCommMonoidₓ (Additive α) :=
-  { Additive.addMonoid, Additive.addCommSemigroup with }
+  { Additive.addMonoid, Additive.addCommSemigroup with zero := 0, add := · + · }
 
 instance [AddCommMonoidₓ α] : CommMonoidₓ (Multiplicative α) :=
-  { Multiplicative.monoid, Multiplicative.commSemigroup with }
+  { Multiplicative.monoid, Multiplicative.commSemigroup with one := 1, mul := · * · }
 
 instance [HasInv α] : Neg (Additive α) :=
   ⟨fun x => Multiplicative.ofAdd (x.to_mul⁻¹)⟩
@@ -233,14 +233,11 @@ theorem of_add_neg [Neg α] (x : α) : Multiplicative.ofAdd (-x) = Multiplicativ
 theorem to_add_inv [Neg α] (x : Multiplicative α) : x⁻¹.toAdd = -x.to_add :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance Additive.hasSub [ Div α ] : Sub ( Additive α ) where sub x y := Additive.ofMul ( x.to_mul / y.to_mul )
+instance Additive.hasSub [Div α] : Sub (Additive α) where
+  sub := fun x y => Additive.ofMul (x.to_mul / y.to_mul)
 
--- failed to format: format: uncaught backtrack exception
-instance
-  Multiplicative.hasDiv
-  [ Sub α ] : Div ( Multiplicative α )
-  where div x y := Multiplicative.ofAdd ( x.to_add - y.to_add )
+instance Multiplicative.hasDiv [Sub α] : Div (Multiplicative α) where
+  div := fun x y => Multiplicative.ofAdd (x.to_add - y.to_add)
 
 @[simp]
 theorem of_add_sub [Sub α] (x y : α) : Multiplicative.ofAdd (x - y) = Multiplicative.ofAdd x / Multiplicative.ofAdd y :=
@@ -280,7 +277,7 @@ instance [CommGroupₓ α] : AddCommGroupₓ (Additive α) :=
 instance [AddCommGroupₓ α] : CommGroupₓ (Multiplicative α) :=
   { Multiplicative.group, Multiplicative.commMonoid with }
 
-/--  Reinterpret `α →+ β` as `multiplicative α →* multiplicative β`. -/
+/-- Reinterpret `α →+ β` as `multiplicative α →* multiplicative β`. -/
 def AddMonoidHom.toMultiplicative [AddZeroClass α] [AddZeroClass β] :
     (α →+ β) ≃ (Multiplicative α →* Multiplicative β) :=
   ⟨fun f => ⟨f.1, f.2, f.3⟩, fun f => ⟨f.1, f.2, f.3⟩, fun x => by
@@ -289,7 +286,7 @@ def AddMonoidHom.toMultiplicative [AddZeroClass α] [AddZeroClass β] :
     ext
     rfl⟩
 
-/--  Reinterpret `α →* β` as `additive α →+ additive β`. -/
+/-- Reinterpret `α →* β` as `additive α →+ additive β`. -/
 def MonoidHom.toAdditive [MulOneClass α] [MulOneClass β] : (α →* β) ≃ (Additive α →+ Additive β) :=
   ⟨fun f => ⟨f.1, f.2, f.3⟩, fun f => ⟨f.1, f.2, f.3⟩, fun x => by
     ext
@@ -297,7 +294,7 @@ def MonoidHom.toAdditive [MulOneClass α] [MulOneClass β] : (α →* β) ≃ (A
     ext
     rfl⟩
 
-/--  Reinterpret `additive α →+ β` as `α →* multiplicative β`. -/
+/-- Reinterpret `additive α →+ β` as `α →* multiplicative β`. -/
 def AddMonoidHom.toMultiplicative' [MulOneClass α] [AddZeroClass β] : (Additive α →+ β) ≃ (α →* Multiplicative β) :=
   ⟨fun f => ⟨f.1, f.2, f.3⟩, fun f => ⟨f.1, f.2, f.3⟩, fun x => by
     ext
@@ -305,11 +302,11 @@ def AddMonoidHom.toMultiplicative' [MulOneClass α] [AddZeroClass β] : (Additiv
     ext
     rfl⟩
 
-/--  Reinterpret `α →* multiplicative β` as `additive α →+ β`. -/
+/-- Reinterpret `α →* multiplicative β` as `additive α →+ β`. -/
 def MonoidHom.toAdditive' [MulOneClass α] [AddZeroClass β] : (α →* Multiplicative β) ≃ (Additive α →+ β) :=
   AddMonoidHom.toMultiplicative'.symm
 
-/--  Reinterpret `α →+ additive β` as `multiplicative α →* β`. -/
+/-- Reinterpret `α →+ additive β` as `multiplicative α →* β`. -/
 def AddMonoidHom.toMultiplicative'' [AddZeroClass α] [MulOneClass β] : (α →+ Additive β) ≃ (Multiplicative α →* β) :=
   ⟨fun f => ⟨f.1, f.2, f.3⟩, fun f => ⟨f.1, f.2, f.3⟩, fun x => by
     ext
@@ -317,11 +314,11 @@ def AddMonoidHom.toMultiplicative'' [AddZeroClass α] [MulOneClass β] : (α →
     ext
     rfl⟩
 
-/--  Reinterpret `multiplicative α →* β` as `α →+ additive β`. -/
+/-- Reinterpret `multiplicative α →* β` as `α →+ additive β`. -/
 def MonoidHom.toAdditive'' [AddZeroClass α] [MulOneClass β] : (Multiplicative α →* β) ≃ (α →+ Additive β) :=
   AddMonoidHom.toMultiplicative''.symm
 
-/--  If `α` has some multiplicative structure and coerces to a function,
+/-- If `α` has some multiplicative structure and coerces to a function,
 then `additive α` should also coerce to the same function.
 
 This allows `additive` to be used on bundled function types with a multiplicative structure, which
@@ -330,7 +327,7 @@ is often used for composition, without affecting the behavior of the function it
 instance Additive.hasCoeToFun {α : Type _} {β : α → Sort _} [CoeFun α β] : CoeFun (Additive α) fun a => β a.to_mul :=
   ⟨fun a => coeFn a.to_mul⟩
 
-/--  If `α` has some additive structure and coerces to a function,
+/-- If `α` has some additive structure and coerces to a function,
 then `multiplicative α` should also coerce to the same function.
 
 This allows `multiplicative` to be used on bundled function types with an additive structure, which

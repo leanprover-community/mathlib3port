@@ -16,13 +16,13 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup
   {H'' : Type _} [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M'']
   [ChartedSpace H'' M''] (n : WithTop ℕ)
 
-/--  Bundled `n` times continuously differentiable maps. -/
+/-- Bundled `n` times continuously differentiable maps. -/
 @[protect_proj]
 structure TimesContMdiffMap where
   toFun : M → M'
   times_cont_mdiff_to_fun : TimesContMdiff I I' n to_fun
 
-/--  Bundled smooth maps. -/
+/-- Bundled smooth maps. -/
 @[reducible]
 def SmoothMap :=
   TimesContMdiffMap I I' M M' ⊤
@@ -74,13 +74,14 @@ theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f =
 theorem ext (h : ∀ x, f x = g x) : f = g := by
   cases f <;> cases g <;> congr <;> exact funext h
 
-/--  The identity as a smooth map. -/
+/-- The identity as a smooth map. -/
 def id : C^n⟮I, M; I, M⟯ :=
   ⟨id, times_cont_mdiff_id⟩
 
-/--  The composition of smooth maps, as a smooth map. -/
-def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) : C^n⟮I, M; I'', M''⟯ :=
-  { toFun := fun a => f (g a), times_cont_mdiff_to_fun := f.times_cont_mdiff_to_fun.comp g.times_cont_mdiff_to_fun }
+/-- The composition of smooth maps, as a smooth map. -/
+def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) : C^n⟮I, M; I'', M''⟯ where
+  toFun := fun a => f (g a)
+  times_cont_mdiff_to_fun := f.times_cont_mdiff_to_fun.comp g.times_cont_mdiff_to_fun
 
 @[simp]
 theorem comp_apply (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) (x : M) : f.comp g x = f (g x) :=
@@ -89,7 +90,7 @@ theorem comp_apply (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) (
 instance [Inhabited M'] : Inhabited C^n⟮I, M; I', M'⟯ :=
   ⟨⟨fun _ => default _, times_cont_mdiff_const⟩⟩
 
-/--  Constant map as a smooth map -/
+/-- Constant map as a smooth map -/
 def const (y : M') : C^n⟮I, M; I', M'⟯ :=
   ⟨fun x => y, times_cont_mdiff_const⟩
 

@@ -36,7 +36,7 @@ variable (R : Type _) {V V' P P' : Type _} [Ringₓ R] [Invertible (2 : R)] [Add
 
 include V
 
-/--  `midpoint x y` is the midpoint of the segment `[x, y]`. -/
+/-- `midpoint x y` is the midpoint of the segment `[x, y]`. -/
 def midpoint (x y : P) : P :=
   line_map x y (⅟ 2 : R)
 
@@ -120,7 +120,7 @@ theorem midpoint_eq_midpoint_iff_vsub_eq_vsub {x x' y y' : P} : midpoint R x y =
 theorem midpoint_eq_iff' {x y z : P} : midpoint R x y = z ↔ Equivₓ.pointReflection z x = y :=
   midpoint_eq_iff
 
-/--  `midpoint` does not depend on the ring `R`. -/
+/-- `midpoint` does not depend on the ring `R`. -/
 theorem midpoint_unique (R' : Type _) [Ringₓ R'] [Invertible (2 : R')] [Module R' V] (x y : P) :
     midpoint R x y = midpoint R' x y :=
   (midpoint_eq_iff' R).2 $ (midpoint_eq_iff' R').1 rfl
@@ -130,18 +130,19 @@ theorem midpoint_self (x : P) : midpoint R x x = x :=
   line_map_same_apply _ _
 
 @[simp]
-theorem midpoint_add_self (x y : V) : (midpoint R x y+midpoint R x y) = x+y :=
-  calc midpoint R x y +ᵥ midpoint R x y = midpoint R x y +ᵥ midpoint R y x := by
-    rw [midpoint_comm]
-    _ = x+y := by
-    rw [midpoint_vadd_midpoint, vadd_eq_add, vadd_eq_add, add_commₓ, midpoint_self]
+theorem midpoint_add_self (x y : V) : midpoint R x y + midpoint R x y = x + y :=
+  calc
+    midpoint R x y +ᵥ midpoint R x y = midpoint R x y +ᵥ midpoint R y x := by
+      rw [midpoint_comm]
+    _ = x + y := by
+      rw [midpoint_vadd_midpoint, vadd_eq_add, vadd_eq_add, add_commₓ, midpoint_self]
     
 
-theorem midpoint_zero_add (x y : V) : midpoint R 0 (x+y) = midpoint R x y :=
+theorem midpoint_zero_add (x y : V) : midpoint R 0 (x + y) = midpoint R x y :=
   (midpoint_eq_midpoint_iff_vsub_eq_vsub R).2 $ by
     simp [sub_add_eq_sub_sub_swap]
 
-theorem midpoint_eq_smul_add (x y : V) : midpoint R x y = (⅟ 2 : R) • x+y := by
+theorem midpoint_eq_smul_add (x y : V) : midpoint R x y = (⅟ 2 : R) • (x + y) := by
   rw [midpoint_eq_iff, point_reflection_apply, vsub_eq_sub, vadd_eq_add, sub_add_eq_add_sub, ← two_smul R, smul_smul,
     mul_inv_of_self, one_smul, add_sub_cancel']
 
@@ -154,11 +155,11 @@ theorem midpoint_neg_self (x : V) : midpoint R (-x) x = 0 := by
   simpa using midpoint_self_neg R (-x)
 
 @[simp]
-theorem midpoint_sub_add (x y : V) : midpoint R (x - y) (x+y) = x := by
+theorem midpoint_sub_add (x y : V) : midpoint R (x - y) (x + y) = x := by
   rw [sub_eq_add_neg, ← vadd_eq_add, ← vadd_eq_add, ← midpoint_vadd_midpoint] <;> simp
 
 @[simp]
-theorem midpoint_add_sub (x y : V) : midpoint R (x+y) (x - y) = x := by
+theorem midpoint_add_sub (x y : V) : midpoint R (x + y) (x - y) = x := by
   rw [midpoint_comm] <;> simp
 
 end
@@ -194,18 +195,20 @@ namespace AddMonoidHom
 variable (R R' : Type _) {E F : Type _} [Ringₓ R] [Invertible (2 : R)] [AddCommGroupₓ E] [Module R E] [Ringₓ R']
   [Invertible (2 : R')] [AddCommGroupₓ F] [Module R' F]
 
-/--  A map `f : E → F` sending zero to zero and midpoints to midpoints is an `add_monoid_hom`. -/
-def of_map_midpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x y) = midpoint R' (f x) (f y)) : E →+ F :=
-  { toFun := f, map_zero' := h0,
-    map_add' := fun x y =>
-      calc f (x+y) = f 0+f (x+y) := by
+/-- A map `f : E → F` sending zero to zero and midpoints to midpoints is an `add_monoid_hom`. -/
+def of_map_midpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x y) = midpoint R' (f x) (f y)) : E →+ F where
+  toFun := f
+  map_zero' := h0
+  map_add' := fun x y =>
+    calc
+      f (x + y) = f 0 + f (x + y) := by
         rw [h0, zero_addₓ]
-        _ = midpoint R' (f 0) (f (x+y))+midpoint R' (f 0) (f (x+y)) := (midpoint_add_self _ _ _).symm
-        _ = f (midpoint R x y)+f (midpoint R x y) := by
+      _ = midpoint R' (f 0) (f (x + y)) + midpoint R' (f 0) (f (x + y)) := (midpoint_add_self _ _ _).symm
+      _ = f (midpoint R x y) + f (midpoint R x y) := by
         rw [← hm, midpoint_zero_add]
-        _ = f x+f y := by
+      _ = f x + f y := by
         rw [hm, midpoint_add_self]
-         }
+      
 
 @[simp]
 theorem coe_of_map_midpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x y) = midpoint R' (f x) (f y)) :

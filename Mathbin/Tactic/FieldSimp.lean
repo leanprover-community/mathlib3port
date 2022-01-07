@@ -10,8 +10,8 @@ Tactic to clear denominators in algebraic expressions, based on `simp` with a sp
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/--  Try to prove a goal of the form `x ≠ 0` by calling `assumption`, or `norm_num1` if `x` is
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Try to prove a goal of the form `x ≠ 0` by calling `assumption`, or `norm_num1` if `x` is
 a numeral. -/
 unsafe def field_simp.ne_zero : tactic Unit := do
   let goal ← tactic.target
@@ -26,8 +26,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-/-- 
-The goal of `field_simp` is to reduce an expression in a field to an expression of the form `n / d`
+/-- The goal of `field_simp` is to reduce an expression in a field to an expression of the form `n / d`
 where neither `n` nor `d` contains any division symbol, just using the simplifier (with a carefully
 crafted simpset named `field_simps`) to reduce the number of division symbols whenever possible by
 iterating the following steps:

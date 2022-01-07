@@ -39,15 +39,13 @@ namespace Top.Presheaf
 
 namespace Sheafify
 
-/-- 
-The prelocal predicate on functions into the stalks, asserting that the function is equal to a germ.
+/-- The prelocal predicate on functions into the stalks, asserting that the function is equal to a germ.
 -/
-def is_germ : prelocal_predicate fun x => F.stalk x :=
-  { pred := fun U f => ∃ g : F.obj (op U), ∀ x : U, f x = F.germ x g,
-    res := fun V U i f ⟨g, p⟩ => ⟨F.map i.op g, fun x => (p (i x)).trans (F.germ_res_apply _ _ _).symm⟩ }
+def is_germ : prelocal_predicate fun x => F.stalk x where
+  pred := fun U f => ∃ g : F.obj (op U), ∀ x : U, f x = F.germ x g
+  res := fun V U i f ⟨g, p⟩ => ⟨F.map i.op g, fun x => (p (i x)).trans (F.germ_res_apply _ _ _).symm⟩
 
-/-- 
-The local predicate on functions into the stalks,
+/-- The local predicate on functions into the stalks,
 asserting that the function is locally equal to a germ.
 -/
 def is_locally_germ : local_predicate fun x => F.stalk x :=
@@ -55,26 +53,23 @@ def is_locally_germ : local_predicate fun x => F.stalk x :=
 
 end Sheafify
 
-/-- 
-The sheafification of a `Type` valued presheaf, defined as the functions into the stalks which
+/-- The sheafification of a `Type` valued presheaf, defined as the functions into the stalks which
 are locally equal to germs.
 -/
 def sheafify : sheaf (Type v) X :=
   subsheaf_to_Types (sheafify.is_locally_germ F)
 
-/-- 
-The morphism from a presheaf to its sheafification,
+/-- The morphism from a presheaf to its sheafification,
 sending each section to its germs.
 (This forms the unit of the adjunction.)
 -/
-def to_sheafify : F ⟶ F.sheafify.1 :=
-  { app := fun U f => ⟨fun x => F.germ x f, prelocal_predicate.sheafify_of ⟨f, fun x => rfl⟩⟩,
-    naturality' := fun U U' f => by
-      ext x ⟨u, m⟩
-      exact germ_res_apply F f.unop ⟨u, m⟩ x }
+def to_sheafify : F ⟶ F.sheafify.1 where
+  app := fun U f => ⟨fun x => F.germ x f, prelocal_predicate.sheafify_of ⟨f, fun x => rfl⟩⟩
+  naturality' := fun U U' f => by
+    ext x ⟨u, m⟩
+    exact germ_res_apply F f.unop ⟨u, m⟩ x
 
-/-- 
-The natural morphism from the stalk of the sheafification to the original stalk.
+/-- The natural morphism from the stalk of the sheafification to the original stalk.
 In `sheafify_stalk_iso` we show this is an isomorphism.
 -/
 def stalk_to_fiber (x : X) : F.sheafify.1.stalk x ⟶ F.stalk x :=
@@ -84,13 +79,13 @@ theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalk_to_fibe
   apply stalk_to_fiber_surjective
   intro t
   obtain ⟨U, m, s, rfl⟩ := F.germ_exist _ t
-  ·
-    use ⟨U, m⟩
+  · use ⟨U, m⟩
     fconstructor
-    ·
-      exact fun y => F.germ y s
-    ·
-      exact ⟨prelocal_predicate.sheafify_of ⟨s, fun _ => rfl⟩, rfl⟩
+    · exact fun y => F.germ y s
+      
+    · exact ⟨prelocal_predicate.sheafify_of ⟨s, fun _ => rfl⟩, rfl⟩
+      
+    
 
 theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalk_to_fiber x) := by
   apply stalk_to_fiber_injective
@@ -109,14 +104,13 @@ theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalk_to_fiber 
   dsimp  at e'
   use ⟨W⊓(U'⊓V'), ⟨mW, mU, mV⟩⟩
   refine' ⟨_, _, _⟩
-  ·
-    change W⊓(U'⊓V') ⟶ U.val
+  · change W⊓(U'⊓V') ⟶ U.val
     exact opens.inf_le_right _ _ ≫ opens.inf_le_left _ _ ≫ iU
-  ·
-    change W⊓(U'⊓V') ⟶ V.val
+    
+  · change W⊓(U'⊓V') ⟶ V.val
     exact opens.inf_le_right _ _ ≫ opens.inf_le_right _ _ ≫ iV
-  ·
-    intro w
+    
+  · intro w
     dsimp
     specialize wU ⟨w.1, w.2.2.1⟩
     dsimp  at wU
@@ -124,9 +118,9 @@ theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalk_to_fiber 
     dsimp  at wV
     erw [wU, ← F.germ_res iU' ⟨w, w.2.1⟩, wV, ← F.germ_res iV' ⟨w, w.2.1⟩, CategoryTheory.types_comp_apply,
       CategoryTheory.types_comp_apply, e']
+    
 
-/-- 
-The isomorphism betweeen a stalk of the sheafification and the original stalk.
+/-- The isomorphism betweeen a stalk of the sheafification and the original stalk.
 -/
 def sheafify_stalk_iso (x : X) : F.sheafify.1.stalk x ≅ F.stalk x :=
   (Equivₓ.ofBijective _ ⟨stalk_to_fiber_injective _ _, stalk_to_fiber_surjective _ _⟩).toIso

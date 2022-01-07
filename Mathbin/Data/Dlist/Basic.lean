@@ -14,7 +14,7 @@ useful for append-heavy uses such as logging and pretty printing.
 -/
 
 
-/--  Concatenates a list of difference lists to form a single difference list. Similar to
+/-- Concatenates a list of difference lists to form a single difference list. Similar to
 `list.join`. -/
 def Dlist.join {α : Type _} : List (Dlist α) → Dlist α
   | [] => Dlist.empty

@@ -148,10 +148,9 @@ local postfix:9001 "*" => many
 
 open PushNeg
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-Push negations in the goal of some assumption.
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Push negations in the goal of some assumption.
 
 For instance, a hypothesis `h : ¬ ∀ x, ∃ y, x ≤ y` will be transformed by `push_neg at h` into
 `h : ∃ x, ∀ y, y < x`. Variables names are conserved.
@@ -194,12 +193,11 @@ add_tactic_doc
 
 theorem imp_of_not_imp_not (P Q : Prop) : (¬Q → ¬P) → P → Q := fun h hP => Classical.by_contradiction fun h' => h h' hP
 
-/--  Matches either an identifier "h" or a pair of identifiers "h with k" -/
+/-- Matches either an identifier "h" or a pair of identifiers "h with k" -/
 unsafe def name_with_opt : lean.parser (Name × Option Name) :=
   Prod.mk <$> ident <*> (some <$> (tk "with" >> ident) <|> return none)
 
-/-- 
-Transforms the goal into its contrapositive.
+/-- Transforms the goal into its contrapositive.
 
 * `contrapose`     turns a goal `P → Q` into `¬ Q → ¬ P`
 * `contrapose!`    turns a goal `P → Q` into `¬ Q → ¬ P` and pushes negations inside `P` and `Q`

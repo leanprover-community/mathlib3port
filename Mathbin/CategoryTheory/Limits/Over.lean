@@ -57,20 +57,20 @@ variable [has_pullbacks C]
 
 open Tactic
 
-/--  When `C` has pullbacks, a morphism `f : X ⟶ Y` induces a functor `over Y ⥤ over X`,
+/-- When `C` has pullbacks, a morphism `f : X ⟶ Y` induces a functor `over Y ⥤ over X`,
 by pulling back a morphism along `f`. -/
 @[simps]
-def pullback {X Y : C} (f : X ⟶ Y) : over Y ⥤ over X :=
-  { obj := fun g => over.mk (pullback.snd : pullback g.hom f ⟶ X),
-    map := fun g h k =>
-      over.hom_mk
-        (pullback.lift (pullback.fst ≫ k.left) pullback.snd
-          (by
-            simp [pullback.condition]))
+def pullback {X Y : C} (f : X ⟶ Y) : over Y ⥤ over X where
+  obj := fun g => over.mk (pullback.snd : pullback g.hom f ⟶ X)
+  map := fun g h k =>
+    over.hom_mk
+      (pullback.lift (pullback.fst ≫ k.left) pullback.snd
         (by
-          tidy) }
+          simp [pullback.condition]))
+      (by
+        tidy)
 
-/--  `over.map f` is left adjoint to `over.pullback f`. -/
+/-- `over.map f` is left adjoint to `over.pullback f`. -/
 def map_pullback_adj {A B : C} (f : A ⟶ B) : over.map f ⊣ pullback f :=
   adjunction.mk_of_hom_equiv
     { homEquiv := fun g h =>
@@ -93,11 +93,11 @@ def map_pullback_adj {A B : C} (f : A ⟶ B) : over.map f ⊣ pullback f :=
             rw [pullback.lift_snd, ← over.w Y]
             rfl } }
 
-/--  pullback (𝟙 A) : over A ⥤ over A is the identity functor. -/
+/-- pullback (𝟙 A) : over A ⥤ over A is the identity functor. -/
 def pullback_id {A : C} : pullback (𝟙 A) ≅ 𝟭 _ :=
   Adjunction.rightAdjointUniq (map_pullback_adj _) (adjunction.id.ofNatIsoLeft over.map_id.symm)
 
-/--  pullback commutes with composition (up to natural isomorphism). -/
+/-- pullback commutes with composition (up to natural isomorphism). -/
 def pullback_comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : pullback (f ≫ g) ≅ pullback g ⋙ pullback f :=
   Adjunction.rightAdjointUniq (map_pullback_adj _)
     (((map_pullback_adj _).comp _ _ (map_pullback_adj _)).ofNatIsoLeft (over.map_comp _ _).symm)
@@ -133,18 +133,18 @@ section
 
 variable [has_pushouts C]
 
-/--  When `C` has pushouts, a morphism `f : X ⟶ Y` induces a functor `under X ⥤ under Y`,
+/-- When `C` has pushouts, a morphism `f : X ⟶ Y` induces a functor `under X ⥤ under Y`,
 by pushing a morphism forward along `f`. -/
 @[simps]
-def pushout {X Y : C} (f : X ⟶ Y) : under X ⥤ under Y :=
-  { obj := fun g => under.mk (pushout.inr : Y ⟶ pushout g.hom f),
-    map := fun g h k =>
-      under.hom_mk
-        (pushout.desc (k.right ≫ pushout.inl) pushout.inr
-          (by
-            simp [← pushout.condition]))
+def pushout {X Y : C} (f : X ⟶ Y) : under X ⥤ under Y where
+  obj := fun g => under.mk (pushout.inr : Y ⟶ pushout g.hom f)
+  map := fun g h k =>
+    under.hom_mk
+      (pushout.desc (k.right ≫ pushout.inl) pushout.inr
         (by
-          tidy) }
+          simp [← pushout.condition]))
+      (by
+        tidy)
 
 end
 

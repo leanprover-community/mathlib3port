@@ -31,7 +31,7 @@ open_locale Classical
 
 namespace Order
 
-/--  Suppose `α` is a nonempty dense linear order without endpoints, and
+/-- Suppose `α` is a nonempty dense linear order without endpoints, and
     suppose `lo`, `hi`, are finite subssets with all of `lo` strictly
     before `hi`. Then there is an element of `α` strictly between `lo`
     and `hi`. -/
@@ -54,8 +54,8 @@ theorem exists_between_finsets {α : Type _} [LinearOrderₓ α] [DenselyOrdered
 
 variable (α β : Type _) [LinearOrderₓ α] [LinearOrderₓ β]
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (p q «expr ∈ » f)
-/--  The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (p q «expr ∈ » f)
+/-- The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting
     of pairs which should be identified. -/
 def partial_iso : Type _ :=
@@ -71,7 +71,7 @@ instance : Preorderₓ (partial_iso α β) :=
 
 variable {α β}
 
-/--  For each `a`, we can find a `b` in the codomain, such that `a`'s relation to
+/-- For each `a`, we can find a `b` in the codomain, such that `a`'s relation to
 the domain of `f` is `b`'s relation to the image of `f`.
 
 Thus, if `a` is not already in `f`, then we can extend `f` by sending `a` to `b`.
@@ -79,9 +79,9 @@ Thus, if `a` is not already in `f`, then we can extend `f` by sending `a` to `b`
 theorem exists_across [DenselyOrdered β] [NoBotOrder β] [NoTopOrder β] [Nonempty β] (f : partial_iso α β) (a : α) :
     ∃ b : β, ∀, ∀ p ∈ f.val, ∀, cmp (Prod.fst p) a = cmp (Prod.snd p) b := by
   by_cases' h : ∃ b, (a, b) ∈ f.val
-  ·
-    cases' h with b hb
+  · cases' h with b hb
     exact ⟨b, fun p hp => f.property _ _ hp hb⟩
+    
   have :
     ∀,
       ∀ x ∈ (f.val.filter fun p : α × β => p.fst < a).Image Prod.snd,
@@ -99,16 +99,16 @@ theorem exists_across [DenselyOrdered β] [NoBotOrder β] [NoTopOrder β] [Nonem
   rintro ⟨p1, p2⟩ hp
   have : p1 ≠ a := fun he => h ⟨p2, he ▸ hp⟩
   cases' lt_or_gt_of_neₓ this with hl hr
-  ·
-    have : p1 < a ∧ p2 < b := ⟨hl, hb.1 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hl⟩, rfl⟩)⟩
+  · have : p1 < a ∧ p2 < b := ⟨hl, hb.1 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hl⟩, rfl⟩)⟩
     rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff] at this
     cc
-  ·
-    have : a < p1 ∧ b < p2 := ⟨hr, hb.2 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hr⟩, rfl⟩)⟩
+    
+  · have : a < p1 ∧ b < p2 := ⟨hr, hb.2 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hr⟩, rfl⟩)⟩
     rw [← cmp_eq_gt_iff, ← cmp_eq_gt_iff] at this
     cc
+    
 
-/--  A partial isomorphism between `α` and `β` is also a partial isomorphism between `β` and `α`. -/
+/-- A partial isomorphism between `α` and `β` is also a partial isomorphism between `β` and `α`. -/
 protected def comm : partial_iso α β → partial_iso β α :=
   Subtype.map (Finset.image (Equivₓ.prodComm _ _)) $ fun f hf p q hp hq =>
     Eq.symm $
@@ -122,58 +122,59 @@ protected def comm : partial_iso α β → partial_iso β α :=
 
 variable (β)
 
-/--  The set of partial isomorphisms defined at `a : α`, together with a proof that any
+/-- The set of partial isomorphisms defined at `a : α`, together with a proof that any
     partial isomorphism can be extended to one defined at `a`. -/
-def defined_at_left [DenselyOrdered β] [NoBotOrder β] [NoTopOrder β] [Nonempty β] (a : α) : cofinal (partial_iso α β) :=
-  { Carrier := fun f => ∃ b : β, (a, b) ∈ f.val,
-    mem_gt := by
-      intro f
-      cases' exists_across f a with b a_b
-      refine' ⟨⟨insert (a, b) f.val, _⟩, ⟨b, Finset.mem_insert_self _ _⟩, Finset.subset_insert _ _⟩
-      intro p q hp hq
-      rw [Finset.mem_insert] at hp hq
-      rcases hp with (rfl | pf) <;> rcases hq with (rfl | qf)
-      ·
-        simp
-      ·
-        rw [cmp_eq_cmp_symm]
-        exact a_b _ qf
-      ·
-        exact a_b _ pf
-      ·
-        exact f.property _ _ pf qf }
+def defined_at_left [DenselyOrdered β] [NoBotOrder β] [NoTopOrder β] [Nonempty β] (a : α) :
+    cofinal (partial_iso α β) where
+  Carrier := fun f => ∃ b : β, (a, b) ∈ f.val
+  mem_gt := by
+    intro f
+    cases' exists_across f a with b a_b
+    refine' ⟨⟨insert (a, b) f.val, _⟩, ⟨b, Finset.mem_insert_self _ _⟩, Finset.subset_insert _ _⟩
+    intro p q hp hq
+    rw [Finset.mem_insert] at hp hq
+    rcases hp with (rfl | pf) <;> rcases hq with (rfl | qf)
+    · simp
+      
+    · rw [cmp_eq_cmp_symm]
+      exact a_b _ qf
+      
+    · exact a_b _ pf
+      
+    · exact f.property _ _ pf qf
+      
 
 variable (α) {β}
 
-/--  The set of partial isomorphisms defined at `b : β`, together with a proof that any
+/-- The set of partial isomorphisms defined at `b : β`, together with a proof that any
     partial isomorphism can be extended to include `b`. We prove this by symmetry. -/
 def defined_at_right [DenselyOrdered α] [NoBotOrder α] [NoTopOrder α] [Nonempty α] (b : β) :
-    cofinal (partial_iso α β) :=
-  { Carrier := fun f => ∃ a, (a, b) ∈ f.val,
-    mem_gt := by
-      intro f
-      rcases(defined_at_left α b).mem_gt f.comm with ⟨f', ⟨a, ha⟩, hl⟩
-      use f'.comm
-      constructor
-      ·
-        use a
-        change (a, b) ∈ f'.val.image _
-        rwa [← Finset.mem_coe, Finset.coe_image, Equivₓ.image_eq_preimage]
-      ·
-        change _ ⊆ f'.val.image _
-        rw [← Finset.coe_subset, Finset.coe_image, ← Equivₓ.subset_image]
-        change f.val.image _ ⊆ _ at hl
-        rwa [← Finset.coe_subset, Finset.coe_image] at hl }
+    cofinal (partial_iso α β) where
+  Carrier := fun f => ∃ a, (a, b) ∈ f.val
+  mem_gt := by
+    intro f
+    rcases(defined_at_left α b).mem_gt f.comm with ⟨f', ⟨a, ha⟩, hl⟩
+    use f'.comm
+    constructor
+    · use a
+      change (a, b) ∈ f'.val.image _
+      rwa [← Finset.mem_coe, Finset.coe_image, Equivₓ.image_eq_preimage]
+      
+    · change _ ⊆ f'.val.image _
+      rw [← Finset.coe_subset, Finset.coe_image, ← Equivₓ.subset_image]
+      change f.val.image _ ⊆ _ at hl
+      rwa [← Finset.coe_subset, Finset.coe_image] at hl
+      
 
 variable {α}
 
-/--  Given an ideal which intersects `defined_at_left β a`, pick `b : β` such that
+/-- Given an ideal which intersects `defined_at_left β a`, pick `b : β` such that
     some partial function in the ideal maps `a` to `b`. -/
 def fun_of_ideal [DenselyOrdered β] [NoBotOrder β] [NoTopOrder β] [Nonempty β] (a : α) (I : ideal (partial_iso α β)) :
     (∃ f, f ∈ defined_at_left β a ∧ f ∈ I) → { b // ∃ f ∈ I, (a, b) ∈ Subtype.val f } :=
   Classical.indefiniteDescription _ ∘ fun ⟨f, ⟨b, hb⟩, hf⟩ => ⟨b, f, hf, hb⟩
 
-/--  Given an ideal which intersects `defined_at_right α b`, pick `a : α` such that
+/-- Given an ideal which intersects `defined_at_right α b`, pick `a : α` such that
     some partial function in the ideal maps `a` to `b`. -/
 def inv_of_ideal [DenselyOrdered α] [NoBotOrder α] [NoTopOrder α] [Nonempty α] (b : β) (I : ideal (partial_iso α β)) :
     (∃ f, f ∈ defined_at_right α b ∧ f ∈ I) → { a // ∃ f ∈ I, (a, b) ∈ Subtype.val f } :=
@@ -185,7 +186,7 @@ open PartialIso
 
 variable (α β)
 
-/--  Any countable linear order embeds in any nonempty dense linear order without endpoints. -/
+/-- Any countable linear order embeds in any nonempty dense linear order without endpoints. -/
 def embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [NoBotOrder β] [NoTopOrder β] [Nonempty β] :
     α ↪o β :=
   let our_ideal : ideal (partial_iso α β) := ideal_of_cofinals (default _) (defined_at_left β)
@@ -198,7 +199,7 @@ def embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [NoBotO
       rcases our_ideal.directed _ hf _ hg with ⟨m, hm, fm, gm⟩
       exact (lt_iff_lt_of_cmp_eq_cmp $ m.property (a₁, _) (a₂, _) (fm ha₁) (gm ha₂)).mp)
 
-/--  Any two countable dense, nonempty linear orders without endpoints are order isomorphic. -/
+/-- Any two countable dense, nonempty linear orders without endpoints are order isomorphic. -/
 def iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoBotOrder α] [NoTopOrder α] [Nonempty α] [Encodable β]
     [DenselyOrdered β] [NoBotOrder β] [NoTopOrder β] [Nonempty β] : α ≃o β :=
   let to_cofinal : Sum α β → cofinal (partial_iso α β) := fun p => Sum.recOn p (defined_at_left β) (defined_at_right α)

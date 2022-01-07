@@ -15,13 +15,13 @@ variable {α β : Type _}
 
 namespace Lattice
 
-/--  Implication as a binary operation on a boolean algebra. -/
+/-- Implication as a binary operation on a boolean algebra. -/
 def imp [HasCompl α] [HasSup α] (a b : α) : α :=
   aᶜ⊔b
 
 infixl:65 " ⇒ₒ " => Lattice.imp
 
-/--  Equivalence as a binary operation on a boolean algebra. -/
+/-- Equivalence as a binary operation on a boolean algebra. -/
 def biimp [HasCompl α] [HasSup α] [HasInf α] (a b : α) : α :=
   (a ⇒ₒ b)⊓(b ⇒ₒ a)
 

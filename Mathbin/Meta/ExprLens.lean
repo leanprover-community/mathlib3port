@@ -22,7 +22,7 @@ expr, expr_lens, congr, environment, meta, metaprogramming, tactic
 /-! ### Declarations about `expr_lens` -/
 
 
-/--  You're supposed to think of an `expr_lens` as a big set of nested applications with a single
+/-- You're supposed to think of an `expr_lens` as a big set of nested applications with a single
 hole which needs to be filled, either in a function spot or argument spot. `expr_lens.fill` can
 fill this hole and turn your lens back into a real `expr`. -/
 unsafe inductive expr_lens
@@ -32,9 +32,7 @@ unsafe inductive expr_lens
 
 namespace ExprLens
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/--  Inductive type with two constructors `F` and `A`,
+/-- Inductive type with two constructors `F` and `A`,
 that represent the function-part `f` and arg-part `a` of an application `f a`. They specify the
 directions in which an `expr_lens` should zoom into an `expr`.
 
@@ -43,9 +41,9 @@ This type is used in the development of rewriting tactics such as `nth_rewrite` 
 inductive dir
   | F
   | A
-  deriving [anonymous], [anonymous]
+  deriving DecidableEq, Inhabited
 
-/--  String representation of `dir`. -/
+/-- String representation of `dir`. -/
 def dir.to_string : dir → Stringₓ
   | dir.F => "F"
   | dir.A => "A"
@@ -55,13 +53,13 @@ instance : HasToString dir :=
 
 open Tactic
 
-/--  Fill the function or argument hole in this lens with the given `expr`. -/
+/-- Fill the function or argument hole in this lens with the given `expr`. -/
 unsafe def fill : expr_lens → expr → expr
   | entire, e => e
   | app_fun l f, x => l.fill (expr.app f x)
   | app_arg l x, f => l.fill (expr.app f x)
 
-/--  Zoom into `e : expr` given the context of an `expr_lens`, popping out an `expr` and a new
+/-- Zoom into `e : expr` given the context of an `expr_lens`, popping out an `expr` and a new
 zoomed `expr_lens`, if this is possible (`e` has to be an application). -/
 unsafe def zoom : expr_lens → List dir → expr → Option (expr_lens × expr)
   | l, [], e => (l, e)
@@ -69,14 +67,14 @@ unsafe def zoom : expr_lens → List dir → expr → Option (expr_lens × expr)
   | l, dir.A :: rest, expr.app f x => (expr_lens.app_fun l f).zoom rest x
   | _, _, _ => none
 
-/--  Convert an `expr_lens` into a list of instructions needed to build it; repeatedly inspecting a
+/-- Convert an `expr_lens` into a list of instructions needed to build it; repeatedly inspecting a
 function or its argument a finite number of times. -/
 unsafe def to_dirs : expr_lens → List dir
   | expr_lens.entire => []
   | expr_lens.app_fun l _ => l.to_dirs.concat dir.A
   | expr_lens.app_arg l _ => l.to_dirs.concat dir.F
 
-/--  Sometimes `mk_congr_arg` fails, when the function is 'superficially dependent'.
+/-- Sometimes `mk_congr_arg` fails, when the function is 'superficially dependent'.
 Try to `dsimp` the function first before building the `congr_arg` expression. -/
 unsafe def mk_congr_arg_using_dsimp (G W : expr) (u : List Name) : tactic expr := do
   let s ← simp_lemmas.mk_default
@@ -94,7 +92,7 @@ private unsafe def trace_congr_error (f : expr) (x_eq : expr) : tactic Unit := d
         {pp_f } : {pp_f_t }
         {pp_x_eq } : {pp_x_eq_t}"
 
-/--  Turn an `e : expr_lens` and a proof that `a = b` into a series of `congr_arg` or `congr_fun`
+/-- Turn an `e : expr_lens` and a proof that `a = b` into a series of `congr_arg` or `congr_fun`
 applications showing that the expressions obtained from `e.fill a` and `e.fill b` are equal. -/
 unsafe def congr : expr_lens → expr → tactic expr
   | entire, e_eq => pure e_eq
@@ -107,7 +105,7 @@ unsafe def congr : expr_lens → expr → tactic expr
       | none => trace_congr_error f x_eq >> failed
   | app_arg l x, f_eq => mk_congr_fun f_eq x >>= l.congr
 
-/--  Pretty print a lens. -/
+/-- Pretty print a lens. -/
 unsafe def to_tactic_string : expr_lens → tactic Stringₓ
   | entire => return "(entire)"
   | app_fun l f => do
@@ -123,7 +121,7 @@ end ExprLens
 
 namespace Expr
 
-/--  The private internal function used by `app_map`, which "does the work". -/
+/-- The private internal function used by `app_map`, which "does the work". -/
 private unsafe def app_map_aux {α} (F : expr_lens → expr → tactic (List α)) :
     Option (expr_lens × expr) → tactic (List α)
   | some (l, e) =>
@@ -132,7 +130,7 @@ private unsafe def app_map_aux {α} (F : expr_lens → expr → tactic (List α)
       pure []
   | none => pure []
 
-/--  `app_map F e` maps a function `F` which understands `expr_lens`es
+/-- `app_map F e` maps a function `F` which understands `expr_lens`es
 over the given `e : expr` in the natural way;
 that is, make holes in `e` everywhere where that is possible
 (generating `expr_lens`es in the process),

@@ -6,8 +6,7 @@ open Expr
 
 open tactic.interactive (casesm constructor_matching)
 
-/-- 
-  find all assumptions of the shape `¬ (p ∧ q)` or `¬ (p ∨ q)` and
+/-- find all assumptions of the shape `¬ (p ∧ q)` or `¬ (p ∨ q)` and
   replace them using de Morgan's law.
 -/
 unsafe def distrib_not : tactic Unit := do
@@ -56,8 +55,7 @@ unsafe def add_refl (r : tauto_state) (e : expr) : tactic (expr × expr) := do
   write_ref r $ m.insert e none
   return (e, p)
 
-/-- 
-  If there exists a symmetry lemma that can be applied to the hypothesis `e`,
+/-- If there exists a symmetry lemma that can be applied to the hypothesis `e`,
   store it.
 -/
 unsafe def add_symm_proof (r : tauto_state) (e : expr) : tactic (expr × expr) := do
@@ -77,8 +75,7 @@ unsafe def add_symm_proof (r : tauto_state) (e : expr) : tactic (expr × expr) :
 unsafe def add_edge (r : tauto_state) (x y p : expr) : tactic Unit :=
   modify_ref r $ fun m => m.insert x (y, p)
 
-/-- 
-  Retrieve the root of the hypothesis `e` from the proof forest.
+/-- Retrieve the root of the hypothesis `e` from the proof forest.
   If `e` has not been internalized, add it to the proof forest.
 -/
 unsafe def root (r : tauto_state) : expr → tactic (expr × expr)
@@ -102,8 +99,7 @@ unsafe def root (r : tauto_state) : expr → tactic (expr × expr)
         pure (e'', p'')
       | none => Prod.mk e <$> mk_mapp `rfl [none, some e]
 
-/-- 
-  Given hypotheses `a` and `b`, build a proof that `a` is equivalent to `b`,
+/-- Given hypotheses `a` and `b`, build a proof that `a` is equivalent to `b`,
   applying congruence and recursing into arguments if `a` and `b`
   are applications of function symbols.
 -/
@@ -201,8 +197,7 @@ unsafe def assumption_with (r : tauto_state) : tactic Unit :=
 unsafe def assumption_symm :=
   using_new_ref (native.rb_map.mk _ _) assumption_with
 
-/-- 
-  Configuration options for `tauto`.
+/-- Configuration options for `tauto`.
   If `classical` is `tt`, runs `classical` before the rest of `tauto`.
   `closer` is run on any remaining subgoals left by `tauto_core; basic_tauto_tacs`.
 -/
@@ -240,8 +235,7 @@ local postfix:9001 "?" => optionalₓ
 
 setup_tactic_parser
 
-/-- 
-`tautology` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
+/-- `tautology` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
 and splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged
 using `reflexivity` or `solve_by_elim`.
 This is a finishing tactic: it either closes the goal or raises an error.
@@ -253,8 +247,7 @@ that it is unable to solve before failing.
 unsafe def tautology (c : parse $ (tk "!")?) (cfg : tactic.tauto_cfg := {  }) :=
   tactic.tautology $ { cfg with classical := c.is_some }
 
-/-- 
-`tauto` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
+/-- `tauto` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
 and splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged
 using `reflexivity` or `solve_by_elim`.
 This is a finishing tactic: it either closes the goal or raises an error.
@@ -268,8 +261,7 @@ unsafe def tauto (c : parse $ (tk "!")?) (cfg : tactic.tauto_cfg := {  }) : tact
 
 add_hint_tactic tauto
 
-/-- 
-This tactic (with shorthand `tauto`) breaks down assumptions of the form
+/-- This tactic (with shorthand `tauto`) breaks down assumptions of the form
 `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
 and splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged
 using `reflexivity` or `solve_by_elim`. This is a finishing tactic: it

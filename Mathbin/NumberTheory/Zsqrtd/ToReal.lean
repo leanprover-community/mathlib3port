@@ -11,14 +11,14 @@ It is in a separate file to avoid pulling in all of `data.real` into `data.zsqrt
 
 namespace Zsqrtd
 
-/--  The image of `zsqrtd` in `ℝ`, using `real.sqrt` which takes the positive root of `d`.
+/-- The image of `zsqrtd` in `ℝ`, using `real.sqrt` which takes the positive root of `d`.
 
 If the negative root is desired, use `to_real h a.conj`. -/
 @[simps]
 noncomputable def to_real {d : ℤ} (h : 0 ≤ d) : ℤ√d →+* ℝ :=
   lift ⟨Real.sqrt d, Real.mul_self_sqrt (Int.cast_nonneg.mpr h)⟩
 
-theorem to_real_injective {d : ℤ} (h0d : 0 ≤ d) (hd : ∀ n : ℤ, d ≠ n*n) : Function.Injective (to_real h0d) :=
+theorem to_real_injective {d : ℤ} (h0d : 0 ≤ d) (hd : ∀ n : ℤ, d ≠ n * n) : Function.Injective (to_real h0d) :=
   lift_injective _ hd
 
 end Zsqrtd

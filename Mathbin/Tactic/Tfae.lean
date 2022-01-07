@@ -15,13 +15,11 @@ export List (Tfae)
 
 namespace Tfae
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_reflect
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
 inductive arrow : Type
   | right : arrow
   | left_right : arrow
   | left : arrow
-  deriving [anonymous], [anonymous]
+  deriving has_reflect, Inhabited
 
 unsafe def mk_implication : ∀ re : arrow e₁ e₂ : expr, pexpr
   | arrow.right, e₁, e₂ => pquote.1 ((%%ₓe₁) → %%ₓe₂)
@@ -46,7 +44,7 @@ unsafe def parse_list : expr → Option (List expr)
   | quote.1 ((%%ₓe) :: %%ₓes) => (· :: ·) e <$> parse_list es
   | _ => none
 
-/--  In a goal of the form `tfae [a₀, a₁, a₂]`,
+/-- In a goal of the form `tfae [a₀, a₁, a₂]`,
 `tfae_have : i → j` creates the assertion `aᵢ → aⱼ`. The other possible
 notations are `tfae_have : i ← j` and `tfae_have : i ↔ j`. The user can
 also provide a label for the assertion, as with `have`: `tfae_have h : i ↔ j`.
@@ -66,7 +64,7 @@ unsafe def tfae_have (h : parse $ optionalₓ ident <* tk ":") (i₁ : parse (wi
   tactic.assert h type
   return ()
 
-/--  Finds all implications and equivalences in the context
+/-- Finds all implications and equivalences in the context
 to prove a goal of the form `tfae [...]`.
 -/
 unsafe def tfae_finish : tactic Unit :=
@@ -90,8 +88,7 @@ end Interactive
 
 end Tactic
 
-/-- 
-The `tfae` tactic suite is a set of tactics that help with proving that certain
+/-- The `tfae` tactic suite is a set of tactics that help with proving that certain
 propositions are equivalent.
 In `data/list/basic.lean` there is a section devoted to propositions of the
 form

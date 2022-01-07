@@ -62,12 +62,12 @@ theorem le_antisymm' [PartialOrderₓ α] : ∀ {a b : α}, a ≤ b → b ≤ a 
 
 end
 
-/--  Typeclass for the `⊔` (`\lub`) notation -/
+/-- Typeclass for the `⊔` (`\lub`) notation -/
 @[notation_class]
 class HasSup (α : Type u) where
   sup : α → α → α
 
-/--  Typeclass for the `⊓` (`\glb`) notation -/
+/-- Typeclass for the `⊓` (`\glb`) notation -/
 @[notation_class]
 class HasInf (α : Type u) where
   inf : α → α → α
@@ -81,7 +81,7 @@ infixl:69 "⊓" => HasInf.inf
 -/
 
 
-/--  A `semilattice_sup` is a join-semilattice, that is, a partial order
+/-- A `semilattice_sup` is a join-semilattice, that is, a partial order
   with a join (a.k.a. lub / least upper bound, sup / supremum) operation
   `⊔` which is the least element larger than both factors. -/
 class SemilatticeSup (α : Type u) extends HasSup α, PartialOrderₓ α where
@@ -89,30 +89,31 @@ class SemilatticeSup (α : Type u) extends HasSup α, PartialOrderₓ α where
   le_sup_right : ∀ a b : α, b ≤ a⊔b
   sup_le : ∀ a b c : α, a ≤ c → b ≤ c → a⊔b ≤ c
 
-/-- 
-A type with a commutative, associative and idempotent binary `sup` operation has the structure of a
+/-- A type with a commutative, associative and idempotent binary `sup` operation has the structure of a
 join-semilattice.
 
 The partial order is defined so that `a ≤ b` unfolds to `a ⊔ b = b`; cf. `sup_eq_right`.
 -/
 def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ a b : α, a⊔b = b⊔a)
-    (sup_assoc : ∀ a b c : α, a⊔b⊔c = a⊔(b⊔c)) (sup_idem : ∀ a : α, a⊔a = a) : SemilatticeSup α :=
-  { sup := ·⊔·, le := fun a b => a⊔b = b, le_refl := sup_idem,
-    le_trans := fun a b c hab hbc => by
-      dsimp only [· ≤ ·]  at *
-      rwa [← hbc, ← sup_assoc, hab],
-    le_antisymm := fun a b hab hba => by
-      dsimp only [· ≤ ·]  at *
-      rwa [← hba, sup_comm],
-    le_sup_left := fun a b =>
-      show a⊔(a⊔b) = a⊔b by
-        rw [← sup_assoc, sup_idem],
-    le_sup_right := fun a b =>
-      show b⊔(a⊔b) = a⊔b by
-        rw [sup_comm, sup_assoc, sup_idem],
-    sup_le := fun a b c hac hbc => by
-      dsimp only [· ≤ ·, Preorderₓ.Le]  at *
-      rwa [sup_assoc, hbc] }
+    (sup_assoc : ∀ a b c : α, a⊔b⊔c = a⊔(b⊔c)) (sup_idem : ∀ a : α, a⊔a = a) : SemilatticeSup α where
+  sup := ·⊔·
+  le := fun a b => a⊔b = b
+  le_refl := sup_idem
+  le_trans := fun a b c hab hbc => by
+    dsimp only [· ≤ ·]  at *
+    rwa [← hbc, ← sup_assoc, hab]
+  le_antisymm := fun a b hab hba => by
+    dsimp only [· ≤ ·]  at *
+    rwa [← hba, sup_comm]
+  le_sup_left := fun a b =>
+    show a⊔(a⊔b) = a⊔b by
+      rw [← sup_assoc, sup_idem]
+  le_sup_right := fun a b =>
+    show b⊔(a⊔b) = a⊔b by
+      rw [sup_comm, sup_assoc, sup_idem]
+  sup_le := fun a b c hac hbc => by
+    dsimp only [· ≤ ·, Preorderₓ.Le]  at *
+    rwa [sup_assoc, hbc]
 
 instance (α : Type _) [HasInf α] : HasSup (OrderDual α) :=
   ⟨(·⊓· : α → α → α)⟩
@@ -266,10 +267,11 @@ theorem forall_le_or_exists_lt_sup (a : α) : (∀ b, b ≤ a) ∨ ∃ b, a < b 
     rwa [or_iff_not_imp_left, not_forall]
   fun ⟨b, hb⟩ => ⟨a⊔b, lt_of_le_of_neₓ le_sup_left $ mt left_eq_sup.1 hb⟩
 
-/--  If `f` is monotone, `g` is antitone, and `f ≤ g`, then for all `a`, `b` we have `f a ≤ g b`. -/
+/-- If `f` is monotone, `g` is antitone, and `f ≤ g`, then for all `a`, `b` we have `f a ≤ g b`. -/
 theorem Monotone.forall_le_of_antitone {β : Type _} [Preorderₓ β] {f g : α → β} (hf : Monotone f) (hg : Antitone g)
     (h : f ≤ g) (m n : α) : f m ≤ g n :=
-  calc f m ≤ f (m⊔n) := hf le_sup_left
+  calc
+    f m ≤ f (m⊔n) := hf le_sup_left
     _ ≤ g (m⊔n) := h _
     _ ≤ g n := hg le_sup_right
     
@@ -277,19 +279,22 @@ theorem Monotone.forall_le_of_antitone {β : Type _} [Preorderₓ β] {f g : α 
 theorem SemilatticeSup.ext_sup {α} {A B : SemilatticeSup α}
     (H :
       ∀ x y : α,
-        by
-          have := A <;> exact x ≤ y ↔ x ≤ y)
+        (have := A
+          x ≤ y) ↔
+          x ≤ y)
     (x y : α) :
-    by
-      have := A <;> exact x⊔y = x⊔y :=
+    (have := A
+      x⊔y) =
+      x⊔y :=
   eq_of_forall_ge_iff $ fun c => by
     simp only [sup_le_iff] <;> rw [← H, @sup_le_iff α A, H, H]
 
 theorem SemilatticeSup.ext {α} {A B : SemilatticeSup α}
     (H :
       ∀ x y : α,
-        by
-          have := A <;> exact x ≤ y ↔ x ≤ y) :
+        (have := A
+          x ≤ y) ↔
+          x ≤ y) :
     A = B := by
   have := PartialOrderₓ.ext H
   have ss := funext fun x => funext $ SemilatticeSup.ext_sup H x
@@ -312,7 +317,7 @@ end SemilatticeSup
 -/
 
 
-/--  A `semilattice_inf` is a meet-semilattice, that is, a partial order
+/-- A `semilattice_inf` is a meet-semilattice, that is, a partial order
   with a meet (a.k.a. glb / greatest lower bound, inf / infimum) operation
   `⊓` which is the greatest element smaller than both factors. -/
 class SemilatticeInf (α : Type u) extends HasInf α, PartialOrderₓ α where
@@ -458,19 +463,22 @@ theorem forall_le_or_exists_lt_inf (a : α) : (∀ b, a ≤ b) ∨ ∃ b, b < a 
 theorem SemilatticeInf.ext_inf {α} {A B : SemilatticeInf α}
     (H :
       ∀ x y : α,
-        by
-          have := A <;> exact x ≤ y ↔ x ≤ y)
+        (have := A
+          x ≤ y) ↔
+          x ≤ y)
     (x y : α) :
-    by
-      have := A <;> exact x⊓y = x⊓y :=
+    (have := A
+      x⊓y) =
+      x⊓y :=
   eq_of_forall_le_iff $ fun c => by
     simp only [le_inf_iff] <;> rw [← H, @le_inf_iff α A, H, H]
 
 theorem SemilatticeInf.ext {α} {A B : SemilatticeInf α}
     (H :
       ∀ x y : α,
-        by
-          have := A <;> exact x ≤ y ↔ x ≤ y) :
+        (have := A
+          x ≤ y) ↔
+          x ≤ y) :
     A = B := by
   have := PartialOrderₓ.ext H
   have ss := funext fun x => funext $ SemilatticeInf.ext_inf H x
@@ -490,8 +498,7 @@ theorem inf_le_ite (s s' : α) (P : Prop) [Decidable P] : s⊓s' ≤ ite P s s' 
 
 end SemilatticeInf
 
-/-- 
-A type with a commutative, associative and idempotent binary `inf` operation has the structure of a
+/-- A type with a commutative, associative and idempotent binary `inf` operation has the structure of a
 meet-semilattice.
 
 The partial order is defined so that `a ≤ b` unfolds to `b ⊓ a = a`; cf. `inf_eq_right`.
@@ -507,14 +514,14 @@ def SemilatticeInf.mk' {α : Type _} [HasInf α] (inf_comm : ∀ a b : α, a⊓b
 -/
 
 
-/--  A lattice is a join-semilattice which is also a meet-semilattice. -/
+/-- A lattice is a join-semilattice which is also a meet-semilattice. -/
 @[protect_proj]
 class Lattice (α : Type u) extends SemilatticeSup α, SemilatticeInf α
 
 instance α [Lattice α] : Lattice (OrderDual α) :=
   { OrderDual.semilatticeSup α, OrderDual.semilatticeInf α with }
 
-/--  The partial orders from `semilattice_sup_mk'` and `semilattice_inf_mk'` agree
+/-- The partial orders from `semilattice_sup_mk'` and `semilattice_inf_mk'` agree
 if `sup` and `inf` satisfy the lattice absorption laws `sup_inf_self` (`a ⊔ a ⊓ b = a`)
 and `inf_sup_self` (`a ⊓ (a ⊔ b) = a`). -/
 theorem semilattice_sup_mk'_partial_order_eq_semilattice_inf_mk'_partial_order {α : Type _} [HasSup α] [HasInf α]
@@ -529,8 +536,7 @@ theorem semilattice_sup_mk'_partial_order_eq_semilattice_inf_mk'_partial_order {
         rw [← h, inf_comm, inf_sup_self], fun h => by
         rw [← h, sup_comm, sup_inf_self]⟩
 
-/-- 
-A type with a pair of commutative and associative binary operations which satisfy two absorption
+/-- A type with a pair of commutative and associative binary operations which satisfy two absorption
 laws relating the two operations has the structure of a lattice.
 
 The partial order is defined so that `a ≤ b` unfolds to `a ⊔ b = b`; cf. `sup_eq_right`.
@@ -540,16 +546,18 @@ def Lattice.mk' {α : Type _} [HasSup α] [HasInf α] (sup_comm : ∀ a b : α, 
     (inf_assoc : ∀ a b c : α, a⊓b⊓c = a⊓(b⊓c)) (sup_inf_self : ∀ a b : α, a⊔a⊓b = a)
     (inf_sup_self : ∀ a b : α, a⊓(a⊔b) = a) : Lattice α :=
   have sup_idem : ∀ b : α, b⊔b = b := fun b =>
-    calc b⊔b = b⊔b⊓(b⊔b) := by
-      rw [inf_sup_self]
+    calc
+      b⊔b = b⊔b⊓(b⊔b) := by
+        rw [inf_sup_self]
       _ = b := by
-      rw [sup_inf_self]
+        rw [sup_inf_self]
       
   have inf_idem : ∀ b : α, b⊓b = b := fun b =>
-    calc b⊓b = b⊓(b⊔b⊓b) := by
-      rw [sup_inf_self]
+    calc
+      b⊓b = b⊓(b⊔b⊓b) := by
+        rw [sup_inf_self]
       _ = b := by
-      rw [inf_sup_self]
+        rw [inf_sup_self]
       
   let semilatt_inf_inst := SemilatticeInf.mk' inf_comm inf_assoc inf_idem
   let semilatt_sup_inst := SemilatticeSup.mk' sup_comm sup_assoc sup_idem
@@ -577,13 +585,13 @@ theorem inf_le_sup : a⊓b ≤ a⊔b :=
 @[simp]
 theorem inf_lt_sup : a⊓b < a⊔b ↔ a ≠ b := by
   constructor
-  ·
-    rintro H rfl
+  · rintro H rfl
     simpa using H
-  ·
-    refine' fun Hne => lt_iff_le_and_ne.2 ⟨inf_le_sup, fun Heq => Hne _⟩
+    
+  · refine' fun Hne => lt_iff_le_and_ne.2 ⟨inf_le_sup, fun Heq => Hne _⟩
     refine' le_antisymmₓ _ _
     exacts[le_sup_left.trans (Heq.symm.trans_le inf_le_right), le_sup_right.trans (Heq.symm.trans_le inf_le_left)]
+    
 
 /-!
 #### Distributivity laws
@@ -608,8 +616,9 @@ theorem sup_eq_iff_inf_eq : a⊔b = b ↔ a⊓b = a := by
 theorem Lattice.ext {α} {A B : Lattice α}
     (H :
       ∀ x y : α,
-        by
-          have := A <;> exact x ≤ y ↔ x ≤ y) :
+        (have := A
+          x ≤ y) ↔
+          x ≤ y) :
     A = B := by
   have SS : @Lattice.toSemilatticeSup α A = @Lattice.toSemilatticeSup α B := SemilatticeSup.ext H
   have II := SemilatticeInf.ext H
@@ -624,7 +633,7 @@ end Lattice
 -/
 
 
-/--  A distributive lattice is a lattice that satisfies any of four
+/-- A distributive lattice is a lattice that satisfies any of four
 equivalent distributive properties (of `sup` over `inf` or `inf` over `sup`,
 on the left or right).
 
@@ -651,16 +660,17 @@ theorem sup_inf_right : y⊓z⊔x = (y⊔x)⊓(z⊔x) := by
   simp only [sup_inf_left, fun y : α => @sup_comm α _ y x, eq_self_iff_true]
 
 theorem inf_sup_left : x⊓(y⊔z) = x⊓y⊔x⊓z :=
-  calc x⊓(y⊔z) = x⊓(x⊔z)⊓(y⊔z) := by
-    rw [inf_sup_self]
+  calc
+    x⊓(y⊔z) = x⊓(x⊔z)⊓(y⊔z) := by
+      rw [inf_sup_self]
     _ = x⊓(x⊓y⊔z) := by
-    simp only [inf_assoc, sup_inf_right, eq_self_iff_true]
+      simp only [inf_assoc, sup_inf_right, eq_self_iff_true]
     _ = (x⊔x⊓y)⊓(x⊓y⊔z) := by
-    rw [sup_inf_self]
+      rw [sup_inf_self]
     _ = (x⊓y⊔x)⊓(x⊓y⊔z) := by
-    rw [sup_comm]
+      rw [sup_comm]
     _ = x⊓y⊔x⊓z := by
-    rw [sup_inf_left]
+      rw [sup_inf_left]
     
 
 instance (α : Type _) [DistribLattice α] : DistribLattice (OrderDual α) :=
@@ -670,9 +680,10 @@ theorem inf_sup_right : (y⊔z)⊓x = y⊓x⊔z⊓x := by
   simp only [inf_sup_left, fun y : α => @inf_comm α _ y x, eq_self_iff_true]
 
 theorem le_of_inf_le_sup_le (h₁ : x⊓z ≤ y⊓z) (h₂ : x⊔z ≤ y⊔z) : x ≤ y :=
-  calc x ≤ y⊓z⊔x := le_sup_right
+  calc
+    x ≤ y⊓z⊔x := le_sup_right
     _ = (y⊔x)⊓(x⊔z) := by
-    rw [sup_inf_right, @sup_comm _ _ x]
+      rw [sup_inf_right, @sup_comm _ _ x]
     _ ≤ (y⊔x)⊓(y⊔z) := inf_le_inf_left _ h₂
     _ = y⊔x⊓z := sup_inf_left.symm
     _ ≤ y⊔y⊓z := sup_le_sup_left h₁ _
@@ -690,7 +701,7 @@ end DistribLattice
 -/
 
 
-instance (priority := 100) latticeOfLinearOrder {α : Type u} [o : LinearOrderₓ α] : Lattice α :=
+instance (priority := 100) LinearOrderₓ.toLattice {α : Type u} [o : LinearOrderₓ α] : Lattice α :=
   { o with sup := max, le_sup_left := le_max_leftₓ, le_sup_right := le_max_rightₓ, sup_le := fun a b c => max_leₓ,
     inf := min, inf_le_left := min_le_leftₓ, inf_le_right := min_le_rightₓ, le_inf := fun a b c => le_minₓ }
 
@@ -700,7 +711,7 @@ theorem sup_eq_max [LinearOrderₓ α] {x y : α} : x⊔y = max x y :=
 theorem inf_eq_min [LinearOrderₓ α] {x y : α} : x⊓y = min x y :=
   rfl
 
-/--  A lattice with total order is a linear order.
+/-- A lattice with total order is a linear order.
 
 See note [reducible non-instances]. -/
 @[reducible]
@@ -719,8 +730,8 @@ def Lattice.toLinearOrder (α : Type u) [Lattice α] [DecidableEq α] [Decidable
       split_ifs with h'
       exacts[inf_of_le_left h', inf_of_le_right $ (h x y).resolve_left h'] }
 
-instance (priority := 100) distribLatticeOfLinearOrder {α : Type u} [o : LinearOrderₓ α] : DistribLattice α :=
-  { latticeOfLinearOrder with
+instance (priority := 100) LinearOrderₓ.toDistribLattice {α : Type u} [o : LinearOrderₓ α] : DistribLattice α :=
+  { LinearOrderₓ.toLattice with
     le_sup_inf := fun a b c =>
       match le_totalₓ b c with
       | Or.inl h => inf_le_of_left_le $ sup_le_sup_left (le_inf (le_reflₓ b) h) _
@@ -783,20 +794,20 @@ end Pi
 
 namespace Monotone
 
-/--  Pointwise supremum of two monotone functions is a monotone function. -/
+/-- Pointwise supremum of two monotone functions is a monotone function. -/
 protected theorem sup [Preorderₓ α] [SemilatticeSup β] {f g : α → β} (hf : Monotone f) (hg : Monotone g) :
     Monotone (f⊔g) := fun x y h => sup_le_sup (hf h) (hg h)
 
-/--  Pointwise infimum of two monotone functions is a monotone function. -/
+/-- Pointwise infimum of two monotone functions is a monotone function. -/
 protected theorem inf [Preorderₓ α] [SemilatticeInf β] {f g : α → β} (hf : Monotone f) (hg : Monotone g) :
     Monotone (f⊓g) := fun x y h => inf_le_inf (hf h) (hg h)
 
-/--  Pointwise maximum of two monotone functions is a monotone function. -/
+/-- Pointwise maximum of two monotone functions is a monotone function. -/
 protected theorem max [Preorderₓ α] [LinearOrderₓ β] {f g : α → β} (hf : Monotone f) (hg : Monotone g) :
     Monotone fun x => max (f x) (g x) :=
   hf.sup hg
 
-/--  Pointwise minimum of two monotone functions is a monotone function. -/
+/-- Pointwise minimum of two monotone functions is a monotone function. -/
 protected theorem min [Preorderₓ α] [LinearOrderₓ β] {f g : α → β} (hf : Monotone f) (hg : Monotone g) :
     Monotone fun x => min (f x) (g x) :=
   hf.inf hg
@@ -820,6 +831,42 @@ theorem map_inf [SemilatticeInf α] [IsTotal α (· ≤ ·)] [SemilatticeInf β]
   @Monotone.map_sup (OrderDual α) _ _ _ _ _ hf.dual x y
 
 end Monotone
+
+namespace Antitone
+
+/-- Pointwise supremum of two monotone functions is a monotone function. -/
+protected theorem sup [Preorderₓ α] [SemilatticeSup β] {f g : α → β} (hf : Antitone f) (hg : Antitone g) :
+    Antitone (f⊔g) := fun x y h => sup_le_sup (hf h) (hg h)
+
+/-- Pointwise infimum of two monotone functions is a monotone function. -/
+protected theorem inf [Preorderₓ α] [SemilatticeInf β] {f g : α → β} (hf : Antitone f) (hg : Antitone g) :
+    Antitone (f⊓g) := fun x y h => inf_le_inf (hf h) (hg h)
+
+/-- Pointwise maximum of two monotone functions is a monotone function. -/
+protected theorem max [Preorderₓ α] [LinearOrderₓ β] {f g : α → β} (hf : Antitone f) (hg : Antitone g) :
+    Antitone fun x => max (f x) (g x) :=
+  hf.sup hg
+
+/-- Pointwise minimum of two monotone functions is a monotone function. -/
+protected theorem min [Preorderₓ α] [LinearOrderₓ β] {f g : α → β} (hf : Antitone f) (hg : Antitone g) :
+    Antitone fun x => min (f x) (g x) :=
+  hf.inf hg
+
+theorem map_sup_le [SemilatticeSup α] [SemilatticeInf β] {f : α → β} (h : Antitone f) (x y : α) : f (x⊔y) ≤ f x⊓f y :=
+  h.dual_right.le_map_sup x y
+
+theorem map_sup [SemilatticeSup α] [IsTotal α (· ≤ ·)] [SemilatticeInf β] {f : α → β} (hf : Antitone f) (x y : α) :
+    f (x⊔y) = f x⊓f y :=
+  hf.dual_right.map_sup x y
+
+theorem le_map_inf [SemilatticeInf α] [SemilatticeSup β] {f : α → β} (h : Antitone f) (x y : α) : f x⊔f y ≤ f (x⊓y) :=
+  h.dual_right.map_inf_le x y
+
+theorem map_inf [SemilatticeInf α] [IsTotal α (· ≤ ·)] [SemilatticeSup β] {f : α → β} (hf : Antitone f) (x y : α) :
+    f (x⊓y) = f x⊔f y :=
+  hf.dual_right.map_inf x y
+
+end Antitone
 
 /-!
 ### Products of (semi-)lattices
@@ -859,7 +906,7 @@ end Prod
 
 namespace Subtype
 
-/--  A subtype forms a `⊔`-semilattice if `⊔` preserves the property.
+/-- A subtype forms a `⊔`-semilattice if `⊔` preserves the property.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def SemilatticeSup [SemilatticeSup α] {P : α → Prop} (Psup : ∀ ⦃x y⦄, P x → P y → P (x⊔y)) :
@@ -868,7 +915,7 @@ protected def SemilatticeSup [SemilatticeSup α] {P : α → Prop} (Psup : ∀ �
     le_sup_left := fun x y => @le_sup_left _ _ (x : α) y, le_sup_right := fun x y => @le_sup_right _ _ (x : α) y,
     sup_le := fun x y z h1 h2 => @sup_le α _ _ _ _ h1 h2 }
 
-/--  A subtype forms a `⊓`-semilattice if `⊓` preserves the property.
+/-- A subtype forms a `⊓`-semilattice if `⊓` preserves the property.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def SemilatticeInf [SemilatticeInf α] {P : α → Prop} (Pinf : ∀ ⦃x y⦄, P x → P y → P (x⊓y)) :
@@ -877,7 +924,7 @@ protected def SemilatticeInf [SemilatticeInf α] {P : α → Prop} (Pinf : ∀ �
     inf_le_left := fun x y => @inf_le_left _ _ (x : α) y, inf_le_right := fun x y => @inf_le_right _ _ (x : α) y,
     le_inf := fun x y z h1 h2 => @le_inf α _ _ _ _ h1 h2 }
 
-/--  A subtype forms a lattice if `⊔` and `⊓` preserve the property.
+/-- A subtype forms a lattice if `⊔` and `⊓` preserve the property.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Lattice [Lattice α] {P : α → Prop} (Psup : ∀ ⦃x y⦄, P x → P y → P (x⊔y))
@@ -888,7 +935,7 @@ end Subtype
 
 section lift
 
-/--  A type endowed with `⊔` is a `semilattice_sup`, if it admits an injective map that
+/-- A type endowed with `⊔` is a `semilattice_sup`, if it admits an injective map that
 preserves `⊔` to a `semilattice_sup`.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -908,7 +955,7 @@ protected def Function.Injective.semilatticeSup [HasSup α] [SemilatticeSup β] 
       rw [map_sup]
       exact sup_le ha hb }
 
-/--  A type endowed with `⊓` is a `semilattice_inf`, if it admits an injective map that
+/-- A type endowed with `⊓` is a `semilattice_inf`, if it admits an injective map that
 preserves `⊓` to a `semilattice_inf`.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -928,7 +975,7 @@ protected def Function.Injective.semilatticeInf [HasInf α] [SemilatticeInf β] 
       rw [map_inf]
       exact le_inf ha hb }
 
-/--  A type endowed with `⊔` and `⊓` is a `lattice`, if it admits an injective map that
+/-- A type endowed with `⊔` and `⊓` is a `lattice`, if it admits an injective map that
 preserves `⊔` and `⊓` to a `lattice`.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -936,7 +983,7 @@ protected def Function.Injective.lattice [HasSup α] [HasInf α] [Lattice β] (f
     (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) : Lattice α :=
   { hf_inj.semilattice_sup f map_sup, hf_inj.semilattice_inf f map_inf with }
 
-/--  A type endowed with `⊔` and `⊓` is a `distrib_lattice`, if it admits an injective map that
+/-- A type endowed with `⊔` and `⊓` is a `distrib_lattice`, if it admits an injective map that
 preserves `⊔` and `⊓` to a `distrib_lattice`.
 See note [reducible non-instances]. -/
 @[reducible]

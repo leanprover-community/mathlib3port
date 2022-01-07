@@ -19,8 +19,7 @@ local notation f ` ⊚ `:80 g:80 := category.comp g f    -- type as \oo
 -/
 
 
-/-- 
-The typeclass `category C` describes morphisms associated to objects of type `C : Type u`.
+/-- The typeclass `category C` describes morphisms associated to objects of type `C : Type u`.
 
 The universe levels of the objects and morphisms are independent, and will often need to be
 specified explicitly, as `category.{v} C`.
@@ -68,7 +67,7 @@ universe v u
 
 namespace CategoryTheory
 
-/--  A preliminary structure on the way to defining a category,
+/-- A preliminary structure on the way to defining a category,
 containing the data, but none of the axioms. -/
 class category_struct (obj : Type u) extends Quiver.{v + 1} obj : Type max u (v + 1) where
   id : ∀ X : obj, hom X X
@@ -78,8 +77,7 @@ notation "𝟙" => category_struct.id
 
 infixr:80 " ≫ " => category_struct.comp
 
-/-- 
-The typeclass `category C` describes morphisms associated to objects of type `C`.
+/-- The typeclass `category C` describes morphisms associated to objects of type `C`.
 The universe levels of the objects and morphisms are unconstrained, and will often need to be
 specified explicitly, as `category.{v} C`. (See also `large_category` and `small_category`.)
 
@@ -106,16 +104,14 @@ attribute [simp] category.id_comp category.comp_id category.assoc
 
 attribute [trans] category_struct.comp
 
-/-- 
-A `large_category` has objects in one universe level higher than the universe level of
+/-- A `large_category` has objects in one universe level higher than the universe level of
 the morphisms. It is useful for examples such as the category of types, or the category
 of groups, etc.
 -/
 abbrev large_category (C : Type (u + 1)) : Type (u + 1) :=
   category.{u} C
 
-/-- 
-A `small_category` has objects and morphisms in the same universe level.
+/-- A `small_category` has objects and morphisms in the same universe level.
 -/
 abbrev small_category (C : Type u) : Type (u + 1) :=
   category.{u} C
@@ -127,11 +123,11 @@ variable {C : Type u} [category.{v} C] {X Y Z : C}
 initialize_simps_projections category (to_category_struct_to_quiver_hom → Hom, to_category_struct_comp → comp,
   to_category_struct_id → id, -toCategoryStruct)
 
-/--  postcompose an equation between morphisms by another morphism -/
+/-- postcompose an equation between morphisms by another morphism -/
 theorem eq_whisker {f g : X ⟶ Y} (w : f = g) (h : Y ⟶ Z) : f ≫ h = g ≫ h := by
   rw [w]
 
-/--  precompose an equation between morphisms by another morphism -/
+/-- precompose an equation between morphisms by another morphism -/
 theorem whisker_eq (f : X ⟶ Y) {g h : Y ⟶ Z} (w : g = h) : f ≫ g = f ≫ h := by
   rw [w]
 
@@ -173,8 +169,7 @@ theorem dite_comp {P : Prop} [Decidable P] {X Y Z : C} (f : P → (X ⟶ Y)) (f'
     (if h : P then f h else f' h) ≫ g = if h : P then f h ≫ g else f' h ≫ g := by
   split_ifs <;> rfl
 
-/-- 
-A morphism `f` is an epimorphism if it can be "cancelled" when precomposed:
+/-- A morphism `f` is an epimorphism if it can be "cancelled" when precomposed:
 `f ≫ g = f ≫ h` implies `g = h`.
 
 See https://stacks.math.columbia.edu/tag/003B.
@@ -182,8 +177,7 @@ See https://stacks.math.columbia.edu/tag/003B.
 class epi (f : X ⟶ Y) : Prop where
   left_cancellation : ∀ {Z : C} g h : Y ⟶ Z w : f ≫ g = f ≫ h, g = h
 
-/-- 
-A morphism `f` is a monomorphism if it can be "cancelled" when postcomposed:
+/-- A morphism `f` is a monomorphism if it can be "cancelled" when postcomposed:
 `g ≫ f = h ≫ f` implies `g = h`.
 
 See https://stacks.math.columbia.edu/tag/003B.
@@ -264,11 +258,10 @@ variable [category.{v} C]
 
 universe u'
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ulift_category
-  : category .{ v } ( Ulift .{ u' } C )
-  where Hom X Y := X.down ⟶ Y.down id X := 𝟙 X.down comp _ _ _ f g := f ≫ g
+instance ulift_category : category.{v} (Ulift.{u'} C) where
+  Hom := fun X Y => X.down ⟶ Y.down
+  id := fun X => 𝟙 X.down
+  comp := fun _ _ _ f g => f ≫ g
 
 example (D : Type u) [small_category D] : large_category (Ulift.{u + 1} D) := by
   infer_instance
@@ -277,8 +270,7 @@ end
 
 end CategoryTheory
 
-/-- 
-Many proofs in the category theory library use the `dsimp, simp` pattern,
+/-- Many proofs in the category theory library use the `dsimp, simp` pattern,
 which typically isn't necessary elsewhere.
 
 One would usually hope that the same effect could be achieved simply with `simp`.

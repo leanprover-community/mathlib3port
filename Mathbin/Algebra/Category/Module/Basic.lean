@@ -52,7 +52,7 @@ universe v u
 
 variable (R : Type u) [Ringₓ R]
 
-/--  The category of R-modules and their morphisms.
+/-- The category of R-modules and their morphisms.
 
  Note that in the case of `R = ℤ`, we can not
 impose here that the `ℤ`-multiplication field from the module structure is defeq to the one coming
@@ -70,17 +70,13 @@ namespace ModuleCat
 instance : CoeSort (ModuleCat.{v} R) (Type v) :=
   ⟨ModuleCat.Carrier⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  Module_category
-  : category ( ModuleCat .{ v } R )
-  where
-    Hom M N := M →ₗ[ R ] N
-      id M := 1
-      comp A B C f g := g.comp f
-      id_comp' X Y f := LinearMap.id_comp _
-      comp_id' X Y f := LinearMap.comp_id _
-      assoc' W X Y Z f g h := LinearMap.comp_assoc _ _ _
+instance Module_category : category (ModuleCat.{v} R) where
+  Hom := fun M N => M →ₗ[R] N
+  id := fun M => 1
+  comp := fun A B C f g => g.comp f
+  id_comp' := fun X Y f => LinearMap.id_comp _
+  comp_id' := fun X Y f => LinearMap.comp_id _
+  assoc' := fun W X Y Z f g h => LinearMap.comp_assoc _ _ _
 
 instance Module_concrete_category : concrete_category.{v} (ModuleCat.{v} R) where
   forget := { obj := fun R => R, map := fun R S f => (f : R → S) }
@@ -92,11 +88,11 @@ instance has_forget_to_AddCommGroup : has_forget₂ (ModuleCat R) AddCommGroup�
 instance (M N : ModuleCat R) : AddMonoidHomClass (M ⟶ N) M N :=
   { LinearMap.addMonoidHomClass with coe := fun f => f }
 
-/--  The object in the category of R-modules associated to an R-module -/
+/-- The object in the category of R-modules associated to an R-module -/
 def of (X : Type v) [AddCommGroupₓ X] [Module R X] : ModuleCat R :=
   ⟨X⟩
 
-/--  Typecheck a `linear_map` as a morphism in `Module R`. -/
+/-- Typecheck a `linear_map` as a morphism in `Module R`. -/
 def of_hom {R : Type u} [Ringₓ R] {X Y : Type u} [AddCommGroupₓ X] [Module R X] [AddCommGroupₓ Y] [Module R Y]
     (f : X →ₗ[R] Y) : of R X ⟶ of R Y :=
   f
@@ -113,31 +109,31 @@ theorem coe_of (X : Type u) [AddCommGroupₓ X] [Module R X] : (of R X : Type u)
 
 variable {R}
 
-/--  Forgetting to the underlying type and then building the bundled object returns the original
+/-- Forgetting to the underlying type and then building the bundled object returns the original
 module. -/
 @[simps]
-def of_self_iso (M : ModuleCat R) : ModuleCat.of R M ≅ M :=
-  { Hom := 𝟙 M, inv := 𝟙 M }
+def of_self_iso (M : ModuleCat R) : ModuleCat.of R M ≅ M where
+  Hom := 𝟙 M
+  inv := 𝟙 M
 
 instance : Subsingleton (of R PUnit) := by
   rw [coe_of R PUnit]
   infer_instance
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : has_zero_object ( ModuleCat .{ v } R )
-  where
-    zero := 0
-      uniqueTo
-        X
-        :=
-        {
-          default := ( 0 : PUnit →ₗ[ R ] X ) ,
-            uniq
-              :=
-              fun _ => LinearMap.ext $ fun x => have h : x = 0 := by decide by simp only [ h , LinearMap.map_zero ]
-          }
-      uniqueFrom X := { default := ( 0 : X →ₗ[ R ] PUnit ) , uniq := fun _ => LinearMap.ext $ fun x => by decide }
+instance : has_zero_object (ModuleCat.{v} R) where
+  zero := 0
+  uniqueTo := fun X =>
+    { default := (0 : PUnit →ₗ[R] X),
+      uniq := fun _ =>
+        LinearMap.ext $ fun x => by
+          have h : x = 0 := by
+            decide
+          simp only [h, LinearMap.map_zero] }
+  uniqueFrom := fun X =>
+    { default := (0 : X →ₗ[R] PUnit),
+      uniq := fun _ =>
+        LinearMap.ext $ fun x => by
+          decide }
 
 variable {R} {M N U : ModuleCat.{v} R}
 
@@ -158,127 +154,139 @@ variable {R}
 
 variable {X₁ X₂ : Type v}
 
-/--  Reinterpreting a linear map in the category of `R`-modules. -/
+/-- Reinterpreting a linear map in the category of `R`-modules. -/
 def ModuleCat.asHom [AddCommGroupₓ X₁] [Module R X₁] [AddCommGroupₓ X₂] [Module R X₂] :
     (X₁ →ₗ[R] X₂) → (ModuleCat.of R X₁ ⟶ ModuleCat.of R X₂) :=
   id
 
 localized [ModuleCat] notation "↟" f:1024 => ModuleCat.asHom f
 
-/--  Reinterpreting a linear map in the category of `R`-modules. -/
+/-- Reinterpreting a linear map in the category of `R`-modules. -/
 def ModuleCat.asHomRight [AddCommGroupₓ X₁] [Module R X₁] {X₂ : ModuleCat.{v} R} :
     (X₁ →ₗ[R] X₂) → (ModuleCat.of R X₁ ⟶ X₂) :=
   id
 
 localized [ModuleCat] notation "↾" f:1024 => ModuleCat.asHomRight f
 
-/--  Reinterpreting a linear map in the category of `R`-modules. -/
+/-- Reinterpreting a linear map in the category of `R`-modules. -/
 def ModuleCat.asHomLeft {X₁ : ModuleCat.{v} R} [AddCommGroupₓ X₂] [Module R X₂] :
     (X₁ →ₗ[R] X₂) → (X₁ ⟶ ModuleCat.of R X₂) :=
   id
 
 localized [ModuleCat] notation "↿" f:1024 => ModuleCat.asHomLeft f
 
-/--  Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s. -/
+/-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s. -/
 @[simps]
 def LinearEquiv.toModuleIso {g₁ : AddCommGroupₓ X₁} {g₂ : AddCommGroupₓ X₂} {m₁ : Module R X₁} {m₂ : Module R X₂}
-    (e : X₁ ≃ₗ[R] X₂) : ModuleCat.of R X₁ ≅ ModuleCat.of R X₂ :=
-  { Hom := (e : X₁ →ₗ[R] X₂), inv := (e.symm : X₂ →ₗ[R] X₁),
-    hom_inv_id' := by
-      ext
-      exact e.left_inv x,
-    inv_hom_id' := by
-      ext
-      exact e.right_inv x }
+    (e : X₁ ≃ₗ[R] X₂) : ModuleCat.of R X₁ ≅ ModuleCat.of R X₂ where
+  Hom := (e : X₁ →ₗ[R] X₂)
+  inv := (e.symm : X₂ →ₗ[R] X₁)
+  hom_inv_id' := by
+    ext
+    exact e.left_inv x
+  inv_hom_id' := by
+    ext
+    exact e.right_inv x
 
-/-- 
-Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
+/-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
 
 This version is better than `linear_equiv_to_Module_iso` when applicable, because Lean can't see
 `Module.of R M` is defeq to `M` when `M : Module R`. -/
 @[simps]
-def LinearEquiv.toModuleIso' {M N : ModuleCat.{v} R} (i : M ≃ₗ[R] N) : M ≅ N :=
-  { Hom := i, inv := i.symm,
-    hom_inv_id' :=
-      LinearMap.ext $ fun x => by
-        simp ,
-    inv_hom_id' :=
-      LinearMap.ext $ fun x => by
-        simp }
+def LinearEquiv.toModuleIso' {M N : ModuleCat.{v} R} (i : M ≃ₗ[R] N) : M ≅ N where
+  Hom := i
+  inv := i.symm
+  hom_inv_id' :=
+    LinearMap.ext $ fun x => by
+      simp
+  inv_hom_id' :=
+    LinearMap.ext $ fun x => by
+      simp
 
-/-- 
-Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
+/-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
 
 This version is better than `linear_equiv_to_Module_iso` when applicable, because Lean can't see
 `Module.of R M` is defeq to `M` when `M : Module R`. -/
 @[simps]
 def LinearEquiv.toModuleIso'Left {X₁ : ModuleCat.{v} R} {g₂ : AddCommGroupₓ X₂} {m₂ : Module R X₂} (e : X₁ ≃ₗ[R] X₂) :
-    X₁ ≅ ModuleCat.of R X₂ :=
-  { Hom := (e : X₁ →ₗ[R] X₂), inv := (e.symm : X₂ →ₗ[R] X₁),
-    hom_inv_id' :=
-      LinearMap.ext $ fun x => by
-        simp ,
-    inv_hom_id' :=
-      LinearMap.ext $ fun x => by
-        simp }
+    X₁ ≅ ModuleCat.of R X₂ where
+  Hom := (e : X₁ →ₗ[R] X₂)
+  inv := (e.symm : X₂ →ₗ[R] X₁)
+  hom_inv_id' :=
+    LinearMap.ext $ fun x => by
+      simp
+  inv_hom_id' :=
+    LinearMap.ext $ fun x => by
+      simp
 
-/-- 
-Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
+/-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
 
 This version is better than `linear_equiv_to_Module_iso` when applicable, because Lean can't see
 `Module.of R M` is defeq to `M` when `M : Module R`. -/
 @[simps]
 def LinearEquiv.toModuleIso'Right {g₁ : AddCommGroupₓ X₁} {m₁ : Module R X₁} {X₂ : ModuleCat.{v} R} (e : X₁ ≃ₗ[R] X₂) :
-    ModuleCat.of R X₁ ≅ X₂ :=
-  { Hom := (e : X₁ →ₗ[R] X₂), inv := (e.symm : X₂ →ₗ[R] X₁),
-    hom_inv_id' :=
-      LinearMap.ext $ fun x => by
-        simp ,
-    inv_hom_id' :=
-      LinearMap.ext $ fun x => by
-        simp }
+    ModuleCat.of R X₁ ≅ X₂ where
+  Hom := (e : X₁ →ₗ[R] X₂)
+  inv := (e.symm : X₂ →ₗ[R] X₁)
+  hom_inv_id' :=
+    LinearMap.ext $ fun x => by
+      simp
+  inv_hom_id' :=
+    LinearMap.ext $ fun x => by
+      simp
 
 namespace CategoryTheory.Iso
 
-/--  Build a `linear_equiv` from an isomorphism in the category `Module R`. -/
+/-- Build a `linear_equiv` from an isomorphism in the category `Module R`. -/
 @[simps]
-def to_linear_equiv {X Y : ModuleCat R} (i : X ≅ Y) : X ≃ₗ[R] Y :=
-  { toFun := i.hom, invFun := i.inv,
-    left_inv := by
-      tidy,
-    right_inv := by
-      tidy,
-    map_add' := by
-      tidy,
-    map_smul' := by
-      tidy }
+def to_linear_equiv {X Y : ModuleCat R} (i : X ≅ Y) : X ≃ₗ[R] Y where
+  toFun := i.hom
+  invFun := i.inv
+  left_inv := by
+    tidy
+  right_inv := by
+    tidy
+  map_add' := by
+    tidy
+  map_smul' := by
+    tidy
 
 end CategoryTheory.Iso
 
-/--  linear equivalences between `module`s are the same as (isomorphic to) isomorphisms
+/-- linear equivalences between `module`s are the same as (isomorphic to) isomorphisms
 in `Module` -/
 @[simps]
 def linearEquivIsoModuleIso {X Y : Type u} [AddCommGroupₓ X] [AddCommGroupₓ Y] [Module R X] [Module R Y] :
-    (X ≃ₗ[R] Y) ≅ ModuleCat.of R X ≅ ModuleCat.of R Y :=
-  { Hom := fun e => e.to_Module_iso, inv := fun i => i.to_linear_equiv }
+    (X ≃ₗ[R] Y) ≅ ModuleCat.of R X ≅ ModuleCat.of R Y where
+  Hom := fun e => e.to_Module_iso
+  inv := fun i => i.to_linear_equiv
 
 namespace ModuleCat
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : preadditive ( ModuleCat .{ v } R )
-  where
-    add_comp' P Q R f f' g := show ( f + f' ) ≫ g = ( f ≫ g ) + f' ≫ g by ext simp
-      comp_add' P Q R f g g' := show ( f ≫ g + g' ) = ( f ≫ g ) + f ≫ g' by ext simp
+instance : preadditive (ModuleCat.{v} R) where
+  add_comp' := fun P Q R f f' g =>
+    show (f + f') ≫ g = f ≫ g + f' ≫ g by
+      ext
+      simp
+  comp_add' := fun P Q R f g g' =>
+    show f ≫ (g + g') = f ≫ g + f ≫ g' by
+      ext
+      simp
 
 section
 
 variable {S : Type u} [CommRingₓ S]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : linear S ( ModuleCat .{ v } S )
-  where homModule X Y := LinearMap.module smul_comp' := by intros ext simp comp_smul' := by intros ext simp
+instance : linear S (ModuleCat.{v} S) where
+  homModule := fun X Y => LinearMap.module
+  smul_comp' := by
+    intros
+    ext
+    simp
+  comp_smul' := by
+    intros
+    ext
+    simp
 
 end
 

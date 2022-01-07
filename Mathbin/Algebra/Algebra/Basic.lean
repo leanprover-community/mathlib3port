@@ -81,7 +81,7 @@ all be relaxed independently; for instance, this allows us to:
 * Replace `semiring A` with `non_unital_non_assoc_semiring A` in order to describe non-unital and/or
   non-associative algebras.
 * Replace `comm_semiring R` and `module R A` with `comm_group R'` and `distrib_mul_action R' A`,
-  which when `R' = units R` lets us talk about the "algebra-like" action of `units R` on an
+  which when `R' = Rˣ` lets us talk about the "algebra-like" action of `Rˣ` on an
   `R`-algebra `A`.
 
 While `alg_hom R A B` cannot be used in the second approach, `non_unital_alg_hom R A B` still can.
@@ -101,27 +101,30 @@ section Prio
 -- ././Mathport/Syntax/Translate/Basic.lean:169:9: warning: unsupported option extends_priority
 set_option extends_priority 200
 
-/-- 
-An associative unital `R`-algebra is a semiring `A` equipped with a map into its center `R → A`.
+/-- An associative unital `R`-algebra is a semiring `A` equipped with a map into its center `R → A`.
 
 See the implementation notes in this file for discussion of the details of this definition.
 -/
 @[nolint has_inhabited_instance]
 class Algebra (R : Type u) (A : Type v) [CommSemiringₓ R] [Semiringₓ A] extends HasScalar R A, R →+* A where
-  commutes' : ∀ r x, (to_fun r*x) = x*to_fun r
-  smul_def' : ∀ r x, r • x = to_fun r*x
+  commutes' : ∀ r x, to_fun r * x = x * to_fun r
+  smul_def' : ∀ r x, r • x = to_fun r * x
 
 end Prio
 
-/--  Embedding `R →+* A` given by `algebra` structure. -/
+/-- Embedding `R →+* A` given by `algebra` structure. -/
 def algebraMap (R : Type u) (A : Type v) [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] : R →+* A :=
   Algebra.toRingHom
 
-/--  Creating an algebra from a morphism to the center of a semiring. -/
-def RingHom.toAlgebra' {R S} [CommSemiringₓ R] [Semiringₓ S] (i : R →+* S) (h : ∀ c x, (i c*x) = x*i c) : Algebra R S :=
-  { smul := fun c x => i c*x, commutes' := h, smul_def' := fun c x => rfl, toRingHom := i }
+/-- Creating an algebra from a morphism to the center of a semiring. -/
+def RingHom.toAlgebra' {R S} [CommSemiringₓ R] [Semiringₓ S] (i : R →+* S) (h : ∀ c x, i c * x = x * i c) :
+    Algebra R S where
+  smul := fun c x => i c * x
+  commutes' := h
+  smul_def' := fun c x => rfl
+  toRingHom := i
 
-/--  Creating an algebra from a morphism to a commutative semiring. -/
+/-- Creating an algebra from a morphism to a commutative semiring. -/
 def RingHom.toAlgebra {R S} [CommSemiringₓ R] [CommSemiringₓ S] (i : R →+* S) : Algebra R S :=
   i.to_algebra' $ fun _ => mul_commₓ _
 
@@ -133,31 +136,33 @@ namespace Algebra
 
 variable {R : Type u} {S : Type v} {A : Type w} {B : Type _}
 
-/--  Let `R` be a commutative semiring, let `A` be a semiring with a `module R` structure.
+/-- Let `R` be a commutative semiring, let `A` be a semiring with a `module R` structure.
 If `(r • 1) * x = x * (r • 1) = r • x` for all `r : R` and `x : A`, then `A` is an `algebra`
 over `R`.
 
 See note [reducible non-instances]. -/
 @[reducible]
-def of_module' [CommSemiringₓ R] [Semiringₓ A] [Module R A] (h₁ : ∀ r : R x : A, ((r • 1)*x) = r • x)
-    (h₂ : ∀ r : R x : A, (x*r • 1) = r • x) : Algebra R A :=
-  { toFun := fun r => r • 1, map_one' := one_smul _ _,
-    map_mul' := fun r₁ r₂ => by
-      rw [h₁, mul_smul],
-    map_zero' := zero_smul _ _, map_add' := fun r₁ r₂ => add_smul r₁ r₂ 1,
-    commutes' := fun r x => by
-      simp only [h₁, h₂],
-    smul_def' := fun r x => by
-      simp only [h₁] }
+def of_module' [CommSemiringₓ R] [Semiringₓ A] [Module R A] (h₁ : ∀ r : R x : A, r • 1 * x = r • x)
+    (h₂ : ∀ r : R x : A, x * r • 1 = r • x) : Algebra R A where
+  toFun := fun r => r • 1
+  map_one' := one_smul _ _
+  map_mul' := fun r₁ r₂ => by
+    rw [h₁, mul_smul]
+  map_zero' := zero_smul _ _
+  map_add' := fun r₁ r₂ => add_smul r₁ r₂ 1
+  commutes' := fun r x => by
+    simp only [h₁, h₂]
+  smul_def' := fun r x => by
+    simp only [h₁]
 
-/--  Let `R` be a commutative semiring, let `A` be a semiring with a `module R` structure.
+/-- Let `R` be a commutative semiring, let `A` be a semiring with a `module R` structure.
 If `(r • x) * y = x * (r • y) = r • (x * y)` for all `r : R` and `x y : A`, then `A`
 is an `algebra` over `R`.
 
 See note [reducible non-instances]. -/
 @[reducible]
-def of_module [CommSemiringₓ R] [Semiringₓ A] [Module R A] (h₁ : ∀ r : R x y : A, ((r • x)*y) = r • x*y)
-    (h₂ : ∀ r : R x y : A, (x*r • y) = r • x*y) : Algebra R A :=
+def of_module [CommSemiringₓ R] [Semiringₓ A] [Module R A] (h₁ : ∀ r : R x y : A, r • x * y = r • (x * y))
+    (h₂ : ∀ r : R x y : A, x * r • y = r • (x * y)) : Algebra R A :=
   of_module'
     (fun r x => by
       rw [h₁, one_mulₓ])
@@ -170,41 +175,38 @@ variable [CommSemiringₓ R] [CommSemiringₓ S]
 
 variable [Semiringₓ A] [Algebra R A] [Semiringₓ B] [Algebra R B]
 
-/--  We keep this lemma private because it picks up the `algebra.to_has_scalar` instance
+/-- We keep this lemma private because it picks up the `algebra.to_has_scalar` instance
 which we set to priority 0 shortly. See `smul_def` below for the public version. -/
-private theorem smul_def'' (r : R) (x : A) : r • x = algebraMap R A r*x :=
+private theorem smul_def'' (r : R) (x : A) : r • x = algebraMap R A r * x :=
   Algebra.smul_def' r x
 
-/-- 
-To prove two algebra structures on a fixed `[comm_semiring R] [semiring A]` agree,
+/-- To prove two algebra structures on a fixed `[comm_semiring R] [semiring A]` agree,
 it suffices to check the `algebra_map`s agree.
 -/
 @[ext]
 theorem algebra_ext {R : Type _} [CommSemiringₓ R] {A : Type _} [Semiringₓ A] (P Q : Algebra R A)
     (w :
       ∀ r : R,
-        by
-          have := P
-          exact algebraMap R A r = by
+        (have := P
+          algebraMap R A r) =
           have := Q
-          exact algebraMap R A r) :
+          algebraMap R A r) :
     P = Q := by
-  (
-    rcases P with ⟨⟨P⟩⟩
-    rcases Q with ⟨⟨Q⟩⟩)
+  rcases P with ⟨⟨P⟩⟩
+  rcases Q with ⟨⟨Q⟩⟩
   congr
-  ·
-    funext r a
-    replace w := congr_argₓ (fun s => s*a) (w r)
+  · funext r a
+    replace w := congr_argₓ (fun s => s * a) (w r)
     simp only [← smul_def''] at w
     apply w
-  ·
-    ext r
+    
+  · ext r
     exact w r
-  ·
-    apply proof_irrel_heq
-  ·
-    apply proof_irrel_heq
+    
+  · apply proof_irrel_heq
+    
+  · apply proof_irrel_heq
+    
 
 instance (priority := 200) to_module : Module R A where
   one_smul := by
@@ -222,43 +224,44 @@ instance (priority := 200) to_module : Module R A where
 
 attribute [instance] Algebra.toHasScalar
 
-theorem smul_def (r : R) (x : A) : r • x = algebraMap R A r*x :=
+theorem smul_def (r : R) (x : A) : r • x = algebraMap R A r * x :=
   Algebra.smul_def' r x
 
 theorem algebra_map_eq_smul_one (r : R) : algebraMap R A r = r • 1 :=
-  calc algebraMap R A r = algebraMap R A r*1 := (mul_oneₓ _).symm
+  calc
+    algebraMap R A r = algebraMap R A r * 1 := (mul_oneₓ _).symm
     _ = r • 1 := (Algebra.smul_def r 1).symm
     
 
 theorem algebra_map_eq_smul_one' : ⇑algebraMap R A = fun r => r • (1 : A) :=
   funext algebra_map_eq_smul_one
 
-/--  `mul_comm` for `algebra`s when one element is from the base ring. -/
-theorem commutes (r : R) (x : A) : (algebraMap R A r*x) = x*algebraMap R A r :=
+/-- `mul_comm` for `algebra`s when one element is from the base ring. -/
+theorem commutes (r : R) (x : A) : algebraMap R A r * x = x * algebraMap R A r :=
   Algebra.commutes' r x
 
-/--  `mul_left_comm` for `algebra`s when one element is from the base ring. -/
-theorem left_comm (x : A) (r : R) (y : A) : (x*algebraMap R A r*y) = algebraMap R A r*x*y := by
+/-- `mul_left_comm` for `algebra`s when one element is from the base ring. -/
+theorem left_comm (x : A) (r : R) (y : A) : x * (algebraMap R A r * y) = algebraMap R A r * (x * y) := by
   rw [← mul_assocₓ, ← commutes, mul_assocₓ]
 
-/--  `mul_right_comm` for `algebra`s when one element is from the base ring. -/
-theorem right_comm (x : A) (r : R) (y : A) : ((x*algebraMap R A r)*y) = (x*y)*algebraMap R A r := by
+/-- `mul_right_comm` for `algebra`s when one element is from the base ring. -/
+theorem right_comm (x : A) (r : R) (y : A) : x * algebraMap R A r * y = x * y * algebraMap R A r := by
   rw [mul_assocₓ, commutes, ← mul_assocₓ]
 
 instance _root_.is_scalar_tower.right : IsScalarTower R A A :=
   ⟨fun x y z => by
     rw [smul_eq_mul, smul_eq_mul, smul_def, smul_def, mul_assocₓ]⟩
 
-/--  This is just a special case of the global `mul_smul_comm` lemma that requires less typeclass
+/-- This is just a special case of the global `mul_smul_comm` lemma that requires less typeclass
 search (and was here first). -/
 @[simp]
-protected theorem mul_smul_comm (s : R) (x y : A) : (x*s • y) = s • x*y := by
+protected theorem mul_smul_comm (s : R) (x y : A) : x * s • y = s • (x * y) := by
   rw [smul_def, smul_def, left_comm]
 
-/--  This is just a special case of the global `smul_mul_assoc` lemma that requires less typeclass
+/-- This is just a special case of the global `smul_mul_assoc` lemma that requires less typeclass
 search (and was here first). -/
 @[simp]
-protected theorem smul_mul_assoc (r : R) (x y : A) : ((r • x)*y) = r • x*y :=
+protected theorem smul_mul_assoc (r : R) (x y : A) : r • x * y = r • (x * y) :=
   smul_mul_assoc r x y
 
 section
@@ -284,15 +287,15 @@ theorem bit0_smul_bit1 : bit0 r • bit1 a = r • bit0 (bit1 a) := by
 theorem bit1_smul_one : bit1 r • (1 : A) = bit1 (r • (1 : A)) := by
   simp [bit1, add_smul]
 
-theorem bit1_smul_one' : bit1 r • (1 : A) = (r • 2)+1 := by
+theorem bit1_smul_one' : bit1 r • (1 : A) = r • 2 + 1 := by
   simp [bit1, bit0, add_smul, smul_add]
 
 @[simp]
-theorem bit1_smul_bit0 : bit1 r • bit0 a = (r • bit0 (bit0 a))+bit0 a := by
+theorem bit1_smul_bit0 : bit1 r • bit0 a = r • bit0 (bit0 a) + bit0 a := by
   simp [bit1, add_smul, smul_add]
 
 @[simp]
-theorem bit1_smul_bit1 : bit1 r • bit1 a = (r • bit0 (bit1 a))+bit1 a := by
+theorem bit1_smul_bit1 : bit1 r • bit1 a = r • bit0 (bit1 a) + bit1 a := by
   simp only [bit0, bit1, add_smul, smul_add, one_smul]
   abel
 
@@ -300,8 +303,7 @@ end
 
 variable (R A)
 
-/-- 
-The canonical ring homomorphism `algebra_map R A : R →* A` for any `R`-algebra `A`,
+/-- The canonical ring homomorphism `algebra_map R A : R →* A` for any `R`-algebra `A`,
 packaged as an `R`-linear map.
 -/
 protected def LinearMap : R →ₗ[R] A :=
@@ -331,7 +333,7 @@ theorem map_eq_self (x : R) : algebraMap R R x = x :=
   rfl
 
 @[simp]
-theorem smul_eq_mul (x y : R) : x • y = x*y :=
+theorem smul_eq_mul (x y : R) : x • y = x * y :=
   rfl
 
 end id
@@ -359,12 +361,12 @@ theorem algebra_map_prod_apply (r : R) : algebraMap R (A × B) r = (algebraMap R
 
 end Prod
 
-/--  Algebra over a subsemiring. This builds upon `subsemiring.module`. -/
+/-- Algebra over a subsemiring. This builds upon `subsemiring.module`. -/
 instance of_subsemiring (S : Subsemiring R) : Algebra S A :=
   { (algebraMap R A).comp S.subtype with smul := · • ·, commutes' := fun r x => Algebra.commutes r x,
     smul_def' := fun r x => Algebra.smul_def r x }
 
-/--  Algebra over a subring. This builds upon `subring.module`. -/
+/-- Algebra over a subring. This builds upon `subring.module`. -/
 instance of_subring {R A : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] (S : Subring R) : Algebra S A :=
   { Algebra.ofSubsemiring S.to_subsemiring, (algebraMap R A).comp S.subtype with smul := · • · }
 
@@ -379,7 +381,7 @@ theorem coe_algebra_map_of_subring {R : Type _} [CommRingₓ R] (S : Subring R) 
 theorem algebra_map_of_subring_apply {R : Type _} [CommRingₓ R] (S : Subring R) (x : S) : algebraMap S R x = x :=
   rfl
 
-/--  Explicit characterization of the submonoid map in the case of an algebra.
+/-- Explicit characterization of the submonoid map in the case of an algebra.
 `S` is made explicit to help with type inference -/
 def algebra_map_submonoid (S : Type _) [Semiringₓ S] [Algebra R S] (M : Submonoid R) : Submonoid S :=
   Submonoid.map (algebraMap R S : R →* S) M
@@ -396,7 +398,7 @@ variable [CommRingₓ R]
 
 variable (R)
 
-/--  A `semiring` that is an `algebra` over a commutative ring carries a natural `ring` structure.
+/-- A `semiring` that is an `algebra` over a commutative ring carries a natural `ring` structure.
 See note [reducible non-instances]. -/
 @[reducible]
 def semiring_to_ring [Semiringₓ A] [Algebra R A] : Ringₓ A :=
@@ -405,16 +407,16 @@ def semiring_to_ring [Semiringₓ A] [Algebra R A] : Ringₓ A :=
 variable {R}
 
 theorem mul_sub_algebra_map_commutes [Ringₓ A] [Algebra R A] (x : A) (r : R) :
-    (x*x - algebraMap R A r) = (x - algebraMap R A r)*x := by
+    x * (x - algebraMap R A r) = (x - algebraMap R A r) * x := by
   rw [mul_sub, ← commutes, sub_mul]
 
 theorem mul_sub_algebra_map_pow_commutes [Ringₓ A] [Algebra R A] (x : A) (r : R) (n : ℕ) :
-    (x*(x - algebraMap R A r) ^ n) = ((x - algebraMap R A r) ^ n)*x := by
+    x * (x - algebraMap R A r) ^ n = (x - algebraMap R A r) ^ n * x := by
   induction' n with n ih
-  ·
-    simp
-  ·
-    rw [pow_succₓ, ← mul_assocₓ, mul_sub_algebra_map_commutes, mul_assocₓ, ih, ← mul_assocₓ]
+  · simp
+    
+  · rw [pow_succₓ, ← mul_assocₓ, mul_sub_algebra_map_commutes, mul_assocₓ, ih, ← mul_assocₓ]
+    
 
 end Ringₓ
 
@@ -430,7 +432,7 @@ section Ringₓ
 
 variable [CommRingₓ R]
 
-/--  If `algebra_map R A` is injective and `A` has no zero divisors,
+/-- If `algebra_map R A` is injective and `A` has no zero divisors,
 `R`-multiples in `A` are zero only if one of the factors is zero.
 
 Cannot be an instance because there is no `injective (algebra_map R A)` typeclass.
@@ -443,7 +445,7 @@ variable (R A)
 
 theorem algebra_map_injective [Ringₓ A] [Nontrivial A] [Algebra R A] [NoZeroSmulDivisors R A] :
     Function.Injective (algebraMap R A) :=
-  suffices Function.Injective fun c : R => c • (1 : A)by
+  suffices Function.Injective fun c : R => c • (1 : A) by
     convert this
     ext
     rw [Algebra.smul_def, mul_oneₓ]
@@ -509,7 +511,7 @@ theorem ker_algebra_map_End (K : Type u) (V : Type v) [Field K] [AddCommGroupₓ
 
 end Module
 
-/--  Defining the homomorphism in the category R-Alg. -/
+/-- Defining the homomorphism in the category R-Alg. -/
 @[nolint has_inhabited_instance]
 structure AlgHom (R : Type u) (A : Type v) (B : Type w) [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A]
   [Algebra R B] extends RingHom A B where
@@ -541,16 +543,16 @@ initialize_simps_projections AlgHom (toFun → apply)
 theorem to_fun_eq_coe (f : A →ₐ[R] B) : f.to_fun = f :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : RingHomClass ( A →ₐ[ R ] B ) A B
-  where
-    coe := to_fun
-      coe_injective' f g h := by cases f cases g congr
-      map_add := map_add'
-      map_zero := map_zero'
-      map_mul := map_mul'
-      map_one := map_one'
+instance : RingHomClass (A →ₐ[R] B) A B where
+  coe := to_fun
+  coe_injective' := fun f g h => by
+    cases f
+    cases g
+    congr
+  map_add := map_add'
+  map_zero := map_zero'
+  map_mul := map_mul'
+  map_one := map_one'
 
 instance coe_ring_hom : Coe (A →ₐ[R] B) (A →+* B) :=
   ⟨AlgHom.toRingHom⟩
@@ -622,13 +624,13 @@ theorem commutes (r : R) : φ (algebraMap R A r) = algebraMap R B r :=
 theorem comp_algebra_map : (φ : A →+* B).comp (algebraMap R A) = algebraMap R B :=
   RingHom.ext $ φ.commutes
 
-theorem map_add (r s : A) : φ (r+s) = φ r+φ s :=
+theorem map_add (r s : A) : φ (r + s) = φ r + φ s :=
   map_add _ _ _
 
 theorem map_zero : φ 0 = 0 :=
   map_zero _
 
-theorem map_mul x y : φ (x*y) = φ x*φ y :=
+theorem map_mul x y : φ (x * y) = φ x * φ y :=
   map_mul _ _ _
 
 theorem map_one : φ 1 = 1 :=
@@ -641,165 +643,8 @@ theorem map_pow (x : A) (n : ℕ) : φ (x ^ n) = φ x ^ n :=
 theorem map_smul (r : R) (x : A) : φ (r • x) = r • φ x := by
   simp only [Algebra.smul_def, map_mul, commutes]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `map_sum [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`ι] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.explicitBinder "(" [`f] [":" (Term.arrow `ι "→" `A)] [] ")")
-    (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [`ι])] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app
-      `φ
-      [(Algebra.BigOperators.Basic.«term∑_in_,_»
-        "∑"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-        " in "
-        `s
-        ", "
-        (Term.app `f [`x]))])
-     "="
-     (Algebra.BigOperators.Basic.«term∑_in_,_»
-      "∑"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-      " in "
-      `s
-      ", "
-      (Term.app `φ [(Term.app `f [`x])])))))
-  (Command.declValSimple ":=" (Term.app `φ.to_ring_hom.map_sum [`f `s]) [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `φ.to_ring_hom.map_sum [`f `s])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `φ.to_ring_hom.map_sum
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.app
-    `φ
-    [(Algebra.BigOperators.Basic.«term∑_in_,_»
-      "∑"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-      " in "
-      `s
-      ", "
-      (Term.app `f [`x]))])
-   "="
-   (Algebra.BigOperators.Basic.«term∑_in_,_»
-    "∑"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-    " in "
-    `s
-    ", "
-    (Term.app `φ [(Term.app `f [`x])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∑_in_,_»
-   "∑"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-   " in "
-   `s
-   ", "
-   (Term.app `φ [(Term.app `f [`x])]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∑_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `φ [(Term.app `f [`x])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `f [`x])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `f [`x]) []] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `φ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  map_sum
-  { ι : Type _ } ( f : ι → A ) ( s : Finset ι ) : φ ∑ x in s , f x = ∑ x in s , φ f x
-  := φ.to_ring_hom.map_sum f s
+theorem map_sum {ι : Type _} (f : ι → A) (s : Finset ι) : φ (∑ x in s, f x) = ∑ x in s, φ (f x) :=
+  φ.to_ring_hom.map_sum f s
 
 theorem map_finsupp_sum {α : Type _} [HasZero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A) :
     φ (f.sum g) = f.sum fun i a => φ (g i a) :=
@@ -815,7 +660,7 @@ theorem map_bit0 x : φ (bit0 x) = bit0 (φ x) :=
 theorem map_bit1 x : φ (bit1 x) = bit1 (φ x) :=
   map_bit1 _ _
 
-/--  If a `ring_hom` is `R`-linear, then it is an `alg_hom`. -/
+/-- If a `ring_hom` is `R`-linear, then it is an `alg_hom`. -/
 def mk' (f : A →+* B) (h : ∀ c : R x, f (c • x) = c • f x) : A →ₐ[R] B :=
   { f with toFun := f,
     commutes' := fun c => by
@@ -829,7 +674,7 @@ section
 
 variable (R A)
 
-/--  Identity map as an `alg_hom`. -/
+/-- Identity map as an `alg_hom`. -/
 protected def id : A →ₐ[R] A :=
   { RingHom.id A with commutes' := fun _ => rfl }
 
@@ -846,7 +691,7 @@ end
 theorem id_apply (p : A) : AlgHom.id R A p = p :=
   rfl
 
-/--  Composition of algebra homeomorphisms. -/
+/-- Composition of algebra homeomorphisms. -/
 def comp (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) : A →ₐ[R] C :=
   { φ₁.to_ring_hom.comp (↑φ₂) with
     commutes' := fun r : R => by
@@ -873,9 +718,11 @@ theorem id_comp : (AlgHom.id R B).comp φ = φ :=
 theorem comp_assoc (φ₁ : C →ₐ[R] D) (φ₂ : B →ₐ[R] C) (φ₃ : A →ₐ[R] B) : (φ₁.comp φ₂).comp φ₃ = φ₁.comp (φ₂.comp φ₃) :=
   ext $ fun x => rfl
 
-/--  R-Alg ⥤ R-Mod -/
-def to_linear_map : A →ₗ[R] B :=
-  { toFun := φ, map_add' := φ.map_add, map_smul' := φ.map_smul }
+/-- R-Alg ⥤ R-Mod -/
+def to_linear_map : A →ₗ[R] B where
+  toFun := φ
+  map_add' := φ.map_add
+  map_smul' := φ.map_smul
 
 @[simp]
 theorem to_linear_map_apply (p : A) : φ.to_linear_map p = φ p :=
@@ -893,9 +740,9 @@ theorem comp_to_linear_map (f : A →ₐ[R] B) (g : B →ₐ[R] C) :
 theorem to_linear_map_id : to_linear_map (AlgHom.id R A) = LinearMap.id :=
   LinearMap.ext $ fun _ => rfl
 
-/--  Promote a `linear_map` to an `alg_hom` by supplying proofs about the behavior on `1` and `*`. -/
+/-- Promote a `linear_map` to an `alg_hom` by supplying proofs about the behavior on `1` and `*`. -/
 @[simps]
-def of_linear_map (f : A →ₗ[R] B) (map_one : f 1 = 1) (map_mul : ∀ x y, f (x*y) = f x*f y) : A →ₐ[R] B :=
+def of_linear_map (f : A →ₗ[R] B) (map_one : f 1 = 1) (map_mul : ∀ x y, f (x * y) = f x * f y) : A →ₐ[R] B :=
   { f.to_add_monoid_hom with toFun := f, map_one' := map_one, map_mul' := map_mul,
     commutes' := fun c => by
       simp only [Algebra.algebra_map_eq_smul_one, f.map_smul, map_one] }
@@ -920,11 +767,11 @@ theorem map_list_prod (s : List A) : φ s.prod = (s.map φ).Prod :=
 
 section Prod
 
-/--  First projection as `alg_hom`. -/
+/-- First projection as `alg_hom`. -/
 def fst : A × B →ₐ[R] A :=
   { RingHom.fst A B with commutes' := fun r => rfl }
 
-/--  Second projection as `alg_hom`. -/
+/-- Second projection as `alg_hom`. -/
 def snd : A × B →ₐ[R] B :=
   { RingHom.snd A B with commutes' := fun r => rfl }
 
@@ -944,165 +791,8 @@ variable [Algebra R A] [Algebra R B] (φ : A →ₐ[R] B)
 theorem map_multiset_prod (s : Multiset A) : φ s.prod = (s.map φ).Prod :=
   φ.to_ring_hom.map_multiset_prod s
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `map_prod [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`ι] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.explicitBinder "(" [`f] [":" (Term.arrow `ι "→" `A)] [] ")")
-    (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [`ι])] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app
-      `φ
-      [(Algebra.BigOperators.Basic.«term∏_in_,_»
-        "∏"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-        " in "
-        `s
-        ", "
-        (Term.app `f [`x]))])
-     "="
-     (Algebra.BigOperators.Basic.«term∏_in_,_»
-      "∏"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-      " in "
-      `s
-      ", "
-      (Term.app `φ [(Term.app `f [`x])])))))
-  (Command.declValSimple ":=" (Term.app `φ.to_ring_hom.map_prod [`f `s]) [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `φ.to_ring_hom.map_prod [`f `s])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `φ.to_ring_hom.map_prod
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.app
-    `φ
-    [(Algebra.BigOperators.Basic.«term∏_in_,_»
-      "∏"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-      " in "
-      `s
-      ", "
-      (Term.app `f [`x]))])
-   "="
-   (Algebra.BigOperators.Basic.«term∏_in_,_»
-    "∏"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-    " in "
-    `s
-    ", "
-    (Term.app `φ [(Term.app `f [`x])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∏_in_,_»
-   "∏"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-   " in "
-   `s
-   ", "
-   (Term.app `φ [(Term.app `f [`x])]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∏_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `φ [(Term.app `f [`x])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `f [`x])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `f [`x]) []] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `φ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  map_prod
-  { ι : Type _ } ( f : ι → A ) ( s : Finset ι ) : φ ∏ x in s , f x = ∏ x in s , φ f x
-  := φ.to_ring_hom.map_prod f s
+theorem map_prod {ι : Type _} (f : ι → A) (s : Finset ι) : φ (∏ x in s, f x) = ∏ x in s, φ (f x) :=
+  φ.to_ring_hom.map_prod f s
 
 theorem map_finsupp_prod {α : Type _} [HasZero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A) :
     φ (f.prod g) = f.prod fun i a => φ (g i a) :=
@@ -1154,7 +844,7 @@ end AlgHom
 theorem Rat.smul_one_eq_coe {A : Type _} [DivisionRing A] [Algebra ℚ A] (m : ℚ) : m • (1 : A) = ↑m := by
   rw [Algebra.smul_def, mul_oneₓ, RingHom.eq_rat_cast]
 
-/--  An equivalence of algebras is an equivalence of rings commuting with the actions of scalars. -/
+/-- An equivalence of algebras is an equivalence of rings commuting with the actions of scalars. -/
 structure AlgEquiv (R : Type u) (A : Type v) (B : Type w) [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A]
   [Algebra R B] extends A ≃ B, A ≃* B, A ≃+ B, A ≃+* B where
   commutes' : ∀ r : R, to_fun (algebraMap R A r) = algebraMap R B r
@@ -1190,10 +880,10 @@ theorem ext {f g : A₁ ≃ₐ[R] A₂} (h : ∀ a, f a = g a) : f = g := by
   cases f
   cases g
   congr
-  ·
-    exact funext h
-  ·
-    exact congr_argₓ Equivₓ.invFun h₁
+  · exact funext h
+    
+  · exact congr_argₓ Equivₓ.invFun h₁
+    
 
 protected theorem congr_argₓ {f : A₁ ≃ₐ[R] A₂} : ∀ {x x' : A₁}, x = x' → f x = f x'
   | _, _, rfl => rfl
@@ -1240,7 +930,7 @@ theorem coe_ring_equiv_injective : Function.Injective (coeₓ : (A₁ ≃ₐ[R] 
   ext $ RingEquiv.congr_fun h
 
 @[simp]
-theorem map_add : ∀ x y, e (x+y) = e x+e y :=
+theorem map_add : ∀ x y, e (x + y) = e x + e y :=
   e.to_add_equiv.map_add
 
 @[simp]
@@ -1248,7 +938,7 @@ theorem map_zero : e 0 = 0 :=
   e.to_add_equiv.map_zero
 
 @[simp]
-theorem map_mul : ∀ x y, e (x*y) = e x*e y :=
+theorem map_mul : ∀ x y, e (x * y) = e x * e y :=
   e.to_mul_equiv.map_mul
 
 @[simp]
@@ -1263,171 +953,14 @@ theorem commutes : ∀ r : R, e (algebraMap R A₁ r) = algebraMap R A₂ r :=
 theorem map_smul (r : R) (x : A₁) : e (r • x) = r • e x := by
   simp only [Algebra.smul_def, map_mul, commutes]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `map_sum [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`ι] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.explicitBinder "(" [`f] [":" (Term.arrow `ι "→" `A₁)] [] ")")
-    (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [`ι])] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app
-      `e
-      [(Algebra.BigOperators.Basic.«term∑_in_,_»
-        "∑"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-        " in "
-        `s
-        ", "
-        (Term.app `f [`x]))])
-     "="
-     (Algebra.BigOperators.Basic.«term∑_in_,_»
-      "∑"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-      " in "
-      `s
-      ", "
-      (Term.app `e [(Term.app `f [`x])])))))
-  (Command.declValSimple ":=" (Term.app `e.to_add_equiv.map_sum [`f `s]) [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `e.to_add_equiv.map_sum [`f `s])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `e.to_add_equiv.map_sum
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.app
-    `e
-    [(Algebra.BigOperators.Basic.«term∑_in_,_»
-      "∑"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-      " in "
-      `s
-      ", "
-      (Term.app `f [`x]))])
-   "="
-   (Algebra.BigOperators.Basic.«term∑_in_,_»
-    "∑"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-    " in "
-    `s
-    ", "
-    (Term.app `e [(Term.app `f [`x])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∑_in_,_»
-   "∑"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-   " in "
-   `s
-   ", "
-   (Term.app `e [(Term.app `f [`x])]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∑_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `e [(Term.app `f [`x])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `f [`x])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `f [`x]) []] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `e
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  map_sum
-  { ι : Type _ } ( f : ι → A₁ ) ( s : Finset ι ) : e ∑ x in s , f x = ∑ x in s , e f x
-  := e.to_add_equiv.map_sum f s
+theorem map_sum {ι : Type _} (f : ι → A₁) (s : Finset ι) : e (∑ x in s, f x) = ∑ x in s, e (f x) :=
+  e.to_add_equiv.map_sum f s
 
 theorem map_finsupp_sum {α : Type _} [HasZero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A₁) :
     e (f.sum g) = f.sum fun i b => e (g i b) :=
   e.map_sum _ _
 
-/--  Interpret an algebra equivalence as an algebra homomorphism.
+/-- Interpret an algebra equivalence as an algebra homomorphism.
 
 This definition is included for symmetry with the other `to_*_hom` projections.
 The `simp` normal form is to use the coercion of the `has_coe_to_alg_hom` instance. -/
@@ -1448,7 +981,7 @@ theorem coe_alg_hom : ((e : A₁ →ₐ[R] A₂) : A₁ → A₂) = e :=
 theorem coe_alg_hom_injective : Function.Injective (coeₓ : (A₁ ≃ₐ[R] A₂) → A₁ →ₐ[R] A₂) := fun e₁ e₂ h =>
   ext $ AlgHom.congr_fun h
 
-/--  The two paths coercion can take to a `ring_hom` are equivalent -/
+/-- The two paths coercion can take to a `ring_hom` are equivalent -/
 theorem coe_ring_hom_commutes : ((e : A₁ →ₐ[R] A₂) : A₁ →+* A₂) = ((e : A₁ ≃+* A₂) : A₁ →+* A₂) :=
   rfl
 
@@ -1471,7 +1004,7 @@ instance : HasOne (A₁ ≃ₐ[R] A₁) :=
 instance : Inhabited (A₁ ≃ₐ[R] A₁) :=
   ⟨1⟩
 
-/--  Algebra equivalences are reflexive. -/
+/-- Algebra equivalences are reflexive. -/
 @[refl]
 def refl : A₁ ≃ₐ[R] A₁ :=
   1
@@ -1484,7 +1017,7 @@ theorem refl_to_alg_hom : ↑(refl : A₁ ≃ₐ[R] A₁) = AlgHom.id R A₁ :=
 theorem coe_refl : ⇑(refl : A₁ ≃ₐ[R] A₁) = id :=
   rfl
 
-/--  Algebra equivalences are symmetric. -/
+/-- Algebra equivalences are symmetric. -/
 @[symm]
 def symm (e : A₁ ≃ₐ[R] A₂) : A₂ ≃ₐ[R] A₁ :=
   { e.to_ring_equiv.symm with
@@ -1494,7 +1027,7 @@ def symm (e : A₁ ≃ₐ[R] A₂) : A₂ ≃ₐ[R] A₁ :=
       change _ = e _
       rw [e.commutes] }
 
-/--  See Note [custom simps projection] -/
+/-- See Note [custom simps projection] -/
 def simps.symm_apply (e : A₁ ≃ₐ[R] A₂) : A₂ → A₁ :=
   e.symm
 
@@ -1522,7 +1055,7 @@ theorem symm_mk f f' h₁ h₂ h₃ h₄ h₅ :
       { (⟨f, f', h₁, h₂, h₃, h₄, h₅⟩ : A₁ ≃ₐ[R] A₂).symm with toFun := f', invFun := f } :=
   rfl
 
-/--  Algebra equivalences are transitive. -/
+/-- Algebra equivalences are transitive. -/
 @[trans]
 def trans (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) : A₁ ≃ₐ[R] A₃ :=
   { e₁.to_ring_equiv.trans e₂.to_ring_equiv with
@@ -1565,18 +1098,18 @@ theorem left_inverse_symm (e : A₁ ≃ₐ[R] A₂) : Function.LeftInverse e.sym
 theorem right_inverse_symm (e : A₁ ≃ₐ[R] A₂) : Function.RightInverse e.symm e :=
   e.right_inv
 
-/--  If `A₁` is equivalent to `A₁'` and `A₂` is equivalent to `A₂'`, then the type of maps
+/-- If `A₁` is equivalent to `A₁'` and `A₂` is equivalent to `A₂'`, then the type of maps
 `A₁ →ₐ[R] A₂` is equivalent to the type of maps `A₁' →ₐ[R] A₂'`. -/
 def arrow_congr {A₁' A₂' : Type _} [Semiringₓ A₁'] [Semiringₓ A₂'] [Algebra R A₁'] [Algebra R A₂'] (e₁ : A₁ ≃ₐ[R] A₁')
-    (e₂ : A₂ ≃ₐ[R] A₂') : (A₁ →ₐ[R] A₂) ≃ (A₁' →ₐ[R] A₂') :=
-  { toFun := fun f => (e₂.to_alg_hom.comp f).comp e₁.symm.to_alg_hom,
-    invFun := fun f => (e₂.symm.to_alg_hom.comp f).comp e₁.to_alg_hom,
-    left_inv := fun f => by
-      simp only [AlgHom.comp_assoc, to_alg_hom_eq_coe, symm_comp]
-      simp only [← AlgHom.comp_assoc, symm_comp, AlgHom.id_comp, AlgHom.comp_id],
-    right_inv := fun f => by
-      simp only [AlgHom.comp_assoc, to_alg_hom_eq_coe, comp_symm]
-      simp only [← AlgHom.comp_assoc, comp_symm, AlgHom.id_comp, AlgHom.comp_id] }
+    (e₂ : A₂ ≃ₐ[R] A₂') : (A₁ →ₐ[R] A₂) ≃ (A₁' →ₐ[R] A₂') where
+  toFun := fun f => (e₂.to_alg_hom.comp f).comp e₁.symm.to_alg_hom
+  invFun := fun f => (e₂.symm.to_alg_hom.comp f).comp e₁.to_alg_hom
+  left_inv := fun f => by
+    simp only [AlgHom.comp_assoc, to_alg_hom_eq_coe, symm_comp]
+    simp only [← AlgHom.comp_assoc, symm_comp, AlgHom.id_comp, AlgHom.comp_id]
+  right_inv := fun f => by
+    simp only [AlgHom.comp_assoc, to_alg_hom_eq_coe, comp_symm]
+    simp only [← AlgHom.comp_assoc, comp_symm, AlgHom.id_comp, AlgHom.comp_id]
 
 theorem arrow_congr_comp {A₁' A₂' A₃' : Type _} [Semiringₓ A₁'] [Semiringₓ A₂'] [Semiringₓ A₃'] [Algebra R A₁']
     [Algebra R A₂'] [Algebra R A₃'] (e₁ : A₁ ≃ₐ[R] A₁') (e₂ : A₂ ≃ₐ[R] A₂') (e₃ : A₃ ≃ₐ[R] A₃') (f : A₁ →ₐ[R] A₂)
@@ -1604,7 +1137,7 @@ theorem arrow_congr_symm {A₁' A₂' : Type _} [Semiringₓ A₁'] [Semiringₓ
   ext
   rfl
 
-/--  If an algebra morphism has an inverse, it is a algebra isomorphism. -/
+/-- If an algebra morphism has an inverse, it is a algebra isomorphism. -/
 def of_alg_hom (f : A₁ →ₐ[R] A₂) (g : A₂ →ₐ[R] A₁) (h₁ : f.comp g = AlgHom.id R A₂) (h₂ : g.comp f = AlgHom.id R A₁) :
     A₁ ≃ₐ[R] A₂ :=
   { f with toFun := f, invFun := g, left_inv := AlgHom.ext_iff.1 h₂, right_inv := AlgHom.ext_iff.1 h₁ }
@@ -1620,11 +1153,19 @@ theorem of_alg_hom_symm (f : A₁ →ₐ[R] A₂) (g : A₂ →ₐ[R] A₁) h₁
     (of_alg_hom f g h₁ h₂).symm = of_alg_hom g f h₂ h₁ :=
   rfl
 
-/--  Promotes a bijective algebra homomorphism to an algebra equivalence. -/
+/-- Promotes a bijective algebra homomorphism to an algebra equivalence. -/
 noncomputable def of_bijective (f : A₁ →ₐ[R] A₂) (hf : Function.Bijective f) : A₁ ≃ₐ[R] A₂ :=
   { RingEquiv.ofBijective (f : A₁ →+* A₂) hf, f with }
 
-/--  Forgetting the multiplicative structures, an equivalence of algebras is a linear equivalence. -/
+@[simp]
+theorem coe_of_bijective {f : A₁ →ₐ[R] A₂} {hf : Function.Bijective f} : (AlgEquiv.ofBijective f hf : A₁ → A₂) = f :=
+  rfl
+
+theorem of_bijective_apply {f : A₁ →ₐ[R] A₂} {hf : Function.Bijective f} (a : A₁) :
+    (AlgEquiv.ofBijective f hf) a = f a :=
+  rfl
+
+/-- Forgetting the multiplicative structures, an equivalence of algebras is a linear equivalence. -/
 @[simps apply]
 def to_linear_equiv (e : A₁ ≃ₐ[R] A₂) : A₁ ≃ₗ[R] A₂ :=
   { e with toFun := e, map_smul' := e.map_smul, invFun := e.symm }
@@ -1645,7 +1186,7 @@ theorem to_linear_equiv_trans (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R
 theorem to_linear_equiv_injective : Function.Injective (to_linear_equiv : _ → A₁ ≃ₗ[R] A₂) := fun e₁ e₂ h =>
   ext $ LinearEquiv.congr_fun h
 
-/--  Interpret an algebra equivalence as a linear map. -/
+/-- Interpret an algebra equivalence as a linear map. -/
 def to_linear_map : A₁ →ₗ[R] A₂ :=
   e.to_alg_hom.to_linear_map
 
@@ -1671,11 +1212,10 @@ theorem trans_to_linear_map (f : A₁ ≃ₐ[R] A₂) (g : A₂ ≃ₐ[R] A₃) 
 
 section OfLinearEquiv
 
-variable (l : A₁ ≃ₗ[R] A₂) (map_mul : ∀ x y : A₁, l (x*y) = l x*l y)
+variable (l : A₁ ≃ₗ[R] A₂) (map_mul : ∀ x y : A₁, l (x * y) = l x * l y)
   (commutes : ∀ r : R, l (algebraMap R A₁ r) = algebraMap R A₂ r)
 
-/-- 
-Upgrade a linear equivalence to an algebra equivalence,
+/-- Upgrade a linear equivalence to an algebra equivalence,
 given that it distributes over multiplication and action of scalars.
 -/
 @[simps apply]
@@ -1701,36 +1241,39 @@ theorem to_linear_equiv_of_linear_equiv : to_linear_equiv (of_linear_equiv l map
 
 end OfLinearEquiv
 
--- failed to format: format: uncaught backtrack exception
-instance
-  aut
-  : Groupₓ ( A₁ ≃ₐ[ R ] A₁ )
-  where
-    mul ϕ ψ := ψ.trans ϕ
-      mul_assoc ϕ ψ χ := rfl
-      one := 1
-      one_mul ϕ := by ext rfl
-      mul_one ϕ := by ext rfl
-      inv := symm
-      mul_left_inv ϕ := by ext exact symm_apply_apply ϕ a
+instance aut : Groupₓ (A₁ ≃ₐ[R] A₁) where
+  mul := fun ϕ ψ => ψ.trans ϕ
+  mul_assoc := fun ϕ ψ χ => rfl
+  one := 1
+  one_mul := fun ϕ => by
+    ext
+    rfl
+  mul_one := fun ϕ => by
+    ext
+    rfl
+  inv := symm
+  mul_left_inv := fun ϕ => by
+    ext
+    exact symm_apply_apply ϕ a
 
 @[simp]
-theorem mul_apply (e₁ e₂ : A₁ ≃ₐ[R] A₁) (x : A₁) : (e₁*e₂) x = e₁ (e₂ x) :=
+theorem mul_apply (e₁ e₂ : A₁ ≃ₐ[R] A₁) (x : A₁) : (e₁ * e₂) x = e₁ (e₂ x) :=
   rfl
 
-/--  An algebra isomorphism induces a group isomorphism between automorphism groups -/
+/-- An algebra isomorphism induces a group isomorphism between automorphism groups -/
 @[simps apply]
-def aut_congr (ϕ : A₁ ≃ₐ[R] A₂) : (A₁ ≃ₐ[R] A₁) ≃* A₂ ≃ₐ[R] A₂ :=
-  { toFun := fun ψ => ϕ.symm.trans (ψ.trans ϕ), invFun := fun ψ => ϕ.trans (ψ.trans ϕ.symm),
-    left_inv := fun ψ => by
-      ext
-      simp_rw [trans_apply, symm_apply_apply],
-    right_inv := fun ψ => by
-      ext
-      simp_rw [trans_apply, apply_symm_apply],
-    map_mul' := fun ψ χ => by
-      ext
-      simp only [mul_apply, trans_apply, symm_apply_apply] }
+def aut_congr (ϕ : A₁ ≃ₐ[R] A₂) : (A₁ ≃ₐ[R] A₁) ≃* A₂ ≃ₐ[R] A₂ where
+  toFun := fun ψ => ϕ.symm.trans (ψ.trans ϕ)
+  invFun := fun ψ => ϕ.trans (ψ.trans ϕ.symm)
+  left_inv := fun ψ => by
+    ext
+    simp_rw [trans_apply, symm_apply_apply]
+  right_inv := fun ψ => by
+    ext
+    simp_rw [trans_apply, apply_symm_apply]
+  map_mul' := fun ψ χ => by
+    ext
+    simp only [mul_apply, trans_apply, symm_apply_apply]
 
 @[simp]
 theorem aut_congr_refl : aut_congr AlgEquiv.refl = MulEquiv.refl (A₁ ≃ₐ[R] A₁) := by
@@ -1746,22 +1289,17 @@ theorem aut_congr_trans (ϕ : A₁ ≃ₐ[R] A₂) (ψ : A₂ ≃ₐ[R] A₃) :
     (aut_congr ϕ).trans (aut_congr ψ) = aut_congr (ϕ.trans ψ) :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-/--
-    The tautological action by `A₁ ≃ₐ[R] A₁` on `A₁`.
-    
-    This generalizes `function.End.apply_mul_action`. -/
-  instance
-    apply_mul_semiring_action
-    : MulSemiringAction ( A₁ ≃ₐ[ R ] A₁ ) A₁
-    where
-      smul := · $ ·
-        smul_zero := AlgEquiv.map_zero
-        smul_add := AlgEquiv.map_add
-        smul_one := AlgEquiv.map_one
-        smul_mul := AlgEquiv.map_mul
-        one_smul _ := rfl
-        mul_smul _ _ _ := rfl
+/-- The tautological action by `A₁ ≃ₐ[R] A₁` on `A₁`.
+
+This generalizes `function.End.apply_mul_action`. -/
+instance apply_mul_semiring_action : MulSemiringAction (A₁ ≃ₐ[R] A₁) A₁ where
+  smul := · $ ·
+  smul_zero := AlgEquiv.map_zero
+  smul_add := AlgEquiv.map_add
+  smul_one := AlgEquiv.map_one
+  smul_mul := AlgEquiv.map_mul
+  one_smul := fun _ => rfl
+  mul_smul := fun _ _ _ => rfl
 
 @[simp]
 protected theorem smul_def (f : A₁ ≃ₐ[R] A₁) (a : A₁) : f • a = f a :=
@@ -1770,11 +1308,11 @@ protected theorem smul_def (f : A₁ ≃ₐ[R] A₁) (a : A₁) : f • a = f a 
 instance apply_has_faithful_scalar : HasFaithfulScalar (A₁ ≃ₐ[R] A₁) A₁ :=
   ⟨fun _ _ => AlgEquiv.ext⟩
 
--- failed to format: format: uncaught backtrack exception
-instance apply_smul_comm_class : SmulCommClass R ( A₁ ≃ₐ[ R ] A₁ ) A₁ where smul_comm r e a := ( e.map_smul r a ) . symm
+instance apply_smul_comm_class : SmulCommClass R (A₁ ≃ₐ[R] A₁) A₁ where
+  smul_comm := fun r e a => (e.map_smul r a).symm
 
--- failed to format: format: uncaught backtrack exception
-instance apply_smul_comm_class' : SmulCommClass ( A₁ ≃ₐ[ R ] A₁ ) R A₁ where smul_comm e r a := e.map_smul r a
+instance apply_smul_comm_class' : SmulCommClass (A₁ ≃ₐ[R] A₁) R A₁ where
+  smul_comm := fun e r a => e.map_smul r a
 
 @[simp]
 theorem algebra_map_eq_apply (e : A₁ ≃ₐ[R] A₂) {y : R} {x : A₁} : algebraMap R A₂ y = e x ↔ algebraMap R A₁ y = x :=
@@ -1789,165 +1327,8 @@ variable [CommSemiringₓ R] [CommSemiringₓ A₁] [CommSemiringₓ A₂]
 
 variable [Algebra R A₁] [Algebra R A₂] (e : A₁ ≃ₐ[R] A₂)
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `map_prod [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`ι] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.explicitBinder "(" [`f] [":" (Term.arrow `ι "→" `A₁)] [] ")")
-    (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [`ι])] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app
-      `e
-      [(Algebra.BigOperators.Basic.«term∏_in_,_»
-        "∏"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-        " in "
-        `s
-        ", "
-        (Term.app `f [`x]))])
-     "="
-     (Algebra.BigOperators.Basic.«term∏_in_,_»
-      "∏"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-      " in "
-      `s
-      ", "
-      (Term.app `e [(Term.app `f [`x])])))))
-  (Command.declValSimple ":=" (Term.app `e.to_alg_hom.map_prod [`f `s]) [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `e.to_alg_hom.map_prod [`f `s])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `e.to_alg_hom.map_prod
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.app
-    `e
-    [(Algebra.BigOperators.Basic.«term∏_in_,_»
-      "∏"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-      " in "
-      `s
-      ", "
-      (Term.app `f [`x]))])
-   "="
-   (Algebra.BigOperators.Basic.«term∏_in_,_»
-    "∏"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-    " in "
-    `s
-    ", "
-    (Term.app `e [(Term.app `f [`x])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∏_in_,_»
-   "∏"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
-   " in "
-   `s
-   ", "
-   (Term.app `e [(Term.app `f [`x])]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∏_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `e [(Term.app `f [`x])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `f [`x])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `f [`x]) []] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `e
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  map_prod
-  { ι : Type _ } ( f : ι → A₁ ) ( s : Finset ι ) : e ∏ x in s , f x = ∏ x in s , e f x
-  := e.to_alg_hom.map_prod f s
+theorem map_prod {ι : Type _} (f : ι → A₁) (s : Finset ι) : e (∏ x in s, f x) = ∏ x in s, e (f x) :=
+  e.to_alg_hom.map_prod f s
 
 theorem map_finsupp_prod {α : Type _} [HasZero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A₁) :
     e (f.prod g) = f.prod fun i a => e (g i a) :=
@@ -1997,7 +1378,7 @@ section
 
 variable [Monoidₓ M] [MulSemiringAction M A] [SmulCommClass M R A]
 
-/--  Each element of the monoid defines a algebra homomorphism.
+/-- Each element of the monoid defines a algebra homomorphism.
 
 This is a stronger version of `mul_semiring_action.to_ring_hom` and
 `distrib_mul_action.to_linear_map`. -/
@@ -2015,7 +1396,7 @@ section
 
 variable [Groupₓ G] [MulSemiringAction G A] [SmulCommClass G R A]
 
-/--  Each element of the group defines a algebra equivalence.
+/-- Each element of the group defines a algebra equivalence.
 
 This is a stronger version of `mul_semiring_action.to_ring_equiv` and
 `distrib_mul_action.to_linear_equiv`. -/
@@ -2035,13 +1416,11 @@ section Nat
 
 variable {R : Type _} [Semiringₓ R]
 
--- failed to format: format: uncaught backtrack exception
 /-- Semiring ⥤ ℕ-Alg -/
-  instance
-    ( priority := 99 )
-    algebraNat
-    : Algebra ℕ R
-    where commutes' := Nat.cast_commute smul_def' _ _ := nsmul_eq_mul _ _ toRingHom := Nat.castRingHom R
+instance (priority := 99) algebraNat : Algebra ℕ R where
+  commutes' := Nat.cast_commute
+  smul_def' := fun _ _ => nsmul_eq_mul _ _
+  toRingHom := Nat.castRingHom R
 
 instance nat_algebra_subsingleton : Subsingleton (Algebra ℕ R) :=
   ⟨fun P Q => by
@@ -2054,13 +1433,13 @@ namespace RingHom
 
 variable {R S : Type _}
 
-/--  Reinterpret a `ring_hom` as an `ℕ`-algebra homomorphism. -/
+/-- Reinterpret a `ring_hom` as an `ℕ`-algebra homomorphism. -/
 def to_nat_alg_hom [Semiringₓ R] [Semiringₓ S] (f : R →+* S) : R →ₐ[ℕ] S :=
   { f with toFun := f,
     commutes' := fun n => by
       simp }
 
-/--  Reinterpret a `ring_hom` as a `ℤ`-algebra homomorphism. -/
+/-- Reinterpret a `ring_hom` as a `ℤ`-algebra homomorphism. -/
 def to_int_alg_hom [Ringₓ R] [Ringₓ S] [Algebra ℤ R] [Algebra ℤ S] (f : R →+* S) : R →ₐ[ℤ] S :=
   { f with
     commutes' := fun n => by
@@ -2071,7 +1450,7 @@ theorem map_rat_algebra_map [Ringₓ R] [Ringₓ S] [Algebra ℚ R] [Algebra ℚ
     f (algebraMap ℚ R r) = algebraMap ℚ S r :=
   RingHom.ext_iff.1 (Subsingleton.elimₓ (f.comp (algebraMap ℚ R)) (algebraMap ℚ S)) r
 
-/--  Reinterpret a `ring_hom` as a `ℚ`-algebra homomorphism. -/
+/-- Reinterpret a `ring_hom` as a `ℚ`-algebra homomorphism. -/
 def to_rat_alg_hom [Ringₓ R] [Ringₓ S] [Algebra ℚ R] [Algebra ℚ S] (f : R →+* S) : R →ₐ[ℚ] S :=
   { f with commutes' := f.map_rat_algebra_map }
 
@@ -2099,7 +1478,7 @@ variable (R : Type u) (A : Type v)
 
 variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
-/--  `algebra_map` as an `alg_hom`. -/
+/-- `algebra_map` as an `alg_hom`. -/
 def of_id : R →ₐ[R] A :=
   { algebraMap R A with commutes' := fun _ => rfl }
 
@@ -2114,13 +1493,11 @@ section Int
 
 variable (R : Type _) [Ringₓ R]
 
--- failed to format: format: uncaught backtrack exception
 /-- Ring ⥤ ℤ-Alg -/
-  instance
-    ( priority := 99 )
-    algebraInt
-    : Algebra ℤ R
-    where commutes' := Int.cast_commute smul_def' _ _ := zsmul_eq_mul _ _ toRingHom := Int.castRingHom R
+instance (priority := 99) algebraInt : Algebra ℤ R where
+  commutes' := Int.cast_commute
+  smul_def' := fun _ _ => zsmul_eq_mul _ _
+  toRingHom := Int.castRingHom R
 
 variable {R}
 
@@ -2166,7 +1543,7 @@ theorem algebra_map_apply {r : CommSemiringₓ R} [s : ∀ i, Semiringₓ (f i)]
 
 variable {I} (R) (f)
 
-/--  `function.eval` as an `alg_hom`. The name matches `pi.eval_ring_hom`, `pi.eval_monoid_hom`,
+/-- `function.eval` as an `alg_hom`. The name matches `pi.eval_ring_hom`, `pi.eval_monoid_hom`,
 etc. -/
 @[simps]
 def eval_alg_hom {r : CommSemiringₓ R} [∀ i, Semiringₓ (f i)] [∀ i, Algebra R (f i)] (i : I) : (∀ i, f i) →ₐ[R] f i :=
@@ -2174,13 +1551,13 @@ def eval_alg_hom {r : CommSemiringₓ R} [∀ i, Semiringₓ (f i)] [∀ i, Alge
 
 variable (A B : Type _) [CommSemiringₓ R] [Semiringₓ B] [Algebra R B]
 
-/--  `function.const` as an `alg_hom`. The name matches `pi.const_ring_hom`, `pi.const_monoid_hom`,
+/-- `function.const` as an `alg_hom`. The name matches `pi.const_ring_hom`, `pi.const_monoid_hom`,
 etc. -/
 @[simps]
 def const_alg_hom : B →ₐ[R] A → B :=
   { Pi.constRingHom A B with toFun := Function.const _, commutes' := fun r => rfl }
 
-/--  When `R` is commutative and permits an `algebra_map`, `pi.const_ring_hom` is equal to that
+/-- When `R` is commutative and permits an `algebra_map`, `pi.const_ring_hom` is equal to that
 map. -/
 @[simp]
 theorem const_ring_hom_eq_algebra_map : const_ring_hom A R = algebraMap R (A → R) :=
@@ -2236,11 +1613,13 @@ theorem coe_restrict_scalars_eq_coe (f : M →ₗ[A] N) : (f.restrict_scalars R 
 theorem coe_coe_is_scalar_tower (f : M →ₗ[A] N) : ((f : M →ₗ[R] N) : M → N) = f :=
   rfl
 
-/--  `A`-linearly coerce a `R`-linear map from `M` to `A` to a function, given an algebra `A` over
+/-- `A`-linearly coerce a `R`-linear map from `M` to `A` to a function, given an algebra `A` over
 a commutative semiring `R` and `M` a module over `R`. -/
 def lto_fun (R : Type u) (M : Type v) (A : Type w) [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [CommRingₓ A]
-    [Algebra R A] : (M →ₗ[R] A) →ₗ[A] M → A :=
-  { toFun := LinearMap.toFun, map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
+    [Algebra R A] : (M →ₗ[R] A) →ₗ[A] M → A where
+  toFun := LinearMap.toFun
+  map_add' := fun f g => rfl
+  map_smul' := fun c f => rfl
 
 end LinearMap
 
@@ -2277,7 +1656,7 @@ variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [AddCommMonoidₓ M]
 
 variable [Module R M] [Module A M] [IsScalarTower R A M]
 
-/--  If `A` is an `R`-algebra such that the induced morhpsim `R →+* A` is surjective, then the
+/-- If `A` is an `R`-algebra such that the induced morhpsim `R →+* A` is surjective, then the
 `R`-module generated by a set `X` equals the `A`-module generated by `X`. -/
 theorem span_eq_restrict_scalars (X : Set M) (hsur : Function.Surjective (algebraMap R A)) :
     span R X = restrict_scalars R (span A X) := by
@@ -2296,7 +1675,7 @@ variable [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B]
 
 variable [Algebra R A] [Algebra R B]
 
-/--  `R`-algebra homomorphism between the function spaces `I → A` and `I → B`, induced by an
+/-- `R`-algebra homomorphism between the function spaces `I → A` and `I → B`, induced by an
 `R`-algebra homomorphism `f` between `A` and `B`. -/
 @[simps]
 protected def comp_left (f : A →ₐ[R] B) (I : Type _) : (I → A) →ₐ[R] I → B :=

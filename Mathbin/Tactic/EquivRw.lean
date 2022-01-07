@@ -61,7 +61,7 @@ but this will wait for another subsequent PR.
 
 namespace Tactic
 
-/--  A list of lemmas used for constructing congruence equivalences. -/
+/-- A list of lemmas used for constructing congruence equivalences. -/
 unsafe def equiv_congr_lemmas : List (tactic expr) :=
   [`equiv.of_iff, `equiv.equiv_congr, `equiv.arrow_congr', `equiv.subtype_equiv_of_subtype', `equiv.sigma_congr_left',
         `equiv.forall₃_congr', `equiv.forall₂_congr', `equiv.forall_congr', `equiv.Pi_congr_left', `bifunctor.map_equiv,
@@ -71,8 +71,7 @@ unsafe def equiv_congr_lemmas : List (tactic expr) :=
 initialize
   registerTraceClass.1 `equiv_rw_type
 
-/-- 
-Configuration structure for `equiv_rw`.
+/-- Configuration structure for `equiv_rw`.
 
 * `max_depth` bounds the search depth for equivalences to rewrite along.
   The default value is 10.
@@ -82,12 +81,11 @@ Configuration structure for `equiv_rw`.
 unsafe structure equiv_rw_cfg where
   max_depth : ℕ := 10
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-Implementation of `equiv_rw_type`, using `solve_by_elim`.
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Implementation of `equiv_rw_type`, using `solve_by_elim`.
 Expects a goal of the form `t ≃ _`,
 and tries to solve it using `eq : α ≃ β` and congruence lemmas.
 -/
@@ -108,8 +106,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
                   let gs ← gs.mmap fun g => infer_type g >>= pp
                   trace f! "Attempting to adapt to {gs}" }
 
-/-- 
-`equiv_rw_type e t` rewrites the type `t` using the equivalence `e : α ≃ β`,
+/-- `equiv_rw_type e t` rewrites the type `t` using the equivalence `e : α ≃ β`,
 returning a new equivalence `t ≃ t'`.
 -/
 unsafe def equiv_rw_type (eqv : expr) (ty : expr) (cfg : equiv_rw_cfg) : tactic expr := do
@@ -133,9 +130,8 @@ mk_simp_attribute equiv_rw_simp :=
 
 attribute [equiv_rw_simp] Equivₓ.symm_symm Equivₓ.apply_symm_apply Equivₓ.symm_apply_apply
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-Attempt to replace the hypothesis with name `x`
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Attempt to replace the hypothesis with name `x`
 by transporting it along the equivalence in `e : α ≃ β`.
 -/
 unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit :=
@@ -165,7 +161,7 @@ unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tac
       skip)
     { failIfUnchanged := ff } tt
 
-/--  Rewrite the goal using an equiv `e`. -/
+/-- Rewrite the goal using an equiv `e`. -/
 unsafe def equiv_rw_target (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit := do
   let t ← target
   let e ← equiv_rw_type e t cfg
@@ -185,8 +181,7 @@ open Tactic
 
 local postfix:9001 "?" => optionalₓ
 
-/-- 
-`equiv_rw e at h`, where `h : α` is a hypothesis, and `e : α ≃ β`,
+/-- `equiv_rw e at h`, where `h : α` is a hypothesis, and `e : α ≃ β`,
 will attempt to transport `h` along `e`, producing a new hypothesis `h : β`,
 with all occurrences of `h` in other hypotheses and the goal replaced with `e.symm h`.
 
@@ -210,8 +205,7 @@ add_tactic_doc
   { Name := "equiv_rw", category := DocCategory.tactic, declNames := [`tactic.interactive.equiv_rw],
     tags := ["rewriting", "equiv", "transport"] }
 
-/-- 
-Solve a goal of the form `t ≃ _`,
+/-- Solve a goal of the form `t ≃ _`,
 by constructing an equivalence from `e : α ≃ β`.
 This is the same equivalence that `equiv_rw` would use to rewrite a term of type `t`.
 

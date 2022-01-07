@@ -3,12 +3,12 @@ import Mathbin.Data.Quot
 
 namespace Tactic
 
-/--  Auxiliary tactic for `trunc_cases`. -/
+/-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_subsingleton (e : expr) (ids : List Name) : tactic expr := do
   let [(_, [e], _)] ← tactic.induction e ids `trunc.rec_on_subsingleton
   return e
 
-/--  Auxiliary tactic for `trunc_cases`. -/
+/-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_nondependent (e : expr) (ids : List Name) : tactic expr := do
   to_expr (pquote.1 (Trunc.liftOn (%%ₓe))) >>= tactic.fapply
   tactic.clear e
@@ -23,8 +23,8 @@ private unsafe def trunc_cases_nondependent (e : expr) (ids : List Name) : tacti
   tactic.swap
   return e
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/--  Auxiliary tactic for `trunc_cases`. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_dependent (e : expr) (ids : List Name) : tactic expr := do
   let [(_, [e], _), (_, [e_a, e_b, e_p], _)] ← tactic.induction e ids
   swap
@@ -36,8 +36,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-/-- 
-`trunc_cases e` performs case analysis on a `trunc` expression `e`,
+/-- `trunc_cases e` performs case analysis on a `trunc` expression `e`,
 attempting the following strategies:
 1. when the goal is a subsingleton, calling `induction e using trunc.rec_on_subsingleton`,
 2. when the goal does not depend on `e`, calling `fapply trunc.lift_on e`,

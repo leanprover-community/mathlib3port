@@ -52,9 +52,9 @@ theorem is_primitive.irreducible_of_irreducible_map_of_injective (h_irr : Irredu
       (by
         rw [h, map_mul]) with
     (hu | hu)
-  ·
-    left
+  · left
     rwa [(hf.is_primitive_of_dvd (Dvd.intro _ h.symm)).is_unit_iff_is_unit_map_of_injective hinj]
+    
   right
   rwa [(hf.is_primitive_of_dvd (Dvd.intro_left _ h.symm)).is_unit_iff_is_unit_map_of_injective hinj]
 
@@ -78,17 +78,17 @@ theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : Polyn
   apply is_unit_of_mul_is_unit_right
   rw [← hc, (integer_normalization R⁰ p).eq_C_content_mul_prim_part, ← hu, ← RingHom.map_mul, is_unit_iff]
   refine'
-    ⟨algebraMap R K ((integer_normalization R⁰ p).content*↑u), is_unit_iff_ne_zero.2 fun con => _, by
+    ⟨algebraMap R K ((integer_normalization R⁰ p).content * ↑u), is_unit_iff_ne_zero.2 fun con => _, by
       simp ⟩
   replace con := (algebraMap R K).injective_iff.1 (IsFractionRing.injective _ _) _ Con
   rw [mul_eq_zero, content_eq_zero_iff, IsFractionRing.integer_normalization_eq_zero_iff] at con
   rcases Con with (con | con)
-  ·
-    apply h0 Con
-  ·
-    apply Units.ne_zero _ Con
+  · apply h0 Con
+    
+  · apply Units.ne_zero _ Con
+    
 
-/--  **Gauss's Lemma** states that a primitive polynomial is irreducible iff it is irreducible in the
+/-- **Gauss's Lemma** states that a primitive polynomial is irreducible iff it is irreducible in the
   fraction field. -/
 theorem is_primitive.irreducible_iff_irreducible_map_fraction_map {p : Polynomial R} (hp : p.is_primitive) :
     Irreducible p ↔ Irreducible (p.map (algebraMap R K)) := by
@@ -99,19 +99,19 @@ theorem is_primitive.irreducible_iff_irreducible_map_fraction_map {p : Polynomia
   obtain ⟨⟨d, d0⟩, hd⟩ := integer_normalization_map_to_map R⁰ b
   rw [Algebra.smul_def, algebra_map_apply, Subtype.coe_mk] at hc hd
   rw [mem_non_zero_divisors_iff_ne_zero] at c0 d0
-  have hcd0 : (c*d) ≠ 0 := mul_ne_zero c0 d0
+  have hcd0 : c * d ≠ 0 := mul_ne_zero c0 d0
   rw [Ne.def, ← C_eq_zero] at hcd0
-  have h1 : ((C c*C d)*p) = integer_normalization R⁰ a*integer_normalization R⁰ b := by
+  have h1 : C c * C d * p = integer_normalization R⁰ a * integer_normalization R⁰ b := by
     apply map_injective (algebraMap R K) (IsFractionRing.injective _ _) _
     rw [map_mul, map_mul, map_mul, hc, hd, map_C, map_C, hab]
     ring
-  obtain ⟨u, hu⟩ : Associated (c*d) (content (integer_normalization R⁰ a)*content (integer_normalization R⁰ b))
-  ·
+  obtain ⟨u, hu⟩ : Associated (c * d) (content (integer_normalization R⁰ a) * content (integer_normalization R⁰ b)) :=
+    by
     rw [← dvd_dvd_iff_associated, ← normalize_eq_normalize_iff, normalize.map_mul, normalize.map_mul, normalize_content,
-      normalize_content, ← mul_oneₓ (normalize c*normalize d), ← hp.content_eq_one, ← content_C, ← content_C, ←
+      normalize_content, ← mul_oneₓ (normalize c * normalize d), ← hp.content_eq_one, ← content_C, ← content_C, ←
       content_mul, ← content_mul, ← content_mul, h1]
   rw [← RingHom.map_mul, eq_comm, (integer_normalization R⁰ a).eq_C_content_mul_prim_part,
-    (integer_normalization R⁰ b).eq_C_content_mul_prim_part, mul_assocₓ, mul_commₓ _ (C _*_), ← mul_assocₓ, ←
+    (integer_normalization R⁰ b).eq_C_content_mul_prim_part, mul_assocₓ, mul_commₓ _ (C _ * _), ← mul_assocₓ, ←
     mul_assocₓ, ← RingHom.map_mul, ← hu, RingHom.map_mul, mul_assocₓ, mul_assocₓ, ← mul_assocₓ (C (↑u))] at h1
   have h0 : a ≠ 0 ∧ b ≠ 0 := by
     classical
@@ -120,31 +120,31 @@ theorem is_primitive.irreducible_iff_irreducible_map_fraction_map {p : Polynomia
     apply hp.ne_zero (map_injective (algebraMap R K) (IsFractionRing.injective _ _) _)
     simp [Con]
   rcases hi.is_unit_or_is_unit (mul_left_cancel₀ hcd0 h1).symm with (h | h)
-  ·
-    right
+  · right
     apply is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part h0.2 (is_unit_of_mul_is_unit_right h)
-  ·
-    left
+    
+  · left
     apply is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part h0.1 h
+    
 
 theorem is_primitive.dvd_of_fraction_map_dvd_fraction_map {p q : Polynomial R} (hp : p.is_primitive)
     (hq : q.is_primitive) (h_dvd : p.map (algebraMap R K) ∣ q.map (algebraMap R K)) : p ∣ q := by
   rcases h_dvd with ⟨r, hr⟩
   obtain ⟨⟨s, s0⟩, hs⟩ := integer_normalization_map_to_map R⁰ r
   rw [Subtype.coe_mk, Algebra.smul_def, algebra_map_apply] at hs
-  have h : p ∣ q*C s := by
+  have h : p ∣ q * C s := by
     use integer_normalization R⁰ r
     apply map_injective (algebraMap R K) (IsFractionRing.injective _ _)
     rw [map_mul, map_mul, hs, hr, mul_assocₓ, mul_commₓ r]
     simp
   rw [← hp.dvd_prim_part_iff_dvd, prim_part_mul, hq.prim_part_eq, Associated.dvd_iff_dvd_right] at h
-  ·
-    exact h
-  ·
-    symm
+  · exact h
+    
+  · symm
     rcases is_unit_prim_part_C s with ⟨u, hu⟩
     use u
     rw [hu]
+    
   iterate 2 
     apply mul_ne_zero hq.ne_zero
     rw [Ne.def, C_eq_zero]
@@ -160,7 +160,7 @@ theorem is_primitive.dvd_iff_fraction_map_dvd_fraction_map {p q : Polynomial R} 
 
 end FractionMap
 
-/--  **Gauss's Lemma** for `ℤ` states that a primitive integer polynomial is irreducible iff it is
+/-- **Gauss's Lemma** for `ℤ` states that a primitive integer polynomial is irreducible iff it is
   irreducible over `ℚ`. -/
 theorem is_primitive.int.irreducible_iff_irreducible_map_cast {p : Polynomial ℤ} (hp : p.is_primitive) :
     Irreducible p ↔ Irreducible (p.map (Int.castRingHom ℚ)) :=

@@ -35,7 +35,7 @@ universe u v w
 
 variable {α β γ : Type _} {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop}
 
-/--  A relation homomorphism with respect to a given pair of relations `r` and `s`
+/-- A relation homomorphism with respect to a given pair of relations `r` and `s`
 is a function `f : α → β` such that `r a b → s (f a) (f b)`. -/
 @[nolint has_inhabited_instance]
 structure RelHom {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) where
@@ -44,7 +44,7 @@ structure RelHom {α β : Type _} (r : α → α → Prop) (s : β → β → Pr
 
 infixl:25 " →r " => RelHom
 
-/--  `rel_hom_class F r s` asserts that `F` is a type of functions such that all `f : F`
+/-- `rel_hom_class F r s` asserts that `F` is a type of functions such that all `f : F`
 satisfy `r a b → s (f a) (f b)`.
 
 The relations `r` and `s` are `out_param`s since figuring them out from a goal is a higher-order
@@ -90,12 +90,15 @@ end RelHomClass
 
 namespace RelHom
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : RelHomClass ( r →r s ) r s
-  where coe o := o.to_fun coe_injective' f g h := by cases f cases g congr map_rel := map_rel'
+instance : RelHomClass (r →r s) r s where
+  coe := fun o => o.to_fun
+  coe_injective' := fun f g h => by
+    cases f
+    cases g
+    congr
+  map_rel := map_rel'
 
-/--  Auxiliary instance if `rel_hom_class.to_fun_like.to_has_coe_to_fun` isn't found -/
+/-- Auxiliary instance if `rel_hom_class.to_fun_like.to_has_coe_to_fun` isn't found -/
 instance : CoeFun (r →r s) fun _ => α → β :=
   ⟨fun o => o.to_fun⟩
 
@@ -112,7 +115,7 @@ theorem coe_fn_mk (f : α → β) o : (@RelHom.mk _ _ r s f o : α → β) = f :
 theorem coe_fn_to_fun (f : r →r s) : (f.to_fun : α → β) = f :=
   rfl
 
-/--  The map `coe_fn : (r →r s) → (α → β)` is injective. -/
+/-- The map `coe_fn : (r →r s) → (α → β)` is injective. -/
 theorem coe_fn_injective : @Function.Injective (r →r s) (α → β) coeFn :=
   FunLike.coe_injective
 
@@ -123,27 +126,27 @@ theorem ext ⦃f g : r →r s⦄ (h : ∀ x, f x = g x) : f = g :=
 theorem ext_iff {f g : r →r s} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 
-/--  Identity map is a relation homomorphism. -/
+/-- Identity map is a relation homomorphism. -/
 @[refl, simps]
 protected def id (r : α → α → Prop) : r →r r :=
   ⟨fun x => x, fun a b x => x⟩
 
-/--  Composition of two relation homomorphisms is a relation homomorphism. -/
+/-- Composition of two relation homomorphisms is a relation homomorphism. -/
 @[trans, simps]
 protected def comp (g : s →r t) (f : r →r s) : r →r t :=
   ⟨fun x => g (f x), fun a b h => g.2 (f.2 h)⟩
 
-/--  A relation homomorphism is also a relation homomorphism between dual relations. -/
+/-- A relation homomorphism is also a relation homomorphism between dual relations. -/
 protected def swap (f : r →r s) : swap r →r swap s :=
   ⟨f, fun a b => f.map_rel⟩
 
-/--  A function is a relation homomorphism from the preimage relation of `s` to `s`. -/
+/-- A function is a relation homomorphism from the preimage relation of `s` to `s`. -/
 def preimage (f : α → β) (s : β → β → Prop) : f ⁻¹'o s →r s :=
   ⟨f, fun a b => id⟩
 
 end RelHom
 
-/--  An increasing function is injective -/
+/-- An increasing function is injective -/
 theorem injective_of_increasing (r : α → α → Prop) (s : β → β → Prop) [IsTrichotomous α r] [IsIrrefl β s] (f : α → β)
     (hf : ∀ {x y}, r x y → s (f x) (f y)) : injective f := by
   intro x y hxy
@@ -158,7 +161,7 @@ theorem injective_of_increasing (r : α → α → Prop) (s : β → β → Prop
   exfalso
   exact irrefl_of s (f y) this
 
-/--  An increasing function is injective -/
+/-- An increasing function is injective -/
 theorem RelHom.injective_of_increasing [IsTrichotomous α r] [IsIrrefl β s] (f : r →r s) : injective f :=
   injective_of_increasing r s f fun x y => f.map_rel
 
@@ -167,8 +170,8 @@ theorem Surjective.well_founded_iff {f : α → β} (hf : surjective f) (o : ∀
   Iff.intro
     (by
       refine' RelHomClass.well_founded (RelHom.mk _ _ : s →r r)
-      ·
-        exact Classical.some hf.has_right_inverse
+      · exact Classical.some hf.has_right_inverse
+        
       intro a b h
       apply o.2
       convert h
@@ -176,14 +179,14 @@ theorem Surjective.well_founded_iff {f : α → β} (hf : surjective f) (o : ∀
         apply Classical.some_spec hf.has_right_inverse)
     (RelHomClass.well_founded (⟨f, fun _ _ => o.1⟩ : r →r s))
 
-/--  A relation embedding with respect to a given pair of relations `r` and `s`
+/-- A relation embedding with respect to a given pair of relations `r` and `s`
 is an embedding `f : α ↪ β` such that `r a b ↔ s (f a) (f b)`. -/
 structure RelEmbedding {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) extends α ↪ β where
   map_rel_iff' : ∀ {a b}, s (to_embedding a) (to_embedding b) ↔ r a b
 
 infixl:25 " ↪r " => RelEmbedding
 
-/--  The induced relation on a subtype is an embedding under the natural inclusion. -/
+/-- The induced relation on a subtype is an embedding under the natural inclusion. -/
 def Subtype.relEmbedding {X : Type _} (r : X → X → Prop) (p : X → Prop) : (Subtype.val : Subtype p → X) ⁻¹'o r ↪r r :=
   ⟨embedding.subtype p, fun x y => Iff.rfl⟩
 
@@ -192,9 +195,10 @@ theorem preimage_equivalence {α β} (f : α → β) {s : β → β → Prop} (h
 
 namespace RelEmbedding
 
-/--  A relation embedding is also a relation homomorphism -/
-def to_rel_hom (f : r ↪r s) : r →r s :=
-  { toFun := f.to_embedding.to_fun, map_rel' := fun x y => (map_rel_iff' f).mpr }
+/-- A relation embedding is also a relation homomorphism -/
+def to_rel_hom (f : r ↪r s) : r →r s where
+  toFun := f.to_embedding.to_fun
+  map_rel' := fun x y => (map_rel_iff' f).mpr
 
 instance : Coe (r ↪r s) (r →r s) :=
   ⟨to_rel_hom⟩
@@ -202,15 +206,15 @@ instance : Coe (r ↪r s) (r →r s) :=
 instance : CoeFun (r ↪r s) fun _ => α → β :=
   ⟨fun o => o.to_embedding⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : RelHomClass ( r ↪r s ) r s
-  where
-    coe := coeFn
-      coe_injective' f g h := by rcases f with ⟨ ⟨ ⟩ ⟩ rcases g with ⟨ ⟨ ⟩ ⟩ congr
-      map_rel f a b := Iff.mpr ( map_rel_iff' f )
+instance : RelHomClass (r ↪r s) r s where
+  coe := coeFn
+  coe_injective' := fun f g h => by
+    rcases f with ⟨⟨⟩⟩
+    rcases g with ⟨⟨⟩⟩
+    congr
+  map_rel := fun f a b => Iff.mpr (map_rel_iff' f)
 
-/--  See Note [custom simps projection]. We need to specify this projection explicitly in this case,
+/-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
 def simps.apply (h : r ↪r s) : α → β :=
   h
@@ -239,7 +243,7 @@ theorem coe_fn_mk (f : α ↪ β) o : (@RelEmbedding.mk _ _ r s f o : α → β)
 theorem coe_fn_to_embedding (f : r ↪r s) : (f.to_embedding : α → β) = f :=
   rfl
 
-/--  The map `coe_fn : (r ↪r s) → (α → β)` is injective. -/
+/-- The map `coe_fn : (r ↪r s) → (α → β)` is injective. -/
 theorem coe_fn_injective : @Function.Injective (r ↪r s) (α → β) coeFn :=
   FunLike.coe_injective
 
@@ -250,12 +254,12 @@ theorem ext ⦃f g : r ↪r s⦄ (h : ∀ x, f x = g x) : f = g :=
 theorem ext_iff {f g : r ↪r s} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 
-/--  Identity map is a relation embedding. -/
+/-- Identity map is a relation embedding. -/
 @[refl, simps]
 protected def refl (r : α → α → Prop) : r ↪r r :=
   ⟨embedding.refl _, fun a b => Iff.rfl⟩
 
-/--  Composition of two relation embeddings is a relation embedding. -/
+/-- Composition of two relation embeddings is a relation embedding. -/
 @[trans]
 protected def trans (f : r ↪r s) (g : s ↪r t) : r ↪r t :=
   ⟨f.1.trans g.1, fun a b => by
@@ -271,11 +275,11 @@ theorem trans_apply (f : r ↪r s) (g : s ↪r t) (a : α) : (f.trans g) a = g (
 theorem coeTransₓ (f : r ↪r s) (g : s ↪r t) : ⇑f.trans g = g ∘ f :=
   rfl
 
-/--  A relation embedding is also a relation embedding between dual relations. -/
+/-- A relation embedding is also a relation embedding between dual relations. -/
 protected def swap (f : r ↪r s) : swap r ↪r swap s :=
   ⟨f.to_embedding, fun a b => f.map_rel_iff⟩
 
-/--  If `f` is injective, then it is a relation embedding from the
+/-- If `f` is injective, then it is a relation embedding from the
   preimage relation of `s` to `s`. -/
 def preimage (f : α ↪ β) (s : β → β → Prop) : f ⁻¹'o s ↪r s :=
   ⟨f, fun a b => Iff.rfl⟩
@@ -306,27 +310,22 @@ protected theorem IsTotal : ∀ f : r ↪r s [IsTotal β s], IsTotal α r
   | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congr o o).1 (H _ _)⟩
 
 protected theorem IsPreorder : ∀ f : r ↪r s [IsPreorder β s], IsPreorder α r
-  | f, H => by
-    exact { f.is_refl, f.is_trans with }
+  | f, H => { f.is_refl, f.is_trans with }
 
 protected theorem IsPartialOrder : ∀ f : r ↪r s [IsPartialOrder β s], IsPartialOrder α r
-  | f, H => by
-    exact { f.is_preorder, f.is_antisymm with }
+  | f, H => { f.is_preorder, f.is_antisymm with }
 
 protected theorem IsLinearOrder : ∀ f : r ↪r s [IsLinearOrder β s], IsLinearOrder α r
-  | f, H => by
-    exact { f.is_partial_order, f.is_total with }
+  | f, H => { f.is_partial_order, f.is_total with }
 
 protected theorem IsStrictOrder : ∀ f : r ↪r s [IsStrictOrder β s], IsStrictOrder α r
-  | f, H => by
-    exact { f.is_irrefl, f.is_trans with }
+  | f, H => { f.is_irrefl, f.is_trans with }
 
 protected theorem IsTrichotomous : ∀ f : r ↪r s [IsTrichotomous β s], IsTrichotomous α r
   | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congr o (or_congr f.inj'.eq_iff o)).1 (H _ _)⟩
 
 protected theorem IsStrictTotalOrder' : ∀ f : r ↪r s [IsStrictTotalOrder' β s], IsStrictTotalOrder' α r
-  | f, H => by
-    exact { f.is_trichotomous, f.is_strict_order with }
+  | f, H => { f.is_trichotomous, f.is_strict_order with }
 
 protected theorem Acc (f : r ↪r s) (a : α) : Acc s (f a) → Acc r a := by
   generalize h : f a = b
@@ -339,39 +338,39 @@ protected theorem WellFounded : ∀ f : r ↪r s h : WellFounded s, WellFounded 
   | f, ⟨H⟩ => ⟨fun a => f.acc _ (H _)⟩
 
 protected theorem IsWellOrder : ∀ f : r ↪r s [IsWellOrder β s], IsWellOrder α r
-  | f, H => by
-    exact { f.is_strict_total_order' with wf := f.well_founded H.wf }
+  | f, H => { f.is_strict_total_order' with wf := f.well_founded H.wf }
 
-/-- 
-To define an relation embedding from an antisymmetric relation `r` to a reflexive relation `s` it
+/-- To define an relation embedding from an antisymmetric relation `r` to a reflexive relation `s` it
 suffices to give a function together with a proof that it satisfies `s (f a) (f b) ↔ r a b`.
 -/
-def of_map_rel_iff (f : α → β) [IsAntisymm α r] [IsRefl β s] (hf : ∀ a b, s (f a) (f b) ↔ r a b) : r ↪r s :=
-  { toFun := f, inj' := fun x y h => antisymm ((hf _ _).1 (h ▸ refl _)) ((hf _ _).1 (h ▸ refl _)), map_rel_iff' := hf }
+def of_map_rel_iff (f : α → β) [IsAntisymm α r] [IsRefl β s] (hf : ∀ a b, s (f a) (f b) ↔ r a b) : r ↪r s where
+  toFun := f
+  inj' := fun x y h => antisymm ((hf _ _).1 (h ▸ refl _)) ((hf _ _).1 (h ▸ refl _))
+  map_rel_iff' := hf
 
 @[simp]
 theorem of_map_rel_iff_coe (f : α → β) [IsAntisymm α r] [IsRefl β s] (hf : ∀ a b, s (f a) (f b) ↔ r a b) :
     ⇑(of_map_rel_iff f hf : r ↪r s) = f :=
   rfl
 
-/--  It suffices to prove `f` is monotone between strict relations
+/-- It suffices to prove `f` is monotone between strict relations
   to show it is a relation embedding. -/
 def of_monotone [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H : ∀ a b, r a b → s (f a) (f b)) : r ↪r s := by
   have := @IsAsymm.is_irrefl β s _
   refine' ⟨⟨f, fun a b e => _⟩, fun a b => ⟨fun h => _, H _ _⟩⟩
-  ·
-    refine' ((@trichotomous _ r _ a b).resolve_left _).resolve_right _ <;>
+  · refine' ((@trichotomous _ r _ a b).resolve_left _).resolve_right _ <;>
       exact fun h =>
         @irrefl _ s _ _
           (by
             simpa [e] using H _ _ h)
-  ·
-    refine' (@trichotomous _ r _ a b).resolve_right (Or.ndrec (fun e => _) fun h' => _)
-    ·
-      subst e
+    
+  · refine' (@trichotomous _ r _ a b).resolve_right (Or.ndrec (fun e => _) fun h' => _)
+    · subst e
       exact irrefl _ h
-    ·
-      exact asymm (H _ _ h') h
+      
+    · exact asymm (H _ _ h') h
+      
+    
 
 @[simp]
 theorem of_monotone_coe [IsTrichotomous α r] [IsAsymm β s] (f : α → β) H : (@of_monotone _ _ r s _ _ f H : α → β) = f :=
@@ -379,7 +378,7 @@ theorem of_monotone_coe [IsTrichotomous α r] [IsAsymm β s] (f : α → β) H :
 
 end RelEmbedding
 
-/--  A relation isomorphism is an equivalence that is also a relation embedding. -/
+/-- A relation isomorphism is an equivalence that is also a relation embedding. -/
 structure RelIso {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) extends α ≃ β where
   map_rel_iff' : ∀ {a b}, s (to_equiv a) (to_equiv b) ↔ r a b
 
@@ -387,7 +386,7 @@ infixl:25 " ≃r " => RelIso
 
 namespace RelIso
 
-/--  Convert an `rel_iso` to an `rel_embedding`. This function is also available as a coercion
+/-- Convert an `rel_iso` to an `rel_embedding`. This function is also available as a coercion
 but often it is easier to write `f.to_rel_embedding` than to write explicitly `r` and `s`
 in the target type. -/
 def to_rel_embedding (f : r ≃r s) : r ↪r s :=
@@ -404,13 +403,10 @@ instance : Coe (r ≃r s) (r ↪r s) :=
 instance : CoeFun (r ≃r s) fun _ => α → β :=
   ⟨fun f => f⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : RelHomClass ( r ≃r s ) r s
-  where
-    coe := coeFn
-      coe_injective' := Equivₓ.coe_fn_injective . comp to_equiv_injective
-      map_rel f a b := Iff.mpr ( map_rel_iff' f )
+instance : RelHomClass (r ≃r s) r s where
+  coe := coeFn
+  coe_injective' := Equivₓ.coe_fn_injective.comp to_equiv_injective
+  map_rel := fun f a b => Iff.mpr (map_rel_iff' f)
 
 @[simp]
 theorem to_rel_embedding_eq_coe (f : r ≃r s) : f.to_rel_embedding = f :=
@@ -431,7 +427,7 @@ theorem coe_fn_mk (f : α ≃ β) (o : ∀ ⦃a b⦄, s (f a) (f b) ↔ r a b) :
 theorem coe_fn_to_equiv (f : r ≃r s) : (f.to_equiv : α → β) = f :=
   rfl
 
-/--  The map `coe_fn : (r ≃r s) → (α → β)` is injective. Lean fails to parse
+/-- The map `coe_fn : (r ≃r s) → (α → β)` is injective. Lean fails to parse
 `function.injective (λ e : r ≃r s, (e : α → β))`, so we use a trick to say the same. -/
 theorem coe_fn_injective : @Function.Injective (r ≃r s) (α → β) coeFn :=
   FunLike.coe_injective
@@ -443,29 +439,29 @@ theorem ext ⦃f g : r ≃r s⦄ (h : ∀ x, f x = g x) : f = g :=
 theorem ext_iff {f g : r ≃r s} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 
-/--  Inverse map of a relation isomorphism is a relation isomorphism. -/
+/-- Inverse map of a relation isomorphism is a relation isomorphism. -/
 @[symm]
 protected def symm (f : r ≃r s) : s ≃r r :=
   ⟨f.to_equiv.symm, fun a b => by
     erw [← f.map_rel_iff, f.1.apply_symm_apply, f.1.apply_symm_apply]⟩
 
-/--  See Note [custom simps projection]. We need to specify this projection explicitly in this case,
+/-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
   because it is a composition of multiple projections. -/
 def simps.apply (h : r ≃r s) : α → β :=
   h
 
-/--  See Note [custom simps projection]. -/
+/-- See Note [custom simps projection]. -/
 def simps.symm_apply (h : r ≃r s) : β → α :=
   h.symm
 
 initialize_simps_projections RelIso (to_equiv_to_fun → apply, to_equiv_inv_fun → symmApply, -toEquiv)
 
-/--  Identity map is a relation isomorphism. -/
+/-- Identity map is a relation isomorphism. -/
 @[refl, simps apply]
 protected def refl (r : α → α → Prop) : r ≃r r :=
   ⟨Equivₓ.refl _, fun a b => Iff.rfl⟩
 
-/--  Composition of two relation isomorphisms is a relation isomorphism. -/
+/-- Composition of two relation isomorphisms is a relation isomorphism. -/
 @[trans, simps apply]
 protected def trans (f₁ : r ≃r s) (f₂ : s ≃r t) : r ≃r t :=
   ⟨f₁.to_equiv.trans f₂.to_equiv, fun a b => f₂.map_rel_iff.trans f₁.map_rel_iff⟩
@@ -477,7 +473,7 @@ instance (r : α → α → Prop) : Inhabited (r ≃r r) :=
 theorem default_def (r : α → α → Prop) : default (r ≃r r) = RelIso.refl r :=
   rfl
 
-/--  a relation isomorphism is also a relation isomorphism between dual relations. -/
+/-- a relation isomorphism is also a relation isomorphism between dual relations. -/
 protected def swap (f : r ≃r s) : swap r ≃r swap s :=
   ⟨f.to_equiv, fun _ _ => f.map_rel_iff⟩
 
@@ -516,17 +512,16 @@ theorem range_eq (e : r ≃r s) : Set.Range e = Set.Univ :=
 theorem eq_iff_eq (f : r ≃r s) {a b} : f a = f b ↔ a = b :=
   f.injective.eq_iff
 
-/--  Any equivalence lifts to a relation isomorphism between `s` and its preimage. -/
+/-- Any equivalence lifts to a relation isomorphism between `s` and its preimage. -/
 protected def preimage (f : α ≃ β) (s : β → β → Prop) : f ⁻¹'o s ≃r s :=
   ⟨f, fun a b => Iff.rfl⟩
 
-/--  A surjective relation embedding is a relation isomorphism. -/
+/-- A surjective relation embedding is a relation isomorphism. -/
 @[simps apply]
 noncomputable def of_surjective (f : r ↪r s) (H : surjective f) : r ≃r s :=
   ⟨Equivₓ.ofBijective f ⟨f.injective, H⟩, fun a b => f.map_rel_iff⟩
 
-/-- 
-Given relation isomorphisms `r₁ ≃r s₁` and `r₂ ≃r s₂`, construct a relation isomorphism for the
+/-- Given relation isomorphisms `r₁ ≃r s₁` and `r₂ ≃r s₂`, construct a relation isomorphism for the
 lexicographic orders on the sum.
 -/
 def sum_lex_congr {α₁ α₂ β₁ β₂ r₁ r₂ s₁ s₂} (e₁ : @RelIso α₁ β₁ r₁ s₁) (e₂ : @RelIso α₂ β₂ r₂ s₂) :
@@ -534,8 +529,7 @@ def sum_lex_congr {α₁ α₂ β₁ β₂ r₁ r₂ s₁ s₂} (e₁ : @RelIso 
   ⟨Equivₓ.sumCongr e₁.to_equiv e₂.to_equiv, fun a b => by
     cases' e₁ with f hf <;> cases' e₂ with g hg <;> cases a <;> cases b <;> simp [hf, hg]⟩
 
-/-- 
-Given relation isomorphisms `r₁ ≃r s₁` and `r₂ ≃r s₂`, construct a relation isomorphism for the
+/-- Given relation isomorphisms `r₁ ≃r s₁` and `r₂ ≃r s₂`, construct a relation isomorphism for the
 lexicographic orders on the product.
 -/
 def prod_lex_congr {α₁ α₂ β₁ β₂ r₁ r₂ s₁ s₂} (e₁ : @RelIso α₁ β₁ r₁ s₁) (e₂ : @RelIso α₂ β₂ r₂ s₂) :
@@ -543,27 +537,24 @@ def prod_lex_congr {α₁ α₂ β₁ β₂ r₁ r₂ s₁ s₂} (e₁ : @RelIso
   ⟨Equivₓ.prodCongr e₁.to_equiv e₂.to_equiv, fun a b => by
     simp [Prod.lex_def, e₁.map_rel_iff, e₂.map_rel_iff]⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : Groupₓ ( r ≃r r )
-  where
-    one := RelIso.refl r
-      mul f₁ f₂ := f₂.trans f₁
-      inv := RelIso.symm
-      mul_assoc f₁ f₂ f₃ := rfl
-      one_mul f := ext $ fun _ => rfl
-      mul_one f := ext $ fun _ => rfl
-      mul_left_inv f := ext f.symm_apply_apply
+instance : Groupₓ (r ≃r r) where
+  one := RelIso.refl r
+  mul := fun f₁ f₂ => f₂.trans f₁
+  inv := RelIso.symm
+  mul_assoc := fun f₁ f₂ f₃ => rfl
+  one_mul := fun f => ext $ fun _ => rfl
+  mul_one := fun f => ext $ fun _ => rfl
+  mul_left_inv := fun f => ext f.symm_apply_apply
 
 @[simp]
 theorem coe_one : ⇑(1 : r ≃r r) = id :=
   rfl
 
 @[simp]
-theorem coe_mul (e₁ e₂ : r ≃r r) : (⇑e₁*e₂) = e₁ ∘ e₂ :=
+theorem coe_mul (e₁ e₂ : r ≃r r) : ⇑(e₁ * e₂) = e₁ ∘ e₂ :=
   rfl
 
-theorem mul_apply (e₁ e₂ : r ≃r r) (x : α) : (e₁*e₂) x = e₁ (e₂ x) :=
+theorem mul_apply (e₁ e₂ : r ≃r r) (x : α) : (e₁ * e₂) x = e₁ (e₂ x) :=
   rfl
 
 @[simp]
@@ -576,7 +567,7 @@ theorem apply_inv_self (e : r ≃r r) x : e ((e⁻¹) x) = x :=
 
 end RelIso
 
-/--  `subrel r p` is the inherited relation on a subset. -/
+/-- `subrel r p` is the inherited relation on a subset. -/
 def Subrel (r : α → α → Prop) (p : Set α) : p → p → Prop :=
   (coeₓ : p → α) ⁻¹'o r
 
@@ -586,7 +577,7 @@ theorem subrel_val (r : α → α → Prop) (p : Set α) {a b} : Subrel r p a b 
 
 namespace Subrel
 
-/--  The relation embedding from the inherited relation on a subset. -/
+/-- The relation embedding from the inherited relation on a subset. -/
 protected def RelEmbedding (r : α → α → Prop) (p : Set α) : Subrel r p ↪r r :=
   ⟨embedding.subtype _, fun a b => Iff.rfl⟩
 
@@ -599,7 +590,7 @@ instance (r : α → α → Prop) [IsWellOrder α r] (p : Set α) : IsWellOrder 
 
 end Subrel
 
-/--  Restrict the codomain of a relation embedding. -/
+/-- Restrict the codomain of a relation embedding. -/
 def RelEmbedding.codRestrict (p : Set β) (f : r ↪r s) (H : ∀ a, f a ∈ p) : r ↪r Subrel s p :=
   ⟨f.to_embedding.cod_restrict p H, f.map_rel_iff'⟩
 

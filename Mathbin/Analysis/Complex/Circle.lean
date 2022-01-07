@@ -32,28 +32,29 @@ open Complex Metric
 
 open_locale ComplexConjugate
 
-/--  The unit circle in `ℂ`, here given the structure of a submonoid of `ℂ`. -/
-def circle : Submonoid ℂ :=
-  { Carrier := sphere (0 : ℂ) 1,
-    one_mem' := by
-      simp ,
-    mul_mem' := fun a b => by
-      simp only [norm_eq_abs, mem_sphere_zero_iff_norm]
-      intro ha hb
-      simp [ha, hb] }
+/-- The unit circle in `ℂ`, here given the structure of a submonoid of `ℂ`. -/
+def circle : Submonoid ℂ where
+  Carrier := sphere (0 : ℂ) 1
+  one_mem' := by
+    simp
+  mul_mem' := fun a b => by
+    simp only [norm_eq_abs, mem_sphere_zero_iff_norm]
+    intro ha hb
+    simp [ha, hb]
 
 @[simp]
-theorem mem_circle_iff_abs (z : ℂ) : z ∈ circle ↔ abs z = 1 :=
+theorem mem_circle_iff_abs {z : ℂ} : z ∈ circle ↔ abs z = 1 :=
   mem_sphere_zero_iff_norm
 
-theorem circle_def : ↑circle = { z : ℂ | abs z = 1 } := by
-  ext
-  simp
+theorem circle_def : ↑circle = { z : ℂ | abs z = 1 } :=
+  Set.ext $ fun z => mem_circle_iff_abs
 
 @[simp]
-theorem abs_eq_of_mem_circle (z : circle) : abs z = 1 := by
-  convert z.2
-  simp
+theorem abs_coe_circle (z : circle) : abs z = 1 :=
+  mem_circle_iff_abs.mp z.2
+
+theorem mem_circle_iff_norm_sq {z : ℂ} : z ∈ circle ↔ norm_sq z = 1 := by
+  rw [mem_circle_iff_abs, Complex.abs, Real.sqrt_eq_one]
 
 @[simp]
 theorem norm_sq_eq_of_mem_circle (z : circle) : norm_sq z = 1 := by
@@ -83,7 +84,7 @@ theorem coe_inv_circle (z : circle) : ↑z⁻¹ = (z : ℂ)⁻¹ := by
 
 @[simp]
 theorem coe_div_circle (z w : circle) : ↑(z / w) = (z : ℂ) / w :=
-  show (↑z*w⁻¹) = (z : ℂ)*w⁻¹by
+  show ↑(z * w⁻¹) = (z : ℂ) * w⁻¹ by
     simp
 
 instance : CompactSpace circle :=
@@ -95,14 +96,14 @@ instance : TopologicalGroup circle where
     continuous_induced_rng (continuous_mul.comp (h.prod_map h))
   continuous_inv := continuous_induced_rng $ Complex.conjCle.Continuous.comp continuous_subtype_coe
 
-/--  The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`. -/
-def expMapCircle : C(ℝ, circle) :=
-  { toFun := fun t =>
-      ⟨exp (t*I), by
-        simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩ }
+/-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`. -/
+def expMapCircle : C(ℝ, circle) where
+  toFun := fun t =>
+    ⟨exp (t * I), by
+      simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
 
 @[simp]
-theorem exp_map_circle_apply (t : ℝ) : ↑expMapCircle t = Complex.exp (t*Complex.i) :=
+theorem exp_map_circle_apply (t : ℝ) : ↑expMapCircle t = Complex.exp (t * Complex.i) :=
   rfl
 
 @[simp]
@@ -111,15 +112,17 @@ theorem exp_map_circle_zero : expMapCircle 0 = 1 :=
     rw [exp_map_circle_apply, of_real_zero, zero_mul, exp_zero, Submonoid.coe_one]
 
 @[simp]
-theorem exp_map_circle_add (x y : ℝ) : expMapCircle (x+y) = expMapCircle x*expMapCircle y :=
+theorem exp_map_circle_add (x y : ℝ) : expMapCircle (x + y) = expMapCircle x * expMapCircle y :=
   Subtype.ext $ by
     simp only [exp_map_circle_apply, Submonoid.coe_mul, of_real_add, add_mulₓ, Complex.exp_add]
 
-/--  The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`, considered as a homomorphism of
+/-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`, considered as a homomorphism of
 groups. -/
 @[simps]
-def expMapCircleHom : ℝ →+ Additive circle :=
-  { toFun := Additive.ofMul ∘ expMapCircle, map_zero' := exp_map_circle_zero, map_add' := exp_map_circle_add }
+def expMapCircleHom : ℝ →+ Additive circle where
+  toFun := Additive.ofMul ∘ expMapCircle
+  map_zero' := exp_map_circle_zero
+  map_add' := exp_map_circle_add
 
 @[simp]
 theorem exp_map_circle_sub (x y : ℝ) : expMapCircle (x - y) = expMapCircle x / expMapCircle y :=

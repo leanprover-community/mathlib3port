@@ -30,57 +30,57 @@ namespace Linarith
 /-! ### Parsing datatypes -/
 
 
-/--  Variables (represented by natural numbers) map to their power. -/
+/-- Variables (represented by natural numbers) map to their power. -/
 @[reducible]
 unsafe def monom : Type :=
   rb_map ℕ ℕ
 
-/--  `1` is represented by the empty monomial, the product of no variables. -/
+/-- `1` is represented by the empty monomial, the product of no variables. -/
 unsafe def monom.one : monom :=
   rb_map.mk _ _
 
-/--  Compare monomials by first comparing their keys and then their powers. -/
+/-- Compare monomials by first comparing their keys and then their powers. -/
 @[reducible]
 unsafe def monom.lt : monom → monom → Prop := fun a b => a.keys < b.keys || a.keys = b.keys && a.values < b.values
 
 unsafe instance : LT monom :=
   ⟨monom.lt⟩
 
-/--  Linear combinations of monomials are represented by mapping monomials to coefficients. -/
+/-- Linear combinations of monomials are represented by mapping monomials to coefficients. -/
 @[reducible]
 unsafe def Sum : Type :=
   rb_map monom ℤ
 
-/--  `1` is represented as the singleton sum of the monomial `monom.one` with coefficient 1. -/
+/-- `1` is represented as the singleton sum of the monomial `monom.one` with coefficient 1. -/
 unsafe def sum.one : Sum :=
   rb_map.of_list [(monom.one, 1)]
 
-/--  `sum.scale_by_monom s m` multiplies every monomial in `s` by `m`. -/
+/-- `sum.scale_by_monom s m` multiplies every monomial in `s` by `m`. -/
 unsafe def sum.scale_by_monom (s : Sum) (m : monom) : Sum :=
   s.fold mk_rb_map $ fun m' coeff sm => sm.insert (m.add m') coeff
 
-/--  `sum.mul s1 s2` distributes the multiplication of two sums.` -/
+/-- `sum.mul s1 s2` distributes the multiplication of two sums.` -/
 unsafe def sum.mul (s1 s2 : Sum) : Sum :=
   s1.fold mk_rb_map $ fun mn coeff sm => sm.add $ (s2.scale_by_monom mn).scale coeff
 
-/--  The `n`th power of `s : sum` is the `n`-fold product of `s`, with `s.pow 0 = sum.one`. -/
+/-- The `n`th power of `s : sum` is the `n`-fold product of `s`, with `s.pow 0 = sum.one`. -/
 unsafe def sum.pow (s : Sum) : ℕ → Sum
   | 0 => sum.one
-  | k+1 => s.mul (sum.pow k)
+  | k + 1 => s.mul (sum.pow k)
 
-/--  `sum_of_monom m` lifts `m` to a sum with coefficient `1`. -/
+/-- `sum_of_monom m` lifts `m` to a sum with coefficient `1`. -/
 unsafe def sum_of_monom (m : monom) : Sum :=
   mk_rb_map.insert m 1
 
-/--  The unit monomial `one` is represented by the empty rb map. -/
+/-- The unit monomial `one` is represented by the empty rb map. -/
 unsafe def one : monom :=
   mk_rb_map
 
-/--  A scalar `z` is represented by a `sum` with coefficient `z` and monomial `one` -/
+/-- A scalar `z` is represented by a `sum` with coefficient `z` and monomial `one` -/
 unsafe def scalar (z : ℤ) : Sum :=
   mk_rb_map.insert one z
 
-/--  A single variable `n` is represented by a sum with coefficient `1` and monomial `n`. -/
+/-- A single variable `n` is represented by a sum with coefficient `1` and monomial `n`. -/
 unsafe def var (n : ℕ) : Sum :=
   mk_rb_map.insert (mk_rb_map.insert n 1) 1
 
@@ -89,8 +89,7 @@ unsafe def var (n : ℕ) : Sum :=
 
 local notation "exmap" => List (expr × ℕ)
 
-/-- 
-`linear_form_of_atom red map e` is the atomic case for `linear_form_of_expr`.
+/-- `linear_form_of_atom red map e` is the atomic case for `linear_form_of_expr`.
 If `e` appears with index `k` in `map`, it returns the singleton sum `var k`.
 Otherwise it updates `map`, adding `e` with index `n`, and returns the singleton sum `var n`.
 -/
@@ -98,11 +97,10 @@ unsafe def linear_form_of_atom (red : transparency) (m : exmap) (e : expr) : tac
   (do
       let (_, k) ← m.find_defeq red e
       return (m, var k)) <|>
-    let n := m.length+1
+    let n := m.length + 1
     return ((e, n) :: m, var n)
 
-/-- 
-`linear_form_of_expr red map e` computes the linear form of `e`.
+/-- `linear_form_of_expr red map e` computes the linear form of `e`.
 
 `map` is a lookup map from atomic expressions to variable numbers.
 If a new atomic expression is encountered, it is added to the map with a new number.
@@ -112,11 +110,11 @@ Because it matches up to definitional equality, this function must be in the `ta
 and forces some functions that call it into `tactic` as well.
 -/
 unsafe def linear_form_of_expr (red : transparency) : exmap → expr → tactic (exmap × Sum)
-  | m, e@(quote.1 ((%%ₓe1)*%%ₓe2)) => do
+  | m, e@(quote.1 ((%%ₓe1) * %%ₓe2)) => do
     let (m', comp1) ← linear_form_of_expr m e1
     let (m', comp2) ← linear_form_of_expr m' e2
     return (m', comp1.mul comp2)
-  | m, quote.1 ((%%ₓe1)+%%ₓe2) => do
+  | m, quote.1 ((%%ₓe1) + %%ₓe2) => do
     let (m', comp1) ← linear_form_of_expr m e1
     let (m', comp2) ← linear_form_of_expr m' e2
     return (m', comp1.add comp2)
@@ -139,8 +137,7 @@ unsafe def linear_form_of_expr (red : transparency) : exmap → expr → tactic 
     | some z => return ⟨m, scalar z⟩
     | none => linear_form_of_atom red m e
 
-/-- 
-`sum_to_lf s map` eliminates the monomial level of the `sum` `s`.
+/-- `sum_to_lf s map` eliminates the monomial level of the `sum` `s`.
 
 `map` is a lookup map from monomials to variable numbers.
 The output `rb_map ℕ ℤ` has the same structure as `sum`,
@@ -155,8 +152,7 @@ unsafe def sum_to_lf (s : Sum) (m : rb_map monom ℕ) : rb_map monom ℕ × rb_m
       let n := map.size
       ⟨map.insert mn n, out.insert n coeff⟩
 
-/-- 
-`to_comp red e e_map monom_map` converts an expression of the form `t < 0`, `t ≤ 0`, or `t = 0`
+/-- `to_comp red e e_map monom_map` converts an expression of the form `t < 0`, `t ≤ 0`, or `t = 0`
 into a `comp` object.
 
 `e_map` maps atomic expressions to indices; `monom_map` maps monomials to indices.
@@ -169,8 +165,7 @@ unsafe def to_comp (red : transparency) (e : expr) (e_map : exmap) (monom_map : 
   let ⟨nm, mm'⟩ := sum_to_lf comp' monom_map
   return ⟨⟨iq, mm'.to_list⟩, m', nm⟩
 
-/-- 
-`to_comp_fold red e_map exprs monom_map` folds `to_comp` over `exprs`,
+/-- `to_comp_fold red e_map exprs monom_map` folds `to_comp` over `exprs`,
 updating `e_map` and `monom_map` as it goes.
  -/
 unsafe def to_comp_fold (red : transparency) :
@@ -181,8 +176,7 @@ unsafe def to_comp_fold (red : transparency) :
     let (l, mp, mm') ← to_comp_fold m' t mm'
     return (c :: l, mp, mm')
 
-/-- 
-`linear_forms_and_vars red pfs` is the main interface for computing the linear forms of a list
+/-- `linear_forms_and_vars red pfs` is the main interface for computing the linear forms of a list
 of expressions. Given a list `pfs` of proofs of comparisons, it produces a list `c` of `comps` of
 the same length, such that `c[i]` represents the linear form of the type of `pfs[i]`.
 

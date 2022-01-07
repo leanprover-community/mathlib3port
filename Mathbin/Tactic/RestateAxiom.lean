@@ -2,8 +2,7 @@ import Mathbin.Tactic.DocCommands
 
 open Lean.Parser Tactic Interactive
 
-/-- 
-`restate_axiom` takes a structure field, and makes a new, definitionally simplified copy of it.
+/-- `restate_axiom` takes a structure field, and makes a new, definitionally simplified copy of it.
 If the existing field name ends with a `'`, the new field just has the prime removed. Otherwise,
 we append `_lemma`.
 The main application is to provide clean versions of structure fields that have been tagged with
@@ -37,8 +36,7 @@ private unsafe def name_lemma (old : Name) (new : Option Name := none) : tactic 
     | nil => undefined
   | some new => return (mkStrName old.get_prefix new.to_string)
 
-/-- 
-`restate_axiom` makes a new copy of a structure field, first definitionally simplifying the type.
+/-- `restate_axiom` makes a new copy of a structure field, first definitionally simplifying the type.
 This is useful to remove `auto_param` or `opt_param` from the statement.
 
 As an example, we have:

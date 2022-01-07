@@ -229,9 +229,9 @@ theorem IsROrC.measurable_of_real : Measurable (coeₓ : ℝ → 𝕜) :=
 theorem measurable_of_re_im (hre : Measurable fun x => IsROrC.re (f x)) (him : Measurable fun x => IsROrC.im (f x)) :
     Measurable f := by
   convert (is_R_or_C.measurable_of_real.comp hre).add ((is_R_or_C.measurable_of_real.comp him).mul_const IsROrC.i)
-  ·
-    ext1 x
+  · ext1 x
     exact (IsROrC.re_add_im _).symm
+    
   all_goals
     infer_instance
 
@@ -240,9 +240,9 @@ theorem ae_measurable_of_re_im (hre : AeMeasurable (fun x => IsROrC.re (f x)) μ
   convert
     (is_R_or_C.measurable_of_real.comp_ae_measurable hre).add
       ((is_R_or_C.measurable_of_real.comp_ae_measurable him).mul_const IsROrC.i)
-  ·
-    ext1 x
+  · ext1 x
     exact (IsROrC.re_add_im _).symm
+    
   all_goals
     infer_instance
 
@@ -264,14 +264,14 @@ instance Nnreal.hasMeasurablePow : HasMeasurablePow ℝ≥0 ℝ :=
 
 instance Ennreal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ := by
   refine' ⟨Ennreal.measurable_of_measurable_nnreal_prod _ _⟩
-  ·
-    simp_rw [Ennreal.coe_rpow_def]
+  · simp_rw [Ennreal.coe_rpow_def]
     refine' Measurable.ite _ measurable_const (measurable_fst.pow measurable_snd).coe_nnreal_ennreal
     exact MeasurableSet.inter (measurable_fst (measurable_set_singleton 0)) (measurable_snd measurable_set_Iio)
-  ·
-    simp_rw [Ennreal.top_rpow_def]
+    
+  · simp_rw [Ennreal.top_rpow_def]
     refine' Measurable.ite measurable_set_Ioi measurable_const _
     exact Measurable.ite (measurable_set_singleton 0) measurable_const measurable_const
+    
 
 end PowInstances
 
@@ -295,10 +295,10 @@ theorem AeMeasurable.inner [MeasurableSpace α] [MeasurableSpace E] [OpensMeasur
   refine' hf.ae_eq_mk.mp (hg.ae_eq_mk.mono fun x hxg hxf => _)
   dsimp only
   congr
-  ·
-    exact hxf
-  ·
-    exact hxg
+  · exact hxf
+    
+  · exact hxg
+    
 
 end
 

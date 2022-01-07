@@ -21,7 +21,7 @@ Nevertheless, sometimes proof by computational reflection requires natural numbe
 
 namespace PosNum
 
-/--  Auxiliary function for computing the smallest prime factor of a `pos_num`. Unlike
+/-- Auxiliary function for computing the smallest prime factor of a `pos_num`. Unlike
 `nat.min_fac_aux`, we use a natural number `fuel` variable that is set to an upper bound on the
 number of iterations. It is initialized to the number `n` we are determining primality for. Even
 though this is exponential in the input (since it is a `nat`, not a `num`), it will get lazily
@@ -29,21 +29,21 @@ evaluated during kernel reduction, so we will only require about `sqrt n` unfold
 `sqrt n` iterations of the loop. -/
 def min_fac_aux (n : PosNum) : ℕ → PosNum → PosNum
   | 0, _ => n
-  | fuel+1, k => if h : n < k.bit1*k.bit1 then n else if k.bit1 ∣ n then k.bit1 else min_fac_aux fuel k.succ
+  | fuel + 1, k => if h : n < k.bit1 * k.bit1 then n else if k.bit1 ∣ n then k.bit1 else min_fac_aux fuel k.succ
 
-theorem min_fac_aux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel+k.bit1) :
+theorem min_fac_aux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + k.bit1) :
     (min_fac_aux n fuel k : ℕ) = Nat.minFacAux n k.bit1 := by
   induction' fuel with fuel ih generalizing k <;> rw [min_fac_aux, Nat.minFacAux]
-  ·
-    rw [if_pos]
+  · rw [if_pos]
     rwa [zero_addₓ, Nat.sqrt_lt] at h
+    
   rw [← mul_to_nat]
   simp only [cast_lt, dvd_to_nat, ite_cast]
   congr 2
   rw [ih] <;> [congr, convert Nat.lt_succ_of_ltₓ h using 1] <;>
     simp only [_root_.bit1, _root_.bit0, cast_bit1, cast_succ, Nat.succ_eq_add_one, add_assocₓ, add_left_commₓ]
 
-/--  Returns the smallest prime factor of `n ≠ 1`. -/
+/-- Returns the smallest prime factor of `n ≠ 1`. -/
 def min_fac : PosNum → PosNum
   | 1 => 1
   | bit0 n => 2
@@ -52,33 +52,33 @@ def min_fac : PosNum → PosNum
 @[simp]
 theorem min_fac_to_nat (n : PosNum) : (min_fac n : ℕ) = Nat.minFac n := by
   cases n
-  ·
-    rfl
-  ·
-    rw [min_fac, Nat.min_fac_eq, if_neg]
+  · rfl
+    
+  · rw [min_fac, Nat.min_fac_eq, if_neg]
     swap
-    ·
-      simp
+    · simp
+      
     rw [min_fac_aux_to_nat]
-    ·
-      rfl
+    · rfl
+      
     simp only [cast_one, cast_bit1]
     rw [Nat.sqrt_lt]
     convert
       lt_add_of_pos_right _
         (by
-          decide : (0 : ℕ) < ((n+4)*n)+8)
+          decide : (0 : ℕ) < (n + 4) * n + 8)
     unfold _root_.bit1 _root_.bit0
     ring
-  ·
-    rw [min_fac, Nat.min_fac_eq, if_pos]
-    ·
-      rfl
+    
+  · rw [min_fac, Nat.min_fac_eq, if_pos]
+    · rfl
+      
     simp
+    
 
-/--  Primality predicate for a `pos_num`. -/
+/-- Primality predicate for a `pos_num`. -/
 @[simp]
-def prime (n : PosNum) : Prop :=
+def Prime (n : PosNum) : Prop :=
   Nat.Prime n
 
 instance decidable_prime : DecidablePred PosNum.Prime
@@ -87,16 +87,16 @@ instance decidable_prime : DecidablePred PosNum.Prime
     decidableOfIff' (n = 1)
       (by
         refine' nat.prime_def_min_fac.trans ((and_iff_right _).trans $ eq_comm.trans _)
-        ·
-          exact bit0_le_bit0.2 (to_nat_pos _)
+        · exact bit0_le_bit0.2 (to_nat_pos _)
+          
         rw [← min_fac_to_nat, to_nat_inj]
         exact ⟨bit0.inj, congr_argₓ _⟩)
   | bit1 n =>
     decidableOfIff' (min_fac_aux (bit1 n) n 1 = bit1 n)
       (by
         refine' nat.prime_def_min_fac.trans ((and_iff_right _).trans _)
-        ·
-          exact Nat.bit0_le_bit1_iff.2 (to_nat_pos _)
+        · exact Nat.bit0_le_bit1_iff.2 (to_nat_pos _)
+          
         rw [← min_fac_to_nat, to_nat_inj]
         rfl)
 
@@ -104,7 +104,7 @@ end PosNum
 
 namespace Num
 
-/--  Returns the smallest prime factor of `n ≠ 1`. -/
+/-- Returns the smallest prime factor of `n ≠ 1`. -/
 def min_fac : Num → PosNum
   | 0 => 2
   | Pos n => n.min_fac
@@ -114,9 +114,9 @@ theorem min_fac_to_nat : ∀ n : Num, (min_fac n : ℕ) = Nat.minFac n
   | 0 => rfl
   | Pos n => PosNum.min_fac_to_nat _
 
-/--  Primality predicate for a `num`. -/
+/-- Primality predicate for a `num`. -/
 @[simp]
-def prime (n : Num) : Prop :=
+def Prime (n : Num) : Prop :=
   Nat.Prime n
 
 instance decidable_prime : DecidablePred Num.Prime

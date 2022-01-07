@@ -36,8 +36,7 @@ namespace CategoryTheory
 
 variable {C : Type u₁} [category.{v₁} C] [monoidal_category C]
 
-/-- 
-A half-braiding on `X : C` is a family of isomorphisms `X ⊗ U ≅ U ⊗ X`,
+/-- A half-braiding on `X : C` is a family of isomorphisms `X ⊗ U ≅ U ⊗ X`,
 monoidally natural in `U : C`.
 
 Thinking of `C` as a 2-category with a single `0`-morphism, these are the same as natural
@@ -67,100 +66,18 @@ attribute [simp, reassoc] half_braiding.naturality
 
 variable (C)
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment
-    "/--"
-    "\nThe Drinfeld center of a monoidal category `C` has as objects pairs `⟨X, b⟩`, where `X : C`\nand `b` is a half-braiding on `X`.\n-/")]
-  [(Term.attributes
-    "@["
-    [(Term.attrInstance (Term.attrKind []) (Mathlib.Tactic.Lint.nolint "nolint" [`has_inhabited_instance]))]
-    "]")]
-  []
-  []
-  []
-  [])
- (Command.def
-  "def"
-  (Command.declId `center [])
-  (Command.optDeclSig [] [])
-  (Command.declValSimple
-   ":="
-   (Init.Data.Sigma.Basic.«termΣ_,_»
-    "Σ"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `X)] [":" `C]))
-    ", "
-    (Term.app `half_braiding [`X]))
-   [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Init.Data.Sigma.Basic.«termΣ_,_»
-   "Σ"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `X)] [":" `C]))
-   ", "
-   (Term.app `half_braiding [`X]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `half_braiding [`X])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `X
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `half_braiding
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-      The Drinfeld center of a monoidal category `C` has as objects pairs `⟨X, b⟩`, where `X : C`
-      and `b` is a half-braiding on `X`.
-      -/
-    @[ nolint has_inhabited_instance ]
-  def center := Σ X : C , half_braiding X
+/-- The Drinfeld center of a monoidal category `C` has as objects pairs `⟨X, b⟩`, where `X : C`
+and `b` is a half-braiding on `X`.
+-/
+@[nolint has_inhabited_instance]
+def center :=
+  Σ X : C, half_braiding X
 
 namespace Center
 
 variable {C}
 
-/--  A morphism in the Drinfeld center of `C`. -/
+/-- A morphism in the Drinfeld center of `C`. -/
 @[ext, nolint has_inhabited_instance]
 structure hom (X Y : center C) where
   f : X.1 ⟶ Y.1
@@ -172,8 +89,10 @@ restate_axiom hom.comm'
 
 attribute [simp, reassoc] hom.comm
 
--- failed to format: format: uncaught backtrack exception
-instance : category ( center C ) where Hom := hom id X := { f := 𝟙 X . 1 } comp X Y Z f g := { f := f.f ≫ g.f }
+instance : category (center C) where
+  Hom := hom
+  id := fun X => { f := 𝟙 X.1 }
+  comp := fun X Y Z f g => { f := f.f ≫ g.f }
 
 @[simp]
 theorem id_f (X : center C) : hom.f (𝟙 X) = 𝟙 X.1 :=
@@ -190,22 +109,21 @@ theorem ext {X Y : center C} (f g : X ⟶ Y) (w : f.f = g.f) : f = g := by
   congr
   exact w
 
-/-- 
-Construct an isomorphism in the Drinfeld center from
+/-- Construct an isomorphism in the Drinfeld center from
 a morphism whose underlying morphism is an isomorphism.
 -/
 @[simps]
-def iso_mk {X Y : center C} (f : X ⟶ Y) [is_iso f.f] : X ≅ Y :=
-  { Hom := f,
-    inv :=
-      ⟨inv f.f, fun U => by
-        simp [← cancel_epi (f.f ⊗ 𝟙 U), ← comp_tensor_id_assoc, ← id_tensor_comp]⟩ }
+def iso_mk {X Y : center C} (f : X ⟶ Y) [is_iso f.f] : X ≅ Y where
+  Hom := f
+  inv :=
+    ⟨inv f.f, fun U => by
+      simp [← cancel_epi (f.f ⊗ 𝟙 U), ← comp_tensor_id_assoc, ← id_tensor_comp]⟩
 
 instance is_iso_of_f_is_iso {X Y : center C} (f : X ⟶ Y) [is_iso f.f] : is_iso f := by
   change is_iso (iso_mk f).Hom
   infer_instance
 
-/--  Auxiliary definition for the `monoidal_category` instance on `center C`. -/
+/-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
 def tensor_obj (X Y : center C) : center C :=
   ⟨X.1 ⊗ Y.1,
@@ -229,20 +147,20 @@ def tensor_obj (X Y : center C) : center C :=
           id_tensor_comp_assoc, half_braiding.naturality, id_tensor_comp_assoc, associator_inv_naturality_assoc, ←
           comp_tensor_id_assoc, half_braiding.naturality, comp_tensor_id_assoc, associator_naturality, ← tensor_id] }⟩
 
-/--  Auxiliary definition for the `monoidal_category` instance on `center C`. -/
+/-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
-def tensor_hom {X₁ Y₁ X₂ Y₂ : center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) : tensor_obj X₁ X₂ ⟶ tensor_obj Y₁ Y₂ :=
-  { f := f.f ⊗ g.f,
-    comm' := fun U => by
-      dsimp
-      rw [category.assoc, category.assoc, category.assoc, category.assoc, associator_naturality_assoc, ←
-        tensor_id_comp_id_tensor, category.assoc, ← id_tensor_comp_assoc, g.comm, id_tensor_comp_assoc,
-        tensor_id_comp_id_tensor_assoc, ← id_tensor_comp_tensor_id, category.assoc, associator_inv_naturality_assoc,
-        id_tensor_associator_inv_naturality_assoc, tensor_id, id_tensor_comp_tensor_id_assoc, ←
-        tensor_id_comp_id_tensor g.f, category.assoc, ← comp_tensor_id_assoc, f.comm, comp_tensor_id_assoc,
-        id_tensor_associator_naturality, associator_naturality_assoc, ← id_tensor_comp, tensor_id_comp_id_tensor] }
+def tensor_hom {X₁ Y₁ X₂ Y₂ : center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) : tensor_obj X₁ X₂ ⟶ tensor_obj Y₁ Y₂ where
+  f := f.f ⊗ g.f
+  comm' := fun U => by
+    dsimp
+    rw [category.assoc, category.assoc, category.assoc, category.assoc, associator_naturality_assoc, ←
+      tensor_id_comp_id_tensor, category.assoc, ← id_tensor_comp_assoc, g.comm, id_tensor_comp_assoc,
+      tensor_id_comp_id_tensor_assoc, ← id_tensor_comp_tensor_id, category.assoc, associator_inv_naturality_assoc,
+      id_tensor_associator_inv_naturality_assoc, tensor_id, id_tensor_comp_tensor_id_assoc, ←
+      tensor_id_comp_id_tensor g.f, category.assoc, ← comp_tensor_id_assoc, f.comm, comp_tensor_id_assoc,
+      id_tensor_associator_naturality, associator_naturality_assoc, ← id_tensor_comp, tensor_id_comp_id_tensor]
 
-/--  Auxiliary definition for the `monoidal_category` instance on `center C`. -/
+/-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
 def tensor_unit : center C :=
   ⟨𝟙_ C,
@@ -253,7 +171,7 @@ def tensor_unit : center C :=
         dsimp
         rw [left_unitor_naturality_assoc, right_unitor_inv_naturality, category.assoc] }⟩
 
-/--  Auxiliary definition for the `monoidal_category` instance on `center C`. -/
+/-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def associator (X Y Z : center C) : tensor_obj (tensor_obj X Y) Z ≅ tensor_obj X (tensor_obj Y Z) :=
   iso_mk
     ⟨(α_ X.1 Y.1 Z.1).Hom, fun U => by
@@ -264,7 +182,7 @@ def associator (X Y Z : center C) : tensor_obj (tensor_obj X Y) Z ≅ tensor_obj
         associator_naturality_assoc, cancel_epi, cancel_epi, ← is_iso.inv_comp_eq, inv_tensor, is_iso.inv_id,
         is_iso.iso.inv_inv, pentagon_assoc, iso.hom_inv_id_assoc, ← tensor_id, ← associator_naturality_assoc]⟩
 
-/--  Auxiliary definition for the `monoidal_category` instance on `center C`. -/
+/-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def left_unitor (X : center C) : tensor_obj tensor_unit X ≅ X :=
   iso_mk
     ⟨(λ_ X.1).Hom, fun U => by
@@ -273,7 +191,7 @@ def left_unitor (X : center C) : tensor_obj tensor_unit X ≅ X :=
         triangle_assoc_comp_right_inv]
       rw [← left_unitor_tensor, left_unitor_naturality, left_unitor_tensor'_assoc]⟩
 
-/--  Auxiliary definition for the `monoidal_category` instance on `center C`. -/
+/-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def right_unitor (X : center C) : tensor_obj X tensor_unit ≅ X :=
   iso_mk
     ⟨(ρ_ X.1).Hom, fun U => by
@@ -289,16 +207,13 @@ attribute [local simp] associator_naturality left_unitor_naturality right_unitor
 
 attribute [local simp] center.associator center.left_unitor center.right_unitor
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : monoidal_category ( center C )
-  where
-    tensorObj X Y := tensor_obj X Y
-      tensorHom X₁ Y₁ X₂ Y₂ f g := tensor_hom f g
-      tensorUnit := tensor_unit
-      associator := associator
-      leftUnitor := left_unitor
-      rightUnitor := right_unitor
+instance : monoidal_category (center C) where
+  tensorObj := fun X Y => tensor_obj X Y
+  tensorHom := fun X₁ Y₁ X₂ Y₂ f g => tensor_hom f g
+  tensorUnit := tensor_unit
+  associator := associator
+  leftUnitor := left_unitor
+  rightUnitor := right_unitor
 
 @[simp]
 theorem tensor_fst (X Y : center C) : (X ⊗ Y).1 = X.1 ⊗ Y.1 :=
@@ -353,19 +268,24 @@ section
 
 variable (C)
 
-/--  The forgetful monoidal functor from the Drinfeld center to the original category. -/
+/-- The forgetful monoidal functor from the Drinfeld center to the original category. -/
 @[simps]
-def forget : monoidal_functor (center C) C :=
-  { obj := fun X => X.1, map := fun X Y f => f.f, ε := 𝟙 (𝟙_ C), μ := fun X Y => 𝟙 (X.1 ⊗ Y.1) }
+def forget : monoidal_functor (center C) C where
+  obj := fun X => X.1
+  map := fun X Y f => f.f
+  ε := 𝟙 (𝟙_ C)
+  μ := fun X Y => 𝟙 (X.1 ⊗ Y.1)
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : reflects_isomorphisms ( forget C ) . toFunctor
-  where reflects A B f i := by dsimp at i skip change is_iso ( iso_mk f ) . Hom infer_instance
+instance : reflects_isomorphisms (forget C).toFunctor where
+  reflects := fun A B f i => by
+    dsimp  at i
+    skip
+    change is_iso (iso_mk f).Hom
+    infer_instance
 
 end
 
-/--  Auxiliary definition for the `braided_category` instance on `center C`. -/
+/-- Auxiliary definition for the `braided_category` instance on `center C`. -/
 @[simps]
 def braiding (X Y : center C) : X ⊗ Y ≅ Y ⊗ X :=
   iso_mk
@@ -376,30 +296,12 @@ def braiding (X Y : center C) : X ⊗ Y ≅ Y ⊗ X :=
         half_braiding.monoidal]
       simp ⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  braided_category_center
-  : braided_category ( center C )
-  where
-    braiding := braiding
-      braiding_naturality'
-        X Y X' Y' f g
-        :=
-        by
-          ext
-            dsimp
-            rw
-              [
-                ← tensor_id_comp_id_tensor
-                  ,
-                  category.assoc
-                  ,
-                  half_braiding.naturality
-                  ,
-                  f.comm_assoc
-                  ,
-                  id_tensor_comp_tensor_id
-                ]
+instance braided_category_center : braided_category (center C) where
+  braiding := braiding
+  braiding_naturality' := fun X Y X' Y' f g => by
+    ext
+    dsimp
+    rw [← tensor_id_comp_id_tensor, category.assoc, half_braiding.naturality, f.comm_assoc, id_tensor_comp_tensor_id]
 
 section
 
@@ -407,7 +309,7 @@ variable [braided_category C]
 
 open BraidedCategory
 
-/--  Auxiliary construction for `of_braided`. -/
+/-- Auxiliary construction for `of_braided`. -/
 @[simps]
 def of_braided_obj (X : C) : center C :=
   ⟨X,
@@ -418,24 +320,24 @@ def of_braided_obj (X : C) : center C :=
 
 variable (C)
 
-/-- 
-The functor lifting a braided category to its center, using the braiding as the half-braiding.
+/-- The functor lifting a braided category to its center, using the braiding as the half-braiding.
 -/
 @[simps]
-def of_braided : monoidal_functor C (center C) :=
-  { obj := of_braided_obj, map := fun X X' f => { f, comm' := fun U => braiding_naturality _ _ },
-    ε :=
-      { f := 𝟙 _,
-        comm' := fun U => by
-          dsimp
-          rw [tensor_id, category.id_comp, tensor_id, category.comp_id, ← braiding_right_unitor, category.assoc,
-            iso.hom_inv_id, category.comp_id] },
-    μ := fun X Y =>
-      { f := 𝟙 _,
-        comm' := fun U => by
-          dsimp
-          rw [tensor_id, tensor_id, category.id_comp, category.comp_id, ← iso.inv_comp_eq, ← category.assoc, ←
-            category.assoc, ← iso.comp_inv_eq, category.assoc, hexagon_reverse, category.assoc] } }
+def of_braided : monoidal_functor C (center C) where
+  obj := of_braided_obj
+  map := fun X X' f => { f, comm' := fun U => braiding_naturality _ _ }
+  ε :=
+    { f := 𝟙 _,
+      comm' := fun U => by
+        dsimp
+        rw [tensor_id, category.id_comp, tensor_id, category.comp_id, ← braiding_right_unitor, category.assoc,
+          iso.hom_inv_id, category.comp_id] }
+  μ := fun X Y =>
+    { f := 𝟙 _,
+      comm' := fun U => by
+        dsimp
+        rw [tensor_id, tensor_id, category.id_comp, category.comp_id, ← iso.inv_comp_eq, ← category.assoc, ←
+          category.assoc, ← iso.comp_inv_eq, category.assoc, hexagon_reverse, category.assoc] }
 
 end
 

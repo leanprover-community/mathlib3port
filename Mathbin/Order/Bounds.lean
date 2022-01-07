@@ -36,263 +36,35 @@ variable [Preorderₓ α] [Preorderₓ β] {s t : Set α} {a b : α}
 -/
 
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [(Command.docComment "/--" " The set of upper bounds of a set. -/")] [] [] [] [] [])
- (Command.def
-  "def"
-  (Command.declId `UpperBounds [])
-  (Command.optDeclSig
-   [(Term.explicitBinder "(" [`s] [":" (Term.app `Set [`α])] [] ")")]
-   [(Term.typeSpec ":" (Term.app `Set [`α]))])
-  (Command.declValSimple
-   ":="
-   (Set.«term{_|_}»
-    "{"
-    `x
-    "|"
-    (Term.forall
-     "∀"
-     [(Term.strictImplicitBinder "⦃" [`a] [] "⦄")]
-     ","
-     (Term.arrow (Init.Core.«term_∈_» `a " ∈ " `s) "→" («term_≤_» `a "≤" `x)))
-    "}")
-   [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}»
-   "{"
-   `x
-   "|"
-   (Term.forall
-    "∀"
-    [(Term.strictImplicitBinder "⦃" [`a] [] "⦄")]
-    ","
-    (Term.arrow (Init.Core.«term_∈_» `a " ∈ " `s) "→" («term_≤_» `a "≤" `x)))
-   "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.forall
-   "∀"
-   [(Term.strictImplicitBinder "⦃" [`a] [] "⦄")]
-   ","
-   (Term.arrow (Init.Core.«term_∈_» `a " ∈ " `s) "→" («term_≤_» `a "≤" `x)))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.forall', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.forall', expected 'Lean.Parser.Term.forall.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.arrow (Init.Core.«term_∈_» `a " ∈ " `s) "→" («term_≤_» `a "≤" `x))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.arrow', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_≤_» `a "≤" `x)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_≤_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 25 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
-  (Init.Core.«term_∈_» `a " ∈ " `s)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_∈_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (some 25, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'Lean.Parser.Term.simpleBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'Lean.Parser.Term.explicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'Lean.Parser.Term.explicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«⦄»', expected 'group'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«⦃»', expected 'group'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/-- The set of upper bounds of a set. -/ def UpperBounds ( s : Set α ) : Set α := { x | ∀ ⦃ a ⦄ , a ∈ s → a ≤ x }
+/-- The set of upper bounds of a set. -/
+def UpperBounds (s : Set α) : Set α :=
+  { x | ∀ ⦃a⦄, a ∈ s → a ≤ x }
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [(Command.docComment "/--" " The set of lower bounds of a set. -/")] [] [] [] [] [])
- (Command.def
-  "def"
-  (Command.declId `LowerBounds [])
-  (Command.optDeclSig
-   [(Term.explicitBinder "(" [`s] [":" (Term.app `Set [`α])] [] ")")]
-   [(Term.typeSpec ":" (Term.app `Set [`α]))])
-  (Command.declValSimple
-   ":="
-   (Set.«term{_|_}»
-    "{"
-    `x
-    "|"
-    (Term.forall
-     "∀"
-     [(Term.strictImplicitBinder "⦃" [`a] [] "⦄")]
-     ","
-     (Term.arrow (Init.Core.«term_∈_» `a " ∈ " `s) "→" («term_≤_» `x "≤" `a)))
-    "}")
-   [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}»
-   "{"
-   `x
-   "|"
-   (Term.forall
-    "∀"
-    [(Term.strictImplicitBinder "⦃" [`a] [] "⦄")]
-    ","
-    (Term.arrow (Init.Core.«term_∈_» `a " ∈ " `s) "→" («term_≤_» `x "≤" `a)))
-   "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.forall
-   "∀"
-   [(Term.strictImplicitBinder "⦃" [`a] [] "⦄")]
-   ","
-   (Term.arrow (Init.Core.«term_∈_» `a " ∈ " `s) "→" («term_≤_» `x "≤" `a)))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.forall', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.forall', expected 'Lean.Parser.Term.forall.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.arrow (Init.Core.«term_∈_» `a " ∈ " `s) "→" («term_≤_» `x "≤" `a))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.arrow', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_≤_» `x "≤" `a)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_≤_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 25 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
-  (Init.Core.«term_∈_» `a " ∈ " `s)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_∈_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (some 25, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'Lean.Parser.Term.simpleBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'Lean.Parser.Term.explicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'Lean.Parser.Term.explicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«⦄»', expected 'group'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«⦃»', expected 'group'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/-- The set of lower bounds of a set. -/ def LowerBounds ( s : Set α ) : Set α := { x | ∀ ⦃ a ⦄ , a ∈ s → x ≤ a }
+/-- The set of lower bounds of a set. -/
+def LowerBounds (s : Set α) : Set α :=
+  { x | ∀ ⦃a⦄, a ∈ s → x ≤ a }
 
-/--  A set is bounded above if there exists an upper bound. -/
+/-- A set is bounded above if there exists an upper bound. -/
 def BddAbove (s : Set α) :=
   (UpperBounds s).Nonempty
 
-/--  A set is bounded below if there exists a lower bound. -/
+/-- A set is bounded below if there exists a lower bound. -/
 def BddBelow (s : Set α) :=
   (LowerBounds s).Nonempty
 
-/--  `a` is a least element of a set `s`; for a partial order, it is unique if exists. -/
+/-- `a` is a least element of a set `s`; for a partial order, it is unique if exists. -/
 def IsLeast (s : Set α) (a : α) : Prop :=
   a ∈ s ∧ a ∈ LowerBounds s
 
-/--  `a` is a greatest element of a set `s`; for a partial order, it is unique if exists -/
+/-- `a` is a greatest element of a set `s`; for a partial order, it is unique if exists -/
 def IsGreatest (s : Set α) (a : α) : Prop :=
   a ∈ s ∧ a ∈ UpperBounds s
 
-/--  `a` is a least upper bound of a set `s`; for a partial order, it is unique if exists. -/
+/-- `a` is a least upper bound of a set `s`; for a partial order, it is unique if exists. -/
 def IsLub (s : Set α) : α → Prop :=
   IsLeast (UpperBounds s)
 
-/--  `a` is a greatest lower bound of a set `s`; for a partial order, it is unique if exists. -/
+/-- `a` is a greatest lower bound of a set `s`; for a partial order, it is unique if exists. -/
 def IsGlb (s : Set α) : α → Prop :=
   IsGreatest (LowerBounds s)
 
@@ -302,24 +74,24 @@ theorem mem_upper_bounds : a ∈ UpperBounds s ↔ ∀, ∀ x ∈ s, ∀, x ≤ 
 theorem mem_lower_bounds : a ∈ LowerBounds s ↔ ∀, ∀ x ∈ s, ∀, a ≤ x :=
   Iff.rfl
 
-/--  A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` such that `x`
+/-- A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` such that `x`
 is not greater than or equal to `y`. This version only assumes `preorder` structure and uses
 `¬(y ≤ x)`. A version for linear orders is called `not_bdd_above_iff`. -/
 theorem not_bdd_above_iff' : ¬BddAbove s ↔ ∀ x, ∃ y ∈ s, ¬y ≤ x := by
   simp [BddAbove, UpperBounds, Set.Nonempty]
 
-/--  A set `s` is not bounded below if and only if for each `x` there exists `y ∈ s` such that `x`
+/-- A set `s` is not bounded below if and only if for each `x` there exists `y ∈ s` such that `x`
 is not less than or equal to `y`. This version only assumes `preorder` structure and uses
 `¬(x ≤ y)`. A version for linear orders is called `not_bdd_below_iff`. -/
 theorem not_bdd_below_iff' : ¬BddBelow s ↔ ∀ x, ∃ y ∈ s, ¬x ≤ y :=
   @not_bdd_above_iff' (OrderDual α) _ _
 
-/--  A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` that is greater
+/-- A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` that is greater
 than `x`. A version for preorders is called `not_bdd_above_iff'`. -/
 theorem not_bdd_above_iff {α : Type _} [LinearOrderₓ α] {s : Set α} : ¬BddAbove s ↔ ∀ x, ∃ y ∈ s, x < y := by
   simp only [not_bdd_above_iff', not_leₓ]
 
-/--  A set `s` is not bounded below if and only if for each `x` there exists `y ∈ s` that is less
+/-- A set `s` is not bounded below if and only if for each `x` there exists `y ∈ s` that is less
 than `x`. A version for preorders is called `not_bdd_below_iff'`. -/
 theorem not_bdd_below_iff {α : Type _} [LinearOrderₓ α] {s : Set α} : ¬BddBelow s ↔ ∀ x, ∃ y ∈ s, y < x :=
   @not_bdd_above_iff (OrderDual α) _ _
@@ -363,21 +135,21 @@ theorem upper_bounds_mono ⦃s t : Set α⦄ (hst : s ⊆ t) ⦃a b⦄ (hab : a 
 theorem lower_bounds_mono ⦃s t : Set α⦄ (hst : s ⊆ t) ⦃a b⦄ (hab : a ≤ b) : b ∈ LowerBounds t → a ∈ LowerBounds s :=
   fun hb => lower_bounds_mono_set hst $ lower_bounds_mono_mem hab hb
 
-/--  If `s ⊆ t` and `t` is bounded above, then so is `s`. -/
+/-- If `s ⊆ t` and `t` is bounded above, then so is `s`. -/
 theorem BddAbove.mono ⦃s t : Set α⦄ (h : s ⊆ t) : BddAbove t → BddAbove s :=
   nonempty.mono $ upper_bounds_mono_set h
 
-/--  If `s ⊆ t` and `t` is bounded below, then so is `s`. -/
+/-- If `s ⊆ t` and `t` is bounded below, then so is `s`. -/
 theorem BddBelow.mono ⦃s t : Set α⦄ (h : s ⊆ t) : BddBelow t → BddBelow s :=
   nonempty.mono $ lower_bounds_mono_set h
 
-/--  If `a` is a least upper bound for sets `s` and `p`, then it is a least upper bound for any
+/-- If `a` is a least upper bound for sets `s` and `p`, then it is a least upper bound for any
 set `t`, `s ⊆ t ⊆ p`. -/
 theorem IsLub.of_subset_of_superset {s t p : Set α} (hs : IsLub s a) (hp : IsLub p a) (hst : s ⊆ t) (htp : t ⊆ p) :
     IsLub t a :=
   ⟨upper_bounds_mono_set htp hp.1, lower_bounds_mono_set (upper_bounds_mono_set hst) hs.2⟩
 
-/--  If `a` is a greatest lower bound for sets `s` and `p`, then it is a greater lower bound for any
+/-- If `a` is a greatest lower bound for sets `s` and `p`, then it is a greater lower bound for any
 set `t`, `s ⊆ t ⊆ p`. -/
 theorem IsGlb.of_subset_of_superset {s t p : Set α} (hs : IsGlb s a) (hp : IsGlb p a) (hst : s ⊆ t) (htp : t ⊆ p) :
     IsGlb t a :=
@@ -442,19 +214,19 @@ theorem is_lub_iff_le_iff : IsLub s a ↔ ∀ b, a ≤ b ↔ b ∈ UpperBounds s
 theorem is_glb_iff_le_iff : IsGlb s a ↔ ∀ b, b ≤ a ↔ b ∈ LowerBounds s :=
   @is_lub_iff_le_iff (OrderDual α) _ _ _
 
-/--  If `s` has a least upper bound, then it is bounded above. -/
+/-- If `s` has a least upper bound, then it is bounded above. -/
 theorem IsLub.bdd_above (h : IsLub s a) : BddAbove s :=
   ⟨a, h.1⟩
 
-/--  If `s` has a greatest lower bound, then it is bounded below. -/
+/-- If `s` has a greatest lower bound, then it is bounded below. -/
 theorem IsGlb.bdd_below (h : IsGlb s a) : BddBelow s :=
   ⟨a, h.1⟩
 
-/--  If `s` has a greatest element, then it is bounded above. -/
+/-- If `s` has a greatest element, then it is bounded above. -/
 theorem IsGreatest.bdd_above (h : IsGreatest s a) : BddAbove s :=
   ⟨a, h.2⟩
 
-/--  If `s` has a least element, then it is bounded below. -/
+/-- If `s` has a least element, then it is bounded below. -/
 theorem IsLeast.bdd_below (h : IsLeast s a) : BddBelow s :=
   ⟨a, h.2⟩
 
@@ -492,30 +264,30 @@ theorem is_greatest_union_iff :
     IsGreatest (s ∪ t) a ↔ IsGreatest s a ∧ a ∈ UpperBounds t ∨ a ∈ UpperBounds s ∧ IsGreatest t a :=
   @is_least_union_iff (OrderDual α) _ a s t
 
-/--  If `s` is bounded, then so is `s ∩ t` -/
+/-- If `s` is bounded, then so is `s ∩ t` -/
 theorem BddAbove.inter_of_left (h : BddAbove s) : BddAbove (s ∩ t) :=
   h.mono $ inter_subset_left s t
 
-/--  If `t` is bounded, then so is `s ∩ t` -/
+/-- If `t` is bounded, then so is `s ∩ t` -/
 theorem BddAbove.inter_of_right (h : BddAbove t) : BddAbove (s ∩ t) :=
   h.mono $ inter_subset_right s t
 
-/--  If `s` is bounded, then so is `s ∩ t` -/
+/-- If `s` is bounded, then so is `s ∩ t` -/
 theorem BddBelow.inter_of_left (h : BddBelow s) : BddBelow (s ∩ t) :=
   h.mono $ inter_subset_left s t
 
-/--  If `t` is bounded, then so is `s ∩ t` -/
+/-- If `t` is bounded, then so is `s ∩ t` -/
 theorem BddBelow.inter_of_right (h : BddBelow t) : BddBelow (s ∩ t) :=
   h.mono $ inter_subset_right s t
 
-/--  If `s` and `t` are bounded above sets in a `semilattice_sup`, then so is `s ∪ t`. -/
+/-- If `s` and `t` are bounded above sets in a `semilattice_sup`, then so is `s ∪ t`. -/
 theorem BddAbove.union [SemilatticeSup γ] {s t : Set γ} : BddAbove s → BddAbove t → BddAbove (s ∪ t) := by
   rintro ⟨bs, hs⟩ ⟨bt, ht⟩
   use bs⊔bt
   rw [upper_bounds_union]
   exact ⟨upper_bounds_mono_mem le_sup_left hs, upper_bounds_mono_mem le_sup_right ht⟩
 
-/--  The union of two sets is bounded above if and only if each of the sets is. -/
+/-- The union of two sets is bounded above if and only if each of the sets is. -/
 theorem bdd_above_union [SemilatticeSup γ] {s t : Set γ} : BddAbove (s ∪ t) ↔ BddAbove s ∧ BddAbove t :=
   ⟨fun h => ⟨h.mono $ subset_union_left s t, h.mono $ subset_union_right s t⟩, fun h => h.1.union h.2⟩
 
@@ -526,27 +298,27 @@ theorem BddBelow.union [SemilatticeInf γ] {s t : Set γ} : BddBelow s → BddBe
 theorem bdd_below_union [SemilatticeInf γ] {s t : Set γ} : BddBelow (s ∪ t) ↔ BddBelow s ∧ BddBelow t :=
   @bdd_above_union (OrderDual γ) _ s t
 
-/--  If `a` is the least upper bound of `s` and `b` is the least upper bound of `t`,
+/-- If `a` is the least upper bound of `s` and `b` is the least upper bound of `t`,
 then `a ⊔ b` is the least upper bound of `s ∪ t`. -/
 theorem IsLub.union [SemilatticeSup γ] {a b : γ} {s t : Set γ} (hs : IsLub s a) (ht : IsLub t b) :
     IsLub (s ∪ t) (a⊔b) :=
   ⟨fun c h => h.cases_on (fun h => le_sup_of_le_left $ hs.left h) fun h => le_sup_of_le_right $ ht.left h, fun c hc =>
     sup_le (hs.right $ fun d hd => hc $ Or.inl hd) (ht.right $ fun d hd => hc $ Or.inr hd)⟩
 
-/--  If `a` is the greatest lower bound of `s` and `b` is the greatest lower bound of `t`,
+/-- If `a` is the greatest lower bound of `s` and `b` is the greatest lower bound of `t`,
 then `a ⊓ b` is the greatest lower bound of `s ∪ t`. -/
 theorem IsGlb.union [SemilatticeInf γ] {a₁ a₂ : γ} {s t : Set γ} (hs : IsGlb s a₁) (ht : IsGlb t a₂) :
     IsGlb (s ∪ t) (a₁⊓a₂) :=
   hs.dual.union ht
 
-/--  If `a` is the least element of `s` and `b` is the least element of `t`,
+/-- If `a` is the least element of `s` and `b` is the least element of `t`,
 then `min a b` is the least element of `s ∪ t`. -/
 theorem IsLeast.union [LinearOrderₓ γ] {a b : γ} {s t : Set γ} (ha : IsLeast s a) (hb : IsLeast t b) :
     IsLeast (s ∪ t) (min a b) :=
   ⟨by
     cases' le_totalₓ a b with h h <;> simp [h, ha.1, hb.1], (ha.is_glb.union hb.is_glb).1⟩
 
-/--  If `a` is the greatest element of `s` and `b` is the greatest element of `t`,
+/-- If `a` is the greatest element of `s` and `b` is the greatest element of `t`,
 then `max a b` is the greatest element of `s ∪ t`. -/
 theorem IsGreatest.union [LinearOrderₓ γ] {a b : γ} {s t : Set γ} (ha : IsGreatest s a) (hb : IsGreatest t b) :
     IsGreatest (s ∪ t) (max a b) :=
@@ -721,8 +493,8 @@ variable [SemilatticeSup γ] [DenselyOrdered γ]
 theorem is_glb_Ioo {a b : γ} (h : a < b) : IsGlb (Ioo a b) a :=
   ⟨fun x hx => hx.1.le, fun x hx => by
     cases' eq_or_lt_of_le (le_sup_right : a ≤ x⊔a) with h₁ h₂
-    ·
-      exact h₁.symm ▸ le_sup_left
+    · exact h₁.symm ▸ le_sup_left
+      
     obtain ⟨y, lty, ylt⟩ := exists_between h₂
     apply (not_lt_of_le (sup_le (hx ⟨lty, ylt.trans_le (sup_le _ h.le)⟩) lty.le) ylt).elim
     obtain ⟨u, au, ub⟩ := exists_between h
@@ -859,7 +631,7 @@ theorem nonempty_of_not_bdd_below [ha : Nonempty α] (h : ¬BddBelow s) : s.none
 -/
 
 
-/--  Adding a point to a set preserves its boundedness above. -/
+/-- Adding a point to a set preserves its boundedness above. -/
 @[simp]
 theorem bdd_above_insert [SemilatticeSup γ] (a : γ) {s : Set γ} : BddAbove (insert a s) ↔ BddAbove s := by
   simp only [insert_eq, bdd_above_union, bdd_above_singleton, true_andₓ]
@@ -900,12 +672,12 @@ theorem upper_bounds_insert (a : α) (s : Set α) : UpperBounds (insert a s) = I
 theorem lower_bounds_insert (a : α) (s : Set α) : LowerBounds (insert a s) = Iic a ∩ LowerBounds s := by
   rw [insert_eq, lower_bounds_union, lower_bounds_singleton]
 
-/--  When there is a global maximum, every set is bounded above. -/
+/-- When there is a global maximum, every set is bounded above. -/
 @[simp]
 protected theorem OrderTop.bdd_above [Preorderₓ γ] [OrderTop γ] (s : Set γ) : BddAbove s :=
   ⟨⊤, fun a ha => OrderTop.le_top a⟩
 
-/--  When there is a global minimum, every set is bounded below. -/
+/-- When there is a global minimum, every set is bounded below. -/
 @[simp]
 protected theorem OrderBot.bdd_below [Preorderₓ γ] [OrderBot γ] (s : Set γ) : BddBelow s :=
   ⟨⊥, fun a ha => OrderBot.bot_le a⟩
@@ -965,7 +737,8 @@ theorem lt_is_glb_iff (ha : IsGlb s a) : b < a ↔ ∃ c ∈ LowerBounds s, b < 
 
 theorem le_of_is_lub_le_is_glb {x y} (ha : IsGlb s a) (hb : IsLub s b) (hab : b ≤ a) (hx : x ∈ s) (hy : y ∈ s) :
     x ≤ y :=
-  calc x ≤ b := hb.1 hx
+  calc
+    x ≤ b := hb.1 hx
     _ ≤ a := hab
     _ ≤ y := ha.1 hy
     
@@ -1042,10 +815,10 @@ section LinearOrderedAddCommGroup
 
 variable [LinearOrderedAddCommGroup α] {s : Set α} {a ε : α}
 
-theorem IsGlb.exists_between_self_add (h : IsGlb s a) (hε : 0 < ε) : ∃ b ∈ s, a ≤ b ∧ b < a+ε :=
+theorem IsGlb.exists_between_self_add (h : IsGlb s a) (hε : 0 < ε) : ∃ b ∈ s, a ≤ b ∧ b < a + ε :=
   h.exists_between $ lt_add_of_pos_right _ hε
 
-theorem IsGlb.exists_between_self_add' (h : IsGlb s a) (h₂ : a ∉ s) (hε : 0 < ε) : ∃ b ∈ s, a < b ∧ b < a+ε :=
+theorem IsGlb.exists_between_self_add' (h : IsGlb s a) (h₂ : a ∉ s) (hε : 0 < ε) : ∃ b ∈ s, a < b ∧ b < a + ε :=
   h.exists_between' h₂ $ lt_add_of_pos_right _ hε
 
 theorem IsLub.exists_between_sub_self (h : IsLub s a) (hε : 0 < ε) : ∃ b ∈ s, a - ε < b ∧ b ≤ a :=
@@ -1078,19 +851,19 @@ theorem image_upper_bounds_subset_upper_bounds_image (hf : Monotone f) : f '' Up
 theorem image_lower_bounds_subset_lower_bounds_image (hf : Monotone f) : f '' LowerBounds s ⊆ LowerBounds (f '' s) :=
   hf.dual.image_upper_bounds_subset_upper_bounds_image
 
-/--  The image under a monotone function of a set which is bounded above is bounded above. -/
+/-- The image under a monotone function of a set which is bounded above is bounded above. -/
 theorem map_bdd_above (hf : Monotone f) : BddAbove s → BddAbove (f '' s)
   | ⟨C, hC⟩ => ⟨f C, hf.mem_upper_bounds_image hC⟩
 
-/--  The image under a monotone function of a set which is bounded below is bounded below. -/
+/-- The image under a monotone function of a set which is bounded below is bounded below. -/
 theorem map_bdd_below (hf : Monotone f) : BddBelow s → BddBelow (f '' s)
   | ⟨C, hC⟩ => ⟨f C, hf.mem_lower_bounds_image hC⟩
 
-/--  A monotone map sends a least element of a set to a least element of its image. -/
+/-- A monotone map sends a least element of a set to a least element of its image. -/
 theorem map_is_least (Ha : IsLeast s a) : IsLeast (f '' s) (f a) :=
   ⟨mem_image_of_mem _ Ha.1, Hf.mem_lower_bounds_image Ha.2⟩
 
-/--  A monotone map sends a greatest element of a set to a greatest element of its image. -/
+/-- A monotone map sends a greatest element of a set to a greatest element of its image. -/
 theorem map_is_greatest (Ha : IsGreatest s a) : IsGreatest (f '' s) (f a) :=
   ⟨mem_image_of_mem _ Ha.1, Hf.mem_upper_bounds_image Ha.2⟩
 
@@ -1118,19 +891,19 @@ theorem image_lower_bounds_subset_upper_bounds_image (hf : Antitone f) : f '' Lo
 theorem image_upper_bounds_subset_lower_bounds_image (hf : Antitone f) : f '' UpperBounds s ⊆ LowerBounds (f '' s) :=
   hf.dual_right.image_upper_bounds_subset_upper_bounds_image
 
-/--  The image under an antitone function of a set which is bounded above is bounded below. -/
+/-- The image under an antitone function of a set which is bounded above is bounded below. -/
 theorem map_bdd_above (hf : Antitone f) : BddAbove s → BddBelow (f '' s) :=
   hf.dual_right.map_bdd_above
 
-/--  The image under an antitone function of a set which is bounded below is bounded above. -/
+/-- The image under an antitone function of a set which is bounded below is bounded above. -/
 theorem map_bdd_below (hf : Antitone f) : BddBelow s → BddAbove (f '' s) :=
   hf.dual_right.map_bdd_below
 
-/--  An antitone map sends a greatest element of a set to a least element of its image. -/
+/-- An antitone map sends a greatest element of a set to a least element of its image. -/
 theorem map_is_greatest (ha : IsGreatest s a) : IsLeast (f '' s) (f a) :=
   hf.dual_right.map_is_greatest ha
 
-/--  An antitone map sends a least element of a set to a greatest element of its image. -/
+/-- An antitone map sends a least element of a set to a greatest element of its image. -/
 theorem map_is_least (ha : IsLeast s a) : IsGreatest (f '' s) (f a) :=
   hf.dual_right.map_is_least ha
 
@@ -1155,14 +928,14 @@ theorem is_lub_pi {π : α → Type _} [∀ a, Preorderₓ (π a)] {s : Set (∀
     IsLub s f ↔ ∀ a, IsLub (Function.eval a '' s) (f a) := by
   classical
   refine' ⟨fun H a => ⟨(Function.monotone_eval a).mem_upper_bounds_image H.1, fun b hb => _⟩, fun H => ⟨_, _⟩⟩
-  ·
-    suffices : Function.update f a b ∈ UpperBounds s
+  · suffices : Function.update f a b ∈ UpperBounds s
     exact Function.update_same a b f ▸ H.2 this a
     refine' fun g hg => le_update_iff.2 ⟨hb $ mem_image_of_mem _ hg, fun i hi => H.1 hg i⟩
-  ·
-    exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
-  ·
-    exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upper_bounds_image hg)
+    
+  · exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
+    
+  · exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upper_bounds_image hg)
+    
 
 theorem is_glb_pi {π : α → Type _} [∀ a, Preorderₓ (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
     IsGlb s f ↔ ∀ a, IsGlb (Function.eval a '' s) (f a) :=
@@ -1175,18 +948,18 @@ theorem is_lub_prod [Preorderₓ α] [Preorderₓ β] {s : Set (α × β)} (p : 
       ⟨⟨monotone_fst.mem_upper_bounds_image H.1, fun a ha => _⟩,
         ⟨monotone_snd.mem_upper_bounds_image H.1, fun a ha => _⟩⟩,
       fun H => ⟨_, _⟩⟩
-  ·
-    suffices : (a, p.2) ∈ UpperBounds s
+  · suffices : (a, p.2) ∈ UpperBounds s
     exact (H.2 this).1
     exact fun q hq => ⟨ha $ mem_image_of_mem _ hq, (H.1 hq).2⟩
-  ·
-    suffices : (p.1, a) ∈ UpperBounds s
+    
+  · suffices : (p.1, a) ∈ UpperBounds s
     exact (H.2 this).2
     exact fun q hq => ⟨(H.1 hq).1, ha $ mem_image_of_mem _ hq⟩
-  ·
-    exact fun q hq => ⟨H.1.1 $ mem_image_of_mem _ hq, H.2.1 $ mem_image_of_mem _ hq⟩
-  ·
-    exact fun q hq => ⟨H.1.2 $ monotone_fst.mem_upper_bounds_image hq, H.2.2 $ monotone_snd.mem_upper_bounds_image hq⟩
+    
+  · exact fun q hq => ⟨H.1.1 $ mem_image_of_mem _ hq, H.2.1 $ mem_image_of_mem _ hq⟩
+    
+  · exact fun q hq => ⟨H.1.2 $ monotone_fst.mem_upper_bounds_image hq, H.2.2 $ monotone_snd.mem_upper_bounds_image hq⟩
+    
 
 theorem is_glb_prod [Preorderₓ α] [Preorderₓ β] {s : Set (α × β)} (p : α × β) :
     IsGlb s p ↔ IsGlb (Prod.fst '' s) p.1 ∧ IsGlb (Prod.snd '' s) p.2 :=

@@ -30,9 +30,7 @@ section
 
 variable (C)
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/-- 
-Given a type `C`, the free monoidal category over `C` has as objects formal expressions built from
+/-- Given a type `C`, the free monoidal category over `C` has as objects formal expressions built from
 (formal) tensor products of terms of `C` and a formal unit. Its morphisms are compositions and
 tensor products of identities, unitors and associators.
 -/
@@ -40,7 +38,7 @@ inductive free_monoidal_category : Type u
   | of : C → free_monoidal_category
   | Unit : free_monoidal_category
   | tensor : free_monoidal_category → free_monoidal_category → free_monoidal_category
-  deriving [anonymous]
+  deriving Inhabited
 
 end
 
@@ -48,7 +46,7 @@ local notation "F" => free_monoidal_category
 
 namespace FreeMonoidalCategory
 
-/--  Formal compositions and tensor products of identities, unitors and associators. The morphisms
+/-- Formal compositions and tensor products of identities, unitors and associators. The morphisms
     of the free monoidal category are obtained as a quotient of these formal morphisms by the
     relations defining a monoidal category. -/
 @[nolint has_inhabited_instance]
@@ -65,7 +63,7 @@ inductive hom : F C → F C → Type u
 
 local infixr:10 " ⟶ᵐ " => hom
 
-/--  The morphisms of the free monoidal category satisfy 21 relations ensuring that the resulting
+/-- The morphisms of the free monoidal category satisfy 21 relations ensuring that the resulting
     category is in fact a category and that it is monoidal. -/
 inductive hom_equiv : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
   | refl {X Y} (f : X ⟶ᵐ Y) : hom_equiv f f
@@ -99,7 +97,7 @@ inductive hom_equiv : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
   | triangle {X Y} :
     hom_equiv ((hom.α_hom X Unit Y).comp ((hom.id X).tensor (hom.l_hom Y))) ((hom.ρ_hom X).tensor (hom.id Y))
 
-/--  We say that two formal morphisms in the free monoidal category are equivalent if they become
+/-- We say that two formal morphisms in the free monoidal category are equivalent if they become
     equal if we apply the relations that are true in a monoidal category. Note that we will prove
     that there is only one equivalence class -- this is the monoidal coherence theorem. -/
 def setoid_hom (X Y : F C) : Setoidₓ (X ⟶ᵐ Y) :=
@@ -111,44 +109,51 @@ section
 
 open FreeMonoidalCategory.HomEquiv
 
--- failed to format: format: uncaught backtrack exception
-instance
-  category_free_monoidal_category
-  : category .{ u } ( F C )
-  where
-    Hom X Y := Quotientₓ ( free_monoidal_category.setoid_hom X Y )
-      id X := ⟦ free_monoidal_category.hom.id _ ⟧
-      comp X Y Z f g := Quotientₓ.map₂ hom.comp ( by intro f f' hf g g' hg exact comp hf hg ) f g
-      id_comp' := by rintro X Y ⟨ f ⟩ exact Quotientₓ.sound ( id_comp f )
-      comp_id' := by rintro X Y ⟨ f ⟩ exact Quotientₓ.sound ( comp_id f )
-      assoc' := by rintro W X Y Z ⟨ f ⟩ ⟨ g ⟩ ⟨ h ⟩ exact Quotientₓ.sound ( assoc f g h )
+instance category_free_monoidal_category : category.{u} (F C) where
+  Hom := fun X Y => Quotientₓ (free_monoidal_category.setoid_hom X Y)
+  id := fun X => ⟦free_monoidal_category.hom.id _⟧
+  comp := fun X Y Z f g =>
+    Quotientₓ.map₂ hom.comp
+      (by
+        intro f f' hf g g' hg
+        exact comp hf hg)
+      f g
+  id_comp' := by
+    rintro X Y ⟨f⟩
+    exact Quotientₓ.sound (id_comp f)
+  comp_id' := by
+    rintro X Y ⟨f⟩
+    exact Quotientₓ.sound (comp_id f)
+  assoc' := by
+    rintro W X Y Z ⟨f⟩ ⟨g⟩ ⟨h⟩
+    exact Quotientₓ.sound (assoc f g h)
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : monoidal_category ( F C )
-  where
-    tensorObj X Y := free_monoidal_category.tensor X Y
-      tensorHom X₁ Y₁ X₂ Y₂ := Quotientₓ.map₂ hom.tensor $ by intro _ _ h _ _ h' exact hom_equiv.tensor h h'
-      tensor_id' X Y := Quotientₓ.sound tensor_id
-      tensor_comp'
-        X₁ Y₁ Z₁ X₂ Y₂ Z₂
-        :=
-        by rintro ⟨ f₁ ⟩ ⟨ f₂ ⟩ ⟨ g₁ ⟩ ⟨ g₂ ⟩ exact Quotientₓ.sound ( tensor_comp _ _ _ _ )
-      tensorUnit := free_monoidal_category.unit
-      associator
-        X Y Z
-        :=
-        ⟨ ⟦ hom.α_hom X Y Z ⟧ , ⟦ hom.α_inv X Y Z ⟧ , Quotientₓ.sound α_hom_inv , Quotientₓ.sound α_inv_hom ⟩
-      associator_naturality'
-        X₁ X₂ X₃ Y₁ Y₂ Y₃
-        :=
-        by rintro ⟨ f₁ ⟩ ⟨ f₂ ⟩ ⟨ f₃ ⟩ exact Quotientₓ.sound ( associator_naturality _ _ _ )
-      leftUnitor X := ⟨ ⟦ hom.l_hom X ⟧ , ⟦ hom.l_inv X ⟧ , Quotientₓ.sound l_hom_inv , Quotientₓ.sound l_inv_hom ⟩
-      left_unitor_naturality' X Y := by rintro ⟨ f ⟩ exact Quotientₓ.sound ( l_naturality _ )
-      rightUnitor X := ⟨ ⟦ hom.ρ_hom X ⟧ , ⟦ hom.ρ_inv X ⟧ , Quotientₓ.sound ρ_hom_inv , Quotientₓ.sound ρ_inv_hom ⟩
-      right_unitor_naturality' X Y := by rintro ⟨ f ⟩ exact Quotientₓ.sound ( ρ_naturality _ )
-      pentagon' W X Y Z := Quotientₓ.sound pentagon
-      triangle' X Y := Quotientₓ.sound triangle
+instance : monoidal_category (F C) where
+  tensorObj := fun X Y => free_monoidal_category.tensor X Y
+  tensorHom := fun X₁ Y₁ X₂ Y₂ =>
+    Quotientₓ.map₂ hom.tensor $ by
+      intro _ _ h _ _ h'
+      exact hom_equiv.tensor h h'
+  tensor_id' := fun X Y => Quotientₓ.sound tensor_id
+  tensor_comp' := fun X₁ Y₁ Z₁ X₂ Y₂ Z₂ => by
+    rintro ⟨f₁⟩ ⟨f₂⟩ ⟨g₁⟩ ⟨g₂⟩
+    exact Quotientₓ.sound (tensor_comp _ _ _ _)
+  tensorUnit := free_monoidal_category.unit
+  associator := fun X Y Z =>
+    ⟨⟦hom.α_hom X Y Z⟧, ⟦hom.α_inv X Y Z⟧, Quotientₓ.sound α_hom_inv, Quotientₓ.sound α_inv_hom⟩
+  associator_naturality' := fun X₁ X₂ X₃ Y₁ Y₂ Y₃ => by
+    rintro ⟨f₁⟩ ⟨f₂⟩ ⟨f₃⟩
+    exact Quotientₓ.sound (associator_naturality _ _ _)
+  leftUnitor := fun X => ⟨⟦hom.l_hom X⟧, ⟦hom.l_inv X⟧, Quotientₓ.sound l_hom_inv, Quotientₓ.sound l_inv_hom⟩
+  left_unitor_naturality' := fun X Y => by
+    rintro ⟨f⟩
+    exact Quotientₓ.sound (l_naturality _)
+  rightUnitor := fun X => ⟨⟦hom.ρ_hom X⟧, ⟦hom.ρ_inv X⟧, Quotientₓ.sound ρ_hom_inv, Quotientₓ.sound ρ_inv_hom⟩
+  right_unitor_naturality' := fun X Y => by
+    rintro ⟨f⟩
+    exact Quotientₓ.sound (ρ_naturality _)
+  pentagon' := fun W X Y Z => Quotientₓ.sound pentagon
+  triangle' := fun X Y => Quotientₓ.sound triangle
 
 @[simp]
 theorem mk_comp {X Y Z : F C} (f : X ⟶ᵐ Y) (g : Y ⟶ᵐ Z) :
@@ -200,7 +205,7 @@ section Functor
 
 variable {D : Type u'} [category.{v'} D] [monoidal_category D] (f : C → D)
 
-/--  Auxiliary definition for `free_monoidal_category.project`. -/
+/-- Auxiliary definition for `free_monoidal_category.project`. -/
 def project_obj : F C → D
   | free_monoidal_category.of X => f X
   | free_monoidal_category.unit => 𝟙_ D
@@ -210,7 +215,7 @@ section
 
 open Hom
 
-/--  Auxiliary definition for `free_monoidal_category.project`. -/
+/-- Auxiliary definition for `free_monoidal_category.project`. -/
 @[simp]
 def project_map_aux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (project_obj f X ⟶ project_obj f Y)
   | _, _, id _ => 𝟙 _
@@ -223,69 +228,72 @@ def project_map_aux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (project_obj f X ⟶ pro
   | _, _, comp f g => project_map_aux f ≫ project_map_aux g
   | _, _, hom.tensor f g => project_map_aux f ⊗ project_map_aux g
 
-/--  Auxiliary definition for `free_monoidal_category.project`. -/
+/-- Auxiliary definition for `free_monoidal_category.project`. -/
 def project_map (X Y : F C) : (X ⟶ Y) → (project_obj f X ⟶ project_obj f Y) :=
   Quotientₓ.lift (project_map_aux f)
     (by
       intro f g h
       induction' h with
         X Y f X Y f g hfg hfg' X Y f g h _ _ hfg hgh X Y Z f f' g g' _ _ hf hg W X Y Z f g f' g' _ _ hfg hfg'
-      ·
+      · rfl
+        
+      · exact hfg'.symm
+        
+      · exact hfg.trans hgh
+        
+      · simp only [project_map_aux, hf, hg]
+        
+      · simp only [project_map_aux, hfg, hfg']
+        
+      · simp only [project_map_aux, category.comp_id]
+        
+      · simp only [project_map_aux, category.id_comp]
+        
+      · simp only [project_map_aux, category.assoc]
+        
+      · simp only [project_map_aux, monoidal_category.tensor_id]
         rfl
-      ·
-        exact hfg'.symm
-      ·
-        exact hfg.trans hgh
-      ·
-        simp only [project_map_aux, hf, hg]
-      ·
-        simp only [project_map_aux, hfg, hfg']
-      ·
-        simp only [project_map_aux, category.comp_id]
-      ·
-        simp only [project_map_aux, category.id_comp]
-      ·
-        simp only [project_map_aux, category.assoc]
-      ·
-        simp only [project_map_aux, monoidal_category.tensor_id]
-        rfl
-      ·
-        simp only [project_map_aux, monoidal_category.tensor_comp]
-      ·
-        simp only [project_map_aux, iso.hom_inv_id]
-      ·
-        simp only [project_map_aux, iso.inv_hom_id]
-      ·
-        simp only [project_map_aux, monoidal_category.associator_naturality]
-      ·
-        simp only [project_map_aux, iso.hom_inv_id]
-      ·
-        simp only [project_map_aux, iso.inv_hom_id]
-      ·
-        simp only [project_map_aux]
+        
+      · simp only [project_map_aux, monoidal_category.tensor_comp]
+        
+      · simp only [project_map_aux, iso.hom_inv_id]
+        
+      · simp only [project_map_aux, iso.inv_hom_id]
+        
+      · simp only [project_map_aux, monoidal_category.associator_naturality]
+        
+      · simp only [project_map_aux, iso.hom_inv_id]
+        
+      · simp only [project_map_aux, iso.inv_hom_id]
+        
+      · simp only [project_map_aux]
         dsimp [project_obj]
         exact monoidal_category.right_unitor_naturality _
-      ·
-        simp only [project_map_aux, iso.hom_inv_id]
-      ·
-        simp only [project_map_aux, iso.inv_hom_id]
-      ·
-        simp only [project_map_aux]
+        
+      · simp only [project_map_aux, iso.hom_inv_id]
+        
+      · simp only [project_map_aux, iso.inv_hom_id]
+        
+      · simp only [project_map_aux]
         dsimp [project_obj]
         exact monoidal_category.left_unitor_naturality _
-      ·
-        simp only [project_map_aux]
+        
+      · simp only [project_map_aux]
         exact monoidal_category.pentagon _ _ _ _
-      ·
-        simp only [project_map_aux]
-        exact monoidal_category.triangle _ _)
+        
+      · simp only [project_map_aux]
+        exact monoidal_category.triangle _ _
+        )
 
 end
 
-/--  If `D` is a monoidal category and we have a function `C → D`, then we have a functor from the
+/-- If `D` is a monoidal category and we have a function `C → D`, then we have a functor from the
     free monoidal category over `C` to the category `D`. -/
-def project : monoidal_functor (F C) D :=
-  { obj := project_obj f, map := project_map f, ε := 𝟙 _, μ := fun X Y => 𝟙 _ }
+def project : monoidal_functor (F C) D where
+  obj := project_obj f
+  map := project_map f
+  ε := 𝟙 _
+  μ := fun X Y => 𝟙 _
 
 end Functor
 

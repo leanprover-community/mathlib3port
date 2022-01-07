@@ -21,7 +21,7 @@ open_locale Real
 
 namespace Real
 
-/--  Inverse of the `sin` function, returns values in the range `-π / 2 ≤ arcsin x ≤ π / 2`.
+/-- Inverse of the `sin` function, returns values in the range `-π / 2 ≤ arcsin x ≤ π / 2`.
 It defaults to `-π / 2` on `(-∞, -1)` and to `π / 2` to `(1, ∞)`. -/
 @[pp_nodot]
 noncomputable def arcsin : ℝ → ℝ :=
@@ -104,16 +104,16 @@ theorem arcsin_of_le_neg_one {x : ℝ} (hx : x ≤ -1) : arcsin x = -(π / 2) :=
 @[simp]
 theorem arcsin_neg (x : ℝ) : arcsin (-x) = -arcsin x := by
   cases' le_totalₓ x (-1) with hx₁ hx₁
-  ·
-    rw [arcsin_of_le_neg_one hx₁, neg_negₓ, arcsin_of_one_le (le_neg.2 hx₁)]
+  · rw [arcsin_of_le_neg_one hx₁, neg_negₓ, arcsin_of_one_le (le_neg.2 hx₁)]
+    
   cases' le_totalₓ 1 x with hx₂ hx₂
-  ·
-    rw [arcsin_of_one_le hx₂, arcsin_of_le_neg_one (neg_le_neg hx₂)]
+  · rw [arcsin_of_one_le hx₂, arcsin_of_le_neg_one (neg_le_neg hx₂)]
+    
   refine' arcsin_eq_of_sin_eq _ _
-  ·
-    rw [sin_neg, sin_arcsin hx₁ hx₂]
-  ·
-    exact ⟨neg_le_neg (arcsin_le_pi_div_two _), neg_le.2 (neg_pi_div_two_le_arcsin _)⟩
+  · rw [sin_neg, sin_arcsin hx₁ hx₂]
+    
+  · exact ⟨neg_le_neg (arcsin_le_pi_div_two _), neg_le.2 (neg_pi_div_two_le_arcsin _)⟩
+    
 
 theorem arcsin_le_iff_le_sin {x y : ℝ} (hx : x ∈ Icc (-1 : ℝ) 1) (hy : y ∈ Icc (-(π / 2)) (π / 2)) :
     arcsin x ≤ y ↔ x ≤ sin y := by
@@ -121,11 +121,11 @@ theorem arcsin_le_iff_le_sin {x y : ℝ} (hx : x ∈ Icc (-1 : ℝ) 1) (hy : y �
 
 theorem arcsin_le_iff_le_sin' {x y : ℝ} (hy : y ∈ Ico (-(π / 2)) (π / 2)) : arcsin x ≤ y ↔ x ≤ sin y := by
   cases' le_totalₓ x (-1) with hx₁ hx₁
-  ·
-    simp [arcsin_of_le_neg_one hx₁, hy.1, hx₁.trans (neg_one_le_sin _)]
+  · simp [arcsin_of_le_neg_one hx₁, hy.1, hx₁.trans (neg_one_le_sin _)]
+    
   cases' lt_or_leₓ 1 x with hx₂ hx₂
-  ·
-    simp [arcsin_of_one_le hx₂.le, hy.2.not_le, (sin_le_one y).trans_lt hx₂]
+  · simp [arcsin_of_one_le hx₂.le, hy.2.not_le, (sin_le_one y).trans_lt hx₂]
+    
   exact arcsin_le_iff_le_sin ⟨hx₁, hx₂⟩ (mem_Icc_of_Ico hy)
 
 theorem le_arcsin_iff_sin_le {x y : ℝ} (hx : x ∈ Icc (-(π / 2)) (π / 2)) (hy : y ∈ Icc (-1 : ℝ) 1) :
@@ -212,30 +212,41 @@ theorem neg_pi_div_two_eq_arcsin {x} : -(π / 2) = arcsin x ↔ x ≤ -1 :=
 theorem arcsin_le_neg_pi_div_two {x} : arcsin x ≤ -(π / 2) ↔ x ≤ -1 :=
   (neg_pi_div_two_le_arcsin x).le_iff_eq.trans arcsin_eq_neg_pi_div_two
 
+@[simp]
+theorem pi_div_four_le_arcsin {x} : π / 4 ≤ arcsin x ↔ sqrt 2 / 2 ≤ x := by
+  rw [← sin_pi_div_four, le_arcsin_iff_sin_le']
+  have := pi_pos
+  constructor <;> linarith
+
 theorem maps_to_sin_Ioo : maps_to sin (Ioo (-(π / 2)) (π / 2)) (Ioo (-1) 1) := fun x h => by
   rwa [mem_Ioo, ← arcsin_lt_pi_div_two, ← neg_pi_div_two_lt_arcsin, arcsin_sin h.1.le h.2.le]
 
-/--  `real.sin` as a `local_homeomorph` between `(-π / 2, π / 2)` and `(-1, 1)`. -/
+/-- `real.sin` as a `local_homeomorph` between `(-π / 2, π / 2)` and `(-1, 1)`. -/
 @[simp]
-def sin_local_homeomorph : LocalHomeomorph ℝ ℝ :=
-  { toFun := sin, invFun := arcsin, Source := Ioo (-(π / 2)) (π / 2), Target := Ioo (-1) 1,
-    map_source' := maps_to_sin_Ioo,
-    map_target' := fun y hy => ⟨neg_pi_div_two_lt_arcsin.2 hy.1, arcsin_lt_pi_div_two.2 hy.2⟩,
-    left_inv' := fun x hx => arcsin_sin hx.1.le hx.2.le, right_inv' := fun y hy => sin_arcsin hy.1.le hy.2.le,
-    open_source := is_open_Ioo, open_target := is_open_Ioo, continuous_to_fun := continuous_sin.ContinuousOn,
-    continuous_inv_fun := continuous_arcsin.ContinuousOn }
+def sin_local_homeomorph : LocalHomeomorph ℝ ℝ where
+  toFun := sin
+  invFun := arcsin
+  Source := Ioo (-(π / 2)) (π / 2)
+  Target := Ioo (-1) 1
+  map_source' := maps_to_sin_Ioo
+  map_target' := fun y hy => ⟨neg_pi_div_two_lt_arcsin.2 hy.1, arcsin_lt_pi_div_two.2 hy.2⟩
+  left_inv' := fun x hx => arcsin_sin hx.1.le hx.2.le
+  right_inv' := fun y hy => sin_arcsin hy.1.le hy.2.le
+  open_source := is_open_Ioo
+  open_target := is_open_Ioo
+  continuous_to_fun := continuous_sin.ContinuousOn
+  continuous_inv_fun := continuous_arcsin.ContinuousOn
 
 theorem cos_arcsin_nonneg (x : ℝ) : 0 ≤ cos (arcsin x) :=
   cos_nonneg_of_mem_Icc ⟨neg_pi_div_two_le_arcsin _, arcsin_le_pi_div_two _⟩
 
-theorem cos_arcsin {x : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) : cos (arcsin x) = sqrt (1 - (x^2)) :=
-  have : ((sin (arcsin x)^2)+cos (arcsin x)^2) = 1 := sin_sq_add_cos_sq (arcsin x)
-  by
+theorem cos_arcsin {x : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) : cos (arcsin x) = sqrt (1 - x ^ 2) := by
+  have : sin (arcsin x) ^ 2 + cos (arcsin x) ^ 2 = 1 := sin_sq_add_cos_sq (arcsin x)
   rw [← eq_sub_iff_add_eq', ← sqrt_inj (sq_nonneg _) (sub_nonneg.2 (sin_sq_le_one (arcsin x))), sq,
     sqrt_mul_self (cos_arcsin_nonneg _)] at this
   rw [this, sin_arcsin hx₁ hx₂]
 
-/--  Inverse of the `cos` function, returns values in the range `0 ≤ arccos x` and `arccos x ≤ π`.
+/-- Inverse of the `cos` function, returns values in the range `0 ≤ arccos x` and `arccos x ≤ π`.
   If the argument is not between `-1` and `1` it defaults to `π / 2` -/
 @[pp_nodot]
 noncomputable def arccos (x : ℝ) : ℝ :=
@@ -286,7 +297,7 @@ theorem arccos_eq_zero {x} : arccos x = 0 ↔ 1 ≤ x := by
 
 @[simp]
 theorem arccos_eq_pi_div_two {x} : arccos x = π / 2 ↔ x = 0 := by
-  simp [arccos, sub_eq_iff_eq_add]
+  simp [arccos]
 
 @[simp]
 theorem arccos_eq_pi {x} : arccos x = π ↔ x ≤ -1 := by
@@ -295,8 +306,20 @@ theorem arccos_eq_pi {x} : arccos x = π ↔ x ≤ -1 := by
 theorem arccos_neg (x : ℝ) : arccos (-x) = π - arccos x := by
   rw [← add_halves π, arccos, arcsin_neg, arccos, add_sub_assoc, sub_sub_self, sub_neg_eq_add]
 
-theorem sin_arccos {x : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) : sin (arccos x) = sqrt (1 - (x^2)) := by
+theorem sin_arccos {x : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) : sin (arccos x) = sqrt (1 - x ^ 2) := by
   rw [arccos_eq_pi_div_two_sub_arcsin, sin_pi_div_two_sub, cos_arcsin hx₁ hx₂]
+
+@[simp]
+theorem arccos_le_pi_div_two {x} : arccos x ≤ π / 2 ↔ 0 ≤ x := by
+  simp [arccos]
+
+@[simp]
+theorem arccos_le_pi_div_four {x} : arccos x ≤ π / 4 ↔ sqrt 2 / 2 ≤ x := by
+  rw [arccos, ← pi_div_four_le_arcsin]
+  constructor <;>
+    · intro
+      linarith
+      
 
 @[continuity]
 theorem continuous_arccos : Continuous arccos :=

@@ -17,24 +17,24 @@ This file provides basic results about orderings and comparison in linear orders
 
 variable {α : Type _}
 
-/--  Like `cmp`, but uses a `≤` on the type instead of `<`. Given two elements `x` and `y`, returns a
+/-- Like `cmp`, but uses a `≤` on the type instead of `<`. Given two elements `x` and `y`, returns a
 three-way comparison result `ordering`. -/
 def cmpLe {α} [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) : Ordering :=
   if x ≤ y then if y ≤ x then Ordering.eq else Ordering.lt else Ordering.gt
 
 theorem cmp_le_swap {α} [LE α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x y : α) : (cmpLe x y).swap = cmpLe y x :=
   by
-  by_cases' xy : x ≤ y <;> by_cases' yx : y ≤ x <;> simp [cmpLe, Ordering.swap]
+  by_cases' xy : x ≤ y <;> by_cases' yx : y ≤ x <;> simp [cmpLe, *, Ordering.swap]
   cases not_orₓ xy yx (total_of _ _ _)
 
 theorem cmp_le_eq_cmp {α} [Preorderₓ α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)]
     (x y : α) : cmpLe x y = cmp x y := by
-  by_cases' xy : x ≤ y <;> by_cases' yx : y ≤ x <;> simp [cmpLe, lt_iff_le_not_leₓ, cmp, cmpUsing]
+  by_cases' xy : x ≤ y <;> by_cases' yx : y ≤ x <;> simp [cmpLe, lt_iff_le_not_leₓ, *, cmp, cmpUsing]
   cases not_orₓ xy yx (total_of _ _ _)
 
 namespace Ordering
 
-/--  `compares o a b` means that `a` and `b` have the ordering relation `o` between them, assuming
+/-- `compares o a b` means that `a` and `b` have the ordering relation `o` between them, assuming
 that the relation `a < b` is defined. -/
 @[simp]
 def compares [LT α] : Ordering → α → α → Prop
@@ -105,17 +105,17 @@ theorem compares_iff_of_compares_impl {β : Type _} [LinearOrderₓ α] [Preorde
     (h : ∀ {o}, compares o a b → compares o a' b') o : compares o a b ↔ compares o a' b' := by
   refine' ⟨h, fun ho => _⟩
   cases' lt_trichotomyₓ a b with hab hab
-  ·
-    change compares Ordering.lt a b at hab
+  · change compares Ordering.lt a b at hab
     rwa [ho.inj (h hab)]
-  ·
-    cases' hab with hab hab
-    ·
-      change compares Ordering.eq a b at hab
+    
+  · cases' hab with hab hab
+    · change compares Ordering.eq a b at hab
       rwa [ho.inj (h hab)]
-    ·
-      change compares Ordering.gt a b at hab
+      
+    · change compares Ordering.gt a b at hab
       rwa [ho.inj (h hab)]
+      
+    
 
 theorem swap_or_else o₁ o₂ : (or_else o₁ o₂).swap = or_else o₁.swap o₂.swap := by
   cases o₁ <;>
@@ -151,7 +151,7 @@ theorem OrderDual.cmp_le_flip {α} [LE α] [@DecidableRel α (· ≤ ·)] (x y :
     @cmpLe (OrderDual α) _ _ x y = cmpLe y x :=
   rfl
 
-/--  Generate a linear order structure from a preorder and `cmp` function. -/
+/-- Generate a linear order structure from a preorder and `cmp` function. -/
 def linearOrderOfCompares [Preorderₓ α] (cmp : α → α → Ordering) (h : ∀ a b, (cmp a b).Compares a b) : LinearOrderₓ α :=
   { ‹Preorderₓ α› with le_antisymm := fun a b => (h a b).le_antisymm, le_total := fun a b => (h a b).le_total,
     decidableLe := fun a b => decidableOfIff _ (h a b).ne_gt, decidableLt := fun a b => decidableOfIff _ (h a b).eq_lt,

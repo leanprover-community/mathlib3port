@@ -58,8 +58,7 @@ private unsafe def trace_match (pat : pexpr) (ty : expr) (n : Name) : tactic Uni
     let ty ← pp ty
     trace f! "{n }: {ty}"
 
-/-- 
-The `find` command from `tactic.find` allows to find definitions lemmas using
+/-- The `find` command from `tactic.find` allows to find definitions lemmas using
 pattern matching on the type. For instance:
 
 ```lean

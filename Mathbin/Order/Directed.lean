@@ -21,12 +21,12 @@ variable {α : Type u} {β : Type v} {ι : Sort w} (r : α → α → Prop)
 
 local infixl:50 " ≼ " => r
 
-/--  A family of elements of α is directed (with respect to a relation `≼` on α)
+/-- A family of elements of α is directed (with respect to a relation `≼` on α)
   if there is a member of the family `≼`-above any pair in the family.  -/
 def Directed (f : ι → α) :=
   ∀ x y, ∃ z, f x ≼ f z ∧ f y ≼ f z
 
-/--  A subset of α is directed if there is an element of the set `≼`-above any
+/-- A subset of α is directed if there is an element of the set `≼`-above any
   pair of elements in the set. -/
 def DirectedOn (s : Set α) :=
   ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, ∃ z ∈ s, x ≼ z ∧ y ≼ z
@@ -61,18 +61,18 @@ theorem Directed.mono_comp {ι} {rb : β → β → Prop} {g : α → β} {f : �
     (hf : Directed r f) : Directed rb (g ∘ f) :=
   directed_comp.2 $ hf.mono hg
 
-/--  A monotone function on a sup-semilattice is directed. -/
+/-- A monotone function on a sup-semilattice is directed. -/
 theorem directed_of_sup [SemilatticeSup α] {f : α → β} {r : β → β → Prop} (H : ∀ ⦃i j⦄, i ≤ j → r (f i) (f j)) :
     Directed r f := fun a b => ⟨a⊔b, H le_sup_left, H le_sup_right⟩
 
 theorem Monotone.directed_le [SemilatticeSup α] [Preorderₓ β] {f : α → β} : Monotone f → Directed (· ≤ ·) f :=
   directed_of_sup
 
-/--  An antitone function on an inf-semilattice is directed. -/
+/-- An antitone function on an inf-semilattice is directed. -/
 theorem directed_of_inf [SemilatticeInf α] {r : β → β → Prop} {f : α → β} (hf : ∀ a₁ a₂, a₁ ≤ a₂ → r (f a₂) (f a₁)) :
     Directed r f := fun x y => ⟨x⊓y, hf _ _ inf_le_left, hf _ _ inf_le_right⟩
 
-/--  A `preorder` is a `directed_order` if for any two elements `i`, `j`
+/-- A `preorder` is a `directed_order` if for any two elements `i`, `j`
 there is an element `k` such that `i ≤ k` and `j ≤ k`. -/
 class DirectedOrder (α : Type u) extends Preorderₓ α where
   Directed : ∀ i j : α, ∃ k, i ≤ k ∧ j ≤ k

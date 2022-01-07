@@ -13,7 +13,7 @@ This file provides two equivalences for linearly ordered fintypes:
 
 open Finset
 
-/--  Given a linearly ordered fintype `α` of cardinal `k`, the order isomorphism
+/-- Given a linearly ordered fintype `α` of cardinal `k`, the order isomorphism
 `mono_equiv_of_fin α h` is the increasing bijection between `fin k` and `α`. Here, `h` is a proof
 that the cardinality of `α` is `k`. We use this instead of an isomorphism `fin (card α) ≃o α` to
 avoid casting issues in further uses of this function. -/
@@ -22,13 +22,15 @@ def monoEquivOfFin (α : Type _) [Fintype α] [LinearOrderₓ α] {k : ℕ} (h :
 
 variable {α : Type _} [DecidableEq α] [Fintype α] [LinearOrderₓ α] {m n : ℕ} {s : Finset α}
 
-/--  If `α` is a linearly ordered fintype, `s : finset α` has cardinality `m` and its complement has
+/-- If `α` is a linearly ordered fintype, `s : finset α` has cardinality `m` and its complement has
 cardinality `n`, then `fin m ⊕ fin n ≃ α`. The equivalence sends elements of `fin m` to
 elements of `s` and elements of `fin n` to elements of `sᶜ` while preserving order on each
 "half" of `fin m ⊕ fin n` (using `set.order_iso_of_fin`). -/
 def finSumEquivOfFinset (hm : s.card = m) (hn : sᶜ.card = n) : Sum (Finₓ m) (Finₓ n) ≃ α :=
-  calc Sum (Finₓ m) (Finₓ n) ≃ Sum (s : Set α) (sᶜ : Set α) :=
-    Equivₓ.sumCongr (s.order_iso_of_fin hm).toEquiv $ (sᶜ.orderIsoOfFin hn).toEquiv.trans $ Equivₓ.Set.ofEq s.coe_compl
+  calc
+    Sum (Finₓ m) (Finₓ n) ≃ Sum (s : Set α) (sᶜ : Set α) :=
+      Equivₓ.sumCongr (s.order_iso_of_fin hm).toEquiv $
+        (sᶜ.orderIsoOfFin hn).toEquiv.trans $ Equivₓ.Set.ofEq s.coe_compl
     _ ≃ α := Equivₓ.Set.sumCompl _
     
 

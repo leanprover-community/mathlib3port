@@ -15,7 +15,7 @@ open Set Filter
 
 open_locale Real TopologicalSpace
 
-/--  `complex.exp` as a `local_homeomorph` with `source = {z | -π < im z < π}` and
+/-- `complex.exp` as a `local_homeomorph` with `source = {z | -π < im z < π}` and
 `target = {z | 0 < re z} ∪ {z | im z ≠ 0}`. This definition is used to prove that `complex.log`
 is complex differentiable at all points but the negative real semi-axis. -/
 def exp_local_homeomorph : LocalHomeomorph ℂ ℂ :=
@@ -25,8 +25,7 @@ def exp_local_homeomorph : LocalHomeomorph ℂ ℂ :=
       map_source' := by
         rintro ⟨x, y⟩ ⟨h₁ : -π < y, h₂ : y < π⟩
         refine' (not_or_of_imp $ fun hz => _).symm
-        obtain rfl : y = 0
-        ·
+        obtain rfl : y = 0 := by
           rw [exp_im] at hz
           simpa [(Real.exp_pos _).ne', Real.sin_eq_zero_iff_of_lt_of_lt h₁ h₂] using hz
         rw [mem_set_of_eq, ← of_real_def, exp_of_real_re]

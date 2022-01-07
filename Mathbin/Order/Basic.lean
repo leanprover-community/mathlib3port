@@ -91,7 +91,7 @@ alias le_of_eqₓ ← Eq.le
 
 attribute [nolint decidable_classical] LE.le.lt_or_eq_dec
 
-/--  A version of `le_refl` where the argument is implicit -/
+/-- A version of `le_refl` where the argument is implicit -/
 theorem le_rfl [Preorderₓ α] {x : α} : x ≤ x :=
   le_reflₓ x
 
@@ -101,7 +101,7 @@ theorem lt_self_iff_false [Preorderₓ α] (x : α) : x < x ↔ False :=
 
 namespace Eq
 
-/--  If `x = y` then `y ≤ x`. Note: this lemma uses `y ≤ x` instead of `x ≥ y`, because `le` is used
+/-- If `x = y` then `y ≤ x`. Note: this lemma uses `y ≤ x` instead of `x ≥ y`, because `le` is used
 almost exclusively in mathlib. -/
 protected theorem Ge [Preorderₓ α] {x y : α} (h : x = y) : y ≤ x :=
   h.symm.le
@@ -205,8 +205,9 @@ protected theorem Decidable.eq_iff_le_not_lt [PartialOrderₓ α] [@DecidableRel
   ⟨fun h => ⟨h.le, h ▸ lt_irreflₓ _⟩, fun ⟨h₁, h₂⟩ =>
     h₁.antisymm $ Decidable.by_contradiction $ fun h₃ => h₂ (h₁.lt_of_not_le h₃)⟩
 
-theorem eq_iff_le_not_lt [PartialOrderₓ α] {a b : α} : a = b ↔ a ≤ b ∧ ¬a < b := by
-  have := Classical.dec <;> exact Decidable.eq_iff_le_not_lt
+theorem eq_iff_le_not_lt [PartialOrderₓ α] {a b : α} : a = b ↔ a ≤ b ∧ ¬a < b :=
+  have := Classical.dec
+  Decidable.eq_iff_le_not_lt
 
 theorem eq_or_lt_of_le [PartialOrderₓ α] {a b : α} (h : a ≤ b) : a = b ∨ a < b :=
   h.lt_or_eq.symm
@@ -235,8 +236,9 @@ protected theorem Decidable.ne_iff_lt_iff_le [PartialOrderₓ α] [@DecidableRel
   ⟨fun h => Decidable.byCases le_of_eqₓ (le_of_ltₓ ∘ h.mp), fun h => ⟨lt_of_le_of_neₓ h, ne_of_ltₓ⟩⟩
 
 @[simp]
-theorem ne_iff_lt_iff_le [PartialOrderₓ α] {a b : α} : (a ≠ b ↔ a < b) ↔ a ≤ b := by
-  have := Classical.dec <;> exact Decidable.ne_iff_lt_iff_le
+theorem ne_iff_lt_iff_le [PartialOrderₓ α] {a b : α} : (a ≠ b ↔ a < b) ↔ a ≤ b :=
+  have := Classical.dec
+  Decidable.ne_iff_lt_iff_le
 
 theorem lt_of_not_ge' [LinearOrderₓ α] {a b : α} (h : ¬b ≤ a) : a < b :=
   ((le_totalₓ _ _).resolve_right h).lt_of_not_le h
@@ -247,7 +249,7 @@ theorem lt_iff_not_ge' [LinearOrderₓ α] {x y : α} : x < y ↔ ¬y ≤ x :=
 theorem Ne.lt_or_lt [LinearOrderₓ α] {x y : α} (h : x ≠ y) : x < y ∨ y < x :=
   lt_or_gt_of_neₓ h
 
-/--  A version of `ne_iff_lt_or_gt` with LHS and RHS reversed. -/
+/-- A version of `ne_iff_lt_or_gt` with LHS and RHS reversed. -/
 @[simp]
 theorem lt_or_lt_iff_ne [LinearOrderₓ α] {x y : α} : x < y ∨ y < x ↔ x ≠ y :=
   ne_iff_lt_or_gtₓ.symm
@@ -304,7 +306,7 @@ theorem forall_lt_iff_le' [LinearOrderₓ α] {a b : α} : (∀ ⦃c⦄, a < c �
 theorem eq_of_forall_ge_iff [PartialOrderₓ α] {a b : α} (H : ∀ c, a ≤ c ↔ b ≤ c) : a = b :=
   ((H _).2 le_rfl).antisymm ((H _).1 le_rfl)
 
-/--  monotonicity of `≤` with respect to `→` -/
+/-- monotonicity of `≤` with respect to `→` -/
 theorem le_implies_le_of_le_of_le {a b c d : α} [Preorderₓ α] (hca : c ≤ a) (hbd : b ≤ d) : a ≤ b → c ≤ d := fun hab =>
   (hca.trans hab).trans hbd
 
@@ -343,8 +345,9 @@ theorem LinearOrderₓ.to_partial_order_injective {α : Type _} : Function.Injec
 theorem Preorderₓ.ext {α} {A B : Preorderₓ α}
     (H :
       ∀ x y : α,
-        by
-          have := A <;> exact x ≤ y ↔ x ≤ y) :
+        (have := A
+          x ≤ y) ↔
+          x ≤ y) :
     A = B := by
   ext x y
   exact H x y
@@ -352,8 +355,9 @@ theorem Preorderₓ.ext {α} {A B : Preorderₓ α}
 theorem PartialOrderₓ.ext {α} {A B : PartialOrderₓ α}
     (H :
       ∀ x y : α,
-        by
-          have := A <;> exact x ≤ y ↔ x ≤ y) :
+        (have := A
+          x ≤ y) ↔
+          x ≤ y) :
     A = B := by
   ext x y
   exact H x y
@@ -361,13 +365,14 @@ theorem PartialOrderₓ.ext {α} {A B : PartialOrderₓ α}
 theorem LinearOrderₓ.ext {α} {A B : LinearOrderₓ α}
     (H :
       ∀ x y : α,
-        by
-          have := A <;> exact x ≤ y ↔ x ≤ y) :
+        (have := A
+          x ≤ y) ↔
+          x ≤ y) :
     A = B := by
   ext x y
   exact H x y
 
-/--  Given a relation `R` on `β` and a function `f : α → β`, the preimage relation on `α` is defined
+/-- Given a relation `R` on `β` and a function `f : α → β`, the preimage relation on `α` is defined
 by `x ≤ y ↔ f x ≤ f y`. It is the unique relation on `α` making `f` a `rel_embedding` (assuming `f`
 is injective). -/
 @[simp]
@@ -376,14 +381,14 @@ def Order.Preimage {α β} (f : α → β) (s : β → β → Prop) (x y : α) :
 
 infixl:80 " ⁻¹'o " => Order.Preimage
 
-/--  The preimage of a decidable order is decidable. -/
+/-- The preimage of a decidable order is decidable. -/
 instance Order.Preimage.decidable {α β} (f : α → β) (s : β → β → Prop) [H : DecidableRel s] : DecidableRel (f ⁻¹'o s) :=
   fun x y => H _ _
 
 /-! ### Order dual -/
 
 
-/--  Type synonym to equip a type with the dual order: `≤` means `≥` and `<` means `>`. -/
+/-- Type synonym to equip a type with the dual order: `≤` means `≥` and `<` means `>`. -/
 def OrderDual (α : Type _) : Type _ :=
   α
 
@@ -440,11 +445,8 @@ end OrderDual
 /-! ### Order instances on the function space -/
 
 
--- failed to format: format: uncaught backtrack exception
-instance
-  Pi.hasLe
-  { ι : Type u } { α : ι → Type v } [ ∀ i , LE ( α i ) ] : LE ( ∀ i , α i )
-  where le x y := ∀ i , x i ≤ y i
+instance Pi.hasLe {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] : LE (∀ i, α i) where
+  le := fun x y => ∀ i, x i ≤ y i
 
 theorem Pi.le_def {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] {x y : ∀ i, α i} : x ≤ y ↔ ∀ i, x i ≤ y i :=
   Iff.rfl
@@ -452,324 +454,24 @@ theorem Pi.le_def {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] {x y : �
 instance Pi.preorder {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] : Preorderₓ (∀ i, α i) :=
   { Pi.hasLe with le_refl := fun a i => le_reflₓ (a i), le_trans := fun a b c h₁ h₂ i => le_transₓ (h₁ i) (h₂ i) }
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `Pi.lt_def [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`ι] [":" (Term.type "Type" [`u])] "}")
-    (Term.implicitBinder "{" [`α] [":" (Term.arrow `ι "→" (Term.type "Type" [`v]))] "}")
-    (Term.instBinder
-     "["
-     []
-     (Term.forall "∀" [(Term.simpleBinder [`i] [])] "," (Term.app `Preorderₓ [(Term.app `α [`i])]))
-     "]")
-    (Term.implicitBinder "{" [`x `y] [":" (Term.forall "∀" [(Term.simpleBinder [`i] [])] "," (Term.app `α [`i]))] "}")]
-   (Term.typeSpec
-    ":"
-    («term_↔_»
-     («term_<_» `x "<" `y)
-     "↔"
-     («term_∧_»
-      («term_≤_» `x "≤" `y)
-      "∧"
-      («term∃_,_»
-       "∃"
-       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-       ","
-       («term_<_» (Term.app `x [`i]) "<" (Term.app `y [`i])))))))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group
-        (Tactic.simp
-         "simp"
-         ["("
-          "config"
-          ":="
-          (Term.structInst
-           "{"
-           []
-           [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-           (Term.optEllipsis [])
-           []
-           "}")
-          ")"]
-         []
-         ["[" [(Tactic.simpLemma [] [] `lt_iff_le_not_leₓ) "," (Tactic.simpLemma [] [] `Pi.le_def)] "]"]
-         [])
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simp
-        "simp"
-        ["("
-         "config"
-         ":="
-         (Term.structInst
-          "{"
-          []
-          [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-          (Term.optEllipsis [])
-          []
-          "}")
-         ")"]
-        []
-        ["[" [(Tactic.simpLemma [] [] `lt_iff_le_not_leₓ) "," (Tactic.simpLemma [] [] `Pi.le_def)] "]"]
-        [])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp
-   "simp"
-   ["("
-    "config"
-    ":="
-    (Term.structInst
-     "{"
-     []
-     [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-     (Term.optEllipsis [])
-     []
-     "}")
-    ")"]
-   []
-   ["[" [(Tactic.simpLemma [] [] `lt_iff_le_not_leₓ) "," (Tactic.simpLemma [] [] `Pi.le_def)] "]"]
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Pi.le_def
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `lt_iff_le_not_leₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'Lean.Parser.Tactic.discharger'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  Pi.lt_def
-  { ι : Type u } { α : ι → Type v } [ ∀ i , Preorderₓ α i ] { x y : ∀ i , α i } : x < y ↔ x ≤ y ∧ ∃ i , x i < y i
-  := by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ lt_iff_le_not_leₓ , Pi.le_def ]
+theorem Pi.lt_def {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] {x y : ∀ i, α i} :
+    x < y ↔ x ≤ y ∧ ∃ i, x i < y i := by
+  simp (config := { contextual := true })[lt_iff_le_not_leₓ, Pi.le_def]
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
     {a : α i} : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
     {a : α i} : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 
--- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (j «expr ≠ » i)
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `update_le_update_iff [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`ι] [":" (Term.type "Type" [`u])] "}")
-    (Term.implicitBinder "{" [`α] [":" (Term.arrow `ι "→" (Term.type "Type" [`v]))] "}")
-    (Term.instBinder
-     "["
-     []
-     (Term.forall "∀" [(Term.simpleBinder [`i] [])] "," (Term.app `Preorderₓ [(Term.app `α [`i])]))
-     "]")
-    (Term.instBinder "[" [] (Term.app `DecidableEq [`ι]) "]")
-    (Term.implicitBinder "{" [`x `y] [":" (Term.forall "∀" [(Term.simpleBinder [`i] [])] "," (Term.app `α [`i]))] "}")
-    (Term.implicitBinder "{" [`i] [":" `ι] "}")
-    (Term.implicitBinder "{" [`a `b] [":" (Term.app `α [`i])] "}")]
-   (Term.typeSpec
-    ":"
-    («term_↔_»
-     («term_≤_» (Term.app `Function.update [`x `i `a]) "≤" (Term.app `Function.update [`y `i `b]))
-     "↔"
-     («term_∧_»
-      («term_≤_» `a "≤" `b)
-      "∧"
-      (Term.forall
-       "∀"
-       [(Term.simpleBinder [`j] []) (Term.simpleBinder [(Term.hole "_")] [(Term.typeSpec ":" («term_≠_» `j "≠" `i))])]
-       ","
-       («term_≤_» (Term.app `x [`j]) "≤" (Term.app `y [`j])))))))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group
-        (Tactic.simp
-         "simp"
-         ["("
-          "config"
-          ":="
-          (Term.structInst
-           "{"
-           []
-           [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-           (Term.optEllipsis [])
-           []
-           "}")
-          ")"]
-         []
-         ["[" [(Tactic.simpLemma [] [] `update_le_iff)] "]"]
-         [])
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simp
-        "simp"
-        ["("
-         "config"
-         ":="
-         (Term.structInst
-          "{"
-          []
-          [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-          (Term.optEllipsis [])
-          []
-          "}")
-         ")"]
-        []
-        ["[" [(Tactic.simpLemma [] [] `update_le_iff)] "]"]
-        [])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp
-   "simp"
-   ["("
-    "config"
-    ":="
-    (Term.structInst
-     "{"
-     []
-     [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-     (Term.optEllipsis [])
-     []
-     "}")
-    ")"]
-   []
-   ["[" [(Tactic.simpLemma [] [] `update_le_iff)] "]"]
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `update_le_iff
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'Lean.Parser.Tactic.discharger'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  update_le_update_iff
-  { ι : Type u }
-      { α : ι → Type v }
-      [ ∀ i , Preorderₓ α i ]
-      [ DecidableEq ι ]
-      { x y : ∀ i , α i }
-      { i : ι }
-      { a b : α i }
-    : Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ j _ : j ≠ i , x j ≤ y j
-  := by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ update_le_iff ]
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+theorem update_le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i}
+    {i : ι} {a b : α i} : Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ j _ : j ≠ i, x j ≤ y j := by
+  simp (config := { contextual := true })[update_le_iff]
 
 instance Pi.partialOrder {ι : Type u} {α : ι → Type v} [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (∀ i, α i) :=
   { Pi.preorder with le_antisymm := fun f g h1 h2 => funext fun b => (h1 b).antisymm (h2 b) }
@@ -777,20 +479,23 @@ instance Pi.partialOrder {ι : Type u} {α : ι → Type v} [∀ i, PartialOrder
 /-! ### Lifts of order instances -/
 
 
-/--  Transfer a `preorder` on `β` to a `preorder` on `α` using a function `f : α → β`.
+/-- Transfer a `preorder` on `β` to a `preorder` on `α` using a function `f : α → β`.
 See note [reducible non-instances]. -/
 @[reducible]
-def Preorderₓ.lift {α β} [Preorderₓ β] (f : α → β) : Preorderₓ α :=
-  { le := fun x y => f x ≤ f y, le_refl := fun a => le_rfl, le_trans := fun a b c => le_transₓ,
-    lt := fun x y => f x < f y, lt_iff_le_not_le := fun a b => lt_iff_le_not_leₓ }
+def Preorderₓ.lift {α β} [Preorderₓ β] (f : α → β) : Preorderₓ α where
+  le := fun x y => f x ≤ f y
+  le_refl := fun a => le_rfl
+  le_trans := fun a b c => le_transₓ
+  lt := fun x y => f x < f y
+  lt_iff_le_not_le := fun a b => lt_iff_le_not_leₓ
 
-/--  Transfer a `partial_order` on `β` to a `partial_order` on `α` using an injective
+/-- Transfer a `partial_order` on `β` to a `partial_order` on `α` using an injective
 function `f : α → β`. See note [reducible non-instances]. -/
 @[reducible]
 def PartialOrderₓ.lift {α β} [PartialOrderₓ β] (f : α → β) (inj : injective f) : PartialOrderₓ α :=
   { Preorderₓ.lift f with le_antisymm := fun a b h₁ h₂ => inj (h₁.antisymm h₂) }
 
-/--  Transfer a `linear_order` on `β` to a `linear_order` on `α` using an injective
+/-- Transfer a `linear_order` on `β` to a `linear_order` on `α` using an injective
 function `f : α → β`. See note [reducible non-instances]. -/
 @[reducible]
 def LinearOrderₓ.lift {α β} [LinearOrderₓ β] (f : α → β) (inj : injective f) : LinearOrderₓ α :=
@@ -823,7 +528,7 @@ theorem Subtype.coe_lt_coe {α} [Preorderₓ α] {p : α → Prop} {x y : Subtyp
 instance Subtype.partialOrder {α} [PartialOrderₓ α] (p : α → Prop) : PartialOrderₓ (Subtype p) :=
   PartialOrderₓ.lift coeₓ Subtype.coe_injective
 
-/--  A subtype of a linear order is a linear order. We explicitly give the proof of decidable
+/-- A subtype of a linear order is a linear order. We explicitly give the proof of decidable
   equality as the existing instance, in order to not have two instances of decidable equality that
   are not definitionally equal. -/
 instance Subtype.linearOrder {α} [LinearOrderₓ α] (p : α → Prop) : LinearOrderₓ (Subtype p) :=
@@ -833,7 +538,7 @@ instance Subtype.linearOrder {α} [LinearOrderₓ α] (p : α → Prop) : Linear
 ### Pointwise order on `α × β`
 
 The lexicographic order is defined in `order.lexicographic`, and the instances are available via the
-type synonym `lex α β = α × β`.
+type synonym `α ×ₗ β = α × β`.
 -/
 
 
@@ -855,27 +560,27 @@ instance (α : Type u) (β : Type v) [Preorderₓ α] [Preorderₓ β] : Preorde
 
 theorem lt_iff [Preorderₓ α] [Preorderₓ β] {a b : α × β} : a < b ↔ a.1 < b.1 ∧ a.2 ≤ b.2 ∨ a.1 ≤ b.1 ∧ a.2 < b.2 := by
   refine' ⟨fun h => _, _⟩
-  ·
-    by_cases' h₁ : b.1 ≤ a.1
-    ·
-      exact Or.inr ⟨h.1.1, h.1.2.lt_of_not_le $ fun h₂ => h.2 ⟨h₁, h₂⟩⟩
-    ·
-      exact Or.inl ⟨h.1.1.lt_of_not_le h₁, h.1.2⟩
-  ·
-    rintro (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩)
-    ·
-      exact ⟨⟨h₁.le, h₂⟩, fun h => h₁.not_le h.1⟩
-    ·
-      exact ⟨⟨h₁, h₂.le⟩, fun h => h₂.not_le h.2⟩
+  · by_cases' h₁ : b.1 ≤ a.1
+    · exact Or.inr ⟨h.1.1, h.1.2.lt_of_not_le $ fun h₂ => h.2 ⟨h₁, h₂⟩⟩
+      
+    · exact Or.inl ⟨h.1.1.lt_of_not_le h₁, h.1.2⟩
+      
+    
+  · rintro (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩)
+    · exact ⟨⟨h₁.le, h₂⟩, fun h => h₁.not_le h.1⟩
+      
+    · exact ⟨⟨h₁, h₂.le⟩, fun h => h₂.not_le h.2⟩
+      
+    
 
 @[simp]
 theorem mk_lt_mk [Preorderₓ α] [Preorderₓ β] {x₁ x₂ : α} {y₁ y₂ : β} :
     (x₁, y₁) < (x₂, y₂) ↔ x₁ < x₂ ∧ y₁ ≤ y₂ ∨ x₁ ≤ x₂ ∧ y₁ < y₂ :=
   lt_iff
 
-/--  The pointwise partial order on a product.
+/-- The pointwise partial order on a product.
     (The lexicographic ordering is defined in order/lexicographic.lean, and the instances are
-    available via the type synonym `lex α β = α × β`.) -/
+    available via the type synonym `α ×ₗ β = α × β`.) -/
 instance (α : Type u) (β : Type v) [PartialOrderₓ α] [PartialOrderₓ β] : PartialOrderₓ (α × β) :=
   { Prod.preorder α β with
     le_antisymm := fun ⟨a, b⟩ ⟨c, d⟩ ⟨hac, hbd⟩ ⟨hca, hdb⟩ => Prod.extₓ (hac.antisymm hca) (hbd.antisymm hdb) }
@@ -885,7 +590,7 @@ end Prod
 /-! ### Additional order classes -/
 
 
-/--  Order without a maximal element. Sometimes called cofinal. -/
+/-- Order without a maximal element. Sometimes called cofinal. -/
 class NoTopOrder (α : Type u) [LT α] : Prop where
   no_top : ∀ a : α, ∃ a', a < a'
 
@@ -895,7 +600,7 @@ theorem no_top [LT α] [NoTopOrder α] : ∀ a : α, ∃ a', a < a' :=
 instance nonempty_gt {α : Type u} [LT α] [NoTopOrder α] (a : α) : Nonempty { x // a < x } :=
   nonempty_subtype.2 (no_top a)
 
-/--  `a : α` is a top element of `α` if it is greater than or equal to any other element of `α`.
+/-- `a : α` is a top element of `α` if it is greater than or equal to any other element of `α`.
 This predicate is useful, e.g., to make some statements and proofs work in both cases
 `[order_top α]` and `[no_top_order α]`. -/
 def IsTop {α : Type u} [LE α] (a : α) : Prop :=
@@ -909,14 +614,14 @@ theorem not_is_top {α : Type u} [Preorderₓ α] [NoTopOrder α] (a : α) : ¬I
 theorem IsTop.unique {α : Type u} [PartialOrderₓ α] {a b : α} (ha : IsTop a) (hb : a ≤ b) : a = b :=
   le_antisymmₓ hb (ha b)
 
-/--  Order without a minimal element. Sometimes called coinitial or dense. -/
+/-- Order without a minimal element. Sometimes called coinitial or dense. -/
 class NoBotOrder (α : Type u) [LT α] : Prop where
   no_bot : ∀ a : α, ∃ a', a' < a
 
 theorem no_bot [LT α] [NoBotOrder α] : ∀ a : α, ∃ a', a' < a :=
   NoBotOrder.no_bot
 
-/--  `a : α` is a bottom element of `α` if it is less than or equal to any other element of `α`.
+/-- `a : α` is a bottom element of `α` if it is less than or equal to any other element of `α`.
 This predicate is useful, e.g., to make some statements and proofs work in both cases
 `[order_bot α]` and `[no_bot_order α]`. -/
 def IsBot {α : Type u} [LE α] (a : α) : Prop :=
@@ -939,7 +644,7 @@ instance OrderDual.no_bot_order (α : Type u) [LT α] [NoTopOrder α] : NoBotOrd
 instance nonempty_lt {α : Type u} [LT α] [NoBotOrder α] (a : α) : Nonempty { x // x < a } :=
   nonempty_subtype.2 (no_bot a)
 
-/--  An order is dense if there is an element between any pair of distinct elements. -/
+/-- An order is dense if there is an element between any pair of distinct elements. -/
 class DenselyOrdered (α : Type u) [LT α] : Prop where
   dense : ∀ a₁ a₂ : α, a₁ < a₂ → ∃ a, a₁ < a ∧ a < a₂
 
@@ -978,7 +683,7 @@ variable {s : β → β → Prop} {t : γ → γ → Prop}
 /-! ### Linear order from a total partial order -/
 
 
-/--  Type synonym to create an instance of `linear_order` from a `partial_order` and
+/-- Type synonym to create an instance of `linear_order` from a `partial_order` and
 `is_total α (≤)` -/
 def AsLinearOrder (α : Type u) :=
   α

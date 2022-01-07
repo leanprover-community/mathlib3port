@@ -18,16 +18,14 @@ open Set Filter
 
 open_locale Classical
 
-/-- 
-Helper lemma for the more general case: `is_min_on.of_is_local_min_on_of_convex_on`.
+/-- Helper lemma for the more general case: `is_min_on.of_is_local_min_on_of_convex_on`.
 -/
 theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
     (h_local_min : IsLocalMinOn f (Icc a b) a) (h_conv : ConvexOn ℝ (Icc a b) f) : ∀, ∀ x ∈ Icc a b, ∀, f a ≤ f x := by
   by_contra H_cont
   push_neg  at H_cont
   rcases H_cont with ⟨x, ⟨h_ax, h_xb⟩, fx_lt_fa⟩
-  obtain ⟨z, hz, ge_on_nhd⟩ : ∃ z > a, ∀, ∀ y ∈ Icc a z, ∀, f y ≥ f a
-  ·
+  obtain ⟨z, hz, ge_on_nhd⟩ : ∃ z > a, ∀, ∀ y ∈ Icc a z, ∀, f y ≥ f a := by
     rcases eventually_iff_exists_mem.mp h_local_min with ⟨U, U_in_nhds_within, fy_ge_fa⟩
     rw [nhds_within_Icc_eq_nhds_within_Ici a_lt_b, mem_nhds_within_Ici_iff_exists_Icc_subset] at U_in_nhds_within
     rcases U_in_nhds_within with ⟨ε, ε_in_Ioi, Ioc_in_U⟩
@@ -38,27 +36,21 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ}
   have lt_on_nhd : ∀, ∀ y ∈ Ioc a x, ∀, f y < f a := by
     intro y y_in_Ioc
     rcases(Convex.mem_Ioc a_lt_x).mp y_in_Ioc with ⟨ya, yx, ya_pos, yx_pos, yax, y_combo⟩
-    calc f y = f ((ya*a)+yx*x) := by
-      rw [y_combo]_ ≤ (ya • f a)+yx • f x :=
-      h_conv.2 (left_mem_Icc.mpr (le_of_ltₓ a_lt_b)) ⟨h_ax, h_xb⟩ ya_pos (le_of_ltₓ yx_pos)
-        yax _ < (ya • f a)+yx • f a :=
-      add_lt_add_left (smul_lt_smul_of_pos fx_lt_fa yx_pos) _ _ = f a := by
-      rw [← add_smul, yax, one_smul]
+    calc f y = f (ya * a + yx * x) := by
+        rw [y_combo]_ ≤ ya • f a + yx • f x :=
+        h_conv.2 (left_mem_Icc.mpr (le_of_ltₓ a_lt_b)) ⟨h_ax, h_xb⟩ ya_pos (le_of_ltₓ yx_pos)
+          yax _ < ya • f a + yx • f a :=
+        add_lt_add_left (smul_lt_smul_of_pos fx_lt_fa yx_pos) _ _ = f a := by
+        rw [← add_smul, yax, one_smul]
   by_cases' h_xz : x ≤ z
-  ·
-    exact
-      not_lt_of_geₓ
-        (ge_on_nhd x
-          (show x ∈ Icc a z by
-            exact ⟨h_ax, h_xz⟩))
-        fx_lt_fa
-  ·
-    have h₁ : z ∈ Ioc a x := ⟨hz, le_of_not_geₓ h_xz⟩
+  · exact not_lt_of_geₓ (ge_on_nhd x (show x ∈ Icc a z from ⟨h_ax, h_xz⟩)) fx_lt_fa
+    
+  · have h₁ : z ∈ Ioc a x := ⟨hz, le_of_not_geₓ h_xz⟩
     have h₂ : z ∈ Icc a z := ⟨le_of_ltₓ hz, le_reflₓ z⟩
     exact not_lt_of_geₓ (ge_on_nhd z h₂) (lt_on_nhd z h₁)
+    
 
-/-- 
-A local minimum of a convex function is a global minimum, restricted to a set `s`.
+/-- A local minimum of a convex function is a global minimum, restricted to a set `s`.
 -/
 theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s : a ∈ s) (h_localmin : IsLocalMinOn f s a)
     (h_conv : ConvexOn ℝ s f) : ∀, ∀ x ∈ s, ∀, f a ≤ f x := by
@@ -81,7 +73,7 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s :
         simp [mem_preimage, hg1, x_in_s]
       rw [←
         segment_eq_Icc
-          (show (0 : ℝ) ≤ 1by
+          (show (0 : ℝ) ≤ 1 by
             linarith)]
       exact
         (Convex.affine_preimage g h_conv.1).segment_subset
@@ -100,17 +92,17 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s :
     simp [hg1, fx_lt_fa, hg0]
   exact not_lt_of_geₓ (fg_min_on 1 (mem_Icc.mpr ⟨zero_le_one, le_reflₓ 1⟩)) gx_lt_ga
 
-/--  A local maximum of a concave function is a global maximum, restricted to a set `s`. -/
+/-- A local maximum of a concave function is a global maximum, restricted to a set `s`. -/
 theorem IsMaxOn.of_is_local_max_on_of_concave_on {f : E → β} {a : E} (a_in_s : a ∈ s) (h_localmax : IsLocalMaxOn f s a)
     (h_conc : ConcaveOn ℝ s f) : ∀, ∀ x ∈ s, ∀, f x ≤ f a :=
   @IsMinOn.of_is_local_min_on_of_convex_on _ (OrderDual β) _ _ _ _ _ _ _ _ s f a a_in_s h_localmax h_conc
 
-/--  A local minimum of a convex function is a global minimum. -/
+/-- A local minimum of a convex function is a global minimum. -/
 theorem IsMinOn.of_is_local_min_of_convex_univ {f : E → β} {a : E} (h_local_min : IsLocalMin f a)
     (h_conv : ConvexOn ℝ univ f) : ∀ x, f a ≤ f x := fun x =>
   (IsMinOn.of_is_local_min_on_of_convex_on (mem_univ a) (IsLocalMin.on h_local_min univ) h_conv) x (mem_univ x)
 
-/--  A local maximum of a concave function is a global maximum. -/
+/-- A local maximum of a concave function is a global maximum. -/
 theorem IsMaxOn.of_is_local_max_of_convex_univ {f : E → β} {a : E} (h_local_max : IsLocalMax f a)
     (h_conc : ConcaveOn ℝ univ f) : ∀ x, f x ≤ f a :=
   @IsMinOn.of_is_local_min_of_convex_univ _ (OrderDual β) _ _ _ _ _ _ _ _ f a h_local_max h_conc

@@ -26,10 +26,9 @@ variable {k M N : Type _}
 
 namespace OrderDual
 
--- failed to format: format: uncaught backtrack exception
-instance
-  [ Semiringₓ k ] [ OrderedAddCommMonoid M ] [ Module k M ] : Module k ( OrderDual M )
-  where add_smul r s x := OrderDual.rec ( add_smul _ _ ) x zero_smul m := OrderDual.rec ( zero_smul _ ) m
+instance [Semiringₓ k] [OrderedAddCommMonoid M] [Module k M] : Module k (OrderDual M) where
+  add_smul := fun r s x => OrderDual.rec (add_smul _ _) x
+  zero_smul := fun m => OrderDual.rec (zero_smul _) m
 
 end OrderDual
 
@@ -76,7 +75,8 @@ theorem smul_pos_iff_of_neg (hc : c < 0) : 0 < c • a ↔ a < 0 := by
   exact smul_neg_iff_of_pos (neg_pos_of_neg hc)
 
 theorem smul_nonpos_of_nonpos_of_nonneg (hc : c ≤ 0) (ha : 0 ≤ a) : c • a ≤ 0 :=
-  calc c • a ≤ c • 0 := smul_le_smul_of_nonpos ha hc
+  calc
+    c • a ≤ c • 0 := smul_le_smul_of_nonpos ha hc
     _ = 0 := smul_zero' M c
     
 
@@ -115,12 +115,14 @@ theorem lt_smul_iff_of_neg (hc : c < 0) : a < c • b ↔ b < c⁻¹ • a := by
 
 variable (M)
 
-/--  Left scalar multiplication as an order isomorphism. -/
+/-- Left scalar multiplication as an order isomorphism. -/
 @[simps]
-def OrderIso.smulLeftDual {c : k} (hc : c < 0) : M ≃o OrderDual M :=
-  { toFun := fun b => OrderDual.toDual (c • b), invFun := fun b => c⁻¹ • OrderDual.ofDual b,
-    left_inv := inv_smul_smul₀ hc.ne, right_inv := smul_inv_smul₀ hc.ne,
-    map_rel_iff' := fun b₁ b₂ => smul_le_smul_iff_of_neg hc }
+def OrderIso.smulLeftDual {c : k} (hc : c < 0) : M ≃o OrderDual M where
+  toFun := fun b => OrderDual.toDual (c • b)
+  invFun := fun b => c⁻¹ • OrderDual.ofDual b
+  left_inv := inv_smul_smul₀ hc.ne
+  right_inv := smul_inv_smul₀ hc.ne
+  map_rel_iff' := fun b₁ b₂ => smul_le_smul_iff_of_neg hc
 
 variable {M} [OrderedAddCommGroup N] [Module k N] [OrderedSmul k N]
 

@@ -33,7 +33,7 @@ namespace CliffordAlgebra
 
 section Involute
 
-/--  Grade involution, inverting the sign of each basis vector. -/
+/-- Grade involution, inverting the sign of each basis vector. -/
 def involute : CliffordAlgebra Q →ₐ[R] CliffordAlgebra Q :=
   CliffordAlgebra.lift Q
     ⟨-ι Q, fun m => by
@@ -61,7 +61,7 @@ section Reverse
 
 open MulOpposite
 
-/--  Grade reversion, inverting the multiplication order of basis vectors.
+/-- Grade reversion, inverting the multiplication order of basis vectors.
 Also called *transpose* in some literature. -/
 def reverse : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q :=
   (op_linear_equiv R).symm.toLinearMap.comp
@@ -83,7 +83,7 @@ theorem reverse.map_one : reverse (1 : CliffordAlgebra Q) = 1 := by
   convert reverse.commutes (1 : R) <;> simp
 
 @[simp]
-theorem reverse.map_mul (a b : CliffordAlgebra Q) : reverse (a*b) = reverse b*reverse a := by
+theorem reverse.map_mul (a b : CliffordAlgebra Q) : reverse (a * b) = reverse b * reverse a := by
   simp [reverse]
 
 @[simp]
@@ -122,7 +122,7 @@ theorem reverse_comp_involute :
   case h_add a b ha hb =>
     simp only [ha, hb, reverse.map_add, AlgHom.map_add]
 
-/--  `clifford_algebra.reverse` and `clifford_algebra.inverse` commute. Note that the composition
+/-- `clifford_algebra.reverse` and `clifford_algebra.inverse` commute. Note that the composition
 is sometimes referred to as the "clifford conjugate". -/
 theorem reverse_involute_commute : Function.Commute (reverse : _ → CliffordAlgebra Q) involute :=
   LinearMap.congr_fun reverse_comp_involute
@@ -139,7 +139,7 @@ end Reverse
 
 section List
 
-/--  Taking the reverse of the product a list of $n$ vectors lifted via `ι` is equivalent to
+/-- Taking the reverse of the product a list of $n$ vectors lifted via `ι` is equivalent to
 taking the product of the reverse of that list. -/
 theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map $ ι Q).Prod = (l.map $ ι Q).reverse.Prod
   | [] => by
@@ -147,9 +147,9 @@ theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map $ ι Q).Prod = (l.m
   | x :: xs => by
     simp [reverse_prod_map_ι xs]
 
-/--  Taking the involute of the product a list of $n$ vectors lifted via `ι` is equivalent to
+/-- Taking the involute of the product a list of $n$ vectors lifted via `ι` is equivalent to
 premultiplying by ${-1}^n$. -/
-theorem involute_prod_map_ι : ∀ l : List M, involute (l.map $ ι Q).Prod = ((-1 : R)^l.length) • (l.map $ ι Q).Prod
+theorem involute_prod_map_ι : ∀ l : List M, involute (l.map $ ι Q).Prod = (-1 : R) ^ l.length • (l.map $ ι Q).Prod
   | [] => by
     simp
   | x :: xs => by

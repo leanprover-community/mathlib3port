@@ -40,12 +40,12 @@ open Functor IsLawfulApplicative
 
 variable {F G : Type u → Type u} [Applicativeₓ F] [Applicativeₓ G]
 
-/--  traverse on the first functor argument -/
+/-- traverse on the first functor argument -/
 @[reducible]
 def tfst {α α'} (f : α → F α') : t α β → F (t α' β) :=
   bitraverse f pure
 
-/--  traverse on the second functor argument -/
+/-- traverse on the second functor argument -/
 @[reducible]
 def tsnd {α α'} (f : α → F α') : t β α → F (t β α') :=
   bitraverse pure f

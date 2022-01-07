@@ -2,8 +2,7 @@ import Mathbin.Tactic.SimpResult
 
 namespace Tactic
 
-/-- 
-`delta_instance ids` tries to solve the goal by calling `apply_instance`,
+/-- `delta_instance ids` tries to solve the goal by calling `apply_instance`,
 first unfolding the definitions in `ids`.
 -/
 unsafe def delta_instance (ids : List Name) : tactic Unit :=
@@ -13,16 +12,16 @@ namespace Interactive
 
 setup_tactic_parser
 
-/-- 
-`delta_instance id₁ id₂ ...` tries to solve the goal by calling `apply_instance`,
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr *»
+/-- `delta_instance id₁ id₂ ...` tries to solve the goal by calling `apply_instance`,
 first unfolding the definitions in `idᵢ`.
 -/
-unsafe def delta_instance (ids : parse (ident)*) : itactic :=
+unsafe def delta_instance (ids : parse («expr *» ident)) : itactic :=
   tactic.delta_instance ids
 
 end Interactive
 
-/--  Guess a name for an instance from its expression.
+/-- Guess a name for an instance from its expression.
 
 This is a poor-man's version of the C++ `heuristic_inst_name`, and tries much less hard to pick a
 good name. -/
@@ -33,8 +32,7 @@ unsafe def delta_instance_name : pexpr → Stringₓ
   | expr.const nm _ => nm.last
   | _ => "inst"
 
-/-- 
-Tries to derive instances by unfolding the newly introduced type and applying type class resolution.
+/-- Tries to derive instances by unfolding the newly introduced type and applying type class resolution.
 
 For example,
 ```lean

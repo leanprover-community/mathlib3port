@@ -65,8 +65,7 @@ theorem faithful_reflects_mono (F : C ⥤ D) [faithful F] {X Y : C} {f : X ⟶ Y
 
 end
 
-/-- 
-A split monomorphism is a morphism `f : X ⟶ Y` admitting a retraction `retraction f : Y ⟶ X`
+/-- A split monomorphism is a morphism `f : X ⟶ Y` admitting a retraction `retraction f : Y ⟶ X`
 such that `f ≫ retraction f = 𝟙 X`.
 
 Every split monomorphism is a monomorphism.
@@ -77,8 +76,7 @@ class split_mono {X Y : C} (f : X ⟶ Y) where
     run_tac
       obviously
 
-/-- 
-A split epimorphism is a morphism `f : X ⟶ Y` admitting a section `section_ f : Y ⟶ X`
+/-- A split epimorphism is a morphism `f : X ⟶ Y` admitting a section `section_ f : Y ⟶ X`
 such that `section_ f ≫ f = 𝟙 Y`.
 (Note that `section` is a reserved keyword, so we append an underscore.)
 
@@ -90,7 +88,7 @@ class split_epi {X Y : C} (f : X ⟶ Y) where
     run_tac
       obviously
 
-/--  The chosen retraction of a split monomorphism. -/
+/-- The chosen retraction of a split monomorphism. -/
 def retraction {X Y : C} (f : X ⟶ Y) [split_mono f] : Y ⟶ X :=
   split_mono.retraction f
 
@@ -98,19 +96,18 @@ def retraction {X Y : C} (f : X ⟶ Y) [split_mono f] : Y ⟶ X :=
 theorem split_mono.id {X Y : C} (f : X ⟶ Y) [split_mono f] : f ≫ retraction f = 𝟙 X :=
   split_mono.id'
 
-/--  The retraction of a split monomorphism is itself a split epimorphism. -/
+/-- The retraction of a split monomorphism is itself a split epimorphism. -/
 instance retraction_split_epi {X Y : C} (f : X ⟶ Y) [split_mono f] : split_epi (retraction f) where
   section_ := f
 
-/--  A split mono which is epi is an iso. -/
+/-- A split mono which is epi is an iso. -/
 theorem is_iso_of_epi_of_split_mono {X Y : C} (f : X ⟶ Y) [split_mono f] [epi f] : is_iso f :=
   ⟨⟨retraction f,
       ⟨by
         simp , by
         simp [← cancel_epi f]⟩⟩⟩
 
-/-- 
-The chosen section of a split epimorphism.
+/-- The chosen section of a split epimorphism.
 (Note that `section` is a reserved keyword, so we append an underscore.)
 -/
 def section_ {X Y : C} (f : X ⟶ Y) [split_epi f] : Y ⟶ X :=
@@ -120,42 +117,38 @@ def section_ {X Y : C} (f : X ⟶ Y) [split_epi f] : Y ⟶ X :=
 theorem split_epi.id {X Y : C} (f : X ⟶ Y) [split_epi f] : section_ f ≫ f = 𝟙 Y :=
   split_epi.id'
 
-/--  The section of a split epimorphism is itself a split monomorphism. -/
+/-- The section of a split epimorphism is itself a split monomorphism. -/
 instance section_split_mono {X Y : C} (f : X ⟶ Y) [split_epi f] : split_mono (section_ f) where
   retraction := f
 
-/--  A split epi which is mono is an iso. -/
+/-- A split epi which is mono is an iso. -/
 theorem is_iso_of_mono_of_split_epi {X Y : C} (f : X ⟶ Y) [mono f] [split_epi f] : is_iso f :=
   ⟨⟨section_ f,
       ⟨by
         simp [← cancel_mono f], by
         simp ⟩⟩⟩
 
-/--  Every iso is a split mono. -/
+/-- Every iso is a split mono. -/
 noncomputable instance (priority := 100) split_mono.of_iso {X Y : C} (f : X ⟶ Y) [is_iso f] : split_mono f where
   retraction := inv f
 
-/--  Every iso is a split epi. -/
+/-- Every iso is a split epi. -/
 noncomputable instance (priority := 100) split_epi.of_iso {X Y : C} (f : X ⟶ Y) [is_iso f] : split_epi f where
   section_ := inv f
 
--- failed to format: format: uncaught backtrack exception
 /-- Every split mono is a mono. -/
-  instance
-    ( priority := 100 )
-    split_mono.mono
-    { X Y : C } ( f : X ⟶ Y ) [ split_mono f ] : mono f
-    where right_cancellation Z g h w := by replace w := w =≫ retraction f simpa using w
+instance (priority := 100) split_mono.mono {X Y : C} (f : X ⟶ Y) [split_mono f] : mono f where
+  right_cancellation := fun Z g h w => by
+    replace w := w =≫ retraction f
+    simpa using w
 
--- failed to format: format: uncaught backtrack exception
 /-- Every split epi is an epi. -/
-  instance
-    ( priority := 100 )
-    split_epi.epi
-    { X Y : C } ( f : X ⟶ Y ) [ split_epi f ] : epi f
-    where left_cancellation Z g h w := by replace w := section_ f ≫= w simpa using w
+instance (priority := 100) split_epi.epi {X Y : C} (f : X ⟶ Y) [split_epi f] : epi f where
+  left_cancellation := fun Z g h w => by
+    replace w := section_ f ≫= w
+    simpa using w
 
-/--  Every split mono whose retraction is mono is an iso. -/
+/-- Every split mono whose retraction is mono is an iso. -/
 theorem is_iso.of_mono_retraction {X Y : C} {f : X ⟶ Y} [split_mono f] [mono $ retraction f] : is_iso f :=
   ⟨⟨retraction f,
       ⟨by
@@ -164,7 +157,7 @@ theorem is_iso.of_mono_retraction {X Y : C} {f : X ⟶ Y} [split_mono f] [mono $
           (by
             simp )⟩⟩⟩
 
-/--  Every split epi whose section is epi is an iso. -/
+/-- Every split epi whose section is epi is an iso. -/
 theorem is_iso.of_epi_section {X Y : C} {f : X ⟶ Y} [split_epi f] [epi $ section_ f] : is_iso f :=
   ⟨⟨section_ f,
       ⟨(cancel_epi_id $ section_ f).mp
@@ -173,7 +166,7 @@ theorem is_iso.of_epi_section {X Y : C} {f : X ⟶ Y} [split_epi f] [epi $ secti
         by
         simp ⟩⟩⟩
 
-/--  A category where every morphism has a `trunc` retraction is computably a groupoid. -/
+/-- A category where every morphism has a `trunc` retraction is computably a groupoid. -/
 noncomputable def groupoid.of_trunc_split_mono (all_split_mono : ∀ {X Y : C} f : X ⟶ Y, Trunc (split_mono f)) :
     groupoid.{v₁} C := by
   apply groupoid.of_is_iso
@@ -186,13 +179,13 @@ section
 
 variable {D : Type u₂} [category.{v₂} D]
 
-/--  Split monomorphisms are also absolute monomorphisms. -/
+/-- Split monomorphisms are also absolute monomorphisms. -/
 instance {X Y : C} (f : X ⟶ Y) [split_mono f] (F : C ⥤ D) : split_mono (F.map f) where
   retraction := F.map (retraction f)
   id' := by
     rw [← functor.map_comp, split_mono.id, Functor.map_id]
 
-/--  Split epimorphisms are also absolute epimorphisms. -/
+/-- Split epimorphisms are also absolute epimorphisms. -/
 instance {X Y : C} (f : X ⟶ Y) [split_epi f] (F : C ⥤ D) : split_epi (F.map f) where
   section_ := F.map (section_ f)
   id' := by

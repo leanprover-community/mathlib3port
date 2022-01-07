@@ -71,7 +71,7 @@ universe u v
 
 open Finₓ Nat Function
 
-/--  Elimination principle for the empty set `fin 0`, dependent version. -/
+/-- Elimination principle for the empty set `fin 0`, dependent version. -/
 def finZeroElim {α : Finₓ 0 → Sort u} (x : Finₓ 0) : α x :=
   x.elim0
 
@@ -159,7 +159,7 @@ theorem coe_eq_val (a : Finₓ n) : (a : ℕ) = a.val :=
 theorem val_eq_coe (a : Finₓ n) : a.val = a :=
   rfl
 
-/--  Assume `k = l`. If two functions defined on `fin k` and `fin l` are equal on each element,
+/-- Assume `k = l`. If two functions defined on `fin k` and `fin l` are equal on each element,
 then they coincide (in the heq sense). -/
 protected theorem heq_fun_iff {α : Sort _} {k l : ℕ} (h : k = l) {f : Finₓ k → α} {g : Finₓ l → α} :
     HEq f g ↔ ∀ i : Finₓ k, f i = g ⟨(i : ℕ), h ▸ i.2⟩ := by
@@ -188,7 +188,7 @@ section Order
 theorem is_lt (i : Finₓ n) : (i : ℕ) < n :=
   i.2
 
-theorem is_le (i : Finₓ (n+1)) : (i : ℕ) ≤ n :=
+theorem is_le (i : Finₓ (n + 1)) : (i : ℕ) ≤ n :=
   le_of_lt_succ i.is_lt
 
 theorem lt_iff_coe_lt_coe : a < b ↔ (a : ℕ) < b :=
@@ -203,12 +203,12 @@ theorem mk_lt_of_lt_coe {a : ℕ} (h : a < b) : (⟨a, h.trans b.is_lt⟩ : Fin�
 theorem mk_le_of_le_coe {a : ℕ} (h : a ≤ b) : (⟨a, h.trans_lt b.is_lt⟩ : Finₓ n) ≤ b :=
   h
 
-/--  `a < b` as natural numbers if and only if `a < b` in `fin n`. -/
+/-- `a < b` as natural numbers if and only if `a < b` in `fin n`. -/
 @[norm_cast, simp]
 theorem coe_fin_lt {n : ℕ} {a b : Finₓ n} : (a : ℕ) < (b : ℕ) ↔ a < b :=
   Iff.rfl
 
-/--  `a ≤ b` as natural numbers if and only if `a ≤ b` in `fin n`. -/
+/-- `a ≤ b` as natural numbers if and only if `a ≤ b` in `fin n`. -/
 @[norm_cast, simp]
 theorem coe_fin_le {n : ℕ} {a b : Finₓ n} : (a : ℕ) ≤ (b : ℕ) ↔ a ≤ b :=
   Iff.rfl
@@ -217,15 +217,15 @@ instance {n : ℕ} : LinearOrderₓ (Finₓ n) :=
   { LinearOrderₓ.lift (coeₓ : Finₓ n → ℕ) (@Finₓ.eq_of_veq _) with le := · ≤ ·, lt := · < ·,
     decidableLe := Finₓ.decidableLe, decidableLt := Finₓ.decidableLt, DecidableEq := Finₓ.decidableEq _ }
 
-/--  The inclusion map `fin n → ℕ` is a relation embedding. -/
+/-- The inclusion map `fin n → ℕ` is a relation embedding. -/
 def coe_embedding n : Finₓ n ↪o ℕ :=
   ⟨⟨coeₓ, @Finₓ.eq_of_veq _⟩, fun a b => Iff.rfl⟩
 
-/--  The ordering on `fin n` is a well order. -/
+/-- The ordering on `fin n` is a well order. -/
 instance fin.lt.is_well_order n : IsWellOrder (Finₓ n) (· < ·) :=
   (coe_embedding n).IsWellOrder
 
-/--  Use the ordering on `fin n` for checking recursive definitions.
+/-- Use the ordering on `fin n` for checking recursive definitions.
 
 For example, the following definition is not accepted by the termination checker,
 unless we declare the `has_well_founded` instance:
@@ -239,39 +239,39 @@ instance {n : ℕ} : HasWellFounded (Finₓ n) :=
   ⟨_, measure_wf coeₓ⟩
 
 @[simp]
-theorem coe_zero {n : ℕ} : ((0 : Finₓ (n+1)) : ℕ) = 0 :=
+theorem coe_zero {n : ℕ} : ((0 : Finₓ (n + 1)) : ℕ) = 0 :=
   rfl
 
 attribute [simp] val_zero
 
 @[simp]
-theorem val_zero' n : (0 : Finₓ (n+1)).val = 0 :=
+theorem val_zero' n : (0 : Finₓ (n + 1)).val = 0 :=
   rfl
 
 @[simp]
-theorem mk_zero : (⟨0, Nat.succ_pos'⟩ : Finₓ (n+1)) = (0 : Finₓ _) :=
+theorem mk_zero : (⟨0, Nat.succ_pos'⟩ : Finₓ (n + 1)) = (0 : Finₓ _) :=
   rfl
 
-theorem zero_le (a : Finₓ (n+1)) : 0 ≤ a :=
+theorem zero_le (a : Finₓ (n + 1)) : 0 ≤ a :=
   zero_le a.1
 
-theorem zero_lt_one : (0 : Finₓ (n+2)) < 1 :=
+theorem zero_lt_one : (0 : Finₓ (n + 2)) < 1 :=
   Nat.zero_lt_oneₓ
 
-theorem pos_iff_ne_zero (a : Finₓ (n+1)) : 0 < a ↔ a ≠ 0 := by
+theorem pos_iff_ne_zero (a : Finₓ (n + 1)) : 0 < a ↔ a ≠ 0 := by
   rw [← coe_fin_lt, coe_zero, pos_iff_ne_zero, Ne.def, Ne.def, ext_iff, coe_zero]
 
-theorem eq_zero_or_eq_succ {n : ℕ} (i : Finₓ (n+1)) : i = 0 ∨ ∃ j : Finₓ n, i = j.succ := by
+theorem eq_zero_or_eq_succ {n : ℕ} (i : Finₓ (n + 1)) : i = 0 ∨ ∃ j : Finₓ n, i = j.succ := by
   rcases i with ⟨_ | j, h⟩
-  ·
-    left
+  · left
     rfl
-  ·
-    right
+    
+  · right
     exact ⟨⟨j, Nat.lt_of_succ_lt_succₓ h⟩, rfl⟩
+    
 
-/--  The greatest value of `fin (n+1)` -/
-def last (n : ℕ) : Finₓ (n+1) :=
+/-- The greatest value of `fin (n+1)` -/
+def last (n : ℕ) : Finₓ (n + 1) :=
   ⟨_, n.lt_succ_self⟩
 
 @[simp, norm_cast]
@@ -281,23 +281,29 @@ theorem coe_last (n : ℕ) : (last n : ℕ) = n :=
 theorem last_val (n : ℕ) : (last n).val = n :=
   rfl
 
-theorem le_last (i : Finₓ (n+1)) : i ≤ last n :=
+theorem le_last (i : Finₓ (n + 1)) : i ≤ last n :=
   le_of_lt_succ i.is_lt
 
-instance : BoundedOrder (Finₓ (n+1)) where
+instance : BoundedOrder (Finₓ (n + 1)) where
   top := last n
   le_top := le_last
   bot := 0
   bot_le := zero_le
 
-instance : Lattice (Finₓ (n+1)) :=
-  latticeOfLinearOrder
+instance : Lattice (Finₓ (n + 1)) :=
+  LinearOrderₓ.toLattice
 
-theorem last_pos : (0 : Finₓ (n+2)) < last (n+1) := by
+theorem last_pos : (0 : Finₓ (n + 2)) < last (n + 1) := by
   simp [lt_iff_coe_lt_coe]
 
-theorem eq_last_of_not_lt {i : Finₓ (n+1)} (h : ¬(i : ℕ) < n) : i = last n :=
+theorem eq_last_of_not_lt {i : Finₓ (n + 1)} (h : ¬(i : ℕ) < n) : i = last n :=
   le_antisymmₓ (le_last i) (not_ltₓ.1 h)
+
+theorem top_eq_last (n : ℕ) : ⊤ = Finₓ.last n :=
+  rfl
+
+theorem bot_eq_zero (n : ℕ) : ⊥ = (0 : Finₓ (n + 1)) :=
+  rfl
 
 section
 
@@ -305,7 +311,7 @@ variable {α : Type _} [Preorderₓ α]
 
 open Set
 
-/--  If `e` is an `order_iso` between `fin n` and `fin m`, then `n = m` and `e` is the identity
+/-- If `e` is an `order_iso` between `fin n` and `fin m`, then `n = m` and `e` is the identity
 map. In this lemma we state that for each `i : fin n` we have `(e i : ℕ) = (i : ℕ)`. -/
 @[simp]
 theorem coe_order_iso_apply (e : Finₓ n ≃o Finₓ m) (i : Finₓ n) : (e i : ℕ) = i := by
@@ -313,13 +319,13 @@ theorem coe_order_iso_apply (e : Finₓ n ≃o Finₓ m) (i : Finₓ n) : (e i :
   rw [Subtype.coe_mk]
   induction' i using Nat.strong_induction_onₓ with i h
   refine' le_antisymmₓ (forall_lt_iff_le.1 $ fun j hj => _) (forall_lt_iff_le.1 $ fun j hj => _)
-  ·
-    have := e.symm.lt_iff_lt.2 (mk_lt_of_lt_coe hj)
+  · have := e.symm.lt_iff_lt.2 (mk_lt_of_lt_coe hj)
     rw [e.symm_apply_apply] at this
     convert this
     simpa using h _ this (e.symm _).is_lt
-  ·
-    rwa [← h j hj (hj.trans hi), ← lt_iff_coe_lt_coe, e.lt_iff_lt]
+    
+  · rwa [← h j hj (hj.trans hi), ← lt_iff_coe_lt_coe, e.lt_iff_lt]
+    
 
 instance order_iso_subsingleton : Subsingleton (Finₓ n ≃o α) :=
   ⟨fun e e' => by
@@ -332,37 +338,37 @@ instance order_iso_subsingleton' : Subsingleton (α ≃o Finₓ n) :=
 instance order_iso_unique : Unique (Finₓ n ≃o Finₓ n) :=
   Unique.mk' _
 
-/--  Two strictly monotone functions from `fin n` are equal provided that their ranges
+/-- Two strictly monotone functions from `fin n` are equal provided that their ranges
 are equal. -/
 theorem strict_mono_unique {f g : Finₓ n → α} (hf : StrictMono f) (hg : StrictMono g) (h : range f = range g) : f = g :=
   have : (hf.order_iso f).trans (OrderIso.setCongr _ _ h) = hg.order_iso g := Subsingleton.elimₓ _ _
   congr_argₓ (Function.comp (coeₓ : range g → α)) (funext $ RelIso.ext_iff.1 this)
 
-/--  Two order embeddings of `fin n` are equal provided that their ranges are equal. -/
+/-- Two order embeddings of `fin n` are equal provided that their ranges are equal. -/
 theorem order_embedding_eq {f g : Finₓ n ↪o α} (h : range f = range g) : f = g :=
   RelEmbedding.ext $ funext_iff.1 $ strict_mono_unique f.strict_mono g.strict_mono h
 
 end
 
-/--  A function `f` on `fin n` is strictly monotone if and only if `f i < f (i+1)` for all `i`. -/
+/-- A function `f` on `fin n` is strictly monotone if and only if `f i < f (i+1)` for all `i`. -/
 theorem strict_mono_iff_lt_succ {α : Type _} [Preorderₓ α] {f : Finₓ n → α} :
-    StrictMono f ↔ ∀ i h : (i+1) < n, f ⟨i, lt_of_le_of_ltₓ (Nat.le_succₓ i) h⟩ < f ⟨i+1, h⟩ := by
+    StrictMono f ↔ ∀ i h : i + 1 < n, f ⟨i, lt_of_le_of_ltₓ (Nat.le_succₓ i) h⟩ < f ⟨i + 1, h⟩ := by
   constructor
-  ·
-    intro H i hi
+  · intro H i hi
     apply H
     exact Nat.lt_succ_selfₓ _
-  ·
-    intro H
+    
+  · intro H
     have A : ∀ i j h : i < j h' : j < n, f ⟨i, lt_transₓ h h'⟩ < f ⟨j, h'⟩ := by
       intro i j h h'
       induction' h with k h IH
-      ·
-        exact H _ _
-      ·
-        exact lt_transₓ (IH (Nat.lt_of_succ_ltₓ h')) (H _ _)
+      · exact H _ _
+        
+      · exact lt_transₓ (IH (Nat.lt_of_succ_ltₓ h')) (H _ _)
+        
     intro i j hij
     convert A (i : ℕ) (j : ℕ) hij j.2 <;> ext <;> simp only [Subtype.coe_eta]
+    
 
 end Order
 
@@ -373,44 +379,44 @@ section Add
 -/
 
 
-/--  Given a positive `n`, `fin.of_nat' i` is `i % n` as an element of `fin n`. -/
+/-- Given a positive `n`, `fin.of_nat' i` is `i % n` as an element of `fin n`. -/
 def of_nat' [h : Fact (0 < n)] (i : ℕ) : Finₓ n :=
   ⟨i % n, mod_lt _ h.1⟩
 
-theorem one_val {n : ℕ} : (1 : Finₓ (n+1)).val = 1 % n+1 :=
+theorem one_val {n : ℕ} : (1 : Finₓ (n + 1)).val = 1 % (n + 1) :=
   rfl
 
-theorem coe_one' {n : ℕ} : ((1 : Finₓ (n+1)) : ℕ) = 1 % n+1 :=
-  rfl
-
-@[simp]
-theorem val_one {n : ℕ} : (1 : Finₓ (n+2)).val = 1 :=
+theorem coe_one' {n : ℕ} : ((1 : Finₓ (n + 1)) : ℕ) = 1 % (n + 1) :=
   rfl
 
 @[simp]
-theorem coe_one {n : ℕ} : ((1 : Finₓ (n+2)) : ℕ) = 1 :=
+theorem val_one {n : ℕ} : (1 : Finₓ (n + 2)).val = 1 :=
   rfl
 
 @[simp]
-theorem mk_one : (⟨1, Nat.succ_lt_succₓ (Nat.succ_posₓ n)⟩ : Finₓ (n+2)) = (1 : Finₓ _) :=
+theorem coe_one {n : ℕ} : ((1 : Finₓ (n + 2)) : ℕ) = 1 :=
   rfl
 
-instance {n : ℕ} : Nontrivial (Finₓ (n+2)) :=
+@[simp]
+theorem mk_one : (⟨1, Nat.succ_lt_succₓ (Nat.succ_posₓ n)⟩ : Finₓ (n + 2)) = (1 : Finₓ _) :=
+  rfl
+
+instance {n : ℕ} : Nontrivial (Finₓ (n + 2)) :=
   ⟨⟨0, 1, by
       decide⟩⟩
 
 section Monoidₓ
 
 @[simp]
-protected theorem add_zeroₓ (k : Finₓ (n+1)) : (k+0) = k := by
+protected theorem add_zeroₓ (k : Finₓ (n + 1)) : k + 0 = k := by
   simp [eq_iff_veq, add_def, mod_eq_of_lt (is_lt k)]
 
 @[simp]
-protected theorem zero_addₓ (k : Finₓ (n+1)) : ((0 : Finₓ (n+1))+k) = k := by
+protected theorem zero_addₓ (k : Finₓ (n + 1)) : (0 : Finₓ (n + 1)) + k = k := by
   simp [eq_iff_veq, add_def, mod_eq_of_lt (is_lt k)]
 
-instance AddCommMonoidₓ (n : ℕ) : AddCommMonoidₓ (Finₓ (n+1)) where
-  add := ·+·
+instance AddCommMonoidₓ (n : ℕ) : AddCommMonoidₓ (Finₓ (n + 1)) where
+  add := · + ·
   add_assoc := by
     simp [eq_iff_veq, add_def, add_assocₓ]
   zero := 0
@@ -421,13 +427,13 @@ instance AddCommMonoidₓ (n : ℕ) : AddCommMonoidₓ (Finₓ (n+1)) where
 
 end Monoidₓ
 
-theorem val_add {n : ℕ} : ∀ a b : Finₓ n, (a+b).val = (a.val+b.val) % n
+theorem val_add {n : ℕ} : ∀ a b : Finₓ n, (a + b).val = (a.val + b.val) % n
   | ⟨_, _⟩, ⟨_, _⟩ => rfl
 
-theorem coe_add {n : ℕ} : ∀ a b : Finₓ n, ((a+b : Finₓ n) : ℕ) = (a+b) % n
+theorem coe_add {n : ℕ} : ∀ a b : Finₓ n, ((a + b : Finₓ n) : ℕ) = (a + b) % n
   | ⟨_, _⟩, ⟨_, _⟩ => rfl
 
-theorem coe_add_eq_ite {n : ℕ} (a b : Finₓ n) : (↑a+b : ℕ) = if n ≤ a+b then (a+b) - n else a+b := by
+theorem coe_add_eq_ite {n : ℕ} (a b : Finₓ n) : (↑(a + b) : ℕ) = if n ≤ a + b then a + b - n else a + b := by
   rw [Finₓ.coe_add, Nat.add_mod_eq_ite, Nat.mod_eq_of_ltₓ (show ↑a < n from a.2),
     Nat.mod_eq_of_ltₓ (show ↑b < n from b.2)]
 
@@ -435,38 +441,38 @@ theorem coe_bit0 {n : ℕ} (k : Finₓ n) : ((bit0 k : Finₓ n) : ℕ) = bit0 (
   cases k
   rfl
 
-theorem coe_bit1 {n : ℕ} (k : Finₓ (n+1)) : ((bit1 k : Finₓ (n+1)) : ℕ) = bit1 (k : ℕ) % n+1 := by
+theorem coe_bit1 {n : ℕ} (k : Finₓ (n + 1)) : ((bit1 k : Finₓ (n + 1)) : ℕ) = bit1 (k : ℕ) % (n + 1) := by
   cases n
-  ·
-    cases' k with k h
+  · cases' k with k h
     cases k
-    ·
-      show _ % _ = _
+    · show _ % _ = _
       simp
+      
     cases' h with _ h
     cases h
+    
   simp [bit1, Finₓ.coe_bit0, Finₓ.coe_add, Finₓ.coe_one]
 
-theorem coe_add_one_of_lt {n : ℕ} {i : Finₓ n.succ} (h : i < last _) : (↑i+1 : ℕ) = i+1 := by
+theorem coe_add_one_of_lt {n : ℕ} {i : Finₓ n.succ} (h : i < last _) : (↑(i + 1) : ℕ) = i + 1 := by
   cases n
-  ·
-    cases h
+  · cases h
+    
   rw [Finₓ.coe_add, Finₓ.coe_one, Nat.mod_eq_of_ltₓ (Nat.succ_lt_succₓ _)]
   exact h
 
 @[simp]
-theorem last_add_one : ∀ n, (last n+1) = 0
+theorem last_add_one : ∀ n, last n + 1 = 0
   | 0 => Subsingleton.elimₓ _ _
-  | n+1 => by
+  | n + 1 => by
     ext
     rw [coe_add, coe_zero, coe_last, coe_one, Nat.mod_selfₓ]
 
-theorem coe_add_one {n : ℕ} (i : Finₓ (n+1)) : ((i+1 : Finₓ (n+1)) : ℕ) = if i = last _ then 0 else i+1 := by
+theorem coe_add_one {n : ℕ} (i : Finₓ (n + 1)) : ((i + 1 : Finₓ (n + 1)) : ℕ) = if i = last _ then 0 else i + 1 := by
   rcases(le_last i).eq_or_lt with (rfl | h)
-  ·
-    simp
-  ·
-    simpa [h.ne] using coe_add_one_of_lt h
+  · simp
+    
+  · simpa [h.ne] using coe_add_one_of_lt h
+    
 
 section Bit
 
@@ -476,8 +482,9 @@ theorem mk_bit0 {m n : ℕ} (h : bit0 m < n) :
   eq_of_veq (Nat.mod_eq_of_ltₓ h).symm
 
 @[simp]
-theorem mk_bit1 {m n : ℕ} (h : bit1 m < n+1) :
-    (⟨bit1 m, h⟩ : Finₓ (n+1)) = (bit1 ⟨m, (Nat.le_add_rightₓ m m).trans_lt ((m+m).lt_succ_self.trans h)⟩ : Finₓ _) :=
+theorem mk_bit1 {m n : ℕ} (h : bit1 m < n + 1) :
+    (⟨bit1 m, h⟩ : Finₓ (n + 1)) =
+      (bit1 ⟨m, (Nat.le_add_rightₓ m m).trans_lt ((m + m).lt_succ_self.trans h)⟩ : Finₓ _) :=
   by
   ext
   simp only [bit1, bit0] at h
@@ -486,90 +493,90 @@ theorem mk_bit1 {m n : ℕ} (h : bit1 m < n+1) :
 end Bit
 
 @[simp]
-theorem val_two {n : ℕ} : (2 : Finₓ (n+3)).val = 2 :=
+theorem val_two {n : ℕ} : (2 : Finₓ (n + 3)).val = 2 :=
   rfl
 
 @[simp]
-theorem coe_two {n : ℕ} : ((2 : Finₓ (n+3)) : ℕ) = 2 :=
+theorem coe_two {n : ℕ} : ((2 : Finₓ (n + 3)) : ℕ) = 2 :=
   rfl
 
 section OfNatCoe
 
 @[simp]
-theorem of_nat_eq_coe (n : ℕ) (a : ℕ) : (of_nat a : Finₓ (n+1)) = a := by
+theorem of_nat_eq_coe (n : ℕ) (a : ℕ) : (of_nat a : Finₓ (n + 1)) = a := by
   induction' a with a ih
-  ·
-    rfl
+  · rfl
+    
   ext
-  show ((a+1) % n+1) = Subtype.val (a+1 : Finₓ (n+1))
-  ·
-    rw [val_add, ← ih, of_nat]
+  show (a + 1) % (n + 1) = Subtype.val (a + 1 : Finₓ (n + 1))
+  · rw [val_add, ← ih, of_nat]
     exact add_mod _ _ _
+    
 
-/--  Converting an in-range number to `fin (n + 1)` produces a result
+/-- Converting an in-range number to `fin (n + 1)` produces a result
 whose value is the original number.  -/
-theorem coe_val_of_lt {n : ℕ} {a : ℕ} (h : a < n+1) : (a : Finₓ (n+1)).val = a := by
+theorem coe_val_of_lt {n : ℕ} {a : ℕ} (h : a < n + 1) : (a : Finₓ (n + 1)).val = a := by
   rw [← of_nat_eq_coe]
   exact Nat.mod_eq_of_ltₓ h
 
-/--  Converting the value of a `fin (n + 1)` to `fin (n + 1)` results
+/-- Converting the value of a `fin (n + 1)` to `fin (n + 1)` results
 in the same value.  -/
-theorem coe_val_eq_self {n : ℕ} (a : Finₓ (n+1)) : (a.val : Finₓ (n+1)) = a := by
+theorem coe_val_eq_self {n : ℕ} (a : Finₓ (n + 1)) : (a.val : Finₓ (n + 1)) = a := by
   rw [Finₓ.eq_iff_veq]
   exact coe_val_of_lt a.property
 
-/--  Coercing an in-range number to `fin (n + 1)`, and converting back
+/-- Coercing an in-range number to `fin (n + 1)`, and converting back
 to `ℕ`, results in that number. -/
-theorem coe_coe_of_lt {n : ℕ} {a : ℕ} (h : a < n+1) : ((a : Finₓ (n+1)) : ℕ) = a :=
+theorem coe_coe_of_lt {n : ℕ} {a : ℕ} (h : a < n + 1) : ((a : Finₓ (n + 1)) : ℕ) = a :=
   coe_val_of_lt h
 
-/--  Converting a `fin (n + 1)` to `ℕ` and back results in the same
+/-- Converting a `fin (n + 1)` to `ℕ` and back results in the same
 value. -/
 @[simp]
-theorem coe_coe_eq_self {n : ℕ} (a : Finₓ (n+1)) : ((a : ℕ) : Finₓ (n+1)) = a :=
+theorem coe_coe_eq_self {n : ℕ} (a : Finₓ (n + 1)) : ((a : ℕ) : Finₓ (n + 1)) = a :=
   coe_val_eq_self a
 
-theorem coe_nat_eq_last n : (n : Finₓ (n+1)) = Finₓ.last n := by
+theorem coe_nat_eq_last n : (n : Finₓ (n + 1)) = Finₓ.last n := by
   rw [← Finₓ.of_nat_eq_coe, Finₓ.ofNat, Finₓ.last]
   simp only [Nat.mod_eq_of_ltₓ n.lt_succ_self]
 
-theorem le_coe_last (i : Finₓ (n+1)) : i ≤ n := by
+theorem le_coe_last (i : Finₓ (n + 1)) : i ≤ n := by
   rw [Finₓ.coe_nat_eq_last]
   exact Finₓ.le_last i
 
 end OfNatCoe
 
-theorem add_one_pos (i : Finₓ (n+1)) (h : i < Finₓ.last n) : (0 : Finₓ (n+1)) < i+1 := by
+theorem add_one_pos (i : Finₓ (n + 1)) (h : i < Finₓ.last n) : (0 : Finₓ (n + 1)) < i + 1 := by
   cases n
-  ·
-    exact absurd h (Nat.not_lt_zeroₓ _)
-  ·
-    rw [lt_iff_coe_lt_coe, coe_last, ← add_lt_add_iff_right 1] at h
+  · exact absurd h (Nat.not_lt_zeroₓ _)
+    
+  · rw [lt_iff_coe_lt_coe, coe_last, ← add_lt_add_iff_right 1] at h
     rw [lt_iff_coe_lt_coe, coe_add, coe_zero, coe_one, Nat.mod_eq_of_ltₓ h]
     exact Nat.zero_lt_succₓ _
+    
 
-theorem one_pos : (0 : Finₓ (n+2)) < 1 :=
+theorem one_pos : (0 : Finₓ (n + 2)) < 1 :=
   succ_pos 0
 
-theorem zero_ne_one : (0 : Finₓ (n+2)) ≠ 1 :=
+theorem zero_ne_one : (0 : Finₓ (n + 2)) ≠ 1 :=
   ne_of_ltₓ one_pos
 
 @[simp]
-theorem zero_eq_one_iff : (0 : Finₓ (n+1)) = 1 ↔ n = 0 := by
+theorem zero_eq_one_iff : (0 : Finₓ (n + 1)) = 1 ↔ n = 0 := by
   constructor
-  ·
-    cases n <;> intro h
-    ·
-      rfl
-    ·
-      have := zero_ne_one
+  · cases n <;> intro h
+    · rfl
+      
+    · have := zero_ne_one
       contradiction
-  ·
-    rintro rfl
+      
+    
+  · rintro rfl
     rfl
+    
 
 @[simp]
-theorem one_eq_zero_iff : (1 : Finₓ (n+1)) = 0 ↔ n = 0 := by
+theorem one_eq_zero_iff : (1 : Finₓ (n + 1)) = 0 ↔ n = 0 := by
   rw [eq_comm, zero_eq_one_iff]
 
 end Add
@@ -582,14 +589,14 @@ section Succ
 
 
 @[simp]
-theorem coe_succ (j : Finₓ n) : (j.succ : ℕ) = j+1 := by
+theorem coe_succ (j : Finₓ n) : (j.succ : ℕ) = j + 1 := by
   cases j <;> simp [Finₓ.succ]
 
-theorem succ_pos (a : Finₓ n) : (0 : Finₓ (n+1)) < a.succ := by
+theorem succ_pos (a : Finₓ n) : (0 : Finₓ (n + 1)) < a.succ := by
   simp [lt_iff_coe_lt_coe]
 
-/--  `fin.succ` as an `order_embedding` -/
-def succ_embedding (n : ℕ) : Finₓ n ↪o Finₓ (n+1) :=
+/-- `fin.succ` as an `order_embedding` -/
+def succ_embedding (n : ℕ) : Finₓ n ↪o Finₓ (n + 1) :=
   OrderEmbedding.ofStrictMono Finₓ.succ $ fun ⟨i, hi⟩ ⟨j, hj⟩ h => succ_lt_succ h
 
 @[simp]
@@ -615,33 +622,33 @@ theorem succ_ne_zero {n} : ∀ k : Finₓ n, Finₓ.succ k ≠ 0
   | ⟨k, hk⟩, HEq => Nat.succ_ne_zero k $ (ext_iff _ _).1 HEq
 
 @[simp]
-theorem succ_zero_eq_one : Finₓ.succ (0 : Finₓ (n+1)) = 1 :=
+theorem succ_zero_eq_one : Finₓ.succ (0 : Finₓ (n + 1)) = 1 :=
   rfl
 
 @[simp]
-theorem succ_one_eq_two : Finₓ.succ (1 : Finₓ (n+2)) = 2 :=
+theorem succ_one_eq_two : Finₓ.succ (1 : Finₓ (n + 2)) = 2 :=
   rfl
 
 @[simp]
-theorem succ_mk (n i : ℕ) (h : i < n) : Finₓ.succ ⟨i, h⟩ = ⟨i+1, Nat.succ_lt_succₓ h⟩ :=
+theorem succ_mk (n i : ℕ) (h : i < n) : Finₓ.succ ⟨i, h⟩ = ⟨i + 1, Nat.succ_lt_succₓ h⟩ :=
   rfl
 
-theorem mk_succ_pos (i : ℕ) (h : i < n) : (0 : Finₓ (n+1)) < ⟨i.succ, add_lt_add_right h 1⟩ := by
+theorem mk_succ_pos (i : ℕ) (h : i < n) : (0 : Finₓ (n + 1)) < ⟨i.succ, add_lt_add_right h 1⟩ := by
   rw [lt_iff_coe_lt_coe, coe_zero]
   exact Nat.succ_posₓ i
 
-theorem one_lt_succ_succ (a : Finₓ n) : (1 : Finₓ (n+2)) < a.succ.succ := by
+theorem one_lt_succ_succ (a : Finₓ n) : (1 : Finₓ (n + 2)) < a.succ.succ := by
   cases n
-  ·
-    exact finZeroElim a
-  ·
-    rw [← succ_zero_eq_one, succ_lt_succ_iff]
+  · exact finZeroElim a
+    
+  · rw [← succ_zero_eq_one, succ_lt_succ_iff]
     exact succ_pos a
+    
 
 theorem succ_succ_ne_one (a : Finₓ n) : Finₓ.succ (Finₓ.succ a) ≠ 1 :=
   ne_of_gtₓ (one_lt_succ_succ a)
 
-/--  `cast_lt i h` embeds `i` into a `fin` where `h` proves it belongs into.  -/
+/-- `cast_lt i h` embeds `i` into a `fin` where `h` proves it belongs into.  -/
 def cast_lt (i : Finₓ m) (h : i.1 < n) : Finₓ n :=
   ⟨i.1, h⟩
 
@@ -653,7 +660,7 @@ theorem coe_cast_lt (i : Finₓ m) (h : i.1 < n) : (cast_lt i h : ℕ) = i :=
 theorem cast_lt_mk (i n m : ℕ) (hn : i < n) (hm : i < m) : cast_lt ⟨i, hn⟩ hm = ⟨i, hm⟩ :=
   rfl
 
-/--  `cast_le h i` embeds `i` into a larger `fin` type.  -/
+/-- `cast_le h i` embeds `i` into a larger `fin` type.  -/
 def cast_le (h : n ≤ m) : Finₓ n ↪o Finₓ m :=
   (OrderEmbedding.ofStrictMono fun a => cast_lt a (lt_of_lt_of_leₓ a.2 h)) $ fun a b h => h
 
@@ -669,346 +676,9 @@ theorem cast_le_mk (i n m : ℕ) (hn : i < n) (h : n ≤ m) : cast_le h ⟨i, hn
 theorem cast_le_zero {n m : ℕ} (h : n.succ ≤ m.succ) : cast_le h 0 = 0 := by
   simp [eq_iff_veq]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  []
-  [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
-  []
-  []
-  []
-  [])
- (Command.theorem
-  "theorem"
-  (Command.declId `range_cast_le [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`n `k] [":" (termℕ "ℕ")] "}")
-    (Term.explicitBinder "(" [`h] [":" («term_≤_» `n "≤" `k)] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app `Set.Range [(Term.app `cast_le [`h])])
-     "="
-     (Set.«term{_|_}»
-      "{"
-      `i
-      "|"
-      («term_<_» (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")") "<" `n)
-      "}"))))
-  (Command.declValSimple
-   ":="
-   (Term.app
-    `Set.ext
-    [(Term.fun
-      "fun"
-      (Term.basicFun
-       [(Term.simpleBinder [`x] [])]
-       "=>"
-       (Term.anonymousCtor
-        "⟨"
-        [(Term.fun
-          "fun"
-          (Term.basicFun
-           [(Term.anonymousCtor "⟨" [`y "," `hy] "⟩")]
-           "=>"
-           (Term.subst `hy "▸" [(Term.proj `y "." (fieldIdx "2"))])))
-         ","
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [(Term.simpleBinder [`hx] [])]
-           "=>"
-           (Term.anonymousCtor "⟨" [(Term.anonymousCtor "⟨" [`x "," `hx] "⟩") "," (Term.app `Finₓ.ext [`rfl])] "⟩")))]
-        "⟩")))])
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app
-   `Set.ext
-   [(Term.fun
-     "fun"
-     (Term.basicFun
-      [(Term.simpleBinder [`x] [])]
-      "=>"
-      (Term.anonymousCtor
-       "⟨"
-       [(Term.fun
-         "fun"
-         (Term.basicFun
-          [(Term.anonymousCtor "⟨" [`y "," `hy] "⟩")]
-          "=>"
-          (Term.subst `hy "▸" [(Term.proj `y "." (fieldIdx "2"))])))
-        ","
-        (Term.fun
-         "fun"
-         (Term.basicFun
-          [(Term.simpleBinder [`hx] [])]
-          "=>"
-          (Term.anonymousCtor "⟨" [(Term.anonymousCtor "⟨" [`x "," `hx] "⟩") "," (Term.app `Finₓ.ext [`rfl])] "⟩")))]
-       "⟩")))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun
-   "fun"
-   (Term.basicFun
-    [(Term.simpleBinder [`x] [])]
-    "=>"
-    (Term.anonymousCtor
-     "⟨"
-     [(Term.fun
-       "fun"
-       (Term.basicFun
-        [(Term.anonymousCtor "⟨" [`y "," `hy] "⟩")]
-        "=>"
-        (Term.subst `hy "▸" [(Term.proj `y "." (fieldIdx "2"))])))
-      ","
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [(Term.simpleBinder [`hx] [])]
-        "=>"
-        (Term.anonymousCtor "⟨" [(Term.anonymousCtor "⟨" [`x "," `hx] "⟩") "," (Term.app `Finₓ.ext [`rfl])] "⟩")))]
-     "⟩")))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor
-   "⟨"
-   [(Term.fun
-     "fun"
-     (Term.basicFun
-      [(Term.anonymousCtor "⟨" [`y "," `hy] "⟩")]
-      "=>"
-      (Term.subst `hy "▸" [(Term.proj `y "." (fieldIdx "2"))])))
-    ","
-    (Term.fun
-     "fun"
-     (Term.basicFun
-      [(Term.simpleBinder [`hx] [])]
-      "=>"
-      (Term.anonymousCtor "⟨" [(Term.anonymousCtor "⟨" [`x "," `hx] "⟩") "," (Term.app `Finₓ.ext [`rfl])] "⟩")))]
-   "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun
-   "fun"
-   (Term.basicFun
-    [(Term.simpleBinder [`hx] [])]
-    "=>"
-    (Term.anonymousCtor "⟨" [(Term.anonymousCtor "⟨" [`x "," `hx] "⟩") "," (Term.app `Finₓ.ext [`rfl])] "⟩")))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor "⟨" [(Term.anonymousCtor "⟨" [`x "," `hx] "⟩") "," (Term.app `Finₓ.ext [`rfl])] "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `Finₓ.ext [`rfl])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `rfl
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `Finₓ.ext
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor "⟨" [`x "," `hx] "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hx
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun
-   "fun"
-   (Term.basicFun
-    [(Term.anonymousCtor "⟨" [`y "," `hy] "⟩")]
-    "=>"
-    (Term.subst `hy "▸" [(Term.proj `y "." (fieldIdx "2"))])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.subst `hy "▸" [(Term.proj `y "." (fieldIdx "2"))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.subst', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.proj `y "." (fieldIdx "2"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `y
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 75 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 75, term))
-  `hy
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 75, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 75, (some 75, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.simpleBinder'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor "⟨" [`y "," `hy] "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hy
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `y
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `Set.ext
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.app `Set.Range [(Term.app `cast_le [`h])])
-   "="
-   (Set.«term{_|_}»
-    "{"
-    `i
-    "|"
-    («term_<_» (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")") "<" `n)
-    "}"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}» "{" `i "|" («term_<_» (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")") "<" `n) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_<_» (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")") "<" `n)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (termℕ "ℕ")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'termℕ', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-@[ simp ]
-  theorem
-    range_cast_le
-    { n k : ℕ } ( h : n ≤ k ) : Set.Range cast_le h = { i | ( i : ℕ ) < n }
-    := Set.ext fun x => ⟨ fun ⟨ y , hy ⟩ => hy ▸ y . 2 , fun hx => ⟨ ⟨ x , hx ⟩ , Finₓ.ext rfl ⟩ ⟩
+@[simp]
+theorem range_cast_le {n k : ℕ} (h : n ≤ k) : Set.Range (cast_le h) = { i | (i : ℕ) < n } :=
+  Set.ext fun x => ⟨fun ⟨y, hy⟩ => hy ▸ y.2, fun hx => ⟨⟨x, hx⟩, Finₓ.ext rfl⟩⟩
 
 @[simp]
 theorem coe_of_injective_cast_le_symm {n k : ℕ} (h : n ≤ k) (i : Finₓ k) hi :
@@ -1017,20 +687,20 @@ theorem coe_of_injective_cast_le_symm {n k : ℕ} (h : n ≤ k) (i : Finₓ k) h
   exact congr_argₓ coeₓ (Equivₓ.apply_of_injective_symm _ _ _)
 
 @[simp]
-theorem cast_le_succ {m n : ℕ} (h : (m+1) ≤ n+1) (i : Finₓ m) :
+theorem cast_le_succ {m n : ℕ} (h : m + 1 ≤ n + 1) (i : Finₓ m) :
     cast_le h i.succ = (cast_le (Nat.succ_le_succ_iff.mp h) i).succ := by
   simp [Finₓ.eq_iff_veq]
 
-/--  `cast eq i` embeds `i` into a equal `fin` type, see also `equiv.fin_congr`. -/
-def cast (eq : n = m) : Finₓ n ≃o Finₓ m :=
-  { toEquiv := ⟨cast_le Eq.le, cast_le eq.symm.le, fun a => eq_of_veq rfl, fun a => eq_of_veq rfl⟩,
-    map_rel_iff' := fun a b => Iff.rfl }
+/-- `cast eq i` embeds `i` into a equal `fin` type, see also `equiv.fin_congr`. -/
+def cast (eq : n = m) : Finₓ n ≃o Finₓ m where
+  toEquiv := ⟨cast_le Eq.le, cast_le eq.symm.le, fun a => eq_of_veq rfl, fun a => eq_of_veq rfl⟩
+  map_rel_iff' := fun a b => Iff.rfl
 
 @[simp]
 theorem symm_cast (h : n = m) : (cast h).symm = cast h.symm :=
   rfl
 
-/--  While `fin.coe_order_iso_apply` is a more general case of this, we mark this `simp` anyway
+/-- While `fin.coe_order_iso_apply` is a more general case of this, we mark this `simp` anyway
 as it is eligible for `dsimp`. -/
 @[simp]
 theorem coe_cast (h : n = m) (i : Finₓ n) : (cast h i : ℕ) = i :=
@@ -1049,21 +719,21 @@ theorem cast_refl (h : n = n := rfl) : cast h = OrderIso.refl (Finₓ n) := by
   ext
   rfl
 
-/--  While in many cases `fin.cast` is better than `equiv.cast`/`cast`, sometimes we want to apply
+/-- While in many cases `fin.cast` is better than `equiv.cast`/`cast`, sometimes we want to apply
 a generic theorem about `cast`. -/
 theorem cast_to_equiv (h : n = m) : (cast h).toEquiv = Equivₓ.cast (h ▸ rfl) := by
   subst h
   simp
 
-/--  While in many cases `fin.cast` is better than `equiv.cast`/`cast`, sometimes we want to apply
+/-- While in many cases `fin.cast` is better than `equiv.cast`/`cast`, sometimes we want to apply
 a generic theorem about `cast`. -/
 theorem cast_eq_cast (h : n = m) : (cast h : Finₓ n → Finₓ m) = _root_.cast (h ▸ rfl) := by
   subst h
   ext
   simp
 
-/--  `cast_add m i` embeds `i : fin n` in `fin (n+m)`. See also `fin.nat_add` and `fin.add_nat`. -/
-def cast_add m : Finₓ n ↪o Finₓ (n+m) :=
+/-- `cast_add m i` embeds `i : fin n` in `fin (n+m)`. See also `fin.nat_add` and `fin.add_nat`. -/
+def cast_add m : Finₓ n ↪o Finₓ (n + m) :=
   cast_le $ Nat.le_add_rightₓ n m
 
 @[simp]
@@ -1078,27 +748,27 @@ theorem cast_add_mk (m : ℕ) (i : ℕ) (h : i < n) : cast_add m ⟨i, h⟩ = �
   rfl
 
 @[simp]
-theorem cast_add_cast_lt (m : ℕ) (i : Finₓ (n+m)) (hi : i.val < n) : cast_add m (cast_lt i hi) = i :=
+theorem cast_add_cast_lt (m : ℕ) (i : Finₓ (n + m)) (hi : i.val < n) : cast_add m (cast_lt i hi) = i :=
   ext rfl
 
 @[simp]
 theorem cast_lt_cast_add (m : ℕ) (i : Finₓ n) : cast_lt (cast_add m i) (cast_add_lt m i) = i :=
   ext rfl
 
-/--  For rewriting in the reverse direction, see `fin.cast_cast_add_left`. -/
+/-- For rewriting in the reverse direction, see `fin.cast_cast_add_left`. -/
 theorem cast_add_cast {n n' : ℕ} (m : ℕ) (i : Finₓ n') (h : n' = n) :
     cast_add m (Finₓ.cast h i) = Finₓ.cast (congr_argₓ _ h) (cast_add m i) :=
   ext rfl
 
-theorem cast_cast_add_left {n n' m : ℕ} (i : Finₓ n') (h : (n'+m) = n+m) :
+theorem cast_cast_add_left {n n' m : ℕ} (i : Finₓ n') (h : n' + m = n + m) :
     cast h (cast_add m i) = cast_add m (cast (add_right_cancelₓ h) i) :=
   ext rfl
 
 @[simp]
-theorem cast_cast_add_right {n m m' : ℕ} (i : Finₓ n) (h : (n+m') = n+m) : cast h (cast_add m' i) = cast_add m i :=
+theorem cast_cast_add_right {n m m' : ℕ} (i : Finₓ n) (h : n + m' = n + m) : cast h (cast_add m' i) = cast_add m i :=
   ext rfl
 
-/--  The cast of the successor is the succesor of the cast. See `fin.succ_cast_eq` for rewriting in
+/-- The cast of the successor is the succesor of the cast. See `fin.succ_cast_eq` for rewriting in
 the reverse direction. -/
 @[simp]
 theorem cast_succ_eq {n' : ℕ} (i : Finₓ n) (h : n.succ = n'.succ) : cast h i.succ = (cast (Nat.succ.injₓ h) i).succ :=
@@ -1114,8 +784,8 @@ theorem succ_cast_eq {n' : ℕ} (i : Finₓ n) (h : n = n') :
   ext $ by
     simp
 
-/--  `cast_succ i` embeds `i : fin n` in `fin (n+1)`. -/
-def cast_succ : Finₓ n ↪o Finₓ (n+1) :=
+/-- `cast_succ i` embeds `i : fin n` in `fin (n+1)`. -/
+def cast_succ : Finₓ n ↪o Finₓ (n + 1) :=
   cast_add 1
 
 @[simp]
@@ -1130,7 +800,7 @@ theorem cast_succ_lt_succ (i : Finₓ n) : i.cast_succ < i.succ :=
   lt_iff_coe_lt_coe.2 $ by
     simp only [coe_cast_succ, coe_succ, Nat.lt_succ_selfₓ]
 
-theorem le_cast_succ_iff {i : Finₓ (n+1)} {j : Finₓ n} : i ≤ j.cast_succ ↔ i < j.succ := by
+theorem le_cast_succ_iff {i : Finₓ (n + 1)} {j : Finₓ n} : i ≤ j.cast_succ ↔ i < j.succ := by
   simpa [lt_iff_coe_lt_coe, le_iff_coe_le_coe] using nat.succ_le_succ_iff.symm
 
 @[simp]
@@ -1138,11 +808,11 @@ theorem succ_last (n : ℕ) : (last n).succ = last n.succ :=
   rfl
 
 @[simp]
-theorem succ_eq_last_succ {n : ℕ} (i : Finₓ n.succ) : i.succ = last (n+1) ↔ i = last n := by
+theorem succ_eq_last_succ {n : ℕ} (i : Finₓ n.succ) : i.succ = last (n + 1) ↔ i = last n := by
   rw [← succ_last, (succ_injective _).eq_iff]
 
 @[simp]
-theorem cast_succ_cast_lt (i : Finₓ (n+1)) (h : (i : ℕ) < n) : cast_succ (cast_lt i h) = i :=
+theorem cast_succ_cast_lt (i : Finₓ (n + 1)) (h : (i : ℕ) < n) : cast_succ (cast_lt i h) = i :=
   Finₓ.eq_of_veq rfl
 
 @[simp]
@@ -1163,175 +833,47 @@ theorem cast_succ_lt_last (a : Finₓ n) : cast_succ a < last n :=
   lt_iff_coe_lt_coe.mpr a.is_lt
 
 @[simp]
-theorem cast_succ_zero : cast_succ (0 : Finₓ (n+1)) = 0 :=
+theorem cast_succ_zero : cast_succ (0 : Finₓ (n + 1)) = 0 :=
   rfl
 
 @[simp]
-theorem cast_succ_one {n : ℕ} : Finₓ.castSucc (1 : Finₓ (n+2)) = 1 :=
+theorem cast_succ_one {n : ℕ} : Finₓ.castSucc (1 : Finₓ (n + 2)) = 1 :=
   rfl
 
-/--  `cast_succ i` is positive when `i` is positive -/
-theorem cast_succ_pos {i : Finₓ (n+1)} (h : 0 < i) : 0 < cast_succ i := by
+/-- `cast_succ i` is positive when `i` is positive -/
+theorem cast_succ_pos {i : Finₓ (n + 1)} (h : 0 < i) : 0 < cast_succ i := by
   simpa [lt_iff_coe_lt_coe] using h
 
 @[simp]
-theorem cast_succ_eq_zero_iff (a : Finₓ (n+1)) : a.cast_succ = 0 ↔ a = 0 :=
-  Subtype.ext_iff.trans $
-    (Subtype.ext_iff.trans $ by
-        exact Iff.rfl).symm
+theorem cast_succ_eq_zero_iff (a : Finₓ (n + 1)) : a.cast_succ = 0 ↔ a = 0 :=
+  Subtype.ext_iff.trans $ (Subtype.ext_iff.trans $ Iff.rfl).symm
 
-theorem cast_succ_ne_zero_iff (a : Finₓ (n+1)) : a.cast_succ ≠ 0 ↔ a ≠ 0 :=
+theorem cast_succ_ne_zero_iff (a : Finₓ (n + 1)) : a.cast_succ ≠ 0 ↔ a ≠ 0 :=
   not_iff_not.mpr $ cast_succ_eq_zero_iff a
 
 theorem cast_succ_fin_succ (n : ℕ) (j : Finₓ n) : cast_succ (Finₓ.succ j) = Finₓ.succ (cast_succ j) := by
   simp [Finₓ.ext_iff]
 
 @[norm_cast, simp]
-theorem coe_eq_cast_succ : (a : Finₓ (n+1)) = a.cast_succ := by
+theorem coe_eq_cast_succ : (a : Finₓ (n + 1)) = a.cast_succ := by
   ext
   exact coe_val_of_lt (Nat.Lt.step a.is_lt)
 
 @[simp]
-theorem coe_succ_eq_succ : (a.cast_succ+1) = a.succ := by
+theorem coe_succ_eq_succ : a.cast_succ + 1 = a.succ := by
   cases n
-  ·
-    exact finZeroElim a
-  ·
-    simp [a.is_lt, eq_iff_veq, add_def, Nat.mod_eq_of_ltₓ]
+  · exact finZeroElim a
+    
+  · simp [a.is_lt, eq_iff_veq, add_def, Nat.mod_eq_of_ltₓ]
+    
 
 theorem lt_succ : a.cast_succ < a.succ := by
   rw [cast_succ, lt_iff_coe_lt_coe, coe_cast_add, coe_succ]
   exact lt_add_one a.val
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  []
-  [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
-  []
-  []
-  []
-  [])
- (Command.theorem
-  "theorem"
-  (Command.declId `range_cast_succ [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`n] [":" (termℕ "ℕ")] "}")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app
-      `Set.Range
-      [(Term.paren
-        "("
-        [`cast_succ [(Term.typeAscription ":" (Term.arrow (Term.app `Finₓ [`n]) "→" (Term.app `Finₓ [`n.succ])))]]
-        ")")])
-     "="
-     (Set.«term{_|_}»
-      "{"
-      `i
-      "|"
-      («term_<_» (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")") "<" `n)
-      "}"))))
-  (Command.declValSimple ":=" (Term.app `range_cast_le [(Term.hole "_")]) [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `range_cast_le [(Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `range_cast_le
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.app
-    `Set.Range
-    [(Term.paren
-      "("
-      [`cast_succ [(Term.typeAscription ":" (Term.arrow (Term.app `Finₓ [`n]) "→" (Term.app `Finₓ [`n.succ])))]]
-      ")")])
-   "="
-   (Set.«term{_|_}»
-    "{"
-    `i
-    "|"
-    («term_<_» (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")") "<" `n)
-    "}"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}» "{" `i "|" («term_<_» (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")") "<" `n) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_<_» (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")") "<" `n)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (termℕ "ℕ")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'termℕ', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-@[ simp ]
-  theorem
-    range_cast_succ
-    { n : ℕ } : Set.Range ( cast_succ : Finₓ n → Finₓ n.succ ) = { i | ( i : ℕ ) < n }
-    := range_cast_le _
+@[simp]
+theorem range_cast_succ {n : ℕ} : Set.Range (cast_succ : Finₓ n → Finₓ n.succ) = { i | (i : ℕ) < n } :=
+  range_cast_le _
 
 @[simp]
 theorem coe_of_injective_cast_succ_symm {n : ℕ} (i : Finₓ n.succ) hi :
@@ -1344,51 +886,51 @@ theorem succ_cast_succ {n : ℕ} (i : Finₓ n) : i.cast_succ.succ = i.succ.cast
     (by
       simp )
 
-/--  `add_nat m i` adds `m` to `i`, generalizes `fin.succ`. -/
-def add_nat m : Finₓ n ↪o Finₓ (n+m) :=
-  (OrderEmbedding.ofStrictMono fun i => ⟨(i : ℕ)+m, add_lt_add_right i.2 _⟩) $ fun i j h =>
+/-- `add_nat m i` adds `m` to `i`, generalizes `fin.succ`. -/
+def add_nat m : Finₓ n ↪o Finₓ (n + m) :=
+  (OrderEmbedding.ofStrictMono fun i => ⟨(i : ℕ) + m, add_lt_add_right i.2 _⟩) $ fun i j h =>
     lt_iff_coe_lt_coe.2 $ add_lt_add_right h _
 
 @[simp]
-theorem coe_add_nat (m : ℕ) (i : Finₓ n) : (add_nat m i : ℕ) = i+m :=
+theorem coe_add_nat (m : ℕ) (i : Finₓ n) : (add_nat m i : ℕ) = i + m :=
   rfl
 
 theorem le_coe_add_nat (m : ℕ) (i : Finₓ n) : m ≤ add_nat m i :=
   Nat.le_add_leftₓ _ _
 
 @[simp]
-theorem add_nat_mk (n i : ℕ) (hi : i < m) : add_nat n ⟨i, hi⟩ = ⟨i+n, add_lt_add_right hi n⟩ :=
+theorem add_nat_mk (n i : ℕ) (hi : i < m) : add_nat n ⟨i, hi⟩ = ⟨i + n, add_lt_add_right hi n⟩ :=
   rfl
 
 @[simp]
-theorem cast_add_nat_zero {n n' : ℕ} (i : Finₓ n) (h : (n+0) = n') :
+theorem cast_add_nat_zero {n n' : ℕ} (i : Finₓ n) (h : n + 0 = n') :
     cast h (add_nat 0 i) = cast ((add_zeroₓ _).symm.trans h) i :=
   ext $ add_zeroₓ _
 
-/--  For rewriting in the reverse direction, see `fin.cast_add_nat_left`. -/
+/-- For rewriting in the reverse direction, see `fin.cast_add_nat_left`. -/
 theorem add_nat_cast {n n' m : ℕ} (i : Finₓ n') (h : n' = n) :
     add_nat m (cast h i) = cast (congr_argₓ _ h) (add_nat m i) :=
   ext rfl
 
-theorem cast_add_nat_left {n n' m : ℕ} (i : Finₓ n') (h : (n'+m) = n+m) :
+theorem cast_add_nat_left {n n' m : ℕ} (i : Finₓ n') (h : n' + m = n + m) :
     cast h (add_nat m i) = add_nat m (cast (add_right_cancelₓ h) i) :=
   ext rfl
 
 @[simp]
-theorem cast_add_nat_right {n m m' : ℕ} (i : Finₓ n) (h : (n+m') = n+m) : cast h (add_nat m' i) = add_nat m i :=
-  ext $ (congr_argₓ ((·+·) (i : ℕ)) (add_left_cancelₓ h) : _)
+theorem cast_add_nat_right {n m m' : ℕ} (i : Finₓ n) (h : n + m' = n + m) : cast h (add_nat m' i) = add_nat m i :=
+  ext $ (congr_argₓ ((· + ·) (i : ℕ)) (add_left_cancelₓ h) : _)
 
-/--  `nat_add n i` adds `n` to `i` "on the left". -/
-def nat_add n {m} : Finₓ m ↪o Finₓ (n+m) :=
-  (OrderEmbedding.ofStrictMono fun i => ⟨n+(i : ℕ), add_lt_add_left i.2 _⟩) $ fun i j h =>
+/-- `nat_add n i` adds `n` to `i` "on the left". -/
+def nat_add n {m} : Finₓ m ↪o Finₓ (n + m) :=
+  (OrderEmbedding.ofStrictMono fun i => ⟨n + (i : ℕ), add_lt_add_left i.2 _⟩) $ fun i j h =>
     lt_iff_coe_lt_coe.2 $ add_lt_add_left h _
 
 @[simp]
-theorem coe_nat_add (n : ℕ) {m : ℕ} (i : Finₓ m) : (nat_add n i : ℕ) = n+i :=
+theorem coe_nat_add (n : ℕ) {m : ℕ} (i : Finₓ m) : (nat_add n i : ℕ) = n + i :=
   rfl
 
 @[simp]
-theorem nat_add_mk (n i : ℕ) (hi : i < m) : nat_add n ⟨i, hi⟩ = ⟨n+i, add_lt_add_left hi n⟩ :=
+theorem nat_add_mk (n i : ℕ) (hi : i < m) : nat_add n ⟨i, hi⟩ = ⟨n + i, add_lt_add_left hi n⟩ :=
   rfl
 
 theorem le_coe_nat_add (m : ℕ) (i : Finₓ n) : m ≤ nat_add m i :=
@@ -1398,21 +940,21 @@ theorem nat_add_zero {n : ℕ} : Finₓ.natAdd 0 = (Finₓ.cast (zero_addₓ n).
   ext
   apply zero_addₓ
 
-/--  For rewriting in the reverse direction, see `fin.cast_nat_add_right`. -/
+/-- For rewriting in the reverse direction, see `fin.cast_nat_add_right`. -/
 theorem nat_add_cast {n n' : ℕ} (m : ℕ) (i : Finₓ n') (h : n' = n) :
     nat_add m (cast h i) = cast (congr_argₓ _ h) (nat_add m i) :=
   ext rfl
 
-theorem cast_nat_add_right {n n' m : ℕ} (i : Finₓ n') (h : (m+n') = m+n) :
+theorem cast_nat_add_right {n n' m : ℕ} (i : Finₓ n') (h : m + n' = m + n) :
     cast h (nat_add m i) = nat_add m (cast (add_left_cancelₓ h) i) :=
   ext rfl
 
 @[simp]
-theorem cast_nat_add_left {n m m' : ℕ} (i : Finₓ n) (h : (m'+n) = m+n) : cast h (nat_add m' i) = nat_add m i :=
-  ext $ (congr_argₓ (·+(i : ℕ)) (add_right_cancelₓ h) : _)
+theorem cast_nat_add_left {n m m' : ℕ} (i : Finₓ n) (h : m' + n = m + n) : cast h (nat_add m' i) = nat_add m i :=
+  ext $ (congr_argₓ (· + (i : ℕ)) (add_right_cancelₓ h) : _)
 
 @[simp]
-theorem cast_nat_add_zero {n n' : ℕ} (i : Finₓ n) (h : (0+n) = n') :
+theorem cast_nat_add_zero {n n' : ℕ} (i : Finₓ n) (h : 0 + n = n') :
     cast h (nat_add 0 i) = cast ((zero_addₓ _).symm.trans h) i :=
   ext $ zero_addₓ _
 
@@ -1434,15 +976,15 @@ section Pred
 
 
 @[simp]
-theorem coe_pred (j : Finₓ (n+1)) (h : j ≠ 0) : (j.pred h : ℕ) = j - 1 := by
+theorem coe_pred (j : Finₓ (n + 1)) (h : j ≠ 0) : (j.pred h : ℕ) = j - 1 := by
   cases j
   rfl
 
 @[simp]
-theorem succ_pred : ∀ i : Finₓ (n+1) h : i ≠ 0, (i.pred h).succ = i
+theorem succ_pred : ∀ i : Finₓ (n + 1) h : i ≠ 0, (i.pred h).succ = i
   | ⟨0, h⟩, hi => by
     contradiction
-  | ⟨n+1, h⟩, hi => rfl
+  | ⟨n + 1, h⟩, hi => rfl
 
 @[simp]
 theorem pred_succ (i : Finₓ n) {h : i.succ ≠ 0} : i.succ.pred h = i := by
@@ -1450,11 +992,11 @@ theorem pred_succ (i : Finₓ n) {h : i.succ ≠ 0} : i.succ.pred h = i := by
   rfl
 
 @[simp]
-theorem pred_mk_succ (i : ℕ) (h : i < n+1) :
-    Finₓ.pred ⟨i+1, add_lt_add_right h 1⟩ (ne_of_vne (ne_of_gtₓ (mk_succ_pos i h))) = ⟨i, h⟩ := by
+theorem pred_mk_succ (i : ℕ) (h : i < n + 1) :
+    Finₓ.pred ⟨i + 1, add_lt_add_right h 1⟩ (ne_of_vne (ne_of_gtₓ (mk_succ_pos i h))) = ⟨i, h⟩ := by
   simp only [ext_iff, coe_pred, coe_mk, add_tsub_cancel_right]
 
-theorem pred_mk {n : ℕ} (i : ℕ) (h : i < n+1) w :
+theorem pred_mk {n : ℕ} (i : ℕ) (h : i < n + 1) w :
     Finₓ.pred ⟨i, h⟩ w =
       ⟨i - 1, by
         rwa [tsub_lt_iff_right (Nat.succ_le_of_ltₓ $ Nat.pos_of_ne_zeroₓ (Finₓ.vne_of_ne w))]⟩ :=
@@ -1469,35 +1011,36 @@ theorem pred_lt_pred_iff {n : ℕ} {a b : Finₓ n.succ} {ha : a ≠ 0} {hb : b 
   rw [← succ_lt_succ_iff, succ_pred, succ_pred]
 
 @[simp]
-theorem pred_inj : ∀ {a b : Finₓ (n+1)} {ha : a ≠ 0} {hb : b ≠ 0}, a.pred ha = b.pred hb ↔ a = b
+theorem pred_inj : ∀ {a b : Finₓ (n + 1)} {ha : a ≠ 0} {hb : b ≠ 0}, a.pred ha = b.pred hb ↔ a = b
   | ⟨0, _⟩, b, ha, hb => by
     contradiction
-  | ⟨i+1, _⟩, ⟨0, _⟩, ha, hb => by
+  | ⟨i + 1, _⟩, ⟨0, _⟩, ha, hb => by
     contradiction
-  | ⟨i+1, hi⟩, ⟨j+1, hj⟩, ha, hb => by
+  | ⟨i + 1, hi⟩, ⟨j + 1, hj⟩, ha, hb => by
     simp [Finₓ.eq_iff_veq]
 
 @[simp]
-theorem pred_one {n : ℕ} : Finₓ.pred (1 : Finₓ (n+2)) (Ne.symm (ne_of_ltₓ one_pos)) = 0 :=
+theorem pred_one {n : ℕ} : Finₓ.pred (1 : Finₓ (n + 2)) (Ne.symm (ne_of_ltₓ one_pos)) = 0 :=
   rfl
 
-theorem pred_add_one (i : Finₓ (n+2)) (h : (i : ℕ) < n+1) :
-    pred (i+1) (ne_of_gtₓ (add_one_pos _ (lt_iff_coe_lt_coe.mpr h))) = cast_lt i h := by
+theorem pred_add_one (i : Finₓ (n + 2)) (h : (i : ℕ) < n + 1) :
+    pred (i + 1) (ne_of_gtₓ (add_one_pos _ (lt_iff_coe_lt_coe.mpr h))) = cast_lt i h := by
   rw [ext_iff, coe_pred, coe_cast_lt, coe_add, coe_one, mod_eq_of_lt, add_tsub_cancel_right]
   exact add_lt_add_right h 1
 
-/--  `sub_nat i h` subtracts `m` from `i`, generalizes `fin.pred`. -/
-def sub_nat m (i : Finₓ (n+m)) (h : m ≤ (i : ℕ)) : Finₓ n :=
+/-- `sub_nat i h` subtracts `m` from `i`, generalizes `fin.pred`. -/
+def sub_nat m (i : Finₓ (n + m)) (h : m ≤ (i : ℕ)) : Finₓ n :=
   ⟨(i : ℕ) - m, by
     rw [tsub_lt_iff_right h]
     exact i.is_lt⟩
 
 @[simp]
-theorem coe_sub_nat (i : Finₓ (n+m)) (h : m ≤ i) : (i.sub_nat m h : ℕ) = i - m :=
+theorem coe_sub_nat (i : Finₓ (n + m)) (h : m ≤ i) : (i.sub_nat m h : ℕ) = i - m :=
   rfl
 
 @[simp]
-theorem sub_nat_mk {i : ℕ} (h₁ : i < n+m) (h₂ : m ≤ i) : sub_nat m ⟨i, h₁⟩ h₂ = ⟨i - m, (tsub_lt_iff_right h₂).2 h₁⟩ :=
+theorem sub_nat_mk {i : ℕ} (h₁ : i < n + m) (h₂ : m ≤ i) :
+    sub_nat m ⟨i, h₁⟩ h₂ = ⟨i - m, (tsub_lt_iff_right h₂).2 h₁⟩ :=
   rfl
 
 @[simp]
@@ -1506,7 +1049,7 @@ theorem pred_cast_succ_succ (i : Finₓ n) :
   simp [eq_iff_veq]
 
 @[simp]
-theorem add_nat_sub_nat {i : Finₓ (n+m)} (h : m ≤ i) : add_nat m (sub_nat m i h) = i :=
+theorem add_nat_sub_nat {i : Finₓ (n + m)} (h : m ≤ i) : add_nat m (sub_nat m i h) = i :=
   ext $ tsub_add_cancel_of_le h
 
 @[simp]
@@ -1515,27 +1058,27 @@ theorem sub_nat_add_nat (i : Finₓ n) (m : ℕ) (h : m ≤ add_nat m i := le_co
   ext $ add_tsub_cancel_right i m
 
 @[simp]
-theorem nat_add_sub_nat_cast {i : Finₓ (n+m)} (h : n ≤ i) : nat_add n (sub_nat n (cast (add_commₓ _ _) i) h) = i := by
+theorem nat_add_sub_nat_cast {i : Finₓ (n + m)} (h : n ≤ i) : nat_add n (sub_nat n (cast (add_commₓ _ _) i) h) = i := by
   simp [← cast_add_nat]
 
 end Pred
 
 section DivMod
 
-/--  Compute `i / n`, where `n` is a `nat` and inferred the type of `i`. -/
-def div_nat (i : Finₓ (m*n)) : Finₓ m :=
+/-- Compute `i / n`, where `n` is a `nat` and inferred the type of `i`. -/
+def div_nat (i : Finₓ (m * n)) : Finₓ m :=
   ⟨i / n, Nat.div_lt_of_lt_mul $ mul_commₓ m n ▸ i.prop⟩
 
 @[simp]
-theorem coe_div_nat (i : Finₓ (m*n)) : (i.div_nat : ℕ) = i / n :=
+theorem coe_div_nat (i : Finₓ (m * n)) : (i.div_nat : ℕ) = i / n :=
   rfl
 
-/--  Compute `i % n`, where `n` is a `nat` and inferred the type of `i`. -/
-def mod_nat (i : Finₓ (m*n)) : Finₓ n :=
+/-- Compute `i % n`, where `n` is a `nat` and inferred the type of `i`. -/
+def mod_nat (i : Finₓ (m * n)) : Finₓ n :=
   ⟨i % n, Nat.mod_ltₓ _ $ pos_of_mul_pos_left ((Nat.zero_leₓ i).trans_lt i.is_lt) m.zero_le⟩
 
 @[simp]
-theorem coe_mod_nat (i : Finₓ (m*n)) : (i.mod_nat : ℕ) = i % n :=
+theorem coe_mod_nat (i : Finₓ (m * n)) : (i.mod_nat : ℕ) = i % n :=
   rfl
 
 end DivMod
@@ -1547,7 +1090,7 @@ section Rec
 -/
 
 
-/--  Define `C n i` by induction on `i : fin n` interpreted as `(0 : fin (n - i)).succ.succ…`.
+/-- Define `C n i` by induction on `i : fin n` interpreted as `(0 : fin (n - i)).succ.succ…`.
 This function has two arguments: `H0 n` defines `0`-th element `C (n+1) 0` of an `(n+1)`-tuple,
 and `Hs n i` defines `(i+1)`-st element of `(n+1)`-tuple based on `n`, `i`, and `i`-th element
 of `n`-tuple. -/
@@ -1558,7 +1101,7 @@ def succ_rec {C : ∀ n, Finₓ n → Sort _} (H0 : ∀ n, C (succ n) 0) (Hs : �
   | succ n, ⟨0, _⟩ => H0 _
   | succ n, ⟨succ i, h⟩ => Hs _ _ (succ_rec ⟨i, lt_of_succ_lt_succ h⟩)
 
-/--  Define `C n i` by induction on `i : fin n` interpreted as `(0 : fin (n - i)).succ.succ…`.
+/-- Define `C n i` by induction on `i : fin n` interpreted as `(0 : fin (n - i)).succ.succ…`.
 This function has two arguments: `H0 n` defines `0`-th element `C (n+1) 0` of an `(n+1)`-tuple,
 and `Hs n i` defines `(i+1)`-st element of `(n+1)`-tuple based on `n`, `i`, and `i`-th element
 of `n`-tuple.
@@ -1578,35 +1121,33 @@ theorem succ_rec_on_succ {C : ∀ n, Finₓ n → Sort _} {H0 Hs} {n} (i : Fin�
     @Finₓ.succRecOn (succ n) i.succ C H0 Hs = Hs n i (Finₓ.succRecOn i H0 Hs) := by
   cases i <;> rfl
 
-/-- 
-Define `C i` by induction on `i : fin (n + 1)` via induction on the underlying `nat` value.
+/-- Define `C i` by induction on `i : fin (n + 1)` via induction on the underlying `nat` value.
 This function has two arguments: `h0` handles the base case on `C 0`,
 and `hs` defines the inductive step using `C i.cast_succ`.
 -/
 @[elab_as_eliminator]
-def induction {C : Finₓ (n+1) → Sort _} (h0 : C 0) (hs : ∀ i : Finₓ n, C i.cast_succ → C i.succ) :
-    ∀ i : Finₓ (n+1), C i := by
+def induction {C : Finₓ (n + 1) → Sort _} (h0 : C 0) (hs : ∀ i : Finₓ n, C i.cast_succ → C i.succ) :
+    ∀ i : Finₓ (n + 1), C i := by
   rintro ⟨i, hi⟩
   induction' i with i IH
-  ·
-    rwa [Finₓ.mk_zero]
-  ·
-    refine' hs ⟨i, lt_of_succ_lt_succ hi⟩ _
+  · rwa [Finₓ.mk_zero]
+    
+  · refine' hs ⟨i, lt_of_succ_lt_succ hi⟩ _
     exact IH (lt_of_succ_lt hi)
+    
 
-/-- 
-Define `C i` by induction on `i : fin (n + 1)` via induction on the underlying `nat` value.
+/-- Define `C i` by induction on `i : fin (n + 1)` via induction on the underlying `nat` value.
 This function has two arguments: `h0` handles the base case on `C 0`,
 and `hs` defines the inductive step using `C i.cast_succ`.
 
 A version of `fin.induction` taking `i : fin (n + 1)` as the first argument.
 -/
 @[elab_as_eliminator]
-def induction_on (i : Finₓ (n+1)) {C : Finₓ (n+1) → Sort _} (h0 : C 0) (hs : ∀ i : Finₓ n, C i.cast_succ → C i.succ) :
-    C i :=
+def induction_on (i : Finₓ (n + 1)) {C : Finₓ (n + 1) → Sort _} (h0 : C 0)
+    (hs : ∀ i : Finₓ n, C i.cast_succ → C i.succ) : C i :=
   induction h0 hs i
 
-/--  Define `f : Π i : fin n.succ, C i` by separately handling the cases `i = 0` and
+/-- Define `f : Π i : fin n.succ, C i` by separately handling the cases `i = 0` and
 `i = j.succ`, `j : fin n`. -/
 @[elab_as_eliminator]
 def cases {C : Finₓ (succ n) → Sort _} (H0 : C 0) (Hs : ∀ i : Finₓ n, C i.succ) : ∀ i : Finₓ (succ n), C i :=
@@ -1621,14 +1162,14 @@ theorem cases_succ {n} {C : Finₓ (succ n) → Sort _} {H0 Hs} (i : Finₓ n) :
   cases i <;> rfl
 
 @[simp]
-theorem cases_succ' {n} {C : Finₓ (succ n) → Sort _} {H0 Hs} {i : ℕ} (h : (i+1) < n+1) :
+theorem cases_succ' {n} {C : Finₓ (succ n) → Sort _} {H0 Hs} {i : ℕ} (h : i + 1 < n + 1) :
     @Finₓ.cases n C H0 Hs ⟨i.succ, h⟩ = Hs ⟨i, lt_of_succ_lt_succ h⟩ := by
   cases i <;> rfl
 
-theorem forall_fin_succ {P : Finₓ (n+1) → Prop} : (∀ i, P i) ↔ P 0 ∧ ∀ i : Finₓ n, P i.succ :=
+theorem forall_fin_succ {P : Finₓ (n + 1) → Prop} : (∀ i, P i) ↔ P 0 ∧ ∀ i : Finₓ n, P i.succ :=
   ⟨fun H => ⟨H 0, fun i => H _⟩, fun ⟨H0, H1⟩ i => Finₓ.cases H0 H1 i⟩
 
-theorem exists_fin_succ {P : Finₓ (n+1) → Prop} : (∃ i, P i) ↔ P 0 ∨ ∃ i : Finₓ n, P i.succ :=
+theorem exists_fin_succ {P : Finₓ (n + 1) → Prop} : (∃ i, P i) ↔ P 0 ∨ ∃ i : Finₓ n, P i.succ :=
   ⟨fun ⟨i, h⟩ => Finₓ.cases Or.inl (fun i hi => Or.inr ⟨i, hi⟩) i h, fun h =>
     (Or.elim h fun h => ⟨0, h⟩) $ fun ⟨i, hi⟩ => ⟨i.succ, hi⟩⟩
 
@@ -1644,14 +1185,17 @@ theorem forall_fin_two {p : Finₓ 2 → Prop} : (∀ i, p i) ↔ p 0 ∧ p 1 :=
 theorem exists_fin_two {p : Finₓ 2 → Prop} : (∃ i, p i) ↔ p 0 ∨ p 1 :=
   exists_fin_succ.trans $ or_congr_right exists_fin_one
 
-/-- 
-Define `C i` by reverse induction on `i : fin (n + 1)` via induction on the underlying `nat` value.
+theorem fin_two_eq_of_eq_zero_iff {a b : Finₓ 2} (h : a = 0 ↔ b = 0) : a = b := by
+  revert a b
+  simp [forall_fin_two]
+
+/-- Define `C i` by reverse induction on `i : fin (n + 1)` via induction on the underlying `nat` value.
 This function has two arguments: `hlast` handles the base case on `C (fin.last n)`,
 and `hs` defines the inductive step using `C i.succ`, inducting downwards.
 -/
 @[elab_as_eliminator]
-def reverse_induction {n : ℕ} {C : Finₓ (n+1) → Sort _} (hlast : C (Finₓ.last n))
-    (hs : ∀ i : Finₓ n, C i.succ → C i.cast_succ) : ∀ i : Finₓ (n+1), C i
+def reverse_induction {n : ℕ} {C : Finₓ (n + 1) → Sort _} (hlast : C (Finₓ.last n))
+    (hs : ∀ i : Finₓ n, C i.succ → C i.cast_succ) : ∀ i : Finₓ (n + 1), C i
   | i =>
     if hi : i = Finₓ.last n then
       _root_.cast
@@ -1660,9 +1204,9 @@ def reverse_induction {n : ℕ} {C : Finₓ (n+1) → Sort _} (hlast : C (Finₓ
         hlast
     else
       let j : Finₓ n := ⟨i, lt_of_le_of_neₓ (Nat.le_of_lt_succₓ i.2) fun h => hi (Finₓ.ext h)⟩
-      have wf : (n+1) - j.succ < (n+1) - i := by
+      have wf : n + 1 - j.succ < n + 1 - i := by
         cases i
-        rw [tsub_lt_tsub_iff_left_of_le] <;> simp [Nat.succ_le_iff]
+        rw [tsub_lt_tsub_iff_left_of_le] <;> simp [*, Nat.succ_le_iff]
       have hi : i = Finₓ.castSucc j := Finₓ.ext rfl
       _root_.cast
         (by
@@ -1670,56 +1214,55 @@ def reverse_induction {n : ℕ} {C : Finₓ (n+1) → Sort _} (hlast : C (Finₓ
         (hs _ (reverse_induction j.succ))
 
 @[simp]
-theorem reverse_induction_last {n : ℕ} {C : Finₓ (n+1) → Sort _} (h0 : C (Finₓ.last n))
+theorem reverse_induction_last {n : ℕ} {C : Finₓ (n + 1) → Sort _} (h0 : C (Finₓ.last n))
     (hs : ∀ i : Finₓ n, C i.succ → C i.cast_succ) : (reverse_induction h0 hs (Finₓ.last n) : C (Finₓ.last n)) = h0 := by
   rw [reverse_induction] <;> simp
 
 @[simp]
-theorem reverse_induction_cast_succ {n : ℕ} {C : Finₓ (n+1) → Sort _} (h0 : C (Finₓ.last n))
+theorem reverse_induction_cast_succ {n : ℕ} {C : Finₓ (n + 1) → Sort _} (h0 : C (Finₓ.last n))
     (hs : ∀ i : Finₓ n, C i.succ → C i.cast_succ) (i : Finₓ n) :
     (reverse_induction h0 hs i.cast_succ : C i.cast_succ) = hs i (reverse_induction h0 hs i.succ) := by
   rw [reverse_induction, dif_neg (ne_of_ltₓ (Finₓ.cast_succ_lt_last i))]
   cases i
   rfl
 
-/--  Define `f : Π i : fin n.succ, C i` by separately handling the cases `i = fin.last n` and
+/-- Define `f : Π i : fin n.succ, C i` by separately handling the cases `i = fin.last n` and
 `i = j.cast_succ`, `j : fin n`. -/
 @[elab_as_eliminator, elab_strategy]
-def last_cases {n : ℕ} {C : Finₓ (n+1) → Sort _} (hlast : C (Finₓ.last n)) (hcast : ∀ i : Finₓ n, C i.cast_succ)
-    (i : Finₓ (n+1)) : C i :=
+def last_cases {n : ℕ} {C : Finₓ (n + 1) → Sort _} (hlast : C (Finₓ.last n)) (hcast : ∀ i : Finₓ n, C i.cast_succ)
+    (i : Finₓ (n + 1)) : C i :=
   reverse_induction hlast (fun i _ => hcast i) i
 
 @[simp]
-theorem last_cases_last {n : ℕ} {C : Finₓ (n+1) → Sort _} (hlast : C (Finₓ.last n))
+theorem last_cases_last {n : ℕ} {C : Finₓ (n + 1) → Sort _} (hlast : C (Finₓ.last n))
     (hcast : ∀ i : Finₓ n, C i.cast_succ) : (Finₓ.lastCases hlast hcast (Finₓ.last n) : C (Finₓ.last n)) = hlast :=
   reverse_induction_last _ _
 
 @[simp]
-theorem last_cases_cast_succ {n : ℕ} {C : Finₓ (n+1) → Sort _} (hlast : C (Finₓ.last n))
+theorem last_cases_cast_succ {n : ℕ} {C : Finₓ (n + 1) → Sort _} (hlast : C (Finₓ.last n))
     (hcast : ∀ i : Finₓ n, C i.cast_succ) (i : Finₓ n) :
     (Finₓ.lastCases hlast hcast (Finₓ.castSucc i) : C (Finₓ.castSucc i)) = hcast i :=
   reverse_induction_cast_succ _ _ _
 
-/--  Define `f : Π i : fin (m + n), C i` by separately handling the cases `i = cast_add n i`,
+/-- Define `f : Π i : fin (m + n), C i` by separately handling the cases `i = cast_add n i`,
 `j : fin m` and `i = nat_add m j`, `j : fin n`. -/
 @[elab_as_eliminator, elab_strategy]
-def add_cases {m n : ℕ} {C : Finₓ (m+n) → Sort u} (hleft : ∀ i, C (cast_add n i)) (hright : ∀ i, C (nat_add m i))
-    (i : Finₓ (m+n)) : C i :=
+def add_cases {m n : ℕ} {C : Finₓ (m + n) → Sort u} (hleft : ∀ i, C (cast_add n i)) (hright : ∀ i, C (nat_add m i))
+    (i : Finₓ (m + n)) : C i :=
   if hi : (i : ℕ) < m then Eq.recOnₓ (cast_add_cast_lt n i hi) (hleft (cast_lt i hi))
   else Eq.recOnₓ (nat_add_sub_nat_cast (le_of_not_ltₓ hi)) (hright _)
 
 @[simp]
-theorem add_cases_left {m n : ℕ} {C : Finₓ (m+n) → Sort _} (hleft : ∀ i, C (cast_add n i))
+theorem add_cases_left {m n : ℕ} {C : Finₓ (m + n) → Sort _} (hleft : ∀ i, C (cast_add n i))
     (hright : ∀ i, C (nat_add m i)) (i : Finₓ m) : add_cases hleft hright (Finₓ.castAdd n i) = hleft i := by
   cases' i with i hi
   rw [add_cases, dif_pos (cast_add_lt _ _)]
   rfl
 
 @[simp]
-theorem add_cases_right {m n : ℕ} {C : Finₓ (m+n) → Sort _} (hleft : ∀ i, C (cast_add n i))
+theorem add_cases_right {m n : ℕ} {C : Finₓ (m + n) → Sort _} (hleft : ∀ i, C (cast_add n i))
     (hright : ∀ i, C (nat_add m i)) (i : Finₓ n) : add_cases hleft hright (nat_add m i) = hright i := by
-  have : ¬(nat_add m i : ℕ) < m
-  exact (le_coe_nat_add _ _).not_lt
+  have : ¬(nat_add m i : ℕ) < m := (le_coe_nat_add _ _).not_lt
   rw [add_cases, dif_neg this]
   refine' eq_of_heq ((eq_rec_heqₓ _ _).trans _)
   congr 1
@@ -1731,12 +1274,12 @@ section AddGroupₓ
 
 open Nat Int
 
-/--  Negation on `fin n` -/
+/-- Negation on `fin n` -/
 instance (n : ℕ) : Neg (Finₓ n) :=
   ⟨fun a => ⟨(n - a) % n, Nat.mod_ltₓ _ (lt_of_le_of_ltₓ (Nat.zero_leₓ _) a.2)⟩⟩
 
-/--  Abelian group structure on `fin (n+1)`. -/
-instance (n : ℕ) : AddCommGroupₓ (Finₓ (n+1)) :=
+/-- Abelian group structure on `fin (n+1)`. -/
+instance (n : ℕ) : AddCommGroupₓ (Finₓ (n + 1)) :=
   { Finₓ.addCommMonoid n, Finₓ.hasNeg n.succ with
     add_left_neg := fun ⟨a, ha⟩ =>
       Finₓ.ext $
@@ -1745,55 +1288,55 @@ instance (n : ℕ) : AddCommGroupₓ (Finₓ (n+1)) :=
           exact le_of_ltₓ ha,
     sub_eq_add_neg := fun ⟨a, ha⟩ ⟨b, hb⟩ =>
       Finₓ.ext $
-        show ((a+(n+1) - b) % n+1) = (a+((n+1) - b) % n+1) % n+1by
+        show (a + (n + 1 - b)) % (n + 1) = (a + (n + 1 - b) % (n + 1)) % (n + 1) by
           simp ,
     sub := Finₓ.sub }
 
 protected theorem coe_neg (a : Finₓ n) : ((-a : Finₓ n) : ℕ) = (n - a) % n :=
   rfl
 
-protected theorem coe_sub (a b : Finₓ n) : ((a - b : Finₓ n) : ℕ) = (a+n - b) % n := by
+protected theorem coe_sub (a b : Finₓ n) : ((a - b : Finₓ n) : ℕ) = (a + (n - b)) % n := by
   cases a <;> cases b <;> rfl
 
 end AddGroupₓ
 
 section SuccAbove
 
-theorem succ_above_aux (p : Finₓ (n+1)) :
+theorem succ_above_aux (p : Finₓ (n + 1)) :
     StrictMono fun i : Finₓ n => if i.cast_succ < p then i.cast_succ else i.succ :=
   (cast_succ : Finₓ n ↪o _).StrictMono.ite (succ_embedding n).StrictMono
     (fun i j hij hj => lt_transₓ ((cast_succ : Finₓ n ↪o _).lt_iff_lt.2 hij) hj) fun i => (cast_succ_lt_succ i).le
 
-/--  `succ_above p i` embeds `fin n` into `fin (n + 1)` with a hole around `p`. -/
-def succ_above (p : Finₓ (n+1)) : Finₓ n ↪o Finₓ (n+1) :=
+/-- `succ_above p i` embeds `fin n` into `fin (n + 1)` with a hole around `p`. -/
+def succ_above (p : Finₓ (n + 1)) : Finₓ n ↪o Finₓ (n + 1) :=
   OrderEmbedding.ofStrictMono _ p.succ_above_aux
 
-/--  Embedding `i : fin n` into `fin (n + 1)` with a hole around `p : fin (n + 1)`
+/-- Embedding `i : fin n` into `fin (n + 1)` with a hole around `p : fin (n + 1)`
 embeds `i` by `cast_succ` when the resulting `i.cast_succ < p`. -/
-theorem succ_above_below (p : Finₓ (n+1)) (i : Finₓ n) (h : i.cast_succ < p) : p.succ_above i = i.cast_succ := by
+theorem succ_above_below (p : Finₓ (n + 1)) (i : Finₓ n) (h : i.cast_succ < p) : p.succ_above i = i.cast_succ := by
   rw [succ_above]
   exact if_pos h
 
 @[simp]
-theorem succ_above_ne_zero_zero {a : Finₓ (n+2)} (ha : a ≠ 0) : a.succ_above 0 = 0 := by
+theorem succ_above_ne_zero_zero {a : Finₓ (n + 2)} (ha : a ≠ 0) : a.succ_above 0 = 0 := by
   rw [Finₓ.succ_above_below]
-  ·
-    rfl
-  ·
-    exact bot_lt_iff_ne_bot.mpr ha
+  · rfl
+    
+  · exact bot_lt_iff_ne_bot.mpr ha
+    
 
-theorem succ_above_eq_zero_iff {a : Finₓ (n+2)} {b : Finₓ (n+1)} (ha : a ≠ 0) : a.succ_above b = 0 ↔ b = 0 := by
+theorem succ_above_eq_zero_iff {a : Finₓ (n + 2)} {b : Finₓ (n + 1)} (ha : a ≠ 0) : a.succ_above b = 0 ↔ b = 0 := by
   simp only [← succ_above_ne_zero_zero ha, OrderEmbedding.eq_iff_eq]
 
-theorem succ_above_ne_zero {a : Finₓ (n+2)} {b : Finₓ (n+1)} (ha : a ≠ 0) (hb : b ≠ 0) : a.succ_above b ≠ 0 :=
+theorem succ_above_ne_zero {a : Finₓ (n + 2)} {b : Finₓ (n + 1)} (ha : a ≠ 0) (hb : b ≠ 0) : a.succ_above b ≠ 0 :=
   mt (succ_above_eq_zero_iff ha).mp hb
 
-/--  Embedding `fin n` into `fin (n + 1)` with a hole around zero embeds by `succ`. -/
+/-- Embedding `fin n` into `fin (n + 1)` with a hole around zero embeds by `succ`. -/
 @[simp]
-theorem succ_above_zero : ⇑succ_above (0 : Finₓ (n+1)) = Finₓ.succ :=
+theorem succ_above_zero : ⇑succ_above (0 : Finₓ (n + 1)) = Finₓ.succ :=
   rfl
 
-/--  Embedding `fin n` into `fin (n + 1)` with a hole around `last n` embeds by `cast_succ`. -/
+/-- Embedding `fin n` into `fin (n + 1)` with a hole around `last n` embeds by `cast_succ`. -/
 @[simp]
 theorem succ_above_last : succ_above (Finₓ.last n) = cast_succ := by
   ext
@@ -1802,174 +1345,173 @@ theorem succ_above_last : succ_above (Finₓ.last n) = cast_succ := by
 theorem succ_above_last_apply (i : Finₓ n) : succ_above (Finₓ.last n) i = i.cast_succ := by
   rw [succ_above_last]
 
-/--  Embedding `i : fin n` into `fin (n + 1)` with a hole around `p : fin (n + 1)`
+/-- Embedding `i : fin n` into `fin (n + 1)` with a hole around `p : fin (n + 1)`
 embeds `i` by `succ` when the resulting `p < i.succ`. -/
-theorem succ_above_above (p : Finₓ (n+1)) (i : Finₓ n) (h : p ≤ i.cast_succ) : p.succ_above i = i.succ := by
+theorem succ_above_above (p : Finₓ (n + 1)) (i : Finₓ n) (h : p ≤ i.cast_succ) : p.succ_above i = i.succ := by
   simp [succ_above, h.not_lt]
 
-/--  Embedding `i : fin n` into `fin (n + 1)` is always about some hole `p`. -/
-theorem succ_above_lt_ge (p : Finₓ (n+1)) (i : Finₓ n) : i.cast_succ < p ∨ p ≤ i.cast_succ :=
+/-- Embedding `i : fin n` into `fin (n + 1)` is always about some hole `p`. -/
+theorem succ_above_lt_ge (p : Finₓ (n + 1)) (i : Finₓ n) : i.cast_succ < p ∨ p ≤ i.cast_succ :=
   lt_or_geₓ (cast_succ i) p
 
-/--  Embedding `i : fin n` into `fin (n + 1)` is always about some hole `p`. -/
-theorem succ_above_lt_gt (p : Finₓ (n+1)) (i : Finₓ n) : i.cast_succ < p ∨ p < i.succ :=
+/-- Embedding `i : fin n` into `fin (n + 1)` is always about some hole `p`. -/
+theorem succ_above_lt_gt (p : Finₓ (n + 1)) (i : Finₓ n) : i.cast_succ < p ∨ p < i.succ :=
   Or.cases_on (succ_above_lt_ge p i) (fun h => Or.inl h) fun h => Or.inr (lt_of_le_of_ltₓ h (cast_succ_lt_succ i))
 
-/--  Embedding `i : fin n` into `fin (n + 1)` using a pivot `p` that is greater
+/-- Embedding `i : fin n` into `fin (n + 1)` using a pivot `p` that is greater
 results in a value that is less than `p`. -/
 @[simp]
-theorem succ_above_lt_iff (p : Finₓ (n+1)) (i : Finₓ n) : p.succ_above i < p ↔ i.cast_succ < p := by
+theorem succ_above_lt_iff (p : Finₓ (n + 1)) (i : Finₓ n) : p.succ_above i < p ↔ i.cast_succ < p := by
   refine' Iff.intro _ _
-  ·
-    intro h
+  · intro h
     cases' succ_above_lt_ge p i with H H
-    ·
-      exact H
-    ·
-      rw [succ_above_above _ _ H] at h
+    · exact H
+      
+    · rw [succ_above_above _ _ H] at h
       exact lt_transₓ (cast_succ_lt_succ i) h
-  ·
-    intro h
+      
+    
+  · intro h
     rw [succ_above_below _ _ h]
     exact h
+    
 
-/--  Embedding `i : fin n` into `fin (n + 1)` using a pivot `p` that is lesser
+/-- Embedding `i : fin n` into `fin (n + 1)` using a pivot `p` that is lesser
 results in a value that is greater than `p`. -/
-theorem lt_succ_above_iff (p : Finₓ (n+1)) (i : Finₓ n) : p < p.succ_above i ↔ p ≤ i.cast_succ := by
+theorem lt_succ_above_iff (p : Finₓ (n + 1)) (i : Finₓ n) : p < p.succ_above i ↔ p ≤ i.cast_succ := by
   refine' Iff.intro _ _
-  ·
-    intro h
+  · intro h
     cases' succ_above_lt_ge p i with H H
-    ·
-      rw [succ_above_below _ _ H] at h
+    · rw [succ_above_below _ _ H] at h
       exact le_of_ltₓ h
-    ·
-      exact H
-  ·
-    intro h
+      
+    · exact H
+      
+    
+  · intro h
     rw [succ_above_above _ _ h]
     exact lt_of_le_of_ltₓ h (cast_succ_lt_succ i)
+    
 
-/--  Embedding `i : fin n` into `fin (n + 1)` with a hole around `p : fin (n + 1)`
+/-- Embedding `i : fin n` into `fin (n + 1)` with a hole around `p : fin (n + 1)`
 never results in `p` itself -/
-theorem succ_above_ne (p : Finₓ (n+1)) (i : Finₓ n) : p.succ_above i ≠ p := by
+theorem succ_above_ne (p : Finₓ (n + 1)) (i : Finₓ n) : p.succ_above i ≠ p := by
   intro eq
   by_cases' H : i.cast_succ < p
-  ·
-    simpa [lt_irreflₓ, ← succ_above_below _ _ H, Eq] using H
-  ·
-    simpa [← succ_above_above _ _ (le_of_not_ltₓ H), Eq] using cast_succ_lt_succ i
+  · simpa [lt_irreflₓ, ← succ_above_below _ _ H, Eq] using H
+    
+  · simpa [← succ_above_above _ _ (le_of_not_ltₓ H), Eq] using cast_succ_lt_succ i
+    
 
-/--  Embedding a positive `fin n` results in a positive fin (n + 1)` -/
-theorem succ_above_pos (p : Finₓ (n+2)) (i : Finₓ (n+1)) (h : 0 < i) : 0 < p.succ_above i := by
+/-- Embedding a positive `fin n` results in a positive fin (n + 1)` -/
+theorem succ_above_pos (p : Finₓ (n + 2)) (i : Finₓ (n + 1)) (h : 0 < i) : 0 < p.succ_above i := by
   by_cases' H : i.cast_succ < p
-  ·
-    simpa [succ_above_below _ _ H] using cast_succ_pos h
-  ·
-    simpa [succ_above_above _ _ (le_of_not_ltₓ H)] using succ_pos _
+  · simpa [succ_above_below _ _ H] using cast_succ_pos h
+    
+  · simpa [succ_above_above _ _ (le_of_not_ltₓ H)] using succ_pos _
+    
 
 @[simp]
-theorem succ_above_cast_lt {x y : Finₓ (n+1)} (h : x < y) (hx : x.1 < n := lt_of_lt_of_leₓ h y.le_last) :
+theorem succ_above_cast_lt {x y : Finₓ (n + 1)} (h : x < y) (hx : x.1 < n := lt_of_lt_of_leₓ h y.le_last) :
     y.succ_above (x.cast_lt hx) = x := by
   rw [succ_above_below, cast_succ_cast_lt]
   exact h
 
 @[simp]
-theorem succ_above_pred {x y : Finₓ (n+1)} (h : x < y) (hy : y ≠ 0 := (x.zero_le.trans_lt h).ne') :
+theorem succ_above_pred {x y : Finₓ (n + 1)} (h : x < y) (hy : y ≠ 0 := (x.zero_le.trans_lt h).ne') :
     x.succ_above (y.pred hy) = y := by
   rw [succ_above_above, succ_pred]
   simpa [le_iff_coe_le_coe] using Nat.le_pred_of_lt h
 
-theorem cast_lt_succ_above {x : Finₓ n} {y : Finₓ (n+1)} (h : cast_succ x < y)
+theorem cast_lt_succ_above {x : Finₓ n} {y : Finₓ (n + 1)} (h : cast_succ x < y)
     (h' : (y.succ_above x).1 < n := lt_of_lt_of_leₓ ((succ_above_lt_iff _ _).2 h) (le_last y)) :
     (y.succ_above x).cast_lt h' = x := by
   simp only [succ_above_below _ _ h, cast_lt_cast_succ]
 
-theorem pred_succ_above {x : Finₓ n} {y : Finₓ (n+1)} (h : y ≤ cast_succ x)
+theorem pred_succ_above {x : Finₓ n} {y : Finₓ (n + 1)} (h : y ≤ cast_succ x)
     (h' : y.succ_above x ≠ 0 := (y.zero_le.trans_lt $ (lt_succ_above_iff _ _).2 h).ne') :
     (y.succ_above x).pred h' = x := by
   simp only [succ_above_above _ _ h, pred_succ]
 
-theorem exists_succ_above_eq {x y : Finₓ (n+1)} (h : x ≠ y) : ∃ z, y.succ_above z = x := by
+theorem exists_succ_above_eq {x y : Finₓ (n + 1)} (h : x ≠ y) : ∃ z, y.succ_above z = x := by
   cases' h.lt_or_lt with hlt hlt
   exacts[⟨_, succ_above_cast_lt hlt⟩, ⟨_, succ_above_pred hlt⟩]
 
 @[simp]
-theorem exists_succ_above_eq_iff {x y : Finₓ (n+1)} : (∃ z, x.succ_above z = y) ↔ y ≠ x := by
+theorem exists_succ_above_eq_iff {x y : Finₓ (n + 1)} : (∃ z, x.succ_above z = y) ↔ y ≠ x := by
   refine' ⟨_, exists_succ_above_eq⟩
   rintro ⟨y, rfl⟩
   exact succ_above_ne _ _
 
-/--  The range of `p.succ_above` is everything except `p`. -/
+/-- The range of `p.succ_above` is everything except `p`. -/
 @[simp]
-theorem range_succ_above (p : Finₓ (n+1)) : Set.Range p.succ_above = {p}ᶜ :=
+theorem range_succ_above (p : Finₓ (n + 1)) : Set.Range p.succ_above = {p}ᶜ :=
   Set.ext $ fun _ => exists_succ_above_eq_iff
 
-/--  Given a fixed pivot `x : fin (n + 1)`, `x.succ_above` is injective -/
-theorem succ_above_right_injective {x : Finₓ (n+1)} : injective (succ_above x) :=
+/-- Given a fixed pivot `x : fin (n + 1)`, `x.succ_above` is injective -/
+theorem succ_above_right_injective {x : Finₓ (n + 1)} : injective (succ_above x) :=
   (succ_above x).Injective
 
-/--  Given a fixed pivot `x : fin (n + 1)`, `x.succ_above` is injective -/
-theorem succ_above_right_inj {x : Finₓ (n+1)} : x.succ_above a = x.succ_above b ↔ a = b :=
+/-- Given a fixed pivot `x : fin (n + 1)`, `x.succ_above` is injective -/
+theorem succ_above_right_inj {x : Finₓ (n + 1)} : x.succ_above a = x.succ_above b ↔ a = b :=
   succ_above_right_injective.eq_iff
 
-/--  `succ_above` is injective at the pivot -/
+/-- `succ_above` is injective at the pivot -/
 theorem succ_above_left_injective : injective (@succ_above n) := fun _ _ h => by
-  simpa [range_succ_above] using congr_argₓ (fun f : Finₓ n ↪o Finₓ (n+1) => Set.Range fᶜ) h
+  simpa [range_succ_above] using congr_argₓ (fun f : Finₓ n ↪o Finₓ (n + 1) => Set.Range fᶜ) h
 
-/--  `succ_above` is injective at the pivot -/
+/-- `succ_above` is injective at the pivot -/
 @[simp]
-theorem succ_above_left_inj {x y : Finₓ (n+1)} : x.succ_above = y.succ_above ↔ x = y :=
+theorem succ_above_left_inj {x y : Finₓ (n + 1)} : x.succ_above = y.succ_above ↔ x = y :=
   succ_above_left_injective.eq_iff
 
 @[simp]
-theorem zero_succ_above {n : ℕ} (i : Finₓ n) : (0 : Finₓ (n+1)).succAbove i = i.succ :=
+theorem zero_succ_above {n : ℕ} (i : Finₓ n) : (0 : Finₓ (n + 1)).succAbove i = i.succ :=
   rfl
 
 @[simp]
-theorem succ_succ_above_zero {n : ℕ} (i : Finₓ (n+1)) : i.succ.succAbove 0 = 0 :=
+theorem succ_succ_above_zero {n : ℕ} (i : Finₓ (n + 1)) : i.succ.succAbove 0 = 0 :=
   succ_above_below _ _ (succ_pos _)
 
 @[simp]
-theorem succ_succ_above_succ {n : ℕ} (i : Finₓ (n+1)) (j : Finₓ n) : i.succ.succAbove j.succ = (i.succ_above j).succ :=
+theorem succ_succ_above_succ {n : ℕ} (i : Finₓ (n + 1)) (j : Finₓ n) :
+    i.succ.succAbove j.succ = (i.succ_above j).succ :=
   (lt_or_geₓ j.cast_succ i).elim
-    (fun h =>
+    (fun h => by
       have h' : j.succ.cast_succ < i.succ := by
         simpa [lt_iff_coe_lt_coe] using h
-      by
       ext
       simp [succ_above_below _ _ h, succ_above_below _ _ h'])
-    fun h =>
+    fun h => by
     have h' : i.succ ≤ j.succ.cast_succ := by
       simpa [le_iff_coe_le_coe] using h
-    by
     ext
     simp [succ_above_above _ _ h, succ_above_above _ _ h']
 
 @[simp]
-theorem one_succ_above_zero {n : ℕ} : (1 : Finₓ (n+2)).succAbove 0 = 0 :=
+theorem one_succ_above_zero {n : ℕ} : (1 : Finₓ (n + 2)).succAbove 0 = 0 :=
   succ_succ_above_zero 0
 
-/--  By moving `succ` to the outside of this expression, we create opportunities for further
+/-- By moving `succ` to the outside of this expression, we create opportunities for further
 simplification using `succ_above_zero` or `succ_succ_above_zero`. -/
 @[simp]
-theorem succ_succ_above_one {n : ℕ} (i : Finₓ (n+2)) : i.succ.succAbove 1 = (i.succ_above 0).succ :=
+theorem succ_succ_above_one {n : ℕ} (i : Finₓ (n + 2)) : i.succ.succAbove 1 = (i.succ_above 0).succ :=
   succ_succ_above_succ i 0
 
 @[simp]
-theorem one_succ_above_succ {n : ℕ} (j : Finₓ n) : (1 : Finₓ (n+2)).succAbove j.succ = j.succ.succ :=
+theorem one_succ_above_succ {n : ℕ} (j : Finₓ n) : (1 : Finₓ (n + 2)).succAbove j.succ = j.succ.succ :=
   succ_succ_above_succ 0 j
 
 @[simp]
-theorem one_succ_above_one {n : ℕ} : (1 : Finₓ (n+3)).succAbove 1 = 2 :=
+theorem one_succ_above_one {n : ℕ} : (1 : Finₓ (n + 3)).succAbove 1 = 2 :=
   succ_succ_above_succ 0 0
 
 end SuccAbove
 
 section PredAbove
 
-/--  `pred_above p i` embeds `i : fin (n+1)` into `fin n` by subtracting one if `p < i`. -/
-def pred_above (p : Finₓ n) (i : Finₓ (n+1)) : Finₓ n :=
+/-- `pred_above p i` embeds `i : fin (n+1)` into `fin n` by subtracting one if `p < i`. -/
+def pred_above (p : Finₓ n) (i : Finₓ (n + 1)) : Finₓ n :=
   if h : p.cast_succ < i then i.pred (ne_of_ltₓ (lt_of_le_of_ltₓ (zero_le p.cast_succ) h)).symm
   else i.cast_lt (lt_of_le_of_ltₓ (le_of_not_ltₓ h) p.2)
 
@@ -1978,59 +1520,60 @@ theorem pred_above_right_monotone (p : Finₓ n) : Monotone p.pred_above := fun 
   split_ifs with ha hb hb
   all_goals
     simp only [le_iff_coe_le_coe, coe_pred]
-  ·
-    exact pred_le_pred H
-  ·
-    calc _ ≤ _ := Nat.pred_leₓ _ _ ≤ _ := H
-  ·
-    simp at ha
+  · exact pred_le_pred H
+    
+  · calc _ ≤ _ := Nat.pred_leₓ _ _ ≤ _ := H
+    
+  · simp at ha
     exact le_pred_of_lt (lt_of_le_of_ltₓ ha hb)
-  ·
-    exact H
+    
+  · exact H
+    
 
-theorem pred_above_left_monotone (i : Finₓ (n+1)) : Monotone fun p => pred_above p i := fun a b H => by
+theorem pred_above_left_monotone (i : Finₓ (n + 1)) : Monotone fun p => pred_above p i := fun a b H => by
   dsimp [pred_above]
   split_ifs with ha hb hb
   all_goals
     simp only [le_iff_coe_le_coe, coe_pred]
-  ·
-    exact pred_le _
-  ·
-    have : b < a := cast_succ_lt_cast_succ_iff.mpr (hb.trans_le (le_of_not_gtₓ ha))
+  · exact pred_le _
+    
+  · have : b < a := cast_succ_lt_cast_succ_iff.mpr (hb.trans_le (le_of_not_gtₓ ha))
     exact absurd H this.not_le
+    
 
-/--  `cast_pred` embeds `i : fin (n + 2)` into `fin (n + 1)`
+/-- `cast_pred` embeds `i : fin (n + 2)` into `fin (n + 1)`
 by lowering just `last (n + 1)` to `last n`. -/
-def cast_pred (i : Finₓ (n+2)) : Finₓ (n+1) :=
+def cast_pred (i : Finₓ (n + 2)) : Finₓ (n + 1) :=
   pred_above (last n) i
 
 @[simp]
-theorem cast_pred_zero : cast_pred (0 : Finₓ (n+2)) = 0 :=
+theorem cast_pred_zero : cast_pred (0 : Finₓ (n + 2)) = 0 :=
   rfl
 
 @[simp]
-theorem cast_pred_one : cast_pred (1 : Finₓ (n+2)) = 1 := by
+theorem cast_pred_one : cast_pred (1 : Finₓ (n + 2)) = 1 := by
   cases n
   apply Subsingleton.elimₓ
   rfl
 
 @[simp]
-theorem pred_above_zero {i : Finₓ (n+2)} (hi : i ≠ 0) : pred_above 0 i = i.pred hi := by
+theorem pred_above_zero {i : Finₓ (n + 2)} (hi : i ≠ 0) : pred_above 0 i = i.pred hi := by
   dsimp [pred_above]
   rw [dif_pos]
   exact (pos_iff_ne_zero _).mpr hi
 
 @[simp]
-theorem cast_pred_last : cast_pred (last (n+1)) = last n := by
+theorem cast_pred_last : cast_pred (last (n + 1)) = last n := by
   simp [eq_iff_veq, cast_pred, pred_above, cast_succ_lt_last]
 
 @[simp]
-theorem cast_pred_mk (n i : ℕ) (h : i < n+1) : cast_pred ⟨i, lt_succ_of_lt h⟩ = ⟨i, h⟩ := by
+theorem cast_pred_mk (n i : ℕ) (h : i < n + 1) : cast_pred ⟨i, lt_succ_of_lt h⟩ = ⟨i, h⟩ := by
   have : ¬cast_succ (last n) < ⟨i, lt_succ_of_lt h⟩ := by
     simpa [lt_iff_coe_lt_coe] using le_of_lt_succ h
   simp [cast_pred, pred_above, this]
 
-theorem pred_above_below (p : Finₓ (n+1)) (i : Finₓ (n+2)) (h : i ≤ p.cast_succ) : p.pred_above i = i.cast_pred := by
+theorem pred_above_below (p : Finₓ (n + 1)) (i : Finₓ (n + 2)) (h : i ≤ p.cast_succ) : p.pred_above i = i.cast_pred :=
+  by
   have : i ≤ (last n).cast_succ := h.trans p.le_last
   simp [pred_above, cast_pred, h.not_lt, this.not_lt]
 
@@ -2041,43 +1584,43 @@ theorem pred_above_last : pred_above (Finₓ.last n) = cast_pred :=
 theorem pred_above_last_apply (i : Finₓ n) : pred_above (Finₓ.last n) i = i.cast_pred := by
   rw [pred_above_last]
 
-theorem pred_above_above (p : Finₓ n) (i : Finₓ (n+1)) (h : p.cast_succ < i) :
+theorem pred_above_above (p : Finₓ n) (i : Finₓ (n + 1)) (h : p.cast_succ < i) :
     p.pred_above i = i.pred (p.cast_succ.zero_le.trans_lt h).Ne.symm := by
   simp [pred_above, h]
 
 theorem cast_pred_monotone : Monotone (@cast_pred n) :=
   pred_above_right_monotone (last _)
 
-/--  Sending `fin (n+1)` to `fin n` by subtracting one from anything above `p`
+/-- Sending `fin (n+1)` to `fin n` by subtracting one from anything above `p`
 then back to `fin (n+1)` with a gap around `p` is the identity away from `p`. -/
 @[simp]
-theorem succ_above_pred_above {p : Finₓ n} {i : Finₓ (n+1)} (h : i ≠ p.cast_succ) :
+theorem succ_above_pred_above {p : Finₓ n} {i : Finₓ (n + 1)} (h : i ≠ p.cast_succ) :
     p.cast_succ.succ_above (p.pred_above i) = i := by
   dsimp [pred_above, succ_above]
   rcases p with ⟨p, _⟩
   rcases i with ⟨i, _⟩
   cases' lt_or_leₓ i p with H H
-  ·
-    rw [dif_neg]
+  · rw [dif_neg]
     rw [if_pos]
     rfl
     exact H
     simp
     apply le_of_ltₓ H
-  ·
-    rw [dif_pos]
+    
+  · rw [dif_pos]
     rw [if_neg]
     swap 3
-    ·
-      exact lt_of_le_of_neₓ H (Ne.symm h)
-    ·
-      simp
-    ·
-      simp only [Subtype.mk_eq_mk, Ne.def, Finₓ.cast_succ_mk] at h
+    · exact lt_of_le_of_neₓ H (Ne.symm h)
+      
+    · simp
+      
+    · simp only [Subtype.mk_eq_mk, Ne.def, Finₓ.cast_succ_mk] at h
       simp only [pred, Subtype.mk_lt_mk, not_ltₓ]
       exact Nat.le_pred_of_lt (Nat.lt_of_le_and_neₓ H (Ne.symm h))
+      
+    
 
-/--  Sending `fin n` into `fin (n + 1)` with a gap at `p`
+/-- Sending `fin n` into `fin (n + 1)` with a gap at `p`
 then back to `fin n` by subtracting one from anything above `p` is the identity. -/
 @[simp]
 theorem pred_above_succ_above (p : Finₓ n) (i : Finₓ n) : p.pred_above (p.cast_succ.succ_above i) = i := by
@@ -2085,90 +1628,90 @@ theorem pred_above_succ_above (p : Finₓ n) (i : Finₓ n) : p.pred_above (p.ca
   rcases p with ⟨p, _⟩
   rcases i with ⟨i, _⟩
   split_ifs
-  ·
-    rw [dif_neg]
-    ·
-      rfl
-    ·
-      simp_rw [if_pos h]
+  · rw [dif_neg]
+    · rfl
+      
+    · simp_rw [if_pos h]
       simp only [Subtype.mk_lt_mk, not_ltₓ]
       exact le_of_ltₓ h
-  ·
-    rw [dif_pos]
-    ·
-      rfl
-    ·
-      simp_rw [if_neg h]
+      
+    
+  · rw [dif_pos]
+    · rfl
+      
+    · simp_rw [if_neg h]
       exact lt_succ_iff.mpr (not_lt.mp h)
+      
+    
 
-theorem cast_succ_pred_eq_pred_cast_succ {a : Finₓ (n+1)} (ha : a ≠ 0) (ha' := a.cast_succ_ne_zero_iff.mpr ha) :
+theorem cast_succ_pred_eq_pred_cast_succ {a : Finₓ (n + 1)} (ha : a ≠ 0) (ha' := a.cast_succ_ne_zero_iff.mpr ha) :
     (a.pred ha).cast_succ = a.cast_succ.pred ha' := by
   cases a
   rfl
 
-/--  `pred` commutes with `succ_above`. -/
-theorem pred_succ_above_pred {a : Finₓ (n+2)} {b : Finₓ (n+1)} (ha : a ≠ 0) (hb : b ≠ 0)
+/-- `pred` commutes with `succ_above`. -/
+theorem pred_succ_above_pred {a : Finₓ (n + 2)} {b : Finₓ (n + 1)} (ha : a ≠ 0) (hb : b ≠ 0)
     (hk := succ_above_ne_zero ha hb) : (a.pred ha).succAbove (b.pred hb) = (a.succ_above b).pred hk := by
   obtain hbelow | habove := lt_or_leₓ b.cast_succ a
-  ·
-    rw [Finₓ.succ_above_below]
-    ·
-      rwa [cast_succ_pred_eq_pred_cast_succ, Finₓ.pred_inj, Finₓ.succ_above_below]
-    ·
-      rwa [cast_succ_pred_eq_pred_cast_succ, pred_lt_pred_iff]
-  ·
-    rw [Finₓ.succ_above_above]
+  · rw [Finₓ.succ_above_below]
+    · rwa [cast_succ_pred_eq_pred_cast_succ, Finₓ.pred_inj, Finₓ.succ_above_below]
+      
+    · rwa [cast_succ_pred_eq_pred_cast_succ, pred_lt_pred_iff]
+      
+    
+  · rw [Finₓ.succ_above_above]
     have : (b.pred hb).succ = b.succ.pred (Finₓ.succ_ne_zero _) := by
       rw [succ_pred, pred_succ]
-    ·
-      rwa [this, Finₓ.pred_inj, Finₓ.succ_above_above]
-    ·
-      rwa [cast_succ_pred_eq_pred_cast_succ, Finₓ.pred_le_pred_iff]
+    · rwa [this, Finₓ.pred_inj, Finₓ.succ_above_above]
+      
+    · rwa [cast_succ_pred_eq_pred_cast_succ, Finₓ.pred_le_pred_iff]
+      
+    
 
 @[simp]
-theorem cast_pred_cast_succ (i : Finₓ (n+1)) : cast_pred i.cast_succ = i := by
+theorem cast_pred_cast_succ (i : Finₓ (n + 1)) : cast_pred i.cast_succ = i := by
   simp [cast_pred, pred_above, le_last]
 
-theorem cast_succ_cast_pred {i : Finₓ (n+2)} (h : i < last _) : cast_succ i.cast_pred = i := by
+theorem cast_succ_cast_pred {i : Finₓ (n + 2)} (h : i < last _) : cast_succ i.cast_pred = i := by
   rw [cast_pred, pred_above, dif_neg]
-  ·
-    simp [Finₓ.eq_iff_veq]
-  ·
-    exact h.not_le
+  · simp [Finₓ.eq_iff_veq]
+    
+  · exact h.not_le
+    
 
-theorem coe_cast_pred_le_self (i : Finₓ (n+2)) : (i.cast_pred : ℕ) ≤ i := by
+theorem coe_cast_pred_le_self (i : Finₓ (n + 2)) : (i.cast_pred : ℕ) ≤ i := by
   rcases i.le_last.eq_or_lt with (rfl | h)
-  ·
-    simp
-  ·
-    rw [cast_pred, pred_above, dif_neg]
-    ·
-      simp
-    ·
-      simpa [lt_iff_coe_lt_coe, le_iff_coe_le_coe, lt_succ_iff] using h
+  · simp
+    
+  · rw [cast_pred, pred_above, dif_neg]
+    · simp
+      
+    · simpa [lt_iff_coe_lt_coe, le_iff_coe_le_coe, lt_succ_iff] using h
+      
+    
 
-theorem coe_cast_pred_lt_iff {i : Finₓ (n+2)} : (i.cast_pred : ℕ) < i ↔ i = Finₓ.last _ := by
+theorem coe_cast_pred_lt_iff {i : Finₓ (n + 2)} : (i.cast_pred : ℕ) < i ↔ i = Finₓ.last _ := by
   rcases i.le_last.eq_or_lt with (rfl | H)
-  ·
-    simp
-  ·
-    simp only [ne_of_ltₓ H]
+  · simp
+    
+  · simp only [ne_of_ltₓ H]
     rw [← cast_succ_cast_pred H]
     simp
+    
 
-theorem lt_last_iff_coe_cast_pred {i : Finₓ (n+2)} : i < Finₓ.last _ ↔ (i.cast_pred : ℕ) = i := by
+theorem lt_last_iff_coe_cast_pred {i : Finₓ (n + 2)} : i < Finₓ.last _ ↔ (i.cast_pred : ℕ) = i := by
   rcases i.le_last.eq_or_lt with (rfl | H)
-  ·
-    simp
-  ·
-    simp only [H]
+  · simp
+    
+  · simp only [H]
     rw [← cast_succ_cast_pred H]
     simp
+    
 
 end PredAbove
 
-/--  `min n m` as an element of `fin (m + 1)` -/
-def clamp (n m : ℕ) : Finₓ (m+1) :=
+/-- `min n m` as an element of `fin (m + 1)` -/
+def clamp (n m : ℕ) : Finₓ (m + 1) :=
   of_nat $ min n m
 
 @[simp]
@@ -2190,30 +1733,30 @@ section Mul
 -/
 
 
-theorem val_mul {n : ℕ} : ∀ a b : Finₓ n, (a*b).val = (a.val*b.val) % n
+theorem val_mul {n : ℕ} : ∀ a b : Finₓ n, (a * b).val = a.val * b.val % n
   | ⟨_, _⟩, ⟨_, _⟩ => rfl
 
-theorem coe_mul {n : ℕ} : ∀ a b : Finₓ n, ((a*b : Finₓ n) : ℕ) = (a*b) % n
+theorem coe_mul {n : ℕ} : ∀ a b : Finₓ n, ((a * b : Finₓ n) : ℕ) = a * b % n
   | ⟨_, _⟩, ⟨_, _⟩ => rfl
 
 @[simp]
-protected theorem mul_oneₓ (k : Finₓ (n+1)) : (k*1) = k := by
+protected theorem mul_oneₓ (k : Finₓ (n + 1)) : k * 1 = k := by
   cases n
   simp
   simp [eq_iff_veq, mul_def, mod_eq_of_lt (is_lt k)]
 
 @[simp]
-protected theorem one_mulₓ (k : Finₓ (n+1)) : ((1 : Finₓ (n+1))*k) = k := by
+protected theorem one_mulₓ (k : Finₓ (n + 1)) : (1 : Finₓ (n + 1)) * k = k := by
   cases n
   simp
   simp [eq_iff_veq, mul_def, mod_eq_of_lt (is_lt k)]
 
 @[simp]
-protected theorem mul_zero (k : Finₓ (n+1)) : (k*0) = 0 := by
+protected theorem mul_zero (k : Finₓ (n + 1)) : k * 0 = 0 := by
   simp [eq_iff_veq, mul_def]
 
 @[simp]
-protected theorem zero_mul (k : Finₓ (n+1)) : ((0 : Finₓ (n+1))*k) = 0 := by
+protected theorem zero_mul (k : Finₓ (n + 1)) : (0 : Finₓ (n + 1)) * k = 0 := by
   simp [eq_iff_veq, mul_def]
 
 end Mul

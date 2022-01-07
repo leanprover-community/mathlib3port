@@ -18,7 +18,7 @@ unsafe def select_domain (t s : tactic (Option Bool)) : tactic (Option Bool) := 
 unsafe def type_domain (x : expr) : tactic (Option Bool) :=
   if x = quote.1 Int then return (some tt) else if x = quote.1 Nat then return (some ff) else failed
 
-/--  Detects domain of a formula from its expr.
+/-- Detects domain of a formula from its expr.
 * Returns none, if domain can be either ℤ or ℕ
 * Returns some tt, if domain is exclusively ℤ
 * Returns some ff, if domain is exclusively ℕ
@@ -44,14 +44,14 @@ unsafe def form_domain : expr → tactic (Option Bool)
 unsafe def goal_domain_aux (x : expr) : tactic Bool :=
   omega.int.wff x >> return tt <|> omega.nat.wff x >> return ff
 
-/--  Use the current goal to determine.
+/-- Use the current goal to determine.
     Return tt if the domain is ℤ, and return ff if it is ℕ -/
 unsafe def goal_domain : tactic Bool := do
   let gx ← target
   let hxs ← local_context >>= Monadₓ.mapm infer_type
   app_first goal_domain_aux (gx :: hxs)
 
-/--  Return tt if the domain is ℤ, and return ff if it is ℕ -/
+/-- Return tt if the domain is ℤ, and return ff if it is ℕ -/
 unsafe def determine_domain (opt : List Name) : tactic Bool :=
   if `int ∈ opt then return tt else if `nat ∈ opt then return ff else goal_domain
 
@@ -59,7 +59,7 @@ end Omega
 
 open Lean.Parser Interactive Omega
 
-/--  Attempts to discharge goals in the quantifier-free fragment of
+/-- Attempts to discharge goals in the quantifier-free fragment of
 linear integer and natural number arithmetic using the Omega test.
 Guesses the correct domain by looking at the goal and hypotheses,
 and then reverts all relevant hypotheses and variables.
@@ -76,8 +76,7 @@ add_hint_tactic omega
 initialize
   registerTraceClass.1 `omega
 
-/-- 
-`omega` attempts to discharge goals in the quantifier-free fragment of linear integer and natural
+/-- `omega` attempts to discharge goals in the quantifier-free fragment of linear integer and natural
 number arithmetic using the Omega test. In other words, the core procedure of `omega` works with
 goals of the form
 ```lean

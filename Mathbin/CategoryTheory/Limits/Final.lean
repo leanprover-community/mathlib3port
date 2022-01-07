@@ -67,8 +67,7 @@ variable {C : Type v} [small_category C]
 
 variable {D : Type v} [small_category D]
 
-/-- 
-A functor `F : C ⥤ D` is final if for every `d : D`, the comma category of morphisms `d ⟶ F.obj c`
+/-- A functor `F : C ⥤ D` is final if for every `d : D`, the comma category of morphisms `d ⟶ F.obj c`
 is connected.
 
 See https://stacks.math.columbia.edu/tag/04E6
@@ -78,8 +77,7 @@ class final (F : C ⥤ D) : Prop where
 
 attribute [instance] final.out
 
-/-- 
-A functor `F : C ⥤ D` is initial if for every `d : D`, the comma category of morphisms
+/-- A functor `F : C ⥤ D` is initial if for every `d : D`, the comma category of morphisms
 `F.obj c ⟶ d` is connected.
 -/
 class initial (F : C ⥤ D) : Prop where
@@ -87,17 +85,11 @@ class initial (F : C ⥤ D) : Prop where
 
 attribute [instance] initial.out
 
--- failed to format: format: uncaught backtrack exception
-instance
-  final_op_of_initial
-  ( F : C ⥤ D ) [ initial F ] : final F.op
-  where out d := is_connected_of_equivalent ( costructured_arrow_op_equivalence F ( unop d ) )
+instance final_op_of_initial (F : C ⥤ D) [initial F] : final F.op where
+  out := fun d => is_connected_of_equivalent (costructured_arrow_op_equivalence F (unop d))
 
--- failed to format: format: uncaught backtrack exception
-instance
-  initial_op_of_final
-  ( F : C ⥤ D ) [ final F ] : initial F.op
-  where out d := is_connected_of_equivalent ( structured_arrow_op_equivalence F ( unop d ) )
+instance initial_op_of_final (F : C ⥤ D) [final F] : initial F.op where
+  out := fun d => is_connected_of_equivalent (structured_arrow_op_equivalence F (unop d))
 
 theorem final_of_initial_op (F : C ⥤ D) [initial F.op] : final F :=
   { out := fun d =>
@@ -107,7 +99,7 @@ theorem initial_of_final_op (F : C ⥤ D) [final F.op] : initial F :=
   { out := fun d =>
       @is_connected_of_is_connected_op _ _ (is_connected_of_equivalent (costructured_arrow_op_equivalence F d).symm) }
 
-/--  If a functor `R : D ⥤ C` is a right adjoint, it is final. -/
+/-- If a functor `R : D ⥤ C` is a right adjoint, it is final. -/
 theorem final_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : final R :=
   { out := fun c =>
       let u : structured_arrow c R := structured_arrow.mk (adj.unit.app c)
@@ -126,7 +118,7 @@ theorem final_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : final 
                     (by
                       simp )⟩)) }
 
-/--  If a functor `L : C ⥤ D` is a left adjoint, it is initial. -/
+/-- If a functor `L : C ⥤ D` is a left adjoint, it is initial. -/
 theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : initial L :=
   { out := fun d =>
       let u : costructured_arrow L d := costructured_arrow.mk (adj.counit.app d)
@@ -160,22 +152,19 @@ instance (d : D) : Nonempty (structured_arrow d F) :=
 
 variable {E : Type u} [category.{v} E] (G : D ⥤ E)
 
-/-- 
-When `F : C ⥤ D` is cofinal, we denote by `lift F d` an arbitrary choice of object in `C` such that
+/-- When `F : C ⥤ D` is cofinal, we denote by `lift F d` an arbitrary choice of object in `C` such that
 there exists a morphism `d ⟶ F.obj (lift F d)`.
 -/
 def lift (d : D) : C :=
   (Classical.arbitrary (structured_arrow d F)).right
 
-/-- 
-When `F : C ⥤ D` is cofinal, we denote by `hom_to_lift` an arbitrary choice of morphism
+/-- When `F : C ⥤ D` is cofinal, we denote by `hom_to_lift` an arbitrary choice of morphism
 `d ⟶ F.obj (lift F d)`.
 -/
 def hom_to_lift (d : D) : d ⟶ F.obj (lift F d) :=
   (Classical.arbitrary (structured_arrow d F)).Hom
 
-/-- 
-We provide an induction principle for reasoning about `lift` and `hom_to_lift`.
+/-- We provide an induction principle for reasoning about `lift` and `hom_to_lift`.
 We want to perform some construction (usually just a proof) about
 the particular choices `lift F d` and `hom_to_lift F d`,
 it suffices to perform that construction for some other pair of choices
@@ -190,109 +179,107 @@ def induction {d : D} (Z : ∀ X : C k : d ⟶ F.obj X, Sort _)
   apply Nonempty.some
   apply
     @is_preconnected_induction _ _ _ (fun Y : structured_arrow d F => Z Y.right Y.hom) _ _ { right := X₀, Hom := k₀ } z
-  ·
-    intro j₁ j₂ f a
+  · intro j₁ j₂ f a
     fapply h₁ _ _ _ _ f.right _ a
     convert f.w.symm
     dsimp
     simp
-  ·
-    intro j₁ j₂ f a
+    
+  · intro j₁ j₂ f a
     fapply h₂ _ _ _ _ f.right _ a
     convert f.w.symm
     dsimp
     simp
+    
 
 variable {F G}
 
-/-- 
-Given a cocone over `F ⋙ G`, we can construct a `cocone G` with the same cocone point.
+/-- Given a cocone over `F ⋙ G`, we can construct a `cocone G` with the same cocone point.
 -/
 @[simps]
-def extend_cocone : cocone (F ⋙ G) ⥤ cocone G :=
-  { obj := fun c =>
-      { x := c.X,
-        ι :=
-          { app := fun X => G.map (hom_to_lift F X) ≫ c.ι.app (lift F X),
-            naturality' := fun X Y f => by
-              dsimp
-              simp
-              apply induction F fun Z k => G.map f ≫ G.map (hom_to_lift F Y) ≫ c.ι.app (lift F Y) = G.map k ≫ c.ι.app Z
-              ·
-                intro Z₁ Z₂ k₁ k₂ g a z
-                rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w, z]
-              ·
-                intro Z₁ Z₂ k₁ k₂ g a z
-                rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w] at z
-                rw [z]
-              ·
-                rw [← functor.map_comp_assoc] } },
-    map := fun X Y f => { Hom := f.hom } }
+def extend_cocone : cocone (F ⋙ G) ⥤ cocone G where
+  obj := fun c =>
+    { x := c.X,
+      ι :=
+        { app := fun X => G.map (hom_to_lift F X) ≫ c.ι.app (lift F X),
+          naturality' := fun X Y f => by
+            dsimp
+            simp
+            apply induction F fun Z k => G.map f ≫ G.map (hom_to_lift F Y) ≫ c.ι.app (lift F Y) = G.map k ≫ c.ι.app Z
+            · intro Z₁ Z₂ k₁ k₂ g a z
+              rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w, z]
+              
+            · intro Z₁ Z₂ k₁ k₂ g a z
+              rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w] at z
+              rw [z]
+              
+            · rw [← functor.map_comp_assoc]
+               } }
+  map := fun X Y f => { Hom := f.hom }
 
 @[simp]
 theorem colimit_cocone_comp_aux (s : cocone (F ⋙ G)) (j : C) :
     G.map (hom_to_lift F (F.obj j)) ≫ s.ι.app (lift F (F.obj j)) = s.ι.app j := by
   apply induction F fun X k => G.map k ≫ s.ι.app X = (s.ι.app j : _)
-  ·
-    intro j₁ j₂ k₁ k₂ f w h
+  · intro j₁ j₂ k₁ k₂ f w h
     rw [← w]
     rw [← s.w f] at h
     simpa using h
-  ·
-    intro j₁ j₂ k₁ k₂ f w h
+    
+  · intro j₁ j₂ k₁ k₂ f w h
     rw [← w] at h
     rw [← s.w f]
     simpa using h
-  ·
-    exact s.w (𝟙 _)
+    
+  · exact s.w (𝟙 _)
+    
 
 variable (F G)
 
-/-- 
-If `F` is cofinal,
+/-- If `F` is cofinal,
 the category of cocones on `F ⋙ G` is equivalent to the category of cocones on `G`,
 for any `G : D ⥤ E`.
 -/
 @[simps]
-def cocones_equiv : cocone (F ⋙ G) ≌ cocone G :=
-  { Functor := extend_cocone, inverse := cocones.whiskering F,
-    unitIso :=
-      nat_iso.of_components
-        (fun c =>
-          cocones.ext (iso.refl _)
-            (by
-              tidy))
-        (by
-          tidy),
-    counitIso :=
-      nat_iso.of_components
-        (fun c =>
-          cocones.ext (iso.refl _)
-            (by
-              tidy))
-        (by
-          tidy) }
+def cocones_equiv : cocone (F ⋙ G) ≌ cocone G where
+  Functor := extend_cocone
+  inverse := cocones.whiskering F
+  unitIso :=
+    nat_iso.of_components
+      (fun c =>
+        cocones.ext (iso.refl _)
+          (by
+            tidy))
+      (by
+        tidy)
+  counitIso :=
+    nat_iso.of_components
+      (fun c =>
+        cocones.ext (iso.refl _)
+          (by
+            tidy))
+      (by
+        tidy)
 
 variable {G}
 
-/-- 
-When `F : C ⥤ D` is cofinal, and `t : cocone G` for some `G : D ⥤ E`,
+/-- When `F : C ⥤ D` is cofinal, and `t : cocone G` for some `G : D ⥤ E`,
 `t.whisker F` is a colimit cocone exactly when `t` is.
 -/
 def is_colimit_whisker_equiv (t : cocone G) : is_colimit (t.whisker F) ≃ is_colimit t :=
   is_colimit.of_cocone_equiv (cocones_equiv F G).symm
 
-/-- 
-When `F` is cofinal, and `t : cocone (F ⋙ G)`,
+/-- When `F` is cofinal, and `t : cocone (F ⋙ G)`,
 `extend_cocone.obj t` is a colimit coconne exactly when `t` is.
 -/
 def is_colimit_extend_cocone_equiv (t : cocone (F ⋙ G)) : is_colimit (extend_cocone.obj t) ≃ is_colimit t :=
   is_colimit.of_cocone_equiv (cocones_equiv F G)
 
-/--  Given a colimit cocone over `G : D ⥤ E` we can construct a colimit cocone over `F ⋙ G`. -/
+/-- Given a colimit cocone over `G : D ⥤ E` we can construct a colimit cocone over `F ⋙ G`. -/
 @[simps]
-def colimit_cocone_comp (t : colimit_cocone G) : colimit_cocone (F ⋙ G) :=
-  { Cocone := _, IsColimit := (is_colimit_whisker_equiv F _).symm t.is_colimit }
+def colimit_cocone_comp (t : colimit_cocone G) : colimit_cocone (F ⋙ G) where
+  Cocone := _
+  IsColimit := (is_colimit_whisker_equiv F _).symm t.is_colimit
 
 instance (priority := 100) comp_has_colimit [has_colimit G] : has_colimit (F ⋙ G) :=
   has_colimit.mk (colimit_cocone_comp F (get_colimit_cocone G))
@@ -317,8 +304,7 @@ section
 
 variable (G)
 
-/-- 
-When `F : C ⥤ D` is cofinal, and `G : D ⥤ E` has a colimit, then `F ⋙ G` has a colimit also and
+/-- When `F : C ⥤ D` is cofinal, and `G : D ⥤ E` has a colimit, then `F ⋙ G` has a colimit also and
 `colimit (F ⋙ G) ≅ colimit G`
 
 https://stacks.math.columbia.edu/tag/04E7
@@ -328,13 +314,13 @@ def colimit_iso [has_colimit G] : colimit (F ⋙ G) ≅ colimit G :=
 
 end
 
-/--  Given a colimit cocone over `F ⋙ G` we can construct a colimit cocone over `G`. -/
+/-- Given a colimit cocone over `F ⋙ G` we can construct a colimit cocone over `G`. -/
 @[simps]
-def colimit_cocone_of_comp (t : colimit_cocone (F ⋙ G)) : colimit_cocone G :=
-  { Cocone := extend_cocone.obj t.cocone, IsColimit := (is_colimit_extend_cocone_equiv F _).symm t.is_colimit }
+def colimit_cocone_of_comp (t : colimit_cocone (F ⋙ G)) : colimit_cocone G where
+  Cocone := extend_cocone.obj t.cocone
+  IsColimit := (is_colimit_extend_cocone_equiv F _).symm t.is_colimit
 
-/-- 
-When `F` is cofinal, and `F ⋙ G` has a colimit, then `G` has a colimit also.
+/-- When `F` is cofinal, and `F ⋙ G` has a colimit, then `G` has a colimit also.
 
 We can't make this an instance, because `F` is not determined by the goal.
 (Even if this weren't a problem, it would cause a loop with `comp_has_colimit`.)
@@ -346,8 +332,7 @@ section
 
 attribute [local instance] has_colimit_of_comp
 
-/-- 
-When `F` is cofinal, and `F ⋙ G` has a colimit, then `G` has a colimit also and
+/-- When `F` is cofinal, and `F ⋙ G` has a colimit, then `G` has a colimit also and
 `colimit (F ⋙ G) ≅ colimit G`
 
 https://stacks.math.columbia.edu/tag/04E7
@@ -357,8 +342,7 @@ def colimit_iso' [has_colimit (F ⋙ G)] : colimit (F ⋙ G) ≅ colimit G :=
 
 end
 
-/-- 
-If the universal morphism `colimit (F ⋙ coyoneda.obj (op d)) ⟶ colimit (coyoneda.obj (op d))`
+/-- If the universal morphism `colimit (F ⋙ coyoneda.obj (op d)) ⟶ colimit (coyoneda.obj (op d))`
 is an isomorphism (as it always is when `F` is cofinal),
 then `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit`
 (simply because `colimit (coyoneda.obj (op d)) ≅ punit`).
@@ -367,800 +351,29 @@ def colimit_comp_coyoneda_iso (d : D) [is_iso (colimit.pre (coyoneda.obj (op d))
     colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit :=
   as_iso (colimit.pre (coyoneda.obj (op d)) F) ≪≫ coyoneda.colimit_coyoneda_iso (op d)
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `zigzag_of_eqv_gen_quot_rel [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`F] [":" (CategoryTheory.CategoryTheory.Functor.«term_⥤_» `C " ⥤ " `D)] "}")
-    (Term.implicitBinder "{" [`d] [":" `D] "}")
-    (Term.implicitBinder
-     "{"
-     [`f₁ `f₂]
-     [":"
-      (Init.Data.Sigma.Basic.«termΣ_,_»
-       "Σ"
-       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `X)] []))
-       ", "
-       (Combinatorics.Quiver.«term_⟶_» `d " ⟶ " (Term.app `F.obj [`X])))]
-     "}")
-    (Term.explicitBinder
-     "("
-     [`t]
-     [":"
-      (Term.app
-       `EqvGen
-       [(Term.app
-         `types.quot.rel
-         [(CategoryTheory.Functor.CategoryTheory.Functor.«term_⋙_»
-           `F
-           " ⋙ "
-           (Term.app (Term.proj `coyoneda "." `obj) [(Term.app `op [`d])]))])
-        `f₁
-        `f₂])]
-     []
-     ")")]
-   (Term.typeSpec
-    ":"
-    (Term.app
-     `zigzag
-     [(Term.app `structured_arrow.mk [(Term.proj `f₁ "." (fieldIdx "2"))])
-      (Term.app `structured_arrow.mk [(Term.proj `f₂ "." (fieldIdx "2"))])])))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group (Tactic.induction "induction" [`t] [] [] []) [])
-       (group
-        (Tactic.case
-         "case"
-         `eqv_gen.rel
-         [`x `y `r]
-         "=>"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(group
-             (Tactic.obtain
-              "obtain"
-              [(Tactic.rcasesPatMed
-                [(Tactic.rcasesPat.tuple
-                  "⟨"
-                  [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `f)]) [])
-                   ","
-                   (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `w)]) [])]
-                  "⟩")])]
-              []
-              [":=" [`r]])
-             [])
-            (group (Tactic.fconstructor "fconstructor") [])
-            (group (Tactic.swap "swap" [(numLit "2")]) [])
-            (group (Tactic.fconstructor "fconstructor") [])
-            (group (Tactic.left "left") [])
-            (group (Tactic.fconstructor "fconstructor") [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.structInst
-               "{"
-               []
-               [(group (Term.structInstField (Term.structInstLVal `right []) ":=" `f) [])]
-               (Term.optEllipsis [])
-               []
-               "}"))
-             [])])))
-        [])
-       (group
-        (Tactic.case
-         "case"
-         `eqv_gen.refl
-         []
-         "=>"
-         (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.fconstructor "fconstructor") [])])))
-        [])
-       (group
-        (Tactic.case
-         "case"
-         `eqv_gen.symm
-         [`x `y `h `ih]
-         "=>"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(group (Tactic.apply "apply" `zigzag_symmetric) []) (group (Tactic.exact "exact" `ih) [])])))
-        [])
-       (group
-        (Tactic.case
-         "case"
-         `eqv_gen.trans
-         [`x `y `z `h₁ `h₂ `ih₁ `ih₂]
-         "=>"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(group (Tactic.apply "apply" `Relation.ReflTransGen.trans) [])
-            (group (Tactic.exact "exact" `ih₁) [])
-            (group (Tactic.exact "exact" `ih₂) [])])))
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.induction "induction" [`t] [] [] []) [])
-      (group
-       (Tactic.case
-        "case"
-        `eqv_gen.rel
-        [`x `y `r]
-        "=>"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group
-            (Tactic.obtain
-             "obtain"
-             [(Tactic.rcasesPatMed
-               [(Tactic.rcasesPat.tuple
-                 "⟨"
-                 [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `f)]) [])
-                  ","
-                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `w)]) [])]
-                 "⟩")])]
-             []
-             [":=" [`r]])
-            [])
-           (group (Tactic.fconstructor "fconstructor") [])
-           (group (Tactic.swap "swap" [(numLit "2")]) [])
-           (group (Tactic.fconstructor "fconstructor") [])
-           (group (Tactic.left "left") [])
-           (group (Tactic.fconstructor "fconstructor") [])
-           (group
-            (Tactic.exact
-             "exact"
-             (Term.structInst
-              "{"
-              []
-              [(group (Term.structInstField (Term.structInstLVal `right []) ":=" `f) [])]
-              (Term.optEllipsis [])
-              []
-              "}"))
-            [])])))
-       [])
-      (group
-       (Tactic.case
-        "case"
-        `eqv_gen.refl
-        []
-        "=>"
-        (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.fconstructor "fconstructor") [])])))
-       [])
-      (group
-       (Tactic.case
-        "case"
-        `eqv_gen.symm
-        [`x `y `h `ih]
-        "=>"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group (Tactic.apply "apply" `zigzag_symmetric) []) (group (Tactic.exact "exact" `ih) [])])))
-       [])
-      (group
-       (Tactic.case
-        "case"
-        `eqv_gen.trans
-        [`x `y `z `h₁ `h₂ `ih₁ `ih₂]
-        "=>"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group (Tactic.apply "apply" `Relation.ReflTransGen.trans) [])
-           (group (Tactic.exact "exact" `ih₁) [])
-           (group (Tactic.exact "exact" `ih₂) [])])))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.case
-   "case"
-   `eqv_gen.trans
-   [`x `y `z `h₁ `h₂ `ih₁ `ih₂]
-   "=>"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.apply "apply" `Relation.ReflTransGen.trans) [])
-      (group (Tactic.exact "exact" `ih₁) [])
-      (group (Tactic.exact "exact" `ih₂) [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.case', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.exact "exact" `ih₂)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `ih₂
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.exact "exact" `ih₁)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `ih₁
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.apply "apply" `Relation.ReflTransGen.trans)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.apply', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Relation.ReflTransGen.trans
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.case
-   "case"
-   `eqv_gen.symm
-   [`x `y `h `ih]
-   "=>"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.apply "apply" `zigzag_symmetric) []) (group (Tactic.exact "exact" `ih) [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.case', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.exact "exact" `ih)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `ih
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.apply "apply" `zigzag_symmetric)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.apply', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `zigzag_symmetric
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.case
-   "case"
-   `eqv_gen.refl
-   []
-   "=>"
-   (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.fconstructor "fconstructor") [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.case', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.fconstructor "fconstructor")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.fconstructor', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.case
-   "case"
-   `eqv_gen.rel
-   [`x `y `r]
-   "=>"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.obtain
-        "obtain"
-        [(Tactic.rcasesPatMed
-          [(Tactic.rcasesPat.tuple
-            "⟨"
-            [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `f)]) [])
-             ","
-             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `w)]) [])]
-            "⟩")])]
-        []
-        [":=" [`r]])
-       [])
-      (group (Tactic.fconstructor "fconstructor") [])
-      (group (Tactic.swap "swap" [(numLit "2")]) [])
-      (group (Tactic.fconstructor "fconstructor") [])
-      (group (Tactic.left "left") [])
-      (group (Tactic.fconstructor "fconstructor") [])
-      (group
-       (Tactic.exact
-        "exact"
-        (Term.structInst
-         "{"
-         []
-         [(group (Term.structInstField (Term.structInstLVal `right []) ":=" `f) [])]
-         (Term.optEllipsis [])
-         []
-         "}"))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.case', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.exact
-   "exact"
-   (Term.structInst
-    "{"
-    []
-    [(group (Term.structInstField (Term.structInstLVal `right []) ":=" `f) [])]
-    (Term.optEllipsis [])
-    []
-    "}"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.structInst
-   "{"
-   []
-   [(group (Term.structInstField (Term.structInstLVal `right []) ":=" `f) [])]
-   (Term.optEllipsis [])
-   []
-   "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.structInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.optEllipsis', expected 'Lean.Parser.Term.optEllipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstLVal', expected 'Lean.Parser.Term.structInstLVal.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.fconstructor "fconstructor")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.fconstructor', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
-  (Tactic.left "left")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.left', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
-  (Tactic.fconstructor "fconstructor")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.fconstructor', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
-  (Tactic.swap "swap" [(numLit "2")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.swap', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.fconstructor "fconstructor")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.fconstructor', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
-  (Tactic.obtain
-   "obtain"
-   [(Tactic.rcasesPatMed
-     [(Tactic.rcasesPat.tuple
-       "⟨"
-       [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `f)]) [])
-        ","
-        (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `w)]) [])]
-       "⟩")])]
-   []
-   [":=" [`r]])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.obtain', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `r
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatMed', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.induction "induction" [`t] [] [] [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.induction', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `t
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Term.app
-   `zigzag
-   [(Term.app `structured_arrow.mk [(Term.proj `f₁ "." (fieldIdx "2"))])
-    (Term.app `structured_arrow.mk [(Term.proj `f₂ "." (fieldIdx "2"))])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `structured_arrow.mk [(Term.proj `f₂ "." (fieldIdx "2"))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.proj `f₂ "." (fieldIdx "2"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `f₂
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `structured_arrow.mk
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Term.app `structured_arrow.mk [(Term.proj `f₂ "." (fieldIdx "2"))]) []]
- ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `structured_arrow.mk [(Term.proj `f₁ "." (fieldIdx "2"))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.proj `f₁ "." (fieldIdx "2"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `f₁
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `structured_arrow.mk
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Term.app `structured_arrow.mk [(Term.proj `f₁ "." (fieldIdx "2"))]) []]
- ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `zigzag
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.simpleBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.explicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app
-   `EqvGen
-   [(Term.app
-     `types.quot.rel
-     [(CategoryTheory.Functor.CategoryTheory.Functor.«term_⋙_»
-       `F
-       " ⋙ "
-       (Term.app (Term.proj `coyoneda "." `obj) [(Term.app `op [`d])]))])
-    `f₁
-    `f₂])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `f₂
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `f₁
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app
-   `types.quot.rel
-   [(CategoryTheory.Functor.CategoryTheory.Functor.«term_⋙_»
-     `F
-     " ⋙ "
-     (Term.app (Term.proj `coyoneda "." `obj) [(Term.app `op [`d])]))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.«term_⋙_»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.«term_⋙_»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.«term_⋙_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.«term_⋙_»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.«term_⋙_»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (CategoryTheory.Functor.CategoryTheory.Functor.«term_⋙_»
-   `F
-   " ⋙ "
-   (Term.app (Term.proj `coyoneda "." `obj) [(Term.app `op [`d])]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.«term_⋙_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app (Term.proj `coyoneda "." `obj) [(Term.app `op [`d])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `op [`d])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `d
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `op
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `op [`d]) []] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  (Term.proj `coyoneda "." `obj)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `coyoneda
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 80 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
-  `F
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none, [anonymous]) <=? (some 80, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 80, (some 80, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(CategoryTheory.Functor.CategoryTheory.Functor.«term_⋙_»
-   `F
-   " ⋙ "
-   (Term.app (Term.proj `coyoneda "." `obj) [(Term.paren "(" [(Term.app `op [`d]) []] ")")]))
-  []]
- ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `types.quot.rel
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Term.app
-   `types.quot.rel
-   [(Term.paren
-     "("
-     [(CategoryTheory.Functor.CategoryTheory.Functor.«term_⋙_»
-       `F
-       " ⋙ "
-       (Term.app (Term.proj `coyoneda "." `obj) [(Term.paren "(" [(Term.app `op [`d]) []] ")")]))
-      []]
-     ")")])
-  []]
- ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `EqvGen
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.implicitBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.implicitBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.implicitBinder', expected 'Lean.Parser.Term.simpleBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.implicitBinder', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.implicitBinder', expected 'Lean.Parser.Term.explicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.implicitBinder', expected 'Lean.Parser.Term.explicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.implicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.implicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.implicitBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Init.Data.Sigma.Basic.«termΣ_,_»
-   "Σ"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `X)] []))
-   ", "
-   (Combinatorics.Quiver.«term_⟶_» `d " ⟶ " (Term.app `F.obj [`X])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Combinatorics.Quiver.«term_⟶_» `d " ⟶ " (Term.app `F.obj [`X]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Combinatorics.Quiver.«term_⟶_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `F.obj [`X])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `X
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `F.obj
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-  `d
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 11 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.implicitBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.implicitBinder', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  zigzag_of_eqv_gen_quot_rel
-  { F : C ⥤ D } { d : D } { f₁ f₂ : Σ X , d ⟶ F.obj X } ( t : EqvGen types.quot.rel F ⋙ coyoneda . obj op d f₁ f₂ )
-    : zigzag structured_arrow.mk f₁ . 2 structured_arrow.mk f₂ . 2
-  :=
-    by
-      induction t
-        case
-          eqv_gen.rel
-          x y r
-          =>
-          obtain ⟨ f , w ⟩ := r fconstructor swap 2 fconstructor left fconstructor exact { right := f }
-        case eqv_gen.refl => fconstructor
-        case eqv_gen.symm x y h ih => apply zigzag_symmetric exact ih
-        case eqv_gen.trans x y z h₁ h₂ ih₁ ih₂ => apply Relation.ReflTransGen.trans exact ih₁ exact ih₂
+theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : Σ X, d ⟶ F.obj X}
+    (t : EqvGen (types.quot.rel (F ⋙ coyoneda.obj (op d))) f₁ f₂) :
+    zigzag (structured_arrow.mk f₁.2) (structured_arrow.mk f₂.2) := by
+  induction t
+  case eqv_gen.rel x y r =>
+    obtain ⟨f, w⟩ := r
+    fconstructor
+    swap 2
+    fconstructor
+    left
+    fconstructor
+    exact { right := f }
+  case eqv_gen.refl =>
+    fconstructor
+  case eqv_gen.symm x y h ih =>
+    apply zigzag_symmetric
+    exact ih
+  case eqv_gen.trans x y z h₁ h₂ ih₁ ih₂ =>
+    apply Relation.ReflTransGen.trans
+    exact ih₁
+    exact ih₂
 
-/-- 
-If `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit` for all `d : D`, then `F` is cofinal.
+/-- If `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit` for all `d : D`, then `F` is cofinal.
 -/
 theorem cofinal_of_colimit_comp_coyoneda_iso_punit (I : ∀ d, colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit) : final F :=
   ⟨fun d => by
@@ -1191,22 +404,19 @@ instance (d : D) : Nonempty (costructured_arrow F d) :=
 
 variable {E : Type u} [category.{v} E] (G : D ⥤ E)
 
-/-- 
-When `F : C ⥤ D` is initial, we denote by `lift F d` an arbitrary choice of object in `C` such that
+/-- When `F : C ⥤ D` is initial, we denote by `lift F d` an arbitrary choice of object in `C` such that
 there exists a morphism `F.obj (lift F d) ⟶ d`.
 -/
 def lift (d : D) : C :=
   (Classical.arbitrary (costructured_arrow F d)).left
 
-/-- 
-When `F : C ⥤ D` is initial, we denote by `hom_to_lift` an arbitrary choice of morphism
+/-- When `F : C ⥤ D` is initial, we denote by `hom_to_lift` an arbitrary choice of morphism
 `F.obj (lift F d) ⟶ d`.
 -/
 def hom_to_lift (d : D) : F.obj (lift F d) ⟶ d :=
   (Classical.arbitrary (costructured_arrow F d)).Hom
 
-/-- 
-We provide an induction principle for reasoning about `lift` and `hom_to_lift`.
+/-- We provide an induction principle for reasoning about `lift` and `hom_to_lift`.
 We want to perform some construction (usually just a proof) about
 the particular choices `lift F d` and `hom_to_lift F d`,
 it suffices to perform that construction for some other pair of choices
@@ -1221,112 +431,109 @@ def induction {d : D} (Z : ∀ X : C k : F.obj X ⟶ d, Sort _)
   apply Nonempty.some
   apply
     @is_preconnected_induction _ _ _ (fun Y : costructured_arrow F d => Z Y.left Y.hom) _ _ { left := X₀, Hom := k₀ } z
-  ·
-    intro j₁ j₂ f a
+  · intro j₁ j₂ f a
     fapply h₁ _ _ _ _ f.left _ a
     convert f.w
     dsimp
     simp
-  ·
-    intro j₁ j₂ f a
+    
+  · intro j₁ j₂ f a
     fapply h₂ _ _ _ _ f.left _ a
     convert f.w
     dsimp
     simp
+    
 
 variable {F G}
 
-/-- 
-Given a cone over `F ⋙ G`, we can construct a `cone G` with the same cocone point.
+/-- Given a cone over `F ⋙ G`, we can construct a `cone G` with the same cocone point.
 -/
 @[simps]
-def extend_cone : cone (F ⋙ G) ⥤ cone G :=
-  { obj := fun c =>
-      { x := c.X,
-        π :=
-          { app := fun d => c.π.app (lift F d) ≫ G.map (hom_to_lift F d),
-            naturality' := fun X Y f => by
-              dsimp
-              simp
-              apply
-                induction F fun Z k =>
-                  (c.π.app Z ≫ G.map k : c.X ⟶ _) = c.π.app (lift F X) ≫ G.map (hom_to_lift F X) ≫ G.map f
-              ·
-                intro Z₁ Z₂ k₁ k₂ g a z
-                rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc, c.w] at z
-                rw [z, category.assoc]
-              ·
-                intro Z₁ Z₂ k₁ k₂ g a z
-                rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc, c.w, z,
-                  category.assoc]
-              ·
-                rw [← functor.map_comp] } },
-    map := fun X Y f => { Hom := f.hom } }
+def extend_cone : cone (F ⋙ G) ⥤ cone G where
+  obj := fun c =>
+    { x := c.X,
+      π :=
+        { app := fun d => c.π.app (lift F d) ≫ G.map (hom_to_lift F d),
+          naturality' := fun X Y f => by
+            dsimp
+            simp
+            apply
+              induction F fun Z k =>
+                (c.π.app Z ≫ G.map k : c.X ⟶ _) = c.π.app (lift F X) ≫ G.map (hom_to_lift F X) ≫ G.map f
+            · intro Z₁ Z₂ k₁ k₂ g a z
+              rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc, c.w] at z
+              rw [z, category.assoc]
+              
+            · intro Z₁ Z₂ k₁ k₂ g a z
+              rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc, c.w, z, category.assoc]
+              
+            · rw [← functor.map_comp]
+               } }
+  map := fun X Y f => { Hom := f.hom }
 
 @[simp]
 theorem limit_cone_comp_aux (s : cone (F ⋙ G)) (j : C) :
     s.π.app (lift F (F.obj j)) ≫ G.map (hom_to_lift F (F.obj j)) = s.π.app j := by
   apply induction F fun X k => s.π.app X ≫ G.map k = (s.π.app j : _)
-  ·
-    intro j₁ j₂ k₁ k₂ f w h
+  · intro j₁ j₂ k₁ k₂ f w h
     rw [← s.w f]
     rw [← w] at h
     simpa using h
-  ·
-    intro j₁ j₂ k₁ k₂ f w h
+    
+  · intro j₁ j₂ k₁ k₂ f w h
     rw [← s.w f] at h
     rw [← w]
     simpa using h
-  ·
-    exact s.w (𝟙 _)
+    
+  · exact s.w (𝟙 _)
+    
 
 variable (F G)
 
-/-- 
-If `F` is initial,
+/-- If `F` is initial,
 the category of cones on `F ⋙ G` is equivalent to the category of cones on `G`,
 for any `G : D ⥤ E`.
 -/
 @[simps]
-def cones_equiv : cone (F ⋙ G) ≌ cone G :=
-  { Functor := extend_cone, inverse := cones.whiskering F,
-    unitIso :=
-      nat_iso.of_components
-        (fun c =>
-          cones.ext (iso.refl _)
-            (by
-              tidy))
-        (by
-          tidy),
-    counitIso :=
-      nat_iso.of_components
-        (fun c =>
-          cones.ext (iso.refl _)
-            (by
-              tidy))
-        (by
-          tidy) }
+def cones_equiv : cone (F ⋙ G) ≌ cone G where
+  Functor := extend_cone
+  inverse := cones.whiskering F
+  unitIso :=
+    nat_iso.of_components
+      (fun c =>
+        cones.ext (iso.refl _)
+          (by
+            tidy))
+      (by
+        tidy)
+  counitIso :=
+    nat_iso.of_components
+      (fun c =>
+        cones.ext (iso.refl _)
+          (by
+            tidy))
+      (by
+        tidy)
 
 variable {G}
 
-/-- 
-When `F : C ⥤ D` is initial, and `t : cone G` for some `G : D ⥤ E`,
+/-- When `F : C ⥤ D` is initial, and `t : cone G` for some `G : D ⥤ E`,
 `t.whisker F` is a limit cone exactly when `t` is.
 -/
 def is_limit_whisker_equiv (t : cone G) : is_limit (t.whisker F) ≃ is_limit t :=
   is_limit.of_cone_equiv (cones_equiv F G).symm
 
-/-- 
-When `F` is initial, and `t : cone (F ⋙ G)`,
+/-- When `F` is initial, and `t : cone (F ⋙ G)`,
 `extend_cone.obj t` is a limit cone exactly when `t` is.
 -/
 def is_limit_extend_cone_equiv (t : cone (F ⋙ G)) : is_limit (extend_cone.obj t) ≃ is_limit t :=
   is_limit.of_cone_equiv (cones_equiv F G)
 
-/--  Given a limit cone over `G : D ⥤ E` we can construct a limit cone over `F ⋙ G`. -/
+/-- Given a limit cone over `G : D ⥤ E` we can construct a limit cone over `F ⋙ G`. -/
 @[simps]
-def limit_cone_comp (t : limit_cone G) : limit_cone (F ⋙ G) :=
-  { Cone := _, IsLimit := (is_limit_whisker_equiv F _).symm t.is_limit }
+def limit_cone_comp (t : limit_cone G) : limit_cone (F ⋙ G) where
+  Cone := _
+  IsLimit := (is_limit_whisker_equiv F _).symm t.is_limit
 
 instance (priority := 100) comp_has_limit [has_limit G] : has_limit (F ⋙ G) :=
   has_limit.mk (limit_cone_comp F (get_limit_cone G))
@@ -1348,8 +555,7 @@ section
 
 variable (G)
 
-/-- 
-When `F : C ⥤ D` is initial, and `G : D ⥤ E` has a limit, then `F ⋙ G` has a limit also and
+/-- When `F : C ⥤ D` is initial, and `G : D ⥤ E` has a limit, then `F ⋙ G` has a limit also and
 `limit (F ⋙ G) ≅ limit G`
 
 https://stacks.math.columbia.edu/tag/04E7
@@ -1359,13 +565,13 @@ def limit_iso [has_limit G] : limit (F ⋙ G) ≅ limit G :=
 
 end
 
-/--  Given a limit cone over `F ⋙ G` we can construct a limit cone over `G`. -/
+/-- Given a limit cone over `F ⋙ G` we can construct a limit cone over `G`. -/
 @[simps]
-def limit_cone_of_comp (t : limit_cone (F ⋙ G)) : limit_cone G :=
-  { Cone := extend_cone.obj t.cone, IsLimit := (is_limit_extend_cone_equiv F _).symm t.is_limit }
+def limit_cone_of_comp (t : limit_cone (F ⋙ G)) : limit_cone G where
+  Cone := extend_cone.obj t.cone
+  IsLimit := (is_limit_extend_cone_equiv F _).symm t.is_limit
 
-/-- 
-When `F` is initial, and `F ⋙ G` has a limit, then `G` has a limit also.
+/-- When `F` is initial, and `F ⋙ G` has a limit, then `G` has a limit also.
 
 We can't make this an instance, because `F` is not determined by the goal.
 (Even if this weren't a problem, it would cause a loop with `comp_has_limit`.)
@@ -1377,8 +583,7 @@ section
 
 attribute [local instance] has_limit_of_comp
 
-/-- 
-When `F` is initial, and `F ⋙ G` has a limit, then `G` has a limit also and
+/-- When `F` is initial, and `F ⋙ G` has a limit, then `G` has a limit also and
 `limit (F ⋙ G) ≅ limit G`
 
 https://stacks.math.columbia.edu/tag/04E7

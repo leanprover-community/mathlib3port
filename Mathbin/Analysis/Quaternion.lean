@@ -31,12 +31,12 @@ noncomputable section
 namespace Quaternion
 
 instance : HasInner ℝ ℍ :=
-  ⟨fun a b => (a*b.conj).re⟩
+  ⟨fun a b => (a * b.conj).re⟩
 
 theorem inner_self (a : ℍ) : ⟪a, a⟫ = norm_sq a :=
   rfl
 
-theorem inner_def (a b : ℍ) : ⟪a, b⟫ = (a*b.conj).re :=
+theorem inner_def (a b : ℍ) : ⟪a, b⟫ = (a * b.conj).re :=
   rfl
 
 instance : InnerProductSpace ℝ ℍ :=
@@ -50,7 +50,7 @@ instance : InnerProductSpace ℝ ℍ :=
       smulLeft := fun x y r => by
         simp [inner_def] }
 
-theorem norm_sq_eq_norm_sq (a : ℍ) : norm_sq a = ∥a∥*∥a∥ := by
+theorem norm_sq_eq_norm_sq (a : ℍ) : norm_sq a = ∥a∥ * ∥a∥ := by
   rw [← inner_self, real_inner_self_eq_norm_mul_norm]
 
 instance : NormOneClass ℍ :=
@@ -58,7 +58,7 @@ instance : NormOneClass ℍ :=
     rw [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_one, Real.sqrt_one]⟩
 
 @[simp]
-theorem norm_mul (a b : ℍ) : ∥a*b∥ = ∥a∥*∥b∥ := by
+theorem norm_mul (a b : ℍ) : ∥a * b∥ = ∥a∥ * ∥b∥ := by
   simp only [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_mul]
   exact Real.sqrt_mul norm_sq_nonneg _
 
@@ -66,8 +66,9 @@ theorem norm_mul (a b : ℍ) : ∥a*b∥ = ∥a∥*∥b∥ := by
 theorem norm_coe (a : ℝ) : ∥(a : ℍ)∥ = ∥a∥ := by
   rw [norm_eq_sqrt_real_inner, inner_self, norm_sq_coe, Real.sqrt_sq_eq_abs, Real.norm_eq_abs]
 
--- failed to format: format: uncaught backtrack exception
-noncomputable instance : NormedRing ℍ where dist_eq _ _ := rfl norm_mul a b := ( norm_mul a b ) . le
+noncomputable instance : NormedRing ℍ where
+  dist_eq := fun _ _ => rfl
+  norm_mul := fun a b => (norm_mul a b).le
 
 noncomputable instance : NormedAlgebra ℝ ℍ where
   norm_algebra_map_eq := norm_coe
@@ -93,11 +94,11 @@ theorem coe_complex_im_k (z : ℂ) : (z : ℍ).imK = 0 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_complex_add (z w : ℂ) : (↑z+w) = (z+w : ℍ) := by
+theorem coe_complex_add (z w : ℂ) : ↑(z + w) = (z + w : ℍ) := by
   ext <;> simp
 
 @[simp, norm_cast]
-theorem coe_complex_mul (z w : ℂ) : (↑z*w) = (z*w : ℍ) := by
+theorem coe_complex_mul (z w : ℂ) : ↑(z * w) = (z * w : ℍ) := by
   ext <;> simp
 
 @[simp, norm_cast]
@@ -109,17 +110,21 @@ theorem coe_complex_one : ((1 : ℂ) : ℍ) = 1 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_real_complex_mul (r : ℝ) (z : ℂ) : (r • z : ℍ) = (↑r)*↑z := by
+theorem coe_real_complex_mul (r : ℝ) (z : ℂ) : (r • z : ℍ) = ↑r * ↑z := by
   ext <;> simp
 
 @[simp, norm_cast]
 theorem coe_complex_coe (r : ℝ) : ((r : ℂ) : ℍ) = r :=
   rfl
 
-/--  Coercion `ℂ →ₐ[ℝ] ℍ` as an algebra homomorphism. -/
-def of_complex : ℂ →ₐ[ℝ] ℍ :=
-  { toFun := coeₓ, map_one' := rfl, map_zero' := rfl, map_add' := coe_complex_add, map_mul' := coe_complex_mul,
-    commutes' := fun x => rfl }
+/-- Coercion `ℂ →ₐ[ℝ] ℍ` as an algebra homomorphism. -/
+def of_complex : ℂ →ₐ[ℝ] ℍ where
+  toFun := coeₓ
+  map_one' := rfl
+  map_zero' := rfl
+  map_add' := coe_complex_add
+  map_mul' := coe_complex_mul
+  commutes' := fun x => rfl
 
 @[simp]
 theorem coe_of_complex : ⇑of_complex = coeₓ :=

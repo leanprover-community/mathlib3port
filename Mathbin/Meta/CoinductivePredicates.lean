@@ -5,8 +5,9 @@ section
 universe u
 
 @[user_attribute]
-unsafe def monotonicity : user_attribute :=
-  { Name := `monotonicity, descr := "Monotonicity rules for predicates" }
+unsafe def monotonicity : user_attribute where
+  Name := `monotonicity
+  descr := "Monotonicity rules for predicates"
 
 theorem Monotonicity.pi {α : Sort u} {p q : α → Prop} (h : ∀ a, Implies (p a) (q a)) : Implies (∀ a, p a) (∀ a, q a) :=
   fun h' a => h a (h' a)
@@ -174,7 +175,7 @@ end AddCoinductivePredicate
 
 open AddCoinductivePredicate
 
-/--  compact_relation bs as_ps: Product a relation of the form:
+/-- compact_relation bs as_ps: Product a relation of the form:
   R := λ as, ∃ bs, Λ_i a_i = p_i[bs]
 This relation is user visible, so we compact it by removing each `b_j` where a `p_i = b_j`, and
 hence `a_i = b_j`. We need to take care when there are `p_i` and `p_j` with `p_i = p_j = b_k`. -/
@@ -229,7 +230,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
         pd.intros.mmap fun r : coind_rule => do
             let t := instantiate_local pd.f₂.local_uniq_name (pd.func_g.app_of_list fs₁) r.loc_type
             return (r.func_nm, r.orig_nm, t.pis $ params ++ fs₁)
-      add_inductive pd.func.const_name u_names (params.length+preds.length) (pd.type.pis $ params ++ fs₁)
+      add_inductive pd.func.const_name u_names (params.length + preds.length) (pd.type.pis $ params ++ fs₁)
           (func_intros.map $ fun ⟨t, _, r⟩ => (t, r))
       let mono_params ←
         pds.mmap fun pd => do
@@ -256,7 +257,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
                 let params ← (ms.zip bs).enum.mfilter fun ⟨n, m, d⟩ => bnot <$> is_assigned m.2
                 params.mmap' fun ⟨n, m, d⟩ =>
                     mono d (fs.map Prod.snd) <|>
-                      fail f!"failed to prove montonoicity of {(n+1)}. parameter of intro-rule {pp_n}"
+                      fail f!"failed to prove montonoicity of {(n + 1)}. parameter of intro-rule {pp_n}"
   pds.mmap' fun pd => do
       let func_f := fun pd : coind_pred => pd.func_g.app_of_list $ pds.map coind_pred.f₁
       let pred_body ←
@@ -357,7 +358,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
                 let h' ← note `h' none $ hr.app_of_list ls h'
                 match s.length with
                   | 0 => induction h' >> skip
-                  | n+1 => do
+                  | n + 1 => do
                     let hs ← elim_gen_sum n h'
                     (hs.zip $ pd.intros.zip s).mmap' fun ⟨h, r, n_bs, n_eqs⟩ =>
                         solve1 $ do
@@ -392,7 +393,7 @@ unsafe def coinductive_predicate (meta_info : decl_meta_info) (_ : parse $ tk "c
       let some doc_string ← pure meta_info.doc_string | skip
       add_doc_string d.name doc_string
 
-/--  Prepares coinduction proofs. This tactic constructs the coinduction invariant from
+/-- Prepares coinduction proofs. This tactic constructs the coinduction invariant from
 the quantifiers in the current goal.
 
 Current version: do not support mutual inductive rules -/

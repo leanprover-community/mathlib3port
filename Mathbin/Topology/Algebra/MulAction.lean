@@ -18,9 +18,9 @@ In this file we define class `has_continuous_smul`. We say `has_continuous_smul 
   is a nonzero element of `G₀`, then scalar multiplication by `c` is a homeomorphism of `α`;
 * `homeomorph.smul`: scalar multiplication by an element of a group `G` acting on `α`
   is a homeomorphism of `α`.
-* `units.has_continuous_smul`: scalar multiplication by `units M` is continuous when scalar
+* `units.has_continuous_smul`: scalar multiplication by `Mˣ` is continuous when scalar
   multiplication by `M` is continuous. This allows `homeomorph.smul` to be used with on monoids
-  with `G = units M`.
+  with `G = Mˣ`.
 
 ## Main results
 
@@ -33,7 +33,7 @@ open_locale TopologicalSpace Pointwise
 
 open Filter
 
-/--  Class `has_continuous_smul M α` says that the scalar multiplication `(•) : M → α → α`
+/-- Class `has_continuous_smul M α` says that the scalar multiplication `(•) : M → α → α`
 is continuous in both arguments. We use the same class for all kinds of multiplicative actions,
 including (semi)modules and algebras. -/
 class HasContinuousSmul (M α : Type _) [HasScalar M α] [TopologicalSpace M] [TopologicalSpace α] : Prop where
@@ -41,7 +41,7 @@ class HasContinuousSmul (M α : Type _) [HasScalar M α] [TopologicalSpace M] [T
 
 export HasContinuousSmul (continuous_smul)
 
-/--  Class `has_continuous_vadd M α` says that the additive action `(+ᵥ) : M → α → α`
+/-- Class `has_continuous_vadd M α` says that the additive action `(+ᵥ) : M → α → α`
 is continuous in both arguments. We use the same class for all kinds of additive actions,
 including (semi)modules and algebras. -/
 class HasContinuousVadd (M α : Type _) [HasVadd M α] [TopologicalSpace M] [TopologicalSpace α] : Prop where
@@ -108,11 +108,11 @@ theorem Continuous.smul (hf : Continuous f) (hg : Continuous g) : Continuous fun
 theorem Continuous.const_smul (hg : Continuous g) (c : M) : Continuous fun x => c • g x :=
   continuous_smul.comp (continuous_const.prod_mk hg)
 
-/--  If a scalar is central, then its right action is continuous when its left action is. -/
+/-- If a scalar is central, then its right action is continuous when its left action is. -/
 instance HasContinuousSmul.op [HasScalar (Mᵐᵒᵖ) α] [IsCentralScalar M α] : HasContinuousSmul (Mᵐᵒᵖ) α :=
-  ⟨suffices Continuous fun p : M × α => MulOpposite.op p.fst • p.snd from
+  ⟨by
+    suffices Continuous fun p : M × α => MulOpposite.op p.fst • p.snd from
       this.comp (continuous_unop.prod_map continuous_id)
-    by
     simpa only [op_smul_eq_smul] using (continuous_smul : Continuous fun p : M × α => _)⟩
 
 end HasScalar
@@ -121,9 +121,9 @@ section Monoidₓ
 
 variable [Monoidₓ M] [MulAction M α] [HasContinuousSmul M α]
 
-instance Units.has_continuous_smul : HasContinuousSmul (Units M) α where
+instance Units.has_continuous_smul : HasContinuousSmul (M)ˣ α where
   continuous_smul :=
-    show Continuous ((fun p : M × α => p.fst • p.snd) ∘ fun p : Units M × α => (p.1, p.2)) from
+    show Continuous ((fun p : M × α => p.fst • p.snd) ∘ fun p : (M)ˣ × α => (p.1, p.2)) from
       continuous_smul.comp ((Units.continuous_coe.comp continuous_fst).prod_mk continuous_snd)
 
 @[to_additive]
@@ -165,18 +165,20 @@ theorem continuous_at_const_smul_iff (c : G) : ContinuousAt (fun x => c • f x)
 theorem continuous_const_smul_iff (c : G) : (Continuous fun x => c • f x) ↔ Continuous f := by
   simp only [continuous_iff_continuous_at, continuous_at_const_smul_iff]
 
-/--  Scalar multiplication by an element of a group `G` acting on `α` is a homeomorphism from `α`
+/-- Scalar multiplication by an element of a group `G` acting on `α` is a homeomorphism from `α`
 to itself. -/
-protected def Homeomorph.smul (c : G) : α ≃ₜ α :=
-  { toEquiv := MulAction.toPermHom G α c, continuous_to_fun := continuous_id.const_smul _,
-    continuous_inv_fun := continuous_id.const_smul _ }
+protected def Homeomorph.smul (c : G) : α ≃ₜ α where
+  toEquiv := MulAction.toPermHom G α c
+  continuous_to_fun := continuous_id.const_smul _
+  continuous_inv_fun := continuous_id.const_smul _
 
-/--  Affine-addition of an element of an additive group `G` acting on `α` is a homeomorphism
+/-- Affine-addition of an element of an additive group `G` acting on `α` is a homeomorphism
 from `α` to itself. -/
 protected def Homeomorph.vadd {G : Type _} [TopologicalSpace G] [AddGroupₓ G] [AddAction G α] [HasContinuousVadd G α]
-    (c : G) : α ≃ₜ α :=
-  { toEquiv := AddAction.toPermHom α G c, continuous_to_fun := continuous_id.const_vadd _,
-    continuous_inv_fun := continuous_id.const_vadd _ }
+    (c : G) : α ≃ₜ α where
+  toEquiv := AddAction.toPermHom α G c
+  continuous_to_fun := continuous_id.const_vadd _
+  continuous_inv_fun := continuous_id.const_vadd _
 
 attribute [to_additive] Homeomorph.smul
 
@@ -221,7 +223,7 @@ theorem continuous_at_const_smul_iff₀ (hc : c ≠ 0) : ContinuousAt (fun x => 
 theorem continuous_const_smul_iff₀ (hc : c ≠ 0) : (Continuous fun x => c • f x) ↔ Continuous f :=
   continuous_const_smul_iff (Units.mk0 c hc)
 
-/--  Scalar multiplication by a non-zero element of a group with zero acting on `α` is a
+/-- Scalar multiplication by a non-zero element of a group with zero acting on `α` is a
 homeomorphism from `α` onto itself. -/
 protected def Homeomorph.smulOfNeZero (c : G₀) (hc : c ≠ 0) : α ≃ₜ α :=
   Homeomorph.smul (Units.mk0 c hc)
@@ -229,25 +231,25 @@ protected def Homeomorph.smulOfNeZero (c : G₀) (hc : c ≠ 0) : α ≃ₜ α :
 theorem is_open_map_smul₀ {c : G₀} (hc : c ≠ 0) : IsOpenMap fun x : α => c • x :=
   (Homeomorph.smulOfNeZero c hc).IsOpenMap
 
-/--  `smul` is a closed map in the second argument.
+/-- `smul` is a closed map in the second argument.
 
 The lemma that `smul` is a closed map in the first argument (for a normed space over a complete
 normed field) is `is_closed_map_smul_left` in `analysis.normed_space.finite_dimension`. -/
 theorem is_closed_map_smul_of_ne_zero {c : G₀} (hc : c ≠ 0) : IsClosedMap fun x : α => c • x :=
   (Homeomorph.smulOfNeZero c hc).IsClosedMap
 
-/--  `smul` is a closed map in the second argument.
+/-- `smul` is a closed map in the second argument.
 
 The lemma that `smul` is a closed map in the first argument (for a normed space over a complete
 normed field) is `is_closed_map_smul_left` in `analysis.normed_space.finite_dimension`. -/
 theorem is_closed_map_smul₀ {𝕜 M : Type _} [DivisionRing 𝕜] [AddCommMonoidₓ M] [TopologicalSpace M] [T1Space M]
     [Module 𝕜 M] [TopologicalSpace 𝕜] [HasContinuousSmul 𝕜 M] (c : 𝕜) : IsClosedMap fun x : M => c • x := by
   rcases eq_or_ne c 0 with (rfl | hne)
-  ·
-    simp only [zero_smul]
+  · simp only [zero_smul]
     exact is_closed_map_const
-  ·
-    exact (Homeomorph.smulOfNeZero c hne).IsClosedMap
+    
+  · exact (Homeomorph.smulOfNeZero c hne).IsClosedMap
+    
 
 end GroupWithZeroₓ
 
@@ -301,7 +303,7 @@ instance [TopologicalSpace β] [HasScalar M α] [HasScalar M β] [HasContinuousS
       (continuous_fst.smul (continuous_snd.comp continuous_snd))⟩
 
 @[to_additive]
-instance {ι : Type _} {γ : ι → Type} [∀ i, TopologicalSpace (γ i)] [∀ i, HasScalar M (γ i)]
+instance {ι : Type _} {γ : ι → Type _} [∀ i, TopologicalSpace (γ i)] [∀ i, HasScalar M (γ i)]
     [∀ i, HasContinuousSmul M (γ i)] : HasContinuousSmul M (∀ i, γ i) :=
   ⟨continuous_pi $ fun i =>
       (continuous_fst.smul continuous_snd).comp $ continuous_fst.prod_mk ((continuous_apply i).comp continuous_snd)⟩

@@ -51,8 +51,7 @@ variable (adj₁ : L₁ ⊣ R₁) (adj₂ : L₂ ⊣ R₂)
 
 include adj₁ adj₂
 
-/-- 
-Suppose we have a square of functors (where the top and bottom are adjunctions `L₁ ⊣ R₁` and
+/-- Suppose we have a square of functors (where the top and bottom are adjunctions `L₁ ⊣ R₁` and
 `L₂ ⊣ R₂` respectively).
 
       C ↔ D
@@ -71,33 +70,33 @@ This can be seen as a bijection of the 2-cells:
 
 Note that if one of the transformations is an iso, it does not imply the other is an iso.
 -/
-def transfer_nat_trans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R₂) :=
-  { toFun := fun h =>
-      { app := fun X => adj₂.unit.app _ ≫ R₂.map (h.app _ ≫ H.map (adj₁.counit.app _)),
-        naturality' := fun X Y f => by
-          dsimp
-          rw [assoc, ← R₂.map_comp, assoc, ← H.map_comp, ← adj₁.counit_naturality, H.map_comp, ← functor.comp_map L₁, ←
-            h.naturality_assoc]
-          simp },
-    invFun := fun h =>
-      { app := fun X => L₂.map (G.map (adj₁.unit.app _) ≫ h.app _) ≫ adj₂.counit.app _,
-        naturality' := fun X Y f => by
-          dsimp
-          rw [← L₂.map_comp_assoc, ← G.map_comp_assoc, ← adj₁.unit_naturality, G.map_comp_assoc, ← functor.comp_map,
-            h.naturality]
-          simp },
-    left_inv := fun h => by
-      ext X
-      dsimp
-      simp only [L₂.map_comp, assoc, adj₂.counit_naturality, adj₂.left_triangle_components_assoc, ←
-        functor.comp_map G L₂, h.naturality_assoc, functor.comp_map L₁, ← H.map_comp, adj₁.left_triangle_components]
-      dsimp
-      simp ,
-    right_inv := fun h => by
-      ext X
-      dsimp
-      simp [-functor.comp_map, ← functor.comp_map H, functor.comp_map R₁, -nat_trans.naturality, ← h.naturality,
-        -functor.map_comp, ← functor.map_comp_assoc G, R₂.map_comp] }
+def transfer_nat_trans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R₂) where
+  toFun := fun h =>
+    { app := fun X => adj₂.unit.app _ ≫ R₂.map (h.app _ ≫ H.map (adj₁.counit.app _)),
+      naturality' := fun X Y f => by
+        dsimp
+        rw [assoc, ← R₂.map_comp, assoc, ← H.map_comp, ← adj₁.counit_naturality, H.map_comp, ← functor.comp_map L₁, ←
+          h.naturality_assoc]
+        simp }
+  invFun := fun h =>
+    { app := fun X => L₂.map (G.map (adj₁.unit.app _) ≫ h.app _) ≫ adj₂.counit.app _,
+      naturality' := fun X Y f => by
+        dsimp
+        rw [← L₂.map_comp_assoc, ← G.map_comp_assoc, ← adj₁.unit_naturality, G.map_comp_assoc, ← functor.comp_map,
+          h.naturality]
+        simp }
+  left_inv := fun h => by
+    ext X
+    dsimp
+    simp only [L₂.map_comp, assoc, adj₂.counit_naturality, adj₂.left_triangle_components_assoc, ← functor.comp_map G L₂,
+      h.naturality_assoc, functor.comp_map L₁, ← H.map_comp, adj₁.left_triangle_components]
+    dsimp
+    simp
+  right_inv := fun h => by
+    ext X
+    dsimp
+    simp [-functor.comp_map, ← functor.comp_map H, functor.comp_map R₁, -nat_trans.naturality, ← h.naturality,
+      -functor.map_comp, ← functor.map_comp_assoc G, R₂.map_comp]
 
 theorem transfer_nat_trans_counit (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (Y : D) :
     L₂.map ((transfer_nat_trans adj₁ adj₂ f).app _) ≫ adj₂.counit.app _ = f.app _ ≫ H.map (adj₁.counit.app Y) := by
@@ -120,8 +119,7 @@ variable {L₁ L₂ L₃ : C ⥤ D} {R₁ R₂ R₃ : D ⥤ C}
 
 variable (adj₁ : L₁ ⊣ R₁) (adj₂ : L₂ ⊣ R₂) (adj₃ : L₃ ⊣ R₃)
 
-/-- 
-Given two adjunctions `L₁ ⊣ R₁` and `L₂ ⊣ R₂` both between categories `C`, `D`, there is a
+/-- Given two adjunctions `L₁ ⊣ R₁` and `L₂ ⊣ R₂` both between categories `C`, `D`, there is a
 bijection between natural transformations `L₂ ⟶ L₁` and natural transformations `R₁ ⟶ R₂`.
 This is defined as a special case of `transfer_nat_trans`, where the two "vertical" functors are
 identity.
@@ -133,7 +131,8 @@ This is in contrast to the general case `transfer_nat_trans` which does not in g
 property.
 -/
 def transfer_nat_trans_self : (L₂ ⟶ L₁) ≃ (R₁ ⟶ R₂) :=
-  calc (L₂ ⟶ L₁) ≃ _ := (iso.hom_congr L₂.left_unitor L₁.right_unitor).symm
+  calc
+    (L₂ ⟶ L₁) ≃ _ := (iso.hom_congr L₂.left_unitor L₁.right_unitor).symm
     _ ≃ _ := transfer_nat_trans adj₁ adj₂
     _ ≃ (R₁ ⟶ R₂) := R₁.right_unitor.hom_congr R₂.left_unitor
     
@@ -192,8 +191,7 @@ theorem transfer_nat_trans_self_symm_comm {f g} (gf : g ≫ f = 𝟙 _) :
     (transfer_nat_trans_self adj₁ adj₂).symm f ≫ (transfer_nat_trans_self adj₂ adj₁).symm g = 𝟙 _ := by
   rw [transfer_nat_trans_self_symm_comp, gf, transfer_nat_trans_self_symm_id]
 
-/-- 
-If `f` is an isomorphism, then the transferred natural transformation is an isomorphism.
+/-- If `f` is an isomorphism, then the transferred natural transformation is an isomorphism.
 The converse is given in `transfer_nat_trans_self_of_iso`.
 -/
 instance transfer_nat_trans_self_iso (f : L₂ ⟶ L₁) [is_iso f] : is_iso (transfer_nat_trans_self adj₁ adj₂ f) :=
@@ -205,8 +203,7 @@ instance transfer_nat_trans_self_iso (f : L₂ ⟶ L₁) [is_iso f] : is_iso (tr
           (by
             simp )⟩⟩⟩
 
-/-- 
-If `f` is an isomorphism, then the un-transferred natural transformation is an isomorphism.
+/-- If `f` is an isomorphism, then the un-transferred natural transformation is an isomorphism.
 The converse is given in `transfer_nat_trans_self_symm_of_iso`.
 -/
 instance transfer_nat_trans_self_symm_iso (f : R₁ ⟶ R₂) [is_iso f] :
@@ -219,24 +216,22 @@ instance transfer_nat_trans_self_symm_iso (f : R₁ ⟶ R₂) [is_iso f] :
           (by
             simp )⟩⟩⟩
 
-/-- 
-If `f` is a natural transformation whose transferred natural transformation is an isomorphism,
+/-- If `f` is a natural transformation whose transferred natural transformation is an isomorphism,
 then `f` is an isomorphism.
 The converse is given in `transfer_nat_trans_self_iso`.
 -/
 theorem transfer_nat_trans_self_of_iso (f : L₂ ⟶ L₁) [is_iso (transfer_nat_trans_self adj₁ adj₂ f)] : is_iso f := by
-  suffices is_iso ((transfer_nat_trans_self adj₁ adj₂).symm (transfer_nat_trans_self adj₁ adj₂ f))by
+  suffices is_iso ((transfer_nat_trans_self adj₁ adj₂).symm (transfer_nat_trans_self adj₁ adj₂ f)) by
     simpa using this
   infer_instance
 
-/-- 
-If `f` is a natural transformation whose un-transferred natural transformation is an isomorphism,
+/-- If `f` is a natural transformation whose un-transferred natural transformation is an isomorphism,
 then `f` is an isomorphism.
 The converse is given in `transfer_nat_trans_self_symm_iso`.
 -/
 theorem transfer_nat_trans_self_symm_of_iso (f : R₁ ⟶ R₂) [is_iso ((transfer_nat_trans_self adj₁ adj₂).symm f)] :
     is_iso f := by
-  suffices is_iso ((transfer_nat_trans_self adj₁ adj₂) ((transfer_nat_trans_self adj₁ adj₂).symm f))by
+  suffices is_iso ((transfer_nat_trans_self adj₁ adj₂) ((transfer_nat_trans_self adj₁ adj₂).symm f)) by
     simpa using this
   infer_instance
 

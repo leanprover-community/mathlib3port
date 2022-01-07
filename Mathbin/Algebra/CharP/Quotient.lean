@@ -22,7 +22,7 @@ theorem Quotientₓ (R : Type u) [CommRingₓ R] (p : ℕ) [hp1 : Fact p.prime] 
           Ideal.mem_span_singleton.1 $
             Ideal.Quotient.eq_zero_iff_mem.1 $ @Subsingleton.elimₓ (@CharP.subsingleton _ $ ringChar.of_eq h1) _ _
 
-/--  If an ideal does not contain any coercions of natural numbers other than zero, then its quotient
+/-- If an ideal does not contain any coercions of natural numbers other than zero, then its quotient
 inherits the characteristic of the underlying ring. -/
 theorem quotient' {R : Type _} [CommRingₓ R] (p : ℕ) [CharP R p] (I : Ideal R)
     (h : ∀ x : ℕ, (x : R) ∈ I → (x : R) = 0) : CharP (R ⧸ I) p :=

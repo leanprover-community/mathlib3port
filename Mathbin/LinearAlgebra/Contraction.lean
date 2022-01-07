@@ -25,15 +25,15 @@ variable (R : Type u) (M N : Type v)
 
 variable [CommRingₓ R] [AddCommGroupₓ M] [AddCommGroupₓ N] [Module R M] [Module R N]
 
-/--  The natural left-handed pairing between a module and its dual. -/
+/-- The natural left-handed pairing between a module and its dual. -/
 def contractLeft : Module.Dual R M ⊗ M →ₗ[R] R :=
   (uncurry _ _ _ _).toFun LinearMap.id
 
-/--  The natural right-handed pairing between a module and its dual. -/
+/-- The natural right-handed pairing between a module and its dual. -/
 def contractRight : M ⊗ Module.Dual R M →ₗ[R] R :=
   (uncurry _ _ _ _).toFun (LinearMap.flip LinearMap.id)
 
-/--  The natural map associating a linear map to the tensor product of two modules. -/
+/-- The natural map associating a linear map to the tensor product of two modules. -/
 def dualTensorHom : Module.Dual R M ⊗ N →ₗ[R] M →ₗ[R] N :=
   let M' := Module.Dual R M
   (uncurry R M' N (M →ₗ[R] N) : _ → M' ⊗ N →ₗ[R] M →ₗ[R] N) LinearMap.smulRightₗ

@@ -15,16 +15,14 @@ namespace Tactic
 
 namespace Explode
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
 inductive status : Type
   | reg
   | intro
   | lam
   | sintro
-  deriving [anonymous]
+  deriving Inhabited
 
-/-- 
-A type to distinguish introduction or elimination rules represented as
+/-- A type to distinguish introduction or elimination rules represented as
 strings from theorems referred to by their names.
 -/
 unsafe inductive thm : Type
@@ -32,8 +30,7 @@ unsafe inductive thm : Type
   | Name (n : Name)
   | Stringₓ (s : Stringₓ)
 
-/-- 
-Turn a thm into a string.
+/-- Turn a thm into a string.
 -/
 unsafe def thm.to_string : thm → Stringₓ
   | thm.expr e => e.to_string
@@ -52,11 +49,10 @@ unsafe def pad_right (l : List Stringₓ) : List Stringₓ :=
   let n := l.foldl (fun r s : Stringₓ => max r s.length) 0
   l.map $ fun s => Nat.iterate (fun s => s.push ' ') (n - s.length) s
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
 unsafe structure entries : Type where mk' ::
   s : expr_map entry
   l : List entry
-  deriving [anonymous]
+  deriving Inhabited
 
 unsafe def entries.find (es : entries) (e : expr) : Option entry :=
   es.s.find e
@@ -122,7 +118,7 @@ mutual
           return $ es'.add ⟨e, es'.size, depth, status.lam, thm.string "∀I", [es.size, es'.size - 1]⟩
         else do
           let en : entry := ⟨l, es.size, depth, status.intro, thm.name n, []⟩
-          let es' ← explode.core b' si (depth+1) (es.add en)
+          let es' ← explode.core b' si (depth + 1) (es.add en)
           let deps' ← explode.append_dep filter es' b'.erase_annotations []
           let deps' ← explode.append_dep filter es' l deps'
           return $ es'.add ⟨e, es'.size, depth, status.lam, thm.string "∀I", deps'⟩
@@ -165,8 +161,7 @@ unsafe def explode (n : Name) : tactic Unit := do
 
 setup_tactic_parser
 
-/-- 
-`#explode decl_name` displays a proof term in a line-by-line format somewhat akin to a Fitch-style
+/-- `#explode decl_name` displays a proof term in a line-by-line format somewhat akin to a Fitch-style
 proof or the Metamath proof style.
 `#explode_widget decl_name` renders a widget that displays an `#explode` proof.
 

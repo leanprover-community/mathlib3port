@@ -26,7 +26,7 @@ instance smoothFunctionsAlgebra : Algebra 𝕜 C^∞⟮I, M; 𝕜⟯ := by
 instance smooth_functions_tower : IsScalarTower 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜⟯ := by
   infer_instance
 
-/--  Type synonym, introduced to put a different `has_scalar` action on `C^n⟮I, M; 𝕜⟯`
+/-- Type synonym, introduced to put a different `has_scalar` action on `C^n⟮I, M; 𝕜⟯`
 which is defined as `f • r = f(x) * r`. -/
 @[nolint unused_arguments]
 def PointedSmoothMap (x : M) :=
@@ -58,31 +58,26 @@ instance {x : M} : IsScalarTower 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ C^∞⟮I, M; �
 
 variable {I}
 
-/--  `smooth_map.eval_ring_hom` gives rise to an algebra structure of `C^∞⟮I, M; 𝕜⟯` on `𝕜`. -/
+/-- `smooth_map.eval_ring_hom` gives rise to an algebra structure of `C^∞⟮I, M; 𝕜⟯` on `𝕜`. -/
 instance eval_algebra {x : M} : Algebra C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜 :=
   (SmoothMap.evalRingHom x : C^∞⟮I,M;𝕜⟯⟨x⟩ →+* 𝕜).toAlgebra
 
-/--  With the `eval_algebra` algebra structure evaluation is actually an algebra morphism. -/
+/-- With the `eval_algebra` algebra structure evaluation is actually an algebra morphism. -/
 def eval (x : M) : C^∞⟮I, M; 𝕜⟯ →ₐ[C^∞⟮I,M;𝕜⟯⟨x⟩] 𝕜 :=
   Algebra.ofId C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜
 
-theorem smul_def (x : M) (f : C^∞⟮I,M;𝕜⟯⟨x⟩) (k : 𝕜) : f • k = f x*k :=
+theorem smul_def (x : M) (f : C^∞⟮I,M;𝕜⟯⟨x⟩) (k : 𝕜) : f • k = f x * k :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  ( x : M ) : IsScalarTower 𝕜 C^ ∞ ⟮ I , M ; 𝕜 ⟯⟨ x ⟩ 𝕜
-  where
-    smul_assoc
-      k f h
-      :=
-      by simp only [ smul_def , Algebra.id.smul_eq_mul , SmoothMap.coe_smul , Pi.smul_apply , mul_assocₓ ]
+instance (x : M) : IsScalarTower 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜 where
+  smul_assoc := fun k f h => by
+    simp only [smul_def, Algebra.id.smul_eq_mul, SmoothMap.coe_smul, Pi.smul_apply, mul_assocₓ]
 
 end PointedSmoothMap
 
 open_locale Derivation
 
-/--  The derivations at a point of a manifold. Some regard this as a possible definition of the
+/-- The derivations at a point of a manifold. Some regard this as a possible definition of the
 tangent space -/
 @[reducible]
 def PointDerivation (x : M) :=
@@ -92,7 +87,7 @@ section
 
 variable (I) {M} (X Y : Derivation 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜⟯) (f g : C^∞⟮I, M; 𝕜⟯) (r : 𝕜)
 
-/--  Evaluation at a point gives rise to a `C^∞⟮I, M; 𝕜⟯`-linear map between `C^∞⟮I, M; 𝕜⟯` and `𝕜`.
+/-- Evaluation at a point gives rise to a `C^∞⟮I, M; 𝕜⟯`-linear map between `C^∞⟮I, M; 𝕜⟯` and `𝕜`.
  -/
 def SmoothFunction.evalAt (x : M) : C^∞⟮I, M; 𝕜⟯ →ₗ[C^∞⟮I,M;𝕜⟯⟨x⟩] 𝕜 :=
   (PointedSmoothMap.eval x).toLinearMap
@@ -101,7 +96,7 @@ namespace Derivation
 
 variable {I}
 
-/--  The evaluation at a point as a linear map. -/
+/-- The evaluation at a point as a linear map. -/
 def eval_at (x : M) : Derivation 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜⟯ →ₗ[𝕜] PointDerivation I x :=
   (SmoothFunction.evalAt I x).compDer
 
@@ -113,24 +108,25 @@ end Derivation
 variable {I} {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
   {I' : ModelWithCorners 𝕜 E' H'} {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
 
-/--  The heterogeneous differential as a linear map. Instead of taking a function as an argument this
+/-- The heterogeneous differential as a linear map. Instead of taking a function as an argument this
 differential takes `h : f x = y`. It is particularly handy to deal with situations where the points
 on where it has to be evaluated are equal but not definitionally equal. -/
 def hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) :
-    PointDerivation I x →ₗ[𝕜] PointDerivation I' y :=
-  { toFun := fun v =>
-      { toLinearMap :=
-          { toFun := fun g => v (g.comp f),
-            map_add' := fun g g' => by
-              rw [SmoothMap.add_comp, Derivation.map_add],
-            map_smul' := fun k g => by
-              simp only [SmoothMap.smul_comp, Derivation.map_smul, RingHom.id_apply] },
-        leibniz' := fun g g' => by
-          simp only [Derivation.leibniz, SmoothMap.mul_comp, PointedSmoothMap.smul_def, TimesContMdiffMap.comp_apply,
-            h] },
-    map_smul' := fun k v => rfl, map_add' := fun v w => rfl }
+    PointDerivation I x →ₗ[𝕜] PointDerivation I' y where
+  toFun := fun v =>
+    Derivation.mk'
+      { toFun := fun g => v (g.comp f),
+        map_add' := fun g g' => by
+          rw [SmoothMap.add_comp, Derivation.map_add],
+        map_smul' := fun k g => by
+          simp only [SmoothMap.smul_comp, Derivation.map_smul, RingHom.id_apply] }
+      fun g g' => by
+      simp only [Derivation.leibniz, SmoothMap.mul_comp, LinearMap.coe_mk, PointedSmoothMap.smul_def,
+        TimesContMdiffMap.comp_apply, h]
+  map_smul' := fun k v => rfl
+  map_add' := fun v w => rfl
 
-/--  The homogeneous differential as a linear map. -/
+/-- The homogeneous differential as a linear map. -/
 def fdifferential (f : C^∞⟮I, M; I', M'⟯) (x : M) : PointDerivation I x →ₗ[𝕜] PointDerivation I' (f x) :=
   hfdifferential (rfl : f x = f x)
 

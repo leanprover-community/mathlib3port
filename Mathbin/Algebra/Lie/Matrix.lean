@@ -31,13 +31,13 @@ variable {R : Type u} [CommRingₓ R]
 
 variable {n : Type w} [DecidableEq n] [Fintype n]
 
-/--  The natural equivalence between linear endomorphisms of finite free modules and square matrices
+/-- The natural equivalence between linear endomorphisms of finite free modules and square matrices
 is compatible with the Lie algebra structures. -/
 def lieEquivMatrix' : Module.End R (n → R) ≃ₗ⁅R⁆ Matrix n n R :=
   { LinearMap.toMatrix' with
     map_lie' := fun T S => by
       let f := @LinearMap.toMatrix' R _ n n _ _
-      change f (T.comp S - S.comp T) = (f T*f S) - f S*f T
+      change f (T.comp S - S.comp T) = f T * f S - f S * f T
       have h : ∀ T S : Module.End R _, f (T.comp S) = f T ⬝ f S := LinearMap.to_matrix'_comp
       rw [LinearEquiv.map_sub, h, h, Matrix.mul_eq_mul, Matrix.mul_eq_mul] }
 
@@ -49,7 +49,7 @@ theorem lie_equiv_matrix'_apply (f : Module.End R (n → R)) : lieEquivMatrix' f
 theorem lie_equiv_matrix'_symm_apply (A : Matrix n n R) : (@lieEquivMatrix' R _ n _ _).symm A = A.to_lin' :=
   rfl
 
-/--  An invertible matrix induces a Lie algebra equivalence from the space of matrices to itself. -/
+/-- An invertible matrix induces a Lie algebra equivalence from the space of matrices to itself. -/
 def Matrix.lieConj (P : Matrix n n R) (h : Invertible P) : Matrix n n R ≃ₗ⁅R⁆ Matrix n n R :=
   ((@lieEquivMatrix' R _ n _ _).symm.trans (P.to_linear_equiv' h).lieConj).trans lieEquivMatrix'
 
@@ -63,7 +63,7 @@ theorem Matrix.lie_conj_symm_apply (P A : Matrix n n R) (h : Invertible P) : (P.
 
 variable {m : Type w₁} [DecidableEq m] [Fintype m] (e : n ≃ m)
 
-/--  For square matrices, the natural map that reindexes a matrix's rows and columns with equivalent
+/-- For square matrices, the natural map that reindexes a matrix's rows and columns with equivalent
 types, `matrix.reindex`, is an equivalence of Lie algebras. -/
 def Matrix.reindexLieEquiv : Matrix n n R ≃ₗ⁅R⁆ Matrix m m R :=
   { Matrix.reindexLinearEquiv R R e e with toFun := Matrix.reindex e e,

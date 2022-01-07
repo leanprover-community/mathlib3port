@@ -25,7 +25,7 @@ variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 theorem Option.id_traverse {α} (x : Option α) : Option.traverseₓₓ id.mk x = x := by
   cases x <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 @[nolint unused_arguments]
 theorem Option.comp_traverse {α β γ} (f : β → F γ) (g : α → G β) (x : Option α) :
     Option.traverseₓₓ (comp.mk ∘ (· <$> ·) f ∘ g) x = comp.mk (Option.traverseₓₓ f <$> Option.traverseₓₓ g x) := by
@@ -36,10 +36,10 @@ theorem Option.traverse_eq_map_id {α β} (f : α → β) (x : Option α) : trav
 
 variable (η : ApplicativeTransformation F G)
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 theorem Option.naturality {α β} (f : α → F β) (x : Option α) :
     η (Option.traverseₓₓ f x) = Option.traverseₓₓ (@η _ ∘ f) x := by
-  cases' x with x <;> simp' with functor_norm
+  cases' x with x <;> simp' [*] with functor_norm
 
 end Option
 
@@ -61,27 +61,27 @@ open Applicativeₓ Functor
 
 open list (cons)
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 protected theorem id_traverse {α} (xs : List α) : List.traverseₓₓ id.mk xs = xs := by
-  induction xs <;> simp' with functor_norm <;> rfl
+  induction xs <;> simp' [*] with functor_norm <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 @[nolint unused_arguments]
 protected theorem comp_traverse {α β γ} (f : β → F γ) (g : α → G β) (x : List α) :
     List.traverseₓₓ (comp.mk ∘ (· <$> ·) f ∘ g) x = comp.mk (List.traverseₓₓ f <$> List.traverseₓₓ g x) := by
-  induction x <;> simp' with functor_norm <;> rfl
+  induction x <;> simp' [*] with functor_norm <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 protected theorem traverse_eq_map_id {α β} (f : α → β) (x : List α) : List.traverseₓₓ (id.mk ∘ f) x = id.mk (f <$> x) :=
   by
-  induction x <;> simp' with functor_norm <;> rfl
+  induction x <;> simp' [*] with functor_norm <;> rfl
 
 variable (η : ApplicativeTransformation F G)
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 protected theorem naturality {α β} (f : α → F β) (x : List α) :
     η (List.traverseₓₓ f x) = List.traverseₓₓ (@η _ ∘ f) x := by
-  induction x <;> simp' with functor_norm
+  induction x <;> simp' [*] with functor_norm
 
 open Nat
 
@@ -100,17 +100,16 @@ theorem traverse_nil : traverse f ([] : List α') = (pure [] : F (List β')) :=
   rfl
 
 @[simp]
-theorem traverse_cons (a : α') (l : List α') : traverse f (a :: l) = ((· :: ·) <$> f a)<*>traverse f l :=
+theorem traverse_cons (a : α') (l : List α') : traverse f (a :: l) = (· :: ·) <$> f a <*> traverse f l :=
   rfl
 
 variable [IsLawfulApplicative F]
 
 @[simp]
-theorem traverse_append : ∀ as bs : List α', traverse f (as ++ bs) = ((· ++ ·) <$> traverse f as)<*>traverse f bs
-  | [], bs =>
+theorem traverse_append : ∀ as bs : List α', traverse f (as ++ bs) = (· ++ ·) <$> traverse f as <*> traverse f bs
+  | [], bs => by
     have : Append.append ([] : List β') = id := by
       funext <;> rfl
-    by
     simp' [this] with functor_norm
   | a :: as, bs => by
     simp' [traverse_append as bs] with functor_norm <;> congr
@@ -152,16 +151,16 @@ variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 protected theorem id_traverse {σ α} (x : Sum σ α) : Sum.traverseₓ id.mk x = x := by
   cases x <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 @[nolint unused_arguments]
 protected theorem comp_traverse {α β γ} (f : β → F γ) (g : α → G β) (x : Sum σ α) :
     Sum.traverseₓ (comp.mk ∘ (· <$> ·) f ∘ g) x = comp.mk (Sum.traverseₓ f <$> Sum.traverseₓ g x) := by
   cases x <;> simp' [Sum.traverseₓ, map_id] with functor_norm <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 protected theorem traverse_eq_map_id {α β} (f : α → β) (x : Sum σ α) : Sum.traverseₓ (id.mk ∘ f) x = id.mk (f <$> x) :=
   by
-  induction x <;> simp' with functor_norm <;> rfl
+  induction x <;> simp' [*] with functor_norm <;> rfl
 
 protected theorem map_traverse {α β γ} (g : α → G β) (f : β → γ) (x : Sum σ α) :
     (· <$> ·) f <$> Sum.traverseₓ g x = Sum.traverseₓ ((· <$> ·) f ∘ g) x := by
@@ -169,7 +168,7 @@ protected theorem map_traverse {α β γ} (g : α → G β) (f : β → γ) (x :
 
 variable (η : ApplicativeTransformation F G)
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 protected theorem naturality {α β} (f : α → F β) (x : Sum σ α) : η (Sum.traverseₓ f x) = Sum.traverseₓ (@η _ ∘ f) x :=
   by
   cases x <;> simp' [Sum.traverseₓ] with functor_norm

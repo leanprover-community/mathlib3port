@@ -8,14 +8,14 @@ namespace Bitvec
 instance (n : ℕ) : Preorderₓ (Bitvec n) :=
   Preorderₓ.lift Bitvec.toNat
 
-/--  convert `fin` to `bitvec` -/
+/-- convert `fin` to `bitvec` -/
 def of_fin {n : ℕ} (i : Finₓ $ 2 ^ n) : Bitvec n :=
   Bitvec.ofNat _ i.val
 
 theorem of_fin_val {n : ℕ} (i : Finₓ $ 2 ^ n) : (of_fin i).toNat = i.val := by
   rw [of_fin, to_nat_of_nat, Nat.mod_eq_of_ltₓ] <;> apply i.is_lt
 
-/--  convert `bitvec` to `fin` -/
+/-- convert `bitvec` to `fin` -/
 def to_fin {n : ℕ} (i : Bitvec n) : Finₓ $ 2 ^ n :=
   @Finₓ.ofNat' _
     ⟨pow_pos
@@ -24,14 +24,14 @@ def to_fin {n : ℕ} (i : Bitvec n) : Finₓ $ 2 ^ n :=
         _⟩
     i.to_nat
 
-theorem add_lsb_eq_twice_add_one {x b} : add_lsb x b = (2*x)+cond b 1 0 := by
+theorem add_lsb_eq_twice_add_one {x b} : add_lsb x b = 2 * x + cond b 1 0 := by
   simp [add_lsb, two_mul]
 
 theorem to_nat_eq_foldr_reverse {n : ℕ} (v : Bitvec n) : v.to_nat = v.to_list.reverse.foldr (flip add_lsb) 0 := by
   rw [List.foldr_reverse, flip] <;> rfl
 
 theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.to_nat < 2 ^ n := by
-  suffices (v.to_nat+1) ≤ 2 ^ n by
+  suffices v.to_nat + 1 ≤ 2 ^ n by
     simpa
   rw [to_nat_eq_foldr_reverse]
   cases' v with xs h
@@ -40,23 +40,23 @@ theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.to_nat < 2 ^ n := by
   generalize xs.reverse = ys  at h⊢
   clear xs
   induction ys generalizing n
-  ·
-    simp [← h]
-  ·
-    simp only [← h, pow_addₓ, flip, List.length, List.foldr, pow_oneₓ]
+  · simp [← h]
+    
+  · simp only [← h, pow_addₓ, flip, List.length, List.foldr, pow_oneₓ]
     rw [add_lsb_eq_twice_add_one]
-    trans (2*List.foldr (fun x : Bool y : ℕ => add_lsb y x) 0 ys_tl)+2*1
-    ·
-      ac_mono
+    trans 2 * List.foldr (fun x : Bool y : ℕ => add_lsb y x) 0 ys_tl + 2 * 1
+    · ac_mono
       rw [two_mul]
       mono
       cases ys_hd <;> simp
-    ·
-      rw [← left_distrib]
+      
+    · rw [← left_distrib]
       ac_mono
       norm_num
       apply ys_ih
       rfl
+      
+    
 
 theorem add_lsb_div_two {x b} : add_lsb x b / 2 = x := by
   cases b <;>
@@ -80,11 +80,10 @@ theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.to_nat = v := 
   generalize xs.reverse = ys  at h⊢
   clear xs
   induction ys generalizing n
-  ·
-    cases h
+  · cases h
     simp [Bitvec.ofNat]
-  ·
-    simp only [← Nat.succ_eq_add_one, List.length] at h
+    
+  · simp only [← Nat.succ_eq_add_one, List.length] at h
     subst n
     simp only [Bitvec.ofNat, Vector.to_list_cons, Vector.to_list_nil, List.reverse_cons, Vector.to_list_append,
       List.foldr]
@@ -92,6 +91,7 @@ theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.to_nat = v := 
     congr
     apply ys_ih
     rfl
+    
 
 theorem to_fin_val {n : ℕ} (v : Bitvec n) : (to_fin v : ℕ) = v.to_nat := by
   rw [to_fin, Finₓ.coe_of_nat_eq_mod', Nat.mod_eq_of_ltₓ] <;> apply to_nat_lt

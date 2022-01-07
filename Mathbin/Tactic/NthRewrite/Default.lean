@@ -28,13 +28,13 @@ open Tactic Lean.Parser Interactive Interactive.Types Expr
 
 namespace Tactic
 
-/--  Returns the target of the goal when passed `none`,
+/-- Returns the target of the goal when passed `none`,
 otherwise, return the type of `h` in `some h`. -/
 unsafe def target_or_hyp_type : Option expr → tactic expr
   | none => target
   | some h => infer_type h
 
-/--  Replace the target, or a hypothesis, depending on whether `none` or `some h` is given as the
+/-- Replace the target, or a hypothesis, depending on whether `none` or `some h` is given as the
 first argument. -/
 unsafe def replace_in_state : Option expr → expr → expr → tactic Unit
   | none => tactic.replace_target
@@ -44,18 +44,18 @@ open NthRewrite NthRewrite.Congr NthRewrite.TrackedRewrite
 
 open Tactic.Interactive
 
-/--  Preprocess a rewrite rule for use in `get_nth_rewrite`. -/
+/-- Preprocess a rewrite rule for use in `get_nth_rewrite`. -/
 private unsafe def unpack_rule (p : rw_rule) : tactic (expr × Bool) := do
   let r ← to_expr p.rule tt ff
   return (r, p.symm)
 
-/--  Get the `n`th rewrite of rewrite rules `q` in expression `e`,
+/-- Get the `n`th rewrite of rewrite rules `q` in expression `e`,
 or fail if there are not enough such rewrites. -/
 unsafe def get_nth_rewrite (n : ℕ) (q : rw_rules_t) (e : expr) : tactic tracked_rewrite := do
   let rewrites ← q.rules.mmap $ fun r => unpack_rule r >>= all_rewrites e
   rewrites.join.nth n <|> fail "failed: not enough rewrites found"
 
-/--  Rewrite the `n`th occurrence of the rewrite rules `q` of (optionally after zooming into) a
+/-- Rewrite the `n`th occurrence of the rewrite rules `q` of (optionally after zooming into) a
 hypothesis or target `h` which is an application of a relation. -/
 unsafe def get_nth_rewrite_with_zoom (n : ℕ) (q : rw_rules_t) (path : List ExprLens.Dir) (h : Option expr) :
     tactic tracked_rewrite := do
@@ -64,7 +64,7 @@ unsafe def get_nth_rewrite_with_zoom (n : ℕ) (q : rw_rules_t) (path : List Exp
   let rw ← get_nth_rewrite n q new_e
   return ⟨ln.fill rw.exp, rw.proof >>= ln.congr, rw.addr.map $ fun l => path ++ l⟩
 
-/--  Rewrite the `n`th occurrence of the rewrite rules `q` (optionally on a side)
+/-- Rewrite the `n`th occurrence of the rewrite rules `q` (optionally on a side)
 at all the locations `loc`. -/
 unsafe def nth_rewrite_core (path : List ExprLens.Dir) (n : parse small_nat) (q : parse rw_rules) (l : parse location) :
     tactic Unit := do
@@ -79,7 +79,7 @@ namespace Interactive
 
 open ExprLens
 
-/--  `nth_rewrite n rules` performs only the `n`th possible rewrite using the `rules`.
+/-- `nth_rewrite n rules` performs only the `n`th possible rewrite using the `rules`.
 The tactics `nth_rewrite_lhs` and `nth_rewrite_rhs` are variants
 that operate on the left and right hand sides of an equation or iff.
 

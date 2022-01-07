@@ -25,7 +25,7 @@ namespace CategoryTheory
 
 universe v v₂ u u₂
 
-/--  A `groupoid` is a category such that all morphisms are isomorphisms. -/
+/-- A `groupoid` is a category such that all morphisms are isomorphisms. -/
 class groupoid (obj : Type u) extends category.{v} obj : Type max u (v + 1) where
   inv : ∀ {X Y : obj}, (X ⟶ Y) → (Y ⟶ X)
   inv_comp' : ∀ {X Y : obj} f : X ⟶ Y, comp (inv f) f = id Y := by
@@ -41,15 +41,13 @@ restate_axiom groupoid.comp_inv'
 
 attribute [simp] groupoid.inv_comp groupoid.comp_inv
 
-/-- 
-A `large_groupoid` is a groupoid
+/-- A `large_groupoid` is a groupoid
 where the objects live in `Type (u+1)` while the morphisms live in `Type u`.
 -/
 abbrev large_groupoid (C : Type (u + 1)) : Type (u + 1) :=
   groupoid.{u} C
 
-/-- 
-A `small_groupoid` is a groupoid
+/-- A `small_groupoid` is a groupoid
 where the objects and morphisms live in the same universe.
 -/
 abbrev small_groupoid (C : Type u) : Type (u + 1) :=
@@ -65,10 +63,12 @@ instance (priority := 100) is_iso.of_groupoid (f : X ⟶ Y) : is_iso f :=
 
 variable (X Y)
 
-/--  In a groupoid, isomorphisms are equivalent to morphisms. -/
-def groupoid.iso_equiv_hom : (X ≅ Y) ≃ (X ⟶ Y) :=
-  { toFun := iso.hom, invFun := fun f => ⟨f, groupoid.inv f⟩, left_inv := fun i => iso.ext rfl,
-    right_inv := fun f => rfl }
+/-- In a groupoid, isomorphisms are equivalent to morphisms. -/
+def groupoid.iso_equiv_hom : (X ≅ Y) ≃ (X ⟶ Y) where
+  toFun := iso.hom
+  invFun := fun f => ⟨f, groupoid.inv f⟩
+  left_inv := fun i => iso.ext rfl
+  right_inv := fun f => rfl
 
 end
 
@@ -76,9 +76,9 @@ section
 
 variable {C : Type u} [category.{v} C]
 
-/--  A category where every morphism `is_iso` is a groupoid. -/
-noncomputable def groupoid.of_is_iso (all_is_iso : ∀ {X Y : C} f : X ⟶ Y, is_iso f) : groupoid.{v} C :=
-  { inv := fun X Y f => inv f }
+/-- A category where every morphism `is_iso` is a groupoid. -/
+noncomputable def groupoid.of_is_iso (all_is_iso : ∀ {X Y : C} f : X ⟶ Y, is_iso f) : groupoid.{v} C where
+  inv := fun X Y f => inv f
 
 end
 

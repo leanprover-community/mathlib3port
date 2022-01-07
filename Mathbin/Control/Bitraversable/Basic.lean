@@ -35,19 +35,19 @@ traversable bitraversable iterator functor bifunctor applicative
 
 universe u
 
-/--  Lawless bitraversable bifunctor. This only holds data for the bimap and bitraverse. -/
+/-- Lawless bitraversable bifunctor. This only holds data for the bimap and bitraverse. -/
 class Bitraversable (t : Type u → Type u → Type u) extends Bifunctor t where
   bitraverse : ∀ {m : Type u → Type u} [Applicativeₓ m] {α α' β β'}, (α → m α') → (β → m β') → t α β → m (t α' β')
 
 export Bitraversable (bitraverse)
 
-/--  A bitraversable functor commutes with all applicative functors. -/
+/-- A bitraversable functor commutes with all applicative functors. -/
 def bisequence {t m} [Bitraversable t] [Applicativeₓ m] {α β} : t (m α) (m β) → m (t α β) :=
   bitraverse id id
 
 open Functor
 
-/--  Bifunctor. This typeclass asserts that a lawless bitraversable bifunctor is lawful. -/
+/-- Bifunctor. This typeclass asserts that a lawless bitraversable bifunctor is lawful. -/
 class IsLawfulBitraversable (t : Type u → Type u → Type u) [Bitraversable t] extends IsLawfulBifunctor t where
   id_bitraverse : ∀ {α β} x : t α β, bitraverse id.mk id.mk x = id.mk x
   comp_bitraverse :

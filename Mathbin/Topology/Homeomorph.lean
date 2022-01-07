@@ -27,7 +27,7 @@ open_locale TopologicalSpace
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
-/--  Homeomorphism between `α` and `β`, also called topological isomorphism -/
+/-- Homeomorphism between `α` and `β`, also called topological isomorphism -/
 @[nolint has_inhabited_instance]
 structure Homeomorph (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] extends α ≃ β where
   continuous_to_fun : Continuous to_fun := by
@@ -54,16 +54,18 @@ theorem homeomorph_mk_coe (a : Equivₓ α β) b c : (Homeomorph.mk a b c : α �
 theorem coe_to_equiv (h : α ≃ₜ β) : ⇑h.to_equiv = h :=
   rfl
 
-/--  Inverse of a homeomorphism. -/
-protected def symm (h : α ≃ₜ β) : β ≃ₜ α :=
-  { continuous_to_fun := h.continuous_inv_fun, continuous_inv_fun := h.continuous_to_fun, toEquiv := h.to_equiv.symm }
+/-- Inverse of a homeomorphism. -/
+protected def symm (h : α ≃ₜ β) : β ≃ₜ α where
+  continuous_to_fun := h.continuous_inv_fun
+  continuous_inv_fun := h.continuous_to_fun
+  toEquiv := h.to_equiv.symm
 
-/--  See Note [custom simps projection]. We need to specify this projection explicitly in this case,
+/-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
   because it is a composition of multiple projections. -/
 def simps.apply (h : α ≃ₜ β) : α → β :=
   h
 
-/--  See Note [custom simps projection] -/
+/-- See Note [custom simps projection] -/
 def simps.symm_apply (h : α ≃ₜ β) : β → α :=
   h.symm
 
@@ -76,16 +78,18 @@ theorem to_equiv_injective : Function.Injective (to_equiv : α ≃ₜ β → α 
 theorem ext {h h' : α ≃ₜ β} (H : ∀ x, h x = h' x) : h = h' :=
   to_equiv_injective $ Equivₓ.ext H
 
-/--  Identity map as a homeomorphism. -/
+/-- Identity map as a homeomorphism. -/
 @[simps (config := { fullyApplied := ff }) apply]
-protected def refl (α : Type _) [TopologicalSpace α] : α ≃ₜ α :=
-  { continuous_to_fun := continuous_id, continuous_inv_fun := continuous_id, toEquiv := Equivₓ.refl α }
+protected def refl (α : Type _) [TopologicalSpace α] : α ≃ₜ α where
+  continuous_to_fun := continuous_id
+  continuous_inv_fun := continuous_id
+  toEquiv := Equivₓ.refl α
 
-/--  Composition of two homeomorphisms. -/
-protected def trans (h₁ : α ≃ₜ β) (h₂ : β ≃ₜ γ) : α ≃ₜ γ :=
-  { continuous_to_fun := h₂.continuous_to_fun.comp h₁.continuous_to_fun,
-    continuous_inv_fun := h₁.continuous_inv_fun.comp h₂.continuous_inv_fun,
-    toEquiv := Equivₓ.trans h₁.to_equiv h₂.to_equiv }
+/-- Composition of two homeomorphisms. -/
+protected def trans (h₁ : α ≃ₜ β) (h₂ : β ≃ₜ γ) : α ≃ₜ γ where
+  continuous_to_fun := h₂.continuous_to_fun.comp h₁.continuous_to_fun
+  continuous_inv_fun := h₁.continuous_inv_fun.comp h₂.continuous_inv_fun
+  toEquiv := Equivₓ.trans h₁.to_equiv h₂.to_equiv
 
 @[simp]
 theorem trans_apply (h₁ : α ≃ₜ β) (h₂ : β ≃ₜ γ) (a : α) : h₁.trans h₂ a = h₂ (h₁ a) :=
@@ -124,13 +128,14 @@ protected theorem injective (h : α ≃ₜ β) : Function.Injective h :=
 protected theorem surjective (h : α ≃ₜ β) : Function.Surjective h :=
   h.to_equiv.surjective
 
-/--  Change the homeomorphism `f` to make the inverse function definitionally equal to `g`. -/
+/-- Change the homeomorphism `f` to make the inverse function definitionally equal to `g`. -/
 def change_inv (f : α ≃ₜ β) (g : β → α) (hg : Function.RightInverse g f) : α ≃ₜ β :=
   have : g = f.symm :=
     funext fun x =>
-      calc g x = f.symm (f (g x)) := (f.left_inv (g x)).symm
+      calc
+        g x = f.symm (f (g x)) := (f.left_inv (g x)).symm
         _ = f.symm x := by
-        rw [hg x]
+          rw [hg x]
         
   { toFun := f, invFun := g,
     left_inv := by
@@ -142,11 +147,11 @@ def change_inv (f : α ≃ₜ β) (g : β → α) (hg : Function.RightInverse g 
       convert f.symm.continuous }
 
 @[simp]
-theorem symm_comp_self (h : α ≃ₜ β) : (⇑h.symm ∘ ⇑h) = id :=
+theorem symm_comp_self (h : α ≃ₜ β) : ⇑h.symm ∘ ⇑h = id :=
   funext h.symm_apply_apply
 
 @[simp]
-theorem self_comp_symm (h : α ≃ₜ β) : (⇑h ∘ ⇑h.symm) = id :=
+theorem self_comp_symm (h : α ≃ₜ β) : ⇑h ∘ ⇑h.symm = id :=
   funext h.apply_symm_apply
 
 @[simp]
@@ -184,7 +189,7 @@ theorem coinduced_eq (h : α ≃ₜ β) : TopologicalSpace.coinduced h ‹_› =
 protected theorem Embedding (h : α ≃ₜ β) : Embedding h :=
   ⟨h.inducing, h.injective⟩
 
-/--  Homeomorphism given an embedding. -/
+/-- Homeomorphism given an embedding. -/
 noncomputable def of_embedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set.Range f :=
   { Equivₓ.ofInjective f hf.inj with continuous_to_fun := continuous_subtype_mk _ hf.continuous,
     continuous_inv_fun := by
@@ -200,12 +205,12 @@ theorem compact_image {s : Set α} (h : α ≃ₜ β) : IsCompact (h '' s) ↔ I
 theorem compact_preimage {s : Set β} (h : α ≃ₜ β) : IsCompact (h ⁻¹' s) ↔ IsCompact s := by
   rw [← image_symm] <;> exact h.symm.compact_image
 
-theorem CompactSpace [CompactSpace α] (h : α ≃ₜ β) : CompactSpace β :=
+protected theorem CompactSpace [CompactSpace α] (h : α ≃ₜ β) : CompactSpace β :=
   { compact_univ := by
       rw [← image_univ_of_surjective h.surjective, h.compact_image]
       apply CompactSpace.compact_univ }
 
-theorem T2Space [T2Space α] (h : α ≃ₜ β) : T2Space β :=
+protected theorem T2Space [T2Space α] (h : α ≃ₜ β) : T2Space β :=
   { t2 := by
       intro x y hxy
       obtain ⟨u, v, hu, hv, hxu, hyv, huv⟩ := t2_separation (h.symm.injective.ne hxy)
@@ -249,6 +254,9 @@ protected theorem OpenEmbedding (h : α ≃ₜ β) : OpenEmbedding h :=
 protected theorem ClosedEmbedding (h : α ≃ₜ β) : ClosedEmbedding h :=
   closed_embedding_of_embedding_closed h.embedding h.is_closed_map
 
+theorem preimage_frontier (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Frontier s = Frontier (h ⁻¹' s) :=
+  h.is_open_map.preimage_frontier_eq_frontier_preimage h.continuous _
+
 @[simp]
 theorem map_nhds_eq (h : α ≃ₜ β) (x : α) : map h (𝓝 x) = 𝓝 (h x) :=
   h.embedding.map_nhds_of_mem _
@@ -265,15 +273,15 @@ theorem nhds_eq_comap (h : α ≃ₜ β) (x : α) : 𝓝 x = comap h (𝓝 (h x)
 theorem comap_nhds_eq (h : α ≃ₜ β) (y : β) : comap h (𝓝 y) = 𝓝 (h.symm y) := by
   rw [h.nhds_eq_comap, h.apply_symm_apply]
 
-/--  If an bijective map `e : α ≃ β` is continuous and open, then it is a homeomorphism. -/
-def homeomorph_of_continuous_open (e : α ≃ β) (h₁ : Continuous e) (h₂ : IsOpenMap e) : α ≃ₜ β :=
-  { continuous_to_fun := h₁,
-    continuous_inv_fun := by
-      rw [continuous_def]
-      intro s hs
-      convert ← h₂ s hs using 1
-      apply e.image_eq_preimage,
-    toEquiv := e }
+/-- If an bijective map `e : α ≃ β` is continuous and open, then it is a homeomorphism. -/
+def homeomorph_of_continuous_open (e : α ≃ β) (h₁ : Continuous e) (h₂ : IsOpenMap e) : α ≃ₜ β where
+  continuous_to_fun := h₁
+  continuous_inv_fun := by
+    rw [continuous_def]
+    intro s hs
+    convert ← h₂ s hs using 1
+    apply e.image_eq_preimage
+  toEquiv := e
 
 @[simp]
 theorem comp_continuous_on_iff (h : α ≃ₜ β) (f : γ → α) (s : Set γ) : ContinuousOn (h ∘ f) s ↔ ContinuousOn f s :=
@@ -313,28 +321,29 @@ theorem comp_is_open_map_iff' (h : α ≃ₜ β) {f : β → γ} : IsOpenMap (f 
   rw [← Function.comp.right_id f, ← h.self_comp_symm, ← Function.comp.assoc]
   exact hf.comp h.symm.is_open_map
 
-/--  If two sets are equal, then they are homeomorphic. -/
-def set_congr {s t : Set α} (h : s = t) : s ≃ₜ t :=
-  { continuous_to_fun := continuous_subtype_mk _ continuous_subtype_val,
-    continuous_inv_fun := continuous_subtype_mk _ continuous_subtype_val, toEquiv := Equivₓ.setCongr h }
+/-- If two sets are equal, then they are homeomorphic. -/
+def set_congr {s t : Set α} (h : s = t) : s ≃ₜ t where
+  continuous_to_fun := continuous_subtype_mk _ continuous_subtype_val
+  continuous_inv_fun := continuous_subtype_mk _ continuous_subtype_val
+  toEquiv := Equivₓ.setCongr h
 
-/--  Sum of two homeomorphisms. -/
-def sum_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : Sum α γ ≃ₜ Sum β δ :=
-  { continuous_to_fun := by
-      convert continuous_sum_rec (continuous_inl.comp h₁.continuous) (continuous_inr.comp h₂.continuous)
-      ext x
-      cases x <;> rfl,
-    continuous_inv_fun := by
-      convert continuous_sum_rec (continuous_inl.comp h₁.symm.continuous) (continuous_inr.comp h₂.symm.continuous)
-      ext x
-      cases x <;> rfl,
-    toEquiv := h₁.to_equiv.sum_congr h₂.to_equiv }
+/-- Sum of two homeomorphisms. -/
+def sum_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : Sum α γ ≃ₜ Sum β δ where
+  continuous_to_fun := by
+    convert continuous_sum_rec (continuous_inl.comp h₁.continuous) (continuous_inr.comp h₂.continuous)
+    ext x
+    cases x <;> rfl
+  continuous_inv_fun := by
+    convert continuous_sum_rec (continuous_inl.comp h₁.symm.continuous) (continuous_inr.comp h₂.symm.continuous)
+    ext x
+    cases x <;> rfl
+  toEquiv := h₁.to_equiv.sum_congr h₂.to_equiv
 
-/--  Product of two homeomorphisms. -/
-def prod_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : α × γ ≃ₜ β × δ :=
-  { continuous_to_fun := (h₁.continuous.comp continuous_fst).prod_mk (h₂.continuous.comp continuous_snd),
-    continuous_inv_fun := (h₁.symm.continuous.comp continuous_fst).prod_mk (h₂.symm.continuous.comp continuous_snd),
-    toEquiv := h₁.to_equiv.prod_congr h₂.to_equiv }
+/-- Product of two homeomorphisms. -/
+def prod_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : α × γ ≃ₜ β × δ where
+  continuous_to_fun := (h₁.continuous.comp continuous_fst).prod_mk (h₂.continuous.comp continuous_snd)
+  continuous_inv_fun := (h₁.symm.continuous.comp continuous_fst).prod_mk (h₂.symm.continuous.comp continuous_snd)
+  toEquiv := h₁.to_equiv.prod_congr h₂.to_equiv
 
 @[simp]
 theorem prod_congr_symm (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : (h₁.prod_congr h₂).symm = h₁.symm.prod_congr h₂.symm :=
@@ -348,10 +357,11 @@ section
 
 variable (α β γ)
 
-/--  `α × β` is homeomorphic to `β × α`. -/
-def prod_comm : α × β ≃ₜ β × α :=
-  { continuous_to_fun := continuous_snd.prod_mk continuous_fst,
-    continuous_inv_fun := continuous_snd.prod_mk continuous_fst, toEquiv := Equivₓ.prodComm α β }
+/-- `α × β` is homeomorphic to `β × α`. -/
+def prod_comm : α × β ≃ₜ β × α where
+  continuous_to_fun := continuous_snd.prod_mk continuous_fst
+  continuous_inv_fun := continuous_snd.prod_mk continuous_fst
+  toEquiv := Equivₓ.prodComm α β
 
 @[simp]
 theorem prod_comm_symm : (prod_comm α β).symm = prod_comm β α :=
@@ -361,21 +371,22 @@ theorem prod_comm_symm : (prod_comm α β).symm = prod_comm β α :=
 theorem coe_prod_comm : ⇑prod_comm α β = Prod.swap :=
   rfl
 
-/--  `(α × β) × γ` is homeomorphic to `α × (β × γ)`. -/
-def prod_assoc : (α × β) × γ ≃ₜ α × β × γ :=
-  { continuous_to_fun :=
-      (continuous_fst.comp continuous_fst).prod_mk ((continuous_snd.comp continuous_fst).prod_mk continuous_snd),
-    continuous_inv_fun :=
-      (continuous_fst.prod_mk (continuous_fst.comp continuous_snd)).prod_mk (continuous_snd.comp continuous_snd),
-    toEquiv := Equivₓ.prodAssoc α β γ }
+/-- `(α × β) × γ` is homeomorphic to `α × (β × γ)`. -/
+def prod_assoc : (α × β) × γ ≃ₜ α × β × γ where
+  continuous_to_fun :=
+    (continuous_fst.comp continuous_fst).prod_mk ((continuous_snd.comp continuous_fst).prod_mk continuous_snd)
+  continuous_inv_fun :=
+    (continuous_fst.prod_mk (continuous_fst.comp continuous_snd)).prod_mk (continuous_snd.comp continuous_snd)
+  toEquiv := Equivₓ.prodAssoc α β γ
 
-/--  `α × {*}` is homeomorphic to `α`. -/
+/-- `α × {*}` is homeomorphic to `α`. -/
 @[simps (config := { fullyApplied := ff }) apply]
-def prod_punit : α × PUnit ≃ₜ α :=
-  { toEquiv := Equivₓ.prodPunit α, continuous_to_fun := continuous_fst,
-    continuous_inv_fun := continuous_id.prod_mk continuous_const }
+def prod_punit : α × PUnit ≃ₜ α where
+  toEquiv := Equivₓ.prodPunit α
+  continuous_to_fun := continuous_fst
+  continuous_inv_fun := continuous_id.prod_mk continuous_const
 
-/--  `{*} × α` is homeomorphic to `α`. -/
+/-- `{*} × α` is homeomorphic to `α`. -/
 def punit_prod : PUnit × α ≃ₜ α :=
   (prod_comm _ _).trans (prod_punit _)
 
@@ -385,512 +396,63 @@ theorem coe_punit_prod : ⇑punit_prod α = Prod.snd :=
 
 end
 
-/--  `ulift α` is homeomorphic to `α`. -/
-def Ulift.{u, v} {α : Type u} [TopologicalSpace α] : Ulift.{v, u} α ≃ₜ α :=
-  { continuous_to_fun := continuous_ulift_down, continuous_inv_fun := continuous_ulift_up, toEquiv := Equivₓ.ulift }
+/-- `ulift α` is homeomorphic to `α`. -/
+def Ulift.{u, v} {α : Type u} [TopologicalSpace α] : Ulift.{v, u} α ≃ₜ α where
+  continuous_to_fun := continuous_ulift_down
+  continuous_inv_fun := continuous_ulift_up
+  toEquiv := Equivₓ.ulift
 
 section Distrib
 
-/--  `(α ⊕ β) × γ` is homeomorphic to `α × γ ⊕ β × γ`. -/
+/-- `(α ⊕ β) × γ` is homeomorphic to `α × γ ⊕ β × γ`. -/
 def sum_prod_distrib : Sum α β × γ ≃ₜ Sum (α × γ) (β × γ) := by
   refine' (Homeomorph.homeomorphOfContinuousOpen (Equivₓ.sumProdDistrib α β γ).symm _ _).symm
-  ·
-    convert
+  · convert
       continuous_sum_rec ((continuous_inl.comp continuous_fst).prod_mk continuous_snd)
         ((continuous_inr.comp continuous_fst).prod_mk continuous_snd)
     ext1 x
     cases x <;> rfl
-  ·
-    exact
+    
+  · exact
       is_open_map_sum (open_embedding_inl.prod open_embedding_id).IsOpenMap
         (open_embedding_inr.prod open_embedding_id).IsOpenMap
+    
 
-/--  `α × (β ⊕ γ)` is homeomorphic to `α × β ⊕ α × γ`. -/
+/-- `α × (β ⊕ γ)` is homeomorphic to `α × β ⊕ α × γ`. -/
 def prod_sum_distrib : α × Sum β γ ≃ₜ Sum (α × β) (α × γ) :=
   (prod_comm _ _).trans $ sum_prod_distrib.trans $ sum_congr (prod_comm _ _) (prod_comm _ _)
 
 variable {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment "/--" " `(Σ i, σ i) × β` is homeomorphic to `Σ i, (σ i × β)`. -/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.def
-  "def"
-  (Command.declId `sigma_prod_distrib [])
-  (Command.optDeclSig
-   []
-   [(Term.typeSpec
-     ":"
-     (Topology.Homeomorph.«term_≃ₜ_»
-      («term_×_»
-       (Init.Data.Sigma.Basic.«termΣ_,_»
-        "Σ"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-        ", "
-        (Term.app `σ [`i]))
-       "×"
-       `β)
-      " ≃ₜ "
-      (Init.Data.Sigma.Basic.«termΣ_,_»
-       "Σ"
-       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-       ", "
-       («term_×_» (Term.app `σ [`i]) "×" `β))))])
-  (Command.declValSimple
-   ":="
-   («term_$__»
-    `Homeomorph.symm
-    "$"
-    (Term.app
-     `homeomorph_of_continuous_open
-     [(Term.proj (Term.app `Equivₓ.sigmaProdDistrib [`σ `β]) "." `symm)
-      («term_$__»
-       `continuous_sigma
-       "$"
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [(Term.simpleBinder [`i] [])]
-         "=>"
-         (Term.app
-          (Term.proj (Term.app (Term.proj `continuous_sigma_mk "." `comp) [`continuous_fst]) "." `prod_mk)
-          [`continuous_snd]))))
-      («term_$__»
-       `is_open_map_sigma
-       "$"
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [(Term.simpleBinder [`i] [])]
-         "=>"
-         (Term.proj (Term.app (Term.proj `open_embedding_sigma_mk "." `Prod) [`open_embedding_id]) "." `IsOpenMap))))]))
-   [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_$__»
-   `Homeomorph.symm
-   "$"
-   (Term.app
-    `homeomorph_of_continuous_open
-    [(Term.proj (Term.app `Equivₓ.sigmaProdDistrib [`σ `β]) "." `symm)
-     («term_$__»
-      `continuous_sigma
-      "$"
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [(Term.simpleBinder [`i] [])]
-        "=>"
-        (Term.app
-         (Term.proj (Term.app (Term.proj `continuous_sigma_mk "." `comp) [`continuous_fst]) "." `prod_mk)
-         [`continuous_snd]))))
-     («term_$__»
-      `is_open_map_sigma
-      "$"
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [(Term.simpleBinder [`i] [])]
-        "=>"
-        (Term.proj (Term.app (Term.proj `open_embedding_sigma_mk "." `Prod) [`open_embedding_id]) "." `IsOpenMap))))]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app
-   `homeomorph_of_continuous_open
-   [(Term.proj (Term.app `Equivₓ.sigmaProdDistrib [`σ `β]) "." `symm)
-    («term_$__»
-     `continuous_sigma
-     "$"
-     (Term.fun
-      "fun"
-      (Term.basicFun
-       [(Term.simpleBinder [`i] [])]
-       "=>"
-       (Term.app
-        (Term.proj (Term.app (Term.proj `continuous_sigma_mk "." `comp) [`continuous_fst]) "." `prod_mk)
-        [`continuous_snd]))))
-    («term_$__»
-     `is_open_map_sigma
-     "$"
-     (Term.fun
-      "fun"
-      (Term.basicFun
-       [(Term.simpleBinder [`i] [])]
-       "=>"
-       (Term.proj (Term.app (Term.proj `open_embedding_sigma_mk "." `Prod) [`open_embedding_id]) "." `IsOpenMap))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_$__»
-   `is_open_map_sigma
-   "$"
-   (Term.fun
-    "fun"
-    (Term.basicFun
-     [(Term.simpleBinder [`i] [])]
-     "=>"
-     (Term.proj (Term.app (Term.proj `open_embedding_sigma_mk "." `Prod) [`open_embedding_id]) "." `IsOpenMap))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun
-   "fun"
-   (Term.basicFun
-    [(Term.simpleBinder [`i] [])]
-    "=>"
-    (Term.proj (Term.app (Term.proj `open_embedding_sigma_mk "." `Prod) [`open_embedding_id]) "." `IsOpenMap)))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.proj (Term.app (Term.proj `open_embedding_sigma_mk "." `Prod) [`open_embedding_id]) "." `IsOpenMap)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app (Term.proj `open_embedding_sigma_mk "." `Prod) [`open_embedding_id])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `open_embedding_id
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  (Term.proj `open_embedding_sigma_mk "." `Prod)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `open_embedding_sigma_mk
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Term.app (Term.proj `open_embedding_sigma_mk "." `Prod) [`open_embedding_id]) []]
- ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-  `is_open_map_sigma
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(«term_$__»
-   `is_open_map_sigma
-   "$"
-   (Term.fun
-    "fun"
-    (Term.basicFun
-     [(Term.simpleBinder [`i] [])]
-     "=>"
-     (Term.proj
-      (Term.paren "(" [(Term.app (Term.proj `open_embedding_sigma_mk "." `Prod) [`open_embedding_id]) []] ")")
-      "."
-      `IsOpenMap))))
-  []]
- ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  («term_$__»
-   `continuous_sigma
-   "$"
-   (Term.fun
-    "fun"
-    (Term.basicFun
-     [(Term.simpleBinder [`i] [])]
-     "=>"
-     (Term.app
-      (Term.proj (Term.app (Term.proj `continuous_sigma_mk "." `comp) [`continuous_fst]) "." `prod_mk)
-      [`continuous_snd]))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun
-   "fun"
-   (Term.basicFun
-    [(Term.simpleBinder [`i] [])]
-    "=>"
-    (Term.app
-     (Term.proj (Term.app (Term.proj `continuous_sigma_mk "." `comp) [`continuous_fst]) "." `prod_mk)
-     [`continuous_snd])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app
-   (Term.proj (Term.app (Term.proj `continuous_sigma_mk "." `comp) [`continuous_fst]) "." `prod_mk)
-   [`continuous_snd])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `continuous_snd
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  (Term.proj (Term.app (Term.proj `continuous_sigma_mk "." `comp) [`continuous_fst]) "." `prod_mk)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app (Term.proj `continuous_sigma_mk "." `comp) [`continuous_fst])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `continuous_fst
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  (Term.proj `continuous_sigma_mk "." `comp)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `continuous_sigma_mk
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Term.app (Term.proj `continuous_sigma_mk "." `comp) [`continuous_fst]) []]
- ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-  `continuous_sigma
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 0, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(«term_$__»
-   `continuous_sigma
-   "$"
-   (Term.fun
-    "fun"
-    (Term.basicFun
-     [(Term.simpleBinder [`i] [])]
-     "=>"
-     (Term.app
-      (Term.proj
-       (Term.paren "(" [(Term.app (Term.proj `continuous_sigma_mk "." `comp) [`continuous_fst]) []] ")")
-       "."
-       `prod_mk)
-      [`continuous_snd]))))
-  []]
- ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.proj (Term.app `Equivₓ.sigmaProdDistrib [`σ `β]) "." `symm)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `Equivₓ.sigmaProdDistrib [`σ `β])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `β
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `σ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `Equivₓ.sigmaProdDistrib
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `Equivₓ.sigmaProdDistrib [`σ `β]) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `homeomorph_of_continuous_open
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-  `Homeomorph.symm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.optDeclSig', expected 'Lean.Parser.Command.optDeclSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Topology.Homeomorph.«term_≃ₜ_»
-   («term_×_»
-    (Init.Data.Sigma.Basic.«termΣ_,_»
-     "Σ"
-     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-     ", "
-     (Term.app `σ [`i]))
-    "×"
-    `β)
-   " ≃ₜ "
-   (Init.Data.Sigma.Basic.«termΣ_,_»
-    "Σ"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-    ", "
-    («term_×_» (Term.app `σ [`i]) "×" `β)))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.Homeomorph.«term_≃ₜ_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Init.Data.Sigma.Basic.«termΣ_,_»
-   "Σ"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-   ", "
-   («term_×_» (Term.app `σ [`i]) "×" `β))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_×_» (Term.app `σ [`i]) "×" `β)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_×_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `β
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 35 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 35, term))
-  (Term.app `σ [`i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `σ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 36 >? 1022, (some 1023, term) <=? (some 35, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 35, (some 35, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- `(Σ i, σ i) × β` is homeomorphic to `Σ i, (σ i × β)`. -/
-  def
-    sigma_prod_distrib
-    : Σ i , σ i × β ≃ₜ Σ i , σ i × β
-    :=
-      Homeomorph.symm
-        $
-        homeomorph_of_continuous_open
-          Equivₓ.sigmaProdDistrib σ β . symm
-            continuous_sigma $ fun i => continuous_sigma_mk . comp continuous_fst . prod_mk continuous_snd
-            is_open_map_sigma $ fun i => open_embedding_sigma_mk . Prod open_embedding_id . IsOpenMap
+def sigma_prod_distrib : (Σ i, σ i) × β ≃ₜ Σ i, σ i × β :=
+  Homeomorph.symm $
+    homeomorph_of_continuous_open (Equivₓ.sigmaProdDistrib σ β).symm
+      (continuous_sigma $ fun i => (continuous_sigma_mk.comp continuous_fst).prod_mk continuous_snd)
+      (is_open_map_sigma $ fun i => (open_embedding_sigma_mk.Prod open_embedding_id).IsOpenMap)
 
 end Distrib
 
-/--  If `ι` has a unique element, then `ι → α` is homeomorphic to `α`. -/
+/-- If `ι` has a unique element, then `ι → α` is homeomorphic to `α`. -/
 @[simps (config := { fullyApplied := ff })]
-def fun_unique (ι α : Type _) [Unique ι] [TopologicalSpace α] : (ι → α) ≃ₜ α :=
-  { toEquiv := Equivₓ.funUnique ι α, continuous_to_fun := continuous_apply _,
-    continuous_inv_fun := continuous_pi fun _ => continuous_id }
+def fun_unique (ι α : Type _) [Unique ι] [TopologicalSpace α] : (ι → α) ≃ₜ α where
+  toEquiv := Equivₓ.funUnique ι α
+  continuous_to_fun := continuous_apply _
+  continuous_inv_fun := continuous_pi fun _ => continuous_id
 
-/--  Homeomorphism between dependent functions `Π i : fin 2, α i` and `α 0 × α 1`. -/
+/-- Homeomorphism between dependent functions `Π i : fin 2, α i` and `α 0 × α 1`. -/
 @[simps (config := { fullyApplied := ff })]
-def pi_fin_two.{u} (α : Finₓ 2 → Type u) [∀ i, TopologicalSpace (α i)] : (∀ i, α i) ≃ₜ α 0 × α 1 :=
-  { toEquiv := piFinTwoEquiv α, continuous_to_fun := (continuous_apply 0).prod_mk (continuous_apply 1),
-    continuous_inv_fun := continuous_pi $ Finₓ.forall_fin_two.2 ⟨continuous_fst, continuous_snd⟩ }
+def pi_fin_two.{u} (α : Finₓ 2 → Type u) [∀ i, TopologicalSpace (α i)] : (∀ i, α i) ≃ₜ α 0 × α 1 where
+  toEquiv := piFinTwoEquiv α
+  continuous_to_fun := (continuous_apply 0).prod_mk (continuous_apply 1)
+  continuous_inv_fun := continuous_pi $ Finₓ.forall_fin_two.2 ⟨continuous_fst, continuous_snd⟩
 
-/--  Homeomorphism between `α² = fin 2 → α` and `α × α`. -/
+/-- Homeomorphism between `α² = fin 2 → α` and `α × α`. -/
 @[simps (config := { fullyApplied := ff })]
 def fin_two_arrow : (Finₓ 2 → α) ≃ₜ α × α :=
   { pi_fin_two fun _ => α with toEquiv := finTwoArrowEquiv α }
 
-/-- 
-A subset of a topological space is homeomorphic to its image under a homeomorphism.
+/-- A subset of a topological space is homeomorphic to its image under a homeomorphism.
 -/
 def image (e : α ≃ₜ β) (s : Set α) : s ≃ₜ e '' s :=
   { e.to_equiv.image s with
@@ -900,4 +462,69 @@ def image (e : α ≃ₜ β) (s : Set α) : s ≃ₜ e '' s :=
       continuity! }
 
 end Homeomorph
+
+namespace Continuous
+
+variable [TopologicalSpace α] [TopologicalSpace β]
+
+theorem continuous_symm_of_equiv_compact_to_t2 [CompactSpace α] [T2Space β] {f : α ≃ β} (hf : Continuous f) :
+    Continuous f.symm := by
+  rw [continuous_iff_is_closed]
+  intro C hC
+  have hC' : IsClosed (f '' C) := (hC.is_compact.image hf).IsClosed
+  rwa [Equivₓ.image_eq_preimage] at hC'
+
+/-- Continuous equivalences from a compact space to a T2 space are homeomorphisms.
+
+This is not true when T2 is weakened to T1
+(see `continuous.homeo_of_equiv_compact_to_t2.t1_counterexample`). -/
+@[simps]
+def homeo_of_equiv_compact_to_t2 [CompactSpace α] [T2Space β] {f : α ≃ β} (hf : Continuous f) : α ≃ₜ β :=
+  { f with continuous_to_fun := hf, continuous_inv_fun := hf.continuous_symm_of_equiv_compact_to_t2 }
+
+/-- A concrete counterexample shows that  `continuous.homeo_of_equiv_compact_to_t2`
+cannot be generalized from `t2_space` to `t1_space`.
+
+Let `α = ℕ` be the one-point compactification of `{1, 2, ...}` with the discrete topology,
+where `0` is the adjoined point, and let `β = ℕ` be given the cofinite topology.
+Then `α` is compact, `β` is T1, and the identity map `id : α → β` is a continuous equivalence
+that is not a homeomorphism.
+-/
+theorem homeo_of_equiv_compact_to_t2.t1_counterexample :
+    ∃ (α β : Type)(Iα : TopologicalSpace α)(Iβ : TopologicalSpace β),
+      CompactSpace α ∧ T1Space β ∧ ∃ f : α ≃ β, Continuous f ∧ ¬Continuous f.symm :=
+  by
+  let topα : TopologicalSpace ℕ := nhdsAdjoint 0 Filter.cofinite
+  let topβ : TopologicalSpace ℕ := cofiniteTopology ℕ
+  refine' ⟨ℕ, ℕ, topα, topβ, _, t1_space_cofinite, Equivₓ.refl ℕ, _, _⟩
+  · fconstructor
+    rw [is_compact_iff_ultrafilter_le_nhds]
+    intro f
+    suffices ∃ a, ↑f ≤ @nhds _ topα a by
+      simpa
+    by_cases' hf : ↑f ≤ @nhds _ topα 0
+    · exact ⟨0, hf⟩
+      
+    · obtain ⟨U, h0U, hU_fin, hUf⟩ : ∃ U : Set ℕ, 0 ∈ U ∧ Uᶜ.Finite ∧ Uᶜ ∈ f := by
+        rw [nhds_adjoint_nhds, Filter.le_def] at hf
+        push_neg  at hf
+        simpa [and_assoc, ← Ultrafilter.compl_mem_iff_not_mem] using hf
+      obtain ⟨n, hn', hn⟩ := Ultrafilter.eq_principal_of_finite_mem hU_fin hUf
+      rw [hn]
+      exact ⟨n, @mem_of_mem_nhds _ topα n⟩
+      
+    
+  · rw [continuous_iff_coinduced_le]
+    change topα ≤ topβ
+    rw [gc_nhds]
+    simp [nhds_cofinite]
+    
+  · intro h
+    replace h : topβ ≤ topα := by
+      simpa [continuous_iff_coinduced_le, coinduced_id] using h
+    rw [le_nhds_adjoint_iff] at h
+    exact (finite_singleton 1).infinite_compl (h.2 1 one_ne_zero ⟨1, mem_singleton 1⟩)
+    
+
+end Continuous
 

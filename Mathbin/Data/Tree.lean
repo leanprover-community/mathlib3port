@@ -14,13 +14,11 @@ to be defined and is better suited for in-kernel computation.
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_reflect
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
-/--  A binary tree with values stored in non-leaf nodes. -/
+/-- A binary tree with values stored in non-leaf nodes. -/
 inductive Tree.{u} (α : Type u) : Type u
   | nil : Tree
   | node : α → Tree → Tree → Tree
-  deriving [anonymous], [anonymous]
+  deriving has_reflect, DecidableEq
 
 namespace Tree
 
@@ -28,7 +26,7 @@ universe u
 
 variable {α : Type u}
 
-/--  Construct a string representation of a tree. Provides a `has_repr` instance. -/
+/-- Construct a string representation of a tree. Provides a `has_repr` instance. -/
 def reprₓ [HasRepr α] : Tree α → Stringₓ
   | nil => "nil"
   | node a t1 t2 => "tree.node " ++ HasRepr.repr a ++ " (" ++ reprₓ t1 ++ ") (" ++ reprₓ t2 ++ ")"
@@ -39,13 +37,13 @@ instance [HasRepr α] : HasRepr (Tree α) :=
 instance : Inhabited (Tree α) :=
   ⟨nil⟩
 
-/--  Makes a `tree α` out of a red-black tree. -/
+/-- Makes a `tree α` out of a red-black tree. -/
 def of_rbnode : Rbnode α → Tree α
   | Rbnode.leaf => nil
   | Rbnode.red_node l a r => node a (of_rbnode l) (of_rbnode r)
   | Rbnode.black_node l a r => node a (of_rbnode l) (of_rbnode r)
 
-/--  Finds the index of an element in the tree assuming the tree has been
+/-- Finds the index of an element in the tree assuming the tree has been
 constructed according to the provided decidable order on its elements.
 If it hasn't, the result will be incorrect. If it has, but the element
 is not in the tree, returns none. -/
@@ -57,7 +55,7 @@ def index_of (lt : α → α → Prop) [DecidableRel lt] (x : α) : Tree α → 
     | Ordering.eq => some PosNum.one
     | Ordering.gt => PosNum.bit1 <$> index_of t₂
 
-/--  Retrieves an element uniquely determined by a `pos_num` from the tree,
+/-- Retrieves an element uniquely determined by a `pos_num` from the tree,
 taking the following path to get to the element:
 - `bit0` - go to left child
 - `bit1` - go to right child
@@ -68,12 +66,12 @@ def get : PosNum → Tree α → Option α
   | PosNum.bit0 n, node a t₁ t₂ => t₁.get n
   | PosNum.bit1 n, node a t₁ t₂ => t₂.get n
 
-/--  Retrieves an element from the tree, or the provided default value
+/-- Retrieves an element from the tree, or the provided default value
 if the index is invalid. See `tree.get`. -/
 def get_or_else (n : PosNum) (t : Tree α) (v : α) : α :=
   (t.get n).getOrElse v
 
-/--  Apply a function to each value in the tree.  This is the `map` function for the `tree` functor.
+/-- Apply a function to each value in the tree.  This is the `map` function for the `tree` functor.
 TODO: implement `traversable tree`. -/
 def map {β} (f : α → β) : Tree α → Tree β
   | nil => nil

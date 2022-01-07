@@ -23,11 +23,10 @@ variable {J : Type v} [category.{v} J] {J' : Type v} [category.{v} J']
 
 variable {C : Type u} [category.{v} C] {C' : Type u} [category.{v} C']
 
-/--  A cone is a limit cone iff it is terminal. -/
+/-- A cone is a limit cone iff it is terminal. -/
 def cone.is_limit_equiv_is_terminal {F : J ⥤ C} (c : cone F) : is_limit c ≃ is_terminal c :=
   is_limit.iso_unique_cone_morphism.toEquiv.trans
-    { toFun := fun h => by
-        exact is_terminal.of_unique _,
+    { toFun := fun h => is_terminal.of_unique _,
       invFun := fun h s => ⟨⟨is_terminal.from h s⟩, fun a => is_terminal.hom_ext h a _⟩,
       left_inv := by
         tidy,
@@ -42,21 +41,20 @@ theorem is_terminal.from_eq_lift_cone_morphism {F : J ⥤ C} {c : cone F} (hc : 
     is_terminal.from hc s = ((cone.is_limit_equiv_is_terminal _).symm hc).liftConeMorphism s := by
   convert (is_limit.lift_cone_morphism_eq_is_terminal_from _ s).symm
 
-/--  If `G : cone F ⥤ cone F'` preserves terminal objects, it preserves limit cones. -/
+/-- If `G : cone F ⥤ cone F'` preserves terminal objects, it preserves limit cones. -/
 def is_limit.of_preserves_cone_terminal {F : J ⥤ C} {F' : J' ⥤ C'} (G : cone F ⥤ cone F')
-    [preserves_limit (functor.empty _) G] {c : cone F} (hc : is_limit c) : is_limit (G.obj c) :=
+    [preserves_limit (functor.empty.{v} _) G] {c : cone F} (hc : is_limit c) : is_limit (G.obj c) :=
   (cone.is_limit_equiv_is_terminal _).symm $ (cone.is_limit_equiv_is_terminal _ hc).isTerminalObj _ _
 
-/--  If `G : cone F ⥤ cone F'` reflects terminal objects, it reflects limit cones. -/
+/-- If `G : cone F ⥤ cone F'` reflects terminal objects, it reflects limit cones. -/
 def is_limit.of_reflects_cone_terminal {F : J ⥤ C} {F' : J' ⥤ C'} (G : cone F ⥤ cone F')
-    [reflects_limit (functor.empty _) G] {c : cone F} (hc : is_limit (G.obj c)) : is_limit c :=
+    [reflects_limit (functor.empty.{v} _) G] {c : cone F} (hc : is_limit (G.obj c)) : is_limit c :=
   (cone.is_limit_equiv_is_terminal _).symm $ (cone.is_limit_equiv_is_terminal _ hc).isTerminalOfObj _ _
 
-/--  A cocone is a colimit cocone iff it is initial. -/
+/-- A cocone is a colimit cocone iff it is initial. -/
 def cocone.is_colimit_equiv_is_initial {F : J ⥤ C} (c : cocone F) : is_colimit c ≃ is_initial c :=
   is_colimit.iso_unique_cocone_morphism.toEquiv.trans
-    { toFun := fun h => by
-        exact is_initial.of_unique _,
+    { toFun := fun h => is_initial.of_unique _,
       invFun := fun h s => ⟨⟨is_initial.to h s⟩, fun a => is_initial.hom_ext h a _⟩,
       left_inv := by
         tidy,
@@ -71,14 +69,14 @@ theorem is_initial.to_eq_desc_cocone_morphism {F : J ⥤ C} {c : cocone F} (hc :
     is_initial.to hc s = ((cocone.is_colimit_equiv_is_initial _).symm hc).descCoconeMorphism s := by
   convert (is_colimit.desc_cocone_morphism_eq_is_initial_to _ s).symm
 
-/--  If `G : cocone F ⥤ cocone F'` preserves initial objects, it preserves colimit cocones. -/
+/-- If `G : cocone F ⥤ cocone F'` preserves initial objects, it preserves colimit cocones. -/
 def is_colimit.of_preserves_cocone_initial {F : J ⥤ C} {F' : J' ⥤ C'} (G : cocone F ⥤ cocone F')
-    [preserves_colimit (functor.empty _) G] {c : cocone F} (hc : is_colimit c) : is_colimit (G.obj c) :=
+    [preserves_colimit (functor.empty.{v} _) G] {c : cocone F} (hc : is_colimit c) : is_colimit (G.obj c) :=
   (cocone.is_colimit_equiv_is_initial _).symm $ (cocone.is_colimit_equiv_is_initial _ hc).isInitialObj _ _
 
-/--  If `G : cocone F ⥤ cocone F'` reflects initial objects, it reflects colimit cocones. -/
+/-- If `G : cocone F ⥤ cocone F'` reflects initial objects, it reflects colimit cocones. -/
 def is_colimit.of_reflects_cocone_initial {F : J ⥤ C} {F' : J' ⥤ C'} (G : cocone F ⥤ cocone F')
-    [reflects_colimit (functor.empty _) G] {c : cocone F} (hc : is_colimit (G.obj c)) : is_colimit c :=
+    [reflects_colimit (functor.empty.{v} _) G] {c : cocone F} (hc : is_colimit (G.obj c)) : is_colimit c :=
   (cocone.is_colimit_equiv_is_initial _).symm $ (cocone.is_colimit_equiv_is_initial _ hc).isInitialOfObj _ _
 
 end CategoryTheory.Limits

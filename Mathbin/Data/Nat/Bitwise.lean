@@ -44,46 +44,45 @@ theorem bit_eq_zero {n : ℕ} {b : Bool} : n.bit b = 0 ↔ n = 0 ∧ b = ff := b
 
 theorem zero_of_test_bit_eq_ff {n : ℕ} (h : ∀ i, test_bit n i = ff) : n = 0 := by
   induction' n using Nat.binaryRec with b n hn
-  ·
-    rfl
-  ·
-    have : b = ff := by
+  · rfl
+    
+  · have : b = ff := by
       simpa using h 0
     rw [this, bit_ff, bit0_val,
       hn fun i => by
-        rw [← h (i+1), test_bit_succ],
+        rw [← h (i + 1), test_bit_succ],
       mul_zero]
+    
 
 @[simp]
 theorem zero_test_bit (i : ℕ) : test_bit 0 i = ff := by
   simp [test_bit]
 
-/--  Bitwise extensionality: Two numbers agree if they agree at every bit position. -/
+/-- Bitwise extensionality: Two numbers agree if they agree at every bit position. -/
 theorem eq_of_test_bit_eq {n m : ℕ} (h : ∀ i, test_bit n i = test_bit m i) : n = m := by
   induction' n using Nat.binaryRec with b n hn generalizing m
-  ·
-    simp only [zero_test_bit] at h
+  · simp only [zero_test_bit] at h
     exact (zero_of_test_bit_eq_ff fun i => (h i).symm).symm
+    
   induction' m using Nat.binaryRec with b' m hm
-  ·
-    simp only [zero_test_bit] at h
+  · simp only [zero_test_bit] at h
     exact zero_of_test_bit_eq_ff h
+    
   suffices h' : n = m
-  ·
-    rw [h',
+  · rw [h',
       show b = b' by
         simpa using h 0]
+    
   exact
     hn fun i => by
-      convert h (i+1) using 1 <;> rw [test_bit_succ]
+      convert h (i + 1) using 1 <;> rw [test_bit_succ]
 
 theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) : ∃ i, test_bit n i = tt ∧ ∀ j, i < j → test_bit n j = ff := by
   induction' n using Nat.binaryRec with b n hn
-  ·
-    exact False.elim (h rfl)
+  · exact False.elim (h rfl)
+    
   by_cases' h' : n = 0
-  ·
-    subst h'
+  · subst h'
     rw
       [show b = tt by
         revert h
@@ -94,10 +93,10 @@ theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) : ∃ i, test_bit n 
           rw [test_bit_zero], fun j hj => _⟩⟩
     obtain ⟨j', rfl⟩ := exists_eq_succ_of_ne_zero (ne_of_gtₓ hj)
     rw [test_bit_succ, zero_test_bit]
-  ·
-    obtain ⟨k, ⟨hk, hk'⟩⟩ := hn h'
+    
+  · obtain ⟨k, ⟨hk, hk'⟩⟩ := hn h'
     refine'
-      ⟨k+1,
+      ⟨k + 1,
         ⟨by
           rw [test_bit_succ, hk], fun j hj => _⟩⟩
     obtain ⟨j', rfl⟩ :=
@@ -105,39 +104,39 @@ theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) : ∃ i, test_bit n 
         (show j ≠ 0 by
           linarith)
     exact (test_bit_succ _ _ _).trans (hk' _ (lt_of_succ_lt_succ hj))
+    
 
 theorem lt_of_test_bit {n m : ℕ} (i : ℕ) (hn : test_bit n i = ff) (hm : test_bit m i = tt)
     (hnm : ∀ j, i < j → test_bit n j = test_bit m j) : n < m := by
   induction' n using Nat.binaryRec with b n hn' generalizing i m
-  ·
-    contrapose! hm
+  · contrapose! hm
     rw [le_zero_iff] at hm
     simp [hm]
+    
   induction' m using Nat.binaryRec with b' m hm' generalizing i
-  ·
-    exact False.elim (Bool.ff_ne_tt ((zero_test_bit i).symm.trans hm))
+  · exact False.elim (Bool.ff_ne_tt ((zero_test_bit i).symm.trans hm))
+    
   by_cases' hi : i = 0
-  ·
-    subst hi
+  · subst hi
     simp only [test_bit_zero] at hn hm
-    have : n = m := by
-      exact
-        eq_of_test_bit_eq fun i => by
-          convert
-              hnm (i+1)
-                (by
-                  decide) using
-              1 <;>
-            rw [test_bit_succ]
+    have : n = m :=
+      eq_of_test_bit_eq fun i => by
+        convert
+            hnm (i + 1)
+              (by
+                decide) using
+            1 <;>
+          rw [test_bit_succ]
     rw [hn, hm, this, bit_ff, bit_tt, bit0_val, bit1_val]
     exact lt_add_one _
-  ·
-    obtain ⟨i', rfl⟩ := exists_eq_succ_of_ne_zero hi
+    
+  · obtain ⟨i', rfl⟩ := exists_eq_succ_of_ne_zero hi
     simp only [test_bit_succ] at hn hm
     have :=
       hn' _ hn hm fun j hj => by
         convert hnm j.succ (succ_lt_succ hj) using 1 <;> rw [test_bit_succ]
     cases b <;> cases b' <;> simp only [bit_ff, bit_tt, bit0_val n, bit1_val n, bit0_val m, bit1_val m] <;> linarith
+    
 
 @[simp]
 theorem test_bit_two_pow_self (n : ℕ) : test_bit (2 ^ n) n = tt := by
@@ -146,29 +145,30 @@ theorem test_bit_two_pow_self (n : ℕ) : test_bit (2 ^ n) n = tt := by
 theorem test_bit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : test_bit (2 ^ n) m = ff := by
   rw [test_bit, shiftr_eq_div_pow]
   cases' hm.lt_or_lt with hm hm
-  ·
-    rw [Nat.div_eq_zero, bodd_zero]
+  · rw [Nat.div_eq_zero, bodd_zero]
     exact Nat.pow_lt_pow_of_lt_right one_lt_two hm
-  ·
-    rw [pow_div hm.le zero_lt_two, ← tsub_add_cancel_of_le (succ_le_of_lt $ tsub_pos_of_lt hm)]
+    
+  · rw [pow_div hm.le zero_lt_two, ← tsub_add_cancel_of_le (succ_le_of_lt $ tsub_pos_of_lt hm)]
     simp [pow_succₓ]
+    
 
 theorem test_bit_two_pow (n m : ℕ) : test_bit (2 ^ n) m = (n = m) := by
   by_cases' n = m
-  ·
-    cases h
+  · cases h
     simp
-  ·
-    rw [test_bit_two_pow_of_ne h]
+    
+  · rw [test_bit_two_pow_of_ne h]
     simp [h]
+    
 
-/--  If `f` is a commutative operation on bools such that `f ff ff = ff`, then `bitwise f` is also
+/-- If `f` is a commutative operation on bools such that `f ff ff = ff`, then `bitwise f` is also
     commutative. -/
 theorem bitwise_comm {f : Bool → Bool → Bool} (hf : ∀ b b', f b b' = f b' b) (hf' : f ff ff = ff) (n m : ℕ) :
     bitwise f n m = bitwise f m n :=
-  suffices bitwise f = swap (bitwise f)by
+  suffices bitwise f = swap (bitwise f) by
     conv_lhs => rw [this]
-  calc bitwise f = bitwise (swap f) := congr_argₓ _ $ funext $ fun _ => funext $ hf _
+  calc
+    bitwise f = bitwise (swap f) := congr_argₓ _ $ funext $ fun _ => funext $ hf _
     _ = swap (bitwise f) := bitwise_swap hf'
     
 
@@ -205,8 +205,8 @@ theorem zero_lor (n : ℕ) : lor 0 n = n := by
 theorem lor_zero (n : ℕ) : lor n 0 = n := by
   simp [lor]
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/--  Proving associativity of bitwise operations in general essentially boils down to a huge case
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=
   sorry
@@ -229,10 +229,11 @@ theorem lxor_self (n : ℕ) : lxor n n = 0 :=
     simp
 
 theorem lxor_right_inj {n m m' : ℕ} (h : lxor n m = lxor n m') : m = m' :=
-  calc m = lxor n (lxor n m') := by
-    simp [← lxor_assoc, ← h]
+  calc
+    m = lxor n (lxor n m') := by
+      simp [← lxor_assoc, ← h]
     _ = m' := by
-    simp [← lxor_assoc]
+      simp [← lxor_assoc]
     
 
 theorem lxor_left_inj {n n' m : ℕ} (h : lxor n m = lxor n' m) : n = n' := by
@@ -246,34 +247,40 @@ theorem lxor_eq_zero {n m : ℕ} : lxor n m = 0 ↔ n = m :=
     rintro rfl
     exact lxor_self _⟩
 
--- failed to format: format: uncaught backtrack exception
-theorem
-  lxor_trichotomy
-  { a b c : ℕ } ( h : lxor a ( lxor b c ) ≠ 0 ) : lxor b c < a ∨ lxor a c < b ∨ lxor a b < c
-  :=
-    by
-      set v := lxor a ( lxor b c ) with hv
-        have hab : lxor a b = lxor c v := by rw [ hv ] conv_rhs => rw [ lxor_comm ] simp [ lxor_assoc ]
-        have
-          hac
-            : lxor a c = lxor b v
-            :=
-            by
-              rw [ hv ]
-                conv_rhs => congr skip rw [ lxor_comm ]
-                rw [ ← lxor_assoc , ← lxor_assoc , lxor_self , zero_lxor , lxor_comm ]
-        have hbc : lxor b c = lxor a v := by simp [ hv , ← lxor_assoc ]
-        obtain ⟨ i , ⟨ hi , hi' ⟩ ⟩ := exists_most_significant_bit h
-        have
-          : test_bit a i = tt ∨ test_bit b i = tt ∨ test_bit c i = tt
-            :=
-            by
-              contrapose! hi
-                simp only [ eq_ff_eq_not_eq_tt , Ne , test_bit_lxor ] at hi ⊢
-                rw [ hi . 1 , hi . 2 . 1 , hi . 2 . 2 , bxor_ff , bxor_ff ]
-        rcases this with ( h | h | h ) <;> [ · left rw [ hbc ] , · right left rw [ hac ] , · right right rw [ hab ] ]
-          <;>
-          exact lt_of_test_bit i ( by simp [ h , hi ] ) h fun j hj => by simp [ hi' _ hj ]
+theorem lxor_trichotomy {a b c : ℕ} (h : lxor a (lxor b c) ≠ 0) : lxor b c < a ∨ lxor a c < b ∨ lxor a b < c := by
+  set v := lxor a (lxor b c) with hv
+  have hab : lxor a b = lxor c v := by
+    rw [hv]
+    conv_rhs => rw [lxor_comm]simp [lxor_assoc]
+  have hac : lxor a c = lxor b v := by
+    rw [hv]
+    conv_rhs => congr skip rw [lxor_comm]
+    rw [← lxor_assoc, ← lxor_assoc, lxor_self, zero_lxor, lxor_comm]
+  have hbc : lxor b c = lxor a v := by
+    simp [hv, ← lxor_assoc]
+  obtain ⟨i, ⟨hi, hi'⟩⟩ := exists_most_significant_bit h
+  have : test_bit a i = tt ∨ test_bit b i = tt ∨ test_bit c i = tt := by
+    contrapose! hi
+    simp only [eq_ff_eq_not_eq_tt, Ne, test_bit_lxor] at hi⊢
+    rw [hi.1, hi.2.1, hi.2.2, bxor_ff, bxor_ff]
+  rcases this with (h | h | h) <;>
+      [· left
+        rw [hbc]
+        ,
+      · right
+        left
+        rw [hac]
+        ,
+      · right
+        right
+        rw [hab]
+        ] <;>
+    exact
+      lt_of_test_bit i
+        (by
+          simp [h, hi])
+        h fun j hj => by
+        simp [hi' _ hj]
 
 end Nat
 

@@ -13,8 +13,7 @@ The implementation of `uchange` is efficient. Both `uchange.up` and
 
 universe u v
 
-/-- 
-`unchecked_cast' a : β` performs an unchecked cast of `(a : α)` to `β`.
+/-- `unchecked_cast' a : β` performs an unchecked cast of `(a : α)` to `β`.
 
 Unlike `unchecked_cast`, it can cast across universes. The VM implementation
 is guaranteed to be the identity.
@@ -23,8 +22,7 @@ is guaranteed to be the identity.
 unsafe irreducible_def unchecked_cast' {α : Sort u} {β : Sort v} (a : α) : β :=
   Plift.down $ @cast (α → β → Plift β) (β → α → Plift β) undefined (fun _ a => Plift.up a) (cast undefined PUnit.unit) a
 
-/-- 
-`uchange (α : Sort v) : Sort u` is an equivalent type in a different universe.
+/-- `uchange (α : Sort v) : Sort u` is an equivalent type in a different universe.
 
 In the VM, both `α` and `uchange α` have the same representation.
 
@@ -43,8 +41,7 @@ unsafe instance [DecidableEq α] : DecidableEq (uchange α) :=
     (by
       infer_instance : _root_.decidable_eq α)
 
-/-- 
-`uchange.down` embeds `α` to `uchange α`.
+/-- `uchange.down` embeds `α` to `uchange α`.
 
 The VM implementation is guaranteed to be the identity.
 -/
@@ -52,8 +49,7 @@ The VM implementation is guaranteed to be the identity.
 unsafe def down {α} (a : α) : uchange α :=
   unchecked_cast' a
 
-/-- 
-`uchange.up` extracts from `uchange α` an `α`.
+/-- `uchange.up` extracts from `uchange α` an `α`.
 
 The VM implementation is guaranteed to be the identity.
 -/

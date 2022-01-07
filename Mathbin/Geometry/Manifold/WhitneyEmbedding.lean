@@ -45,12 +45,12 @@ In this section we prove a version of the Whitney embedding theorem: for any com
 
 variable [T2Space M] [Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
 
-/--  Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
-def embedding_pi_tangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯ :=
-  { toFun := fun x i => (f i x • extChartAt I (f.c i) x, f i x),
-    times_cont_mdiff_to_fun :=
-      times_cont_mdiff_pi_space.2 $ fun i =>
-        ((f i).smooth_smul times_cont_mdiff_on_ext_chart_at).prod_mk_space (f i).Smooth }
+/-- Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
+def embedding_pi_tangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯ where
+  toFun := fun x i => (f i x • extChartAt I (f.c i) x, f i x)
+  times_cont_mdiff_to_fun :=
+    times_cont_mdiff_pi_space.2 $ fun i =>
+      ((f i).smooth_smul times_cont_mdiff_on_ext_chart_at).prod_mk_space (f i).Smooth
 
 @[local simp]
 theorem embedding_pi_tangent_coe : ⇑f.embedding_pi_tangent = fun x i => (f i x • extChartAt I (f.c i) x, f i x) :=
@@ -96,7 +96,7 @@ theorem embedding_pi_tangent_injective_mfderiv (x : M) (hx : x ∈ s) :
     injective (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embedding_pi_tangent x) :=
   LinearMap.ker_eq_bot.1 (f.embedding_pi_tangent_ker_mfderiv x hx)
 
-/--  Baby version of the Whitney weak embedding theorem: if `M` admits a finite covering by
+/-- Baby version of the Whitney weak embedding theorem: if `M` admits a finite covering by
 supports of bump functions, then for some `n` it can be immersed into the `n`-dimensional
 Euclidean space. -/
 theorem exists_immersion_euclidean (f : SmoothBumpCovering ι I M) :
@@ -115,7 +115,7 @@ theorem exists_immersion_euclidean (f : SmoothBumpCovering ι I M) :
 
 end SmoothBumpCovering
 
-/--  Baby version of the Whitney weak embedding theorem: if `M` admits a finite covering by
+/-- Baby version of the Whitney weak embedding theorem: if `M` admits a finite covering by
 supports of bump functions, then for some `n` it can be embedded into the `n`-dimensional
 Euclidean space. -/
 theorem exists_embedding_euclidean_of_compact [T2Space M] [CompactSpace M] :

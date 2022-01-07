@@ -19,7 +19,7 @@ noncomputable section
 
 namespace ContinuousLinearMap
 
-/--  Formal power series of a continuous linear map `f : E →L[𝕜] F` at `x : E`:
+/-- Formal power series of a continuous linear map `f : E →L[𝕜] F` at `x : E`:
 `f y = f x + f (y - x)`. -/
 @[simp]
 def fpower_series (f : E →L[𝕜] F) (x : E) : FormalMultilinearSeries 𝕜 E F
@@ -28,7 +28,7 @@ def fpower_series (f : E →L[𝕜] F) (x : E) : FormalMultilinearSeries 𝕜 E 
   | _ => 0
 
 @[simp]
-theorem fpower_series_apply_add_two (f : E →L[𝕜] F) (x : E) (n : ℕ) : f.fpower_series x (n+2) = 0 :=
+theorem fpower_series_apply_add_two (f : E →L[𝕜] F) (x : E) (n : ℕ) : f.fpower_series x (n + 2) = 0 :=
   rfl
 
 @[simp]
@@ -49,7 +49,7 @@ protected theorem HasFpowerSeriesAt (f : E →L[𝕜] F) (x : E) : HasFpowerSeri
 protected theorem AnalyticAt (f : E →L[𝕜] F) (x : E) : AnalyticAt 𝕜 f x :=
   (f.has_fpower_series_at x).AnalyticAt
 
-/--  Reinterpret a bilinear map `f : E →L[𝕜] F →L[𝕜] G` as a multilinear map
+/-- Reinterpret a bilinear map `f : E →L[𝕜] F →L[𝕜] G` as a multilinear map
 `(E × F) [×2]→L[𝕜] G`. This multilinear map is the second term in the formal
 multilinear series expansion of `uncurry f`. It is given by
 `f.uncurry_bilinear ![(x, y), (x', y')] = f x y'`. -/
@@ -63,7 +63,7 @@ theorem uncurry_bilinear_apply (f : E →L[𝕜] F →L[𝕜] G) (m : Finₓ 2 �
     f.uncurry_bilinear m = f (m 0).1 (m 1).2 :=
   rfl
 
-/--  Formal multilinear series expansion of a bilinear function `f : E →L[𝕜] F →L[𝕜] G`. -/
+/-- Formal multilinear series expansion of a bilinear function `f : E →L[𝕜] F →L[𝕜] G`. -/
 @[simp]
 def fpower_series_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) : FormalMultilinearSeries 𝕜 (E × F) G
   | 0 => ContinuousMultilinearMap.curry0 𝕜 _ (f x.1 x.2)

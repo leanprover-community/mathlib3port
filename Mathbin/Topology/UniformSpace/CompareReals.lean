@@ -47,21 +47,20 @@ real numbers, completion, uniform spaces
 
 open Set Function Filter CauSeq UniformSpace
 
-/--  The metric space uniform structure on ℚ (which presupposes the existence
+/-- The metric space uniform structure on ℚ (which presupposes the existence
 of real numbers) agrees with the one coming directly from (abs : ℚ → ℚ). -/
 theorem Rat.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) = MetricSpace.toUniformSpace' := by
   ext s
   erw [Metric.mem_uniformity_dist, IsAbsoluteValue.mem_uniformity]
   constructor <;> rintro ⟨ε, ε_pos, h⟩
-  ·
-    use ε, by
+  · use ε, by
       exact_mod_cast ε_pos
     intro a b hab
     apply h
     rw [Rat.dist_eq, abs_sub_comm] at hab
     exact_mod_cast hab
-  ·
-    obtain ⟨ε', h', h''⟩ : ∃ ε' : ℚ, 0 < ε' ∧ (ε' : ℝ) < ε
+    
+  · obtain ⟨ε', h', h''⟩ : ∃ ε' : ℚ, 0 < ε' ∧ (ε' : ℝ) < ε
     exact exists_pos_rat_lt ε_pos
     use ε', h'
     intro a b hab
@@ -69,48 +68,47 @@ theorem Rat.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) 
     rw [Rat.dist_eq, abs_sub_comm]
     refine' lt_transₓ _ h''
     exact_mod_cast hab
+    
 
-/--  Cauchy reals packaged as a completion of ℚ using the absolute value route. -/
-noncomputable def rationalCauSeqPkg : @AbstractCompletion ℚ $ IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) :=
-  { Space := ℝ, coe := (coeₓ : ℚ → ℝ),
-    uniformStruct := by
-      infer_instance,
-    complete := by
-      infer_instance,
-    separation := by
-      infer_instance,
-    UniformInducing := by
-      rw [Rat.uniform_space_eq]
-      exact rat.uniform_embedding_coe_real.to_uniform_inducing,
-    dense := Rat.dense_embedding_coe_real.dense }
+/-- Cauchy reals packaged as a completion of ℚ using the absolute value route. -/
+noncomputable def rationalCauSeqPkg : @AbstractCompletion ℚ $ IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) where
+  Space := ℝ
+  coe := (coeₓ : ℚ → ℝ)
+  uniformStruct := by
+    infer_instance
+  complete := by
+    infer_instance
+  separation := by
+    infer_instance
+  UniformInducing := by
+    rw [Rat.uniform_space_eq]
+    exact rat.uniform_embedding_coe_real.to_uniform_inducing
+  dense := Rat.dense_embedding_coe_real.dense
 
 namespace CompareReals
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler comm_ring
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/--  Type wrapper around ℚ to make sure the absolute value uniform space instance is picked up
+/-- Type wrapper around ℚ to make sure the absolute value uniform space instance is picked up
 instead of the metric space one. We proved in rat.uniform_space_eq that they are equal,
 but they are not definitionaly equal, so it would confuse the type class system (and probably
 also human readers). -/
 def Q :=
-  ℚ deriving [anonymous], [anonymous]
+  ℚ deriving CommRingₓ, Inhabited
 
 instance : UniformSpace Q :=
   IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ)
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/--  Real numbers constructed as in Bourbaki. -/
+/-- Real numbers constructed as in Bourbaki. -/
 def Bourbakiℝ : Type :=
-  completion Q deriving [anonymous]
+  completion Q deriving Inhabited
 
 instance bourbaki.uniform_space : UniformSpace Bourbakiℝ :=
   completion.uniform_space Q
 
-/--  Bourbaki reals packaged as a completion of Q using the general theory. -/
+/-- Bourbaki reals packaged as a completion of Q using the general theory. -/
 def Bourbaki_pkg : AbstractCompletion Q :=
   completion.cpkg
 
-/--  The equivalence between Bourbaki and Cauchy reals-/
+/-- The equivalence between Bourbaki and Cauchy reals-/
 noncomputable def compare_equiv : Bourbakiℝ ≃ ℝ :=
   Bourbaki_pkg.compareEquiv rationalCauSeqPkg
 

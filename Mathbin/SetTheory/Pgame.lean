@@ -102,7 +102,7 @@ An interested reader may like to formalise some of the material from
 
 universe u
 
-/--  The type of pre-games, before we have quotiented
+/-- The type of pre-games, before we have quotiented
   by extensionality. In ZFC, a combinatorial game is constructed from
   two sets of combinatorial games that have been constructed at an earlier
   stage. To do this in type theory, we say that a pre-game is built
@@ -114,25 +114,24 @@ inductive Pgame : Type (u + 1)
 
 namespace Pgame
 
-/-- 
-Construct a pre-game from list of pre-games describing the available moves for Left and Right.
+/-- Construct a pre-game from list of pre-games describing the available moves for Left and Right.
 -/
 def of_lists (L R : List Pgame.{0}) : Pgame.{0} :=
   Pgame.mk (Finₓ L.length) (Finₓ R.length) (fun i => L.nth_le i i.is_lt) fun j => R.nth_le j.val j.is_lt
 
-/--  The indexing type for allowable moves by Left. -/
+/-- The indexing type for allowable moves by Left. -/
 def left_moves : Pgame → Type u
   | mk l _ _ _ => l
 
-/--  The indexing type for allowable moves by Right. -/
+/-- The indexing type for allowable moves by Right. -/
 def right_moves : Pgame → Type u
   | mk _ r _ _ => r
 
-/--  The new game after Left makes an allowed move. -/
+/-- The new game after Left makes an allowed move. -/
 def move_left : ∀ g : Pgame, left_moves g → Pgame
   | mk l _ L _, i => L i
 
-/--  The new game after Right makes an allowed move. -/
+/-- The new game after Right makes an allowed move. -/
 def move_right : ∀ g : Pgame, right_moves g → Pgame
   | mk _ r _ R, j => R j
 
@@ -152,7 +151,7 @@ theorem right_moves_mk {xl xr xL xR} : (⟨xl, xr, xL, xR⟩ : Pgame).RightMoves
 theorem move_right_mk {xl xr xL xR j} : (⟨xl, xr, xL, xR⟩ : Pgame).moveRight j = xR j :=
   rfl
 
-/--  `subsequent p q` says that `p` can be obtained by playing
+/-- `subsequent p q` says that `p` can be obtained by playing
   some nonempty sequence of moves from `q`. -/
 inductive subsequent : Pgame → Pgame → Prop
   | left : ∀ x : Pgame i : x.left_moves, subsequent (x.move_left i) x
@@ -165,33 +164,33 @@ theorem wf_subsequent : WellFounded subsequent :=
     refine' ⟨_, fun y h => _⟩
     generalize e : mk l r L R = x  at h
     induction' h with _ i _ j a b _ h1 h2 IH1 IH2 <;> subst e
-    ·
-      apply IHl
-    ·
-      apply IHr
-    ·
-      exact Acc.invₓ (IH2 rfl) h1⟩
+    · apply IHl
+      
+    · apply IHr
+      
+    · exact Acc.invₓ (IH2 rfl) h1
+      ⟩
 
 instance : HasWellFounded Pgame where
   R := subsequent
   wf := wf_subsequent
 
-/--  A move by Left produces a subsequent game. (For use in pgame_wf_tac.) -/
+/-- A move by Left produces a subsequent game. (For use in pgame_wf_tac.) -/
 theorem subsequent.left_move {xl xr} {xL : xl → Pgame} {xR : xr → Pgame} {i : xl} :
     subsequent (xL i) (mk xl xr xL xR) :=
   subsequent.left (mk xl xr xL xR) i
 
-/--  A move by Right produces a subsequent game. (For use in pgame_wf_tac.) -/
+/-- A move by Right produces a subsequent game. (For use in pgame_wf_tac.) -/
 theorem subsequent.right_move {xl xr} {xL : xl → Pgame} {xR : xr → Pgame} {j : xr} :
     subsequent (xR j) (mk xl xr xL xR) :=
   subsequent.right (mk xl xr xL xR) j
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/--  A local tactic for proving well-foundedness of recursive definitions involving pregames. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- A local tactic for proving well-foundedness of recursive definitions involving pregames. -/
 unsafe def pgame_wf_tac :=
   sorry
 
-/--  The pre-game `zero` is defined by `0 = { | }`. -/
+/-- The pre-game `zero` is defined by `0 = { | }`. -/
 instance : HasZero Pgame :=
   ⟨⟨Pempty, Pempty, Pempty.elimₓ, Pempty.elimₓ⟩⟩
 
@@ -206,7 +205,7 @@ theorem zero_right_moves : (0 : Pgame).RightMoves = Pempty :=
 instance : Inhabited Pgame :=
   ⟨0⟩
 
-/--  The pre-game `one` is defined by `1 = { 0 | }`. -/
+/-- The pre-game `one` is defined by `1 = { 0 | }`. -/
 instance : HasOne Pgame :=
   ⟨⟨PUnit, Pempty, fun _ => 0, Pempty.elimₓ⟩⟩
 
@@ -222,7 +221,7 @@ theorem one_move_left : (1 : Pgame).moveLeft PUnit.unit = 0 :=
 theorem one_right_moves : (1 : Pgame).RightMoves = Pempty :=
   rfl
 
-/--  Define simultaneously by mutual induction the `<=` and `<`
+/-- Define simultaneously by mutual induction the `<=` and `<`
   relation on pre-games. The ZFC definition says that `x = {xL | xR}`
   is less or equal to `y = {yL | yR}` if `∀ x₁ ∈ xL, x₁ < y`
   and `∀ y₂ ∈ yR, x < y₂`, where `x < y` is the same as `¬ y <= x`.
@@ -240,7 +239,7 @@ instance : LE Pgame :=
 instance : LT Pgame :=
   ⟨fun x y => (le_lt x y).2⟩
 
-/--  Definition of `x ≤ y` on pre-games built using the constructor. -/
+/-- Definition of `x ≤ y` on pre-games built using the constructor. -/
 @[simp]
 theorem mk_le_mk {xl xr xL xR yl yr yL yR} :
     (⟨xl, xr, xL, xR⟩ : Pgame) ≤ ⟨yl, yr, yL, yR⟩ ↔
@@ -249,7 +248,7 @@ theorem mk_le_mk {xl xr xL xR yl yr yL yR} :
     rw [le_lt]
     rfl
 
-/--  Definition of `x ≤ y` on pre-games, in terms of `<` -/
+/-- Definition of `x ≤ y` on pre-games, in terms of `<` -/
 theorem le_def_lt {x y : Pgame} :
     x ≤ y ↔ (∀ i : x.left_moves, x.move_left i < y) ∧ ∀ j : y.right_moves, x < y.move_right j := by
   cases x
@@ -257,7 +256,7 @@ theorem le_def_lt {x y : Pgame} :
   rw [mk_le_mk]
   rfl
 
-/--  Definition of `x < y` on pre-games built using the constructor. -/
+/-- Definition of `x < y` on pre-games built using the constructor. -/
 @[simp]
 theorem mk_lt_mk {xl xr xL xR yl yr yL yR} :
     (⟨xl, xr, xL, xR⟩ : Pgame) < ⟨yl, yr, yL, yR⟩ ↔
@@ -266,7 +265,7 @@ theorem mk_lt_mk {xl xr xL xR yl yr yL yR} :
     rw [le_lt]
     rfl
 
-/--  Definition of `x < y` on pre-games, in terms of `≤` -/
+/-- Definition of `x < y` on pre-games, in terms of `≤` -/
 theorem lt_def_le {x y : Pgame} :
     x < y ↔ (∃ i : y.left_moves, x ≤ y.move_left i) ∨ ∃ j : x.right_moves, x.move_right j ≤ y := by
   cases x
@@ -274,381 +273,75 @@ theorem lt_def_le {x y : Pgame} :
   rw [mk_lt_mk]
   rfl
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment "/--" " The definition of `x ≤ y` on pre-games, in terms of `≤` two moves later. -/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.theorem
-  "theorem"
-  (Command.declId `le_def [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`x `y] [":" `Pgame] "}")]
-   (Term.typeSpec
-    ":"
-    («term_↔_»
-     («term_≤_» `x "≤" `y)
-     "↔"
-     («term_∧_»
-      (Term.forall
-       "∀"
-       [(Term.simpleBinder [`i] [(Term.typeSpec ":" `x.left_moves)])]
-       ","
-       («term_∨_»
-        («term∃_,_»
-         "∃"
-         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i')] [":" `y.left_moves]))
-         ","
-         («term_≤_» (Term.app `x.move_left [`i]) "≤" (Term.app `y.move_left [`i'])))
-        "∨"
-        («term∃_,_»
-         "∃"
-         (Lean.explicitBinders
-          (Lean.unbracketedExplicitBinders
-           [(Lean.binderIdent `j)]
-           [":" (Term.proj (Term.app `x.move_left [`i]) "." `RightMoves)]))
-         ","
-         («term_≤_» (Term.app (Term.proj (Term.app `x.move_left [`i]) "." `moveRight) [`j]) "≤" `y))))
-      "∧"
-      (Term.forall
-       "∀"
-       [(Term.simpleBinder [`j] [(Term.typeSpec ":" `y.right_moves)])]
-       ","
-       («term_∨_»
-        («term∃_,_»
-         "∃"
-         (Lean.explicitBinders
-          (Lean.unbracketedExplicitBinders
-           [(Lean.binderIdent `i)]
-           [":" (Term.proj (Term.app `y.move_right [`j]) "." `LeftMoves)]))
-         ","
-         («term_≤_» `x "≤" (Term.app (Term.proj (Term.app `y.move_right [`j]) "." `moveLeft) [`i])))
-        "∨"
-        («term∃_,_»
-         "∃"
-         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `j')] [":" `x.right_moves]))
-         ","
-         («term_≤_» (Term.app `x.move_right [`j']) "≤" (Term.app `y.move_right [`j])))))))))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `le_def_lt)] "]") []) [])
-       (group
-        (Tactic.Conv.conv
-         "conv"
-         []
-         []
-         "=>"
-         (Tactic.Conv.convSeq
-          (Tactic.Conv.convSeq1Indented
-           [(group (Tactic.Conv.lhs "lhs") [])
-            (group (Tactic.Conv.simp "simp" [] ["only"] ["[" [(Tactic.simpLemma [] [] `lt_def_le)] "]"] []) [])])))
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `le_def_lt)] "]") []) [])
-      (group
-       (Tactic.Conv.conv
-        "conv"
-        []
-        []
-        "=>"
-        (Tactic.Conv.convSeq
-         (Tactic.Conv.convSeq1Indented
-          [(group (Tactic.Conv.lhs "lhs") [])
-           (group (Tactic.Conv.simp "simp" [] ["only"] ["[" [(Tactic.simpLemma [] [] `lt_def_le)] "]"] []) [])])))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.Conv.conv
-   "conv"
-   []
-   []
-   "=>"
-   (Tactic.Conv.convSeq
-    (Tactic.Conv.convSeq1Indented
-     [(group (Tactic.Conv.lhs "lhs") [])
-      (group (Tactic.Conv.simp "simp" [] ["only"] ["[" [(Tactic.simpLemma [] [] `lt_def_le)] "]"] []) [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.Conv.conv', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.Conv.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'Lean.Parser.Tactic.discharger'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.Conv.convSeq1Indented', expected 'Lean.Parser.Tactic.Conv.convSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- The definition of `x ≤ y` on pre-games, in terms of `≤` two moves later. -/
-  theorem
-    le_def
-    { x y : Pgame }
-      :
-        x ≤ y
-          ↔
-          ∀
-              i : x.left_moves
-              ,
-              ∃ i' : y.left_moves , x.move_left i ≤ y.move_left i'
-                ∨
-                ∃ j : x.move_left i . RightMoves , x.move_left i . moveRight j ≤ y
-            ∧
-            ∀
-              j : y.right_moves
-              ,
-              ∃ i : y.move_right j . LeftMoves , x ≤ y.move_right j . moveLeft i
-                ∨
-                ∃ j' : x.right_moves , x.move_right j' ≤ y.move_right j
-    := by rw [ le_def_lt ] conv => lhs simp only [ lt_def_le ]
+theorem le_def {x y : Pgame} :
+    x ≤ y ↔
+      (∀ i : x.left_moves,
+          (∃ i' : y.left_moves, x.move_left i ≤ y.move_left i') ∨
+            ∃ j : (x.move_left i).RightMoves, (x.move_left i).moveRight j ≤ y) ∧
+        ∀ j : y.right_moves,
+          (∃ i : (y.move_right j).LeftMoves, x ≤ (y.move_right j).moveLeft i) ∨
+            ∃ j' : x.right_moves, x.move_right j' ≤ y.move_right j :=
+  by
+  rw [le_def_lt]
+  conv => lhs simp only [lt_def_le]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment "/--" " The definition of `x < y` on pre-games, in terms of `<` two moves later. -/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.theorem
-  "theorem"
-  (Command.declId `lt_def [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`x `y] [":" `Pgame] "}")]
-   (Term.typeSpec
-    ":"
-    («term_↔_»
-     («term_<_» `x "<" `y)
-     "↔"
-     («term_∨_»
-      («term∃_,_»
-       "∃"
-       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] [":" `y.left_moves]))
-       ","
-       («term_∧_»
-        (Term.forall
-         "∀"
-         [(Term.simpleBinder [`i'] [(Term.typeSpec ":" `x.left_moves)])]
-         ","
-         («term_<_» (Term.app `x.move_left [`i']) "<" (Term.app `y.move_left [`i])))
-        "∧"
-        (Term.forall
-         "∀"
-         [(Term.simpleBinder [`j] [(Term.typeSpec ":" (Term.proj (Term.app `y.move_left [`i]) "." `RightMoves))])]
-         ","
-         («term_<_» `x "<" (Term.app (Term.proj (Term.app `y.move_left [`i]) "." `moveRight) [`j])))))
-      "∨"
-      («term∃_,_»
-       "∃"
-       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `j)] [":" `x.right_moves]))
-       ","
-       («term_∧_»
-        (Term.forall
-         "∀"
-         [(Term.simpleBinder [`i] [(Term.typeSpec ":" (Term.proj (Term.app `x.move_right [`j]) "." `LeftMoves))])]
-         ","
-         («term_<_» (Term.app (Term.proj (Term.app `x.move_right [`j]) "." `moveLeft) [`i]) "<" `y))
-        "∧"
-        (Term.forall
-         "∀"
-         [(Term.simpleBinder [`j'] [(Term.typeSpec ":" `y.right_moves)])]
-         ","
-         («term_<_» (Term.app `x.move_right [`j]) "<" (Term.app `y.move_right [`j'])))))))))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `lt_def_le)] "]") []) [])
-       (group
-        (Tactic.Conv.conv
-         "conv"
-         []
-         []
-         "=>"
-         (Tactic.Conv.convSeq
-          (Tactic.Conv.convSeq1Indented
-           [(group (Tactic.Conv.lhs "lhs") [])
-            (group (Tactic.Conv.simp "simp" [] ["only"] ["[" [(Tactic.simpLemma [] [] `le_def_lt)] "]"] []) [])])))
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `lt_def_le)] "]") []) [])
-      (group
-       (Tactic.Conv.conv
-        "conv"
-        []
-        []
-        "=>"
-        (Tactic.Conv.convSeq
-         (Tactic.Conv.convSeq1Indented
-          [(group (Tactic.Conv.lhs "lhs") [])
-           (group (Tactic.Conv.simp "simp" [] ["only"] ["[" [(Tactic.simpLemma [] [] `le_def_lt)] "]"] []) [])])))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.Conv.conv
-   "conv"
-   []
-   []
-   "=>"
-   (Tactic.Conv.convSeq
-    (Tactic.Conv.convSeq1Indented
-     [(group (Tactic.Conv.lhs "lhs") [])
-      (group (Tactic.Conv.simp "simp" [] ["only"] ["[" [(Tactic.simpLemma [] [] `le_def_lt)] "]"] []) [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.Conv.conv', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.Conv.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'Lean.Parser.Tactic.discharger'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.Conv.convSeq1Indented', expected 'Lean.Parser.Tactic.Conv.convSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- The definition of `x < y` on pre-games, in terms of `<` two moves later. -/
-  theorem
-    lt_def
-    { x y : Pgame }
-      :
-        x < y
-          ↔
-          ∃
-              i : y.left_moves
-              ,
-              ∀ i' : x.left_moves , x.move_left i' < y.move_left i
-                ∧
-                ∀ j : y.move_left i . RightMoves , x < y.move_left i . moveRight j
-            ∨
-            ∃
-              j : x.right_moves
-              ,
-              ∀ i : x.move_right j . LeftMoves , x.move_right j . moveLeft i < y
-                ∧
-                ∀ j' : y.right_moves , x.move_right j < y.move_right j'
-    := by rw [ lt_def_le ] conv => lhs simp only [ le_def_lt ]
+theorem lt_def {x y : Pgame} :
+    x < y ↔
+      (∃ i : y.left_moves,
+          (∀ i' : x.left_moves, x.move_left i' < y.move_left i) ∧
+            ∀ j : (y.move_left i).RightMoves, x < (y.move_left i).moveRight j) ∨
+        ∃ j : x.right_moves,
+          (∀ i : (x.move_right j).LeftMoves, (x.move_right j).moveLeft i < y) ∧
+            ∀ j' : y.right_moves, x.move_right j < y.move_right j' :=
+  by
+  rw [lt_def_le]
+  conv => lhs simp only [le_def_lt]
 
-/--  The definition of `x ≤ 0` on pre-games, in terms of `≤ 0` two moves later. -/
+/-- The definition of `x ≤ 0` on pre-games, in terms of `≤ 0` two moves later. -/
 theorem le_zero {x : Pgame} :
     x ≤ 0 ↔ ∀ i : x.left_moves, ∃ j : (x.move_left i).RightMoves, (x.move_left i).moveRight j ≤ 0 := by
   rw [le_def]
   dsimp
   simp [forall_pempty, exists_pempty]
 
-/--  The definition of `0 ≤ x` on pre-games, in terms of `0 ≤` two moves later. -/
+/-- The definition of `0 ≤ x` on pre-games, in terms of `0 ≤` two moves later. -/
 theorem zero_le {x : Pgame} :
     0 ≤ x ↔ ∀ j : x.right_moves, ∃ i : (x.move_right j).LeftMoves, 0 ≤ (x.move_right j).moveLeft i := by
   rw [le_def]
   dsimp
   simp [forall_pempty, exists_pempty]
 
-/--  The definition of `x < 0` on pre-games, in terms of `< 0` two moves later. -/
+/-- The definition of `x < 0` on pre-games, in terms of `< 0` two moves later. -/
 theorem lt_zero {x : Pgame} :
     x < 0 ↔ ∃ j : x.right_moves, ∀ i : (x.move_right j).LeftMoves, (x.move_right j).moveLeft i < 0 := by
   rw [lt_def]
   dsimp
   simp [forall_pempty, exists_pempty]
 
-/--  The definition of `0 < x` on pre-games, in terms of `< x` two moves later. -/
+/-- The definition of `0 < x` on pre-games, in terms of `< x` two moves later. -/
 theorem zero_lt {x : Pgame} :
     0 < x ↔ ∃ i : x.left_moves, ∀ j : (x.move_left i).RightMoves, 0 < (x.move_left i).moveRight j := by
   rw [lt_def]
   dsimp
   simp [forall_pempty, exists_pempty]
 
-/--  Given a right-player-wins game, provide a response to any move by left. -/
+/-- Given a right-player-wins game, provide a response to any move by left. -/
 noncomputable def right_response {x : Pgame} (h : x ≤ 0) (i : x.left_moves) : (x.move_left i).RightMoves :=
   Classical.some $ (le_zero.1 h) i
 
-/--  Show that the response for right provided by `right_response`
+/-- Show that the response for right provided by `right_response`
     preserves the right-player-wins condition. -/
 theorem right_response_spec {x : Pgame} (h : x ≤ 0) (i : x.left_moves) :
     (x.move_left i).moveRight (right_response h i) ≤ 0 :=
   Classical.some_spec $ (le_zero.1 h) i
 
-/--  Given a left-player-wins game, provide a response to any move by right. -/
+/-- Given a left-player-wins game, provide a response to any move by right. -/
 noncomputable def left_response {x : Pgame} (h : 0 ≤ x) (j : x.right_moves) : (x.move_right j).LeftMoves :=
   Classical.some $ (zero_le.1 h) j
 
-/--  Show that the response for left provided by `left_response`
+/-- Show that the response for left provided by `left_response`
     preserves the left-player-wins condition. -/
 theorem left_response_spec {x : Pgame} (h : 0 ≤ x) (j : x.right_moves) :
     0 ≤ (x.move_right j).moveLeft (left_response h j) :=
@@ -709,9 +402,8 @@ theorem le_trans_aux {xl xr} {xL : xl → Pgame} {xR : xr → Pgame} {yl yr} {yL
         not_leₓ.1 fun h => not_ltₓ.2 (h₂ _ h ⟨xLy, xyR⟩) (yzR _)⟩
 
 @[trans]
-theorem le_transₓ {x y z : Pgame} : x ≤ y → y ≤ z → x ≤ z :=
+theorem le_transₓ {x y z : Pgame} : x ≤ y → y ≤ z → x ≤ z := by
   suffices ∀ {x y z : Pgame}, (x ≤ y → y ≤ z → x ≤ z) ∧ (y ≤ z → z ≤ x → y ≤ x) ∧ (z ≤ x → x ≤ y → z ≤ y) from this.1
-  by
   clear x y z
   intros
   induction' x with xl xr xL xR IHxl IHxr generalizing y z
@@ -732,7 +424,7 @@ theorem lt_of_lt_of_leₓ {x y z : Pgame} (hxy : x < y) (hyz : y ≤ z) : x < z 
   rw [← not_leₓ] at hxy⊢
   exact mt (fun H => le_transₓ hyz H) hxy
 
-/--  Define the equivalence relation on pre-games. Two pre-games
+/-- Define the equivalence relation on pre-games. Two pre-games
   `x`, `y` are equivalent if `x ≤ y` and `y ≤ x`. -/
 def Equivₓ (x y : Pgame) : Prop :=
   x ≤ y ∧ y ≤ x
@@ -783,24 +475,24 @@ theorem equiv_of_mk_equiv {x y : Pgame} (L : x.left_moves ≃ y.left_moves) (R :
     (hl : ∀ i : x.left_moves, x.move_left i ≈ y.move_left (L i))
     (hr : ∀ j : y.right_moves, x.move_right (R.symm j) ≈ y.move_right j) : x ≈ y := by
   fconstructor <;> rw [le_def]
-  ·
-    exact ⟨fun i => Or.inl ⟨L i, (hl i).1⟩, fun j => Or.inr ⟨R.symm j, (hr j).1⟩⟩
-  ·
-    fconstructor
-    ·
-      intro i
+  · exact ⟨fun i => Or.inl ⟨L i, (hl i).1⟩, fun j => Or.inr ⟨R.symm j, (hr j).1⟩⟩
+    
+  · fconstructor
+    · intro i
       left
       specialize hl (L.symm i)
       simp only [move_left_mk, Equivₓ.apply_symm_apply] at hl
       use ⟨L.symm i, hl.2⟩
-    ·
-      intro j
+      
+    · intro j
       right
       specialize hr (R j)
       simp only [move_right_mk, Equivₓ.symm_apply_apply] at hr
       use ⟨R j, hr.2⟩
+      
+    
 
-/--  `restricted x y` says that Left always has no more moves in `x` than in `y`,
+/-- `restricted x y` says that Left always has no more moves in `x` than in `y`,
      and Right always has no more moves in `y` than in `x` -/
 inductive restricted : Pgame.{u} → Pgame.{u} → Type (u + 1)
   | mk :
@@ -808,7 +500,7 @@ inductive restricted : Pgame.{u} → Pgame.{u} → Type (u + 1)
       (∀ i : x.left_moves, restricted (x.move_left i) (y.move_left (L i))) →
         (∀ j : y.right_moves, restricted (x.move_right (R j)) (y.move_right j)) → restricted x y
 
-/--  The identity restriction. -/
+/-- The identity restriction. -/
 @[refl]
 def restricted.refl : ∀ x : Pgame, restricted x x
   | mk xl xr xL xR => restricted.mk id id (fun i => restricted.refl _) fun j => restricted.refl _
@@ -818,8 +510,7 @@ theorem restricted.le : ∀ {x y : Pgame} r : restricted x y, x ≤ y
     rw [le_def]
     exact ⟨fun i => Or.inl ⟨L_embedding i, (L_restriction i).le⟩, fun i => Or.inr ⟨R_embedding i, (R_restriction i).le⟩⟩
 
-/-- 
-`relabelling x y` says that `x` and `y` are really the same game, just dressed up differently.
+/-- `relabelling x y` says that `x` and `y` are really the same game, just dressed up differently.
 Specifically, there is a bijection between the moves for Left in `x` and in `y`, and similarly
 for Right, and under these bijections we inductively have `relabelling`s for the consequent games.
 -/
@@ -829,55 +520,55 @@ inductive relabelling : Pgame.{u} → Pgame.{u} → Type (u + 1)
       (∀ i : x.left_moves, relabelling (x.move_left i) (y.move_left (L i))) →
         (∀ j : y.right_moves, relabelling (x.move_right (R.symm j)) (y.move_right j)) → relabelling x y
 
-/--  If `x` is a relabelling of `y`, then Left and Right have the same moves in either game,
+/-- If `x` is a relabelling of `y`, then Left and Right have the same moves in either game,
     so `x` is a restriction of `y`. -/
 def relabelling.restricted : ∀ {x y : Pgame} r : relabelling x y, restricted x y
   | mk xl xr xL xR, mk yl yr yL yR, relabelling.mk L_equiv R_equiv L_relabelling R_relabelling =>
     restricted.mk L_equiv.to_embedding R_equiv.symm.to_embedding (fun i => (L_relabelling i).Restricted) fun j =>
       (R_relabelling j).Restricted
 
-/--  The identity relabelling. -/
+/-- The identity relabelling. -/
 @[refl]
 def relabelling.refl : ∀ x : Pgame, relabelling x x
   | mk xl xr xL xR =>
     relabelling.mk (Equivₓ.refl _) (Equivₓ.refl _) (fun i => relabelling.refl _) fun j => relabelling.refl _
 
-/--  Reverse a relabelling. -/
+/-- Reverse a relabelling. -/
 @[symm]
 def relabelling.symm : ∀ {x y : Pgame}, relabelling x y → relabelling y x
   | mk xl xr xL xR, mk yl yr yL yR, relabelling.mk L_equiv R_equiv L_relabelling R_relabelling => by
     refine' relabelling.mk L_equiv.symm R_equiv.symm _ _
-    ·
-      intro i
+    · intro i
       simpa using (L_relabelling (L_equiv.symm i)).symm
-    ·
-      intro j
+      
+    · intro j
       simpa using (R_relabelling (R_equiv j)).symm
+      
 
-/--  Transitivity of relabelling -/
+/-- Transitivity of relabelling -/
 @[trans]
 def relabelling.trans : ∀ {x y z : Pgame}, relabelling x y → relabelling y z → relabelling x z
   | mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR, relabelling.mk L_equiv₁ R_equiv₁ L_relabelling₁ R_relabelling₁,
     relabelling.mk L_equiv₂ R_equiv₂ L_relabelling₂ R_relabelling₂ => by
     refine' relabelling.mk (L_equiv₁.trans L_equiv₂) (R_equiv₁.trans R_equiv₂) _ _
-    ·
-      intro i
+    · intro i
       simpa using (L_relabelling₁ _).trans (L_relabelling₂ _)
-    ·
-      intro j
+      
+    · intro j
       simpa using (R_relabelling₁ _).trans (R_relabelling₂ _)
+      
 
 theorem relabelling.le {x y : Pgame} (r : relabelling x y) : x ≤ y :=
   r.restricted.le
 
-/--  A relabelling lets us prove equivalence of games. -/
+/-- A relabelling lets us prove equivalence of games. -/
 theorem relabelling.equiv {x y : Pgame} (r : relabelling x y) : x ≈ y :=
   ⟨r.le, r.symm.le⟩
 
 instance {x y : Pgame} : Coe (relabelling x y) (x ≈ y) :=
   ⟨relabelling.equiv⟩
 
-/--  Replace the types indexing the next moves for Left and Right by equivalent types. -/
+/-- Replace the types indexing the next moves for Left and Right by equivalent types. -/
 def relabel {x : Pgame} {xl' xr'} (el : x.left_moves ≃ xl') (er : x.right_moves ≃ xr') :=
   Pgame.mk xl' xr' (fun i => x.move_left (el.symm i)) fun j => x.move_right (er.symm j)
 
@@ -901,7 +592,7 @@ theorem relabel_move_right {x : Pgame} {xl' xr'} (el : x.left_moves ≃ xl') (er
     (j : x.right_moves) : move_right (relabel el er) (er j) = x.move_right j := by
   simp
 
-/--  The game obtained by relabelling the next moves is a relabelling of the original game. -/
+/-- The game obtained by relabelling the next moves is a relabelling of the original game. -/
 def relabel_relabelling {x : Pgame} {xl' xr'} (el : x.left_moves ≃ xl') (er : x.right_moves ≃ xr') :
     relabelling x (relabel el er) :=
   relabelling.mk el er
@@ -910,7 +601,7 @@ def relabel_relabelling {x : Pgame} {xl' xr'} (el : x.left_moves ≃ xl') (er : 
     fun j => by
     simp
 
-/--  The negation of `{L | R}` is `{-R | -L}`. -/
+/-- The negation of `{L | R}` is `{-R | -L}`. -/
 def neg : Pgame → Pgame
   | ⟨l, r, L, R⟩ => ⟨r, l, fun i => neg (R i), fun i => neg (L i)⟩
 
@@ -932,12 +623,12 @@ theorem neg_zero : -(0 : Pgame) = 0 := by
   dsimp [HasZero.zero, Neg.neg, neg]
   congr <;> funext i <;> cases i
 
-/--  An explicit equivalence between the moves for Left in `-x` and the moves for Right in `x`. -/
+/-- An explicit equivalence between the moves for Left in `-x` and the moves for Right in `x`. -/
 def left_moves_neg (x : Pgame) : (-x).LeftMoves ≃ x.right_moves := by
   cases x
   rfl
 
-/--  An explicit equivalence between the moves for Right in `-x` and the moves for Left in `x`. -/
+/-- An explicit equivalence between the moves for Right in `-x` and the moves for Left in `x`. -/
 def right_moves_neg (x : Pgame) : (-x).RightMoves ≃ x.left_moves := by
   cases x
   rfl
@@ -966,7 +657,7 @@ theorem move_right_right_moves_neg_symm {x : Pgame} (i : left_moves x) :
   cases x
   rfl
 
-/--  If `x` has the same moves as `y`, then `-x` has the sames moves as `-y`. -/
+/-- If `x` has the same moves as `y`, then `-x` has the sames moves as `-y`. -/
 def relabelling.neg_congr : ∀ {x y : Pgame}, x.relabelling y → (-x).Relabelling (-y)
   | mk xl xr xL xR, mk yl yr yL yR, ⟨L_equiv, R_equiv, L_relabelling, R_relabelling⟩ =>
     ⟨R_equiv, L_equiv, fun i =>
@@ -984,74 +675,74 @@ theorem le_iff_neg_ge : ∀ {x y : Pgame}, x ≤ y ↔ -y ≤ -x
     rw [le_def]
     dsimp [neg]
     constructor
-    ·
-      intro h
+    · intro h
       constructor
-      ·
-        intro i
+      · intro i
         have t := h.right i
         cases t
-        ·
-          right
+        · right
           cases t
           use (@right_moves_neg (yR i)).symm t_w
           convert le_iff_neg_ge.1 t_h
           simp
-        ·
-          left
+          
+        · left
           cases t
           use t_w
           exact le_iff_neg_ge.1 t_h
-      ·
-        intro j
+          
+        
+      · intro j
         have t := h.left j
         cases t
-        ·
-          right
+        · right
           cases t
           use t_w
           exact le_iff_neg_ge.1 t_h
-        ·
-          left
+          
+        · left
           cases t
           use (@left_moves_neg (xL j)).symm t_w
           convert le_iff_neg_ge.1 t_h
           simp
-    ·
-      intro h
+          
+        
+      
+    · intro h
       constructor
-      ·
-        intro i
+      · intro i
         have t := h.right i
         cases t
-        ·
-          right
+        · right
           cases t
           use (@left_moves_neg (xL i)) t_w
           convert le_iff_neg_ge.2 _
           convert t_h
           simp
-        ·
-          left
+          
+        · left
           cases t
           use t_w
           exact le_iff_neg_ge.2 t_h
-      ·
-        intro j
+          
+        
+      · intro j
         have t := h.left j
         cases t
-        ·
-          right
+        · right
           cases t
           use t_w
           exact le_iff_neg_ge.2 t_h
-        ·
-          left
+          
+        · left
           cases t
           use (@right_moves_neg (yR j)) t_w
           convert le_iff_neg_ge.2 _
           convert t_h
           simp
+          
+        
+      
 
 theorem neg_congr {x y : Pgame} (h : x ≈ y) : -x ≈ -y :=
   ⟨le_iff_neg_ge.1 h.2, le_iff_neg_ge.1 h.1⟩
@@ -1070,146 +761,146 @@ theorem le_zero_iff_zero_le_neg {x : Pgame} : x ≤ 0 ↔ 0 ≤ -x := by
   convert le_iff_neg_ge
   rw [neg_zero]
 
-/--  The sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
+/-- The sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
 def add (x y : Pgame) : Pgame := by
   induction' x with xl xr xL xR IHxl IHxr generalizing y
   induction' y with yl yr yL yR IHyl IHyr
   have y := mk yl yr yL yR
   refine' ⟨Sum xl yl, Sum xr yr, Sum.rec _ _, Sum.rec _ _⟩
-  ·
-    exact fun i => IHxl i y
-  ·
-    exact fun i => IHyl i
-  ·
-    exact fun i => IHxr i y
-  ·
-    exact fun i => IHyr i
+  · exact fun i => IHxl i y
+    
+  · exact fun i => IHyl i
+    
+  · exact fun i => IHxr i y
+    
+  · exact fun i => IHyr i
+    
 
 instance : Add Pgame :=
   ⟨add⟩
 
-/--  `x + 0` has exactly the same moves as `x`. -/
-def add_zero_relabelling : ∀ x : Pgame.{u}, relabelling (x+0) x
+/-- `x + 0` has exactly the same moves as `x`. -/
+def add_zero_relabelling : ∀ x : Pgame.{u}, relabelling (x + 0) x
   | mk xl xr xL xR => by
     refine' ⟨Equivₓ.sumEmpty xl Pempty, Equivₓ.sumEmpty xr Pempty, _, _⟩
-    ·
-      rintro (⟨i⟩ | ⟨⟨⟩⟩)
+    · rintro (⟨i⟩ | ⟨⟨⟩⟩)
       apply add_zero_relabelling
-    ·
-      rintro j
+      
+    · rintro j
       apply add_zero_relabelling
+      
 
-/--  `x + 0` is equivalent to `x`. -/
-theorem add_zero_equiv (x : Pgame.{u}) : (x+0) ≈ x :=
+/-- `x + 0` is equivalent to `x`. -/
+theorem add_zero_equiv (x : Pgame.{u}) : x + 0 ≈ x :=
   (add_zero_relabelling x).Equiv
 
-/--  `0 + x` has exactly the same moves as `x`. -/
-def zero_add_relabelling : ∀ x : Pgame.{u}, relabelling (0+x) x
+/-- `0 + x` has exactly the same moves as `x`. -/
+def zero_add_relabelling : ∀ x : Pgame.{u}, relabelling (0 + x) x
   | mk xl xr xL xR => by
     refine' ⟨Equivₓ.emptySum Pempty xl, Equivₓ.emptySum Pempty xr, _, _⟩
-    ·
-      rintro (⟨⟨⟩⟩ | ⟨i⟩)
+    · rintro (⟨⟨⟩⟩ | ⟨i⟩)
       apply zero_add_relabelling
-    ·
-      rintro j
+      
+    · rintro j
       apply zero_add_relabelling
+      
 
-/--  `0 + x` is equivalent to `x`. -/
-theorem zero_add_equiv (x : Pgame.{u}) : (0+x) ≈ x :=
+/-- `0 + x` is equivalent to `x`. -/
+theorem zero_add_equiv (x : Pgame.{u}) : 0 + x ≈ x :=
   (zero_add_relabelling x).Equiv
 
-/--  An explicit equivalence between the moves for Left in `x + y` and the type-theory sum
+/-- An explicit equivalence between the moves for Left in `x + y` and the type-theory sum
     of the moves for Left in `x` and in `y`. -/
-def left_moves_add (x y : Pgame) : (x+y).LeftMoves ≃ Sum x.left_moves y.left_moves := by
+def left_moves_add (x y : Pgame) : (x + y).LeftMoves ≃ Sum x.left_moves y.left_moves := by
   cases x
   cases y
   rfl
 
-/--  An explicit equivalence between the moves for Right in `x + y` and the type-theory sum
+/-- An explicit equivalence between the moves for Right in `x + y` and the type-theory sum
     of the moves for Right in `x` and in `y`. -/
-def right_moves_add (x y : Pgame) : (x+y).RightMoves ≃ Sum x.right_moves y.right_moves := by
+def right_moves_add (x y : Pgame) : (x + y).RightMoves ≃ Sum x.right_moves y.right_moves := by
   cases x
   cases y
   rfl
 
 @[simp]
 theorem mk_add_move_left_inl {xl xr yl yr} {xL xR yL yR} {i} :
-    (mk xl xr xL xR+mk yl yr yL yR).moveLeft (Sum.inl i) = (mk xl xr xL xR).moveLeft i+mk yl yr yL yR :=
+    (mk xl xr xL xR + mk yl yr yL yR).moveLeft (Sum.inl i) = (mk xl xr xL xR).moveLeft i + mk yl yr yL yR :=
   rfl
 
 @[simp]
 theorem add_move_left_inl {x y : Pgame} {i} :
-    (x+y).moveLeft ((@left_moves_add x y).symm (Sum.inl i)) = x.move_left i+y := by
+    (x + y).moveLeft ((@left_moves_add x y).symm (Sum.inl i)) = x.move_left i + y := by
   cases x
   cases y
   rfl
 
 @[simp]
 theorem mk_add_move_right_inl {xl xr yl yr} {xL xR yL yR} {i} :
-    (mk xl xr xL xR+mk yl yr yL yR).moveRight (Sum.inl i) = (mk xl xr xL xR).moveRight i+mk yl yr yL yR :=
+    (mk xl xr xL xR + mk yl yr yL yR).moveRight (Sum.inl i) = (mk xl xr xL xR).moveRight i + mk yl yr yL yR :=
   rfl
 
 @[simp]
 theorem add_move_right_inl {x y : Pgame} {i} :
-    (x+y).moveRight ((@right_moves_add x y).symm (Sum.inl i)) = x.move_right i+y := by
+    (x + y).moveRight ((@right_moves_add x y).symm (Sum.inl i)) = x.move_right i + y := by
   cases x
   cases y
   rfl
 
 @[simp]
 theorem mk_add_move_left_inr {xl xr yl yr} {xL xR yL yR} {i} :
-    (mk xl xr xL xR+mk yl yr yL yR).moveLeft (Sum.inr i) = mk xl xr xL xR+(mk yl yr yL yR).moveLeft i :=
+    (mk xl xr xL xR + mk yl yr yL yR).moveLeft (Sum.inr i) = mk xl xr xL xR + (mk yl yr yL yR).moveLeft i :=
   rfl
 
 @[simp]
 theorem add_move_left_inr {x y : Pgame} {i : y.left_moves} :
-    (x+y).moveLeft ((@left_moves_add x y).symm (Sum.inr i)) = x+y.move_left i := by
+    (x + y).moveLeft ((@left_moves_add x y).symm (Sum.inr i)) = x + y.move_left i := by
   cases x
   cases y
   rfl
 
 @[simp]
 theorem mk_add_move_right_inr {xl xr yl yr} {xL xR yL yR} {i} :
-    (mk xl xr xL xR+mk yl yr yL yR).moveRight (Sum.inr i) = mk xl xr xL xR+(mk yl yr yL yR).moveRight i :=
+    (mk xl xr xL xR + mk yl yr yL yR).moveRight (Sum.inr i) = mk xl xr xL xR + (mk yl yr yL yR).moveRight i :=
   rfl
 
 @[simp]
 theorem add_move_right_inr {x y : Pgame} {i} :
-    (x+y).moveRight ((@right_moves_add x y).symm (Sum.inr i)) = x+y.move_right i := by
+    (x + y).moveRight ((@right_moves_add x y).symm (Sum.inr i)) = x + y.move_right i := by
   cases x
   cases y
   rfl
 
-/--  If `w` has the same moves as `x` and `y` has the same moves as `z`,
+/-- If `w` has the same moves as `x` and `y` has the same moves as `z`,
 then `w + y` has the same moves as `x + z`. -/
-def relabelling.add_congr : ∀ {w x y z : Pgame.{u}}, w.relabelling x → y.relabelling z → (w+y).Relabelling (x+z)
+def relabelling.add_congr : ∀ {w x y z : Pgame.{u}}, w.relabelling x → y.relabelling z → (w + y).Relabelling (x + z)
   | mk wl wr wL wR, mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR,
     ⟨L_equiv₁, R_equiv₁, L_relabelling₁, R_relabelling₁⟩, ⟨L_equiv₂, R_equiv₂, L_relabelling₂, R_relabelling₂⟩ => by
     refine' ⟨Equivₓ.sumCongr L_equiv₁ L_equiv₂, Equivₓ.sumCongr R_equiv₁ R_equiv₂, _, _⟩
-    ·
-      rintro (i | j)
-      ·
-        exact relabelling.add_congr (L_relabelling₁ i) ⟨L_equiv₂, R_equiv₂, L_relabelling₂, R_relabelling₂⟩
-      ·
-        exact relabelling.add_congr ⟨L_equiv₁, R_equiv₁, L_relabelling₁, R_relabelling₁⟩ (L_relabelling₂ j)
-    ·
-      rintro (i | j)
-      ·
-        exact relabelling.add_congr (R_relabelling₁ i) ⟨L_equiv₂, R_equiv₂, L_relabelling₂, R_relabelling₂⟩
-      ·
-        exact relabelling.add_congr ⟨L_equiv₁, R_equiv₁, L_relabelling₁, R_relabelling₁⟩ (R_relabelling₂ j)
+    · rintro (i | j)
+      · exact relabelling.add_congr (L_relabelling₁ i) ⟨L_equiv₂, R_equiv₂, L_relabelling₂, R_relabelling₂⟩
+        
+      · exact relabelling.add_congr ⟨L_equiv₁, R_equiv₁, L_relabelling₁, R_relabelling₁⟩ (L_relabelling₂ j)
+        
+      
+    · rintro (i | j)
+      · exact relabelling.add_congr (R_relabelling₁ i) ⟨L_equiv₂, R_equiv₂, L_relabelling₂, R_relabelling₂⟩
+        
+      · exact relabelling.add_congr ⟨L_equiv₁, R_equiv₁, L_relabelling₁, R_relabelling₁⟩ (R_relabelling₂ j)
+        
+      
 
 instance : Sub Pgame :=
-  ⟨fun x y => x+-y⟩
+  ⟨fun x y => x + -y⟩
 
-/--  If `w` has the same moves as `x` and `y` has the same moves as `z`,
+/-- If `w` has the same moves as `x` and `y` has the same moves as `z`,
 then `w - y` has the same moves as `x - z`. -/
 def relabelling.sub_congr {w x y z : Pgame} (h₁ : w.relabelling x) (h₂ : y.relabelling z) :
     (w - y).Relabelling (x - z) :=
   h₁.add_congr h₂.neg_congr
 
-/--  `-(x+y)` has exactly the same moves as `-x + -y`. -/
-def neg_add_relabelling : ∀ x y : Pgame, relabelling (-x+y) ((-x)+-y)
+/-- `-(x+y)` has exactly the same moves as `-x + -y`. -/
+def neg_add_relabelling : ∀ x y : Pgame, relabelling (-(x + y)) (-x + -y)
   | mk xl xr xL xR, mk yl yr yL yR =>
     ⟨Equivₓ.refl _, Equivₓ.refl _, fun j =>
       Sum.casesOn j (fun j => neg_add_relabelling (xR j) (mk yl yr yL yR)) fun j =>
@@ -1218,201 +909,210 @@ def neg_add_relabelling : ∀ x y : Pgame, relabelling (-x+y) ((-x)+-y)
       Sum.casesOn i (fun i => neg_add_relabelling (xL i) (mk yl yr yL yR)) fun i =>
         neg_add_relabelling (mk xl xr xL xR) (yL i)⟩
 
-theorem neg_add_le {x y : Pgame} : (-x+y) ≤ (-x)+-y :=
+theorem neg_add_le {x y : Pgame} : -(x + y) ≤ -x + -y :=
   (neg_add_relabelling x y).le
 
-/--  `x+y` has exactly the same moves as `y+x`. -/
-def add_comm_relabelling : ∀ x y : Pgame.{u}, relabelling (x+y) (y+x)
+/-- `x+y` has exactly the same moves as `y+x`. -/
+def add_comm_relabelling : ∀ x y : Pgame.{u}, relabelling (x + y) (y + x)
   | mk xl xr xL xR, mk yl yr yL yR => by
     refine' ⟨Equivₓ.sumComm _ _, Equivₓ.sumComm _ _, _, _⟩ <;>
       rintro (_ | _) <;>
-        ·
-          simp [left_moves_add, right_moves_add]
+        · simp [left_moves_add, right_moves_add]
           apply add_comm_relabelling
+          
 
-theorem add_comm_le {x y : Pgame} : (x+y) ≤ y+x :=
+theorem add_comm_le {x y : Pgame} : x + y ≤ y + x :=
   (add_comm_relabelling x y).le
 
-theorem add_comm_equiv {x y : Pgame} : (x+y) ≈ y+x :=
+theorem add_comm_equiv {x y : Pgame} : x + y ≈ y + x :=
   (add_comm_relabelling x y).Equiv
 
-/--  `(x + y) + z` has exactly the same moves as `x + (y + z)`. -/
-def add_assoc_relabelling : ∀ x y z : Pgame.{u}, relabelling ((x+y)+z) (x+y+z)
+/-- `(x + y) + z` has exactly the same moves as `x + (y + z)`. -/
+def add_assoc_relabelling : ∀ x y z : Pgame.{u}, relabelling (x + y + z) (x + (y + z))
   | mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR => by
     refine' ⟨Equivₓ.sumAssoc _ _ _, Equivₓ.sumAssoc _ _ _, _, _⟩
-    ·
-      rintro (⟨i | i⟩ | i)
-      ·
+    · rintro (⟨i | i⟩ | i)
+      · apply add_assoc_relabelling
+        
+      · change relabelling (mk xl xr xL xR + yL i + mk zl zr zL zR) (mk xl xr xL xR + (yL i + mk zl zr zL zR))
         apply add_assoc_relabelling
-      ·
-        change relabelling ((mk xl xr xL xR+yL i)+mk zl zr zL zR) (mk xl xr xL xR+yL i+mk zl zr zL zR)
+        
+      · change relabelling (mk xl xr xL xR + mk yl yr yL yR + zL i) (mk xl xr xL xR + (mk yl yr yL yR + zL i))
         apply add_assoc_relabelling
-      ·
-        change relabelling ((mk xl xr xL xR+mk yl yr yL yR)+zL i) (mk xl xr xL xR+mk yl yr yL yR+zL i)
+        
+      
+    · rintro (j | ⟨j | j⟩)
+      · apply add_assoc_relabelling
+        
+      · change relabelling (mk xl xr xL xR + yR j + mk zl zr zL zR) (mk xl xr xL xR + (yR j + mk zl zr zL zR))
         apply add_assoc_relabelling
-    ·
-      rintro (j | ⟨j | j⟩)
-      ·
+        
+      · change relabelling (mk xl xr xL xR + mk yl yr yL yR + zR j) (mk xl xr xL xR + (mk yl yr yL yR + zR j))
         apply add_assoc_relabelling
-      ·
-        change relabelling ((mk xl xr xL xR+yR j)+mk zl zr zL zR) (mk xl xr xL xR+yR j+mk zl zr zL zR)
-        apply add_assoc_relabelling
-      ·
-        change relabelling ((mk xl xr xL xR+mk yl yr yL yR)+zR j) (mk xl xr xL xR+mk yl yr yL yR+zR j)
-        apply add_assoc_relabelling
+        
+      
 
-theorem add_assoc_equiv {x y z : Pgame} : ((x+y)+z) ≈ x+y+z :=
+theorem add_assoc_equiv {x y z : Pgame} : x + y + z ≈ x + (y + z) :=
   (add_assoc_relabelling x y z).Equiv
 
-theorem add_le_add_right : ∀ {x y z : Pgame} h : x ≤ y, (x+z) ≤ y+z
+theorem add_le_add_right : ∀ {x y z : Pgame} h : x ≤ y, x + z ≤ y + z
   | mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR => by
     intro h
     rw [le_def]
     constructor
-    ·
-      intro i
+    · intro i
       change Sum xl zl at i
       cases i
-      ·
-        rw [le_def] at h
+      · rw [le_def] at h
         cases h
         have t := h_left i
         rcases t with (⟨i', ih⟩ | ⟨j, jh⟩)
-        ·
-          left
+        · left
           refine' ⟨(left_moves_add _ _).invFun (Sum.inl i'), _⟩
           exact add_le_add_right ih
-        ·
-          right
+          
+        · right
           refine' ⟨(right_moves_add _ _).invFun (Sum.inl j), _⟩
           convert add_le_add_right jh
           apply add_move_right_inl
-      ·
-        left
+          
+        
+      · left
         refine' ⟨(left_moves_add _ _).invFun (Sum.inr i), _⟩
         exact add_le_add_right h
-    ·
-      intro j
+        
+      
+    · intro j
       change Sum yr zr at j
       cases j
-      ·
-        rw [le_def] at h
+      · rw [le_def] at h
         cases h
         have t := h_right j
         rcases t with (⟨i, ih⟩ | ⟨j', jh⟩)
-        ·
-          left
+        · left
           refine' ⟨(left_moves_add _ _).invFun (Sum.inl i), _⟩
           convert add_le_add_right ih
           apply add_move_left_inl
-        ·
-          right
+          
+        · right
           refine' ⟨(right_moves_add _ _).invFun (Sum.inl j'), _⟩
           exact add_le_add_right jh
-      ·
-        right
+          
+        
+      · right
         refine' ⟨(right_moves_add _ _).invFun (Sum.inr j), _⟩
         exact add_le_add_right h
+        
+      
 
-theorem add_le_add_left {x y z : Pgame} (h : y ≤ z) : (x+y) ≤ x+z :=
-  calc (x+y) ≤ y+x := add_comm_le
-    _ ≤ z+x := add_le_add_right h
-    _ ≤ x+z := add_comm_le
+theorem add_le_add_left {x y z : Pgame} (h : y ≤ z) : x + y ≤ x + z :=
+  calc
+    x + y ≤ y + x := add_comm_le
+    _ ≤ z + x := add_le_add_right h
+    _ ≤ x + z := add_comm_le
     
 
-theorem add_congr {w x y z : Pgame} (h₁ : w ≈ x) (h₂ : y ≈ z) : (w+y) ≈ x+z :=
-  ⟨calc (w+y) ≤ w+z := add_le_add_left h₂.1
-      _ ≤ x+z := add_le_add_right h₁.1
+theorem add_congr {w x y z : Pgame} (h₁ : w ≈ x) (h₂ : y ≈ z) : w + y ≈ x + z :=
+  ⟨calc
+      w + y ≤ w + z := add_le_add_left h₂.1
+      _ ≤ x + z := add_le_add_right h₁.1
       ,
-    calc (x+z) ≤ x+y := add_le_add_left h₂.2
-      _ ≤ w+y := add_le_add_right h₁.2
+    calc
+      x + z ≤ x + y := add_le_add_left h₂.2
+      _ ≤ w + y := add_le_add_right h₁.2
       ⟩
 
 theorem sub_congr {w x y z : Pgame} (h₁ : w ≈ x) (h₂ : y ≈ z) : w - y ≈ x - z :=
   add_congr h₁ (neg_congr h₂)
 
-theorem add_left_neg_le_zero : ∀ {x : Pgame}, ((-x)+x) ≤ 0
+theorem add_left_neg_le_zero : ∀ {x : Pgame}, -x + x ≤ 0
   | ⟨xl, xr, xL, xR⟩ => by
     rw [le_def]
     constructor
-    ·
-      intro i
+    · intro i
       change Sum xr xl at i
       cases i
-      ·
-        right
+      · right
         refine' ⟨(right_moves_add _ _).invFun (Sum.inr i), _⟩
         convert @add_left_neg_le_zero (xR i)
         exact add_move_right_inr
-      ·
-        right
+        
+      · right
         dsimp
         refine' ⟨(right_moves_add _ _).invFun (Sum.inl i), _⟩
         convert @add_left_neg_le_zero (xL i)
         exact add_move_right_inl
-    ·
-      rintro ⟨⟩
+        
+      
+    · rintro ⟨⟩
+      
 
-theorem zero_le_add_left_neg : ∀ {x : Pgame}, 0 ≤ (-x)+x := by
+theorem zero_le_add_left_neg : ∀ {x : Pgame}, 0 ≤ -x + x := by
   intro x
   rw [le_iff_neg_ge, neg_zero]
   exact le_transₓ neg_add_le add_left_neg_le_zero
 
-theorem add_left_neg_equiv {x : Pgame} : ((-x)+x) ≈ 0 :=
+theorem add_left_neg_equiv {x : Pgame} : -x + x ≈ 0 :=
   ⟨add_left_neg_le_zero, zero_le_add_left_neg⟩
 
-theorem add_right_neg_le_zero {x : Pgame} : (x+-x) ≤ 0 :=
-  calc (x+-x) ≤ (-x)+x := add_comm_le
+theorem add_right_neg_le_zero {x : Pgame} : x + -x ≤ 0 :=
+  calc
+    x + -x ≤ -x + x := add_comm_le
     _ ≤ 0 := add_left_neg_le_zero
     
 
-theorem zero_le_add_right_neg {x : Pgame} : 0 ≤ x+-x :=
-  calc 0 ≤ (-x)+x := zero_le_add_left_neg
-    _ ≤ x+-x := add_comm_le
+theorem zero_le_add_right_neg {x : Pgame} : 0 ≤ x + -x :=
+  calc
+    0 ≤ -x + x := zero_le_add_left_neg
+    _ ≤ x + -x := add_comm_le
     
 
-theorem add_right_neg_equiv {x : Pgame} : (x+-x) ≈ 0 :=
+theorem add_right_neg_equiv {x : Pgame} : x + -x ≈ 0 :=
   ⟨add_right_neg_le_zero, zero_le_add_right_neg⟩
 
-theorem add_lt_add_right {x y z : Pgame} (h : x < y) : (x+z) < y+z :=
-  suffices ((y+z) ≤ x+z) → y ≤ x by
+theorem add_lt_add_right {x y z : Pgame} (h : x < y) : x + z < y + z :=
+  suffices y + z ≤ x + z → y ≤ x by
     rw [← not_leₓ] at h⊢
     exact mt this h
   fun w =>
-  calc y ≤ y+0 := (add_zero_relabelling _).symm.le
-    _ ≤ y+z+-z := add_le_add_left zero_le_add_right_neg
-    _ ≤ (y+z)+-z := (add_assoc_relabelling _ _ _).symm.le
-    _ ≤ (x+z)+-z := add_le_add_right w
-    _ ≤ x+z+-z := (add_assoc_relabelling _ _ _).le
-    _ ≤ x+0 := add_le_add_left add_right_neg_le_zero
+  calc
+    y ≤ y + 0 := (add_zero_relabelling _).symm.le
+    _ ≤ y + (z + -z) := add_le_add_left zero_le_add_right_neg
+    _ ≤ y + z + -z := (add_assoc_relabelling _ _ _).symm.le
+    _ ≤ x + z + -z := add_le_add_right w
+    _ ≤ x + (z + -z) := (add_assoc_relabelling _ _ _).le
+    _ ≤ x + 0 := add_le_add_left add_right_neg_le_zero
     _ ≤ x := (add_zero_relabelling _).le
     
 
-theorem add_lt_add_left {x y z : Pgame} (h : y < z) : (x+y) < x+z :=
-  calc (x+y) ≤ y+x := add_comm_le
-    _ < z+x := add_lt_add_right h
-    _ ≤ x+z := add_comm_le
+theorem add_lt_add_left {x y z : Pgame} (h : y < z) : x + y < x + z :=
+  calc
+    x + y ≤ y + x := add_comm_le
+    _ < z + x := add_lt_add_right h
+    _ ≤ x + z := add_comm_le
     
 
 theorem le_iff_sub_nonneg {x y : Pgame} : x ≤ y ↔ 0 ≤ y - x :=
   ⟨fun h => le_transₓ zero_le_add_right_neg (add_le_add_right h), fun h =>
-    calc x ≤ 0+x := (zero_add_relabelling x).symm.le
-      _ ≤ (y - x)+x := add_le_add_right h
-      _ ≤ y+(-x)+x := (add_assoc_relabelling _ _ _).le
-      _ ≤ y+0 := add_le_add_left add_left_neg_le_zero
+    calc
+      x ≤ 0 + x := (zero_add_relabelling x).symm.le
+      _ ≤ y - x + x := add_le_add_right h
+      _ ≤ y + (-x + x) := (add_assoc_relabelling _ _ _).le
+      _ ≤ y + 0 := add_le_add_left add_left_neg_le_zero
       _ ≤ y := (add_zero_relabelling y).le
       ⟩
 
 theorem lt_iff_sub_pos {x y : Pgame} : x < y ↔ 0 < y - x :=
   ⟨fun h => lt_of_le_of_ltₓ zero_le_add_right_neg (add_lt_add_right h), fun h =>
-    calc x ≤ 0+x := (zero_add_relabelling x).symm.le
-      _ < (y - x)+x := add_lt_add_right h
-      _ ≤ y+(-x)+x := (add_assoc_relabelling _ _ _).le
-      _ ≤ y+0 := add_le_add_left add_left_neg_le_zero
+    calc
+      x ≤ 0 + x := (zero_add_relabelling x).symm.le
+      _ < y - x + x := add_lt_add_right h
+      _ ≤ y + (-x + x) := (add_assoc_relabelling _ _ _).le
+      _ ≤ y + 0 := add_le_add_left add_left_neg_le_zero
       _ ≤ y := (add_zero_relabelling y).le
       ⟩
 
-/--  The pre-game `star`, which is fuzzy/confused with zero. -/
+/-- The pre-game `star`, which is fuzzy/confused with zero. -/
 def star : Pgame :=
   Pgame.ofLists [0] [0]
 
@@ -1430,7 +1130,7 @@ theorem zero_lt_star : 0 < star := by
         ⟨⟨0, zero_lt_one⟩, by
           constructor <;> rintro ⟨⟩⟩
 
-/--  The pre-game `ω`. (In fact all ordinals have game and surreal representatives.) -/
+/-- The pre-game `ω`. (In fact all ordinals have game and surreal representatives.) -/
 def omega : Pgame :=
   ⟨Ulift ℕ, Pempty, fun n => ↑n.1, Pempty.elimₓ⟩
 
@@ -1441,7 +1141,7 @@ theorem zero_lt_one : (0 : Pgame) < 1 := by
     ⟨PUnit.unit, by
       constructor <;> rintro ⟨⟩⟩
 
-/--  The pre-game `half` is defined as `{0 | 1}`. -/
+/-- The pre-game `half` is defined as `{0 | 1}`. -/
 def half : Pgame :=
   ⟨PUnit, PUnit, 0, 1⟩
 

@@ -67,8 +67,8 @@ theorem erase_dup_idempotent {l : List α} : erase_dup (erase_dup l) = erase_dup
 
 theorem erase_dup_append (l₁ l₂ : List α) : erase_dup (l₁ ++ l₂) = l₁ ∪ erase_dup l₂ := by
   induction' l₁ with a l₁ IH
-  ·
-    rfl
+  · rfl
+    
   rw [cons_union, ← IH]
   show erase_dup (a :: (l₁ ++ l₂)) = insert a (erase_dup (l₁ ++ l₂))
   by_cases' a ∈ erase_dup (l₁ ++ l₂) <;> [rw [erase_dup_cons_of_mem' h, insert_of_mem h],

@@ -24,8 +24,7 @@ variable {E : Type u₃} [category.{v} E]
 
 variable {J : Type v} [small_category J] {K : J ⥤ C}
 
-/-- 
-A functor is said to preserve filtered colimits, if it preserves all colimits of shape `J`, where
+/-- A functor is said to preserve filtered colimits, if it preserves all colimits of shape `J`, where
 `J` is a filtered category.
 -/
 class preserves_filtered_colimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
@@ -37,15 +36,11 @@ instance (priority := 100) preserves_colimits.preserves_filtered_colimits (F : C
     preserves_filtered_colimits F where
   PreservesFilteredColimits := inferInstance
 
--- failed to format: format: uncaught backtrack exception
-instance
-  comp_preserves_filtered_colimits
-  ( F : C ⥤ D ) ( G : D ⥤ E ) [ preserves_filtered_colimits F ] [ preserves_filtered_colimits G ]
-    : preserves_filtered_colimits ( F ⋙ G )
-  where PreservesFilteredColimits J _ _ := by exact inferInstance
+instance comp_preserves_filtered_colimits (F : C ⥤ D) (G : D ⥤ E) [preserves_filtered_colimits F]
+    [preserves_filtered_colimits G] : preserves_filtered_colimits (F ⋙ G) where
+  PreservesFilteredColimits := fun J _ _ => inferInstance
 
-/-- 
-A functor is said to preserve cofiltered limits, if it preserves all limits of shape `J`, where
+/-- A functor is said to preserve cofiltered limits, if it preserves all limits of shape `J`, where
 `J` is a cofiltered category.
 -/
 class preserves_cofiltered_limits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
@@ -57,12 +52,9 @@ instance (priority := 100) preserves_limits.preserves_cofiltered_limits (F : C �
     preserves_cofiltered_limits F where
   PreservesCofilteredLimits := inferInstance
 
--- failed to format: format: uncaught backtrack exception
-instance
-  comp_preserves_cofiltered_limits
-  ( F : C ⥤ D ) ( G : D ⥤ E ) [ preserves_cofiltered_limits F ] [ preserves_cofiltered_limits G ]
-    : preserves_cofiltered_limits ( F ⋙ G )
-  where PreservesCofilteredLimits J _ _ := by exact inferInstance
+instance comp_preserves_cofiltered_limits (F : C ⥤ D) (G : D ⥤ E) [preserves_cofiltered_limits F]
+    [preserves_cofiltered_limits G] : preserves_cofiltered_limits (F ⋙ G) where
+  PreservesCofilteredLimits := fun J _ _ => inferInstance
 
 end CategoryTheory.Limits
 

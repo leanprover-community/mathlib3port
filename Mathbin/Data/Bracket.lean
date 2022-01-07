@@ -17,7 +17,7 @@ these are the Unicode "square with quill" brackets rather than the usual square 
 -/
 
 
-/--  The has_bracket class has three intended uses:
+/-- The has_bracket class has three intended uses:
 
   1. for certain binary operations on structures, like the product `⁅x, y⁆` of two elements
     `x`, `y` in a Lie algebra or the commutator of two elements `x` and `y` in a group.

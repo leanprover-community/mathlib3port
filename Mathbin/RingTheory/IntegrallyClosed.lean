@@ -20,7 +20,7 @@ integral over `R`. A special case of integrally closed domains are the Dedekind 
 
 open_locale nonZeroDivisors
 
-/--  `R` is integrally closed if all integral elements of `Frac(R)` are also elements of `R`.
+/-- `R` is integrally closed if all integral elements of `Frac(R)` are also elements of `R`.
 
 This definition uses `fraction_ring R` to denote `Frac(R)`. See `is_integrally_closed_iff`
 if you want to choose another field of fractions for `R`.
@@ -34,36 +34,36 @@ variable {R : Type _} [CommRingₓ R] [IsDomain R]
 
 variable (K : Type _) [Field K] [Algebra R K] [IsFractionRing R K]
 
-/--  `R` is integrally closed iff all integral elements of its fraction field `K`
+/-- `R` is integrally closed iff all integral elements of its fraction field `K`
 are also elements of `R`. -/
 theorem is_integrally_closed_iff : IsIntegrallyClosed R ↔ ∀ {x : K}, IsIntegral R x → ∃ y, algebraMap R K y = x := by
   let e : K ≃ₐ[R] FractionRing R := IsLocalization.algEquiv R⁰ _ _
   constructor
-  ·
-    rintro ⟨cl⟩
+  · rintro ⟨cl⟩
     refine' fun x hx => _
     obtain ⟨y, hy⟩ := cl ((is_integral_alg_equiv e).mpr hx)
     exact ⟨y, e.algebra_map_eq_apply.mp hy⟩
-  ·
-    rintro cl
+    
+  · rintro cl
     refine' ⟨fun x hx => _⟩
     obtain ⟨y, hy⟩ := cl ((is_integral_alg_equiv e.symm).mpr hx)
     exact ⟨y, e.symm.algebra_map_eq_apply.mp hy⟩
+    
 
-/--  `R` is integrally closed iff it is the integral closure of itself in its field of fractions. -/
+/-- `R` is integrally closed iff it is the integral closure of itself in its field of fractions. -/
 theorem is_integrally_closed_iff_is_integral_closure : IsIntegrallyClosed R ↔ IsIntegralClosure R R K :=
   (is_integrally_closed_iff K).trans $ by
     let e : K ≃ₐ[R] FractionRing R := IsLocalization.algEquiv R⁰ _ _
     constructor
-    ·
-      intro cl
+    · intro cl
       refine' ⟨IsFractionRing.injective _ _, fun x => ⟨cl, _⟩⟩
       rintro ⟨y, y_eq⟩
       rw [← y_eq]
       exact is_integral_algebra_map
-    ·
-      rintro ⟨-, cl⟩ x hx
+      
+    · rintro ⟨-, cl⟩ x hx
       exact cl.mp hx
+      
 
 end Iff
 
@@ -88,15 +88,15 @@ variable {R} (K)
 theorem integral_closure_eq_bot_iff : integralClosure R K = ⊥ ↔ IsIntegrallyClosed R := by
   refine' eq_bot_iff.trans _
   constructor
-  ·
-    rw [is_integrally_closed_iff K]
+  · rw [is_integrally_closed_iff K]
     intro h x hx
     exact set.mem_range.mp (algebra.mem_bot.mp (h hx))
     assumption
-  ·
-    intro h x hx
+    
+  · intro h x hx
     rw [Algebra.mem_bot, Set.mem_range]
     exact is_integral_iff.mp hx
+    
 
 include iic
 

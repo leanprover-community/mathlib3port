@@ -26,7 +26,7 @@ namespace LieAlgebra
 
 variable (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
-/--  A character of a Lie algebra is a morphism to the scalars. -/
+/-- A character of a Lie algebra is a morphism to the scalars. -/
 abbrev lie_character :=
   L →ₗ⁅R⁆ R
 
@@ -41,33 +41,33 @@ theorem lie_character_apply_of_mem_derived (χ : lie_character R L) {x : L} (h :
   rw [derived_series_def, derived_series_of_ideal_succ, derived_series_of_ideal_zero, ← LieSubmodule.mem_coe_submodule,
     LieSubmodule.lie_ideal_oper_eq_linear_span] at h
   apply Submodule.span_induction h
-  ·
-    rintro y ⟨⟨z, hz⟩, ⟨⟨w, hw⟩, rfl⟩⟩
+  · rintro y ⟨⟨z, hz⟩, ⟨⟨w, hw⟩, rfl⟩⟩
     apply lie_character_apply_lie
-  ·
-    exact χ.map_zero
-  ·
-    intro y z hy hz
+    
+  · exact χ.map_zero
+    
+  · intro y z hy hz
     rw [LieHom.map_add, hy, hz, add_zeroₓ]
-  ·
-    intro t y hy
+    
+  · intro t y hy
     rw [LieHom.map_smul, hy, smul_zero]
+    
 
-/--  For an Abelian Lie algebra, characters are just linear forms. -/
+/-- For an Abelian Lie algebra, characters are just linear forms. -/
 @[simps]
-def lie_character_equiv_linear_dual [IsLieAbelian L] : lie_character R L ≃ Module.Dual R L :=
-  { toFun := fun χ => (χ : L →ₗ[R] R),
-    invFun := fun ψ =>
-      { ψ with
-        map_lie' := fun x y => by
-          rw [LieModule.IsTrivial.trivial, LieRing.of_associative_ring_bracket, mul_commₓ, sub_self,
-            LinearMap.to_fun_eq_coe, LinearMap.map_zero] },
-    left_inv := fun χ => by
-      ext
-      rfl,
-    right_inv := fun ψ => by
-      ext
-      rfl }
+def lie_character_equiv_linear_dual [IsLieAbelian L] : lie_character R L ≃ Module.Dual R L where
+  toFun := fun χ => (χ : L →ₗ[R] R)
+  invFun := fun ψ =>
+    { ψ with
+      map_lie' := fun x y => by
+        rw [LieModule.IsTrivial.trivial, LieRing.of_associative_ring_bracket, mul_commₓ, sub_self,
+          LinearMap.to_fun_eq_coe, LinearMap.map_zero] }
+  left_inv := fun χ => by
+    ext
+    rfl
+  right_inv := fun ψ => by
+    ext
+    rfl
 
 end LieAlgebra
 

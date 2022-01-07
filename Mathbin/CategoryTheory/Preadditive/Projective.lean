@@ -30,16 +30,14 @@ namespace CategoryTheory
 
 variable {C : Type u} [category.{v} C]
 
-/-- 
-An object `P` is called projective if every morphism out of `P` factors through every epimorphism.
+/-- An object `P` is called projective if every morphism out of `P` factors through every epimorphism.
 -/
 class projective (P : C) : Prop where
   Factors : ∀ {E X : C} f : P ⟶ X e : E ⟶ X [epi e], ∃ f', f' ≫ e = f
 
 section
 
-/-- 
-A projective presentation of an object `X` consists of an epimorphism `f : P ⟶ X`
+/-- A projective presentation of an object `X` consists of an epimorphism `f : P ⟶ X`
 from some projective object `P`.
 -/
 @[nolint has_inhabited_instance]
@@ -55,7 +53,7 @@ structure projective_presentation (X : C) where
 
 variable (C)
 
-/--  A category "has enough projectives" if for every object `X` there is a projective object `P` and
+/-- A category "has enough projectives" if for every object `X` there is a projective object `P` and
     an epimorphism `P ↠ X`. -/
 class enough_projectives : Prop where
   presentation : ∀ X : C, Nonempty (projective_presentation X)
@@ -64,8 +62,7 @@ end
 
 namespace Projective
 
-/-- 
-An arbitrarily chosen factorisation of a morphism out of a projective object through an epimorphism.
+/-- An arbitrarily chosen factorisation of a morphism out of a projective object through an epimorphism.
 -/
 def factor_thru {P X E : C} [projective P] (f : P ⟶ X) (e : E ⟶ X) [epi e] : P ⟶ E :=
   (projective.factors f e).some
@@ -78,11 +75,10 @@ section
 
 open_locale ZeroObject
 
--- failed to format: format: uncaught backtrack exception
-instance
-  zero_projective
-  [ has_zero_object C ] [ has_zero_morphisms C ] : projective ( 0 : C )
-  where Factors E X f e epi := by use 0 ext
+instance zero_projective [has_zero_object C] [has_zero_morphisms C] : projective (0 : C) where
+  Factors := fun E X f e epi => by
+    use 0
+    ext
 
 end
 
@@ -97,64 +93,43 @@ theorem of_iso {P Q : C} (i : P ≅ Q) (hP : projective P) : projective Q := by
 theorem iso_iff {P Q : C} (i : P ≅ Q) : projective P ↔ projective Q :=
   ⟨of_iso i, of_iso i.symm⟩
 
--- failed to format: format: uncaught backtrack exception
 /-- The axiom of choice says that every type is a projective object in `Type`. -/
-  instance
-    ( X : Type u ) : projective X
-    where
-      Factors
-        E X' f e epi
-        :=
-        ⟨
-          fun x => ( ( epi_iff_surjective _ ) . mp epi ( f x ) ) . some
-            ,
-            by ext x exact ( ( epi_iff_surjective _ ) . mp epi ( f x ) ) . some_spec
-          ⟩
+instance (X : Type u) : projective X where
+  Factors := fun E X' f e epi =>
+    ⟨fun x => ((epi_iff_surjective _).mp epi (f x)).some, by
+      ext x
+      exact ((epi_iff_surjective _).mp epi (f x)).some_spec⟩
 
--- failed to format: format: uncaught backtrack exception
-instance Type.enough_projectives : enough_projectives ( Type u ) where presentation X := ⟨ { P := X , f := 𝟙 X } ⟩
+instance Type.enough_projectives : enough_projectives (Type u) where
+  presentation := fun X => ⟨{ P := X, f := 𝟙 X }⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { P Q : C } [ has_binary_coproduct P Q ] [ projective P ] [ projective Q ] : projective ( P ⨿ Q )
-  where
-    Factors
-      E X' f e epi
-      :=
-      by exact ⟨ coprod.desc ( factor_thru ( coprod.inl ≫ f ) e ) ( factor_thru ( coprod.inr ≫ f ) e ) , by tidy ⟩
+instance {P Q : C} [has_binary_coproduct P Q] [projective P] [projective Q] : projective (P ⨿ Q) where
+  Factors := fun E X' f e epi =>
+    ⟨coprod.desc (factor_thru (coprod.inl ≫ f) e) (factor_thru (coprod.inr ≫ f) e), by
+      tidy⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { β : Type v } ( g : β → C ) [ has_coproduct g ] [ ∀ b , projective ( g b ) ] : projective ( ∐ g )
-  where Factors E X' f e epi := by exact ⟨ sigma.desc fun b => factor_thru ( sigma.ι g b ≫ f ) e , by tidy ⟩
+instance {β : Type v} (g : β → C) [has_coproduct g] [∀ b, projective (g b)] : projective (∐ g) where
+  Factors := fun E X' f e epi =>
+    ⟨sigma.desc fun b => factor_thru (sigma.ι g b ≫ f) e, by
+      tidy⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { P Q : C } [ has_zero_morphisms C ] [ has_binary_biproduct P Q ] [ projective P ] [ projective Q ]
-    : projective ( P ⊞ Q )
-  where
-    Factors
-      E X' f e epi
-      :=
-      by exact ⟨ biprod.desc ( factor_thru ( biprod.inl ≫ f ) e ) ( factor_thru ( biprod.inr ≫ f ) e ) , by tidy ⟩
+instance {P Q : C} [has_zero_morphisms C] [has_binary_biproduct P Q] [projective P] [projective Q] :
+    projective (P ⊞ Q) where
+  Factors := fun E X' f e epi =>
+    ⟨biprod.desc (factor_thru (biprod.inl ≫ f) e) (factor_thru (biprod.inr ≫ f) e), by
+      tidy⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { β : Type v }
-      [ DecidableEq β ]
-      ( g : β → C )
-      [ has_zero_morphisms C ]
-      [ has_biproduct g ]
-      [ ∀ b , projective ( g b ) ]
-    : projective ( ⨁ g )
-  where Factors E X' f e epi := by exact ⟨ biproduct.desc fun b => factor_thru ( biproduct.ι g b ≫ f ) e , by tidy ⟩
+instance {β : Type v} [DecidableEq β] (g : β → C) [has_zero_morphisms C] [has_biproduct g] [∀ b, projective (g b)] :
+    projective (⨁ g) where
+  Factors := fun E X' f e epi =>
+    ⟨biproduct.desc fun b => factor_thru (biproduct.ι g b ≫ f) e, by
+      tidy⟩
 
 section EnoughProjectives
 
 variable [enough_projectives C]
 
-/-- 
-`projective.over X` provides an arbitrarily chosen projective object equipped with
+/-- `projective.over X` provides an arbitrarily chosen projective object equipped with
 an epimorphism `projective.π : projective.over X ⟶ X`.
 -/
 def over (X : C) : C :=
@@ -163,8 +138,7 @@ def over (X : C) : C :=
 instance projective_over (X : C) : projective (over X) :=
   (enough_projectives.presentation X).some.Projective
 
-/-- 
-The epimorphism `projective.π : projective.over X ⟶ X`
+/-- The epimorphism `projective.π : projective.over X ⟶ X`
 from the arbitrarily chosen projective object over `X`.
 -/
 def π (X : C) : over X ⟶ X :=
@@ -177,16 +151,13 @@ section
 
 variable [has_zero_morphisms C] {X Y : C} (f : X ⟶ Y) [has_kernel f]
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler projective
-/-- 
-When `C` has enough projectives, the object `projective.syzygies f` is
+/-- When `C` has enough projectives, the object `projective.syzygies f` is
 an arbitrarily chosen projective object over `kernel f`.
 -/
 def syzygies : C :=
-  over (kernel f)deriving [anonymous]
+  over (kernel f)deriving projective
 
-/-- 
-When `C` has enough projectives,
+/-- When `C` has enough projectives,
 `projective.d f : projective.syzygies f ⟶ X` is the composition
 `π (kernel f) ≫ kernel.ι f`.
 
@@ -207,8 +178,7 @@ section
 
 variable [has_zero_morphisms C] [has_equalizers C] [has_images C]
 
-/-- 
-Given a projective object `P` mapping via `h` into
+/-- Given a projective object `P` mapping via `h` into
 the middle object `R` of a pair of exact morphisms `f : Q ⟶ R` and `g : R ⟶ S`,
 such that `h ≫ g = 0`, there is a lift of `h` to `Q`.
 -/

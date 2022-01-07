@@ -57,17 +57,14 @@ unsafe def add_simps : simp_lemmas → List Name → tactic simp_lemmas
     let s' ← s.add_simp n
     add_simps s' ns
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/-- 
-Configuration information for the auto tactics.
+/-- Configuration information for the auto tactics.
 * `(use_simp := tt)`: call the simplifier
 * `(max_ematch_rounds := 20)`: for the "done" tactic
 -/
 structure auto_config : Type where
   useSimp := tt
   maxEmatchRounds := 20
-  deriving [anonymous], [anonymous]
+  deriving DecidableEq, Inhabited
 
 /-!
 ### Preprocess goal.
@@ -139,7 +136,7 @@ def common_normalize_lemma_names : List Name :=
 def classical_normalize_lemma_names : List Name :=
   common_normalize_lemma_names ++ [`` classical.implies_iff_not_or]
 
-/--  optionally returns an equivalent expression and proof of equivalence -/
+/-- optionally returns an equivalent expression and proof of equivalence -/
 private unsafe def transform_negation_step (cfg : auto_config) (e : expr) : tactic (Option (expr × expr)) := do
   let e ← whnf_reducible e
   match e with
@@ -171,7 +168,7 @@ private unsafe def transform_negation_step (cfg : auto_config) (e : expr) : tact
         | _ => return none
     | _ => return none
 
-/--  given an expr `e`, returns a new expression and a proof of equality -/
+/-- given an expr `e`, returns a new expression and a proof of equality -/
 private unsafe def transform_negation (cfg : auto_config) : expr → tactic (Option (expr × expr)) := fun e => do
   let opr ← transform_negation_step cfg e
   match opr with
@@ -214,7 +211,7 @@ unsafe def normalize_hyps (cfg : auto_config) : tactic Unit := do
 -/
 
 
-/--  eliminate an existential quantifier if there is one -/
+/-- eliminate an existential quantifier if there is one -/
 unsafe def eelim : tactic Unit := do
   let ctx ← local_context
   first $
@@ -226,7 +223,7 @@ unsafe def eelim : tactic Unit := do
         intros
         clear h
 
-/--  eliminate all existential quantifiers, fails if there aren't any -/
+/-- eliminate all existential quantifiers, fails if there aren't any -/
 unsafe def eelims : tactic Unit :=
   eelim >> repeat eelim
 
@@ -235,7 +232,7 @@ unsafe def eelims : tactic Unit :=
 -/
 
 
-/--  carries out a subst if there is one, fails otherwise -/
+/-- carries out a subst if there is one, fails otherwise -/
 unsafe def do_subst : tactic Unit := do
   let ctx ← local_context
   first $
@@ -253,7 +250,7 @@ unsafe def do_substs : tactic Unit :=
 -/
 
 
-/--  Assumes `pr` is a proof of `t`. Adds the consequences of `t` to the context
+/-- Assumes `pr` is a proof of `t`. Adds the consequences of `t` to the context
  and returns `tt` if anything nontrivial has been added. -/
 unsafe def add_conjuncts : expr → expr → tactic Bool := fun pr t =>
   let assert_consequences := fun e t => mcond (add_conjuncts e t) skip (note_anon t e >> skip)
@@ -270,12 +267,12 @@ unsafe def add_conjuncts : expr → expr → tactic Bool := fun pr t =>
       return tt
     | _ => return ff
 
-/--  return `tt` if any progress is made -/
+/-- return `tt` if any progress is made -/
 unsafe def split_hyp (h : expr) : tactic Bool := do
   let t ← infer_type h
   mcond (add_conjuncts h t) (clear h >> return tt) (return ff)
 
-/--  return `tt` if any progress is made -/
+/-- return `tt` if any progress is made -/
 unsafe def split_hyps_aux : List expr → tactic Bool
   | [] => return ff
   | h :: hs => do
@@ -283,7 +280,7 @@ unsafe def split_hyps_aux : List expr → tactic Bool
     let b₂ ← split_hyps_aux hs
     return (b₁ || b₂)
 
-/--  fail if no progress is made -/
+/-- fail if no progress is made -/
 unsafe def split_hyps : tactic Unit :=
   local_context >>= split_hyps_aux >>= guardb
 
@@ -292,7 +289,7 @@ unsafe def split_hyps : tactic Unit :=
 -/
 
 
-/--  Eagerly apply all the preprocessing rules -/
+/-- Eagerly apply all the preprocessing rules -/
 unsafe def preprocess_hyps (cfg : auto_config) : tactic Unit := do
   repeat (intro1 >> skip)
   preprocess_goal
@@ -304,8 +301,7 @@ unsafe def preprocess_hyps (cfg : auto_config) : tactic Unit := do
 -/
 
 
-/-- 
-The terminal tactic, used to try to finish off goals:
+/-- The terminal tactic, used to try to finish off goals:
 - Call the contradiction tactic.
 - Open an SMT state, and use ematching and congruence closure, with all the universal
   statements in the context.
@@ -367,8 +363,7 @@ private unsafe def add_hinst_lemmas_from_pexprs (md : transparency) (lhs_lemma :
     (hs : hinst_lemmas) : smt_tactic hinst_lemmas :=
   List.mfoldl (add_hinst_lemma_from_pexpr md lhs_lemma) hs ps
 
-/-- 
-`done` first attempts to close the goal using `contradiction`. If this fails, it creates an
+/-- `done` first attempts to close the goal using `contradiction`. If this fails, it creates an
 SMT state and will repeatedly use `ematch` (using `ematch` lemmas in the environment,
 universally quantified assumptions, and the supplied lemmas `ps`) and congruence closure.
 -/
@@ -390,13 +385,11 @@ unsafe def done (ps : List pexpr) (cfg : auto_config := {  }) : tactic Unit := d
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
 inductive case_option
   | force
   | at_most_one
   | accept
-  deriving [anonymous], [anonymous]
+  deriving DecidableEq, Inhabited
 
 private unsafe def case_cont (s : case_option) (cont : case_option → tactic Unit) : tactic Unit := do
   match s with
@@ -424,8 +417,7 @@ unsafe def case_some_hyp (s : case_option) (cont : case_option → tactic Unit) 
 -/
 
 
-/-- 
-`safe_core s ps cfg opt` negates the goal, normalizes hypotheses
+/-- `safe_core s ps cfg opt` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `s`), and then tries `contradiction`.
 
@@ -460,22 +452,19 @@ unsafe def safe_core (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : aut
               | case_option.at_most_one => try (done ps cfg)
               | case_option.accept => try (done ps cfg))
 
-/-- 
-`clarify` is `safe_core`, but with the `(opt : case_option)`
+/-- `clarify` is `safe_core`, but with the `(opt : case_option)`
 parameter fixed at `case_option.at_most_one`.
 -/
 unsafe def clarify (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : auto_config := {  }) : tactic Unit :=
   safe_core s ps cfg case_option.at_most_one
 
-/-- 
-`safe` is `safe_core`, but with the `(opt : case_option)`
+/-- `safe` is `safe_core`, but with the `(opt : case_option)`
 parameter fixed at `case_option.accept`.
 -/
 unsafe def safe (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : auto_config := {  }) : tactic Unit :=
   safe_core s ps cfg case_option.accept
 
-/-- 
-`finish` is `safe_core`, but with the `(opt : case_option)`
+/-- `finish` is `safe_core`, but with the `(opt : case_option)`
 parameter fixed at `case_option.force`.
 -/
 unsafe def finish (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : auto_config := {  }) : tactic Unit :=
@@ -494,8 +483,8 @@ namespace Interactive
 
 setup_tactic_parser
 
-/-- 
-`clarify [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+/-- `clarify [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.
 
@@ -509,13 +498,13 @@ Either of the supplied simp lemmas or the supplied ematch lemmas are optional.
 
 `clarify` will fail if it produces more than one goal.
 -/
-unsafe def clarify (hs : parse simp_arg_list) (ps : parse (tk "using" *> pexpr_list_or_texpr)?)
+unsafe def clarify (hs : parse simp_arg_list) (ps : parse («expr ?» (tk "using" *> pexpr_list_or_texpr)))
     (cfg : auto_config := {  }) : tactic Unit := do
   let s ← mk_simp_set ff [] hs
   auto.clarify s (ps.get_or_else []) cfg
 
-/-- 
-`safe [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+/-- `safe [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.
 
@@ -529,13 +518,13 @@ Either of the supplied simp lemmas or the supplied ematch lemmas are optional.
 
 `safe` ignores the number of goals it produces, and should never fail.
 -/
-unsafe def safe (hs : parse simp_arg_list) (ps : parse (tk "using" *> pexpr_list_or_texpr)?)
+unsafe def safe (hs : parse simp_arg_list) (ps : parse («expr ?» (tk "using" *> pexpr_list_or_texpr)))
     (cfg : auto_config := {  }) : tactic Unit := do
   let s ← mk_simp_set ff [] hs
   auto.safe s (ps.get_or_else []) cfg
 
-/-- 
-`finish [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+/-- `finish [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.
 
@@ -549,15 +538,14 @@ Either of the supplied simp lemmas or the supplied ematch lemmas are optional.
 
 `finish` will fail if it does not close the goal.
 -/
-unsafe def finish (hs : parse simp_arg_list) (ps : parse (tk "using" *> pexpr_list_or_texpr)?)
+unsafe def finish (hs : parse simp_arg_list) (ps : parse («expr ?» (tk "using" *> pexpr_list_or_texpr)))
     (cfg : auto_config := {  }) : tactic Unit := do
   let s ← mk_simp_set ff [] hs
   auto.finish s (ps.get_or_else []) cfg
 
 add_hint_tactic finish
 
-/-- 
-These tactics do straightforward things: they call the simplifier, split conjunctive assumptions,
+/-- These tactics do straightforward things: they call the simplifier, split conjunctive assumptions,
 eliminate existential quantifiers on the left, and look for contradictions. They rely on ematching
 and congruence closure to try to finish off a goal at the end.
 

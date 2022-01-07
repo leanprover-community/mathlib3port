@@ -34,7 +34,7 @@ variable {P : Type _}
 
 namespace Ideal
 
-/--  A pair of an `ideal` and a `pfilter` which form a partition of `P`.
+/-- A pair of an `ideal` and a `pfilter` which form a partition of `P`.
 -/
 @[nolint has_inhabited_instance]
 structure prime_pair (P : Type _) [Preorderₓ P] where
@@ -68,7 +68,7 @@ theorem F_union_I : (IF.F : Set P) ∪ IF.I = Set.Univ :=
 
 end PrimePair
 
-/--  An ideal `I` is prime if its complement is a filter.
+/-- An ideal `I` is prime if its complement is a filter.
 -/
 @[mk_iff]
 class is_prime [Preorderₓ P] (I : ideal P) extends is_proper I : Prop where
@@ -78,7 +78,7 @@ section Preorderₓ
 
 variable [Preorderₓ P]
 
-/--  Create an element of type `order.ideal.prime_pair` from an ideal satisfying the predicate
+/-- Create an element of type `order.ideal.prime_pair` from an ideal satisfying the predicate
 `order.ideal.is_prime`. -/
 def is_prime.to_prime_pair {I : ideal P} (h : is_prime I) : prime_pair P :=
   { i, f := h.compl_filter.to_pfilter, is_compl_I_F := is_compl_compl }
@@ -105,15 +105,15 @@ theorem is_prime.of_mem_or_mem [is_proper I] (hI : ∀ {x y : P}, x⊓y ∈ I �
   rw [is_prime_iff]
   use ‹_›
   apply is_pfilter.of_def
-  ·
-    exact Set.nonempty_compl.2 (I.is_proper_iff.1 ‹_›)
-  ·
-    intro x _ y _
+  · exact Set.nonempty_compl.2 (I.is_proper_iff.1 ‹_›)
+    
+  · intro x _ y _
     refine' ⟨x⊓y, _, inf_le_left, inf_le_right⟩
     have := mt hI
     tauto!
-  ·
-    exact @mem_compl_of_ge _ _ _
+    
+  · exact @mem_compl_of_ge _ _ _
+    
 
 theorem is_prime_iff_mem_or_mem [is_proper I] : is_prime I ↔ ∀ {x y : P}, x⊓y ∈ I → x ∈ I ∨ y ∈ I :=
   ⟨is_prime.mem_or_mem, is_prime.of_mem_or_mem⟩
@@ -170,8 +170,8 @@ instance (priority := 100) is_prime.is_maximal [is_prime I] : is_maximal I := by
   intro J hIJ x
   rcases Set.exists_of_ssubset hIJ with ⟨y, hyJ, hyI⟩
   suffices ass : x⊓y⊔x⊓yᶜ ∈ J
-  ·
-    rwa [sup_inf_inf_compl] at ass
+  · rwa [sup_inf_inf_compl] at ass
+    
   exact
     sup_mem _ _ (J.mem_of_le inf_le_right hyJ)
       (hIJ.le (I.mem_of_le inf_le_right (is_prime.mem_compl_of_not_mem ‹_› hyI)))
@@ -184,13 +184,13 @@ namespace Pfilter
 
 variable [Preorderₓ P]
 
-/--  A filter `F` is prime if its complement is an ideal.
+/-- A filter `F` is prime if its complement is an ideal.
 -/
 @[mk_iff]
 class is_prime (F : pfilter P) : Prop where
   compl_ideal : is_ideal ((F : Set P)ᶜ)
 
-/--  Create an element of type `order.ideal.prime_pair` from a filter satisfying the predicate
+/-- Create an element of type `order.ideal.prime_pair` from a filter satisfying the predicate
 `order.pfilter.is_prime`. -/
 def is_prime.to_prime_pair {F : pfilter P} (h : is_prime F) : ideal.prime_pair P :=
   { i := h.compl_ideal.to_ideal, f, is_compl_I_F := is_compl_compl.symm }

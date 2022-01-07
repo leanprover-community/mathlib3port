@@ -18,14 +18,14 @@ namespace Functor
 
 variable (C : Type u) [category.{v} C]
 
-/--  The constant functor sending everything to `punit.star`. -/
+/-- The constant functor sending everything to `punit.star`. -/
 @[simps]
 def star : C ⥤ discrete PUnit :=
   (Functor.Const _).obj PUnit.unit
 
 variable {C}
 
-/--  Any two functors to `discrete punit` are isomorphic. -/
+/-- Any two functors to `discrete punit` are isomorphic. -/
 @[simps]
 def punit_ext (F G : C ⥤ discrete PUnit) : F ≅ G :=
   nat_iso.of_components
@@ -36,8 +36,7 @@ def punit_ext (F G : C ⥤ discrete PUnit) : F ≅ G :=
     fun _ _ _ => by
     decide
 
-/-- 
-Any two functors to `discrete punit` are *equal*.
+/-- Any two functors to `discrete punit` are *equal*.
 You probably want to use `punit_ext` instead of this.
 -/
 theorem punit_ext' (F G : C ⥤ discrete PUnit) : F = G :=
@@ -47,28 +46,29 @@ theorem punit_ext' (F G : C ⥤ discrete PUnit) : F = G :=
     fun _ _ _ => by
     decide
 
-/--  The functor from `discrete punit` sending everything to the given object. -/
+/-- The functor from `discrete punit` sending everything to the given object. -/
 abbrev from_punit (X : C) : discrete PUnit.{v + 1} ⥤ C :=
   (Functor.Const _).obj X
 
-/--  Functors from `discrete punit` are equivalent to the category itself. -/
+/-- Functors from `discrete punit` are equivalent to the category itself. -/
 @[simps]
-def Equivₓ : discrete PUnit ⥤ C ≌ C :=
-  { Functor := { obj := fun F => F.obj PUnit.unit, map := fun F G θ => θ.app PUnit.unit }, inverse := Functor.Const _,
-    unitIso := by
-      apply nat_iso.of_components _ _
-      intro X
-      apply discrete.nat_iso
-      rintro ⟨⟩
-      apply iso.refl _
-      intros
-      ext ⟨⟩
-      simp ,
-    counitIso := by
-      refine' nat_iso.of_components iso.refl _
-      intro X Y f
-      dsimp
-      simp }
+def Equivₓ : discrete PUnit ⥤ C ≌ C where
+  Functor := { obj := fun F => F.obj PUnit.unit, map := fun F G θ => θ.app PUnit.unit }
+  inverse := Functor.Const _
+  unitIso := by
+    apply nat_iso.of_components _ _
+    intro X
+    apply discrete.nat_iso
+    rintro ⟨⟩
+    apply iso.refl _
+    intros
+    ext ⟨⟩
+    simp
+  counitIso := by
+    refine' nat_iso.of_components iso.refl _
+    intro X Y f
+    dsimp
+    simp
 
 end Functor
 

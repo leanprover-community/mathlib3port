@@ -30,108 +30,13 @@ namespace Nat
 
 namespace ArithmeticFunction
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [(Command.docComment "/--" " The L-series of an `arithmetic_function`. -/")] [] [] [] [] [])
- (Command.def
-  "def"
-  (Command.declId `l_series [])
-  (Command.optDeclSig
-   [(Term.explicitBinder "(" [`f] [":" (Term.app `arithmetic_function [(Data.Complex.Basic.termℂ "ℂ")])] [] ")")
-    (Term.explicitBinder "(" [`z] [":" (Data.Complex.Basic.termℂ "ℂ")] [] ")")]
-   [(Term.typeSpec ":" (Data.Complex.Basic.termℂ "ℂ"))])
-  (Command.declValSimple
-   ":="
-   (Topology.Algebra.InfiniteSum.«term∑'_,_»
-    "∑'"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] []))
-    ", "
-    («term_/_» (Term.app `f [`n]) "/" (Cardinal.SetTheory.Cofinality.«term_^_» `n "^" `z)))
-   [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Topology.Algebra.InfiniteSum.«term∑'_,_»
-   "∑'"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] []))
-   ", "
-   («term_/_» (Term.app `f [`n]) "/" (Cardinal.SetTheory.Cofinality.«term_^_» `n "^" `z)))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.Algebra.InfiniteSum.«term∑'_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_/_» (Term.app `f [`n]) "/" (Cardinal.SetTheory.Cofinality.«term_^_» `n "^" `z))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_/_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Cardinal.SetTheory.Cofinality.«term_^_» `n "^" `z)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Cardinal.SetTheory.Cofinality.«term_^_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `z
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 0, term))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1 >? 1024, (none, [anonymous]) <=? (some 0, term)
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 0, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Cardinal.SetTheory.Cofinality.«term_^_» `n "^" `z) []]
- ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
-  (Term.app `f [`n])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- The L-series of an `arithmetic_function`. -/
-  def l_series ( f : arithmetic_function ℂ ) ( z : ℂ ) : ℂ := ∑' n , f n / n ^ z
+def l_series (f : arithmetic_function ℂ) (z : ℂ) : ℂ :=
+  ∑' n, f n / n ^ z
 
-/--  `f.l_series_summable z` indicates that the L-series of `f` converges at `z`. -/
+/-- `f.l_series_summable z` indicates that the L-series of `f` converges at `z`. -/
 def l_series_summable (f : arithmetic_function ℂ) (z : ℂ) : Prop :=
-  Summable fun n => f n / (n^z)
+  Summable fun n => f n / n ^ z
 
 theorem l_series_eq_zero_of_not_l_series_summable (f : arithmetic_function ℂ) (z : ℂ) :
     ¬f.l_series_summable z → f.l_series z = 0 :=
@@ -144,34 +49,34 @@ theorem l_series_summable_zero {z : ℂ} : l_series_summable 0 z := by
 theorem l_series_summable_of_bounded_of_one_lt_real {f : arithmetic_function ℂ} {m : ℝ}
     (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℝ} (hz : 1 < z) : f.l_series_summable z := by
   by_cases' h0 : m = 0
-  ·
-    subst h0
+  · subst h0
     have hf : f = 0 :=
       arithmetic_function.ext fun n => Complex.abs_eq_zero.1 (le_antisymmₓ (h n) (Complex.abs_nonneg _))
     simp [hf]
-  refine' summable_of_norm_bounded (fun n : ℕ => m / (n^z)) _ _
-  ·
-    simp_rw [div_eq_mul_inv]
+    
+  refine' summable_of_norm_bounded (fun n : ℕ => m / n ^ z) _ _
+  · simp_rw [div_eq_mul_inv]
     exact (summable_mul_left_iff h0).1 (Real.summable_nat_rpow_inv.2 hz)
-  ·
-    intro n
+    
+  · intro n
     have hm : 0 ≤ m := le_transₓ (Complex.abs_nonneg _) (h 0)
     cases n
-    ·
-      simp [hm, Real.zero_rpow (ne_of_gtₓ (lt_transₓ Real.zero_lt_one hz))]
+    · simp [hm, Real.zero_rpow (ne_of_gtₓ (lt_transₓ Real.zero_lt_one hz))]
+      
     simp only [Complex.abs_div, Complex.norm_eq_abs]
     apply div_le_div hm (h _) (Real.rpow_pos_of_pos (Nat.cast_pos.2 n.succ_pos) _) (le_of_eqₓ _)
     rw [Complex.abs_cpow_real, Complex.abs_cast_nat]
+    
 
 theorem l_series_summable_iff_of_re_eq_re {f : arithmetic_function ℂ} {w z : ℂ} (h : w.re = z.re) :
     f.l_series_summable w ↔ f.l_series_summable z := by
-  suffices h : ∀ n : ℕ, Complex.abs (f n) / Complex.abs (↑n^w) = Complex.abs (f n) / Complex.abs (↑n^z)
-  ·
-    simp [l_series_summable, ← summable_norm_iff, h, Complex.norm_eq_abs]
+  suffices h : ∀ n : ℕ, Complex.abs (f n) / Complex.abs (↑n ^ w) = Complex.abs (f n) / Complex.abs (↑n ^ z)
+  · simp [l_series_summable, ← summable_norm_iff, h, Complex.norm_eq_abs]
+    
   intro n
   cases n
-  ·
-    simp
+  · simp
+    
   apply congr rfl
   have h0 : (n.succ : ℂ) ≠ 0 := by
     rw [Ne.def, Nat.cast_eq_zero]
@@ -194,26 +99,26 @@ theorem zeta_l_series_summable_iff_one_lt_re {z : ℂ} : l_series_summable ζ z 
   rw [← l_series_summable_iff_of_re_eq_re (Complex.of_real_re z.re), l_series_summable, ← summable_norm_iff, ←
     Real.summable_one_div_nat_rpow, iff_iff_eq]
   by_cases' h0 : z.re = 0
-  ·
-    rw [h0, ← summable_nat_add_iff 1]
+  · rw [h0, ← summable_nat_add_iff 1]
     swap
-    ·
-      infer_instance
+    · infer_instance
+      
     apply congr rfl
     ext n
     simp [n.succ_ne_zero]
-  ·
-    apply congr rfl
+    
+  · apply congr rfl
     ext n
     cases n
-    ·
-      simp [h0]
+    · simp [h0]
+      
     simp only [n.succ_ne_zero, one_div, cast_one, nat_coe_apply, Complex.abs_cpow_real, inv_inj₀, Complex.abs_inv,
       if_false, zeta_apply, Complex.norm_eq_abs, Complex.abs_of_nat]
+    
 
 @[simp]
 theorem l_series_add {f g : arithmetic_function ℂ} {z : ℂ} (hf : f.l_series_summable z) (hg : g.l_series_summable z) :
-    (f+g).lSeries z = f.l_series z+g.l_series z := by
+    (f + g).lSeries z = f.l_series z + g.l_series z := by
   simp only [l_series, add_apply]
   rw [← tsum_add hf hg]
   apply congr rfl (funext fun n => _)

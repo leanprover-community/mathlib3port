@@ -29,7 +29,7 @@ theorem rev_list_reverse_aux :
     ∀ i h : i ≤ n t : List α,
       (a.iterate_aux (fun _ => · :: ·) i h []).reverseCore t = a.rev_iterate_aux (fun _ => · :: ·) i h t
   | 0, h, t => rfl
-  | i+1, h, t => rev_list_reverse_aux i _ _
+  | i + 1, h, t => rev_list_reverse_aux i _ _
 
 @[simp]
 theorem rev_list_reverse : a.rev_list.reverse = a.to_list :=
@@ -51,7 +51,7 @@ theorem mem.def : v ∈ a ↔ ∃ i, a.read i = v :=
 theorem mem_rev_list_aux :
     ∀ {i} h : i ≤ n, (∃ j : Finₓ n, (j : ℕ) < i ∧ read a j = v) ↔ v ∈ a.iterate_aux (fun _ => · :: ·) i h []
   | 0, _ => ⟨fun ⟨i, n, _⟩ => absurd n i.val.not_lt_zero, False.elim⟩
-  | i+1, h =>
+  | i + 1, h =>
     let IH := mem_rev_list_aux (le_of_ltₓ h)
     ⟨fun ⟨j, ji1, e⟩ =>
       Or.elim (lt_or_eq_of_leₓ $ Nat.le_of_succ_le_succₓ ji1) (fun ji => List.mem_cons_of_memₓ _ $ IH.1 ⟨j, ji, e⟩)
@@ -85,7 +85,7 @@ variable {n : ℕ} {α : Type u} {β : Type w} {b : β} {f : α → β → β} {
 theorem rev_list_foldr_aux :
     ∀ {i} h : i ≤ n, (DArray.iterateAux a (fun _ => · :: ·) i h []).foldr f b = DArray.iterateAux a (fun _ => f) i h b
   | 0, h => rfl
-  | j+1, h => congr_argₓ (f (read a ⟨j, h⟩)) (rev_list_foldr_aux _)
+  | j + 1, h => congr_argₓ (f (read a ⟨j, h⟩)) (rev_list_foldr_aux _)
 
 theorem rev_list_foldr : a.rev_list.foldr f b = a.foldl b f :=
   rev_list_foldr_aux _
@@ -106,7 +106,7 @@ section Length
 variable {n : ℕ} {α : Type u}
 
 theorem rev_list_length_aux (a : Arrayₓ n α) i h : (a.iterate_aux (fun _ => · :: ·) i h []).length = i := by
-  induction i <;> simp [DArray.iterateAux]
+  induction i <;> simp [*, DArray.iterateAux]
 
 @[simp]
 theorem rev_list_length (a : Arrayₓ n α) : a.rev_list.length = n :=
@@ -124,22 +124,22 @@ variable {n : ℕ} {α : Type u} {a : Arrayₓ n α}
 
 theorem to_list_nth_le_aux (i : ℕ) (ih : i < n) :
     ∀ j {jh t h'},
-      (∀ k tl, (j+k) = i → List.nthLe t k tl = a.read ⟨i, ih⟩) →
+      (∀ k tl, j + k = i → List.nthLe t k tl = a.read ⟨i, ih⟩) →
         (a.rev_iterate_aux (fun _ => · :: ·) j jh t).nthLe i h' = a.read ⟨i, ih⟩
   | 0, _, _, _, al => al i _ $ zero_addₓ _
-  | j+1, jh, t, h', al =>
+  | j + 1, jh, t, h', al =>
     to_list_nth_le_aux j $ fun k tl hjk =>
       show List.nthLe (a.read ⟨j, jh⟩ :: t) k tl = a.read ⟨i, ih⟩ from
         match k, hjk, tl with
         | 0, e, tl =>
           match i, e, ih with
           | _, rfl, _ => rfl
-        | k'+1, _, tl => by
+        | k' + 1, _, tl => by
           simp [List.nthLe] <;>
             exact
               al _ _
                 (by
-                  simp [add_commₓ, add_assocₓ] <;> cc)
+                  simp [add_commₓ, add_assocₓ, *] <;> cc)
 
 theorem to_list_nth_le (i : ℕ) h h' : List.nthLe a.to_list i h' = a.read ⟨i, h⟩ :=
   to_list_nth_le_aux _ _ _ fun k tl => absurd tl k.not_lt_zero
@@ -152,10 +152,10 @@ theorem to_list_nth {i v} : List.nth a.to_list i = some v ↔ ∃ h, a.read ⟨i
   rw [List.nth_eq_some]
   have ll := to_list_length a
   constructor <;> intro h <;> cases' h with h e <;> subst v
-  ·
-    exact ⟨ll ▸ h, (to_list_nth_le _ _ _).symm⟩
-  ·
-    exact ⟨ll.symm ▸ h, to_list_nth_le _ _ _⟩
+  · exact ⟨ll ▸ h, (to_list_nth_le _ _ _).symm⟩
+    
+  · exact ⟨ll.symm ▸ h, to_list_nth_le _ _ _⟩
+    
 
 theorem write_to_list {i v} : (a.write i v).toList = a.to_list.update_nth i v :=
   List.ext_le
@@ -169,13 +169,13 @@ theorem write_to_list {i v} : (a.write i v).toList = a.to_list.update_nth i v :=
       let ⟨_, e⟩ := List.nth_eq_some.1 _
       e.symm
     by_cases' ij : (i : ℕ) = j
-    ·
-      subst j
+    · subst j
       rw [show (⟨(i : ℕ), h₃⟩ : Finₓ _) = i from Finₓ.eq_of_veq rfl, Arrayₓ.read_write, List.nth_update_nth_of_lt]
       simp [h₃]
-    ·
-      rw [List.nth_update_nth_ne _ _ ij, a.read_write_of_ne, to_list_nth.2 ⟨h₃, rfl⟩]
+      
+    · rw [List.nth_update_nth_ne _ _ ij, a.read_write_of_ne, to_list_nth.2 ⟨h₃, rfl⟩]
       exact Finₓ.ne_of_vne ij
+      
 
 end Nth
 
@@ -215,7 +215,7 @@ variable {n : ℕ} {α : Type u} {v : α} {a : Arrayₓ n α}
 theorem push_back_rev_list_aux :
     ∀ i h h', DArray.iterateAux (a.push_back v) (fun _ => · :: ·) i h [] = DArray.iterateAux a (fun _ => · :: ·) i h' []
   | 0, h, h' => rfl
-  | i+1, h, h' => by
+  | i + 1, h, h' => by
     simp [DArray.iterateAux]
     refine' ⟨_, push_back_rev_list_aux _ _ _⟩
     dsimp [read, DArray.read, push_back]
@@ -283,16 +283,16 @@ end Arrayₓ
 
 namespace Equivₓ
 
-/--  The natural equivalence between length-`n` heterogeneous arrays
+/-- The natural equivalence between length-`n` heterogeneous arrays
 and dependent functions from `fin n`. -/
 def d_array_equiv_fin {n : ℕ} (α : Finₓ n → Type _) : DArray n α ≃ ∀ i, α i :=
   ⟨DArray.read, DArray.mk, fun ⟨f⟩ => rfl, fun f => rfl⟩
 
-/--  The natural equivalence between length-`n` arrays and functions from `fin n`. -/
+/-- The natural equivalence between length-`n` arrays and functions from `fin n`. -/
 def array_equiv_fin (n : ℕ) (α : Type _) : Arrayₓ n α ≃ (Finₓ n → α) :=
   d_array_equiv_fin _
 
-/--  The natural equivalence between length-`n` vectors and length-`n` arrays. -/
+/-- The natural equivalence between length-`n` vectors and length-`n` arrays. -/
 def vector_equiv_array (α : Type _) (n : ℕ) : Vector α n ≃ Arrayₓ n α :=
   (vector_equiv_fin _ _).trans (array_equiv_fin _ _).symm
 

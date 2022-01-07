@@ -34,7 +34,7 @@ noncomputable section
 
 variable (Fq F : Type) [Field Fq] [Field F]
 
-/--  `F` is a function field over the finite field `Fq` if it is a finite
+/-- `F` is a function field over the finite field `Fq` if it is a finite
 extension of the field of rational functions in one variable over `Fq`.
 
 Note that `F` can be a function field over multiple, non-isomorphic, `Fq`.
@@ -42,7 +42,7 @@ Note that `F` can be a function field over multiple, non-isomorphic, `Fq`.
 abbrev FunctionField [Algebra (Ratfunc Fq) F] : Prop :=
   FiniteDimensional (Ratfunc Fq) F
 
-/--  `F` is a function field over `Fq` iff it is a finite extension of `Fq(t)`. -/
+/-- `F` is a function field over `Fq` iff it is a finite extension of `Fq(t)`. -/
 protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra (Polynomial Fq) Fqt]
     [IsFractionRing (Polynomial Fq) Fqt] [Algebra (Ratfunc Fq) F] [Algebra Fqt F] [Algebra (Polynomial Fq) F]
     [IsScalarTower (Polynomial Fq) Fqt F] [IsScalarTower (Polynomial Fq) (Ratfunc Fq) F] :
@@ -58,19 +58,19 @@ protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra (Polyno
         simp only [AlgEquiv.map_one, RingHom.map_one, AlgEquiv.map_mul, RingHom.map_mul, AlgEquiv.commutes, ←
           IsScalarTower.algebra_map_apply]
   constructor <;> intro h <;> skip
-  ·
-    let b := FiniteDimensional.finBasis (Ratfunc Fq) F
+  · let b := FiniteDimensional.finBasis (Ratfunc Fq) F
     exact FiniteDimensional.of_fintype_basis (b.map_coeffs e this)
-  ·
-    let b := FiniteDimensional.finBasis Fqt F
+    
+  · let b := FiniteDimensional.finBasis Fqt F
     refine' FiniteDimensional.of_fintype_basis (b.map_coeffs e.symm _)
     intro c x
     convert (this (e.symm c) x).symm
     simp only [e.apply_symm_apply]
+    
 
 namespace FunctionField
 
-/--  The function field analogue of `number_field.ring_of_integers`:
+/-- The function field analogue of `number_field.ring_of_integers`:
 `function_field.ring_of_integers Fq Fqt F` is the integral closure of `Fq[t]` in `F`.
 
 We don't actually assume `F` is a function field over `Fq` in the definition,

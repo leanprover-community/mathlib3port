@@ -28,8 +28,7 @@ section
 
 variable [enough_projectives C] [abelian C]
 
-/-- 
-When `C` is abelian, `projective.d f` and `f` are exact.
+/-- When `C` is abelian, `projective.d f` and `f` are exact.
 -/
 theorem exact_d_f {X Y : C} (f : X ⟶ Y) : exact (d f) f :=
   (abelian.exact_iff _ _).2 $
@@ -54,14 +53,13 @@ and the map to the `n`-th object as `projective.d`.
 
 variable [abelian C] [enough_projectives C]
 
-/--  Auxiliary definition for `ProjectiveResolution.of`. -/
+/-- Auxiliary definition for `ProjectiveResolution.of`. -/
 @[simps]
 def of_complex (Z : C) : ChainComplex C ℕ :=
   ChainComplex.mk' (projective.over Z) (projective.syzygies (projective.π Z)) (projective.d (projective.π Z))
     fun ⟨X, Y, f⟩ => ⟨projective.syzygies f, projective.d f, (exact_d_f f).w⟩
 
-/-- 
-In any abelian category with enough projectives,
+/-- In any abelian category with enough projectives,
 `ProjectiveResolution.of Z` constructs a projection resolution of the object `Z`.
 -/
 irreducible_def of (Z : C) : ProjectiveResolution Z :=
@@ -80,16 +78,17 @@ irreducible_def of (Z : C) : ProjectiveResolution Z :=
       simpa using exact_d_f (projective.π Z),
     exact := by
       rintro (_ | n) <;>
-        ·
-          simp
-          apply exact_d_f,
+        · simp
+          apply exact_d_f
+          ,
     Epi := projective.π_epi Z }
 
 instance (priority := 100) (Z : C) : has_projective_resolution Z where
   out := ⟨of Z⟩
 
--- failed to format: format: uncaught backtrack exception
-instance ( priority := 100 ) : has_projective_resolutions C where out Z := by infer_instance
+instance (priority := 100) : has_projective_resolutions C where
+  out := fun Z => by
+    infer_instance
 
 end ProjectiveResolution
 

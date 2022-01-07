@@ -59,7 +59,7 @@ variable {F : Type _}
 
 section Zero
 
-/--  `zero_hom M N` is the type of functions `M → N` that preserve zero.
+/-- `zero_hom M N` is the type of functions `M → N` that preserve zero.
 
 When possible, instead of parametrizing results over `(f : zero_hom M N)`,
 you should parametrize over `(F : Type*) [zero_hom_class F M N] (f : F)`.
@@ -70,7 +70,7 @@ structure ZeroHom (M : Type _) (N : Type _) [HasZero M] [HasZero N] where
   toFun : M → N
   map_zero' : to_fun 0 = 0
 
-/--  `zero_hom_class F M N` states that `F` is a type of zero-preserving homomorphisms.
+/-- `zero_hom_class F M N` states that `F` is a type of zero-preserving homomorphisms.
 
 You should extend this typeclass when you extend `zero_hom`.
 -/
@@ -81,7 +81,7 @@ end Zero
 
 section Add
 
-/--  `add_hom M N` is the type of functions `M → N` that preserve addition.
+/-- `add_hom M N` is the type of functions `M → N` that preserve addition.
 
 When possible, instead of parametrizing results over `(f : add_hom M N)`,
 you should parametrize over `(F : Type*) [add_hom_class F M N] (f : F)`.
@@ -90,19 +90,19 @@ When you extend this structure, make sure to extend `add_hom_class`.
 -/
 structure AddHom (M : Type _) (N : Type _) [Add M] [Add N] where
   toFun : M → N
-  map_add' : ∀ x y, to_fun (x+y) = to_fun x+to_fun y
+  map_add' : ∀ x y, to_fun (x + y) = to_fun x + to_fun y
 
-/--  `add_hom_class F M N` states that `F` is a type of addition-preserving homomorphisms.
+/-- `add_hom_class F M N` states that `F` is a type of addition-preserving homomorphisms.
 You should declare an instance of this typeclass when you extend `add_hom`.
 -/
 class AddHomClass (F : Type _) (M N : outParam $ Type _) [Add M] [Add N] extends FunLike F M fun _ => N where
-  map_add : ∀ f : F x y : M, f (x+y) = f x+f y
+  map_add : ∀ f : F x y : M, f (x + y) = f x + f y
 
 end Add
 
 section add_zeroₓ
 
-/--  `M →+ N` is the type of functions `M → N` that preserve the `add_zero_class` structure.
+/-- `M →+ N` is the type of functions `M → N` that preserve the `add_zero_class` structure.
 
 `add_monoid_hom` is also used for group homomorphisms.
 
@@ -120,7 +120,7 @@ attribute [nolint doc_blame] AddMonoidHom.toZeroHom
 
 infixr:25 " →+ " => AddMonoidHom
 
-/--  `add_monoid_hom_class F M N` states that `F` is a type of `add_zero_class`-preserving
+/-- `add_monoid_hom_class F M N` states that `F` is a type of `add_zero_class`-preserving
 homomorphisms.
 
 You should also extend this typeclass when you extend `add_monoid_hom`.
@@ -135,7 +135,7 @@ section One
 
 variable [HasOne M] [HasOne N]
 
-/--  `one_hom M N` is the type of functions `M → N` that preserve one.
+/-- `one_hom M N` is the type of functions `M → N` that preserve one.
 
 When possible, instead of parametrizing results over `(f : one_hom M N)`,
 you should parametrize over `(F : Type*) [one_hom_class F M N] (f : F)`.
@@ -147,19 +147,19 @@ structure OneHom (M : Type _) (N : Type _) [HasOne M] [HasOne N] where
   toFun : M → N
   map_one' : to_fun 1 = 1
 
-/--  `one_hom_class F M N` states that `F` is a type of one-preserving homomorphisms.
+/-- `one_hom_class F M N` states that `F` is a type of one-preserving homomorphisms.
 You should extend this typeclass when you extend `one_hom`.
 -/
 @[to_additive]
 class OneHomClass (F : Type _) (M N : outParam $ Type _) [HasOne M] [HasOne N] extends FunLike F M fun _ => N where
   map_one : ∀ f : F, f 1 = 1
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    OneHom.oneHomClass
-    : OneHomClass ( OneHom M N ) M N
-    where coe := OneHom.toFun coe_injective' f g h := by cases f <;> cases g <;> congr map_one := OneHom.map_one'
+@[to_additive]
+instance OneHom.oneHomClass : OneHomClass (OneHom M N) M N where
+  coe := OneHom.toFun
+  coe_injective' := fun f g h => by
+    cases f <;> cases g <;> congr
+  map_one := OneHom.map_one'
 
 @[simp, to_additive]
 theorem map_one [OneHomClass F M N] (f : F) : f 1 = 1 :=
@@ -171,7 +171,7 @@ section Mul
 
 variable [Mul M] [Mul N]
 
-/--  `mul_hom M N` is the type of functions `M → N` that preserve multiplication.
+/-- `mul_hom M N` is the type of functions `M → N` that preserve multiplication.
 
 When possible, instead of parametrizing results over `(f : mul_hom M N)`,
 you should parametrize over `(F : Type*) [mul_hom_class F M N] (f : F)`.
@@ -180,25 +180,25 @@ When you extend this structure, make sure to extend `mul_hom_class`.
 @[to_additive]
 structure MulHom (M : Type _) (N : Type _) [Mul M] [Mul N] where
   toFun : M → N
-  map_mul' : ∀ x y, to_fun (x*y) = to_fun x*to_fun y
+  map_mul' : ∀ x y, to_fun (x * y) = to_fun x * to_fun y
 
-/--  `mul_hom_class F M N` states that `F` is a type of multiplication-preserving homomorphisms.
+/-- `mul_hom_class F M N` states that `F` is a type of multiplication-preserving homomorphisms.
 
 You should declare an instance of this typeclass when you extend `mul_hom`.
 -/
 @[to_additive]
 class MulHomClass (F : Type _) (M N : outParam $ Type _) [Mul M] [Mul N] extends FunLike F M fun _ => N where
-  map_mul : ∀ f : F x y : M, f (x*y) = f x*f y
+  map_mul : ∀ f : F x y : M, f (x * y) = f x * f y
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    MulHom.mulHomClass
-    : MulHomClass ( MulHom M N ) M N
-    where coe := MulHom.toFun coe_injective' f g h := by cases f <;> cases g <;> congr map_mul := MulHom.map_mul'
+@[to_additive]
+instance MulHom.mulHomClass : MulHomClass (MulHom M N) M N where
+  coe := MulHom.toFun
+  coe_injective' := fun f g h => by
+    cases f <;> cases g <;> congr
+  map_mul := MulHom.map_mul'
 
 @[simp, to_additive]
-theorem map_mul [MulHomClass F M N] (f : F) (x y : M) : f (x*y) = f x*f y :=
+theorem map_mul [MulHomClass F M N] (f : F) (x y : M) : f (x * y) = f x * f y :=
   MulHomClass.map_mul f x y
 
 end Mul
@@ -207,7 +207,7 @@ section mul_oneₓ
 
 variable [MulOneClass M] [MulOneClass N]
 
-/--  `M →* N` is the type of functions `M → N` that preserve the `monoid` structure.
+/-- `M →* N` is the type of functions `M → N` that preserve the `monoid` structure.
 `monoid_hom` is also used for group homomorphisms.
 
 When possible, instead of parametrizing results over `(f : M →+ N)`,
@@ -224,43 +224,40 @@ attribute [nolint doc_blame] MonoidHom.toOneHom
 
 infixr:25 " →* " => MonoidHom
 
-/--  `monoid_hom_class F M N` states that `F` is a type of `monoid`-preserving homomorphisms.
+/-- `monoid_hom_class F M N` states that `F` is a type of `monoid`-preserving homomorphisms.
 You should also extend this typeclass when you extend `monoid_hom`.
 -/
 @[ancestor MulHomClass OneHomClass, to_additive]
 class MonoidHomClass (F : Type _) (M N : outParam $ Type _) [MulOneClass M] [MulOneClass N] extends MulHomClass F M N,
   OneHomClass F M N
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    MonoidHom.monoidHomClass
-    : MonoidHomClass ( M →* N ) M N
-    where
-      coe := MonoidHom.toFun
-        coe_injective' f g h := by cases f <;> cases g <;> congr
-        map_mul := MonoidHom.map_mul'
-        map_one := MonoidHom.map_one'
+@[to_additive]
+instance MonoidHom.monoidHomClass : MonoidHomClass (M →* N) M N where
+  coe := MonoidHom.toFun
+  coe_injective' := fun f g h => by
+    cases f <;> cases g <;> congr
+  map_mul := MonoidHom.map_mul'
+  map_one := MonoidHom.map_one'
 
 @[to_additive]
 instance [MonoidHomClass F M N] : CoeTₓ F (M →* N) :=
   ⟨fun f => { toFun := f, map_one' := map_one f, map_mul' := map_mul f }⟩
 
 @[to_additive]
-theorem map_mul_eq_one [MonoidHomClass F M N] (f : F) {a b : M} (h : (a*b) = 1) : (f a*f b) = 1 := by
+theorem map_mul_eq_one [MonoidHomClass F M N] (f : F) {a b : M} (h : a * b = 1) : f a * f b = 1 := by
   rw [← map_mul, h, map_one]
 
-/--  Group homomorphisms preserve inverse. -/
+/-- Group homomorphisms preserve inverse. -/
 @[simp, to_additive]
 theorem map_inv [Groupₓ G] [Groupₓ H] [MonoidHomClass F G H] (f : F) (g : G) : f (g⁻¹) = f g⁻¹ :=
   eq_inv_of_mul_eq_one $ map_mul_eq_one f $ inv_mul_selfₓ g
 
-/--  Group homomorphisms preserve division. -/
+/-- Group homomorphisms preserve division. -/
 @[simp, to_additive]
-theorem map_mul_inv [Groupₓ G] [Groupₓ H] [MonoidHomClass F G H] (f : F) (g h : G) : f (g*h⁻¹) = f g*f h⁻¹ := by
+theorem map_mul_inv [Groupₓ G] [Groupₓ H] [MonoidHomClass F G H] (f : F) (g h : G) : f (g * h⁻¹) = f g * f h⁻¹ := by
   rw [map_mul, map_inv]
 
-/--  Group homomorphisms preserve division. -/
+/-- Group homomorphisms preserve division. -/
 @[simp, to_additive]
 theorem map_div [Groupₓ G] [Groupₓ H] [MonoidHomClass F G H] (f : F) (x y : G) : f (x / y) = f x / f y := by
   rw [div_eq_mul_inv, div_eq_mul_inv, map_mul_inv]
@@ -269,7 +266,7 @@ theorem map_div [Groupₓ G] [Groupₓ H] [MonoidHomClass F G H] (f : F) (x y : 
 theorem map_pow [Monoidₓ G] [Monoidₓ H] [MonoidHomClass F G H] (f : F) (a : G) : ∀ n : ℕ, f (a ^ n) = f a ^ n
   | 0 => by
     rw [pow_zeroₓ, pow_zeroₓ, map_one]
-  | n+1 => by
+  | n + 1 => by
     rw [pow_succₓ, pow_succₓ, map_mul, map_pow]
 
 @[to_additive]
@@ -280,7 +277,7 @@ theorem map_zpow' [DivInvMonoidₓ G] [DivInvMonoidₓ H] [MonoidHomClass F G H]
   | -[1+ n] => by
     rw [zpow_neg_succ_of_nat, hf, map_pow, ← zpow_neg_succ_of_nat]
 
-/--  Group homomorphisms preserve integer power. -/
+/-- Group homomorphisms preserve integer power. -/
 @[simp, to_additive " Additive group homomorphisms preserve integer scaling. "]
 theorem map_zpow [Groupₓ G] [Groupₓ H] [MonoidHomClass F G H] (f : F) (g : G) (n : ℤ) : f (g ^ n) = f g ^ n :=
   map_zpow' f (map_inv f) g n
@@ -291,7 +288,7 @@ section MulZeroOne
 
 variable [MulZeroOneClass M] [MulZeroOneClass N]
 
-/--  `monoid_with_zero_hom M N` is the type of functions `M → N` that preserve
+/-- `monoid_with_zero_hom M N` is the type of functions `M → N` that preserve
 the `monoid_with_zero` structure.
 
 `monoid_with_zero_hom` is also used for group homomorphisms.
@@ -309,7 +306,7 @@ attribute [nolint doc_blame] MonoidWithZeroHom.toMonoidHom
 
 attribute [nolint doc_blame] MonoidWithZeroHom.toZeroHom
 
-/--  `monoid_with_zero_hom_class F M N` states that `F` is a type of
+/-- `monoid_with_zero_hom_class F M N` states that `F` is a type of
 `monoid_with_zero`-preserving homomorphisms.
 
 You should also extend this typeclass when you extend `monoid_with_zero_hom`.
@@ -317,16 +314,13 @@ You should also extend this typeclass when you extend `monoid_with_zero_hom`.
 class MonoidWithZeroHomClass (F : Type _) (M N : outParam $ Type _) [MulZeroOneClass M] [MulZeroOneClass N] extends
   MonoidHomClass F M N, ZeroHomClass F M N
 
--- failed to format: format: uncaught backtrack exception
-instance
-  MonoidWithZeroHom.monoidWithZeroHomClass
-  : MonoidWithZeroHomClass ( MonoidWithZeroHom M N ) M N
-  where
-    coe := MonoidWithZeroHom.toFun
-      coe_injective' f g h := by cases f <;> cases g <;> congr
-      map_mul := MonoidWithZeroHom.map_mul'
-      map_one := MonoidWithZeroHom.map_one'
-      map_zero := MonoidWithZeroHom.map_zero'
+instance MonoidWithZeroHom.monoidWithZeroHomClass : MonoidWithZeroHomClass (MonoidWithZeroHom M N) M N where
+  coe := MonoidWithZeroHom.toFun
+  coe_injective' := fun f g h => by
+    cases f <;> cases g <;> congr
+  map_mul := MonoidWithZeroHom.map_mul'
+  map_one := MonoidWithZeroHom.map_one'
+  map_zero := MonoidWithZeroHom.map_zero'
 
 end MulZeroOne
 
@@ -561,7 +555,7 @@ end Coes
 protected theorem OneHom.map_one [HasOne M] [HasOne N] (f : OneHom M N) : f 1 = 1 :=
   f.map_one'
 
-/--  If `f` is a monoid homomorphism then `f 1 = 1`. -/
+/-- If `f` is a monoid homomorphism then `f 1 = 1`. -/
 @[to_additive]
 protected theorem MonoidHom.map_one [MulOneClass M] [MulOneClass N] (f : M →* N) : f 1 = 1 :=
   f.map_one'
@@ -570,7 +564,7 @@ protected theorem MonoidWithZeroHom.map_one [MulZeroOneClass M] [MulZeroOneClass
     f 1 = 1 :=
   f.map_one'
 
-/--  If `f` is an additive monoid homomorphism then `f 0 = 0`. -/
+/-- If `f` is an additive monoid homomorphism then `f 0 = 0`. -/
 add_decl_doc AddMonoidHom.map_zero
 
 protected theorem MonoidWithZeroHom.map_zero [MulZeroOneClass M] [MulZeroOneClass N] (f : MonoidWithZeroHom M N) :
@@ -578,19 +572,19 @@ protected theorem MonoidWithZeroHom.map_zero [MulZeroOneClass M] [MulZeroOneClas
   f.map_zero'
 
 @[to_additive]
-protected theorem MulHom.map_mul [Mul M] [Mul N] (f : MulHom M N) (a b : M) : f (a*b) = f a*f b :=
+protected theorem MulHom.map_mul [Mul M] [Mul N] (f : MulHom M N) (a b : M) : f (a * b) = f a * f b :=
   f.map_mul' a b
 
-/--  If `f` is a monoid homomorphism then `f (a * b) = f a * f b`. -/
+/-- If `f` is a monoid homomorphism then `f (a * b) = f a * f b`. -/
 @[to_additive]
-protected theorem MonoidHom.map_mul [MulOneClass M] [MulOneClass N] (f : M →* N) (a b : M) : f (a*b) = f a*f b :=
+protected theorem MonoidHom.map_mul [MulOneClass M] [MulOneClass N] (f : M →* N) (a b : M) : f (a * b) = f a * f b :=
   f.map_mul' a b
 
 protected theorem MonoidWithZeroHom.map_mul [MulZeroOneClass M] [MulZeroOneClass N] (f : MonoidWithZeroHom M N)
-    (a b : M) : f (a*b) = f a*f b :=
+    (a b : M) : f (a * b) = f a * f b :=
   f.map_mul' a b
 
-/--  If `f` is an additive monoid homomorphism then `f (a + b) = f a + f b`. -/
+/-- If `f` is an additive monoid homomorphism then `f (a + b) = f a + f b`. -/
 add_decl_doc AddMonoidHom.map_add
 
 namespace MonoidHom
@@ -602,102 +596,111 @@ variable [Groupₓ G] [CommGroupₓ H]
 include mM mN
 
 @[to_additive]
-theorem map_mul_eq_one (f : M →* N) {a b : M} (h : (a*b) = 1) : (f a*f b) = 1 :=
+theorem map_mul_eq_one (f : M →* N) {a b : M} (h : a * b = 1) : f a * f b = 1 :=
   map_mul_eq_one f h
 
-/--  Given a monoid homomorphism `f : M →* N` and an element `x : M`, if `x` has a right inverse,
+/-- Given a monoid homomorphism `f : M →* N` and an element `x : M`, if `x` has a right inverse,
 then `f x` has a right inverse too. For elements invertible on both sides see `is_unit.map`. -/
 @[to_additive
       "Given an add_monoid homomorphism `f : M →+ N` and an element `x : M`, if `x` has\na right inverse, then `f x` has a right inverse too."]
-theorem map_exists_right_inv (f : M →* N) {x : M} (hx : ∃ y, (x*y) = 1) : ∃ y, (f x*y) = 1 :=
+theorem map_exists_right_inv (f : M →* N) {x : M} (hx : ∃ y, x * y = 1) : ∃ y, f x * y = 1 :=
   let ⟨y, hy⟩ := hx
   ⟨f y, f.map_mul_eq_one hy⟩
 
-/--  Given a monoid homomorphism `f : M →* N` and an element `x : M`, if `x` has a left inverse,
+/-- Given a monoid homomorphism `f : M →* N` and an element `x : M`, if `x` has a left inverse,
 then `f x` has a left inverse too. For elements invertible on both sides see `is_unit.map`. -/
 @[to_additive
       "Given an add_monoid homomorphism `f : M →+ N` and an element `x : M`, if `x` has\na left inverse, then `f x` has a left inverse too. For elements invertible on both sides see\n`is_add_unit.map`."]
-theorem map_exists_left_inv (f : M →* N) {x : M} (hx : ∃ y, (y*x) = 1) : ∃ y, (y*f x) = 1 :=
+theorem map_exists_left_inv (f : M →* N) {x : M} (hx : ∃ y, y * x = 1) : ∃ y, y * f x = 1 :=
   let ⟨y, hy⟩ := hx
   ⟨f y, f.map_mul_eq_one hy⟩
 
 end MonoidHom
 
-/--  Inversion on a commutative group, considered as a monoid homomorphism. -/
+/-- Inversion on a commutative group, considered as a monoid homomorphism. -/
 @[to_additive "Inversion on a commutative additive group, considered as an additive\nmonoid homomorphism."]
-def CommGroupₓ.invMonoidHom {G : Type _} [CommGroupₓ G] : G →* G :=
-  { toFun := HasInv.inv, map_one' := one_inv, map_mul' := mul_inv }
+def CommGroupₓ.invMonoidHom {G : Type _} [CommGroupₓ G] : G →* G where
+  toFun := HasInv.inv
+  map_one' := one_inv
+  map_mul' := mul_inv
 
-/--  The identity map from a type with 1 to itself. -/
+/-- The identity map from a type with 1 to itself. -/
 @[to_additive, simps]
-def OneHom.id (M : Type _) [HasOne M] : OneHom M M :=
-  { toFun := fun x => x, map_one' := rfl }
+def OneHom.id (M : Type _) [HasOne M] : OneHom M M where
+  toFun := fun x => x
+  map_one' := rfl
 
-/--  The identity map from a type with multiplication to itself. -/
+/-- The identity map from a type with multiplication to itself. -/
 @[to_additive, simps]
-def MulHom.id (M : Type _) [Mul M] : MulHom M M :=
-  { toFun := fun x => x, map_mul' := fun _ _ => rfl }
+def MulHom.id (M : Type _) [Mul M] : MulHom M M where
+  toFun := fun x => x
+  map_mul' := fun _ _ => rfl
 
-/--  The identity map from a monoid to itself. -/
+/-- The identity map from a monoid to itself. -/
 @[to_additive, simps]
-def MonoidHom.id (M : Type _) [MulOneClass M] : M →* M :=
-  { toFun := fun x => x, map_one' := rfl, map_mul' := fun _ _ => rfl }
+def MonoidHom.id (M : Type _) [MulOneClass M] : M →* M where
+  toFun := fun x => x
+  map_one' := rfl
+  map_mul' := fun _ _ => rfl
 
-/--  The identity map from a monoid_with_zero to itself. -/
+/-- The identity map from a monoid_with_zero to itself. -/
 @[simps]
-def MonoidWithZeroHom.id (M : Type _) [MulZeroOneClass M] : MonoidWithZeroHom M M :=
-  { toFun := fun x => x, map_zero' := rfl, map_one' := rfl, map_mul' := fun _ _ => rfl }
+def MonoidWithZeroHom.id (M : Type _) [MulZeroOneClass M] : MonoidWithZeroHom M M where
+  toFun := fun x => x
+  map_zero' := rfl
+  map_one' := rfl
+  map_mul' := fun _ _ => rfl
 
-/--  The identity map from an type with zero to itself. -/
+/-- The identity map from an type with zero to itself. -/
 add_decl_doc ZeroHom.id
 
-/--  The identity map from an type with addition to itself. -/
+/-- The identity map from an type with addition to itself. -/
 add_decl_doc AddHom.id
 
-/--  The identity map from an additive monoid to itself. -/
+/-- The identity map from an additive monoid to itself. -/
 add_decl_doc AddMonoidHom.id
 
-/--  Composition of `one_hom`s as a `one_hom`. -/
+/-- Composition of `one_hom`s as a `one_hom`. -/
 @[to_additive]
-def OneHom.comp [HasOne M] [HasOne N] [HasOne P] (hnp : OneHom N P) (hmn : OneHom M N) : OneHom M P :=
-  { toFun := hnp ∘ hmn,
-    map_one' := by
-      simp }
+def OneHom.comp [HasOne M] [HasOne N] [HasOne P] (hnp : OneHom N P) (hmn : OneHom M N) : OneHom M P where
+  toFun := hnp ∘ hmn
+  map_one' := by
+    simp
 
-/--  Composition of `mul_hom`s as a `mul_hom`. -/
+/-- Composition of `mul_hom`s as a `mul_hom`. -/
 @[to_additive]
-def MulHom.comp [Mul M] [Mul N] [Mul P] (hnp : MulHom N P) (hmn : MulHom M N) : MulHom M P :=
-  { toFun := hnp ∘ hmn,
-    map_mul' := by
-      simp }
+def MulHom.comp [Mul M] [Mul N] [Mul P] (hnp : MulHom N P) (hmn : MulHom M N) : MulHom M P where
+  toFun := hnp ∘ hmn
+  map_mul' := by
+    simp
 
-/--  Composition of monoid morphisms as a monoid morphism. -/
+/-- Composition of monoid morphisms as a monoid morphism. -/
 @[to_additive]
-def MonoidHom.comp [MulOneClass M] [MulOneClass N] [MulOneClass P] (hnp : N →* P) (hmn : M →* N) : M →* P :=
-  { toFun := hnp ∘ hmn,
-    map_one' := by
-      simp ,
-    map_mul' := by
-      simp }
+def MonoidHom.comp [MulOneClass M] [MulOneClass N] [MulOneClass P] (hnp : N →* P) (hmn : M →* N) : M →* P where
+  toFun := hnp ∘ hmn
+  map_one' := by
+    simp
+  map_mul' := by
+    simp
 
-/--  Composition of `monoid_with_zero_hom`s as a `monoid_with_zero_hom`. -/
+/-- Composition of `monoid_with_zero_hom`s as a `monoid_with_zero_hom`. -/
 def MonoidWithZeroHom.comp [MulZeroOneClass M] [MulZeroOneClass N] [MulZeroOneClass P] (hnp : MonoidWithZeroHom N P)
-    (hmn : MonoidWithZeroHom M N) : MonoidWithZeroHom M P :=
-  { toFun := hnp ∘ hmn,
-    map_zero' := by
-      simp ,
-    map_one' := by
-      simp ,
-    map_mul' := by
-      simp }
+    (hmn : MonoidWithZeroHom M N) : MonoidWithZeroHom M P where
+  toFun := hnp ∘ hmn
+  map_zero' := by
+    simp
+  map_one' := by
+    simp
+  map_mul' := by
+    simp
 
-/--  Composition of `zero_hom`s as a `zero_hom`. -/
+/-- Composition of `zero_hom`s as a `zero_hom`. -/
 add_decl_doc ZeroHom.comp
 
-/--  Composition of `add_hom`s as a `add_hom`. -/
+/-- Composition of `add_hom`s as a `add_hom`. -/
 add_decl_doc AddHom.comp
 
-/--  Composition of additive monoid morphisms as an additive monoid morphism. -/
+/-- Composition of additive monoid morphisms as an additive monoid morphism. -/
 add_decl_doc AddMonoidHom.comp
 
 @[simp, to_additive]
@@ -736,7 +739,7 @@ theorem MonoidWithZeroHom.comp_apply [MulZeroOneClass M] [MulZeroOneClass N] [Mu
     (g : MonoidWithZeroHom N P) (f : MonoidWithZeroHom M N) (x : M) : g.comp f x = g (f x) :=
   rfl
 
-/--  Composition of monoid homomorphisms is associative. -/
+/-- Composition of monoid homomorphisms is associative. -/
 @[to_additive]
 theorem OneHom.comp_assoc {Q : Type _} [HasOne M] [HasOne N] [HasOne P] [HasOne Q] (f : OneHom M N) (g : OneHom N P)
     (h : OneHom P Q) : (h.comp g).comp f = h.comp (g.comp f) :=
@@ -883,21 +886,18 @@ namespace Monoidₓ
 
 variable (M) [MulOneClass M]
 
-/--  The monoid of endomorphisms. -/
+/-- The monoid of endomorphisms. -/
 protected def End :=
   M →* M
 
 namespace End
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : Monoidₓ ( Monoidₓ.End M )
-  where
-    mul := MonoidHom.comp
-      one := MonoidHom.id M
-      mul_assoc _ _ _ := MonoidHom.comp_assoc _ _ _
-      mul_one := MonoidHom.comp_id
-      one_mul := MonoidHom.id_comp
+instance : Monoidₓ (Monoidₓ.End M) where
+  mul := MonoidHom.comp
+  one := MonoidHom.id M
+  mul_assoc := fun _ _ _ => MonoidHom.comp_assoc _ _ _
+  mul_one := MonoidHom.comp_id
+  one_mul := MonoidHom.id_comp
 
 instance : Inhabited (Monoidₓ.End M) :=
   ⟨1⟩
@@ -912,7 +912,7 @@ theorem coe_one : ((1 : Monoidₓ.End M) : M → M) = id :=
   rfl
 
 @[simp]
-theorem coe_mul f g : ((f*g : Monoidₓ.End M) : M → M) = f ∘ g :=
+theorem coe_mul f g : ((f * g : Monoidₓ.End M) : M → M) = f ∘ g :=
   rfl
 
 end Monoidₓ
@@ -921,21 +921,18 @@ namespace AddMonoidₓ
 
 variable (A : Type _) [AddZeroClass A]
 
-/--  The monoid of endomorphisms. -/
+/-- The monoid of endomorphisms. -/
 protected def End :=
   A →+ A
 
 namespace End
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : Monoidₓ ( AddMonoidₓ.End A )
-  where
-    mul := AddMonoidHom.comp
-      one := AddMonoidHom.id A
-      mul_assoc _ _ _ := AddMonoidHom.comp_assoc _ _ _
-      mul_one := AddMonoidHom.comp_id
-      one_mul := AddMonoidHom.id_comp
+instance : Monoidₓ (AddMonoidₓ.End A) where
+  mul := AddMonoidHom.comp
+  one := AddMonoidHom.id A
+  mul_assoc := fun _ _ _ => AddMonoidHom.comp_assoc _ _ _
+  mul_one := AddMonoidHom.comp_id
+  one_mul := AddMonoidHom.id_comp
 
 instance : Inhabited (AddMonoidₓ.End A) :=
   ⟨1⟩
@@ -950,35 +947,35 @@ theorem coe_one : ((1 : AddMonoidₓ.End A) : A → A) = id :=
   rfl
 
 @[simp]
-theorem coe_mul f g : ((f*g : AddMonoidₓ.End A) : A → A) = f ∘ g :=
+theorem coe_mul f g : ((f * g : AddMonoidₓ.End A) : A → A) = f ∘ g :=
   rfl
 
 end AddMonoidₓ
 
 end End
 
-/--  `1` is the homomorphism sending all elements to `1`. -/
+/-- `1` is the homomorphism sending all elements to `1`. -/
 @[to_additive]
 instance [HasOne M] [HasOne N] : HasOne (OneHom M N) :=
   ⟨⟨fun _ => 1, rfl⟩⟩
 
-/--  `1` is the multiplicative homomorphism sending all elements to `1`. -/
+/-- `1` is the multiplicative homomorphism sending all elements to `1`. -/
 @[to_additive]
 instance [Mul M] [MulOneClass N] : HasOne (MulHom M N) :=
   ⟨⟨fun _ => 1, fun _ _ => (one_mulₓ 1).symm⟩⟩
 
-/--  `1` is the monoid homomorphism sending all elements to `1`. -/
+/-- `1` is the monoid homomorphism sending all elements to `1`. -/
 @[to_additive]
 instance [MulOneClass M] [MulOneClass N] : HasOne (M →* N) :=
   ⟨⟨fun _ => 1, rfl, fun _ _ => (one_mulₓ 1).symm⟩⟩
 
-/--  `0` is the homomorphism sending all elements to `0`. -/
+/-- `0` is the homomorphism sending all elements to `0`. -/
 add_decl_doc ZeroHom.hasZero
 
-/--  `0` is the additive homomorphism sending all elements to `0`. -/
+/-- `0` is the additive homomorphism sending all elements to `0`. -/
 add_decl_doc AddHom.hasZero
 
-/--  `0` is the additive monoid homomorphism sending all elements to `0`. -/
+/-- `0` is the additive monoid homomorphism sending all elements to `0`. -/
 add_decl_doc AddMonoidHom.hasZero
 
 @[simp, to_additive]
@@ -1019,26 +1016,26 @@ variable [mM : MulOneClass M] [mN : MulOneClass N] [mP : MulOneClass P]
 
 variable [Groupₓ G] [CommGroupₓ H]
 
-/--  Given two monoid morphisms `f`, `g` to a commutative monoid, `f * g` is the monoid morphism
+/-- Given two monoid morphisms `f`, `g` to a commutative monoid, `f * g` is the monoid morphism
 sending `x` to `f x * g x`. -/
 @[to_additive]
 instance {M N} {mM : MulOneClass M} [CommMonoidₓ N] : Mul (M →* N) :=
   ⟨fun f g =>
-    { toFun := fun m => f m*g m,
+    { toFun := fun m => f m * g m,
       map_one' :=
-        show (f 1*g 1) = 1by
+        show f 1 * g 1 = 1 by
           simp ,
       map_mul' := by
         intros
-        show (f (x*y)*g (x*y)) = (f x*g x)*f y*g y
+        show f (x * y) * g (x * y) = f x * g x * (f y * g y)
         rw [f.map_mul, g.map_mul, ← mul_assocₓ, ← mul_assocₓ, mul_right_commₓ (f x)] }⟩
 
-/--  Given two additive monoid morphisms `f`, `g` to an additive commutative monoid, `f + g` is the
+/-- Given two additive monoid morphisms `f`, `g` to an additive commutative monoid, `f + g` is the
 additive monoid morphism sending `x` to `f x + g x`. -/
 add_decl_doc AddMonoidHom.hasAdd
 
 @[simp, to_additive]
-theorem mul_apply {M N} {mM : MulOneClass M} {mN : CommMonoidₓ N} (f g : M →* N) (x : M) : (f*g) x = f x*g x :=
+theorem mul_apply {M N} {mM : MulOneClass M} {mN : CommMonoidₓ N} (f g : M →* N) (x : M) : (f * g) x = f x * g x :=
   rfl
 
 @[simp, to_additive]
@@ -1052,42 +1049,42 @@ theorem comp_one [MulOneClass M] [MulOneClass N] [MulOneClass P] (f : N →* P) 
 
 @[to_additive]
 theorem mul_comp [MulOneClass M] [CommMonoidₓ N] [CommMonoidₓ P] (g₁ g₂ : N →* P) (f : M →* N) :
-    (g₁*g₂).comp f = g₁.comp f*g₂.comp f :=
+    (g₁ * g₂).comp f = g₁.comp f * g₂.comp f :=
   rfl
 
 @[to_additive]
 theorem comp_mul [MulOneClass M] [CommMonoidₓ N] [CommMonoidₓ P] (g : N →* P) (f₁ f₂ : M →* N) :
-    g.comp (f₁*f₂) = g.comp f₁*g.comp f₂ := by
+    g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ := by
   ext
   simp only [mul_apply, Function.comp_app, map_mul, coe_comp]
 
-/--  If two homomorphism from a group to a monoid are equal at `x`, then they are equal at `x⁻¹`. -/
+/-- If two homomorphism from a group to a monoid are equal at `x`, then they are equal at `x⁻¹`. -/
 @[to_additive
       "If two homomorphism from an additive group to an additive monoid are equal at `x`,\nthen they are equal at `-x`."]
 theorem eq_on_inv {G} [Groupₓ G] [Monoidₓ M] {f g : G →* M} {x : G} (h : f x = g x) : f (x⁻¹) = g (x⁻¹) :=
   left_inv_eq_right_invₓ (map_mul_eq_one f $ inv_mul_selfₓ x) $ h.symm ▸ g.map_mul_eq_one $ mul_inv_selfₓ x
 
-/--  Group homomorphisms preserve inverse. -/
+/-- Group homomorphisms preserve inverse. -/
 @[to_additive]
 protected theorem map_inv {G H} [Groupₓ G] [Groupₓ H] (f : G →* H) (g : G) : f (g⁻¹) = f g⁻¹ :=
   map_inv f g
 
-/--  Group homomorphisms preserve integer power. -/
+/-- Group homomorphisms preserve integer power. -/
 @[to_additive " Additive group homomorphisms preserve integer scaling. "]
 protected theorem map_zpow {G H} [Groupₓ G] [Groupₓ H] (f : G →* H) (g : G) (n : ℤ) : f (g ^ n) = f g ^ n :=
   map_zpow f g n
 
-/--  Group homomorphisms preserve division. -/
+/-- Group homomorphisms preserve division. -/
 @[to_additive " Additive group homomorphisms preserve subtraction. "]
 protected theorem map_div {G H} [Groupₓ G] [Groupₓ H] (f : G →* H) (g h : G) : f (g / h) = f g / f h :=
   map_div f g h
 
-/--  Group homomorphisms preserve division. -/
+/-- Group homomorphisms preserve division. -/
 @[to_additive]
-protected theorem map_mul_inv {G H} [Groupₓ G] [Groupₓ H] (f : G →* H) (g h : G) : f (g*h⁻¹) = f g*f h⁻¹ :=
+protected theorem map_mul_inv {G H} [Groupₓ G] [Groupₓ H] (f : G →* H) (g h : G) : f (g * h⁻¹) = f g * f h⁻¹ :=
   map_mul_inv f g h
 
-/--  A homomorphism from a group to a monoid is injective iff its kernel is trivial.
+/-- A homomorphism from a group to a monoid is injective iff its kernel is trivial.
 For the iff statement on the triviality of the kernel, see `monoid_hom.injective_iff'`.  -/
 @[to_additive
       " A homomorphism from an additive group to an additive monoid is injective iff\nits kernel is trivial. For the iff statement on the triviality of the kernel,\nsee `add_monoid_hom.injective_iff'`. "]
@@ -1097,7 +1094,7 @@ theorem injective_iff {G H} [Groupₓ G] [MulOneClass H] (f : G →* H) : Functi
       h _ $ by
         rw [f.map_mul, hxy, ← f.map_mul, mul_inv_selfₓ, f.map_one]⟩
 
-/--  A homomorphism from a group to a monoid is injective iff its kernel is trivial,
+/-- A homomorphism from a group to a monoid is injective iff its kernel is trivial,
 stated as an iff on the triviality of the kernel.
 For the implication, see `monoid_hom.injective_iff`. -/
 @[to_additive
@@ -1107,37 +1104,39 @@ theorem injective_iff' {G H} [Groupₓ G] [MulOneClass H] (f : G →* H) : Funct
 
 include mM
 
-/--  Makes a group homomorphism from a proof that the map preserves multiplication. -/
+/-- Makes a group homomorphism from a proof that the map preserves multiplication. -/
 @[to_additive "Makes an additive group homomorphism from a proof that the map preserves addition.",
   simps (config := { fullyApplied := ff })]
-def mk' (f : M → G) (map_mul : ∀ a b : M, f (a*b) = f a*f b) : M →* G :=
-  { toFun := f, map_mul' := map_mul,
-    map_one' :=
-      mul_left_eq_self.1 $ by
-        rw [← map_mul, mul_oneₓ] }
+def mk' (f : M → G) (map_mul : ∀ a b : M, f (a * b) = f a * f b) : M →* G where
+  toFun := f
+  map_mul' := map_mul
+  map_one' :=
+    mul_left_eq_self.1 $ by
+      rw [← map_mul, mul_oneₓ]
 
 omit mM
 
-/--  Makes a group homomorphism from a proof that the map preserves right division `λ x y, x * y⁻¹`.
+/-- Makes a group homomorphism from a proof that the map preserves right division `λ x y, x * y⁻¹`.
 See also `monoid_hom.of_map_div` for a version using `λ x y, x / y`.
 -/
 @[to_additive
       "Makes an additive group homomorphism from a proof that the map preserves\nthe operation `λ a b, a + -b`. See also `add_monoid_hom.of_map_sub` for a version using\n`λ a b, a - b`."]
-def of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, f (a*b⁻¹) = f a*f b⁻¹) : G →* H :=
+def of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, f (a * b⁻¹) = f a * f b⁻¹) : G →* H :=
   mk' f $ fun x y =>
-    calc f (x*y) = f x*(f $ (1*1⁻¹)*y⁻¹)⁻¹ := by
-      simp only [one_mulₓ, one_inv, ← map_div, inv_invₓ]
-      _ = f x*f y := by
-      simp only [map_div]
-      simp only [mul_right_invₓ, one_mulₓ, inv_invₓ]
+    calc
+      f (x * y) = f x * (f $ 1 * 1⁻¹ * y⁻¹)⁻¹ := by
+        simp only [one_mulₓ, one_inv, ← map_div, inv_invₓ]
+      _ = f x * f y := by
+        simp only [map_div]
+        simp only [mul_right_invₓ, one_mulₓ, inv_invₓ]
       
 
 @[simp, to_additive]
-theorem coe_of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, f (a*b⁻¹) = f a*f b⁻¹) :
+theorem coe_of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, f (a * b⁻¹) = f a * f b⁻¹) :
     ⇑of_map_mul_inv f map_div = f :=
   rfl
 
-/--  Define a morphism of additive groups given a map which respects ratios. -/
+/-- Define a morphism of additive groups given a map which respects ratios. -/
 @[to_additive "Define a morphism of additive groups given a map which respects difference."]
 def of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : G →* H :=
   of_map_mul_inv f
@@ -1148,7 +1147,7 @@ def of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) 
 theorem coe_of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : ⇑of_map_div f hf = f :=
   rfl
 
-/--  If `f` is a monoid homomorphism to a commutative group, then `f⁻¹` is the homomorphism sending
+/-- If `f` is a monoid homomorphism to a commutative group, then `f⁻¹` is the homomorphism sending
 `x` to `(f x)⁻¹`. -/
 @[to_additive]
 instance {M G} [MulOneClass M] [CommGroupₓ G] : HasInv (M →* G) :=
@@ -1156,7 +1155,7 @@ instance {M G} [MulOneClass M] [CommGroupₓ G] : HasInv (M →* G) :=
     (mk' fun g => f g⁻¹) $ fun a b => by
       rw [← mul_inv, f.map_mul]⟩
 
-/--  If `f` is an additive monoid homomorphism to an additive commutative group, then `-f` is the
+/-- If `f` is an additive monoid homomorphism to an additive commutative group, then `-f` is the
 homomorphism sending `x` to `-(f x)`. -/
 add_decl_doc AddMonoidHom.hasNeg
 
@@ -1176,7 +1175,7 @@ theorem comp_inv {M A B} {mM : MulOneClass M} {mA : CommGroupₓ A} {mB : CommGr
   ext
   simp only [Function.comp_app, inv_apply, map_inv, coe_comp]
 
-/--  If `f` and `g` are monoid homomorphisms to a commutative group, then `f / g` is the homomorphism
+/-- If `f` and `g` are monoid homomorphisms to a commutative group, then `f / g` is the homomorphism
 sending `x` to `(f x) / (g x)`. -/
 @[to_additive]
 instance {M G} [MulOneClass M] [CommGroupₓ G] : Div (M →* G) :=
@@ -1184,7 +1183,7 @@ instance {M G} [MulOneClass M] [CommGroupₓ G] : Div (M →* G) :=
     (mk' fun x => f x / g x) $ fun a b => by
       simp [div_eq_mul_inv, mul_assocₓ, mul_left_commₓ, mul_commₓ]⟩
 
-/--  If `f` and `g` are monoid homomorphisms to an additive commutative group, then `f - g`
+/-- If `f` and `g` are monoid homomorphisms to an additive commutative group, then `f - g`
 is the homomorphism sending `x` to `(f x) - (g x)`. -/
 add_decl_doc AddMonoidHom.hasSub
 

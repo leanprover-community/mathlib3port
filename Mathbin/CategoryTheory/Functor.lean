@@ -19,8 +19,7 @@ universe v v₁ v₂ v₃ u u₁ u₂ u₃
 
 section
 
-/-- 
-`functor C D` represents a functor between categories `C` and `D`.
+/-- `functor C D` represents a functor between categories `C` and `D`.
 
 To apply a functor `F` to an object use `F.obj X`, and to a morphism use `F.map f`.
 
@@ -38,7 +37,7 @@ structure Functor (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.
     run_tac
       obviously
 
-/--  The prefunctor between the underlying quivers. -/
+/-- The prefunctor between the underlying quivers. -/
 add_decl_doc functor.to_prefunctor
 
 end
@@ -59,9 +58,10 @@ section
 
 variable (C : Type u₁) [category.{v₁} C]
 
-/--  `𝟭 C` is the identity functor on a category `C`. -/
-protected def id : C ⥤ C :=
-  { obj := fun X => X, map := fun _ _ f => f }
+/-- `𝟭 C` is the identity functor on a category `C`. -/
+protected def id : C ⥤ C where
+  obj := fun X => X
+  map := fun _ _ f => f
 
 notation "𝟭" => functor.id
 
@@ -84,11 +84,11 @@ section
 
 variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D] {E : Type u₃} [category.{v₃} E]
 
-/-- 
-`F ⋙ G` is the composition of a functor `F` and a functor `G` (`F` first, then `G`).
+/-- `F ⋙ G` is the composition of a functor `F` and a functor `G` (`F` first, then `G`).
 -/
-def comp (F : C ⥤ D) (G : D ⥤ E) : C ⥤ E :=
-  { obj := fun X => G.obj (F.obj X), map := fun _ _ f => G.map (F.map f) }
+def comp (F : C ⥤ D) (G : D ⥤ E) : C ⥤ E where
+  obj := fun X => G.obj (F.obj X)
+  map := fun _ _ f => G.map (F.map f)
 
 infixr:80 " ⋙ " => comp
 

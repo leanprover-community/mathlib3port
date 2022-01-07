@@ -50,11 +50,11 @@ variable [preadditive C] [has_zero_object C] [has_equalizers C] [has_images C] [
 
 variable [preadditive D] [has_zero_object D] [has_equalizers D] [has_cokernels D] [has_images D] [has_image_maps D]
 
-/--  The left derived functors of an additive functor. -/
+/-- The left derived functors of an additive functor. -/
 def functor.left_derived (F : C ⥤ D) [F.additive] (n : ℕ) : C ⥤ D :=
   projective_resolutions C ⋙ F.map_homotopy_category _ ⋙ HomotopyCategory.homologyFunctor D _ n
 
-/--  We can compute a left derived functor using a chosen projective resolution. -/
+/-- We can compute a left derived functor using a chosen projective resolution. -/
 @[simps]
 def functor.left_derived_obj_iso (F : C ⥤ D) [F.additive] (n : ℕ) {X : C} (P : ProjectiveResolution X) :
     (F.left_derived n).obj X ≅ (homologyFunctor D _ n).obj ((F.map_homological_complex _).obj P.complex) :=
@@ -62,7 +62,7 @@ def functor.left_derived_obj_iso (F : C ⥤ D) [F.additive] (n : ℕ) {X : C} (P
       (HomotopyCategory.isoOfHomotopyEquiv (F.map_homotopy_equiv (ProjectiveResolution.homotopy_equiv _ P))) ≪≫
     (HomotopyCategory.homologyFactors D _ n).app _
 
-/--  The 0-th derived functor of `F` on a projective object `X` is just `F.obj X`. -/
+/-- The 0-th derived functor of `F` on a projective object `X` is just `F.obj X`. -/
 @[simps]
 def functor.left_derived_obj_projective_zero (F : C ⥤ D) [F.additive] (X : C) [projective X] :
     (F.left_derived 0).obj X ≅ F.obj X :=
@@ -72,16 +72,15 @@ def functor.left_derived_obj_projective_zero (F : C ⥤ D) [F.additive] (X : C) 
 
 open_locale ZeroObject
 
-/--  The higher derived functors vanish on projective objects. -/
+/-- The higher derived functors vanish on projective objects. -/
 @[simps]
 def functor.left_derived_obj_projective_succ (F : C ⥤ D) [F.additive] (n : ℕ) (X : C) [projective X] :
-    (F.left_derived (n+1)).obj X ≅ 0 :=
-  F.left_derived_obj_iso (n+1) (ProjectiveResolution.self X) ≪≫
+    (F.left_derived (n + 1)).obj X ≅ 0 :=
+  F.left_derived_obj_iso (n + 1) (ProjectiveResolution.self X) ≪≫
     (homologyFunctor _ _ _).mapIso ((ChainComplex.single₀MapHomologicalComplex F).app X) ≪≫
       (ChainComplex.homologyFunctorSuccSingle₀ D n).app (F.obj X)
 
-/-- 
-We can compute a left derived functor on a morphism using a lift of that morphism
+/-- We can compute a left derived functor on a morphism using a lift of that morphism
 to a chain map between chosen projective resolutions.
 -/
 theorem functor.left_derived_map_eq (F : C ⥤ D) [F.additive] (n : ℕ) {X Y : C} (f : X ⟶ Y) {P : ProjectiveResolution X}
@@ -101,12 +100,12 @@ theorem functor.left_derived_map_eq (F : C ⥤ D) [F.additive] (n : ℕ) {X Y : 
   apply Homotopy.trans
   exact HomotopyCategory.homotopyOutMap _
   apply ProjectiveResolution.lift_homotopy f
-  ·
-    simp
-  ·
-    simp [w]
+  · simp
+    
+  · simp [w]
+    
 
-/--  The natural transformation between left-derived functors induced by a natural transformation. -/
+/-- The natural transformation between left-derived functors induced by a natural transformation. -/
 @[simps]
 def nat_trans.left_derived {F G : C ⥤ D} [F.additive] [G.additive] (α : F ⟶ G) (n : ℕ) :
     F.left_derived n ⟶ G.left_derived n :=
@@ -124,8 +123,7 @@ theorem nat_trans.left_derived_comp {F G H : C ⥤ D} [F.additive] [G.additive] 
     (n : ℕ) : nat_trans.left_derived (α ≫ β) n = nat_trans.left_derived α n ≫ nat_trans.left_derived β n := by
   simp [nat_trans.left_derived]
 
-/-- 
-A component of the natural transformation between left-derived functors can be computed
+/-- A component of the natural transformation between left-derived functors can be computed
 using a chosen projective resolution.
 -/
 theorem nat_trans.left_derived_eq {F G : C ⥤ D} [F.additive] [G.additive] (α : F ⟶ G) (n : ℕ) {X : C}

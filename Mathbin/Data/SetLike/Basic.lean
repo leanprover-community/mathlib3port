@@ -65,7 +65,7 @@ subobjects
 -/
 
 
-/--  A class to indicate that there is a canonical injection between `A` and `set B`.
+/-- A class to indicate that there is a canonical injection between `A` and `set B`.
 
 This has the effect of giving terms of `A` elements of type `B` (through a `has_mem`
 instance) and a compatible coercion to `Type*` as a subtype.
@@ -123,7 +123,7 @@ theorem ext' (h : (p : Set B) = q) : p = q :=
 theorem ext'_iff : p = q ↔ (p : Set B) = q :=
   coe_set_eq.symm
 
-/--  Note: implementers of `set_like` must copy this lemma in order to tag it with `@[ext]`. -/
+/-- Note: implementers of `set_like` must copy this lemma in order to tag it with `@[ext]`. -/
 theorem ext (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
   coe_injective $ Set.ext h
 

@@ -22,39 +22,39 @@ operations (`pow_right`, field inverse etc) are in the files that define corresp
 
 universe u v
 
-/--  `x` is semiconjugate to `y` by `a`, if `a * x = y * a`. -/
+/-- `x` is semiconjugate to `y` by `a`, if `a * x = y * a`. -/
 @[to_additive AddSemiconjBy "`x` is additive semiconjugate to `y` by `a` if `a + x = y + a`"]
 def SemiconjBy {M : Type u} [Mul M] (a x y : M) : Prop :=
-  (a*x) = y*a
+  a * x = y * a
 
 namespace SemiconjBy
 
-/--  Equality behind `semiconj_by a x y`; useful for rewriting. -/
+/-- Equality behind `semiconj_by a x y`; useful for rewriting. -/
 @[to_additive]
-protected theorem Eq {S : Type u} [Mul S] {a x y : S} (h : SemiconjBy a x y) : (a*x) = y*a :=
+protected theorem Eq {S : Type u} [Mul S] {a x y : S} (h : SemiconjBy a x y) : a * x = y * a :=
   h
 
 section Semigroupₓ
 
 variable {S : Type u} [Semigroupₓ S] {a b x y z x' y' : S}
 
-/--  If `a` semiconjugates `x` to `y` and `x'` to `y'`,
+/-- If `a` semiconjugates `x` to `y` and `x'` to `y'`,
 then it semiconjugates `x * x'` to `y * y'`. -/
 @[simp, to_additive]
-theorem mul_right (h : SemiconjBy a x y) (h' : SemiconjBy a x' y') : SemiconjBy a (x*x') (y*y') := by
+theorem mul_right (h : SemiconjBy a x y) (h' : SemiconjBy a x' y') : SemiconjBy a (x * x') (y * y') := by
   unfold SemiconjBy <;> assoc_rw [h.eq, h'.eq]
 
-/--  If both `a` and `b` semiconjugate `x` to `y`, then so does `a * b`. -/
+/-- If both `a` and `b` semiconjugate `x` to `y`, then so does `a * b`. -/
 @[to_additive]
-theorem mul_left (ha : SemiconjBy a y z) (hb : SemiconjBy b x y) : SemiconjBy (a*b) x z := by
+theorem mul_left (ha : SemiconjBy a y z) (hb : SemiconjBy b x y) : SemiconjBy (a * b) x z := by
   unfold SemiconjBy <;> assoc_rw [hb.eq, ha.eq, mul_assocₓ]
 
-/--  The relation “there exists an element that semiconjugates `a` to `b`” on a semigroup
+/-- The relation “there exists an element that semiconjugates `a` to `b`” on a semigroup
 is transitive. -/
 @[to_additive
       "The relation “there exists an element that semiconjugates `a` to `b`” on an additive\nsemigroup is transitive."]
 protected theorem Transitive : Transitive fun a b : S => ∃ c, SemiconjBy c a b := fun a b c ⟨x, hx⟩ ⟨y, hy⟩ =>
-  ⟨y*x, hy.mul_left hx⟩
+  ⟨y * x, hy.mul_left hx⟩
 
 end Semigroupₓ
 
@@ -62,17 +62,17 @@ section MulOneClass
 
 variable {M : Type u} [MulOneClass M]
 
-/--  Any element semiconjugates `1` to `1`. -/
+/-- Any element semiconjugates `1` to `1`. -/
 @[simp, to_additive]
 theorem one_right (a : M) : SemiconjBy a 1 1 := by
   rw [SemiconjBy, mul_oneₓ, one_mulₓ]
 
-/--  One semiconjugates any element to itself. -/
+/-- One semiconjugates any element to itself. -/
 @[simp, to_additive]
 theorem one_left (x : M) : SemiconjBy 1 x x :=
   Eq.symm $ one_right x
 
-/--  The relation “there exists an element that semiconjugates `a` to `b`” on a monoid (or, more
+/-- The relation “there exists an element that semiconjugates `a` to `b`” on a monoid (or, more
 generally, on ` mul_one_class` type) is reflexive. -/
 @[to_additive
       "The relation “there exists an element that semiconjugates `a` to `b`” on an additive\nmonoid (or, more generally, on a `add_zero_class` type) is reflexive."]
@@ -84,53 +84,55 @@ section Monoidₓ
 
 variable {M : Type u} [Monoidₓ M]
 
-/--  If `a` semiconjugates a unit `x` to a unit `y`, then it semiconjugates `x⁻¹` to `y⁻¹`. -/
+/-- If `a` semiconjugates a unit `x` to a unit `y`, then it semiconjugates `x⁻¹` to `y⁻¹`. -/
 @[to_additive]
-theorem units_inv_right {a : M} {x y : Units M} (h : SemiconjBy a x y) : SemiconjBy a (↑x⁻¹) (↑y⁻¹) :=
-  calc (a*↑x⁻¹) = ((↑y⁻¹)*y*a)*↑x⁻¹ := by
-    rw [Units.inv_mul_cancel_left]
-    _ = (↑y⁻¹)*a := by
-    rw [← h.eq, mul_assocₓ, Units.mul_inv_cancel_right]
+theorem units_inv_right {a : M} {x y : (M)ˣ} (h : SemiconjBy a x y) : SemiconjBy a (↑x⁻¹) (↑y⁻¹) :=
+  calc
+    a * ↑x⁻¹ = ↑y⁻¹ * (y * a) * ↑x⁻¹ := by
+      rw [Units.inv_mul_cancel_left]
+    _ = ↑y⁻¹ * a := by
+      rw [← h.eq, mul_assocₓ, Units.mul_inv_cancel_right]
     
 
 @[simp, to_additive]
-theorem units_inv_right_iff {a : M} {x y : Units M} : SemiconjBy a (↑x⁻¹) (↑y⁻¹) ↔ SemiconjBy a x y :=
+theorem units_inv_right_iff {a : M} {x y : (M)ˣ} : SemiconjBy a (↑x⁻¹) (↑y⁻¹) ↔ SemiconjBy a x y :=
   ⟨units_inv_right, units_inv_right⟩
 
-/--  If a unit `a` semiconjugates `x` to `y`, then `a⁻¹` semiconjugates `y` to `x`. -/
+/-- If a unit `a` semiconjugates `x` to `y`, then `a⁻¹` semiconjugates `y` to `x`. -/
 @[to_additive]
-theorem units_inv_symm_left {a : Units M} {x y : M} (h : SemiconjBy (↑a) x y) : SemiconjBy (↑a⁻¹) y x :=
-  calc ((↑a⁻¹)*y) = (↑a⁻¹)*(y*a)*↑a⁻¹ := by
-    rw [Units.mul_inv_cancel_right]
-    _ = x*↑a⁻¹ := by
-    rw [← h.eq, ← mul_assocₓ, Units.inv_mul_cancel_left]
+theorem units_inv_symm_left {a : (M)ˣ} {x y : M} (h : SemiconjBy (↑a) x y) : SemiconjBy (↑a⁻¹) y x :=
+  calc
+    ↑a⁻¹ * y = ↑a⁻¹ * (y * a * ↑a⁻¹) := by
+      rw [Units.mul_inv_cancel_right]
+    _ = x * ↑a⁻¹ := by
+      rw [← h.eq, ← mul_assocₓ, Units.inv_mul_cancel_left]
     
 
 @[simp, to_additive]
-theorem units_inv_symm_left_iff {a : Units M} {x y : M} : SemiconjBy (↑a⁻¹) y x ↔ SemiconjBy (↑a) x y :=
+theorem units_inv_symm_left_iff {a : (M)ˣ} {x y : M} : SemiconjBy (↑a⁻¹) y x ↔ SemiconjBy (↑a) x y :=
   ⟨units_inv_symm_left, units_inv_symm_left⟩
 
 @[to_additive]
-theorem units_coe {a x y : Units M} (h : SemiconjBy a x y) : SemiconjBy (a : M) x y :=
+theorem units_coe {a x y : (M)ˣ} (h : SemiconjBy a x y) : SemiconjBy (a : M) x y :=
   congr_argₓ Units.val h
 
 @[to_additive]
-theorem units_of_coe {a x y : Units M} (h : SemiconjBy (a : M) x y) : SemiconjBy a x y :=
+theorem units_of_coe {a x y : (M)ˣ} (h : SemiconjBy (a : M) x y) : SemiconjBy a x y :=
   Units.ext h
 
 @[simp, to_additive]
-theorem units_coe_iff {a x y : Units M} : SemiconjBy (a : M) x y ↔ SemiconjBy a x y :=
+theorem units_coe_iff {a x y : (M)ˣ} : SemiconjBy (a : M) x y ↔ SemiconjBy a x y :=
   ⟨units_of_coe, units_coe⟩
 
 @[simp, to_additive]
 theorem pow_right {a x y : M} (h : SemiconjBy a x y) (n : ℕ) : SemiconjBy a (x ^ n) (y ^ n) := by
   induction' n with n ih
-  ·
-    rw [pow_zeroₓ, pow_zeroₓ]
+  · rw [pow_zeroₓ, pow_zeroₓ]
     exact SemiconjBy.one_right _
-  ·
-    rw [pow_succₓ, pow_succₓ]
+    
+  · rw [pow_succₓ, pow_succₓ]
     exact h.mul_right ih
+    
 
 end Monoidₓ
 
@@ -162,9 +164,9 @@ theorem inv_inv_symm (h : SemiconjBy a x y) : SemiconjBy (a⁻¹) (y⁻¹) (x⁻
 theorem inv_inv_symm_iff : SemiconjBy (a⁻¹) (y⁻¹) (x⁻¹) ↔ SemiconjBy a x y :=
   inv_right_iff.trans inv_symm_left_iff
 
-/--  `a` semiconjugates `x` to `a * x * a⁻¹`. -/
+/-- `a` semiconjugates `x` to `a * x * a⁻¹`. -/
 @[to_additive]
-theorem conj_mk (a x : G) : SemiconjBy a x ((a*x)*a⁻¹) := by
+theorem conj_mk (a x : G) : SemiconjBy a x (a * x * a⁻¹) := by
   unfold SemiconjBy <;> rw [mul_assocₓ, inv_mul_selfₓ, mul_oneₓ]
 
 end Groupₓ
@@ -176,8 +178,8 @@ theorem semiconj_by_iff_eq {M : Type u} [CancelCommMonoid M] {a x y : M} : Semic
   ⟨fun h => mul_left_cancelₓ (h.trans (mul_commₓ _ _)), fun h => by
     rw [h, SemiconjBy, mul_commₓ]⟩
 
-/--  `a` semiconjugates `x` to `a * x * a⁻¹`. -/
+/-- `a` semiconjugates `x` to `a * x * a⁻¹`. -/
 @[to_additive]
-theorem Units.mk_semiconj_by {M : Type u} [Monoidₓ M] (u : Units M) (x : M) : SemiconjBy (↑u) x ((u*x)*↑u⁻¹) := by
+theorem Units.mk_semiconj_by {M : Type u} [Monoidₓ M] (u : (M)ˣ) (x : M) : SemiconjBy (↑u) x (u * x * ↑u⁻¹) := by
   unfold SemiconjBy <;> rw [Units.inv_mul_cancel_right]
 

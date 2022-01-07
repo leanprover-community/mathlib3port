@@ -15,7 +15,7 @@ private unsafe def reflect_name_list : has_reflect (List Name)
 private unsafe def parse_name_list (e : expr) : List Name :=
   e.app_arg.get_app_args.map expr.const_name
 
-/--  The `ancestor` attributes is used to record the names of structures which appear in the
+/-- The `ancestor` attributes is used to record the names of structures which appear in the
 extends clause of a `structure` or `class` declared with `old_structure_cmd` set to true.
 
 As an example:
@@ -34,8 +34,10 @@ The list of ancestors should be in the order they appear in the `extends` clause
 contain only the names of the ancestor structures, without any arguments.
 -/
 @[user_attribute]
-unsafe def ancestor_attr : user_attribute Unit (List Name) :=
-  { Name := `ancestor, descr := "ancestor of old structures", parser := many ident }
+unsafe def ancestor_attr : user_attribute Unit (List Name) where
+  Name := `ancestor
+  descr := "ancestor of old structures"
+  parser := many ident
 
 add_tactic_doc
   { Name := "ancestor", category := DocCategory.attr, declNames := [`tactic.ancestor_attr],
@@ -43,24 +45,21 @@ add_tactic_doc
 
 end Performance
 
-/-- 
-Returns the parents of a structure added via the `ancestor` attribute.
+/-- Returns the parents of a structure added via the `ancestor` attribute.
 
 On failure, the empty list is returned.
 -/
 unsafe def get_tagged_ancestors (cl : Name) : tactic (List Name) :=
   parse_name_list <$> ancestor_attr.get_param_untyped cl <|> pure []
 
-/-- 
-Returns the parents of a structure added via the `ancestor` attribute, as well as subobjects.
+/-- Returns the parents of a structure added via the `ancestor` attribute, as well as subobjects.
 
 On failure, the empty list is returned.
 -/
 unsafe def get_ancestors (cl : Name) : tactic (List Name) :=
   (· ++ ·) <$> (Prod.fst <$> subobject_names cl <|> pure []) <*> get_tagged_ancestors cl
 
-/-- 
-Returns the (transitive) ancestors of a structure added via the `ancestor`
+/-- Returns the (transitive) ancestors of a structure added via the `ancestor`
 attribute (or reachable via subobjects).
 
 On failure, the empty list is returned.

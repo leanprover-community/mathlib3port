@@ -1,4 +1,6 @@
 import Mathbin.Topology.MetricSpace.Basic
+import Mathbin.Topology.Algebra.Ordered.MonotoneConvergence
+import Mathbin.Data.Set.Intervals.Monotone
 
 /-!
 # Rectangular boxes in `ℝⁿ`
@@ -43,11 +45,11 @@ rectangular box
 -/
 
 
-open Set Function Metric
+open Set Function Metric Filter
 
 noncomputable section
 
-open_locale Nnreal Classical
+open_locale Nnreal Classical TopologicalSpace
 
 namespace BoxIntegral
 
@@ -58,7 +60,7 @@ variable {ι : Type _}
 -/
 
 
-/--  A nontrivial rectangular box in `ι → ℝ` with corners `lower` and `upper`. Repesents the product
+/-- A nontrivial rectangular box in `ι → ℝ` with corners `lower` and `upper`. Repesents the product
 of half-open intervals `(lower i, upper i]`. -/
 structure box (ι : Type _) where
   (lower upper : ι → ℝ)
@@ -78,103 +80,8 @@ theorem lower_le_upper : I.lower ≤ I.upper := fun i => (I.lower_lt_upper i).le
 instance : HasMem (ι → ℝ) (box ι) :=
   ⟨fun x I => ∀ i, x i ∈ Ioc (I.lower i) (I.upper i)⟩
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.instance
-  (Term.attrKind [])
-  "instance"
-  []
-  []
-  (Command.declSig
-   []
-   (Term.typeSpec
-    ":"
-    (Term.app `CoeTₓ [(Term.app `box [`ι]) («term_$__» `Set "$" (Term.arrow `ι "→" (Data.Real.Basic.termℝ "ℝ")))])))
-  (Command.declValSimple
-   ":="
-   (Term.anonymousCtor
-    "⟨"
-    [(Term.fun
-      "fun"
-      (Term.basicFun
-       [(Term.simpleBinder [`I] [])]
-       "=>"
-       (Set.«term{_|_}» "{" `x "|" (Init.Core.«term_∈_» `x " ∈ " `I) "}")))]
-    "⟩")
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor
-   "⟨"
-   [(Term.fun
-     "fun"
-     (Term.basicFun
-      [(Term.simpleBinder [`I] [])]
-      "=>"
-      (Set.«term{_|_}» "{" `x "|" (Init.Core.«term_∈_» `x " ∈ " `I) "}")))]
-   "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun
-   "fun"
-   (Term.basicFun
-    [(Term.simpleBinder [`I] [])]
-    "=>"
-    (Set.«term{_|_}» "{" `x "|" (Init.Core.«term_∈_» `x " ∈ " `I) "}")))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}» "{" `x "|" (Init.Core.«term_∈_» `x " ∈ " `I) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Init.Core.«term_∈_» `x " ∈ " `I)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_∈_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `I
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-instance : CoeTₓ box ι Set $ ι → ℝ := ⟨ fun I => { x | x ∈ I } ⟩
+instance : CoeTₓ (box ι) (Set $ ι → ℝ) :=
+  ⟨fun I => { x | x ∈ I }⟩
 
 @[simp]
 theorem mem_mk {l u x : ι → ℝ} {H} : x ∈ mk l u H ↔ ∀ i, x i ∈ Ioc (l i) (u i) :=
@@ -261,7 +168,7 @@ theorem ne_of_disjoint_coe (h : Disjoint (I : Set (ι → ℝ)) J) : I ≠ J :=
 instance : PartialOrderₓ (box ι) :=
   { PartialOrderₓ.lift (coeₓ : box ι → Set (ι → ℝ)) injective_coe with le := · ≤ · }
 
-/--  Closed box corresponding to `I : box_integral.box ι`. -/
+/-- Closed box corresponding to `I : box_integral.box ι`. -/
 protected def Icc : box ι ↪o Set (ι → ℝ) :=
   OrderEmbedding.ofMapLeIff (fun I : box ι => Icc I.lower I.upper) fun I J => (le_tfae I J).out 2 0
 
@@ -296,7 +203,7 @@ theorem coe_subset_Icc : ↑I ⊆ I.Icc := fun x hx => ⟨fun i => (hx i).1.le, 
 -/
 
 
-/--  `I ⊔ J` is the least box that includes both `I` and `J`. Since `↑I ∪ ↑J` is usually not a box,
+/-- `I ⊔ J` is the least box that includes both `I` and `J`. Since `↑I ∪ ↑J` is usually not a box,
 `↑(I ⊔ J)` is larger than `↑I ∪ ↑J`. -/
 instance : HasSup (box ι) :=
   ⟨fun I J =>
@@ -335,233 +242,24 @@ theorem is_some_iff : ∀ {I : WithBot (box ι)}, I.is_some ↔ (I : Set (ι →
     erw [Option.isSome]
     simp [I.nonempty_coe]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `bUnion_coe_eq_coe [])
-  (Command.declSig
-   [(Term.explicitBinder "(" [`I] [":" (Term.app `WithBot [(Term.app `box [`ι])])] [] ")")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Set.Data.Set.Lattice.«term⋃_,_»
-      "⋃"
-      (Lean.explicitBinders
-       [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `J)] ":" (Term.app `box [`ι]) ")")
-        (Lean.bracketedExplicitBinders
-         "("
-         [(Lean.binderIdent `hJ)]
-         ":"
-         («term_=_» (Init.Coe.«term↑_» "↑" `J) "=" `I)
-         ")")])
-      ", "
-      (Term.paren
-       "("
-       [`J [(Term.typeAscription ":" (Term.app `Set [(Term.arrow `ι "→" (Data.Real.Basic.termℝ "ℝ"))]))]]
-       ")"))
-     "="
-     `I)))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group
-        (Tactic.«tactic_<;>_»
-         (Tactic.induction "induction" [`I] ["using" `WithBot.recBotCoe] [] [])
-         "<;>"
-         (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `WithBot.coe_eq_coe)] "]"] []))
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.«tactic_<;>_»
-        (Tactic.induction "induction" [`I] ["using" `WithBot.recBotCoe] [] [])
-        "<;>"
-        (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `WithBot.coe_eq_coe)] "]"] []))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic_<;>_»
-   (Tactic.induction "induction" [`I] ["using" `WithBot.recBotCoe] [] [])
-   "<;>"
-   (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `WithBot.coe_eq_coe)] "]"] []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `WithBot.coe_eq_coe)] "]"] [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `WithBot.coe_eq_coe
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-  (Tactic.induction "induction" [`I] ["using" `WithBot.recBotCoe] [] [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.induction', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `I
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Set.Data.Set.Lattice.«term⋃_,_»
-    "⋃"
-    (Lean.explicitBinders
-     [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `J)] ":" (Term.app `box [`ι]) ")")
-      (Lean.bracketedExplicitBinders
-       "("
-       [(Lean.binderIdent `hJ)]
-       ":"
-       («term_=_» (Init.Coe.«term↑_» "↑" `J) "=" `I)
-       ")")])
-    ", "
-    (Term.paren
-     "("
-     [`J [(Term.typeAscription ":" (Term.app `Set [(Term.arrow `ι "→" (Data.Real.Basic.termℝ "ℝ"))]))]]
-     ")"))
-   "="
-   `I)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `I
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  (Set.Data.Set.Lattice.«term⋃_,_»
-   "⋃"
-   (Lean.explicitBinders
-    [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `J)] ":" (Term.app `box [`ι]) ")")
-     (Lean.bracketedExplicitBinders
-      "("
-      [(Lean.binderIdent `hJ)]
-      ":"
-      («term_=_» (Init.Coe.«term↑_» "↑" `J) "=" `I)
-      ")")])
-   ", "
-   (Term.paren
-    "("
-    [`J [(Term.typeAscription ":" (Term.app `Set [(Term.arrow `ι "→" (Data.Real.Basic.termℝ "ℝ"))]))]]
-    ")"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Lattice.«term⋃_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.paren
-   "("
-   [`J [(Term.typeAscription ":" (Term.app `Set [(Term.arrow `ι "→" (Data.Real.Basic.termℝ "ℝ"))]))]]
-   ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `Set [(Term.arrow `ι "→" (Data.Real.Basic.termℝ "ℝ"))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.arrow', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.arrow', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.arrow', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.arrow', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.arrow', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.arrow `ι "→" (Data.Real.Basic.termℝ "ℝ"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.arrow', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Data.Real.Basic.termℝ "ℝ")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Real.Basic.termℝ', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 25 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
-  `ι
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 25, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 25, (some 25, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.arrow `ι "→" (Data.Real.Basic.termℝ "ℝ")) []] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `Set
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  `J
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  bUnion_coe_eq_coe
-  ( I : WithBot box ι ) : ⋃ ( J : box ι ) ( hJ : ↑ J = I ) , ( J : Set ι → ℝ ) = I
-  := by induction I using WithBot.recBotCoe <;> simp [ WithBot.coe_eq_coe ]
+theorem bUnion_coe_eq_coe (I : WithBot (box ι)) : (⋃ (J : box ι) (hJ : ↑J = I), (J : Set (ι → ℝ))) = I := by
+  induction I using WithBot.recBotCoe <;> simp [WithBot.coe_eq_coe]
 
 @[simp, norm_cast]
 theorem with_bot_coe_subset_iff {I J : WithBot (box ι)} : (I : Set (ι → ℝ)) ⊆ J ↔ I ≤ J := by
   induction I using WithBot.recBotCoe
-  ·
-    simp
+  · simp
+    
   induction J using WithBot.recBotCoe
-  ·
-    simp [subset_empty_iff]
+  · simp [subset_empty_iff]
+    
   simp
 
 @[simp, norm_cast]
 theorem with_bot_coe_inj {I J : WithBot (box ι)} : (I : Set (ι → ℝ)) = J ↔ I = J := by
   simp only [subset.antisymm_iff, ← le_antisymm_iffₓ, with_bot_coe_subset_iff]
 
-/--  Make a `with_bot (box ι)` from a pair of corners `l u : ι → ℝ`. If `l i < u i` for all `i`,
+/-- Make a `with_bot (box ι)` from a pair of corners `l u : ι → ℝ`. If `l i < u i` for all `i`,
 then the result is `⟨l, u, _⟩ : box ι`, otherwise it is `⊥`. In any case, the result interpreted
 as a set in `ι → ℝ` is the set `{x : ι → ℝ | ∀ i, x i ∈ Ioc (l i) (u i)}`.  -/
 def mk' (l u : ι → ℝ) : WithBot (box ι) :=
@@ -577,24 +275,24 @@ theorem mk'_eq_coe {l u : ι → ℝ} : mk' l u = I ↔ l = I.lower ∧ u = I.up
   cases' I with lI uI hI
   rw [mk']
   split_ifs
-  ·
-    simp [WithBot.coe_eq_coe]
-  ·
-    suffices l = lI → u ≠ uI by
+  · simp [WithBot.coe_eq_coe]
+    
+  · suffices l = lI → u ≠ uI by
       simpa
     rintro rfl rfl
     exact h hI
+    
 
 @[simp]
 theorem coe_mk' (l u : ι → ℝ) : (mk' l u : Set (ι → ℝ)) = pi univ fun i => Ioc (l i) (u i) := by
   rw [mk']
   split_ifs
-  ·
-    exact coe_eq_pi _
-  ·
-    rcases not_forall.mp h with ⟨i, hi⟩
+  · exact coe_eq_pi _
+    
+  · rcases not_forall.mp h with ⟨i, hi⟩
     rw [coe_bot, univ_pi_eq_empty]
     exact Ioc_eq_empty hi
+    
 
 instance : HasInf (WithBot (box ι)) :=
   ⟨fun I =>
@@ -604,13 +302,13 @@ instance : HasInf (WithBot (box ι)) :=
 @[simp]
 theorem coe_inf (I J : WithBot (box ι)) : (↑(I⊓J) : Set (ι → ℝ)) = I ∩ J := by
   induction I using WithBot.recBotCoe
-  ·
-    change ∅ = _
+  · change ∅ = _
     simp
+    
   induction J using WithBot.recBotCoe
-  ·
-    change ∅ = _
+  · change ∅ = _
     simp
+    
   change ↑mk' _ _ = _
   simp only [coe_eq_pi, ← pi_inter_distrib, Ioc_inter_Ioc, Pi.sup_apply, Pi.inf_apply, coe_mk', coe_coe]
 
@@ -642,40 +340,85 @@ theorem not_disjoint_coe_iff_nonempty_inter : ¬Disjoint (I : WithBot (box ι)) 
 -/
 
 
-/--  Face of a box in `ℝⁿ⁺¹ = fin (n + 1) → ℝ`: the box in `ℝⁿ = fin n → ℝ` with corners at
+/-- Face of a box in `ℝⁿ⁺¹ = fin (n + 1) → ℝ`: the box in `ℝⁿ = fin n → ℝ` with corners at
 `I.lower ∘ fin.succ_above i` and `I.upper ∘ fin.succ_above i`. -/
-@[simps]
-def face {n} (I : box (Finₓ (n+1))) (i : Finₓ (n+1)) : box (Finₓ n) :=
+@[simps (config := { simpRhs := tt })]
+def face {n} (I : box (Finₓ (n + 1))) (i : Finₓ (n + 1)) : box (Finₓ n) :=
   ⟨I.lower ∘ Finₓ.succAbove i, I.upper ∘ Finₓ.succAbove i, fun j => I.lower_lt_upper _⟩
 
 @[simp]
-theorem face_mk {n} (l u : Finₓ (n+1) → ℝ) (h : ∀ i, l i < u i) (i : Finₓ (n+1)) :
+theorem face_mk {n} (l u : Finₓ (n + 1) → ℝ) (h : ∀ i, l i < u i) (i : Finₓ (n + 1)) :
     face ⟨l, u, h⟩ i = ⟨l ∘ Finₓ.succAbove i, u ∘ Finₓ.succAbove i, fun j => h _⟩ :=
   rfl
 
 @[mono]
-theorem face_mono {n} {I J : box (Finₓ (n+1))} (h : I ≤ J) (i : Finₓ (n+1)) : face I i ≤ face J i := fun x hx i =>
+theorem face_mono {n} {I J : box (Finₓ (n + 1))} (h : I ≤ J) (i : Finₓ (n + 1)) : face I i ≤ face J i := fun x hx i =>
   Ioc_subset_Ioc ((le_iff_bounds.1 h).1 _) ((le_iff_bounds.1 h).2 _) (hx _)
 
-theorem maps_to_insert_nth_face_Icc {n} (I : box (Finₓ (n+1))) {i : Finₓ (n+1)} {x : ℝ}
+theorem monotone_face {n} (i : Finₓ (n + 1)) : Monotone fun I => face I i := fun I J h => face_mono h i
+
+theorem maps_to_insert_nth_face_Icc {n} (I : box (Finₓ (n + 1))) {i : Finₓ (n + 1)} {x : ℝ}
     (hx : x ∈ Icc (I.lower i) (I.upper i)) : maps_to (i.insert_nth x) (I.face i).Icc I.Icc := fun y hy =>
   Finₓ.insert_nth_mem_Icc.2 ⟨hx, hy⟩
 
-theorem maps_to_insert_nth_face {n} (I : box (Finₓ (n+1))) {i : Finₓ (n+1)} {x : ℝ}
+theorem maps_to_insert_nth_face {n} (I : box (Finₓ (n + 1))) {i : Finₓ (n + 1)} {x : ℝ}
     (hx : x ∈ Ioc (I.lower i) (I.upper i)) : maps_to (i.insert_nth x) (I.face i) I := fun y hy => by
   simpa only [mem_coe, mem_def, i.forall_iff_succ_above, hx, Finₓ.insert_nth_apply_same,
     Finₓ.insert_nth_apply_succ_above, true_andₓ]
 
-theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Finₓ (n+1) → ℝ) → X} {I : box (Finₓ (n+1))}
-    (h : ContinuousOn f I.Icc) {i : Finₓ (n+1)} {x : ℝ} (hx : x ∈ Icc (I.lower i) (I.upper i)) :
+theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Finₓ (n + 1) → ℝ) → X} {I : box (Finₓ (n + 1))}
+    (h : ContinuousOn f I.Icc) {i : Finₓ (n + 1)} {x : ℝ} (hx : x ∈ Icc (I.lower i) (I.upper i)) :
     ContinuousOn (f ∘ i.insert_nth x) (I.face i).Icc :=
   h.comp (continuous_on_const.fin_insert_nth i continuous_on_id) (I.maps_to_insert_nth_face_Icc hx)
+
+/-!
+### Covering of the interior of a box by a monotone sequence of smaller boxes
+-/
+
+
+/-- The interior of a box. -/
+protected def Ioo : box ι →o Set (ι → ℝ) where
+  toFun := fun I => pi univ fun i => Ioo (I.lower i) (I.upper i)
+  monotone' := fun I J h => pi_mono $ fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
+
+theorem Ioo_subset_coe (I : box ι) : I.Ioo ⊆ I := fun x hx i => Ioo_subset_Ioc_self (hx i trivialₓ)
+
+protected theorem Ioo_subset_Icc (I : box ι) : I.Ioo ⊆ I.Icc :=
+  I.Ioo_subset_coe.trans coe_subset_Icc
+
+theorem Union_Ioo_of_tendsto [Fintype ι] {I : box ι} {J : ℕ → box ι} (hJ : Monotone J)
+    (hl : tendsto (lower ∘ J) at_top (𝓝 I.lower)) (hu : tendsto (upper ∘ J) at_top (𝓝 I.upper)) :
+    (⋃ n, (J n).Ioo) = I.Ioo :=
+  have hl' : ∀ i, Antitone fun n => (J n).lower i := fun i =>
+    (monotone_eval i).comp_antitone (antitone_lower.comp_monotone hJ)
+  have hu' : ∀ i, Monotone fun n => (J n).upper i := fun i => (monotone_eval i).comp (monotone_upper.comp hJ)
+  calc
+    (⋃ n, (J n).Ioo) = pi univ fun i => ⋃ n, Ioo ((J n).lower i) ((J n).upper i) :=
+      Union_univ_pi_of_monotone fun i => (hl' i).Ioo (hu' i)
+    _ = I.Ioo :=
+      pi_congr rfl fun i hi =>
+        Union_Ioo_of_mono_of_is_glb_of_is_lub (hl' i) (hu' i)
+          (is_glb_of_tendsto_at_top (hl' i) (tendsto_pi_nhds.1 hl _))
+          (is_lub_of_tendsto_at_top (hu' i) (tendsto_pi_nhds.1 hu _))
+    
+
+theorem exists_seq_mono_tendsto (I : box ι) :
+    ∃ J : ℕ →o box ι,
+      (∀ n, (J n).Icc ⊆ I.Ioo) ∧ tendsto (lower ∘ J) at_top (𝓝 I.lower) ∧ tendsto (upper ∘ J) at_top (𝓝 I.upper) :=
+  by
+  choose a b ha_anti hb_mono ha_mem hb_mem hab ha_tendsto hb_tendsto using fun i =>
+    exists_seq_strict_anti_strict_mono_tendsto (I.lower_lt_upper i)
+  exact
+    ⟨⟨fun k => ⟨flip a k, flip b k, fun i => hab _ _ _⟩, fun k l hkl =>
+        le_iff_bounds.2 ⟨fun i => (ha_anti i).Antitone hkl, fun i => (hb_mono i).Monotone hkl⟩⟩,
+      fun n x hx i hi => ⟨(ha_mem _ _).1.trans_le (hx.1 _), (hx.2 _).trans_lt (hb_mem _ _).2⟩,
+      tendsto_pi_nhds.2 ha_tendsto, tendsto_pi_nhds.2 hb_tendsto⟩
 
 section Distortion
 
 variable [Fintype ι]
 
-/--  The distortion of a box `I` is the maximum of the ratios of the lengths of its edges.
+/-- The distortion of a box `I` is the maximum of the ratios of the lengths of its edges.
 It is defined as the maximum of the ratios
 `nndist I.lower I.upper / nndist (I.lower i) (I.upper i)`. -/
 def distortion (I : box ι) : ℝ≥0 :=
@@ -693,26 +436,26 @@ theorem distortion_eq_of_sub_eq_div {I J : box ι} {r : ℝ}
   simp only [Nnreal.finset_sup_div, div_div_div_cancel_right _ (real.nnabs.map_ne_zero.2 this.ne')]
 
 theorem nndist_le_distortion_mul (I : box ι) (i : ι) :
-    nndist I.lower I.upper ≤ I.distortion*nndist (I.lower i) (I.upper i) :=
+    nndist I.lower I.upper ≤ I.distortion * nndist (I.lower i) (I.upper i) :=
   calc
-    nndist I.lower I.upper = (nndist I.lower I.upper / nndist (I.lower i) (I.upper i))*nndist (I.lower i) (I.upper i) :=
-    (div_mul_cancel _ $ mt nndist_eq_zero.1 (I.lower_lt_upper i).Ne).symm
-    _ ≤ I.distortion*nndist (I.lower i) (I.upper i) := mul_le_mul_right' (Finset.le_sup $ Finset.mem_univ i) _
+    nndist I.lower I.upper = nndist I.lower I.upper / nndist (I.lower i) (I.upper i) * nndist (I.lower i) (I.upper i) :=
+      (div_mul_cancel _ $ mt nndist_eq_zero.1 (I.lower_lt_upper i).Ne).symm
+    _ ≤ I.distortion * nndist (I.lower i) (I.upper i) := mul_le_mul_right' (Finset.le_sup $ Finset.mem_univ i) _
     
 
-theorem dist_le_distortion_mul (I : box ι) (i : ι) : dist I.lower I.upper ≤ I.distortion*I.upper i - I.lower i :=
+theorem dist_le_distortion_mul (I : box ι) (i : ι) : dist I.lower I.upper ≤ I.distortion * (I.upper i - I.lower i) := by
   have A : I.lower i - I.upper i < 0 := sub_neg.2 (I.lower_lt_upper i)
-  by
   simpa only [← Nnreal.coe_le_coe, ← dist_nndist, Nnreal.coe_mul, Real.dist_eq, abs_of_neg A, neg_sub] using
     I.nndist_le_distortion_mul i
 
 theorem diam_Icc_le_of_distortion_le (I : box ι) (i : ι) {c : ℝ≥0 } (h : I.distortion ≤ c) :
-    diam I.Icc ≤ c*I.upper i - I.lower i :=
-  have : (0 : ℝ) ≤ c*I.upper i - I.lower i := mul_nonneg c.coe_nonneg (sub_nonneg.2 $ I.lower_le_upper _)
+    diam I.Icc ≤ c * (I.upper i - I.lower i) :=
+  have : (0 : ℝ) ≤ c * (I.upper i - I.lower i) := mul_nonneg c.coe_nonneg (sub_nonneg.2 $ I.lower_le_upper _)
   diam_le_of_forall_dist_le this $ fun x hx y hy =>
-    calc dist x y ≤ dist I.lower I.upper := Real.dist_le_of_mem_pi_Icc hx hy
-      _ ≤ I.distortion*I.upper i - I.lower i := I.dist_le_distortion_mul i
-      _ ≤ c*I.upper i - I.lower i := mul_le_mul_of_nonneg_right h (sub_nonneg.2 (I.lower_le_upper i))
+    calc
+      dist x y ≤ dist I.lower I.upper := Real.dist_le_of_mem_pi_Icc hx hy
+      _ ≤ I.distortion * (I.upper i - I.lower i) := I.dist_le_distortion_mul i
+      _ ≤ c * (I.upper i - I.lower i) := mul_le_mul_of_nonneg_right h (sub_nonneg.2 (I.lower_le_upper i))
       
 
 end Distortion

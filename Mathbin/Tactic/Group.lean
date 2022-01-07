@@ -18,20 +18,20 @@ group_theory
 
 
 @[to_additive]
-theorem Tactic.Group.zpow_trick {G : Type _} [Groupₓ G] (a b : G) (n m : ℤ) : ((a*b ^ n)*b ^ m) = a*b ^ n+m := by
+theorem Tactic.Group.zpow_trick {G : Type _} [Groupₓ G] (a b : G) (n m : ℤ) : a * b ^ n * b ^ m = a * b ^ (n + m) := by
   rw [mul_assocₓ, ← zpow_add]
 
 @[to_additive]
-theorem Tactic.Group.zpow_trick_one {G : Type _} [Groupₓ G] (a b : G) (m : ℤ) : ((a*b)*b ^ m) = a*b ^ m+1 := by
+theorem Tactic.Group.zpow_trick_one {G : Type _} [Groupₓ G] (a b : G) (m : ℤ) : a * b * b ^ m = a * b ^ (m + 1) := by
   rw [mul_assocₓ, mul_self_zpow]
 
 @[to_additive]
-theorem Tactic.Group.zpow_trick_one' {G : Type _} [Groupₓ G] (a b : G) (n : ℤ) : ((a*b ^ n)*b) = a*b ^ n+1 := by
+theorem Tactic.Group.zpow_trick_one' {G : Type _} [Groupₓ G] (a b : G) (n : ℤ) : a * b ^ n * b = a * b ^ (n + 1) := by
   rw [mul_assocₓ, mul_zpow_self]
 
 @[to_additive]
-theorem Tactic.Group.zpow_trick_sub {G : Type _} [Groupₓ G] (a b : G) (n m : ℤ) : ((a*b ^ n)*b ^ -m) = a*b ^ (n - m) :=
-  by
+theorem Tactic.Group.zpow_trick_sub {G : Type _} [Groupₓ G] (a b : G) (n m : ℤ) :
+    a * b ^ n * b ^ -m = a * b ^ (n - m) := by
   rw [mul_assocₓ, ← zpow_add] <;> rfl
 
 namespace Tactic
@@ -40,7 +40,7 @@ setup_tactic_parser
 
 open Tactic.SimpArgType Interactive Tactic.Group
 
-/--  Auxiliary tactic for the `group` tactic. Calls the simplifier only. -/
+/-- Auxiliary tactic for the `group` tactic. Calls the simplifier only. -/
 unsafe def aux_group₁ (locat : loc) : tactic Unit :=
   simp_core {  } skip tt
       [expr (pquote.1 mul_oneₓ), expr (pquote.1 one_mulₓ), expr (pquote.1 one_pow), expr (pquote.1 one_zpow),
@@ -57,7 +57,7 @@ unsafe def aux_group₁ (locat : loc) : tactic Unit :=
       [] locat >>
     skip
 
-/--  Auxiliary tactic for the `group` tactic. Calls `ring_nf` to normalize exponents. -/
+/-- Auxiliary tactic for the `group` tactic. Calls `ring_nf` to normalize exponents. -/
 unsafe def aux_group₂ (locat : loc) : tactic Unit :=
   ring_nf none Tactic.Ring.NormalizeMode.raw locat
 
@@ -69,9 +69,8 @@ setup_tactic_parser
 
 open Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-Tactic for normalizing expressions in multiplicative groups, without assuming
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Tactic for normalizing expressions in multiplicative groups, without assuming
 commutativity, using only the group axioms without any information about which group
 is manipulated.
 

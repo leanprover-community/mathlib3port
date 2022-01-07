@@ -38,7 +38,7 @@ namespace Set
 
 section UnionLift
 
-/--  Given a Union of sets `Union S`, define a function on the Union by defining
+/-- Given a Union of sets `Union S`, define a function on the Union by defining
 it on each component, and proving that it agrees on the intersections. -/
 @[nolint unused_arguments]
 noncomputable def Union_lift (S : ι → Set α) (f : ∀ i x : S i, β)
@@ -52,9 +52,8 @@ variable {S : ι → Set α} {f : ∀ i x : S i, β}
   (hT' : T = Union S)
 
 @[simp]
-theorem Union_lift_mk {i : ι} (x : S i) (hx : (x : α) ∈ T) : Union_lift S f hf T hT ⟨x, hx⟩ = f i x :=
+theorem Union_lift_mk {i : ι} (x : S i) (hx : (x : α) ∈ T) : Union_lift S f hf T hT ⟨x, hx⟩ = f i x := by
   let j := Classical.indefiniteDescription _ (mem_Union.1 (hT hx))
-  by
   cases' x with x hx <;> exact hf j i x j.2 _
 
 @[simp]
@@ -64,18 +63,17 @@ theorem Union_lift_inclusion {i : ι} (x : S i) (h : S i ⊆ T) : Union_lift S f
 theorem Union_lift_of_mem (x : T) {i : ι} (hx : (x : α) ∈ S i) : Union_lift S f hf T hT x = f i ⟨x, hx⟩ := by
   cases' x with x hx <;> exact hf _ _ _ _ _
 
-/--  `Union_lift_const` is useful for proving that `Union_lift` is a homomorphism
+/-- `Union_lift_const` is useful for proving that `Union_lift` is a homomorphism
   of algebraic structures when defined on the Union of algebraic subobjects.
   For example, it could be used to prove that the lift of a collection
   of group homomorphisms on a union of subgroups preserves `1`. -/
 theorem Union_lift_const (c : T) (ci : ∀ i, S i) (hci : ∀ i, (ci i : α) = c) (cβ : β) (h : ∀ i, f i (ci i) = cβ) :
-    Union_lift S f hf T hT c = cβ :=
+    Union_lift S f hf T hT c = cβ := by
   let ⟨i, hi⟩ := Set.mem_Union.1 (hT c.prop)
   have : ci i = ⟨c, hi⟩ := Subtype.ext (hci i)
-  by
   rw [Union_lift_of_mem _ hi, ← this, h]
 
-/--  `Union_lift_unary` is useful for proving that `Union_lift` is a homomorphism
+/-- `Union_lift_unary` is useful for proving that `Union_lift` is a homomorphism
   of algebraic structures when defined on the Union of algebraic subobjects.
   For example, it could be used to prove that the lift of a collection
   of linear_maps on a union of submodules preserves scalar multiplication. -/
@@ -92,11 +90,10 @@ theorem Union_lift_unary (u : T → T) (ui : ∀ i, S i → S i)
   have : x = Set.inclusion (Set.subset_Union S i) ⟨x, hi⟩ := by
     cases x
     rfl
-  have hx' : (Set.inclusion (Set.subset_Union S i) (ui i ⟨x, hi⟩) : α) ∈ S i
-  exact (ui i ⟨x, hi⟩).Prop
+  have hx' : (Set.inclusion (Set.subset_Union S i) (ui i ⟨x, hi⟩) : α) ∈ S i := (ui i ⟨x, hi⟩).Prop
   conv_lhs => rw [this, hui, Union_lift_inclusion]
 
-/--  `Union_lift_binary` is useful for proving that `Union_lift` is a homomorphism
+/-- `Union_lift_binary` is useful for proving that `Union_lift` is a homomorphism
   of algebraic structures when defined on the Union of algebraic subobjects.
   For example, it could be used to prove that the lift of a collection
   of group homomorphisms on a union of subgroups preserves `*`. -/
@@ -121,8 +118,8 @@ theorem Union_lift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
   have hy : y = Set.inclusion (Set.subset_Union S k) ⟨y, hjk hj⟩ := by
     cases y
     rfl
-  have hxy : (Set.inclusion (Set.subset_Union S k) (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩) : α) ∈ S k
-  exact (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).Prop
+  have hxy : (Set.inclusion (Set.subset_Union S k) (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩) : α) ∈ S k :=
+    (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).Prop
   conv_lhs => rw [hx, hy, ← hopi, Union_lift_of_mem _ hxy]
   simp only [coe_inclusion, Subtype.coe_eta]
 
@@ -131,7 +128,7 @@ end UnionLift
 variable {S : ι → Set α} {f : ∀ i x : S i, β}
   {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {hS : Union S = univ}
 
-/--  Glue together functions defined on each of a collection `S` of sets that cover a type. See
+/-- Glue together functions defined on each of a collection `S` of sets that cover a type. See
   also `set.Union_lift`.   -/
 noncomputable def lift_cover (S : ι → Set α) (f : ∀ i x : S i, β)
     (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (hS : Union S = univ) (a : α) : β :=

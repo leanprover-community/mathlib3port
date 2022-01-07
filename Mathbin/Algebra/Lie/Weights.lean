@@ -60,203 +60,49 @@ open_locale BigOperators
 
 open_locale TensorProduct
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment
-    "/--"
-    " Given a Lie module `M` over a Lie algebra `L`, the pre-weight space of `M` with respect to a\nmap `χ : L → R` is the simultaneous generalized eigenspace of the action of all `x : L` on `M`,\nwith eigenvalues `χ x`.\n\nSee also `lie_module.weight_space`. -/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.def
-  "def"
-  (Command.declId `pre_weight_space [])
-  (Command.optDeclSig
-   [(Term.explicitBinder "(" [`χ] [":" (Term.arrow `L "→" `R)] [] ")")]
-   [(Term.typeSpec ":" (Term.app `Submodule [`R `M]))])
-  (Command.declValSimple
-   ":="
-   (Order.CompleteLattice.«term⨅_,_»
-    "⨅"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `L]))
-    ", "
-    (Term.app
-     (Term.proj (Term.app `to_endomorphism [`R `L `M `x]) "." `maximalGeneralizedEigenspace)
-     [(Term.app `χ [`x])]))
-   [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Order.CompleteLattice.«term⨅_,_»
-   "⨅"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `L]))
-   ", "
-   (Term.app
-    (Term.proj (Term.app `to_endomorphism [`R `L `M `x]) "." `maximalGeneralizedEigenspace)
-    [(Term.app `χ [`x])]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.CompleteLattice.«term⨅_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app
-   (Term.proj (Term.app `to_endomorphism [`R `L `M `x]) "." `maximalGeneralizedEigenspace)
-   [(Term.app `χ [`x])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `χ [`x])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `χ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `χ [`x]) []] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  (Term.proj (Term.app `to_endomorphism [`R `L `M `x]) "." `maximalGeneralizedEigenspace)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `to_endomorphism [`R `L `M `x])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `M
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `L
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `R
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `to_endomorphism
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `to_endomorphism [`R `L `M `x]) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-    Given a Lie module `M` over a Lie algebra `L`, the pre-weight space of `M` with respect to a
-    map `χ : L → R` is the simultaneous generalized eigenspace of the action of all `x : L` on `M`,
-    with eigenvalues `χ x`.
-    
-    See also `lie_module.weight_space`. -/
-  def
-    pre_weight_space
-    ( χ : L → R ) : Submodule R M
-    := ⨅ x : L , to_endomorphism R L M x . maximalGeneralizedEigenspace χ x
+/-- Given a Lie module `M` over a Lie algebra `L`, the pre-weight space of `M` with respect to a
+map `χ : L → R` is the simultaneous generalized eigenspace of the action of all `x : L` on `M`,
+with eigenvalues `χ x`.
+
+See also `lie_module.weight_space`. -/
+def pre_weight_space (χ : L → R) : Submodule R M :=
+  ⨅ x : L, (to_endomorphism R L M x).maximalGeneralizedEigenspace (χ x)
 
 theorem mem_pre_weight_space (χ : L → R) (m : M) :
-    m ∈ pre_weight_space M χ ↔ ∀ x, ∃ k : ℕ, (to_endomorphism R L M x - χ x • 1^k) m = 0 := by
+    m ∈ pre_weight_space M χ ↔ ∀ x, ∃ k : ℕ, ((to_endomorphism R L M x - χ x • 1) ^ k) m = 0 := by
   simp [pre_weight_space, -LinearMap.pow_apply]
 
 variable (L)
 
-/--  See also `bourbaki1975b` Chapter VII §1.1, Proposition 2 (ii). -/
+/-- See also `bourbaki1975b` Chapter VII §1.1, Proposition 2 (ii). -/
 protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w₂) (M₃ : Type w₃) [AddCommGroupₓ M₁]
     [Module R M₁] [LieRingModule L M₁] [LieModule R L M₁] [AddCommGroupₓ M₂] [Module R M₂] [LieRingModule L M₂]
     [LieModule R L M₂] [AddCommGroupₓ M₃] [Module R M₃] [LieRingModule L M₃] [LieModule R L M₃]
     (g : M₁ ⊗[R] M₂ →ₗ⁅R,L⁆ M₃) (χ₁ χ₂ : L → R) :
     ((g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (map_incl (pre_weight_space M₁ χ₁) (pre_weight_space M₂ χ₂))).range ≤
-      pre_weight_space M₃ (χ₁+χ₂) :=
+      pre_weight_space M₃ (χ₁ + χ₂) :=
   by
   intro m₃
   simp only [LieModuleHom.coe_to_linear_map, Pi.add_apply, Function.comp_app, mem_pre_weight_space, LinearMap.coe_comp,
     TensorProduct.mapIncl, exists_imp_distrib, LinearMap.mem_range]
   rintro t rfl x
-  let F : Module.End R M₃ := to_endomorphism R L M₃ x - (χ₁ x+χ₂ x) • 1
-  change ∃ k, (F^k) (g _) = 0
+  let F : Module.End R M₃ := to_endomorphism R L M₃ x - (χ₁ x + χ₂ x) • 1
+  change ∃ k, (F ^ k) (g _) = 0
   apply t.induction_on
-  ·
-    use 0
+  · use 0
     simp only [LinearMap.map_zero, LieModuleHom.map_zero]
+    
   swap
-  ·
-    rintro t₁ t₂ ⟨k₁, hk₁⟩ ⟨k₂, hk₂⟩
+  · rintro t₁ t₂ ⟨k₁, hk₁⟩ ⟨k₂, hk₂⟩
     use max k₁ k₂
     simp only [LieModuleHom.map_add, LinearMap.map_add, LinearMap.pow_map_zero_of_le (le_max_leftₓ k₁ k₂) hk₁,
       LinearMap.pow_map_zero_of_le (le_max_rightₓ k₁ k₂) hk₂, add_zeroₓ]
+    
   rintro ⟨m₁, hm₁⟩ ⟨m₂, hm₂⟩
-  change ∃ k, (F^k) ((g : M₁ ⊗[R] M₂ →ₗ[R] M₃) (m₁ ⊗ₜ m₂)) = 0
+  change ∃ k, (F ^ k) ((g : M₁ ⊗[R] M₂ →ₗ[R] M₃) (m₁ ⊗ₜ m₂)) = 0
   let f₁ : Module.End R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₁ x - χ₁ x • 1).rtensor M₂
   let f₂ : Module.End R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₂ x - χ₂ x • 1).ltensor M₁
-  have h_comm_square : F ∘ₗ ↑g = (g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (f₁+f₂) := by
+  have h_comm_square : F ∘ₗ ↑g = (g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (f₁ + f₂) := by
     ext m₁ m₂
     simp only [← g.map_lie x (m₁ ⊗ₜ m₂), add_smul, sub_tmul, tmul_sub, smul_tmul, lie_tmul_right, tmul_smul,
       to_endomorphism_apply_apply, LieModuleHom.map_smul, LinearMap.one_apply, LieModuleHom.coe_to_linear_map,
@@ -264,7 +110,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
       LinearMap.add_apply, LieModuleHom.map_sub, LinearMap.sub_apply, LinearMap.ltensor_tmul,
       algebra_tensor_module.curry_apply, curry_apply, LinearMap.to_fun_eq_coe, LinearMap.coe_restrict_scalars_eq_coe]
     abel
-  suffices ∃ k, ((f₁+f₂)^k) (m₁ ⊗ₜ m₂) = 0 by
+  suffices ∃ k, ((f₁ + f₂) ^ k) (m₁ ⊗ₜ m₂) = 0 by
     obtain ⟨k, hk⟩ := this
     use k
     rw [← LinearMap.comp_apply, LinearMap.commute_pow_left_of_commute h_comm_square, LinearMap.comp_apply, hk,
@@ -272,11 +118,11 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
   simp only [mem_pre_weight_space] at hm₁ hm₂
   obtain ⟨k₁, hk₁⟩ := hm₁ x
   obtain ⟨k₂, hk₂⟩ := hm₂ x
-  have hf₁ : (f₁^k₁) (m₁ ⊗ₜ m₂) = 0 := by
+  have hf₁ : (f₁ ^ k₁) (m₁ ⊗ₜ m₂) = 0 := by
     simp only [hk₁, zero_tmul, LinearMap.rtensor_tmul, LinearMap.rtensor_pow]
-  have hf₂ : (f₂^k₂) (m₁ ⊗ₜ m₂) = 0 := by
+  have hf₂ : (f₂ ^ k₂) (m₁ ⊗ₜ m₂) = 0 := by
     simp only [hk₂, tmul_zero, LinearMap.ltensor_tmul, LinearMap.ltensor_pow]
-  use (k₁+k₂) - 1
+  use k₁ + k₂ - 1
   have hf_comm : Commute f₁ f₂ := by
     ext m₁ m₂
     simp only [LinearMap.mul_apply, LinearMap.rtensor_tmul, LinearMap.ltensor_tmul, algebra_tensor_module.curry_apply,
@@ -286,19 +132,19 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
     TensorProduct.map_tmul, LinearMap.smul_apply]
   apply Finset.sum_eq_zero
   rintro ⟨i, j⟩ hij
-  suffices ((f₁^i)*f₂^j) (m₁ ⊗ₜ m₂) = 0 by
+  suffices (f₁ ^ i * f₂ ^ j) (m₁ ⊗ₜ m₂) = 0 by
     rw [this]
     apply smul_zero
   cases' Nat.le_or_le_of_add_eq_add_pred (finset.nat.mem_antidiagonal.mp hij) with hi hj
-  ·
-    rw [(hf_comm.pow_pow i j).Eq, LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hi hf₁, LinearMap.map_zero]
-  ·
-    rw [LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hj hf₂, LinearMap.map_zero]
+  · rw [(hf_comm.pow_pow i j).Eq, LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hi hf₁, LinearMap.map_zero]
+    
+  · rw [LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hj hf₂, LinearMap.map_zero]
+    
 
 variable {L M}
 
 theorem lie_mem_pre_weight_space_of_mem_pre_weight_space {χ₁ χ₂ : L → R} {x : L} {m : M}
-    (hx : x ∈ pre_weight_space L χ₁) (hm : m ∈ pre_weight_space M χ₂) : ⁅x,m⁆ ∈ pre_weight_space M (χ₁+χ₂) := by
+    (hx : x ∈ pre_weight_space L χ₁) (hm : m ∈ pre_weight_space M χ₂) : ⁅x,m⁆ ∈ pre_weight_space M (χ₁ + χ₂) := by
   apply LieModule.weight_vector_multiplication L L M M (to_module_hom R L M) χ₁ χ₂
   simp only [LieModuleHom.coe_to_linear_map, Function.comp_app, LinearMap.coe_comp, TensorProduct.mapIncl,
     LinearMap.mem_range]
@@ -308,13 +154,13 @@ theorem lie_mem_pre_weight_space_of_mem_pre_weight_space {χ₁ χ₂ : L → R}
 
 variable (M)
 
-/--  If a Lie algebra is nilpotent, then pre-weight spaces are Lie submodules. -/
+/-- If a Lie algebra is nilpotent, then pre-weight spaces are Lie submodules. -/
 def weight_space [LieAlgebra.IsNilpotent R L] (χ : L → R) : LieSubmodule R L M :=
   { pre_weight_space M χ with
     lie_mem := fun x m hm => by
       rw [← zero_addₓ χ]
       refine' lie_mem_pre_weight_space_of_mem_pre_weight_space _ hm
-      suffices pre_weight_space L (0 : L → R) = ⊤by
+      suffices pre_weight_space L (0 : L → R) = ⊤ by
         simp only [this, Submodule.mem_top]
       exact LieAlgebra.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent R L }
 
@@ -322,7 +168,7 @@ theorem mem_weight_space [LieAlgebra.IsNilpotent R L] (χ : L → R) (m : M) :
     m ∈ weight_space M χ ↔ m ∈ pre_weight_space M χ :=
   Iff.rfl
 
-/--  See also the more useful form `lie_module.zero_weight_space_eq_top_of_nilpotent`. -/
+/-- See also the more useful form `lie_module.zero_weight_space_eq_top_of_nilpotent`. -/
 @[simp]
 theorem zero_weight_space_eq_top_of_nilpotent' [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
     weight_space M (0 : L → R) = ⊤ := by
@@ -335,14 +181,14 @@ theorem coe_weight_space_of_top [LieAlgebra.IsNilpotent R L] (χ : L → R) :
   simp only [weight_space, LieSubmodule.coe_to_submodule_mk, LieSubalgebra.coe_bracket_of_module, Function.comp_app,
     mem_pre_weight_space]
   constructor <;> intro h x
-  ·
-    obtain ⟨k, hk⟩ := h ⟨x, Set.mem_univ x⟩
+  · obtain ⟨k, hk⟩ := h ⟨x, Set.mem_univ x⟩
     use k
     exact hk
-  ·
-    obtain ⟨k, hk⟩ := h x
+    
+  · obtain ⟨k, hk⟩ := h x
     use k
     exact hk
+    
 
 @[simp]
 theorem zero_weight_space_eq_top_of_nilpotent [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
@@ -354,12 +200,12 @@ theorem zero_weight_space_eq_top_of_nilpotent [LieAlgebra.IsNilpotent R L] [IsNi
     infi_max_gen_zero_eigenspace_eq_top_of_nilpotent R L M]
   rfl
 
-/--  Given a Lie module `M` of a Lie algebra `L`, a weight of `M` with respect to a nilpotent
+/-- Given a Lie module `M` of a Lie algebra `L`, a weight of `M` with respect to a nilpotent
 subalgebra `H ⊆ L` is a Lie character whose corresponding weight space is non-empty. -/
 def is_weight (χ : lie_character R H) : Prop :=
   weight_space M χ ≠ ⊥
 
-/--  For a non-trivial nilpotent Lie module over a nilpotent Lie algebra, the zero character is a
+/-- For a non-trivial nilpotent Lie module over a nilpotent Lie algebra, the zero character is a
 weight with respect to the `⊤` Lie subalgebra. -/
 theorem is_weight_zero_of_nilpotent [Nontrivial M] [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
     is_weight (⊤ : LieSubalgebra R L) M 0 := by
@@ -376,7 +222,7 @@ open TensorProduct.LieModule
 
 open LieModule
 
-/--  Given a nilpotent Lie subalgebra `H ⊆ L`, the root space of a map `χ : H → R` is the weight
+/-- Given a nilpotent Lie subalgebra `H ⊆ L`, the root space of a map `χ : H → R` is the weight
 space of `L` regarded as a module of `H` via the adjoint action. -/
 abbrev root_space (χ : H → R) : LieSubmodule R H L :=
   weight_space L χ
@@ -385,7 +231,7 @@ abbrev root_space (χ : H → R) : LieSubmodule R H L :=
 theorem zero_root_space_eq_top_of_nilpotent [h : IsNilpotent R L] : root_space (⊤ : LieSubalgebra R L) 0 = ⊤ :=
   zero_weight_space_eq_top_of_nilpotent L
 
-/--  A root of a Lie algebra `L` with respect to a nilpotent subalgebra `H ⊆ L` is a weight of `L`,
+/-- A root of a Lie algebra `L` with respect to a nilpotent subalgebra `H ⊆ L` is a weight of `L`,
 regarded as a module of `H` via the adjoint action. -/
 abbrev is_root :=
   is_weight H L
@@ -396,8 +242,9 @@ theorem root_space_comap_eq_weight_space (χ : H → R) : (root_space H χ).coma
   let f : H → Module.End R L := fun y => to_endomorphism R H L y - χ y • 1
   let g : H → Module.End R H := fun y => to_endomorphism R H H y - χ y • 1
   suffices
-    (∀ y : H, ∃ k : ℕ, (f y^k).comp (H.incl : H →ₗ[R] L) x = 0) ↔
-      ∀ y : H, ∃ k : ℕ, (H.incl : H →ₗ[R] L).comp (g y^k) x = 0 by
+    (∀ y : H, ∃ k : ℕ, (f y ^ k).comp (H.incl : H →ₗ[R] L) x = 0) ↔
+      ∀ y : H, ∃ k : ℕ, (H.incl : H →ₗ[R] L).comp (g y ^ k) x = 0
+    by
     simp only [LieHom.coe_to_linear_map, LieSubalgebra.coe_incl, Function.comp_app, LinearMap.coe_comp,
       Submodule.coe_eq_zero] at this
     simp only [mem_weight_space, mem_pre_weight_space, LieSubalgebra.coe_incl', LieSubmodule.mem_comap, this]
@@ -412,7 +259,7 @@ theorem root_space_comap_eq_weight_space (χ : H → R) : (root_space H χ).coma
 variable {H M}
 
 theorem lie_mem_weight_space_of_mem_weight_space {χ₁ χ₂ : H → R} {x : L} {m : M} (hx : x ∈ root_space H χ₁)
-    (hm : m ∈ weight_space M χ₂) : ⁅x,m⁆ ∈ weight_space M (χ₁+χ₂) := by
+    (hm : m ∈ weight_space M χ₂) : ⁅x,m⁆ ∈ weight_space M (χ₁ + χ₂) := by
   apply LieModule.weight_vector_multiplication H L M M ((to_module_hom R L M).restrictLie H) χ₁ χ₂
   simp only [LieModuleHom.coe_to_linear_map, Function.comp_app, LinearMap.coe_comp, TensorProduct.mapIncl,
     LinearMap.mem_range]
@@ -422,33 +269,32 @@ theorem lie_mem_weight_space_of_mem_weight_space {χ₁ χ₂ : H → R} {x : L}
 
 variable (R L H M)
 
-/-- 
-Auxiliary definition for `root_space_weight_space_product`,
+/-- Auxiliary definition for `root_space_weight_space_product`,
 which is close to the deterministic timeout limit.
 -/
-def root_space_weight_space_product_aux {χ₁ χ₂ χ₃ : H → R} (hχ : (χ₁+χ₂) = χ₃) :
-    root_space H χ₁ →ₗ[R] weight_space M χ₂ →ₗ[R] weight_space M χ₃ :=
-  { toFun := fun x =>
-      { toFun := fun m => ⟨⁅(x : L),(m : M)⁆, hχ ▸ lie_mem_weight_space_of_mem_weight_space x.property m.property⟩,
-        map_add' := fun m n => by
-          simp only [LieSubmodule.coe_add, lie_add]
-          rfl,
-        map_smul' := fun t m => by
-          conv_lhs => congr rw [LieSubmodule.coe_smul, lie_smul]
-          rfl },
-    map_add' := fun x y => by
-      ext m <;>
-        rw [LinearMap.add_apply, LinearMap.coe_mk, LinearMap.coe_mk, LinearMap.coe_mk, Subtype.coe_mk,
-          LieSubmodule.coe_add, LieSubmodule.coe_add, add_lie, Subtype.coe_mk, Subtype.coe_mk],
-    map_smul' := fun t x => by
-      simp only [RingHom.id_apply]
-      ext m
-      rw [LinearMap.smul_apply, LinearMap.coe_mk, LinearMap.coe_mk, Subtype.coe_mk, LieSubmodule.coe_smul, smul_lie,
-        LieSubmodule.coe_smul, Subtype.coe_mk] }
+def root_space_weight_space_product_aux {χ₁ χ₂ χ₃ : H → R} (hχ : χ₁ + χ₂ = χ₃) :
+    root_space H χ₁ →ₗ[R] weight_space M χ₂ →ₗ[R] weight_space M χ₃ where
+  toFun := fun x =>
+    { toFun := fun m => ⟨⁅(x : L),(m : M)⁆, hχ ▸ lie_mem_weight_space_of_mem_weight_space x.property m.property⟩,
+      map_add' := fun m n => by
+        simp only [LieSubmodule.coe_add, lie_add]
+        rfl,
+      map_smul' := fun t m => by
+        conv_lhs => congr rw [LieSubmodule.coe_smul, lie_smul]
+        rfl }
+  map_add' := fun x y => by
+    ext m <;>
+      rw [LinearMap.add_apply, LinearMap.coe_mk, LinearMap.coe_mk, LinearMap.coe_mk, Subtype.coe_mk,
+        LieSubmodule.coe_add, LieSubmodule.coe_add, add_lie, Subtype.coe_mk, Subtype.coe_mk]
+  map_smul' := fun t x => by
+    simp only [RingHom.id_apply]
+    ext m
+    rw [LinearMap.smul_apply, LinearMap.coe_mk, LinearMap.coe_mk, Subtype.coe_mk, LieSubmodule.coe_smul, smul_lie,
+      LieSubmodule.coe_smul, Subtype.coe_mk]
 
-/--  Given a nilpotent Lie subalgebra `H ⊆ L` together with `χ₁ χ₂ : H → R`, there is a natural
+/-- Given a nilpotent Lie subalgebra `H ⊆ L` together with `χ₁ χ₂ : H → R`, there is a natural
 `R`-bilinear product of root vectors and weight vectors, compatible with the actions of `H`. -/
-def root_space_weight_space_product (χ₁ χ₂ χ₃ : H → R) (hχ : (χ₁+χ₂) = χ₃) :
+def root_space_weight_space_product (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) :
     root_space H χ₁ ⊗[R] weight_space M χ₂ →ₗ⁅R,H⁆ weight_space M χ₃ :=
   lift_lie R H (root_space H χ₁) (weight_space M χ₂) (weight_space M χ₃)
     { toLinearMap := root_space_weight_space_product_aux R L H M hχ,
@@ -460,15 +306,15 @@ def root_space_weight_space_product (χ₁ χ₂ χ₃ : H → R) (hχ : (χ₁+
             LieSubmodule.coe_bracket, LieSubalgebra.coe_bracket_of_module, lie_lie] }
 
 @[simp]
-theorem coe_root_space_weight_space_product_tmul (χ₁ χ₂ χ₃ : H → R) (hχ : (χ₁+χ₂) = χ₃) (x : root_space H χ₁)
+theorem coe_root_space_weight_space_product_tmul (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) (x : root_space H χ₁)
     (m : weight_space M χ₂) : (root_space_weight_space_product R L H M χ₁ χ₂ χ₃ hχ (x ⊗ₜ m) : M) = ⁅(x : L),(m : M)⁆ :=
   by
   simp only [root_space_weight_space_product, root_space_weight_space_product_aux, lift_apply,
     LieModuleHom.coe_to_linear_map, coe_lift_lie_eq_lift_coe, Submodule.coe_mk, LinearMap.coe_mk, LieModuleHom.coe_mk]
 
-/--  Given a nilpotent Lie subalgebra `H ⊆ L` together with `χ₁ χ₂ : H → R`, there is a natural
+/-- Given a nilpotent Lie subalgebra `H ⊆ L` together with `χ₁ χ₂ : H → R`, there is a natural
 `R`-bilinear product of root vectors, compatible with the actions of `H`. -/
-def root_space_product (χ₁ χ₂ χ₃ : H → R) (hχ : (χ₁+χ₂) = χ₃) :
+def root_space_product (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) :
     root_space H χ₁ ⊗[R] root_space H χ₂ →ₗ⁅R,H⁆ root_space H χ₃ :=
   root_space_weight_space_product R L H L χ₁ χ₂ χ₃ hχ
 
@@ -476,11 +322,11 @@ def root_space_product (χ₁ χ₂ χ₃ : H → R) (hχ : (χ₁+χ₂) = χ�
 theorem root_space_product_def : root_space_product R L H = root_space_weight_space_product R L H L :=
   rfl
 
-theorem root_space_product_tmul (χ₁ χ₂ χ₃ : H → R) (hχ : (χ₁+χ₂) = χ₃) (x : root_space H χ₁) (y : root_space H χ₂) :
+theorem root_space_product_tmul (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) (x : root_space H χ₁) (y : root_space H χ₂) :
     (root_space_product R L H χ₁ χ₂ χ₃ hχ (x ⊗ₜ y) : L) = ⁅(x : L),(y : L)⁆ := by
   simp only [root_space_product_def, coe_root_space_weight_space_product_tmul]
 
-/--  Given a nilpotent Lie subalgebra `H ⊆ L`, the root space of the zero map `0 : H → R` is a Lie
+/-- Given a nilpotent Lie subalgebra `H ⊆ L`, the root space of the zero map `0 : H → R` is a Lie
 subalgebra of `L`. -/
 def zero_root_subalgebra : LieSubalgebra R L :=
   { (root_space H 0 : Submodule R L) with
@@ -495,7 +341,7 @@ theorem coe_zero_root_subalgebra : (zero_root_subalgebra R L H : Submodule R L) 
   rfl
 
 theorem mem_zero_root_subalgebra (x : L) :
-    x ∈ zero_root_subalgebra R L H ↔ ∀ y : H, ∃ k : ℕ, (to_endomorphism R H L y^k) x = 0 := by
+    x ∈ zero_root_subalgebra R L H ↔ ∀ y : H, ∃ k : ℕ, (to_endomorphism R H L y ^ k) x = 0 := by
   simp only [zero_root_subalgebra, mem_weight_space, mem_pre_weight_space, Pi.zero_apply, sub_zero, SetLike.mem_coe,
     zero_smul, LieSubmodule.mem_coe_submodule, Submodule.mem_carrier, LieSubalgebra.mem_mk_iff]
 
@@ -504,8 +350,7 @@ theorem to_lie_submodule_le_root_space_zero : H.to_lie_submodule ≤ root_space 
   simp only [LieSubalgebra.mem_to_lie_submodule] at hx
   simp only [mem_weight_space, mem_pre_weight_space, Pi.zero_apply, sub_zero, zero_smul]
   intro y
-  (
-    obtain ⟨k, hk⟩ := (inferInstance : IsNilpotent R H))
+  obtain ⟨k, hk⟩ := (inferInstance : IsNilpotent R H)
   use k
   let f : Module.End R H := to_endomorphism R H H y
   let g : Module.End R L := to_endomorphism R H L y
@@ -513,7 +358,7 @@ theorem to_lie_submodule_le_root_space_zero : H.to_lie_submodule ≤ root_space 
     ext z
     simp only [to_endomorphism_apply_apply, Submodule.subtype_apply, LieSubalgebra.coe_bracket_of_module,
       LieSubalgebra.coe_bracket, Function.comp_app, LinearMap.coe_comp]
-  change (g^k).comp (H : Submodule R L).Subtype ⟨x, hx⟩ = 0
+  change (g ^ k).comp (H : Submodule R L).Subtype ⟨x, hx⟩ = 0
   rw [LinearMap.commute_pow_left_of_commute hfg k]
   have h := iterate_to_endomorphism_mem_lower_central_series R H H y ⟨x, hx⟩ k
   rw [hk, LieSubmodule.mem_bot] at h
@@ -537,11 +382,11 @@ theorem zero_root_subalgebra_normalizer_eq_self :
   rw [mem_zero_root_subalgebra] at hx
   obtain ⟨k, hk⟩ := hx ⟨y, hy⟩
   rw [← lie_skew, LinearMap.map_neg, neg_eq_zero] at hk
-  use k+1
+  use k + 1
   rw [LinearMap.iterate_succ, LinearMap.coe_comp, Function.comp_app, to_endomorphism_apply_apply,
     LieSubalgebra.coe_bracket_of_module, Submodule.coe_mk, hk]
 
-/--  In finite dimensions over a field (and possibly more generally) Engel's theorem shows that
+/-- In finite dimensions over a field (and possibly more generally) Engel's theorem shows that
 the converse of this is also true, i.e.,
 `zero_root_subalgebra R L H = H ↔ lie_subalgebra.is_cartan_subalgebra H`. -/
 theorem zero_root_subalgebra_is_cartan_of_eq (h : zero_root_subalgebra R L H = H) :
@@ -559,7 +404,7 @@ open LieAlgebra
 
 variable {R L H}
 
-/--  A priori, weight spaces are Lie submodules over the Lie subalgebra `H` used to define them.
+/-- A priori, weight spaces are Lie submodules over the Lie subalgebra `H` used to define them.
 However they are naturally Lie submodules over the (in general larger) Lie subalgebra
 `zero_root_subalgebra R L H`. Even though it is often the case that
 `zero_root_subalgebra R L H = H`, it is likely to be useful to have the flexibility not to have

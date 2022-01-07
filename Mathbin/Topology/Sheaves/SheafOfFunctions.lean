@@ -40,8 +40,7 @@ open Top
 
 namespace Top.Presheaf
 
-/-- 
-We show that the presheaf of functions to a type `T`
+/-- We show that the presheaf of functions to a type `T`
 (no continuity assumptions, just plain functions)
 form a sheaf.
 
@@ -53,21 +52,20 @@ theorem to_Types_is_sheaf (T : X → Type u) : (presheaf_to_Types X T).IsSheaf :
     choose index index_spec using fun x : supr U => opens.mem_supr.mp x.2
     let s : ∀ x : supr U, T x := fun x => sf (index x) ⟨x.1, index_spec x⟩
     refine' ⟨s, _, _⟩
-    ·
-      intro i
+    · intro i
       ext x
       convert congr_funₓ (hsf (index ⟨x, _⟩) i) ⟨x, ⟨index_spec ⟨x.1, _⟩, x.2⟩⟩
       ext
       rfl
-    ·
-      intro t ht
+      
+    · intro t ht
       ext x
       convert congr_funₓ (ht (index x)) ⟨x.1, index_spec x⟩
       ext
       rfl
+      
 
-/-- 
-The presheaf of not-necessarily-continuous functions to
+/-- The presheaf of not-necessarily-continuous functions to
 a target type `T` satsifies the sheaf condition.
 -/
 theorem to_Type_is_sheaf (T : Type u) : (presheaf_to_Type X T).IsSheaf :=
@@ -77,15 +75,13 @@ end Top.Presheaf
 
 namespace Top
 
-/-- 
-The sheaf of not-necessarily-continuous functions on `X` with values in type family
+/-- The sheaf of not-necessarily-continuous functions on `X` with values in type family
 `T : X → Type u`.
 -/
 def sheaf_to_Types (T : X → Type u) : sheaf (Type u) X :=
   ⟨presheaf_to_Types X T, presheaf.to_Types_is_sheaf _ _⟩
 
-/-- 
-The sheaf of not-necessarily-continuous functions on `X` with values in a type `T`.
+/-- The sheaf of not-necessarily-continuous functions on `X` with values in a type `T`.
 -/
 def sheaf_to_Type (T : Type u) : sheaf (Type u) X :=
   ⟨presheaf_to_Type X T, presheaf.to_Type_is_sheaf _ _⟩

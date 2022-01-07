@@ -18,11 +18,11 @@ parameter {α : Type _}[LinearOrderedField α]
 
 parameter {β : Type _}[CommRingₓ β]{abv : β → α}[IsAbsoluteValue abv]
 
-/--  The Cauchy completion of a commutative ring with absolute value. -/
+/-- The Cauchy completion of a commutative ring with absolute value. -/
 def Cauchy :=
   @Quotientₓ (CauSeq _ abv) CauSeq.equiv
 
-/--  The map from Cauchy sequences into the Cauchy completion. -/
+/-- The map from Cauchy sequences into the Cauchy completion. -/
 def mk : CauSeq _ abv → Cauchy :=
   Quotientₓ.mk
 
@@ -33,7 +33,7 @@ theorem mk_eq_mk f : @Eq Cauchy (⟦f⟧) (mk f) :=
 theorem mk_eq {f g} : mk f = mk g ↔ f ≈ g :=
   Quotientₓ.eq
 
-/--  The map from the original ring into the Cauchy completion. -/
+/-- The map from the original ring into the Cauchy completion. -/
 def of_rat (x : β) : Cauchy :=
   mk (const abv x)
 
@@ -58,12 +58,12 @@ theorem mk_eq_zero {f} : mk f = 0 ↔ lim_zero f := by
 
 instance : Add Cauchy :=
   ⟨fun x y =>
-    (Quotientₓ.liftOn₂ x y fun f g => mk (f+g)) $ fun f₁ g₁ f₂ g₂ hf hg =>
+    (Quotientₓ.liftOn₂ x y fun f g => mk (f + g)) $ fun f₁ g₁ f₂ g₂ hf hg =>
       Quotientₓ.sound $ by
         simpa [· ≈ ·, Setoidₓ.R, sub_eq_add_neg, add_commₓ, add_left_commₓ, add_assocₓ] using add_lim_zero hf hg⟩
 
 @[simp]
-theorem mk_add (f g : CauSeq β abv) : (mk f+mk g) = mk (f+g) :=
+theorem mk_add (f g : CauSeq β abv) : mk f + mk g = mk (f + g) :=
   rfl
 
 instance : Neg Cauchy :=
@@ -78,13 +78,13 @@ theorem mk_neg (f : CauSeq β abv) : -mk f = mk (-f) :=
 
 instance : Mul Cauchy :=
   ⟨fun x y =>
-    (Quotientₓ.liftOn₂ x y fun f g => mk (f*g)) $ fun f₁ g₁ f₂ g₂ hf hg =>
+    (Quotientₓ.liftOn₂ x y fun f g => mk (f * g)) $ fun f₁ g₁ f₂ g₂ hf hg =>
       Quotientₓ.sound $ by
         simpa [· ≈ ·, Setoidₓ.R, mul_addₓ, mul_commₓ, add_assocₓ, sub_eq_add_neg] using
           add_lim_zero (mul_lim_zero_right g₁ hf) (mul_lim_zero_right f₂ hg)⟩
 
 @[simp]
-theorem mk_mul (f g : CauSeq β abv) : (mk f*mk g) = mk (f*g) :=
+theorem mk_mul (f g : CauSeq β abv) : mk f * mk g = mk (f * g) :=
   rfl
 
 instance : Sub Cauchy :=
@@ -98,13 +98,13 @@ instance : Sub Cauchy :=
 theorem mk_sub (f g : CauSeq β abv) : mk f - mk g = mk (f - g) :=
   rfl
 
-theorem of_rat_add (x y : β) : of_rat (x+y) = of_rat x+of_rat y :=
+theorem of_rat_add (x y : β) : of_rat (x + y) = of_rat x + of_rat y :=
   congr_argₓ mk (const_add _ _)
 
 theorem of_rat_neg (x : β) : of_rat (-x) = -of_rat x :=
   congr_argₓ mk (const_neg _)
 
-theorem of_rat_mul (x y : β) : of_rat (x*y) = of_rat x*of_rat y :=
+theorem of_rat_mul (x y : β) : of_rat (x * y) = of_rat x * of_rat y :=
   congr_argₓ mk (const_mul _ _)
 
 private theorem zero_def : 0 = mk 0 :=
@@ -115,14 +115,14 @@ private theorem one_def : 1 = mk 1 :=
 
 instance : CommRingₓ Cauchy := by
   refine'
-      { neg := Neg.neg, sub := Sub.sub, sub_eq_add_neg := _, add := ·+·, zero := (0 : Cauchy), mul := ·*·, one := 1,
+      { neg := Neg.neg, sub := Sub.sub, sub_eq_add_neg := _, add := · + ·, zero := (0 : Cauchy), mul := · * ·, one := 1,
         nsmul := nsmulRec, npow := npowRec, zsmul := zsmulRec, .. } <;>
     try
         intros <;> rfl <;>
-      ·
-        repeat'
+      · repeat'
           refine' fun a => Quotientₓ.induction_on a fun _ => _
         simp [zero_def, one_def, mul_left_commₓ, mul_commₓ, mul_addₓ, add_commₓ, add_left_commₓ, sub_eq_add_neg]
+        
 
 theorem of_rat_sub (x y : β) : of_rat (x - y) = of_rat x - of_rat y :=
   congr_argₓ mk (const_sub _ _)
@@ -144,16 +144,16 @@ noncomputable instance : HasInv Cauchy :=
     (Quotientₓ.liftOn x fun f => mk $ if h : lim_zero f then 0 else inv f h) $ fun f g fg => by
       have := lim_zero_congr fg
       by_cases' hf : lim_zero f
-      ·
-        simp [hf, this.1 hf, Setoidₓ.refl]
-      ·
-        have hg := mt this.2 hf
+      · simp [hf, this.1 hf, Setoidₓ.refl]
+        
+      · have hg := mt this.2 hf
         simp [hf, hg]
-        have If : (mk (inv f hf)*mk f) = 1 := mk_eq.2 (inv_mul_cancel hf)
-        have Ig : (mk (inv g hg)*mk g) = 1 := mk_eq.2 (inv_mul_cancel hg)
+        have If : mk (inv f hf) * mk f = 1 := mk_eq.2 (inv_mul_cancel hf)
+        have Ig : mk (inv g hg) * mk g = 1 := mk_eq.2 (inv_mul_cancel hg)
         rw [mk_eq.2 fg, ← Ig] at If
         rw [mul_commₓ] at Ig
-        rw [← mul_oneₓ (mk (inv f hf)), ← Ig, ← mul_assocₓ, If, mul_assocₓ, Ig, mul_oneₓ]⟩
+        rw [← mul_oneₓ (mk (inv f hf)), ← Ig, ← mul_assocₓ, If, mul_assocₓ, Ig, mul_oneₓ]
+        ⟩
 
 @[simp]
 theorem inv_zero : (0 : Cauchy)⁻¹ = 0 :=
@@ -173,13 +173,13 @@ theorem cau_seq_zero_ne_one : ¬(0 : CauSeq _ abv) ≈ 1 := fun h =>
 
 theorem zero_ne_one : (0 : Cauchy) ≠ 1 := fun h => cau_seq_zero_ne_one $ mk_eq.1 h
 
-protected theorem inv_mul_cancel {x : Cauchy} : x ≠ 0 → (x⁻¹*x) = 1 :=
+protected theorem inv_mul_cancel {x : Cauchy} : x ≠ 0 → x⁻¹ * x = 1 :=
   Quotientₓ.induction_on x $ fun f hf => by
     simp at hf
     simp [hf]
     exact Quotientₓ.sound (CauSeq.inv_mul_cancel hf)
 
-/--  The Cauchy completion forms a field.
+/-- The Cauchy completion forms a field.
 See note [reducible non-instances]. -/
 @[reducible]
 noncomputable def Field : Field Cauchy :=
@@ -209,7 +209,7 @@ section
 
 variable (β : Type _) [Ringₓ β] (abv : β → α) [IsAbsoluteValue abv]
 
-/--  A class stating that a ring with an absolute value is complete, i.e. every Cauchy
+/-- A class stating that a ring with an absolute value is complete, i.e. every Cauchy
 sequence has a limit. -/
 class is_complete where
   IsComplete : ∀ s : CauSeq β abv, ∃ b : β, s ≈ const abv b
@@ -225,7 +225,7 @@ variable [is_complete β abv]
 theorem complete : ∀ s : CauSeq β abv, ∃ b : β, s ≈ const abv b :=
   is_complete.is_complete
 
-/--  The limit of a Cauchy sequence in a complete ring. Chosen non-computably. -/
+/-- The limit of a Cauchy sequence in a complete ring. Chosen non-computably. -/
 noncomputable def lim (s : CauSeq β abv) : β :=
   Classical.some (complete s)
 
@@ -245,38 +245,37 @@ theorem lim_eq_lim_of_equiv {f g : CauSeq β abv} (h : f ≈ g) : lim f = lim g 
 theorem lim_const (x : β) : lim (const abv x) = x :=
   lim_eq_of_equiv_const $ Setoidₓ.refl _
 
-theorem lim_add (f g : CauSeq β abv) : (lim f+lim g) = lim (f+g) :=
+theorem lim_add (f g : CauSeq β abv) : lim f + lim g = lim (f + g) :=
   eq_lim_of_const_equiv $
-    show lim_zero (const abv (lim f+lim g) - f+g)by
+    show lim_zero (const abv (lim f + lim g) - (f + g)) by
       rw [const_add, add_sub_comm] <;> exact add_lim_zero (Setoidₓ.symm (equiv_lim f)) (Setoidₓ.symm (equiv_lim g))
 
-theorem lim_mul_lim (f g : CauSeq β abv) : (lim f*lim g) = lim (f*g) :=
+theorem lim_mul_lim (f g : CauSeq β abv) : lim f * lim g = lim (f * g) :=
   eq_lim_of_const_equiv $
-    show lim_zero (const abv (lim f*lim g) - f*g) from
-      have h : (const abv (lim f*lim g) - f*g) = ((const abv (lim f) - f)*g)+const abv (lim f)*const abv (lim g) - g :=
+    show lim_zero (const abv (lim f * lim g) - f * g) by
+      have h :
+        const abv (lim f * lim g) - f * g = (const abv (lim f) - f) * g + const abv (lim f) * (const abv (lim g) - g) :=
         by
         simp [const_mul (lim f), mul_addₓ, add_mulₓ, sub_eq_add_neg, add_commₓ, add_left_commₓ]
-      by
       rw [h] <;>
         exact
           add_lim_zero (mul_lim_zero_left _ (Setoidₓ.symm (equiv_lim _)))
             (mul_lim_zero_right _ (Setoidₓ.symm (equiv_lim _)))
 
-theorem lim_mul (f : CauSeq β abv) (x : β) : (lim f*x) = lim (f*const abv x) := by
+theorem lim_mul (f : CauSeq β abv) (x : β) : lim f * x = lim (f * const abv x) := by
   rw [← lim_mul_lim, lim_const]
 
 theorem lim_neg (f : CauSeq β abv) : lim (-f) = -lim f :=
   lim_eq_of_equiv_const
-    (show lim_zero (-f - const abv (-lim f))by
+    (show lim_zero (-f - const abv (-lim f)) by
       rw [const_neg, sub_neg_eq_add, add_commₓ, ← sub_eq_add_neg] <;> exact Setoidₓ.symm (equiv_lim f))
 
 theorem lim_eq_zero_iff (f : CauSeq β abv) : lim f = 0 ↔ lim_zero f :=
   ⟨fun h => by
-    have hf := equiv_lim f <;> rw [h] at hf <;> exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl), fun h =>
+    have hf := equiv_lim f <;> rw [h] at hf <;> exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl), fun h => by
     have h₁ : f = f - const abv 0 :=
       ext fun n => by
         simp [sub_apply, const_apply]
-    by
     rw [h₁] at h <;> exact lim_eq_of_equiv_const h⟩
 
 end
@@ -290,16 +289,18 @@ theorem lim_inv {f : CauSeq β abv} (hf : ¬lim_zero f) : lim (inv f hf) = lim f
     rwa [← lim_eq_zero_iff] at hf
   lim_eq_of_equiv_const $
     show lim_zero (inv f hf - const abv (lim f⁻¹)) from
-      have h₁ : ∀ g f : CauSeq β abv hf : ¬lim_zero f, lim_zero (g - (f*inv f hf)*g) := fun g f hf => by
+      have h₁ : ∀ g f : CauSeq β abv hf : ¬lim_zero f, lim_zero (g - f * inv f hf * g) := fun g f hf => by
         rw [← one_mulₓ g, ← mul_assocₓ, ← sub_mul, mul_oneₓ, mul_commₓ, mul_commₓ f] <;>
           exact mul_lim_zero_right _ (Setoidₓ.symm (CauSeq.inv_mul_cancel _))
-      have h₂ : lim_zero (inv f hf - const abv (lim f⁻¹) - (const abv (lim f) - f)*inv f hf*const abv (lim f⁻¹)) := by
+      have h₂ :
+        lim_zero (inv f hf - const abv (lim f⁻¹) - (const abv (lim f) - f) * (inv f hf * const abv (lim f⁻¹))) := by
         rw [sub_mul, ← sub_add, sub_sub, sub_add_eq_sub_sub, sub_right_comm, sub_add] <;>
           exact
             show
               lim_zero
-                ((inv f hf - const abv (lim f)*inv f hf*const abv (lim f⁻¹)) -
-                  (const abv (lim f⁻¹) - f*inv f hf*const abv (lim f⁻¹))) from
+                (inv f hf - const abv (lim f) * (inv f hf * const abv (lim f⁻¹)) -
+                  (const abv (lim f⁻¹) - f * (inv f hf * const abv (lim f⁻¹))))
+              from
               sub_lim_zero
                 (by
                   rw [← mul_assocₓ, mul_right_commₓ, const_inv hl] <;> exact h₁ _ _ _)

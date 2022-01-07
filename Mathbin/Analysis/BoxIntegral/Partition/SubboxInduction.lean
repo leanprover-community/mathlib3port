@@ -34,15 +34,15 @@ variable {ι : Type _} [Fintype ι] {I J : box ι}
 
 namespace Prepartition
 
-/--  Split a box in `ℝⁿ` into `2 ^ n` boxes by hyperplanes passing through its center. -/
-def split_center (I : box ι) : prepartition I :=
-  { boxes := Finset.univ.map (box.split_center_box_emb I),
-    le_of_mem' := by
-      simp [I.split_center_box_le],
-    PairwiseDisjoint := by
-      rw [Finset.coe_map, Finset.coe_univ, image_univ]
-      rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ Hne
-      exact I.disjoint_split_center_box (mt (congr_argₓ _) Hne) }
+/-- Split a box in `ℝⁿ` into `2 ^ n` boxes by hyperplanes passing through its center. -/
+def split_center (I : box ι) : prepartition I where
+  boxes := Finset.univ.map (box.split_center_box_emb I)
+  le_of_mem' := by
+    simp [I.split_center_box_le]
+  PairwiseDisjoint := by
+    rw [Finset.coe_map, Finset.coe_univ, image_univ]
+    rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ Hne
+    exact I.disjoint_split_center_box (mt (congr_argₓ _) Hne)
 
 @[simp]
 theorem mem_split_center : J ∈ split_center I ↔ ∃ s, I.split_center_box s = J := by
@@ -62,7 +62,7 @@ namespace Box
 
 open Prepartition TaggedPrepartition
 
-/--  Let `p` be a predicate on `box ι`, let `I` be a box. Suppose that the following two properties
+/-- Let `p` be a predicate on `box ι`, let `I` be a box. Suppose that the following two properties
 hold true.
 
 * Consider a smaller box `J ≤ I`. The hyperplanes passing through the center of `J` split it into
@@ -90,7 +90,7 @@ theorem subbox_induction_on {p : box ι → Prop} (I : box ι)
   rcases mem_split_center.1 h' with ⟨s, rfl⟩
   exact hs s
 
-/--  Given a box `I` in `ℝⁿ` and a function `r : ℝⁿ → (0, ∞)`, there exists a tagged partition `π` of
+/-- Given a box `I` in `ℝⁿ` and a function `r : ℝⁿ → (0, ∞)`, there exists a tagged partition `π` of
 `I` such that
 
 * `π` is a Henstock partition;
@@ -108,11 +108,9 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : box �
               π.distortion = I.distortion :=
   by
   refine' subbox_induction_on I (fun J hle hJ => _) fun z hz => _
-  ·
-    choose! πi hP hHen hr Hn Hd using hJ
+  · choose! πi hP hHen hr Hn Hd using hJ
     choose! n hn using Hn
-    have hP : ((split_center J).bUnionTagged πi).IsPartition
-    exact (is_partition_split_center _).bUnionTagged hP
+    have hP : ((split_center J).bUnionTagged πi).IsPartition := (is_partition_split_center _).bUnionTagged hP
     have hsub :
       ∀,
         ∀ J' ∈ (split_center J).bUnionTagged πi,
@@ -120,14 +118,14 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : box �
       by
       intro J' hJ'
       rcases(split_center J).mem_bUnion_tagged.1 hJ' with ⟨J₁, h₁, h₂⟩
-      refine' ⟨n J₁ J'+1, fun i => _⟩
+      refine' ⟨n J₁ J' + 1, fun i => _⟩
       simp only [hn J₁ h₁ J' h₂, upper_sub_lower_of_mem_split_center h₁, pow_succₓ, div_div_eq_div_mul]
     refine' ⟨_, hP, is_Henstock_bUnion_tagged.2 hHen, is_subordinate_bUnion_tagged.2 hr, hsub, _⟩
     refine' tagged_prepartition.distortion_of_const _ hP.nonempty_boxes fun J' h' => _
     rcases hsub J' h' with ⟨n, hn⟩
     exact box.distortion_eq_of_sub_eq_div hn
-  ·
-    refine' ⟨I.Icc ∩ closed_ball z (r z), inter_mem_nhds_within _ (closed_ball_mem_nhds _ (r z).coe_prop), _⟩
+    
+  · refine' ⟨I.Icc ∩ closed_ball z (r z), inter_mem_nhds_within _ (closed_ball_mem_nhds _ (r z).coe_prop), _⟩
     intro J Hle n Hmem HIcc Hsub
     rw [Set.subset_inter_iff] at HIcc
     refine'
@@ -136,6 +134,7 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : box �
     simp only [tagged_prepartition.mem_single, forall_eq]
     refine' ⟨0, fun i => _⟩
     simp
+    
 
 end Box
 
@@ -143,7 +142,7 @@ namespace Prepartition
 
 open TaggedPrepartition Finset Function
 
-/--  Given a box `I` in `ℝⁿ`, a function `r : ℝⁿ → (0, ∞)`, and a prepartition `π` of `I`, there
+/-- Given a box `I` in `ℝⁿ`, a function `r : ℝⁿ → (0, ∞)`, and a prepartition `π` of `I`, there
 exists a tagged prepartition `π'` of `I` such that
 
 * each box of `π'` is included in some box of `π`;
@@ -167,7 +166,7 @@ theorem exists_tagged_le_is_Henstock_is_subordinate_Union_eq {I : box ι} (r : (
   rw [distortion_bUnion_tagged]
   exact sup_congr rfl fun J _ => πid J
 
-/--  Given a prepartition `π` of a box `I` and a function `r : ℝⁿ → (0, ∞)`, `π.to_subordinate r`
+/-- Given a prepartition `π` of a box `I` and a function `r : ℝⁿ → (0, ∞)`, `π.to_subordinate r`
 is a tagged partition `π'` such that
 
 * each box of `π'` is included in some box of `π`;
@@ -203,7 +202,7 @@ end Prepartition
 
 namespace TaggedPrepartition
 
-/--  Given a tagged prepartition `π₁`, a prepartition `π₂` that covers exactly `I \ π₁.Union`, and
+/-- Given a tagged prepartition `π₁`, a prepartition `π₂` that covers exactly `I \ π₁.Union`, and
 a function `r : ℝⁿ → (0, ∞)`, returns the union of `π₁` and `π₂.to_subordinate r`. This partition
 `π` has the following properties:
 

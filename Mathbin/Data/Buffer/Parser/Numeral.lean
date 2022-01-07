@@ -36,45 +36,29 @@ namespace Parser
 
 variable (α : Type) [HasZero α] [HasOne α] [Add α]
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler mono
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler bounded
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler prog
-/-- 
-Parse a string of digits as a numeral while casting it to target type `α`.
+/-- Parse a string of digits as a numeral while casting it to target type `α`.
 -/
 def numeral : Parser α :=
-  Nat.binCast <$> Nat deriving [anonymous], [anonymous], [anonymous]
+  Nat.binCast <$> Nat deriving mono, Bounded, prog
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler mono
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler bounded
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler prog
-/-- 
-Parse a string of digits as a numeral while casting it to target type `α`,
+/-- Parse a string of digits as a numeral while casting it to target type `α`,
 which has a `[fintype α]` constraint. The parser ensures that the numeral parsed in
 is within the cardinality of the type `α`.
 -/
 def numeral.of_fintype [Fintype α] : Parser α := do
   let c ← Nat
   decorate_error (s! "<numeral less than {toString (Fintype.card α)}>") (guardₓ (c < Fintype.card α))
-  pure $ Nat.binCast c deriving [anonymous], [anonymous], [anonymous]
+  pure $ Nat.binCast c deriving mono, Bounded, prog
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler mono
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler bounded
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler prog
-/-- 
-Parse a string of digits as a numeral while casting it to target type `α`. The parsing starts
+/-- Parse a string of digits as a numeral while casting it to target type `α`. The parsing starts
 at "1", so `"1"` is parsed in as `nat.cast 0`. Providing `"0"` to the parser causes a failure.
 -/
 def numeral.from_one : Parser α := do
   let c ← Nat
   decorate_error "<positive numeral>" (guardₓ (0 < c))
-  pure $ Nat.binCast (c - 1)deriving [anonymous], [anonymous], [anonymous]
+  pure $ Nat.binCast (c - 1)deriving mono, Bounded, prog
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler mono
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler bounded
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler prog
-/-- 
-Parse a string of digits as a numeral while casting it to target type `α`,
+/-- Parse a string of digits as a numeral while casting it to target type `α`,
 which has a `[fintype α]` constraint. The parser ensures that the numeral parsed in
 is within the cardinality of the type `α`. The parsing starts
 at "1", so `"1"` is parsed in as `nat.cast 0`. Providing `"0"` to the parser causes a failure.
@@ -83,14 +67,9 @@ def numeral.from_one.of_fintype [Fintype α] : Parser α := do
   let c ← Nat
   decorate_error (s! "<positive numeral less than or equal to {toString (Fintype.card α)}>")
       (guardₓ (0 < c ∧ c ≤ Fintype.card α))
-  pure $ Nat.binCast (c - 1)deriving [anonymous], [anonymous], [anonymous]
+  pure $ Nat.binCast (c - 1)deriving mono, Bounded, prog
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler mono
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler bounded
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler err_static
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler step
-/-- 
-Parse a character as a numeral while casting it to target type `α`,
+/-- Parse a character as a numeral while casting it to target type `α`,
 The parser ensures that the character parsed in is within the bounds set by `fromc` and `toc`,
 and subtracts the value of `fromc` from the parsed in character.
 -/
@@ -98,14 +77,9 @@ def numeral.char (fromc toc : Charₓ) : Parser α := do
   let c ←
     decorate_error (s! "<char between '{fromc.to_string }' to '{toc.to_string}' inclusively>")
         (sat fun c => fromc ≤ c ∧ c ≤ toc)
-  pure $ Nat.binCast (c.to_nat - fromc.to_nat)deriving [anonymous], [anonymous], [anonymous], [anonymous]
+  pure $ Nat.binCast (c.to_nat - fromc.to_nat)deriving mono, Bounded, err_static, step
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler mono
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler bounded
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler err_static
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler step
-/-- 
-Parse a character as a numeral while casting it to target type `α`,
+/-- Parse a character as a numeral while casting it to target type `α`,
 which has a `[fintype α]` constraint.
 The parser ensures that the character parsed in is greater or equal to `fromc` and
 and subtracts the value of `fromc` from the parsed in character. There is also a check
@@ -115,9 +89,9 @@ def numeral.char.of_fintype [Fintype α] (fromc : Charₓ) : Parser α := do
   let c ←
     decorate_error
         (s! "<char from '{fromc.to_string}' to '
-              {(Charₓ.ofNat ((fromc.to_nat+Fintype.card α) - 1)).toString}' inclusively>")
+              {(Charₓ.ofNat (fromc.to_nat + Fintype.card α - 1)).toString}' inclusively>")
         (sat fun c => fromc ≤ c ∧ c.to_nat - Fintype.card α < fromc.to_nat)
-  pure $ Nat.binCast (c.to_nat - fromc.to_nat)deriving [anonymous], [anonymous], [anonymous], [anonymous]
+  pure $ Nat.binCast (c.to_nat - fromc.to_nat)deriving mono, Bounded, err_static, step
 
 end Parser
 

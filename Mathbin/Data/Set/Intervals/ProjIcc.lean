@@ -20,7 +20,7 @@ open Function
 
 namespace Set
 
-/--  Projection of `α` to the closed interval `[a, b]`. -/
+/-- Projection of `α` to the closed interval `[a, b]`. -/
 def proj_Icc (a b : α) (h : a ≤ b) (x : α) : Icc a b :=
   ⟨max a (min b x), le_max_leftₓ _ _, max_leₓ h (min_le_leftₓ _ _)⟩
 
@@ -76,7 +76,7 @@ theorem monotone_proj_Icc : Monotone (proj_Icc a b h) := fun x y hxy => max_le_m
 theorem strict_mono_on_proj_Icc : StrictMonoOn (proj_Icc a b h) (Icc a b) := fun x hx y hy hxy => by
   simpa only [proj_Icc_of_mem, hx, hy]
 
-/--  Extend a function `[a, b] → β` to a map `α → β`. -/
+/-- Extend a function `[a, b] → β` to a map `α → β`. -/
 def Icc_extend {a b : α} (h : a ≤ b) (f : Icc a b → β) : α → β :=
   f ∘ proj_Icc a b h
 

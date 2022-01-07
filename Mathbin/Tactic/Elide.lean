@@ -9,27 +9,27 @@ unsafe def replace : ℕ → expr → tactic expr
     let t ← infer_type e
     let expr.sort u ← infer_type t
     return $ (expr.const `` hidden [u]).app t e
-  | i+1, expr.app f x => do
-    let f' ← replace (i+1) f
+  | i + 1, expr.app f x => do
+    let f' ← replace (i + 1) f
     let x' ← replace i x
     return (f' x')
-  | i+1, expr.lam n b d e => do
+  | i + 1, expr.lam n b d e => do
     let d' ← replace i d
     let var ← mk_local' n b d
     let e' ← replace i (expr.instantiate_var e var)
     return (expr.lam n b d' (expr.abstract_local e' var.local_uniq_name))
-  | i+1, expr.pi n b d e => do
+  | i + 1, expr.pi n b d e => do
     let d' ← replace i d
     let var ← mk_local' n b d
     let e' ← replace i (expr.instantiate_var e var)
     return (expr.pi n b d' (expr.abstract_local e' var.local_uniq_name))
-  | i+1, el@(expr.elet n t d e) => do
+  | i + 1, el@(expr.elet n t d e) => do
     let t' ← replace i t
     let d' ← replace i d
     let var ← mk_local_def n t
     let e' ← replace i (expr.instantiate_var e var)
     return (expr.elet n t' d' (expr.abstract_local e' var.local_uniq_name))
-  | i+1, e => return e
+  | i + 1, e => return e
 
 unsafe def unelide (e : expr) : expr :=
   expr.replace e $ fun e n =>
@@ -44,7 +44,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-/--  The `elide n (at ...)` tactic hides all subterms of the target goal or hypotheses
+/-- The `elide n (at ...)` tactic hides all subterms of the target goal or hypotheses
 beyond depth `n` by replacing them with `hidden`, which is a variant
 on the identity function. (Tactics should still mostly be able to see
 through the abbreviation, but if you want to unhide the term you can use
@@ -56,7 +56,7 @@ unsafe def elide (n : parse small_nat) (loc : parse location) : tactic Unit :=
       tactic.change_core t (some h))
     (target >>= tactic.elide.replace n >>= tactic.change)
 
-/--  The `unelide (at ...)` tactic removes all `hidden` subterms in the target
+/-- The `unelide (at ...)` tactic removes all `hidden` subterms in the target
 types (usually added by `elide`). -/
 unsafe def unelide (loc : parse location) : tactic Unit :=
   loc.apply
@@ -65,8 +65,7 @@ unsafe def unelide (loc : parse location) : tactic Unit :=
       tactic.change_core (elide.unelide t) (some h))
     (target >>= tactic.change ∘ elide.unelide)
 
-/-- 
-The `elide n (at ...)` tactic hides all subterms of the target goal or hypotheses
+/-- The `elide n (at ...)` tactic hides all subterms of the target goal or hypotheses
 beyond depth `n` by replacing them with `hidden`, which is a variant
 on the identity function. (Tactics should still mostly be able to see
 through the abbreviation, but if you want to unhide the term you can use

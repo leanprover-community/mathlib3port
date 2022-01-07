@@ -20,17 +20,18 @@ namespace Polynomial
 
 variable {R : Type _} [Semiringₓ R] (r : R) (f : Polynomial R)
 
-/--  The Taylor expansion of a polynomial `f` at `r`. -/
-def taylor (r : R) : Polynomial R →ₗ[R] Polynomial R :=
-  { toFun := fun f => f.comp (X+C r), map_add' := fun f g => add_comp,
-    map_smul' := fun c f => by
-      simp only [smul_eq_C_mul, C_mul_comp, RingHom.id_apply] }
+/-- The Taylor expansion of a polynomial `f` at `r`. -/
+def taylor (r : R) : Polynomial R →ₗ[R] Polynomial R where
+  toFun := fun f => f.comp (X + C r)
+  map_add' := fun f g => add_comp
+  map_smul' := fun c f => by
+    simp only [smul_eq_C_mul, C_mul_comp, RingHom.id_apply]
 
-theorem taylor_apply : taylor r f = f.comp (X+C r) :=
+theorem taylor_apply : taylor r f = f.comp (X + C r) :=
   rfl
 
 @[simp]
-theorem taylor_X : taylor r X = X+C r := by
+theorem taylor_X : taylor r X = X + C r := by
   simp only [taylor_apply, X_comp]
 
 @[simp]
@@ -41,7 +42,7 @@ theorem taylor_C (x : R) : taylor r (C x) = C x := by
 theorem taylor_one : taylor r (1 : Polynomial R) = C 1 := by
   rw [← C_1, taylor_C]
 
-/--  The `k`th coefficient of `polynomial.taylor r f` is `(polynomial.hasse_deriv k f).eval r`. -/
+/-- The `k`th coefficient of `polynomial.taylor r f` is `(polynomial.hasse_deriv k f).eval r`. -/
 theorem taylor_coeff (n : ℕ) : (taylor r f).coeff n = (hasse_deriv n f).eval r :=
   show (lcoeff R n).comp (taylor r) f = (leval r).comp (hasse_deriv n) f by
     congr 1
@@ -52,8 +53,8 @@ theorem taylor_coeff (n : ℕ) : (taylor r f).coeff n = (hasse_deriv n f).eval r
     simp only [lcoeff_apply, ← C_eq_nat_cast, mul_assocₓ, ← C_pow, ← C_mul, coeff_mul_C, (Nat.cast_commute _ _).Eq,
       coeff_X_pow, boole_mul, Finset.sum_ite_eq, Finset.mem_range]
     split_ifs with h
-    ·
-      rfl
+    · rfl
+      
     push_neg  at h
     rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zero, mul_zero]
 
@@ -65,7 +66,12 @@ theorem taylor_coeff_zero : (taylor r f).coeff 0 = f.eval r := by
 theorem taylor_coeff_one : (taylor r f).coeff 1 = f.derivative.eval r := by
   rw [taylor_coeff, hasse_deriv_one]
 
-theorem taylor_eval {R} [CommSemiringₓ R] (r : R) (f : Polynomial R) (s : R) : (taylor r f).eval s = f.eval (s+r) := by
+@[simp]
+theorem taylor_mul {R} [CommSemiringₓ R] (r : R) (p q : Polynomial R) : taylor r (p * q) = taylor r p * taylor r q := by
+  simp only [taylor_apply, mul_comp]
+
+theorem taylor_eval {R} [CommSemiringₓ R] (r : R) (f : Polynomial R) (s : R) : (taylor r f).eval s = f.eval (s + r) :=
+  by
   simp only [taylor_apply, eval_comp, eval_C, eval_X, eval_add]
 
 theorem taylor_eval_sub {R} [CommRingₓ R] (r : R) (f : Polynomial R) (s : R) : (taylor r f).eval (s - r) = f.eval s :=

@@ -4,7 +4,13 @@ import Mathbin.GroupTheory.GroupAction.Defs
 /-!
 # Prod instances for additive and multiplicative actions
 
-This file defines instances for binary product of additive and multiplicative actions
+This file defines instances for binary product of additive and multiplicative actions and provides
+scalar multiplication as a homomorphism from `α × β` to `β`.
+
+## Main declarations
+
+* `smul_mul_hom`/`smul_monoid_hom`: Scalar multiplication bundled as a multiplicative/monoid
+  homomorphism.
 -/
 
 
@@ -39,11 +45,9 @@ theorem smul_def (a : M) (x : α × β) : a • x = (a • x.1, a • x.2) :=
 instance [HasScalar M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (α × β) :=
   ⟨fun x y z => mk.inj_iff.mpr ⟨smul_assoc _ _ _, smul_assoc _ _ _⟩⟩
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    [ SmulCommClass M N α ] [ SmulCommClass M N β ] : SmulCommClass M N ( α × β )
-    where smul_comm r s x := mk.inj_iff . mpr ⟨ smul_comm _ _ _ , smul_comm _ _ _ ⟩
+@[to_additive]
+instance [SmulCommClass M N α] [SmulCommClass M N β] : SmulCommClass M N (α × β) where
+  smul_comm := fun r s x => mk.inj_iff.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩
 
 instance [HasScalar (Mᵐᵒᵖ) α] [HasScalar (Mᵐᵒᵖ) β] [IsCentralScalar M α] [IsCentralScalar M β] :
     IsCentralScalar M (α × β) :=
@@ -76,39 +80,39 @@ instance is_scalar_tower_both [Monoidₓ N] [Monoidₓ P] [HasScalar M N] [HasSc
   ⟨fun c x y => by
     simp [smul_def, mul_def, smul_mul_assoc]⟩
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    { m : Monoidₓ M } [ MulAction M α ] [ MulAction M β ] : MulAction M ( α × β )
-    where
-      mul_smul a₁ a₂ p := mk.inj_iff . mpr ⟨ mul_smul _ _ _ , mul_smul _ _ _ ⟩
-        one_smul ⟨ b , c ⟩ := mk.inj_iff . mpr ⟨ one_smul _ _ , one_smul _ _ ⟩
+@[to_additive]
+instance {m : Monoidₓ M} [MulAction M α] [MulAction M β] : MulAction M (α × β) where
+  mul_smul := fun a₁ a₂ p => mk.inj_iff.mpr ⟨mul_smul _ _ _, mul_smul _ _ _⟩
+  one_smul := fun ⟨b, c⟩ => mk.inj_iff.mpr ⟨one_smul _ _, one_smul _ _⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { R M N : Type _ }
-      { r : Monoidₓ R }
-      [ AddMonoidₓ M ]
-      [ AddMonoidₓ N ]
-      [ DistribMulAction R M ]
-      [ DistribMulAction R N ]
-    : DistribMulAction R ( M × N )
-  where
-    smul_add a p₁ p₂ := mk.inj_iff . mpr ⟨ smul_add _ _ _ , smul_add _ _ _ ⟩
-      smul_zero a := mk.inj_iff . mpr ⟨ smul_zero _ , smul_zero _ ⟩
+instance {R M N : Type _} {r : Monoidₓ R} [AddMonoidₓ M] [AddMonoidₓ N] [DistribMulAction R M] [DistribMulAction R N] :
+    DistribMulAction R (M × N) where
+  smul_add := fun a p₁ p₂ => mk.inj_iff.mpr ⟨smul_add _ _ _, smul_add _ _ _⟩
+  smul_zero := fun a => mk.inj_iff.mpr ⟨smul_zero _, smul_zero _⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { R M N : Type _ }
-      { r : Monoidₓ R }
-      [ Monoidₓ M ]
-      [ Monoidₓ N ]
-      [ MulDistribMulAction R M ]
-      [ MulDistribMulAction R N ]
-    : MulDistribMulAction R ( M × N )
-  where
-    smul_mul a p₁ p₂ := mk.inj_iff . mpr ⟨ smul_mul' _ _ _ , smul_mul' _ _ _ ⟩
-      smul_one a := mk.inj_iff . mpr ⟨ smul_one _ , smul_one _ ⟩
+instance {R M N : Type _} {r : Monoidₓ R} [Monoidₓ M] [Monoidₓ N] [MulDistribMulAction R M] [MulDistribMulAction R N] :
+    MulDistribMulAction R (M × N) where
+  smul_mul := fun a p₁ p₂ => mk.inj_iff.mpr ⟨smul_mul' _ _ _, smul_mul' _ _ _⟩
+  smul_one := fun a => mk.inj_iff.mpr ⟨smul_one _, smul_one _⟩
 
 end Prod
+
+/-! ### Scalar multiplication as a homomorphism -/
+
+
+section BundledSmul
+
+/-- Scalar multiplication as a multiplicative homomorphism. -/
+@[simps]
+def smulMulHom [Monoidₓ α] [Mul β] [MulAction α β] [IsScalarTower α β β] [SmulCommClass α β β] : MulHom (α × β) β where
+  toFun := fun a => a.1 • a.2
+  map_mul' := fun a b => (smul_mul_smul _ _ _ _).symm
+
+/-- Scalar multiplication as a monoid homomorphism. -/
+@[simps]
+def smulMonoidHom [Monoidₓ α] [MulOneClass β] [MulAction α β] [IsScalarTower α β β] [SmulCommClass α β β] :
+    α × β →* β :=
+  { smulMulHom with map_one' := one_smul _ _ }
+
+end BundledSmul
 

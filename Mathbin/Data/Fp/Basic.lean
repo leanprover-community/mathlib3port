@@ -12,10 +12,9 @@ def Int.shift2 (a b : ℕ) : ℤ → ℕ × ℕ
 
 namespace Fp
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
 inductive rmode
   | NE
-  deriving [anonymous]
+  deriving Inhabited
 
 class float_cfg where
   (prec emax : ℕ)
@@ -36,7 +35,7 @@ def emin : ℤ :=
   1 - C.emax
 
 def valid_finite (e : ℤ) (m : ℕ) : Prop :=
-  emin ≤ (e+prec) - 1 ∧ (e+prec) - 1 ≤ emax ∧ e = max ((e+m.size) - prec) emin
+  emin ≤ e + prec - 1 ∧ e + prec - 1 ≤ emax ∧ e = max (e + m.size - prec) emin
 
 instance dec_valid_finite e m : Decidable (valid_finite e m) := by
   unfold valid_finite <;> infer_instance
@@ -63,7 +62,7 @@ theorem float.zero.valid : valid_finite emin 0 :=
     apply sub_nonneg_of_le
     apply Int.coe_nat_le_coe_nat_of_le
     exact C.prec_pos,
-    suffices prec ≤ 2*emax by
+    suffices prec ≤ 2 * emax by
       rw [← Int.coe_nat_le] at this
       rw [← sub_nonneg] at *
       simp only [emin, emax] at *
@@ -107,15 +106,15 @@ def div_nat_lt_two_pow (n d : ℕ) : ℤ → Bool
 
 unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
   let e₁ : ℤ := n.1.size - d.1.size - prec
-  cases' h₁ : Int.shift2 d.1 n.1 (e₁+prec) with d₁ n₁
+  cases' h₁ : Int.shift2 d.1 n.1 (e₁ + prec) with d₁ n₁
   let e₂ := if n₁ < d₁ then e₁ - 1 else e₁
   let e₃ := max e₂ emin
-  cases' h₂ : Int.shift2 d.1 n.1 (e₃+prec) with d₂ n₂
+  cases' h₂ : Int.shift2 d.1 n.1 (e₃ + prec) with d₂ n₂
   let r := Rat.mkNat n₂ d₂
   let m := r.floor
   refine' (float.finite ff e₃ (Int.toNat m) _, r.denom = 1)
-  ·
-    exact undefined
+  · exact undefined
+    
 
 unsafe def next_up_pos e m (v : valid_finite e m) : float :=
   let m' := m.succ
@@ -187,7 +186,7 @@ unsafe def add (mode : rmode) : float → float → float
   | finite s₁ e₁ m₁ v₁, finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
-    of_rat mode (to_rat f₁ rfl+to_rat f₂ rfl)
+    of_rat mode (to_rat f₁ rfl + to_rat f₂ rfl)
 
 unsafe instance : Add float :=
   ⟨float.add rmode.NE⟩
@@ -206,7 +205,7 @@ unsafe def mul (mode : rmode) : float → float → float
   | finite s₁ e₁ m₁ v₁, finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
-    of_rat mode (to_rat f₁ rfl*to_rat f₂ rfl)
+    of_rat mode (to_rat f₁ rfl * to_rat f₂ rfl)
 
 unsafe def div (mode : rmode) : float → float → float
   | nan, _ => nan

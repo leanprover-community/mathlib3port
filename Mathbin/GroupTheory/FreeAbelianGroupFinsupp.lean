@@ -22,11 +22,11 @@ open_locale BigOperators
 
 variable {X : Type _}
 
-/--  The group homomorphism `free_abelian_group X →+ (X →₀ ℤ)`. -/
+/-- The group homomorphism `free_abelian_group X →+ (X →₀ ℤ)`. -/
 def FreeAbelianGroup.toFinsupp : FreeAbelianGroup X →+ X →₀ ℤ :=
   FreeAbelianGroup.lift $ fun x => Finsupp.single x (1 : ℤ)
 
-/--  The group homomorphism `(X →₀ ℤ) →+ free_abelian_group X`. -/
+/-- The group homomorphism `(X →₀ ℤ) →+ free_abelian_group X`. -/
 def Finsupp.toFreeAbelianGroup : (X →₀ ℤ) →+ FreeAbelianGroup X :=
   Finsupp.liftAddHom $ fun x => (smulAddHom ℤ (FreeAbelianGroup X)).flip (FreeAbelianGroup.of x)
 
@@ -76,20 +76,23 @@ theorem to_finsupp_to_free_abelian_group (f : X →₀ ℤ) : f.to_free_abelian_
 
 variable (X)
 
-/--  The additive equivalence between `free_abelian_group X` and `(X →₀ ℤ)`. -/
+/-- The additive equivalence between `free_abelian_group X` and `(X →₀ ℤ)`. -/
 @[simps]
-def equiv_finsupp : FreeAbelianGroup X ≃+ (X →₀ ℤ) :=
-  { toFun := to_finsupp, invFun := to_free_abelian_group, left_inv := to_free_abelian_group_to_finsupp,
-    right_inv := to_finsupp_to_free_abelian_group, map_add' := to_finsupp.map_add }
+def equiv_finsupp : FreeAbelianGroup X ≃+ (X →₀ ℤ) where
+  toFun := to_finsupp
+  invFun := to_free_abelian_group
+  left_inv := to_free_abelian_group_to_finsupp
+  right_inv := to_finsupp_to_free_abelian_group
+  map_add' := to_finsupp.map_add
 
 variable {X}
 
-/--  `coeff x` is the additive group homomorphism `free_abelian_group X →+ ℤ`
+/-- `coeff x` is the additive group homomorphism `free_abelian_group X →+ ℤ`
 that sends `a` to the multiplicity of `x : X` in `a`. -/
 def coeff (x : X) : FreeAbelianGroup X →+ ℤ :=
   (Finsupp.applyAddHom x).comp to_finsupp
 
-/--  `support a` for `a : free_abelian_group X` is the finite set of `x : X`
+/-- `support a` for `a : free_abelian_group X` is the finite set of `x : X`
 that occur in the formal sum `a`. -/
 def support (a : FreeAbelianGroup X) : Finset X :=
   a.to_finsupp.support
@@ -127,7 +130,7 @@ theorem support_nsmul (k : ℕ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support
 
 open_locale Classical
 
-theorem support_add (a b : FreeAbelianGroup X) : support (a+b) ⊆ a.support ∪ b.support := by
+theorem support_add (a b : FreeAbelianGroup X) : support (a + b) ⊆ a.support ∪ b.support := by
   simp only [support, AddMonoidHom.map_add]
   apply Finsupp.support_add
 

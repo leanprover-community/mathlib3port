@@ -21,16 +21,16 @@ namespace SmoothMap
 
 @[to_additive]
 instance Mul {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G] : Mul C^∞⟮I, N; I', G⟯ :=
-  ⟨fun f g => ⟨f*g, f.smooth.mul g.smooth⟩⟩
+  ⟨fun f g => ⟨f * g, f.smooth.mul g.smooth⟩⟩
 
 @[simp, to_additive]
 theorem coe_mul {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G]
-    (f g : C^∞⟮I, N; I', G⟯) : (⇑f*g) = f*g :=
+    (f g : C^∞⟮I, N; I', G⟯) : ⇑(f * g) = f * g :=
   rfl
 
 @[simp, to_additive]
 theorem mul_comp {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G]
-    (f g : C^∞⟮I'', N'; I', G⟯) (h : C^∞⟮I, N; I'', N'⟯) : (f*g).comp h = f.comp h*g.comp h := by
+    (f g : C^∞⟮I'', N'; I', G⟯) (h : C^∞⟮I, N; I'', N'⟯) : (f * g).comp h = f.comp h * g.comp h := by
   ext <;> simp only [TimesContMdiffMap.comp_apply, coe_mul, Pi.mul_apply]
 
 @[to_additive]
@@ -67,11 +67,13 @@ instance Monoidₓ {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace
     mul_one := fun a => by
       ext <;> exact mul_oneₓ _ }
 
-/--  Coercion to a function as an `monoid_hom`. Similar to `monoid_hom.coe_fn`. -/
+/-- Coercion to a function as an `monoid_hom`. Similar to `monoid_hom.coe_fn`. -/
 @[to_additive "Coercion to a function as an `add_monoid_hom`. Similar to `add_monoid_hom.coe_fn`.", simps]
 def coe_fn_monoid_hom {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G] :
-    C^∞⟮I, N; I', G⟯ →* N → G :=
-  { toFun := coeFn, map_one' := coe_one, map_mul' := coe_mul }
+    C^∞⟮I, N; I', G⟯ →* N → G where
+  toFun := coeFn
+  map_one' := coe_one
+  map_mul' := coe_mul
 
 @[to_additive]
 instance CommMonoidₓ {G : Type _} [CommMonoidₓ G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G] :
@@ -137,13 +139,13 @@ instance CommRingₓ {R : Type _} [CommRingₓ R] [TopologicalSpace R] [ChartedS
     CommRingₓ C^∞⟮I, N; I', R⟯ :=
   { SmoothMap.semiring, SmoothMap.addCommGroup, SmoothMap.commMonoid with }
 
-/--  Coercion to a function as a `ring_hom`. -/
+/-- Coercion to a function as a `ring_hom`. -/
 @[simps]
 def coe_fn_ring_hom {R : Type _} [CommRingₓ R] [TopologicalSpace R] [ChartedSpace H' R] [SmoothRing I' R] :
     C^∞⟮I, N; I', R⟯ →+* N → R :=
   { (coe_fn_monoid_hom : C^∞⟮I, N; I', R⟯ →* _), (coe_fn_add_monoid_hom : C^∞⟮I, N; I', R⟯ →+ _) with toFun := coeFn }
 
-/--  `function.eval` as a `ring_hom` on the ring of smooth functions. -/
+/-- `function.eval` as a `ring_hom` on the ring of smooth functions. -/
 def eval_ring_hom {R : Type _} [CommRingₓ R] [TopologicalSpace R] [ChartedSpace H' R] [SmoothRing I' R] (n : N) :
     C^∞⟮I, N; I', R⟯ →+* R :=
   (Pi.evalRingHom _ n : (N → R) →+* R).comp SmoothMap.coeFnRingHom
@@ -185,7 +187,7 @@ instance Module {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : Module 𝕜 
       one_smul := fun f => by
         ext x <;> exact one_smul 𝕜 (f x) }
 
-/--  Coercion to a function as a `linear_map`. -/
+/-- Coercion to a function as a `linear_map`. -/
 @[simps]
 def coe_fn_linear_map {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : C^∞⟮I, N; 𝓘(𝕜, V), V⟯ →ₗ[𝕜] N → V :=
   { (coe_fn_add_monoid_hom : C^∞⟮I, N; 𝓘(𝕜, V), V⟯ →+ _) with toFun := coeFn, map_smul' := coe_smul }
@@ -204,17 +206,17 @@ inherit an algebra structure.
 
 variable {A : Type _} [NormedRing A] [NormedAlgebra 𝕜 A] [SmoothRing 𝓘(𝕜, A) A]
 
-/--  Smooth constant functions as a `ring_hom`. -/
-def C : 𝕜 →+* C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
-  { toFun := fun c : 𝕜 => ⟨fun x => (algebraMap 𝕜 A) c, smooth_const⟩,
-    map_one' := by
-      ext x <;> exact (algebraMap 𝕜 A).map_one,
-    map_mul' := fun c₁ c₂ => by
-      ext x <;> exact (algebraMap 𝕜 A).map_mul _ _,
-    map_zero' := by
-      ext x <;> exact (algebraMap 𝕜 A).map_zero,
-    map_add' := fun c₁ c₂ => by
-      ext x <;> exact (algebraMap 𝕜 A).map_add _ _ }
+/-- Smooth constant functions as a `ring_hom`. -/
+def C : 𝕜 →+* C^∞⟮I, N; 𝓘(𝕜, A), A⟯ where
+  toFun := fun c : 𝕜 => ⟨fun x => (algebraMap 𝕜 A) c, smooth_const⟩
+  map_one' := by
+    ext x <;> exact (algebraMap 𝕜 A).map_one
+  map_mul' := fun c₁ c₂ => by
+    ext x <;> exact (algebraMap 𝕜 A).map_mul _ _
+  map_zero' := by
+    ext x <;> exact (algebraMap 𝕜 A).map_zero
+  map_add' := fun c₁ c₂ => by
+    ext x <;> exact (algebraMap 𝕜 A).map_add _ _
 
 instance Algebra : Algebra 𝕜 C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
   { SmoothMap.semiring with smul := fun r f => ⟨r • f, smooth_const.smul f.smooth⟩, toRingHom := SmoothMap.c,
@@ -223,11 +225,15 @@ instance Algebra : Algebra 𝕜 C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
     smul_def' := fun c f => by
       ext x <;> exact Algebra.smul_def' _ _ }
 
-/--  Coercion to a function as an `alg_hom`. -/
+/-- Coercion to a function as an `alg_hom`. -/
 @[simps]
-def coe_fn_alg_hom : C^∞⟮I, N; 𝓘(𝕜, A), A⟯ →ₐ[𝕜] N → A :=
-  { toFun := coeFn, commutes' := fun r => rfl, map_zero' := SmoothMap.coe_zero, map_one' := SmoothMap.coe_one,
-    map_add' := SmoothMap.coe_add, map_mul' := SmoothMap.coe_mul }
+def coe_fn_alg_hom : C^∞⟮I, N; 𝓘(𝕜, A), A⟯ →ₐ[𝕜] N → A where
+  toFun := coeFn
+  commutes' := fun r => rfl
+  map_zero' := SmoothMap.coe_zero
+  map_one' := SmoothMap.coe_one
+  map_add' := SmoothMap.coe_add
+  map_mul' := SmoothMap.coe_mul
 
 end AlgebraStructure
 
@@ -248,19 +254,20 @@ theorem smul_comp' {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] (f : C^∞�
     (h : C^∞⟮I, N; I'', N'⟯) : (f • g).comp h = f.comp h • g.comp h :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  module'
-  { V : Type _ } [ NormedGroup V ] [ NormedSpace 𝕜 V ]
-    : Module C^ ∞ ⟮ I , N ; 𝓘( 𝕜 ) , 𝕜 ⟯ C^ ∞ ⟮ I , N ; 𝓘( 𝕜 , V ) , V ⟯
-  where
-    smul := · • ·
-      smul_add c f g := by ext x <;> exact smul_add ( c x ) ( f x ) ( g x )
-      add_smul c₁ c₂ f := by ext x <;> exact add_smul ( c₁ x ) ( c₂ x ) ( f x )
-      mul_smul c₁ c₂ f := by ext x <;> exact mul_smul ( c₁ x ) ( c₂ x ) ( f x )
-      one_smul f := by ext x <;> exact one_smul 𝕜 ( f x )
-      zero_smul f := by ext x <;> exact zero_smul _ _
-      smul_zero r := by ext x <;> exact smul_zero _
+instance module' {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : Module C^∞⟮I, N; 𝓘(𝕜), 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯ where
+  smul := · • ·
+  smul_add := fun c f g => by
+    ext x <;> exact smul_add (c x) (f x) (g x)
+  add_smul := fun c₁ c₂ f => by
+    ext x <;> exact add_smul (c₁ x) (c₂ x) (f x)
+  mul_smul := fun c₁ c₂ f => by
+    ext x <;> exact mul_smul (c₁ x) (c₂ x) (f x)
+  one_smul := fun f => by
+    ext x <;> exact one_smul 𝕜 (f x)
+  zero_smul := fun f => by
+    ext x <;> exact zero_smul _ _
+  smul_zero := fun r => by
+    ext x <;> exact smul_zero _
 
 end ModuleOverContinuousFunctions
 

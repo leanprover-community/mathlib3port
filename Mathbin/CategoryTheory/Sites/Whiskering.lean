@@ -42,7 +42,7 @@ variable (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X)
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:57:31: expecting tactic arg
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:57:31: expecting tactic arg
-/--  The multicospan associated to a cover `S : J.cover X` and a presheaf of the form `P ⋙ F`
+/-- The multicospan associated to a cover `S : J.cover X` and a presheaf of the form `P ⋙ F`
 is isomorphic to the composition of the multicospan associated to `S` and `P`,
 composed with `F`. -/
 def multicospan_comp : (S.index (P ⋙ F)).multicospan ≅ (S.index P).multicospan ⋙ F :=
@@ -86,7 +86,7 @@ theorem multicospan_comp_hom_inv_right (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover 
     (S.multicospan_comp F P).inv.app (walking_multicospan.right b) = eq_to_hom rfl :=
   rfl
 
-/--  Mapping the multifork associated to a cover `S : J.cover X` and a presheaf `P` with
+/-- Mapping the multifork associated to a cover `S : J.cover X` and a presheaf `P` with
 respect to a functor `F` is isomorphic (upto a natural isomorphism of the underlying functors)
 to the multifork associated to `S` and `P ⋙ F`. -/
 def map_multifork :
@@ -94,14 +94,14 @@ def map_multifork :
   cones.ext (eq_to_iso rfl)
     (by
       rintro (a | b)
-      ·
-        dsimp
+      · dsimp
         simpa
-      ·
-        dsimp
+        
+      · dsimp
         simp
         dsimp [multifork.of_ι]
-        simpa)
+        simpa
+        )
 
 end GrothendieckTopology.Cover
 
@@ -117,13 +117,14 @@ theorem presheaf.is_sheaf.comp {P : Cᵒᵖ ⥤ A} (hP : presheaf.is_sheaf J P) 
 
 variable (J)
 
-/--  Composing a sheaf with a functor preserving the appropriate limits yields a functor
+/-- Composing a sheaf with a functor preserving the appropriate limits yields a functor
 between sheaf categories. -/
 @[simps]
-def Sheaf_compose : Sheaf J A ⥤ Sheaf J B :=
-  { obj := fun G => ⟨G.val ⋙ F, presheaf.is_sheaf.comp _ G.2⟩, map := fun G H η => ⟨whisker_right η.val _⟩,
-    map_id' := fun G => Sheaf.hom.ext _ _ $ whisker_right_id _,
-    map_comp' := fun G H W f g => Sheaf.hom.ext _ _ $ whisker_right_comp _ _ _ }
+def Sheaf_compose : Sheaf J A ⥤ Sheaf J B where
+  obj := fun G => ⟨G.val ⋙ F, presheaf.is_sheaf.comp _ G.2⟩
+  map := fun G H η => ⟨whisker_right η.val _⟩
+  map_id' := fun G => Sheaf.hom.ext _ _ $ whisker_right_id _
+  map_comp' := fun G H W f g => Sheaf.hom.ext _ _ $ whisker_right_comp _ _ _
 
 end CategoryTheory
 

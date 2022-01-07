@@ -34,8 +34,7 @@ variable {J : Type v}
 
 variable {C : Type u} [category.{v} C]
 
-/-- 
-The functor `G : D ⥤ C` satisfies the *solution set condition* if for every `A : C`, there is a
+/-- The functor `G : D ⥤ C` satisfies the *solution set condition* if for every `A : C`, there is a
 family of morphisms `{f_i : A ⟶ G (B_i) // i ∈ ι}` such that given any morphism `h : A ⟶ G X`,
 there is some `i ∈ ι` such that `h` factors through `f_i`.
 
@@ -54,7 +53,7 @@ section GeneralAdjointFunctorTheorem
 
 variable (G : D ⥤ C)
 
-/--  If `G : D ⥤ C` is a right adjoint it satisfies the solution set condition.  -/
+/-- If `G : D ⥤ C` is a right adjoint it satisfies the solution set condition.  -/
 theorem solution_set_condition_of_is_right_adjoint [is_right_adjoint G] : solution_set_condition G := by
   intro A
   refine' ⟨PUnit, fun _ => (left_adjoint G).obj A, fun _ => (adjunction.of_right_adjoint G).Unit.app A, _⟩
@@ -62,8 +61,7 @@ theorem solution_set_condition_of_is_right_adjoint [is_right_adjoint G] : soluti
   refine' ⟨PUnit.unit, ((adjunction.of_right_adjoint G).homEquiv _ _).symm h, _⟩
   rw [← adjunction.hom_equiv_unit, Equivₓ.apply_symm_apply]
 
-/-- 
-The general adjoint functor theorem says that if `G : D ⥤ C` preserves limits and `D` has them,
+/-- The general adjoint functor theorem says that if `G : D ⥤ C` preserves limits and `D` has them,
 if `G` satisfies the solution set condition then `G` is a right adjoint.
 -/
 noncomputable def is_right_adjoint_of_preserves_limits_of_solution_set_condition [has_limits D] [preserves_limits G]

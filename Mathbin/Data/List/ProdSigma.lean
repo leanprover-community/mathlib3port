@@ -37,7 +37,7 @@ theorem mem_product {l₁ : List α} {l₂ : List β} {a : α} {b : β} : (a, b)
   simp only [product, mem_bind, mem_map, Prod.ext_iff, exists_prop, And.left_comm, exists_and_distrib_left,
     exists_eq_left, exists_eq_right]
 
-theorem length_product (l₁ : List α) (l₂ : List β) : length (product l₁ l₂) = length l₁*length l₂ := by
+theorem length_product (l₁ : List α) (l₂ : List β) : length (product l₁ l₂) = length l₁ * length l₂ := by
   induction' l₁ with x l₁ IH <;> [exact (zero_mul _).symm,
     simp only [length, product_cons, length_append, IH, right_distrib, one_mulₓ, length_map, add_commₓ]]
 

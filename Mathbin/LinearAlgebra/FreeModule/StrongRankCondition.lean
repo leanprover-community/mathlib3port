@@ -30,14 +30,14 @@ variable (R : Type _) [CommRingₓ R] [Nontrivial R]
 
 open Polynomial Function Finₓ LinearMap
 
-/--  Any commutative ring satisfies the `strong_rank_condition`. -/
+/-- Any commutative ring satisfies the `strong_rank_condition`. -/
 instance (priority := 100) comm_ring_strong_rank_condition : StrongRankCondition R := by
-  suffices ∀ n, ∀ f : (Finₓ (n+1) → R) →ₗ[R] Finₓ n → R, ¬injective f by
+  suffices ∀ n, ∀ f : (Finₓ (n + 1) → R) →ₗ[R] Finₓ n → R, ¬injective f by
     rwa [strong_rank_condition_iff_succ R]
   intro n f
   by_contra hf
   let this' : Module.Finite R (Finₓ n.succ → R) := Module.Finite.pi
-  let g : (Finₓ (n+1) → R) →ₗ[R] Finₓ (n+1) → R := (extend_by_zero.linear_map R cast_succ).comp f
+  let g : (Finₓ (n + 1) → R) →ₗ[R] Finₓ (n + 1) → R := (extend_by_zero.linear_map R cast_succ).comp f
   have hg : injective g := (extend_injective (RelEmbedding.injective cast_succ) 0).comp hf
   have hnex : ¬∃ i : Finₓ n, cast_succ i = last n := fun ⟨i, hi⟩ => ne_of_ltₓ (cast_succ_lt_last i) hi
   let a₀ := (minpoly R g).coeff 0

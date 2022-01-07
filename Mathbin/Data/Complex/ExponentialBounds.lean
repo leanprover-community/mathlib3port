@@ -10,7 +10,7 @@ namespace Real
 
 open IsAbsoluteValue Finset CauSeq Complex
 
-theorem exp_one_near_10 : |exp 1 - 2244083 / 825552| ≤ 1 / (10^10) := by
+theorem exp_one_near_10 : |exp 1 - 2244083 / 825552| ≤ 1 / 10 ^ 10 := by
   apply exp_approx_start
   iterate 13 
     refine'
@@ -33,7 +33,7 @@ theorem exp_one_near_10 : |exp 1 - 2244083 / 825552| ≤ 1 / (10^10) := by
       _
   rw [_root_.abs_one, abs_of_pos] <;> norm_num1
 
-theorem exp_one_near_20 : |exp 1 - 363916618873 / 133877442384| ≤ 1 / (10^20) := by
+theorem exp_one_near_20 : |exp 1 - 363916618873 / 133877442384| ≤ 1 / 10 ^ 20 := by
   apply exp_approx_start
   iterate 21 
     refine'
@@ -79,8 +79,8 @@ theorem exp_neg_one_lt_d9 : exp (-1) < 0.3678794412 := by
   all_goals
     norm_num
 
-theorem log_two_near_10 : |log 2 - 287209 / 414355| ≤ 1 / (10^10) := by
-  suffices |log 2 - 287209 / 414355| ≤ (1 / 17179869184)+1 / (10^10) - 1 / (2^34)by
+theorem log_two_near_10 : |log 2 - 287209 / 414355| ≤ 1 / 10 ^ 10 := by
+  suffices |log 2 - 287209 / 414355| ≤ 1 / 17179869184 + (1 / 10 ^ 10 - 1 / 2 ^ 34) by
     norm_num1  at *
     assumption
   have t : |(2⁻¹ : ℝ)| = 2⁻¹ := by
@@ -88,7 +88,7 @@ theorem log_two_near_10 : |log 2 - 287209 / 414355| ≤ 1 / (10^10) := by
     norm_num
   have z :=
     Real.abs_log_sub_add_sum_range_le
-      (show |(2⁻¹ : ℝ)| < 1by
+      (show |(2⁻¹ : ℝ)| < 1 by
         rw [t]
         norm_num)
       34

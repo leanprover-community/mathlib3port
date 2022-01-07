@@ -26,25 +26,25 @@ instance [Nontrivial R] : Infinite (Polynomial R) :=
 
 theorem card_support_le_one_iff_monomial {f : Polynomial R} : Finset.card f.support ≤ 1 ↔ ∃ n a, f = monomial n a := by
   constructor
-  ·
-    intro H
+  · intro H
     rw [Finset.card_le_one_iff_subset_singleton] at H
     rcases H with ⟨n, hn⟩
     refine' ⟨n, f.coeff n, _⟩
     ext i
     by_cases' hi : i = n
-    ·
-      simp [hi, coeff_monomial]
-    ·
-      have : f.coeff i = 0 := by
+    · simp [hi, coeff_monomial]
+      
+    · have : f.coeff i = 0 := by
         rw [← not_mem_support_iff]
         exact fun hi' => hi (Finset.mem_singleton.1 (hn hi'))
       simp [this, Ne.symm hi, coeff_monomial]
-  ·
-    rintro ⟨n, a, rfl⟩
+      
+    
+  · rintro ⟨n, a, rfl⟩
     rw [← Finset.card_singleton n]
     apply Finset.card_le_of_subset
     exact support_monomial' _ _
+    
 
 theorem ring_hom_ext {S} [Semiringₓ S] {f g : Polynomial R →+* S} (h₁ : ∀ a, f (C a) = g (C a)) (h₂ : f X = g X) :
     f = g := by
@@ -52,22 +52,20 @@ theorem ring_hom_ext {S} [Semiringₓ S] {f g : Polynomial R →+* S} (h₁ : �
   set g' := g.comp (to_finsupp_iso R).symm.toRingHom with hg'
   have A : f' = g' := by
     ext
-    ·
-      simp [h₁, RingEquiv.to_ring_hom_eq_coe]
-    ·
-      simpa [RingEquiv.to_ring_hom_eq_coe] using h₂
+    · simp [h₁, RingEquiv.to_ring_hom_eq_coe]
+      
+    · simpa [RingEquiv.to_ring_hom_eq_coe] using h₂
+      
   have B : f = f'.comp (to_finsupp_iso R) := by
-    ·
-      rw [hf', RingHom.comp_assoc]
-      ext x
-      simp only [RingEquiv.to_ring_hom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_app, RingHom.coe_comp,
-        RingEquiv.coe_to_ring_hom]
+    rw [hf', RingHom.comp_assoc]
+    ext x
+    simp only [RingEquiv.to_ring_hom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_app, RingHom.coe_comp,
+      RingEquiv.coe_to_ring_hom]
   have C : g = g'.comp (to_finsupp_iso R) := by
-    ·
-      rw [hg', RingHom.comp_assoc]
-      ext x
-      simp only [RingEquiv.to_ring_hom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_app, RingHom.coe_comp,
-        RingEquiv.coe_to_ring_hom]
+    rw [hg', RingHom.comp_assoc]
+    ext x
+    simp only [RingEquiv.to_ring_hom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_app, RingHom.coe_comp,
+      RingEquiv.coe_to_ring_hom]
   rw [B, C, A]
 
 @[ext]

@@ -102,32 +102,32 @@ The tactics perform the following parts of this proof scheme:
 
 namespace DeriveFintype
 
-/--  A step in the construction of `finset.univ` for a finite inductive type.
+/-- A step in the construction of `finset.univ` for a finite inductive type.
 We will set `enum` to the discriminant of the inductive type, so a `finset_above`
 represents a finset that enumerates all elements in a tail of the constructor list. -/
 def finset_above α (enum : α → ℕ) (n : ℕ) :=
   { s : Finset α // ∀, ∀ x ∈ s, ∀, n ≤ enum x }
 
-/--  Construct a fintype instance from a completed `finset_above`. -/
+/-- Construct a fintype instance from a completed `finset_above`. -/
 def mk_fintype {α} (enum : α → ℕ) (s : finset_above α enum 0) (H : ∀ x, x ∈ s.1) : Fintype α :=
   ⟨s.1, H⟩
 
-/--  This is the case for a simple variant (no arguments) in an inductive type. -/
-def finset_above.cons {α} {enum : α → ℕ} n (a : α) (h : enum a = n) (s : finset_above α enum (n+1)) :
+/-- This is the case for a simple variant (no arguments) in an inductive type. -/
+def finset_above.cons {α} {enum : α → ℕ} n (a : α) (h : enum a = n) (s : finset_above α enum (n + 1)) :
     finset_above α enum n := by
   refine' ⟨Finset.cons a s.1 _, _⟩
-  ·
-    intro h'
+  · intro h'
     have := s.2 _ h'
     rw [h] at this
     exact Nat.not_succ_le_selfₓ n this
-  ·
-    intro x h'
+    
+  · intro x h'
     rcases Finset.mem_cons.1 h' with (rfl | h')
-    ·
-      exact ge_of_eq h
-    ·
-      exact Nat.le_of_succ_leₓ (s.2 _ h')
+    · exact ge_of_eq h
+      
+    · exact Nat.le_of_succ_leₓ (s.2 _ h')
+      
+    
 
 theorem finset_above.mem_cons_self {α} {enum : α → ℕ} {n a h s} : a ∈ (@finset_above.cons α enum n a h s).1 :=
   Multiset.mem_cons_self _ _
@@ -136,7 +136,7 @@ theorem finset_above.mem_cons_of_mem {α} {enum : α → ℕ} {n a h s b} :
     b ∈ (s : finset_above _ _ _).1 → b ∈ (@finset_above.cons α enum n a h s).1 :=
   Multiset.mem_cons_of_mem
 
-/--  The base case is when we run out of variants; we just put an empty finset at the end. -/
+/-- The base case is when we run out of variants; we just put an empty finset at the end. -/
 def finset_above.nil {α} {enum : α → ℕ} n : finset_above α enum n :=
   ⟨∅, by
     rintro _ ⟨⟩⟩
@@ -144,14 +144,14 @@ def finset_above.nil {α} {enum : α → ℕ} n : finset_above α enum n :=
 instance α enum n : Inhabited (finset_above α enum n) :=
   ⟨finset_above.nil _⟩
 
-/--  This is a finset covering a nontrivial variant (with one or more constructor arguments).
+/-- This is a finset covering a nontrivial variant (with one or more constructor arguments).
 The property `P` here is `λ a, enum a = n` where `n` is the discriminant for the current
 variant. -/
 @[nolint has_inhabited_instance]
 def finset_in {α} (P : α → Prop) :=
   { s : Finset α // ∀, ∀ x ∈ s, ∀, P x }
 
-/--  To construct the finset, we use an injective map from the type `Γ`, which will be the
+/-- To construct the finset, we use an injective map from the type `Γ`, which will be the
 sigma over all constructor arguments. We use sigma instances and existing fintype instances
 to prove that `Γ` is a fintype, and construct the function `f` that maps `⟨a, b, c, ...⟩`
 to `C_n a b c ...` where `C_n` is the nth constructor, and `mem` asserts
@@ -165,23 +165,23 @@ theorem finset_in.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ �
     a ∈ (@finset_in.mk α P Γ s f inj mem).1 :=
   Finset.mem_map.2 ⟨_, Finset.mem_univ _, H⟩
 
-/--  For nontrivial variants, we split the constructor list into a `finset_in` component for the
+/-- For nontrivial variants, we split the constructor list into a `finset_in` component for the
 current constructor and a `finset_above` for the rest. -/
-def finset_above.union {α} {enum : α → ℕ} n (s : finset_in fun a => enum a = n) (t : finset_above α enum (n+1)) :
+def finset_above.union {α} {enum : α → ℕ} n (s : finset_in fun a => enum a = n) (t : finset_above α enum (n + 1)) :
     finset_above α enum n := by
   refine' ⟨Finset.disjUnion s.1 t.1 _, _⟩
-  ·
-    intro a hs ht
+  · intro a hs ht
     have := t.2 _ ht
     rw [s.2 _ hs] at this
     exact Nat.not_succ_le_selfₓ n this
-  ·
-    intro x h'
+    
+  · intro x h'
     rcases Finset.mem_disj_union.1 h' with (h' | h')
-    ·
-      exact ge_of_eq (s.2 _ h')
-    ·
-      exact Nat.le_of_succ_leₓ (t.2 _ h')
+    · exact ge_of_eq (s.2 _ h')
+      
+    · exact Nat.le_of_succ_leₓ (t.2 _ h')
+      
+    
 
 theorem finset_above.mem_union_left {α} {enum : α → ℕ} {n s t a} (H : a ∈ (s : finset_in _).1) :
     a ∈ (@finset_above.union α enum n s t).1 :=
@@ -199,7 +199,7 @@ open DeriveFintype Tactic Expr
 
 namespace DeriveFintype
 
-/--  Construct the term `Σ' (a:A) (b:B a) (c:C a b), unit` from
+/-- Construct the term `Σ' (a:A) (b:B a) (c:C a b), unit` from
 `Π (a:A) (b:B a), C a b → T` (the type of a constructor). -/
 unsafe def mk_sigma : expr → tactic expr
   | expr.pi n bi d b => do
@@ -208,7 +208,7 @@ unsafe def mk_sigma : expr → tactic expr
     tactic.mk_app `` Psigma [d, bind_lambda e p]
   | _ => pure (quote.1 Unit)
 
-/--  Prove the goal `(Σ' (a:A) (b:B a) (c:C a b), unit) → T`
+/-- Prove the goal `(Σ' (a:A) (b:B a) (c:C a b), unit) → T`
 (this is the function `f` in `finset_in.mk`) using recursive `psigma.elim`,
 finishing with the constructor. The two arguments are the type of the constructor,
 and the constructor term itself; as we recurse we add arguments
@@ -218,12 +218,12 @@ unsafe def mk_sigma_elim : expr → expr → tactic ℕ
   | expr.pi n bi d b, c => do
     refine (pquote.1 (@Psigma.elim (%%ₓd) _ _ _))
     let i ← intro_fresh n
-    (·+1) <$> mk_sigma_elim (expr.instantiate_var b i) (c i)
+    (· + 1) <$> mk_sigma_elim (expr.instantiate_var b i) (c i)
   | _, c => do
     intro1
     exact c $> 0
 
-/--  Prove the goal `a, b |- f a = f b → g a = g b` where `f` is the function we constructed in
+/-- Prove the goal `a, b |- f a = f b → g a = g b` where `f` is the function we constructed in
 `mk_sigma_elim`, and `g` is some other term that gets built up and eventually closed by
 reflexivity. Here `a` and `b` have sigma types so the proof approach is to case on `a` and `b`
 until the goal reduces to `C_n a1 ... am = C_n b1 ... bm → ⟨a1, ..., am⟩ = ⟨b1, ..., bm⟩`, at which
@@ -232,7 +232,7 @@ point cases on the equality reduces the problem to reflexivity.
 The arguments are the number `m` returned from `mk_sigma_elim`, and the hypotheses `a,b` that we
 need to case on. -/
 unsafe def mk_sigma_elim_inj : ℕ → expr → expr → tactic Unit
-  | m+1, x, y => do
+  | m + 1, x, y => do
     let [(_, [x1, x2])] ← cases x
     let [(_, [y1, y2])] ← cases y
     mk_sigma_elim_inj m x2 y2
@@ -243,16 +243,16 @@ unsafe def mk_sigma_elim_inj : ℕ → expr → expr → tactic Unit
     is.mmap' cases
     reflexivity
 
-/--  Prove the goal `a |- enum (f a) = n`, where `f` is the function constructed in `mk_sigma_elim`,
+/-- Prove the goal `a |- enum (f a) = n`, where `f` is the function constructed in `mk_sigma_elim`,
 and `enum` is a function that reduces to `n` on the constructor `C_n`. Here we just have to case on
 `a` `m` times, and then `reflexivity` finishes the proof. -/
 unsafe def mk_sigma_elim_eq : ℕ → expr → tactic Unit
-  | n+1, x => do
+  | n + 1, x => do
     let [(_, [x1, x2])] ← cases x
     mk_sigma_elim_eq n x2
   | 0, x => reflexivity
 
-/--  Prove the goal `|- finset_above T enum k`, where `T` is the inductive type and `enum` is the
+/-- Prove the goal `|- finset_above T enum k`, where `T` is the inductive type and `enum` is the
 discriminant function. The arguments are `args`, the parameters to the inductive type (and all
 constructors), `k`, the index of the current variant, and `cs`, the list of constructor names.
 This uses `finset_above.cons` for basic variants and `finset_above.union` for variants with
@@ -269,20 +269,20 @@ unsafe def mk_finset (ls : List level) (args : List expr) : ℕ → List Name �
         let n ← mk_sigma_elim t e
         intro1 >>= fun x => intro1 >>= mk_sigma_elim_inj n x
         intro1 >>= mk_sigma_elim_eq n
-        mk_finset (k+1) cs
+        mk_finset (k + 1) cs
       else do
         let c ← to_expr (pquote.1 (finset_above.cons (%%ₓreflect k) (%%ₓe))) tt ff
         apply c { NewGoals := new_goals.all }
         reflexivity
-        mk_finset (k+1) cs
+        mk_finset (k + 1) cs
   | k, [] => applyc `` finset_above.nil
 
-/--  Prove the goal `|- Σ' (a:A) (b: B a) (c:C a b), unit` given a list of terms `a, b, c`. -/
+/-- Prove the goal `|- Σ' (a:A) (b: B a) (c:C a b), unit` given a list of terms `a, b, c`. -/
 unsafe def mk_sigma_mem : List expr → tactic Unit
   | x :: xs => fconstructor >> exact x >> mk_sigma_mem xs
   | [] => fconstructor $> ()
 
-/--  This function is called to prove `a : T |- a ∈ S.1` where `S` is the `finset_above` constructed
+/-- This function is called to prove `a : T |- a ∈ S.1` where `S` is the `finset_above` constructed
 by `mk_finset`, after the initial cases on `a : T`, producing a list of subgoals. For each case,
 we have to navigate past all the variants that don't apply (which is what the `tac` input tactic
 does), and then call either `finset_above.mem_cons_self` for trivial variants or
@@ -305,7 +305,7 @@ end DeriveFintype
 
 open Tactic.DeriveFintype
 
-/--  Proves `|- fintype T` where `T` is a non-recursive inductive type with no indices,
+/-- Proves `|- fintype T` where `T` is a non-recursive inductive type with no indices,
 where all arguments to all constructors are fintypes. -/
 unsafe def mk_fintype_instance : tactic Unit := do
   intros
@@ -321,8 +321,7 @@ unsafe def mk_fintype_instance : tactic Unit := do
   mk_finset ls args 0 cs
   intro1 >>= cases >>= mk_finset_total skip
 
-/-- 
-Tries to derive a `fintype` instance for inductives and structures.
+/-- Tries to derive a `fintype` instance for inductives and structures.
 
 For example:
 ```

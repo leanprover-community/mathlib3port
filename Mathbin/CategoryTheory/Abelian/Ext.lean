@@ -31,8 +31,7 @@ open CategoryTheory
 
 variable (R : Type _) [Ringₓ R] (C : Type _) [category C] [abelian C] [linear R C] [enough_projectives C]
 
-/-- 
-`Ext R C n` is defined by deriving in the frst argument of `(X, Y) ↦ Module.of R (unop X ⟶ Y)`
+/-- `Ext R C n` is defined by deriving in the frst argument of `(X, Y) ↦ Module.of R (unop X ⟶ Y)`
 (which is the second argument of `linear_yoneda`).
 -/
 @[simps]
@@ -54,8 +53,8 @@ def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
 
 open_locale ZeroObject
 
-/--  If `X : C` is projective and `n : ℕ`, then `Ext^(n + 1) X Y ≅ 0` for any `Y`. -/
-def extSuccOfProjective (X Y : C) [projective X] (n : ℕ) : ((ext R C (n+1)).obj (Opposite.op X)).obj Y ≅ 0 :=
+/-- If `X : C` is projective and `n : ℕ`, then `Ext^(n + 1) X Y ≅ 0` for any `Y`. -/
+def extSuccOfProjective (X Y : C) [projective X] (n : ℕ) : ((ext R C (n + 1)).obj (Opposite.op X)).obj Y ≅ 0 :=
   let E := (((linear_yoneda R C).obj Y).rightOp.leftDerivedObjProjectiveSucc n X).unop.symm
   E ≪≫
     { Hom := 0, inv := 0,

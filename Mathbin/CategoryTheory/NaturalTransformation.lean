@@ -31,8 +31,7 @@ universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
 variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
-/-- 
-`nat_trans F G` represents a natural transformation between functors `F` and `G`.
+/-- `nat_trans F G` represents a natural transformation between functors `F` and `G`.
 
 The field `app` provides the components of the natural transformation.
 
@@ -54,9 +53,9 @@ theorem congr_app {F G : C ⥤ D} {α β : nat_trans F G} (h : α = β) (X : C) 
 
 namespace NatTrans
 
-/--  `nat_trans.id F` is the identity natural transformation on a functor `F`. -/
-protected def id (F : C ⥤ D) : nat_trans F F :=
-  { app := fun X => 𝟙 (F.obj X) }
+/-- `nat_trans.id F` is the identity natural transformation on a functor `F`. -/
+protected def id (F : C ⥤ D) : nat_trans F F where
+  app := fun X => 𝟙 (F.obj X)
 
 @[simp]
 theorem id_app' (F : C ⥤ D) (X : C) : (nat_trans.id F).app X = 𝟙 (F.obj X) :=
@@ -73,17 +72,16 @@ section
 
 variable {F G H I : C ⥤ D}
 
-/--  `vcomp α β` is the vertical compositions of natural transformations. -/
-def vcomp (α : nat_trans F G) (β : nat_trans G H) : nat_trans F H :=
-  { app := fun X => α.app X ≫ β.app X }
+/-- `vcomp α β` is the vertical compositions of natural transformations. -/
+def vcomp (α : nat_trans F G) (β : nat_trans G H) : nat_trans F H where
+  app := fun X => α.app X ≫ β.app X
 
 theorem vcomp_app (α : nat_trans F G) (β : nat_trans G H) (X : C) : (vcomp α β).app X = α.app X ≫ β.app X :=
   rfl
 
 end
 
-/-- 
-The diagram
+/-- The diagram
     F(f)      F(g)      F(h)
 F X ----> F Y ----> F U ----> F U
  |         |         |         |

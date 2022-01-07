@@ -31,20 +31,18 @@ universe u v
 
 namespace SlimCheck
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler monad
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler is_lawful_monad
-/--  Monad to generate random examples to test properties with.
+/-- Monad to generate random examples to test properties with.
 It has a `nat` parameter so that the caller can decide on the
 size of the examples. -/
 @[reducible]
 def gen (α : Type u) :=
-  ReaderTₓ (Ulift ℕ) Rand α deriving [anonymous], [anonymous]
+  ReaderTₓ (Ulift ℕ) Rand α deriving Monadₓ, IsLawfulMonad
 
 variable (α : Type u)
 
 local infixl:41 " .. " => Set.Icc
 
-/--  Execute a `gen` inside the `io` monad using `i` as the example
+/-- Execute a `gen` inside the `io` monad using `i` as the example
 size and with a fresh random number generator. -/
 def io.run_gen {α} (x : gen α) (i : ℕ) : Io α :=
   Io.runRand (x.run ⟨i⟩)
@@ -53,13 +51,13 @@ namespace Gen
 
 section Rand
 
-/--  Lift `random.random` to the `gen` monad. -/
+/-- Lift `random.random` to the `gen` monad. -/
 def choose_any [Random α] : gen α :=
   ⟨fun _ => Rand.random α⟩
 
 variable {α} [Preorderₓ α]
 
-/--  Lift `random.random_r` to the `gen` monad. -/
+/-- Lift `random.random_r` to the `gen` monad. -/
 def choose [BoundedRandom α] (x y : α) (p : x ≤ y) : gen (x .. y) :=
   ⟨fun _ => Rand.randomR x y p⟩
 
@@ -67,16 +65,16 @@ end Rand
 
 open Nat hiding choose
 
-/--  Generate a `nat` example between `x` and `y`. -/
+/-- Generate a `nat` example between `x` and `y`. -/
 def choose_nat (x y : ℕ) (p : x ≤ y) : gen (x .. y) :=
   choose x y p
 
-/--  Generate a `nat` example between `x` and `y`. -/
+/-- Generate a `nat` example between `x` and `y`. -/
 def choose_nat' (x y : ℕ) (p : x < y) : gen (Set.Ico x y) :=
   have : ∀ i, x < i → i ≤ y → i.pred < y := fun i h₀ h₁ =>
     show i.pred.succ ≤ y by
       rwa [succ_pred_eq_of_pos] <;> apply lt_of_le_of_ltₓ (Nat.zero_leₓ _) h₀
-  (Subtype.map pred fun i h : (x+1) ≤ i ∧ i ≤ y => ⟨le_pred_of_lt h.1, this _ h.1 h.2⟩) <$> choose (x+1) y p
+  (Subtype.map pred fun i h : x + 1 ≤ i ∧ i ≤ y => ⟨le_pred_of_lt h.1, this _ h.1 h.2⟩) <$> choose (x + 1) y p
 
 open Nat
 
@@ -90,29 +88,29 @@ instance : HasOrelse gen.{u} :=
 
 variable {α}
 
-/--  Get access to the size parameter of the `gen` monad. For
+/-- Get access to the size parameter of the `gen` monad. For
 reasons of universe polymorphism, it is specified in
 continuation passing style. -/
 def sized (cmd : ℕ → gen α) : gen α :=
   ⟨fun ⟨sz⟩ => ReaderTₓ.run (cmd sz) ⟨sz⟩⟩
 
-/--  Apply a function to the size parameter. -/
+/-- Apply a function to the size parameter. -/
 def resize (f : ℕ → ℕ) (cmd : gen α) : gen α :=
   ⟨fun ⟨sz⟩ => ReaderTₓ.run cmd ⟨f sz⟩⟩
 
-/--  Create `n` examples using `cmd`. -/
+/-- Create `n` examples using `cmd`. -/
 def vector_of : ∀ n : ℕ cmd : gen α, gen (Vector α n)
   | 0, _ => return Vector.nil
-  | succ n, cmd => (Vector.cons <$> cmd)<*>vector_of n cmd
+  | succ n, cmd => Vector.cons <$> cmd <*> vector_of n cmd
 
-/--  Create a list of examples using `cmd`. The size is controlled
+/-- Create a list of examples using `cmd`. The size is controlled
 by the size parameter of `gen`. -/
 def list_of (cmd : gen α) : gen (List α) :=
   sized $ fun sz => do
     do
       let ⟨n⟩ ←
         Uliftable.up $
-            choose_nat 0 (sz+1)
+            choose_nat 0 (sz + 1)
               (by
                 decide)
       let v ← vector_of n.val cmd
@@ -120,18 +118,17 @@ def list_of (cmd : gen α) : gen (List α) :=
 
 open Ulift
 
-/--  Given a list of example generators, choose one to create an example. -/
+/-- Given a list of example generators, choose one to create an example. -/
 def one_of (xs : List (gen α)) (pos : 0 < xs.length) : gen α := do
   let ⟨⟨n, h, h'⟩⟩ ← Uliftable.up $ choose_nat' 0 xs.length Pos
   List.nthLe xs n h'
 
-/--  Given a list of example generators, choose one to create an example. -/
+/-- Given a list of example generators, choose one to create an example. -/
 def elements (xs : List α) (pos : 0 < xs.length) : gen α := do
   let ⟨⟨n, h₀, h₁⟩⟩ ← Uliftable.up $ choose_nat' 0 xs.length Pos
   pure $ List.nthLe xs n h₁
 
-/-- 
-`freq_aux xs i _` takes a weighted list of generator and a number meant to select one of the
+/-- `freq_aux xs i _` takes a weighted list of generator and a number meant to select one of the
 generators.
 
 If we consider `freq_aux [(1, gena), (3, genb), (5, genc)] 4 _`, we choose a generator by splitting
@@ -148,8 +145,7 @@ def freq_aux : ∀ xs : List (ℕ+ × gen α) i, i < (xs.map (Subtype.val ∘ Pr
           rw [tsub_lt_iff_right (le_of_not_gtₓ h')]
           simpa [List.sum_cons, add_commₓ] using h)
 
-/-- 
-`freq [(1, gena), (3, genb), (5, genc)] _` will choose one of `gena`, `genb`, `genc` with
+/-- `freq [(1, gena), (3, genb), (5, genc)] _` will choose one of `gena`, `genb`, `genc` with
 probabilities proportional to the number accompanying them. In this example, the sum of
 those numbers is 9, `gena` will be chosen with probability ~1/9, `genb` with ~3/9 (i.e. 1/3)
 and `genc` with probability 5/9.
@@ -169,7 +165,7 @@ def freq (xs : List (ℕ+ × gen α)) (pos : 0 < xs.length) : gen α :=
       (by
         rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁ <;> exact ha)
 
-/--  Generate a random permutation of a given list. -/
+/-- Generate a random permutation of a given list. -/
 def permutation_of {α : Type u} : ∀ xs : List α, gen (Subtype $ List.Perm xs)
   | [] => pure ⟨[], List.Perm.nil⟩
   | x :: xs => do

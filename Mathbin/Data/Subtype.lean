@@ -25,13 +25,13 @@ namespace Subtype
 
 variable {α β γ : Sort _} {p q : α → Prop}
 
-/--  See Note [custom simps projection] -/
+/-- See Note [custom simps projection] -/
 def simps.coe (x : Subtype p) : α :=
   x
 
 initialize_simps_projections Subtype (val → coe)
 
-/--  A version of `x.property` or `x.2` where `p` is syntactically applied to the coercion of `x`
+/-- A version of `x.property` or `x.2` where `p` is syntactically applied to the coercion of `x`
   instead of `x.1`. A similar result is `subtype.mem` in `data.set.basic`. -/
 theorem prop (x : Subtype p) : p x :=
   x.2
@@ -44,7 +44,7 @@ theorem val_eq_coe {x : Subtype p} : x.1 = ↑x :=
 protected theorem forall {q : { a // p a } → Prop} : (∀ x, q x) ↔ ∀ a b, q ⟨a, b⟩ :=
   ⟨fun h a b => h ⟨a, b⟩, fun h ⟨a, b⟩ => h a b⟩
 
-/--  An alternative version of `subtype.forall`. This one is useful if Lean cannot figure out `q`
+/-- An alternative version of `subtype.forall`. This one is useful if Lean cannot figure out `q`
   when using `subtype.forall` from right to left. -/
 protected theorem forall' {q : ∀ x, p x → Prop} : (∀ x h, q x h) ↔ ∀ x : { a // p a }, q x x.2 :=
   (@Subtype.forall _ _ fun x => q x.1 x.2).symm
@@ -53,7 +53,7 @@ protected theorem forall' {q : ∀ x, p x → Prop} : (∀ x h, q x h) ↔ ∀ x
 protected theorem exists {q : { a // p a } → Prop} : (∃ x, q x) ↔ ∃ a b, q ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 
-/--  An alternative version of `subtype.exists`. This one is useful if Lean cannot figure out `q`
+/-- An alternative version of `subtype.exists`. This one is useful if Lean cannot figure out `q`
   when using `subtype.exists` from right to left. -/
 protected theorem exists' {q : ∀ x, p x → Prop} : (∃ x h, q x h) ↔ ∃ x : { a // p a }, q x x.2 :=
   (@Subtype.exists _ _ fun x => q x.1 x.2).symm
@@ -100,7 +100,7 @@ theorem coe_injective : injective (coeₓ : Subtype p → α) := fun a b => Subt
 theorem val_injective : injective (@val _ p) :=
   coe_injective
 
-/--  Restrict a (dependent) function to a subtype -/
+/-- Restrict a (dependent) function to a subtype -/
 def restrict {α} {β : α → Type _} (f : ∀ x, β x) (p : α → Prop) (x : Subtype p) : β x.1 :=
   f x
 
@@ -120,7 +120,7 @@ theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β 
   rintro ⟨x, hx⟩
   exact dif_pos hx
 
-/--  Defining a map into a subtype, this can be seen as an "coinduction principle" of `subtype`-/
+/-- Defining a map into a subtype, this can be seen as an "coinduction principle" of `subtype`-/
 @[simps]
 def coind {α β} (f : α → β) {p : β → Prop} (h : ∀ a, p (f a)) : α → Subtype p := fun a => ⟨f a, h a⟩
 
@@ -138,7 +138,7 @@ theorem coind_bijective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p 
     bijective (coind f h) :=
   ⟨coind_injective h hf.1, coind_surjective h hf.2⟩
 
-/--  Restriction of a function to a function on subtypes. -/
+/-- Restriction of a function to a function on subtypes. -/
 @[simps]
 def map {p : α → Prop} {q : β → Prop} (f : α → β) (h : ∀ a, p a → q (f a)) : Subtype p → Subtype q := fun x =>
   ⟨f x, h x x.prop⟩

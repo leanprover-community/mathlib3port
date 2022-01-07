@@ -76,13 +76,13 @@ theorem map_bind (x : m α) {g : α → m β} {f : β → γ} : f <$> (x >>= g) 
   rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [bind_pure_comp_eq_map]
 
 theorem seq_bind_eq (x : m α) {g : β → m γ} {f : α → β} : f <$> x >>= g = x >>= g ∘ f :=
-  show bind (f <$> x) g = bind x (g ∘ f)by
+  show bind (f <$> x) g = bind x (g ∘ f) by
     rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [pure_bind]
 
 theorem seq_eq_bind_mapₓ {x : m α} {f : m (α → β)} : f <*> x = f >>= · <$> x :=
   (bind_map_eq_seq f x).symm
 
-/--  This is the Kleisli composition -/
+/-- This is the Kleisli composition -/
 @[reducible]
 def fish {m} [Monadₓ m] {α β γ} (f : α → m β) (g : β → m γ) := fun x => f x >>= g
 
@@ -198,9 +198,10 @@ open Functor
 
 theorem IsCommApplicative.commutative_map {m : Type _ → Type _} [Applicativeₓ m] [IsCommApplicative m] {α β γ} (a : m α)
     (b : m β) {f : α → β → γ} : f <$> a <*> b = flip f <$> b <*> a :=
-  calc f <$> a <*> b = (fun p : α × β => f p.1 p.2) <$> (Prod.mk <$> a <*> b) := by
-    simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
+  calc
+    f <$> a <*> b = (fun p : α × β => f p.1 p.2) <$> (Prod.mk <$> a <*> b) := by
+      simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
     _ = (fun b a => f a b) <$> b <*> a := by
-    rw [IsCommApplicative.commutative_prod] <;> simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
+      rw [IsCommApplicative.commutative_prod] <;> simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
     
 

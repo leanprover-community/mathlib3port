@@ -18,7 +18,7 @@ variable {α : Type _} {β : Type _}
 
 open_locale Classical
 
-/--  Predicate typeclass for expressing that a type is not reduced to a single element. In rings,
+/-- Predicate typeclass for expressing that a type is not reduced to a single element. In rings,
 this is equivalent to `0 ≠ 1`. In vector spaces, this is equivalent to positive dimension. -/
 class Nontrivial (α : Type _) : Prop where
   exists_pair_ne : ∃ x y : α, x ≠ y
@@ -32,11 +32,11 @@ theorem exists_pair_ne (α : Type _) [Nontrivial α] : ∃ x y : α, x ≠ y :=
 protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) : ∃ y, y ≠ x := by
   rcases exists_pair_ne α with ⟨y, y', h⟩
   by_cases' hx : x = y
-  ·
-    rw [← hx] at h
+  · rw [← hx] at h
     exact ⟨y', h.symm⟩
-  ·
-    exact ⟨y, Ne.symm hx⟩
+    
+  · exact ⟨y, Ne.symm hx⟩
+    
 
 theorem exists_ne [Nontrivial α] (x : α) : ∃ y, y ≠ x := by
   classical <;> exact Decidable.exists_ne x
@@ -57,8 +57,7 @@ theorem Subtype.nontrivial_iff_exists_ne (p : α → Prop) (x : Subtype p) :
 instance : Nontrivial Prop :=
   ⟨⟨True, False, true_ne_false⟩⟩
 
-/-- 
-See Note [lower instance priority]
+/-- See Note [lower instance priority]
 
 Note that since this and `nonempty_of_inhabited` are the most "obvious" way to find a nonempty
 instance if no direct instance can be found, we give this a higher priority than the usual `100`.
@@ -69,7 +68,7 @@ instance (priority := 500) Nontrivial.to_nonempty [Nontrivial α] : Nonempty α 
 
 attribute [instance] nonempty_of_inhabited
 
-/--  An inhabited type is either nontrivial, or has a unique element. -/
+/-- An inhabited type is either nontrivial, or has a unique element. -/
 noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] : Psum (Nontrivial α) (Unique α) :=
   if h : Nontrivial α then Psum.inl h
   else
@@ -94,7 +93,7 @@ theorem not_subsingleton α [h : Nontrivial α] : ¬Subsingleton α :=
   let ⟨⟨x, y, hxy⟩⟩ := h
   fun ⟨h'⟩ => hxy $ h' x y
 
-/--  A type is either a subsingleton or nontrivial. -/
+/-- A type is either a subsingleton or nontrivial. -/
 theorem subsingleton_or_nontrivial (α : Type _) : Subsingleton α ∨ Nontrivial α := by
   rw [← not_nontrivial_iff_subsingleton, or_comm]
   exact Classical.em _
@@ -107,33 +106,32 @@ instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by
   inhabit α
   use none, some (default α)
 
-/--  Pushforward a `nontrivial` instance along an injective function. -/
+/-- Pushforward a `nontrivial` instance along an injective function. -/
 protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β} (hf : Function.Injective f) : Nontrivial β :=
   let ⟨x, y, h⟩ := exists_pair_ne α
   ⟨⟨f x, f y, hf.ne h⟩⟩
 
-/--  Pullback a `nontrivial` instance along a surjective function. -/
+/-- Pullback a `nontrivial` instance along a surjective function. -/
 protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β} (hf : Function.Surjective f) :
     Nontrivial α := by
   rcases exists_pair_ne β with ⟨x, y, h⟩
   rcases hf x with ⟨x', hx'⟩
   rcases hf y with ⟨y', hy'⟩
   have : x' ≠ y' := by
-    ·
-      contrapose! h
-      rw [← hx', ← hy', h]
+    contrapose! h
+    rw [← hx', ← hy', h]
   exact ⟨⟨x', y', this⟩⟩
 
-/--  An injective function from a nontrivial type has an argument at
+/-- An injective function from a nontrivial type has an argument at
 which it does not take a given value. -/
 protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β} (hf : Function.Injective f) (y : β) :
     ∃ x, f x ≠ y := by
   rcases exists_pair_ne α with ⟨x₁, x₂, hx⟩
   by_cases' h : f x₂ = y
-  ·
-    exact ⟨x₁, (hf.ne_iff' h).2 hx⟩
-  ·
-    exact ⟨x₂, h⟩
+  · exact ⟨x₁, (hf.ne_iff' h).2 hx⟩
+    
+  · exact ⟨x₂, h⟩
+    
 
 instance nontrivial_prod_right [Nonempty α] [Nontrivial β] : Nontrivial (α × β) :=
   Prod.snd_surjective.Nontrivial
@@ -145,12 +143,11 @@ namespace Pi
 
 variable {I : Type _} {f : I → Type _}
 
-/--  A pi type is nontrivial if it's nonempty everywhere and nontrivial somewhere. -/
+/-- A pi type is nontrivial if it's nonempty everywhere and nontrivial somewhere. -/
 theorem nontrivial_at (i' : I) [inst : ∀ i, Nonempty (f i)] [Nontrivial (f i')] : Nontrivial (∀ i : I, f i) := by
   classical <;> exact (Function.update_injective (fun i => Classical.choice (inst i)) i').Nontrivial
 
-/-- 
-As a convenience, provide an instance automatically if `(f (default I))` is nontrivial.
+/-- As a convenience, provide an instance automatically if `(f (default I))` is nontrivial.
 
 If a different index has the non-trivial type, then use `haveI := nontrivial_at that_index`.
 -/
@@ -172,8 +169,7 @@ attribute [nontriviality] eq_iff_true_of_subsingleton Subsingleton.le
 
 namespace Tactic
 
-/-- 
-Tries to generate a `nontrivial α` instance by performing case analysis on
+/-- Tries to generate a `nontrivial α` instance by performing case analysis on
 `subsingleton_or_nontrivial α`,
 attempting to discharge the subsingleton branch using lemmas with `@[nontriviality]` attribute,
 including `subsingleton.le` and `eq_iff_true_of_subsingleton`.
@@ -188,9 +184,8 @@ unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_
       fail f! "Could not prove goal assuming `subsingleton {α}`"
   reset_instance_cache
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
 and local hypotheses.
 -/
 unsafe def nontriviality_by_assumption (α : expr) : tactic Unit := do
@@ -207,8 +202,7 @@ open Tactic
 
 setup_tactic_parser
 
-/-- 
-Attempts to generate a `nontrivial α` hypothesis.
+/-- Attempts to generate a `nontrivial α` hypothesis.
 
 The tactic first looks for an instance using `apply_instance`.
 

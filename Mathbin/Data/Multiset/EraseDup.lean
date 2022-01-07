@@ -14,7 +14,7 @@ variable {α β : Type _} [DecidableEq α]
 /-! ### erase_dup -/
 
 
-/--  `erase_dup s` removes duplicates from `s`, yielding a `nodup` multiset. -/
+/-- `erase_dup s` removes duplicates from `s`, yielding a `nodup` multiset. -/
 def erase_dup (s : Multiset α) : Multiset α :=
   Quot.liftOn s (fun l => (l.erase_dup : Multiset α)) fun s t p => Quot.sound p.erase_dup
 

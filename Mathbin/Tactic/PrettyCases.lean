@@ -36,7 +36,7 @@ end
 
 namespace Tactic
 
-/--  Query the proof goal and print the skeleton of a proof by cases. -/
+/-- Query the proof goal and print the skeleton of a proof by cases. -/
 unsafe def pretty_cases_advice : tactic Stringₓ :=
   retrieve $ do
     let gs ← get_goals
@@ -61,8 +61,7 @@ unsafe def pretty_cases_advice : tactic Stringₓ :=
 
 namespace Interactive
 
-/-- 
-Query the proof goal and print the skeleton of a proof by
+/-- Query the proof goal and print the skeleton of a proof by
 cases.
 
 For example, let us consider the following proof:

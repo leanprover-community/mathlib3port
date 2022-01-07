@@ -38,11 +38,11 @@ noncomputable instance : Fintype (ClassGroup (ring_of_integers Fq F) F) :=
 
 end RingOfIntegers
 
-/--  The class number in a function field is the (finite) cardinality of the class group. -/
+/-- The class number in a function field is the (finite) cardinality of the class group. -/
 noncomputable def class_number : ℕ :=
   Fintype.card (ClassGroup (ring_of_integers Fq F) F)
 
-/--  The class number of a function field is `1` iff the ring of integers is a PID. -/
+/-- The class number of a function field is `1` iff the ring of integers is a PID. -/
 theorem class_number_eq_one_iff : class_number Fq F = 1 ↔ IsPrincipalIdealRing (ring_of_integers Fq F) :=
   card_class_group_eq_one_iff
 

@@ -6,7 +6,7 @@ namespace Omega
 
 namespace Nat
 
-/--  The shadow syntax for arithmetic terms. All constants are reified to `cst`
+/-- The shadow syntax for arithmetic terms. All constants are reified to `cst`
 (e.g., `5` is reified to `cst 5`) and all other atomic terms are reified to
 `exp` (e.g., `5 * (list.length l)` is reified to `exp 5 \`(list.length l)`).
 `exp` accepts a coefficient of type `nat` as its first argument because
@@ -17,10 +17,7 @@ unsafe inductive exprterm : Type
   | add : exprterm → exprterm → exprterm
   | sub : exprterm → exprterm → exprterm
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_reflect
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/--  Similar to `exprterm`, except that all exprs are now replaced with
+/-- Similar to `exprterm`, except that all exprs are now replaced with
 de Brujin indices of type `nat`. This is akin to generalizing over
 the terms represented by the said exprs. -/
 inductive preterm : Type
@@ -28,7 +25,7 @@ inductive preterm : Type
   | var : Nat → Nat → preterm
   | add : preterm → preterm → preterm
   | sub : preterm → preterm → preterm
-  deriving [anonymous], [anonymous], [anonymous]
+  deriving has_reflect, DecidableEq, Inhabited
 
 localized [Omega.Nat] notation "&" k => Omega.Nat.Preterm.cst k
 
@@ -40,16 +37,16 @@ localized [Omega.Nat] notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/--  Helper tactic for proof by induction over preterms -/
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- Helper tactic for proof by induction over preterms -/
 unsafe def induce (tac : tactic Unit := tactic.skip) : tactic Unit :=
   sorry
 
-/--  Preterm evaluation -/
+/-- Preterm evaluation -/
 def val (v : Nat → Nat) : preterm → Nat
   | &i => i
-  | i ** n => if i = 1 then v n else v n*i
-  | t1 +* t2 => t1.val+t2.val
+  | i ** n => if i = 1 then v n else v n * i
+  | t1 +* t2 => t1.val + t2.val
   | t1 -* t2 => t1.val - t2.val
 
 @[simp]
@@ -57,34 +54,34 @@ theorem val_const {v : Nat → Nat} {m : Nat} : (&m).val v = m :=
   rfl
 
 @[simp]
-theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m*v n := by
+theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m * v n := by
   simp only [val]
   by_cases' h1 : m = 1
   rw [if_pos h1, h1, one_mulₓ]
   rw [if_neg h1, mul_commₓ]
 
 @[simp]
-theorem val_add {v : Nat → Nat} {t s : preterm} : (t +* s).val v = t.val v+s.val v :=
+theorem val_add {v : Nat → Nat} {t s : preterm} : (t +* s).val v = t.val v + s.val v :=
   rfl
 
 @[simp]
 theorem val_sub {v : Nat → Nat} {t s : preterm} : (t -* s).val v = t.val v - s.val v :=
   rfl
 
-/--  Fresh de Brujin index not used by any variable in argument -/
+/-- Fresh de Brujin index not used by any variable in argument -/
 def fresh_index : preterm → Nat
   | &_ => 0
-  | i ** n => n+1
+  | i ** n => n + 1
   | t1 +* t2 => max t1.fresh_index t2.fresh_index
   | t1 -* t2 => max t1.fresh_index t2.fresh_index
 
-/--  If variable assignments `v` and `w` agree on all variables that occur
+/-- If variable assignments `v` and `w` agree on all variables that occur
 in term `t`, the value of `t` under `v` and `w` are identical. -/
 theorem val_constant (v w : Nat → Nat) : ∀ t : preterm, (∀, ∀ x < t.fresh_index, ∀, v x = w x) → t.val v = t.val w
   | &n, h1 => rfl
   | m ** n, h1 => by
     simp only [val_var]
-    apply congr_argₓ fun y => m*y
+    apply congr_argₓ fun y => m * y
     apply h1 _ (lt_add_one _)
   | t +* s, h1 => by
     simp only [val_add]
@@ -107,7 +104,7 @@ def reprₓ : preterm → Stringₓ
 def add_one (t : preterm) : preterm :=
   t +* &1
 
-/--  Preterm is free of subtractions -/
+/-- Preterm is free of subtractions -/
 def sub_free : preterm → Prop
   | &m => True
   | m ** n => True
@@ -118,7 +115,7 @@ end Preterm
 
 open_locale List.Func
 
-/--  Return a term (which is in canonical form by definition)
+/-- Return a term (which is in canonical form by definition)
     that is equivalent to the input preterm -/
 @[simp]
 def canonize : preterm → term

@@ -46,7 +46,7 @@ For `a : α`, `o : part α`, `a ∈ o` means that `o` is defined and equal to `a
 -/
 
 
-/--  `part α` is the type of "partial values" of type `α`. It
+/-- `part α` is the type of "partial values" of type `α`. It
   is similar to `option α` except the domain condition can be an
   arbitrary proposition, not necessarily decidable. -/
 structure Part.{u} (α : Type u) : Type u where
@@ -57,23 +57,22 @@ namespace Part
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
-/--  Convert a `part α` with a decidable domain to an option -/
+/-- Convert a `part α` with a decidable domain to an option -/
 def to_option (o : Part α) [Decidable o.dom] : Option α :=
   if h : dom o then some (o.get h) else none
 
-/--  `part` extensionality -/
+/-- `part` extensionality -/
 theorem ext' : ∀ {o p : Part α} H1 : o.dom ↔ p.dom H2 : ∀ h₁ h₂, o.get h₁ = p.get h₂, o = p
-  | ⟨od, o⟩, ⟨pd, p⟩, H1, H2 =>
+  | ⟨od, o⟩, ⟨pd, p⟩, H1, H2 => by
     have t : od = pd := propext H1
-    by
     cases t <;> rw [show o = p from funext $ fun p => H2 p p]
 
-/--  `part` eta expansion -/
+/-- `part` eta expansion -/
 @[simp]
 theorem eta : ∀ o : Part α, (⟨o.dom, fun h => o.get h⟩ : Part α) = o
   | ⟨h, f⟩ => rfl
 
-/--  `a ∈ o` means that `o` is defined and equal to `a` -/
+/-- `a ∈ o` means that `o` is defined and equal to `a` -/
 protected def mem (a : α) (o : Part α) : Prop :=
   ∃ h, o.get h = a
 
@@ -89,12 +88,12 @@ theorem dom_iff_mem : ∀ {o : Part α}, o.dom ↔ ∃ y, y ∈ o
 theorem get_mem {o : Part α} h : get o h ∈ o :=
   ⟨_, rfl⟩
 
-/--  `part` extensionality -/
+/-- `part` extensionality -/
 @[ext]
 theorem ext {o p : Part α} (H : ∀ a, a ∈ o ↔ a ∈ p) : o = p :=
   ext' ⟨fun h => ((H _).1 ⟨h, rfl⟩).fst, fun h => ((H _).2 ⟨h, rfl⟩).fst⟩ $ fun a b => ((H _).2 ⟨_, rfl⟩).snd
 
-/--  The `none` value in `part` has a `false` domain and an empty function. -/
+/-- The `none` value in `part` has a `false` domain and an empty function. -/
 def none : Part α :=
   ⟨False, False.ndrec _⟩
 
@@ -104,7 +103,7 @@ instance : Inhabited (Part α) :=
 @[simp]
 theorem not_mem_none (a : α) : a ∉ @none α := fun h => h.fst
 
-/--  The `some a` value in `part` has a `true` domain and the
+/-- The `some a` value in `part` has a `true` domain and the
   function returns `a`. -/
 def some (a : α) : Part α :=
   ⟨True, fun _ => a⟩
@@ -117,125 +116,7 @@ theorem mem.left_unique : Relator.LeftUnique (· ∈ · : α → Part α → Pro
 theorem get_eq_of_mem {o : Part α} {a} (h : a ∈ o) h' : get o h' = a :=
   mem_unique ⟨_, rfl⟩ h
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [(Command.protected "protected")] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `Subsingleton [])
-  (Command.declSig
-   [(Term.explicitBinder "(" [`o] [":" (Term.app `Part [`α])] [] ")")]
-   (Term.typeSpec
-    ":"
-    (Term.app `Set.Subsingleton [(Set.«term{_|_}» "{" `a "|" (Init.Core.«term_∈_» `a " ∈ " `o) "}")])))
-  (Command.declValSimple
-   ":="
-   (Term.fun "fun" (Term.basicFun [(Term.simpleBinder [`a `ha `b `hb] [])] "=>" (Term.app `mem_unique [`ha `hb])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun "fun" (Term.basicFun [(Term.simpleBinder [`a `ha `b `hb] [])] "=>" (Term.app `mem_unique [`ha `hb])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `mem_unique [`ha `hb])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hb
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `ha
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `mem_unique
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Term.app `Set.Subsingleton [(Set.«term{_|_}» "{" `a "|" (Init.Core.«term_∈_» `a " ∈ " `o) "}")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}» "{" `a "|" (Init.Core.«term_∈_» `a " ∈ " `o) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Init.Core.«term_∈_» `a " ∈ " `o)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_∈_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `o
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-protected theorem Subsingleton ( o : Part α ) : Set.Subsingleton { a | a ∈ o } := fun a ha b hb => mem_unique ha hb
+protected theorem Subsingleton (o : Part α) : Set.Subsingleton { a | a ∈ o } := fun a ha b hb => mem_unique ha hb
 
 @[simp]
 theorem get_some {a : α} (ha : (some a).Dom) : get (some a) ha = a :=
@@ -273,12 +154,12 @@ theorem none_ne_some (x : α) : none ≠ some x :=
 
 theorem ne_none_iff {o : Part α} : o ≠ none ↔ ∃ x, o = some x := by
   constructor
-  ·
-    rw [Ne, eq_none_iff', not_not]
+  · rw [Ne, eq_none_iff', not_not]
     exact fun h => ⟨o.get h, eq_some_iff.2 (get_mem h)⟩
-  ·
-    rintro ⟨x, rfl⟩
+    
+  · rintro ⟨x, rfl⟩
     apply some_ne_none
+    
 
 theorem eq_none_or_eq_some (o : Part α) : o = none ∨ ∃ x, o = some x :=
   or_iff_not_imp_left.2 ne_none_iff.1
@@ -320,7 +201,7 @@ instance none_decidable : Decidable (@none α).Dom :=
 instance some_decidable (a : α) : Decidable (some a).Dom :=
   Decidable.true
 
-/--  Retrieves the value of `a : part α` if it exists, and return the provided default value
+/-- Retrieves the value of `a : part α` if it exists, and return the provided default value
 otherwise. -/
 def get_or_else (a : Part α) [Decidable a.dom] (d : α) :=
   if ha : a.dom then a.get ha else d
@@ -337,12 +218,12 @@ theorem get_or_else_some (a : α) (d : α) [Decidable (some a).Dom] : get_or_els
 theorem mem_to_option {o : Part α} [Decidable o.dom] {a : α} : a ∈ to_option o ↔ a ∈ o := by
   unfold to_option
   by_cases' h : o.dom <;> simp [h]
-  ·
-    exact ⟨fun h => ⟨_, h⟩, fun ⟨_, h⟩ => h⟩
-  ·
-    exact mt Exists.fst h
+  · exact ⟨fun h => ⟨_, h⟩, fun ⟨_, h⟩ => h⟩
+    
+  · exact mt Exists.fst h
+    
 
-/--  Converts an `option α` into a `part α`. -/
+/-- Converts an `option α` into a `part α`. -/
 def of_option : Option α → Part α
   | Option.none => none
   | Option.some a => some a
@@ -394,35 +275,34 @@ theorem to_of_option (o : Option α) : to_option (of_option o) = o := by
 theorem of_to_option (o : Part α) [Decidable o.dom] : of_option (to_option o) = o :=
   ext $ fun a => mem_of_option.trans mem_to_option
 
-/--  `part α` is (classically) equivalent to `option α`. -/
-noncomputable def equiv_option : Part α ≃ Option α := by
-  have := Classical.dec <;>
-    exact
-      ⟨fun o => to_option o, of_option, fun o => of_to_option o, fun o =>
-        Eq.trans
-          (by
-            dsimp <;> congr)
-          (to_of_option o)⟩
+/-- `part α` is (classically) equivalent to `option α`. -/
+noncomputable def equiv_option : Part α ≃ Option α :=
+  have := Classical.dec
+  ⟨fun o => to_option o, of_option, fun o => of_to_option o, fun o =>
+    Eq.trans
+      (by
+        dsimp <;> congr)
+      (to_of_option o)⟩
 
--- failed to format: format: uncaught backtrack exception
 /-- We give `part α` the order where everything is greater than `none`. -/
-  instance
-    : PartialOrderₓ ( Part α )
-    where
-      le x y := ∀ i , i ∈ x → i ∈ y
-        le_refl x y := id
-        le_trans x y z f g i := g _ ∘ f _
-        le_antisymm x y f g := Part.ext $ fun z => ⟨ f _ , g _ ⟩
+instance : PartialOrderₓ (Part α) where
+  le := fun x y => ∀ i, i ∈ x → i ∈ y
+  le_refl := fun x y => id
+  le_trans := fun x y z f g i => g _ ∘ f _
+  le_antisymm := fun x y f g => Part.ext $ fun z => ⟨f _, g _⟩
 
--- failed to format: format: uncaught backtrack exception
-instance : OrderBot ( Part α ) where bot := none bot_le := by introv x rintro ⟨ ⟨ _ ⟩ , _ ⟩
+instance : OrderBot (Part α) where
+  bot := none
+  bot_le := by
+    introv x
+    rintro ⟨⟨_⟩, _⟩
 
 theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : y ≤ z) : x ≤ y ∨ y ≤ x := by
   rcases Part.eq_none_or_eq_some x with (h | ⟨b, h₀⟩)
-  ·
-    rw [h]
+  · rw [h]
     left
     apply OrderBot.bot_le _
+    
   right
   intro b' h₁
   rw [Part.eq_some_iff] at h₀
@@ -432,17 +312,17 @@ theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : 
   subst hx
   exact h₀
 
-/--  `assert p f` is a bind-like operation which appends an additional condition
+/-- `assert p f` is a bind-like operation which appends an additional condition
   `p` to the domain and uses `f` to produce the value. -/
 def assert (p : Prop) (f : p → Part α) : Part α :=
   ⟨∃ h : p, (f h).Dom, fun ha => (f ha.fst).get ha.snd⟩
 
-/--  The bind operation has value `g (f.get)`, and is defined when all the
+/-- The bind operation has value `g (f.get)`, and is defined when all the
   parts are defined. -/
 protected def bind (f : Part α) (g : α → Part β) : Part β :=
   assert (dom f) fun b => g (f.get b)
 
-/--  The map operation for `part` just maps the value and maintains the same domain. -/
+/-- The map operation for `part` just maps the value and maintains the same domain. -/
 @[simps]
 def map (f : α → β) (o : Part α) : Part β :=
   ⟨o.dom, f ∘ o.get⟩
@@ -479,21 +359,21 @@ theorem assert_pos {p : Prop} {f : p → Part α} (h : p) : assert p f = f h := 
   cases h' : f h
   simp only [h', h, true_andₓ, iff_selfₓ, exists_prop_of_true, eq_iff_iff]
   apply Function.hfunext
-  ·
-    simp only [h, h', exists_prop_of_true]
-  ·
-    cc
+  · simp only [h, h', exists_prop_of_true]
+    
+  · cc
+    
 
 theorem assert_neg {p : Prop} {f : p → Part α} (h : ¬p) : assert p f = none := by
   dsimp [assert, none]
   congr
-  ·
-    simp only [h, not_false_iff, exists_prop_of_false]
-  ·
-    apply Function.hfunext
-    ·
-      simp only [h, not_false_iff, exists_prop_of_false]
+  · simp only [h, not_false_iff, exists_prop_of_false]
+    
+  · apply Function.hfunext
+    · simp only [h, not_false_iff, exists_prop_of_false]
+      
     cc
+    
 
 theorem mem_bind {f : Part α} {g : α → Part β} : ∀ {a b}, a ∈ f → b ∈ g a → b ∈ f.bind g
   | _, _, ⟨h, rfl⟩, ⟨h₂, rfl⟩ => ⟨⟨h, h₂⟩, rfl⟩
@@ -542,14 +422,12 @@ instance : Monadₓ Part where
   map := @map
   bind := @Part.bind
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : IsLawfulMonad Part
-  where
-    bind_pure_comp_eq_map := @ bind_some_eq_map
-      id_map β f := by cases f <;> rfl
-      pure_bind := @ bind_some
-      bind_assoc := @ bind_assoc
+instance : IsLawfulMonad Part where
+  bind_pure_comp_eq_map := @bind_some_eq_map
+  id_map := fun β f => by
+    cases f <;> rfl
+  pure_bind := @bind_some
+  bind_assoc := @bind_assoc
 
 theorem map_id' {f : α → α} (H : ∀ x : α, f x = x) o : map f o = o := by
   rw [show f = id from funext H] <;> exact id_map o
@@ -576,21 +454,21 @@ theorem bind_eq_bind {α β} (f : Part α) (g : α → Part β) : f >>= g = f.bi
 
 theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) : x >>= f ≤ y ↔ ∀ a, a ∈ x → f a ≤ y := by
   constructor <;> intro h
-  ·
-    intro a h' b
+  · intro a h' b
     replace h := h b
     simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp_distrib] at h
     apply h _ h'
-  ·
-    intro b h'
+    
+  · intro b h'
     simp only [exists_prop, bind_eq_bind, mem_bind_iff] at h'
     rcases h' with ⟨a, h₀, h₁⟩
     apply h _ h₀ _ h₁
+    
 
 instance : MonadFail Part :=
   { Part.monad with fail := fun _ _ => none }
 
-/--  `restrict p o h` replaces the domain of `o` with `p`, and is well defined when
+/-- `restrict p o h` replaces the domain of `o` with `p`, and is well defined when
   `p` implies `o` is defined. -/
 def restrict (p : Prop) (o : Part α) (H : p → o.dom) : Part α :=
   ⟨p, fun h => o.get (H h)⟩
@@ -599,13 +477,13 @@ def restrict (p : Prop) (o : Part α) (H : p → o.dom) : Part α :=
 theorem mem_restrict (p : Prop) (o : Part α) (h : p → o.dom) (a : α) : a ∈ restrict p o h ↔ p ∧ a ∈ o := by
   dsimp [restrict, mem_eq]
   constructor
-  ·
-    rintro ⟨h₀, h₁⟩
+  · rintro ⟨h₀, h₁⟩
     exact ⟨h₀, ⟨_, h₁⟩⟩
+    
   rintro ⟨h₀, h₁, h₂⟩
   exact ⟨h₀, h₂⟩
 
-/--  `unwrap o` gets the value at `o`, ignoring the condition. This function is unsound. -/
+/-- `unwrap o` gets the value at `o`, ignoring the condition. This function is unsound. -/
 unsafe def unwrap (o : Part α) : α :=
   o.get undefined
 

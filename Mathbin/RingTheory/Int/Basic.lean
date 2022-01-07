@@ -9,8 +9,6 @@ their proofs or cases of ℕ and ℤ being examples of structures in abstract al
 
 ## Main statements
 
-* `nat.prime_iff`: `nat.prime` coincides with the general definition of `prime`
-* `nat.irreducible_iff_prime`: a non-unit natural number is only divisible by `1` iff it is prime
 * `nat.factors_eq`: the multiset of elements of `nat.factors` is equal to the factors
    given by the `unique_factorization_monoid` instance
 * ℤ is a `normalization_monoid`
@@ -24,69 +22,6 @@ unique factors
 -/
 
 
-theorem Nat.prime_iff {p : ℕ} : p.prime ↔ Prime p := by
-  constructor <;> intro h
-  ·
-    refine' ⟨h.ne_zero, ⟨_, fun a b => _⟩⟩
-    ·
-      rw [Nat.is_unit_iff]
-      apply h.ne_one
-    ·
-      apply h.dvd_mul.1
-  ·
-    refine' ⟨_, fun m hm => _⟩
-    ·
-      cases p
-      ·
-        exfalso
-        apply h.ne_zero rfl
-      cases p
-      ·
-        exfalso
-        apply h.ne_one rfl
-      exact (add_le_add_right (zero_le p) 2 : _)
-    ·
-      cases' hm with n hn
-      cases' h.2.2 m n (hn ▸ dvd_rfl) with hpm hpn
-      ·
-        right
-        apply Nat.dvd_antisymm (Dvd.intro _ hn.symm) hpm
-      ·
-        left
-        cases n
-        ·
-          exfalso
-          rw [hn, mul_zero] at h
-          apply h.ne_zero rfl
-        apply Nat.eq_of_mul_eq_mul_rightₓ (Nat.succ_posₓ _)
-        rw [← hn, one_mulₓ]
-        apply Nat.dvd_antisymm hpn (Dvd.intro m _)
-        rw [mul_commₓ, hn]
-
-theorem Nat.irreducible_iff_prime {p : ℕ} : Irreducible p ↔ Prime p := by
-  refine' ⟨fun h => _, Prime.irreducible⟩
-  rw [← Nat.prime_iff]
-  refine' ⟨_, fun m hm => _⟩
-  ·
-    cases p
-    ·
-      exfalso
-      apply h.ne_zero rfl
-    cases p
-    ·
-      exfalso
-      apply h.not_unit is_unit_one
-    exact (add_le_add_right (zero_le p) 2 : _)
-  ·
-    cases' hm with n hn
-    cases' h.is_unit_or_is_unit hn with um un
-    ·
-      left
-      rw [Nat.is_unit_iff.1 um]
-    ·
-      right
-      rw [hn, Nat.is_unit_iff.1 un, mul_oneₓ]
-
 namespace Nat
 
 instance : WfDvdMonoid ℕ :=
@@ -96,13 +31,13 @@ instance : WfDvdMonoid ℕ :=
         (WithTop.well_founded_lt Nat.lt_wf)
     intro a b h
     cases a
-    ·
-      exfalso
+    · exfalso
       revert h
       simp [DvdNotUnit]
+      
     cases b
-    ·
-      simp [succ_ne_zero, WithTop.coe_lt_top]
+    · simp [succ_ne_zero, WithTop.coe_lt_top]
+      
     cases' dvd_and_not_dvd_iff.2 h with h1 h2
     simp only [succ_ne_zero, WithTop.coe_lt_coe, if_false]
     apply lt_of_le_of_neₓ (Nat.le_of_dvdₓ (Nat.succ_posₓ _) h1) fun con => h2 _
@@ -113,19 +48,17 @@ instance : UniqueFactorizationMonoid ℕ :=
 
 end Nat
 
--- failed to format: format: uncaught backtrack exception
 /-- `ℕ` is a gcd_monoid. -/
-  instance
-    : GcdMonoid ℕ
-    where
-      gcd := Nat.gcdₓ
-        lcm := Nat.lcmₓ
-        gcd_dvd_left := Nat.gcd_dvd_leftₓ
-        gcd_dvd_right := Nat.gcd_dvd_rightₓ
-        dvd_gcd a b c := Nat.dvd_gcdₓ
-        gcd_mul_lcm a b := by rw [ Nat.gcd_mul_lcmₓ ]
-        lcm_zero_left := Nat.lcm_zero_leftₓ
-        lcm_zero_right := Nat.lcm_zero_rightₓ
+instance : GcdMonoid ℕ where
+  gcd := Nat.gcdₓ
+  lcm := Nat.lcmₓ
+  gcd_dvd_left := Nat.gcd_dvd_leftₓ
+  gcd_dvd_right := Nat.gcd_dvd_rightₓ
+  dvd_gcd := fun a b c => Nat.dvd_gcdₓ
+  gcd_mul_lcm := fun a b => by
+    rw [Nat.gcd_mul_lcmₓ]
+  lcm_zero_left := Nat.lcm_zero_leftₓ
+  lcm_zero_right := Nat.lcm_zero_rightₓ
 
 instance : NormalizedGcdMonoid ℕ :=
   { (inferInstance : GcdMonoid ℕ), (inferInstance : NormalizationMonoid ℕ) with
@@ -141,32 +74,26 @@ namespace Int
 
 section NormalizationMonoid
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : NormalizationMonoid ℤ
-  where
-    normUnit a : ℤ := if 0 ≤ a then 1 else - 1
-      norm_unit_zero := if_pos ( le_reflₓ _ )
-      norm_unit_mul
-        a b hna hnb
-        :=
-        by
-          cases' hna.lt_or_lt with ha ha
-            <;>
-            cases' hnb.lt_or_lt with hb hb <;> simp [ mul_nonneg_iff , ha.le , ha.not_le , hb.le , hb.not_le ]
-      norm_unit_coe_units
-        u
-        :=
-        ( units_eq_one_or u ) . elim
-          ( fun eq => Eq.symm ▸ if_pos zero_le_one )
-            fun eq => Eq.symm ▸ if_neg ( not_le_of_gtₓ $ show ( - 1 : ℤ ) < 0 by decide )
+instance : NormalizationMonoid ℤ where
+  normUnit := fun a : ℤ => if 0 ≤ a then 1 else -1
+  norm_unit_zero := if_pos (le_reflₓ _)
+  norm_unit_mul := fun a b hna hnb => by
+    cases' hna.lt_or_lt with ha ha <;>
+      cases' hnb.lt_or_lt with hb hb <;> simp [mul_nonneg_iff, ha.le, ha.not_le, hb.le, hb.not_le]
+  norm_unit_coe_units := fun u =>
+    (units_eq_one_or u).elim (fun eq => Eq.symm ▸ if_pos zero_le_one) fun eq =>
+      Eq.symm ▸
+        if_neg
+          (not_le_of_gtₓ $
+            show (-1 : ℤ) < 0 by
+              decide)
 
 theorem normalize_of_nonneg {z : ℤ} (h : 0 ≤ z) : normalize z = z :=
-  show (z*↑ite _ _ _) = z by
+  show z * ↑ite _ _ _ = z by
     rw [if_pos h, Units.coe_one, mul_oneₓ]
 
 theorem normalize_of_neg {z : ℤ} (h : z < 0) : normalize z = -z :=
-  show (z*↑ite _ _ _) = -z by
+  show z * ↑ite _ _ _ = -z by
     rw [if_neg (not_le_of_gtₓ h), Units.coe_neg, Units.coe_one, mul_neg_one]
 
 theorem normalize_coe_nat (n : ℕ) : normalize (n : ℤ) = n :=
@@ -174,13 +101,14 @@ theorem normalize_coe_nat (n : ℕ) : normalize (n : ℤ) = n :=
 
 theorem coe_nat_abs_eq_normalize (z : ℤ) : (z.nat_abs : ℤ) = normalize z := by
   by_cases' 0 ≤ z
-  ·
-    simp [nat_abs_of_nonneg h, normalize_of_nonneg h]
-  ·
-    simp [of_nat_nat_abs_of_nonpos (le_of_not_geₓ h), normalize_of_neg (lt_of_not_geₓ h)]
+  · simp [nat_abs_of_nonneg h, normalize_of_nonneg h]
+    
+  · simp [of_nat_nat_abs_of_nonpos (le_of_not_geₓ h), normalize_of_neg (lt_of_not_geₓ h)]
+    
 
 theorem nonneg_of_normalize_eq_self {z : ℤ} (hz : normalize z = z) : 0 ≤ z :=
-  calc 0 ≤ (z.nat_abs : ℤ) := coe_zero_le _
+  calc
+    0 ≤ (z.nat_abs : ℤ) := coe_zero_le _
     _ = normalize z := coe_nat_abs_eq_normalize _
     _ = z := hz
     
@@ -195,21 +123,17 @@ end NormalizationMonoid
 
 section GcdMonoid
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : GcdMonoid ℤ
-  where
-    gcd a b := Int.gcdₓ a b
-      lcm a b := Int.lcm a b
-      gcd_dvd_left a b := Int.gcd_dvd_left _ _
-      gcd_dvd_right a b := Int.gcd_dvd_right _ _
-      dvd_gcd a b c := dvd_gcd
-      gcd_mul_lcm
-        a b
-        :=
-        by rw [ ← Int.coe_nat_mul , gcd_mul_lcm , coe_nat_abs_eq_normalize ] exact normalize_associated ( a * b )
-      lcm_zero_left a := coe_nat_eq_zero . 2 $ Nat.lcm_zero_leftₓ _
-      lcm_zero_right a := coe_nat_eq_zero . 2 $ Nat.lcm_zero_rightₓ _
+instance : GcdMonoid ℤ where
+  gcd := fun a b => Int.gcdₓ a b
+  lcm := fun a b => Int.lcm a b
+  gcd_dvd_left := fun a b => Int.gcd_dvd_left _ _
+  gcd_dvd_right := fun a b => Int.gcd_dvd_right _ _
+  dvd_gcd := fun a b c => dvd_gcd
+  gcd_mul_lcm := fun a b => by
+    rw [← Int.coe_nat_mul, gcd_mul_lcm, coe_nat_abs_eq_normalize]
+    exact normalize_associated (a * b)
+  lcm_zero_left := fun a => coe_nat_eq_zero.2 $ Nat.lcm_zero_leftₓ _
+  lcm_zero_right := fun a => coe_nat_eq_zero.2 $ Nat.lcm_zero_rightₓ _
 
 instance : NormalizedGcdMonoid ℤ :=
   { Int.normalizationMonoid, (inferInstance : GcdMonoid ℤ) with normalize_gcd := fun a b => normalize_coe_nat _,
@@ -229,41 +153,41 @@ theorem nat_abs_lcm (i j : ℤ) : nat_abs (GcdMonoid.lcm i j) = Int.lcm i j :=
 
 end GcdMonoid
 
-theorem exists_unit_of_abs (a : ℤ) : ∃ (u : ℤ)(h : IsUnit u), (Int.natAbs a : ℤ) = u*a := by
+theorem exists_unit_of_abs (a : ℤ) : ∃ (u : ℤ)(h : IsUnit u), (Int.natAbs a : ℤ) = u * a := by
   cases' nat_abs_eq a with h
-  ·
-    use 1, is_unit_one
+  · use 1, is_unit_one
     rw [← h, one_mulₓ]
-  ·
-    use -1, is_unit_one.neg
+    
+  · use -1, is_unit_one.neg
     rw [← neg_eq_iff_neg_eq.mp (Eq.symm h)]
     simp only [neg_mul_eq_neg_mul_symm, one_mulₓ]
+    
 
 theorem gcd_eq_nat_abs {a b : ℤ} : Int.gcdₓ a b = Nat.gcdₓ a.nat_abs b.nat_abs :=
   rfl
 
 theorem gcd_eq_one_iff_coprime {a b : ℤ} : Int.gcdₓ a b = 1 ↔ IsCoprime a b := by
   constructor
-  ·
-    intro hg
+  · intro hg
     obtain ⟨ua, hua, ha⟩ := exists_unit_of_abs a
     obtain ⟨ub, hub, hb⟩ := exists_unit_of_abs b
-    use Nat.gcdA (Int.natAbs a) (Int.natAbs b)*ua, Nat.gcdB (Int.natAbs a) (Int.natAbs b)*ub
+    use Nat.gcdA (Int.natAbs a) (Int.natAbs b) * ua, Nat.gcdB (Int.natAbs a) (Int.natAbs b) * ub
     rw [mul_assocₓ, ← ha, mul_assocₓ, ← hb, mul_commₓ, mul_commₓ _ (Int.natAbs b : ℤ), ← Nat.gcd_eq_gcd_ab, ←
       gcd_eq_nat_abs, hg, Int.coe_nat_one]
-  ·
-    rintro ⟨r, s, h⟩
+    
+  · rintro ⟨r, s, h⟩
     by_contra hg
     obtain ⟨p, ⟨hp, ha, hb⟩⟩ := nat.prime.not_coprime_iff_dvd.mp hg
     apply Nat.Prime.not_dvd_one hp
     rw [← coe_nat_dvd, Int.coe_nat_one, ← h]
     exact dvd_add ((coe_nat_dvd_left.mpr ha).mul_left _) ((coe_nat_dvd_left.mpr hb).mul_left _)
+    
 
 theorem coprime_iff_nat_coprime {a b : ℤ} : IsCoprime a b ↔ Nat.Coprime a.nat_abs b.nat_abs := by
   rw [← gcd_eq_one_iff_coprime, Nat.coprime_iff_gcd_eq_oneₓ, gcd_eq_nat_abs]
 
-theorem sq_of_gcd_eq_one {a b c : ℤ} (h : Int.gcdₓ a b = 1) (heq : (a*b) = (c^2)) :
-    ∃ a0 : ℤ, a = (a0^2) ∨ a = -(a0^2) := by
+theorem sq_of_gcd_eq_one {a b c : ℤ} (h : Int.gcdₓ a b = 1) (heq : a * b = c ^ 2) :
+    ∃ a0 : ℤ, a = a0 ^ 2 ∨ a = -(a0 ^ 2) := by
   have h' : IsUnit (GcdMonoid.gcd a b) := by
     rw [← coe_gcd, h, Int.coe_nat_one]
     exact is_unit_one
@@ -271,48 +195,23 @@ theorem sq_of_gcd_eq_one {a b c : ℤ} (h : Int.gcdₓ a b = 1) (heq : (a*b) = (
   use d
   rw [← hu]
   cases' Int.units_eq_one_or u with hu' hu' <;>
-    ·
-      rw [hu']
+    · rw [hu']
       simp
+      
 
-theorem sq_of_coprime {a b c : ℤ} (h : IsCoprime a b) (heq : (a*b) = (c^2)) : ∃ a0 : ℤ, a = (a0^2) ∨ a = -(a0^2) :=
+theorem sq_of_coprime {a b c : ℤ} (h : IsCoprime a b) (heq : a * b = c ^ 2) : ∃ a0 : ℤ, a = a0 ^ 2 ∨ a = -(a0 ^ 2) :=
   sq_of_gcd_eq_one (gcd_eq_one_iff_coprime.mpr h) HEq
 
 theorem nat_abs_euclidean_domain_gcd (a b : ℤ) : Int.natAbs (EuclideanDomain.gcd a b) = Int.gcdₓ a b := by
   apply Nat.dvd_antisymm <;> rw [← Int.coe_nat_dvd]
-  ·
-    rw [Int.nat_abs_dvd]
+  · rw [Int.nat_abs_dvd]
     exact Int.dvd_gcd (EuclideanDomain.gcd_dvd_left _ _) (EuclideanDomain.gcd_dvd_right _ _)
-  ·
-    rw [Int.dvd_nat_abs]
+    
+  · rw [Int.dvd_nat_abs]
     exact EuclideanDomain.dvd_gcd (Int.gcd_dvd_left _ _) (Int.gcd_dvd_right _ _)
+    
 
 end Int
-
-theorem irreducible_iff_nat_prime : ∀ a : ℕ, Irreducible a ↔ Nat.Prime a
-  | 0 => by
-    simp [Nat.not_prime_zero]
-  | 1 => by
-    simp [Nat.Prime, one_lt_two]
-  | n+2 =>
-    have h₁ : ¬(n+2) = 1 := by
-      decide
-    by
-    simp [h₁, Nat.Prime, irreducible_iff, · ≥ ·, Nat.le_add_leftₓ 2 n, · ∣ ·]
-    refine' forall_congrₓ fun a => forall_congrₓ $ fun b => forall_congrₓ $ fun hab => _
-    by_cases' a = 1 <;> simp [h]
-    constructor
-    ·
-      intro hb
-      simpa [hb] using hab.symm
-    ·
-      intro ha
-      subst ha
-      have : (n+2) > 0
-      exact by
-        decide
-      refine' Nat.eq_of_mul_eq_mul_leftₓ this _
-      rw [← hab, mul_oneₓ]
 
 theorem Nat.prime_iff_prime_int {p : ℕ} : p.prime ↔ _root_.prime (p : ℤ) :=
   ⟨fun hp =>
@@ -327,47 +226,48 @@ theorem Nat.prime_iff_prime_int {p : ℕ} : p.prime ↔ _root_.prime (p : ℤ) :
         fun a b => by
         simpa only [Int.coe_nat_dvd, (Int.coe_nat_mul _ _).symm] using hp.2.2 a b⟩⟩
 
-/--  Maps an associate class of integers consisting of `-n, n` to `n : ℕ` -/
+/-- Maps an associate class of integers consisting of `-n, n` to `n : ℕ` -/
 def associatesIntEquivNat : Associates ℤ ≃ ℕ := by
   refine' ⟨fun z => z.out.nat_abs, fun n => Associates.mk n, _, _⟩
-  ·
-    refine' fun a =>
+  · refine' fun a =>
       Quotientₓ.induction_on' a $ fun a => Associates.mk_eq_mk_iff_associated.2 $ Associated.symm $ ⟨norm_unit a, _⟩
     show normalize a = Int.natAbs (normalize a)
     rw [Int.coe_nat_abs_eq_normalize, normalize_idem]
-  ·
-    intro n
+    
+  · intro n
     dsimp
     rw [← normalize_apply, ← Int.coe_nat_abs_eq_normalize, Int.nat_abs_of_nat, Int.nat_abs_of_nat]
+    
 
-theorem Int.Prime.dvd_mul {m n : ℤ} {p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ m*n) : p ∣ m.nat_abs ∨ p ∣ n.nat_abs := by
+theorem Int.Prime.dvd_mul {m n : ℤ} {p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ m * n) : p ∣ m.nat_abs ∨ p ∣ n.nat_abs :=
+  by
   apply (Nat.Prime.dvd_mul hp).mp
   rw [← Int.nat_abs_mul]
   exact int.coe_nat_dvd_left.mp h
 
-theorem Int.Prime.dvd_mul' {m n : ℤ} {p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ m*n) : (p : ℤ) ∣ m ∨ (p : ℤ) ∣ n := by
+theorem Int.Prime.dvd_mul' {m n : ℤ} {p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ m * n) : (p : ℤ) ∣ m ∨ (p : ℤ) ∣ n := by
   rw [Int.coe_nat_dvd_left, Int.coe_nat_dvd_left]
   exact Int.Prime.dvd_mul hp h
 
-theorem Int.Prime.dvd_pow {n : ℤ} {k p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ (n^k)) : p ∣ n.nat_abs := by
+theorem Int.Prime.dvd_pow {n : ℤ} {k p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ n ^ k) : p ∣ n.nat_abs := by
   apply @Nat.Prime.dvd_of_dvd_pow _ _ k hp
   rw [← Int.nat_abs_pow]
   exact int.coe_nat_dvd_left.mp h
 
-theorem Int.Prime.dvd_pow' {n : ℤ} {k p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ (n^k)) : (p : ℤ) ∣ n := by
+theorem Int.Prime.dvd_pow' {n : ℤ} {k p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ n ^ k) : (p : ℤ) ∣ n := by
   rw [Int.coe_nat_dvd_left]
   exact Int.Prime.dvd_pow hp h
 
-theorem prime_two_or_dvd_of_dvd_two_mul_pow_self_two {m : ℤ} {p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ 2*m^2) :
+theorem prime_two_or_dvd_of_dvd_two_mul_pow_self_two {m : ℤ} {p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ 2 * m ^ 2) :
     p = 2 ∨ p ∣ Int.natAbs m := by
   cases' Int.Prime.dvd_mul hp h with hp2 hpp
-  ·
-    apply Or.intro_left
+  · apply Or.intro_left
     exact le_antisymmₓ (Nat.le_of_dvdₓ zero_lt_two hp2) (Nat.Prime.two_le hp)
-  ·
-    apply Or.intro_rightₓ
+    
+  · apply Or.intro_rightₓ
     rw [sq, Int.nat_abs_mul] at hpp
     exact (or_selfₓ _).mp ((Nat.Prime.dvd_mul hp).mp hpp)
+    
 
 theorem Int.exists_prime_and_dvd {n : ℤ} (n2 : 2 ≤ n.nat_abs) : ∃ p, Prime p ∧ p ∣ n := by
   obtain ⟨p, pp, pd⟩ := Nat.exists_prime_and_dvd n2
@@ -377,19 +277,19 @@ open UniqueFactorizationMonoid
 
 theorem Nat.factors_eq {n : ℕ} : normalized_factors n = n.factors := by
   cases n
-  ·
-    simp
+  · simp
+    
   rw [← Multiset.rel_eq, ← associated_eq_eq]
   apply factors_unique irreducible_of_normalized_factor _
-  ·
-    rw [Multiset.coe_prod, Nat.prod_factors (Nat.succ_posₓ _)]
+  · rw [Multiset.coe_prod, Nat.prod_factors (Nat.succ_posₓ _)]
     apply normalized_factors_prod (Nat.succ_ne_zero _)
-  ·
-    infer_instance
-  ·
-    intro x hx
+    
+  · infer_instance
+    
+  · intro x hx
     rw [Nat.irreducible_iff_prime, ← Nat.prime_iff]
     exact Nat.prime_of_mem_factors hx
+    
 
 theorem Nat.factors_multiset_prod_of_irreducible {s : Multiset ℕ} (h : ∀ x : ℕ, x ∈ s → Irreducible x) :
     normalized_factors s.prod = s := by
@@ -415,17 +315,17 @@ instance decidable_int : DecidableRel fun a b : ℤ => (multiplicity a b).Dom :=
 
 end multiplicity
 
-theorem induction_on_primes {P : ℕ → Prop} (h₀ : P 0) (h₁ : P 1) (h : ∀ p a : ℕ, p.prime → P a → P (p*a)) (n : ℕ) :
+theorem induction_on_primes {P : ℕ → Prop} (h₀ : P 0) (h₁ : P 1) (h : ∀ p a : ℕ, p.prime → P a → P (p * a)) (n : ℕ) :
     P n := by
   apply UniqueFactorizationMonoid.induction_on_prime
   exact h₀
-  ·
-    intro n h
+  · intro n h
     rw [Nat.is_unit_iff.1 h]
     exact h₁
-  ·
-    intro a p _ hp ha
+    
+  · intro a p _ hp ha
     exact h p a (Nat.prime_iff.2 hp) ha
+    
 
 theorem Int.associated_nat_abs (k : ℤ) : Associated k k.nat_abs :=
   associated_of_dvd_dvd (Int.coe_nat_dvd_right.mpr dvd_rfl) (Int.nat_abs_dvd.mpr dvd_rfl)
@@ -451,21 +351,21 @@ theorem span_nat_abs (a : ℤ) : Ideal.span ({a.nat_abs} : Set ℤ) = Ideal.span
   rw [Ideal.span_singleton_eq_span_singleton]
   exact (associated_nat_abs _).symm
 
-theorem eq_pow_of_mul_eq_pow_bit1_left {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ} (h : (a*b) = (c^bit1 k)) :
-    ∃ d, a = (d^bit1 k) := by
+theorem eq_pow_of_mul_eq_pow_bit1_left {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ} (h : a * b = c ^ bit1 k) :
+    ∃ d, a = d ^ bit1 k := by
   obtain ⟨d, hd⟩ := exists_associated_pow_of_mul_eq_pow' hab h
   replace hd := hd.symm
   rw [associated_iff_nat_abs, nat_abs_eq_nat_abs_iff, ← neg_pow_bit1] at hd
   obtain rfl | rfl := hd <;> exact ⟨_, rfl⟩
 
-theorem eq_pow_of_mul_eq_pow_bit1_right {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ} (h : (a*b) = (c^bit1 k)) :
-    ∃ d, b = (d^bit1 k) :=
+theorem eq_pow_of_mul_eq_pow_bit1_right {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ} (h : a * b = c ^ bit1 k) :
+    ∃ d, b = d ^ bit1 k :=
   eq_pow_of_mul_eq_pow_bit1_left hab.symm
     (by
       rwa [mul_commₓ] at h)
 
-theorem eq_pow_of_mul_eq_pow_bit1 {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ} (h : (a*b) = (c^bit1 k)) :
-    (∃ d, a = (d^bit1 k)) ∧ ∃ e, b = (e^bit1 k) :=
+theorem eq_pow_of_mul_eq_pow_bit1 {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ} (h : a * b = c ^ bit1 k) :
+    (∃ d, a = d ^ bit1 k) ∧ ∃ e, b = e ^ bit1 k :=
   ⟨eq_pow_of_mul_eq_pow_bit1_left hab h, eq_pow_of_mul_eq_pow_bit1_right hab h⟩
 
 end Int

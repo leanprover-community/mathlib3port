@@ -2,12 +2,10 @@ import Mathbin.Tactic.Core
 
 open Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
 inductive Side
   | L
   | R
-  deriving [anonymous], [anonymous]
+  deriving DecidableEq, Inhabited
 
 def Side.other : Side → Side
   | Side.L => Side.R

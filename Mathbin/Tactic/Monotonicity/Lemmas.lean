@@ -7,23 +7,24 @@ import Mathbin.Tactic.Monotonicity.Basic
 variable {α : Type _}
 
 @[mono]
-theorem mul_mono_nonneg {x y z : α} [OrderedSemiring α] (h' : 0 ≤ z) (h : x ≤ y) : (x*z) ≤ y*z := by
+theorem mul_mono_nonneg {x y z : α} [OrderedSemiring α] (h' : 0 ≤ z) (h : x ≤ y) : x * z ≤ y * z := by
   apply mul_le_mul_of_nonneg_right <;> assumption
 
-theorem lt_of_mul_lt_mul_neg_right {a b c : α} [LinearOrderedRing α] (h : (a*c) < b*c) (hc : c ≤ 0) : b < a :=
+theorem lt_of_mul_lt_mul_neg_right {a b c : α} [LinearOrderedRing α] (h : a * c < b * c) (hc : c ≤ 0) : b < a :=
   have nhc : -c ≥ 0 := neg_nonneg_of_nonpos hc
-  have h2 : (-b*c) < -a*c := neg_lt_neg h
-  have h3 : (b*-c) < a*-c :=
-    calc (b*-c) = -b*c := by
-      rw [neg_mul_eq_mul_neg]
-      _ < -a*c := h2
-      _ = a*-c := by
-      rw [neg_mul_eq_mul_neg]
+  have h2 : -(b * c) < -(a * c) := neg_lt_neg h
+  have h3 : b * -c < a * -c :=
+    calc
+      b * -c = -(b * c) := by
+        rw [neg_mul_eq_mul_neg]
+      _ < -(a * c) := h2
+      _ = a * -c := by
+        rw [neg_mul_eq_mul_neg]
       
   lt_of_mul_lt_mul_right h3 nhc
 
 @[mono]
-theorem mul_mono_nonpos {x y z : α} [LinearOrderedRing α] (h' : z ≤ 0) (h : y ≤ x) : (x*z) ≤ y*z := by
+theorem mul_mono_nonpos {x y z : α} [LinearOrderedRing α] (h' : z ≤ 0) (h : y ≤ x) : x * z ≤ y * z := by
   classical
   by_contra h''
   revert h
@@ -48,7 +49,7 @@ theorem Nat.sub_mono_right_strict {x y z : ℕ} (h' : x ≤ z) (h : y < x) : z -
     assumption
   apply @Nat.lt_of_add_lt_add_rightₓ _ x
   rw [tsub_add_cancel_of_le h']
-  apply @lt_of_le_of_ltₓ _ _ _ ((z - y)+y)
+  apply @lt_of_le_of_ltₓ _ _ _ (z - y + y)
   rw [tsub_add_cancel_of_le h'']
   apply Nat.add_lt_add_leftₓ h
 

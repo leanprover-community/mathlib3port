@@ -44,43 +44,43 @@ theorem to_nat_to_int (n : PosNum) : ((n : ℕ) : ℤ) = n := by
 theorem cast_to_int [AddGroupₓ α] [HasOne α] (n : PosNum) : ((n : ℤ) : α) = n := by
   rw [← to_nat_to_int, Int.cast_coe_nat, cast_to_nat]
 
-theorem succ_to_nat : ∀ n, (succ n : ℕ) = n+1
+theorem succ_to_nat : ∀ n, (succ n : ℕ) = n + 1
   | 1 => rfl
   | bit0 p => rfl
   | bit1 p =>
     (congr_argₓ _root_.bit0 (succ_to_nat p)).trans $
-      show ((((↑p)+1)+↑p)+1) = (((↑p)+↑p)+1)+1by
+      show ↑p + 1 + ↑p + 1 = ↑p + ↑p + 1 + 1 by
         simp [add_left_commₓ]
 
-theorem one_add (n : PosNum) : (1+n) = succ n := by
+theorem one_add (n : PosNum) : 1 + n = succ n := by
   cases n <;> rfl
 
-theorem add_one (n : PosNum) : (n+1) = succ n := by
+theorem add_one (n : PosNum) : n + 1 = succ n := by
   cases n <;> rfl
 
 @[norm_cast]
-theorem add_to_nat : ∀ m n, ((m+n : PosNum) : ℕ) = m+n
+theorem add_to_nat : ∀ m n, ((m + n : PosNum) : ℕ) = m + n
   | 1, b => by
     rw [one_add b, succ_to_nat, add_commₓ] <;> rfl
   | a, 1 => by
     rw [add_one a, succ_to_nat] <;> rfl
   | bit0 a, bit0 b =>
     (congr_argₓ _root_.bit0 (add_to_nat a b)).trans $
-      show ((a+b)+a+b : ℕ) = (a+a)+b+b by
+      show (a + b + (a + b) : ℕ) = a + a + (b + b) by
         simp [add_left_commₓ]
   | bit0 a, bit1 b =>
     (congr_argₓ _root_.bit1 (add_to_nat a b)).trans $
-      show (((a+b)+a+b)+1 : ℕ) = (a+a)+(b+b)+1by
+      show (a + b + (a + b) + 1 : ℕ) = a + a + (b + b + 1) by
         simp [add_left_commₓ]
   | bit1 a, bit0 b =>
     (congr_argₓ _root_.bit1 (add_to_nat a b)).trans $
-      show (((a+b)+a+b)+1 : ℕ) = ((a+a)+1)+b+b by
+      show (a + b + (a + b) + 1 : ℕ) = a + a + 1 + (b + b) by
         simp [add_commₓ, add_left_commₓ]
   | bit1 a, bit1 b =>
-    show (succ (a+b)+succ (a+b) : ℕ) = ((a+a)+1)+(b+b)+1by
+    show (succ (a + b) + succ (a + b) : ℕ) = a + a + 1 + (b + b + 1) by
       rw [succ_to_nat, add_to_nat] <;> simp [add_left_commₓ]
 
-theorem add_succ : ∀ m n : PosNum, (m+succ n) = succ (m+n)
+theorem add_succ : ∀ m n : PosNum, m + succ n = succ (m + n)
   | 1, b => by
     simp [one_add]
   | bit0 a, 1 => congr_argₓ bit0 (add_one a)
@@ -98,18 +98,18 @@ theorem bit0_of_bit0 : ∀ n, _root_.bit0 n = bit0 n
       rw [bit0_of_bit0] <;> rfl
 
 theorem bit1_of_bit1 (n : PosNum) : _root_.bit1 n = bit1 n :=
-  show (_root_.bit0 n+1) = bit1 n by
+  show _root_.bit0 n + 1 = bit1 n by
     rw [add_one, bit0_of_bit0] <;> rfl
 
 @[norm_cast]
-theorem mul_to_nat m : ∀ n, ((m*n : PosNum) : ℕ) = m*n
+theorem mul_to_nat m : ∀ n, ((m * n : PosNum) : ℕ) = m * n
   | 1 => (mul_oneₓ _).symm
   | bit0 p =>
-    show ((↑m*p)+↑m*p : ℕ) = (↑m)*p+p by
+    show (↑(m * p) + ↑(m * p) : ℕ) = ↑m * (p + p) by
       rw [mul_to_nat, left_distrib]
   | bit1 p =>
-    (add_to_nat (bit0 (m*p)) m).trans $
-      show (((↑m*p)+↑m*p)+↑m : ℕ) = ((↑m)*p+p)+m by
+    (add_to_nat (bit0 (m * p)) m).trans $
+      show (↑(m * p) + ↑(m * p) + ↑m : ℕ) = ↑m * (p + p) + m by
         rw [mul_to_nat, left_distrib]
 
 theorem to_nat_pos : ∀ n : PosNum, 0 < (n : ℕ)
@@ -120,7 +120,7 @@ theorem to_nat_pos : ∀ n : PosNum, 0 < (n : ℕ)
   | bit1 p => Nat.succ_posₓ _
 
 theorem cmp_to_nat_lemma {m n : PosNum} : (m : ℕ) < n → (bit1 m : ℕ) < bit0 n :=
-  show (m : ℕ) < n → (((m+m)+1)+1 : ℕ) ≤ n+n by
+  show (m : ℕ) < n → (m + m + 1 + 1 : ℕ) ≤ n + n by
     intro h <;> rw [Nat.add_right_comm m m 1, add_assocₓ] <;> exact add_le_add h h
 
 theorem cmp_swap m : ∀ n, (cmp m n).swap = cmp n m := by
@@ -147,46 +147,46 @@ theorem cmp_to_nat : ∀ m n, (Ordering.casesOn (cmp m n) ((m : ℕ) < n) (m = n
     have := cmp_to_nat a b
     revert this
     cases cmp a b <;> dsimp <;> intro
-    ·
-      exact add_lt_add this this
-    ·
-      rw [this]
-    ·
-      exact add_lt_add this this
+    · exact add_lt_add this this
+      
+    · rw [this]
+      
+    · exact add_lt_add this this
+      
   | bit0 a, bit1 b => by
     dsimp [cmp]
     have := cmp_to_nat a b
     revert this
     cases cmp a b <;> dsimp <;> intro
-    ·
-      exact Nat.le_succ_of_leₓ (add_lt_add this this)
-    ·
-      rw [this]
+    · exact Nat.le_succ_of_leₓ (add_lt_add this this)
+      
+    · rw [this]
       apply Nat.lt_succ_selfₓ
-    ·
-      exact cmp_to_nat_lemma this
+      
+    · exact cmp_to_nat_lemma this
+      
   | bit1 a, bit0 b => by
     dsimp [cmp]
     have := cmp_to_nat a b
     revert this
     cases cmp a b <;> dsimp <;> intro
-    ·
-      exact cmp_to_nat_lemma this
-    ·
-      rw [this]
+    · exact cmp_to_nat_lemma this
+      
+    · rw [this]
       apply Nat.lt_succ_selfₓ
-    ·
-      exact Nat.le_succ_of_leₓ (add_lt_add this this)
+      
+    · exact Nat.le_succ_of_leₓ (add_lt_add this this)
+      
   | bit1 a, bit1 b => by
     have := cmp_to_nat a b
     revert this
     cases cmp a b <;> dsimp <;> intro
-    ·
-      exact Nat.succ_lt_succₓ (add_lt_add this this)
-    ·
-      rw [this]
-    ·
-      exact Nat.succ_lt_succₓ (add_lt_add this this)
+    · exact Nat.succ_lt_succₓ (add_lt_add this this)
+      
+    · rw [this]
+      
+    · exact Nat.succ_lt_succₓ (add_lt_add this this)
+      
 
 @[norm_cast]
 theorem lt_to_nat {m n : PosNum} : (m : ℕ) < n ↔ m < n :=
@@ -216,30 +216,30 @@ variable {α : Type _}
 
 open PosNum
 
-theorem add_zeroₓ (n : Num) : (n+0) = n := by
+theorem add_zeroₓ (n : Num) : n + 0 = n := by
   cases n <;> rfl
 
-theorem zero_addₓ (n : Num) : (0+n) = n := by
+theorem zero_addₓ (n : Num) : 0 + n = n := by
   cases n <;> rfl
 
-theorem add_one : ∀ n : Num, (n+1) = succ n
+theorem add_one : ∀ n : Num, n + 1 = succ n
   | 0 => rfl
   | Pos p => by
     cases p <;> rfl
 
-theorem add_succ : ∀ m n : Num, (m+succ n) = succ (m+n)
+theorem add_succ : ∀ m n : Num, m + succ n = succ (m + n)
   | 0, n => by
     simp [zero_addₓ]
   | Pos p, 0 =>
-    show Pos (p+1) = succ (Pos p+0)by
+    show Pos (p + 1) = succ (Pos p + 0) by
       rw [PosNum.add_one, add_zeroₓ] <;> rfl
   | Pos p, Pos q => congr_argₓ Pos (PosNum.add_succ _ _)
 
 @[simp, norm_cast]
-theorem add_of_nat m : ∀ n, ((m+n : ℕ) : Num) = m+n
+theorem add_of_nat m : ∀ n, ((m + n : ℕ) : Num) = m + n
   | 0 => (add_zeroₓ _).symm
-  | n+1 =>
-    show ((m+n : ℕ)+1 : Num) = m+(↑n)+1by
+  | n + 1 =>
+    show ((m + n : ℕ) + 1 : Num) = m + (↑n + 1) by
       rw [add_one, add_one, add_succ, add_of_nat]
 
 theorem bit0_of_bit0 : ∀ n : Num, bit0 n = n.bit0
@@ -266,11 +266,11 @@ theorem cast_one [HasZero α] [HasOne α] [Add α] : ((1 : Num) : α) = 1 :=
 theorem cast_pos [HasZero α] [HasOne α] [Add α] (n : PosNum) : (Num.pos n : α) = n :=
   rfl
 
-theorem succ'_to_nat : ∀ n, (succ' n : ℕ) = n+1
+theorem succ'_to_nat : ∀ n, (succ' n : ℕ) = n + 1
   | 0 => (_root_.zero_add _).symm
   | Pos p => PosNum.succ_to_nat _
 
-theorem succ_to_nat n : (succ n : ℕ) = n+1 :=
+theorem succ_to_nat n : (succ n : ℕ) = n + 1 :=
   succ'_to_nat n
 
 @[simp, norm_cast]
@@ -289,7 +289,7 @@ theorem cast_to_int [AddGroupₓ α] [HasOne α] (n : Num) : ((n : ℤ) : α) = 
 @[norm_cast]
 theorem to_of_nat : ∀ n : ℕ, ((n : Num) : ℕ) = n
   | 0 => rfl
-  | n+1 => by
+  | n + 1 => by
     rw [Nat.cast_add_one, add_one, succ_to_nat, to_of_nat]
 
 @[simp, norm_cast]
@@ -301,14 +301,14 @@ theorem of_nat_inj {m n : ℕ} : (m : Num) = n ↔ m = n :=
   ⟨fun h => Function.LeftInverse.injective to_of_nat h, congr_argₓ _⟩
 
 @[norm_cast]
-theorem add_to_nat : ∀ m n, ((m+n : Num) : ℕ) = m+n
+theorem add_to_nat : ∀ m n, ((m + n : Num) : ℕ) = m + n
   | 0, 0 => rfl
   | 0, Pos q => (_root_.zero_add _).symm
   | Pos p, 0 => rfl
   | Pos p, Pos q => PosNum.add_to_nat _ _
 
 @[norm_cast]
-theorem mul_to_nat : ∀ m n, ((m*n : Num) : ℕ) = m*n
+theorem mul_to_nat : ∀ m n, ((m * n : Num) : ℕ) = m * n
   | 0, 0 => rfl
   | 0, Pos q => (zero_mul _).symm
   | Pos p, 0 => rfl
@@ -350,10 +350,10 @@ namespace PosNum
 theorem of_to_nat : ∀ n : PosNum, ((n : ℕ) : Num) = Num.pos n
   | 1 => rfl
   | bit0 p =>
-    show ↑(p+p : ℕ) = Num.pos p.bit0 by
+    show ↑(p + p : ℕ) = Num.pos p.bit0 by
       rw [Num.add_of_nat, of_to_nat] <;> exact congr_argₓ Num.pos p.bit0_of_bit0
   | bit1 p =>
-    show (((p+p : ℕ) : Num)+1) = Num.pos p.bit1 by
+    show ((p + p : ℕ) : Num) + 1 = Num.pos p.bit1 by
       rw [Num.add_of_nat, of_to_nat] <;> exact congr_argₓ Num.pos p.bit1_of_bit1
 
 end PosNum
@@ -369,9 +369,8 @@ theorem of_to_nat : ∀ n : Num, ((n : ℕ) : Num) = n
 theorem to_nat_inj {m n : Num} : (m : ℕ) = n ↔ m = n :=
   ⟨fun h => Function.LeftInverse.injective of_to_nat h, congr_argₓ _⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-This tactic tries to turn an (in)equality about `num`s to one about `nat`s by rewriting.
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- This tactic tries to turn an (in)equality about `num`s to one about `nat`s by rewriting.
 ```lean
 example (n : num) (m : num) : n ≤ n + m :=
 begin
@@ -383,9 +382,8 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-This tactic tries to prove (in)equalities about `num`s by transfering them to the `nat` world and
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- This tactic tries to prove (in)equalities about `num`s by transfering them to the `nat` world and
 then trying to call `simp`.
 ```lean
 example (n : num) (m : num) : n ≤ n + m := by num.transfer
@@ -396,8 +394,8 @@ unsafe def transfer : tactic Unit :=
 
 instance : CommSemiringₓ Num := by
   refine_struct
-      { add := ·+·, zero := 0, zero_add, add_zero, mul := ·*·, one := 1, nsmul := @nsmulRec Num ⟨0⟩ ⟨·+·⟩,
-        npow := @npowRec Num ⟨1⟩ ⟨·*·⟩ } <;>
+      { add := · + ·, zero := 0, zero_add, add_zero, mul := · * ·, one := 1, nsmul := @nsmulRec Num ⟨0⟩ ⟨· + ·⟩,
+        npow := @npowRec Num ⟨1⟩ ⟨· * ·⟩ } <;>
     try
         intros
         rfl <;>
@@ -542,9 +540,8 @@ theorem nat_size_to_nat n : nat_size n = Nat.size n := by
 theorem nat_size_pos n : 0 < nat_size n := by
   cases n <;> apply Nat.succ_posₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-This tactic tries to turn an (in)equality about `pos_num`s to one about `nat`s by rewriting.
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- This tactic tries to turn an (in)equality about `pos_num`s to one about `nat`s by rewriting.
 ```lean
 example (n : pos_num) (m : pos_num) : n ≤ n + m :=
 begin
@@ -556,9 +553,8 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-This tactic tries to prove (in)equalities about `pos_num`s by transferring them to the `nat` world
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- This tactic tries to prove (in)equalities about `pos_num`s by transferring them to the `nat` world
 and then trying to call `simp`.
 ```lean
 example (n : pos_num) (m : pos_num) : n ≤ n + m := by pos_num.transfer
@@ -568,12 +564,12 @@ unsafe def transfer : tactic Unit :=
   sorry
 
 instance : AddCommSemigroupₓ PosNum := by
-  refine' { add := ·+·, .. } <;>
+  refine' { add := · + ·, .. } <;>
     run_tac
       transfer
 
 instance : CommMonoidₓ PosNum := by
-  refine_struct { mul := ·*·, one := (1 : PosNum), npow := @npowRec PosNum ⟨1⟩ ⟨·*·⟩ } <;>
+  refine_struct { mul := · * ·, one := (1 : PosNum), npow := @npowRec PosNum ⟨1⟩ ⟨· * ·⟩ } <;>
     try
         intros
         rfl <;>
@@ -581,11 +577,11 @@ instance : CommMonoidₓ PosNum := by
         transfer
 
 instance : Distrib PosNum := by
-  refine' { add := ·+·, mul := ·*·, .. } <;>
-    ·
-      run_tac
+  refine' { add := · + ·, mul := · * ·, .. } <;>
+    · run_tac
         transfer
       simp [mul_addₓ, mul_commₓ]
+      
 
 instance : LinearOrderₓ PosNum where
   lt := · < ·
@@ -629,11 +625,11 @@ theorem bit_to_nat b n : (bit b n : ℕ) = Nat.bit b n := by
   cases b <;> rfl
 
 @[simp, norm_cast]
-theorem cast_add [AddMonoidₓ α] [HasOne α] m n : ((m+n : PosNum) : α) = m+n := by
+theorem cast_add [AddMonoidₓ α] [HasOne α] m n : ((m + n : PosNum) : α) = m + n := by
   rw [← cast_to_nat, add_to_nat, Nat.cast_add, cast_to_nat, cast_to_nat]
 
 @[simp, norm_cast]
-theorem cast_succ [AddMonoidₓ α] [HasOne α] (n : PosNum) : (succ n : α) = n+1 := by
+theorem cast_succ [AddMonoidₓ α] [HasOne α] (n : PosNum) : (succ n : α) = n + 1 := by
   rw [← add_one, cast_add, cast_one]
 
 @[simp, norm_cast]
@@ -649,7 +645,7 @@ theorem cast_pos [LinearOrderedSemiring α] (n : PosNum) : 0 < (n : α) :=
   lt_of_lt_of_leₓ zero_lt_one (one_le_cast n)
 
 @[simp, norm_cast]
-theorem cast_mul [Semiringₓ α] m n : ((m*n : PosNum) : α) = m*n := by
+theorem cast_mul [Semiringₓ α] m n : ((m * n : PosNum) : α) = m * n := by
   rw [← cast_to_nat, mul_to_nat, Nat.cast_mul, cast_to_nat, cast_to_nat]
 
 @[simp]
@@ -659,10 +655,10 @@ theorem cmp_eq m n : cmp m n = Ordering.eq ↔ m = n := by
     simp at this⊢ <;>
       try
           exact this <;>
-        ·
-          simp
+        · simp
             [show m ≠ n from fun e => by
               rw [e] at this <;> exact lt_irreflₓ _ this]
+          
 
 @[simp, norm_cast]
 theorem cast_lt [LinearOrderedSemiring α] {m n : PosNum} : (m : α) < n ↔ m < n := by
@@ -683,14 +679,14 @@ open PosNum
 theorem bit_to_nat b n : (bit b n : ℕ) = Nat.bit b n := by
   cases b <;> cases n <;> rfl
 
-theorem cast_succ' [AddMonoidₓ α] [HasOne α] n : (succ' n : α) = n+1 := by
+theorem cast_succ' [AddMonoidₓ α] [HasOne α] n : (succ' n : α) = n + 1 := by
   rw [← PosNum.cast_to_nat, succ'_to_nat, Nat.cast_add_one, cast_to_nat]
 
-theorem cast_succ [AddMonoidₓ α] [HasOne α] n : (succ n : α) = n+1 :=
+theorem cast_succ [AddMonoidₓ α] [HasOne α] n : (succ n : α) = n + 1 :=
   cast_succ' n
 
 @[simp, norm_cast]
-theorem cast_add [Semiringₓ α] m n : ((m+n : Num) : α) = m+n := by
+theorem cast_add [Semiringₓ α] m n : ((m + n : Num) : α) = m + n := by
   rw [← cast_to_nat, add_to_nat, Nat.cast_add, cast_to_nat, cast_to_nat]
 
 @[simp, norm_cast]
@@ -702,7 +698,7 @@ theorem cast_bit1 [Semiringₓ α] (n : Num) : (n.bit1 : α) = _root_.bit1 n := 
   rw [← bit1_of_bit1, _root_.bit1, bit0_of_bit0, cast_add, cast_bit0] <;> rfl
 
 @[simp, norm_cast]
-theorem cast_mul [Semiringₓ α] : ∀ m n, ((m*n : Num) : α) = m*n
+theorem cast_mul [Semiringₓ α] : ∀ m n, ((m * n : Num) : α) = m * n
   | 0, 0 => (zero_mul _).symm
   | 0, Pos q => (zero_mul _).symm
   | Pos p, 0 => (mul_zero _).symm
@@ -731,10 +727,10 @@ theorem of_nat'_eq : ∀ n, Num.ofNat' n = n :=
     fun b n IH => by
     rw [of_nat'] at IH⊢
     rw [Nat.binary_rec_eq, IH]
-    ·
-      cases b <;> simp [Nat.bit, bit0_of_bit0, bit1_of_bit1]
-    ·
-      rfl
+    · cases b <;> simp [Nat.bit, bit0_of_bit0, bit1_of_bit1]
+      
+    · rfl
+      
 
 theorem zneg_to_znum (n : Num) : -n.to_znum = n.to_znum_neg := by
   cases n <;> rfl
@@ -757,7 +753,7 @@ theorem cast_to_znum_neg [AddGroupₓ α] [HasOne α] : ∀ n : Num, (n.to_znum_
   | Num.pos p => rfl
 
 @[simp]
-theorem add_to_znum (m n : Num) : Num.toZnum (m+n) = m.to_znum+n.to_znum := by
+theorem add_to_znum (m n : Num) : Num.toZnum (m + n) = m.to_znum + n.to_znum := by
   cases m <;> cases n <;> rfl
 
 end Num
@@ -770,16 +766,16 @@ theorem pred_to_nat {n : PosNum} (h : 1 < n) : (pred n : ℕ) = Nat.pred n := by
   unfold pred
   have := pred'_to_nat n
   cases e : pred' n
-  ·
-    have : (1 : ℕ) ≤ Nat.pred n := Nat.pred_le_predₓ ((@cast_lt ℕ _ _ _).2 h)
+  · have : (1 : ℕ) ≤ Nat.pred n := Nat.pred_le_predₓ ((@cast_lt ℕ _ _ _).2 h)
     rw [← pred'_to_nat, e] at this
     exact
       absurd this
         (by
           decide)
-  ·
-    rw [← pred'_to_nat, e]
+    
+  · rw [← pred'_to_nat, e]
     rfl
+    
 
 theorem sub'_one (a : PosNum) : sub' a 1 = (pred' a).toZnum := by
   cases a <;> rfl
@@ -832,10 +828,10 @@ theorem cmp_eq m n : cmp m n = Ordering.eq ↔ m = n := by
     simp at this⊢ <;>
       try
           exact this <;>
-        ·
-          simp
+        · simp
             [show m ≠ n from fun e => by
               rw [e] at this <;> exact lt_irreflₓ _ this]
+          
 
 @[simp, norm_cast]
 theorem cast_lt [LinearOrderedSemiring α] {m n : Num} : (m : α) < n ↔ m < n := by
@@ -892,14 +888,13 @@ theorem bitwise_to_nat {f : Num → Num → Num} {g : Bool → Bool → Bool} (p
           change zero with 0 <;>
         try
           change ((0 : Num) : ℕ) with 0
-  ·
-    rw [f00, Nat.bitwise_zero] <;> rfl
-  ·
-    unfold Nat.bitwiseₓ
+  · rw [f00, Nat.bitwise_zero] <;> rfl
+    
+  · unfold Nat.bitwiseₓ
     rw [f0n, Nat.binary_rec_zero]
     cases g ff tt <;> rfl
-  ·
-    unfold Nat.bitwiseₓ
+    
+  · unfold Nat.bitwiseₓ
     generalize h : (Pos m : ℕ) = m'
     revert h
     apply Nat.bitCasesOn m' _
@@ -907,8 +902,8 @@ theorem bitwise_to_nat {f : Num → Num → Num} {g : Bool → Bool → Bool} (p
     rw [fn0, Nat.binary_rec_eq, Nat.binary_rec_zero, ← h]
     cases g tt ff <;> rfl
     apply Nat.bitwise_bit_aux gff
-  ·
-    rw [fnn]
+    
+  · rw [fnn]
     have : ∀ b n : PosNum, (cond b (↑n) 0 : ℕ) = ↑(cond b (Pos n) 0 : Num) := by
       intros <;> cases b <;> rfl
     induction' m with m IH m IH generalizing n <;> cases' n with n n
@@ -925,7 +920,7 @@ theorem bitwise_to_nat {f : Num → Num → Num} {g : Bool → Bool → Bool} (p
     all_goals
       repeat'
         rw
-          [show ∀ b n, (Pos (PosNum.bit b n) : ℕ) = Nat.bit b (↑n)by
+          [show ∀ b n, (Pos (PosNum.bit b n) : ℕ) = Nat.bit b (↑n) by
             intros <;> cases b <;> rfl]
       rw [Nat.bitwise_bit]
     any_goals {
@@ -939,6 +934,7 @@ theorem bitwise_to_nat {f : Num → Num → Num} {g : Bool → Bool → Bool} (p
     all_goals
       rw [← show ∀ n, ↑p m n = Nat.bitwiseₓ g (↑m) (↑n) from IH]
       rw [← bit_to_nat, pbb]
+    
 
 @[simp, norm_cast]
 theorem lor_to_nat : ∀ m n, (lor m n : ℕ) = Nat.lorₓ m n := by
@@ -983,85 +979,85 @@ theorem lxor_to_nat : ∀ m n, (lxor m n : ℕ) = Nat.lxor m n := by
 @[simp, norm_cast]
 theorem shiftl_to_nat m n : (shiftl m n : ℕ) = Nat.shiftl m n := by
   cases m <;> dunfold shiftl
-  ·
-    symm
+  · symm
     apply Nat.zero_shiftl
+    
   simp
   induction' n with n IH
-  ·
-    rfl
+  · rfl
+    
   simp [PosNum.shiftl, Nat.shiftl_succ]
   rw [← IH]
 
 @[simp, norm_cast]
 theorem shiftr_to_nat m n : (shiftr m n : ℕ) = Nat.shiftr m n := by
   cases' m with m <;> dunfold shiftr
-  ·
-    symm
+  · symm
     apply Nat.zero_shiftr
+    
   induction' n with n IH generalizing m
-  ·
-    cases m <;> rfl
+  · cases m <;> rfl
+    
   cases' m with m m <;> dunfold PosNum.shiftr
-  ·
-    rw [Nat.shiftr_eq_div_pow]
+  · rw [Nat.shiftr_eq_div_pow]
     symm
     apply Nat.div_eq_of_ltₓ
     exact
       @Nat.pow_lt_pow_of_lt_right 2
         (by
           decide)
-        0 (n+1) (Nat.succ_posₓ _)
-  ·
-    trans
+        0 (n + 1) (Nat.succ_posₓ _)
+    
+  · trans
     apply IH
-    change Nat.shiftr m n = Nat.shiftr (bit1 m) (n+1)
+    change Nat.shiftr m n = Nat.shiftr (bit1 m) (n + 1)
     rw [add_commₓ n 1, Nat.shiftr_add]
     apply congr_argₓ fun x => Nat.shiftr x n
     unfold Nat.shiftr
     change (bit1 (↑m) : ℕ) with Nat.bit tt m
     rw [Nat.div2_bit]
-  ·
-    trans
+    
+  · trans
     apply IH
-    change Nat.shiftr m n = Nat.shiftr (bit0 m) (n+1)
+    change Nat.shiftr m n = Nat.shiftr (bit0 m) (n + 1)
     rw [add_commₓ n 1, Nat.shiftr_add]
     apply congr_argₓ fun x => Nat.shiftr x n
     unfold Nat.shiftr
     change (bit0 (↑m) : ℕ) with Nat.bit ff m
     rw [Nat.div2_bit]
+    
 
 @[simp]
 theorem test_bit_to_nat m n : test_bit m n = Nat.testBit m n := by
   cases' m with m <;> unfold test_bit Nat.testBit
-  ·
-    change (zero : Nat) with 0
+  · change (zero : Nat) with 0
     rw [Nat.zero_shiftr]
     rfl
+    
   induction' n with n IH generalizing m <;> cases m <;> dunfold PosNum.testBit
-  ·
-    rfl
-  ·
-    exact (Nat.bodd_bit _ _).symm
-  ·
-    exact (Nat.bodd_bit _ _).symm
-  ·
-    change ff = Nat.bodd (Nat.shiftr 1 (n+1))
+  · rfl
+    
+  · exact (Nat.bodd_bit _ _).symm
+    
+  · exact (Nat.bodd_bit _ _).symm
+    
+  · change ff = Nat.bodd (Nat.shiftr 1 (n + 1))
     rw [add_commₓ, Nat.shiftr_add]
     change Nat.shiftr 1 1 with 0
     rw [Nat.zero_shiftr] <;> rfl
-  ·
-    change PosNum.testBit m n = Nat.bodd (Nat.shiftr (Nat.bit tt m) (n+1))
+    
+  · change PosNum.testBit m n = Nat.bodd (Nat.shiftr (Nat.bit tt m) (n + 1))
     rw [add_commₓ, Nat.shiftr_add]
     unfold Nat.shiftr
     rw [Nat.div2_bit]
     apply IH
-  ·
-    change PosNum.testBit m n = Nat.bodd (Nat.shiftr (Nat.bit ff m) (n+1))
+    
+  · change PosNum.testBit m n = Nat.bodd (Nat.shiftr (Nat.bit ff m) (n + 1))
     rw [add_commₓ, Nat.shiftr_add]
     unfold Nat.shiftr
     rw [Nat.div2_bit]
     apply IH
+    
 
 end Num
 
@@ -1126,7 +1122,7 @@ theorem zneg_pred (n : Znum) : -n.pred = (-n).succ := by
 
 @[simp, norm_cast]
 theorem neg_of_int : ∀ n, ((-n : ℤ) : Znum) = -n
-  | (n+1 : ℕ) => rfl
+  | (n + 1 : ℕ) => rfl
   | 0 => rfl
   | -[1+ n] => (zneg_zneg _).symm
 
@@ -1135,7 +1131,7 @@ theorem abs_to_nat : ∀ n, (abs n : ℕ) = Int.natAbs n
   | 0 => rfl
   | Pos p => congr_argₓ Int.natAbs p.to_nat_to_int
   | neg p =>
-    show Int.natAbs ((p : ℕ) : ℤ) = Int.natAbs (-p)by
+    show Int.natAbs ((p : ℕ) : ℤ) = Int.natAbs (-p) by
       rw [p.to_nat_to_int, Int.nat_abs_neg]
 
 @[simp]
@@ -1180,32 +1176,32 @@ theorem cast_bit1 [AddGroupₓ α] [HasOne α] : ∀ n : Znum, (n.bit1 : α) = b
   | neg p => by
     rw [Znum.bit1, cast_neg, cast_neg]
     cases' e : pred' p with a <;> have : p = _ := (succ'_pred' p).symm.trans (congr_argₓ Num.succ' e)
-    ·
-      change p = 1 at this
+    · change p = 1 at this
       subst p
       simp [_root_.bit1, _root_.bit0]
-    ·
-      rw [Num.succ'] at this
+      
+    · rw [Num.succ'] at this
       subst p
-      have : (↑(-↑a : ℤ) : α) = (-1)+↑((-↑a)+1 : ℤ) := by
+      have : (↑(-↑a : ℤ) : α) = -1 + ↑(-↑a + 1 : ℤ) := by
         simp [add_commₓ]
       simpa [_root_.bit1, _root_.bit0, -add_commₓ]
+      
 
 @[simp]
 theorem cast_bitm1 [AddGroupₓ α] [HasOne α] (n : Znum) : (n.bitm1 : α) = bit0 n - 1 := by
   conv => lhs rw [← zneg_zneg n]
   rw [← zneg_bit1, cast_zneg, cast_bit1]
-  have : ((((-1)+n)+n : ℤ) : α) = ((n+n)+-1 : ℤ) := by
+  have : ((-1 + n + n : ℤ) : α) = (n + n + -1 : ℤ) := by
     simp [add_commₓ, add_left_commₓ]
   simpa [_root_.bit1, _root_.bit0, sub_eq_add_neg, -Int.add_neg_one]
 
-theorem add_zeroₓ (n : Znum) : (n+0) = n := by
+theorem add_zeroₓ (n : Znum) : n + 0 = n := by
   cases n <;> rfl
 
-theorem zero_addₓ (n : Znum) : (0+n) = n := by
+theorem zero_addₓ (n : Znum) : 0 + n = n := by
   cases n <;> rfl
 
-theorem add_one : ∀ n : Znum, (n+1) = succ n
+theorem add_one : ∀ n : Znum, n + 1 = succ n
   | 0 => rfl
   | Pos p => congr_argₓ Pos p.add_one
   | neg p => by
@@ -1232,29 +1228,29 @@ theorem cast_sub' [AddGroupₓ α] [HasOne α] : ∀ m n : PosNum, (sub' m n : �
       simp [PosNum.cast_pos]
   | bit0 a, bit0 b => by
     rw [sub', Znum.cast_bit0, cast_sub']
-    have : (((a+-b)+a+-b : ℤ) : α) = (a+a)+(-b)+-b := by
+    have : ((a + -b + (a + -b) : ℤ) : α) = a + a + (-b + -b) := by
       simp [add_left_commₓ]
     simpa [_root_.bit0, sub_eq_add_neg]
   | bit0 a, bit1 b => by
     rw [sub', Znum.cast_bitm1, cast_sub']
-    have : (((-b)+a+(-b)+-1 : ℤ) : α) = ((a+-1)+(-b)+-b : ℤ) := by
+    have : ((-b + (a + (-b + -1)) : ℤ) : α) = (a + -1 + (-b + -b) : ℤ) := by
       simp [add_commₓ, add_left_commₓ]
     simpa [_root_.bit1, _root_.bit0, sub_eq_add_neg]
   | bit1 a, bit0 b => by
     rw [sub', Znum.cast_bit1, cast_sub']
-    have : (((-b)+a+(-b)+1 : ℤ) : α) = ((a+1)+(-b)+-b : ℤ) := by
+    have : ((-b + (a + (-b + 1)) : ℤ) : α) = (a + 1 + (-b + -b) : ℤ) := by
       simp [add_commₓ, add_left_commₓ]
     simpa [_root_.bit1, _root_.bit0, sub_eq_add_neg]
   | bit1 a, bit1 b => by
     rw [sub', Znum.cast_bit0, cast_sub']
-    have : (((-b)+a+-b : ℤ) : α) = a+(-b)+-b := by
+    have : ((-b + (a + -b) : ℤ) : α) = a + (-b + -b) := by
       simp [add_left_commₓ]
     simpa [_root_.bit1, _root_.bit0, sub_eq_add_neg]
 
-theorem to_nat_eq_succ_pred (n : PosNum) : (n : ℕ) = n.pred'+1 := by
+theorem to_nat_eq_succ_pred (n : PosNum) : (n : ℕ) = n.pred' + 1 := by
   rw [← Num.succ'_to_nat, n.succ'_pred']
 
-theorem to_int_eq_succ_pred (n : PosNum) : (n : ℤ) = (n.pred' : ℕ)+1 := by
+theorem to_int_eq_succ_pred (n : PosNum) : (n : ℤ) = (n.pred' : ℕ) + 1 := by
   rw [← n.to_nat_to_int, to_nat_eq_succ_pred] <;> rfl
 
 end PosNum
@@ -1273,7 +1269,7 @@ theorem cast_sub' [AddGroupₓ α] [HasOne α] : ∀ m n : Num, (sub' m n : α) 
 @[simp]
 theorem of_nat_to_znum : ∀ n : ℕ, to_znum n = n
   | 0 => rfl
-  | n+1 => by
+  | n + 1 => by
     rw [Nat.cast_add_one, Nat.cast_add_one, Znum.add_one, add_one, ← of_nat_to_znum] <;> cases (n : Num) <;> rfl
 
 @[simp]
@@ -1306,7 +1302,7 @@ theorem of_znum'_to_nat : ∀ n : Znum, coeₓ <$> of_znum' n = Int.toNat' n
       rw [← PosNum.to_nat_to_int p] <;> rfl
   | Znum.neg p =>
     (congr_argₓ fun x => Int.toNat' (-x)) $
-      show ((p.pred'+1 : ℕ) : ℤ) = p by
+      show ((p.pred' + 1 : ℕ) : ℤ) = p by
         rw [← succ'_to_nat] <;> simp
 
 @[simp]
@@ -1317,7 +1313,7 @@ theorem of_znum_to_nat : ∀ n : Znum, (of_znum n : ℕ) = Int.toNat n
       rw [← PosNum.to_nat_to_int p] <;> rfl
   | Znum.neg p =>
     (congr_argₓ fun x => Int.toNat (-x)) $
-      show ((p.pred'+1 : ℕ) : ℤ) = p by
+      show ((p.pred' + 1 : ℕ) : ℤ) = p by
         rw [← succ'_to_nat] <;> simp
 
 @[simp]
@@ -1336,7 +1332,7 @@ namespace Znum
 variable {α : Type _}
 
 @[simp, norm_cast]
-theorem cast_add [AddGroupₓ α] [HasOne α] : ∀ m n, ((m+n : Znum) : α) = m+n
+theorem cast_add [AddGroupₓ α] [HasOne α] : ∀ m n, ((m + n : Znum) : α) = m + n
   | 0, a => by
     cases a <;> exact (_root_.zero_add _).symm
   | b, 0 => by
@@ -1345,37 +1341,37 @@ theorem cast_add [AddGroupₓ α] [HasOne α] : ∀ m n, ((m+n : Znum) : α) = m
   | Pos a, neg b => by
     simpa only [sub_eq_add_neg] using PosNum.cast_sub' _ _
   | neg a, Pos b =>
-    have : ((↑b)+-↑a : α) = (-↑a)+↑b := by
+    have : (↑b + -↑a : α) = -↑a + ↑b := by
       rw [← PosNum.cast_to_int a, ← PosNum.cast_to_int b, ← Int.cast_neg, ← Int.cast_add (-a)] <;> simp [add_commₓ]
     (PosNum.cast_sub' _ _).trans $ (sub_eq_add_neg _ _).trans this
   | neg a, neg b =>
-    show -(↑a+b : α) = (-a)+-b by
+    show -(↑(a + b) : α) = -a + -b by
       rw [PosNum.cast_add, neg_eq_iff_neg_eq, neg_add_rev, neg_negₓ, neg_negₓ, ← PosNum.cast_to_int a, ←
           PosNum.cast_to_int b, ← Int.cast_add] <;>
         simp [add_commₓ]
 
 @[simp]
-theorem cast_succ [AddGroupₓ α] [HasOne α] n : ((succ n : Znum) : α) = n+1 := by
+theorem cast_succ [AddGroupₓ α] [HasOne α] n : ((succ n : Znum) : α) = n + 1 := by
   rw [← add_one, cast_add, cast_one]
 
 @[simp, norm_cast]
-theorem mul_to_int : ∀ m n, ((m*n : Znum) : ℤ) = m*n
+theorem mul_to_int : ∀ m n, ((m * n : Znum) : ℤ) = m * n
   | 0, a => by
     cases a <;> exact (_root_.zero_mul _).symm
   | b, 0 => by
     cases b <;> exact (_root_.mul_zero _).symm
   | Pos a, Pos b => PosNum.cast_mul a b
   | Pos a, neg b =>
-    show (-↑a*b) = (↑a)*-↑b by
+    show -↑(a * b) = ↑a * -↑b by
       rw [PosNum.cast_mul, neg_mul_eq_mul_neg]
   | neg a, Pos b =>
-    show (-↑a*b) = (-↑a)*↑b by
+    show -↑(a * b) = -↑a * ↑b by
       rw [PosNum.cast_mul, neg_mul_eq_neg_mul]
   | neg a, neg b =>
-    show (↑a*b) = (-↑a)*-↑b by
+    show ↑(a * b) = -↑a * -↑b by
       rw [PosNum.cast_mul, neg_mul_neg]
 
-theorem cast_mul [Ringₓ α] m n : ((m*n : Znum) : α) = m*n := by
+theorem cast_mul [Ringₓ α] m n : ((m * n : Znum) : α) = m * n := by
   rw [← cast_to_int, mul_to_int, Int.cast_mul, cast_to_int, cast_to_int]
 
 @[simp, norm_cast]
@@ -1416,919 +1412,21 @@ theorem of_int'_eq : ∀ n, Znum.ofInt' n = n
     to_int_inj.1 $ by
       simp [Znum.ofInt']
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `cmp_to_int [])
-  (Command.declSig
-   []
-   (Term.typeSpec
-    ":"
-    (Term.forall
-     "∀"
-     [(Term.simpleBinder [`m `n] [])]
-     ","
-     (Term.paren
-      "("
-      [(Term.app
-        `Ordering.casesOn
-        [(Term.app `cmp [`m `n])
-         («term_<_» (Term.paren "(" [`m [(Term.typeAscription ":" (termℤ "ℤ"))]] ")") "<" `n)
-         («term_=_» `m "=" `n)
-         («term_<_» (Term.paren "(" [`n [(Term.typeAscription ":" (termℤ "ℤ"))]] ")") "<" `m)])
-       [(Term.typeAscription ":" (Term.prop "Prop"))]]
-      ")"))))
-  (Command.declValEqns
-   (Term.matchAltsWhereDecls
-    (Term.matchAlts
-     [(Term.matchAlt "|" [(numLit "0") "," (numLit "0")] "=>" `rfl)
-      (Term.matchAlt
-       "|"
-       [(Term.app `Pos [`a]) "," (Term.app `Pos [`b])]
-       "=>"
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group
-            (Tactic.«tactic_<;>_»
-             (Tactic.tacticHave_
-              "have"
-              (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `PosNum.cmp_to_nat [`a `b]))))
-             "<;>"
-             (Tactic.«tactic_<;>_»
-              (Tactic.revert "revert" [`this])
-              "<;>"
-              (Tactic.«tactic_<;>_»
-               (Tactic.dsimp "dsimp" [] [] ["[" [(Tactic.simpLemma [] [] `cmp)] "]"] [] [])
-               "<;>"
-               (Tactic.«tactic_<;>_»
-                (Tactic.cases "cases" [(Tactic.casesTarget [] (Term.app `PosNum.cmp [`a `b]))] [] [])
-                "<;>"
-                (Tactic.«tactic_<;>[_]»
-                 (Tactic.dsimp "dsimp" [] [] [] [] [])
-                 "<;>"
-                 "["
-                 [(Tactic.simp "simp" [] [] [] [])
-                  ","
-                  (Tactic.exact "exact" (Term.app `congr_argₓ [`Pos]))
-                  ","
-                  (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `Gt)] "]"] [])]
-                 "]")))))
-            [])]))))
-      (Term.matchAlt
-       "|"
-       [(Term.app `neg [`a]) "," (Term.app `neg [`b])]
-       "=>"
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group
-            (Tactic.«tactic_<;>_»
-             (Tactic.tacticHave_
-              "have"
-              (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `PosNum.cmp_to_nat [`b `a]))))
-             "<;>"
-             (Tactic.«tactic_<;>_»
-              (Tactic.revert "revert" [`this])
-              "<;>"
-              (Tactic.«tactic_<;>_»
-               (Tactic.dsimp "dsimp" [] [] ["[" [(Tactic.simpLemma [] [] `cmp)] "]"] [] [])
-               "<;>"
-               (Tactic.«tactic_<;>_»
-                (Tactic.cases "cases" [(Tactic.casesTarget [] (Term.app `PosNum.cmp [`b `a]))] [] [])
-                "<;>"
-                (Tactic.«tactic_<;>[_]»
-                 (Tactic.dsimp "dsimp" [] [] [] [] [])
-                 "<;>"
-                 "["
-                 [(Tactic.simp "simp" [] [] [] [])
-                  ","
-                  (Tactic.simp
-                   "simp"
-                   ["("
-                    "config"
-                    ":="
-                    (Term.structInst
-                     "{"
-                     []
-                     [(group
-                       (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0)
-                       [])]
-                     (Term.optEllipsis [])
-                     []
-                     "}")
-                    ")"]
-                   []
-                   []
-                   [])
-                  ","
-                  (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `Gt)] "]"] [])]
-                 "]")))))
-            [])]))))
-      (Term.matchAlt "|" [(Term.app `Pos [`a]) "," (numLit "0")] "=>" (Term.app `PosNum.cast_pos [(Term.hole "_")]))
-      (Term.matchAlt
-       "|"
-       [(Term.app `Pos [`a]) "," (Term.app `neg [`b])]
-       "=>"
-       (Term.app
-        `lt_transₓ
-        [(«term_$__» (Term.proj `neg_lt_zero "." (fieldIdx "2")) "$" (Term.app `PosNum.cast_pos [(Term.hole "_")]))
-         (Term.app `PosNum.cast_pos [(Term.hole "_")])]))
-      (Term.matchAlt
-       "|"
-       [(numLit "0") "," (Term.app `neg [`b])]
-       "=>"
-       («term_$__» (Term.proj `neg_lt_zero "." (fieldIdx "2")) "$" (Term.app `PosNum.cast_pos [(Term.hole "_")])))
-      (Term.matchAlt
-       "|"
-       [(Term.app `neg [`a]) "," (numLit "0")]
-       "=>"
-       («term_$__» (Term.proj `neg_lt_zero "." (fieldIdx "2")) "$" (Term.app `PosNum.cast_pos [(Term.hole "_")])))
-      (Term.matchAlt
-       "|"
-       [(Term.app `neg [`a]) "," (Term.app `Pos [`b])]
-       "=>"
-       (Term.app
-        `lt_transₓ
-        [(«term_$__» (Term.proj `neg_lt_zero "." (fieldIdx "2")) "$" (Term.app `PosNum.cast_pos [(Term.hole "_")]))
-         (Term.app `PosNum.cast_pos [(Term.hole "_")])]))
-      (Term.matchAlt "|" [(numLit "0") "," (Term.app `Pos [`b])] "=>" (Term.app `PosNum.cast_pos [(Term.hole "_")]))])
-    []))
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAltsWhereDecls', expected 'Lean.Parser.Term.matchAltsWhereDecls.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlts', expected 'Lean.Parser.Term.matchAlts.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'Lean.Parser.Term.matchAlt.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `PosNum.cast_pos [(Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `PosNum.cast_pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `Pos [`b])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `b
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `Pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "0")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'Lean.Parser.Term.matchAlt.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app
-   `lt_transₓ
-   [(«term_$__» (Term.proj `neg_lt_zero "." (fieldIdx "2")) "$" (Term.app `PosNum.cast_pos [(Term.hole "_")]))
-    (Term.app `PosNum.cast_pos [(Term.hole "_")])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `PosNum.cast_pos [(Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `PosNum.cast_pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `PosNum.cast_pos [(Term.hole "_")]) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  («term_$__» (Term.proj `neg_lt_zero "." (fieldIdx "2")) "$" (Term.app `PosNum.cast_pos [(Term.hole "_")]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `PosNum.cast_pos [(Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `PosNum.cast_pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-  (Term.proj `neg_lt_zero "." (fieldIdx "2"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `neg_lt_zero
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 10, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(«term_$__» (Term.proj `neg_lt_zero "." (fieldIdx "2")) "$" (Term.app `PosNum.cast_pos [(Term.hole "_")])) []]
- ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `lt_transₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `Pos [`b])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `b
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `Pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `neg [`a])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `neg
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'Lean.Parser.Term.matchAlt.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_$__» (Term.proj `neg_lt_zero "." (fieldIdx "2")) "$" (Term.app `PosNum.cast_pos [(Term.hole "_")]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `PosNum.cast_pos [(Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `PosNum.cast_pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-  (Term.proj `neg_lt_zero "." (fieldIdx "2"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `neg_lt_zero
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "0")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `neg [`a])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `neg
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'Lean.Parser.Term.matchAlt.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_$__» (Term.proj `neg_lt_zero "." (fieldIdx "2")) "$" (Term.app `PosNum.cast_pos [(Term.hole "_")]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `PosNum.cast_pos [(Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `PosNum.cast_pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-  (Term.proj `neg_lt_zero "." (fieldIdx "2"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `neg_lt_zero
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `neg [`b])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `b
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `neg
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "0")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'Lean.Parser.Term.matchAlt.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app
-   `lt_transₓ
-   [(«term_$__» (Term.proj `neg_lt_zero "." (fieldIdx "2")) "$" (Term.app `PosNum.cast_pos [(Term.hole "_")]))
-    (Term.app `PosNum.cast_pos [(Term.hole "_")])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `PosNum.cast_pos [(Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `PosNum.cast_pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `PosNum.cast_pos [(Term.hole "_")]) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  («term_$__» (Term.proj `neg_lt_zero "." (fieldIdx "2")) "$" (Term.app `PosNum.cast_pos [(Term.hole "_")]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `PosNum.cast_pos [(Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `PosNum.cast_pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
-  (Term.proj `neg_lt_zero "." (fieldIdx "2"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `neg_lt_zero
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 10, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(«term_$__» (Term.proj `neg_lt_zero "." (fieldIdx "2")) "$" (Term.app `PosNum.cast_pos [(Term.hole "_")])) []]
- ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `lt_transₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `neg [`b])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `b
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `neg
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `Pos [`a])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `Pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'Lean.Parser.Term.matchAlt.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `PosNum.cast_pos [(Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `PosNum.cast_pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "0")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `Pos [`a])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `Pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.matchAlt', expected 'Lean.Parser.Term.matchAlt.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.«tactic_<;>_»
-        (Tactic.tacticHave_ "have" (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `PosNum.cmp_to_nat [`b `a]))))
-        "<;>"
-        (Tactic.«tactic_<;>_»
-         (Tactic.revert "revert" [`this])
-         "<;>"
-         (Tactic.«tactic_<;>_»
-          (Tactic.dsimp "dsimp" [] [] ["[" [(Tactic.simpLemma [] [] `cmp)] "]"] [] [])
-          "<;>"
-          (Tactic.«tactic_<;>_»
-           (Tactic.cases "cases" [(Tactic.casesTarget [] (Term.app `PosNum.cmp [`b `a]))] [] [])
-           "<;>"
-           (Tactic.«tactic_<;>[_]»
-            (Tactic.dsimp "dsimp" [] [] [] [] [])
-            "<;>"
-            "["
-            [(Tactic.simp "simp" [] [] [] [])
-             ","
-             (Tactic.simp
-              "simp"
-              ["("
-               "config"
-               ":="
-               (Term.structInst
-                "{"
-                []
-                [(group
-                  (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0)
-                  [])]
-                (Term.optEllipsis [])
-                []
-                "}")
-               ")"]
-              []
-              []
-              [])
-             ","
-             (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `Gt)] "]"] [])]
-            "]")))))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic_<;>_»
-   (Tactic.tacticHave_ "have" (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `PosNum.cmp_to_nat [`b `a]))))
-   "<;>"
-   (Tactic.«tactic_<;>_»
-    (Tactic.revert "revert" [`this])
-    "<;>"
-    (Tactic.«tactic_<;>_»
-     (Tactic.dsimp "dsimp" [] [] ["[" [(Tactic.simpLemma [] [] `cmp)] "]"] [] [])
-     "<;>"
-     (Tactic.«tactic_<;>_»
-      (Tactic.cases "cases" [(Tactic.casesTarget [] (Term.app `PosNum.cmp [`b `a]))] [] [])
-      "<;>"
-      (Tactic.«tactic_<;>[_]»
-       (Tactic.dsimp "dsimp" [] [] [] [] [])
-       "<;>"
-       "["
-       [(Tactic.simp "simp" [] [] [] [])
-        ","
-        (Tactic.simp
-         "simp"
-         ["("
-          "config"
-          ":="
-          (Term.structInst
-           "{"
-           []
-           [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-           (Term.optEllipsis [])
-           []
-           "}")
-          ")"]
-         []
-         []
-         [])
-        ","
-        (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `Gt)] "]"] [])]
-       "]")))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic_<;>_»
-   (Tactic.revert "revert" [`this])
-   "<;>"
-   (Tactic.«tactic_<;>_»
-    (Tactic.dsimp "dsimp" [] [] ["[" [(Tactic.simpLemma [] [] `cmp)] "]"] [] [])
-    "<;>"
-    (Tactic.«tactic_<;>_»
-     (Tactic.cases "cases" [(Tactic.casesTarget [] (Term.app `PosNum.cmp [`b `a]))] [] [])
-     "<;>"
-     (Tactic.«tactic_<;>[_]»
-      (Tactic.dsimp "dsimp" [] [] [] [] [])
-      "<;>"
-      "["
-      [(Tactic.simp "simp" [] [] [] [])
-       ","
-       (Tactic.simp
-        "simp"
-        ["("
-         "config"
-         ":="
-         (Term.structInst
-          "{"
-          []
-          [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-          (Term.optEllipsis [])
-          []
-          "}")
-         ")"]
-        []
-        []
-        [])
-       ","
-       (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `Gt)] "]"] [])]
-      "]"))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic_<;>_»
-   (Tactic.dsimp "dsimp" [] [] ["[" [(Tactic.simpLemma [] [] `cmp)] "]"] [] [])
-   "<;>"
-   (Tactic.«tactic_<;>_»
-    (Tactic.cases "cases" [(Tactic.casesTarget [] (Term.app `PosNum.cmp [`b `a]))] [] [])
-    "<;>"
-    (Tactic.«tactic_<;>[_]»
-     (Tactic.dsimp "dsimp" [] [] [] [] [])
-     "<;>"
-     "["
-     [(Tactic.simp "simp" [] [] [] [])
-      ","
-      (Tactic.simp
-       "simp"
-       ["("
-        "config"
-        ":="
-        (Term.structInst
-         "{"
-         []
-         [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-         (Term.optEllipsis [])
-         []
-         "}")
-        ")"]
-       []
-       []
-       [])
-      ","
-      (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `Gt)] "]"] [])]
-     "]")))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic_<;>_»
-   (Tactic.cases "cases" [(Tactic.casesTarget [] (Term.app `PosNum.cmp [`b `a]))] [] [])
-   "<;>"
-   (Tactic.«tactic_<;>[_]»
-    (Tactic.dsimp "dsimp" [] [] [] [] [])
-    "<;>"
-    "["
-    [(Tactic.simp "simp" [] [] [] [])
-     ","
-     (Tactic.simp
-      "simp"
-      ["("
-       "config"
-       ":="
-       (Term.structInst
-        "{"
-        []
-        [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-        (Term.optEllipsis [])
-        []
-        "}")
-       ")"]
-      []
-      []
-      [])
-     ","
-     (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `Gt)] "]"] [])]
-    "]"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.«tactic_<;>[_]»
-   (Tactic.dsimp "dsimp" [] [] [] [] [])
-   "<;>"
-   "["
-   [(Tactic.simp "simp" [] [] [] [])
-    ","
-    (Tactic.simp
-     "simp"
-     ["("
-      "config"
-      ":="
-      (Term.structInst
-       "{"
-       []
-       [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-       (Term.optEllipsis [])
-       []
-       "}")
-      ")"]
-     []
-     []
-     [])
-    ","
-    (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `Gt)] "]"] [])]
-   "]")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>[_]»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp "simp" [] [] ["[" [(Tactic.simpLemma [] [] `Gt)] "]"] [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `Gt
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simp
-   "simp"
-   ["("
-    "config"
-    ":="
-    (Term.structInst
-     "{"
-     []
-     [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
-     (Term.optEllipsis [])
-     []
-     "}")
-    ")"]
-   []
-   []
-   [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'Lean.Parser.Tactic.discharger'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  cmp_to_int
-  : ∀ m n , ( Ordering.casesOn cmp m n ( m : ℤ ) < n m = n ( n : ℤ ) < m : Prop )
-  | 0 , 0 => rfl
-    |
-      Pos a , Pos b
-      =>
-      by
-        have := PosNum.cmp_to_nat a b
-          <;>
-          revert this
-            <;>
-            dsimp [ cmp ] <;> cases PosNum.cmp a b <;> dsimp <;> [ simp , exact congr_argₓ Pos , simp [ Gt ] ]
-    |
-      neg a , neg b
-      =>
-      by
-        have := PosNum.cmp_to_nat b a
-          <;>
-          revert this
-            <;>
-            dsimp [ cmp ]
-              <;>
-              cases PosNum.cmp b a
-                <;>
-                dsimp <;> [ simp , simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) , simp [ Gt ] ]
-    | Pos a , 0 => PosNum.cast_pos _
-    | Pos a , neg b => lt_transₓ neg_lt_zero . 2 $ PosNum.cast_pos _ PosNum.cast_pos _
-    | 0 , neg b => neg_lt_zero . 2 $ PosNum.cast_pos _
-    | neg a , 0 => neg_lt_zero . 2 $ PosNum.cast_pos _
-    | neg a , Pos b => lt_transₓ neg_lt_zero . 2 $ PosNum.cast_pos _ PosNum.cast_pos _
-    | 0 , Pos b => PosNum.cast_pos _
+theorem cmp_to_int : ∀ m n, (Ordering.casesOn (cmp m n) ((m : ℤ) < n) (m = n) ((n : ℤ) < m) : Prop)
+  | 0, 0 => rfl
+  | Pos a, Pos b => by
+    have := PosNum.cmp_to_nat a b <;>
+      revert this <;> dsimp [cmp] <;> cases PosNum.cmp a b <;> dsimp <;> [simp , exact congr_argₓ Pos, simp [Gt]]
+  | neg a, neg b => by
+    have := PosNum.cmp_to_nat b a <;>
+      revert this <;>
+        dsimp [cmp] <;> cases PosNum.cmp b a <;> dsimp <;> [simp , simp (config := { contextual := true }), simp [Gt]]
+  | Pos a, 0 => PosNum.cast_pos _
+  | Pos a, neg b => lt_transₓ (neg_lt_zero.2 $ PosNum.cast_pos _) (PosNum.cast_pos _)
+  | 0, neg b => neg_lt_zero.2 $ PosNum.cast_pos _
+  | neg a, 0 => neg_lt_zero.2 $ PosNum.cast_pos _
+  | neg a, Pos b => lt_transₓ (neg_lt_zero.2 $ PosNum.cast_pos _) (PosNum.cast_pos _)
+  | 0, Pos b => PosNum.cast_pos _
 
 @[norm_cast]
 theorem lt_to_int {m n : Znum} : (m : ℤ) < n ↔ m < n :=
@@ -2361,9 +1459,8 @@ theorem cast_le [LinearOrderedRing α] {m n : Znum} : (m : α) ≤ n ↔ m ≤ n
 theorem cast_inj [LinearOrderedRing α] {m n : Znum} : (m : α) = n ↔ m = n := by
   rw [← cast_to_int m, ← cast_to_int n, Int.cast_inj, to_int_inj]
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-This tactic tries to turn an (in)equality about `znum`s to one about `int`s by rewriting.
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- This tactic tries to turn an (in)equality about `znum`s to one about `int`s by rewriting.
 ```lean
 example (n : znum) (m : znum) : n ≤ n + m * m :=
 begin
@@ -2375,9 +1472,8 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
-/-- 
-This tactic tries to prove (in)equalities about `znum`s by transfering them to the `int` world and
+-- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+/-- This tactic tries to prove (in)equalities about `znum`s by transfering them to the `int` world and
 then trying to call `simp`.
 ```lean
 example (n : znum) (m : znum) : n ≤ n + m * m :=
@@ -2421,7 +1517,7 @@ instance : LinearOrderₓ Znum where
   decidableLt := Znum.decidableLt
 
 instance : AddCommGroupₓ Znum where
-  add := ·+·
+  add := · + ·
   add_assoc := by
     run_tac
       transfer
@@ -2437,7 +1533,7 @@ instance : AddCommGroupₓ Znum where
       transfer
 
 instance : LinearOrderedCommRing Znum :=
-  { Znum.linearOrder, Znum.addCommGroup with mul := ·*·,
+  { Znum.linearOrder, Znum.addCommGroup with mul := · * ·,
     mul_assoc := by
       run_tac
         transfer,
@@ -2469,7 +1565,7 @@ instance : LinearOrderedCommRing Znum :=
         transfer_rw
       exact fun h => add_le_add_left h c,
     mul_pos := fun a b =>
-      show 0 < a → 0 < b → 0 < a*b by
+      show 0 < a → 0 < b → 0 < a * b by
         run_tac
           transfer_rw
         apply mul_pos,
@@ -2489,58 +1585,58 @@ end Znum
 
 namespace PosNum
 
-theorem divmod_to_nat_aux {n d : PosNum} {q r : Num} (h₁ : ((r : ℕ)+d*_root_.bit0 q) = n) (h₂ : (r : ℕ) < 2*d) :
-    ((divmod_aux d q r).2+d*(divmod_aux d q r).1 : ℕ) = ↑n ∧ ((divmod_aux d q r).2 : ℕ) < d := by
+theorem divmod_to_nat_aux {n d : PosNum} {q r : Num} (h₁ : (r : ℕ) + d * _root_.bit0 q = n) (h₂ : (r : ℕ) < 2 * d) :
+    ((divmod_aux d q r).2 + d * (divmod_aux d q r).1 : ℕ) = ↑n ∧ ((divmod_aux d q r).2 : ℕ) < d := by
   unfold divmod_aux
-  have : ∀ {r₂}, Num.ofZnum' (Num.sub' r (Num.pos d)) = some r₂ ↔ (r : ℕ) = r₂+d := by
+  have : ∀ {r₂}, Num.ofZnum' (Num.sub' r (Num.pos d)) = some r₂ ↔ (r : ℕ) = r₂ + d := by
     intro r₂
     apply num.mem_of_znum'.trans
     rw [← Znum.to_int_inj, Num.cast_to_znum, Num.cast_sub', sub_eq_iff_eq_add, ← Int.coe_nat_inj']
     simp
   cases' e : Num.ofZnum' (Num.sub' r (Num.pos d)) with r₂ <;> simp [divmod_aux]
-  ·
-    refine' ⟨h₁, lt_of_not_geₓ fun h => _⟩
+  · refine' ⟨h₁, lt_of_not_geₓ fun h => _⟩
     cases' Nat.Le.dest h with r₂ e'
     rw [← Num.to_of_nat r₂, add_commₓ] at e'
     cases e.symm.trans (this.2 e'.symm)
-  ·
-    have := this.1 e
+    
+  · have := this.1 e
     constructor
-    ·
-      rwa [_root_.bit1, add_commₓ _ 1, mul_addₓ, mul_oneₓ, ← add_assocₓ, ← this]
-    ·
-      rwa [this, two_mul, add_lt_add_iff_right] at h₂
+    · rwa [_root_.bit1, add_commₓ _ 1, mul_addₓ, mul_oneₓ, ← add_assocₓ, ← this]
+      
+    · rwa [this, two_mul, add_lt_add_iff_right] at h₂
+      
+    
 
 theorem divmod_to_nat (d n : PosNum) : (n / d : ℕ) = (divmod d n).1 ∧ (n % d : ℕ) = (divmod d n).2 := by
   rw [Nat.div_mod_unique (PosNum.cast_pos _)]
   induction' n with n IH n IH
-  ·
-    exact
+  · exact
       divmod_to_nat_aux
         (by
           simp <;> rfl)
         (Nat.mul_le_mul_leftₓ 2 (PosNum.cast_pos d : (0 : ℕ) < d))
-  ·
-    unfold divmod
+    
+  · unfold divmod
     cases' divmod d n with q r
     simp only [divmod] at IH⊢
     apply divmod_to_nat_aux <;> simp
-    ·
-      rw [_root_.bit1, _root_.bit1, add_right_commₓ, bit0_eq_two_mul (↑n), ← IH.1, mul_addₓ, ← bit0_eq_two_mul,
+    · rw [_root_.bit1, _root_.bit1, add_right_commₓ, bit0_eq_two_mul (↑n), ← IH.1, mul_addₓ, ← bit0_eq_two_mul,
         mul_left_commₓ, ← bit0_eq_two_mul]
-    ·
-      rw [← bit0_eq_two_mul]
+      
+    · rw [← bit0_eq_two_mul]
       exact Nat.bit1_lt_bit0 IH.2
-  ·
-    unfold divmod
+      
+    
+  · unfold divmod
     cases' divmod d n with q r
     simp only [divmod] at IH⊢
     apply divmod_to_nat_aux <;> simp
-    ·
-      rw [bit0_eq_two_mul (↑n), ← IH.1, mul_addₓ, ← bit0_eq_two_mul, mul_left_commₓ, ← bit0_eq_two_mul]
-    ·
-      rw [← bit0_eq_two_mul]
+    · rw [bit0_eq_two_mul (↑n), ← IH.1, mul_addₓ, ← bit0_eq_two_mul, mul_left_commₓ, ← bit0_eq_two_mul]
+      
+    · rw [← bit0_eq_two_mul]
       exact Nat.bit0_lt IH.2
+      
+    
 
 @[simp]
 theorem div'_to_nat n d : (div' n d : ℕ) = n / d :=
@@ -2584,7 +1680,7 @@ theorem mod_to_nat : ∀ n d, ((n % d : Num) : ℕ) = n % d
   | Pos n, 0 => (Nat.mod_zeroₓ _).symm
   | Pos n, Pos d => PosNum.mod'_to_nat _ _
 
-theorem gcd_to_nat_aux : ∀ {n} {a b : Num}, a ≤ b → (a*b).natSize ≤ n → (gcd_aux n a b : ℕ) = Nat.gcdₓ a b
+theorem gcd_to_nat_aux : ∀ {n} {a b : Num}, a ≤ b → (a * b).natSize ≤ n → (gcd_aux n a b : ℕ) = Nat.gcdₓ a b
   | 0, 0, b, ab, h => (Nat.gcd_zero_leftₓ _).symm
   | 0, Pos a, 0, ab, h => (not_lt_of_geₓ ab).elim rfl
   | 0, Pos a, Pos b, ab, h => (not_lt_of_le h).elim $ PosNum.nat_size_pos _
@@ -2592,11 +1688,11 @@ theorem gcd_to_nat_aux : ∀ {n} {a b : Num}, a ≤ b → (a*b).natSize ≤ n �
   | Nat.succ n, Pos a, b, ab, h => by
     simp [gcd_aux]
     rw [Nat.gcd_recₓ, gcd_to_nat_aux, mod_to_nat]
-    ·
-      rfl
-    ·
-      rw [← le_to_nat, mod_to_nat]
+    · rfl
+      
+    · rw [← le_to_nat, mod_to_nat]
       exact le_of_ltₓ (Nat.mod_ltₓ _ (PosNum.cast_pos _))
+      
     rw [nat_size_to_nat, mul_to_nat, Nat.size_le] at h⊢
     rw [mod_to_nat, mul_commₓ]
     rw [pow_succ'ₓ, ← Nat.mod_add_divₓ b (Pos a)] at h
@@ -2609,21 +1705,20 @@ theorem gcd_to_nat_aux : ∀ {n} {a b : Num}, a ≤ b → (a*b).natSize ≤ n �
     exact le_to_nat.2 ab
 
 @[simp]
-theorem gcd_to_nat : ∀ a b, (gcd a b : ℕ) = Nat.gcdₓ a b :=
-  have : ∀ a b : Num, (a*b).natSize ≤ a.nat_size+b.nat_size := by
+theorem gcd_to_nat : ∀ a b, (gcd a b : ℕ) = Nat.gcdₓ a b := by
+  have : ∀ a b : Num, (a * b).natSize ≤ a.nat_size + b.nat_size := by
     intros
     simp [nat_size_to_nat]
     rw [Nat.size_le, pow_addₓ]
     exact mul_lt_mul'' (Nat.lt_size_self _) (Nat.lt_size_self _) (Nat.zero_leₓ _) (Nat.zero_leₓ _)
-  by
   intros
   unfold gcd
   split_ifs
-  ·
-    exact gcd_to_nat_aux h (this _ _)
-  ·
-    rw [Nat.gcd_commₓ]
+  · exact gcd_to_nat_aux h (this _ _)
+    
+  · rw [Nat.gcd_commₓ]
     exact gcd_to_nat_aux (le_of_not_leₓ h) (this _ _)
+    
 
 theorem dvd_iff_mod_eq_zero {m n : Num} : m ∣ n ↔ n % m = 0 := by
   rw [← dvd_to_nat, Nat.dvd_iff_mod_eq_zeroₓ, ← to_nat_inj, mod_to_nat] <;> rfl
@@ -2663,12 +1758,12 @@ theorem div_to_int : ∀ n d, ((n / d : Znum) : ℤ) = n / d
   | neg n, Pos d =>
     show -_ = -_ / ↑d by
       rw [n.to_int_eq_succ_pred, d.to_int_eq_succ_pred, ← PosNum.to_nat_to_int, Num.succ'_to_nat, Num.div_to_nat]
-      change -[1+ n.pred' / ↑d] = -[1+ n.pred' / d.pred'+1]
+      change -[1+ n.pred' / ↑d] = -[1+ n.pred' / (d.pred' + 1)]
       rw [d.to_nat_eq_succ_pred]
   | neg n, neg d =>
     show ↑(PosNum.pred' n / Num.pos d).succ' = -_ / -↑d by
       rw [n.to_int_eq_succ_pred, d.to_int_eq_succ_pred, ← PosNum.to_nat_to_int, Num.succ'_to_nat, Num.div_to_nat]
-      change (Nat.succ (_ / d) : ℤ) = Nat.succ (n.pred' / d.pred'+1)
+      change (Nat.succ (_ / d) : ℤ) = Nat.succ (n.pred' / (d.pred' + 1))
       rw [d.to_nat_eq_succ_pred]
 
 @[simp, norm_cast]
@@ -2698,7 +1793,7 @@ end Znum
 
 namespace Int
 
-/--  Cast a `snum` to the corresponding integer. -/
+/-- Cast a `snum` to the corresponding integer. -/
 def of_snum : Snum → ℤ :=
   Snum.rec' (fun a => cond a (-1) 0) fun a p IH => cond a (bit1 IH) (bit0 IH)
 

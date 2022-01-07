@@ -23,7 +23,7 @@ local notation a "*" b => op a b
 
 include hc ha
 
-/--  `fold op b f s` folds the commutative associative operation `op` over the
+/-- `fold op b f s` folds the commutative associative operation `op` over the
   `f`-image of `s`, i.e. `fold (+) b f {1,2,3} = f 1 + f 2 + f 3 + b`. -/
 def fold (b : β) (f : α → β) (s : Finset α) : β :=
   (s.1.map f).fold op b
@@ -64,6 +64,20 @@ theorem fold_op_distrib {f g : α → β} {b₁ b₂ : β} :
     (s.fold op (b₁*b₂) fun x => f x*g x) = s.fold op b₁ f*s.fold op b₂ g := by
   simp only [fold, fold_distrib]
 
+theorem fold_const [Decidable (s = ∅)] (c : β) (h : op c (op b c) = op b c) :
+    Finset.fold op b (fun _ => c) s = if s = ∅ then b else op b c := by
+  classical
+  induction' s using Finset.induction_on with x s hx IH
+  · simp
+    
+  · simp only [Finset.fold_insert hx, IH, if_false, Finset.insert_ne_empty]
+    split_ifs
+    · rw [hc.comm]
+      
+    · exact h
+      
+    
+
 theorem fold_hom {op' : γ → γ → γ} [IsCommutative γ op'] [IsAssociative γ op'] {m : β → γ}
     (hm : ∀ x y, m (op x y) = op' (m x) (m y)) : (s.fold op' (m b) fun x => m (f x)) = m (s.fold op b f) := by
   rw [fold, fold, ← fold_hom op hm, Multiset.map_map]
@@ -76,90 +90,122 @@ theorem fold_union_inter [DecidableEq α] {s₁ s₂ : Finset α} {b₁ b₂ : �
 @[simp]
 theorem fold_insert_idem [DecidableEq α] [hi : IsIdempotent β op] : (insert a s).fold op b f = f a*s.fold op b f := by
   by_cases' a ∈ s
-  ·
-    rw [← insert_erase h]
+  · rw [← insert_erase h]
     simp [← ha.assoc, hi.idempotent]
-  ·
-    apply fold_insert h
+    
+  · apply fold_insert h
+    
 
 theorem fold_image_idem [DecidableEq α] {g : γ → α} {s : Finset γ} [hi : IsIdempotent β op] :
     (image g s).fold op b f = s.fold op b (f ∘ g) := by
   induction' s using Finset.cons_induction with x xs hx ih
-  ·
-    rw [fold_empty, image_empty, fold_empty]
-  ·
-    have := Classical.decEq γ
+  · rw [fold_empty, image_empty, fold_empty]
+    
+  · have := Classical.decEq γ
     rw [fold_cons, cons_eq_insert, image_insert, fold_insert_idem, ih]
+    
+
+/-- A stronger version of `finset.fold_ite`, but relies on
+an explicit proof of idempotency on the seed element, rather
+than relying on typeclass idempotency over the whole type. -/
+theorem fold_ite' {g : α → β} (hb : op b b = b) (p : α → Prop) [DecidablePred p] :
+    Finset.fold op b (fun i => ite (p i) (f i) (g i)) s =
+      op (Finset.fold op b f (s.filter p)) (Finset.fold op b g (s.filter fun i => ¬p i)) :=
+  by
+  classical
+  induction' s using Finset.induction_on with x s hx IH
+  · simp [hb]
+    
+  · simp only [Finset.filter_congr_decidable, Finset.fold_insert hx]
+    split_ifs with h h
+    · have : x ∉ Finset.filter p s := by
+        simp [hx]
+      simp [Finset.filter_insert, h, Finset.fold_insert this, ha.assoc, IH]
+      
+    · have : x ∉ Finset.filter (fun i => ¬p i) s := by
+        simp [hx]
+      simp [Finset.filter_insert, h, Finset.fold_insert this, IH, ← ha.assoc, hc.comm]
+      
+    
+
+/-- A weaker version of `finset.fold_ite'`,
+relying on typeclass idempotency over the whole type,
+instead of solely on the seed element.
+However, this is easier to use because it does not generate side goals. -/
+theorem fold_ite [IsIdempotent β op] {g : α → β} (p : α → Prop) [DecidablePred p] :
+    Finset.fold op b (fun i => ite (p i) (f i) (g i)) s =
+      op (Finset.fold op b f (s.filter p)) (Finset.fold op b g (s.filter fun i => ¬p i)) :=
+  fold_ite' (IsIdempotent.idempotent _) _
 
 theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∧ r x z) {c : β} :
     r c (s.fold op b f) ↔ r c b ∧ ∀, ∀ x ∈ s, ∀, r c (f x) := by
   classical
   apply Finset.induction_on s
-  ·
-    simp
+  · simp
+    
   clear s
   intro a s ha IH
   rw [Finset.fold_insert ha, hr, IH, ← and_assoc, and_comm (r c (f a)), and_assoc]
   apply and_congr Iff.rfl
   constructor
-  ·
-    rintro ⟨h₁, h₂⟩
+  · rintro ⟨h₁, h₂⟩
     intro b hb
     rw [Finset.mem_insert] at hb
     rcases hb with (rfl | hb) <;> solve_by_elim
-  ·
-    intro h
+    
+  · intro h
     constructor
-    ·
-      exact h a (Finset.mem_insert_self _ _)
-    ·
-      intro b hb
+    · exact h a (Finset.mem_insert_self _ _)
+      
+    · intro b hb
       apply h b
       rw [Finset.mem_insert]
       right
       exact hb
+      
+    
 
 theorem fold_op_rel_iff_or {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∨ r x z) {c : β} :
     r c (s.fold op b f) ↔ r c b ∨ ∃ x ∈ s, r c (f x) := by
   classical
   apply Finset.induction_on s
-  ·
-    simp
+  · simp
+    
   clear s
   intro a s ha IH
   rw [Finset.fold_insert ha, hr, IH, ← or_assoc, or_comm (r c (f a)), or_assoc]
   apply or_congr Iff.rfl
   constructor
-  ·
-    rintro (h₁ | ⟨x, hx, h₂⟩)
-    ·
-      use a
+  · rintro (h₁ | ⟨x, hx, h₂⟩)
+    · use a
       simp [h₁]
-    ·
-      refine'
+      
+    · refine'
         ⟨x, by
           simp [hx], h₂⟩
-  ·
-    rintro ⟨x, hx, h⟩
+      
+    
+  · rintro ⟨x, hx, h⟩
     rw [mem_insert] at hx
     cases hx
-    ·
-      left
+    · left
       rwa [hx] at h
-    ·
-      right
+      
+    · right
       exact ⟨x, hx, h⟩
+      
+    
 
 omit hc ha
 
 @[simp]
 theorem fold_union_empty_singleton [DecidableEq α] (s : Finset α) : Finset.fold (· ∪ ·) ∅ singleton s = s := by
   apply Finset.induction_on s
-  ·
-    simp only [fold_empty]
-  ·
-    intro a s has ih
+  · simp only [fold_empty]
+    
+  · intro a s has ih
     rw [fold_insert has, ih, insert_eq]
+    
 
 theorem fold_sup_bot_singleton [DecidableEq α] (s : Finset α) : Finset.fold (·⊔·) ⊥ singleton s = s :=
   fold_union_empty_singleton s

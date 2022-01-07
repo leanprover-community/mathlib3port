@@ -55,10 +55,10 @@ theorem Applicativeₓ.ext {F} :
       exact (L1_pure_seq_eq_map _ _).symm.trans (L2_pure_seq_eq_map _ _)
     subst this
     congr <;> funext α β x y
-    ·
-      exact (L1_seq_left_eq _ _).trans (L2_seq_left_eq _ _).symm
-    ·
-      exact (L1_seq_right_eq _ _).trans (L2_seq_right_eq _ _).symm
+    · exact (L1_seq_left_eq _ _).trans (L2_seq_left_eq _ _).symm
+      
+    · exact (L1_seq_right_eq _ _).trans (L2_seq_right_eq _ _).symm
+      
 
 end Lemmas
 
@@ -114,7 +114,7 @@ theorem applicative_comp_id {F} [AF : Applicativeₓ F] [LF : IsLawfulApplicativ
 
 open IsCommApplicative
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
 instance {f : Type u → Type w} {g : Type v → Type u} [Applicativeₓ f] [Applicativeₓ g] [IsCommApplicative f]
     [IsCommApplicative g] : IsCommApplicative (comp f g) := by
   refine' { @comp.is_lawful_applicative f g _ _ _ _ with .. }
@@ -139,18 +139,16 @@ theorem Comp.seq_mk {α β : Type w} {f : Type u → Type v} {g : Type w → Typ
     (h : f (g (α → β))) (x : f (g α)) : comp.mk h <*> comp.mk x = comp.mk (Seqₓ.seq <$> h <*> x) :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { α } [ HasOne α ] [ Mul α ] : Applicativeₓ ( const α )
-  where pure β x := ( 1 : α ) seq β γ f x := ( f * x : α )
+instance {α} [HasOne α] [Mul α] : Applicativeₓ (const α) where
+  pure := fun β x => (1 : α)
+  seq := fun β γ f x => (f * x : α)
 
 instance {α} [Monoidₓ α] : IsLawfulApplicative (const α) := by
   refine' { .. } <;> intros <;> simp [mul_assocₓ, · <$> ·, · <*> ·, pure]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { α } [ HasZero α ] [ Add α ] : Applicativeₓ ( add_const α )
-  where pure β x := ( 0 : α ) seq β γ f x := ( f + x : α )
+instance {α} [HasZero α] [Add α] : Applicativeₓ (add_const α) where
+  pure := fun β x => (0 : α)
+  seq := fun β γ f x => (f + x : α)
 
 instance {α} [AddMonoidₓ α] : IsLawfulApplicative (add_const α) := by
   refine' { .. } <;> intros <;> simp [add_assocₓ, · <$> ·, · <*> ·, pure]

@@ -35,7 +35,7 @@ noncomputable section
 
 open_locale Manifold
 
-/--  A Lie (additive) group is a group and a smooth manifold at the same time in which
+/-- A Lie (additive) group is a group and a smooth manifold at the same time in which
 the addition and negation operations are smooth. -/
 @[ancestor HasSmoothAdd]
 class LieAddGroup {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
@@ -43,7 +43,7 @@ class LieAddGroup {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [To
   [ChartedSpace H G] extends HasSmoothAdd I G : Prop where
   smooth_neg : Smooth I I fun a : G => -a
 
-/--  A Lie group is a group and a smooth manifold at the same time in which
+/-- A Lie group is a group and a smooth manifold at the same time in which
 the multiplication and inverse operations are smooth. -/
 @[ancestor HasSmoothMul, to_additive]
 class LieGroup {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
@@ -69,7 +69,7 @@ variable (I)
 theorem smooth_inv : Smooth I I fun x : G => x⁻¹ :=
   LieGroup.smooth_inv
 
-/--  A Lie group is a topological group. This is not an instance for technical reasons,
+/-- A Lie group is a topological group. This is not an instance for technical reasons,
 see note [Design choices about smooth algebraic structures]. -/
 @[to_additive
       "An additive Lie group is an additive topological group. This is not an instance for technical\nreasons, see note [Design choices about smooth algebraic structures]."]

@@ -40,34 +40,23 @@ at infinity if R is not a field. Define the group law on the R-points. (hard) pr
 -/
 
 
-/--  The discriminant of the plane cubic `Y^2+a1*X*Y+a3*Y=X^3+a2*X^2+a4*X+a6`. If `R` is a field
+/-- The discriminant of the plane cubic `Y^2+a1*X*Y+a3*Y=X^3+a2*X^2+a4*X+a6`. If `R` is a field
 then this polynomial vanishes iff the cubic curve cut out by this equation is singular. -/
 def EllipticCurve.discAux {R : Type _} [CommRingₓ R] (a1 a2 a3 a4 a6 : R) : R :=
-  (((-432)*a6 ^
-          2)+((((288*a2)+72*a1 ^
-                  2)*a4)+(((-216)*a3 ^
-                  2)+(((144*a1)*a2)+36*a1 ^
-                      3)*a3)+((((-64)*a2 ^ 3) - (48*a1 ^ 2)*a2 ^ 2) - (12*a1 ^ 4)*a2) -
-              a1 ^
-                6)*a6)+((((-64)*a4 ^
-              3)+((((-96)*a1)*a3)+((16*a2 ^
-                      2)+(8*a1 ^
-                        2)*a2)+a1 ^
-                  4)*a4 ^
-              2)+((((72*a2) -
-                30*a1 ^
-                    2)*a3 ^
-                2)+((((16*a1)*a2 ^
-                      2)+(8*a1 ^
-                        3)*a2)+a1 ^
-                  5)*a3)*a4)+(((-27)*a3 ^
-              4)+(((36*a1)*a2)+a1 ^ 3)*a3 ^ 3)+((((-16)*a2 ^ 3) - (8*a1 ^ 2)*a2 ^ 2) - (a1 ^ 4)*a2)*a3 ^ 2
+  -432 * a6 ^ 2 +
+      ((288 * a2 + 72 * a1 ^ 2) * a4 +
+          (-216 * a3 ^ 2 + (144 * a1 * a2 + 36 * a1 ^ 3) * a3 +
+            (-64 * a2 ^ 3 - 48 * a1 ^ 2 * a2 ^ 2 - 12 * a1 ^ 4 * a2 - a1 ^ 6))) *
+        a6 +
+    (-64 * a4 ^ 3 + (-96 * a1 * a3 + (16 * a2 ^ 2 + 8 * a1 ^ 2 * a2 + a1 ^ 4)) * a4 ^ 2 +
+        ((72 * a2 - 30 * a1 ^ 2) * a3 ^ 2 + (16 * a1 * a2 ^ 2 + 8 * a1 ^ 3 * a2 + a1 ^ 5) * a3) * a4 +
+      (-27 * a3 ^ 4 + (36 * a1 * a2 + a1 ^ 3) * a3 ^ 3 + (-16 * a2 ^ 3 - 8 * a1 ^ 2 * a2 ^ 2 - a1 ^ 4 * a2) * a3 ^ 2))
 
-/--  The category of elliptic curves over `R` (note that this definition is only mathematically
+/-- The category of elliptic curves over `R` (note that this definition is only mathematically
 correct for certain rings, for example if `R` is a field or a PID). -/
 structure EllipticCurve (R : Type _) [CommRingₓ R] where
   (a1 a2 a3 a4 a6 : R)
-  discUnit : Units R
+  discUnit : (R)ˣ
   disc_unit_eq : (disc_unit : R) = EllipticCurve.discAux a1 a2 a3 a4 a6
 
 namespace EllipticCurve
@@ -77,12 +66,12 @@ instance : Inhabited (EllipticCurve ℚ) :=
       ⟨37, 37⁻¹, by
         norm_num, by
         norm_num⟩,
-      show (37 : ℚ) = _+_ by
+      show (37 : ℚ) = _ + _ by
         norm_num⟩⟩
 
 variable {R : Type _} [CommRingₓ R] (E : EllipticCurve R)
 
-/--  The discriminant of an elliptic curve. Sometimes only defined up to sign in the literature;
+/-- The discriminant of an elliptic curve. Sometimes only defined up to sign in the literature;
   we choose the sign used by the LMFDB. See
   [the LMFDB page on discriminants](https://www.lmfdb.org/knowledge/show/ec.discriminant)
   for more discussion. -/
@@ -93,9 +82,9 @@ theorem disc_is_unit : IsUnit E.disc := by
   convert Units.is_unit E.disc_unit
   exact E.disc_unit_eq.symm
 
-/--  The j-invariant of an elliptic curve. -/
+/-- The j-invariant of an elliptic curve. -/
 def j :=
-  ((((-48)*E.a4)+(((-24)*E.a1)*E.a3)+((16*E.a2 ^ 2)+(8*E.a1 ^ 2)*E.a2)+E.a1 ^ 4) ^ 3)*(E.disc_unit⁻¹ : Units R)
+  (-48 * E.a4 + (-24 * E.a1 * E.a3 + (16 * E.a2 ^ 2 + 8 * E.a1 ^ 2 * E.a2 + E.a1 ^ 4))) ^ 3 * (E.disc_unit⁻¹ : (R)ˣ)
 
 end EllipticCurve
 

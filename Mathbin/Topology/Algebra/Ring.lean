@@ -32,7 +32,7 @@ section TopologicalRing
 
 variable (α : Type _)
 
-/--  A topological (semi)ring is a (semi)ring `R` where addition and multiplication are continuous.
+/-- A topological (semi)ring is a (semi)ring `R` where addition and multiplication are continuous.
 If `R` is a ring, then negation is automatically continuous, as it is multiplication with `-1`. -/
 class TopologicalRing [TopologicalSpace α] [Semiringₓ α] extends HasContinuousAdd α, HasContinuousMul α : Prop
 
@@ -51,7 +51,7 @@ instance (S : Subsemiring α) : TopologicalRing S :=
 
 end Subsemiring
 
-/--  The (topological-space) closure of a subsemiring of a topological semiring is
+/-- The (topological-space) closure of a subsemiring of a topological semiring is
 itself a subsemiring. -/
 def Subsemiring.topologicalClosure (s : Subsemiring α) : Subsemiring α :=
   { s.to_submonoid.topological_closure, s.to_add_submonoid.topological_closure with Carrier := Closure (s : Set α) }
@@ -75,7 +75,7 @@ theorem Subsemiring.topological_closure_minimal (s : Subsemiring α) {t : Subsem
     (ht : IsClosed (t : Set α)) : s.topological_closure ≤ t :=
   closure_minimal h ht
 
-/--  The product topology on the cartesian product of two topological semirings
+/-- The product topology on the cartesian product of two topological semirings
   makes the product into a topological semiring. -/
 instance {β : Type _} [Semiringₓ β] [TopologicalSpace β] [TopologicalRing β] : TopologicalRing (α × β) :=
   {  }
@@ -91,39 +91,41 @@ section
 variable {R : Type _} [Ringₓ R] [TopologicalSpace R]
 
 theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
-    (hmul : tendsto (uncurry (·*· : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) $ 𝓝 0)
-    (hmul_left : ∀ x₀ : R, tendsto (fun x : R => x₀*x) (𝓝 0) $ 𝓝 0)
-    (hmul_right : ∀ x₀ : R, tendsto (fun x : R => x*x₀) (𝓝 0) $ 𝓝 0) : TopologicalRing R := by
+    (hmul : tendsto (uncurry (· * · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) $ 𝓝 0)
+    (hmul_left : ∀ x₀ : R, tendsto (fun x : R => x₀ * x) (𝓝 0) $ 𝓝 0)
+    (hmul_right : ∀ x₀ : R, tendsto (fun x : R => x * x₀) (𝓝 0) $ 𝓝 0) : TopologicalRing R := by
   refine' { ‹TopologicalAddGroup R› with .. }
-  have hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀+x) (𝓝 0) := by
+  have hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0) := by
     simp
-  have hadd : tendsto (uncurry (·+· : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0) := by
+  have hadd : tendsto (uncurry (· + · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0) := by
     rw [← nhds_prod_eq]
     convert continuous_add.tendsto ((0 : R), (0 : R))
     rw [zero_addₓ]
   rw [continuous_iff_continuous_at]
   rintro ⟨x₀, y₀⟩
-  rw [ContinuousAt, nhds_prod_eq, hleft x₀, hleft y₀, hleft (x₀*y₀), Filter.prod_map_map_eq, tendsto_map'_iff]
+  rw [ContinuousAt, nhds_prod_eq, hleft x₀, hleft y₀, hleft (x₀ * y₀), Filter.prod_map_map_eq, tendsto_map'_iff]
   suffices
-    tendsto ((fun x : R => x+x₀*y₀) ∘ (fun p : R × R => p.1+p.2) ∘ fun p : R × R => ((p.1*y₀)+x₀*p.2, p.1*p.2))
-      (𝓝 0 ×ᶠ 𝓝 0) ((map fun x : R => x+x₀*y₀) $ 𝓝 0)by
+    tendsto
+      ((fun x : R => x + x₀ * y₀) ∘ (fun p : R × R => p.1 + p.2) ∘ fun p : R × R => (p.1 * y₀ + x₀ * p.2, p.1 * p.2))
+      (𝓝 0 ×ᶠ 𝓝 0) ((map fun x : R => x + x₀ * y₀) $ 𝓝 0)
+    by
     convert this using 1
-    ·
-      ext
+    · ext
       simp only [comp_app, mul_addₓ, add_mulₓ]
       abel
-    ·
-      simp only [add_commₓ]
+      
+    · simp only [add_commₓ]
+      
   refine' tendsto_map.comp (hadd.comp (tendsto.prod_mk _ hmul))
   exact hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))
 
-theorem TopologicalRing.of_nhds_zero (hadd : tendsto (uncurry (·+· : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) $ 𝓝 0)
-    (hneg : tendsto (fun x => -x : R → R) (𝓝 0) (𝓝 0)) (hmul : tendsto (uncurry (·*· : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) $ 𝓝 0)
-    (hmul_left : ∀ x₀ : R, tendsto (fun x : R => x₀*x) (𝓝 0) $ 𝓝 0)
-    (hmul_right : ∀ x₀ : R, tendsto (fun x : R => x*x₀) (𝓝 0) $ 𝓝 0)
-    (hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀+x) (𝓝 0)) : TopologicalRing R := by
+theorem TopologicalRing.of_nhds_zero (hadd : tendsto (uncurry (· + · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) $ 𝓝 0)
+    (hneg : tendsto (fun x => -x : R → R) (𝓝 0) (𝓝 0)) (hmul : tendsto (uncurry (· * · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) $ 𝓝 0)
+    (hmul_left : ∀ x₀ : R, tendsto (fun x : R => x₀ * x) (𝓝 0) $ 𝓝 0)
+    (hmul_right : ∀ x₀ : R, tendsto (fun x : R => x * x₀) (𝓝 0) $ 𝓝 0)
+    (hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0)) : TopologicalRing R :=
   have := TopologicalAddGroup.of_comm_of_nhds_zero hadd hneg hleft
-  exact TopologicalRing.of_add_group_of_nhds_zero hmul hmul_left hmul_right
+  TopologicalRing.of_add_group_of_nhds_zero hmul hmul_left hmul_right
 
 end
 
@@ -134,11 +136,11 @@ instance (priority := 100) TopologicalRing.to_topological_add_group : Topologica
   continuous_neg := by
     simpa only [neg_one_mul, id.def] using (@continuous_const α α _ _ (-1)).mul continuous_id
 
-/--  In a topological ring, the left-multiplication `add_monoid_hom` is continuous. -/
+/-- In a topological ring, the left-multiplication `add_monoid_hom` is continuous. -/
 theorem mul_left_continuous (x : α) : Continuous (AddMonoidHom.mulLeft x) :=
   continuous_const.mul continuous_id
 
-/--  In a topological ring, the right-multiplication `add_monoid_hom` is continuous. -/
+/-- In a topological ring, the right-multiplication `add_monoid_hom` is continuous. -/
 theorem mul_right_continuous (x : α) : Continuous (AddMonoidHom.mulRight x) :=
   continuous_id.mul continuous_const
 
@@ -149,7 +151,7 @@ instance (S : Subring α) : TopologicalRing S :=
 
 end Subring
 
-/--  The (topological-space) closure of a subring of a topological semiring is
+/-- The (topological-space) closure of a subring of a topological semiring is
 itself a subring. -/
 def Subring.topologicalClosure (S : Subring α) : Subring α :=
   { S.to_submonoid.topological_closure, S.to_add_subgroup.topological_closure with Carrier := Closure (S : Set α) }
@@ -174,7 +176,7 @@ section TopologicalCommRing
 
 variable {α : Type _} [TopologicalSpace α] [CommRingₓ α] [TopologicalRing α]
 
-/--  The closure of an ideal in a topological ring as an ideal. -/
+/-- The closure of an ideal in a topological ring as an ideal. -/
 def Ideal.closure (S : Ideal α) : Ideal α :=
   { AddSubmonoid.topologicalClosure S.to_add_submonoid with Carrier := Closure S,
     smul_mem' := fun c x hx => map_mem_closure (mul_left_continuous _) hx $ fun a => S.mul_mem_left c }
@@ -192,7 +194,7 @@ variable {α : Type _} [TopologicalSpace α] [CommRingₓ α] (N : Ideal α)
 open Ideal.Quotient
 
 instance topologicalRingQuotientTopology : TopologicalSpace (α ⧸ N) :=
-  show TopologicalSpace (Quotientₓ _)by
+  show TopologicalSpace (Quotientₓ _) by
     infer_instance
 
 variable [TopologicalRing α]
@@ -211,10 +213,10 @@ theorem QuotientRing.quotient_map_coe_coe : QuotientMap fun p : α × α => (mk 
 
 instance topological_ring_quotient : TopologicalRing (α ⧸ N) where
   continuous_add :=
-    have cont : Continuous (mk N ∘ fun p : α × α => p.fst+p.snd) := continuous_quot_mk.comp continuous_add
+    have cont : Continuous (mk N ∘ fun p : α × α => p.fst + p.snd) := continuous_quot_mk.comp continuous_add
     (QuotientMap.continuous_iff (QuotientRing.quotient_map_coe_coe N)).mpr cont
   continuous_mul :=
-    have cont : Continuous (mk N ∘ fun p : α × α => p.fst*p.snd) := continuous_quot_mk.comp continuous_mul
+    have cont : Continuous (mk N ∘ fun p : α × α => p.fst * p.snd) := continuous_quot_mk.comp continuous_mul
     (QuotientMap.continuous_iff (QuotientRing.quotient_map_coe_coe N)).mpr cont
 
 end TopologicalRing
@@ -232,7 +234,7 @@ Any function `f : α → β` induces `coinduced f : topological_space α → rin
 
 universe u v
 
-/--  A ring topology on a ring `α` is a topology for which addition, negation and multiplication
+/-- A ring topology on a ring `α` is a topology for which addition, negation and multiplication
 are continuous. -/
 @[ext]
 structure RingTopology (α : Type u) [Ringₓ α] extends TopologicalSpace α, TopologicalRing α : Type u
@@ -249,7 +251,7 @@ theorem ext' {f g : RingTopology α} (h : f.is_open = g.is_open) : f = g := by
   ext
   rw [h]
 
-/--  The ordering on ring topologies on the ring `α`.
+/-- The ordering on ring topologies on the ring `α`.
   `t ≤ s` if every set open in `s` is also open in `t` (`t` is finer than `s`). -/
 instance : PartialOrderₓ (RingTopology α) :=
   PartialOrderₓ.lift RingTopology.toTopologicalSpace $ ext
@@ -265,7 +267,7 @@ private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
       skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
-      have h_continuous_add : cont (id _) t fun p : α × α => p.fst+p.snd := continuous_add
+      have h_continuous_add : cont (id _) t fun p : α × α => p.fst + p.snd := continuous_add
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ h_continuous_add h_continuous_id,
     continuous_mul := by
       apply continuous_Inf_rng
@@ -273,10 +275,10 @@ private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
       skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
-      have h_continuous_mul : cont (id _) t fun p : α × α => p.fst*p.snd := continuous_mul
+      have h_continuous_mul : cont (id _) t fun p : α × α => p.fst * p.snd := continuous_mul
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ h_continuous_mul h_continuous_id }
 
-/--  Ring topologies on `α` form a complete lattice, with `⊥` the discrete topology and `⊤` the
+/-- Ring topologies on `α` form a complete lattice, with `⊥` the discrete topology and `⊤` the
 indiscrete topology.
 
 The infimum of a collection of ring topologies is the topology generated by all their open sets
@@ -298,7 +300,7 @@ instance : CompleteSemilatticeInf (RingTopology α) :=
 instance : CompleteLattice (RingTopology α) :=
   completeLatticeOfCompleteSemilatticeInf _
 
-/--   Given `f : α → β` and a topology on `α`, the coinduced ring topology on `β` is the finest
+/-- Given `f : α → β` and a topology on `α`, the coinduced ring topology on `β` is the finest
 topology such that `f` is continuous and `β` is a topological ring. -/
 def coinduced {α β : Type _} [t : TopologicalSpace α] [Ringₓ β] (f : α → β) : RingTopology β :=
   Inf { b : RingTopology β | TopologicalSpace.coinduced f t ≤ b.to_topological_space }
@@ -310,29 +312,28 @@ theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Ringₓ
   rintro _ ⟨t', ht', rfl⟩
   exact ht'
 
-/--  The forgetful functor from ring topologies on `a` to additive group topologies on `a`. -/
-def to_add_group_topology (t : RingTopology α) : AddGroupTopology α :=
-  { toTopologicalSpace := t.to_topological_space,
-    to_topological_add_group :=
-      @TopologicalRing.to_topological_add_group _ _ t.to_topological_space t.to_topological_ring }
+/-- The forgetful functor from ring topologies on `a` to additive group topologies on `a`. -/
+def to_add_group_topology (t : RingTopology α) : AddGroupTopology α where
+  toTopologicalSpace := t.to_topological_space
+  to_topological_add_group := @TopologicalRing.to_topological_add_group _ _ t.to_topological_space t.to_topological_ring
 
-/--  The order embedding from ring topologies on `a` to additive group topologies on `a`. -/
-def to_add_group_topology.order_embedding : OrderEmbedding (RingTopology α) (AddGroupTopology α) :=
-  { toFun := fun t => t.to_add_group_topology,
-    inj' := by
-      intro t₁ t₂ h_eq
-      dsimp only  at h_eq
-      ext
-      have h_t₁ : t₁.to_topological_space = t₁.to_add_group_topology.to_topological_space := rfl
-      rw [h_t₁, h_eq]
-      rfl,
-    map_rel_iff' := by
-      intro t₁ t₂
-      rw [embedding.coe_fn_mk]
-      have h_le : t₁ ≤ t₂ ↔ t₁.to_topological_space ≤ t₂.to_topological_space := by
-        rfl
-      rw [h_le]
-      rfl }
+/-- The order embedding from ring topologies on `a` to additive group topologies on `a`. -/
+def to_add_group_topology.order_embedding : OrderEmbedding (RingTopology α) (AddGroupTopology α) where
+  toFun := fun t => t.to_add_group_topology
+  inj' := by
+    intro t₁ t₂ h_eq
+    dsimp only  at h_eq
+    ext
+    have h_t₁ : t₁.to_topological_space = t₁.to_add_group_topology.to_topological_space := rfl
+    rw [h_t₁, h_eq]
+    rfl
+  map_rel_iff' := by
+    intro t₁ t₂
+    rw [embedding.coe_fn_mk]
+    have h_le : t₁ ≤ t₂ ↔ t₁.to_topological_space ≤ t₂.to_topological_space := by
+      rfl
+    rw [h_le]
+    rfl
 
 end RingTopology
 

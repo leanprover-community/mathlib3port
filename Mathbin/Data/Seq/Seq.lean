@@ -5,19 +5,18 @@ import Mathbin.Data.Seq.Computation
 
 universe u v w
 
-/-- 
-A stream `s : option α` is a sequence if `s.nth n = none` implies `s.nth (n + 1) = none`.
+/-- A stream `s : option α` is a sequence if `s.nth n = none` implies `s.nth (n + 1) = none`.
 -/
 def Streamₓ.IsSeq {α : Type u} (s : Streamₓ (Option α)) : Prop :=
-  ∀ {n : ℕ}, s n = none → s (n+1) = none
+  ∀ {n : ℕ}, s n = none → s (n + 1) = none
 
-/--  `seq α` is the type of possibly infinite lists (referred here as sequences).
+/-- `seq α` is the type of possibly infinite lists (referred here as sequences).
   It is encoded as an infinite stream of options such that if `f n = none`, then
   `f m = none` for all `m ≥ n`. -/
 def Seqₓₓ (α : Type u) : Type u :=
   { f : Streamₓ (Option α) // f.is_seq }
 
-/--  `seq1 α` is the type of nonempty sequences. -/
+/-- `seq1 α` is the type of nonempty sequences. -/
 def Seq1 α :=
   α × Seqₓₓ α
 
@@ -25,14 +24,14 @@ namespace Seqₓₓ
 
 variable {α : Type u} {β : Type v} {γ : Type w}
 
-/--  The empty sequence -/
+/-- The empty sequence -/
 def nil : Seqₓₓ α :=
   ⟨Streamₓ.const none, fun n h => rfl⟩
 
 instance : Inhabited (Seqₓₓ α) :=
   ⟨nil⟩
 
-/--  Prepend an element to a sequence -/
+/-- Prepend an element to a sequence -/
 def cons (a : α) : Seqₓₓ α → Seqₓₓ α
   | ⟨f, al⟩ =>
     ⟨some a :: f, fun n h => by
@@ -40,34 +39,34 @@ def cons (a : α) : Seqₓₓ α → Seqₓₓ α
       contradiction
       exact al h⟩
 
-/--  Get the nth element of a sequence (if it exists) -/
+/-- Get the nth element of a sequence (if it exists) -/
 def nth : Seqₓₓ α → ℕ → Option α :=
   Subtype.val
 
-/--  A sequence has terminated at position `n` if the value at position `n` equals `none`. -/
+/-- A sequence has terminated at position `n` if the value at position `n` equals `none`. -/
 def terminated_at (s : Seqₓₓ α) (n : ℕ) : Prop :=
   s.nth n = none
 
-/--  It is decidable whether a sequence terminates at a given position. -/
+/-- It is decidable whether a sequence terminates at a given position. -/
 instance terminated_at_decidable (s : Seqₓₓ α) (n : ℕ) : Decidable (s.terminated_at n) :=
   decidableOfIff' (s.nth n).isNone $ by
     unfold terminated_at <;> cases s.nth n <;> simp
 
-/--  A sequence terminates if there is some position `n` at which it has terminated. -/
+/-- A sequence terminates if there is some position `n` at which it has terminated. -/
 def terminates (s : Seqₓₓ α) : Prop :=
   ∃ n : ℕ, s.terminated_at n
 
-/--  Functorial action of the functor `option (α × _)` -/
+/-- Functorial action of the functor `option (α × _)` -/
 @[simp]
 def omap (f : β → γ) : Option (α × β) → Option (α × γ)
   | none => none
   | some (a, b) => some (a, f b)
 
-/--  Get the first element of a sequence -/
+/-- Get the first element of a sequence -/
 def head (s : Seqₓₓ α) : Option α :=
   nth s 0
 
-/--  Get the tail of a sequence (or `nil` if the sequence is `nil`) -/
+/-- Get the tail of a sequence (or `nil` if the sequence is `nil`) -/
 def tail : Seqₓₓ α → Seqₓₓ α
   | ⟨f, al⟩ => ⟨f.tail, fun n => al⟩
 
@@ -82,13 +81,12 @@ theorem le_stable (s : Seqₓₓ α) {m n} (h : m ≤ n) : s.nth m = none → s.
   induction' h with n h IH
   exacts[id, fun h2 => al (IH h2)]
 
-/--  If a sequence terminated at position `n`, it also terminated at `m ≥ n `. -/
+/-- If a sequence terminated at position `n`, it also terminated at `m ≥ n `. -/
 theorem terminated_stable (s : Seqₓₓ α) {m n : ℕ} (m_le_n : m ≤ n) (terminated_at_m : s.terminated_at m) :
     s.terminated_at n :=
   le_stable s m_le_n terminated_at_m
 
-/-- 
-If `s.nth n = some aₙ` for some value `aₙ`, then there is also some value `aₘ` such
+/-- If `s.nth n = some aₙ` for some value `aₙ`, then there is also some value `aₘ` such
 that `s.nth = some aₘ` for `m ≤ n`.
 -/
 theorem ge_stable (s : Seqₓₓ α) {aₙ : α} {n m : ℕ} (m_le_n : m ≤ n) (s_nth_eq_some : s.nth n = some aₙ) :
@@ -116,12 +114,12 @@ theorem eq_or_mem_of_mem_cons {a b : α} : ∀ {s : Seqₓₓ α}, a ∈ cons b 
 theorem mem_cons_iff {a b : α} {s : Seqₓₓ α} : a ∈ cons b s ↔ a = b ∨ a ∈ s :=
   ⟨eq_or_mem_of_mem_cons, fun o => by
     cases' o with e m <;>
-      [·
-        rw [e]
-        apply mem_cons,
+      [· rw [e]
+        apply mem_cons
+        ,
       exact mem_cons_of_mem _ m]⟩
 
-/--  Destructor for a sequence, resulting in either `none` (for `nil`) or
+/-- Destructor for a sequence, resulting in either `none` (for `nil`) or
   `some (a, s)` (for `cons a s`). -/
 def destruct (s : Seqₓₓ α) : Option (Seq1 α) :=
   (fun a' => (a', s.tail)) <$> nth s 0
@@ -129,21 +127,20 @@ def destruct (s : Seqₓₓ α) : Option (Seq1 α) :=
 theorem destruct_eq_nil {s : Seqₓₓ α} : destruct s = none → s = nil := by
   dsimp [destruct]
   induction' f0 : nth s 0 with <;> intro h
-  ·
-    apply Subtype.eq
+  · apply Subtype.eq
     funext n
     induction' n with n IH
     exacts[f0, s.2 IH]
-  ·
-    contradiction
+    
+  · contradiction
+    
 
 theorem destruct_eq_cons {s : Seqₓₓ α} {a s'} : destruct s = some (a, s') → s = cons a s' := by
   dsimp [destruct]
   induction' f0 : nth s 0 with a' <;> intro h
-  ·
-    contradiction
-  ·
-    cases' s with f al
+  · contradiction
+    
+  · cases' s with f al
     injections with _ h1 h2
     rw [← h2]
     apply Subtype.eq
@@ -151,6 +148,7 @@ theorem destruct_eq_cons {s : Seqₓₓ α} {a s'} : destruct s = some (a, s') �
     rw [h1] at f0
     rw [← f0]
     exact (Streamₓ.eta f).symm
+    
 
 @[simp]
 theorem destruct_nil : destruct (nil : Seqₓₓ α) = none :=
@@ -186,35 +184,35 @@ theorem tail_cons (a : α) s : tail (cons a s) = s := by
 
 def cases_on {C : Seqₓₓ α → Sort v} (s : Seqₓₓ α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) : C s := by
   induction' H : destruct s with v v
-  ·
-    rw [destruct_eq_nil H]
+  · rw [destruct_eq_nil H]
     apply h1
-  ·
-    cases' v with a s'
+    
+  · cases' v with a s'
     rw [destruct_eq_cons H]
     apply h2
+    
 
 theorem mem_rec_on {C : Seqₓₓ α → Prop} {a s} (M : a ∈ s) (h1 : ∀ b s', a = b ∨ C s' → C (cons b s')) : C s := by
   cases' M with k e
   unfold Streamₓ.nth  at e
   induction' k with k IH generalizing s
-  ·
-    have TH : s = cons a (tail s) := by
+  · have TH : s = cons a (tail s) := by
       apply destruct_eq_cons
       unfold destruct nth Functor.map
       rw [← e]
       rfl
     rw [TH]
     apply h1 _ _ (Or.inl rfl)
+    
   revert e
   apply s.cases_on _ fun b s' => _ <;> intro e
-  ·
-    injection e
-  ·
-    have h_eq : (cons b s').val (Nat.succ k) = s'.val k := by
+  · injection e
+    
+  · have h_eq : (cons b s').val (Nat.succ k) = s'.val k := by
       cases s' <;> rfl
     rw [h_eq] at e
     apply h1 _ _ (Or.inr (IH e))
+    
 
 def corec.F (f : β → Option (α × β)) : Option β → Option α × Option β
   | none => (none, none)
@@ -223,7 +221,7 @@ def corec.F (f : β → Option (α × β)) : Option β → Option α × Option �
     | none => (none, none)
     | some (a, b') => (some a, some b')
 
-/--  Corecursor for `seq α` as a coinductive type. Iterates `f` to produce new elements
+/-- Corecursor for `seq α` as a coinductive type. Iterates `f` to produce new elements
   of the sequence until `none` is obtained. -/
 def corec (f : β → Option (α × β)) (b : β) : Seqₓₓ α := by
   refine' ⟨Streamₓ.corec' (corec.F f) (some b), fun n h => _⟩
@@ -233,22 +231,22 @@ def corec (f : β → Option (α × β)) (b : β) : Seqₓₓ α := by
   generalize some b = o
   revert o
   induction' n with n IH <;> intro o
-  ·
-    change (corec.F f o).1 = none → (corec.F f (corec.F f o).2).1 = none
+  · change (corec.F f o).1 = none → (corec.F f (corec.F f o).2).1 = none
     cases' o with b <;> intro h
-    ·
-      rfl
+    · rfl
+      
     dsimp [corec.F]  at h
     dsimp [corec.F]
     cases' f b with s
-    ·
-      rfl
-    ·
-      cases' s with a b'
+    · rfl
+      
+    · cases' s with a b'
       contradiction
-  ·
-    rw [Streamₓ.corec'_eq (corec.F f) (corec.F f o).2, Streamₓ.corec'_eq (corec.F f) o]
+      
+    
+  · rw [Streamₓ.corec'_eq (corec.F f) (corec.F f o).2, Streamₓ.corec'_eq (corec.F f) o]
     exact IH (corec.F f o).2
+    
 
 @[simp]
 theorem corec_eq (f : β → Option (α × β)) (b : β) : destruct (corec f b) = omap (corec f) (f b) := by
@@ -256,8 +254,8 @@ theorem corec_eq (f : β → Option (α × β)) (b : β) : destruct (corec f b) 
   change Streamₓ.corec' (corec.F f) (some b) 0 with (corec.F f (some b)).1
   dsimp [corec.F]
   induction' h : f b with s
-  ·
-    rfl
+  · rfl
+    
   cases' s with a b'
   dsimp [corec.F]
   apply congr_argₓ fun b' => some (a, b')
@@ -268,17 +266,17 @@ theorem corec_eq (f : β → Option (α × β)) (b : β) : destruct (corec f b) 
   rw [h]
   rfl
 
-/--  Embed a list as a sequence -/
+/-- Embed a list as a sequence -/
 def of_list (l : List α) : Seqₓₓ α :=
   ⟨List.nth l, fun n h => by
     induction' l with a l IH generalizing n
     rfl
     dsimp [List.nth]
     cases' n with n <;> dsimp [List.nth]  at h
-    ·
-      contradiction
-    ·
-      apply IH _ h⟩
+    · contradiction
+      
+    · apply IH _ h
+      ⟩
 
 instance coe_list : Coe (List α) (Seqₓₓ α) :=
   ⟨of_list⟩
@@ -306,7 +304,7 @@ theorem eq_of_bisim (bisim : is_bisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : 
   intro t₁ t₂ e
   exact
     match t₁, t₂, e with
-    | _, _, ⟨s, s', rfl, rfl, r⟩ =>
+    | _, _, ⟨s, s', rfl, rfl, r⟩ => by
       suffices head s = head s' ∧ R (tail s) (tail s') from
         And.imp id
           (fun r =>
@@ -314,27 +312,26 @@ theorem eq_of_bisim (bisim : is_bisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : 
               cases s <;> rfl, by
               cases s' <;> rfl, r⟩)
           this
-      by
       have := bisim r
       revert r this
       apply cases_on s _ _ <;> intros <;> apply cases_on s' _ _ <;> intros <;> intro r this
-      ·
-        constructor
+      · constructor
         rfl
         assumption
-      ·
-        rw [destruct_nil, destruct_cons] at this
+        
+      · rw [destruct_nil, destruct_cons] at this
         exact False.elim this
-      ·
-        rw [destruct_nil, destruct_cons] at this
+        
+      · rw [destruct_nil, destruct_cons] at this
         exact False.elim this
-      ·
-        rw [destruct_cons, destruct_cons] at this
+        
+      · rw [destruct_cons, destruct_cons] at this
         rw [head_cons, head_cons, tail_cons, tail_cons]
         cases' this with h1 h2
         constructor
         rw [h1]
         exact h2
+        
   exact ⟨s₁, s₂, rfl, rfl, r⟩
 
 end Bisim
@@ -353,7 +350,7 @@ theorem coinduction2 s (f g : Seqₓₓ α → Seqₓₓ β)
   rw [h1, h2]
   apply H
 
-/--  Embed an infinite stream as a sequence -/
+/-- Embed an infinite stream as a sequence -/
 def of_stream (s : Streamₓ α) : Seqₓₓ α :=
   ⟨s.map some, fun n h => by
     contradiction⟩
@@ -361,7 +358,7 @@ def of_stream (s : Streamₓ α) : Seqₓₓ α :=
 instance coe_stream : Coe (Streamₓ α) (Seqₓₓ α) :=
   ⟨of_stream⟩
 
-/--  Embed a `lazy_list α` as a sequence. Note that even though this
+/-- Embed a `lazy_list α` as a sequence. Note that even though this
   is non-meta, it will produce infinite sequences if used with
   cyclic `lazy_list`s created by meta constructions. -/
 def of_lazy_list : LazyList α → Seqₓₓ α :=
@@ -373,7 +370,7 @@ def of_lazy_list : LazyList α → Seqₓₓ α :=
 instance coe_lazy_list : Coe (LazyList α) (Seqₓₓ α) :=
   ⟨of_lazy_list⟩
 
-/--  Translate a sequence into a `lazy_list`. Since `lazy_list` and `list`
+/-- Translate a sequence into a `lazy_list`. Since `lazy_list` and `list`
   are isomorphic as non-meta types, this function is necessarily meta. -/
 unsafe def to_lazy_list : Seqₓₓ α → LazyList α
   | s =>
@@ -381,12 +378,12 @@ unsafe def to_lazy_list : Seqₓₓ α → LazyList α
     | none => LazyList.nil
     | some (a, s') => LazyList.cons a (to_lazy_list s')
 
-/--  Translate a sequence to a list. This function will run forever if
+/-- Translate a sequence to a list. This function will run forever if
   run on an infinite sequence. -/
 unsafe def force_to_list (s : Seqₓₓ α) : List α :=
   (to_lazy_list s).toList
 
-/--  The sequence of natural numbers some 0, some 1, ... -/
+/-- The sequence of natural numbers some 0, some 1, ... -/
 def nats : Seqₓₓ ℕ :=
   Streamₓ.nats
 
@@ -394,7 +391,7 @@ def nats : Seqₓₓ ℕ :=
 theorem nats_nth (n : ℕ) : nats.nth n = some n :=
   rfl
 
-/--  Append two sequences. If `s₁` is infinite, then `s₁ ++ s₂ = s₁`,
+/-- Append two sequences. If `s₁` is infinite, then `s₁ ++ s₂ = s₁`,
   otherwise it puts `s₂` at the location of the `nil` in `s₁`. -/
 def append (s₁ s₂ : Seqₓₓ α) : Seqₓₓ α :=
   @corec α (Seqₓₓ α × Seqₓₓ α)
@@ -404,19 +401,19 @@ def append (s₁ s₂ : Seqₓₓ α) : Seqₓₓ α :=
       | some (a, s₁') => some (a, s₁', s₂))
     (s₁, s₂)
 
-/--  Map a function over a sequence. -/
+/-- Map a function over a sequence. -/
 def map (f : α → β) : Seqₓₓ α → Seqₓₓ β
   | ⟨s, al⟩ =>
     ⟨s.map (Option.map f), fun n => by
       dsimp [Streamₓ.map, Streamₓ.nth]
       induction' e : s n with <;> intro
-      ·
-        rw [al e]
+      · rw [al e]
         assumption
-      ·
-        contradiction⟩
+        
+      · contradiction
+        ⟩
 
-/--  Flatten a sequence of sequences. (It is required that the
+/-- Flatten a sequence of sequences. (It is required that the
   sequences be nonempty to ensure productivity; in the case
   of an infinite sequence of `nil`, the first element is never
   generated.) -/
@@ -431,26 +428,26 @@ def join : Seqₓₓ (Seq1 α) → Seqₓₓ α :=
           | none => S'
           | some s' => cons s' S')
 
-/--  Remove the first `n` elements from the sequence. -/
+/-- Remove the first `n` elements from the sequence. -/
 def drop (s : Seqₓₓ α) : ℕ → Seqₓₓ α
   | 0 => s
-  | n+1 => tail (drop n)
+  | n + 1 => tail (drop n)
 
 attribute [simp] drop
 
-/--  Take the first `n` elements of the sequence (producing a list) -/
+/-- Take the first `n` elements of the sequence (producing a list) -/
 def take : ℕ → Seqₓₓ α → List α
   | 0, s => []
-  | n+1, s =>
+  | n + 1, s =>
     match destruct s with
     | none => []
     | some (x, r) => List.cons x (take n r)
 
-/--  Split a sequence at `n`, producing a finite initial segment
+/-- Split a sequence at `n`, producing a finite initial segment
   and an infinite tail. -/
 def split_at : ℕ → Seqₓₓ α → List α × Seqₓₓ α
   | 0, s => ([], s)
-  | n+1, s =>
+  | n + 1, s =>
     match destruct s with
     | none => ([], nil)
     | some (x, s') =>
@@ -459,7 +456,7 @@ def split_at : ℕ → Seqₓₓ α → List α × Seqₓₓ α
 
 section ZipWith
 
-/--  Combine two sequences with a function -/
+/-- Combine two sequences with a function -/
 def zip_with (f : α → β → γ) : Seqₓₓ α → Seqₓₓ β → Seqₓₓ γ
   | ⟨f₁, a₁⟩, ⟨f₂, a₂⟩ =>
     ⟨fun n =>
@@ -468,62 +465,58 @@ def zip_with (f : α → β → γ) : Seqₓₓ α → Seqₓₓ β → Seqₓ�
       | _, _ => none,
       fun n => by
       induction' h1 : f₁ n with
-      ·
-        intro H
+      · intro H
         simp only [a₁ h1]
         rfl
+        
       induction' h2 : f₂ n with <;> dsimp [Seqₓₓ.ZipWith._match1] <;> intro H
-      ·
-        rw [a₂ h2]
-        cases f₁ (n+1) <;> rfl
-      ·
-        rw [h1, h2] at H
-        contradiction⟩
+      · rw [a₂ h2]
+        cases f₁ (n + 1) <;> rfl
+        
+      · rw [h1, h2] at H
+        contradiction
+        ⟩
 
 variable {s : Seqₓₓ α} {s' : Seqₓₓ β} {n : ℕ}
 
 theorem zip_with_nth_some {a : α} {b : β} (s_nth_eq_some : s.nth n = some a) (s_nth_eq_some' : s'.nth n = some b)
     (f : α → β → γ) : (zip_with f s s').nth n = some (f a b) := by
   cases' s with st
-  have : st n = some a
-  exact s_nth_eq_some
+  have : st n = some a := s_nth_eq_some
   cases' s' with st'
-  have : st' n = some b
-  exact s_nth_eq_some'
-  simp only [zip_with, Seqₓₓ.nth]
+  have : st' n = some b := s_nth_eq_some'
+  simp only [zip_with, Seqₓₓ.nth, *]
 
 theorem zip_with_nth_none (s_nth_eq_none : s.nth n = none) (f : α → β → γ) : (zip_with f s s').nth n = none := by
   cases' s with st
-  have : st n = none
-  exact s_nth_eq_none
+  have : st n = none := s_nth_eq_none
   cases' s' with st'
-  cases st'_nth_eq : st' n <;> simp only [zip_with, Seqₓₓ.nth]
+  cases st'_nth_eq : st' n <;> simp only [zip_with, Seqₓₓ.nth, *]
 
 theorem zip_with_nth_none' (s'_nth_eq_none : s'.nth n = none) (f : α → β → γ) : (zip_with f s s').nth n = none := by
   cases' s' with st'
-  have : st' n = none
-  exact s'_nth_eq_none
+  have : st' n = none := s'_nth_eq_none
   cases' s with st
-  cases st_nth_eq : st n <;> simp only [zip_with, Seqₓₓ.nth]
+  cases st_nth_eq : st n <;> simp only [zip_with, Seqₓₓ.nth, *]
 
 end ZipWith
 
-/--  Pair two sequences into a sequence of pairs -/
+/-- Pair two sequences into a sequence of pairs -/
 def zip : Seqₓₓ α → Seqₓₓ β → Seqₓₓ (α × β) :=
   zip_with Prod.mk
 
-/--  Separate a sequence of pairs into two sequences -/
+/-- Separate a sequence of pairs into two sequences -/
 def unzip (s : Seqₓₓ (α × β)) : Seqₓₓ α × Seqₓₓ β :=
   (map Prod.fst s, map Prod.snd s)
 
-/--  Convert a sequence which is known to terminate into a list -/
+/-- Convert a sequence which is known to terminate into a list -/
 def to_list (s : Seqₓₓ α) (h : ∃ n, ¬(nth s n).isSome) : List α :=
   take (Nat.findₓ h) s
 
-/--  Convert a sequence which is known not to terminate into a stream -/
+/-- Convert a sequence which is known not to terminate into a stream -/
 def to_stream (s : Seqₓₓ α) (h : ∀ n, (nth s n).isSome) : Streamₓ α := fun n => Option.getₓ (h n)
 
-/--  Convert a sequence into either a list or a stream depending on whether
+/-- Convert a sequence into either a list or a stream depending on whether
   it is finite or infinite. (Without decidability of the infiniteness predicate,
   this is not constructively possible.) -/
 def to_list_or_stream (s : Seqₓₓ α) [Decidable (∃ n, ¬(nth s n).isSome)] : Sum (List α) (Streamₓ α) :=
@@ -538,13 +531,13 @@ theorem nil_append (s : Seqₓₓ α) : append nil s = s := by
   rw [corec_eq]
   dsimp [append]
   apply cases_on s _ _
-  ·
-    trivial
-  ·
-    intro x s
+  · trivial
+    
+  · intro x s
     rw [destruct_cons]
     dsimp
     exact ⟨rfl, s, rfl, rfl⟩
+    
 
 @[simp]
 theorem cons_append (a : α) s t : append (cons a s) t = cons a (append s t) :=
@@ -561,38 +554,38 @@ theorem append_nil (s : Seqₓₓ α) : append s nil = s := by
   apply coinduction2 s
   intro s
   apply cases_on s _ _
-  ·
-    trivial
-  ·
-    intro x s
+  · trivial
+    
+  · intro x s
     rw [cons_append, destruct_cons, destruct_cons]
     dsimp
     exact ⟨rfl, s, rfl, rfl⟩
+    
 
 @[simp]
 theorem append_assoc (s t u : Seqₓₓ α) : append (append s t) u = append s (append t u) := by
   apply eq_of_bisim fun s1 s2 => ∃ s t u, s1 = append (append s t) u ∧ s2 = append s (append t u)
-  ·
-    intro s1 s2 h
+  · intro s1 s2 h
     exact
       match s1, s2, h with
       | _, _, ⟨s, t, u, rfl, rfl⟩ => by
         apply cases_on s <;> simp
-        ·
-          apply cases_on t <;> simp
-          ·
-            apply cases_on u <;> simp
-            ·
-              intro x u
+        · apply cases_on t <;> simp
+          · apply cases_on u <;> simp
+            · intro x u
               refine' ⟨nil, nil, u, _, _⟩ <;> simp
-          ·
-            intro x t
+              
+            
+          · intro x t
             refine' ⟨nil, t, u, _, _⟩ <;> simp
-        ·
-          intro x s
+            
+          
+        · intro x s
           exact ⟨s, t, u, rfl, rfl⟩
-  ·
-    exact ⟨s, t, u, rfl, rfl⟩
+          
+    
+  · exact ⟨s, t, u, rfl, rfl⟩
+    
 
 @[simp]
 theorem map_nil (f : α → β) : map f nil = nil :=
@@ -629,14 +622,14 @@ theorem map_append (f : α → β) s t : map f (append s t) = append (map f s) (
     match s1, s2, h with
     | _, _, ⟨s, t, rfl, rfl⟩ => by
       apply cases_on s <;> simp
-      ·
-        apply cases_on t <;> simp
-        ·
-          intro x t
+      · apply cases_on t <;> simp
+        · intro x t
           refine' ⟨nil, t, _, _⟩ <;> simp
-      ·
-        intro x s
+          
+        
+      · intro x s
         refine' ⟨s, t, rfl, rfl⟩
+        
 
 @[simp]
 theorem map_nth (f : α → β) : ∀ s n, nth (map f s) n = (nth s n).map f
@@ -673,49 +666,49 @@ theorem join_cons (a : α) s S : join (cons (a, s) S) = cons a (append s (join S
     match s1, s2, h with
     | _, _, Or.inl $ Eq.refl s => by
       apply cases_on s
-      ·
-        trivial
-      ·
-        intro x s
+      · trivial
+        
+      · intro x s
         rw [destruct_cons]
         exact ⟨rfl, Or.inl rfl⟩
+        
     | _, _, Or.inr ⟨a, s, S, rfl, rfl⟩ => by
       apply cases_on s
-      ·
-        simp
-      ·
-        intro x s
+      · simp
+        
+      · intro x s
         simp
         refine' Or.inr ⟨x, s, S, rfl, rfl⟩
+        
 
 @[simp]
 theorem join_append (S T : Seqₓₓ (Seq1 α)) : join (append S T) = append (join S) (join T) := by
   apply eq_of_bisim fun s1 s2 => ∃ s S T, s1 = append s (join (append S T)) ∧ s2 = append s (append (join S) (join T))
-  ·
-    intro s1 s2 h
+  · intro s1 s2 h
     exact
       match s1, s2, h with
       | _, _, ⟨s, S, T, rfl, rfl⟩ => by
         apply cases_on s <;> simp
-        ·
-          apply cases_on S <;> simp
-          ·
-            apply cases_on T
-            ·
-              simp
-            ·
-              intro s T
+        · apply cases_on S <;> simp
+          · apply cases_on T
+            · simp
+              
+            · intro s T
               cases' s with a s <;> simp
               refine' ⟨s, nil, T, _, _⟩ <;> simp
-          ·
-            intro s S
+              
+            
+          · intro s S
             cases' s with a s <;> simp
             exact ⟨s, S, T, rfl, rfl⟩
-        ·
-          intro x s
+            
+          
+        · intro x s
           exact ⟨s, S, T, rfl, rfl⟩
-  ·
-    refine' ⟨nil, S, T, _, _⟩ <;> simp
+          
+    
+  · refine' ⟨nil, S, T, _, _⟩ <;> simp
+    
 
 @[simp]
 theorem of_list_nil : of_list [] = (nil : Seqₓₓ α) :=
@@ -731,13 +724,13 @@ theorem of_stream_cons (a : α) s : of_stream (a :: s) = cons a (of_stream s) :=
 
 @[simp]
 theorem of_list_append (l l' : List α) : of_list (l ++ l') = append (of_list l) (of_list l') := by
-  induction l <;> simp
+  induction l <;> simp [*]
 
 @[simp]
 theorem of_stream_append (l : List α) (s : Streamₓ α) : of_stream (l++ₛs) = append (of_list l) (of_stream s) := by
-  induction l <;> simp [Streamₓ.nil_append_stream, Streamₓ.cons_append_stream]
+  induction l <;> simp [*, Streamₓ.nil_append_stream, Streamₓ.cons_append_stream]
 
-/--  Convert a sequence into a list, embedded in a computation to allow for
+/-- Convert a sequence into a list, embedded in a computation to allow for
   the possibility of infinite sequences (in which case the computation
   never returns anything). -/
 def to_list' {α} (s : Seqₓₓ α) : Computation (List α) :=
@@ -748,14 +741,14 @@ def to_list' {α} (s : Seqₓₓ α) : Computation (List α) :=
       | some (a, s') => Sum.inr (a :: l, s'))
     ([], s)
 
-theorem dropn_add (s : Seqₓₓ α) m : ∀ n, drop s (m+n) = drop (drop s m) n
+theorem dropn_add (s : Seqₓₓ α) m : ∀ n, drop s (m + n) = drop (drop s m) n
   | 0 => rfl
-  | n+1 => congr_argₓ tail (dropn_add n)
+  | n + 1 => congr_argₓ tail (dropn_add n)
 
-theorem dropn_tail (s : Seqₓₓ α) n : drop (tail s) n = drop s (n+1) := by
+theorem dropn_tail (s : Seqₓₓ α) n : drop (tail s) n = drop s (n + 1) := by
   rw [add_commₓ] <;> symm <;> apply dropn_add
 
-theorem nth_tail : ∀ s : Seqₓₓ α n, nth (tail s) n = nth s (n+1)
+theorem nth_tail : ∀ s : Seqₓₓ α n, nth (tail s) n = nth s (n + 1)
   | ⟨f, al⟩, n => rfl
 
 @[ext]
@@ -767,19 +760,19 @@ protected theorem ext (s s' : Seqₓₓ α) (hyp : ∀ n : ℕ, s.nth n = s'.nth
   unfold Seqₓₓ.destruct
   rw [hyp 0]
   cases s'.nth 0
-  ·
-    simp [Seqₓₓ.BisimO]
-  ·
-    suffices ext s.tail s'.tail by
+  · simp [Seqₓₓ.BisimO]
+    
+  · suffices ext s.tail s'.tail by
       simpa
     intro n
-    simp only [Seqₓₓ.nth_tail _ n, hyp $ n+1]
+    simp only [Seqₓₓ.nth_tail _ n, hyp $ n + 1]
+    
 
 @[simp]
 theorem head_dropn (s : Seqₓₓ α) n : head (drop s n) = nth s n := by
   induction' n with n IH generalizing s
-  ·
-    rfl
+  · rfl
+    
   rw [Nat.succ_eq_add_one, ← nth_tail, ← dropn_tail]
   apply IH
 
@@ -787,9 +780,8 @@ theorem mem_map (f : α → β) {a : α} : ∀ {s : Seqₓₓ α}, a ∈ s → f
   | ⟨g, al⟩ => Streamₓ.mem_map (Option.map f)
 
 theorem exists_of_mem_map {f} {b : β} : ∀ {s : Seqₓₓ α}, b ∈ map f s → ∃ a, a ∈ s ∧ f a = b
-  | ⟨g, al⟩, h =>
+  | ⟨g, al⟩, h => by
     let ⟨o, om, oe⟩ := Streamₓ.exists_of_mem_map h
-    by
     cases' o with a <;> injection oe with h' <;> exact ⟨a, om, h'⟩
 
 theorem of_mem_append {s₁ s₂ : Seqₓₓ α} {a : α} (h : a ∈ append s₁ s₂) : a ∈ s₁ ∨ a ∈ s₂ := by
@@ -801,30 +793,30 @@ theorem of_mem_append {s₁ s₂ : Seqₓₓ α} {a : α} (h : a ∈ append s₁
   apply mem_rec_on h _
   intro b s' o s₁
   apply s₁.cases_on _ fun c t₁ => _ <;> intro m e <;> have := congr_argₓ destruct e
-  ·
-    apply Or.inr
+  · apply Or.inr
     simpa using m
-  ·
-    cases'
+    
+  · cases'
       show a = c ∨ a ∈ append t₁ s₂ by
         simpa using m with
       e' m
-    ·
-      rw [e']
+    · rw [e']
       exact Or.inl (mem_cons _ _)
-    ·
-      cases'
+      
+    · cases'
         show c = b ∧ append t₁ s₂ = s' by
           simpa with
         i1 i2
       cases' o with e' IH
-      ·
-        simp [i1, e']
-      ·
-        exact Or.imp_left (mem_cons_of_mem _) (IH m i2)
+      · simp [i1, e']
+        
+      · exact Or.imp_left (mem_cons_of_mem _) (IH m i2)
+        
+      
+    
 
 theorem mem_append_left {s₁ s₂ : Seqₓₓ α} {a : α} (h : a ∈ s₁) : a ∈ append s₁ s₂ := by
-  apply mem_rec_on h <;> intros <;> simp
+  apply mem_rec_on h <;> intros <;> simp [*]
 
 end Seqₓₓ
 
@@ -834,14 +826,14 @@ variable {α : Type u} {β : Type v} {γ : Type w}
 
 open Seqₓₓ
 
-/--  Convert a `seq1` to a sequence. -/
+/-- Convert a `seq1` to a sequence. -/
 def to_seq : Seq1 α → Seqₓₓ α
   | (a, s) => cons a s
 
 instance coe_seq : Coe (Seq1 α) (Seqₓₓ α) :=
   ⟨to_seq⟩
 
-/--  Map a function on a `seq1` -/
+/-- Map a function on a `seq1` -/
 def map (f : α → β) : Seq1 α → Seq1 β
   | (a, s) => (f a, Seqₓₓ.map f s)
 
@@ -849,7 +841,7 @@ theorem map_id : ∀ s : Seq1 α, map id s = s
   | ⟨a, s⟩ => by
     simp [map]
 
-/--  Flatten a nonempty sequence of nonempty sequences -/
+/-- Flatten a nonempty sequence of nonempty sequences -/
 def join : Seq1 (Seq1 α) → Seq1 α
   | ((a, s), S) =>
     match destruct s with
@@ -864,7 +856,7 @@ theorem join_nil (a : α) S : join ((a, nil), S) = (a, Seqₓₓ.join S) :=
 theorem join_cons (a b : α) s S : join ((a, cons b s), S) = (a, Seqₓₓ.join (cons (b, s) S)) := by
   dsimp [join] <;> rw [destruct_cons] <;> rfl
 
-/--  The `return` operator for the `seq1` monad,
+/-- The `return` operator for the `seq1` monad,
   which produces a singleton sequence. -/
 def ret (a : α) : Seq1 α :=
   (a, nil)
@@ -872,7 +864,7 @@ def ret (a : α) : Seq1 α :=
 instance [Inhabited α] : Inhabited (Seq1 α) :=
   ⟨ret (default _)⟩
 
-/--  The `bind` operator for the `seq1` monad,
+/-- The `bind` operator for the `seq1` monad,
   which maps `f` on each element of `s` and appends the results together.
   (Not all of `s` may be evaluated, because the first few elements of `s`
   may already produce an infinite result.) -/
@@ -902,23 +894,23 @@ theorem map_join' (f : α → β) S : Seqₓₓ.map f (Seqₓₓ.join S) = Seq�
   apply
     eq_of_bisim fun s1 s2 =>
       ∃ s S, s1 = append s (Seqₓₓ.map f (Seqₓₓ.join S)) ∧ s2 = append s (Seqₓₓ.join (Seqₓₓ.map (map f) S))
-  ·
-    intro s1 s2 h
+  · intro s1 s2 h
     exact
       match s1, s2, h with
       | _, _, ⟨s, S, rfl, rfl⟩ => by
         apply cases_on s <;> simp
-        ·
-          apply cases_on S <;> simp
-          ·
-            intro x S
+        · apply cases_on S <;> simp
+          · intro x S
             cases' x with a s <;> simp [map]
             exact ⟨_, _, rfl, rfl⟩
-        ·
-          intro x s
+            
+          
+        · intro x s
           refine' ⟨s, S, rfl, rfl⟩
-  ·
-    refine' ⟨nil, S, _, _⟩ <;> simp
+          
+    
+  · refine' ⟨nil, S, _, _⟩ <;> simp
+    
 
 @[simp]
 theorem map_join (f : α → β) : ∀ S, map f (join S) = join (map (map f) S)
@@ -930,28 +922,28 @@ theorem join_join (SS : Seqₓₓ (Seq1 (Seq1 α))) : Seqₓₓ.join (Seqₓₓ.
   apply
     eq_of_bisim fun s1 s2 =>
       ∃ s SS, s1 = Seqₓₓ.append s (Seqₓₓ.join (Seqₓₓ.join SS)) ∧ s2 = Seqₓₓ.append s (Seqₓₓ.join (Seqₓₓ.map join SS))
-  ·
-    intro s1 s2 h
+  · intro s1 s2 h
     exact
       match s1, s2, h with
       | _, _, ⟨s, SS, rfl, rfl⟩ => by
         apply cases_on s <;> simp
-        ·
-          apply cases_on SS <;> simp
-          ·
-            intro S SS
+        · apply cases_on SS <;> simp
+          · intro S SS
             cases' S with s S <;> cases' s with x s <;> simp [map]
             apply cases_on s <;> simp
-            ·
-              exact ⟨_, _, rfl, rfl⟩
-            ·
-              intro x s
+            · exact ⟨_, _, rfl, rfl⟩
+              
+            · intro x s
               refine' ⟨cons x (append s (Seqₓₓ.join S)), SS, _, _⟩ <;> simp
-        ·
-          intro x s
+              
+            
+          
+        · intro x s
           exact ⟨s, SS, rfl, rfl⟩
-  ·
-    refine' ⟨nil, SS, _, _⟩ <;> simp
+          
+    
+  · refine' ⟨nil, SS, _, _⟩ <;> simp
+    
 
 @[simp]
 theorem bind_assoc (s : Seq1 α) (f : α → Seq1 β) (g : β → Seq1 γ) :
@@ -964,11 +956,11 @@ theorem bind_assoc (s : Seq1 α) (f : α → Seq1 β) (g : β → Seq1 γ) :
   generalize Seqₓₓ.map (map g ∘ f) s = SS
   rcases map g (f a) with ⟨⟨a, s⟩, S⟩
   apply cases_on s <;> intros <;> apply cases_on S <;> intros <;> simp
-  ·
-    cases' x with x t
+  · cases' x with x t
     apply cases_on t <;> intros <;> simp
-  ·
-    cases' x_1 with y t <;> simp
+    
+  · cases' x_1 with y t <;> simp
+    
 
 instance : Monadₓ Seq1 where
   map := @map

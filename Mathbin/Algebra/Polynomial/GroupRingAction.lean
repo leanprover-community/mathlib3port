@@ -20,8 +20,8 @@ variable {M}
 
 theorem smul_eq_map [MulSemiringAction M R] (m : M) : (· • ·) m = map (MulSemiringAction.toRingHom M R m) := by
   suffices
-    DistribMulAction.toAddMonoidHom (Polynomial R) m =
-      (map_ring_hom (MulSemiringAction.toRingHom M R m)).toAddMonoidHom by
+    DistribMulAction.toAddMonoidHom (Polynomial R) m = (map_ring_hom (MulSemiringAction.toRingHom M R m)).toAddMonoidHom
+    by
     ext1 r
     exact AddMonoidHom.congr_fun this r
   ext n r : 2
@@ -77,7 +77,7 @@ open MulAction
 
 open_locale Classical
 
-/--  the product of `(X - g • x)` over distinct `g • x`. -/
+/-- the product of `(X - g • x)` over distinct `g • x`. -/
 noncomputable def prodXSubSmul (x : R) : Polynomial R :=
   (Finset.univ : Finset (G ⧸ MulAction.stabilizer G x)).Prod $ fun g =>
     Polynomial.x - Polynomial.c (of_quotient_stabilizer G x g)
@@ -111,21 +111,23 @@ variable {Q : Type _} [CommSemiringₓ Q] [MulSemiringAction M Q]
 
 open Polynomial
 
-/--  An equivariant map induces an equivariant map on polynomials. -/
-protected noncomputable def Polynomial (g : P →+*[M] Q) : Polynomial P →+*[M] Polynomial Q :=
-  { toFun := map g,
-    map_smul' := fun m p =>
-      Polynomial.induction_on p
-        (fun b => by
-          rw [smul_C, map_C, coe_fn_coe, g.map_smul, map_C, coe_fn_coe, smul_C])
-        (fun p q ihp ihq => by
-          rw [smul_add, Polynomial.map_add, ihp, ihq, Polynomial.map_add, smul_add])
-        fun n b ih => by
-        rw [smul_mul', smul_C, smul_pow', smul_X, Polynomial.map_mul, map_C, Polynomial.map_pow, map_X, coe_fn_coe,
-          g.map_smul, Polynomial.map_mul, map_C, Polynomial.map_pow, map_X, smul_mul', smul_C, smul_pow', smul_X,
-          coe_fn_coe],
-    map_zero' := Polynomial.map_zero g, map_add' := fun p q => Polynomial.map_add g, map_one' := Polynomial.map_one g,
-    map_mul' := fun p q => Polynomial.map_mul g }
+/-- An equivariant map induces an equivariant map on polynomials. -/
+protected noncomputable def Polynomial (g : P →+*[M] Q) : Polynomial P →+*[M] Polynomial Q where
+  toFun := map g
+  map_smul' := fun m p =>
+    Polynomial.induction_on p
+      (fun b => by
+        rw [smul_C, map_C, coe_fn_coe, g.map_smul, map_C, coe_fn_coe, smul_C])
+      (fun p q ihp ihq => by
+        rw [smul_add, Polynomial.map_add, ihp, ihq, Polynomial.map_add, smul_add])
+      fun n b ih => by
+      rw [smul_mul', smul_C, smul_pow', smul_X, Polynomial.map_mul, map_C, Polynomial.map_pow, map_X, coe_fn_coe,
+        g.map_smul, Polynomial.map_mul, map_C, Polynomial.map_pow, map_X, smul_mul', smul_C, smul_pow', smul_X,
+        coe_fn_coe]
+  map_zero' := Polynomial.map_zero g
+  map_add' := fun p q => Polynomial.map_add g
+  map_one' := Polynomial.map_one g
+  map_mul' := fun p q => Polynomial.map_mul g
 
 @[simp]
 theorem coe_polynomial (g : P →+*[M] Q) : (g.polynomial : Polynomial P → Polynomial Q) = map g :=

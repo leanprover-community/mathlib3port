@@ -28,8 +28,7 @@ open Opposite
 
 variable {C : Type u₁} [category.{v₁} C]
 
-/-- 
-An equality `X = Y` gives us a morphism `X ⟶ Y`.
+/-- An equality `X = Y` gives us a morphism `X ⟶ Y`.
 
 It is typically better to use this, rather than rewriting by the equality then using `𝟙 _`
 which usually leads to dependent type theory hell.
@@ -47,8 +46,7 @@ theorem eq_to_hom_trans {X Y Z : C} (p : X = Y) (q : Y = Z) : eq_to_hom p ≫ eq
   cases q
   simp
 
-/-- 
-If we (perhaps unintentionally) perform equational rewriting on
+/-- If we (perhaps unintentionally) perform equational rewriting on
 the source object of a morphism,
 we can replace the resulting `_.mpr f` term by a composition with an `eq_to_hom`.
 
@@ -61,8 +59,7 @@ theorem congr_arg_mpr_hom_left {X Y Z : C} (p : X = Y) (q : Y ⟶ Z) :
   cases p
   simp
 
-/-- 
-If we (perhaps unintentionally) perform equational rewriting on
+/-- If we (perhaps unintentionally) perform equational rewriting on
 the target object of a morphism,
 we can replace the resulting `_.mpr f` term by a composition with an `eq_to_hom`.
 
@@ -75,8 +72,7 @@ theorem congr_arg_mpr_hom_right {X Y Z : C} (p : X ⟶ Y) (q : Z = Y) :
   cases q
   simp
 
-/-- 
-An equality `X = Y` gives us an isomorphism `X ≅ Y`.
+/-- An equality `X = Y` gives us an isomorphism `X ≅ Y`.
 
 It is typically better to use this, rather than rewriting by the equality then using `iso.refl _`
 which usually leads to dependent type theory hell.
@@ -124,7 +120,7 @@ variable {D : Type u₂} [category.{v₂} D]
 
 namespace Functor
 
-/--  Proving equality between functors. This isn't an extensionality lemma,
+/-- Proving equality between functors. This isn't an extensionality lemma,
   because usually you don't really want to do this. -/
 theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
     (h_map : ∀ X Y f, F.map f = eq_to_hom (h_obj X) ≫ G.map f ≫ eq_to_hom (h_obj Y).symm) : F = G := by
@@ -137,7 +133,7 @@ theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
   funext X Y f
   simpa using h_map X Y f
 
-/--  Proving equality between functors using heterogeneous equality. -/
+/-- Proving equality between functors using heterogeneous equality. -/
 theorem hext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X) (h_map : ∀ X Y f : X ⟶ Y, HEq (F.map f) (G.map f)) :
     F = G := by
   cases' F with F_obj _ _ _

@@ -147,27 +147,72 @@ theorem Ico_filter_le_of_left_le {a b c : α} [DecidablePred ((· ≤ ·) c)] (h
   rw [mem_filter, mem_Ico, mem_Ico, and_comm, And.left_comm]
   exact and_iff_right_of_imp fun h => hac.trans h.1
 
-/--  A set with upper and lower bounds in a locally finite order is a fintype -/
+/-- A set with upper and lower bounds in a locally finite order is a fintype -/
 def _root_.set.fintype_of_mem_bounds {a b} {s : Set α} [DecidablePred (· ∈ s)] (ha : a ∈ LowerBounds s)
     (hb : b ∈ UpperBounds s) : Fintype s :=
   Set.fintypeSubset (Set.Icc a b) $ fun x hx => ⟨ha hx, hb hx⟩
 
-theorem _root_.bdd_below.finite_of_bdd_above {s : Set α} (h₀ : BddBelow s) (h₁ : BddAbove s) : s.finite :=
+theorem _root_.bdd_below.finite_of_bdd_above {s : Set α} (h₀ : BddBelow s) (h₁ : BddAbove s) : s.finite := by
   let ⟨a, ha⟩ := h₀
   let ⟨b, hb⟩ := h₁
-  by
   classical
   exact ⟨Set.fintypeOfMemBounds ha hb⟩
+
+section Filter
+
+variable (a b) [Fintype α]
+
+theorem filter_lt_lt_eq_Ioo [DecidablePred fun j : α => a < j ∧ j < b] :
+    (Finset.univ.filter fun j => a < j ∧ j < b) = Ioo a b := by
+  ext
+  simp
+
+theorem filter_lt_le_eq_Ioc [DecidablePred fun j : α => a < j ∧ j ≤ b] :
+    (Finset.univ.filter fun j => a < j ∧ j ≤ b) = Ioc a b := by
+  ext
+  simp
+
+theorem filter_le_lt_eq_Ico [DecidablePred fun j : α => a ≤ j ∧ j < b] :
+    (Finset.univ.filter fun j => a ≤ j ∧ j < b) = Ico a b := by
+  ext
+  simp
+
+theorem filter_le_le_eq_Icc [DecidablePred fun j : α => a ≤ j ∧ j ≤ b] :
+    (Finset.univ.filter fun j => a ≤ j ∧ j ≤ b) = Icc a b := by
+  ext
+  simp
+
+theorem filter_lt_eq_Ioi [OrderTop α] [DecidablePred ((· < ·) a)] : (Finset.univ.filter fun j => a < j) = Ioi a := by
+  ext
+  simp
+
+theorem filter_le_eq_Ici [OrderTop α] [DecidablePred ((· ≤ ·) a)] : (Finset.univ.filter fun j => a ≤ j) = Ici a := by
+  ext
+  simp
+
+theorem filter_gt_eq_Iio [OrderBot α] [DecidablePred (· < a)] : (Finset.univ.filter fun j => j < a) = Iio a := by
+  ext
+  simp
+
+theorem filter_ge_eq_Iic [OrderBot α] [DecidablePred (· ≤ a)] : (Finset.univ.filter fun j => j ≤ a) = Iic a := by
+  ext
+  simp
+
+end Filter
 
 end Preorderₓ
 
 section PartialOrderₓ
 
-variable [PartialOrderₓ α] [LocallyFiniteOrder α] {a b : α}
+variable [PartialOrderₓ α] [LocallyFiniteOrder α] {a b c : α}
 
 @[simp]
 theorem Icc_self (a : α) : Icc a a = {a} := by
   rw [← coe_eq_singleton, coe_Icc, Set.Icc_self]
+
+@[simp]
+theorem Icc_eq_singleton_iff : Icc a b = {c} ↔ a = c ∧ b = c := by
+  rw [← coe_eq_singleton, coe_Icc, Set.Icc_eq_singleton_iff]
 
 section DecidableEq
 
@@ -202,24 +247,32 @@ theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
   rw [mem_filter, mem_Ico, mem_singleton, And.right_comm, ← le_antisymm_iffₓ, eq_comm]
   exact and_iff_left_of_imp fun h => h.le.trans_lt hab
 
-theorem card_Ico_eq_card_Icc_sub_one (h : a ≤ b) : (Ico a b).card = (Icc a b).card - 1 := by
+theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (Ico a b).card = (Icc a b).card - 1 := by
   classical
-  rw [← Ico_insert_right h, card_insert_of_not_mem right_not_mem_Ico]
-  exact (Nat.add_sub_cancel _ _).symm
+  by_cases' h : a ≤ b
+  · rw [← Ico_insert_right h, card_insert_of_not_mem right_not_mem_Ico]
+    exact (Nat.add_sub_cancel _ _).symm
+    
+  · rw [Ico_eq_empty fun h' => h h'.le, Icc_eq_empty h, card_empty, zero_tsub]
+    
 
-theorem card_Ioc_eq_card_Icc_sub_one (h : a ≤ b) : (Ioc a b).card = (Icc a b).card - 1 :=
-  @card_Ico_eq_card_Icc_sub_one (OrderDual α) _ _ _ _ h
+theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (Ioc a b).card = (Icc a b).card - 1 :=
+  @card_Ico_eq_card_Icc_sub_one (OrderDual α) _ _ _ _
 
-theorem card_Ioo_eq_card_Ico_sub_one (h : a ≤ b) : (Ioo a b).card = (Ico a b).card - 1 := by
-  obtain rfl | h' := h.eq_or_lt
-  ·
-    rw [Ioo_self, Ico_self, card_empty]
+theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (Ioo a b).card = (Ico a b).card - 1 := by
   classical
-  rw [← Ioo_insert_left h', card_insert_of_not_mem left_not_mem_Ioo]
-  exact (Nat.add_sub_cancel _ _).symm
+  by_cases' h : a ≤ b
+  · obtain rfl | h' := h.eq_or_lt
+    · rw [Ioo_self, Ico_self, card_empty]
+      
+    rw [← Ioo_insert_left h', card_insert_of_not_mem left_not_mem_Ioo]
+    exact (Nat.add_sub_cancel _ _).symm
+    
+  · rw [Ioo_eq_empty fun h' => h h'.le, Ico_eq_empty fun h' => h h'.le, card_empty, zero_tsub]
+    
 
-theorem card_Ioo_eq_card_Icc_sub_two (h : a ≤ b) : (Ioo a b).card = (Icc a b).card - 2 := by
-  rw [card_Ioo_eq_card_Ico_sub_one h, card_Ico_eq_card_Icc_sub_one h]
+theorem card_Ioo_eq_card_Icc_sub_two (a b : α) : (Ioo a b).card = (Icc a b).card - 2 := by
+  rw [card_Ioo_eq_card_Ico_sub_one, card_Ico_eq_card_Icc_sub_one]
   rfl
 
 end PartialOrderₓ
@@ -247,38 +300,38 @@ theorem Ico_inter_Ico {a b c d : α} : Ico a b ∩ Ico c d = Ico (max a c) (min 
 @[simp]
 theorem Ico_filter_lt (a b c : α) : ((Ico a b).filter fun x => x < c) = Ico a (min b c) := by
   cases le_totalₓ b c
-  ·
-    rw [Ico_filter_lt_of_right_le h, min_eq_leftₓ h]
-  ·
-    rw [Ico_filter_lt_of_le_right h, min_eq_rightₓ h]
+  · rw [Ico_filter_lt_of_right_le h, min_eq_leftₓ h]
+    
+  · rw [Ico_filter_lt_of_le_right h, min_eq_rightₓ h]
+    
 
 @[simp]
 theorem Ico_filter_le (a b c : α) : ((Ico a b).filter fun x => c ≤ x) = Ico (max a c) b := by
   cases le_totalₓ a c
-  ·
-    rw [Ico_filter_le_of_left_le h, max_eq_rightₓ h]
-  ·
-    rw [Ico_filter_le_of_le_left h, max_eq_leftₓ h]
+  · rw [Ico_filter_le_of_left_le h, max_eq_rightₓ h]
+    
+  · rw [Ico_filter_le_of_le_left h, max_eq_leftₓ h]
+    
 
 @[simp]
 theorem Ico_diff_Ico_left (a b c : α) : Ico a b \ Ico a c = Ico (max a c) b := by
   cases le_totalₓ a c
-  ·
-    ext x
+  · ext x
     rw [mem_sdiff, mem_Ico, mem_Ico, mem_Ico, max_eq_rightₓ h, And.right_comm, not_and, not_ltₓ]
     exact and_congr_left' ⟨fun hx => hx.2 hx.1, fun hx => ⟨h.trans hx, fun _ => hx⟩⟩
-  ·
-    rw [Ico_eq_empty_of_le h, sdiff_empty, max_eq_leftₓ h]
+    
+  · rw [Ico_eq_empty_of_le h, sdiff_empty, max_eq_leftₓ h]
+    
 
 @[simp]
 theorem Ico_diff_Ico_right (a b c : α) : Ico a b \ Ico c b = Ico a (min b c) := by
   cases le_totalₓ b c
-  ·
-    rw [Ico_eq_empty_of_le h, sdiff_empty, min_eq_leftₓ h]
-  ·
-    ext x
+  · rw [Ico_eq_empty_of_le h, sdiff_empty, min_eq_leftₓ h]
+    
+  · ext x
     rw [mem_sdiff, mem_Ico, mem_Ico, mem_Ico, min_eq_rightₓ h, and_assoc, not_and', not_leₓ]
     exact and_congr_right' ⟨fun hx => hx.2 hx.1, fun hx => ⟨hx.trans_le h, fun _ => hx⟩⟩
+    
 
 end LinearOrderₓ
 
@@ -304,77 +357,77 @@ section OrderedCancelAddCommMonoid
 
 variable [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [DecidableEq α] [LocallyFiniteOrder α]
 
-theorem image_add_left_Icc (a b c : α) : (Icc a b).Image ((·+·) c) = Icc (c+a) (c+b) := by
+theorem image_add_left_Icc (a b c : α) : (Icc a b).Image ((· + ·) c) = Icc (c + a) (c + b) := by
   ext x
   rw [mem_image, mem_Icc]
   constructor
-  ·
-    rintro ⟨y, hy, rfl⟩
+  · rintro ⟨y, hy, rfl⟩
     rw [mem_Icc] at hy
     exact ⟨add_le_add_left hy.1 c, add_le_add_left hy.2 c⟩
-  ·
-    intro hx
+    
+  · intro hx
     obtain ⟨y, hy⟩ := exists_add_of_le hx.1
     rw [add_assocₓ] at hy
     rw [hy] at hx
-    exact ⟨a+y, mem_Icc.2 ⟨le_of_add_le_add_left hx.1, le_of_add_le_add_left hx.2⟩, hy.symm⟩
+    exact ⟨a + y, mem_Icc.2 ⟨le_of_add_le_add_left hx.1, le_of_add_le_add_left hx.2⟩, hy.symm⟩
+    
 
-theorem image_add_left_Ico (a b c : α) : (Ico a b).Image ((·+·) c) = Ico (c+a) (c+b) := by
+theorem image_add_left_Ico (a b c : α) : (Ico a b).Image ((· + ·) c) = Ico (c + a) (c + b) := by
   ext x
   rw [mem_image, mem_Ico]
   constructor
-  ·
-    rintro ⟨y, hy, rfl⟩
+  · rintro ⟨y, hy, rfl⟩
     rw [mem_Ico] at hy
     exact ⟨add_le_add_left hy.1 c, add_lt_add_left hy.2 c⟩
-  ·
-    intro hx
+    
+  · intro hx
     obtain ⟨y, hy⟩ := exists_add_of_le hx.1
     rw [add_assocₓ] at hy
     rw [hy] at hx
-    exact ⟨a+y, mem_Ico.2 ⟨le_of_add_le_add_left hx.1, lt_of_add_lt_add_left hx.2⟩, hy.symm⟩
+    exact ⟨a + y, mem_Ico.2 ⟨le_of_add_le_add_left hx.1, lt_of_add_lt_add_left hx.2⟩, hy.symm⟩
+    
 
-theorem image_add_left_Ioc (a b c : α) : (Ioc a b).Image ((·+·) c) = Ioc (c+a) (c+b) := by
+theorem image_add_left_Ioc (a b c : α) : (Ioc a b).Image ((· + ·) c) = Ioc (c + a) (c + b) := by
   ext x
   rw [mem_image, mem_Ioc]
   refine' ⟨_, fun hx => _⟩
-  ·
-    rintro ⟨y, hy, rfl⟩
+  · rintro ⟨y, hy, rfl⟩
     rw [mem_Ioc] at hy
     exact ⟨add_lt_add_left hy.1 c, add_le_add_left hy.2 c⟩
-  ·
-    obtain ⟨y, hy⟩ := exists_add_of_le hx.1.le
+    
+  · obtain ⟨y, hy⟩ := exists_add_of_le hx.1.le
     rw [add_assocₓ] at hy
     rw [hy] at hx
-    exact ⟨a+y, mem_Ioc.2 ⟨lt_of_add_lt_add_left hx.1, le_of_add_le_add_left hx.2⟩, hy.symm⟩
+    exact ⟨a + y, mem_Ioc.2 ⟨lt_of_add_lt_add_left hx.1, le_of_add_le_add_left hx.2⟩, hy.symm⟩
+    
 
-theorem image_add_left_Ioo (a b c : α) : (Ioo a b).Image ((·+·) c) = Ioo (c+a) (c+b) := by
+theorem image_add_left_Ioo (a b c : α) : (Ioo a b).Image ((· + ·) c) = Ioo (c + a) (c + b) := by
   ext x
   rw [mem_image, mem_Ioo]
   refine' ⟨_, fun hx => _⟩
-  ·
-    rintro ⟨y, hy, rfl⟩
+  · rintro ⟨y, hy, rfl⟩
     rw [mem_Ioo] at hy
     exact ⟨add_lt_add_left hy.1 c, add_lt_add_left hy.2 c⟩
-  ·
-    obtain ⟨y, hy⟩ := exists_add_of_le hx.1.le
+    
+  · obtain ⟨y, hy⟩ := exists_add_of_le hx.1.le
     rw [add_assocₓ] at hy
     rw [hy] at hx
-    exact ⟨a+y, mem_Ioo.2 ⟨lt_of_add_lt_add_left hx.1, lt_of_add_lt_add_left hx.2⟩, hy.symm⟩
+    exact ⟨a + y, mem_Ioo.2 ⟨lt_of_add_lt_add_left hx.1, lt_of_add_lt_add_left hx.2⟩, hy.symm⟩
+    
 
-theorem image_add_right_Icc (a b c : α) : ((Icc a b).Image fun x => x+c) = Icc (a+c) (b+c) := by
+theorem image_add_right_Icc (a b c : α) : ((Icc a b).Image fun x => x + c) = Icc (a + c) (b + c) := by
   simp_rw [add_commₓ _ c]
   exact image_add_left_Icc a b c
 
-theorem image_add_right_Ico (a b c : α) : ((Ico a b).Image fun x => x+c) = Ico (a+c) (b+c) := by
+theorem image_add_right_Ico (a b c : α) : ((Ico a b).Image fun x => x + c) = Ico (a + c) (b + c) := by
   simp_rw [add_commₓ _ c]
   exact image_add_left_Ico a b c
 
-theorem image_add_right_Ioc (a b c : α) : ((Ioc a b).Image fun x => x+c) = Ioc (a+c) (b+c) := by
+theorem image_add_right_Ioc (a b c : α) : ((Ioc a b).Image fun x => x + c) = Ioc (a + c) (b + c) := by
   simp_rw [add_commₓ _ c]
   exact image_add_left_Ioc a b c
 
-theorem image_add_right_Ioo (a b c : α) : ((Ioo a b).Image fun x => x+c) = Ioo (a+c) (b+c) := by
+theorem image_add_right_Ioo (a b c : α) : ((Ioo a b).Image fun x => x + c) = Ioo (a + c) (b + c) := by
   simp_rw [add_commₓ _ c]
   exact image_add_left_Ioo a b c
 

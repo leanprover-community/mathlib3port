@@ -55,22 +55,30 @@ theorem comp_one [HasOne β] (x : β → γ) : x ∘ 1 = const α (x 1) :=
 
 @[to_additive]
 instance Mul [∀ i, Mul $ f i] : Mul (∀ i : I, f i) :=
-  ⟨fun f g i => f i*g i⟩
+  ⟨fun f g i => f i * g i⟩
 
 @[simp, to_additive]
-theorem mul_apply [∀ i, Mul $ f i] : (x*y) i = x i*y i :=
+theorem mul_apply [∀ i, Mul $ f i] : (x * y) i = x i * y i :=
   rfl
 
 @[to_additive]
-theorem mul_def [∀ i, Mul $ f i] : (x*y) = fun i => x i*y i :=
+theorem mul_def [∀ i, Mul $ f i] : x * y = fun i => x i * y i :=
   rfl
 
 @[simp, to_additive]
-theorem const_mul [Mul β] (a b : β) : (const α a*const α b) = const α (a*b) :=
+theorem const_mul [Mul β] (a b : β) : const α a * const α b = const α (a * b) :=
   rfl
 
 @[to_additive]
-theorem mul_comp [Mul γ] (x y : β → γ) (z : α → β) : (x*y) ∘ z = (x ∘ z)*y ∘ z :=
+theorem mul_comp [Mul γ] (x y : β → γ) (z : α → β) : (x * y) ∘ z = x ∘ z * y ∘ z :=
+  rfl
+
+@[simp]
+theorem bit0_apply [∀ i, Add $ f i] : (bit0 x) i = bit0 (x i) :=
+  rfl
+
+@[simp]
+theorem bit1_apply [∀ i, Add $ f i] [∀ i, HasOne $ f i] : (bit1 x) i = bit1 (x i) :=
   rfl
 
 @[to_additive]
@@ -119,7 +127,7 @@ variable [DecidableEq I]
 
 variable [∀ i, HasZero (f i)] [∀ i, HasZero (g i)] [∀ i, HasZero (h i)]
 
-/--  The function supported at `i`, with value `x` there. -/
+/-- The function supported at `i`, with value `x` there. -/
 def single (i : I) (x : f i) : ∀ i, f i :=
   Function.update 0 i x
 
@@ -131,7 +139,7 @@ theorem single_eq_same (i : I) (x : f i) : single i x i = x :=
 theorem single_eq_of_ne {i i' : I} (h : i' ≠ i) (x : f i) : single i x i' = 0 :=
   Function.update_noteq h x _
 
-/--  Abbreviation for `single_eq_of_ne h.symm`, for ease of use by `simp`. -/
+/-- Abbreviation for `single_eq_of_ne h.symm`, for ease of use by `simp`. -/
 @[simp]
 theorem single_eq_of_ne' {i i' : I} (h : i ≠ i') (x : f i) : single i x i' = 0 :=
   single_eq_of_ne h.symm x
@@ -140,11 +148,11 @@ theorem single_eq_of_ne' {i i' : I} (h : i ≠ i') (x : f i) : single i x i' = 0
 theorem single_zero (i : I) : single i (0 : f i) = 0 :=
   Function.update_eq_self _ _
 
-/--  On non-dependent functions, `pi.single` can be expressed as an `ite` -/
+/-- On non-dependent functions, `pi.single` can be expressed as an `ite` -/
 theorem single_apply {β : Sort _} [HasZero β] (i : I) (x : β) (i' : I) : single i x i' = if i' = i then x else 0 :=
   Function.update_apply 0 i x i'
 
-/--  On non-dependent functions, `pi.single` is symmetric in the two indices. -/
+/-- On non-dependent functions, `pi.single` is symmetric in the two indices. -/
 theorem single_comm {β : Sort _} [HasZero β] (i : I) (x : β) (i' : I) : single i x i' = single i' x i := by
   simp only [single_apply, eq_comm] <;> congr
 
@@ -155,11 +163,11 @@ theorem apply_single (f' : ∀ i, f i → g i) (hf' : ∀ i, f' i 0 = 0) (i : I)
 theorem apply_single₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 0 0 = 0) (i : I) (x : f i) (y : g i) (j : I) :
     f' j (single i x j) (single i y j) = single i (f' i x y) j := by
   by_cases' h : j = i
-  ·
-    subst h
+  · subst h
     simp only [single_eq_same]
-  ·
-    simp only [single_eq_of_ne h, hf']
+    
+  · simp only [single_eq_of_ne h, hf']
+    
 
 theorem single_op {g : I → Type _} [∀ i, HasZero (g i)] (op : ∀ i, f i → g i) (h : ∀ i, op i 0 = 0) (i : I) (x : f i) :
     single i (op i x) = fun j => op j (single i x j) :=
@@ -194,9 +202,9 @@ theorem extend_one [HasOne γ] (f : α → β) : Function.extendₓ f (1 : α �
 
 @[to_additive]
 theorem extend_mul [Mul γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ : β → γ) :
-    Function.extendₓ f (g₁*g₂) (e₁*e₂) = Function.extendₓ f g₁ e₁*Function.extendₓ f g₂ e₂ :=
+    Function.extendₓ f (g₁ * g₂) (e₁ * e₂) = Function.extendₓ f g₁ e₁ * Function.extendₓ f g₂ e₂ :=
   funext $ fun _ => by
-    convert (apply_dite2 (·*·) _ _ _ _ _).symm
+    convert (apply_dite2 (· * ·) _ _ _ _ _).symm
 
 @[to_additive]
 theorem extend_inv [HasInv γ] (f : α → β) (g : α → γ) (e : β → γ) :

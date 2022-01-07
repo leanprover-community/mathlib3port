@@ -2,7 +2,7 @@ import Mathbin.Tactic.Omega.Term
 
 namespace Omega
 
-/--  (([t₁,...tₘ],[s₁,...,sₙ]) : clause) encodes the constraints
+/-- (([t₁,...tₘ],[s₁,...,sₙ]) : clause) encodes the constraints
 0 = ⟦t₁⟧ ∧ ... ∧ 0 = ⟦tₘ⟧ ∧ 0 ≤ ⟦s₁⟧ ∧ ... ∧ 0 ≤ ⟦sₙ⟧, where
 ⟦t⟧ is the value of (t : term). -/
 @[reducible]
@@ -11,19 +11,19 @@ def clause :=
 
 namespace Clause
 
-/--  holds v c := clause c holds under valuation v -/
+/-- holds v c := clause c holds under valuation v -/
 def holds (v : Nat → Int) : clause → Prop
   | (eqs, les) => (∀ t : term, t ∈ eqs → 0 = term.val v t) ∧ ∀ t : term, t ∈ les → 0 ≤ term.val v t
 
-/--  sat c := there exists a valuation v under which c holds -/
+/-- sat c := there exists a valuation v under which c holds -/
 def sat (c : clause) : Prop :=
   ∃ v : Nat → Int, holds v c
 
-/--  unsat c := there is no valuation v under which c holds -/
+/-- unsat c := there is no valuation v under which c holds -/
 def unsat (c : clause) : Prop :=
   ¬c.sat
 
-/--  append two clauses by elementwise appending -/
+/-- append two clauses by elementwise appending -/
 def append (c1 c2 : clause) : clause :=
   (c1.fst ++ c2.fst, c1.snd ++ c2.snd)
 
@@ -37,11 +37,11 @@ theorem holds_append {v : Nat → Int} {c1 c2 : clause} : holds v c1 → holds v
 
 end Clause
 
-/--  There exists a satisfiable clause c in argument -/
+/-- There exists a satisfiable clause c in argument -/
 def clauses.sat (cs : List clause) : Prop :=
   ∃ c ∈ cs, clause.sat c
 
-/--  There is no satisfiable clause c in argument -/
+/-- There is no satisfiable clause c in argument -/
 def clauses.unsat (cs : List clause) : Prop :=
   ¬clauses.sat cs
 

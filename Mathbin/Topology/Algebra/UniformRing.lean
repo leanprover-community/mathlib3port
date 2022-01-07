@@ -41,7 +41,7 @@ instance : HasOne (completion α) :=
   ⟨(1 : α)⟩
 
 instance : Mul (completion α) :=
-  ⟨curry $ (dense_inducing_coe.Prod dense_inducing_coe).extend (coeₓ ∘ uncurry (·*·))⟩
+  ⟨curry $ (dense_inducing_coe.Prod dense_inducing_coe).extend (coeₓ ∘ uncurry (· * ·))⟩
 
 @[norm_cast]
 theorem coe_one : ((1 : α) : completion α) = 1 :=
@@ -50,24 +50,22 @@ theorem coe_one : ((1 : α) : completion α) = 1 :=
 variable {α} [TopologicalRing α]
 
 @[norm_cast]
-theorem coe_mul (a b : α) : ((a*b : α) : completion α) = a*b :=
+theorem coe_mul (a b : α) : ((a * b : α) : completion α) = a * b :=
   ((dense_inducing_coe.Prod dense_inducing_coe).extend_eq ((continuous_coe α).comp (@continuous_mul α _ _ _))
       (a, b)).symm
 
 variable [UniformAddGroup α]
 
-theorem continuous_mul : Continuous fun p : completion α × completion α => p.1*p.2 := by
+theorem continuous_mul : Continuous fun p : completion α × completion α => p.1 * p.2 := by
   let m := (AddMonoidHom.mul : α →+ α →+ α).compr₂ to_compl
-  have : Continuous fun p : α × α => m p.1 p.2
-  exact (continuous_coe α).comp continuous_mul
-  have di : DenseInducing (to_compl : α → completion α)
-  exact dense_inducing_coe
+  have : Continuous fun p : α × α => m p.1 p.2 := (continuous_coe α).comp continuous_mul
+  have di : DenseInducing (to_compl : α → completion α) := dense_inducing_coe
   convert di.extend_Z_bilin di this
   ext ⟨x, y⟩
   rfl
 
 theorem Continuous.mul {β : Type _} [TopologicalSpace β] {f g : β → completion α} (hf : Continuous f)
-    (hg : Continuous g) : Continuous fun b => f b*g b :=
+    (hg : Continuous g) : Continuous fun b => f b * g b :=
   continuous_mul.comp (hf.prod_mk hg : _)
 
 instance : Ringₓ (completion α) :=
@@ -106,7 +104,7 @@ instance : Ringₓ (completion α) :=
         fun a b c => by
         rw [← coe_add, ← coe_mul, ← coe_mul, ← coe_mul, ← coe_add, add_mulₓ] }
 
-/--  The map from a uniform ring to its completion, as a ring homomorphism. -/
+/-- The map from a uniform ring to its completion, as a ring homomorphism. -/
 def coe_ring_hom : α →+* completion α :=
   ⟨coeₓ, coe_one α, fun a b => coe_mul a b, coe_zero, fun a b => coe_add a b⟩
 
@@ -116,7 +114,7 @@ theorem continuous_coe_ring_hom : Continuous (coe_ring_hom : α → completion �
 variable {β : Type u} [UniformSpace β] [Ringₓ β] [UniformAddGroup β] [TopologicalRing β] (f : α →+* β)
   (hf : Continuous f)
 
-/--  The completion extension as a ring morphism. -/
+/-- The completion extension as a ring morphism. -/
 def extension_hom [CompleteSpace β] [SeparatedSpace β] : completion α →+* β :=
   have hf' : Continuous (f : α →+ β) := hf
   have hf : UniformContinuous f := uniform_continuous_of_continuous hf'
@@ -142,7 +140,7 @@ instance top_ring_compl : TopologicalRing (completion α) where
   continuous_add := continuous_add
   continuous_mul := continuous_mul
 
-/--  The completion map as a ring morphism. -/
+/-- The completion map as a ring morphism. -/
 def map_ring_hom (hf : Continuous f) : completion α →+* completion β :=
   extension_hom (coe_ring_hom.comp f) (continuous_coe_ring_hom.comp hf)
 
@@ -169,7 +167,7 @@ theorem ring_sep_quot (α : Type u) [r : CommRingₓ α] [UniformSpace α] [Unif
     Quotientₓ (separation_setoid α) = (α ⧸ (⊥ : Ideal α).closure) := by
   rw [@ring_sep_rel α r] <;> rfl
 
-/--  Given a topological ring `α` equipped with a uniform structure that makes subtraction uniformly
+/-- Given a topological ring `α` equipped with a uniform structure that makes subtraction uniformly
 continuous, get an equivalence between the separated quotient of `α` and the quotient ring
 corresponding to the closure of zero. -/
 def sep_quot_equiv_ring_quot α [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :

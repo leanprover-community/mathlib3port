@@ -24,7 +24,7 @@ namespace CategoryTheory
 
 namespace MonoOver
 
-/--  When `f : X ⟶ Y` and `P : mono_over Y`,
+/-- When `f : X ⟶ Y` and `P : mono_over Y`,
 `P.factors f` expresses that there exists a factorisation of `f` through `P`.
 Given `h : P.factors f`, you can recover the morphism as `P.factor_thru f h`.
 -/
@@ -39,7 +39,7 @@ theorem factors_congr {X : C} {f g : mono_over X} {Y : C} (h : Y ⟶ X) (e : f �
     ⟨u ≫ ((mono_over.forget _).map e.inv).left, by
       simp [hu]⟩⟩
 
-/--  `P.factor_thru f h` provides a factorisation of `f : X ⟶ Y` through some `P : mono_over Y`,
+/-- `P.factor_thru f h` provides a factorisation of `f : X ⟶ Y` through some `P : mono_over Y`,
 given the evidence `h : P.factors f` that such a factorisation exists. -/
 def factor_thru {X Y : C} (P : mono_over Y) (f : X ⟶ Y) (h : factors P f) : X ⟶ (P : C) :=
   Classical.some h
@@ -48,7 +48,7 @@ end MonoOver
 
 namespace Subobject
 
-/--  When `f : X ⟶ Y` and `P : subobject Y`,
+/-- When `f : X ⟶ Y` and `P : subobject Y`,
 `P.factors f` expresses that there exists a factorisation of `f` through `P`.
 Given `h : P.factors f`, you can recover the morphism as `P.factor_thru f h`.
 -/
@@ -58,16 +58,16 @@ def factors {X Y : C} (P : subobject Y) (f : X ⟶ Y) : Prop :=
       rintro P Q ⟨h⟩
       apply propext
       constructor
-      ·
-        rintro ⟨i, w⟩
+      · rintro ⟨i, w⟩
         exact
           ⟨i ≫ h.hom.left, by
             erw [category.assoc, over.w h.hom, w]⟩
-      ·
-        rintro ⟨i, w⟩
+        
+      · rintro ⟨i, w⟩
         exact
           ⟨i ≫ h.inv.left, by
-            erw [category.assoc, over.w h.inv, w]⟩)
+            erw [category.assoc, over.w h.inv, w]⟩
+        )
 
 @[simp]
 theorem mk_factors_iff {X Y Z : C} (f : Y ⟶ X) [mono f] (g : Z ⟶ X) :
@@ -106,7 +106,7 @@ theorem factors_of_le {Y Z : C} {P Q : subobject Y} (f : Z ⟶ Y) (h : P ≤ Q) 
     ⟨u ≫ of_le _ _ h, by
       simp [← hu]⟩
 
-/--  `P.factor_thru f h` provides a factorisation of `f : X ⟶ Y` through some `P : subobject Y`,
+/-- `P.factor_thru f h` provides a factorisation of `f : X ⟶ Y` through some `P : subobject Y`,
 given the evidence `h : P.factors f` that such a factorisation exists. -/
 def factor_thru {X Y : C} (P : subobject Y) (f : X ⟶ Y) (h : factors P f) : X ⟶ P :=
   Classical.some ((factors_iff _ _).mp h)
@@ -129,14 +129,14 @@ theorem factor_thru_comp_arrow {X Y : C} {P : subobject Y} (f : X ⟶ P) h : P.f
 theorem factor_thru_eq_zero [has_zero_morphisms C] {X Y : C} {P : subobject Y} {f : X ⟶ Y} {h : factors P f} :
     P.factor_thru f h = 0 ↔ f = 0 := by
   fconstructor
-  ·
-    intro w
+  · intro w
     replace w := w =≫ P.arrow
     simpa using w
-  ·
-    rintro rfl
+    
+  · rintro rfl
     ext
     simp
+    
 
 theorem factor_thru_right {X Y Z : C} {P : subobject Z} (f : X ⟶ Y) (g : Y ⟶ Z) (h : P.factors g) :
     f ≫ P.factor_thru g h = P.factor_thru (f ≫ g) (factors_of_factors_right f h) := by
@@ -157,39 +157,40 @@ section Preadditive
 
 variable [preadditive C]
 
-theorem factors_add {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (wf : P.factors f) (wg : P.factors g) : P.factors (f+g) :=
+theorem factors_add {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (wf : P.factors f) (wg : P.factors g) :
+    P.factors (f + g) :=
   (factors_iff _ _).mpr
-    ⟨P.factor_thru f wf+P.factor_thru g wg, by
+    ⟨P.factor_thru f wf + P.factor_thru g wg, by
       simp ⟩
 
-theorem factor_thru_add {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (w : P.factors (f+g)) (wf : P.factors f)
-    (wg : P.factors g) : P.factor_thru (f+g) w = P.factor_thru f wf+P.factor_thru g wg := by
+theorem factor_thru_add {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (w : P.factors (f + g)) (wf : P.factors f)
+    (wg : P.factors g) : P.factor_thru (f + g) w = P.factor_thru f wf + P.factor_thru g wg := by
   ext
   simp
 
-theorem factors_left_of_factors_add {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (w : P.factors (f+g)) (wg : P.factors g) :
-    P.factors f :=
+theorem factors_left_of_factors_add {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (w : P.factors (f + g))
+    (wg : P.factors g) : P.factors f :=
   (factors_iff _ _).mpr
-    ⟨P.factor_thru (f+g) w - P.factor_thru g wg, by
+    ⟨P.factor_thru (f + g) w - P.factor_thru g wg, by
       simp ⟩
 
 @[simp]
-theorem factor_thru_add_sub_factor_thru_right {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (w : P.factors (f+g))
+theorem factor_thru_add_sub_factor_thru_right {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (w : P.factors (f + g))
     (wg : P.factors g) :
-    P.factor_thru (f+g) w - P.factor_thru g wg = P.factor_thru f (factors_left_of_factors_add f g w wg) := by
+    P.factor_thru (f + g) w - P.factor_thru g wg = P.factor_thru f (factors_left_of_factors_add f g w wg) := by
   ext
   simp
 
-theorem factors_right_of_factors_add {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (w : P.factors (f+g))
+theorem factors_right_of_factors_add {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (w : P.factors (f + g))
     (wf : P.factors f) : P.factors g :=
   (factors_iff _ _).mpr
-    ⟨P.factor_thru (f+g) w - P.factor_thru f wf, by
+    ⟨P.factor_thru (f + g) w - P.factor_thru f wf, by
       simp ⟩
 
 @[simp]
-theorem factor_thru_add_sub_factor_thru_left {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (w : P.factors (f+g))
+theorem factor_thru_add_sub_factor_thru_left {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (w : P.factors (f + g))
     (wf : P.factors f) :
-    P.factor_thru (f+g) w - P.factor_thru f wf = P.factor_thru g (factors_right_of_factors_add f g w wf) := by
+    P.factor_thru (f + g) w - P.factor_thru f wf = P.factor_thru g (factors_right_of_factors_add f g w wf) := by
   ext
   simp
 

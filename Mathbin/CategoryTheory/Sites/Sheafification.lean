@@ -30,7 +30,7 @@ variable [concrete_category.{max v u} D]
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-/--  A concrete version of the multiequalizer, to be used below. -/
+/-- A concrete version of the multiequalizer, to be used below. -/
 @[nolint has_inhabited_instance]
 def meq {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) :=
   { x : ∀ I : S.arrow, P.obj (op I.Y) // ∀ I : S.relation, P.map I.g₁.op (x I.fst) = P.map I.g₂.op (x I.snd) }
@@ -54,7 +54,7 @@ theorem condition {X} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : meq P S) (I : S.r
     P.map I.g₁.op (x ((S.index P).fstTo I)) = P.map I.g₂.op (x ((S.index P).sndTo I)) :=
   x.2 _
 
-/--  Refine a term of `meq P T` with respect to a refinement `S ⟶ T` of covers. -/
+/-- Refine a term of `meq P T` with respect to a refinement `S ⟶ T` of covers. -/
 def refine {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : meq P T) (e : S ⟶ T) : meq P S :=
   ⟨fun I => x ⟨I.Y, I.f, (le_of_hom e) _ I.hf⟩, fun I =>
     x.condition ⟨I.Y₁, I.Y₂, I.Z, I.g₁, I.g₂, I.f₁, I.f₂, (le_of_hom e) _ I.h₁, (le_of_hom e) _ I.h₂, I.w⟩⟩
@@ -64,7 +64,7 @@ theorem refine_apply {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : meq P T)
     x.refine e I = x ⟨I.Y, I.f, (le_of_hom e) _ I.hf⟩ :=
   rfl
 
-/--  Pull back a term of `meq P S` with respect to a morphism `f : Y ⟶ X` in `C`. -/
+/-- Pull back a term of `meq P S` with respect to a morphism `f : Y ⟶ X` in `C`. -/
 def pullback {Y X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : meq P S) (f : Y ⟶ X) : meq P ((J.pullback f).obj S) :=
   ⟨fun I => x ⟨_, I.f ≫ f, I.hf⟩, fun I =>
     x.condition
@@ -81,7 +81,7 @@ theorem pullback_refine {Y X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (h : S �
     (x.pullback f).refine ((J.pullback f).map h) = (refine x h).pullback _ :=
   rfl
 
-/--  Make a term of `meq P S`. -/
+/-- Make a term of `meq P S`. -/
 def mk {X : C} {P : Cᵒᵖ ⥤ D} (S : J.cover X) (x : P.obj (op X)) : meq P S :=
   ⟨fun I => P.map I.f.op x, fun I => by
     dsimp
@@ -92,7 +92,7 @@ theorem mk_apply {X : C} {P : Cᵒᵖ ⥤ D} (S : J.cover X) (x : P.obj (op X)) 
 
 variable [preserves_limits (forget D)]
 
-/--  The equivalence between the type associated to `multiequalizer (S.index P)` and `meq P S`. -/
+/-- The equivalence between the type associated to `multiequalizer (S.index P)` and `meq P S`. -/
 noncomputable def Equivₓ {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) [has_multiequalizer (S.index P)] :
     (multiequalizer (S.index P) : D) ≃ meq P S :=
   limits.concrete.multiequalizer_equiv _
@@ -127,7 +127,7 @@ variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, has_multiequalizer (S.index
 
 noncomputable section
 
-/--  Make a term of `(J.plus_obj P).obj (op X)` from `x : meq P S`. -/
+/-- Make a term of `(J.plus_obj P).obj (op X)` from `x : meq P S`. -/
 def mk {X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : meq P S) : (J.plus_obj P).obj (op X) :=
   colimit.ι (J.diagram P X) (op S) ((meq.equiv P S).symm x)
 
@@ -203,8 +203,7 @@ theorem exists_rep {X : C} {P : Cᵒᵖ ⥤ D} (x : (J.plus_obj P).obj (op X)) :
 theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : meq P S) (y : meq P T) :
     mk x = mk y ↔ ∃ (W : J.cover X)(h1 : W ⟶ S)(h2 : W ⟶ T), x.refine h1 = y.refine h2 := by
   constructor
-  ·
-    intro h
+  · intro h
     obtain ⟨W, h1, h2, hh⟩ := concrete.colimit_exists_of_rep_eq _ _ _ h
     use W.unop, h1.unop, h2.unop
     ext I
@@ -215,8 +214,8 @@ theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : meq 
       simp only [← comp_apply, multiequalizer.lift_ι, category.comp_id, meq.equiv_symm_eq_apply]
       cases I
       rfl
-  ·
-    rintro ⟨S, h1, h2, e⟩
+    
+  · rintro ⟨S, h1, h2, e⟩
     apply concrete.colimit_rep_eq_of_exists
     use op S, h1.op, h2.op
     apply concrete.multiequalizer_ext
@@ -228,8 +227,9 @@ theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : meq 
       simp only [← comp_apply, multiequalizer.lift_ι, meq.equiv_symm_eq_apply]
       cases i
       rfl
+    
 
-/--  `P⁺` is always separated. -/
+/-- `P⁺` is always separated. -/
 theorem sep {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) (x y : (J.plus_obj P).obj (op X))
     (h : ∀ I : S.arrow, (J.plus_obj P).map I.f.op x = (J.plus_obj P).map I.f.op y) : x = y := by
   obtain ⟨Sx, x, rfl⟩ := exists_rep x
@@ -260,18 +260,18 @@ theorem sep {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) (x y : (J.plus_obj P).ob
   let IW : (W IS).arrow := I.to_middle
   apply_fun fun e => e IW  at hh
   convert hh
-  ·
-    let Rx : Sx.relation :=
+  · let Rx : Sx.relation :=
       ⟨I.Y, I.Y, I.Y, 𝟙 _, 𝟙 _, I.f, I.to_middle_hom ≫ I.from_middle_hom, _, _, by
         simp [I.middle_spec]⟩
     have := x.condition Rx
     simpa using this
-  ·
-    let Ry : Sy.relation :=
+    
+  · let Ry : Sy.relation :=
       ⟨I.Y, I.Y, I.Y, 𝟙 _, 𝟙 _, I.f, I.to_middle_hom ≫ I.from_middle_hom, _, _, by
         simp [I.middle_spec]⟩
     have := y.condition Ry
     simpa using this
+    
 
 theorem inj_of_sep (P : Cᵒᵖ ⥤ D)
     (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y)
@@ -285,7 +285,7 @@ theorem inj_of_sep (P : Cᵒᵖ ⥤ D)
   apply_fun fun e => e I  at hh
   exact hh
 
-/--  An auxiliary definition to be used in the proof of `exists_of_sep` below.
+/-- An auxiliary definition to be used in the proof of `exists_of_sep` below.
   Given a compatible family of local sections for `P⁺`, and representatives of said sections,
   construct a compatible family of local sections of `P` over the combination of the covers
   associated to the representatives.
@@ -293,24 +293,24 @@ theorem inj_of_sep (P : Cᵒᵖ ⥤ D)
 def meq_of_sep (P : Cᵒᵖ ⥤ D)
     (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) (X : C)
     (S : J.cover X) (s : meq (J.plus_obj P) S) (T : ∀ I : S.arrow, J.cover I.Y) (t : ∀ I : S.arrow, meq P (T I))
-    (ht : ∀ I : S.arrow, s I = mk (t I)) : meq P (S.bind T) :=
-  { val := fun I => t I.from_middle I.to_middle,
-    property := by
-      intro II
-      apply inj_of_sep P hsep
-      rw [← comp_apply, ← comp_apply, (J.to_plus P).naturality, (J.to_plus P).naturality, comp_apply, comp_apply]
-      erw [to_plus_apply (T II.fst.from_middle) (t II.fst.from_middle) II.fst.to_middle,
-        to_plus_apply (T II.snd.from_middle) (t II.snd.from_middle) II.snd.to_middle, ← ht, ← ht, ← comp_apply, ←
-        comp_apply, ← (J.plus_obj P).map_comp, ← (J.plus_obj P).map_comp]
-      rw [← op_comp, ← op_comp]
-      let IR : S.relation :=
-        ⟨_, _, _, II.g₁ ≫ II.fst.to_middle_hom, II.g₂ ≫ II.snd.to_middle_hom, II.fst.from_middle_hom,
-          II.snd.from_middle_hom, II.fst.from_middle_condition, II.snd.from_middle_condition, _⟩
-      swap
-      ·
-        simp only [category.assoc, II.fst.middle_spec, II.snd.middle_spec]
-        apply II.w
-      exact s.condition IR }
+    (ht : ∀ I : S.arrow, s I = mk (t I)) : meq P (S.bind T) where
+  val := fun I => t I.from_middle I.to_middle
+  property := by
+    intro II
+    apply inj_of_sep P hsep
+    rw [← comp_apply, ← comp_apply, (J.to_plus P).naturality, (J.to_plus P).naturality, comp_apply, comp_apply]
+    erw [to_plus_apply (T II.fst.from_middle) (t II.fst.from_middle) II.fst.to_middle,
+      to_plus_apply (T II.snd.from_middle) (t II.snd.from_middle) II.snd.to_middle, ← ht, ← ht, ← comp_apply, ←
+      comp_apply, ← (J.plus_obj P).map_comp, ← (J.plus_obj P).map_comp]
+    rw [← op_comp, ← op_comp]
+    let IR : S.relation :=
+      ⟨_, _, _, II.g₁ ≫ II.fst.to_middle_hom, II.g₂ ≫ II.snd.to_middle_hom, II.fst.from_middle_hom,
+        II.snd.from_middle_hom, II.fst.from_middle_condition, II.snd.from_middle_condition, _⟩
+    swap
+    · simp only [category.assoc, II.fst.middle_spec, II.snd.middle_spec]
+      apply II.w
+      
+    exact s.condition IR
 
 theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
     (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) (X : C)
@@ -332,20 +332,20 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
       (by
         intro Y f hf
         apply sieve.le_pullback_bind _ _ _ I.hf
-        ·
-          cases I
-          exact hf)
+        · cases I
+          exact hf
+          )
   use e0, 𝟙 _
   ext IV
   dsimp only [meq.refine_apply, meq.pullback_apply, w]
   let IA : B.arrow := ⟨_, (IV.f ≫ II.f) ≫ I.f, _⟩
   swap
-  ·
-    refine' ⟨I.Y, _, _, I.hf, _, rfl⟩
+  · refine' ⟨I.Y, _, _, I.hf, _, rfl⟩
     apply sieve.downward_closed
     convert II.hf
     cases I
     rfl
+    
   let IB : S.arrow := IA.from_middle
   let IC : (T IB).arrow := IA.to_middle
   let ID : (T I).arrow := ⟨IV.Y, IV.f ≫ II.f, sieve.downward_closed (T I) II.hf IV.f⟩
@@ -359,7 +359,7 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
 
 variable [reflects_isomorphisms (forget D)]
 
-/--  If `P` is separated, then `P⁺` is a sheaf. -/
+/-- If `P` is separated, then `P⁺` is a sheaf. -/
 theorem is_sheaf_of_sep (P : Cᵒᵖ ⥤ D)
     (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) :
     presheaf.is_sheaf J (J.plus_obj P) := by
@@ -368,34 +368,34 @@ theorem is_sheaf_of_sep (P : Cᵒᵖ ⥤ D)
   apply is_iso_of_reflects_iso _ (forget D)
   rw [is_iso_iff_bijective]
   constructor
-  ·
-    intro x y h
+  · intro x y h
     apply sep P S _ _
     intro I
     apply_fun meq.equiv _ _  at h
     apply_fun fun e => e I  at h
     convert h
-    ·
-      erw [meq.equiv_apply, ← comp_apply, multiequalizer.lift_ι]
-    ·
-      erw [meq.equiv_apply, ← comp_apply, multiequalizer.lift_ι]
-  ·
-    rintro (x : (multiequalizer (S.index _) : D))
+    · erw [meq.equiv_apply, ← comp_apply, multiequalizer.lift_ι]
+      
+    · erw [meq.equiv_apply, ← comp_apply, multiequalizer.lift_ι]
+      
+    
+  · rintro (x : (multiequalizer (S.index _) : D))
     obtain ⟨t, ht⟩ := exists_of_sep P hsep X S (meq.equiv _ _ x)
     use t
     apply_fun meq.equiv _ _
     swap
-    ·
-      infer_instance
+    · infer_instance
+      
     rw [← ht]
     ext i
     dsimp
     rw [← comp_apply, multiequalizer.lift_ι]
     rfl
+    
 
 variable (J)
 
-/--  `P⁺⁺` is always a sheaf. -/
+/-- `P⁺⁺` is always a sheaf. -/
 theorem is_sheaf_plus_plus (P : Cᵒᵖ ⥤ D) : presheaf.is_sheaf J (J.plus_obj (J.plus_obj P)) := by
   apply is_sheaf_of_sep
   intro X S x y
@@ -408,16 +408,16 @@ variable (J)
 variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
   [∀ X : C, has_colimits_of_shape (J.cover Xᵒᵖ) D]
 
-/--  The sheafification of a presheaf `P`.
+/-- The sheafification of a presheaf `P`.
 *NOTE:* Additional hypotheses are needed to obtain a proof that this is a sheaf! -/
 def sheafify (P : Cᵒᵖ ⥤ D) : Cᵒᵖ ⥤ D :=
   J.plus_obj (J.plus_obj P)
 
-/--  The canonical map from `P` to its sheafification. -/
+/-- The canonical map from `P` to its sheafification. -/
 def to_sheafify (P : Cᵒᵖ ⥤ D) : P ⟶ J.sheafify P :=
   J.to_plus P ≫ J.plus_map (J.to_plus P)
 
-/--  The canonical map on sheafifications induced by a morphism. -/
+/-- The canonical map on sheafifications induced by a morphism. -/
 def sheafify_map {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.sheafify P ⟶ J.sheafify Q :=
   J.plus_map $ J.plus_map η
 
@@ -440,7 +440,7 @@ theorem to_sheafify_naturality {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : η ≫ J.t
 
 variable (D)
 
-/--  The sheafification of a presheaf `P`, as a functor.
+/-- The sheafification of a presheaf `P`, as a functor.
 *NOTE:* Additional hypotheses are needed to obtain a proof that this is a sheaf! -/
 def sheafification : (Cᵒᵖ ⥤ D) ⥤ Cᵒᵖ ⥤ D :=
   J.plus_functor D ⋙ J.plus_functor D
@@ -453,7 +453,7 @@ theorem sheafification_obj (P : Cᵒᵖ ⥤ D) : (J.sheafification D).obj P = J.
 theorem sheafification_map {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : (J.sheafification D).map η = J.sheafify_map η :=
   rfl
 
-/--  The canonical map from `P` to its sheafification, as a natural transformation.
+/-- The canonical map from `P` to its sheafification, as a natural transformation.
 *Note:* We only show this is a sheaf under additional hypotheses on `D`. -/
 def to_sheafification : 𝟭 _ ⟶ sheafification J D :=
   J.to_plus_nat_trans D ≫ whisker_right (J.to_plus_nat_trans D) (J.plus_functor D)
@@ -472,7 +472,7 @@ theorem is_iso_to_sheafify {P : Cᵒᵖ ⥤ D} (hP : presheaf.is_sheaf J P) : is
     apply functor.map_is_iso
   exact @is_iso.comp_is_iso _ _ _ _ _ (J.to_plus P) ((J.plus_functor D).map (J.to_plus P)) _ _
 
-/--  If `P` is a sheaf, then `P` is isomorphic to `J.sheafify P`. -/
+/-- If `P` is a sheaf, then `P` is isomorphic to `J.sheafify P`. -/
 def iso_sheafify {P : Cᵒᵖ ⥤ D} (hP : presheaf.is_sheaf J P) : P ≅ J.sheafify P := by
   let this' := is_iso_to_sheafify J hP <;> exact as_iso (J.to_sheafify P)
 
@@ -480,7 +480,7 @@ def iso_sheafify {P : Cᵒᵖ ⥤ D} (hP : presheaf.is_sheaf J P) : P ≅ J.shea
 theorem iso_sheafify_hom {P : Cᵒᵖ ⥤ D} (hP : presheaf.is_sheaf J P) : (J.iso_sheafify hP).Hom = J.to_sheafify P :=
   rfl
 
-/--  Given a sheaf `Q` and a morphism `P ⟶ Q`, construct a morphism from
+/-- Given a sheaf `Q` and a morphism `P ⟶ Q`, construct a morphism from
 `J.sheafifcation P` to `Q`. -/
 def sheafify_lift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : presheaf.is_sheaf J Q) : J.sheafify P ⟶ Q :=
   J.plus_lift (J.plus_lift η hQ) hQ
@@ -531,14 +531,15 @@ theorem grothendieck_topology.sheafify_is_sheaf (P : Cᵒᵖ ⥤ D) : presheaf.i
 
 variable (D)
 
-/--  The sheafification functor, as a functor taking values in `Sheaf`. -/
+/-- The sheafification functor, as a functor taking values in `Sheaf`. -/
 @[simps]
-def presheaf_to_Sheaf : (Cᵒᵖ ⥤ D) ⥤ Sheaf J D :=
-  { obj := fun P => ⟨J.sheafify P, J.sheafify_is_sheaf P⟩, map := fun P Q η => ⟨J.sheafify_map η⟩,
-    map_id' := fun P => Sheaf.hom.ext _ _ $ J.sheafify_map_id _,
-    map_comp' := fun P Q R f g => Sheaf.hom.ext _ _ $ J.sheafify_map_comp _ _ }
+def presheaf_to_Sheaf : (Cᵒᵖ ⥤ D) ⥤ Sheaf J D where
+  obj := fun P => ⟨J.sheafify P, J.sheafify_is_sheaf P⟩
+  map := fun P Q η => ⟨J.sheafify_map η⟩
+  map_id' := fun P => Sheaf.hom.ext _ _ $ J.sheafify_map_id _
+  map_comp' := fun P Q R f g => Sheaf.hom.ext _ _ $ J.sheafify_map_comp _ _
 
-/--  The sheafification functor is left adjoint to the forgetful functor. -/
+/-- The sheafification functor is left adjoint to the forgetful functor. -/
 @[simps unit_app counit_app_val]
 def sheafification_adjunction : presheaf_to_Sheaf J D ⊣ Sheaf_to_presheaf J D :=
   adjunction.mk_of_hom_equiv
@@ -558,16 +559,17 @@ def sheafification_adjunction : presheaf_to_Sheaf J D ⊣ Sheaf_to_presheaf J D 
 
 variable {J D}
 
-/--  A sheaf `P` is isomorphic to its own sheafification. -/
+/-- A sheaf `P` is isomorphic to its own sheafification. -/
 @[simps]
-def sheafification_iso (P : Sheaf J D) : P ≅ (presheaf_to_Sheaf J D).obj P.val :=
-  { Hom := ⟨(J.iso_sheafify P.2).Hom⟩, inv := ⟨(J.iso_sheafify P.2).inv⟩,
-    hom_inv_id' := by
-      ext1
-      apply (J.iso_sheafify P.2).hom_inv_id,
-    inv_hom_id' := by
-      ext1
-      apply (J.iso_sheafify P.2).inv_hom_id }
+def sheafification_iso (P : Sheaf J D) : P ≅ (presheaf_to_Sheaf J D).obj P.val where
+  Hom := ⟨(J.iso_sheafify P.2).Hom⟩
+  inv := ⟨(J.iso_sheafify P.2).inv⟩
+  hom_inv_id' := by
+    ext1
+    apply (J.iso_sheafify P.2).hom_inv_id
+  inv_hom_id' := by
+    ext1
+    apply (J.iso_sheafify P.2).inv_hom_id
 
 instance is_iso_sheafification_adjunction_counit (P : Sheaf J D) :
     is_iso ((sheafification_adjunction J D).counit.app P) :=

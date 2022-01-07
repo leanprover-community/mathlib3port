@@ -15,14 +15,13 @@ open LinearIsometry ContinuousLinearMap
 open_locale RealInnerProductSpace
 
 theorem is_conformal_map_iff (f' : E →L[ℝ] F) :
-    IsConformalMap f' ↔ ∃ c : ℝ, 0 < c ∧ ∀ u v : E, ⟪f' u, f' v⟫ = (c : ℝ)*⟪u, v⟫ := by
+    IsConformalMap f' ↔ ∃ c : ℝ, 0 < c ∧ ∀ u v : E, ⟪f' u, f' v⟫ = (c : ℝ) * ⟪u, v⟫ := by
   constructor
-  ·
-    rintro ⟨c₁, hc₁, li, h⟩
-    refine' ⟨c₁*c₁, mul_self_pos hc₁, fun u v => _⟩
+  · rintro ⟨c₁, hc₁, li, h⟩
+    refine' ⟨c₁ * c₁, mul_self_pos.2 hc₁, fun u v => _⟩
     simp only [h, Pi.smul_apply, inner_map_map, real_inner_smul_left, real_inner_smul_right, mul_assocₓ]
-  ·
-    rintro ⟨c₁, hc₁, huv⟩
+    
+  · rintro ⟨c₁, hc₁, huv⟩
     let c := Real.sqrt (c₁⁻¹)
     have hc : c ≠ 0 := fun w => by
       simp only [c] at w <;> exact (real.sqrt_ne_zero'.mpr $ inv_pos.mpr hc₁) w
@@ -34,4 +33,5 @@ theorem is_conformal_map_iff (f' : E →L[ℝ] F) :
     simp_rw [to_linear_map_eq_coe, ContinuousLinearMap.coe_coe, minor, Pi.smul_apply]
     rw [real_inner_smul_left, real_inner_smul_right, huv u v, ← mul_assocₓ, ← mul_assocₓ,
       Real.mul_self_sqrt $ le_of_ltₓ $ inv_pos.mpr hc₁, inv_mul_cancel $ ne_of_gtₓ hc₁, one_mulₓ]
+    
 

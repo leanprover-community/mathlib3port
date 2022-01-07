@@ -55,21 +55,21 @@ variable {M N : Type _} (μ : M → N → N) (r : N → N → Prop)
 
 variable (M N)
 
-/--  `covariant` is useful to formulate succintly statements about the interactions between an
+/-- `covariant` is useful to formulate succintly statements about the interactions between an
 action of a Type on another one and a relation on the acted-upon Type.
 
 See the `covariant_class` doc-string for its meaning. -/
 def Covariant : Prop :=
   ∀ m {n₁ n₂}, r n₁ n₂ → r (μ m n₁) (μ m n₂)
 
-/--  `contravariant` is useful to formulate succintly statements about the interactions between an
+/-- `contravariant` is useful to formulate succintly statements about the interactions between an
 action of a Type on another one and a relation on the acted-upon Type.
 
 See the `contravariant_class` doc-string for its meaning. -/
 def Contravariant : Prop :=
   ∀ m {n₁ n₂}, r (μ m n₁) (μ m n₂) → r n₁ n₂
 
-/--   Given an action `μ` of a Type `M` on a Type `N` and a relation `r` on `N`, informally, the
+/-- Given an action `μ` of a Type `M` on a Type `N` and a relation `r` on `N`, informally, the
 `covariant_class` says that "the action `μ` preserves the relation `r`.
 
 More precisely, the `covariant_class` is a class taking two Types `M N`, together with an "action"
@@ -84,7 +84,7 @@ If `m : M` and `h : r n₁ n₂`, then `covariant_class.elim m h : r (μ m n₁)
 class CovariantClass : Prop where
   elim : Covariant M N μ r
 
-/--   Given an action `μ` of a Type `M` on a Type `N` and a relation `r` on `N`, informally, the
+/-- Given an action `μ` of a Type `M` on a Type `N` and a relation `r` on `N`, informally, the
 `contravariant_class` says that "if the result of the action `μ` on a pair satisfies the
 relation `r`, then the initial pair satisfied the relation `r`.
 
@@ -122,17 +122,17 @@ theorem act_rel_act_of_rel (m : M) {a b : N} (ab : r a b) : r (μ m a) (μ m b) 
   CovariantClass.elim _ ab
 
 @[to_additive]
-theorem Groupₓ.covariant_iff_contravariant [Groupₓ N] : Covariant N N (·*·) r ↔ Contravariant N N (·*·) r := by
+theorem Groupₓ.covariant_iff_contravariant [Groupₓ N] : Covariant N N (· * ·) r ↔ Contravariant N N (· * ·) r := by
   refine' ⟨fun h a b c bc => _, fun h a b c bc => _⟩
-  ·
-    rw [← inv_mul_cancel_leftₓ a b, ← inv_mul_cancel_leftₓ a c]
+  · rw [← inv_mul_cancel_leftₓ a b, ← inv_mul_cancel_leftₓ a c]
     exact h (a⁻¹) bc
-  ·
-    rw [← inv_mul_cancel_leftₓ a b, ← inv_mul_cancel_leftₓ a c] at bc
+    
+  · rw [← inv_mul_cancel_leftₓ a b, ← inv_mul_cancel_leftₓ a c] at bc
     exact h (a⁻¹) bc
+    
 
 @[to_additive]
-theorem Groupₓ.covconv [Groupₓ N] [CovariantClass N N (·*·) r] : ContravariantClass N N (·*·) r :=
+theorem Groupₓ.covconv [Groupₓ N] [CovariantClass N N (· * ·) r] : ContravariantClass N N (· * ·) r :=
   ⟨Groupₓ.covariant_iff_contravariant.mp CovariantClass.elim⟩
 
 section IsTrans
@@ -183,10 +183,10 @@ end Contravariant
 theorem covariant_le_of_covariant_lt [PartialOrderₓ N] : Covariant M N μ (· < ·) → Covariant M N μ (· ≤ ·) := by
   refine' fun h a b c bc => _
   rcases le_iff_eq_or_lt.mp bc with (rfl | bc)
-  ·
-    exact rfl.le
-  ·
-    exact (h _ bc).le
+  · exact rfl.le
+    
+  · exact (h _ bc).le
+    
 
 theorem contravariant_lt_of_contravariant_le [PartialOrderₓ N] :
     Contravariant M N μ (· ≤ ·) → Contravariant M N μ (· < ·) := by
@@ -203,101 +203,78 @@ theorem covariant_lt_iff_contravariant_le [LinearOrderₓ N] : Covariant M N μ 
     not_leₓ.mp fun k => not_leₓ.mpr bc (h _ k)⟩
 
 @[to_additive]
-theorem covariant_flip_mul_iff [CommSemigroupₓ N] : Covariant N N (flip (·*·)) r ↔ Covariant N N (·*·) r := by
+theorem covariant_flip_mul_iff [CommSemigroupₓ N] : Covariant N N (flip (· * ·)) r ↔ Covariant N N (· * ·) r := by
   rw [IsSymmOp.flip_eq]
 
 @[to_additive]
-theorem contravariant_flip_mul_iff [CommSemigroupₓ N] : Contravariant N N (flip (·*·)) r ↔ Contravariant N N (·*·) r :=
-  by
+theorem contravariant_flip_mul_iff [CommSemigroupₓ N] :
+    Contravariant N N (flip (· * ·)) r ↔ Contravariant N N (· * ·) r := by
   rw [IsSymmOp.flip_eq]
 
 @[to_additive]
-instance contravariant_mul_lt_of_covariant_mul_le [Mul N] [LinearOrderₓ N] [CovariantClass N N (·*·) (· ≤ ·)] :
-    ContravariantClass N N (·*·) (· < ·) where
-  elim := (covariant_le_iff_contravariant_lt N N (·*·)).mp CovariantClass.elim
+instance contravariant_mul_lt_of_covariant_mul_le [Mul N] [LinearOrderₓ N] [CovariantClass N N (· * ·) (· ≤ ·)] :
+    ContravariantClass N N (· * ·) (· < ·) where
+  elim := (covariant_le_iff_contravariant_lt N N (· * ·)).mp CovariantClass.elim
 
 @[to_additive]
-instance covariant_mul_lt_of_contravariant_mul_le [Mul N] [LinearOrderₓ N] [ContravariantClass N N (·*·) (· ≤ ·)] :
-    CovariantClass N N (·*·) (· < ·) where
-  elim := (covariant_lt_iff_contravariant_le N N (·*·)).mpr ContravariantClass.elim
+instance covariant_mul_lt_of_contravariant_mul_le [Mul N] [LinearOrderₓ N] [ContravariantClass N N (· * ·) (· ≤ ·)] :
+    CovariantClass N N (· * ·) (· < ·) where
+  elim := (covariant_lt_iff_contravariant_le N N (· * ·)).mpr ContravariantClass.elim
 
 @[to_additive]
-instance covariant_swap_mul_le_of_covariant_mul_le [CommSemigroupₓ N] [LE N] [CovariantClass N N (·*·) (· ≤ ·)] :
-    CovariantClass N N (swap (·*·)) (· ≤ ·) where
+instance covariant_swap_mul_le_of_covariant_mul_le [CommSemigroupₓ N] [LE N] [CovariantClass N N (· * ·) (· ≤ ·)] :
+    CovariantClass N N (swap (· * ·)) (· ≤ ·) where
   elim := (covariant_flip_mul_iff N (· ≤ ·)).mpr CovariantClass.elim
 
 @[to_additive]
 instance contravariant_swap_mul_le_of_contravariant_mul_le [CommSemigroupₓ N] [LE N]
-    [ContravariantClass N N (·*·) (· ≤ ·)] : ContravariantClass N N (swap (·*·)) (· ≤ ·) where
+    [ContravariantClass N N (· * ·) (· ≤ ·)] : ContravariantClass N N (swap (· * ·)) (· ≤ ·) where
   elim := (contravariant_flip_mul_iff N (· ≤ ·)).mpr ContravariantClass.elim
 
 @[to_additive]
 instance contravariant_swap_mul_lt_of_contravariant_mul_lt [CommSemigroupₓ N] [LT N]
-    [ContravariantClass N N (·*·) (· < ·)] : ContravariantClass N N (swap (·*·)) (· < ·) where
+    [ContravariantClass N N (· * ·) (· < ·)] : ContravariantClass N N (swap (· * ·)) (· < ·) where
   elim := (contravariant_flip_mul_iff N (· < ·)).mpr ContravariantClass.elim
 
 @[to_additive]
-instance covariant_swap_mul_lt_of_covariant_mul_lt [CommSemigroupₓ N] [LT N] [CovariantClass N N (·*·) (· < ·)] :
-    CovariantClass N N (swap (·*·)) (· < ·) where
+instance covariant_swap_mul_lt_of_covariant_mul_lt [CommSemigroupₓ N] [LT N] [CovariantClass N N (· * ·) (· < ·)] :
+    CovariantClass N N (swap (· * ·)) (· < ·) where
   elim := (covariant_flip_mul_iff N (· < ·)).mpr CovariantClass.elim
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le
-    [ LeftCancelSemigroup N ] [ PartialOrderₓ N ] [ CovariantClass N N ( · * · ) ( · ≤ · ) ]
-      : CovariantClass N N ( · * · ) ( · < · )
-    where
-      elim
-        a b c bc
-        :=
-        by
-          cases' lt_iff_le_and_ne.mp bc with bc cb
-            exact lt_iff_le_and_ne.mpr ⟨ CovariantClass.elim a bc , ( mul_ne_mul_right a ) . mpr cb ⟩
+@[to_additive]
+instance LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le [LeftCancelSemigroup N] [PartialOrderₓ N]
+    [CovariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (· * ·) (· < ·) where
+  elim := fun a b c bc => by
+    cases' lt_iff_le_and_ne.mp bc with bc cb
+    exact lt_iff_le_and_ne.mpr ⟨CovariantClass.elim a bc, (mul_ne_mul_right a).mpr cb⟩
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le
-    [ RightCancelSemigroup N ] [ PartialOrderₓ N ] [ CovariantClass N N ( swap ( · * · ) ) ( · ≤ · ) ]
-      : CovariantClass N N ( swap ( · * · ) ) ( · < · )
-    where
-      elim
-        a b c bc
-        :=
-        by
-          cases' lt_iff_le_and_ne.mp bc with bc cb
-            exact lt_iff_le_and_ne.mpr ⟨ CovariantClass.elim a bc , ( mul_ne_mul_left a ) . mpr cb ⟩
+@[to_additive]
+instance RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le [RightCancelSemigroup N] [PartialOrderₓ N]
+    [CovariantClass N N (swap (· * ·)) (· ≤ ·)] : CovariantClass N N (swap (· * ·)) (· < ·) where
+  elim := fun a b c bc => by
+    cases' lt_iff_le_and_ne.mp bc with bc cb
+    exact lt_iff_le_and_ne.mpr ⟨CovariantClass.elim a bc, (mul_ne_mul_left a).mpr cb⟩
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt
-    [ LeftCancelSemigroup N ] [ PartialOrderₓ N ] [ ContravariantClass N N ( · * · ) ( · < · ) ]
-      : ContravariantClass N N ( · * · ) ( · ≤ · )
-    where
-      elim
-        a b c bc
-        :=
-        by
-          cases' le_iff_eq_or_lt.mp bc with h h
-            · exact ( ( mul_right_injₓ a ) . mp h ) . le
-            · exact ( ContravariantClass.elim _ h ) . le
+@[to_additive]
+instance LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt [LeftCancelSemigroup N] [PartialOrderₓ N]
+    [ContravariantClass N N (· * ·) (· < ·)] : ContravariantClass N N (· * ·) (· ≤ ·) where
+  elim := fun a b c bc => by
+    cases' le_iff_eq_or_lt.mp bc with h h
+    · exact ((mul_right_injₓ a).mp h).le
+      
+    · exact (ContravariantClass.elim _ h).le
+      
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt
-    [ RightCancelSemigroup N ] [ PartialOrderₓ N ] [ ContravariantClass N N ( swap ( · * · ) ) ( · < · ) ]
-      : ContravariantClass N N ( swap ( · * · ) ) ( · ≤ · )
-    where
-      elim
-        a b c bc
-        :=
-        by
-          cases' le_iff_eq_or_lt.mp bc with h h
-            · exact ( ( mul_left_injₓ a ) . mp h ) . le
-            · exact ( ContravariantClass.elim _ h ) . le
+@[to_additive]
+instance RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt [RightCancelSemigroup N]
+    [PartialOrderₓ N] [ContravariantClass N N (swap (· * ·)) (· < ·)] :
+    ContravariantClass N N (swap (· * ·)) (· ≤ ·) where
+  elim := fun a b c bc => by
+    cases' le_iff_eq_or_lt.mp bc with h h
+    · exact ((mul_left_injₓ a).mp h).le
+      
+    · exact (ContravariantClass.elim _ h).le
+      
 
 end Variants
 

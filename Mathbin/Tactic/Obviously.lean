@@ -21,8 +21,7 @@ In the past it had been used by an external category theory library which wanted
 
 def_replacer obviously
 
-/-- 
-The default implementation of `obviously`
+/-- The default implementation of `obviously`
 discharges any goals which contain `sorry` in their type using `sorry`,
 and then calls `tidy`.
 -/

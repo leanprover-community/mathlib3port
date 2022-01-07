@@ -17,21 +17,20 @@ universe u v
 
 namespace CategoryTheory
 
-/--  The Kleisli category on the (type-)monad `m`. Note that the monad is not assumed to be lawful
+/-- The Kleisli category on the (type-)monad `m`. Note that the monad is not assumed to be lawful
 yet. -/
 @[nolint unused_arguments]
 def Kleisli (m : Type u → Type v) :=
   Type u
 
-/--  Construct an object of the Kleisli category from a type. -/
+/-- Construct an object of the Kleisli category from a type. -/
 def Kleisli.mk m (α : Type u) : Kleisli m :=
   α
 
--- failed to format: format: uncaught backtrack exception
-instance
-  Kleisli.category_struct
-  { m } [ Monadₓ .{ u , v } m ] : category_struct ( Kleisli m )
-  where Hom α β := α → m β id α x := pure x comp X Y Z f g := f >=> g
+instance Kleisli.category_struct {m} [Monadₓ.{u, v} m] : category_struct (Kleisli m) where
+  Hom := fun α β => α → m β
+  id := fun α x => pure x
+  comp := fun X Y Z f g => f >=> g
 
 instance Kleisli.category {m} [Monadₓ.{u, v} m] [IsLawfulMonad m] : category (Kleisli m) := by
   refine' { id_comp' := _, comp_id' := _, assoc' := _ } <;>

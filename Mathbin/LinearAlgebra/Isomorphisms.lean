@@ -29,14 +29,14 @@ open Submodule
 
 section IsomorphismLaws
 
-/--  The first isomorphism law for modules. The quotient of `M` by the kernel of `f` is linearly
+/-- The first isomorphism law for modules. The quotient of `M` by the kernel of `f` is linearly
 equivalent to the range of `f`. -/
 noncomputable def quot_ker_equiv_range : (M ⧸ f.ker) ≃ₗ[R] f.range :=
   (LinearEquiv.ofInjective (f.ker.liftq f $ le_reflₓ _) $
         ker_eq_bot.mp $ Submodule.ker_liftq_eq_bot _ _ _ (le_reflₓ f.ker)).trans
     (LinearEquiv.ofEq _ _ $ Submodule.range_liftq _ _ _)
 
-/--  The first isomorphism theorem for surjective linear maps. -/
+/-- The first isomorphism theorem for surjective linear maps. -/
 noncomputable def quot_ker_equiv_of_surjective (f : M →ₗ[R] M₂) (hf : Function.Surjective f) : (M ⧸ f.ker) ≃ₗ[R] M₂ :=
   f.quot_ker_equiv_range.trans (LinearEquiv.ofTop f.range (LinearMap.range_eq_top.2 hf))
 
@@ -49,8 +49,7 @@ theorem quot_ker_equiv_range_symm_apply_image (x : M) (h : f x ∈ f.range) :
     f.quot_ker_equiv_range.symm ⟨f x, h⟩ = f.ker.mkq x :=
   f.quot_ker_equiv_range.symm_apply_apply (f.ker.mkq x)
 
-/-- 
-Canonical linear map from the quotient `p/(p ∩ p')` to `(p+p')/p'`, mapping `x + (p ∩ p')`
+/-- Canonical linear map from the quotient `p/(p ∩ p')` to `(p+p')/p'`, mapping `x + (p ∩ p')`
 to `x + p'`, where `p` and `p'` are submodules of an ambient module.
 -/
 def quotient_inf_to_sup_quotient (p p' : Submodule R M) :
@@ -60,8 +59,7 @@ def quotient_inf_to_sup_quotient (p p' : Submodule R M) :
       rw [ker_comp, of_le, comap_cod_restrict, ker_mkq, map_comap_subtype]
       exact comap_mono (inf_le_inf_right _ le_sup_left))
 
-/-- 
-Second Isomorphism Law : the canonical map from `p/(p ∩ p')` to `(p+p')/p'` as a linear isomorphism.
+/-- Second Isomorphism Law : the canonical map from `p/(p ∩ p')` to `(p+p')/p'` as a linear isomorphism.
 -/
 noncomputable def quotient_inf_equiv_sup_quotient (p p' : Submodule R M) :
     (p ⧸ comap p.subtype (p⊓p')) ≃ₗ[R] _ ⧸ comap (p⊔p').Subtype p' :=
@@ -76,7 +74,7 @@ noncomputable def quotient_inf_equiv_sup_quotient (p p' : Submodule R M) :
       rcases mem_sup.1 hx with ⟨y, hy, z, hz, rfl⟩
       use ⟨y, hy⟩
       apply (Submodule.Quotient.eq _).2
-      change (y - y+z) ∈ p'
+      change y - (y + z) ∈ p'
       rwa [sub_add_eq_sub_sub, sub_self, zero_sub, neg_mem_iff])
 
 @[simp]
@@ -116,7 +114,7 @@ namespace Submodule
 
 variable (S T : Submodule R M) (h : S ≤ T)
 
-/--  The map from the third isomorphism theorem for modules: `(M / S) / (T / S) → M / T`. -/
+/-- The map from the third isomorphism theorem for modules: `(M / S) / (T / S) → M / T`. -/
 def quotient_quotient_equiv_quotient_aux : (M ⧸ S) ⧸ T.map S.mkq →ₗ[R] M ⧸ T :=
   liftq _ (mapq S T LinearMap.id h)
     (by
@@ -134,7 +132,7 @@ theorem quotient_quotient_equiv_quotient_aux_mk_mk (x : M) :
     quotient_quotient_equiv_quotient_aux S T h (Quotientₓ.mk (Quotientₓ.mk x)) = Quotientₓ.mk x := by
   rw [quotient_quotient_equiv_quotient_aux_mk, mapq_apply, LinearMap.id_apply]
 
-/--  **Noether's third isomorphism theorem** for modules: `(M / S) / (T / S) ≃ M / T`. -/
+/-- **Noether's third isomorphism theorem** for modules: `(M / S) / (T / S) ≃ M / T`. -/
 def quotient_quotient_equiv_quotient : ((M ⧸ S) ⧸ T.map S.mkq) ≃ₗ[R] M ⧸ T :=
   { quotient_quotient_equiv_quotient_aux S T h with toFun := quotient_quotient_equiv_quotient_aux S T h,
     invFun := mapq _ _ (mkq S) (le_comap_map _ _),

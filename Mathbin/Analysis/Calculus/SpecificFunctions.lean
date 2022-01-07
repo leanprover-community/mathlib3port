@@ -42,7 +42,7 @@ open_locale Classical TopologicalSpace
 
 open Polynomial Real Filter Set Function
 
-/--  `exp_neg_inv_glue` is the real function given by `x ↦ exp (-1/x)` for `x > 0` and `0`
+/-- `exp_neg_inv_glue` is the real function given by `x ↦ exp (-1/x)` for `x > 0` and `0`
 for `x ≤ 0`. It is a basic building block to construct smooth partitions of unity. Its main property
 is that it vanishes for `x ≤ 0`, it is positive for `x > 0`, and the junction between the two
 behaviors is flat enough to retain smoothness. The fact that this function is `C^∞` is proved in
@@ -52,88 +52,88 @@ def expNegInvGlue (x : ℝ) : ℝ :=
 
 namespace expNegInvGlue
 
-/--  Our goal is to prove that `exp_neg_inv_glue` is `C^∞`. For this, we compute its successive
+/-- Our goal is to prove that `exp_neg_inv_glue` is `C^∞`. For this, we compute its successive
 derivatives for `x > 0`. The `n`-th derivative is of the form `P_aux n (x) exp(-1/x) / x^(2 n)`,
 where `P_aux n` is computed inductively. -/
 noncomputable def P_aux : ℕ → Polynomial ℝ
   | 0 => 1
-  | n+1 => ((X^2)*(P_aux n).derivative)+(1 - C (↑2*n)*X)*P_aux n
+  | n + 1 => X ^ 2 * (P_aux n).derivative + (1 - C (↑(2 * n)) * X) * P_aux n
 
-/--  Formula for the `n`-th derivative of `exp_neg_inv_glue`, as an auxiliary function `f_aux`. -/
+/-- Formula for the `n`-th derivative of `exp_neg_inv_glue`, as an auxiliary function `f_aux`. -/
 def f_aux (n : ℕ) (x : ℝ) : ℝ :=
-  if x ≤ 0 then 0 else ((P_aux n).eval x*exp (-x⁻¹)) / (x^2*n)
+  if x ≤ 0 then 0 else (P_aux n).eval x * exp (-x⁻¹) / x ^ (2 * n)
 
-/--  The `0`-th auxiliary function `f_aux 0` coincides with `exp_neg_inv_glue`, by definition. -/
+/-- The `0`-th auxiliary function `f_aux 0` coincides with `exp_neg_inv_glue`, by definition. -/
 theorem f_aux_zero_eq : f_aux 0 = expNegInvGlue := by
   ext x
   by_cases' h : x ≤ 0
-  ·
-    simp [expNegInvGlue, f_aux, h]
-  ·
-    simp [h, expNegInvGlue, f_aux, ne_of_gtₓ (not_leₓ.1 h), P_aux]
+  · simp [expNegInvGlue, f_aux, h]
+    
+  · simp [h, expNegInvGlue, f_aux, ne_of_gtₓ (not_leₓ.1 h), P_aux]
+    
 
-/--  For positive values, the derivative of the `n`-th auxiliary function `f_aux n`
+/-- For positive values, the derivative of the `n`-th auxiliary function `f_aux n`
 (given in this statement in unfolded form) is the `n+1`-th auxiliary function, since
 the polynomial `P_aux (n+1)` was chosen precisely to ensure this. -/
 theorem f_aux_deriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
-    HasDerivAt (fun x => ((P_aux n).eval x*exp (-x⁻¹)) / (x^2*n)) (((P_aux (n+1)).eval x*exp (-x⁻¹)) / (x^2*n+1)) x :=
+    HasDerivAt (fun x => (P_aux n).eval x * exp (-x⁻¹) / x ^ (2 * n))
+      ((P_aux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1))) x :=
   by
-  have A : ∀ k : ℕ, (2*k+1) - 1 = (2*k)+1 := by
+  have A : ∀ k : ℕ, 2 * (k + 1) - 1 = 2 * k + 1 := by
     intro k
     rw [tsub_eq_iff_eq_add_of_le]
-    ·
-      ring
-    ·
-      simpa [mul_addₓ] using add_le_add (zero_le (2*k)) one_le_two
+    · ring
+      
+    · simpa [mul_addₓ] using add_le_add (zero_le (2 * k)) one_le_two
+      
   convert
     (((P_aux n).HasDerivAt x).mul ((has_deriv_at_exp _).comp x (has_deriv_at_inv hx).neg)).div
-      (has_deriv_at_pow (2*n) x) (pow_ne_zero _ hx) using
+      (has_deriv_at_pow (2 * n) x) (pow_ne_zero _ hx) using
     1
   field_simp [hx, P_aux]
   cases n <;> simp [Nat.succ_eq_add_one, A, -mul_eq_mul_right_iff] <;> ring_exp
 
-/--  For positive values, the derivative of the `n`-th auxiliary function `f_aux n`
+/-- For positive values, the derivative of the `n`-th auxiliary function `f_aux n`
 is the `n+1`-th auxiliary function. -/
 theorem f_aux_deriv_pos (n : ℕ) (x : ℝ) (hx : 0 < x) :
-    HasDerivAt (f_aux n) (((P_aux (n+1)).eval x*exp (-x⁻¹)) / (x^2*n+1)) x := by
+    HasDerivAt (f_aux n) ((P_aux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1))) x := by
   apply (f_aux_deriv n x (ne_of_gtₓ hx)).congr_of_eventually_eq
   filter_upwards [lt_mem_nhds hx]
   intro y hy
   simp [f_aux, hy.not_le]
 
-/--  To get differentiability at `0` of the auxiliary functions, we need to know that their limit
+/-- To get differentiability at `0` of the auxiliary functions, we need to know that their limit
 is `0`, to be able to apply general differentiability extension theorems. This limit is checked in
 this lemma. -/
-theorem f_aux_limit (n : ℕ) : tendsto (fun x => ((P_aux n).eval x*exp (-x⁻¹)) / (x^2*n)) (𝓝[>] 0) (𝓝 0) := by
+theorem f_aux_limit (n : ℕ) : tendsto (fun x => (P_aux n).eval x * exp (-x⁻¹) / x ^ (2 * n)) (𝓝[>] 0) (𝓝 0) := by
   have A : tendsto (fun x => (P_aux n).eval x) (𝓝[>] 0) (𝓝 ((P_aux n).eval 0)) := (P_aux n).ContinuousWithinAt
-  have B : tendsto (fun x => exp (-x⁻¹) / (x^2*n)) (𝓝[>] 0) (𝓝 0) := by
-    convert (tendsto_pow_mul_exp_neg_at_top_nhds_0 (2*n)).comp tendsto_inv_zero_at_top
+  have B : tendsto (fun x => exp (-x⁻¹) / x ^ (2 * n)) (𝓝[>] 0) (𝓝 0) := by
+    convert (tendsto_pow_mul_exp_neg_at_top_nhds_0 (2 * n)).comp tendsto_inv_zero_at_top
     ext x
     field_simp
   convert A.mul B <;> simp [mul_div_assoc]
 
-/--  Deduce from the limiting behavior at `0` of its derivative and general differentiability
+/-- Deduce from the limiting behavior at `0` of its derivative and general differentiability
 extension theorems that the auxiliary function `f_aux n` is differentiable at `0`,
 with derivative `0`. -/
 theorem f_aux_deriv_zero (n : ℕ) : HasDerivAt (f_aux n) 0 0 := by
   have A : HasDerivWithinAt (f_aux n) (0 : ℝ) (Iic 0) 0 := by
     apply (has_deriv_at_const (0 : ℝ) (0 : ℝ)).HasDerivWithinAt.congr
-    ·
-      intro y hy
+    · intro y hy
       simp at hy
       simp [f_aux, hy]
-    ·
-      simp [f_aux, le_reflₓ]
+      
+    · simp [f_aux, le_reflₓ]
+      
   have B : HasDerivWithinAt (f_aux n) (0 : ℝ) (Ici 0) 0 := by
     have diff : DifferentiableOn ℝ (f_aux n) (Ioi 0) := fun x hx =>
       (f_aux_deriv_pos n x hx).DifferentiableAt.DifferentiableWithinAt
     apply has_deriv_at_interval_left_endpoint_of_tendsto_deriv diff _ self_mem_nhds_within
-    ·
-      refine' (f_aux_limit (n+1)).congr' _
+    · refine' (f_aux_limit (n + 1)).congr' _
       apply mem_of_superset self_mem_nhds_within fun x hx => _
       simp [(f_aux_deriv_pos n x hx).deriv]
-    ·
-      have : f_aux n 0 = 0 := by
+      
+    · have : f_aux n 0 = 0 := by
         simp [f_aux, le_reflₓ]
       simp only [ContinuousWithinAt, this]
       refine' (f_aux_limit n).congr' _
@@ -141,71 +141,72 @@ theorem f_aux_deriv_zero (n : ℕ) : HasDerivAt (f_aux n) 0 0 := by
       have : ¬x ≤ 0 := by
         simpa using hx
       simp [f_aux, this]
+      
   simpa using A.union B
 
-/--  At every point, the auxiliary function `f_aux n` has a derivative which is
+/-- At every point, the auxiliary function `f_aux n` has a derivative which is
 equal to `f_aux (n+1)`. -/
-theorem f_aux_has_deriv_at (n : ℕ) (x : ℝ) : HasDerivAt (f_aux n) (f_aux (n+1) x) x := by
+theorem f_aux_has_deriv_at (n : ℕ) (x : ℝ) : HasDerivAt (f_aux n) (f_aux (n + 1) x) x := by
   rcases lt_trichotomyₓ x 0 with (hx | hx | hx)
-  ·
-    have : f_aux (n+1) x = 0 := by
+  · have : f_aux (n + 1) x = 0 := by
       simp [f_aux, le_of_ltₓ hx]
     rw [this]
     apply (has_deriv_at_const x (0 : ℝ)).congr_of_eventually_eq
     filter_upwards [gt_mem_nhds hx]
     intro y hy
     simp [f_aux, hy.le]
-  ·
-    have : f_aux (n+1) 0 = 0 := by
+    
+  · have : f_aux (n + 1) 0 = 0 := by
       simp [f_aux, le_reflₓ]
     rw [hx, this]
     exact f_aux_deriv_zero n
-  ·
-    have : f_aux (n+1) x = ((P_aux (n+1)).eval x*exp (-x⁻¹)) / (x^2*n+1) := by
+    
+  · have : f_aux (n + 1) x = (P_aux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1)) := by
       simp [f_aux, not_le_of_gtₓ hx]
     rw [this]
     exact f_aux_deriv_pos n x hx
+    
 
-/--  The successive derivatives of the auxiliary function `f_aux 0` are the
+/-- The successive derivatives of the auxiliary function `f_aux 0` are the
 functions `f_aux n`, by induction. -/
 theorem f_aux_iterated_deriv (n : ℕ) : iteratedDeriv n (f_aux 0) = f_aux n := by
   induction' n with n IH
-  ·
-    simp
-  ·
-    simp [iterated_deriv_succ, IH]
+  · simp
+    
+  · simp [iterated_deriv_succ, IH]
     ext x
     exact (f_aux_has_deriv_at n x).deriv
+    
 
-/--  The function `exp_neg_inv_glue` is smooth. -/
+/-- The function `exp_neg_inv_glue` is smooth. -/
 protected theorem TimesContDiff {n} : TimesContDiff ℝ n expNegInvGlue := by
   rw [← f_aux_zero_eq]
   apply times_cont_diff_of_differentiable_iterated_deriv fun m hm => _
   rw [f_aux_iterated_deriv m]
   exact fun x => (f_aux_has_deriv_at m x).DifferentiableAt
 
-/--  The function `exp_neg_inv_glue` vanishes on `(-∞, 0]`. -/
+/-- The function `exp_neg_inv_glue` vanishes on `(-∞, 0]`. -/
 theorem zero_of_nonpos {x : ℝ} (hx : x ≤ 0) : expNegInvGlue x = 0 := by
   simp [expNegInvGlue, hx]
 
-/--  The function `exp_neg_inv_glue` is positive on `(0, +∞)`. -/
+/-- The function `exp_neg_inv_glue` is positive on `(0, +∞)`. -/
 theorem pos_of_pos {x : ℝ} (hx : 0 < x) : 0 < expNegInvGlue x := by
   simp [expNegInvGlue, not_leₓ.2 hx, exp_pos]
 
-/--  The function exp_neg_inv_glue` is nonnegative. -/
+/-- The function exp_neg_inv_glue` is nonnegative. -/
 theorem nonneg (x : ℝ) : 0 ≤ expNegInvGlue x := by
   cases le_or_gtₓ x 0
-  ·
-    exact ge_of_eq (zero_of_nonpos h)
-  ·
-    exact le_of_ltₓ (pos_of_pos h)
+  · exact ge_of_eq (zero_of_nonpos h)
+    
+  · exact le_of_ltₓ (pos_of_pos h)
+    
 
 end expNegInvGlue
 
-/--  An infinitely smooth function `f : ℝ → ℝ` such that `f x = 0` for `x ≤ 0`,
+/-- An infinitely smooth function `f : ℝ → ℝ` such that `f x = 0` for `x ≤ 0`,
 `f x = 1` for `1 ≤ x`, and `0 < f x < 1` for `0 < x < 1`. -/
 def Real.smoothTransition (x : ℝ) : ℝ :=
-  expNegInvGlue x / expNegInvGlue x+expNegInvGlue (1 - x)
+  expNegInvGlue x / (expNegInvGlue x + expNegInvGlue (1 - x))
 
 namespace Real
 
@@ -215,7 +216,7 @@ variable {x : ℝ}
 
 open expNegInvGlue
 
-theorem pos_denom x : 0 < expNegInvGlue x+expNegInvGlue (1 - x) :=
+theorem pos_denom x : 0 < expNegInvGlue x + expNegInvGlue (1 - x) :=
   ((@zero_lt_one ℝ _ _).lt_or_lt x).elim (fun hx => add_pos_of_pos_of_nonneg (pos_of_pos hx) (nonneg _)) fun hx =>
     add_pos_of_nonneg_of_pos (nonneg _) (pos_of_pos $ sub_pos.2 hx)
 
@@ -253,7 +254,7 @@ end Real
 
 variable {E : Type _}
 
-/--  `f : times_cont_diff_bump_of_inner c`, where `c` is a point in an inner product space, is a
+/-- `f : times_cont_diff_bump_of_inner c`, where `c` is a point in an inner product space, is a
 bundled smooth function such that
 
 - `f` is equal to `1` in `metric.closed_ball c f.r`;
@@ -278,7 +279,7 @@ instance (c : E) : Inhabited (TimesContDiffBumpOfInner c) :=
 
 variable [InnerProductSpace ℝ E] {c : E} (f : TimesContDiffBumpOfInner c) {x : E}
 
-/--  The function defined by `f : times_cont_diff_bump_of_inner c`. Use automatic coercion to
+/-- The function defined by `f : times_cont_diff_bump_of_inner c`. Use automatic coercion to
 function instead. -/
 def to_fun (f : TimesContDiffBumpOfInner c) : E → ℝ := fun x => Real.smoothTransition ((f.R - dist x c) / (f.R - f.r))
 
@@ -312,10 +313,10 @@ theorem support_eq : support (f : E → ℝ) = Metric.Ball c f.R := by
   suffices f x ≠ 0 ↔ dist x c < f.R by
     simpa [mem_support]
   cases' lt_or_leₓ (dist x c) f.R with hx hx
-  ·
-    simp [hx, (f.pos_of_mem_ball hx).ne']
-  ·
-    simp [hx.not_lt, f.zero_of_le_dist hx]
+  · simp [hx, (f.pos_of_mem_ball hx).ne']
+    
+  · simp [hx.not_lt, f.zero_of_le_dist hx]
+    
 
 theorem eventually_eq_one_of_mem_ball (h : x ∈ ball c f.r) : f =ᶠ[𝓝 x] 1 :=
   ((is_open_lt (continuous_id.dist continuous_const) continuous_const).eventually_mem h).mono $ fun z hz =>
@@ -326,15 +327,15 @@ theorem eventually_eq_one : f =ᶠ[𝓝 c] 1 :=
 
 protected theorem TimesContDiffAt {n} : TimesContDiffAt ℝ n f x := by
   rcases em (x = c) with (rfl | hx)
-  ·
-    refine' TimesContDiffAt.congr_of_eventually_eq _ f.eventually_eq_one
+  · refine' TimesContDiffAt.congr_of_eventually_eq _ f.eventually_eq_one
     rw [Pi.one_def]
     exact times_cont_diff_at_const
-  ·
-    exact
+    
+  · exact
       real.smooth_transition.times_cont_diff_at.comp x
         (TimesContDiffAt.div_const $
           times_cont_diff_at_const.sub $ times_cont_diff_at_id.dist times_cont_diff_at_const hx)
+    
 
 protected theorem TimesContDiff {n} : TimesContDiff ℝ n f :=
   times_cont_diff_iff_times_cont_diff_at.2 $ fun y => f.times_cont_diff_at
@@ -344,7 +345,7 @@ protected theorem TimesContDiffWithinAt {s n} : TimesContDiffWithinAt ℝ n f s 
 
 end TimesContDiffBumpOfInner
 
-/--  `f : times_cont_diff_bump c`, where `c` is a point in a finite dimensional real vector space, is
+/-- `f : times_cont_diff_bump c`, where `c` is a point in a finite dimensional real vector space, is
 a bundled smooth function such that
 
   - `f` is equal to `1` in `euclidean.closed_ball c f.r`;
@@ -360,7 +361,7 @@ namespace TimesContDiffBump
 
 variable [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {c x : E} (f : TimesContDiffBump c)
 
-/--  The function defined by `f : times_cont_diff_bump c`. Use automatic coercion to function
+/-- The function defined by `f : times_cont_diff_bump c`. Use automatic coercion to function
 instead. -/
 def to_fun (f : TimesContDiffBump c) : E → ℝ :=
   f.to_times_cont_diff_bump_of_inner ∘ toEuclidean
@@ -374,7 +375,7 @@ instance (c : E) : Inhabited (TimesContDiffBump c) :=
 theorem R_pos : 0 < f.R :=
   f.to_times_cont_diff_bump_of_inner.R_pos
 
-theorem coe_eq_comp : ⇑f = (f.to_times_cont_diff_bump_of_inner ∘ toEuclidean) :=
+theorem coe_eq_comp : ⇑f = f.to_times_cont_diff_bump_of_inner ∘ toEuclidean :=
   rfl
 
 theorem one_of_mem_closed_ball (hx : x ∈ Euclidean.ClosedBall c f.r) : f x = 1 :=
@@ -435,7 +436,7 @@ end TimesContDiffBump
 
 open FiniteDimensional Metric
 
-/--  If `E` is a finite dimensional normed space over `ℝ`, then for any point `x : E` and its
+/-- If `E` is a finite dimensional normed space over `ℝ`, then for any point `x : E` and its
 neighborhood `s` there exists an infinitely smooth function with the following properties:
 
 * `f y = 1` in a neighborhood of `x`;

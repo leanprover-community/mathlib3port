@@ -28,11 +28,11 @@ open_locale TensorProduct
 
 attribute [local ext] TensorProduct.ext
 
-/--  (implementation) tensor product of R-modules -/
+/-- (implementation) tensor product of R-modules -/
 def tensor_obj (M N : ModuleCat R) : ModuleCat R :=
   ModuleCat.of R (M ⊗[R] N)
 
-/--  (implementation) tensor product of morphisms R-modules -/
+/-- (implementation) tensor product of morphisms R-modules -/
 def tensor_hom {M N M' N' : ModuleCat R} (f : M ⟶ N) (g : M' ⟶ N') : tensor_obj M M' ⟶ tensor_obj N N' :=
   TensorProduct.map f g
 
@@ -43,7 +43,7 @@ theorem tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : ModuleCat R} (f₁ : X₁ �
     tensor_hom (f₁ ≫ g₁) (f₂ ≫ g₂) = tensor_hom f₁ f₂ ≫ tensor_hom g₁ g₂ := by
   tidy
 
-/--  (implementation) the associator for R-modules -/
+/-- (implementation) the associator for R-modules -/
 def associator (M N K : ModuleCat R) : tensor_obj (tensor_obj M N) K ≅ tensor_obj M (tensor_obj N K) :=
   LinearEquiv.toModuleIso (TensorProduct.assoc R M N K)
 
@@ -93,7 +93,7 @@ theorem pentagon (W X Y Z : ModuleCat R) :
   by
   convert pentagon_aux R W X Y Z using 1
 
-/--  (implementation) the left unitor for R-modules -/
+/-- (implementation) the left unitor for R-modules -/
 def left_unitor (M : ModuleCat.{u} R) : ModuleCat.of R (R ⊗[R] M) ≅ M :=
   (LinearEquiv.toModuleIso (TensorProduct.lid R M) : of R (R ⊗ M) ≅ of R M).trans (of_self_iso M)
 
@@ -105,7 +105,7 @@ theorem left_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
   rw [LinearMap.map_smul]
   rfl
 
-/--  (implementation) the right unitor for R-modules -/
+/-- (implementation) the right unitor for R-modules -/
 def right_unitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
   (LinearEquiv.toModuleIso (TensorProduct.rid R M) : of R (M ⊗ R) ≅ of R M).trans (of_self_iso M)
 
@@ -132,26 +132,22 @@ end MonoidalCategory
 
 open MonoidalCategory
 
--- failed to format: format: uncaught backtrack exception
-instance
-  monoidal_category
-  : monoidal_category ( ModuleCat .{ u } R )
-  where
-    tensorObj := tensor_obj
-      tensorHom := @ tensor_hom _ _
-      tensorUnit := ModuleCat.of R R
-      associator := associator
-      leftUnitor := left_unitor
-      rightUnitor := right_unitor
-      tensor_id' M N := tensor_id M N
-      tensor_comp' M N K M' N' K' f g h := tensor_comp f g h
-      associator_naturality' M N K M' N' K' f g h := associator_naturality f g h
-      left_unitor_naturality' M N f := left_unitor_naturality f
-      right_unitor_naturality' M N f := right_unitor_naturality f
-      pentagon' M N K L := pentagon M N K L
-      triangle' M N := triangle M N
+instance monoidal_category : monoidal_category (ModuleCat.{u} R) where
+  tensorObj := tensor_obj
+  tensorHom := @tensor_hom _ _
+  tensorUnit := ModuleCat.of R R
+  associator := associator
+  leftUnitor := left_unitor
+  rightUnitor := right_unitor
+  tensor_id' := fun M N => tensor_id M N
+  tensor_comp' := fun M N K M' N' K' f g h => tensor_comp f g h
+  associator_naturality' := fun M N K M' N' K' f g h => associator_naturality f g h
+  left_unitor_naturality' := fun M N f => left_unitor_naturality f
+  right_unitor_naturality' := fun M N f => right_unitor_naturality f
+  pentagon' := fun M N K L => pentagon M N K L
+  triangle' := fun M N => triangle M N
 
-/--  Remind ourselves that the monoidal unit, being just `R`, is still a commutative ring. -/
+/-- Remind ourselves that the monoidal unit, being just `R`, is still a commutative ring. -/
 instance : CommRingₓ ((𝟙_ (ModuleCat.{u} R) : ModuleCat.{u} R) : Type u) :=
   (by
     infer_instance : CommRingₓ R)
@@ -194,7 +190,7 @@ theorem associator_inv_apply {M N K : ModuleCat.{u} R} (m : M) (n : N) (k : K) :
 
 end MonoidalCategory
 
-/--  (implementation) the braiding for R-modules -/
+/-- (implementation) the braiding for R-modules -/
 def braiding (M N : ModuleCat R) : tensor_obj M N ≅ tensor_obj N M :=
   LinearEquiv.toModuleIso (TensorProduct.comm R M N)
 
@@ -226,16 +222,12 @@ theorem hexagon_reverse (X Y Z : ModuleCat.{u} R) :
 
 attribute [local ext] TensorProduct.ext
 
--- failed to format: format: uncaught backtrack exception
 /-- The symmetric monoidal structure on `Module R`. -/
-  instance
-    symmetric_category
-    : symmetric_category ( ModuleCat .{ u } R )
-    where
-      braiding := braiding
-        braiding_naturality' X₁ X₂ Y₁ Y₂ f g := braiding_naturality f g
-        hexagon_forward' := hexagon_forward
-        hexagon_reverse' := hexagon_reverse
+instance symmetric_category : symmetric_category (ModuleCat.{u} R) where
+  braiding := braiding
+  braiding_naturality' := fun X₁ X₂ Y₁ Y₂ f g => braiding_naturality f g
+  hexagon_forward' := hexagon_forward
+  hexagon_reverse' := hexagon_reverse
 
 namespace MonoidalCategory
 

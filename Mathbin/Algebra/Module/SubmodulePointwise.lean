@@ -20,20 +20,16 @@ variable {α : Type _} {R : Type _} {M : Type _}
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  pointwise_add_comm_monoid
-  : AddCommMonoidₓ ( Submodule R M )
-  where
-    add := · ⊔ ·
-      add_assoc _ _ _ := sup_assoc
-      zero := ⊥
-      zero_add _ := bot_sup_eq
-      add_zero _ := sup_bot_eq
-      add_comm _ _ := sup_comm
+instance pointwise_add_comm_monoid : AddCommMonoidₓ (Submodule R M) where
+  add := ·⊔·
+  add_assoc := fun _ _ _ => sup_assoc
+  zero := ⊥
+  zero_add := fun _ => bot_sup_eq
+  add_zero := fun _ => sup_bot_eq
+  add_comm := fun _ _ => sup_comm
 
 @[simp]
-theorem add_eq_sup (p q : Submodule R M) : (p+q) = p⊔q :=
+theorem add_eq_sup (p q : Submodule R M) : p + q = p⊔q :=
   rfl
 
 @[simp]
@@ -44,22 +40,16 @@ section
 
 variable [Monoidₓ α] [DistribMulAction α M] [SmulCommClass α R M]
 
-/--  The action on a submodule corresponding to applying the action to every element.
+/-- The action on a submodule corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwise_distrib_mul_action : DistribMulAction α (Submodule R M) :=
-  { smul := fun a S => S.map (DistribMulAction.toLinearMap _ _ a),
-    one_smul := fun S =>
-      (congr_argₓ (fun f => S.map f)
-            (LinearMap.ext $ by
-              exact one_smul α)).trans
-        S.map_id,
-    mul_smul := fun a₁ a₂ S =>
-      (congr_argₓ (fun f : M →ₗ[R] M => S.map f)
-            (LinearMap.ext $ by
-              exact mul_smul _ _)).trans
-        (S.map_comp _ _),
-    smul_zero := fun a => map_bot _, smul_add := fun a S₁ S₂ => map_sup _ _ _ }
+protected def pointwise_distrib_mul_action : DistribMulAction α (Submodule R M) where
+  smul := fun a S => S.map (DistribMulAction.toLinearMap _ _ a)
+  one_smul := fun S => (congr_argₓ (fun f => S.map f) (LinearMap.ext $ one_smul α)).trans S.map_id
+  mul_smul := fun a₁ a₂ S =>
+    (congr_argₓ (fun f : M →ₗ[R] M => S.map f) (LinearMap.ext $ mul_smul _ _)).trans (S.map_comp _ _)
+  smul_zero := fun a => map_bot _
+  smul_add := fun a S₁ S₂ => map_sup _ _ _
 
 localized [Pointwise] attribute [instance] Submodule.pointwiseDistribMulAction
 
@@ -83,10 +73,7 @@ theorem smul_mem_pointwise_smul (m : M) (a : α) (S : Submodule R M) : m ∈ S �
 
 instance pointwise_central_scalar [DistribMulAction (αᵐᵒᵖ) M] [SmulCommClass (αᵐᵒᵖ) R M] [IsCentralScalar α M] :
     IsCentralScalar α (Submodule R M) :=
-  ⟨fun a S =>
-    (congr_argₓ fun f => S.map f) $
-      LinearMap.ext $ by
-        exact op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_argₓ fun f => S.map f) $ LinearMap.ext $ op_smul_eq_smul _⟩
 
 @[simp]
 theorem smul_le_self_of_tower {α : Type _} [Semiringₓ α] [Module α R] [Module α M] [SmulCommClass α R M]
@@ -100,7 +87,7 @@ section
 
 variable [Semiringₓ α] [Module α M] [SmulCommClass α R M]
 
-/--  The action on a submodule corresponding to applying the action to every element.
+/-- The action on a submodule corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale.
 
@@ -108,11 +95,7 @@ This is a stronger version of `submodule.pointwise_distrib_mul_action`. Note tha
 not hold so this cannot be stated as a `module`. -/
 protected def pointwise_mul_action_with_zero : MulActionWithZero α (Submodule R M) :=
   { Submodule.pointwiseDistribMulAction with
-    zero_smul := fun S =>
-      (congr_argₓ (fun f : M →ₗ[R] M => S.map f)
-            (LinearMap.ext $ by
-              exact zero_smul α)).trans
-        S.map_zero }
+    zero_smul := fun S => (congr_argₓ (fun f : M →ₗ[R] M => S.map f) (LinearMap.ext $ zero_smul α)).trans S.map_zero }
 
 localized [Pointwise] attribute [instance] Submodule.pointwiseMulActionWithZero
 

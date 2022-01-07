@@ -26,9 +26,9 @@ theorem coe_one [HasOne Y] : ⇑(1 : LocallyConstant X Y) = (1 : X → Y) :=
 theorem one_apply [HasOne Y] (x : X) : (1 : LocallyConstant X Y) x = 1 :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance [ HasInv Y ] : HasInv ( LocallyConstant X Y ) where inv f := ⟨ f ⁻¹ , f.is_locally_constant.inv ⟩
+@[to_additive]
+instance [HasInv Y] : HasInv (LocallyConstant X Y) where
+  inv := fun f => ⟨f⁻¹, f.is_locally_constant.inv⟩
 
 @[simp, to_additive]
 theorem coe_inv [HasInv Y] (f : LocallyConstant X Y) : ⇑f⁻¹ = f⁻¹ :=
@@ -38,18 +38,16 @@ theorem coe_inv [HasInv Y] (f : LocallyConstant X Y) : ⇑f⁻¹ = f⁻¹ :=
 theorem inv_apply [HasInv Y] (f : LocallyConstant X Y) (x : X) : (f⁻¹) x = f x⁻¹ :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    [ Mul Y ] : Mul ( LocallyConstant X Y )
-    where mul f g := ⟨ f * g , f.is_locally_constant.mul g.is_locally_constant ⟩
+@[to_additive]
+instance [Mul Y] : Mul (LocallyConstant X Y) where
+  mul := fun f g => ⟨f * g, f.is_locally_constant.mul g.is_locally_constant⟩
 
 @[simp, to_additive]
-theorem coe_mul [Mul Y] (f g : LocallyConstant X Y) : (⇑f*g) = f*g :=
+theorem coe_mul [Mul Y] (f g : LocallyConstant X Y) : ⇑(f * g) = f * g :=
   rfl
 
 @[to_additive]
-theorem mul_apply [Mul Y] (f g : LocallyConstant X Y) (x : X) : (f*g) x = f x*g x :=
+theorem mul_apply [Mul Y] (f g : LocallyConstant X Y) (x : X) : (f * g) x = f x * g x :=
   rfl
 
 @[to_additive]
@@ -64,15 +62,19 @@ instance [MulOneClass Y] : MulOneClass (LocallyConstant X Y) :=
       ext
       simp only [mul_apply, one_apply, mul_oneₓ] }
 
-/--  `coe_fn` is a `monoid_hom`. -/
+/-- `coe_fn` is a `monoid_hom`. -/
 @[to_additive "`coe_fn` is an `add_monoid_hom`.", simps]
-def coe_fn_monoid_hom [MulOneClass Y] : LocallyConstant X Y →* X → Y :=
-  { toFun := coeFn, map_one' := rfl, map_mul' := fun _ _ => rfl }
+def coe_fn_monoid_hom [MulOneClass Y] : LocallyConstant X Y →* X → Y where
+  toFun := coeFn
+  map_one' := rfl
+  map_mul' := fun _ _ => rfl
 
-/--  The constant-function embedding, as a multiplicative monoid hom. -/
+/-- The constant-function embedding, as a multiplicative monoid hom. -/
 @[to_additive "The constant-function embedding, as an additive monoid hom.", simps]
-def const_monoid_hom [MulOneClass Y] : Y →* LocallyConstant X Y :=
-  { toFun := const X, map_one' := rfl, map_mul' := fun _ _ => rfl }
+def const_monoid_hom [MulOneClass Y] : Y →* LocallyConstant X Y where
+  toFun := const X
+  map_one' := rfl
+  map_mul' := fun _ _ => rfl
 
 instance [MulZeroClass Y] : MulZeroClass (LocallyConstant X Y) :=
   { LocallyConstant.hasZero, LocallyConstant.hasMul with
@@ -88,11 +90,9 @@ instance [MulZeroClass Y] : MulZeroClass (LocallyConstant X Y) :=
 instance [MulZeroOneClass Y] : MulZeroOneClass (LocallyConstant X Y) :=
   { LocallyConstant.mulZeroClass, LocallyConstant.mulOneClass with }
 
--- failed to format: format: uncaught backtrack exception
-@[ to_additive ]
-  instance
-    [ Div Y ] : Div ( LocallyConstant X Y )
-    where div f g := ⟨ f / g , f.is_locally_constant.div g.is_locally_constant ⟩
+@[to_additive]
+instance [Div Y] : Div (LocallyConstant X Y) where
+  div := fun f g => ⟨f / g, f.is_locally_constant.div g.is_locally_constant⟩
 
 @[to_additive]
 theorem coe_div [Div Y] (f g : LocallyConstant X Y) : ⇑(f / g) = f / g :=
@@ -123,7 +123,7 @@ instance [CommSemigroupₓ Y] : CommSemigroupₓ (LocallyConstant X Y) :=
 
 @[to_additive]
 instance [Monoidₓ Y] : Monoidₓ (LocallyConstant X Y) :=
-  { LocallyConstant.semigroup, LocallyConstant.mulOneClass with mul := ·*· }
+  { LocallyConstant.semigroup, LocallyConstant.mulOneClass with mul := · * · }
 
 @[to_additive]
 instance [CommMonoidₓ Y] : CommMonoidₓ (LocallyConstant X Y) :=
@@ -165,7 +165,7 @@ instance [NonUnitalSemiring Y] : NonUnitalSemiring (LocallyConstant X Y) :=
 instance [NonAssocSemiring Y] : NonAssocSemiring (LocallyConstant X Y) :=
   { LocallyConstant.mulOneClass, LocallyConstant.nonUnitalNonAssocSemiring with }
 
-/--  The constant-function embedding, as a ring hom.  -/
+/-- The constant-function embedding, as a ring hom.  -/
 @[simps]
 def const_ring_hom [NonAssocSemiring Y] : Y →+* LocallyConstant X Y :=
   { const_monoid_hom, const_add_monoid_hom with toFun := const X }
@@ -184,10 +184,8 @@ instance [CommRingₓ Y] : CommRingₓ (LocallyConstant X Y) :=
 
 variable {R : Type _}
 
--- failed to format: format: uncaught backtrack exception
-instance
-  [ HasScalar R Y ] : HasScalar R ( LocallyConstant X Y )
-  where smul r f := { toFun := r • f , IsLocallyConstant := ( ( IsLocallyConstant f ) . comp ( ( · • · ) r ) : _ ) }
+instance [HasScalar R Y] : HasScalar R (LocallyConstant X Y) where
+  smul := fun r f => { toFun := r • f, IsLocallyConstant := ((IsLocallyConstant f).comp ((· • ·) r) : _) }
 
 @[simp]
 theorem coe_smul [HasScalar R Y] (r : R) (f : LocallyConstant X Y) : ⇑(r • f) = r • f :=

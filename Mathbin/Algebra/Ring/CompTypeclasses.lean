@@ -39,7 +39,7 @@ variable {R₁ : Type _} {R₂ : Type _} {R₃ : Type _}
 
 variable [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃]
 
-/--  Class that expresses the fact that three ring equivs form a composition triple. This is
+/-- Class that expresses the fact that three ring homomorphisms form a composition triple. This is
 used to handle composition of semilinear maps. -/
 class RingHomCompTriple (σ₁₂ : R₁ →+* R₂) (σ₂₃ : R₂ →+* R₃) (σ₁₃ : outParam (R₁ →+* R₃)) : Prop where
   comp_eq : σ₂₃.comp σ₁₂ = σ₁₃
@@ -56,8 +56,8 @@ theorem comp_apply [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] {x : R₁} : �
 
 end RingHomCompTriple
 
-/--  Class that expresses the fact that two ring equivs are inverses of each other. This is used
-to handle `symm` for semilinear equivalences. -/
+/-- Class that expresses the fact that two ring homomorphisms are inverses of each other. This is
+used to handle `symm` for semilinear equivalences. -/
 class RingHomInvPair (σ : R₁ →+* R₂) (σ' : outParam (R₂ →+* R₁)) : Prop where
   comp_eq : σ'.comp σ = RingHom.id R₁
   comp_eq₂ : σ.comp σ' = RingHom.id R₂
@@ -93,8 +93,7 @@ instance triples₂ {σ₂₁ : R₂ →+* R₁} [RingHomInvPair σ₁₂ σ₂�
   ⟨by
     simp only [comp_eq₂]⟩
 
-/-- 
-Construct a `ring_hom_inv_pair` from both directions of a ring equiv.
+/-- Construct a `ring_hom_inv_pair` from both directions of a ring equiv.
 
 This is not an instance, as for equivalences that are involutions, a better instance
 would be `ring_hom_inv_pair e e`. Indeed, this declaration is not currently used in mathlib.
@@ -105,8 +104,7 @@ See note [reducible non-instances].
 theorem of_ring_equiv (e : R₁ ≃+* R₂) : RingHomInvPair (↑e : R₁ →+* R₂) (↑e.symm) :=
   ⟨e.symm_to_ring_hom_comp_to_ring_hom, e.symm.symm_to_ring_hom_comp_to_ring_hom⟩
 
-/-- 
-Swap the direction of a `ring_hom_inv_pair`. This is not an instance as it would loop, and better
+/-- Swap the direction of a `ring_hom_inv_pair`. This is not an instance as it would loop, and better
 instances are often available and may often be preferrable to using this one. Indeed, this
 declaration is not currently used in mathlib.
 
@@ -132,7 +130,7 @@ instance right_ids : RingHomCompTriple σ₁₂ (RingHom.id R₂) σ₁₂ :=
 
 end RingHomCompTriple
 
-/--  Class expressing the fact that a `ring_hom` is surjective. This is needed in the context
+/-- Class expressing the fact that a `ring_hom` is surjective. This is needed in the context
 of semilinear maps, where some lemmas require this. -/
 class RingHomSurjective (σ : R₁ →+* R₂) : Prop where
   is_surjective : Function.Surjective σ
@@ -149,7 +147,7 @@ instance (priority := 100) inv_pair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+
 instance ids : RingHomSurjective (RingHom.id R₁) :=
   ⟨is_surjective⟩
 
-/--  This cannot be an instance as there is no way to infer `σ₁₂` and `σ₂₃`. -/
+/-- This cannot be an instance as there is no way to infer `σ₁₂` and `σ₂₃`. -/
 theorem comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomSurjective σ₁₂] [RingHomSurjective σ₂₃] : RingHomSurjective σ₁₃ :=
   { is_surjective := by
       have := σ₂₃.is_surjective.comp σ₁₂.is_surjective

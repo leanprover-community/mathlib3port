@@ -20,7 +20,7 @@ variable {R : Type _} {M : Type _} {N : Type _} {ι : Type _} {κ : Type _}
 
 variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [AddCommGroupₓ N] [Module R N]
 
-/--  If b : ι → M and c : κ → N are bases then so is λ i, b i.1 ⊗ₜ c i.2 : ι × κ → M ⊗ N. -/
+/-- If b : ι → M and c : κ → N are bases then so is λ i, b i.1 ⊗ₜ c i.2 : ι × κ → M ⊗ N. -/
 def Basis.tensorProduct (b : Basis ι R M) (c : Basis κ R N) : Basis (ι × κ) R (TensorProduct R M N) :=
   Finsupp.basisSingleOne.map
     ((TensorProduct.congr b.repr c.repr).trans $
@@ -34,7 +34,7 @@ variable {K : Type _} (V W : Type _)
 
 variable [Field K] [AddCommGroupₓ V] [Module K V] [AddCommGroupₓ W] [Module K W]
 
-/--  If `V` and `W` are finite dimensional `K` vector spaces, so is `V ⊗ W`. -/
+/-- If `V` and `W` are finite dimensional `K` vector spaces, so is `V ⊗ W`. -/
 instance finite_dimensional_tensor_product [FiniteDimensional K V] [FiniteDimensional K W] :
     FiniteDimensional K (TensorProduct K V W) :=
   FiniteDimensional.of_fintype_basis (Basis.tensorProduct (Basis.ofVectorSpace K V) (Basis.ofVectorSpace K W))

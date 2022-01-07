@@ -25,29 +25,29 @@ open Nat
 
 namespace List
 
-theorem length_of_fn_aux {n} (f : Finₓ n → α) : ∀ m h l, length (of_fn_aux f m h l) = length l+m
+theorem length_of_fn_aux {n} (f : Finₓ n → α) : ∀ m h l, length (of_fn_aux f m h l) = length l + m
   | 0, h, l => rfl
   | succ m, h, l => (length_of_fn_aux m _ _).trans (succ_add _ _)
 
-/--  The length of a list converted from a function is the size of the domain. -/
+/-- The length of a list converted from a function is the size of the domain. -/
 @[simp]
 theorem length_of_fn {n} (f : Finₓ n → α) : length (of_fn f) = n :=
   (length_of_fn_aux f _ _ _).trans (zero_addₓ _)
 
 theorem nth_of_fn_aux {n} (f : Finₓ n → α) i :
-    ∀ m h l, (∀ i, nth l i = of_fn_nth_val f (i+m)) → nth (of_fn_aux f m h l) i = of_fn_nth_val f i
+    ∀ m h l, (∀ i, nth l i = of_fn_nth_val f (i + m)) → nth (of_fn_aux f m h l) i = of_fn_nth_val f i
   | 0, h, l, H => H i
   | succ m, h, l, H =>
     nth_of_fn_aux m _ _
       (by
         intro j
         cases' j with j
-        ·
-          simp only [nth, of_fn_nth_val, zero_addₓ, dif_pos (show m < n from h)]
-        ·
-          simp only [nth, H, add_succ, succ_add])
+        · simp only [nth, of_fn_nth_val, zero_addₓ, dif_pos (show m < n from h)]
+          
+        · simp only [nth, H, add_succ, succ_add]
+          )
 
-/--  The `n`th element of a list -/
+/-- The `n`th element of a list -/
 @[simp]
 theorem nth_of_fn {n} (f : Finₓ n → α) i : nth (of_fn f) i = of_fn_nth_val f i :=
   nth_of_fn_aux f _ _ _ _ $ fun i => by
@@ -70,29 +70,27 @@ theorem map_of_fn {β : Type _} {n : ℕ} (f : Finₓ n → α) (g : α → β) 
     fun i h h' => by
     simp
 
-/--  Arrays converted to lists are the same as `of_fn` on the indexing function of the array. -/
-theorem array_eq_of_fn {n} (a : Arrayₓ n α) : a.to_list = of_fn a.read :=
+/-- Arrays converted to lists are the same as `of_fn` on the indexing function of the array. -/
+theorem array_eq_of_fn {n} (a : Arrayₓ n α) : a.to_list = of_fn a.read := by
   suffices ∀ {m h l}, DArray.revIterateAux a (fun i => cons) m h l = of_fn_aux (DArray.read a) m h l from this
-  by
   intros
   induction' m with m IH generalizing l
-  ·
-    rfl
+  · rfl
+    
   simp only [DArray.revIterateAux, of_fn_aux, IH]
 
-/--  `of_fn` on an empty domain is the empty list. -/
+/-- `of_fn` on an empty domain is the empty list. -/
 @[simp]
 theorem of_fn_zero (f : Finₓ 0 → α) : of_fn f = [] :=
   rfl
 
 @[simp]
-theorem of_fn_succ {n} (f : Finₓ (succ n) → α) : of_fn f = f 0 :: of_fn fun i => f i.succ :=
+theorem of_fn_succ {n} (f : Finₓ (succ n) → α) : of_fn f = f 0 :: of_fn fun i => f i.succ := by
   suffices ∀ {m h l}, of_fn_aux f (succ m) (succ_le_succ h) l = f 0 :: of_fn_aux (fun i => f i.succ) m h l from this
-  by
   intros
   induction' m with m IH generalizing l
-  ·
-    rfl
+  · rfl
+    
   rw [of_fn_aux, IH]
   rfl
 

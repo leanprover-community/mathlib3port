@@ -23,7 +23,7 @@ generators, relations, group presentations
 
 variable {α : Type}
 
-/--  Given a set of relations, rels, over a type `α`, presented_group constructs the group with
+/-- Given a set of relations, rels, over a type `α`, presented_group constructs the group with
 generators `x : α` and relations `rels` as a quotient of free_group `α`.-/
 def PresentedGroup (rels : Set (FreeGroup α)) : Type :=
   FreeGroup α ⧸ Subgroup.normalClosure rels
@@ -33,7 +33,7 @@ namespace PresentedGroup
 instance (rels : Set (FreeGroup α)) : Groupₓ (PresentedGroup rels) :=
   QuotientGroup.Quotient.group _
 
-/--  `of` is the canonical map from `α` to a presented group with generators `x : α`. The term `x` is
+/-- `of` is the canonical map from `α` to a presented group with generators `x : α`. The term `x` is
 mapped to the equivalence class of the image of `x` in `free_group α`. -/
 def of {rels : Set (FreeGroup α)} (x : α) : PresentedGroup rels :=
   QuotientGroup.mk (FreeGroup.of x)
@@ -52,7 +52,7 @@ theorem closure_rels_subset_ker : Subgroup.normalClosure rels ≤ MonoidHom.ker 
 theorem to_group_eq_one_of_mem_closure : ∀, ∀ x ∈ Subgroup.normalClosure rels, ∀, F x = 1 := fun x w =>
   (MonoidHom.mem_ker _).1 $ closure_rels_subset_ker h w
 
-/--  The extension of a map `f : α → G` that satisfies the given relations to a group homomorphism
+/-- The extension of a map `f : α → G` that satisfies the given relations to a group homomorphism
 from `presented_group rels → G`. -/
 def to_group : PresentedGroup rels →* G :=
   QuotientGroup.lift (Subgroup.normalClosure rels) F (to_group_eq_one_of_mem_closure h)

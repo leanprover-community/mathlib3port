@@ -61,8 +61,7 @@ namespace GeneralizedContinuedFraction
 
 variable (K : Type _)
 
-/-- 
-We collect an integer part `b = ⌊v⌋` and fractional part `fr = v - ⌊v⌋` of a value `v` in a pair
+/-- We collect an integer part `b = ⌊v⌋` and fractional part `fr = v - ⌊v⌋` of a value `v` in a pair
 `⟨b, fr⟩`.
 -/
 structure int_fract_pair where
@@ -76,15 +75,14 @@ variable {K}
 
 namespace IntFractPair
 
-/--  Make an `int_fract_pair` printable. -/
+/-- Make an `int_fract_pair` printable. -/
 instance [HasRepr K] : HasRepr (int_fract_pair K) :=
   ⟨fun p => "(b : " ++ reprₓ p.b ++ ", fract : " ++ reprₓ p.fr ++ ")"⟩
 
 instance Inhabited [Inhabited K] : Inhabited (int_fract_pair K) :=
   ⟨⟨0, default _⟩⟩
 
-/-- 
-Maps a function `f` on the fractional components of a given pair.
+/-- Maps a function `f` on the fractional components of a given pair.
 -/
 def mapFr {β : Type _} (f : K → β) (gp : int_fract_pair K) : int_fract_pair β :=
   ⟨gp.b, f gp.fr⟩
@@ -96,7 +94,7 @@ section coeₓ
 
 variable {β : Type _} [Coe K β]
 
-/--  Coerce a pair by coercing the fractional component. -/
+/-- Coerce a pair by coercing the fractional component. -/
 instance has_coe_to_int_fract_pair : Coe (int_fract_pair K) (int_fract_pair β) :=
   ⟨mapFr coeₓ⟩
 
@@ -109,12 +107,11 @@ end coeₓ
 
 variable [LinearOrderedField K] [FloorRing K]
 
-/--  Creates the integer and fractional part of a value `v`, i.e. `⟨⌊v⌋, v - ⌊v⌋⟩`. -/
+/-- Creates the integer and fractional part of a value `v`, i.e. `⟨⌊v⌋, v - ⌊v⌋⟩`. -/
 protected def of (v : K) : int_fract_pair K :=
   ⟨⌊v⌋, Int.fract v⟩
 
-/-- 
-Creates the stream of integer and fractional parts of a value `v` needed to obtain the continued
+/-- Creates the stream of integer and fractional parts of a value `v` needed to obtain the continued
 fraction representation of `v` in `generalized_continued_fraction.of`. More precisely, given a value
 `v : K`, it recursively computes a stream of option `ℤ × K` pairs as follows:
 - `stream v 0 = some ⟨⌊v⌋, v - ⌊v⌋⟩`
@@ -130,20 +127,18 @@ For example, let `(v : ℚ) := 3.4`. The process goes as follows:
 -/
 protected def Streamₓ (v : K) : Streamₓ $ Option (int_fract_pair K)
   | 0 => some (int_fract_pair.of v)
-  | n+1 => do
+  | n + 1 => do
     let ap_n ← Streamₓ n
     if ap_n.fr = 0 then none else int_fract_pair.of (ap_n.fr⁻¹)
 
-/-- 
-Shows that `int_fract_pair.stream` has the sequence property, that is once we return `none` at
+/-- Shows that `int_fract_pair.stream` has the sequence property, that is once we return `none` at
 position `n`, we also return `none` at `n + 1`.
 -/
 theorem stream_is_seq (v : K) : (int_fract_pair.stream v).IsSeq := by
   intro _ hyp
   simp [int_fract_pair.stream, hyp]
 
-/-- 
-Uses `int_fract_pair.stream` to create a sequence with head (i.e. `seq1`) of integer and fractional
+/-- Uses `int_fract_pair.stream` to create a sequence with head (i.e. `seq1`) of integer and fractional
 parts of a value `v`. The first value of `int_fract_pair.stream` is never `none`, so we can safely
 extract it and put the tail of the stream in the sequence part.
 
@@ -156,8 +151,7 @@ protected def Seq1 (v : K) : Seq1 $ int_fract_pair K :=
 
 end IntFractPair
 
-/-- 
-Returns the `generalized_continued_fraction` of a value. In fact, the returned gcf is also
+/-- Returns the `generalized_continued_fraction` of a value. In fact, the returned gcf is also
 a `continued_fraction` that terminates if and only if `v` is rational (those proofs will be
 added in a future commit).
 

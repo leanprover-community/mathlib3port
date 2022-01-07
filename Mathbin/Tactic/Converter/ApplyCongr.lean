@@ -19,8 +19,7 @@ open Interactive Interactive.Types Lean.Parser
 
 local postfix:9001 "?" => optionalₓ
 
-/-- 
-Apply a congruence lemma inside `conv` mode.
+/-- Apply a congruence lemma inside `conv` mode.
 
 When called without an argument `apply_congr` will try applying all lemmas marked with `@[congr]`.
 Otherwise `apply_congr e` will apply the lemma `e`.

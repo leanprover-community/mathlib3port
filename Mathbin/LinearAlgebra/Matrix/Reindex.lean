@@ -33,7 +33,7 @@ section AddCommMonoidₓ
 
 variable [Semiringₓ R] [AddCommMonoidₓ A] [Module R A]
 
-/--  The natural map that reindexes a matrix's rows and columns with equivalent types,
+/-- The natural map that reindexes a matrix's rows and columns with equivalent types,
 `matrix.reindex`, is a linear equivalence. -/
 def reindex_linear_equiv (eₘ : m ≃ m') (eₙ : n ≃ n') : Matrix m n A ≃ₗ[R] Matrix m' n' A :=
   { reindex eₘ eₙ with map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
@@ -99,8 +99,7 @@ section Algebra
 
 variable [CommSemiringₓ R] [Fintype n] [Fintype m] [DecidableEq m] [DecidableEq n]
 
-/-- 
-For square matrices with coefficients in commutative semirings, the natural map that reindexes
+/-- For square matrices with coefficients in commutative semirings, the natural map that reindexes
 a matrix's rows and columns with equivalent types, `matrix.reindex`, is an equivalence of algebras.
 -/
 def reindex_alg_equiv (e : m ≃ n) : Matrix m m R ≃ₐ[R] Matrix n n R :=
@@ -127,7 +126,7 @@ theorem reindex_alg_equiv_mul (e : m ≃ n) (M : Matrix m m R) (N : Matrix m m R
 
 end Algebra
 
-/--  Reindexing both indices along the same equivalence preserves the determinant.
+/-- Reindexing both indices along the same equivalence preserves the determinant.
 
 For the `simp` version of this lemma, see `det_minor_equiv_self`.
 -/
@@ -135,7 +134,7 @@ theorem det_reindex_linear_equiv_self [CommRingₓ R] [Fintype m] [DecidableEq m
     (M : Matrix m m R) : det (reindex_linear_equiv R R e e M) = det M :=
   det_reindex_self e M
 
-/--  Reindexing both indices along the same equivalence preserves the determinant.
+/-- Reindexing both indices along the same equivalence preserves the determinant.
 
 For the `simp` version of this lemma, see `det_minor_equiv_self`.
 -/

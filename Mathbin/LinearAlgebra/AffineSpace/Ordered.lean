@@ -41,7 +41,7 @@ variable [Field k] [AddCommGroupₓ E] [Module k E] [AddTorsor E PE]
 
 include E
 
-/--  `slope f a b = (b - a)⁻¹ • (f b -ᵥ f a)` is the slope of a function `f` on the interval
+/-- `slope f a b = (b - a)⁻¹ • (f b -ᵥ f a)` is the slope of a function `f` on the interval
 `[a, b]`. Note that `slope f a a = 0`, not the derivative of `f` at `a`. -/
 def slope (f : k → PE) (a b : k) : E :=
   (b - a)⁻¹ • (f b -ᵥ f a)
@@ -64,41 +64,41 @@ theorem eq_of_slope_eq_zero {f : k → PE} {a b : k} (h : slope f a b = (0 : E))
 theorem slope_comm (f : k → PE) (a b : k) : slope f a b = slope f b a := by
   rw [slope, slope, ← neg_vsub_eq_vsub_rev, smul_neg, ← neg_smul, neg_inv, neg_sub]
 
-/--  `slope f a c` is a linear combination of `slope f a b` and `slope f b c`. This version
+/-- `slope f a c` is a linear combination of `slope f a b` and `slope f b c`. This version
 explicitly provides coefficients. If `a ≠ c`, then the sum of the coefficients is `1`, so it is
 actually an affine combination, see `line_map_slope_slope_sub_div_sub`. -/
 theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c : k) :
-    ((((b - a) / (c - a)) • slope f a b)+((c - b) / (c - a)) • slope f b c) = slope f a c := by
+    ((b - a) / (c - a)) • slope f a b + ((c - b) / (c - a)) • slope f b c = slope f a c := by
   by_cases' hab : a = b
-  ·
-    subst hab
+  · subst hab
     rw [sub_self, zero_div, zero_smul, zero_addₓ]
     by_cases' hac : a = c
-    ·
-      simp [hac]
-    ·
-      rw [div_self (sub_ne_zero.2 $ Ne.symm hac), one_smul]
+    · simp [hac]
+      
+    · rw [div_self (sub_ne_zero.2 $ Ne.symm hac), one_smul]
+      
+    
   by_cases' hbc : b = c
-  ·
-    subst hbc
+  · subst hbc
     simp [sub_ne_zero.2 (Ne.symm hab)]
+    
   rw [add_commₓ]
   simp_rw [slope, div_eq_inv_mul, mul_smul, ← smul_add, smul_inv_smul₀ (sub_ne_zero.2 $ Ne.symm hab),
     smul_inv_smul₀ (sub_ne_zero.2 $ Ne.symm hbc), vsub_add_vsub_cancel]
 
-/--  `slope f a c` is an affine combination of `slope f a b` and `slope f b c`. This version uses
+/-- `slope f a c` is an affine combination of `slope f a b` and `slope f b c`. This version uses
 `line_map` to express this property. -/
 theorem line_map_slope_slope_sub_div_sub (f : k → PE) (a b c : k) (h : a ≠ c) :
     line_map (slope f a b) (slope f b c) ((c - b) / (c - a)) = slope f a c := by
   field_simp [sub_ne_zero.2 h.symm, ← sub_div_sub_smul_slope_add_sub_div_sub_smul_slope f a b c, line_map_apply_module]
 
-/--  `slope f a b` is an affine combination of `slope f a (line_map a b r)` and
+/-- `slope f a b` is an affine combination of `slope f a (line_map a b r)` and
 `slope f (line_map a b r) b`. We use `line_map` to express this property. -/
 theorem line_map_slope_line_map_slope_line_map (f : k → PE) (a b r : k) :
     line_map (slope f (line_map a b r) b) (slope f a (line_map a b r)) r = slope f a b := by
   obtain rfl | hab : a = b ∨ a ≠ b := Classical.em _
-  ·
-    simp
+  · simp
+    
   rw [slope_comm _ a, slope_comm _ a, slope_comm _ _ b]
   convert line_map_slope_slope_sub_div_sub f b (line_map a b r) a hab.symm using 2
   rw [line_map_apply_ring, eq_div_iff (sub_ne_zero.2 hab), sub_mul, one_mulₓ, mul_sub, ← sub_sub, sub_sub_cancel]
@@ -142,8 +142,8 @@ theorem line_map_mono_endpoints (ha : a ≤ a') (hb : b ≤ b') (h₀ : 0 ≤ r)
 theorem line_map_strict_mono_endpoints (ha : a < a') (hb : b < b') (h₀ : 0 ≤ r) (h₁ : r ≤ 1) :
     line_map a b r < line_map a' b' r := by
   rcases h₀.eq_or_lt with (rfl | h₀)
-  ·
-    simpa
+  · simpa
+    
   exact (line_map_mono_left ha.le h₁).trans_lt (line_map_strict_mono_right hb h₀)
 
 theorem line_map_lt_line_map_iff_of_lt (h : r < r') : line_map a b r < line_map a b r' ↔ a < b := by
@@ -268,9 +268,9 @@ variable {f : k → E} {a b r : k}
 
 local notation "c" => line_map a b r
 
-/--  Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is non-strictly below the
+/-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is non-strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c ≤ slope f a b`. -/
-theorem map_le_line_map_iff_slope_le_slope_left (h : 0 < r*b - a) :
+theorem map_le_line_map_iff_slope_le_slope_left (h : 0 < r * (b - a)) :
     f c ≤ line_map (f a) (f b) r ↔ slope f a c ≤ slope f a b := by
   rw [line_map_apply, line_map_apply, slope, slope, vsub_eq_sub, vsub_eq_sub, vsub_eq_sub, vadd_eq_add, vadd_eq_add,
     smul_eq_mul, add_sub_cancel, smul_sub, smul_sub, smul_sub, sub_le_iff_le_add, mul_inv_rev₀, mul_smul, mul_smul, ←
@@ -278,27 +278,27 @@ theorem map_le_line_map_iff_slope_le_slope_left (h : 0 < r*b - a) :
     mul_inv_cancel_right₀ (right_ne_zero_of_mul h.ne'), smul_add, smul_inv_smul₀ (left_ne_zero_of_mul h.ne')]
   infer_instance
 
-/--  Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is non-strictly above the
+/-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is non-strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b ≤ slope f a c`. -/
-theorem line_map_le_map_iff_slope_le_slope_left (h : 0 < r*b - a) :
+theorem line_map_le_map_iff_slope_le_slope_left (h : 0 < r * (b - a)) :
     line_map (f a) (f b) r ≤ f c ↔ slope f a b ≤ slope f a c :=
   @map_le_line_map_iff_slope_le_slope_left k (OrderDual E) _ _ _ _ f a b r h
 
-/--  Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is strictly below the
+/-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c < slope f a b`. -/
-theorem map_lt_line_map_iff_slope_lt_slope_left (h : 0 < r*b - a) :
+theorem map_lt_line_map_iff_slope_lt_slope_left (h : 0 < r * (b - a)) :
     f c < line_map (f a) (f b) r ↔ slope f a c < slope f a b :=
   lt_iff_lt_of_le_iff_le' (line_map_le_map_iff_slope_le_slope_left h) (map_le_line_map_iff_slope_le_slope_left h)
 
-/--  Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is strictly above the
+/-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b < slope f a c`. -/
-theorem line_map_lt_map_iff_slope_lt_slope_left (h : 0 < r*b - a) :
+theorem line_map_lt_map_iff_slope_lt_slope_left (h : 0 < r * (b - a)) :
     line_map (f a) (f b) r < f c ↔ slope f a b < slope f a c :=
   @map_lt_line_map_iff_slope_lt_slope_left k (OrderDual E) _ _ _ _ f a b r h
 
-/--  Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is non-strictly below the
+/-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is non-strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b ≤ slope f c b`. -/
-theorem map_le_line_map_iff_slope_le_slope_right (h : 0 < (1 - r)*b - a) :
+theorem map_le_line_map_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
     f c ≤ line_map (f a) (f b) r ↔ slope f a b ≤ slope f c b := by
   rw [← line_map_apply_one_sub, ← line_map_apply_one_sub _ _ r]
   revert h
@@ -308,30 +308,30 @@ theorem map_le_line_map_iff_slope_le_slope_right (h : 0 < (1 - r)*b - a) :
   simp_rw [line_map_apply, slope, vsub_eq_sub, vadd_eq_add, smul_eq_mul]
   rw [sub_add_eq_sub_sub_swap, sub_self, zero_sub, le_smul_iff_of_pos, inv_inv₀, smul_smul, neg_mul_eq_mul_neg, neg_sub,
     mul_inv_cancel_right₀, le_sub, ← neg_sub (f b), smul_neg, neg_add_eq_sub]
-  ·
-    exact right_ne_zero_of_mul h.ne'
-  ·
-    simpa [mul_sub] using h
+  · exact right_ne_zero_of_mul h.ne'
+    
+  · simpa [mul_sub] using h
+    
 
-/--  Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is non-strictly above the
+/-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is non-strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b ≤ slope f a b`. -/
-theorem line_map_le_map_iff_slope_le_slope_right (h : 0 < (1 - r)*b - a) :
+theorem line_map_le_map_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
     line_map (f a) (f b) r ≤ f c ↔ slope f c b ≤ slope f a b :=
   @map_le_line_map_iff_slope_le_slope_right k (OrderDual E) _ _ _ _ f a b r h
 
-/--  Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is strictly below the
+/-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b < slope f c b`. -/
-theorem map_lt_line_map_iff_slope_lt_slope_right (h : 0 < (1 - r)*b - a) :
+theorem map_lt_line_map_iff_slope_lt_slope_right (h : 0 < (1 - r) * (b - a)) :
     f c < line_map (f a) (f b) r ↔ slope f a b < slope f c b :=
   lt_iff_lt_of_le_iff_le' (line_map_le_map_iff_slope_le_slope_right h) (map_le_line_map_iff_slope_le_slope_right h)
 
-/--  Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is strictly above the
+/-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b < slope f a b`. -/
-theorem line_map_lt_map_iff_slope_lt_slope_right (h : 0 < (1 - r)*b - a) :
+theorem line_map_lt_map_iff_slope_lt_slope_right (h : 0 < (1 - r) * (b - a)) :
     line_map (f a) (f b) r < f c ↔ slope f c b < slope f a b :=
   @map_lt_line_map_iff_slope_lt_slope_right k (OrderDual E) _ _ _ _ f a b r h
 
-/--  Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is non-strictly below the
+/-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is non-strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c ≤ slope f c b`. -/
 theorem map_le_line_map_iff_slope_le_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :
     f c ≤ line_map (f a) (f b) r ↔ slope f a c ≤ slope f c b := by
@@ -340,19 +340,19 @@ theorem map_le_line_map_iff_slope_le_slope (hab : a < b) (h₀ : 0 < r) (h₁ : 
   infer_instance
   infer_instance
 
-/--  Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is non-strictly above the
+/-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is non-strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b ≤ slope f a c`. -/
 theorem line_map_le_map_iff_slope_le_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :
     line_map (f a) (f b) r ≤ f c ↔ slope f c b ≤ slope f a c :=
   @map_le_line_map_iff_slope_le_slope k (OrderDual E) _ _ _ _ _ _ _ _ hab h₀ h₁
 
-/--  Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is strictly below the
+/-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c < slope f c b`. -/
 theorem map_lt_line_map_iff_slope_lt_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :
     f c < line_map (f a) (f b) r ↔ slope f a c < slope f c b :=
   lt_iff_lt_of_le_iff_le' (line_map_le_map_iff_slope_le_slope hab h₀ h₁) (map_le_line_map_iff_slope_le_slope hab h₀ h₁)
 
-/--  Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is strictly above the
+/-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b < slope f a c`. -/
 theorem line_map_lt_map_iff_slope_lt_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :
     line_map (f a) (f b) r < f c ↔ slope f c b < slope f a c :=

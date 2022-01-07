@@ -39,10 +39,7 @@ initialize
 initialize
   registerTraceClass.1 `simps.debug
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_reflect
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/-- 
-Projection data for a single projection of a structure, consisting of the following fields:
+/-- Projection data for a single projection of a structure, consisting of the following fields:
 - the name used in the generated `simp` lemmas
 - an expression used by simps for the projection. It must be definitionally equal to an original
   projection (or a composition of multiple projections).
@@ -64,9 +61,9 @@ unsafe structure projection_data where
   proj_nrs : List ℕ
   is_default : Bool
   IsPrefix : Bool
-  deriving [anonymous], [anonymous]
+  deriving has_reflect, Inhabited
 
-/--  Temporary projection data parsed from `initialize_simps_projections` before the expression
+/-- Temporary projection data parsed from `initialize_simps_projections` before the expression
   matching this projection has been found. Only used internally in `simps_get_raw_projections`. -/
 unsafe structure parsed_projection_data where
   orig_name : Name
@@ -102,13 +99,12 @@ unsafe instance : has_to_format parsed_projection_data :=
 
 end
 
-/--  The type of rules that specify how metadata for projections in changes.
+/-- The type of rules that specify how metadata for projections in changes.
   See `initialize_simps_projection`. -/
 abbrev ProjectionRule :=
   Sum (Name × Name) Name × Bool
 
-/-- 
-The `@[_simps_str]` attribute specifies the preferred projections of the given structure,
+/-- The `@[_simps_str]` attribute specifies the preferred projections of the given structure,
 used by the `@[simps]` attribute.
 - This will usually be tagged by the `@[simps]` tactic.
 - You can also generate this with the command `initialize_simps_projections`.
@@ -118,11 +114,14 @@ used by the `@[simps]` attribute.
 - The second argument is a list that consists of the projection data for each projection.
 -/
 @[user_attribute]
-unsafe def simps_str_attr : user_attribute Unit (List Name × List projection_data) :=
-  { Name := `_simps_str, descr := "An attribute specifying the projection of the given structure.", parser := failed }
+unsafe def simps_str_attr : user_attribute Unit (List Name × List projection_data) where
+  Name := `_simps_str
+  descr := "An attribute specifying the projection of the given structure."
+  parser := failed
 
-/-- 
-  The `@[notation_class]` attribute specifies that this is a notation class,
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+/-- The `@[notation_class]` attribute specifies that this is a notation class,
   and this notation should be used instead of projections by @[simps].
   * The first argument `tt` for notation classes and `ff` for classes applied to the structure,
     like `has_coe_to_sort` and `has_coe_to_fun`
@@ -130,9 +129,10 @@ unsafe def simps_str_attr : user_attribute Unit (List Name × List projection_da
     of the structure)
 -/
 @[user_attribute]
-unsafe def notation_class_attr : user_attribute Unit (Bool × Option Name) :=
-  { Name := `notation_class, descr := "An attribute specifying that this is a notation class. Used by @[simps].",
-    parser := Prod.mk <$> Option.isNone <$> (tk "*")? <*> (ident)? }
+unsafe def notation_class_attr : user_attribute Unit (Bool × Option Name) where
+  Name := `notation_class
+  descr := "An attribute specifying that this is a notation class. Used by @[simps]."
+  parser := Prod.mk <$> Option.isNone <$> «expr ?» (tk "*") <*> «expr ?» ident
 
 attribute [notation_class]
   HasZero HasOne Add Mul HasInv Neg Sub Div HasDvd Mod LE LT Append HasAndthen HasUnion HasInter HasSdiff HasEquivₓ HasSubset HasSsubset HasEmptyc HasInsert HasSingleton HasSep HasMem Pow
@@ -141,7 +141,7 @@ attribute [notation_class* coeSort] CoeSort
 
 attribute [notation_class* coeFn] CoeFun
 
-/--  Returns the projection information of a structure. -/
+/-- Returns the projection information of a structure. -/
 unsafe def projections_info (l : List projection_data) (pref : Stringₓ) (str : Name) : tactic format := do
   let ⟨defaults, nondefaults⟩ ← return $ l.partition_map $ fun s => if s.is_default then inl s else inr s
   let to_print ←
@@ -158,7 +158,7 @@ unsafe def projections_info (l : List projection_data) (pref : Stringₓ) (str :
       f! "[simps] > {pref } {str }:
                 > {to_print}"
 
-/--  Auxiliary function of `get_composite_of_projections`. -/
+/-- Auxiliary function of `get_composite_of_projections`. -/
 unsafe def get_composite_of_projections_aux :
     ∀ str : Name proj : Stringₓ x : expr pos : List ℕ args : List expr, tactic (expr × List ℕ)
   | str, proj, x, Pos, args => do
@@ -183,7 +183,7 @@ unsafe def get_composite_of_projections_aux :
         let new_str := tgt.get_app_fn.const_name
         get_composite_of_projections_aux new_str proj_rest (new_x.mk_app type_args) new_pos (args ++ type_args)
 
-/--  Given a structure `str` and a projection `proj`, that could be multiple nested projections
+/-- Given a structure `str` and a projection `proj`, that could be multiple nested projections
   (separated by `_`), returns an expression that is the composition of these projections and a
   list of natural numbers, that are the projection numbers of the applied projections. -/
 unsafe def get_composite_of_projections (str : Name) (proj : Stringₓ) : tactic (expr × List ℕ) := do
@@ -196,8 +196,7 @@ unsafe def get_composite_of_projections (str : Name) (proj : Stringₓ) : tactic
   let x ← mk_local' `x BinderInfo.default str_ap
   get_composite_of_projections_aux str ("_" ++ proj) x [] $ type_args ++ [x]
 
-/-- 
-  Get the projections used by `simps` associated to a given structure `str`.
+/-- Get the projections used by `simps` associated to a given structure `str`.
 
   The returned information is also stored in a parameter of the attribute `@[_simps_str]`, which
   is given to `str`. If `str` already has this attribute, the information is read from this
@@ -374,14 +373,14 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
               {← (raw_univs, projs)}")
       return (raw_univs, projs)
 
-/--  Parse a rule for `initialize_simps_projections`. It is either `<name>→<name>` or `-<name>`,
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+/-- Parse a rule for `initialize_simps_projections`. It is either `<name>→<name>` or `-<name>`,
   possibly following by `as_prefix`.-/
 unsafe def simps_parse_rule : parser ProjectionRule :=
   Prod.mk <$> ((fun x y => inl (x, y)) <$> ident <*> (tk "->" >> ident) <|> inr <$> (tk "-" >> ident)) <*>
-    is_some <$> (tk "as_prefix")?
+    is_some <$> «expr ?» (tk "as_prefix")
 
-/-- 
-You can specify custom projections for the `@[simps]` attribute.
+/-- You can specify custom projections for the `@[simps]` attribute.
 To do this for the projection `my_structure.original_projection` by adding a declaration
 `my_structure.simps.my_projection` that is definitionally equal to
 `my_structure.original_projection` but has the projection in the desired (simp-normal) form.
@@ -400,8 +399,10 @@ composite of multiple projections).
 -/
 library_note "custom simps projection"
 
-/-- 
-This command specifies custom names and custom projections for the simp attribute `simps_attr`.
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+/-- This command specifies custom names and custom projections for the simp attribute `simps_attr`.
 * You can specify custom names by writing e.g.
   `initialize_simps_projections equiv (to_fun → apply, inv_fun → symm_apply)`.
 * See Note [custom simps projection] and the examples below for information how to declare custom
@@ -479,8 +480,8 @@ Some common uses:
 @[user_command]
 unsafe def initialize_simps_projections_cmd (_ : parse $ tk "initialize_simps_projections") : parser Unit := do
   let env ← get_env
-  let trc ← is_some <$> (tk "?")?
-  let ns ← (Prod.mk <$> ident <*> (tk "(" >> sep_by (tk ",") simps_parse_rule <* tk ")")?)*
+  let trc ← is_some <$> «expr ?» (tk "?")
+  let ns ← «expr *» (Prod.mk <$> ident <*> «expr ?» (tk "(" >> sep_by (tk ",") simps_parse_rule <* tk ")"))
   ns.mmap' $ fun data => do
       let nm ← resolve_constant data.1
       simps_get_raw_projections env nm tt (data.2.getOrElse []) trc
@@ -489,10 +490,7 @@ add_tactic_doc
   { Name := "initialize_simps_projections", category := DocCategory.cmd,
     declNames := [`initialize_simps_projections_cmd], tags := ["simplification"] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_reflect
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
-/-- 
-  Configuration options for the `@[simps]` attribute.
+/-- Configuration options for the `@[simps]` attribute.
   * `attrs` specifies the list of attributes given to the generated lemmas. Default: ``[`simp]``.
     The attributes can be either basic attributes, or user attributes without parameters.
     There are two attributes which `simps` might add itself:
@@ -538,19 +536,18 @@ structure SimpsCfg where
   notRecursive := [`prod, `pprod]
   trace := ff
   addAdditive := @none Name
-  deriving [anonymous], [anonymous]
+  deriving has_reflect, Inhabited
 
-/--  A common configuration for `@[simps]`: generate equalities between functions instead equalities
+/-- A common configuration for `@[simps]`: generate equalities between functions instead equalities
   between fully applied expressions. -/
-def asFn : SimpsCfg :=
-  { fullyApplied := ff }
+def asFn : SimpsCfg where
+  fullyApplied := ff
 
-/--  A common configuration for `@[simps]`: don't tag the generated lemmas with `@[simp]`. -/
-def lemmasOnly : SimpsCfg :=
-  { attrs := [] }
+/-- A common configuration for `@[simps]`: don't tag the generated lemmas with `@[simp]`. -/
+def lemmasOnly : SimpsCfg where
+  attrs := []
 
-/-- 
-  Get the projections of a structure used by `@[simps]` applied to the appropriate arguments.
+/-- Get the projections of a structure used by `@[simps]` applied to the appropriate arguments.
   Returns a list of tuples
   ```
   (corresponding right-hand-side, given projection name, projection expression, projection numbers,
@@ -591,7 +588,7 @@ unsafe def simps_get_projection_exprs (e : environment) (tgt : expr) (rhs : expr
           proj_nrs := proj.proj_nrs.tail })
   return new_proj_data
 
-/--  Add a lemma with `nm` stating that `lhs = rhs`. `type` is the type of both `lhs` and `rhs`,
+/-- Add a lemma with `nm` stating that `lhs = rhs`. `type` is the type of both `lhs` and `rhs`,
   `args` is the list of local constants occurring, and `univs` is the list of universe variables. -/
 unsafe def simps_add_projection (nm : Name) (type lhs rhs : expr) (args : List expr) (univs : List Name)
     (cfg : SimpsCfg) : tactic Unit := do
@@ -632,7 +629,7 @@ unsafe def simps_add_projection (nm : Name) (type lhs rhs : expr) (args : List e
   cfg.attrs.mmap' $ fun nm => set_attribute nm decl_name tt
   when cfg.add_additive.is_some $ to_additive.attr decl_name ⟨ff, cfg.trace, cfg.add_additive.iget, none, tt⟩ tt
 
-/--  Derive lemmas specifying the projections of the declaration.
+/-- Derive lemmas specifying the projections of the declaration.
   If `todo` is non-empty, it will generate exactly the names in `todo`.
   `to_apply` is non-empty after a custom projection that is a composition of multiple projections
   was just used. In that case we need to apply these projections before we continue changing lhs. -/
@@ -750,7 +747,7 @@ unsafe def simps_add_projections :
         if cfg.fully_applied then simps_add_projection nm tgt lhs_ap rhs_ap new_args univs cfg
           else simps_add_projection nm type lhs rhs args univs cfg
 
-/--  `simps_tac` derives `simp` lemmas for all (nested) non-Prop projections of the declaration.
+/-- `simps_tac` derives `simp` lemmas for all (nested) non-Prop projections of the declaration.
   If `todo` is non-empty, it will generate exactly the names in `todo`.
   If `short_nm` is true, the generated names will only use the last projection name.
   If `trc` is true, trace as if `trace.simps.verbose` is true. -/
@@ -771,15 +768,16 @@ unsafe def simps_tac (nm : Name) (cfg : SimpsCfg := {  }) (todo : List Stringₓ
       else return cfg
   simps_add_projections e nm d.type lhs d.value [] d.univ_params tt cfg todo []
 
-/--  The parser for the `@[simps]` attribute. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+/-- The parser for the `@[simps]` attribute. -/
 unsafe def simps_parser : parser (Bool × List Stringₓ × SimpsCfg) := do
-  Prod.mk <$> is_some <$> (tk "?")? <*>
+  Prod.mk <$> is_some <$> «expr ?» (tk "?") <*>
       (Prod.mk <$> many (name.last <$> ident) <*> do
-        let some e ← (parser.pexpr)? | return {  }
+        let some e ← «expr ?» parser.pexpr | return {  }
         eval_pexpr SimpsCfg e)
 
-/-- 
-The `@[simps]` attribute automatically derives lemmas specifying the projections of this
+/-- The `@[simps]` attribute automatically derives lemmas specifying the projections of this
 declaration.
 
 Example:
@@ -878,14 +876,15 @@ derives two `simp` lemmas:
   `simp` lemmas.
 -/
 @[user_attribute]
-unsafe def simps_attr : user_attribute Unit (Bool × List Stringₓ × SimpsCfg) :=
-  { Name := `simps, descr := "Automatically derive lemmas specifying the projections of this declaration.",
-    parser := simps_parser,
-    after_set :=
-      some $ fun n _ persistent => do
-        guardₓ persistent <|> fail "`simps` currently cannot be used as a local attribute"
-        let (trc, todo, cfg) ← simps_attr.get_param n
-        simps_tac n cfg todo trc }
+unsafe def simps_attr : user_attribute Unit (Bool × List Stringₓ × SimpsCfg) where
+  Name := `simps
+  descr := "Automatically derive lemmas specifying the projections of this declaration."
+  parser := simps_parser
+  after_set :=
+    some $ fun n _ persistent => do
+      guardₓ persistent <|> fail "`simps` currently cannot be used as a local attribute"
+      let (trc, todo, cfg) ← simps_attr.get_param n
+      simps_tac n cfg todo trc
 
 add_tactic_doc { Name := "simps", category := DocCategory.attr, declNames := [`simps_attr], tags := ["simplification"] }
 

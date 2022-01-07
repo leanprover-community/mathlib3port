@@ -1,4 +1,4 @@
-import Mathbin.Data.Multiset.Basic
+import Mathbin.Data.Multiset.Bind
 import Mathbin.Control.Traversable.Lemmas
 import Mathbin.Control.Traversable.Instances
 
@@ -29,44 +29,32 @@ variable {F : Type u → Type u} [Applicativeₓ F] [IsCommApplicative F]
 
 variable {α' β' : Type u} (f : α' → F β')
 
--- failed to format: format: uncaught backtrack exception
-def
-  traverse
-  : Multiset α' → F ( Multiset β' )
-  :=
-    Quotientₓ.lift
-      ( Functor.map coeₓ ∘ Traversable.traverse f )
-        (
+def traverse : Multiset α' → F (Multiset β') :=
+  Quotientₓ.lift (Functor.map coeₓ ∘ Traversable.traverse f)
+    (by
+      introv p
+      unfold Function.comp
+      induction p
+      case perm.nil =>
+        rfl
+      case perm.cons =>
+        have :
+          Multiset.cons <$> f p_x <*> coeₓ <$> traverse f p_l₁ = Multiset.cons <$> f p_x <*> coeₓ <$> traverse f p_l₂ :=
           by
-            introv p
-              unfold Function.comp
-              induction p
-              case perm.nil => rfl
-              case
-                perm.cons
-                =>
-                have
-                    :
-                        ( ( Multiset.cons <$> f p_x ) <*> coeₓ <$> traverse f p_l₁ )
-                          =
-                          ( Multiset.cons <$> f p_x ) <*> coeₓ <$> traverse f p_l₂
-                      :=
-                      by rw [ p_ih ]
-                  simpa with functor_norm
-              case
-                perm.swap
-                =>
-                have
-                    :
-                        ( ( ( fun a b l : List β' => ( ↑ ( a :: b :: l ) : Multiset β' ) ) <$> f p_y ) <*> f p_x )
-                          =
-                          ( ( fun a b l => ↑ ( a :: b :: l ) ) <$> f p_x ) <*> f p_y
-                      :=
-                      by
-                        rw [ IsCommApplicative.commutative_map ] congr funext a b l simpa [ flip ] using perm.swap b a l
-                  simp' [ · ∘ · , this ] with functor_norm
-              case perm.trans => simp
-          )
+          rw [p_ih]
+        simpa with functor_norm
+      case perm.swap =>
+        have :
+          (fun a b l : List β' => (↑(a :: b :: l) : Multiset β')) <$> f p_y <*> f p_x =
+            (fun a b l => ↑(a :: b :: l)) <$> f p_x <*> f p_y :=
+          by
+          rw [IsCommApplicative.commutative_map]
+          congr
+          funext a b l
+          simpa [flip] using perm.swap b a l
+        simp' [· ∘ ·, this] with functor_norm
+      case perm.trans =>
+        simp [*])
 
 instance : Monadₓ Multiset :=
   { Multiset.functor with pure := fun α x => {x}, bind := @bind }
@@ -79,13 +67,13 @@ theorem pure_def {α} : (pure : α → Multiset α) = singleton :=
 theorem bind_def {α β} : · >>= · = @bind α β :=
   rfl
 
--- failed to format: format: uncaught backtrack exception
-instance
-  : IsLawfulMonad Multiset
-  where
-    bind_pure_comp_eq_map α β f s := Multiset.induction_on s rfl $ fun a s ih => by simp
-      pure_bind α β x f := by simp [ pure ]
-      bind_assoc := @ bind_assoc
+instance : IsLawfulMonad Multiset where
+  bind_pure_comp_eq_map := fun α β f s =>
+    Multiset.induction_on s rfl $ fun a s ih => by
+      simp
+  pure_bind := fun α β x f => by
+    simp [pure]
+  bind_assoc := @bind_assoc
 
 open Functor
 

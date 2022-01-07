@@ -62,7 +62,7 @@ private unsafe def collect_proofs_in : expr → List expr → List Name × List 
     | expr.macro m l => go fun nh => mfoldl (fun x e => collect_proofs_in e ctx x) nh l
     | _ => return (ns, hs)
 
-/--  Generalize proofs in the goal, naming them with the provided list. -/
+/-- Generalize proofs in the goal, naming them with the provided list. -/
 unsafe def generalize_proofs (ns : List Name) (loc : Interactive.Loc) : tactic Unit := do
   intros_dep
   let hs ← local_context >>= mfilter is_proof
@@ -75,7 +75,7 @@ local postfix:9001 "*" => many
 
 namespace Interactive
 
-/--  Generalize proofs in the goal, naming them with the provided list.
+/-- Generalize proofs in the goal, naming them with the provided list.
 
 For example:
 ```lean

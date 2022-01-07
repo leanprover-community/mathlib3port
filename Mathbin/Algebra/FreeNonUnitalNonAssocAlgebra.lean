@@ -37,25 +37,23 @@ noncomputable section
 
 variable (R : Type u) (X : Type v) [Semiringₓ R]
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler non_unital_non_assoc_semiring
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler module R
-/--  The free non-unital, non-associative algebra on the type `X` with coefficients in `R`. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler module R
+/-- The free non-unital, non-associative algebra on the type `X` with coefficients in `R`. -/
 def FreeNonUnitalNonAssocAlgebra :=
-  MonoidAlgebra R (FreeMagma X)deriving [anonymous], [anonymous], [anonymous]
+  MonoidAlgebra R (FreeMagma X)deriving Inhabited, NonUnitalNonAssocSemiring, [anonymous]
 
 namespace FreeNonUnitalNonAssocAlgebra
 
 variable {X}
 
-/--  The embedding of `X` into the free algebra with coefficients in `R`. -/
+/-- The embedding of `X` into the free algebra with coefficients in `R`. -/
 def of : X → FreeNonUnitalNonAssocAlgebra R X :=
   MonoidAlgebra.ofMagma R _ ∘ FreeMagma.of
 
 instance : IsScalarTower R (FreeNonUnitalNonAssocAlgebra R X) (FreeNonUnitalNonAssocAlgebra R X) :=
   MonoidAlgebra.is_scalar_tower_self R
 
-/--  If the coefficients are commutative amongst themselves, they also commute with the algebra
+/-- If the coefficients are commutative amongst themselves, they also commute with the algebra
 multiplication. -/
 instance (R : Type u) [CommSemiringₓ R] :
     SmulCommClass R (FreeNonUnitalNonAssocAlgebra R X) (FreeNonUnitalNonAssocAlgebra R X) :=
@@ -68,7 +66,7 @@ variable {A : Type w} [NonUnitalNonAssocSemiring A]
 
 variable [Module R A] [IsScalarTower R A A] [SmulCommClass R A A]
 
-/--  The functor `X ↦ free_non_unital_non_assoc_algebra R X` from the category of types to the
+/-- The functor `X ↦ free_non_unital_non_assoc_algebra R X` from the category of types to the
 category of non-unital, non-associative algebras over `R` is adjoint to the forgetful functor in the
 other direction. -/
 def lift : (X → A) ≃ NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A :=

@@ -23,8 +23,7 @@ sides of the equivalence are `fintype`s.
 
 variable {α β : Type _} [Fintype α] [DecidableEq β] (e : Equivₓ.Perm α) (f : α ↪ β)
 
-/-- 
-Computably turn an embedding `f : α ↪ β` into an equiv `α ≃ set.range f`,
+/-- Computably turn an embedding `f : α ↪ β` into an equiv `α ≃ set.range f`,
 if `α` is a `fintype`. Has poor computational performance, due to exhaustive searching in
 constructed inverse. When a better inverse is known, use `equiv.of_left_inverse'` or
 `equiv.of_left_inverse` instead. This is the computable version of `equiv.of_injective`.
@@ -47,8 +46,7 @@ theorem Function.Embedding.to_equiv_range_eq_of_injective : f.to_equiv_range = E
   ext
   simp
 
-/-- 
-Extend the domain of `e : equiv.perm α`, mapping it through `f : α ↪ β`.
+/-- Extend the domain of `e : equiv.perm α`, mapping it through `f : α ↪ β`.
 Everything outside of `set.range f` is kept fixed. Has poor computational performance,
 due to exhaustive searching in constructed inverse due to using `function.embedding.to_equiv_range`.
 When a better `α ≃ set.range f` is known, use `equiv.perm.via_set_range`.
@@ -80,7 +78,7 @@ namespace Equivₓ
 
 variable {p q : α → Prop} [DecidablePred p] [DecidablePred q]
 
-/--  If `e` is an equivalence between two subtypes of a fintype `α`, `e.to_compl`
+/-- If `e` is an equivalence between two subtypes of a fintype `α`, `e.to_compl`
 is an equivalence between the complement of those subtypes.
 
 See also `equiv.compl`, for a computable version when a term of type
@@ -88,7 +86,7 @@ See also `equiv.compl`, for a computable version when a term of type
 noncomputable def to_compl (e : { x // p x } ≃ { x // q x }) : { x // ¬p x } ≃ { x // ¬q x } :=
   Classical.choice (Fintype.card_eq.mp (Fintype.card_compl_eq_card_compl (Fintype.card_congr e)))
 
-/--  If `e` is an equivalence between two subtypes of a fintype `α`, `e.extend_subtype`
+/-- If `e` is an equivalence between two subtypes of a fintype `α`, `e.extend_subtype`
 is a permutation of `α` acting like `e` on the subtypes and doing something arbitrary outside.
 
 Note that when `p = q`, `equiv.perm.subtype_congr e (equiv.refl _)` can be used instead. -/

@@ -8,28 +8,28 @@ variable {α : Type u} {lt : α → α → Prop}
 
 theorem mem_of_min_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : Rbnode α} : t.min = some a → mem lt a t := by
   induction t
-  ·
-    intros
+  · intros
     contradiction
+    
   all_goals
     cases t_lchild <;> simp [Rbnode.min] <;> intro h
-    ·
-      subst t_val
+    · subst t_val
       simp [mem, irrefl_of lt a]
+      
     all_goals
       rw [mem]
       simp [t_ih_lchild h]
 
 theorem mem_of_max_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : Rbnode α} : t.max = some a → mem lt a t := by
   induction t
-  ·
-    intros
+  · intros
     contradiction
+    
   all_goals
     cases t_rchild <;> simp [Rbnode.max] <;> intro h
-    ·
-      subst t_val
+    · subst t_val
       simp [mem, irrefl_of lt a]
+      
     all_goals
       rw [mem]
       simp [t_ih_rchild h]
@@ -38,9 +38,9 @@ variable [IsStrictWeakOrder α lt]
 
 theorem eq_leaf_of_min_eq_none {t : Rbnode α} : t.min = none → t = leaf := by
   induction t
-  ·
-    intros
+  · intros
     rfl
+    
   all_goals
     cases t_lchild <;> simp [Rbnode.min, false_implies_iff] <;> intro h
     all_goals
@@ -49,9 +49,9 @@ theorem eq_leaf_of_min_eq_none {t : Rbnode α} : t.min = none → t = leaf := by
 
 theorem eq_leaf_of_max_eq_none {t : Rbnode α} : t.max = none → t = leaf := by
   induction t
-  ·
-    intros
+  · intros
     rfl
+    
   all_goals
     cases t_rchild <;> simp [Rbnode.max, false_implies_iff] <;> intro h
     all_goals
@@ -62,38 +62,37 @@ theorem min_is_minimal {a : α} {t : Rbnode α} :
     ∀ {lo hi}, is_searchable lt t lo hi → t.min = some a → ∀ {b}, mem lt b t → a ≈[lt]b ∨ lt a b := by
   classical
   induction t
-  ·
-    simp [StrictWeakOrder.Equiv]
+  · simp [StrictWeakOrder.Equiv]
     intro _ _ hs hmin b
     contradiction
+    
   all_goals
     cases t_lchild <;> intro lo hi hs hmin b hmem
-    ·
-      simp [Rbnode.min] at hmin
+    · simp [Rbnode.min] at hmin
       subst t_val
       simp [mem] at hmem
       cases' hmem with heqv hmem
-      ·
-        left
+      · left
         exact heqv.swap
-      ·
-        have :=
+        
+      · have :=
           lt_of_mem_right hs
             (by
               constructor)
             hmem
         right
         assumption
+        
+      
     all_goals
       have hs' := hs
       cases hs
       simp [Rbnode.min] at hmin
       rw [mem] at hmem
       cases_type* or.1
-      ·
-        exact t_ih_lchild hs_hs₁ hmin hmem
-      ·
-        have hmm := mem_of_min_eq lt hmin
+      · exact t_ih_lchild hs_hs₁ hmin hmem
+        
+      · have hmm := mem_of_min_eq lt hmin
         have a_lt_val :=
           lt_of_mem_left hs'
             (by
@@ -102,8 +101,8 @@ theorem min_is_minimal {a : α} {t : Rbnode α} :
         have a_lt_b := lt_of_lt_of_incomp a_lt_val hmem.swap
         right
         assumption
-      ·
-        have hmm := mem_of_min_eq lt hmin
+        
+      · have hmm := mem_of_min_eq lt hmin
         have a_lt_b :=
           lt_of_mem_left_right hs'
             (by
@@ -111,41 +110,41 @@ theorem min_is_minimal {a : α} {t : Rbnode α} :
             hmm hmem
         right
         assumption
+        
 
 theorem max_is_maximal {a : α} {t : Rbnode α} :
     ∀ {lo hi}, is_searchable lt t lo hi → t.max = some a → ∀ {b}, mem lt b t → a ≈[lt]b ∨ lt b a := by
   classical
   induction t
-  ·
-    simp [StrictWeakOrder.Equiv]
+  · simp [StrictWeakOrder.Equiv]
     intro _ _ hs hmax b
     contradiction
+    
   all_goals
     cases t_rchild <;> intro lo hi hs hmax b hmem
-    ·
-      simp [Rbnode.max] at hmax
+    · simp [Rbnode.max] at hmax
       subst t_val
       simp [mem] at hmem
       cases' hmem with hmem heqv
-      ·
-        have :=
+      · have :=
           lt_of_mem_left hs
             (by
               constructor)
             hmem
         right
         assumption
-      ·
-        left
+        
+      · left
         exact heqv.swap
+        
+      
     all_goals
       have hs' := hs
       cases hs
       simp [Rbnode.max] at hmax
       rw [mem] at hmem
       cases_type* or.1
-      ·
-        have hmm := mem_of_max_eq lt hmax
+      · have hmm := mem_of_max_eq lt hmax
         have a_lt_b :=
           lt_of_mem_left_right hs'
             (by
@@ -153,8 +152,8 @@ theorem max_is_maximal {a : α} {t : Rbnode α} :
             hmem hmm
         right
         assumption
-      ·
-        have hmm := mem_of_max_eq lt hmax
+        
+      · have hmm := mem_of_max_eq lt hmax
         have val_lt_a :=
           lt_of_mem_right hs'
             (by
@@ -163,8 +162,9 @@ theorem max_is_maximal {a : α} {t : Rbnode α} :
         have a_lt_b := lt_of_incomp_of_lt hmem val_lt_a
         right
         assumption
-      ·
-        exact t_ih_rchild hs_hs₂ hmax hmem
+        
+      · exact t_ih_rchild hs_hs₂ hmax hmem
+        
 
 end Rbnode
 

@@ -18,8 +18,7 @@ open NormNum
 
 namespace NormSwap
 
-/-- 
-A `norm_num` plugin for normalizing `equiv.swap a b c`
+/-- A `norm_num` plugin for normalizing `equiv.swap a b c`
 where `a b c` are numerals of `ℕ`, `ℤ`, `ℚ` or `fin n`.
 
 ```

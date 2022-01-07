@@ -49,8 +49,7 @@ namespace Tactic.Interactive
 
 open Lean.Parser Interactive Interactive.Types Tactic.RewriteSearch
 
-/-- 
-Search for a chain of rewrites to prove an equation or iff statement.
+/-- Search for a chain of rewrites to prove an equation or iff statement.
 
 Collects rewrite rules, runs a graph search to find a chain of rewrites to prove the
 current target, and generates a string explanation for it.

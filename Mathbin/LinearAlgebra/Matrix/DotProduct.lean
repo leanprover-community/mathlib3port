@@ -29,7 +29,7 @@ variable {R : Type v} [Semiringₓ R] {n : Type w} [Fintype n]
 
 @[simp]
 theorem dot_product_std_basis_eq_mul [DecidableEq n] (v : n → R) (c : R) (i : n) :
-    dot_product v (LinearMap.stdBasis R (fun _ => R) i c) = v i*c := by
+    dot_product v (LinearMap.stdBasis R (fun _ => R) i c) = v i * c := by
   rw [dot_product, Finset.sum_eq_single i, LinearMap.std_basis_same]
   exact fun _ _ hb => by
     rw [LinearMap.std_basis_ne _ _ _ _ hb, mul_zero]

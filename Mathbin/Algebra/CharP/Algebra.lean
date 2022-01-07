@@ -23,7 +23,7 @@ Instances constructed from this result:
 -/
 
 
-/--  If the algebra map `R →+* A` is injective then `A` has the same characteristic as `R`. -/
+/-- If the algebra map `R →+* A` is injective then `A` has the same characteristic as `R`. -/
 theorem char_p_of_injective_algebra_map {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
     (h : Function.Injective (algebraMap R A)) (p : ℕ) [CharP R p] : CharP A p :=
   { cast_eq_zero_iff := fun x => by
@@ -33,7 +33,7 @@ theorem char_p_of_injective_algebra_map {R A : Type _} [CommSemiringₓ R] [Semi
       refine' Iff.trans _ h.eq_iff
       rw [RingHom.map_zero] }
 
-/--  If the algebra map `R →+* A` is injective and `R` has characteristic zero then so does `A`. -/
+/-- If the algebra map `R →+* A` is injective and `R` has characteristic zero then so does `A`. -/
 theorem char_zero_of_injective_algebra_map {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
     (h : Function.Injective (algebraMap R A)) [CharZero R] : CharZero A :=
   { cast_injective := fun x y hxy => by
@@ -55,11 +55,11 @@ namespace FreeAlgebra
 
 variable {R X : Type _} [CommSemiringₓ R] (p : ℕ)
 
-/--  If `R` has characteristic `p`, then so does `free_algebra R X`. -/
+/-- If `R` has characteristic `p`, then so does `free_algebra R X`. -/
 instance CharP [CharP R p] : CharP (FreeAlgebra R X) p :=
   char_p_of_injective_algebra_map FreeAlgebra.algebra_map_left_inverse.Injective p
 
-/--  If `R` has characteristic `0`, then so does `free_algebra R X`. -/
+/-- If `R` has characteristic `0`, then so does `free_algebra R X`. -/
 instance CharZero [CharZero R] : CharZero (FreeAlgebra R X) :=
   char_zero_of_injective_algebra_map FreeAlgebra.algebra_map_left_inverse.Injective
 
@@ -71,21 +71,21 @@ variable (R : Type _) {K : Type _} [CommRingₓ R] [Field K] [Algebra R K] [IsFr
 
 variable (p : ℕ)
 
-/--  If `R` has characteristic `p`, then so does Frac(R). -/
+/-- If `R` has characteristic `p`, then so does Frac(R). -/
 theorem char_p_of_is_fraction_ring [CharP R p] : CharP K p :=
   char_p_of_injective_algebra_map (IsFractionRing.injective R K) p
 
-/--  If `R` has characteristic `0`, then so does Frac(R). -/
+/-- If `R` has characteristic `0`, then so does Frac(R). -/
 theorem char_zero_of_is_fraction_ring [CharZero R] : CharZero K :=
   @CharP.char_p_to_char_zero K _ (char_p_of_is_fraction_ring R 0)
 
 variable [IsDomain R]
 
-/--  If `R` has characteristic `p`, then so does `fraction_ring R`. -/
+/-- If `R` has characteristic `p`, then so does `fraction_ring R`. -/
 instance CharP [CharP R p] : CharP (FractionRing R) p :=
   char_p_of_is_fraction_ring R p
 
-/--  If `R` has characteristic `0`, then so does `fraction_ring R`. -/
+/-- If `R` has characteristic `0`, then so does `fraction_ring R`. -/
 instance CharZero [CharZero R] : CharZero (FractionRing R) :=
   char_zero_of_is_fraction_ring R
 

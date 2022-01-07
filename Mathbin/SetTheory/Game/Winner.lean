@@ -13,19 +13,19 @@ namespace Pgame
 
 local infixl:0 " ≈ " => Equivₓ
 
-/--  The player who goes first loses -/
+/-- The player who goes first loses -/
 def first_loses (G : Pgame) : Prop :=
   G ≤ 0 ∧ 0 ≤ G
 
-/--  The player who goes first wins -/
+/-- The player who goes first wins -/
 def first_wins (G : Pgame) : Prop :=
   0 < G ∧ G < 0
 
-/--  The left player can always win -/
+/-- The left player can always win -/
 def left_wins (G : Pgame) : Prop :=
   0 < G ∧ 0 ≤ G
 
-/--  The right player can always win -/
+/-- The right player can always win -/
 def right_wins (G : Pgame) : Prop :=
   G ≤ 0 ∧ G < 0
 
@@ -55,8 +55,7 @@ theorem winner_cases (G : Pgame) : G.left_wins ∨ G.right_wins ∨ G.first_lose
   classical
   by_cases' hpos : 0 < G <;>
     by_cases' hneg : G < 0 <;>
-      ·
-        try
+      · try
           rw [not_ltₓ] at hpos
         try
           rw [not_ltₓ] at hneg
@@ -77,6 +76,7 @@ theorem winner_cases (G : Pgame) : G.left_wins ∨ G.right_wins ∨ G.first_lose
           right
           right
           exact ⟨hpos, hneg⟩
+        
 
 theorem first_loses_is_zero {G : Pgame} : G.first_loses ↔ (G ≈ 0) := by
   rfl

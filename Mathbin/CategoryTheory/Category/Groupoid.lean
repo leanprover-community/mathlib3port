@@ -21,7 +21,7 @@ universe v u
 
 namespace CategoryTheory
 
-/--  Category of groupoids -/
+/-- Category of groupoids -/
 @[nolint check_univs]
 def Groupoid :=
   bundled groupoid.{v, u}
@@ -34,34 +34,35 @@ instance : Inhabited Groupoid :=
 instance str (C : Groupoid.{v, u}) : groupoid.{v, u} C.α :=
   C.str
 
-/--  Construct a bundled `Groupoid` from the underlying type and the typeclass. -/
+/-- Construct a bundled `Groupoid` from the underlying type and the typeclass. -/
 def of (C : Type u) [groupoid.{v} C] : Groupoid.{v, u} :=
   bundled.of C
 
--- failed to format: format: uncaught backtrack exception
 /-- Category structure on `Groupoid` -/
-  instance
-    category
-    : large_category .{ max v u } Groupoid .{ v , u }
-    where
-      Hom C D := C.α ⥤ D.α
-        id C := 𝟭 C.α
-        comp C D E F G := F ⋙ G
-        id_comp' C D F := by cases F <;> rfl
-        comp_id' C D F := by cases F <;> rfl
-        assoc' := by intros <;> rfl
+instance category : large_category.{max v u} Groupoid.{v, u} where
+  Hom := fun C D => C.α ⥤ D.α
+  id := fun C => 𝟭 C.α
+  comp := fun C D E F G => F ⋙ G
+  id_comp' := fun C D F => by
+    cases F <;> rfl
+  comp_id' := fun C D F => by
+    cases F <;> rfl
+  assoc' := by
+    intros <;> rfl
 
-/--  Functor that gets the set of objects of a groupoid. It is not
+/-- Functor that gets the set of objects of a groupoid. It is not
 called `forget`, because it is not a faithful functor. -/
-def objects : Groupoid.{v, u} ⥤ Type u :=
-  { obj := bundled.α, map := fun C D F => F.obj }
+def objects : Groupoid.{v, u} ⥤ Type u where
+  obj := bundled.α
+  map := fun C D F => F.obj
 
-/--  Forgetting functor to `Cat` -/
-def forget_to_Cat : Groupoid.{v, u} ⥤ Cat.{v, u} :=
-  { obj := fun C => Cat.of C.α, map := fun C D => id }
+/-- Forgetting functor to `Cat` -/
+def forget_to_Cat : Groupoid.{v, u} ⥤ Cat.{v, u} where
+  obj := fun C => Cat.of C.α
+  map := fun C D => id
 
--- failed to format: format: uncaught backtrack exception
-instance forget_to_Cat_full : full forget_to_Cat where Preimage C D := id
+instance forget_to_Cat_full : full forget_to_Cat where
+  Preimage := fun C D => id
 
 instance forget_to_Cat_faithful : faithful forget_to_Cat :=
   {  }

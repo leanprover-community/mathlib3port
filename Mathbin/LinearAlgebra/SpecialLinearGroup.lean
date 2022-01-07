@@ -54,7 +54,7 @@ section
 
 variable (n : Type u) [DecidableEq n] [Fintype n] (R : Type v) [CommRingₓ R]
 
-/--  `special_linear_group n R` is the group of `n` by `n` `R`-matrices with determinant equal to 1.
+/-- `special_linear_group n R` is the group of `n` by `n` `R`-matrices with determinant equal to 1.
 -/
 def special_linear_group :=
   { A : Matrix n n R // A.det = 1 }
@@ -108,7 +108,7 @@ theorem coe_inv : ↑ₘ(A⁻¹) = adjugate A :=
   rfl
 
 @[simp]
-theorem coe_mul : ↑ₘ(A*B) = ↑ₘA ⬝ ↑ₘB :=
+theorem coe_mul : ↑ₘ(A * B) = ↑ₘA ⬝ ↑ₘB :=
   rfl
 
 @[simp]
@@ -139,16 +139,16 @@ instance : Groupₓ (special_linear_group n R) :=
       ext1
       simp [adjugate_mul] }
 
-/--  A version of `matrix.to_lin' A` that produces linear equivalences. -/
-def to_lin' : special_linear_group n R →* (n → R) ≃ₗ[R] n → R :=
-  { toFun := fun A =>
-      LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘ(A⁻¹))
-        (by
-          rw [← to_lin'_mul, ← coe_mul, mul_right_invₓ, coe_one, to_lin'_one])
-        (by
-          rw [← to_lin'_mul, ← coe_mul, mul_left_invₓ, coe_one, to_lin'_one]),
-    map_one' := LinearEquiv.to_linear_map_injective Matrix.to_lin'_one,
-    map_mul' := fun A B => LinearEquiv.to_linear_map_injective $ Matrix.to_lin'_mul A B }
+/-- A version of `matrix.to_lin' A` that produces linear equivalences. -/
+def to_lin' : special_linear_group n R →* (n → R) ≃ₗ[R] n → R where
+  toFun := fun A =>
+    LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘ(A⁻¹))
+      (by
+        rw [← to_lin'_mul, ← coe_mul, mul_right_invₓ, coe_one, to_lin'_one])
+      (by
+        rw [← to_lin'_mul, ← coe_mul, mul_left_invₓ, coe_one, to_lin'_one])
+  map_one' := LinearEquiv.to_linear_map_injective Matrix.to_lin'_one
+  map_mul' := fun A B => LinearEquiv.to_linear_map_injective $ Matrix.to_lin'_mul A B
 
 theorem to_lin'_apply (A : special_linear_group n R) (v : n → R) :
     special_linear_group.to_lin' A v = Matrix.toLin' (↑ₘA) v :=
@@ -166,7 +166,7 @@ theorem to_lin'_symm_to_linear_map (A : special_linear_group n R) : ↑A.to_lin'
 theorem to_lin'_injective : Function.Injective (⇑(to_lin' : special_linear_group n R →* (n → R) ≃ₗ[R] n → R)) :=
   fun A B h => Subtype.coe_injective $ Matrix.toLin'.Injective $ LinearEquiv.to_linear_map_injective.eq_iff.mpr h
 
-/--  `to_GL` is the map from the special linear group to the general linear group -/
+/-- `to_GL` is the map from the special linear group to the general linear group -/
 def to_GL : special_linear_group n R →* general_linear_group R (n → R) :=
   (general_linear_group.general_linear_equiv _ _).symm.toMonoidHom.comp to_lin'
 
@@ -175,19 +175,20 @@ theorem coe_to_GL (A : special_linear_group n R) : ↑A.to_GL = A.to_lin'.to_lin
 
 variable {S : Type _} [CommRingₓ S]
 
-/--  A ring homomorphism from `R` to `S` induces a group homomorphism from
+/-- A ring homomorphism from `R` to `S` induces a group homomorphism from
 `special_linear_group n R` to `special_linear_group n S`. -/
 @[simps]
-def map (f : R →+* S) : special_linear_group n R →* special_linear_group n S :=
-  { toFun := fun g =>
-      ⟨f.map_matrix (↑g), by
-        rw [← f.map_det]
-        simp [g.2]⟩,
-    map_one' := Subtype.ext $ f.map_matrix.map_one, map_mul' := fun x y => Subtype.ext $ f.map_matrix.map_mul x y }
+def map (f : R →+* S) : special_linear_group n R →* special_linear_group n S where
+  toFun := fun g =>
+    ⟨f.map_matrix (↑g), by
+      rw [← f.map_det]
+      simp [g.2]⟩
+  map_one' := Subtype.ext $ f.map_matrix.map_one
+  map_mul' := fun x y => Subtype.ext $ f.map_matrix.map_mul x y
 
 section cast
 
-/--  Coercion of SL `n` `ℤ` to SL `n` `R` for a commutative ring `R`. -/
+/-- Coercion of SL `n` `ℤ` to SL `n` `R` for a commutative ring `R`. -/
 instance : Coe (special_linear_group n ℤ) (special_linear_group n R) :=
   ⟨fun x => map (Int.castRingHom R) x⟩
 
@@ -202,7 +203,7 @@ section Neg
 
 variable [Fact (Even (Fintype.card n))]
 
-/--  Formal operation of negation on special linear group on even cardinality `n` given by negating
+/-- Formal operation of negation on special linear group on even cardinality `n` given by negating
 each element. -/
 instance : Neg (special_linear_group n R) :=
   ⟨fun g =>
@@ -221,9 +222,9 @@ end Neg
 
 section CoeFnInstance
 
--- failed to format: format: uncaught backtrack exception
 /-- This instance is here for convenience, but is not the simp-normal form. -/
-  instance : CoeFun ( special_linear_group n R ) fun _ => n → n → R where coe A := A.val
+instance : CoeFun (special_linear_group n R) fun _ => n → n → R where
+  coe := fun A => A.val
 
 @[simp]
 theorem coe_fn_eq_coe (s : special_linear_group n R) : ⇑s = ↑ₘs :=

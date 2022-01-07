@@ -81,7 +81,7 @@ setup_tactic_parser
 
 open tactic.interactive (rw_rules)
 
-/--  The `conv` tactic provides a `conv` within a `conv`. It allows the user to return to a
+/-- The `conv` tactic provides a `conv` within a `conv`. It allows the user to return to a
 previous state of the outer conv block to continue editing an expression without having to
 start a new conv block. -/
 protected unsafe def conv (t : conv.interactive.itactic) : conv Unit := do
@@ -97,8 +97,7 @@ unsafe def erw (q : parse rw_rules) (cfg : rewrite_cfg := { md := semireducible 
 
 open Interactive.Types
 
-/-- 
-`guard_target t` fails if the target of the conv goal is not `t`.
+/-- `guard_target t` fails if the target of the conv goal is not `t`.
 We use this tactic for writing tests.
 -/
 unsafe def guard_target (p : parse texpr) : conv Unit := do
@@ -123,11 +122,15 @@ unsafe def old_conv (c : old_conv.interactive.itactic) : tactic Unit := do
 unsafe def find (p : parse lean.parser.pexpr) (c : old_conv.interactive.itactic) : tactic Unit :=
   old_conv $ old_conv.interactive.find p c
 
-unsafe def conv_lhs (loc : parse (tk "at" *> ident)?) (p : parse (tk "in" *> parser.pexpr)?)
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+unsafe def conv_lhs (loc : parse («expr ?» (tk "at" *> ident))) (p : parse («expr ?» (tk "in" *> parser.pexpr)))
     (c : conv.interactive.itactic) : tactic Unit :=
   conv loc p (conv.interactive.to_lhs >> c)
 
-unsafe def conv_rhs (loc : parse (tk "at" *> ident)?) (p : parse (tk "in" *> parser.pexpr)?)
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+unsafe def conv_rhs (loc : parse («expr ?» (tk "at" *> ident))) (p : parse («expr ?» (tk "in" *> parser.pexpr)))
     (c : conv.interactive.itactic) : tactic Unit :=
   conv loc p (conv.interactive.to_rhs >> c)
 

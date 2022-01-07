@@ -64,7 +64,7 @@ open Opposite
 
 open MonoidalCategory
 
-/--  `(𝟙_ C ⟶ -)` is a lax monoidal functor to `Type`. -/
+/-- `(𝟙_ C ⟶ -)` is a lax monoidal functor to `Type`. -/
 def coyoneda_tensor_unit (C : Type u) [category.{v} C] [monoidal_category C] : lax_monoidal_functor C (Type v) :=
   { coyoneda.obj (op (𝟙_ C)) with ε := fun p => 𝟙 _, μ := fun X Y p => (λ_ (𝟙_ C)).inv ≫ (p.1 ⊗ p.2),
     μ_natural' := by

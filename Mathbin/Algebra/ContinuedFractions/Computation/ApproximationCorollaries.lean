@@ -43,14 +43,14 @@ open GeneralizedContinuedFraction
 theorem GeneralizedContinuedFraction.of_is_simple_continued_fraction : (of v).IsSimpleContinuedFraction :=
   fun _ _ nth_part_num_eq => of_part_num_eq_one nth_part_num_eq
 
-/--  Creates the simple continued fraction of a value. -/
+/-- Creates the simple continued fraction of a value. -/
 def SimpleContinuedFraction.of : SimpleContinuedFraction K :=
   ⟨of v, GeneralizedContinuedFraction.of_is_simple_continued_fraction v⟩
 
 theorem SimpleContinuedFraction.of_is_continued_fraction : (SimpleContinuedFraction.of v).IsContinuedFraction :=
   fun _ denom nth_part_denom_eq => lt_of_lt_of_leₓ zero_lt_one (of_one_le_nth_part_denom nth_part_denom_eq)
 
-/--  Creates the continued fraction of a value. -/
+/-- Creates the continued fraction of a value. -/
 def ContinuedFraction.of : ContinuedFraction K :=
   ⟨SimpleContinuedFraction.of v, SimpleContinuedFraction.of_is_continued_fraction v⟩
 
@@ -80,76 +80,63 @@ theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, �
   intro n n_ge_N
   let g := of v
   cases' Decidable.em (g.terminated_at n) with terminated_at_n not_terminated_at_n
-  ·
-    have : v = g.convergents n
-    exact of_correctness_of_terminated_at terminated_at_n
-    have : v - g.convergents n = 0
-    exact sub_eq_zero.elim_right this
+  · have : v = g.convergents n := of_correctness_of_terminated_at terminated_at_n
+    have : v - g.convergents n = 0 := sub_eq_zero.elim_right this
     rw [this]
     exact_mod_cast ε_pos
-  ·
-    let B := g.denominators n
-    let nB := g.denominators (n+1)
-    have abs_v_sub_conv_le : |v - g.convergents n| ≤ 1 / B*nB
-    exact abs_sub_convergents_le not_terminated_at_n
-    suffices : (1 / B*nB) < ε
+    
+  · let B := g.denominators n
+    let nB := g.denominators (n + 1)
+    have abs_v_sub_conv_le : |v - g.convergents n| ≤ 1 / (B * nB) := abs_sub_convergents_le not_terminated_at_n
+    suffices : 1 / (B * nB) < ε
     exact lt_of_le_of_ltₓ abs_v_sub_conv_le this
-    have nB_ineq : (fib (n+2) : K) ≤ nB := by
-      ·
-        have : ¬g.terminated_at ((n+1) - 1)
-        exact not_terminated_at_n
-        exact succ_nth_fib_le_of_nth_denom (Or.inr this)
-    have B_ineq : (fib (n+1) : K) ≤ B := by
-      ·
-        have : ¬g.terminated_at (n - 1)
-        exact mt (terminated_stable n.pred_le) not_terminated_at_n
-        exact succ_nth_fib_le_of_nth_denom (Or.inr this)
-    have zero_lt_B : 0 < B := by
-      ·
-        have : (0 : K) < fib (n+1) := by
-          exact_mod_cast fib_pos n.zero_lt_succ
-        exact lt_of_lt_of_leₓ this B_ineq
-    have zero_lt_mul_conts : 0 < B*nB := by
-      ·
-        have : 0 < nB := by
-          ·
-            have : (0 : K) < fib (n+2) := by
-              exact_mod_cast fib_pos (n+1).zero_lt_succ
-            exact lt_of_lt_of_leₓ this nB_ineq
-        solve_by_elim [mul_pos]
-    suffices : 1 < ε*B*nB
+    have nB_ineq : (fib (n + 2) : K) ≤ nB :=
+      have : ¬g.terminated_at (n + 1 - 1) := not_terminated_at_n
+      succ_nth_fib_le_of_nth_denom (Or.inr this)
+    have B_ineq : (fib (n + 1) : K) ≤ B :=
+      have : ¬g.terminated_at (n - 1) := mt (terminated_stable n.pred_le) not_terminated_at_n
+      succ_nth_fib_le_of_nth_denom (Or.inr this)
+    have zero_lt_B : 0 < B :=
+      have : (0 : K) < fib (n + 1) := by
+        exact_mod_cast fib_pos n.zero_lt_succ
+      lt_of_lt_of_leₓ this B_ineq
+    have zero_lt_mul_conts : 0 < B * nB := by
+      have : 0 < nB :=
+        have : (0 : K) < fib (n + 2) := by
+          exact_mod_cast fib_pos (n + 1).zero_lt_succ
+        lt_of_lt_of_leₓ this nB_ineq
+      solve_by_elim [mul_pos]
+    suffices : 1 < ε * (B * nB)
     exact (div_lt_iff zero_lt_mul_conts).elim_right this
-    have one_lt_ε_mul_N : 1 < ε*n := by
-      ·
-        have one_lt_ε_mul_N' : 1 < ε*(N' : K)
-        exact (div_lt_iff' ε_pos).elim_left one_div_ε_lt_N'
-        have : (N' : K) ≤ N := by
-          exact_mod_cast le_max_leftₓ _ _
-        have : (ε*N') ≤ ε*n
-        exact
-          (mul_le_mul_left ε_pos).elim_right
-            (le_transₓ this
-              (by
-                exact_mod_cast n_ge_N))
-        exact lt_of_lt_of_leₓ one_lt_ε_mul_N' this
-    suffices : (ε*n) ≤ ε*B*nB
+    have one_lt_ε_mul_N : 1 < ε * n := by
+      have one_lt_ε_mul_N' : 1 < ε * (N' : K) := (div_lt_iff' ε_pos).elim_left one_div_ε_lt_N'
+      have : (N' : K) ≤ N := by
+        exact_mod_cast le_max_leftₓ _ _
+      have : ε * N' ≤ ε * n :=
+        (mul_le_mul_left ε_pos).elim_right
+          (le_transₓ this
+            (by
+              exact_mod_cast n_ge_N))
+      exact lt_of_lt_of_leₓ one_lt_ε_mul_N' this
+    suffices : ε * n ≤ ε * (B * nB)
     exact lt_of_lt_of_leₓ one_lt_ε_mul_N this
-    suffices : (n : K) ≤ B*nB
+    suffices : (n : K) ≤ B * nB
     exact (mul_le_mul_left ε_pos).elim_right this
-    show (n : K) ≤ B*nB
+    show (n : K) ≤ B * nB
     calc (n : K) ≤ fib n := by
-      exact_mod_cast le_fib_self $ le_transₓ (le_max_rightₓ N' 5) n_ge_N _ ≤ fib (n+1) := by
-      exact_mod_cast fib_le_fib_succ _ ≤ fib (n+1)*fib (n+1) := by
-      exact_mod_cast (fib (n+1)).le_mul_self _ ≤ fib (n+1)*fib (n+2) :=
-      mul_le_mul_of_nonneg_left
-        (by
-          exact_mod_cast fib_le_fib_succ)
-        (by
-          exact_mod_cast (fib (n+1)).zero_le)_ ≤ B*nB :=
-      mul_le_mul B_ineq nB_ineq
-        (by
-          exact_mod_cast (fib (n+2)).zero_le)
-        (le_of_ltₓ zero_lt_B)
+        exact_mod_cast le_fib_self $ le_transₓ (le_max_rightₓ N' 5) n_ge_N _ ≤ fib (n + 1) := by
+        exact_mod_cast fib_le_fib_succ _ ≤ fib (n + 1) * fib (n + 1) := by
+        exact_mod_cast (fib (n + 1)).le_mul_self _ ≤ fib (n + 1) * fib (n + 2) :=
+        mul_le_mul_of_nonneg_left
+          (by
+            exact_mod_cast fib_le_fib_succ)
+          (by
+            exact_mod_cast (fib (n + 1)).zero_le)_ ≤ B * nB :=
+        mul_le_mul B_ineq nB_ineq
+          (by
+            exact_mod_cast (fib (n + 2)).zero_le)
+          (le_of_ltₓ zero_lt_B)
+    
 
 attribute [local instance] Preorderₓ.topology
 

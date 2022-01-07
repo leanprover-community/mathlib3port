@@ -14,6 +14,13 @@ trivial `simp` lemmas, and define the following operations on `monoid_hom`s:
 * `f.coprod g : M × N →* P`: sends `(x, y)` to `f x * g y`;
 * `f.prod_map g : M × N → M' × N'`: `prod.map f g` as a `monoid_hom`,
   sends `(x, y)` to `(f x, g y)`.
+
+## Main declarations
+
+* `mul_mul_hom`/`mul_monoid_hom`/`mul_monoid_with_zero_hom`: Multiplication bundled as a
+  multiplicative/monoid/monoid with zero homomorphism.
+* `div_monoid_hom`/`div_monoid_with_zero_hom`: Division bundled as a monoid/monoid with zero
+  homomorphism.
 -/
 
 
@@ -23,22 +30,22 @@ namespace Prod
 
 @[to_additive]
 instance [Mul M] [Mul N] : Mul (M × N) :=
-  ⟨fun p q => ⟨p.1*q.1, p.2*q.2⟩⟩
+  ⟨fun p q => ⟨p.1 * q.1, p.2 * q.2⟩⟩
 
 @[simp, to_additive]
-theorem fst_mul [Mul M] [Mul N] (p q : M × N) : (p*q).1 = p.1*q.1 :=
+theorem fst_mul [Mul M] [Mul N] (p q : M × N) : (p * q).1 = p.1 * q.1 :=
   rfl
 
 @[simp, to_additive]
-theorem snd_mul [Mul M] [Mul N] (p q : M × N) : (p*q).2 = p.2*q.2 :=
+theorem snd_mul [Mul M] [Mul N] (p q : M × N) : (p * q).2 = p.2 * q.2 :=
   rfl
 
 @[simp, to_additive]
-theorem mk_mul_mk [Mul M] [Mul N] (a₁ a₂ : M) (b₁ b₂ : N) : ((a₁, b₁)*(a₂, b₂)) = (a₁*a₂, b₁*b₂) :=
+theorem mk_mul_mk [Mul M] [Mul N] (a₁ a₂ : M) (b₁ b₂ : N) : (a₁, b₁) * (a₂, b₂) = (a₁ * a₂, b₁ * b₂) :=
   rfl
 
 @[to_additive]
-theorem mul_def [Mul M] [Mul N] (p q : M × N) : (p*q) = (p.1*q.1, p.2*q.2) :=
+theorem mul_def [Mul M] [Mul N] (p q : M × N) : p * q = (p.1 * q.1, p.2 * q.2) :=
   rfl
 
 @[to_additive]
@@ -62,7 +69,7 @@ theorem mk_eq_one [HasOne M] [HasOne N] {x : M} {y : N} : (x, y) = 1 ↔ x = 1 �
   mk.inj_iff
 
 @[to_additive]
-theorem fst_mul_snd [MulOneClass M] [MulOneClass N] (p : M × N) : ((p.fst, 1)*(1, p.snd)) = p :=
+theorem fst_mul_snd [MulOneClass M] [MulOneClass N] (p : M × N) : (p.fst, 1) * (1, p.snd) = p :=
   ext (mul_oneₓ p.1) (one_mulₓ p.2)
 
 @[to_additive]
@@ -188,22 +195,22 @@ namespace MonoidHom
 
 variable (M N) [MulOneClass M] [MulOneClass N]
 
-/--  Given monoids `M`, `N`, the natural projection homomorphism from `M × N` to `M`.-/
+/-- Given monoids `M`, `N`, the natural projection homomorphism from `M × N` to `M`.-/
 @[to_additive "Given additive monoids `A`, `B`, the natural projection homomorphism\nfrom `A × B` to `A`"]
 def fst : M × N →* M :=
   ⟨Prod.fst, rfl, fun _ _ => rfl⟩
 
-/--  Given monoids `M`, `N`, the natural projection homomorphism from `M × N` to `N`.-/
+/-- Given monoids `M`, `N`, the natural projection homomorphism from `M × N` to `N`.-/
 @[to_additive "Given additive monoids `A`, `B`, the natural projection homomorphism\nfrom `A × B` to `B`"]
 def snd : M × N →* N :=
   ⟨Prod.snd, rfl, fun _ _ => rfl⟩
 
-/--  Given monoids `M`, `N`, the natural inclusion homomorphism from `M` to `M × N`. -/
+/-- Given monoids `M`, `N`, the natural inclusion homomorphism from `M` to `M × N`. -/
 @[to_additive "Given additive monoids `A`, `B`, the natural inclusion homomorphism\nfrom `A` to `A × B`."]
 def inl : M →* M × N :=
   ⟨fun x => (x, 1), rfl, fun _ _ => Prod.extₓ rfl (one_mulₓ 1).symm⟩
 
-/--  Given monoids `M`, `N`, the natural inclusion homomorphism from `N` to `M × N`. -/
+/-- Given monoids `M`, `N`, the natural inclusion homomorphism from `N` to `M × N`. -/
 @[to_additive "Given additive monoids `A`, `B`, the natural inclusion homomorphism\nfrom `B` to `A × B`."]
 def inr : N →* M × N :=
   ⟨fun y => (1, y), rfl, fun _ _ => Prod.extₓ (one_mulₓ 1).symm rfl⟩
@@ -246,13 +253,14 @@ section Prod
 
 variable [MulOneClass P]
 
-/--  Combine two `monoid_hom`s `f : M →* N`, `g : M →* P` into `f.prod g : M →* N × P`
+/-- Combine two `monoid_hom`s `f : M →* N`, `g : M →* P` into `f.prod g : M →* N × P`
 given by `(f.prod g) x = (f x, g x)` -/
 @[to_additive Prod
       "Combine two `add_monoid_hom`s `f : M →+ N`, `g : M →+ P` into\n`f.prod g : M →+ N × P` given by `(f.prod g) x = (f x, g x)`"]
-protected def Prod (f : M →* N) (g : M →* P) : M →* N × P :=
-  { toFun := fun x => (f x, g x), map_one' := Prod.extₓ f.map_one g.map_one,
-    map_mul' := fun x y => Prod.extₓ (f.map_mul x y) (g.map_mul x y) }
+protected def Prod (f : M →* N) (g : M →* P) : M →* N × P where
+  toFun := fun x => (f x, g x)
+  map_one' := Prod.extₓ f.map_one g.map_one
+  map_mul' := fun x y => Prod.extₓ (f.map_mul x y) (g.map_mul x y)
 
 @[simp, to_additive prod_apply]
 theorem prod_apply (f : M →* N) (g : M →* P) x : f.prod g x = (f x, g x) :=
@@ -277,7 +285,7 @@ section prod_mapₓ
 
 variable {M' : Type _} {N' : Type _} [MulOneClass M'] [MulOneClass N'] [MulOneClass P] (f : M →* M') (g : N →* N')
 
-/--  `prod.map` as a `monoid_hom`. -/
+/-- `prod.map` as a `monoid_hom`. -/
 @[to_additive prod_mapₓ "`prod.map` as an `add_monoid_hom`"]
 def prod_mapₓ : M × N →* M' × N' :=
   (f.comp (fst M N)).Prod (g.comp (snd M N))
@@ -301,14 +309,14 @@ section Coprod
 
 variable [CommMonoidₓ P] (f : M →* P) (g : N →* P)
 
-/--  Coproduct of two `monoid_hom`s with the same codomain:
+/-- Coproduct of two `monoid_hom`s with the same codomain:
 `f.coprod g (p : M × N) = f p.1 * g p.2`. -/
 @[to_additive "Coproduct of two `add_monoid_hom`s with the same codomain:\n`f.coprod g (p : M × N) = f p.1 + g p.2`."]
 def coprod : M × N →* P :=
-  f.comp (fst M N)*g.comp (snd M N)
+  f.comp (fst M N) * g.comp (snd M N)
 
 @[simp, to_additive]
-theorem coprod_apply (p : M × N) : f.coprod g p = f p.1*g p.2 :=
+theorem coprod_apply (p : M × N) : f.coprod g p = f p.1 * g p.2 :=
   rfl
 
 @[simp, to_additive]
@@ -345,7 +353,7 @@ section
 
 variable {M N} [MulOneClass M] [MulOneClass N]
 
-/--  The equivalence between `M × N` and `N × M` given by swapping the components
+/-- The equivalence between `M × N` and `N × M` given by swapping the components
 is multiplicative. -/
 @[to_additive prod_comm "The equivalence between `M × N` and `N × M` given by swapping the\ncomponents is additive."]
 def prod_comm : M × N ≃* N × M :=
@@ -365,21 +373,21 @@ section
 
 variable {M N} [Monoidₓ M] [Monoidₓ N]
 
-/--  The monoid equivalence between units of a product of two monoids, and the product of the
+/-- The monoid equivalence between units of a product of two monoids, and the product of the
     units of each monoid. -/
 @[to_additive prod_add_units
       "The additive monoid equivalence between additive units of a product\nof two additive monoids, and the product of the additive units of each additive monoid."]
-def prod_units : Units (M × N) ≃* Units M × Units N :=
-  { toFun := (Units.map (MonoidHom.fst M N)).Prod (Units.map (MonoidHom.snd M N)),
-    invFun := fun u =>
-      ⟨(u.1, u.2), (↑u.1⁻¹, ↑u.2⁻¹), by
-        simp , by
-        simp ⟩,
-    left_inv := fun u => by
-      simp ,
-    right_inv := fun ⟨u₁, u₂⟩ => by
-      simp [Units.map],
-    map_mul' := MonoidHom.map_mul _ }
+def prod_units : (M × N)ˣ ≃* (M)ˣ × (N)ˣ where
+  toFun := (Units.map (MonoidHom.fst M N)).Prod (Units.map (MonoidHom.snd M N))
+  invFun := fun u =>
+    ⟨(u.1, u.2), (↑u.1⁻¹, ↑u.2⁻¹), by
+      simp , by
+      simp ⟩
+  left_inv := fun u => by
+    simp
+  right_inv := fun ⟨u₁, u₂⟩ => by
+    simp [Units.map]
+  map_mul' := MonoidHom.map_mul _
 
 end
 
@@ -389,14 +397,54 @@ section Units
 
 open MulOpposite
 
-/--  Canonical homomorphism of monoids from `units α` into `α × αᵐᵒᵖ`.
-Used mainly to define the natural topology of `units α`. -/
-def embedProduct (α : Type _) [Monoidₓ α] : Units α →* α × αᵐᵒᵖ :=
-  { toFun := fun x => ⟨x, op (↑x⁻¹)⟩,
-    map_one' := by
-      simp only [one_inv, eq_self_iff_true, Units.coe_one, op_one, Prod.mk_eq_one, and_selfₓ],
-    map_mul' := fun x y => by
-      simp only [mul_inv_rev, op_mul, Units.coe_mul, Prod.mk_mul_mk] }
+/-- Canonical homomorphism of monoids from `αˣ` into `α × αᵐᵒᵖ`.
+Used mainly to define the natural topology of `αˣ`. -/
+def embedProduct (α : Type _) [Monoidₓ α] : (α)ˣ →* α × αᵐᵒᵖ where
+  toFun := fun x => ⟨x, op (↑x⁻¹)⟩
+  map_one' := by
+    simp only [one_inv, eq_self_iff_true, Units.coe_one, op_one, Prod.mk_eq_one, and_selfₓ]
+  map_mul' := fun x y => by
+    simp only [mul_inv_rev, op_mul, Units.coe_mul, Prod.mk_mul_mk]
 
 end Units
+
+/-! ### Multiplication and division as homomorphisms -/
+
+
+section BundledMulDiv
+
+variable {α : Type _}
+
+/-- Multiplication as a multiplicative homomorphism. -/
+@[to_additive "Addition as an additive homomorphism.", simps]
+def mulMulHom [CommSemigroupₓ α] : MulHom (α × α) α where
+  toFun := fun a => a.1 * a.2
+  map_mul' := fun a b => mul_mul_mul_commₓ _ _ _ _
+
+/-- Multiplication as a monoid homomorphism. -/
+@[to_additive "Addition as an additive monoid homomorphism.", simps]
+def mulMonoidHom [CommMonoidₓ α] : α × α →* α :=
+  { mulMulHom with map_one' := mul_oneₓ _ }
+
+/-- Multiplication as a multiplicative homomorphism with zero. -/
+@[simps]
+def mulMonoidWithZeroHom [CommMonoidWithZero α] : MonoidWithZeroHom (α × α) α :=
+  { mulMonoidHom with map_zero' := mul_zero _ }
+
+/-- Division as a monoid homomorphism. -/
+@[to_additive "Subtraction as an additive monoid homomorphism.", simps]
+def divMonoidHom [CommGroupₓ α] : α × α →* α where
+  toFun := fun a => a.1 / a.2
+  map_one' := div_one' _
+  map_mul' := fun a b => mul_div_comm' _ _ _ _
+
+/-- Division as a multiplicative homomorphism with zero. -/
+@[simps]
+def divMonoidWithZeroHom [CommGroupWithZero α] : MonoidWithZeroHom (α × α) α where
+  toFun := fun a => a.1 / a.2
+  map_zero' := zero_div _
+  map_one' := div_one _
+  map_mul' := fun a b => (div_mul_div _ _ _ _).symm
+
+end BundledMulDiv
 

@@ -28,7 +28,7 @@ from the natural numbers into it is injective.
 -/
 
 
-/--  Typeclass for monoids with characteristic zero.
+/-- Typeclass for monoids with characteristic zero.
   (This is usually stated on fields but it makes sense for any additive monoid with 1.) -/
 class CharZero (R : Type _) [AddMonoidₓ R] [HasOne R] : Prop where
   cast_injective : Function.Injective (coeₓ : ℕ → R)
@@ -42,7 +42,7 @@ theorem char_zero_of_inj_zero {R : Type _} [AddLeftCancelMonoid R] [HasOne R] (H
     rw [Nat.cast_add, eq_comm, add_right_eq_selfₓ] at h
     rw [H k h, add_zeroₓ]⟩
 
-/--  Note this is not an instance as `char_zero` implies `nontrivial`,
+/-- Note this is not an instance as `char_zero` implies `nontrivial`,
 and this would risk forming a loop. -/
 theorem OrderedSemiring.to_char_zero {R : Type _} [OrderedSemiring R] [Nontrivial R] : CharZero R :=
   ⟨Nat.strict_mono_cast.Injective⟩
@@ -57,7 +57,7 @@ variable {R : Type _} [AddMonoidₓ R] [HasOne R] [CharZero R]
 theorem cast_injective : Function.Injective (coeₓ : ℕ → R) :=
   CharZero.cast_injective
 
-/--  `nat.cast` as an embedding into monoids of characteristic `0`. -/
+/-- `nat.cast` as an embedding into monoids of characteristic `0`. -/
 @[simps]
 def cast_embedding : ℕ ↪ R :=
   ⟨coeₓ, cast_injective⟩
@@ -74,18 +74,18 @@ theorem cast_eq_zero {n : ℕ} : (n : R) = 0 ↔ n = 0 := by
 theorem cast_ne_zero {n : ℕ} : (n : R) ≠ 0 ↔ n ≠ 0 :=
   not_congr cast_eq_zero
 
-theorem cast_add_one_ne_zero (n : ℕ) : (n+1 : R) ≠ 0 := by
+theorem cast_add_one_ne_zero (n : ℕ) : (n + 1 : R) ≠ 0 := by
   exact_mod_cast n.succ_ne_zero
 
 @[simp, norm_cast]
 theorem cast_dvd_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℕ} (n_dvd : n ∣ m) : ((m / n : ℕ) : k) = m / n :=
   by
   by_cases' hn : n = 0
-  ·
-    subst hn
+  · subst hn
     simp
-  ·
-    exact cast_dvd n_dvd (cast_ne_zero.mpr hn)
+    
+  · exact cast_dvd n_dvd (cast_ne_zero.mpr hn)
+    
 
 end Nat
 
@@ -99,12 +99,11 @@ instance (priority := 100) CharZero.infinite : Infinite M :=
 variable {M}
 
 @[field_simps]
-theorem two_ne_zero' : (2 : M) ≠ 0 :=
+theorem two_ne_zero' : (2 : M) ≠ 0 := by
   have : ((2 : ℕ) : M) ≠ 0 :=
     Nat.cast_ne_zero.2
       (by
         decide)
-  by
   rwa [Nat.cast_two] at this
 
 end
@@ -114,7 +113,7 @@ section
 variable {R : Type _} [Semiringₓ R] [NoZeroDivisors R] [CharZero R]
 
 @[simp]
-theorem add_self_eq_zero {a : R} : (a+a) = 0 ↔ a = 0 := by
+theorem add_self_eq_zero {a : R} : a + a = 0 ↔ a = 0 := by
   simp only [(two_mul a).symm, mul_eq_zero, two_ne_zero', false_orₓ]
 
 @[simp]
@@ -138,11 +137,11 @@ theorem neg_eq_self_iff {a : R} : -a = a ↔ a = 0 :=
 theorem eq_neg_self_iff {a : R} : a = -a ↔ a = 0 :=
   eq_neg_iff_add_eq_zero.trans add_self_eq_zero
 
-theorem nat_mul_inj {n : ℕ} {a b : R} (h : ((n : R)*a) = (n : R)*b) : n = 0 ∨ a = b := by
+theorem nat_mul_inj {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) : n = 0 ∨ a = b := by
   rw [← sub_eq_zero, ← mul_sub, mul_eq_zero, sub_eq_zero] at h
   exact_mod_cast h
 
-theorem nat_mul_inj' {n : ℕ} {a b : R} (h : ((n : R)*a) = (n : R)*b) (w : n ≠ 0) : a = b := by
+theorem nat_mul_inj' {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) (w : n ≠ 0) : a = b := by
   simpa [w] using nat_mul_inj h
 
 theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h => by
@@ -182,11 +181,11 @@ section
 variable {R : Type _} [DivisionRing R] [CharZero R]
 
 @[simp]
-theorem half_add_self (a : R) : (a+a) / 2 = a := by
+theorem half_add_self (a : R) : (a + a) / 2 = a := by
   rw [← mul_two, mul_div_cancel a two_ne_zero']
 
 @[simp]
-theorem add_halves' (a : R) : ((a / 2)+a / 2) = a := by
+theorem add_halves' (a : R) : a / 2 + a / 2 = a := by
   rw [← add_div, half_add_self]
 
 theorem sub_half (a : R) : a - a / 2 = a / 2 := by
@@ -199,10 +198,9 @@ end
 
 namespace WithTop
 
--- failed to format: format: uncaught backtrack exception
-instance
-  { R : Type _ } [ AddMonoidₓ R ] [ HasOne R ] [ CharZero R ] : CharZero ( WithTop R )
-  where cast_injective m n h := by rwa [ ← coe_nat , ← coe_nat n , coe_eq_coe , Nat.cast_inj ] at h
+instance {R : Type _} [AddMonoidₓ R] [HasOne R] [CharZero R] : CharZero (WithTop R) where
+  cast_injective := fun m n h => by
+    rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h
 
 end WithTop
 
@@ -220,8 +218,7 @@ theorem RingHom.char_zero_iff {ϕ : R →+* S} (hϕ : Function.Injective ϕ) : C
   ⟨fun hR =>
     ⟨fun a b h => by
       rwa [← @Nat.cast_inj R _ _ hR, ← hϕ.eq_iff, ϕ.map_nat_cast, ϕ.map_nat_cast]⟩,
-    fun hS => by
-    exact ϕ.char_zero⟩
+    fun hS => ϕ.char_zero⟩
 
 end RingHom
 

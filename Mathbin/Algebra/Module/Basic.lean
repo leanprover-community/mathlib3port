@@ -39,48 +39,44 @@ universe u u' v w x y z
 
 variable {R : Type u} {k : Type u'} {S : Type v} {M : Type w} {M₂ : Type x} {M₃ : Type y} {ι : Type z}
 
-/--  A module is a generalization of vector spaces to a scalar semiring.
+/-- A module is a generalization of vector spaces to a scalar semiring.
   It consists of a scalar semiring `R` and an additive monoid of "vectors" `M`,
   connected by a "scalar multiplication" operation `r • x : M`
   (where `r : R` and `x : M`) with some natural associativity and
   distributivity axioms similar to those on a ring. -/
 @[protect_proj]
 class Module (R : Type u) (M : Type v) [Semiringₓ R] [AddCommMonoidₓ M] extends DistribMulAction R M where
-  add_smul : ∀ r s : R x : M, (r+s) • x = (r • x)+s • x
+  add_smul : ∀ r s : R x : M, (r + s) • x = r • x + s • x
   zero_smul : ∀ x : M, (0 : R) • x = 0
 
 section AddCommMonoidₓ
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (r s : R) (x y : M)
 
-/--  A module over a semiring automatically inherits a `mul_action_with_zero` structure. -/
+/-- A module over a semiring automatically inherits a `mul_action_with_zero` structure. -/
 instance (priority := 100) Module.toMulActionWithZero : MulActionWithZero R M :=
   { (inferInstance : MulAction R M) with smul_zero := smul_zero, zero_smul := Module.zero_smul }
 
--- failed to format: format: uncaught backtrack exception
-instance
-  AddCommMonoidₓ.natModule
-  : Module ℕ M
-  where
-    one_smul := one_nsmul
-      mul_smul m n a := mul_nsmul a m n
-      smul_add n a b := nsmul_add a b n
-      smul_zero := nsmul_zero
-      zero_smul := zero_nsmul
-      add_smul r s x := add_nsmul x r s
+instance AddCommMonoidₓ.natModule : Module ℕ M where
+  one_smul := one_nsmul
+  mul_smul := fun m n a => mul_nsmul a m n
+  smul_add := fun n a b => nsmul_add a b n
+  smul_zero := nsmul_zero
+  zero_smul := zero_nsmul
+  add_smul := fun r s x => add_nsmul x r s
 
-theorem add_smul : (r+s) • x = (r • x)+s • x :=
+theorem add_smul : (r + s) • x = r • x + s • x :=
   Module.add_smul r s x
 
 variable (R)
 
-theorem two_smul : (2 : R) • x = x+x := by
+theorem two_smul : (2 : R) • x = x + x := by
   rw [bit0, add_smul, one_smul]
 
 theorem two_smul' : (2 : R) • x = bit0 x :=
   two_smul R x
 
-/--  Pullback a `module` structure along an injective additive monoid homomorphism.
+/-- Pullback a `module` structure along an injective additive monoid homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.module [AddCommMonoidₓ M₂] [HasScalar R M₂] (f : M₂ →+ M) (hf : injective f)
@@ -93,7 +89,7 @@ protected def Function.Injective.module [AddCommMonoidₓ M₂] [HasScalar R M�
       hf $ by
         simp only [smul, zero_smul, f.map_zero] }
 
-/--  Pushforward a `module` structure along a surjective additive monoid homomorphism. -/
+/-- Pushforward a `module` structure along a surjective additive monoid homomorphism. -/
 protected def Function.Surjective.module [AddCommMonoidₓ M₂] [HasScalar R M₂] (f : M →+ M₂) (hf : surjective f)
     (smul : ∀ c : R x, f (c • x) = c • f x) : Module R M₂ :=
   { hf.distrib_mul_action f smul with smul := · • ·,
@@ -104,7 +100,7 @@ protected def Function.Surjective.module [AddCommMonoidₓ M₂] [HasScalar R M�
       rcases hf x with ⟨x, rfl⟩
       simp only [← f.map_zero, ← smul, zero_smul] }
 
-/--  Push forward the action of `R` on `M` along a compatible surjective map `f : R →+* S`.
+/-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →+* S`.
 
 See also `function.surjective.mul_action_left` and `function.surjective.distrib_mul_action_left`.
 -/
@@ -120,7 +116,7 @@ def Function.Surjective.moduleLeft {R S M : Type _} [Semiringₓ R] [AddCommMono
 
 variable {R} (M)
 
-/--  Compose a `module` with a `ring_hom`, with action `f s • m`.
+/-- Compose a `module` with a `ring_hom`, with action `f s • m`.
 
 See note [reducible non-instances]. -/
 @[reducible]
@@ -132,7 +128,7 @@ def Module.compHom [Semiringₓ S] (f : S →+* R) : Module S M :=
 
 variable (R) (M)
 
-/--  `(•)` as an `add_monoid_hom`.
+/-- `(•)` as an `add_monoid_hom`.
 
 This is a stronger version of `distrib_mul_action.to_add_monoid_End` -/
 @[simps apply_apply]
@@ -145,7 +141,7 @@ def Module.toAddMonoidEnd : R →+* AddMonoidₓ.End M :=
       AddMonoidHom.ext $ fun r => by
         simp [add_smul] }
 
-/--  A convenience alias for `module.to_add_monoid_End` as an `add_monoid_hom`, usually to allow the
+/-- A convenience alias for `module.to_add_monoid_End` as an `add_monoid_hom`, usually to allow the
 use of `add_monoid_hom.flip`. -/
 def smulAddHom : R →+ M →+ M :=
   (Module.toAddMonoidEnd R M).toAddMonoidHom
@@ -165,228 +161,21 @@ theorem List.sum_smul {l : List R} {x : M} : l.sum • x = (l.map fun r => r •
 theorem Multiset.sum_smul {l : Multiset R} {x : M} : l.sum • x = (l.map fun r => r • x).Sum :=
   ((smulAddHom R M).flip x).map_multiset_sum l
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `Finset.sum_smul [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`f] [":" (Term.arrow `ι "→" `R)] "}")
-    (Term.implicitBinder "{" [`s] [":" (Term.app `Finset [`ι])] "}")
-    (Term.implicitBinder "{" [`x] [":" `M] "}")]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Algebra.Group.Defs.«term_•_»
-      (Algebra.BigOperators.Basic.«term∑_in_,_»
-       "∑"
-       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-       " in "
-       `s
-       ", "
-       (Term.app `f [`i]))
-      " • "
-      `x)
-     "="
-     (Algebra.BigOperators.Basic.«term∑_in_,_»
-      "∑"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      " in "
-      `s
-      ", "
-      (Algebra.Group.Defs.«term_•_» (Term.app `f [`i]) " • " `x)))))
-  (Command.declValSimple
-   ":="
-   (Term.app (Term.proj (Term.app (Term.proj (Term.app `smulAddHom [`R `M]) "." `flip) [`x]) "." `map_sum) [`f `s])
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app (Term.proj (Term.app (Term.proj (Term.app `smulAddHom [`R `M]) "." `flip) [`x]) "." `map_sum) [`f `s])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  (Term.proj (Term.app (Term.proj (Term.app `smulAddHom [`R `M]) "." `flip) [`x]) "." `map_sum)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app (Term.proj (Term.app `smulAddHom [`R `M]) "." `flip) [`x])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  (Term.proj (Term.app `smulAddHom [`R `M]) "." `flip)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `smulAddHom [`R `M])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `M
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `R
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `smulAddHom
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `smulAddHom [`R `M]) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Term.app (Term.proj (Term.paren "(" [(Term.app `smulAddHom [`R `M]) []] ")") "." `flip) [`x]) []]
- ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Algebra.Group.Defs.«term_•_»
-    (Algebra.BigOperators.Basic.«term∑_in_,_»
-     "∑"
-     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-     " in "
-     `s
-     ", "
-     (Term.app `f [`i]))
-    " • "
-    `x)
-   "="
-   (Algebra.BigOperators.Basic.«term∑_in_,_»
-    "∑"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-    " in "
-    `s
-    ", "
-    (Algebra.Group.Defs.«term_•_» (Term.app `f [`i]) " • " `x)))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∑_in_,_»
-   "∑"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-   " in "
-   `s
-   ", "
-   (Algebra.Group.Defs.«term_•_» (Term.app `f [`i]) " • " `x))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∑_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.Group.Defs.«term_•_» (Term.app `f [`i]) " • " `x)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.Group.Defs.«term_•_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 73 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 73, term))
-  (Term.app `f [`i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 74 >? 1022, (some 1023, term) <=? (some 73, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 73, (some 73, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  Finset.sum_smul
-  { f : ι → R } { s : Finset ι } { x : M } : ∑ i in s , f i • x = ∑ i in s , f i • x
-  := smulAddHom R M . flip x . map_sum f s
+theorem Finset.sum_smul {f : ι → R} {s : Finset ι} {x : M} : (∑ i in s, f i) • x = ∑ i in s, f i • x :=
+  ((smulAddHom R M).flip x).map_sum f s
 
 end AddCommMonoidₓ
 
 variable (R)
 
-/--  An `add_comm_monoid` that is a `module` over a `ring` carries a natural `add_comm_group`
+/-- An `add_comm_monoid` that is a `module` over a `ring` carries a natural `add_comm_group`
 structure.
 See note [reducible non-instances]. -/
 @[reducible]
 def Module.addCommMonoidToAddCommGroup [Ringₓ R] [AddCommMonoidₓ M] [Module R M] : AddCommGroupₓ M :=
   { (inferInstance : AddCommMonoidₓ M) with neg := fun a => (-1 : R) • a,
     add_left_neg := fun a =>
-      show (((-1 : R) • a)+a) = 0 by
+      show (-1 : R) • a + a = 0 by
         nth_rw 1[← one_smul _ a]
         rw [← add_smul, add_left_negₓ, zero_smul] }
 
@@ -396,32 +185,28 @@ section AddCommGroupₓ
 
 variable (R M) [Semiringₓ R] [AddCommGroupₓ M]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  AddCommGroupₓ.intModule
-  : Module ℤ M
-  where
-    one_smul := one_zsmul
-      mul_smul m n a := mul_zsmul a m n
-      smul_add n a b := zsmul_add a b n
-      smul_zero := zsmul_zero
-      zero_smul := zero_zsmul
-      add_smul r s x := add_zsmul x r s
+instance AddCommGroupₓ.intModule : Module ℤ M where
+  one_smul := one_zsmul
+  mul_smul := fun m n a => mul_zsmul a m n
+  smul_add := fun n a b => zsmul_add a b n
+  smul_zero := zsmul_zero
+  zero_smul := zero_zsmul
+  add_smul := fun r s x => add_zsmul x r s
 
-/--  A structure containing most informations as in a module, except the fields `zero_smul`
+/-- A structure containing most informations as in a module, except the fields `zero_smul`
 and `smul_zero`. As these fields can be deduced from the other ones when `M` is an `add_comm_group`,
 this provides a way to construct a module structure by checking less properties, in
 `module.of_core`. -/
 @[nolint has_inhabited_instance]
 structure Module.Core extends HasScalar R M where
-  smul_add : ∀ r : R x y : M, (r • x+y) = (r • x)+r • y
-  add_smul : ∀ r s : R x : M, (r+s) • x = (r • x)+s • x
-  mul_smul : ∀ r s : R x : M, (r*s) • x = r • s • x
+  smul_add : ∀ r : R x y : M, r • (x + y) = r • x + r • y
+  add_smul : ∀ r s : R x : M, (r + s) • x = r • x + s • x
+  mul_smul : ∀ r s : R x : M, (r * s) • x = r • s • x
   one_smul : ∀ x : M, (1 : R) • x = x
 
 variable {R M}
 
-/--  Define `module` without proving `zero_smul` and `smul_zero` by using an auxiliary
+/-- Define `module` without proving `zero_smul` and `smul_zero` by using an auxiliary
 structure `module.core`, when the underlying space is an `add_comm_group`. -/
 def Module.ofCore (H : Module.Core R M) : Module R M := by
   let this' := H.to_has_scalar <;>
@@ -431,28 +216,23 @@ def Module.ofCore (H : Module.Core R M) : Module R M := by
 
 end AddCommGroupₓ
 
-/-- 
-To prove two module structures on a fixed `add_comm_monoid` agree,
+/-- To prove two module structures on a fixed `add_comm_monoid` agree,
 it suffices to check the scalar multiplications agree.
 -/
 @[ext]
 theorem module_ext {R : Type _} [Semiringₓ R] {M : Type _} [AddCommMonoidₓ M] (P Q : Module R M)
     (w :
       ∀ r : R m : M,
-        by
-          have := P
-          exact r • m = by
+        (have := P
+          r • m) =
           have := Q
-          exact r • m) :
+          r • m) :
     P = Q := by
-  (
-    rcases P with ⟨⟨⟨⟨P⟩⟩⟩⟩
-    rcases Q with ⟨⟨⟨⟨Q⟩⟩⟩⟩)
-  obtain rfl : P = Q
-  ·
-    ·
-      funext r m
-      exact w r m
+  rcases P with ⟨⟨⟨⟨P⟩⟩⟩⟩
+  rcases Q with ⟨⟨⟨⟨Q⟩⟩⟩⟩
+  obtain rfl : P = Q := by
+    funext r m
+    exact w r m
   congr
 
 section Module
@@ -470,7 +250,7 @@ theorem neg_smul_neg : -r • -x = r • x := by
   rw [neg_smul, smul_neg, neg_negₓ]
 
 @[simp]
-theorem Units.neg_smul (u : Units R) (x : M) : -u • x = -(u • x) := by
+theorem Units.neg_smul (u : (R)ˣ) (x : M) : -u • x = -(u • x) := by
   rw [Units.smul_def, Units.coe_neg, neg_smul, Units.smul_def]
 
 variable (R)
@@ -485,7 +265,7 @@ theorem sub_smul (r s : R) (y : M) : (r - s) • y = r • y - s • y := by
 
 end Module
 
-/--  A module over a `subsingleton` semiring is a `subsingleton`. We cannot register this
+/-- A module over a `subsingleton` semiring is a `subsingleton`. We cannot register this
 as an instance because Lean has no way to guess `R`. -/
 protected theorem Module.subsingleton (R M : Type _) [Semiringₓ R] [Subsingleton R] [AddCommMonoidₓ M] [Module R M] :
     Subsingleton M :=
@@ -498,31 +278,30 @@ instance (priority := 910) Semiringₓ.toModule [Semiringₓ R] : Module R R whe
   zero_smul := zero_mul
   smul_zero := mul_zero
 
-/--  Like `semiring.to_module`, but multiplies on the right. -/
+/-- Like `semiring.to_module`, but multiplies on the right. -/
 instance (priority := 910) Semiringₓ.toOppositeModule [Semiringₓ R] : Module (Rᵐᵒᵖ) R :=
   { MonoidWithZeroₓ.toOppositeMulActionWithZero R with smul_add := fun r x y => add_mulₓ _ _ _,
     add_smul := fun r x y => mul_addₓ _ _ _ }
 
-/--  A ring homomorphism `f : R →+* M` defines a module structure by `r • x = f r * x`. -/
+/-- A ring homomorphism `f : R →+* M` defines a module structure by `r • x = f r * x`. -/
 def RingHom.toModule [Semiringₓ R] [Semiringₓ S] (f : R →+* S) : Module R S :=
   Module.compHom S f
 
--- failed to format: format: uncaught backtrack exception
-/--
-    The tautological action by `R →+* R` on `R`.
-    
-    This generalizes `function.End.apply_mul_action`. -/
-  instance
-    RingHom.applyDistribMulAction
-    [ Semiringₓ R ] : DistribMulAction ( R →+* R ) R
-    where
-      smul := · $ · smul_zero := RingHom.map_zero smul_add := RingHom.map_add one_smul _ := rfl mul_smul _ _ _ := rfl
+/-- The tautological action by `R →+* R` on `R`.
+
+This generalizes `function.End.apply_mul_action`. -/
+instance RingHom.applyDistribMulAction [Semiringₓ R] : DistribMulAction (R →+* R) R where
+  smul := · $ ·
+  smul_zero := RingHom.map_zero
+  smul_add := RingHom.map_add
+  one_smul := fun _ => rfl
+  mul_smul := fun _ _ _ => rfl
 
 @[simp]
 protected theorem RingHom.smul_def [Semiringₓ R] (f : R →+* R) (a : R) : f • a = f a :=
   rfl
 
-/--  `ring_hom.apply_distrib_mul_action` is faithful. -/
+/-- `ring_hom.apply_distrib_mul_action` is faithful. -/
 instance RingHom.apply_has_faithful_scalar [Semiringₓ R] : HasFaithfulScalar (R →+* R) R :=
   ⟨RingHom.ext⟩
 
@@ -534,52 +313,44 @@ section
 
 variable (R)
 
-/--  `nsmul` is equal to any other module structure via a cast. -/
+/-- `nsmul` is equal to any other module structure via a cast. -/
 theorem nsmul_eq_smul_cast (n : ℕ) (b : M) : n • b = (n : R) • b := by
   induction' n with n ih
-  ·
-    rw [Nat.cast_zero, zero_smul, zero_smul]
-  ·
-    rw [Nat.succ_eq_add_one, Nat.cast_succ, add_smul, add_smul, one_smul, ih, one_smul]
+  · rw [Nat.cast_zero, zero_smul, zero_smul]
+    
+  · rw [Nat.succ_eq_add_one, Nat.cast_succ, add_smul, add_smul, one_smul, ih, one_smul]
+    
 
 end
 
-/--  Convert back any exotic `ℕ`-smul to the canonical instance. This should not be needed since in
+/-- Convert back any exotic `ℕ`-smul to the canonical instance. This should not be needed since in
 mathlib all `add_comm_monoid`s should normally have exactly one `ℕ`-module structure by design.
 -/
 theorem nat_smul_eq_nsmul (h : Module ℕ M) (n : ℕ) (x : M) : @HasScalar.smul ℕ M h.to_has_scalar n x = n • x := by
   rw [nsmul_eq_smul_cast ℕ n x, Nat.cast_id]
 
-/--  All `ℕ`-module structures are equal. Not an instance since in mathlib all `add_comm_monoid`
+/-- All `ℕ`-module structures are equal. Not an instance since in mathlib all `add_comm_monoid`
 should normally have exactly one `ℕ`-module structure by design. -/
-def AddCommMonoidₓ.natModule.unique : Unique (Module ℕ M) :=
-  { default := by
-      infer_instance,
-    uniq := fun P => module_ext P _ $ fun n => nat_smul_eq_nsmul P n }
+def AddCommMonoidₓ.natModule.unique : Unique (Module ℕ M) where
+  default := by
+    infer_instance
+  uniq := fun P => module_ext P _ $ fun n => nat_smul_eq_nsmul P n
 
--- failed to format: format: uncaught backtrack exception
-instance
-  AddCommMonoidₓ.nat_is_scalar_tower
-  : IsScalarTower ℕ R M
-  where
-    smul_assoc
-      n x y
-      :=
-      Nat.recOn
-        n ( by simp only [ zero_smul ] ) fun n ih => by simp only [ Nat.succ_eq_add_one , add_smul , one_smul , ih ]
+instance AddCommMonoidₓ.nat_is_scalar_tower : IsScalarTower ℕ R M where
+  smul_assoc := fun n x y =>
+    Nat.recOn n
+      (by
+        simp only [zero_smul])
+      fun n ih => by
+      simp only [Nat.succ_eq_add_one, add_smul, one_smul, ih]
 
--- failed to format: format: uncaught backtrack exception
-instance
-  AddCommMonoidₓ.nat_smul_comm_class
-  : SmulCommClass ℕ R M
-  where
-    smul_comm
-      n r m
-      :=
-      Nat.recOn
-        n
-          ( by simp only [ zero_smul , smul_zero ] )
-          fun n ih => by simp only [ Nat.succ_eq_add_one , add_smul , one_smul , ← ih , smul_add ]
+instance AddCommMonoidₓ.nat_smul_comm_class : SmulCommClass ℕ R M where
+  smul_comm := fun n r m =>
+    Nat.recOn n
+      (by
+        simp only [zero_smul, smul_zero])
+      fun n ih => by
+      simp only [Nat.succ_eq_add_one, add_smul, one_smul, ← ih, smul_add]
 
 instance AddCommMonoidₓ.nat_smul_comm_class' : SmulCommClass R ℕ M :=
   SmulCommClass.symm _ _ _
@@ -594,7 +365,7 @@ section
 
 variable (R)
 
-/--  `zsmul` is equal to any other module structure via a cast. -/
+/-- `zsmul` is equal to any other module structure via a cast. -/
 theorem zsmul_eq_smul_cast (n : ℤ) (b : M) : n • b = (n : R) • b :=
   have : (smulAddHom ℤ M).flip b = ((smulAddHom R M).flip b).comp (Int.castAddHom R) := by
     ext
@@ -603,17 +374,17 @@ theorem zsmul_eq_smul_cast (n : ℤ) (b : M) : n • b = (n : R) • b :=
 
 end
 
-/--  Convert back any exotic `ℤ`-smul to the canonical instance. This should not be needed since in
+/-- Convert back any exotic `ℤ`-smul to the canonical instance. This should not be needed since in
 mathlib all `add_comm_group`s should normally have exactly one `ℤ`-module structure by design. -/
 theorem int_smul_eq_zsmul (h : Module ℤ M) (n : ℤ) (x : M) : @HasScalar.smul ℤ M h.to_has_scalar n x = n • x := by
   rw [zsmul_eq_smul_cast ℤ n x, Int.cast_id]
 
-/--  All `ℤ`-module structures are equal. Not an instance since in mathlib all `add_comm_group`
+/-- All `ℤ`-module structures are equal. Not an instance since in mathlib all `add_comm_group`
 should normally have exactly one `ℤ`-module structure by design. -/
-def AddCommGroupₓ.intModule.unique : Unique (Module ℤ M) :=
-  { default := by
-      infer_instance,
-    uniq := fun P => module_ext P _ $ fun n => int_smul_eq_zsmul P n }
+def AddCommGroupₓ.intModule.unique : Unique (Module ℤ M) where
+  default := by
+    infer_instance
+  uniq := fun P => module_ext P _ $ fun n => int_smul_eq_zsmul P n
 
 end AddCommGroupₓ
 
@@ -638,23 +409,23 @@ theorem map_inv_int_cast_smul {E F : Type _} [AddCommGroupₓ E] [AddCommGroup�
     [DivisionRing R] [DivisionRing S] [Module R E] [Module S F] (n : ℤ) (x : E) : f ((n⁻¹ : R) • x) = (n⁻¹ : S) • f x :=
   by
   by_cases' hR : (n : R) = 0 <;> by_cases' hS : (n : S) = 0
-  ·
-    simp [hR, hS]
-  ·
-    suffices ∀ y, f y = 0 by
+  · simp [hR, hS]
+    
+  · suffices ∀ y, f y = 0 by
       simp [this]
     clear x
     intro x
     rw [← inv_smul_smul₀ hS (f x), ← map_int_cast_smul f R S]
     simp [hR]
-  ·
-    suffices ∀ y, f y = 0 by
+    
+  · suffices ∀ y, f y = 0 by
       simp [this]
     clear x
     intro x
     rw [← smul_inv_smul₀ hR x, map_int_cast_smul f R S, hS, zero_smul]
-  ·
-    rw [← inv_smul_smul₀ hS (f _), ← map_int_cast_smul f R S, smul_inv_smul₀ hR]
+    
+  · rw [← inv_smul_smul₀ hS (f _), ← map_int_cast_smul f R S, smul_inv_smul₀ hR]
+    
 
 theorem map_inv_nat_cast_smul {E F : Type _} [AddCommGroupₓ E] [AddCommGroupₓ F] (f : E →+ F) (R S : Type _)
     [DivisionRing R] [DivisionRing S] [Module R E] [Module S F] (n : ℕ) (x : E) : f ((n⁻¹ : R) • x) = (n⁻¹ : S) • f x :=
@@ -671,58 +442,49 @@ theorem map_rat_module_smul {E : Type _} [AddCommGroupₓ E] [Module ℚ E] {F :
 
 end AddMonoidHom
 
-/--  There can be at most one `module ℚ E` structure on an additive commutative group. This is not
+/-- There can be at most one `module ℚ E` structure on an additive commutative group. This is not
 an instance because `simp` becomes very slow if we have many `subsingleton` instances,
 see [gh-6025]. -/
 theorem subsingleton_rat_module (E : Type _) [AddCommGroupₓ E] : Subsingleton (Module ℚ E) :=
   ⟨fun P Q => module_ext P Q $ fun r x => @AddMonoidHom.map_rat_module_smul E ‹_› P E ‹_› Q (AddMonoidHom.id _) r x⟩
 
-/--  If `E` is a vector space over two division rings `R` and `S`, then scalar multiplications
+/-- If `E` is a vector space over two division rings `R` and `S`, then scalar multiplications
 agree on inverses of integer numbers in `R` and `S`. -/
 theorem inv_int_cast_smul_eq {E : Type _} (R S : Type _) [AddCommGroupₓ E] [DivisionRing R] [DivisionRing S]
     [Module R E] [Module S E] (n : ℤ) (x : E) : (n⁻¹ : R) • x = (n⁻¹ : S) • x :=
   (AddMonoidHom.id E).map_inv_int_cast_smul R S n x
 
-/--  If `E` is a vector space over two division rings `R` and `S`, then scalar multiplications
+/-- If `E` is a vector space over two division rings `R` and `S`, then scalar multiplications
 agree on inverses of natural numbers in `R` and `S`. -/
 theorem inv_nat_cast_smul_eq {E : Type _} (R S : Type _) [AddCommGroupₓ E] [DivisionRing R] [DivisionRing S]
     [Module R E] [Module S E] (n : ℕ) (x : E) : (n⁻¹ : R) • x = (n⁻¹ : S) • x :=
   (AddMonoidHom.id E).map_inv_nat_cast_smul R S n x
 
-/--  If `E` is a vector space over two division rings `R` and `S`, then scalar multiplications
+/-- If `E` is a vector space over two division rings `R` and `S`, then scalar multiplications
 agree on rational numbers in `R` and `S`. -/
 theorem rat_cast_smul_eq {E : Type _} (R S : Type _) [AddCommGroupₓ E] [DivisionRing R] [DivisionRing S] [Module R E]
     [Module S E] (r : ℚ) (x : E) : (r : R) • x = (r : S) • x :=
   (AddMonoidHom.id E).map_rat_cast_smul R S r x
 
--- failed to format: format: uncaught backtrack exception
-instance
-  AddCommGroupₓ.int_is_scalar_tower
-  { R : Type u } { M : Type v } [ Ringₓ R ] [ AddCommGroupₓ M ] [ Module R M ] : IsScalarTower ℤ R M
-  where smul_assoc n x y := ( ( smulAddHom R M ) . flip y ) . map_int_module_smul n x
+instance AddCommGroupₓ.int_is_scalar_tower {R : Type u} {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M] :
+    IsScalarTower ℤ R M where
+  smul_assoc := fun n x y => ((smulAddHom R M).flip y).map_int_module_smul n x
 
--- failed to format: format: uncaught backtrack exception
-instance
-  AddCommGroupₓ.int_smul_comm_class
-  { S : Type u } { M : Type v } [ Semiringₓ S ] [ AddCommGroupₓ M ] [ Module S M ] : SmulCommClass ℤ S M
-  where smul_comm n x y := ( ( smulAddHom S M x ) . map_zsmul y n ) . symm
+instance AddCommGroupₓ.int_smul_comm_class {S : Type u} {M : Type v} [Semiringₓ S] [AddCommGroupₓ M] [Module S M] :
+    SmulCommClass ℤ S M where
+  smul_comm := fun n x y => ((smulAddHom S M x).map_zsmul y n).symm
 
 instance AddCommGroupₓ.int_smul_comm_class' {S : Type u} {M : Type v} [Semiringₓ S] [AddCommGroupₓ M] [Module S M] :
     SmulCommClass S ℤ M :=
   SmulCommClass.symm _ _ _
 
--- failed to format: format: uncaught backtrack exception
-instance
-  IsScalarTower.rat
-  { R : Type u } { M : Type v } [ Ringₓ R ] [ AddCommGroupₓ M ] [ Module R M ] [ Module ℚ R ] [ Module ℚ M ]
-    : IsScalarTower ℚ R M
-  where smul_assoc r x y := ( ( smulAddHom R M ) . flip y ) . map_rat_module_smul r x
+instance IsScalarTower.rat {R : Type u} {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [Module ℚ R]
+    [Module ℚ M] : IsScalarTower ℚ R M where
+  smul_assoc := fun r x y => ((smulAddHom R M).flip y).map_rat_module_smul r x
 
--- failed to format: format: uncaught backtrack exception
-instance
-  SmulCommClass.rat
-  { R : Type u } { M : Type v } [ Semiringₓ R ] [ AddCommGroupₓ M ] [ Module R M ] [ Module ℚ M ] : SmulCommClass ℚ R M
-  where smul_comm r x y := ( ( smulAddHom R M x ) . map_rat_module_smul r y ) . symm
+instance SmulCommClass.rat {R : Type u} {M : Type v} [Semiringₓ R] [AddCommGroupₓ M] [Module R M] [Module ℚ M] :
+    SmulCommClass ℚ R M where
+  smul_comm := fun r x y => ((smulAddHom R M x).map_rat_module_smul r y).symm
 
 instance SmulCommClass.rat' {R : Type u} {M : Type v} [Semiringₓ R] [AddCommGroupₓ M] [Module R M] [Module ℚ M] :
     SmulCommClass R ℚ M :=
@@ -737,7 +499,7 @@ for the vanishing of elements (especially in modules over division rings).
 -/
 
 
-/--  `no_zero_smul_divisors R M` states that a scalar multiple is `0` only if either argument is `0`.
+/-- `no_zero_smul_divisors R M` states that a scalar multiple is `0` only if either argument is `0`.
 This a version of saying that `M` is torsion free, without assuming `R` is zero-divisor free.
 
 The main application of `no_zero_smul_divisors R M`, when `M` is a module,
@@ -750,7 +512,7 @@ class NoZeroSmulDivisors (R M : Type _) [HasZero R] [HasZero M] [HasScalar R M] 
 
 export NoZeroSmulDivisors (eq_zero_or_eq_zero_of_smul_eq_zero)
 
-/--  Pullback a `no_zero_smul_divisors` instance along an injective function. -/
+/-- Pullback a `no_zero_smul_divisors` instance along an injective function. -/
 theorem Function.Injective.no_zero_smul_divisors {R M N : Type _} [HasZero R] [HasZero M] [HasZero N] [HasScalar R M]
     [HasScalar R N] [NoZeroSmulDivisors R N] (f : M → N) (hf : Function.Injective f) (h0 : f 0 = 0)
     (hs : ∀ c : R x : M, f (c • x) = c • f x) : NoZeroSmulDivisors R M :=
@@ -789,18 +551,17 @@ theorem Nat.no_zero_smul_divisors : NoZeroSmulDivisors ℕ M :=
 
 variable {M}
 
-theorem eq_zero_of_two_nsmul_eq_zero {v : M} (hv : 2 • v = 0) : v = 0 := by
-  have := Nat.no_zero_smul_divisors R M <;>
-    exact
-      (smul_eq_zero.mp hv).resolve_left
-        (by
-          norm_num)
+theorem eq_zero_of_two_nsmul_eq_zero {v : M} (hv : 2 • v = 0) : v = 0 :=
+  have := Nat.no_zero_smul_divisors R M
+  (smul_eq_zero.mp hv).resolve_left
+    (by
+      norm_num)
 
 end Nat
 
 variable (R M)
 
-/--  If `M` is an `R`-module with one and `M` has characteristic zero, then `R` has characteristic
+/-- If `M` is an `R`-module with one and `M` has characteristic zero, then `R` has characteristic
 zero as well. Usually `M` is an `R`-algebra. -/
 theorem CharZero.of_module [HasOne M] [CharZero M] : CharZero R := by
   refine' ⟨fun m n h => @Nat.cast_injective M _ _ _ _ _ _⟩
@@ -820,7 +581,8 @@ theorem smul_right_injective [NoZeroSmulDivisors R M] {c : R} (hc : c ≠ 0) : F
   fun x y h =>
   sub_eq_zero.mp
     ((smul_eq_zero.mp
-          (calc c • (x - y) = c • x - c • y := smul_sub c x y
+          (calc
+            c • (x - y) = c • x - c • y := smul_sub c x y
             _ = 0 := sub_eq_zero.mpr h
             )).resolve_left
       hc)
@@ -853,7 +615,8 @@ variable (R)
 theorem smul_left_injective {x : M} (hx : x ≠ 0) : Function.Injective fun c : R => c • x := fun c d h =>
   sub_eq_zero.mp
     ((smul_eq_zero.mp
-          (calc (c - d) • x = c • x - d • x := sub_smul c d x
+          (calc
+            (c - d) • x = c • x - d • x := sub_smul c d x
             _ = 0 := sub_eq_zero.mpr h
             )).resolve_right
       hx)

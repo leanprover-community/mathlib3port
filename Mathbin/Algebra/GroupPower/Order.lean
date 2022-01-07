@@ -13,14 +13,14 @@ variable {A G M R : Type _}
 
 section Preorderₓ
 
-variable [Monoidₓ M] [Preorderₓ M] [CovariantClass M M (·*·) (· ≤ ·)]
+variable [Monoidₓ M] [Preorderₓ M] [CovariantClass M M (· * ·) (· ≤ ·)]
 
 @[to_additive nsmul_le_nsmul_of_le_right, mono]
-theorem pow_le_pow_of_le_left' [CovariantClass M M (Function.swap (·*·)) (· ≤ ·)] {a b : M} (hab : a ≤ b) :
+theorem pow_le_pow_of_le_left' [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)] {a b : M} (hab : a ≤ b) :
     ∀ i : ℕ, a ^ i ≤ b ^ i
   | 0 => by
     simp
-  | k+1 => by
+  | k + 1 => by
     rw [pow_succₓ, pow_succₓ]
     exact mul_le_mul' hab (pow_le_pow_of_le_left' k)
 
@@ -30,7 +30,7 @@ attribute [mono] nsmul_le_nsmul_of_le_right
 theorem one_le_pow_of_one_le' {a : M} (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
   | 0 => by
     simp
-  | k+1 => by
+  | k + 1 => by
     rw [pow_succₓ]
     exact one_le_mul H (one_le_pow_of_one_le' k)
 
@@ -41,9 +41,10 @@ theorem pow_le_one' {a : M} (H : a ≤ 1) (n : ℕ) : a ^ n ≤ 1 :=
 @[to_additive nsmul_le_nsmul]
 theorem pow_le_pow' {a : M} {n m : ℕ} (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
   let ⟨k, hk⟩ := Nat.Le.dest h
-  calc a ^ n ≤ (a ^ n)*a ^ k := le_mul_of_one_le_right' (one_le_pow_of_one_le' ha _)
+  calc
+    a ^ n ≤ a ^ n * a ^ k := le_mul_of_one_le_right' (one_le_pow_of_one_le' ha _)
     _ = a ^ m := by
-    rw [← hk, pow_addₓ]
+      rw [← hk, pow_addₓ]
     
 
 @[to_additive nsmul_le_nsmul_of_nonpos]
@@ -55,18 +56,19 @@ theorem one_lt_pow' {a : M} (ha : 1 < a) {k : ℕ} (hk : k ≠ 0) : 1 < a ^ k :=
   rcases Nat.exists_eq_succ_of_ne_zero hk with ⟨l, rfl⟩
   clear hk
   induction' l with l IH
-  ·
-    simpa using ha
-  ·
-    rw [pow_succₓ]
+  · simpa using ha
+    
+  · rw [pow_succₓ]
     exact one_lt_mul' ha IH
+    
 
 @[to_additive nsmul_neg]
 theorem pow_lt_one' {a : M} (ha : a < 1) {k : ℕ} (hk : k ≠ 0) : a ^ k < 1 :=
   @one_lt_pow' (OrderDual M) _ _ _ _ ha k hk
 
 @[to_additive nsmul_lt_nsmul]
-theorem pow_lt_pow' [CovariantClass M M (·*·) (· < ·)] {a : M} {n m : ℕ} (ha : 1 < a) (h : n < m) : a ^ n < a ^ m := by
+theorem pow_lt_pow' [CovariantClass M M (· * ·) (· < ·)] {a : M} {n m : ℕ} (ha : 1 < a) (h : n < m) : a ^ n < a ^ m :=
+  by
   rcases Nat.Le.dest h with ⟨k, rfl⟩
   clear h
   rw [pow_addₓ, pow_succ'ₓ, mul_assocₓ, ← pow_succₓ]
@@ -76,7 +78,7 @@ end Preorderₓ
 
 section LinearOrderₓ
 
-variable [Monoidₓ M] [LinearOrderₓ M] [CovariantClass M M (·*·) (· ≤ ·)]
+variable [Monoidₓ M] [LinearOrderₓ M] [CovariantClass M M (· * ·) (· ≤ ·)]
 
 @[to_additive nsmul_nonneg_iff]
 theorem one_le_pow_iff {x : M} {n : ℕ} (hn : n ≠ 0) : 1 ≤ x ^ n ↔ 1 ≤ x :=
@@ -102,7 +104,7 @@ end LinearOrderₓ
 
 section Groupₓ
 
-variable [Groupₓ G] [Preorderₓ G] [CovariantClass G G (·*·) (· ≤ ·)]
+variable [Groupₓ G] [Preorderₓ G] [CovariantClass G G (· * ·) (· ≤ ·)]
 
 @[to_additive zsmul_nonneg]
 theorem one_le_zpow {x : G} (H : 1 ≤ x) {n : ℤ} (hn : 0 ≤ n) : 1 ≤ x ^ n := by
@@ -131,7 +133,7 @@ theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
     nontriviality
     rw [pow_zeroₓ]
     exact zero_lt_one
-  | n+1 => by
+  | n + 1 => by
     rw [pow_succₓ]
     exact mul_pos H (pow_pos _)
 
@@ -140,42 +142,42 @@ theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
   | 0 => by
     rw [pow_zeroₓ]
     exact zero_le_one
-  | n+1 => by
+  | n + 1 => by
     rw [pow_succₓ]
     exact mul_nonneg H (pow_nonneg _)
 
-theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : ((x ^ n)+y ^ n) ≤ (x+y) ^ n := by
+theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : x ^ n + y ^ n ≤ (x + y) ^ n := by
   rcases Nat.exists_eq_succ_of_ne_zero hn with ⟨k, rfl⟩
   induction' k with k ih
-  ·
-    simp only [pow_oneₓ]
+  · simp only [pow_oneₓ]
+    
   let n := k.succ
   have h1 := add_nonneg (mul_nonneg hx (pow_nonneg hy n)) (mul_nonneg hy (pow_nonneg hx n))
   have h2 := add_nonneg hx hy
-  calc ((x ^ n.succ)+y ^ n.succ) ≤ ((x*x ^ n)+y*y ^ n)+(x*y ^ n)+y*x ^ n := by
-    rw [pow_succₓ _ n, pow_succₓ _ n]
-    exact le_add_of_nonneg_right h1 _ = (x+y)*(x ^ n)+y ^ n := by
-    rw [add_mulₓ, mul_addₓ, mul_addₓ, add_commₓ (y*x ^ n), ← add_assocₓ, ← add_assocₓ, add_assocₓ (x*x ^ n) (x*y ^ n),
-      add_commₓ (x*y ^ n) (y*y ^ n), ← add_assocₓ]_ ≤ (x+y) ^ n.succ :=
-    by
-    rw [pow_succₓ _ n]
-    exact mul_le_mul_of_nonneg_left (ih (Nat.succ_ne_zero k)) h2
+  calc x ^ n.succ + y ^ n.succ ≤ x * x ^ n + y * y ^ n + (x * y ^ n + y * x ^ n) := by
+      rw [pow_succₓ _ n, pow_succₓ _ n]
+      exact le_add_of_nonneg_right h1 _ = (x + y) * (x ^ n + y ^ n) := by
+      rw [add_mulₓ, mul_addₓ, mul_addₓ, add_commₓ (y * x ^ n), ← add_assocₓ, ← add_assocₓ,
+        add_assocₓ (x * x ^ n) (x * y ^ n), add_commₓ (x * y ^ n) (y * y ^ n), ← add_assocₓ]_ ≤ (x + y) ^ n.succ :=
+      by
+      rw [pow_succₓ _ n]
+      exact mul_le_mul_of_nonneg_left (ih (Nat.succ_ne_zero k)) h2
 
 theorem pow_lt_pow_of_lt_left (Hxy : x < y) (Hxpos : 0 ≤ x) (Hnpos : 0 < n) : x ^ n < y ^ n := by
   cases lt_or_eq_of_leₓ Hxpos
-  ·
-    rw [← tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ Hnpos)]
+  · rw [← tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ Hnpos)]
     induction n - 1
-    ·
-      simpa only [pow_oneₓ]
+    · simpa only [pow_oneₓ]
+      
     rw [pow_addₓ, pow_addₓ, Nat.succ_eq_add_one, pow_oneₓ, pow_oneₓ]
     apply mul_lt_mul ih (le_of_ltₓ Hxy) h (le_of_ltₓ (pow_pos (lt_transₓ h Hxy) _))
-  ·
-    rw [← h, zero_pow Hnpos]
+    
+  · rw [← h, zero_pow Hnpos]
     apply
       pow_pos
         (by
           rwa [← h] at Hxy : 0 < y)
+    
 
 theorem pow_lt_one (h₀ : 0 ≤ a) (h₁ : a < 1) {n : ℕ} (hn : n ≠ 0) : a ^ n < 1 :=
   (one_pow n).subst (pow_lt_pow_of_lt_left h₁ h₀ (Nat.pos_of_ne_zeroₓ hn))
@@ -186,7 +188,7 @@ theorem strict_mono_on_pow (hn : 0 < n) : StrictMonoOn (fun x : R => x ^ n) (Set
 theorem one_le_pow_of_one_le (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
   | 0 => by
     rw [pow_zeroₓ]
-  | n+1 => by
+  | n + 1 => by
     rw [pow_succₓ]
     simpa only [mul_oneₓ] using mul_le_mul H (one_le_pow_of_one_le n) zero_le_one (le_transₓ zero_le_one H)
 
@@ -223,7 +225,7 @@ theorem pow_lt_pow_of_lt_one (h : 0 < a) (ha : a < 1) {i j : ℕ} (hij : i < j) 
 theorem pow_le_pow_of_le_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i : ℕ, a ^ i ≤ b ^ i
   | 0 => by
     simp
-  | k+1 => by
+  | k + 1 => by
     rw [pow_succₓ, pow_succₓ]
     exact mul_le_mul hab (pow_le_pow_of_le_left _) (pow_nonneg ha _) (le_transₓ ha hab)
 
@@ -232,7 +234,7 @@ theorem one_lt_pow (ha : 1 < a) {n : ℕ} (hn : n ≠ 0) : 1 < a ^ n :=
 
 theorem pow_le_one : ∀ n : ℕ h₀ : 0 ≤ a h₁ : a ≤ 1, a ^ n ≤ 1
   | 0, h₀, h₁ => (pow_zeroₓ a).le
-  | n+1, h₀, h₁ => (pow_succ'ₓ a n).le.trans (mul_le_one (pow_le_one n h₀ h₁) h₀ h₁)
+  | n + 1, h₀, h₁ => (pow_succ'ₓ a n).le.trans (mul_le_one (pow_le_one n h₀ h₁) h₀ h₁)
 
 theorem sq_pos_of_pos (ha : 0 < a) : 0 < a ^ 2 := by
   rw [sq]
@@ -383,8 +385,8 @@ section LinearOrderedCommRing
 
 variable [LinearOrderedCommRing R]
 
-/--  Arithmetic mean-geometric mean (AM-GM) inequality for linearly ordered commutative rings. -/
-theorem two_mul_le_add_sq (a b : R) : ((2*a)*b) ≤ (a ^ 2)+b ^ 2 :=
+/-- Arithmetic mean-geometric mean (AM-GM) inequality for linearly ordered commutative rings. -/
+theorem two_mul_le_add_sq (a b : R) : 2 * a * b ≤ a ^ 2 + b ^ 2 :=
   sub_nonneg.mp ((sub_add_eq_add_sub _ _ _).subst ((sub_sq a b).subst (sq_nonneg _)))
 
 alias two_mul_le_add_sq ← two_mul_le_add_pow_two

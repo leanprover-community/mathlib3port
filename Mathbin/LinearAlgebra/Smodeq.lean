@@ -16,7 +16,7 @@ variable {x x₁ x₂ y y₁ y₂ z z₁ z₂ : M}
 
 variable {N : Type _} [AddCommGroupₓ N] [Module R N] (V V₁ V₂ : Submodule R N)
 
-/--  A predicate saying two elements of a module are equivalent modulo a submodule. -/
+/-- A predicate saying two elements of a module are equivalent modulo a submodule. -/
 def Smodeq (x y : M) : Prop :=
   (Submodule.Quotient.mk x : M ⧸ U) = Submodule.Quotient.mk y
 
@@ -56,7 +56,7 @@ theorem symm (hxy : x ≡ y [SMOD U]) : y ≡ x [SMOD U] :=
 theorem trans (hxy : x ≡ y [SMOD U]) (hyz : y ≡ z [SMOD U]) : x ≡ z [SMOD U] :=
   hxy.trans hyz
 
-theorem add (hxy₁ : x₁ ≡ y₁ [SMOD U]) (hxy₂ : x₂ ≡ y₂ [SMOD U]) : (x₁+x₂) ≡ y₁+y₂ [SMOD U] := by
+theorem add (hxy₁ : x₁ ≡ y₁ [SMOD U]) (hxy₂ : x₂ ≡ y₂ [SMOD U]) : x₁ + x₂ ≡ y₁ + y₂ [SMOD U] := by
   rw [Smodeq.def] at hxy₁ hxy₂⊢
   simp_rw [quotient.mk_add, hxy₁, hxy₂]
 

@@ -81,7 +81,7 @@ def RADIX := by
 
 def hash_byte (seed : ℕ) (c : Charₓ) : ℕ :=
   let n : ℕ := c.to_nat
-  (seed.lxor n*FNV_PRIME) % RADIX
+  seed.lxor n * FNV_PRIME % RADIX
 
 def hash_string (s : Stringₓ) : ℕ :=
   s.to_list.foldl hash_byte FNV_OFFSET_BASIS
@@ -120,7 +120,7 @@ private unsafe def get_with_status_tag_aux (rn : Name) : ℕ → tactic (ℕ × 
     if ¬present then fail f! "{rn} never seen in cache!"
       else do
         let is_dead ← is_name_dead n
-        if is_dead then get_with_status_tag_aux (tag+1) <|> return (tag, False) else return (tag, True)
+        if is_dead then get_with_status_tag_aux (tag + 1) <|> return (tag, False) else return (tag, True)
 
 unsafe def get_tag_with_status (rn : Name) : tactic (ℕ × Bool) :=
   get_with_status_tag_aux rn 0
@@ -128,7 +128,7 @@ unsafe def get_tag_with_status (rn : Name) : tactic (ℕ × Bool) :=
 unsafe def get_name (ns : Name) : tactic Name := do
   let rn ← get_root_name ns
   let (tag, alive) ← get_tag_with_status rn <|> return (0, True)
-  return $ apply_tag rn $ if alive then tag else tag+1
+  return $ apply_tag rn $ if alive then tag else tag + 1
 
 unsafe def try_get_name (ns : Name) : tactic Name := do
   let rn ← get_root_name ns
@@ -151,26 +151,26 @@ end Internal
 
 open Internal
 
-/--  This scope propogates the cache within a `begin ... end` or `by` block
+/-- This scope propogates the cache within a `begin ... end` or `by` block
     and its decendants. -/
 unsafe def cache_scope.block_local : cache_scope :=
   ⟨block_local.get_name, block_local.try_get_name, block_local.present, block_local.clear⟩
 
-/--  This scope propogates the cache within an entire `def`/`lemma`. -/
+/-- This scope propogates the cache within an entire `def`/`lemma`. -/
 unsafe def cache_scope.def_local : cache_scope :=
   ⟨def_local.get_name, def_local.try_get_name, def_local.present, def_local.clear⟩
 
 open CacheScope
 
-/--  Asks whether the namespace `ns` currently has a value-in-cache. -/
+/-- Asks whether the namespace `ns` currently has a value-in-cache. -/
 unsafe def present (ns : Name) (s : cache_scope := block_local) : tactic Bool :=
   s.present ns
 
-/--  Clear cache associated to namespace `ns`. -/
+/-- Clear cache associated to namespace `ns`. -/
 unsafe def clear (ns : Name) (s : cache_scope := block_local) : tactic Unit :=
   s.clear ns
 
-/--  Gets the (optionally present) value-in-cache for `ns`. -/
+/-- Gets the (optionally present) value-in-cache for `ns`. -/
 unsafe def get (ns : Name) (α : Type) [reflected α] [has_reflect α] (s : cache_scope := block_local) :
     tactic (Option α) := do
   let dn ← some <$> s.try_get_name ns <|> return none
@@ -182,7 +182,7 @@ end LocalCache
 
 open LocalCache LocalCache.Internal
 
-/--  Using the namespace `ns` as its key, when called for the first
+/-- Using the namespace `ns` as its key, when called for the first
     time `run_once ns t` runs `t`, then saves and returns the result.
     Upon subsequent invocations in the same tactic block, with the scope
     of the caching being inherited by child tactic blocks) we return the

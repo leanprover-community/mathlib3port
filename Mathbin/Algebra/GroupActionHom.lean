@@ -54,7 +54,7 @@ variable (T : Type _) [Semiringₓ T] [MulSemiringAction M T]
 
 variable (G : Type _) [Groupₓ G] (H : Subgroup G)
 
-/--  Equivariant functions. -/
+/-- Equivariant functions. -/
 @[nolint has_inhabited_instance]
 structure MulActionHom where
   toFun : X → Y
@@ -88,7 +88,7 @@ protected theorem congr_funₓ {f g : X →[M'] Y} (h : f = g) (x : X) : f x = g
 
 variable (M M') {X}
 
-/--  The identity map as an equivariant map. -/
+/-- The identity map as an equivariant map. -/
 protected def id : X →[M'] X :=
   ⟨id, fun _ _ => rfl⟩
 
@@ -98,11 +98,12 @@ theorem id_apply (x : X) : MulActionHom.id M' x = x :=
 
 variable {M M' X Y Z}
 
-/--  Composition of two equivariant maps. -/
+/-- Composition of two equivariant maps. -/
 def comp (g : Y →[M'] Z) (f : X →[M'] Y) : X →[M'] Z :=
   ⟨g ∘ f, fun m x =>
-    calc g (f (m • x)) = g (m • f x) := by
-      rw [f.map_smul]
+    calc
+      g (f (m • x)) = g (m • f x) := by
+        rw [f.map_smul]
       _ = m • g (f x) := g.map_smul _ _
       ⟩
 
@@ -122,22 +123,23 @@ theorem comp_id (f : X →[M'] Y) : f.comp (MulActionHom.id M') = f :=
 
 variable {A B}
 
-/--  The inverse of a bijective equivariant map is equivariant. -/
+/-- The inverse of a bijective equivariant map is equivariant. -/
 @[simps]
-def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) : B →[M] A :=
-  { toFun := g,
-    map_smul' := fun m x =>
-      calc g (m • x) = g (m • f (g x)) := by
+def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) : B →[M] A where
+  toFun := g
+  map_smul' := fun m x =>
+    calc
+      g (m • x) = g (m • f (g x)) := by
         rw [h₂]
-        _ = g (f (m • g x)) := by
+      _ = g (f (m • g x)) := by
         rw [f.map_smul]
-        _ = m • g x := by
+      _ = m • g x := by
         rw [h₁]
-         }
+      
 
 variable {G} (H)
 
-/--  The canonical map to the left cosets. -/
+/-- The canonical map to the left cosets. -/
 def to_quotient : G →[G] G ⧸ H :=
   ⟨coeₓ, fun g x => rfl⟩
 
@@ -147,13 +149,13 @@ theorem to_quotient_apply (g : G) : to_quotient H g = g :=
 
 end MulActionHom
 
-/--  Equivariant additive monoid homomorphisms. -/
+/-- Equivariant additive monoid homomorphisms. -/
 structure DistribMulActionHom extends A →[M] B, A →+ B
 
-/--  Reinterpret an equivariant additive monoid homomorphism as an additive monoid homomorphism. -/
+/-- Reinterpret an equivariant additive monoid homomorphism as an additive monoid homomorphism. -/
 add_decl_doc DistribMulActionHom.toAddMonoidHom
 
-/--  Reinterpret an equivariant additive monoid homomorphism as an equivariant function. -/
+/-- Reinterpret an equivariant additive monoid homomorphism as an equivariant function. -/
 add_decl_doc DistribMulActionHom.toMulActionHom
 
 notation:25 A " →+[" M:25 "] " B:0 => DistribMulActionHom M A B
@@ -209,7 +211,7 @@ theorem map_zero (f : A →+[M] B) : f 0 = 0 :=
   f.map_zero'
 
 @[simp]
-theorem map_add (f : A →+[M] B) (x y : A) : f (x+y) = f x+f y :=
+theorem map_add (f : A →+[M] B) (x y : A) : f (x + y) = f x + f y :=
   f.map_add' x y
 
 @[simp]
@@ -226,7 +228,7 @@ theorem map_smul (f : A →+[M] B) (m : M) (x : A) : f (m • x) = m • f x :=
 
 variable (M) {A}
 
-/--  The identity map as an equivariant additive monoid homomorphism. -/
+/-- The identity map as an equivariant additive monoid homomorphism. -/
 protected def id : A →+[M] A :=
   ⟨id, fun _ _ => rfl, rfl, fun _ _ => rfl⟩
 
@@ -261,7 +263,7 @@ theorem one_apply (a : A) : (1 : A →+[M] A) a = a :=
 instance : Inhabited (A →+[M] B) :=
   ⟨0⟩
 
-/--  Composition of two equivariant additive monoid homomorphisms. -/
+/-- Composition of two equivariant additive monoid homomorphisms. -/
 def comp (g : B →+[M] C) (f : A →+[M] B) : A →+[M] C :=
   { MulActionHom.comp (g : B →[M] C) (f : A →[M] B), AddMonoidHom.comp (g : B →+ C) (f : A →+ B) with }
 
@@ -279,7 +281,7 @@ theorem comp_id (f : A →+[M] B) : f.comp (DistribMulActionHom.id M) = f :=
   ext $ fun x => by
     rw [comp_apply, id_apply]
 
-/--  The inverse of a bijective `distrib_mul_action_hom` is a `distrib_mul_action_hom`. -/
+/-- The inverse of a bijective `distrib_mul_action_hom` is a `distrib_mul_action_hom`. -/
 @[simps]
 def inverse (f : A →+[M] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) : B →+[M] A :=
   { (f : A →+ B).inverse g h₁ h₂, (f : A →[M] B).inverse g h₁ h₂ with toFun := g }
@@ -300,14 +302,14 @@ end Semiringₓ
 
 end DistribMulActionHom
 
-/--  Equivariant ring homomorphisms. -/
+/-- Equivariant ring homomorphisms. -/
 @[nolint has_inhabited_instance]
 structure MulSemiringActionHom extends R →+[M] S, R →+* S
 
-/--  Reinterpret an equivariant ring homomorphism as a ring homomorphism. -/
+/-- Reinterpret an equivariant ring homomorphism as a ring homomorphism. -/
 add_decl_doc MulSemiringActionHom.toRingHom
 
-/--  Reinterpret an equivariant ring homomorphism as an equivariant additive monoid homomorphism. -/
+/-- Reinterpret an equivariant ring homomorphism as an equivariant additive monoid homomorphism. -/
 add_decl_doc MulSemiringActionHom.toDistribMulActionHom
 
 notation:25 R " →+*[" M:25 "] " S:0 => MulSemiringActionHom M R S
@@ -348,7 +350,7 @@ theorem map_zero (f : R →+*[M] S) : f 0 = 0 :=
   f.map_zero'
 
 @[simp]
-theorem map_add (f : R →+*[M] S) (x y : R) : f (x+y) = f x+f y :=
+theorem map_add (f : R →+*[M] S) (x y : R) : f (x + y) = f x + f y :=
   f.map_add' x y
 
 @[simp]
@@ -364,7 +366,7 @@ theorem map_one (f : R →+*[M] S) : f 1 = 1 :=
   f.map_one'
 
 @[simp]
-theorem map_mul (f : R →+*[M] S) (x y : R) : f (x*y) = f x*f y :=
+theorem map_mul (f : R →+*[M] S) (x y : R) : f (x * y) = f x * f y :=
   f.map_mul' x y
 
 @[simp]
@@ -373,7 +375,7 @@ theorem map_smul (f : R →+*[M] S) (m : M) (x : R) : f (m • x) = m • f x :=
 
 variable (M) {R}
 
-/--  The identity map as an equivariant ring homomorphism. -/
+/-- The identity map as an equivariant ring homomorphism. -/
 protected def id : R →+*[M] R :=
   ⟨id, fun _ _ => rfl, rfl, fun _ _ => rfl, rfl, fun _ _ => rfl⟩
 
@@ -383,7 +385,7 @@ theorem id_apply (x : R) : MulSemiringActionHom.id M x = x :=
 
 variable {M R S T}
 
-/--  Composition of two equivariant additive monoid homomorphisms. -/
+/-- Composition of two equivariant additive monoid homomorphisms. -/
 def comp (g : S →+*[M] T) (f : R →+*[M] S) : R →+*[M] T :=
   { DistribMulActionHom.comp (g : S →+[M] T) (f : R →+[M] S), RingHom.comp (g : S →+* T) (f : R →+* S) with }
 
@@ -407,7 +409,7 @@ section
 
 variable (M) {R'} (U : Subring R') [IsInvariantSubring M U]
 
-/--  The canonical inclusion from an invariant subring. -/
+/-- The canonical inclusion from an invariant subring. -/
 def IsInvariantSubring.subtypeHom : U →+*[M] R' :=
   { U.subtype with map_smul' := fun m s => rfl }
 

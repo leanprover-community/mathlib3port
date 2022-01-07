@@ -38,20 +38,20 @@ open_locale BigOperators
 
 variable (K L : Type _) [Field K] [Field L] [Algebra K L]
 
-/--  `S : intermediate_field K L` is a subset of `L` such that there is a field
+/-- `S : intermediate_field K L` is a subset of `L` such that there is a field
 tower `L / S / K`. -/
 structure IntermediateField extends Subalgebra K L where
   neg_mem' : ∀, ∀ x ∈ carrier, ∀, -x ∈ carrier
   inv_mem' : ∀, ∀ x ∈ carrier, ∀, x⁻¹ ∈ carrier
 
-/--  Reinterpret an `intermediate_field` as a `subalgebra`. -/
+/-- Reinterpret an `intermediate_field` as a `subalgebra`. -/
 add_decl_doc IntermediateField.toSubalgebra
 
 variable {K L} (S : IntermediateField K L)
 
 namespace IntermediateField
 
-/--  Reinterpret an `intermediate_field` as a `subfield`. -/
+/-- Reinterpret an `intermediate_field` as a `subfield`. -/
 def to_subfield : Subfield L :=
   { S.to_subalgebra, S with }
 
@@ -64,7 +64,7 @@ instance : SetLike (IntermediateField K L) L :=
 theorem mem_carrier {s : IntermediateField K L} {x : L} : x ∈ s.carrier ↔ x ∈ s :=
   Iff.rfl
 
-/--  Two intermediate fields are equal if they have the same elements. -/
+/-- Two intermediate fields are equal if they have the same elements. -/
 @[ext]
 theorem ext {S T : IntermediateField K L} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
   SetLike.ext h
@@ -90,365 +90,91 @@ theorem mem_to_subalgebra (s : IntermediateField K L) (x : L) : x ∈ s.to_subal
 theorem mem_to_subfield (s : IntermediateField K L) (x : L) : x ∈ s.to_subfield ↔ x ∈ s :=
   Iff.rfl
 
-/--  An intermediate field contains the image of the smaller field. -/
+/-- An intermediate field contains the image of the smaller field. -/
 theorem algebra_map_mem (x : K) : algebraMap K L x ∈ S :=
   S.algebra_map_mem' x
 
-/--  An intermediate field contains the ring's 1. -/
+/-- An intermediate field contains the ring's 1. -/
 theorem one_mem : (1 : L) ∈ S :=
   S.one_mem'
 
-/--  An intermediate field contains the ring's 0. -/
+/-- An intermediate field contains the ring's 0. -/
 theorem zero_mem : (0 : L) ∈ S :=
   S.zero_mem'
 
-/--  An intermediate field is closed under multiplication. -/
-theorem mul_mem : ∀ {x y : L}, x ∈ S → y ∈ S → (x*y) ∈ S :=
+/-- An intermediate field is closed under multiplication. -/
+theorem mul_mem : ∀ {x y : L}, x ∈ S → y ∈ S → x * y ∈ S :=
   S.mul_mem'
 
-/--  An intermediate field is closed under scalar multiplication. -/
+/-- An intermediate field is closed under scalar multiplication. -/
 theorem smul_mem {y : L} : y ∈ S → ∀ {x : K}, x • y ∈ S :=
   S.to_subalgebra.smul_mem
 
-/--  An intermediate field is closed under addition. -/
-theorem add_mem : ∀ {x y : L}, x ∈ S → y ∈ S → (x+y) ∈ S :=
+/-- An intermediate field is closed under addition. -/
+theorem add_mem : ∀ {x y : L}, x ∈ S → y ∈ S → x + y ∈ S :=
   S.add_mem'
 
-/--  An intermediate field is closed under subtraction -/
+/-- An intermediate field is closed under subtraction -/
 theorem sub_mem {x y : L} (hx : x ∈ S) (hy : y ∈ S) : x - y ∈ S :=
   S.to_subfield.sub_mem hx hy
 
-/--  An intermediate field is closed under negation. -/
+/-- An intermediate field is closed under negation. -/
 theorem neg_mem : ∀ {x : L}, x ∈ S → -x ∈ S :=
   S.neg_mem'
 
-/--  An intermediate field is closed under inverses. -/
+/-- An intermediate field is closed under inverses. -/
 theorem inv_mem : ∀ {x : L}, x ∈ S → x⁻¹ ∈ S :=
   S.inv_mem'
 
-/--  An intermediate field is closed under division. -/
+/-- An intermediate field is closed under division. -/
 theorem div_mem {x y : L} (hx : x ∈ S) (hy : y ∈ S) : x / y ∈ S :=
   S.to_subfield.div_mem hx hy
 
-/--  Product of a list of elements in an intermediate_field is in the intermediate_field. -/
+/-- Copy of an intermediate field with a new `carrier` equal to the old one. Useful to fix
+definitional equalities. -/
+protected def copy (S : IntermediateField K L) (s : Set L) (hs : s = ↑S) : IntermediateField K L where
+  toSubalgebra := S.to_subalgebra.copy s (hs : s = S.to_subalgebra.Carrier)
+  neg_mem' :=
+    have hs' : (S.to_subalgebra.copy s hs).Carrier = S.to_subalgebra.Carrier := hs
+    hs'.symm ▸ S.neg_mem'
+  inv_mem' :=
+    have hs' : (S.to_subalgebra.copy s hs).Carrier = S.to_subalgebra.Carrier := hs
+    hs'.symm ▸ S.inv_mem'
+
+@[simp]
+theorem coe_copy (S : IntermediateField K L) (s : Set L) (hs : s = ↑S) : (S.copy s hs : Set L) = s :=
+  rfl
+
+theorem copy_eq (S : IntermediateField K L) (s : Set L) (hs : s = ↑S) : S.copy s hs = S :=
+  SetLike.coe_injective hs
+
+/-- Product of a list of elements in an intermediate_field is in the intermediate_field. -/
 theorem list_prod_mem {l : List L} : (∀, ∀ x ∈ l, ∀, x ∈ S) → l.prod ∈ S :=
   S.to_subfield.list_prod_mem
 
-/--  Sum of a list of elements in an intermediate field is in the intermediate_field. -/
+/-- Sum of a list of elements in an intermediate field is in the intermediate_field. -/
 theorem list_sum_mem {l : List L} : (∀, ∀ x ∈ l, ∀, x ∈ S) → l.sum ∈ S :=
   S.to_subfield.list_sum_mem
 
-/--  Product of a multiset of elements in an intermediate field is in the intermediate_field. -/
+/-- Product of a multiset of elements in an intermediate field is in the intermediate_field. -/
 theorem multiset_prod_mem (m : Multiset L) : (∀, ∀ a ∈ m, ∀, a ∈ S) → m.prod ∈ S :=
   S.to_subfield.multiset_prod_mem m
 
-/--  Sum of a multiset of elements in a `intermediate_field` is in the `intermediate_field`. -/
+/-- Sum of a multiset of elements in a `intermediate_field` is in the `intermediate_field`. -/
 theorem multiset_sum_mem (m : Multiset L) : (∀, ∀ a ∈ m, ∀, a ∈ S) → m.sum ∈ S :=
   S.to_subfield.multiset_sum_mem m
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment
-    "/--"
-    " Product of elements of an intermediate field indexed by a `finset` is in the intermediate_field.\n-/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.theorem
-  "theorem"
-  (Command.declId `prod_mem [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`ι] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.implicitBinder "{" [`t] [":" (Term.app `Finset [`ι])] "}")
-    (Term.implicitBinder "{" [`f] [":" (Term.arrow `ι "→" `L)] "}")
-    (Term.explicitBinder
-     "("
-     [`h]
-     [":"
-      (Term.forall
-       "∀"
-       []
-       ","
-       (Mathlib.ExtendedBinder.«term∀___,_»
-        "∀"
-        `c
-        («binderTerm∈_» "∈" `t)
-        ","
-        (Term.forall "∀" [] "," (Init.Core.«term_∈_» (Term.app `f [`c]) " ∈ " `S))))]
-     []
-     ")")]
-   (Term.typeSpec
-    ":"
-    (Init.Core.«term_∈_»
-     (Algebra.BigOperators.Basic.«term∏_in_,_»
-      "∏"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      " in "
-      `t
-      ", "
-      (Term.app `f [`i]))
-     " ∈ "
-     `S)))
-  (Command.declValSimple ":=" (Term.app `S.to_subfield.prod_mem [`h]) [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `S.to_subfield.prod_mem [`h])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `h
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `S.to_subfield.prod_mem
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Init.Core.«term_∈_»
-   (Algebra.BigOperators.Basic.«term∏_in_,_»
-    "∏"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-    " in "
-    `t
-    ", "
-    (Term.app `f [`i]))
-   " ∈ "
-   `S)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_∈_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `S
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  (Algebra.BigOperators.Basic.«term∏_in_,_»
-   "∏"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-   " in "
-   `t
-   ", "
-   (Term.app `f [`i]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∏_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `f [`i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `t
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-    Product of elements of an intermediate field indexed by a `finset` is in the intermediate_field.
-    -/
-  theorem
-    prod_mem
-    { ι : Type _ } { t : Finset ι } { f : ι → L } ( h : ∀ , ∀ c ∈ t , ∀ , f c ∈ S ) : ∏ i in t , f i ∈ S
-    := S.to_subfield.prod_mem h
+/-- Product of elements of an intermediate field indexed by a `finset` is in the intermediate_field.
+-/
+theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀, ∀ c ∈ t, ∀, f c ∈ S) : (∏ i in t, f i) ∈ S :=
+  S.to_subfield.prod_mem h
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment
-    "/--"
-    " Sum of elements in a `intermediate_field` indexed by a `finset` is in the `intermediate_field`.\n-/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.theorem
-  "theorem"
-  (Command.declId `sum_mem [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`ι] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.implicitBinder "{" [`t] [":" (Term.app `Finset [`ι])] "}")
-    (Term.implicitBinder "{" [`f] [":" (Term.arrow `ι "→" `L)] "}")
-    (Term.explicitBinder
-     "("
-     [`h]
-     [":"
-      (Term.forall
-       "∀"
-       []
-       ","
-       (Mathlib.ExtendedBinder.«term∀___,_»
-        "∀"
-        `c
-        («binderTerm∈_» "∈" `t)
-        ","
-        (Term.forall "∀" [] "," (Init.Core.«term_∈_» (Term.app `f [`c]) " ∈ " `S))))]
-     []
-     ")")]
-   (Term.typeSpec
-    ":"
-    (Init.Core.«term_∈_»
-     (Algebra.BigOperators.Basic.«term∑_in_,_»
-      "∑"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      " in "
-      `t
-      ", "
-      (Term.app `f [`i]))
-     " ∈ "
-     `S)))
-  (Command.declValSimple ":=" (Term.app `S.to_subfield.sum_mem [`h]) [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `S.to_subfield.sum_mem [`h])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `h
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `S.to_subfield.sum_mem
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Init.Core.«term_∈_»
-   (Algebra.BigOperators.Basic.«term∑_in_,_»
-    "∑"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-    " in "
-    `t
-    ", "
-    (Term.app `f [`i]))
-   " ∈ "
-   `S)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_∈_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `S
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  (Algebra.BigOperators.Basic.«term∑_in_,_»
-   "∑"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-   " in "
-   `t
-   ", "
-   (Term.app `f [`i]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∑_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `f [`i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `t
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-    Sum of elements in a `intermediate_field` indexed by a `finset` is in the `intermediate_field`.
-    -/
-  theorem
-    sum_mem
-    { ι : Type _ } { t : Finset ι } { f : ι → L } ( h : ∀ , ∀ c ∈ t , ∀ , f c ∈ S ) : ∑ i in t , f i ∈ S
-    := S.to_subfield.sum_mem h
+/-- Sum of elements in a `intermediate_field` indexed by a `finset` is in the `intermediate_field`.
+-/
+theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀, ∀ c ∈ t, ∀, f c ∈ S) : (∑ i in t, f i) ∈ S :=
+  S.to_subfield.sum_mem h
 
-theorem pow_mem {x : L} (hx : x ∈ S) : ∀ n : ℤ, (x^n) ∈ S
+theorem pow_mem {x : L} (hx : x ∈ S) : ∀ n : ℤ, x ^ n ∈ S
   | (n : ℕ) => by
     rw [zpow_coe_nat]
     exact S.to_subfield.pow_mem hx _
@@ -464,7 +190,7 @@ theorem coe_int_mem (n : ℤ) : (n : L) ∈ S := by
 
 end IntermediateField
 
-/--  Turn a subalgebra closed under inverses into an intermediate field -/
+/-- Turn a subalgebra closed under inverses into an intermediate field -/
 def Subalgebra.toIntermediateField (S : Subalgebra K L) (inv_mem : ∀, ∀ x ∈ S, ∀, x⁻¹ ∈ S) : IntermediateField K L :=
   { S with neg_mem' := fun x => S.neg_mem, inv_mem' := inv_mem }
 
@@ -480,19 +206,19 @@ theorem to_intermediate_field_to_subalgebra (S : IntermediateField K L)
   ext
   rfl
 
-/--  Turn a subfield of `L` containing the image of `K` into an intermediate field -/
+/-- Turn a subfield of `L` containing the image of `K` into an intermediate field -/
 def Subfield.toIntermediateField (S : Subfield L) (algebra_map_mem : ∀ x, algebraMap K L x ∈ S) :
     IntermediateField K L :=
   { S with algebra_map_mem' := algebra_map_mem }
 
 namespace IntermediateField
 
-/--  An intermediate field inherits a field structure -/
+/-- An intermediate field inherits a field structure -/
 instance to_field : Field S :=
   S.to_subfield.to_field
 
 @[simp, norm_cast]
-theorem coe_add (x y : S) : (↑x+y : L) = (↑x)+↑y :=
+theorem coe_add (x y : S) : (↑(x + y) : L) = ↑x + ↑y :=
   rfl
 
 @[simp, norm_cast]
@@ -500,7 +226,7 @@ theorem coe_neg (x : S) : (↑(-x) : L) = -↑x :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_mul (x y : S) : (↑x*y : L) = (↑x)*↑y :=
+theorem coe_mul (x y : S) : (↑(x * y) : L) = ↑x * ↑y :=
   rfl
 
 @[simp, norm_cast]
@@ -516,12 +242,12 @@ theorem coe_one : ((1 : S) : L) = 1 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_pow (x : S) (n : ℕ) : (↑(x^n) : L) = (↑x^n) := by
+theorem coe_pow (x : S) (n : ℕ) : (↑(x ^ n) : L) = ↑x ^ n := by
   induction' n with n ih
-  ·
-    simp
-  ·
-    simp [pow_succₓ, ih]
+  · simp
+    
+  · simp [pow_succₓ, ih]
+    
 
 /-! `intermediate_field`s inherit structure from their `subalgebra` coercions. -/
 
@@ -556,13 +282,13 @@ instance is_scalar_tower_mid {R : Type _} [Semiringₓ R] [Algebra L R] [Algebra
     IsScalarTower K S R :=
   IsScalarTower.subalgebra' _ _ _ S.to_subalgebra
 
-/--  Specialize `is_scalar_tower_mid` to the common case where the top field is `L` -/
+/-- Specialize `is_scalar_tower_mid` to the common case where the top field is `L` -/
 instance is_scalar_tower_mid' : IsScalarTower K S L :=
   S.is_scalar_tower_mid
 
 variable {L' : Type _} [Field L'] [Algebra K L']
 
-/--  If `f : L →+* L'` fixes `K`, `S.map f` is the intermediate field between `L'` and `K`
+/-- If `f : L →+* L'` fixes `K`, `S.map f` is the intermediate field between `L'` and `K`
 such that `x ∈ S ↔ f x ∈ S.map f`. -/
 def map (f : L →ₐ[K] L') : IntermediateField K L' :=
   { S.to_subalgebra.map f with
@@ -571,7 +297,12 @@ def map (f : L →ₐ[K] L') : IntermediateField K L' :=
       exact ⟨x⁻¹, S.inv_mem hx, f.map_inv x⟩,
     neg_mem' := fun x hx => (S.to_subalgebra.map f).neg_mem hx }
 
-/--  The embedding from an intermediate field of `L / K` to `L`. -/
+theorem map_map {K L₁ L₂ L₃ : Type _} [Field K] [Field L₁] [Algebra K L₁] [Field L₂] [Algebra K L₂] [Field L₃]
+    [Algebra K L₃] (E : IntermediateField K L₁) (f : L₁ →ₐ[K] L₂) (g : L₂ →ₐ[K] L₃) :
+    (E.map f).map g = E.map (g.comp f) :=
+  SetLike.coe_injective $ Set.image_image _ _ _
+
+/-- The embedding from an intermediate field of `L / K` to `L`. -/
 def val : S →ₐ[K] L :=
   S.to_subalgebra.val
 
@@ -614,15 +345,20 @@ variable {S}
 
 section Tower
 
-/--  Lift an intermediate_field of an intermediate_field -/
+/-- Lift an intermediate_field of an intermediate_field -/
 def lift1 {F : IntermediateField K L} (E : IntermediateField K F) : IntermediateField K L :=
   map E (val F)
 
-/--  Lift an intermediate_field of an intermediate_field -/
-def lift2 {F : IntermediateField K L} (E : IntermediateField F L) : IntermediateField K L :=
-  { Carrier := E.carrier, zero_mem' := zero_mem E, add_mem' := fun x y => add_mem E, neg_mem' := fun x => neg_mem E,
-    one_mem' := one_mem E, mul_mem' := fun x y => mul_mem E, inv_mem' := fun x => inv_mem E,
-    algebra_map_mem' := fun x => algebra_map_mem E (algebraMap K F x) }
+/-- Lift an intermediate_field of an intermediate_field -/
+def lift2 {F : IntermediateField K L} (E : IntermediateField F L) : IntermediateField K L where
+  Carrier := E.carrier
+  zero_mem' := zero_mem E
+  add_mem' := fun x y => add_mem E
+  neg_mem' := fun x => neg_mem E
+  one_mem' := one_mem E
+  mul_mem' := fun x y => mul_mem E
+  inv_mem' := fun x => inv_mem E
+  algebra_map_mem' := fun x => algebra_map_mem E (algebraMap K F x)
 
 instance has_lift1 {F : IntermediateField K L} : HasLiftT (IntermediateField K F) (IntermediateField K L) :=
   ⟨lift1⟩
@@ -635,7 +371,7 @@ theorem mem_lift2 {F : IntermediateField K L} {E : IntermediateField F L} {x : L
     x ∈ (↑E : IntermediateField K L) ↔ x ∈ E :=
   Iff.rfl
 
-/--  This was formerly an instance called `lift2_alg`, but an instance above already provides it. -/
+/-- This was formerly an instance called `lift2_alg`, but an instance above already provides it. -/
 example {F : IntermediateField K L} {E : IntermediateField F L} : Algebra K E := by
   infer_instance
 
@@ -646,7 +382,7 @@ theorem lift2_algebra_map {F : IntermediateField K L} {E : IntermediateField F L
 instance lift2_tower {F : IntermediateField K L} {E : IntermediateField F L} : IsScalarTower K F E :=
   E.is_scalar_tower
 
-/--  `lift2` is isomorphic to the original `intermediate_field`. -/
+/-- `lift2` is isomorphic to the original `intermediate_field`. -/
 def lift2_alg_equiv {F : IntermediateField K L} (E : IntermediateField F L) : (↑E : IntermediateField K L) ≃ₐ[K] E :=
   AlgEquiv.refl
 
@@ -699,11 +435,13 @@ end FiniteDimensional
 
 end IntermediateField
 
-/--  If `L/K` is algebraic, the `K`-subalgebras of `L` are all fields.  -/
-def subalgebraEquivIntermediateField (alg : Algebra.IsAlgebraic K L) : Subalgebra K L ≃o IntermediateField K L :=
-  { toFun := fun S => S.to_intermediate_field fun x hx => S.inv_mem_of_algebraic (alg (⟨x, hx⟩ : S)),
-    invFun := fun S => S.to_subalgebra, left_inv := fun S => to_subalgebra_to_intermediate_field _ _,
-    right_inv := fun S => to_intermediate_field_to_subalgebra _ _, map_rel_iff' := fun S S' => Iff.rfl }
+/-- If `L/K` is algebraic, the `K`-subalgebras of `L` are all fields.  -/
+def subalgebraEquivIntermediateField (alg : Algebra.IsAlgebraic K L) : Subalgebra K L ≃o IntermediateField K L where
+  toFun := fun S => S.to_intermediate_field fun x hx => S.inv_mem_of_algebraic (alg (⟨x, hx⟩ : S))
+  invFun := fun S => S.to_subalgebra
+  left_inv := fun S => to_subalgebra_to_intermediate_field _ _
+  right_inv := fun S => to_intermediate_field_to_subalgebra _ _
+  map_rel_iff' := fun S S' => Iff.rfl
 
 @[simp]
 theorem mem_subalgebra_equiv_intermediate_field (alg : Algebra.IsAlgebraic K L) {S : Subalgebra K L} {x : L} :

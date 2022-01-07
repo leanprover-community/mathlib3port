@@ -67,7 +67,7 @@ variable (v : E)
 /-! ### Construction of the stereographic projection -/
 
 
-/--  Stereographic projection, forward direction. This is a map from an inner product space `E` to
+/-- Stereographic projection, forward direction. This is a map from an inner product space `E` to
 the orthogonal complement of an element `v` of `E`. It is smooth away from the affine hyperplane
 through `v` parallel to the orthogonal complement.  It restricts on the sphere to the stereographic
 projection. -/
@@ -85,11 +85,11 @@ theorem times_cont_diff_on_stereo_to_fun [CompleteSpace E] :
     TimesContDiffOn ℝ ⊤ (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } := by
   refine' TimesContDiffOn.smul _ (orthogonalProjection (ℝ∙v)ᗮ).TimesContDiff.TimesContDiffOn
   refine' times_cont_diff_const.times_cont_diff_on.div _ _
-  ·
-    exact (times_cont_diff_const.sub (innerSL v).TimesContDiff).TimesContDiffOn
-  ·
-    intro x h h'
+  · exact (times_cont_diff_const.sub (innerSL v).TimesContDiff).TimesContDiffOn
+    
+  · intro x h h'
     exact h (sub_eq_zero.mp h').symm
+    
 
 theorem continuous_on_stereo_to_fun [CompleteSpace E] :
     ContinuousOn (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } :=
@@ -97,30 +97,30 @@ theorem continuous_on_stereo_to_fun [CompleteSpace E] :
 
 variable (v)
 
-/--  Auxiliary function for the construction of the reverse direction of the stereographic
+/-- Auxiliary function for the construction of the reverse direction of the stereographic
 projection.  This is a map from the orthogonal complement of a unit vector `v` in an inner product
 space `E` to `E`; we will later prove that it takes values in the unit sphere.
 
 For most purposes, use `stereo_inv_fun`, not `stereo_inv_fun_aux`. -/
 def stereoInvFunAux (w : E) : E :=
-  ((∥w∥^2)+4)⁻¹ • ((4 : ℝ) • w)+((∥w∥^2) - 4) • v
+  (∥w∥ ^ 2 + 4)⁻¹ • ((4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v)
 
 variable {v}
 
 @[simp]
-theorem stereo_inv_fun_aux_apply (w : E) : stereoInvFunAux v w = ((∥w∥^2)+4)⁻¹ • ((4 : ℝ) • w)+((∥w∥^2) - 4) • v :=
+theorem stereo_inv_fun_aux_apply (w : E) : stereoInvFunAux v w = (∥w∥ ^ 2 + 4)⁻¹ • ((4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v) :=
   rfl
 
 theorem stereo_inv_fun_aux_mem (hv : ∥v∥ = 1) {w : E} (hw : w ∈ (ℝ∙v)ᗮ) : stereoInvFunAux v w ∈ sphere (0 : E) 1 := by
-  have h₁ : 0 ≤ (∥w∥^2)+4 := by
+  have h₁ : 0 ≤ ∥w∥ ^ 2 + 4 := by
     nlinarith
-  suffices ∥((4 : ℝ) • w)+((∥w∥^2) - 4) • v∥ = (∥w∥^2)+4by
-    have h₂ : ((∥w∥^2)+4) ≠ 0 := by
+  suffices ∥(4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v∥ = ∥w∥ ^ 2 + 4 by
+    have h₂ : ∥w∥ ^ 2 + 4 ≠ 0 := by
       nlinarith
     simp only [mem_sphere_zero_iff_norm, norm_smul, Real.norm_eq_abs, abs_inv, this, abs_of_nonneg h₁,
       stereo_inv_fun_aux_apply]
     field_simp
-  suffices (∥((4 : ℝ) • w)+((∥w∥^2) - 4) • v∥^2) = (((∥w∥^2)+4)^2)by
+  suffices ∥(4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v∥ ^ 2 = (∥w∥ ^ 2 + 4) ^ 2 by
     have h₃ : 0 ≤ ∥stereoInvFunAux v w∥ := norm_nonneg _
     simpa [h₁, h₃, -one_pow] using this
   simp [norm_add_sq_real, norm_smul, inner_smul_left, inner_smul_right, inner_left_of_mem_orthogonal_singleton _ hw,
@@ -128,24 +128,24 @@ theorem stereo_inv_fun_aux_mem (hv : ∥v∥ = 1) {w : E} (hw : w ∈ (ℝ∙v)�
   ring
 
 theorem times_cont_diff_stereo_inv_fun_aux : TimesContDiff ℝ ⊤ (stereoInvFunAux v) := by
-  have h₀ : TimesContDiff ℝ ⊤ fun w : E => ∥w∥^2 := times_cont_diff_norm_sq
-  have h₁ : TimesContDiff ℝ ⊤ fun w : E => ((∥w∥^2)+4)⁻¹ := by
+  have h₀ : TimesContDiff ℝ ⊤ fun w : E => ∥w∥ ^ 2 := times_cont_diff_norm_sq
+  have h₁ : TimesContDiff ℝ ⊤ fun w : E => (∥w∥ ^ 2 + 4)⁻¹ := by
     refine' (h₀.add times_cont_diff_const).inv _
     intro x
     nlinarith
-  have h₂ : TimesContDiff ℝ ⊤ fun w => ((4 : ℝ) • w)+((∥w∥^2) - 4) • v := by
+  have h₂ : TimesContDiff ℝ ⊤ fun w => (4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v := by
     refine' (times_cont_diff_const.smul times_cont_diff_id).add _
     refine' (h₀.sub times_cont_diff_const).smul times_cont_diff_const
   exact h₁.smul h₂
 
-/--  Stereographic projection, reverse direction.  This is a map from the orthogonal complement of a
+/-- Stereographic projection, reverse direction.  This is a map from the orthogonal complement of a
 unit vector `v` in an inner product space `E` to the unit sphere in `E`. -/
 def stereoInvFun (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) : sphere (0 : E) 1 :=
   ⟨stereoInvFunAux v (w : E), stereo_inv_fun_aux_mem hv w.2⟩
 
 @[simp]
 theorem stereo_inv_fun_apply (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) :
-    (stereoInvFun hv w : E) = ((∥w∥^2)+4)⁻¹ • ((4 : ℝ) • w)+((∥w∥^2) - 4) • v :=
+    (stereoInvFun hv w : E) = (∥w∥ ^ 2 + 4)⁻¹ • ((4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v) :=
   rfl
 
 theorem stereo_inv_fun_ne_north_pole (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) :
@@ -156,16 +156,16 @@ theorem stereo_inv_fun_ne_north_pole (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) :
   by
   refine' Subtype.ne_of_val_ne _
   rw [← inner_lt_one_iff_real_of_norm_one _ hv]
-  ·
-    have hw : ⟪v, w⟫_ℝ = 0 := inner_right_of_mem_orthogonal_singleton v w.2
-    have hw' : (((∥(w : E)∥^2)+4)⁻¹*(∥(w : E)∥^2) - 4) < 1 := by
+  · have hw : ⟪v, w⟫_ℝ = 0 := inner_right_of_mem_orthogonal_singleton v w.2
+    have hw' : (∥(w : E)∥ ^ 2 + 4)⁻¹ * (∥(w : E)∥ ^ 2 - 4) < 1 := by
       refine' (inv_mul_lt_iff' _).mpr _
-      ·
-        nlinarith
+      · nlinarith
+        
       linarith
     simpa [real_inner_comm, inner_add_right, inner_smul_right, real_inner_self_eq_norm_mul_norm, hw, hv] using hw'
-  ·
-    simpa using stereo_inv_fun_aux_mem hv w.2
+    
+  · simpa using stereo_inv_fun_aux_mem hv w.2
+    
 
 theorem continuous_stereo_inv_fun (hv : ∥v∥ = 1) : Continuous (stereoInvFun hv) :=
   continuous_induced_rng (times_cont_diff_stereo_inv_fun_aux.Continuous.comp continuous_subtype_coe)
@@ -178,20 +178,20 @@ theorem stereo_left_inv (hv : ∥v∥ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
   simp only [stereo_to_fun_apply, stereo_inv_fun_apply, smul_add]
   set a : ℝ := innerSL v x
   set y := orthogonalProjection (ℝ∙v)ᗮ x
-  have split : ↑x = (a • v)+↑y := by
+  have split : ↑x = a • v + ↑y := by
     convert eq_sum_orthogonal_projection_self_orthogonal_complement (ℝ∙v) x
     exact (orthogonal_projection_unit_singleton ℝ hv x).symm
   have hvy : ⟪v, y⟫_ℝ = 0 := inner_right_of_mem_orthogonal_singleton v y.2
-  have pythag : 1 = (a^2)+∥y∥^2 := by
+  have pythag : 1 = a ^ 2 + ∥y∥ ^ 2 := by
     have hvy' : ⟪a • v, y⟫_ℝ = 0 := by
       simp [inner_smul_left, hvy]
     convert norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero _ _ hvy' using 2
-    ·
-      simp [← split]
-    ·
-      simp [norm_smul, hv, Real.norm_eq_abs, ← sq, sq_abs]
-    ·
-      exact sq _
+    · simp [← split]
+      
+    · simp [norm_smul, hv, Real.norm_eq_abs, ← sq, sq_abs]
+      
+    · exact sq _
+      
   have ha : 1 - a ≠ 0 := by
     have : a < 1 :=
       (inner_lt_one_iff_real_of_norm_one hv
@@ -199,69 +199,72 @@ theorem stereo_left_inv (hv : ∥v∥ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
               simp )).mpr
         hx.symm
     linarith
-  have : (((2^2)*∥y∥^2)+4*1 - a^2) ≠ 0 := by
+  have : 2 ^ 2 * ∥y∥ ^ 2 + 4 * (1 - a) ^ 2 ≠ 0 := by
     refine' ne_of_gtₓ _
     have := norm_nonneg (y : E)
-    have : 0 < (1 - a^2) := sq_pos_of_ne_zero (1 - a) ha
+    have : 0 < (1 - a) ^ 2 := sq_pos_of_ne_zero (1 - a) ha
     nlinarith
-  have h₁ : ((((((2^2) / (1 - a^2))*∥y∥^2)+4)⁻¹*4)*2 / (1 - a)) = 1 := by
+  have h₁ : (2 ^ 2 / (1 - a) ^ 2 * ∥y∥ ^ 2 + 4)⁻¹ * 4 * (2 / (1 - a)) = 1 := by
     field_simp
     nlinarith
-  have h₂ : (((((2^2) / (1 - a^2))*∥y∥^2)+4)⁻¹*(((2^2) / (1 - a^2))*∥y∥^2) - 4) = a := by
+  have h₂ : (2 ^ 2 / (1 - a) ^ 2 * ∥y∥ ^ 2 + 4)⁻¹ * (2 ^ 2 / (1 - a) ^ 2 * ∥y∥ ^ 2 - 4) = a := by
     field_simp
-    trans (1 - a^2)*a*((2^2)*∥y∥^2)+4*1 - a^2
-    ·
-      congr
+    trans (1 - a) ^ 2 * (a * (2 ^ 2 * ∥y∥ ^ 2 + 4 * (1 - a) ^ 2))
+    · congr
       nlinarith
+      
     ring
   convert congr_arg2ₓ Add.add (congr_argₓ (fun t => t • (y : E)) h₁) (congr_argₓ (fun t => t • v) h₂) using 1
-  ·
-    simp [inner_add_right, inner_smul_right, hvy, real_inner_self_eq_norm_mul_norm, hv, mul_smul, mul_powₓ,
+  · simp [inner_add_right, inner_smul_right, hvy, real_inner_self_eq_norm_mul_norm, hv, mul_smul, mul_powₓ,
       Real.norm_eq_abs, sq_abs, norm_smul]
-  ·
-    simp [split, add_commₓ]
+    
+  · simp [split, add_commₓ]
+    
 
 theorem stereo_right_inv (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) : stereoToFun v (stereoInvFun hv w) = w := by
-  have : (((2 / (1 - ((∥(w : E)∥^2)+4)⁻¹*(∥(w : E)∥^2) - 4))*((∥(w : E)∥^2)+4)⁻¹)*4) = 1 := by
-    have : ((∥(w : E)∥^2)+4) ≠ 0 := by
+  have : 2 / (1 - (∥(w : E)∥ ^ 2 + 4)⁻¹ * (∥(w : E)∥ ^ 2 - 4)) * (∥(w : E)∥ ^ 2 + 4)⁻¹ * 4 = 1 := by
+    have : ∥(w : E)∥ ^ 2 + 4 ≠ 0 := by
       nlinarith
-    have : ((4 : ℝ)+4) ≠ 0 := by
+    have : (4 : ℝ) + 4 ≠ 0 := by
       nlinarith
     field_simp
     ring
   convert congr_argₓ (fun c => c • w) this
-  ·
-    have h₁ : orthogonalProjection (ℝ∙v)ᗮ v = 0 := orthogonal_projection_orthogonal_complement_singleton_eq_zero v
+  · have h₁ : orthogonalProjection (ℝ∙v)ᗮ v = 0 := orthogonal_projection_orthogonal_complement_singleton_eq_zero v
     have h₂ : orthogonalProjection (ℝ∙v)ᗮ w = w := orthogonal_projection_mem_subspace_eq_self w
     have h₃ : innerSL v w = (0 : ℝ) := inner_right_of_mem_orthogonal_singleton v w.2
     have h₄ : innerSL v v = (1 : ℝ) := by
       simp [real_inner_self_eq_norm_mul_norm, hv]
     simp [h₁, h₂, h₃, h₄, ContinuousLinearMap.map_add, ContinuousLinearMap.map_smul, mul_smul]
-  ·
-    simp
+    
+  · simp
+    
 
-/--  Stereographic projection from the unit sphere in `E`, centred at a unit vector `v` in `E`; this
+/-- Stereographic projection from the unit sphere in `E`, centred at a unit vector `v` in `E`; this
 is the version as a local homeomorphism. -/
-def stereographic (hv : ∥v∥ = 1) : LocalHomeomorph (sphere (0 : E) 1) (ℝ∙v)ᗮ :=
-  { toFun := stereoToFun v ∘ coeₓ, invFun := stereoInvFun hv,
-    Source :=
-      {⟨v, by
-            simp [hv]⟩}ᶜ,
-    Target := Set.Univ,
-    map_source' := by
-      simp ,
-    map_target' := fun w _ => stereo_inv_fun_ne_north_pole hv w,
-    left_inv' := fun _ hx => stereo_left_inv hv fun h => hx (Subtype.ext h),
-    right_inv' := fun w _ => stereo_right_inv hv w, open_source := is_open_compl_singleton, open_target := is_open_univ,
-    continuous_to_fun :=
-      continuous_on_stereo_to_fun.comp continuous_subtype_coe.ContinuousOn fun w h =>
-        h ∘
-          Subtype.ext ∘
-            Eq.symm ∘
-              (inner_eq_norm_mul_iff_of_norm_one hv
-                  (by
-                    simp )).mp,
-    continuous_inv_fun := (continuous_stereo_inv_fun hv).ContinuousOn }
+def stereographic (hv : ∥v∥ = 1) : LocalHomeomorph (sphere (0 : E) 1) (ℝ∙v)ᗮ where
+  toFun := stereoToFun v ∘ coeₓ
+  invFun := stereoInvFun hv
+  Source :=
+    {⟨v, by
+          simp [hv]⟩}ᶜ
+  Target := Set.Univ
+  map_source' := by
+    simp
+  map_target' := fun w _ => stereo_inv_fun_ne_north_pole hv w
+  left_inv' := fun _ hx => stereo_left_inv hv fun h => hx (Subtype.ext h)
+  right_inv' := fun w _ => stereo_right_inv hv w
+  open_source := is_open_compl_singleton
+  open_target := is_open_univ
+  continuous_to_fun :=
+    continuous_on_stereo_to_fun.comp continuous_subtype_coe.ContinuousOn fun w h =>
+      h ∘
+        Subtype.ext ∘
+          Eq.symm ∘
+            (inner_eq_norm_mul_iff_of_norm_one hv
+                (by
+                  simp )).mp
+  continuous_inv_fun := (continuous_stereo_inv_fun hv).ContinuousOn
 
 @[simp]
 theorem stereographic_source (hv : ∥v∥ = 1) :
@@ -297,419 +300,33 @@ orthogonalization, but in the finite-dimensional case it follows more easily by 
 -/
 
 
-/--  Variant of the stereographic projection, for the sphere in an `n + 1`-dimensional inner product
+/-- Variant of the stereographic projection, for the sphere in an `n + 1`-dimensional inner product
 space `E`.  This version has codomain the Euclidean space of dimension `n`, and is obtained by
 composing the original sterographic projection (`stereographic`) with an arbitrary linear isometry
 from `(ℝ ∙ v)ᗮ` to the Euclidean space. -/
-def stereographic' (n : ℕ) [Fact (finrank ℝ E = n+1)] (v : sphere (0 : E) 1) :
+def stereographic' (n : ℕ) [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
     LocalHomeomorph (sphere (0 : E) 1) (EuclideanSpace ℝ (Finₓ n)) :=
   stereographic (norm_eq_of_mem_sphere v) ≫ₕ
     (LinearIsometryEquiv.fromOrthogonalSpanSingleton n (nonzero_of_mem_unit_sphere v)).toHomeomorph.toLocalHomeomorph
 
 @[simp]
-theorem stereographic'_source {n : ℕ} [Fact (finrank ℝ E = n+1)] (v : sphere (0 : E) 1) :
+theorem stereographic'_source {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
     (stereographic' n v).Source = {v}ᶜ := by
   simp [stereographic']
 
 @[simp]
-theorem stereographic'_target {n : ℕ} [Fact (finrank ℝ E = n+1)] (v : sphere (0 : E) 1) :
+theorem stereographic'_target {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
     (stereographic' n v).Target = Set.Univ := by
   simp [stereographic']
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment
-    "/--"
-    " The unit sphere in an `n + 1`-dimensional inner product space `E` is a charted space\nmodelled on the Euclidean space of dimension `n`. -/")]
-  []
-  []
-  []
-  []
-  [])
- (Command.instance
-  (Term.attrKind [])
-  "instance"
-  []
-  []
-  (Command.declSig
-   [(Term.implicitBinder "{" [`n] [":" (termℕ "ℕ")] "}")
-    (Term.instBinder
-     "["
-     []
-     (Term.app
-      `Fact
-      [(«term_=_» (Term.app `finrank [(Data.Real.Basic.termℝ "ℝ") `E]) "=" (Init.Logic.«term_+_» `n "+" (numLit "1")))])
-     "]")]
-   (Term.typeSpec
-    ":"
-    (Term.app
-     `ChartedSpace
-     [(Term.app `EuclideanSpace [(Data.Real.Basic.termℝ "ℝ") (Term.app `Finₓ [`n])])
-      (Term.app `sphere [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `E)]] ")") (numLit "1")])])))
-  (Command.whereStructInst
-   "where"
-   [(group
-     (Command.whereStructField
-      (Term.letDecl
-       (Term.letIdDecl
-        `Atlas
-        []
-        []
-        ":="
-        (Set.«term{_|_}»
-         "{"
-         `f
-         "|"
-         («term∃_,_»
-          "∃"
-          (Lean.explicitBinders
-           (Lean.unbracketedExplicitBinders
-            [(Lean.binderIdent `v)]
-            [":" (Term.app `sphere [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `E)]] ")") (numLit "1")])]))
-          ","
-          («term_=_» `f "=" (Term.app `stereographic' [`n `v])))
-         "}"))))
-     [])
-    (group
-     (Command.whereStructField
-      (Term.letDecl
-       (Term.letIdDecl
-        `chartAt
-        [(Term.simpleBinder [(Term.simpleBinder [`v] [])] [])]
-        []
-        ":="
-        (Term.app `stereographic' [`n («term-_» "-" `v)]))))
-     [])
-    (group
-     (Command.whereStructField
-      (Term.letDecl
-       (Term.letIdDecl
-        `mem_chart_source
-        [(Term.simpleBinder [(Term.simpleBinder [`v] [])] [])]
-        []
-        ":="
-        (Term.byTactic
-         "by"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(group
-             (Tactic.simpa
-              "simpa"
-              []
-              []
-              []
-              []
-              ["using" (Term.app `ne_neg_of_mem_unit_sphere [(Data.Real.Basic.termℝ "ℝ") `v])])
-             [])]))))))
-     [])
-    (group
-     (Command.whereStructField
-      (Term.letDecl
-       (Term.letIdDecl
-        `chart_mem_atlas
-        [(Term.simpleBinder [(Term.simpleBinder [`v] [])] [])]
-        []
-        ":="
-        (Term.anonymousCtor "⟨" [(«term-_» "-" `v) "," `rfl] "⟩"))))
-     [])])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructField', expected 'Lean.Parser.Command.whereStructField.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letDecl', expected 'Lean.Parser.Term.letDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letIdDecl.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor "⟨" [(«term-_» "-" `v) "," `rfl] "⟩")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `rfl
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term-_»', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term-_» "-" `v)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term-_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `v
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 100 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 100, (some 100, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructField', expected 'Lean.Parser.Command.whereStructField.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letDecl', expected 'Lean.Parser.Term.letDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letIdDecl.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.simpa
-        "simpa"
-        []
-        []
-        []
-        []
-        ["using" (Term.app `ne_neg_of_mem_unit_sphere [(Data.Real.Basic.termℝ "ℝ") `v])])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simpa "simpa" [] [] [] [] ["using" (Term.app `ne_neg_of_mem_unit_sphere [(Data.Real.Basic.termℝ "ℝ") `v])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpa', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `ne_neg_of_mem_unit_sphere [(Data.Real.Basic.termℝ "ℝ") `v])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `v
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Real.Basic.termℝ', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Real.Basic.termℝ', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Real.Basic.termℝ', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Real.Basic.termℝ', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Real.Basic.termℝ', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Data.Real.Basic.termℝ "ℝ")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Real.Basic.termℝ', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `ne_neg_of_mem_unit_sphere
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructField', expected 'Lean.Parser.Command.whereStructField.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letDecl', expected 'Lean.Parser.Term.letDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letIdDecl.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Term.app `stereographic' [`n («term-_» "-" `v)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term-_»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term-_»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term-_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term-_»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term-_»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term-_» "-" `v)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term-_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `v
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 100 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 100, (some 100, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term-_» "-" `v) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `stereographic'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructField', expected 'Lean.Parser.Command.whereStructField.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letDecl', expected 'Lean.Parser.Term.letDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letIdDecl.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Set.«term{_|_}»
-   "{"
-   `f
-   "|"
-   («term∃_,_»
-    "∃"
-    (Lean.explicitBinders
-     (Lean.unbracketedExplicitBinders
-      [(Lean.binderIdent `v)]
-      [":" (Term.app `sphere [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `E)]] ")") (numLit "1")])]))
-    ","
-    («term_=_» `f "=" (Term.app `stereographic' [`n `v])))
-   "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term∃_,_»
-   "∃"
-   (Lean.explicitBinders
-    (Lean.unbracketedExplicitBinders
-     [(Lean.binderIdent `v)]
-     [":" (Term.app `sphere [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `E)]] ")") (numLit "1")])]))
-   ","
-   («term_=_» `f "=" (Term.app `stereographic' [`n `v])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term∃_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_=_» `f "=" (Term.app `stereographic' [`n `v]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `stereographic' [`n `v])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `v
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `n
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `stereographic'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'Lean.bracketedExplicitBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `sphere [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `E)]] ")") (numLit "1")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "1")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `E)]] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `E
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (numLit "0")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `sphere
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.binderIdent', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-    The unit sphere in an `n + 1`-dimensional inner product space `E` is a charted space
-    modelled on the Euclidean space of dimension `n`. -/
-  instance
-    { n : ℕ } [ Fact finrank ℝ E = n + 1 ] : ChartedSpace EuclideanSpace ℝ Finₓ n sphere ( 0 : E ) 1
-    where
-      Atlas := { f | ∃ v : sphere ( 0 : E ) 1 , f = stereographic' n v }
-        chartAt v := stereographic' n - v
-        mem_chart_source v := by simpa using ne_neg_of_mem_unit_sphere ℝ v
-        chart_mem_atlas v := ⟨ - v , rfl ⟩
+/-- The unit sphere in an `n + 1`-dimensional inner product space `E` is a charted space
+modelled on the Euclidean space of dimension `n`. -/
+instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : ChartedSpace (EuclideanSpace ℝ (Finₓ n)) (sphere (0 : E) 1) where
+  Atlas := { f | ∃ v : sphere (0 : E) 1, f = stereographic' n v }
+  chartAt := fun v => stereographic' n (-v)
+  mem_chart_source := fun v => by
+    simpa using ne_neg_of_mem_unit_sphere ℝ v
+  chart_mem_atlas := fun v => ⟨-v, rfl⟩
 
 end ChartedSpace
 
@@ -718,9 +335,9 @@ section SmoothManifold
 /-! ### Smooth manifold structure on the sphere -/
 
 
-/--  The unit sphere in an `n + 1`-dimensional inner product space `E` is a smooth manifold,
+/-- The unit sphere in an `n + 1`-dimensional inner product space `E` is a smooth manifold,
 modelled on the Euclidean space of dimension `n`. -/
-instance {n : ℕ} [Fact (finrank ℝ E = n+1)] : SmoothManifoldWithCorners (𝓡 n) (sphere (0 : E) 1) :=
+instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : SmoothManifoldWithCorners (𝓡 n) (sphere (0 : E) 1) :=
   smooth_manifold_with_corners_of_times_cont_diff_on (𝓡 n) (sphere (0 : E) 1)
     (by
       rintro _ _ ⟨v, rfl⟩ ⟨v', rfl⟩
@@ -742,20 +359,20 @@ instance {n : ℕ} [Fact (finrank ℝ E = n+1)] : SmoothManifoldWithCorners (�
       ext
       simp [h_set, hUv, hU'v', stereographic, real_inner_comm])
 
-/--  The inclusion map (i.e., `coe`) from the sphere in `E` to `E` is smooth.  -/
-theorem times_cont_mdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n+1)] :
+/-- The inclusion map (i.e., `coe`) from the sphere in `E` to `E` is smooth.  -/
+theorem times_cont_mdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
     TimesContMdiff (𝓡 n) 𝓘(ℝ, E) ∞ (coeₓ : sphere (0 : E) 1 → E) := by
   rw [times_cont_mdiff_iff]
   constructor
-  ·
-    exact continuous_subtype_coe
-  ·
-    intro v _
+  · exact continuous_subtype_coe
+    
+  · intro v _
     let U : (ℝ∙(-v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
       LinearIsometryEquiv.fromOrthogonalSpanSingleton n (nonzero_of_mem_unit_sphere (-v))
     exact
       ((times_cont_diff_stereo_inv_fun_aux.comp (ℝ∙(-v : E))ᗮ.subtypeL.TimesContDiff).comp
           U.symm.times_cont_diff).TimesContDiffOn
+    
 
 variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
 
@@ -763,9 +380,9 @@ variable {H : Type _} [TopologicalSpace H] {I : ModelWithCorners ℝ F H}
 
 variable {M : Type _} [TopologicalSpace M] [ChartedSpace H M] [SmoothManifoldWithCorners I M]
 
-/--  If a `times_cont_mdiff` function `f : M → E`, where `M` is some manifold, takes values in the
+/-- If a `times_cont_mdiff` function `f : M → E`, where `M` is some manifold, takes values in the
 sphere, then it restricts to a `times_cont_mdiff` function from `M` to the sphere. -/
-theorem TimesContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n+1)] {m : WithTop ℕ} {f : M → E}
+theorem TimesContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m : WithTop ℕ} {f : M → E}
     (hf : TimesContMdiff I 𝓘(ℝ, E) m f) (hf' : ∀ x, f x ∈ sphere (0 : E) 1) :
     TimesContMdiff I (𝓡 n) m (Set.codRestrict _ _ hf' : M → sphere (0 : E) 1) := by
   rw [times_cont_mdiff_iff_target]
@@ -786,8 +403,8 @@ theorem TimesContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n+1)
   dsimp [chart_at]
   simp [not_iff_not, Subtype.ext_iff, hfxv, real_inner_comm]
 
-/--  The antipodal map is smooth. -/
-theorem times_cont_mdiff_neg_sphere {n : ℕ} [Fact (finrank ℝ E = n+1)] :
+/-- The antipodal map is smooth. -/
+theorem times_cont_mdiff_neg_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
     TimesContMdiff (𝓡 n) (𝓡 n) ∞ fun x : sphere (0 : E) 1 => -x :=
   (times_cont_diff_neg.TimesContMdiff.comp times_cont_mdiff_coe_sphere).cod_restrict_sphere _
 
@@ -799,7 +416,7 @@ open Complex
 
 attribute [local instance] finrank_real_complex_fact
 
-/--  The unit circle in `ℂ` is a charted space modelled on `euclidean_space ℝ (fin 1)`.  This
+/-- The unit circle in `ℂ` is a charted space modelled on `euclidean_space ℝ (fin 1)`.  This
 follows by definition from the corresponding result for `metric.sphere`. -/
 instance : ChartedSpace (EuclideanSpace ℝ (Finₓ 1)) circle :=
   Metric.Sphere.chartedSpace
@@ -807,20 +424,20 @@ instance : ChartedSpace (EuclideanSpace ℝ (Finₓ 1)) circle :=
 instance : SmoothManifoldWithCorners (𝓡 1) circle :=
   Metric.Sphere.smooth_manifold_with_corners
 
-/--  The unit circle in `ℂ` is a Lie group. -/
+/-- The unit circle in `ℂ` is a Lie group. -/
 instance : LieGroup (𝓡 1) circle :=
   { Metric.Sphere.smooth_manifold_with_corners with
     smooth_mul := by
       let c : circle → ℂ := coeₓ
       have h₁ : TimesContMdiff _ _ _ (Prod.map c c) := times_cont_mdiff_coe_sphere.prod_map times_cont_mdiff_coe_sphere
-      have h₂ : TimesContMdiff (𝓘(ℝ, ℂ).Prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst*z.snd := by
+      have h₂ : TimesContMdiff (𝓘(ℝ, ℂ).Prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd := by
         rw [times_cont_mdiff_iff]
         exact ⟨continuous_mul, fun x y => (times_cont_diff_mul.restrict_scalars ℝ).TimesContDiffOn⟩
       exact (h₂.comp h₁).cod_restrict_sphere _,
     smooth_inv :=
       (Complex.conjCle.TimesContDiff.TimesContMdiff.comp times_cont_mdiff_coe_sphere).cod_restrict_sphere _ }
 
-/--  The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ` is smooth. -/
+/-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ` is smooth. -/
 theorem times_cont_mdiff_exp_map_circle : TimesContMdiff 𝓘(ℝ, ℝ) (𝓡 1) ∞ expMapCircle :=
   ((times_cont_diff_exp.restrictScalars ℝ).comp
           (times_cont_diff_id.smul times_cont_diff_const)).TimesContMdiff.cod_restrict_sphere

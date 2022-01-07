@@ -15,7 +15,7 @@ noncomputable instance MvPolynomial.invertibleC (σ : Type _) {R : Type _} [Comm
     Invertible (C r : MvPolynomial σ R) :=
   Invertible.map (C.toMonoidHom : R →* MvPolynomial σ R) _
 
-/--  A natural number that is invertible when coerced to a commutative semiring `R`
+/-- A natural number that is invertible when coerced to a commutative semiring `R`
 is also invertible when coerced to any polynomial ring with rational coefficients.
 
 Short-cut for typeclass resolution. -/

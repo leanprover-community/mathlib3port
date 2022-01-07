@@ -24,8 +24,7 @@ open List
 
 variable {α : Type _}
 
-/-- 
-`palindrome l` asserts that `l` is a palindrome. This is defined inductively:
+/-- `palindrome l` asserts that `l` is a palindrome. This is defined inductively:
 
 * The empty list is a palindrome;
 * A list with one element is a palindrome;
@@ -47,8 +46,7 @@ theorem of_reverse_eq {l : List α} : reverse l = l → Palindrome l := by
   intro x l y hp hr
   rw [reverse_cons, reverse_append] at hr
   rw [head_eq_of_cons_eq hr]
-  have : Palindrome l
-  exact hp (append_inj_left' (tail_eq_of_cons_eq hr) rfl)
+  have : Palindrome l := hp (append_inj_left' (tail_eq_of_cons_eq hr) rfl)
   exact Palindrome.cons_concat x this
 
 theorem iff_reverse_eq {l : List α} : Palindrome l ↔ reverse l = l :=

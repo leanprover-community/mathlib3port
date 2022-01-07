@@ -19,15 +19,14 @@ namespace CommRingₓₓ
 
 open_locale Classical
 
-/-- 
-The free functor `Type u ⥤ CommRing` sending a type `X` to the multivariable (commutative)
+/-- The free functor `Type u ⥤ CommRing` sending a type `X` to the multivariable (commutative)
 polynomials with variables `x : X`.
 -/
-def free : Type u ⥤ CommRingₓₓ.{u} :=
-  { obj := fun α => of (MvPolynomial α ℤ),
-    map := fun X Y f => (↑(rename f : _ →ₐ[ℤ] _) : MvPolynomial X ℤ →+* MvPolynomial Y ℤ),
-    map_id' := fun X => RingHom.ext $ rename_id,
-    map_comp' := fun X Y Z f g => RingHom.ext $ fun p => (rename_rename f g p).symm }
+def free : Type u ⥤ CommRingₓₓ.{u} where
+  obj := fun α => of (MvPolynomial α ℤ)
+  map := fun X Y f => (↑(rename f : _ →ₐ[ℤ] _) : MvPolynomial X ℤ →+* MvPolynomial Y ℤ)
+  map_id' := fun X => RingHom.ext $ rename_id
+  map_comp' := fun X Y Z f g => RingHom.ext $ fun p => (rename_rename f g p).symm
 
 @[simp]
 theorem free_obj_coe {α : Type u} : (free.obj α : Type u) = MvPolynomial α ℤ :=
@@ -37,8 +36,7 @@ theorem free_obj_coe {α : Type u} : (free.obj α : Type u) = MvPolynomial α �
 theorem free_map_coe {α β : Type u} {f : α → β} : ⇑free.map f = rename f :=
   rfl
 
-/-- 
-The free-forgetful adjunction for commutative rings.
+/-- The free-forgetful adjunction for commutative rings.
 -/
 def adj : free ⊣ forget CommRingₓₓ.{u} :=
   adjunction.mk_of_hom_equiv

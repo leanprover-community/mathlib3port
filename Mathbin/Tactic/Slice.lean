@@ -38,10 +38,10 @@ unsafe def slice (a b : ℕ) : conv Unit := do
       conv.congr
       conv.skip
   let k ← repeat_count $ to_expr (pquote.1 category.assoc) >>= fun e => tactic.rewrite_target e { symm := tt }
-  iterate_range (((k+1)+a) - b) (((k+1)+a) - b) conv.congr
+  iterate_range (k + 1 + a - b) (k + 1 + a - b) conv.congr
   repeat $ to_expr (pquote.1 category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
   rotate 1
-  iterate_exactly' (((k+1)+a) - b) conv.skip
+  iterate_exactly' (k + 1 + a - b) conv.skip
 
 unsafe def slice_lhs (a b : ℕ) (t : conv Unit) : tactic Unit := do
   conv.interactive.to_lhs
@@ -55,8 +55,7 @@ unsafe def slice_rhs (a b : ℕ) (t : conv Unit) : tactic Unit := do
 
 namespace Interactive
 
-/-- 
-`slice` is a conv tactic; if the current focus is a composition of several morphisms,
+/-- `slice` is a conv tactic; if the current focus is a composition of several morphisms,
 `slice a b` reassociates as needed, and zooms in on the `a`-th through `b`-th morphisms.
 
 Thus if the current focus is `(a ≫ b) ≫ ((c ≫ d) ≫ e)`, then `slice 2 3` zooms to `b ≫ c`.
@@ -83,15 +82,13 @@ namespace Interactive
 
 setup_tactic_parser
 
-/-- 
-`slice_lhs a b { tac }` zooms to the left hand side, uses associativity for categorical
+/-- `slice_lhs a b { tac }` zooms to the left hand side, uses associativity for categorical
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
 -/
 unsafe def slice_lhs (a b : parse small_nat) (t : conv.interactive.itactic) : tactic Unit := do
   conv_target' (conv.interactive.to_lhs >> slice a b >> t)
 
-/-- 
-`slice_rhs a b { tac }` zooms to the right hand side, uses associativity for categorical
+/-- `slice_rhs a b { tac }` zooms to the right hand side, uses associativity for categorical
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
 -/
 unsafe def slice_rhs (a b : parse small_nat) (t : conv.interactive.itactic) : tactic Unit := do
@@ -101,8 +98,7 @@ end Interactive
 
 end Tactic
 
-/-- 
-`slice_lhs a b { tac }` zooms to the left hand side, uses associativity for categorical
+/-- `slice_lhs a b { tac }` zooms to the left hand side, uses associativity for categorical
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
 
 `slice_rhs a b { tac }` zooms to the right hand side, uses associativity for categorical

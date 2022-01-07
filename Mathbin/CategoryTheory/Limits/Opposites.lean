@@ -28,8 +28,7 @@ variable {J : Type v} [small_category J]
 
 variable (F : J ⥤ Cᵒᵖ)
 
-/-- 
-If `F.left_op : Jᵒᵖ ⥤ C` has a colimit, we can construct a limit for `F : J ⥤ Cᵒᵖ`.
+/-- If `F.left_op : Jᵒᵖ ⥤ C` has a colimit, we can construct a limit for `F : J ⥤ Cᵒᵖ`.
 -/
 theorem has_limit_of_has_colimit_left_op [has_colimit F.left_op] : has_limit F :=
   has_limit.mk
@@ -51,22 +50,19 @@ theorem has_limit_of_has_colimit_left_op [has_colimit F.left_op] : has_limit F :
             rw [cone_of_cocone_left_op_π_app, colimit.cocone_ι, Quiver.Hom.unop_op]
             rfl } }
 
-/-- 
-If `C` has colimits of shape `Jᵒᵖ`, we can construct limits in `Cᵒᵖ` of shape `J`.
+/-- If `C` has colimits of shape `Jᵒᵖ`, we can construct limits in `Cᵒᵖ` of shape `J`.
 -/
 theorem has_limits_of_shape_op_of_has_colimits_of_shape [has_colimits_of_shape (Jᵒᵖ) C] : has_limits_of_shape J (Cᵒᵖ) :=
   { HasLimit := fun F => has_limit_of_has_colimit_left_op F }
 
 attribute [local instance] has_limits_of_shape_op_of_has_colimits_of_shape
 
-/-- 
-If `C` has colimits, we can construct limits for `Cᵒᵖ`.
+/-- If `C` has colimits, we can construct limits for `Cᵒᵖ`.
 -/
 theorem has_limits_op_of_has_colimits [has_colimits C] : has_limits (Cᵒᵖ) :=
   ⟨inferInstance⟩
 
-/-- 
-If `F.left_op : Jᵒᵖ ⥤ C` has a limit, we can construct a colimit for `F : J ⥤ Cᵒᵖ`.
+/-- If `F.left_op : Jᵒᵖ ⥤ C` has a limit, we can construct a colimit for `F : J ⥤ Cᵒᵖ`.
 -/
 theorem has_colimit_of_has_limit_left_op [has_limit F.left_op] : has_colimit F :=
   has_colimit.mk
@@ -88,31 +84,27 @@ theorem has_colimit_of_has_limit_left_op [has_limit F.left_op] : has_colimit F :
             rw [cocone_of_cone_left_op_ι_app, limit.cone_π, Quiver.Hom.unop_op]
             rfl } }
 
-/-- 
-If `C` has colimits of shape `Jᵒᵖ`, we can construct limits in `Cᵒᵖ` of shape `J`.
+/-- If `C` has colimits of shape `Jᵒᵖ`, we can construct limits in `Cᵒᵖ` of shape `J`.
 -/
 theorem has_colimits_of_shape_op_of_has_limits_of_shape [has_limits_of_shape (Jᵒᵖ) C] : has_colimits_of_shape J (Cᵒᵖ) :=
   { HasColimit := fun F => has_colimit_of_has_limit_left_op F }
 
 attribute [local instance] has_colimits_of_shape_op_of_has_limits_of_shape
 
-/-- 
-If `C` has limits, we can construct colimits for `Cᵒᵖ`.
+/-- If `C` has limits, we can construct colimits for `Cᵒᵖ`.
 -/
 theorem has_colimits_op_of_has_limits [has_limits C] : has_colimits (Cᵒᵖ) :=
   ⟨inferInstance⟩
 
 variable (X : Type v)
 
-/-- 
-If `C` has products indexed by `X`, then `Cᵒᵖ` has coproducts indexed by `X`.
+/-- If `C` has products indexed by `X`, then `Cᵒᵖ` has coproducts indexed by `X`.
 -/
 theorem has_coproducts_opposite [has_products_of_shape X C] : has_coproducts_of_shape X (Cᵒᵖ) := by
   have : has_limits_of_shape (discrete Xᵒᵖ) C := has_limits_of_shape_of_equivalence (discrete.opposite X).symm
   infer_instance
 
-/-- 
-If `C` has coproducts indexed by `X`, then `Cᵒᵖ` has products indexed by `X`.
+/-- If `C` has coproducts indexed by `X`, then `Cᵒᵖ` has products indexed by `X`.
 -/
 theorem has_products_opposite [has_coproducts_of_shape X C] : has_products_of_shape X (Cᵒᵖ) := by
   have : has_colimits_of_shape (discrete Xᵒᵖ) C := has_colimits_of_shape_of_equivalence (discrete.opposite X).symm

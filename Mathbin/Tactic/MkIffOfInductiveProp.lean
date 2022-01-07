@@ -22,15 +22,15 @@ open Tactic Expr
 
 namespace MkIff
 
-/--  `select m n` runs `tactic.right` `m` times, and then `tactic.left` `(n-m)` times.
+/-- `select m n` runs `tactic.right` `m` times, and then `tactic.left` `(n-m)` times.
 Fails if `n < m`. -/
 unsafe def select : ℕ → ℕ → tactic Unit
   | 0, 0 => skip
-  | 0, n+1 => left >> skip
-  | m+1, n+1 => right >> select m n
-  | n+1, 0 => failure
+  | 0, n + 1 => left >> skip
+  | m + 1, n + 1 => right >> select m n
+  | n + 1, 0 => failure
 
-/--  `compact_relation bs as_ps`: Produce a relation of the form:
+/-- `compact_relation bs as_ps`: Produce a relation of the form:
 ```lean
 R as := ∃ bs, Λ_i a_i = p_i[bs]
 ```
@@ -105,8 +105,7 @@ unsafe def to_cases (s : List $ List (Option expr) × Sum expr ℕ) : tactic Uni
         done)
   done
 
-/-- 
-Iterate over two lists, if the first element of the first list is `none`, insert `none` into the
+/-- Iterate over two lists, if the first element of the first list is `none`, insert `none` into the
 result and continue with the tail of first list. Otherwise, wrap the first element of the second
 list with `some` and continue with the tails of both lists. Return when either list is empty.
 
@@ -126,7 +125,7 @@ unsafe def to_inductive (cs : List Name) (gs : List expr) (s : List (List (Optio
     tactic Unit :=
   match s.length with
   | 0 => induction h >> skip
-  | n+1 => do
+  | n + 1 => do
     let r ← elim_gen_sum n h
     focus
         ((cs.zip (r.zip s)).map $ fun ⟨constr_name, h, bs, e⟩ => do
@@ -136,7 +135,7 @@ unsafe def to_inductive (cs : List Name) (gs : List expr) (s : List (List (Optio
             | Sum.inr 0 => do
               let (hs, h, _) ← elim_gen_prod n h [] []
               clear h
-            | Sum.inr (e+1) => do
+            | Sum.inr (e + 1) => do
               let (hs, h, _) ← elim_gen_prod n h [] []
               let (es, Eq, _) ← elim_gen_prod e h [] []
               let es := es ++ [Eq]
@@ -162,8 +161,7 @@ namespace Tactic
 
 open MkIff
 
-/-- 
-`mk_iff_of_inductive_prop i r` makes an `iff` rule for the inductively-defined proposition `i`.
+/-- `mk_iff_of_inductive_prop i r` makes an `iff` rule for the inductively-defined proposition `i`.
 The new rule `r` has the shape `∀ps is, i as ↔ ⋁_j, ∃cs, is = cs`, where `ps` are the type
 parameters, `is` are the indices, `j` ranges over all possible constructors, the `cs` are the
 parameters for each of the constructors, and the equalities `is = cs` are the instantiations for
@@ -210,8 +208,7 @@ section
 
 setup_tactic_parser
 
-/-- 
-`mk_iff_of_inductive_prop i r` makes an `iff` rule for the inductively-defined proposition `i`.
+/-- `mk_iff_of_inductive_prop i r` makes an `iff` rule for the inductively-defined proposition `i`.
 The new rule `r` has the shape `∀ps is, i as ↔ ⋁_j, ∃cs, is = cs`, where `ps` are the type
 parameters, `is` are the indices, `j` ranges over all possible constructors, the `cs` are the
 parameters for each of the constructors, and the equalities `is = cs` are the instantiations for
@@ -239,8 +236,8 @@ add_tactic_doc
   { Name := "mk_iff_of_inductive_prop", category := DocCategory.cmd, declNames := [`` mk_iff_of_inductive_prop_cmd],
     tags := ["logic", "environment"] }
 
-/-- 
-Applying the `mk_iff` attribute to an inductively-defined proposition `mk_iff` makes an `iff` rule
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+/-- Applying the `mk_iff` attribute to an inductively-defined proposition `mk_iff` makes an `iff` rule
 `r` with the shape `∀ps is, i as ↔ ⋁_j, ∃cs, is = cs`, where `ps` are the type parameters, `is` are
 the indices, `j` ranges over all possible constructors, the `cs` are the parameters for each of the
 constructors, and the equalities `is = cs` are the instantiations for each constructor for each of
@@ -277,12 +274,14 @@ bar : ∀ (m n : ℕ), foo m n ↔ m = n ∧ m + n = 2
 See also the user command `mk_iff_of_inductive_prop`.
 -/
 @[user_attribute]
-unsafe def mk_iff_attr : user_attribute Unit (Option Name) :=
-  { Name := `mk_iff, descr := "Generate an `iff` lemma for an inductive `Prop`.", parser := (ident)?,
-    after_set :=
-      some $ fun n _ _ => do
-        let tgt ← mk_iff_attr.get_param n
-        tactic.mk_iff_of_inductive_prop n (tgt.get_or_else (n.append_suffix "_iff")) }
+unsafe def mk_iff_attr : user_attribute Unit (Option Name) where
+  Name := `mk_iff
+  descr := "Generate an `iff` lemma for an inductive `Prop`."
+  parser := «expr ?» ident
+  after_set :=
+    some $ fun n _ _ => do
+      let tgt ← mk_iff_attr.get_param n
+      tactic.mk_iff_of_inductive_prop n (tgt.get_or_else (n.append_suffix "_iff"))
 
 add_tactic_doc
   { Name := "mk_iff", category := DocCategory.attr, declNames := [`mk_iff_attr], tags := ["logic", "environment"] }

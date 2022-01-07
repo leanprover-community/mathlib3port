@@ -8,19 +8,15 @@ open Lean Lean.Parser Interactive
 
 open Interactive.Types
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
 structure mono_cfg where
   unify := ff
-  deriving [anonymous]
+  deriving Inhabited
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_reflect
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
 inductive mono_selection : Type
   | left : mono_selection
   | right : mono_selection
   | both : mono_selection
-  deriving [anonymous], [anonymous], [anonymous]
+  deriving DecidableEq, has_reflect, Inhabited
 
 initialize
   registerTraceClass.1 `mono.relation
@@ -133,20 +129,21 @@ unsafe def side : lean.parser mono_selection :=
 open Function
 
 @[user_attribute]
-unsafe def monotonicity.attr : user_attribute (native.rb_lmap mono_key Name) (Option mono_key × mono_selection) :=
-  { Name := `mono, descr := "monotonicity of function `f` wrt relations `R₀` and `R₁`: R₀ x y → R₁ (f x) (f y)",
-    cache_cfg :=
-      { dependencies := [],
-        mk_cache := fun ls => do
-          let ps ← ls.mmap monotonicity.attr.get_param
-          let ps := ps.filter_map Prod.fst
-          pure $ (ps.zip ls).foldl (flip $ uncurry fun k n m => m.insert k n) (native.rb_lmap.mk mono_key _) },
-    after_set :=
-      some $ fun n prio p => do
-        let (none, v) ← monotonicity.attr.get_param n | pure ()
-        let k ← monotonicity.check n
-        monotonicity.attr.set n (some k, v) p,
-    Parser := Prod.mk none <$> side }
+unsafe def monotonicity.attr : user_attribute (native.rb_lmap mono_key Name) (Option mono_key × mono_selection) where
+  Name := `mono
+  descr := "monotonicity of function `f` wrt relations `R₀` and `R₁`: R₀ x y → R₁ (f x) (f y)"
+  cache_cfg :=
+    { dependencies := [],
+      mk_cache := fun ls => do
+        let ps ← ls.mmap monotonicity.attr.get_param
+        let ps := ps.filter_map Prod.fst
+        pure $ (ps.zip ls).foldl (flip $ uncurry fun k n m => m.insert k n) (native.rb_lmap.mk mono_key _) }
+  after_set :=
+    some $ fun n prio p => do
+      let (none, v) ← monotonicity.attr.get_param n | pure ()
+      let k ← monotonicity.check n
+      monotonicity.attr.set n (some k, v) p
+  Parser := Prod.mk none <$> side
 
 unsafe def filter_instances (e : mono_selection) (ns : List Name) : tactic (List Name) :=
   ns.mfilter $ fun n => do

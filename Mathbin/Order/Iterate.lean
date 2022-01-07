@@ -33,39 +33,39 @@ lemmas in this section formalize this fact for different inequalities made stric
 -/
 
 
-theorem seq_le_seq (hf : Monotone f) (n : ℕ) (h₀ : x 0 ≤ y 0) (hx : ∀, ∀ k < n, ∀, x (k+1) ≤ f (x k))
-    (hy : ∀, ∀ k < n, ∀, f (y k) ≤ y (k+1)) : x n ≤ y n := by
+theorem seq_le_seq (hf : Monotone f) (n : ℕ) (h₀ : x 0 ≤ y 0) (hx : ∀, ∀ k < n, ∀, x (k + 1) ≤ f (x k))
+    (hy : ∀, ∀ k < n, ∀, f (y k) ≤ y (k + 1)) : x n ≤ y n := by
   induction' n with n ihn
-  ·
-    exact h₀
-  ·
-    refine' (hx _ n.lt_succ_self).trans ((hf $ ihn _ _).trans (hy _ n.lt_succ_self))
+  · exact h₀
+    
+  · refine' (hx _ n.lt_succ_self).trans ((hf $ ihn _ _).trans (hy _ n.lt_succ_self))
     exact fun k hk => hx _ (hk.trans n.lt_succ_self)
     exact fun k hk => hy _ (hk.trans n.lt_succ_self)
+    
 
 theorem seq_pos_lt_seq_of_lt_of_le (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
-    (hx : ∀, ∀ k < n, ∀, x (k+1) < f (x k)) (hy : ∀, ∀ k < n, ∀, f (y k) ≤ y (k+1)) : x n < y n := by
+    (hx : ∀, ∀ k < n, ∀, x (k + 1) < f (x k)) (hy : ∀, ∀ k < n, ∀, f (y k) ≤ y (k + 1)) : x n < y n := by
   induction' n with n ihn
-  ·
-    exact hn.false.elim
+  · exact hn.false.elim
+    
   suffices : x n ≤ y n
   exact (hx n n.lt_succ_self).trans_le ((hf this).trans $ hy n n.lt_succ_self)
   cases n
-  ·
-    exact h₀
+  · exact h₀
+    
   refine' (ihn n.zero_lt_succ (fun k hk => hx _ _) fun k hk => hy _ _).le <;> exact hk.trans n.succ.lt_succ_self
 
 theorem seq_pos_lt_seq_of_le_of_lt (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
-    (hx : ∀, ∀ k < n, ∀, x (k+1) ≤ f (x k)) (hy : ∀, ∀ k < n, ∀, f (y k) < y (k+1)) : x n < y n :=
+    (hx : ∀, ∀ k < n, ∀, x (k + 1) ≤ f (x k)) (hy : ∀, ∀ k < n, ∀, f (y k) < y (k + 1)) : x n < y n :=
   hf.dual.seq_pos_lt_seq_of_lt_of_le hn h₀ hy hx
 
-theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0) (hx : ∀, ∀ k < n, ∀, x (k+1) < f (x k))
-    (hy : ∀, ∀ k < n, ∀, f (y k) ≤ y (k+1)) : x n < y n := by
+theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0) (hx : ∀, ∀ k < n, ∀, x (k + 1) < f (x k))
+    (hy : ∀, ∀ k < n, ∀, f (y k) ≤ y (k + 1)) : x n < y n := by
   cases n
   exacts[h₀, hf.seq_pos_lt_seq_of_lt_of_le n.zero_lt_succ h₀.le hx hy]
 
-theorem seq_lt_seq_of_le_of_lt (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0) (hx : ∀, ∀ k < n, ∀, x (k+1) ≤ f (x k))
-    (hy : ∀, ∀ k < n, ∀, f (y k) < y (k+1)) : x n < y n :=
+theorem seq_lt_seq_of_le_of_lt (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0) (hx : ∀, ∀ k < n, ∀, x (k + 1) ≤ f (x k))
+    (hy : ∀, ∀ k < n, ∀, f (y k) < y (k + 1)) : x n < y n :=
   hf.dual.seq_lt_seq_of_lt_of_le n h₀ hy hx
 
 /-!
@@ -89,11 +89,11 @@ theorem le_iterate_comp_of_le (hf : Monotone f) (H : h ∘ g ≤ f ∘ h) (n : �
 theorem iterate_comp_le_of_le (hf : Monotone f) (H : f ∘ h ≤ h ∘ g) (n : ℕ) : f^[n] ∘ h ≤ h ∘ g^[n] :=
   hf.dual.le_iterate_comp_of_le H n
 
-/--  If `f ≤ g` and `f` is monotone, then `f^[n] ≤ g^[n]`. -/
+/-- If `f ≤ g` and `f` is monotone, then `f^[n] ≤ g^[n]`. -/
 theorem iterate_le_of_le {g : α → α} (hf : Monotone f) (h : f ≤ g) (n : ℕ) : f^[n] ≤ g^[n] :=
   hf.iterate_comp_le_of_le h n
 
-/--  If `f ≤ g` and `g` is monotone, then `f^[n] ≤ g^[n]`. -/
+/-- If `f ≤ g` and `g` is monotone, then `f^[n] ≤ g^[n]`. -/
 theorem le_iterate_of_le {g : α → α} (hg : Monotone g) (h : f ≤ g) (n : ℕ) : f^[n] ≤ g^[n] :=
   hg.dual.iterate_le_of_le h n
 
@@ -113,7 +113,7 @@ section Preorderₓ
 
 variable [Preorderₓ α] {f : α → α}
 
-/--  If $x ≤ f x$ for all $x$ (we write this as `id ≤ f`), then the same is true for any iterate
+/-- If $x ≤ f x$ for all $x$ (we write this as `id ≤ f`), then the same is true for any iterate
 `f^[n]` of `f`. -/
 theorem id_le_iterate_of_id_le (h : id ≤ f) (n : ℕ) : id ≤ f^[n] := by
   simpa only [iterate_id] using monotone_id.iterate_le_of_le h n
@@ -167,12 +167,12 @@ variable [LinearOrderₓ α] {f g : α → α}
 theorem iterate_pos_lt_iff_map_lt (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n} (hn : 0 < n) :
     (f^[n]) x < (g^[n]) x ↔ f x < g x := by
   rcases lt_trichotomyₓ (f x) (g x) with (H | H | H)
-  ·
-    simp only [iterate_pos_lt_of_map_lt]
-  ·
-    simp only [h.iterate_eq_of_map_eq, lt_irreflₓ]
-  ·
-    simp only [lt_asymmₓ H, lt_asymmₓ (h.symm.iterate_pos_lt_of_map_lt' hg hf H hn)]
+  · simp only [*, iterate_pos_lt_of_map_lt]
+    
+  · simp only [*, h.iterate_eq_of_map_eq, lt_irreflₓ]
+    
+  · simp only [lt_asymmₓ H, lt_asymmₓ (h.symm.iterate_pos_lt_of_map_lt' hg hf H hn)]
+    
 
 theorem iterate_pos_lt_iff_map_lt' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x n} (hn : 0 < n) :
     (f^[n]) x < (g^[n]) x ↔ f x < g x :=
@@ -198,14 +198,14 @@ namespace Monotone
 
 variable [Preorderₓ α] {f : α → α} {x : α}
 
-/--  If `f` is a monotone map and `x ≤ f x` at some point `x`, then the iterates `f^[n] x` form
+/-- If `f` is a monotone map and `x ≤ f x` at some point `x`, then the iterates `f^[n] x` form
 a monotone sequence. -/
 theorem monotone_iterate_of_le_map (hf : Monotone f) (hx : x ≤ f x) : Monotone fun n => (f^[n]) x :=
   monotone_nat_of_le_succ $ fun n => by
     rw [iterate_succ_apply]
     exact hf.iterate n hx
 
-/--  If `f` is a monotone map and `f x ≤ x` at some point `x`, then the iterates `f^[n] x` form
+/-- If `f` is a monotone map and `f x ≤ x` at some point `x`, then the iterates `f^[n] x` form
 a antitone sequence. -/
 theorem antitone_iterate_of_map_le (hf : Monotone f) (hx : f x ≤ x) : Antitone fun n => (f^[n]) x :=
   hf.dual.monotone_iterate_of_le_map hx
@@ -216,14 +216,14 @@ namespace StrictMono
 
 variable [Preorderₓ α] {f : α → α} {x : α}
 
-/--  If `f` is a strictly monotone map and `x < f x` at some point `x`, then the iterates `f^[n] x`
+/-- If `f` is a strictly monotone map and `x < f x` at some point `x`, then the iterates `f^[n] x`
 form a strictly monotone sequence. -/
 theorem strict_mono_iterate_of_lt_map (hf : StrictMono f) (hx : x < f x) : StrictMono fun n => (f^[n]) x :=
   strict_mono_nat_of_lt_succ $ fun n => by
     rw [iterate_succ_apply]
     exact hf.iterate n hx
 
-/--  If `f` is a strictly antitone map and `f x < x` at some point `x`, then the iterates `f^[n] x`
+/-- If `f` is a strictly antitone map and `f x < x` at some point `x`, then the iterates `f^[n] x`
 form a strictly antitone sequence. -/
 theorem strict_anti_iterate_of_map_lt (hf : StrictMono f) (hx : f x < x) : StrictAnti fun n => (f^[n]) x :=
   hf.dual.strict_mono_iterate_of_lt_map hx

@@ -43,7 +43,7 @@ theorem map_subtype_embedding_Ioo : (Ioo a b).map (Function.Embedding.subtype _)
   map_subtype_embedding_Ioo _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
 
 @[simp]
-theorem card_Icc : (Icc a b).card = (b+1) - a := by
+theorem card_Icc : (Icc a b).card = b + 1 - a := by
   rw [← Nat.card_Icc, ← map_subtype_embedding_Icc, card_map]
 
 @[simp]
@@ -59,7 +59,7 @@ theorem card_Ioo : (Ioo a b).card = b - a - 1 := by
   rw [← Nat.card_Ioo, ← map_subtype_embedding_Ioo, card_map]
 
 @[simp]
-theorem card_fintype_Icc : Fintype.card (Set.Icc a b) = (b+1) - a := by
+theorem card_fintype_Icc : Fintype.card (Set.Icc a b) = b + 1 - a := by
   rw [← card_Icc, Fintype.card_of_finset]
 
 @[simp]

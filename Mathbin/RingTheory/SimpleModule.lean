@@ -24,11 +24,11 @@ import Mathbin.Order.Atoms
 
 variable (R : Type _) [Ringₓ R] (M : Type _) [AddCommGroupₓ M] [Module R M]
 
-/--  A module is simple when it has only two submodules, `⊥` and `⊤`. -/
+/-- A module is simple when it has only two submodules, `⊥` and `⊤`. -/
 abbrev IsSimpleModule :=
   IsSimpleOrder (Submodule R M)
 
-/--  A module is semisimple when every submodule has a complement, or equivalently, the module
+/-- A module is semisimple when every submodule has a complement, or equivalently, the module
   is a direct sum of simple modules. -/
 abbrev IsSemisimpleModule :=
   IsComplemented (Submodule R M)
@@ -71,9 +71,9 @@ theorem Sup_simples_eq_top : Sup { m : Submodule R M | IsSimpleModule R m } = �
   simp_rw [is_simple_module_iff_is_atom]
   exact Sup_atoms_eq_top
 
-instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m := by
+instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
   have f : Submodule R m ≃o Set.Iic m := Submodule.MapSubtype.relIso m
-  exact f.is_complemented_iff.2 IsModularLattice.is_complemented_Iic
+  f.is_complemented_iff.2 IsModularLattice.is_complemented_Iic
 
 end IsSemisimpleModule
 
@@ -99,20 +99,20 @@ theorem surjective_or_eq_zero [IsSimpleModule R N] (f : M →ₗ[R] N) : Functio
 theorem surjective_of_ne_zero [IsSimpleModule R N] {f : M →ₗ[R] N} (h : f ≠ 0) : Function.Surjective f :=
   f.surjective_or_eq_zero.resolve_right h
 
-/--  **Schur's Lemma** for linear maps between (possibly distinct) simple modules -/
+/-- **Schur's Lemma** for linear maps between (possibly distinct) simple modules -/
 theorem bijective_or_eq_zero [IsSimpleModule R M] [IsSimpleModule R N] (f : M →ₗ[R] N) : Function.Bijective f ∨ f = 0 :=
   by
   by_cases' h : f = 0
-  ·
-    right
+  · right
     exact h
+    
   exact Or.intro_left _ ⟨injective_of_ne_zero h, surjective_of_ne_zero h⟩
 
 theorem bijective_of_ne_zero [IsSimpleModule R M] [IsSimpleModule R N] {f : M →ₗ[R] N} (h : f ≠ 0) :
     Function.Bijective f :=
   f.bijective_or_eq_zero.resolve_right h
 
-/--  Schur's Lemma makes the endomorphism ring of a simple module a division ring. -/
+/-- Schur's Lemma makes the endomorphism ring of a simple module a division ring. -/
 noncomputable instance _root_.module.End.division_ring [DecidableEq (Module.End R M)] [IsSimpleModule R M] :
     DivisionRing (Module.End R M) :=
   { (Module.End.ring : Ringₓ (Module.End R M)) with
@@ -132,7 +132,7 @@ noncomputable instance _root_.module.End.division_ring [DecidableEq (Module.End 
         rw [← h x, h y]⟩,
     mul_inv_cancel := by
       intro a a0
-      change (a*dite _ _ _) = 1
+      change a * dite _ _ _ = 1
       ext
       rw [dif_neg a0, mul_eq_comp, one_apply, comp_apply]
       exact (Equivₓ.ofBijective _ (bijective_of_ne_zero a0)).right_inv x,

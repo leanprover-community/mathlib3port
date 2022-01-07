@@ -30,10 +30,10 @@ theorem one_down [HasOne α] : (1 : Ulift α).down = 1 :=
 
 @[to_additive]
 instance Mul [Mul α] : Mul (Ulift α) :=
-  ⟨fun f g => ⟨f.down*g.down⟩⟩
+  ⟨fun f g => ⟨f.down * g.down⟩⟩
 
 @[simp, to_additive]
-theorem mul_down [Mul α] : (x*y).down = x.down*y.down :=
+theorem mul_down [Mul α] : (x * y).down = x.down * y.down :=
   rfl
 
 @[to_additive]
@@ -52,8 +52,7 @@ instance HasInv [HasInv α] : HasInv (Ulift α) :=
 theorem inv_down [HasInv α] : x⁻¹.down = x.down⁻¹ :=
   rfl
 
-/-- 
-The multiplicative equivalence between `ulift α` and `α`.
+/-- The multiplicative equivalence between `ulift α` and `α`.
 -/
 @[to_additive "The additive equivalence between `ulift α` and `α`."]
 def _root_.mul_equiv.ulift [Mul α] : Ulift α ≃* α :=

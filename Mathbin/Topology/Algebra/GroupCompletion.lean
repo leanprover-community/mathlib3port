@@ -41,7 +41,7 @@ instance [Neg α] : Neg (completion α) :=
   ⟨completion.map (fun a => -a : α → α)⟩
 
 instance [Add α] : Add (completion α) :=
-  ⟨completion.map₂ (·+·)⟩
+  ⟨completion.map₂ (· + ·)⟩
 
 instance [Sub α] : Sub (completion α) :=
   ⟨completion.map₂ Sub.sub⟩
@@ -69,18 +69,18 @@ theorem coe_sub (a b : α) : ((a - b : α) : completion α) = a - b :=
   (map₂_coe_coe a b Sub.sub uniform_continuous_sub).symm
 
 @[norm_cast]
-theorem coe_add (a b : α) : ((a+b : α) : completion α) = a+b :=
-  (map₂_coe_coe a b (·+·) uniform_continuous_add).symm
+theorem coe_add (a b : α) : ((a + b : α) : completion α) = a + b :=
+  (map₂_coe_coe a b (· + ·) uniform_continuous_add).symm
 
 instance : AddMonoidₓ (completion α) :=
   { completion.has_zero, completion.has_neg, completion.has_add, completion.has_sub with
     zero_add := fun a =>
       completion.induction_on a (is_closed_eq (continuous_map₂ continuous_const continuous_id) continuous_id) fun a =>
-        show (0+(a : completion α)) = a by
+        show 0 + (a : completion α) = a by
           rw_mod_cast [zero_addₓ],
     add_zero := fun a =>
       completion.induction_on a (is_closed_eq (continuous_map₂ continuous_id continuous_const) continuous_id) fun a =>
-        show ((a : completion α)+0) = a by
+        show (a : completion α) + 0 = a by
           rw_mod_cast [add_zeroₓ],
     add_assoc := fun a b c =>
       completion.induction_on₃ a b c
@@ -90,7 +90,7 @@ instance : AddMonoidₓ (completion α) :=
           (continuous_map₂ continuous_fst
             (continuous_map₂ (continuous_fst.comp continuous_snd) (continuous_snd.comp continuous_snd))))
         fun a b c =>
-        show (((a : completion α)+b)+c) = a+b+c by
+        show (a : completion α) + b + c = a + (b + c) by
           repeat'
             rw_mod_cast [add_assocₓ] }
 
@@ -108,17 +108,19 @@ instance : AddGroupₓ (completion α) :=
     add_left_neg := fun a =>
       completion.induction_on a
         (is_closed_eq (continuous_map₂ completion.continuous_map continuous_id) continuous_const) fun a =>
-        show ((-(a : completion α))+a) = 0 by
+        show -(a : completion α) + a = 0 by
           rw_mod_cast [add_left_negₓ]
           rfl }
 
 instance : UniformAddGroup (completion α) :=
   ⟨uniform_continuous_map₂ Sub.sub⟩
 
-/--  The map from a group to its completion as a group hom. -/
+/-- The map from a group to its completion as a group hom. -/
 @[simps]
-def to_compl : α →+ completion α :=
-  { toFun := coeₓ, map_add' := coe_add, map_zero' := coe_zero }
+def to_compl : α →+ completion α where
+  toFun := coeₓ
+  map_add' := coe_add
+  map_zero' := coe_zero
 
 theorem continuous_to_compl : Continuous (to_compl : α → completion α) :=
   continuous_coe α
@@ -131,7 +133,7 @@ instance {α : Type u} [UniformSpace α] [AddCommGroupₓ α] [UniformAddGroup �
       completion.induction_on₂ a b
         (is_closed_eq (continuous_map₂ continuous_fst continuous_snd) (continuous_map₂ continuous_snd continuous_fst))
         fun x y => by
-        change ((↑x)+↑y) = (↑y)+↑x
+        change ↑x + ↑y = ↑y + ↑x
         rw [← coe_add, ← coe_add, add_commₓ] }
 
 end UniformAddGroup
@@ -145,7 +147,7 @@ variable {α β : Type _} [UniformSpace α] [AddGroupₓ α] [UniformAddGroup α
 
 open UniformSpace UniformSpace.Completion
 
-/--  Extension to the completion of a continuous group hom. -/
+/-- Extension to the completion of a continuous group hom. -/
 def AddMonoidHom.extension [CompleteSpace β] [SeparatedSpace β] (f : α →+ β) (hf : Continuous f) : completion α →+ β :=
   have hf : UniformContinuous f := uniform_continuous_of_continuous hf
   { toFun := completion.extension f,
@@ -167,7 +169,7 @@ theorem AddMonoidHom.continuous_extension [CompleteSpace β] [SeparatedSpace β]
     Continuous (f.extension hf) :=
   continuous_extension
 
-/--  Completion of a continuous group hom, as a group hom. -/
+/-- Completion of a continuous group hom, as a group hom. -/
 def AddMonoidHom.completion (f : α →+ β) (hf : Continuous f) : completion α →+ completion β :=
   (to_compl.comp f).extension (continuous_to_compl.comp hf)
 
@@ -182,23 +184,24 @@ theorem AddMonoidHom.completion_coe (f : α →+ β) (hf : Continuous f) (a : α
 theorem AddMonoidHom.completion_zero : (0 : α →+ β).Completion continuous_const = 0 := by
   ext x
   apply completion.induction_on x
-  ·
-    apply is_closed_eq ((0 : α →+ β).continuous_completion continuous_const)
+  · apply is_closed_eq ((0 : α →+ β).continuous_completion continuous_const)
     simp [continuous_const]
-  ·
-    intro a
+    
+  · intro a
     simp [(0 : α →+ β).completion_coe continuous_const, coe_zero]
+    
 
 theorem AddMonoidHom.completion_add {γ : Type _} [AddCommGroupₓ γ] [UniformSpace γ] [UniformAddGroup γ] (f g : α →+ γ)
-    (hf : Continuous f) (hg : Continuous g) : (f+g).Completion (hf.add hg) = f.completion hf+g.completion hg := by
+    (hf : Continuous f) (hg : Continuous g) : (f + g).Completion (hf.add hg) = f.completion hf + g.completion hg := by
   have hfg := hf.add hg
   ext x
   apply completion.induction_on x
-  ·
-    exact is_closed_eq ((f+g).continuous_completion hfg) ((f.continuous_completion hf).add (g.continuous_completion hg))
-  ·
-    intro a
-    simp [(f+g).completion_coe hfg, coe_add, f.completion_coe hf, g.completion_coe hg]
+  · exact
+      is_closed_eq ((f + g).continuous_completion hfg) ((f.continuous_completion hf).add (g.continuous_completion hg))
+    
+  · intro a
+    simp [(f + g).completion_coe hfg, coe_add, f.completion_coe hf, g.completion_coe hg]
+    
 
 end AddMonoidHom
 

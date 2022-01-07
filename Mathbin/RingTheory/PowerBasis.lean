@@ -45,7 +45,7 @@ variable {A B : Type _} [CommRingₓ A] [CommRingₓ B] [IsDomain B] [Algebra A 
 
 variable {K L : Type _} [Field K] [Field L] [Algebra K L]
 
-/--  `pb : power_basis R S` states that `1, pb.gen, ..., pb.gen ^ (pb.dim - 1)`
+/-- `pb : power_basis R S` states that `1, pb.gen, ..., pb.gen ^ (pb.dim - 1)`
 is a basis for the `R`-algebra `S` (viewed as `R`-module).
 
 This is a structure, not a class, since the same algebra can have many power bases.
@@ -57,15 +57,17 @@ structure PowerBasis (R S : Type _) [CommRingₓ R] [Ringₓ S] [Algebra R S] wh
   gen : S
   dim : ℕ
   Basis : Basis (Finₓ dim) R S
-  basis_eq_pow : ∀ i, Basis i = (gen^(i : ℕ))
+  basis_eq_pow : ∀ i, Basis i = gen ^ (i : ℕ)
+
+initialize_simps_projections PowerBasis (-Basis)
 
 namespace PowerBasis
 
 @[simp]
-theorem coe_basis (pb : PowerBasis R S) : ⇑pb.basis = fun i : Finₓ pb.dim => pb.gen^(i : ℕ) :=
+theorem coe_basis (pb : PowerBasis R S) : ⇑pb.basis = fun i : Finₓ pb.dim => pb.gen ^ (i : ℕ) :=
   funext pb.basis_eq_pow
 
-/--  Cannot be an instance because `power_basis` cannot be a class. -/
+/-- Cannot be an instance because `power_basis` cannot be a class. -/
 theorem FiniteDimensional [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional K S :=
   FiniteDimensional.of_fintype_basis pb.basis
 
@@ -73,9 +75,9 @@ theorem finrank [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional.finrank 
   rw [FiniteDimensional.finrank_eq_card_basis pb.basis, Fintype.card_fin]
 
 theorem mem_span_pow' {x y : S} {d : ℕ} :
-    y ∈ Submodule.span R (Set.Range fun i : Finₓ d => x^(i : ℕ)) ↔ ∃ f : Polynomial R, f.degree < d ∧ y = aeval x f :=
+    y ∈ Submodule.span R (Set.Range fun i : Finₓ d => x ^ (i : ℕ)) ↔ ∃ f : Polynomial R, f.degree < d ∧ y = aeval x f :=
   by
-  have : (Set.Range fun i : Finₓ d => x^(i : ℕ)) = (fun i : ℕ => x^i) '' ↑Finset.range d := by
+  have : (Set.Range fun i : Finₓ d => x ^ (i : ℕ)) = (fun i : ℕ => x ^ i) '' ↑Finset.range d := by
     ext n
     simp_rw [Set.mem_range, Set.mem_image, Finset.mem_coe, Finset.mem_range]
     exact ⟨fun ⟨⟨i, hi⟩, hy⟩ => ⟨i, hi, hy⟩, fun ⟨i, hi, hy⟩ => ⟨⟨i, hi⟩, hy⟩⟩
@@ -87,21 +89,21 @@ theorem mem_span_pow' {x y : S} {d : ℕ} :
   exact Iff.rfl
 
 theorem mem_span_pow {x y : S} {d : ℕ} (hd : d ≠ 0) :
-    y ∈ Submodule.span R (Set.Range fun i : Finₓ d => x^(i : ℕ)) ↔
+    y ∈ Submodule.span R (Set.Range fun i : Finₓ d => x ^ (i : ℕ)) ↔
       ∃ f : Polynomial R, f.nat_degree < d ∧ y = aeval x f :=
   by
   rw [mem_span_pow']
   constructor <;>
-    ·
-      rintro ⟨f, h, hy⟩
+    · rintro ⟨f, h, hy⟩
       refine' ⟨f, _, hy⟩
       by_cases' hf : f = 0
-      ·
-        simp only [hf, nat_degree_zero, degree_zero] at h⊢
+      · simp only [hf, nat_degree_zero, degree_zero] at h⊢
         first |
           exact lt_of_le_of_neₓ (Nat.zero_leₓ d) hd.symm|
           exact WithBot.bot_lt_coe d
+        
       simpa only [degree_eq_nat_degree hf, WithBot.coe_lt_coe] using h
+      
 
 theorem dim_ne_zero [h : Nontrivial S] (pb : PowerBasis R S) : pb.dim ≠ 0 := fun h =>
   not_nonempty_iff.mpr (h.symm ▸ Finₓ.is_empty : IsEmpty (Finₓ pb.dim)) pb.basis.index_nonempty
@@ -132,209 +134,19 @@ open_locale BigOperators
 
 variable [Algebra A S]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers
-  [(Command.docComment
-    "/--"
-    " `pb.minpoly_gen` is a minimal polynomial for `pb.gen`.\n\nIf `A` is not a field, it might not necessarily be *the* minimal polynomial,\nhowever `nat_degree_minpoly` shows its degree is indeed minimal.\n-/")]
-  []
-  []
-  [(Command.noncomputable "noncomputable")]
-  []
-  [])
- (Command.def
-  "def"
-  (Command.declId `minpoly_gen [])
-  (Command.optDeclSig
-   [(Term.explicitBinder "(" [`pb] [":" (Term.app `PowerBasis [`A `S])] [] ")")]
-   [(Term.typeSpec ":" (Term.app `Polynomial [`A]))])
-  (Command.declValSimple
-   ":="
-   («term_-_»
-    (Cardinal.SetTheory.Cofinality.«term_^_» `X "^" `pb.dim)
-    "-"
-    (Algebra.BigOperators.Basic.«term∑_,_»
-     "∑"
-     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] [":" (Term.app `Finₓ [`pb.dim])]))
-     ", "
-     (Finset.Data.Finset.Fold.«term_*_»
-      (Term.app `C [(Term.app `pb.basis.repr [(Cardinal.SetTheory.Cofinality.«term_^_» `pb.gen "^" `pb.dim) `i])])
-      "*"
-      (Cardinal.SetTheory.Cofinality.«term_^_»
-       `X
-       "^"
-       (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")")))))
-   [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_-_»
-   (Cardinal.SetTheory.Cofinality.«term_^_» `X "^" `pb.dim)
-   "-"
-   (Algebra.BigOperators.Basic.«term∑_,_»
-    "∑"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] [":" (Term.app `Finₓ [`pb.dim])]))
-    ", "
-    (Finset.Data.Finset.Fold.«term_*_»
-     (Term.app `C [(Term.app `pb.basis.repr [(Cardinal.SetTheory.Cofinality.«term_^_» `pb.gen "^" `pb.dim) `i])])
-     "*"
-     (Cardinal.SetTheory.Cofinality.«term_^_»
-      `X
-      "^"
-      (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")")))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∑_,_»
-   "∑"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] [":" (Term.app `Finₓ [`pb.dim])]))
-   ", "
-   (Finset.Data.Finset.Fold.«term_*_»
-    (Term.app `C [(Term.app `pb.basis.repr [(Cardinal.SetTheory.Cofinality.«term_^_» `pb.gen "^" `pb.dim) `i])])
-    "*"
-    (Cardinal.SetTheory.Cofinality.«term_^_» `X "^" (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")"))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∑_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Finset.Data.Finset.Fold.«term_*_»
-   (Term.app `C [(Term.app `pb.basis.repr [(Cardinal.SetTheory.Cofinality.«term_^_» `pb.gen "^" `pb.dim) `i])])
-   "*"
-   (Cardinal.SetTheory.Cofinality.«term_^_» `X "^" (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")")))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Cardinal.SetTheory.Cofinality.«term_^_» `X "^" (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Cardinal.SetTheory.Cofinality.«term_^_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.paren "(" [`i [(Term.typeAscription ":" (termℕ "ℕ"))]] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (termℕ "ℕ")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'termℕ', expected 'antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 0, term))
-  `X
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1 >? 1024, (none, [anonymous]) <=? (some 0, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 0, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  (Term.app `C [(Term.app `pb.basis.repr [(Cardinal.SetTheory.Cofinality.«term_^_» `pb.gen "^" `pb.dim) `i])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `pb.basis.repr [(Cardinal.SetTheory.Cofinality.«term_^_» `pb.gen "^" `pb.dim) `i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Cardinal.SetTheory.Cofinality.«term_^_»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Cardinal.SetTheory.Cofinality.«term_^_»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Cardinal.SetTheory.Cofinality.«term_^_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Cardinal.SetTheory.Cofinality.«term_^_»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Cardinal.SetTheory.Cofinality.«term_^_»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Cardinal.SetTheory.Cofinality.«term_^_» `pb.gen "^" `pb.dim)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Cardinal.SetTheory.Cofinality.«term_^_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `pb.dim
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 0, term))
-  `pb.gen
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1 >? 1024, (none, [anonymous]) <=? (some 0, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 0, (some 0, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Cardinal.SetTheory.Cofinality.«term_^_» `pb.gen "^" `pb.dim) []]
- ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `pb.basis.repr
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Term.app `pb.basis.repr [(Term.paren "(" [(Cardinal.SetTheory.Cofinality.«term_^_» `pb.gen "^" `pb.dim) []] ")") `i])
-  []]
- ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `C
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-      `pb.minpoly_gen` is a minimal polynomial for `pb.gen`.
-      
-      If `A` is not a field, it might not necessarily be *the* minimal polynomial,
-      however `nat_degree_minpoly` shows its degree is indeed minimal.
-      -/
-    noncomputable
-  def
-    minpoly_gen
-    ( pb : PowerBasis A S ) : Polynomial A
-    := X ^ pb.dim - ∑ i : Finₓ pb.dim , C pb.basis.repr pb.gen ^ pb.dim i * X ^ ( i : ℕ )
+/-- `pb.minpoly_gen` is a minimal polynomial for `pb.gen`.
+
+If `A` is not a field, it might not necessarily be *the* minimal polynomial,
+however `nat_degree_minpoly` shows its degree is indeed minimal.
+-/
+noncomputable def minpoly_gen (pb : PowerBasis A S) : Polynomial A :=
+  X ^ pb.dim - ∑ i : Finₓ pb.dim, C (pb.basis.repr (pb.gen ^ pb.dim) i) * X ^ (i : ℕ)
 
 @[simp]
 theorem aeval_minpoly_gen (pb : PowerBasis A S) : aeval pb.gen (minpoly_gen pb) = 0 := by
   simp_rw [minpoly_gen, AlgHom.map_sub, AlgHom.map_sum, AlgHom.map_mul, AlgHom.map_pow, aeval_C, ← Algebra.smul_def,
     aeval_X]
-  refine' sub_eq_zero.mpr ((pb.basis.total_repr (pb.gen^pb.dim)).symm.trans _)
+  refine' sub_eq_zero.mpr ((pb.basis.total_repr (pb.gen ^ pb.dim)).symm.trans _)
   rw [Finsupp.total_apply, Finsupp.sum_fintype] <;>
     simp only [pb.coe_basis, zero_smul, eq_self_iff_true, implies_true_iff]
 
@@ -345,8 +157,8 @@ theorem dim_le_nat_degree_of_root (h : PowerBasis A S) {p : Polynomial A} (ne_ze
   suffices ∀ i, p_coeff i = 0 by
     ext i
     by_cases' hi : i < h.dim
-    ·
-      exact this ⟨i, hi⟩
+    · exact this ⟨i, hi⟩
+      
     exact coeff_eq_zero_of_nat_degree_lt (lt_of_lt_of_leₓ hlt (le_of_not_gtₓ hi))
   intro i
   refine' linear_independent_iff'.mp h.basis.linear_independent _ _ _ i (Finset.mem_univ _)
@@ -355,10 +167,10 @@ theorem dim_le_nat_degree_of_root (h : PowerBasis A S) {p : Polynomial A} (ne_ze
   convert root
   ext i
   split_ifs with hi
-  ·
-    simp_rw [coe_basis, p_coeff, Finₓ.coe_mk]
-  ·
-    rw [coeff_eq_zero_of_nat_degree_lt (lt_of_lt_of_leₓ hlt (le_of_not_gtₓ hi)), zero_smul]
+  · simp_rw [coe_basis, p_coeff, Finₓ.coe_mk]
+    
+  · rw [coeff_eq_zero_of_nat_degree_lt (lt_of_lt_of_leₓ hlt (le_of_not_gtₓ hi)), zero_smul]
+    
 
 theorem dim_le_degree_of_root (h : PowerBasis A S) {p : Polynomial A} (ne_zero : p ≠ 0) (root : aeval h.gen p = 0) :
     ↑h.dim ≤ p.degree := by
@@ -407,21 +219,21 @@ variable [Algebra A S] {S' : Type _} [CommRingₓ S'] [Algebra A S']
 theorem nat_degree_lt_nat_degree {p q : Polynomial R} (hp : p ≠ 0) (hpq : p.degree < q.degree) :
     p.nat_degree < q.nat_degree := by
   by_cases' hq : q = 0
-  ·
-    rw [hq, degree_zero] at hpq
+  · rw [hq, degree_zero] at hpq
     have := not_lt_bot hpq
     contradiction
+    
   rwa [degree_eq_nat_degree hp, degree_eq_nat_degree hq, WithBot.coe_lt_coe] at hpq
 
 variable [IsDomain A]
 
 theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0) (f : Polynomial A) :
-    pb.basis.constr A (fun i => y^(i : ℕ)) (aeval pb.gen f) = aeval y f := by
+    pb.basis.constr A (fun i => y ^ (i : ℕ)) (aeval pb.gen f) = aeval y f := by
   rw [← aeval_mod_by_monic_eq_self_of_root (minpoly.monic pb.is_integral_gen) (minpoly.aeval _ _), ←
     @aeval_mod_by_monic_eq_self_of_root _ _ _ _ _ f _ (minpoly.monic pb.is_integral_gen) y hy]
   by_cases' hf : f %ₘ minpoly A pb.gen = 0
-  ·
-    simp only [hf, AlgHom.map_zero, LinearMap.map_zero]
+  · simp only [hf, AlgHom.map_zero, LinearMap.map_zero]
+    
   have : (f %ₘ minpoly A pb.gen).natDegree < pb.dim := by
     rw [← pb.nat_degree_minpoly]
     apply nat_degree_lt_nat_degree hf
@@ -434,28 +246,28 @@ theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A
   rw [← Finₓ.coe_mk hi, ← pb.basis_eq_pow ⟨i, hi⟩, Basis.constr_basis]
 
 theorem constr_pow_gen (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0) :
-    pb.basis.constr A (fun i => y^(i : ℕ)) pb.gen = y := by
+    pb.basis.constr A (fun i => y ^ (i : ℕ)) pb.gen = y := by
   convert pb.constr_pow_aeval hy X <;> rw [aeval_X]
 
 theorem constr_pow_algebra_map (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0) (x : A) :
-    pb.basis.constr A (fun i => y^(i : ℕ)) (algebraMap A S x) = algebraMap A S' x := by
+    pb.basis.constr A (fun i => y ^ (i : ℕ)) (algebraMap A S x) = algebraMap A S' x := by
   convert pb.constr_pow_aeval hy (C x) <;> rw [aeval_C]
 
 theorem constr_pow_mul (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0) (x x' : S) :
-    pb.basis.constr A (fun i => y^(i : ℕ)) (x*x') =
-      pb.basis.constr A (fun i => y^(i : ℕ)) x*pb.basis.constr A (fun i => y^(i : ℕ)) x' :=
+    pb.basis.constr A (fun i => y ^ (i : ℕ)) (x * x') =
+      pb.basis.constr A (fun i => y ^ (i : ℕ)) x * pb.basis.constr A (fun i => y ^ (i : ℕ)) x' :=
   by
   obtain ⟨f, rfl⟩ := pb.exists_eq_aeval' x
   obtain ⟨g, rfl⟩ := pb.exists_eq_aeval' x'
   simp only [← aeval_mul, pb.constr_pow_aeval hy]
 
-/--  `pb.lift y hy` is the algebra map sending `pb.gen` to `y`,
+/-- `pb.lift y hy` is the algebra map sending `pb.gen` to `y`,
 where `hy` states the higher powers of `y` are the same as the higher powers of `pb.gen`.
 
 See `power_basis.lift_equiv` for a bundled equiv sending `⟨y, hy⟩` to the algebra map.
 -/
 noncomputable def lift (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A pb.gen) = 0) : S →ₐ[A] S' :=
-  { pb.basis.constr A fun i => y^(i : ℕ) with
+  { pb.basis.constr A fun i => y ^ (i : ℕ) with
     map_one' := by
       convert pb.constr_pow_algebra_map hy 1 using 2 <;> rw [RingHom.map_one],
     map_zero' := by
@@ -471,7 +283,7 @@ theorem lift_aeval (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A pb.ge
     pb.lift y hy (aeval pb.gen f) = aeval y f :=
   pb.constr_pow_aeval hy f
 
-/--  `pb.lift_equiv` states that roots of the minimal polynomial of `pb.gen` correspond to
+/-- `pb.lift_equiv` states that roots of the minimal polynomial of `pb.gen` correspond to
 maps sending `pb.gen` to that root.
 
 This is the bundled equiv version of `power_basis.lift`.
@@ -479,14 +291,15 @@ If the codomain of the `alg_hom`s is an integral domain, then the roots form a m
 see `lift_equiv'` for the corresponding statement.
 -/
 @[simps]
-noncomputable def lift_equiv (pb : PowerBasis A S) : (S →ₐ[A] S') ≃ { y : S' // aeval y (minpoly A pb.gen) = 0 } :=
-  { toFun := fun f =>
-      ⟨f pb.gen, by
-        rw [aeval_alg_hom_apply, minpoly.aeval, f.map_zero]⟩,
-    invFun := fun y => pb.lift y y.2, left_inv := fun f => pb.alg_hom_ext $ lift_gen _ _ _,
-    right_inv := fun y => Subtype.ext $ lift_gen _ _ y.prop }
+noncomputable def lift_equiv (pb : PowerBasis A S) : (S →ₐ[A] S') ≃ { y : S' // aeval y (minpoly A pb.gen) = 0 } where
+  toFun := fun f =>
+    ⟨f pb.gen, by
+      rw [aeval_alg_hom_apply, minpoly.aeval, f.map_zero]⟩
+  invFun := fun y => pb.lift y y.2
+  left_inv := fun f => pb.alg_hom_ext $ lift_gen _ _ _
+  right_inv := fun y => Subtype.ext $ lift_gen _ _ y.prop
 
-/--  `pb.lift_equiv'` states that elements of the root set of the minimal
+/-- `pb.lift_equiv'` states that elements of the root set of the minimal
 polynomial of `pb.gen` correspond to maps sending `pb.gen` to that root. -/
 @[simps (config := { fullyApplied := ff })]
 noncomputable def lift_equiv' (pb : PowerBasis A S) :
@@ -496,12 +309,12 @@ noncomputable def lift_equiv' (pb : PowerBasis A S) :
       rw [mem_roots, is_root.def, Equivₓ.refl_apply, ← eval₂_eq_eval_map, ← aeval_def]
       exact map_monic_ne_zero (minpoly.monic pb.is_integral_gen))
 
-/--  There are finitely many algebra homomorphisms `S →ₐ[A] B` if `S` is of the form `A[x]`
+/-- There are finitely many algebra homomorphisms `S →ₐ[A] B` if `S` is of the form `A[x]`
 and `B` is an integral domain. -/
 noncomputable def alg_hom.fintype (pb : PowerBasis A S) : Fintype (S →ₐ[A] B) := by
   let this' := Classical.decEq B <;> exact Fintype.ofEquiv _ pb.lift_equiv'.symm
 
-/--  `pb.equiv_of_root pb' h₁ h₂` is an equivalence of algebras with the same power basis,
+/-- `pb.equiv_of_root pb' h₁ h₂` is an equivalence of algebras with the same power basis,
 where "the same" means that `pb` is a root of `pb'`s minimal polynomial and vice versa.
 
 See also `power_basis.equiv_of_minpoly` which takes the hypothesis that the
@@ -535,7 +348,7 @@ theorem equiv_of_root_symm (pb : PowerBasis A S) (pb' : PowerBasis A S') (h₁ :
     (h₂ : aeval pb'.gen (minpoly A pb.gen) = 0) : (pb.equiv_of_root pb' h₁ h₂).symm = pb'.equiv_of_root pb h₂ h₁ :=
   rfl
 
-/--  `pb.equiv_of_minpoly pb' h` is an equivalence of algebras with the same power basis,
+/-- `pb.equiv_of_minpoly pb' h` is an equivalence of algebras with the same power basis,
 where "the same" means that they have identical minimal polynomials.
 
 See also `power_basis.equiv_of_root` which takes the hypothesis that each generator is a root of the
@@ -566,10 +379,10 @@ end PowerBasis
 
 open PowerBasis
 
-/--  Useful lemma to show `x` generates a power basis:
+/-- Useful lemma to show `x` generates a power basis:
 the powers of `x` less than the degree of `x`'s minimal polynomial are linearly independent. -/
 theorem IsIntegral.linear_independent_pow [Algebra K S] {x : S} (hx : IsIntegral K x) :
-    LinearIndependent K fun i : Finₓ (minpoly K x).natDegree => x^(i : ℕ) := by
+    LinearIndependent K fun i : Finₓ (minpoly K x).natDegree => x ^ (i : ℕ) := by
   rw [linear_independent_iff]
   intro p hp
   set f : Polynomial K := p.sum fun i => monomial i with hf0
@@ -577,19 +390,19 @@ theorem IsIntegral.linear_independent_pow [Algebra K S] {x : S} (hx : IsIntegral
     intro i
     simp only [f, Finsupp.sum, coeff_monomial, finset_sum_coeff]
     rw [Finset.sum_eq_single, if_pos rfl]
-    ·
-      intro b _ hb
+    · intro b _ hb
       rw [if_neg (mt (fun h => _) hb)]
       exact Finₓ.coe_injective h
-    ·
-      intro hi
+      
+    · intro hi
       rw [if_pos rfl]
       exact finsupp.not_mem_support_iff.mp hi
+      
   have f_def' : ∀ i, f.coeff i = if hi : i < _ then p ⟨i, hi⟩ else 0 := by
     intro i
     split_ifs with hi
-    ·
-      exact f_def ⟨i, hi⟩
+    · exact f_def ⟨i, hi⟩
+      
     simp only [f, Finsupp.sum, coeff_monomial, finset_sum_coeff]
     apply Finset.sum_eq_zero
     rintro ⟨j, hj⟩ -
@@ -618,7 +431,7 @@ theorem IsIntegral.linear_independent_pow [Algebra K S] {x : S} (hx : IsIntegral
 
 theorem IsIntegral.mem_span_pow [Nontrivial R] {x y : S} (hx : IsIntegral R x)
     (hy : ∃ f : Polynomial R, y = aeval x f) :
-    y ∈ Submodule.span R (Set.Range fun i : Finₓ (minpoly R x).natDegree => x^(i : ℕ)) := by
+    y ∈ Submodule.span R (Set.Range fun i : Finₓ (minpoly R x).natDegree => x ^ (i : ℕ)) := by
   obtain ⟨f, rfl⟩ := hy
   apply mem_span_pow'.mpr _
   have := minpoly.monic hx
@@ -632,12 +445,14 @@ section Map
 
 variable {S' : Type _} [CommRingₓ S'] [Algebra R S']
 
-/--  `power_basis.map pb (e : S ≃ₐ[R] S')` is the power basis for `S'` generated by `e pb.gen`. -/
-@[simps]
-noncomputable def map (pb : PowerBasis R S) (e : S ≃ₐ[R] S') : PowerBasis R S' :=
-  { dim := pb.dim, Basis := pb.basis.map e.to_linear_equiv, gen := e pb.gen,
-    basis_eq_pow := fun i => by
-      rw [Basis.map_apply, pb.basis_eq_pow, e.to_linear_equiv_apply, e.map_pow] }
+/-- `power_basis.map pb (e : S ≃ₐ[R] S')` is the power basis for `S'` generated by `e pb.gen`. -/
+@[simps dim gen Basis]
+noncomputable def map (pb : PowerBasis R S) (e : S ≃ₐ[R] S') : PowerBasis R S' where
+  dim := pb.dim
+  Basis := pb.basis.map e.to_linear_equiv
+  gen := e pb.gen
+  basis_eq_pow := fun i => by
+    rw [Basis.map_apply, pb.basis_eq_pow, e.to_linear_equiv_apply, e.map_pow]
 
 variable [Algebra A S] [Algebra A S']
 

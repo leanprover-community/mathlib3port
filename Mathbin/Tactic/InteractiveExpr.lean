@@ -32,7 +32,7 @@ namespace InteractiveExpression
 unsafe instance : HasMem Expr.Coord Expr.Address :=
   List.hasMem
 
-/--  eformat but without any of the formatting stuff like highlighting, groups etc. -/
+/-- eformat but without any of the formatting stuff like highlighting, groups etc. -/
 unsafe inductive sf : Type
   | tag_expr : Expr.Address → expr → sf → sf
   | compose : sf → sf → sf
@@ -40,7 +40,7 @@ unsafe inductive sf : Type
   | highlight : Format.Color → sf → sf
   | block : ℕ → sf → sf
 
-/--  Prints a debugging representation of an `sf` object. -/
+/-- Prints a debugging representation of an `sf` object. -/
 unsafe def sf.repr : sf → format
   | sf.tag_expr addr e a =>
     format.group $
@@ -60,7 +60,7 @@ unsafe instance : HasToString sf :=
 unsafe instance : HasRepr sf :=
   ⟨fun s => s.repr.to_string⟩
 
-/--  Constructs an `sf` from an `eformat` by forgetting grouping, nesting, etc. -/
+/-- Constructs an `sf` from an `eformat` by forgetting grouping, nesting, etc. -/
 unsafe def sf.of_eformat : eformat → sf
   | tag ⟨ea, e⟩ m => sf.tag_expr ea e $ sf.of_eformat m
   | group m => sf.block 0 $ sf.of_eformat m
@@ -69,7 +69,7 @@ unsafe def sf.of_eformat : eformat → sf
   | of_format f => sf.of_string $ format.to_string f
   | compose x y => sf.compose (sf.of_eformat x) (sf.of_eformat y)
 
-/--  Flattens an `sf`, i.e. merges adjacent `of_string` constructors. -/
+/-- Flattens an `sf`, i.e. merges adjacent `of_string` constructors. -/
 unsafe def sf.flatten : sf → sf
   | sf.tag_expr ea e m => sf.tag_expr ea e $ sf.flatten m
   | sf.compose x y =>
@@ -81,7 +81,7 @@ unsafe def sf.flatten : sf → sf
       sf.compose x (sf.compose (sf.of_string (sy1 ++ sy2)) z)
     | x, y => sf.compose x y
   | sf.of_string s => sf.of_string (s.to_list.map fun c => if c = '\n' then ' ' else c).asString
-  | sf.block i (sf.block j a) => (sf.block (i+j) a).flatten
+  | sf.block i (sf.block j a) => (sf.block (i + j) a).flatten
   | sf.block i a => sf.block i a.flatten
   | sf.highlight i a => sf.highlight i a.flatten
 
@@ -94,8 +94,7 @@ private unsafe def elim_part_apps : sf → Expr.Address → sf
   | sf.block i a, Acc => sf.block i $ elim_part_apps a Acc
   | sf.highlight c a, Acc => sf.highlight c $ elim_part_apps a Acc
 
-/-- 
-Post-process an `sf` object to eliminate tags for partial applications by
+/-- Post-process an `sf` object to eliminate tags for partial applications by
 pushing the `app_fn` as far into the expression as possible. The effect is
 that clicking on a sub-expression always includes the full argument list in
 the popup.
@@ -123,8 +122,7 @@ After:
 unsafe def sf.elim_part_apps (s : sf) : sf :=
   elim_part_apps s []
 
-/-- 
-The actions accepted by an expression widget.
+/-- The actions accepted by an expression widget.
 -/
 unsafe inductive action (γ : Type)
   | on_mouse_enter : subexpr → action
@@ -134,8 +132,7 @@ unsafe inductive action (γ : Type)
   | on_close_tooltip : action
   | effect : widget.effect → action
 
-/-- 
-Render a 'go to definition' button for a given expression.
+/-- Render a 'go to definition' button for a given expression.
 If there is no definition available, then returns an empty list.
 -/
 unsafe def goto_def_button {γ} : expr → tactic (List (html (action γ)))
@@ -152,7 +149,7 @@ unsafe def goto_def_button {γ} : expr → tactic (List (html (action γ)))
                 ["↪"]]) <|>
       pure []
 
-/--  Due to a bug in the webview browser, we have to reduce the number of spans in the expression.
+/-- Due to a bug in the webview browser, we have to reduce the number of spans in the expression.
 To do this, we collect the attributes from `sf.block` and `sf.highlight` after an expression
 boundary. -/
 unsafe def get_block_attrs {γ} : sf → tactic (sf × List (attr γ))
@@ -168,8 +165,7 @@ unsafe def get_block_attrs {γ} : sf → tactic (sf × List (attr γ))
     pure (a, cn c.to_string :: rest)
   | a => pure (a, [])
 
-/-- 
-Renders a subexpression as a list of html elements.
+/-- Renders a subexpression as a list of html elements.
 -/
 unsafe def view {γ} (tooltip_component : Tc subexpr (action γ)) (click_address : Option Expr.Address)
     (select_address : Option Expr.Address) : subexpr → sf → tactic (List (html (action γ)))
@@ -214,7 +210,7 @@ unsafe def view {γ} (tooltip_component : Tc subexpr (action γ)) (click_address
     let inner ← view ca a
     pure [h "span" attrs inner]
 
-/--  Make an interactive expression. -/
+/-- Make an interactive expression. -/
 unsafe def mk {γ} (tooltip : Tc subexpr γ) : Tc expr γ :=
   let tooltip_comp :=
     (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2) $
@@ -242,7 +238,7 @@ unsafe def mk {γ} (tooltip : Tc subexpr γ) : Tc expr γ :=
         let v ← view tooltip_comp (Prod.snd <$> ca) (Prod.snd <$> sa) ⟨e, []⟩ m
         pure $ [h "span" [className "expr", key e.hash, on_mouse_leave fun _ => action.on_mouse_leave_all] $ v]
 
-/--  Render the implicit arguments for an expression in fancy, little pills. -/
+/-- Render the implicit arguments for an expression in fancy, little pills. -/
 unsafe def implicit_arg_list (tooltip : Tc subexpr Empty) (e : expr) : tactic $ html Empty := do
   let fn ← mk tooltip $ expr.get_app_fn e
   let args ← List.mmapₓ (mk tooltip) $ expr.get_app_args e
@@ -251,8 +247,7 @@ unsafe def implicit_arg_list (tooltip : Tc subexpr Empty) (e : expr) : tactic $ 
         (h "span" [className "bg-blue br3 ma1 ph2 white"] [fn] ::
           List.map (fun a => h "span" [className "bg-gray br3 ma1 ph2 white"] [a]) args)
 
-/-- 
-Component for the type tooltip.
+/-- Component for the type tooltip.
 -/
 unsafe def type_tooltip : Tc subexpr Empty :=
   tc.stateless fun ⟨e, ea⟩ => do
@@ -265,18 +260,15 @@ unsafe def type_tooltip : Tc subexpr Empty :=
 
 end InteractiveExpression
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
-/-- 
-Supported tactic state filters.
+/-- Supported tactic state filters.
 -/
 unsafe inductive filter_type
   | none
   | no_instances
   | only_props
-  deriving [anonymous]
+  deriving DecidableEq
 
-/-- 
-Filters a local constant using the given filter.
+/-- Filters a local constant using the given filter.
 -/
 unsafe def filter_local : filter_type → expr → tactic Bool
   | filter_type.none, e => pure tt
@@ -287,8 +279,7 @@ unsafe def filter_local : filter_type → expr → tactic Bool
     let t ← tactic.infer_type e
     tactic.is_prop t
 
-/-- 
-Component for the filter dropdown.
+/-- Component for the filter dropdown.
 -/
 unsafe def filter_component : component filter_type filter_type :=
   component.stateless fun lf =>
@@ -298,16 +289,14 @@ unsafe def filter_component : component filter_type filter_type :=
           ⟨filter_type.only_props, "2", ["only props"]⟩]
         lf]
 
-/-- 
-Converts a name into an html element.
+/-- Converts a name into an html element.
 -/
 unsafe def html.of_name {α : Type} : Name → html α
   | n => html.of_string $ Name.toString n
 
 open Tactic
 
-/-- 
-Component that shows a type.
+/-- Component that shows a type.
 -/
 unsafe def show_type_component : Tc expr Empty :=
   tc.stateless fun x => do
@@ -315,23 +304,22 @@ unsafe def show_type_component : Tc expr Empty :=
     let y_comp ← interactive_expression.mk interactive_expression.type_tooltip $ y
     pure y_comp
 
--- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
-/--  A group of local constants in the context that should be rendered as one line. -/
+/-- A group of local constants in the context that should be rendered as one line. -/
 unsafe structure local_collection where
   key : Stringₓ
   locals : List expr
   type : expr
   value : Option expr
-  deriving [anonymous]
+  deriving DecidableEq
 
-/--  Converts a single local constant into a (singleton) `local_collection` -/
+/-- Converts a single local constant into a (singleton) `local_collection` -/
 unsafe def to_local_collection (l : expr) : tactic local_collection :=
   tactic.unsafe.type_context.run $ do
     let lctx ← tactic.unsafe.type_context.get_local_context
     let some ldecl ← pure $ lctx.get_local_decl l.local_uniq_name
     pure { key := l.local_uniq_name.repr, locals := [l], type := ldecl.type, value := ldecl.value }
 
-/--  Groups consecutive local collections by type -/
+/-- Groups consecutive local collections by type -/
 unsafe def group_local_collection : List local_collection → List local_collection
   | a :: b :: rest =>
     if a.type = b.type ∧ a.value = b.value then
@@ -339,7 +327,7 @@ unsafe def group_local_collection : List local_collection → List local_collect
     else a :: group_local_collection (b :: rest)
   | ls => ls
 
-/--  Component that displays the main (first) goal. -/
+/-- Component that displays the main (first) goal. -/
 unsafe def tactic_view_goal {γ} (local_c : Tc local_collection γ) (target_c : Tc expr γ) : Tc filter_type γ :=
   tc.stateless $ fun ft => do
     let g@(expr.mvar u_n pp_n y) ← main_goal
@@ -365,15 +353,13 @@ unsafe def tactic_view_goal {γ} (local_c : Tc local_collection γ) (target_c : 
         h "ul" [key g.hash, className "list pl0 font-code"] $
           case_tag ++ lchs ++ [h "li" [key u_n] [h "span" [cn "goal-vdash b"] ["⊢ "], t_comp]]
 
-/-- 
-Actions accepted by the `tactic_view_component`.
+/-- Actions accepted by the `tactic_view_component`.
 -/
 unsafe inductive tactic_view_action (γ : Type)
   | out (a : γ) : tactic_view_action
   | filter (f : filter_type) : tactic_view_action
 
-/-- 
-The "goals accomplished 🎉" HTML widget. This can be overridden using:
+/-- The "goals accomplished 🎉" HTML widget. This can be overridden using:
 ```lean
 meta def my_new_msg {α : Type} : widget.html α := "my message"
 attribute [vm_override my_new_msg] widget_override.goals_accomplished_message
@@ -382,7 +368,7 @@ attribute [vm_override my_new_msg] widget_override.goals_accomplished_message
 unsafe def goals_accomplished_message {α} : html α :=
   h "div" [cn "f5"] ["goals accomplished 🎉"]
 
-/--  Component that displays all goals, together with the `$n goals` message. -/
+/-- Component that displays all goals, together with the `$n goals` message. -/
 unsafe def tactic_view_component {γ} (local_c : Tc local_collection γ) (target_c : Tc expr γ) : Tc Unit γ :=
   tc.mk_simple (tactic_view_action γ) filter_type (fun _ => pure $ filter_type.none)
     (fun ⟨⟩ ft a =>
@@ -408,7 +394,7 @@ unsafe def tactic_view_component {γ} (local_c : Tc local_collection γ) (target
             [html.of_component ft $ component.map_action tactic_view_action.filter filter_component],
           html.map_action tactic_view_action.out goals]
 
-/--  Component that displays the term-mode goal. -/
+/-- Component that displays the term-mode goal. -/
 unsafe def tactic_view_term_goal {γ} (local_c : Tc local_collection γ) (target_c : Tc expr γ) : Tc Unit γ :=
   tc.stateless $ fun _ => do
     let goal ← flip tc.to_html filter_type.none $ tactic_view_goal local_c target_c
@@ -417,8 +403,7 @@ unsafe def tactic_view_term_goal {γ} (local_c : Tc local_collection γ) (target
             [h "li" [className "lh-copy"] [h "strong" [cn "goal-goals"] ["expected type:"]],
               h "li" [className "lh-copy"] [goal]]]
 
-/-- 
-Component showing a local collection.
+/-- Component showing a local collection.
 -/
 unsafe def show_local_collection_component : Tc local_collection Empty :=
   tc.stateless fun lc => do
@@ -430,20 +415,17 @@ unsafe def show_local_collection_component : Tc local_collection Empty :=
         pure [c, " := ", v]
       | none => pure [c]
 
-/-- 
-Renders the current tactic state.
+/-- Renders the current tactic state.
 -/
 unsafe def tactic_render : Tc Unit Empty :=
   component.ignore_action $ tactic_view_component show_local_collection_component show_type_component
 
-/-- 
-Component showing the current tactic state.
+/-- Component showing the current tactic state.
 -/
 unsafe def tactic_state_widget : component tactic_state Empty :=
   tc.to_component tactic_render
 
-/-- 
-Widget used to display term-proof goals.
+/-- Widget used to display term-proof goals.
 -/
 unsafe def term_goal_widget : component tactic_state Empty :=
   (tactic_view_term_goal show_local_collection_component show_type_component).to_component

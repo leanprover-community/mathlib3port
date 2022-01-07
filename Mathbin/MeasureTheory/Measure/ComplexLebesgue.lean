@@ -17,15 +17,15 @@ noncomputable section
 
 namespace Complex
 
-/--  Lebesgue measure on `ℂ`. -/
+/-- Lebesgue measure on `ℂ`. -/
 instance measure_space : measure_space ℂ :=
   ⟨measure.map basis_one_I.equivFun.symm volume⟩
 
-/--  Measurable equivalence between `ℂ` and `ℝ² = fin 2 → ℝ`. -/
+/-- Measurable equivalence between `ℂ` and `ℝ² = fin 2 → ℝ`. -/
 def measurable_equiv_pi : ℂ ≃ᵐ (Finₓ 2 → ℝ) :=
   basis_one_I.equivFun.toContinuousLinearEquiv.toHomeomorph.toMeasurableEquiv
 
-/--  Measurable equivalence between `ℂ` and `ℝ × ℝ`. -/
+/-- Measurable equivalence between `ℂ` and `ℝ × ℝ`. -/
 def measurable_equiv_real_prod : ℂ ≃ᵐ ℝ × ℝ :=
   equiv_real_prodₗ.toHomeomorph.toMeasurableEquiv
 

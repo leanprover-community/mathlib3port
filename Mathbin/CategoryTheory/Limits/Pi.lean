@@ -26,75 +26,70 @@ variable {J : Type v₁} [small_category J]
 
 variable {F : J ⥤ ∀ i, C i}
 
-/-- 
-A cone over `F : J ⥤ Π i, C i` has as its components cones over each of the `F ⋙ pi.eval C i`.
+/-- A cone over `F : J ⥤ Π i, C i` has as its components cones over each of the `F ⋙ pi.eval C i`.
 -/
-def cone_comp_eval (c : cone F) (i : I) : cone (F ⋙ pi.eval C i) :=
-  { x := c.X i, π := { app := fun j => c.π.app j i, naturality' := fun j j' f => congr_funₓ (c.π.naturality f) i } }
+def cone_comp_eval (c : cone F) (i : I) : cone (F ⋙ pi.eval C i) where
+  x := c.X i
+  π := { app := fun j => c.π.app j i, naturality' := fun j j' f => congr_funₓ (c.π.naturality f) i }
 
-/-- 
-A cocone over `F : J ⥤ Π i, C i` has as its components cocones over each of the `F ⋙ pi.eval C i`.
+/-- A cocone over `F : J ⥤ Π i, C i` has as its components cocones over each of the `F ⋙ pi.eval C i`.
 -/
-def cocone_comp_eval (c : cocone F) (i : I) : cocone (F ⋙ pi.eval C i) :=
-  { x := c.X i, ι := { app := fun j => c.ι.app j i, naturality' := fun j j' f => congr_funₓ (c.ι.naturality f) i } }
+def cocone_comp_eval (c : cocone F) (i : I) : cocone (F ⋙ pi.eval C i) where
+  x := c.X i
+  ι := { app := fun j => c.ι.app j i, naturality' := fun j j' f => congr_funₓ (c.ι.naturality f) i }
 
-/-- 
-Given a family of cones over the `F ⋙ pi.eval C i`, we can assemble these together as a `cone F`.
+/-- Given a family of cones over the `F ⋙ pi.eval C i`, we can assemble these together as a `cone F`.
 -/
-def cone_of_cone_comp_eval (c : ∀ i, cone (F ⋙ pi.eval C i)) : cone F :=
-  { x := fun i => (c i).x,
-    π :=
-      { app := fun j i => (c i).π.app j,
-        naturality' := fun j j' f => by
-          ext i
-          exact (c i).π.naturality f } }
+def cone_of_cone_comp_eval (c : ∀ i, cone (F ⋙ pi.eval C i)) : cone F where
+  x := fun i => (c i).x
+  π :=
+    { app := fun j i => (c i).π.app j,
+      naturality' := fun j j' f => by
+        ext i
+        exact (c i).π.naturality f }
 
-/-- 
-Given a family of cocones over the `F ⋙ pi.eval C i`,
+/-- Given a family of cocones over the `F ⋙ pi.eval C i`,
 we can assemble these together as a `cocone F`.
 -/
-def cocone_of_cocone_comp_eval (c : ∀ i, cocone (F ⋙ pi.eval C i)) : cocone F :=
-  { x := fun i => (c i).x,
-    ι :=
-      { app := fun j i => (c i).ι.app j,
-        naturality' := fun j j' f => by
-          ext i
-          exact (c i).ι.naturality f } }
+def cocone_of_cocone_comp_eval (c : ∀ i, cocone (F ⋙ pi.eval C i)) : cocone F where
+  x := fun i => (c i).x
+  ι :=
+    { app := fun j i => (c i).ι.app j,
+      naturality' := fun j j' f => by
+        ext i
+        exact (c i).ι.naturality f }
 
-/-- 
-Given a family of limit cones over the `F ⋙ pi.eval C i`,
+/-- Given a family of limit cones over the `F ⋙ pi.eval C i`,
 assembling them together as a `cone F` produces a limit cone.
 -/
 def cone_of_cone_eval_is_limit {c : ∀ i, cone (F ⋙ pi.eval C i)} (P : ∀ i, is_limit (c i)) :
-    is_limit (cone_of_cone_comp_eval c) :=
-  { lift := fun s i => (P i).lift (cone_comp_eval s i),
-    fac' := fun s j => by
-      ext i
-      exact (P i).fac (cone_comp_eval s i) j,
-    uniq' := fun s m w => by
-      ext i
-      exact (P i).uniq (cone_comp_eval s i) (m i) fun j => congr_funₓ (w j) i }
+    is_limit (cone_of_cone_comp_eval c) where
+  lift := fun s i => (P i).lift (cone_comp_eval s i)
+  fac' := fun s j => by
+    ext i
+    exact (P i).fac (cone_comp_eval s i) j
+  uniq' := fun s m w => by
+    ext i
+    exact (P i).uniq (cone_comp_eval s i) (m i) fun j => congr_funₓ (w j) i
 
-/-- 
-Given a family of colimit cocones over the `F ⋙ pi.eval C i`,
+/-- Given a family of colimit cocones over the `F ⋙ pi.eval C i`,
 assembling them together as a `cocone F` produces a colimit cocone.
 -/
 def cocone_of_cocone_eval_is_colimit {c : ∀ i, cocone (F ⋙ pi.eval C i)} (P : ∀ i, is_colimit (c i)) :
-    is_colimit (cocone_of_cocone_comp_eval c) :=
-  { desc := fun s i => (P i).desc (cocone_comp_eval s i),
-    fac' := fun s j => by
-      ext i
-      exact (P i).fac (cocone_comp_eval s i) j,
-    uniq' := fun s m w => by
-      ext i
-      exact (P i).uniq (cocone_comp_eval s i) (m i) fun j => congr_funₓ (w j) i }
+    is_colimit (cocone_of_cocone_comp_eval c) where
+  desc := fun s i => (P i).desc (cocone_comp_eval s i)
+  fac' := fun s j => by
+    ext i
+    exact (P i).fac (cocone_comp_eval s i) j
+  uniq' := fun s m w => by
+    ext i
+    exact (P i).uniq (cocone_comp_eval s i) (m i) fun j => congr_funₓ (w j) i
 
 section
 
 variable [∀ i, has_limit (F ⋙ pi.eval C i)]
 
-/-- 
-If we have a functor `F : J ⥤ Π i, C i` into a category of indexed families,
+/-- If we have a functor `F : J ⥤ Π i, C i` into a category of indexed families,
 and we have limits for each of the `F ⋙ pi.eval C i`,
 then `F` has a limit.
 -/
@@ -109,8 +104,7 @@ section
 
 variable [∀ i, has_colimit (F ⋙ pi.eval C i)]
 
-/-- 
-If we have a functor `F : J ⥤ Π i, C i` into a category of indexed families,
+/-- If we have a functor `F : J ⥤ Π i, C i` into a category of indexed families,
 and colimits exist for each of the `F ⋙ pi.eval C i`,
 there is a colimit for `F`.
 -/

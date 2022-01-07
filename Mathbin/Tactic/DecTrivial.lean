@@ -16,7 +16,8 @@ open Tactic.Interactive
 
 setup_tactic_parser
 
-/--  `dec_trivial` tries to use decidability to prove a goal
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+/-- `dec_trivial` tries to use decidability to prove a goal
 (i.e., using `exact dec_trivial`).
 The variant `dec_trivial!` will revert all hypotheses on which the target depends,
 before it tries `exact dec_trivial`.
@@ -27,7 +28,7 @@ example (n : ℕ) (h : n < 2) : n = 0 ∨ n = 1 :=
 by dec_trivial!
 ```
 -/
-unsafe def tactic.interactive.dec_trivial (revert_deps : parse (tk "!")?) : tactic Unit :=
+unsafe def tactic.interactive.dec_trivial (revert_deps : parse («expr ?» (tk "!"))) : tactic Unit :=
   if revert_deps.is_some then revert_target_deps; tactic.exact_dec_trivial else tactic.exact_dec_trivial
 
 add_tactic_doc

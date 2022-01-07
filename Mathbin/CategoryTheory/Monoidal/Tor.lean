@@ -30,17 +30,17 @@ variable {C : Type _} [category C] [monoidal_category C] [preadditive C] [monoid
 
 variable (C)
 
-/--  We define `Tor C n : C ⥤ C ⥤ C` by left-deriving in the second factor of `(X, Y) ↦ X ⊗ Y`. -/
+/-- We define `Tor C n : C ⥤ C ⥤ C` by left-deriving in the second factor of `(X, Y) ↦ X ⊗ Y`. -/
 @[simps]
-def Tor (n : ℕ) : C ⥤ C ⥤ C :=
-  { obj := fun X => functor.left_derived ((tensoring_left C).obj X) n,
-    map := fun X Y f => nat_trans.left_derived ((tensoring_left C).map f) n,
-    map_id' := fun X => by
-      rw [(tensoring_left C).map_id, nat_trans.left_derived_id],
-    map_comp' := fun X Y Z f g => by
-      rw [(tensoring_left C).map_comp, nat_trans.left_derived_comp] }
+def Tor (n : ℕ) : C ⥤ C ⥤ C where
+  obj := fun X => functor.left_derived ((tensoring_left C).obj X) n
+  map := fun X Y f => nat_trans.left_derived ((tensoring_left C).map f) n
+  map_id' := fun X => by
+    rw [(tensoring_left C).map_id, nat_trans.left_derived_id]
+  map_comp' := fun X Y Z f g => by
+    rw [(tensoring_left C).map_comp, nat_trans.left_derived_comp]
 
-/--  An alternative definition of `Tor`, where we left-derive in the first factor instead. -/
+/-- An alternative definition of `Tor`, where we left-derive in the first factor instead. -/
 @[simps]
 def Tor' (n : ℕ) : C ⥤ C ⥤ C :=
   functor.flip
@@ -53,12 +53,12 @@ def Tor' (n : ℕ) : C ⥤ C ⥤ C :=
 
 open_locale ZeroObject
 
-/--  The higher `Tor` groups for `X` and `Y` are zero if `Y` is projective. -/
-def Tor_succ_of_projective (X Y : C) [projective Y] (n : ℕ) : ((Tor C (n+1)).obj X).obj Y ≅ 0 :=
+/-- The higher `Tor` groups for `X` and `Y` are zero if `Y` is projective. -/
+def Tor_succ_of_projective (X Y : C) [projective Y] (n : ℕ) : ((Tor C (n + 1)).obj X).obj Y ≅ 0 :=
   ((tensoring_left C).obj X).leftDerivedObjProjectiveSucc n Y
 
-/--  The higher `Tor'` groups for `X` and `Y` are zero if `X` is projective. -/
-def Tor'_succ_of_projective (X Y : C) [projective X] (n : ℕ) : ((Tor' C (n+1)).obj X).obj Y ≅ 0 := by
+/-- The higher `Tor'` groups for `X` and `Y` are zero if `X` is projective. -/
+def Tor'_succ_of_projective (X Y : C) [projective X] (n : ℕ) : ((Tor' C (n + 1)).obj X).obj Y ≅ 0 := by
   dsimp only [Tor', functor.flip]
   exact ((tensoring_right C).obj Y).leftDerivedObjProjectiveSucc n X
 

@@ -33,8 +33,7 @@ variable {D : Type u₂} [category.{v₂} D]
 
 variable {L : C ⥤ D} {R : D ⥤ C} (h : L ⊣ R)
 
-/-- 
-If the left adjoint is fully faithful, then the unit is an isomorphism.
+/-- If the left adjoint is fully faithful, then the unit is an isomorphism.
 
 See
 * Lemma 4.5.13 from [Riehl][riehl2017]
@@ -56,8 +55,7 @@ instance unit_is_iso_of_L_fully_faithful [full L] [faithful L] : is_iso (adjunct
             rw [← h.unit_naturality]
             simp ⟩⟩⟩
 
-/-- 
-If the right adjoint is fully faithful, then the counit is an isomorphism.
+/-- If the right adjoint is fully faithful, then the counit is an isomorphism.
 
 See https://stacks.math.columbia.edu/tag/07RB (we only prove the forward direction!)
 -/
@@ -77,43 +75,43 @@ instance counit_is_iso_of_R_fully_faithful [full R] [faithful R] : is_iso (adjun
               rw [← h.counit_naturality]
               simp ⟩⟩⟩
 
-/--  If the unit of an adjunction is an isomorphism, then its inverse on the image of L is given
+/-- If the unit of an adjunction is an isomorphism, then its inverse on the image of L is given
 by L whiskered with the counit. -/
 @[simp]
 theorem inv_map_unit {X : C} [is_iso (h.unit.app X)] : inv (L.map (h.unit.app X)) = h.counit.app (L.obj X) :=
   is_iso.inv_eq_of_hom_inv_id h.left_triangle_components
 
-/--  If the unit is an isomorphism, bundle one has an isomorphism `L ⋙ R ⋙ L ≅ L`. -/
+/-- If the unit is an isomorphism, bundle one has an isomorphism `L ⋙ R ⋙ L ≅ L`. -/
 @[simps]
 noncomputable def whisker_left_L_counit_iso_of_is_iso_unit [is_iso h.unit] : L ⋙ R ⋙ L ≅ L :=
   (L.associator R L).symm ≪≫ iso_whisker_right (as_iso h.unit).symm L ≪≫ functor.left_unitor _
 
-/--  If the counit of an adjunction is an isomorphism, then its inverse on the image of R is given
+/-- If the counit of an adjunction is an isomorphism, then its inverse on the image of R is given
 by R whiskered with the unit. -/
 @[simp]
 theorem inv_counit_map {X : D} [is_iso (h.counit.app X)] : inv (R.map (h.counit.app X)) = h.unit.app (R.obj X) :=
   is_iso.inv_eq_of_inv_hom_id h.right_triangle_components
 
-/--  If the counit of an is an isomorphism, one has an isomorphism `(R ⋙ L ⋙ R) ≅ R`. -/
+/-- If the counit of an is an isomorphism, one has an isomorphism `(R ⋙ L ⋙ R) ≅ R`. -/
 @[simps]
 noncomputable def whisker_left_R_unit_iso_of_is_iso_counit [is_iso h.counit] : R ⋙ L ⋙ R ≅ R :=
   (R.associator L R).symm ≪≫ iso_whisker_right (as_iso h.counit) R ≪≫ functor.left_unitor _
 
-/--  If the unit is an isomorphism, then the left adjoint is full-/
-noncomputable def L_full_of_unit_is_iso [is_iso h.unit] : full L :=
-  { Preimage := fun X Y f => h.hom_equiv X (L.obj Y) f ≫ inv (h.unit.app Y) }
+/-- If the unit is an isomorphism, then the left adjoint is full-/
+noncomputable def L_full_of_unit_is_iso [is_iso h.unit] : full L where
+  Preimage := fun X Y f => h.hom_equiv X (L.obj Y) f ≫ inv (h.unit.app Y)
 
-/--  If the unit is an isomorphism, then the left adjoint is faithful-/
+/-- If the unit is an isomorphism, then the left adjoint is faithful-/
 theorem L_faithful_of_unit_is_iso [is_iso h.unit] : faithful L :=
   { map_injective' := fun X Y f g H => by
       rw [← (h.hom_equiv X (L.obj Y)).apply_eq_iff_eq] at H
       simpa using H =≫ inv (h.unit.app Y) }
 
-/--  If the counit is an isomorphism, then the right adjoint is full-/
-noncomputable def R_full_of_counit_is_iso [is_iso h.counit] : full R :=
-  { Preimage := fun X Y f => inv (h.counit.app X) ≫ (h.hom_equiv (R.obj X) Y).symm f }
+/-- If the counit is an isomorphism, then the right adjoint is full-/
+noncomputable def R_full_of_counit_is_iso [is_iso h.counit] : full R where
+  Preimage := fun X Y f => inv (h.counit.app X) ≫ (h.hom_equiv (R.obj X) Y).symm f
 
-/--  If the counit is an isomorphism, then the right adjoint is faithful-/
+/-- If the counit is an isomorphism, then the right adjoint is faithful-/
 theorem R_faithful_of_counit_is_iso [is_iso h.counit] : faithful R :=
   { map_injective' := fun X Y f g H => by
       rw [← (h.hom_equiv (R.obj X) Y).symm.apply_eq_iff_eq] at H
@@ -149,8 +147,7 @@ variable {C' : Type u₃} [category.{v₃} C']
 
 variable {D' : Type u₄} [category.{v₄} D']
 
-/-- 
-If `C` is a full subcategory of `C'` and `D` is a full subcategory of `D'`, then we can restrict
+/-- If `C` is a full subcategory of `C'` and `D` is a full subcategory of `D'`, then we can restrict
 an adjunction `L' ⊣ R'` where `L' : C' ⥤ D'` and `R' : D' ⥤ C'` to `C` and `D`.
 The construction here is slightly more general, in that `C` is required only to have a full and
 faithful "inclusion" functor `iC : C ⥤ C'` (and similarly `iD : D ⥤ D'`) which commute (up to
@@ -161,7 +158,8 @@ def adjunction.restrict_fully_faithful (iC : C ⥤ C') (iD : D ⥤ D') {L' : C' 
     [faithful iD] : L ⊣ R :=
   adjunction.mk_of_hom_equiv
     { homEquiv := fun X Y =>
-        calc (L.obj X ⟶ Y) ≃ (iD.obj (L.obj X) ⟶ iD.obj Y) := equiv_of_fully_faithful iD
+        calc
+          (L.obj X ⟶ Y) ≃ (iD.obj (L.obj X) ⟶ iD.obj Y) := equiv_of_fully_faithful iD
           _ ≃ (L'.obj (iC.obj X) ⟶ iD.obj Y) := iso.hom_congr (comm1.symm.app X) (iso.refl _)
           _ ≃ (iC.obj X ⟶ R'.obj (iD.obj Y)) := adj.hom_equiv _ _
           _ ≃ (iC.obj X ⟶ iC.obj (R.obj Y)) := iso.hom_congr (iso.refl _) (comm2.app Y)

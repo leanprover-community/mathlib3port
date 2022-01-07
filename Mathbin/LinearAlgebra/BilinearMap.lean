@@ -56,13 +56,14 @@ variable {ρ₁₂ : R →+* R₂} {σ₁₂ : S →+* S₂}
 
 variable (ρ₁₂ σ₁₂)
 
-/--  Create a bilinear map from a function that is semilinear in each component.
+/-- Create a bilinear map from a function that is semilinear in each component.
 See `mk₂'` and `mk₂` for the linear case. -/
-def mk₂'ₛₗ (f : M → N → P) (H1 : ∀ m₁ m₂ n, f (m₁+m₂) n = f m₁ n+f m₂ n) (H2 : ∀ c : R m n, f (c • m) n = ρ₁₂ c • f m n)
-    (H3 : ∀ m n₁ n₂, f m (n₁+n₂) = f m n₁+f m n₂) (H4 : ∀ c : S m n, f m (c • n) = σ₁₂ c • f m n) :
-    M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P :=
-  { toFun := fun m => { toFun := f m, map_add' := H3 m, map_smul' := fun c => H4 c m },
-    map_add' := fun m₁ m₂ => LinearMap.ext $ H1 m₁ m₂, map_smul' := fun c m => LinearMap.ext $ H2 c m }
+def mk₂'ₛₗ (f : M → N → P) (H1 : ∀ m₁ m₂ n, f (m₁ + m₂) n = f m₁ n + f m₂ n)
+    (H2 : ∀ c : R m n, f (c • m) n = ρ₁₂ c • f m n) (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂)
+    (H4 : ∀ c : S m n, f m (c • n) = σ₁₂ c • f m n) : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P where
+  toFun := fun m => { toFun := f m, map_add' := H3 m, map_smul' := fun c => H4 c m }
+  map_add' := fun m₁ m₂ => LinearMap.ext $ H1 m₁ m₂
+  map_smul' := fun c m => LinearMap.ext $ H2 c m
 
 variable {ρ₁₂ σ₁₂}
 
@@ -73,10 +74,11 @@ theorem mk₂'ₛₗ_apply (f : M → N → P) {H1 H2 H3 H4} (m : M) (n : N) :
 
 variable (R S)
 
-/--  Create a bilinear map from a function that is linear in each component.
+/-- Create a bilinear map from a function that is linear in each component.
 See `mk₂` for the special case where both arguments come from modules over the same ring. -/
-def mk₂' (f : M → N → Pₗ) (H1 : ∀ m₁ m₂ n, f (m₁+m₂) n = f m₁ n+f m₂ n) (H2 : ∀ c : R m n, f (c • m) n = c • f m n)
-    (H3 : ∀ m n₁ n₂, f m (n₁+n₂) = f m n₁+f m n₂) (H4 : ∀ c : S m n, f m (c • n) = c • f m n) : M →ₗ[R] N →ₗ[S] Pₗ :=
+def mk₂' (f : M → N → Pₗ) (H1 : ∀ m₁ m₂ n, f (m₁ + m₂) n = f m₁ n + f m₂ n) (H2 : ∀ c : R m n, f (c • m) n = c • f m n)
+    (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂) (H4 : ∀ c : S m n, f m (c • n) = c • f m n) :
+    M →ₗ[R] N →ₗ[S] Pₗ :=
   mk₂'ₛₗ (RingHom.id R) (RingHom.id S) f H1 H2 H3 H4
 
 variable {R S}
@@ -93,7 +95,7 @@ section
 
 attribute [local instance] SmulCommClass.symm
 
-/--  Given a linear map from `M` to linear maps from `N` to `P`, i.e., a bilinear map from `M × N` to
+/-- Given a linear map from `M` to linear maps from `N` to `P`, i.e., a bilinear map from `M × N` to
 `P`, change the order of variables and get a linear map from `N` to linear maps from `M` to `P`. -/
 def flip (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) : N →ₛₗ[σ₁₂] M →ₛₗ[ρ₁₂] P :=
   mk₂'ₛₗ σ₁₂ ρ₁₂ (fun n m => f m n) (fun n₁ n₂ m => (f m).map_add _ _) (fun c n m => (f m).map_smulₛₗ _ _)
@@ -126,7 +128,7 @@ theorem map_neg₂ (f : M' →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P') x y : f
 theorem map_sub₂ (f : M' →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P') x y z : f (x - y) z = f x z - f y z :=
   (flip f z).map_sub _ _
 
-theorem map_add₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) x₁ x₂ y : f (x₁+x₂) y = f x₁ y+f x₂ y :=
+theorem map_add₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) x₁ x₂ y : f (x₁ + x₂) y = f x₁ y + f x₂ y :=
   (flip f y).map_add _ _
 
 theorem map_smul₂ (f : M →ₗ[R] N →ₗ[S] Pₗ) (r : R) x y : f (r • x) y = r • f x y :=
@@ -135,196 +137,9 @@ theorem map_smul₂ (f : M →ₗ[R] N →ₗ[S] Pₗ) (r : R) x y : f (r • x)
 theorem map_smulₛₗ₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (r : R) x y : f (r • x) y = ρ₁₂ r • f x y :=
   (flip f y).map_smulₛₗ _ _
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `map_sum₂ [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`ι] [":" (Term.type "Type" [(Level.hole "_")])] "}")
-    (Term.explicitBinder
-     "("
-     [`f]
-     [":"
-      (Algebra.Module.LinearMap.«term_→ₛₗ[_]_»
-       `M
-       " →ₛₗ["
-       `ρ₁₂
-       "] "
-       (Algebra.Module.LinearMap.«term_→ₛₗ[_]_» `N " →ₛₗ[" `σ₁₂ "] " `P))]
-     []
-     ")")
-    (Term.explicitBinder "(" [`t] [":" (Term.app `Finset [`ι])] [] ")")
-    (Term.explicitBinder "(" [`x] [":" (Term.arrow `ι "→" `M)] [] ")")
-    (Term.simpleBinder [`y] [])]
-   (Term.typeSpec
-    ":"
-    («term_=_»
-     (Term.app
-      `f
-      [(Algebra.BigOperators.Basic.«term∑_in_,_»
-        "∑"
-        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-        " in "
-        `t
-        ", "
-        (Term.app `x [`i]))
-       `y])
-     "="
-     (Algebra.BigOperators.Basic.«term∑_in_,_»
-      "∑"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      " in "
-      `t
-      ", "
-      (Term.app `f [(Term.app `x [`i]) `y])))))
-  (Command.declValSimple ":=" (Term.proj (Term.app `flip [`f `y]) "." `map_sum) [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.proj (Term.app `flip [`f `y]) "." `map_sum)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `flip [`f `y])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `y
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `flip
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `flip [`f `y]) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_=_»
-   (Term.app
-    `f
-    [(Algebra.BigOperators.Basic.«term∑_in_,_»
-      "∑"
-      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-      " in "
-      `t
-      ", "
-      (Term.app `x [`i]))
-     `y])
-   "="
-   (Algebra.BigOperators.Basic.«term∑_in_,_»
-    "∑"
-    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-    " in "
-    `t
-    ", "
-    (Term.app `f [(Term.app `x [`i]) `y])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Algebra.BigOperators.Basic.«term∑_in_,_»
-   "∑"
-   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
-   " in "
-   `t
-   ", "
-   (Term.app `f [(Term.app `x [`i]) `y]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∑_in_,_»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `f [(Term.app `x [`i]) `y])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `y
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `x [`i])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `i
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `x [`i]) []] ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `f
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `t
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem
-  map_sum₂
-  { ι : Type _ } ( f : M →ₛₗ[ ρ₁₂ ] N →ₛₗ[ σ₁₂ ] P ) ( t : Finset ι ) ( x : ι → M ) y
-    : f ∑ i in t , x i y = ∑ i in t , f x i y
-  := flip f y . map_sum
+theorem map_sum₂ {ι : Type _} (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (t : Finset ι) (x : ι → M) y :
+    f (∑ i in t, x i) y = ∑ i in t, f (x i) y :=
+  (flip f y).map_sum
 
 end Semiringₓ
 
@@ -354,11 +169,12 @@ variable [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomCompTriple σ₄
 
 variable (R)
 
-/--  Create a bilinear map from a function that is linear in each component.
+/-- Create a bilinear map from a function that is linear in each component.
 
 This is a shorthand for `mk₂'` for the common case when `R = S`. -/
-def mk₂ (f : M → Nₗ → Pₗ) (H1 : ∀ m₁ m₂ n, f (m₁+m₂) n = f m₁ n+f m₂ n) (H2 : ∀ c : R m n, f (c • m) n = c • f m n)
-    (H3 : ∀ m n₁ n₂, f m (n₁+n₂) = f m n₁+f m n₂) (H4 : ∀ c : R m n, f m (c • n) = c • f m n) : M →ₗ[R] Nₗ →ₗ[R] Pₗ :=
+def mk₂ (f : M → Nₗ → Pₗ) (H1 : ∀ m₁ m₂ n, f (m₁ + m₂) n = f m₁ n + f m₂ n) (H2 : ∀ c : R m n, f (c • m) n = c • f m n)
+    (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂) (H4 : ∀ c : R m n, f m (c • n) = c • f m n) :
+    M →ₗ[R] Nₗ →ₗ[R] Pₗ :=
   mk₂' R R f H1 H2 H3 H4
 
 @[simp]
@@ -368,10 +184,12 @@ theorem mk₂_apply (f : M → Nₗ → Pₗ) {H1 H2 H3 H4} (m : M) (n : Nₗ) :
 
 variable (R M N P)
 
-/--  Given a linear map from `M` to linear maps from `N` to `P`, i.e., a bilinear map `M → N → P`,
+/-- Given a linear map from `M` to linear maps from `N` to `P`, i.e., a bilinear map `M → N → P`,
 change the order of variables and get a linear map from `N` to linear maps from `M` to `P`. -/
-def lflip : (M →ₛₗ[σ₁₃] N →ₛₗ[σ₂₃] P) →ₗ[R₃] N →ₛₗ[σ₂₃] M →ₛₗ[σ₁₃] P :=
-  { toFun := flip, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
+def lflip : (M →ₛₗ[σ₁₃] N →ₛₗ[σ₂₃] P) →ₗ[R₃] N →ₛₗ[σ₂₃] M →ₛₗ[σ₁₃] P where
+  toFun := flip
+  map_add' := fun _ _ => rfl
+  map_smul' := fun _ _ => rfl
 
 variable {R M N P}
 
@@ -383,7 +201,7 @@ theorem lflip_apply (m : M) (n : N) : lflip R M N P f n m = f m n :=
 
 variable (R Pₗ)
 
-/--  Composing a linear map `M → N` and a linear map `N → P` to form a linear map `M → P`. -/
+/-- Composing a linear map `M → N` and a linear map `N → P` to form a linear map `M → P`. -/
 def lcomp (f : M →ₗ[R] Nₗ) : (Nₗ →ₗ[R] Pₗ) →ₗ[R] M →ₗ[R] Pₗ :=
   flip $ LinearMap.comp (flip id) f
 
@@ -395,7 +213,7 @@ theorem lcomp_apply (f : M →ₗ[R] Nₗ) (g : Nₗ →ₗ[R] Pₗ) (x : M) : l
 
 variable (P σ₂₃)
 
-/--  Composing a semilinear map `M → N` and a semilinear map `N → P` to form a semilinear map
+/-- Composing a semilinear map `M → N` and a semilinear map `N → P` to form a semilinear map
 `M → P` is itself a linear map. -/
 def lcompₛₗ (f : M →ₛₗ[σ₁₂] N) : (N →ₛₗ[σ₂₃] P) →ₗ[R₃] M →ₛₗ[σ₁₃] P :=
   flip $ LinearMap.comp (flip id) f
@@ -412,7 +230,7 @@ omit σ₁₃
 
 variable (R M Nₗ Pₗ)
 
-/--  Composing a linear map `M → N` and a linear map `N → P` to form a linear map `M → P`. -/
+/-- Composing a linear map `M → N` and a linear map `N → P` to form a linear map `M → P`. -/
 def llcomp : (Nₗ →ₗ[R] Pₗ) →ₗ[R] (M →ₗ[R] Nₗ) →ₗ[R] M →ₗ[R] Pₗ :=
   flip
     { toFun := lcomp R Pₗ, map_add' := fun f f' => ext₂ $ fun g x => g.map_add _ _,
@@ -428,7 +246,7 @@ theorem llcomp_apply (f : Nₗ →ₗ[R] Pₗ) (g : M →ₗ[R] Nₗ) (x : M) : 
 
 end
 
-/--  Composing a linear map `Q → N` and a bilinear map `M → N → P` to
+/-- Composing a linear map `Q → N` and a bilinear map `M → N → P` to
 form a bilinear map `M → Q → P`. -/
 def compl₂ (g : Q →ₛₗ[σ₄₂] N) : M →ₛₗ[σ₁₃] Q →ₛₗ[σ₄₃] P :=
   (lcompₛₗ _ _ g).comp f
@@ -441,7 +259,7 @@ theorem compl₂_apply (g : Q →ₛₗ[σ₄₂] N) (m : M) (q : Q) : f.compl�
 
 omit σ₄₃
 
-/--  Composing a linear map `P → Q` and a bilinear map `M → N → P` to
+/-- Composing a linear map `P → Q` and a bilinear map `M → N → P` to
 form a bilinear map `M → N → Q`. -/
 def compr₂ (f : M →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Pₗ →ₗ[R] Qₗ) : M →ₗ[R] Nₗ →ₗ[R] Qₗ :=
   llcomp R Nₗ Pₗ Qₗ g ∘ₗ f
@@ -452,7 +270,7 @@ theorem compr₂_apply (f : M →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Pₗ →ₗ[R]
 
 variable (R M)
 
-/--  Scalar multiplication as a bilinear map `R → M → M`. -/
+/-- Scalar multiplication as a bilinear map `R → M → M`. -/
 def lsmul : R →ₗ[R] M →ₗ[R] M :=
   mk₂ R (· • ·) add_smul (fun _ _ _ => mul_smul _ _ _) smul_add fun r s m => by
     simp only [smul_smul, smul_eq_mul, mul_commₓ]

@@ -16,6 +16,7 @@ import Mathbin.Algebra.BigOperators.Fin
 import Mathbin.Algebra.BigOperators.Finprod
 import Mathbin.Algebra.BigOperators.Finsupp
 import Mathbin.Algebra.BigOperators.Intervals
+import Mathbin.Algebra.BigOperators.Multiset
 import Mathbin.Algebra.BigOperators.NatAntidiagonal
 import Mathbin.Algebra.BigOperators.Option
 import Mathbin.Algebra.BigOperators.Order
@@ -30,6 +31,7 @@ import Mathbin.Algebra.Category.CommRing.Colimits
 import Mathbin.Algebra.Category.CommRing.Constructions
 import Mathbin.Algebra.Category.CommRing.Default
 import Mathbin.Algebra.Category.CommRing.FilteredColimits
+import Mathbin.Algebra.Category.CommRing.Instances
 import Mathbin.Algebra.Category.CommRing.Limits
 import Mathbin.Algebra.Category.FinVect
 import Mathbin.Algebra.Category.Group.ZModuleEquivalence
@@ -96,6 +98,7 @@ import Mathbin.Algebra.DirectSum.Internal
 import Mathbin.Algebra.DirectSum.Module
 import Mathbin.Algebra.DirectSum.Ring
 import Mathbin.Algebra.Divisibility
+import Mathbin.Algebra.DualNumber
 import Mathbin.Algebra.EuclideanDomain
 import Mathbin.Algebra.Field.Basic
 import Mathbin.Algebra.Field.Opposite
@@ -116,6 +119,7 @@ import Mathbin.Algebra.Group.Conj
 import Mathbin.Algebra.Group.Default
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Algebra.Group.Ext
+import Mathbin.Algebra.Group.Freiman
 import Mathbin.Algebra.Group.Hom
 import Mathbin.Algebra.Group.HomInstances
 import Mathbin.Algebra.Group.InjSurj
@@ -198,6 +202,7 @@ import Mathbin.Algebra.Module.Ulift
 import Mathbin.Algebra.MonoidAlgebra.Basic
 import Mathbin.Algebra.MonoidAlgebra.Grading
 import Mathbin.Algebra.MonoidAlgebra.ToDirectSum
+import Mathbin.Algebra.NeZero
 import Mathbin.Algebra.NonUnitalAlgHom
 import Mathbin.Algebra.Opposites
 import Mathbin.Algebra.Order.AbsoluteValue
@@ -247,6 +252,7 @@ import Mathbin.Algebra.Star.Basic
 import Mathbin.Algebra.Star.Chsh
 import Mathbin.Algebra.Star.Module
 import Mathbin.Algebra.Star.Pi
+import Mathbin.Algebra.Star.SelfAdjoint
 import Mathbin.Algebra.Support
 import Mathbin.Algebra.TrivSqZeroExt
 import Mathbin.Algebra.Tropical.Basic
@@ -255,6 +261,7 @@ import Mathbin.Algebra.Tropical.Lattice
 import Mathbin.AlgebraicGeometry.EllipticCurve
 import Mathbin.AlgebraicGeometry.Scheme
 import Mathbin.AlgebraicGeometry.Spec
+import Mathbin.AlgebraicGeometry.FunctionField
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace.HasColimits
 import Mathbin.AlgebraicGeometry.OpenImmersion
@@ -269,6 +276,7 @@ import Mathbin.AlgebraicGeometry.SheafedSpace
 import Mathbin.AlgebraicGeometry.Stalks
 import Mathbin.AlgebraicGeometry.StructureSheaf
 import Mathbin.AlgebraicTopology.MooreComplex
+import Mathbin.AlgebraicTopology.AlternatingFaceMapComplex
 import Mathbin.AlgebraicTopology.CechNerve
 import Mathbin.AlgebraicTopology.SimplexCategory
 import Mathbin.AlgebraicTopology.SimplicialObject
@@ -321,10 +329,12 @@ import Mathbin.Analysis.Calculus.SpecificFunctions
 import Mathbin.Analysis.Calculus.TangentCone
 import Mathbin.Analysis.Calculus.TimesContDiff
 import Mathbin.Analysis.Complex.Basic
+import Mathbin.Analysis.Complex.CauchyIntegral
 import Mathbin.Analysis.Complex.Circle
 import Mathbin.Analysis.Complex.Conformal
 import Mathbin.Analysis.Complex.Isometry
 import Mathbin.Analysis.Complex.Polynomial
+import Mathbin.Analysis.Complex.ReImTopology
 import Mathbin.Analysis.Complex.RealDeriv
 import Mathbin.Analysis.Complex.RootsOfUnity
 import Mathbin.Analysis.Complex.UpperHalfPlane
@@ -350,6 +360,7 @@ import Mathbin.Analysis.Convex.Strict
 import Mathbin.Analysis.Convex.Topology
 import Mathbin.Analysis.Fourier
 import Mathbin.Analysis.Hofer
+import Mathbin.Analysis.InnerProductSpace.Adjoint
 import Mathbin.Analysis.InnerProductSpace.Basic
 import Mathbin.Analysis.InnerProductSpace.Calculus
 import Mathbin.Analysis.InnerProductSpace.ConformalLinearMap
@@ -369,11 +380,13 @@ import Mathbin.Analysis.Normed.Group.Completion
 import Mathbin.Analysis.Normed.Group.Hom
 import Mathbin.Analysis.Normed.Group.HomCompletion
 import Mathbin.Analysis.Normed.Group.InfiniteSum
+import Mathbin.Analysis.Normed.Group.Pointwise
 import Mathbin.Analysis.Normed.Group.Quotient
 import Mathbin.Analysis.NormedSpace.AddTorsor
 import Mathbin.Analysis.NormedSpace.AddTorsorBases
 import Mathbin.Analysis.NormedSpace.AffineIsometry
 import Mathbin.Analysis.NormedSpace.Banach
+import Mathbin.Analysis.NormedSpace.BanachSteinhaus
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
 import Mathbin.Analysis.NormedSpace.Complemented
@@ -390,11 +403,13 @@ import Mathbin.Analysis.NormedSpace.Int
 import Mathbin.Analysis.NormedSpace.IsROrC
 import Mathbin.Analysis.NormedSpace.LatticeOrderedGroup
 import Mathbin.Analysis.NormedSpace.LinearIsometry
+import Mathbin.Analysis.NormedSpace.LpSpace
 import Mathbin.Analysis.NormedSpace.MazurUlam
 import Mathbin.Analysis.NormedSpace.Multilinear
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Analysis.NormedSpace.Ordered
 import Mathbin.Analysis.NormedSpace.PiLp
+import Mathbin.Analysis.NormedSpace.Pointwise
 import Mathbin.Analysis.NormedSpace.RieszLemma
 import Mathbin.Analysis.NormedSpace.Spectrum
 import Mathbin.Analysis.NormedSpace.Star
@@ -457,6 +472,7 @@ import Mathbin.CategoryTheory.Adjunction.Over
 import Mathbin.CategoryTheory.Adjunction.Reflective
 import Mathbin.CategoryTheory.Adjunction.Whiskering
 import Mathbin.CategoryTheory.Arrow
+import Mathbin.CategoryTheory.Bicategory.Basic
 import Mathbin.CategoryTheory.Category.Cat
 import Mathbin.CategoryTheory.Category.Groupoid
 import Mathbin.CategoryTheory.Category.Kleisli
@@ -661,6 +677,7 @@ import Mathbin.CategoryTheory.Sites.CoverPreserving
 import Mathbin.CategoryTheory.Sites.DenseSubsite
 import Mathbin.CategoryTheory.Sites.Grothendieck
 import Mathbin.CategoryTheory.Sites.InducedTopology
+import Mathbin.CategoryTheory.Sites.LeftExact
 import Mathbin.CategoryTheory.Sites.Limits
 import Mathbin.CategoryTheory.Sites.Plus
 import Mathbin.CategoryTheory.Sites.Pretopology
@@ -713,6 +730,7 @@ import Mathbin.Combinatorics.SetFamily.Shadow
 import Mathbin.Combinatorics.SimpleGraph.AdjMatrix
 import Mathbin.Combinatorics.SimpleGraph.Basic
 import Mathbin.Combinatorics.SimpleGraph.Coloring
+import Mathbin.Combinatorics.SimpleGraph.Connectivity
 import Mathbin.Combinatorics.SimpleGraph.DegreeSum
 import Mathbin.Combinatorics.SimpleGraph.Matching
 import Mathbin.Combinatorics.SimpleGraph.Partition
@@ -778,7 +796,8 @@ import Mathbin.Data.Complex.Exponential
 import Mathbin.Data.Complex.ExponentialBounds
 import Mathbin.Data.Complex.IsROrC
 import Mathbin.Data.Complex.Module
-import Mathbin.Data.Dfinsupp
+import Mathbin.Data.Dfinsupp.Basic
+import Mathbin.Data.Dfinsupp.Order
 import Mathbin.Data.Dlist.Basic
 import Mathbin.Data.Dlist.Instances
 import Mathbin.Data.Equiv.Basic
@@ -805,7 +824,9 @@ import Mathbin.Data.Erased
 import Mathbin.Data.Fin.Basic
 import Mathbin.Data.Fin.Fin2
 import Mathbin.Data.Fin.Interval
-import Mathbin.Data.Fin.Tuple
+import Mathbin.Data.Fin.Tuple.Basic
+import Mathbin.Data.Fin.Tuple.Default
+import Mathbin.Data.Fin.Tuple.Sort
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.Data.FinEnum
 import Mathbin.Data.Finmap
@@ -814,6 +835,7 @@ import Mathbin.Data.Finset.Card
 import Mathbin.Data.Finset.Default
 import Mathbin.Data.Finset.Fin
 import Mathbin.Data.Finset.Fold
+import Mathbin.Data.Finset.Functor
 import Mathbin.Data.Finset.Interval
 import Mathbin.Data.Finset.Lattice
 import Mathbin.Data.Finset.LocallyFinite
@@ -828,11 +850,14 @@ import Mathbin.Data.Finset.Pimage
 import Mathbin.Data.Finset.Powerset
 import Mathbin.Data.Finset.Preimage
 import Mathbin.Data.Finset.Prod
+import Mathbin.Data.Finset.Sigma
+import Mathbin.Data.Finset.Slice
 import Mathbin.Data.Finset.Sort
 import Mathbin.Data.Finsupp.Antidiagonal
 import Mathbin.Data.Finsupp.Basic
 import Mathbin.Data.Finsupp.Default
-import Mathbin.Data.Finsupp.Lattice
+import Mathbin.Data.Finsupp.Multiset
+import Mathbin.Data.Finsupp.Order
 import Mathbin.Data.Finsupp.Pointwise
 import Mathbin.Data.Finsupp.ToDfinsupp
 import Mathbin.Data.Fintype.Basic
@@ -876,6 +901,7 @@ import Mathbin.Data.List.EraseDup
 import Mathbin.Data.List.Forall2
 import Mathbin.Data.List.Func
 import Mathbin.Data.List.Indexes
+import Mathbin.Data.List.Infix
 import Mathbin.Data.List.Intervals
 import Mathbin.Data.List.Join
 import Mathbin.Data.List.Lattice
@@ -889,6 +915,7 @@ import Mathbin.Data.List.Pairwise
 import Mathbin.Data.List.Palindrome
 import Mathbin.Data.List.Perm
 import Mathbin.Data.List.Permutation
+import Mathbin.Data.List.Prime
 import Mathbin.Data.List.ProdMonoid
 import Mathbin.Data.List.ProdSigma
 import Mathbin.Data.List.Range
@@ -912,6 +939,7 @@ import Mathbin.Data.Matrix.Rank
 import Mathbin.Data.Mllist
 import Mathbin.Data.Multiset.Antidiagonal
 import Mathbin.Data.Multiset.Basic
+import Mathbin.Data.Multiset.Bind
 import Mathbin.Data.Multiset.Default
 import Mathbin.Data.Multiset.EraseDup
 import Mathbin.Data.Multiset.FinsetOps
@@ -965,6 +993,7 @@ import Mathbin.Data.Nat.Log
 import Mathbin.Data.Nat.Modeq
 import Mathbin.Data.Nat.MulInd
 import Mathbin.Data.Nat.Multiplicity
+import Mathbin.Data.Nat.Nth
 import Mathbin.Data.Nat.Pairing
 import Mathbin.Data.Nat.Parity
 import Mathbin.Data.Nat.Pow
@@ -994,6 +1023,7 @@ import Mathbin.Data.Pfunctor.Univariate.M
 import Mathbin.Data.Pfunctor.Univariate.Basic
 import Mathbin.Data.Pfunctor.Univariate.Default
 import Mathbin.Data.Pi
+import Mathbin.Data.Pi.Interval
 import Mathbin.Data.Pnat.Basic
 import Mathbin.Data.Pnat.Factors
 import Mathbin.Data.Pnat.Interval
@@ -1031,6 +1061,7 @@ import Mathbin.Data.Polynomial.RingDivision
 import Mathbin.Data.Polynomial.Taylor
 import Mathbin.Data.Pprod
 import Mathbin.Data.Prod
+import Mathbin.Data.Psigma.Order
 import Mathbin.Data.Qpf.Multivariate.Basic
 import Mathbin.Data.Qpf.Multivariate.Constructions.Cofix
 import Mathbin.Data.Qpf.Multivariate.Constructions.Comp
@@ -1098,6 +1129,7 @@ import Mathbin.Data.Set.Intervals.Default
 import Mathbin.Data.Set.Intervals.Disjoint
 import Mathbin.Data.Set.Intervals.ImagePreimage
 import Mathbin.Data.Set.Intervals.Infinite
+import Mathbin.Data.Set.Intervals.Monotone
 import Mathbin.Data.Set.Intervals.OrdConnected
 import Mathbin.Data.Set.Intervals.Pi
 import Mathbin.Data.Set.Intervals.ProjIcc
@@ -1119,7 +1151,7 @@ import Mathbin.Data.Stream.Init
 import Mathbin.Data.String.Basic
 import Mathbin.Data.String.Defs
 import Mathbin.Data.Subtype
-import Mathbin.Data.Sum
+import Mathbin.Data.Sum.Basic
 import Mathbin.Data.Sym.Basic
 import Mathbin.Data.Sym.Card
 import Mathbin.Data.Sym.Sym2
@@ -1344,6 +1376,7 @@ import Mathbin.LinearAlgebra.Prod
 import Mathbin.LinearAlgebra.Projection
 import Mathbin.LinearAlgebra.QuadraticForm.Basic
 import Mathbin.LinearAlgebra.QuadraticForm.Complex
+import Mathbin.LinearAlgebra.QuadraticForm.Prod
 import Mathbin.LinearAlgebra.QuadraticForm.Real
 import Mathbin.LinearAlgebra.Quotient
 import Mathbin.LinearAlgebra.SesquilinearForm
@@ -1404,6 +1437,7 @@ import Mathbin.MeasureTheory.Group.MeasurableEquiv
 import Mathbin.MeasureTheory.Group.Pointwise
 import Mathbin.MeasureTheory.Group.Prod
 import Mathbin.MeasureTheory.Integral.Bochner
+import Mathbin.MeasureTheory.Integral.CircleIntegral
 import Mathbin.MeasureTheory.Integral.DivergenceTheorem
 import Mathbin.MeasureTheory.Integral.IntegrableOn
 import Mathbin.MeasureTheory.Integral.IntegralEqImproper
@@ -1456,6 +1490,7 @@ import Mathbin.NumberTheory.ClassNumber.AdmissibleCardPowDegree
 import Mathbin.NumberTheory.ClassNumber.Finite
 import Mathbin.NumberTheory.ClassNumber.FunctionField
 import Mathbin.NumberTheory.ClassNumber.NumberField
+import Mathbin.NumberTheory.Cyclotomic.Basic
 import Mathbin.NumberTheory.Dioph
 import Mathbin.NumberTheory.Divisors
 import Mathbin.NumberTheory.Fermat4
@@ -1863,10 +1898,11 @@ import Mathbin.Topology.Algebra.GroupWithZero
 import Mathbin.Topology.Algebra.InfiniteSum
 import Mathbin.Topology.Algebra.Localization
 import Mathbin.Topology.Algebra.Matrix
-import Mathbin.Topology.Algebra.Module
+import Mathbin.Topology.Algebra.Module.Basic
+import Mathbin.Topology.Algebra.Module.Multilinear
+import Mathbin.Topology.Algebra.Module.WeakDual
 import Mathbin.Topology.Algebra.Monoid
 import Mathbin.Topology.Algebra.MulAction
-import Mathbin.Topology.Algebra.Multilinear
 import Mathbin.Topology.Algebra.Nonarchimedean.AdicTopology
 import Mathbin.Topology.Algebra.Nonarchimedean.Bases
 import Mathbin.Topology.Algebra.Nonarchimedean.Basic
@@ -1889,7 +1925,6 @@ import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.Algebra.UniformRing
 import Mathbin.Topology.Algebra.Valuation
 import Mathbin.Topology.Algebra.ValuedField
-import Mathbin.Topology.Algebra.WeakDualTopology
 import Mathbin.Topology.Algebra.WithZeroTopology
 import Mathbin.Topology.Bases
 import Mathbin.Topology.Basic
@@ -1930,12 +1965,14 @@ import Mathbin.Topology.Homeomorph
 import Mathbin.Topology.Homotopy.Basic
 import Mathbin.Topology.Homotopy.FundamentalGroupoid
 import Mathbin.Topology.Homotopy.Path
+import Mathbin.Topology.Homotopy.Product
 import Mathbin.Topology.Instances.Ennreal
 import Mathbin.Topology.Instances.Ereal
 import Mathbin.Topology.Instances.Irrational
 import Mathbin.Topology.Instances.Nnreal
 import Mathbin.Topology.Instances.Real
 import Mathbin.Topology.Instances.RealVectorSpace
+import Mathbin.Topology.IsLocallyHomeomorph
 import Mathbin.Topology.List
 import Mathbin.Topology.LocalExtr
 import Mathbin.Topology.LocalHomeomorph
@@ -1994,10 +2031,12 @@ import Mathbin.Topology.Sober
 import Mathbin.Topology.StoneCech
 import Mathbin.Topology.SubsetProperties
 import Mathbin.Topology.Tactic
+import Mathbin.Topology.TietzeExtension
 import Mathbin.Topology.UniformSpace.AbsoluteValue
 import Mathbin.Topology.UniformSpace.AbstractCompletion
 import Mathbin.Topology.UniformSpace.Basic
 import Mathbin.Topology.UniformSpace.Cauchy
+import Mathbin.Topology.UniformSpace.CompactConvergence
 import Mathbin.Topology.UniformSpace.CompactSeparated
 import Mathbin.Topology.UniformSpace.CompareReals
 import Mathbin.Topology.UniformSpace.CompleteSeparated

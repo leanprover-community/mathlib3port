@@ -80,19 +80,19 @@ circular order, cyclic order, circularly ordered set, cyclically ordered set
 -/
 
 
-/--  Syntax typeclass for a betweenness relation. -/
+/-- Syntax typeclass for a betweenness relation. -/
 class HasBtw (α : Type _) where
   Btw : α → α → α → Prop
 
 export HasBtw (Btw)
 
-/--  Syntax typeclass for a strict betweenness relation. -/
+/-- Syntax typeclass for a strict betweenness relation. -/
 class HasSbtw (α : Type _) where
   Sbtw : α → α → α → Prop
 
 export HasSbtw (Sbtw)
 
-/--  A circular preorder is the analogue of a preorder where you can loop around. `≤` and `<` are
+/-- A circular preorder is the analogue of a preorder where you can loop around. `≤` and `<` are
 replaced by ternary relations `btw` and `sbtw`. `btw` is reflexive and cyclic. `sbtw` is transitive.
 -/
 class CircularPreorder (α : Type _) extends HasBtw α, HasSbtw α where
@@ -106,7 +106,7 @@ class CircularPreorder (α : Type _) extends HasBtw α, HasSbtw α where
 
 export CircularPreorder (btw_refl btw_cyclic_left sbtw_trans_left)
 
-/--  A circular partial order is the analogue of a partial order where you can loop around. `≤` and
+/-- A circular partial order is the analogue of a partial order where you can loop around. `≤` and
 `<` are replaced by ternary relations `btw` and `sbtw`. `btw` is reflexive, cyclic and
 antisymmetric. `sbtw` is transitive. -/
 class CircularPartialOrder (α : Type _) extends CircularPreorder α where
@@ -114,7 +114,7 @@ class CircularPartialOrder (α : Type _) extends CircularPreorder α where
 
 export CircularPartialOrder (btw_antisymm)
 
-/--  A circular order is the analogue of a linear order where you can loop around. `≤` and `<` are
+/-- A circular order is the analogue of a linear order where you can loop around. `≤` and `<` are
 replaced by ternary relations `btw` and `sbtw`. `btw` is reflexive, cyclic, antisymmetric and total.
 `sbtw` is transitive. -/
 class CircularOrder (α : Type _) extends CircularPartialOrder α where
@@ -140,7 +140,7 @@ theorem btw_cyclic_right {a b c : α} (h : btw a b c) : btw c a b :=
 
 alias btw_cyclic_right ← HasBtw.Btw.cyclic_right
 
-/--  The order of the `↔` has been chosen so that `rw btw_cyclic` cycles to the right while
+/-- The order of the `↔` has been chosen so that `rw btw_cyclic` cycles to the right while
 `rw ←btw_cyclic` cycles to the left (thus following the prepended arrow). -/
 theorem btw_cyclic {a b c : α} : btw a b c ↔ btw c a b :=
   ⟨btw_cyclic_right, btw_cyclic_left⟩
@@ -177,7 +177,7 @@ theorem sbtw_cyclic_right {a b c : α} (h : sbtw a b c) : sbtw c a b :=
 
 alias sbtw_cyclic_right ← HasSbtw.Sbtw.cyclic_right
 
-/--  The order of the `↔` has been chosen so that `rw sbtw_cyclic` cycles to the right while
+/-- The order of the `↔` has been chosen so that `rw sbtw_cyclic` cycles to the right while
 `rw ←sbtw_cyclic` cycles to the left (thus following the prepended arrow). -/
 theorem sbtw_cyclic {a b c : α} : sbtw a b c ↔ sbtw c a b :=
   ⟨sbtw_cyclic_right, sbtw_cyclic_left⟩
@@ -261,169 +261,13 @@ section CircularPreorder
 
 variable {α : Type _} [CircularPreorder α]
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [(Command.docComment "/--" " Closed-closed circular interval -/")] [] [] [] [] [])
- (Command.def
-  "def"
-  (Command.declId `cIcc [])
-  (Command.optDeclSig [(Term.explicitBinder "(" [`a `b] [":" `α] [] ")")] [(Term.typeSpec ":" (Term.app `Set [`α]))])
-  (Command.declValSimple ":=" (Set.«term{_|_}» "{" `x "|" (Term.app `btw [`a `x `b]) "}") [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}» "{" `x "|" (Term.app `btw [`a `x `b]) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `btw [`a `x `b])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `b
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `btw
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/-- Closed-closed circular interval -/ def cIcc ( a b : α ) : Set α := { x | btw a x b }
+/-- Closed-closed circular interval -/
+def cIcc (a b : α) : Set α :=
+  { x | btw a x b }
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [(Command.docComment "/--" " Open-open circular interval -/")] [] [] [] [] [])
- (Command.def
-  "def"
-  (Command.declId `cIoo [])
-  (Command.optDeclSig [(Term.explicitBinder "(" [`a `b] [":" `α] [] ")")] [(Term.typeSpec ":" (Term.app `Set [`α]))])
-  (Command.declValSimple ":=" (Set.«term{_|_}» "{" `x "|" (Term.app `sbtw [`a `x `b]) "}") [])
-  []
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Set.«term{_|_}» "{" `x "|" (Term.app `sbtw [`a `x `b]) "}")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `sbtw [`a `x `b])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `b
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `x
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `a
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `sbtw
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/-- Open-open circular interval -/ def cIoo ( a b : α ) : Set α := { x | sbtw a x b }
+/-- Open-open circular interval -/
+def cIoo (a b : α) : Set α :=
+  { x | sbtw a x b }
 
 @[simp]
 theorem mem_cIcc {a b x : α} : x ∈ cIcc a b ↔ btw a x b :=
@@ -462,107 +306,108 @@ end Set
 /-! ### Circularizing instances -/
 
 
-/--  The betweenness relation obtained from "looping around" `≤`.
+/-- The betweenness relation obtained from "looping around" `≤`.
 See note [reducible non-instances]. -/
 @[reducible]
-def LE.toHasBtw (α : Type _) [LE α] : HasBtw α :=
-  { Btw := fun a b c => a ≤ b ∧ b ≤ c ∨ b ≤ c ∧ c ≤ a ∨ c ≤ a ∧ a ≤ b }
+def LE.toHasBtw (α : Type _) [LE α] : HasBtw α where
+  Btw := fun a b c => a ≤ b ∧ b ≤ c ∨ b ≤ c ∧ c ≤ a ∨ c ≤ a ∧ a ≤ b
 
-/--  The strict betweenness relation obtained from "looping around" `<`.
+/-- The strict betweenness relation obtained from "looping around" `<`.
 See note [reducible non-instances]. -/
 @[reducible]
-def LT.toHasSbtw (α : Type _) [LT α] : HasSbtw α :=
-  { Sbtw := fun a b c => a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b }
+def LT.toHasSbtw (α : Type _) [LT α] : HasSbtw α where
+  Sbtw := fun a b c => a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b
 
-/--  The circular preorder obtained from "looping around" a preorder.
+/-- The circular preorder obtained from "looping around" a preorder.
 See note [reducible non-instances]. -/
 @[reducible]
-def Preorderₓ.toCircularPreorder (α : Type _) [Preorderₓ α] : CircularPreorder α :=
-  { Btw := fun a b c => a ≤ b ∧ b ≤ c ∨ b ≤ c ∧ c ≤ a ∨ c ≤ a ∧ a ≤ b,
-    Sbtw := fun a b c => a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b, btw_refl := fun a => Or.inl ⟨le_rfl, le_rfl⟩,
-    btw_cyclic_left := fun a b c h => by
-      unfold btw  at h⊢
-      rwa [← Or.assoc, or_comm],
-    sbtw_trans_left := fun a b c d => by
-      rintro (⟨hab, hbc⟩ | ⟨hbc, hca⟩ | ⟨hca, hab⟩) (⟨hbd, hdc⟩ | ⟨hdc, hcb⟩ | ⟨hcb, hbd⟩)
-      ·
-        exact Or.inl ⟨hab.trans hbd, hdc⟩
-      ·
-        exact (hbc.not_lt hcb).elim
-      ·
-        exact (hbc.not_lt hcb).elim
-      ·
-        exact Or.inr (Or.inl ⟨hdc, hca⟩)
-      ·
-        exact Or.inr (Or.inl ⟨hdc, hca⟩)
-      ·
-        exact (hbc.not_lt hcb).elim
-      ·
-        exact Or.inr (Or.inl ⟨hdc, hca⟩)
-      ·
-        exact Or.inr (Or.inl ⟨hdc, hca⟩)
-      ·
-        exact Or.inr (Or.inr ⟨hca, hab.trans hbd⟩),
-    sbtw_iff_btw_not_btw := fun a b c => by
-      simp_rw [lt_iff_le_not_leₓ]
-      set x₀ := a ≤ b
-      set x₁ := b ≤ c
-      set x₂ := c ≤ a
-      have : x₀ → x₁ → a ≤ c := le_transₓ
-      have : x₁ → x₂ → b ≤ a := le_transₓ
-      have : x₂ → x₀ → c ≤ b := le_transₓ
-      clear_value x₀ x₁ x₂
-      tauto! }
+def Preorderₓ.toCircularPreorder (α : Type _) [Preorderₓ α] : CircularPreorder α where
+  Btw := fun a b c => a ≤ b ∧ b ≤ c ∨ b ≤ c ∧ c ≤ a ∨ c ≤ a ∧ a ≤ b
+  Sbtw := fun a b c => a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b
+  btw_refl := fun a => Or.inl ⟨le_rfl, le_rfl⟩
+  btw_cyclic_left := fun a b c h => by
+    unfold btw  at h⊢
+    rwa [← Or.assoc, or_comm]
+  sbtw_trans_left := fun a b c d => by
+    rintro (⟨hab, hbc⟩ | ⟨hbc, hca⟩ | ⟨hca, hab⟩) (⟨hbd, hdc⟩ | ⟨hdc, hcb⟩ | ⟨hcb, hbd⟩)
+    · exact Or.inl ⟨hab.trans hbd, hdc⟩
+      
+    · exact (hbc.not_lt hcb).elim
+      
+    · exact (hbc.not_lt hcb).elim
+      
+    · exact Or.inr (Or.inl ⟨hdc, hca⟩)
+      
+    · exact Or.inr (Or.inl ⟨hdc, hca⟩)
+      
+    · exact (hbc.not_lt hcb).elim
+      
+    · exact Or.inr (Or.inl ⟨hdc, hca⟩)
+      
+    · exact Or.inr (Or.inl ⟨hdc, hca⟩)
+      
+    · exact Or.inr (Or.inr ⟨hca, hab.trans hbd⟩)
+      
+  sbtw_iff_btw_not_btw := fun a b c => by
+    simp_rw [lt_iff_le_not_leₓ]
+    set x₀ := a ≤ b
+    set x₁ := b ≤ c
+    set x₂ := c ≤ a
+    have : x₀ → x₁ → a ≤ c := le_transₓ
+    have : x₁ → x₂ → b ≤ a := le_transₓ
+    have : x₂ → x₀ → c ≤ b := le_transₓ
+    clear_value x₀ x₁ x₂
+    tauto!
 
-/--  The circular partial order obtained from "looping around" a partial order.
+/-- The circular partial order obtained from "looping around" a partial order.
 See note [reducible non-instances]. -/
 @[reducible]
 def PartialOrderₓ.toCircularPartialOrder (α : Type _) [PartialOrderₓ α] : CircularPartialOrder α :=
   { Preorderₓ.toCircularPreorder α with
     btw_antisymm := fun a b c => by
       rintro (⟨hab, hbc⟩ | ⟨hbc, hca⟩ | ⟨hca, hab⟩) (⟨hcb, hba⟩ | ⟨hba, hac⟩ | ⟨hac, hcb⟩)
-      ·
-        exact Or.inl (hab.antisymm hba)
-      ·
-        exact Or.inl (hab.antisymm hba)
-      ·
-        exact Or.inr (Or.inl $ hbc.antisymm hcb)
-      ·
-        exact Or.inr (Or.inl $ hbc.antisymm hcb)
-      ·
-        exact Or.inr (Or.inr $ hca.antisymm hac)
-      ·
-        exact Or.inr (Or.inl $ hbc.antisymm hcb)
-      ·
-        exact Or.inl (hab.antisymm hba)
-      ·
-        exact Or.inl (hab.antisymm hba)
-      ·
-        exact Or.inr (Or.inr $ hca.antisymm hac) }
+      · exact Or.inl (hab.antisymm hba)
+        
+      · exact Or.inl (hab.antisymm hba)
+        
+      · exact Or.inr (Or.inl $ hbc.antisymm hcb)
+        
+      · exact Or.inr (Or.inl $ hbc.antisymm hcb)
+        
+      · exact Or.inr (Or.inr $ hca.antisymm hac)
+        
+      · exact Or.inr (Or.inl $ hbc.antisymm hcb)
+        
+      · exact Or.inl (hab.antisymm hba)
+        
+      · exact Or.inl (hab.antisymm hba)
+        
+      · exact Or.inr (Or.inr $ hca.antisymm hac)
+         }
 
-/--  The circular order obtained from "looping around" a linear order.
+/-- The circular order obtained from "looping around" a linear order.
 See note [reducible non-instances]. -/
 @[reducible]
 def LinearOrderₓ.toCircularOrder (α : Type _) [LinearOrderₓ α] : CircularOrder α :=
   { PartialOrderₓ.toCircularPartialOrder α with
     btw_total := fun a b c => by
       cases' le_totalₓ a b with hab hba <;> cases' le_totalₓ b c with hbc hcb <;> cases' le_totalₓ c a with hca hac
-      ·
-        exact Or.inl (Or.inl ⟨hab, hbc⟩)
-      ·
-        exact Or.inl (Or.inl ⟨hab, hbc⟩)
-      ·
-        exact Or.inl (Or.inr $ Or.inr ⟨hca, hab⟩)
-      ·
-        exact Or.inr (Or.inr $ Or.inr ⟨hac, hcb⟩)
-      ·
-        exact Or.inl (Or.inr $ Or.inl ⟨hbc, hca⟩)
-      ·
-        exact Or.inr (Or.inr $ Or.inl ⟨hba, hac⟩)
-      ·
-        exact Or.inr (Or.inl ⟨hcb, hba⟩)
-      ·
-        exact Or.inr (Or.inr $ Or.inl ⟨hba, hac⟩) }
+      · exact Or.inl (Or.inl ⟨hab, hbc⟩)
+        
+      · exact Or.inl (Or.inl ⟨hab, hbc⟩)
+        
+      · exact Or.inl (Or.inr $ Or.inr ⟨hca, hab⟩)
+        
+      · exact Or.inr (Or.inr $ Or.inr ⟨hac, hcb⟩)
+        
+      · exact Or.inl (Or.inr $ Or.inl ⟨hbc, hca⟩)
+        
+      · exact Or.inr (Or.inr $ Or.inl ⟨hba, hac⟩)
+        
+      · exact Or.inr (Or.inl ⟨hcb, hba⟩)
+        
+      · exact Or.inr (Or.inr $ Or.inl ⟨hba, hac⟩)
+         }
 
 /-! ### Dual constructions -/
 

@@ -28,7 +28,7 @@ theorem one_eq : (1 : PUnit) = star :=
   rfl
 
 @[simp, to_additive]
-theorem mul_eq : (x*y) = star :=
+theorem mul_eq : x * y = star :=
   rfl
 
 @[simp, to_additive]
@@ -129,8 +129,8 @@ instance : LinearOrderedCancelAddCommMonoid PUnit :=
     decidableLe := fun _ _ => Decidable.true, DecidableEq := PUnit.decidableEq,
     decidableLt := fun _ _ => Decidable.false }
 
--- failed to format: format: uncaught backtrack exception
-instance : HasScalar R PUnit where smul _ _ := star
+instance : HasScalar R PUnit where
+  smul := fun _ _ => star
 
 @[simp]
 theorem smul_eq (r : R) : r • y = star :=

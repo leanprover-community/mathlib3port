@@ -22,6 +22,7 @@ Actions on the opposite type just act on the underlying type.
 
 namespace MulOpposite
 
+@[to_additive]
 instance (R : Type _) [Monoidₓ R] [MulAction R α] : MulAction R (αᵐᵒᵖ) :=
   { MulOpposite.hasScalar α R with one_smul := fun x => unop_injective $ one_smul R (unop x),
     mul_smul := fun r₁ r₂ x => unop_injective $ mul_smul r₁ r₂ (unop x) }
@@ -37,6 +38,7 @@ instance (R : Type _) [Monoidₓ R] [Monoidₓ α] [MulDistribMulAction R α] : 
 instance {M N} [HasScalar M N] [HasScalar M α] [HasScalar N α] [IsScalarTower M N α] : IsScalarTower M N (αᵐᵒᵖ) :=
   ⟨fun x y z => unop_injective $ smul_assoc _ _ _⟩
 
+@[to_additive]
 instance {M N} [HasScalar M α] [HasScalar N α] [SmulCommClass M N α] : SmulCommClass M N (αᵐᵒᵖ) :=
   ⟨fun x y z => unop_injective $ smul_comm _ _ _⟩
 
@@ -63,42 +65,39 @@ reversed.
 
 open MulOpposite
 
--- failed to format: format: uncaught backtrack exception
-/--
-    Like `has_mul.to_has_scalar`, but multiplies on the right.
-    
-    See also `monoid.to_opposite_mul_action` and `monoid_with_zero.to_opposite_mul_action_with_zero`. -/
-  instance Mul.toHasOppositeScalar [ Mul α ] : HasScalar ( α ᵐᵒᵖ ) α where smul c x := x * c.unop
+/-- Like `has_mul.to_has_scalar`, but multiplies on the right.
 
-@[simp]
-theorem op_smul_eq_mul [Mul α] {a a' : α} : op a • a' = a'*a :=
+See also `monoid.to_opposite_mul_action` and `monoid_with_zero.to_opposite_mul_action_with_zero`. -/
+@[to_additive]
+instance Mul.toHasOppositeScalar [Mul α] : HasScalar (αᵐᵒᵖ) α where
+  smul := fun c x => x * c.unop
+
+@[simp, to_additive]
+theorem op_smul_eq_mul [Mul α] {a a' : α} : op a • a' = a' * a :=
   rfl
 
-/--  The right regular action of a group on itself is transitive. -/
+/-- The right regular action of a group on itself is transitive. -/
+@[to_additive]
 instance MulAction.OppositeRegular.is_pretransitive {G : Type _} [Groupₓ G] : MulAction.IsPretransitive (Gᵐᵒᵖ) G :=
-  ⟨fun x y => ⟨op (x⁻¹*y), mul_inv_cancel_left _ _⟩⟩
+  ⟨fun x y => ⟨op (x⁻¹ * y), mul_inv_cancel_left _ _⟩⟩
 
--- failed to format: format: uncaught backtrack exception
-instance
-  Semigroupₓ.opposite_smul_comm_class
-  [ Semigroupₓ α ] : SmulCommClass ( α ᵐᵒᵖ ) α α
-  where smul_comm x y z := mul_assocₓ _ _ _
+@[to_additive]
+instance Semigroupₓ.opposite_smul_comm_class [Semigroupₓ α] : SmulCommClass (αᵐᵒᵖ) α α where
+  smul_comm := fun x y z => mul_assocₓ _ _ _
 
--- failed to format: format: uncaught backtrack exception
-instance
-  Semigroupₓ.opposite_smul_comm_class'
-  [ Semigroupₓ α ] : SmulCommClass α ( α ᵐᵒᵖ ) α
-  where smul_comm x y z := ( mul_assocₓ _ _ _ ) . symm
+@[to_additive]
+instance Semigroupₓ.opposite_smul_comm_class' [Semigroupₓ α] : SmulCommClass α (αᵐᵒᵖ) α :=
+  SmulCommClass.symm _ _ _
 
 instance CommSemigroupₓ.is_central_scalar [CommSemigroupₓ α] : IsCentralScalar α α :=
   ⟨fun r m => mul_commₓ _ _⟩
 
--- failed to format: format: uncaught backtrack exception
 /-- Like `monoid.to_mul_action`, but multiplies on the right. -/
-  instance
-    Monoidₓ.toOppositeMulAction
-    [ Monoidₓ α ] : MulAction ( α ᵐᵒᵖ ) α
-    where smul := · • · one_smul := mul_oneₓ mul_smul x y r := ( mul_assocₓ _ _ _ ) . symm
+@[to_additive]
+instance Monoidₓ.toOppositeMulAction [Monoidₓ α] : MulAction (αᵐᵒᵖ) α where
+  smul := · • ·
+  one_smul := mul_oneₓ
+  mul_smul := fun x y r => (mul_assocₓ _ _ _).symm
 
 instance IsScalarTower.opposite_mid {M N} [Monoidₓ N] [HasScalar M N] [SmulCommClass M N N] :
     IsScalarTower M (Nᵐᵒᵖ) N :=
@@ -113,11 +112,12 @@ instance SmulCommClass.opposite_mid {M N} [Monoidₓ N] [HasScalar M N] [IsScala
 example [Monoidₓ α] : Monoidₓ.toMulAction (αᵐᵒᵖ) = MulOpposite.mulAction α (αᵐᵒᵖ) :=
   rfl
 
-/--  `monoid.to_opposite_mul_action` is faithful on cancellative monoids. -/
+/-- `monoid.to_opposite_mul_action` is faithful on cancellative monoids. -/
+@[to_additive]
 instance LeftCancelMonoid.to_has_faithful_opposite_scalar [LeftCancelMonoid α] : HasFaithfulScalar (αᵐᵒᵖ) α :=
   ⟨fun x y h => unop_injective $ mul_left_cancelₓ (h 1)⟩
 
-/--  `monoid.to_opposite_mul_action` is faithful on nontrivial cancellative monoids with zero. -/
+/-- `monoid.to_opposite_mul_action` is faithful on nontrivial cancellative monoids with zero. -/
 instance CancelMonoidWithZero.to_has_faithful_opposite_scalar [CancelMonoidWithZero α] [Nontrivial α] :
     HasFaithfulScalar (αᵐᵒᵖ) α :=
   ⟨fun x y h => unop_injective $ mul_left_cancel₀ one_ne_zero (h 1)⟩

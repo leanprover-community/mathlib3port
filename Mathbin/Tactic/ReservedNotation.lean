@@ -12,15 +12,15 @@ are defined.
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:1368:35: warning: unsupported: precedence command
--- ././Mathport/Syntax/Translate/Basic.lean:1273:11: warning: suppressing unsupported reserve notation
--- ././Mathport/Syntax/Translate/Basic.lean:1273:11: warning: suppressing unsupported reserve notation
--- ././Mathport/Syntax/Translate/Basic.lean:1273:11: warning: suppressing unsupported reserve notation
--- ././Mathport/Syntax/Translate/Basic.lean:1273:11: warning: suppressing unsupported reserve notation
--- ././Mathport/Syntax/Translate/Basic.lean:1273:11: warning: suppressing unsupported reserve notation
--- ././Mathport/Syntax/Translate/Basic.lean:333:9: unsupported: advanced prec syntax
--- ././Mathport/Syntax/Translate/Basic.lean:1273:11: warning: suppressing unsupported reserve notation
--- ././Mathport/Syntax/Translate/Basic.lean:1273:11: warning: suppressing unsupported reserve notation
--- ././Mathport/Syntax/Translate/Basic.lean:1273:11: warning: suppressing unsupported reserve notation
--- ././Mathport/Syntax/Translate/Basic.lean:1368:35: warning: unsupported: precedence command
--- ././Mathport/Syntax/Translate/Basic.lean:1368:35: warning: unsupported: precedence command
+-- ././Mathport/Syntax/Translate/Basic.lean:1392:35: warning: unsupported: precedence command
+-- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1392:35: warning: unsupported: precedence command
+-- ././Mathport/Syntax/Translate/Basic.lean:1392:35: warning: unsupported: precedence command

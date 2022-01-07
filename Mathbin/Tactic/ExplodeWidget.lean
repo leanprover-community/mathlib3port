@@ -25,7 +25,7 @@ open TaggedFormat
 
 open Widget.Html Widget.Attr
 
-/--  Redefine some of the style attributes for better formatting. -/
+/-- Redefine some of the style attributes for better formatting. -/
 unsafe def get_block_attrs {γ} : sf → tactic (sf × List (attr γ))
   | sf.block i a => do
     let s : attr γ := style [("display", "inline-block"), ("white-space", "pre-wrap"), ("vertical-align", "top")]
@@ -36,7 +36,7 @@ unsafe def get_block_attrs {γ} : sf → tactic (sf × List (attr γ))
     pure (a, cn c.to_string :: rest)
   | a => pure (a, [])
 
-/--  Explode button for subsequent exploding. -/
+/-- Explode button for subsequent exploding. -/
 unsafe def insert_explode {γ} : expr → tactic (List (html (action γ)))
   | expr.const n _ =>
     (do
@@ -49,8 +49,7 @@ unsafe def insert_explode {γ} : expr → tactic (List (html (action γ)))
       pure []
   | e => pure []
 
-/-- 
-Render a subexpression as a list of html elements.
+/-- Render a subexpression as a list of html elements.
 -/
 unsafe def view {γ} (tooltip_component : Tc subexpr (action γ)) (click_address : Option Expr.Address)
     (select_address : Option Expr.Address) : subexpr → sf → tactic (List (html (action γ)))
@@ -96,7 +95,7 @@ unsafe def view {γ} (tooltip_component : Tc subexpr (action γ)) (click_address
     let inner ← view ca a
     pure [h "span" attrs inner]
 
-/--  Make an interactive expression. -/
+/-- Make an interactive expression. -/
 unsafe def mk {γ} (tooltip : Tc subexpr γ) : Tc expr γ :=
   let tooltip_comp :=
     (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2) $
@@ -124,7 +123,7 @@ unsafe def mk {γ} (tooltip : Tc subexpr γ) : Tc expr γ :=
         let v ← view tooltip_comp (Prod.snd <$> ca) (Prod.snd <$> sa) ⟨e, []⟩ m
         pure $ [h "span" [className "expr", key e.hash, on_mouse_leave fun _ => action.on_mouse_leave_all] $ v]
 
-/--  Render the implicit arguments for an expression in fancy, little pills. -/
+/-- Render the implicit arguments for an expression in fancy, little pills. -/
 unsafe def implicit_arg_list (tooltip : Tc subexpr Empty) (e : expr) : tactic $ html Empty := do
   let fn ← mk tooltip $ expr.get_app_fn e
   let args ← List.mmapₓ (mk tooltip) $ expr.get_app_args e
@@ -133,8 +132,7 @@ unsafe def implicit_arg_list (tooltip : Tc subexpr Empty) (e : expr) : tactic $ 
         (h "span" [className "bg-blue br3 ma1 ph2 white"] [fn] ::
           List.map (fun a => h "span" [className "bg-gray br3 ma1 ph2 white"] [a]) args)
 
-/-- 
-Component for the type tooltip.
+/-- Component for the type tooltip.
 -/
 unsafe def type_tooltip : Tc subexpr Empty :=
   tc.stateless fun ⟨e, ea⟩ => do
@@ -143,8 +141,7 @@ unsafe def type_tooltip : Tc subexpr Empty :=
     let implicit_args ← implicit_arg_list type_tooltip e
     pure [h "div" [style [("minWidth", "12rem")]] [h "div" [cn "pl1"] [y_comp], h "hr" [] [], implicit_args]]
 
-/-- 
-Component that shows a type.
+/-- Component that shows a type.
 -/
 unsafe def show_type_component : Tc expr Empty :=
   tc.stateless fun x => do
@@ -152,23 +149,20 @@ unsafe def show_type_component : Tc expr Empty :=
     let y_comp ← mk type_tooltip $ y
     pure y_comp
 
-/-- 
-Component that shows a constant.
+/-- Component that shows a constant.
 -/
 unsafe def show_constant_component : Tc expr Empty :=
   tc.stateless fun x => do
     let y_comp ← mk type_tooltip x
     pure y_comp
 
-/-- 
-Search for an entry that has the specified line number.
+/-- Search for an entry that has the specified line number.
 -/
 unsafe def lookup_lines : entries → Nat → entry
   | ⟨_, []⟩, n => ⟨default _, 0, 0, status.sintro, thm.string "", []⟩
   | ⟨rb, hd :: tl⟩, n => if hd.line = n then hd else lookup_lines ⟨rb, tl⟩ n
 
-/-- 
-Render a row that shows a goal.
+/-- Render a row that shows a goal.
 -/
 unsafe def goal_row (e : expr) (show_expr := tt) : tactic (List (html Empty)) := do
   let t ← explode_widget.show_type_component e
@@ -176,14 +170,12 @@ unsafe def goal_row (e : expr) (show_expr := tt) : tactic (List (html Empty)) :=
       [h "td" [cn "ba bg-dark-green tc"] "Goal",
         h "td" [cn "ba tc"] (if show_expr then [html.of_name e.local_pp_name, " : ", t] else t)]
 
-/-- 
-Render a row that shows the ID of a goal.
+/-- Render a row that shows the ID of a goal.
 -/
 unsafe def id_row {γ} (l : Nat) : tactic (List (html γ)) :=
   return $ [h "td" [cn "ba bg-dark-green tc"] "ID", h "td" [cn "ba tc"] (toString l)]
 
-/-- 
-Render a row that shows the rule or theorem being applied.
+/-- Render a row that shows the rule or theorem being applied.
 -/
 unsafe def rule_row : thm → tactic (List (html Empty))
   | thm.expr e => do
@@ -191,23 +183,20 @@ unsafe def rule_row : thm → tactic (List (html Empty))
     return $ [h "td" [cn "ba bg-dark-green tc"] "Rule", h "td" [cn "ba tc"] t]
   | t => return $ [h "td" [cn "ba bg-dark-green tc"] "Rule", h "td" [cn "ba tc"] t.to_string]
 
-/-- 
-Render a row that contains the sub-proofs, i.e., the proofs of the
+/-- Render a row that contains the sub-proofs, i.e., the proofs of the
 arguments.
 -/
 unsafe def proof_row {γ} (args : List (html γ)) : List (html γ) :=
   [h "td" [cn "ba bg-dark-green tc"] "Proofs",
     h "td" [cn "ba tc"] [h "details" [] $ h "summary" [attr.style [("color", "orange")]] "Details" :: args]]
 
-/-- 
-Combine the goal row, id row, rule row and proof row to make them a table.
+/-- Combine the goal row, id row, rule row and proof row to make them a table.
 -/
 unsafe def assemble_table {γ} gr ir rr : List (html γ) → html γ
   | [] => h "table" [cn "collapse"] [h "tbody" [] [h "tr" [] gr, h "tr" [] ir, h "tr" [] rr]]
   | pr => h "table" [cn "collapse"] [h "tbody" [] [h "tr" [] gr, h "tr" [] ir, h "tr" [] rr, h "tr" [] pr]]
 
-/-- 
-Render a table for a given entry.
+/-- Render a table for a given entry.
 -/
 unsafe def assemble (es : entries) : entry → tactic (html Empty)
   | ⟨e, l, d, status.sintro, t, ref⟩ => do
@@ -229,15 +218,13 @@ unsafe def assemble (es : entries) : entry → tactic (html Empty)
     let pr := proof_row $ ls.intersperse (h "br" [] [])
     return $ assemble_table gr ir rr pr
 
-/-- 
-Render a widget from given entries.
+/-- Render a widget from given entries.
 -/
 unsafe def explode_component (es : entries) : tactic (html Empty) :=
   let concl := lookup_lines es (es.l.length - 1)
   assemble es concl
 
-/-- 
-Explode a theorem and return entries.
+/-- Explode a theorem and return entries.
 -/
 unsafe def explode_entries (n : Name) (hide_non_prop := tt) : tactic entries := do
   let expr.const n _ ← resolve_name n | fail "cannot resolve name"
@@ -256,8 +243,7 @@ open ExplodeWidget
 
 setup_tactic_parser
 
-/-- 
-User command of the explode widget.
+/-- User command of the explode widget.
 -/
 @[user_command]
 unsafe def explode_widget_cmd (_ : parse $ tk "#explode_widget") : lean.parser Unit := do

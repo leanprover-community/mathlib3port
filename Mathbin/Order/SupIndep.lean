@@ -28,7 +28,7 @@ section Lattice
 
 variable [Lattice α] [OrderBot α]
 
-/--  Supremum independence of finite sets. We avoid the "obvious" definition using`s.erase i` because
+/-- Supremum independence of finite sets. We avoid the "obvious" definition using`s.erase i` because
 `erase` would require decidable equality on `ι`. -/
 def sup_indep (s : Finset ι) (f : ι → α) : Prop :=
   ∀ ⦃t⦄, t ⊆ s → ∀ ⦃i⦄, i ∈ s → i ∉ t → Disjoint (f i) (t.sup f)
@@ -46,7 +46,7 @@ theorem sup_indep_singleton (i : ι) (f : ι → α) : ({i} : Finset ι).SupInde
 theorem sup_indep.pairwise_disjoint (hs : s.sup_indep f) : (s : Set ι).PairwiseDisjoint f := fun a ha b hb hab =>
   sup_singleton.subst $ hs (singleton_subset_iff.2 hb) ha $ not_mem_singleton.2 hab
 
-/--  The RHS looks like the definition of `complete_lattice.independent`. -/
+/-- The RHS looks like the definition of `complete_lattice.independent`. -/
 theorem sup_indep_iff_disjoint_erase [DecidableEq ι] :
     s.sup_indep f ↔ ∀, ∀ i ∈ s, ∀, Disjoint (f i) ((s.erase i).sup f) :=
   ⟨fun hs i hi => hs (erase_subset _ _) hi (not_mem_erase _ _), fun hs t ht i hi hit =>
@@ -73,14 +73,14 @@ theorem sup_indep_iff_pairwise_disjoint : s.sup_indep f ↔ (s : Set ι).Pairwis
 
 alias sup_indep_iff_pairwise_disjoint ↔ Finset.SupIndep.pairwise_disjoint Set.PairwiseDisjoint.sup_indep
 
-/--  Bind operation for `sup_indep`. -/
+/-- Bind operation for `sup_indep`. -/
 theorem sup_indep.sup [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
     (hs : s.sup_indep fun i => (g i).sup f) (hg : ∀, ∀ i' ∈ s, ∀, (g i').SupIndep f) : (s.sup g).SupIndep f := by
   simp_rw [sup_indep_iff_pairwise_disjoint]  at hs hg⊢
   rw [sup_eq_bUnion, coe_bUnion]
   exact hs.bUnion_finset hg
 
-/--  Bind operation for `sup_indep`. -/
+/-- Bind operation for `sup_indep`. -/
 theorem sup_indep.bUnion [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
     (hs : s.sup_indep fun i => (g i).sup f) (hg : ∀, ∀ i' ∈ s, ∀, (g i').SupIndep f) : (s.bUnion g).SupIndep f := by
   rw [← sup_eq_bUnion]
