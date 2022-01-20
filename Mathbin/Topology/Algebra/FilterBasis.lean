@@ -209,9 +209,9 @@ a group filter basis then it's a topological group. -/
 instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @TopologicalGroup G B.topology _ := by
   let this' := B.topology
   have basis := B.nhds_one_has_basis
-  have basis' := basis.prod basis
+  have basis' := Basis.prod Basis
   refine' TopologicalGroup.of_nhds_one _ _ _ _
-  · rw [basis'.tendsto_iff basis]
+  · rw [basis'.tendsto_iff Basis]
     suffices ∀, ∀ U ∈ B, ∀, ∃ V W, (V ∈ B ∧ W ∈ B) ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by
       simpa
     intro U U_in
@@ -220,7 +220,7 @@ instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @Topo
     intro a b a_in b_in
     exact hV ⟨a, b, a_in, b_in, rfl⟩
     
-  · rw [basis.tendsto_iff basis]
+  · rw [basis.tendsto_iff Basis]
     intro U U_in
     simpa using inv U_in
     
@@ -229,7 +229,7 @@ instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @Topo
     rfl
     
   · intro x₀
-    rw [basis.tendsto_iff basis]
+    rw [basis.tendsto_iff Basis]
     intro U U_in
     exact conj x₀ U_in
     
@@ -273,10 +273,10 @@ instance (priority := 100) is_topological_ring {R : Type u} [Ringₓ R] (B : Rin
   let B' := B.to_add_group_filter_basis
   let this' := B'.topology
   have basis := B'.nhds_zero_has_basis
-  have basis' := basis.prod basis
+  have basis' := Basis.prod Basis
   have := B'.is_topological_add_group
   apply TopologicalRing.of_add_group_of_nhds_zero
-  · rw [basis'.tendsto_iff basis]
+  · rw [basis'.tendsto_iff Basis]
     suffices ∀, ∀ U ∈ B', ∀, ∃ V W, (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by
       simpa
     intro U U_in
@@ -286,12 +286,12 @@ instance (priority := 100) is_topological_ring {R : Type u} [Ringₓ R] (B : Rin
     exact hV ⟨a, b, a_in, b_in, rfl⟩
     
   · intro x₀
-    rw [basis.tendsto_iff basis]
+    rw [basis.tendsto_iff Basis]
     intro U
     simpa using B.mul_left x₀
     
   · intro x₀
-    rw [basis.tendsto_iff basis]
+    rw [basis.tendsto_iff Basis]
     intro U
     simpa using B.mul_right x₀
     
@@ -327,7 +327,7 @@ theorem smul_right (m₀ : M) {U : Set M} (hU : U ∈ B) : ∀ᶠ x in 𝓝 (0 :
 /-- If `R` is discrete then the trivial additive group filter basis on any `R`-module is a
 module filter basis. -/
 instance [DiscreteTopology R] : Inhabited (ModuleFilterBasis R M) :=
-  ⟨{ default $ AddGroupFilterBasis M with
+  ⟨{ show AddGroupFilterBasis M from default with
       smul' := by
         rintro U (h : U ∈ {{(0 : M)}})
         rw [mem_singleton_iff] at h

@@ -154,7 +154,7 @@ theorem tendsto_norm_sq_coprime_pair (z : ℍ) :
       rw [f_def, add_im, of_real_mul_im, of_real_im, add_zeroₓ, mul_left_commₓ, inv_mul_cancel hz, mul_oneₓ]
       
     · show (z : ℂ).im⁻¹ * ((z : ℂ) * conj (f c)).im = c 1
-      rw [f_def, RingEquiv.map_add, RingEquiv.map_mul, mul_addₓ, mul_left_commₓ, mul_conj, conj_of_real, conj_of_real, ←
+      rw [f_def, RingHom.map_add, RingHom.map_mul, mul_addₓ, mul_left_commₓ, mul_conj, conj_of_real, conj_of_real, ←
         of_real_mul, add_im, of_real_im, zero_addₓ, inv_mul_eq_iff_eq_mul₀ hz]
       simp only [of_real_im, of_real_re, mul_im, zero_addₓ, mul_zero]
       
@@ -202,8 +202,6 @@ def lc_row0_extend {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
 -- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The map `lc_row0` is proper, that is, preimages of cocompact sets are finite in
 `[[* , *], [c, d]]`.-/
 theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
@@ -211,46 +209,29 @@ theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) 
   let mB : ℝ → Matrix (Finₓ 2) (Finₓ 2) ℝ := fun t =>
     «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»"
   have hmB : Continuous mB := by
-    refine' continuous_pi fun i => _
-    fin_cases i
-    · refine' continuous_pi fun j => _
-      fin_cases j
-      · exact continuous_id
-        
-      · exact @continuous_const _ _ _ _ (-(1 : ℤ) : ℝ)
-        
-      
-    exact @continuous_const _ _ _ _ (coeₓ ∘ cd)
-  convert Filter.Tendsto.of_tendsto_comp _ (comap_cocompact hmB)
+    simp only [continuous_pi_iff, Finₓ.forall_fin_two]
+    have : ∀ c : ℝ, Continuous fun x : ℝ => c := fun c => continuous_const
+    exact ⟨⟨continuous_id, @this (-1 : ℤ)⟩, ⟨this (cd 0), this (cd 1)⟩⟩
+  refine' Filter.Tendsto.of_tendsto_comp _ (comap_cocompact hmB)
   let f₁ : SL(2, ℤ) → Matrix (Finₓ 2) (Finₓ 2) ℝ := fun g => Matrix.map (↑g : Matrix _ _ ℤ) (coeₓ : ℤ → ℝ)
   have cocompact_ℝ_to_cofinite_ℤ_matrix :
     tendsto (fun m : Matrix (Finₓ 2) (Finₓ 2) ℤ => Matrix.map m (coeₓ : ℤ → ℝ)) cofinite (cocompact _) := by
-    convert tendsto.pi_map_Coprod fun i => tendsto.pi_map_Coprod fun j => Int.tendsto_coe_cofinite
-    · simp [Coprod_cofinite]
-      
-    · simp only [Coprod_cocompact]
-      rfl
-      
+    simpa only [Coprod_cofinite, Coprod_cocompact] using
+      tendsto.pi_map_Coprod fun i : Finₓ 2 => tendsto.pi_map_Coprod fun j : Finₓ 2 => Int.tendsto_coe_cofinite
   have hf₁ : tendsto f₁ cofinite (cocompact _) :=
     cocompact_ℝ_to_cofinite_ℤ_matrix.comp subtype.coe_injective.tendsto_cofinite
   have hf₂ : ClosedEmbedding (lc_row0_extend hcd) :=
     (lc_row0_extend hcd).toContinuousLinearEquiv.toHomeomorph.ClosedEmbedding
   convert hf₂.tendsto_cocompact.comp (hf₁.comp subtype.coe_injective.tendsto_cofinite) using 1
-  funext g
-  obtain ⟨g, hg⟩ := g
-  funext j
-  fin_cases j
-  · ext i
-    fin_cases i
-    · simp [mB, f₁, Matrix.mulVecₓ, Matrix.dotProduct, Finₓ.sum_univ_succ]
-      
-    · convert congr_argₓ (fun n : ℤ => (-n : ℝ)) g.det_coe.symm using 1
-      simp [f₁, ← hg, Matrix.mulVecₓ, Matrix.dotProduct, Finₓ.sum_univ_succ, Matrix.det_fin_two,
-        -special_linear_group.det_coe]
-      ring
-      
+  ext ⟨g, rfl⟩ i j : 3
+  fin_cases i <;> [fin_cases j, skip]
+  · simp [mB, f₁, mul_vec, dot_product, Finₓ.sum_univ_two]
     
-  · exact congr_argₓ (fun p => (coeₓ : ℤ → ℝ) ∘ p) hg.symm
+  · convert congr_argₓ (fun n : ℤ => (-n : ℝ)) g.det_coe.symm using 1
+    simp [f₁, mul_vec, dot_product, mB, Finₓ.sum_univ_two, Matrix.det_fin_two]
+    ring
+    
+  · rfl
     
 
 /-- This replaces `(g•z).re = a/c + *` in the standard theory with the following novel identity:

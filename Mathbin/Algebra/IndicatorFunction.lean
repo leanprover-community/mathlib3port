@@ -260,6 +260,11 @@ theorem mul_indicator_mul (s : Set α) (f g : α → M) :
     
   rw [mul_oneₓ]
 
+@[to_additive]
+theorem mul_indicator_mul' (s : Set α) (f g : α → M) :
+    mul_indicator s (f * g) = mul_indicator s f * mul_indicator s g :=
+  mul_indicator_mul s f g
+
 @[simp, to_additive]
 theorem mul_indicator_compl_mul_self_apply (s : Set α) (f : α → M) (a : α) :
     mul_indicator (sᶜ) f a * mul_indicator s f a = f a :=
@@ -337,9 +342,15 @@ theorem mul_indicator_inv' (s : Set α) (f : α → G) : mul_indicator s (f⁻¹
 theorem mul_indicator_inv (s : Set α) (f : α → G) : (mul_indicator s fun a => f a⁻¹) = fun a => mul_indicator s f a⁻¹ :=
   mul_indicator_inv' s f
 
-theorem indicator_sub {G} [AddGroupₓ G] (s : Set α) (f g : α → G) :
-    (indicator s fun a => f a - g a) = fun a => indicator s f a - indicator s g a :=
-  (indicator_hom G s).map_sub f g
+@[to_additive]
+theorem mul_indicator_div (s : Set α) (f g : α → G) :
+    (mul_indicator s fun a => f a / g a) = fun a => mul_indicator s f a / mul_indicator s g a :=
+  (mul_indicator_hom G s).map_div f g
+
+@[to_additive]
+theorem mul_indicator_div' (s : Set α) (f g : α → G) :
+    mul_indicator s (f / g) = mul_indicator s f / mul_indicator s g :=
+  mul_indicator_div s f g
 
 @[to_additive indicator_compl']
 theorem mul_indicator_compl (s : Set α) (f : α → G) : mul_indicator (sᶜ) f = f * mul_indicator s f⁻¹ :=
@@ -480,7 +491,7 @@ section MonoidWithZeroₓ
 variable [MonoidWithZeroₓ M]
 
 theorem indicator_prod_one {s : Set α} {t : Set β} {x : α} {y : β} :
-    (s.prod t).indicator (1 : _ → M) (x, y) = s.indicator 1 x * t.indicator 1 y := by
+    (s ×ˢ t : Set _).indicator (1 : _ → M) (x, y) = s.indicator 1 x * t.indicator 1 y := by
   simp [indicator, ← ite_and]
 
 end MonoidWithZeroₓ

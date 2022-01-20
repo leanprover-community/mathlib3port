@@ -1,4 +1,3 @@
-import Mathbin.Algebra.Invertible
 import Mathbin.Algebra.Order.Group
 import Mathbin.Algebra.Order.Sub
 import Mathbin.Data.Set.Intervals.Basic
@@ -539,36 +538,11 @@ theorem neg_of_mul_pos_right (h : 0 < a * b) (ha : b ≤ 0) : a < 0 :=
 theorem neg_iff_neg_of_mul_pos (hab : 0 < a * b) : a < 0 ↔ b < 0 :=
   ⟨neg_of_mul_pos_left hab ∘ le_of_ltₓ, neg_of_mul_pos_right hab ∘ le_of_ltₓ⟩
 
-@[simp]
-theorem inv_of_pos [Invertible a] : 0 < ⅟ a ↔ 0 < a :=
-  have : 0 < a * ⅟ a := by
-    simp only [mul_inv_of_self, zero_lt_one]
-  ⟨fun h => pos_of_mul_pos_right this h.le, fun h => pos_of_mul_pos_left this h.le⟩
-
-@[simp]
-theorem inv_of_nonpos [Invertible a] : ⅟ a ≤ 0 ↔ a ≤ 0 := by
-  simp only [← not_ltₓ, inv_of_pos]
-
 theorem nonneg_of_mul_nonneg_left (h : 0 ≤ a * b) (h1 : 0 < a) : 0 ≤ b :=
   le_of_not_gtₓ fun h2 : b < 0 => (mul_neg_of_pos_of_neg h1 h2).not_le h
 
 theorem nonneg_of_mul_nonneg_right (h : 0 ≤ a * b) (h1 : 0 < b) : 0 ≤ a :=
   le_of_not_gtₓ fun h2 : a < 0 => (mul_neg_of_neg_of_pos h2 h1).not_le h
-
-@[simp]
-theorem inv_of_nonneg [Invertible a] : 0 ≤ ⅟ a ↔ 0 ≤ a :=
-  have : 0 < a * ⅟ a := by
-    simp only [mul_inv_of_self, zero_lt_one]
-  ⟨fun h => (pos_of_mul_pos_right this h).le, fun h => (pos_of_mul_pos_left this h).le⟩
-
-@[simp]
-theorem inv_of_lt_zero [Invertible a] : ⅟ a < 0 ↔ a < 0 := by
-  simp only [← not_leₓ, inv_of_nonneg]
-
-@[simp]
-theorem inv_of_le_one [Invertible a] (h : 1 ≤ a) : ⅟ a ≤ 1 :=
-  have := @LinearOrderₓ.decidableLe α _
-  mul_inv_of_self a ▸ Decidable.le_mul_of_one_le_left (inv_of_nonneg.2 $ zero_le_one.trans h) h
 
 theorem neg_of_mul_neg_left (h : a * b < 0) (h1 : 0 ≤ a) : b < 0 :=
   have := @LinearOrderₓ.decidableLe α _
@@ -744,8 +718,8 @@ theorem nonpos_of_mul_nonneg_left (h : 0 ≤ a * b) (hb : b < 0) : a ≤ 0 :=
 theorem nonpos_of_mul_nonneg_right (h : 0 ≤ a * b) (ha : a < 0) : b ≤ 0 :=
   le_of_not_gtₓ fun hb => absurd h (mul_neg_of_neg_of_pos ha hb).not_le
 
-instance (priority := 100) LinearOrderedSemiring.to_no_top_order {α : Type _} [LinearOrderedSemiring α] :
-    NoTopOrder α :=
+instance (priority := 100) LinearOrderedSemiring.to_no_max_order {α : Type _} [LinearOrderedSemiring α] :
+    NoMaxOrder α :=
   ⟨fun a => ⟨a + 1, lt_add_of_pos_right _ zero_lt_one⟩⟩
 
 /-- Pullback a `linear_ordered_semiring` under an injective map.

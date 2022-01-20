@@ -1406,7 +1406,7 @@ unsafe def instance_stub : hole_command where
     let fs ← expanded_field_list cl
     let fs := fs.map Prod.snd
     let fs := format.intercalate (",\n  " : format) $ fs.map fun fn => f! "{fn} := _"
-    let out := format.to_string f! "\{ {fs} }"
+    let out := format.to_string f! "\{ {fs} }}"
     return [(out, "")]
 
 add_tactic_doc
@@ -1637,7 +1637,7 @@ unsafe def list_constructors_hole : hole_command where
                 {c } : {t}
                 "
     let fs ← format.intercalate ", " <$> cs.mmap (strip_prefix >=> pure ∘ to_fmt)
-    let out := format.to_string f! "\{! {fs} !}"
+    let out := format.to_string f! "\{! {fs} !}}"
     trace (format.join ts).toString
     return [(out, "")]
 
@@ -2301,7 +2301,7 @@ unsafe def set_attribute (attr_name : Name) (c_name : Name) (persistent := tt) (
       let user_attr_const ← mk_const user_attr_nm
       let tac ←
         eval_pexpr (tactic Unit)
-              (pquote.1 (user_attribute.set (%%ₓuser_attr_const) (%%ₓc_name) (default _) (%%ₓpersistent))) <|>
+              (pquote.1 (user_attribute.set (%%ₓuser_attr_const) (%%ₓc_name) default (%%ₓpersistent))) <|>
             throwError "Cannot set attribute @[{(← attr_name)}].
               The corresponding user attribute {← user_attr_nm} has a parameter without a default value.
               Solution: provide an `inhabited` instance."

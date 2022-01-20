@@ -266,7 +266,7 @@ variable {A : Type _}
 if `f 1 = g 1`. -/
 @[ext]
 theorem ext_int [AddMonoidₓ A] {f g : ℤ →+ A} (h1 : f 1 = g 1) : f = g :=
-  have : f.comp (Int.ofNatHom : ℕ →+ ℤ) = g.comp (Int.ofNatHom : ℕ →+ ℤ) := ext_nat h1
+  have : f.comp (Int.ofNatHom : ℕ →+ ℤ) = g.comp (Int.ofNatHom : ℕ →+ ℤ) := ext_nat' _ _ h1
   have : ∀ n : ℕ, f n = g n := ext_iff.1 this
   ext $ fun n => Int.casesOn n this $ fun n => eq_on_neg (this $ n + 1)
 

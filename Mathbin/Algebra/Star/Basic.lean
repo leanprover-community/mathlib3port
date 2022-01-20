@@ -16,12 +16,23 @@ These are implemented as "mixin" typeclasses, so to summon a star ring (for exam
 one needs to write `(R : Type) [ring R] [star_ring R]`.
 This avoids difficulties with diamond inheritance.
 
+We also define the class `star_ordered_ring R`, which says that the order on `R` respects the
+star operation, i.e. an element `r` is nonnegative iff there exists an `s` such that
+`r = star s * s`.
+
 For now we simply do not introduce notations,
 as different users are expected to feel strongly about the relative merits of
 `r^*`, `r†`, `rᘁ`, and so on.
 
 Our star rings are actually star semirings, but of course we can prove
 `star_neg : star (-r) = - star r` when the underlying semiring is a ring.
+
+## TODO
+
+* In a Banach star algebra without a well-defined square root, the natural ordering is given by the
+positive cone which is the closure of the sums of elements `star r * r`. A weaker version of
+`star_ordered_ring` could be defined for this case. Note that the current definition has the
+advantage of not requiring a topology.
 -/
 
 
@@ -55,6 +66,15 @@ theorem star_star [HasInvolutiveStar R] (r : R) : star (star r) = r :=
 
 theorem star_injective [HasInvolutiveStar R] : Function.Injective (star : R → R) :=
   star_involutive.Injective
+
+/-- Typeclass for a trivial star operation. This is mostly meant for `ℝ`.
+-/
+class HasTrivialStar (R : Type u) [HasStar R] where
+  star_trivial : ∀ r : R, star r = r
+
+export HasTrivialStar (star_trivial)
+
+attribute [simp] star_trivial
 
 /-- A `*`-monoid is a monoid `R` with an involutive operations `star`
 so `star (r * s) = star s * star r`.
@@ -204,26 +224,40 @@ def starRingEquiv [Semiringₓ R] [StarRing R] : R ≃+* Rᵐᵒᵖ :=
   { starAddEquiv.trans (MulOpposite.opAddEquiv : R ≃+ Rᵐᵒᵖ), starMulEquiv with
     toFun := fun x => MulOpposite.op (star x) }
 
-/-- `star` as a `ring_aut` for commutative `R`. This is used to denote complex
-conjugation, and is available under the notation `conj` in the locale `complex_conjugate` -/
+/-- `star` as a ring automorphism, for commutative `R`. -/
+@[simps apply]
 def starRingAut [CommSemiringₓ R] [StarRing R] : RingAut R :=
   { starAddEquiv, starMulAut with toFun := star }
 
-localized [ComplexConjugate] notation "conj" => starRingAut
+variable (R)
 
-/-- This is not a simp lemma, since we usually want simp to keep `star_ring_aut` bundled.
+/-- `star` as a ring endomorphism, for commutative `R`. This is used to denote complex
+conjugation, and is available under the notation `conj` in the locale `complex_conjugate`.
+
+Note that this is the preferred form (over `star_ring_aut`, available under the same hypotheses)
+because the notation `E →ₗ⋆[R] F` for an `R`-conjugate-linear map (short for
+`E →ₛₗ[star_ring_end R] F`) does not pretty-print if there is a coercion involved, as would be the
+case for `(↑star_ring_aut : R →* R)`. -/
+def starRingEnd [CommSemiringₓ R] [StarRing R] : R →+* R :=
+  @starRingAut R _ _
+
+variable {R}
+
+localized [ComplexConjugate] notation "conj" => starRingEnd _
+
+/-- This is not a simp lemma, since we usually want simp to keep `star_ring_end` bundled.
  For example, for complex conjugation, we don't want simp to turn `conj x`
  into the bare function `star x` automatically since most lemmas are about `conj x`. -/
-theorem star_ring_aut_apply [CommSemiringₓ R] [StarRing R] {x : R} : starRingAut x = star x :=
+theorem star_ring_end_apply [CommSemiringₓ R] [StarRing R] {x : R} : starRingEnd R x = star x :=
   rfl
 
 @[simp]
-theorem star_ring_aut_self_apply [CommSemiringₓ R] [StarRing R] (x : R) : starRingAut (starRingAut x) = x :=
+theorem star_ring_end_self_apply [CommSemiringₓ R] [StarRing R] (x : R) : starRingEnd R (starRingEnd R x) = x :=
   star_star x
 
-alias star_ring_aut_self_apply ← Complex.conj_conj
+alias star_ring_end_self_apply ← Complex.conj_conj
 
-alias star_ring_aut_self_apply ← IsROrC.conj_conj
+alias star_ring_end_self_apply ← IsROrC.conj_conj
 
 @[simp]
 theorem star_inv' [DivisionRing R] [StarRing R] (x : R) : star (x⁻¹) = star x⁻¹ :=
@@ -236,7 +270,7 @@ theorem star_zpow₀ [DivisionRing R] [StarRing R] (x : R) (z : ℤ) : star (x ^
 /-- When multiplication is commutative, `star` preserves division. -/
 @[simp]
 theorem star_div' [Field R] [StarRing R] (x y : R) : star (x / y) = star x / star y :=
-  (starRingAut : R ≃+* R).toRingHom.map_div _ _
+  (starRingEnd R).map_div _ _
 
 @[simp]
 theorem star_bit0 [Ringₓ R] [StarRing R] (r : R) : star (bit0 r) = bit0 (star r) := by
@@ -254,18 +288,33 @@ See note [reducible non-instances].
 def starRingOfComm {R : Type _} [CommSemiringₓ R] : StarRing R :=
   { starMonoidOfComm with star := id, star_add := fun x y => rfl }
 
-/-- An ordered `*`-ring is a ring which is both an ordered ring and a `*`-ring,
-and `0 ≤ star r * r` for every `r`.
-
-(In a Banach algebra, the natural ordering is given by the positive cone
-which is the closure of the sums of elements `star r * r`.
-This ordering makes the Banach algebra an ordered `*`-ring.)
+/-- An ordered `*`-ring is a ring which is both an `ordered_add_comm_group` and a `*`-ring,
+and `0 ≤ r ↔ ∃ s, r = star s * s`.
 -/
-class StarOrderedRing (R : Type u) [OrderedSemiring R] extends StarRing R where
-  star_mul_self_nonneg : ∀ r : R, 0 ≤ star r * r
+class StarOrderedRing (R : Type u) [Ringₓ R] [PartialOrderₓ R] extends StarRing R where
+  add_le_add_left : ∀ a b : R, a ≤ b → ∀ c : R, c + a ≤ c + b
+  nonneg_iff : ∀ r : R, 0 ≤ r ↔ ∃ s, r = star s * s
 
-theorem star_mul_self_nonneg [OrderedSemiring R] [StarOrderedRing R] {r : R} : 0 ≤ star r * r :=
-  StarOrderedRing.star_mul_self_nonneg r
+namespace StarOrderedRing
+
+variable [Ringₓ R] [PartialOrderₓ R] [StarOrderedRing R]
+
+instance (priority := 100) : OrderedAddCommGroup R :=
+  { show Ringₓ R by
+      infer_instance,
+    show PartialOrderₓ R by
+      infer_instance,
+    show StarOrderedRing R by
+      infer_instance with }
+
+end StarOrderedRing
+
+theorem star_mul_self_nonneg [Ringₓ R] [PartialOrderₓ R] [StarOrderedRing R] {r : R} : 0 ≤ star r * r :=
+  (StarOrderedRing.nonneg_iff _).mpr ⟨r, rfl⟩
+
+theorem star_mul_self_nonneg' [Ringₓ R] [PartialOrderₓ R] [StarOrderedRing R] {r : R} : 0 ≤ r * star r := by
+  nth_rw_rhs 0[← star_star r]
+  exact star_mul_self_nonneg
 
 /-- A star module `A` over a star ring `R` is a module which is a star add monoid,
 and the two star structures are compatible in the sense
@@ -293,8 +342,7 @@ namespace RingHomInvPair
 
 /-- Instance needed to define star-linear maps over a commutative star ring
 (ex: conjugate-linear maps when R = ℂ).  -/
-instance [CommSemiringₓ R] [StarRing R] :
-    RingHomInvPair ((starRingAut : RingAut R) : R →+* R) ((starRingAut : RingAut R) : R →+* R) :=
+instance [CommSemiringₓ R] [StarRing R] : RingHomInvPair (starRingEnd R) (starRingEnd R) :=
   ⟨RingHom.ext star_star, RingHom.ext star_star⟩
 
 end RingHomInvPair

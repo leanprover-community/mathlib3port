@@ -116,6 +116,24 @@ theorem mem_max_triv_submodule (m : M) : m ∈ max_triv_submodule R L M ↔ ∀ 
 instance : is_trivial L (max_triv_submodule R L M) where
   trivial := fun x m => Subtype.ext (m.property x)
 
+@[simp]
+theorem ideal_oper_max_triv_submodule_eq_bot (I : LieIdeal R L) : ⁅I,max_triv_submodule R L M⁆ = ⊥ := by
+  rw [← LieSubmodule.coe_to_submodule_eq_iff, LieSubmodule.lie_ideal_oper_eq_linear_span,
+    LieSubmodule.bot_coe_submodule, Submodule.span_eq_bot]
+  rintro m ⟨⟨x, hx⟩, ⟨⟨m, hm⟩, rfl⟩⟩
+  exact hm x
+
+theorem le_max_triv_iff_bracket_eq_bot {N : LieSubmodule R L M} :
+    N ≤ max_triv_submodule R L M ↔ ⁅(⊤ : LieIdeal R L),N⁆ = ⊥ := by
+  refine' ⟨fun h => _, fun h m hm => _⟩
+  · rw [← le_bot_iff, ← ideal_oper_max_triv_submodule_eq_bot R L M ⊤]
+    exact LieSubmodule.mono_lie_right _ _ ⊤ h
+    
+  · rw [mem_max_triv_submodule]
+    rw [LieSubmodule.lie_eq_bot_iff] at h
+    exact fun x => h x (LieSubmodule.mem_top x) m hm
+    
+
 theorem trivial_iff_le_maximal_trivial (N : LieSubmodule R L M) : is_trivial L N ↔ N ≤ max_triv_submodule R L M :=
   ⟨fun h m hm x => is_trivial.dcases_on h fun h => Subtype.ext_iff.mp (h x ⟨m, hm⟩), fun h =>
     { trivial := fun x m => Subtype.ext (h m.2 x) }⟩

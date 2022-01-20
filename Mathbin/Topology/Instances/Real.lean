@@ -229,7 +229,7 @@ theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f
 
 theorem Real.uniform_continuous_mul_const {x : ℝ} : UniformContinuous ((· * ·) x) :=
   Metric.uniform_continuous_iff.2 $ fun ε ε0 => by
-    cases' no_top |x| with y xy
+    cases' exists_gt |x| with y xy
     have y0 := lt_of_le_of_ltₓ (abs_nonneg _) xy
     refine' ⟨_, div_pos ε0 y0, fun a b h => _⟩
     rw [Real.dist_eq, ← mul_sub, abs_mul, ← mul_div_cancel' ε (ne_of_gtₓ y0)]
@@ -246,7 +246,7 @@ theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
 protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p.2 :=
   continuous_iff_continuous_at.2 $ fun ⟨a₁, a₂⟩ =>
     tendsto_of_uniform_continuous_subtype
-      (Real.uniform_continuous_mul ({ x | |x| < |a₁| + 1 }.Prod { x | |x| < |a₂| + 1 }) fun x => id)
+      (Real.uniform_continuous_mul ({ x | |x| < |a₁| + 1 } ×ˢ { x | |x| < |a₂| + 1 }) fun x => id)
       (IsOpen.mem_nhds
         (((is_open_gt' (|a₁| + 1)).Preimage continuous_abs).Prod ((is_open_gt' (|a₂| + 1)).Preimage continuous_abs))
         ⟨lt_add_one |a₁|, lt_add_one |a₂|⟩)

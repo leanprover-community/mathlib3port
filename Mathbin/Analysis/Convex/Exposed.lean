@@ -144,7 +144,7 @@ theorem inter_right (hC : IsExposed 𝕜 B C) (hCA : C ⊆ A) : IsExposed 𝕜 (
   exact hC.inter_left hCA
 
 protected theorem IsExtreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B := by
-  refine' ⟨hAB.subset, fun x₁ x₂ hx₁A hx₂A x hxB hx => _⟩
+  refine' ⟨hAB.subset, fun x₁ hx₁A x₂ hx₂A x hxB hx => _⟩
   obtain ⟨l, rfl⟩ := hAB ⟨x, hxB⟩
   have hl : ConvexOn 𝕜 univ l := l.to_linear_map.convex_on convex_univ
   have hlx₁ := hxB.2 x₁ hx₁A

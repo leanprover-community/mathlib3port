@@ -79,7 +79,7 @@ theorem stationary {f : CauSeq ℚ (padicNorm p)} (hf : ¬f ≈ 0) :
   let ⟨ε, hε, N1, hN1⟩ := this
   let ⟨N2, hN2⟩ := CauSeq.cauchy₂ f hε
   ⟨max N1 N2, fun n m hn hm => by
-    have : padicNorm p (f n - f m) < ε := hN2 _ _ (max_le_iff.1 hn).2 (max_le_iff.1 hm).2
+    have : padicNorm p (f n - f m) < ε := hN2 _ (max_le_iff.1 hn).2 _ (max_le_iff.1 hm).2
     have : padicNorm p (f n - f m) < padicNorm p (f n) := lt_of_lt_of_leₓ this $ hN1 _ (max_le_iff.1 hn).1
     have : padicNorm p (f n - f m) < max (padicNorm p (f n)) (padicNorm p (f m)) := lt_max_iff.2 (Or.inl this)
     by_contra hne

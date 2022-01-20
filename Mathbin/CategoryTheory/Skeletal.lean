@@ -65,7 +65,7 @@ def skeleton : Type u₁ :=
   induced_category C Quotientₓ.out deriving category
 
 instance [Inhabited C] : Inhabited (skeleton C) :=
-  ⟨⟦default C⟧⟩
+  ⟨⟦default⟧⟩
 
 /-- The functor from the skeleton of `C` to `C`. -/
 @[simps]
@@ -113,7 +113,7 @@ def thin_skeleton : Type u₁ :=
   Quotientₓ (is_isomorphic_setoid C)
 
 instance inhabited_thin_skeleton [Inhabited C] : Inhabited (thin_skeleton C) :=
-  ⟨Quotientₓ.mk (default _)⟩
+  ⟨Quotientₓ.mk default⟩
 
 instance thin_skeleton.preorder : Preorderₓ (thin_skeleton C) where
   le :=

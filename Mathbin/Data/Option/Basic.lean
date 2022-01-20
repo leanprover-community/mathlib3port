@@ -439,9 +439,13 @@ theorem guard_eq_some {p : α → Prop} [DecidablePred p] {a b : α} : guardₓ 
   by_cases' p a <;> simp [Option.guard, h] <;> intro <;> contradiction
 
 @[simp]
-theorem guard_eq_some' {p : Prop} [Decidable p] : ∀ u, _root_.guard p = some u ↔ p
-  | () => by
-    by_cases' p <;> simp [guardₓ, h, pure] <;> intro <;> contradiction
+theorem guard_eq_some' {p : Prop} [Decidable p] u : _root_.guard p = some u ↔ p := by
+  cases u
+  by_cases' p <;>
+    simp [_root_.guard, h] <;>
+      first |
+        rfl|
+        contradiction
 
 theorem lift_or_get_choice {f : α → α → α} (h : ∀ a b, f a b = a ∨ f a b = b) :
     ∀ o₁ o₂, lift_or_get f o₁ o₂ = o₁ ∨ lift_or_get f o₁ o₂ = o₂

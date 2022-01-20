@@ -101,7 +101,7 @@ structure BasicSmoothBundleCore {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E
   coord_change_smooth :
     ∀ i j : atlas H M,
       TimesContDiffOn 𝕜 ∞ (fun p : E × F => coord_change i j (I.symm p.1) p.2)
-        ((I '' (i.1.symm.trans j.1).Source).Prod (univ : Set F))
+        (I '' (i.1.symm.trans j.1).Source ×ˢ (univ : Set F))
 
 /-- The trivial basic smooth bundle core, in which all the changes of coordinates are the
 identity. -/
@@ -140,17 +140,18 @@ def to_topological_fiber_bundle_core : TopologicalFiberBundleCore (atlas H M) M 
   coord_change_continuous := fun i j => by
     have A :
       ContinuousOn (fun p : E × F => Z.coord_change i j (I.symm p.1) p.2)
-        ((I '' (i.1.symm.trans j.1).Source).Prod (univ : Set F)) :=
+        (I '' (i.1.symm.trans j.1).Source ×ˢ (univ : Set F)) :=
       (Z.coord_change_smooth i j).ContinuousOn
     have B : ContinuousOn (fun x : M => I (i.1 x)) i.1.Source := I.continuous.comp_continuous_on i.1.ContinuousOn
-    have C : ContinuousOn (fun p : M × F => (⟨I (i.1 p.1), p.2⟩ : E × F)) (i.1.Source.Prod univ) := by
+    have C : ContinuousOn (fun p : M × F => (⟨I (i.1 p.1), p.2⟩ : E × F)) (i.1.Source ×ˢ (univ : Set F)) := by
       apply ContinuousOn.prod _ continuous_snd.continuous_on
       exact B.comp continuous_fst.continuous_on (prod_subset_preimage_fst _ _)
-    have C' : ContinuousOn (fun p : M × F => (⟨I (i.1 p.1), p.2⟩ : E × F)) ((i.1.Source ∩ j.1.Source).Prod univ) :=
+    have C' :
+      ContinuousOn (fun p : M × F => (⟨I (i.1 p.1), p.2⟩ : E × F)) ((i.1.Source ∩ j.1.Source) ×ˢ (univ : Set F)) :=
       ContinuousOn.mono C (prod_mono (inter_subset_left _ _) (subset.refl _))
     have D :
-      (i.1.Source ∩ j.1.Source).Prod univ ⊆
-        (fun p : M × F => (I (i.1 p.1), p.2)) ⁻¹' (I '' (i.1.symm.trans j.1).Source).Prod univ :=
+      (i.1.Source ∩ j.1.Source) ×ˢ (univ : Set F) ⊆
+        (fun p : M × F => (I (i.1 p.1), p.2)) ⁻¹' (I '' (i.1.symm.trans j.1).Source ×ˢ (univ : Set F)) :=
       by
       rintro ⟨x, v⟩ hx
       simp' only with mfld_simps  at hx
@@ -176,7 +177,8 @@ theorem chart_source (e : LocalHomeomorph M H) (he : e ∈ atlas H M) :
   mfld_set_tac
 
 @[simp, mfld_simps]
-theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ atlas H M) : (Z.chart he).Target = e.target.prod univ := by
+theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ atlas H M) :
+    (Z.chart he).Target = e.target ×ˢ (univ : Set F) := by
   simp only [chart]
   mfld_set_tac
 
@@ -229,7 +231,7 @@ instance to_smooth_manifold :
     intro e e' he he'
     have :
       J.symm ⁻¹' ((chart Z he).symm.trans (chart Z he')).Source ∩ range J =
-        (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I).Prod univ :=
+        (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F) :=
       by
       simp only [J, chart, ModelWithCorners.prod]
       mfld_set_tac
@@ -237,10 +239,12 @@ instance to_smooth_manifold :
     apply TimesContDiffOn.prod
     show
       TimesContDiffOn 𝕜 ∞ (fun p : E × F => (I ∘ e' ∘ e.symm ∘ I.symm) p.1)
-        ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I).Prod (univ : Set F))
+        ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F))
     · have A : TimesContDiffOn 𝕜 ∞ (I ∘ e.symm.trans e' ∘ I.symm) (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) :=
         (HasGroupoid.compatible (timesContDiffGroupoid ∞ I) he he').1
-      have B : TimesContDiffOn 𝕜 ∞ (fun p : E × F => p.1) ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I).Prod univ) :=
+      have B :
+        TimesContDiffOn 𝕜 ∞ (fun p : E × F => p.1)
+          ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F)) :=
         times_cont_diff_fst.times_cont_diff_on
       exact TimesContDiffOn.comp A B (prod_subset_preimage_fst _ _)
       
@@ -250,7 +254,7 @@ instance to_smooth_manifold :
           Z.coord_change ⟨chart_at H (e.symm (I.symm p.1)), _⟩ ⟨e', he'⟩
             ((chart_at H (e.symm (I.symm p.1)) : M → H) (e.symm (I.symm p.1)))
             (Z.coord_change ⟨e, he⟩ ⟨chart_at H (e.symm (I.symm p.1)), _⟩ (e (e.symm (I.symm p.1))) p.2))
-        ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I).Prod (univ : Set F))
+        ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F))
     · have := Z.coord_change_smooth ⟨e, he⟩ ⟨e', he'⟩
       rw [I.image_eq] at this
       apply TimesContDiffOn.congr this
@@ -293,7 +297,7 @@ def tangentBundleCore : BasicSmoothBundleCore I M E where
         (fun p : E × E =>
           (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) p.1 : E → E)
             p.2)
-        ((I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I).Prod univ) :=
+        ((I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) ×ˢ (univ : Set E)) :=
       times_cont_diff_on_fderiv_within_apply A B le_top
     have D :
       ∀,

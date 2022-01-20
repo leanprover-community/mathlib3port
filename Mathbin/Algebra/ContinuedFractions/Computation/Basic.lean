@@ -80,7 +80,7 @@ instance [HasRepr K] : HasRepr (int_fract_pair K) :=
   ⟨fun p => "(b : " ++ reprₓ p.b ++ ", fract : " ++ reprₓ p.fr ++ ")"⟩
 
 instance Inhabited [Inhabited K] : Inhabited (int_fract_pair K) :=
-  ⟨⟨0, default _⟩⟩
+  ⟨⟨0, default⟩⟩
 
 /-- Maps a function `f` on the fractional components of a given pair.
 -/

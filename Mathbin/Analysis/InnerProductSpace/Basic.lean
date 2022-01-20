@@ -151,7 +151,7 @@ local notation "absK" => @IsROrC.abs 𝕜 _
 
 local notation "ext_iff" => @IsROrC.ext_iff 𝕜 _
 
-local postfix:90 "†" => starRingAut
+local postfix:90 "†" => starRingEnd _
 
 /-- Inner product defined by the `inner_product_space.core` structure. -/
 def to_has_inner : HasInner 𝕜 F where
@@ -181,7 +181,7 @@ theorem inner_add_left {x y z : F} : ⟪x + y, z⟫ = ⟪x, z⟫ + ⟪y, z⟫ :=
   c.add_left _ _ _
 
 theorem inner_add_right {x y z : F} : ⟪x, y + z⟫ = ⟪x, y⟫ + ⟪x, z⟫ := by
-  rw [← inner_conj_sym, inner_add_left, RingEquiv.map_add] <;> simp only [inner_conj_sym]
+  rw [← inner_conj_sym, inner_add_left, RingHom.map_add] <;> simp only [inner_conj_sym]
 
 theorem inner_norm_sq_eq_inner_self (x : F) : (norm_sqF x : 𝕜) = ⟪x, x⟫ := by
   rw [ext_iff]
@@ -200,13 +200,13 @@ theorem inner_smul_left {x y : F} {r : 𝕜} : ⟪r • x, y⟫ = r† * ⟪x, y
   c.smul_left _ _ _
 
 theorem inner_smul_right {x y : F} {r : 𝕜} : ⟪x, r • y⟫ = r * ⟪x, y⟫ := by
-  rw [← inner_conj_sym, inner_smul_left] <;> simp only [conj_conj, inner_conj_sym, RingEquiv.map_mul]
+  rw [← inner_conj_sym, inner_smul_left] <;> simp only [conj_conj, inner_conj_sym, RingHom.map_mul]
 
 theorem inner_zero_left {x : F} : ⟪0, x⟫ = 0 := by
-  rw [← zero_smul 𝕜 (0 : F), inner_smul_left] <;> simp only [zero_mul, RingEquiv.map_zero]
+  rw [← zero_smul 𝕜 (0 : F), inner_smul_left] <;> simp only [zero_mul, RingHom.map_zero]
 
 theorem inner_zero_right {x : F} : ⟪x, 0⟫ = 0 := by
-  rw [← inner_conj_sym, inner_zero_left] <;> simp only [RingEquiv.map_zero]
+  rw [← inner_conj_sym, inner_zero_left] <;> simp only [RingHom.map_zero]
 
 theorem inner_self_eq_zero {x : F} : ⟪x, x⟫ = 0 ↔ x = 0 :=
   Iff.intro (c.definite _)
@@ -225,7 +225,7 @@ theorem inner_neg_left {x y : F} : ⟪-x, y⟫ = -⟪x, y⟫ := by
   simp
 
 theorem inner_neg_right {x y : F} : ⟪x, -y⟫ = -⟪x, y⟫ := by
-  rw [← inner_conj_sym, inner_neg_left] <;> simp only [RingEquiv.map_neg, inner_conj_sym]
+  rw [← inner_conj_sym, inner_neg_left] <;> simp only [RingHom.map_neg, inner_conj_sym]
 
 theorem inner_sub_left {x y z : F} : ⟪x - y, z⟫ = ⟪x, z⟫ - ⟪y, z⟫ := by
   simp [sub_eq_add_neg, inner_add_left, inner_neg_left]
@@ -285,7 +285,7 @@ theorem inner_mul_inner_self_le (x y : F) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
         _ = re ⟪x, x⟫ - re (T† * ⟪y, x⟫) - re (T * ⟪x, y⟫) + re (T * T† * ⟪y, y⟫) := by
           simp only [inner_smul_left, inner_smul_right, mul_assocₓ]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ / ⟪y, y⟫ * ⟪y, x⟫) := by
-          field_simp [-mul_re, inner_conj_sym, hT, RingEquiv.map_div, h₁, h₃]
+          field_simp [-mul_re, inner_conj_sym, hT, RingHom.map_div, h₁, h₃]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / ⟪y, y⟫) := by
           rw [div_mul_eq_mul_div_comm, ← mul_div_assoc]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / re ⟪y, y⟫) := by
@@ -405,7 +405,7 @@ local notation "absR" => HasAbs.abs
 
 local notation "absK" => @IsROrC.abs 𝕜 _
 
-local postfix:90 "†" => starRingAut
+local postfix:90 "†" => starRingEnd _
 
 export InnerProductSpace (norm_sq_eq_inner)
 
@@ -434,7 +434,7 @@ theorem inner_add_left {x y z : E} : ⟪x + y, z⟫ = ⟪x, z⟫ + ⟪y, z⟫ :=
   InnerProductSpace.add_left _ _ _
 
 theorem inner_add_right {x y z : E} : ⟪x, y + z⟫ = ⟪x, y⟫ + ⟪x, z⟫ := by
-  rw [← inner_conj_sym, inner_add_left, RingEquiv.map_add]
+  rw [← inner_conj_sym, inner_add_left, RingHom.map_add]
   simp only [inner_conj_sym]
 
 theorem inner_re_symm {x y : E} : re ⟪x, y⟫ = re ⟪y, x⟫ := by
@@ -454,7 +454,7 @@ theorem inner_smul_real_left {x y : E} {r : ℝ} : ⟪(r : 𝕜) • x, y⟫ = r
   rfl
 
 theorem inner_smul_right {x y : E} {r : 𝕜} : ⟪x, r • y⟫ = r * ⟪x, y⟫ := by
-  rw [← inner_conj_sym, inner_smul_left, RingEquiv.map_mul, conj_conj, inner_conj_sym]
+  rw [← inner_conj_sym, inner_smul_left, RingHom.map_mul, conj_conj, inner_conj_sym]
 
 theorem real_inner_smul_right {x y : F} {r : ℝ} : ⟪x, r • y⟫_ℝ = r * ⟪x, y⟫_ℝ :=
   inner_smul_right
@@ -466,7 +466,7 @@ theorem inner_smul_real_right {x y : E} {r : ℝ} : ⟪x, (r : 𝕜) • y⟫ = 
 /-- The inner product as a sesquilinear form. -/
 @[simps]
 def sesqFormOfInner : E →ₗ[𝕜] E →ₗ⋆[𝕜] 𝕜 :=
-  LinearMap.mk₂'ₛₗ (RingHom.id 𝕜) starRingAut.toRingHom (fun x y => ⟪y, x⟫) (fun x y z => inner_add_right)
+  LinearMap.mk₂'ₛₗ (RingHom.id 𝕜) (starRingEnd _) (fun x y => ⟪y, x⟫) (fun x y z => inner_add_right)
     (fun r x y => inner_smul_right) (fun x y z => inner_add_left) fun r x y => inner_smul_left
 
 /-- The real inner product as a bilinear form. -/
@@ -498,16 +498,26 @@ theorem Finsupp.inner_sum {ι : Type _} (l : ι →₀ 𝕜) (v : ι → E) (x :
   convert inner_sum l.support (fun a => l a • v a) x
   simp [inner_smul_right, Finsupp.sum]
 
+theorem Dfinsupp.sum_inner {ι : Type _} [dec : DecidableEq ι] {α : ι → Type _} [∀ i, AddZeroClass (α i)]
+    [∀ i x : α i, Decidable (x ≠ 0)] (f : ∀ i, α i → E) (l : Π₀ i, α i) (x : E) :
+    ⟪l.sum f, x⟫ = l.sum fun i a => ⟪f i a, x⟫ := by
+  simp (config := { contextual := true })[Dfinsupp.sum, sum_inner]
+
+theorem Dfinsupp.inner_sum {ι : Type _} [dec : DecidableEq ι] {α : ι → Type _} [∀ i, AddZeroClass (α i)]
+    [∀ i x : α i, Decidable (x ≠ 0)] (f : ∀ i, α i → E) (l : Π₀ i, α i) (x : E) :
+    ⟪x, l.sum f⟫ = l.sum fun i a => ⟪x, f i a⟫ := by
+  simp (config := { contextual := true })[Dfinsupp.sum, inner_sum]
+
 @[simp]
 theorem inner_zero_left {x : E} : ⟪0, x⟫ = 0 := by
-  rw [← zero_smul 𝕜 (0 : E), inner_smul_left, RingEquiv.map_zero, zero_mul]
+  rw [← zero_smul 𝕜 (0 : E), inner_smul_left, RingHom.map_zero, zero_mul]
 
 theorem inner_re_zero_left {x : E} : re ⟪0, x⟫ = 0 := by
   simp only [inner_zero_left, AddMonoidHom.map_zero]
 
 @[simp]
 theorem inner_zero_right {x : E} : ⟪x, 0⟫ = 0 := by
-  rw [← inner_conj_sym, inner_zero_left, RingEquiv.map_zero]
+  rw [← inner_conj_sym, inner_zero_left, RingHom.map_zero]
 
 theorem inner_re_zero_right {x : E} : re ⟪x, 0⟫ = 0 := by
   simp only [inner_zero_right, AddMonoidHom.map_zero]
@@ -589,7 +599,7 @@ theorem inner_neg_left {x y : E} : ⟪-x, y⟫ = -⟪x, y⟫ := by
 
 @[simp]
 theorem inner_neg_right {x y : E} : ⟪x, -y⟫ = -⟪x, y⟫ := by
-  rw [← inner_conj_sym, inner_neg_left] <;> simp only [RingEquiv.map_neg, inner_conj_sym]
+  rw [← inner_conj_sym, inner_neg_left] <;> simp only [RingHom.map_neg, inner_conj_sym]
 
 theorem inner_neg_neg {x y : E} : ⟪-x, -y⟫ = ⟪x, y⟫ := by
   simp
@@ -675,7 +685,7 @@ theorem inner_mul_inner_self_le (x y : E) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
         _ = re ⟪x, x⟫ - re (T† * ⟪y, x⟫) - re (T * ⟪x, y⟫) + re (T * T† * ⟪y, y⟫) := by
           simp only [inner_smul_left, inner_smul_right, mul_assocₓ]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ / ⟪y, y⟫ * ⟪y, x⟫) := by
-          field_simp [-mul_re, hT, RingEquiv.map_div, h₁, h₃, inner_conj_sym]
+          field_simp [-mul_re, hT, RingHom.map_div, h₁, h₃, inner_conj_sym]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / ⟪y, y⟫) := by
           rw [div_mul_eq_mul_div_comm, ← mul_div_assoc]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / re ⟪y, y⟫) := by
@@ -794,9 +804,15 @@ theorem Orthonormal.inner_right_finsupp {v : ι → E} (hv : Orthonormal 𝕜 v)
 
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
 vectors picks out the coefficient of that vector. -/
+theorem Orthonormal.inner_right_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι → 𝕜) {s : Finset ι} {i : ι} (hi : i ∈ s) :
+    ⟪v i, ∑ i in s, l i • v i⟫ = l i := by
+  classical <;> simp [inner_sum, inner_smul_right, orthonormal_iff_ite.mp hv, hi]
+
+/-- The inner product of a linear combination of a set of orthonormal vectors with one of those
+vectors picks out the coefficient of that vector. -/
 theorem Orthonormal.inner_right_fintype [Fintype ι] {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι → 𝕜) (i : ι) :
-    ⟪v i, ∑ i : ι, l i • v i⟫ = l i := by
-  classical <;> simp [inner_sum, inner_smul_right, orthonormal_iff_ite.mp hv]
+    ⟪v i, ∑ i : ι, l i • v i⟫ = l i :=
+  hv.inner_right_sum l (Finset.mem_univ _)
 
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
 vectors picks out the coefficient of that vector. -/
@@ -806,9 +822,35 @@ theorem Orthonormal.inner_left_finsupp {v : ι → E} (hv : Orthonormal 𝕜 v) 
 
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
 vectors picks out the coefficient of that vector. -/
+theorem Orthonormal.inner_left_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι → 𝕜) {s : Finset ι} {i : ι} (hi : i ∈ s) :
+    ⟪∑ i in s, l i • v i, v i⟫ = conj (l i) := by
+  classical <;> simp [sum_inner, inner_smul_left, orthonormal_iff_ite.mp hv, hi]
+
+/-- The inner product of a linear combination of a set of orthonormal vectors with one of those
+vectors picks out the coefficient of that vector. -/
 theorem Orthonormal.inner_left_fintype [Fintype ι] {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι → 𝕜) (i : ι) :
-    ⟪∑ i : ι, l i • v i, v i⟫ = conj (l i) := by
-  classical <;> simp [sum_inner, inner_smul_left, orthonormal_iff_ite.mp hv]
+    ⟪∑ i : ι, l i • v i, v i⟫ = conj (l i) :=
+  hv.inner_left_sum l (Finset.mem_univ _)
+
+/-- The inner product of two linear combinations of a set of orthonormal vectors, expressed as
+a sum over the first `finsupp`. -/
+theorem Orthonormal.inner_finsupp_eq_sum_left {v : ι → E} (hv : Orthonormal 𝕜 v) (l₁ l₂ : ι →₀ 𝕜) :
+    ⟪Finsupp.total ι E 𝕜 v l₁, Finsupp.total ι E 𝕜 v l₂⟫ = l₁.sum fun i y => conj y * l₂ i := by
+  simp [Finsupp.total_apply _ l₁, Finsupp.sum_inner, hv.inner_right_finsupp]
+
+/-- The inner product of two linear combinations of a set of orthonormal vectors, expressed as
+a sum over the second `finsupp`. -/
+theorem Orthonormal.inner_finsupp_eq_sum_right {v : ι → E} (hv : Orthonormal 𝕜 v) (l₁ l₂ : ι →₀ 𝕜) :
+    ⟪Finsupp.total ι E 𝕜 v l₁, Finsupp.total ι E 𝕜 v l₂⟫ = l₂.sum fun i y => conj (l₁ i) * y := by
+  simp [Finsupp.total_apply _ l₂, Finsupp.inner_sum, hv.inner_left_finsupp, mul_commₓ]
+
+/-- The inner product of two linear combinations of a set of orthonormal vectors, expressed as
+a sum. -/
+theorem Orthonormal.inner_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l₁ l₂ : ι → 𝕜) (s : Finset ι) :
+    ⟪∑ i in s, l₁ i • v i, ∑ i in s, l₂ i • v i⟫ = ∑ i in s, conj (l₁ i) * l₂ i := by
+  simp_rw [sum_inner, inner_smul_left]
+  refine' Finset.sum_congr rfl fun i hi => _
+  rw [hv.inner_right_sum l₂ hi]
 
 /-- The double sum of weighted inner products of pairs of vectors from an orthonormal sequence is the
 sum of the weights.
@@ -1487,7 +1529,7 @@ theorem innerSL_apply_norm {x : E} : ∥(innerSL x : E →L[𝕜] 𝕜)∥ = ∥
 
 /-- The inner product as a continuous sesquilinear map, with the two arguments flipped. -/
 def innerSLFlip : E →L[𝕜] E →L⋆[𝕜] 𝕜 :=
-  ContinuousLinearMap.flipₗᵢ' E E 𝕜 (RingHom.id 𝕜) (↑starRingAut : 𝕜 →+* 𝕜) innerSL
+  @ContinuousLinearMap.flipₗᵢ' 𝕜 𝕜 𝕜 E E 𝕜 _ _ _ _ _ _ _ _ _ (RingHom.id 𝕜) (starRingEnd 𝕜) _ _ innerSL
 
 @[simp]
 theorem innerSL_flip_apply {x y : E} : innerSLFlip x y = ⟪y, x⟫ :=
@@ -1500,7 +1542,7 @@ variable {E' : Type _} [InnerProductSpace 𝕜 E']
 /-- Given `f : E →L[𝕜] E'`, construct the continuous sesquilinear form `λ x y, ⟪x, A y⟫`, given
 as a continuous linear map. -/
 def to_sesq_form : (E →L[𝕜] E') →L[𝕜] E' →L⋆[𝕜] E →L[𝕜] 𝕜 :=
-  ↑(ContinuousLinearMap.flipₗᵢ' E E' 𝕜 (↑(starRingAut : 𝕜 ≃+* 𝕜) : 𝕜 →+* 𝕜) (RingHom.id 𝕜)).toContinuousLinearEquiv ∘L
+  ↑(ContinuousLinearMap.flipₗᵢ' E E' 𝕜 (starRingEnd 𝕜) (RingHom.id 𝕜)).toContinuousLinearEquiv ∘L
     ContinuousLinearMap.compSL E E' (E' →L⋆[𝕜] 𝕜) (RingHom.id 𝕜) (RingHom.id 𝕜) innerSLFlip
 
 @[simp]
@@ -1622,95 +1664,209 @@ variable {ι : Type _} [dec_ι : DecidableEq ι] (𝕜)
 
 open_locale DirectSum
 
-/-- An indexed family of mutually-orthogonal subspaces of an inner product space `E`. -/
-def OrthogonalFamily (V : ι → Submodule 𝕜 E) : Prop :=
-  ∀ ⦃i j⦄, i ≠ j → ∀ {v : E} hv : v ∈ V i {w : E} hw : w ∈ V j, ⟪v, w⟫ = 0
+/-- An indexed family of mutually-orthogonal subspaces of an inner product space `E`.
 
-variable {𝕜} {V : ι → Submodule 𝕜 E} (hV : OrthogonalFamily 𝕜 V) [dec_V : ∀ i x : V i, Decidable (x ≠ 0)]
+The simple way to express this concept would be as a condition on `V : ι → submodule 𝕜 E`.  We
+We instead implement it as a condition on a family of inner product spaces each equipped with an
+isometric embedding into `E`, thus making it a property of morphisms rather than subobjects.
+
+This definition is less lightweight, but allows for better definitional properties when the inner
+product space structure on each of the submodules is important -- for example, when considering
+their Hilbert sum (`pi_lp V 2`).  For example, given an orthonormal set of vectors `v : ι → E`,
+we have an associated orthogonal family of one-dimensional subspaces of `E`, which it is convenient
+to be able to discuss using `ι → 𝕜` rather than `Π i : ι, span 𝕜 (v i)`. -/
+def OrthogonalFamily {G : ι → Type _} [∀ i, InnerProductSpace 𝕜 (G i)] (V : ∀ i, G i →ₗᵢ[𝕜] E) : Prop :=
+  ∀ ⦃i j⦄, i ≠ j → ∀ v : G i, ∀ w : G j, ⟪V i v, V j w⟫ = 0
+
+variable {𝕜} {G : ι → Type _} [∀ i, InnerProductSpace 𝕜 (G i)] {V : ∀ i, G i →ₗᵢ[𝕜] E} (hV : OrthogonalFamily 𝕜 V)
+  [dec_V : ∀ i x : G i, Decidable (x ≠ 0)]
+
+theorem Orthonormal.orthogonal_family {v : ι → E} (hv : Orthonormal 𝕜 v) :
+    @OrthogonalFamily 𝕜 _ _ _ _ (fun i : ι => 𝕜) _ fun i => LinearIsometry.toSpanSingleton 𝕜 E (hv.1 i) :=
+  fun i j hij a b => by
+  simp [inner_smul_left, inner_smul_right, hv.2 hij]
 
 include hV dec_ι
 
-theorem OrthogonalFamily.eq_ite {i j : ι} (v : V i) (w : V j) : ⟪(v : E), w⟫ = ite (i = j) ⟪(v : E), w⟫ 0 := by
+theorem OrthogonalFamily.eq_ite {i j : ι} (v : G i) (w : G j) : ⟪V i v, V j w⟫ = ite (i = j) ⟪V i v, V j w⟫ 0 := by
   split_ifs
   · rfl
     
-  · exact hV h v.prop w.prop
+  · exact hV h v w
     
 
 include dec_V
 
-theorem OrthogonalFamily.inner_right_dfinsupp (l : ⨁ i, V i) (i : ι) (v : V i) :
-    ⟪(v : E), Dfinsupp.lsum ℕ (fun i => (V i).Subtype) l⟫ = ⟪v, l i⟫ :=
+theorem OrthogonalFamily.inner_right_dfinsupp (l : ⨁ i, G i) (i : ι) (v : G i) :
+    ⟪V i v, l.sum fun j => V j⟫ = ⟪v, l i⟫ :=
   calc
-    ⟪(v : E), Dfinsupp.lsum ℕ (fun i => (V i).Subtype) l⟫ = l.sum fun j => fun w => ⟪(v : E), w⟫ := by
-      let F : E →+ 𝕜 := (@innerSL 𝕜 E _ _ v).toLinearMap.toAddMonoidHom
-      have hF := congr_argₓ AddMonoidHom.toFun (Dfinsupp.comp_sum_add_hom F fun j => (V j).Subtype.toAddMonoidHom)
-      convert congr_funₓ hF l using 1
-      simp only [Dfinsupp.sum_add_hom_apply, ContinuousLinearMap.to_linear_map_eq_coe, AddMonoidHom.coe_comp,
-        innerSL_apply_coe, AddMonoidHom.to_fun_eq_coe, LinearMap.to_add_monoid_hom_coe, ContinuousLinearMap.coe_coe]
-      congr
-    _ = l.sum fun j => fun w => ite (i = j) ⟪(v : E), w⟫ 0 := congr_argₓ l.sum $ funext $ fun j => funext $ hV.eq_ite v
+    ⟪V i v, l.sum fun j => V j⟫ = l.sum fun j => fun w => ⟪V i v, V j w⟫ := Dfinsupp.inner_sum (fun j => V j) l (V i v)
+    _ = l.sum fun j => fun w => ite (i = j) ⟪V i v, V j w⟫ 0 :=
+      congr_argₓ l.sum $ funext $ fun j => funext $ hV.eq_ite v
     _ = ⟪v, l i⟫ := by
-      simp only [Dfinsupp.sum, Submodule.coe_inner, Finset.sum_ite_eq, ite_eq_left_iff, Dfinsupp.mem_support_to_fun,
-        not_not]
-      intro h
-      simp [h]
+      simp only [Dfinsupp.sum, Submodule.coe_inner, Finset.sum_ite_eq, ite_eq_left_iff, Dfinsupp.mem_support_to_fun]
+      split_ifs with h h
+      · simp
+        
+      · simp [of_not_not h]
+        
     
 
 omit dec_ι dec_V
 
-theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, V i) (i : ι) (v : V i) :
-    ⟪(v : E), ∑ j : ι, l j⟫ = ⟪v, l i⟫ := by
+theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : ι) (v : G i) :
+    ⟪V i v, ∑ j : ι, V j (l j)⟫ = ⟪v, l i⟫ := by
   classical <;>
-    calc ⟪(v : E), ∑ j : ι, l j⟫ = ∑ j : ι, ⟪(v : E), l j⟫ := by
-        rw [inner_sum]_ = ∑ j, ite (i = j) ⟪(v : E), l j⟫ 0 :=
+    calc ⟪V i v, ∑ j : ι, V j (l j)⟫ = ∑ j : ι, ⟪V i v, V j (l j)⟫ := by
+        rw [inner_sum]_ = ∑ j, ite (i = j) ⟪V i v, V j (l j)⟫ 0 :=
         congr_argₓ (Finset.sum Finset.univ) $ funext $ fun j => hV.eq_ite v (l j)_ = ⟪v, l i⟫ := by
         simp
+
+theorem OrthogonalFamily.inner_sum (l₁ l₂ : ∀ i, G i) (s : Finset ι) :
+    ⟪∑ i in s, V i (l₁ i), ∑ j in s, V j (l₂ j)⟫ = ∑ i in s, ⟪l₁ i, l₂ i⟫ := by
+  classical <;>
+    calc ⟪∑ i in s, V i (l₁ i), ∑ j in s, V j (l₂ j)⟫ = ∑ j in s, ∑ i in s, ⟪V i (l₁ i), V j (l₂ j)⟫ := by
+        simp [sum_inner, inner_sum]_ = ∑ j in s, ∑ i in s, ite (i = j) ⟪V i (l₁ i), V j (l₂ j)⟫ 0 := by
+        congr with i
+        congr with j
+        apply hV.eq_ite _ = ∑ i in s, ⟪l₁ i, l₂ i⟫ := by
+        simp [Finset.sum_ite_of_true]
+
+theorem OrthogonalFamily.norm_sum (l : ∀ i, G i) (s : Finset ι) : ∥∑ i in s, V i (l i)∥ ^ 2 = ∑ i in s, ∥l i∥ ^ 2 := by
+  have : (∥∑ i in s, V i (l i)∥ ^ 2 : 𝕜) = ∑ i in s, ∥l i∥ ^ 2 := by
+    simp [← inner_self_eq_norm_sq_to_K, hV.inner_sum]
+  exact_mod_cast this
+
+/-- The composition of an orthogonal family of subspaces with an injective function is also an
+orthogonal family. -/
+theorem OrthogonalFamily.comp {γ : Type _} {f : γ → ι} (hf : Function.Injective f) :
+    OrthogonalFamily 𝕜 fun g : γ => (V (f g) : G (f g) →ₗᵢ[𝕜] E) := fun i j hij v w => hV (hf.ne hij) v w
+
+theorem OrthogonalFamily.orthonormal_sigma_orthonormal {α : ι → Type _} {v_family : ∀ i, α i → G i}
+    (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) : Orthonormal 𝕜 fun a : Σ i, α i => V a.1 (v_family a.1 a.2) := by
+  constructor
+  · rintro ⟨i, v⟩
+    simpa using (hv_family i).1 v
+    
+  rintro ⟨i, v⟩ ⟨j, w⟩ hvw
+  by_cases' hij : i = j
+  · subst hij
+    have : v ≠ w := by
+      simpa using hvw
+    simpa using (hv_family i).2 this
+    
+  · exact hV hij (v_family i v) (v_family j w)
+    
+
+include dec_ι
+
+theorem OrthogonalFamily.norm_sq_diff_sum (f : ∀ i, G i) (s₁ s₂ : Finset ι) :
+    ∥(∑ i in s₁, V i (f i)) - ∑ i in s₂, V i (f i)∥ ^ 2 = (∑ i in s₁ \ s₂, ∥f i∥ ^ 2) + ∑ i in s₂ \ s₁, ∥f i∥ ^ 2 := by
+  rw [← Finset.sum_sdiff_sub_sum_sdiff, sub_eq_add_neg, ← Finset.sum_neg_distrib]
+  let F : ∀ i, G i := fun i => if i ∈ s₁ then f i else -f i
+  have hF₁ : ∀, ∀ i ∈ s₁ \ s₂, ∀, F i = f i := fun i hi => if_pos (Finset.sdiff_subset _ _ hi)
+  have hF₂ : ∀, ∀ i ∈ s₂ \ s₁, ∀, F i = -f i := fun i hi => if_neg (finset.mem_sdiff.mp hi).2
+  have hF : ∀ i, ∥F i∥ = ∥f i∥ := by
+    intro i
+    dsimp [F]
+    split_ifs <;> simp
+  have :
+    ∥(∑ i in s₁ \ s₂, V i (F i)) + ∑ i in s₂ \ s₁, V i (F i)∥ ^ 2 =
+      (∑ i in s₁ \ s₂, ∥F i∥ ^ 2) + ∑ i in s₂ \ s₁, ∥F i∥ ^ 2 :=
+    by
+    have hs : Disjoint (s₁ \ s₂) (s₂ \ s₁) := disjoint_sdiff_sdiff
+    simpa only [Finset.sum_union hs] using hV.norm_sum F (s₁ \ s₂ ∪ s₂ \ s₁)
+  convert this using 4
+  · refine' Finset.sum_congr rfl fun i hi => _
+    simp [hF₁ i hi]
+    
+  · refine' Finset.sum_congr rfl fun i hi => _
+    simp [hF₂ i hi]
+    
+  · simp [hF]
+    
+  · simp [hF]
+    
+
+omit dec_ι
+
+/-- A family `f` of mutually-orthogonal elements of `E` is summable, if and only if
+`(λ i, ∥f i∥ ^ 2)` is summable. -/
+theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : ∀ i, G i) :
+    (Summable fun i => V i (f i)) ↔ Summable fun i => ∥f i∥ ^ 2 := by
+  classical
+  simp only [summable_iff_cauchy_seq_finset, NormedGroup.cauchy_seq_iff, Real.norm_eq_abs]
+  constructor
+  · intro hf ε hε
+    obtain ⟨a, H⟩ := hf _ (sqrt_pos.mpr hε)
+    use a
+    intro s₁ hs₁ s₂ hs₂
+    rw [← Finset.sum_sdiff_sub_sum_sdiff]
+    refine' (_root_.abs_sub _ _).trans_lt _
+    have : ∀ i, 0 ≤ ∥f i∥ ^ 2 := fun i : ι => sq_nonneg _
+    simp only [Finset.abs_sum_of_nonneg' this]
+    have : ((∑ i in s₁ \ s₂, ∥f i∥ ^ 2) + ∑ i in s₂ \ s₁, ∥f i∥ ^ 2) < sqrt ε ^ 2 := by
+      rw [← hV.norm_sq_diff_sum]
+      apply sq_lt_sq
+      rw [_root_.abs_of_nonneg (norm_nonneg _)]
+      exact H s₁ hs₁ s₂ hs₂
+    have hη := sq_sqrt (le_of_ltₓ hε)
+    linarith
+    
+  · intro hf ε hε
+    have hε' : 0 < ε ^ 2 / 2 := half_pos (sq_pos_of_pos hε)
+    obtain ⟨a, H⟩ := hf _ hε'
+    use a
+    intro s₁ hs₁ s₂ hs₂
+    refine' (abs_lt_of_sq_lt_sq' _ (le_of_ltₓ hε)).2
+    have has : a ≤ s₁⊓s₂ := le_inf hs₁ hs₂
+    rw [hV.norm_sq_diff_sum]
+    have Hs₁ : (∑ x : ι in s₁ \ s₂, ∥f x∥ ^ 2) < ε ^ 2 / 2 := by
+      convert H _ hs₁ _ has
+      have : s₁⊓s₂ ⊆ s₁ := Finset.inter_subset_left _ _
+      rw [← Finset.sum_sdiff this, add_tsub_cancel_right, Finset.abs_sum_of_nonneg']
+      · simp
+        
+      · exact fun i => sq_nonneg _
+        
+    have Hs₂ : (∑ x : ι in s₂ \ s₁, ∥f x∥ ^ 2) < ε ^ 2 / 2 := by
+      convert H _ hs₂ _ has
+      have : s₁⊓s₂ ⊆ s₂ := Finset.inter_subset_right _ _
+      rw [← Finset.sum_sdiff this, add_tsub_cancel_right, Finset.abs_sum_of_nonneg']
+      · simp
+        
+      · exact fun i => sq_nonneg _
+        
+    linarith
+    
+
+omit hV
 
 /-- An orthogonal family forms an independent family of subspaces; that is, any collection of
 elements each from a different subspace in the family is linearly independent. In particular, the
 pairwise intersections of elements of the family are 0. -/
-theorem OrthogonalFamily.independent : CompleteLattice.Independent V := by
+theorem OrthogonalFamily.independent {V : ι → Submodule 𝕜 E}
+    (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) : CompleteLattice.Independent V := by
   classical
   apply CompleteLattice.independent_of_dfinsupp_lsum_injective
   rw [← @LinearMap.ker_eq_bot _ _ _ _ _ _ (DirectSum.addCommGroup fun i => V i), Submodule.eq_bot_iff]
   intro v hv
   rw [LinearMap.mem_ker] at hv
   ext i
-  have : ⟪(v i : E), Dfinsupp.lsum ℕ (fun i => (V i).Subtype) v⟫ = 0 := by
-    simp [hv]
-  simpa only [Submodule.coe_zero, Submodule.coe_eq_zero, DirectSum.zero_apply, inner_self_eq_zero,
-    hV.inner_right_dfinsupp] using this
-
-/-- The composition of an orthogonal family of subspaces with an injective function is also an
-orthogonal family. -/
-theorem OrthogonalFamily.comp {γ : Type _} {f : γ → ι} (hf : Function.Injective f) : OrthogonalFamily 𝕜 (V ∘ f) :=
-  fun i j hij v hv w hw => hV (hf.ne hij) hv hw
-
-theorem OrthogonalFamily.orthonormal_sigma_orthonormal {α : ι → Type _} {v_family : ∀ i, α i → V i}
-    (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) : Orthonormal 𝕜 fun a : Σ i, α i => (v_family a.1 a.2 : E) := by
-  constructor
-  · rintro ⟨i, vi⟩
-    exact (hv_family i).1 vi
-    
-  rintro ⟨i, vi⟩ ⟨j, vj⟩ hvij
-  by_cases' hij : i = j
-  · subst hij
-    have : vi ≠ vj := by
-      simpa using hvij
-    exact (hv_family i).2 this
-    
-  · exact hV hij (v_family i vi : V i).Prop (v_family j vj : V j).Prop
-    
+  suffices ⟪(v i : E), v i⟫ = 0 by
+    simpa using this
+  calc ⟪(v i : E), v i⟫ = ⟪(v i : E), Dfinsupp.lsum ℕ (fun i => (V i).Subtype) v⟫ := by
+      simpa [Dfinsupp.sum_add_hom_apply, Submodule.coe_subtype] using (hV.inner_right_dfinsupp v i (v i)).symm _ = 0 :=
+      by
+      simp [hv]
 
 include dec_ι
 
-theorem DirectSum.SubmoduleIsInternal.collected_basis_orthonormal (hV_sum : DirectSum.SubmoduleIsInternal V)
-    {α : ι → Type _} {v_family : ∀ i, Basis (α i) 𝕜 (V i)} (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) :
-    Orthonormal 𝕜 (hV_sum.collected_basis v_family) := by
+theorem DirectSum.SubmoduleIsInternal.collected_basis_orthonormal {V : ι → Submodule 𝕜 E}
+    (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ)
+    (hV_sum : DirectSum.SubmoduleIsInternal fun i => V i) {α : ι → Type _} {v_family : ∀ i, Basis (α i) 𝕜 (V i)}
+    (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) : Orthonormal 𝕜 (hV_sum.collected_basis v_family) := by
   simpa using hV.orthonormal_sigma_orthonormal hv_family
-
-omit dec_ι
 
 end OrthogonalFamily
 

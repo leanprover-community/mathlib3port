@@ -65,7 +65,7 @@ def const {α : Type u} (a : α) : ∀ n, Arity α n
   | n + 1 => fun _ => const n
 
 instance arity.inhabited {α n} [Inhabited α] : Inhabited (Arity α n) :=
-  ⟨const (default _) _⟩
+  ⟨const default _⟩
 
 end Arity
 
@@ -316,7 +316,7 @@ def resp n :=
   { x : Arity PSet.{u} n // arity.equiv x x }
 
 instance resp.inhabited {n} : Inhabited (resp n) :=
-  ⟨⟨Arity.const (default _) _, arity.equiv_const _⟩⟩
+  ⟨⟨Arity.const default _, arity.equiv_const _⟩⟩
 
 /-- The `n`-ary image of a `(n + 1)`-ary function respecting equivalence as a function respecting
 equivalence. -/

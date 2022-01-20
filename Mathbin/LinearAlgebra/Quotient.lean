@@ -165,13 +165,17 @@ instance HasScalar : HasScalar R (M ⧸ P) :=
 theorem mk_smul (r : S) (x : M) : (mk (r • x) : M ⧸ p) = r • mk x :=
   rfl
 
-instance (T : Type _) [HasScalar T R] [HasScalar T M] [IsScalarTower T R M] [SmulCommClass S T M] :
+instance SmulCommClass (T : Type _) [HasScalar T R] [HasScalar T M] [IsScalarTower T R M] [SmulCommClass S T M] :
     SmulCommClass S T (M ⧸ P) where
   smul_comm := fun x y => Quotientₓ.ind' $ fun z => congr_argₓ mk (smul_comm _ _ _)
 
-instance (T : Type _) [HasScalar T R] [HasScalar T M] [IsScalarTower T R M] [HasScalar S T] [IsScalarTower S T M] :
-    IsScalarTower S T (M ⧸ P) where
+instance IsScalarTower (T : Type _) [HasScalar T R] [HasScalar T M] [IsScalarTower T R M] [HasScalar S T]
+    [IsScalarTower S T M] : IsScalarTower S T (M ⧸ P) where
   smul_assoc := fun x y => Quotientₓ.ind' $ fun z => congr_argₓ mk (smul_assoc _ _ _)
+
+instance IsCentralScalar [HasScalar (Sᵐᵒᵖ) R] [HasScalar (Sᵐᵒᵖ) M] [IsScalarTower (Sᵐᵒᵖ) R M] [IsCentralScalar S M] :
+    IsCentralScalar S (M ⧸ P) where
+  op_smul_eq_smul := fun x => Quotientₓ.ind' $ fun z => congr_argₓ mk $ op_smul_eq_smul _ _
 
 end HasScalar
 

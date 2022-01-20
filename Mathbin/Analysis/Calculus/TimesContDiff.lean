@@ -160,7 +160,7 @@ local notation "∞" => (⊤ : WithTop ℕ)
 
 universe u v w
 
-attribute [local instance] NormedGroup.toAddCommGroup NormedSpace.toModule AddCommGroupₓ.toAddCommMonoid
+attribute [local instance] NormedGroup.toAddCommGroup NormedSpace.toModule' AddCommGroupₓ.toAddCommMonoid
 
 open Set Finₓ Filter
 
@@ -1077,9 +1077,9 @@ theorem TimesContDiffOn.continuous_on_fderiv_of_open {n : WithTop ℕ} (h : Time
 continuous. -/
 theorem TimesContDiffOn.continuous_on_fderiv_within_apply {n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f s)
     (hs : UniqueDiffOn 𝕜 s) (hn : 1 ≤ n) :
-    ContinuousOn (fun p : E × E => (fderivWithin 𝕜 f s p.1 : E → F) p.2) (Set.Prod s univ) := by
+    ContinuousOn (fun p : E × E => (fderivWithin 𝕜 f s p.1 : E → F) p.2) (s ×ˢ (univ : Set E)) := by
   have A : Continuous fun q : (E →L[𝕜] F) × E => q.1 q.2 := is_bounded_bilinear_map_apply.continuous
-  have B : ContinuousOn (fun p : E × E => (fderivWithin 𝕜 f s p.1, p.2)) (Set.Prod s univ) := by
+  have B : ContinuousOn (fun p : E × E => (fderivWithin 𝕜 f s p.1, p.2)) (s ×ˢ (univ : Set E)) := by
     apply ContinuousOn.prod _ continuous_snd.continuous_on
     exact
       ContinuousOn.comp (h.continuous_on_fderiv_within hs hn) continuous_fst.continuous_on
@@ -2034,14 +2034,14 @@ theorem TimesContDiff.comp_times_cont_diff_at {n : WithTop ℕ} {g : F → G} {f
 /-- The bundled derivative of a `C^{n+1}` function is `C^n`. -/
 theorem times_cont_diff_on_fderiv_within_apply {m n : WithTop ℕ} {s : Set E} {f : E → F} (hf : TimesContDiffOn 𝕜 n f s)
     (hs : UniqueDiffOn 𝕜 s) (hmn : m + 1 ≤ n) :
-    TimesContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 f s p.1 : E →L[𝕜] F) p.2) (Set.Prod s (univ : Set E)) := by
+    TimesContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 f s p.1 : E →L[𝕜] F) p.2) (s ×ˢ (univ : Set E)) := by
   have A : TimesContDiff 𝕜 m fun p : (E →L[𝕜] F) × E => p.1 p.2 := by
     apply IsBoundedBilinearMap.times_cont_diff
     exact is_bounded_bilinear_map_apply
-  have B : TimesContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 f s p.fst, p.snd)) (Set.Prod s univ) := by
+  have B : TimesContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 f s p.fst, p.snd)) (s ×ˢ univ) := by
     apply TimesContDiffOn.prod _ _
     · have I : TimesContDiffOn 𝕜 m (fun x : E => fderivWithin 𝕜 f s x) s := hf.fderiv_within hs hmn
-      have J : TimesContDiffOn 𝕜 m (fun x : E × E => x.1) (Set.Prod s univ) := times_cont_diff_fst.times_cont_diff_on
+      have J : TimesContDiffOn 𝕜 m (fun x : E × E => x.1) (s ×ˢ univ) := times_cont_diff_fst.times_cont_diff_on
       exact TimesContDiffOn.comp I J (prod_subset_preimage_fst _ _)
       
     · apply TimesContDiff.times_cont_diff_on _
@@ -2256,19 +2256,19 @@ variable {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {F' : Type _} [Nor
 within the product set at the product point. -/
 theorem TimesContDiffWithinAt.prod_map' {s : Set E} {t : Set E'} {f : E → F} {g : E' → F'} {p : E × E'}
     (hf : TimesContDiffWithinAt 𝕜 n f s p.1) (hg : TimesContDiffWithinAt 𝕜 n g t p.2) :
-    TimesContDiffWithinAt 𝕜 n (Prod.map f g) (Set.Prod s t) p :=
+    TimesContDiffWithinAt 𝕜 n (Prod.map f g) (s ×ˢ t) p :=
   (hf.comp p times_cont_diff_within_at_fst (prod_subset_preimage_fst _ _)).Prod
     (hg.comp p times_cont_diff_within_at_snd (prod_subset_preimage_snd _ _))
 
 theorem TimesContDiffWithinAt.prod_map {s : Set E} {t : Set E'} {f : E → F} {g : E' → F'} {x : E} {y : E'}
     (hf : TimesContDiffWithinAt 𝕜 n f s x) (hg : TimesContDiffWithinAt 𝕜 n g t y) :
-    TimesContDiffWithinAt 𝕜 n (Prod.map f g) (Set.Prod s t) (x, y) :=
+    TimesContDiffWithinAt 𝕜 n (Prod.map f g) (s ×ˢ t) (x, y) :=
   TimesContDiffWithinAt.prod_map' hf hg
 
 /-- The product map of two `C^n` functions on a set is `C^n` on the product set. -/
 theorem TimesContDiffOn.prod_map {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {F' : Type _} [NormedGroup F']
     [NormedSpace 𝕜 F'] {s : Set E} {t : Set E'} {n : WithTop ℕ} {f : E → F} {g : E' → F'} (hf : TimesContDiffOn 𝕜 n f s)
-    (hg : TimesContDiffOn 𝕜 n g t) : TimesContDiffOn 𝕜 n (Prod.map f g) (Set.Prod s t) :=
+    (hg : TimesContDiffOn 𝕜 n g t) : TimesContDiffOn 𝕜 n (Prod.map f g) (s ×ˢ t) :=
   (hf.comp times_cont_diff_on_fst (prod_subset_preimage_fst _ _)).Prod
     (hg.comp times_cont_diff_on_snd (prod_subset_preimage_snd _ _))
 
@@ -2559,7 +2559,7 @@ then `f` is Lipschitz in a neighborhood of `x` within `s`. -/
 theorem HasFtaylorSeriesUpToOn.exists_lipschitz_on_with {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedGroup F]
     [NormedSpace ℝ F] {f : E → F} {p : E → FormalMultilinearSeries ℝ E F} {s : Set E} {x : E}
     (hf : HasFtaylorSeriesUpToOn 1 f p (insert x s)) (hs : Convex ℝ s) : ∃ K, ∃ t ∈ 𝓝[s] x, LipschitzOnWith K f t :=
-  (no_top _).imp $ hf.exists_lipschitz_on_with_of_nnnorm_lt hs
+  (exists_gt _).imp $ hf.exists_lipschitz_on_with_of_nnnorm_lt hs
 
 /-- If `f` is `C^1` within a conves set `s` at `x`, then it is Lipschitz on a neighborhood of `x`
 within `s`. -/
@@ -2624,7 +2624,8 @@ theorem times_cont_diff_on_succ_iff_deriv_within {n : ℕ} (hs : UniqueDiffOn �
       simp [derivWithin]
     simp only [this]
     apply TimesContDiff.comp_times_cont_diff_on _ h
-    exact (is_bounded_bilinear_map_smul_right.is_bounded_linear_map_right _).TimesContDiff
+    have : IsBoundedBilinearMap 𝕜 fun _ : (𝕜 →L[𝕜] 𝕜) × F => _ := is_bounded_bilinear_map_smul_right
+    exact (this.is_bounded_linear_map_right _).TimesContDiff
     
 
 /-- A function is `C^(n + 1)` on an open domain if and only if it is

@@ -542,7 +542,7 @@ instance (priority := 3000) unused_var_testable β [Inhabited α] [testable β] 
     testable (named_binder var $ ∀ x : α, β) :=
   ⟨fun cfg min => do
     let r ← testable.run β cfg min
-    pure $ convert_counter_example (· $ default _) r (Psum.inr $ fun x _ => x)⟩
+    pure $ convert_counter_example (· $ default) r (Psum.inr $ fun x _ => x)⟩
 
 instance (priority := 2000) subtype_var_testable {p : α → Prop} [∀ x, printable_prop (p x)] [∀ x, testable (β x)]
     [I : sampleable_ext (Subtype p)] : testable (named_binder var $ ∀ x : α, named_binder var' $ p x → β x) :=

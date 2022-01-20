@@ -283,7 +283,7 @@ structure TopologicalVectorBundleCore (ι : Type _) where
   coordChange : ι → ι → B → F →ₗ[R] F
   coord_change_self : ∀ i, ∀, ∀ x ∈ base_set i, ∀, ∀ v, coord_change i i x v = v
   coord_change_continuous :
-    ∀ i j, ContinuousOn (fun p : B × F => coord_change i j p.1 p.2) (Set.Prod (base_set i ∩ base_set j) univ)
+    ∀ i j, ContinuousOn (fun p : B × F => coord_change i j p.1 p.2) ((base_set i ∩ base_set j) ×ˢ (univ : Set F))
   coord_change_comp :
     ∀ i j k,
       ∀,
@@ -408,9 +408,9 @@ instance : TopologicalVectorBundle R F Z.fiber where
         
       · refine'
           is_open_induced_iff.mpr
-            ⟨(Z.local_triv_at b).Source ∩ Z.local_triv_at b ⁻¹' (Z.local_triv_at b).BaseSet.Prod s,
+            ⟨(Z.local_triv_at b).Source ∩ Z.local_triv_at b ⁻¹' ((Z.local_triv_at b).BaseSet ×ˢ s),
               (continuous_on_open_iff (Z.local_triv_at b).open_source).mp (Z.local_triv_at b).continuous_to_fun _
-                (IsOpen.prod (Z.local_triv_at b).open_base_set h),
+                ((Z.local_triv_at b).open_base_set.Prod h),
               _⟩
         rw [preimage_inter, ← preimage_comp, Function.comp]
         simp only [id.def]

@@ -711,24 +711,25 @@ theorem sup_eq_max [LinearOrderₓ α] {x y : α} : x⊔y = max x y :=
 theorem inf_eq_min [LinearOrderₓ α] {x y : α} : x⊓y = min x y :=
   rfl
 
+theorem sup_eq_max_default [SemilatticeSup α] [DecidableRel (· ≤ · : α → α → Prop)] [IsTotal α (· ≤ ·)] :
+    ·⊔· = (maxDefault : α → α → α) := by
+  ext x y
+  dunfold maxDefault
+  split_ifs with h'
+  exacts[sup_of_le_left h', sup_of_le_right $ (total_of (· ≤ ·) x y).resolve_right h']
+
+theorem inf_eq_min_default [SemilatticeInf α] [DecidableRel (· ≤ · : α → α → Prop)] [IsTotal α (· ≤ ·)] :
+    ·⊓· = (minDefault : α → α → α) :=
+  @sup_eq_max_default (OrderDual α) _ _ _
+
 /-- A lattice with total order is a linear order.
 
 See note [reducible non-instances]. -/
 @[reducible]
 def Lattice.toLinearOrder (α : Type u) [Lattice α] [DecidableEq α] [DecidableRel (· ≤ · : α → α → Prop)]
-    [DecidableRel (· < · : α → α → Prop)] (h : ∀ x y : α, x ≤ y ∨ y ≤ x) : LinearOrderₓ α :=
-  { ‹Lattice α› with decidableLe := ‹_›, DecidableEq := ‹_›, decidableLt := ‹_›, le_total := h, max := ·⊔·,
-    max_def := by
-      funext x y
-      dunfold maxDefault
-      split_ifs with h'
-      exacts[sup_of_le_left h', sup_of_le_right $ (h x y).resolve_right h'],
-    min := ·⊓·,
-    min_def := by
-      funext x y
-      dunfold minDefault
-      split_ifs with h'
-      exacts[inf_of_le_left h', inf_of_le_right $ (h x y).resolve_left h'] }
+    [DecidableRel (· < · : α → α → Prop)] [IsTotal α (· ≤ ·)] : LinearOrderₓ α :=
+  { ‹Lattice α› with decidableLe := ‹_›, DecidableEq := ‹_›, decidableLt := ‹_›, le_total := total_of (· ≤ ·),
+    max := ·⊔·, max_def := sup_eq_max_default, min := ·⊓·, min_def := inf_eq_min_default }
 
 instance (priority := 100) LinearOrderₓ.toDistribLattice {α : Type u} [o : LinearOrderₓ α] : DistribLattice α :=
   { LinearOrderₓ.toLattice with

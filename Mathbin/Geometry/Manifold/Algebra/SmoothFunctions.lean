@@ -225,6 +225,12 @@ instance Algebra : Algebra 𝕜 C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
     smul_def' := fun c f => by
       ext x <;> exact Algebra.smul_def' _ _ }
 
+/-- A special case of `pi.algebra` for non-dependent types. Lean get stuck on the definition
+below without this. -/
+instance _root_.function.algebra (I : Type _) {R : Type _} (A : Type _) {r : CommSemiringₓ R} [Semiringₓ A]
+    [Algebra R A] : Algebra R (I → A) :=
+  Pi.algebra _ _
+
 /-- Coercion to a function as an `alg_hom`. -/
 @[simps]
 def coe_fn_alg_hom : C^∞⟮I, N; 𝓘(𝕜, A), A⟯ →ₐ[𝕜] N → A where

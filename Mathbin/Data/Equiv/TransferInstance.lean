@@ -270,7 +270,7 @@ protected def CommRingₓ [CommRingₓ β] : CommRingₓ α := by
   let sub := e.has_sub
   skip <;> apply e.injective.comm_ring _ <;> intros <;> exact e.apply_symm_apply _
 
-/-- Transfer `nonzero` across an `equiv` -/
+/-- Transfer `nontrivial` across an `equiv` -/
 protected theorem Nontrivial [Nontrivial β] : Nontrivial α :=
   e.surjective.nontrivial
 

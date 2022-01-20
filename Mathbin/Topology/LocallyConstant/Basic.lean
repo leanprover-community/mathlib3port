@@ -179,7 +179,7 @@ structure LocallyConstant (X Y : Type _) [TopologicalSpace X] where
 namespace LocallyConstant
 
 instance [Inhabited Y] : Inhabited (LocallyConstant X Y) :=
-  ⟨⟨_, IsLocallyConstant.const (default Y)⟩⟩
+  ⟨⟨_, IsLocallyConstant.const default⟩⟩
 
 instance : CoeFun (LocallyConstant X Y) fun _ => X → Y :=
   ⟨LocallyConstant.toFun⟩

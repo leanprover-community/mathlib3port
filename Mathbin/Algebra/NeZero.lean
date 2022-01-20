@@ -56,13 +56,13 @@ theorem of_map [HasZero R] [HasZero M] [ZeroHomClass F R M] (f : F) [NeZero (f r
     Ne (f r) $ by
       convert map_zero f⟩
 
-theorem of_injective' {r : R} [HasZero R] [h : NeZero r] [HasZero M] [ZeroHomClass F R M] {f : F}
+theorem of_injective {r : R} [HasZero R] [h : NeZero r] [HasZero M] [ZeroHomClass F R M] {f : F}
     (hf : Function.Injective f) : NeZero (f r) :=
   ⟨by
     rw [← map_zero f]
     exact hf.ne (Ne r)⟩
 
-theorem of_injective [NonAssocSemiring M] [NonAssocSemiring R] [h : NeZero (n : R)] {f : R →+* M}
+theorem nat_of_injective [NonAssocSemiring M] [NonAssocSemiring R] [h : NeZero (n : R)] [RingHomClass F R M] {f : F}
     (hf : Function.Injective f) : NeZero (n : M) :=
   ⟨fun h =>
     NeZero.ne' n R $
@@ -76,13 +76,19 @@ theorem of_not_dvd [AddMonoidₓ M] [HasOne M] [CharP M p] (h : ¬p ∣ n) : NeZ
 
 theorem of_no_zero_smul_divisors [CommRingₓ R] [NeZero (n : R)] [Ringₓ M] [Nontrivial M] [Algebra R M]
     [NoZeroSmulDivisors R M] : NeZero (n : M) :=
-  of_injective $ NoZeroSmulDivisors.algebra_map_injective R M
+  nat_of_injective $ NoZeroSmulDivisors.algebra_map_injective R M
 
 theorem of_ne_zero_coe [HasZero R] [HasOne R] [Add R] [h : NeZero (n : R)] : NeZero n :=
   ⟨by
     cases' h
     rintro rfl
     contradiction⟩
+
+theorem not_char_dvd [AddMonoidₓ R] [HasOne R] (p : ℕ) [CharP R p] (k : ℕ) [h : NeZero (k : R)] : ¬p ∣ k := by
+  rwa [← not_iff_not.mpr $ CharP.cast_eq_zero_iff R p k, ← Ne.def, ← ne_zero_iff]
+
+theorem pos_of_ne_zero_coe [HasZero R] [HasOne R] [Add R] [NeZero (n : R)] : 0 < n :=
+  (NeZero.of_ne_zero_coe R).out.bot_lt
 
 end NeZero
 

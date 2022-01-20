@@ -680,8 +680,8 @@ section Prod
 
 /-- The product of two local equivs, as a local equiv on the product. -/
 def Prod (e : LocalEquiv α β) (e' : LocalEquiv γ δ) : LocalEquiv (α × γ) (β × δ) where
-  Source := Set.Prod e.source e'.source
-  Target := Set.Prod e.target e'.target
+  Source := e.source ×ˢ e'.source
+  Target := e.target ×ˢ e'.target
   toFun := fun p => (e p.1, e' p.2)
   invFun := fun p => (e.symm p.1, e'.symm p.2)
   map_source' := fun p hp => by
@@ -698,11 +698,11 @@ def Prod (e : LocalEquiv α β) (e' : LocalEquiv γ δ) : LocalEquiv (α × γ) 
     simp [hp]
 
 @[simp, mfld_simps]
-theorem prod_source (e : LocalEquiv α β) (e' : LocalEquiv γ δ) : (e.prod e').Source = Set.Prod e.source e'.source :=
+theorem prod_source (e : LocalEquiv α β) (e' : LocalEquiv γ δ) : (e.prod e').Source = e.source ×ˢ e'.source :=
   rfl
 
 @[simp, mfld_simps]
-theorem prod_target (e : LocalEquiv α β) (e' : LocalEquiv γ δ) : (e.prod e').Target = Set.Prod e.target e'.target :=
+theorem prod_target (e : LocalEquiv α β) (e' : LocalEquiv γ δ) : (e.prod e').Target = e.target ×ˢ e'.target :=
   rfl
 
 @[simp, mfld_simps]

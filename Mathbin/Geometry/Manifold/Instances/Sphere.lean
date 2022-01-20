@@ -405,8 +405,10 @@ theorem TimesContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 
 
 /-- The antipodal map is smooth. -/
 theorem times_cont_mdiff_neg_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
-    TimesContMdiff (𝓡 n) (𝓡 n) ∞ fun x : sphere (0 : E) 1 => -x :=
-  (times_cont_diff_neg.TimesContMdiff.comp times_cont_mdiff_coe_sphere).cod_restrict_sphere _
+    TimesContMdiff (𝓡 n) (𝓡 n) ∞ fun x : sphere (0 : E) 1 => -x := by
+  apply TimesContMdiff.cod_restrict_sphere
+  apply times_cont_diff_neg.times_cont_mdiff.comp _
+  exact times_cont_mdiff_coe_sphere
 
 end SmoothManifold
 
@@ -425,17 +427,20 @@ instance : SmoothManifoldWithCorners (𝓡 1) circle :=
   Metric.Sphere.smooth_manifold_with_corners
 
 /-- The unit circle in `ℂ` is a Lie group. -/
-instance : LieGroup (𝓡 1) circle :=
-  { Metric.Sphere.smooth_manifold_with_corners with
-    smooth_mul := by
-      let c : circle → ℂ := coeₓ
-      have h₁ : TimesContMdiff _ _ _ (Prod.map c c) := times_cont_mdiff_coe_sphere.prod_map times_cont_mdiff_coe_sphere
-      have h₂ : TimesContMdiff (𝓘(ℝ, ℂ).Prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd := by
-        rw [times_cont_mdiff_iff]
-        exact ⟨continuous_mul, fun x y => (times_cont_diff_mul.restrict_scalars ℝ).TimesContDiffOn⟩
-      exact (h₂.comp h₁).cod_restrict_sphere _,
-    smooth_inv :=
-      (Complex.conjCle.TimesContDiff.TimesContMdiff.comp times_cont_mdiff_coe_sphere).cod_restrict_sphere _ }
+instance : LieGroup (𝓡 1) circle where
+  smooth_mul := by
+    apply TimesContMdiff.cod_restrict_sphere
+    let c : circle → ℂ := coeₓ
+    have h₂ : TimesContMdiff (𝓘(ℝ, ℂ).Prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd := by
+      rw [times_cont_mdiff_iff]
+      exact ⟨continuous_mul, fun x y => (times_cont_diff_mul.restrict_scalars ℝ).TimesContDiffOn⟩
+    suffices h₁ : TimesContMdiff _ _ _ (Prod.map c c)
+    · apply h₂.comp h₁
+      
+    apply TimesContMdiff.prod_map <;> exact times_cont_mdiff_coe_sphere
+  smooth_inv := by
+    apply TimesContMdiff.cod_restrict_sphere
+    exact complex.conj_cle.times_cont_diff.times_cont_mdiff.comp times_cont_mdiff_coe_sphere
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ` is smooth. -/
 theorem times_cont_mdiff_exp_map_circle : TimesContMdiff 𝓘(ℝ, ℝ) (𝓡 1) ∞ expMapCircle :=

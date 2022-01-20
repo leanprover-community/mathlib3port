@@ -205,11 +205,14 @@ section DerivedInstances
 instance [Semiringₓ k] [Subsingleton k] : Unique (MonoidAlgebra k G) :=
   Finsupp.uniqueOfRight
 
-instance [Ringₓ k] : AddGroupₓ (MonoidAlgebra k G) :=
-  Finsupp.addGroup
+instance [Ringₓ k] : AddCommGroupₓ (MonoidAlgebra k G) :=
+  Finsupp.addCommGroup
+
+instance [Ringₓ k] [Mul G] : NonUnitalNonAssocRing (MonoidAlgebra k G) :=
+  { MonoidAlgebra.addCommGroup, MonoidAlgebra.nonUnitalNonAssocSemiring with }
 
 instance [Ringₓ k] [Monoidₓ G] : Ringₓ (MonoidAlgebra k G) :=
-  { MonoidAlgebra.semiring with neg := Neg.neg, add_left_neg := add_left_negₓ }
+  { MonoidAlgebra.nonUnitalNonAssocRing, MonoidAlgebra.semiring with }
 
 instance [CommRingₓ k] [CommMonoidₓ G] : CommRingₓ (MonoidAlgebra k G) :=
   { MonoidAlgebra.ring with mul_comm := mul_commₓ }
@@ -355,9 +358,6 @@ theorem mul_single_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G}
   calc
     (f * single x r) z = Sum f fun a b => if a = y then b * r else 0 := by
       simp only [mul_apply, A, H]
-      congr
-      funext
-      split_ifs <;> rfl
     _ = if y ∈ f.support then f y * r else 0 := f.support.sum_ite_eq' _ _
     _ = f y * r := by
       split_ifs with h <;> simp at h <;> simp [h]
@@ -388,8 +388,6 @@ theorem single_mul_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G}
     (single x r * f) y = Sum f fun a b => ite (x * a = y) (r * b) 0 := (mul_apply _ _ _).trans $ sum_single_index this
     _ = f.sum fun a b => ite (a = z) (r * b) 0 := by
       simp only [H]
-      congr with g s
-      split_ifs <;> rfl
     _ = if z ∈ f.support then r * f z else 0 := f.support.sum_ite_eq' _ _
     _ = _ := by
       split_ifs with h <;> simp at h <;> simp [h]
@@ -427,7 +425,7 @@ end MiscTheorems
 
 section NonUnitalNonAssocAlgebra
 
-variable {R : Type _} (k) [Semiringₓ R] [Semiringₓ k] [DistribMulAction R k] [Mul G]
+variable {R : Type _} (k) [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] [Mul G]
 
 instance is_scalar_tower_self [IsScalarTower R k k] : IsScalarTower R (MonoidAlgebra k G) (MonoidAlgebra k G) :=
   ⟨fun t a b => by
@@ -965,12 +963,14 @@ section DerivedInstances
 instance [Semiringₓ k] [Subsingleton k] : Unique (AddMonoidAlgebra k G) :=
   Finsupp.uniqueOfRight
 
-instance [Ringₓ k] : AddGroupₓ (AddMonoidAlgebra k G) :=
-  Finsupp.addGroup
+instance [Ringₓ k] : AddCommGroupₓ (AddMonoidAlgebra k G) :=
+  Finsupp.addCommGroup
+
+instance [Ringₓ k] [Add G] : NonUnitalNonAssocRing (AddMonoidAlgebra k G) :=
+  { AddMonoidAlgebra.addCommGroup, AddMonoidAlgebra.nonUnitalNonAssocSemiring with }
 
 instance [Ringₓ k] [AddMonoidₓ G] : Ringₓ (AddMonoidAlgebra k G) :=
-  { AddMonoidAlgebra.semiring with neg := Neg.neg, add_left_neg := add_left_negₓ, sub := Sub.sub,
-    sub_eq_add_neg := Finsupp.addGroup.sub_eq_add_neg }
+  { AddMonoidAlgebra.nonUnitalNonAssocRing, AddMonoidAlgebra.semiring with }
 
 instance [CommRingₓ k] [AddCommMonoidₓ G] : CommRingₓ (AddMonoidAlgebra k G) :=
   { AddMonoidAlgebra.ring with mul_comm := mul_commₓ }
@@ -1197,7 +1197,7 @@ variable {k G}
 
 section NonUnitalNonAssocAlgebra
 
-variable {R : Type _} (k) [Semiringₓ R] [Semiringₓ k] [DistribMulAction R k] [Add G]
+variable {R : Type _} (k) [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] [Add G]
 
 instance is_scalar_tower_self [IsScalarTower R k k] : IsScalarTower R (AddMonoidAlgebra k G) (AddMonoidAlgebra k G) :=
   @MonoidAlgebra.is_scalar_tower_self k (Multiplicative G) R _ _ _ _ _

@@ -1,4 +1,5 @@
 import Mathbin.CategoryTheory.EqToHom
+import Mathbin.Combinatorics.Quiver.Path
 
 /-!
 # The category paths on a quiver.
@@ -17,7 +18,7 @@ def paths (V : Type u₁) : Type u₁ :=
   V
 
 instance (V : Type u₁) [Inhabited V] : Inhabited (paths V) :=
-  ⟨(default V : V)⟩
+  ⟨(default : V)⟩
 
 variable (V : Type u₁) [Quiver.{v₁ + 1} V]
 

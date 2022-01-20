@@ -96,8 +96,8 @@ structure almost_mono {α ι κ : Type _} (C : (ι → Option α) → κ) where
   Color : κ
   has_color : ∀ x : α, C (line (some x)) = color
 
-instance {α ι κ : Type _} [Nonempty ι] [Inhabited κ] : Inhabited (almost_mono fun v : ι → Option α => default κ) :=
-  ⟨{ line := default _, Color := default κ, has_color := fun _ => rfl }⟩
+instance {α ι κ : Type _} [Nonempty ι] [Inhabited κ] : Inhabited (almost_mono fun v : ι → Option α => (default : κ)) :=
+  ⟨{ line := default, Color := default, has_color := fun _ => rfl }⟩
 
 /-- The type of collections of lines such that
 - each line is only one color except possibly at its endpoint
@@ -188,7 +188,7 @@ private theorem exists_mono_in_high_dimension' :
       intros κ _
       by_cases' h : Nonempty κ
       · skip
-        exact ⟨Unit, inferInstance, fun C => ⟨default _, Classical.arbitrary _, Pempty.rec _⟩⟩
+        exact ⟨Unit, inferInstance, fun C => ⟨default, Classical.arbitrary _, Pempty.rec _⟩⟩
         
       · exact ⟨Empty, inferInstance, fun C => (h ⟨C (Empty.rec _)⟩).elim⟩
         )
@@ -213,7 +213,7 @@ private theorem exists_mono_in_high_dimension' :
         
       intro r
       induction' r with r ihr
-      · exact ⟨Empty, inferInstance, fun C => Or.inl ⟨default _, Multiset.card_zero⟩⟩
+      · exact ⟨Empty, inferInstance, fun C => Or.inl ⟨default, Multiset.card_zero⟩⟩
         
       obtain ⟨ι, _inst, hι⟩ := ihr
       skip

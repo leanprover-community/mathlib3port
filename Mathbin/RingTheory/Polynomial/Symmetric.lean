@@ -157,13 +157,15 @@ theorem esymm_eq_sum_monomial (n : ℕ) :
     convert (Finsupp.applyAddHom x' : (σ →₀ ℕ) →+ ℕ).map_sum _ x
     classical
     simp [Finsupp.single_apply, Finset.filter_eq', apply_ite, apply_ite Finset.card]
-    rw [if_pos hx']
+    rw [if_pos]
+    exact hx'
     
   · convert pow_zeroₓ _
     convert (Finsupp.applyAddHom y : (σ →₀ ℕ) →+ ℕ).map_sum _ x
     classical
     simp [Finsupp.single_apply, Finset.filter_eq', apply_ite, apply_ite Finset.card]
-    rw [if_neg hy]
+    rw [if_neg]
+    exact hy
     
 
 @[simp]

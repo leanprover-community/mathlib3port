@@ -186,9 +186,10 @@ variable {F : Type _} [Field F]
 
 variable [Algebra K S] [Algebra K F]
 
-theorem PowerBasis.trace_gen_eq_sum_roots [Nontrivial S] (pb : PowerBasis K S)
-    (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
-    algebraMap K F (trace K S pb.gen) = ((minpoly K pb.gen).map (algebraMap K F)).roots.Sum := by
+/-- Given `pb : power_basis K S`, then the trace of `pb.gen` is
+`-((minpoly K pb.gen).map (algebra_map K F)).next_coeff`. -/
+theorem PowerBasis.trace_gen_eq_next_coeff_minpoly [Nontrivial S] (pb : PowerBasis K S) :
+    algebraMap K F (trace K S pb.gen) = -((minpoly K pb.gen).map (algebraMap K F)).nextCoeff := by
   have d_pos : 0 < pb.dim := PowerBasis.dim_pos pb
   have d_pos' : 0 < (minpoly K pb.gen).natDegree := by
     simpa
@@ -196,19 +197,16 @@ theorem PowerBasis.trace_gen_eq_sum_roots [Nontrivial S] (pb : PowerBasis K S)
   rw [trace_eq_matrix_trace pb.basis, trace_eq_neg_charpoly_coeff, charpoly_left_mul_matrix, RingHom.map_neg, ←
     pb.nat_degree_minpoly, Fintype.card_fin, ← next_coeff_of_pos_nat_degree _ d_pos', ←
     next_coeff_map (algebraMap K F).Injective]
-  conv_lhs => rw [eq_prod_roots_of_splits hf]
-  rw [monic.next_coeff_mul, next_coeff_C_eq_zero, zero_addₓ, monic.next_coeff_multiset_prod]
-  simp_rw [next_coeff_X_sub_C, Multiset.sum_map_neg, neg_negₓ]
-  · intros
-    apply monic_X_sub_C
-    
-  · convert monic_one
-    simp [(minpoly.monic pb.is_integral_gen).leadingCoeff]
-    
-  · apply monic_multiset_prod_of_monic
-    intros
-    apply monic_X_sub_C
-    
+
+/-- Given `pb : power_basis K S`, then the trace of `pb.gen` is
+`((minpoly K pb.gen).map (algebra_map K F)).roots.sum`. -/
+theorem PowerBasis.trace_gen_eq_sum_roots [Nontrivial S] (pb : PowerBasis K S)
+    (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
+    algebraMap K F (trace K S pb.gen) = ((minpoly K pb.gen).map (algebraMap K F)).roots.Sum := by
+  rw [PowerBasis.trace_gen_eq_next_coeff_minpoly,
+    sum_roots_eq_next_coeff_of_monic_of_split (monic_map _ (minpoly.monic (PowerBasis.is_integral_gen _)))
+      ((splits_id_iff_splits _).2 hf),
+    neg_negₓ]
 
 namespace IntermediateField.AdjoinSimple
 
@@ -448,6 +446,20 @@ theorem trace_matrix_of_basis [Fintype κ] [DecidableEq κ] (b : Basis κ A B) :
     trace_matrix A b = BilinForm.toMatrix b (trace_form A B) := by
   ext i j
   rw [trace_matrix, trace_form_apply, trace_form_to_matrix]
+
+theorem trace_matrix_of_basis_mul_vec (b : Basis ι A B) (z : B) :
+    (trace_matrix A b).mulVec (b.equiv_fun z) = fun i => trace A B (z * b i) := by
+  ext i
+  rw [← col_apply ((trace_matrix A b).mulVec (b.equiv_fun z)) i Unit.star, col_mul_vec, Matrix.mul_apply,
+    trace_matrix_def]
+  simp only [col_apply, trace_form_apply]
+  conv_lhs => congr skip ext rw [mul_commₓ _ (b.equiv_fun z _), ← smul_eq_mul, ← LinearMap.map_smul]
+  rw [← LinearMap.map_sum]
+  congr
+  conv_lhs => congr skip ext rw [← mul_smul_comm]
+  rw [← Finset.mul_sum, mul_commₓ z]
+  congr
+  rw [b.sum_equiv_fun]
 
 variable (A)
 

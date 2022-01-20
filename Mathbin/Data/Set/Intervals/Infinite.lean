@@ -36,13 +36,13 @@ end Bounded
 
 section UnboundedBelow
 
-variable [NoBotOrder α]
+variable [NoMinOrder α]
 
 theorem Iio.infinite {b : α} : Infinite (Iio b) := by
   rintro (f : finite (Iio b))
   obtain ⟨m, hm₁, hm₂⟩ : ∃ m < b, ∀, ∀ x < b, ∀, ¬x < m := by
     simpa using Finset.exists_minimal f.to_finset
-  obtain ⟨z, hz⟩ : ∃ z, z < m := no_bot _
+  obtain ⟨z, hz⟩ : ∃ z, z < m := exists_lt _
   exact hm₂ z (lt_transₓ hz hm₁) hz
 
 theorem Iic.infinite {b : α} : Infinite (Iic b) :=
@@ -52,7 +52,7 @@ end UnboundedBelow
 
 section UnboundedAbove
 
-variable [NoTopOrder α]
+variable [NoMaxOrder α]
 
 theorem Ioi.infinite {a : α} : Infinite (Ioi a) := by
   apply @Iio.infinite (OrderDual α)

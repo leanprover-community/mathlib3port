@@ -310,7 +310,7 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
       sum_le_sum fun m hmJ =>
         mul_le_mul_of_nonneg_left
           (le_of_ltₓ
-            (hN (K - m) K
+            (hN (K - m)
               (le_tsub_of_add_le_left
                 (le_transₓ
                   (by
@@ -319,7 +319,7 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
                         add_le_add (le_of_ltₓ (mem_range.1 hmJ))
                           (le_transₓ (le_max_leftₓ _ _) (le_of_ltₓ (lt_add_one _))))
                   hK))
-              (le_of_ltₓ hKN)))
+              K (le_of_ltₓ hKN)))
           (abv_nonneg abv _)
     have hsumltP : (∑ n in range (max N M + 1), abv (a n)) < P :=
       calc
@@ -361,7 +361,7 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
                   rw [two_mul] <;>
                     exact add_pos (lt_of_le_of_ltₓ (abv_nonneg _ _) (hQ 0)) (lt_of_le_of_ltₓ (abv_nonneg _ _) (hQ 0))).2
               (lt_of_le_of_ltₓ (le_abs_self _)
-                (hM _ _ (le_transₓ (Nat.le_succ_of_leₓ (le_max_rightₓ _ _)) (le_of_ltₓ hNMK))
+                (hM _ (le_transₓ (Nat.le_succ_of_leₓ (le_max_rightₓ _ _)) (le_of_ltₓ hNMK)) _
                   (Nat.le_succ_of_leₓ (le_max_rightₓ _ _))))⟩
 
 end NoArchimedean
@@ -568,9 +568,9 @@ theorem exp_conj : exp (conj x) = conj (exp x) := by
   rw [← lim_conj]
   refine' congr_argₓ limₓ (CauSeq.ext fun _ => _)
   dsimp [exp', Function.comp, cau_seq_conj]
-  rw [star_ring_aut.map_sum]
+  rw [(starRingEnd _).map_sum]
   refine' sum_congr rfl fun n hn => _
-  rw [RingEquiv.map_div, RingEquiv.map_pow, ← of_real_nat_cast, conj_of_real]
+  rw [RingHom.map_div, RingHom.map_pow, ← of_real_nat_cast, conj_of_real]
 
 @[simp]
 theorem of_real_exp_of_real_re (x : ℝ) : ((exp x).re : ℂ) = exp x :=
@@ -635,8 +635,7 @@ theorem cosh_sub : cosh (x - y) = cosh x * cosh y - sinh x * sinh y := by
   simp [sub_eq_add_neg, cosh_add, sinh_neg, cosh_neg]
 
 theorem sinh_conj : sinh (conj x) = conj (sinh x) := by
-  rw [sinh, ← RingEquiv.map_neg, exp_conj, exp_conj, ← RingEquiv.map_sub, sinh, RingEquiv.map_div, conj_bit0,
-    RingEquiv.map_one]
+  rw [sinh, ← RingHom.map_neg, exp_conj, exp_conj, ← RingHom.map_sub, sinh, RingHom.map_div, conj_bit0, RingHom.map_one]
 
 @[simp]
 theorem of_real_sinh_of_real_re (x : ℝ) : ((sinh x).re : ℂ) = sinh x :=
@@ -655,8 +654,7 @@ theorem sinh_of_real_re (x : ℝ) : (sinh x).re = Real.sinh x :=
   rfl
 
 theorem cosh_conj : cosh (conj x) = conj (cosh x) := by
-  rw [cosh, ← RingEquiv.map_neg, exp_conj, exp_conj, ← RingEquiv.map_add, cosh, RingEquiv.map_div, conj_bit0,
-    RingEquiv.map_one]
+  rw [cosh, ← RingHom.map_neg, exp_conj, exp_conj, ← RingHom.map_add, cosh, RingHom.map_div, conj_bit0, RingHom.map_one]
 
 @[simp]
 theorem of_real_cosh_of_real_re (x : ℝ) : ((cosh x).re : ℂ) = cosh x :=
@@ -686,7 +684,7 @@ theorem tanh_neg : tanh (-x) = -tanh x := by
   simp [tanh, neg_div]
 
 theorem tanh_conj : tanh (conj x) = conj (tanh x) := by
-  rw [tanh, sinh_conj, cosh_conj, ← RingEquiv.map_div, tanh]
+  rw [tanh, sinh_conj, cosh_conj, ← RingHom.map_div, tanh]
 
 @[simp]
 theorem of_real_tanh_of_real_re (x : ℝ) : ((tanh x).re : ℂ) = tanh x :=
@@ -856,7 +854,7 @@ theorem cos_add_cos : cos x + cos y = 2 * cos ((x + y) / 2) * cos ((x - y) / 2) 
   ring
 
 theorem sin_conj : sin (conj x) = conj (sin x) := by
-  rw [← mul_left_inj' I_ne_zero, ← sinh_mul_I, ← conj_neg_I, ← RingEquiv.map_mul, ← RingEquiv.map_mul, sinh_conj,
+  rw [← mul_left_inj' I_ne_zero, ← sinh_mul_I, ← conj_neg_I, ← RingHom.map_mul, ← RingHom.map_mul, sinh_conj,
     mul_neg_eq_neg_mul_symm, sinh_neg, sinh_mul_I, mul_neg_eq_neg_mul_symm]
 
 @[simp]
@@ -876,7 +874,7 @@ theorem sin_of_real_re (x : ℝ) : (sin x).re = Real.sin x :=
   rfl
 
 theorem cos_conj : cos (conj x) = conj (cos x) := by
-  rw [← cosh_mul_I, ← conj_neg_I, ← RingEquiv.map_mul, ← cosh_mul_I, cosh_conj, mul_neg_eq_neg_mul_symm, cosh_neg]
+  rw [← cosh_mul_I, ← conj_neg_I, ← RingHom.map_mul, ← cosh_mul_I, cosh_conj, mul_neg_eq_neg_mul_symm, cosh_neg]
 
 @[simp]
 theorem of_real_cos_of_real_re (x : ℝ) : ((cos x).re : ℂ) = cos x :=
@@ -909,7 +907,7 @@ theorem tan_neg : tan (-x) = -tan x := by
   simp [tan, neg_div]
 
 theorem tan_conj : tan (conj x) = conj (tan x) := by
-  rw [tan, sin_conj, cos_conj, ← RingEquiv.map_div, tan]
+  rw [tan, sin_conj, cos_conj, ← RingHom.map_div, tan]
 
 @[simp]
 theorem of_real_tan_of_real_re (x : ℝ) : ((tan x).re : ℂ) = tan x :=

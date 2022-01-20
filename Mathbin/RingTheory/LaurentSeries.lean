@@ -101,39 +101,7 @@ theorem of_power_series_power_series_part (x : LaurentSeries R) :
   refine' Eq.trans _ (congr rfl x.single_order_mul_power_series_part)
   rw [← mul_assocₓ, single_mul_single, neg_add_selfₓ, mul_oneₓ, ← C_apply, C_one, one_mulₓ, coe_power_series]
 
-@[simp]
-theorem of_power_series_X : of_power_series ℤ R PowerSeries.x = single 1 1 := by
-  ext n
-  cases n
-  · rw [Int.of_nat_eq_coe, ← Int.nat_cast_eq_coe_nat, of_power_series_apply_coeff]
-    by_cases' h1 : n = 1
-    · simp [h1]
-      
-    · rw [PowerSeries.coeff_X, single_coeff, if_neg h1, if_neg]
-      contrapose! h1
-      rw [← Nat.cast_one] at h1
-      exact Nat.cast_injective h1
-      
-    
-  · rw [of_power_series_apply, emb_domain_notin_range, single_coeff_of_ne]
-    · decide
-      
-    rw [Set.mem_range, not_exists]
-    intro m
-    simp only [RelEmbedding.coe_fn_mk, Function.Embedding.coe_fn_mk, Int.nat_cast_eq_coe_nat]
-    decide
-    
-
 end Semiringₓ
-
-@[simp]
-theorem of_power_series_X_pow [CommSemiringₓ R] (n : ℕ) : of_power_series ℤ R (PowerSeries.x ^ n) = single (n : ℤ) 1 :=
-  by
-  rw [RingHom.map_pow]
-  induction' n with n ih
-  · rfl
-    
-  rw [pow_succₓ, Int.coe_nat_succ, ih, of_power_series_X, mul_commₓ, single_mul_single, one_mulₓ]
 
 instance [CommSemiringₓ R] : Algebra (PowerSeries R) (LaurentSeries R) :=
   (HahnSeries.ofPowerSeries ℤ R).toAlgebra
@@ -162,14 +130,15 @@ instance of_power_series_localization [CommRingₓ R] :
     intro z
     by_cases' h : 0 ≤ z.order
     · refine' ⟨⟨PowerSeries.x ^ Int.natAbs z.order * power_series_part z, 1⟩, _⟩
-      simp only [RingHom.map_one, mul_oneₓ, RingHom.map_mul, coe_algebra_map, of_power_series_X_pow, Submonoid.coe_one]
+      simp only [RingHom.map_one, mul_oneₓ, RingHom.map_mul, coe_algebra_map, of_power_series_X_pow, Submonoid.coe_one,
+        Int.nat_cast_eq_coe_nat]
       rw [Int.nat_abs_of_nonneg h, ← coe_power_series, single_order_mul_power_series_part]
       
     · refine' ⟨⟨power_series_part z, PowerSeries.x ^ Int.natAbs z.order, ⟨_, rfl⟩⟩, _⟩
       simp only [coe_algebra_map, of_power_series_power_series_part]
       rw [mul_commₓ _ z]
       refine' congr rfl _
-      rw [Subtype.coe_mk, of_power_series_X_pow, Int.of_nat_nat_abs_of_nonpos]
+      rw [Subtype.coe_mk, of_power_series_X_pow, Int.nat_cast_eq_coe_nat, Int.of_nat_nat_abs_of_nonpos]
       exact le_of_not_geₓ h
       
   eq_iff_exists := by
@@ -195,4 +164,65 @@ instance {K : Type u} [Field K] : IsFractionRing (PowerSeries K) (LaurentSeries 
     is_unit_of_mem_non_zero_divisors $ RingHom.map_mem_non_zero_divisors _ HahnSeries.of_power_series_injective hf
 
 end LaurentSeries
+
+namespace PowerSeries
+
+open LaurentSeries
+
+variable [Semiringₓ R] (f g : PowerSeries R)
+
+@[simp, norm_cast]
+theorem coe_zero : ((0 : PowerSeries R) : LaurentSeries R) = 0 :=
+  (of_power_series ℤ R).map_zero
+
+@[simp, norm_cast]
+theorem coe_one : ((1 : PowerSeries R) : LaurentSeries R) = 1 :=
+  (of_power_series ℤ R).map_one
+
+@[simp, norm_cast]
+theorem coe_add : ((f + g : PowerSeries R) : LaurentSeries R) = f + g :=
+  (of_power_series ℤ R).map_add _ _
+
+@[simp, norm_cast]
+theorem coe_mul : ((f * g : PowerSeries R) : LaurentSeries R) = f * g :=
+  (of_power_series ℤ R).map_mul _ _
+
+theorem coeff_coe (i : ℤ) :
+    ((f : PowerSeries R) : LaurentSeries R).coeff i = if i < 0 then 0 else PowerSeries.coeff R i.nat_abs f := by
+  cases i
+  · rw [Int.nat_abs_of_nat_core, Int.of_nat_eq_coe, coeff_coe_power_series, if_neg (Int.coe_nat_nonneg _).not_lt]
+    
+  · rw [coe_power_series, of_power_series_apply, emb_domain_notin_image_support, if_pos (Int.neg_succ_lt_zeroₓ _)]
+    simp only [not_exists, RelEmbedding.coe_fn_mk, Set.mem_image, not_and, Function.Embedding.coe_fn_mk, Ne.def,
+      to_power_series_symm_apply_coeff, mem_support, Int.nat_cast_eq_coe_nat, Int.coe_nat_eq, implies_true_iff,
+      not_false_iff]
+    
+
+@[simp, norm_cast]
+theorem coe_C (r : R) : ((C R r : PowerSeries R) : LaurentSeries R) = HahnSeries.c r :=
+  of_power_series_C _
+
+@[simp]
+theorem coe_X : ((X : PowerSeries R) : LaurentSeries R) = single 1 1 :=
+  of_power_series_X
+
+@[simp, norm_cast]
+theorem coe_smul {S : Type _} [Semiringₓ S] [Module R S] (r : R) (x : PowerSeries S) :
+    ((r • x : PowerSeries S) : LaurentSeries S) = r • x := by
+  ext
+  simp [coeff_coe, coeff_smul, smul_ite]
+
+@[simp, norm_cast]
+theorem coe_bit0 : ((bit0 f : PowerSeries R) : LaurentSeries R) = bit0 f :=
+  (of_power_series ℤ R).map_bit0 _
+
+@[simp, norm_cast]
+theorem coe_bit1 : ((bit1 f : PowerSeries R) : LaurentSeries R) = bit1 f :=
+  (of_power_series ℤ R).map_bit1 _
+
+@[simp, norm_cast]
+theorem coe_pow (n : ℕ) : ((f ^ n : PowerSeries R) : LaurentSeries R) = f ^ n :=
+  (of_power_series ℤ R).map_pow _ _
+
+end PowerSeries
 

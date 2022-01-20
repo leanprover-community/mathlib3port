@@ -1,4 +1,4 @@
-import Mathbin.Data.Complex.Module
+import Mathbin.Data.Complex.Determinant
 import Mathbin.Data.Complex.IsROrC
 
 /-!
@@ -183,6 +183,16 @@ theorem conj_lie_apply (z : ℂ) : conj_lie z = conj z :=
 
 theorem isometry_conj : Isometry (conj : ℂ → ℂ) :=
   conj_lie.Isometry
+
+/-- The determinant of `conj_lie`, as a linear map. -/
+@[simp]
+theorem det_conj_lie : (conj_lie.toLinearEquiv : ℂ →ₗ[ℝ] ℂ).det = -1 :=
+  det_conj_ae
+
+/-- The determinant of `conj_lie`, as a linear equiv. -/
+@[simp]
+theorem linear_equiv_det_conj_lie : conj_lie.toLinearEquiv.det = -1 :=
+  linear_equiv_det_conj_ae
 
 @[continuity]
 theorem continuous_conj : Continuous (conj : ℂ → ℂ) :=

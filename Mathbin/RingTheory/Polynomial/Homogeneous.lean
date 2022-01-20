@@ -116,6 +116,11 @@ theorem is_homogeneous_monomial (d : σ →₀ ℕ) (r : R) (n : ℕ) (hn : (∑
 
 variable (σ) {R}
 
+theorem is_homogeneous_of_total_degree_zero {p : MvPolynomial σ R} (hp : p.total_degree = 0) : is_homogeneous p 0 := by
+  erw [total_degree, Finset.sup_eq_bot_iff] at hp
+  simp_rw [mem_support_iff]  at hp
+  exact hp
+
 theorem is_homogeneous_C (r : R) : is_homogeneous (C r : MvPolynomial σ R) 0 := by
   apply is_homogeneous_monomial
   simp only [Finsupp.zero_apply, Finset.sum_const_zero]
@@ -223,7 +228,7 @@ section HomogeneousComponent
 
 open Finset
 
-variable [CommSemiringₓ R] (n : ℕ) (φ : MvPolynomial σ R)
+variable [CommSemiringₓ R] (n : ℕ) (φ ψ : MvPolynomial σ R)
 
 theorem coeff_homogeneous_component (d : σ →₀ ℕ) :
     coeff d (homogeneous_component n φ) = if (∑ i in d.support, d i) = n then coeff d φ else 0 := by
@@ -239,6 +244,7 @@ theorem homogeneous_component_is_homogeneous : (homogeneous_component n φ).IsHo
   contrapose! hd
   rw [coeff_homogeneous_component, if_neg hd]
 
+@[simp]
 theorem homogeneous_component_zero : homogeneous_component 0 φ = C (coeff 0 φ) := by
   ext1 d
   rcases em (d = 0) with (rfl | hd)
@@ -249,6 +255,11 @@ theorem homogeneous_component_zero : homogeneous_component 0 φ = C (coeff 0 φ)
     simp only [Finsupp.ext_iff, Finsupp.zero_apply] at hd
     simp [hd]
     
+
+@[simp]
+theorem homogeneous_component_C_mul (n : ℕ) (r : R) :
+    homogeneous_component n (C r * φ) = C r * homogeneous_component n φ := by
+  simp only [C_mul', LinearMap.map_smul]
 
 theorem homogeneous_component_eq_zero' (h : ∀ d : σ →₀ ℕ, d ∈ φ.support → (∑ i in d.support, d i) ≠ n) :
     homogeneous_component n φ = 0 := by

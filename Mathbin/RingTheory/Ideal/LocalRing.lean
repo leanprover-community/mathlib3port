@@ -110,14 +110,14 @@ theorem local_of_nonunits_ideal [CommRingₓ R] (hnze : (0 : R) ≠ 1)
     is_local := fun x =>
       or_iff_not_imp_left.mpr $ fun hx => by
         by_contra H
-        apply h _ _ hx H
+        apply h _ hx _ H
         simp [-sub_eq_add_neg, add_sub_cancel'_right] }
 
 theorem local_of_unique_max_ideal [CommRingₓ R] (h : ∃! I : Ideal R, I.is_maximal) : LocalRing R :=
   local_of_nonunits_ideal
       (let ⟨I, Imax, _⟩ := h
       fun H : 0 = 1 => Imax.1.1 $ I.eq_top_iff_one.2 $ H ▸ I.zero_mem) $
-    fun x y hx hy H =>
+    fun x hx y hy H =>
     let ⟨I, Imax, Iuniq⟩ := h
     let ⟨Ix, Ixmax, Hx⟩ := exists_max_ideal_of_mem_nonunits hx
     let ⟨Iy, Iymax, Hy⟩ := exists_max_ideal_of_mem_nonunits hy

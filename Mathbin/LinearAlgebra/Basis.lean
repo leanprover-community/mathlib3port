@@ -211,19 +211,27 @@ end Coord
 
 section Ext
 
-variable {M₁ : Type _} [AddCommMonoidₓ M₁] [Module R M₁]
+variable {R₁ : Type _} [Semiringₓ R₁] {σ : R →+* R₁} {σ' : R₁ →+* R}
+
+variable [RingHomInvPair σ σ'] [RingHomInvPair σ' σ]
+
+variable {M₁ : Type _} [AddCommMonoidₓ M₁] [Module R₁ M₁]
 
 /-- Two linear maps are equal if they are equal on basis vectors. -/
-theorem ext {f₁ f₂ : M →ₗ[R] M₁} (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ := by
+theorem ext {f₁ f₂ : M →ₛₗ[σ] M₁} (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ := by
   ext x
   rw [← b.total_repr x, Finsupp.total_apply, Finsupp.sum]
-  simp only [LinearMap.map_sum, LinearMap.map_smul, h]
+  simp only [LinearMap.map_sum, LinearMap.map_smulₛₗ, h]
+
+include σ'
 
 /-- Two linear equivs are equal if they are equal on basis vectors. -/
-theorem ext' {f₁ f₂ : M ≃ₗ[R] M₁} (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ := by
+theorem ext' {f₁ f₂ : M ≃ₛₗ[σ] M₁} (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ := by
   ext x
   rw [← b.total_repr x, Finsupp.total_apply, Finsupp.sum]
-  simp only [LinearEquiv.map_sum, LinearEquiv.map_smul, h]
+  simp only [LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ, h]
+
+omit σ'
 
 /-- Two elements are equal if their coordinates are equal. -/
 theorem ext_elem {x y : M} (h : ∀ i, b.repr x i = b.repr y i) : x = y := by
@@ -379,7 +387,7 @@ theorem finsupp.single_apply_left {α β γ : Type _} [HasZero γ] {f : α → �
 theorem reindex_range_self (i : ι) (h := Set.mem_range_self i) : b.reindex_range ⟨b i, h⟩ = b i := by
   by_cases' htr : Nontrivial R
   · let this' := htr
-    simp [htr, reindex_range, reindex_apply, Equivₓ.apply_of_injective_symm b b.injective, Subtype.coe_mk]
+    simp [htr, reindex_range, reindex_apply, Equivₓ.apply_of_injective_symm b.injective, Subtype.coe_mk]
     
   · let this' : Subsingleton R := not_nontrivial_iff_subsingleton.mp htr
     let this' := Module.subsingleton R M
@@ -673,7 +681,7 @@ section Singleton
 /-- `basis.singleton ι R` is the basis sending the unique element of `ι` to `1 : R`. -/
 protected def singleton (ι R : Type _) [Unique ι] [Semiringₓ R] : Basis ι R R :=
   of_repr
-    { toFun := fun x => Finsupp.single (default ι) x, invFun := fun f => f (default ι),
+    { toFun := fun x => Finsupp.single default x, invFun := fun f => f default,
       left_inv := fun x => by
         simp ,
       right_inv := fun f =>
@@ -701,14 +709,14 @@ theorem basis_singleton_iff {R M : Type _} [Ringₓ R] [Nontrivial R] [AddCommGr
     Nonempty (Basis ι R M) ↔ ∃ (x : _)(_ : x ≠ 0), ∀ y : M, ∃ r : R, r • x = y := by
   fconstructor
   · rintro ⟨b⟩
-    refine' ⟨b (default ι), b.linear_independent.ne_zero _, _⟩
+    refine' ⟨b default, b.linear_independent.ne_zero _, _⟩
     simpa [span_singleton_eq_top_iff, Set.range_unique] using b.span_eq
     
   · rintro ⟨x, nz, w⟩
     refine'
       ⟨of_repr $
           LinearEquiv.symm
-            { toFun := fun f => f (default ι) • x, invFun := fun y => Finsupp.single (default ι) (w y).some,
+            { toFun := fun f => f default • x, invFun := fun y => Finsupp.single default (w y).some,
               left_inv := fun f => Finsupp.unique_ext _, right_inv := fun y => _, map_add' := fun y z => _,
               map_smul' := fun c y => _ }⟩
     · rw [Finsupp.add_apply, add_smul]
@@ -718,7 +726,7 @@ theorem basis_singleton_iff {R M : Type _} [Ringₓ R] [Nontrivial R] [AddCommGr
       
     · refine' smul_left_injective _ nz _
       simp only [Finsupp.single_eq_same]
-      exact (w (f (default ι) • x)).some_spec
+      exact (w (f default • x)).some_spec
       
     · simp only [Finsupp.single_eq_same]
       exact (w y).some_spec

@@ -15,9 +15,9 @@ open Metric Set
 
 open_locale Pointwise TopologicalSpace
 
-section SemiNormedSpace
+section NormedSpace
 
-variable {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [SemiNormedGroup E] [SemiNormedSpace 𝕜 E]
+variable {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [SemiNormedGroup E] [NormedSpace 𝕜 E]
 
 theorem smul_ball {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • ball x r = ball (c • x) (∥c∥ * r) := by
   ext y
@@ -107,7 +107,7 @@ theorem set_smul_mem_nhds_zero_iff (s : Set E) {c : 𝕜} (hc : c ≠ 0) : c •
   convert set_smul_mem_nhds_zero h (inv_ne_zero hc)
   rw [smul_smul, inv_mul_cancel hc, one_smul]
 
-end SemiNormedSpace
+end NormedSpace
 
 section NormedSpace
 

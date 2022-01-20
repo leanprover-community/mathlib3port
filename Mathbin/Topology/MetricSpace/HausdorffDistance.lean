@@ -73,9 +73,9 @@ theorem inf_edist_zero_of_mem (h : x ∈ s) : inf_edist x s = 0 :=
 theorem inf_edist_le_inf_edist_of_subset (h : s ⊆ t) : inf_edist x t ≤ inf_edist x s :=
   infi_le_infi_of_subset h
 
-/-- If the edist to a set is `< r`, there exists a point in the set at edistance `< r` -/
-theorem exists_edist_lt_of_inf_edist_lt {r : ℝ≥0∞} (h : inf_edist x s < r) : ∃ y ∈ s, edist x y < r := by
-  simpa only [inf_edist, infi_lt_iff] using h
+/-- The edist to a set is `< r` iff there exists a point in the set at edistance `< r` -/
+theorem inf_edist_lt_iff {r : ℝ≥0∞} : inf_edist x s < r ↔ ∃ y ∈ s, edist x y < r := by
+  simp_rw [inf_edist, infi_lt_iff]
 
 /-- The edist of `x` to `s` is bounded by the sum of the edist of `y` to `s` and
 the edist from `x` to `y` -/
@@ -103,7 +103,7 @@ theorem inf_edist_closure : inf_edist x (Closure s) = inf_edist x s := by
   have ε0 : 0 < (ε / 2 : ℝ≥0∞) := by
     simpa [pos_iff_ne_zero] using εpos
   have : inf_edist x (Closure s) < inf_edist x (Closure s) + ε / 2 := Ennreal.lt_add_right h.ne ε0.ne'
-  rcases exists_edist_lt_of_inf_edist_lt this with ⟨y, ycs, hy⟩
+  rcases inf_edist_lt_iff.mp this with ⟨y, ycs, hy⟩
   rcases Emetric.mem_closure_iff.1 ycs (ε / 2) ε0 with ⟨z, zs, dyz⟩
   calc inf_edist x s ≤ edist x z := inf_edist_le_edist_of_mem zs _ ≤ edist x y + edist y z :=
       edist_triangle _ _ _ _ ≤ inf_edist x (Closure s) + ε / 2 + ε / 2 :=
@@ -113,11 +113,11 @@ theorem inf_edist_closure : inf_edist x (Closure s) = inf_edist x s := by
 /-- A point belongs to the closure of `s` iff its infimum edistance to this set vanishes -/
 theorem mem_closure_iff_inf_edist_zero : x ∈ Closure s ↔ inf_edist x s = 0 :=
   ⟨fun h => by
-    rw [← inf_edist_closure] <;> exact inf_edist_zero_of_mem h, fun h =>
+    rw [← inf_edist_closure]
+    exact inf_edist_zero_of_mem h, fun h =>
     Emetric.mem_closure_iff.2 $ fun ε εpos =>
-      exists_edist_lt_of_inf_edist_lt
-        (by
-          rwa [h])⟩
+      inf_edist_lt_iff.mp $ by
+        rwa [h]⟩
 
 /-- Given a closed set `s`, a point belongs to `s` iff its infimum edistance to this set vanishes -/
 theorem mem_iff_inf_edist_zero_of_closed (h : IsClosed s) : x ∈ s ↔ inf_edist x s = 0 := by
@@ -238,7 +238,7 @@ theorem inf_edist_le_Hausdorff_edist_of_mem (h : x ∈ s) : inf_edist x t ≤ Ha
 a corresponding point at distance `<r` in the other set -/
 theorem exists_edist_lt_of_Hausdorff_edist_lt {r : ℝ≥0∞} (h : x ∈ s) (H : Hausdorff_edist s t < r) :
     ∃ y ∈ t, edist x y < r :=
-  exists_edist_lt_of_inf_edist_lt $
+  inf_edist_lt_iff.mp $
     calc
       inf_edist x t ≤ Hausdorff_edist s t := inf_edist_le_Hausdorff_edist_of_mem h
       _ < r := H
@@ -251,7 +251,7 @@ theorem inf_edist_le_inf_edist_add_Hausdorff_edist : inf_edist x t ≤ inf_edist
     have ε0 : (ε / 2 : ℝ≥0∞) ≠ 0 := by
       simpa [pos_iff_ne_zero] using εpos
     have : inf_edist x s < inf_edist x s + ε / 2 := Ennreal.lt_add_right (Ennreal.add_lt_top.1 h).1.Ne ε0
-    rcases exists_edist_lt_of_inf_edist_lt this with ⟨y, ys, dxy⟩
+    rcases inf_edist_lt_iff.mp this with ⟨y, ys, dxy⟩
     have : Hausdorff_edist s t < Hausdorff_edist s t + ε / 2 := Ennreal.lt_add_right (Ennreal.add_lt_top.1 h).2.Ne ε0
     rcases exists_edist_lt_of_Hausdorff_edist_lt ys this with ⟨z, zt, dyz⟩
     calc inf_edist x t ≤ edist x z := inf_edist_le_edist_of_mem zt _ ≤ edist x y + edist y z :=
@@ -424,15 +424,10 @@ theorem inf_dist_le_inf_dist_of_subset (h : s ⊆ t) (hs : s.nonempty) : inf_dis
   rw [inf_dist, inf_dist, Ennreal.to_real_le_to_real (inf_edist_ne_top ht) (inf_edist_ne_top hs)]
   exact inf_edist_le_inf_edist_of_subset h
 
-/-- If the minimal distance to a set is `<r`, there exists a point in this set at distance `<r` -/
-theorem exists_dist_lt_of_inf_dist_lt {r : Real} (h : inf_dist x s < r) (hs : s.nonempty) : ∃ y ∈ s, dist x y < r := by
-  have rpos : 0 < r := lt_of_le_of_ltₓ inf_dist_nonneg h
-  have : inf_edist x s < Ennreal.ofReal r := by
-    rwa [inf_dist, ← Ennreal.to_real_of_real (le_of_ltₓ rpos),
-      Ennreal.to_real_lt_to_real (inf_edist_ne_top hs) Ennreal.of_real_ne_top] at h
-  rcases exists_edist_lt_of_inf_edist_lt this with ⟨y, ys, hy⟩
-  rw [edist_dist, Ennreal.of_real_lt_of_real_iff rpos] at hy
-  exact ⟨y, ys, hy⟩
+/-- The minimal distance to a set is `< r` iff there exists a point in this set at distance `< r` -/
+theorem inf_dist_lt_iff {r : ℝ} (hs : s.nonempty) : inf_dist x s < r ↔ ∃ y ∈ s, dist x y < r := by
+  simp_rw [inf_dist, ← Ennreal.lt_of_real_iff_to_real_lt (inf_edist_ne_top hs), inf_edist_lt_iff,
+    Ennreal.lt_of_real_iff_to_real_lt (edist_ne_top _ _), ← dist_edist]
 
 /-- The minimal distance from `x` to `s` is bounded by the distance from `y` to `s`, modulo
 the distance between `x` and `y` -/
@@ -505,7 +500,7 @@ theorem inf_dist_inter_closed_ball_of_mem (h : y ∈ s) : inf_dist x (s ∩ clos
   replace h : y ∈ s ∩ closed_ball x (dist y x) := ⟨h, mem_closed_ball.2 le_rfl⟩
   refine' le_antisymmₓ _ (inf_dist_le_inf_dist_of_subset (inter_subset_left _ _) ⟨y, h⟩)
   refine' not_ltₓ.1 fun hlt => _
-  rcases exists_dist_lt_of_inf_dist_lt hlt ⟨y, h.1⟩ with ⟨z, hzs, hz⟩
+  rcases(inf_dist_lt_iff ⟨y, h.1⟩).mp hlt with ⟨z, hzs, hz⟩
   cases' le_or_ltₓ (dist z x) (dist y x) with hle hlt
   · exact hz.not_le (inf_dist_le_dist_of_mem ⟨hzs, hle⟩)
     
@@ -533,7 +528,7 @@ theorem exists_mem_closure_inf_dist_eq_dist [ProperSpace α] (hne : s.nonempty) 
     ∃ y ∈ Closure s, inf_dist x s = dist x y := by
   simpa only [inf_dist_eq_closure] using is_closed_closure.exists_inf_dist_eq_dist hne.closure x
 
-theorem closed_ball_inf_dist_compl_subset_closure' {E : Type _} [SemiNormedGroup E] [SemiNormedSpace ℝ E] {x : E}
+theorem closed_ball_inf_dist_compl_subset_closure' {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E] {x : E}
     {s : Set E} (hx : s ∈ 𝓝 x) (hs : s ≠ univ) : closed_ball x (inf_dist x (sᶜ)) ⊆ Closure s := by
   have hne : sᶜ.Nonempty := nonempty_compl.2 hs
   have hpos : 0 < inf_dist x (sᶜ) := by
@@ -835,16 +830,8 @@ theorem thickening_subset_of_subset (δ : ℝ) {E₁ E₂ : Set α} (h : E₁ �
   fun _ hx => lt_of_le_of_ltₓ (inf_edist_le_inf_edist_of_subset h) hx
 
 theorem mem_thickening_iff_exists_edist_lt {δ : ℝ} (E : Set α) (x : α) :
-    x ∈ thickening δ E ↔ ∃ z ∈ E, edist x z < Ennreal.ofReal δ := by
-  simp only [exists_prop, mem_set_of_eq]
-  constructor
-  · intro h
-    rcases exists_edist_lt_of_inf_edist_lt h with ⟨z, ⟨hzE, hxz⟩⟩
-    exact ⟨z, hzE, hxz⟩
-    
-  · rintro ⟨z, hzE, hxz⟩
-    exact lt_of_le_of_ltₓ (@inf_edist_le_edist_of_mem _ _ x _ _ hzE) hxz
-    
+    x ∈ thickening δ E ↔ ∃ z ∈ E, edist x z < Ennreal.ofReal δ :=
+  inf_edist_lt_iff
 
 variable {X : Type u} [PseudoMetricSpace X]
 
@@ -860,11 +847,16 @@ theorem mem_thickening_iff {δ : ℝ} (E : Set X) (x : X) : x ∈ thickening δ 
     rwa [Ennreal.of_real_to_real d_lt_top.ne] at key
   simp_rw [mem_thickening_iff_exists_edist_lt, key_iff]
 
+@[simp]
+theorem thickening_singleton (δ : ℝ) (x : X) : thickening δ ({x} : Set X) = ball x δ := by
+  ext
+  simp [mem_thickening_iff]
+
 /-- The (open) `δ`-thickening `thickening δ E` of a subset `E` in a metric space equals the
 union of balls of radius `δ` centered at points of `E`. -/
 theorem thickening_eq_bUnion_ball {δ : ℝ} {E : Set X} : thickening δ E = ⋃ x ∈ E, ball x δ := by
   ext x
-  rw [mem_bUnion_iff]
+  rw [mem_Union₂]
   exact mem_thickening_iff E x
 
 theorem bounded.thickening {δ : ℝ} {E : Set X} (h : Bounded E) : Bounded (thickening δ E) := by
@@ -926,6 +918,20 @@ theorem cthickening_zero (E : Set α) : cthickening 0 E = Closure E :=
 the thickening radius `δ`. -/
 theorem cthickening_mono {δ₁ δ₂ : ℝ} (hle : δ₁ ≤ δ₂) (E : Set α) : cthickening δ₁ E ⊆ cthickening δ₂ E :=
   preimage_mono (Iic_subset_Iic.mpr (Ennreal.of_real_le_of_real hle))
+
+@[simp]
+theorem cthickening_singleton {α : Type _} [PseudoMetricSpace α] (x : α) {δ : ℝ} (hδ : 0 ≤ δ) :
+    cthickening δ ({x} : Set α) = closed_ball x δ := by
+  ext y
+  simp [cthickening, edist_dist, Ennreal.of_real_le_of_real_iff hδ]
+
+theorem closed_ball_subset_cthickening_singleton {α : Type _} [PseudoMetricSpace α] (x : α) (δ : ℝ) :
+    closed_ball x δ ⊆ cthickening δ ({x} : Set α) := by
+  rcases lt_or_leₓ δ 0 with (hδ | hδ)
+  · simp only [closed_ball_eq_empty.mpr hδ, empty_subset]
+    
+  · simp only [cthickening_singleton x hδ]
+    
 
 /-- The closed thickening `cthickening δ E` with a fixed thickening radius `δ` is
 an increasing function of the subset `E`. -/
@@ -1078,6 +1084,28 @@ theorem frontier_cthickening_subset (E : Set α) {δ : ℝ} :
     simp only [preimage, mem_singleton_iff]
   rw [cthickening_eq_preimage_inf_edist, singleton_preim, ← frontier_Iic' ⟨∞, Ennreal.of_real_lt_top⟩]
   exact continuous_inf_edist.frontier_preimage_subset (Iic (Ennreal.ofReal δ))
+
+/-- The closed ball of radius `δ` centered at a point of `E` is included in the closed
+thickening of `E`. -/
+theorem closed_ball_subset_cthickening {α : Type _} [PseudoMetricSpace α] {x : α} {E : Set α} (hx : x ∈ E) (δ : ℝ) :
+    closed_ball x δ ⊆ cthickening δ E := by
+  refine' (closed_ball_subset_cthickening_singleton _ _).trans (cthickening_subset_of_subset _ _)
+  simpa using hx
+
+/-- The closed thickening of a compact set `E` is the union of the balls `closed_ball x δ` over
+`x ∈ E`. -/
+theorem _root_.is_compact.cthickening_eq_bUnion_closed_ball {α : Type _} [PseudoMetricSpace α] {δ : ℝ} {E : Set α}
+    (hE : IsCompact E) (hδ : 0 ≤ δ) : cthickening δ E = ⋃ x ∈ E, closed_ball x δ := by
+  rcases eq_empty_or_nonempty E with (rfl | hne)
+  · simp only [cthickening_empty, Union_false, Union_empty]
+    
+  refine' subset.antisymm (fun x hx => _) (bUnion_subset fun x hx => closed_ball_subset_cthickening hx _)
+  obtain ⟨y, yE, hy⟩ : ∃ y ∈ E, Emetric.infEdist x E = edist x y := hE.exists_inf_edist_eq_edist hne _
+  have D1 : edist x y ≤ Ennreal.ofReal δ := (le_of_eqₓ hy.symm).trans hx
+  have D2 : dist x y ≤ δ := by
+    rw [edist_dist] at D1
+    exact (Ennreal.of_real_le_of_real_iff hδ).1 D1
+  exact mem_bUnion yE D2
 
 end Cthickening
 

@@ -77,7 +77,7 @@ open Finsupp
 variable {σ R : Type _}
 
 instance [Inhabited R] : Inhabited (MvPowerSeries σ R) :=
-  ⟨fun _ => default _⟩
+  ⟨fun _ => default⟩
 
 instance [HasZero R] : HasZero (MvPowerSeries σ R) :=
   Pi.hasZero
@@ -320,7 +320,6 @@ theorem coeff_X [DecidableEq σ] (n : σ →₀ ℕ) (s : σ) :
 theorem coeff_index_single_X [DecidableEq σ] (s t : σ) :
     coeff R (single t 1) (X s : MvPowerSeries σ R) = if t = s then 1 else 0 := by
   simp only [coeff_X, single_left_inj one_ne_zero]
-  split_ifs <;> rfl
 
 @[simp]
 theorem coeff_index_single_self_X (s : σ) : coeff R (single s 1) (X s : MvPowerSeries σ R) = 1 :=
@@ -517,11 +516,11 @@ instance [Nonempty σ] [Nontrivial R] : Nontrivial (Subalgebra R (MvPowerSeries 
   ⟨⟨⊥, ⊤, by
       rw [Ne.def, SetLike.ext_iff, not_forall]
       inhabit σ
-      refine' ⟨X (default σ), _⟩
+      refine' ⟨X default, _⟩
       simp only [Algebra.mem_bot, not_exists, Set.mem_range, iff_trueₓ, Algebra.mem_top]
       intro x
       rw [ext_iff, not_forall]
-      refine' ⟨Finsupp.single (default σ) 1, _⟩
+      refine' ⟨Finsupp.single default 1, _⟩
       simp [algebra_map_apply, coeff_C]⟩⟩
 
 end Algebra
@@ -901,6 +900,14 @@ theorem coe_C (a : R) : ((C a : MvPolynomial σ R) : MvPowerSeries σ R) = MvPow
   coe_monomial _ _
 
 @[simp, norm_cast]
+theorem coe_bit0 : ((bit0 φ : MvPolynomial σ R) : MvPowerSeries σ R) = bit0 (φ : MvPowerSeries σ R) :=
+  coe_add _ _
+
+@[simp, norm_cast]
+theorem coe_bit1 : ((bit1 φ : MvPolynomial σ R) : MvPowerSeries σ R) = bit1 (φ : MvPowerSeries σ R) := by
+  rw [bit1, bit1, coe_add, coe_one, coe_bit0]
+
+@[simp, norm_cast]
 theorem coe_X (s : σ) : ((X s : MvPolynomial σ R) : MvPowerSeries σ R) = MvPowerSeries.x s :=
   coe_monomial _ _
 
@@ -933,6 +940,10 @@ def coe_to_mv_power_series.ring_hom : MvPolynomial σ R →+* MvPowerSeries σ R
   map_one' := coe_one
   map_add' := coe_add
   map_mul' := coe_mul
+
+@[simp, norm_cast]
+theorem coe_pow (n : ℕ) : ((φ ^ n : MvPolynomial σ R) : MvPowerSeries σ R) = (φ : MvPowerSeries σ R) ^ n :=
+  coe_to_mv_power_series.ring_hom.map_pow _ _
 
 variable (φ ψ)
 
@@ -1083,7 +1094,6 @@ theorem coeff_monomial (m n : ℕ) (a : R) : coeff R m (monomial R n a) = if m =
     coeff R m (monomial R n a) = _ := MvPowerSeries.coeff_monomial _ _ _
     _ = if m = n then a else 0 := by
       simp only [Finsupp.unique_single_eq_iff]
-      split_ifs <;> rfl
     
 
 theorem monomial_eq_mk (n : ℕ) (a : R) : monomial R n a = mk fun m => if m = n then a else 0 :=
@@ -1205,7 +1215,8 @@ theorem coeff_C_mul (n : ℕ) (φ : PowerSeries R) (a : R) : coeff R n (C R a * 
   MvPowerSeries.coeff_C_mul _ φ a
 
 @[simp]
-theorem coeff_smul (n : ℕ) (φ : PowerSeries R) (a : R) : coeff R n (a • φ) = a * coeff R n φ :=
+theorem coeff_smul {S : Type _} [Semiringₓ S] [Module R S] (n : ℕ) (φ : PowerSeries S) (a : R) :
+    coeff S n (a • φ) = a • coeff S n φ :=
   rfl
 
 @[simp]
@@ -2112,6 +2123,14 @@ theorem coe_C (a : R) : ((C a : Polynomial R) : PowerSeries R) = PowerSeries.c R
   rwa [PowerSeries.monomial_zero_eq_C_apply] at this
 
 @[simp, norm_cast]
+theorem coe_bit0 : ((bit0 φ : Polynomial R) : PowerSeries R) = bit0 (φ : PowerSeries R) :=
+  coe_add φ φ
+
+@[simp, norm_cast]
+theorem coe_bit1 : ((bit1 φ : Polynomial R) : PowerSeries R) = bit1 (φ : PowerSeries R) := by
+  rw [bit1, bit1, coe_add, coe_one, coe_bit0]
+
+@[simp, norm_cast]
 theorem coe_X : ((X : Polynomial R) : PowerSeries R) = PowerSeries.x :=
   coe_monomial _ _
 
@@ -2150,6 +2169,10 @@ def coe_to_power_series.ring_hom : Polynomial R →+* PowerSeries R where
 @[simp]
 theorem coe_to_power_series.ring_hom_apply : coe_to_power_series.ring_hom φ = φ :=
   rfl
+
+@[simp, norm_cast]
+theorem coe_pow (n : ℕ) : ((φ ^ n : Polynomial R) : PowerSeries R) = (φ : PowerSeries R) ^ n :=
+  coe_to_power_series.ring_hom.map_pow _ _
 
 variable (A : Type _) [Semiringₓ A] [Algebra R A]
 

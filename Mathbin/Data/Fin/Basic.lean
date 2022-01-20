@@ -684,7 +684,7 @@ theorem range_cast_le {n k : ℕ} (h : n ≤ k) : Set.Range (cast_le h) = { i | 
 theorem coe_of_injective_cast_le_symm {n k : ℕ} (h : n ≤ k) (i : Finₓ k) hi :
     ((Equivₓ.ofInjective _ (cast_le h).Injective).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_le]
-  exact congr_argₓ coeₓ (Equivₓ.apply_of_injective_symm _ _ _)
+  exact congr_argₓ coeₓ (Equivₓ.apply_of_injective_symm _ _)
 
 @[simp]
 theorem cast_le_succ {m n : ℕ} (h : m + 1 ≤ n + 1) (i : Finₓ m) :
@@ -879,7 +879,7 @@ theorem range_cast_succ {n : ℕ} : Set.Range (cast_succ : Finₓ n → Finₓ n
 theorem coe_of_injective_cast_succ_symm {n : ℕ} (i : Finₓ n.succ) hi :
     ((Equivₓ.ofInjective cast_succ (cast_succ_injective _)).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_succ]
-  exact congr_argₓ coeₓ (Equivₓ.apply_of_injective_symm _ _ _)
+  exact congr_argₓ coeₓ (Equivₓ.apply_of_injective_symm _ _)
 
 theorem succ_cast_succ {n : ℕ} (i : Finₓ n) : i.cast_succ.succ = i.succ.cast_succ :=
   Finₓ.ext

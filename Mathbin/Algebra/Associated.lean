@@ -26,6 +26,9 @@ theorem is_unit_of_dvd_unit {α} [CommMonoidₓ α] {x y : α} (xy : x ∣ y) (h
 theorem is_unit_of_dvd_one [CommMonoidₓ α] : ∀ a _ : a ∣ 1, IsUnit (a : α)
   | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩
 
+theorem not_is_unit_of_not_is_unit_dvd [CommMonoidₓ α] {a b : α} (ha : ¬IsUnit a) (hb : a ∣ b) : ¬IsUnit b :=
+  mt (is_unit_of_dvd_unit hb) ha
+
 theorem dvd_and_not_dvd_iff [CancelCommMonoidWithZero α] {x y : α} : x ∣ y ∧ ¬y ∣ x ↔ DvdNotUnit x y :=
   ⟨fun ⟨⟨d, hd⟩, hyx⟩ =>
     ⟨fun hx0 => by
@@ -120,6 +123,23 @@ theorem Prime.left_dvd_or_dvd_right_of_dvd_mul [CancelCommMonoidWithZero α] {p 
   · rw [mul_left_commₓ, mul_right_inj' hp.ne_zero] at hc
     exact Or.inr (hc.symm ▸ dvd_mul_right _ _)
     
+
+theorem Prime.pow_dvd_of_dvd_mul_left [CancelCommMonoidWithZero α] {p a b : α} (hp : Prime p) (n : ℕ) (h : ¬p ∣ a)
+    (h' : p ^ n ∣ a * b) : p ^ n ∣ b := by
+  induction' n with n ih
+  · rw [pow_zeroₓ]
+    exact one_dvd b
+    
+  · obtain ⟨c, rfl⟩ := ih (dvd_trans (pow_dvd_pow p n.le_succ) h')
+    rw [pow_succ'ₓ]
+    apply mul_dvd_mul_left _ ((hp.dvd_or_dvd _).resolve_left h)
+    rwa [← mul_dvd_mul_iff_left (pow_ne_zero n hp.ne_zero), ← pow_succ'ₓ, mul_left_commₓ]
+    
+
+theorem Prime.pow_dvd_of_dvd_mul_right [CancelCommMonoidWithZero α] {p a b : α} (hp : Prime p) (n : ℕ) (h : ¬p ∣ b)
+    (h' : p ^ n ∣ a * b) : p ^ n ∣ a := by
+  rw [mul_commₓ] at h'
+  exact hp.pow_dvd_of_dvd_mul_left n h h'
 
 /-- `irreducible p` states that `p` is non-unit and only factors into units.
 
@@ -545,6 +565,9 @@ instance : Preorderₓ (Associates α) where
   le_refl := dvd_refl
   le_trans := fun a b c => dvd_trans
 
+theorem bot_eq_one : (⊥ : Associates α) = 1 :=
+  rfl
+
 @[simp]
 theorem mk_one : Associates.mk (1 : α) = 1 :=
   rfl
@@ -597,6 +620,9 @@ theorem is_unit_mk {a : α} : IsUnit (Associates.mk a) ↔ IsUnit a :=
       rw [is_unit_iff_eq_one, one_eq_mk_one, mk_eq_mk_iff_associated]
     _ ↔ IsUnit a := associated_one_iff_is_unit
     
+
+theorem mk_injective [Unique (Units α)] : Function.Injective (@Associates.mk α _) := fun a b h =>
+  associated_iff_eq.mp (Associates.mk_eq_mk_iff_associated.mp h)
 
 section Order
 
@@ -707,10 +733,7 @@ theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ _root_.prime p := by
   apply and_congr
   · rw [is_unit_mk]
     
-  apply forall_congrₓ
-  intro a
-  apply forall_congrₓ
-  intro b
+  refine' forall₂_congrₓ fun a b => _
   rw [mk_mul_mk, mk_dvd_mk, mk_dvd_mk, mk_dvd_mk]
 
 theorem irreducible_mk (a : α) : Irreducible (Associates.mk a) ↔ Irreducible a := by
@@ -831,7 +854,61 @@ instance : CancelCommMonoidWithZero (Associates α) :=
 theorem dvd_not_unit_iff_lt {a b : Associates α} : DvdNotUnit a b ↔ a < b :=
   dvd_and_not_dvd_iff.symm
 
+theorem le_one_iff {p : Associates α} : p ≤ 1 ↔ p = 1 := by
+  rw [← Associates.bot_eq_one, le_bot_iff]
+
 end CancelCommMonoidWithZero
 
 end Associates
+
+section CancelCommMonoidWithZero
+
+theorem DvdNotUnit.is_unit_of_irreducible_right [CancelCommMonoidWithZero α] {p q : α} (h : DvdNotUnit p q)
+    (hq : Irreducible q) : IsUnit p := by
+  obtain ⟨hp', x, hx, hx'⟩ := h
+  exact Or.resolve_right ((irreducible_iff.1 hq).right p x hx') hx
+
+theorem not_irreducible_of_not_unit_dvd_not_unit [CancelCommMonoidWithZero α] {p q : α} (hp : ¬IsUnit p)
+    (h : DvdNotUnit p q) : ¬Irreducible q :=
+  mt h.is_unit_of_irreducible_right hp
+
+theorem DvdNotUnit.not_unit [CancelCommMonoidWithZero α] {p q : α} (hp : DvdNotUnit p q) : ¬IsUnit q := by
+  obtain ⟨-, x, hx, rfl⟩ := hp
+  exact fun hc => hx (is_unit_iff_dvd_one.mpr (dvd_of_mul_left_dvd (is_unit_iff_dvd_one.mp hc)))
+
+theorem is_unit_of_associated_mul [CancelCommMonoidWithZero α] {p b : α} (h : Associated (p * b) p) (hp : p ≠ 0) :
+    IsUnit b := by
+  cases' h with a ha
+  refine' is_unit_of_mul_eq_one b a ((mul_right_inj' hp).mp _)
+  rwa [← mul_assocₓ, mul_oneₓ]
+
+theorem DvdNotUnit.not_associated [CancelCommMonoidWithZero α] {p q : α} (h : DvdNotUnit p q) : ¬Associated p q := by
+  rintro ⟨a, rfl⟩
+  obtain ⟨hp, x, hx, hx'⟩ := h
+  rcases(mul_right_inj' hp).mp hx' with rfl
+  exact hx a.is_unit
+
+theorem dvd_not_unit_of_dvd_not_unit_associated [CancelCommMonoidWithZero α] [Nontrivial α] {p q r : α}
+    (h : DvdNotUnit p q) (h' : Associated q r) : DvdNotUnit p r := by
+  obtain ⟨u, rfl⟩ := Associated.symm h'
+  obtain ⟨hp, x, hx⟩ := h
+  refine' ⟨hp, x * ↑u⁻¹, DvdNotUnit.not_unit ⟨u⁻¹.ne_zero, x, hx.left, mul_commₓ _ _⟩, _⟩
+  rw [← mul_assocₓ, ← hx.right, mul_assocₓ, Units.mul_inv, mul_oneₓ]
+
+theorem DvdNotUnit.ne [CancelCommMonoidWithZero α] {p q : α} (h : DvdNotUnit p q) : p ≠ q := by
+  by_contra hcontra
+  obtain ⟨hp, x, hx', hx''⟩ := h
+  conv_lhs at hx'' => rw [← hcontra, ← mul_oneₓ p]
+  rw [(mul_left_cancel₀ hp hx'').symm] at hx'
+  exact hx' is_unit_one
+
+theorem pow_injective_of_not_unit [CancelCommMonoidWithZero α] {q : α} (hq : ¬IsUnit q) (hq' : q ≠ 0) :
+    Function.Injective fun n : ℕ => q ^ n := by
+  refine' injective_of_lt_imp_ne fun n m h => DvdNotUnit.ne ⟨pow_ne_zero n hq', q ^ (m - n), _, _⟩
+  · exact not_is_unit_of_not_is_unit_dvd hq (dvd_pow (dvd_refl _) (Nat.sub_pos_of_ltₓ h).ne')
+    
+  · exact (pow_mul_pow_sub q h.le).symm
+    
+
+end CancelCommMonoidWithZero
 

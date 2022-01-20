@@ -168,7 +168,7 @@ structure TopologicalFiberBundle.Pretrivialization (proj : Z → B) extends Loca
   BaseSet : Set B
   open_base_set : IsOpen base_set
   source_eq : source = proj ⁻¹' base_set
-  target_eq : target = Set.Prod base_set univ
+  target_eq : target = base_set ×ˢ (univ : Set F)
   proj_to_fun : ∀, ∀ p ∈ source, ∀, (to_fun p).1 = proj p
 
 open TopologicalFiberBundle
@@ -238,7 +238,7 @@ theorem preimage_symm_proj_base_set : e.to_local_equiv.symm ⁻¹' (proj ⁻¹' 
 
 @[simp, mfld_simps]
 theorem preimage_symm_proj_inter (s : Set B) :
-    e.to_local_equiv.symm ⁻¹' (proj ⁻¹' s) ∩ e.base_set.prod univ = (s ∩ e.base_set).Prod univ := by
+    e.to_local_equiv.symm ⁻¹' (proj ⁻¹' s) ∩ e.base_set ×ˢ (univ : Set F) = (s ∩ e.base_set) ×ˢ (univ : Set F) := by
   ext ⟨x, y⟩
   suffices x ∈ e.base_set → (proj (e.to_local_equiv.symm (x, y)) ∈ s ↔ x ∈ s) by
     simpa only [prod_mk_mem_set_prod_eq, mem_inter_eq, and_trueₓ, mem_univ, And.congr_left_iff]
@@ -258,7 +258,7 @@ structure TopologicalFiberBundle.Trivialization (proj : Z → B) extends LocalHo
   BaseSet : Set B
   open_base_set : IsOpen base_set
   source_eq : source = proj ⁻¹' base_set
-  target_eq : target = Set.Prod base_set univ
+  target_eq : target = base_set ×ˢ (univ : Set F)
   proj_to_fun : ∀, ∀ p ∈ source, ∀, (to_local_homeomorph p).1 = proj p
 
 open TopologicalFiberBundle
@@ -595,7 +595,7 @@ end Comap
 namespace TopologicalFiberBundle.Trivialization
 
 theorem is_image_preimage_prod (e : trivialization F proj) (s : Set B) :
-    e.to_local_homeomorph.is_image (proj ⁻¹' s) (s.prod univ) := fun x hx => by
+    e.to_local_homeomorph.is_image (proj ⁻¹' s) (s ×ˢ (univ : Set F)) := fun x hx => by
   simp [e.coe_fst', hx]
 
 /-- Restrict a `trivialization` to an open set in the base. `-/
@@ -626,8 +626,8 @@ noncomputable def piecewise (e e' : trivialization F proj) (s : Set B)
     (Hs : e.base_set ∩ Frontier s = e'.base_set ∩ Frontier s) (Heq : eq_on e e' $ proj ⁻¹' (e.base_set ∩ Frontier s)) :
     trivialization F proj where
   toLocalHomeomorph :=
-    e.to_local_homeomorph.piecewise e'.to_local_homeomorph (proj ⁻¹' s) (s.prod univ) (e.is_image_preimage_prod s)
-      (e'.is_image_preimage_prod s)
+    e.to_local_homeomorph.piecewise e'.to_local_homeomorph (proj ⁻¹' s) (s ×ˢ (univ : Set F))
+      (e.is_image_preimage_prod s) (e'.is_image_preimage_prod s)
       (by
         rw [e.frontier_preimage, e'.frontier_preimage, Hs])
       (by
@@ -797,7 +797,7 @@ structure TopologicalFiberBundleCore (ι : Type _) (B : Type _) [TopologicalSpac
   coordChange : ι → ι → B → F → F
   coord_change_self : ∀ i, ∀, ∀ x ∈ base_set i, ∀, ∀ v, coord_change i i x v = v
   coord_change_continuous :
-    ∀ i j, ContinuousOn (fun p : B × F => coord_change i j p.1 p.2) (Set.Prod (base_set i ∩ base_set j) univ)
+    ∀ i j, ContinuousOn (fun p : B × F => coord_change i j p.1 p.2) ((base_set i ∩ base_set j) ×ˢ (univ : Set F))
   coord_change_comp :
     ∀ i j k,
       ∀,
@@ -849,8 +849,8 @@ def proj : Z.total_space → B :=
 
 /-- Local homeomorphism version of the trivialization change. -/
 def triv_change (i j : ι) : LocalHomeomorph (B × F) (B × F) where
-  Source := Set.Prod (Z.base_set i ∩ Z.base_set j) univ
-  Target := Set.Prod (Z.base_set i ∩ Z.base_set j) univ
+  Source := (Z.base_set i ∩ Z.base_set j) ×ˢ (univ : Set F)
+  Target := (Z.base_set i ∩ Z.base_set j) ×ˢ (univ : Set F)
   toFun := fun p => ⟨p.1, Z.coord_change i j p.1 p.2⟩
   invFun := fun p => ⟨p.1, Z.coord_change j i p.1 p.2⟩
   map_source' := fun p hp => by
@@ -895,7 +895,7 @@ and use `Z.local_triv` instead.
 -/
 def local_triv_as_local_equiv (i : ι) : LocalEquiv Z.total_space (B × F) where
   Source := Z.proj ⁻¹' Z.base_set i
-  Target := Set.Prod (Z.base_set i) univ
+  Target := Z.base_set i ×ˢ (univ : Set F)
   invFun := fun p => ⟨p.1, Z.coord_change i (Z.index_at p.1) p.1 p.2⟩
   toFun := fun p => ⟨p.1, Z.coord_change (Z.index_at p.1) i p.1 p.2⟩
   map_source' := fun p hp => by
@@ -964,7 +964,7 @@ variable {ι}
 theorem open_source' (i : ι) : IsOpen (Z.local_triv_as_local_equiv i).Source := by
   apply TopologicalSpace.GenerateOpen.basic
   simp only [exists_prop, mem_Union, mem_singleton_iff]
-  refine' ⟨i, Set.Prod (Z.base_set i) univ, (Z.is_open_base_set i).Prod is_open_univ, _⟩
+  refine' ⟨i, Z.base_set i ×ˢ (univ : Set F), (Z.is_open_base_set i).Prod is_open_univ, _⟩
   ext p
   simp only [local_triv_as_local_equiv_apply, prod_mk_mem_set_prod_eq, mem_inter_eq, and_selfₓ,
     mem_local_triv_as_local_equiv_source, and_trueₓ, mem_univ, mem_preimage]

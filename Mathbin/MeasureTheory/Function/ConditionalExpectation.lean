@@ -82,7 +82,7 @@ function. This is similar to `ae_measurable`, but the `measurable_space` structu
 measurability statement and for the measure are different. -/
 def ae_measurable' {α β} [MeasurableSpace β] (m : MeasurableSpace α) {m0 : MeasurableSpace α} (f : α → β)
     (μ : Measureₓ α) : Prop :=
-  ∃ g : α → β, @Measurable α β m _ g ∧ f =ᵐ[μ] g
+  ∃ g : α → β, measurable[m] g ∧ f =ᵐ[μ] g
 
 namespace AeMeasurable'
 
@@ -97,11 +97,11 @@ theorem add [Add β] [HasMeasurableAdd₂ β] (hf : ae_measurable' m f μ) (hg :
     ae_measurable' m (f + g) μ := by
   rcases hf with ⟨f', h_f'_meas, hff'⟩
   rcases hg with ⟨g', h_g'_meas, hgg'⟩
-  exact ⟨f' + g', @Measurable.add _ _ _ _ m _ f' g' h_f'_meas h_g'_meas, hff'.add hgg'⟩
+  exact ⟨f' + g', h_f'_meas.add h_g'_meas, hff'.add hgg'⟩
 
 theorem neg [Neg β] [HasMeasurableNeg β] {f : α → β} (hfm : ae_measurable' m f μ) : ae_measurable' m (-f) μ := by
   rcases hfm with ⟨f', hf'_meas, hf_ae⟩
-  refine' ⟨-f', @Measurable.neg _ _ _ _ _ m _ hf'_meas, hf_ae.mono fun x hx => _⟩
+  refine' ⟨-f', hf'_meas.neg, hf_ae.mono fun x hx => _⟩
   simp_rw [Pi.neg_apply]
   rw [hx]
 
@@ -109,22 +109,20 @@ theorem sub [Sub β] [HasMeasurableSub₂ β] {f g : α → β} (hfm : ae_measur
     ae_measurable' m (f - g) μ := by
   rcases hfm with ⟨f', hf'_meas, hf_ae⟩
   rcases hgm with ⟨g', hg'_meas, hg_ae⟩
-  refine' ⟨f' - g', @Measurable.sub _ _ _ _ m _ _ _ hf'_meas hg'_meas, hf_ae.mp (hg_ae.mono fun x hx1 hx2 => _)⟩
+  refine' ⟨f' - g', hf'_meas.sub hg'_meas, hf_ae.mp (hg_ae.mono fun x hx1 hx2 => _)⟩
   simp_rw [Pi.sub_apply]
   rw [hx1, hx2]
 
 theorem const_smul [HasScalar 𝕜 β] [HasMeasurableSmul 𝕜 β] (c : 𝕜) (hf : ae_measurable' m f μ) :
     ae_measurable' m (c • f) μ := by
   rcases hf with ⟨f', h_f'_meas, hff'⟩
-  refine' ⟨c • f', @Measurable.const_smul _ _ _ _ _ _ m _ f' h_f'_meas c, _⟩
+  refine' ⟨c • f', h_f'_meas.const_smul c, _⟩
   exact eventually_eq.fun_comp hff' fun x => c • x
 
 theorem const_inner {𝕜} [IsROrC 𝕜] [InnerProductSpace 𝕜 β] [second_countable_topology β] [OpensMeasurableSpace β]
     {f : α → β} (hfm : ae_measurable' m f μ) (c : β) : ae_measurable' m (fun x => (inner c (f x) : 𝕜)) μ := by
   rcases hfm with ⟨f', hf'_meas, hf_ae⟩
-  refine'
-    ⟨fun x => (inner c (f' x) : 𝕜), @Measurable.inner _ _ _ _ _ m _ _ _ _ _ (@measurable_const _ _ _ m _) hf'_meas,
-      hf_ae.mono fun x hx => _⟩
+  refine' ⟨fun x => (inner c (f' x) : 𝕜), (@measurable_const _ _ _ m _).inner hf'_meas, hf_ae.mono fun x hx => _⟩
   dsimp only
   rw [hx]
 
@@ -330,7 +328,7 @@ theorem Lp_meas_subgroup_to_Lp_trim_add (hm : m ≤ m0) (f g : Lp_meas_subgroup 
   ext1
   refine' eventually_eq.trans _ (Lp.coe_fn_add _ _).symm
   refine' ae_eq_trim_of_measurable hm (Lp.measurable _) _ _
-  · exact @Measurable.add _ _ _ _ m _ _ _ (Lp.measurable _) (Lp.measurable _)
+  · exact (Lp.measurable _).add (Lp.measurable _)
     
   refine' (Lp_meas_subgroup_to_Lp_trim_ae_eq hm _).trans _
   refine'
@@ -368,7 +366,7 @@ theorem Lp_meas_to_Lp_trim_smul (hm : m ≤ m0) (c : 𝕜) (f : Lp_meas F 𝕜 m
   ext1
   refine' eventually_eq.trans _ (Lp.coe_fn_smul _ _).symm
   refine' ae_eq_trim_of_measurable hm (Lp.measurable _) _ _
-  · exact @Measurable.const_smul _ _ α _ _ _ m _ _ (Lp.measurable _) c
+  · exact (Lp.measurable _).const_smul c
     
   refine' (Lp_meas_to_Lp_trim_ae_eq hm _).trans _
   refine' (Lp.coe_fn_smul _ _).trans _
@@ -880,7 +878,7 @@ theorem condexp_L2_indicator_eq_to_span_singleton_comp (hm : m ≤ m0) (hs : Mea
 variable {𝕜}
 
 theorem set_lintegral_nnnorm_condexp_L2_indicator_le (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : E')
-    {t : Set α} (ht : @MeasurableSet _ m t) (hμt : μ t ≠ ∞) :
+    {t : Set α} (ht : measurable_set[m] t) (hμt : μ t ≠ ∞) :
     (∫⁻ a in t, ∥condexp_L2 𝕜 hm (indicator_const_Lp 2 hs hμs x) a∥₊ ∂μ) ≤ μ (s ∩ t) * ∥x∥₊ :=
   calc
     (∫⁻ a in t, ∥condexp_L2 𝕜 hm (indicator_const_Lp 2 hs hμs x) a∥₊ ∂μ) =
@@ -957,7 +955,7 @@ theorem condexp_ind_smul_ae_eq_smul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs
   (to_span_singleton ℝ x).coe_fn_comp_LpL _
 
 theorem set_lintegral_nnnorm_condexp_ind_smul_le (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G)
-    {t : Set α} (ht : @MeasurableSet _ m t) (hμt : μ t ≠ ∞) :
+    {t : Set α} (ht : measurable_set[m] t) (hμt : μ t ≠ ∞) :
     (∫⁻ a in t, ∥condexp_ind_smul hm hs hμs x a∥₊ ∂μ) ≤ μ (s ∩ t) * ∥x∥₊ :=
   calc
     (∫⁻ a in t, ∥condexp_ind_smul hm hs hμs x a∥₊ ∂μ) =

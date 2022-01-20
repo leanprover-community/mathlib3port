@@ -64,9 +64,9 @@ Absorbent and balanced sets in a vector space over a normed field.
 
 open NormedField Set
 
-open_locale Pointwise TopologicalSpace
+open_locale Pointwise TopologicalSpace Nnreal
 
-variable {𝕜 E : Type _}
+variable {R 𝕜 E ι : Type _}
 
 section SemiNormedRing
 
@@ -264,20 +264,28 @@ section HasScalar
 
 variable [HasScalar 𝕜 E]
 
-instance : Inhabited (Seminorm 𝕜 E) :=
-  ⟨{ toFun := fun _ => 0, smul' := fun _ _ => (mul_zero _).symm,
-      triangle' := fun x y => by
-        rw [add_zeroₓ] }⟩
+instance FunLike : FunLike (Seminorm 𝕜 E) E fun _ => ℝ where
+  coe := Seminorm.toFun
+  coe_injective' := fun f g h => by
+    cases f <;> cases g <;> congr
 
+/-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn`. -/
 instance : CoeFun (Seminorm 𝕜 E) fun _ => E → ℝ :=
   ⟨fun p => p.to_fun⟩
 
 @[ext]
-theorem ext {p q : Seminorm 𝕜 E} (h : (p : E → ℝ) = q) : p = q := by
-  cases p
-  cases q
-  have : p_to_fun = q_to_fun := h
-  simp_rw [this]
+theorem ext {p q : Seminorm 𝕜 E} (h : ∀ x, (p : E → ℝ) x = q x) : p = q :=
+  FunLike.ext p q h
+
+instance : HasZero (Seminorm 𝕜 E) :=
+  ⟨{ toFun := 0, smul' := fun _ _ => (mul_zero _).symm, triangle' := fun _ _ => Eq.ge (zero_addₓ _) }⟩
+
+@[simp]
+theorem coe_zero : ⇑(0 : Seminorm 𝕜 E) = 0 :=
+  rfl
+
+instance : Inhabited (Seminorm 𝕜 E) :=
+  ⟨0⟩
 
 variable (p : Seminorm 𝕜 E) (c : 𝕜) (x y : E) (r : ℝ)
 
@@ -286,6 +294,97 @@ protected theorem smul : p (c • x) = ∥c∥ * p x :=
 
 protected theorem triangle : p (x + y) ≤ p x + p y :=
   p.triangle' _ _
+
+/-- Any action on `ℝ` which factors through `ℝ≥0` applies to a seminorm. -/
+instance [HasScalar R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] : HasScalar R (Seminorm 𝕜 E) where
+  smul := fun r p =>
+    { toFun := fun x => r • p x,
+      smul' := fun _ _ => by
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
+        rw [p.smul, mul_left_commₓ],
+      triangle' := fun _ _ => by
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
+        exact (mul_le_mul_of_nonneg_left (p.triangle _ _) (Nnreal.coe_nonneg _)).trans_eq (mul_addₓ _ _ _) }
+
+theorem coe_smul [HasScalar R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p : Seminorm 𝕜 E) :
+    ⇑(r • p) = r • p :=
+  rfl
+
+@[simp]
+theorem smul_apply [HasScalar R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p : Seminorm 𝕜 E) (x : E) :
+    (r • p) x = r • p x :=
+  rfl
+
+instance : Add (Seminorm 𝕜 E) where
+  add := fun p q =>
+    { toFun := fun x => p x + q x,
+      smul' := fun a x => by
+        rw [p.smul, q.smul, mul_addₓ],
+      triangle' := fun _ _ =>
+        LE.le.trans_eq (add_le_add (p.triangle _ _) (q.triangle _ _)) (add_add_add_commₓ _ _ _ _) }
+
+theorem coe_add (p q : Seminorm 𝕜 E) : ⇑(p + q) = p + q :=
+  rfl
+
+@[simp]
+theorem add_apply (p q : Seminorm 𝕜 E) (x : E) : (p + q) x = p x + q x :=
+  rfl
+
+instance : AddMonoidₓ (Seminorm 𝕜 E) :=
+  FunLike.coe_injective.addMonoidSmul _ rfl coe_add fun p n => coe_smul n p
+
+instance : OrderedCancelAddCommMonoid (Seminorm 𝕜 E) :=
+  { Seminorm.addMonoid,
+    (FunLike.coe_injective.OrderedCancelAddCommMonoid _ rfl coe_add : OrderedCancelAddCommMonoid (Seminorm 𝕜 E)) with
+    nsmul := · • · }
+
+instance [Monoidₓ R] [MulAction R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] : MulAction R (Seminorm 𝕜 E) :=
+  FunLike.coe_injective.MulAction _ coe_smul
+
+variable (𝕜 E)
+
+/-- `coe_fn` as an `add_monoid_hom`. Helper definition for showing that `seminorm 𝕜 E` is
+a module. -/
+@[simps]
+def coe_fn_add_monoid_hom : AddMonoidHom (Seminorm 𝕜 E) (E → ℝ) :=
+  ⟨coeFn, coe_zero, coe_add⟩
+
+theorem coe_fn_add_monoid_hom_injective : Function.Injective (coe_fn_add_monoid_hom 𝕜 E) :=
+  show @Function.Injective (Seminorm 𝕜 E) (E → ℝ) coeFn from FunLike.coe_injective
+
+variable {𝕜 E}
+
+instance [Monoidₓ R] [DistribMulAction R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] :
+    DistribMulAction R (Seminorm 𝕜 E) :=
+  (coe_fn_add_monoid_hom_injective 𝕜 E).DistribMulAction _ coe_smul
+
+instance [Semiringₓ R] [Module R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] : Module R (Seminorm 𝕜 E) :=
+  (coe_fn_add_monoid_hom_injective 𝕜 E).Module R _ coe_smul
+
+noncomputable instance : HasSup (Seminorm 𝕜 E) where
+  sup := fun p q =>
+    { toFun := p⊔q,
+      triangle' := fun x y =>
+        sup_le ((p.triangle x y).trans $ add_le_add le_sup_left le_sup_left)
+          ((q.triangle x y).trans $ add_le_add le_sup_right le_sup_right),
+      smul' := fun x v =>
+        (congr_arg2ₓ max (p.smul x v) (q.smul x v)).trans $ (mul_max_of_nonneg _ _ $ norm_nonneg x).symm }
+
+@[simp]
+theorem coe_sup (p q : Seminorm 𝕜 E) : ⇑(p⊔q) = p⊔q :=
+  rfl
+
+instance : PartialOrderₓ (Seminorm 𝕜 E) :=
+  PartialOrderₓ.lift _ FunLike.coe_injective
+
+theorem le_def (p q : Seminorm 𝕜 E) : p ≤ q ↔ (p : E → ℝ) ≤ q :=
+  Iff.rfl
+
+theorem lt_def (p q : Seminorm 𝕜 E) : p < q ↔ (p : E → ℝ) < q :=
+  Iff.rfl
+
+noncomputable instance : SemilatticeSup (Seminorm 𝕜 E) :=
+  Function.Injective.semilatticeSup _ FunLike.coe_injective coe_sup
 
 end HasScalar
 
@@ -342,6 +441,25 @@ theorem nonneg : 0 ≤ p x :=
 theorem sub_rev : p (x - y) = p (y - x) := by
   rw [← neg_sub, p.neg]
 
+instance : OrderBot (Seminorm 𝕜 E) :=
+  ⟨0, nonneg⟩
+
+@[simp]
+theorem coe_bot : ⇑(⊥ : Seminorm 𝕜 E) = 0 :=
+  rfl
+
+theorem bot_eq_zero : (⊥ : Seminorm 𝕜 E) = 0 :=
+  rfl
+
+theorem finset_sup_apply (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) :
+    s.sup p x = ↑(s.sup fun i => ⟨p i x, nonneg (p i) x⟩ : Nnreal) := by
+  induction' s using Finset.cons_induction_on with a s ha ih
+  · rw [Finset.sup_empty, Finset.sup_empty, coe_bot, _root_.bot_eq_zero, Pi.zero_apply, Nonneg.coe_zero]
+    
+  · rw [Finset.sup_cons, Finset.sup_cons, coe_sup, sup_eq_max, Pi.sup_apply, sup_eq_max, Nnreal.coe_max, Subtype.coe_mk,
+      ih]
+    
+
 end NormOneClass
 
 /-! ### Seminorm ball -/
@@ -371,11 +489,32 @@ theorem mem_ball_zero : y ∈ ball p 0 r ↔ p y < r := by
 theorem ball_zero_eq : ball p 0 r = { y : E | p y < r } :=
   Set.ext $ fun x => p.mem_ball_zero
 
+@[simp]
+theorem ball_zero' (x : E) (hr : 0 < r) : ball (0 : Seminorm 𝕜 E) x r = Set.Univ := by
+  rw [Set.eq_univ_iff_forall, ball]
+  simp [hr]
+
+theorem ball_sup (p : Seminorm 𝕜 E) (q : Seminorm 𝕜 E) (e : E) (r : ℝ) : ball (p⊔q) e r = ball p e r ∩ ball q e r := by
+  simp_rw [ball, ← Set.set_of_and, coe_sup, Pi.sup_apply, sup_lt_iff]
+
+theorem ball_finset_sup' (p : ι → Seminorm 𝕜 E) (s : Finset ι) (H : s.nonempty) (e : E) (r : ℝ) :
+    ball (s.sup' H p) e r = s.inf' H fun i => ball (p i) e r := by
+  induction' H using Finset.Nonempty.cons_induction with a a s ha hs ih
+  · classical
+    simp
+    
+  · rw [Finset.sup'_cons hs, Finset.inf'_cons hs, ball_sup, inf_eq_inter, ih]
+    
+
 end HasScalar
 
 section Module
 
 variable [NormOneClass 𝕜] [Module 𝕜 E] (p : Seminorm 𝕜 E)
+
+@[simp]
+theorem ball_bot {r : ℝ} (x : E) (hr : 0 < r) : ball (⊥ : Seminorm 𝕜 E) x r = Set.Univ :=
+  ball_zero' x hr
 
 /-- Seminorm-balls at the origin are balanced. -/
 theorem balanced_ball_zero (r : ℝ) : Balanced 𝕜 (ball p 0 r) := by
@@ -383,6 +522,17 @@ theorem balanced_ball_zero (r : ℝ) : Balanced 𝕜 (ball p 0 r) := by
   rw [mem_ball_zero, ← hx, p.smul]
   calc _ ≤ p y := mul_le_of_le_one_left (p.nonneg _) ha _ < r := by
       rwa [mem_ball_zero] at hy
+
+theorem ball_finset_sup_eq_Inter (p : ι → Seminorm 𝕜 E) (s : Finset ι) (e : E) {r : ℝ} (hr : 0 < r) :
+    ball (s.sup p) e r = ⋂ i ∈ s, ball (p i) e r := by
+  lift r to Nnreal using hr.le
+  simp_rw [ball, Inter_set_of, finset_sup_apply, Nnreal.coe_lt_coe, Finset.sup_lt_iff (show ⊥ < r from hr), ←
+    Nnreal.coe_lt_coe, Subtype.coe_mk]
+
+theorem ball_finset_sup (p : ι → Seminorm 𝕜 E) (s : Finset ι) (e : E) {r : ℝ} (hr : 0 < r) :
+    ball (s.sup p) e r = s.inf fun i => ball (p i) e r := by
+  rw [Finset.inf_eq_infi]
+  exact ball_finset_sup_eq_Inter _ _ _ hr
 
 end Module
 
@@ -421,7 +571,7 @@ end NormedField
 
 section NormedLinearOrderedField
 
-variable [NormedLinearOrderedField 𝕜] [AddCommGroupₓ E] [SemiNormedSpace ℝ 𝕜] [Module 𝕜 E]
+variable [NormedLinearOrderedField 𝕜] [AddCommGroupₓ E] [NormedSpace ℝ 𝕜] [Module 𝕜 E]
 
 section HasScalar
 
@@ -724,7 +874,7 @@ theorem Seminorm.gauge_ball (p : Seminorm ℝ E) : gauge (p.ball 0 1) = p := by
 
 theorem Seminorm.gauge_seminorm_ball (p : Seminorm ℝ E) :
     gaugeSeminorm (fun x => p.symmetric_ball_zero 1) (p.convex_ball 0 1) (p.absorbent_ball_zero zero_lt_one) = p :=
-  Seminorm.ext p.gauge_ball
+  FunLike.coe_injective p.gauge_ball
 
 end gauge
 

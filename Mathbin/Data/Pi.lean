@@ -154,7 +154,7 @@ theorem single_apply {β : Sort _} [HasZero β] (i : I) (x : β) (i' : I) : sing
 
 /-- On non-dependent functions, `pi.single` is symmetric in the two indices. -/
 theorem single_comm {β : Sort _} [HasZero β] (i : I) (x : β) (i' : I) : single i x i' = single i' x i := by
-  simp only [single_apply, eq_comm] <;> congr
+  simp [single_apply, eq_comm]
 
 theorem apply_single (f' : ∀ i, f i → g i) (hf' : ∀ i, f' i 0 = 0) (i : I) (x : f i) (j : I) :
     f' j (single i x j) = single i (f' i x) j := by

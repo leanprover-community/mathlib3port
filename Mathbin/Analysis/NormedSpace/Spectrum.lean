@@ -41,11 +41,11 @@ open_locale Ennreal
 noncomputable def spectralRadius (𝕜 : Type _) {A : Type _} [NormedField 𝕜] [Ringₓ A] [Algebra 𝕜 A] (a : A) : ℝ≥0∞ :=
   ⨆ k ∈ Spectrum 𝕜 a, ∥k∥₊
 
+variable {𝕜 : Type _} {A : Type _}
+
 namespace Spectrum
 
 section SpectrumCompact
-
-variable {𝕜 : Type _} {A : Type _}
 
 variable [NormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
 
@@ -108,8 +108,6 @@ end SpectrumCompact
 
 section ResolventDeriv
 
-variable {𝕜 : Type _} {A : Type _}
-
 variable [NondiscreteNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
 
 local notation "ρ" => ResolventSet 𝕜
@@ -125,4 +123,40 @@ theorem has_deriv_at_resolvent {a : A} {k : 𝕜} (hk : k ∈ ρ a) : HasDerivAt
 end ResolventDeriv
 
 end Spectrum
+
+namespace AlgHom
+
+section NormedField
+
+variable [NormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
+
+local notation "↑ₐ" => algebraMap 𝕜 A
+
+/-- An algebra homomorphism into the base field, as a continuous linear map (since it is
+automatically bounded). -/
+@[simps]
+def to_continuous_linear_map (φ : A →ₐ[𝕜] 𝕜) : A →L[𝕜] 𝕜 :=
+  φ.to_linear_map.mk_continuous_of_exists_bound $
+    ⟨1, fun a => (one_mulₓ ∥a∥).symm ▸ Spectrum.norm_le_norm_of_mem (φ.apply_mem_spectrum _)⟩
+
+theorem Continuous (φ : A →ₐ[𝕜] 𝕜) : Continuous φ :=
+  φ.to_continuous_linear_map.continuous
+
+end NormedField
+
+section NondiscreteNormedField
+
+variable [NondiscreteNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
+
+local notation "↑ₐ" => algebraMap 𝕜 A
+
+@[simp]
+theorem to_continuous_linear_map_norm [NormOneClass A] (φ : A →ₐ[𝕜] 𝕜) : ∥φ.to_continuous_linear_map∥ = 1 :=
+  ContinuousLinearMap.op_norm_eq_of_bounds zero_le_one
+    (fun a => (one_mulₓ ∥a∥).symm ▸ Spectrum.norm_le_norm_of_mem (φ.apply_mem_spectrum _)) fun _ _ h => by
+    simpa only [to_continuous_linear_map_apply, mul_oneₓ, map_one, norm_one] using h 1
+
+end NondiscreteNormedField
+
+end AlgHom
 

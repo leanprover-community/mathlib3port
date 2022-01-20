@@ -63,8 +63,8 @@ theorem norm_sq_eq_of_mem_circle (z : circle) : norm_sq z = 1 := by
 theorem nonzero_of_mem_circle (z : circle) : (z : ℂ) ≠ 0 :=
   nonzero_of_mem_unit_sphere z
 
-instance : Groupₓ circle :=
-  { circle.toMonoid with
+instance : CommGroupₓ circle :=
+  { circle.toCommMonoid with
     inv := fun z =>
       ⟨conj (z : ℂ), by
         simp ⟩,
@@ -72,7 +72,7 @@ instance : Groupₓ circle :=
       Subtype.ext $ by
         simp [HasInv.inv, ← norm_sq_eq_conj_mul_self, ← mul_self_abs] }
 
-theorem coe_inv_circle_eq_conj (z : circle) : ↑z⁻¹ = (conj : RingAut ℂ) z :=
+theorem coe_inv_circle_eq_conj (z : circle) : ↑z⁻¹ = conj (z : ℂ) :=
   rfl
 
 @[simp]
@@ -86,6 +86,13 @@ theorem coe_inv_circle (z : circle) : ↑z⁻¹ = (z : ℂ)⁻¹ := by
 theorem coe_div_circle (z w : circle) : ↑(z / w) = (z : ℂ) / w :=
   show ↑(z * w⁻¹) = (z : ℂ) * w⁻¹ by
     simp
+
+/-- The elements of the circle embed into the units. -/
+@[simps]
+def circle.toUnits : circle →* Units ℂ where
+  toFun := fun x => Units.mk0 x $ nonzero_of_mem_circle _
+  map_one' := Units.ext rfl
+  map_mul' := fun x y => Units.ext rfl
 
 instance : CompactSpace circle :=
   Metric.Sphere.compact_space _ _

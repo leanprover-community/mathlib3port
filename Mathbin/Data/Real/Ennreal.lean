@@ -74,14 +74,11 @@ variable {α : Type _} {β : Type _}
   and is relevant as the codomain of a measure. -/
 def Ennreal :=
   WithTop ℝ≥0 deriving HasZero, AddCommMonoidₓ, CanonicallyOrderedCommSemiring, CompleteLinearOrder, DenselyOrdered,
-  Nontrivial, CanonicallyLinearOrderedAddMonoid, Sub, HasOrderedSub
+  Nontrivial, CanonicallyLinearOrderedAddMonoid, Sub, HasOrderedSub, LinearOrderedAddCommMonoidWithTop
 
 localized [Ennreal] notation "ℝ≥0∞" => Ennreal
 
 localized [Ennreal] notation "∞" => (⊤ : Ennreal)
-
-noncomputable instance : LinearOrderedAddCommMonoid ℝ≥0∞ :=
-  { Ennreal.canonicallyOrderedCommSemiring, Ennreal.completeLinearOrder with }
 
 instance covariant_class_mul : CovariantClass ℝ≥0∞ ℝ≥0∞ (· * ·) (· ≤ ·) :=
   CanonicallyOrderedCommSemiring.to_covariant_mul_le
@@ -406,11 +403,11 @@ theorem supr_ennreal {α : Type _} [CompleteLattice α] {f : ℝ≥0∞ → α} 
 
 @[simp]
 theorem add_top : a + ∞ = ∞ :=
-  WithTop.add_top
+  add_top _
 
 @[simp]
 theorem top_add : ∞ + a = ∞ :=
-  WithTop.top_add
+  top_add _
 
 /-- Coercion `ℝ≥0 → ℝ≥0∞` as a `ring_hom`. -/
 noncomputable def of_nnreal_hom : ℝ≥0 →+* ℝ≥0∞ :=
@@ -1097,17 +1094,11 @@ theorem of_real_sum_of_nonneg {s : Finset α} {f : α → ℝ} (hf : ∀ i, i �
 
 theorem sum_lt_sum_of_nonempty {s : Finset α} (hs : s.nonempty) {f g : α → ℝ≥0∞} (Hlt : ∀, ∀ i ∈ s, ∀, f i < g i) :
     (∑ i in s, f i) < ∑ i in s, g i := by
-  classical
-  induction' s using Finset.induction_on with a s as IH
-  · exact (Finset.not_nonempty_empty hs).elim
+  induction' hs using Finset.Nonempty.cons_induction with a a s as hs IH
+  · simp [Hlt _ (Finset.mem_singleton_self _)]
     
-  · rcases Finset.eq_empty_or_nonempty s with (rfl | h's)
-    · simp [Hlt _ (Finset.mem_singleton_self _)]
-      
-    · simp only [as, Finset.sum_insert, not_false_iff]
-      exact
-        Ennreal.add_lt_add (Hlt _ (Finset.mem_insert_self _ _)) (IH h's fun i hi => Hlt _ (Finset.mem_insert_of_mem hi))
-      
+  · simp only [as, Finset.sum_cons, not_false_iff]
+    exact Ennreal.add_lt_add (Hlt _ (Finset.mem_cons_self _ _)) (IH fun i hi => Hlt _ (Finset.mem_cons.2 $ Or.inr hi))
     
 
 theorem exists_le_of_sum_le {s : Finset α} (hs : s.nonempty) {f g : α → ℝ≥0∞} (Hle : (∑ i in s, f i) ≤ ∑ i in s, g i) :
@@ -1504,8 +1495,20 @@ theorem mul_div_le : a * (b / a) ≤ b := by
 theorem inv_two_add_inv_two : (2 : ℝ≥0∞)⁻¹ + 2⁻¹ = 1 := by
   rw [← two_mul, ← div_eq_mul_inv, div_self two_ne_zero two_ne_top]
 
+theorem inv_three_add_inv_three : (3 : ℝ≥0∞)⁻¹ + 3⁻¹ + 3⁻¹ = 1 := by
+  rw
+      [show (3 : ℝ≥0∞)⁻¹ + 3⁻¹ + 3⁻¹ = 3 * 3⁻¹ by
+        ring,
+      ← div_eq_mul_inv, Ennreal.div_self] <;>
+    simp
+
+@[simp]
 theorem add_halves (a : ℝ≥0∞) : a / 2 + a / 2 = a := by
   rw [div_eq_mul_inv, ← mul_addₓ, inv_two_add_inv_two, mul_oneₓ]
+
+@[simp]
+theorem add_thirds (a : ℝ≥0∞) : a / 3 + a / 3 + a / 3 = a := by
+  rw [div_eq_mul_inv, ← mul_addₓ, ← mul_addₓ, inv_three_add_inv_three, mul_oneₓ]
 
 @[simp]
 theorem div_zero_iff : a / b = 0 ↔ a = 0 ∨ b = ∞ := by

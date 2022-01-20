@@ -2,6 +2,7 @@ import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.RingTheory.Adjoin.Fg
 import Mathbin.RingTheory.Polynomial.ScaleRoots
 import Mathbin.RingTheory.Polynomial.Tower
+import Mathbin.LinearAlgebra.Matrix.Determinant
 
 /-!
 # Integral closure of a subring.
@@ -357,6 +358,11 @@ theorem mem_integral_closure_iff_mem_fg {r : A} :
 
 variable {R} {A}
 
+theorem adjoin_le_integral_closure {x : A} (hx : IsIntegral R x) : Algebra.adjoin R {x} ≤ integralClosure R A := by
+  rw [Algebra.adjoin_le_iff]
+  simp only [SetLike.mem_coe, Set.singleton_subset_iff]
+  exact hx
+
 theorem le_integral_closure_iff_is_integral {S : Subalgebra R A} : S ≤ integralClosure R A ↔ Algebra.IsIntegral R S :=
   SetLike.forall.symm.trans
     (forall_congrₓ fun x =>
@@ -429,6 +435,11 @@ theorem IsIntegral.prod {α : Type _} {s : Finset α} (f : α → A) (h : ∀, �
 theorem IsIntegral.sum {α : Type _} {s : Finset α} (f : α → A) (h : ∀, ∀ x ∈ s, ∀, IsIntegral R (f x)) :
     IsIntegral R (∑ x in s, f x) :=
   (integralClosure R A).sum_mem h
+
+theorem IsIntegral.det {n : Type _} [Fintype n] [DecidableEq n] {M : Matrix n n A} (h : ∀ i j, IsIntegral R (M i j)) :
+    IsIntegral R M.det := by
+  rw [Matrix.det_apply]
+  exact IsIntegral.sum _ fun σ hσ => IsIntegral.zsmul (IsIntegral.prod _ fun i hi => h _ _) _
 
 section
 

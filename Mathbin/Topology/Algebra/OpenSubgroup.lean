@@ -45,10 +45,6 @@ add_decl_doc OpenSubgroup.toSubgroup
 /-- Reinterpret an `open_add_subgroup` as an `add_subgroup`. -/
 add_decl_doc OpenAddSubgroup.toAddSubgroup
 
-namespace OpenAddSubgroup
-
-end OpenAddSubgroup
-
 namespace OpenSubgroup
 
 open Function TopologicalSpace
@@ -152,7 +148,7 @@ variable {H : Type _} [Groupₓ H] [TopologicalSpace H]
 /-- The product of two open subgroups as an open subgroup of the product group. -/
 @[to_additive "The product of two open subgroups as an open subgroup of the product group."]
 def Prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
-  { (U : Subgroup G).Prod (V : Subgroup H) with Carrier := (U : Set G).Prod (V : Set H),
+  { (U : Subgroup G).Prod (V : Subgroup H) with Carrier := (U : Set G) ×ˢ (V : Set H),
     is_open' := U.is_open.prod V.is_open }
 
 end

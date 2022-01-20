@@ -86,12 +86,12 @@ private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lif
 
 private theorem comp_rel_gen_gen_subset_gen_comp_rel {s t : Set (α × α)} :
     CompRel (gen s) (gen t) ⊆ (gen (CompRel s t) : Set (Cauchyₓ α × Cauchyₓ α)) := fun ⟨f, g⟩ ⟨h, h₁, h₂⟩ =>
-  let ⟨t₁, (ht₁ : t₁ ∈ f.val), t₂, (ht₂ : t₂ ∈ h.val), (h₁ : Set.Prod t₁ t₂ ⊆ s)⟩ := mem_prod_iff.mp h₁
-  let ⟨t₃, (ht₃ : t₃ ∈ h.val), t₄, (ht₄ : t₄ ∈ g.val), (h₂ : Set.Prod t₃ t₄ ⊆ t)⟩ := mem_prod_iff.mp h₂
+  let ⟨t₁, (ht₁ : t₁ ∈ f.val), t₂, (ht₂ : t₂ ∈ h.val), (h₁ : t₁ ×ˢ t₂ ⊆ s)⟩ := mem_prod_iff.mp h₁
+  let ⟨t₃, (ht₃ : t₃ ∈ h.val), t₄, (ht₄ : t₄ ∈ g.val), (h₂ : t₃ ×ˢ t₄ ⊆ t)⟩ := mem_prod_iff.mp h₂
   have : t₂ ∩ t₃ ∈ h.val := inter_mem ht₂ ht₃
   let ⟨x, xt₂, xt₃⟩ := h.property.left.nonempty_of_mem this
   (f.val ×ᶠ g.val).sets_of_superset (prod_mem_prod ht₁ ht₄) fun ⟨a, b⟩ ⟨(ha : a ∈ t₁), (hb : b ∈ t₄)⟩ =>
-    ⟨x, h₁ (show (a, x) ∈ Set.Prod t₁ t₂ from ⟨ha, xt₂⟩), h₂ (show (x, b) ∈ Set.Prod t₃ t₄ from ⟨xt₃, hb⟩)⟩
+    ⟨x, h₁ (show (a, x) ∈ t₁ ×ˢ t₂ from ⟨ha, xt₂⟩), h₂ (show (x, b) ∈ t₃ ×ˢ t₄ from ⟨xt₃, hb⟩)⟩
 
 private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => CompRel s s) ≤ (𝓤 α).lift' gen :=
   calc
@@ -145,7 +145,7 @@ theorem dense_range_pure_cauchy : DenseRange pure_cauchy := fun f => by
     let ⟨t'', ht''₁, (ht''₂ : gen t'' ⊆ s)⟩ := (mem_lift'_sets monotone_gen).mp hs
     let ⟨t', ht'₁, ht'₂⟩ := comp_mem_uniformity_sets ht''₁
     have : t' ∈ f.val ×ᶠ f.val := f.property.right ht'₁
-    let ⟨t, ht, (h : Set.Prod t t ⊆ t')⟩ := mem_prod_same_iff.mp this
+    let ⟨t, ht, (h : t ×ˢ t ⊆ t')⟩ := mem_prod_same_iff.mp this
     let ⟨x, (hx : x ∈ t)⟩ := f.property.left.nonempty_of_mem ht
     have : t'' ∈ f.val ×ᶠ pure x :=
       mem_prod_iff.mpr
@@ -188,7 +188,7 @@ instance : CompleteSpace (Cauchyₓ α) :=
     have : map pure_cauchy f ≤ (𝓤 $ Cauchyₓ α).lift' (preimage (Prod.mk f')) :=
       le_lift' $ fun s hs =>
         let ⟨t, ht₁, (ht₂ : gen t ⊆ s)⟩ := (mem_lift'_sets monotone_gen).mp hs
-        let ⟨t', ht', (h : Set.Prod t' t' ⊆ t)⟩ := mem_prod_same_iff.mp (hf.right ht₁)
+        let ⟨t', ht', (h : t' ×ˢ t' ⊆ t)⟩ := mem_prod_same_iff.mp (hf.right ht₁)
         have : t' ⊆ { y : α | (f', pure_cauchy y) ∈ gen t } := fun x hx =>
           (f ×ᶠ pure x).sets_of_superset (prod_mem_prod ht' hx) h
         f.sets_of_superset ht' $ subset.trans this (preimage_mono ht₂)
@@ -198,7 +198,7 @@ instance : CompleteSpace (Cauchyₓ α) :=
 end
 
 instance [Inhabited α] : Inhabited (Cauchyₓ α) :=
-  ⟨pure_cauchy $ default α⟩
+  ⟨pure_cauchy default⟩
 
 instance [h : Nonempty α] : Nonempty (Cauchyₓ α) :=
   h.rec_on $ fun a => Nonempty.intro $ Cauchyₓ.pureCauchy a

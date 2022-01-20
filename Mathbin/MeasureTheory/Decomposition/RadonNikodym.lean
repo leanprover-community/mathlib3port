@@ -46,7 +46,7 @@ theorem with_density_rn_deriv_eq (μ ν : Measureₓ α) [have_lebesgue_decompos
     suffices singular_part μ ν Set.Univ = 0 by
       rw [measure.coe_zero, Pi.zero_apply, ← this]
       exact measure_mono (Set.subset_univ _)
-    rw [← Set.union_compl_self E, measure_union (@disjoint_compl_right _ E _) hE₁ hE₁.compl, hE₂, zero_addₓ]
+    rw [← measure_add_measure_compl hE₁, hE₂, zero_addₓ]
     have : (singular_part μ ν + ν.with_density (rn_deriv μ ν)) (Eᶜ) = μ (Eᶜ) := by
       rw [← hadd]
     rw [measure.coe_add, Pi.add_apply, h hE₃] at this

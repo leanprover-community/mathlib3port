@@ -130,17 +130,28 @@ theorem nodup_pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} : nodup s → (�
                 rwa [pi.cons_same, pi.cons_same] at this
         )
 
+@[simp]
+theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀, ∀ a' ∈ a ::ₘ m, ∀, δ a') :
+    (pi.cons m a (f _ (mem_cons_self _ _)) fun a' ha' => f a' (mem_cons_of_mem ha')) = f := by
+  ext a' h'
+  by_cases' a' = a
+  · subst h
+    rw [pi.cons_same]
+    
+  · rw [pi.cons_ne _ h]
+    
+
 theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
     ∀ f : ∀, ∀ a ∈ m, ∀, δ a, f ∈ pi m t ↔ ∀ a h : a ∈ m, f a h ∈ t a := by
-  refine' Multiset.induction_on m (fun f => _) fun a m ih f => _
+  intro f
+  induction' m using Multiset.induction_on with a m ih
   · simpa using
       show f = pi.empty δ by
         funext a ha <;> exact ha.elim
     
-  simp only [mem_bind, exists_prop, mem_cons, pi_cons, mem_map]
+  simp_rw [pi_cons, mem_bind, mem_map, ih]
   constructor
   · rintro ⟨b, hb, f', hf', rfl⟩ a' ha'
-    rw [ih] at hf'
     by_cases' a' = a
     · subst h
       rwa [pi.cons_same]
@@ -150,14 +161,8 @@ theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
       
     
   · intro hf
-    refine' ⟨_, hf a (mem_cons_self a _), fun a ha => f a (mem_cons_of_mem ha), (ih _).2 fun a' h' => hf _ _, _⟩
-    funext a' h'
-    by_cases' a' = a
-    · subst h
-      rw [pi.cons_same]
-      
-    · rw [pi.cons_ne _ h]
-      
+    refine' ⟨_, hf a (mem_cons_self _ _), _, fun a ha => hf a (mem_cons_of_mem ha), _⟩
+    rw [pi.cons_ext]
     
 
 end Pi

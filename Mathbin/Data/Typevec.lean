@@ -47,7 +47,7 @@ def arrow (α β : Typevec n) :=
 localized [Mvfunctor] infixl:40 " ⟹ " => Typevec.Arrow
 
 instance arrow.inhabited (α β : Typevec n) [∀ i, Inhabited (β i)] : Inhabited (α ⟹ β) :=
-  ⟨fun _ _ => default _⟩
+  ⟨fun _ _ => default⟩
 
 /-- identity of arrow composition -/
 def id {α : Typevec n} : α ⟹ α := fun i x => x
@@ -84,7 +84,7 @@ def last (α : Typevec.{u} (n + 1)) : Type _ :=
   α Fin2.fz
 
 instance last.inhabited (α : Typevec (n + 1)) [Inhabited (α Fin2.fz)] : Inhabited (last α) :=
-  ⟨(default (α Fin2.fz) : α Fin2.fz)⟩
+  ⟨show α Fin2.fz from default⟩
 
 theorem drop_append1 {α : Typevec n} {β : Type _} {i : Fin2 n} : drop (append1 α β) i = α i :=
   rfl

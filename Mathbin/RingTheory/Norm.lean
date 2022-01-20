@@ -2,7 +2,7 @@ import Mathbin.FieldTheory.PrimitiveElement
 import Mathbin.LinearAlgebra.Determinant
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff
 import Mathbin.LinearAlgebra.Matrix.ToLinearEquiv
-import Mathbin.RingTheory.PowerBasis
+import Mathbin.FieldTheory.IsAlgClosed.AlgebraicClosure
 
 /-!
 # Norm for (finite) ring extensions
@@ -40,7 +40,7 @@ variable [Algebra R S]
 
 variable {K L F : Type _} [Field K] [Field L] [Field F]
 
-variable [Algebra K L] [Algebra L F] [Algebra K F]
+variable [Algebra K L] [Algebra K F]
 
 variable {ι : Type w} [Fintype ι]
 
@@ -48,7 +48,7 @@ open FiniteDimensional
 
 open LinearMap
 
-open Matrix
+open Matrix Polynomial
 
 open_locale BigOperators
 
@@ -103,18 +103,23 @@ theorem norm_algebra_map (x : K) : norm K (algebraMap K L x) = x ^ finrank K L :
 
 section EqProdRoots
 
-theorem norm_gen_eq_prod_roots [Algebra K S] (pb : PowerBasis K S) (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
+/-- Given `pb : power_basis K S`, then the norm of `pb.gen` is
+`(-1) ^ pb.dim * coeff ((minpoly K pb.gen).map (algebra_map K F)) 0`. -/
+theorem power_basis.norm_gen_eq_coeff_zero_minpoly [Algebra K S] (pb : PowerBasis K S) :
+    (algebraMap K F) (norm K pb.gen) = -1 ^ pb.dim * coeff ((minpoly K pb.gen).map (algebraMap K F)) 0 := by
+  rw [norm_eq_matrix_det pb.basis, det_eq_sign_charpoly_coeff, charpoly_left_mul_matrix, RingHom.map_mul, map_pow,
+    RingHom.map_neg, RingHom.map_one, ← coeff_map, Fintype.card_fin]
+
+/-- Given `pb : power_basis K S`, then the norm of `pb.gen` is
+`((minpoly K pb.gen).map (algebra_map K F)).roots.prod`. -/
+theorem power_basis.norm_gen_eq_prod_roots [Algebra K S] (pb : PowerBasis K S)
+    (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
     algebraMap K F (norm K pb.gen) = ((minpoly K pb.gen).map (algebraMap K F)).roots.Prod := by
-  rw [norm_eq_matrix_det pb.basis, det_eq_sign_charpoly_coeff, charpoly_left_mul_matrix, RingHom.map_mul,
-    RingHom.map_pow, RingHom.map_neg, RingHom.map_one, ← Polynomial.coeff_map, Fintype.card_fin]
-  conv_lhs => rw [Polynomial.eq_prod_roots_of_splits hf]
-  rw [Polynomial.coeff_C_mul, Polynomial.coeff_zero_multiset_prod, Multiset.map_map,
-    (minpoly.monic pb.is_integral_gen).leadingCoeff, RingHom.map_one, one_mulₓ]
-  rw [← Multiset.prod_repeat (-1 : F), ← pb.nat_degree_minpoly, Polynomial.nat_degree_eq_card_roots hf, ←
-    Multiset.map_const, ← Multiset.prod_map_mul]
-  congr
-  convert Multiset.map_id _
-  ext f
+  rw [power_basis.norm_gen_eq_coeff_zero_minpoly, ← pb.nat_degree_minpoly,
+    prod_roots_eq_coeff_zero_of_monic_of_split (monic_map _ (minpoly.monic (PowerBasis.is_integral_gen _)))
+      ((splits_id_iff_splits _).2 hf)]
+  simp only [PowerBasis.nat_degree_minpoly, nat_degree_map]
+  rw [← mul_assocₓ, ← mul_powₓ]
   simp
 
 end EqProdRoots
@@ -186,19 +191,63 @@ theorem norm_eq_norm_adjoin [FiniteDimensional K L] [IsSeparable K L] (x : L) :
   congr
   rw [← PowerBasis.finrank, adjoin_simple.algebra_map_gen K x]
 
-section EqProdEmbeddings
-
 variable {K}
+
+section IntermediateField
+
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
+theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_one {x : L} (hx : ¬_root_.is_integral K x) :
+    norm K (adjoin_simple.gen K x) = 1 := by
+  rw [norm_eq_one_of_not_exists_basis]
+  contrapose! hx
+  obtain ⟨s, ⟨b⟩⟩ := hx
+  refine'
+    is_integral_of_mem_of_fg
+      («expr ⟮ , ⟯» K
+          "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»").toSubalgebra
+      _ x _
+  · exact (Submodule.fg_iff_finite_dimensional _).mpr (of_finset_basis b)
+    
+  · exact IntermediateField.subset_adjoin K _ (Set.mem_singleton x)
+    
+
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
+theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_prod_roots (x : L)
+    (hf : (minpoly K x).Splits (algebraMap K F)) :
+    (algebraMap K F) (norm K (adjoin_simple.gen K x)) = ((minpoly K x).map (algebraMap K F)).roots.Prod := by
+  have injKxL :
+    Function.Injective
+      (algebraMap («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»")
+        L) :=
+    RingHom.injective _
+  by_cases' hx : _root_.is_integral K x
+  swap
+  · simp [minpoly.eq_zero hx, IntermediateField.AdjoinSimple.norm_gen_eq_one hx]
+    
+  have hx' : _root_.is_integral K (adjoin_simple.gen K x) := by
+    rwa [← is_integral_algebra_map_iff injKxL, adjoin_simple.algebra_map_gen]
+    infer_instance
+  rw [← adjoin.power_basis_gen hx, power_basis.norm_gen_eq_prod_roots] <;>
+    rw [adjoin.power_basis_gen hx, minpoly.eq_of_algebra_map_eq injKxL hx'] <;>
+      try
+        simp only [adjoin_simple.algebra_map_gen _ _]
+  exact hf
+
+end IntermediateField
+
+section EqProdEmbeddings
 
 open IntermediateField IntermediateField.AdjoinSimple Polynomial
 
-variable (E : Type _) [Field E] [Algebra K E] [IsScalarTower K L F]
+variable (E : Type _) [Field E] [Algebra K E]
 
 theorem norm_eq_prod_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.gen).Splits (algebraMap K E))
     (hfx : (minpoly K pb.gen).Separable) :
     algebraMap K E (norm K pb.gen) = (@Finset.univ (PowerBasis.AlgHom.fintype pb)).Prod fun σ => σ pb.gen := by
   let this' := Classical.decEq E
-  rw [norm_gen_eq_prod_roots pb hE, Fintype.prod_equiv pb.lift_equiv', Finset.prod_mem_multiset,
+  rw [power_basis.norm_gen_eq_prod_roots pb hE, Fintype.prod_equiv pb.lift_equiv', Finset.prod_mem_multiset,
     Finset.prod_eq_multiset_prod, Multiset.to_finset_val, multiset.erase_dup_eq_self.mpr, Multiset.map_id]
   · exact nodup_roots ((separable_map _).mpr hfx)
     
@@ -209,9 +258,21 @@ theorem norm_eq_prod_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.ge
     rw [PowerBasis.lift_equiv'_apply_coe, id.def]
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
+theorem norm_eq_prod_roots [IsSeparable K L] [FiniteDimensional K L] {x : L}
+    (hF : (minpoly K x).Splits (algebraMap K F)) :
+    algebraMap K F (norm K x) =
+      ((minpoly K x).map (algebraMap K F)).roots.Prod ^
+        finrank («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»")
+          L :=
+  by
+  rw [norm_eq_norm_adjoin K x, map_pow, IntermediateField.AdjoinSimple.norm_gen_eq_prod_roots _ hF]
+
 variable (F)
 
-theorem prod_embeddings_eq_finrank_pow [IsAlgClosed E] [IsSeparable K F] [FiniteDimensional K F] (pb : PowerBasis K L) :
+theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAlgClosed E] [IsSeparable K F]
+    [FiniteDimensional K F] (pb : PowerBasis K L) :
     (∏ σ : F →ₐ[K] E, σ (algebraMap L F pb.gen)) =
       ((@Finset.univ (PowerBasis.AlgHom.fintype pb)).Prod fun σ : L →ₐ[K] E => σ pb.gen) ^ finrank L F :=
   by
@@ -250,6 +311,21 @@ theorem norm_eq_prod_embeddings [FiniteDimensional K L] [IsSeparable K L] [IsAlg
       is_separable_tower_bot_of_is_separable K
         («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") L
     exact IsSeparable.separable K _
+    
+
+theorem is_integral_norm [Algebra S L] [Algebra S K] [IsScalarTower S K L] [IsSeparable K L] [FiniteDimensional K L]
+    {x : L} (hx : _root_.is_integral S x) : _root_.is_integral S (norm K x) := by
+  have hx' : _root_.is_integral K x := is_integral_of_is_scalar_tower _ hx
+  rw [← is_integral_algebra_map_iff (algebraMap K (AlgebraicClosure L)).Injective, norm_eq_prod_roots]
+  · refine' (IsIntegral.multiset_prod fun y hy => _).pow _
+    rw [mem_roots_map (minpoly.ne_zero hx')] at hy
+    use minpoly S x, minpoly.monic hx
+    rw [← aeval_def] at hy⊢
+    exact minpoly.aeval_of_is_scalar_tower S x y hy
+    
+  · apply IsAlgClosed.splits_codomain
+    
+  · infer_instance
     
 
 end EqProdEmbeddings

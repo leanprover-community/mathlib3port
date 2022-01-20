@@ -2,6 +2,7 @@ import Mathbin.Analysis.NormedSpace.AffineIsometry
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Analysis.Asymptotics.AsymptoticEquivalent
 import Mathbin.LinearAlgebra.Matrix.ToLin
+import Mathbin.Topology.Algebra.Matrix
 
 /-!
 # Finite dimensional normed spaces over complete fields
@@ -77,7 +78,7 @@ namespace AffineIsometry
 open AffineMap
 
 variable {𝕜 : Type _} {V₁ V₂ : Type _} {P₁ P₂ : Type _} [NormedField 𝕜] [NormedGroup V₁] [SemiNormedGroup V₂]
-  [NormedSpace 𝕜 V₁] [SemiNormedSpace 𝕜 V₂] [MetricSpace P₁] [PseudoMetricSpace P₂] [NormedAddTorsor V₁ P₁]
+  [NormedSpace 𝕜 V₁] [NormedSpace 𝕜 V₂] [MetricSpace P₁] [PseudoMetricSpace P₂] [NormedAddTorsor V₁ P₁]
   [SemiNormedAddTorsor V₂ P₂]
 
 variable [FiniteDimensional 𝕜 V₁] [FiniteDimensional 𝕜 V₂]
@@ -85,7 +86,7 @@ variable [FiniteDimensional 𝕜 V₁] [FiniteDimensional 𝕜 V₂]
 /-- An affine isometry between finite dimensional spaces of equal dimension can be upgraded
     to an affine isometry equivalence. -/
 def to_affine_isometry_equiv [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂) (h : finrank 𝕜 V₁ = finrank 𝕜 V₂) : P₁ ≃ᵃⁱ[𝕜] P₂ :=
-  AffineIsometryEquiv.mk' li (li.linear_isometry.to_linear_isometry_equiv h) (arbitraryₓ P₁) fun p => by
+  AffineIsometryEquiv.mk' li (li.linear_isometry.to_linear_isometry_equiv h) (arbitrary P₁) fun p => by
     simp
 
 @[simp]
@@ -219,6 +220,26 @@ theorem LinearMap.continuous_of_finite_dimensional [FiniteDimensional 𝕜 E] (f
 theorem AffineMap.continuous_of_finite_dimensional {PE PF : Type _} [MetricSpace PE] [NormedAddTorsor E PE]
     [MetricSpace PF] [NormedAddTorsor F PF] [FiniteDimensional 𝕜 E] (f : PE →ᵃ[𝕜] PF) : Continuous f :=
   AffineMap.continuous_linear_iff.1 f.linear.continuous_of_finite_dimensional
+
+theorem ContinuousLinearMap.continuous_det : Continuous fun f : E →L[𝕜] E => f.det := by
+  change Continuous fun f : E →L[𝕜] E => (f : E →ₗ[𝕜] E).det
+  classical
+  by_cases' h : ∃ s : Finset E, Nonempty (Basis (↥s) 𝕜 E)
+  · rcases h with ⟨s, ⟨b⟩⟩
+    have : FiniteDimensional 𝕜 E := FiniteDimensional.of_finset_basis b
+    let this' : NormedGroup (Matrix s s 𝕜) := Matrix.normedGroup
+    let this' : NormedSpace 𝕜 (Matrix s s 𝕜) := Matrix.normedSpace
+    simp_rw [LinearMap.det_eq_det_to_matrix_of_finset b]
+    have A : Continuous fun f : E →L[𝕜] E => LinearMap.toMatrix b b f := by
+      change Continuous ((LinearMap.toMatrix b b).toLinearMap.comp (ContinuousLinearMap.coeLm 𝕜))
+      exact LinearMap.continuous_of_finite_dimensional _
+    convert continuous_det.comp A
+    ext f
+    congr
+    
+  · unfold LinearMap.det
+    simpa only [h, MonoidHom.one_apply, dif_neg, not_false_iff] using continuous_const
+    
 
 namespace LinearMap
 

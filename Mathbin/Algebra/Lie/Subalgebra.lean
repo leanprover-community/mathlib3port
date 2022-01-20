@@ -53,8 +53,10 @@ instance : Coe (LieSubalgebra R L) (Submodule R L) :=
 instance : HasMem L (LieSubalgebra R L) :=
   ⟨fun x L' => x ∈ (L' : Set L)⟩
 
+namespace LieSubalgebra
+
 /-- A Lie subalgebra forms a new Lie ring. -/
-instance lieSubalgebraLieRing (L' : LieSubalgebra R L) : LieRing L' where
+instance (L' : LieSubalgebra R L) : LieRing L' where
   bracket := fun x y => ⟨⁅x.val,y.val⁆, L'.lie_mem' x.property y.property⟩
   lie_add := by
     intros
@@ -73,14 +75,29 @@ instance lieSubalgebraLieRing (L' : LieSubalgebra R L) : LieRing L' where
     apply SetCoe.ext
     apply leibniz_lie
 
+section
+
+variable {R₁ : Type _} [Semiringₓ R₁]
+
+/-- A Lie subalgebra inherits module structures from `L`. -/
+instance [HasScalar R₁ R] [Module R₁ L] [IsScalarTower R₁ R L] (L' : LieSubalgebra R L) : Module R₁ L' :=
+  L'.to_submodule.module'
+
+instance [HasScalar R₁ R] [HasScalar (R₁ᵐᵒᵖ) R] [Module R₁ L] [Module (R₁ᵐᵒᵖ) L] [IsScalarTower R₁ R L]
+    [IsScalarTower (R₁ᵐᵒᵖ) R L] [IsCentralScalar R₁ L] (L' : LieSubalgebra R L) : IsCentralScalar R₁ L' :=
+  L'.to_submodule.is_central_scalar
+
+instance [HasScalar R₁ R] [Module R₁ L] [IsScalarTower R₁ R L] (L' : LieSubalgebra R L) : IsScalarTower R₁ R L' :=
+  L'.to_submodule.is_scalar_tower
+
+end
+
 /-- A Lie subalgebra forms a new Lie algebra. -/
-instance lieSubalgebraLieAlgebra (L' : LieSubalgebra R L) : LieAlgebra R L' where
+instance (L' : LieSubalgebra R L) : LieAlgebra R L' where
   lie_smul := by
     intros
     apply SetCoe.ext
     apply lie_smul
-
-namespace LieSubalgebra
 
 variable {R L} (L' : LieSubalgebra R L)
 
@@ -540,7 +557,7 @@ variable {R L s}
 theorem mem_lie_span {x : L} : x ∈ lie_span R L s ↔ ∀ K : LieSubalgebra R L, s ⊆ K → x ∈ K := by
   change x ∈ (lie_span R L s : Set L) ↔ _
   erw [Inf_coe]
-  exact Set.mem_bInter_iff
+  exact Set.mem_Inter₂
 
 theorem subset_lie_span : s ⊆ lie_span R L s := by
   intro m hm

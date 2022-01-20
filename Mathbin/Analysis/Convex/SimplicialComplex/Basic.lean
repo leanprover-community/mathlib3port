@@ -68,7 +68,7 @@ def space (K : simplicial_complex 𝕜 E) : Set E :=
   ⋃ s ∈ K.faces, convexHull 𝕜 (s : Set E)
 
 theorem mem_space_iff : x ∈ K.space ↔ ∃ s ∈ K.faces, x ∈ convexHull 𝕜 (s : Set E) :=
-  mem_bUnion_iff
+  mem_Union₂
 
 theorem convex_hull_subset_space (hs : s ∈ K.faces) : convexHull 𝕜 (↑s) ⊆ K.space :=
   subset_bUnion_of_mem hs
@@ -113,7 +113,7 @@ def of_erase (faces : Set (Finset E)) (indep : ∀, ∀ s ∈ faces, ∀, Affine
   not_empty_mem := fun h => h.2 (mem_singleton _)
   indep := fun s hs => indep _ hs.1
   down_closed := fun s t hs hts ht => ⟨down_closed _ hs.1 _ hts, ht⟩
-  inter_subset_convex_hull := fun s t hs ht => inter_subset_convex_hull _ _ hs.1 ht.1
+  inter_subset_convex_hull := fun s t hs ht => inter_subset_convex_hull _ hs.1 _ ht.1
 
 /-- Construct a simplicial complex as a subset of a given simplicial complex. -/
 @[simps]
@@ -136,7 +136,7 @@ theorem mem_vertices : x ∈ K.vertices ↔ {x} ∈ K.faces :=
 theorem vertices_eq : K.vertices = ⋃ k ∈ K.faces, (k : Set E) := by
   ext x
   refine' ⟨fun h => mem_bUnion h $ mem_coe.2 $ mem_singleton_self x, fun h => _⟩
-  obtain ⟨s, hs, hx⟩ := mem_bUnion_iff.1 h
+  obtain ⟨s, hs, hx⟩ := mem_Union₂.1 h
   exact K.down_closed hs (Finset.singleton_subset_iff.2 $ mem_coe.1 hx) (singleton_ne_empty _)
 
 theorem vertices_subset_space : K.vertices ⊆ K.space :=

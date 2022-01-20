@@ -463,7 +463,7 @@ theorem NormedGroup.tendsto_at_top [Nonempty α] [SemilatticeSup α] {β : Type 
 /-- A variant of `normed_group.tendsto_at_top` that
 uses `∃ N, ∀ n > N, ...` rather than `∃ N, ∀ n ≥ N, ...`
 -/
-theorem NormedGroup.tendsto_at_top' [Nonempty α] [SemilatticeSup α] [NoTopOrder α] {β : Type _} [SemiNormedGroup β]
+theorem NormedGroup.tendsto_at_top' [Nonempty α] [SemilatticeSup α] [NoMaxOrder α] {β : Type _} [SemiNormedGroup β]
     {f : α → β} {b : β} : tendsto f at_top (𝓝 b) ↔ ∀ ε, 0 < ε → ∃ N, ∀ n, N < n → ∥f n - b∥ < ε :=
   (at_top_basis_Ioi.tendsto_iff Metric.nhds_basis_ball).trans
     (by
@@ -550,54 +550,43 @@ theorem nnnorm_zsmul_le (n : ℤ) (a : α) : ∥n • a∥₊ ≤ ∥n∥₊ * �
 
 end
 
-section SemiNormedSpace
+section SemiNormedGroup
 
 section Prio
 
 -- ././Mathport/Syntax/Translate/Basic.lean:169:9: warning: unsupported option extends_priority
 set_option extends_priority 920
 
-/-- A seminormed space over a normed field is a vector space endowed with a seminorm which satisfies
-the equality `∥c • x∥ = ∥c∥ ∥x∥`. We require only `∥c • x∥ ≤ ∥c∥ ∥x∥` in the definition, then prove
-`∥c • x∥ = ∥c∥ ∥x∥` in `norm_smul`. -/
-class SemiNormedSpace (α : Type _) (β : Type _) [NormedField α] [SemiNormedGroup β] extends Module α β where
-  norm_smul_le : ∀ a : α b : β, ∥a • b∥ ≤ ∥a∥ * ∥b∥
-
--- ././Mathport/Syntax/Translate/Basic.lean:169:9: warning: unsupported option extends_priority
-set_option extends_priority 920
-
 /-- A normed space over a normed field is a vector space endowed with a norm which satisfies the
 equality `∥c • x∥ = ∥c∥ ∥x∥`. We require only `∥c • x∥ ≤ ∥c∥ ∥x∥` in the definition, then prove
-`∥c • x∥ = ∥c∥ ∥x∥` in `norm_smul`. -/
-class NormedSpace (α : Type _) (β : Type _) [NormedField α] [NormedGroup β] extends Module α β where
-  norm_smul_le : ∀ a : α b : β, ∥a • b∥ ≤ ∥a∥ * ∥b∥
+`∥c • x∥ = ∥c∥ ∥x∥` in `norm_smul`.
 
-/-- A normed space is a seminormed space. -/
-instance (priority := 100) NormedSpace.toSemiNormedSpace [NormedField α] [NormedGroup β] [γ : NormedSpace α β] :
-    SemiNormedSpace α β :=
-  { γ with }
+Note that since this requires `semi_normed_group` and not `normed_group`, this typeclass can be
+used for "semi normed spaces" too, just as `module` can be used for "semi modules". -/
+class NormedSpace (α : Type _) (β : Type _) [NormedField α] [SemiNormedGroup β] extends Module α β where
+  norm_smul_le : ∀ a : α b : β, ∥a • b∥ ≤ ∥a∥ * ∥b∥
 
 end Prio
 
 variable [NormedField α] [SemiNormedGroup β]
 
-instance (priority := 100) SemiNormedSpace.has_bounded_smul [SemiNormedSpace α β] : HasBoundedSmul α β where
+instance (priority := 100) NormedSpace.has_bounded_smul [NormedSpace α β] : HasBoundedSmul α β where
   dist_smul_pair' := fun x y₁ y₂ => by
-    simpa [dist_eq_norm, smul_sub] using SemiNormedSpace.norm_smul_le x (y₁ - y₂)
+    simpa [dist_eq_norm, smul_sub] using NormedSpace.norm_smul_le x (y₁ - y₂)
   dist_pair_smul' := fun x₁ x₂ y => by
-    simpa [dist_eq_norm, sub_smul] using SemiNormedSpace.norm_smul_le (x₁ - x₂) y
+    simpa [dist_eq_norm, sub_smul] using NormedSpace.norm_smul_le (x₁ - x₂) y
 
 instance NormedField.toNormedSpace : NormedSpace α α where
   norm_smul_le := fun a b => le_of_eqₓ (NormedField.norm_mul a b)
 
-theorem norm_smul [SemiNormedSpace α β] (s : α) (x : β) : ∥s • x∥ = ∥s∥ * ∥x∥ := by
+theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ∥s • x∥ = ∥s∥ * ∥x∥ := by
   by_cases' h : s = 0
   · simp [h]
     
-  · refine' le_antisymmₓ (SemiNormedSpace.norm_smul_le s x) _
+  · refine' le_antisymmₓ (NormedSpace.norm_smul_le s x) _
     calc ∥s∥ * ∥x∥ = ∥s∥ * ∥s⁻¹ • s • x∥ := by
         rw [inv_smul_smul₀ h]_ ≤ ∥s∥ * (∥s⁻¹∥ * ∥s • x∥) :=
-        mul_le_mul_of_nonneg_left (SemiNormedSpace.norm_smul_le _ _) (norm_nonneg _)_ = ∥s • x∥ := by
+        mul_le_mul_of_nonneg_left (NormedSpace.norm_smul_le _ _) (norm_nonneg _)_ = ∥s • x∥ := by
         rw [NormedField.norm_inv, ← mul_assocₓ, mul_inv_cancel (mt norm_eq_zero.1 h), one_mulₓ]
     
 
@@ -605,21 +594,21 @@ theorem norm_smul [SemiNormedSpace α β] (s : α) (x : β) : ∥s • x∥ = �
 theorem abs_norm_eq_norm (z : β) : |∥z∥| = ∥z∥ :=
   (abs_eq (norm_nonneg z)).mpr (Or.inl rfl)
 
-theorem dist_smul [SemiNormedSpace α β] (s : α) (x y : β) : dist (s • x) (s • y) = ∥s∥ * dist x y := by
+theorem dist_smul [NormedSpace α β] (s : α) (x y : β) : dist (s • x) (s • y) = ∥s∥ * dist x y := by
   simp only [dist_eq_norm, (norm_smul _ _).symm, smul_sub]
 
-theorem nnnorm_smul [SemiNormedSpace α β] (s : α) (x : β) : ∥s • x∥₊ = ∥s∥₊ * ∥x∥₊ :=
+theorem nnnorm_smul [NormedSpace α β] (s : α) (x : β) : ∥s • x∥₊ = ∥s∥₊ * ∥x∥₊ :=
   Nnreal.eq $ norm_smul s x
 
-theorem nndist_smul [SemiNormedSpace α β] (s : α) (x y : β) : nndist (s • x) (s • y) = ∥s∥₊ * nndist x y :=
+theorem nndist_smul [NormedSpace α β] (s : α) (x y : β) : nndist (s • x) (s • y) = ∥s∥₊ * nndist x y :=
   Nnreal.eq $ dist_smul s x y
 
-theorem norm_smul_of_nonneg [SemiNormedSpace ℝ β] {t : ℝ} (ht : 0 ≤ t) (x : β) : ∥t • x∥ = t * ∥x∥ := by
+theorem norm_smul_of_nonneg [NormedSpace ℝ β] {t : ℝ} (ht : 0 ≤ t) (x : β) : ∥t • x∥ = t * ∥x∥ := by
   rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg ht]
 
-variable {E : Type _} [SemiNormedGroup E] [SemiNormedSpace α E]
+variable {E : Type _} [SemiNormedGroup E] [NormedSpace α E]
 
-variable {F : Type _} [SemiNormedGroup F] [SemiNormedSpace α F]
+variable {F : Type _} [SemiNormedGroup F] [NormedSpace α F]
 
 theorem eventually_nhds_norm_smul_sub_lt (c : α) (x : E) {ε : ℝ} (h : 0 < ε) : ∀ᶠ y in 𝓝 x, ∥c • (y - x)∥ < ε :=
   have : tendsto (fun y => ∥c • (y - x)∥) (𝓝 x) (𝓝 0) :=
@@ -628,7 +617,7 @@ theorem eventually_nhds_norm_smul_sub_lt (c : α) (x : E) {ε : ℝ} (h : 0 < ε
         simp )
   this.eventually (gt_mem_nhds h)
 
-theorem closure_ball [SemiNormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Closure (ball x r) = closed_ball x r := by
+theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Closure (ball x r) = closed_ball x r := by
   refine' Set.Subset.antisymm closure_ball_subset_closed_ball fun y hy => _
   have : ContinuousWithinAt (fun c : ℝ => c • (y - x) + x) (Set.Ico 0 1) 1 :=
     ((continuous_id.smul continuous_const).add continuous_const).ContinuousWithinAt
@@ -644,13 +633,13 @@ theorem closure_ball [SemiNormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Cl
     apply mul_lt_mul' <;> assumption
     
 
-theorem frontier_ball [SemiNormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Frontier (ball x r) = sphere x r := by
+theorem frontier_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Frontier (ball x r) = sphere x r := by
   rw [Frontier, closure_ball x hr, is_open_ball.interior_eq]
   ext x
   exact (@eq_iff_le_not_lt ℝ _ _ _).symm
 
-theorem interior_closed_ball [SemiNormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) :
-    Interior (closed_ball x r) = ball x r := by
+theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Interior (closed_ball x r) = ball x r :=
+  by
   refine' Set.Subset.antisymm _ ball_subset_interior_closed_ball
   intro y hy
   rcases le_iff_lt_or_eqₓ.1 (mem_closed_ball.1 $ interior_subset hy) with (hr | rfl)
@@ -669,8 +658,8 @@ theorem interior_closed_ball [SemiNormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 <
   rw [Set.mem_Icc, ← abs_le, ← Real.norm_eq_abs, ← mul_le_mul_right hr]
   simpa [f, dist_eq_norm, norm_smul] using hc
 
-theorem frontier_closed_ball [SemiNormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) :
-    Frontier (closed_ball x r) = sphere x r := by
+theorem frontier_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Frontier (closed_ball x r) = sphere x r :=
+  by
   rw [Frontier, closure_closed_ball, interior_closed_ball x hr, closed_ball_diff_ball]
 
 /-- A (semi) normed real vector space is homeomorphic to the unit ball in the same space.
@@ -679,7 +668,7 @@ This homeomorphism sends `x : E` to `(1 + ∥x∥)⁻¹ • x`.
 In many cases the actual implementation is not important, so we don't mark the projection lemmas
 `homeomorph_unit_ball_apply_coe` and `homeomorph_unit_ball_symm_apply` as `@[simp]`. -/
 @[simps (config := { attrs := [] })]
-def homeomorphUnitBall {E : Type _} [SemiNormedGroup E] [SemiNormedSpace ℝ E] : E ≃ₜ ball (0 : E) 1 where
+def homeomorphUnitBall {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E] : E ≃ₜ ball (0 : E) 1 where
   toFun := fun x =>
     ⟨(1 + ∥x∥)⁻¹ • x, by
       have : ∥x∥ < |1 + ∥x∥| := (lt_one_add _).trans_le (le_abs_self _)
@@ -722,25 +711,24 @@ variable {α}
 
 open NormedField
 
-/-- The product of two seminormed spaces is a seminormed space, with the sup norm. -/
-instance Prod.semiNormedSpace : SemiNormedSpace α (E × F) :=
+/-- The product of two normed spaces is a normed space, with the sup norm. -/
+instance Prod.normedSpace : NormedSpace α (E × F) :=
   { Prod.normedGroup, Prod.module with
     norm_smul_le := fun s x =>
       le_of_eqₓ $ by
         simp [Prod.semi_norm_def, norm_smul, mul_max_of_nonneg] }
 
-/-- The product of finitely many seminormed spaces is a seminormed space, with the sup norm. -/
-instance Pi.semiNormedSpace {E : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (E i)] [∀ i, SemiNormedSpace α (E i)] :
-    SemiNormedSpace α (∀ i, E i) where
+/-- The product of finitely many normed spaces is a normed space, with the sup norm. -/
+instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (E i)] [∀ i, NormedSpace α (E i)] :
+    NormedSpace α (∀ i, E i) where
   norm_smul_le := fun a f =>
     le_of_eqₓ $
       show (↑Finset.sup Finset.univ fun b : ι => ∥a • f b∥₊ : ℝ) = ∥a∥₊ * ↑Finset.sup Finset.univ fun b : ι => ∥f b∥₊ by
         simp only [(Nnreal.coe_mul _ _).symm, Nnreal.mul_finset_sup, nnnorm_smul]
 
-/-- A subspace of a seminormed space is also a normed space, with the restriction of the norm. -/
-instance Submodule.semiNormedSpace {𝕜 R : Type _} [HasScalar 𝕜 R] [NormedField 𝕜] [Ringₓ R] {E : Type _}
-    [SemiNormedGroup E] [SemiNormedSpace 𝕜 E] [Module R E] [IsScalarTower 𝕜 R E] (s : Submodule R E) :
-    SemiNormedSpace 𝕜 s where
+/-- A subspace of a normed space is also a normed space, with the restriction of the norm. -/
+instance Submodule.normedSpace {𝕜 R : Type _} [HasScalar 𝕜 R] [NormedField 𝕜] [Ringₓ R] {E : Type _} [SemiNormedGroup E]
+    [NormedSpace 𝕜 E] [Module R E] [IsScalarTower 𝕜 R E] (s : Submodule R E) : NormedSpace 𝕜 s where
   norm_smul_le := fun c x => le_of_eqₓ $ norm_smul c (x : E)
 
 /-- If there is a scalar `c` with `∥c∥>1`, then any element with nonzero norm can be
@@ -775,9 +763,9 @@ theorem rescale_to_shell_semi_normed {c : α} (hc : 1 < ∥c∥) {ε : ℝ} (εp
     exact mul_le_mul_of_nonneg_right hn.1 (norm_nonneg _)
     
 
-end SemiNormedSpace
+end SemiNormedGroup
 
-section NormedSpace
+section NormedGroup
 
 variable [NormedField α]
 
@@ -786,6 +774,22 @@ variable {E : Type _} [NormedGroup E] [NormedSpace α E]
 variable {F : Type _} [NormedGroup F] [NormedSpace α F]
 
 open NormedField
+
+/-- While this may appear identical to `normed_space.to_module`, it contains an implicit argument
+involving `normed_group.to_semi_normed_group` that typeclass inference has trouble inferring.
+
+Specifically, the following instance cannot be found without this `normed_space.to_module'`:
+```lean
+example
+  (𝕜 ι : Type*) (E : ι → Type*)
+  [normed_field 𝕜] [Π i, normed_group (E i)] [Π i, normed_space 𝕜 (E i)] :
+  Π i, module 𝕜 (E i) := by apply_instance
+```
+
+[This Zulip thread](https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Typeclass.20resolution.20under.20binders/near/245151099)
+gives some more context. -/
+instance (priority := 100) NormedSpace.toModule' : Module α F :=
+  NormedSpace.toModule
 
 theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) :
     Interior (closed_ball x r) = ball x r := by
@@ -810,15 +814,6 @@ theorem rescale_to_shell {c : α} (hc : 1 < ∥c∥) {ε : ℝ} (εpos : 0 < ε)
     ∃ d : α, d ≠ 0 ∧ ∥d • x∥ < ε ∧ ε / ∥c∥ ≤ ∥d • x∥ ∧ ∥d∥⁻¹ ≤ ε⁻¹ * ∥c∥ * ∥x∥ :=
   rescale_to_shell_semi_normed hc εpos (ne_of_ltₓ (norm_pos_iff.2 hx)).symm
 
-/-- The product of two normed spaces is a normed space, with the sup norm. -/
-instance : NormedSpace α (E × F) :=
-  { Prod.semiNormedSpace with }
-
-/-- The product of finitely many normed spaces is a normed space, with the sup norm. -/
-instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, NormedGroup (E i)] [∀ i, NormedSpace α (E i)] :
-    NormedSpace α (∀ i, E i) :=
-  { Pi.semiNormedSpace with }
-
 section
 
 attribute [local instance] Matrix.normedGroup
@@ -832,12 +827,7 @@ def Matrix.normedSpace {α : Type _} [NormedField α] {n m : Type _} [Fintype n]
 
 end
 
-/-- A subspace of a normed space is also a normed space, with the restriction of the norm. -/
-instance Submodule.normedSpace {𝕜 R : Type _} [HasScalar 𝕜 R] [NormedField 𝕜] [Ringₓ R] {E : Type _} [NormedGroup E]
-    [NormedSpace 𝕜 E] [Module R E] [IsScalarTower 𝕜 R E] (s : Submodule R E) : NormedSpace 𝕜 s :=
-  { Submodule.semiNormedSpace s with }
-
-end NormedSpace
+end NormedGroup
 
 section NormedSpaceNondiscrete
 
@@ -877,37 +867,26 @@ end NormedSpaceNondiscrete
 
 section NormedAlgebra
 
-/-- A seminormed algebra `𝕜'` over `𝕜` is an algebra endowed with a seminorm for which the
+/-- A normed algebra `𝕜'` over `𝕜` is an algebra endowed with a norm for which the
 embedding of `𝕜` in `𝕜'` is an isometry. -/
-class SemiNormedAlgebra (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [SemiNormedRing 𝕜'] extends Algebra 𝕜 𝕜' where
+class NormedAlgebra (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [SemiNormedRing 𝕜'] extends Algebra 𝕜 𝕜' where
   norm_algebra_map_eq : ∀ x : 𝕜, ∥algebraMap 𝕜 𝕜' x∥ = ∥x∥
-
-/-- A normed algebra `𝕜'` over `𝕜` is an algebra endowed with a norm for which the embedding of
-`𝕜` in `𝕜'` is an isometry. -/
-class NormedAlgebra (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [NormedRing 𝕜'] extends Algebra 𝕜 𝕜' where
-  norm_algebra_map_eq : ∀ x : 𝕜, ∥algebraMap 𝕜 𝕜' x∥ = ∥x∥
-
-/-- A normed algebra is a seminormed algebra. -/
-instance (priority := 100) NormedAlgebra.toSemiNormedAlgebra (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [NormedRing 𝕜']
-    [NormedAlgebra 𝕜 𝕜'] : SemiNormedAlgebra 𝕜 𝕜' where
-  norm_algebra_map_eq := NormedAlgebra.norm_algebra_map_eq
 
 @[simp]
-theorem norm_algebra_map_eq {𝕜 : Type _} (𝕜' : Type _) [NormedField 𝕜] [SemiNormedRing 𝕜'] [h : SemiNormedAlgebra 𝕜 𝕜']
+theorem norm_algebra_map_eq {𝕜 : Type _} (𝕜' : Type _) [NormedField 𝕜] [SemiNormedRing 𝕜'] [h : NormedAlgebra 𝕜 𝕜']
     (x : 𝕜) : ∥algebraMap 𝕜 𝕜' x∥ = ∥x∥ :=
-  SemiNormedAlgebra.norm_algebra_map_eq _
+  NormedAlgebra.norm_algebra_map_eq _
 
 /-- In a normed algebra, the inclusion of the base field in the extended field is an isometry. -/
-theorem algebra_map_isometry (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [SemiNormedRing 𝕜'] [SemiNormedAlgebra 𝕜 𝕜'] :
+theorem algebra_map_isometry (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [SemiNormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜'] :
     Isometry (algebraMap 𝕜 𝕜') := by
   refine' isometry_emetric_iff_metric.2 fun x y => _
   rw [dist_eq_norm, dist_eq_norm, ← RingHom.map_sub, norm_algebra_map_eq]
 
-variable (𝕜 : Type _) [NormedField 𝕜]
+variable (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜]
 
-variable (𝕜' : Type _) [SemiNormedRing 𝕜']
-
-instance (priority := 100) SemiNormedAlgebra.toSemiNormedSpace [h : SemiNormedAlgebra 𝕜 𝕜'] : SemiNormedSpace 𝕜 𝕜' :=
+instance (priority := 100) NormedAlgebra.toNormedSpace [SemiNormedRing 𝕜'] [h : NormedAlgebra 𝕜 𝕜'] :
+    NormedSpace 𝕜 𝕜' :=
   { h with
     norm_smul_le := fun s x =>
       calc
@@ -919,12 +898,10 @@ instance (priority := 100) SemiNormedAlgebra.toSemiNormedSpace [h : SemiNormedAl
           rw [norm_algebra_map_eq]
          }
 
-/-- While this may appear identical to `semi_normed_algebra.to_semi_normed_space`, it contains an
-implicit argument involving `normed_ring.to_semi_normed_ring` that typeclass inference has trouble
-inferring.
+/-- While this may appear identical to `normed_algebra.to_normed_space`, it contains an implicit
+argument involving `normed_ring.to_semi_normed_ring` that typeclass inference has trouble inferring.
 
-Specifically, the following instance cannot be found without this
-`semi_normed_algebra.to_semi_normed_space'`:
+Specifically, the following instance cannot be found without this `normed_space.to_module'`:
 ```lean
 example
   (𝕜 ι : Type*) (E : ι → Type*)
@@ -932,21 +909,16 @@ example
   Π i, module 𝕜 (E i) := by apply_instance
 ```
 
-See `semi_normed_space.to_module'` for a similar situation. -/
-instance (priority := 100) SemiNormedAlgebra.toSemiNormedSpace' (𝕜 : Type _) [NormedField 𝕜] (𝕜' : Type _)
-    [NormedRing 𝕜'] [SemiNormedAlgebra 𝕜 𝕜'] : SemiNormedSpace 𝕜 𝕜' := by
+See `normed_space.to_module'` for a similar situation. -/
+instance (priority := 100) NormedAlgebra.toNormedSpace' [NormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜'] : NormedSpace 𝕜 𝕜' := by
   infer_instance
-
-instance (priority := 100) NormedAlgebra.toNormedSpace (𝕜 : Type _) [NormedField 𝕜] (𝕜' : Type _) [NormedRing 𝕜']
-    [h : NormedAlgebra 𝕜 𝕜'] : NormedSpace 𝕜 𝕜' :=
-  { h with norm_smul_le := SemiNormedSpace.norm_smul_le }
 
 instance NormedAlgebra.id : NormedAlgebra 𝕜 𝕜 :=
   { Algebra.id 𝕜 with
     norm_algebra_map_eq := by
       simp }
 
-variable (𝕜') [SemiNormedAlgebra 𝕜 𝕜']
+variable (𝕜') [SemiNormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
 include 𝕜
 
@@ -968,23 +940,8 @@ end NormedAlgebra
 
 section RestrictScalars
 
-variable (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] (E : Type _) [NormedGroup E]
-  [NormedSpace 𝕜' E] (F : Type _) [SemiNormedGroup F] [SemiNormedSpace 𝕜' F]
-
-/-- Warning: This declaration should be used judiciously.
-Please consider using `is_scalar_tower` instead.
-
-`𝕜`-seminormed space structure induced by a `𝕜'`-seminormed space structure when `𝕜'` is a
-seminormed algebra over `𝕜`. Not registered as an instance as `𝕜'` can not be inferred.
-
-The type synonym `module.restrict_scalars 𝕜 𝕜' E` will be endowed with this instance by default.
--/
-def SemiNormedSpace.restrictScalars : SemiNormedSpace 𝕜 F :=
-  { RestrictScalars.module 𝕜 𝕜' F with
-    norm_smul_le := fun c x =>
-      le_of_eqₓ $ by
-        change ∥algebraMap 𝕜 𝕜' c • x∥ = ∥c∥ * ∥x∥
-        simp [norm_smul] }
+variable (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] (E : Type _)
+  [SemiNormedGroup E] [NormedSpace 𝕜' E]
 
 /-- Warning: This declaration should be used judiciously.
 Please consider using `is_scalar_tower` instead.
@@ -1001,22 +958,15 @@ def NormedSpace.restrictScalars : NormedSpace 𝕜 E :=
         change ∥algebraMap 𝕜 𝕜' c • x∥ = ∥c∥ * ∥x∥
         simp [norm_smul] }
 
-instance {𝕜 : Type _} {𝕜' : Type _} {F : Type _} [I : SemiNormedGroup F] : SemiNormedGroup (RestrictScalars 𝕜 𝕜' F) :=
+instance {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [I : SemiNormedGroup E] : SemiNormedGroup (RestrictScalars 𝕜 𝕜' E) :=
   I
 
 instance {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [I : NormedGroup E] : NormedGroup (RestrictScalars 𝕜 𝕜' E) :=
   I
 
-instance Module.RestrictScalars.semiNormedSpaceOrig {𝕜 : Type _} {𝕜' : Type _} {F : Type _} [NormedField 𝕜']
-    [SemiNormedGroup F] [I : SemiNormedSpace 𝕜' F] : SemiNormedSpace 𝕜' (RestrictScalars 𝕜 𝕜' F) :=
+instance Module.RestrictScalars.normedSpaceOrig {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [NormedField 𝕜']
+    [SemiNormedGroup E] [I : NormedSpace 𝕜' E] : NormedSpace 𝕜' (RestrictScalars 𝕜 𝕜' E) :=
   I
-
-instance Module.RestrictScalars.normedSpaceOrig {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [NormedField 𝕜'] [NormedGroup E]
-    [I : NormedSpace 𝕜' E] : NormedSpace 𝕜' (RestrictScalars 𝕜 𝕜' E) :=
-  I
-
-instance : SemiNormedSpace 𝕜 (RestrictScalars 𝕜 𝕜' F) :=
-  (SemiNormedSpace.restrictScalars 𝕜 𝕜' F : SemiNormedSpace 𝕜 F)
 
 instance : NormedSpace 𝕜 (RestrictScalars 𝕜 𝕜' E) :=
   (NormedSpace.restrictScalars 𝕜 𝕜' E : NormedSpace 𝕜 E)

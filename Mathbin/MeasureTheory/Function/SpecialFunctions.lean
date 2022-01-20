@@ -124,7 +124,7 @@ section RealComposition
 
 open Real
 
-variable {α : Type _} [MeasurableSpace α] {f : α → ℝ} (hf : Measurable f)
+variable {α : Type _} {m : MeasurableSpace α} {f : α → ℝ} (hf : Measurable f)
 
 @[measurability]
 theorem Measurable.exp : Measurable fun x => Real.exp (f x) :=
@@ -164,7 +164,7 @@ section ComplexComposition
 
 open Complex
 
-variable {α : Type _} [MeasurableSpace α] {f : α → ℂ} (hf : Measurable f)
+variable {α : Type _} {m : MeasurableSpace α} {f : α → ℂ} (hf : Measurable f)
 
 @[measurability]
 theorem Measurable.cexp : Measurable fun x => Complex.exp (f x) :=
@@ -198,7 +198,9 @@ end ComplexComposition
 
 section IsROrCComposition
 
-variable {α 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {f : α → 𝕜} {μ : MeasureTheory.Measure α}
+variable {α 𝕜 : Type _} [IsROrC 𝕜] {m : MeasurableSpace α} {f : α → 𝕜} {μ : MeasureTheory.Measure α}
+
+include m
 
 @[measurability]
 theorem Measurable.re (hf : Measurable f) : Measurable fun x => IsROrC.re (f x) :=
@@ -215,6 +217,8 @@ theorem Measurable.im (hf : Measurable f) : Measurable fun x => IsROrC.im (f x) 
 @[measurability]
 theorem AeMeasurable.im (hf : AeMeasurable f μ) : AeMeasurable (fun x => IsROrC.im (f x)) μ :=
   IsROrC.measurable_im.comp_ae_measurable hf
+
+omit m
 
 end IsROrCComposition
 
@@ -282,23 +286,20 @@ variable {α : Type _} {𝕜 : Type _} {E : Type _} [IsROrC 𝕜] [InnerProductS
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 @[measurability]
-theorem Measurable.inner [MeasurableSpace α] [MeasurableSpace E] [OpensMeasurableSpace E]
+theorem Measurable.inner {m : MeasurableSpace α} [MeasurableSpace E] [OpensMeasurableSpace E]
     [TopologicalSpace.SecondCountableTopology E] {f g : α → E} (hf : Measurable f) (hg : Measurable g) :
     Measurable fun t => ⟪f t, g t⟫ :=
   Continuous.measurable2 continuous_inner hf hg
 
 @[measurability]
-theorem AeMeasurable.inner [MeasurableSpace α] [MeasurableSpace E] [OpensMeasurableSpace E]
+theorem AeMeasurable.inner {m : MeasurableSpace α} [MeasurableSpace E] [OpensMeasurableSpace E]
     [TopologicalSpace.SecondCountableTopology E] {μ : MeasureTheory.Measure α} {f g : α → E} (hf : AeMeasurable f μ)
     (hg : AeMeasurable g μ) : AeMeasurable (fun x => ⟪f x, g x⟫) μ := by
   refine' ⟨fun x => ⟪hf.mk f x, hg.mk g x⟫, hf.measurable_mk.inner hg.measurable_mk, _⟩
   refine' hf.ae_eq_mk.mp (hg.ae_eq_mk.mono fun x hxg hxf => _)
   dsimp only
   congr
-  · exact hxf
-    
-  · exact hxg
-    
+  exacts[hxf, hxg]
 
 end
 

@@ -55,7 +55,7 @@ open_locale Classical BigOperators Nnreal
 
 open Finset Metric
 
-attribute [local instance] AddCommGroupₓ.toAddCommMonoid NormedGroup.toAddCommGroup NormedSpace.toModule
+attribute [local instance] AddCommGroupₓ.toAddCommMonoid NormedGroup.toAddCommGroup NormedSpace.toModule'
 
 attribute [-instance] Unique.subsingleton Pi.subsingleton
 

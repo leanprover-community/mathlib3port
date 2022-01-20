@@ -82,5 +82,10 @@ theorem with_bot.one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x := by
   · exact with_bot.coe_le_coe.mpr (nat.succ_le_iff.mpr (with_bot.coe_lt_coe.mp h))
     
 
+theorem with_bot.lt_one_iff_le_zero {x : WithBot ℕ} : x < 1 ↔ x ≤ 0 :=
+  not_iff_not.mp
+    (by
+      simpa using with_bot.one_le_iff_zero_lt)
+
 end Nat
 

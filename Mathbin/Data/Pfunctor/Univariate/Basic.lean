@@ -25,7 +25,7 @@ structure Pfunctor where
 namespace Pfunctor
 
 instance : Inhabited Pfunctor :=
-  ⟨⟨default _, default _⟩⟩
+  ⟨⟨default, default⟩⟩
 
 variable (P : Pfunctor) {α β : Type u}
 
@@ -37,7 +37,7 @@ def obj (α : Type _) :=
 def map {α β : Type _} (f : α → β) : P.obj α → P.obj β := fun ⟨a, g⟩ => ⟨a, f ∘ g⟩
 
 instance obj.inhabited [Inhabited P.A] [Inhabited α] : Inhabited (P.obj α) :=
-  ⟨⟨default _, fun _ => default _⟩⟩
+  ⟨⟨default, fun _ => default⟩⟩
 
 instance : Functor P.obj where
   map := @map P
@@ -96,15 +96,15 @@ one part of `x` or is invalid, if `i.1 ≠ x.1` -/
 def Idx :=
   Σ x : P.A, P.B x
 
-instance Idx.inhabited [Inhabited P.A] [Inhabited (P.B (default _))] : Inhabited P.Idx :=
-  ⟨⟨default _, default _⟩⟩
+instance Idx.inhabited [Inhabited P.A] [Inhabited (P.B default)] : Inhabited P.Idx :=
+  ⟨⟨default, default⟩⟩
 
 variable {P}
 
 /-- `x.iget i` takes the component of `x` designated by `i` if any is or returns
 a default value -/
 def obj.iget [DecidableEq P.A] {α} [Inhabited α] (x : P.obj α) (i : P.Idx) : α :=
-  if h : i.1 = x.1 then x.2 (cast (congr_argₓ _ h) i.2) else default _
+  if h : i.1 = x.1 then x.2 (cast (congr_argₓ _ h) i.2) else default
 
 @[simp]
 theorem fst_map {α β : Type u} (x : P.obj α) (f : α → β) : (f <$> x).1 = x.1 := by

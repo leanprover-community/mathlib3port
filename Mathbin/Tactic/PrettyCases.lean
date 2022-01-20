@@ -53,7 +53,7 @@ unsafe def pretty_cases_advice : tactic Stringₓ :=
           let var_decls := if vs.empty then "" else " : " ++ var_decls
           pure
               s! "  case {ts.head }{var_decls}
-                  \{ admit }"
+                  \{ admit }}"
     let cases := Stringₓ.intercalate ",\n" cases
     pure
         s! "Try this:

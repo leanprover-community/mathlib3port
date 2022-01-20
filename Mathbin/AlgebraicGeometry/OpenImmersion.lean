@@ -1237,6 +1237,28 @@ theorem affine_basis_cover_is_basis (X : Scheme) :
       
     
 
+/-- Every open cover of a quasi-compact scheme can be refined into a finite subcover.
+-/
+@[simps obj map]
+def open_cover.finite_subcover {X : Scheme} (𝒰 : open_cover X) [H : CompactSpace X.carrier] : open_cover X := by
+  have :=
+    @CompactSpace.elim_nhds_subcover _ H (fun x : X.carrier => Set.Range (𝒰.map (𝒰.f x)).1.base) fun x =>
+      (is_open_immersion.open_range (𝒰.map (𝒰.f x))).mem_nhds (𝒰.covers x)
+  let t := this.some
+  have h : ∀ x : X.carrier, ∃ y : t, x ∈ Set.Range (𝒰.map (𝒰.f y)).1.base := by
+    intro x
+    have h' : x ∈ (⊤ : Set X.carrier) := trivialₓ
+    rw [← Classical.some_spec this, Set.mem_Union] at h'
+    rcases h' with ⟨y, _, ⟨hy, rfl⟩, hy'⟩
+    exact ⟨⟨y, hy⟩, hy'⟩
+  exact
+    { J := t, obj := fun x => 𝒰.obj (𝒰.f x.1), map := fun x => 𝒰.map (𝒰.f x.1), f := fun x => (h x).some,
+      Covers := fun x => (h x).some_spec }
+
+instance [H : CompactSpace X.carrier] : Fintype 𝒰.finite_subcover.J := by
+  delta' open_cover.finite_subcover
+  infer_instance
+
 end Scheme
 
 end OpenCover
@@ -1301,6 +1323,22 @@ end ToScheme
 
 end PresheafedSpace.IsOpenImmersion
 
+/-- The restriction of a Scheme along an open embedding. -/
+@[simps]
+def Scheme.restrict {U : Top} (X : Scheme) {f : U ⟶ Top.of X.carrier} (h : OpenEmbedding f) : Scheme :=
+  { PresheafedSpace.is_open_immersion.to_Scheme X (X.to_PresheafedSpace.of_restrict h) with
+    toPresheafedSpace := X.to_PresheafedSpace.restrict h }
+
+/-- The canonical map from the restriction to the supspace. -/
+@[simps]
+def Scheme.of_restrict {U : Top} (X : Scheme) {f : U ⟶ Top.of X.carrier} (h : OpenEmbedding f) : X.restrict h ⟶ X :=
+  X.to_LocallyRingedSpace.of_restrict h
+
+instance is_open_immersion.of_restrict {U : Top} (X : Scheme) {f : U ⟶ Top.of X.carrier} (h : OpenEmbedding f) :
+    is_open_immersion (X.of_restrict h) :=
+  show PresheafedSpace.is_open_immersion (X.to_PresheafedSpace.of_restrict h) by
+    infer_instance
+
 namespace IsOpenImmersion
 
 variable {X Y Z : Scheme.{u}} (f : X ⟶ Z) (g : Y ⟶ Z)
@@ -1311,6 +1349,10 @@ instance (priority := 100) of_is_iso [is_iso g] : is_open_immersion g :=
   @LocallyRingedSpace.is_open_immersion.of_is_iso _
     (show is_iso ((induced_functor _).map g) by
       infer_instance)
+
+/-- A open immersion induces an isomorphism from the domain onto the image -/
+def iso_restrict : X ≅ (Z.restrict H.base_open : _) :=
+  ⟨H.iso_restrict.hom, H.iso_restrict.inv, H.iso_restrict.hom_inv_id, H.iso_restrict.inv_hom_id⟩
 
 include H
 
@@ -1398,7 +1440,53 @@ instance forget_to_Top_preserves_of_left : preserves_limit (cospan f g) Scheme.f
 instance forget_to_Top_preserves_of_right : preserves_limit (cospan g f) Scheme.forget_to_Top :=
   preserves_pullback_symmetry _ _ _
 
+/-- The universal property of open immersions:
+For an open immersion `f : X ⟶ Z`, given any morphism of schemes `g : Y ⟶ Z` whose topological
+image is contained in the image of `f`, we can lift this morphism to a unique `Y ⟶ X` that
+commutes with these maps.
+-/
+def lift (H' : Set.Range g.1.base ⊆ Set.Range f.1.base) : Y ⟶ X :=
+  LocallyRingedSpace.is_open_immersion.lift f g H'
+
+@[simp, reassoc]
+theorem lift_fac (H' : Set.Range g.1.base ⊆ Set.Range f.1.base) : lift f g H' ≫ f = g :=
+  LocallyRingedSpace.is_open_immersion.lift_fac f g H'
+
+theorem lift_uniq (H' : Set.Range g.1.base ⊆ Set.Range f.1.base) (l : Y ⟶ X) (hl : l ≫ f = g) : l = lift f g H' :=
+  LocallyRingedSpace.is_open_immersion.lift_uniq f g H' l hl
+
+/-- Two open immersions with equal range is isomorphic. -/
+@[simps]
+def iso_of_range_eq [is_open_immersion g] (e : Set.Range f.1.base = Set.Range g.1.base) : X ≅ Y where
+  Hom := lift g f (le_of_eqₓ e)
+  inv := lift f g (le_of_eqₓ e.symm)
+  hom_inv_id' := by
+    rw [← cancel_mono f]
+    simp
+  inv_hom_id' := by
+    rw [← cancel_mono g]
+    simp
+
 end IsOpenImmersion
+
+/-- Given an open cover on `X`, we may pull them back along a morphism `W ⟶ X` to obtain
+an open cover of `W`. -/
+@[simps]
+def Scheme.open_cover.pullback_cover {X : Scheme} (𝒰 : X.open_cover) {W : Scheme} (f : W ⟶ X) : W.open_cover where
+  J := 𝒰.J
+  obj := fun x => pullback f (𝒰.map x)
+  map := fun x => pullback.fst
+  f := fun x => 𝒰.f (f.1.base x)
+  Covers := fun x => by
+    rw [←
+      show _ = (pullback.fst : pullback f (𝒰.map (𝒰.f (f.1.base x))) ⟶ _).1.base from
+        preserves_pullback.iso_hom_fst Scheme.forget_to_Top f (𝒰.map (𝒰.f (f.1.base x)))]
+    rw [coe_comp, Set.range_comp, set.range_iff_surjective.mpr, Set.image_univ, Top.pullback_fst_range]
+    obtain ⟨y, h⟩ := 𝒰.covers (f.1.base x)
+    exact ⟨y, h.symm⟩
+    · rw [← Top.epi_iff_surjective]
+      infer_instance
+      
 
 end AlgebraicGeometry
 

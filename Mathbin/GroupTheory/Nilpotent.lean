@@ -1,5 +1,6 @@
 import Mathbin.GroupTheory.GeneralCommutator
 import Mathbin.GroupTheory.QuotientGroup
+import Mathbin.GroupTheory.Solvable
 
 /-!
 
@@ -42,6 +43,7 @@ subgroup `G` of `G`, and `⊥` denotes the trivial subgroup `{1}`.
 * `nilpotent_iff_finite_descending_central_series` : `G` is nilpotent iff some descending central
     series reaches `⊥`.
 * `nilpotent_iff_lower` : `G` is nilpotent iff the lower central series reaches `⊥`.
+* `is_nilpotent.to_is_solvable`: If `G` is nilpotent, it is solvable.
 
 ## Warning
 
@@ -390,4 +392,18 @@ theorem is_nilpotent_of_ker_le_center {H : Type _} [Groupₓ H] {f : G →* H} (
   rcases hH with ⟨n, hn⟩
   refine' ⟨n + 1, lower_central_series_succ_eq_bot (le_transₓ ((map_eq_bot_iff _).mp _) hf1)⟩
   exact eq_bot_iff.mpr (hn ▸ lowerCentralSeries.map f n)
+
+theorem derived_le_lower_central (n : ℕ) : derivedSeries G n ≤ lowerCentralSeries G n := by
+  induction' n with i ih
+  · simp
+    
+  · apply general_commutator_mono ih
+    simp
+    
+
+instance (priority := 100) IsNilpotent.to_is_solvable [h : is_nilpotent G] : IsSolvable G := by
+  obtain ⟨n, hn⟩ := nilpotent_iff_lower_central_series.1 h
+  use n
+  apply le_bot_iff.mp
+  calc derivedSeries G n ≤ lowerCentralSeries G n := derived_le_lower_central n _ = ⊥ := hn
 

@@ -28,11 +28,10 @@ algebra-homomorphisms.)
 open Function Set
 
 variable (𝕜 : Type _) {V V₁ V₂ V₃ V₄ : Type _} {P₁ : Type _} (P P₂ : Type _) {P₃ P₄ : Type _} [NormedField 𝕜]
-  [SemiNormedGroup V] [NormedGroup V₁] [SemiNormedGroup V₂] [SemiNormedGroup V₃] [SemiNormedGroup V₄]
-  [SemiNormedSpace 𝕜 V] [NormedSpace 𝕜 V₁] [SemiNormedSpace 𝕜 V₂] [SemiNormedSpace 𝕜 V₃] [SemiNormedSpace 𝕜 V₄]
-  [PseudoMetricSpace P] [MetricSpace P₁] [PseudoMetricSpace P₂] [PseudoMetricSpace P₃] [PseudoMetricSpace P₄]
-  [SemiNormedAddTorsor V P] [NormedAddTorsor V₁ P₁] [SemiNormedAddTorsor V₂ P₂] [SemiNormedAddTorsor V₃ P₃]
-  [SemiNormedAddTorsor V₄ P₄]
+  [SemiNormedGroup V] [NormedGroup V₁] [SemiNormedGroup V₂] [SemiNormedGroup V₃] [SemiNormedGroup V₄] [NormedSpace 𝕜 V]
+  [NormedSpace 𝕜 V₁] [NormedSpace 𝕜 V₂] [NormedSpace 𝕜 V₃] [NormedSpace 𝕜 V₄] [PseudoMetricSpace P] [MetricSpace P₁]
+  [PseudoMetricSpace P₂] [PseudoMetricSpace P₃] [PseudoMetricSpace P₄] [SemiNormedAddTorsor V P] [NormedAddTorsor V₁ P₁]
+  [SemiNormedAddTorsor V₂ P₂] [SemiNormedAddTorsor V₃ P₃] [SemiNormedAddTorsor V₄ P₄]
 
 include V V₂
 
@@ -684,7 +683,7 @@ theorem dist_point_reflection_self (x y : P) : dist (point_reflection 𝕜 x y) 
 theorem point_reflection_fixed_iff [Invertible (2 : 𝕜)] {x y : P} : point_reflection 𝕜 x y = y ↔ y = x :=
   AffineEquiv.point_reflection_fixed_iff_of_module 𝕜
 
-variable [SemiNormedSpace ℝ V]
+variable [NormedSpace ℝ V]
 
 theorem dist_point_reflection_self_real (x y : P) : dist (point_reflection ℝ x y) y = 2 * dist x y := by
   rw [dist_point_reflection_self, Real.norm_two]
@@ -708,8 +707,8 @@ theorem AffineMap.continuous_linear_iff {f : P →ᵃ[𝕜] P₂} : Continuous f
   inhabit P
   have :
     (f.linear : V → V₂) =
-      (AffineIsometryEquiv.vaddConst 𝕜 $ f $ default P).toHomeomorph.symm ∘
-        f ∘ (AffineIsometryEquiv.vaddConst 𝕜 $ default P).toHomeomorph :=
+      (AffineIsometryEquiv.vaddConst 𝕜 $ f default).toHomeomorph.symm ∘
+        f ∘ (AffineIsometryEquiv.vaddConst 𝕜 default).toHomeomorph :=
     by
     ext v
     simp
@@ -721,8 +720,8 @@ theorem AffineMap.is_open_map_linear_iff {f : P →ᵃ[𝕜] P₂} : IsOpenMap f
   inhabit P
   have :
     (f.linear : V → V₂) =
-      (AffineIsometryEquiv.vaddConst 𝕜 $ f $ default P).toHomeomorph.symm ∘
-        f ∘ (AffineIsometryEquiv.vaddConst 𝕜 $ default P).toHomeomorph :=
+      (AffineIsometryEquiv.vaddConst 𝕜 $ f default).toHomeomorph.symm ∘
+        f ∘ (AffineIsometryEquiv.vaddConst 𝕜 default).toHomeomorph :=
     by
     ext v
     simp

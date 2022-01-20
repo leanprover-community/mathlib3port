@@ -202,16 +202,6 @@ theorem mem_mk_left (x y : α) : x ∈ ⟦(x, y)⟧ :=
 theorem mem_mk_right (x y : α) : y ∈ ⟦(x, y)⟧ :=
   eq_swap.subst $ mem_mk_left y x
 
-/-- Given an element of the unordered pair, give the other element using `classical.some`.
-See also `mem.other'` for the computable version.
--/
-noncomputable def mem.other {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
-  Classical.some h
-
-@[simp]
-theorem other_spec {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(a, h.other)⟧ = z := by
-  erw [← Classical.some_spec h]
-
 @[simp]
 theorem mem_iff {a b c : α} : a ∈ ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
   { mp := by
@@ -223,6 +213,32 @@ theorem mem_iff {a b c : α} : a ∈ ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
       · apply mem_mk_left
         
       apply mem_mk_right }
+
+theorem out_fst_mem (e : Sym2 α) : e.out.1 ∈ e :=
+  ⟨e.out.2, by
+    rw [Prod.mk.eta, e.out_eq]⟩
+
+theorem out_snd_mem (e : Sym2 α) : e.out.2 ∈ e :=
+  ⟨e.out.1, by
+    rw [eq_swap, Prod.mk.eta, e.out_eq]⟩
+
+theorem ball {p : α → Prop} {a b : α} : (∀, ∀ c ∈ ⟦(a, b)⟧, ∀, p c) ↔ p a ∧ p b := by
+  refine' ⟨fun h => ⟨h _ $ mem_mk_left _ _, h _ $ mem_mk_right _ _⟩, fun h c hc => _⟩
+  obtain rfl | rfl := Sym2.mem_iff.1 hc
+  · exact h.1
+    
+  · exact h.2
+    
+
+/-- Given an element of the unordered pair, give the other element using `classical.some`.
+See also `mem.other'` for the computable version.
+-/
+noncomputable def mem.other {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
+  Classical.some h
+
+@[simp]
+theorem other_spec {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(a, h.other)⟧ = z := by
+  erw [← Classical.some_spec h]
 
 theorem other_mem {a : α} {z : Sym2 α} (h : a ∈ z) : h.other ∈ z := by
   convert mem_mk_right a h.other

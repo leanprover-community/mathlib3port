@@ -61,10 +61,10 @@ variable {ι ι' : Type _} {α : ι → Type _}
 
 /-- Boxes formed by π-systems form a π-system. -/
 theorem IsPiSystem.pi {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsPiSystem (C i)) : IsPiSystem (pi univ '' pi univ C) := by
-  rintro _ _ ⟨s₁, hs₁, rfl⟩ ⟨s₂, hs₂, rfl⟩ hst
+  rintro _ ⟨s₁, hs₁, rfl⟩ _ ⟨s₂, hs₂, rfl⟩ hst
   rw [← pi_inter_distrib] at hst⊢
   rw [univ_pi_nonempty_iff] at hst
-  exact mem_image_of_mem _ fun i _ => hC i _ _ (hs₁ i (mem_univ i)) (hs₂ i (mem_univ i)) (hst i)
+  exact mem_image_of_mem _ fun i _ => hC i _ (hs₁ i (mem_univ i)) _ (hs₂ i (mem_univ i)) (hst i)
 
 /-- Boxes form a π-system. -/
 theorem is_pi_system_pi [∀ i, MeasurableSpace (α i)] :
@@ -142,7 +142,7 @@ theorem generate_from_eq_pi [h : ∀ i, MeasurableSpace (α i)] {C : ∀ i, Set 
     generate_from (pi univ '' pi univ C) = MeasurableSpace.pi := by
   rw [← funext hC, generate_from_pi_eq h2C]
 
-/-- The product σ-algebra is generated from boxes, i.e. `s.prod t` for sets `s : set α` and
+/-- The product σ-algebra is generated from boxes, i.e. `s ×ˢ t` for sets `s : set α` and
   `t : set β`. -/
 theorem generate_from_pi [∀ i, MeasurableSpace (α i)] :
     generate_from (pi univ '' pi univ fun i => { s : Set (α i) | MeasurableSet s }) = MeasurableSpace.pi :=
@@ -520,7 +520,7 @@ theorem map_pi_equiv_pi_subtype_prod_symm (p : ι → Prop) [DecidablePred p] :
   refine' (measure.pi_eq fun s hs => _).symm
   have A :
     ((Equivₓ.piEquivPiSubtypeProd p α).symm ⁻¹' Set.Pi Set.Univ fun i : ι => s i) =
-      Set.Prod (Set.Pi Set.Univ fun i => s i) (Set.Pi Set.Univ fun i => s i) :=
+      (Set.Pi Set.Univ fun i : { i // p i } => s i) ×ˢ Set.Pi Set.Univ fun i : { i // ¬p i } => s i :=
     by
     ext x
     simp only [Equivₓ.pi_equiv_pi_subtype_prod_symm_apply, mem_prod, mem_univ_pi, mem_preimage, Subtype.forall]

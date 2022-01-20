@@ -212,7 +212,7 @@ theorem borel_le_caratheodory (hm : is_metric μ) : borel X ≤ μ.caratheodory 
     ⟨(↑(2 * i + 1 + r))⁻¹ - (↑(2 * j + r))⁻¹, by
       simpa using A, fun x hx y hy => _⟩
   have : inf_edist y t < (↑(2 * j + r))⁻¹ := not_leₓ.1 fun hle => hy.2 ⟨hy.1, hle⟩
-  rcases exists_edist_lt_of_inf_edist_lt this with ⟨z, hzt, hyz⟩
+  rcases inf_edist_lt_iff.mp this with ⟨z, hzt, hyz⟩
   have hxz : (↑(2 * i + 1 + r))⁻¹ ≤ edist x z := le_inf_edist.1 hx.2 _ hzt
   apply Ennreal.le_of_add_le_add_right hyz.ne_top
   refine' le_transₓ _ (edist_triangle _ _ _)
@@ -462,7 +462,6 @@ theorem mk_metric_apply (m : ℝ≥0∞ → ℝ≥0∞) (s : Set X) :
   · rw [infi_eq_if, if_pos htr]
     congr 1 with n : 1
     simp only [infi_eq_if, htr n, id, if_true, supr_and']
-    rfl
     
   · rw [infi_eq_if, if_neg htr]
     push_neg  at htr

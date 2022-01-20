@@ -126,7 +126,7 @@ theorem sign_mul_abs (a : ℤ) : sign a * |a| = a := by
   rw [abs_eq_nat_abs, sign_mul_nat_abs]
 
 @[simp]
-theorem default_eq_zero : default ℤ = 0 :=
+theorem default_eq_zero : default = (0 : ℤ) :=
   rfl
 
 unsafe instance : has_to_format ℤ :=

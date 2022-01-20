@@ -59,9 +59,9 @@ open function (update iterate_succ iterate_succ_apply iterate_succ' iterate_succ
 namespace Turing
 
 /-- The `blank_extends` partial order holds of `l₁` and `l₂` if `l₂` is obtained by adding
-blanks (`default Γ`) to the end of `l₁`. -/
+blanks (`default : Γ`) to the end of `l₁`. -/
 def blank_extends {Γ} [Inhabited Γ] (l₁ l₂ : List Γ) : Prop :=
-  ∃ n, l₂ = l₁ ++ List.repeat (default Γ) n
+  ∃ n, l₂ = l₁ ++ List.repeat default n
 
 @[refl]
 theorem blank_extends.refl {Γ} [Inhabited Γ] (l : List Γ) : blank_extends l l :=
@@ -322,17 +322,16 @@ theorem list_blank.nth_modify_nth {Γ} [Inhabited Γ] (f : Γ → Γ) n i (L : l
       simp only [list_blank.nth_zero, list_blank.head_cons, list_blank.modify_nth]
       
     · simp only [IH, list_blank.modify_nth, list_blank.nth_succ, list_blank.tail_cons]
-      congr
       
     
 
 /-- A pointed map of `inhabited` types is a map that sends one default value to the other. -/
 structure pointed_map.{u, v} (Γ : Type u) (Γ' : Type v) [Inhabited Γ] [Inhabited Γ'] : Type max u v where
   f : Γ → Γ'
-  map_pt' : f (default _) = default _
+  map_pt' : f default = default
 
 instance {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] : Inhabited (pointed_map Γ Γ') :=
-  ⟨⟨fun _ => default _, rfl⟩⟩
+  ⟨⟨fun _ => default, rfl⟩⟩
 
 instance {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] : CoeFun (pointed_map Γ Γ') fun _ => Γ → Γ' :=
   ⟨pointed_map.f⟩
@@ -342,7 +341,7 @@ theorem pointed_map.mk_val {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : Γ → �
   rfl
 
 @[simp]
-theorem pointed_map.map_pt {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : pointed_map Γ Γ') : f (default _) = default _ :=
+theorem pointed_map.map_pt {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : pointed_map Γ Γ') : f default = default :=
   pointed_map.map_pt' _
 
 @[simp]
@@ -427,7 +426,7 @@ theorem list_blank.append_assoc {Γ} [Inhabited Γ] (l₁ l₂ : List Γ) (l₃ 
 /-- The `bind` function on lists is well defined on `list_blank`s provided that the default element
 is sent to a sequence of default elements. -/
 def list_blank.bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (l : list_blank Γ) (f : Γ → List Γ')
-    (hf : ∃ n, f (default _) = List.repeat (default _) n) : list_blank Γ' :=
+    (hf : ∃ n, f default = List.repeat default n) : list_blank Γ' :=
   l.lift_on (fun l => list_blank.mk (List.bind l f))
     (by
       rintro l _ ⟨i, rfl⟩
@@ -913,7 +912,7 @@ The initial state takes a `list Γ` and produces a `tape Γ` where the head of t
 of the tape and the rest of the list extends to the right, with the left side all blank. The final
 state takes the entire right side of the tape right or equal to the current position of the
 machine. (This is actually a `list_blank Γ`, not a `list Γ`, because we don't know, at this level
-of generality, where the output ends. If equality to `default Γ` is decidable we can trim the list
+of generality, where the output ends. If equality to `default : Γ` is decidable we can trim the list
 to remove the infinite tail of blanks.)
 -/
 
@@ -933,7 +932,7 @@ inductive stmt
   | write : Γ → stmt
 
 instance stmt.inhabited : Inhabited stmt :=
-  ⟨stmt.write (default _)⟩
+  ⟨stmt.write default⟩
 
 /-- A Post-Turing machine with symbol type `Γ` and label type `Λ`
   is a function which, given the current state `q : Λ` and
@@ -961,7 +960,7 @@ structure cfg where
   Tape : tape Γ
 
 instance cfg.inhabited : Inhabited cfg :=
-  ⟨⟨default _, default _⟩⟩
+  ⟨⟨default, default⟩⟩
 
 parameter {Γ Λ}
 
@@ -981,7 +980,7 @@ def reaches (M : machine) : cfg → cfg → Prop :=
 
 /-- The initial configuration. -/
 def init (l : List Γ) : cfg :=
-  ⟨default Λ, tape.mk₁ l⟩
+  ⟨default, tape.mk₁ l⟩
 
 /-- Evaluate a Turing machine on initial input to a final state,
   if it terminates. -/
@@ -996,7 +995,7 @@ def eval (M : machine) (l : List Γ) : Part (list_blank Γ) :=
   supports a Turing machine `M` if `S` is closed under the
   transition function and contains the initial state. -/
 def supports (M : machine) (S : Set Λ) :=
-  default Λ ∈ S ∧ ∀ {q a q' s}, (q', s) ∈ M q a → q ∈ S → q' ∈ S
+  default ∈ S ∧ ∀ {q a q' s}, (q', s) ∈ M q a → q ∈ S → q' ∈ S
 
 theorem step_supports (M : machine) {S} (ss : supports M S) : ∀ {c c' : cfg}, c' ∈ step M c → c.q ∈ S → c'.q ∈ S
   | ⟨q, T⟩, c', h₁, h₂ => by
@@ -1145,7 +1144,7 @@ structure cfg where
   Tape : tape Γ
 
 instance cfg.inhabited [Inhabited σ] : Inhabited cfg :=
-  ⟨⟨default _, default _, default _⟩⟩
+  ⟨⟨default, default, default⟩⟩
 
 parameter {Γ Λ σ}
 
@@ -1243,7 +1242,7 @@ variable [Inhabited Λ]
   statements in the functions in `S` refer only to other functions
   in `S`. -/
 def supports (M : Λ → stmt) (S : Finset Λ) :=
-  default Λ ∈ S ∧ ∀, ∀ q ∈ S, ∀, supports_stmt S (M q)
+  default ∈ S ∧ ∀, ∀ q ∈ S, ∀, supports_stmt S (M q)
 
 theorem stmts_supports_stmt {M : Λ → stmt} {S q} (ss : supports M S) : some q ∈ stmts M S → supports_stmt S q := by
   simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
@@ -1276,7 +1275,7 @@ variable [Inhabited σ]
 /-- The initial state, given a finite input that is placed on the tape starting at the TM head and
 going to the right. -/
 def init (l : List Γ) : cfg :=
-  ⟨some (default _), default _, tape.mk₁ l⟩
+  ⟨some default, default, tape.mk₁ l⟩
 
 /-- Evaluate a TM to completion, resulting in an output list on the tape (with an indeterminate
 number of blanks on the end). -/
@@ -1336,7 +1335,7 @@ def Λ' :=
   Option stmt₁ × σ
 
 instance : Inhabited Λ' :=
-  ⟨(some (M (default _)), default _)⟩
+  ⟨(some (M default), default)⟩
 
 open TM0.Stmt
 
@@ -1501,7 +1500,7 @@ parameter {Γ : Type _}[Inhabited Γ]
 
 theorem exists_enc_dec [Fintype Γ] :
     ∃ (n : _)(enc : Γ → Vector Bool n)(dec : Vector Bool n → Γ),
-      enc (default _) = Vector.repeat ff n ∧ ∀ a, dec (enc a) = a :=
+      enc default = Vector.repeat ff n ∧ ∀ a, dec (enc a) = a :=
   by
   let this' := Classical.decEq Γ
   let n := Fintype.card Γ
@@ -1510,7 +1509,7 @@ theorem exists_enc_dec [Fintype Γ] :
     ⟨fun a b => a = b, fun a b h => of_to_bool_true $ (congr_funₓ h b).trans $ to_bool_tt rfl⟩
   let H := (F.to_embedding.trans G).trans (Equivₓ.vectorEquivFin _ _).symm.toEmbedding
   classical
-  let enc := H.set_value (default _) (Vector.repeat ff n)
+  let enc := H.set_value default (Vector.repeat ff n)
   exact ⟨_, enc, Function.invFun enc, H.set_value_eq _ _, Function.left_inverse_inv_funₓ enc.2⟩
 
 parameter {Λ : Type _}[Inhabited Λ]
@@ -1527,7 +1526,7 @@ inductive Λ' : Type max u_1 u_2 u_3
   | write : Γ → stmt₁ → Λ'
 
 instance : Inhabited Λ' :=
-  ⟨Λ'.normal (default _)⟩
+  ⟨Λ'.normal default⟩
 
 local notation "stmt'" => stmt Bool Λ' σ
 
@@ -1593,7 +1592,7 @@ theorem supports_stmt_read {S} : ∀ {f : Γ → stmt'}, (∀ a, supports_stmt S
     
   constructor <;> apply IH <;> intro <;> apply hf
 
-parameter (enc0 : enc (default _) = Vector.repeat ff n)
+parameter (enc0 : enc default = Vector.repeat ff n)
 
 section
 
@@ -1860,7 +1859,7 @@ inductive Λ'
   | act : TM0.stmt Γ → Λ → Λ'
 
 instance : Inhabited Λ' :=
-  ⟨Λ'.normal (default _)⟩
+  ⟨Λ'.normal default⟩
 
 local notation "cfg₀" => TM0.cfg Γ Λ
 
@@ -1878,7 +1877,7 @@ def tr : Λ' → stmt₁
     branch (fun a _ => (M q a).isNone) halt $
       goto fun a _ =>
         match M q a with
-        | none => default _
+        | none => default
         | some (q', s) => Λ'.act s q'
   | Λ'.act (TM0.stmt.move d) q => move d $ goto fun _ _ => Λ'.normal q
   | Λ'.act (TM0.stmt.write a) q => (write fun _ _ => a) $ goto fun _ _ => Λ'.normal q
@@ -1983,7 +1982,7 @@ structure cfg where
   stk : ∀ k, List (Γ k)
 
 instance cfg.inhabited [Inhabited σ] : Inhabited cfg :=
-  ⟨⟨default _, default _, default _⟩⟩
+  ⟨⟨default, default, default⟩⟩
 
 parameter {Γ Λ σ K}
 
@@ -2088,7 +2087,7 @@ variable [Inhabited Λ]
 /-- Given a TM2 machine `M` and a set `S` of states, `supports M S` means that all states in
 `S` jump only to other states in `S`. -/
 def supports (M : Λ → stmt) (S : Finset Λ) :=
-  default Λ ∈ S ∧ ∀, ∀ q ∈ S, ∀, supports_stmt S (M q)
+  default ∈ S ∧ ∀, ∀ q ∈ S, ∀, supports_stmt S (M q)
 
 theorem stmts_supports_stmt {M : Λ → stmt} {S q} (ss : supports M S) : some q ∈ stmts M S → supports_stmt S q := by
   simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
@@ -2120,7 +2119,7 @@ variable [Inhabited σ]
 
 /-- The initial state of the TM2 model. The input is provided on a designated stack. -/
 def init k (L : List (Γ k)) : cfg :=
-  ⟨some (default _), default _, update (fun _ => []) k L⟩
+  ⟨some default, default, update (fun _ => []) k L⟩
 
 /-- Evaluates a TM2 program to completion, with the output on the same stack as the input. -/
 def eval (M : Λ → stmt) k (L : List (Γ k)) : Part (List (Γ k)) :=
@@ -2297,7 +2296,7 @@ inductive Λ' : Type max u_1 u_2 u_3 u_4
 open Λ'
 
 instance Λ'.inhabited : Inhabited Λ' :=
-  ⟨normal (default _)⟩
+  ⟨normal default⟩
 
 local notation "stmt₁" => TM1.stmt Γ' Λ' σ
 
@@ -2556,7 +2555,7 @@ theorem tr_respects : respects (TM2.step M) (TM1.step tr) tr_cfg := fun c₁ c�
 
 theorem tr_cfg_init k (L : List (Γ k)) : tr_cfg (TM2.init k L) (TM1.init (tr_init k L)) := by
   rw [(_ : TM1.init _ = _)]
-  · refine' ⟨list_blank.mk (L.reverse.map $ fun a => update (default _) k (some a)), fun k' => _⟩
+  · refine' ⟨list_blank.mk (L.reverse.map $ fun a => update default k (some a)), fun k' => _⟩
     refine' list_blank.ext fun i => _
     rw [list_blank.map_mk, list_blank.nth_mk, List.inth, List.map_mapₓ, · ∘ ·, List.nth_map, proj, pointed_map.mk_val]
     by_cases' k' = k

@@ -399,7 +399,7 @@ theorem times_cont_mdiff_on_iff_target :
     convert (h''.comp' (chart_at H' y).continuous_to_fun).comp' h
     simp
     
-  · exact fun h' x y => (h' y).2 x (default E')
+  · exact fun h' x y => (h' y).2 x default
     
 
 theorem smooth_on_iff :
@@ -1109,13 +1109,13 @@ theorem TimesContMdiffOn.times_cont_mdiff_on_tangent_map_within_aux {f : H → H
   have U' : UniqueDiffOn 𝕜 (range I ∩ I.symm ⁻¹' s) := by
     intro y hy
     simpa only [UniqueMdiffOn, UniqueMdiffWithinAt, hy.1, inter_comm] with mfld_simps using hs (I.symm y) hy.2
-  have U : UniqueDiffOn 𝕜 (Set.Prod (range I ∩ I.symm ⁻¹' s) (univ : Set E)) := U'.prod unique_diff_on_univ
+  have U : UniqueDiffOn 𝕜 ((range I ∩ I.symm ⁻¹' s) ×ˢ (univ : Set E)) := U'.prod unique_diff_on_univ
   rw [times_cont_mdiff_on_iff]
   refine' ⟨hf.continuous_on_tangent_map_within_aux one_le_n hs, fun p q => _⟩
   have A :
-    (range I).Prod univ ∩
+    range I ×ˢ (univ : Set E) ∩
         ((Equivₓ.sigmaEquivProd H E).symm ∘ fun p : E × E => (I.symm p.fst, p.snd)) ⁻¹' (TangentBundle.proj I H ⁻¹' s) =
-      Set.Prod (range I ∩ I.symm ⁻¹' s) univ :=
+      (range I ∩ I.symm ⁻¹' s) ×ˢ (univ : Set E) :=
     by
     ext ⟨x, v⟩
     simp' only with mfld_simps
@@ -1123,21 +1123,21 @@ theorem TimesContMdiffOn.times_cont_mdiff_on_tangent_map_within_aux {f : H → H
     TimesContDiffOn 𝕜 m
       (((fun p : H' × E' => (I' p.fst, p.snd)) ∘ Equivₓ.sigmaEquivProd H' E') ∘
         tangentMapWithin I I' f s ∘ (Equivₓ.sigmaEquivProd H E).symm ∘ fun p : E × E => (I.symm p.fst, p.snd))
-      ((range (⇑I) ∩ ⇑I.symm ⁻¹' s).Prod univ)
+      ((range (⇑I) ∩ ⇑I.symm ⁻¹' s) ×ˢ (univ : Set E))
   · simpa [A] using h
     
   change
     TimesContDiffOn 𝕜 m
       (fun p : E × E => ((I' (f (I.symm p.fst)), (mfderivWithin I I' f s (I.symm p.fst) : E → E') p.snd) : E' × E'))
-      (Set.Prod (range I ∩ I.symm ⁻¹' s) univ)
+      ((range I ∩ I.symm ⁻¹' s) ×ˢ (univ : Set E))
   have hf' := times_cont_mdiff_on_iff.1 hf
   have A : TimesContDiffOn 𝕜 m (I' ∘ f ∘ I.symm) (range I ∩ I.symm ⁻¹' s) := by
     simpa only with mfld_simps using (hf'.2 (I.symm 0) (I'.symm 0)).of_le m_le_n
-  have B : TimesContDiffOn 𝕜 m ((I' ∘ f ∘ I.symm) ∘ Prod.fst) (Set.Prod (range I ∩ I.symm ⁻¹' s) (univ : Set E)) :=
+  have B : TimesContDiffOn 𝕜 m ((I' ∘ f ∘ I.symm) ∘ Prod.fst) ((range I ∩ I.symm ⁻¹' s) ×ˢ (univ : Set E)) :=
     A.comp times_cont_diff_fst.times_cont_diff_on (prod_subset_preimage_fst _ _)
   suffices C :
     TimesContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 (I' ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I) p.1 : _) p.2)
-      (Set.Prod (range I ∩ I.symm ⁻¹' s) univ)
+      ((range I ∩ I.symm ⁻¹' s) ×ˢ (univ : Set E))
   · apply TimesContDiffOn.prod B _
     apply C.congr fun p hp => _
     simp' only with mfld_simps  at hp
@@ -1700,13 +1700,13 @@ variable {g : N → N'} {r : Set N} {y : N}
 within the product set at the product point. -/
 theorem TimesContMdiffWithinAt.prod_map' {p : M × N} (hf : TimesContMdiffWithinAt I I' n f s p.1)
     (hg : TimesContMdiffWithinAt J J' n g r p.2) :
-    TimesContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.map f g) (s.prod r) p :=
+    TimesContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.map f g) (s ×ˢ r) p :=
   (hf.comp p times_cont_mdiff_within_at_fst (prod_subset_preimage_fst _ _)).prod_mk $
     hg.comp p times_cont_mdiff_within_at_snd (prod_subset_preimage_snd _ _)
 
 theorem TimesContMdiffWithinAt.prod_map (hf : TimesContMdiffWithinAt I I' n f s x)
     (hg : TimesContMdiffWithinAt J J' n g r y) :
-    TimesContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.map f g) (s.prod r) (x, y) :=
+    TimesContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.map f g) (s ×ˢ r) (x, y) :=
   TimesContMdiffWithinAt.prod_map' hf hg
 
 theorem TimesContMdiffAt.prod_map (hf : TimesContMdiffAt I I' n f x) (hg : TimesContMdiffAt J J' n g y) :
@@ -1721,7 +1721,7 @@ theorem TimesContMdiffAt.prod_map' {p : M × N} (hf : TimesContMdiffAt I I' n f 
   exact hf.prod_map hg
 
 theorem TimesContMdiffOn.prod_map (hf : TimesContMdiffOn I I' n f s) (hg : TimesContMdiffOn J J' n g r) :
-    TimesContMdiffOn (I.prod J) (I'.prod J') n (Prod.map f g) (s.prod r) :=
+    TimesContMdiffOn (I.prod J) (I'.prod J') n (Prod.map f g) (s ×ˢ r) :=
   (hf.comp times_cont_mdiff_on_fst (prod_subset_preimage_fst _ _)).prod_mk $
     hg.comp times_cont_mdiff_on_snd (prod_subset_preimage_snd _ _)
 
@@ -1731,7 +1731,7 @@ theorem TimesContMdiff.prod_map (hf : TimesContMdiff I I' n f) (hg : TimesContMd
   exact (hf p.1).prod_map' (hg p.2)
 
 theorem SmoothWithinAt.prod_map (hf : SmoothWithinAt I I' f s x) (hg : SmoothWithinAt J J' g r y) :
-    SmoothWithinAt (I.prod J) (I'.prod J') (Prod.map f g) (s.prod r) (x, y) :=
+    SmoothWithinAt (I.prod J) (I'.prod J') (Prod.map f g) (s ×ˢ r) (x, y) :=
   hf.prod_map hg
 
 theorem SmoothAt.prod_map (hf : SmoothAt I I' f x) (hg : SmoothAt J J' g y) :
@@ -1739,7 +1739,7 @@ theorem SmoothAt.prod_map (hf : SmoothAt I I' f x) (hg : SmoothAt J J' g y) :
   hf.prod_map hg
 
 theorem SmoothOn.prod_map (hf : SmoothOn I I' f s) (hg : SmoothOn J J' g r) :
-    SmoothOn (I.prod J) (I'.prod J') (Prod.map f g) (s.prod r) :=
+    SmoothOn (I.prod J) (I'.prod J') (Prod.map f g) (s ×ˢ r) :=
   hf.prod_map hg
 
 theorem Smooth.prod_map (hf : Smooth I I' f) (hg : Smooth J J' g) : Smooth (I.prod J) (I'.prod J') (Prod.map f g) :=

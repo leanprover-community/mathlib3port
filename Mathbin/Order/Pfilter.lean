@@ -89,7 +89,7 @@ def principal (p : P) : pfilter P :=
   ⟨ideal.principal p⟩
 
 instance [Inhabited P] : Inhabited (pfilter P) :=
-  ⟨⟨default _⟩⟩
+  ⟨⟨default⟩⟩
 
 /-- Two filters are equal when their underlying sets are equal. -/
 @[ext]
@@ -138,7 +138,7 @@ variable [SemilatticeInf P] {x y : P} {F : pfilter P}
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » F)
 /-- A specific witness of `pfilter.directed` when `P` has meets. -/
 theorem inf_mem x y (_ : x ∈ F) (_ : y ∈ F) : x⊓y ∈ F :=
-  ideal.sup_mem x y ‹x ∈ F› ‹y ∈ F›
+  ideal.sup_mem x ‹x ∈ F› y ‹y ∈ F›
 
 @[simp]
 theorem inf_mem_iff : x⊓y ∈ F ↔ x ∈ F ∧ y ∈ F :=

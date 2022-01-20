@@ -24,8 +24,8 @@ conflicts with general sigma types.
 def total_space :=
   Σ x, E x
 
-instance [Inhabited B] [Inhabited (E (default B))] : Inhabited (total_space E) :=
-  ⟨⟨default B, default (E (default B))⟩⟩
+instance [Inhabited B] [Inhabited (E default)] : Inhabited (total_space E) :=
+  ⟨⟨default, default⟩⟩
 
 /-- `bundle.proj E` is the canonical projection `total_space E → B` on the base space. -/
 @[simp]
@@ -52,7 +52,7 @@ def trivialₓ (B : Type _) (F : Type _) : B → Type _ :=
   Function.const B F
 
 instance {F : Type _} [Inhabited F] {b : B} : Inhabited (Bundle.Trivial B F b) :=
-  ⟨(default F : F)⟩
+  ⟨(default : F)⟩
 
 /-- The trivial bundle, unlike other bundles, has a canonical projection on the fiber. -/
 def trivial.proj_snd (B : Type _) (F : Type _) : total_space (Bundle.Trivial B F) → F :=

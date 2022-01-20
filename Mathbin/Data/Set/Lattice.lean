@@ -95,10 +95,18 @@ theorem infi_eq_Inter (s : ι → Set α) : infi s = Inter s :=
 theorem mem_Union {x : β} {s : ι → Set β} : x ∈ Union s ↔ ∃ i, x ∈ s i :=
   ⟨fun ⟨t, ⟨⟨a, (t_eq : s a = t)⟩, (h : x ∈ t)⟩⟩ => ⟨a, t_eq.symm ▸ h⟩, fun ⟨a, h⟩ => ⟨s a, ⟨⟨a, rfl⟩, h⟩⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (a b)
+theorem mem_Union₂ {x : γ} {β : α → Sort _} {s : ∀ a, β a → Set γ} : (x ∈ ⋃ (a) (b), s a b) ↔ ∃ a b, x ∈ s a b := by
+  simp only [Set.mem_Union]
+
 @[simp]
 theorem mem_Inter {x : β} {s : ι → Set β} : x ∈ Inter s ↔ ∀ i, x ∈ s i :=
   ⟨fun h : ∀, ∀ a ∈ { a : Set β | ∃ i, s i = a }, ∀, x ∈ a a => h (s a) ⟨a, rfl⟩, fun h t ⟨a, (Eq : s a = t)⟩ =>
     Eq ▸ h a⟩
+
+-- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (a b)
+theorem mem_Inter₂ {x : γ} {β : α → Sort _} {s : ∀ a, β a → Set γ} : (x ∈ ⋂ (a) (b), s a b) ↔ ∀ a b, x ∈ s a b := by
+  simp only [Set.mem_Inter]
 
 theorem mem_sUnion {x : α} {S : Set (Set α)} : x ∈ ⋃₀S ↔ ∃ t ∈ S, x ∈ t :=
   Iff.rfl
@@ -509,21 +517,11 @@ theorem Inter_Inter_eq_or_left {b : β} {p : β → Prop} {s : ∀ x : β, x = b
 /-! ### Bounded unions and intersections -/
 
 
-theorem mem_bUnion_iff {s : Set α} {t : α → Set β} {y : β} : (y ∈ ⋃ x ∈ s, t x) ↔ ∃ x ∈ s, y ∈ t x := by
-  simp
-
-theorem mem_bUnion_iff' {p : α → Prop} {t : α → Set β} {y : β} :
-    (y ∈ ⋃ (i) (h : p i), t i) ↔ ∃ (i : _)(h : p i), y ∈ t i :=
-  mem_bUnion_iff
-
-theorem mem_bInter_iff {s : Set α} {t : α → Set β} {y : β} : (y ∈ ⋂ x ∈ s, t x) ↔ ∀, ∀ x ∈ s, ∀, y ∈ t x := by
-  simp
-
 theorem mem_bUnion {s : Set α} {t : α → Set β} {x : α} {y : β} (xs : x ∈ s) (ytx : y ∈ t x) : y ∈ ⋃ x ∈ s, t x :=
-  mem_bUnion_iff.2 ⟨x, ⟨xs, ytx⟩⟩
+  mem_Union₂.2 ⟨x, ⟨xs, ytx⟩⟩
 
 theorem mem_bInter {s : Set α} {t : α → Set β} {y : β} (h : ∀, ∀ x ∈ s, ∀, y ∈ t x) : y ∈ ⋂ x ∈ s, t x :=
-  mem_bInter_iff.2 h
+  mem_Inter₂.2 h
 
 theorem bUnion_subset {s : Set α} {t : Set β} {u : α → Set β} (h : ∀, ∀ x ∈ s, ∀, u x ⊆ t) : (⋃ x ∈ s, u x) ⊆ t :=
   Union_subset $ fun x => Union_subset (h x)
@@ -896,10 +894,10 @@ theorem union_eq_Union {s₁ s₂ : Set α} : s₁ ∪ s₂ = ⋃ b : Bool, cond
 theorem inter_eq_Inter {s₁ s₂ : Set α} : s₁ ∩ s₂ = ⋂ b : Bool, cond b s₁ s₂ :=
   inf_eq_infi s₁ s₂
 
-theorem sInter_union_sInter {S T : Set (Set α)} : ⋂₀S ∪ ⋂₀T = ⋂ p ∈ S.prod T, (p : Set α × Set α).1 ∪ p.2 :=
+theorem sInter_union_sInter {S T : Set (Set α)} : ⋂₀S ∪ ⋂₀T = ⋂ p ∈ S ×ˢ T, (p : Set α × Set α).1 ∪ p.2 :=
   Inf_sup_Inf
 
-theorem sUnion_inter_sUnion {s t : Set (Set α)} : ⋃₀s ∩ ⋃₀t = ⋃ p ∈ s.prod t, (p : Set α × Set α).1 ∩ p.2 :=
+theorem sUnion_inter_sUnion {s t : Set (Set α)} : ⋃₀s ∩ ⋃₀t = ⋃ p ∈ s ×ˢ t, (p : Set α × Set α).1 ∩ p.2 :=
   Sup_inf_Sup
 
 theorem bUnion_Union (s : ι → Set α) (t : α → Set β) : (⋃ x ∈ ⋃ i, s i, t x) = ⋃ (i) (x ∈ s i), t x := by
@@ -1045,14 +1043,24 @@ theorem image_sInter_subset (S : Set (Set α)) (f : α → β) : f '' ⋂₀S �
 /-! ### `inj_on` -/
 
 
+theorem inj_on.image_inter {f : α → β} {s t u : Set α} (hf : inj_on f u) (hs : s ⊆ u) (ht : t ⊆ u) :
+    f '' (s ∩ t) = f '' s ∩ f '' t := by
+  apply subset.antisymm (image_inter_subset _ _ _)
+  rintro x ⟨⟨y, ys, hy⟩, ⟨z, zt, hz⟩⟩
+  have : y = z := by
+    apply hf (hs ys) (ht zt)
+    rwa [← hz] at hy
+  rw [← this] at zt
+  exact ⟨y, ⟨ys, zt⟩, hy⟩
+
 theorem inj_on.image_Inter_eq [Nonempty ι] {s : ι → Set α} {f : α → β} (h : inj_on f (⋃ i, s i)) :
     (f '' ⋂ i, s i) = ⋂ i, f '' s i := by
   inhabit ι
   refine' subset.antisymm (image_Inter_subset s f) fun y hy => _
   simp only [mem_Inter, mem_image_iff_bex] at hy
   choose x hx hy using hy
-  refine' ⟨x (default ι), mem_Inter.2 $ fun i => _, hy _⟩
-  suffices x (default ι) = x i by
+  refine' ⟨x default, mem_Inter.2 $ fun i => _, hy _⟩
+  suffices x default = x i by
     rw [this]
     apply hx
   replace hx : ∀ i, x i ∈ ⋃ j, s j := fun i => (subset_Union _ _) (hx i)
@@ -1219,38 +1227,37 @@ end Preimage
 section Prod
 
 theorem monotone_prod [Preorderₓ α] {f : α → Set β} {g : α → Set γ} (hf : Monotone f) (hg : Monotone g) :
-    Monotone fun x => (f x).Prod (g x) := fun a b h => prod_mono (hf h) (hg h)
+    Monotone fun x => f x ×ˢ g x := fun a b h => prod_mono (hf h) (hg h)
 
 alias monotone_prod ← Monotone.set_prod
 
-theorem prod_Union {ι} {s : Set α} {t : ι → Set β} : s.prod (⋃ i, t i) = ⋃ i, s.prod (t i) := by
+theorem prod_Union {ι} {s : Set α} {t : ι → Set β} : (s ×ˢ ⋃ i, t i) = ⋃ i, s ×ˢ t i := by
   ext
   simp
 
-theorem prod_bUnion {ι} {u : Set ι} {s : Set α} {t : ι → Set β} : s.prod (⋃ i ∈ u, t i) = ⋃ i ∈ u, s.prod (t i) := by
+theorem prod_bUnion {ι} {u : Set ι} {s : Set α} {t : ι → Set β} : (s ×ˢ ⋃ i ∈ u, t i) = ⋃ i ∈ u, s ×ˢ t i := by
   simp_rw [prod_Union]
 
-theorem prod_sUnion {s : Set α} {C : Set (Set β)} : s.prod (⋃₀C) = ⋃₀((fun t => s.prod t) '' C) := by
+theorem prod_sUnion {s : Set α} {C : Set (Set β)} : s ×ˢ ⋃₀C = ⋃₀((fun t => s ×ˢ t) '' C) := by
   simp only [sUnion_eq_bUnion, prod_bUnion, bUnion_image]
 
-theorem Union_prod_const {ι} {s : ι → Set α} {t : Set β} : (⋃ i, s i).Prod t = ⋃ i, (s i).Prod t := by
+theorem Union_prod_const {ι} {s : ι → Set α} {t : Set β} : (⋃ i, s i) ×ˢ t = ⋃ i, s i ×ˢ t := by
   ext
   simp
 
-theorem bUnion_prod_const {ι} {u : Set ι} {s : ι → Set α} {t : Set β} : (⋃ i ∈ u, s i).Prod t = ⋃ i ∈ u, (s i).Prod t :=
-  by
+theorem bUnion_prod_const {ι} {u : Set ι} {s : ι → Set α} {t : Set β} : (⋃ i ∈ u, s i) ×ˢ t = ⋃ i ∈ u, s i ×ˢ t := by
   simp_rw [Union_prod_const]
 
-theorem sUnion_prod_const {C : Set (Set α)} {t : Set β} : (⋃₀C).Prod t = ⋃₀((fun s : Set α => s.prod t) '' C) := by
+theorem sUnion_prod_const {C : Set (Set α)} {t : Set β} : ⋃₀C ×ˢ t = ⋃₀((fun s : Set α => s ×ˢ t) '' C) := by
   simp only [sUnion_eq_bUnion, bUnion_prod_const, bUnion_image]
 
-theorem Union_prod {ι α β} (s : ι → Set α) (t : ι → Set β) :
-    (⋃ x : ι × ι, (s x.1).Prod (t x.2)) = (⋃ i : ι, s i).Prod (⋃ i : ι, t i) := by
+theorem Union_prod {ι ι' α β} (s : ι → Set α) (t : ι' → Set β) :
+    (⋃ x : ι × ι', s x.1 ×ˢ t x.2) = (⋃ i : ι, s i) ×ˢ ⋃ i : ι', t i := by
   ext
   simp
 
 theorem Union_prod_of_monotone [SemilatticeSup α] {s : α → Set β} {t : α → Set γ} (hs : Monotone s) (ht : Monotone t) :
-    (⋃ x, (s x).Prod (t x)) = (⋃ x, s x).Prod (⋃ x, t x) := by
+    (⋃ x, s x ×ˢ t x) = (⋃ x, s x) ×ˢ ⋃ x, t x := by
   ext ⟨z, w⟩
   simp only [mem_prod, mem_Union, exists_imp_distrib, and_imp, iff_def]
   constructor
@@ -1327,7 +1334,7 @@ theorem seq_seq {s : Set (β → γ)} {t : Set (α → β)} {u : Set α} : seq s
 theorem image_seq {f : β → γ} {s : Set (α → β)} {t : Set α} : f '' seq s t = seq ((· ∘ ·) f '' s) t := by
   rw [← singleton_seq, ← singleton_seq, seq_seq, image_singleton]
 
-theorem prod_eq_seq {s : Set α} {t : Set β} : s.prod t = (Prod.mk '' s).seq t := by
+theorem prod_eq_seq {s : Set α} {t : Set β} : s ×ˢ t = (Prod.mk '' s).seq t := by
   ext ⟨a, b⟩
   constructor
   · rintro ⟨ha, hb⟩
@@ -1346,55 +1353,6 @@ theorem image2_eq_seq (f : α → β → γ) (s : Set α) (t : Set β) : image2 
   simp
 
 end Seq
-
-/-! ### `set` as a monad -/
-
-
-instance : Monadₓ Set where
-  pure := fun α : Type u a => {a}
-  bind := fun α β : Type u s f => ⋃ i ∈ s, f i
-  seq := fun α β : Type u => Set.Seq
-  map := fun α β : Type u => Set.Image
-
-section Monadₓ
-
-variable {α' β' : Type u} {s : Set α'} {f : α' → Set β'} {g : Set (α' → β')}
-
-@[simp]
-theorem bind_def : s >>= f = ⋃ i ∈ s, f i :=
-  rfl
-
-@[simp]
-theorem fmap_eq_image (f : α' → β') : f <$> s = f '' s :=
-  rfl
-
-@[simp]
-theorem seq_eq_set_seq {α β : Type _} (s : Set (α → β)) (t : Set α) : s <*> t = s.seq t :=
-  rfl
-
-@[simp]
-theorem pure_def (a : α) : (pure a : Set α) = {a} :=
-  rfl
-
-end Monadₓ
-
-instance : IsLawfulMonad Set where
-  pure_bind := fun α β x f => by
-    simp
-  bind_assoc := fun α β γ s f g =>
-    Set.ext $ fun a => by
-      simp [exists_and_distrib_right.symm, -exists_and_distrib_right, exists_and_distrib_left.symm,
-          -exists_and_distrib_left, and_assoc] <;>
-        exact exists_swap
-  id_map := fun α => id_map
-  bind_pure_comp_eq_map := fun α β f s =>
-    Set.ext $ by
-      simp [Set.Image, eq_comm]
-  bind_map_eq_seq := fun α β s t => by
-    simp [seq_def]
-
-instance : IsCommApplicative (Set : Type u → Type u) :=
-  ⟨fun α β s t => prod_image_seq_comm s t⟩
 
 section Pi
 
@@ -1487,8 +1445,11 @@ theorem disjoint_iff_inter_eq_empty : Disjoint s t ↔ s ∩ t = ∅ :=
 theorem not_disjoint_iff : ¬Disjoint s t ↔ ∃ x, x ∈ s ∧ x ∈ t :=
   not_forall.trans $ exists_congr $ fun x => not_not
 
-theorem not_disjoint_iff_nonempty_inter {α : Type _} {s t : Set α} : ¬Disjoint s t ↔ (s ∩ t).Nonempty := by
+theorem not_disjoint_iff_nonempty_inter : ¬Disjoint s t ↔ (s ∩ t).Nonempty := by
   simp [Set.not_disjoint_iff, Set.nonempty_def]
+
+theorem disjoint_or_nonempty_inter (s t : Set α) : Disjoint s t ∨ (s ∩ t).Nonempty :=
+  (em _).imp_right not_disjoint_iff_nonempty_inter.mp
 
 theorem disjoint_left : Disjoint s t ↔ ∀ {a}, a ∈ s → a ∉ t :=
   show (∀ x, ¬x ∈ s ∩ t) ↔ _ from ⟨fun h a => not_and.1 $ h a, fun h a => not_and.2 $ h a⟩
@@ -1579,6 +1540,11 @@ theorem disjoint_iff_subset_compl_right : Disjoint s t ↔ s ⊆ tᶜ :=
 
 theorem disjoint_iff_subset_compl_left : Disjoint s t ↔ t ⊆ sᶜ :=
   disjoint_right
+
+theorem _root_.disjoint.image {s t u : Set α} {f : α → β} (h : Disjoint s t) (hf : inj_on f u) (hs : s ⊆ u)
+    (ht : t ⊆ u) : Disjoint (f '' s) (f '' t) := by
+  rw [disjoint_iff_inter_eq_empty] at h⊢
+  rw [← hf.image_inter hs ht, h, image_empty]
 
 end Set
 

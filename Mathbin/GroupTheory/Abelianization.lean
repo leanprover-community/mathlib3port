@@ -46,6 +46,9 @@ instance : CommGroupₓ (Abelianization G) :=
 instance : Inhabited (Abelianization G) :=
   ⟨1⟩
 
+instance [Fintype G] [DecidablePred (· ∈ commutator G)] : Fintype (Abelianization G) :=
+  QuotientGroup.fintype (commutator G)
+
 variable {G}
 
 /-- `of` is the canonical projection from G to its abelianization. -/

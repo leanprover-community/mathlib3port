@@ -1,3 +1,4 @@
+import Mathbin.Analysis.SpecialFunctions.Trigonometric.Angle
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Inverse
 
 /-!
@@ -13,7 +14,7 @@ noncomputable section
 
 namespace Complex
 
-open_locale Real TopologicalSpace
+open_locale ComplexConjugate Real TopologicalSpace
 
 open Filter Set
 
@@ -184,19 +185,6 @@ theorem arg_eq_arg_iff {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) : arg x = arg y
   rw [← of_real_div, arg_real_mul]
   exact div_pos (abs_pos.2 hy) (abs_pos.2 hx)
 
-theorem arg_eq_arg_neg_add_pi_of_im_nonneg_of_re_neg {x : ℂ} (hxr : x.re < 0) (hxi : 0 ≤ x.im) : arg x = arg (-x) + π :=
-  by
-  have : 0 ≤ (-x).re :=
-    le_of_ltₓ $ by
-      simpa [neg_pos]
-  rw [arg, arg, if_neg (not_leₓ.2 hxr), if_pos this, if_pos hxi, abs_neg]
-
-theorem arg_eq_arg_neg_sub_pi_of_im_neg_of_re_neg {x : ℂ} (hxr : x.re < 0) (hxi : x.im < 0) : arg x = arg (-x) - π := by
-  have : 0 ≤ (-x).re :=
-    le_of_ltₓ $ by
-      simpa [neg_pos]
-  rw [arg, arg, if_neg (not_leₓ.2 hxr), if_neg (not_leₓ.2 hxi), if_pos this, abs_neg]
-
 @[simp]
 theorem arg_one : arg 1 = 0 := by
   simp [arg, zero_le_one]
@@ -291,6 +279,112 @@ theorem arg_of_im_neg {z : ℂ} (hz : z.im < 0) : arg z = -Real.arccos (z.re / a
   have h₀ : z ≠ 0 := mt (congr_argₓ im) hz.ne
   rw [← cos_arg h₀, ← Real.cos_neg, Real.arccos_cos, neg_negₓ]
   exacts[neg_nonneg.2 (arg_neg_iff.2 hz).le, neg_le.2 (neg_pi_lt_arg z).le]
+
+theorem arg_conj (x : ℂ) : arg (conj x) = if arg x = π then π else -arg x := by
+  simp_rw [arg_eq_pi_iff, arg, neg_im, conj_im, conj_re, abs_conj, neg_div, neg_negₓ, Real.arcsin_neg,
+    apply_ite Neg.neg, neg_add, neg_sub, neg_negₓ, ← sub_eq_add_neg, sub_neg_eq_add, add_commₓ π]
+  rcases lt_trichotomyₓ x.re 0 with (hr | hr | hr) <;> rcases lt_trichotomyₓ x.im 0 with (hi | hi | hi)
+  · simp [hr, hr.not_le, hi.le, hi.ne, not_leₓ.2 hi]
+    
+  · simp [hr, hr.not_le, hi]
+    
+  · simp [hr, hr.not_le, hi.ne.symm, hi.le, not_leₓ.2 hi]
+    
+  · simp [hr]
+    
+  · simp [hr]
+    
+  · simp [hr]
+    
+  · simp [hr, hr.le, hi.ne]
+    
+  · simp [hr, hr.le, hr.le.not_lt]
+    
+  · simp [hr, hr.le, hr.le.not_lt]
+    
+
+theorem arg_inv (x : ℂ) : arg (x⁻¹) = if arg x = π then π else -arg x := by
+  rw [← arg_conj, inv_def, mul_commₓ]
+  by_cases' hx : x = 0
+  · simp [hx]
+    
+  · exact
+      arg_real_mul (conj x)
+        (by
+          simp [hx])
+    
+
+@[simp]
+theorem arg_conj_coe_angle (x : ℂ) : (arg (conj x) : Real.Angle) = -arg x := by
+  by_cases' h : arg x = π <;> simp [arg_conj, h]
+
+@[simp]
+theorem arg_inv_coe_angle (x : ℂ) : (arg (x⁻¹) : Real.Angle) = -arg x := by
+  by_cases' h : arg x = π <;> simp [arg_inv, h]
+
+theorem arg_neg_eq_arg_sub_pi_of_im_pos {x : ℂ} (hi : 0 < x.im) : arg (-x) = arg x - π := by
+  rw [arg_of_im_pos hi, arg_of_im_neg (show (-x).im < 0 from Left.neg_neg_iff.2 hi)]
+  simp [neg_div, Real.arccos_neg]
+
+theorem arg_neg_eq_arg_add_pi_of_im_neg {x : ℂ} (hi : x.im < 0) : arg (-x) = arg x + π := by
+  rw [arg_of_im_neg hi, arg_of_im_pos (show 0 < (-x).im from Left.neg_pos_iff.2 hi)]
+  simp [neg_div, Real.arccos_neg, add_commₓ, ← sub_eq_add_neg]
+
+theorem arg_neg_eq_arg_sub_pi_iff {x : ℂ} : arg (-x) = arg x - π ↔ 0 < x.im ∨ x.im = 0 ∧ x.re < 0 := by
+  rcases lt_trichotomyₓ x.im 0 with (hi | hi | hi)
+  · simp [hi, hi.ne, hi.not_lt, arg_neg_eq_arg_add_pi_of_im_neg, sub_eq_add_neg, ← add_eq_zero_iff_eq_neg,
+      Real.pi_ne_zero]
+    
+  · rw [(ext rfl hi : x = x.re)]
+    rcases lt_trichotomyₓ x.re 0 with (hr | hr | hr)
+    · rw [arg_of_real_of_neg hr, ← of_real_neg, arg_of_real_of_nonneg (Left.neg_pos_iff.2 hr).le]
+      simp [hr]
+      
+    · simp [hr, hi, Real.pi_ne_zero]
+      
+    · rw [arg_of_real_of_nonneg hr.le, ← of_real_neg, arg_of_real_of_neg (Left.neg_neg_iff.2 hr)]
+      simp [hr.not_lt, ← add_eq_zero_iff_eq_neg, Real.pi_ne_zero]
+      
+    
+  · simp [hi, arg_neg_eq_arg_sub_pi_of_im_pos]
+    
+
+theorem arg_neg_eq_arg_add_pi_iff {x : ℂ} : arg (-x) = arg x + π ↔ x.im < 0 ∨ x.im = 0 ∧ 0 < x.re := by
+  rcases lt_trichotomyₓ x.im 0 with (hi | hi | hi)
+  · simp [hi, arg_neg_eq_arg_add_pi_of_im_neg]
+    
+  · rw [(ext rfl hi : x = x.re)]
+    rcases lt_trichotomyₓ x.re 0 with (hr | hr | hr)
+    · rw [arg_of_real_of_neg hr, ← of_real_neg, arg_of_real_of_nonneg (Left.neg_pos_iff.2 hr).le]
+      simp [hr.not_lt, ← two_mul, Real.pi_ne_zero]
+      
+    · simp [hr, hi, real.pi_ne_zero.symm]
+      
+    · rw [arg_of_real_of_nonneg hr.le, ← of_real_neg, arg_of_real_of_neg (Left.neg_neg_iff.2 hr)]
+      simp [hr]
+      
+    
+  · simp [hi, hi.ne.symm, hi.not_lt, arg_neg_eq_arg_sub_pi_of_im_pos, sub_eq_add_neg, ← add_eq_zero_iff_neg_eq,
+      Real.pi_ne_zero]
+    
+
+theorem arg_neg_coe_angle {x : ℂ} (hx : x ≠ 0) : (arg (-x) : Real.Angle) = arg x + π := by
+  rcases lt_trichotomyₓ x.im 0 with (hi | hi | hi)
+  · rw [arg_neg_eq_arg_add_pi_of_im_neg hi, Real.Angle.coe_add]
+    
+  · rw [(ext rfl hi : x = x.re)]
+    rcases lt_trichotomyₓ x.re 0 with (hr | hr | hr)
+    · rw [arg_of_real_of_neg hr, ← of_real_neg, arg_of_real_of_nonneg (Left.neg_pos_iff.2 hr).le, ← Real.Angle.coe_add,
+        ← two_mul, Real.Angle.coe_two_pi, Real.Angle.coe_zero]
+      
+    · exact False.elim (hx (ext hr hi))
+      
+    · rw [arg_of_real_of_nonneg hr.le, ← of_real_neg, arg_of_real_of_neg (Left.neg_neg_iff.2 hr), Real.Angle.coe_zero,
+        zero_addₓ]
+      
+    
+  · rw [arg_neg_eq_arg_sub_pi_of_im_pos hi, Real.Angle.coe_sub, Real.Angle.sub_coe_pi_eq_add_coe_pi]
+    
 
 section Continuity
 

@@ -174,7 +174,7 @@ instance : HasDist GH_space where
   dist := fun x y =>
     Inf $
       (fun p : nonempty_compacts ℓ_infty_ℝ × nonempty_compacts ℓ_infty_ℝ => Hausdorff_dist p.1.val p.2.val) ''
-        Set.Prod { a | ⟦a⟧ = x } { b | ⟦b⟧ = y }
+        ({ a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y })
 
 /-- The Gromov-Hausdorff distance between two nonempty compact metric spaces, equal by definition to
 the distance of the equivalence classes of these spaces in the Gromov-Hausdorff space. -/
@@ -443,10 +443,10 @@ instance : MetricSpace GH_space where
   dist_comm := fun x y => by
     have A :
       (fun p : nonempty_compacts ℓ_infty_ℝ × nonempty_compacts ℓ_infty_ℝ => Hausdorff_dist p.fst.val p.snd.val) ''
-          Set.Prod { a | ⟦a⟧ = x } { b | ⟦b⟧ = y } =
+          ({ a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y }) =
         (fun p : nonempty_compacts ℓ_infty_ℝ × nonempty_compacts ℓ_infty_ℝ => Hausdorff_dist p.fst.val p.snd.val) ∘
             Prod.swap ''
-          Set.Prod { a | ⟦a⟧ = x } { b | ⟦b⟧ = y } :=
+          ({ a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y }) :=
       by
       congr
       funext
@@ -690,13 +690,13 @@ instance : second_countable_topology GH_space := by
     show ∀ x : p.rep, ∃ (y : p.rep)(H : y ∈ s p), dist x y ≤ ε
     · intro x
       have : x ∈ ⋃ y ∈ s p, ball y ε := (hs p).2 (mem_univ _)
-      rcases mem_bUnion_iff.1 this with ⟨y, ys, hy⟩
+      rcases mem_Union₂.1 this with ⟨y, ys, hy⟩
       exact ⟨y, ys, le_of_ltₓ hy⟩
       
     show ∀ x : q.rep, ∃ z : s p, dist x (Φ z) ≤ ε
     · intro x
       have : x ∈ ⋃ y ∈ s q, ball y ε := (hs q).2 (mem_univ _)
-      rcases mem_bUnion_iff.1 this with ⟨y, ys, hy⟩
+      rcases mem_Union₂.1 this with ⟨y, ys, hy⟩
       let i : ℕ := E q ⟨y, ys⟩
       let hi := ((E q) ⟨y, ys⟩).is_lt
       have ihi_eq : (⟨i, hi⟩ : Finₓ (N q)) = (E q) ⟨y, ys⟩ := by
@@ -822,13 +822,13 @@ theorem TotallyBounded {t : Set GH_space} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
     show ∀ x : p.rep, ∃ (y : p.rep)(H : y ∈ s p), dist x y ≤ ε
     · intro x
       have : x ∈ ⋃ y ∈ s p, ball y (u n) := (hs p pt) (mem_univ _)
-      rcases mem_bUnion_iff.1 this with ⟨y, ys, hy⟩
+      rcases mem_Union₂.1 this with ⟨y, ys, hy⟩
       exact ⟨y, ys, le_transₓ (le_of_ltₓ hy) u_le_ε⟩
       
     show ∀ x : q.rep, ∃ z : s p, dist x (Φ z) ≤ ε
     · intro x
       have : x ∈ ⋃ y ∈ s q, ball y (u n) := (hs q qt) (mem_univ _)
-      rcases mem_bUnion_iff.1 this with ⟨y, ys, hy⟩
+      rcases mem_Union₂.1 this with ⟨y, ys, hy⟩
       let i : ℕ := E q ⟨y, ys⟩
       let hi := ((E q) ⟨y, ys⟩).2
       have ihi_eq : (⟨i, hi⟩ : Finₓ (N q)) = (E q) ⟨y, ys⟩ := by

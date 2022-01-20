@@ -91,7 +91,7 @@ notation:25 M " →ₛₗ[" σ:25 "] " M₂:0 => LinearMap σ M M₂
 
 notation:25 M " →ₗ[" R:25 "] " M₂:0 => LinearMap (RingHom.id R) M M₂
 
-notation:25 M " →ₗ⋆[" R:25 "] " M₂:0 => LinearMap (@starRingAut R _ _ : R →+* R) M M₂
+notation:25 M " →ₗ⋆[" R:25 "] " M₂:0 => LinearMap (starRingEnd R) M M₂
 
 namespace LinearMap
 
@@ -641,7 +641,7 @@ instance : Inhabited (M →ₛₗ[σ₁₂] M₂) :=
   ⟨0⟩
 
 @[simp]
-theorem default_def : default (M →ₛₗ[σ₁₂] M₂) = 0 :=
+theorem default_def : (default : M →ₛₗ[σ₁₂] M₂) = 0 :=
   rfl
 
 /-- The sum of two linear maps is linear. -/

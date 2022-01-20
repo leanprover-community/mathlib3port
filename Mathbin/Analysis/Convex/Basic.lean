@@ -1,3 +1,4 @@
+import Mathbin.Algebra.Order.Invertible
 import Mathbin.Algebra.Order.Module
 import Mathbin.LinearAlgebra.AffineSpace.Midpoint
 import Mathbin.LinearAlgebra.AffineSpace.AffineSubspace
@@ -490,13 +491,9 @@ def Convex : Prop :=
 variable {𝕜 s}
 
 theorem convex_iff_segment_subset : Convex 𝕜 s ↔ ∀ ⦃x y⦄, x ∈ s → y ∈ s → [x -[𝕜] y] ⊆ s := by
-  constructor
-  · rintro h x y hx hy z ⟨a, b, ha, hb, hab, rfl⟩
-    exact h hx hy ha hb hab
-    
-  · rintro h x y hx hy a b ha hb hab
-    exact h hx hy ⟨a, b, ha, hb, hab, rfl⟩
-    
+  refine' forall₄_congrₓ fun x y hx hy => ⟨_, fun h a b ha hb hab => h ⟨a, b, ha, hb, hab, rfl⟩⟩
+  rintro h _ ⟨a, b, ha, hb, hab, rfl⟩
+  exact h ha hb hab
 
 theorem Convex.segment_subset (h : Convex 𝕜 s) {x y : E} (hx : x ∈ s) (hy : y ∈ s) : [x -[𝕜] y] ⊆ s :=
   convex_iff_segment_subset.1 h hx hy
@@ -527,7 +524,7 @@ theorem convex_sInter {S : Set (Set E)} (h : ∀, ∀ s ∈ S, ∀, Convex 𝕜 
 theorem convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i : ι, Convex 𝕜 (s i)) : Convex 𝕜 (⋂ i, s i) :=
   sInter_range s ▸ convex_sInter $ forall_range_iff.2 h
 
-theorem Convex.prod {s : Set E} {t : Set F} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (s.prod t) := by
+theorem Convex.prod {s : Set E} {t : Set F} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (s ×ˢ t) := by
   intro x y hx hy a b ha hb hab
   apply mem_prod.2
   exact ⟨hs (mem_prod.1 hx).1 (mem_prod.1 hy).1 ha hb hab, ht (mem_prod.1 hx).2 (mem_prod.1 hy).2 ha hb hab⟩
@@ -589,9 +586,9 @@ theorem convex_iff_pairwise_pos :
     
   exact h hx hy hxy ha' hb' hab
 
-theorem convex_iff_open_segment_subset : Convex 𝕜 s ↔ ∀ ⦃x y⦄, x ∈ s → y ∈ s → OpenSegment 𝕜 x y ⊆ s := by
-  rw [convex_iff_segment_subset]
-  exact forall₂_congr fun x y => forall₂_congr $ fun hx hy => (open_segment_subset_iff_segment_subset hx hy).symm
+theorem convex_iff_open_segment_subset : Convex 𝕜 s ↔ ∀ ⦃x y⦄, x ∈ s → y ∈ s → OpenSegment 𝕜 x y ⊆ s :=
+  convex_iff_segment_subset.trans $
+    forall₄_congrₓ $ fun x y hx hy => (open_segment_subset_iff_segment_subset hx hy).symm
 
 theorem convex_singleton (c : E) : Convex 𝕜 ({c} : Set E) := by
   intro x y hx hy a b ha hb hab

@@ -48,7 +48,7 @@ instance : Inhabited (Kleisli id) :=
   ⟨PUnit⟩
 
 instance {α : Type u} [Inhabited α] : Inhabited (Kleisli.mk id α) :=
-  ⟨(default α : _)⟩
+  ⟨show α from default⟩
 
 end CategoryTheory
 

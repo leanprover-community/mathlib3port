@@ -330,12 +330,12 @@ theorem zpow_mem {x : G} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K
 def of_div (s : Set G) (hsn : s.nonempty) (hs : ∀ x y _ : x ∈ s _ : y ∈ s, x * y⁻¹ ∈ s) : Subgroup G :=
   have one_mem : (1 : G) ∈ s := by
     let ⟨x, hx⟩ := hsn
-    simpa using hs x x hx hx
+    simpa using hs x hx x hx
   have inv_mem : ∀ x, x ∈ s → x⁻¹ ∈ s := fun x hx => by
-    simpa using hs 1 x one_mem hx
+    simpa using hs 1 one_mem x hx
   { Carrier := s, one_mem' := one_mem, inv_mem' := inv_mem,
     mul_mem' := fun x y hx hy => by
-      simpa using hs x (y⁻¹) hx (inv_mem y hy) }
+      simpa using hs x hx (y⁻¹) (inv_mem y hy) }
 
 /-- A subgroup of a group inherits a multiplication. -/
 @[to_additive "An `add_subgroup` of an `add_group` inherits an addition."]
@@ -593,7 +593,7 @@ instance : HasInfₓ (Subgroup G) :=
         Set.mem_bInter $ fun i h =>
           i.inv_mem
             (by
-              apply Set.mem_bInter_iff.1 hx i h) }⟩
+              apply Set.mem_Inter₂.1 hx i h) }⟩
 
 @[simp, norm_cast, to_additive]
 theorem coe_Inf (H : Set (Subgroup G)) : ((Inf H : Subgroup G) : Set G) = ⋂ s ∈ H, ↑s :=
@@ -601,7 +601,7 @@ theorem coe_Inf (H : Set (Subgroup G)) : ((Inf H : Subgroup G) : Set G) = ⋂ s 
 
 @[simp, to_additive]
 theorem mem_Inf {S : Set (Subgroup G)} {x : G} : x ∈ Inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
-  Set.mem_bInter_iff
+  Set.mem_Inter₂
 
 @[to_additive]
 theorem mem_infi {ι : Sort _} {S : ι → Subgroup G} {x : G} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
@@ -1070,7 +1070,7 @@ def Prod (H : Subgroup G) (K : Subgroup N) : Subgroup (G × N) :=
   { Submonoid.prod H.to_submonoid K.to_submonoid with inv_mem' := fun _ hx => ⟨H.inv_mem' hx.1, K.inv_mem' hx.2⟩ }
 
 @[to_additive coe_prod]
-theorem coe_prod (H : Subgroup G) (K : Subgroup N) : (H.prod K : Set (G × N)) = (H : Set G).Prod (K : Set N) :=
+theorem coe_prod (H : Subgroup G) (K : Subgroup N) : (H.prod K : Set (G × N)) = (H : Set G) ×ˢ (K : Set N) :=
   rfl
 
 @[to_additive mem_prod]
@@ -1393,7 +1393,7 @@ def conjugates_of_set (s : Set G) : Set G :=
   ⋃ a ∈ s, ConjugatesOf a
 
 theorem mem_conjugates_of_set_iff {x : G} : x ∈ conjugates_of_set s ↔ ∃ a ∈ s, IsConj a x :=
-  Set.mem_bUnion_iff
+  Set.mem_Union₂
 
 theorem subset_conjugates_of_set : s ⊆ conjugates_of_set s := fun x : G h : x ∈ s =>
   mem_conjugates_of_set_iff.2 ⟨x, h, IsConj.refl _⟩

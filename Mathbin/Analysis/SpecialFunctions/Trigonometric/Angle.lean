@@ -71,6 +71,23 @@ theorem coe_two_pi : ↑(2 * π : ℝ) = (0 : angle) :=
     ⟨1, by
       rw [sub_zero, Int.cast_one, mul_oneₓ]⟩
 
+@[simp]
+theorem neg_coe_pi : -(π : angle) = π := by
+  rw [← coe_neg, angle_eq_iff_two_pi_dvd_sub]
+  use -1
+  simp [two_mul, sub_eq_add_neg]
+
+theorem sub_coe_pi_eq_add_coe_pi (θ : angle) : θ - π = θ + π := by
+  rw [sub_eq_add_neg, neg_coe_pi]
+
+@[simp]
+theorem two_nsmul_coe_pi : (2 : ℕ) • (π : angle) = 0 := by
+  simp [← coe_nat_mul_eq_nsmul]
+
+@[simp]
+theorem two_zsmul_coe_pi : (2 : ℤ) • (π : angle) = 0 := by
+  simp [← coe_int_mul_eq_zsmul]
+
 theorem cos_eq_iff_eq_or_eq_neg {θ ψ : ℝ} : cos θ = cos ψ ↔ (θ : angle) = ψ ∨ (θ : angle) = -ψ := by
   constructor
   · intro Hcos

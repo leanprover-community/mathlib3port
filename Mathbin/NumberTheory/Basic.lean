@@ -29,7 +29,7 @@ theorem dvd_sub_pow_of_dvd_sub {R : Type _} [CommRingₓ R] {p : ℕ} {a b : R} 
   let I : Ideal R := span {p}
   let f : R →+* R ⧸ I := mk I
   have hp : (p : R ⧸ I) = 0 := by
-    rw [← f.map_nat_cast, eq_zero_iff_mem, mem_span_singleton]
+    rw [← map_nat_cast f, eq_zero_iff_mem, mem_span_singleton]
   rw [← mem_span_singleton, ← Ideal.Quotient.eq] at h
   rw [← mem_span_singleton, ← eq_zero_iff_mem, RingHom.map_geom_sum₂, RingHom.map_pow, RingHom.map_pow, h,
     geom_sum₂_self, hp, zero_mul]

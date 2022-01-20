@@ -44,6 +44,8 @@ commute with finite limits.
 -/
 
 
+open Function
+
 universe v v₁ u u₁
 
 namespace CategoryTheory
@@ -81,17 +83,17 @@ instance (priority := 100) is_filtered_of_semilattice_sup_nonempty (α : Type u)
     is_filtered α :=
   {  }
 
-instance (priority := 100) is_filtered_or_empty_of_directed_order (α : Type u) [DirectedOrder α] :
+instance (priority := 100) is_filtered_or_empty_of_directed_le (α : Type u) [Preorderₓ α] [IsDirected α (· ≤ ·)] :
     is_filtered_or_empty α where
   cocone_objs := fun X Y =>
-    let ⟨Z, h1, h2⟩ := DirectedOrder.directed X Y
+    let ⟨Z, h1, h2⟩ := exists_ge_ge X Y
     ⟨Z, hom_of_le h1, hom_of_le h2, trivialₓ⟩
   cocone_maps := fun X Y f g =>
     ⟨Y, 𝟙 _, by
       simp ⟩
 
-instance (priority := 100) is_filtered_of_directed_order_nonempty (α : Type u) [DirectedOrder α] [Nonempty α] :
-    is_filtered α :=
+instance (priority := 100) is_filtered_of_directed_le_nonempty (α : Type u) [Preorderₓ α] [IsDirected α (· ≤ ·)]
+    [Nonempty α] : is_filtered α :=
   {  }
 
 example (α : Type u) [SemilatticeSup α] [OrderBot α] : is_filtered α := by
@@ -459,6 +461,19 @@ instance (priority := 100) is_cofiltered_or_empty_of_semilattice_inf (α : Type 
 
 instance (priority := 100) is_cofiltered_of_semilattice_inf_nonempty (α : Type u) [SemilatticeInf α] [Nonempty α] :
     is_cofiltered α :=
+  {  }
+
+instance (priority := 100) is_cofiltered_or_empty_of_directed_ge (α : Type u) [Preorderₓ α]
+    [IsDirected α (swap (· ≤ ·))] : is_cofiltered_or_empty α where
+  cocone_objs := fun X Y =>
+    let ⟨Z, hX, hY⟩ := exists_le_le X Y
+    ⟨Z, hom_of_le hX, hom_of_le hY, trivialₓ⟩
+  cocone_maps := fun X Y f g =>
+    ⟨X, 𝟙 _, by
+      simp ⟩
+
+instance (priority := 100) is_cofiltered_of_directed_ge_nonempty (α : Type u) [Preorderₓ α]
+    [IsDirected α (swap (· ≤ ·))] [Nonempty α] : is_cofiltered α :=
   {  }
 
 example (α : Type u) [SemilatticeInf α] [OrderBot α] : is_cofiltered α := by

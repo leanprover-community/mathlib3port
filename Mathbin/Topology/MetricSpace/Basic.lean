@@ -157,15 +157,9 @@ def PseudoMetricSpace.ofMetrizable {α : Type _} [TopologicalSpace α] (dist : �
           intro s
           change IsOpen s ↔ _
           rw [H s]
-          apply forall_congrₓ
-          intro x
-          apply forall_congrₓ
-          intro x_in
+          refine' forall₂_congrₓ fun x x_in => _
           erw [(has_basis_binfi_principal _ nonempty_Ioi).mem_iff]
-          · apply exists_congr
-            intro ε
-            apply exists_congr
-            intro ε_pos
+          · refine' exists₂_congrₓ fun ε ε_pos => _
             simp only [Prod.forall, set_of_subset_set_of]
             constructor
             · rintro h _ y H rfl
@@ -425,12 +419,23 @@ theorem ball_subset_closed_ball : ball x ε ⊆ closed_ball x ε := fun y hy : _
 
 theorem sphere_subset_closed_ball : sphere x ε ⊆ closed_ball x ε := fun y => le_of_eqₓ
 
-theorem ball_disjoint_ball (x y : α) (rx ry : ℝ) (h : rx + ry ≤ dist x y) : Disjoint (ball x rx) (ball y ry) := by
+theorem closed_ball_disjoint_ball (x y : α) (rx ry : ℝ) (h : rx + ry ≤ dist x y) :
+    Disjoint (closed_ball x rx) (ball y ry) := by
   rw [disjoint_left]
   intro a ax ay
   apply lt_irreflₓ (dist x y)
-  calc dist x y ≤ dist x a + dist a y := dist_triangle _ _ _ _ < rx + ry :=
-      add_lt_add (mem_ball'.1 ax) (mem_ball.1 ay)_ ≤ dist x y := h
+  calc dist x y ≤ dist a x + dist a y := dist_triangle_left _ _ _ _ < rx + ry :=
+      add_lt_add_of_le_of_lt (mem_closed_ball.1 ax) (mem_ball.1 ay)_ ≤ dist x y := h
+
+theorem ball_disjoint_ball (x y : α) (rx ry : ℝ) (h : rx + ry ≤ dist x y) : Disjoint (ball x rx) (ball y ry) :=
+  (closed_ball_disjoint_ball x y rx ry h).mono_left ball_subset_closed_ball
+
+theorem closed_ball_disjoint_closed_ball {x y : α} {rx ry : ℝ} (h : rx + ry < dist x y) :
+    Disjoint (closed_ball x rx) (closed_ball y ry) := by
+  rw [disjoint_left]
+  intro a ax ay
+  apply lt_irreflₓ (dist x y)
+  calc dist x y ≤ dist a x + dist a y := dist_triangle_left _ _ _ _ ≤ rx + ry := add_le_add ax ay _ < dist x y := h
 
 theorem sphere_disjoint_ball : Disjoint (sphere x ε) (ball x ε) := fun y ⟨hy₁, hy₂⟩ => absurd hy₁ $ ne_of_ltₓ hy₂
 
@@ -503,14 +508,6 @@ theorem dist_lt_add_of_nonempty_ball_inter_ball (h : (ball x ε₁ ∩ ball y ε
 @[simp]
 theorem Union_closed_ball_nat (x : α) : (⋃ n : ℕ, closed_ball x n) = univ :=
   Union_eq_univ_iff.2 $ fun y => exists_nat_ge (dist y x)
-
-theorem ball_disjoint (h : ε₁ + ε₂ ≤ dist x y) : ball x ε₁ ∩ ball y ε₂ = ∅ :=
-  eq_empty_iff_forall_not_mem.2 $ fun z ⟨h₁, h₂⟩ =>
-    not_lt_of_le (dist_triangle_left x y z) (lt_of_lt_of_leₓ (add_lt_add h₁ h₂) h)
-
-theorem ball_disjoint_same (h : ε ≤ dist x y / 2) : ball x ε ∩ ball y ε = ∅ :=
-  ball_disjoint $ by
-    rwa [← two_mul, ← le_div_iff' (@zero_lt_two ℝ _ _)]
 
 theorem ball_subset (h : dist x y ≤ ε₂ - ε₁) : ball x ε₁ ⊆ ball y ε₂ := fun z zx => by
   rw [← add_sub_cancel'_right ε₁ ε₂] <;> exact lt_of_le_of_ltₓ (dist_triangle z x y) (add_lt_add_of_lt_of_le zx h)
@@ -770,11 +767,15 @@ theorem nhds_within_basis_ball {s : Set α} : (𝓝[s] x).HasBasis (fun ε : ℝ
 theorem mem_nhds_within_iff {t : Set α} : s ∈ 𝓝[t] x ↔ ∃ ε > 0, ball x ε ∩ t ⊆ s :=
   nhds_within_basis_ball.mem_iff
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem tendsto_nhds_within_nhds_within [PseudoMetricSpace β] {t : Set β} {f : α → β} {a b} :
     tendsto f (𝓝[s] a) (𝓝[t] b) ↔
       ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ {x : α}, x ∈ s → dist x a < δ → f x ∈ t ∧ dist (f x) b < ε :=
-  (nhds_within_basis_ball.tendsto_iff nhds_within_basis_ball).trans $ by
-    simp only [inter_comm, mem_inter_iff, and_imp, mem_ball]
+  (nhds_within_basis_ball.tendsto_iff nhds_within_basis_ball).trans $
+    forall₂_congrₓ $ fun ε hε =>
+      exists₂_congrₓ $ fun δ hδ =>
+        forall_congrₓ $ fun x => by
+          simp <;> itauto
 
 theorem tendsto_nhds_within_nhds [PseudoMetricSpace β] {f : α → β} {a b} :
     tendsto f (𝓝[s] a) (𝓝 b) ↔ ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ {x : α}, x ∈ s → dist x a < δ → dist (f x) b < ε := by
@@ -830,7 +831,7 @@ theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {u : β → α} {a : α
 /-- A variant of `tendsto_at_top` that
 uses `∃ N, ∀ n > N, ...` rather than `∃ N, ∀ n ≥ N, ...`
 -/
-theorem tendsto_at_top' [Nonempty β] [SemilatticeSup β] [NoTopOrder β] {u : β → α} {a : α} :
+theorem tendsto_at_top' [Nonempty β] [SemilatticeSup β] [NoMaxOrder β] {u : β → α} {a : α} :
     tendsto u at_top (𝓝 a) ↔ ∀, ∀ ε > 0, ∀, ∃ N, ∀, ∀ n > N, ∀, dist (u n) a < ε :=
   (at_top_basis_Ioi.tendsto_iff nhds_basis_ball).trans $ by
     simp only [exists_prop, true_andₓ]
@@ -1143,7 +1144,7 @@ and `b` converges to zero, then `s` is a Cauchy sequence.  -/
 theorem cauchy_seq_of_le_tendsto_0 {s : β → α} (b : β → ℝ) (h : ∀ n m N : β, N ≤ n → N ≤ m → dist (s n) (s m) ≤ b N)
     (h₀ : tendsto b at_top (nhds 0)) : CauchySeq s :=
   Metric.cauchy_seq_iff.2 $ fun ε ε0 =>
-    (Metric.tendsto_at_top.1 h₀ ε ε0).imp $ fun N hN m n hm hn =>
+    (Metric.tendsto_at_top.1 h₀ ε ε0).imp $ fun N hN m hm n hn =>
       calc
         dist (s m) (s n) ≤ b N := h m n N hm hn
         _ ≤ |b N| := le_abs_self _
@@ -1193,7 +1194,7 @@ theorem cauchy_seq_iff_le_tendsto_0 {s : ℕ → α} :
     rw [Real.dist_0_eq_abs, abs_of_nonneg (S0 n)]
     refine' lt_of_le_of_ltₓ (cSup_le ⟨_, S0m _⟩ _) (half_lt_self ε0)
     rintro _ ⟨⟨m', n'⟩, ⟨hm', hn'⟩, rfl⟩
-    exact le_of_ltₓ (hN _ _ (le_transₓ hn hm') (le_transₓ hn hn')), fun ⟨b, _, b_bound, b_lim⟩ =>
+    exact le_of_ltₓ (hN _ (le_transₓ hn hm') _ (le_transₓ hn hn')), fun ⟨b, _, b_bound, b_lim⟩ =>
     cauchy_seq_of_le_tendsto_0 b b_bound b_lim⟩
 
 end CauchySeq
@@ -1300,12 +1301,12 @@ noncomputable instance Prod.pseudoMetricSpaceMax [PseudoMetricSpace β] : Pseudo
 theorem Prod.dist_eq [PseudoMetricSpace β] {x y : α × β} : dist x y = max (dist x.1 y.1) (dist x.2 y.2) :=
   rfl
 
-theorem ball_prod_same [PseudoMetricSpace β] (x : α) (y : β) (r : ℝ) : (ball x r).Prod (ball y r) = ball (x, y) r :=
+theorem ball_prod_same [PseudoMetricSpace β] (x : α) (y : β) (r : ℝ) : ball x r ×ˢ ball y r = ball (x, y) r :=
   ext $ fun z => by
     simp [Prod.dist_eq]
 
 theorem closed_ball_prod_same [PseudoMetricSpace β] (x : α) (y : β) (r : ℝ) :
-    (closed_ball x r).Prod (closed_ball y r) = closed_ball (x, y) r :=
+    closed_ball x r ×ˢ closed_ball y r = closed_ball (x, y) r :=
   ext $ fun z => by
     simp [Prod.dist_eq]
 
@@ -1617,7 +1618,7 @@ instance (priority := 100) complete_of_proper [ProperSpace α] : CompleteSpace �
     obtain ⟨t, t_fset, ht⟩ : ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, dist x y < 1 :=
       (Metric.cauchy_iff.1 hf).2 1 zero_lt_one
     rcases hf.1.nonempty_of_mem t_fset with ⟨x, xt⟩
-    have : closed_ball x 1 ∈ f := mem_of_superset t_fset fun y yt => (ht y x yt xt).le
+    have : closed_ball x 1 ∈ f := mem_of_superset t_fset fun y yt => (ht y yt x xt).le
     rcases(compact_iff_totally_bounded_complete.1 (is_compact_closed_ball x 1)).2 f hf (le_principal_iff.2 this) with
       ⟨y, -, hy⟩
     exact ⟨y, hy⟩⟩
@@ -1653,7 +1654,7 @@ theorem exists_lt_subset_ball (hs : IsClosed s) (h : s ⊆ ball x r) : ∃ r' < 
   cases' le_or_ltₓ r 0 with hr hr
   · rw [ball_eq_empty.2 hr, subset_empty_iff] at h
     subst s
-    exact (no_bot r).imp fun r' hr' => ⟨hr', empty_subset _⟩
+    exact (exists_lt r).imp fun r' hr' => ⟨hr', empty_subset _⟩
     
   · exact (exists_pos_lt_subset_ball hr hs h).imp fun r' hr' => ⟨hr'.fst.2, hr'.snd⟩
     
@@ -1722,11 +1723,11 @@ theorem bounded_iff_mem_bounded : Bounded s ↔ ∀, ∀ x ∈ s, ∀, Bounded s
 
 /-- Subsets of a bounded set are also bounded -/
 theorem bounded.mono (incl : s ⊆ t) : Bounded t → Bounded s :=
-  Exists.impₓ $ fun C hC x y hx hy => hC x y (incl hx) (incl hy)
+  Exists.impₓ $ fun C hC x hx y hy => hC x (incl hx) y (incl hy)
 
 /-- Closed balls are bounded -/
 theorem bounded_closed_ball : Bounded (closed_ball x r) :=
-  ⟨r + r, fun y z hy hz => by
+  ⟨r + r, fun y hy z hz => by
     simp only [mem_closed_ball] at *
     calc dist y z ≤ dist y x + dist z x := dist_triangle_right _ _ _ _ ≤ r + r := add_le_add hy hz⟩
 
@@ -1748,7 +1749,7 @@ theorem bounded_iff_subset_ball (c : α) : Bounded s ↔ ∃ r, s ⊆ closed_bal
         ⟨C + dist x c, fun y hy =>
           calc
             dist y c ≤ dist y x + dist x c := dist_triangle _ _ _
-            _ ≤ C + dist x c := add_le_add_right (hC y x hy hx) _
+            _ ≤ C + dist x c := add_le_add_right (hC y hy x hx) _
             ⟩
       
     
@@ -1771,7 +1772,7 @@ theorem bounded.subset_ball_lt (h : Bounded s) (a : ℝ) (c : α) : ∃ r, a < r
 
 theorem bounded_closure_of_bounded (h : Bounded s) : Bounded (Closure s) :=
   let ⟨C, h⟩ := h
-  ⟨C, fun a b ha hb => (is_closed_le' C).closure_subset $ map_mem_closure2 continuous_dist ha hb h⟩
+  ⟨C, fun a ha b hb => (is_closed_le' C).closure_subset $ map_mem_closure2 continuous_dist ha hb $ ball_mem_comm.mp h⟩
 
 alias bounded_closure_of_bounded ← Metric.Bounded.closure
 
@@ -1833,15 +1834,15 @@ theorem bounded_singleton {x : α} : Bounded ({x} : Set α) :=
 /-- Characterization of the boundedness of the range of a function -/
 theorem bounded_range_iff {f : β → α} : Bounded (range f) ↔ ∃ C, ∀ x y, dist (f x) (f y) ≤ C :=
   exists_congr $ fun C =>
-    ⟨fun H x y => H _ _ ⟨x, rfl⟩ ⟨y, rfl⟩, by
-      rintro H _ _ ⟨x, rfl⟩ ⟨y, rfl⟩ <;> exact H x y⟩
+    ⟨fun H x y => H _ ⟨x, rfl⟩ _ ⟨y, rfl⟩, by
+      rintro H _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ <;> exact H x y⟩
 
 theorem bounded_range_of_tendsto_cofinite_uniformity {f : β → α}
     (hf : tendsto (Prod.map f f) (cofinite ×ᶠ cofinite) (𝓤 α)) : Bounded (range f) := by
   rcases(has_basis_cofinite.prod_self.tendsto_iff uniformity_basis_dist).1 hf 1 zero_lt_one with ⟨s, hsf, hs1⟩
   rw [← image_univ, ← union_compl_self s, image_union, bounded_union]
   use (hsf.image f).Bounded, 1
-  rintro _ _ ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩
+  rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
   exact le_of_ltₓ (hs1 (x, y) ⟨hx, hy⟩)
 
 theorem bounded_range_of_cauchy_map_cofinite {f : β → α} (hf : Cauchy (map f cofinite)) : Bounded (range f) :=
@@ -1972,10 +1973,8 @@ theorem dist_le_diam_of_mem' (h : Emetric.diam s ≠ ⊤) (hx : x ∈ s) (hy : y
 
 /-- Characterize the boundedness of a set in terms of the finiteness of its emetric.diameter. -/
 theorem bounded_iff_ediam_ne_top : Bounded s ↔ Emetric.diam s ≠ ⊤ :=
-  Iff.intro
-    (fun ⟨C, hC⟩ =>
-      ne_top_of_le_ne_top Ennreal.of_real_ne_top (ediam_le_of_forall_dist_le $ fun x hx y hy => hC x y hx hy))
-    fun h => ⟨diam s, fun x y hx hy => dist_le_diam_of_mem' h hx hy⟩
+  Iff.intro (fun ⟨C, hC⟩ => ne_top_of_le_ne_top Ennreal.of_real_ne_top $ ediam_le_of_forall_dist_le hC) fun h =>
+    ⟨diam s, fun x hx y hy => dist_le_diam_of_mem' h hx hy⟩
 
 theorem bounded.ediam_ne_top (h : Bounded s) : Emetric.diam s ≠ ⊤ :=
   bounded_iff_ediam_ne_top.1 h
@@ -2035,19 +2034,22 @@ theorem diam_union' {t : Set α} (h : (s ∩ t).Nonempty) : diam (s ∪ t) ≤ d
   rcases h with ⟨x, ⟨xs, xt⟩⟩
   simpa using diam_union xs xt
 
-/-- The diameter of a closed ball of radius `r` is at most `2 r`. -/
-theorem diam_closed_ball {r : ℝ} (h : 0 ≤ r) : diam (closed_ball x r) ≤ 2 * r :=
-  diam_le_of_forall_dist_le (mul_nonneg (le_of_ltₓ zero_lt_two) h) $ fun a ha b hb =>
+theorem diam_le_of_subset_closed_ball {r : ℝ} (hr : 0 ≤ r) (h : s ⊆ closed_ball x r) : diam s ≤ 2 * r :=
+  diam_le_of_forall_dist_le (mul_nonneg zero_le_two hr) $ fun a ha b hb =>
     calc
       dist a b ≤ dist a x + dist b x := dist_triangle_right _ _ _
-      _ ≤ r + r := add_le_add ha hb
+      _ ≤ r + r := add_le_add (h ha) (h hb)
       _ = 2 * r := by
         simp [mul_two, mul_commₓ]
       
 
+/-- The diameter of a closed ball of radius `r` is at most `2 r`. -/
+theorem diam_closed_ball {r : ℝ} (h : 0 ≤ r) : diam (closed_ball x r) ≤ 2 * r :=
+  diam_le_of_subset_closed_ball h subset.rfl
+
 /-- The diameter of a ball of radius `r` is at most `2 r`. -/
 theorem diam_ball {r : ℝ} (h : 0 ≤ r) : diam (ball x r) ≤ 2 * r :=
-  le_transₓ (diam_mono ball_subset_closed_ball bounded_closed_ball) (diam_closed_ball h)
+  diam_le_of_subset_closed_ball h ball_subset_closed_ball
 
 end Diam
 

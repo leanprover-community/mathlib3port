@@ -26,7 +26,7 @@ def const (A : Type _) (v : Typevec.{u} n) : Type _ :=
   A
 
 instance const.inhabited {A α} [Inhabited A] : Inhabited (const n A α) :=
-  ⟨(default A : A)⟩
+  ⟨(default : A)⟩
 
 namespace Const
 

@@ -100,6 +100,14 @@ theorem neg_div' (a b : K) : -(b / a) = -b / a := by
 theorem neg_div_neg_eq (a b : K) : -a / -b = a / b := by
   rw [div_neg_eq_neg_div, neg_div, neg_negₓ]
 
+@[simp]
+theorem div_neg_self {a : K} (h : a ≠ 0) : a / -a = -1 := by
+  rw [div_neg_eq_neg_div, div_self h]
+
+@[simp]
+theorem neg_div_self {a : K} (h : a ≠ 0) : -a / a = -1 := by
+  rw [neg_div, div_self h]
+
 @[field_simps]
 theorem div_add_div_same (a b c : K) : a / c + b / c = (a + b) / c := by
   simpa only [div_eq_mul_inv] using (right_distrib a b (c⁻¹)).symm

@@ -75,7 +75,7 @@ theorem not_ff : ¬ff :=
   ff_ne_tt
 
 @[simp]
-theorem default_bool : default Bool = ff :=
+theorem default_bool : default = ff :=
   rfl
 
 theorem dichotomy (b : Bool) : b = ff ∨ b = tt := by

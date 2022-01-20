@@ -12,10 +12,10 @@ open Function.Embedding
 
 namespace Equivₓ
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 /-- Embeddings from a sum type are equivalent to two separate embeddings with disjoint ranges. -/
 def sum_embedding_equiv_prod_embedding_disjoint {α β γ : Type _} :
     (Sum α β ↪ γ) ≃ { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.Range f.1) (Set.Range f.2) } where
@@ -94,7 +94,7 @@ def sum_embedding_equiv_sigma_embedding_restricted {α β γ : Type _} : (Sum α
 
 /-- Embeddings from a single-member type are equivalent to members of the target type. -/
 def unique_embedding_equiv_result {α β : Type _} [Unique α] : (α ↪ β) ≃ β where
-  toFun := fun f => f (default α)
+  toFun := fun f => f default
   invFun := fun x => ⟨fun _ => x, fun _ _ _ => Subsingleton.elimₓ _ _⟩
   left_inv := fun _ => by
     ext

@@ -218,8 +218,8 @@ theorem subalgebra_topological_closure_eq_top_of_separates_points (A : Subalgebr
   have n : Set.Nonempty (L : Set C(X, ℝ)) := ⟨(1 : C(X, ℝ)), A.subalgebra_topological_closure A.one_mem⟩
   convert
     sublattice_closure_eq_top (L : Set C(X, ℝ)) n
-      (fun f g fm gm => inf_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
-      (fun f g fm gm => sup_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
+      (fun f fm g gm => inf_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
+      (fun f fm g gm => sup_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
       (Subalgebra.SeparatesPoints.strongly (Subalgebra.separates_points_monotone A.subalgebra_topological_closure w))
   · simp
     

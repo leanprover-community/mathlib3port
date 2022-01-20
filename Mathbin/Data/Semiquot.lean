@@ -32,9 +32,11 @@ instance : HasMem α (Semiquot α) :=
 def mk {a : α} {s : Set α} (h : a ∈ s) : Semiquot α :=
   ⟨s, Trunc.mk ⟨a, h⟩⟩
 
-theorem ext_s {q₁ q₂ : Semiquot α} : q₁ = q₂ ↔ q₁.s = q₂.s :=
-  ⟨congr_argₓ _, fun h => by
-    cases q₁ <;> cases q₂ <;> congr <;> exact h⟩
+theorem ext_s {q₁ q₂ : Semiquot α} : q₁ = q₂ ↔ q₁.s = q₂.s := by
+  refine' ⟨congr_argₓ _, fun h => _⟩
+  cases q₁
+  cases q₂
+  cc
 
 theorem ext {q₁ q₂ : Semiquot α} : q₁ = q₂ ↔ ∀ a, a ∈ q₁ ↔ a ∈ q₂ :=
   ext_s.trans Set.ext_iff
@@ -84,7 +86,7 @@ def to_trunc (q : Semiquot α) : Trunc α :=
 /-- If `f` is a constant on `q.s`, then `q.lift_on f` is the value of `f`
 at any point of `q`. -/
 def lift_on (q : Semiquot α) (f : α → β) (h : ∀ a b _ : a ∈ q _ : b ∈ q, f a = f b) : β :=
-  Trunc.liftOn q.2 (fun x => f x.1) fun x y => h _ _ x.2 y.2
+  Trunc.liftOn q.2 (fun x => f x.1) fun x y => h _ x.2 _ y.2
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a b «expr ∈ » q)
 theorem lift_on_of_mem (q : Semiquot α) (f : α → β) (h : ∀ a b _ : a ∈ q _ : b ∈ q, f a = f b) (a : α) (aq : a ∈ q) :
@@ -105,7 +107,7 @@ def bind (q : Semiquot α) (f : α → Semiquot β) : Semiquot β :=
 
 @[simp]
 theorem mem_bind (q : Semiquot α) (f : α → Semiquot β) (b : β) : b ∈ bind q f ↔ ∃ a ∈ q, b ∈ f a :=
-  Set.mem_bUnion_iff
+  Set.mem_Union₂
 
 instance : Monadₓ Semiquot where
   pure := @Semiquot.pure
@@ -178,24 +180,24 @@ theorem get_mem {q : Semiquot α} p : get q p ∈ q := by
 
 theorem eq_pure {q : Semiquot α} p : q = pure (get q p) :=
   ext.2 $ fun a => by
-    simp <;> exact ⟨fun h => p _ _ h (get_mem _), fun e => e.symm ▸ get_mem _⟩
+    simp <;> exact ⟨fun h => p _ h _ (get_mem _), fun e => e.symm ▸ get_mem _⟩
 
 @[simp]
 theorem pure_is_pure (a : α) : is_pure (pure a)
-  | b, c, ab, ac => by
-    simp at ab ac
+  | b, ab, c, ac => by
+    rw [mem_pure] at ab ac
     cc
 
 theorem is_pure_iff {s : Semiquot α} : is_pure s ↔ ∃ a, s = pure a :=
   ⟨fun h => ⟨_, eq_pure h⟩, fun ⟨a, e⟩ => e.symm ▸ pure_is_pure _⟩
 
 theorem is_pure.mono {s t : Semiquot α} (st : s ≤ t) (h : is_pure t) : is_pure s
-  | a, b, as, bs => h _ _ (st as) (st bs)
+  | a, as, b, bs => h _ (st as) _ (st bs)
 
 theorem is_pure.min {s t : Semiquot α} (h : is_pure t) : s ≤ t ↔ s = t :=
   ⟨fun st =>
     le_antisymmₓ st $ by
-      rw [eq_pure h, eq_pure (h.mono st)] <;> simp <;> exact h _ _ (get_mem _) (st $ get_mem _),
+      rw [eq_pure h, eq_pure (h.mono st)] <;> simp <;> exact h _ (get_mem _) _ (st $ get_mem _),
     le_of_eqₓ⟩
 
 theorem is_pure_of_subsingleton [Subsingleton α] (q : Semiquot α) : is_pure q
@@ -203,7 +205,7 @@ theorem is_pure_of_subsingleton [Subsingleton α] (q : Semiquot α) : is_pure q
 
 /-- `univ : semiquot α` represents an unspecified element of `univ : set α`. -/
 def univ [Inhabited α] : Semiquot α :=
-  mk $ Set.mem_univ (default _)
+  mk $ Set.mem_univ default
 
 instance [Inhabited α] : Inhabited (Semiquot α) :=
   ⟨univ⟩
@@ -219,7 +221,7 @@ theorem univ_unique (I J : Inhabited α) : @univ _ I = @univ _ J :=
 
 @[simp]
 theorem is_pure_univ [Inhabited α] : @is_pure α univ ↔ Subsingleton α :=
-  ⟨fun h => ⟨fun a b => h a b trivialₓ trivialₓ⟩, fun ⟨h⟩ a b _ _ => h a b⟩
+  ⟨fun h => ⟨fun a b => h a trivialₓ b trivialₓ⟩, fun ⟨h⟩ a _ b _ => h a b⟩
 
 instance [Inhabited α] : OrderTop (Semiquot α) where
   top := univ

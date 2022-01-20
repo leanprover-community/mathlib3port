@@ -659,24 +659,6 @@ theorem Prime.dvd_of_dvd_pow {p m n : ℕ} (pp : Prime p) (h : p ∣ m ^ n) : p 
     exact (pp.dvd_mul.1 h).elim id IH
     
 
-theorem prime.pow_dvd_of_dvd_mul_right {p n a b : ℕ} (hp : p.prime) (h : p ^ n ∣ a * b) (hpb : ¬p ∣ b) : p ^ n ∣ a := by
-  induction' n with n ih
-  · simp only [one_dvd, pow_zeroₓ]
-    
-  · rw [pow_succ'ₓ] at *
-    rcases ih ((dvd_mul_right _ _).trans h) with ⟨c, rfl⟩
-    rw [mul_assocₓ] at h
-    rcases hp.dvd_mul.1 (Nat.dvd_of_mul_dvd_mul_leftₓ (pow_pos hp.pos _) h) with (⟨d, rfl⟩ | ⟨d, rfl⟩)
-    · rw [← mul_assocₓ]
-      exact dvd_mul_right _ _
-      
-    · exact (hpb (dvd_mul_right _ _)).elim
-      
-    
-
-theorem prime.pow_dvd_of_dvd_mul_left {p n a b : ℕ} (hp : p.prime) (h : p ^ n ∣ a * b) (hpb : ¬p ∣ a) : p ^ n ∣ b := by
-  rw [mul_commₓ] at h <;> exact hp.pow_dvd_of_dvd_mul_right h hpb
-
 theorem prime.pow_not_prime {x n : ℕ} (hn : 2 ≤ n) : ¬(x ^ n).Prime := fun hp =>
   (hp.eq_one_or_self_of_dvd x $ dvd_trans ⟨x, sq _⟩ (pow_dvd_pow _ hn)).elim
     (fun hx1 => hp.ne_one $ hx1.symm ▸ one_pow _) fun hxn =>
@@ -935,6 +917,17 @@ theorem dvd_of_factors_subperm {a b : ℕ} (ha : a ≠ 0) (h : a.factors <+~ b.f
   nth_rw 0[← Nat.prod_factors ha.bot_lt]
   rw [← List.prod_append, List.Perm.prod_eq $ List.subperm_append_diff_self_of_count_le $ list.subperm_ext_iff.mp h,
     Nat.prod_factors hb]
+
+theorem pow_factors_count_dvd (n p : ℕ) : p ^ n.factors.count p ∣ n := by
+  by_cases' hp : p.prime
+  · apply dvd_of_factors_subperm (pow_ne_zero _ hp.ne_zero)
+    rw [hp.factors_pow, List.subperm_ext_iff]
+    intro q hq
+    simp [List.eq_of_mem_repeatₓ hq]
+    
+  · rw [count_eq_zero_of_not_mem (mt prime_of_mem_factors hp)]
+    simp
+    
 
 end
 

@@ -94,7 +94,7 @@ theorem frequently_measure_inter_ne_zero (hf : conservative f μ) (hs : Measurab
     rwa [measure_diff_null hμT]
   rcases hf.exists_mem_image_mem ((hs.inter (hf.measurable.iterate n hs)).diff hT) this with
     ⟨x, ⟨⟨hxs, hxn⟩, hxT⟩, m, hm0, ⟨hxms, hxm⟩, hxx⟩
-  refine' hxT ⟨hxs, mem_bUnion_iff.2 ⟨n + m, _, _⟩⟩
+  refine' hxT ⟨hxs, mem_Union₂.2 ⟨n + m, _, _⟩⟩
   · exact add_le_add hn (Nat.one_le_of_lt $ pos_iff_ne_zero.2 hm0)
     
   · rwa [Set.mem_preimage, ← iterate_add_apply] at hxm

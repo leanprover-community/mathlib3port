@@ -169,6 +169,17 @@ theorem is_stopping_time.measurable_set_eq_le {f : filtration ℕ m} {τ : α �
     (hle : i ≤ j) : measurable_set[f j] { x | τ x = i } :=
   f.mono hle _ $ hτ.measurable_set_eq i
 
+theorem is_stopping_time.measurable_set_lt (hτ : is_stopping_time f τ) (i : ℕ) : measurable_set[f i] { x | τ x < i } :=
+  by
+  convert (hτ i).diff (hτ.measurable_set_eq i)
+  ext
+  change τ x < i ↔ τ x ≤ i ∧ τ x ≠ i
+  rw [lt_iff_le_and_ne]
+
+theorem is_stopping_time.measurable_set_lt_le (hτ : is_stopping_time f τ) {i j : ℕ} (hle : i ≤ j) :
+    measurable_set[f j] { x | τ x < i } :=
+  f.mono hle _ $ hτ.measurable_set_lt i
+
 theorem is_stopping_time_of_measurable_set_eq {f : filtration ℕ m} {τ : α → ℕ}
     (hτ : ∀ i, measurable_set[f i] { x | τ x = i }) : is_stopping_time f τ := by
   intro i
@@ -339,11 +350,43 @@ section Nat
 
 open Filtration
 
-variable {f : filtration ℕ m} {u : ℕ → α → β} {τ : α → ℕ}
+variable {f : filtration ℕ m} {u : ℕ → α → β} {τ π : α → ℕ}
+
+theorem stopped_value_sub_eq_sum [AddCommGroupₓ β] (hle : τ ≤ π) :
+    stopped_value u π - stopped_value u τ = fun x => (∑ i in Finset.ico (τ x) (π x), u (i + 1) - u i) x := by
+  ext x
+  rw [Finset.sum_Ico_eq_sub _ (hle x), Finset.sum_range_sub, Finset.sum_range_sub]
+  simp [stopped_value]
+
+theorem stopped_value_sub_eq_sum' [AddCommGroupₓ β] (hle : τ ≤ π) {N : ℕ} (hbdd : ∀ x, π x ≤ N) :
+    stopped_value u π - stopped_value u τ = fun x =>
+      (∑ i in Finset.range (N + 1), Set.indicator { x | τ x ≤ i ∧ i < π x } (u (i + 1) - u i)) x :=
+  by
+  rw [stopped_value_sub_eq_sum hle]
+  ext x
+  simp only [Finset.sum_apply, Finset.sum_indicator_eq_sum_filter]
+  refine' Finset.sum_congr _ fun _ _ => rfl
+  ext i
+  simp only [Finset.mem_filter, Set.mem_set_of_eq, Finset.mem_range, Finset.mem_Ico]
+  exact ⟨fun h => ⟨lt_transₓ h.2 (Nat.lt_succ_iffₓ.2 $ hbdd _), h⟩, fun h => h.2⟩
 
 section AddCommMonoidₓ
 
 variable [AddCommMonoidₓ β]
+
+theorem stopped_value_eq {N : ℕ} (hbdd : ∀ x, τ x ≤ N) :
+    stopped_value u τ = fun x => (∑ i in Finset.range (N + 1), Set.indicator { x | τ x = i } (u i)) x := by
+  ext y
+  rw [stopped_value, Finset.sum_apply, Finset.sum_eq_single (τ y)]
+  · rw [Set.indicator_of_mem]
+    exact rfl
+    
+  · exact fun i hi hneq => Set.indicator_of_not_mem hneq.symm _
+    
+  · intro hy
+    rw [Set.indicator_of_not_mem]
+    exact fun _ => hy (Finset.mem_range.2 $ lt_of_le_of_ltₓ (hbdd _) (Nat.lt_succ_selfₓ _))
+    
 
 theorem stopped_process_eq (n : ℕ) :
     stopped_process u τ n =
@@ -425,6 +468,21 @@ theorem integrable_stopped_process [BorelSpace β] {μ : Measureₓ α} (hτ : i
     (hu : ∀ n, integrable (u n) μ) (n : ℕ) : integrable (stopped_process u τ n) μ := by
   simp_rw [← mem_ℒp_one_iff_integrable]  at hu⊢
   exact mem_ℒp_stopped_process hτ hu n
+
+theorem mem_ℒp_stopped_value {p : ℝ≥0∞} [BorelSpace β] {μ : Measureₓ α} (hτ : is_stopping_time f τ)
+    (hu : ∀ n, mem_ℒp (u n) p μ) {N : ℕ} (hbdd : ∀ x, τ x ≤ N) : mem_ℒp (stopped_value u τ) p μ := by
+  rw [stopped_value_eq hbdd]
+  suffices mem_ℒp (fun x => ∑ i : ℕ in Finset.range (N + 1), { a : α | τ a = i }.indicator (u i) x) p μ by
+    convert this
+    ext1 x
+    simp only [Finset.sum_apply]
+  refine' mem_ℒp_finset_sum _ fun i hi => mem_ℒp.indicator _ (hu i)
+  exact f.le i { a : α | τ a = i } (hτ.measurable_set_eq i)
+
+theorem integrable_stopped_value [BorelSpace β] {μ : Measureₓ α} (hτ : is_stopping_time f τ)
+    (hu : ∀ n, integrable (u n) μ) {N : ℕ} (hbdd : ∀ x, τ x ≤ N) : integrable (stopped_value u τ) μ := by
+  simp_rw [← mem_ℒp_one_iff_integrable]  at hu⊢
+  exact mem_ℒp_stopped_value hτ hu hbdd
 
 end NormedGroup
 

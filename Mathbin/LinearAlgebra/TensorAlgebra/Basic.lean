@@ -150,12 +150,12 @@ theorem algebra_map_inj (x y : R) : algebraMap R (TensorAlgebra R M) x = algebra
   (algebra_map_left_inverse M).Injective.eq_iff
 
 @[simp]
-theorem algebra_map_eq_zero_iff (x : R) : algebraMap R (TensorAlgebra R M) x = 0 ↔ x = 0 := by
-  rw [← algebra_map_inj M x 0, RingHom.map_zero]
+theorem algebra_map_eq_zero_iff (x : R) : algebraMap R (TensorAlgebra R M) x = 0 ↔ x = 0 :=
+  map_eq_zero_iff (algebraMap _ _) (algebra_map_left_inverse _).Injective
 
 @[simp]
-theorem algebra_map_eq_one_iff (x : R) : algebraMap R (TensorAlgebra R M) x = 1 ↔ x = 1 := by
-  rw [← algebra_map_inj M x 1, RingHom.map_one]
+theorem algebra_map_eq_one_iff (x : R) : algebraMap R (TensorAlgebra R M) x = 1 ↔ x = 1 :=
+  map_eq_one_iff (algebraMap _ _) (algebra_map_left_inverse _).Injective
 
 variable {M}
 

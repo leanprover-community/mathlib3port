@@ -87,5 +87,38 @@ instance [NonUnitalNonAssocRing β] : NonUnitalNonAssocRing (α →₀ β) :=
       ext
       simp (config := { proj := false })only [mul_apply, add_apply, right_distrib] }
 
+/-- The pointwise multiplicative action of functions on finitely supported functions -/
+instance pointwise_module [Semiringₓ β] : Module (α → β) (α →₀ β) where
+  smul := fun f g =>
+    Finsupp.ofSupportFinite (fun a => f a • g a)
+      (by
+        apply Set.Finite.subset g.finite_support
+        simp only [Function.support_subset_iff, Finsupp.mem_support_iff, Ne.def, Finsupp.fun_support_eq, Finset.mem_coe]
+        intro x hx h
+        apply hx
+        rw [h, smul_zero])
+  one_smul := fun b => by
+    ext a
+    simp only [one_smul, Pi.one_apply, Finsupp.of_support_finite_coe]
+  mul_smul := fun x y b => by
+    simp [Finsupp.of_support_finite_coe, mul_smul]
+  smul_add := fun r x y =>
+    Finsupp.ext fun a => by
+      simpa only [smul_add, Pi.add_apply, coe_add]
+  smul_zero := fun b =>
+    Finsupp.ext
+      (by
+        simp [Finsupp.of_support_finite_coe, smul_zero])
+  zero_smul := fun a =>
+    Finsupp.ext fun b => by
+      simp [Finsupp.of_support_finite_coe]
+  add_smul := fun r s x =>
+    Finsupp.ext fun b => by
+      simp [Finsupp.of_support_finite_coe, add_smul]
+
+@[simp]
+theorem coe_pointwise_module [Semiringₓ β] (f : α → β) (g : α →₀ β) : ⇑(f • g) = f • g :=
+  rfl
+
 end Finsupp
 

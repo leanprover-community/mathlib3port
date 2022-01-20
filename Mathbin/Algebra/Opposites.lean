@@ -125,7 +125,7 @@ instance [Nontrivial α] : Nontrivial (αᵐᵒᵖ) :=
 
 @[to_additive]
 instance [Inhabited α] : Inhabited (αᵐᵒᵖ) :=
-  ⟨op (default α)⟩
+  ⟨op default⟩
 
 @[to_additive]
 instance [Subsingleton α] : Subsingleton (αᵐᵒᵖ) :=

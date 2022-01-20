@@ -140,6 +140,7 @@ theorem is_unit_res_basic_open {U : opens X} (f : X.presheaf.obj (op U)) :
   rw [germ_res_apply]
   rfl
 
+@[simp]
 theorem basic_open_res {U V : opens Xᵒᵖ} (i : U ⟶ V) (f : X.presheaf.obj U) :
     @basic_open X (unop V) (X.presheaf.map i f) = unop V ∩ @basic_open X (unop U) f := by
   induction U using Opposite.rec
@@ -164,6 +165,38 @@ theorem basic_open_res {U V : opens Xᵒᵖ} (i : U ⟶ V) (f : X.presheaf.obj U
     · rfl
       
     
+
+@[simp]
+theorem basic_open_res_eq {U V : opens Xᵒᵖ} (i : U ⟶ V) [is_iso i] (f : X.presheaf.obj U) :
+    @basic_open X (unop V) (X.presheaf.map i f) = @RingedSpace.basic_open X (unop U) f := by
+  apply le_antisymmₓ
+  · rw [X.basic_open_res i f]
+    exact inf_le_right
+    
+  · have := X.basic_open_res (inv i) (X.presheaf.map i f)
+    rw [← comp_apply, ← X.presheaf.map_comp, is_iso.hom_inv_id, X.presheaf.map_id] at this
+    erw [this]
+    exact inf_le_right
+    
+
+@[simp]
+theorem basic_open_mul {U : opens X} (f g : X.presheaf.obj (op U)) :
+    X.basic_open (f * g) = X.basic_open f⊓X.basic_open g := by
+  ext1
+  dsimp [RingedSpace.basic_open]
+  rw [Set.image_inter Subtype.coe_injective]
+  congr
+  ext
+  simp_rw [map_mul]
+  exact IsUnit.mul_iff
+
+theorem basic_open_of_is_unit {U : opens X} {f : X.presheaf.obj (op U)} (hf : IsUnit f) : X.basic_open f = U := by
+  apply le_antisymmₓ
+  · exact X.basic_open_subset f
+    
+  intro x hx
+  erw [X.mem_basic_open f (⟨x, hx⟩ : U)]
+  exact RingHom.is_unit_map _ hf
 
 end RingedSpace
 

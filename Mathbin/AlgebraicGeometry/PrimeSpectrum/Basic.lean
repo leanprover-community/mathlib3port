@@ -349,7 +349,7 @@ instance zariski_topology : TopologicalSpace (PrimeSpectrum R) :=
       simp only [hf]
       exact ⟨_, zero_locus_Union _⟩)
     (by
-      rintro _ _ ⟨s, rfl⟩ ⟨t, rfl⟩
+      rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩
       exact ⟨_, (union_zero_locus s t).symm⟩)
 
 theorem is_open_iff (U : Set (PrimeSpectrum R)) : IsOpen U ↔ ∃ s, Uᶜ = zero_locus s := by

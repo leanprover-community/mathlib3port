@@ -112,7 +112,7 @@ protected theorem UniformContinuousOn (hf : HolderOnWith C r f s) (h0 : 0 < r) :
   have : tendsto (fun d : ℝ≥0∞ => (C : ℝ≥0∞) * d ^ (r : ℝ)) (𝓝 0) (𝓝 0) :=
     Ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos Ennreal.coe_ne_top h0
   rcases ennreal.nhds_zero_basis.mem_iff.1 (this (gt_mem_nhds εpos)) with ⟨δ, δ0, H⟩
-  exact ⟨δ, δ0, fun x y hx hy h => (hf.edist_le hx hy).trans_lt (H h)⟩
+  exact ⟨δ, δ0, fun x hx y hy h => (hf.edist_le hx hy).trans_lt (H h)⟩
 
 protected theorem ContinuousOn (hf : HolderOnWith C r f s) (h0 : 0 < r) : ContinuousOn f s :=
   (hf.uniform_continuous_on h0).ContinuousOn

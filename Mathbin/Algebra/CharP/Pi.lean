@@ -18,9 +18,9 @@ instance pi (ι : Type u) [hi : Nonempty ι] (R : Type v) [Semiringₓ R] (p : �
         ⟨fun h =>
           funext $ fun j =>
             show Pi.evalRingHom (fun _ => R) j (↑x : ι → R) = 0 by
-              rw [RingHom.map_nat_cast, h],
+              rw [map_nat_cast, h],
           fun h =>
-          (Pi.evalRingHom (fun _ : ι => R) i).map_nat_cast x ▸ by
+          map_nat_cast (Pi.evalRingHom (fun _ : ι => R) i) x ▸ by
             rw [h, RingHom.map_zero]⟩⟩
 
 instance pi' (ι : Type u) [hi : Nonempty ι] (R : Type v) [CommRingₓ R] (p : ℕ) [CharP R p] : CharP (ι → R) p :=

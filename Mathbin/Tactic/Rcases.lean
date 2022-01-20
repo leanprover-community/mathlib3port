@@ -173,7 +173,7 @@ unsafe def tuple₁_core : listΠ rcases_patt → listΠ rcases_patt
 `tuple₁_core` but it produces a pattern instead of a tuple pattern list, converting `[n]` to `n`
 instead of `⟨n⟩` and `[]` to `_`, and otherwise just converting `[a, b, c]` to `⟨a, b, c⟩`. -/
 unsafe def tuple₁ : listΠ rcases_patt → rcases_patt
-  | [] => default _
+  | [] => default
   | [one n] => one n
   | ps => tuple (tuple₁_core ps)
 
@@ -246,7 +246,7 @@ constructor. The `name` is the name which will be used in the top-level `cases` 
 tactics. -/
 unsafe def rcases.process_constructor : Nat → listΠ rcases_patt → listΠ Name × listΠ rcases_patt
   | 0, ps => ([], [])
-  | 1, [] => ([`_], [default _])
+  | 1, [] => ([`_], [default])
   | 1, [p] => ([p.name.get_or_else `_], [p])
   | 1, ps => ([`_], [rcases_patt.tuple ps])
   | n + 1, ps =>
@@ -1033,9 +1033,9 @@ If `⟨patt⟩` is omitted, `rcases` will try to infer the pattern.
 If `type` is omitted, `:= proof` is required.
 -/
 unsafe def obtain : parse obtain_parse → tactic Unit
-  | ((pat, _), some (Sum.inr val)) => tactic.rcases_many val (pat.get_or_else (default _))
-  | ((pat, none), some (Sum.inl val)) => tactic.rcases none val (pat.get_or_else (default _))
-  | ((pat, some tp), some (Sum.inl val)) => tactic.rcases none val $ (pat.get_or_else (default _)).typed tp
+  | ((pat, _), some (Sum.inr val)) => tactic.rcases_many val (pat.get_or_else default)
+  | ((pat, none), some (Sum.inl val)) => tactic.rcases none val (pat.get_or_else default)
+  | ((pat, some tp), some (Sum.inl val)) => tactic.rcases none val $ (pat.get_or_else default).typed tp
   | ((pat, some tp), none) => do
     let nm ← mk_fresh_name
     let e ← to_expr tp >>= assert nm

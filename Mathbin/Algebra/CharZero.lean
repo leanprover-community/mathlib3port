@@ -212,12 +212,12 @@ theorem RingHom.char_zero (ϕ : R →+* S) [hS : CharZero S] : CharZero R :=
   ⟨fun a b h =>
     CharZero.cast_injective
       (by
-        rw [← ϕ.map_nat_cast, ← ϕ.map_nat_cast, h])⟩
+        rw [← map_nat_cast ϕ, ← map_nat_cast ϕ, h])⟩
 
 theorem RingHom.char_zero_iff {ϕ : R →+* S} (hϕ : Function.Injective ϕ) : CharZero R ↔ CharZero S :=
   ⟨fun hR =>
     ⟨fun a b h => by
-      rwa [← @Nat.cast_inj R _ _ hR, ← hϕ.eq_iff, ϕ.map_nat_cast, ϕ.map_nat_cast]⟩,
+      rwa [← @Nat.cast_inj R _ _ hR, ← hϕ.eq_iff, map_nat_cast ϕ, map_nat_cast ϕ]⟩,
     fun hS => ϕ.char_zero⟩
 
 end RingHom

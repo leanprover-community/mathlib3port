@@ -165,6 +165,10 @@ instance OneHom.oneHomClass : OneHomClass (OneHom M N) M N where
 theorem map_one [OneHomClass F M N] (f : F) : f 1 = 1 :=
   OneHomClass.map_one f
 
+@[to_additive]
+theorem map_eq_one_iff [OneHomClass F M N] (f : F) (hf : Function.Injective f) {x : M} : f x = 1 ↔ x = 1 :=
+  hf.eq_iff' (map_one f)
+
 end One
 
 section Mul
@@ -1089,7 +1093,7 @@ For the iff statement on the triviality of the kernel, see `monoid_hom.injective
 @[to_additive
       " A homomorphism from an additive group to an additive monoid is injective iff\nits kernel is trivial. For the iff statement on the triviality of the kernel,\nsee `add_monoid_hom.injective_iff'`. "]
 theorem injective_iff {G H} [Groupₓ G] [MulOneClass H] (f : G →* H) : Function.Injective f ↔ ∀ a, f a = 1 → a = 1 :=
-  ⟨fun h x hfx => h $ hfx.trans f.map_one.symm, fun h x y hxy =>
+  ⟨fun h x => (map_eq_one_iff f h).mp, fun h x y hxy =>
     mul_inv_eq_one.1 $
       h _ $ by
         rw [f.map_mul, hxy, ← f.map_mul, mul_inv_selfₓ, f.map_one]⟩

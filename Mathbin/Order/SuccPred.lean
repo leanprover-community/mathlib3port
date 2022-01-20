@@ -36,7 +36,7 @@ The solution taken here is to remove the implications `≤ → <` and instead re
 for all non maximal elements (enforced by the combination of `le_succ` and the contrapositive of
 `maximal_of_succ_le`).
 The stricter condition of every element having a sensible successor can be obtained through the
-combination of `succ_order α` and `no_top_order α`.
+combination of `succ_order α` and `no_max_order α`.
 
 ## TODO
 
@@ -111,12 +111,12 @@ protected theorem _root_.has_lt.lt.covers_succ {a b : α} (h : a < b) : a ⋖ su
 theorem covers_succ_of_nonempty_Ioi {a : α} (h : (Set.Ioi a).Nonempty) : a ⋖ succ a :=
   LT.lt.covers_succ h.some_mem
 
-section NoTopOrder
+section NoMaxOrder
 
-variable [NoTopOrder α] {a b : α}
+variable [NoMaxOrder α] {a b : α}
 
 theorem lt_succ (a : α) : a < succ a :=
-  (le_succ a).lt_of_not_le fun h => not_exists.2 (maximal_of_succ_le h) (no_top a)
+  (le_succ a).lt_of_not_le $ fun h => not_exists.2 (maximal_of_succ_le h) (exists_gt a)
 
 theorem lt_succ_iff : a < succ b ↔ a ≤ b :=
   ⟨le_of_lt_succ, fun h => h.trans_lt $ lt_succ b⟩
@@ -140,7 +140,7 @@ theorem succ_strict_mono : StrictMono (succ : α → α) := fun a b => succ_lt_s
 theorem covers_succ (a : α) : a ⋖ succ a :=
   ⟨lt_succ a, fun c hc => (succ_le_of_lt hc).not_lt⟩
 
-end NoTopOrder
+end NoMaxOrder
 
 end Preorderₓ
 
@@ -182,9 +182,9 @@ theorem le_le_succ_iff {a b : α} : a ≤ b ∧ b ≤ succ a ↔ b = a ∨ b = s
 theorem _root_.covers.succ_eq {a b : α} (h : a ⋖ b) : succ a = b :=
   (succ_le_of_lt h.lt).eq_of_not_lt $ fun h' => h.2 (lt_succ_of_not_maximal h.lt) h'
 
-section NoTopOrder
+section NoMaxOrder
 
-variable [NoTopOrder α] {a b : α}
+variable [NoMaxOrder α] {a b : α}
 
 theorem succ_injective : injective (succ : α → α) := by
   rintro a b
@@ -210,7 +210,7 @@ theorem _root_.covers_iff_succ_eq : a ⋖ b ↔ succ a = b :=
     rintro rfl
     exact covers_succ _⟩
 
-end NoTopOrder
+end NoMaxOrder
 
 end PartialOrderₓ
 
@@ -337,12 +337,12 @@ protected theorem _root_.has_lt.lt.pred_covers {a b : α} (h : b < a) : pred a �
 theorem pred_covers_of_nonempty_Iio {a : α} (h : (Set.Iio a).Nonempty) : pred a ⋖ a :=
   LT.lt.pred_covers h.some_mem
 
-section NoBotOrder
+section NoMinOrder
 
-variable [NoBotOrder α] {a b : α}
+variable [NoMinOrder α] {a b : α}
 
 theorem pred_lt (a : α) : pred a < a :=
-  (pred_le a).lt_of_not_le fun h => not_exists.2 (minimal_of_le_pred h) (no_bot a)
+  (pred_le a).lt_of_not_le $ fun h => not_exists.2 (minimal_of_le_pred h) (exists_lt a)
 
 theorem pred_lt_iff : pred a < b ↔ a ≤ b :=
   ⟨le_of_pred_lt, (pred_lt a).trans_le⟩
@@ -367,7 +367,7 @@ theorem pred_strict_mono : StrictMono (pred : α → α) := fun a b => pred_lt_p
 theorem pred_covers (a : α) : pred a ⋖ a :=
   ⟨pred_lt a, fun c hc => (le_of_pred_lt hc).not_lt⟩
 
-end NoBotOrder
+end NoMinOrder
 
 end Preorderₓ
 
@@ -409,9 +409,9 @@ theorem pred_le_le_iff {a b : α} : pred a ≤ b ∧ b ≤ a ↔ b = a ∨ b = p
 theorem _root_.covers.pred_eq {a b : α} (h : a ⋖ b) : pred b = a :=
   (le_pred_of_lt h.lt).eq_of_not_gt $ fun h' => h.2 h' $ pred_lt_of_not_minimal h.lt
 
-section NoBotOrder
+section NoMinOrder
 
-variable [NoBotOrder α] {a b : α}
+variable [NoMinOrder α] {a b : α}
 
 theorem pred_injective : injective (pred : α → α) := by
   rintro a b
@@ -435,7 +435,7 @@ theorem _root_.covers_iff_pred_eq : a ⋖ b ↔ pred b = a :=
     rintro rfl
     exact pred_covers _⟩
 
-end NoBotOrder
+end NoMinOrder
 
 end PartialOrderₓ
 
@@ -528,11 +528,11 @@ theorem pred_succ_of_nonempty_Ioi {a : α} (h : (Set.Ioi a).Nonempty) : pred (su
   LT.lt.pred_succ h.some_mem
 
 @[simp]
-theorem succ_pred [NoBotOrder α] (a : α) : succ (pred a) = a :=
+theorem succ_pred [NoMinOrder α] (a : α) : succ (pred a) = a :=
   (pred_covers _).succ_eq
 
 @[simp]
-theorem pred_succ [NoTopOrder α] (a : α) : pred (succ a) = a :=
+theorem pred_succ [NoMaxOrder α] (a : α) : pred (succ a) = a :=
   (covers_succ _).pred_eq
 
 end SuccPredOrder
@@ -566,9 +566,9 @@ Adding a greatest/least element to a `succ_order` or to a `pred_order`.
 As far as successors and predecessors are concerned, there are four ways to add a bottom or top
 element to an order:
 * Adding a `⊤` to an `order_top`: Preserves `succ` and `pred`.
-* Adding a `⊤` to a `no_top_order`: Preserves `succ`. Never preserves `pred`.
+* Adding a `⊤` to a `no_max_order`: Preserves `succ`. Never preserves `pred`.
 * Adding a `⊥` to an `order_bot`: Preserves `succ` and `pred`.
-* Adding a `⊥` to a `no_bot_order`: Preserves `pred`. Never preserves `succ`.
+* Adding a `⊥` to a `no_min_order`: Preserves `pred`. Never preserves `succ`.
 where "preserves `(succ/pred)`" means
 `(succ/pred)_order α → (succ/pred)_order ((with_top/with_bot) α)`.
 -/
@@ -674,10 +674,10 @@ instance [PartialOrderₓ α] [OrderTop α] [PredOrder α] : PredOrder (WithTop 
     · exact some_le_some.2 (le_of_pred_lt $ some_lt_some.1 h)
       
 
-/-! #### Adding a `⊤` to a `no_top_order` -/
+/-! #### Adding a `⊤` to a `no_max_order` -/
 
 
-instance ofNoTop [PartialOrderₓ α] [NoTopOrder α] [SuccOrder α] : SuccOrder (WithTop α) where
+instance WithTop.succOrderOfNoMaxOrder [PartialOrderₓ α] [NoMaxOrder α] [SuccOrder α] : SuccOrder (WithTop α) where
   succ := fun a =>
     match a with
     | ⊤ => ⊤
@@ -692,7 +692,7 @@ instance ofNoTop [PartialOrderₓ α] [NoTopOrder α] [SuccOrder α] : SuccOrder
     cases a
     · exact not_top_lt h
       
-    · exact not_exists.2 (maximal_of_succ_le (some_le_some.1 ha)) (no_top a)
+    · exact not_exists.2 (maximal_of_succ_le (some_le_some.1 ha)) (exists_gt a)
       
   succ_le_of_lt := fun a b h => by
     cases a
@@ -713,14 +713,14 @@ instance ofNoTop [PartialOrderₓ α] [NoTopOrder α] [SuccOrder α] : SuccOrder
     · exact some_le_some.2 (le_of_lt_succ $ some_lt_some.1 h)
       
 
-instance [PartialOrderₓ α] [NoTopOrder α] [hα : Nonempty α] : IsEmpty (PredOrder (WithTop α)) :=
+instance [PartialOrderₓ α] [NoMaxOrder α] [hα : Nonempty α] : IsEmpty (PredOrder (WithTop α)) :=
   ⟨by
     intro
     set b := pred (⊤ : WithTop α) with h
     cases' pred (⊤ : WithTop α) with a ha <;> change b with pred ⊤ at h
     · exact hα.elim fun a => minimal_of_le_pred h.ge (coe_lt_top a)
       
-    · obtain ⟨c, hc⟩ := no_top a
+    · obtain ⟨c, hc⟩ := exists_gt a
       rw [← some_lt_some, ← h] at hc
       exact (le_of_pred_lt hc).not_lt (some_lt_none _)
       ⟩
@@ -828,22 +828,22 @@ instance [DecidableEq α] [PartialOrderₓ α] [OrderBot α] [PredOrder α] : Pr
     · exact le_of_pred_lt (some_lt_some.1 h)
       
 
-/-! #### Adding a `⊥` to a `no_bot_order` -/
+/-! #### Adding a `⊥` to a `no_min_order` -/
 
 
-instance [PartialOrderₓ α] [NoBotOrder α] [hα : Nonempty α] : IsEmpty (SuccOrder (WithBot α)) :=
+instance [PartialOrderₓ α] [NoMinOrder α] [hα : Nonempty α] : IsEmpty (SuccOrder (WithBot α)) :=
   ⟨by
     intro
     set b : WithBot α := succ ⊥ with h
     cases' succ (⊥ : WithBot α) with a ha <;> change b with succ ⊥ at h
     · exact hα.elim fun a => maximal_of_succ_le h.le (bot_lt_coe a)
       
-    · obtain ⟨c, hc⟩ := no_bot a
+    · obtain ⟨c, hc⟩ := exists_lt a
       rw [← some_lt_some, ← h] at hc
       exact (le_of_lt_succ hc).not_lt (none_lt_some _)
       ⟩
 
-instance ofNoBot [PartialOrderₓ α] [NoBotOrder α] [PredOrder α] : PredOrder (WithBot α) where
+instance WithBot.predOrderOfNoMinOrder [PartialOrderₓ α] [NoMinOrder α] [PredOrder α] : PredOrder (WithBot α) where
   pred := fun a =>
     match a with
     | ⊥ => ⊥
@@ -858,7 +858,7 @@ instance ofNoBot [PartialOrderₓ α] [NoBotOrder α] [PredOrder α] : PredOrder
     cases a
     · exact not_lt_bot h
       
-    · exact not_exists.2 (minimal_of_le_pred (some_le_some.1 ha)) (no_bot a)
+    · exact not_exists.2 (minimal_of_le_pred (some_le_some.1 ha)) (exists_lt a)
       
   le_pred_of_lt := fun a b h => by
     cases b

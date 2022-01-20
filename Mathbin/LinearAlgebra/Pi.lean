@@ -1,4 +1,5 @@
 import Mathbin.LinearAlgebra.Basic
+import Mathbin.LinearAlgebra.BilinearMap
 import Mathbin.Data.Equiv.Fin
 
 /-!
@@ -410,4 +411,99 @@ noncomputable def Function.ExtendByZero.linearMap : (ι → R) →ₗ[R] η → 
       simpa using Function.extend_smul r s f 0 }
 
 end Extend
+
+/-! ### Bundled versions of `matrix.vec_cons` and `matrix.vec_empty`
+
+The idea of these definitions is to be able to define a map as `x ↦ ![f₁ x, f₂ x, f₃ x]`, where
+`f₁ f₂ f₃` are already linear maps, as `f₁.vec_cons $ f₂.vec_cons $ f₃.vec_cons $ vec_empty`.
+
+While the same thing could be achieved using `linear_map.pi ![f₁, f₂, f₃]`, this is not
+definitionally equal to the result using `linear_map.vec_cons`, as `fin.cases` and function
+application do not commute definitionally.
+
+Versions for when `f₁ f₂ f₃` are bilinear maps are also provided.
+
+-/
+
+
+section Finₓ
+
+section Semiringₓ
+
+variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
+
+variable [Module R M] [Module R M₂] [Module R M₃]
+
+/-- The linear map defeq to `matrix.vec_empty` -/
+def LinearMap.vecEmpty : M →ₗ[R] Finₓ 0 → M₃ where
+  toFun := fun m => Matrix.vecEmpty
+  map_add' := fun x y => Subsingleton.elimₓ _ _
+  map_smul' := fun r x => Subsingleton.elimₓ _ _
+
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem LinearMap.vec_empty_apply (m : M) :
+    (LinearMap.vecEmpty : M →ₗ[R] Finₓ 0 → M₃) m =
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»" :=
+  rfl
+
+/-- A linear map into `fin n.succ → M₃` can be built out of a map into `M₃` and a map into
+`fin n → M₃`. -/
+def LinearMap.vecCons {n} (f : M →ₗ[R] M₂) (g : M →ₗ[R] Finₓ n → M₂) : M →ₗ[R] Finₓ n.succ → M₂ where
+  toFun := fun m => Matrix.vecCons (f m) (g m)
+  map_add' := fun x y => by
+    rw [f.map_add, g.map_add, Matrix.cons_add_cons (f x)]
+  map_smul' := fun c x => by
+    rw [f.map_smul, g.map_smul, RingHom.id_apply, Matrix.smul_cons c (f x)]
+
+@[simp]
+theorem LinearMap.vec_cons_apply {n} (f : M →ₗ[R] M₂) (g : M →ₗ[R] Finₓ n → M₂) (m : M) :
+    f.vec_cons g m = Matrix.vecCons (f m) (g m) :=
+  rfl
+
+end Semiringₓ
+
+/-- Non-dependent version of `pi.has_scalar`. Lean gets confused by the dependent instance if this
+is not present. -/
+@[to_additive Function.hasVadd]
+instance Function.hasScalar {ι R M : Type _} [HasScalar R M] : HasScalar R (ι → M) :=
+  Pi.hasScalar
+
+/-- Non-dependent version of `pi.smul_comm_class`. Lean gets confused by the dependent instance if
+this is not present. -/
+@[to_additive]
+instance Function.smul_comm_class {ι α β M : Type _} [HasScalar α M] [HasScalar β M] [SmulCommClass α β M] :
+    SmulCommClass α β (ι → M) :=
+  Pi.smul_comm_class
+
+section CommSemiringₓ
+
+variable [CommSemiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
+
+variable [Module R M] [Module R M₂] [Module R M₃]
+
+/-- The empty bilinear map defeq to `matrix.vec_empty` -/
+@[simps]
+def LinearMap.vecEmpty₂ : M →ₗ[R] M₂ →ₗ[R] Finₓ 0 → M₃ where
+  toFun := fun m => LinearMap.vecEmpty
+  map_add' := fun x y => LinearMap.ext $ fun z => Subsingleton.elimₓ _ _
+  map_smul' := fun r x => LinearMap.ext $ fun z => Subsingleton.elimₓ _ _
+
+/-- A bilinear map into `fin n.succ → M₃` can be built out of a map into `M₃` and a map into
+`fin n → M₃` -/
+@[simps]
+def LinearMap.vecCons₂ {n} (f : M →ₗ[R] M₂ →ₗ[R] M₃) (g : M →ₗ[R] M₂ →ₗ[R] Finₓ n → M₃) :
+    M →ₗ[R] M₂ →ₗ[R] Finₓ n.succ → M₃ where
+  toFun := fun m => LinearMap.vecCons (f m) (g m)
+  map_add' := fun x y =>
+    LinearMap.ext $ fun z => by
+      simp only [f.map_add, g.map_add, LinearMap.add_apply, LinearMap.vec_cons_apply, Matrix.cons_add_cons (f x z)]
+  map_smul' := fun r x =>
+    LinearMap.ext $ fun z => by
+      simp [Matrix.smul_cons r (f x z)]
+
+end CommSemiringₓ
+
+end Finₓ
 

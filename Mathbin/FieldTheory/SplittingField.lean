@@ -524,6 +524,25 @@ theorem aeval_root_derivative_of_splits [Algebra K L] {P : Polynomial K} (hmo : 
   nth_rw 0[eq_prod_roots_of_monic_of_splits_id hmo hP]
   rw [eval_multiset_prod_X_sub_C_derivative hr]
 
+/-- If `P` is a monic polynomial that splits, then `coeff P 0` equals the product of the roots. -/
+theorem prod_roots_eq_coeff_zero_of_monic_of_split {P : Polynomial K} (hmo : P.monic) (hP : P.splits (RingHom.id K)) :
+    coeff P 0 = -1 ^ P.nat_degree * P.roots.prod := by
+  nth_rw 0[eq_prod_roots_of_monic_of_splits_id hmo hP]
+  rw [coeff_zero_eq_eval_zero, eval_multiset_prod, Multiset.map_map]
+  simp_rw [Function.comp_app, eval_sub, eval_X, zero_sub, eval_C]
+  conv_lhs => congr congr ext rw [neg_eq_neg_one_mul]
+  rw [Multiset.prod_map_mul, Multiset.map_const, Multiset.prod_repeat, Multiset.map_id', splits_iff_card_roots.1 hP]
+
+/-- If `P` is a monic polynomial that splits, then `P.next_coeff` equals the sum of the roots. -/
+theorem sum_roots_eq_next_coeff_of_monic_of_split {P : Polynomial K} (hmo : P.monic) (hP : P.splits (RingHom.id K)) :
+    P.next_coeff = -P.roots.sum := by
+  nth_rw 0[eq_prod_roots_of_monic_of_splits_id hmo hP]
+  rw [monic.next_coeff_multiset_prod _ _ fun a ha => _]
+  · simp_rw [next_coeff_X_sub_C, Multiset.sum_map_neg]
+    
+  · exact monic_X_sub_C a
+    
+
 end Splits
 
 end Polynomial

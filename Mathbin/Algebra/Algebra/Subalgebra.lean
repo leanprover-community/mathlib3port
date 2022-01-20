@@ -55,6 +55,13 @@ theorem mem_to_subsemiring {S : Subalgebra R A} {x} : x ∈ S.to_subsemiring ↔
 theorem coe_to_subsemiring (S : Subalgebra R A) : (↑S.to_subsemiring : Set A) = S :=
   rfl
 
+theorem to_subsemiring_injective : Function.Injective (to_subsemiring : Subalgebra R A → Subsemiring A) := fun S T h =>
+  ext $ fun x => by
+    rw [← mem_to_subsemiring, ← mem_to_subsemiring, h]
+
+theorem to_subsemiring_inj {S U : Subalgebra R A} : S.to_subsemiring = U.to_subsemiring ↔ S = U :=
+  to_subsemiring_injective.eq_iff
+
 /-- Copy of a subalgebra with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (S : Subalgebra R A) (s : Set A) (hs : s = ↑S) : Subalgebra R A where
@@ -170,6 +177,15 @@ theorem mem_to_subring {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Al
 theorem coe_to_subring {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A] (S : Subalgebra R A) :
     (↑S.to_subring : Set A) = S :=
   rfl
+
+theorem to_subring_injective {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A] :
+    Function.Injective (to_subring : Subalgebra R A → Subring A) := fun S T h =>
+  ext $ fun x => by
+    rw [← mem_to_subring, ← mem_to_subring, h]
+
+theorem to_subring_inj {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A] {S U : Subalgebra R A} :
+    S.to_subring = U.to_subring ↔ S = U :=
+  to_subring_injective.eq_iff
 
 instance : Inhabited S :=
   ⟨(0 : S.to_subsemiring)⟩
@@ -392,6 +408,14 @@ theorem map_map (S : Subalgebra R A) (g : B →ₐ[R] C) (f : A →ₐ[R] B) : (
 theorem mem_map {S : Subalgebra R A} {f : A →ₐ[R] B} {y : B} : y ∈ map S f ↔ ∃ x ∈ S, f x = y :=
   Subsemiring.mem_map
 
+theorem map_to_submodule {S : Subalgebra R A} {f : A →ₐ[R] B} :
+    (S.map f).toSubmodule = S.to_submodule.map f.to_linear_map :=
+  SetLike.coe_injective rfl
+
+theorem map_to_subsemiring {S : Subalgebra R A} {f : A →ₐ[R] B} :
+    (S.map f).toSubsemiring = S.to_subsemiring.map f.to_ring_hom :=
+  SetLike.coe_injective rfl
+
 @[simp]
 theorem coe_map (S : Subalgebra R A) (f : A →ₐ[R] B) : (S.map f : Set B) = f '' S :=
   rfl
@@ -589,6 +613,23 @@ theorem top_to_submodule : (⊤ : Subalgebra R A).toSubmodule = ⊤ :=
 theorem top_to_subsemiring : (⊤ : Subalgebra R A).toSubsemiring = ⊤ :=
   rfl
 
+@[simp]
+theorem top_to_subring {R A : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] : (⊤ : Subalgebra R A).toSubring = ⊤ :=
+  rfl
+
+@[simp]
+theorem to_submodule_eq_top {S : Subalgebra R A} : S.to_submodule = ⊤ ↔ S = ⊤ :=
+  Subalgebra.to_submodule_injective.eq_iff' top_to_submodule
+
+@[simp]
+theorem to_subsemiring_eq_top {S : Subalgebra R A} : S.to_subsemiring = ⊤ ↔ S = ⊤ :=
+  Subalgebra.to_subsemiring_injective.eq_iff' top_to_subsemiring
+
+@[simp]
+theorem to_subring_eq_top {R A : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] {S : Subalgebra R A} :
+    S.to_subring = ⊤ ↔ S = ⊤ :=
+  Subalgebra.to_subring_injective.eq_iff' top_to_subring
+
 theorem mem_sup_left {S T : Subalgebra R A} : ∀ {x : A}, x ∈ S → x ∈ S⊔T :=
   show S ≤ S⊔T from le_sup_left
 
@@ -622,7 +663,7 @@ theorem coe_Inf (S : Set (Subalgebra R A)) : (↑Inf S : Set A) = ⋂ s ∈ S, �
   Inf_image
 
 theorem mem_Inf {S : Set (Subalgebra R A)} {x : A} : x ∈ Inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p := by
-  simp only [← SetLike.mem_coe, coe_Inf, Set.mem_bInter_iff]
+  simp only [← SetLike.mem_coe, coe_Inf, Set.mem_Inter₂]
 
 @[simp]
 theorem Inf_to_submodule (S : Set (Subalgebra R A)) : (Inf S).toSubmodule = Inf (Subalgebra.toSubmodule '' S) :=
@@ -829,11 +870,11 @@ variable (S₁ : Subalgebra R B)
 
 /-- The product of two subalgebras is a subalgebra. -/
 def Prod : Subalgebra R (A × B) :=
-  { S.to_subsemiring.prod S₁.to_subsemiring with Carrier := Set.Prod S S₁,
+  { S.to_subsemiring.prod S₁.to_subsemiring with Carrier := (S : Set A) ×ˢ (S₁ : Set B),
     algebra_map_mem' := fun r => ⟨algebra_map_mem _ _, algebra_map_mem _ _⟩ }
 
 @[simp]
-theorem coe_prod : (Prod S S₁ : Set (A × B)) = Set.Prod S S₁ :=
+theorem coe_prod : (Prod S S₁ : Set (A × B)) = (S : Set A) ×ˢ (S₁ : Set B) :=
   rfl
 
 theorem prod_to_submodule : (S.prod S₁).toSubmodule = S.to_submodule.prod S₁.to_submodule :=

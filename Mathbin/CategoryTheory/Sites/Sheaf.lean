@@ -188,7 +188,7 @@ def Sheaf_equiv_SheafOfTypes : Sheaf J (Type w) ≌ SheafOfTypes J where
         tidy)
 
 instance : Inhabited (Sheaf (⊥ : grothendieck_topology C) (Type w)) :=
-  ⟨(Sheaf_equiv_SheafOfTypes _).inverse.obj (default _)⟩
+  ⟨(Sheaf_equiv_SheafOfTypes _).inverse.obj default⟩
 
 variable {J} {A}
 
@@ -273,9 +273,7 @@ theorem is_sheaf_iff_multifork : is_sheaf J P ↔ ∀ X : C S : J.cover X, Nonem
 theorem is_sheaf_iff_multiequalizer [∀ X : C S : J.cover X, has_multiequalizer (S.index P)] :
     is_sheaf J P ↔ ∀ X : C S : J.cover X, is_iso (S.to_multiequalizer P) := by
   rw [is_sheaf_iff_multifork]
-  apply forall_congrₓ fun X => _
-  apply forall_congrₓ fun S => _
-  constructor
+  refine' forall₂_congrₓ fun X S => ⟨_, _⟩
   · rintro ⟨h⟩
     let e : P.obj (op X) ≅ multiequalizer (S.index P) := h.cone_point_unique_up_to_iso (limit.is_limit _)
     exact (inferInstance : is_iso e.hom)

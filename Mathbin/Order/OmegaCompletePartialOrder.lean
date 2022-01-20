@@ -94,7 +94,7 @@ instance : CoeFun (chain α) fun _ => ℕ → α :=
   OrderHom.hasCoeToFun
 
 instance [Inhabited α] : Inhabited (chain α) :=
-  ⟨⟨fun _ => default _, fun _ _ _ => le_reflₓ _⟩⟩
+  ⟨⟨fun _ => default, fun _ _ _ => le_reflₓ _⟩⟩
 
 instance : HasMem α (chain α) :=
   ⟨fun a c : ℕ →o α => ∃ i, a = c i⟩
@@ -682,7 +682,7 @@ theorem const_apply (f : β) (a : α) : const f a = f :=
   rfl
 
 instance [Inhabited β] : Inhabited (α →𝒄 β) :=
-  ⟨const (default β)⟩
+  ⟨const default⟩
 
 namespace Prod
 

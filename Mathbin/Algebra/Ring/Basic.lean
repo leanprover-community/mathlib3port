@@ -1117,6 +1117,15 @@ theorem is_regular_of_ne_zero' [Ringₓ α] [NoZeroDivisors α] {k : α} (hk : k
     is_right_regular_of_non_zero_divisor k fun x h =>
       (NoZeroDivisors.eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hk⟩
 
+/-- A ring with no zero divisors is a cancel_monoid_with_zero.
+
+Note this is not an instance as it forms a typeclass loop. -/
+@[reducible]
+def NoZeroDivisors.toCancelMonoidWithZero [Ringₓ α] [NoZeroDivisors α] : CancelMonoidWithZero α :=
+  { (inferInstance : Semiringₓ α) with
+    mul_left_cancel_of_ne_zero := fun a b c ha => @IsRegular.left _ _ _ (is_regular_of_ne_zero' ha) _ _,
+    mul_right_cancel_of_ne_zero := fun a b c hb => @IsRegular.right _ _ _ (is_regular_of_ne_zero' hb) _ _ }
+
 /-- A domain is a nontrivial ring with no zero divisors, i.e. satisfying
   the condition `a * b = 0 ↔ a = 0 ∨ b = 0`.
 
@@ -1132,9 +1141,7 @@ section Ringₓ
 variable [Ringₓ α] [IsDomain α]
 
 instance (priority := 100) IsDomain.toCancelMonoidWithZero : CancelMonoidWithZero α :=
-  { (inferInstance : Semiringₓ α) with
-    mul_left_cancel_of_ne_zero := fun a b c ha => @IsRegular.left _ _ _ (is_regular_of_ne_zero' ha) _ _,
-    mul_right_cancel_of_ne_zero := fun a b c hb => @IsRegular.right _ _ _ (is_regular_of_ne_zero' hb) _ _ }
+  NoZeroDivisors.toCancelMonoidWithZero
 
 /-- Pullback an `is_domain` instance along an injective function. -/
 protected theorem Function.Injective.is_domain [Ringₓ β] (f : β →+* α) (hf : injective f) : IsDomain β :=

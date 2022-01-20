@@ -93,10 +93,9 @@ theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) := by
   · rw [h, inv_zero]
     dsimp [HasInv.inv]
     norm_cast
-    simp [if_pos]
+    simp
     
   · conv_lhs => dsimp [HasInv.inv]
-    norm_cast
     rw [if_neg]
     · exact hat_inv_extends h
       

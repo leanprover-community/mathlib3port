@@ -92,7 +92,7 @@ def wide_cospan (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : wi
     · simpa
       
     cases g
-    simpa
+    simp
 
 /-- Every diagram is naturally isomorphic (actually, equal) to a `wide_cospan` -/
 def diagram_iso_wide_cospan (F : wide_pullback_shape J ⥤ C) :
@@ -170,7 +170,10 @@ def wide_span (B : C) (objs : J → C) (arrows : ∀ j : J, B ⟶ objs j) : wide
     · exact arrows j
       
   map_comp' := by
-    rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _) <;> simpa
+    rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _) <;>
+      first |
+        simpa|
+        simp
 
 /-- Every diagram is naturally isomorphic (actually, equal) to a `wide_span` -/
 def diagram_iso_wide_span (F : wide_pushout_shape J ⥤ C) :

@@ -391,7 +391,7 @@ theorem is_preconnected_interval : IsPreconnected (interval a b) :=
   is_preconnected_Icc
 
 theorem Set.OrdConnected.is_preconnected {s : Set α} (h : s.ord_connected) : IsPreconnected s :=
-  is_preconnected_of_forall_pair $ fun x y hx hy =>
+  is_preconnected_of_forall_pair $ fun x hx y hy =>
     ⟨interval x y, h.interval_subset hx hy, left_mem_interval, right_mem_interval, is_preconnected_interval⟩
 
 theorem is_preconnected_iff_ord_connected {s : Set α} : IsPreconnected s ↔ ord_connected s :=

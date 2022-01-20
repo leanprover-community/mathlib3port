@@ -1162,7 +1162,7 @@ theorem at_prime.local_ring [IsLocalization.AtPrime S I] : LocalRing S :=
             simpa using ht.symm
           htz.symm ▸ I.zero_mem))
     (by
-      intro x y hx hy hu
+      intro x hx y hy hu
       cases' is_unit_iff_exists_inv.1 hu with z hxyz
       have : ∀ {r : R} {s : I.prime_compl}, mk' S r s ∈ Nonunits S → r ∈ I := fun r : R s : I.prime_compl =>
         not_imp_comm.1 fun nr =>
@@ -2054,6 +2054,9 @@ theorem coe_submodule_le_coe_submodule {I J : Ideal R} : coe_submodule K I ≤ c
 @[mono]
 theorem coe_submodule_strict_mono : StrictMono (coe_submodule K : Ideal R → Submodule R K) :=
   strict_mono_of_le_iff_le fun _ _ => coe_submodule_le_coe_submodule.symm
+
+instance (priority := 100) [NoZeroDivisors K] : NoZeroSmulDivisors R K :=
+  NoZeroSmulDivisors.of_algebra_map_injective $ IsFractionRing.injective R K
 
 variable (R K)
 

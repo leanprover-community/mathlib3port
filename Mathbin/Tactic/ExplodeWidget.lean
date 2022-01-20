@@ -159,7 +159,7 @@ unsafe def show_constant_component : Tc expr Empty :=
 /-- Search for an entry that has the specified line number.
 -/
 unsafe def lookup_lines : entries → Nat → entry
-  | ⟨_, []⟩, n => ⟨default _, 0, 0, status.sintro, thm.string "", []⟩
+  | ⟨_, []⟩, n => ⟨default, 0, 0, status.sintro, thm.string "", []⟩
   | ⟨rb, hd :: tl⟩, n => if hd.line = n then hd else lookup_lines ⟨rb, tl⟩ n
 
 /-- Render a row that shows a goal.

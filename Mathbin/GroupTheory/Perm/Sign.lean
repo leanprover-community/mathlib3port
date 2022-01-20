@@ -130,18 +130,20 @@ theorem mem_sum_congr_hom_range_of_perm_maps_to_inl {m n : Type _} [Fintype m] [
     exact ⟨b, rfl⟩
   let σ₁' := subtype_perm_of_fintype σ h1
   let σ₂' := subtype_perm_of_fintype σ h3
-  let σ₁ := perm_congr (Equivₓ.ofInjective (@Sum.inl m n) Sum.inl_injective).symm σ₁'
-  let σ₂ := perm_congr (Equivₓ.ofInjective (@Sum.inr m n) Sum.inr_injective).symm σ₂'
+  let σ₁ := perm_congr (Equivₓ.ofInjective _ Sum.inl_injective).symm σ₁'
+  let σ₂ := perm_congr (Equivₓ.ofInjective _ Sum.inr_injective).symm σ₂'
   rw [MonoidHom.mem_range, Prod.exists]
   use σ₁, σ₂
   rw [perm.sum_congr_hom_apply]
   ext
   cases' x with a b
-  · rw [Equivₓ.sum_congr_apply, Sum.map_inl, perm_congr_apply, Equivₓ.symm_symm, apply_of_injective_symm (@Sum.inl m n)]
+  · rw [Equivₓ.sum_congr_apply, Sum.map_inl, perm_congr_apply, Equivₓ.symm_symm,
+      apply_of_injective_symm Sum.inl_injective]
     erw [subtype_perm_apply]
     rw [of_injective_apply, Subtype.coe_mk, Subtype.coe_mk]
     
-  · rw [Equivₓ.sum_congr_apply, Sum.map_inr, perm_congr_apply, Equivₓ.symm_symm, apply_of_injective_symm (@Sum.inr m n)]
+  · rw [Equivₓ.sum_congr_apply, Sum.map_inr, perm_congr_apply, Equivₓ.symm_symm,
+      apply_of_injective_symm Sum.inr_injective]
     erw [subtype_perm_apply]
     rw [of_injective_apply, Subtype.coe_mk, Subtype.coe_mk]
     

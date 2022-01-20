@@ -1,5 +1,6 @@
 import Mathbin.LinearAlgebra.Matrix.ToLin
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
+import Mathbin.Algebra.Star.Unitary
 
 /-!
 # The Unitary Group
@@ -31,23 +32,6 @@ matrix group, group, unitary group, orthogonal group
 
 universe u v
 
-section
-
-variable (M : Type v) [Monoidₓ M] [StarMonoid M]
-
-/-- In a `star_monoid M`, `unitary_submonoid M` is the submonoid consisting of all the elements of
-`M` such that `star A * A = 1`.
--/
-def unitarySubmonoid : Submonoid M where
-  Carrier := { A | star A * A = 1 }
-  one_mem' := by
-    simp
-  mul_mem' := fun A B hA : star A * A = 1 hB : star B * B = 1 =>
-    show star (A * B) * (A * B) = 1 by
-      rwa [star_mul, ← mul_assocₓ, mul_assocₓ _ _ A, hA, mul_oneₓ]
-
-end
-
 namespace Matrix
 
 open LinearMap
@@ -62,27 +46,14 @@ variable (α : Type v) [CommRingₓ α] [StarRing α]
 
 /-- `unitary_group n` is the group of `n` by `n` matrices where the star-transpose is the inverse.
 -/
-def unitary_group : Type _ :=
-  unitarySubmonoid (Matrix n n α)deriving Monoidₓ
+abbrev unitary_group :=
+  unitary (Matrix n n α)
 
 end
 
 variable {n : Type u} [DecidableEq n] [Fintype n]
 
 variable {α : Type v} [CommRingₓ α] [StarRing α]
-
-namespace unitarySubmonoid
-
-theorem star_mem {A : Matrix n n α} (h : A ∈ unitarySubmonoid (Matrix n n α)) :
-    star A ∈ unitarySubmonoid (Matrix n n α) :=
-  mul_eq_one_comm.mp $ (star_star A).symm ▸ h
-
-@[simp]
-theorem star_mem_iff {A : Matrix n n α} :
-    star A ∈ unitarySubmonoid (Matrix n n α) ↔ A ∈ unitarySubmonoid (Matrix n n α) :=
-  ⟨fun ha => star_star A ▸ star_mem ha, star_mem⟩
-
-end unitarySubmonoid
 
 namespace UnitaryGroup
 
@@ -107,20 +78,9 @@ theorem ext_iff (A B : unitary_group n α) : A = B ↔ ∀ i j, A i j = B i j :=
 theorem ext (A B : unitary_group n α) : (∀ i j, A i j = B i j) → A = B :=
   (unitary_group.ext_iff A B).mpr
 
-instance : HasInv (unitary_group n α) :=
-  ⟨fun A => ⟨star A.1, unitary_submonoid.star_mem_iff.mpr A.2⟩⟩
-
-instance : StarMonoid (unitary_group n α) where
-  star := fun A => ⟨star A.1, unitary_submonoid.star_mem A.2⟩
-  star_involutive := fun A => Subtype.ext $ star_star A.1
-  star_mul := fun A B => Subtype.ext $ star_mul A.1 B.1
-
 @[simp]
 theorem star_mul_self (A : unitary_group n α) : star A ⬝ A = 1 :=
-  A.2
-
-instance : Inhabited (unitary_group n α) :=
-  ⟨1⟩
+  A.2.1
 
 section CoeLemmas
 
@@ -160,22 +120,19 @@ theorem to_lin'_one : to_lin' (1 : unitary_group n α) = LinearMap.id :=
 
 end CoeLemmas
 
-instance : Groupₓ (unitary_group n α) :=
-  { unitary_group.has_inv, unitary_group.monoid n α with mul_left_inv := fun A => Subtype.eq A.2 }
-
 /-- `to_linear_equiv A` is matrix multiplication of vectors by `A`, as a linear equivalence. -/
 def to_linear_equiv (A : unitary_group n α) : (n → α) ≃ₗ[α] n → α :=
-  { Matrix.toLin' A with invFun := A⁻¹.toLin',
+  { Matrix.toLin' A with invFun := to_lin' (A⁻¹),
     left_inv := fun x =>
       calc
-        A⁻¹.toLin'.comp A.to_lin' x = (A⁻¹ * A).toLin' x := by
+        (to_lin' (A⁻¹)).comp (to_lin' A) x = (to_lin' (A⁻¹ * A)) x := by
           rw [← to_lin'_mul]
         _ = x := by
           rw [mul_left_invₓ, to_lin'_one, id_apply]
         ,
     right_inv := fun x =>
       calc
-        A.to_lin'.comp A⁻¹.toLin' x = (A * A⁻¹).toLin' x := by
+        (to_lin' A).comp (to_lin' (A⁻¹)) x = to_lin' (A * A⁻¹) x := by
           rw [← to_lin'_mul]
         _ = x := by
           rw [mul_right_invₓ, to_lin'_one, id_apply]
@@ -185,7 +142,7 @@ def to_linear_equiv (A : unitary_group n α) : (n → α) ≃ₗ[α] n → α :=
 def to_GL (A : unitary_group n α) : general_linear_group α (n → α) :=
   general_linear_group.of_linear_equiv (to_linear_equiv A)
 
-theorem coe_to_GL (A : unitary_group n α) : ↑to_GL A = A.to_lin' :=
+theorem coe_to_GL (A : unitary_group n α) : ↑to_GL A = to_lin' A :=
   rfl
 
 @[simp]

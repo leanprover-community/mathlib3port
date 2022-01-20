@@ -388,6 +388,11 @@ theorem quot_lift_on_mk (β : Type v) (f : List (α × Bool) → β) (H : ∀ L�
     Quot.liftOn (mk L) f H = f L :=
   rfl
 
+@[simp]
+theorem quot_map_mk (β : Type v) (f : List (α × Bool) → List (β × Bool)) (H : (red.step⇒red.step) f f) :
+    Quot.map f H (mk L) = mk (f L) :=
+  rfl
+
 instance : HasOne (FreeGroup α) :=
   ⟨mk []⟩
 
@@ -540,27 +545,16 @@ section Map
 
 variable {β : Type v} (f : α → β) {x y : FreeGroup α}
 
-/-- Given `f : α → β`, the canonical map `list (α × bool) → list (β × bool)`. -/
-def map.aux (L : List (α × Bool)) : List (β × Bool) :=
-  L.map $ fun x => (f x.1, x.2)
-
-/-- Any function from `α` to `β` extends uniquely
-to a group homomorphism from the free group
-over `α` to the free group over `β`. Note that this is the bare function;
-for the group homomorphism use `map`. -/
-def map.to_fun (x : FreeGroup α) : FreeGroup β :=
-  (x.lift_on fun L => mk $ map.aux f L) $ fun L₁ L₂ H =>
-    Quot.sound $ by
-      cases H <;> simp [map.aux]
-
 /-- Any function from `α` to `β` extends uniquely
 to a group homomorphism from the free group
 ver `α` to the free group over `β`. -/
 def map : FreeGroup α →* FreeGroup β :=
-  MonoidHom.mk' (map.to_fun f)
+  MonoidHom.mk'
+    (Quot.map (List.map $ fun x => (f x.1, x.2)) $ fun L₁ L₂ H => by
+      cases H <;> simp )
     (by
       rintro ⟨L₁⟩ ⟨L₂⟩
-      simp [map.to_fun, map.aux])
+      simp )
 
 variable {f}
 
@@ -569,15 +563,14 @@ theorem map.mk : map f (mk L) = mk (L.map fun x => (f x.1, x.2)) :=
   rfl
 
 @[simp]
-theorem map.id : map id x = x := by
-  have H1 : (fun x : α × Bool => x) = id := rfl
-  rcases x with ⟨L⟩ <;> simp [H1]
+theorem map.id (x : FreeGroup α) : map id x = x := by
+  rcases x with ⟨L⟩ <;> simp [List.map_id']
 
 @[simp]
-theorem map.id' : map (fun z => z) x = x :=
-  map.id
+theorem map.id' (x : FreeGroup α) : map (fun z => z) x = x :=
+  map.id x
 
-theorem map.comp {γ : Type w} {f : α → β} {g : β → γ} {x} : map g (map f x) = map (g ∘ f) x := by
+theorem map.comp {γ : Type w} (f : α → β) (g : β → γ) x : map g (map f x) = map (g ∘ f) x := by
   rcases x with ⟨L⟩ <;> simp
 
 @[simp]
@@ -594,16 +587,33 @@ theorem map.unique (g : FreeGroup α →* FreeGroup β) (hg : ∀ x, g (of x) = 
           (show g (of x * mk t) = map f (of x * mk t) by
             simp [g.map_mul, hg, ih])
 
-/-- Equivalent types give rise to equivalent free groups. -/
-def free_group_congr {α β} (e : α ≃ β) : FreeGroup α ≃ FreeGroup β :=
-  ⟨map e, map e.symm, fun x => by
-    simp [Function.comp, map.comp], fun x => by
-    simp [Function.comp, map.comp]⟩
-
 theorem map_eq_lift : map f x = lift (of ∘ f) x :=
   Eq.symm $
     map.unique _ $ fun x => by
       simp
+
+/-- Equivalent types give rise to multiplicatively equivalent free groups. -/
+@[simps apply]
+def free_group_congr {α β} (e : α ≃ β) : FreeGroup α ≃* FreeGroup β where
+  toFun := map e
+  invFun := map e.symm
+  left_inv := fun x => by
+    simp [Function.comp, map.comp]
+  right_inv := fun x => by
+    simp [Function.comp, map.comp]
+  map_mul' := MonoidHom.map_mul _
+
+@[simp]
+theorem free_group_congr_refl : free_group_congr (Equivₓ.refl α) = MulEquiv.refl _ :=
+  MulEquiv.ext map.id
+
+@[simp]
+theorem free_group_congr_symm {α β} (e : α ≃ β) : (free_group_congr e).symm = free_group_congr e.symm :=
+  rfl
+
+theorem free_group_congr_trans {α β γ} (e : α ≃ β) (f : β ≃ γ) :
+    (free_group_congr e).trans (free_group_congr f) = free_group_congr (e.trans f) :=
+  MulEquiv.ext $ map.comp _ _
 
 end Map
 

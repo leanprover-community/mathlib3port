@@ -396,7 +396,7 @@ theorem coe_Inf (S : Set (Subsemiring R)) : ((Inf S : Subsemiring R) : Set R) = 
   rfl
 
 theorem mem_Inf {S : Set (Subsemiring R)} {x : R} : x ∈ Inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
-  Set.mem_bInter_iff
+  Set.mem_Inter₂
 
 @[simp]
 theorem Inf_to_submonoid (s : Set (Subsemiring R)) : (Inf s).toSubmonoid = ⨅ t ∈ s, Subsemiring.toSubmonoid t :=
@@ -625,10 +625,11 @@ theorem comap_top (f : R →+* S) : (⊤ : Subsemiring S).comap f = ⊤ :=
 /-- Given `subsemiring`s `s`, `t` of semirings `R`, `S` respectively, `s.prod t` is `s × t`
 as a subsemiring of `R × S`. -/
 def Prod (s : Subsemiring R) (t : Subsemiring S) : Subsemiring (R × S) :=
-  { s.to_submonoid.prod t.to_submonoid, s.to_add_submonoid.prod t.to_add_submonoid with Carrier := (s : Set R).Prod t }
+  { s.to_submonoid.prod t.to_submonoid, s.to_add_submonoid.prod t.to_add_submonoid with
+    Carrier := (s : Set R) ×ˢ (t : Set S) }
 
 @[norm_cast]
-theorem coe_prod (s : Subsemiring R) (t : Subsemiring S) : (s.prod t : Set (R × S)) = (s : Set R).Prod (t : Set S) :=
+theorem coe_prod (s : Subsemiring R) (t : Subsemiring S) : (s.prod t : Set (R × S)) = (s : Set R) ×ˢ (t : Set S) :=
   rfl
 
 theorem mem_prod {s : Subsemiring R} {t : Subsemiring S} {p : R × S} : p ∈ s.prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=

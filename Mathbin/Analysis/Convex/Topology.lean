@@ -169,7 +169,7 @@ theorem Convex.subset_interior_image_homothety_of_one_lt {s : Set E} (hs : Conve
 
 theorem Convex.is_path_connected {s : Set E} (hconv : Convex ℝ s) (hne : s.nonempty) : IsPathConnected s := by
   refine' is_path_connected_iff.mpr ⟨hne, _⟩
-  intro x y x_in y_in
+  intro x x_in y y_in
   have H := hconv.segment_subset x_in y_in
   rw [segment_eq_image_line_map] at H
   exact

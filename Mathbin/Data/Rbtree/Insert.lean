@@ -136,7 +136,7 @@ theorem is_searchable_balance1 {l y r v t lo hi} :
         run_tac
           is_searchable_tactic
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 theorem is_searchable_balance1_node {t} [IsTrans α lt] :
     ∀ {y s lo hi},
       is_searchable lt t lo (some y) → is_searchable lt s (some y) hi → is_searchable lt (balance1_node t y s) lo hi :=
@@ -168,7 +168,7 @@ theorem is_searchable_balance2 {l y r v t lo hi} :
         run_tac
           is_searchable_tactic
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 theorem is_searchable_balance2_node {t} [IsTrans α lt] :
     ∀ {y s lo hi},
       is_searchable lt s lo (some y) → is_searchable lt t (some y) hi → is_searchable lt (balance2_node t y s) lo hi :=
@@ -191,7 +191,7 @@ theorem is_searchable_balance2_node {t} [IsTrans α lt] :
     apply is_searchable_balance2
     assumption'
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 theorem is_searchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
     ∀ {lo hi} h : is_searchable lt t lo hi,
       lift lt lo (some x) → lift lt (some x) hi → is_searchable lt (ins lt t x) lo hi :=

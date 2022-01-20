@@ -50,7 +50,7 @@ def piFinTwoEquiv (α : Finₓ 2 → Type u) : (∀ i, α i) ≃ α 0 × α 1 wh
   right_inv := fun ⟨x, y⟩ => rfl
 
 theorem Finₓ.preimage_apply_01_prod {α : Finₓ 2 → Type u} (s : Set (α 0)) (t : Set (α 1)) :
-    (fun f : ∀ i, α i => (f 0, f 1)) ⁻¹' s.prod t = Set.Pi Set.Univ (Finₓ.cons s $ Finₓ.cons t Finₓ.elim0) := by
+    (fun f : ∀ i, α i => (f 0, f 1)) ⁻¹' (s ×ˢ t) = Set.Pi Set.Univ (Finₓ.cons s $ Finₓ.cons t Finₓ.elim0) := by
   ext f
   have : (Finₓ.cons s (Finₓ.cons t Finₓ.elim0) : ∀ i, Set (α i)) 1 = t := rfl
   simp [Finₓ.forall_fin_two, this]
@@ -58,7 +58,7 @@ theorem Finₓ.preimage_apply_01_prod {α : Finₓ 2 → Type u} (s : Set (α 0)
 -- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
 theorem Finₓ.preimage_apply_01_prod' {α : Type u} (s t : Set α) :
-    (fun f : Finₓ 2 → α => (f 0, f 1)) ⁻¹' s.prod t =
+    (fun f : Finₓ 2 → α => (f 0, f 1)) ⁻¹' (s ×ˢ t) =
       Set.Pi Set.Univ
         («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") :=
   Finₓ.preimage_apply_01_prod s t

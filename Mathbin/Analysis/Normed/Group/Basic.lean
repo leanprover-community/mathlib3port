@@ -451,7 +451,7 @@ theorem NormedGroup.tendsto_nhds_nhds {f : E → F} {x : E} {y : F} :
   simp_rw [Metric.tendsto_nhds_nhds, dist_eq_norm]
 
 theorem NormedGroup.cauchy_seq_iff [Nonempty α] [SemilatticeSup α] {u : α → E} :
-    CauchySeq u ↔ ∀, ∀ ε > 0, ∀, ∃ N, ∀ m n, N ≤ m → N ≤ n → ∥u m - u n∥ < ε := by
+    CauchySeq u ↔ ∀, ∀ ε > 0, ∀, ∃ N, ∀ m, N ≤ m → ∀ n, N ≤ n → ∥u m - u n∥ < ε := by
   simp [Metric.cauchy_seq_iff, dist_eq_norm]
 
 theorem NormedGroup.uniformity_basis_dist :

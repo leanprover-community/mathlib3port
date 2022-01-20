@@ -357,7 +357,7 @@ theorem cast_pow (h : m ∣ n) (a : Zmod n) (k : ℕ) : ((a ^ k : Zmod n) : R) =
 
 @[simp, norm_cast]
 theorem cast_nat_cast (h : m ∣ n) (k : ℕ) : ((k : Zmod n) : R) = k :=
-  (cast_hom h R).map_nat_cast k
+  map_nat_cast (cast_hom h R) k
 
 @[simp, norm_cast]
 theorem cast_int_cast (h : m ∣ n) (k : ℤ) : ((k : Zmod n) : R) = k :=

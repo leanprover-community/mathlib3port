@@ -96,8 +96,8 @@ theorem spec : ∀ x : ℕ, (x : R) = 0 ↔ ringChar R ∣ x := by
   let this' := (Classical.some_spec (CharP.exists_unique R)).1 <;>
     unfold ringChar <;> exact CharP.cast_eq_zero_iff R (ringChar R)
 
-theorem Eq {p : ℕ} (C : CharP R p) : p = ringChar R :=
-  (Classical.some_spec (CharP.exists_unique R)).2 p C
+theorem Eq (p : ℕ) [C : CharP R p] : ringChar R = p :=
+  ((Classical.some_spec (CharP.exists_unique R)).2 p C).symm
 
 instance CharP : CharP R (ringChar R) :=
   ⟨spec R⟩
@@ -108,14 +108,14 @@ theorem of_eq {p : ℕ} (h : ringChar R = p) : CharP R p :=
   CharP.congr (ringChar R) h
 
 theorem eq_iff {p : ℕ} : ringChar R = p ↔ CharP R p :=
-  ⟨of_eq, Eq.symm ∘ Eq R⟩
+  ⟨of_eq, @Eq R _ p⟩
 
 theorem dvd {x : ℕ} (hx : (x : R) = 0) : ringChar R ∣ x :=
   (spec R x).1 hx
 
 @[simp]
 theorem eq_zero [CharZero R] : ringChar R = 0 :=
-  (Eq R (CharP.of_char_zero R)).symm
+  Eq R 0
 
 end ringChar
 
@@ -218,7 +218,7 @@ theorem RingHom.char_p_iff_char_p {K L : Type _} [DivisionRing K] [Semiringₓ L
     · intro _c
       constructor
       intro n
-      rw [← @CharP.cast_eq_zero_iff _ _ _ p _c n, ← f.injective.eq_iff, f.map_nat_cast, f.map_zero]
+      rw [← @CharP.cast_eq_zero_iff _ _ _ p _c n, ← f.injective.eq_iff, map_nat_cast f, f.map_zero]
       
 
 section frobenius
@@ -282,7 +282,7 @@ theorem frobenius_add : frobenius R p (x + y) = frobenius R p x + frobenius R p 
   (frobenius R p).map_add x y
 
 theorem frobenius_nat_cast (n : ℕ) : frobenius R p n = n :=
-  (frobenius R p).map_nat_cast n
+  map_nat_cast (frobenius R p) n
 
 open_locale BigOperators
 

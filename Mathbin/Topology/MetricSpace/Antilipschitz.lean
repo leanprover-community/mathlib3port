@@ -170,7 +170,7 @@ open Metric
 variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0 } {f : α → β}
 
 theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded s) : Bounded (f ⁻¹' s) :=
-  Exists.introₓ (K * diam s) $ fun x y hx hy =>
+  Exists.introₓ (K * diam s) $ fun x hx y hy =>
     calc
       dist x y ≤ K * dist (f x) (f y) := hf.le_mul_dist x y
       _ ≤ K * diam s := mul_le_mul_of_nonneg_left (dist_le_diam_of_mem hs hx hy) K.2

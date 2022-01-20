@@ -251,12 +251,6 @@ theorem le_coe_iff (x : Enat) (n : ℕ) : x ≤ n ↔ ∃ h : x.dom, x.get h ≤
   rw [← some_eq_coe]
   show (∃ h : True → x.dom, _) ↔ ∃ h : x.dom, x.get h ≤ n
   simp only [forall_prop_of_true, some_eq_coe, dom_coe, get_coe']
-  constructor <;>
-    rintro ⟨_, _⟩ <;>
-      refine' ⟨_, _⟩ <;>
-        intros <;>
-          try
-            assumption
 
 theorem lt_coe_iff (x : Enat) (n : ℕ) : x < n ↔ ∃ h : x.dom, x.get h < n := by
   simp only [lt_def, forall_prop_of_true, get_coe', dom_coe]
@@ -336,13 +330,15 @@ theorem pos_iff_one_le {x : Enat} : 0 < x ↔ 1 ≤ x :=
     rw [← Nat.cast_zero, ← Nat.cast_one, Enat.coe_lt_coe, Enat.coe_le_coe]
     rfl
 
+instance : IsTotal Enat (· ≤ ·) where
+  Total := fun x y =>
+    Enat.cases_on x (Or.inr le_top)
+      (Enat.cases_on y (fun _ => Or.inl le_top) fun x y =>
+        (le_totalₓ x y).elim (Or.inr ∘ coe_le_coe.2) (Or.inl ∘ coe_le_coe.2))
+
 noncomputable instance : LinearOrderₓ Enat :=
-  { Enat.partialOrder with
-    le_total := fun x y =>
-      Enat.cases_on x (Or.inr le_top)
-        (Enat.cases_on y (fun _ => Or.inl le_top) fun x y =>
-          (le_totalₓ x y).elim (Or.inr ∘ coe_le_coe.2) (Or.inl ∘ coe_le_coe.2)),
-    decidableLe := Classical.decRel _ }
+  { Enat.partialOrder with le_total := IsTotal.total, decidableLe := Classical.decRel _, max := ·⊔·,
+    max_def := @sup_eq_max_default _ _ (id _) _ }
 
 instance : BoundedOrder Enat :=
   { Enat.orderTop, Enat.orderBot with }
@@ -350,12 +346,6 @@ instance : BoundedOrder Enat :=
 noncomputable instance : Lattice Enat :=
   { Enat.semilatticeSup with inf := min, inf_le_left := min_le_leftₓ, inf_le_right := min_le_rightₓ,
     le_inf := fun _ _ _ => le_minₓ }
-
-theorem sup_eq_max {a b : Enat} : a⊔b = max a b :=
-  le_antisymmₓ (sup_le (le_max_leftₓ _ _) (le_max_rightₓ _ _)) (max_leₓ le_sup_left le_sup_right)
-
-theorem inf_eq_min {a b : Enat} : a⊓b = min a b :=
-  rfl
 
 instance : OrderedAddCommMonoid Enat :=
   { Enat.linearOrder, Enat.addCommMonoid with
@@ -494,7 +484,6 @@ theorem to_with_top_some (n : ℕ) : to_with_top (some n) = n :=
 
 theorem to_with_top_coe (n : ℕ) {_ : Decidable (n : Enat).Dom} : to_with_top n = n := by
   simp only [← some_eq_coe, ← to_with_top_some]
-  congr
 
 @[simp]
 theorem to_with_top_coe' (n : ℕ) {h : Decidable (n : Enat).Dom} : to_with_top (n : Enat) = n := by
@@ -523,18 +512,7 @@ open_locale Classical
 
 @[simp]
 theorem to_with_top_add {x y : Enat} : to_with_top (x + y) = to_with_top x + to_with_top y := by
-  apply Enat.cases_on y <;> apply Enat.cases_on x
-  · simp
-    
-  · simp
-    
-  · simp
-    
-  · intros
-    rw [to_with_top_coe', to_with_top_coe']
-    norm_cast
-    exact to_with_top_coe' _
-    
+  apply Enat.cases_on y <;> apply Enat.cases_on x <;> simp [← Nat.cast_add, ← WithTop.coe_add]
 
 /-- `equiv` between `enat` and `with_top ℕ` (for the order isomorphism see `with_top_order_iso`). -/
 noncomputable def with_top_equiv : Enat ≃ WithTop ℕ where

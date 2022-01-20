@@ -8,16 +8,19 @@ This file defines `self_adjoint R`, where `R` is a star additive monoid, as the 
 containing the elements that satisfy `star x = x`. This includes, for instance, Hermitian
 operators on Hilbert spaces.
 
-## TODO
+## Implementation notes
 
-* If `R` is a `star_module R₂ R`, put a module structure on `self_adjoint R`. This would naturally
-  be a `module (self_adjoint R₂) (self_adjoint R)`, but doing this literally would be undesirable
-  since in the main case of interest (`R₂ = ℂ`) we want `module ℝ (self_adjoint R)` and not
-  `module (self_adjoint ℂ) (self_adjoint R)`. One way of doing this would be to add the typeclass
-  `[has_trivial_star R]`, of which `ℝ` would be an instance, and then add a
-  `[module R (self_adjoint E)]` instance whenever we have `[module R E] [has_trivial_star E]`.
-  Another one would be to define a `[star_invariant_scalars R E]` to express the fact that
-  `star (x • v) = x • star v`.
+* When `R` is a `star_module R₂ R`, then `self_adjoint R` has a natural
+  `module (self_adjoint R₂) (self_adjoint R)` structure. However, doing this literally would be
+  undesirable since in the main case of interest (`R₂ = ℂ`) we want `module ℝ (self_adjoint R)`
+  and not `module (self_adjoint ℂ) (self_adjoint R)`. We solve this issue by adding the typeclass
+  `[has_trivial_star R₃]`, of which `ℝ` is an instance (registered in `data/real/basic`), and then
+  add a `[module R₃ (self_adjoint R)]` instance whenever we have
+  `[module R₃ R] [has_trivial_star R₃]`. (Another approach would have been to define
+  `[star_invariant_scalars R₃ R]` to express the fact that `star (x • v) = x • star v`, but
+  this typeclass would have the disadvantage of taking two type arguments.)
+
+## TODO
 
 * Define `λ z x, z * x * star z` (i.e. conjugation by `z`) as a monoid action of `R` on `R`
   (similar to the existing `conj_act` for groups), and then state the fact that `self_adjoint R` is
@@ -55,6 +58,9 @@ theorem mem_iff {x : R} : x ∈ selfAdjoint R ↔ star x = x := by
 theorem star_coe_eq {x : selfAdjoint R} : star (x : R) = x :=
   x.prop
 
+instance : Inhabited (selfAdjoint R) :=
+  ⟨0⟩
+
 end AddGroupₓ
 
 instance [AddCommGroupₓ R] [StarAddMonoid R] : AddCommGroupₓ (selfAdjoint R) :=
@@ -71,6 +77,9 @@ instance : HasOne (selfAdjoint R) :=
 @[simp, norm_cast]
 theorem coe_one : (coeₓ : selfAdjoint R → R) (1 : selfAdjoint R) = (1 : R) :=
   rfl
+
+instance [Nontrivial R] : Nontrivial (selfAdjoint R) :=
+  ⟨⟨0, 1, Subtype.ne_of_val_ne zero_ne_one⟩⟩
 
 theorem one_mem : (1 : R) ∈ selfAdjoint R := by
   simp only [mem_iff, star_one]
@@ -147,6 +156,46 @@ theorem coe_inv (x : selfAdjoint R) : (coeₓ : selfAdjoint R → R) (x⁻¹) = 
   rfl
 
 end Field
+
+section Module
+
+variable {A : Type _} [Semiringₓ R] [HasStar R] [HasTrivialStar R] [AddCommGroupₓ A] [StarAddMonoid A] [Module R A]
+  [StarModule R A]
+
+instance : HasScalar R (selfAdjoint A) :=
+  ⟨fun r x =>
+    ⟨r • x, by
+      rw [mem_iff, star_smul, star_trivial, star_coe_eq]⟩⟩
+
+@[simp, norm_cast]
+theorem coe_smul (r : R) (x : selfAdjoint A) : (coeₓ : selfAdjoint A → A) (r • x) = r • x :=
+  rfl
+
+instance : MulAction R (selfAdjoint A) where
+  one_smul := fun x => by
+    ext
+    rw [coe_smul, one_smul]
+  mul_smul := fun r s x => by
+    ext
+    simp only [mul_smul, coe_smul]
+
+instance : DistribMulAction R (selfAdjoint A) where
+  smul_add := fun r x y => by
+    ext
+    simp only [smul_add, AddSubgroup.coe_add, coe_smul]
+  smul_zero := fun r => by
+    ext
+    simp only [smul_zero', coe_smul, AddSubgroup.coe_zero]
+
+instance : Module R (selfAdjoint A) where
+  add_smul := fun r s x => by
+    ext
+    simp only [add_smul, AddSubgroup.coe_add, coe_smul]
+  zero_smul := fun x => by
+    ext
+    simp only [coe_smul, zero_smul, AddSubgroup.coe_zero]
+
+end Module
 
 end selfAdjoint
 

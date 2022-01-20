@@ -154,7 +154,7 @@ theorem exists_locally_constant_fintype_nonempty {α : Type _} [Fintype α] [Non
   inhabit α
   obtain ⟨j, gg, h⟩ := exists_locally_constant_fintype_aux _ hC f
   let ι : α → α → Finₓ 2 := fun a b => if a = b then 0 else 1
-  let σ : (α → Finₓ 2) → α := fun f => if h : ∃ a : α, ι a = f then h.some else arbitraryₓ _
+  let σ : (α → Finₓ 2) → α := fun f => if h : ∃ a : α, ι a = f then h.some else arbitrary _
   refine' ⟨j, gg.map σ, _⟩
   ext
   rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous]

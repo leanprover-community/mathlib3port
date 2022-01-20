@@ -83,7 +83,7 @@ protected theorem induction_on [Fintype m] [Fintype n] [Nonempty m] [Nonempty n]
     (by
       inhabit m
       inhabit n
-      simpa using h_std_basis (default m) (default n) 0)
+      simpa using h_std_basis default default 0)
     h_add h_std_basis
 
 namespace StdBasisMatrix

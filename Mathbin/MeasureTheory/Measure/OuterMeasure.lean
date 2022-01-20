@@ -50,6 +50,8 @@ noncomputable section
 
 open Set Finset Function Filter Encodable
 
+open topological_space (SecondCountableTopology)
+
 open_locale Classical BigOperators Nnreal TopologicalSpace Ennreal
 
 namespace MeasureTheory
@@ -81,12 +83,27 @@ theorem empty' (m : outer_measure α) : m ∅ = 0 :=
 theorem mono' (m : outer_measure α) {s₁ s₂} (h : s₁ ⊆ s₂) : m s₁ ≤ m s₂ :=
   m.mono h
 
+theorem mono_null (m : outer_measure α) {s t} (h : s ⊆ t) (ht : m t = 0) : m s = 0 :=
+  nonpos_iff_eq_zero.mp $ ht ▸ m.mono' h
+
 protected theorem Union (m : outer_measure α) {β} [Encodable β] (s : β → Set α) : m (⋃ i, s i) ≤ ∑' i, m (s i) :=
   rel_supr_tsum m m.empty (· ≤ ·) m.Union_nat s
 
-theorem Union_null (m : outer_measure α) {β} [Encodable β] {s : β → Set α} (h : ∀ i, m (s i) = 0) : m (⋃ i, s i) = 0 :=
-  by
+theorem Union_null [Encodable β] (m : outer_measure α) {s : β → Set α} (h : ∀ i, m (s i) = 0) : m (⋃ i, s i) = 0 := by
   simpa [h] using m.Union s
+
+@[simp]
+theorem Union_null_iff [Encodable β] (m : outer_measure α) {s : β → Set α} : m (⋃ i, s i) = 0 ↔ ∀ i, m (s i) = 0 :=
+  ⟨fun h i => m.mono_null (subset_Union _ _) h, m.Union_null⟩
+
+theorem bUnion_null_iff (m : outer_measure α) {s : Set β} (hs : countable s) {t : β → Set α} :
+    m (⋃ i ∈ s, t i) = 0 ↔ ∀, ∀ i ∈ s, ∀, m (t i) = 0 := by
+  have := hs.to_encodable
+  rw [bUnion_eq_Union, Union_null_iff, SetCoe.forall']
+
+theorem sUnion_null_iff (m : outer_measure α) {S : Set (Set α)} (hS : countable S) :
+    m (⋃₀S) = 0 ↔ ∀, ∀ s ∈ S, ∀, m s = 0 := by
+  rw [sUnion_eq_bUnion, m.bUnion_null_iff hS]
 
 protected theorem Union_finset (m : outer_measure α) (s : β → Set α) (t : Finset β) :
     m (⋃ i ∈ t, s i) ≤ ∑ i in t, m (s i) :=
@@ -95,8 +112,26 @@ protected theorem Union_finset (m : outer_measure α) (s : β → Set α) (t : F
 protected theorem union (m : outer_measure α) (s₁ s₂ : Set α) : m (s₁ ∪ s₂) ≤ m s₁ + m s₂ :=
   rel_sup_add m m.empty (· ≤ ·) m.Union_nat s₁ s₂
 
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+/-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
+in a second-countable space. -/
+theorem null_of_locally_null [TopologicalSpace α] [second_countable_topology α] (m : outer_measure α) (s : Set α)
+    (hs : ∀, ∀ x ∈ s, ∀, ∃ u ∈ 𝓝[s] x, m u = 0) : m s = 0 := by
+  choose! u hxu hu₀ using hs
+  obtain ⟨t, ts, t_count, ht⟩ : ∃ (t : _)(_ : t ⊆ s), t.countable ∧ s ⊆ ⋃ x ∈ t, u x :=
+    TopologicalSpace.countable_cover_nhds_within hxu
+  apply m.mono_null ht
+  exact (m.bUnion_null_iff t_count).2 fun x hx => hu₀ x (ts hx)
+
+/-- If `m s ≠ 0`, then for some point `x ∈ s` and any `t ∈ 𝓝[s] x` we have `0 < m t`. -/
+theorem exists_mem_forall_mem_nhds_within_pos [TopologicalSpace α] [second_countable_topology α] (m : outer_measure α)
+    {s : Set α} (hs : m s ≠ 0) : ∃ x ∈ s, ∀, ∀ t ∈ 𝓝[s] x, ∀, 0 < m t := by
+  contrapose! hs
+  simp only [nonpos_iff_eq_zero, ← exists_prop] at hs
+  exact m.null_of_locally_null s hs
+
 /-- If `s : ι → set α` is a sequence of sets, `S = ⋃ n, s n`, and `m (S \ s n)` tends to zero along
-some nontrivial filter (usually `at_top` on `α = ℕ`), then `m S = ⨆ n, m (s n)`. -/
+some nontrivial filter (usually `at_top` on `ι = ℕ`), then `m S = ⨆ n, m (s n)`. -/
 theorem Union_of_tendsto_zero {ι} (m : outer_measure α) {s : ι → Set α} (l : Filter ι) [ne_bot l]
     (h0 : tendsto (fun k => m ((⋃ n, s n) \ s k)) l (𝓝 0)) : m (⋃ n, s n) = ⨆ n, m (s n) := by
   set S := ⋃ n, s n
@@ -243,6 +278,9 @@ instance outer_measure.order_bot : OrderBot (outer_measure α) :=
   { outer_measure.has_bot with
     bot_le := fun a s => by
       simp only [coe_zero, Pi.zero_apply, coe_bot, zero_le] }
+
+theorem univ_eq_zero_iff (m : outer_measure α) : m univ = 0 ↔ m = 0 :=
+  ⟨fun h => bot_unique $ fun s => (m.mono' $ subset_univ s).trans_eq h, fun h => h.symm ▸ rfl⟩
 
 section Supremum
 
@@ -1212,9 +1250,7 @@ theorem induced_outer_measure_eq_infi (s : Set α) :
     induced_outer_measure m P0 m0 s = ⨅ (t : Set α) (ht : P t) (h : s ⊆ t), m t ht := by
   apply le_antisymmₓ
   · simp only [le_infi_iff]
-    intro t ht
-    simp only [le_infi_iff]
-    intro hs
+    intro t ht hs
     refine' le_transₓ (mono' _ hs) _
     exact le_of_eqₓ (induced_outer_measure_eq' _ msU m_mono _)
     
@@ -1357,9 +1393,8 @@ theorem le_trim_iff {m₁ m₂ : outer_measure α} : m₁ ≤ m₂.trim ↔ ∀ 
 
 theorem trim_le_trim_iff {m₁ m₂ : outer_measure α} : m₁.trim ≤ m₂.trim ↔ ∀ s, MeasurableSet s → m₁ s ≤ m₂ s :=
   le_trim_iff.trans $
-    forall_congrₓ $ fun s =>
-      forall_congrₓ $ fun hs => by
-        rw [trim_eq _ hs]
+    forall₂_congrₓ $ fun s hs => by
+      rw [trim_eq _ hs]
 
 theorem trim_eq_trim_iff {m₁ m₂ : outer_measure α} : m₁.trim = m₂.trim ↔ ∀ s, MeasurableSet s → m₁ s = m₂ s := by
   simp only [le_antisymm_iffₓ, trim_le_trim_iff, forall_and_distrib]

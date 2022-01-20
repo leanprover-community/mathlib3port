@@ -86,7 +86,7 @@ theorem cast_ite (P : Prop) [Decidable P] (m n : ℕ) : ((ite P m n : ℕ) : α)
 end
 
 @[simp, norm_cast]
-theorem cast_one [AddMonoidₓ α] [HasOne α] : ((1 : ℕ) : α) = 1 :=
+theorem cast_one [AddZeroClass α] [HasOne α] : ((1 : ℕ) : α) = 1 :=
   zero_addₓ _
 
 @[simp, norm_cast]
@@ -128,8 +128,8 @@ theorem cast_bit0 [AddMonoidₓ α] [HasOne α] (n : ℕ) : ((bit0 n : ℕ) : α
 theorem cast_bit1 [AddMonoidₓ α] [HasOne α] (n : ℕ) : ((bit1 n : ℕ) : α) = bit1 n := by
   rw [bit1, cast_add_one, cast_bit0] <;> rfl
 
-theorem cast_two {α : Type _} [AddMonoidₓ α] [HasOne α] : ((2 : ℕ) : α) = 2 := by
-  simp
+theorem cast_two {α : Type _} [AddZeroClass α] [HasOne α] : ((2 : ℕ) : α) = 2 := by
+  rw [cast_add_one, cast_one, bit0]
 
 @[simp, norm_cast]
 theorem cast_pred [AddGroupₓ α] [HasOne α] : ∀ {n}, 0 < n → ((n - 1 : ℕ) : α) = n - 1
@@ -172,7 +172,7 @@ theorem cast_commute [NonAssocSemiring α] (n : ℕ) (x : α) : Commute (↑n) x
 theorem cast_comm [NonAssocSemiring α] (n : ℕ) (x : α) : (n : α) * x = x * n :=
   (cast_commute n x).Eq
 
-theorem commute_cast [Semiringₓ α] (x : α) (n : ℕ) : Commute x n :=
+theorem commute_cast [NonAssocSemiring α] (x : α) (n : ℕ) : Commute x n :=
   (n.cast_commute x).symm
 
 section
@@ -239,8 +239,8 @@ theorem cast_max [LinearOrderedSemiring α] {a b : ℕ} : (↑max a b : α) = ma
 theorem abs_cast [LinearOrderedRing α] (a : ℕ) : |(a : α)| = a :=
   abs_of_nonneg (cast_nonneg a)
 
-theorem coe_nat_dvd [CommSemiringₓ α] {m n : ℕ} (h : m ∣ n) : (m : α) ∣ (n : α) :=
-  RingHom.map_dvd (Nat.castRingHom α) h
+theorem coe_nat_dvd [Semiringₓ α] {m n : ℕ} (h : m ∣ n) : (m : α) ∣ (n : α) :=
+  (Nat.castRingHom α).map_dvd h
 
 alias coe_nat_dvd ← HasDvd.Dvd.nat_cast
 
@@ -293,64 +293,76 @@ theorem snd_nat_cast (n : ℕ) : (n : α × β).snd = n := by
 
 end Prod
 
-namespace AddMonoidHom
+section AddMonoidHomClass
 
-variable {A B : Type _} [AddMonoidₓ A]
+variable {A B F : Type _} [AddMonoidₓ A] [AddMonoidₓ B] [HasOne B]
+
+theorem ext_nat' [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1 = g 1) : f = g :=
+  FunLike.ext f g $ by
+    apply Nat.rec
+    · simp only [Nat.nat_zero_eq_zero, map_zero]
+      
+    simp (config := { contextual := true })[Nat.succ_eq_add_one, h]
 
 @[ext]
-theorem ext_nat {f g : ℕ →+ A} (h : f 1 = g 1) : f = g :=
-  ext $ fun n =>
-    Nat.recOn n (f.map_zero.trans g.map_zero.symm) $ fun n ihn => by
-      simp only [Nat.succ_eq_add_one, *, map_add]
+theorem AddMonoidHom.ext_nat : ∀ {f g : ℕ →+ A}, ∀ h : f 1 = g 1, f = g :=
+  ext_nat'
 
-variable [HasOne A] [AddMonoidₓ B] [HasOne B]
+variable [HasOne A]
 
-theorem eq_nat_cast (f : ℕ →+ A) (h1 : f 1 = 1) : ∀ n : ℕ, f n = n :=
-  congr_funₓ $ show f = Nat.castAddMonoidHom A from ext_nat (h1.trans Nat.cast_one.symm)
+theorem eq_nat_cast' [AddMonoidHomClass F ℕ A] (f : F) (h1 : f 1 = 1) : ∀ n : ℕ, f n = n
+  | 0 => by
+    simp
+  | n + 1 => by
+    rw [map_add, h1, eq_nat_cast' n, Nat.cast_add_one]
 
-theorem map_nat_cast (f : A →+ B) (h1 : f 1 = 1) (n : ℕ) : f n = n :=
-  (f.comp (Nat.castAddMonoidHom A)).eq_nat_cast
-    (by
-      simp [h1])
-    _
+theorem map_nat_cast' [AddMonoidHomClass F A B] (f : F) (h : f 1 = 1) : ∀ n : ℕ, f n = n
+  | 0 => by
+    simp
+  | n + 1 => by
+    rw [Nat.cast_add, map_add, Nat.cast_add, map_nat_cast', Nat.cast_one, h, Nat.cast_one]
 
-end AddMonoidHom
+end AddMonoidHomClass
 
-namespace MonoidWithZeroHom
+section MonoidWithZeroHomClass
 
-variable {A : Type _} [MonoidWithZeroₓ A]
+variable {A F : Type _} [MonoidWithZeroₓ A]
 
 /-- If two `monoid_with_zero_hom`s agree on the positive naturals they are equal. -/
+theorem ext_nat'' [MonoidWithZeroHomClass F ℕ A] (f g : F) (h_pos : ∀ {n : ℕ}, 0 < n → f n = g n) : f = g := by
+  apply FunLike.ext
+  rintro (_ | n)
+  · simp
+    
+  exact h_pos n.succ_pos
+
 @[ext]
-theorem ext_nat {f g : MonoidWithZeroHom ℕ A} (h_pos : ∀ {n : ℕ}, 0 < n → f n = g n) : f = g := by
-  ext (_ | n)
-  · rw [f.map_zero, g.map_zero]
-    
-  · exact h_pos n.zero_lt_succ
-    
+theorem MonoidWithZeroHom.ext_nat : ∀ {f g : MonoidWithZeroHom ℕ A}, (∀ {n : ℕ}, 0 < n → f n = g n) → f = g :=
+  ext_nat''
 
-end MonoidWithZeroHom
+end MonoidWithZeroHomClass
 
-namespace RingHom
+section RingHomClass
 
-variable {R : Type _} {S : Type _} [NonAssocSemiring R] [NonAssocSemiring S]
+variable {R S F : Type _} [NonAssocSemiring R] [NonAssocSemiring S]
 
 @[simp]
-theorem eq_nat_cast (f : ℕ →+* R) (n : ℕ) : f n = n :=
-  f.to_add_monoid_hom.eq_nat_cast f.map_one n
+theorem eq_nat_cast [RingHomClass F ℕ R] (f : F) : ∀ n, f n = n :=
+  eq_nat_cast' f $ map_one f
 
 @[simp]
-theorem map_nat_cast (f : R →+* S) (n : ℕ) : f n = n :=
-  (f.comp (Nat.castRingHom R)).eq_nat_cast n
+theorem map_nat_cast [RingHomClass F R S] (f : F) : ∀ n : ℕ, f (n : R) = n :=
+  map_nat_cast' f $ map_one f
 
-theorem ext_nat (f g : ℕ →+* R) : f = g :=
-  coe_add_monoid_hom_injective $ AddMonoidHom.ext_nat $ f.map_one.trans g.map_one.symm
+theorem ext_nat [RingHomClass F ℕ R] (f g : F) : f = g :=
+  ext_nat' f g $ by
+    simp only [map_one]
 
-end RingHom
+end RingHomClass
 
 @[simp, norm_cast]
 theorem Nat.cast_id (n : ℕ) : ↑n = n :=
-  ((RingHom.id ℕ).eq_nat_cast n).symm
+  (eq_nat_cast (RingHom.id ℕ) n).symm
 
 @[simp]
 theorem Nat.cast_with_bot : ∀ n : ℕ, @coeₓ ℕ (WithBot ℕ) (@coeToLift _ _ Nat.castCoe) n = n
@@ -359,7 +371,7 @@ theorem Nat.cast_with_bot : ∀ n : ℕ, @coeₓ ℕ (WithBot ℕ) (@coeToLift _
     rw [WithBot.coe_add, Nat.cast_add, Nat.cast_with_bot n] <;> rfl
 
 instance Nat.subsingleton_ring_hom {R : Type _} [NonAssocSemiring R] : Subsingleton (ℕ →+* R) :=
-  ⟨RingHom.ext_nat⟩
+  ⟨ext_nat⟩
 
 namespace WithTop
 
@@ -368,7 +380,7 @@ variable {α : Type _}
 variable [HasZero α] [HasOne α] [Add α]
 
 @[simp, norm_cast]
-theorem coe_nat : ∀ n : Nat, ((n : α) : WithTop α) = n
+theorem coe_nat : ∀ n : ℕ, ((n : α) : WithTop α) = n
   | 0 => rfl
   | n + 1 => by
     push_cast

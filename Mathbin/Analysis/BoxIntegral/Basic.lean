@@ -213,7 +213,7 @@ theorem integrable_iff_cauchy_basis [CompleteSpace F] :
   by
   rw [integrable_iff_cauchy, cauchy_map_iff',
     (l.has_basis_to_filter_Union_top _).prod_self.tendsto_iff uniformity_basis_dist_le]
-  refine' forall_congrₓ fun ε => forall_congrₓ $ fun ε0 => exists_congr $ fun r => _
+  refine' forall₂_congrₓ fun ε ε0 => exists_congr $ fun r => _
   simp only [exists_prop, Prod.forall, Set.mem_Union, exists_imp_distrib, prod_mk_mem_set_prod_eq, and_imp,
     mem_inter_eq, mem_set_of_eq]
   exact
@@ -653,7 +653,7 @@ theorem integrable_of_continuous_on [CompleteSpace E] {I : box ι} {f : ℝⁿ �
     have : 0 ≤ μ.to_box_additive J := Ennreal.to_real_nonneg
     rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg this, ← dist_eq_norm]
     refine' mul_le_mul_of_nonneg_left _ this
-    refine' Hδ _ _ (tagged_prepartition.tag_mem_Icc _ _) (tagged_prepartition.tag_mem_Icc _ _) _
+    refine' Hδ _ (tagged_prepartition.tag_mem_Icc _ _) _ (tagged_prepartition.tag_mem_Icc _ _) _
     rw [← add_halves δ]
     refine' (dist_triangle_left _ _ J.upper).trans (add_le_add (h₁.1 _ _ _) (h₂.1 _ _ _))
     · exact prepartition.bUnion_index_mem _ hJ

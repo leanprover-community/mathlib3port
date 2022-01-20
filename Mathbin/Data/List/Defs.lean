@@ -110,7 +110,7 @@ section Take'
 variable [Inhabited α]
 
 /-- Take `n` elements from a list `l`. If `l` has less than `n` elements, append `n - length l`
-elements `default α`. -/
+elements `default`. -/
 def take' : ∀ n, List α → List α
   | 0, l => []
   | n + 1, l => l.head :: take' n l.tail

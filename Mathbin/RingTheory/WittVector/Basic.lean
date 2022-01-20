@@ -266,6 +266,8 @@ theorem ghost_component_apply (n : ℕ) (x : 𝕎 R) : ghost_component n x = aev
 theorem ghost_map_apply (x : 𝕎 R) (n : ℕ) : ghost_map x n = ghost_component n x :=
   rfl
 
+section Invertible
+
 variable (p R) [Invertible (p : R)]
 
 /-- `witt_vector.ghost_map` is a ring isomorphism when `p` is invertible in `R`. -/
@@ -278,6 +280,22 @@ theorem ghost_equiv_coe : (ghost_equiv p R : 𝕎 R →+* ℕ → R) = ghost_map
 
 theorem ghost_map.bijective_of_invertible : Function.Bijective (ghost_map : 𝕎 R → ℕ → R) :=
   (ghost_equiv p R).Bijective
+
+end Invertible
+
+/-- `witt_vector.coeff x 0` as a `ring_hom` -/
+@[simps]
+def constant_coeff : 𝕎 R →+* R where
+  toFun := fun x => x.coeff 0
+  map_zero' := by
+    simp
+  map_one' := by
+    simp
+  map_add' := add_coeff_zero
+  map_mul' := mul_coeff_zero
+
+instance [Nontrivial R] : Nontrivial (𝕎 R) :=
+  constant_coeff.domain_nontrivial
 
 end WittVector
 

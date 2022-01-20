@@ -22,7 +22,7 @@ theorem accumulate_def [LE α] {x : α} : accumulate s x = ⋃ y ≤ x, s y :=
 
 @[simp]
 theorem mem_accumulate [LE α] {x : α} {z : β} : z ∈ accumulate s x ↔ ∃ y ≤ x, z ∈ s y :=
-  mem_bUnion_iff
+  mem_Union₂
 
 theorem subset_accumulate [Preorderₓ α] {x : α} : s x ⊆ accumulate s x := fun z => mem_bUnion le_rfl
 

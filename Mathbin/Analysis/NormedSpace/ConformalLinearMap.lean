@@ -40,12 +40,12 @@ open LinearIsometry ContinuousLinearMap
 
 /-- A continuous linear map `f'` is said to be conformal if it's
     a nonzero multiple of a linear isometry. -/
-def IsConformalMap {R : Type _} {X Y : Type _} [NormedField R] [SemiNormedGroup X] [SemiNormedGroup Y]
-    [SemiNormedSpace R X] [SemiNormedSpace R Y] (f' : X →L[R] Y) :=
+def IsConformalMap {R : Type _} {X Y : Type _} [NormedField R] [SemiNormedGroup X] [SemiNormedGroup Y] [NormedSpace R X]
+    [NormedSpace R Y] (f' : X →L[R] Y) :=
   ∃ (c : R)(hc : c ≠ 0)(li : X →ₗᵢ[R] Y), (f' : X → Y) = c • li
 
 variable {R M N G M' : Type _} [NormedField R] [SemiNormedGroup M] [SemiNormedGroup N] [SemiNormedGroup G]
-  [SemiNormedSpace R M] [SemiNormedSpace R N] [SemiNormedSpace R G] [NormedGroup M'] [NormedSpace R M']
+  [NormedSpace R M] [NormedSpace R N] [NormedSpace R G] [NormedGroup M'] [NormedSpace R M']
 
 theorem is_conformal_map_id : IsConformalMap (id R M) :=
   ⟨1, one_ne_zero, id, by

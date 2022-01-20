@@ -28,13 +28,13 @@ variable (α) [Inhabited α]
 /-- Constructs the `⊥` of a finite inhabited `semilattice_inf`. -/
 @[reducible]
 def Fintype.toOrderBot [SemilatticeInf α] : OrderBot α where
-  bot := Finset.fold (·⊓·) (arbitraryₓ α) id Finset.univ
+  bot := Finset.fold (·⊓·) (arbitrary α) id Finset.univ
   bot_le := fun a => ((Finset.fold_op_rel_iff_and (@le_inf_iff α _)).1 le_rfl).2 a (Finset.mem_univ _)
 
 /-- Constructs the `⊤` of a finite inhabited `semilattice_sup` -/
 @[reducible]
 def Fintype.toOrderTop [SemilatticeSup α] : OrderTop α where
-  top := Finset.fold (·⊔·) (arbitraryₓ α) id Finset.univ
+  top := Finset.fold (·⊔·) (arbitrary α) id Finset.univ
   le_top := fun a =>
     ((Finset.fold_op_rel_iff_and fun x y z => show x ≥ y⊔z ↔ _ from sup_le_iff).mp le_rfl).2 a (Finset.mem_univ a)
 

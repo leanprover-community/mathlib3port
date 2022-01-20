@@ -104,8 +104,9 @@ instance (priority := 100) UniformSpace : UniformSpace R :=
 instance (priority := 100) UniformAddGroup : UniformAddGroup R :=
   topological_add_group_is_uniform
 
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » M)
 theorem cauchy_iff {F : Filter R} :
-    Cauchy F ↔ F.ne_bot ∧ ∀ γ : (Γ₀ R)ˣ, ∃ M ∈ F, ∀ x y, x ∈ M → y ∈ M → v (y - x) < γ := by
+    Cauchy F ↔ F.ne_bot ∧ ∀ γ : (Γ₀ R)ˣ, ∃ M ∈ F, ∀ x y _ : x ∈ M _ : y ∈ M, v (y - x) < γ := by
   rw [AddGroupFilterBasis.cauchy_iff]
   apply and_congr Iff.rfl
   simp_rw [subgroups_basis.mem_add_group_filter_basis_iff]

@@ -309,7 +309,6 @@ theorem diff_eq_filter_of_nodup [DecidableEq α] : ∀ {l₁ l₂ : List α} hl�
   | l₁, a :: l₂, hl₁ => by
     rw [diff_cons, diff_eq_filter_of_nodup (nodup_erase_of_nodup _ hl₁), nodup_erase_eq_filter _ hl₁, filter_filter]
     simp only [mem_cons_iff, not_or_distrib, And.comm]
-    congr
 
 theorem mem_diff_iff_of_nodup [DecidableEq α] {l₁ l₂ : List α} (hl₁ : l₁.nodup) {a : α} :
     a ∈ l₁.diff l₂ ↔ a ∈ l₁ ∧ a ∉ l₂ := by

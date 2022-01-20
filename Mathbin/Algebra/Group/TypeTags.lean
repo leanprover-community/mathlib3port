@@ -86,10 +86,10 @@ theorem of_mul_to_mul (x : Additive α) : Additive.ofMul x.to_mul = x :=
   rfl
 
 instance [Inhabited α] : Inhabited (Additive α) :=
-  ⟨Additive.ofMul (default α)⟩
+  ⟨Additive.ofMul default⟩
 
 instance [Inhabited α] : Inhabited (Multiplicative α) :=
-  ⟨Multiplicative.ofAdd (default α)⟩
+  ⟨Multiplicative.ofAdd default⟩
 
 instance [Nontrivial α] : Nontrivial (Additive α) :=
   Additive.ofMul.Injective.Nontrivial

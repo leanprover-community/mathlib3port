@@ -79,11 +79,11 @@ This is a `monoid_hom` when `M` is commutative. -/
       "The function from `S.left_add` to `S` sending an element to its right additive\ninverse in `S`. This is an `add_monoid_hom` when `M` is commutative."]
 noncomputable def from_left_inv : S.left_inv → S := fun x => x.prop.some
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem mul_from_left_inv (x : S.left_inv) : (x : M) * S.from_left_inv x = 1 :=
   x.prop.some_spec
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem from_left_inv_one : S.from_left_inv 1 = 1 :=
   (one_mulₓ _).symm.trans (Subtype.eq $ S.mul_from_left_inv 1)
 
@@ -93,7 +93,7 @@ section CommMonoidₓ
 
 variable [CommMonoidₓ M] (S : Submonoid M)
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem from_left_inv_mul (x : S.left_inv) : (S.from_left_inv x : M) * x = 1 := by
   rw [mul_commₓ, mul_from_left_inv]
 
@@ -143,11 +143,11 @@ noncomputable def left_inv_equiv : S.left_inv ≃* S :=
       convert (hS x.prop).some.inv_val
       exact (hS x.prop).some_spec.symm }
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem from_left_inv_left_inv_equiv_symm (x : S) : S.from_left_inv ((S.left_inv_equiv hS).symm x) = x :=
   (S.left_inv_equiv hS).right_inv x
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem left_inv_equiv_symm_from_left_inv (x : S.left_inv) : (S.left_inv_equiv hS).symm (S.from_left_inv x) = x :=
   (S.left_inv_equiv hS).left_inv x
 
@@ -159,12 +159,12 @@ theorem left_inv_equiv_mul (x : S.left_inv) : (S.left_inv_equiv hS x : M) * x = 
 theorem mul_left_inv_equiv (x : S.left_inv) : (x : M) * S.left_inv_equiv hS x = 1 := by
   simp
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem left_inv_equiv_symm_mul (x : S) : ((S.left_inv_equiv hS).symm x : M) * x = 1 := by
   convert S.mul_left_inv_equiv hS ((S.left_inv_equiv hS).symm x)
   simp
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem mul_left_inv_equiv_symm (x : S) : (x : M) * (S.left_inv_equiv hS).symm x = 1 := by
   convert S.left_inv_equiv_mul hS ((S.left_inv_equiv hS).symm x)
   simp
@@ -183,7 +183,7 @@ theorem left_inv_eq_inv : S.left_inv = S⁻¹ :=
     ⟨fun h => Submonoid.mem_inv.mpr ((inv_eq_of_mul_eq_oneₓ h.some_spec).symm ▸ h.some.prop), fun h =>
       ⟨⟨_, h⟩, mul_right_invₓ _⟩⟩
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem from_left_inv_eq_inv (x : S.left_inv) : (S.from_left_inv x : M) = x⁻¹ := by
   rw [← mul_right_injₓ (x : M), mul_right_invₓ, mul_from_left_inv]
 
@@ -193,7 +193,7 @@ section CommGroupₓ
 
 variable [CommGroupₓ M] (S : Submonoid M) (hS : S ≤ IsUnit.submonoid M)
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem left_inv_equiv_symm_eq_inv (x : S) : ((S.left_inv_equiv hS).symm x : M) = x⁻¹ := by
   rw [← mul_right_injₓ (x : M), mul_right_invₓ, mul_left_inv_equiv_symm]
 

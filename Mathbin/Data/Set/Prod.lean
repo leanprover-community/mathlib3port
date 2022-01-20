@@ -17,6 +17,12 @@ type.
 
 open Function
 
+/-- Notation class for product of subobjects (sets, submonoids, subgroups, etc). -/
+class HasSetProd (α β : Type _) (γ : outParam (Type _)) where
+  Prod : α → β → γ
+
+infixl:72 " ×ˢ " => HasSetProd.prod
+
 namespace Set
 
 /-! ### Cartesian binary product of sets -/
@@ -28,226 +34,226 @@ variable {α β γ δ : Type _} {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {a
 
 /-- The cartesian product `prod s t` is the set of `(a, b)`
   such that `a ∈ s` and `b ∈ t`. -/
-protected def Prod (s : Set α) (t : Set β) : Set (α × β) :=
-  { p | p.1 ∈ s ∧ p.2 ∈ t }
+instance : HasSetProd (Set α) (Set β) (Set (α × β)) :=
+  ⟨fun s t => { p | p.1 ∈ s ∧ p.2 ∈ t }⟩
 
-theorem prod_eq (s : Set α) (t : Set β) : s.prod t = Prod.fst ⁻¹' s ∩ Prod.snd ⁻¹' t :=
+theorem prod_eq (s : Set α) (t : Set β) : s ×ˢ t = Prod.fst ⁻¹' s ∩ Prod.snd ⁻¹' t :=
   rfl
 
-theorem mem_prod_eq {p : α × β} : (p ∈ s.prod t) = (p.1 ∈ s ∧ p.2 ∈ t) :=
+theorem mem_prod_eq {p : α × β} : (p ∈ s ×ˢ t) = (p.1 ∈ s ∧ p.2 ∈ t) :=
   rfl
 
 @[simp]
-theorem mem_prod {p : α × β} : p ∈ s.prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
+theorem mem_prod {p : α × β} : p ∈ s ×ˢ t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
   Iff.rfl
 
 @[simp]
-theorem prod_mk_mem_set_prod_eq : ((a, b) ∈ s.prod t) = (a ∈ s ∧ b ∈ t) :=
+theorem prod_mk_mem_set_prod_eq : ((a, b) ∈ s ×ˢ t) = (a ∈ s ∧ b ∈ t) :=
   rfl
 
-theorem mk_mem_prod (ha : a ∈ s) (hb : b ∈ t) : (a, b) ∈ s.prod t :=
+theorem mk_mem_prod (ha : a ∈ s) (hb : b ∈ t) : (a, b) ∈ s ×ˢ t :=
   ⟨ha, hb⟩
 
-theorem prod_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁.prod t₁ ⊆ s₂.prod t₂ := fun x ⟨h₁, h₂⟩ => ⟨hs h₁, ht h₂⟩
+theorem prod_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ ×ˢ t₁ ⊆ s₂ ×ˢ t₂ := fun x ⟨h₁, h₂⟩ => ⟨hs h₁, ht h₂⟩
 
-theorem prod_subset_iff {P : Set (α × β)} : s.prod t ⊆ P ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, (x, y) ∈ P :=
+theorem prod_subset_iff {P : Set (α × β)} : s ×ˢ t ⊆ P ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, (x, y) ∈ P :=
   ⟨fun h _ hx _ hy => h (mk_mem_prod hx hy), fun h ⟨_, _⟩ hp => h _ hp.1 _ hp.2⟩
 
-theorem forall_prod_set {p : α × β → Prop} : (∀, ∀ x ∈ s.prod t, ∀, p x) ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, p (x, y) :=
+theorem forall_prod_set {p : α × β → Prop} : (∀, ∀ x ∈ s ×ˢ t, ∀, p x) ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, p (x, y) :=
   prod_subset_iff
 
-theorem exists_prod_set {p : α × β → Prop} : (∃ x ∈ s.prod t, p x) ↔ ∃ x ∈ s, ∃ y ∈ t, p (x, y) := by
+theorem exists_prod_set {p : α × β → Prop} : (∃ x ∈ s ×ˢ t, p x) ↔ ∃ x ∈ s, ∃ y ∈ t, p (x, y) := by
   simp [and_assoc]
 
 @[simp]
-theorem prod_empty : s.prod ∅ = (∅ : Set (α × β)) := by
+theorem prod_empty : s ×ˢ (∅ : Set β) = ∅ := by
   ext
   exact and_falseₓ _
 
 @[simp]
-theorem empty_prod : Set.Prod ∅ t = (∅ : Set (α × β)) := by
+theorem empty_prod : (∅ : Set α) ×ˢ t = ∅ := by
   ext
   exact false_andₓ _
 
 @[simp]
-theorem univ_prod_univ : (@univ α).Prod (@univ β) = univ := by
+theorem univ_prod_univ : @univ α ×ˢ @univ β = univ := by
   ext
   exact true_andₓ _
 
-theorem univ_prod {t : Set β} : Set.Prod (univ : Set α) t = Prod.snd ⁻¹' t := by
+theorem univ_prod {t : Set β} : (univ : Set α) ×ˢ t = Prod.snd ⁻¹' t := by
   simp [prod_eq]
 
-theorem prod_univ {s : Set α} : Set.Prod s (univ : Set β) = Prod.fst ⁻¹' s := by
+theorem prod_univ {s : Set α} : s ×ˢ (univ : Set β) = Prod.fst ⁻¹' s := by
   simp [prod_eq]
 
 @[simp]
-theorem singleton_prod : Set.Prod {a} t = Prod.mk a '' t := by
+theorem singleton_prod : ({a} : Set α) ×ˢ t = Prod.mk a '' t := by
   ext ⟨x, y⟩
   simp [And.left_comm, eq_comm]
 
 @[simp]
-theorem prod_singleton : s.prod {b} = (fun a => (a, b)) '' s := by
+theorem prod_singleton : s ×ˢ ({b} : Set β) = (fun a => (a, b)) '' s := by
   ext ⟨x, y⟩
   simp [And.left_comm, eq_comm]
 
-theorem singleton_prod_singleton : Set.Prod {a} {b} = ({(a, b)} : Set (α × β)) := by
+theorem singleton_prod_singleton : ({a} : Set α) ×ˢ ({b} : Set β) = {(a, b)} := by
   simp
 
 @[simp]
-theorem union_prod : (s₁ ∪ s₂).Prod t = s₁.prod t ∪ s₂.prod t := by
+theorem union_prod : (s₁ ∪ s₂) ×ˢ t = s₁ ×ˢ t ∪ s₂ ×ˢ t := by
   ext ⟨x, y⟩
   simp [or_and_distrib_right]
 
 @[simp]
-theorem prod_union : s.prod (t₁ ∪ t₂) = s.prod t₁ ∪ s.prod t₂ := by
+theorem prod_union : s ×ˢ (t₁ ∪ t₂) = s ×ˢ t₁ ∪ s ×ˢ t₂ := by
   ext ⟨x, y⟩
   simp [and_or_distrib_left]
 
-theorem prod_inter_prod : s₁.prod t₁ ∩ s₂.prod t₂ = (s₁ ∩ s₂).Prod (t₁ ∩ t₂) := by
+theorem prod_inter_prod : s₁ ×ˢ t₁ ∩ s₂ ×ˢ t₂ = (s₁ ∩ s₂) ×ˢ (t₁ ∩ t₂) := by
   ext ⟨x, y⟩
   simp [and_assoc, And.left_comm]
 
-theorem insert_prod : (insert a s).Prod t = Prod.mk a '' t ∪ s.prod t := by
+theorem insert_prod : insert a s ×ˢ t = Prod.mk a '' t ∪ s ×ˢ t := by
   ext ⟨x, y⟩
   simp (config := { contextual := true })[image, iff_def, or_imp_distrib, Imp.swap]
 
-theorem prod_insert : s.prod (insert b t) = (fun a => (a, b)) '' s ∪ s.prod t := by
+theorem prod_insert : s ×ˢ insert b t = (fun a => (a, b)) '' s ∪ s ×ˢ t := by
   ext ⟨x, y⟩
   simp (config := { contextual := true })[image, iff_def, or_imp_distrib, Imp.swap]
 
-theorem prod_preimage_eq {f : γ → α} {g : δ → β} : (f ⁻¹' s).Prod (g ⁻¹' t) = (fun p => (f p.1, g p.2)) ⁻¹' s.prod t :=
+theorem prod_preimage_eq {f : γ → α} {g : δ → β} :
+    f ⁻¹' s ×ˢ g ⁻¹' t = (fun p : γ × δ => (f p.1, g p.2)) ⁻¹' (s ×ˢ t) :=
   rfl
 
-theorem prod_preimage_left {f : γ → α} : (f ⁻¹' s).Prod t = (fun p => (f p.1, p.2)) ⁻¹' s.prod t :=
+theorem prod_preimage_left {f : γ → α} : f ⁻¹' s ×ˢ t = (fun p : γ × β => (f p.1, p.2)) ⁻¹' (s ×ˢ t) :=
   rfl
 
-theorem prod_preimage_right {g : δ → β} : s.prod (g ⁻¹' t) = (fun p => (p.1, g p.2)) ⁻¹' s.prod t :=
+theorem prod_preimage_right {g : δ → β} : s ×ˢ g ⁻¹' t = (fun p : α × δ => (p.1, g p.2)) ⁻¹' (s ×ˢ t) :=
   rfl
 
 theorem preimage_prod_map_prod (f : α → β) (g : γ → δ) (s : Set β) (t : Set δ) :
-    Prod.map f g ⁻¹' s.prod t = (f ⁻¹' s).Prod (g ⁻¹' t) :=
+    Prod.map f g ⁻¹' (s ×ˢ t) = f ⁻¹' s ×ˢ g ⁻¹' t :=
   rfl
 
-theorem mk_preimage_prod (f : γ → α) (g : γ → β) : (fun x => (f x, g x)) ⁻¹' s.prod t = f ⁻¹' s ∩ g ⁻¹' t :=
+theorem mk_preimage_prod (f : γ → α) (g : γ → β) : (fun x => (f x, g x)) ⁻¹' (s ×ˢ t) = f ⁻¹' s ∩ g ⁻¹' t :=
   rfl
 
 @[simp]
-theorem mk_preimage_prod_left (hb : b ∈ t) : (fun a => (a, b)) ⁻¹' s.prod t = s := by
+theorem mk_preimage_prod_left (hb : b ∈ t) : (fun a => (a, b)) ⁻¹' (s ×ˢ t) = s := by
   ext a
   simp [hb]
 
 @[simp]
-theorem mk_preimage_prod_right (ha : a ∈ s) : Prod.mk a ⁻¹' s.prod t = t := by
+theorem mk_preimage_prod_right (ha : a ∈ s) : Prod.mk a ⁻¹' (s ×ˢ t) = t := by
   ext b
   simp [ha]
 
 @[simp]
-theorem mk_preimage_prod_left_eq_empty (hb : b ∉ t) : (fun a => (a, b)) ⁻¹' s.prod t = ∅ := by
+theorem mk_preimage_prod_left_eq_empty (hb : b ∉ t) : (fun a => (a, b)) ⁻¹' (s ×ˢ t) = ∅ := by
   ext a
   simp [hb]
 
 @[simp]
-theorem mk_preimage_prod_right_eq_empty (ha : a ∉ s) : Prod.mk a ⁻¹' s.prod t = ∅ := by
+theorem mk_preimage_prod_right_eq_empty (ha : a ∉ s) : Prod.mk a ⁻¹' (s ×ˢ t) = ∅ := by
   ext b
   simp [ha]
 
-theorem mk_preimage_prod_left_eq_if [DecidablePred (· ∈ t)] : (fun a => (a, b)) ⁻¹' s.prod t = if b ∈ t then s else ∅ :=
+theorem mk_preimage_prod_left_eq_if [DecidablePred (· ∈ t)] : (fun a => (a, b)) ⁻¹' (s ×ˢ t) = if b ∈ t then s else ∅ :=
   by
   split_ifs <;> simp [h]
 
-theorem mk_preimage_prod_right_eq_if [DecidablePred (· ∈ s)] : Prod.mk a ⁻¹' s.prod t = if a ∈ s then t else ∅ := by
+theorem mk_preimage_prod_right_eq_if [DecidablePred (· ∈ s)] : Prod.mk a ⁻¹' (s ×ˢ t) = if a ∈ s then t else ∅ := by
   split_ifs <;> simp [h]
 
 theorem mk_preimage_prod_left_fn_eq_if [DecidablePred (· ∈ t)] (f : γ → α) :
-    (fun a => (f a, b)) ⁻¹' s.prod t = if b ∈ t then f ⁻¹' s else ∅ := by
+    (fun a => (f a, b)) ⁻¹' (s ×ˢ t) = if b ∈ t then f ⁻¹' s else ∅ := by
   rw [← mk_preimage_prod_left_eq_if, prod_preimage_left, preimage_preimage]
 
 theorem mk_preimage_prod_right_fn_eq_if [DecidablePred (· ∈ s)] (g : δ → β) :
-    (fun b => (a, g b)) ⁻¹' s.prod t = if a ∈ s then g ⁻¹' t else ∅ := by
+    (fun b => (a, g b)) ⁻¹' (s ×ˢ t) = if a ∈ s then g ⁻¹' t else ∅ := by
   rw [← mk_preimage_prod_right_eq_if, prod_preimage_right, preimage_preimage]
 
-theorem preimage_swap_prod {s : Set α} {t : Set β} : Prod.swap ⁻¹' t.prod s = s.prod t := by
+theorem preimage_swap_prod {s : Set α} {t : Set β} : Prod.swap ⁻¹' (t ×ˢ s) = s ×ˢ t := by
   ext ⟨x, y⟩
   simp [and_comm]
 
-theorem image_swap_prod : Prod.swap '' t.prod s = s.prod t := by
+theorem image_swap_prod : Prod.swap '' (t ×ˢ s) = s ×ˢ t := by
   rw [image_swap_eq_preimage_swap, preimage_swap_prod]
 
 theorem prod_image_image_eq {m₁ : α → γ} {m₂ : β → δ} :
-    (m₁ '' s).Prod (m₂ '' t) = image (fun p : α × β => (m₁ p.1, m₂ p.2)) (s.prod t) :=
+    m₁ '' s ×ˢ m₂ '' t = image (fun p : α × β => (m₁ p.1, m₂ p.2)) (s ×ˢ t) :=
   ext $ by
     simp [-exists_and_distrib_right, exists_and_distrib_right.symm, And.left_comm, And.assoc, And.comm]
 
 theorem prod_range_range_eq {m₁ : α → γ} {m₂ : β → δ} :
-    (range m₁).Prod (range m₂) = range fun p : α × β => (m₁ p.1, m₂ p.2) :=
+    range m₁ ×ˢ range m₂ = range fun p : α × β => (m₁ p.1, m₂ p.2) :=
   ext $ by
     simp [range]
 
 @[simp]
-theorem range_prod_map {m₁ : α → γ} {m₂ : β → δ} : range (Prod.map m₁ m₂) = (range m₁).Prod (range m₂) :=
+theorem range_prod_map {m₁ : α → γ} {m₂ : β → δ} : range (Prod.map m₁ m₂) = range m₁ ×ˢ range m₂ :=
   prod_range_range_eq.symm
 
-theorem prod_range_univ_eq {m₁ : α → γ} : (range m₁).Prod (univ : Set β) = range fun p : α × β => (m₁ p.1, p.2) :=
+theorem prod_range_univ_eq {m₁ : α → γ} : range m₁ ×ˢ (univ : Set β) = range fun p : α × β => (m₁ p.1, p.2) :=
   ext $ by
     simp [range]
 
-theorem prod_univ_range_eq {m₂ : β → δ} : (univ : Set α).Prod (range m₂) = range fun p : α × β => (p.1, m₂ p.2) :=
+theorem prod_univ_range_eq {m₂ : β → δ} : (univ : Set α) ×ˢ range m₂ = range fun p : α × β => (p.1, m₂ p.2) :=
   ext $ by
     simp [range]
 
-theorem range_pair_subset (f : α → β) (g : α → γ) : (range fun x => (f x, g x)) ⊆ (range f).Prod (range g) := by
+theorem range_pair_subset (f : α → β) (g : α → γ) : (range fun x => (f x, g x)) ⊆ range f ×ˢ range g := by
   have : (fun x => (f x, g x)) = Prod.map f g ∘ fun x => (x, x) := funext fun x => rfl
   rw [this, ← range_prod_map]
   apply range_comp_subset_range
 
-theorem nonempty.prod : s.nonempty → t.nonempty → (s.prod t).Nonempty := fun ⟨x, hx⟩ ⟨y, hy⟩ => ⟨(x, y), ⟨hx, hy⟩⟩
+theorem nonempty.prod : s.nonempty → t.nonempty → (s ×ˢ t : Set _).Nonempty := fun ⟨x, hx⟩ ⟨y, hy⟩ => ⟨(x, y), ⟨hx, hy⟩⟩
 
-theorem nonempty.fst : (s.prod t).Nonempty → s.nonempty := fun ⟨x, hx⟩ => ⟨x.1, hx.1⟩
+theorem nonempty.fst : (s ×ˢ t : Set _).Nonempty → s.nonempty := fun ⟨x, hx⟩ => ⟨x.1, hx.1⟩
 
-theorem nonempty.snd : (s.prod t).Nonempty → t.nonempty := fun ⟨x, hx⟩ => ⟨x.2, hx.2⟩
+theorem nonempty.snd : (s ×ˢ t : Set _).Nonempty → t.nonempty := fun ⟨x, hx⟩ => ⟨x.2, hx.2⟩
 
-theorem prod_nonempty_iff : (s.prod t).Nonempty ↔ s.nonempty ∧ t.nonempty :=
+theorem prod_nonempty_iff : (s ×ˢ t : Set _).Nonempty ↔ s.nonempty ∧ t.nonempty :=
   ⟨fun h => ⟨h.fst, h.snd⟩, fun h => h.1.Prod h.2⟩
 
-theorem prod_eq_empty_iff : s.prod t = ∅ ↔ s = ∅ ∨ t = ∅ := by
+theorem prod_eq_empty_iff : s ×ˢ t = ∅ ↔ s = ∅ ∨ t = ∅ := by
   simp only [not_nonempty_iff_eq_empty.symm, prod_nonempty_iff, not_and_distrib]
 
-theorem prod_sub_preimage_iff {W : Set γ} {f : α × β → γ} : s.prod t ⊆ f ⁻¹' W ↔ ∀ a b, a ∈ s → b ∈ t → f (a, b) ∈ W :=
-  by
+theorem prod_sub_preimage_iff {W : Set γ} {f : α × β → γ} : s ×ˢ t ⊆ f ⁻¹' W ↔ ∀ a b, a ∈ s → b ∈ t → f (a, b) ∈ W := by
   simp [subset_def]
 
-theorem fst_image_prod_subset (s : Set α) (t : Set β) : Prod.fst '' s.prod t ⊆ s := fun _ h =>
+theorem fst_image_prod_subset (s : Set α) (t : Set β) : Prod.fst '' (s ×ˢ t) ⊆ s := fun _ h =>
   let ⟨_, ⟨h₂, _⟩, h₁⟩ := (Set.mem_image _ _ _).1 h
   h₁ ▸ h₂
 
-theorem prod_subset_preimage_fst (s : Set α) (t : Set β) : s.prod t ⊆ Prod.fst ⁻¹' s :=
+theorem prod_subset_preimage_fst (s : Set α) (t : Set β) : s ×ˢ t ⊆ Prod.fst ⁻¹' s :=
   image_subset_iff.1 (fst_image_prod_subset s t)
 
-theorem fst_image_prod (s : Set β) {t : Set α} (ht : t.nonempty) : Prod.fst '' s.prod t = s :=
+theorem fst_image_prod (s : Set β) {t : Set α} (ht : t.nonempty) : Prod.fst '' (s ×ˢ t) = s :=
   (fst_image_prod_subset _ _).antisymm $ fun y hy =>
     let ⟨x, hx⟩ := ht
     ⟨(y, x), ⟨hy, hx⟩, rfl⟩
 
-theorem snd_image_prod_subset (s : Set α) (t : Set β) : Prod.snd '' s.prod t ⊆ t := fun _ h =>
+theorem snd_image_prod_subset (s : Set α) (t : Set β) : Prod.snd '' (s ×ˢ t) ⊆ t := fun _ h =>
   let ⟨_, ⟨_, h₂⟩, h₁⟩ := (Set.mem_image _ _ _).1 h
   h₁ ▸ h₂
 
-theorem prod_subset_preimage_snd (s : Set α) (t : Set β) : s.prod t ⊆ Prod.snd ⁻¹' t :=
+theorem prod_subset_preimage_snd (s : Set α) (t : Set β) : s ×ˢ t ⊆ Prod.snd ⁻¹' t :=
   image_subset_iff.1 (snd_image_prod_subset s t)
 
-theorem snd_image_prod {s : Set α} (hs : s.nonempty) (t : Set β) : Prod.snd '' s.prod t = t :=
+theorem snd_image_prod {s : Set α} (hs : s.nonempty) (t : Set β) : Prod.snd '' (s ×ˢ t) = t :=
   (snd_image_prod_subset _ _).antisymm $ fun y y_in =>
     let ⟨x, x_in⟩ := hs
     ⟨(x, y), ⟨x_in, y_in⟩, rfl⟩
 
-theorem prod_diff_prod : s.prod t \ s₁.prod t₁ = s.prod (t \ t₁) ∪ (s \ s₁).Prod t := by
+theorem prod_diff_prod : s ×ˢ t \ s₁ ×ˢ t₁ = s ×ˢ (t \ t₁) ∪ (s \ s₁) ×ˢ t := by
   ext x
   by_cases' h₁ : x.1 ∈ s₁ <;> by_cases' h₂ : x.2 ∈ t₁ <;> simp [*]
 
 /-- A product set is included in a product set if and only factors are included, or a factor of the
 first set is empty. -/
-theorem prod_subset_prod_iff : s.prod t ⊆ s₁.prod t₁ ↔ s ⊆ s₁ ∧ t ⊆ t₁ ∨ s = ∅ ∨ t = ∅ := by
-  cases' (s.prod t).eq_empty_or_nonempty with h h
+theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t ⊆ t₁ ∨ s = ∅ ∨ t = ∅ := by
+  cases' (s ×ˢ t : Set _).eq_empty_or_nonempty with h h
   · simp [h, prod_eq_empty_iff.1 h]
     
   have st : s.nonempty ∧ t.nonempty := by
@@ -265,7 +271,7 @@ theorem prod_subset_prod_iff : s.prod t ⊆ s₁.prod t₁ ↔ s ⊆ s₁ ∧ t 
     
 
 @[simp]
-theorem image_prod (f : α → β → γ) : (fun x : α × β => f x.1 x.2) '' s.prod t = image2 f s t :=
+theorem image_prod (f : α → β → γ) : (fun x : α × β => f x.1 x.2) '' (s ×ˢ t) = image2 f s t :=
   Set.ext $ fun a =>
     ⟨by
       rintro ⟨_, _, rfl⟩
@@ -337,7 +343,7 @@ theorem pi_inter_distrib : (s.pi fun i => t i ∩ t₁ i) = s.pi t ∩ s.pi t₁
     simp only [forall_and_distrib, mem_pi, mem_inter_eq]
 
 theorem pi_congr (h : s₁ = s₂) (h' : ∀, ∀ i ∈ s₁, ∀, t₁ i = t₂ i) : s₁.pi t₁ = s₂.pi t₂ :=
-  h ▸ (ext $ fun x => forall_congrₓ $ fun i => forall_congrₓ $ fun hi => h' i hi ▸ Iff.rfl)
+  h ▸ (ext $ fun x => forall₂_congrₓ $ fun i hi => h' i hi ▸ Iff.rfl)
 
 theorem pi_eq_empty (hs : i ∈ s) (ht : t i = ∅) : s.pi t = ∅ := by
   ext f

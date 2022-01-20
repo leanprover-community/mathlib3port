@@ -294,7 +294,7 @@ theorem eventually_split_many_inf_eq_filter (π : prepartition I) :
     exact ht I J hJ J₁ h₁ (mt disjoint_iff.1 hne)
     
   · rw [mem_filter] at hJ
-    rcases Set.mem_bUnion_iff.1 (hJ.2 J.upper_mem) with ⟨J', hJ', hmem⟩
+    rcases Set.mem_Union₂.1 (hJ.2 J.upper_mem) with ⟨J', hJ', hmem⟩
     refine' ⟨J', hJ', ht I _ hJ' _ hJ.1 $ box.not_disjoint_coe_iff_nonempty_inter.2 _⟩
     exact ⟨J.upper, hmem, J.upper_mem⟩
     

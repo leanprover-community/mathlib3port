@@ -239,6 +239,19 @@ theorem prod_to_list (s : Finset α) (f : α → β) : (s.to_list.map f).Prod = 
 
 end ToList
 
+@[to_additive]
+theorem _root_.equiv.perm.prod_comp (σ : Equivₓ.Perm α) (s : Finset α) (f : α → β) (hs : { a | σ a ≠ a } ⊆ s) :
+    (∏ x in s, f (σ x)) = ∏ x in s, f x := by
+  convert (prod_mapₓ _ σ.to_embedding _).symm
+  exact (map_perm hs).symm
+
+@[to_additive]
+theorem _root_.equiv.perm.prod_comp' (σ : Equivₓ.Perm α) (s : Finset α) (f : α → α → β) (hs : { a | σ a ≠ a } ⊆ s) :
+    (∏ x in s, f (σ x) x) = ∏ x in s, f x (σ.symm x) := by
+  convert σ.prod_comp s (fun x => f x (σ.symm x)) hs
+  ext
+  rw [Equivₓ.symm_apply_apply]
+
 end CommMonoidₓ
 
 end Finset
@@ -1282,6 +1295,11 @@ theorem prod_inv_distrib : (∏ x in s, f x⁻¹) = (∏ x in s, f x)⁻¹ :=
 theorem prod_zpow (f : α → β) (s : Finset α) (n : ℤ) : (∏ a in s, f a) ^ n = ∏ a in s, f a ^ n :=
   Multiset.prod_map_zpow.symm
 
+@[to_additive]
+theorem prod_sdiff_div_prod_sdiff [DecidableEq α] :
+    ((∏ x : α in s₂ \ s₁, f x) / ∏ x : α in s₁ \ s₂, f x) = (∏ x : α in s₂, f x) / ∏ x : α in s₁, f x := by
+  simp [← Finset.prod_sdiff (@inf_le_left _ _ s₁ s₂), ← Finset.prod_sdiff (@inf_le_right _ _ s₁ s₂)]
+
 end CommGroupₓ
 
 @[simp]
@@ -1380,12 +1398,12 @@ end CommGroupWithZero
 
 @[to_additive]
 theorem prod_unique_nonempty {α β : Type _} [CommMonoidₓ β] [Unique α] (s : Finset α) (f : α → β) (h : s.nonempty) :
-    (∏ x in s, f x) = f (default α) := by
+    (∏ x in s, f x) = f default := by
   obtain ⟨a, ha⟩ := h
   have : s = {a} := by
     ext b
     simpa [Subsingleton.elimₓ a b] using ha
-  rw [this, Finset.prod_singleton, Subsingleton.elimₓ a (default α)]
+  rw [this, Finset.prod_singleton, Subsingleton.elimₓ a default]
 
 end Finset
 
@@ -1419,7 +1437,7 @@ theorem prod_finset_coe [CommMonoidₓ β] : (∏ i : (s : Set α), f i) = ∏ i
   (Finset.prod_subtype s (fun _ => Iff.rfl) f).symm
 
 @[to_additive]
-theorem prod_unique {α β : Type _} [CommMonoidₓ β] [Unique α] (f : α → β) : (∏ x : α, f x) = f (default α) := by
+theorem prod_unique {α β : Type _} [CommMonoidₓ β] [Unique α] (f : α → β) : (∏ x : α, f x) = f default := by
   rw [univ_unique, prod_singleton]
 
 @[to_additive]

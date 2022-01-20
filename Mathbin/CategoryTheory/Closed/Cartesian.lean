@@ -272,7 +272,7 @@ def mul_zero {I : C} (t : is_initial I) : I ⨯ A ≅ I :=
 
 /-- If an initial object `0` exists in a CCC then `0^B ≅ 1` for any `B`. -/
 def pow_zeroₓ {I : C} (t : is_initial I) [cartesian_closed C] : I ⟹ B ≅ ⊤_ C where
-  Hom := default _
+  Hom := default
   inv := cartesian_closed.curry ((mul_zero t).Hom ≫ t.to _)
   hom_inv_id' := by
     rw [← curry_natural_left, curry_eq_iff, ← cancel_epi (mul_zero t).inv]

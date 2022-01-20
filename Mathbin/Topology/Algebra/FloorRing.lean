@@ -23,7 +23,7 @@ open Filter Function Int Set
 
 open_locale TopologicalSpace
 
-variable {α : Type _} [LinearOrderedRing α] [FloorRing α]
+variable {α β γ : Type _} [LinearOrderedRing α] [FloorRing α]
 
 theorem tendsto_floor_at_top : tendsto (floor : α → ℤ) at_top at_top :=
   floor_mono.tendsto_at_top_at_top $ fun b =>
@@ -140,8 +140,10 @@ theorem tendsto_fract_right [OrderClosedTopology α] [TopologicalAddGroup α] (n
 
 local notation "I" => (Icc 0 1 : Set α)
 
-theorem ContinuousOn.comp_fract' {β γ : Type _} [OrderTopology α] [TopologicalAddGroup α] [TopologicalSpace β]
-    [TopologicalSpace γ] {f : β → α → γ} (h : ContinuousOn (uncurry f) $ (univ : Set β).Prod I)
+variable [OrderTopology α] [TopologicalAddGroup α] [TopologicalSpace β] [TopologicalSpace γ]
+
+/-- Do not use this, use `continuous_on.comp_fract` instead. -/
+theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncurry f) $ (univ : Set β) ×ˢ I)
     (hf : ∀ s, f s 0 = f s 1) : Continuous fun st : β × α => f st.1 $ fract st.2 := by
   change Continuous (uncurry f ∘ Prod.map id fract)
   rw [continuous_iff_continuous_at]
@@ -149,10 +151,10 @@ theorem ContinuousOn.comp_fract' {β γ : Type _} [OrderTopology α] [Topologica
   by_cases' ht : t = floor t
   · rw [ht]
     rw [← continuous_within_at_univ]
-    have : (univ : Set (β × α)) ⊆ Set.Prod univ (Iio $ floor t) ∪ Set.Prod univ (Ici $ floor t) := by
+    have : (univ : Set (β × α)) ⊆ (univ : Set β) ×ˢ Iio (↑⌊t⌋) ∪ (univ : Set β) ×ˢ Ici (↑⌊t⌋) := by
       rintro p -
       rw [← prod_union]
-      exact ⟨True.intro, lt_or_leₓ _ _⟩
+      exact ⟨trivialₓ, lt_or_leₓ p.2 _⟩
     refine' ContinuousWithinAt.mono _ this
     refine' ContinuousWithinAt.union _ _
     · simp only [ContinuousWithinAt, fract_coe, nhds_within_prod_eq, nhds_within_univ, id.def, comp_app, Prod.map_mkₓ]
@@ -189,22 +191,12 @@ theorem ContinuousOn.comp_fract' {β γ : Type _} [OrderTopology α] [Topologica
           (eventually_of_forall fun x => ⟨fract_nonneg _, (fract_lt_one _).le⟩))
     
 
-theorem ContinuousOn.comp_fract {β : Type _} [OrderTopology α] [TopologicalAddGroup α] [TopologicalSpace β] {f : α → β}
-    (h : ContinuousOn f I) (hf : f 0 = f 1) : Continuous (f ∘ fract) := by
-  let f' : Unit → α → β := fun x y => f y
-  have : ContinuousOn (uncurry f') ((univ : Set Unit).Prod I) := by
-    rintro ⟨s, t⟩ ⟨-, ht : t ∈ I⟩
-    simp only [ContinuousWithinAt, uncurry, nhds_within_prod_eq, nhds_within_univ, f']
-    rw [tendsto_prod_iff]
-    intro W hW
-    specialize h t ht hW
-    rw [mem_map_iff_exists_image] at h
-    rcases h with ⟨V, hV, hVW⟩
-    rw [image_subset_iff] at hVW
-    use univ, univ_mem, V, hV
-    intro x y hx hy
-    exact hVW hy
-  have key : Continuous (fun s => ⟨Unit.star, s⟩ : α → Unit × α) := by
-    continuity
-  exact (this.comp_fract' fun s => hf).comp key
+theorem ContinuousOn.comp_fract {s : β → α} {f : β → α → γ}
+    (h : ContinuousOn (uncurry f) $ (univ : Set β) ×ˢ (Icc 0 1 : Set α)) (hs : Continuous s) (hf : ∀ s, f s 0 = f s 1) :
+    Continuous fun x : β => f x $ Int.fract (s x) :=
+  (h.comp_fract' hf).comp (continuous_id.prod_mk hs)
+
+/-- A special case of `continuous_on.comp_fract`. -/
+theorem ContinuousOn.comp_fract'' {f : α → β} (h : ContinuousOn f I) (hf : f 0 = f 1) : Continuous (f ∘ fract) :=
+  ContinuousOn.comp_fract (h.comp continuous_on_snd $ fun x hx => (mem_prod.mp hx).2) continuous_id fun _ => hf
 

@@ -93,11 +93,7 @@ theorem trop_Inf_image [ConditionallyCompleteLinearOrder R] (s : Finset S) (f : 
   rcases s.eq_empty_or_nonempty with (rfl | h)
   · simp only [Set.image_empty, coe_empty, sum_empty, WithTop.cInf_empty, trop_top]
     
-  rw [← inf'_eq_cInf_image _ h, inf'_eq_inf]
-  convert s.trop_inf f
-  refine' Lattice.ext _
-  intros
-  exact Iff.rfl
+  rw [← inf'_eq_cInf_image _ h, inf'_eq_inf, s.trop_inf]
 
 theorem trop_infi [ConditionallyCompleteLinearOrder R] [Fintype S] (f : S → WithTop R) :
     trop (⨅ i : S, f i) = ∑ i : S, trop (f i) := by
@@ -122,11 +118,7 @@ theorem untrop_sum_eq_Inf_image [ConditionallyCompleteLinearOrder R] (s : Finset
   rcases s.eq_empty_or_nonempty with (rfl | h)
   · simp only [Set.image_empty, coe_empty, sum_empty, WithTop.cInf_empty, untrop_zero]
     
-  rw [← inf'_eq_cInf_image _ h, inf'_eq_inf]
-  convert s.untrop_sum' f
-  refine' Lattice.ext _
-  intros
-  exact Iff.rfl
+  rw [← inf'_eq_cInf_image _ h, inf'_eq_inf, Finset.untrop_sum']
 
 theorem untrop_sum [ConditionallyCompleteLinearOrder R] [Fintype S] (f : S → Tropical (WithTop R)) :
     untrop (∑ i : S, f i) = ⨅ i : S, untrop (f i) := by

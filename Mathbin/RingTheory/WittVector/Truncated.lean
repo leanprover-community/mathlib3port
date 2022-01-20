@@ -55,7 +55,7 @@ def TruncatedWittVector (p : ℕ) (n : ℕ) (R : Type _) :=
   Finₓ n → R
 
 instance (p n : ℕ) (R : Type _) [Inhabited R] : Inhabited (TruncatedWittVector p n R) :=
-  ⟨fun _ => default R⟩
+  ⟨fun _ => default⟩
 
 variable {n R}
 

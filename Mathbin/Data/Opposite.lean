@@ -97,7 +97,7 @@ theorem unop_eq_iff_eq_op {x} {y : α} : unop x = y ↔ x = op y :=
   equiv_to_opposite.symm.apply_eq_iff_eq_symm_apply
 
 instance [Inhabited α] : Inhabited (αᵒᵖ) :=
-  ⟨op (default _)⟩
+  ⟨op default⟩
 
 /-- A recursor for `opposite`. Use as `induction x using opposite.rec`. -/
 @[simp]

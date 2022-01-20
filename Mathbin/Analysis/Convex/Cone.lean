@@ -127,20 +127,11 @@ theorem mem_inf {x} : x ∈ S⊓T ↔ x ∈ S ∧ x ∈ T :=
 
 instance : HasInfₓ (ConvexCone 𝕜 E) :=
   ⟨fun S =>
-    ⟨⋂ s ∈ S, ↑s, fun c hc x hx =>
-      mem_bInter $ fun s hs =>
-        s.smul_mem hc $ by
-          apply mem_bInter_iff.1 hx s hs,
-      fun x hx y hy =>
-      mem_bInter $ fun s hs =>
-        s.add_mem
-          (by
-            apply mem_bInter_iff.1 hx s hs)
-          (by
-            apply mem_bInter_iff.1 hy s hs)⟩⟩
+    ⟨⋂ s ∈ S, ↑s, fun c hc x hx => mem_bInter $ fun s hs => s.smul_mem hc $ mem_Inter₂.1 hx s hs, fun x hx y hy =>
+      mem_bInter $ fun s hs => s.add_mem (mem_Inter₂.1 hx s hs) (mem_Inter₂.1 hy s hs)⟩⟩
 
 theorem mem_Inf {x : E} {S : Set (ConvexCone 𝕜 E)} : x ∈ Inf S ↔ ∀, ∀ s ∈ S, ∀, x ∈ s :=
-  mem_bInter_iff
+  mem_Inter₂
 
 variable (𝕜)
 

@@ -85,7 +85,7 @@ namespace Holor
 variable {α : Type} {d : ℕ} {ds : List ℕ} {ds₁ : List ℕ} {ds₂ : List ℕ} {ds₃ : List ℕ}
 
 instance [Inhabited α] : Inhabited (Holor α ds) :=
-  ⟨fun t => default α⟩
+  ⟨fun t => default⟩
 
 instance [HasZero α] : HasZero (Holor α ds) :=
   ⟨fun t => 0⟩

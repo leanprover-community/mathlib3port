@@ -119,7 +119,7 @@ class HasBesicovitchCovering (α : Type _) [MetricSpace α] : Prop where
 
 /-- There is always a satellite configuration with a single point. -/
 instance {α : Type _} {τ : ℝ} [Inhabited α] [MetricSpace α] : Inhabited (Besicovitch.SatelliteConfig α 0 τ) :=
-  ⟨{ c := fun i => default α, R := fun i => 1, rpos := fun i => zero_lt_one,
+  ⟨{ c := fun i => default, R := fun i => 1, rpos := fun i => zero_lt_one,
       h := fun i j hij => (hij (Subsingleton.elimₓ i j)).elim,
       hlast := fun i hi => by
         rw [Subsingleton.elimₓ i (last 0)] at hi
@@ -481,7 +481,7 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ) (hN
         p.mem_Union_up_to_last_step b
     simp only [exists_prop, mem_Union, mem_ball, mem_singleton_iff, bUnion_and', exists_eq_left, Union_exists,
       exists_and_distrib_left]
-    exact ⟨⟨p.color a, p.color_lt ha.1 hN⟩, p.index a, ⟨a, rfl, ha.1, rfl⟩, ha.2⟩
+    exact ⟨⟨p.color a, p.color_lt ha.1 hN⟩, a, rfl, ha⟩
     
 
 /-!
@@ -595,7 +595,7 @@ theorem exist_finset_disjoint_balls_large_measure [second_countable_topology α]
     · rw [Finset.set_bUnion_finset_image]
       exact le_transₓ (measure_mono (diff_subset_diff so (subset.refl _))) H
       
-    rw [← diff_inter_self_eq_diff, measure_diff_le_iff_le_add _ omeas (inter_subset_right _ _) (measure_lt_top μ _).Ne]
+    rw [← diff_inter_self_eq_diff, measure_diff_le_iff_le_add _ (inter_subset_right _ _) (measure_lt_top μ _).Ne]
     swap
     · apply MeasurableSet.inter _ omeas
       have : Encodable (u i) := (u_count i).toEncodable
@@ -1027,7 +1027,7 @@ theorem exists_closed_ball_covering_tsum_measure_le [second_countable_topology �
           simpa only [not_exists, exists_prop, mem_Union, mem_closed_ball, not_and, not_leₓ, mem_set_of_eq,
             Subtype.range_coe_subtype, mem_diff] using h'x
         simpa only [mem_Union, mem_image] using hS A
-      refine' mem_bUnion_iff.2 ⟨y, Or.inr _, _⟩
+      refine' mem_Union₂.2 ⟨y, Or.inr _, _⟩
       · simp only [mem_Union, mem_image]
         exact ⟨i, y, ySi, rfl⟩
         
@@ -1038,7 +1038,7 @@ theorem exists_closed_ball_covering_tsum_measure_le [second_countable_topology �
       
     · obtain ⟨y, yt0, hxy⟩ : ∃ y : α, y ∈ t0 ∧ x ∈ closed_ball y (r0 y) := by
         simpa [hx, -mem_closed_ball] using h'x
-      refine' mem_bUnion_iff.2 ⟨y, Or.inl yt0, _⟩
+      refine' mem_Union₂.2 ⟨y, Or.inl yt0, _⟩
       rwa [r_t0 _ yt0]
       
     

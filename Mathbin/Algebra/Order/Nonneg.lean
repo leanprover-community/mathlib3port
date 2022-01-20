@@ -46,8 +46,8 @@ instance OrderBot [Preorderₓ α] {a : α} : OrderBot { x : α // a ≤ x } :=
 theorem bot_eq [Preorderₓ α] {a : α} : (⊥ : { x : α // a ≤ x }) = ⟨a, le_rfl⟩ :=
   rfl
 
-instance NoTopOrder [PartialOrderₓ α] [NoTopOrder α] {a : α} : NoTopOrder { x : α // a ≤ x } :=
-  Set.Ici.no_top_order
+instance NoMaxOrder [PartialOrderₓ α] [NoMaxOrder α] {a : α} : NoMaxOrder { x : α // a ≤ x } :=
+  Set.Ici.no_max_order
 
 instance SemilatticeInf [SemilatticeInf α] {a : α} : SemilatticeInf { x : α // a ≤ x } :=
   Set.Ici.semilatticeInf

@@ -41,7 +41,7 @@ structure is_add_fundamental_domain (G : Type _) {α : Type _} [HasZero G] [HasV
   Prop where
   MeasurableSet : MeasurableSet s
   ae_covers : ∀ᵐ x ∂μ, ∃ g : G, g +ᵥ x ∈ s
-  ae_disjoint : ∀ g _ : g ≠ (0 : G), μ ((g +ᵥ s) ∩ s) = 0
+  AeDisjoint : ∀ g _ : g ≠ (0 : G), μ ((g +ᵥ s) ∩ s) = 0
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (g «expr ≠ » (1 : G))
 /-- A measurable set `s` is a *fundamental domain* for an action of a group `G` on a measurable
@@ -55,7 +55,7 @@ structure is_fundamental_domain (G : Type _) {α : Type _} [HasOne G] [HasScalar
   Prop where
   MeasurableSet : MeasurableSet s
   ae_covers : ∀ᵐ x ∂μ, ∃ g : G, g • x ∈ s
-  ae_disjoint : ∀ g _ : g ≠ (1 : G), μ (g • s ∩ s) = 0
+  AeDisjoint : ∀ g _ : g ≠ (1 : G), μ (g • s ∩ s) = 0
 
 namespace IsFundamentalDomain
 
@@ -67,7 +67,7 @@ is a fundamental domain for the action of `G` on `α`. -/
       "/- If for each `x : α`, exactly one of `g +ᵥ x`, `g : G`, belongs to a measurable set\n`s`, then `s` is a fundamental domain for the additive action of `G` on `α`. -/"]
 theorem mk' (h_meas : MeasurableSet s) (h_exists : ∀ x : α, ∃! g : G, g • x ∈ s) : is_fundamental_domain G s μ :=
   { MeasurableSet := h_meas, ae_covers := eventually_of_forall $ fun x => (h_exists x).exists,
-    ae_disjoint := fun g hne => by
+    AeDisjoint := fun g hne => by
       suffices g • s ∩ s = ∅ by
         rw [this, measure_empty]
       refine' eq_empty_iff_forall_not_mem.2 _
@@ -216,7 +216,8 @@ protected theorem set_integral_eq (hs : is_fundamental_domain G s μ) (ht : is_f
     have hac : ∀ {u}, μ.restrict u ≪ μ := fun u => restrict_le_self.absolutely_continuous
     calc (∫ x in s, f x ∂μ) = ∫ x in ⋃ g : G, g • t, f x ∂μ.restrict s := by
         rw [restrict_congr_set (hac ht.Union_smul_ae_eq), restrict_univ]_ = ∑' g : G, ∫ x in g • t, f x ∂μ.restrict s :=
-        integral_Union_of_null_inter ht.measurable_set_smul (ht.pairwise_ae_disjoint.mono $ fun i j h => hac h)
+        integral_Union_of_null_inter (fun g => (ht.measurable_set_smul g).NullMeasurableSet)
+          (ht.pairwise_ae_disjoint.mono $ fun i j h => hac h)
           hfs.integrable.integrable_on _ = ∑' g : G, ∫ x in s ∩ g • t, f x ∂μ :=
         by
         simp only [restrict_restrict (ht.measurable_set_smul _), inter_comm]_ = ∑' g : G, ∫ x in s ∩ g⁻¹ • t, f x ∂μ :=
@@ -227,7 +228,8 @@ protected theorem set_integral_eq (hs : is_fundamental_domain G s μ) (ht : is_f
             _ _ = ∑' g : G, ∫ x in g • s, f x ∂μ.restrict t :=
         by
         simp only [hf, restrict_restrict (hs.measurable_set_smul _)]_ = ∫ x in ⋃ g : G, g • s, f x ∂μ.restrict t :=
-        (integral_Union_of_null_inter hs.measurable_set_smul (hs.pairwise_ae_disjoint.mono $ fun i j h => hac h)
+        (integral_Union_of_null_inter (fun g => (hs.measurable_set_smul g).NullMeasurableSet)
+            (hs.pairwise_ae_disjoint.mono $ fun i j h => hac h)
             hft.integrable.integrable_on).symm _ = ∫ x in t, f x ∂μ :=
         by
         rw [restrict_congr_set (hac hs.Union_smul_ae_eq), restrict_univ]

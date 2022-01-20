@@ -107,7 +107,7 @@ theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : chain α) : is_�
   · apply ωSup_le
     
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:529:11: unsupported: specialize non-hyp
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:532:11: unsupported: specialize non-hyp
 theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β]
     (f : Scott α → Scott β) (hf : Continuous f) : OmegaCompletePartialOrder.Continuous' f := by
   simp only [continuous_def, · ⁻¹' ·] at hf

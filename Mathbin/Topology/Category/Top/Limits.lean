@@ -633,6 +633,34 @@ theorem snd_iso_of_left_embedding_range_subset {X Y S : Top} {f : X ⟶ S} (hf :
   ext
   rfl
 
+theorem pullback_snd_image_fst_preimage (f : X ⟶ Z) (g : Y ⟶ Z) (U : Set X) :
+    (pullback.snd : pullback f g ⟶ _) '' ((pullback.fst : pullback f g ⟶ _) ⁻¹' U) = g ⁻¹' (f '' U) := by
+  ext x
+  constructor
+  · rintro ⟨y, hy, rfl⟩
+    exact ⟨(pullback.fst : pullback f g ⟶ _) y, hy, concrete_category.congr_hom pullback.condition y⟩
+    
+  · rintro ⟨y, hy, eq⟩
+    exact
+      ⟨(Top.pullbackIsoProdSubtype f g).inv ⟨⟨_, _⟩, Eq⟩, by
+        simpa, by
+        simp ⟩
+    
+
+theorem pullback_fst_image_snd_preimage (f : X ⟶ Z) (g : Y ⟶ Z) (U : Set Y) :
+    (pullback.fst : pullback f g ⟶ _) '' ((pullback.snd : pullback f g ⟶ _) ⁻¹' U) = f ⁻¹' (g '' U) := by
+  ext x
+  constructor
+  · rintro ⟨y, hy, rfl⟩
+    exact ⟨(pullback.snd : pullback f g ⟶ _) y, hy, (concrete_category.congr_hom pullback.condition y).symm⟩
+    
+  · rintro ⟨y, hy, eq⟩
+    exact
+      ⟨(Top.pullbackIsoProdSubtype f g).inv ⟨⟨_, _⟩, Eq.symm⟩, by
+        simpa, by
+        simp ⟩
+    
+
 end Pullback
 
 theorem coinduced_of_is_colimit {F : J ⥤ Top.{u}} (c : cocone F) (hc : is_colimit c) :
@@ -781,7 +809,8 @@ We give this in a more general form, which is that cofiltered limits
 of nonempty compact Hausdorff spaces are nonempty
 (`nonempty_limit_cone_of_compact_t2_cofiltered_system`).
 
-This also applies to inverse limits, where `{J : Type u} [directed_order J]` and `F : Jᵒᵖ ⥤ Top`.
+This also applies to inverse limits, where `{J : Type u} [preorder J] [is_directed J (≤)]` and
+`F : Jᵒᵖ ⥤ Top`.
 
 The theorem is specialized to nonempty finite types (which are compact Hausdorff with the
 discrete topology) in `nonempty_sections_of_fintype_cofiltered_system` and
@@ -917,7 +946,7 @@ This may be regarded as a generalization of Kőnig's lemma.
 To specialize: given a locally finite connected graph, take `Jᵒᵖ` to be `ℕ` and
 `F j` to be length-`j` paths that start from an arbitrary fixed vertex.
 Elements of `F.sections` can be read off as infinite rays in the graph. -/
-theorem nonempty_sections_of_fintype_inverse_system {J : Type u} [DirectedOrder J] (F : Jᵒᵖ ⥤ Type v)
+theorem nonempty_sections_of_fintype_inverse_system {J : Type u} [Preorderₓ J] [IsDirected J (· ≤ ·)] (F : Jᵒᵖ ⥤ Type v)
     [∀ j : Jᵒᵖ, Fintype (F.obj j)] [∀ j : Jᵒᵖ, Nonempty (F.obj j)] : F.sections.nonempty := by
   run_tac
     tactic.unfreeze_local_instances

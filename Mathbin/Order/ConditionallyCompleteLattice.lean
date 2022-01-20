@@ -71,6 +71,7 @@ class ConditionallyCompleteLattice (α : Type _) extends Lattice α, HasSupₓ �
   cInf_le : ∀ s a, BddBelow s → a ∈ s → Inf s ≤ a
   le_cInf : ∀ s a, Set.Nonempty s → a ∈ LowerBounds s → a ≤ Inf s
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1165:11: unsupported: advanced extends in structure
 /-- A conditionally complete linear order is a linear order in which
 every nonempty subset which is bounded above has a supremum, and
 every nonempty subset which is bounded below has an infimum.
@@ -80,7 +81,8 @@ To differentiate the statements from the corresponding statements in (unconditio
 complete linear orders, we prefix Inf and Sup by a c everywhere. The same statements should
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
-class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α, LinearOrderₓ α
+class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α,
+  "././Mathport/Syntax/Translate/Basic.lean:1165:11: unsupported: advanced extends in structure"
 
 /-- A conditionally complete linear order with `bot` is a linear order with least element, in which
 every nonempty subset which is bounded above has a supremum, and every nonempty subset (necessarily
@@ -331,6 +333,14 @@ theorem cSup_singleton (a : α) : Sup {a} = a :=
 theorem cInf_singleton (a : α) : Inf {a} = a :=
   is_least_singleton.cInf_eq
 
+@[simp]
+theorem cSup_pair (a b : α) : Sup {a, b} = a⊔b :=
+  (@is_lub_pair _ _ a b).cSup_eq (nonempty_insert _ _)
+
+@[simp]
+theorem cInf_pair (a b : α) : Inf {a, b} = a⊓b :=
+  (@is_glb_pair _ _ a b).cInf_eq (nonempty_insert _ _)
+
 /-- If a set is bounded below and above, and nonempty, its infimum is less than or equal to
 its supremum.-/
 theorem cInf_le_cSup (hb : BddBelow s) (ha : BddAbove s) (ne : s.nonempty) : Inf s ≤ Sup s :=
@@ -390,7 +400,7 @@ theorem cInf_Ioc [DenselyOrdered α] (h : a < b) : Inf (Ioc a b) = a :=
   (is_glb_Ioc h).cInf_eq (nonempty_Ioc.2 h)
 
 @[simp]
-theorem cInf_Ioi [NoTopOrder α] [DenselyOrdered α] : Inf (Ioi a) = a :=
+theorem cInf_Ioi [NoMaxOrder α] [DenselyOrdered α] : Inf (Ioi a) = a :=
   cInf_eq_of_forall_ge_of_forall_gt_exists_lt nonempty_Ioi (fun _ => le_of_ltₓ) fun w hw => by
     simpa using exists_between hw
 
@@ -411,7 +421,7 @@ theorem cSup_Iic : Sup (Iic a) = a :=
   is_greatest_Iic.cSup_eq
 
 @[simp]
-theorem cSup_Iio [NoBotOrder α] [DenselyOrdered α] : Sup (Iio a) = a :=
+theorem cSup_Iio [NoMinOrder α] [DenselyOrdered α] : Sup (Iio a) = a :=
   cSup_eq_of_forall_le_of_forall_lt_exists_gt nonempty_Iio (fun _ => le_of_ltₓ) fun w hw => by
     simpa [and_comm] using exists_between hw
 
@@ -467,11 +477,11 @@ theorem csupr_const [hι : Nonempty ι] {a : α} : (⨆ b : ι, a) = a := by
 theorem cinfi_const [hι : Nonempty ι] {a : α} : (⨅ b : ι, a) = a :=
   @csupr_const (OrderDual α) _ _ _ _
 
-theorem supr_unique [Unique ι] {s : ι → α} : (⨆ i, s i) = s (default ι) := by
-  have : ∀ i, s i = s (default ι) := fun i => congr_argₓ s (Unique.eq_default i)
+theorem supr_unique [Unique ι] {s : ι → α} : (⨆ i, s i) = s default := by
+  have : ∀ i, s i = s default := fun i => congr_argₓ s (Unique.eq_default i)
   simp only [this, csupr_const]
 
-theorem infi_unique [Unique ι] {s : ι → α} : (⨅ i, s i) = s (default ι) :=
+theorem infi_unique [Unique ι] {s : ι → α} : (⨅ i, s i) = s default :=
   @supr_unique (OrderDual α) _ _ _ _
 
 @[simp]
@@ -1105,13 +1115,13 @@ variable [HasSupₓ α]
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
 noncomputable def subsetHasSup [Inhabited s] : HasSupₓ s where
-  sup := fun t => if ht : Sup (coeₓ '' t : Set α) ∈ s then ⟨Sup (coeₓ '' t : Set α), ht⟩ else default s
+  sup := fun t => if ht : Sup (coeₓ '' t : Set α) ∈ s then ⟨Sup (coeₓ '' t : Set α), ht⟩ else default
 
 attribute [local instance] subsetHasSup
 
 @[simp]
 theorem subset_Sup_def [Inhabited s] :
-    @Sup s _ = fun t => if ht : Sup (coeₓ '' t : Set α) ∈ s then ⟨Sup (coeₓ '' t : Set α), ht⟩ else default s :=
+    @Sup s _ = fun t => if ht : Sup (coeₓ '' t : Set α) ∈ s then ⟨Sup (coeₓ '' t : Set α), ht⟩ else default :=
   rfl
 
 theorem subset_Sup_of_within [Inhabited s] {t : Set s} (h : Sup (coeₓ '' t : Set α) ∈ s) :
@@ -1128,13 +1138,13 @@ variable [HasInfₓ α]
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
 noncomputable def subsetHasInf [Inhabited s] : HasInfₓ s where
-  inf := fun t => if ht : Inf (coeₓ '' t : Set α) ∈ s then ⟨Inf (coeₓ '' t : Set α), ht⟩ else default s
+  inf := fun t => if ht : Inf (coeₓ '' t : Set α) ∈ s then ⟨Inf (coeₓ '' t : Set α), ht⟩ else default
 
 attribute [local instance] subsetHasInf
 
 @[simp]
 theorem subset_Inf_def [Inhabited s] :
-    @Inf s _ = fun t => if ht : Inf (coeₓ '' t : Set α) ∈ s then ⟨Inf (coeₓ '' t : Set α), ht⟩ else default s :=
+    @Inf s _ = fun t => if ht : Inf (coeₓ '' t : Set α) ∈ s then ⟨Inf (coeₓ '' t : Set α), ht⟩ else default :=
   rfl
 
 theorem subset_Inf_of_within [Inhabited s] {t : Set s} (h : Inf (coeₓ '' t : Set α) ∈ s) :

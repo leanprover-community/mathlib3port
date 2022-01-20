@@ -79,7 +79,7 @@ def TopologicalSpace.ofClosed {α : Type u} (T : Set (Set α)) (empty_mem : ∅ 
   is_open_univ := by
     simp [empty_mem]
   is_open_inter := fun s t hs ht => by
-    simpa [Set.compl_inter] using union_mem (sᶜ) (tᶜ) hs ht
+    simpa [Set.compl_inter] using union_mem (sᶜ) hs (tᶜ) ht
   is_open_sUnion := fun s hs => by
     rw [Set.compl_sUnion] <;>
       exact
@@ -435,7 +435,7 @@ theorem closure_union {s t : Set α} : Closure (s ∪ t) = Closure s ∪ Closure
     ((monotone_closure α).le_map_sup s t)
 
 @[simp]
-theorem Finset.closure_Union {ι : Type _} (s : Finset ι) (f : ι → Set α) :
+theorem Finset.closure_bUnion {ι : Type _} (s : Finset ι) (f : ι → Set α) :
     Closure (⋃ i ∈ s, f i) = ⋃ i ∈ s, Closure (f i) := by
   classical
   refine'
@@ -449,7 +449,7 @@ theorem Finset.closure_Union {ι : Type _} (s : Finset ι) (f : ι → Set α) :
 @[simp]
 theorem closure_Union_of_fintype {ι : Type _} [Fintype ι] (f : ι → Set α) : Closure (⋃ i, f i) = ⋃ i, Closure (f i) :=
   by
-  convert finset.univ.closure_Union f <;> simp
+  convert finset.univ.closure_bUnion f <;> simp
 
 theorem interior_subset_closure {s : Set α} : Interior s ⊆ Closure s :=
   subset.trans interior_subset subset_closure
@@ -762,6 +762,10 @@ theorem Filter.Eventually.eventually_nhds {p : α → Prop} {a : α} (h : ∀ᶠ
 @[simp]
 theorem eventually_eventually_nhds {p : α → Prop} {a : α} : (∀ᶠ y in 𝓝 a, ∀ᶠ x in 𝓝 y, p x) ↔ ∀ᶠ x in 𝓝 a, p x :=
   ⟨fun h => h.self_of_nhds, fun h => h.eventually_nhds⟩
+
+@[simp]
+theorem eventually_mem_nhds {s : Set α} {a : α} : (∀ᶠ x in 𝓝 a, s ∈ 𝓝 x) ↔ s ∈ 𝓝 a :=
+  eventually_eventually_nhds
 
 @[simp]
 theorem nhds_bind_nhds : (𝓝 a).bind 𝓝 = 𝓝 a :=
@@ -1260,6 +1264,11 @@ theorem continuous_def {f : α → β} : Continuous f ↔ ∀ s, IsOpen s → Is
 theorem IsOpen.preimage {f : α → β} (hf : Continuous f) {s : Set β} (h : IsOpen s) : IsOpen (f ⁻¹' s) :=
   hf.is_open_preimage s h
 
+theorem Continuous.congr {f g : α → β} (h : Continuous f) (h' : ∀ x, f x = g x) : Continuous g := by
+  convert h
+  ext
+  rw [h']
+
 /-- A function between topological spaces is continuous at a point `x₀`
 if `f x` tends to `f x₀` when `x` tends to `x₀`. -/
 def ContinuousAt (f : α → β) (x : α) :=
@@ -1267,6 +1276,9 @@ def ContinuousAt (f : α → β) (x : α) :=
 
 theorem ContinuousAt.tendsto {f : α → β} {x : α} (h : ContinuousAt f x) : tendsto f (𝓝 x) (𝓝 (f x)) :=
   h
+
+theorem continuous_at_def {f : α → β} {x : α} : ContinuousAt f x ↔ ∀, ∀ A ∈ 𝓝 (f x), ∀, f ⁻¹' A ∈ 𝓝 x :=
+  Iff.rfl
 
 theorem continuous_at_congr {f g : α → β} {x : α} (h : f =ᶠ[𝓝 x] g) : ContinuousAt f x ↔ ContinuousAt g x := by
   simp only [ContinuousAt, tendsto_congr' h, h.eq_of_nhds]

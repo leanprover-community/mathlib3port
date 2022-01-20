@@ -130,7 +130,7 @@ instance : CoeFun (CompositionSeries X) fun x => Finₓ (x.length + 1) → X whe
   coe := CompositionSeries.series
 
 instance [Inhabited X] : Inhabited (CompositionSeries X) :=
-  ⟨{ length := 0, series := fun _ => default X, step' := fun x => x.elim0 }⟩
+  ⟨{ length := 0, series := fun _ => default, step' := fun x => x.elim0 }⟩
 
 variable {X}
 

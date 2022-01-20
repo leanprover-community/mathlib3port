@@ -106,14 +106,44 @@ unsafe def sort_results {α} (e : environment) (results : rb_map Name α) : List
         results.fold [] $ fun decl linter_warning results =>
           (((e.decl_pos decl).getOrElse ⟨0, 0⟩).line, (decl, linter_warning)) :: results
 
-/-- Formats a linter warning as `#print` command with comment. -/
+/-- Formats a linter warning as `#check` command with comment. -/
 unsafe def print_warning (decl_name : Name) (warning : Stringₓ) : format :=
   "#check @" ++ to_fmt decl_name ++ " /- " ++ warning ++ " -/"
 
+private def workflow_command_replacements : Charₓ → Stringₓ
+  | '%' => "%25"
+  | '\n' => "%0A"
+  | c => toString c
+
+/-- Escape characters that may not be used in a workflow commands, following
+https://github.com/actions/toolkit/blob/7257597d731b34d14090db516d9ea53439300e98/packages/core/src/command.ts#L92-L105
+-/
+def escapeWorkflowCommand (s : Stringₓ) : Stringₓ :=
+  "".intercalate $ s.to_list.map workflow_command_replacements
+
+/-- Prints a workflow command to emit an error understood by github in an actions workflow.
+This enables CI to tag the parts of the file where linting failed with annotations, and makes it
+easier for mathlib contributors to see what needs fixing.
+See https://docs.github.com/en/actions/learn-github-actions/workflow-commands-for-github-actions#setting-an-error-message
+-/
+unsafe def print_workflow_command (env : environment) (linter_name decl_name : Name) (warning : Stringₓ) :
+    Option Stringₓ := do
+  let po ← env.decl_pos decl_name
+  let ol ← env.decl_olean decl_name
+  return $
+      ((s! "
+            ::error file={ol },line={po.line },col={po.column},title=") ++
+          s! "Warning from {linter_name} linter::") ++
+        s!"{(escapeWorkflowCommand $ toString decl_name)} - {escapeWorkflowCommand warning}"
+
 /-- Formats a map of linter warnings using `print_warning`, sorted by line number. -/
-unsafe def print_warnings (env : environment) (results : rb_map Name Stringₓ) : format :=
+unsafe def print_warnings (env : environment) (emit_workflow_commands : Bool) (linter_name : Name)
+    (results : rb_map Name Stringₓ) : format :=
   format.intercalate format.line $
-    (sort_results env results).map $ fun ⟨decl_name, warning⟩ => print_warning decl_name warning
+    (sort_results env results).map $ fun ⟨decl_name, warning⟩ =>
+      let form := print_warning decl_name warning
+      if emit_workflow_commands then form ++ (print_workflow_command env linter_name decl_name warning).getOrElse ""
+      else form
 
 /-- Formats a map of linter warnings grouped by filename with `-- filename` comments.
 The first `drop_fn_chars` characters are stripped from the filename.
@@ -129,19 +159,20 @@ unsafe def grouped_by_filename (e : environment) (results : rb_map Name String�
       ("-- " ++ fn.popn drop_fn_chars ++ "\n" ++ formatter results : format)
   format.intercalate "\n\n" l ++ "\n"
 
-/-- Formats the linter results as Lean code with comments and `#print` commands.
+/-- Formats the linter results as Lean code with comments and `#check` commands.
 -/
 unsafe def format_linter_results (env : environment) (results : List (Name × linter × rb_map Name Stringₓ))
     (decls non_auto_decls : List declaration) (group_by_filename : Option ℕ) (where_desc : Stringₓ) (slow : Bool)
-    (verbose : LintVerbosity) (num_linters : ℕ) : format := do
+    (verbose : LintVerbosity) (num_linters : ℕ) (emit_workflow_commands : Bool := ff) : format := do
   let formatted_results :=
     results.map $ fun ⟨linter_name, linter, results⟩ =>
       let report_str : format := to_fmt "/- The `" ++ to_fmt linter_name ++ "` linter reports: -/\n"
       if ¬results.empty then
         let warnings :=
           match group_by_filename with
-          | none => print_warnings env results
-          | some dropped => grouped_by_filename env results dropped (print_warnings env)
+          | none => print_warnings env emit_workflow_commands linter_name results
+          | some dropped =>
+            grouped_by_filename env results dropped (print_warnings env emit_workflow_commands linter_name)
         report_str ++ "/- " ++ linter.errors_found ++ " -/\n" ++ warnings ++ "\n"
       else if verbose = LintVerbosity.high then "/- OK: " ++ linter.no_errors_found ++ " -/" else format.nil
   let s := format.intercalate "\n" (formatted_results.filter fun f => ¬f.is_nil)

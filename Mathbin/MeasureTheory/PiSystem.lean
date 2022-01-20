@@ -59,12 +59,12 @@ def IsPiSystem {α} (C : Set (Set α)) : Prop :=
 namespace MeasurableSpace
 
 theorem is_pi_system_measurable_set {α : Type _} [MeasurableSpace α] : IsPiSystem { s : Set α | MeasurableSet s } :=
-  fun s t hs ht _ => hs.inter ht
+  fun s hs t ht _ => hs.inter ht
 
 end MeasurableSpace
 
 theorem IsPiSystem.singleton {α} (S : Set α) : IsPiSystem ({S} : Set (Set α)) := by
-  intro s t h_s h_t h_ne
+  intro s h_s t h_t h_ne
   rw [Set.mem_singleton_iff.1 h_s, Set.mem_singleton_iff.1 h_t, Set.inter_self, Set.mem_singleton_iff]
 
 section Order
@@ -72,7 +72,7 @@ section Order
 variable {α : Type _} {ι ι' : Sort _} [LinearOrderₓ α]
 
 theorem is_pi_system_image_Iio (s : Set α) : IsPiSystem (Iio '' s) := by
-  rintro _ _ ⟨a, ha, rfl⟩ ⟨b, hb, rfl⟩ -
+  rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ -
   exact ⟨a⊓b, inf_ind a b ha hb, Iio_inter_Iio.symm⟩
 
 theorem is_pi_system_Iio : IsPiSystem (range Iio : Set (Set α)) :=
@@ -87,7 +87,7 @@ theorem is_pi_system_Ioi : IsPiSystem (range Ioi : Set (Set α)) :=
 theorem is_pi_system_Ixx_mem {Ixx : α → α → Set α} {p : α → α → Prop} (Hne : ∀ {a b}, (Ixx a b).Nonempty → p a b)
     (Hi : ∀ {a₁ b₁ a₂ b₂}, Ixx a₁ b₁ ∩ Ixx a₂ b₂ = Ixx (max a₁ a₂) (min b₁ b₂)) (s t : Set α) :
     IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ hlu : p l u, Ixx l u = S } := by
-  rintro _ _ ⟨l₁, hls₁, u₁, hut₁, hlu₁, rfl⟩ ⟨l₂, hls₂, u₂, hut₂, hlu₂, rfl⟩
+  rintro _ ⟨l₁, hls₁, u₁, hut₁, hlu₁, rfl⟩ _ ⟨l₂, hls₂, u₂, hut₂, hlu₂, rfl⟩
   simp only [Hi, ← sup_eq_max, ← inf_eq_min]
   exact fun H => ⟨l₁⊔l₂, sup_ind l₁ l₂ hls₁ hls₂, u₁⊓u₂, inf_ind u₁ u₂ hut₁ hut₂, Hne H, rfl⟩
 
@@ -134,7 +134,7 @@ inductive GeneratePiSystem {α} (S : Set (Set α)) : Set (Set α)
     GeneratePiSystem (s ∩ t)
 
 theorem is_pi_system_generate_pi_system {α} (S : Set (Set α)) : IsPiSystem (GeneratePiSystem S) :=
-  fun s t h_s h_t h_nonempty => GeneratePiSystem.inter h_s h_t h_nonempty
+  fun s h_s t h_t h_nonempty => GeneratePiSystem.inter h_s h_t h_nonempty
 
 theorem subset_generate_pi_system_self {α} (S : Set (Set α)) : S ⊆ GeneratePiSystem S := fun s => GeneratePiSystem.base
 
@@ -143,7 +143,7 @@ theorem generate_pi_system_subset_self {α} {S : Set (Set α)} (h_S : IsPiSystem
   induction' h with s h_s s u h_gen_s h_gen_u h_nonempty h_s h_u
   · exact h_s
     
-  · exact h_S _ _ h_s h_u h_nonempty
+  · exact h_S _ h_s _ h_u h_nonempty
     
 
 theorem generate_pi_system_eq {α} {S : Set (Set α)} (h_pi : IsPiSystem S) : GeneratePiSystem S = S :=
@@ -154,7 +154,7 @@ theorem generate_pi_system_mono {α} {S T : Set (Set α)} (hST : S ⊆ T) : Gene
   induction' ht with s h_s s u h_gen_s h_gen_u h_nonempty h_s h_u
   · exact GeneratePiSystem.base (Set.mem_of_subset_of_mem hST h_s)
     
-  · exact is_pi_system_generate_pi_system T _ _ h_s h_u h_nonempty
+  · exact is_pi_system_generate_pi_system T _ h_s _ h_u h_nonempty
     
 
 theorem generate_pi_system_measurable_set {α} [M : MeasurableSpace α] {S : Set (Set α)}
@@ -206,7 +206,7 @@ theorem mem_generate_pi_system_Union_elim {α β} {g : β → Set (Set α)} (h_p
       
     intro b h_b
     split_ifs with hbs hbt hbt
-    · refine' h_pi b (f_s b) (f_t' b) (h_s b hbs) (h_t' b hbt) (Set.Nonempty.mono _ h_nonempty)
+    · refine' h_pi b (f_s b) (h_s b hbs) (f_t' b) (h_t' b hbt) (Set.Nonempty.mono _ h_nonempty)
       exact Set.inter_subset_inter (Set.bInter_subset_of_mem hbs) (Set.bInter_subset_of_mem hbt)
       
     · exact h_s b hbs
@@ -401,7 +401,7 @@ theorem generate_inter {s : Set (Set α)} (hs : IsPiSystem s) {t₁ t₂ : Set �
         generate_le _ $ fun s₂ hs₂ =>
           show (generate s).Has (s₂ ∩ s₁) from
             (s₂ ∩ s₁).eq_empty_or_nonempty.elim (fun h => h.symm ▸ generate_has.empty) fun h =>
-              generate_has.basic _ (hs _ _ hs₂ hs₁ h)
+              generate_has.basic _ $ hs _ hs₂ _ hs₁ h
       have : (generate s).Has (t₂ ∩ s₁) := this _ ht₂
       show (generate s).Has (s₁ ∩ t₂) by
         rwa [inter_comm]

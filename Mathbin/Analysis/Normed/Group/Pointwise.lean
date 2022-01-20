@@ -1,4 +1,5 @@
 import Mathbin.Analysis.Normed.Group.Basic
+import Mathbin.Topology.MetricSpace.HausdorffDistance
 
 /-!
 # Properties of pointwise addition of sets in normed groups.
@@ -66,6 +67,13 @@ theorem singleton_add_closed_ball_zero (x : E) (r : ℝ) : {x} + closed_ball 0 r
 
 theorem closed_ball_zero_add_singleton (x : E) (r : ℝ) : closed_ball 0 r + {x} = closed_ball x r := by
   simp
+
+theorem IsCompact.cthickening_eq_add_closed_ball {s : Set E} (hs : IsCompact s) {r : ℝ} (hr : 0 ≤ r) :
+    cthickening r s = s + closed_ball 0 r := by
+  rw [hs.cthickening_eq_bUnion_closed_ball hr]
+  ext x
+  simp only [mem_add, dist_eq_norm, exists_prop, mem_Union, mem_closed_ball, exists_and_distrib_left,
+    mem_closed_ball_zero_iff, ← eq_sub_iff_add_eq', exists_eq_right]
 
 end SemiNormedGroup
 

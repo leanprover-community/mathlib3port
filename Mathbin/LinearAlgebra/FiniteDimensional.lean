@@ -544,14 +544,14 @@ variable {K : Type u} {V : Type v} [Field K] [AddCommGroupₓ V] [Module K V] {V
 /-- In a vector space with dimension 1, each set {v} is a basis for `v ≠ 0`. -/
 noncomputable def basis_singleton (ι : Type _) [Unique ι] (h : finrank K V = 1) (v : V) (hv : v ≠ 0) : Basis ι K V :=
   let b := basis_unique ι h
-  b.map (LinearEquiv.smulOfUnit (Units.mk0 (b.repr v (default ι)) (mt basis_unique.repr_eq_zero_iff.mp hv)))
+  b.map (LinearEquiv.smulOfUnit (Units.mk0 (b.repr v default) (mt basis_unique.repr_eq_zero_iff.mp hv)))
 
 @[simp]
 theorem basis_singleton_apply (ι : Type _) [Unique ι] (h : finrank K V = 1) (v : V) (hv : v ≠ 0) (i : ι) :
     basis_singleton ι h v hv i = v :=
   calc
-    basis_singleton ι h v hv i = ((basis_unique ι h).repr v) (default ι) • (basis_unique ι h) (default ι) := by
-      simp [Subsingleton.elimₓ i (default ι), basis_singleton, LinearEquiv.smulOfUnit]
+    basis_singleton ι h v hv i = ((basis_unique ι h).repr v) default • (basis_unique ι h) default := by
+      simp [Subsingleton.elimₓ i default, basis_singleton, LinearEquiv.smulOfUnit]
     _ = v := by
       rw [← Finsupp.total_unique K (Basis.repr _ v), Basis.total_repr]
     
@@ -1070,15 +1070,26 @@ section Span
 
 open Submodule
 
+variable (K)
+
+/-- The rank of a set of vectors as a natural number. -/
+protected noncomputable def Set.finrank (s : Set V) : ℕ :=
+  finrank K (span K s)
+
+variable {K}
+
+theorem Set.finrank_mono [FiniteDimensional K V] {s t : Set V} (h : s ⊆ t) : s.finrank K ≤ t.finrank K :=
+  finrank_mono (span_mono h)
+
 theorem finrank_span_le_card (s : Set V) [fin : Fintype s] : finrank K (span K s) ≤ s.to_finset.card := by
   have := span_of_finite K ⟨Finₓ⟩
   have : Module.rank K (span K s) ≤ # s := dim_span_le s
   rw [← finrank_eq_dim, Cardinal.mk_fintype, ← Set.to_finset_card] at this
   exact_mod_cast this
 
-theorem finrank_span_finset_le_card (s : Finset V) : finrank K (span K (s : Set V)) ≤ s.card :=
+theorem finrank_span_finset_le_card (s : Finset V) : (s : Set V).finrank K ≤ s.card :=
   calc
-    finrank K (span K (s : Set V)) ≤ (s : Set V).toFinset.card := finrank_span_le_card s
+    (s : Set V).finrank K ≤ (s : Set V).toFinset.card := finrank_span_le_card s
     _ = s.card := by
       simp
     
@@ -1163,7 +1174,7 @@ theorem linear_independent_of_span_eq_top_of_card_eq_finrank {ι : Type _} [Fint
 /-- A finite family of vectors is linearly independent if and only if
 its cardinality equals the dimension of its span. -/
 theorem linear_independent_iff_card_eq_finrank_span {ι : Type _} [Fintype ι] {b : ι → V} :
-    LinearIndependent K b ↔ Fintype.card ι = finrank K (span K (Set.Range b)) := by
+    LinearIndependent K b ↔ Fintype.card ι = (Set.Range b).finrank K := by
   constructor
   · intro h
     exact (finrank_span_eq_card h).symm

@@ -79,9 +79,10 @@ theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) 
     (⨆ i ∈ I, range (std_basis R φ i)) ≤ ⨅ i ∈ J, ker (proj i) := by
   refine' supr_le $ fun i => supr_le $ fun hi => range_le_iff_comap.2 _
   simp only [(ker_comp _ _).symm, eq_top_iff, SetLike.le_def, mem_ker, comap_infi, mem_infi]
-  intro b hb j hj
-  have : i ≠ j := fun eq => h ⟨hi, Eq.symm ▸ hj⟩
-  rw [mem_comap, mem_ker, ← comp_apply, proj_std_basis_ne R φ j i this.symm, zero_apply]
+  rintro b - j hj
+  rw [proj_std_basis_ne R φ j i, zero_apply]
+  rintro rfl
+  exact h ⟨hi, hj⟩
 
 theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu : Set.Univ ⊆ ↑I ∪ J) :
     (⨅ i ∈ J, ker (proj i)) ≤ ⨆ i ∈ I, range (std_basis R φ i) :=

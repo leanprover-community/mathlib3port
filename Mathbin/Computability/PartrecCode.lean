@@ -488,19 +488,19 @@ def eval : code → ℕ →. ℕ
 instance : HasMem (ℕ →. ℕ) code :=
   ⟨fun f c => eval c = f⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem eval_const : ∀ n m, eval (code.const n) m = Part.some n
   | 0, m => rfl
   | n + 1, m => by
     simp [*]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem eval_id n : eval code.id n = Part.some n := by
   simp [· <*> ·]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem eval_curry c n x : eval (curry c n) x = eval c (mkpair n x) := by
   simp [· <*> ·]

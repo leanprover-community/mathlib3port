@@ -157,8 +157,10 @@ instance [hp : Fact p.prime] [Fintype (Sylow p G)] : is_pretransitive G (Sylow p
     refine' fun h => hp.out.not_dvd_one (nat.modeq_zero_iff_dvd.mp _)
     calc 1 = card (fixed_points P (orbit G P)) := _ _ ≡ card (orbit G P) [MOD p] :=
         (P.2.card_modeq_card_fixed_points (orbit G P)).symm _ ≡ 0 [MOD p] := nat.modeq_zero_iff_dvd.mpr h
-    convert (Set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)).symm
-    exact set.eq_singleton_iff_unique_mem.mpr ⟨H.mpr rfl, fun R h => Subtype.ext (Sylow.ext (H.mp h))⟩⟩
+    rw [← Set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)]
+    refine' card_congr' (congr_argₓ _ (Eq.symm _))
+    rw [Set.eq_singleton_iff_unique_mem]
+    exact ⟨H.mpr rfl, fun R h => Subtype.ext (Sylow.ext (H.mp h))⟩⟩
 
 variable (p) (G)
 
@@ -166,7 +168,7 @@ variable (p) (G)
   If the number of Sylow `p`-subgroups is finite, then it is congruent to `1` modulo `p`. -/
 theorem card_sylow_modeq_one [Fact p.prime] [Fintype (Sylow p G)] : card (Sylow p G) ≡ 1 [MOD p] := by
   refine' sylow.nonempty.elim fun P : Sylow p G => _
-  have :=
+  have : fixed_points P.1 (Sylow p G) = {P} :=
     Set.ext fun Q : Sylow p G =>
       calc
         Q ∈ fixed_points P (Sylow p G) ↔ P.1 ≤ Q := P.2.sylow_mem_fixed_points_iff
@@ -174,9 +176,10 @@ theorem card_sylow_modeq_one [Fact p.prime] [Fintype (Sylow p G)] : card (Sylow 
         _ ↔ Q ∈ {P} := sylow.ext_iff.symm.trans set.mem_singleton_iff.symm
         
   have : Fintype (fixed_points P.1 (Sylow p G)) := by
-    convert Set.fintypeSingleton P
+    rw [this]
+    infer_instance
   have : card (fixed_points P.1 (Sylow p G)) = 1 := by
-    convert Set.card_singleton P
+    simp [this]
   exact
     (P.2.card_modeq_card_fixed_points (Sylow p G)).trans
       (by

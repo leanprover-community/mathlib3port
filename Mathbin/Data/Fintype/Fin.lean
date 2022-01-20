@@ -24,8 +24,8 @@ theorem univ_filter_zero_lt {n : ℕ} :
   · refine' cases _ _ i
     · rintro ⟨⟨⟩⟩
       
-    · intro i _
-      exact ⟨i, mem_univ _, rfl⟩
+    · intro j _
+      exact ⟨j, rfl⟩
       
     
   · rintro ⟨i, _, rfl⟩
@@ -44,11 +44,11 @@ theorem univ_filter_succ_lt {n : ℕ} (j : Finₓ n) :
     · rintro ⟨⟨⟩⟩
       
     · intro i hi
-      exact ⟨i, mem_filter.mpr ⟨mem_univ _, succ_lt_succ_iff.mp hi⟩, rfl⟩
+      refine' ⟨i, succ_lt_succ_iff.mp hi, rfl⟩
       
     
   · rintro ⟨i, hi, rfl⟩
-    exact succ_lt_succ_iff.mpr (mem_filter.mp hi).2
+    simpa
     
 
 end Finₓ

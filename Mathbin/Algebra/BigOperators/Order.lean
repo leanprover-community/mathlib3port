@@ -114,6 +114,10 @@ theorem one_le_prod' (h : ∀, ∀ i ∈ s, ∀, 1 ≤ f i) : 1 ≤ ∏ i in s, 
       rw [prod_const_one])
     (prod_le_prod'' h)
 
+@[to_additive Finset.sum_nonneg']
+theorem one_le_prod'' (h : ∀ i : ι, 1 ≤ f i) : 1 ≤ ∏ i : ι in s, f i :=
+  Finset.one_le_prod' fun i hi => h i
+
 @[to_additive sum_nonpos]
 theorem prod_le_one' (h : ∀, ∀ i ∈ s, ∀, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
   (prod_le_prod'' h).trans_eq
@@ -201,6 +205,14 @@ end OrderedCommMonoid
 theorem abs_sum_le_sum_abs {G : Type _} [LinearOrderedAddCommGroup G] (f : ι → G) (s : Finset ι) :
     |∑ i in s, f i| ≤ ∑ i in s, |f i| :=
   le_sum_of_subadditive _ abs_zero abs_add s f
+
+theorem abs_sum_of_nonneg {G : Type _} [LinearOrderedAddCommGroup G] {f : ι → G} {s : Finset ι}
+    (hf : ∀, ∀ i ∈ s, ∀, 0 ≤ f i) : |∑ i : ι in s, f i| = ∑ i : ι in s, f i := by
+  rw [abs_of_nonneg (Finset.sum_nonneg hf)]
+
+theorem abs_sum_of_nonneg' {G : Type _} [LinearOrderedAddCommGroup G] {f : ι → G} {s : Finset ι} (hf : ∀ i, 0 ≤ f i) :
+    |∑ i : ι in s, f i| = ∑ i : ι in s, f i := by
+  rw [abs_of_nonneg (Finset.sum_nonneg' hf)]
 
 theorem abs_prod {R : Type _} [LinearOrderedCommRing R] {f : ι → R} {s : Finset ι} :
     |∏ x in s, f x| = ∏ x in s, |f x| :=

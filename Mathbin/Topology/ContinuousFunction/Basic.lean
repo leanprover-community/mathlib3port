@@ -67,7 +67,7 @@ theorem ext_iff : f = g ↔ ∀ x, f x = g x :=
   ⟨ContinuousMap.congr_fun, ext⟩
 
 instance [Inhabited β] : Inhabited C(α, β) :=
-  ⟨{ toFun := fun _ => default _ }⟩
+  ⟨{ toFun := fun _ => default }⟩
 
 theorem coe_inj ⦃f g : C(α, β)⦄ (h : (f : α → β) = g) : f = g := by
   cases f <;> cases g <;> cases h <;> rfl
@@ -114,6 +114,16 @@ theorem comp_coe (f : C(β, γ)) (g : C(α, β)) : (comp f g : α → γ) = f �
 theorem comp_apply (f : C(β, γ)) (g : C(α, β)) (a : α) : comp f g a = f (g a) :=
   rfl
 
+@[simp]
+theorem id_comp (f : C(β, γ)) : id.comp f = f := by
+  ext
+  rfl
+
+@[simp]
+theorem comp_id (f : C(α, β)) : f.comp id = f := by
+  ext
+  rfl
+
 /-- Constant map as a continuous map -/
 def const (b : β) : C(α, β) :=
   ⟨fun x => b⟩
@@ -125,13 +135,12 @@ theorem const_coe (b : β) : (const b : α → β) = fun x => b :=
 theorem const_apply (b : β) (a : α) : const b a = b :=
   rfl
 
-instance [Nonempty α] [Nontrivial β] : Nontrivial C(α, β) where
+instance [h : Nonempty α] [Nontrivial β] : Nontrivial C(α, β) where
   exists_pair_ne := by
     obtain ⟨b₁, b₂, hb⟩ := exists_pair_ne β
     refine' ⟨const b₁, const b₂, _⟩
     contrapose! hb
-    inhabit α
-    change const b₁ (default α) = const b₂ (default α)
+    change const b₁ h.some = const b₂ h.some
     simp [hb]
 
 section

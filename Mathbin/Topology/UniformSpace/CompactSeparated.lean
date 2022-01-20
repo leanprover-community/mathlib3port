@@ -112,13 +112,13 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       apply diag_subset
       simp [h]
     have : NormalSpace γ := normal_of_compact_t2
-    obtain ⟨U₁, V₁, U₁_in, V₁_in, U₂, V₂, U₂_in₂, V₂_in, V₁_cl, V₂_cl, U₁_op, U₂_op, VU₁, VU₂, hU₁₂⟩ :
+    obtain ⟨U₁, U₁_in, V₁, V₁_in, U₂, U₂_in₂, V₂, V₂_in, V₁_cl, V₂_cl, U₁_op, U₂_op, VU₁, VU₂, hU₁₂⟩ :
       ∃ (U₁ V₁ : _)(_ : U₁ ∈ 𝓝 x)(_ : V₁ ∈ 𝓝 x)(U₂ V₂ : _)(_ : U₂ ∈ 𝓝 y)(_ : V₂ ∈ 𝓝 y),
         IsClosed V₁ ∧ IsClosed V₂ ∧ IsOpen U₁ ∧ IsOpen U₂ ∧ V₁ ⊆ U₁ ∧ V₂ ⊆ U₂ ∧ U₁ ∩ U₂ = ∅ :=
       disjoint_nested_nhds x_ne_y
     let U₃ := (V₁ ∪ V₂)ᶜ
     have U₃_op : IsOpen U₃ := is_open_compl_iff.mpr (IsClosed.union V₁_cl V₂_cl)
-    let W := U₁.prod U₁ ∪ U₂.prod U₂ ∪ U₃.prod U₃
+    let W := U₁ ×ˢ U₁ ∪ U₂ ×ˢ U₂ ∪ U₃ ×ˢ U₃
     have W_in : W ∈ 𝓝Δ := by
       rw [mem_supr]
       intro x
@@ -136,18 +136,18 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
         simp only [IsOpen.prod, *]
     have : W ○ W ∈ F := by
       simpa only using mem_lift' W_in
-    have hV₁₂ : V₁.prod V₂ ∈ 𝓝 (x, y) := ProdIsOpen.mem_nhds V₁_in V₂_in
+    have hV₁₂ : V₁ ×ˢ V₂ ∈ 𝓝 (x, y) := ProdIsOpen.mem_nhds V₁_in V₂_in
     have clF : ClusterPt (x, y) F := hxy.of_inf_left
-    obtain ⟨p, p_in⟩ : ∃ p, p ∈ V₁.prod V₂ ∩ (W ○ W) := cluster_pt_iff.mp clF hV₁₂ this
-    have inter_empty : V₁.prod V₂ ∩ (W ○ W) = ∅ := by
+    obtain ⟨p, p_in⟩ : ∃ p, p ∈ V₁ ×ˢ V₂ ∩ (W ○ W) := cluster_pt_iff.mp clF hV₁₂ this
+    have inter_empty : V₁ ×ˢ V₂ ∩ (W ○ W) = ∅ := by
       rw [eq_empty_iff_forall_not_mem]
       rintro ⟨u, v⟩ ⟨⟨u_in, v_in⟩, w, huw, hwv⟩
-      have uw_in : (u, w) ∈ U₁.prod U₁ :=
+      have uw_in : (u, w) ∈ U₁ ×ˢ U₁ :=
         Set.mem_prod.2
           ((huw.resolve_right fun h => h.1 $ Or.inl u_in).resolve_right fun h => by
             have : u ∈ U₁ ∩ U₂ := ⟨VU₁ u_in, h.1⟩
             rwa [hU₁₂] at this)
-      have wv_in : (w, v) ∈ U₂.prod U₂ :=
+      have wv_in : (w, v) ∈ U₂ ×ˢ U₂ :=
         Set.mem_prod.2
           ((hwv.resolve_right fun h => h.2 $ Or.inr v_in).resolve_left fun h => by
             have : v ∈ U₁ ∩ U₂ := ⟨h.2, VU₂ v_in⟩
@@ -216,10 +216,10 @@ theorem IsCompact.uniform_continuous_on_of_continuous [SeparatedSpace α] {s : S
 `β` is compact and separated and `f` is continuous on `U × (univ : set β)` for some separated
 neighborhood `U` of `x`. -/
 theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [SeparatedSpace β] [UniformSpace γ]
-    {f : α → β → γ} {x : α} {U : Set α} (hxU : U ∈ 𝓝 x) (hU : IsSeparated U) (h : ContinuousOn (↿f) (U.prod univ)) :
-    TendstoUniformly f (f x) (𝓝 x) := by
+    {f : α → β → γ} {x : α} {U : Set α} (hxU : U ∈ 𝓝 x) (hU : IsSeparated U)
+    (h : ContinuousOn (↿f) (U ×ˢ (univ : Set β))) : TendstoUniformly f (f x) (𝓝 x) := by
   rcases LocallyCompactSpace.local_compact_nhds _ _ hxU with ⟨K, hxK, hKU, hK⟩
-  have : UniformContinuousOn (↿f) (K.prod univ) := by
+  have : UniformContinuousOn (↿f) (K ×ˢ (univ : Set β)) := by
     refine' IsCompact.uniform_continuous_on_of_continuous' (hK.prod compact_univ) _ (h.mono $ prod_mono hKU subset.rfl)
     exact (hU.mono hKU).Prod (is_separated_of_separated_space _)
   exact this.tendsto_uniformly hxK

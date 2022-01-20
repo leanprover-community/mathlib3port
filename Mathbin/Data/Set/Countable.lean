@@ -217,16 +217,11 @@ theorem countable_pi {π : α → Type _} [Fintype α] {s : ∀ a, Set (π a)} (
     have : Trunc (Encodable (∀ a : α, s a)) := @Encodable.fintypePi α _ _ _ fun a => (hs a).toEncodable
     Trunc.induction_on this $ fun h => @countable_range _ _ h _
 
-protected theorem countable.prod {s : Set α} {t : Set β} (hs : countable s) (ht : countable t) :
-    countable (Set.Prod s t) := by
+protected theorem countable.prod {s : Set α} {t : Set β} (hs : countable s) (ht : countable t) : countable (s ×ˢ t) :=
+  by
   have : Encodable s := hs.to_encodable
   have : Encodable t := ht.to_encodable
-  have : Encodable (s × t) := by
-    infer_instance
-  have : range (Prod.map coeₓ coeₓ : s × t → α × β) = Set.Prod s t := by
-    rw [range_prod_map, Subtype.range_coe, Subtype.range_coe]
-  rw [← this]
-  exact countable_range _
+  exact ⟨of_equiv (s × t) (Equivₓ.Set.prod _ _)⟩
 
 theorem countable.image2 {s : Set α} {t : Set β} (hs : countable s) (ht : countable t) (f : α → β → γ) :
     countable (image2 f s t) := by

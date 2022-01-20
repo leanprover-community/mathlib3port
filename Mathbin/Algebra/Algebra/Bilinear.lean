@@ -61,9 +61,17 @@ variable (R)
 def lmul_left (r : A) : A →ₗ[R] A :=
   lmul R A r
 
+@[simp]
+theorem lmul_left_to_add_monoid_hom (r : A) : (lmul_left R r : A →+ A) = AddMonoidHom.mulLeft r :=
+  FunLike.coe_injective rfl
+
 /-- The multiplication on the right in an algebra is a linear map. -/
 def lmul_right (r : A) : A →ₗ[R] A :=
   (lmul R A).toLinearMap.flip r
+
+@[simp]
+theorem lmul_right_to_add_monoid_hom (r : A) : (lmul_right R r : A →+ A) = AddMonoidHom.mulRight r :=
+  FunLike.coe_injective rfl
 
 /-- Simultaneous multiplication on the left and right is a linear map. -/
 def lmul_left_right (vw : A × A) : A →ₗ[R] A :=

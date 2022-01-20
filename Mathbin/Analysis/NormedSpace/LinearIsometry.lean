@@ -1,5 +1,6 @@
 import Mathbin.Analysis.Normed.Group.Basic
 import Mathbin.Topology.Algebra.Module.Basic
+import Mathbin.LinearAlgebra.Basis
 
 /-!
 # (Semi-)linear isometries
@@ -13,7 +14,7 @@ the star-linear versions.
 We also prove some trivial lemmas and provide convenience constructors.
 
 Since a lot of elementary properties don't require `∥x∥ = 0 → x = 0` we start setting up the
-theory for `semi_normed_space` and we specialize to `normed_space` when needed.
+theory for `semi_normed_group` and we specialize to `normed_group` when needed.
 -/
 
 
@@ -39,12 +40,27 @@ notation:25 E " →ₛₗᵢ[" σ₁₂:25 "] " E₂:0 => LinearIsometry σ₁�
 
 notation:25 E " →ₗᵢ[" R:25 "] " E₂:0 => LinearIsometry (RingHom.id R) E E₂
 
-notation:25 E " →ₗᵢ⋆[" R:25 "] " E₂:0 => LinearIsometry (@starRingAut R _ _ : R →+* R) E E₂
+notation:25 E " →ₗᵢ⋆[" R:25 "] " E₂:0 => LinearIsometry (starRingEnd R) E E₂
 
 namespace LinearIsometry
 
 variable (f : E →ₛₗᵢ[σ₁₂] E₂) (f₁ : F →ₛₗᵢ[σ₁₂] E₂)
 
+theorem to_linear_map_injective : injective (to_linear_map : (E →ₛₗᵢ[σ₁₂] E₂) → E →ₛₗ[σ₁₂] E₂)
+  | ⟨f, _⟩, ⟨g, _⟩, rfl => rfl
+
+@[simp]
+theorem to_linear_map_inj {f g : E →ₛₗᵢ[σ₁₂] E₂} : f.to_linear_map = g.to_linear_map ↔ f = g :=
+  to_linear_map_injective.eq_iff
+
+instance : AddMonoidHomClass (E →ₛₗᵢ[σ₁₂] E₂) E E₂ where
+  coe := fun e => e.to_fun
+  coe_injective' := fun f g h => to_linear_map_injective (FunLike.coe_injective h)
+  map_add := fun f => map_add f.to_linear_map
+  map_zero := fun f => map_zero f.to_linear_map
+
+/-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly.
+-/
 instance : CoeFun (E →ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
   ⟨fun f => f.to_fun⟩
 
@@ -52,15 +68,18 @@ instance : CoeFun (E →ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
 theorem coe_to_linear_map : ⇑f.to_linear_map = f :=
   rfl
 
-theorem to_linear_map_injective : injective (to_linear_map : (E →ₛₗᵢ[σ₁₂] E₂) → E →ₛₗ[σ₁₂] E₂)
-  | ⟨f, _⟩, ⟨g, _⟩, rfl => rfl
-
-theorem coe_fn_injective : injective fun f : E →ₛₗᵢ[σ₁₂] E₂ x : E => f x :=
-  LinearMap.coe_injective.comp to_linear_map_injective
+theorem coe_injective : @injective (E →ₛₗᵢ[σ₁₂] E₂) (E → E₂) coeFn :=
+  FunLike.coe_injective
 
 @[ext]
 theorem ext {f g : E →ₛₗᵢ[σ₁₂] E₂} (h : ∀ x, f x = g x) : f = g :=
-  coe_fn_injective $ funext h
+  coe_injective $ funext h
+
+protected theorem congr_argₓ {f : E →ₛₗᵢ[σ₁₂] E₂} : ∀ {x x' : E}, x = x' → f x = f x'
+  | _, _, rfl => rfl
+
+protected theorem congr_funₓ {f g : E →ₛₗᵢ[σ₁₂] E₂} (h : f = g) (x : E) : f x = g x :=
+  h ▸ rfl
 
 @[simp]
 theorem map_zero : f 0 = 0 :=
@@ -69,6 +88,10 @@ theorem map_zero : f 0 = 0 :=
 @[simp]
 theorem map_add (x y : E) : f (x + y) = f x + f y :=
   f.to_linear_map.map_add x y
+
+@[simp]
+theorem map_neg (x : E) : f (-x) = -f x :=
+  f.to_linear_map.map_neg x
 
 @[simp]
 theorem map_sub (x y : E) : f (x - y) = f x - f y :=
@@ -149,6 +172,14 @@ theorem diam_range : Metric.diam (range f) = Metric.diam (univ : Set E) :=
 def to_continuous_linear_map : E →SL[σ₁₂] E₂ :=
   ⟨f.to_linear_map, f.continuous⟩
 
+theorem to_continuous_linear_map_injective : Function.Injective (to_continuous_linear_map : _ → E →SL[σ₁₂] E₂) :=
+  fun x y h => coe_injective (congr_argₓ _ h : ⇑x.to_continuous_linear_map = _)
+
+@[simp]
+theorem to_continuous_linear_map_inj {f g : E →ₛₗᵢ[σ₁₂] E₂} :
+    f.to_continuous_linear_map = g.to_continuous_linear_map ↔ f = g :=
+  to_continuous_linear_map_injective.eq_iff
+
 @[simp]
 theorem coe_to_continuous_linear_map : ⇑f.to_continuous_linear_map = f :=
   rfl
@@ -219,6 +250,12 @@ theorem coe_one : ((1 : E →ₗᵢ[R] E) : E → E) = _root_.id :=
 theorem coe_mul (f g : E →ₗᵢ[R] E) : ⇑(f * g) = f ∘ g :=
   rfl
 
+theorem one_def : (1 : E →ₗᵢ[R] E) = id :=
+  rfl
+
+theorem mul_def (f g : E →ₗᵢ[R] E) : (f * g : E →ₗᵢ[R] E) = f.comp g :=
+  rfl
+
 end LinearIsometry
 
 /-- Construct a `linear_isometry` from a `linear_map` satisfying `isometry`. -/
@@ -275,7 +312,7 @@ notation:25 E " ≃ₛₗᵢ[" σ₁₂:25 "] " E₂:0 => LinearIsometryEquiv σ
 
 notation:25 E " ≃ₗᵢ[" R:25 "] " E₂:0 => LinearIsometryEquiv (RingHom.id R) E E₂
 
-notation:25 E " ≃ₗᵢ⋆[" R:25 "] " E₂:0 => LinearIsometryEquiv (@starRingAut R _ _ : R →+* R) E E₂
+notation:25 E " ≃ₗᵢ⋆[" R:25 "] " E₂:0 => LinearIsometryEquiv (starRingEnd R) E E₂
 
 namespace LinearIsometryEquiv
 
@@ -283,8 +320,26 @@ variable (e : E ≃ₛₗᵢ[σ₁₂] E₂)
 
 include σ₂₁
 
+theorem to_linear_equiv_injective : injective (to_linear_equiv : (E ≃ₛₗᵢ[σ₁₂] E₂) → E ≃ₛₗ[σ₁₂] E₂)
+  | ⟨e, _⟩, ⟨_, _⟩, rfl => rfl
+
+@[simp]
+theorem to_linear_equiv_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} : f.to_linear_equiv = g.to_linear_equiv ↔ f = g :=
+  to_linear_equiv_injective.eq_iff
+
+instance : AddMonoidHomClass (E ≃ₛₗᵢ[σ₁₂] E₂) E E₂ where
+  coe := fun e => e.to_fun
+  coe_injective' := fun f g h => to_linear_equiv_injective (FunLike.coe_injective h)
+  map_add := fun f => map_add f.to_linear_equiv
+  map_zero := fun f => map_zero f.to_linear_equiv
+
+/-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly.
+-/
 instance : CoeFun (E ≃ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
   ⟨fun f => f.to_fun⟩
+
+theorem coe_injective : @Function.Injective (E ≃ₛₗᵢ[σ₁₂] E₂) (E → E₂) coeFn :=
+  FunLike.coe_injective
 
 @[simp]
 theorem coe_mk (e : E ≃ₛₗ[σ₁₂] E₂) (he : ∀ x, ∥e x∥ = ∥x∥) : ⇑mk e he = e :=
@@ -294,12 +349,15 @@ theorem coe_mk (e : E ≃ₛₗ[σ₁₂] E₂) (he : ∀ x, ∥e x∥ = ∥x∥
 theorem coe_to_linear_equiv (e : E ≃ₛₗᵢ[σ₁₂] E₂) : ⇑e.to_linear_equiv = e :=
   rfl
 
-theorem to_linear_equiv_injective : injective (to_linear_equiv : (E ≃ₛₗᵢ[σ₁₂] E₂) → E ≃ₛₗ[σ₁₂] E₂)
-  | ⟨e, _⟩, ⟨_, _⟩, rfl => rfl
-
 @[ext]
 theorem ext {e e' : E ≃ₛₗᵢ[σ₁₂] E₂} (h : ∀ x, e x = e' x) : e = e' :=
   to_linear_equiv_injective $ LinearEquiv.ext h
+
+protected theorem congr_argₓ {f : E ≃ₛₗᵢ[σ₁₂] E₂} : ∀ {x x' : E}, x = x' → f x = f x'
+  | _, _, rfl => rfl
+
+protected theorem congr_funₓ {f g : E ≃ₛₗᵢ[σ₁₂] E₂} (h : f = g) (x : E) : f x = g x :=
+  h ▸ rfl
 
 /-- Construct a `linear_isometry_equiv` from a `linear_equiv` and two inequalities:
 `∀ x, ∥e x∥ ≤ ∥x∥` and `∀ y, ∥e.symm y∥ ≤ ∥y∥`. -/
@@ -316,6 +374,13 @@ theorem norm_map (x : E) : ∥e x∥ = ∥x∥ :=
 def to_linear_isometry : E →ₛₗᵢ[σ₁₂] E₂ :=
   ⟨e.1, e.2⟩
 
+theorem to_linear_isometry_injective : Function.Injective (to_linear_isometry : _ → E →ₛₗᵢ[σ₁₂] E₂) := fun x y h =>
+  coe_injective (congr_argₓ _ h : ⇑x.to_linear_isometry = _)
+
+@[simp]
+theorem to_linear_isometry_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} : f.to_linear_isometry = g.to_linear_isometry ↔ f = g :=
+  to_linear_isometry_injective.eq_iff
+
 @[simp]
 theorem coe_to_linear_isometry : ⇑e.to_linear_isometry = e :=
   rfl
@@ -326,6 +391,13 @@ protected theorem Isometry : Isometry e :=
 /-- Reinterpret a `linear_isometry_equiv` as an `isometric`. -/
 def to_isometric : E ≃ᵢ E₂ :=
   ⟨e.to_linear_equiv.to_equiv, e.isometry⟩
+
+theorem to_isometric_injective : Function.Injective (to_isometric : (E ≃ₛₗᵢ[σ₁₂] E₂) → E ≃ᵢ E₂) := fun x y h =>
+  coe_injective (congr_argₓ _ h : ⇑x.to_isometric = _)
+
+@[simp]
+theorem to_isometric_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} : f.to_isometric = g.to_isometric ↔ f = g :=
+  to_isometric_injective.eq_iff
 
 @[simp]
 theorem coe_to_isometric : ⇑e.to_isometric = e :=
@@ -338,6 +410,13 @@ theorem range_eq_univ (e : E ≃ₛₗᵢ[σ₁₂] E₂) : Set.Range e = Set.Un
 /-- Reinterpret a `linear_isometry_equiv` as an `homeomorph`. -/
 def to_homeomorph : E ≃ₜ E₂ :=
   e.to_isometric.to_homeomorph
+
+theorem to_homeomorph_injective : Function.Injective (to_homeomorph : (E ≃ₛₗᵢ[σ₁₂] E₂) → E ≃ₜ E₂) := fun x y h =>
+  coe_injective (congr_argₓ _ h : ⇑x.to_homeomorph = _)
+
+@[simp]
+theorem to_homeomorph_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} : f.to_homeomorph = g.to_homeomorph ↔ f = g :=
+  to_homeomorph_injective.eq_iff
 
 @[simp]
 theorem coe_to_homeomorph : ⇑e.to_homeomorph = e :=
@@ -358,6 +437,14 @@ protected theorem ContinuousWithinAt {s x} : ContinuousWithinAt e s x :=
 /-- Interpret a `linear_isometry_equiv` as a continuous linear equiv. -/
 def to_continuous_linear_equiv : E ≃SL[σ₁₂] E₂ :=
   { e.to_linear_isometry.to_continuous_linear_map, e.to_homeomorph with }
+
+theorem to_continuous_linear_equiv_injective : Function.Injective (to_continuous_linear_equiv : _ → E ≃SL[σ₁₂] E₂) :=
+  fun x y h => coe_injective (congr_argₓ _ h : ⇑x.to_continuous_linear_equiv = _)
+
+@[simp]
+theorem to_continuous_linear_equiv_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} :
+    f.to_continuous_linear_equiv = g.to_continuous_linear_equiv ↔ f = g :=
+  to_continuous_linear_equiv_injective.eq_iff
 
 @[simp]
 theorem coe_to_continuous_linear_equiv : ⇑e.to_continuous_linear_equiv = e :=
@@ -483,6 +570,15 @@ theorem coe_mul (e e' : E ≃ₗᵢ[R] E) : ⇑(e * e') = e ∘ e' :=
 
 @[simp]
 theorem coe_inv (e : E ≃ₗᵢ[R] E) : ⇑e⁻¹ = e.symm :=
+  rfl
+
+theorem one_def : (1 : E ≃ₗᵢ[R] E) = refl _ _ :=
+  rfl
+
+theorem mul_def (e e' : E ≃ₗᵢ[R] E) : (e * e' : E ≃ₗᵢ[R] E) = e'.trans e :=
+  rfl
+
+theorem inv_def (e : E ≃ₗᵢ[R] E) : (e⁻¹ : E ≃ₗᵢ[R] E) = e.symm :=
   rfl
 
 include σ₂₁
@@ -632,4 +728,18 @@ theorem coe_prod_assoc_symm [Module R E₂] [Module R E₃] :
   rfl
 
 end LinearIsometryEquiv
+
+/-- Two linear isometries are equal if they are equal on basis vectors. -/
+theorem Basis.ext_linear_isometry {ι : Type _} (b : Basis ι R E) {f₁ f₂ : E →ₛₗᵢ[σ₁₂] E₂}
+    (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ :=
+  LinearIsometry.to_linear_map_injective $ b.ext h
+
+include σ₂₁
+
+/-- Two linear isometric equivalences are equal if they are equal on basis vectors. -/
+theorem Basis.ext_linear_isometry_equiv {ι : Type _} (b : Basis ι R E) {f₁ f₂ : E ≃ₛₗᵢ[σ₁₂] E₂}
+    (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ :=
+  LinearIsometryEquiv.to_linear_equiv_injective $ b.ext' h
+
+omit σ₂₁
 

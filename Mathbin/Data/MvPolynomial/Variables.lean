@@ -596,6 +596,15 @@ theorem total_degree_pow (a : MvPolynomial σ R) (n : ℕ) : (a ^ n).totalDegree
       add_le_add_left ih _ _ = (n + 1) * a.total_degree := by
       rw [add_mulₓ, one_mulₓ, add_commₓ]
 
+@[simp]
+theorem total_degree_monomial (s : σ →₀ ℕ) {c : R} (hc : c ≠ 0) :
+    (monomial s c : MvPolynomial σ R).totalDegree = s.sum fun _ e => e := by
+  simp [total_degree, support_monomial, if_neg hc]
+
+@[simp]
+theorem total_degree_X_pow [Nontrivial R] (s : σ) (n : ℕ) : (X s ^ n : MvPolynomial σ R).totalDegree = n := by
+  simp [X_pow_eq_monomial, one_ne_zero]
+
 theorem total_degree_list_prod :
     ∀ s : List (MvPolynomial σ R), s.prod.total_degree ≤ (s.map MvPolynomial.totalDegree).Sum
   | [] => by
@@ -615,6 +624,15 @@ theorem total_degree_finset_prod {ι : Type _} (s : Finset ι) (f : ι → MvPol
   refine' le_transₓ (total_degree_multiset_prod _) _
   rw [Multiset.map_map]
   rfl
+
+theorem total_degree_finset_sum {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R) :
+    (s.sum f).totalDegree ≤ Finset.sup s fun i => (f i).totalDegree := by
+  induction' s using Finset.cons_induction with a s has hind
+  · exact zero_le _
+    
+  · rw [Finset.sum_cons, Finset.sup_cons, sup_eq_max]
+    exact (MvPolynomial.total_degree_add _ _).trans (max_le_max le_rfl hind)
+    
 
 theorem exists_degree_lt [Fintype σ] (f : MvPolynomial σ R) (n : ℕ) (h : f.total_degree < n * Fintype.card σ)
     {d : σ →₀ ℕ} (hd : d ∈ f.support) : ∃ i, d i < n := by

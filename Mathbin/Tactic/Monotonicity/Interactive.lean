@@ -68,7 +68,7 @@ unsafe def ac_mono_ctx.to_tactic_format (ctx : ac_mono_ctx) : tactic format := d
       f! "\{ function := {fn }
         , left  := {l }
         , right := {r }
-        , rel_def := {rel} }"
+        , rel_def := {rel} }}"
 
 unsafe instance has_to_tactic_format_mono_ctx : has_to_tactic_format ac_mono_ctx where
   to_tactic_format := ac_mono_ctx.to_tactic_format

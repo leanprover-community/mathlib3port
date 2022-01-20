@@ -227,7 +227,7 @@ theorem of_set_eq_refl {s : Set α} [DecidablePred (· ∈ s)] : of_set s = Pequ
     intro
     rw [← mem_of_set_self_iff, h]
     exact rfl, fun h => by
-    simp only [of_set_univ.symm, h] <;> congr⟩
+    simp only [← of_set_univ, h]⟩
 
 end OfSet
 

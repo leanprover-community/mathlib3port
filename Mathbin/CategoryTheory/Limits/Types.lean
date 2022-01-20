@@ -327,7 +327,7 @@ def image : Type u :=
   Set.Range f
 
 instance [Inhabited α] : Inhabited (image f) where
-  default := ⟨f (default α), ⟨_, rfl⟩⟩
+  default := ⟨f default, ⟨_, rfl⟩⟩
 
 /-- the inclusion of `image f` into the target -/
 def image.ι : image f ⟶ β :=

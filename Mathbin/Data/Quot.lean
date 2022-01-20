@@ -30,7 +30,7 @@ variable {ra : α → α → Prop} {rb : β → β → Prop} {φ : Quot ra → Q
 local notation:999 "⟦" a "⟧" => Quot.mk _ a
 
 instance [Inhabited α] : Inhabited (Quot ra) :=
-  ⟨⟦default _⟧⟩
+  ⟨⟦default⟧⟩
 
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrec_on₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ (⟦a⟧) (⟦b⟧))
@@ -130,7 +130,7 @@ variable [sa : Setoidₓ α] [sb : Setoidₓ β]
 variable {φ : Quotientₓ sa → Quotientₓ sb → Sort _}
 
 instance [Inhabited α] : Inhabited (Quotientₓ sa) :=
-  ⟨⟦default _⟧⟩
+  ⟨⟦default⟧⟩
 
 /-- Induction on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrec_on₂ (qa : Quotientₓ sa) (qb : Quotientₓ sb) (f : ∀ a b, φ (⟦a⟧) (⟦b⟧))
@@ -294,7 +294,7 @@ def mk (a : α) : Trunc α :=
   Quot.mk _ a
 
 instance [Inhabited α] : Inhabited (Trunc α) :=
-  ⟨mk (default _)⟩
+  ⟨mk default⟩
 
 /-- Any constant function lifts to a function out of the truncation -/
 def lift (f : α → β) (c : ∀ a b : α, f a = f b) : Trunc α → β :=

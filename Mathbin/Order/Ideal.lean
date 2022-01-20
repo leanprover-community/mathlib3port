@@ -85,7 +85,7 @@ def principal (p : P) : ideal P where
   mem_of_le := fun x y hxy hy => le_transₓ hxy hy
 
 instance [Inhabited P] : Inhabited (ideal P) :=
-  ⟨ideal.principal $ default P⟩
+  ⟨ideal.principal default⟩
 
 /-- An ideal of `P` can be viewed as a subset of `P`. -/
 instance : Coe (ideal P) (Set P) :=
@@ -284,7 +284,7 @@ theorem sup_mem x y (_ : x ∈ I) (_ : y ∈ I) : x⊔y ∈ I :=
 
 @[simp]
 theorem sup_mem_iff : x⊔y ∈ I ↔ x ∈ I ∧ y ∈ I :=
-  ⟨fun h => ⟨I.mem_of_le le_sup_left h, I.mem_of_le le_sup_right h⟩, fun h => sup_mem x y h.left h.right⟩
+  ⟨fun h => ⟨I.mem_of_le le_sup_left h, I.mem_of_le le_sup_right h⟩, fun h => sup_mem x h.left y h.right⟩
 
 end SemilatticeSup
 
@@ -297,7 +297,7 @@ def inf (I J : ideal P) : ideal P where
   Carrier := I ∩ J
   Nonempty := inter_nonempty I J
   Directed := fun x ⟨_, _⟩ y ⟨_, _⟩ =>
-    ⟨x⊔y, ⟨sup_mem x y ‹_› ‹_›, sup_mem x y ‹_› ‹_›⟩, by
+    ⟨x⊔y, ⟨sup_mem x ‹_› y ‹_›, sup_mem x ‹_› y ‹_›⟩, by
       simp ⟩
   mem_of_le := fun x y h ⟨_, _⟩ => ⟨mem_of_le I h ‹_›, mem_of_le J h ‹_›⟩
 
@@ -310,7 +310,7 @@ def sup (I J : ideal P) : ideal P where
     exact ⟨w, w, h.1, w, h.2, le_sup_left⟩
   Directed := fun x ⟨xi, _, xj, _, _⟩ y ⟨yi, _, yj, _, _⟩ =>
     ⟨x⊔y,
-      ⟨xi⊔yi, sup_mem xi yi ‹_› ‹_›, xj⊔yj, sup_mem xj yj ‹_› ‹_›,
+      ⟨xi⊔yi, sup_mem xi ‹_› yi ‹_›, xj⊔yj, sup_mem xj ‹_› yj ‹_›,
         sup_le
           (calc
             x ≤ xi⊔xj := ‹_›
@@ -324,7 +324,7 @@ def sup (I J : ideal P) : ideal P where
   mem_of_le := fun x y _ ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, le_transₓ ‹x ≤ y› ‹_›⟩
 
 theorem sup_le : I ≤ K → J ≤ K → sup I J ≤ K := fun hIK hJK x ⟨i, hiI, j, hjJ, hxij⟩ =>
-  K.mem_of_le hxij $ sup_mem i j (mem_of_mem_of_le hiI hIK) (mem_of_mem_of_le hjJ hJK)
+  K.mem_of_le hxij $ sup_mem i (mem_of_mem_of_le hiI hIK) j (mem_of_mem_of_le hjJ hJK)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∈ » I)
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ∈ » J)
@@ -392,10 +392,10 @@ instance : HasInfₓ (ideal P) where
           ⟨fun S ⟨I, hS⟩ => by
             simp only [← hS, sup_mem_iff, mem_coe, Set.mem_Inter]
             intro hI
-            rw [Set.mem_bInter_iff] at *
+            rw [Set.mem_Inter₂] at *
             exact ⟨hx _ hI, hy _ hI⟩, le_sup_left, le_sup_right⟩⟩,
       mem_of_le := fun x y hxy hy => by
-        rw [Set.mem_bInter_iff] at *
+        rw [Set.mem_Inter₂] at *
         exact fun I hI => mem_of_le I ‹_› (hy I hI) }
 
 variable {s : Set (ideal P)}
@@ -462,7 +462,7 @@ variable [BooleanAlgebra P] {x : P} {I : ideal P}
 theorem is_proper.not_mem_of_compl_mem (hI : is_proper I) (hxc : xᶜ ∈ I) : x ∉ I := by
   intro hx
   apply hI.top_not_mem
-  have ht : x⊔xᶜ ∈ I := sup_mem _ _ ‹_› ‹_›
+  have ht : x⊔xᶜ ∈ I := sup_mem _ ‹_› _ ‹_›
   rwa [sup_compl_eq_top] at ht
 
 theorem is_proper.not_mem_or_compl_not_mem (hI : is_proper I) : x ∉ I ∨ xᶜ ∉ I := by

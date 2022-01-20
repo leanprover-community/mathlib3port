@@ -291,9 +291,9 @@ theorem arrow_congr_right_apply {α : Sort u} {β : Sort v} {γ : Sort w} (e : �
 
 /-- An embedding `e : α ↪ β` defines an embedding `(α → γ) ↪ (β → γ)` for any inhabited type `γ`.
 This embedding sends each `f : α → γ` to a function `g : β → γ` such that `g ∘ e = f` and
-`g y = default γ` whenever `y ∉ range e`. -/
+`g y = default` whenever `y ∉ range e`. -/
 noncomputable def arrow_congr_left {α : Sort u} {β : Sort v} {γ : Sort w} [Inhabited γ] (e : α ↪ β) : (α → γ) ↪ β → γ :=
-  ⟨fun f => extend e f fun _ => default γ, fun f₁ f₂ h =>
+  ⟨fun f => extend e f fun _ => default, fun f₁ f₂ h =>
     funext $ fun x => by
       simpa only [extend_apply e.injective] using congr_funₓ h (e x)⟩
 

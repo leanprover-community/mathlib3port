@@ -374,7 +374,7 @@ theorem coe_fn_const (b : β) : (const α b : α →ₘ[μ] β) =ᵐ[μ] Functio
 variable {α}
 
 instance [Inhabited β] : Inhabited (α →ₘ[μ] β) :=
-  ⟨const α (default β)⟩
+  ⟨const α default⟩
 
 @[to_additive]
 instance [HasOne β] : HasOne (α →ₘ[μ] β) :=

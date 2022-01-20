@@ -99,7 +99,7 @@ instance {γ} : IsLawfulFunctor (const γ) := by
   constructor <;> intros <;> rfl
 
 instance {α β} [Inhabited α] : Inhabited (const α β) :=
-  ⟨(default _ : α)⟩
+  ⟨(default : α)⟩
 
 end Const
 
@@ -127,7 +127,7 @@ instance add_const.is_lawful_functor {γ} : IsLawfulFunctor (add_const γ) :=
   @const.is_lawful_functor γ
 
 instance {α β} [Inhabited α] : Inhabited (add_const α β) :=
-  ⟨(default _ : α)⟩
+  ⟨(default : α)⟩
 
 /-- `functor.comp` is a wrapper around `function.comp` for types.
     It prevents Lean's type class resolution mechanism from trying
@@ -153,7 +153,7 @@ protected theorem ext {α} {x y : comp F G α} : x.run = y.run → x = y :=
   id
 
 instance {α} [Inhabited (F (G α))] : Inhabited (comp F G α) :=
-  ⟨(default _ : F (G α))⟩
+  ⟨(default : F (G α))⟩
 
 variable [Functor F] [Functor G]
 

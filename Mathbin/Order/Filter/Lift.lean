@@ -62,7 +62,7 @@ theorem has_basis.lift {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α
 
 theorem mem_lift_sets (hg : Monotone g) {s : Set β} : s ∈ f.lift g ↔ ∃ t ∈ f, s ∈ g t :=
   (f.basis_sets.mem_lift_iff (fun s => (g s).basis_sets) hg).trans $ by
-    simp only [id, ← exists_mem_subset_iff]
+    simp only [id, exists_mem_subset_iff]
 
 theorem mem_lift {s : Set β} {t : Set α} (ht : t ∈ f) (hs : s ∈ g t) : s ∈ f.lift g :=
   le_principal_iff.mp $ show f.lift g ≤ 𝓟 s from infi_le_of_le t $ infi_le_of_le ht $ le_principal_iff.mpr hs
@@ -354,7 +354,7 @@ theorem eventually_lift'_powerset {f : Filter α} {p : Set α → Prop} :
 theorem eventually_lift'_powerset' {f : Filter α} {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ t → p t → p s) :
     (∀ᶠ s in f.lift' powerset, p s) ↔ ∃ s ∈ f, p s :=
   eventually_lift'_powerset.trans $
-    exists_congr $ fun s => exists_congr $ fun hsf => ⟨fun H => H s (subset.refl s), fun hs t ht => hp ht hs⟩
+    exists₂_congrₓ $ fun s hsf => ⟨fun H => H s (subset.refl s), fun hs t ht => hp ht hs⟩
 
 instance lift'_powerset_ne_bot (f : Filter α) : ne_bot (f.lift' powerset) :=
   (lift'_ne_bot_iff monotone_powerset).2 $ fun _ _ => powerset_nonempty
@@ -389,20 +389,20 @@ section Prod
 
 variable {f : Filter α}
 
-theorem prod_def {f : Filter α} {g : Filter β} : f ×ᶠ g = (f.lift $ fun s => g.lift' $ Set.Prod s) := by
-  have : ∀ s : Set α t : Set β, 𝓟 (Set.Prod s t) = (𝓟 s).comap Prod.fst⊓(𝓟 t).comap Prod.snd := by
+theorem prod_def {f : Filter α} {g : Filter β} : f ×ᶠ g = (f.lift $ fun s => g.lift' $ fun t => s ×ˢ t) := by
+  have : ∀ s : Set α t : Set β, 𝓟 (s ×ˢ t) = (𝓟 s).comap Prod.fst⊓(𝓟 t).comap Prod.snd := by
     simp only [principal_eq_iff_eq, comap_principal, inf_principal] <;> intros <;> rfl
   simp only [Filter.lift', Function.comp, this, lift_inf, lift_const, lift_inf]
   rw [← comap_lift_eq monotone_principal, ← comap_lift_eq monotone_principal]
   simp only [Filter.prod, lift_principal2, eq_self_iff_true]
 
-theorem prod_same_eq : f ×ᶠ f = f.lift' fun t => Set.Prod t t := by
+theorem prod_same_eq : f ×ᶠ f = f.lift' fun t : Set α => t ×ˢ t := by
   rw [prod_def] <;>
     exact
       lift_lift'_same_eq_lift' (fun s => Set.monotone_prod monotone_const monotone_id) fun t =>
         Set.monotone_prod monotone_id monotone_const
 
-theorem mem_prod_same_iff {s : Set (α × α)} : s ∈ f ×ᶠ f ↔ ∃ t ∈ f, Set.Prod t t ⊆ s := by
+theorem mem_prod_same_iff {s : Set (α × α)} : s ∈ f ×ᶠ f ↔ ∃ t ∈ f, t ×ˢ t ⊆ s := by
   rw [prod_same_eq, mem_lift'_sets] <;> exact Set.monotone_prod monotone_id monotone_id
 
 theorem tendsto_prod_self_iff {f : α × α → β} {x : Filter α} {y : Filter β} :
@@ -427,7 +427,7 @@ theorem prod_lift_lift {f₁ : Filter α₁} {f₂ : Filter α₂} {g₁ : Set �
 
 theorem prod_lift'_lift' {f₁ : Filter α₁} {f₂ : Filter α₂} {g₁ : Set α₁ → Set β₁} {g₂ : Set α₂ → Set β₂}
     (hg₁ : Monotone g₁) (hg₂ : Monotone g₂) :
-    f₁.lift' g₁ ×ᶠ f₂.lift' g₂ = f₁.lift fun s => f₂.lift' fun t => (g₁ s).Prod (g₂ t) := by
+    f₁.lift' g₁ ×ᶠ f₂.lift' g₂ = f₁.lift fun s => f₂.lift' fun t => g₁ s ×ˢ g₂ t := by
   rw [prod_def, lift_lift'_assoc]
   apply congr_argₓ
   funext x

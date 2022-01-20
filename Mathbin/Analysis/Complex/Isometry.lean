@@ -1,4 +1,6 @@
 import Mathbin.Analysis.Complex.Circle
+import Mathbin.LinearAlgebra.Determinant
+import Mathbin.LinearAlgebra.GeneralLinearGroup
 
 /-!
 # Isometries of the Complex Plane
@@ -28,48 +30,25 @@ open_locale ComplexConjugate
 local notation "|" x "|" => Complex.abs x
 
 /-- An element of the unit circle defines a `linear_isometry_equiv` from `ℂ` to itself, by
-rotation. This is an auxiliary construction; use `rotation`, which has more structure, by
-preference. -/
-def rotationAux (a : circle) : ℂ ≃ₗᵢ[ℝ] ℂ where
-  toFun := fun z => a * z
-  map_add' := mul_addₓ (↑a)
-  map_smul' := fun t z => by
-    simp only [real_smul, RingHom.id_apply]
-    ring
-  invFun := fun z => a⁻¹ * z
-  left_inv := fun z => by
-    field_simp [nonzero_of_mem_circle]
-    ring
-  right_inv := fun z => by
-    field_simp [nonzero_of_mem_circle]
-    ring
-  norm_map' := by
-    simp
-
-/-- An element of the unit circle defines a `linear_isometry_equiv` from `ℂ` to itself, by
 rotation. -/
 def rotation : circle →* ℂ ≃ₗᵢ[ℝ] ℂ where
-  toFun := rotationAux
-  map_one' := by
-    ext1
-    simp [rotationAux]
-  map_mul' := fun a b => by
-    ext1
-    simp [rotationAux]
+  toFun := fun a =>
+    { DistribMulAction.toLinearEquiv ℝ ℂ a with
+      norm_map' := fun x =>
+        show |a * x| = |x| by
+          rw [Complex.abs_mul, abs_coe_circle, one_mulₓ] }
+  map_one' := LinearIsometryEquiv.ext $ one_smul _
+  map_mul' := fun _ _ => LinearIsometryEquiv.ext $ mul_smul _ _
 
 @[simp]
 theorem rotation_apply (a : circle) (z : ℂ) : rotation a z = a * z :=
   rfl
 
-theorem LinearIsometryEquiv.congr_fun {R E F} [Semiringₓ R] [SemiNormedGroup E] [SemiNormedGroup F] [Module R E]
-    [Module R F] {f g : E ≃ₗᵢ[R] F} (h : f = g) (x : E) : f x = g x :=
-  congr_argₓ _ h
-
 theorem rotation_ne_conj_lie (a : circle) : rotation a ≠ conj_lie := by
   intro h
   have h1 : rotation a 1 = conj 1 := LinearIsometryEquiv.congr_fun h 1
   have hI : rotation a I = conj I := LinearIsometryEquiv.congr_fun h I
-  rw [rotation_apply, RingEquiv.map_one, mul_oneₓ] at h1
+  rw [rotation_apply, RingHom.map_one, mul_oneₓ] at h1
   rw [rotation_apply, conj_I, ← neg_one_mul, mul_left_inj' I_ne_zero, h1, eq_neg_self_iff] at hI
   exact one_ne_zero hI
 
@@ -108,11 +87,11 @@ theorem LinearIsometry.im_apply_eq_im {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1)
   apply_fun fun x => x ^ 2  at this
   simp only [norm_eq_abs, ← norm_sq_eq_abs] at this
   rw [← of_real_inj, ← mul_conj, ← mul_conj] at this
-  rw [RingEquiv.map_sub, RingEquiv.map_sub] at this
+  rw [RingHom.map_sub, RingHom.map_sub] at this
   simp only [sub_mul, mul_sub, one_mulₓ, mul_oneₓ] at this
   rw [mul_conj, norm_sq_eq_abs, ← norm_eq_abs, LinearIsometry.norm_map] at this
   rw [mul_conj, norm_sq_eq_abs, ← norm_eq_abs] at this
-  simp only [sub_sub, sub_right_inj, mul_oneₓ, of_real_pow, RingEquiv.map_one, norm_eq_abs] at this
+  simp only [sub_sub, sub_right_inj, mul_oneₓ, of_real_pow, RingHom.map_one, norm_eq_abs] at this
   simp only [add_sub, sub_left_inj] at this
   rw [add_commₓ, ← this, add_commₓ]
 
@@ -155,4 +134,29 @@ theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) : ∃ a : circle, f
     
   · exact eq_mul_of_inv_mul_eq h₂
     
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+/-- The matrix representation of `rotation a` is equal to the conformal matrix
+`![![re a, -im a], ![im a, re a]]`. -/
+theorem to_matrix_rotation (a : circle) :
+    LinearMap.toMatrix basis_one_I basis_one_I (rotation a).toLinearEquiv =
+      Matrix.planeConformalMatrix (re a) (im a)
+        (by
+          simp [pow_two, ← norm_sq_apply]) :=
+  by
+  ext i j
+  simp [LinearMap.to_matrix_apply]
+  fin_cases i <;> fin_cases j <;> simp
+
+/-- The determinant of `rotation` (as a linear map) is equal to `1`. -/
+@[simp]
+theorem det_rotation (a : circle) : ((rotation a).toLinearEquiv : ℂ →ₗ[ℝ] ℂ).det = 1 := by
+  rw [← LinearMap.det_to_matrix basis_one_I, to_matrix_rotation, Matrix.det_fin_two]
+  simp [← norm_sq_apply]
+
+/-- The determinant of `rotation` (as a linear equiv) is equal to `1`. -/
+@[simp]
+theorem linear_equiv_det_rotation (a : circle) : (rotation a).toLinearEquiv.det = 1 := by
+  rw [← Units.eq_iff, LinearEquiv.coe_det, det_rotation, Units.coe_one]
 

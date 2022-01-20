@@ -276,7 +276,7 @@ theorem vsub_right_injective (p : P) : Function.Injective ((· -ᵥ ·) p : P �
 
 end General
 
-section Comm
+section comm
 
 variable {G : Type _} {P : Type _} [AddCommGroupₓ G] [AddTorsor G P]
 
@@ -301,7 +301,7 @@ theorem vadd_eq_vadd_iff_sub_eq_vsub {v₁ v₂ : G} {p₁ p₂ : P} : v₁ +ᵥ
 theorem vsub_sub_vsub_comm (p₁ p₂ p₃ p₄ : P) : p₁ -ᵥ p₂ - (p₃ -ᵥ p₄) = p₁ -ᵥ p₃ - (p₂ -ᵥ p₄) := by
   rw [← vsub_vadd_eq_vsub_sub, vsub_vadd_comm, vsub_vadd_eq_vsub_sub]
 
-end Comm
+end comm
 
 namespace Prod
 
@@ -483,5 +483,5 @@ end Equivₓ
 
 theorem AddTorsor.subsingleton_iff (G P : Type _) [AddGroupₓ G] [AddTorsor G P] : Subsingleton G ↔ Subsingleton P := by
   inhabit P
-  exact (Equivₓ.vaddConst (default P)).subsingleton_congr
+  exact (Equivₓ.vaddConst default).subsingleton_congr
 

@@ -147,11 +147,11 @@ theorem _root_.commute.op [Mul α] {x y : α} (h : Commute x y) : Commute (op x)
 theorem commute.unop [Mul α] {x y : αᵐᵒᵖ} (h : Commute x y) : Commute (unop x) (unop y) :=
   h.unop
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem commute_op [Mul α] {x y : α} : Commute (op x) (op y) ↔ Commute x y :=
   semiconj_by_op
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem commute_unop [Mul α] {x y : αᵐᵒᵖ} : Commute (unop x) (unop y) ↔ Commute x y :=
   semiconj_by_unop
 

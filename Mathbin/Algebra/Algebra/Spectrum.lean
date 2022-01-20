@@ -333,3 +333,19 @@ end ScalarField
 
 end Spectrum
 
+namespace AlgHom
+
+variable {R : Type _} {A : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A]
+
+local notation "σ" => Spectrum R
+
+local notation "↑ₐ" => algebraMap R A
+
+theorem apply_mem_spectrum [Nontrivial R] (φ : A →ₐ[R] R) (a : A) : φ a ∈ σ a := by
+  have h : ↑ₐ (φ a) - a ∈ φ.to_ring_hom.ker := by
+    simp only [RingHom.mem_ker, coe_to_ring_hom, commutes, Algebra.id.map_eq_id, to_ring_hom_eq_coe, RingHom.id_apply,
+      sub_self, map_sub]
+  simp only [Spectrum.mem_iff, ← mem_nonunits_iff, coe_subset_nonunits φ.to_ring_hom.ker_ne_top h]
+
+end AlgHom
+

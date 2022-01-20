@@ -292,7 +292,7 @@ instance : functor.additive (embedding C) :=
 end Embedding
 
 instance [Inhabited C] : Inhabited (Mat_ C) :=
-  ⟨(embedding C).obj (default C)⟩
+  ⟨(embedding C).obj default⟩
 
 open CategoryTheory.Limits
 

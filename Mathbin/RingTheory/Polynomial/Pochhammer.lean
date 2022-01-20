@@ -63,8 +63,8 @@ end
 
 @[simp, norm_cast]
 theorem pochhammer_eval_cast (n k : ℕ) : ((pochhammer ℕ n).eval k : S) = (pochhammer S n).eval k := by
-  rw [← pochhammer_map (algebraMap ℕ S), eval_map, ← (algebraMap ℕ S).eq_nat_cast, eval₂_at_nat_cast, Nat.cast_id,
-    RingHom.eq_nat_cast]
+  rw [← pochhammer_map (algebraMap ℕ S), eval_map, ← eq_nat_cast (algebraMap ℕ S), eval₂_at_nat_cast, Nat.cast_id,
+    eq_nat_cast]
 
 theorem pochhammer_eval_zero {n : ℕ} : (pochhammer S n).eval 0 = if n = 0 then 1 else 0 := by
   cases n
@@ -83,7 +83,7 @@ theorem pochhammer_ne_zero_eval_zero {n : ℕ} (h : n ≠ 0) : (pochhammer S n).
 theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n + 1) = pochhammer S n * (X + n) := by
   suffices h : pochhammer ℕ (n + 1) = pochhammer ℕ n * (X + n)
   · apply_fun Polynomial.map (algebraMap ℕ S)  at h
-    simpa only [pochhammer_map, Polynomial.map_mul, Polynomial.map_add, map_X, map_nat_cast] using h
+    simpa only [pochhammer_map, Polynomial.map_mul, Polynomial.map_add, map_X, Polynomial.map_nat_cast] using h
     
   induction' n with n ih
   · simp

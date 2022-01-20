@@ -1,4 +1,3 @@
-import Mathbin.Data.Sum.Basic
 import Mathbin.Order.Basic
 
 /-!
@@ -16,6 +15,22 @@ universe u v
 variable {α : Type u} {β : Type v} {r : α → α → Prop} {s : β → β → Prop}
 
 open Function
+
+/-- A version of `antisymm` with `r` explicit.
+
+This lemma matches the lemmas from lean core in `init.algebra.classes`, but is missing there.  -/
+@[elabWithoutExpectedType]
+theorem antisymm_of (r : α → α → Prop) [IsAntisymm α r] {a b : α} : r a b → r b a → a = b :=
+  antisymm
+
+theorem comm [IsSymm α r] {a b : α} : r a b ↔ r b a :=
+  ⟨symm, symm⟩
+
+/-- A version of `comm` with `r` explicit.
+
+This lemma matches the lemmas from lean core in `init.algebra.classes`, but is missing there.  -/
+theorem comm_of (r : α → α → Prop) [IsSymm α r] {a b : α} : r a b ↔ r b a :=
+  comm
 
 theorem IsRefl.swap r [IsRefl α r] : IsRefl α (swap r) :=
   ⟨refl_of r⟩
@@ -62,6 +77,9 @@ protected theorem IsAsymm.is_irrefl [IsAsymm α r] : IsIrrefl α r :=
 
 protected theorem IsTotal.is_trichotomous r [IsTotal α r] : IsTrichotomous α r :=
   ⟨fun a b => Or.left_comm.1 (Or.inr $ total_of r a b)⟩
+
+instance (priority := 100) IsTotal.to_is_refl r [IsTotal α r] : IsRefl α r :=
+  ⟨fun a => (or_selfₓ _).1 $ total_of r a a⟩
 
 instance [Preorderₓ α] : IsRefl α (· ≤ ·) :=
   ⟨le_reflₓ⟩
@@ -317,15 +335,6 @@ instance EmptyRelation.is_well_order [Subsingleton α] : IsWellOrder α EmptyRel
 
 instance Nat.Lt.is_well_order : IsWellOrder ℕ (· < ·) :=
   ⟨Nat.lt_wf⟩
-
-instance Sum.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOrder (Sum α β) (Sum.Lex r s) where
-  trichotomous := fun a b => by
-    cases a <;> cases b <;> simp <;> apply trichotomous
-  irrefl := fun a => by
-    cases a <;> simp <;> apply irrefl
-  trans := fun a b c => by
-    cases a <;> cases b <;> simp <;> cases c <;> simp <;> apply trans
-  wf := Sum.lex_wf IsWellOrder.wf IsWellOrder.wf
 
 instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOrder (α × β) (Prod.Lex r s) where
   trichotomous := fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ =>

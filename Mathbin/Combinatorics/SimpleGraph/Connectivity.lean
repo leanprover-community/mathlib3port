@@ -186,7 +186,7 @@ theorem length_append : ∀ {u v w : V} p : G.walk u v q : G.walk v w, (p.append
   | _, _, _, cons _ _, _ => by
     simp [length_append, add_left_commₓ, add_commₓ]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 protected theorem length_reverse_aux :
     ∀ {u v w : V} p : G.walk u v q : G.walk u w, (p.reverse_aux q).length = p.length + q.length

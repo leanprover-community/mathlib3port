@@ -121,7 +121,7 @@ protected theorem completion.mem_uniformity_dist (s : Set (completion α × comp
     refine' mem_of_superset ht1 _
     have A : ∀ a b : completion α, (a, b) ∈ t1 → dist a b < ε := by
       intro a b hab
-      have : ((a, b), (a, a)) ∈ Set.Prod t1 t2 := ⟨hab, refl_mem_uniformity ht2⟩
+      have : ((a, b), (a, a)) ∈ t1 ×ˢ t2 := ⟨hab, refl_mem_uniformity ht2⟩
       have I := ht this
       simp [completion.dist_self, Real.dist_eq, completion.dist_comm] at I
       exact lt_of_le_of_ltₓ (le_abs_self _) I

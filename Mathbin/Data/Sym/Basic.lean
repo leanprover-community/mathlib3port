@@ -33,6 +33,9 @@ show these are equivalent in `sym.sym_equiv_sym'`.
 def Sym (α : Type u) (n : ℕ) :=
   { s : Multiset α // s.card = n }
 
+instance Sym.hasCoe (α : Type _) (n : ℕ) : Coe (Sym α n) (Multiset α) :=
+  coeSubtype
+
 /-- This is the `list.perm` setoid lifted to `vector`.
 
 See note [reducible non-instances].
@@ -45,7 +48,7 @@ attribute [local instance] Vector.Perm.isSetoid
 
 namespace Sym
 
-variable {α : Type u} {n : ℕ}
+variable {α : Type u} {n : ℕ} {s : Sym α n} {a b : α}
 
 /-- The unique element in `sym α 0`.
 -/
@@ -165,6 +168,18 @@ def repeat (a : α) (n : ℕ) : Sym α n :=
 theorem repeat_succ {a : α} {n : ℕ} : repeat a n.succ = a :: repeat a n :=
   rfl
 
+theorem coe_repeat : (repeat a n : Multiset α) = Multiset.repeat a n :=
+  rfl
+
+@[simp]
+theorem mem_repeat : b ∈ repeat a n ↔ n ≠ 0 ∧ b = a :=
+  Multiset.mem_repeat
+
+theorem eq_repeat_iff : s = repeat a n ↔ ∀, ∀ b ∈ s, ∀, b = a := by
+  rw [Subtype.ext_iff, coe_repeat]
+  convert Multiset.eq_repeat'
+  exact s.2.symm
+
 theorem exists_mem (s : Sym α n.succ) : ∃ a, a ∈ s :=
   Multiset.card_pos_iff_exists_mem.1 $ s.2.symm ▸ n.succ_pos
 
@@ -190,10 +205,10 @@ instance [Subsingleton α] (n : ℕ) : Subsingleton (Sym α n) :=
       ⟩
 
 instance inhabited_sym [Inhabited α] (n : ℕ) : Inhabited (Sym α n) :=
-  ⟨repeat (default α) n⟩
+  ⟨repeat default n⟩
 
 instance inhabited_sym' [Inhabited α] (n : ℕ) : Inhabited (sym' α n) :=
-  ⟨Quotientₓ.mk' (Vector.repeat (default α) n)⟩
+  ⟨Quotientₓ.mk' (Vector.repeat default n)⟩
 
 instance (n : ℕ) [IsEmpty α] : IsEmpty (Sym α n.succ) :=
   ⟨fun s => by
@@ -224,12 +239,12 @@ theorem mem_map {α β : Type _} {n : ℕ} {f : α → β} {b : β} {l : Sym α 
 
 @[simp]
 theorem map_id {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map id s = s := by
-  simp [Sym.map, Subtype.mk.inj_eq]
+  simp [Sym.map]
 
 @[simp]
 theorem map_map {α β γ : Type _} {n : ℕ} (g : β → γ) (f : α → β) (s : Sym α n) :
     Sym.map g (Sym.map f s) = Sym.map (g ∘ f) s := by
-  simp [Sym.map, Subtype.mk.inj_eq]
+  simp [Sym.map]
 
 @[simp]
 theorem map_zero {α β : Type _} (f : α → β) : Sym.map f (0 : Sym α 0) = (0 : Sym β 0) :=
@@ -237,7 +252,6 @@ theorem map_zero {α β : Type _} (f : α → β) : Sym.map f (0 : Sym α 0) = (
 
 @[simp]
 theorem map_cons {α β : Type _} {n : ℕ} (f : α → β) (a : α) (s : Sym α n) : (a :: s).map f = f a :: s.map f := by
-  cases s
   simp [map, cons]
 
 /-- Mapping an equivalence `α ≃ β` using `sym.map` gives an equivalence between `sym α n` and

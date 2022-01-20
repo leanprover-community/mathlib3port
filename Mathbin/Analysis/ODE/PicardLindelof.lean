@@ -68,8 +68,8 @@ protected theorem LipschitzOnWith {t} (ht : t ∈ Icc v.t_min v.t_max) :
     LipschitzOnWith v.L (v t) (closed_ball v.x₀ v.R) :=
   v.lipschitz' t ht
 
-protected theorem ContinuousOn : ContinuousOn (uncurry v) ((Icc v.t_min v.t_max).Prod (closed_ball v.x₀ v.R)) :=
-  have : ContinuousOn (uncurry (flip v)) ((closed_ball v.x₀ v.R).Prod (Icc v.t_min v.t_max)) :=
+protected theorem ContinuousOn : ContinuousOn (uncurry v) (Icc v.t_min v.t_max ×ˢ closed_ball v.x₀ v.R) :=
+  have : ContinuousOn (uncurry (flip v)) (closed_ball v.x₀ v.R ×ˢ Icc v.t_min v.t_max) :=
     continuous_on_prod_of_continuous_on_lipschitz_on _ v.L v.cont v.lipschitz'
   this.comp continuous_swap.ContinuousOn preimage_swap_prod.symm.Subset
 

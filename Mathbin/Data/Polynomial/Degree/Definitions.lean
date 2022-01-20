@@ -191,6 +191,9 @@ theorem degree_C (ha : a ≠ 0) : degree (C a) = (0 : WithBot ℕ) := by
 theorem degree_C_le : degree (C a) ≤ 0 := by
   by_cases' h : a = 0 <;> [rw [h, C_0], rw [degree_C h]] <;> [exact bot_le, exact le_reflₓ _]
 
+theorem degree_C_lt (a : R) : degree (C a) < 1 :=
+  Nat.WithBot.lt_one_iff_le_zero.mpr degree_C_le
+
 theorem degree_one_le : degree (1 : Polynomial R) ≤ (0 : WithBot ℕ) := by
   rw [← C_1] <;> exact degree_C_le
 
@@ -1090,6 +1093,11 @@ theorem leading_coeff_X_add_C [Semiringₓ S] (r : S) : (X + C r).leadingCoeff =
 @[simp]
 theorem leading_coeff_X_pow_add_one {n : ℕ} (hn : 0 < n) : (X ^ n + 1 : Polynomial R).leadingCoeff = 1 :=
   leading_coeff_X_pow_add_C hn
+
+@[simp]
+theorem leading_coeff_pow_X_add_C (r : R) (i : ℕ) : leading_coeff ((X + C r) ^ i) = 1 := by
+  nontriviality
+  rw [leading_coeff_pow'] <;> simp
 
 end Semiringₓ
 

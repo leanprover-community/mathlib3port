@@ -229,7 +229,6 @@ theorem forall_mem_inter_of_forall_right (l₁ : List α) (h : ∀, ∀ x ∈ l�
 @[simp]
 theorem inter_reverse {xs ys : List α} : xs.inter ys.reverse = xs.inter ys := by
   simp only [List.interₓ, mem_reverse]
-  congr
 
 end Inter
 

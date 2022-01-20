@@ -36,7 +36,7 @@ def connected_components (J : Type u₁) [category.{v₁} J] : Type u₁ :=
   Quotientₓ (zigzag.setoid J)
 
 instance [Inhabited J] : Inhabited (connected_components J) :=
-  ⟨Quotientₓ.mk' (default J)⟩
+  ⟨Quotientₓ.mk' default⟩
 
 /-- Given an index for a connected component, produce the actual component as a full subcategory. -/
 def component (j : connected_components J) : Type u₁ :=

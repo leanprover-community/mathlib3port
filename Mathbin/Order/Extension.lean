@@ -98,5 +98,5 @@ def toLinearExtension {α : Type u} [PartialOrderₓ α] :
   map_rel' := fun a b => (extend_partial_order (· ≤ · : α → α → Prop)).some_spec.some_spec _ _
 
 instance {α : Type u} [Inhabited α] : Inhabited (LinearExtension α) :=
-  ⟨(default _ : α)⟩
+  ⟨(default : α)⟩
 

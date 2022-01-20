@@ -51,7 +51,7 @@ theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepe
   obtain ⟨g, gcombo, gsum, gpos⟩ := exists_nontrivial_relation_sum_zero_of_not_affine_ind h
   replace gpos := exists_pos_of_sum_zero_of_exists_nonzero g gsum gpos
   clear h
-  let s := t.filter fun z : E => 0 < g z
+  let s := @Finset.filter _ (fun z => 0 < g z) (fun _ => LinearOrderₓ.decidableLt _ _) t
   obtain ⟨i₀, mem, w⟩ : ∃ i₀ ∈ s, ∀, ∀ i ∈ s, ∀, f i₀ / g i₀ ≤ f i / g i := by
     apply s.exists_min_image fun z => f z / g z
     obtain ⟨x, hx, hgx⟩ : ∃ x ∈ t, 0 < g x := gpos
@@ -70,7 +70,9 @@ theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepe
             zero_addₓ]_ = ∑ e in t, f e - f i₀ / g i₀ * g e :=
         rfl _ = 1 := by
         rw [sum_sub_distrib, fsum, ← mul_sum, gsum, mul_zero, sub_zero]
-  refine' ⟨⟨i₀, hi₀⟩, k, _, ksum, _⟩
+  refine'
+    ⟨⟨i₀, hi₀⟩, k, _, by
+      convert ksum, _⟩
   · simp only [and_imp, sub_nonneg, mem_erase, Ne.def, Subtype.coe_mk]
     intro e hei₀ het
     by_cases' hes : e ∈ s

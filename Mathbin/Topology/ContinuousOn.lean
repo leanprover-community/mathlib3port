@@ -22,7 +22,7 @@ equipped with the subspace topology.
 -/
 
 
-open Set Filter
+open Set Filter Function
 
 open_locale TopologicalSpace Filter
 
@@ -191,17 +191,20 @@ theorem mem_nhds_within_insert {a : α} {s t : Set α} : t ∈ 𝓝[insert a s] 
 theorem insert_mem_nhds_within_insert {a : α} {s t : Set α} (h : t ∈ 𝓝[s] a) : insert a t ∈ 𝓝[insert a s] a := by
   simp [mem_of_superset h]
 
+theorem insert_mem_nhds_iff {a : α} {s : Set α} : insert a s ∈ 𝓝 a ↔ s ∈ 𝓝[≠] a := by
+  simp only [nhdsWithin, mem_inf_principal, mem_compl_iff, mem_singleton_iff, or_iff_not_imp_left, insert_def]
+
 @[simp]
 theorem nhds_within_compl_singleton_sup_pure (a : α) : 𝓝[≠] a⊔pure a = 𝓝 a := by
   rw [← nhds_within_singleton, ← nhds_within_union, compl_union_self, nhds_within_univ]
 
 theorem nhds_within_prod_eq {α : Type _} [TopologicalSpace α] {β : Type _} [TopologicalSpace β] (a : α) (b : β)
-    (s : Set α) (t : Set β) : 𝓝[s.prod t] (a, b) = 𝓝[s] a ×ᶠ 𝓝[t] b := by
+    (s : Set α) (t : Set β) : 𝓝[s ×ˢ t] (a, b) = 𝓝[s] a ×ᶠ 𝓝[t] b := by
   delta' nhdsWithin
   rw [nhds_prod_eq, ← Filter.prod_inf_prod, Filter.prod_principal_principal]
 
 theorem nhds_within_prod {α : Type _} [TopologicalSpace α] {β : Type _} [TopologicalSpace β] {s u : Set α} {t v : Set β}
-    {a : α} {b : β} (hu : u ∈ 𝓝[s] a) (hv : v ∈ 𝓝[t] b) : u.prod v ∈ 𝓝[s.prod t] (a, b) := by
+    {a : α} {b : β} (hu : u ∈ 𝓝[s] a) (hv : v ∈ 𝓝[t] b) : u ×ˢ v ∈ 𝓝[s ×ˢ t] (a, b) := by
   rw [nhds_within_prod_eq]
   exact prod_mem_prod hu hv
 
@@ -214,8 +217,7 @@ theorem nhds_within_pi_eq' {ι : Type _} {α : ι → Type _} [∀ i, Topologica
 theorem nhds_within_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : finite I)
     (s : ∀ i, Set (α i)) (x : ∀ i, α i) :
     𝓝[pi I s] x = (⨅ i ∈ I, comap (fun x => x i) (𝓝[s i] x i))⊓⨅ (i) (_ : i ∉ I), comap (fun x => x i) (𝓝 (x i)) := by
-  simp only [nhdsWithin, nhds_pi, Filter.pi, pi_def, ← infi_principal_finite hI, comap_inf, comap_principal,
-    Function.eval]
+  simp only [nhdsWithin, nhds_pi, Filter.pi, pi_def, ← infi_principal_finite hI, comap_inf, comap_principal, eval]
   rw [infi_split _ fun i => i ∈ I, inf_right_comm]
   simp only [infi_inf_eq]
 
@@ -384,7 +386,7 @@ theorem ContinuousWithinAt.tendsto_nhds_within_image {f : α → β} {x : α} {s
 
 theorem ContinuousWithinAt.prod_map {f : α → γ} {g : β → δ} {s : Set α} {t : Set β} {x : α} {y : β}
     (hf : ContinuousWithinAt f s x) (hg : ContinuousWithinAt g t y) :
-    ContinuousWithinAt (Prod.map f g) (s.prod t) (x, y) := by
+    ContinuousWithinAt (Prod.map f g) (s ×ˢ t) (x, y) := by
   unfold ContinuousWithinAt  at *
   rw [nhds_within_prod_eq, Prod.map, nhds_prod_eq]
   exact hf.prod_map hg
@@ -443,7 +445,7 @@ theorem continuous_on_iff_is_closed {f : α → β} {s : Set α} :
   rw [continuous_on_iff_continuous_restrict, continuous_iff_is_closed] <;> simp only [this]
 
 theorem ContinuousOn.prod_map {f : α → γ} {g : β → δ} {s : Set α} {t : Set β} (hf : ContinuousOn f s)
-    (hg : ContinuousOn g t) : ContinuousOn (Prod.map f g) (s.prod t) := fun ⟨x, y⟩ ⟨hx, hy⟩ =>
+    (hg : ContinuousOn g t) : ContinuousOn (Prod.map f g) (s ×ˢ t) := fun ⟨x, y⟩ ⟨hx, hy⟩ =>
   ContinuousWithinAt.prod_map (hf x hx) (hg y hy)
 
 theorem continuous_on_empty (f : α → β) : ContinuousOn f ∅ := fun x => False.elim
@@ -524,18 +526,24 @@ theorem continuous_within_at_diff_self {f : α → β} {s : Set α} {x : α} :
     ContinuousWithinAt f (s \ {x}) x ↔ ContinuousWithinAt f s x :=
   continuous_within_at_singleton.diff_iff
 
+@[simp]
+theorem continuous_within_at_compl_self {f : α → β} {a : α} : ContinuousWithinAt f ({a}ᶜ) a ↔ ContinuousAt f a := by
+  rw [compl_eq_univ_diff, continuous_within_at_diff_self, continuous_within_at_univ]
+
+@[simp]
 theorem continuous_within_at_update_same [DecidableEq α] {f : α → β} {s : Set α} {x : α} {y : β} :
-    ContinuousWithinAt (Function.update f x y) s x ↔ tendsto f (𝓝[s \ {x}] x) (𝓝 y) :=
+    ContinuousWithinAt (update f x y) s x ↔ tendsto f (𝓝[s \ {x}] x) (𝓝 y) :=
   calc
-    ContinuousWithinAt (Function.update f x y) s x ↔ ContinuousWithinAt (Function.update f x y) (s \ {x}) x :=
-      continuous_within_at_diff_self.symm
-    _ ↔ tendsto (Function.update f x y) (𝓝[s \ {x}] x) (𝓝 y) := by
-      rw [ContinuousWithinAt, Function.update_same]
+    ContinuousWithinAt (update f x y) s x ↔ tendsto (update f x y) (𝓝[s \ {x}] x) (𝓝 y) := by
+      rw [← continuous_within_at_diff_self, ContinuousWithinAt, Function.update_same]
     _ ↔ tendsto f (𝓝[s \ {x}] x) (𝓝 y) :=
-      tendsto_congr' $
-        mem_of_superset self_mem_nhds_within $ fun z hz => by
-          rw [mem_set_of_eq, Function.update_noteq hz.2]
+      tendsto_congr' $ eventually_nhds_within_iff.2 $ eventually_of_forall $ fun z hz => update_noteq hz.2 _ _
     
+
+@[simp]
+theorem continuous_at_update_same [DecidableEq α] {f : α → β} {x : α} {y : β} :
+    ContinuousAt (Function.update f x y) x ↔ tendsto f (𝓝[≠] x) (𝓝 y) := by
+  rw [← continuous_within_at_univ, continuous_within_at_update_same, compl_eq_univ_diff]
 
 theorem IsOpenMap.continuous_on_image_of_left_inv_on {f : α → β} {s : Set α} (h : IsOpenMap (s.restrict f))
     {finv : β → α} (hleft : left_inv_on finv f s) : ContinuousOn finv (f '' s) := by
@@ -570,11 +578,13 @@ theorem ContinuousAt.continuous_within_at {f : α → β} {s : Set α} {x : α} 
     ContinuousWithinAt f s x :=
   ContinuousWithinAt.mono ((continuous_within_at_univ f x).2 h) (subset_univ _)
 
+theorem continuous_within_at_iff_continuous_at {f : α → β} {s : Set α} {x : α} (h : s ∈ 𝓝 x) :
+    ContinuousWithinAt f s x ↔ ContinuousAt f x := by
+  rw [← univ_inter s, continuous_within_at_inter h, continuous_within_at_univ]
+
 theorem ContinuousWithinAt.continuous_at {f : α → β} {s : Set α} {x : α} (h : ContinuousWithinAt f s x) (hs : s ∈ 𝓝 x) :
-    ContinuousAt f x := by
-  have : s = univ ∩ s := by
-    rw [univ_inter]
-  rwa [this, continuous_within_at_inter hs, continuous_within_at_univ] at h
+    ContinuousAt f x :=
+  (continuous_within_at_iff_continuous_at hs).mp h
 
 theorem ContinuousOn.continuous_at {f : α → β} {s : Set α} {x : α} (h : ContinuousOn f s) (hx : s ∈ 𝓝 x) :
     ContinuousAt f x :=

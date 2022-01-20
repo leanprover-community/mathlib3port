@@ -122,23 +122,21 @@ theorem is_open_A (L : E →L[𝕜] F) (r ε : ℝ) : IsOpen (A f L r ε) := by
     ⟨r' - s, by
       linarith, fun x' hx' => ⟨s, this, _⟩⟩
   have B : ball x' s ⊆ ball x r' := ball_subset (le_of_ltₓ hx')
-  intro y z hy hz
-  exact hr' y z (B hy) (B hz)
+  intro y hy z hz
+  exact hr' y (B hy) z (B hz)
 
 theorem is_open_B {K : Set (E →L[𝕜] F)} {r s ε : ℝ} : IsOpen (B f K r s ε) := by
   simp [B, is_open_Union, IsOpen.inter, is_open_A]
 
 theorem A_mono (L : E →L[𝕜] F) (r : ℝ) {ε δ : ℝ} (h : ε ≤ δ) : A f L r ε ⊆ A f L r δ := by
   rintro x ⟨r', r'r, hr'⟩
-  refine' ⟨r', r'r, fun y z hy hz => _⟩
-  apply le_transₓ (hr' y z hy hz)
-  apply mul_le_mul_of_nonneg_right h
+  refine' ⟨r', r'r, fun y hy z hz => (hr' y hy z hz).trans (mul_le_mul_of_nonneg_right h _)⟩
   linarith [mem_ball.1 hy, r'r.2, @dist_nonneg _ _ y x]
 
 theorem le_of_mem_A {r ε : ℝ} {L : E →L[𝕜] F} {x : E} (hx : x ∈ A f L r ε) {y z : E} (hy : y ∈ closed_ball x (r / 2))
     (hz : z ∈ closed_ball x (r / 2)) : ∥f z - f y - L (z - y)∥ ≤ ε * r := by
   rcases hx with ⟨r', r'mem, hr'⟩
-  exact hr' _ _ (lt_of_le_of_ltₓ (mem_closed_ball.1 hy) r'mem.1) (lt_of_le_of_ltₓ (mem_closed_ball.1 hz) r'mem.1)
+  exact hr' _ ((mem_closed_ball.1 hy).trans_lt r'mem.1) _ ((mem_closed_ball.1 hz).trans_lt r'mem.1)
 
 theorem mem_A_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : E} (hx : DifferentiableAt 𝕜 f x) :
     ∃ R > 0, ∀, ∀ r ∈ Ioo (0 : ℝ) R, ∀, x ∈ A f (fderiv 𝕜 f x) r ε := by
@@ -147,7 +145,7 @@ theorem mem_A_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : E} (hx : Differen
   rcases eventually_nhds_iff_ball.1 (this (half_pos hε)) with ⟨R, R_pos, hR⟩
   refine' ⟨R, R_pos, fun r hr => _⟩
   have : r ∈ Ioc (r / 2) r := ⟨half_lt_self hr.1, le_reflₓ _⟩
-  refine' ⟨r, this, fun y z hy hz => _⟩
+  refine' ⟨r, this, fun y hy z hz => _⟩
   calc
     ∥f z - f y - (fderiv 𝕜 f x) (z - y)∥ =
         ∥f z - f x - (fderiv 𝕜 f x) (z - x) - (f y - f x - (fderiv 𝕜 f x) (y - x))∥ :=

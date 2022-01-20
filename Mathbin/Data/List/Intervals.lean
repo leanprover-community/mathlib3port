@@ -184,7 +184,7 @@ theorem filter_lt_of_succ_bot {n m : ℕ} (hnm : n < m) : ((Ico n m).filter fun 
 @[simp]
 theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((Ico n m).filter fun x => x ≤ n) = [n] := by
   rw [← filter_lt_of_succ_bot hnm]
-  exact filter_congr fun _ _ => lt_succ_iff.symm
+  exact filter_congr' fun _ _ => lt_succ_iff.symm
 
 /-- For any natural numbers n, a, and b, one of the following holds:
 1. n < a

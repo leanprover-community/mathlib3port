@@ -911,11 +911,8 @@ theorem perm.union {l₁ l₂ t₁ t₂ : List α} (p₁ : l₁ ~ l₂) (p₂ : 
 theorem perm.inter_right {l₁ l₂ : List α} (t₁ : List α) : l₁ ~ l₂ → l₁ ∩ t₁ ~ l₂ ∩ t₁ :=
   perm.filter _
 
-theorem perm.inter_left (l : List α) {t₁ t₂ : List α} (p : t₁ ~ t₂) : l ∩ t₁ = l ∩ t₂ := by
-  dsimp [· ∩ ·, List.interₓ]
-  congr
-  funext a
-  rw [p.mem_iff]
+theorem perm.inter_left (l : List α) {t₁ t₂ : List α} (p : t₁ ~ t₂) : l ∩ t₁ = l ∩ t₂ :=
+  filter_congr' fun a _ => p.mem_iff
 
 theorem perm.inter {l₁ l₂ t₁ t₂ : List α} (p₁ : l₁ ~ l₂) (p₂ : t₁ ~ t₂) : l₁ ∩ t₁ ~ l₂ ∩ t₂ :=
   p₂.inter_left l₂ ▸ p₁.inter_right t₁
@@ -1115,7 +1112,7 @@ theorem perm.take_inter {α} [DecidableEq α] {xs ys : List α} (n : ℕ) (h : x
         filter_false]
     cases' h' with _ _ h₁ h₂
     convert h_ih h₂ n using 1
-    apply filter_congr
+    apply filter_congr'
     introv h
     simp only [(h₁ x h).symm, false_orₓ]
   case list.perm.swap h_x h_y h_l n =>
@@ -1131,14 +1128,16 @@ theorem perm.take_inter {α} [DecidableEq α] {xs ys : List α} (n : ℕ) (h : x
       solve_by_elim [Ne.symm]
       
     · convert perm.swap _ _ _
-      rw [@filter_congr _ _ (· ∈ take n h_l)]
+      rw [@filter_congr' _ _ (· ∈ take n h_l)]
       · clear h₁
-        induction n generalizing h_l <;> simp only [not_mem_nil, filter_false, take]
+        induction n generalizing h_l
+        · simp
+          
         cases h_l <;>
           simp only [mem_cons_iff, true_orₓ, eq_self_iff_true, filter_cons_of_pos, true_andₓ, take, not_mem_nil,
             filter_false, take_nil]
         cases' h₃ with _ _ h₃ h₄
-        rwa [@filter_congr _ _ (· ∈ take n_n h_l_tl), n_ih]
+        rwa [@filter_congr' _ _ (· ∈ take n_n h_l_tl), n_ih]
         · introv h
           apply h₂ _ (Or.inr h)
           

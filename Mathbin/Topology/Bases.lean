@@ -114,8 +114,7 @@ theorem is_topological_basis.mem_nhds_iff {a : α} {s : Set α} {b : Set (Set α
     s ∈ 𝓝 a ↔ ∃ t ∈ b, a ∈ t ∧ t ⊆ s := by
   change s ∈ (𝓝 a).Sets ↔ ∃ t ∈ b, a ∈ t ∧ t ⊆ s
   rw [hb.eq_generate_from, nhds_generate_from, binfi_sets_eq]
-  · simp only [mem_bUnion_iff, exists_prop, mem_set_of_eq, and_assoc, And.left_comm]
-    rfl
+  · simp [and_assoc, And.left_comm]
     
   · exact fun s ⟨hs₁, hs₂⟩ t ⟨ht₁, ht₂⟩ =>
       have : a ∈ s ∩ t := ⟨hs₁, ht₁⟩
@@ -199,7 +198,7 @@ theorem is_topological_basis_opens : is_topological_basis { U : Set α | IsOpen 
       tauto)
 
 protected theorem is_topological_basis.prod {β} [TopologicalSpace β] {B₁ : Set (Set α)} {B₂ : Set (Set β)}
-    (h₁ : is_topological_basis B₁) (h₂ : is_topological_basis B₂) : is_topological_basis (image2 Set.Prod B₁ B₂) := by
+    (h₁ : is_topological_basis B₁) (h₂ : is_topological_basis B₂) : is_topological_basis (image2 (· ×ˢ ·) B₁ B₂) := by
   refine' is_topological_basis_of_open_of_nhds _ _
   · rintro _ ⟨u₁, u₂, hu₁, hu₂, rfl⟩
     exact (h₁.is_open hu₁).Prod (h₂.is_open hu₂)
@@ -207,7 +206,7 @@ protected theorem is_topological_basis.prod {β} [TopologicalSpace β] {B₁ : S
   · rintro ⟨a, b⟩ u hu uo
     rcases(h₁.nhds_has_basis.prod_nhds h₂.nhds_has_basis).mem_iff.1 (IsOpen.mem_nhds uo hu) with
       ⟨⟨s, t⟩, ⟨⟨hs, ha⟩, ht, hb⟩, hu⟩
-    exact ⟨s.prod t, mem_image2_of_mem hs ht, ⟨ha, hb⟩, hu⟩
+    exact ⟨s ×ˢ t, mem_image2_of_mem hs ht, ⟨ha, hb⟩, hu⟩
     
 
 protected theorem is_topological_basis.inducing {β} [TopologicalSpace β] {f : α → β} {T : Set (Set β)} (hf : Inducing f)

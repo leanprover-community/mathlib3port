@@ -167,18 +167,16 @@ we prepare some easy lemmas about √2.
 
 theorem tsirelson_inequality_aux : √2 * √2 ^ 3 = √2 * (2 * √2⁻¹ + 4 * (√2⁻¹ * 2⁻¹)) := by
   ring_nf
-  rw [mul_assocₓ, inv_mul_cancel, Real.sqrt_eq_rpow, ← Real.rpow_nat_cast, ← Real.rpow_mul]
-  · norm_num
-    rw
-      [show (2 : ℝ) ^ (2 : ℝ) = (2 : ℝ) ^ (2 : ℕ) by
-        rw [← Real.rpow_nat_cast]
-        norm_num]
-    norm_num
-    
-  · norm_num
-    
-  · norm_num
-    
+  field_simp [(@Real.sqrt_pos 2).2
+      (by
+        norm_num)]
+  convert
+      congr_argₓ (· ^ 2)
+        (@Real.sq_sqrt 2
+          (by
+            norm_num)) using
+      1 <;>
+    simp only [← pow_mulₓ] <;> norm_num
 
 theorem sqrt_two_inv_mul_self : √2⁻¹ * √2⁻¹ = (2⁻¹ : ℝ) := by
   rw [← mul_inv₀]

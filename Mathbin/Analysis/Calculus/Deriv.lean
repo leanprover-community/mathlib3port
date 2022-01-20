@@ -1,5 +1,6 @@
 import Mathbin.Analysis.Calculus.Fderiv
 import Mathbin.Data.Polynomial.Derivative
+import Mathbin.LinearAlgebra.AffineSpace.Slope
 
 /-!
 
@@ -243,7 +244,7 @@ theorem HasStrictDerivAt.has_deriv_at (h : HasStrictDerivAt f f' x) : HasDerivAt
 definition with a limit. In this version we have to take the limit along the subset `-{x}`,
 because for `y=x` the slope equals zero due to the convention `0⁻¹=0`. -/
 theorem has_deriv_at_filter_iff_tendsto_slope {x : 𝕜} {L : Filter 𝕜} :
-    HasDerivAtFilter f f' x L ↔ tendsto (fun y => (y - x)⁻¹ • (f y - f x)) (L⊓𝓟 ({x}ᶜ)) (𝓝 f') := by
+    HasDerivAtFilter f f' x L ↔ tendsto (slope f x) (L⊓𝓟 ({x}ᶜ)) (𝓝 f') := by
   conv_lhs =>
     simp only [has_deriv_at_filter_iff_tendsto, (NormedField.norm_inv _).symm, (norm_smul _ _).symm,
       tendsto_zero_iff_norm_tendsto_zero.symm]
@@ -254,20 +255,19 @@ theorem has_deriv_at_filter_iff_tendsto_slope {x : 𝕜} {L : Filter 𝕜} :
       (tendsto_congr' _)
   refine' (eventually_principal.2 $ fun z hz => _).filter_mono inf_le_right
   simp only [· ∘ ·]
-  rw [smul_sub, ← mul_smul, inv_mul_cancel (sub_ne_zero.2 hz), one_smul]
+  rw [smul_sub, ← mul_smul, inv_mul_cancel (sub_ne_zero.2 hz), one_smul, slope_def_module]
 
-theorem has_deriv_within_at_iff_tendsto_slope :
-    HasDerivWithinAt f f' s x ↔ tendsto (fun y => (y - x)⁻¹ • (f y - f x)) (𝓝[s \ {x}] x) (𝓝 f') := by
+theorem has_deriv_within_at_iff_tendsto_slope : HasDerivWithinAt f f' s x ↔ tendsto (slope f x) (𝓝[s \ {x}] x) (𝓝 f') :=
+  by
   simp only [HasDerivWithinAt, nhdsWithin, diff_eq, inf_assoc.symm, inf_principal.symm]
   exact has_deriv_at_filter_iff_tendsto_slope
 
 theorem has_deriv_within_at_iff_tendsto_slope' (hs : x ∉ s) :
-    HasDerivWithinAt f f' s x ↔ tendsto (fun y => (y - x)⁻¹ • (f y - f x)) (𝓝[s] x) (𝓝 f') := by
+    HasDerivWithinAt f f' s x ↔ tendsto (slope f x) (𝓝[s] x) (𝓝 f') := by
   convert ← has_deriv_within_at_iff_tendsto_slope
   exact diff_singleton_eq_self hs
 
-theorem has_deriv_at_iff_tendsto_slope :
-    HasDerivAt f f' x ↔ tendsto (fun y => (y - x)⁻¹ • (f y - f x)) (𝓝[≠] x) (𝓝 f') :=
+theorem has_deriv_at_iff_tendsto_slope : HasDerivAt f f' x ↔ tendsto (slope f x) (𝓝[≠] x) (𝓝 f') :=
   has_deriv_at_filter_iff_tendsto_slope
 
 theorem has_deriv_within_at_congr_set {s t u : Set 𝕜} (hu : u ∈ 𝓝 x) (h : s ∩ u = t ∩ u) :
@@ -354,6 +354,15 @@ theorem DifferentiableWithinAt.has_deriv_within_at (h : DifferentiableWithinAt �
 
 theorem DifferentiableAt.has_deriv_at (h : DifferentiableAt 𝕜 f x) : HasDerivAt f (deriv f x) x :=
   h.has_fderiv_at.has_deriv_at
+
+@[simp]
+theorem has_deriv_at_deriv_iff : HasDerivAt f (deriv f x) x ↔ DifferentiableAt 𝕜 f x :=
+  ⟨fun h => h.differentiable_at, fun h => h.has_deriv_at⟩
+
+@[simp]
+theorem has_deriv_within_at_deriv_within_iff :
+    HasDerivWithinAt f (derivWithin f s x) s x ↔ DifferentiableWithinAt 𝕜 f s x :=
+  ⟨fun h => h.differentiable_within_at, fun h => h.has_deriv_within_at⟩
 
 theorem DifferentiableOn.has_deriv_at (h : DifferentiableOn 𝕜 f s) (hs : s ∈ 𝓝 x) : HasDerivAt f (deriv f x) x :=
   (h.has_fderiv_at hs).HasDerivAt
@@ -951,7 +960,7 @@ theorem deriv_within_const_sub (hxs : UniqueDiffWithinAt 𝕜 s x) (c : F) :
   simp [derivWithin, fderiv_within_const_sub hxs]
 
 theorem deriv_const_sub (c : F) : deriv (fun y => c - f y) x = -deriv f x := by
-  simp only [← deriv_within_univ, deriv_within_const_sub unique_diff_within_at_univ]
+  simp only [← deriv_within_univ, deriv_within_const_sub (unique_diff_within_at_univ : UniqueDiffWithinAt 𝕜 _ _)]
 
 end Sub
 
@@ -1883,15 +1892,15 @@ section Real
 variable {f : ℝ → ℝ} {f' : ℝ} {s : Set ℝ} {x : ℝ} {r : ℝ}
 
 theorem HasDerivWithinAt.limsup_slope_le (hf : HasDerivWithinAt f f' s x) (hr : f' < r) :
-    ∀ᶠ z in 𝓝[s \ {x}] x, (z - x)⁻¹ * (f z - f x) < r :=
+    ∀ᶠ z in 𝓝[s \ {x}] x, slope f x z < r :=
   has_deriv_within_at_iff_tendsto_slope.1 hf (IsOpen.mem_nhds is_open_Iio hr)
 
 theorem HasDerivWithinAt.limsup_slope_le' (hf : HasDerivWithinAt f f' s x) (hs : x ∉ s) (hr : f' < r) :
-    ∀ᶠ z in 𝓝[s] x, (z - x)⁻¹ * (f z - f x) < r :=
+    ∀ᶠ z in 𝓝[s] x, slope f x z < r :=
   (has_deriv_within_at_iff_tendsto_slope' hs).1 hf (IsOpen.mem_nhds is_open_Iio hr)
 
 theorem HasDerivWithinAt.liminf_right_slope_le (hf : HasDerivWithinAt f f' (Ici x) x) (hr : f' < r) :
-    ∃ᶠ z in 𝓝[>] x, (z - x)⁻¹ * (f z - f x) < r :=
+    ∃ᶠ z in 𝓝[>] x, slope f x z < r :=
   (hf.Ioi_of_Ici.limsup_slope_le' (lt_irreflₓ x) hr).Frequently
 
 end Real

@@ -1,4 +1,4 @@
-import Mathbin.Combinatorics.Quiver
+import Mathbin.Combinatorics.Quiver.Basic
 import Mathbin.Tactic.Basic
 
 /-!

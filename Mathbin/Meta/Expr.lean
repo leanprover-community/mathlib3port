@@ -745,7 +745,7 @@ unsafe def has_local_constant (e l : expr) : Bool :=
 /-- Turns a local constant into a binder -/
 unsafe def to_binder : expr → binder
   | local_const _ nm bi t => ⟨nm, bi, t⟩
-  | _ => default binder
+  | _ => default
 
 /-- Strip-away the context-dependent unique id for the given local const and return: its friendly
 `name`, its `binder_info`, and its `type : expr`. -/

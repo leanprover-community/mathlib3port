@@ -12,10 +12,12 @@ induces on `C(α, β)`:
  1. Given a sequence of continuous functions `Fₙ : α → β` together with some continuous `f : α → β`,
     then `Fₙ` converges to `f` as a sequence in `C(α, β)` iff `Fₙ` converges to `f` uniformly on
     each compact subset `K` of `α`.
- 2. The topology coincides with the compact-open topology.
+ 2. Given `Fₙ` and `f` as above and suppose `α` is locally compact, then `Fₙ` converges to `f` iff
+    `Fₙ` converges to `f` locally uniformly.
+ 3. The topology coincides with the compact-open topology.
 
-Property 1 is essentially true by definition but 2 requires a little work and uses the Lebesgue
-number lemma.
+Property 1 is essentially true by definition, 2 follows from basic results about uniform
+convergence, but 3 requires a little work and uses the Lebesgue number lemma.
 
 ## The uniform space structure
 
@@ -47,6 +49,10 @@ neighbourhood basis (the compact-convergence neighbourhood basis).
  * `mem_compact_convergence_entourage_iff`: a characterisation of the entourages of `C(α, β)`.
  * `tendsto_iff_forall_compact_tendsto_uniformly_on`: a sequence of functions `Fₙ` in `C(α, β)`
    converges to some `f` iff `Fₙ` converges to `f` uniformly on each compact subset `K` of `α`.
+ * `tendsto_iff_tendsto_locally_uniformly`: on a locally compact space, a sequence of functions
+   `Fₙ` in `C(α, β)` converges to some `f` iff `Fₙ` converges to `f` locally uniformly.
+ * `tendsto_iff_tendsto_uniformly`: on a compact space, a sequence of functions `Fₙ` in `C(α, β)`
+   converges to some `f` iff `Fₙ` converges to `f` uniformly.
 
 ## Implementation details
 
@@ -167,7 +173,7 @@ theorem tendsto_iff_forall_compact_tendsto_uniformly_on' {ι : Type u₃} {p : F
   simp only [(has_basis_nhds_compact_convergence f).tendsto_right_iff, TendstoUniformlyOn, and_imp, Prod.forall]
   refine' forall_congrₓ fun K => _
   rw [forall_swap]
-  exact forall_congrₓ fun hK => forall_congrₓ fun V => forall_congrₓ fun hV => Iff.rfl
+  exact forall₃_congrₓ fun hK V hV => Iff.rfl
 
 /-- Any point of `compact_open.gen K U` is also an interior point wrt the topology of compact
 convergence.
@@ -267,9 +273,8 @@ theorem mem_compact_convergence_uniformity (X : Set (C(α, β) × C(α, β))) :
     (Filter.has_basis_binfi_principal _ compact_conv_nhd_compact_entourage_nonempty).mem_iff]
   · simp only [exists_prop, Prod.forall, set_of_subset_set_of, mem_set_of_eq, Prod.exists]
     exact
-      exists_congr fun K =>
-        exists_congr fun V => by
-          tauto
+      exists₂_congrₓ fun K V => by
+        tauto
     
   · rintro ⟨K₁, V₁⟩ ⟨hK₁, hV₁⟩ ⟨K₂, V₂⟩ ⟨hK₂, hV₂⟩
     refine' ⟨⟨K₁ ∪ K₂, V₁ ∩ V₂⟩, ⟨hK₁.union hK₂, Filter.inter_mem hV₁ hV₂⟩, _⟩
@@ -312,11 +317,10 @@ instance compact_convergence_uniform_space : UniformSpace C(α, β) where
     exact (mem_compact_convergence_uniformity _).mpr ⟨K, V', hK, hV', subset.refl _⟩
   is_open_uniformity := by
     rw [compact_open_eq_compact_convergence]
-    refine' fun Y => forall_congrₓ fun f => forall_congrₓ fun hf => _
+    refine' fun Y => forall₂_congrₓ fun f hf => _
     simp only [mem_compact_convergence_nhd_filter, mem_compact_convergence_uniformity, Prod.forall,
       set_of_subset_set_of, compact_conv_nhd]
-    refine' exists_congr fun K => exists_congr fun V => exists_congr fun hK => exists_congr fun hV => _
-    refine' ⟨_, fun hY g hg => hY f g hg rfl⟩
+    refine' exists₄_congrₓ fun K V hK hV => ⟨_, fun hY g hg => hY f g hg rfl⟩
     rintro hY g₁ g₂ hg₁ rfl
     exact hY hg₁
 
@@ -333,9 +337,40 @@ theorem has_basis_compact_convergence_uniformity :
     simp only [mem_compact_convergence_entourage_iff, Prod.exists]
     tauto⟩
 
-theorem tendsto_iff_forall_compact_tendsto_uniformly_on {ι : Type u₃} {p : Filter ι} {F : ι → C(α, β)} :
-    Filter.Tendsto F p (𝓝 f) ↔ ∀ K, IsCompact K → TendstoUniformlyOn (fun i a => F i a) f p K := by
+variable {ι : Type u₃} {p : Filter ι} {F : ι → C(α, β)} {f}
+
+theorem tendsto_iff_forall_compact_tendsto_uniformly_on :
+    tendsto F p (𝓝 f) ↔ ∀ K, IsCompact K → TendstoUniformlyOn (fun i a => F i a) f p K := by
   rw [compact_open_eq_compact_convergence, tendsto_iff_forall_compact_tendsto_uniformly_on']
+
+/-- Locally uniform convergence implies convergence in the compact-open topology. -/
+theorem tendsto_of_tendsto_locally_uniformly (h : TendstoLocallyUniformly (fun i a => F i a) f p) : tendsto F p (𝓝 f) :=
+  by
+  rw [tendsto_iff_forall_compact_tendsto_uniformly_on]
+  intro K hK
+  rw [← tendsto_locally_uniformly_on_iff_tendsto_uniformly_on_of_compact hK]
+  exact h.tendsto_locally_uniformly_on
+
+/-- If every point has a compact neighbourhood, then convergence in the compact-open topology
+implies locally uniform convergence.
+
+See also `tendsto_iff_tendsto_locally_uniformly`, especially for T2 spaces. -/
+theorem tendsto_locally_uniformly_of_tendsto (hα : ∀ x : α, ∃ n, IsCompact n ∧ n ∈ 𝓝 x) (h : tendsto F p (𝓝 f)) :
+    TendstoLocallyUniformly (fun i a => F i a) f p := by
+  rw [tendsto_iff_forall_compact_tendsto_uniformly_on] at h
+  intro V hV x
+  obtain ⟨n, hn₁, hn₂⟩ := hα x
+  exact ⟨n, hn₂, h n hn₁ V hV⟩
+
+/-- Convergence in the compact-open topology is the same as locally uniform convergence on a locally
+compact space.
+
+For non-T2 spaces, the assumption `locally_compact_space α` is stronger than we need and in fact
+the `←` direction is true unconditionally. See `tendsto_locally_uniformly_of_tendsto` and
+`tendsto_of_tendsto_locally_uniformly` for versions requiring weaker hypotheses. -/
+theorem tendsto_iff_tendsto_locally_uniformly [LocallyCompactSpace α] :
+    tendsto F p (𝓝 f) ↔ TendstoLocallyUniformly (fun i a => F i a) f p :=
+  ⟨tendsto_locally_uniformly_of_tendsto exists_compact_mem_nhds, tendsto_of_tendsto_locally_uniformly⟩
 
 section CompactDomain
 
@@ -349,8 +384,7 @@ theorem has_basis_compact_convergence_uniformity_of_compact :
 
 /-- Convergence in the compact-open topology is the same as uniform convergence for sequences of
 continuous functions on a compact space. -/
-theorem tendsto_iff_tendsto_uniformly {ι : Type u₃} {p : Filter ι} {F : ι → C(α, β)} :
-    Filter.Tendsto F p (𝓝 f) ↔ TendstoUniformly (fun i a => F i a) f p := by
+theorem tendsto_iff_tendsto_uniformly : tendsto F p (𝓝 f) ↔ TendstoUniformly (fun i a => F i a) f p := by
   rw [tendsto_iff_forall_compact_tendsto_uniformly_on, ← tendsto_uniformly_on_univ]
   exact ⟨fun h => h univ compact_univ, fun h K hK => h.mono (subset_univ K)⟩
 

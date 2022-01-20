@@ -79,8 +79,8 @@ Let `f` and `B` be continuous functions on `[a, b]` such that
 
 Then `f x ≤ B x` everywhere on `[a, b]`. -/
 theorem image_le_of_liminf_slope_right_lt_deriv_boundary' {f f' : ℝ → ℝ} {a b : ℝ} (hf : ContinuousOn f (Icc a b))
-    (hf' : ∀, ∀ x ∈ Ico a b, ∀, ∀ r, f' x < r → ∃ᶠ z in 𝓝[>] x, (z - x)⁻¹ * (f z - f x) < r) {B B' : ℝ → ℝ}
-    (ha : f a ≤ B a) (hB : ContinuousOn B (Icc a b)) (hB' : ∀, ∀ x ∈ Ico a b, ∀, HasDerivWithinAt B (B' x) (Ici x) x)
+    (hf' : ∀, ∀ x ∈ Ico a b, ∀, ∀ r, f' x < r → ∃ᶠ z in 𝓝[>] x, slope f x z < r) {B B' : ℝ → ℝ} (ha : f a ≤ B a)
+    (hB : ContinuousOn B (Icc a b)) (hB' : ∀, ∀ x ∈ Ico a b, ∀, HasDerivWithinAt B (B' x) (Ici x) x)
     (bound : ∀, ∀ x ∈ Ico a b, ∀, f x = B x → f' x < B' x) : ∀ ⦃x⦄, x ∈ Icc a b → f x ≤ B x := by
   change Icc a b ⊆ { x | f x ≤ B x }
   set s := { x | f x ≤ B x } ∩ Icc a b
@@ -99,13 +99,13 @@ theorem image_le_of_liminf_slope_right_lt_deriv_boundary' {f f' : ℝ → ℝ} {
     
   · rcases exists_between (bound x xab hxB) with ⟨r, hfr, hrB⟩
     specialize hf' x xab r hfr
-    have HB : ∀ᶠ z in 𝓝[>] x, r < (z - x)⁻¹ * (B z - B x) :=
+    have HB : ∀ᶠ z in 𝓝[>] x, r < slope B x z :=
       (has_deriv_within_at_iff_tendsto_slope' $ lt_irreflₓ x).1 (hB' x xab).Ioi_of_Ici (Ioi_mem_nhds hrB)
-    obtain ⟨z, ⟨hfz, hzB⟩, hz⟩ : ∃ z, ((z - x)⁻¹ * (f z - f x) < r ∧ r < (z - x)⁻¹ * (B z - B x)) ∧ z ∈ Ioc x y
-    exact ((hf'.and_eventually HB).and_eventually (Ioc_mem_nhds_within_Ioi ⟨le_rfl, hy⟩)).exists
+    obtain ⟨z, hfz, hzB, hz⟩ : ∃ z, slope f x z < r ∧ r < slope B x z ∧ z ∈ Ioc x y
+    exact (hf'.and_eventually (HB.and (Ioc_mem_nhds_within_Ioi ⟨le_rfl, hy⟩))).exists
     refine' ⟨z, _, hz⟩
     have := (hfz.trans hzB).le
-    rwa [mul_le_mul_left (inv_pos.2 $ sub_pos.2 hz.1), hxB, sub_le_sub_iff_right] at this
+    rwa [slope_def_field, slope_def_field, div_le_div_right (sub_pos.2 hz.1), hxB, sub_le_sub_iff_right] at this
     
 
 /-- General fencing theorem for continuous functions with an estimate on the derivative.
@@ -119,8 +119,8 @@ Let `f` and `B` be continuous functions on `[a, b]` such that
 
 Then `f x ≤ B x` everywhere on `[a, b]`. -/
 theorem image_le_of_liminf_slope_right_lt_deriv_boundary {f f' : ℝ → ℝ} {a b : ℝ} (hf : ContinuousOn f (Icc a b))
-    (hf' : ∀, ∀ x ∈ Ico a b, ∀, ∀ r, f' x < r → ∃ᶠ z in 𝓝[>] x, (z - x)⁻¹ * (f z - f x) < r) {B B' : ℝ → ℝ}
-    (ha : f a ≤ B a) (hB : ∀ x, HasDerivAt B (B' x) x) (bound : ∀, ∀ x ∈ Ico a b, ∀, f x = B x → f' x < B' x) :
+    (hf' : ∀, ∀ x ∈ Ico a b, ∀, ∀ r, f' x < r → ∃ᶠ z in 𝓝[>] x, slope f x z < r) {B B' : ℝ → ℝ} (ha : f a ≤ B a)
+    (hB : ∀ x, HasDerivAt B (B' x) x) (bound : ∀, ∀ x ∈ Ico a b, ∀, f x = B x → f' x < B' x) :
     ∀ ⦃x⦄, x ∈ Icc a b → f x ≤ B x :=
   image_le_of_liminf_slope_right_lt_deriv_boundary' hf hf' ha (fun x hx => (hB x).ContinuousAt.ContinuousWithinAt)
     (fun x hx => (hB x).HasDerivWithinAt) bound
@@ -137,8 +137,8 @@ Then `f x ≤ B x` everywhere on `[a, b]`. -/
 theorem image_le_of_liminf_slope_right_le_deriv_boundary {f : ℝ → ℝ} {a b : ℝ} (hf : ContinuousOn f (Icc a b))
     {B B' : ℝ → ℝ} (ha : f a ≤ B a) (hB : ContinuousOn B (Icc a b))
     (hB' : ∀, ∀ x ∈ Ico a b, ∀, HasDerivWithinAt B (B' x) (Ici x) x)
-    (bound : ∀, ∀ x ∈ Ico a b, ∀, ∀ r, B' x < r → ∃ᶠ z in 𝓝[>] x, (z - x)⁻¹ * (f z - f x) < r) :
-    ∀ ⦃x⦄, x ∈ Icc a b → f x ≤ B x := by
+    (bound : ∀, ∀ x ∈ Ico a b, ∀, ∀ r, B' x < r → ∃ᶠ z in 𝓝[>] x, slope f x z < r) : ∀ ⦃x⦄, x ∈ Icc a b → f x ≤ B x :=
+  by
   have Hr : ∀, ∀ x ∈ Icc a b, ∀, ∀, ∀ r > 0, ∀, f x ≤ B x + r * (x - a) := by
     intro x hx r hr
     apply image_le_of_liminf_slope_right_lt_deriv_boundary' hf bound
@@ -226,7 +226,7 @@ Let `f` and `B` be continuous functions on `[a, b]` such that
 Then `∥f x∥ ≤ B x` everywhere on `[a, b]`. -/
 theorem image_norm_le_of_liminf_right_slope_norm_lt_deriv_boundary {E : Type _} [NormedGroup E] {f : ℝ → E} {f' : ℝ → ℝ}
     (hf : ContinuousOn f (Icc a b))
-    (hf' : ∀, ∀ x ∈ Ico a b, ∀, ∀ r, f' x < r → ∃ᶠ z in 𝓝[>] x, (z - x)⁻¹ * (∥f z∥ - ∥f x∥) < r) {B B' : ℝ → ℝ}
+    (hf' : ∀, ∀ x ∈ Ico a b, ∀, ∀ r, f' x < r → ∃ᶠ z in 𝓝[>] x, slope (norm ∘ f) x z < r) {B B' : ℝ → ℝ}
     (ha : ∥f a∥ ≤ B a) (hB : ContinuousOn B (Icc a b)) (hB' : ∀, ∀ x ∈ Ico a b, ∀, HasDerivWithinAt B (B' x) (Ici x) x)
     (bound : ∀, ∀ x ∈ Ico a b, ∀, ∥f x∥ = B x → f' x < B' x) : ∀ ⦃x⦄, x ∈ Icc a b → ∥f x∥ ≤ B x :=
   image_le_of_liminf_slope_right_lt_deriv_boundary' (continuous_norm.comp_continuous_on hf) hf' ha hB hB' bound
@@ -474,7 +474,7 @@ with an explicit estimate on the Lipschitz constant. -/
 theorem exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at (hs : Convex ℝ s) {f : E → G}
     (hder : ∀ᶠ y in 𝓝[s] x, HasFderivWithinAt f (f' y) s y) (hcont : ContinuousWithinAt f' s x) :
     ∃ K, ∃ t ∈ 𝓝[s] x, LipschitzOnWith K f t :=
-  (no_top _).imp $ hs.exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at_of_nnnorm_lt hder hcont
+  (exists_gt _).imp $ hs.exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at_of_nnnorm_lt hder hcont
 
 /-- The mean value theorem on a convex set: if the derivative of a function within this set is
 bounded by `C`, then the function is `C`-Lipschitz. Version with `fderiv_within`. -/
@@ -719,7 +719,7 @@ of the real line. If `f` is differentiable on the interior of `D` and `C < f'`, 
 theorem Convex.mul_sub_lt_image_sub_of_lt_deriv {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
     (hf' : DifferentiableOn ℝ f (Interior D)) {C} (hf'_gt : ∀, ∀ x ∈ Interior D, ∀, C < deriv f x) :
     ∀ x y _ : x ∈ D _ : y ∈ D, x < y → C * (y - x) < f y - f x := by
-  intro x y hx hy hxy
+  intro x hx y hy hxy
   have hxyD : Icc x y ⊆ D := hD.ord_connected.out hx hy
   have hxyD' : Ioo x y ⊆ Interior D := subset_sUnion_of_mem ⟨is_open_Ioo, subset.trans Ioo_subset_Icc_self hxyD⟩
   obtain ⟨a, a_mem, ha⟩ : ∃ a ∈ Ioo x y, deriv f a = (f y - f x) / (y - x)
@@ -734,7 +734,7 @@ theorem Convex.mul_sub_lt_image_sub_of_lt_deriv {D : Set ℝ} (hD : Convex ℝ D
 theorem mul_sub_lt_image_sub_of_lt_deriv {f : ℝ → ℝ} (hf : Differentiable ℝ f) {C} (hf'_gt : ∀ x, C < deriv f x) ⦃x y⦄
     (hxy : x < y) : C * (y - x) < f y - f x :=
   convex_univ.mul_sub_lt_image_sub_of_lt_deriv hf.continuous.continuous_on hf.differentiable_on (fun x _ => hf'_gt x) x
-    y trivialₓ trivialₓ hxy
+    trivialₓ y trivialₓ hxy
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » D)
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
@@ -744,7 +744,7 @@ of the real line. If `f` is differentiable on the interior of `D` and `C ≤ f'`
 theorem Convex.mul_sub_le_image_sub_of_le_deriv {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
     (hf' : DifferentiableOn ℝ f (Interior D)) {C} (hf'_ge : ∀, ∀ x ∈ Interior D, ∀, C ≤ deriv f x) :
     ∀ x y _ : x ∈ D _ : y ∈ D, x ≤ y → C * (y - x) ≤ f y - f x := by
-  intro x y hx hy hxy
+  intro x hx y hy hxy
   cases' eq_or_lt_of_le hxy with hxy' hxy'
   · rw [hxy', sub_self, sub_self, mul_zero]
     
@@ -762,7 +762,7 @@ as `C * x`, i.e., `C * (y - x) ≤ f y - f x` whenever `x ≤ y`. -/
 theorem mul_sub_le_image_sub_of_le_deriv {f : ℝ → ℝ} (hf : Differentiable ℝ f) {C} (hf'_ge : ∀ x, C ≤ deriv f x) ⦃x y⦄
     (hxy : x ≤ y) : C * (y - x) ≤ f y - f x :=
   convex_univ.mul_sub_le_image_sub_of_le_deriv hf.continuous.continuous_on hf.differentiable_on (fun x _ => hf'_ge x) x
-    y trivialₓ trivialₓ hxy
+    trivialₓ y trivialₓ hxy
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » D)
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
@@ -772,19 +772,19 @@ of the real line. If `f` is differentiable on the interior of `D` and `f' < C`, 
 theorem Convex.image_sub_lt_mul_sub_of_deriv_lt {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
     (hf' : DifferentiableOn ℝ f (Interior D)) {C} (lt_hf' : ∀, ∀ x ∈ Interior D, ∀, deriv f x < C) :
     ∀ x y _ : x ∈ D _ : y ∈ D, x < y → f y - f x < C * (y - x) := by
-  intro x y hx hy hxy
+  intro x hx y hy hxy
   have hf'_gt : ∀, ∀ x ∈ Interior D, ∀, -C < deriv (fun y => -f y) x := by
     intro x hx
     rw [deriv.neg, neg_lt_neg_iff]
     exact lt_hf' x hx
-  simpa [-neg_lt_neg_iff] using neg_lt_neg (hD.mul_sub_lt_image_sub_of_lt_deriv hf.neg hf'.neg hf'_gt x y hx hy hxy)
+  simpa [-neg_lt_neg_iff] using neg_lt_neg (hD.mul_sub_lt_image_sub_of_lt_deriv hf.neg hf'.neg hf'_gt x hx y hy hxy)
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f' < C`, then `f` grows slower than
 `C * x` on `D`, i.e., `f y - f x < C * (y - x)` whenever `x < y`. -/
 theorem image_sub_lt_mul_sub_of_deriv_lt {f : ℝ → ℝ} (hf : Differentiable ℝ f) {C} (lt_hf' : ∀ x, deriv f x < C) ⦃x y⦄
     (hxy : x < y) : f y - f x < C * (y - x) :=
   convex_univ.image_sub_lt_mul_sub_of_deriv_lt hf.continuous.continuous_on hf.differentiable_on (fun x _ => lt_hf' x) x
-    y trivialₓ trivialₓ hxy
+    trivialₓ y trivialₓ hxy
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » D)
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
@@ -794,19 +794,19 @@ of the real line. If `f` is differentiable on the interior of `D` and `f' ≤ C`
 theorem Convex.image_sub_le_mul_sub_of_deriv_le {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
     (hf' : DifferentiableOn ℝ f (Interior D)) {C} (le_hf' : ∀, ∀ x ∈ Interior D, ∀, deriv f x ≤ C) :
     ∀ x y _ : x ∈ D _ : y ∈ D, x ≤ y → f y - f x ≤ C * (y - x) := by
-  intro x y hx hy hxy
+  intro x hx y hy hxy
   have hf'_ge : ∀, ∀ x ∈ Interior D, ∀, -C ≤ deriv (fun y => -f y) x := by
     intro x hx
     rw [deriv.neg, neg_le_neg_iff]
     exact le_hf' x hx
-  simpa [-neg_le_neg_iff] using neg_le_neg (hD.mul_sub_le_image_sub_of_le_deriv hf.neg hf'.neg hf'_ge x y hx hy hxy)
+  simpa [-neg_le_neg_iff] using neg_le_neg (hD.mul_sub_le_image_sub_of_le_deriv hf.neg hf'.neg hf'_ge x hx y hy hxy)
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f' ≤ C`, then `f` grows at most as fast
 as `C * x`, i.e., `f y - f x ≤ C * (y - x)` whenever `x ≤ y`. -/
 theorem image_sub_le_mul_sub_of_deriv_le {f : ℝ → ℝ} (hf : Differentiable ℝ f) {C} (le_hf' : ∀ x, deriv f x ≤ C) ⦃x y⦄
     (hxy : x ≤ y) : f y - f x ≤ C * (y - x) :=
   convex_univ.image_sub_le_mul_sub_of_deriv_le hf.continuous.continuous_on hf.differentiable_on (fun x _ => le_hf' x) x
-    y trivialₓ trivialₓ hxy
+    trivialₓ y trivialₓ hxy
 
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f'` is positive, then
@@ -816,7 +816,7 @@ being strictly positive. -/
 theorem Convex.strict_mono_on_of_deriv_pos {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
     (hf' : ∀, ∀ x ∈ Interior D, ∀, 0 < deriv f x) : StrictMonoOn f D := by
   rintro x hx y hy
-  simpa only [zero_mul, sub_pos] using hD.mul_sub_lt_image_sub_of_lt_deriv hf _ hf' x y hx hy
+  simpa only [zero_mul, sub_pos] using hD.mul_sub_lt_image_sub_of_lt_deriv hf _ hf' x hx y hy
   exact fun z hz => (differentiable_at_of_deriv_ne_zero (hf' z hz).ne').DifferentiableWithinAt
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f'` is positive, then
@@ -835,7 +835,7 @@ of the real line. If `f` is differentiable on the interior of `D` and `f'` is no
 theorem Convex.monotone_on_of_deriv_nonneg {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
     (hf' : DifferentiableOn ℝ f (Interior D)) (hf'_nonneg : ∀, ∀ x ∈ Interior D, ∀, 0 ≤ deriv f x) : MonotoneOn f D :=
   fun x hx y hy hxy => by
-  simpa only [zero_mul, sub_nonneg] using hD.mul_sub_le_image_sub_of_le_deriv hf hf' hf'_nonneg x y hx hy hxy
+  simpa only [zero_mul, sub_nonneg] using hD.mul_sub_le_image_sub_of_le_deriv hf hf' hf'_nonneg x hx y hy hxy
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f'` is nonnegative, then
 `f` is a monotone function. -/
@@ -850,7 +850,7 @@ theorem Convex.strict_anti_on_of_deriv_neg {D : Set ℝ} (hD : Convex ℝ D) {f 
     (hf' : ∀, ∀ x ∈ Interior D, ∀, deriv f x < 0) : StrictAntiOn f D := fun x hx y => by
   simpa only [zero_mul, sub_lt_zero] using
     hD.image_sub_lt_mul_sub_of_deriv_lt hf
-      (fun z hz => (differentiable_at_of_deriv_ne_zero (hf' z hz).Ne).DifferentiableWithinAt) hf' x y hx
+      (fun z hz => (differentiable_at_of_deriv_ne_zero (hf' z hz).Ne).DifferentiableWithinAt) hf' x hx y
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f'` is negative, then
 `f` is a strictly antitone function.
@@ -868,7 +868,7 @@ of the real line. If `f` is differentiable on the interior of `D` and `f'` is no
 theorem Convex.antitone_on_of_deriv_nonpos {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
     (hf' : DifferentiableOn ℝ f (Interior D)) (hf'_nonpos : ∀, ∀ x ∈ Interior D, ∀, deriv f x ≤ 0) : AntitoneOn f D :=
   fun x hx y hy hxy => by
-  simpa only [zero_mul, sub_nonpos] using hD.image_sub_le_mul_sub_of_deriv_le hf hf' hf'_nonpos x y hx hy hxy
+  simpa only [zero_mul, sub_nonpos] using hD.image_sub_le_mul_sub_of_deriv_le hf hf' hf'_nonpos x hx y hy hxy
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f'` is nonpositive, then
 `f` is an antitone function. -/
@@ -1166,7 +1166,7 @@ differentiable. -/
 theorem has_strict_deriv_at_of_has_deriv_at_of_continuous_at {f f' : 𝕜 → G} {x : 𝕜}
     (hder : ∀ᶠ y in 𝓝 x, HasDerivAt f (f' y) y) (hcont : ContinuousAt f' x) : HasStrictDerivAt f (f' x) x :=
   has_strict_fderiv_at_of_has_fderiv_at_of_continuous_at (hder.mono fun y hy => hy.has_fderiv_at) $
-    (smul_rightL 𝕜 _ _ 1).Continuous.ContinuousAt.comp hcont
+    (smul_rightL 𝕜 𝕜 G 1).Continuous.ContinuousAt.comp hcont
 
 end IsROrC
 

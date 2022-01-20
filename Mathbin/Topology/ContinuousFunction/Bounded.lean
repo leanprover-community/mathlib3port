@@ -198,7 +198,7 @@ theorem const_apply' (a : α) (b : β) : (const α b : α → β) a = b :=
 
 /-- If the target space is inhabited, so is the space of bounded continuous functions -/
 instance [Inhabited β] : Inhabited (α →ᵇ β) :=
-  ⟨const α (default β)⟩
+  ⟨const α default⟩
 
 theorem lipschitz_evalx (x : α) : LipschitzWith 1 fun f : α →ᵇ β => f x :=
   LipschitzWith.mk_one $ fun f g => dist_coe_le_dist x
@@ -383,7 +383,7 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
     fun x =>
     let ⟨U, nhdsU, hU⟩ := H x _ ε₂0
     let ⟨V, VU, openV, xV⟩ := _root_.mem_nhds_iff.1 nhdsU
-    ⟨V, xV, openV, fun y z hy hz f hf => hU y z (VU hy) (VU hz) f hf⟩
+    ⟨V, xV, openV, fun y hy z hz f hf => hU y (VU hy) z (VU hz) f hf⟩
   choose U hU using this
   rcases compact_univ.elim_finite_subcover_image (fun x _ => (hU x).2.1) fun x hx =>
       mem_bUnion (mem_univ _) (hU x).1 with
@@ -398,13 +398,13 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
       infer_instance, fun f a => ⟨F (f a), (hF (f a)).1⟩, _⟩
   rintro ⟨f, hf⟩ ⟨g, hg⟩ f_eq_g
   refine' lt_of_le_of_ltₓ ((dist_le $ le_of_ltₓ ε₁0).2 fun x => _) εε₁
-  obtain ⟨x', x'tα, hx'⟩ : ∃ x' ∈ tα, x ∈ U x' := mem_bUnion_iff.1 (htα (mem_univ x))
+  obtain ⟨x', x'tα, hx'⟩ : ∃ x' ∈ tα, x ∈ U x' := mem_Union₂.1 (htα (mem_univ x))
   calc dist (f x) (g x) ≤ dist (f x) (f x') + dist (g x) (g x') + dist (f x') (g x') :=
       dist_triangle4_right _ _ _ _ _ ≤ ε₂ + ε₂ + ε₁ / 2 := le_of_ltₓ (add_lt_add (add_lt_add _ _) _)_ = ε₁ := by
       rw [add_halves, add_halves]
-  · exact (hU x').2.2 _ _ hx' (hU x').1 hf
+  · exact (hU x').2.2 _ hx' _ (hU x').1 hf
     
-  · exact (hU x').2.2 _ _ hx' (hU x').1 hg
+  · exact (hU x').2.2 _ hx' _ (hU x').1 hg
     
   · have F_f_g : F (f x') = F (g x') := (congr_argₓ (fun f : tα → tβ => (f ⟨x', x'tα⟩ : β)) f_eq_g : _)
     calc dist (f x') (g x') ≤ dist (f x') (F (f x')) + dist (g x') (F (f x')) :=
@@ -424,8 +424,8 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
   · have : CompactSpace s := is_compact_iff_compact_space.1 hs
     refine'
       arzela_ascoli₁ _ (continuous_iff_is_closed.1 (continuous_comp M) _ closed) fun x ε ε0 =>
-        Bex.imp_right (fun U U_nhds hU y z hy hz f hf => _) (H x ε ε0)
-    calc dist (f y) (f z) = dist (F f y) (F f z) := rfl _ < ε := hU y z hy hz (F f) hf
+        Bex.imp_right (fun U U_nhds hU y hy z hz f hf => _) (H x ε ε0)
+    calc dist (f y) (f z) = dist (F f y) (F f z) := rfl _ < ε := hU y hy z hz (F f) hf
     
   · let g := cod_restrict s f fun x => in_s f x hf
     rw
@@ -449,12 +449,12 @@ theorem arzela_ascoli (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)) (
         ⟨g x, in_s g x gA, lt_of_le_of_ltₓ (dist_coe_le_dist _) dist_fg⟩)
     fun x ε ε0 =>
     show ∃ U ∈ 𝓝 x, ∀ y z _ : y ∈ U _ : z ∈ U, ∀ f : α →ᵇ β, f ∈ Closure A → dist (f y) (f z) < ε by
-      refine' Bex.imp_right (fun U U_set hU y z hy hz f hf => _) (H x (ε / 2) (half_pos ε0))
+      refine' Bex.imp_right (fun U U_set hU y hy z hz f hf => _) (H x (ε / 2) (half_pos ε0))
       rcases Metric.mem_closure_iff.1 hf (ε / 2 / 2) (half_pos (half_pos ε0)) with ⟨g, gA, dist_fg⟩
       replace dist_fg := fun x => lt_of_le_of_ltₓ (dist_coe_le_dist x) dist_fg
       calc dist (f y) (f z) ≤ dist (f y) (g y) + dist (f z) (g z) + dist (g y) (g z) :=
           dist_triangle4_right _ _ _ _ _ < ε / 2 / 2 + ε / 2 / 2 + ε / 2 :=
-          add_lt_add (add_lt_add (dist_fg y) (dist_fg z)) (hU y z hy hz g gA)_ = ε := by
+          add_lt_add (add_lt_add (dist_fg y) (dist_fg z)) (hU y hy z hz g gA)_ = ε := by
           rw [add_halves, add_halves]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y z «expr ∈ » U)
@@ -462,7 +462,7 @@ theorem equicontinuous_of_continuity_modulus {α : Type u} [MetricSpace α] (b :
     (A : Set (α →ᵇ β)) (H : ∀ x y : α f : α →ᵇ β, f ∈ A → dist (f x) (f y) ≤ b (dist x y)) (x : α) (ε : ℝ)
     (ε0 : 0 < ε) : ∃ U ∈ 𝓝 x, ∀ y z _ : y ∈ U _ : z ∈ U f : α →ᵇ β, f ∈ A → dist (f y) (f z) < ε := by
   rcases tendsto_nhds_nhds.1 b_lim ε ε0 with ⟨δ, δ0, hδ⟩
-  refine' ⟨ball x (δ / 2), ball_mem_nhds x (half_pos δ0), fun y z hy hz f hf => _⟩
+  refine' ⟨ball x (δ / 2), ball_mem_nhds x (half_pos δ0), fun y hy z hz f hf => _⟩
   have : dist y z < δ :=
     calc
       dist y z ≤ dist y x + dist z x := dist_triangle_right _ _ _

@@ -1332,8 +1332,8 @@ theorem UniqueMdiffOn.smooth_bundle_preimage (hs : UniqueMdiffOn I s) :
   have :
     (fun p : E × F => (I.symm p.1, p.snd)) ⁻¹' e.target ∩
           (fun p : E × F => (I.symm p.1, p.snd)) ⁻¹' (e.symm ⁻¹' (Sigma.fst ⁻¹' s)) ∩
-        (range I).Prod univ =
-      Set.Prod (I.symm ⁻¹' (e₀.target ∩ e₀.symm ⁻¹' s) ∩ range I) univ :=
+        range I ×ˢ (univ : Set F) =
+      (I.symm ⁻¹' (e₀.target ∩ e₀.symm ⁻¹' s) ∩ range I) ×ˢ (univ : Set F) :=
     by
     mfld_set_tac
   intro q hq

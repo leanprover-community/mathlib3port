@@ -344,7 +344,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
         refine'
           IH _ this
             (by
-              simp [hf, h, -Subtype.val_eq_coe])
+              simp_all )
             _ rfl fun m h' => _
         obtain h | rfl := Nat.lt_succ_iff_lt_or_eq.1 h'
         exacts[hm _ h, h]
@@ -1372,8 +1372,10 @@ theorem head_main_ok {q s L} {c d : List Γ'} :
   · cases L <;> exact ⟨rfl, rfl⟩
     
   simp
-    [show o ≠ some Γ'.Cons by
-      cases L <;> rintro ⟨⟩]
+  rw
+    [if_neg
+      (show o ≠ some Γ'.Cons by
+        cases L <;> rintro ⟨⟩)]
   refine' (clear_ok (split_at_pred_eq _ _ _ none [] _ ⟨rfl, rfl⟩)).trans _
   · exact fun x h => to_bool_ff (tr_list_ne_Cons _ _ h)
     

@@ -54,7 +54,7 @@ attribute [to_additive AddUnits] Units
 section HasElem
 
 @[to_additive]
-theorem unique_has_one {α : Type _} [Unique α] [HasOne α] : default α = 1 :=
+theorem unique_has_one {α : Type _} [Unique α] [HasOne α] : default = (1 : α) :=
   Unique.default_eq 1
 
 end HasElem

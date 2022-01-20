@@ -54,7 +54,7 @@ def to_ring_filter_basis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubg
   Sets := { U | ∃ i, U = B i }
   Nonempty := by
     inhabit ι
-    exact ⟨B (default ι), default ι, rfl⟩
+    exact ⟨B default, default, rfl⟩
   inter_sets := by
     rintro _ _ ⟨i, rfl⟩ ⟨j, rfl⟩
     cases' hB.inter i j with k hk
@@ -212,7 +212,7 @@ def to_module_filter_basis : ModuleFilterBasis R M where
   Sets := { U | ∃ i, U = B i }
   Nonempty := by
     inhabit ι
-    exact ⟨B (default ι), default ι, rfl⟩
+    exact ⟨B default, default, rfl⟩
   inter_sets := by
     rintro _ _ ⟨i, rfl⟩ ⟨j, rfl⟩
     cases' hB.inter i j with k hk

@@ -61,7 +61,7 @@ def const (X : Top) (Z : C) : PresheafedSpace C where
   Presheaf := { obj := fun U => Z, map := fun U V f => 𝟙 Z }
 
 instance [Inhabited C] : Inhabited (PresheafedSpace C) :=
-  ⟨const (Top.of Pempty) (default C)⟩
+  ⟨const (Top.of Pempty) default⟩
 
 /-- A morphism between presheafed spaces `X` and `Y` consists of a continuous map
     `f` between the underlying topological spaces, and a (notice contravariant!) map
@@ -177,6 +177,12 @@ theorem id_c_app (X : PresheafedSpace C) U :
 
 @[simp]
 theorem comp_base {X Y Z : PresheafedSpace C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).base = f.base ≫ g.base :=
+  rfl
+
+instance (X Y : PresheafedSpace C) : CoeFun (X ⟶ Y) fun _ => X → Y :=
+  ⟨fun f => f.base⟩
+
+theorem coe_to_fun_eq {X Y : PresheafedSpace C} (f : X ⟶ Y) : (f : X → Y) = f.base :=
   rfl
 
 /-- Sometimes rewriting with `comp_c_app` doesn't work because of dependent type issues.

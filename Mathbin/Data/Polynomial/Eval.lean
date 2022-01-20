@@ -587,8 +587,8 @@ theorem coe_map_ring_hom (f : R →+* S) : ⇑map_ring_hom f = map f :=
   rfl
 
 @[simp]
-theorem map_nat_cast (n : ℕ) : (n : Polynomial R).map f = n :=
-  (map_ring_hom f).map_nat_cast n
+protected theorem map_nat_cast (n : ℕ) : (n : Polynomial R).map f = n :=
+  map_nat_cast (map_ring_hom f) n
 
 @[simp]
 theorem coeff_map (n : ℕ) : coeff (p.map f) n = f (coeff p n) := by
@@ -770,7 +770,7 @@ theorem eval_nat_cast_map (f : R →+* S) (p : Polynomial R) (n : ℕ) : (p.map 
     simp only [hp, hq, map_add, RingHom.map_add, eval_add]
     
   · intro n r
-    simp only [f.map_nat_cast, eval_monomial, map_monomial, f.map_pow, f.map_mul]
+    simp only [map_nat_cast f, eval_monomial, map_monomial, f.map_pow, f.map_mul]
     
 
 @[simp]

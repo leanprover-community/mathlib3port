@@ -370,7 +370,7 @@ instance : CoeFun (TimesContDiffBump c) fun _ => E → ℝ :=
   ⟨to_fun⟩
 
 instance (c : E) : Inhabited (TimesContDiffBump c) :=
-  ⟨⟨default _⟩⟩
+  ⟨⟨default⟩⟩
 
 theorem R_pos : 0 < f.R :=
   f.to_times_cont_diff_bump_of_inner.R_pos

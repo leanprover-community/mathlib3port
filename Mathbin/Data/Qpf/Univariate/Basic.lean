@@ -338,7 +338,7 @@ def cofix (F : Type u → Type u) [Functor F] [q : Qpf F] :=
   Quot (@Mcongr F _ q)
 
 instance [Inhabited q.P.A] : Inhabited (cofix F) :=
-  ⟨Quot.mk _ (default _)⟩
+  ⟨Quot.mk _ default⟩
 
 /-- corecursor for type defined by `cofix` -/
 def cofix.corec {α : Type _} (g : α → F α) (x : α) : cofix F :=

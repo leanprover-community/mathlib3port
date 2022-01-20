@@ -104,7 +104,7 @@ theorem mul_mem_mul [Mul α] (ha : a ∈ s) (hb : b ∈ t) : a * b ∈ s * t :=
   mem_image2_of_mem ha hb
 
 @[to_additive add_image_prod]
-theorem image_mul_prod [Mul α] : (fun x : α × α => x.fst * x.snd) '' s.prod t = s * t :=
+theorem image_mul_prod [Mul α] : (fun x : α × α => x.fst * x.snd) '' (s ×ˢ t) = s * t :=
   image_prod _
 
 @[simp, to_additive]
@@ -550,7 +550,7 @@ theorem mem_smul_of_mem [HasScalar α β] {t : Set β} {a} {b} (ha : a ∈ s) (h
   ⟨a, b, ha, hb, rfl⟩
 
 @[to_additive]
-theorem image_smul_prod [HasScalar α β] {t : Set β} : (fun x : α × β => x.fst • x.snd) '' s.prod t = s • t :=
+theorem image_smul_prod [HasScalar α β] {t : Set β} : (fun x : α × β => x.fst • x.snd) '' (s ×ˢ t) = s • t :=
   image_prod _
 
 @[to_additive]
@@ -1155,8 +1155,7 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
     ∀ k, Fintype.card G ≤ k → Fintype.card (↥(S ^ k)) = Fintype.card (↥(S ^ Fintype.card G)) := by
   have hG : 0 < Fintype.card G := fintype.card_pos_iff.mpr ⟨1⟩
   by_cases' hS : S = ∅
-  · intro k hk
-    congr 2
+  · refine' fun k hk => Fintype.card_congr _
     rw [hS, empty_pow _ (ne_of_gtₓ (lt_of_lt_of_leₓ hG hk)), empty_pow _ (ne_of_gtₓ hG)]
     
   obtain ⟨a, ha⟩ := set.ne_empty_iff_nonempty.mp hS

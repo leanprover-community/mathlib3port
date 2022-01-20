@@ -1,4 +1,5 @@
 import Mathbin.Data.Finset.Sort
+import Mathbin.Data.Set.Functor
 
 /-!
 # Finite sets
@@ -336,12 +337,12 @@ def fintype_subset (s : Set α) {t : Set α} [Fintype s] [DecidablePred (· ∈ 
 theorem finite.subset {s : Set α} : finite s → ∀ {t : Set α}, t ⊆ s → finite t
   | ⟨hs⟩, t, h => ⟨@Set.fintypeSubset _ _ _ hs (Classical.decPred t) h⟩
 
-theorem finite.union_iff {s t : Set α} : finite (s ∪ t) ↔ finite s ∧ finite t :=
+@[simp]
+theorem finite_union {s t : Set α} : finite (s ∪ t) ↔ finite s ∧ finite t :=
   ⟨fun h => ⟨h.subset (subset_union_left _ _), h.subset (subset_union_right _ _)⟩, fun ⟨hs, ht⟩ => hs.union ht⟩
 
-theorem finite.diff {s t u : Set α} (hs : s.finite) (ht : t.finite) (h : u \ t ≤ s) : u.finite := by
-  refine' finite.subset (ht.union hs) _
-  exact diff_subset_iff.mp h
+theorem finite.of_diff {s t : Set α} (hd : finite (s \ t)) (ht : finite t) : finite s :=
+  (hd.union ht).Subset $ subset_diff_union _ _
 
 theorem finite.inter_of_left {s : Set α} (h : finite s) (t : Set α) : finite (s ∩ t) :=
   h.subset (inter_subset_left _ _)
@@ -361,8 +362,11 @@ theorem finite.sInter {α : Type _} {s : Set (Set α)} {t : Set α} (ht : t ∈ 
 protected theorem infinite.mono {s t : Set α} (h : s ⊆ t) : Infinite s → Infinite t :=
   mt fun ht => ht.subset h
 
-theorem infinite.diff {s t : Set α} (hs : s.infinite) (ht : t.finite) : (s \ t).Infinite := fun h =>
-  hs ((h.union ht).Subset (s.subset_diff_union t))
+theorem infinite.diff {s t : Set α} (hs : s.infinite) (ht : t.finite) : (s \ t).Infinite := fun h => hs $ h.of_diff ht
+
+@[simp]
+theorem infinite_union {s t : Set α} : Infinite (s ∪ t) ↔ Infinite s ∨ Infinite t := by
+  simp only [Infinite, finite_union, not_and_distrib]
 
 instance fintype_image [DecidableEq β] (s : Set α) (f : α → β) [Fintype s] : Fintype (f '' s) :=
   Fintype.ofFinset (s.to_finset.image f) $ by
@@ -436,6 +440,12 @@ theorem infinite.exists_lt_map_eq_of_maps_to [LinearOrderₓ α] {s : Set α} {t
   let ⟨x, hx, y, hy, hxy, hf⟩ := hs.exists_ne_map_eq_of_maps_to hf ht
   hxy.lt_or_lt.elim (fun hxy => ⟨x, hx, y, hy, hxy, hf⟩) fun hyx => ⟨y, hy, x, hx, hyx, hf.symm⟩
 
+theorem finite.exists_lt_map_eq_of_range_subset [LinearOrderₓ α] [_root_.infinite α] {t : Set β} {f : α → β}
+    (hf : range f ⊆ t) (ht : finite t) : ∃ a b, a < b ∧ f a = f b := by
+  rw [range_subset_iff, ← maps_univ_to] at hf
+  obtain ⟨a, -, b, -, h⟩ := (@infinite_univ α _).exists_lt_map_eq_of_maps_to hf ht
+  exact ⟨a, b, h⟩
+
 theorem infinite_range_of_injective [_root_.infinite α] {f : α → β} (hi : injective f) : Infinite (range f) := by
   rw [← image_univ, infinite_image_iff (inj_on_of_injective hi _)]
   exact infinite_univ
@@ -503,11 +513,11 @@ theorem infinite.exists_nat_lt {s : Set ℕ} (hs : Infinite s) (n : ℕ) : ∃ m
   ⟨m, by
     simpa using hm⟩
 
-instance fintype_prod (s : Set α) (t : Set β) [Fintype s] [Fintype t] : Fintype (Set.Prod s t) :=
+instance fintype_prod (s : Set α) (t : Set β) [Fintype s] [Fintype t] : Fintype (s ×ˢ t : Set _) :=
   Fintype.ofFinset (s.to_finset.product t.to_finset) $ by
     simp
 
-theorem finite.prod {s : Set α} {t : Set β} : finite s → finite t → finite (Set.Prod s t)
+theorem finite.prod {s : Set α} {t : Set β} : finite s → finite t → finite (s ×ˢ t)
   | ⟨hs⟩, ⟨ht⟩ => ⟨Set.fintypeProd s t⟩
 
 /-- `image2 f s t` is finitype if `s` and `t` are. -/
@@ -788,9 +798,10 @@ theorem finite.exists_maximal_wrt [PartialOrderₓ β] (f : α → β) (s : Set 
 
 theorem finite.card_to_finset {s : Set α} [Fintype s] (h : s.finite) : h.to_finset.card = Fintype.card s := by
   rw [← Finset.card_attach, Finset.attach_eq_univ, ← Fintype.card]
-  congr 2
-  funext
-  rw [Set.Finite.mem_to_finset]
+  refine' Fintype.card_congr (Equivₓ.setCongr _)
+  ext x
+  show x ∈ h.to_finset ↔ x ∈ s
+  simp
 
 theorem Infinite.exists_not_mem_finset {s : Set α} (hs : s.infinite) (f : Finset α) : ∃ a ∈ s, a ∉ f :=
   let ⟨a, has, haf⟩ := (hs.diff f.finite_to_set).Nonempty

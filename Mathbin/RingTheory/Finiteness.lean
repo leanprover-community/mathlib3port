@@ -639,7 +639,7 @@ theorem support_gen_of_gen {S : Set (AddMonoidAlgebra R M)} (hS : Algebra.adjoin
   intro f hf
   have hincl : of' R M '' f.support ⊆ ⋃ (g : AddMonoidAlgebra R M) (H : g ∈ S), of' R M '' g.support := by
     intro s hs
-    exact Set.mem_bUnion_iff.2 ⟨f, ⟨hf, hs⟩⟩
+    exact Set.mem_Union₂.2 ⟨f, ⟨hf, hs⟩⟩
   exact adjoin_mono hincl (mem_adjoin_support f)
 
 /-- If a set `S` generates, as algebra, `add_monoid_algebra R M`, then the image of the union of
@@ -781,7 +781,7 @@ theorem support_gen_of_gen {S : Set (MonoidAlgebra R M)} (hS : Algebra.adjoin R 
   intro f hf
   have hincl : of R M '' f.support ⊆ ⋃ (g : MonoidAlgebra R M) (H : g ∈ S), of R M '' g.support := by
     intro s hs
-    exact Set.mem_bUnion_iff.2 ⟨f, ⟨hf, hs⟩⟩
+    exact Set.mem_Union₂.2 ⟨f, ⟨hf, hs⟩⟩
   exact adjoin_mono hincl (mem_adjoint_support f)
 
 /-- If a set `S` generates, as algebra, `monoid_algebra R M`, then the image of the union of the

@@ -623,6 +623,10 @@ def map (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) : Submodule R₂ M�
 theorem map_coe (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) : (map f p : Set M₂) = f '' p :=
   rfl
 
+theorem map_to_add_submonoid (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) :
+    (p.map f).toAddSubmonoid = p.to_add_submonoid.map f :=
+  SetLike.coe_injective rfl
+
 @[simp]
 theorem mem_map {f : M →ₛₗ[σ₁₂] M₂} {p : Submodule R M} {x : M₂} : x ∈ map f p ↔ ∃ y, y ∈ p ∧ f y = x :=
   Iff.rfl
@@ -786,13 +790,13 @@ theorem comap_injective_of_surjective : Function.Injective (comap f) :=
 theorem map_sup_comap_of_surjective (p q : Submodule R₂ M₂) : (p.comap f⊔q.comap f).map f = p⊔q :=
   (gi_map_comap hf).l_sup_u _ _
 
-theorem map_supr_comap_of_sujective (S : ι → Submodule R₂ M₂) : (⨆ i, (S i).comap f).map f = supr S :=
+theorem map_supr_comap_of_sujective {ι : Sort _} (S : ι → Submodule R₂ M₂) : (⨆ i, (S i).comap f).map f = supr S :=
   (gi_map_comap hf).l_supr_u _
 
 theorem map_inf_comap_of_surjective (p q : Submodule R₂ M₂) : (p.comap f⊓q.comap f).map f = p⊓q :=
   (gi_map_comap hf).l_inf_u _ _
 
-theorem map_infi_comap_of_surjective (S : ι → Submodule R₂ M₂) : (⨅ i, (S i).comap f).map f = infi S :=
+theorem map_infi_comap_of_surjective {ι : Sort _} (S : ι → Submodule R₂ M₂) : (⨅ i, (S i).comap f).map f = infi S :=
   (gi_map_comap hf).l_infi_u _
 
 theorem comap_le_comap_iff_of_surjective (p q : Submodule R₂ M₂) : p.comap f ≤ q.comap f ↔ p ≤ q :=
@@ -826,13 +830,13 @@ theorem map_injective_of_injective : Function.Injective (map f) :=
 theorem comap_inf_map_of_injective (p q : Submodule R M) : (p.map f⊓q.map f).comap f = p⊓q :=
   (gci_map_comap hf).u_inf_l _ _
 
-theorem comap_infi_map_of_injective (S : ι → Submodule R M) : (⨅ i, (S i).map f).comap f = infi S :=
+theorem comap_infi_map_of_injective {ι : Sort _} (S : ι → Submodule R M) : (⨅ i, (S i).map f).comap f = infi S :=
   (gci_map_comap hf).u_infi_l _
 
 theorem comap_sup_map_of_injective (p q : Submodule R M) : (p.map f⊔q.map f).comap f = p⊔q :=
   (gci_map_comap hf).u_sup_l _ _
 
-theorem comap_supr_map_of_injective (S : ι → Submodule R M) : (⨆ i, (S i).map f).comap f = supr S :=
+theorem comap_supr_map_of_injective {ι : Sort _} (S : ι → Submodule R M) : (⨆ i, (S i).map f).comap f = supr S :=
   (gci_map_comap hf).u_supr_l _
 
 theorem map_le_map_iff_of_injective (p q : Submodule R M) : p.map f ≤ q.map f ↔ p ≤ q :=
@@ -860,7 +864,7 @@ theorem eq_zero_of_bot_submodule : ∀ b : (⊥ : Submodule R M), b = 0
 
 /-- The infimum of a family of invariant submodule of an endomorphism is also an invariant
 submodule. -/
-theorem _root_.linear_map.infi_invariant {σ : R →+* R} [RingHomSurjective σ] {ι : Type _} (f : M →ₛₗ[σ] M)
+theorem _root_.linear_map.infi_invariant {σ : R →+* R} [RingHomSurjective σ] {ι : Sort _} (f : M →ₛₗ[σ] M)
     {p : ι → Submodule R M} (hf : ∀ i, ∀, ∀ v ∈ p i, ∀, f v ∈ p i) : ∀, ∀ v ∈ infi p, ∀, f v ∈ infi p := by
   have : ∀ i, (p i).map f ≤ p i := by
     rintro i - ⟨v, hv, rfl⟩
@@ -882,7 +886,7 @@ end
 variable {s t : Set M}
 
 theorem mem_span : x ∈ span R s ↔ ∀ p : Submodule R M, s ⊆ p → x ∈ p :=
-  mem_bInter_iff
+  mem_Inter₂
 
 theorem subset_span : s ⊆ span R s := fun x h => mem_span.2 $ fun p hp => hp h
 
@@ -1122,10 +1126,23 @@ theorem mem_sup' : x ∈ p⊔p' ↔ ∃ (y : p)(z : p'), (y : M) + z = x :=
   mem_sup.trans $ by
     simp only [SetLike.exists, coe_mk]
 
+variable (p p')
+
 theorem coe_sup : ↑(p⊔p') = (p + p' : Set M) := by
   ext
   rw [SetLike.mem_coe, mem_sup, Set.mem_add]
   simp
+
+theorem sup_to_add_submonoid : (p⊔p').toAddSubmonoid = p.to_add_submonoid⊔p'.to_add_submonoid := by
+  ext x
+  rw [mem_to_add_submonoid, mem_sup, AddSubmonoid.mem_sup]
+  rfl
+
+theorem sup_to_add_subgroup {R M : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R M] (p p' : Submodule R M) :
+    (p⊔p').toAddSubgroup = p.to_add_subgroup⊔p'.to_add_subgroup := by
+  ext x
+  rw [mem_to_add_subgroup, mem_sup, AddSubgroup.mem_sup]
+  rfl
 
 end
 
@@ -1281,6 +1298,32 @@ theorem supr_eq_span {ι : Sort _} (p : ι → Submodule R M) : (⨆ i : ι, p i
   le_antisymmₓ (supr_le $ fun i => subset.trans (fun m hm => Set.mem_Union.mpr ⟨i, hm⟩) subset_span)
     (span_le.mpr $ Union_subset_iff.mpr $ fun i m hm => mem_supr_of_mem i hm)
 
+theorem supr_to_add_submonoid {ι : Sort _} (p : ι → Submodule R M) :
+    (⨆ i, p i).toAddSubmonoid = ⨆ i, (p i).toAddSubmonoid := by
+  refine' le_antisymmₓ (fun x => _) (supr_le $ fun i => to_add_submonoid_mono $ le_supr _ i)
+  simp_rw [supr_eq_span, AddSubmonoid.supr_eq_closure, mem_to_add_submonoid, coe_to_add_submonoid]
+  intro hx
+  refine' Submodule.span_induction hx (fun x hx => _) _ (fun x y hx hy => _) fun r x hx => _
+  · exact AddSubmonoid.subset_closure hx
+    
+  · exact AddSubmonoid.zero_mem _
+    
+  · exact AddSubmonoid.add_mem _ hx hy
+    
+  · apply AddSubmonoid.closure_induction hx
+    · rintro x ⟨_, ⟨i, rfl⟩, hix : x ∈ p i⟩
+      apply AddSubmonoid.subset_closure (set.mem_Union.mpr ⟨i, _⟩)
+      exact smul_mem _ r hix
+      
+    · rw [smul_zero]
+      exact AddSubmonoid.zero_mem _
+      
+    · intro x y hx hy
+      rw [smul_add]
+      exact AddSubmonoid.add_mem _ hx hy
+      
+    
+
 theorem span_singleton_le_iff_mem (m : M) (p : Submodule R M) : (R∙m) ≤ p ↔ m ∈ p := by
   rw [span_le, singleton_subset_iff, SetLike.mem_coe]
 
@@ -1369,19 +1412,19 @@ end
 
 /-- The product of two submodules is a submodule. -/
 def Prod : Submodule R (M × M') :=
-  { p.to_add_submonoid.prod q₁.to_add_submonoid with Carrier := Set.Prod p q₁,
+  { p.to_add_submonoid.prod q₁.to_add_submonoid with Carrier := (p : Set M) ×ˢ (q₁ : Set M'),
     smul_mem' := by
       rintro a ⟨x, y⟩ ⟨hx, hy⟩ <;> exact ⟨smul_mem _ a hx, smul_mem _ a hy⟩ }
 
 @[simp]
-theorem prod_coe : (Prod p q₁ : Set (M × M')) = Set.Prod p q₁ :=
+theorem prod_coe : (Prod p q₁ : Set (M × M')) = (p : Set M) ×ˢ (q₁ : Set M') :=
   rfl
 
 @[simp]
 theorem mem_prod {p : Submodule R M} {q : Submodule R M'} {x : M × M'} : x ∈ Prod p q ↔ x.1 ∈ p ∧ x.2 ∈ q :=
   Set.mem_prod
 
-theorem span_prod_le (s : Set M) (t : Set M') : span R (Set.Prod s t) ≤ Prod (span R s) (span R t) :=
+theorem span_prod_le (s : Set M) (t : Set M') : span R (s ×ˢ t) ≤ Prod (span R s) (span R t) :=
   span_le.2 $ Set.prod_mono subset_span subset_span
 
 @[simp]
@@ -1875,19 +1918,19 @@ theorem sub_mem_ker_iff {x y} : x - y ∈ f.ker ↔ f x = f y := by
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » p)
 theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ x y _ : x ∈ p _ : y ∈ p, f x = f y → x = y :=
   disjoint_ker.trans
-    ⟨fun H x y hx hy h =>
+    ⟨fun H x hx y hy h =>
       eq_of_sub_eq_zero $
         H _ (sub_mem _ hx hy)
           (by
             simp [h]),
       fun H x h₁ h₂ =>
-      H x 0 h₁ (zero_mem _)
+      H x h₁ 0 (zero_mem _)
         (by
           simpa using h₂)⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem inj_of_disjoint_ker {p : Submodule R M} {s : Set M} (h : s ⊆ p) (hd : Disjoint p (ker f)) :
-    ∀ x y _ : x ∈ s _ : y ∈ s, f x = f y → x = y := fun x y hx hy => disjoint_ker'.1 hd _ _ (h hx) (h hy)
+    ∀ x y _ : x ∈ s _ : y ∈ s, f x = f y → x = y := fun x hx y hy => disjoint_ker'.1 hd _ (h hx) _ (h hy)
 
 theorem ker_eq_bot : ker f = ⊥ ↔ injective f := by
   simpa [Disjoint] using @disjoint_ker' _ _ _ _ _ _ _ _ _ _ _ f ⊤
@@ -2879,25 +2922,6 @@ def to_linear_equiv (e : M ≃ M₂) (h : IsLinearMap R (e : M → M₂)) : M �
   { e, h.mk' e with }
 
 end Equivₓ
-
-namespace AddEquiv
-
-variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ M₂] [Module R M₂]
-
-/-- An additive equivalence whose underlying function preserves `smul` is a linear equivalence. -/
-def to_linear_equiv (e : M ≃+ M₂) (h : ∀ c : R x, e (c • x) = c • e x) : M ≃ₗ[R] M₂ :=
-  { e with map_smul' := h }
-
-@[simp]
-theorem coe_to_linear_equiv (e : M ≃+ M₂) (h : ∀ c : R x, e (c • x) = c • e x) : ⇑e.to_linear_equiv h = e :=
-  rfl
-
-@[simp]
-theorem coe_to_linear_equiv_symm (e : M ≃+ M₂) (h : ∀ c : R x, e (c • x) = c • e x) :
-    ⇑(e.to_linear_equiv h).symm = e.symm :=
-  rfl
-
-end AddEquiv
 
 section FunLeft
 

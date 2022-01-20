@@ -575,8 +575,8 @@ theorem normalized_factors_mul {x y : α} (hx : x ≠ 0) (hy : y ≠ 0) :
     ext
     rw [Function.comp_applyₓ, Associates.out_mk]
   rw [← Multiset.map_id' (normalized_factors (x * y)), ← Multiset.map_id' (normalized_factors x), ←
-    Multiset.map_id' (normalized_factors y), ← Multiset.map_congr normalize_normalized_factor, ←
-    Multiset.map_congr normalize_normalized_factor, ← Multiset.map_congr normalize_normalized_factor, ←
+    Multiset.map_id' (normalized_factors y), ← Multiset.map_congr rfl normalize_normalized_factor, ←
+    Multiset.map_congr rfl normalize_normalized_factor, ← Multiset.map_congr rfl normalize_normalized_factor, ←
     Multiset.map_add, h, ← Multiset.map_map Associates.out, eq_comm, ← Multiset.map_map Associates.out]
   refine' congr rfl _
   apply Multiset.map_mk_eq_map_mk_of_rel
@@ -1543,4 +1543,52 @@ noncomputable def fintype_subtype_dvd {M : Type _} [CancelCommMonoidWithZero M] 
     
 
 end UniqueFactorizationMonoid
+
+section Finsupp
+
+variable [CancelCommMonoidWithZero α] [UniqueFactorizationMonoid α]
+
+variable [NormalizationMonoid α] [DecidableEq α]
+
+open UniqueFactorizationMonoid
+
+/-- This returns the multiset of irreducible factors as a `finsupp` -/
+noncomputable def factorization (n : α) : α →₀ ℕ :=
+  (normalized_factors n).toFinsupp
+
+theorem factorization_eq_count {n p : α} : factorization n p = Multiset.count p (normalized_factors n) := by
+  simp [factorization]
+
+@[simp]
+theorem factorization_zero : factorization (0 : α) = 0 := by
+  simp [factorization]
+
+@[simp]
+theorem factorization_one : factorization (1 : α) = 0 := by
+  simp [factorization]
+
+/-- The support of `factorization n` is exactly the finset of normalized factors -/
+@[simp]
+theorem support_factorization {n : α} : (factorization n).Support = (normalized_factors n).toFinset := by
+  simp [factorization, Multiset.to_finsupp_support]
+
+/-- For nonzero `a` and `b`, the power of `p` in `a * b` is the sum of the powers in `a` and `b` -/
+@[simp]
+theorem factorization_mul {a b : α} (ha : a ≠ 0) (hb : b ≠ 0) :
+    factorization (a * b) = factorization a + factorization b := by
+  simp [factorization, normalized_factors_mul ha hb]
+
+/-- For any `p`, the power of `p` in `x^n` is `n` times the power in `x` -/
+theorem factorization_pow {x : α} {n : ℕ} : factorization (x ^ n) = n • factorization x := by
+  ext
+  simp [factorization]
+
+theorem associated_of_factorization_eq (a b : α) (ha : a ≠ 0) (hb : b ≠ 0) (h : factorization a = factorization b) :
+    Associated a b := by
+  simp only [factorization, AddEquiv.apply_eq_iff_eq] at h
+  have ha' := normalized_factors_prod ha
+  rw [h] at ha'
+  exact Associated.trans ha'.symm (normalized_factors_prod hb)
+
+end Finsupp
 

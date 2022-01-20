@@ -218,7 +218,7 @@ theorem map_eq_map_of_bij_of_nodup (f : α → γ) (g : β → γ) {s : Multiset
     _ = s.attach.map fun x => f x.1 := by
       rw [pmap_eq_map_attach]
     _ = t.map g := by
-      rw [this, Multiset.map_map] <;> exact map_congr fun x _ => h _ _
+      rw [this, Multiset.map_map] <;> exact map_congr rfl fun x _ => h _ _
     
 
 end Multiset

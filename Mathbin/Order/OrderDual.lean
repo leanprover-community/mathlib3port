@@ -104,3 +104,11 @@ alias OrderDual.to_dual_lt_to_dual ↔ _ LT.lt.dual
 
 alias OrderDual.to_dual_le_to_dual ↔ _ LE.le.dual
 
+open OrderDual
+
+theorem IsTop.to_dual [LE α] {a : α} (h : IsTop a) : IsBot (to_dual a) :=
+  h
+
+theorem IsBot.to_dual [LE α] {a : α} (h : IsBot a) : IsTop (to_dual a) :=
+  h
+

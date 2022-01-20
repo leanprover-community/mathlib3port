@@ -83,6 +83,19 @@ def rootsOfUnity (k : ℕ+) (M : Type _) [CommMonoidₓ M] : Subgroup (M)ˣ wher
 theorem mem_roots_of_unity (k : ℕ+) (ζ : (M)ˣ) : ζ ∈ rootsOfUnity k M ↔ ζ ^ (k : ℕ) = 1 :=
   Iff.rfl
 
+/-- Make an element of `roots_of_unity` from a member of the base ring, and a proof that it has
+a positive power equal to one. -/
+@[simps coe_coe]
+def rootsOfUnity.mkOfPowEq (ζ : M) {n : ℕ+} (h : ζ ^ (n : ℕ) = 1) : rootsOfUnity n M :=
+  ⟨Units.mkOfMulEqOne ζ (ζ ^ n.nat_pred) $ by
+      rwa [← pow_oneₓ ζ, ← pow_mulₓ, ← pow_addₓ, one_mulₓ, Pnat.one_add_nat_pred],
+    Units.ext $ by
+      simpa⟩
+
+@[simp]
+theorem rootsOfUnity.coe_mk_of_pow_eq {ζ : M} {n : ℕ+} (h : ζ ^ (n : ℕ) = 1) : (rootsOfUnity.mkOfPowEq _ h : M) = ζ :=
+  rfl
+
 theorem roots_of_unity_le_of_dvd (h : k ∣ l) : rootsOfUnity k M ≤ rootsOfUnity l M := by
   obtain ⟨d, rfl⟩ := h
   intro ζ h
@@ -508,7 +521,7 @@ variable [CommSemiringₓ R] [CommSemiringₓ S] {f : R →+* S} {ζ : R}
 
 open Function
 
-theorem map_of_injective (hf : injective f) (h : IsPrimitiveRoot ζ k) : IsPrimitiveRoot (f ζ) k :=
+theorem map_of_injective (h : IsPrimitiveRoot ζ k) (hf : injective f) : IsPrimitiveRoot (f ζ) k :=
   { pow_eq_one := by
       rw [← map_pow, h.pow_eq_one, _root_.map_one],
     dvd_of_pow_eq_one := by
@@ -517,7 +530,7 @@ theorem map_of_injective (hf : injective f) (h : IsPrimitiveRoot ζ k) : IsPrimi
       rw [← map_pow, ← f.map_one] at hl
       exact order_of_dvd_of_pow_eq_one (hf hl) }
 
-theorem of_map_of_injective (hf : injective f) (h : IsPrimitiveRoot (f ζ) k) : IsPrimitiveRoot ζ k :=
+theorem of_map_of_injective (h : IsPrimitiveRoot (f ζ) k) (hf : injective f) : IsPrimitiveRoot ζ k :=
   { pow_eq_one := by
       apply_fun f
       rw [map_pow, _root_.map_one, h.pow_eq_one],

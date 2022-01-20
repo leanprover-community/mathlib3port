@@ -39,7 +39,7 @@ section GradedAlgebra
 
 variable {ι R A : Type _}
 
-variable [DecidableEq ι] [AddCommMonoidₓ ι] [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
+variable [DecidableEq ι] [AddCommMonoidₓ ι] [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
 variable (𝒜 : ι → Submodule R A)
 
@@ -59,6 +59,23 @@ class GradedAlgebra extends SetLike.GradedMonoid 𝒜 where
 
 theorem GradedAlgebra.is_internal [GradedAlgebra 𝒜] : DirectSum.SubmoduleIsInternal 𝒜 :=
   ⟨GradedAlgebra.left_inv.Injective, GradedAlgebra.right_inv.Surjective⟩
+
+/-- A helper to construct a `graded_algebra` when the `set_like.graded_monoid` structure is already
+available. This makes the `left_inv` condition easier to prove, and phrases the `right_inv`
+condition in a way that allows custom `@[ext]` lemmas to apply.
+
+See note [reducible non-instances]. -/
+@[reducible]
+def GradedAlgebra.ofAlgHom [SetLike.GradedMonoid 𝒜] (decompose : A →ₐ[R] ⨁ i, 𝒜 i)
+    (right_inv : (DirectSum.submoduleCoeAlgHom 𝒜).comp decompose = AlgHom.id R A)
+    (left_inv : ∀ i x : 𝒜 i, decompose (x : A) = DirectSum.of (fun i => ↥𝒜 i) i x) : GradedAlgebra 𝒜 where
+  decompose' := decompose
+  right_inv := AlgHom.congr_fun right_inv
+  left_inv := by
+    suffices : decompose.comp (DirectSum.submoduleCoeAlgHom 𝒜) = AlgHom.id _ _
+    exact AlgHom.congr_fun this
+    ext i x : 2
+    exact (decompose.congr_arg $ DirectSum.submodule_coe_alg_hom_of _ _ _).trans (left_inv i x)
 
 variable [GradedAlgebra 𝒜]
 

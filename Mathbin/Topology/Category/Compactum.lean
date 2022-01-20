@@ -199,7 +199,7 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A := by
   let C1 := insert AA C0
   let C2 := finite_inter_closure C1
   have claim1 : ∀ B C _ : B ∈ C0 _ : C ∈ C0, B ∩ C ∈ C0 := by
-    rintro B C ⟨Q, hQ, rfl⟩ ⟨R, hR, rfl⟩
+    rintro B ⟨Q, hQ, rfl⟩ C ⟨R, hR, rfl⟩
     use Q ∩ R
     simp only [and_trueₓ, eq_self_iff_true, Set.preimage_inter, Subtype.val_eq_coe]
     exact inter_sets _ hQ hR
@@ -267,7 +267,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
     intro A hA
     exact claim1 (cl A) (is_closed_cl A) (mem_of_superset hA (subset_cl A))
   have claim3 : ∀ S1 S2 _ : S1 ∈ T0 _ : S2 ∈ T0, S1 ∩ S2 ∈ T0 := by
-    rintro S1 S2 ⟨S1, hS1, rfl⟩ ⟨S2, hS2, rfl⟩
+    rintro S1 ⟨S1, hS1, rfl⟩ S2 ⟨S2, hS2, rfl⟩
     exact
       ⟨S1 ∩ S2, inter_mem hS1 hS2, by
         simp [basic_inter]⟩

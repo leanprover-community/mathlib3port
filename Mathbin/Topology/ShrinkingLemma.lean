@@ -114,16 +114,16 @@ theorem mem_find_carrier_iff {c : Set (partial_refinement u s)} {i : ι} (ne : c
     i ∈ (find c Ne i).Carrier ↔ i ∈ chain_Sup_carrier c := by
   rw [find]
   split_ifs
-  · have : i ∈ h.some.carrier ∧ i ∈ chain_Sup_carrier c := ⟨h.some_spec.snd, mem_bUnion_iff.2 h⟩
+  · have : i ∈ h.some.carrier ∧ i ∈ chain_Sup_carrier c := ⟨h.some_spec.snd, mem_Union₂.2 h⟩
     simp only [this]
     
-  · have : i ∉ ne.some.carrier ∧ i ∉ chain_Sup_carrier c := ⟨fun hi => h ⟨_, ne.some_spec, hi⟩, mt mem_bUnion_iff.1 h⟩
+  · have : i ∉ ne.some.carrier ∧ i ∉ chain_Sup_carrier c := ⟨fun hi => h ⟨_, ne.some_spec, hi⟩, mt mem_Union₂.1 h⟩
     simp only [this]
     
 
 theorem find_apply_of_mem {c : Set (partial_refinement u s)} (hc : chain (· ≤ ·) c) (ne : c.nonempty) {i v} (hv : v ∈ c)
     (hi : i ∈ carrier v) : find c Ne i i = v i :=
-  apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 $ mem_bUnion_iff.2 ⟨v, hv, hi⟩) hi
+  apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 $ mem_Union₂.2 ⟨v, hv, hi⟩) hi
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c)
 /-- Least upper bound of a nonempty chain of partial refinements. -/
@@ -137,7 +137,7 @@ def chain_Sup (c : Set (partial_refinement u s)) (hc : chain (· ≤ ·) c) (ne 
   · use i
     rwa [(find c Ne i).apply_eq (mt (mem_find_carrier_iff _).1 hi)]
     
-  · simp_rw [not_exists, not_imp_not, chain_Sup_carrier, mem_bUnion_iff]  at hx
+  · simp_rw [not_exists, not_imp_not, chain_Sup_carrier, mem_Union₂]  at hx
     have : Nonempty (partial_refinement u s) := ⟨ne.some⟩
     choose! v hvc hiv using hx
     rcases(hfin x hxs).exists_maximal_wrt v _ (mem_Union.1 (hU hxs)) with

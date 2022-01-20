@@ -441,16 +441,16 @@ unsafe inductive with_pattern
 
 namespace WithPattern
 
-open lean (parser)
+open lean (Parser)
 
 open Lean.Parser
 
 /-- Parser for a `with_pattern`. -/
-protected unsafe def parser : parser with_pattern :=
+protected unsafe def Parser : lean.parser with_pattern :=
   tk "-" *> pure with_pattern.clear <|> tk "_" *> pure with_pattern.auto <|> with_pattern.exact <$> ident
 
 /-- Parser for a `with` clause. -/
-unsafe def clause_parser : parser (List with_pattern) :=
+unsafe def clause_parser : lean.parser (List with_pattern) :=
   tk "with" *> many with_pattern.parser <|> pure []
 
 /-- `to_name_spec auto_candidates p` returns a description of how the hypothesis to

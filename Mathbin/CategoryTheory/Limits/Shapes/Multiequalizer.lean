@@ -46,7 +46,7 @@ namespace WalkingMulticospan
 variable {L R : Type v} {fst snd : R → L}
 
 instance [Inhabited L] : Inhabited (walking_multicospan fst snd) :=
-  ⟨left (default _)⟩
+  ⟨left default⟩
 
 /-- Morphisms for `walking_multicospan`. -/
 inductive hom : ∀ a b : walking_multicospan fst snd, Type v
@@ -84,7 +84,7 @@ namespace WalkingMultispan
 variable {L R : Type v} {fst snd : L → R}
 
 instance [Inhabited L] : Inhabited (walking_multispan fst snd) :=
-  ⟨left (default _)⟩
+  ⟨left default⟩
 
 /-- Morphisms for `walking_multispan`. -/
 inductive hom : ∀ a b : walking_multispan fst snd, Type v

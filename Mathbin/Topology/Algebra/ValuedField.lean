@@ -165,9 +165,9 @@ instance (priority := 100) Valued.completable : CompletableTopField K :=
         apply mem_of_superset (Filter.inter_mem M₀_in M₁_in)
         exact subset_preimage_image _ _
         
-      · rintro _ _ ⟨x, ⟨x_in₀, x_in₁⟩, rfl⟩ ⟨y, ⟨y_in₀, y_in₁⟩, rfl⟩
+      · rintro _ ⟨x, ⟨x_in₀, x_in₁⟩, rfl⟩ _ ⟨y, ⟨y_in₀, y_in₁⟩, rfl⟩
         simp only [mem_set_of_eq]
-        specialize H₁ x y x_in₁ y_in₁
+        specialize H₁ x x_in₁ y y_in₁
         replace x_in₀ := H₀ x x_in₀
         replace y_in₀ := H₀ y y_in₀
         clear H₀
@@ -239,7 +239,7 @@ theorem Valued.continuous_extension : Continuous (Valued.extension : hat K → �
         rw [mem_compl_singleton_iff] at h'
         exact h' rfl
         
-      · rintro x y ⟨hx, _⟩ ⟨hy, _⟩
+      · rintro x ⟨hx, _⟩ y ⟨hy, _⟩
         apply hU <;> assumption
         
     rcases this with ⟨V', V'_in, zeroV', hV'⟩

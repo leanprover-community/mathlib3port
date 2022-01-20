@@ -1,4 +1,5 @@
 import Mathbin.Computability.DFA
+import Mathbin.Data.Set.Functor
 
 /-!
 # Nondeterministic Finite Automata

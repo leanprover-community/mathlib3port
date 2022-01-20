@@ -230,7 +230,6 @@ theorem coeff_rename_map_domain (f : σ → τ) (hf : injective f) (φ : MvPolyn
   · intro u r
     rw [rename_monomial, coeff_monomial, coeff_monomial]
     simp only [(Finsupp.map_domain_injective hf).eq_iff]
-    split_ifs <;> rfl
     
   · intros
     simp only [*, AlgHom.map_add, coeff_add]

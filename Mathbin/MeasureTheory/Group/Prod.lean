@@ -108,9 +108,9 @@ theorem quasi_measure_preserving_inv (hμ : is_mul_left_invariant μ) :
   rw [map_apply measurable_inv hsm, inv_preimage]
   have hf : Measurable fun z : G × G => (z.2 * z.1, z.1⁻¹) :=
     (measurable_snd.mul measurable_fst).prod_mk measurable_fst.inv
-  suffices map (fun z : G × G => (z.2 * z.1, z.1⁻¹)) (μ.prod μ) (s⁻¹.Prod (s⁻¹)) = 0 by
+  suffices map (fun z : G × G => (z.2 * z.1, z.1⁻¹)) (μ.prod μ) (s⁻¹ ×ˢ s⁻¹) = 0 by
     simpa only [map_prod_mul_inv_eq hμ hμ, prod_prod, mul_eq_zero, or_selfₓ] using this
-  have hsm' : MeasurableSet (s⁻¹.Prod (s⁻¹)) := hsm.inv.prod hsm.inv
+  have hsm' : MeasurableSet (s⁻¹ ×ˢ s⁻¹) := hsm.inv.prod hsm.inv
   simp_rw [map_apply hf hsm', prod_apply_symm (hf hsm'), preimage_preimage, mk_preimage_prod, inv_preimage, Set.inv_inv,
     measure_mono_null (inter_subset_right _ _) hμs, lintegral_zero]
 
@@ -123,7 +123,8 @@ theorem measure_inv_null (hμ : is_mul_left_invariant μ) {E : Set G} : μ ((fun
 @[to_additive]
 theorem measurable_measure_mul_right {E : Set G} (hE : MeasurableSet E) :
     Measurable fun x => μ ((fun y => y * x) ⁻¹' E) := by
-  suffices Measurable fun y => μ ((fun x => (x, y)) ⁻¹' ((fun z : G × G => (1, z.1 * z.2)) ⁻¹' Set.Prod univ E)) by
+  suffices
+    Measurable fun y => μ ((fun x => (x, y)) ⁻¹' ((fun z : G × G => ((1 : G), z.1 * z.2)) ⁻¹' ((univ : Set G) ×ˢ E))) by
     convert this
     ext1 x
     congr 1 with y : 1

@@ -30,7 +30,7 @@ namespace Polynomial
 instance {R : Type u} [Semiringₓ R] (p : ℕ) [h : CharP R p] : CharP (Polynomial R) p :=
   let ⟨h⟩ := h
   ⟨fun n => by
-    rw [← C.map_nat_cast, ← C_0, C_inj, h]⟩
+    rw [← map_nat_cast C, ← C_0, C_inj, h]⟩
 
 variable (R : Type u) [CommRingₓ R]
 
@@ -1059,7 +1059,7 @@ open UniqueFactorizationMonoid
 variable {D : Type u} [CommRingₓ D] [IsDomain D] [UniqueFactorizationMonoid D]
 
 instance (priority := 100) UniqueFactorizationMonoid : UniqueFactorizationMonoid (Polynomial D) := by
-  have := arbitraryₓ (NormalizationMonoid D)
+  have := arbitrary (NormalizationMonoid D)
   have := to_normalized_gcd_monoid D
   exact ufm_of_gcd_of_wf_dvd_monoid
 

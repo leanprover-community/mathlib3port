@@ -91,7 +91,7 @@ theorem TopologicalSpace.IsTopologicalBasis.borel_eq_generate_from [TopologicalS
     {s : Set (Set α)} (hs : is_topological_basis s) : borel α = generate_from s :=
   borel_eq_generate_from_of_subbasis hs.eq_generate_from
 
-theorem is_pi_system_is_open [TopologicalSpace α] : IsPiSystem (IsOpen : Set α → Prop) := fun s t hs ht hst =>
+theorem is_pi_system_is_open [TopologicalSpace α] : IsPiSystem (IsOpen : Set α → Prop) := fun s hs t ht hst =>
   IsOpen.inter hs ht
 
 theorem borel_eq_generate_from_is_closed [TopologicalSpace α] : borel α = generate_from { s | IsClosed s } :=
@@ -426,9 +426,7 @@ theorem Set.OrdConnected.measurable_set (h : ord_connected s) : MeasurableSet s 
     refine' Set.finite_of_forall_between_eq_endpoints (s \ u) fun x hx y hy z hz hxy hyz => _
     by_contra h
     push_neg  at h
-    exact
-      hy.2
-        (mem_bUnion_iff.mpr ⟨x, hx.1, mem_bUnion_iff.mpr ⟨z, hz.1, lt_of_le_of_neₓ hxy h.1, lt_of_le_of_neₓ hyz h.2⟩⟩)
+    exact hy.2 (mem_Union₂.mpr ⟨x, hx.1, mem_Union₂.mpr ⟨z, hz.1, lt_of_le_of_neₓ hxy h.1, lt_of_le_of_neₓ hyz h.2⟩⟩)
   have : u ⊆ s := bUnion_subset fun x hx => bUnion_subset fun y hy => Ioo_subset_Icc_self.trans (h.out hx hy)
   rw [← union_diff_cancel this]
   exact humeas.union hfinite.measurable_set
@@ -488,7 +486,7 @@ theorem Dense.borel_eq_generate_from_Ico_mem_aux {α : Type _} [TopologicalSpace
     
 
 theorem Dense.borel_eq_generate_from_Ico_mem {α : Type _} [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α]
-    [second_countable_topology α] [DenselyOrdered α] [NoBotOrder α] {s : Set α} (hd : Dense s) :
+    [second_countable_topology α] [DenselyOrdered α] [NoMinOrder α] {s : Set α} (hd : Dense s) :
     borel α = generate_from { S : Set α | ∃ l ∈ s, ∃ u ∈ s, ∃ h : l < u, Ico l u = S } :=
   hd.borel_eq_generate_from_Ico_mem_aux
       (by
@@ -514,7 +512,7 @@ theorem Dense.borel_eq_generate_from_Ioc_mem_aux {α : Type _} [TopologicalSpace
     
 
 theorem Dense.borel_eq_generate_from_Ioc_mem {α : Type _} [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α]
-    [second_countable_topology α] [DenselyOrdered α] [NoTopOrder α] {s : Set α} (hd : Dense s) :
+    [second_countable_topology α] [DenselyOrdered α] [NoMaxOrder α] {s : Set α} (hd : Dense s) :
     borel α = generate_from { S : Set α | ∃ l ∈ s, ∃ u ∈ s, ∃ h : l < u, Ioc l u = S } :=
   hd.borel_eq_generate_from_Ioc_mem_aux
       (by
@@ -556,7 +554,7 @@ theorem ext_of_Ioc_finite {α : Type _} [TopologicalSpace α] {m : MeasurableSpa
 /-- Two measures which are finite on closed-open intervals are equal if the agree on all
 closed-open intervals. -/
 theorem ext_of_Ico' {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α} [second_countable_topology α]
-    [LinearOrderₓ α] [OrderTopology α] [BorelSpace α] [NoTopOrder α] (μ ν : Measureₓ α)
+    [LinearOrderₓ α] [OrderTopology α] [BorelSpace α] [NoMaxOrder α] (μ ν : Measureₓ α)
     (hμ : ∀ ⦃a b⦄, a < b → μ (Ico a b) ≠ ∞) (h : ∀ ⦃a b⦄, a < b → μ (Ico a b) = ν (Ico a b)) : μ = ν := by
   rcases exists_countable_dense_bot_top α with ⟨s, hsc, hsd, hsb, hst⟩
   have : countable (⋃ (l ∈ s) (u ∈ s) (h : l < u), {Ico l u} : Set (Set α)) :=
@@ -583,7 +581,7 @@ theorem ext_of_Ico' {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
 /-- Two measures which are finite on closed-open intervals are equal if the agree on all
 open-closed intervals. -/
 theorem ext_of_Ioc' {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α} [second_countable_topology α]
-    [LinearOrderₓ α] [OrderTopology α] [BorelSpace α] [NoBotOrder α] (μ ν : Measureₓ α)
+    [LinearOrderₓ α] [OrderTopology α] [BorelSpace α] [NoMinOrder α] (μ ν : Measureₓ α)
     (hμ : ∀ ⦃a b⦄, a < b → μ (Ioc a b) ≠ ∞) (h : ∀ ⦃a b⦄, a < b → μ (Ioc a b) = ν (Ioc a b)) : μ = ν := by
   refine' @ext_of_Ico' (OrderDual α) _ _ _ _ _ ‹_› _ μ ν _ _ <;> intro a b hab <;> erw [dual_Ico]
   exacts[hμ hab, h hab]
@@ -591,14 +589,14 @@ theorem ext_of_Ioc' {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
 /-- Two measures which are finite on closed-open intervals are equal if the agree on all
 closed-open intervals. -/
 theorem ext_of_Ico {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α} [second_countable_topology α]
-    [ConditionallyCompleteLinearOrder α] [OrderTopology α] [BorelSpace α] [NoTopOrder α] (μ ν : Measureₓ α)
+    [ConditionallyCompleteLinearOrder α] [OrderTopology α] [BorelSpace α] [NoMaxOrder α] (μ ν : Measureₓ α)
     [is_locally_finite_measure μ] (h : ∀ ⦃a b⦄, a < b → μ (Ico a b) = ν (Ico a b)) : μ = ν :=
   μ.ext_of_Ico' ν (fun a b hab => measure_Ico_lt_top.Ne) h
 
 /-- Two measures which are finite on closed-open intervals are equal if the agree on all
 open-closed intervals. -/
 theorem ext_of_Ioc {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α} [second_countable_topology α]
-    [ConditionallyCompleteLinearOrder α] [OrderTopology α] [BorelSpace α] [NoBotOrder α] (μ ν : Measureₓ α)
+    [ConditionallyCompleteLinearOrder α] [OrderTopology α] [BorelSpace α] [NoMinOrder α] (μ ν : Measureₓ α)
     [is_locally_finite_measure μ] (h : ∀ ⦃a b⦄, a < b → μ (Ioc a b) = ν (Ioc a b)) : μ = ν :=
   μ.ext_of_Ioc' ν (fun a b hab => measure_Ioc_lt_top.Ne) h
 
@@ -612,8 +610,8 @@ theorem ext_of_Iic {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α} 
     have : DirectedOn (· ≤ ·) s := directed_on_iff_directed.2 (directed_of_sup $ fun _ _ => id)
     simp only [← bsupr_measure_Iic hsc (hsd.exists_ge' hst) this, h]
     
-  rw [← Iic_diff_Iic, measure_diff (Iic_subset_Iic.2 hlt.le) measurable_set_Iic measurable_set_Iic,
-    measure_diff (Iic_subset_Iic.2 hlt.le) measurable_set_Iic measurable_set_Iic, h a, h b]
+  rw [← Iic_diff_Iic, measure_diff (Iic_subset_Iic.2 hlt.le) measurable_set_Iic,
+    measure_diff (Iic_subset_Iic.2 hlt.le) measurable_set_Iic, h a, h b]
   · rw [← h a]
     exact (measure_lt_top μ _).Ne
     
@@ -1207,8 +1205,6 @@ theorem measure_eq_measure_preimage_add_measure_tsum_Ico_zpow [MeasurableSpace �
       have : 0 < f x := h'x.2
       exact lt_irreflₓ 0 (this.trans_le hx.2.le)
       
-    · exact hs.inter (hf (measurable_set_singleton _))
-      
     · exact hs.inter (hf measurable_set_Ioi)
       
   have B : μ (s ∩ f ⁻¹' Ioi 0) = μ (s ∩ f ⁻¹' {∞}) + μ (s ∩ f ⁻¹' Ioo 0 ∞) := by
@@ -1227,8 +1223,6 @@ theorem measure_eq_measure_preimage_add_measure_tsum_Ico_zpow [MeasurableSpace �
     · apply disjoint_left.2 fun x hx h'x => _
       have : f x < ∞ := h'x.2.2
       exact lt_irreflₓ _ (this.trans_le (le_of_eqₓ hx.2.symm))
-      
-    · exact hs.inter (hf (measurable_set_singleton _))
       
     · exact hs.inter (hf measurable_set_Ioo)
       

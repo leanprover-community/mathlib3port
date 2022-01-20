@@ -709,9 +709,9 @@ theorem subset_union {R : Type u} [CommRingₓ R] {I J K : Ideal R} : (I : Set R
     Or.cases_on h (fun h => Set.Subset.trans h $ Set.subset_union_left J K) fun h =>
       Set.Subset.trans h $ Set.subset_union_right J K⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:528:6: unsupported: specialize @hyp
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:528:6: unsupported: specialize @hyp
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:528:6: unsupported: specialize @hyp
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:531:6: unsupported: specialize @hyp
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:531:6: unsupported: specialize @hyp
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:531:6: unsupported: specialize @hyp
 theorem subset_union_prime' {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι → Ideal R} {a b : ι}
     (hp : ∀, ∀ i ∈ s, ∀, is_prime (f i)) {I : Ideal R} :
     ((I : Set R) ⊆ f a ∪ f b ∪ ⋃ i ∈ (↑s : Set ι), f i) ↔ I ≤ f a ∨ I ≤ f b ∨ ∃ i ∈ s, I ≤ f i := by
@@ -826,7 +826,7 @@ theorem subset_union_prime' {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι
     
   · exact hri (add_sub_cancel r s ▸ (f i).sub_mem hi hsi)
     
-  · rw [Set.mem_bUnion_iff] at ht
+  · rw [Set.mem_Union₂] at ht
     rcases ht with ⟨j, hjt, hj⟩
     simp only [Finset.inf_eq_infi, SetLike.mem_coe, Submodule.mem_infi] at hr
     exact hs (Or.inr $ Set.mem_bUnion hjt $ add_sub_cancel' r s ▸ (f j).sub_mem hj $ hr j hjt)
@@ -1405,6 +1405,9 @@ theorem comap_ker (f : S →+* R) : f.ker.comap g = (f.comp g).ker := by
 theorem not_one_mem_ker [Nontrivial S] (f : R →+* S) : (1 : R) ∉ ker f := by
   rw [mem_ker, f.map_one]
   exact one_ne_zero
+
+theorem ker_ne_top [Nontrivial S] (f : R →+* S) : f.ker ≠ ⊤ :=
+  (Ideal.ne_top_iff_one _).mpr $ not_one_mem_ker f
 
 end Semiringₓ
 

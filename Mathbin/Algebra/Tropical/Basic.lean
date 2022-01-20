@@ -122,12 +122,14 @@ theorem surjective_untrop : Function.Surjective (untrop : Tropical R → R) :=
   trop_equiv.symm.Surjective
 
 instance [Inhabited R] : Inhabited (Tropical R) :=
-  ⟨trop (default _)⟩
+  ⟨trop default⟩
 
 /-- Recursing on a `x' : tropical R` is the same as recursing on an `x : R` reinterpreted
 as a term of `tropical R` via `trop x`. -/
 @[simp]
 def trop_rec {F : ∀ X : Tropical R, Sort v} (h : ∀ X, F (trop X)) : ∀ X, F X := fun X => h (untrop X)
+
+instance [DecidableEq R] : DecidableEq (Tropical R) := fun x y => decidableOfIff _ injective_untrop.eq_iff
 
 section Order
 
@@ -138,12 +140,18 @@ instance [LE R] : LE (Tropical R) where
 theorem untrop_le_iff [LE R] {x y : Tropical R} : untrop x ≤ untrop y ↔ x ≤ y :=
   Iff.rfl
 
+instance decidable_le [LE R] [DecidableRel (· ≤ · : R → R → Prop)] :
+    DecidableRel (· ≤ · : Tropical R → Tropical R → Prop) := fun x y => ‹DecidableRel (· ≤ ·)› (untrop x) (untrop y)
+
 instance [LT R] : LT (Tropical R) where
   lt := fun x y => untrop x < untrop y
 
 @[simp]
 theorem untrop_lt_iff [LT R] {x y : Tropical R} : untrop x < untrop y ↔ x < y :=
   Iff.rfl
+
+instance decidable_lt [LT R] [DecidableRel (· < · : R → R → Prop)] :
+    DecidableRel (· < · : Tropical R → Tropical R → Prop) := fun x y => ‹DecidableRel (· < ·)› (untrop x) (untrop y)
 
 instance [Preorderₓ R] : Preorderₓ (Tropical R) :=
   { Tropical.hasLe, Tropical.hasLt with le_refl := fun _ => le_reflₓ _, le_trans := fun _ _ _ h h' => le_transₓ h h',
@@ -200,17 +208,13 @@ instance [LE R] [OrderTop R] : OrderTop (Tropical R) :=
 variable [LinearOrderₓ R]
 
 /-- Tropical addition is the minimum of two underlying elements of `R`. -/
-protected def add (x y : Tropical R) : Tropical R :=
-  trop (min (untrop x) (untrop y))
+instance : Add (Tropical R) :=
+  ⟨fun x y => trop (min (untrop x) (untrop y))⟩
 
 instance : AddCommSemigroupₓ (Tropical R) where
-  add := Tropical.add
+  add := · + ·
   add_assoc := fun _ _ _ => untrop_injective (min_assocₓ _ _ _)
   add_comm := fun _ _ => untrop_injective (min_commₓ _ _)
-
-instance : LinearOrderₓ (Tropical R) :=
-  { Tropical.partialOrder with le_total := fun a b => le_totalₓ (untrop a) (untrop b),
-    decidableLe := fun x y => if h : untrop x ≤ untrop y then is_true h else is_false h }
 
 @[simp]
 theorem untrop_add (x y : Tropical R) : untrop (x + y) = min (untrop x) (untrop y) :=
@@ -225,6 +229,40 @@ theorem trop_inf (x y : R) : trop (x⊓y) = trop x + trop y :=
   rfl
 
 theorem trop_add_def (x y : Tropical R) : x + y = trop (min (untrop x) (untrop y)) :=
+  rfl
+
+instance : LinearOrderₓ (Tropical R) :=
+  { Tropical.partialOrder with le_total := fun a b => le_totalₓ (untrop a) (untrop b),
+    decidableLe := Tropical.decidableLe, decidableLt := Tropical.decidableLt, DecidableEq := Tropical.decidableEq,
+    max := fun a b => trop (max (untrop a) (untrop b)),
+    max_def := by
+      ext x y
+      rw [maxDefault, max_def, apply_ite trop, trop_untrop, trop_untrop, if_congr untrop_le_iff rfl rfl],
+    min := · + ·,
+    min_def := by
+      ext x y
+      rw [trop_add_def, minDefault, min_def, apply_ite trop, trop_untrop, trop_untrop, if_congr untrop_le_iff rfl rfl] }
+
+@[simp]
+theorem untrop_sup (x y : Tropical R) : untrop (x⊔y) = untrop x⊔untrop y :=
+  rfl
+
+@[simp]
+theorem untrop_max (x y : Tropical R) : untrop (max x y) = max (untrop x) (untrop y) :=
+  rfl
+
+@[simp]
+theorem min_eq_add : (min : Tropical R → Tropical R → Tropical R) = · + · :=
+  rfl
+
+@[simp]
+theorem inf_eq_add : (·⊓· : Tropical R → Tropical R → Tropical R) = · + · :=
+  rfl
+
+theorem trop_max_def (x y : Tropical R) : max x y = trop (max (untrop x) (untrop y)) :=
+  rfl
+
+theorem trop_sup_def (x y : Tropical R) : x⊔y = trop (untrop x⊔untrop y) :=
   rfl
 
 @[simp]
@@ -280,11 +318,8 @@ end Order
 section Monoidₓ
 
 /-- Tropical multiplication is the addition in the underlying `R`. -/
-protected def mul [Add R] (x y : Tropical R) : Tropical R :=
-  trop (untrop x + untrop y)
-
 instance [Add R] : Mul (Tropical R) :=
-  ⟨Tropical.mul⟩
+  ⟨fun x y => trop (untrop x + untrop y)⟩
 
 @[simp]
 theorem trop_add [Add R] (x y : R) : trop (x + y) = trop x * trop y :=
@@ -326,7 +361,7 @@ theorem untrop_div [Sub R] (x y : Tropical R) : untrop (x / y) = untrop x - untr
   rfl
 
 instance [AddSemigroupₓ R] : Semigroupₓ (Tropical R) where
-  mul := Tropical.mul
+  mul := · * ·
   mul_assoc := fun _ _ _ => untrop_injective (add_assocₓ _ _ _)
 
 instance [AddCommSemigroupₓ R] : CommSemigroupₓ (Tropical R) :=
@@ -436,8 +471,8 @@ instance covariant_swap_add_lt [LinearOrderₓ R] :
 
 instance [LinearOrderₓ R] [Add R] [CovariantClass R R (· + ·) (· ≤ ·)]
     [CovariantClass R R (Function.swap (· + ·)) (· ≤ ·)] : Distrib (Tropical R) where
-  mul := Tropical.mul
-  add := Tropical.add
+  mul := · * ·
+  add := · + ·
   left_distrib := fun _ _ _ => untrop_injective (min_add_add_left _ _ _).symm
   right_distrib := fun _ _ _ => untrop_injective (min_add_add_right _ _ _).symm
 

@@ -31,12 +31,12 @@ variable (b : AffineBasis ι 𝕜 P)
 
 @[continuity]
 theorem continuous_barycentric_coord (i : ι) : Continuous (b.coord i) :=
-  AffineMap.continuous_of_finite_dimensional _
+  (b.coord i).continuous_of_finite_dimensional
 
 attribute [local instance] FiniteDimensional.complete
 
 theorem is_open_map_barycentric_coord [Nontrivial ι] (i : ι) : IsOpenMap (b.coord i) :=
-  open_mapping_affine (continuous_barycentric_coord b i) (b.surjective_coord i)
+  (b.coord i).IsOpenMap (continuous_barycentric_coord b i) (b.surjective_coord i)
 
 end Barycentric
 

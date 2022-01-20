@@ -50,6 +50,10 @@ theorem encode_injective [Encodable α] : Function.Injective (@encode α _)
     Option.some.injₓ $ by
       rw [← encodek, e, encodek]
 
+@[simp]
+theorem encode_inj [Encodable α] {a b : α} : encode a = encode b ↔ a = b :=
+  encode_injective.eq_iff
+
 theorem surjective_decode_iget (α : Type _) [Encodable α] [Inhabited α] :
     surjective fun n => (Encodable.decode α n).iget := fun x =>
   ⟨Encodable.encode x, by
@@ -58,7 +62,7 @@ theorem surjective_decode_iget (α : Type _) [Encodable α] [Inhabited α] :
 /-- An encodable type has decidable equality. Not set as an instance because this is usually not the
 best way to infer decidability. -/
 def decidable_eq_of_encodable α [Encodable α] : DecidableEq α
-  | a, b => decidableOfIff _ encode_injective.eq_iff
+  | a, b => decidableOfIff _ encode_inj
 
 /-- If `α` is encodable and there is an injection `f : β → α`, then `β` is encodable as well. -/
 def of_left_injection [Encodable α] (f : β → α) (finv : α → Option β) (linv : ∀ b, finv (f b) = some b) : Encodable β :=
@@ -97,7 +101,7 @@ instance Empty : Encodable Empty :=
   ⟨fun a => a.rec _, fun n => none, fun a => a.rec _⟩
 
 instance Unit : Encodable PUnit :=
-  ⟨fun _ => zero, fun n => Nat.casesOn n (some PUnit.unit) fun _ => none, fun _ => by
+  ⟨fun _ => 0, fun n => Nat.casesOn n (some PUnit.unit) fun _ => none, fun _ => by
     simp ⟩
 
 @[simp]
@@ -146,6 +150,14 @@ theorem mem_decode₂' [Encodable α] {n : ℕ} {a : α} : a ∈ decode₂ α n 
 theorem mem_decode₂ [Encodable α] {n : ℕ} {a : α} : a ∈ decode₂ α n ↔ encode a = n :=
   mem_decode₂'.trans (and_iff_right_of_imp $ fun e => e ▸ encodek _)
 
+theorem decode₂_eq_some [Encodable α] {n : ℕ} {a : α} : decode₂ α n = some a ↔ encode a = n :=
+  mem_decode₂
+
+@[simp]
+theorem decode₂_encode [Encodable α] (a : α) : decode₂ α (encode a) = some a := by
+  ext
+  simp [mem_decode₂, eq_comm]
+
 theorem decode₂_ne_none_iff [Encodable α] {n : ℕ} : decode₂ α n ≠ none ↔ n ∈ Set.Range (encode : α → ℕ) := by
   simp_rw [Set.Range, Set.mem_set_of_eq, Ne.def, Option.eq_none_iff_forall_not_mem, Encodable.mem_decode₂, not_forall,
     not_not]
@@ -184,7 +196,7 @@ def equiv_range_encode (α : Type _) [Encodable α] : α ≃ Set.Range (@encode 
 
 /-- A type with unique element is encodable. This is not an instance to avoid diamonds. -/
 def _root_.unique.encodable [Unique α] : Encodable α :=
-  ⟨fun _ => 0, fun _ => some (default α), Unique.forall_iff.2 rfl⟩
+  ⟨fun _ => 0, fun _ => some default, Unique.forall_iff.2 rfl⟩
 
 section Sum
 
@@ -379,7 +391,7 @@ def down (a : α) : Ulower α :=
   Equivₓ α a
 
 instance [Inhabited α] : Inhabited (Ulower α) :=
-  ⟨down (default _)⟩
+  ⟨down default⟩
 
 /-- Lifts an `a : ulower α` into `α`. -/
 def up (a : Ulower α) : α :=
@@ -478,7 +490,7 @@ variable {α : Type _} {β : Type _} [Encodable α] [Inhabited α]
 construct a noncomputable sequence such that `r (f (x n)) (f (x (n + 1)))`
 and `r (f a) (f (x (encode a + 1))`. -/
 protected noncomputable def sequence {r : β → β → Prop} (f : α → β) (hf : Directed r f) : ℕ → α
-  | 0 => default α
+  | 0 => default
   | n + 1 =>
     let p := sequence n
     match decode α n with

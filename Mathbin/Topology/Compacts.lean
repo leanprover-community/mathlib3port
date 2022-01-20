@@ -43,7 +43,7 @@ def nonempty_compacts :=
 /-- In an inhabited space, the type of nonempty compact subsets is also inhabited, with
 default element the singleton set containing the default element. -/
 instance nonempty_compacts_inhabited [Inhabited α] : Inhabited (nonempty_compacts α) :=
-  ⟨⟨{default α}, singleton_nonempty (default α), is_compact_singleton⟩⟩
+  ⟨⟨{default}, singleton_nonempty default, is_compact_singleton⟩⟩
 
 /-- The compact sets with nonempty interior of a topological space. See also `compacts` and
   `nonempty_compacts`. -/
@@ -148,10 +148,9 @@ section PositiveCompacts
 variable (α)
 
 /-- In a nonempty locally compact space, there exists a compact set with nonempty interior. -/
-instance nonempty_positive_compacts [LocallyCompactSpace α] [Nonempty α] : Nonempty (positive_compacts α) := by
-  inhabit α
-  rcases exists_compact_subset is_open_univ (mem_univ (default α)) with ⟨K, hK⟩
-  exact ⟨⟨K, hK.1, ⟨_, hK.2.1⟩⟩⟩
+instance nonempty_positive_compacts [LocallyCompactSpace α] [h : Nonempty α] : Nonempty (positive_compacts α) :=
+  let ⟨K, hK⟩ := exists_compact_subset is_open_univ $ mem_univ h.some
+  ⟨⟨K, hK.1, ⟨_, hK.2.1⟩⟩⟩
 
 end PositiveCompacts
 

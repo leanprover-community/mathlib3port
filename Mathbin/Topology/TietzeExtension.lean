@@ -199,7 +199,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
   obtain ⟨b, hb⟩ : ∃ b, IsLub (range f) b
   exact ⟨_, is_lub_csupr (Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).2⟩
   have hmem : ∀ x, f x ∈ Icc a b := fun x => ⟨ha.1 ⟨x, rfl⟩, hb.1 ⟨x, rfl⟩⟩
-  have hle : a ≤ b := (hmem (default X)).1.trans (hmem (default X)).2
+  have hle : a ≤ b := (hmem default).1.trans (hmem default).2
   rcases hle.eq_or_lt with (rfl | hlt)
   · have : ∀ x, f x = a := by
       simpa using hmem

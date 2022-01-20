@@ -351,8 +351,6 @@ theorem to_signed_measure_injective : injective $ @jordan_decomposition.to_signe
         Set.disjoint_of_subset_left (Set.inter_subset_right _ _)
           (Set.disjoint_of_subset_right (Set.inter_subset_right _ _) disjoint_compl_right)
       
-    · exact hi.inter hS₁
-      
     · exact hi.inter hS₁.compl
       
   have hμ₂ : (j₂.pos_part i).toReal = j₂.to_signed_measure (i ∩ Tᶜ) := by
@@ -366,8 +364,6 @@ theorem to_signed_measure_injective : injective $ @jordan_decomposition.to_signe
     · exact
         Set.disjoint_of_subset_left (Set.inter_subset_right _ _)
           (Set.disjoint_of_subset_right (Set.inter_subset_right _ _) disjoint_compl_right)
-      
-    · exact hi.inter hT₁
       
     · exact hi.inter hT₁.compl
       

@@ -112,7 +112,7 @@ def of_integer (a : α) : GeneralizedContinuedFraction α :=
   ⟨a, Seqₓₓ.nil⟩
 
 instance [Inhabited α] : Inhabited (GeneralizedContinuedFraction α) :=
-  ⟨of_integer (default _)⟩
+  ⟨of_integer default⟩
 
 /-- Returns the sequence of partial numerators `aᵢ` of `g`. -/
 def partial_numerators (g : GeneralizedContinuedFraction α) : Seqₓₓ α :=

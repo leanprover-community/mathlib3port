@@ -128,7 +128,7 @@ theorem tangent_cone_inter_nhds (ht : t ∈ 𝓝 x) : TangentConeAt 𝕜 (s ∩ 
 
 /-- The tangent cone of a product contains the tangent cone of its left factor. -/
 theorem subset_tangent_cone_prod_left {t : Set F} {y : F} (ht : y ∈ Closure t) :
-    LinearMap.inl 𝕜 E F '' TangentConeAt 𝕜 s x ⊆ TangentConeAt 𝕜 (Set.Prod s t) (x, y) := by
+    LinearMap.inl 𝕜 E F '' TangentConeAt 𝕜 s x ⊆ TangentConeAt 𝕜 (s ×ˢ t) (x, y) := by
   rintro _ ⟨v, ⟨c, d, hd, hc, hy⟩, rfl⟩
   have : ∀ n, ∃ d', y + d' ∈ t ∧ ∥c n • d'∥ < ((1 : ℝ) / 2) ^ n := by
     intro n
@@ -140,7 +140,7 @@ theorem subset_tangent_cone_prod_left {t : Set F} {y : F} (ht : y ∈ Closure t)
         simpa using hz⟩
   choose d' hd' using this
   refine' ⟨c, fun n => (d n, d' n), _, hc, _⟩
-  show ∀ᶠ n in at_top, (x, y) + (d n, d' n) ∈ Set.Prod s t
+  show ∀ᶠ n in at_top, (x, y) + (d n, d' n) ∈ s ×ˢ t
   · filter_upwards [hd]
     intro n hn
     simp [hn, (hd' n).1]
@@ -152,7 +152,7 @@ theorem subset_tangent_cone_prod_left {t : Set F} {y : F} (ht : y ∈ Closure t)
 
 /-- The tangent cone of a product contains the tangent cone of its right factor. -/
 theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ Closure s) :
-    LinearMap.inr 𝕜 E F '' TangentConeAt 𝕜 t y ⊆ TangentConeAt 𝕜 (Set.Prod s t) (x, y) := by
+    LinearMap.inr 𝕜 E F '' TangentConeAt 𝕜 t y ⊆ TangentConeAt 𝕜 (s ×ˢ t) (x, y) := by
   rintro _ ⟨w, ⟨c, d, hd, hc, hy⟩, rfl⟩
   have : ∀ n, ∃ d', x + d' ∈ s ∧ ∥c n • d'∥ < ((1 : ℝ) / 2) ^ n := by
     intro n
@@ -164,7 +164,7 @@ theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ Closure s
         simpa using hz⟩
   choose d' hd' using this
   refine' ⟨c, fun n => (d' n, d n), _, hc, _⟩
-  show ∀ᶠ n in at_top, (x, y) + (d' n, d n) ∈ Set.Prod s t
+  show ∀ᶠ n in at_top, (x, y) + (d' n, d n) ∈ s ×ˢ t
   · filter_upwards [hd]
     intro n hn
     simp [hn, (hd' n).1]
@@ -317,11 +317,11 @@ theorem IsOpen.unique_diff_on (hs : IsOpen s) : UniqueDiffOn 𝕜 s := fun x hx 
 /-- The product of two sets of unique differentiability at points `x` and `y` has unique
 differentiability at `(x, y)`. -/
 theorem UniqueDiffWithinAt.prod {t : Set F} {y : F} (hs : UniqueDiffWithinAt 𝕜 s x) (ht : UniqueDiffWithinAt 𝕜 t y) :
-    UniqueDiffWithinAt 𝕜 (Set.Prod s t) (x, y) := by
+    UniqueDiffWithinAt 𝕜 (s ×ˢ t) (x, y) := by
   rw [unique_diff_within_at_iff] at hs ht⊢
   rw [closure_prod_eq]
   refine' ⟨_, hs.2, ht.2⟩
-  have : _ ≤ Submodule.span 𝕜 (TangentConeAt 𝕜 (s.prod t) (x, y)) :=
+  have : _ ≤ Submodule.span 𝕜 (TangentConeAt 𝕜 (s ×ˢ t) (x, y)) :=
     Submodule.span_mono (union_subset (subset_tangent_cone_prod_left ht.2) (subset_tangent_cone_prod_right hs.2))
   rw [LinearMap.span_inl_union_inr, SetLike.le_def] at this
   exact (hs.1.Prod ht.1).mono this
@@ -345,7 +345,7 @@ theorem UniqueDiffWithinAt.pi (ι : Type _) [Fintype ι] (E : ι → Type _) [�
   by_cases' hi : i ∈ I <;> simp [*, unique_diff_within_at_univ]
 
 /-- The product of two sets of unique differentiability is a set of unique differentiability. -/
-theorem UniqueDiffOn.prod {t : Set F} (hs : UniqueDiffOn 𝕜 s) (ht : UniqueDiffOn 𝕜 t) : UniqueDiffOn 𝕜 (Set.Prod s t) :=
+theorem UniqueDiffOn.prod {t : Set F} (hs : UniqueDiffOn 𝕜 s) (ht : UniqueDiffOn 𝕜 t) : UniqueDiffOn 𝕜 (s ×ˢ t) :=
   fun ⟨x, y⟩ h => UniqueDiffWithinAt.prod (hs x h.1) (ht y h.2)
 
 /-- The finite product of a family of sets of unique differentiability is a set of unique

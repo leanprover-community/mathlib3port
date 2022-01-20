@@ -221,7 +221,7 @@ unsafe def cancel_denominators_in_type (h : expr) : tactic (expr × expr) := do
   let (_, gcd_pos) ← solve_aux gcd_pos sorry
   let pf ← mk_app lem [lhs_p, rhs_p, al_pos, ar_pos, gcd_pos]
   let pf_tp ← infer_type pf
-  return ((find_comp_lemma pf_tp).elim (default _) (Prod.fst ∘ Prod.snd), pf)
+  return ((find_comp_lemma pf_tp).elim default (Prod.fst ∘ Prod.snd), pf)
 
 end CancelFactors
 

@@ -588,6 +588,17 @@ theorem map_lie₂ (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) (x : L) (m : M) (n : N)
 theorem map_zero (f : M →ₗ⁅R,L⁆ N) : f 0 = 0 :=
   LinearMap.map_zero (f : M →ₗ[R] N)
 
+/-- The identity map is a morphism of Lie modules. -/
+def id : M →ₗ⁅R,L⁆ M :=
+  { (LinearMap.id : M →ₗ[R] M) with map_lie' := fun x m => rfl }
+
+@[simp]
+theorem coe_id : ((id : M →ₗ⁅R,L⁆ M) : M → M) = _root_.id :=
+  rfl
+
+theorem id_apply (x : M) : (id : M →ₗ⁅R,L⁆ M) x = x :=
+  rfl
+
 /-- The constant 0 map is a Lie module morphism. -/
 instance : HasZero (M →ₗ⁅R,L⁆ N) :=
   ⟨{ (0 : M →ₗ[R] N) with
@@ -603,9 +614,7 @@ theorem zero_apply (m : M) : (0 : M →ₗ⁅R,L⁆ N) m = 0 :=
 
 /-- The identity map is a Lie module morphism. -/
 instance : HasOne (M →ₗ⁅R,L⁆ M) :=
-  ⟨{ (1 : M →ₗ[R] M) with
-      map_lie' := by
-        simp }⟩
+  ⟨id⟩
 
 instance : Inhabited (M →ₗ⁅R,L⁆ N) :=
   ⟨0⟩

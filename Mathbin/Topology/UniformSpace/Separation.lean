@@ -113,9 +113,8 @@ theorem separated_def {α : Type u} [UniformSpace α] : SeparatedSpace α ↔ �
 
 theorem separated_def' {α : Type u} [UniformSpace α] : SeparatedSpace α ↔ ∀ x y, x ≠ y → ∃ r ∈ 𝓤 α, (x, y) ∉ r :=
   separated_def.trans $
-    forall_congrₓ $ fun x =>
-      forall_congrₓ $ fun y => by
-        rw [← not_imp_not] <;> simp [not_forall]
+    forall₂_congrₓ $ fun x y => by
+      rw [← not_imp_not] <;> simp [not_forall]
 
 theorem eq_of_uniformity {α : Type _} [UniformSpace α] [SeparatedSpace α] {x y : α} (h : ∀ {V}, V ∈ 𝓤 α → (x, y) ∈ V) :
     x = y :=
@@ -186,7 +185,7 @@ instance (priority := 100) separated_regular [SeparatedSpace α] : RegularSpace 
       let ⟨d, hd, h⟩ := comp_mem_uniformity_sets this
       let e := { y : α | (a, y) ∈ d }
       have hae : a ∈ Closure e := subset_closure $ refl_mem_uniformity hd
-      have : Set.Prod (Closure e) (Closure e) ⊆ CompRel d (CompRel (Set.Prod e e) d) := by
+      have : Closure e ×ˢ Closure e ⊆ CompRel d (CompRel (e ×ˢ e) d) := by
         rw [← closure_prod_eq, closure_eq_inter_uniformity]
         change (⨅ d' ∈ 𝓤 α, _) ≤ CompRel d (CompRel _ d)
         exact infi_le_of_le d $ infi_le_of_le hd $ le_reflₓ _
@@ -236,19 +235,19 @@ def IsSeparated (s : Set α) : Prop :=
 theorem is_separated_def (s : Set α) : IsSeparated s ↔ ∀ x y _ : x ∈ s _ : y ∈ s, (x, y) ∈ 𝓢 α → x = y :=
   Iff.rfl
 
-theorem is_separated_def' (s : Set α) : IsSeparated s ↔ s.prod s ∩ 𝓢 α ⊆ IdRel := by
+theorem is_separated_def' (s : Set α) : IsSeparated s ↔ s ×ˢ s ∩ 𝓢 α ⊆ IdRel := by
   rw [is_separated_def]
   constructor
   · rintro h ⟨x, y⟩ ⟨⟨x_in, y_in⟩, H⟩
-    simp [h x y x_in y_in H]
+    simp [h x x_in y y_in H]
     
-  · intro h x y x_in y_in xy_in
+  · intro h x x_in y y_in xy_in
     rw [← mem_id_rel]
     exact h ⟨mk_mem_prod x_in y_in, xy_in⟩
     
 
-theorem IsSeparated.mono {s t : Set α} (hs : IsSeparated s) (hts : t ⊆ s) : IsSeparated t := fun x y hx hy =>
-  hs x y (hts hx) (hts hy)
+theorem IsSeparated.mono {s t : Set α} (hs : IsSeparated s) (hts : t ⊆ s) : IsSeparated t := fun x hx y hy =>
+  hs x (hts hx) y (hts hy)
 
 theorem univ_separated_iff : IsSeparated (univ : Set α) ↔ SeparatedSpace α := by
   simp only [IsSeparated, mem_univ, true_implies_iff, separated_space_iff]
@@ -290,7 +289,7 @@ theorem eq_of_uniformity_inf_nhds_of_is_separated {s : Set α} (hs : IsSeparated
     have : 𝓤 α ≤ 𝓟 V := by
       rwa [le_principal_iff]
     exact H.mono this
-  apply hs x y x_in y_in
+  apply hs x x_in y y_in
   simpa [separation_rel_eq_inter_closure]
 
 theorem eq_of_uniformity_inf_nhds [SeparatedSpace α] : ∀ {x y : α}, ClusterPt (x, y) (𝓤 α) → x = y := by
@@ -426,7 +425,7 @@ theorem eq_of_separated_of_uniform_continuous [SeparatedSpace β] {f : α → β
 
 theorem _root_.is_separated.eq_of_uniform_continuous {f : α → β} {x y : α} {s : Set β} (hs : IsSeparated s)
     (hxs : f x ∈ s) (hys : f y ∈ s) (H : UniformContinuous f) (h : x ≈ y) : f x = f y :=
-  (is_separated_def _).mp hs _ _ hxs hys $ fun _ h' => h _ (H h')
+  (is_separated_def _).mp hs _ hxs _ hys $ fun _ h' => h _ (H h')
 
 /-- The maximal separated quotient of a uniform space `α`. -/
 def separation_quotient (α : Type _) [UniformSpace α] :=
@@ -509,8 +508,8 @@ instance separated.prod [SeparatedSpace α] [SeparatedSpace β] : SeparatedSpace
       (eq_of_separated_of_uniform_continuous uniform_continuous_snd H)
 
 theorem _root_.is_separated.prod {s : Set α} {t : Set β} (hs : IsSeparated s) (ht : IsSeparated t) :
-    IsSeparated (s.prod t) :=
-  (is_separated_def _).mpr $ fun x y hx hy H =>
+    IsSeparated (s ×ˢ t) :=
+  (is_separated_def _).mpr $ fun x hx y hy H =>
     Prod.extₓ (hs.eq_of_uniform_continuous hx.1 hy.1 uniform_continuous_fst H)
       (ht.eq_of_uniform_continuous hx.2 hy.2 uniform_continuous_snd H)
 

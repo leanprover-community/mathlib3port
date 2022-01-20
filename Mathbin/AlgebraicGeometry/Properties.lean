@@ -1,4 +1,4 @@
-import Mathbin.AlgebraicGeometry.OpenImmersion
+import Mathbin.AlgebraicGeometry.AffineScheme
 import Mathbin.RingTheory.Nilpotent
 import Mathbin.Topology.Sheaves.SheafCondition.Sites
 import Mathbin.CategoryTheory.Limits.Constructions.BinaryProducts
@@ -118,31 +118,6 @@ theorem affine_is_reduced_iff (R : CommRingₓₓ) : IsReduced (Scheme.Spec.obj 
     infer_instance
   exact is_reduced_of_injective (to_Spec_Γ R) (as_iso $ to_Spec_Γ R).commRingIsoToRingEquiv.Injective
 
-attribute [local elementwise] CategoryTheory.IsIso.hom_inv_id
-
-theorem basic_open_eq_of_affine {R : CommRingₓₓ} (f : R) :
-    RingedSpace.basic_open (Spec.to_SheafedSpace.obj (op R)) ((Spec_Γ_identity.app R).inv f) =
-      PrimeSpectrum.basicOpen f :=
-  by
-  ext
-  change ↑(⟨x, trivialₓ⟩ : (⊤ : opens _)) ∈ RingedSpace.basic_open (Spec.to_SheafedSpace.obj (op R)) _ ↔ _
-  rw [RingedSpace.mem_basic_open]
-  suffices IsUnit (structure_sheaf.to_stalk R x f) ↔ f ∉ PrimeSpectrum.asIdeal x by
-    exact this
-  erw [← is_unit_map_iff (structure_sheaf.stalk_to_fiber_ring_hom R x),
-    structure_sheaf.stalk_to_fiber_ring_hom_to_stalk]
-  exact
-    (IsLocalization.AtPrime.is_unit_to_map_iff (Localization.AtPrime (PrimeSpectrum.asIdeal x))
-      (PrimeSpectrum.asIdeal x) f :
-      _)
-
-theorem basic_open_eq_of_affine' {R : CommRingₓₓ} (f : (Spec.to_SheafedSpace.obj (op R)).Presheaf.obj (op ⊤)) :
-    RingedSpace.basic_open (Spec.to_SheafedSpace.obj (op R)) f =
-      PrimeSpectrum.basicOpen ((Spec_Γ_identity.app R).Hom f) :=
-  by
-  convert basic_open_eq_of_affine ((Spec_Γ_identity.app R).Hom f)
-  exact (coe_hom_inv_id _ _).symm
-
 /-- To show that a statement `P` holds for all open subsets of all schemes, it suffices to show that
 1. In any scheme `X`, if `P` holds for an open cover of `U`, then `P` holds for `U`.
 2. For an open immerison `f : X ⟶ Y`, if `P` holds for the entire space of `X`, then `P` holds for
@@ -168,7 +143,7 @@ theorem reduce_to_affine_global (P : ∀ X : Scheme U : opens X.carrier, Prop)
   apply h₃
 
 theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : opens X.carrier} (s : X.presheaf.obj (op U))
-    (hs : X.to_LocallyRingedSpace.to_RingedSpace.basic_open s = ∅) : s = 0 := by
+    (hs : X.basic_open s = ∅) : s = 0 := by
   apply Top.Presheaf.section_ext X.sheaf U
   simp_rw [RingHom.map_zero]
   run_tac
@@ -178,7 +153,7 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : opens X
   · intro X U hx hX s hs x
     obtain ⟨V, hx, i, H⟩ := hx x
     specialize H (X.presheaf.map i.op s)
-    erw [RingedSpace.basic_open_res] at H
+    erw [Scheme.basic_open_res] at H
     rw [hs, ← subtype.coe_injective.eq_iff, opens.empty_eq, opens.inter_eq, inf_bot_eq] at H
     specialize H rfl ⟨x, hx⟩
     erw [Top.Presheaf.germ_res_apply] at H
@@ -196,7 +171,7 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : opens X
           change x ∈ f.val.base ⁻¹' _
           rw [e]
           trivial⟩
-    · rw [← LocallyRingedSpace.preimage_basic_open, hs]
+    · rw [← Scheme.preimage_basic_open, hs]
       ext1
       simp [opens.map]
       
@@ -208,7 +183,8 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : opens X
     
   · intro R hX s hs x
     erw [basic_open_eq_of_affine', PrimeSpectrum.basic_open_eq_bot_iff] at hs
-    replace hs := (hs.map (Spec_Γ_identity.app R).inv).eq_zero
+    replace hs := hs.map (Spec_Γ_identity.app R).inv
+    replace hs := @IsNilpotent.eq_zero _ _ _ _ (show _ from _) hs
     rw [coe_hom_inv_id] at hs
     rw [hs, map_zero]
     exact @is_reduced.component_reduced hX ⊤
@@ -216,7 +192,7 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : opens X
 
 @[simp]
 theorem basic_open_eq_bot_iff {X : Scheme} [IsReduced X] {U : opens X.carrier} (s : X.presheaf.obj $ op U) :
-    X.to_LocallyRingedSpace.to_RingedSpace.basic_open s = ⊥ ↔ s = 0 := by
+    X.basic_open s = ⊥ ↔ s = 0 := by
   refine' ⟨eq_zero_of_basic_open_empty s, _⟩
   rintro rfl
   simp
@@ -296,8 +272,7 @@ theorem is_integral_of_is_irreducible_is_reduced [IsReduced X] [H : IrreducibleS
     push_neg  at h
     exfalso
     obtain ⟨_, ⟨x, hx₁, rfl⟩, ⟨x, hx₂, e'⟩⟩ :=
-      @nonempty_preirreducible_inter _ H.1 (X.to_LocallyRingedSpace.to_RingedSpace.basic_open a).2
-        (X.to_LocallyRingedSpace.to_RingedSpace.basic_open b).2 h.1 h.2
+      @nonempty_preirreducible_inter _ H.1 (X.basic_open a).2 (X.basic_open b).2 h.1 h.2
     replace e' := Subtype.eq e'
     subst e'
     replace e := congr_argₓ (X.presheaf.germ x) e
@@ -346,10 +321,10 @@ theorem map_injective_of_is_integral [IsIntegral X] {U V : opens X.carrier} (i :
   rw [RingHom.injective_iff]
   intro x hx
   rw [← basic_open_eq_bot_iff] at hx⊢
-  erw [RingedSpace.basic_open_res] at hx
+  rw [Scheme.basic_open_res] at hx
   revert hx
   contrapose!
-  simp_rw [← opens.not_nonempty_iff_eq_bot, not_not, unop_op]
+  simp_rw [← opens.not_nonempty_iff_eq_bot, not_not]
   apply nonempty_preirreducible_inter U.prop (RingedSpace.basic_open _ _).Prop
   simpa using H
 

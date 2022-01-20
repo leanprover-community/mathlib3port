@@ -31,16 +31,16 @@ theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α ×
     Cauchy f ↔ ne_bot f ∧ ∀ i, p i → ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, (x, y) ∈ s i :=
   and_congr Iff.rfl $
     (f.basis_sets.prod_self.le_basis_iff h).trans $ by
-      simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id]
+      simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id, ball_mem_comm]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » t)
 theorem cauchy_iff' {f : Filter α} :
     Cauchy f ↔ ne_bot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, (x, y) ∈ s :=
   (𝓤 α).basis_sets.cauchy_iff
 
-theorem cauchy_iff {f : Filter α} : Cauchy f ↔ ne_bot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, Set.Prod t t ⊆ s :=
+theorem cauchy_iff {f : Filter α} : Cauchy f ↔ ne_bot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, t ×ˢ t ⊆ s :=
   cauchy_iff'.trans $ by
-    simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id]
+    simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id, ball_mem_comm]
 
 theorem cauchy_map_iff {l : Filter β} {f : β → α} :
     Cauchy (l.map f) ↔ ne_bot l ∧ tendsto (fun p : β × β => (f p.1, f p.2)) (l ×ᶠ l) (𝓤 α) := by
@@ -77,7 +77,7 @@ theorem Cauchy.prod [UniformSpace β] {f : Filter α} {g : Filter β} (hf : Cauc
 one can choose a set `t ∈ f` of diameter `s` such that it contains a point `y`
 with `(x, y) ∈ s`, then `f` converges to `x`. -/
 theorem le_nhds_of_cauchy_adhp_aux {f : Filter α} {x : α}
-    (adhs : ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, Set.Prod t t ⊆ s ∧ ∃ y, (x, y) ∈ s ∧ y ∈ t) : f ≤ 𝓝 x := by
+    (adhs : ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, t ×ˢ t ⊆ s ∧ ∃ y, (x, y) ∈ s ∧ y ∈ t) : f ≤ 𝓝 x := by
   intro s hs
   rcases comp_mem_uniformity_sets (mem_nhds_uniformity_iff_right.1 hs) with ⟨U, U_mem, hU⟩
   rcases adhs U U_mem with ⟨t, t_mem, ht, y, hxy, hy⟩
@@ -90,7 +90,7 @@ theorem le_nhds_of_cauchy_adhp {f : Filter α} {x : α} (hf : Cauchy f) (adhs : 
   le_nhds_of_cauchy_adhp_aux
     (by
       intro s hs
-      obtain ⟨t, t_mem, ht⟩ : ∃ t ∈ f, Set.Prod t t ⊆ s
+      obtain ⟨t, t_mem, ht⟩ : ∃ t ∈ f, t ×ˢ t ⊆ s
       exact (cauchy_iff.1 hf).2 s hs
       use t, t_mem, ht
       exact forall_mem_nonempty_iff_ne_bot.2 adhs _ (inter_mem_inf (mem_nhds_left x hs) t_mem))
@@ -218,16 +218,16 @@ theorem Filter.HasBasis.cauchy_seq_iff {γ} [Nonempty β] [SemilatticeSup β] {u
   rw [cauchy_seq_iff_tendsto, ← prod_at_top_at_top_eq]
   refine' (at_top_basis.prod_self.tendsto_iff h).trans _
   simp only [exists_prop, true_andₓ, maps_to, preimage, subset_def, Prod.forall, mem_prod_eq, mem_set_of_eq, mem_Ici,
-    and_imp, Prod.map]
+    and_imp, Prod.map, ge_iff_le, @forall_swap (_ ≤ _) β]
 
 theorem Filter.HasBasis.cauchy_seq_iff' {γ} [Nonempty β] [SemilatticeSup β] {u : β → α} {p : γ → Prop}
     {s : γ → Set (α × α)} (H : (𝓤 α).HasBasis p s) : CauchySeq u ↔ ∀ i, p i → ∃ N, ∀, ∀ n ≥ N, ∀, (u n, u N) ∈ s i := by
   refine' H.cauchy_seq_iff.trans ⟨fun h i hi => _, fun h i hi => _⟩
-  · exact (h i hi).imp fun N hN n hn => hN n N hn (le_reflₓ N)
+  · exact (h i hi).imp fun N hN n hn => hN n hn N le_rfl
     
   · rcases comp_symm_of_uniformity (H.mem_of_mem hi) with ⟨t, ht, ht', hts⟩
     rcases H.mem_iff.1 ht with ⟨j, hj, hjt⟩
-    refine' (h j hj).imp fun N hN m n hm hn => hts ⟨u N, hjt _, ht' $ hjt _⟩
+    refine' (h j hj).imp fun N hN m hm n hn => hts ⟨u N, hjt _, ht' $ hjt _⟩
     · exact hN m hm
       
     · exact hN n hn
@@ -333,7 +333,7 @@ theorem totally_bounded_iff_subset {s : Set α} :
       
     · intro x xs
       obtain ⟨y, hy, xy⟩ : ∃ y ∈ k, (x, y) ∈ r
-      exact mem_bUnion_iff.1 (ks xs)
+      exact mem_Union₂.1 (ks xs)
       rw [bUnion_range, mem_Union]
       set z : ↥u := ⟨y, hy, ⟨x, xs, xy⟩⟩
       exact ⟨z, rd $ mem_comp_rel.2 ⟨y, xy, rs (hfr z)⟩⟩
@@ -390,7 +390,7 @@ theorem Ultrafilter.cauchy_of_totally_bounded {s : Set α} (f : Ultrafilter α) 
     have : (⋃ y ∈ i, { x | (x, y) ∈ t' }) ∈ f := mem_of_superset (le_principal_iff.mp h) hs_union
     have : ∃ y ∈ i, { x | (x, y) ∈ t' } ∈ f := (Ultrafilter.finite_bUnion_mem_iff hi).1 this
     let ⟨y, hy, hif⟩ := this
-    have : Set.Prod { x | (x, y) ∈ t' } { x | (x, y) ∈ t' } ⊆ CompRel t' t' :=
+    have : { x | (x, y) ∈ t' } ×ˢ { x | (x, y) ∈ t' } ⊆ CompRel t' t' :=
       fun ⟨x₁, x₂⟩ ⟨(h₁ : (x₁, y) ∈ t'), (h₂ : (x₂, y) ∈ t')⟩ => ⟨y, h₁, ht'_symm h₂⟩
     mem_of_superset (prod_mem_prod hif hif) (subset.trans this ht'_t)⟩
 
@@ -485,11 +485,11 @@ open Set Finset
 noncomputable section
 
 /-- An auxiliary sequence of sets approximating a Cauchy filter. -/
-def set_seq_aux (n : ℕ) : { s : Set α // ∃ _ : s ∈ f, s.prod s ⊆ U n } :=
+def set_seq_aux (n : ℕ) : { s : Set α // ∃ _ : s ∈ f, s ×ˢ s ⊆ U n } :=
   indefinite_description _ $ (cauchy_iff.1 hf).2 (U n) (U_mem n)
 
 /-- Given a Cauchy filter `f` and a sequence `U` of entourages, `set_seq` provides
-an antitone sequence of sets `s n ∈ f` such that `(s n).prod (s n) ⊆ U`. -/
+an antitone sequence of sets `s n ∈ f` such that `s n ×ˢ s n ⊆ U`. -/
 def set_seq (n : ℕ) : Set α :=
   ⋂ m ∈ Iic n, (set_seq_aux hf U_mem m).val
 
@@ -502,8 +502,7 @@ theorem set_seq_mono ⦃m n : ℕ⦄ (h : m ≤ n) : set_seq hf U_mem n ⊆ set_
 theorem set_seq_sub_aux (n : ℕ) : set_seq hf U_mem n ⊆ set_seq_aux hf U_mem n :=
   bInter_subset_of_mem right_mem_Iic
 
-theorem set_seq_prod_subset {N m n} (hm : N ≤ m) (hn : N ≤ n) : (set_seq hf U_mem m).Prod (set_seq hf U_mem n) ⊆ U N :=
-  by
+theorem set_seq_prod_subset {N m n} (hm : N ≤ m) (hn : N ≤ n) : set_seq hf U_mem m ×ˢ set_seq hf U_mem n ⊆ U N := by
   intro p hp
   refine' (set_seq_aux hf U_mem N).2.snd ⟨_, _⟩ <;> apply set_seq_sub_aux
   exact set_seq_mono hf U_mem hm hp.1
@@ -591,12 +590,12 @@ theorem second_countable_of_separable [separable_space α] : second_countable_to
   choose ht_mem hto hts using hto
   refine' ⟨⟨⋃ x ∈ s, range fun k => ball x (t k), hsc.bUnion fun x hx => countable_range _, _⟩⟩
   refine' (is_topological_basis_of_open_of_nhds _ _).eq_generate_from
-  · simp only [mem_bUnion_iff, mem_range]
+  · simp only [mem_Union₂, mem_range]
     rintro _ ⟨x, hxs, k, rfl⟩
     exact is_open_ball x (hto k)
     
   · intro x V hxV hVo
-    simp only [mem_bUnion_iff, mem_range, exists_prop]
+    simp only [mem_Union₂, mem_range, exists_prop]
     rcases UniformSpace.mem_nhds_iff.1 (IsOpen.mem_nhds hVo hxV) with ⟨U, hU, hUV⟩
     rcases comp_symm_of_uniformity hU with ⟨U', hU', hsymm, hUU'⟩
     rcases h_basis.to_has_basis.mem_iff.1 hU' with ⟨k, -, hk⟩

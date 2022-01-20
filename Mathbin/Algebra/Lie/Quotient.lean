@@ -45,8 +45,16 @@ variable {N I}
 instance AddCommGroupₓ : AddCommGroupₓ (M ⧸ N) :=
   Submodule.Quotient.addCommGroup _
 
+instance module' {S : Type _} [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R M] : Module S (M ⧸ N) :=
+  Submodule.Quotient.module' _
+
 instance Module : Module R (M ⧸ N) :=
   Submodule.Quotient.module _
+
+instance IsCentralScalar {S : Type _} [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R M]
+    [HasScalar (Sᵐᵒᵖ) R] [Module (Sᵐᵒᵖ) M] [IsScalarTower (Sᵐᵒᵖ) R M] [IsCentralScalar S M] :
+    IsCentralScalar S (M ⧸ N) :=
+  Submodule.Quotient.is_central_scalar _
 
 instance Inhabited : Inhabited (M ⧸ N) :=
   ⟨0⟩
@@ -181,6 +189,19 @@ instance lie_quotient_lie_algebra : LieAlgebra R (L ⧸ I) where
 @[simps]
 def mk' : M →ₗ⁅R,L⁆ M ⧸ N :=
   { N.to_submodule.mkq with toFun := mk, map_lie' := fun r m => rfl }
+
+@[simp]
+theorem mk_eq_zero {m : M} : mk' N m = 0 ↔ m ∈ N :=
+  Submodule.Quotient.mk_eq_zero N.to_submodule
+
+@[simp]
+theorem mk'_ker : (mk' N).ker = N := by
+  ext
+  simp
+
+@[simp]
+theorem map_mk'_eq_bot_le : map (mk' N) N' = ⊥ ↔ N' ≤ N := by
+  rw [← LieModuleHom.le_ker_iff_map, mk'_ker]
 
 /-- Two `lie_module_hom`s from a quotient lie module are equal if their compositions with
 `lie_submodule.quotient.mk'` are equal.

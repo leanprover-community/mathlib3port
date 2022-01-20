@@ -45,7 +45,7 @@ open_locale ZeroObject
 def unique_homset_of_zero [has_zero_object C] (X Y : C) : Unique (X ⟶ Y) := by
   have : has_initial C := has_zero_object.has_initial
   apply unique_homset_of_initial_iso_terminal _ X Y
-  refine' ⟨default _, default (⊤_ C ⟶ 0) ≫ default _, _, _⟩ <;> simp
+  refine' ⟨default, (default : ⊤_ C ⟶ 0) ≫ default, _, _⟩ <;> simp
 
 attribute [local instance] unique_homset_of_zero
 
@@ -54,7 +54,7 @@ one morphism.
 -/
 def equiv_punit [has_zero_object C] : C ≌ discrete PUnit :=
   equivalence.mk (functor.star C) (functor.from_punit 0)
-    (nat_iso.of_components (fun X => { Hom := default (X ⟶ 0), inv := default (0 ⟶ X) }) fun X Y f => by
+    (nat_iso.of_components (fun X => { Hom := default, inv := default }) fun X Y f => by
       decide)
     (functor.punit_ext _ _)
 

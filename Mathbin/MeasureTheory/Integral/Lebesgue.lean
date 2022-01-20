@@ -104,7 +104,7 @@ theorem exists_range_iff {f : α →ₛ β} {p : β → Prop} : (∃ y ∈ f.ran
 theorem preimage_eq_empty_iff (f : α →ₛ β) (b : β) : f ⁻¹' {b} = ∅ ↔ b ∉ f.range :=
   preimage_singleton_eq_empty.trans $ not_congr mem_range.symm
 
-theorem exists_forall_le [Nonempty β] [DirectedOrder β] (f : α →ₛ β) : ∃ C, ∀ x, f x ≤ C :=
+theorem exists_forall_le [Nonempty β] [Preorderₓ β] [IsDirected β (· ≤ ·)] (f : α →ₛ β) : ∃ C, ∀ x, f x ≤ C :=
   f.range.exists_le.imp $ fun C => forall_range_iff.1
 
 /-- Constant function as a `simple_func`. -/
@@ -112,7 +112,7 @@ def const α {β} [MeasurableSpace α] (b : β) : α →ₛ β :=
   ⟨fun a => b, fun x => MeasurableSet.const _, finite_range_const⟩
 
 instance [Inhabited β] : Inhabited (α →ₛ β) :=
-  ⟨const _ (default _)⟩
+  ⟨const _ default⟩
 
 theorem const_apply (a : α) (b : β) : (const α b) a = b :=
   rfl
@@ -337,8 +337,7 @@ def pair (f : α →ₛ β) (g : α →ₛ γ) : α →ₛ β × γ :=
 theorem pair_apply (f : α →ₛ β) (g : α →ₛ γ) a : pair f g a = (f a, g a) :=
   rfl
 
-theorem pair_preimage (f : α →ₛ β) (g : α →ₛ γ) (s : Set β) (t : Set γ) :
-    pair f g ⁻¹' Set.Prod s t = f ⁻¹' s ∩ g ⁻¹' t :=
+theorem pair_preimage (f : α →ₛ β) (g : α →ₛ γ) (s : Set β) (t : Set γ) : pair f g ⁻¹' (s ×ˢ t) = f ⁻¹' s ∩ g ⁻¹' t :=
   rfl
 
 theorem pair_preimage_singleton (f : α →ₛ β) (g : α →ₛ γ) (b : β) (c : γ) :
@@ -903,8 +902,8 @@ open Finset Function
 theorem support_eq [MeasurableSpace α] [HasZero β] (f : α →ₛ β) :
     support f = ⋃ y ∈ f.range.filter fun y => y ≠ 0, f ⁻¹' {y} :=
   Set.ext $ fun x => by
-    simp only [Finset.set_bUnion_preimage_singleton, mem_support, Set.mem_preimage, Finset.mem_coe, mem_filter,
-      mem_range_self, true_andₓ]
+    simp only [mem_support, Set.mem_preimage, mem_filter, mem_range_self, true_andₓ, exists_prop, mem_Union,
+      Set.mem_range, mem_singleton_iff, exists_eq_right']
 
 variable {m : MeasurableSpace α} [HasZero β] [HasZero γ] {μ : Measureₓ α} {f : α →ₛ β}
 
@@ -2149,7 +2148,7 @@ theorem with_density_tsum {f : ℕ → α → ℝ≥0∞} (h : ∀ i, Measurable
 theorem with_density_indicator {s : Set α} (hs : MeasurableSet s) (f : α → ℝ≥0∞) :
     μ.with_density (s.indicator f) = (μ.restrict s).withDensity f := by
   ext1 t ht
-  rw [with_density_apply _ ht, lintegral_indicator _ hs, restrict_comm hs ht, ← with_density_apply _ ht]
+  rw [with_density_apply _ ht, lintegral_indicator _ hs, restrict_comm hs, ← with_density_apply _ ht]
 
 theorem with_density_of_real_mutually_singular {f : α → ℝ} (hf : Measurable f) :
     (μ.with_density fun x => Ennreal.ofReal $ f x) ⊥ₘ μ.with_density fun x => Ennreal.ofReal $ -f x := by

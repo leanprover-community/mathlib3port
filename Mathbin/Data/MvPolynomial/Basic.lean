@@ -264,6 +264,10 @@ theorem monomial_zero' : (monomial (0 : σ →₀ ℕ) : R → MvPolynomial σ R
   rfl
 
 @[simp]
+theorem monomial_eq_zero {s : σ →₀ ℕ} {b : R} : monomial s b = 0 ↔ b = 0 :=
+  Finsupp.single_eq_zero
+
+@[simp]
 theorem sum_monomial_eq {A : Type _} [AddCommMonoidₓ A] {u : σ →₀ ℕ} {r : R} {b : (σ →₀ ℕ) → R → A} (w : b u 0 = 0) :
     Sum (monomial u r) b = b u r :=
   sum_single_index w
@@ -609,13 +613,11 @@ theorem coeff_mul_X' [DecidableEq σ] m (s : σ) (p : MvPolynomial σ R) :
     coeff m (p * X s) = if s ∈ m.support then coeff (m - single s 1) p else 0 := by
   refine' (coeff_mul_monomial' _ _ _ _).trans _
   simp_rw [Finsupp.single_le_iff, Finsupp.mem_support_iff, Nat.succ_le_iff, pos_iff_ne_zero, mul_oneₓ]
-  congr
 
 theorem coeff_X_mul' [DecidableEq σ] m (s : σ) (p : MvPolynomial σ R) :
     coeff m (X s * p) = if s ∈ m.support then coeff (m - single s 1) p else 0 := by
   refine' (coeff_monomial_mul' _ _ _ _).trans _
   simp_rw [Finsupp.single_le_iff, Finsupp.mem_support_iff, Nat.succ_le_iff, pos_iff_ne_zero, one_mulₓ]
-  congr
 
 theorem eq_zero_iff {p : MvPolynomial σ R} : p = 0 ↔ ∀ d, coeff d p = 0 := by
   rw [ext_iff]

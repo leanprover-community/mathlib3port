@@ -1,5 +1,6 @@
 import Mathbin.CategoryTheory.Action
-import Mathbin.Combinatorics.Quiver
+import Mathbin.Combinatorics.Quiver.Arborescence
+import Mathbin.Combinatorics.Quiver.ConnectedComponent
 import Mathbin.GroupTheory.IsFreeGroup
 
 /-!
@@ -149,7 +150,7 @@ noncomputable def hom_of_path : ∀ {a : G}, path (root T) a → (root' T ⟶ a)
 
 /-- For every vertex `a`, there is a canonical hom from the root, given by the path in the tree. -/
 def tree_hom (a : G) : root' T ⟶ a :=
-  hom_of_path T (default _)
+  hom_of_path T default
 
 /-- Any path to `a` gives `tree_hom T a`, since paths in the tree are unique. -/
 theorem tree_hom_eq {a : G} (p : path (root T) a) : tree_hom T a = hom_of_path T p := by
@@ -169,10 +170,10 @@ theorem loop_of_hom_eq_id {a b : generators G} e (_ : e ∈ wide_subquiver_symme
     loop_of_hom T (of e) = 𝟙 (root' T) := by
   rw [loop_of_hom, ← category.assoc, is_iso.comp_inv_eq, category.id_comp]
   cases H
-  · rw [tree_hom_eq T (path.cons (default _) ⟨Sum.inl e, H⟩), hom_of_path]
+  · rw [tree_hom_eq T (path.cons default ⟨Sum.inl e, H⟩), hom_of_path]
     rfl
     
-  · rw [tree_hom_eq T (path.cons (default _) ⟨Sum.inr e, H⟩), hom_of_path]
+  · rw [tree_hom_eq T (path.cons default ⟨Sum.inr e, H⟩), hom_of_path]
     simp only [is_iso.inv_hom_id, category.comp_id, category.assoc, tree_hom]
     
 
@@ -250,16 +251,16 @@ from `a` to `b` in the generating quiver. -/
 theorem path_nonempty_of_hom {G} [groupoid.{u, u} G] [IsFreeGroupoid G] {a b : G} :
     Nonempty (a ⟶ b) → Nonempty (path (symgen a) (symgen b)) := by
   rintro ⟨p⟩
-  rw [← weakly_connected_component.eq, eq_comm, ← free_group.of_injective.eq_iff, ← mul_inv_eq_one]
-  let X := FreeGroup (weakly_connected_component $ symmetrify $ generators G)
-  let f : G → X := fun g => FreeGroup.of (↑symgen g)
+  rw [← @weakly_connected_component.eq (generators G), eq_comm, ← free_group.of_injective.eq_iff, ← mul_inv_eq_one]
+  let X := FreeGroup (weakly_connected_component $ generators G)
+  let f : G → X := fun g => FreeGroup.of (weakly_connected_component.mk g)
   let F : G ⥤ single_obj X := single_obj.difference_functor f
   change F.map p = ((CategoryTheory.Functor.const G).obj ()).map p
   congr
   ext
   rw [functor.const.obj_map, id_as_one, difference_functor_map, mul_inv_eq_one]
   apply congr_argₓ FreeGroup.of
-  rw [weakly_connected_component.eq]
+  apply (weakly_connected_component.eq _ _).mpr
   exact ⟨hom.to_path (Sum.inr e)⟩
 
 /-- Given a connected free groupoid, its generating quiver is rooted-connected. -/

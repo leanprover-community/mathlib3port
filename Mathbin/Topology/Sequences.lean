@@ -282,7 +282,7 @@ theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := 
       simpa [ht] using h t
     use a, a_in
     intro H'
-    obtain ⟨x, x_in, hx⟩ := mem_bUnion_iff.mp H'
+    obtain ⟨x, x_in, hx⟩ := mem_Union₂.mp H'
     exact H x x_in hx
   cases' seq_of_forall_finite_exists this with u hu
   clear h this
@@ -313,7 +313,7 @@ protected theorem IsSeqCompact.is_compact [is_countably_generated $ 𝓤 β] (hs
   trans ⋃ y ∈ t, ball y V
   · intro x x_in
     specialize ht x_in
-    rw [mem_bUnion_iff] at *
+    rw [mem_Union₂] at *
     simp_rw [ball_eq_of_symmetry Vsymm]
     exact ht
     

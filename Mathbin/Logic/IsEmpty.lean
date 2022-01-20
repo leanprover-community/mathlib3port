@@ -117,7 +117,7 @@ theorem not_is_empty_iff : ¬IsEmpty α ↔ Nonempty α :=
 
 @[simp]
 theorem is_empty_pi {π : α → Sort _} : IsEmpty (∀ a, π a) ↔ ∃ a, IsEmpty (π a) := by
-  simp only [← not_nonempty_iff, Classical.nonempty_pi, not_forall]
+  simp only [← not_nonempty_iff, Classical.nonempty_piₓ, not_forall]
 
 @[simp]
 theorem is_empty_prod {α β : Type _} : IsEmpty (α × β) ↔ IsEmpty α ∨ IsEmpty β := by
@@ -133,7 +133,7 @@ theorem is_empty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β
 
 @[simp]
 theorem is_empty_psum {α β} : IsEmpty (Psum α β) ↔ IsEmpty α ∧ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_psum, not_or_distrib]
+  simp only [← not_nonempty_iff, nonempty_psumₓ, not_or_distrib]
 
 variable (α)
 

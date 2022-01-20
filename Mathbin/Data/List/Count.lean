@@ -155,7 +155,10 @@ theorem repeat_count_eq_of_count_eq_length {a : α} {l : List α} (h : count a l
 
 @[simp]
 theorem count_filter {p} [DecidablePred p] {a} {l : List α} (h : p a) : count a (filter p l) = count a l := by
-  simp only [count, countp_filter] <;> congr <;> exact Set.ext fun b => and_iff_left_of_imp fun e => e ▸ h
+  simp only [count, countp_filter,
+    show (fun b => a = b ∧ p b) = Eq a by
+      ext b
+      constructor <;> cc]
 
 theorem count_bind {α β} [DecidableEq β] (l : List α) (f : α → List β) (x : β) :
     count x (l.bind f) = Sum (map (count x ∘ f) l) := by

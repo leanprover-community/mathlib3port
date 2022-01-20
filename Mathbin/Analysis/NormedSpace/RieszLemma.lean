@@ -39,7 +39,7 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
         norm_num)
       (le_max_rightₓ r (2⁻¹))
   have hdlt : d < d / r' := (lt_div_iff hlt).mpr ((mul_lt_iff_lt_one_right hdp).2 hr')
-  obtain ⟨y₀, hy₀F, hxy₀⟩ : ∃ y ∈ F, dist x y < d / r' := Metric.exists_dist_lt_of_inf_dist_lt hdlt hFn
+  obtain ⟨y₀, hy₀F, hxy₀⟩ : ∃ y ∈ F, dist x y < d / r' := (Metric.inf_dist_lt_iff hFn).mp hdlt
   have x_ne_y₀ : x - y₀ ∉ F := by
     by_contra h
     have : x - y₀ + y₀ ∈ F := F.add_mem h hy₀F

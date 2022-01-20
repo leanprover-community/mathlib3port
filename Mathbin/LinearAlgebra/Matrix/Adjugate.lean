@@ -334,7 +334,7 @@ theorem adjugate_fin_two' (a b c d : α) :
 
 theorem adjugate_conj_transpose [StarRing α] (A : Matrix n n α) : (A.adjugate)ᴴ = adjugate (A)ᴴ := by
   dsimp only [conj_transpose]
-  have : (A)ᵀ.adjugate.map star = adjugate ((A)ᵀ.map star) := (starRingAut : α ≃+* α).toRingHom.map_adjugate (A)ᵀ
+  have : (A)ᵀ.adjugate.map star = adjugate ((A)ᵀ.map star) := (starRingEnd α).map_adjugate (A)ᵀ
   rw [A.adjugate_transpose, this]
 
 theorem is_regular_of_is_left_regular_det {A : Matrix n n α} (hA : IsLeftRegular A.det) : IsRegular A := by

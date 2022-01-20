@@ -63,6 +63,8 @@ namespace Subgraph
 
 variable {V : Type u} {G : SimpleGraph V}
 
+protected theorem loopless (G' : subgraph G) : Irreflexive G'.adj := fun v h => G.loopless v (G'.adj_sub h)
+
 theorem adj_comm (G' : subgraph G) (v w : V) : G'.adj v w ↔ G'.adj w v :=
   ⟨fun x => G'.symm x, fun x => G'.symm x⟩
 
@@ -98,8 +100,8 @@ def spanning_coe (G' : subgraph G) : SimpleGraph V where
   loopless := fun v hv => G.loopless v (G'.adj_sub hv)
 
 @[simp]
-theorem spanning_coe_adj_sub (H : subgraph G) (u v : H.verts) (h : H.spanning_coe.adj u v) : G.adj u v :=
-  H.adj_sub h
+theorem adj.of_spanning_coe {G' : subgraph G} {u v : G'.verts} (h : G'.spanning_coe.adj u v) : G.adj u v :=
+  G'.adj_sub h
 
 /-- `spanning_coe` is equivalent to `coe` for a subgraph that `is_spanning`.  -/
 @[simps]
@@ -129,6 +131,9 @@ def neighbor_set (G' : subgraph G) (v : V) : Set V :=
   SetOf (G'.adj v)
 
 theorem neighbor_set_subset (G' : subgraph G) (v : V) : G'.neighbor_set v ⊆ G.neighbor_set v := fun w h => G'.adj_sub h
+
+theorem neighbor_set_subset_verts (G' : subgraph G) (v : V) : G'.neighbor_set v ⊆ G'.verts := fun _ h =>
+  G'.edge_vert (adj_symm G' h)
 
 @[simp]
 theorem mem_neighbor_set (G' : subgraph G) (v w : V) : w ∈ G'.neighbor_set v ↔ G'.adj v w :=
@@ -413,9 +418,18 @@ def finite_at_of_subgraph {G' G'' : subgraph G} [DecidableRel G'.adj] (h : G' �
     [hf : Fintype (G''.neighbor_set v)] : Fintype (G'.neighbor_set v) :=
   Set.fintypeSubset (G''.neighbor_set v) (neighbor_set_subset_of_subgraph h v)
 
+instance (G' : subgraph G) [Fintype G'.verts] (v : V) [DecidablePred (· ∈ G'.neighbor_set v)] :
+    Fintype (G'.neighbor_set v) :=
+  Set.fintypeSubset G'.verts (neighbor_set_subset_verts G' v)
+
 instance coe_finite_at {G' : subgraph G} (v : G'.verts) [Fintype (G'.neighbor_set v)] :
     Fintype (G'.coe.neighbor_set v) :=
   Fintype.ofEquiv _ (coe_neighbor_set_equiv v).symm
+
+theorem is_spanning.card_verts [Fintype V] {G' : subgraph G} [Fintype G'.verts] (h : G'.is_spanning) :
+    G'.verts.to_finset.card = Fintype.card V := by
+  rw [is_spanning_iff] at h
+  simpa [h]
 
 /-- The degree of a vertex in a subgraph. It's zero for vertices outside the subgraph. -/
 def degree (G' : subgraph G) (v : V) [Fintype (G'.neighbor_set v)] : ℕ :=
@@ -439,6 +453,12 @@ theorem coe_degree (G' : subgraph G) (v : G'.verts) [Fintype (G'.coe.neighbor_se
     G'.coe.degree v = G'.degree v := by
   rw [← card_neighbor_set_eq_degree]
   exact Fintype.card_congr (coe_neighbor_set_equiv v)
+
+@[simp]
+theorem degree_spanning_coe {G' : G.subgraph} (v : V) [Fintype (G'.neighbor_set v)]
+    [Fintype (G'.spanning_coe.neighbor_set v)] : G'.spanning_coe.degree v = G'.degree v := by
+  rw [← card_neighbor_set_eq_degree, subgraph.degree]
+  congr
 
 theorem degree_eq_one_iff_unique_adj {G' : subgraph G} {v : V} [Fintype (G'.neighbor_set v)] :
     G'.degree v = 1 ↔ ∃! w : V, G'.adj v w := by

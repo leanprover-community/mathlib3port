@@ -68,23 +68,18 @@ theorem set_integral_congr (hs : MeasurableSet s) (h : eq_on f g s) : (∫ x in 
 theorem set_integral_congr_set_ae (hst : s =ᵐ[μ] t) : (∫ x in s, f x ∂μ) = ∫ x in t, f x ∂μ := by
   rw [measure.restrict_congr_set hst]
 
-theorem integral_union (hst : Disjoint s t) (hs : MeasurableSet s) (ht : MeasurableSet t) (hfs : integrable_on f s μ)
+theorem integral_union_ae (hst : ae_disjoint μ s t) (ht : null_measurable_set t μ) (hfs : integrable_on f s μ)
     (hft : integrable_on f t μ) : (∫ x in s ∪ t, f x ∂μ) = (∫ x in s, f x ∂μ) + ∫ x in t, f x ∂μ := by
-  simp only [integrable_on, measure.restrict_union hst hs ht, integral_add_measure hfs hft]
+  simp only [integrable_on, measure.restrict_union₀ hst ht, integral_add_measure hfs hft]
 
-theorem integral_union_ae (hst : (s ∩ t : Set α) =ᵐ[μ] (∅ : Set α)) (hs : MeasurableSet s) (ht : MeasurableSet t)
-    (hfs : integrable_on f s μ) (hft : integrable_on f t μ) :
-    (∫ x in s ∪ t, f x ∂μ) = (∫ x in s, f x ∂μ) + ∫ x in t, f x ∂μ := by
-  have : s =ᵐ[μ] s \ t := by
-    refine' (hst.mem_iff.mono _).set_eq
-    simp
-  rw [← diff_union_self, integral_union disjoint_diff.symm, set_integral_congr_set_ae this]
-  exacts[hs.diff ht, ht, hfs.mono_set (diff_subset _ _), hft]
+theorem integral_union (hst : Disjoint s t) (ht : MeasurableSet t) (hfs : integrable_on f s μ)
+    (hft : integrable_on f t μ) : (∫ x in s ∪ t, f x ∂μ) = (∫ x in s, f x ∂μ) + ∫ x in t, f x ∂μ :=
+  integral_union_ae hst.ae_disjoint ht.null_measurable_set hfs hft
 
-theorem integral_diff (hs : MeasurableSet s) (ht : MeasurableSet t) (hfs : integrable_on f s μ)
-    (hft : integrable_on f t μ) (hts : t ⊆ s) : (∫ x in s \ t, f x ∂μ) = (∫ x in s, f x ∂μ) - ∫ x in t, f x ∂μ := by
+theorem integral_diff (ht : MeasurableSet t) (hfs : integrable_on f s μ) (hft : integrable_on f t μ) (hts : t ⊆ s) :
+    (∫ x in s \ t, f x ∂μ) = (∫ x in s, f x ∂μ) - ∫ x in t, f x ∂μ := by
   rw [eq_sub_iff_add_eq, ← integral_union, diff_union_of_subset hts]
-  exacts[disjoint_diff.symm, hs.diff ht, ht, hfs.mono_set (diff_subset _ _), hft]
+  exacts[disjoint_diff.symm, ht, hfs.mono_set (diff_subset _ _), hft]
 
 theorem integral_finset_bUnion {ι : Type _} (t : Finset ι) {s : ι → Set α} (hs : ∀, ∀ i ∈ t, ∀, MeasurableSet (s i))
     (h's : Set.Pairwise (↑t) (Disjoint on s)) (hf : ∀, ∀ i ∈ t, ∀, integrable_on f (s i) μ) :
@@ -93,7 +88,7 @@ theorem integral_finset_bUnion {ι : Type _} (t : Finset ι) {s : ι → Set α}
   · simp
     
   · simp only [Finset.coe_insert, Finset.forall_mem_insert, Set.pairwise_insert, Finset.set_bUnion_insert] at hs hf h's⊢
-    rw [integral_union _ hs.1 _ hf.1 (integrable_on_finset_Union.2 hf.2)]
+    rw [integral_union _ _ hf.1 (integrable_on_finset_Union.2 hf.2)]
     · rw [Finset.sum_insert hat, IH hs.2 h's.1 hf.2]
       
     · simp only [disjoint_Union_right]
@@ -120,7 +115,7 @@ theorem integral_univ : (∫ x in univ, f x ∂μ) = ∫ x, f x ∂μ := by
 
 theorem integral_add_compl (hs : MeasurableSet s) (hfi : integrable f μ) :
     ((∫ x in s, f x ∂μ) + ∫ x in sᶜ, f x ∂μ) = ∫ x, f x ∂μ := by
-  rw [← integral_union (@disjoint_compl_right (Set α) _ _) hs hs.compl hfi.integrable_on hfi.integrable_on,
+  rw [← integral_union (@disjoint_compl_right (Set α) _ _) hs.compl hfi.integrable_on hfi.integrable_on,
     union_compl_self, integral_univ]
 
 /-- For a function `f` and a measurable set `s`, the integral of `indicator s f`
@@ -152,10 +147,10 @@ theorem tendsto_set_integral_of_monotone {ι : Type _} [Encodable ι] [Semilatti
   have : ∀ᶠ i in at_top, ν (s i) ∈ Icc (ν S - ε) (ν S + ε) :=
     tendsto_measure_Union hsm h_mono (Ennreal.Icc_mem_nhds hfi'.ne (Ennreal.coe_pos.2 ε0).ne')
   refine' this.mono fun i hi => _
-  rw [mem_closed_ball_iff_norm', ← integral_diff hSm (hsm i) hfi (hfi.mono_set hsub) hsub, ← coe_nnnorm,
-    Nnreal.coe_le_coe, ← Ennreal.coe_le_coe]
+  rw [mem_closed_ball_iff_norm', ← integral_diff (hsm i) hfi (hfi.mono_set hsub) hsub, ← coe_nnnorm, Nnreal.coe_le_coe,
+    ← Ennreal.coe_le_coe]
   refine' (ennnorm_integral_le_lintegral_ennnorm _).trans _
-  rw [← with_density_apply _ (hSm.diff (hsm _)), ← hν, measure_diff hsub hSm (hsm _)]
+  rw [← with_density_apply _ (hSm.diff (hsm _)), ← hν, measure_diff hsub (hsm _)]
   exacts[tsub_le_iff_tsub_le.mp hi.1, (hi.2.trans_lt $ Ennreal.add_lt_top.2 ⟨hfi', Ennreal.coe_lt_top⟩).Ne]
 
 theorem has_sum_integral_Union {ι : Type _} [Encodable ι] {s : ι → Set α} {f : α → E} (hm : ∀ i, MeasurableSet (s i))
@@ -174,7 +169,7 @@ theorem integral_Union {ι : Type _} [Encodable ι] {s : ι → Set α} {f : α 
   (HasSum.tsum_eq (has_sum_integral_Union hm hd hfi)).symm
 
 theorem has_sum_integral_Union_of_null_inter {ι : Type _} [Encodable ι] {s : ι → Set α} {f : α → E}
-    (hm : ∀ i, MeasurableSet (s i)) (hd : Pairwise fun i j => μ (s i ∩ s j) = 0) (hfi : integrable_on f (⋃ i, s i) μ) :
+    (hm : ∀ i, null_measurable_set (s i) μ) (hd : Pairwise (ae_disjoint μ on s)) (hfi : integrable_on f (⋃ i, s i) μ) :
     HasSum (fun n => ∫ a in s n, f a ∂μ) (∫ a in ⋃ n, s n, f a ∂μ) := by
   rcases exists_subordinate_pairwise_disjoint hm hd with ⟨t, ht_sub, ht_eq, htm, htd⟩
   have htU_eq : (⋃ i, s i) =ᵐ[μ] ⋃ i, t i := EventuallyEq.countable_Union ht_eq
@@ -182,7 +177,7 @@ theorem has_sum_integral_Union_of_null_inter {ι : Type _} [Encodable ι] {s : �
   exact has_sum_integral_Union htm htd (hfi.congr_set_ae htU_eq.symm)
 
 theorem integral_Union_of_null_inter {ι : Type _} [Encodable ι] {s : ι → Set α} {f : α → E}
-    (hm : ∀ i, MeasurableSet (s i)) (hd : Pairwise fun i j => μ (s i ∩ s j) = 0) (hfi : integrable_on f (⋃ i, s i) μ) :
+    (hm : ∀ i, null_measurable_set (s i) μ) (hd : Pairwise (ae_disjoint μ on s)) (hfi : integrable_on f (⋃ i, s i) μ) :
     (∫ a in ⋃ n, s n, f a ∂μ) = ∑' n, ∫ a in s n, f a ∂μ :=
   (HasSum.tsum_eq (has_sum_integral_Union_of_null_inter hm hd hfi)).symm
 
@@ -194,17 +189,11 @@ theorem set_integral_eq_zero_of_forall_eq_zero {f : α → E} (hf : Measurable f
   rw [Pi.zero_apply]
   exact ht_eq x hx
 
-private theorem set_integral_union_eq_left_of_disjoint {f : α → E} (hf : Measurable f) (hfi : integrable f μ)
-    (hs : MeasurableSet s) (ht : MeasurableSet t) (ht_eq : ∀, ∀ x ∈ t, ∀, f x = 0) (hs_disj : Disjoint s t) :
-    (∫ x in s ∪ t, f x ∂μ) = ∫ x in s, f x ∂μ := by
-  rw [integral_union hs_disj hs ht hfi.integrable_on hfi.integrable_on, set_integral_eq_zero_of_forall_eq_zero hf ht_eq,
-    add_zeroₓ]
-
 theorem set_integral_union_eq_left {f : α → E} (hf : Measurable f) (hfi : integrable f μ) (hs : MeasurableSet s)
-    (ht : MeasurableSet t) (ht_eq : ∀, ∀ x ∈ t, ∀, f x = 0) : (∫ x in s ∪ t, f x ∂μ) = ∫ x in s, f x ∂μ := by
-  rw [← Set.union_diff_self, integral_union,
-    set_integral_eq_zero_of_forall_eq_zero _ fun x hx => ht_eq x (diff_subset _ _ hx), add_zeroₓ]
-  exacts[hf, disjoint_diff, hs, ht.diff hs, hfi.integrable_on, hfi.integrable_on]
+    (ht_eq : ∀, ∀ x ∈ t, ∀, f x = 0) : (∫ x in s ∪ t, f x ∂μ) = ∫ x in s, f x ∂μ := by
+  rw [← Set.union_diff_self, union_comm, integral_union,
+    set_integral_eq_zero_of_forall_eq_zero _ fun x hx => ht_eq x (diff_subset _ _ hx), zero_addₓ]
+  exacts[hf, disjoint_diff.symm, hs, hfi.integrable_on, hfi.integrable_on]
 
 theorem set_integral_neg_eq_set_integral_nonpos [LinearOrderₓ E] [OrderClosedTopology E] {f : α → E} (hf : Measurable f)
     (hfi : integrable f μ) : (∫ x in { x | f x < 0 }, f x ∂μ) = ∫ x in { x | f x ≤ 0 }, f x ∂μ := by
@@ -213,9 +202,7 @@ theorem set_integral_neg_eq_set_integral_nonpos [LinearOrderₓ E] [OrderClosedT
     simp_rw [Set.mem_union_eq, Set.mem_set_of_eq]
     exact le_iff_lt_or_eqₓ
   rw [h_union]
-  exact
-    (set_integral_union_eq_left hf hfi (measurable_set_lt hf measurable_const)
-        (measurable_set_eq_fun hf measurable_const) fun x hx => hx).symm
+  exact (set_integral_union_eq_left hf hfi (measurable_set_lt hf measurable_const) fun x hx => hx).symm
 
 theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hf : Measurable f) (hfi : integrable f μ) :
     (∫ x, ∥f x∥ ∂μ) = (∫ x in { x | 0 ≤ f x }, f x ∂μ) - ∫ x in { x | f x ≤ 0 }, f x ∂μ :=

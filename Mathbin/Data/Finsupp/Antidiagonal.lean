@@ -75,7 +75,7 @@ theorem antidiagonal_zero : antidiagonal (0 : α →₀ ℕ) = singleton (0, 0) 
 theorem prod_antidiagonal_swap {M : Type _} [CommMonoidₓ M] (n : α →₀ ℕ) (f : (α →₀ ℕ) → (α →₀ ℕ) → M) :
     (∏ p in antidiagonal n, f p.1 p.2) = ∏ p in antidiagonal n, f p.2 p.1 :=
   Finset.prod_bij (fun p hp => p.swap) (fun p => swap_mem_antidiagonal.2) (fun p hp => rfl)
-    (fun p₁ p₂ _ _ h => Prod.swap_injective h) fun p hp => ⟨p.swap, swap_mem_antidiagonal.2 hp, p.swap_swap.symm⟩
+    (fun p₁ p₂ _ _ h => Prod.swap_injectiveₓ h) fun p hp => ⟨p.swap, swap_mem_antidiagonal.2 hp, p.swap_swap.symm⟩
 
 /-- The set `{m : α →₀ ℕ | m ≤ n}` as a `finset`. -/
 def Iic_finset (n : α →₀ ℕ) : Finset (α →₀ ℕ) :=

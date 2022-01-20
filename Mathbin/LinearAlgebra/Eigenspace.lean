@@ -90,6 +90,11 @@ theorem mem_spectrum_of_has_eigenvalue {f : End R M} {μ : R} (hμ : has_eigenva
   refine' hv.2 ((linear_map.ker_eq_bot'.mp f'.ker) v (_ : μ • v - f v = 0))
   rw [hv.apply_eq_smul, sub_self]
 
+theorem has_eigenvalue_iff_mem_spectrum [FiniteDimensional K V] {f : End K V} {μ : K} :
+    f.has_eigenvalue μ ↔ μ ∈ Spectrum K f :=
+  Iff.intro mem_spectrum_of_has_eigenvalue fun h => by
+    rwa [Spectrum.mem_iff, IsUnit.sub_iff, LinearMap.is_unit_iff_ker_eq_bot] at h
+
 theorem eigenspace_div (f : End K V) (a b : K) (hb : b ≠ 0) :
     eigenspace f (a / b) = (b • f - algebraMap K (End K V) a).ker :=
   calc
@@ -193,10 +198,8 @@ end minpoly
     an eigenvalue. -/
 theorem exists_eigenvalue [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : End K V) :
     ∃ c : K, f.has_eigenvalue c := by
-  obtain ⟨c, nu⟩ := Spectrum.nonempty_of_is_alg_closed_of_finite_dimensional K f
-  use c
-  rw [Spectrum.mem_iff, IsUnit.sub_iff, LinearMap.is_unit_iff_ker_eq_bot] at nu
-  exact has_eigenvalue_of_has_eigenvector (Submodule.exists_mem_ne_zero_of_ne_bot nu).some_spec
+  simp_rw [has_eigenvalue_iff_mem_spectrum]
+  exact Spectrum.nonempty_of_is_alg_closed_of_finite_dimensional K f
 
 noncomputable instance [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : End K V) : Inhabited f.eigenvalues :=
   ⟨⟨f.exists_eigenvalue.some, f.exists_eigenvalue.some_spec⟩⟩
@@ -420,8 +423,7 @@ theorem generalized_eigenspace_restrict (f : End R M) (p : Submodule R M) (k : �
   · rw [pow_zeroₓ, pow_zeroₓ, LinearMap.one_eq_id]
     apply (Submodule.ker_subtype _).symm
     
-  · erw [pow_succ'ₓ, pow_succ'ₓ, LinearMap.ker_comp, LinearMap.ker_comp, ih, ← LinearMap.ker_comp, ← LinearMap.ker_comp,
-      LinearMap.comp_assoc]
+  · erw [pow_succ'ₓ, pow_succ'ₓ, LinearMap.ker_comp, LinearMap.ker_comp, ih, ← LinearMap.ker_comp, LinearMap.comp_assoc]
     
 
 /-- If `p` is an invariant submodule of an endomorphism `f`, then the `μ`-eigenspace of the

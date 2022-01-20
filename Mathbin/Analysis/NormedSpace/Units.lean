@@ -268,7 +268,7 @@ theorem is_open_map_coe : IsOpenMap (coeₓ : (R)ˣ → R) := by
   intro x s
   rw [mem_map, mem_nhds_induced]
   rintro ⟨t, ht, hts⟩
-  obtain ⟨u, hu, v, hv, huvt⟩ : ∃ u : Set R, u ∈ 𝓝 (↑x) ∧ ∃ v : Set (Rᵐᵒᵖ), v ∈ 𝓝 (op (↑x⁻¹)) ∧ u.prod v ⊆ t := by
+  obtain ⟨u, hu, v, hv, huvt⟩ : ∃ u : Set R, u ∈ 𝓝 (↑x) ∧ ∃ v : Set (Rᵐᵒᵖ), v ∈ 𝓝 (op (↑x⁻¹)) ∧ u ×ˢ v ⊆ t := by
     simpa [embedProduct, mem_nhds_prod_iff] using ht
   have : u ∩ op ∘ Ring.inverse ⁻¹' v ∩ Set.Range (coeₓ : (R)ˣ → R) ∈ 𝓝 (↑x) := by
     refine' inter_mem (inter_mem hu _) (Units.nhds x)
@@ -276,7 +276,7 @@ theorem is_open_map_coe : IsOpenMap (coeₓ : (R)ˣ → R) := by
     simpa using hv
   refine' mem_of_superset this _
   rintro _ ⟨⟨huy, hvy⟩, ⟨y, rfl⟩⟩
-  have : embedProduct R y ∈ u.prod v :=
+  have : embedProduct R y ∈ u ×ˢ v :=
     ⟨huy, by
       simpa using hvy⟩
   simpa using hts (huvt this)

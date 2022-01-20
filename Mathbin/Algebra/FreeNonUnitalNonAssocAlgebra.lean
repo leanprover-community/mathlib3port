@@ -37,10 +37,9 @@ noncomputable section
 
 variable (R : Type u) (X : Type v) [Semiringₓ R]
 
--- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler module R
 /-- The free non-unital, non-associative algebra on the type `X` with coefficients in `R`. -/
-def FreeNonUnitalNonAssocAlgebra :=
-  MonoidAlgebra R (FreeMagma X)deriving Inhabited, NonUnitalNonAssocSemiring, [anonymous]
+abbrev FreeNonUnitalNonAssocAlgebra :=
+  MonoidAlgebra R (FreeMagma X)
 
 namespace FreeNonUnitalNonAssocAlgebra
 
@@ -49,18 +48,6 @@ variable {X}
 /-- The embedding of `X` into the free algebra with coefficients in `R`. -/
 def of : X → FreeNonUnitalNonAssocAlgebra R X :=
   MonoidAlgebra.ofMagma R _ ∘ FreeMagma.of
-
-instance : IsScalarTower R (FreeNonUnitalNonAssocAlgebra R X) (FreeNonUnitalNonAssocAlgebra R X) :=
-  MonoidAlgebra.is_scalar_tower_self R
-
-/-- If the coefficients are commutative amongst themselves, they also commute with the algebra
-multiplication. -/
-instance (R : Type u) [CommSemiringₓ R] :
-    SmulCommClass R (FreeNonUnitalNonAssocAlgebra R X) (FreeNonUnitalNonAssocAlgebra R X) :=
-  MonoidAlgebra.smul_comm_class_self R
-
-instance (R : Type u) [Ringₓ R] : AddCommGroupₓ (FreeNonUnitalNonAssocAlgebra R X) :=
-  Module.addCommMonoidToAddCommGroup R
 
 variable {A : Type w} [NonUnitalNonAssocSemiring A]
 
@@ -86,20 +73,17 @@ theorem lift_unique (f : X → A) (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocA
   (lift R).symm_apply_eq
 
 @[simp]
-theorem lift_of_apply (f : X → A) x : lift R f (of R x) = f x := by
-  rw [← Function.comp_app (lift R f) (of R) x, of_comp_lift]
+theorem lift_of_apply (f : X → A) x : lift R f (of R x) = f x :=
+  congr_funₓ (of_comp_lift _ f) x
 
 @[simp]
-theorem lift_comp_of (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A) : lift R (F ∘ of R) = F := by
-  rw [← lift_symm_apply, Equivₓ.apply_symm_apply]
+theorem lift_comp_of (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A) : lift R (F ∘ of R) = F :=
+  (lift R).apply_symm_apply F
 
 @[ext]
 theorem hom_ext {F₁ F₂ : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A} (h : ∀ x, F₁ (of R x) = F₂ (of R x)) :
     F₁ = F₂ :=
-  have h' : (lift R).symm F₁ = (lift R).symm F₂ := by
-    ext
-    simp [h]
-  (lift R).symm.Injective h'
+  (lift R).symm.Injective $ funext h
 
 end FreeNonUnitalNonAssocAlgebra
 

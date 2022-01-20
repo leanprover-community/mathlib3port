@@ -235,7 +235,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
           by
           ring
       
-  choose r hr using this
+  choose r hr0 hr1 hrμ
   let t' := { a ∈ t | ∃ x, a ⊆ closed_ball x (r x) }
   obtain ⟨u, ut', u_disj, hu⟩ :
     ∃ (u : _)(_ : u ⊆ t'),
@@ -243,9 +243,9 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     by
     have A : ∀ a : Set α, a ∈ t' → diam a ≤ 2 := by
       rintro a ⟨hat, ⟨x, hax⟩⟩
-      calc diam a ≤ diam (closed_ball x (r x)) := diam_mono hax bounded_closed_ball _ ≤ 2 * r x :=
-          diam_closed_ball (hr x).1.le _ ≤ 2 * 1 := mul_le_mul_of_nonneg_left (hr x).2.1 zero_le_two _ = 2 := by
-          norm_num
+      calc diam a ≤ 2 * 1 :=
+          diam_le_of_subset_closed_ball zero_le_one (hax.trans $ closed_ball_subset_closed_ball $ hr1 x)_ = 2 :=
+          mul_oneₓ _
     have B : ∀ a : Set α, a ∈ t' → a.nonempty := fun a hat' => Set.Nonempty.mono interior_subset (ht a hat'.1)
     exact exists_disjoint_subfamily_covering_enlargment t' diam 2 one_lt_two (fun a ha => diam_nonneg) 2 A B
   have ut : u ⊆ t := fun a hau => (ut' hau).1
@@ -266,15 +266,15 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     have R0_bdd : BddAbove ((fun a => r (y a)) '' v) := by
       refine' ⟨1, fun r' hr' => _⟩
       rcases(mem_image _ _ _).1 hr' with ⟨b, hb, rfl⟩
-      exact (hr _).2.1
+      exact hr1 _
     rcases le_totalₓ R0 (r x) with (H | H)
-    · refine' ⟨20 * r x, (hr x).2.2, fun a au hax => _⟩
+    · refine' ⟨20 * r x, hrμ x, fun a au hax => _⟩
       refine' (hy a au).trans _
       apply closed_ball_subset_closed_ball'
       have : r (y a) ≤ R0 := le_cSup R0_bdd (mem_image_of_mem _ ⟨au, hax⟩)
-      linarith [(hr (y a)).1.le, (hr x).1.le, Idist_v a ⟨au, hax⟩]
+      linarith [(hr0 (y a)).le, (hr0 x).le, Idist_v a ⟨au, hax⟩]
       
-    · have R0pos : 0 < R0 := (hr x).1.trans_le H
+    · have R0pos : 0 < R0 := (hr0 x).trans_le H
       have vnonempty : v.nonempty := by
         by_contra
         rw [← ne_empty_iff_nonempty, not_not] at h
@@ -286,7 +286,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
         rcases(mem_image _ _ _).1 r'mem with ⟨a, hav, rfl⟩
         exact ⟨a, hav, hr'⟩
       refine' ⟨8 * R0, _, _⟩
-      · apply lt_of_le_of_ltₓ (measure_mono _) (hr (y a)).2.2
+      · apply lt_of_le_of_ltₓ (measure_mono _) (hrμ (y a))
         apply closed_ball_subset_closed_ball'
         rw [dist_comm]
         linarith [Idist_v a hav]
@@ -298,10 +298,9 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
         linarith [Idist_v b ⟨bu, hbx⟩]
         
       
-  refine' ⟨ball x (r x), _, le_antisymmₓ (le_of_forall_le_of_dense fun ε εpos => _) bot_le⟩
-  · apply mem_nhds_within_of_mem_nhds (is_open_ball.mem_nhds _)
-    simp only [(hr x).left, mem_ball, dist_self]
-    
+  refine'
+    ⟨_ ∩ ball x (r x), inter_mem_nhds_within _ (ball_mem_nhds _ (hr0 _)),
+      nonpos_iff_eq_zero.mp (le_of_forall_le_of_dense fun ε εpos => _)⟩
   have I : (∑' a : v, μ a) < ∞ := by
     calc (∑' a : v, μ a) = μ (⋃ a ∈ v, a) := by
         rw [measure_bUnion (u_count.mono vu) _ fun a ha => (h't _ (vu.trans ut ha)).MeasurableSet]
@@ -411,20 +410,20 @@ protected def VitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurabl
       exact ⟨a, mem_bUnion xs xa, (fsubset x xs xa).1, hax⟩
     have A₂ : ∀, ∀ a ∈ t, ∀, (Interior a).Nonempty := by
       rintro a ha
-      rcases mem_bUnion_iff.1 ha with ⟨x, xs, xa⟩
+      rcases mem_Union₂.1 ha with ⟨x, xs, xa⟩
       exact (fsubset x xs xa).2.2.1
     have A₃ : ∀, ∀ a ∈ t, ∀, IsClosed a := by
       rintro a ha
-      rcases mem_bUnion_iff.1 ha with ⟨x, xs, xa⟩
+      rcases mem_Union₂.1 ha with ⟨x, xs, xa⟩
       exact (fsubset x xs xa).2.1
     have A₄ : ∀, ∀ a ∈ t, ∀, ∃ x ∈ a, μ (closed_ball x (3 * diam a)) ≤ C * μ a := by
       rintro a ha
-      rcases mem_bUnion_iff.1 ha with ⟨x, xs, xa⟩
+      rcases mem_Union₂.1 ha with ⟨x, xs, xa⟩
       exact ⟨x, (fsubset x xs xa).1, (fsubset x xs xa).2.2.2⟩
     obtain ⟨u, ut, u_count, u_disj, μu⟩ :
       ∃ (u : _)(_ : u ⊆ t), u.countable ∧ u.pairwise Disjoint ∧ μ (s \ ⋃ a ∈ u, a) = 0 :=
       exists_disjoint_covering_ae μ s t A₁ A₂ A₃ C A₄
-    have : ∀, ∀ a ∈ u, ∀, ∃ x ∈ s, a ∈ f x := fun a ha => mem_bUnion_iff.1 (ut ha)
+    have : ∀, ∀ a ∈ u, ∀, ∃ x ∈ s, a ∈ f x := fun a ha => mem_Union₂.1 (ut ha)
     choose! x hx using this
     have inj_on_x : inj_on x u := by
       intro a ha b hb hab
@@ -442,17 +441,17 @@ protected def VitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurabl
       
     · rw [inj_on_x.pairwise_disjoint_image]
       intro a ha b hb hab
-      simp only [Function.onFun, Function.inv_fun_on_eq' inj_on_x, ha, hb, · ∘ ·]
+      simp only [Function.onFun, inj_on_x.left_inv_on_inv_fun_on ha, inj_on_x.left_inv_on_inv_fun_on hb, · ∘ ·]
       exact u_disj ha hb hab
       
     · intro y hy
       rcases(mem_image _ _ _).1 hy with ⟨a, ha, rfl⟩
-      rw [Function.inv_fun_on_eq' inj_on_x ha]
+      rw [inj_on_x.left_inv_on_inv_fun_on ha]
       exact (hx a ha).2
       
     · rw [bUnion_image]
       convert μu using 3
-      exact bUnion_congr fun a ha => Function.inv_fun_on_eq' inj_on_x ha
+      exact bUnion_congr fun a ha => inj_on_x.left_inv_on_inv_fun_on ha
       
 
 end Vitali

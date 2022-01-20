@@ -32,7 +32,7 @@ def arrow :=
   comma.{v, v, v} (𝟭 T) (𝟭 T)deriving category
 
 instance arrow.inhabited [Inhabited T] : Inhabited (arrow T) where
-  default := show comma (𝟭 T) (𝟭 T) from default (comma (𝟭 T) (𝟭 T))
+  default := show comma (𝟭 T) (𝟭 T) from default
 
 end
 

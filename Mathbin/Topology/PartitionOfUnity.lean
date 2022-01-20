@@ -192,7 +192,7 @@ theorem coe_single (i : ι) (s : Set X) : ⇑BumpCovering.single i s = Pi.single
   rfl
 
 instance [Inhabited ι] : Inhabited (BumpCovering ι X s) :=
-  ⟨BumpCovering.single (default ι) s⟩
+  ⟨BumpCovering.single default s⟩
 
 /-- A collection of bump functions `f i` is subordinate to a family of sets `U i` indexed by the
 same type if for each `i` the closure of the support of `f i` is a subset of `U i`. -/
@@ -390,7 +390,7 @@ namespace PartitionOfUnity
 variable {s : Set X}
 
 instance [Inhabited ι] : Inhabited (PartitionOfUnity ι X s) :=
-  ⟨(default (BumpCovering ι X s)).toPartitionOfUnity⟩
+  ⟨BumpCovering.toPartitionOfUnity default⟩
 
 /-- If `X` is a normal topological space and `U` is a locally finite open covering of a closed set
 `s`, then there exists a `partition_of_unity ι X s` that is subordinate to `U`. If `X` is a

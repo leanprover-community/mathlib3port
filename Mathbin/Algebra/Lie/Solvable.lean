@@ -256,23 +256,16 @@ def radical :=
 instance radical_is_solvable [IsNoetherian R L] : is_solvable R (radical R L) := by
   have hwf := LieSubmodule.well_founded_of_noetherian R L L
   rw [← CompleteLattice.is_sup_closed_compact_iff_well_founded] at hwf
-  refine' hwf { I : LieIdeal R L | is_solvable R I } _ _
-  · use ⊥
-    exact LieAlgebra.is_solvable_bot R L
+  refine' hwf { I : LieIdeal R L | is_solvable R I } ⟨⊥, _⟩ fun I hI J hJ => _
+  · exact LieAlgebra.is_solvable_bot R L
     
-  · intro I J hI hJ
-    apply LieAlgebra.is_solvable_add R L <;> [exact hI, exact hJ]
+  · apply LieAlgebra.is_solvable_add R L
+    exacts[hI, hJ]
     
 
 /-- The `→` direction of this lemma is actually true without the `is_noetherian` assumption. -/
 theorem lie_ideal.solvable_iff_le_radical [IsNoetherian R L] (I : LieIdeal R L) : is_solvable R I ↔ I ≤ radical R L :=
-  by
-  constructor <;> intro h
-  · exact le_Sup h
-    
-  · apply le_solvable_ideal_solvable h
-    infer_instance
-    
+  ⟨fun h => le_Sup h, fun h => le_solvable_ideal_solvable h inferInstance⟩
 
 theorem center_le_radical : center R L ≤ radical R L :=
   have h : is_solvable R (center R L) := by

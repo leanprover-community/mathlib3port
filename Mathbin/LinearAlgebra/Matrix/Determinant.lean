@@ -104,8 +104,8 @@ theorem det_eq_one_of_card_eq_zero {A : Matrix n n R} (h : Fintype.card n = 0) :
 Although `unique` implies `decidable_eq` and `fintype`, the instances might
 not be syntactically equal. Thus, we need to fill in the args explicitly. -/
 @[simp]
-theorem det_unique {n : Type _} [Unique n] [DecidableEq n] [Fintype n] (A : Matrix n n R) :
-    det A = A (default n) (default n) := by
+theorem det_unique {n : Type _} [Unique n] [DecidableEq n] [Fintype n] (A : Matrix n n R) : det A = A default default :=
+  by
   simp [det_apply, univ_unique]
 
 theorem det_eq_elem_of_subsingleton [Subsingleton n] (A : Matrix n n R) (k : n) : det A = A k k := by
@@ -153,7 +153,7 @@ theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
       sum_congr rfl fun σ _ =>
         Fintype.sum_equiv (Equivₓ.mulRight (σ⁻¹)) _ _ fun τ => by
           have : (∏ j, M (τ j) (σ j)) = ∏ j, M ((τ * σ⁻¹) j) j := by
-            rw [← σ⁻¹.prod_comp]
+            rw [← (σ⁻¹ : _ ≃ _).prod_comp]
             simp only [Equivₓ.Perm.coe_mul, apply_inv_self]
           have h : ε σ * ε(τ * σ⁻¹) = ε τ :=
             calc
@@ -294,7 +294,7 @@ end HomMap
 
 @[simp]
 theorem det_conj_transpose [StarRing R] (M : Matrix m m R) : det (M)ᴴ = star (det M) :=
-  ((starRingAut : RingAut R).map_det _).symm.trans $ congr_argₓ star M.det_transpose
+  ((starRingEnd R).map_det _).symm.trans $ congr_argₓ star M.det_transpose
 
 section DetZero
 

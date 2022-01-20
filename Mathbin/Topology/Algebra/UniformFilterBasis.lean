@@ -40,7 +40,7 @@ theorem cauchy_iff {F : Filter G} :
     constructor <;> rintro ⟨h', h⟩ <;> refine' ⟨h', _⟩ <;> [rwa [← this], rwa [this]]
   rw [uniformity_eq_comap_nhds_zero G, ← map_le_iff_le_comap]
   change tendsto _ _ _ ↔ _
-  simp [(basis_sets F).prod_self.tendsto_iff B.nhds_zero_has_basis]
+  simp [(basis_sets F).prod_self.tendsto_iff B.nhds_zero_has_basis, @forall_swap (_ ∈ _) G]
 
 end AddGroupFilterBasis
 

@@ -20,7 +20,7 @@ def prj (v : Typevec.{u} n) : Type u :=
   v i
 
 instance prj.inhabited {v : Typevec.{u} n} [Inhabited (v i)] : Inhabited (prj i v) :=
-  ⟨(default _ : v i)⟩
+  ⟨(default : v i)⟩
 
 /-- `map` on functor `prj i` -/
 def prj.map ⦃α β : Typevec n⦄ (f : α ⟹ β) : prj i α → prj i β :=

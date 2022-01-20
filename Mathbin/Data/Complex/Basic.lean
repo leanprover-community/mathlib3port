@@ -113,6 +113,13 @@ theorem one_im : (1 : ℂ).im = 0 :=
 theorem of_real_one : ((1 : ℝ) : ℂ) = 1 :=
   rfl
 
+@[simp]
+theorem of_real_eq_one {z : ℝ} : (z : ℂ) = 1 ↔ z = 1 :=
+  of_real_inj
+
+theorem of_real_ne_one {z : ℝ} : (z : ℂ) ≠ 1 ↔ z ≠ 1 :=
+  not_congr of_real_eq_one
+
 instance : Add ℂ :=
   ⟨fun z w => ⟨z.re + w.re, z.im + w.im⟩⟩
 
@@ -297,7 +304,7 @@ theorem I_pow_bit1 (n : ℕ) : I ^ bit1 n = -1 ^ n * I := by
 
 
 /-- This defines the complex conjugate as the `star` operation of the `star_ring ℂ`. It
-is recommended to use the ring automorphism version `star_ring_aut`, available under the
+is recommended to use the ring endomorphism version `star_ring_end`, available under the
 notation `conj` in the locale `complex_conjugate`. -/
 instance : StarRing ℂ where
   star := fun z => ⟨z.re, -z.im⟩
@@ -475,7 +482,7 @@ theorem sub_conj (z : ℂ) : z - conj z = (2 * z.im : ℝ) * I :=
 
 theorem norm_sq_sub (z w : ℂ) : norm_sq (z - w) = norm_sq z + norm_sq w - 2 * (z * conj w).re := by
   rw [sub_eq_add_neg, norm_sq_add]
-  simp only [RingEquiv.map_neg, mul_neg_eq_neg_mul_symm, neg_re, Tactic.Ring.add_neg_eq_sub, norm_sq_neg]
+  simp only [RingHom.map_neg, mul_neg_eq_neg_mul_symm, neg_re, Tactic.Ring.add_neg_eq_sub, norm_sq_neg]
 
 /-! ### Inversion -/
 
@@ -556,7 +563,7 @@ theorem norm_sq_div (z w : ℂ) : norm_sq (z / w) = norm_sq z / norm_sq w :=
 
 @[simp, norm_cast]
 theorem of_real_nat_cast (n : ℕ) : ((n : ℝ) : ℂ) = n :=
-  of_real.map_nat_cast n
+  map_nat_cast of_real n
 
 @[simp, norm_cast]
 theorem nat_cast_re (n : ℕ) : (n : ℂ).re = n := by
@@ -835,17 +842,28 @@ protected def OrderedCommRing : OrderedCommRing ℂ :=
 localized [ComplexOrder] attribute [instance] Complex.orderedCommRing
 
 /-- With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is a star ordered ring.
-(That is, an ordered ring in which every element of the form `star z * z` is nonnegative.)
-
-In fact, the nonnegative elements are precisely those of this form.
-This hold in any `C^*`-algebra, e.g. `ℂ`,
-but we don't yet have `C^*`-algebras in mathlib.
+(That is, a star ring in which the nonnegative elements are those of the form `star z * z`.)
 -/
-protected def StarOrderedRing : StarOrderedRing ℂ where
-  star_mul_self_nonneg := fun z =>
-    ⟨by
-      simp [add_nonneg, mul_self_nonneg], by
-      simp [mul_commₓ]⟩
+protected def StarOrderedRing : StarOrderedRing ℂ :=
+  { Complex.orderedCommRing with
+    nonneg_iff := fun r => by
+      refine' ⟨fun hr => ⟨Real.sqrt r.re, _⟩, fun h => _⟩
+      · have h₁ : 0 ≤ r.re := by
+          rw [le_def] at hr
+          exact hr.1
+        have h₂ : r.im = 0 := by
+          rw [le_def] at hr
+          exact hr.2.symm
+        ext
+        · simp only [of_real_im, star_def, of_real_re, sub_zero, conj_re, mul_re, mul_zero, ← Real.sqrt_mul h₁ r.re,
+            Real.sqrt_mul_self h₁]
+          
+        · simp only [h₂, add_zeroₓ, of_real_im, star_def, zero_mul, conj_im, mul_im, mul_zero, neg_zero]
+          
+        
+      · obtain ⟨s, rfl⟩ := h
+        simp only [← norm_sq_eq_conj_mul_self, norm_sq_nonneg, zero_le_real, star_def]
+         }
 
 localized [ComplexOrder] attribute [instance] Complex.starOrderedRing
 
@@ -921,7 +939,7 @@ theorem lim_im (f : CauSeq ℂ abs) : limₓ (cau_seq_im f) = (limₓ f).im := b
 theorem is_cau_seq_conj (f : CauSeq ℂ abs) : IsCauSeq abs fun n => conj (f n) := fun ε ε0 =>
   let ⟨i, hi⟩ := f.2 ε ε0
   ⟨i, fun j hj => by
-    rw [← RingEquiv.map_sub, abs_conj] <;> exact hi j hj⟩
+    rw [← RingHom.map_sub, abs_conj] <;> exact hi j hj⟩
 
 /-- The complex conjugate of a complex Cauchy sequence, as a complex Cauchy sequence. -/
 noncomputable def cau_seq_conj (f : CauSeq ℂ abs) : CauSeq ℂ abs :=

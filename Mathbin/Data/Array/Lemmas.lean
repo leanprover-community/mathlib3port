@@ -8,7 +8,7 @@ namespace DArray
 variable {n : ℕ} {α : Finₓ n → Type u}
 
 instance [∀ i, Inhabited (α i)] : Inhabited (DArray n α) :=
-  ⟨⟨fun _ => default _⟩⟩
+  ⟨⟨fun _ => default⟩⟩
 
 end DArray
 

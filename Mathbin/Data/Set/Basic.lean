@@ -236,9 +236,6 @@ theorem mem_def {a : α} {s : Set α} : a ∈ s ↔ s a :=
 theorem set_of_bijective : bijective (SetOf : (α → Prop) → Set α) :=
   bijective_id
 
-instance decidable_set_of (p : α → Prop) [H : DecidablePred p] : DecidablePred (· ∈ { a | p a }) :=
-  H
-
 @[simp]
 theorem set_of_subset_set_of {p q : α → Prop} : { a | p a } ⊆ { a | q a } ↔ ∀ a, p a → q a :=
   Iff.rfl
@@ -289,6 +286,13 @@ theorem not_mem_subset (h : s ⊆ t) : a ∉ t → a ∉ s :=
 
 theorem not_subset : ¬s ⊆ t ↔ ∃ a ∈ s, a ∉ t := by
   simp only [subset_def, not_forall]
+
+theorem nontrivial_mono {α : Type _} {s t : Set α} (h₁ : s ⊆ t) (h₂ : Nontrivial s) : Nontrivial t := by
+  rw [nontrivial_iff] at h₂⊢
+  obtain ⟨⟨x, hx⟩, ⟨y, hy⟩, hxy⟩ := h₂
+  exact
+    ⟨⟨x, h₁ hx⟩, ⟨y, h₁ hy⟩, by
+      simpa using hxy⟩
 
 /-! ### Definition of strict subsets `s ⊂ t` and basic properties. -/
 
@@ -477,6 +481,10 @@ theorem ball_empty_iff {p : α → Prop} : (∀, ∀ x ∈ (∅ : Set α), ∀, 
 instance (α : Type u) : IsEmpty.{u + 1} (∅ : Set α) :=
   ⟨fun x => x.2⟩
 
+@[simp]
+theorem empty_ssubset : ∅ ⊂ s ↔ s.nonempty :=
+  (@bot_lt_iff_ne_bot (Set α) _ _ _).trans ne_empty_iff_nonempty
+
 /-!
 
 ### Universal set.
@@ -523,16 +531,14 @@ theorem eq_univ_of_subset {s t : Set α} (h : s ⊆ t) (hs : s = univ) : t = uni
 theorem exists_mem_of_nonempty α : ∀ [Nonempty α], ∃ x : α, x ∈ (univ : Set α)
   | ⟨x⟩ => ⟨x, trivialₓ⟩
 
-instance univ_decidable : DecidablePred (· ∈ @Set.Univ α) := fun x => is_true trivialₓ
-
 theorem ne_univ_iff_exists_not_mem {α : Type _} (s : Set α) : s ≠ univ ↔ ∃ a, a ∉ s := by
   rw [← not_forall, ← eq_univ_iff_forall]
 
 theorem not_subset_iff_exists_mem_not_mem {α : Type _} {s t : Set α} : ¬s ⊆ t ↔ ∃ x, x ∈ s ∧ x ∉ t := by
   simp [subset_def]
 
-theorem univ_unique [Unique α] : @Set.Univ α = {default α} :=
-  Set.ext $ fun x => iff_of_true trivialₓ $ Subsingleton.elimₓ x $ default α
+theorem univ_unique [Unique α] : @Set.Univ α = {default} :=
+  Set.ext $ fun x => iff_of_true trivialₓ $ Subsingleton.elimₓ x default
 
 /-! ### Lemmas about union -/
 
@@ -886,6 +892,8 @@ theorem eq_of_mem_singleton {x y : α} (h : x ∈ ({y} : Set α)) : x = y :=
 theorem singleton_eq_singleton_iff {x y : α} : {x} = ({y} : Set α) ↔ x = y :=
   ext_iff.trans eq_iff_eq_cancel_left
 
+theorem singleton_injective : injective (singleton : α → Set α) := fun _ _ => singleton_eq_singleton_iff.mp
+
 theorem mem_singleton_of_eq {x y : α} (H : x = y) : x ∈ ({y} : Set α) :=
   H
 
@@ -951,14 +959,14 @@ theorem exists_eq_singleton_iff_nonempty_unique_mem :
     (∃ a : α, s = {a}) ↔ s.nonempty ∧ ∀ a b _ : a ∈ s _ : b ∈ s, a = b := by
   refine' ⟨_, fun h => _⟩
   · rintro ⟨a, rfl⟩
-    refine' ⟨Set.singleton_nonempty a, fun b c hb hc => hb.trans hc.symm⟩
+    refine' ⟨Set.singleton_nonempty a, fun b hb c hc => hb.trans hc.symm⟩
     
   · obtain ⟨a, ha⟩ := h.1
-    refine' ⟨a, set.eq_singleton_iff_unique_mem.mpr ⟨ha, fun b hb => h.2 b a hb ha⟩⟩
+    refine' ⟨a, set.eq_singleton_iff_unique_mem.mpr ⟨ha, fun b hb => h.2 b hb a ha⟩⟩
     
 
 @[simp]
-theorem default_coe_singleton (x : α) : default ({x} : Set α) = ⟨x, rfl⟩ :=
+theorem default_coe_singleton (x : α) : (default : ({x} : Set α)) = ⟨x, rfl⟩ :=
   rfl
 
 /-! ### Lemmas about sets defined as `{x ∈ s | p x}`. -/
@@ -983,6 +991,11 @@ theorem eq_sep_of_subset {s t : Set α} (h : s ⊆ t) : s = { x ∈ t | x ∈ s 
 
 @[simp]
 theorem sep_subset (s : Set α) (p : α → Prop) : { x ∈ s | p x } ⊆ s := fun x => And.left
+
+@[simp]
+theorem sep_empty (p : α → Prop) : { x ∈ (∅ : Set α) | p x } = ∅ := by
+  ext
+  exact false_andₓ _
 
 theorem forall_not_of_sep_empty {s : Set α} {p : α → Prop} (H : { x ∈ s | p x } = ∅) x : x ∈ s → ¬p x :=
   not_and.1 (eq_empty_iff_forall_not_mem.1 H x : _)
@@ -2236,7 +2249,7 @@ theorem preimage_range (f : α → β) : f ⁻¹' range f = univ :=
 
 /-- The range of a function from a `unique` type contains just the
 function applied to its single value. -/
-theorem range_unique [h : Unique ι] : range f = {f $ default ι} := by
+theorem range_unique [h : Unique ι] : range f = {f default} := by
   ext x
   rw [mem_range]
   constructor
@@ -2244,7 +2257,7 @@ theorem range_unique [h : Unique ι] : range f = {f $ default ι} := by
     rw [h.uniq i] at hi
     exact hi ▸ mem_singleton _
     
-  · exact fun h => ⟨default ι, h.symm⟩
+  · exact fun h => ⟨default, h.symm⟩
     
 
 theorem range_diff_image_subset (f : α → β) (s : Set α) : range f \ f '' s ⊆ f '' sᶜ := fun y ⟨⟨x, h₁⟩, h₂⟩ =>
@@ -2797,4 +2810,42 @@ theorem mem_iff_nonempty {α : Type _} [Subsingleton α] {s : Set α} {x : α} :
   ⟨fun hx => ⟨x, hx⟩, fun ⟨y, hy⟩ => Subsingleton.elimₓ y x ▸ hy⟩
 
 end Subsingleton
+
+/-! ### Decidability instances for sets -/
+
+
+namespace Set
+
+variable {α : Type u} (s t : Set α) (a : α)
+
+instance decidable_sdiff [Decidable (a ∈ s)] [Decidable (a ∈ t)] : Decidable (a ∈ s \ t) :=
+  (by
+    infer_instance : Decidable (a ∈ s ∧ a ∉ t))
+
+instance decidable_inter [Decidable (a ∈ s)] [Decidable (a ∈ t)] : Decidable (a ∈ s ∩ t) :=
+  (by
+    infer_instance : Decidable (a ∈ s ∧ a ∈ t))
+
+instance decidable_union [Decidable (a ∈ s)] [Decidable (a ∈ t)] : Decidable (a ∈ s ∪ t) :=
+  (by
+    infer_instance : Decidable (a ∈ s ∨ a ∈ t))
+
+instance decidable_compl [Decidable (a ∈ s)] : Decidable (a ∈ sᶜ) :=
+  (by
+    infer_instance : Decidable (a ∉ s))
+
+instance decidable_emptyset : DecidablePred (· ∈ (∅ : Set α)) := fun _ =>
+  Decidable.isFalse
+    (by
+      simp )
+
+instance decidable_univ : DecidablePred (· ∈ (Set.Univ : Set α)) := fun _ =>
+  Decidable.isTrue
+    (by
+      simp )
+
+instance decidable_set_of (p : α → Prop) [Decidable (p a)] : Decidable (a ∈ { a | p a }) := by
+  assumption
+
+end Set
 

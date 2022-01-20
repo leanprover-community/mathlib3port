@@ -2,7 +2,7 @@ import Mathbin.CategoryTheory.Limits.Preserves.Basic
 import Mathbin.CategoryTheory.Limits.Types
 import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.Multiequalizer
-import Mathbin.Tactic.Elementwise
+import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
 
 /-!
 # Facts about (co)limits of functors into concrete categories
@@ -14,8 +14,6 @@ universe w v u
 open CategoryTheory
 
 namespace CategoryTheory.Limits
-
-attribute [elementwise] cone.w limit.lift_π limit.w cocone.w colimit.ι_desc colimit.w
 
 attribute [local instance] concrete_category.has_coe_to_fun concrete_category.has_coe_to_sort
 
@@ -68,7 +66,7 @@ theorem concrete.wide_pullback_ext' {B : C} {ι : Type _} [Nonempty ι] {X : ι 
     (h : ∀ j, π f j x = π f j y) : x = y := by
   apply concrete.wide_pullback_ext _ _ _ _ h
   inhabit ι
-  simp only [← π_arrow f (arbitraryₓ _), comp_apply, h]
+  simp only [← π_arrow f (arbitrary _), comp_apply, h]
 
 end WidePullback
 
@@ -292,8 +290,8 @@ theorem concrete.wide_pushout_exists_rep' {B : C} {α : Type _} [Nonempty α] {X
     ∃ (i : α)(y : X i), ι f i y = x := by
   rcases concrete.wide_pushout_exists_rep f x with (⟨y, rfl⟩ | ⟨i, y, rfl⟩)
   · inhabit α
-    use arbitraryₓ _, f _ y
-    simp only [← arrow_ι _ (arbitraryₓ α), comp_apply]
+    use arbitrary _, f _ y
+    simp only [← arrow_ι _ (arbitrary α), comp_apply]
     
   · use i, y
     

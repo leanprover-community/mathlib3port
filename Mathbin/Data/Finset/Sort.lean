@@ -212,9 +212,8 @@ theorem card_le_of_interleaved {s t : Finset α} (h : ∀ x y _ : x ∈ s _ : y 
     exact i.2
   have h0 : ∀ i : Finₓ (s.card - 1), ↑i < (s.sort (· ≤ ·)).length := fun i => lt_of_le_of_ltₓ (Nat.le_succₓ i) (h1 i)
   have p := fun i : Finₓ (s.card - 1) =>
-    h ((s.sort (· ≤ ·)).nthLe i (h0 i)) ((s.sort (· ≤ ·)).nthLe (i + 1) (h1 i))
-      ((Finset.mem_sort (· ≤ ·)).mp (List.nth_le_mem _ _ (h0 i)))
-      ((Finset.mem_sort (· ≤ ·)).mp (List.nth_le_mem _ _ (h1 i)))
+    h ((s.sort (· ≤ ·)).nthLe i (h0 i)) ((Finset.mem_sort (· ≤ ·)).mp (List.nth_le_mem _ _ (h0 i)))
+      ((s.sort (· ≤ ·)).nthLe (i + 1) (h1 i)) ((Finset.mem_sort (· ≤ ·)).mp (List.nth_le_mem _ _ (h1 i)))
       (s.sort_sorted_lt.rel_nth_le_of_lt (h0 i) (h1 i) (Nat.lt_succ_selfₓ i))
   let f : Finₓ (s.card - 1) → t := fun i => ⟨Classical.some (p i), (exists_prop.mp (Classical.some_spec (p i))).1⟩
   have hf : ∀ i j : Finₓ (s.card - 1), i < j → f i < f j := fun i j hij =>

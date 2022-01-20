@@ -365,14 +365,16 @@ theorem prod_nonneg [OrderedCommSemiring α] {m : Multiset α} (h : ∀, ∀ a �
   rw [prod_cons]
   exact mul_nonneg (ih _ $ mem_cons_self _ _) (hs $ fun a ha => ih _ $ mem_cons_of_mem ha)
 
-theorem sum_eq_zero_iff [CanonicallyOrderedAddMonoid α] {m : Multiset α} : m.sum = 0 ↔ ∀, ∀ x ∈ m, ∀, x = (0 : α) :=
+@[to_additive]
+theorem prod_eq_one_iff [CanonicallyOrderedMonoid α] {m : Multiset α} : m.prod = 1 ↔ ∀, ∀ x ∈ m, ∀, x = (1 : α) :=
   Quotientₓ.induction_on m $ fun l => by
-    simpa using List.sum_eq_zero_iff l
+    simpa using List.prod_eq_one_iff l
 
-theorem le_sum_of_mem [CanonicallyOrderedAddMonoid α] {m : Multiset α} {a : α} (h : a ∈ m) : a ≤ m.sum := by
+@[to_additive]
+theorem le_prod_of_mem [CanonicallyOrderedMonoid α] {m : Multiset α} {a : α} (h : a ∈ m) : a ≤ m.prod := by
   obtain ⟨m', rfl⟩ := exists_cons_of_mem h
-  rw [sum_cons]
-  exact _root_.le_add_right (le_reflₓ a)
+  rw [prod_cons]
+  exact _root_.le_mul_right (le_reflₓ a)
 
 @[to_additive le_sum_of_subadditive_on_pred]
 theorem le_prod_of_submultiplicative_on_pred [CommMonoidₓ α] [OrderedCommMonoid β] (f : α → β) (p : α → Prop)

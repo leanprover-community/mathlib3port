@@ -102,17 +102,14 @@ theorem eval₂_algebra_map_X {R A : Type _} [CommRingₓ R] [Ringₓ A] [Algebr
   simp [Polynomial.C_eq_algebra_map]
 
 @[simp]
-theorem ring_hom_eval₂_algebra_map_int {R S : Type _} [Ringₓ R] [Ringₓ S] (p : Polynomial ℤ) (f : R →+* S) (r : R) :
-    f (eval₂ (algebraMap ℤ R) r p) = eval₂ (algebraMap ℤ S) (f r) p :=
+theorem ring_hom_eval₂_cast_int_ring_hom {R S : Type _} [Ringₓ R] [Ringₓ S] (p : Polynomial ℤ) (f : R →+* S) (r : R) :
+    f (eval₂ (Int.castRingHom R) r p) = eval₂ (Int.castRingHom S) (f r) p :=
   alg_hom_eval₂_algebra_map p f.to_int_alg_hom r
 
 @[simp]
-theorem eval₂_algebra_map_int_X {R : Type _} [Ringₓ R] (p : Polynomial ℤ) (f : Polynomial ℤ →+* R) :
-    eval₂ (algebraMap ℤ R) (f X) p = f p :=
-  eval₂_algebra_map_X p
-    { f with
-      commutes' := fun n => by
-        simp }
+theorem eval₂_int_cast_ring_hom_X {R : Type _} [Ringₓ R] (p : Polynomial ℤ) (f : Polynomial ℤ →+* R) :
+    eval₂ (Int.castRingHom R) (f X) p = f p :=
+  eval₂_algebra_map_X p f.to_int_alg_hom
 
 end CommSemiringₓ
 
@@ -188,7 +185,7 @@ theorem aeval_bit1 : aeval x (bit1 p) = bit1 (aeval x p) :=
 
 @[simp]
 theorem aeval_nat_cast (n : ℕ) : aeval x (n : Polynomial R) = n :=
-  AlgHom.map_nat_cast _ _
+  map_nat_cast _ _
 
 theorem aeval_mul : aeval x (p * q) = aeval x p * aeval x q :=
   AlgHom.map_mul _ _ _

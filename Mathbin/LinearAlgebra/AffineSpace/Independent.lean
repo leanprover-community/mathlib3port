@@ -551,15 +551,13 @@ theorem affine_independent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) :
       
   have : Unique { x // x ≠ (0 : Finₓ 2) } := ⟨⟨i₁⟩, he'⟩
   have hz :
-    ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
-          (↑default { x // x ≠ (0 : Finₓ 2) }) -ᵥ
+    ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") (↑default) -ᵥ
         («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") 0 :
         V) ≠
       0 :=
     by
-    rw [he' (default _)]
-    simp
-    cc
+    rw [he' default]
+    simpa using h.symm
   exact linear_independent_unique _ hz
 
 end DivisionRing
@@ -596,7 +594,7 @@ theorem mk_of_point_points (p : P) (i : Finₓ 1) : (mk_of_point k p).points i =
   rfl
 
 instance [Inhabited P] : Inhabited (simplex k P 0) :=
-  ⟨mk_of_point k $ default P⟩
+  ⟨mk_of_point k default⟩
 
 instance Nonempty : Nonempty (simplex k P 0) :=
   ⟨mk_of_point k $ AddTorsor.nonempty.some⟩

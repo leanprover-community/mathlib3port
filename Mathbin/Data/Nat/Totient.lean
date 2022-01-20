@@ -2,6 +2,7 @@ import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Zmod.Basic
 import Mathbin.RingTheory.Multiplicity
+import Mathbin.Algebra.CharP.Two
 
 /-!
 # Euler's totient function
@@ -98,6 +99,13 @@ theorem _root_.zmod.card_units_eq_totient (n : ℕ) [Fact (0 < n)] [Fintype (Zmo
           
         
     
+
+theorem totient_even {n : ℕ} (hn : 2 < n) : Even n.totient := by
+  have : Fact (1 < n) := ⟨one_lt_two.trans hn⟩
+  suffices 2 = orderOf (-1 : (Zmod n)ˣ) by
+    rw [← Zmod.card_units_eq_totient, even_iff_two_dvd, this]
+    exact order_of_dvd_card_univ
+  rw [← order_of_units, Units.coe_neg_one, order_of_neg_one, ringChar.eq (Zmod n) n, if_neg hn.ne']
 
 theorem totient_mul {m n : ℕ} (h : m.coprime n) : φ (m * n) = φ m * φ n :=
   if hmn0 : m * n = 0 then by

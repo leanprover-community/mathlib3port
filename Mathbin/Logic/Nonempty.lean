@@ -34,7 +34,7 @@ theorem not_nonempty_iff_imp_false {α : Sort _} : ¬Nonempty α ↔ α → Fals
   ⟨fun h a => h ⟨a⟩, fun h ⟨a⟩ => h a⟩
 
 @[simp]
-theorem nonempty_sigma : Nonempty (Σ a : α, γ a) ↔ ∃ a : α, Nonempty (γ a) :=
+theorem nonempty_sigmaₓ : Nonempty (Σ a : α, γ a) ↔ ∃ a : α, Nonempty (γ a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
 
 @[simp]
@@ -62,7 +62,7 @@ theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
     | Or.inr ⟨b⟩ => ⟨Sum.inr b⟩
 
 @[simp]
-theorem nonempty_psum {α β} : Nonempty (Psum α β) ↔ Nonempty α ∨ Nonempty β :=
+theorem nonempty_psumₓ {α β} : Nonempty (Psum α β) ↔ Nonempty α ∨ Nonempty β :=
   Iff.intro
     (fun ⟨h⟩ =>
       match h with
@@ -74,18 +74,18 @@ theorem nonempty_psum {α β} : Nonempty (Psum α β) ↔ Nonempty α ∨ Nonemp
     | Or.inr ⟨b⟩ => ⟨Psum.inr b⟩
 
 @[simp]
-theorem nonempty_psigma {α} {β : α → Sort _} : Nonempty (Psigma β) ↔ ∃ a : α, Nonempty (β a) :=
+theorem nonempty_psigmaₓ {α} {β : α → Sort _} : Nonempty (Psigma β) ↔ ∃ a : α, Nonempty (β a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
 
 @[simp]
 theorem nonempty_empty : ¬Nonempty Empty := fun ⟨h⟩ => h.elim
 
 @[simp]
-theorem nonempty_ulift : Nonempty (Ulift α) ↔ Nonempty α :=
+theorem nonempty_uliftₓ : Nonempty (Ulift α) ↔ Nonempty α :=
   Iff.intro (fun ⟨⟨a⟩⟩ => ⟨a⟩) fun ⟨a⟩ => ⟨⟨a⟩⟩
 
 @[simp]
-theorem nonempty_plift {α} : Nonempty (Plift α) ↔ Nonempty α :=
+theorem nonempty_pliftₓ {α} : Nonempty (Plift α) ↔ Nonempty α :=
   Iff.intro (fun ⟨⟨a⟩⟩ => ⟨a⟩) fun ⟨a⟩ => ⟨⟨a⟩⟩
 
 @[simp]
@@ -96,7 +96,7 @@ theorem Nonempty.forall {α} {p : Nonempty α → Prop} : (∀ h : Nonempty α, 
 theorem Nonempty.exists {α} {p : Nonempty α → Prop} : (∃ h : Nonempty α, p h) ↔ ∃ a, p ⟨a⟩ :=
   Iff.intro (fun ⟨⟨a⟩, h⟩ => ⟨a, h⟩) fun ⟨a, h⟩ => ⟨⟨a⟩, h⟩
 
-theorem Classical.nonempty_pi {α} {β : α → Sort _} : Nonempty (∀ a : α, β a) ↔ ∀ a : α, Nonempty (β a) :=
+theorem Classical.nonempty_piₓ {α} {β : α → Sort _} : Nonempty (∀ a : α, β a) ↔ ∀ a : α, Nonempty (β a) :=
   Iff.intro (fun ⟨f⟩ a => ⟨f a⟩) fun f => ⟨fun a => Classical.choice $ f a⟩
 
 /-- Using `classical.choice`, lifts a (`Prop`-valued) `nonempty` instance to a (`Type`-valued)

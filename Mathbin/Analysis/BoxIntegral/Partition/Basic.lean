@@ -201,7 +201,7 @@ theorem Union_def' : π.Union = ⋃ J ∈ π.boxes, ↑J :=
 
 @[simp]
 theorem mem_Union : x ∈ π.Union ↔ ∃ J ∈ π, x ∈ J :=
-  Set.mem_bUnion_iff
+  Set.mem_Union₂
 
 @[simp]
 theorem Union_single (h : J ≤ I) : (single I J h).Union = J := by

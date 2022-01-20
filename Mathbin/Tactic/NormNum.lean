@@ -1204,6 +1204,33 @@ unsafe def prove_pow (a : expr) (na : ℚ) : instance_cache → expr → tactic 
 
 end
 
+theorem zpow_pos {α} [DivInvMonoidₓ α] (a : α) (b : ℤ) (b' : ℕ) (c : α) (hb : b = b') (h : a ^ b' = c) : a ^ b = c := by
+  rw [← h, hb, zpow_coe_nat]
+
+theorem zpow_neg {α} [DivInvMonoidₓ α] (a : α) (b : ℤ) (b' : ℕ) (c c' : α) (b0 : 0 < b') (hb : b = b') (h : a ^ b' = c)
+    (hc : c⁻¹ = c') : a ^ -b = c' := by
+  rw [← hc, ← h, hb, zpow_neg_coe_of_pos _ b0]
+
+/-- Given `a` a rational numeral and `b : ℤ`, returns `(c, ⊢ a ^ b = c)`. -/
+unsafe def prove_zpow (ic zc nc : instance_cache) (a : expr) (na : ℚ) (b : expr) :
+    tactic (instance_cache × instance_cache × instance_cache × expr × expr) :=
+  match match_sign b with
+  | Sum.inl b => do
+    let (zc, nc, b', hb) ← prove_nat_uncast zc nc b
+    let (ic, c, h) ← prove_pow a na ic b'
+    let (ic, c', hc) ← c.to_rat >>= prove_inv ic c
+    let (ic, p) ← ic.mk_app `` zpow_neg [a, b, b', c, c', hb, h, hc]
+    pure (ic, zc, nc, c', p)
+  | Sum.inr ff => do
+    let (ic, o) ← ic.mk_app `` HasOne.one []
+    let (ic, p) ← ic.mk_app `` zpow_zero [a]
+    pure (ic, zc, nc, o, p)
+  | Sum.inr tt => do
+    let (zc, nc, b', hb) ← prove_nat_uncast zc nc b
+    let (ic, c, h) ← prove_pow a na ic b'
+    let (ic, p) ← ic.mk_app `` zpow_pos [a, b, b', c, hb, h]
+    pure (ic, zc, nc, c, p)
+
 /-- Evaluates expressions of the form `a ^ b`, `monoid.npow a b` or `nat.pow a b`. -/
 unsafe def eval_pow : expr → tactic (expr × expr)
   | quote.1 (@Pow.pow (%%ₓα) _ (%%ₓm) (%%ₓe₁) (%%ₓe₂)) => do
@@ -1211,11 +1238,21 @@ unsafe def eval_pow : expr → tactic (expr × expr)
     let c ← infer_type e₁ >>= mk_instance_cache
     match m with
       | quote.1 (@Monoidₓ.hasPow (%%ₓ_) (%%ₓ_)) => Prod.snd <$> prove_pow e₁ n₁ c e₂
+      | quote.1 (@DivInvMonoidₓ.hasPow (%%ₓ_) (%%ₓ_)) => do
+        let zc ← mk_instance_cache (quote.1 ℤ)
+        let nc ← mk_instance_cache (quote.1 ℕ)
+        (Prod.snd ∘ Prod.snd ∘ Prod.snd) <$> prove_zpow c zc nc e₁ n₁ e₂
       | _ => failed
   | quote.1 (Monoidₓ.npow (%%ₓe₁) (%%ₓe₂)) => do
     let n₁ ← e₁.to_rat
     let c ← infer_type e₁ >>= mk_instance_cache
     Prod.snd <$> prove_pow e₁ n₁ c e₂
+  | quote.1 (DivInvMonoidₓ.zpow (%%ₓe₁) (%%ₓe₂)) => do
+    let n₁ ← e₁.to_rat
+    let c ← infer_type e₁ >>= mk_instance_cache
+    let zc ← mk_instance_cache (quote.1 ℤ)
+    let nc ← mk_instance_cache (quote.1 ℕ)
+    (Prod.snd ∘ Prod.snd ∘ Prod.snd) <$> prove_zpow c zc nc e₁ n₁ e₂
   | _ => failed
 
 /-- Given `⊢ p`, returns `(true, ⊢ p = true)`. -/

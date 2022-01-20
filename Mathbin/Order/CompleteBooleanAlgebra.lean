@@ -87,15 +87,15 @@ instance Pi.completeDistribLattice {ι : Type _} {π : ι → Type _} [∀ i, Co
     inf_Sup_le_supr_inf := fun a s i => by
       simp only [CompleteLattice.supₓ, Sup_apply, supr_apply, Pi.inf_apply, inf_supr_eq, ← supr_subtype''] }
 
-theorem Inf_sup_Inf : Inf s⊔Inf t = ⨅ p ∈ Set.Prod s t, (p : α × α).1⊔p.2 := by
+theorem Inf_sup_Inf : Inf s⊔Inf t = ⨅ p ∈ s ×ˢ t, (p : α × α).1⊔p.2 := by
   apply le_antisymmₓ
   · simp only [and_imp, Prod.forall, le_infi_iff, Set.mem_prod]
     intro a b ha hb
     exact sup_le_sup (Inf_le ha) (Inf_le hb)
     
-  · have : ∀, ∀ a ∈ s, ∀, (⨅ p ∈ Set.Prod s t, (p : α × α).1⊔p.2) ≤ a⊔Inf t := by
+  · have : ∀, ∀ a ∈ s, ∀, (⨅ p ∈ s ×ˢ t, (p : α × α).1⊔p.2) ≤ a⊔Inf t := by
       rintro a ha
-      have : (⨅ p ∈ Set.Prod s t, ((p : α × α).1 : α)⊔p.2) ≤ ⨅ p ∈ Prod.mk a '' t, (p : α × α).1⊔p.2 := by
+      have : (⨅ p ∈ s ×ˢ t, ((p : α × α).1 : α)⊔p.2) ≤ ⨅ p ∈ Prod.mk a '' t, (p : α × α).1⊔p.2 := by
         apply infi_le_infi_of_subset
         rintro ⟨x, y⟩
         simp only [and_imp, Set.mem_image, Prod.mk.inj_iffₓ, Set.prod_mk_mem_set_prod_eq, exists_imp_distrib]
@@ -105,11 +105,11 @@ theorem Inf_sup_Inf : Inf s⊔Inf t = ⨅ p ∈ Set.Prod s t, (p : α × α).1�
       rw [infi_image] at this
       simp only at this
       rwa [← sup_Inf_eq] at this
-    calc (⨅ p ∈ Set.Prod s t, (p : α × α).1⊔p.2) ≤ ⨅ a ∈ s, a⊔Inf t := by
+    calc (⨅ p ∈ s ×ˢ t, (p : α × α).1⊔p.2) ≤ ⨅ a ∈ s, a⊔Inf t := by
         simp <;> exact this _ = Inf s⊔Inf t := Inf_sup_eq.symm
     
 
-theorem Sup_inf_Sup : Sup s⊓Sup t = ⨆ p ∈ Set.Prod s t, (p : α × α).1⊓p.2 :=
+theorem Sup_inf_Sup : Sup s⊓Sup t = ⨆ p ∈ s ×ˢ t, (p : α × α).1⊓p.2 :=
   @Inf_sup_Inf (OrderDual α) _ _ _
 
 theorem supr_disjoint_iff {f : ι → α} : Disjoint (⨆ i, f i) a ↔ ∀ i, Disjoint (f i) a := by

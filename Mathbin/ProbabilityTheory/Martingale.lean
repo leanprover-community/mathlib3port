@@ -1,5 +1,5 @@
 import Mathbin.ProbabilityTheory.Stopping
-import Mathbin.MeasureTheory.Function.ConditionalExpectation
+import Mathbin.ProbabilityTheory.Notation
 
 /-!
 # Martingales
@@ -33,7 +33,7 @@ The definitions of filtration and adapted can be found in `probability_theory.st
 
 open TopologicalSpace Filter
 
-open_locale Nnreal Ennreal MeasureTheory
+open_locale Nnreal Ennreal MeasureTheory ProbabilityTheory BigOperators
 
 namespace MeasureTheory
 
@@ -71,15 +71,18 @@ variable {E}
 
 namespace Martingale
 
+@[protected]
 theorem adapted (hf : martingale f ℱ μ) : adapted ℱ f :=
   hf.1
 
+@[protected]
 theorem Measurable (hf : martingale f ℱ μ) (i : ι) : measurable[ℱ i] (f i) :=
   hf.adapted i
 
 theorem condexp_ae_eq (hf : martingale f ℱ μ) {i j : ι} (hij : i ≤ j) : μ[f j|ℱ i,ℱ.le i] =ᵐ[μ] f i :=
   hf.2 i j hij
 
+@[protected]
 theorem integrable (hf : martingale f ℱ μ) (i : ι) : integrable (f i) μ :=
   integrable_condexp.congr (hf.condexp_ae_eq (le_reflₓ i))
 
@@ -125,12 +128,15 @@ theorem martingale_condexp (f : α → E) (ℱ : filtration ι m0) (μ : Measure
 
 namespace Supermartingale
 
+@[protected]
 theorem adapted [LE E] (hf : supermartingale f ℱ μ) : adapted ℱ f :=
   hf.1
 
+@[protected]
 theorem Measurable [LE E] (hf : supermartingale f ℱ μ) (i : ι) : measurable[ℱ i] (f i) :=
   hf.adapted i
 
+@[protected]
 theorem integrable [LE E] (hf : supermartingale f ℱ μ) (i : ι) : integrable (f i) μ :=
   hf.2.2 i
 
@@ -169,12 +175,15 @@ end Supermartingale
 
 namespace Submartingale
 
+@[protected]
 theorem adapted [LE E] (hf : submartingale f ℱ μ) : adapted ℱ f :=
   hf.1
 
+@[protected]
 theorem Measurable [LE E] (hf : submartingale f ℱ μ) (i : ι) : measurable[ℱ i] (f i) :=
   hf.adapted i
 
+@[protected]
 theorem integrable [LE E] (hf : submartingale f ℱ μ) (i : ι) : integrable (f i) μ :=
   hf.2.2 i
 
@@ -276,6 +285,52 @@ theorem smul_nonpos {f : ι → α → F} {c : ℝ} (hc : c ≤ 0) (hf : submart
 end
 
 end Submartingale
+
+section Nat
+
+variable {𝒢 : filtration ℕ m0} [sigma_finite_filtration μ 𝒢]
+
+namespace Submartingale
+
+theorem integrable_stopped_value [LE E] {f : ℕ → α → E} (hf : submartingale f 𝒢 μ) {τ : α → ℕ}
+    (hτ : is_stopping_time 𝒢 τ) {N : ℕ} (hbdd : ∀ x, τ x ≤ N) : integrable (stopped_value f τ) μ :=
+  integrable_stopped_value hτ hf.integrable hbdd
+
+/-- Given a submartingale `f` and bounded stopping times `τ` and `π` such that `τ ≤ π`, the
+expectation of `stopped_value f τ` is less or equal to the expectation of `stopped_value f π`.
+This is the forward direction of the optional stopping theorem. -/
+theorem expected_stopped_value_mono {f : ℕ → α → ℝ} (hf : submartingale f 𝒢 μ) {τ π : α → ℕ} (hτ : is_stopping_time 𝒢 τ)
+    (hπ : is_stopping_time 𝒢 π) (hle : τ ≤ π) {N : ℕ} (hbdd : ∀ x, π x ≤ N) :
+    μ[stopped_value f τ] ≤ μ[stopped_value f π] := by
+  rw [← sub_nonneg, ← integral_sub', stopped_value_sub_eq_sum' hle hbdd]
+  · simp only [Finset.sum_apply]
+    have : ∀ i, measurable_set[𝒢 i] { x : α | τ x ≤ i ∧ i < π x } := by
+      intro i
+      refine' (hτ i).inter _
+      convert (hπ i).Compl
+      ext x
+      simpa
+    rw [integral_finset_sum]
+    · refine' Finset.sum_nonneg fun i hi => _
+      rw [integral_indicator (𝒢.le _ _ (this _)), integral_sub', sub_nonneg]
+      · exact hf.set_integral_le (Nat.le_succₓ i) (this _)
+        
+      · exact (hf.integrable _).IntegrableOn
+        
+      · exact (hf.integrable _).IntegrableOn
+        
+      
+    intro i hi
+    exact integrable.indicator (integrable.sub (hf.integrable _) (hf.integrable _)) (𝒢.le _ _ (this _))
+    
+  · exact hf.integrable_stopped_value hπ hbdd
+    
+  · exact hf.integrable_stopped_value hτ fun x => le_transₓ (hle x) (hbdd x)
+    
+
+end Submartingale
+
+end Nat
 
 end MeasureTheory
 

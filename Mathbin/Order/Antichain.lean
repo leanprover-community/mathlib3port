@@ -38,6 +38,9 @@ theorem mono_on (hs : IsAntichain r₁ s) (h : s.pairwise fun ⦃a b⦄ => r₂ 
 theorem eq_of_related (hs : IsAntichain r s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : r a b) : a = b :=
   of_not_not $ fun hab => hs ha hb hab h
 
+theorem eq_of_related' (hs : IsAntichain r s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : r b a) : a = b :=
+  (hs.eq_of_related hb ha h).symm
+
 protected theorem IsAntisymm (h : IsAntichain r univ) : IsAntisymm α r :=
   ⟨fun a b ha _ => h.eq_of_related trivialₓ trivialₓ ha⟩
 
@@ -78,24 +81,6 @@ theorem _root_.is_antichain_insert_of_symmetric (hr : Symmetric r) :
 theorem insert_of_symmetric (hs : IsAntichain r s) (hr : Symmetric r) (h : ∀ ⦃b⦄, b ∈ s → a ≠ b → ¬r a b) :
     IsAntichain r (insert a s) :=
   (is_antichain_insert_of_symmetric hr).2 ⟨hs, h⟩
-
-/-- Turns a set into an antichain by keeping only the "maximal" elements. -/
-protected def mk (r : α → α → Prop) (s : Set α) : Set α :=
-  { a ∈ s | ∀ ⦃b⦄, b ∈ s → r a b → a = b }
-
-theorem mk_is_antichain (r : α → α → Prop) (s : Set α) : IsAntichain r (IsAntichain.Mk r s) := fun a ha b hb hab h =>
-  hab $ ha.2 hb.1 h
-
-theorem mk_subset : IsAntichain.Mk r s ⊆ s :=
-  sep_subset _ _
-
-/-- If `is_antichain.mk r s` is included in but *shadows* the antichain `t`, then it is actually
-equal to `t`. -/
-theorem mk_max (ht : IsAntichain r t) (h : IsAntichain.Mk r s ⊆ t)
-    (hs : ∀ ⦃a⦄, a ∈ t → ∃ b ∈ IsAntichain.Mk r s, r a b) : t = IsAntichain.Mk r s := by
-  refine' subset.antisymm (fun a ha => _) h
-  obtain ⟨b, hb, hr⟩ := hs ha
-  rwa [of_not_not fun hab => ht ha (h hb) hab hr]
 
 end IsAntichain
 

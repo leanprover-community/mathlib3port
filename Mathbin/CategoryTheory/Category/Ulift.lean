@@ -95,7 +95,7 @@ def ulift_hom.{w, u} (C : Type u) :=
   C
 
 instance {C} [Inhabited C] : Inhabited (ulift_hom C) :=
-  ⟨(arbitraryₓ C : C)⟩
+  ⟨(arbitrary C : C)⟩
 
 /-- The obvious function `ulift_hom C → C`. -/
 def ulift_hom.obj_down {C} (A : ulift_hom C) : C :=
@@ -201,7 +201,7 @@ def as_small.equiv : C ≌ as_small C where
         tidy)
 
 instance [Inhabited C] : Inhabited (as_small C) :=
-  ⟨⟨arbitraryₓ _⟩⟩
+  ⟨⟨arbitrary _⟩⟩
 
 instance [is_filtered C] : is_filtered (as_small C) :=
   is_filtered.of_equivalence as_small.equiv

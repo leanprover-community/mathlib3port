@@ -48,10 +48,11 @@ namespace CompleteLattice
 
 variable (α)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a b «expr ∈ » s)
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/
 def is_sup_closed_compact : Prop :=
-  ∀ s : Set α h : s.nonempty, (∀ a b, a ∈ s → b ∈ s → a⊔b ∈ s) → Sup s ∈ s
+  ∀ s : Set α h : s.nonempty, (∀ a b _ : a ∈ s _ : b ∈ s, a⊔b ∈ s) → Sup s ∈ s
 
 /-- A compactness property for a complete lattice is that any subset has a finite subset with the
 same `Sup`. -/
@@ -193,21 +194,19 @@ theorem is_sup_closed_compact.well_founded (h : is_sup_closed_compact α) : Well
   · use a 37
     apply Set.mem_range_self
     
-  · rintro x y ⟨m, hm⟩ ⟨n, hn⟩
+  · rintro x ⟨m, hm⟩ y ⟨n, hn⟩
     use m⊔n
     rw [← hm, ← hn]
     apply RelHomClass.map_sup a
     
 
 theorem is_Sup_finite_compact_iff_all_elements_compact : is_Sup_finite_compact α ↔ ∀ k : α, is_compact_element k := by
-  constructor
-  · intro h k s hs
-    obtain ⟨t, ⟨hts, htsup⟩⟩ := h s
+  refine' ⟨fun h k s hs => _, fun h s => _⟩
+  · obtain ⟨t, ⟨hts, htsup⟩⟩ := h s
     use t, hts
     rwa [← htsup]
     
-  · intro h s
-    obtain ⟨t, ⟨hts, htsup⟩⟩ :=
+  · obtain ⟨t, ⟨hts, htsup⟩⟩ :=
       h (Sup s) s
         (by
           rfl)
@@ -216,10 +215,8 @@ theorem is_Sup_finite_compact_iff_all_elements_compact : is_Sup_finite_compact �
         apply le_antisymmₓ <;> assumption
       simp only [id.def, Finset.sup_le_iff]
       intro x hx
-      apply le_Sup
-      exact hts hx
-    use t, hts
-    assumption
+      exact le_Sup (hts hx)
+    use t, hts, this
     
 
 theorem well_founded_characterisations :

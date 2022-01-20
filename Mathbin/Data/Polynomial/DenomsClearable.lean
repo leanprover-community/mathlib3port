@@ -53,8 +53,8 @@ theorem DenomsClearable.add {N : ℕ} {f g : Polynomial R} :
 
 theorem denoms_clearable_of_nat_degree_le (N : ℕ) (a : R) (bu : bi * i b = 1) :
     ∀ f : Polynomial R, f.nat_degree ≤ N → DenomsClearable a b N f i :=
-  induction_with_nat_degree_le N (denoms_clearable_zero N a bu) (fun N_1 r r0 => denoms_clearable_C_mul_X_pow a bu r)
-    fun f g fN gN df dg => df.add dg
+  induction_with_nat_degree_le _ N (denoms_clearable_zero N a bu) (fun N_1 r r0 => denoms_clearable_C_mul_X_pow a bu r)
+    fun f g fg gN df dg => df.add dg
 
 /-- If `i : R → K` is a ring homomorphism, `f` is a polynomial with coefficients in `R`,
 `a, b` are elements of `R`, with `i b` invertible, then there is a `D ∈ R` such that

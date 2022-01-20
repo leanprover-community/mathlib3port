@@ -429,20 +429,17 @@ theorem bind_on_support_bind_on_support (p : Pmf α) (f : ∀, ∀ a ∈ p.suppo
   refine' Pmf.ext fun a => _
   simp only [ennreal.coe_eq_coe.symm, coe_bind_on_support_apply, ← tsum_dite_right, ennreal.tsum_mul_left.symm,
     ennreal.tsum_mul_right.symm]
-  refine' trans Ennreal.tsum_comm (tsum_congr fun a' => _)
-  split_ifs with h
-  · simp only [h, Ennreal.coe_zero, zero_mul, tsum_zero]
+  simp only [Ennreal.tsum_eq_zero, Ennreal.coe_eq_coe, Ennreal.coe_eq_zero, Ennreal.coe_zero, dite_eq_left_iff,
+    mul_eq_zero]
+  refine' ennreal.tsum_comm.trans (tsum_congr fun a' => tsum_congr fun b => _)
+  split_ifs
+  any_goals {
+  }
+  · have := h_1 a'
+    simp [h] at this
+    contradiction
     
-  · simp only [← Ennreal.tsum_mul_left, ← mul_assocₓ]
-    refine' tsum_congr fun b => _
-    split_ifs with h1 h2 h2
-    any_goals {
-    }
-    · rw [bind_on_support_eq_zero_iff] at h1
-      simp only [h1 a' h, Ennreal.coe_zero, zero_mul, mul_zero]
-      
-    · simp only [h2, Ennreal.coe_zero, mul_zero, zero_mul]
-      
+  · simp [h_2]
     
 
 theorem bind_on_support_comm (p : Pmf α) (q : Pmf β) (f : ∀, ∀ a ∈ p.support, ∀, ∀ b ∈ q.support, ∀, Pmf γ) :

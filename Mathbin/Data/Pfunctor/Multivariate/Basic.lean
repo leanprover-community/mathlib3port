@@ -35,10 +35,10 @@ def obj (α : Typevec.{u} n) : Type u :=
 def map {α β : Typevec n} (f : α ⟹ β) : P.obj α → P.obj β := fun ⟨a, g⟩ => ⟨a, Typevec.comp f g⟩
 
 instance : Inhabited (Mvpfunctor n) :=
-  ⟨⟨default _, fun _ => default _⟩⟩
+  ⟨⟨default, fun _ => default⟩⟩
 
 instance obj.inhabited {α : Typevec n} [Inhabited P.A] [∀ i, Inhabited (α i)] : Inhabited (P.obj α) :=
-  ⟨⟨default _, fun _ _ => default _⟩⟩
+  ⟨⟨default, fun _ _ => default⟩⟩
 
 instance : Mvfunctor P.obj :=
   ⟨@Mvpfunctor.map n P⟩
@@ -112,7 +112,7 @@ theorem comp.get_map (f : α ⟹ β) (x : (comp P Q).Obj α) :
   cases x
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem comp.get_mk (x : P.obj fun i => (Q i).Obj α) : comp.get (comp.mk x) = x := by
   cases x

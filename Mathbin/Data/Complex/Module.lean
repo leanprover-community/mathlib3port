@@ -146,7 +146,7 @@ noncomputable def basis_one_I : Basis (Finₓ 2) ℝ ℂ :=
       map_add' := fun z z' => by
         simp ,
       map_smul' := fun c z => by
-        simp }
+        simp [Matrix.smul_cons c z.re, Matrix.smul_cons c z.im] }
 
 -- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
@@ -257,6 +257,20 @@ def conj_ae : ℂ ≃ₐ[ℝ] ℂ :=
 @[simp]
 theorem conj_ae_coe : ⇑conj_ae = conj :=
   rfl
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+/-- The matrix representation of `conj_ae`. -/
+@[simp]
+theorem to_matrix_conj_ae :
+    LinearMap.toMatrix basis_one_I basis_one_I conj_ae.toLinearMap =
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»" :=
+  by
+  ext i j
+  simp [LinearMap.to_matrix_apply]
+  fin_cases i <;> fin_cases j <;> simp
 
 section lift
 

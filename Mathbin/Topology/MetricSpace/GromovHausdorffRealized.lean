@@ -96,10 +96,9 @@ private theorem max_var_bound : dist x y ≤ max_var X Y :=
     dist x y ≤ diam (univ : Set (Sum X Y)) := dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
     _ = diam (inl '' (univ : Set X) ∪ inr '' (univ : Set Y)) := by
       apply congr_argₓ <;> ext x y z <;> cases x <;> simp [mem_univ, mem_range_self]
-    _ ≤ diam (inl '' (univ : Set X)) + dist (inl (default X)) (inr (default Y)) + diam (inr '' (univ : Set Y)) :=
+    _ ≤ diam (inl '' (univ : Set X)) + dist (inl default) (inr default) + diam (inr '' (univ : Set Y)) :=
       diam_union (mem_image_of_mem _ (mem_univ _)) (mem_image_of_mem _ (mem_univ _))
-    _ = diam (univ : Set X) + (dist (default X) (default X) + 1 + dist (default Y) (default Y)) + diam (univ : Set Y) :=
-      by
+    _ = diam (univ : Set X) + (dist default default + 1 + dist default default) + diam (univ : Set Y) := by
       rw [isometry_on_inl.diam_image, isometry_on_inr.diam_image]
       rfl
     _ = 1 * diam (univ : Set X) + 1 + 1 * diam (univ : Set Y) := by
@@ -314,8 +313,8 @@ theorem HD_below_aux1 {f : Cb X Y} (C : ℝ) {x : X} : BddBelow (range fun y : Y
 private theorem HD_bound_aux1 (f : Cb X Y) (C : ℝ) : BddAbove (range fun x : X => ⨅ y, f (inl x, inr y) + C) := by
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).2 with ⟨Cf, hCf⟩
   refine' ⟨Cf + C, forall_range_iff.2 fun x => _⟩
-  calc (⨅ y, f (inl x, inr y) + C) ≤ f (inl x, inr (default Y)) + C :=
-      cinfi_le (HD_below_aux1 C) (default Y)_ ≤ Cf + C := add_le_add ((fun x => hCf (mem_range_self x)) _) (le_reflₓ _)
+  calc (⨅ y, f (inl x, inr y) + C) ≤ f (inl x, inr default) + C := cinfi_le (HD_below_aux1 C) default _ ≤ Cf + C :=
+      add_le_add ((fun x => hCf (mem_range_self x)) _) (le_reflₓ _)
 
 theorem HD_below_aux2 {f : Cb X Y} (C : ℝ) {y : Y} : BddBelow (range fun x : X => f (inl x, inr y) + C) :=
   let ⟨cf, hcf⟩ := (Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1
@@ -324,8 +323,8 @@ theorem HD_below_aux2 {f : Cb X Y} (C : ℝ) {y : Y} : BddBelow (range fun x : X
 private theorem HD_bound_aux2 (f : Cb X Y) (C : ℝ) : BddAbove (range fun y : Y => ⨅ x, f (inl x, inr y) + C) := by
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).2 with ⟨Cf, hCf⟩
   refine' ⟨Cf + C, forall_range_iff.2 fun y => _⟩
-  calc (⨅ x, f (inl x, inr y) + C) ≤ f (inl (default X), inr y) + C :=
-      cinfi_le (HD_below_aux2 C) (default X)_ ≤ Cf + C := add_le_add ((fun x => hCf (mem_range_self x)) _) (le_reflₓ _)
+  calc (⨅ x, f (inl x, inr y) + C) ≤ f (inl default, inr y) + C := cinfi_le (HD_below_aux2 C) default _ ≤ Cf + C :=
+      add_le_add ((fun x => hCf (mem_range_self x)) _) (le_reflₓ _)
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:57:31: expecting tactic arg
@@ -339,14 +338,14 @@ private theorem HD_bound_aux2 (f : Cb X Y) (C : ℝ) : BddAbove (range fun y : Y
 be sufficient to look for functions with `HD(f)` bounded by this bound. -/
 theorem HD_candidates_b_dist_le : HD (candidates_b_dist X Y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
   refine' max_leₓ (csupr_le fun x => _) (csupr_le fun y => _)
-  · have A : (⨅ y, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl x, inr (default Y)) :=
+  · have A : (⨅ y, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl x, inr default) :=
       cinfi_le
         (by
           simpa using HD_below_aux1 0)
-        (default Y)
-    have B : dist (inl x) (inr (default Y)) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
+        default
+    have B : dist (inl x) (inr default) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
       calc
-        dist (inl x) (inr (default Y)) = dist x (default X) + 1 + dist (default Y) (default Y) := rfl
+        dist (inl x) (inr (default : Y)) = dist x (default : X) + 1 + dist default default := rfl
         _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
           apply add_le_add (add_le_add _ (le_reflₓ _))
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
@@ -358,14 +357,14 @@ theorem HD_candidates_b_dist_le : HD (candidates_b_dist X Y) ≤ diam (univ : Se
         
     exact le_transₓ A B
     
-  · have A : (⨅ x, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl (default X), inr y) :=
+  · have A : (⨅ x, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl default, inr y) :=
       cinfi_le
         (by
           simpa using HD_below_aux2 0)
-        (default X)
-    have B : dist (inl (default X)) (inr y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
+        default
+    have B : dist (inl default) (inr y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
       calc
-        dist (inl (default X)) (inr y) = dist (default X) (default X) + 1 + dist (default Y) y := rfl
+        dist (inl (default : X)) (inr y) = dist default default + 1 + dist default y := rfl
         _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
           apply add_le_add (add_le_add _ (le_reflₓ _))
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)

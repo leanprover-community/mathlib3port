@@ -1,4 +1,5 @@
 import Mathbin.CategoryTheory.Adjunction.FullyFaithful
+import Mathbin.CategoryTheory.ReflectsIsomorphisms
 import Mathbin.CategoryTheory.EpiMono
 
 /-!
@@ -133,6 +134,32 @@ theorem unit_comp_partial_bijective_natural [reflective i] (A : C) {B B' : C} (h
     (hB' : B' ∈ i.ess_image) (f : A ⟶ B) :
     (unit_comp_partial_bijective A hB') (f ≫ h) = unit_comp_partial_bijective A hB f ≫ h := by
   rw [← Equivₓ.eq_symm_apply, unit_comp_partial_bijective_symm_natural A h, Equivₓ.symm_apply_apply]
+
+/-- If `i : D ⥤ C` is reflective, the inverse functor of `i ≌ F.ess_image` can be explicitly
+defined by the reflector. -/
+@[simps]
+def equiv_ess_image_of_reflective [reflective i] : D ≌ i.ess_image where
+  Functor := i.to_ess_image
+  inverse := i.ess_image_inclusion ⋙ (left_adjoint i : _)
+  unitIso :=
+    nat_iso.of_components (fun X => (as_iso $ (of_right_adjoint i).counit.app X).symm)
+      (by
+        intro X Y f
+        dsimp
+        simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.assoc]
+        exact ((of_right_adjoint i).counit.naturality _).symm)
+  counitIso :=
+    nat_iso.of_components
+      (fun X => by
+        refine' iso.symm $ as_iso _
+        exact (of_right_adjoint i).Unit.app X
+        apply is_iso_of_reflects_iso _ i.ess_image_inclusion with { instances := ff }
+        exact functor.ess_image.unit_is_iso X.prop)
+      (by
+        intro X Y f
+        dsimp
+        simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.assoc]
+        exact ((of_right_adjoint i).Unit.naturality f).symm)
 
 end CategoryTheory
 

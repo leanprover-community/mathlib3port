@@ -535,7 +535,7 @@ theorem coe_Inf (S : Set (L.substructure M)) : ((Inf S : L.substructure M) : Set
   rfl
 
 theorem mem_Inf {S : Set (L.substructure M)} {x : M} : x ∈ Inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
-  Set.mem_bInter_iff
+  Set.mem_Inter₂
 
 theorem mem_infi {ι : Sort _} {S : ι → L.substructure M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
   simp only [infi, mem_Inf, Set.forall_range_iff]

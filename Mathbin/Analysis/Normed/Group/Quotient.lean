@@ -180,10 +180,7 @@ theorem quotient_norm_eq_zero_iff (S : AddSubgroup M) (m : M) : ∥mk' S m∥ = 
         _ _ ↔ ∀, ∀ ε > 0, ∀, ∃ x ∈ S, x ∈ Metric.Ball m ε := by
         simp [dist_eq_norm, ← sub_eq_add_neg, norm_sub_rev]_ ↔ m ∈ Closure (↑S) := by
         simp [Metric.mem_closure_iff, dist_comm]
-    apply forall_congrₓ
-    intro ε
-    apply forall_congrₓ
-    intro ε_pos
+    refine' forall₂_congrₓ fun ε ε_pos => _
     rw [← S.exists_neg_mem_iff_exists_mem]
     simp
     

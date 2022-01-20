@@ -131,7 +131,7 @@ def free : C ⥤ algebra T where
   map := fun X Y f => { f := T.map f, h' := T.μ.naturality _ }
 
 instance [Inhabited C] : Inhabited (algebra T) :=
-  ⟨(free T).obj (default C)⟩
+  ⟨(free T).obj default⟩
 
 /-- The adjunction between the free and forgetful constructions for Eilenberg-Moore algebras for
   a monad. cf Lemma 5.2.8 of [Riehl][riehl2017]. -/

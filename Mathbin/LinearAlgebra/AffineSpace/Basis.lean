@@ -258,7 +258,6 @@ theorem affine_span_eq_top_of_to_matrix_left_inv [DecidableEq ι] [Nontrivial k]
       finset.univ.affine_combination_eq_linear_combination _ _ hAi]
     change _ = (A ⬝ b.to_matrix p) i j
     simp_rw [hA, Matrix.one_apply, @eq_comm _ i j]
-    congr
   rw [hbi]
   exact affine_combination_mem_affine_span hAi p
 

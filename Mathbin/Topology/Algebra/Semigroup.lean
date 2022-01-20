@@ -25,11 +25,11 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     have scaling_eq_self : (· * m) '' N = N := by
       apply N_minimal
       · refine' ⟨(continuous_mul_left m).IsClosedMap _ N_closed, ⟨_, ⟨m, hm, rfl⟩⟩, _⟩
-        rintro _ _ ⟨m'', hm'', rfl⟩ ⟨m', hm', rfl⟩
-        exact ⟨m'' * m * m', N_mul _ _ (N_mul _ _ hm'' hm) hm', mul_assocₓ _ _ _⟩
+        rintro _ ⟨m'', hm'', rfl⟩ _ ⟨m', hm', rfl⟩
+        refine' ⟨m'' * m * m', N_mul _ (N_mul _ hm'' _ hm) _ hm', mul_assocₓ _ _ _⟩
         
       · rintro _ ⟨m', hm', rfl⟩
-        exact N_mul _ _ hm' hm
+        exact N_mul _ hm' _ hm
         
     have absorbing_eq_self : N ∩ { m' | m' * m = m } = N := by
       apply N_minimal
@@ -37,8 +37,8 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
         · rw [← scaling_eq_self] at hm
           exact hm
           
-        · rintro m'' m' ⟨mem'', eq'' : _ = m⟩ ⟨mem', eq' : _ = m⟩
-          refine' ⟨N_mul _ _ mem'' mem', _⟩
+        · rintro m'' ⟨mem'', eq'' : _ = m⟩ m' ⟨mem', eq' : _ = m⟩
+          refine' ⟨N_mul _ mem'' _ mem', _⟩
           rw [Set.mem_set_of_eq, mul_assocₓ, eq', eq'']
           
         
@@ -70,10 +70,10 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
       exact (hcs i.property).1
       
     
-  · intro m m' hm hm'
+  · intro m hm m' hm'
     rw [Set.mem_sInter]
     intro t ht
-    exact (hcs ht).2.2 m m' (set.mem_sInter.mp hm t ht) (set.mem_sInter.mp hm' t ht)
+    exact (hcs ht).2.2 m (set.mem_sInter.mp hm t ht) m' (set.mem_sInter.mp hm' t ht)
     
   · intro s hs
     exact Set.sInter_subset_of_mem hs
@@ -89,7 +89,7 @@ theorem exists_idempotent_in_compact_subsemigroup {M} [Semigroupₓ M] [Topologi
     (s_add : ∀ x y _ : x ∈ s _ : y ∈ s, x * y ∈ s) : ∃ m ∈ s, m * m = m := by
   let M' := { m // m ∈ s }
   let this' : Semigroupₓ M' :=
-    { mul := fun p q => ⟨p.1 * q.1, s_add _ _ p.2 q.2⟩, mul_assoc := fun p q r => Subtype.eq (mul_assocₓ _ _ _) }
+    { mul := fun p q => ⟨p.1 * q.1, s_add _ p.2 _ q.2⟩, mul_assoc := fun p q r => Subtype.eq (mul_assocₓ _ _ _) }
   have : CompactSpace M' := is_compact_iff_compact_space.mp s_compact
   have : Nonempty M' := nonempty_subtype.mpr snemp
   have : ∀ p : M', Continuous (· * p) := fun p =>

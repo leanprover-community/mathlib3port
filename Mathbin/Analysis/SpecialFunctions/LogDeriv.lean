@@ -168,15 +168,13 @@ namespace Real
 /-- The function `x * log (1 + t / x)` tends to `t` at `+∞`. -/
 theorem tendsto_mul_log_one_plus_div_at_top (t : ℝ) : tendsto (fun x => x * log (1 + t / x)) at_top (𝓝 t) := by
   have h₁ : tendsto (fun h => h⁻¹ * log (1 + t * h)) (𝓝[≠] 0) (𝓝 t) := by
-    simpa [has_deriv_at_iff_tendsto_slope] using
-      ((has_deriv_at_const _ 1).add ((has_deriv_at_id (0 : ℝ)).const_mul t)).log
+    simpa [has_deriv_at_iff_tendsto_slope, slope_fun_def] using
+      (((has_deriv_at_id (0 : ℝ)).const_mul t).const_add 1).log
         (by
           simp )
   have h₂ : tendsto (fun x : ℝ => x⁻¹) at_top (𝓝[≠] 0) :=
     tendsto_inv_at_top_zero'.mono_right (nhds_within_mono _ fun x hx => (set.mem_Ioi.mp hx).ne')
-  convert h₁.comp h₂
-  ext
-  field_simp [mul_commₓ]
+  simpa only [· ∘ ·, inv_inv₀] using h₁.comp h₂
 
 open_locale BigOperators
 
@@ -191,8 +189,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
     intro y hy
     have : (∑ i in range n, (↑i + 1) * y ^ i / (↑i + 1)) = ∑ i in range n, y ^ i := by
       congr with i
-      have : (i : ℝ) + 1 ≠ 0 := ne_of_gtₓ (Nat.cast_add_one_pos i)
-      field_simp [this, mul_commₓ]
+      exact mul_div_cancel_left _ (Nat.cast_add_one_pos i).ne'
     field_simp [F, this, ← geom_sum_def, geom_sum_eq (ne_of_ltₓ hy.2), sub_ne_zero_of_ne (ne_of_gtₓ hy.2),
       sub_ne_zero_of_ne (ne_of_ltₓ hy.2)]
     ring

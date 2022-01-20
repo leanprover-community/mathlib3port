@@ -95,10 +95,8 @@ def RingHom.OfLocalizationSpan :=
 theorem RingHom.of_localization_span_iff_finite : RingHom.OfLocalizationSpan @P ↔ RingHom.OfLocalizationFiniteSpan @P :=
   by
   delta' RingHom.OfLocalizationSpan RingHom.OfLocalizationFiniteSpan
-  iterate 5 
-    apply forall_congrₓ
-    intro
-  skip
+  apply forall₅_congr
+  intros
   constructor
   · intro h s
     exact h s

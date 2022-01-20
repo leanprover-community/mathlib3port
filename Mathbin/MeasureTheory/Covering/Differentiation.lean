@@ -175,7 +175,7 @@ theorem null_of_frequently_le_of_frequently_ge {c d : ℝ≥0 } (hcd : c < d) (s
     (hd : ∀, ∀ x ∈ s, ∀, ∃ᶠ a in v.filter_at x, (d : ℝ≥0∞) * μ a ≤ ρ a) : μ s = 0 := by
   apply null_of_locally_null s fun x hx => _
   obtain ⟨o, xo, o_open, μo⟩ : ∃ o : Set α, x ∈ o ∧ IsOpen o ∧ μ o < ∞ := measure.exists_is_open_measure_lt_top μ x
-  refine' ⟨o, mem_nhds_within_of_mem_nhds (o_open.mem_nhds xo), _⟩
+  refine' ⟨s ∩ o, inter_mem_nhds_within _ (o_open.mem_nhds xo), _⟩
   let s' := s ∩ o
   by_contra
   apply lt_irreflₓ (ρ s')
@@ -435,8 +435,8 @@ theorem mul_measure_le_of_subset_lt_lim_ratio_meas {q : ℝ≥0 } {s : Set α}
 theorem measure_lim_ratio_meas_top : μ { x | v.lim_ratio_meas hρ x = ∞ } = 0 := by
   refine' null_of_locally_null _ fun x hx => _
   obtain ⟨o, xo, o_open, μo⟩ : ∃ o : Set α, x ∈ o ∧ IsOpen o ∧ ρ o < ∞ := measure.exists_is_open_measure_lt_top ρ x
-  refine' ⟨o, mem_nhds_within_of_mem_nhds (o_open.mem_nhds xo), le_antisymmₓ _ bot_le⟩
   let s := { x : α | v.lim_ratio_meas hρ x = ∞ } ∩ o
+  refine' ⟨s, inter_mem_nhds_within _ (o_open.mem_nhds xo), le_antisymmₓ _ bot_le⟩
   have ρs : ρ s ≠ ∞ := ((measure_mono (inter_subset_right _ _)).trans_lt μo).Ne
   have A : ∀ q : ℝ≥0 , 1 ≤ q → μ s ≤ q⁻¹ * ρ s := by
     intro q hq
@@ -459,8 +459,8 @@ theorem measure_lim_ratio_meas_top : μ { x | v.lim_ratio_meas hρ x = ∞ } = 0
 theorem measure_lim_ratio_meas_zero : ρ { x | v.lim_ratio_meas hρ x = 0 } = 0 := by
   refine' null_of_locally_null _ fun x hx => _
   obtain ⟨o, xo, o_open, μo⟩ : ∃ o : Set α, x ∈ o ∧ IsOpen o ∧ μ o < ∞ := measure.exists_is_open_measure_lt_top μ x
-  refine' ⟨o, mem_nhds_within_of_mem_nhds (o_open.mem_nhds xo), le_antisymmₓ _ bot_le⟩
   let s := { x : α | v.lim_ratio_meas hρ x = 0 } ∩ o
+  refine' ⟨s, inter_mem_nhds_within _ (o_open.mem_nhds xo), le_antisymmₓ _ bot_le⟩
   have μs : μ s ≠ ∞ := ((measure_mono (inter_subset_right _ _)).trans_lt μo).Ne
   have A : ∀ q : ℝ≥0 , 0 < q → ρ s ≤ q * μ s := by
     intro q hq

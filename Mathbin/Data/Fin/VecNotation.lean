@@ -349,17 +349,17 @@ end Val
 
 section Smul
 
-variable [Semiringₓ α]
+variable {M : Type _} [HasScalar M α]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
 @[simp]
-theorem smul_empty (x : α) (v : Finₓ 0 → α) :
+theorem smul_empty (x : M) (v : Finₓ 0 → α) :
     x • v = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»" :=
   empty_eq _
 
 @[simp]
-theorem smul_cons (x y : α) (v : Finₓ n → α) : x • vec_cons y v = vec_cons (x * y) (x • v) := by
+theorem smul_cons (x : M) (y : α) (v : Finₓ n → α) : x • vec_cons y v = vec_cons (x • y) (x • v) := by
   ext i
   refine' Finₓ.cases _ _ i <;> simp
 

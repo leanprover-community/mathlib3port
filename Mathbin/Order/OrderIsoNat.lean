@@ -80,6 +80,9 @@ noncomputable def subtype.order_iso_of_nat : ℕ ≃o s :=
 variable {s}
 
 @[simp]
+theorem coe_order_embedding_of_set : ⇑order_embedding_of_set s = coeₓ ∘ subtype.of_nat s :=
+  rfl
+
 theorem order_embedding_of_set_apply {n : ℕ} : order_embedding_of_set s n = subtype.of_nat s n :=
   rfl
 
@@ -89,19 +92,18 @@ theorem subtype.order_iso_of_nat_apply {n : ℕ} : subtype.order_iso_of_nat s n 
 
 variable (s)
 
-@[simp]
-theorem order_embedding_of_set_range : Set.Range (Nat.orderEmbeddingOfSet s) = s := by
-  ext x
-  rw [Set.mem_range, Nat.orderEmbeddingOfSet]
-  constructor <;> intro h
-  · obtain ⟨y, rfl⟩ := h
-    simp
-    
-  · refine' ⟨(Nat.Subtype.orderIsoOfNat s).symm ⟨x, h⟩, _⟩
-    simp only [RelEmbedding.coe_trans, RelEmbedding.order_embedding_of_lt_embedding_apply, RelEmbedding.nat_lt_apply,
-      Function.comp_app, OrderEmbedding.subtype_apply]
-    rw [← subtype.order_iso_of_nat_apply, OrderIso.apply_symm_apply, Subtype.coe_mk]
-    
+theorem order_embedding_of_set_range : Set.Range (Nat.orderEmbeddingOfSet s) = s :=
+  subtype.coe_comp_of_nat_range
+
+theorem exists_subseq_of_forall_mem_union {α : Type _} {s t : Set α} (e : ℕ → α) (he : ∀ n, e n ∈ s ∪ t) :
+    ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by
+  classical
+  have : Infinite (e ⁻¹' s) ∨ Infinite (e ⁻¹' t) := by
+    simp only [Set.infinite_coe_iff, ← Set.infinite_union, ← Set.preimage_union,
+      Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), Set.infinite_univ]
+  cases' this
+  exacts[⟨Nat.orderEmbeddingOfSet (e ⁻¹' s), Or.inl $ fun n => (Nat.Subtype.ofNat (e ⁻¹' s) _).2⟩,
+    ⟨Nat.orderEmbeddingOfSet (e ⁻¹' t), Or.inr $ fun n => (Nat.Subtype.ofNat (e ⁻¹' t) _).2⟩]
 
 end Nat
 

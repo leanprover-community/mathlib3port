@@ -61,7 +61,7 @@ structure comma (L : A ⥤ T) (R : B ⥤ T) : Type max u₁ u₂ v₃ where
   Hom : L.obj left ⟶ R.obj right
 
 instance comma.inhabited [Inhabited T] : Inhabited (comma (𝟭 T) (𝟭 T)) where
-  default := { left := default T, right := default T, Hom := 𝟙 (default T) }
+  default := { left := default, right := default, Hom := 𝟙 default }
 
 variable {L : A ⥤ T} {R : B ⥤ T}
 
@@ -80,9 +80,8 @@ structure comma_morphism (X Y : comma L R) where
     run_tac
       obviously
 
-instance comma_morphism.inhabited [Inhabited (comma L R)] :
-    Inhabited (comma_morphism (default (comma L R)) (default (comma L R))) where
-  default := { left := 𝟙 _, right := 𝟙 _ }
+instance comma_morphism.inhabited [Inhabited (comma L R)] : Inhabited (comma_morphism (default : comma L R) default) :=
+  ⟨⟨𝟙 _, 𝟙 _⟩⟩
 
 restate_axiom comma_morphism.w'
 

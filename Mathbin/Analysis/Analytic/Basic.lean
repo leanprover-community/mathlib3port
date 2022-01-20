@@ -494,7 +494,7 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : Has
   set L : E × E → ℝ := fun y => C * (a / r') ^ 2 * (∥y - (x, x)∥ * ∥y.1 - y.2∥) * (a / (1 - a) ^ 2 + 2 / (1 - a))
   have hL : ∀, ∀ y ∈ Emetric.Ball (x, x) r', ∀, ∥f y.1 - f y.2 - p 1 fun _ => y.1 - y.2∥ ≤ L y := by
     intro y hy'
-    have hy : y ∈ (Emetric.Ball x r).Prod (Emetric.Ball x r) := by
+    have hy : y ∈ Emetric.Ball x r ×ˢ Emetric.Ball x r := by
       rw [Emetric.ball_prod_same]
       exact Emetric.ball_subset_ball hr.le hy'
     set A : ℕ → F := fun n => (p n fun _ => y.1 - x) - p n fun _ => y.2 - x
@@ -544,7 +544,7 @@ theorem HasFpowerSeriesOnBall.image_sub_sub_deriv_le (hf : HasFpowerSeriesOnBall
         ∥f y - f z - p 1 fun _ => y - z∥ ≤ C * max ∥y - x∥ ∥z - x∥ * ∥y - z∥ :=
   by
   simpa only [is_O_principal, mul_assocₓ, NormedField.norm_mul, norm_norm, Prod.forall, Emetric.mem_ball, Prod.edist_eq,
-    max_lt_iff, and_imp] using hf.is_O_image_sub_image_sub_deriv_principal hr
+    max_lt_iff, and_imp, @forall_swap (_ < _) E] using hf.is_O_image_sub_image_sub_deriv_principal hr
 
 /-- If `f` has formal power series `∑ n, pₙ` at `x`, then
 `f y - f z - p 1 (λ _, y - z) = O(∥(y, z) - (x, x)∥ * ∥y - z∥)` as `(y, z) → (x, x)`.
@@ -900,7 +900,6 @@ theorem change_origin_eval (h : (∥x∥₊ + ∥y∥₊ : ℝ≥0∞) < p.radiu
     by
     rintro m rfl
     simp
-    congr
   apply this
 
 end FormalMultilinearSeries

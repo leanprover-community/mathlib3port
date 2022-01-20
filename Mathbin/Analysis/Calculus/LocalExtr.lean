@@ -347,7 +347,7 @@ theorem card_root_set_le_derivative {F : Type _} [Field F] [Algebra F ℝ] (p : 
     simp_rw [root_set_C, Set.empty_card', zero_le]
     
   simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
-  refine' Finset.card_le_of_interleaved fun x y hx hy hxy => _
+  refine' Finset.card_le_of_interleaved fun x hx y hy hxy => _
   rw [← Finset.mem_coe, ← root_set_def, mem_root_set hp] at hx hy
   obtain ⟨z, hz1, hz2⟩ :=
     exists_deriv_eq_zero (fun x : ℝ => aeval x p) hxy p.continuous_aeval.continuous_on (hx.trans hy.symm)

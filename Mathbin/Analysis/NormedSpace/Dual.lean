@@ -13,7 +13,7 @@ version `normed_space.inclusion_in_double_dual_li` of the map which is of type a
 isometric embedding, `E →ₗᵢ[𝕜] (dual 𝕜 (dual 𝕜 E))`.
 
 Since a lot of elementary properties don't require `eq_of_dist_eq_zero` we start setting up the
-theory for `semi_normed_space` and we specialize to `normed_space` when needed.
+theory for `semi_normed_group` and we specialize to `normed_group` when needed.
 
 ## Main definitions
 
@@ -40,11 +40,11 @@ section General
 
 variable (𝕜 : Type _) [NondiscreteNormedField 𝕜]
 
-variable (E : Type _) [SemiNormedGroup E] [SemiNormedSpace 𝕜 E]
+variable (E : Type _) [SemiNormedGroup E] [NormedSpace 𝕜 E]
 
 variable (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F]
 
--- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler semi_normed_space 𝕜
+-- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler normed_space 𝕜
 /-- The topological dual of a seminormed space `E`. -/
 def dual :=
   E →L[𝕜] 𝕜 deriving Inhabited, SemiNormedGroup, [anonymous]
@@ -57,9 +57,6 @@ instance : CoeFun (dual 𝕜 E) fun _ => E → 𝕜 :=
 
 instance : NormedGroup (dual 𝕜 F) :=
   ContinuousLinearMap.toNormedGroup
-
-instance : NormedSpace 𝕜 (dual 𝕜 F) :=
-  ContinuousLinearMap.toNormedSpace
 
 instance [FiniteDimensional 𝕜 E] : FiniteDimensional 𝕜 (dual 𝕜 E) :=
   ContinuousLinearMap.finite_dimensional
@@ -155,7 +152,7 @@ theorem polar_eq_Inter (s : Set E) : Polar 𝕜 s = ⋂ z ∈ s, { x' : dual �
   simp only [Polar, set_of_forall]
 
 @[simp]
-theorem polar_univ : Polar 𝕜 (univ : Set E) = {0} := by
+theorem polar_univ : Polar 𝕜 (univ : Set E) = {(0 : dual 𝕜 E)} := by
   refine' eq_singleton_iff_unique_mem.2 ⟨zero_mem_polar _ _, fun x' hx' => _⟩
   ext x
   refine' norm_le_zero_iff.1 (le_of_forall_le_of_dense $ fun ε hε => _)

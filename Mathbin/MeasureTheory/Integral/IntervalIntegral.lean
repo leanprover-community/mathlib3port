@@ -814,9 +814,8 @@ theorem integral_interval_sub_interval_comm' (hab : IntervalIntegrable f μ a b)
 theorem integral_Iic_sub_Iic (ha : integrable_on f (Iic a) μ) (hb : integrable_on f (Iic b) μ) :
     ((∫ x in Iic b, f x ∂μ) - ∫ x in Iic a, f x ∂μ) = ∫ x in a..b, f x ∂μ := by
   wlog (discharger := tactic.skip) hab : a ≤ b using a b
-  · rw [sub_eq_iff_eq_add', integral_of_le hab, ← integral_union (Iic_disjoint_Ioc (le_reflₓ _)),
-      Iic_union_Ioc_eq_Iic hab]
-    exacts[measurable_set_Iic, measurable_set_Ioc, ha, hb.mono_set fun _ => And.right]
+  · rw [sub_eq_iff_eq_add', integral_of_le hab, ← integral_union (Iic_disjoint_Ioc le_rfl), Iic_union_Ioc_eq_Iic hab]
+    exacts[measurable_set_Ioc, ha, hb.mono_set fun _ => And.right]
     
   · intro ha hb
     rw [integral_symm, ← this hb ha, neg_sub]
@@ -1059,14 +1058,14 @@ theorem continuous_on_primitive_interval_left {f : α → E} {a b : α} [has_no_
   simp only [integral_symm b]
   exact (continuous_on_primitive_interval h_int).neg
 
-variable [NoBotOrder α] [NoTopOrder α] [has_no_atoms μ]
+variable [NoMinOrder α] [NoMaxOrder α] [has_no_atoms μ]
 
 theorem continuous_primitive {f : α → E} (h_int : ∀ a b : α, IntervalIntegrable f μ a b) (a : α) :
     Continuous fun b => ∫ x in a..b, f x ∂μ := by
   rw [continuous_iff_continuous_at]
   intro b₀
-  cases' no_bot b₀ with b₁ hb₁
-  cases' no_top b₀ with b₂ hb₂
+  cases' exists_lt b₀ with b₁ hb₁
+  cases' exists_gt b₀ with b₂ hb₂
   apply ContinuousWithinAt.continuous_at _ (Icc_mem_nhds hb₁ hb₂)
   exact continuous_within_at_primitive (measure_singleton b₀) (h_int _ _)
 
@@ -1806,7 +1805,7 @@ theorem integral_has_fderiv_within_at_of_tendsto_ae (hf : IntervalIntegrable f v
     [FTC_filter a (𝓝[s] a) la] [FTC_filter b (𝓝[t] b) lb] (hmeas_a : MeasurableAtFilter f la)
     (hmeas_b : MeasurableAtFilter f lb) (ha : tendsto f (la⊓volume.ae) (𝓝 ca)) (hb : tendsto f (lb⊓volume.ae) (𝓝 cb)) :
     HasFderivWithinAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x) ((snd ℝ ℝ ℝ).smulRight cb - (fst ℝ ℝ ℝ).smulRight ca)
-      (s.prod t) (a, b) :=
+      (s ×ˢ t) (a, b) :=
   by
   rw [HasFderivWithinAt, nhds_within_prod_eq]
   have :=
@@ -1837,7 +1836,7 @@ theorem integral_has_fderiv_within_at (hf : IntervalIntegrable f volume a b) (hm
     (hmeas_b : MeasurableAtFilter f lb) {s t : Set ℝ} [FTC_filter a (𝓝[s] a) la] [FTC_filter b (𝓝[t] b) lb]
     (ha : tendsto f la (𝓝 $ f a)) (hb : tendsto f lb (𝓝 $ f b)) :
     HasFderivWithinAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
-      ((snd ℝ ℝ ℝ).smulRight (f b) - (fst ℝ ℝ ℝ).smulRight (f a)) (s.prod t) (a, b) :=
+      ((snd ℝ ℝ ℝ).smulRight (f b) - (fst ℝ ℝ ℝ).smulRight (f a)) (s ×ˢ t) (a, b) :=
   integral_has_fderiv_within_at_of_tendsto_ae hf hmeas_a hmeas_b (ha.mono_left inf_le_left) (hb.mono_left inf_le_left)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
@@ -1848,7 +1847,7 @@ unsafe def unique_diff_within_at_Ici_Iic_univ : tactic Unit :=
 
 /-- Let `f` be a measurable function integrable on `a..b`. Choose `s ∈ {Iic a, Ici a, univ}`
 and `t ∈ {Iic b, Ici b, univ}`. Suppose that `f` tends to `ca` and `cb` almost surely at the filters
-`la` and `lb` from the table below. Then `fderiv_within ℝ (λ p, ∫ x in p.1..p.2, f x) (s.prod t)`
+`la` and `lb` from the table below. Then `fderiv_within ℝ (λ p, ∫ x in p.1..p.2, f x) (s ×ˢ t)`
 is equal to `(u, v) ↦ u • cb - v • ca`.
 
 | `s`     | `la`     | `t`     | `lb`     |
@@ -1867,7 +1866,7 @@ theorem fderiv_within_integral_of_tendsto_ae (hf : IntervalIntegrable f volume a
     (ht : UniqueDiffWithinAt ℝ t b := by
       run_tac
         unique_diff_within_at_Ici_Iic_univ) :
-    fderivWithin ℝ (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x) (s.prod t) (a, b) =
+    fderivWithin ℝ (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x) (s ×ˢ t) (a, b) =
       (snd ℝ ℝ ℝ).smulRight cb - (fst ℝ ℝ ℝ).smulRight ca :=
   (integral_has_fderiv_within_at_of_tendsto_ae hf hmeas_a hmeas_b ha hb).fderivWithin $ hs.prod ht
 
@@ -2039,9 +2038,8 @@ theorem sub_le_integral_of_has_deriv_right_of_le (hab : a ≤ b) (hcont : Contin
       have g'_lt_y : g' t < y := Ereal.coe_lt_coe_iff.1 g'_lt_y'
       filter_upwards [(hderiv t ⟨ht.2.1, ht.2.2⟩).limsup_slope_le' (not_mem_Ioi.2 le_rfl) g'_lt_y, self_mem_nhds_within]
       intro u hu t_lt_u
-      have := hu.le
-      rwa [← div_eq_inv_mul, div_le_iff'] at this
-      exact sub_pos.2 t_lt_u
+      have := mul_le_mul_of_nonneg_left hu.le (sub_pos.2 t_lt_u).le
+      rwa [← smul_eq_mul, sub_smul_slope] at this
     have I3 : ∀ᶠ u in 𝓝[>] t, g u - g t ≤ ∫ w in t..u, (G' w).toReal := by
       filter_upwards [I1, I2]
       intro u hu1 hu2

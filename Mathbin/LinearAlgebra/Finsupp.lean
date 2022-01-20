@@ -414,7 +414,7 @@ theorem lmap_domain_disjoint_ker (f : α → α') {s : Set α} (H : ∀ a b _ : 
     · simpa [Finsupp.single_apply]
       
     · intro y hy xy
-      simp [mt (H _ _ (h₁ hy) xs) xy]
+      simp [mt (H _ (h₁ hy) _ xs) xy]
       
     · simp (config := { contextual := true })
       
@@ -452,7 +452,7 @@ theorem total_single (c : R) (a : α) : Finsupp.total α M R v (single a c) = c 
 theorem apply_total (f : M →ₗ[R] M') v (l : α →₀ R) : f (Finsupp.total α M R v l) = Finsupp.total α M' R (f ∘ v) l := by
   apply Finsupp.induction_linear l <;> simp (config := { contextual := true })
 
-theorem total_unique [Unique α] (l : α →₀ R) v : Finsupp.total α M R v l = l (default α) • v (default α) := by
+theorem total_unique [Unique α] (l : α →₀ R) v : Finsupp.total α M R v l = l default • v default := by
   rw [← total_single, ← unique_single l]
 
 theorem total_surjective (h : Function.Surjective v) : Function.Surjective (Finsupp.total α M R v) := by

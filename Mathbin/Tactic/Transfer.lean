@@ -39,7 +39,7 @@ unsafe instance has_to_tactic_format_rule_data : has_to_tactic_format rule_data 
     let ma ← pp r.args
     let pat ← pp r.pat.target
     let output ← pp r.output
-    return f! "\{ ⟨{pat }⟩ pr: {pr } → {output }, {up } {mp } {ua } {ma} }"⟩
+    return f! "\{ ⟨{pat }⟩ pr: {pr } → {output }, {up } {mp } {ua } {ma} }}"⟩
 
 private unsafe def get_lift_fun : expr → tactic (List rel_data × expr)
   | e =>

@@ -1,6 +1,7 @@
 import Mathbin.Data.Int.Basic
 import Mathbin.Algebra.CharZero
 import Mathbin.Order.LocallyFinite
+import Mathbin.Data.Finset.LocallyFinite
 
 /-!
 # Finite intervals of integers
@@ -148,6 +149,42 @@ theorem card_fintype_Ioc_of_le (h : a ≤ b) : (Fintype.card (Set.Ioc a b) : ℤ
 
 theorem card_fintype_Ioo_of_lt (h : a < b) : (Fintype.card (Set.Ioo a b) : ℤ) = b - a - 1 := by
   rw [card_fintype_Ioo, sub_sub, to_nat_sub_of_le h]
+
+theorem image_Ico_mod (n a : ℤ) (h : 0 ≤ a) : (Ico n (n + a)).Image (· % a) = Ico 0 a := by
+  obtain rfl | ha := eq_or_lt_of_le h
+  · simp
+    
+  ext i
+  simp only [mem_image, exists_prop, mem_range, mem_Ico]
+  constructor
+  · rintro ⟨i, h, rfl⟩
+    exact ⟨mod_nonneg i (ne_of_gtₓ ha), mod_lt_of_pos i ha⟩
+    
+  intro hia
+  have hn := Int.mod_add_div n a
+  obtain hi | hi := lt_or_leₓ i (n % a)
+  · refine' ⟨i + a * (n / a + 1), ⟨_, _⟩, _⟩
+    · rw [add_commₓ (n / a), mul_addₓ, mul_oneₓ, ← add_assocₓ]
+      refine' hn.symm.le.trans (add_le_add_right _ _)
+      simpa only [zero_addₓ] using add_le_add hia.left (Int.mod_lt_of_pos n ha).le
+      
+    · refine' lt_of_lt_of_leₓ (add_lt_add_right hi (a * (n / a + 1))) _
+      rw [mul_addₓ, mul_oneₓ, ← add_assocₓ, hn]
+      
+    · rw [Int.add_mul_mod_self_left, Int.mod_eq_of_lt hia.left hia.right]
+      
+    
+  · refine' ⟨i + a * (n / a), ⟨_, _⟩, _⟩
+    · exact hn.symm.le.trans (add_le_add_right hi _)
+      
+    · rw [add_commₓ n a]
+      refine' add_lt_add_of_lt_of_le hia.right (le_transₓ _ hn.le)
+      simp only [zero_le, le_add_iff_nonneg_left]
+      exact Int.mod_nonneg n (ne_of_gtₓ ha)
+      
+    · rw [Int.add_mul_mod_self_left, Int.mod_eq_of_lt hia.left hia.right]
+      
+    
 
 end Int
 

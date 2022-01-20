@@ -386,11 +386,11 @@ theorem algebra_map_inj (x y : R) : algebraMap R (FreeAlgebra R X) x = algebraMa
 
 @[simp]
 theorem algebra_map_eq_zero_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 0 ↔ x = 0 :=
-  algebra_map_inj x 0
+  map_eq_zero_iff (algebraMap _ _) algebra_map_left_inverse.Injective
 
 @[simp]
 theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 ↔ x = 1 :=
-  algebra_map_inj x 1
+  map_eq_one_iff (algebraMap _ _) algebra_map_left_inverse.Injective
 
 theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgebra R X) := fun x y hoxy =>
   Classical.by_contradiction $ fun hxy : x ≠ y =>

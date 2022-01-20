@@ -156,8 +156,7 @@ variable {k P1}
 
 theorem linear_eq_zero_iff_exists_const (f : P1 →ᵃ[k] P2) : f.linear = 0 ↔ ∃ q, f = const k P1 q := by
   refine' ⟨fun h => _, fun h => _⟩
-  · inhabit P1
-    use f (default P1)
+  · use f (Classical.arbitrary P1)
     ext
     rw [coe_const, Function.const_applyₓ, ← @vsub_eq_zero_iff_eq V2, ← f.linear_map_vsub, h, LinearMap.zero_apply]
     

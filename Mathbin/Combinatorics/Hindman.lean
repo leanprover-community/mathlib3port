@@ -130,7 +130,7 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroupₓ M] (a : Streamₓ 
     
   · exact IsClosed.is_compact (is_closed_Inter $ fun i => ultrafilter_is_closed_basic _)
     
-  · intro U V hU hV
+  · intro U hU V hV
     rw [Set.mem_Inter] at *
     intro n
     rw [Set.mem_set_of_eq, Ultrafilter.eventually_mul]

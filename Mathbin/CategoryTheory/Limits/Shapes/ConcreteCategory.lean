@@ -1,6 +1,6 @@
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.CategoryTheory.ConcreteCategory.Basic
-import Mathbin.Tactic.Elementwise
+import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
 
 /-!
 # Facts about limits of functors into concrete categories
@@ -14,10 +14,4 @@ while comparing categorical limits with existing constructions in concrete categ
 universe u
 
 open CategoryTheory
-
-namespace CategoryTheory.Limits
-
-attribute [elementwise] kernel.condition cokernel.condition
-
-end CategoryTheory.Limits
 

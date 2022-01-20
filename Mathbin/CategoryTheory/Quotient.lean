@@ -39,7 +39,7 @@ structure Quotientₓ where
   as : C
 
 instance [Inhabited C] : Inhabited (Quotientₓ r) :=
-  ⟨{ as := default C }⟩
+  ⟨{ as := default }⟩
 
 namespace Quotientₓ
 

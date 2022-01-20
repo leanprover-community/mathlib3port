@@ -740,8 +740,7 @@ theorem map_haar_inv {G : Type _} [CommGroupₓ G] [TopologicalSpace G] [Topolog
   have K : positive_compacts G := Classical.choice (TopologicalSpace.nonempty_positive_compacts G)
   have : c ^ 2 * μ K.1 = 1 ^ 2 * μ K.1 := by
     conv_rhs => rw [μeq]
-    change c ^ 2 * μ K.1 = 1 ^ 2 * (c ^ 2 * μ K.1)
-    rw [one_pow, one_mulₓ]
+    simp
   have : c ^ 2 = 1 ^ 2 :=
     (Ennreal.mul_eq_mul_right (haar_pos_of_nonempty_interior _ K.2.2).ne' (IsCompact.measure_lt_top K.2.1).Ne).1 this
   have : c = 1 := (Ennreal.pow_strict_mono two_ne_zero).Injective this

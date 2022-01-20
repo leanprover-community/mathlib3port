@@ -650,10 +650,6 @@ theorem map_finsupp_sum {α : Type _} [HasZero α] {ι : Type _} (f : ι →₀ 
     φ (f.sum g) = f.sum fun i a => φ (g i a) :=
   φ.map_sum _ _
 
-@[simp]
-theorem map_nat_cast (n : ℕ) : φ n = n :=
-  φ.to_ring_hom.map_nat_cast n
-
 theorem map_bit0 x : φ (bit0 x) = bit0 (φ x) :=
   map_bit0 _ _
 
@@ -1498,6 +1494,11 @@ instance (priority := 99) algebraInt : Algebra ℤ R where
   commutes' := Int.cast_commute
   smul_def' := fun _ _ => zsmul_eq_mul _ _
   toRingHom := Int.castRingHom R
+
+/-- A special case of `ring_hom.eq_int_cast'` that happens to be true definitionally -/
+@[simp]
+theorem algebra_map_int_eq : algebraMap ℤ R = Int.castRingHom R :=
+  rfl
 
 variable {R}
 

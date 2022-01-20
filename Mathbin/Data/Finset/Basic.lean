@@ -247,6 +247,9 @@ theorem subset_def {s₁ s₂ : Finset α} : s₁ ⊆ s₂ ↔ s₁.1 ⊆ s₂.1
 theorem subset.refl (s : Finset α) : s ⊆ s :=
   subset.refl _
 
+protected theorem subset.rfl {s : Finset α} : s ⊆ s :=
+  subset.refl _
+
 theorem subset_of_eq {s t : Finset α} (h : s = t) : s ⊆ t :=
   h ▸ subset.refl _
 
@@ -259,6 +262,9 @@ attribute [local trans] subset.trans superset.trans
 
 theorem mem_of_subset {s₁ s₂ : Finset α} {a : α} : s₁ ⊆ s₂ → a ∈ s₁ → a ∈ s₂ :=
   mem_of_subset
+
+theorem not_mem_mono {s t : Finset α} (h : s ⊆ t) {a : α} : a ∉ t → a ∉ s :=
+  mt $ @h _
 
 theorem subset.antisymm {s₁ s₂ : Finset α} (H₁ : s₁ ⊆ s₂) (H₂ : s₂ ⊆ s₁) : s₁ = s₂ :=
   ext $ fun a => ⟨@H₁ a, @H₂ a⟩
@@ -773,18 +779,20 @@ theorem induction_on' {α : Type _} {p : Finset α → Prop} [DecidableEq α] (S
     (Finset.Subset.refl S)
 
 /-- To prove a proposition about a nonempty `s : finset α`, it suffices to show it holds for all
-singletons and that if it holds for `t : finset α`, then it also holds for the `finset` obtained by
-inserting an element in `t`. -/
+singletons and that if it holds for nonempty `t : finset α`, then it also holds for the `finset`
+obtained by inserting an element in `t`. -/
 @[elab_as_eliminator]
-theorem nonempty.cons_induction {α : Type _} {s : Finset α} (hs : s.nonempty) {p : Finset α → Prop} (h₀ : ∀ a, p {a})
-    (h₁ : ∀ ⦃a⦄ s h : a ∉ s, p s → p (Finset.cons a s h)) : p s := by
+theorem nonempty.cons_induction {α : Type _} {p : ∀ s : Finset α, s.nonempty → Prop}
+    (h₀ : ∀ a, p {a} (singleton_nonempty _))
+    (h₁ : ∀ ⦃a⦄ s h : a ∉ s hs, p s hs → p (Finset.cons a s h) (nonempty_cons h)) {s : Finset α} (hs : s.nonempty) :
+    p s hs := by
   induction' s using Finset.cons_induction with a t ha h
   · exact (not_nonempty_empty hs).elim
     
   obtain rfl | ht := t.eq_empty_or_nonempty
   · exact h₀ a
     
-  · exact h₁ t ha (h ht)
+  · exact h₁ t ha ht (h ht)
     
 
 /-- Inserting an element to a finite set is equivalent to the option type. -/
@@ -972,7 +980,7 @@ theorem exists_mem_subset_of_subset_bUnion_of_directed_on {α ι : Type _} {f : 
   · intro b t hbt htc hbtc
     obtain ⟨i : ι, hic : i ∈ c, hti : (t : Set α) ⊆ f i⟩ := htc (Set.Subset.trans (t.subset_insert b) hbtc)
     obtain ⟨j, hjc, hbj⟩ : ∃ j ∈ c, b ∈ f j := by
-      simpa [Set.mem_bUnion_iff] using hbtc (t.mem_insert_self b)
+      simpa [Set.mem_Union₂] using hbtc (t.mem_insert_self b)
     rcases hc j hjc i hic with ⟨k, hkc, hk, hk'⟩
     use k, hkc
     rw [coe_insert, Set.insert_subset]
@@ -1517,7 +1525,7 @@ theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Finset α))] : piec
 
 variable [∀ j, Decidable (j ∈ s)]
 
-@[norm_cast]
+@[norm_cast move]
 theorem piecewise_coe [∀ j, Decidable (j ∈ (s : Set α))] : (s : Set α).piecewise f g = s.piecewise f g := by
   ext
   congr
@@ -1543,8 +1551,7 @@ theorem piecewise_insert_of_ne [DecidableEq α] {i j : α} [∀ i, Decidable (i 
 theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ insert j s)] :
     (insert j s).piecewise f g = update (s.piecewise f g) j (f j) := by
   classical
-  rw [← piecewise_coe, ← piecewise_coe, ← Set.piecewise_insert, ← coe_insert j s]
-  congr
+  simp only [← piecewise_coe, coe_insert, ← Set.piecewise_insert]
 
 theorem piecewise_cases {i} (p : δ i → Prop) (hf : p (f i)) (hg : p (g i)) : p (s.piecewise f g i) := by
   by_cases' hi : i ∈ s <;> simpa [hi]
@@ -2190,6 +2197,20 @@ theorem mem_map_equiv {f : α ≃ β} {b : β} : b ∈ s.map f.to_embedding ↔ 
       simpa, fun h =>
       ⟨_, h, by
         simp ⟩⟩
+
+/-- If the only elements outside `s` are those left fixed by `σ`, then mapping by `σ` has no effect.
+-/
+theorem map_perm {σ : Equivₓ.Perm α} (hs : { a | σ a ≠ a } ⊆ s) : s.map (σ : α ↪ α) = s := by
+  ext i
+  rw [mem_map]
+  obtain hi | hi := eq_or_ne (σ i) i
+  · refine' ⟨_, fun h => ⟨i, h, hi⟩⟩
+    rintro ⟨j, hj, h⟩
+    rwa [σ.injective (hi.trans h.symm)]
+    
+  · refine' iff_of_true ⟨σ.symm i, hs $ fun h => hi _, σ.apply_symm_apply _⟩ (hs hi)
+    convert congr_argₓ σ h <;> exact (σ.apply_symm_apply _).symm
+    
 
 theorem mem_map' (f : α ↪ β) {a} {s : Finset α} : f a ∈ s.map f ↔ a ∈ s :=
   mem_map_of_injective f.2
@@ -2914,6 +2935,10 @@ theorem disjoint_filter {s : Finset α} {p q : α → Prop} [DecidablePred p] [D
 theorem disjoint_filter_filter {s t : Finset α} {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
     Disjoint s t → Disjoint (s.filter p) (t.filter q) :=
   Disjoint.mono (filter_subset _ _) (filter_subset _ _)
+
+theorem disjoint_filter_filter_neg (s : Finset α) (p : α → Prop) [DecidablePred p] :
+    Disjoint (s.filter p) (s.filter $ fun a => ¬p a) :=
+  (disjoint_filter.2 $ fun a _ => id).symm
 
 theorem disjoint_iff_disjoint_coe {α : Type _} {a b : Finset α} [DecidableEq α] :
     Disjoint a b ↔ Disjoint (↑a : Set α) (↑b : Set α) := by

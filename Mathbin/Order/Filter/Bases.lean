@@ -451,20 +451,17 @@ theorem has_basis.inf_principal_ne_bot_iff (hl : l.has_basis p s) {t : Set α} :
     ne_bot (l⊓𝓟 t) ↔ ∀ ⦃i⦄ hi : p i, (s i ∩ t).Nonempty :=
   (hl.inf_principal t).ne_bot_iff
 
+theorem has_basis.disjoint_basis_iff (hl : l.has_basis p s) (hl' : l'.has_basis p' s') :
+    Disjoint l l' ↔ ∃ (i : _)(hi : p i)(i' : _)(hi' : p' i'), Disjoint (s i) (s' i') :=
+  not_iff_not.mp $ by
+    simp only [disjoint_iff, ← Ne.def, ← ne_bot_iff, hl.inf_basis_ne_bot_iff hl', not_exists, bot_eq_empty,
+      ne_empty_iff_nonempty, inf_eq_inter]
+
 theorem inf_ne_bot_iff : ne_bot (l⊓l') ↔ ∀ ⦃s : Set α⦄ hs : s ∈ l ⦃s'⦄ hs' : s' ∈ l', (s ∩ s').Nonempty :=
   l.basis_sets.inf_ne_bot_iff
 
 theorem inf_principal_ne_bot_iff {s : Set α} : ne_bot (l⊓𝓟 s) ↔ ∀, ∀ U ∈ l, ∀, (U ∩ s).Nonempty :=
   l.basis_sets.inf_principal_ne_bot_iff
-
-theorem inf_eq_bot_iff {f g : Filter α} : f⊓g = ⊥ ↔ ∃ U ∈ f, ∃ V ∈ g, U ∩ V = ∅ :=
-  not_iff_not.1 $
-    ne_bot_iff.symm.trans $
-      inf_ne_bot_iff.trans $ by
-        simp [← ne_empty_iff_nonempty]
-
-protected theorem disjoint_iff {f g : Filter α} : Disjoint f g ↔ ∃ U ∈ f, ∃ V ∈ g, U ∩ V = ∅ :=
-  disjoint_iff.trans inf_eq_bot_iff
 
 theorem mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ f⊓𝓟 (sᶜ) = ⊥ := by
   refine' not_iff_not.1 ((inf_principal_ne_bot_iff.trans _).symm.trans ne_bot_iff)
@@ -476,14 +473,26 @@ theorem mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ f
 theorem not_mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∉ f ↔ ne_bot (f⊓𝓟 (sᶜ)) :=
   (not_congr mem_iff_inf_principal_compl).trans ne_bot_iff.symm
 
-theorem mem_iff_disjoint_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ Disjoint f (𝓟 (sᶜ)) :=
-  mem_iff_inf_principal_compl.trans disjoint_iff.symm
+@[simp]
+theorem disjoint_principal_right {f : Filter α} {s : Set α} : Disjoint f (𝓟 s) ↔ sᶜ ∈ f := by
+  rw [mem_iff_inf_principal_compl, compl_compl, disjoint_iff]
 
-theorem le_iff_forall_disjoint_principal_compl {f g : Filter α} : f ≤ g ↔ ∀, ∀ V ∈ g, ∀, Disjoint f (𝓟 (Vᶜ)) :=
-  forall_congrₓ $ fun _ => forall_congrₓ $ fun _ => mem_iff_disjoint_principal_compl
+@[simp]
+theorem disjoint_principal_left {f : Filter α} {s : Set α} : Disjoint (𝓟 s) f ↔ sᶜ ∈ f := by
+  rw [Disjoint.comm, disjoint_principal_right]
+
+@[simp]
+theorem disjoint_principal_principal {s t : Set α} : Disjoint (𝓟 s) (𝓟 t) ↔ Disjoint s t := by
+  simp [disjoint_iff_subset_compl_left]
+
+alias disjoint_principal_principal ↔ _ Disjoint.filter_principal
+
+@[simp]
+theorem disjoint_pure_pure {x y : α} : Disjoint (pure x : Filter α) (pure y) ↔ x ≠ y := by
+  simp only [← principal_singleton, disjoint_principal_principal, disjoint_singleton]
 
 theorem le_iff_forall_inf_principal_compl {f g : Filter α} : f ≤ g ↔ ∀, ∀ V ∈ g, ∀, f⊓𝓟 (Vᶜ) = ⊥ :=
-  forall_congrₓ $ fun _ => forall_congrₓ $ fun _ => mem_iff_inf_principal_compl
+  forall₂_congrₓ $ fun _ _ => mem_iff_inf_principal_compl
 
 theorem inf_ne_bot_iff_frequently_left {f g : Filter α} :
     ne_bot (f⊓g) ↔ ∀ {p : α → Prop}, (∀ᶠ x in f, p x) → ∃ᶠ x in g, p x := by
@@ -551,7 +560,7 @@ theorem has_basis.comap (f : β → α) (hl : l.has_basis p s) : (l.comap f).Has
 theorem comap_has_basis (f : α → β) (l : Filter β) : has_basis (comap f l) (fun s : Set β => s ∈ l) fun s => f ⁻¹' s :=
   ⟨fun t => mem_comap⟩
 
-theorem has_basis.prod_self (hl : l.has_basis p s) : (l ×ᶠ l).HasBasis p fun i => (s i).Prod (s i) :=
+theorem has_basis.prod_self (hl : l.has_basis p s) : (l ×ᶠ l).HasBasis p fun i => s i ×ˢ s i :=
   ⟨by
     intro t
     apply mem_prod_iff.trans
@@ -564,7 +573,7 @@ theorem has_basis.prod_self (hl : l.has_basis p s) : (l ×ᶠ l).HasBasis p fun 
       exact ⟨s i, hl.mem_of_mem hi, s i, hl.mem_of_mem hi, H⟩
       ⟩
 
-theorem mem_prod_self_iff {s} : s ∈ l ×ᶠ l ↔ ∃ t ∈ l, Set.Prod t t ⊆ s :=
+theorem mem_prod_self_iff {s} : s ∈ l ×ᶠ l ↔ ∃ t ∈ l, t ×ˢ t ⊆ s :=
   l.basis_sets.prod_self.mem_iff
 
 theorem has_basis.sInter_sets (h : has_basis l p s) : ⋂₀l.sets = ⋂ (i) (hi : p i), s i := by
@@ -624,21 +633,21 @@ theorem tendsto.basis_both (H : tendsto f la lb) (hla : la.has_basis pa sa) (hlb
   (hla.tendsto_iff hlb).1 H
 
 theorem has_basis.prod'' (hla : la.has_basis pa sa) (hlb : lb.has_basis pb sb) :
-    (la ×ᶠ lb).HasBasis (fun i : PProd ι ι' => pa i.1 ∧ pb i.2) fun i => (sa i.1).Prod (sb i.2) :=
+    (la ×ᶠ lb).HasBasis (fun i : PProd ι ι' => pa i.1 ∧ pb i.2) fun i => sa i.1 ×ˢ sb i.2 :=
   (hla.comap Prod.fst).inf' (hlb.comap Prod.snd)
 
 theorem has_basis.prod {ι ι' : Type _} {pa : ι → Prop} {sa : ι → Set α} {pb : ι' → Prop} {sb : ι' → Set β}
     (hla : la.has_basis pa sa) (hlb : lb.has_basis pb sb) :
-    (la ×ᶠ lb).HasBasis (fun i : ι × ι' => pa i.1 ∧ pb i.2) fun i => (sa i.1).Prod (sb i.2) :=
+    (la ×ᶠ lb).HasBasis (fun i : ι × ι' => pa i.1 ∧ pb i.2) fun i => sa i.1 ×ˢ sb i.2 :=
   (hla.comap Prod.fst).inf (hlb.comap Prod.snd)
 
 theorem has_basis.prod' {la : Filter α} {lb : Filter β} {ι : Type _} {p : ι → Prop} {sa : ι → Set α} {sb : ι → Set β}
     (hla : la.has_basis p sa) (hlb : lb.has_basis p sb)
-    (h_dir : ∀ {i j}, p i → p j → ∃ k, p k ∧ sa k ⊆ sa i ∧ sb k ⊆ sb j) :
-    (la ×ᶠ lb).HasBasis p fun i => (sa i).Prod (sb i) := by
+    (h_dir : ∀ {i j}, p i → p j → ∃ k, p k ∧ sa k ⊆ sa i ∧ sb k ⊆ sb j) : (la ×ᶠ lb).HasBasis p fun i => sa i ×ˢ sb i :=
+  by
   simp only [has_basis_iff, (hla.prod hlb).mem_iff]
   refine' fun t => ⟨_, _⟩
-  · rintro ⟨⟨i, j⟩, ⟨hi, hj⟩, hsub : (sa i).Prod (sb j) ⊆ t⟩
+  · rintro ⟨⟨i, j⟩, ⟨hi, hj⟩, hsub : sa i ×ˢ sb j ⊆ t⟩
     rcases h_dir hi hj with ⟨k, hk, ki, kj⟩
     exact ⟨k, hk, (Set.prod_mono ki kj).trans hsub⟩
     
@@ -677,7 +686,7 @@ structure countable_filter_basis (α : Type _) extends FilterBasis α where
   Countable : countable sets
 
 instance nat.inhabited_countable_filter_basis : Inhabited (countable_filter_basis ℕ) :=
-  ⟨{ default $ FilterBasis ℕ with Countable := countable_range fun n => Ici n }⟩
+  ⟨{ (default : FilterBasis ℕ) with Countable := countable_range fun n => Ici n }⟩
 
 theorem has_countable_basis.is_countably_generated {f : Filter α} {p : ι → Prop} {s : ι → Set α}
     (h : f.has_countable_basis p s) : f.is_countably_generated :=

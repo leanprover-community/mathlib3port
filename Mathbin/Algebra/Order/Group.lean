@@ -1033,13 +1033,13 @@ theorem exists_one_lt' [Nontrivial α] : ∃ a : α, 1 < a := by
     
 
 @[to_additive]
-instance (priority := 100) LinearOrderedCommGroup.to_no_top_order [Nontrivial α] : NoTopOrder α :=
+instance (priority := 100) LinearOrderedCommGroup.to_no_max_order [Nontrivial α] : NoMaxOrder α :=
   ⟨by
     obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt'
     exact fun a => ⟨a * y, lt_mul_of_one_lt_right' a hy⟩⟩
 
 @[to_additive]
-instance (priority := 100) LinearOrderedCommGroup.to_no_bot_order [Nontrivial α] : NoBotOrder α :=
+instance (priority := 100) LinearOrderedCommGroup.to_no_min_order [Nontrivial α] : NoMinOrder α :=
   ⟨by
     obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt'
     exact fun a => ⟨a / y, (div_lt_self_iff a).mpr hy⟩⟩

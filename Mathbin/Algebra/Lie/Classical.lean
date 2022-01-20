@@ -327,11 +327,11 @@ theorem indefinite_diagonal_assoc :
   ext i j
   rcases i with ⟨⟨i₁ | i₂⟩ | i₃⟩ <;>
     rcases j with ⟨⟨j₁ | j₂⟩ | j₃⟩ <;>
-      simp only [indefinite_diagonal, Matrix.diagonalₓ, Equivₓ.sum_assoc_apply_in1, Matrix.reindex_lie_equiv_apply,
+      simp only [indefinite_diagonal, Matrix.diagonalₓ, Equivₓ.sum_assoc_apply_inl_inl, Matrix.reindex_lie_equiv_apply,
           Matrix.minor_apply, Equivₓ.symm_symm, Matrix.reindex_apply, Sum.elim_inl, if_true, eq_self_iff_true,
-          Matrix.one_apply_eq, Matrix.from_blocks_apply₁₁, Dmatrix.zero_apply, Equivₓ.sum_assoc_apply_in2, if_false,
+          Matrix.one_apply_eq, Matrix.from_blocks_apply₁₁, Dmatrix.zero_apply, Equivₓ.sum_assoc_apply_inl_inr, if_false,
           Matrix.from_blocks_apply₁₂, Matrix.from_blocks_apply₂₁, Matrix.from_blocks_apply₂₂,
-          Equivₓ.sum_assoc_apply_in3, Sum.elim_inr] <;>
+          Equivₓ.sum_assoc_apply_inr, Sum.elim_inr] <;>
         congr
 
 /-- An equivalence between two possible definitions of the classical Lie algebra of type B. -/

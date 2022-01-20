@@ -24,8 +24,6 @@ This file introduces abstract configurations of points and lines, and proves som
 Together, these four statements say that any two of the following properties imply the third:
 (a) `has_lines`, (b) `has_points`, (c) `|P| = |L|`.
 
-## Todo
-* Abstract projective planes.
 -/
 
 
@@ -306,6 +304,94 @@ noncomputable def has_points.has_lines [has_points P L] [Fintype P] [Fintype L] 
     has_lines P L :=
   let this := @has_lines.has_points (dual L) (dual P) _ _ _ _ h.symm
   { mkLine := this.mk_point, mk_line_ax := this.mk_point_ax }
+
+variable (P L)
+
+/-- A projective plane is a nondegenerate configuration in which every pair of lines has
+  an intersection point, every pair of points has a line through them,
+  and which has three points in general position. -/
+class projective_plane extends nondegenerate P L : Type u where
+  mkPoint : ∀ {l₁ l₂ : L} h : l₁ ≠ l₂, P
+  mk_point_ax : ∀ {l₁ l₂ : L} h : l₁ ≠ l₂, mk_point h ∈ l₁ ∧ mk_point h ∈ l₂
+  mkLine : ∀ {p₁ p₂ : P} h : p₁ ≠ p₂, L
+  mk_line_ax : ∀ {p₁ p₂ : P} h : p₁ ≠ p₂, p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
+  exists_config :
+    ∃ (p₁ p₂ p₃ : P)(l₁ l₂ l₃ : L), p₁ ∉ l₂ ∧ p₁ ∉ l₃ ∧ p₂ ∉ l₁ ∧ p₂ ∈ l₂ ∧ p₂ ∈ l₃ ∧ p₃ ∉ l₁ ∧ p₃ ∈ l₂ ∧ p₃ ∉ l₃
+
+namespace ProjectivePlane
+
+instance (priority := 100) has_points [h : projective_plane P L] : has_points P L :=
+  { h with }
+
+instance (priority := 100) has_lines [h : projective_plane P L] : has_lines P L :=
+  { h with }
+
+instance [projective_plane P L] : projective_plane (dual L) (dual P) :=
+  { dual.nondegenerate P L with mkLine := @mk_point P L _ _, mk_line_ax := fun _ _ => mk_point_ax,
+    mkPoint := @mk_line P L _ _, mk_point_ax := fun _ _ => mk_line_ax,
+    exists_config := by
+      obtain ⟨p₁, p₂, p₃, l₁, l₂, l₃, h₁₂, h₁₃, h₂₁, h₂₂, h₂₃, h₃₁, h₃₂, h₃₃⟩ := @exists_config P L _ _
+      exact ⟨l₁, l₂, l₃, p₁, p₂, p₃, h₂₁, h₃₁, h₁₂, h₂₂, h₃₂, h₁₃, h₂₃, h₃₃⟩ }
+
+/-- The order of a projective plane is one less than the number of lines through an arbitrary point.
+Equivalently, it is one less than the number of points on an arbitrary line. -/
+noncomputable def order [projective_plane P L] : ℕ :=
+  line_count L (Classical.some (@exists_config P L _ _)) - 1
+
+variable [Fintype P] [Fintype L]
+
+theorem card_points_eq_card_lines [projective_plane P L] : Fintype.card P = Fintype.card L :=
+  le_antisymmₓ (has_lines.card_le P L) (has_points.card_le P L)
+
+variable {P} (L)
+
+theorem line_count_eq_line_count [projective_plane P L] (p q : P) : line_count L p = line_count L q := by
+  obtain ⟨p₁, p₂, p₃, l₁, l₂, l₃, h₁₂, h₁₃, h₂₁, h₂₂, h₂₃, h₃₁, h₃₂, h₃₃⟩ := exists_config
+  have h := card_points_eq_card_lines P L
+  let n := line_count L p₂
+  have hp₂ : line_count L p₂ = n := rfl
+  have hl₁ : point_count P l₁ = n := (has_lines.line_count_eq_point_count h h₂₁).symm.trans hp₂
+  have hp₃ : line_count L p₃ = n := (has_lines.line_count_eq_point_count h h₃₁).trans hl₁
+  have hl₃ : point_count P l₃ = n := (has_lines.line_count_eq_point_count h h₃₃).symm.trans hp₃
+  have hp₁ : line_count L p₁ = n := (has_lines.line_count_eq_point_count h h₁₃).trans hl₃
+  have hl₂ : point_count P l₂ = n := (has_lines.line_count_eq_point_count h h₁₂).symm.trans hp₁
+  suffices ∀ p : P, line_count L p = n by
+    exact (this p).trans (this q).symm
+  refine' fun p => or_not.elim (fun h₂ => _) fun h₂ => (has_lines.line_count_eq_point_count h h₂).trans hl₂
+  refine' or_not.elim (fun h₃ => _) fun h₃ => (has_lines.line_count_eq_point_count h h₃).trans hl₃
+  rwa [(eq_or_eq h₂ h₂₂ h₃ h₂₃).resolve_right fun h => h₃₃ ((congr_argₓ (HasMem.Mem p₃) h).mp h₃₂)]
+
+variable (P) {L}
+
+theorem point_count_eq_point_count [projective_plane P L] (l m : L) : point_count P l = point_count P m :=
+  line_count_eq_line_count (dual P) l m
+
+variable {P L}
+
+theorem line_count_eq_point_count [projective_plane P L] (p : P) (l : L) : line_count L p = point_count P l :=
+  Exists.elim (exists_point l) fun q hq =>
+    (line_count_eq_line_count L p q).trans (has_lines.line_count_eq_point_count (card_points_eq_card_lines P L) hq)
+
+variable (P L)
+
+theorem dual.order [projective_plane P L] : order (dual L) (dual P) = order P L :=
+  congr_argₓ (fun n => n - 1) (line_count_eq_point_count _ _)
+
+variable {P} (L)
+
+theorem line_count_eq [projective_plane P L] (p : P) : line_count L p = order P L + 1 := by
+  classical
+  obtain ⟨q, -, -, l, -, -, -, -, h, -⟩ := Classical.some_spec (@exists_config P L _ _)
+  rw [order, line_count_eq_line_count L p q, line_count_eq_line_count L (Classical.some _) q, line_count,
+    Nat.card_eq_fintype_card, Nat.sub_add_cancelₓ]
+  exact fintype.card_pos_iff.mpr ⟨⟨l, h⟩⟩
+
+variable (P) {L}
+
+theorem point_count_eq [projective_plane P L] (l : L) : point_count P l = order P L + 1 :=
+  (line_count_eq (dual P) l).trans (congr_argₓ (fun n => n + 1) (dual.order P L))
+
+end ProjectivePlane
 
 end Configuration
 

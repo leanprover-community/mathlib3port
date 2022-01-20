@@ -36,7 +36,7 @@ inductive cofix_a : ℕ → Type u
 /-- default inhabitant of `cofix_a` -/
 protected def cofix_a.default [Inhabited F.A] : ∀ n, cofix_a F n
   | 0 => cofix_a.continue
-  | succ n => cofix_a.intro (default _) $ fun _ => cofix_a.default n
+  | succ n => cofix_a.intro default $ fun _ => cofix_a.default n
 
 instance [Inhabited F.A] {n} : Inhabited (cofix_a F n) :=
   ⟨cofix_a.default F n⟩
@@ -174,12 +174,12 @@ structure M_intl where
 def M :=
   M_intl F
 
-theorem M.default_consistent [Inhabited F.A] : ∀ n, agree (default (cofix_a F n)) (default (cofix_a F (succ n)))
+theorem M.default_consistent [Inhabited F.A] : ∀ n, agree (default : cofix_a F n) default
   | 0 => agree.continue _ _
   | succ n => agree.intro _ _ $ fun _ => M.default_consistent n
 
 instance M.inhabited [Inhabited F.A] : Inhabited (M F) :=
-  ⟨{ approx := fun n => default _, consistent := M.default_consistent _ }⟩
+  ⟨{ approx := fun n => default, consistent := M.default_consistent _ }⟩
 
 instance M_intl.inhabited [Inhabited F.A] : Inhabited (M_intl F) :=
   show Inhabited (M F) by
@@ -238,7 +238,7 @@ def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.Idx) (x : M F) : M F :=
         (congr_argₓ _ $ by
           simp only [head, H'] <;> rfl)
         i.2)
-  else default _
+  else default
 
 theorem head_succ (n m : ℕ) (x : M F) : head' (x.approx (succ n)) = head' (x.approx (succ m)) :=
   head_succ' n m _ x.consistent
@@ -459,7 +459,7 @@ def isubtree [DecidableEq F.A] [Inhabited (M F)] : path F → M F → M F
               (by
                 rw [h])
               i)
-      else default (M F) :
+      else default :
         (fun x => M F) (M.mk ⟨a', f⟩))
 
 /-- similar to `isubtree` but returns the data at the end of the path instead
@@ -467,7 +467,7 @@ of the whole subtree -/
 def iselect [DecidableEq F.A] [Inhabited (M F)] (ps : path F) : M F → F.A := fun x : M F => head $ isubtree ps x
 
 theorem iselect_eq_default [DecidableEq F.A] [Inhabited (M F)] (ps : path F) (x : M F) (h : ¬is_path ps x) :
-    iselect ps x = head (default $ M F) := by
+    iselect ps x = head default := by
   induction ps generalizing x
   · exfalso
     apply h

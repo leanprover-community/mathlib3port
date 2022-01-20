@@ -1,6 +1,7 @@
 import Mathbin.CategoryTheory.Limits.Constructions.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Limits.Shapes.Images
+import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
 import Mathbin.CategoryTheory.Abelian.NonPreadditive
 
 /-!
@@ -376,6 +377,12 @@ instance (priority := 100) has_coequalizers : has_coequalizers C :=
 /-- Any abelian category has pushouts -/
 instance (priority := 100) has_pushouts : has_pushouts C :=
   has_pushouts_of_has_binary_coproducts_of_has_coequalizers C
+
+instance (priority := 100) has_finite_limits : has_finite_limits C :=
+  limits.finite_limits_from_equalizers_and_finite_products
+
+instance (priority := 100) has_finite_colimits : has_finite_colimits C :=
+  limits.finite_colimits_from_coequalizers_and_finite_coproducts
 
 end
 

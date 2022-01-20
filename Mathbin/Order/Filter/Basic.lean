@@ -126,16 +126,19 @@ protected theorem ext : (∀ s, s ∈ f ↔ s ∈ g) → f = g :=
 theorem univ_mem : univ ∈ f :=
   f.univ_sets
 
-theorem mem_of_superset : ∀ {x y : Set α}, x ∈ f → x ⊆ y → y ∈ f :=
-  f.sets_of_superset
+theorem mem_of_superset {x y : Set α} (hx : x ∈ f) (hxy : x ⊆ y) : y ∈ f :=
+  f.sets_of_superset hx hxy
 
-theorem inter_mem : ∀ {s t}, s ∈ f → t ∈ f → s ∩ t ∈ f :=
-  f.inter_sets
+theorem inter_mem {s t : Set α} (hs : s ∈ f) (ht : t ∈ f) : s ∩ t ∈ f :=
+  f.inter_sets hs ht
 
 @[simp]
-theorem inter_mem_iff {s t} : s ∩ t ∈ f ↔ s ∈ f ∧ t ∈ f :=
+theorem inter_mem_iff {s t : Set α} : s ∩ t ∈ f ↔ s ∈ f ∧ t ∈ f :=
   ⟨fun h => ⟨mem_of_superset h (inter_subset_left s t), mem_of_superset h (inter_subset_right s t)⟩,
     and_imp.2 inter_mem⟩
+
+theorem diff_mem {s t : Set α} (hs : s ∈ f) (ht : tᶜ ∈ f) : s \ t ∈ f :=
+  inter_mem hs ht
 
 theorem univ_mem' (h : ∀ a, a ∈ s) : s ∈ f :=
   mem_of_superset univ_mem fun x _ => h x
@@ -403,7 +406,7 @@ instance : CompleteLattice (Filter α) :=
     (join ∘ 𝓟)
     (by
       ext s x
-      exact (@mem_bInter_iff _ _ s Filter.Sets x).symm.trans (Set.ext_iff.1 (sInter_image _ _) x).symm)
+      exact mem_Inter₂.symm.trans (Set.ext_iff.1 (sInter_image _ _) x).symm)
     _ rfl
 
 end CompleteLattice
@@ -600,11 +603,15 @@ theorem compl_not_mem {f : Filter α} {s : Set α} [ne_bot f] (h : s ∈ f) : s�
 theorem filter_eq_bot_of_is_empty [IsEmpty α] (f : Filter α) : f = ⊥ :=
   empty_mem_iff_bot.mp $ univ_mem' isEmptyElim
 
+protected theorem disjoint_iff {f g : Filter α} : Disjoint f g ↔ ∃ s ∈ f, ∃ t ∈ g, Disjoint s t := by
+  simp only [disjoint_iff, ← empty_mem_iff_bot, mem_inf_iff, inf_eq_inter, bot_eq_empty, @eq_comm _ ∅]
+
 theorem disjoint_of_disjoint_of_mem {f g : Filter α} {s t : Set α} (h : Disjoint s t) (hs : s ∈ f) (ht : t ∈ g) :
-    Disjoint f g := by
-  refine' le_of_eqₓ (empty_mem_iff_bot.1 _)
-  rw [← Set.disjoint_iff_inter_eq_empty.1 h]
-  exact inter_mem_inf hs ht
+    Disjoint f g :=
+  Filter.disjoint_iff.mpr ⟨s, hs, t, ht, h⟩
+
+theorem inf_eq_bot_iff {f g : Filter α} : f⊓g = ⊥ ↔ ∃ U ∈ f, ∃ V ∈ g, U ∩ V = ∅ := by
+  simpa only [disjoint_iff] using Filter.disjoint_iff
 
 /-- There is exactly one filter on an empty type. --/
 @[local instance]
@@ -1649,7 +1656,7 @@ theorem comap_comap {m : γ → β} {n : β → α} : comap m (comap n f) = coma
     fun c ⟨b, ⟨a, ha, (h₁ : preimage n a ⊆ b)⟩, (h₂ : preimage m b ⊆ c)⟩ =>
     ⟨a, ha, show preimage m (preimage n a) ⊆ c from (preimage_mono h₁).trans h₂⟩
 
-section Comm
+section comm
 
 variable {δ : Type _}
 
@@ -1675,7 +1682,7 @@ theorem map_comm (F : Filter α) : map ψ (map φ F) = map ρ (map θ F) := by
 theorem comap_comm (G : Filter δ) : comap φ (comap ψ G) = comap θ (comap ρ G) := by
   rw [Filter.comap_comap, H, ← Filter.comap_comap]
 
-end Comm
+end comm
 
 @[simp]
 theorem comap_principal {t : Set β} : comap m (𝓟 t) = 𝓟 (m ⁻¹' t) :=
@@ -1781,7 +1788,7 @@ theorem subtype_coe_map_comap (s : Set α) (f : Filter α) : map (coeₓ : s →
   rw [map_comap, Subtype.range_coe]
 
 theorem subtype_coe_map_comap_prod (s : Set α) (f : Filter (α × α)) :
-    map (coeₓ : s × s → α × α) (comap (coeₓ : s × s → α × α) f) = f⊓𝓟 (s.prod s) := by
+    map (coeₓ : s × s → α × α) (comap (coeₓ : s × s → α × α) f) = f⊓𝓟 (s ×ˢ s) := by
   have : (coeₓ : s × s → α × α) = fun x => (x.1, x.2) := by
     ext ⟨x, y⟩ <;> rfl
   simp [this, map_comap, ← prod_range_range_eq]
@@ -1873,9 +1880,9 @@ theorem comap_eval_ne_bot_iff' {ι : Type _} {α : ι → Type _} {i : ι} {f : 
     (comap (eval i) f).ne_bot ↔ (∀ j, Nonempty (α j)) ∧ ne_bot f := by
   cases' is_empty_or_nonempty (∀ j, α j) with H H
   · rw [filter_eq_bot_of_is_empty (f.comap _), ← not_iff_not] <;> [skip, assumption]
-    simpa [← Classical.nonempty_pi] using H.elim
+    simpa [← Classical.nonempty_piₓ] using H.elim
     
-  · have : ∀ j, Nonempty (α j) := Classical.nonempty_pi.1 H
+  · have : ∀ j, Nonempty (α j) := Classical.nonempty_piₓ.1 H
     simp [comap_ne_bot_iff_frequently, *]
     
 
@@ -1912,7 +1919,7 @@ theorem map_eq_bot_iff : map m f = ⊥ ↔ f = ⊥ :=
   ⟨by
     rw [← empty_mem_iff_bot, ← empty_mem_iff_bot]
     exact id, fun h => by
-    simp only [h, eq_self_iff_true, map_bot]⟩
+    simp only [h, map_bot]⟩
 
 theorem map_ne_bot_iff (f : α → β) {F : Filter α} : ne_bot (map f F) ↔ ne_bot F := by
   simp only [ne_bot_iff, Ne, map_eq_bot_iff]
@@ -1998,7 +2005,7 @@ theorem map_eq_comap_of_inverse {f : Filter α} {m : α → β} {n : β → α} 
         simp only [h₁] <;> apply subset.refl⟩
 
 theorem map_swap_eq_comap_swap {f : Filter (α × β)} : Prod.swap <$> f = comap Prod.swap f :=
-  map_eq_comap_of_inverse Prod.swap_swap_eqₓ Prod.swap_swap_eqₓ
+  map_eq_comap_of_inverse Prod.swap_swap_eq Prod.swap_swap_eq
 
 theorem le_map {f : Filter α} {m : α → β} {g : Filter β} (h : ∀, ∀ s ∈ f, ∀, m '' s ∈ g) : g ≤ f.map m := fun s hs =>
   mem_of_superset (h _ hs) $ image_preimage_subset _ _
@@ -2461,11 +2468,11 @@ protected def Prod (f : Filter α) (g : Filter β) : Filter (α × β) :=
 localized [Filter] infixl:60 " ×ᶠ " => Filter.prod
 
 theorem prod_mem_prod {s : Set α} {t : Set β} {f : Filter α} {g : Filter β} (hs : s ∈ f) (ht : t ∈ g) :
-    Set.Prod s t ∈ f ×ᶠ g :=
+    s ×ˢ t ∈ f ×ᶠ g :=
   inter_mem_inf (preimage_mem_comap hs) (preimage_mem_comap ht)
 
-theorem mem_prod_iff {s : Set (α × β)} {f : Filter α} {g : Filter β} :
-    s ∈ f ×ᶠ g ↔ ∃ t₁ ∈ f, ∃ t₂ ∈ g, Set.Prod t₁ t₂ ⊆ s := by
+theorem mem_prod_iff {s : Set (α × β)} {f : Filter α} {g : Filter β} : s ∈ f ×ᶠ g ↔ ∃ t₁ ∈ f, ∃ t₂ ∈ g, t₁ ×ˢ t₂ ⊆ s :=
+  by
   simp only [Filter.prod]
   constructor
   · rintro ⟨t₁, ⟨s₁, hs₁, hts₁⟩, t₂, ⟨s₂, hs₂, hts₂⟩, rfl⟩
@@ -2477,7 +2484,7 @@ theorem mem_prod_iff {s : Set (α × β)} {f : Filter α} {g : Filter β} :
 
 @[simp]
 theorem prod_mem_prod_iff {s : Set α} {t : Set β} {f : Filter α} {g : Filter β} [f.ne_bot] [g.ne_bot] :
-    s.prod t ∈ f ×ᶠ g ↔ s ∈ f ∧ t ∈ g :=
+    s ×ˢ t ∈ f ×ᶠ g ↔ s ∈ f ∧ t ∈ g :=
   ⟨fun h =>
     let ⟨s', hs', t', ht', H⟩ := mem_prod_iff.1 h
     (prod_subset_prod_iff.1 H).elim (fun ⟨hs's, ht't⟩ => ⟨mem_of_superset hs' hs's, mem_of_superset ht' ht't⟩) fun h =>
@@ -2488,17 +2495,11 @@ theorem prod_mem_prod_iff {s : Set α} {t : Set β} {f : Filter α} {g : Filter 
 theorem mem_prod_principal {f : Filter α} {s : Set (α × β)} {t : Set β} :
     s ∈ f ×ᶠ 𝓟 t ↔ { a | ∀, ∀ b ∈ t, ∀, (a, b) ∈ s } ∈ f := by
   rw [← @exists_mem_subset_iff _ f, mem_prod_iff]
-  apply exists_congr
-  intro u
-  apply exists_congr
-  intro u_in
-  constructor
+  refine' exists₂_congrₓ fun u u_in => ⟨_, fun h => ⟨t, mem_principal_self t, _⟩⟩
   · rintro ⟨v, v_in, hv⟩ a a_in b b_in
     exact hv (mk_mem_prod a_in $ v_in b_in)
     
-  · intro h
-    refine' ⟨t, mem_principal_self t, _⟩
-    rintro ⟨x, y⟩ ⟨hx, hy⟩
+  · rintro ⟨x, y⟩ ⟨hx, hy⟩
     exact h hx y hy
     
 
@@ -2584,8 +2585,7 @@ theorem prod_map_map_eq {α₁ : Type u} {α₂ : Type v} {β₁ : Type w} {β�
       let ⟨s₁, hs₁, s₂, hs₂, h⟩ := mem_prod_iff.mp hs
       Filter.sets_of_superset _ (prod_mem_prod (image_mem_map hs₁) (image_mem_map hs₂)) $
         calc
-          Set.Prod (m₁ '' s₁) (m₂ '' s₂) = (fun p : α₁ × α₂ => (m₁ p.1, m₂ p.2)) '' Set.Prod s₁ s₂ :=
-            Set.prod_image_image_eq
+          m₁ '' s₁ ×ˢ m₂ '' s₂ = (fun p : α₁ × α₂ => (m₁ p.1, m₂ p.2)) '' (s₁ ×ˢ s₂) := Set.prod_image_image_eq
           _ ⊆ _ := by
             rwa [image_subset_iff]
           )
@@ -2624,7 +2624,7 @@ theorem bot_prod {g : Filter β} : (⊥ : Filter α) ×ᶠ g = ⊥ := by
   simp [Filter.prod]
 
 @[simp]
-theorem prod_principal_principal {s : Set α} {t : Set β} : 𝓟 s ×ᶠ 𝓟 t = 𝓟 (Set.Prod s t) := by
+theorem prod_principal_principal {s : Set α} {t : Set β} : 𝓟 s ×ᶠ 𝓟 t = 𝓟 (s ×ˢ t) := by
   simp only [Filter.prod, comap_principal, principal_eq_iff_eq, comap_principal, inf_principal] <;> rfl
 
 @[simp]
@@ -2701,7 +2701,7 @@ theorem coprod_ne_bot_left [ne_bot f] [Nonempty β] : (f.coprod g).ne_bot :=
 theorem coprod_ne_bot_right [ne_bot g] [Nonempty α] : (f.coprod g).ne_bot :=
   coprod_ne_bot_iff.2 (Or.inr ⟨‹_›, ‹_›⟩)
 
-theorem principal_coprod_principal (s : Set α) (t : Set β) : (𝓟 s).coprod (𝓟 t) = 𝓟 (sᶜ.Prod (tᶜ)ᶜ) := by
+theorem principal_coprod_principal (s : Set α) (t : Set β) : (𝓟 s).coprod (𝓟 t) = 𝓟 ((sᶜ ×ˢ tᶜ)ᶜ) := by
   rw [Filter.coprod, comap_principal, comap_principal, sup_principal]
   congr
   ext x
@@ -2720,7 +2720,7 @@ Together with the next lemma, `map_prod_map_const_id_principal_coprod_principal`
 example showing that the inequality in the lemma `map_prod_map_coprod_le` can be strict. -/
 theorem map_const_principal_coprod_map_id_principal {α β ι : Type _} (a : α) (b : β) (i : ι) :
     (map (fun _ : α => b) (𝓟 {a})).coprod (map id (𝓟 {i})) =
-      𝓟 (({b} : Set β).Prod (univ : Set ι) ∪ (univ : Set β).Prod {i}) :=
+      𝓟 (({b} : Set β) ×ˢ (univ : Set ι) ∪ (univ : Set β) ×ˢ ({i} : Set ι)) :=
   by
   rw [map_principal, map_principal, principal_coprod_principal]
   congr
@@ -2734,7 +2734,7 @@ identity function.  Together with the previous lemma,
 `map_const_principal_coprod_map_id_principal`, this provides an example showing that the inequality
 in the lemma `map_prod_map_coprod_le` can be strict. -/
 theorem map_prod_map_const_id_principal_coprod_principal {α β ι : Type _} (a : α) (b : β) (i : ι) :
-    map (Prod.map (fun _ : α => b) id) ((𝓟 {a}).coprod (𝓟 {i})) = 𝓟 (({b} : Set β).Prod (univ : Set ι)) := by
+    map (Prod.map (fun _ : α => b) id) ((𝓟 {a}).coprod (𝓟 {i})) = 𝓟 (({b} : Set β) ×ˢ (univ : Set ι)) := by
   rw [principal_coprod_principal, map_principal]
   congr
   ext ⟨b', i'⟩

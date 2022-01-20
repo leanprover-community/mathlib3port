@@ -194,7 +194,8 @@ namespace Enat
 open_locale Classical
 
 noncomputable instance : CompleteLinearOrder Enat :=
-  { Enat.linearOrder, with_top_order_iso.symm.toGaloisInsertion.liftCompleteLattice with }
+  { Enat.lattice, with_top_order_iso.symm.toGaloisInsertion.liftCompleteLattice, Enat.linearOrder with inf := ·⊓·,
+    sup := ·⊔·, top := ⊤, bot := ⊥, le := · ≤ ·, lt := · < · }
 
 end Enat
 

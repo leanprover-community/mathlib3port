@@ -94,7 +94,7 @@ theorem CompleteLattice.independent_iff_sup_indep [CompleteLattice α] {s : Fins
     CompleteLattice.Independent (f ∘ (coeₓ : s → ι)) ↔ s.sup_indep f := by
   classical
   rw [Finset.sup_indep_iff_disjoint_erase]
-  refine' subtype.forall.trans (forall_congrₓ $ fun a => forall_congrₓ $ fun b => _)
+  refine' subtype.forall.trans (forall₂_congrₓ $ fun a b => _)
   rw [Finset.sup_eq_supr]
   congr 2
   refine' supr_subtype.trans _

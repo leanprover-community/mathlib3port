@@ -116,8 +116,8 @@ theorem univ_eq_empty [IsEmpty α] : (univ : Finset α) = ∅ :=
   univ_eq_empty_iff.2 ‹_›
 
 @[simp]
-theorem univ_unique [Unique α] : (univ : Finset α) = {default α} :=
-  Finset.ext $ fun x => iff_of_true (mem_univ _) $ mem_singleton.2 $ Subsingleton.elimₓ x $ default α
+theorem univ_unique [Unique α] : (univ : Finset α) = {default} :=
+  Finset.ext $ fun x => iff_of_true (mem_univ _) $ mem_singleton.2 $ Subsingleton.elimₓ x default
 
 @[simp]
 theorem subset_univ (s : Finset α) : s ⊆ univ := fun a _ => mem_univ a
@@ -553,6 +553,12 @@ theorem of_equiv_card [Fintype α] (f : α ≃ β) : @card β (of_equiv α f) = 
 theorem card_congr {α β} [Fintype α] [Fintype β] (f : α ≃ β) : card α = card β := by
   rw [← of_equiv_card f] <;> congr
 
+@[congr]
+theorem card_congr' {α β} [Fintype α] [Fintype β] (h : α = β) : card α = card β :=
+  card_congr
+    (by
+      rw [h])
+
 section
 
 variable [Fintype α] [Fintype β]
@@ -619,7 +625,7 @@ theorem card_of_subsingleton (a : α) [Subsingleton α] : @Fintype.card _ (of_su
 
 @[simp]
 theorem card_unique [Unique α] [h : Fintype α] : Fintype.card α = 1 :=
-  Subsingleton.elimₓ (of_subsingleton $ default α) h ▸ card_of_subsingleton _
+  Subsingleton.elimₓ (of_subsingleton default) h ▸ card_of_subsingleton _
 
 instance (priority := 100) of_is_empty [IsEmpty α] : Fintype α :=
   ⟨∅, isEmptyElim⟩
@@ -651,6 +657,10 @@ namespace Set
 /-- Construct a finset enumerating a set `s`, given a `fintype` instance.  -/
 def to_finset (s : Set α) [Fintype s] : Finset α :=
   ⟨(@Finset.univ s _).1.map Subtype.val, Multiset.nodup_map (fun a b => Subtype.eq) Finset.univ.2⟩
+
+@[congr]
+theorem to_finset_congr {s t : Set α} [Fintype s] [Fintype t] (h : s = t) : to_finset s = to_finset t := by
+  cc
 
 @[simp]
 theorem mem_to_finset {s : Set α} [Fintype s] {a : α} : a ∈ s.to_finset ↔ a ∈ s := by
@@ -796,7 +806,7 @@ theorem Finₓ.univ_succ_above (n : ℕ) (p : Finₓ (n + 1)) :
 
 @[instance]
 def Unique.fintype {α : Type _} [Unique α] : Fintype α :=
-  Fintype.ofSubsingleton (default α)
+  Fintype.ofSubsingleton default
 
 /-- Short-circuit instance to decrease search for `unique.fintype`,
 since that relies on a subsingleton elimination for `unique`. -/
@@ -1117,6 +1127,12 @@ theorem card_eq_one_of_forall_eq {i : α} (h : ∀ j, j = i) : card α = 1 :=
 
 theorem one_lt_card [h : Nontrivial α] : 1 < Fintype.card α :=
   Fintype.one_lt_card_iff_nontrivial.mpr h
+
+theorem one_lt_card_iff : 1 < card α ↔ ∃ a b : α, a ≠ b :=
+  one_lt_card_iff_nontrivial.trans nontrivial_iff
+
+theorem two_lt_card_iff : 2 < card α ↔ ∃ a b c : α, a ≠ b ∧ a ≠ c ∧ b ≠ c := by
+  simp_rw [← Finset.card_univ, two_lt_card_iff, mem_univ, true_andₓ]
 
 theorem injective_iff_surjective {f : α → α} : injective f ↔ surjective f :=
   have := Classical.propDecidable
@@ -1898,7 +1914,7 @@ instance [Infinite α] : Infinite (Finset α) :=
 
 instance [Nonempty α] : Infinite (Multiset α) := by
   inhabit α
-  exact of_injective (Multiset.repeat (default α)) (Multiset.repeat_injective _)
+  exact of_injective (Multiset.repeat default) (Multiset.repeat_injective _)
 
 instance [Nonempty α] : Infinite (List α) :=
   of_surjective (coeₓ : List α → Multiset α) (surjective_quot_mk _)

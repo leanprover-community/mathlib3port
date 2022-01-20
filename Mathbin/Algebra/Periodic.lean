@@ -2,7 +2,7 @@ import Mathbin.Algebra.Field.Opposite
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Data.Int.Parity
-import Mathbin.GroupTheory.Subgroup.Basic
+import Mathbin.GroupTheory.Coset
 
 /-!
 # Periodicity
@@ -213,6 +213,14 @@ theorem periodic.map_vadd_multiples [AddCommMonoidₓ α] (hf : periodic f c) (a
     f (a +ᵥ x) = f x := by
   rcases a with ⟨_, m, rfl⟩
   simp [AddSubmonoid.vadd_def, add_commₓ _ x, hf.nsmul m x]
+
+/-- Lift a periodic function to a function from the quotient group. -/
+def periodic.lift [AddGroupₓ α] (h : periodic f c) (x : α ⧸ AddSubgroup.zmultiples c) : β :=
+  Quotientₓ.liftOn' x f $ fun a b ⟨k, hk⟩ => (h.zsmul k _).symm.trans $ congr_argₓ f $ add_eq_of_eq_neg_add hk
+
+@[simp]
+theorem periodic.lift_coe [AddGroupₓ α] (h : periodic f c) (a : α) : h.lift (a : α ⧸ AddSubgroup.zmultiples c) = f a :=
+  rfl
 
 /-! ### Antiperiodicity -/
 

@@ -86,17 +86,17 @@ theorem is_bounded.is_bounded_under {q : β → β → Prop} {u : α → β} (hf
     f.is_bounded r → f.is_bounded_under q u
   | ⟨b, h⟩ => ⟨u b, show ∀ᶠ x in f, q (u x) (u b) from h.mono fun x => hf x b⟩
 
-theorem not_is_bounded_under_of_tendsto_at_top [Preorderₓ β] [NoTopOrder β] {f : α → β} {l : Filter α} [l.ne_bot]
+theorem not_is_bounded_under_of_tendsto_at_top [Preorderₓ β] [NoMaxOrder β] {f : α → β} {l : Filter α} [l.ne_bot]
     (hf : tendsto f l at_top) : ¬is_bounded_under (· ≤ ·) l f := by
   rintro ⟨b, hb⟩
   rw [eventually_map] at hb
-  obtain ⟨b', h⟩ := no_top b
+  obtain ⟨b', h⟩ := exists_gt b
   have hb' := (tendsto_at_top.mp hf) b'
   have : { x : α | f x ≤ b } ∩ { x : α | b' ≤ f x } = ∅ :=
     eq_empty_of_subset_empty fun x hx => (not_le_of_lt h) (le_transₓ hx.2 hx.1)
   exact (nonempty_of_mem (hb.and hb')).ne_empty this
 
-theorem not_is_bounded_under_of_tendsto_at_bot [Preorderₓ β] [NoBotOrder β] {f : α → β} {l : Filter α} [l.ne_bot]
+theorem not_is_bounded_under_of_tendsto_at_bot [Preorderₓ β] [NoMinOrder β] {f : α → β} {l : Filter α} [l.ne_bot]
     (hf : tendsto f l at_bot) : ¬is_bounded_under (· ≥ ·) l f :=
   @not_is_bounded_under_of_tendsto_at_top α (OrderDual β) _ _ _ _ _ hf
 

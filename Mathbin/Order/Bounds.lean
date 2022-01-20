@@ -114,6 +114,18 @@ theorem IsLub.dual (h : IsLub s a) : IsGlb (of_dual ⁻¹' s) (to_dual a) :=
 theorem IsGlb.dual (h : IsGlb s a) : IsLub (of_dual ⁻¹' s) (to_dual a) :=
   h
 
+/-- If `a` is the least element of a set `s`, then subtype `s` is an order with bottom element. -/
+@[reducible]
+def IsLeast.orderBot (h : IsLeast s a) : OrderBot s where
+  bot := ⟨a, h.1⟩
+  bot_le := Subtype.forall.2 h.2
+
+/-- If `a` is the greatest element of a set `s`, then subtype `s` is an order with top element. -/
+@[reducible]
+def IsGreatest.orderTop (h : IsGreatest s a) : OrderTop s where
+  top := ⟨a, h.1⟩
+  le_top := Subtype.forall.2 h.2
+
 /-!
 ### Monotonicity
 -/
@@ -565,21 +577,21 @@ theorem is_glb_univ [Preorderₓ γ] [OrderBot γ] : IsGlb (univ : Set γ) ⊥ :
   is_least_univ.IsGlb
 
 @[simp]
-theorem NoTopOrder.upper_bounds_univ [NoTopOrder α] : UpperBounds (univ : Set α) = ∅ :=
+theorem NoMaxOrder.upper_bounds_univ [NoMaxOrder α] : UpperBounds (univ : Set α) = ∅ :=
   eq_empty_of_subset_empty $ fun b hb =>
-    let ⟨x, hx⟩ := no_top b
+    let ⟨x, hx⟩ := exists_gt b
     not_le_of_lt hx (hb trivialₓ)
 
 @[simp]
-theorem NoBotOrder.lower_bounds_univ [NoBotOrder α] : LowerBounds (univ : Set α) = ∅ :=
-  @NoTopOrder.upper_bounds_univ (OrderDual α) _ _
+theorem NoMinOrder.lower_bounds_univ [NoMinOrder α] : LowerBounds (univ : Set α) = ∅ :=
+  @NoMaxOrder.upper_bounds_univ (OrderDual α) _ _
 
 @[simp]
-theorem not_bdd_above_univ [NoTopOrder α] : ¬BddAbove (univ : Set α) := by
+theorem not_bdd_above_univ [NoMaxOrder α] : ¬BddAbove (univ : Set α) := by
   simp [BddAbove]
 
 @[simp]
-theorem not_bdd_below_univ [NoBotOrder α] : ¬BddBelow (univ : Set α) :=
+theorem not_bdd_below_univ [NoMinOrder α] : ¬BddBelow (univ : Set α) :=
   @not_bdd_above_univ (OrderDual α) _ _
 
 /-!
@@ -609,15 +621,15 @@ theorem is_glb_empty [Preorderₓ γ] [OrderTop γ] : IsGlb ∅ (⊤ : γ) := by
 theorem is_lub_empty [Preorderₓ γ] [OrderBot γ] : IsLub ∅ (⊥ : γ) :=
   @is_glb_empty (OrderDual γ) _ _
 
-theorem IsLub.nonempty [NoBotOrder α] (hs : IsLub s a) : s.nonempty :=
-  let ⟨a', ha'⟩ := no_bot a
+theorem IsLub.nonempty [NoMinOrder α] (hs : IsLub s a) : s.nonempty :=
+  let ⟨a', ha'⟩ := exists_lt a
   ne_empty_iff_nonempty.1 $ fun h =>
     have : a ≤ a' :=
       hs.right $ by
         simp only [h, upper_bounds_empty]
     not_le_of_lt ha' this
 
-theorem IsGlb.nonempty [NoTopOrder α] (hs : IsGlb s a) : s.nonempty :=
+theorem IsGlb.nonempty [NoMaxOrder α] (hs : IsGlb s a) : s.nonempty :=
   hs.dual.nonempty
 
 theorem nonempty_of_not_bdd_above [ha : Nonempty α] (h : ¬BddAbove s) : s.nonempty :=

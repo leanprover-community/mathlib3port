@@ -583,7 +583,7 @@ theorem repeat_right_inj {a : α} {n m : ℕ} : repeat a n = repeat a m ↔ n = 
 /-! ### pure -/
 
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem mem_pure {α} (x y : α) : x ∈ (pure y : List α) ↔ x = y := by
   simp [pure, List.ret]
@@ -871,7 +871,7 @@ theorem init_append_last' : ∀ {l : List α}, ∀ a ∈ l.last', ∀, init l ++
 
 theorem ilast_eq_last' [Inhabited α] : ∀ l : List α, l.ilast = l.last'.iget
   | [] => by
-    simp [ilast, arbitraryₓ]
+    simp [ilast, arbitrary]
   | [a] => rfl
   | [a, b] => rfl
   | [a, b, c] => rfl
@@ -1873,8 +1873,12 @@ theorem map_eq_map_iff {f g : α → β} {l : List α} : map f l = map g l ↔ �
 theorem map_concat (f : α → β) (a : α) (l : List α) : map f (concat l a) = concat (map f l) (f a) := by
   induction l <;> [rfl, simp only [*, concat_eq_append, cons_append, map, map_append]] <;> constructor <;> rfl
 
+@[simp]
+theorem map_id'' (l : List α) : map (fun x => x) l = l :=
+  map_id _
+
 theorem map_id' {f : α → α} (h : ∀ x, f x = x) (l : List α) : map f l = l := by
-  induction l <;> [rfl, simp only [*, map]] <;> constructor <;> rfl
+  simp [show f = id from funext h]
 
 theorem eq_nil_of_map_eq_nil {f : α → β} {l : List α} (h : map f l = nil) : l = nil :=
   eq_nil_of_length_eq_zero $ by
@@ -1927,7 +1931,7 @@ theorem map_comp_map (g : β → γ) (f : α → β) : map g ∘ map f = map (g 
   ext l
   rw [comp_map]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 theorem map_filter_eq_foldr (f : α → β) (p : α → Prop) [DecidablePred p] (as : List α) :
     map f (filter p as) = foldr (fun a bs => if p a then f a :: bs else bs) [] as := by
   induction as
@@ -1957,7 +1961,7 @@ theorem nil_map₂ (f : α → β → γ) (l : List β) : map₂ f [] l = [] := 
 theorem map₂_nil (f : α → β → γ) (l : List α) : map₂ f l [] = [] := by
   cases l <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem map₂_flip (f : α → β → γ) : ∀ as bs, map₂ (flip f) bs as = map₂ f as bs
   | [], [] => rfl
@@ -2348,7 +2352,7 @@ theorem take'_length : ∀ n l, length (@take' α _ n l) = n
   | n + 1, l => congr_argₓ succ (take'_length _ _)
 
 @[simp]
-theorem take'_nil : ∀ n, take' n (@nil α) = repeat (default _) n
+theorem take'_nil : ∀ n, take' n (@nil α) = repeat default n
   | 0 => rfl
   | n + 1 => congr_argₓ (cons _) (take'_nil _)
 
@@ -2829,7 +2833,7 @@ def split_on_p_aux' {α : Type u} (P : α → Prop) [DecidablePred P] : List α 
   | [], xs => [xs]
   | h :: t, xs => if P h then xs :: split_on_p_aux' t [] else split_on_p_aux' t (xs ++ [h])
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 theorem split_on_p_aux_eq {α : Type u} (P : α → Prop) [DecidablePred P] (xs ys : List α) :
     split_on_p_aux' P xs ys = split_on_p_aux P xs ((· ++ ·) ys) := by
   induction' xs with a t ih generalizing ys <;> simp only [append_nil, eq_self_iff_true, and_selfₓ]
@@ -2846,7 +2850,7 @@ theorem split_on_p_aux_nil {α : Type u} (P : α → Prop) [DecidablePred P] (xs
   rw [split_on_p_aux_eq]
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 /-- The original list `L` can be recovered by joining the lists produced by `split_on_p p L`,
 interspersed with the elements `L.filter p`. -/
 theorem split_on_p_spec {α : Type u} (p : α → Prop) [DecidablePred p] (as : List α) :
@@ -3325,13 +3329,13 @@ theorem filter_eq_foldr (p : α → Prop) [DecidablePred p] (l : List α) :
     filter p l = foldr (fun a out => if p a then a :: out else out) [] l := by
   induction l <;> simp [*, filter]
 
-theorem filter_congr {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
+theorem filter_congr' {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
     ∀ {l : List α}, (∀, ∀ x ∈ l, ∀, p x ↔ q x) → filter p l = filter q l
   | [], _ => rfl
   | a :: l, h => by
     rw [forall_mem_cons] at h <;>
-      by_cases' pa : p a <;> [simp only [filter_cons_of_pos _ pa, filter_cons_of_pos _ (h.1.1 pa), filter_congr h.2],
-          simp only [filter_cons_of_neg _ pa, filter_cons_of_neg _ (mt h.1.2 pa), filter_congr h.2]] <;>
+      by_cases' pa : p a <;> [simp only [filter_cons_of_pos _ pa, filter_cons_of_pos _ (h.1.1 pa), filter_congr' h.2],
+          simp only [filter_cons_of_neg _ pa, filter_cons_of_neg _ (mt h.1.2 pa), filter_congr' h.2]] <;>
         constructor <;> rfl
 
 @[simp]
@@ -3677,7 +3681,10 @@ theorem erase_comm (a b : α) (l : List α) : (l.erase a).erase b = (l.erase b).
 
 theorem map_erase [DecidableEq β] {f : α → β} (finj : injective f) {a : α} (l : List α) :
     map f (l.erase a) = (map f l).erase (f a) := by
-  rw [erase_eq_erasep, erase_eq_erasep, erasep_map] <;> congr <;> ext b <;> simp [finj.eq_iff]
+  have this : Eq a = Eq (f a) ∘ f := by
+    ext b
+    simp [finj.eq_iff]
+  simp [erase_eq_erasep, erase_eq_erasep, erasep_map, this]
 
 theorem map_foldl_erase [DecidableEq β] {f : α → β} (finj : injective f) {l₁ l₂ : List α} :
     map f (foldl List.eraseₓ l₁ l₂) = foldl (fun l a => l.erase (f a)) (map f l₁) l₂ := by
@@ -3939,9 +3946,9 @@ variable (f : α → Option β → γ) (as : List α)
 theorem map₂_left_nil_right : map₂_left f as [] = as.map fun a => f a none := by
   cases as <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 theorem map₂_left_eq_map₂_left' : ∀ as bs, map₂_left f as bs = (map₂_left' f as bs).fst
   | [], bs => by
     simp
@@ -3950,9 +3957,9 @@ theorem map₂_left_eq_map₂_left' : ∀ as bs, map₂_left f as bs = (map₂_l
   | a :: as, b :: bs => by
     simp [*]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 theorem map₂_left_eq_map₂ : ∀ as bs, length as ≤ length bs → map₂_left f as bs = map₂ (fun a b => f a (some b)) as bs
   | [], [], h => by
     simp

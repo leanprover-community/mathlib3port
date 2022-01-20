@@ -64,12 +64,12 @@ theorem count_add (a b : ℕ) : count p (a + b) = count p a + count (fun k => p 
     obtain ⟨⟨hx, _⟩, ⟨c, _, rfl⟩, _⟩ := hx
     exact (self_le_add_right _ _).not_lt hx
   simp_rw [count_eq_card_filter_range, range_add, filter_union, card_disjoint_union this, map_filter, addLeftEmbedding,
-    card_map, Function.Embedding.coe_fn_mk]
+    card_map]
+  rfl
 
 theorem count_add' (a b : ℕ) : count p (a + b) = count (fun k => p (k + b)) a + count p b := by
   rw [add_commₓ, count_add, add_commₓ]
   simp_rw [add_commₓ b]
-  congr
 
 theorem count_one : count p 1 = if p 0 then 1 else 0 := by
   simp [count_succ]

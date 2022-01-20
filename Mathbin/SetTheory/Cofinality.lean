@@ -423,7 +423,11 @@ theorem cof_sup_le {ι} (f : ι → Ordinal) (H : ∀ i, f i < sup.{u, u} f) : c
 theorem cof_bsup_le_lift {o : Ordinal} :
     ∀ f : ∀, ∀ a < o, ∀, Ordinal, (∀ i h, f i h < bsup o f) → cof (bsup o f) ≤ o.card.lift :=
   induction_on o $ fun α r _ f H => by
-    rw [bsup_type] <;> refine' cof_sup_le_lift _ _ <;> rw [← bsup_type] <;> intro a <;> apply H
+    skip
+    rw [bsup_eq_sup' r rfl]
+    refine' cof_sup_le_lift _ _
+    rw [← bsup_eq_sup']
+    exact fun a => H _ _
 
 theorem cof_bsup_le {o : Ordinal} :
     ∀ f : ∀, ∀ a < o, ∀, Ordinal, (∀ i h, f i h < bsup.{u, u} o f) → cof (bsup.{u, u} o f) ≤ o.card :=

@@ -21,7 +21,7 @@ variable {α ι ι' : Type _} {r p q : α → α → Prop}
 
 section Pairwise
 
-variable {f : ι → α} {s t u : Set α} {a b : α}
+variable {f g : ι → α} {s t u : Set α} {a b : α}
 
 /-- A relation `r` holds pairwise if `r i j` for all `i ≠ j`. -/
 def Pairwise (r : α → α → Prop) :=
@@ -48,6 +48,10 @@ theorem Symmetric.pairwise_on [LinearOrderₓ ι] (hr : Symmetric r) (f : ι →
 theorem pairwise_disjoint_on [SemilatticeInf α] [OrderBot α] [LinearOrderₓ ι] (f : ι → α) :
     Pairwise (Disjoint on f) ↔ ∀ m n, m < n → Disjoint (f m) (f n) :=
   Symmetric.pairwise_on Disjoint.symm f
+
+theorem PairwiseDisjoint.mono [SemilatticeInf α] [OrderBot α] (hs : Pairwise (Disjoint on f)) (h : g ≤ f) :
+    Pairwise (Disjoint on g) :=
+  hs.mono fun i j hij => Disjoint.mono (h i) (h j) hij
 
 namespace Set
 
@@ -211,7 +215,7 @@ theorem pairwise_disjoint.subset (ht : t.pairwise_disjoint f) (h : s ⊆ t) : s.
 theorem pairwise_disjoint.mono_on (hs : s.pairwise_disjoint f) (h : ∀ ⦃i⦄, i ∈ s → g i ≤ f i) : s.pairwise_disjoint g :=
   fun a ha b hb hab => (hs ha hb hab).mono (h ha) (h hb)
 
-theorem pairwise_disjoint.mono (hs : s.pairwise_disjoint f) (h : g ≤ f) : s.pairwise_disjoint g :=
+theorem PairwiseDisjoint.mono (hs : s.pairwise_disjoint f) (h : g ≤ f) : s.pairwise_disjoint g :=
   hs.mono_on fun i _ => h i
 
 @[simp]
@@ -310,7 +314,7 @@ theorem bUnion_diff_bUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).
     ((⋃ i ∈ s, f i) \ ⋃ i ∈ t, f i) = ⋃ i ∈ s \ t, f i := by
   refine'
     (bUnion_diff_bUnion_subset f s t).antisymm (bUnion_subset $ fun i hi a ha => (mem_diff _).2 ⟨mem_bUnion hi.1 ha, _⟩)
-  rw [mem_bUnion_iff]
+  rw [mem_Union₂]
   rintro ⟨j, hj, haj⟩
   exact h (Or.inl hi.1) (Or.inr hj) (ne_of_mem_of_not_mem hj hi.2).symm ⟨ha, haj⟩
 

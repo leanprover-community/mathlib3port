@@ -332,8 +332,8 @@ theorem ContinuousOn.ae_measurable [TopologicalSpace α] [OpensMeasurableSpace �
     (hs : MeasurableSet s) : AeMeasurable f (μ.restrict s) := by
   nontriviality α
   inhabit α
-  have : (piecewise s f fun _ => f (default α)) =ᵐ[μ.restrict s] f := piecewise_ae_eq_restrict hs
-  refine' ⟨piecewise s f fun _ => f (default α), _, this.symm⟩
+  have : (piecewise s f fun _ => f default) =ᵐ[μ.restrict s] f := piecewise_ae_eq_restrict hs
+  refine' ⟨piecewise s f fun _ => f default, _, this.symm⟩
   apply measurable_of_is_open
   intro t ht
   obtain ⟨u, u_open, hu⟩ : ∃ u : Set α, IsOpen u ∧ f ⁻¹' t ∩ s = u ∩ s := _root_.continuous_on_iff'.1 hf t ht

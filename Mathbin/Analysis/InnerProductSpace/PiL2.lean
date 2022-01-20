@@ -62,7 +62,7 @@ instance PiLp.innerProductSpace {ι : Type _} [Fintype ι] (f : ι → Type _) [
   conj_sym := by
     intro x y
     unfold inner
-    rw [RingEquiv.map_sum]
+    rw [RingHom.map_sum]
     apply Finset.sum_congr rfl
     rintro z -
     apply inner_conj_sym
@@ -114,7 +114,8 @@ theorem finrank_euclidean_space_fin {n : ℕ} : FiniteDimensional.finrank 𝕜 (
 /-- A finite, mutually orthogonal family of subspaces of `E`, which span `E`, induce an isometry
 from `E` to `pi_Lp 2` of the subspaces equipped with the `L2` inner product. -/
 def DirectSum.SubmoduleIsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] {V : ι → Submodule 𝕜 E}
-    (hV : DirectSum.SubmoduleIsInternal V) (hV' : OrthogonalFamily 𝕜 V) : E ≃ₗᵢ[𝕜] PiLp 2 fun i => V i := by
+    (hV : DirectSum.SubmoduleIsInternal V)
+    (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) : E ≃ₗᵢ[𝕜] PiLp 2 fun i => V i := by
   let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
   let e₂ := LinearEquiv.ofBijective _ hV.injective hV.surjective
   refine' (e₂.symm.trans e₁).isometryOfInner _
@@ -123,16 +124,17 @@ def DirectSum.SubmoduleIsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] 
     convert this (e₁ (e₂.symm v₀)) (e₁ (e₂.symm w₀)) <;>
       simp only [LinearEquiv.symm_apply_apply, LinearEquiv.apply_symm_apply]
   intro v w
-  trans ⟪∑ i, (v i : E), ∑ i, (w i : E)⟫
-  · simp [sum_inner, hV'.inner_right_fintype]
+  trans ⟪∑ i, (V i).subtypeₗᵢ (v i), ∑ i, (V i).subtypeₗᵢ (w i)⟫
+  · simp only [sum_inner, hV'.inner_right_fintype, PiLp.inner_apply]
     
   · congr <;> simp
     
 
 @[simp]
 theorem DirectSum.SubmoduleIsInternal.isometry_L2_of_orthogonal_family_symm_apply [DecidableEq ι]
-    {V : ι → Submodule 𝕜 E} (hV : DirectSum.SubmoduleIsInternal V) (hV' : OrthogonalFamily 𝕜 V)
-    (w : PiLp 2 fun i => V i) : (hV.isometry_L2_of_orthogonal_family hV').symm w = ∑ i, (w i : E) := by
+    {V : ι → Submodule 𝕜 E} (hV : DirectSum.SubmoduleIsInternal V)
+    (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) (w : PiLp 2 fun i => V i) :
+    (hV.isometry_L2_of_orthogonal_family hV').symm w = ∑ i, (w i : E) := by
   classical
   let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
   let e₂ := LinearEquiv.ofBijective _ hV.injective hV.surjective

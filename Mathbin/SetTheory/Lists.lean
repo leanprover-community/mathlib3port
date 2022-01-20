@@ -59,7 +59,7 @@ namespace Lists'
 
 instance [Inhabited α] : ∀ b, Inhabited (Lists' α b)
   | tt => ⟨nil⟩
-  | ff => ⟨atom (default _)⟩
+  | ff => ⟨atom default⟩
 
 /-- Appending a ZFA list to a proper ZFA prelist. -/
 def cons : Lists α → Lists' α tt → Lists' α tt

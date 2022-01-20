@@ -637,7 +637,7 @@ theorem normalize_finite_fraction_representation (U : opens (prime_spectrum.Top 
   refine' ⟨fun i => a i * h i ^ N, fun i => h i ^ (N + 1), fun i => eq_to_hom (basic_opens_eq i) ≫ iDh i, _, _, _⟩
   · simpa only [basic_opens_eq] using h_cover
     
-  · intro i j hi hj
+  · intro i hi j hj
     have n_le_N : n (i, j) ≤ N := Finset.le_sup (finset.mem_product.mpr ⟨hi, hj⟩)
     cases' Nat.Le.dest n_le_N with k hk
     simp only [← hk, pow_addₓ, pow_oneₓ]
@@ -693,7 +693,7 @@ theorem to_basic_open_surjective (f : R) : Function.Surjective (to_basic_open R 
   · intro x hx
     erw [TopologicalSpace.Opens.mem_supr]
     have := ht_cover hx
-    rw [← Finset.set_bUnion_coe, Set.mem_bUnion_iff] at this
+    rw [← Finset.set_bUnion_coe, Set.mem_Union₂] at this
     rcases this with ⟨i, i_mem, x_mem⟩
     use i, i_mem
     
@@ -714,7 +714,7 @@ theorem to_basic_open_surjective (f : R) : Function.Surjective (to_basic_open R 
   rw [← hb, Finset.sum_mul, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro j hj
-  rw [mul_assocₓ, ah_ha j i hj hi]
+  rw [mul_assocₓ, ah_ha j hj i hi]
   ring
 
 instance is_iso_to_basic_open (f : R) : is_iso (show CommRingₓₓ.of _ ⟶ _ from to_basic_open R f) :=
@@ -727,21 +727,44 @@ at the submonoid of powers of `f`. -/
 def basic_open_iso (f : R) : (structure_sheaf R).1.obj (op (basic_open f)) ≅ CommRingₓₓ.of (Localization.Away f) :=
   (as_iso (show CommRingₓₓ.of _ ⟶ _ from to_basic_open R f)).symm
 
+instance stalk_algebra (p : PrimeSpectrum R) : Algebra R ((structure_sheaf R).val.stalk p) :=
+  (to_stalk R p).toAlgebra
+
+@[simp]
+theorem stalk_algebra_map (p : PrimeSpectrum R) (r : R) :
+    algebraMap R ((structure_sheaf R).val.stalk p) r = to_stalk R p r :=
+  rfl
+
 /-- Stalk of the structure sheaf at a prime p as localization of R -/
-theorem is_localization.to_stalk (p : PrimeSpectrum R) :
-    @IsLocalization.AtPrime _ _ _ _ (to_stalk R p).toAlgebra p.as_ideal _ := by
+instance is_localization.to_stalk (p : PrimeSpectrum R) :
+    IsLocalization.AtPrime ((structure_sheaf R).val.stalk p) p.as_ideal := by
   convert
     (IsLocalization.is_localization_iff_of_ring_equiv _ (stalk_iso R p).symm.commRingIsoToRingEquiv).mp
       Localization.is_localization
+  apply Algebra.algebra_ext
+  intro
+  rw [stalk_algebra_map]
+  congr 1
   erw [iso.eq_comp_inv]
   exact to_stalk_comp_stalk_to_fiber_ring_hom R p
 
+instance open_algebra (U : opens (PrimeSpectrum R)ᵒᵖ) : Algebra R ((structure_sheaf R).val.obj U) :=
+  (to_open R (unop U)).toAlgebra
+
+@[simp]
+theorem open_algebra_map (U : opens (PrimeSpectrum R)ᵒᵖ) (r : R) :
+    algebraMap R ((structure_sheaf R).val.obj U) r = to_open R (unop U) r :=
+  rfl
+
 /-- Sections of the structure sheaf of Spec R on a basic open as localization of R -/
-theorem is_localization.to_basic_open (r : R) : @IsLocalization.Away _ _ r _ _ (to_open R (basic_open r)).toAlgebra :=
-  by
+instance is_localization.to_basic_open (r : R) :
+    IsLocalization.Away r ((structure_sheaf R).val.obj (op $ basic_open r)) := by
   convert
     (IsLocalization.is_localization_iff_of_ring_equiv _ (basic_open_iso R r).symm.commRingIsoToRingEquiv).mp
       Localization.is_localization
+  apply Algebra.algebra_ext
+  intro x
+  congr 1
   exact (localization_to_basic_open R r).symm
 
 instance to_basic_open_epi (r : R) : epi (to_open R (basic_open r)) :=

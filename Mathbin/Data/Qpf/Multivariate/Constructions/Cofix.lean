@@ -77,7 +77,7 @@ def cofix (F : Typevec (n + 1) → Type u) [Mvfunctor F] [q : Mvqpf F] (α : Typ
   Quot (@Mcongr _ F _ q α)
 
 instance {α : Typevec n} [Inhabited q.P.A] [∀ i : Fin2 n, Inhabited (α i)] : Inhabited (cofix F α) :=
-  ⟨Quot.mk _ (default _)⟩
+  ⟨Quot.mk _ default⟩
 
 /-- maps every element of the W type to a canonical representative -/
 def Mrepr {α : Typevec n} : q.P.M α → q.P.M α :=

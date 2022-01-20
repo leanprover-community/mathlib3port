@@ -104,12 +104,7 @@ theorem bounded_continuous_function_dense [μ.weakly_regular] :
     have : μ u < μ F + ↑η + ↑η := μu.trans (Ennreal.add_lt_add_right Ennreal.coe_ne_top μF)
     convert this.le using 1
     · rw [add_commₓ, ← measure_union, Set.diff_union_of_subset (Fs.trans su)]
-      · exact disjoint_sdiff_self_left
-        
-      · exact (u_open.sdiff F_closed).MeasurableSet
-        
-      · exact F_closed.measurable_set
-        
+      exacts[disjoint_sdiff_self_left, F_closed.measurable_set]
       
     have : (2 : ℝ≥0∞) * η = η + η := by
       simpa using add_mulₓ (1 : ℝ≥0∞) 1 η

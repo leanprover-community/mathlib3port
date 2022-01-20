@@ -4,6 +4,7 @@ import Mathbin.Topology.UniformSpace.UniformEmbedding
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.LinearAlgebra.Projection
 import Mathbin.LinearAlgebra.Pi
+import Mathbin.LinearAlgebra.Determinant
 
 /-!
 # Theory of topological modules and continuous linear maps.
@@ -149,13 +150,13 @@ variable {R : Type u} {M : Type v} [Semiringₓ R] [TopologicalSpace R] [Topolog
   [Module R M] [HasContinuousSmul R M]
 
 theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
-    (fun p : R × M => p.1 • p.2) '' (Set.Univ : Set R).Prod (Closure (s : Set M)) ⊆ Closure (s : Set M) :=
+    (fun p : R × M => p.1 • p.2) '' ((Set.Univ : Set R) ×ˢ Closure (s : Set M)) ⊆ Closure (s : Set M) :=
   calc
-    (fun p : R × M => p.1 • p.2) '' (Set.Univ : Set R).Prod (Closure (s : Set M)) =
-        (fun p : R × M => p.1 • p.2) '' Closure ((Set.Univ : Set R).Prod s) :=
+    (fun p : R × M => p.1 • p.2) '' ((Set.Univ : Set R) ×ˢ Closure (s : Set M)) =
+        (fun p : R × M => p.1 • p.2) '' Closure ((Set.Univ : Set R) ×ˢ (s : Set M)) :=
       by
       simp [closure_prod_eq]
-    _ ⊆ Closure ((fun p : R × M => p.1 • p.2) '' (Set.Univ : Set R).Prod s) :=
+    _ ⊆ Closure ((fun p : R × M => p.1 • p.2) '' ((Set.Univ : Set R) ×ˢ (s : Set M))) :=
       image_closure_subset_closure_image continuous_smul
     _ = Closure s := by
       congr
@@ -166,7 +167,7 @@ theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
     
 
 theorem Submodule.closure_smul_self_eq (s : Submodule R M) :
-    (fun p : R × M => p.1 • p.2) '' (Set.Univ : Set R).Prod (Closure (s : Set M)) = Closure (s : Set M) :=
+    (fun p : R × M => p.1 • p.2) '' ((Set.Univ : Set R) ×ˢ Closure (s : Set M)) = Closure (s : Set M) :=
   Set.Subset.antisymm s.closure_smul_self_subset fun x hx => ⟨⟨1, x⟩, ⟨Set.mem_univ _, hx⟩, one_smul R _⟩
 
 variable [HasContinuousAdd M]
@@ -219,7 +220,7 @@ notation:25 M " →SL[" σ "] " M₂ => ContinuousLinearMap σ M M₂
 
 notation:25 M " →L[" R "] " M₂ => ContinuousLinearMap (RingHom.id R) M M₂
 
-notation:25 M " →L⋆[" R "] " M₂ => ContinuousLinearMap (@starRingAut R _ _ : R →+* R) M M₂
+notation:25 M " →L⋆[" R "] " M₂ => ContinuousLinearMap (starRingEnd R) M M₂
 
 /-- Continuous linear equivalences between modules. We only put the type classes that are necessary
 for the definition, although in applications `M` and `M₂` will be topological modules over the
@@ -239,7 +240,7 @@ notation:50 M " ≃SL[" σ "] " M₂ => ContinuousLinearEquiv σ M M₂
 
 notation:50 M " ≃L[" R "] " M₂ => ContinuousLinearEquiv (RingHom.id R) M M₂
 
-notation:50 M " ≃L⋆[" R "] " M₂ => ContinuousLinearEquiv (@starRingAut R _ _ : R →+* R) M M₂
+notation:50 M " ≃L⋆[" R "] " M₂ => ContinuousLinearEquiv (starRingEnd R) M M₂
 
 section PointwiseLimits
 
@@ -432,7 +433,7 @@ instance : Inhabited (M₁ →SL[σ₁₂] M₂) :=
   ⟨0⟩
 
 @[simp]
-theorem default_def : default (M₁ →SL[σ₁₂] M₂) = 0 :=
+theorem default_def : (default : M₁ →SL[σ₁₂] M₂) = 0 :=
   rfl
 
 @[simp]
@@ -504,7 +505,7 @@ theorem continuous_nsmul (n : ℕ) : Continuous fun x : M₂ => n • x := by
     
 
 @[continuity]
-theorem continuous.nsmul {α : Type _} [TopologicalSpace α] {n : ℕ} {f : α → M₂} (hf : Continuous f) :
+theorem Continuous.nsmul {α : Type _} [TopologicalSpace α] {n : ℕ} {f : α → M₂} (hf : Continuous f) :
     Continuous fun x : α => n • f x :=
   (continuous_nsmul n).comp hf
 
@@ -1233,6 +1234,9 @@ instance : Module S₃ (M →SL[σ₁₃] M₃) where
   zero_smul := fun _ => ext $ fun _ => zero_smul _ _
   add_smul := fun _ _ _ => ext $ fun _ => add_smul _ _ _
 
+instance [Module (S₃ᵐᵒᵖ) M₃] [IsCentralScalar S₃ M₃] : IsCentralScalar S₃ (M →SL[σ₁₃] M₃) where
+  op_smul_eq_smul := fun _ _ => ext $ fun _ => op_smul_eq_smul _ _
+
 variable (S) [HasContinuousAdd N₃]
 
 /-- `continuous_linear_map.prod` as a `linear_equiv`. -/
@@ -1287,6 +1291,13 @@ end SmulRightₗ
 
 section CommRingₓ
 
+/-- The determinant of a continuous linear map, mainly as a convenience device to be able to
+write `A.det` instead of `(A : M →ₗ[R] M).det`. -/
+@[reducible]
+noncomputable def det {R : Type _} [CommRingₓ R] [IsDomain R] {M : Type _} [TopologicalSpace M] [AddCommGroupₓ M]
+    [Module R M] (A : M →L[R] M) : R :=
+  LinearMap.det (A : M →ₗ[R] M)
+
 variable {R : Type _} [CommRingₓ R] [TopologicalSpace R] {M : Type _} [TopologicalSpace M] [AddCommGroupₓ M]
   {M₂ : Type _} [TopologicalSpace M₂] [AddCommGroupₓ M₂] {M₃ : Type _} [TopologicalSpace M₃] [AddCommGroupₓ M₃]
   [Module R M] [Module R M₂] [Module R M₃] [HasContinuousSmul R M₃]
@@ -1307,7 +1318,7 @@ variable {A M M₂ : Type _} [Ringₓ A] [AddCommGroupₓ M] [AddCommGroupₓ M�
 /-- If `A` is an `R`-algebra, then a continuous `A`-linear map can be interpreted as a continuous
 `R`-linear map. We assume `linear_map.compatible_smul M M₂ R A` to match assumptions of
 `linear_map.map_smul_of_tower`. -/
-def restrict_scalars (f : M →L[A] M₂) : M →L[R] M₂ :=
+def RestrictScalars (f : M →L[A] M₂) : M →L[R] M₂ :=
   ⟨(f : M →ₗ[A] M₂).restrictScalars R, f.continuous⟩
 
 variable {R}
@@ -1352,14 +1363,14 @@ variable (A M M₂ R S) [TopologicalAddGroup M₂]
 /-- `continuous_linear_map.restrict_scalars` as a `linear_map`. See also
 `continuous_linear_map.restrict_scalarsL`. -/
 def restrict_scalarsₗ : (M →L[A] M₂) →ₗ[S] M →L[R] M₂ where
-  toFun := restrict_scalars R
+  toFun := RestrictScalars R
   map_add' := restrict_scalars_add
   map_smul' := restrict_scalars_smul
 
 variable {A M M₂ R S}
 
 @[simp]
-theorem coe_restrict_scalarsₗ : ⇑restrict_scalarsₗ A M M₂ R S = restrict_scalars R :=
+theorem coe_restrict_scalarsₗ : ⇑restrict_scalarsₗ A M M₂ R S = RestrictScalars R :=
   rfl
 
 end RestrictScalars
@@ -1983,7 +1994,7 @@ def fun_unique : (ι → M) ≃L[R] M :=
 variable {ι R M}
 
 @[simp]
-theorem coe_fun_unique : ⇑fun_unique ι R M = Function.eval (default ι) :=
+theorem coe_fun_unique : ⇑fun_unique ι R M = Function.eval default :=
   rfl
 
 @[simp]

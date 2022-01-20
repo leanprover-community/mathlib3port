@@ -224,7 +224,7 @@ instance {X : C} (f : X ⟶ 0) : epi f where
     code should generally ask for an instance of `has_zero_morphisms` separately, even if it already
     asks for an instance of `has_zero_objects`. -/
 def zero_morphisms_of_zero_object : has_zero_morphisms C where
-  HasZero := fun X Y => { zero := Inhabited.default (X ⟶ 0) ≫ Inhabited.default (0 ⟶ Y) }
+  HasZero := fun X Y => { zero := (default : X ⟶ 0) ≫ default }
   zero_comp' := fun X Y Z f => by
     dunfold HasZero.zero
     rw [category.assoc]

@@ -352,16 +352,16 @@ theorem single_swap (a₁ a₂ : α) (b : M) : single a₁ b a₂ = single a₂ 
 instance [Nonempty α] [Nontrivial M] : Nontrivial (α →₀ M) := by
   inhabit α
   rcases exists_ne (0 : M) with ⟨x, hx⟩
-  exact nontrivial_of_ne (single (default α) x) 0 (mt single_eq_zero.1 hx)
+  exact nontrivial_of_ne (single default x) 0 (mt single_eq_zero.1 hx)
 
-theorem unique_single [Unique α] (x : α →₀ M) : x = single (default α) (x (default α)) :=
+theorem unique_single [Unique α] (x : α →₀ M) : x = single default (x default) :=
   ext $ Unique.forall_iff.2 single_eq_same.symm
 
-theorem unique_ext [Unique α] {f g : α →₀ M} (h : f (default α) = g (default α)) : f = g :=
+theorem unique_ext [Unique α] {f g : α →₀ M} (h : f default = g default) : f = g :=
   ext $ fun a => by
     rwa [Unique.eq_default a]
 
-theorem unique_ext_iff [Unique α] {f g : α →₀ M} : f = g ↔ f (default α) = g (default α) :=
+theorem unique_ext_iff [Unique α] {f g : α →₀ M} : f = g ↔ f default = g default :=
   ⟨fun h => h ▸ rfl, unique_ext⟩
 
 @[simp]
@@ -942,6 +942,13 @@ See `finsupp.lapply` for the stronger version as a linear map. -/
 def apply_add_hom (a : α) : (α →₀ M) →+ M :=
   ⟨fun g => g a, zero_apply, fun _ _ => add_apply _ _ _⟩
 
+/-- Coercion from a `finsupp` to a function type is an `add_monoid_hom`. -/
+@[simps]
+noncomputable def coe_fn_add_hom : (α →₀ M) →+ α → M where
+  toFun := coeFn
+  map_zero' := coe_zero
+  map_add' := coe_add
+
 theorem update_eq_single_add_erase (f : α →₀ M) (a : α) (b : M) : f.update a b = single a b + f.erase a := by
   ext j
   rcases eq_or_ne a j with (rfl | h)
@@ -1215,10 +1222,21 @@ theorem update_eq_sub_add_single [AddGroupₓ G] (f : α →₀ G) (a : α) (b :
     f.update a b = f - single a (f a) + single a b := by
   rw [update_eq_erase_add_single, erase_eq_sub_single]
 
+theorem finset_sum_apply [AddCommMonoidₓ N] (S : Finset ι) (f : ι → α →₀ N) (a : α) :
+    (∑ i in S, f i) a = ∑ i in S, f i a :=
+  (apply_add_hom a : (α →₀ N) →+ _).map_sum _ _
+
 @[simp]
 theorem sum_apply [HasZero M] [AddCommMonoidₓ N] {f : α →₀ M} {g : α → M → β →₀ N} {a₂ : β} :
     (f.sum g) a₂ = f.sum fun a₁ b => g a₁ b a₂ :=
-  (apply_add_hom a₂ : (β →₀ N) →+ _).map_sum _ _
+  finset_sum_apply _ _ _
+
+theorem coe_finset_sum [AddCommMonoidₓ N] (S : Finset ι) (f : ι → α →₀ N) : (⇑∑ i in S, f i) = ∑ i in S, f i :=
+  (coe_fn_add_hom : (α →₀ N) →+ _).map_sum _ _
+
+theorem coe_sum [HasZero M] [AddCommMonoidₓ N] (f : α →₀ M) (g : α → M → β →₀ N) :
+    ⇑f.sum g = f.sum fun a₁ b => g a₁ b :=
+  coe_finset_sum _ _
 
 theorem support_sum [DecidableEq β] [HasZero M] [AddCommMonoidₓ N] {f : α →₀ M} {g : α → M → β →₀ N} :
     (f.sum g).Support ⊆ f.support.bUnion fun a => (g a (f a)).Support := by
@@ -2392,6 +2410,12 @@ theorem support_smul {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] {
     (b • g).Support ⊆ g.support := fun a => by
   simp only [smul_apply, mem_support_iff, Ne.def]
   exact mt fun h => h.symm ▸ smul_zero _
+
+@[simp]
+theorem support_smul_eq [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [NoZeroSmulDivisors R M] {b : R} (hb : b ≠ 0)
+    {g : α →₀ M} : (b • g).Support = g.support :=
+  Finset.ext fun a => by
+    simp [Finsupp.smul_apply, hb]
 
 section
 

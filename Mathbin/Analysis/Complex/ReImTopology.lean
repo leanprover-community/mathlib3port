@@ -166,3 +166,11 @@ theorem frontier_set_of_le_re_and_im_le (a b : ℝ) :
 
 end Complex
 
+open Complex
+
+theorem IsOpen.re_prod_im {s t : Set ℝ} (hs : IsOpen s) (ht : IsOpen t) : IsOpen (re ⁻¹' s ∩ im ⁻¹' t) :=
+  (hs.preimage continuous_re).inter (ht.preimage continuous_im)
+
+theorem IsClosed.re_prod_im {s t : Set ℝ} (hs : IsClosed s) (ht : IsClosed t) : IsClosed (re ⁻¹' s ∩ im ⁻¹' t) :=
+  (hs.preimage continuous_re).inter (ht.preimage continuous_im)
+

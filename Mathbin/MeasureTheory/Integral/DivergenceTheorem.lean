@@ -204,7 +204,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : bo
             dist (f (i.insert_nth d x)) (f (i.insert_nth (c k) x)) :=
           dist_le_pi_dist (f (i.insert_nth d x)) (f (i.insert_nth (c k) x))
             i _ ≤ ε / ∏ j, (I.face i).upper j - (I.face i).lower j :=
-          hδ _ _ (I.maps_to_insert_nth_face_Icc hd (Hsub hx)) (I.maps_to_insert_nth_face_Icc (hc _) (Hsub hx)) _
+          hδ _ (I.maps_to_insert_nth_face_Icc hd $ Hsub hx) _ (I.maps_to_insert_nth_face_Icc (hc _) $ Hsub hx) _
       rw [Finₓ.dist_insert_nth_insert_nth, dist_self, dist_comm]
       exact max_leₓ hk.le δpos.lt.le _ ≤ ε := by
       rw [box.Icc_def, Real.volume_Icc_pi_to_real ((J k).face i).lower_le_upper, ← le_div_iff (hvol_pos _)]
@@ -422,8 +422,8 @@ over `Icc a b`. -/
 theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le (f g : ℝ × ℝ → E)
     (f' g' : ℝ × ℝ → ℝ × ℝ →L[ℝ] E) (a b : ℝ × ℝ) (hle : a ≤ b) (s : Set (ℝ × ℝ)) (hs : countable s)
     (Hcf : ContinuousOn f (Icc a b)) (Hcg : ContinuousOn g (Icc a b))
-    (Hdf : ∀, ∀ x ∈ (Ioo a.1 b.1).Prod (Ioo a.2 b.2) \ s, ∀, HasFderivAt f (f' x) x)
-    (Hdg : ∀, ∀ x ∈ (Ioo a.1 b.1).Prod (Ioo a.2 b.2) \ s, ∀, HasFderivAt g (g' x) x)
+    (Hdf : ∀, ∀ x ∈ Ioo a.1 b.1 ×ˢ Ioo a.2 b.2 \ s, ∀, HasFderivAt f (f' x) x)
+    (Hdg : ∀, ∀ x ∈ Ioo a.1 b.1 ×ˢ Ioo a.2 b.2 \ s, ∀, HasFderivAt g (g' x) x)
     (Hi : integrable_on (fun x => f' x (1, 0) + g' x (0, 1)) (Icc a b)) :
     (∫ x in Icc a b, f' x (1, 0) + g' x (0, 1)) =
       (((∫ x in a.1 ..b.1, g (x, b.2)) - ∫ x in a.1 ..b.1, g (x, a.2)) + ∫ y in a.2 ..b.2, f (b.1, y)) -
@@ -497,17 +497,17 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
     (f' g' : ℝ × ℝ → ℝ × ℝ →L[ℝ] E) (a₁ a₂ b₁ b₂ : ℝ) (s : Set (ℝ × ℝ)) (hs : countable s)
     (Hcf :
       ContinuousOn f
-        ("././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)".Prod
+        ("././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ×ˢ
           "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)"))
     (Hcg :
       ContinuousOn g
-        ("././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)".Prod
+        ("././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ×ˢ
           "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)"))
-    (Hdf : ∀, ∀ x ∈ (Ioo (min a₁ b₁) (max a₁ b₁)).Prod (Ioo (min a₂ b₂) (max a₂ b₂)) \ s, ∀, HasFderivAt f (f' x) x)
-    (Hdg : ∀, ∀ x ∈ (Ioo (min a₁ b₁) (max a₁ b₁)).Prod (Ioo (min a₂ b₂) (max a₂ b₂)) \ s, ∀, HasFderivAt g (g' x) x)
+    (Hdf : ∀, ∀ x ∈ Ioo (min a₁ b₁) (max a₁ b₁) ×ˢ Ioo (min a₂ b₂) (max a₂ b₂) \ s, ∀, HasFderivAt f (f' x) x)
+    (Hdg : ∀, ∀ x ∈ Ioo (min a₁ b₁) (max a₁ b₁) ×ˢ Ioo (min a₂ b₂) (max a₂ b₂) \ s, ∀, HasFderivAt g (g' x) x)
     (Hi :
       integrable_on (fun x => f' x (1, 0) + g' x (0, 1))
-        ("././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)".Prod
+        ("././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ×ˢ
           "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)")) :
     (∫ x in a₁..b₁, ∫ y in a₂..b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1)) =
       (((∫ x in a₁..b₁, g (x, b₂)) - ∫ x in a₁..b₁, g (x, a₂)) + ∫ y in a₂..b₂, f (b₁, y)) - ∫ y in a₂..b₂, f (a₁, y) :=
@@ -520,7 +520,7 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
           ∫ x in Icc a₁ b₁, ∫ y in Icc a₂ b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1) :=
         by
         simp only [intervalIntegral.integral_of_le, h₁, h₂,
-          set_integral_congr_set_ae Ioc_ae_eq_Icc]_ = ∫ x in (Icc a₁ b₁).Prod (Icc a₂ b₂), f' x (1, 0) + g' x (0, 1) :=
+          set_integral_congr_set_ae Ioc_ae_eq_Icc]_ = ∫ x in Icc a₁ b₁ ×ˢ Icc a₂ b₂, f' x (1, 0) + g' x (0, 1) :=
         (set_integral_prod _
             Hi).symm _ =
           (((∫ x in a₁..b₁, g (x, b₂)) - ∫ x in a₁..b₁, g (x, a₂)) + ∫ y in a₂..b₂, f (b₁, y)) -

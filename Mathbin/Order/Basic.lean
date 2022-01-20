@@ -22,7 +22,7 @@ classes and allows to transfer order instances.
 
 ### Extra classes
 
-- `no_top_order`, `no_bot_order`: An order without a maximal/minimal element.
+- `no_max_order`, `no_min_order`: An order without a maximal/minimal element.
 - `densely_ordered`: An order with no gap, i.e. for any two elements `a < b` there exists `c` such
   that `a < c < b`.
 
@@ -43,10 +43,6 @@ provide many aliases to dot notation-less lemmas. For example, `le_trans` is ali
 - expand module docs
 - automatic construction of dual definitions / theorems
 
-## See also
-
-- `algebra.order.basic` for basic lemmas about orders, and projection notation for orders
-
 ## Tags
 
 preorder, order, partial order, poset, linear order, chain
@@ -59,6 +55,9 @@ universe u v w
 
 variable {α : Type u} {β : Type v} {γ : Type w} {r : α → α → Prop}
 
+theorem ge_antisymm [PartialOrderₓ α] {a b : α} (hab : a ≤ b) (hba : b ≤ a) : b = a :=
+  le_antisymmₓ hba hab
+
 attribute [simp] le_reflₓ
 
 attribute [ext] LE
@@ -68,6 +67,8 @@ alias le_transₓ ← LE.le.trans
 alias lt_of_le_of_ltₓ ← LE.le.trans_lt
 
 alias le_antisymmₓ ← LE.le.antisymm
+
+alias ge_antisymm ← LE.le.antisymm'
 
 alias lt_of_le_of_neₓ ← LE.le.lt_of_ne
 
@@ -591,58 +592,66 @@ end Prod
 
 
 /-- Order without a maximal element. Sometimes called cofinal. -/
-class NoTopOrder (α : Type u) [LT α] : Prop where
-  no_top : ∀ a : α, ∃ a', a < a'
+class NoMaxOrder (α : Type u) [LT α] : Prop where
+  exists_gt (a : α) : ∃ b, a < b
 
-theorem no_top [LT α] [NoTopOrder α] : ∀ a : α, ∃ a', a < a' :=
-  NoTopOrder.no_top
+theorem exists_gt [LT α] [NoMaxOrder α] : ∀ a : α, ∃ a', a < a' :=
+  NoMaxOrder.exists_gt
 
-instance nonempty_gt {α : Type u} [LT α] [NoTopOrder α] (a : α) : Nonempty { x // a < x } :=
-  nonempty_subtype.2 (no_top a)
+instance nonempty_gt [LT α] [NoMaxOrder α] (a : α) : Nonempty { x // a < x } :=
+  nonempty_subtype.2 (exists_gt a)
 
 /-- `a : α` is a top element of `α` if it is greater than or equal to any other element of `α`.
-This predicate is useful, e.g., to make some statements and proofs work in both cases
-`[order_top α]` and `[no_top_order α]`. -/
+This predicate is roughly an unbundled version of `order_bot`, except that a preorder may have
+several top elements. When `α` is linear, this is useful to make a case disjunction on
+`no_max_order α` within a proof. -/
 def IsTop {α : Type u} [LE α] (a : α) : Prop :=
   ∀ b, b ≤ a
 
 @[simp]
-theorem not_is_top {α : Type u} [Preorderₓ α] [NoTopOrder α] (a : α) : ¬IsTop a := fun h =>
-  let ⟨b, hb⟩ := no_top a
+theorem not_is_top [Preorderₓ α] [NoMaxOrder α] (a : α) : ¬IsTop a := fun h =>
+  let ⟨b, hb⟩ := exists_gt a
   hb.not_le (h b)
 
 theorem IsTop.unique {α : Type u} [PartialOrderₓ α] {a b : α} (ha : IsTop a) (hb : a ≤ b) : a = b :=
   le_antisymmₓ hb (ha b)
 
-/-- Order without a minimal element. Sometimes called coinitial or dense. -/
-class NoBotOrder (α : Type u) [LT α] : Prop where
-  no_bot : ∀ a : α, ∃ a', a' < a
+theorem is_top_or_exists_gt [LinearOrderₓ α] (a : α) : IsTop a ∨ ∃ b, a < b := by
+  simpa only [or_iff_not_imp_left, IsTop, not_forall, not_leₓ] using id
 
-theorem no_bot [LT α] [NoBotOrder α] : ∀ a : α, ∃ a', a' < a :=
-  NoBotOrder.no_bot
+/-- Order without a minimal element. Sometimes called coinitial or dense. -/
+class NoMinOrder (α : Type u) [LT α] : Prop where
+  exists_lt (a : α) : ∃ b, b < a
+
+theorem exists_lt [LT α] [NoMinOrder α] : ∀ a : α, ∃ a', a' < a :=
+  NoMinOrder.exists_lt
 
 /-- `a : α` is a bottom element of `α` if it is less than or equal to any other element of `α`.
-This predicate is useful, e.g., to make some statements and proofs work in both cases
-`[order_bot α]` and `[no_bot_order α]`. -/
+This predicate is roughly an unbundled version of `order_bot`, except that a preorder may have
+several bottom elements. When `α` is linear, this is useful to make a case disjunction on
+`no_min_order α` within a proof. -/
 def IsBot {α : Type u} [LE α] (a : α) : Prop :=
   ∀ b, a ≤ b
 
 @[simp]
-theorem not_is_bot {α : Type u} [Preorderₓ α] [NoBotOrder α] (a : α) : ¬IsBot a := fun h =>
-  let ⟨b, hb⟩ := no_bot a
+theorem not_is_bot [Preorderₓ α] [NoMinOrder α] (a : α) : ¬IsBot a := fun h =>
+  let ⟨b, hb⟩ := exists_lt a
   hb.not_le (h b)
 
 theorem IsBot.unique {α : Type u} [PartialOrderₓ α] {a b : α} (ha : IsBot a) (hb : b ≤ a) : a = b :=
   le_antisymmₓ (ha b) hb
 
-instance OrderDual.no_top_order (α : Type u) [LT α] [NoBotOrder α] : NoTopOrder (OrderDual α) :=
-  ⟨fun a => @no_bot α _ _ a⟩
+theorem is_bot_or_exists_lt [LinearOrderₓ α] (a : α) : IsBot a ∨ ∃ b, b < a :=
+  @is_top_or_exists_gt (OrderDual α) _ a
 
-instance OrderDual.no_bot_order (α : Type u) [LT α] [NoTopOrder α] : NoBotOrder (OrderDual α) :=
-  ⟨fun a => @no_top α _ _ a⟩
+instance OrderDual.no_max_order (α : Type u) [LT α] [NoMinOrder α] : NoMaxOrder (OrderDual α) :=
+  ⟨fun a => @exists_lt α _ _ a⟩
 
-instance nonempty_lt {α : Type u} [LT α] [NoBotOrder α] (a : α) : Nonempty { x // x < a } :=
-  nonempty_subtype.2 (no_bot a)
+instance OrderDual.no_min_order (α : Type u) [LT α] [NoMaxOrder α] : NoMinOrder (OrderDual α) :=
+  ⟨fun a => @exists_gt α _ _ a⟩
+
+instance nonempty_lt [LT α] [NoMinOrder α] (a : α) : Nonempty { x // x < a } :=
+  nonempty_subtype.2 (exists_lt a)
 
 /-- An order is dense if there is an element between any pair of distinct elements. -/
 class DenselyOrdered (α : Type u) [LT α] : Prop where
@@ -689,7 +698,7 @@ def AsLinearOrder (α : Type u) :=
   α
 
 instance {α} [Inhabited α] : Inhabited (AsLinearOrder α) :=
-  ⟨(default α : α)⟩
+  ⟨(default : α)⟩
 
 noncomputable instance AsLinearOrder.linearOrder {α} [PartialOrderₓ α] [IsTotal α (· ≤ ·)] :
     LinearOrderₓ (AsLinearOrder α) :=

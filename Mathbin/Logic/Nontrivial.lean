@@ -73,11 +73,11 @@ noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] : Psum (Nont
   if h : Nontrivial α then Psum.inl h
   else
     Psum.inr
-      { default := default α,
+      { default := default,
         uniq := fun x : α => by
-          change x = default α
+          change x = default
           contrapose! h
-          use x, default α }
+          use x, default }
 
 theorem subsingleton_iff : Subsingleton α ↔ ∀ x y : α, x = y :=
   ⟨by
@@ -104,7 +104,7 @@ theorem false_of_nontrivial_of_subsingleton (α : Type _) [Nontrivial α] [Subsi
 
 instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by
   inhabit α
-  use none, some (default α)
+  use none, some default
 
 /-- Pushforward a `nontrivial` instance along an injective function. -/
 protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β} (hf : Function.Injective f) : Nontrivial β :=
@@ -147,13 +147,12 @@ variable {I : Type _} {f : I → Type _}
 theorem nontrivial_at (i' : I) [inst : ∀ i, Nonempty (f i)] [Nontrivial (f i')] : Nontrivial (∀ i : I, f i) := by
   classical <;> exact (Function.update_injective (fun i => Classical.choice (inst i)) i').Nontrivial
 
-/-- As a convenience, provide an instance automatically if `(f (default I))` is nontrivial.
+/-- As a convenience, provide an instance automatically if `(f default)` is nontrivial.
 
 If a different index has the non-trivial type, then use `haveI := nontrivial_at that_index`.
 -/
-instance Nontrivial [Inhabited I] [inst : ∀ i, Nonempty (f i)] [Nontrivial (f (default I))] :
-    Nontrivial (∀ i : I, f i) :=
-  nontrivial_at (default I)
+instance Nontrivial [Inhabited I] [inst : ∀ i, Nonempty (f i)] [Nontrivial (f default)] : Nontrivial (∀ i : I, f i) :=
+  nontrivial_at default
 
 end Pi
 

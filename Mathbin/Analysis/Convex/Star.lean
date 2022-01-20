@@ -127,7 +127,7 @@ theorem star_convex_sUnion {S : Set (Set E)} (hS : ∀, ∀ s ∈ S, ∀, StarCo
   exact star_convex_Union fun s => hS _ s.2
 
 theorem StarConvex.prod {y : F} {s : Set E} {t : Set F} (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 y t) :
-    StarConvex 𝕜 (x, y) (s.prod t) := fun y hy a b ha hb hab => ⟨hs hy.1 ha hb hab, ht hy.2 ha hb hab⟩
+    StarConvex 𝕜 (x, y) (s ×ˢ t) := fun y hy a b ha hb hab => ⟨hs hy.1 ha hb hab, ht hy.2 ha hb hab⟩
 
 theorem star_convex_pi {ι : Type _} {E : ι → Type _} [∀ i, AddCommMonoidₓ (E i)] [∀ i, HasScalar 𝕜 (E i)] {x : ∀ i, E i}
     {s : Set ι} {t : ∀ i, Set (E i)} (ht : ∀ i, StarConvex 𝕜 (x i) (t i)) : StarConvex 𝕜 x (s.pi t) :=
@@ -180,7 +180,7 @@ theorem star_convex_iff_forall_ne_pos (hx : x ∈ s) :
 
 theorem star_convex_iff_open_segment_subset (hx : x ∈ s) : StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s → OpenSegment 𝕜 x y ⊆ s :=
   star_convex_iff_segment_subset.trans $
-    forall_congrₓ $ fun y => forall_congrₓ $ fun hy => (open_segment_subset_iff_segment_subset hx hy).symm
+    forall₂_congrₓ $ fun y hy => (open_segment_subset_iff_segment_subset hx hy).symm
 
 theorem star_convex_singleton (x : E) : StarConvex 𝕜 x {x} := by
   rintro y (rfl : y = x) a b ha hb hab

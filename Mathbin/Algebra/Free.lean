@@ -41,7 +41,7 @@ variable {α : Type u}
 
 @[to_additive]
 instance [Inhabited α] : Inhabited (FreeMagma α) :=
-  ⟨of (default _)⟩
+  ⟨of default⟩
 
 @[to_additive]
 instance : Mul (FreeMagma α) :=
@@ -322,7 +322,7 @@ def of : α → FreeSemigroup α :=
 
 @[to_additive]
 instance [Inhabited α] : Inhabited (FreeSemigroup α) :=
-  ⟨of (default _)⟩
+  ⟨of default⟩
 
 @[elab_as_eliminator, to_additive]
 protected theorem induction_on {C : FreeSemigroup α → Prop} (x : FreeSemigroup α) (ih : ∀ x, C (of x)) : C x :=
@@ -435,7 +435,7 @@ def of (x : α) : FreeSemigroup α :=
 
 @[to_additive]
 instance [Inhabited α] : Inhabited (FreeSemigroup α) :=
-  ⟨of (default _)⟩
+  ⟨of default⟩
 
 /-- Recursor for free semigroup using `of` and `*`. -/
 @[elab_as_eliminator, to_additive "Recursor for free additive semigroup using `of` and `+`."]

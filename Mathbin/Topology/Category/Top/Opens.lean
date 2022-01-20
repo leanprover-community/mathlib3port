@@ -294,6 +294,16 @@ namespace TopologicalSpace.Opens
 
 open TopologicalSpace
 
+@[simp]
+theorem open_embedding_obj_top {X : Top} (U : opens X) : U.open_embedding.is_open_map.functor.obj ⊤ = U := by
+  ext1
+  exact set.image_univ.trans Subtype.range_coe
+
+@[simp]
+theorem inclusion_map_eq_top {X : Top} (U : opens X) : (opens.map U.inclusion).obj U = ⊤ := by
+  ext1
+  exact Subtype.coe_preimage_self _
+
 theorem inclusion_top_functor (X : Top) :
     (@opens.open_embedding X ⊤).IsOpenMap.Functor = map (inclusion_top_iso X).inv := by
   apply functor.hext

@@ -133,9 +133,14 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
   continuous_inv_fun :=
     continuous_subtype_mk _ $ continuous_pi $ fun i => (continuous_id.max continuous_const).comp (continuous_apply i)
 
-localized [Manifold] notation "𝓡 " n => modelWithCornersSelf ℝ (EuclideanSpace ℝ (Finₓ n))
+localized [Manifold]
+  notation "𝓡 " n =>
+    (modelWithCornersSelf ℝ (EuclideanSpace ℝ (Finₓ n)) :
+      ModelWithCorners ℝ (EuclideanSpace ℝ (Finₓ n)) (EuclideanSpace ℝ (Finₓ n)))
 
-localized [Manifold] notation "𝓡∂ " n => modelWithCornersEuclideanHalfSpace n
+localized [Manifold]
+  notation "𝓡∂ " n =>
+    (modelWithCornersEuclideanHalfSpace n : ModelWithCorners ℝ (EuclideanSpace ℝ (Finₓ n)) (EuclideanHalfSpace n))
 
 /-- The left chart for the topological space `[x, y]`, defined on `[x,y)` and sending `x` to `0` in
 `euclidean_half_space 1`.
@@ -256,7 +261,7 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
       simpa only [not_ltₓ] using h'
       
   chart_mem_atlas := fun z => by
-    by_cases' h' : z.val < y <;> simp [h']
+    by_cases' h' : (z : ℝ) < y <;> simp [h']
 
 /-- The manifold structure on `[x, y]` is smooth.
 -/

@@ -27,7 +27,7 @@ not hard but quite a pain to go about as there are many cases to consider.
 -/
 
 
-open Set
+open Function Set
 
 variable {𝕜 E F β : Type _}
 
@@ -77,6 +77,14 @@ theorem Convex.quasiconcave_on_of_convex_ge (hs : Convex 𝕜 s) (h : ∀ r, Con
     QuasiconcaveOn 𝕜 s f :=
   @Convex.quasiconvex_on_of_convex_le 𝕜 E (OrderDual β) _ _ _ _ _ _ hs h
 
+theorem QuasiconvexOn.convex [IsDirected β (· ≤ ·)] (hf : QuasiconvexOn 𝕜 s f) : Convex 𝕜 s :=
+  fun x y hx hy a b ha hb hab =>
+  let ⟨z, hxz, hyz⟩ := exists_ge_ge (f x) (f y)
+  (hf _ ⟨hx, hxz⟩ ⟨hy, hyz⟩ ha hb hab).1
+
+theorem QuasiconcaveOn.convex [IsDirected β (swap (· ≤ ·))] (hf : QuasiconcaveOn 𝕜 s f) : Convex 𝕜 s :=
+  hf.dual.convex
+
 end OrderedAddCommMonoid
 
 section LinearOrderedAddCommMonoid
@@ -86,12 +94,6 @@ variable [LinearOrderedAddCommMonoid β]
 section HasScalar
 
 variable [HasScalar 𝕜 E] {s : Set E} {f g : E → β}
-
-theorem QuasiconvexOn.convex (hf : QuasiconvexOn 𝕜 s f) : Convex 𝕜 s := fun x y hx hy a b ha hb hab =>
-  (hf _ ⟨hx, le_max_leftₓ _ _⟩ ⟨hy, le_max_rightₓ _ _⟩ ha hb hab).1
-
-theorem QuasiconcaveOn.convex (hf : QuasiconcaveOn 𝕜 s f) : Convex 𝕜 s :=
-  hf.dual.convex
 
 theorem QuasiconvexOn.sup (hf : QuasiconvexOn 𝕜 s f) (hg : QuasiconvexOn 𝕜 s g) : QuasiconvexOn 𝕜 s (f⊔g) := by
   intro r

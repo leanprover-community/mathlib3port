@@ -90,7 +90,7 @@ theorem continuous_ev [LocallyCompactSpace α] : Continuous (ev α β) :=
     let ⟨s, hs, sv, sc⟩ := LocallyCompactSpace.local_compact_nhds x (f ⁻¹' v) (f.continuous.tendsto x this)
     let ⟨u, us, uo, xu⟩ := mem_nhds_iff.mp hs
     show ev α β ⁻¹' n ∈ 𝓝 (f, x) from
-      let w := Set.Prod (compact_open.gen s v) u
+      let w := compact_open.gen s v ×ˢ u
       have : w ⊆ ev α β ⁻¹' n := fun ⟨f', x'⟩ ⟨hf', hx'⟩ =>
         calc
           f' x' ∈ f' '' s := mem_image_of_mem f' (us hx')
@@ -144,7 +144,7 @@ theorem compact_open_eq_Inf_induced :
   simp only [← generate_from_Union, induced_generate_from_eq, ContinuousMap.compactOpen]
   apply generate_from_mono
   rintro _ ⟨s, hs, u, hu, rfl⟩
-  rw [mem_bUnion_iff']
+  rw [mem_Union₂]
   refine' ⟨s, hs, _, ⟨univ, is_compact_iff_is_compact_univ.mp hs, u, hu, rfl⟩, _⟩
   ext f
   simp only [compact_open.gen, mem_set_of_eq, mem_preimage, ContinuousMap.coe_restrict]
@@ -219,7 +219,7 @@ def coev (b : β) : C(α, β × α) :=
 
 variable {α β}
 
-theorem image_coev {y : β} (s : Set α) : coev α β y '' s = Set.Prod {y} s := by
+theorem image_coev {y : β} (s : Set α) : coev α β y '' s = ({y} : Set β) ×ˢ s := by
   tidy
 
 theorem continuous_coev : Continuous (coev α β) :=
@@ -332,7 +332,7 @@ def curry [LocallyCompactSpace α] [LocallyCompactSpace β] : C(α × β, γ) �
 /-- If `α` has a single element, then `β` is homeomorphic to `C(α, β)`. -/
 def continuous_map_of_unique [Unique α] : β ≃ₜ C(α, β) where
   toFun := ContinuousMap.comp ⟨_, continuous_fst⟩ ∘ coev α β
-  invFun := ev α β ∘ fun f => (f, default α)
+  invFun := ev α β ∘ fun f => (f, default)
   left_inv := fun a => rfl
   right_inv := fun f => by
     ext
@@ -346,8 +346,7 @@ theorem continuous_map_of_unique_apply [Unique α] (b : β) (a : α) : continuou
   rfl
 
 @[simp]
-theorem continuous_map_of_unique_symm_apply [Unique α] (f : C(α, β)) :
-    continuous_map_of_unique.symm f = f (default α) :=
+theorem continuous_map_of_unique_symm_apply [Unique α] (f : C(α, β)) : continuous_map_of_unique.symm f = f default :=
   rfl
 
 end Homeomorph

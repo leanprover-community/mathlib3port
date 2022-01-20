@@ -52,11 +52,9 @@ section
 
 open_locale Classical
 
-theorem small_map {α : Type _} {β : Type _} [hβ : Small.{w} β] (e : α ≃ β) : Small.{w} α := by
-  run_tac
-    tactic.unfreeze_local_instances
-  rcases hβ with ⟨γ, ⟨f⟩⟩
-  exact Small.mk' (e.trans f)
+theorem small_map {α : Type _} {β : Type _} [hβ : Small.{w} β] (e : α ≃ β) : Small.{w} α :=
+  let ⟨γ, ⟨f⟩⟩ := hβ.equiv_small
+  Small.mk' (e.trans f)
 
 theorem small_congr {α : Type _} {β : Type _} (e : α ≃ β) : Small.{w} α ↔ Small.{w} β :=
   ⟨fun h => @small_map _ _ h e.symm, fun h => @small_map _ _ h e⟩
@@ -64,13 +62,13 @@ theorem small_congr {α : Type _} {β : Type _} (e : α ≃ β) : Small.{w} α �
 instance small_subtype (α : Type v) [Small.{w} α] (P : α → Prop) : Small.{w} { x // P x } :=
   small_map (equivShrink α).subtypeEquivOfSubtype'
 
-theorem small_of_injective {α : Type v} {β : Type w} [Small.{u} β] (f : α → β) (hf : Function.Injective f) :
+theorem small_of_injective {α : Type v} {β : Type w} [Small.{u} β] {f : α → β} (hf : Function.Injective f) :
     Small.{u} α :=
   small_map (Equivₓ.ofInjective f hf)
 
-theorem small_of_surjective {α : Type v} {β : Type w} [Small.{u} α] (f : α → β) (hf : Function.Surjective f) :
+theorem small_of_surjective {α : Type v} {β : Type w} [Small.{u} α] {f : α → β} (hf : Function.Surjective f) :
     Small.{u} β :=
-  small_of_injective _ (Function.injective_surj_inv hf)
+  small_of_injective (Function.injective_surj_inv hf)
 
 instance (priority := 100) small_subsingleton (α : Type v) [Subsingleton α] : Small.{w} α := by
   rcases is_empty_or_nonempty α with ⟨⟩ <;> skip
@@ -106,10 +104,10 @@ instance small_set {α} [Small.{w} α] : Small.{w} (Set α) :=
   ⟨⟨Set (Shrink α), ⟨Equivₓ.Set.congr (equivShrink α)⟩⟩⟩
 
 instance small_range {α : Type v} {β : Type w} (f : α → β) [Small.{u} α] : Small.{u} (Set.Range f) :=
-  small_of_surjective _ Set.surjective_onto_range
+  small_of_surjective Set.surjective_onto_range
 
 instance small_image {α : Type v} {β : Type w} (f : α → β) (S : Set α) [Small.{u} S] : Small.{u} (f '' S) :=
-  small_of_surjective _ Set.surjective_onto_image
+  small_of_surjective Set.surjective_onto_image
 
 theorem not_small_type : ¬Small.{u} (Type max u v)
   | ⟨⟨S, ⟨e⟩⟩⟩ =>

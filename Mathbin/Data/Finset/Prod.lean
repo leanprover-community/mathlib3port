@@ -42,7 +42,7 @@ theorem mem_product {p : α × β} : p ∈ s.product t ↔ p.1 ∈ s ∧ p.2 ∈
   mem_product
 
 @[simp, norm_cast]
-theorem coe_product (s : Finset α) (t : Finset β) : (s.product t : Set (α × β)) = (s : Set α).Prod t :=
+theorem coe_product (s : Finset α) (t : Finset β) : (s.product t : Set (α × β)) = (s : Set α) ×ˢ (t : Set β) :=
   Set.ext $ fun x => Finset.mem_product
 
 theorem subset_product [DecidableEq α] [DecidableEq β] {s : Finset (α × β)} :
@@ -138,6 +138,11 @@ theorem nonempty_product : (s.product t).Nonempty ↔ s.nonempty ∧ t.nonempty 
   ⟨fun h => ⟨h.fst, h.snd⟩, fun h => h.1.product h.2⟩
 
 @[simp]
+theorem product_eq_empty {s : Finset α} {t : Finset β} : s.product t = ∅ ↔ s = ∅ ∨ t = ∅ := by
+  rw [← not_nonempty_iff_eq_empty, nonempty_product, not_and_distrib, not_nonempty_iff_eq_empty,
+    not_nonempty_iff_eq_empty]
+
+@[simp]
 theorem singleton_product {a : α} : ({a} : Finset α).product t = t.map ⟨Prod.mk a, Prod.mk.inj_left _⟩ := by
   ext ⟨x, y⟩
   simp [And.left_comm, eq_comm]
@@ -222,6 +227,14 @@ theorem diag_empty : (∅ : Finset α).diag = ∅ :=
 @[simp]
 theorem off_diag_empty : (∅ : Finset α).offDiag = ∅ :=
   rfl
+
+@[simp]
+theorem diag_union_off_diag : s.diag ∪ s.off_diag = s.product s :=
+  filter_union_filter_neg_eq _ _
+
+@[simp]
+theorem disjoint_diag_off_diag : Disjoint s.diag s.off_diag :=
+  disjoint_filter_filter_neg _ _
 
 end Diag
 

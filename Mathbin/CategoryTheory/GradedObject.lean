@@ -33,7 +33,7 @@ def graded_object (β : Type w) (C : Type u) : Type max w u :=
   β → C
 
 instance inhabited_graded_object (β : Type w) (C : Type u) [Inhabited C] : Inhabited (graded_object β C) :=
-  ⟨fun b => Inhabited.default C⟩
+  ⟨fun b => Inhabited.default⟩
 
 /-- A type synonym for `β → C`, used for `β`-graded objects in a category `C`
 with a shift functor given by translation by `s`.

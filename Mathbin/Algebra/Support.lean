@@ -64,6 +64,10 @@ theorem mul_support_eq_empty_iff {f : α → M} : mul_support f = ∅ ↔ f = 1 
   simp
 
 @[simp, to_additive]
+theorem mul_support_nonempty_iff {f : α → M} : (mul_support f).Nonempty ↔ f ≠ 1 := by
+  rw [← ne_empty_iff_nonempty, Ne.def, mul_support_eq_empty_iff]
+
+@[simp, to_additive]
 theorem mul_support_one' : mul_support (1 : α → M) = ∅ :=
   mul_support_eq_empty_iff.2 rfl
 
@@ -236,7 +240,7 @@ theorem mul_support_prod [CommMonoidₓ M] (s : Finset α) (f : α → β → M)
 
 theorem support_prod_subset [CommMonoidWithZero A] (s : Finset α) (f : α → β → A) :
     (support fun x => ∏ i in s, f i x) ⊆ ⋂ i ∈ s, support (f i) := fun x hx =>
-  mem_bInter_iff.2 $ fun i hi H => hx $ Finset.prod_eq_zero hi H
+  mem_Inter₂.2 $ fun i hi H => hx $ Finset.prod_eq_zero hi H
 
 theorem support_prod [CommMonoidWithZero A] [NoZeroDivisors A] [Nontrivial A] (s : Finset α) (f : α → β → A) :
     (support fun x => ∏ i in s, f i x) = ⋂ i ∈ s, support (f i) :=

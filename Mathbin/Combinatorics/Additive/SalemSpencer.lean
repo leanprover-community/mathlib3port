@@ -71,9 +71,8 @@ theorem mul_salem_spencer_singleton (a : α) : MulSalemSpencer ({a} : Set α) :=
   Set.subsingleton_singleton.MulSalemSpencer
 
 @[to_additive]
-theorem MulSalemSpencer.prod {t : Set β} (hs : MulSalemSpencer s) (ht : MulSalemSpencer t) :
-    MulSalemSpencer (s.prod t) := fun a b c ha hb hc h =>
-  Prod.extₓ (hs ha.1 hb.1 hc.1 (Prod.ext_iff.1 h).1) (ht ha.2 hb.2 hc.2 (Prod.ext_iff.1 h).2)
+theorem MulSalemSpencer.prod {t : Set β} (hs : MulSalemSpencer s) (ht : MulSalemSpencer t) : MulSalemSpencer (s ×ˢ t) :=
+  fun a b c ha hb hc h => Prod.extₓ (hs ha.1 hb.1 hc.1 (Prod.ext_iff.1 h).1) (ht ha.2 hb.2 hc.2 (Prod.ext_iff.1 h).2)
 
 @[to_additive]
 theorem mul_salem_spencer_pi {ι : Type _} {α : ι → Type _} [∀ i, Monoidₓ (α i)] {s : ∀ i, Set (α i)}
@@ -205,11 +204,7 @@ section Nat
 
 theorem add_salem_spencer_iff_eq_right {s : Set ℕ} :
     AddSalemSpencer s ↔ ∀ ⦃a b c⦄, a ∈ s → b ∈ s → c ∈ s → a + b = c + c → a = c := by
-  refine'
-    forall_congrₓ fun a =>
-      forall_congrₓ $ fun b =>
-        forall_congrₓ $ fun c =>
-          forall_congrₓ $ fun _ => forall_congrₓ $ fun _ => forall_congrₓ $ fun _ => forall_congrₓ $ fun habc => ⟨_, _⟩
+  refine' forall₄_congrₓ fun a b c _ => forall₃_congrₓ $ fun _ _ habc => ⟨_, _⟩
   · rintro rfl
     simp_rw [← two_mul]  at habc
     exact mul_left_cancel₀ two_ne_zero habc

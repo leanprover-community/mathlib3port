@@ -62,6 +62,8 @@ noncomputable instance (f : E ≃L[𝕜] F) : Inhabited (ContinuousLinearMap.Non
 
 variable [CompleteSpace F]
 
+namespace ContinuousLinearMap
+
 /-- First step of the proof of the Banach open mapping theorem (using completeness of `F`):
 by Baire's theorem, there exists a ball in `E` whose image closure has nonempty interior.
 Rescaling everything, it follows that any `y ∈ F` is arbitrarily well approached by
@@ -231,15 +233,15 @@ theorem exists_preimage_norm_le (surj : surjective f) : ∃ C > 0, ∀ y, ∃ x,
       _ = (2 * C + 1) * ∥y∥ := by
         ring
       
-  have fsumeq : ∀ n : ℕ, f (∑ i in range n, u i) = y - (h^[n]) y := by
+  have fsumeq : ∀ n : ℕ, f (∑ i in Finset.range n, u i) = y - (h^[n]) y := by
     intro n
     induction' n with n IH
     · simp [f.map_zero]
       
     · rw [sum_range_succ, f.map_add, IH, iterate_succ', sub_add]
       
-  have : tendsto (fun n => ∑ i in range n, u i) at_top (𝓝 x) := su.has_sum.tendsto_sum_nat
-  have L₁ : tendsto (fun n => f (∑ i in range n, u i)) at_top (𝓝 (f x)) := (f.continuous.tendsto _).comp this
+  have : tendsto (fun n => ∑ i in Finset.range n, u i) at_top (𝓝 x) := su.has_sum.tendsto_sum_nat
+  have L₁ : tendsto (fun n => f (∑ i in Finset.range n, u i)) at_top (𝓝 (f x)) := (f.continuous.tendsto _).comp this
   simp only [fsumeq] at L₁
   have L₂ : tendsto (fun n => y - (h^[n]) y) at_top (𝓝 (y - 0)) := by
     refine' tendsto_const_nhds.sub _
@@ -254,7 +256,7 @@ theorem exists_preimage_norm_le (surj : surjective f) : ∃ C > 0, ∀ y, ∃ x,
 
 /-- The Banach open mapping theorem: a surjective bounded linear map between Banach spaces is
 open. -/
-theorem open_mapping (surj : surjective f) : IsOpenMap f := by
+protected theorem IsOpenMap (surj : surjective f) : IsOpenMap f := by
   intro s hs
   rcases exists_preimage_norm_le f surj with ⟨C, Cpos, hC⟩
   refine' is_open_iff.2 fun y yfs => _
@@ -278,17 +280,26 @@ theorem open_mapping (surj : surjective f) : IsOpenMap f := by
       
   exact Set.mem_image_of_mem _ (hε this)
 
-theorem open_mapping_affine {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P] [MetricSpace Q] [NormedAddTorsor F Q]
-    {f : P →ᵃ[𝕜] Q} (hf : Continuous f) (surj : surjective f) : IsOpenMap f := by
-  rw [← AffineMap.is_open_map_linear_iff]
-  exact
-    open_mapping { f.linear with cont := affine_map.continuous_linear_iff.mpr hf }
+protected theorem QuotientMap (surj : surjective f) : QuotientMap f :=
+  (f.is_open_map surj).to_quotient_map f.continuous surj
+
+theorem _root_.affine_map.is_open_map {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P] [MetricSpace Q]
+    [NormedAddTorsor F Q] (f : P →ᵃ[𝕜] Q) (hf : Continuous f) (surj : surjective f) : IsOpenMap f :=
+  AffineMap.is_open_map_linear_iff.mp $
+    ContinuousLinearMap.is_open_map { f.linear with cont := AffineMap.continuous_linear_iff.mpr hf }
       (f.surjective_iff_linear_surjective.mpr surj)
 
 /-! ### Applications of the Banach open mapping theorem -/
 
 
-namespace ContinuousLinearMap
+theorem interior_preimage (hsurj : surjective f) (s : Set F) : Interior (f ⁻¹' s) = f ⁻¹' Interior s :=
+  ((f.is_open_map hsurj).preimage_interior_eq_interior_preimage f.continuous s).symm
+
+theorem closure_preimage (hsurj : surjective f) (s : Set F) : Closure (f ⁻¹' s) = f ⁻¹' Closure s :=
+  ((f.is_open_map hsurj).preimage_closure_eq_closure_preimage f.continuous s).symm
+
+theorem frontier_preimage (hsurj : surjective f) (s : Set F) : Frontier (f ⁻¹' s) = f ⁻¹' Frontier s :=
+  ((f.is_open_map hsurj).preimage_frontier_eq_frontier_preimage f.continuous s).symm
 
 theorem exists_nonlinear_right_inverse_of_surjective (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
     ∃ fsymm : nonlinear_right_inverse f, 0 < fsymm.nnnorm := by
@@ -313,6 +324,8 @@ end ContinuousLinearMap
 
 namespace LinearEquiv
 
+variable [CompleteSpace E]
+
 /-- If a bounded linear map is a bijection, then its inverse is also a bounded linear map. -/
 @[continuity]
 theorem continuous_symm (e : E ≃ₗ[𝕜] F) (h : Continuous e) : Continuous e.symm := by
@@ -320,7 +333,7 @@ theorem continuous_symm (e : E ≃ₗ[𝕜] F) (h : Continuous e) : Continuous e
   intro s hs
   rw [← e.image_eq_preimage]
   rw [← e.coe_coe] at h⊢
-  exact open_mapping ⟨↑e, h⟩ e.surjective s hs
+  exact ContinuousLinearMap.is_open_map ⟨↑e, h⟩ e.surjective s hs
 
 /-- Associating to a linear equivalence between Banach spaces a continuous linear equivalence when
 the direct map is continuous, thanks to the Banach open mapping theorem that ensures that the
@@ -342,7 +355,9 @@ end LinearEquiv
 
 namespace ContinuousLinearEquiv
 
-/-- Convert a bijective continuous linear map `f : E →L[𝕜] F` between two Banach spaces
+variable [CompleteSpace E]
+
+/-- Convert a bijective continuous linear map `f : E →L[𝕜] F` from a Banach space to a normed space
 to a continuous linear equivalence. -/
 noncomputable def of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : E ≃L[𝕜] F :=
   (LinearEquiv.ofBijective (↑f) (LinearMap.ker_eq_bot.mp hinj)
@@ -371,6 +386,8 @@ end ContinuousLinearEquiv
 
 namespace ContinuousLinearMap
 
+variable [CompleteSpace E]
+
 /-- Intermediate definition used to show
 `continuous_linear_map.closed_complemented_range_of_is_compl_of_ker_eq_bot`.
 
@@ -398,7 +415,7 @@ theorem range_eq_map_coprod_subtypeL_equiv_of_is_compl (f : E →L[𝕜] F) {G :
 
 theorem closed_complemented_range_of_is_compl_of_ker_eq_bot (f : E →L[𝕜] F) (G : Submodule 𝕜 F) (h : IsCompl f.range G)
     (hG : IsClosed (G : Set F)) (hker : f.ker = ⊥) : IsClosed (f.range : Set F) := by
-  have : CompleteSpace G := complete_space_coe_iff_is_complete.2 hG.is_complete
+  have : CompleteSpace G := hG.complete_space_coe
   let g := coprod_subtypeL_equiv_of_is_compl f h hker
   rw [congr_argₓ coeₓ (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)]
   apply g.to_homeomorph.is_closed_image.2

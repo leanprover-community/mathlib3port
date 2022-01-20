@@ -83,8 +83,8 @@ def obj_equiv : X ≃ action_category M X where
 theorem hom_as_subtype (p q : action_category M X) : (p ⟶ q) = { m : M // m • p.back = q.back } :=
   rfl
 
-instance [Inhabited X] : Inhabited (action_category M X) where
-  default := ↑default X
+instance [Inhabited X] : Inhabited (action_category M X) :=
+  ⟨show X from default⟩
 
 instance [Nonempty X] : Nonempty (action_category M X) :=
   Nonempty.map (obj_equiv M X) inferInstance

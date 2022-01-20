@@ -174,6 +174,53 @@ instance lex.decidable [DecidableEq α] (r : α → α → Prop) (s : β → β 
       infer_instance)
     (lex_def r s).symm
 
+@[refl]
+theorem lex.refl_left (r : α → α → Prop) (s : β → β → Prop) [IsRefl α r] : ∀ x, Prod.Lex r s x x
+  | (x₁, x₂) => lex.left _ _ (refl _)
+
+instance is_refl_left {r : α → α → Prop} {s : β → β → Prop} [IsRefl α r] : IsRefl (α × β) (lex r s) :=
+  ⟨lex.refl_left _ _⟩
+
+@[refl]
+theorem lex.refl_right (r : α → α → Prop) (s : β → β → Prop) [IsRefl β s] : ∀ x, Prod.Lex r s x x
+  | (x₁, x₂) => lex.right _ (refl _)
+
+instance is_refl_right {r : α → α → Prop} {s : β → β → Prop} [IsRefl β s] : IsRefl (α × β) (lex r s) :=
+  ⟨lex.refl_right _ _⟩
+
+@[trans]
+theorem lex.trans {r : α → α → Prop} {s : β → β → Prop} [IsTrans α r] [IsTrans β s] :
+    ∀ {x y z : α × β}, Prod.Lex r s x y → Prod.Lex r s y z → Prod.Lex r s x z
+  | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.left _ _ hxy₁, lex.left _ _ hyz₁ => lex.left _ _ (trans hxy₁ hyz₁)
+  | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.left _ _ hxy₁, lex.right _ hyz₂ => lex.left _ _ hxy₁
+  | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.right _ _, lex.left _ _ hyz₁ => lex.left _ _ hyz₁
+  | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.right _ hxy₂, lex.right _ hyz₂ => lex.right _ (trans hxy₂ hyz₂)
+
+instance {r : α → α → Prop} {s : β → β → Prop} [IsTrans α r] [IsTrans β s] : IsTrans (α × β) (lex r s) :=
+  ⟨fun _ _ _ => lex.trans⟩
+
+instance {r : α → α → Prop} {s : β → β → Prop} [IsStrictOrder α r] [IsAntisymm β s] : IsAntisymm (α × β) (lex r s) :=
+  ⟨fun x₁ x₂ h₁₂ h₂₁ =>
+    match x₁, x₂, h₁₂, h₂₁ with
+    | (a₁, b₁), (a₂, b₂), lex.left _ _ hr₁, lex.left _ _ hr₂ => (irrefl a₁ (trans hr₁ hr₂)).elim
+    | (a₁, b₁), (a₂, b₂), lex.left _ _ hr₁, lex.right _ _ => (irrefl _ hr₁).elim
+    | (a₁, b₁), (a₂, b₂), lex.right _ _, lex.left _ _ hr₂ => (irrefl _ hr₂).elim
+    | (a₁, b₁), (a₂, b₂), lex.right _ hs₁, lex.right _ hs₂ => antisymm hs₁ hs₂ ▸ rfl⟩
+
+instance is_total_left {r : α → α → Prop} {s : β → β → Prop} [IsTotal α r] : IsTotal (α × β) (lex r s) :=
+  ⟨fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ => (IsTotal.total a₁ a₂).imp (lex.left _ _) (lex.left _ _)⟩
+
+instance is_total_right {r : α → α → Prop} {s : β → β → Prop} [IsTrichotomous α r] [IsTotal β s] :
+    IsTotal (α × β) (lex r s) :=
+  ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by
+    obtain hij | rfl | hji := trichotomous_of r i j
+    · exact Or.inl (lex.left _ _ hij)
+      
+    · exact (total_of s a b).imp (lex.right _) (lex.right _)
+      
+    · exact Or.inr (lex.left _ _ hji)
+      ⟩
+
 end Prod
 
 open Function

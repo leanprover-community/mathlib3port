@@ -107,8 +107,8 @@ theorem dart_of_neighbor_set_injective (v : V) : Function.Injective (G.dart_of_n
   injection h with h₁ h₂
   exact Subtype.ext h₂
 
-instance dart.inhabited [Inhabited V] [Inhabited (G.neighbor_set (default _))] : Inhabited G.dart :=
-  ⟨G.dart_of_neighbor_set (default _) (default _)⟩
+instance dart.inhabited [Inhabited V] [Inhabited (G.neighbor_set default)] : Inhabited G.dart :=
+  ⟨G.dart_of_neighbor_set default default⟩
 
 section DegreeSum
 

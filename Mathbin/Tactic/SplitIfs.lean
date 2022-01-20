@@ -23,7 +23,7 @@ unsafe def find_if_cond_at (at_ : loc) : tactic (Option expr) := do
   let lctx ← lctx.mmap infer_type
   let tgt ← target
   let es := if at_.include_goal then tgt :: lctx else lctx
-  return $ find_if_cond $ es.foldr app (default expr)
+  return $ find_if_cond $ es.foldr app default
 
 run_cmd
   mk_simp_attr `split_if_reduction
@@ -31,7 +31,7 @@ run_cmd
 run_cmd
   add_doc_string `simp_attr.split_if_reduction "Simp set for if-then-else statements"
 
-attribute [split_if_reduction] if_pos if_neg dif_pos dif_neg
+attribute [split_if_reduction] if_pos if_neg dif_pos dif_neg if_congr
 
 unsafe def reduce_ifs_at (at_ : loc) : tactic Unit := do
   let sls ← get_user_simp_lemmas `split_if_reduction

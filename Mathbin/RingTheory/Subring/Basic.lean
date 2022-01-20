@@ -335,8 +335,8 @@ theorem coeSubtype : ⇑s.subtype = coeₓ :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_nat_cast (n : ℕ) : ((n : s) : R) = n :=
-  s.subtype.map_nat_cast n
+theorem coe_nat_cast : ∀ n : ℕ, ((n : s) : R) = n :=
+  map_nat_cast s.subtype
 
 @[simp, norm_cast]
 theorem coe_int_cast (n : ℤ) : ((n : s) : R) = n :=
@@ -524,7 +524,7 @@ theorem coe_Inf (S : Set (Subring R)) : ((Inf S : Subring R) : Set R) = ⋂ s �
   rfl
 
 theorem mem_Inf {S : Set (Subring R)} {x : R} : x ∈ Inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
-  Set.mem_bInter_iff
+  Set.mem_Inter₂
 
 @[simp]
 theorem Inf_to_submonoid (s : Set (Subring R)) : (Inf s).toSubmonoid = ⨅ t ∈ s, Subring.toSubmonoid t :=
@@ -752,13 +752,14 @@ theorem map_bot (f : R →+* S) : (⊥ : Subring R).map f = ⊥ :=
 theorem comap_top (f : R →+* S) : (⊤ : Subring S).comap f = ⊤ :=
   (gc_map_comap f).u_top
 
-/-- Given `subring`s `s`, `t` of rings `R`, `S` respectively, `s.prod t` is `s × t`
+/-- Given `subring`s `s`, `t` of rings `R`, `S` respectively, `s.prod t` is `s ×̂ t`
 as a subring of `R × S`. -/
 def Prod (s : Subring R) (t : Subring S) : Subring (R × S) :=
-  { s.to_submonoid.prod t.to_submonoid, s.to_add_subgroup.prod t.to_add_subgroup with Carrier := (s : Set R).Prod t }
+  { s.to_submonoid.prod t.to_submonoid, s.to_add_subgroup.prod t.to_add_subgroup with
+    Carrier := (s : Set R) ×ˢ (t : Set S) }
 
 @[norm_cast]
-theorem coe_prod (s : Subring R) (t : Subring S) : (s.prod t : Set (R × S)) = (s : Set R).Prod (t : Set S) :=
+theorem coe_prod (s : Subring R) (t : Subring S) : (s.prod t : Set (R × S)) = (s : Set R) ×ˢ (t : Set S) :=
   rfl
 
 theorem mem_prod {s : Subring R} {t : Subring S} {p : R × S} : p ∈ s.prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=

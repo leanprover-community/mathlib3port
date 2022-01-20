@@ -177,7 +177,7 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
             (half_pos $ half_pos ε0) with
           ⟨δ₁, δ₁0, hδ₁⟩
         filter_upwards [Ioc_mem_nhds_within_Ioi ⟨le_rfl, δ₁0⟩]
-        rintro δ hδ y₁ y₂ hy₁ hy₂
+        rintro δ hδ y₁ hy₁ y₂ hy₂
         have : closed_ball x δ ∩ I.Icc ⊆ closed_ball x δ₁ ∩ I.Icc :=
           inter_subset_inter_left _ (closed_ball_subset_closed_ball hδ.2)
         rw [← dist_eq_norm]
@@ -218,7 +218,7 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
           prod_le_prod (fun _ _ => abs_nonneg _) fun j hj => this j _ = (2 * δ) ^ (n + 1) := by
           simp
       
-    · refine' (norm_integral_le_of_le_const (fun y hy => hdfδ _ _ (Hmaps _ Hu hy) (Hmaps _ Hl hy)) _).trans _
+    · refine' (norm_integral_le_of_le_const (fun y hy => hdfδ _ (Hmaps _ Hu hy) _ (Hmaps _ Hl hy)) _).trans _
       refine' (mul_le_mul_of_nonneg_right _ (half_pos ε0).le).trans_eq (one_mulₓ _)
       rw [box.coe_eq_pi, Real.volume_pi_Ioc_to_real (box.lower_le_upper _)]
       refine' prod_le_one (fun _ _ => sub_nonneg.2 $ box.lower_le_upper _ _) fun j hj => _

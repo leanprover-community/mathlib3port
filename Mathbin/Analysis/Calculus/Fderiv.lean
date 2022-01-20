@@ -356,7 +356,7 @@ neighborhood of `x`. See also `has_strict_fderiv_at.exists_lipschitz_on_with_of_
 more precise statement. -/
 theorem HasStrictFderivAt.exists_lipschitz_on_with (hf : HasStrictFderivAt f f' x) :
     ∃ K, ∃ s ∈ 𝓝 x, LipschitzOnWith K f s :=
-  (no_top _).imp hf.exists_lipschitz_on_with_of_nnnorm_lt
+  (exists_gt _).imp hf.exists_lipschitz_on_with_of_nnnorm_lt
 
 /-- Directional derivative agrees with `has_fderiv`. -/
 theorem HasFderivAt.lim (hf : HasFderivAt f f' x) (v : E) {α : Type _} {c : α → 𝕜} {l : Filter α}
@@ -622,6 +622,29 @@ theorem HasFderivAtFilter.congr_of_eventually_eq (h : HasFderivAtFilter f f' x L
     HasFderivAtFilter f₁ f' x L :=
   (hL.has_fderiv_at_filter_iff hx $ fun _ => rfl).2 h
 
+theorem Filter.EventuallyEq.has_fderiv_at_iff (h : f₀ =ᶠ[𝓝 x] f₁) : HasFderivAt f₀ f' x ↔ HasFderivAt f₁ f' x :=
+  h.has_fderiv_at_filter_iff h.eq_of_nhds fun _ => rfl
+
+theorem Filter.EventuallyEq.differentiable_at_iff (h : f₀ =ᶠ[𝓝 x] f₁) :
+    DifferentiableAt 𝕜 f₀ x ↔ DifferentiableAt 𝕜 f₁ x :=
+  exists_congr $ fun f' => h.has_fderiv_at_iff
+
+theorem Filter.EventuallyEq.has_fderiv_within_at_iff (h : f₀ =ᶠ[𝓝[s] x] f₁) (hx : f₀ x = f₁ x) :
+    HasFderivWithinAt f₀ f' s x ↔ HasFderivWithinAt f₁ f' s x :=
+  h.has_fderiv_at_filter_iff hx fun _ => rfl
+
+theorem Filter.EventuallyEq.has_fderiv_within_at_iff_of_mem (h : f₀ =ᶠ[𝓝[s] x] f₁) (hx : x ∈ s) :
+    HasFderivWithinAt f₀ f' s x ↔ HasFderivWithinAt f₁ f' s x :=
+  h.has_fderiv_within_at_iff (h.eq_of_nhds_within hx)
+
+theorem Filter.EventuallyEq.differentiable_within_at_iff (h : f₀ =ᶠ[𝓝[s] x] f₁) (hx : f₀ x = f₁ x) :
+    DifferentiableWithinAt 𝕜 f₀ s x ↔ DifferentiableWithinAt 𝕜 f₁ s x :=
+  exists_congr $ fun f' => h.has_fderiv_within_at_iff hx
+
+theorem Filter.EventuallyEq.differentiable_within_at_iff_of_mem (h : f₀ =ᶠ[𝓝[s] x] f₁) (hx : x ∈ s) :
+    DifferentiableWithinAt 𝕜 f₀ s x ↔ DifferentiableWithinAt 𝕜 f₁ s x :=
+  h.differentiable_within_at_iff (h.eq_of_nhds_within hx)
+
 theorem HasFderivWithinAt.congr_mono (h : HasFderivWithinAt f f' s x) (ht : ∀, ∀ x ∈ t, ∀, f₁ x = f x) (hx : f₁ x = f x)
     (h₁ : t ⊆ s) : HasFderivWithinAt f₁ f' t x :=
   HasFderivAtFilter.congr_of_eventually_eq (h.mono h₁) (Filter.mem_inf_of_right ht) hx
@@ -664,7 +687,7 @@ theorem differentiable_on_congr (h' : ∀, ∀ x ∈ s, ∀, f₁ x = f x) : Dif
 
 theorem DifferentiableAt.congr_of_eventually_eq (h : DifferentiableAt 𝕜 f x) (hL : f₁ =ᶠ[𝓝 x] f) :
     DifferentiableAt 𝕜 f₁ x :=
-  HasFderivAt.differentiable_at (HasFderivAtFilter.congr_of_eventually_eq h.has_fderiv_at hL (mem_of_mem_nhds hL : _))
+  hL.differentiable_at_iff.2 h
 
 theorem DifferentiableWithinAt.fderiv_within_congr_mono (h : DifferentiableWithinAt 𝕜 f s x)
     (hs : ∀, ∀ x ∈ t, ∀, f₁ x = f x) (hx : f₁ x = f x) (hxt : UniqueDiffWithinAt 𝕜 t x) (h₁ : t ⊆ s) :

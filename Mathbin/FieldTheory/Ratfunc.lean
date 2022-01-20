@@ -46,6 +46,12 @@ namely `ratfunc.of_fraction_ring`, `ratfunc.to_fraction_ring`, `ratfunc.mk` and
 All these maps get `simp`ed to bundled morphisms like `algebra_map (polynomial K) (ratfunc K)`
 and `is_localization.alg_equiv`.
 
+## References
+
+* [Kleiman, *Misconceptions about $K_X$*][kleiman1979]
+* https://freedommathdance.blogspot.com/2012/11/misconceptions-about-kx.html
+* https://stacks.math.columbia.edu/tag/01X1
+
 -/
 
 
@@ -84,6 +90,32 @@ theorem of_fraction_ring_injective : Function.Injective (of_fraction_ring : _ �
 
 theorem to_fraction_ring_injective : Function.Injective (to_fraction_ring : _ → FractionRing (Polynomial K))
   | ⟨x⟩, ⟨y⟩, rfl => rfl
+
+/-- Non-dependent recursion principle for `ratfunc K`:
+To construct a term of `P : Sort*` out of `x : ratfunc K`,
+it suffices to provide a constructor `f : Π (p q : polynomial K), P`
+and a proof that `f p q = f p' q'` for all `p q p' q'` such that `p * q' = p' * q` where
+both `q` and `q'` are not zero divisors, stated as `q ∉ (polynomial K)⁰`, `q' ∉ (polynomial K)⁰`.
+
+If considering `K` as an integral domain, this is the same as saying that
+we construct a value of `P` for such elements of `ratfunc K` by setting
+`lift_on (p / q) f _ = f p q`.
+
+When `[is_domain K]`, one can use `ratfunc.lift_on'`, which has the stronger requirement
+of `∀ {p q a : polynomial K} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q)`.
+-/
+protected irreducible_def lift_on {P : Sort v} (x : Ratfunc K) (f : ∀ p q : Polynomial K, P)
+  (H : ∀ {p q p' q'} hq : q ∈ (Polynomial K)⁰ hq' : q' ∈ (Polynomial K)⁰, p * q' = p' * q → f p q = f p' q') : P :=
+  Localization.liftOn (to_fraction_ring x) (fun p q => f p q) fun p p' q q' h =>
+    H q.2 q'.2
+      (let ⟨⟨c, hc⟩, mul_eq⟩ := Localization.r_iff_exists.mp h
+      mul_cancel_right_coe_non_zero_divisor.mp mul_eq)
+
+theorem lift_on_of_fraction_ring_mk {P : Sort v} (n : Polynomial K) (d : (Polynomial K)⁰) (f : ∀ p q : Polynomial K, P)
+    (H : ∀ {p q p' q'} hq : q ∈ (Polynomial K)⁰ hq' : q' ∈ (Polynomial K)⁰, p * q' = p' * q → f p q = f p' q') :
+    Ratfunc.liftOn (of_fraction_ring (Localization.mk n d)) f @H = f n d := by
+  unfold Ratfunc.liftOn
+  exact Localization.lift_on_mk _ _ _ _
 
 include hdomain
 
@@ -127,30 +159,34 @@ theorem mk_eq_mk {p q p' q' : Polynomial K} (hq : q ≠ 0) (hq' : q' ≠ 0) :
   rw [mk_def_of_ne _ hq, mk_def_of_ne _ hq', of_fraction_ring_injective.eq_iff, IsLocalization.mk'_eq_iff_eq,
     SetLike.coe_mk, SetLike.coe_mk, (IsFractionRing.injective (Polynomial K) (FractionRing (Polynomial K))).eq_iff]
 
-/-- Non-dependent recursion principle for `ratfunc K`: if `f p q : P` for all `p q`,
-such that `p * q' = p' * q` implies `f p q = f p' q'`, then we can find a value of `P`
-for all elements of `ratfunc K` by setting `lift_on (p / q) f _ = f p q`.
-
-The value of `f p 0` for any `p` is never used and in principle this may be anything,
-although many usages of `lift_on` assume `f p 0 = f 0 1`.
--/
-protected irreducible_def lift_on {P : Sort v} (x : Ratfunc K) (f : ∀ p q : Polynomial K, P)
-  (H : ∀ {p q p' q'} hq : q ≠ 0 hq' : q' ≠ 0, p * q' = p' * q → f p q = f p' q') : P :=
-  Localization.liftOn (to_fraction_ring x) (fun p q => f p q) fun p p' q q' h =>
-    H (mem_non_zero_divisors_iff_ne_zero.mp q.2) (mem_non_zero_divisors_iff_ne_zero.mp q'.2)
-      (let ⟨⟨c, hc⟩, mul_eq⟩ := Localization.r_iff_exists.mp h
-      (mul_eq_mul_right_iff.mp mul_eq).resolve_right (mem_non_zero_divisors_iff_ne_zero.mp hc))
-
 theorem lift_on_mk {P : Sort v} (p q : Polynomial K) (f : ∀ p q : Polynomial K, P) (f0 : ∀ p, f p 0 = f 0 1)
-    (H : ∀ {p q p' q'} hq : q ≠ 0 hq' : q' ≠ 0, p * q' = p' * q → f p q = f p' q') :
+    (H' : ∀ {p q p' q'} hq : q ≠ 0 hq' : q' ≠ 0, p * q' = p' * q → f p q = f p' q')
+    (H : ∀ {p q p' q'} hq : q ∈ (Polynomial K)⁰ hq' : q' ∈ (Polynomial K)⁰, p * q' = p' * q → f p q = f p' q' :=
+      fun p q p' q' hq hq' h => H' (nonZeroDivisors.ne_zero hq) (nonZeroDivisors.ne_zero hq') h) :
     (Ratfunc.mk p q).liftOn f @H = f p q := by
-  unfold Ratfunc.liftOn
   by_cases' hq : q = 0
   · subst hq
-    simp only [mk_zero, f0, ← Localization.mk_zero 1, Localization.lift_on_mk, Submonoid.coe_one]
+    simp only [mk_zero, f0, ← Localization.mk_zero 1, Localization.lift_on_mk, lift_on_of_fraction_ring_mk,
+      Submonoid.coe_one]
     
-  · simp only [mk_eq_localization_mk _ hq, Localization.lift_on_mk, SetLike.coe_mk]
+  · simp only [mk_eq_localization_mk _ hq, Localization.lift_on_mk, lift_on_of_fraction_ring_mk, SetLike.coe_mk]
     
+
+theorem lift_on_condition_of_lift_on'_condition {P : Sort v} {f : ∀ p q : Polynomial K, P}
+    (H : ∀ {p q a} hq : q ≠ 0 ha : a ≠ 0, f (a * p) (a * q) = f p q) ⦃p q p' q' : Polynomial K⦄ (hq : q ≠ 0)
+    (hq' : q' ≠ 0) (h : p * q' = p' * q) : f p q = f p' q' := by
+  have H0 : f 0 q = f 0 q' := by
+    calc f 0 q = f (q' * 0) (q' * q) := (H hq hq').symm _ = f (q * 0) (q * q') := by
+        rw [mul_zero, mul_zero, mul_commₓ]_ = f 0 q' := H hq' hq
+  by_cases' hp : p = 0
+  · simp only [hp, hq, zero_mul, or_falseₓ, zero_eq_mul] at h⊢
+    rw [h, H0]
+    
+  by_cases' hp' : p' = 0
+  · simpa only [hp, hp', hq', zero_mul, or_selfₓ, mul_eq_zero] using h
+    
+  calc f p q = f (p' * p) (p' * q) := (H hq hp').symm _ = f (p * p') (p * q') := by
+      rw [mul_commₓ p p', h]_ = f p' q' := H hq' hp
 
 /-- Non-dependent recursion principle for `ratfunc K`: if `f p q : P` for all `p q`,
 such that `f (a * p) (a * q) = f p q`, then we can find a value of `P`
@@ -161,24 +197,13 @@ although many usages of `lift_on'` assume `f p 0 = f 0 1`.
 -/
 protected irreducible_def lift_on' {P : Sort v} (x : Ratfunc K) (f : ∀ p q : Polynomial K, P)
   (H : ∀ {p q a} hq : q ≠ 0 ha : a ≠ 0, f (a * p) (a * q) = f p q) : P :=
-  x.lift_on f fun p q p' q' hq hq' h => by
-    have H0 : f 0 q = f 0 q' := by
-      calc f 0 q = f (q' * 0) (q' * q) := (H hq hq').symm _ = f (q * 0) (q * q') := by
-          rw [mul_zero, mul_zero, mul_commₓ]_ = f 0 q' := H hq' hq
-    by_cases' hp : p = 0
-    · simp [hp, hq] at h⊢
-      rw [h, H0]
-      
-    by_cases' hp' : p' = 0
-    · simp [hp', hq'] at h⊢
-      rw [h, H0]
-      
-    calc f p q = f (p' * p) (p' * q) := (H hq hp').symm _ = f (p * p') (p * q') := by
-        rw [mul_commₓ p p', h]_ = f p' q' := H hq' hp
+  x.lift_on f fun p q p' q' hq hq' =>
+    lift_on_condition_of_lift_on'_condition (@H) (nonZeroDivisors.ne_zero hq) (nonZeroDivisors.ne_zero hq')
 
 theorem lift_on'_mk {P : Sort v} (p q : Polynomial K) (f : ∀ p q : Polynomial K, P) (f0 : ∀ p, f p 0 = f 0 1)
     (H : ∀ {p q a} hq : q ≠ 0 ha : a ≠ 0, f (a * p) (a * q) = f p q) : (Ratfunc.mk p q).liftOn' f @H = f p q := by
   rw [Ratfunc.liftOn', Ratfunc.lift_on_mk _ _ _ f0]
+  exact lift_on_condition_of_lift_on'_condition @H
 
 -- ././Mathport/Syntax/Translate/Basic.lean:1080:38: unsupported irreducible non-definition
 /-- Induction principle for `ratfunc K`: if `f p q : P (ratfunc.mk p q)` for all `p q`,
@@ -535,15 +560,17 @@ variable {K}
 
 @[simp]
 theorem lift_on_div {P : Sort v} (p q : Polynomial K) (f : ∀ p q : Polynomial K, P) (f0 : ∀ p, f p 0 = f 0 1)
-    (H : ∀ {p q p' q'} hq : q ≠ 0 hq' : q' ≠ 0, p * q' = p' * q → f p q = f p' q') :
+    (H' : ∀ {p q p' q'} hq : q ≠ 0 hq' : q' ≠ 0, p * q' = p' * q → f p q = f p' q')
+    (H : ∀ {p q p' q'} hq : q ∈ (Polynomial K)⁰ hq' : q' ∈ (Polynomial K)⁰, p * q' = p' * q → f p q = f p' q' :=
+      fun p q p' q' hq hq' h => H' (nonZeroDivisors.ne_zero hq) (nonZeroDivisors.ne_zero hq') h) :
     (algebraMap _ (Ratfunc K) p / algebraMap _ _ q).liftOn f @H = f p q := by
-  rw [← mk_eq_div, lift_on_mk _ _ f f0 @H]
+  rw [← mk_eq_div, lift_on_mk _ _ f f0 @H']
 
 @[simp]
 theorem lift_on'_div {P : Sort v} (p q : Polynomial K) (f : ∀ p q : Polynomial K, P) (f0 : ∀ p, f p 0 = f 0 1) H :
     (algebraMap _ (Ratfunc K) p / algebraMap _ _ q).liftOn' f @H = f p q := by
-  rw [Ratfunc.liftOn', lift_on_div]
-  assumption
+  rw [Ratfunc.liftOn', lift_on_div _ _ _ f0]
+  exact lift_on_condition_of_lift_on'_condition @H
 
 /-- Induction principle for `ratfunc K`: if `f p q : P (p / q)` for all `p q : polynomial K`,
 then `P` holds on all elements of `ratfunc K`.

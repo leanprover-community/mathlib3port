@@ -252,9 +252,11 @@ namespace Emetric
 instance (priority := 900) : is_countably_generated (𝓤 α) :=
   is_countably_generated_of_seq ⟨_, uniformity_basis_edist_inv_nat.eq_infi⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection {a b «expr ∈ » s}
 /-- ε-δ characterization of uniform continuity on a set for pseudoemetric spaces -/
 theorem uniform_continuous_on_iff [PseudoEmetricSpace β] {f : α → β} {s : Set α} :
-    UniformContinuousOn f s ↔ ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ {a b}, a ∈ s → b ∈ s → edist a b < δ → edist (f a) (f b) < ε :=
+    UniformContinuousOn f s ↔
+      ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ {a b} {_ : a ∈ s} {_ : b ∈ s}, edist a b < δ → edist (f a) (f b) < ε :=
   uniformity_basis_edist.uniform_continuous_on_iff uniformity_basis_edist
 
 /-- ε-δ characterization of uniform continuity on pseudoemetric spaces -/
@@ -587,11 +589,11 @@ theorem ball_mem_nhds (x : α) {ε : ℝ≥0∞} (ε0 : 0 < ε) : ball x ε ∈ 
 theorem closed_ball_mem_nhds (x : α) {ε : ℝ≥0∞} (ε0 : 0 < ε) : closed_ball x ε ∈ 𝓝 x :=
   mem_of_superset (ball_mem_nhds x ε0) ball_subset_closed_ball
 
-theorem ball_prod_same [PseudoEmetricSpace β] (x : α) (y : β) (r : ℝ≥0∞) : (ball x r).Prod (ball y r) = ball (x, y) r :=
+theorem ball_prod_same [PseudoEmetricSpace β] (x : α) (y : β) (r : ℝ≥0∞) : ball x r ×ˢ ball y r = ball (x, y) r :=
   ext $ fun z => max_lt_iff.symm
 
 theorem closed_ball_prod_same [PseudoEmetricSpace β] (x : α) (y : β) (r : ℝ≥0∞) :
-    (closed_ball x r).Prod (closed_ball y r) = closed_ball (x, y) r :=
+    closed_ball x r ×ˢ closed_ball y r = closed_ball (x, y) r :=
   ext $ fun z => max_le_iff.symm
 
 /-- ε-characterization of the closure in pseudoemetric spaces -/
@@ -674,7 +676,7 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
       countable_Union $ fun n => (hTc n).Image _, _⟩
   refine' fun x hx => mem_closure_iff.2 fun ε ε0 => _
   rcases Ennreal.exists_inv_nat_lt (Ennreal.half_pos ε0.lt.ne').ne' with ⟨n, hn⟩
-  rcases mem_bUnion_iff.1 (hsT n hx) with ⟨y, hyn, hyx⟩
+  rcases mem_Union₂.1 (hsT n hx) with ⟨y, hyn, hyx⟩
   refine' ⟨f (n⁻¹) y, mem_Union.2 ⟨n, mem_image_of_mem _ hyn⟩, _⟩
   calc edist x (f (n⁻¹) y) ≤ n⁻¹ * 2 := hf _ _ ⟨hyx, hx⟩_ < ε := Ennreal.mul_lt_of_lt_div hn
 

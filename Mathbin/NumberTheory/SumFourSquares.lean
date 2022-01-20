@@ -126,7 +126,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
           decide),
       ← h, mul_addₓ, ← hx, ← hy]
     have : (∑ x, f (σ x) ^ 2) = ∑ x, f x ^ 2 := by
-      conv_rhs => rw [← σ.sum_comp]
+      conv_rhs => rw [← Equivₓ.sum_comp σ]
     have fin4univ : (univ : Finset (Finₓ 4)).1 = 0 ::ₘ 1 ::ₘ 2 ::ₘ 3 ::ₘ 0 := by
       decide
     simpa [Finset.sum_eq_multiset_sum, fin4univ, Multiset.sum_cons, f, add_assocₓ]⟩

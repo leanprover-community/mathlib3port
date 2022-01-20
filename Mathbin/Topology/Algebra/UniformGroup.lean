@@ -1,3 +1,4 @@
+import Mathbin.Topology.UniformSpace.UniformConvergence
 import Mathbin.Topology.UniformSpace.UniformEmbedding
 import Mathbin.Topology.UniformSpace.CompleteSeparated
 import Mathbin.Topology.Algebra.Group
@@ -138,38 +139,35 @@ theorem CauchySeq.add {ι : Type _} [SemilatticeSup ι] {u v : ι → α} (hu : 
 
 end UniformAddGroup
 
-section TopologicalAddCommGroup
-
-universe u v w x
+section TopologicalCommGroup
 
 open Filter
 
-variable {G : Type u} [AddCommGroupₓ G] [TopologicalSpace G] [TopologicalAddGroup G]
-
-variable (G)
+variable (G : Type _) [CommGroupₓ G] [TopologicalSpace G] [TopologicalGroup G]
 
 /-- The right uniformity on a topological group. -/
-def TopologicalAddGroup.toUniformSpace : UniformSpace G where
-  uniformity := comap (fun p : G × G => p.2 - p.1) (𝓝 0)
+@[to_additive "The right uniformity on a topological group"]
+def TopologicalGroup.toUniformSpace : UniformSpace G where
+  uniformity := comap (fun p : G × G => p.2 / p.1) (𝓝 1)
   refl := by
-    refine' map_le_iff_le_comap.1 (le_transₓ _ (pure_le_nhds 0)) <;>
+    refine' map_le_iff_le_comap.1 (le_transₓ _ (pure_le_nhds 1)) <;>
       simp (config := { contextual := true })[Set.subset_def]
   symm := by
-    suffices tendsto ((fun p => -p) ∘ fun p : G × G => p.2 - p.1) (comap (fun p : G × G => p.2 - p.1) (𝓝 0)) (𝓝 (-0)) by
-      simpa [· ∘ ·, tendsto_comap_iff]
-    exact tendsto.comp (tendsto.neg tendsto_id) tendsto_comap
+    suffices tendsto (fun p : G × G => (p.2 / p.1)⁻¹) (comap (fun p : G × G => p.2 / p.1) (𝓝 1)) (𝓝 (1⁻¹)) by
+      simpa [tendsto_comap_iff]
+    exact tendsto.comp (tendsto.inv tendsto_id) tendsto_comap
   comp := by
     intro D H
     rw [mem_lift'_sets]
     · rcases H with ⟨U, U_nhds, U_sub⟩
-      rcases exists_nhds_zero_half U_nhds with ⟨V, ⟨V_nhds, V_sum⟩⟩
-      exists (fun p : G × G => p.2 - p.1) ⁻¹' V
-      have H : (fun p : G × G => p.2 - p.1) ⁻¹' V ∈ comap (fun p : G × G => p.2 - p.1) (𝓝 (0 : G)) := by
+      rcases exists_nhds_one_split U_nhds with ⟨V, ⟨V_nhds, V_sum⟩⟩
+      exists (fun p : G × G => p.2 / p.1) ⁻¹' V
+      have H : (fun p : G × G => p.2 / p.1) ⁻¹' V ∈ comap (fun p : G × G => p.2 / p.1) (𝓝 (1 : G)) := by
         exists V, V_nhds <;> rfl
       exists H
       have comp_rel_sub :
-        CompRel ((fun p : G × G => p.2 - p.1) ⁻¹' V) ((fun p => p.2 - p.1) ⁻¹' V) ⊆
-          (fun p : G × G => p.2 - p.1) ⁻¹' U :=
+        CompRel ((fun p : G × G => p.2 / p.1) ⁻¹' V) ((fun p => p.2 / p.1) ⁻¹' V) ⊆
+          (fun p : G × G => p.2 / p.1) ⁻¹' U :=
         by
         intro p p_comp_rel
         rcases p_comp_rel with ⟨z, ⟨Hz1, Hz2⟩⟩
@@ -181,12 +179,12 @@ def TopologicalAddGroup.toUniformSpace : UniformSpace G where
   is_open_uniformity := by
     intro S
     let S' := fun x => { p : G × G | p.1 = x → p.2 ∈ S }
-    show IsOpen S ↔ ∀ x : G, x ∈ S → S' x ∈ comap (fun p : G × G => p.2 - p.1) (𝓝 (0 : G))
+    show IsOpen S ↔ ∀ x : G, x ∈ S → S' x ∈ comap (fun p : G × G => p.2 / p.1) (𝓝 (1 : G))
     rw [is_open_iff_mem_nhds]
-    refine' forall_congrₓ fun a => forall_congrₓ fun ha => _
-    rw [← nhds_translation_sub, mem_comap, mem_comap]
-    refine' exists_congr fun t => exists_congr fun ht => _
-    show (fun y : G => y - a) ⁻¹' t ⊆ S ↔ (fun p : G × G => p.snd - p.fst) ⁻¹' t ⊆ S' a
+    refine' forall₂_congrₓ fun a ha => _
+    rw [← nhds_translation_div, mem_comap, mem_comap]
+    refine' exists₂_congrₓ fun t ht => _
+    show (fun y : G => y / a) ⁻¹' t ⊆ S ↔ (fun p : G × G => p.snd / p.fst) ⁻¹' t ⊆ S' a
     constructor
     · rintro h ⟨x, y⟩ hx rfl
       exact h hx
@@ -194,6 +192,50 @@ def TopologicalAddGroup.toUniformSpace : UniformSpace G where
     · rintro h x hx
       exact @h (a, x) hx rfl
       
+
+variable {G}
+
+@[to_additive]
+theorem TopologicalGroup.tendsto_uniformly_iff {ι α : Type _} (F : ι → α → G) (f : α → G) (p : Filter ι) :
+    @TendstoUniformly α G ι (TopologicalGroup.toUniformSpace G) F f p ↔
+      ∀, ∀ u ∈ 𝓝 (1 : G), ∀, ∀ᶠ i in p, ∀ a, F i a / f a ∈ u :=
+  ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ => mem_of_superset (h u hu) fun i hi a => hv (hi a)⟩
+
+@[to_additive]
+theorem TopologicalGroup.tendsto_uniformly_on_iff {ι α : Type _} (F : ι → α → G) (f : α → G) (p : Filter ι)
+    (s : Set α) :
+    @TendstoUniformlyOn α G ι (TopologicalGroup.toUniformSpace G) F f p s ↔
+      ∀, ∀ u ∈ 𝓝 (1 : G), ∀, ∀ᶠ i in p, ∀, ∀ a ∈ s, ∀, F i a / f a ∈ u :=
+  ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ =>
+    mem_of_superset (h u hu) fun i hi a ha => hv (hi a ha)⟩
+
+@[to_additive]
+theorem TopologicalGroup.tendsto_locally_uniformly_iff {ι α : Type _} [TopologicalSpace α] (F : ι → α → G) (f : α → G)
+    (p : Filter ι) :
+    @TendstoLocallyUniformly α G ι (TopologicalGroup.toUniformSpace G) _ F f p ↔
+      ∀, ∀ u ∈ 𝓝 (1 : G), ∀ x : α, ∃ t ∈ 𝓝 x, ∀ᶠ i in p, ∀, ∀ a ∈ t, ∀, F i a / f a ∈ u :=
+  ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ x =>
+    exists_imp_exists (fun a => exists_imp_exists fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha))
+      (h u hu x)⟩
+
+@[to_additive]
+theorem TopologicalGroup.tendsto_locally_uniformly_on_iff {ι α : Type _} [TopologicalSpace α] (F : ι → α → G)
+    (f : α → G) (p : Filter ι) (s : Set α) :
+    @TendstoLocallyUniformlyOn α G ι (TopologicalGroup.toUniformSpace G) _ F f p s ↔
+      ∀, ∀ u ∈ 𝓝 (1 : G), ∀, ∀ x ∈ s, ∀, ∃ t ∈ 𝓝[s] x, ∀ᶠ i in p, ∀, ∀ a ∈ t, ∀, F i a / f a ∈ u :=
+  ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ x =>
+    (exists_imp_exists fun a => exists_imp_exists fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha)) ∘
+      h u hu x⟩
+
+end TopologicalCommGroup
+
+section TopologicalAddCommGroup
+
+universe u v w x
+
+open Filter
+
+variable (G : Type _) [AddCommGroupₓ G] [TopologicalSpace G] [TopologicalAddGroup G]
 
 section
 
@@ -336,6 +378,7 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
     simpa using hφ.tendsto (0, y₁)
   have lim := lim2.comp lim1
   rw [tendsto_prod_self_iff] at lim
+  simp_rw [ball_mem_comm]
   exact limₓ W' W'_nhd
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
@@ -378,7 +421,7 @@ private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
     rcases U_in with ⟨U₁, U₁_in, HU₁⟩
     rcases V_in with ⟨V₁, V₁_in, HV₁⟩
     exists U₁, U₁_in, V₁, V₁_in
-    intro x x' x_in x'_in y y' y_in y'_in
+    intro x x_in x' x'_in y y_in y' y'_in
     exact H _ _ (HU₁ (mk_mem_prod x_in x'_in)) (HV₁ (mk_mem_prod y_in y'_in))
   rcases this with ⟨U₁, U₁_nhd, V₁, V₁_nhd, H⟩
   obtain ⟨x₁, x₁_in⟩ : U₁.nonempty := (de.comap_nhds_ne_bot _).nonempty_of_mem U₁_nhd
@@ -389,15 +432,15 @@ private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
   rcases extend_Z_bilin_aux de df hφ W_nhd x₀ y₁ with ⟨U₂, U₂_nhd, HU⟩
   rcases extend_Z_bilin_aux df de cont_flip W_nhd y₀ x₁ with ⟨V₂, V₂_nhd, HV⟩
   exists U₁ ∩ U₂, inter_mem U₁_nhd U₂_nhd, V₁ ∩ V₂, inter_mem V₁_nhd V₂_nhd
-  rintro x x' ⟨xU₁, xU₂⟩ ⟨x'U₁, x'U₂⟩ y y' ⟨yV₁, yV₂⟩ ⟨y'V₁, y'V₂⟩
+  rintro x ⟨xU₁, xU₂⟩ x' ⟨x'U₁, x'U₂⟩ y ⟨yV₁, yV₂⟩ y' ⟨y'V₁, y'V₂⟩
   have key_formula : φ x' y' - φ x y = φ (x' - x) y₁ + φ (x' - x) (y' - y₁) + φ x₁ (y' - y) + φ (x - x₁) (y' - y) := by
     simp
     abel
   rw [key_formula]
-  have h₁ := HU x x' xU₂ x'U₂
-  have h₂ := H x x' xU₁ x'U₁ y₁ y' y₁_in y'V₁
-  have h₃ := HV y y' yV₂ y'V₂
-  have h₄ := H x₁ x x₁_in xU₁ y y' yV₁ y'V₁
+  have h₁ := HU x xU₂ x' x'U₂
+  have h₂ := H x xU₁ x' x'U₁ y₁ y₁_in y' y'V₁
+  have h₃ := HV y yV₂ y' y'V₂
+  have h₄ := H x₁ x₁_in x xU₁ y yV₁ y' y'V₁
   exact W4 h₁ h₂ h₃ h₄
 
 omit W'_nhd
@@ -432,7 +475,7 @@ theorem extend_Z_bilin : Continuous (extend (de.prod df) Φ) := by
     rw [mem_comap] at V_nhd
     rcases V_nhd with ⟨V', V'_nhd, V'_sub⟩
     rw [mem_map, mem_comap, nhds_prod_eq]
-    exists Set.Prod (Set.Prod U' V') (Set.Prod U' V')
+    exists U' ×ˢ V' ×ˢ (U' ×ˢ V')
     rw [mem_prod_same_iff]
     simp only [exists_prop]
     constructor

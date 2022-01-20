@@ -514,9 +514,9 @@ instance : CompleteLattice (AffineSubspace k P) :=
     bot_le := fun _ _ => False.elim, sup := fun s => affineSpan k (⋃ s' ∈ s, (s' : Set P)),
     inf := fun s =>
       mk (⋂ s' ∈ s, (s' : Set P)) fun c p1 p2 p3 hp1 hp2 hp3 =>
-        Set.mem_bInter_iff.2 $ fun s2 hs2 =>
-          s2.smul_vsub_vadd_mem c (Set.mem_bInter_iff.1 hp1 s2 hs2) (Set.mem_bInter_iff.1 hp2 s2 hs2)
-            (Set.mem_bInter_iff.1 hp3 s2 hs2),
+        Set.mem_Inter₂.2 $ fun s2 hs2 => by
+          rw [Set.mem_Inter₂] at *
+          exact s2.smul_vsub_vadd_mem c (hp1 s2 hs2) (hp2 s2 hs2) (hp3 s2 hs2),
     le_Sup := fun _ _ h => Set.Subset.trans (Set.subset_bUnion_of_mem h) (subset_span_points k _),
     Sup_le := fun _ _ h => span_points_subset_coe_of_subset_coe (Set.bUnion_subset h),
     Inf_le := fun _ _ => Set.bInter_subset_of_mem, le_Inf := fun _ _ => Set.subset_bInter }

@@ -348,6 +348,56 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.is_conju
   · simp_rw [g', div_rpow, ← sum_div, ← rpow_mul, one_div, inv_mul_cancel hpq.symm.ne_zero, rpow_one, div_self hG_zero]
     
 
+/-- Hölder inequality: the scalar product of two functions is bounded by the product of their
+`L^p` and `L^q` norms when `p` and `q` are conjugate exponents. A version for `nnreal`-valued
+functions. For an alternative version, convenient if the infinite sums are already expressed as
+`p`-th powers, see `inner_le_Lp_mul_Lq_has_sum`. -/
+theorem inner_le_Lp_mul_Lq_tsum {f g : ι → ℝ≥0 } {p q : ℝ} (hpq : p.is_conjugate_exponent q)
+    (hf : Summable fun i => f i ^ p) (hg : Summable fun i => g i ^ q) :
+    (Summable fun i => f i * g i) ∧ (∑' i, f i * g i) ≤ (∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q) := by
+  have H₁ : ∀ s : Finset ι, (∑ i in s, f i * g i) ≤ (∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q) := by
+    intro s
+    refine' le_transₓ (inner_le_Lp_mul_Lq s f g hpq) (mul_le_mul _ _ bot_le bot_le)
+    · rw [Nnreal.rpow_le_rpow_iff (one_div_pos.mpr hpq.pos)]
+      exact sum_le_tsum _ (fun _ _ => zero_le _) hf
+      
+    · rw [Nnreal.rpow_le_rpow_iff (one_div_pos.mpr hpq.symm.pos)]
+      exact sum_le_tsum _ (fun _ _ => zero_le _) hg
+      
+  have bdd : BddAbove (Set.Range fun s => ∑ i in s, f i * g i) := by
+    refine' ⟨(∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q), _⟩
+    rintro a ⟨s, rfl⟩
+    exact H₁ s
+  have H₂ : Summable _ := (has_sum_of_is_lub _ (is_lub_csupr bdd)).Summable
+  exact ⟨H₂, tsum_le_of_sum_le H₂ H₁⟩
+
+theorem summable_mul_of_Lp_Lq {f g : ι → ℝ≥0 } {p q : ℝ} (hpq : p.is_conjugate_exponent q)
+    (hf : Summable fun i => f i ^ p) (hg : Summable fun i => g i ^ q) : Summable fun i => f i * g i :=
+  (inner_le_Lp_mul_Lq_tsum hpq hf hg).1
+
+theorem inner_le_Lp_mul_Lq_tsum' {f g : ι → ℝ≥0 } {p q : ℝ} (hpq : p.is_conjugate_exponent q)
+    (hf : Summable fun i => f i ^ p) (hg : Summable fun i => g i ^ q) :
+    (∑' i, f i * g i) ≤ (∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q) :=
+  (inner_le_Lp_mul_Lq_tsum hpq hf hg).2
+
+/-- Hölder inequality: the scalar product of two functions is bounded by the product of their
+`L^p` and `L^q` norms when `p` and `q` are conjugate exponents. A version for `nnreal`-valued
+functions. For an alternative version, convenient if the infinite sums are not already expressed as
+`p`-th powers, see `inner_le_Lp_mul_Lq_tsum`.  -/
+theorem inner_le_Lp_mul_Lq_has_sum {f g : ι → ℝ≥0 } {A B : ℝ≥0 } {p q : ℝ} (hpq : p.is_conjugate_exponent q)
+    (hf : HasSum (fun i => f i ^ p) (A ^ p)) (hg : HasSum (fun i => g i ^ q) (B ^ q)) :
+    ∃ C, C ≤ A * B ∧ HasSum (fun i => f i * g i) C := by
+  obtain ⟨H₁, H₂⟩ := inner_le_Lp_mul_Lq_tsum hpq hf.summable hg.summable
+  have hA : A = (∑' i : ι, f i ^ p) ^ (1 / p) := by
+    rw [hf.tsum_eq, rpow_inv_rpow_self hpq.ne_zero]
+  have hB : B = (∑' i : ι, g i ^ q) ^ (1 / q) := by
+    rw [hg.tsum_eq, rpow_inv_rpow_self hpq.symm.ne_zero]
+  refine' ⟨∑' i, f i * g i, _, _⟩
+  · simpa [hA, hB] using H₂
+    
+  · simpa only [rpow_self_rpow_inv hpq.ne_zero] using H₁.has_sum
+    
+
 /-- For `1 ≤ p`, the `p`-th power of the sum of `f i` is bounded above by a constant times the
 sum of the `p`-th powers of `f i`. Version for sums over finite sets, with `ℝ≥0`-valued functions.
 -/
@@ -434,6 +484,15 @@ theorem Lp_add_le_tsum {f g : ι → ℝ≥0 } {p : ℝ} (hp : 1 ≤ p) (hf : Su
   rw [Nnreal.rpow_one_div_le_iff Pos]
   refine' tsum_le_of_sum_le H₂ H₁
 
+theorem summable_Lp_add {f g : ι → ℝ≥0 } {p : ℝ} (hp : 1 ≤ p) (hf : Summable fun i => f i ^ p)
+    (hg : Summable fun i => g i ^ p) : Summable fun i => (f i + g i) ^ p :=
+  (Lp_add_le_tsum hp hf hg).1
+
+theorem Lp_add_le_tsum' {f g : ι → ℝ≥0 } {p : ℝ} (hp : 1 ≤ p) (hf : Summable fun i => f i ^ p)
+    (hg : Summable fun i => g i ^ p) :
+    (∑' i, (f i + g i) ^ p) ^ (1 / p) ≤ (∑' i, f i ^ p) ^ (1 / p) + (∑' i, g i ^ p) ^ (1 / p) :=
+  (Lp_add_le_tsum hp hf hg).2
+
 /-- Minkowski inequality: the `L_p` seminorm of the infinite sum of two vectors is less than or
 equal to the infinite sum of the `L_p`-seminorms of the summands, if these infinite sums both
 exist. A version for `nnreal`-valued functions. For an alternative version, convenient if the
@@ -498,6 +557,44 @@ theorem inner_le_Lp_mul_Lq_of_nonneg (hpq : is_conjugate_exponent p q) (hf : ∀
   convert inner_le_Lp_mul_Lq s f g hpq using 3 <;>
     apply sum_congr rfl <;> intro i hi <;> simp only [abs_of_nonneg, hf i hi, hg i hi]
 
+/-- Hölder inequality: the scalar product of two functions is bounded by the product of their
+`L^p` and `L^q` norms when `p` and `q` are conjugate exponents. A version for `ℝ`-valued functions.
+For an alternative version, convenient if the infinite sums are already expressed as `p`-th powers,
+see `inner_le_Lp_mul_Lq_has_sum_of_nonneg`. -/
+theorem inner_le_Lp_mul_Lq_tsum_of_nonneg (hpq : p.is_conjugate_exponent q) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i)
+    (hf_sum : Summable fun i => f i ^ p) (hg_sum : Summable fun i => g i ^ q) :
+    (Summable fun i => f i * g i) ∧ (∑' i, f i * g i) ≤ (∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q) := by
+  lift f to ι → ℝ≥0 using hf
+  lift g to ι → ℝ≥0 using hg
+  norm_cast  at *
+  exact Nnreal.inner_le_Lp_mul_Lq_tsum hpq hf_sum hg_sum
+
+theorem summable_mul_of_Lp_Lq_of_nonneg (hpq : p.is_conjugate_exponent q) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i)
+    (hf_sum : Summable fun i => f i ^ p) (hg_sum : Summable fun i => g i ^ q) : Summable fun i => f i * g i :=
+  (inner_le_Lp_mul_Lq_tsum_of_nonneg hpq hf hg hf_sum hg_sum).1
+
+theorem inner_le_Lp_mul_Lq_tsum_of_nonneg' (hpq : p.is_conjugate_exponent q) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i)
+    (hf_sum : Summable fun i => f i ^ p) (hg_sum : Summable fun i => g i ^ q) :
+    (∑' i, f i * g i) ≤ (∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q) :=
+  (inner_le_Lp_mul_Lq_tsum_of_nonneg hpq hf hg hf_sum hg_sum).2
+
+/-- Hölder inequality: the scalar product of two functions is bounded by the product of their
+`L^p` and `L^q` norms when `p` and `q` are conjugate exponents. A version for `nnreal`-valued
+functions. For an alternative version, convenient if the infinite sums are not already expressed as
+`p`-th powers, see `inner_le_Lp_mul_Lq_tsum_of_nonneg`.  -/
+theorem inner_le_Lp_mul_Lq_has_sum_of_nonneg (hpq : p.is_conjugate_exponent q) {A B : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B)
+    (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i) (hf_sum : HasSum (fun i => f i ^ p) (A ^ p))
+    (hg_sum : HasSum (fun i => g i ^ q) (B ^ q)) : ∃ C : ℝ, 0 ≤ C ∧ C ≤ A * B ∧ HasSum (fun i => f i * g i) C := by
+  lift f to ι → ℝ≥0 using hf
+  lift g to ι → ℝ≥0 using hg
+  lift A to ℝ≥0 using hA
+  lift B to ℝ≥0 using hB
+  norm_cast  at hf_sum hg_sum
+  obtain ⟨C, hC, H⟩ := Nnreal.inner_le_Lp_mul_Lq_has_sum hpq hf_sum hg_sum
+  refine' ⟨C, C.prop, hC, _⟩
+  norm_cast
+  exact H
+
 /-- For `1 ≤ p`, the `p`-th power of the sum of `f i` is bounded above by a constant times the
 sum of the `p`-th powers of `f i`. Version for sums over finite sets, with nonnegative `ℝ`-valued
 functions. -/
@@ -527,6 +624,15 @@ theorem Lp_add_le_tsum_of_nonneg (hp : 1 ≤ p) (hf : ∀ i, 0 ≤ f i) (hg : �
   lift g to ι → ℝ≥0 using hg
   norm_cast  at *
   exact Nnreal.Lp_add_le_tsum hp hf_sum hg_sum
+
+theorem summable_Lp_add_of_nonneg (hp : 1 ≤ p) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i)
+    (hf_sum : Summable fun i => f i ^ p) (hg_sum : Summable fun i => g i ^ p) : Summable fun i => (f i + g i) ^ p :=
+  (Lp_add_le_tsum_of_nonneg hp hf hg hf_sum hg_sum).1
+
+theorem Lp_add_le_tsum_of_nonneg' (hp : 1 ≤ p) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i)
+    (hf_sum : Summable fun i => f i ^ p) (hg_sum : Summable fun i => g i ^ p) :
+    (∑' i, (f i + g i) ^ p) ^ (1 / p) ≤ (∑' i, f i ^ p) ^ (1 / p) + (∑' i, g i ^ p) ^ (1 / p) :=
+  (Lp_add_le_tsum_of_nonneg hp hf hg hf_sum hg_sum).2
 
 /-- Minkowski inequality: the `L_p` seminorm of the infinite sum of two vectors is less than or
 equal to the infinite sum of the `L_p`-seminorms of the summands, if these infinite sums both

@@ -1,7 +1,7 @@
-import Mathbin.Data.Set.Finite
-import Mathbin.Order.WellFounded
-import Mathbin.Order.OrderIsoNat
 import Mathbin.Algebra.Pointwise
+import Mathbin.Order.Antichain
+import Mathbin.Order.OrderIsoNat
+import Mathbin.Order.WellFounded
 
 /-!
 # Well-founded sets
@@ -33,6 +33,10 @@ A well-founded subset of an ordered type is one on which the relation `<` is wel
  * `set.is_wf.mono` shows that a subset of a well-founded subset is well-founded.
  * `set.is_wf.union` shows that the union of two well-founded subsets is well-founded.
  * `finset.is_wf` shows that all `finset`s are well-founded.
+
+## TODO
+
+Prove that `s` is partial well ordered iff it has no infinite descending chain or antichain.
 
 ## References
  * [Higman, *Ordering by Divisibility in Abstract Algebras*][Higman52]
@@ -191,6 +195,52 @@ theorem partially_well_ordered_on.image_of_monotone_on {s : Set α} {r : α → 
     exact (Classical.some_spec (h n)).1
     
 
+theorem _root_.is_antichain.finite_of_partially_well_ordered_on {s : Set α} {r : α → α → Prop} (ha : IsAntichain r s)
+    (hp : s.partially_well_ordered_on r) : s.finite := by
+  refine' finite_or_infinite.resolve_right fun hi => _
+  obtain ⟨m, n, hmn, h⟩ := hp (fun n => hi.nat_embedding _ n) (range_subset_iff.2 $ fun n => (hi.nat_embedding _ n).2)
+  exact
+    hmn.ne
+      ((hi.nat_embedding _).Injective $
+        Subtype.val_injective $ ha.eq_of_related (hi.nat_embedding _ m).2 (hi.nat_embedding _ n).2 h)
+
+theorem finite.partially_well_ordered_on {s : Set α} {r : α → α → Prop} [IsRefl α r] (hs : s.finite) :
+    s.partially_well_ordered_on r := by
+  intro f hf
+  obtain ⟨m, n, hmn, h⟩ := hs.exists_lt_map_eq_of_range_subset hf
+  exact ⟨m, n, hmn, h.subst $ refl (f m)⟩
+
+theorem _root_.is_antichain.partially_well_ordered_on_iff {s : Set α} {r : α → α → Prop} [IsRefl α r]
+    (hs : IsAntichain r s) : s.partially_well_ordered_on r ↔ s.finite :=
+  ⟨hs.finite_of_partially_well_ordered_on, finite.partially_well_ordered_on⟩
+
+-- ././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+theorem partially_well_ordered_on_iff_finite_antichains {s : Set α} {r : α → α → Prop} [IsRefl α r] [IsSymm α r] :
+    s.partially_well_ordered_on r ↔ ∀ t _ : t ⊆ s, IsAntichain r t → t.finite := by
+  refine' ⟨fun h t ht hrt => hrt.finite_of_partially_well_ordered_on (h.mono ht), _⟩
+  rintro hs f hf
+  "././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'"
+  refine' Set.infinite_range_of_injective (fun m n hmn => _) (hs _ hf _)
+  · obtain h | h | h := lt_trichotomyₓ m n
+    · refine' (H _ _ h _).elim
+      rw [hmn]
+      exact refl _
+      
+    · exact h
+      
+    · refine' (H _ _ h _).elim
+      rw [hmn]
+      exact refl _
+      
+    
+  rintro _ ⟨m, hm, rfl⟩ _ ⟨n, hn, rfl⟩ hmn
+  obtain h | h := (ne_of_apply_ne _ hmn).lt_or_lt
+  · exact H _ _ h
+    
+  · exact mt symm (H _ _ h)
+    
+
 section PartialOrderₓ
 
 variable {s : Set α} {t : Set α} {r : α → α → Prop}
@@ -246,7 +296,7 @@ theorem is_pwo.exists_monotone_subseq (h : s.is_pwo) (f : ℕ → α) (hf : rang
 theorem is_pwo_iff_exists_monotone_subseq : s.is_pwo ↔ ∀ f : ℕ → α, range f ⊆ s → ∃ g : ℕ ↪o ℕ, Monotone (f ∘ g) :=
   partially_well_ordered_on_iff_exists_monotone_subseq
 
-theorem is_pwo.prod (hs : s.is_pwo) (ht : t.is_pwo) : (s.prod t).IsPwo := by
+theorem is_pwo.prod (hs : s.is_pwo) (ht : t.is_pwo) : (s ×ˢ t : Set _).IsPwo := by
   classical
   rw [is_pwo_iff_exists_monotone_subseq] at *
   intro f hf
@@ -325,21 +375,9 @@ end Set
 namespace Finset
 
 @[simp]
-theorem partially_well_ordered_on {r : α → α → Prop} [IsRefl α r] (f : Finset α) :
-    Set.PartiallyWellOrderedOn (↑f : Set α) r := by
-  intro g hg
-  by_cases' hinj : Function.Injective g
-  · exact (Set.infinite_of_injective_forall_mem hinj (Set.range_subset_iff.1 hg) f.finite_to_set).elim
-    
-  · rw [Function.Injective] at hinj
-    push_neg  at hinj
-    obtain ⟨m, n, gmgn, hne⟩ := hinj
-    cases' lt_or_gt_of_neₓ hne with hlt hlt <;>
-      · refine' ⟨_, _, hlt, _⟩
-        rw [gmgn]
-        exact refl_of r _
-        
-    
+theorem partially_well_ordered_on {r : α → α → Prop} [IsRefl α r] (s : Finset α) :
+    (s : Set α).PartiallyWellOrderedOn r :=
+  s.finite_to_set.partially_well_ordered_on
 
 @[simp]
 theorem is_pwo [PartialOrderₓ α] (f : Finset α) : Set.IsPwo (↑f : Set α) :=

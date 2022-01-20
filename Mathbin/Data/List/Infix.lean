@@ -321,7 +321,7 @@ instance decidable_suffix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable 
     if hl : len1 ≤ len2 then decidableOfIff' (l₁ = drop (len2 - len1) l₂) suffix_iff_eq_drop
     else is_false $ fun h => hl $ length_le_of_sublist $ h.sublist
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:528:6: unsupported: specialize @hyp
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:531:6: unsupported: specialize @hyp
 theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) : L.take m <+: L.take n ↔ m ≤ n := by
   simp only [prefix_iff_eq_take, length_take]
   induction' m with m IH generalizing L n

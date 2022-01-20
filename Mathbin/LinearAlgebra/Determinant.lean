@@ -323,6 +323,11 @@ theorem det_trans (f g : M ≃ₗ[R] M) : (f.trans g).det = g.det * f.det :=
 theorem det_symm (f : M ≃ₗ[R] M) : f.symm.det = f.det⁻¹ :=
   map_inv _ f
 
+/-- Conjugating a linear equiv by a linear equiv does not change its determinant. -/
+@[simp]
+theorem det_conj (f : M ≃ₗ[R] M) (e : M ≃ₗ[R] M') : ((e.symm.trans f).trans e).det = f.det := by
+  rw [← Units.eq_iff, coe_det, coe_det, ← comp_coe, ← comp_coe, LinearMap.det_conj]
+
 end LinearEquiv
 
 /-- The determinants of a `linear_equiv` and its inverse multiply to 1. -/
@@ -374,6 +379,12 @@ def LinearEquiv.ofIsUnitDet {f : M →ₗ[R] M'} {v : Basis ι R M} {v' : Basis 
       _ = x := by
         simp [h]
       
+
+@[simp]
+theorem LinearEquiv.coe_of_is_unit_det {f : M →ₗ[R] M'} {v : Basis ι R M} {v' : Basis ι R M'}
+    (h : IsUnit (LinearMap.toMatrix v v' f).det) : (LinearEquiv.ofIsUnitDet h : M →ₗ[R] M') = f := by
+  ext x
+  rfl
 
 /-- Builds a linear equivalence from a linear map on a finite-dimensional vector space whose
 determinant is nonzero. -/

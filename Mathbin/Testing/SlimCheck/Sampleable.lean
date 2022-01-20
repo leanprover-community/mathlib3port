@@ -574,7 +574,7 @@ def no_shrink (α : Type _) :=
   α
 
 instance no_shrink.inhabited {α} [Inhabited α] : Inhabited (no_shrink α) :=
-  ⟨(default α : α)⟩
+  ⟨(default : α)⟩
 
 /-- Introduction of the `no_shrink` type. -/
 def no_shrink.mk {α} (x : α) : no_shrink α :=
@@ -688,10 +688,10 @@ instance large.functor : Functor large :=
   id.monad.toFunctor
 
 instance small.inhabited [Inhabited α] : Inhabited (small α) :=
-  ⟨(default α : α)⟩
+  ⟨(default : α)⟩
 
 instance large.inhabited [Inhabited α] : Inhabited (large α) :=
-  ⟨(default α : α)⟩
+  ⟨(default : α)⟩
 
 instance small.sampleable_functor : sampleable_functor small where
   wf := _

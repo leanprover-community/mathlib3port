@@ -11,13 +11,16 @@ directed iff each pair of elements has a shared upper bound.
 
 * `directed r f`: Predicate stating that the indexed family `f` is `r`-directed.
 * `directed_on r s`: Predicate stating that the set `s` is `r`-directed.
-* `directed_order α`: Typeclass extending `preorder` for stating that `α` is `≤`-directed.
+* `is_directed α r`: Prop-valued mixin stating that `α` is `r`-directed. Follows the style of the
+  unbundled relation classes such as `is_total`.
 -/
 
 
+open Function
+
 universe u v w
 
-variable {α : Type u} {β : Type v} {ι : Sort w} (r : α → α → Prop)
+variable {α : Type u} {β : Type v} {ι : Sort w} (r s : α → α → Prop)
 
 local infixl:50 " ≼ " => r
 
@@ -68,15 +71,62 @@ theorem directed_of_sup [SemilatticeSup α] {f : α → β} {r : β → β → P
 theorem Monotone.directed_le [SemilatticeSup α] [Preorderₓ β] {f : α → β} : Monotone f → Directed (· ≤ ·) f :=
   directed_of_sup
 
+theorem Directed.extend_bot [Preorderₓ α] [OrderBot α] {e : ι → β} {f : ι → α} (hf : Directed (· ≤ ·) f)
+    (he : Function.Injective e) : Directed (· ≤ ·) (Function.extendₓ e f ⊥) := by
+  intro a b
+  rcases(em (∃ i, e i = a)).symm with (ha | ⟨i, rfl⟩)
+  · use b
+    simp [Function.extend_apply' _ _ _ ha]
+    
+  rcases(em (∃ i, e i = b)).symm with (hb | ⟨j, rfl⟩)
+  · use e i
+    simp [Function.extend_apply' _ _ _ hb]
+    
+  rcases hf i j with ⟨k, hi, hj⟩
+  use e k
+  simp only [Function.extend_applyₓ he, *, true_andₓ]
+
 /-- An antitone function on an inf-semilattice is directed. -/
 theorem directed_of_inf [SemilatticeInf α] {r : β → β → Prop} {f : α → β} (hf : ∀ a₁ a₂, a₁ ≤ a₂ → r (f a₂) (f a₁)) :
     Directed r f := fun x y => ⟨x⊓y, hf _ _ inf_le_left, hf _ _ inf_le_right⟩
 
-/-- A `preorder` is a `directed_order` if for any two elements `i`, `j`
-there is an element `k` such that `i ≤ k` and `j ≤ k`. -/
-class DirectedOrder (α : Type u) extends Preorderₓ α where
-  Directed : ∀ i j : α, ∃ k, i ≤ k ∧ j ≤ k
+/-- `is_directed α r` states that for any elements `a`, `b` there exists an element `c` such that
+`r a c` and `r b c`. -/
+class IsDirected (α : Type _) (r : α → α → Prop) : Prop where
+  Directed (a b : α) : ∃ c, r a c ∧ r b c
 
-instance (priority := 100) LinearOrderₓ.toDirectedOrder α [LinearOrderₓ α] : DirectedOrder α :=
-  ⟨fun i j => Or.cases_on (le_totalₓ i j) (fun hij => ⟨j, hij, le_reflₓ j⟩) fun hji => ⟨i, le_reflₓ i, hji⟩⟩
+theorem directed_of (r : α → α → Prop) [IsDirected α r] (a b : α) : ∃ c, r a c ∧ r b c :=
+  IsDirected.directed _ _
+
+theorem directed_id [IsDirected α r] : Directed r id := by
+  convert directed_of r
+
+theorem directed_id_iff_is_directed : Directed r id ↔ IsDirected α r :=
+  ⟨fun h => ⟨h⟩, @directed_id _ _⟩
+
+instance (priority := 100) IsTotal.to_is_directed [IsTotal α r] : IsDirected α r :=
+  ⟨fun a b => Or.cases_on (total_of r a b) (fun h => ⟨b, h, refl _⟩) fun h => ⟨a, refl _, h⟩⟩
+
+theorem is_directed_mono [IsDirected α r] (h : ∀ ⦃a b⦄, r a b → s a b) : IsDirected α s :=
+  ⟨fun a b =>
+    let ⟨c, ha, hb⟩ := IsDirected.directed a b
+    ⟨c, h ha, h hb⟩⟩
+
+theorem exists_ge_ge [LE α] [IsDirected α (· ≤ ·)] (a b : α) : ∃ c, a ≤ c ∧ b ≤ c :=
+  directed_of (· ≤ ·) a b
+
+theorem exists_le_le [LE α] [IsDirected α (swap (· ≤ ·))] (a b : α) : ∃ c, c ≤ a ∧ c ≤ b :=
+  directed_of (swap (· ≤ ·)) a b
+
+instance OrderDual.is_directed_ge [LE α] [IsDirected α (· ≤ ·)] : IsDirected (OrderDual α) (swap (· ≤ ·)) := by
+  assumption
+
+instance OrderDual.is_directed_le [LE α] [IsDirected α (swap (· ≤ ·))] : IsDirected (OrderDual α) (· ≤ ·) := by
+  assumption
+
+instance (priority := 100) SemilatticeSup.to_is_directed_le [SemilatticeSup α] : IsDirected α (· ≤ ·) :=
+  ⟨fun a b => ⟨a⊔b, le_sup_left, le_sup_right⟩⟩
+
+instance (priority := 100) SemilatticeInf.to_is_directed_ge [SemilatticeInf α] : IsDirected α (swap (· ≤ ·)) :=
+  ⟨fun a b => ⟨a⊓b, inf_le_left, inf_le_right⟩⟩
 

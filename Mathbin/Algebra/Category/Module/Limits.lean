@@ -122,7 +122,7 @@ open Module
 
 variable {ι : Type v}
 
-variable [dec_ι : DecidableEq ι] [DirectedOrder ι]
+variable [dec_ι : DecidableEq ι] [Preorderₓ ι]
 
 variable (G : ι → Type v)
 
@@ -165,7 +165,7 @@ def direct_limit_cocone : cocone (direct_limit_diagram G f) where
 /-- The unbundled `direct_limit` of modules is a colimit
 in the sense of `category_theory`. -/
 @[simps]
-def direct_limit_is_colimit [Nonempty ι] : is_colimit (direct_limit_cocone G f) where
+def direct_limit_is_colimit [Nonempty ι] [IsDirected ι (· ≤ ·)] : is_colimit (direct_limit_cocone G f) where
   desc := fun s =>
     direct_limit.lift R ι G f s.ι.app $ fun i j h x => by
       rw [← s.w (hom_of_le h)]

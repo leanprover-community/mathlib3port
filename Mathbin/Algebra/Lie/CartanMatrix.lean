@@ -94,7 +94,7 @@ inductive generators
   | F : B → generators
 
 instance [Inhabited B] : Inhabited (generators B) :=
-  ⟨generators.H $ default B⟩
+  ⟨generators.H default⟩
 
 variable {B}
 

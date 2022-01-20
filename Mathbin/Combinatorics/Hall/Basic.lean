@@ -49,20 +49,6 @@ open Finset
 
 universe u v
 
-/-- The sup directed order on finsets.
-
-TODO: remove when #9200 is merged.  There are two ways `finset α` can
-get a `small_category` instance (used in
-`hall_matchings_functor`). The first is from the preorder on `finset
-α` and the second is from this `directed_order`. These categories
-should be the same, but there is a defeq issue. -/
-def hallFinsetDirectedOrder (α : Type u) : DirectedOrder (Finset α) :=
-  ⟨fun s t => by
-    classical
-    exact ⟨s ∪ t, subset_union_left s t, subset_union_right s t⟩⟩
-
-attribute [local instance] hallFinsetDirectedOrder
-
 /-- The set of matchings for `t` when restricted to a `finset` of `ι`. -/
 def HallMatchingsOn {ι : Type u} {α : Type v} (t : ι → Finset α) (ι' : Finset ι) :=
   { f : ι' → α | Function.Injective f ∧ ∀ x, f x ∈ t x }

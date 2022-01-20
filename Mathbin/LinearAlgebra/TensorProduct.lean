@@ -303,6 +303,16 @@ instance left_module : Module R'' (M ⊗[R] N) :=
 instance : Module R (M ⊗[R] N) :=
   TensorProduct.leftModule
 
+instance [Module (R''ᵐᵒᵖ) M] [IsCentralScalar R'' M] : IsCentralScalar R'' (M ⊗[R] N) where
+  op_smul_eq_smul := fun r x =>
+    TensorProduct.induction_on x
+      (by
+        rw [smul_zero, smul_zero])
+      (fun x y => by
+        rw [smul_tmul', smul_tmul', op_smul_eq_smul])
+      fun x y hx hy => by
+      rw [smul_add, smul_add, hx, hy]
+
 section
 
 variable {R'₂ : Type _} [Monoidₓ R'₂] [DistribMulAction R'₂ M]

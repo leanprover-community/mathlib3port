@@ -66,7 +66,7 @@ theorem norm_bound_pos : 0 < norm_bound abv bS := by
     apply (Algebra.leftMulMatrix bS).injective_iff.mp (Algebra.left_mul_matrix_injective bS)
     ext j k
     simp [h, Dmatrix.zero_apply]
-  simp only [norm_bound, Algebra.smul_def, RingHom.eq_nat_cast, Int.nat_cast_eq_coe_nat]
+  simp only [norm_bound, Algebra.smul_def, eq_nat_cast, Int.nat_cast_eq_coe_nat]
   refine' mul_pos (int.coe_nat_pos.mpr (Nat.factorial_pos _)) _
   refine' pow_pos (mul_pos (int.coe_nat_pos.mpr (fintype.card_pos_iff.mpr ⟨i⟩)) _) _
   refine' lt_of_lt_of_leₓ (abv.pos hijk) (Finset.le_max' _ _ _)

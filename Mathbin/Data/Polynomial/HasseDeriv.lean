@@ -1,5 +1,7 @@
+import Mathbin.Algebra.Polynomial.BigOperators
 import Mathbin.Data.Nat.Choose.Cast
 import Mathbin.Data.Nat.Choose.Vandermonde
+import Mathbin.Data.Polynomial.Degree.Lemmas
 import Mathbin.Data.Polynomial.Derivative
 
 /-!
@@ -77,6 +79,12 @@ theorem hasse_deriv_zero' : hasse_deriv 0 f = f := by
 @[simp]
 theorem hasse_deriv_zero : @hasse_deriv R _ 0 = LinearMap.id :=
   LinearMap.ext $ hasse_deriv_zero'
+
+theorem hasse_deriv_eq_zero_of_lt_nat_degree (p : Polynomial R) (n : ℕ) (h : p.nat_degree < n) : hasse_deriv n p = 0 :=
+  by
+  rw [hasse_deriv_apply, sum_def]
+  refine' Finset.sum_eq_zero fun x hx => _
+  simp [Nat.choose_eq_zero_of_lt ((le_nat_degree_of_mem_supp _ hx).trans_lt h)]
 
 theorem hasse_deriv_one' : hasse_deriv 1 f = derivative f := by
   simp only [hasse_deriv_apply, derivative_apply, monomial_eq_C_mul_X, Nat.choose_one_right, (Nat.cast_commute _ _).Eq]
@@ -173,6 +181,40 @@ theorem hasse_deriv_comp (k l : ℕ) :
     
   all_goals
     apply_rules [mul_ne_zero, H]
+
+theorem nat_degree_hasse_deriv_le (p : Polynomial R) (n : ℕ) : nat_degree (hasse_deriv n p) ≤ nat_degree p - n := by
+  classical
+  rw [hasse_deriv_apply, sum_def]
+  refine' (nat_degree_sum_le _ _).trans _
+  simp_rw [Function.comp, nat_degree_monomial]
+  rw [Finset.fold_ite, Finset.fold_const]
+  · simp only [if_t_t, max_eq_rightₓ, zero_le', Finset.fold_max_le, true_andₓ, and_imp, tsub_le_iff_right,
+      mem_support_iff, Ne.def, Finset.mem_filter]
+    intro x hx hx'
+    have hxp : x ≤ p.nat_degree := le_nat_degree_of_ne_zero hx
+    have hxn : n ≤ x := by
+      contrapose! hx'
+      simp [Nat.choose_eq_zero_of_lt hx']
+    rwa [tsub_add_cancel_of_le (hxn.trans hxp)]
+    
+  · simp
+    
+
+theorem nat_degree_hasse_deriv [NoZeroSmulDivisors ℕ R] (p : Polynomial R) (n : ℕ) :
+    nat_degree (hasse_deriv n p) = nat_degree p - n := by
+  cases' lt_or_leₓ p.nat_degree n with hn hn
+  · simpa [hasse_deriv_eq_zero_of_lt_nat_degree, hn] using (tsub_eq_zero_of_le hn.le).symm
+    
+  · refine' map_nat_degree_eq_sub _ _
+    · exact fun h => hasse_deriv_eq_zero_of_lt_nat_degree _ _
+      
+    · classical
+      simp only [ite_eq_right_iff, Ne.def, nat_degree_monomial, hasse_deriv_monomial]
+      intro k c c0 hh
+      rw [← nsmul_eq_mul, smul_eq_zero, Nat.choose_eq_zero_iff] at hh
+      exact (tsub_eq_zero_of_le (Or.resolve_right hh c0).le).symm
+      
+    
 
 section
 

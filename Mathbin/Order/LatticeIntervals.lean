@@ -1,5 +1,4 @@
-import Mathbin.Order.BoundedOrder
-import Mathbin.Data.Set.Intervals.Basic
+import Mathbin.Order.Bounds
 
 /-!
 # Intervals in Lattices
@@ -16,8 +15,8 @@ In the following, `*` can represent either `c`, `o`, or `i`.
   * `set.I*c.order_top`
   * `set.I*c.semillatice_inf`
   * `set.I**.lattice`
-  * `set.Iic.bounded_order`, within a `bounded_order`
-  * `set.Ici.bounded_order`, within a `bounded_order`
+  * `set.Iic.bounded_order`, within an `order_bot`
+  * `set.Ici.bounded_order`, within an `order_top`
 
 -/
 
@@ -34,9 +33,9 @@ instance [SemilatticeInf α] : SemilatticeInf (Ico a b) :=
   Subtype.semilatticeInf fun x y hx hy => ⟨le_inf hx.1 hy.1, lt_of_le_of_ltₓ inf_le_left hx.2⟩
 
 /-- `Ico a b` has a bottom element whenever `a < b`. -/
-def OrderBot [PartialOrderₓ α] (h : a < b) : OrderBot (Ico a b) where
-  bot := ⟨a, ⟨le_reflₓ a, h⟩⟩
-  bot_le := fun x => x.prop.1
+@[reducible]
+protected def OrderBot [PartialOrderₓ α] (h : a < b) : OrderBot (Ico a b) :=
+  (is_least_Ico h).OrderBot
 
 end Ico
 
@@ -55,9 +54,9 @@ instance [SemilatticeSup α] : SemilatticeSup (Ioc a b) :=
   Subtype.semilatticeSup fun x y hx hy => ⟨lt_of_lt_of_leₓ hx.1 le_sup_left, sup_le hx.2 hy.2⟩
 
 /-- `Ioc a b` has a top element whenever `a < b`. -/
-def OrderTop [PartialOrderₓ α] (h : a < b) : OrderTop (Ioc a b) where
-  top := ⟨b, ⟨h, le_reflₓ b⟩⟩
-  le_top := fun x => x.prop.2
+@[reducible]
+protected def OrderTop [PartialOrderₓ α] (h : a < b) : OrderTop (Ioc a b) :=
+  (is_greatest_Ioc h).OrderTop
 
 end Ioc
 
@@ -97,12 +96,12 @@ instance [Preorderₓ α] [OrderBot α] : OrderBot (Iic a) where
 theorem coe_bot [Preorderₓ α] [OrderBot α] {a : α} : ↑(⊥ : Iic a) = (⊥ : α) :=
   rfl
 
-instance [PartialOrderₓ α] [NoBotOrder α] {a : α} : NoBotOrder (Iic a) :=
+instance [PartialOrderₓ α] [NoMinOrder α] {a : α} : NoMinOrder (Iic a) :=
   ⟨fun x =>
-    let ⟨y, hy⟩ := no_bot x.1
+    let ⟨y, hy⟩ := exists_lt x.1
     ⟨⟨y, le_transₓ hy.le x.2⟩, hy⟩⟩
 
-instance [Preorderₓ α] [BoundedOrder α] : BoundedOrder (Iic a) :=
+instance [Preorderₓ α] [OrderBot α] : BoundedOrder (Iic a) :=
   { Iic.order_top, Iic.order_bot with }
 
 end Iic
@@ -136,12 +135,12 @@ instance [Preorderₓ α] [OrderTop α] : OrderTop (Ici a) where
 theorem coe_top [Preorderₓ α] [OrderTop α] {a : α} : ↑(⊤ : Ici a) = (⊤ : α) :=
   rfl
 
-instance [PartialOrderₓ α] [NoTopOrder α] {a : α} : NoTopOrder (Ici a) :=
+instance [PartialOrderₓ α] [NoMaxOrder α] {a : α} : NoMaxOrder (Ici a) :=
   ⟨fun x =>
-    let ⟨y, hy⟩ := no_top x.1
+    let ⟨y, hy⟩ := exists_gt x.1
     ⟨⟨y, le_transₓ x.2 hy.le⟩, hy⟩⟩
 
-instance [Preorderₓ α] [BoundedOrder α] : BoundedOrder (Ici a) :=
+instance [Preorderₓ α] [OrderTop α] : BoundedOrder (Ici a) :=
   { Ici.order_top, Ici.order_bot with }
 
 end Ici
@@ -158,17 +157,18 @@ instance [Lattice α] {a b : α} : Lattice (Icc a b) :=
   { Icc.semilattice_inf, Icc.semilattice_sup with }
 
 /-- `Icc a b` has a bottom element whenever `a ≤ b`. -/
-def OrderBot [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderBot (Icc a b) where
-  bot := ⟨a, ⟨le_reflₓ a, h⟩⟩
-  bot_le := fun x => x.prop.1
+@[reducible]
+protected def OrderBot [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderBot (Icc a b) :=
+  (is_least_Icc h).OrderBot
 
 /-- `Icc a b` has a top element whenever `a ≤ b`. -/
-def OrderTop [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderTop (Icc a b) where
-  top := ⟨b, ⟨h, le_reflₓ b⟩⟩
-  le_top := fun x => x.prop.2
+@[reducible]
+protected def OrderTop [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderTop (Icc a b) :=
+  (is_greatest_Icc h).OrderTop
 
 /-- `Icc a b` is a `bounded_order` whenever `a ≤ b`. -/
-def BoundedOrder [Preorderₓ α] {a b : α} (h : a ≤ b) : BoundedOrder (Icc a b) :=
+@[reducible]
+protected def BoundedOrder [Preorderₓ α] {a b : α} (h : a ≤ b) : BoundedOrder (Icc a b) :=
   { Icc.order_top h, Icc.order_bot h with }
 
 end Icc

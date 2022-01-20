@@ -41,14 +41,11 @@ theorem Union_decode₂_cases {f : β → Set α} {C : Set α → Prop} (H0 : C 
 
 theorem Union_decode₂_disjoint_on {f : β → Set α} (hd : Pairwise (Disjoint on f)) :
     Pairwise (Disjoint on fun i => ⋃ b ∈ decode₂ β i, f b) := by
-  rintro i j ij x ⟨h₁, h₂⟩
-  revert h₁ h₂
-  simp
-  intro b₁ e₁ h₁ b₂ e₂ h₂
-  refine' hd _ _ _ ⟨h₁, h₂⟩
-  cases Encodable.mem_decode₂.1 e₁
-  cases Encodable.mem_decode₂.1 e₂
-  exact mt (congr_argₓ _) ij
+  rintro i j ij x
+  suffices ∀ a, encode a = i → x ∈ f a → ∀ b, encode b = j → x ∉ f b by
+    simpa [decode₂_eq_some]
+  rintro a rfl ha b rfl hb
+  exact hd a b (mt (congr_argₓ encode) ij) ⟨ha, hb⟩
 
 end Encodable
 

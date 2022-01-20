@@ -154,11 +154,11 @@ instance (priority := 100) has_one_lattice_has_neg_part : HasNegPart α :=
 theorem m_neg_part_def (a : α) : a⁻ = a⁻¹⊔1 :=
   rfl
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem pos_one : (1 : α)⁺ = 1 :=
   sup_idem
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem neg_one : (1 : α)⁻ = 1 := by
   rw [m_neg_part_def, one_inv, sup_idem]
 
@@ -236,7 +236,7 @@ theorem mul_inf_eq_mul_inf_mul [CovariantClass α α (· * ·) (· ≤ ·)] (a b
   rw [← mul_le_mul_iff_left (c⁻¹), ← mul_assocₓ, inv_mul_selfₓ, one_mulₓ, le_inf_iff]
   simp
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem pos_div_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : a⁺ / a⁻ = a := by
   symm
   rw [div_eq_mul_inv]

@@ -63,7 +63,7 @@ inductive total_function (α : Type u) (β : Type v) : Type max u v
   | with_default : List (Σ _ : α, β) → β → total_function
 
 instance total_function.inhabited [Inhabited β] : Inhabited (total_function α β) :=
-  ⟨total_function.with_default ∅ (default _)⟩
+  ⟨total_function.with_default ∅ default⟩
 
 namespace TotalFunction
 
@@ -296,7 +296,7 @@ theorem list.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nod
         
       
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:528:6: unsupported: specialize @hyp
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:531:6: unsupported: specialize @hyp
 theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodupₓ xs) (h₁ : xs ~ ys) (x : α) :
     list.apply_id.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs := by
   simp only [list.apply_id]

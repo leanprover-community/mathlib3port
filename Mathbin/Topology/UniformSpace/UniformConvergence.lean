@@ -73,9 +73,9 @@ filter `p` iff the function `(n, x) ↦ (f x, Fₙ x)` converges along `p ×ᶠ 
 In other words: one knows nothing about the behavior of `x` in this limit besides it being in `s`.
 -/
 theorem tendsto_uniformly_on_iff_tendsto {F : ι → α → β} {f : α → β} {p : Filter ι} {s : Set α} :
-    TendstoUniformlyOn F f p s ↔ tendsto (fun q : ι × α => (f q.2, F q.1 q.2)) (p ×ᶠ 𝓟 s) (𝓤 β) := by
-  refine' forall_congrₓ fun u => forall_congrₓ $ fun u_in => _
-  simp [mem_map, Filter.Eventually, mem_prod_principal]
+    TendstoUniformlyOn F f p s ↔ tendsto (fun q : ι × α => (f q.2, F q.1 q.2)) (p ×ᶠ 𝓟 s) (𝓤 β) :=
+  forall₂_congrₓ $ fun u u_in => by
+    simp [mem_map, Filter.Eventually, mem_prod_principal]
 
 /-- A sequence of functions `Fₙ` converges uniformly to a limiting function `f` with respect to a
 filter `p` if, for any entourage of the diagonal `u`, one has `p`-eventually
@@ -83,14 +83,19 @@ filter `p` if, for any entourage of the diagonal `u`, one has `p`-eventually
 def TendstoUniformly (F : ι → α → β) (f : α → β) (p : Filter ι) :=
   ∀, ∀ u ∈ 𝓤 β, ∀, ∀ᶠ n in p, ∀ x, (f x, F n x) ∈ u
 
+theorem tendsto_uniformly_on_iff_tendsto_uniformly_comp_coe :
+    TendstoUniformlyOn F f p s ↔ TendstoUniformly (fun i x : s => F i x) (f ∘ coeₓ) p :=
+  forall₂_congrₓ $ fun V hV => by
+    simp
+
 /-- A sequence of functions `Fₙ` converges uniformly to a limiting function `f` w.r.t.
 filter `p` iff the function `(n, x) ↦ (f x, Fₙ x)` converges along `p ×ᶠ ⊤` to the uniformity.
 In other words: one knows nothing about the behavior of `x` in this limit.
 -/
 theorem tendsto_uniformly_iff_tendsto {F : ι → α → β} {f : α → β} {p : Filter ι} :
-    TendstoUniformly F f p ↔ tendsto (fun q : ι × α => (f q.2, F q.1 q.2)) (p ×ᶠ ⊤) (𝓤 β) := by
-  refine' forall_congrₓ fun u => forall_congrₓ $ fun u_in => _
-  simp [mem_map, Filter.Eventually, mem_prod_top]
+    TendstoUniformly F f p ↔ tendsto (fun q : ι × α => (f q.2, F q.1 q.2)) (p ×ᶠ ⊤) (𝓤 β) :=
+  forall₂_congrₓ $ fun u u_in => by
+    simp [mem_map, Filter.Eventually, mem_prod_top]
 
 theorem tendsto_uniformly_on_univ : TendstoUniformlyOn F f p univ ↔ TendstoUniformly F f p := by
   simp [TendstoUniformlyOn, TendstoUniformly]
@@ -131,7 +136,7 @@ theorem tendsto_prod_top_iff {c : β} : tendsto (↿F) (p ×ᶠ ⊤) (𝓝 c) �
     
 
 theorem UniformContinuousOn.tendsto_uniformly [UniformSpace α] [UniformSpace γ] {x : α} {U : Set α} (hU : U ∈ 𝓝 x)
-    {F : α → β → γ} (hF : UniformContinuousOn (↿F) (U.prod univ)) : TendstoUniformly F (F x) (𝓝 x) := by
+    {F : α → β → γ} (hF : UniformContinuousOn (↿F) (U ×ˢ (univ : Set β))) : TendstoUniformly F (F x) (𝓝 x) := by
   let φ := fun q : α × β => ((x, q.2), q)
   rw [tendsto_uniformly_iff_tendsto,
     show (fun q : α × β => (F x q.2, F q.1 q.2)) = Prod.map (↿F) (↿F) ∘ φ by
@@ -160,15 +165,37 @@ variable [TopologicalSpace α]
 
 /-- A sequence of functions `Fₙ` converges locally uniformly on a set `s` to a limiting function
 `f` with respect to a filter `p` if, for any entourage of the diagonal `u`, for any `x ∈ s`, one
-has `p`-eventually `(f x, Fₙ x) ∈ u` for all `y` in a neighborhood of `x` in `s`. -/
+has `p`-eventually `(f y, Fₙ y) ∈ u` for all `y` in a neighborhood of `x` in `s`. -/
 def TendstoLocallyUniformlyOn (F : ι → α → β) (f : α → β) (p : Filter ι) (s : Set α) :=
   ∀, ∀ u ∈ 𝓤 β, ∀, ∀, ∀ x ∈ s, ∀, ∃ t ∈ 𝓝[s] x, ∀ᶠ n in p, ∀, ∀ y ∈ t, ∀, (f y, F n y) ∈ u
 
 /-- A sequence of functions `Fₙ` converges locally uniformly to a limiting function `f` with respect
 to a filter `p` if, for any entourage of the diagonal `u`, for any `x`, one has `p`-eventually
-`(f x, Fₙ x) ∈ u` for all `y` in a neighborhood of `x`. -/
+`(f y, Fₙ y) ∈ u` for all `y` in a neighborhood of `x`. -/
 def TendstoLocallyUniformly (F : ι → α → β) (f : α → β) (p : Filter ι) :=
   ∀, ∀ u ∈ 𝓤 β, ∀, ∀ x : α, ∃ t ∈ 𝓝 x, ∀ᶠ n in p, ∀, ∀ y ∈ t, ∀, (f y, F n y) ∈ u
+
+theorem tendsto_locally_uniformly_on_iff_tendsto_locally_uniformly_comp_coe :
+    TendstoLocallyUniformlyOn F f p s ↔ TendstoLocallyUniformly (fun i x : s => F i x) (f ∘ coeₓ) p := by
+  refine' forall₂_congrₓ fun V hV => _
+  simp only [exists_prop, Function.comp_app, SetCoe.forall, Subtype.coe_mk]
+  refine' forall₂_congrₓ fun x hx => ⟨_, _⟩
+  · rintro ⟨t, ht₁, ht₂⟩
+    obtain ⟨u, hu₁, hu₂⟩ := mem_nhds_within_iff_exists_mem_nhds_inter.mp ht₁
+    exact
+      ⟨coeₓ ⁻¹' u, (mem_nhds_subtype _ _ _).mpr ⟨u, hu₁, rfl.subset⟩,
+        ht₂.mono fun i hi y hy₁ hy₂ => hi y (hu₂ ⟨hy₂, hy₁⟩)⟩
+    
+  · rintro ⟨t, ht₁, ht₂⟩
+    obtain ⟨u, hu₁, hu₂⟩ := (mem_nhds_subtype _ _ _).mp ht₁
+    exact
+      ⟨u ∩ s, mem_nhds_within_iff_exists_mem_nhds_inter.mpr ⟨u, hu₁, rfl.subset⟩,
+        ht₂.mono fun i hi y hy =>
+          hi y hy.2
+            (hu₂
+              (by
+                simp [hy.1]))⟩
+    
 
 protected theorem TendstoUniformlyOn.tendsto_locally_uniformly_on (h : TendstoUniformlyOn F f p s) :
     TendstoLocallyUniformlyOn F f p s := fun u hu x hx => ⟨s, self_mem_nhds_within, h u hu⟩
@@ -190,6 +217,29 @@ theorem tendsto_locally_uniformly_on_univ : TendstoLocallyUniformlyOn F f p univ
 protected theorem TendstoLocallyUniformly.tendsto_locally_uniformly_on (h : TendstoLocallyUniformly F f p) :
     TendstoLocallyUniformlyOn F f p s :=
   (tendsto_locally_uniformly_on_univ.mpr h).mono (subset_univ _)
+
+/-- On a compact space, locally uniform convergence is just uniform convergence. -/
+theorem tendsto_locally_uniformly_iff_tendsto_uniformly_of_compact_space [CompactSpace α] :
+    TendstoLocallyUniformly F f p ↔ TendstoUniformly F f p := by
+  refine' ⟨fun h V hV => _, TendstoUniformly.tendsto_locally_uniformly⟩
+  choose U hU using h V hV
+  obtain ⟨t, ht⟩ := compact_univ.elim_nhds_subcover' (fun k hk => U k) fun k hk => (hU k).1
+  replace hU := fun x : t => (hU x).2
+  rw [← eventually_all] at hU
+  refine' hU.mono fun i hi x => _
+  specialize ht (mem_univ x)
+  simp only [exists_prop, mem_Union, SetCoe.exists, exists_and_distrib_right, Subtype.coe_mk] at ht
+  obtain ⟨y, ⟨hy₁, hy₂⟩, hy₃⟩ := ht
+  exact hi ⟨⟨y, hy₁⟩, hy₂⟩ x hy₃
+
+/-- For a compact set `s`, locally uniform convergence on `s` is just uniform convergence on `s`. -/
+theorem tendsto_locally_uniformly_on_iff_tendsto_uniformly_on_of_compact (hs : IsCompact s) :
+    TendstoLocallyUniformlyOn F f p s ↔ TendstoUniformlyOn F f p s := by
+  have : CompactSpace s := is_compact_iff_compact_space.mp hs
+  refine' ⟨fun h => _, TendstoUniformlyOn.tendsto_locally_uniformly_on⟩
+  rwa [tendsto_locally_uniformly_on_iff_tendsto_locally_uniformly_comp_coe,
+    tendsto_locally_uniformly_iff_tendsto_uniformly_of_compact_space, ←
+    tendsto_uniformly_on_iff_tendsto_uniformly_comp_coe] at h
 
 theorem TendstoLocallyUniformlyOn.comp [TopologicalSpace γ] {t : Set γ} (h : TendstoLocallyUniformlyOn F f p s)
     (g : γ → α) (hg : maps_to g t s) (cg : ContinuousOn g t) :

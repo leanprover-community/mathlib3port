@@ -862,7 +862,7 @@ def ret (a : α) : Seq1 α :=
   (a, nil)
 
 instance [Inhabited α] : Inhabited (Seq1 α) :=
-  ⟨ret (default _)⟩
+  ⟨ret default⟩
 
 /-- The `bind` operator for the `seq1` monad,
   which maps `f` on each element of `s` and appends the results together.

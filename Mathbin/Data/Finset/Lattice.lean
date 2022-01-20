@@ -3,6 +3,7 @@ import Mathbin.Data.Finset.Option
 import Mathbin.Data.Finset.Prod
 import Mathbin.Data.Multiset.Lattice
 import Mathbin.Order.CompleteLattice
+import Mathbin.Order.Lexicographic
 
 /-!
 # Lattice operations on finsets
@@ -94,6 +95,10 @@ theorem sup_bot (s : Finset β) : (s.sup fun _ => ⊥) = (⊥ : α) := by
     
   · exact sup_const hs _
     
+
+theorem sup_ite (p : β → Prop) [DecidablePred p] :
+    (s.sup fun i => ite (p i) (f i) (g i)) = (s.filter p).sup f⊔(s.filter fun i => ¬p i).sup g :=
+  fold_ite _
 
 theorem sup_le {a : α} : (∀, ∀ b ∈ s, ∀, f b ≤ a) → s.sup f ≤ a :=
   sup_le_iff.2
@@ -198,7 +203,7 @@ theorem subset_range_sup_succ (s : Finset ℕ) : s ⊆ range (s.sup id).succ := 
 theorem exists_nat_subset_range (s : Finset ℕ) : ∃ n : ℕ, s ⊆ range n :=
   ⟨_, s.subset_range_sup_succ⟩
 
-theorem sup_induction {p : α → Prop} (hb : p ⊥) (hp : ∀ a₁ a₂ : α, p a₁ → p a₂ → p (a₁⊔a₂))
+theorem sup_induction {p : α → Prop} (hb : p ⊥) (hp : ∀ a₁, p a₁ → ∀ a₂, p a₂ → p (a₁⊔a₂))
     (hs : ∀, ∀ b ∈ s, ∀, p (f b)) : p (s.sup f) := by
   induction' s using Finset.cons_induction with c s hc ih
   · exact hb
@@ -244,7 +249,8 @@ end Sup
 
 theorem disjoint_sup_right [DistribLattice α] [OrderBot α] {a : α} {s : Finset β} {f : β → α} :
     Disjoint a (s.sup f) ↔ ∀, ∀ i ∈ s, ∀, Disjoint a (f i) :=
-  ⟨fun h i hi => h.mono_right (le_sup hi), sup_induction disjoint_bot_right fun b c => Disjoint.sup_right⟩
+  ⟨fun h i hi => h.mono_right (le_sup hi),
+    sup_induction disjoint_bot_right $ ball_cond_comm.mpr $ @Disjoint.sup_right _ _ _ _⟩
 
 theorem disjoint_sup_left [DistribLattice α] [OrderBot α] {a : α} {s : Finset β} {f : β → α} :
     Disjoint (s.sup f) a ↔ ∀, ∀ i ∈ s, ∀, Disjoint (f i) a := by
@@ -378,7 +384,7 @@ theorem sup_sdiff_left {α β : Type _} [BooleanAlgebra α] (s : Finset β) (f :
 
 theorem inf_sdiff_left {α β : Type _} [BooleanAlgebra α] {s : Finset β} (hs : s.nonempty) (f : β → α) (a : α) :
     (s.inf fun b => a \ f b) = a \ s.sup f := by
-  refine' hs.cons_induction (fun b => _) fun b t _ h => _
+  induction' hs using Finset.Nonempty.cons_induction with b b t _ _ h
   · rw [sup_singleton, inf_singleton]
     
   · rw [sup_cons, inf_cons, h, sdiff_sup]
@@ -386,7 +392,7 @@ theorem inf_sdiff_left {α β : Type _} [BooleanAlgebra α] {s : Finset β} (hs 
 
 theorem inf_sdiff_right {α β : Type _} [BooleanAlgebra α] {s : Finset β} (hs : s.nonempty) (f : β → α) (a : α) :
     (s.inf fun b => f b \ a) = s.inf f \ a := by
-  refine' hs.cons_induction (fun b => _) fun b t _ h => _
+  induction' hs using Finset.Nonempty.cons_induction with b b t _ _ h
   · rw [inf_singleton, inf_singleton]
     
   · rw [inf_cons, inf_cons, h, inf_sdiff]
@@ -406,7 +412,7 @@ theorem inf_coe {P : α → Prop} {Ptop : P ⊤} {Pinf : ∀ ⦃x y⦄, P x → 
     (@inf _ _ (Subtype.semilatticeInf Pinf) (Subtype.orderTop Ptop) t f : α) = t.inf fun x => f x :=
   @sup_coe (OrderDual α) _ _ _ _ Ptop Pinf t f
 
-theorem inf_induction {p : α → Prop} (ht : p ⊤) (hp : ∀ a₁ a₂ : α, p a₁ → p a₂ → p (a₁⊓a₂))
+theorem inf_induction {p : α → Prop} (ht : p ⊤) (hp : ∀ a₁, p a₁ → ∀ a₂, p a₂ → p (a₁⊓a₂))
     (hs : ∀, ∀ b ∈ s, ∀, p (f b)) : p (s.inf f) :=
   @sup_induction (OrderDual α) _ _ _ _ _ _ ht hp hs
 
@@ -524,35 +530,28 @@ theorem comp_sup'_eq_sup'_comp [SemilatticeSup γ] {s : Finset β} (H : s.nonemp
     exact congr_argₓ coeₓ (g_sup f₁ f₂)
     
 
-theorem sup'_induction {p : α → Prop} (hp : ∀ a₁ a₂ : α, p a₁ → p a₂ → p (a₁⊔a₂)) (hs : ∀, ∀ b ∈ s, ∀, p (f b)) :
+theorem sup'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p a₂ → p (a₁⊔a₂)) (hs : ∀, ∀ b ∈ s, ∀, p (f b)) :
     p (s.sup' H f) := by
   show @WithBot.recBotCoe α (fun _ => Prop) True p (↑s.sup' H f)
   rw [coe_sup']
   refine' sup_induction trivialₓ _ hs
-  intro a₁ a₂ h₁ h₂
-  cases a₁
+  rintro (_ | a₁) h₁ a₂ h₂
   · rw [WithBot.none_eq_bot, bot_sup_eq]
     exact h₂
     
-  · cases a₂
-    exact h₁
-    exact hp a₁ a₂ h₁ h₂
-    
+  cases a₂
+  exacts[h₁, hp a₁ h₁ a₂ h₂]
 
 theorem exists_mem_eq_sup' [IsTotal α (· ≤ ·)] : ∃ b, b ∈ s ∧ s.sup' H f = f b := by
-  induction' s using Finset.cons_induction with c s hc ih
-  · exact False.elim (not_nonempty_empty H)
+  refine' H.cons_induction (fun c => _) fun c s hc hs ih => _
+  · exact ⟨c, mem_singleton_self c, rfl⟩
     
-  · rcases s.eq_empty_or_nonempty with (rfl | hs)
-    · exact ⟨c, mem_singleton_self c, rfl⟩
+  · rcases ih with ⟨b, hb, h'⟩
+    rw [sup'_cons hs, h']
+    cases' total_of (· ≤ ·) (f b) (f c) with h h
+    · exact ⟨c, mem_cons.2 (Or.inl rfl), sup_eq_left.2 h⟩
       
-    · rcases ih hs with ⟨b, hb, h'⟩
-      rw [sup'_cons hs, h']
-      cases' total_of (· ≤ ·) (f b) (f c) with h h
-      · exact ⟨c, mem_cons.2 (Or.inl rfl), sup_eq_left.2 h⟩
-        
-      · exact ⟨b, mem_cons.2 (Or.inr hb), sup_eq_right.2 h⟩
-        
+    · exact ⟨b, mem_cons.2 (Or.inr hb), sup_eq_right.2 h⟩
       
     
 
@@ -635,7 +634,7 @@ theorem comp_inf'_eq_inf'_comp [SemilatticeInf γ] {s : Finset β} (H : s.nonemp
     (g_inf : ∀ x y, g (x⊓y) = g x⊓g y) : g (s.inf' H f) = s.inf' H (g ∘ f) :=
   @comp_sup'_eq_sup'_comp (OrderDual α) _ (OrderDual γ) _ _ _ H f g g_inf
 
-theorem inf'_induction {p : α → Prop} (hp : ∀ a₁ a₂ : α, p a₁ → p a₂ → p (a₁⊓a₂)) (hs : ∀, ∀ b ∈ s, ∀, p (f b)) :
+theorem inf'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p a₂ → p (a₁⊓a₂)) (hs : ∀, ∀ b ∈ s, ∀, p (f b)) :
     p (s.inf' H f) :=
   @sup'_induction (OrderDual α) _ _ _ H f _ hp hs
 
@@ -661,8 +660,9 @@ variable [SemilatticeSup α] [OrderBot α]
 theorem sup'_eq_sup {s : Finset β} (H : s.nonempty) (f : β → α) : s.sup' H f = s.sup f :=
   le_antisymmₓ (sup'_le H f fun b => le_sup) (sup_le fun b => le_sup' f)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem sup_closed_of_sup_closed {s : Set α} (t : Finset α) (htne : t.nonempty) (h_subset : ↑t ⊆ s)
-    (h : ∀ ⦃a b⦄, a ∈ s → b ∈ s → a⊔b ∈ s) : t.sup id ∈ s :=
+    (h : ∀ a b _ : a ∈ s _ : b ∈ s, a⊔b ∈ s) : t.sup id ∈ s :=
   sup'_eq_sup htne id ▸ sup'_induction _ _ h h_subset
 
 theorem exists_mem_eq_sup [IsTotal α (· ≤ ·)] (s : Finset β) (h : s.nonempty) (f : β → α) :
@@ -682,8 +682,9 @@ variable [SemilatticeInf α] [OrderTop α]
 theorem inf'_eq_inf {s : Finset β} (H : s.nonempty) (f : β → α) : s.inf' H f = s.inf f :=
   @sup'_eq_sup (OrderDual α) _ _ _ _ H f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem inf_closed_of_inf_closed {s : Set α} (t : Finset α) (htne : t.nonempty) (h_subset : ↑t ⊆ s)
-    (h : ∀ ⦃a b⦄, a ∈ s → b ∈ s → a⊓b ∈ s) : t.inf id ∈ s :=
+    (h : ∀ a b _ : a ∈ s _ : b ∈ s, a⊓b ∈ s) : t.inf id ∈ s :=
   @sup_closed_of_sup_closed (OrderDual α) _ _ _ t htne h_subset h
 
 theorem exists_mem_eq_inf [IsTotal α (· ≤ ·)] (s : Finset β) (h : s.nonempty) (f : β → α) :
@@ -1020,6 +1021,46 @@ theorem induction_on_min [DecidableEq α] {p : Finset α → Prop} (s : Finset �
   @induction_on_max (OrderDual α) _ _ _ s h0 step
 
 end MaxMin
+
+section MaxMinInductionValue
+
+variable {ι : Type _} [LinearOrderₓ α] [LinearOrderₓ β]
+
+/-- Induction principle for `finset`s in any type from which a given function `f` maps to a linearly
+ordered type : a predicate is true on all `s : finset α` provided that:
+
+* it is true on the empty `finset`,
+* for every `s : finset α` and an element `a` such that for elements of `s` denoted by `x` we have
+  `f x ≤ f a`, `p s` implies `p (insert a s)`. -/
+@[elab_as_eliminator]
+theorem induction_on_max_value [DecidableEq ι] (f : ι → α) {p : Finset ι → Prop} (s : Finset ι) (h0 : p ∅)
+    (step : ∀ a s, a ∉ s → (∀, ∀ x ∈ s, ∀, f x ≤ f a) → p s → p (insert a s)) : p s := by
+  induction' s using Finset.strongInductionOn with s ihs
+  rcases(s.image f).eq_empty_or_nonempty with (hne | hne)
+  · simp only [image_eq_empty] at hne
+    simp only [hne, h0]
+    
+  · have H : (s.image f).max' hne ∈ s.image f := max'_mem (s.image f) hne
+    simp only [mem_image, exists_prop] at H
+    rcases H with ⟨a, has, hfa⟩
+    rw [← insert_erase has]
+    refine' step _ _ (not_mem_erase a s) (fun x hx => _) (ihs _ $ erase_ssubset has)
+    rw [hfa]
+    exact le_max' _ _ (mem_image_of_mem _ $ mem_of_mem_erase hx)
+    
+
+/-- Induction principle for `finset`s in any type from which a given function `f` maps to a linearly
+ordered type : a predicate is true on all `s : finset α` provided that:
+
+* it is true on the empty `finset`,
+* for every `s : finset α` and an element `a` such that for elements of `s` denoted by `x` we have
+  `f a ≤ f x`, `p s` implies `p (insert a s)`. -/
+@[elab_as_eliminator]
+theorem induction_on_min_value [DecidableEq ι] (f : ι → α) {p : Finset ι → Prop} (s : Finset ι) (h0 : p ∅)
+    (step : ∀ a s, a ∉ s → (∀, ∀ x ∈ s, ∀, f a ≤ f x) → p s → p (insert a s)) : p s :=
+  @induction_on_max_value (OrderDual α) ι _ _ _ _ s h0 step
+
+end MaxMinInductionValue
 
 section ExistsMaxMin
 

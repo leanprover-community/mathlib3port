@@ -597,7 +597,7 @@ theorem centroid_eq_centroid_image_of_inj_on {p : ι → P} (hi : ∀ i j _ : i 
       
     · intro hx
       use ⟨p x, hps.symm ▸ Set.mem_image_of_mem _ hx⟩, mem_univ _
-      refine' hi _ _ (hf' _).1 hx _
+      refine' hi _ (hf' _).1 _ hx _
       rw [(hf' _).2]
       rfl
       
@@ -752,9 +752,7 @@ theorem eq_affine_combination_of_mem_affine_span_of_fintype [Fintype ι] {p1 : P
   obtain ⟨s, w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span h
   refine' ⟨(s : Set ι).indicator w, _, Finset.affine_combination_indicator_subset w p s.subset_univ⟩
   simp only [Finset.mem_coe, Set.indicator_apply, ← hw]
-  convert Fintype.sum_extend_by_zero s w
-  ext i
-  congr
+  rw [Fintype.sum_extend_by_zero s w]
 
 variable (k V)
 

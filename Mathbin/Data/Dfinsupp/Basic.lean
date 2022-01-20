@@ -488,10 +488,17 @@ defined on this `finset`. -/
 def mk (s : Finset ι) (x : ∀ i : (↑s : Set ι), β (i : ι)) : Π₀ i, β i :=
   ⟦⟨fun i => if H : i ∈ s then x ⟨i, H⟩ else 0, s.1, fun i => if H : i ∈ s then Or.inl H else Or.inr $ dif_neg H⟩⟧
 
+variable {s : Finset ι} {x : ∀ i : (↑s : Set ι), β i} {i : ι}
+
 @[simp]
-theorem mk_apply {s : Finset ι} {x : ∀ i : (↑s : Set ι), β i} {i : ι} :
-    (mk s x : ∀ i, β i) i = if H : i ∈ s then x ⟨i, H⟩ else 0 :=
+theorem mk_apply : (mk s x : ∀ i, β i) i = if H : i ∈ s then x ⟨i, H⟩ else 0 :=
   rfl
+
+theorem mk_of_mem (hi : i ∈ s) : (mk s x : ∀ i, β i) i = x ⟨i, hi⟩ :=
+  dif_pos hi
+
+theorem mk_of_not_mem (hi : i ∉ s) : (mk s x : ∀ i, β i) i = 0 :=
+  dif_neg hi
 
 theorem mk_injective (s : Finset ι) : Function.Injective (@mk ι β _ _ s) := by
   intro x y H
@@ -697,7 +704,7 @@ theorem erase_single_ne {i j : ι} (x : β i) (h : i ≠ j) : (single i x).erase
 
 section Update
 
-variable (f : Π₀ i, β i) (i : ι) (b : β i) [Decidable (b = 0)]
+variable (f : Π₀ i, β i) (i) (b : β i) [Decidable (b = 0)]
 
 /-- Replace the value of a `Π₀ i, β i` at a given point `i : ι` by a given value `b : β i`.
 If `b = 0`, this amounts to removing `i` from the support.
@@ -1012,8 +1019,11 @@ theorem eq_mk_support (f : Π₀ i, β i) : f = mk f.support fun i => f i := by
 theorem support_zero : (0 : Π₀ i, β i).support = ∅ :=
   rfl
 
-theorem mem_support_iff (f : Π₀ i, β i) : ∀ i : ι, i ∈ f.support ↔ f i ≠ 0 :=
-  f.mem_support_to_fun
+theorem mem_support_iff {f : Π₀ i, β i} {i : ι} : i ∈ f.support ↔ f i ≠ 0 :=
+  f.mem_support_to_fun _
+
+theorem not_mem_support_iff {f : Π₀ i, β i} {i : ι} : i ∉ f.support ↔ f i = 0 :=
+  not_iff_comm.1 mem_support_iff.symm
 
 @[simp]
 theorem support_eq_empty {f : Π₀ i, β i} : f.support = ∅ ↔ f = 0 :=
@@ -1103,7 +1113,8 @@ theorem support_update (f : Π₀ i, β i) (i : ι) (b : β i) [Decidable (b = 0
     support (f.update i b) = if b = 0 then support (f.erase i) else insert i f.support := by
   ext j
   split_ifs with hb
-  · simp only [hb, update_eq_erase, support_erase]
+  · subst hb
+    simp [update_eq_erase, support_erase]
     
   · rw [support_update_ne_zero f _ hb]
     
@@ -1124,7 +1135,7 @@ theorem subtype_domain_def (f : Π₀ i, β i) : f.subtype_domain p = mk (f.supp
     by_cases' h2 : f i ≠ 0 <;>
       try
           simp at h2 <;>
-        dsimp <;> simp [h2, ← Subtype.val_eq_coe]
+        dsimp <;> simp [h2]
 
 @[simp]
 theorem support_subtype_domain {f : Π₀ i, β i} : (subtype_domain p f).support = f.support.subtype p := by
@@ -1155,9 +1166,9 @@ instance [∀ i, HasZero (β i)] [∀ i, DecidableEq (β i)] : DecidableEq (Π�
         if h : i ∈ f.support then h₂ i h
         else by
           have hf : f i = 0 := by
-            rwa [f.mem_support_iff, not_not] at h
+            rwa [mem_support_iff, not_not] at h
           have hg : g i = 0 := by
-            rwa [h₁, g.mem_support_iff, not_not] at h
+            rwa [h₁, mem_support_iff, not_not] at h
           rw [hf, hg],
       by
       intro h <;> subst h <;> simp ⟩
@@ -1232,7 +1243,7 @@ theorem support_sum {ι₁ : Type u₁} [DecidableEq ι₁] {β₁ : ι₁ → T
   have : ∀ i₁ : ι, (f.sum fun i : ι₁ b : β₁ i => (g i b) i₁) ≠ 0 → ∃ i : ι₁, f i ≠ 0 ∧ ¬(g i (f i)) i₁ = 0 :=
     fun i₁ h =>
     let ⟨i, hi, Ne⟩ := Finset.exists_ne_zero_of_sum_ne_zero h
-    ⟨i, (f.mem_support_iff i).mp hi, Ne⟩
+    ⟨i, mem_support_iff.1 hi, Ne⟩
   simpa [Finset.subset_iff, mem_support_iff, Finset.mem_bUnion, sum_apply] using this
 
 @[simp, to_additive]
@@ -1273,7 +1284,7 @@ theorem prod_add_index [∀ i, AddCommMonoidₓ (β i)] [∀ i x : β i, Decidab
 @[to_additive]
 theorem _root_.submonoid.dfinsupp_prod_mem [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ]
     (S : Submonoid γ) (f : Π₀ i, β i) (g : ∀ i, β i → γ) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) : f.prod g ∈ S :=
-  S.prod_mem $ fun i hi => h _ $ (f.mem_support_iff _).mp hi
+  S.prod_mem $ fun i hi => h _ $ mem_support_iff.1 hi
 
 @[simp, to_additive]
 theorem prod_eq_prod_fintype [Fintype ι] [∀ i, HasZero (β i)] [∀ i : ι x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ]

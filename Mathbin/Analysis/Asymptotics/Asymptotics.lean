@@ -1,5 +1,6 @@
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Topology.LocalHomeomorph
+import Mathbin.Topology.Algebra.Ordered.LiminfLimsup
 
 /-!
 # Asymptotics
@@ -414,7 +415,7 @@ alias is_O_norm_right ↔ Asymptotics.IsO.of_norm_right Asymptotics.IsO.norm_rig
 @[simp]
 theorem is_o_norm_right : is_o f (fun x => ∥g' x∥) l ↔ is_o f g' l := by
   unfold is_o
-  exact forall_congrₓ fun _ => forall_congrₓ $ fun _ => is_O_with_norm_right
+  exact forall₂_congrₓ fun _ _ => is_O_with_norm_right
 
 alias is_o_norm_right ↔ Asymptotics.IsOₓ.of_norm_right Asymptotics.IsOₓ.norm_right
 
@@ -434,7 +435,7 @@ alias is_O_norm_left ↔ Asymptotics.IsO.of_norm_left Asymptotics.IsO.norm_left
 @[simp]
 theorem is_o_norm_left : is_o (fun x => ∥f' x∥) g l ↔ is_o f' g l := by
   unfold is_o
-  exact forall_congrₓ fun _ => forall_congrₓ $ fun _ => is_O_with_norm_left
+  exact forall₂_congrₓ fun _ _ => is_O_with_norm_left
 
 alias is_o_norm_left ↔ Asymptotics.IsOₓ.of_norm_left Asymptotics.IsOₓ.norm_left
 
@@ -472,7 +473,7 @@ alias is_O_neg_right ↔ Asymptotics.IsO.of_neg_right Asymptotics.IsO.neg_right
 @[simp]
 theorem is_o_neg_right : is_o f (fun x => -g' x) l ↔ is_o f g' l := by
   unfold is_o
-  exact forall_congrₓ fun _ => forall_congrₓ fun _ => is_O_with_neg_right
+  exact forall₂_congrₓ fun _ _ => is_O_with_neg_right
 
 alias is_o_neg_right ↔ Asymptotics.IsOₓ.of_neg_right Asymptotics.IsOₓ.neg_right
 
@@ -492,7 +493,7 @@ alias is_O_neg_left ↔ Asymptotics.IsO.of_neg_left Asymptotics.IsO.neg_left
 @[simp]
 theorem is_o_neg_left : is_o (fun x => -f' x) g l ↔ is_o f' g l := by
   unfold is_o
-  exact forall_congrₓ fun _ => forall_congrₓ fun _ => is_O_with_neg_left
+  exact forall₂_congrₓ fun _ _ => is_O_with_neg_left
 
 alias is_o_neg_left ↔ Asymptotics.IsOₓ.of_neg_right Asymptotics.IsOₓ.neg_left
 
@@ -825,13 +826,15 @@ theorem is_o_const_const_iff [ne_bot l] {d : E'} {c : F'} (hc : c ≠ 0) : is_o 
 theorem is_o_id_const {c : F'} (hc : c ≠ 0) : is_o (fun x : E' => x) (fun x => c) (𝓝 0) :=
   (is_o_const_iff hc).mpr (continuous_id.Tendsto 0)
 
-theorem is_O_const_of_tendsto {y : E'} (h : tendsto f' l (𝓝 y)) {c : F'} (hc : c ≠ 0) : is_O f' (fun x => c) l := by
-  refine' is_O.trans _ (is_O_const_const (∥y∥ + 1) hc l)
-  refine' is_O.of_bound 1 _
-  simp only [is_O_with, one_mulₓ]
-  have : tendsto (fun x => ∥f' x∥) l (𝓝 ∥y∥) := (continuous_norm.tendsto _).comp h
-  have Iy : ∥y∥ < ∥∥y∥ + 1∥ := lt_of_lt_of_leₓ (lt_add_one _) (le_abs_self _)
-  exact this (ge_mem_nhds Iy)
+theorem _root_.filter.is_bounded_under.is_O_const (h : is_bounded_under (· ≤ ·) l (norm ∘ f')) {c : F'} (hc : c ≠ 0) :
+    is_O f' (fun x => c) l := by
+  rcases h with ⟨C, hC⟩
+  refine' (is_O.of_bound 1 _).trans (is_O_const_const C hc l)
+  refine' (eventually_map.1 hC).mono fun x h => _
+  calc ∥f' x∥ ≤ C := h _ ≤ abs C := le_abs_self C _ = 1 * ∥C∥ := (one_mulₓ _).symm
+
+theorem is_O_const_of_tendsto {y : E'} (h : tendsto f' l (𝓝 y)) {c : F'} (hc : c ≠ 0) : is_O f' (fun x => c) l :=
+  h.norm.is_bounded_under_le.is_O_const hc
 
 section
 
@@ -1431,7 +1434,7 @@ theorem is_O_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.target) {f
 theorem is_o_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.target) {f : β → E} {g : β → F} :
     is_o f g (𝓝 b) ↔ is_o (f ∘ e) (g ∘ e) (𝓝 (e.symm b)) := by
   unfold is_o
-  exact forall_congrₓ $ fun c => forall_congrₓ $ fun hc => e.is_O_with_congr hb
+  exact forall₂_congrₓ fun c hc => e.is_O_with_congr hb
 
 end LocalHomeomorph
 
@@ -1458,7 +1461,7 @@ theorem is_O_congr (e : α ≃ₜ β) {b : β} {f : β → E} {g : β → F} :
 theorem is_o_congr (e : α ≃ₜ β) {b : β} {f : β → E} {g : β → F} :
     is_o f g (𝓝 b) ↔ is_o (f ∘ e) (g ∘ e) (𝓝 (e.symm b)) := by
   unfold is_o
-  exact forall_congrₓ fun c => forall_congrₓ fun hc => e.is_O_with_congr
+  exact forall₂_congrₓ fun c hc => e.is_O_with_congr
 
 end Homeomorph
 

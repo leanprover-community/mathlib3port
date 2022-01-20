@@ -262,7 +262,7 @@ end
 
 section NormedSpace
 
-variable {𝕜 : Type _} [NormedField 𝕜] [SemiNormedSpace 𝕜 V]
+variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 V]
 
 open AffineMap
 
@@ -310,7 +310,7 @@ theorem dist_midpoint_midpoint_le' (p₁ p₂ p₃ p₄ : P) :
 
 end NormedSpace
 
-variable [SemiNormedSpace ℝ V] [NormedSpace ℝ W]
+variable [NormedSpace ℝ V] [NormedSpace ℝ W]
 
 theorem dist_midpoint_midpoint_le (p₁ p₂ p₃ p₄ : V) :
     dist (midpoint ℝ p₁ p₂) (midpoint ℝ p₃ p₄) ≤ (dist p₁ p₃ + dist p₂ p₄) / 2 := by

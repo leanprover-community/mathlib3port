@@ -158,7 +158,7 @@ end CompleteLattice
 namespace Set
 
 theorem Union_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
-    (⋃ n : ℕ, (s n.unpair.fst).Prod (t n.unpair.snd)) = (⋃ n, s n).Prod (⋃ n, t n) := by
+    (⋃ n : ℕ, s n.unpair.fst ×ˢ t n.unpair.snd) = (⋃ n, s n) ×ˢ ⋃ n, t n := by
   rw [← Union_prod]
   convert surjective_unpair.Union_comp _
   rfl

@@ -328,7 +328,7 @@ theorem subtype_perm_of_subtype {p : α → Prop} [DecidablePred p] (f : perm (S
     simp only [show p x from hx, dif_pos, Subtype.coe_eta]
 
 @[simp]
-theorem default_perm {n : Type _} : default (Equivₓ.Perm n) = 1 :=
+theorem default_perm {n : Type _} : (default : perm n) = 1 :=
   rfl
 
 /-- Permutations on a subtype are equivalent to permutations on the original type that fix pointwise

@@ -67,19 +67,30 @@ the free Lie algebra. -/
 inductive rel : lib R X → lib R X → Prop
   | lie_self (a : lib R X) : rel (a * a) 0
   | leibniz_lie (a b c : lib R X) : rel (a * (b * c)) (a * b * c + b * (a * c))
-  | smul (t : R) (a b : lib R X) : rel a b → rel (t • a) (t • b)
-  | add_right (a b c : lib R X) : rel a b → rel (a + c) (b + c)
-  | mul_left (a b c : lib R X) : rel b c → rel (a * b) (a * c)
-  | mul_right (a b c : lib R X) : rel a b → rel (a * c) (b * c)
+  | smul (t : R) {a b : lib R X} : rel a b → rel (t • a) (t • b)
+  | add_right {a b : lib R X} (c : lib R X) : rel a b → rel (a + c) (b + c)
+  | mul_left (a : lib R X) {b c : lib R X} : rel b c → rel (a * b) (a * c)
+  | mul_right {a b : lib R X} (c : lib R X) : rel a b → rel (a * c) (b * c)
 
 variable {R X}
 
-theorem rel.add_left (a b c : lib R X) (h : rel R X b c) : rel R X (a + b) (a + c) := by
+theorem rel.add_left (a : lib R X) {b c : lib R X} (h : rel R X b c) : rel R X (a + b) (a + c) := by
   rw [add_commₓ _ b, add_commₓ _ c]
-  exact rel.add_right _ _ _ h
+  exact h.add_right _
 
-theorem rel.neg (a b : lib R X) (h : rel R X a b) : rel R X (-a) (-b) :=
-  h.smul (-1) _ _
+theorem rel.neg {a b : lib R X} (h : rel R X a b) : rel R X (-a) (-b) := by
+  simpa only [neg_one_smul] using h.smul (-1)
+
+theorem rel.sub_left (a : lib R X) {b c : lib R X} (h : rel R X b c) : rel R X (a - b) (a - c) := by
+  simpa only [sub_eq_add_neg] using h.neg.add_left a
+
+theorem rel.sub_right {a b : lib R X} (c : lib R X) (h : rel R X a b) : rel R X (a - c) (b - c) := by
+  simpa only [sub_eq_add_neg] using h.add_right (-c)
+
+theorem rel.smul_of_tower {S : Type _} [Monoidₓ S] [DistribMulAction S R] [IsScalarTower S R R] (t : S) (a b : lib R X)
+    (h : rel R X a b) : rel R X (t • a) (t • b) := by
+  rw [← smul_one_smul R t a, ← smul_one_smul R t b]
+  exact h.smul _
 
 end FreeLieAlgebra
 
@@ -89,61 +100,42 @@ def FreeLieAlgebra :=
 
 namespace FreeLieAlgebra
 
-instance : AddCommGroupₓ (FreeLieAlgebra R X) where
-  add := Quot.map₂ (· + ·) rel.add_left rel.add_right
-  add_comm := by
-    rintro ⟨a⟩ ⟨b⟩
-    change Quot.mk _ _ = Quot.mk _ _
-    rw [add_commₓ]
-  add_assoc := by
-    rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
-    change Quot.mk _ _ = Quot.mk _ _
-    rw [add_assocₓ]
-  zero := Quot.mk _ 0
-  zero_add := by
-    rintro ⟨a⟩
-    change Quot.mk _ _ = _
-    rw [zero_addₓ]
-  add_zero := by
-    rintro ⟨a⟩
-    change Quot.mk _ _ = _
-    rw [add_zeroₓ]
-  neg := Quot.map Neg.neg rel.neg
-  add_left_neg := by
-    rintro ⟨a⟩
-    change Quot.mk _ _ = Quot.mk _ _
-    rw [add_left_negₓ]
+instance {S : Type _} [Monoidₓ S] [DistribMulAction S R] [IsScalarTower S R R] : HasScalar S (FreeLieAlgebra R X) where
+  smul := fun t => Quot.map ((· • ·) t) (rel.smul_of_tower t)
 
-instance : Module R (FreeLieAlgebra R X) where
-  smul := fun t => Quot.map ((· • ·) t) (rel.smul t)
-  one_smul := by
-    rintro ⟨a⟩
-    change Quot.mk _ _ = Quot.mk _ _
-    rw [one_smul]
-  mul_smul := by
-    rintro t₁ t₂ ⟨a⟩
-    change Quot.mk _ _ = Quot.mk _ _
-    rw [mul_smul]
-  add_smul := by
-    rintro t₁ t₂ ⟨a⟩
-    change Quot.mk _ _ = Quot.mk _ _
-    rw [add_smul]
-  smul_add := by
-    rintro t ⟨a⟩ ⟨b⟩
-    change Quot.mk _ _ = Quot.mk _ _
-    rw [smul_add]
-  zero_smul := by
-    rintro ⟨a⟩
-    change Quot.mk _ _ = Quot.mk _ _
-    rw [zero_smul]
-  smul_zero := fun t => by
-    change Quot.mk _ _ = Quot.mk _ _
-    rw [smul_zero]
+instance {S : Type _} [Monoidₓ S] [DistribMulAction S R] [DistribMulAction (Sᵐᵒᵖ) R] [IsScalarTower S R R]
+    [IsCentralScalar S R] : IsCentralScalar S (FreeLieAlgebra R X) where
+  op_smul_eq_smul := fun t => Quot.ind $ fun a => congr_argₓ (Quot.mk _) (op_smul_eq_smul t a)
+
+instance : HasZero (FreeLieAlgebra R X) where
+  zero := Quot.mk _ 0
+
+instance : Add (FreeLieAlgebra R X) where
+  add := Quot.map₂ (· + ·) (fun _ _ _ => rel.add_left _) fun _ _ _ => rel.add_right _
+
+instance : Neg (FreeLieAlgebra R X) where
+  neg := Quot.map Neg.neg fun _ _ => rel.neg
+
+instance : Sub (FreeLieAlgebra R X) where
+  sub := Quot.map₂ Sub.sub (fun _ _ _ => rel.sub_left _) fun _ _ _ => rel.sub_right _
+
+instance : AddGroupₓ (FreeLieAlgebra R X) :=
+  Function.Surjective.addGroupSmul (Quot.mk _) (surjective_quot_mk _) rfl (fun _ _ => rfl) (fun _ => rfl)
+    (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+
+instance : AddCommSemigroupₓ (FreeLieAlgebra R X) :=
+  Function.Surjective.addCommSemigroup (Quot.mk _) (surjective_quot_mk _) fun _ _ => rfl
+
+instance : AddCommGroupₓ (FreeLieAlgebra R X) :=
+  { FreeLieAlgebra.addGroup R X, FreeLieAlgebra.addCommSemigroup R X with }
+
+instance {S : Type _} [Semiringₓ S] [Module S R] [IsScalarTower S R R] : Module S (FreeLieAlgebra R X) :=
+  Function.Surjective.module S ⟨Quot.mk _, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _) fun _ _ => rfl
 
 /-- Note that here we turn the `has_mul` coming from the `non_unital_non_assoc_semiring` structure
 on `lib R X` into a `has_bracket` on `free_lie_algebra`. -/
 instance : LieRing (FreeLieAlgebra R X) where
-  bracket := Quot.map₂ (· * ·) rel.mul_left rel.mul_right
+  bracket := Quot.map₂ (· * ·) (fun _ _ _ => rel.mul_left _) fun _ _ _ => rel.mul_right _
   add_lie := by
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
     change Quot.mk _ _ = Quot.mk _ _

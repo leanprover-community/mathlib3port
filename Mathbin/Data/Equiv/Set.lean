@@ -105,7 +105,7 @@ theorem eq_preimage_iff_image_eq {α β} (e : α ≃ β) s t : s = e ⁻¹' t �
   Set.eq_preimage_iff_image_eq e.bijective
 
 theorem prod_assoc_preimage {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
-    Equivₓ.prodAssoc α β γ ⁻¹' s.prod (t.prod u) = (s.prod t).Prod u := by
+    Equivₓ.prodAssoc α β γ ⁻¹' (s ×ˢ (t ×ˢ u)) = s ×ˢ t ×ˢ u := by
   ext
   simp [and_assoc]
 
@@ -380,7 +380,7 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
         Equivₓ.coe_trans, Subtype.coe_eta, Subtype.coe_mk, set.sum_compl_symm_apply_compl]
 
 /-- The set product of two sets is equivalent to the type product of their coercions to types. -/
-protected def Prod {α β} (s : Set α) (t : Set β) : s.prod t ≃ s × t :=
+protected def Prod {α β} (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ s × t :=
   @subtype_prod_equiv_prod α β s t
 
 /-- If a function `f` is injective on a set `s`, then `s` is equivalent to `f '' s`. -/
@@ -474,25 +474,25 @@ abbrev of_left_inverse' {α β : Sort _} (f : α → β) (f_inv : β → α) (hf
 noncomputable def of_injective {α β} (f : α → β) (hf : injective f) : α ≃ Set.Range f :=
   Equivₓ.ofLeftInverse f (fun h => Function.invFun f) fun h => Function.left_inverse_inv_funₓ hf
 
-theorem apply_of_injective_symm {α β} (f : α → β) (hf : injective f) (b : Set.Range f) :
+theorem apply_of_injective_symm {α β} {f : α → β} (hf : injective f) (b : Set.Range f) :
     f ((of_injective f hf).symm b) = b :=
   Subtype.ext_iff.1 $ (of_injective f hf).apply_symm_apply b
 
 @[simp]
-theorem of_injective_symm_apply {α β} (f : α → β) (hf : injective f) (a : α) :
+theorem of_injective_symm_apply {α β} {f : α → β} (hf : injective f) (a : α) :
     (of_injective f hf).symm ⟨f a, ⟨a, rfl⟩⟩ = a := by
   apply (of_injective f hf).Injective
-  simp [apply_of_injective_symm f hf]
+  simp [apply_of_injective_symm hf]
 
-theorem coe_of_injective_symm {α β} (f : α → β) (hf : injective f) :
+theorem coe_of_injective_symm {α β} {f : α → β} (hf : injective f) :
     ((of_injective f hf).symm : range f → α) = range_splitting f := by
   ext ⟨y, x, rfl⟩
   apply hf
   simp [apply_range_splitting f]
 
 @[simp]
-theorem self_comp_of_injective_symm {α β} (f : α → β) (hf : injective f) : f ∘ (of_injective f hf).symm = coeₓ :=
-  funext fun x => apply_of_injective_symm f hf x
+theorem self_comp_of_injective_symm {α β} {f : α → β} (hf : injective f) : f ∘ (of_injective f hf).symm = coeₓ :=
+  funext fun x => apply_of_injective_symm hf x
 
 theorem of_left_inverse_eq_of_injective {α β : Type _} (f : α → β) (f_inv : Nonempty α → β → α)
     (hf : ∀ h : Nonempty α, left_inverse (f_inv h) f) :
@@ -520,7 +520,7 @@ protected theorem preimage_sUnion {α β} (f : α ≃ β) {s : Set (Set β)} : f
 end Equivₓ
 
 /-- If a function is a bijection between two sets `s` and `t`, then it induces an
-equivalence between the types `↥s` and ``↥t`. -/
+equivalence between the types `↥s` and `↥t`. -/
 noncomputable def Set.BijOn.equiv {α : Type _} {β : Type _} {s : Set α} {t : Set β} (f : α → β) (h : Set.BijOn f s t) :
     s ≃ t :=
   Equivₓ.ofBijective _ h.bijective
@@ -541,7 +541,6 @@ theorem dite_comp_equiv_update {α : Type _} {β : Sort _} {γ : Sort _} {s : Se
         (by
           rw [Subtype.coe_mk])
     simp_rw [h_coe]
-    congr
     
   · have : i ≠ e j := by
       contrapose! h

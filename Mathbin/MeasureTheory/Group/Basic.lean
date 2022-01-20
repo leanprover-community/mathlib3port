@@ -68,13 +68,9 @@ variable [MeasurableSpace G]
 @[to_additive]
 theorem map_mul_left_eq_self [TopologicalSpace G] [Mul G] [HasContinuousMul G] [BorelSpace G] {μ : Measureₓ G} :
     (∀ g, measure.map ((· * ·) g) μ = μ) ↔ is_mul_left_invariant μ := by
-  apply forall_congrₓ
-  intro g
+  refine' forall_congrₓ fun g => _
   rw [measure.ext_iff]
-  apply forall_congrₓ
-  intro A
-  apply forall_congrₓ
-  intro hA
+  refine' forall₂_congrₓ fun A hA => _
   rw [map_apply (measurable_const_mul g) hA]
 
 @[to_additive]
@@ -91,13 +87,9 @@ theorem _root_.measure_theory.is_mul_left_invariant.measure_preimage_mul [Topolo
 @[to_additive]
 theorem map_mul_right_eq_self [TopologicalSpace G] [Mul G] [HasContinuousMul G] [BorelSpace G] {μ : Measureₓ G} :
     (∀ g, measure.map (fun h => h * g) μ = μ) ↔ is_mul_right_invariant μ := by
-  apply forall_congrₓ
-  intro g
+  refine' forall_congrₓ fun g => _
   rw [measure.ext_iff]
-  apply forall_congrₓ
-  intro A
-  apply forall_congrₓ
-  intro hA
+  refine' forall₂_congrₓ fun A hA => _
   rw [map_apply (measurable_mul_const g) hA]
 
 /-- The measure `A ↦ μ (A⁻¹)`, where `A⁻¹` is the pointwise inverse of `A`. -/

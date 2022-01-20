@@ -265,6 +265,14 @@ theorem of_nat_surjective_aux : ∀ {x : ℕ} hx : x ∈ s, ∃ n, of_nat s n = 
 
 theorem of_nat_surjective : surjective (of_nat s) := fun ⟨x, hx⟩ => of_nat_surjective_aux hx
 
+@[simp]
+theorem of_nat_range : Set.Range (of_nat s) = Set.Univ :=
+  of_nat_surjective.range_eq
+
+@[simp]
+theorem coe_comp_of_nat_range : Set.Range (coeₓ ∘ of_nat s : ℕ → ℕ) = s := by
+  rw [Set.range_comp coeₓ, of_nat_range, Set.image_univ, Subtype.range_coe]
+
 private def to_fun_aux (x : s) : ℕ :=
   (List.range x).countp (· ∈ s)
 

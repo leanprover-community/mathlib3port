@@ -1,5 +1,5 @@
 import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.Sym.Sym2
+import Mathbin.Data.Finset.Sym
 
 /-!
 # Stars and bars
@@ -91,10 +91,20 @@ theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.is_diag }
   obtain ⟨a, ha⟩ := Quotientₓ.exists_rep x
   exact and_iff_right ⟨a, mem_univ _, ha⟩
 
-protected theorem card [Fintype α] : card (Sym2 α) = card α * (card α + 1) / 2 := by
-  rw [← Fintype.card_congr (@Equivₓ.sumCompl _ is_diag (Sym2.IsDiag.decidablePred α)), Fintype.card_sum,
-    card_subtype_diag, card_subtype_not_diag, Nat.choose_two_right, add_commₓ, ← Nat.triangle_succ, Nat.succ_sub_one,
-    mul_commₓ]
+/-- Finset **stars and bars** for the case `n = 2`. -/
+theorem _root_.finset.card_sym2 (s : Finset α) : s.sym2.card = s.card * (s.card + 1) / 2 := by
+  rw [← image_diag_union_image_off_diag, card_union_eq, Sym2.card_image_diag, Sym2.card_image_off_diag,
+    Nat.choose_two_right, add_commₓ, ← Nat.triangle_succ, Nat.succ_sub_one, mul_commₓ]
+  rintro m he
+  rw [inf_eq_inter, mem_inter, mem_image, mem_image] at he
+  obtain ⟨⟨a, ha, rfl⟩, b, hb, hab⟩ := he
+  refine' not_is_diag_mk_of_mem_off_diag hb _
+  rw [hab]
+  exact is_diag_mk_of_mem_diag ha
+
+/-- Type **stars and bars** for the case `n = 2`. -/
+protected theorem card [Fintype α] : card (Sym2 α) = card α * (card α + 1) / 2 :=
+  Finset.card_sym2 _
 
 end Sym2
 

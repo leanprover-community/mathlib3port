@@ -8,7 +8,7 @@ In this file we define
 * `linear_equiv σ M M₂`, `M ≃ₛₗ[σ] M₂`: an invertible semilinear map. Here, `σ` is a `ring_hom`
   from `R` to `R₂` and an `e : M ≃ₛₗ[σ] M₂` satisfies `e (c • x) = (σ c) • (e x)`. The plain
   linear version, with `σ` being `ring_hom.id R`, is denoted by `M ≃ₗ[R] M₂`, and the
-  star-linear version (with `σ` begin `star_ring_aut`) is denoted by `M ≃ₗ⋆[R] M₂`.
+  star-linear version (with `σ` being `star_ring_end`) is denoted by `M ≃ₗ⋆[R] M₂`.
 
 ## Implementation notes
 
@@ -58,7 +58,7 @@ notation:50 M " ≃ₛₗ[" σ "] " M₂ => LinearEquiv σ M M₂
 
 notation:50 M " ≃ₗ[" R "] " M₂ => LinearEquiv (RingHom.id R) M M₂
 
-notation:50 M " ≃ₗ⋆[" R "] " M₂ => LinearEquiv (@starRingAut R _ _ : R →+* R) M M₂
+notation:50 M " ≃ₗ⋆[" R "] " M₂ => LinearEquiv (starRingEnd R) M M₂
 
 namespace LinearEquiv
 
@@ -559,4 +559,104 @@ def to_module_aut : S →* M ≃ₗ[R] M where
   map_mul' := fun a b => LinearEquiv.ext $ mul_smul _ _
 
 end DistribMulAction
+
+namespace AddEquiv
+
+section AddCommMonoidₓ
+
+variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
+
+variable [Module R M] [Module R M₂]
+
+variable (e : M ≃+ M₂)
+
+/-- An additive equivalence whose underlying function preserves `smul` is a linear equivalence. -/
+def to_linear_equiv (h : ∀ c : R x, e (c • x) = c • e x) : M ≃ₗ[R] M₂ :=
+  { e with map_smul' := h }
+
+@[simp]
+theorem coe_to_linear_equiv (h : ∀ c : R x, e (c • x) = c • e x) : ⇑e.to_linear_equiv h = e :=
+  rfl
+
+@[simp]
+theorem coe_to_linear_equiv_symm (h : ∀ c : R x, e (c • x) = c • e x) : ⇑(e.to_linear_equiv h).symm = e.symm :=
+  rfl
+
+/-- An additive equivalence between commutative additive monoids is a linear equivalence between
+ℕ-modules -/
+def to_nat_linear_equiv : M ≃ₗ[ℕ] M₂ :=
+  e.to_linear_equiv $ fun c a => by
+    erw [e.to_add_monoid_hom.map_nsmul]
+    rfl
+
+@[simp]
+theorem coe_to_nat_linear_equiv : ⇑e.to_nat_linear_equiv = e :=
+  rfl
+
+@[simp]
+theorem to_nat_linear_equiv_to_add_equiv : e.to_nat_linear_equiv.to_add_equiv = e := by
+  ext
+  rfl
+
+@[simp]
+theorem _root_.linear_equiv.to_add_equiv_to_nat_linear_equiv (e : M ≃ₗ[ℕ] M₂) :
+    e.to_add_equiv.to_nat_linear_equiv = e :=
+  FunLike.coe_injective rfl
+
+@[simp]
+theorem to_nat_linear_equiv_symm : e.to_nat_linear_equiv.symm = e.symm.to_nat_linear_equiv :=
+  rfl
+
+@[simp]
+theorem to_nat_linear_equiv_refl : (AddEquiv.refl M).toNatLinearEquiv = LinearEquiv.refl ℕ M :=
+  rfl
+
+@[simp]
+theorem to_nat_linear_equiv_trans (e₂ : M₂ ≃+ M₃) :
+    e.to_nat_linear_equiv.trans e₂.to_nat_linear_equiv = (e.trans e₂).toNatLinearEquiv :=
+  rfl
+
+end AddCommMonoidₓ
+
+section AddCommGroupₓ
+
+variable [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
+
+variable (e : M ≃+ M₂)
+
+/-- An additive equivalence between commutative additive groups is a linear
+equivalence between ℤ-modules -/
+def to_int_linear_equiv : M ≃ₗ[ℤ] M₂ :=
+  e.to_linear_equiv $ fun c a => e.to_add_monoid_hom.map_zsmul a c
+
+@[simp]
+theorem coe_to_int_linear_equiv : ⇑e.to_int_linear_equiv = e :=
+  rfl
+
+@[simp]
+theorem to_int_linear_equiv_to_add_equiv : e.to_int_linear_equiv.to_add_equiv = e := by
+  ext
+  rfl
+
+@[simp]
+theorem _root_.linear_equiv.to_add_equiv_to_int_linear_equiv (e : M ≃ₗ[ℤ] M₂) :
+    e.to_add_equiv.to_int_linear_equiv = e :=
+  FunLike.coe_injective rfl
+
+@[simp]
+theorem to_int_linear_equiv_symm : e.to_int_linear_equiv.symm = e.symm.to_int_linear_equiv :=
+  rfl
+
+@[simp]
+theorem to_int_linear_equiv_refl : (AddEquiv.refl M).toIntLinearEquiv = LinearEquiv.refl ℤ M :=
+  rfl
+
+@[simp]
+theorem to_int_linear_equiv_trans (e₂ : M₂ ≃+ M₃) :
+    e.to_int_linear_equiv.trans e₂.to_int_linear_equiv = (e.trans e₂).toIntLinearEquiv :=
+  rfl
+
+end AddCommGroupₓ
+
+end AddEquiv
 

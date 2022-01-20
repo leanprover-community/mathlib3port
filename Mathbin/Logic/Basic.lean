@@ -55,14 +55,14 @@ instance : DecidableEq Empty := fun a => a.elim
 instance Sort.inhabited : Inhabited (Sort _) :=
   ⟨PUnit⟩
 
-instance Sort.inhabited' : Inhabited (default (Sort _)) :=
+instance Sort.inhabited' : Inhabited default :=
   ⟨PUnit.unit⟩
 
 instance Psum.inhabitedLeft {α β} [Inhabited α] : Inhabited (Psum α β) :=
-  ⟨Psum.inl (default _)⟩
+  ⟨Psum.inl default⟩
 
 instance Psum.inhabitedRight {α β} [Inhabited β] : Inhabited (Psum α β) :=
-  ⟨Psum.inr (default _)⟩
+  ⟨Psum.inr default⟩
 
 instance (priority := 10) decidableEqOfSubsingleton {α} [Subsingleton α] : DecidableEq α
   | a, b => is_true (Subsingleton.elimₓ a b)
@@ -234,7 +234,7 @@ theorem false_ne_true : False ≠ True
 
 section Propositional
 
-variable {a b c d : Prop}
+variable {a b c d e f : Prop}
 
 /-! ### Declarations about `implies` -/
 
@@ -258,6 +258,11 @@ theorem eq_iff_iff {p q : Prop} : p = q ↔ (p ↔ q) :=
 @[simp]
 theorem imp_self : a → a ↔ True :=
   iff_true_intro id
+
+@[simp]
+theorem eq_true_eq_id : Eq True = id := by
+  funext
+  simp only [true_iffₓ, id.def, iff_selfₓ, eq_iff_iff]
 
 theorem imp_intro {α β : Prop} (h : α) : β → α := fun _ => h
 
@@ -561,6 +566,9 @@ theorem or_of_or_of_imp_right (h₁ : c ∨ a) (h : a → b) : c ∨ b :=
 theorem Or.elim3 (h : a ∨ b ∨ c) (ha : a → d) (hb : b → d) (hc : c → d) : d :=
   Or.elim h ha fun h₂ => Or.elim h₂ hb hc
 
+theorem Or.imp3 (had : a → d) (hbe : b → e) (hcf : c → f) : a ∨ b ∨ c → d ∨ e ∨ f :=
+  Or.imp had $ Or.imp hbe hcf
+
 theorem or_imp_distrib : a ∨ b → c ↔ (a → c) ∧ (b → c) :=
   ⟨fun h => ⟨fun ha => h (Or.inl ha), fun hb => h (Or.inr hb)⟩, fun ⟨ha, hb⟩ => Or.ndrec ha hb⟩
 
@@ -589,6 +597,12 @@ theorem or_iff_left_iff_imp : (a ∨ b ↔ a) ↔ b → a :=
 @[simp]
 theorem or_iff_right_iff_imp : (a ∨ b ↔ b) ↔ a → b := by
   rw [or_comm, or_iff_left_iff_imp]
+
+theorem or_iff_left (hb : ¬b) : a ∨ b ↔ a :=
+  ⟨fun h => h.resolve_right hb, Or.inl⟩
+
+theorem or_iff_right (ha : ¬a) : a ∨ b ↔ b :=
+  ⟨fun h => h.resolve_left ha, Or.inr⟩
 
 /-! ### Declarations about distributivity -/
 
@@ -829,6 +843,15 @@ theorem proof_irrel_heq {p q : Prop} (hp : p) (hq : q) : HEq hp hq := by
 theorem ne_of_mem_of_not_mem {α β} [HasMem α β] {s : β} {a b : α} (h : a ∈ s) : b ∉ s → a ≠ b :=
   mt $ fun e => e ▸ h
 
+theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
+    (∀ a, s a → ∀ b, s b → p a b) ↔ ∀ a b, s a → s b → p a b :=
+  ⟨fun h a b ha hb => h a ha b hb, fun h a ha b hb => h a b ha hb⟩
+
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a b «expr ∈ » s)
+theorem ball_mem_comm {α β} [HasMem α β] {s : β} {p : α → α → Prop} :
+    (∀ a b _ : a ∈ s _ : b ∈ s, p a b) ↔ ∀ a b, a ∈ s → b ∈ s → p a b :=
+  ball_cond_comm
+
 theorem ne_of_apply_ne {α β : Sort _} (f : α → β) {x y : α} (h : f x ≠ f y) : x ≠ y := fun w : x = y =>
   h (congr_argₓ f w)
 
@@ -908,20 +931,47 @@ end Equality
 
 section Quantifiers
 
-variable {α : Sort _} {β : Sort _} {p q : α → Prop} {b : Prop}
+variable {α : Sort _}
+
+section congr
+
+variable {β : α → Sort _} {γ : ∀ a, β a → Sort _} {δ : ∀ a b, γ a b → Sort _} {ε : ∀ a b c, δ a b c → Sort _}
+
+theorem forall₂_congrₓ {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b ↔ q a b) : (∀ a b, p a b) ↔ ∀ a b, q a b :=
+  forall_congrₓ $ fun a => forall_congrₓ $ h a
+
+theorem forall₃_congrₓ {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c ↔ q a b c) :
+    (∀ a b c, p a b c) ↔ ∀ a b c, q a b c :=
+  forall_congrₓ $ fun a => forall₂_congrₓ $ h a
+
+theorem forall₄_congrₓ {p q : ∀ a b c, δ a b c → Prop} (h : ∀ a b c d, p a b c d ↔ q a b c d) :
+    (∀ a b c d, p a b c d) ↔ ∀ a b c d, q a b c d :=
+  forall_congrₓ $ fun a => forall₃_congrₓ $ h a
+
+theorem forall₅_congr {p q : ∀ a b c d, ε a b c d → Prop} (h : ∀ a b c d e, p a b c d e ↔ q a b c d e) :
+    (∀ a b c d e, p a b c d e) ↔ ∀ a b c d e, q a b c d e :=
+  forall_congrₓ $ fun a => forall₄_congrₓ $ h a
+
+theorem exists₂_congrₓ {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b ↔ q a b) : (∃ a b, p a b) ↔ ∃ a b, q a b :=
+  exists_congr $ fun a => exists_congr $ h a
+
+theorem exists₃_congrₓ {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c ↔ q a b c) :
+    (∃ a b c, p a b c) ↔ ∃ a b c, q a b c :=
+  exists_congr $ fun a => exists₂_congrₓ $ h a
+
+theorem exists₄_congrₓ {p q : ∀ a b c, δ a b c → Prop} (h : ∀ a b c d, p a b c d ↔ q a b c d) :
+    (∃ a b c d, p a b c d) ↔ ∃ a b c d, q a b c d :=
+  exists_congr $ fun a => exists₃_congrₓ $ h a
+
+theorem exists₅_congr {p q : ∀ a b c d, ε a b c d → Prop} (h : ∀ a b c d e, p a b c d e ↔ q a b c d e) :
+    (∃ a b c d e, p a b c d e) ↔ ∃ a b c d e, q a b c d e :=
+  exists_congr $ fun a => exists₄_congrₓ $ h a
+
+end congr
+
+variable {β : Sort _} {p q : α → Prop} {b : Prop}
 
 theorem forall_imp (h : ∀ a, p a → q a) : (∀ a, p a) → ∀ a, q a := fun h' a => h a (h' a)
-
-theorem forall₂_congr {p q : α → β → Prop} (h : ∀ a b, p a b ↔ q a b) : (∀ a b, p a b) ↔ ∀ a b, q a b :=
-  forall_congrₓ fun a => forall_congrₓ (h a)
-
-theorem forall₃_congrₓ {γ : Sort _} {p q : α → β → γ → Prop} (h : ∀ a b c, p a b c ↔ q a b c) :
-    (∀ a b c, p a b c) ↔ ∀ a b c, q a b c :=
-  forall_congrₓ fun a => forall₂_congr (h a)
-
-theorem forall₄_congrₓ {γ δ : Sort _} {p q : α → β → γ → δ → Prop} (h : ∀ a b c d, p a b c d ↔ q a b c d) :
-    (∀ a b c d, p a b c d) ↔ ∀ a b c d, q a b c d :=
-  forall_congrₓ fun a => forall₃_congrₓ (h a)
 
 theorem Exists.impₓ (h : ∀ a, p a → q a) (p : ∃ a, p a) : ∃ a, q a :=
   exists_imp_exists h p
@@ -929,17 +979,6 @@ theorem Exists.impₓ (h : ∀ a, p a → q a) (p : ∃ a, p a) : ∃ a, q a :=
 theorem exists_imp_exists' {p : α → Prop} {q : β → Prop} (f : α → β) (hpq : ∀ a, p a → q (f a)) (hp : ∃ a, p a) :
     ∃ b, q b :=
   Exists.elim hp fun a hp' => ⟨_, hpq _ hp'⟩
-
-theorem exists₂_congr {p q : α → β → Prop} (h : ∀ a b, p a b ↔ q a b) : (∃ a b, p a b) ↔ ∃ a b, q a b :=
-  exists_congr fun a => exists_congr (h a)
-
-theorem exists₃_congrₓ {γ : Sort _} {p q : α → β → γ → Prop} (h : ∀ a b c, p a b c ↔ q a b c) :
-    (∃ a b c, p a b c) ↔ ∃ a b c, q a b c :=
-  exists_congr fun a => exists₂_congr (h a)
-
-theorem exists₄_congrₓ {γ δ : Sort _} {p q : α → β → γ → δ → Prop} (h : ∀ a b c d, p a b c d ↔ q a b c d) :
-    (∃ a b c d, p a b c d) ↔ ∃ a b c d, q a b c d :=
-  exists_congr fun a => exists₃_congrₓ (h a)
 
 theorem forall_swap {p : α → β → Prop} : (∀ x y, p x y) ↔ ∀ y x, p x y :=
   ⟨swap, swap⟩

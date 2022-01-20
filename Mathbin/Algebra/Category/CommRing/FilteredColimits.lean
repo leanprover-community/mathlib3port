@@ -28,10 +28,6 @@ open CategoryTheory.Limits
 
 open CategoryTheory.IsFiltered renaming max → max'
 
-namespace AddMon.FilteredColimits
-
-end AddMon.FilteredColimits
-
 open AddMon.filtered_colimits (colimit_zero_eq colimit_add_mk_eq)
 
 open Mon.filtered_colimits (colimit_one_eq colimit_mul_mk_eq)

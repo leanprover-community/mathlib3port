@@ -1,6 +1,6 @@
 import Mathbin.Algebra.RingQuot
-import Mathbin.LinearAlgebra.TensorAlgebra
-import Mathbin.LinearAlgebra.ExteriorAlgebra
+import Mathbin.LinearAlgebra.TensorAlgebra.Basic
+import Mathbin.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathbin.LinearAlgebra.QuadraticForm.Basic
 
 /-!

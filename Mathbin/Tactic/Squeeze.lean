@@ -45,7 +45,7 @@ unsafe def struct.to_tactic_format (e : pexpr) : tactic format := do
         r.field_names r.field_values
   let ss := r.sources.map fun s => f! " .. {s}"
   let x : format := format.join $ List.intersperse ", " (fs ++ ss)
-  pure f! " \{{x}}"
+  pure f! " \{{x}}}"
 
 /-- Attribute containing a table that accumulates multiple `squeeze_simp` suggestions -/
 @[user_attribute]

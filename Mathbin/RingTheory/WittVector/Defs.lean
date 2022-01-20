@@ -342,6 +342,12 @@ theorem neg_coeff (x : 𝕎 R) (n : ℕ) :
   by
   simp [Neg.neg, eval, Matrix.cons_fin_one]
 
+theorem add_coeff_zero (x y : 𝕎 R) : (x + y).coeff 0 = x.coeff 0 + y.coeff 0 := by
+  simp [add_coeff, peval]
+
+theorem mul_coeff_zero (x y : 𝕎 R) : (x * y).coeff 0 = x.coeff 0 * y.coeff 0 := by
+  simp [mul_coeff, peval]
+
 end Coeff
 
 theorem witt_add_vars (n : ℕ) : (witt_add p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=

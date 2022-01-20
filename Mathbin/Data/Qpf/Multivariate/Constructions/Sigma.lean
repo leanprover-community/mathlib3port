@@ -26,11 +26,11 @@ data types like `ℕ` or over `Type.{u-1}` -/
 def pi (v : Typevec.{u} n) : Type u :=
   ∀ α : A, F α v
 
-instance Sigma.inhabited {α} [Inhabited A] [Inhabited (F (default A) α)] : Inhabited (Sigma F α) :=
-  ⟨⟨default A, default _⟩⟩
+instance Sigma.inhabited {α} [Inhabited A] [Inhabited (F default α)] : Inhabited (Sigma F α) :=
+  ⟨⟨default, default⟩⟩
 
 instance Pi.inhabited {α} [∀ a, Inhabited (F a α)] : Inhabited (pi F α) :=
-  ⟨fun a => default _⟩
+  ⟨fun a => default⟩
 
 variable [∀ α, Mvfunctor $ F α]
 

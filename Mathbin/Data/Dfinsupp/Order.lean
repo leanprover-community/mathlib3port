@@ -16,18 +16,13 @@ Add `is_well_order (Π₀ i, α i) (<)`.
 -/
 
 
-noncomputable section
-
-open_locale Classical BigOperators
+open_locale BigOperators
 
 open Finset
 
 variable {ι : Type _} {α : ι → Type _}
 
 namespace Dfinsupp
-
-theorem not_mem_support_iff [∀ i, HasZero (α i)] {f : Π₀ i, α i} {i : ι} : i ∉ f.support ↔ f i = 0 := by
-  rw [mem_support_iff, not_ne_iff]
 
 /-! ### Order structures -/
 
@@ -160,11 +155,15 @@ protected theorem bot_eq_zero : (⊥ : Π₀ i, α i) = 0 :=
 theorem add_eq_zero_iff (f g : Π₀ i, α i) : f + g = 0 ↔ f = 0 ∧ g = 0 := by
   simp [ext_iff, forall_and_distrib]
 
-theorem le_iff' {f g : Π₀ i, α i} {s : Finset ι} (hf : f.support ⊆ s) : f ≤ g ↔ ∀, ∀ i ∈ s, ∀, f i ≤ g i :=
+section Le
+
+variable [DecidableEq ι] [∀ i x : α i, Decidable (x ≠ 0)] {f g : Π₀ i, α i} {s : Finset ι}
+
+theorem le_iff' (hf : f.support ⊆ s) : f ≤ g ↔ ∀, ∀ i ∈ s, ∀, f i ≤ g i :=
   ⟨fun h s hs => h s, fun h s =>
     if H : s ∈ f.support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
 
-theorem le_iff {f g : Π₀ i, α i} : f ≤ g ↔ ∀, ∀ i ∈ f.support, ∀, f i ≤ g i :=
+theorem le_iff : f ≤ g ↔ ∀, ∀ i ∈ f.support, ∀, f i ≤ g i :=
   le_iff' $ subset.refl _
 
 variable (α)
@@ -175,9 +174,11 @@ instance decidable_le [∀ i, DecidableRel (@LE.le (α i) _)] : DecidableRel (@L
 variable {α}
 
 @[simp]
-theorem single_le_iff {i : ι} {a : α i} {f : Π₀ i, α i} : single i a ≤ f ↔ a ≤ f i :=
+theorem single_le_iff {i : ι} {a : α i} : single i a ≤ f ↔ a ≤ f i :=
   (le_iff' support_single_subset).trans $ by
     simp
+
+end Le
 
 variable (α) [∀ i, Sub (α i)] [∀ i, HasOrderedSub (α i)] {f g : Π₀ i, α i} {i : ι} {a b : α i}
 
@@ -217,7 +218,7 @@ instance : CanonicallyOrderedAddMonoid (Π₀ i, α i) :=
         exact self_le_add_right (f i) (g i)
          }
 
-variable {α}
+variable {α} [DecidableEq ι]
 
 @[simp]
 theorem single_tsub : single i (a - b) = single i a - single i b := by
@@ -227,6 +228,8 @@ theorem single_tsub : single i (a - b) = single i a - single i b := by
     
   · rw [tsub_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, tsub_self]
     
+
+variable [∀ i x : α i, Decidable (x ≠ 0)]
 
 theorem support_tsub : (f - g).support ⊆ f.support := by
   simp (config := { contextual := true })only [subset_iff, tsub_eq_zero_iff_le, mem_support_iff, Ne.def, coe_tsub,

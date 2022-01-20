@@ -351,8 +351,7 @@ theorem convex_hull_eq_union_convex_hull_finite_subsets (s : Set E) :
   · exact Union_subset fun i => Union_subset convex_hull_mono
     
 
-theorem convex_hull_prod (s : Set E) (t : Set F) : convexHull R (s.prod t) = (convexHull R s).Prod (convexHull R t) :=
-  by
+theorem convex_hull_prod (s : Set E) (t : Set F) : convexHull R (s ×ˢ t) = convexHull R s ×ˢ convexHull R t := by
   refine' Set.Subset.antisymm _ _
   · exact
       convex_hull_min (Set.prod_mono (subset_convex_hull _ _) $ subset_convex_hull _ _)

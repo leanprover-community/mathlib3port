@@ -252,7 +252,8 @@ theorem derivative_map [CommSemiringₓ S] (p : Polynomial R) (f : R →+* S) : 
     fun n r ih => by
     rw [map_mul, map_C, Polynomial.map_pow, map_X, derivative_mul, derivative_pow_succ, derivative_C, zero_mul,
       zero_addₓ, derivative_X, mul_oneₓ, derivative_mul, derivative_pow_succ, derivative_C, zero_mul, zero_addₓ,
-      derivative_X, mul_oneₓ, map_mul, map_C, map_mul, Polynomial.map_pow, map_add, map_nat_cast, map_one, map_X]
+      derivative_X, mul_oneₓ, map_mul, map_C, map_mul, Polynomial.map_pow, map_add, Polynomial.map_nat_cast, map_one,
+      map_X]
 
 @[simp]
 theorem iterate_derivative_map [CommSemiringₓ S] (p : Polynomial R) (f : R →+* S) (k : ℕ) :
@@ -288,11 +289,8 @@ theorem derivative_prod {s : Multiset ι} {f : ι → Polynomial R} :
   congr
   rw [h, ← AddMonoidHom.coe_mul_left, (AddMonoidHom.mulLeft (f i)).map_multiset_sum _, AddMonoidHom.coe_mul_left]
   simp only [Function.comp_app, Multiset.map_map]
-  congr 1
-  refine' Multiset.map_congr fun j hj => _
-  simp only [Function.comp_app]
+  refine' congr_argₓ _ (Multiset.map_congr rfl fun j hj => _)
   rw [← mul_assocₓ, ← Multiset.prod_cons, ← Multiset.map_cons]
-  congr 1
   by_cases' hij : i = j
   · simp [hij, ← Multiset.prod_cons, ← Multiset.map_cons, Multiset.cons_erase hj]
     
@@ -337,7 +335,7 @@ theorem derivative_lhom_coe {R : Type _} [CommRingₓ R] :
 
 @[simp]
 theorem derivative_cast_nat {n : ℕ} : derivative (n : Polynomial R) = 0 := by
-  rw [← C.map_nat_cast n]
+  rw [← map_nat_cast C n]
   exact derivative_C
 
 @[simp]

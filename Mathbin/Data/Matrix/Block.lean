@@ -337,18 +337,8 @@ theorem block_diagonal'_map (f : α → β) (hf : f 0 = 0) :
 @[simp]
 theorem block_diagonal'_transpose : (block_diagonal' M)ᵀ = block_diagonal' fun k => (M k)ᵀ := by
   ext ⟨ii, ix⟩ ⟨ji, jx⟩
-  simp only [transpose_apply, block_diagonal'_apply, eq_comm]
-  dsimp only
-  split_ifs with h₁ h₂ h₂
-  · subst h₁
-    rfl
-    
-  · exact (h₂ h₁.symm).elim
-    
-  · exact (h₁ h₂.symm).elim
-    
-  · rfl
-    
+  simp only [transpose_apply, block_diagonal'_apply]
+  split_ifs <;> cc
 
 @[simp]
 theorem block_diagonal'_conj_transpose {α} [Semiringₓ α] [StarRing α] (M : ∀ i, Matrix (m' i) (n' i) α) :
@@ -366,16 +356,7 @@ theorem block_diagonal'_diagonal [∀ i, DecidableEq (m' i)] (d : ∀ i, m' i �
     (block_diagonal' fun k => diagonal (d k)) = diagonal fun ik => d ik.1 ik.2 := by
   ext ⟨i, k⟩ ⟨j, k'⟩
   simp only [block_diagonal'_apply, diagonal]
-  split_ifs <;>
-    try
-        rfl <;>
-      exfalso
-  · exact h_2 ⟨h, (cast_eq_iff_heq.mp h_1.symm).symm⟩
-    
-  · exact h_1 (cast_eq_iff_heq.mpr h_2.right.symm).symm
-    
-  · tauto
-    
+  split_ifs <;> cc
 
 @[simp]
 theorem block_diagonal'_one [∀ i, DecidableEq (m' i)] [HasOne α] :

@@ -53,7 +53,7 @@ protected def mk : ∀ l : List ι f : ∀ i, α i, tprod α l
   | i :: is => fun f => (f i, mk is f)
 
 instance [∀ i, Inhabited (α i)] : Inhabited (tprod α l) :=
-  ⟨tprod.mk l fun i => default (α i)⟩
+  ⟨tprod.mk l fun _ => default⟩
 
 @[simp]
 theorem fst_mk (i : ι) (l : List ι) (f : ∀ i, α i) : (tprod.mk (i :: l) f).1 = f i :=
@@ -134,7 +134,7 @@ open List
 @[simp]
 protected def tprod : ∀ l : List ι t : ∀ i, Set (α i), Set (tprod α l)
   | [], t => univ
-  | i :: is, t => (t i).Prod (tprod is t)
+  | i :: is, t => t i ×ˢ tprod is t
 
 theorem mk_preimage_tprod : ∀ l : List ι t : ∀ i, Set (α i), tprod.mk l ⁻¹' Set.Tprodₓ l t = { i | i ∈ l }.pi t
   | [], t => by

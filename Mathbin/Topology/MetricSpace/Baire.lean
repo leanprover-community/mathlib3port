@@ -264,12 +264,12 @@ theorem dense_bUnion_interior_of_closed {S : Set β} {f : β → Set α} (hc : �
   have : x ∈ ⋃ s ∈ S, f s := by
     have := mem_univ x
     rwa [← hU] at this
-  rcases mem_bUnion_iff.1 this with ⟨s, hs, xs⟩
-  have : x ∈ g s := mem_bInter_iff.1 hx s hs
+  rcases mem_Union₂.1 this with ⟨s, hs, xs⟩
+  have : x ∈ g s := mem_Inter₂.1 hx s hs
   have : x ∈ Interior (f s) := by
     have : x ∈ f s \ Frontier (f s) := mem_inter xs this
     simpa [Frontier, xs, (hc s hs).closure_eq] using this
-  exact mem_bUnion_iff.2 ⟨s, ⟨hs, this⟩⟩
+  exact mem_Union₂.2 ⟨s, ⟨hs, this⟩⟩
 
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
 are dense. Formulated here with `⋃₀`. -/

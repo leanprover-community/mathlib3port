@@ -232,7 +232,7 @@ theorem infi_coe {ι} (p : ι → Submodule R M) : (↑⨅ i, p i : Set M) = ⋂
 
 @[simp]
 theorem mem_Inf {S : Set (Submodule R M)} {x : M} : x ∈ Inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
-  Set.mem_bInter_iff
+  Set.mem_Inter₂
 
 @[simp]
 theorem mem_infi {ι} (p : ι → Submodule R M) {x} : (x ∈ ⨅ i, p i) ↔ ∀ i, x ∈ p i := by

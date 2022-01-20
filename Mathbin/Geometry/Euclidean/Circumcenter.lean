@@ -194,7 +194,7 @@ theorem _root_.affine_independent.exists_unique_dist_eq {ι : Type _} [hne : Non
       use (p i, 0)
       simp only [Prod.fst, Prod.snd, Set.range_unique, AffineSubspace.mem_affine_span_singleton]
       constructor
-      · simp_rw [hi (default ι)]
+      · simp_rw [hi default]
         use rfl
         intro i1
         rw [hi i1]
@@ -203,9 +203,9 @@ theorem _root_.affine_independent.exists_unique_dist_eq {ι : Type _} [hne : Non
       · rintro ⟨cc, cr⟩
         simp only [Prod.fst, Prod.snd]
         rintro ⟨rfl, hdist⟩
-        rw [hi (default ι)]
+        rw [hi default]
         congr
-        rw [← hdist (default ι)]
+        rw [← hdist default]
         exact dist_self _
         
       

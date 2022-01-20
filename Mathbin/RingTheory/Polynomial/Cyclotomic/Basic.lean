@@ -515,8 +515,15 @@ private theorem is_root_cyclotomic_iff' {n : ℕ} {K : Type _} [Field K] {μ : K
 theorem is_root_cyclotomic_iff {n : ℕ} {R : Type _} [CommRingₓ R] [IsDomain R] [NeZero (n : R)] {μ : R} :
     is_root (cyclotomic n R) μ ↔ IsPrimitiveRoot μ n := by
   have hf : Function.Injective _ := IsFractionRing.injective R (FractionRing R)
-  have : NeZero (n : FractionRing R) := NeZero.of_injective hf
+  have : NeZero (n : FractionRing R) := NeZero.nat_of_injective hf
   rw [← is_root_map_iff hf, ← IsPrimitiveRoot.map_iff_of_injective hf, map_cyclotomic, ← is_root_cyclotomic_iff']
+
+/-- If `R` is of characterist zero, then `ζ` is a root of `cyclotomic n R` if and only if it is a
+primitive `n`-th root of unity. -/
+theorem is_root_cyclotomic_iff_char_zero {n : ℕ} {R : Type _} [CommRingₓ R] [IsDomain R] [CharZero R] {μ : R}
+    (hn : 0 < n) : (Polynomial.cyclotomic n R).IsRoot μ ↔ IsPrimitiveRoot μ n := by
+  let this' := NeZero.of_gt hn
+  exact is_root_cyclotomic_iff
 
 /-- Over a ring `R` of characteristic zero, `λ n, cyclotomic n R` is injective. -/
 theorem cyclotomic_injective {R : Type _} [CommRingₓ R] [CharZero R] : Function.Injective fun n => cyclotomic n R := by
@@ -634,7 +641,7 @@ theorem coprime_of_root_cyclotomic {n : ℕ} (hpos : 0 < n) {p : ℕ} [hprime : 
   rw [hprime.1.coprime_iff_not_dvd]
   intro h
   replace h := (Zmod.nat_coe_zmod_eq_zero_iff_dvd a p).2 h
-  rw [is_root.def, RingHom.eq_nat_cast, h, ← coeff_zero_eq_eval_zero] at hroot
+  rw [is_root.def, eq_nat_cast, h, ← coeff_zero_eq_eval_zero] at hroot
   by_cases' hone : n = 1
   · simp only [hone, cyclotomic_one, zero_sub, coeff_one_zero, coeff_X_zero, neg_eq_zero, one_ne_zero, coeff_sub] at
       hroot
@@ -655,7 +662,7 @@ theorem order_of_root_cyclotomic_dvd {n : ℕ} (hpos : 0 < n) {p : ℕ} [Fact p.
     orderOf (Zmod.unitOfCoprime a (coprime_of_root_cyclotomic hpos hroot)) ∣ n := by
   apply order_of_dvd_of_pow_eq_one
   suffices hpow : eval (Nat.castRingHom (Zmod p) a) (X ^ n - 1 : Polynomial (Zmod p)) = 0
-  · simp only [eval_X, eval_one, eval_pow, eval_sub, RingHom.eq_nat_cast] at hpow
+  · simp only [eval_X, eval_one, eval_pow, eval_sub, eq_nat_cast] at hpow
     apply Units.coe_eq_one.1
     simp only [sub_eq_zero.mp hpow, Zmod.coe_unit_of_coprime, Units.coe_pow]
     
@@ -796,6 +803,67 @@ theorem cyclotomic_expand_eq_cyclotomic {p n : ℕ} (hp : Nat.Prime p) (hdiv : p
     
 
 end Expand
+
+section CharP
+
+/-- If `R` is of characteristic `p` and `¬p ∣ n`, then
+`cyclotomic (n * p) R = (cyclotomic n R) ^ (p - 1)`. -/
+theorem cyclotomic_mul_prime_eq_pow_of_not_dvd (R : Type _) {p n : ℕ} [hp : Fact (Nat.Prime p)] [Ringₓ R] [CharP R p]
+    (hn : ¬p ∣ n) : cyclotomic (n * p) R = cyclotomic n R ^ (p - 1) := by
+  suffices cyclotomic (n * p) (Zmod p) = cyclotomic n (Zmod p) ^ (p - 1) by
+    rw [← map_cyclotomic _ (algebraMap (Zmod p) R), ← map_cyclotomic _ (algebraMap (Zmod p) R), this,
+      Polynomial.map_pow]
+  apply mul_right_injective₀ (cyclotomic_ne_zero n $ Zmod p)
+  rw [← pow_succₓ, tsub_add_cancel_of_le hp.out.one_lt.le, mul_commₓ, ← Zmod.expand_card]
+  nth_rw 2[← map_cyclotomic_int]
+  rw [← map_expand, cyclotomic_expand_eq_cyclotomic_mul hp.out hn, Polynomial.map_mul, map_cyclotomic, map_cyclotomic]
+
+/-- If `R` is of characteristic `p` and `p ∣ n`, then
+`cyclotomic (n * p) R = (cyclotomic n R) ^ p`. -/
+theorem cyclotomic_mul_prime_dvd_eq_pow (R : Type _) {p n : ℕ} [hp : Fact (Nat.Prime p)] [Ringₓ R] [CharP R p]
+    (hn : p ∣ n) : cyclotomic (n * p) R = cyclotomic n R ^ p := by
+  suffices cyclotomic (n * p) (Zmod p) = cyclotomic n (Zmod p) ^ p by
+    rw [← map_cyclotomic _ (algebraMap (Zmod p) R), ← map_cyclotomic _ (algebraMap (Zmod p) R), this,
+      Polynomial.map_pow]
+  rw [← Zmod.expand_card, ← map_cyclotomic_int n, ← map_expand, cyclotomic_expand_eq_cyclotomic hp.out hn,
+    map_cyclotomic, mul_commₓ]
+
+/-- If `R` is of characteristic `p` and `¬p ∣ m`, then
+`cyclotomic (p ^ k * m) R = (cyclotomic m R) ^ (p ^ k - p ^ (k - 1))`. -/
+theorem cyclotomic_mul_prime_pow_eq (R : Type _) {p m : ℕ} [Fact (Nat.Prime p)] [Ringₓ R] [CharP R p] (hm : ¬p ∣ m) :
+    ∀ {k}, 0 < k → cyclotomic (p ^ k * m) R = cyclotomic m R ^ (p ^ k - p ^ (k - 1))
+  | 1, _ => by
+    rw [pow_oneₓ, Nat.sub_self, pow_zeroₓ, mul_commₓ, cyclotomic_mul_prime_eq_pow_of_not_dvd R hm]
+  | a + 2, _ => by
+    have hdiv : p ∣ p ^ a.succ * m :=
+      ⟨p ^ a * m, by
+        rw [← mul_assocₓ, pow_succₓ]⟩
+    rw [pow_succₓ, mul_assocₓ, mul_commₓ, cyclotomic_mul_prime_dvd_eq_pow R hdiv,
+      cyclotomic_mul_prime_pow_eq a.succ_pos, ← pow_mulₓ]
+    congr 1
+    simp only [tsub_zero, Nat.succ_sub_succ_eq_sub]
+    rw [Nat.mul_sub_right_distrib, mul_commₓ, pow_succ'ₓ]
+
+/-- If `R` is of characteristic `p` and `¬p ∣ m`, then `ζ` is a root of `cyclotomic (p ^ k * m) R`
+ if and only if it is a primitive `m`-th root of unity. -/
+theorem is_root_cyclotomic_prime_pow_mul_iff_of_char_p {m k p : ℕ} {R : Type _} [CommRingₓ R] [IsDomain R]
+    [hp : Fact (Nat.Prime p)] [hchar : CharP R p] {μ : R} [NeZero (m : R)] :
+    (Polynomial.cyclotomic (p ^ k * m) R).IsRoot μ ↔ IsPrimitiveRoot μ m := by
+  rcases k.eq_zero_or_pos with (rfl | hk)
+  · rw [pow_zeroₓ, one_mulₓ, is_root_cyclotomic_iff]
+    
+  refine' ⟨fun h => _, fun h => _⟩
+  · rw [is_root.def, cyclotomic_mul_prime_pow_eq R (NeZero.not_char_dvd R p m) hk, eval_pow] at h
+    replace h := pow_eq_zero h
+    rwa [← is_root.def, is_root_cyclotomic_iff] at h
+    
+  · rw [← is_root_cyclotomic_iff, is_root.def] at h
+    rw [cyclotomic_mul_prime_pow_eq R (NeZero.not_char_dvd R p m) hk, is_root.def, eval_pow, h, zero_pow]
+    simp only [tsub_pos_iff_lt]
+    apply strict_mono_pow hp.out.one_lt (Nat.pred_ltₓ hk.ne')
+    
+
+end CharP
 
 end Polynomial
 

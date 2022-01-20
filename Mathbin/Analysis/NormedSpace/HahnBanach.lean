@@ -22,7 +22,7 @@ universe u v
 
 namespace Real
 
-variable {E : Type _} [SemiNormedGroup E] [SemiNormedSpace ℝ E]
+variable {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E]
 
 /-- Hahn-Banach theorem for continuous linear functions over `ℝ`. -/
 theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
@@ -51,14 +51,14 @@ section IsROrC
 
 open IsROrC
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SemiNormedGroup F] [SemiNormedSpace 𝕜 F]
+variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SemiNormedGroup F] [NormedSpace 𝕜 F]
 
 /-- Hahn-Banach theorem for continuous linear functions over `𝕜` satisyfing `is_R_or_C 𝕜`. -/
 theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
     ∃ g : F →L[𝕜] 𝕜, (∀ x : p, g x = f x) ∧ ∥g∥ = ∥f∥ := by
   let this' : Module ℝ F := RestrictScalars.module ℝ 𝕜 F
   let this' : IsScalarTower ℝ 𝕜 F := RestrictScalars.is_scalar_tower _ _ _
-  let this' : SemiNormedSpace ℝ F := SemiNormedSpace.restrictScalars _ 𝕜 _
+  let this' : NormedSpace ℝ F := NormedSpace.restrictScalars _ 𝕜 _
   let fr := re_clm.comp (f.restrict_scalars ℝ)
   have fr_apply : ∀ x, fr x = re (f x) := by
     intro x

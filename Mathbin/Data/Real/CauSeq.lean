@@ -82,7 +82,7 @@ variable {α : Type _} [LinearOrderedField α] {β : Type _} [Ringₓ β] {abv :
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j k «expr ≥ » i)
 @[nolint ge_or_gt]
 theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε := by
-  refine' (hf _ (half_pos ε0)).imp fun i hi j k ij ik => _
+  refine' (hf _ (half_pos ε0)).imp fun i hi j ij k ik => _
   rw [← add_halves ε]
   refine' lt_of_le_of_ltₓ (abv_sub_le abv _ _ _) (add_lt_add (hi _ ij) _)
   rw [abv_sub abv]
@@ -90,7 +90,7 @@ theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j 
 
 theorem cauchy₃ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀, ∀ j ≥ i, ∀, ∀, ∀ k ≥ j, ∀, abv (f k - f j) < ε :=
   let ⟨i, H⟩ := hf.cauchy₂ ε0
-  ⟨i, fun j ij k jk => H _ _ (le_transₓ ij jk) ij⟩
+  ⟨i, fun j ij k jk => H _ (le_transₓ ij jk) _ ij⟩
 
 end IsCauSeq
 

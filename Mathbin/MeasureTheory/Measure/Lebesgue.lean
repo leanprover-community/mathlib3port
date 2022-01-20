@@ -470,7 +470,7 @@ variable {α : Type _}
 def RegionBetween (f g : α → ℝ) (s : Set α) : Set (α × ℝ) :=
   { p : α × ℝ | p.1 ∈ s ∧ p.2 ∈ Ioo (f p.1) (g p.1) }
 
-theorem region_between_subset (f g : α → ℝ) (s : Set α) : RegionBetween f g s ⊆ s.prod univ := by
+theorem region_between_subset (f g : α → ℝ) (s : Set α) : RegionBetween f g s ⊆ s ×ˢ (univ : Set ℝ) := by
   simpa only [prod_univ, RegionBetween, Set.Preimage, set_of_subset_set_of] using fun a => And.left
 
 variable [MeasurableSpace α] {μ : Measureₓ α} {f g : α → ℝ} {s : Set α}
@@ -483,8 +483,7 @@ theorem measurable_set_region_between (hf : Measurable f) (hg : Measurable g) (h
     MeasurableSet.inter _
       ((measurable_set_lt (hf.comp measurable_fst) measurable_snd).inter
         (measurable_set_lt measurable_snd (hg.comp measurable_fst)))
-  convert hs.prod MeasurableSet.univ
-  simp only [and_trueₓ, mem_univ]
+  exact measurable_fst hs
 
 theorem volume_region_between_eq_lintegral' (hf : Measurable f) (hg : Measurable g) (hs : MeasurableSet s) :
     μ.prod volume (RegionBetween f g s) = ∫⁻ y in s, Ennreal.ofReal ((g - f) y) ∂μ := by
@@ -529,12 +528,10 @@ theorem volume_region_between_eq_lintegral [sigma_finite μ] (hf : AeMeasurable 
   rw [lintegral_congr_ae h₁, ← volume_region_between_eq_lintegral' hf.measurable_mk hg.measurable_mk hs]
   convert h₂ using 1
   · rw [measure.restrict_prod_eq_prod_univ]
-    exact (measure.restrict_eq_self' (hs.prod MeasurableSet.univ) (region_between_subset f g s)).symm
+    exact (measure.restrict_eq_self _ (region_between_subset f g s)).symm
     
   · rw [measure.restrict_prod_eq_prod_univ]
-    exact
-      (measure.restrict_eq_self' (hs.prod MeasurableSet.univ)
-          (region_between_subset (AeMeasurable.mk f hf) (AeMeasurable.mk g hg) s)).symm
+    exact (measure.restrict_eq_self _ (region_between_subset (AeMeasurable.mk f hf) (AeMeasurable.mk g hg) s)).symm
     
 
 theorem volume_region_between_eq_integral' [sigma_finite μ] (f_int : integrable_on f s μ) (g_int : integrable_on g s μ)

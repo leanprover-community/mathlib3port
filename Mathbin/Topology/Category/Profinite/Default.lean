@@ -108,8 +108,6 @@ theorem Profinite.to_CompHaus_to_Top : profiniteToCompHaus ⋙ compHausToTop = P
 
 section Profinite
 
-attribute [local instance] connectedComponentSetoid
-
 /-- (Implementation) The object part of the connected_components functor from compact Hausdorff spaces
 to Profinite spaces, given by quotienting a space by its connected components.
 See: https://stacks.math.columbia.edu/tag/0900
@@ -125,11 +123,11 @@ spaces in compact Hausdorff spaces.
 -/
 def Profinite.toCompHausEquivalence (X : CompHaus.{u}) (Y : Profinite.{u}) :
     (CompHaus.toProfiniteObj X ⟶ Y) ≃ (X ⟶ profiniteToCompHaus.obj Y) where
-  toFun := fun f => { toFun := f.1 ∘ Quotientₓ.mk, continuous_to_fun := Continuous.comp f.2 continuous_quotient_mk }
+  toFun := fun f => f.comp ⟨Quotientₓ.mk', continuous_quotient_mk⟩
   invFun := fun g =>
     { toFun := Continuous.connectedComponentsLift g.2,
       continuous_to_fun := Continuous.connected_components_lift_continuous g.2 }
-  left_inv := fun f => ContinuousMap.ext $ fun x => Quotientₓ.induction_on x $ fun a => rfl
+  left_inv := fun f => ContinuousMap.ext $ ConnectedComponents.surjective_coe.forall.2 $ fun a => rfl
   right_inv := fun f => ContinuousMap.ext $ fun x => rfl
 
 /-- The connected_components functor from compact Hausdorff spaces to profinite spaces,

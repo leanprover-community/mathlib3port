@@ -14,7 +14,7 @@ depends on the first component. This can be seen as a generalization of the sum 
   `equiv.sum_equiv_sigma_bool`.
 
 `Σ x, A x` is notation for `sigma A` (note the difference with the big operator `∑`).
-`Σ x y z ..., A x y z ...` is notation for `Σ x, Σ y, Σ z, ..., A x y z ...`. Here we have 
+`Σ x y z ..., A x y z ...` is notation for `Σ x, Σ y, Σ z, ..., A x y z ...`. Here we have
 `α : Type*`, `β : α → Type*`, `γ : Π a : α, β a → Type*`, ...,
 `A : Π (a : α) (b : β a) (c : γ a b) ..., Type*`  with `x : α` `y : β x`, `z : γ x y`, ...
 
@@ -32,8 +32,8 @@ variable {α α₁ α₂ : Type _} {β : α → Type _} {β₁ : α₁ → Type 
 
 namespace Sigma
 
-instance [Inhabited α] [Inhabited (β (default α))] : Inhabited (Sigma β) :=
-  ⟨⟨default α, default (β (default α))⟩⟩
+instance [Inhabited α] [Inhabited (β default)] : Inhabited (Sigma β) :=
+  ⟨⟨default, default⟩⟩
 
 instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableEq (Sigma β)
   | ⟨a₁, b₁⟩, ⟨a₂, b₂⟩ =>
@@ -160,8 +160,8 @@ def elim {γ} (f : ∀ a, β a → γ) (a : Psigma β) : γ :=
 theorem elim_val {γ} (f : ∀ a, β a → γ) a b : Psigma.elim f ⟨a, b⟩ = f a b :=
   rfl
 
-instance [Inhabited α] [Inhabited (β (default α))] : Inhabited (Psigma β) :=
-  ⟨⟨default α, default (β (default α))⟩⟩
+instance [Inhabited α] [Inhabited (β default)] : Inhabited (Psigma β) :=
+  ⟨⟨default, default⟩⟩
 
 instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableEq (Psigma β)
   | ⟨a₁, b₁⟩, ⟨a₂, b₂⟩ =>

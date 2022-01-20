@@ -53,7 +53,7 @@ def quot1 (α : Typevec n) :=
   Quot (@R α)
 
 instance quot1.inhabited {α : Typevec n} [Inhabited $ F α] : Inhabited (quot1 R α) :=
-  ⟨Quot.mk _ (default _)⟩
+  ⟨Quot.mk _ default⟩
 
 variable [Mvfunctor F] [q : Mvqpf F]
 

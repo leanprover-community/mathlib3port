@@ -341,7 +341,7 @@ theorem C_pow : C (a ^ n) = C a ^ n :=
 
 @[simp]
 theorem C_eq_nat_cast (n : ℕ) : C (n : R) = (n : Polynomial R) :=
-  C.map_nat_cast n
+  map_nat_cast C n
 
 @[simp]
 theorem C_mul_monomial : C a * monomial n b = monomial n (a * b) := by
@@ -371,6 +371,7 @@ theorem X_mul : X * p = p * X := by
   simp only [X, monomial, monomial_fun, mul_to_finsupp, LinearMap.coe_mk]
   ext
   simp [AddMonoidAlgebra.mul_apply, sum_single_index, add_commₓ]
+  congr <;> ext <;> congr
 
 theorem X_pow_mul {n : ℕ} : X ^ n * p = p * X ^ n := by
   induction' n with n ih

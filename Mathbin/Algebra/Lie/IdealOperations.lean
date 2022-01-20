@@ -134,6 +134,12 @@ theorem bot_lie : ⁅(⊥ : LieIdeal R L),N⁆ = ⊥ := by
   rw [mem_bot] at hx
   simp [hx]
 
+theorem lie_eq_bot_iff : ⁅I,N⁆ = ⊥ ↔ ∀, ∀ x ∈ I, ∀, ∀ m ∈ N, ∀, ⁅(x : L),m⁆ = 0 := by
+  rw [lie_ideal_oper_eq_span, LieSubmodule.lie_span_eq_bot_iff]
+  refine' ⟨fun h x hx m hm => h ⁅x,m⁆ ⟨⟨x, hx⟩, ⟨m, hm⟩, rfl⟩, _⟩
+  rintro h - ⟨⟨x, hx⟩, ⟨⟨n, hn⟩, rfl⟩⟩
+  exact h x hx n hn
+
 theorem mono_lie (h₁ : I ≤ J) (h₂ : N ≤ N') : ⁅I,N⁆ ≤ ⁅J,N'⁆ := by
   intro m h
   rw [lie_ideal_oper_eq_span, mem_lie_span] at h
@@ -207,6 +213,24 @@ theorem lie_inf : ⁅I,N⊓N'⁆ ≤ ⁅I,N⁆⊓⁅I,N'⁆ := by
 theorem inf_lie : ⁅I⊓J,N⁆ ≤ ⁅I,N⁆⊓⁅J,N⁆ := by
   rw [le_inf_iff]
   constructor <;> apply mono_lie_left <;> [exact inf_le_left, exact inf_le_right]
+
+theorem map_bracket_eq {M₂ : Type w₁} [AddCommGroupₓ M₂] [Module R M₂] [LieRingModule L M₂] [LieModule R L M₂]
+    (f : M →ₗ⁅R,L⁆ M₂) : map f ⁅I,N⁆ = ⁅I,map f N⁆ := by
+  rw [← coe_to_submodule_eq_iff, coe_submodule_map, lie_ideal_oper_eq_linear_span, lie_ideal_oper_eq_linear_span,
+    Submodule.map_span]
+  congr
+  ext m
+  constructor
+  · rintro ⟨-, ⟨⟨x, ⟨n, hn⟩, rfl⟩, hm⟩⟩
+    simp only [LieModuleHom.coe_to_linear_map, LieModuleHom.map_lie] at hm
+    exact ⟨x, ⟨f n, (mem_map (f n)).mpr ⟨n, hn, rfl⟩⟩, hm⟩
+    
+  · rintro ⟨x, ⟨m₂, hm₂ : m₂ ∈ map f N⟩, rfl⟩
+    obtain ⟨n, hn, rfl⟩ := (mem_map m₂).mp hm₂
+    exact
+      ⟨⁅x,n⁆, ⟨x, ⟨n, hn⟩, rfl⟩, by
+        simp ⟩
+    
 
 end LieIdealOperations
 

@@ -27,7 +27,7 @@ also use `bsupr`/`binfi` for "bounded" supremum or infimum, i.e. one of `⨆ i �
 -/
 
 
-open Set
+open Set Function
 
 variable {α β β₂ : Type _} {ι ι₂ : Sort _}
 
@@ -278,8 +278,10 @@ see the doc-string on `complete_lattice_of_Sup`.
 def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSup α] : CompleteLattice α :=
   completeLatticeOfSup α fun s => is_lub_Sup s
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1165:11: unsupported: advanced extends in structure
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
-class CompleteLinearOrder (α : Type _) extends CompleteLattice α, LinearOrderₓ α
+class CompleteLinearOrder (α : Type _) extends CompleteLattice α,
+  "././Mathport/Syntax/Translate/Basic.lean:1165:11: unsupported: advanced extends in structure"
 
 namespace OrderDual
 
@@ -542,11 +544,11 @@ theorem Monotone.supr_comp_eq [Preorderₓ β] {f : β → α} (hf : Monotone f)
     (⨆ x, f (s x)) = ⨆ y, f y :=
   le_antisymmₓ (supr_comp_le _ _) (supr_le_supr2 $ fun x => (hs x).imp $ fun i hi => hf hi)
 
-theorem Function.Surjective.supr_comp {α : Type _} [HasSupₓ α] {f : ι → ι₂} (hf : Function.Surjective f) (g : ι₂ → α) :
+theorem Function.Surjective.supr_comp {α : Type _} [HasSupₓ α] {f : ι → ι₂} (hf : surjective f) (g : ι₂ → α) :
     (⨆ x, g (f x)) = ⨆ y, g y := by
   simp only [supr, hf.range_comp]
 
-theorem supr_congr {α : Type _} [HasSupₓ α] {f : ι → α} {g : ι₂ → α} (h : ι → ι₂) (h1 : Function.Surjective h)
+theorem supr_congr {α : Type _} [HasSupₓ α] {f : ι → α} {g : ι₂ → α} (h : ι → ι₂) (h1 : surjective h)
     (h2 : ∀ x, g (h x) = f x) : (⨆ x, f x) = ⨆ y, g y := by
   convert h1.supr_comp g
   exact (funext h2).symm
@@ -637,11 +639,11 @@ theorem Monotone.infi_comp_eq [Preorderₓ β] {f : β → α} (hf : Monotone f)
     (⨅ x, f (s x)) = ⨅ y, f y :=
   le_antisymmₓ (infi_le_infi2 $ fun x => (hs x).imp $ fun i hi => hf hi) (le_infi_comp _ _)
 
-theorem Function.Surjective.infi_comp {α : Type _} [HasInfₓ α] {f : ι → ι₂} (hf : Function.Surjective f) (g : ι₂ → α) :
+theorem Function.Surjective.infi_comp {α : Type _} [HasInfₓ α] {f : ι → ι₂} (hf : surjective f) (g : ι₂ → α) :
     (⨅ x, g (f x)) = ⨅ y, g y :=
   @Function.Surjective.supr_comp _ _ (OrderDual α) _ f hf g
 
-theorem infi_congr {α : Type _} [HasInfₓ α] {f : ι → α} {g : ι₂ → α} (h : ι → ι₂) (h1 : Function.Surjective h)
+theorem infi_congr {α : Type _} [HasInfₓ α] {f : ι → α} {g : ι₂ → α} (h : ι → ι₂) (h1 : surjective h)
     (h2 : ∀ x, g (h x) = f x) : (⨅ x, f x) = ⨅ y, g y :=
   @supr_congr _ _ (OrderDual α) _ _ _ h h1 h2
 
@@ -962,6 +964,10 @@ theorem infi_image {γ} {f : β → γ} {g : γ → α} {t : Set β} : (⨅ c �
 
 theorem supr_image {γ} {f : β → γ} {g : γ → α} {t : Set β} : (⨆ c ∈ f '' t, g c) = ⨆ b ∈ t, g (f b) :=
   @infi_image (OrderDual α) _ _ _ _ _ _
+
+theorem supr_extend_bot {e : ι → β} (he : injective e) (f : ι → α) : (⨆ j, extend e f ⊥ j) = ⨆ i, f i := by
+  rw [supr_split _ fun j => ∃ i, e i = j]
+  simp (config := { contextual := true })[extend_apply he, extend_apply', @supr_comm _ β ι]
 
 /-!
 ### `supr` and `infi` under `Type`
@@ -1299,10 +1305,7 @@ def independent {ι : Sort _} {α : Type _} [CompleteLattice α] (t : ι → α)
 theorem set_independent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
     set_independent s ↔ independent (coeₓ : s → α) := by
   simp_rw [independent, set_independent, SetCoe.forall, Sup_eq_supr]
-  apply forall_congrₓ
-  intro a
-  apply forall_congrₓ
-  intro ha
+  refine' forall₂_congrₓ fun a ha => _
   congr 2
   convert supr_subtype.symm
   simp [supr_and]

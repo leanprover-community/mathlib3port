@@ -166,6 +166,12 @@ theorem exists_rep (a : ConjClasses α) : ∃ a0 : α, ConjClasses.mk a0 = a :=
 def map (f : α →* β) : ConjClasses α → ConjClasses β :=
   Quotientₓ.lift (ConjClasses.mk ∘ f) fun a b ab => mk_eq_mk_iff_is_conj.2 (f.map_is_conj ab)
 
+theorem map_surjective {f : α →* β} (hf : Function.Surjective f) : Function.Surjective (ConjClasses.map f) := by
+  intro b
+  obtain ⟨b, rfl⟩ := ConjClasses.mk_surjective b
+  obtain ⟨a, rfl⟩ := hf b
+  exact ⟨ConjClasses.mk a, rfl⟩
+
 instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] : Fintype (ConjClasses α) :=
   Quotientₓ.fintype (IsConj.setoid α)
 

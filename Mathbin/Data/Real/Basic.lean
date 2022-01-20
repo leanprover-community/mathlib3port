@@ -183,6 +183,9 @@ instance : Inhabited ℝ :=
 instance : StarRing ℝ :=
   starRingOfComm
 
+instance : HasTrivialStar ℝ :=
+  ⟨fun _ => rfl⟩
+
 /-- Coercion `ℚ` → `ℝ` as a `ring_hom`. Note that this
 is `cau_seq.completion.of_rat`, not `rat.cast`. -/
 def of_rat : ℚ →+* ℝ := by
@@ -358,10 +361,6 @@ noncomputable instance : LinearOrderedSemiring ℝ := by
 instance : IsDomain ℝ :=
   { Real.nontrivial, Real.commRing, LinearOrderedRing.is_domain with }
 
-/-- The real numbers are an ordered `*`-ring, with the trivial `*`-structure. -/
-instance : StarOrderedRing ℝ where
-  star_mul_self_nonneg := fun r => mul_self_nonneg r
-
 private noncomputable irreducible_def inv' : ℝ → ℝ
   | ⟨a⟩ => ⟨a⁻¹⟩
 
@@ -515,14 +514,14 @@ theorem exists_is_lub (S : Set ℝ) (hne : S.nonempty) (hbdd : BddAbove S) : ∃
   have hg : IsCauSeq abs (fun n => f n / n : ℕ → ℚ) := by
     intro ε ε0
     suffices ∀ j k _ : j ≥ ⌈ε⁻¹⌉₊ _ : k ≥ ⌈ε⁻¹⌉₊, (f j / j - f k / k : ℚ) < ε by
-      refine' ⟨_, fun j ij => abs_lt.2 ⟨_, this _ _ ij (le_reflₓ _)⟩⟩
+      refine' ⟨_, fun j ij => abs_lt.2 ⟨_, this _ ij _ le_rfl⟩⟩
       rw [neg_lt, neg_sub]
-      exact this _ _ (le_reflₓ _) ij
-    intro j k ij ik
+      exact this _ le_rfl _ ij
+    intro j ij k ik
     replace ij := le_transₓ (Nat.le_ceil _) (Nat.cast_le.2 ij)
     replace ik := le_transₓ (Nat.le_ceil _) (Nat.cast_le.2 ik)
-    have j0 := Nat.cast_pos.1 (lt_of_lt_of_leₓ (inv_pos.2 ε0) ij)
-    have k0 := Nat.cast_pos.1 (lt_of_lt_of_leₓ (inv_pos.2 ε0) ik)
+    have j0 := Nat.cast_pos.1 ((inv_pos.2 ε0).trans_le ij)
+    have k0 := Nat.cast_pos.1 ((inv_pos.2 ε0).trans_le ik)
     rcases hf₁ _ j0 with ⟨y, yS, hy⟩
     refine' lt_of_lt_of_leₓ ((@Rat.cast_lt ℝ _ _ _).1 _) ((inv_le ε0 (Nat.cast_pos.2 k0)).1 ik)
     simpa using sub_lt_iff_lt_add'.2 (lt_of_le_of_ltₓ hy $ sub_lt_iff_lt_add.1 $ hf₂ _ k0 _ yS)
@@ -532,9 +531,9 @@ theorem exists_is_lub (S : Set ℝ) (hne : S.nonempty) (hbdd : BddAbove S) : ∃
     cases' exists_nat_gt ((x - z)⁻¹) with K hK
     refine' le_mk_of_forall_le ⟨K, fun n nK => _⟩
     replace xz := sub_pos.2 xz
-    replace hK := le_transₓ (le_of_ltₓ hK) (Nat.cast_le.2 nK)
-    have n0 : 0 < n := Nat.cast_pos.1 (lt_of_lt_of_leₓ (inv_pos.2 xz) hK)
-    refine' le_transₓ _ (le_of_ltₓ $ hf₂ _ n0 _ xS)
+    replace hK := hK.le.trans (Nat.cast_le.2 nK)
+    have n0 : 0 < n := Nat.cast_pos.1 ((inv_pos.2 xz).trans_le hK)
+    refine' le_transₓ _ (hf₂ _ n0 _ xS).le
     rwa [le_sub, inv_le (Nat.cast_pos.2 n0 : (_ : ℝ) < _) xz]
     
   · exact

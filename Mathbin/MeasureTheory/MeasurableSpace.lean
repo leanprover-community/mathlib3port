@@ -556,20 +556,20 @@ include m
 
 @[measurability]
 theorem MeasurableSet.prod {s : Set α} {t : Set β} (hs : MeasurableSet s) (ht : MeasurableSet t) :
-    MeasurableSet (s.prod t) :=
+    MeasurableSet (s ×ˢ t) :=
   MeasurableSet.inter (measurable_fst hs) (measurable_snd ht)
 
-theorem measurable_set_prod_of_nonempty {s : Set α} {t : Set β} (h : (s.prod t).Nonempty) :
-    MeasurableSet (s.prod t) ↔ MeasurableSet s ∧ MeasurableSet t := by
+theorem measurable_set_prod_of_nonempty {s : Set α} {t : Set β} (h : (s ×ˢ t : Set _).Nonempty) :
+    MeasurableSet (s ×ˢ t) ↔ MeasurableSet s ∧ MeasurableSet t := by
   rcases h with ⟨⟨x, y⟩, hx, hy⟩
   refine' ⟨fun hst => _, fun h => h.1.Prod h.2⟩
-  have : MeasurableSet ((fun x => (x, y)) ⁻¹' s.prod t) := measurable_id.prod_mk measurable_const hst
-  have : MeasurableSet (Prod.mk x ⁻¹' s.prod t) := measurable_const.prod_mk measurable_id hst
+  have : MeasurableSet ((fun x => (x, y)) ⁻¹' (s ×ˢ t)) := measurable_id.prod_mk measurable_const hst
+  have : MeasurableSet (Prod.mk x ⁻¹' (s ×ˢ t)) := measurable_const.prod_mk measurable_id hst
   simp_all
 
 theorem measurable_set_prod {s : Set α} {t : Set β} :
-    MeasurableSet (s.prod t) ↔ MeasurableSet s ∧ MeasurableSet t ∨ s = ∅ ∨ t = ∅ := by
-  cases' (s.prod t).eq_empty_or_nonempty with h h
+    MeasurableSet (s ×ˢ t) ↔ MeasurableSet s ∧ MeasurableSet t ∨ s = ∅ ∨ t = ∅ := by
+  cases' (s ×ˢ t : Set _).eq_empty_or_nonempty with h h
   · simp [h, prod_eq_empty_iff.mp h]
     
   · simp [← not_nonempty_iff_eq_empty, prod_nonempty_iff.mp h, measurable_set_prod_of_nonempty h]
@@ -584,7 +584,7 @@ theorem measurable_set_swap_iff {s : Set (α × β)} : MeasurableSet (Prod.swap 
 theorem measurable_from_prod_encodable [Encodable β] [MeasurableSingletonClass β] {f : α × β → γ}
     (hf : ∀ y, Measurable fun x => f (x, y)) : Measurable f := by
   intro s hs
-  have : f ⁻¹' s = ⋃ y, ((fun x => f (x, y)) ⁻¹' s).Prod {y} := by
+  have : f ⁻¹' s = ⋃ y, (fun x => f (x, y)) ⁻¹' s ×ˢ ({y} : Set β) := by
     ext1 ⟨x, y⟩
     simp [and_assoc, And.left_comm]
   rw [this]
@@ -1087,8 +1087,8 @@ def sum_congr (ab : α ≃ᵐ β) (cd : γ ≃ᵐ δ) : Sum α γ ≃ᵐ Sum β 
     cases cd'
     refine' measurable_sum (measurable_inl.comp abm) (measurable_inr.comp cdm)
 
-/-- `set.prod s t ≃ (s × t)` as measurable spaces. -/
-def Set.Prod (s : Set α) (t : Set β) : s.prod t ≃ᵐ s × t where
+/-- `s ×ˢ t ≃ (s × t)` as measurable spaces. -/
+def set.prod (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ᵐ s × t where
   toEquiv := Equivₓ.Set.prod s t
   measurable_to_fun := measurable_id.subtype_coe.fst.subtype_mk.prod_mk measurable_id.subtype_coe.snd.subtype_mk
   measurable_inv_fun := Measurable.subtype_mk $ measurable_id.fst.subtype_coe.prod_mk measurable_id.snd.subtype_coe
@@ -1176,19 +1176,19 @@ def sum_prod_distrib α β γ [MeasurableSpace α] [MeasurableSpace β] [Measura
   toEquiv := sum_prod_distrib α β γ
   measurable_to_fun := by
     refine'
-      measurable_of_measurable_union_cover ((range Sum.inl).Prod univ) ((range Sum.inr).Prod univ)
+      measurable_of_measurable_union_cover (range Sum.inl ×ˢ (univ : Set γ)) (range Sum.inr ×ˢ (univ : Set γ))
         (measurable_set_range_inl.prod MeasurableSet.univ) (measurable_set_range_inr.prod MeasurableSet.univ)
         (by
           rintro ⟨a | b, c⟩ <;> simp [Set.prod_eq])
         _ _
-    · refine' (Set.Prod (range Sum.inl) univ).symm.measurable_comp_iff.1 _
+    · refine' (set.prod (range Sum.inl) univ).symm.measurable_comp_iff.1 _
       refine' (prod_congr set.range_inl (Set.Univ _)).symm.measurable_comp_iff.1 _
       dsimp [· ∘ ·]
       convert measurable_inl
       ext ⟨a, c⟩
       rfl
       
-    · refine' (Set.Prod (range Sum.inr) univ).symm.measurable_comp_iff.1 _
+    · refine' (set.prod (range Sum.inr) univ).symm.measurable_comp_iff.1 _
       refine' (prod_congr set.range_inr (Set.Univ _)).symm.measurable_comp_iff.1 _
       dsimp [· ∘ ·]
       convert measurable_inr

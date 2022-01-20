@@ -32,7 +32,7 @@ intermediate field, field extension
 -/
 
 
-open FiniteDimensional
+open FiniteDimensional Polynomial
 
 open_locale BigOperators
 
@@ -249,6 +249,24 @@ theorem coe_pow (x : S) (n : ℕ) : (↑(x ^ n) : L) = ↑x ^ n := by
   · simp [pow_succₓ, ih]
     
 
+@[simp, norm_cast]
+theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑∑ i, f i : L) = ∑ i, (f i : L) := by
+  classical
+  induction' Finset.univ using Finset.induction_on with i s hi H
+  · simp
+    
+  · rw [Finset.sum_insert hi, coe_add, H, Finset.sum_insert hi]
+    
+
+@[simp, norm_cast]
+theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑∏ i, f i : L) = ∏ i, (f i : L) := by
+  classical
+  induction' Finset.univ using Finset.induction_on with i s hi H
+  · simp
+    
+  · rw [Finset.prod_insert hi, coe_mul, H, Finset.prod_insert hi]
+    
+
 /-! `intermediate_field`s inherit structure from their `subalgebra` coercions. -/
 
 
@@ -316,6 +334,30 @@ theorem val_mk {x : L} (hx : x ∈ S) : S.val ⟨x, hx⟩ = x :=
 
 theorem range_val : S.val.range = S.to_subalgebra :=
   S.to_subalgebra.range_val
+
+theorem aeval_coe {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra R L] [IsScalarTower R K L] (x : S)
+    (P : Polynomial R) : aeval (x : L) P = aeval x P := by
+  refine' Polynomial.induction_on' P (fun f g hf hg => _) fun n r => _
+  · rw [aeval_add, aeval_add, coe_add, hf, hg]
+    
+  · simp only [coe_mul, aeval_monomial, coe_pow, mul_eq_mul_right_iff]
+    left
+    rfl
+    
+
+theorem coe_is_integral_iff {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra R L] [IsScalarTower R K L] {x : S} :
+    IsIntegral R (x : L) ↔ _root_.is_integral R x := by
+  refine' ⟨fun h => _, fun h => _⟩
+  · obtain ⟨P, hPmo, hProot⟩ := h
+    refine' ⟨P, hPmo, (RingHom.injective_iff _).1 (algebraMap (↥S) L).Injective _ _⟩
+    let this' : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq (congr_funₓ rfl)
+    rwa [eval₂_eq_eval_map, ← eval₂_at_apply, eval₂_eq_eval_map, Polynomial.map_map, ← IsScalarTower.algebra_map_eq, ←
+      eval₂_eq_eval_map]
+    
+  · obtain ⟨P, hPmo, hProot⟩ := h
+    refine' ⟨P, hPmo, _⟩
+    rw [← aeval_def, aeval_coe, aeval_def, hProot, coe_zero]
+    
 
 variable {S}
 

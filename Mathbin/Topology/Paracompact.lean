@@ -159,7 +159,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
     exact ⟨x.2.2, hrp _ _⟩
     
   · refine' fun x hx => mem_Union.2 _
-    rcases mem_bUnion_iff.1 (hT _ ⟨hKcov x, hx⟩) with ⟨⟨c, hc⟩, hcT, hcx⟩
+    rcases mem_Union₂.1 (hT _ ⟨hKcov x, hx⟩) with ⟨⟨c, hc⟩, hcT, hcx⟩
     exact ⟨⟨_, ⟨c, hc⟩, hcT⟩, hcx⟩
     
   · intro x

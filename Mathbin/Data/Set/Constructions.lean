@@ -22,13 +22,13 @@ variable {α : Type _} (S : Set (Set α))
 /-- A structure encapsulating the fact that a set of sets is closed under finite intersection. -/
 structure HasFiniteInter where
   univ_mem : Set.Univ ∈ S
-  inter_mem {s t} : s ∈ S → t ∈ S → s ∩ t ∈ S
+  inter_mem : ∀ ⦃s⦄, s ∈ S → ∀ ⦃t⦄, t ∈ S → s ∩ t ∈ S
 
 namespace HasFiniteInter
 
 instance : Inhabited (HasFiniteInter ({Set.Univ} : Set (Set α))) :=
   ⟨⟨by
-      tauto, fun _ _ h1 h2 => by
+      tauto, fun _ h1 _ h2 => by
       simp [Set.mem_singleton_iff.1 h1, Set.mem_singleton_iff.1 h2]⟩⟩
 
 /-- The smallest set of sets containing `S` which is closed under finite intersections. -/
@@ -40,7 +40,7 @@ inductive finite_inter_closure : Set (Set α)
 /-- Defines `has_finite_inter` for `finite_inter_closure S`. -/
 def finite_inter_closure_has_finite_inter : HasFiniteInter (finite_inter_closure S) where
   univ_mem := finite_inter_closure.univ
-  inter_mem := fun _ _ => finite_inter_closure.inter
+  inter_mem := fun _ h _ => finite_inter_closure.inter h
 
 variable {S}
 

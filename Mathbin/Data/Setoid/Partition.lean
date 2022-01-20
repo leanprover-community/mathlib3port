@@ -264,8 +264,8 @@ variable {ι α : Type _} {s : ι → Set α} (hs : IndexedPartition s)
 
 /-- On a unique index set there is the obvious trivial partition -/
 instance [Unique ι] [Inhabited α] : Inhabited (IndexedPartition fun i : ι => (Set.Univ : Set α)) :=
-  ⟨{ eq_of_mem := fun x i j hi hj => Subsingleton.elimₓ _ _, some := fun i => default α, some_mem := Set.mem_univ,
-      index := fun a => default ι, mem_index := Set.mem_univ }⟩
+  ⟨{ eq_of_mem := fun x i j hi hj => Subsingleton.elimₓ _ _, some := fun i => default, some_mem := Set.mem_univ,
+      index := fun a => default, mem_index := Set.mem_univ }⟩
 
 attribute [simp] some_mem mem_index
 
@@ -307,7 +307,7 @@ def proj : α → hs.quotient :=
   Quotientₓ.mk'
 
 instance [Inhabited α] : Inhabited hs.quotient :=
-  ⟨hs.proj (default α)⟩
+  ⟨hs.proj default⟩
 
 theorem proj_eq_iff {x y : α} : hs.proj x = hs.proj y ↔ hs.index x = hs.index y :=
   Quotientₓ.eq_rel

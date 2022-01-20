@@ -39,7 +39,7 @@ variable {ι : Type v}
 namespace Pairwise
 
 instance pairwise_inhabited [Inhabited ι] : Inhabited (Pairwise ι) :=
-  ⟨single (default ι)⟩
+  ⟨single default⟩
 
 /-- Morphisms in the category `pairwise ι`. The only non-identity morphisms are
 `left i j : single i ⟶ pair i j` and `right i j : single j ⟶ pair i j`.
@@ -52,8 +52,8 @@ inductive hom : Pairwise ι → Pairwise ι → Type v
 
 open Hom
 
-instance hom_inhabited [Inhabited ι] : Inhabited (hom (single (default ι)) (single (default ι))) :=
-  ⟨id_single (default ι)⟩
+instance hom_inhabited [Inhabited ι] : Inhabited (hom (single (default : ι)) (single default)) :=
+  ⟨id_single default⟩
 
 /-- The identity morphism in `pairwise ι`.
 -/

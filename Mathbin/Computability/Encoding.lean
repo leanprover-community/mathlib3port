@@ -50,7 +50,7 @@ def inclusion_bool_Γ' : Bool → Γ' :=
 /-- An arbitrary section of the natural inclusion of bool in Γ'. -/
 def section_Γ'_bool : Γ' → Bool
   | Γ'.bit b => b
-  | _ => arbitraryₓ Bool
+  | _ => arbitrary Bool
 
 theorem left_inverse_section_inclusion : Function.LeftInverse section_Γ'_bool inclusion_bool_Γ' := fun x =>
   Bool.casesOn x rfl rfl
@@ -164,7 +164,7 @@ def encode_bool : Bool → List Bool :=
 /-- A decoding function from `list bool` to bool. -/
 def decode_bool : List Bool → Bool
   | b :: _ => b
-  | _ => arbitraryₓ Bool
+  | _ => arbitrary Bool
 
 theorem decode_encode_bool : ∀ b, decode_bool (encode_bool b) = b := fun b => Bool.casesOn b rfl rfl
 

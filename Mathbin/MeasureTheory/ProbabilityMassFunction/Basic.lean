@@ -92,7 +92,7 @@ theorem mem_support_pure_iff : a' ∈ (pure a).Support ↔ a' = a := by
   simp
 
 instance [Inhabited α] : Inhabited (Pmf α) :=
-  ⟨pure (default α)⟩
+  ⟨pure default⟩
 
 end Pure
 

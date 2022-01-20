@@ -24,7 +24,7 @@ variable (X : Type _) [TopologicalSpace X] [NormalSpace X] [second_countable_top
 -/
 theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := by
   rcases exists_countable_basis X with ⟨B, hBc, -, hB⟩
-  set s : Set (Set X × Set X) := { UV ∈ B.prod B | Closure UV.1 ⊆ UV.2 }
+  set s : Set (Set X × Set X) := { UV ∈ B ×ˢ B | Closure UV.1 ⊆ UV.2 }
   have : Encodable s := ((hBc.prod hBc).mono (inter_subset_left _ _)).toEncodable
   let this' : TopologicalSpace s := ⊥
   have : DiscreteTopology s := ⟨rfl⟩

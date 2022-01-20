@@ -51,7 +51,7 @@ def opens_le_cover : Type v :=
   { V : opens X // ∃ i, V ≤ U i }
 
 instance [Inhabited ι] : Inhabited (opens_le_cover U) :=
-  ⟨⟨⊥, default ι, bot_le⟩⟩
+  ⟨⟨⊥, default, bot_le⟩⟩
 
 instance : category (opens_le_cover U) :=
   CategoryTheory.fullSubcategory _
@@ -207,29 +207,28 @@ in terms of a limit diagram over `U i` and `U i ⊓ U j`.
 -/
 theorem is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections (F : presheaf C X) :
     F.is_sheaf_opens_le_cover ↔ F.is_sheaf_pairwise_intersections :=
-  forall_congrₓ fun ι =>
-    forall_congrₓ fun U =>
-      Equivₓ.nonempty_congr $
-        calc
-          is_limit (F.map_cone (opens_le_cover_cocone U).op) ≃
-              is_limit ((F.map_cone (opens_le_cover_cocone U).op).whisker (pairwise_to_opens_le_cover U).op) :=
-            (functor.initial.is_limit_whisker_equiv (pairwise_to_opens_le_cover U).op _).symm
-          _ ≃ is_limit (F.map_cone ((opens_le_cover_cocone U).op.whisker (pairwise_to_opens_le_cover U).op)) :=
-            is_limit.equiv_iso_limit F.map_cone_whisker.symm
-          _ ≃
-              is_limit
+  forall₂_congrₓ $ fun ι U =>
+    Equivₓ.nonempty_congr $
+      calc
+        is_limit (F.map_cone (opens_le_cover_cocone U).op) ≃
+            is_limit ((F.map_cone (opens_le_cover_cocone U).op).whisker (pairwise_to_opens_le_cover U).op) :=
+          (functor.initial.is_limit_whisker_equiv (pairwise_to_opens_le_cover U).op _).symm
+        _ ≃ is_limit (F.map_cone ((opens_le_cover_cocone U).op.whisker (pairwise_to_opens_le_cover U).op)) :=
+          is_limit.equiv_iso_limit F.map_cone_whisker.symm
+        _ ≃
+            is_limit
+              ((cones.postcompose_equivalence _).Functor.obj
+                (F.map_cone ((opens_le_cover_cocone U).op.whisker (pairwise_to_opens_le_cover U).op))) :=
+          (is_limit.postcompose_hom_equiv _ _).symm
+        _ ≃
+            is_limit
+              (F.map_cone
                 ((cones.postcompose_equivalence _).Functor.obj
-                  (F.map_cone ((opens_le_cover_cocone U).op.whisker (pairwise_to_opens_le_cover U).op))) :=
-            (is_limit.postcompose_hom_equiv _ _).symm
-          _ ≃
-              is_limit
-                (F.map_cone
-                  ((cones.postcompose_equivalence _).Functor.obj
-                    ((opens_le_cover_cocone U).op.whisker (pairwise_to_opens_le_cover U).op))) :=
-            is_limit.equiv_iso_limit (functor.map_cone_postcompose_equivalence_functor _).symm
-          _ ≃ is_limit (F.map_cone (pairwise.cocone U).op) :=
-            is_limit.equiv_iso_limit ((cones.functoriality _ _).mapIso (pairwise_cocone_iso U : _).symm)
-          
+                  ((opens_le_cover_cocone U).op.whisker (pairwise_to_opens_le_cover U).op))) :=
+          is_limit.equiv_iso_limit (functor.map_cone_postcompose_equivalence_functor _).symm
+        _ ≃ is_limit (F.map_cone (pairwise.cocone U).op) :=
+          is_limit.equiv_iso_limit ((cones.functoriality _ _).mapIso (pairwise_cocone_iso U : _).symm)
+        
 
 variable [has_products C]
 

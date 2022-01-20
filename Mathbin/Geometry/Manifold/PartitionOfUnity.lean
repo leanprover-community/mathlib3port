@@ -376,7 +376,7 @@ def single (i : ι) (s : Set M) : SmoothPartitionOfUnity ι I M s :=
       
 
 instance [Inhabited ι] (s : Set M) : Inhabited (SmoothPartitionOfUnity ι I M s) :=
-  ⟨single (default ι) s⟩
+  ⟨single default s⟩
 
 variable [T2Space M] [SigmaCompactSpace M]
 

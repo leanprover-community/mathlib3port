@@ -87,8 +87,9 @@ theorem map_permutations_aux2' {α β α' β'} (g : α → α') (g' : β → β'
 /-- The `f` argument to `permutations_aux2` when `r = []` can be eliminated. -/
 theorem map_permutations_aux2 (t : α) (ts : List α) (ys : List α) (f : List α → β) :
     (permutations_aux2 t ts [] ys id).2.map f = (permutations_aux2 t ts [] ys f).2 := by
-  convert map_permutations_aux2' id _ _ _ _ _ _ _ _ <;> simp only [map_id, id.def]
-  exact fun _ => rfl
+  rw [map_permutations_aux2' id, map_id, map_id]
+  rfl
+  simp
 
 /-- An expository lemma to show how all of `ts`, `r`, and `f` can be eliminated from
 `permutations_aux2`.

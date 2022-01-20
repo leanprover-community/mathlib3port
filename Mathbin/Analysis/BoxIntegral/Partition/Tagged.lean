@@ -67,7 +67,7 @@ theorem Union_to_prepartition : π.to_prepartition.Union = π.Union :=
 
 @[simp]
 theorem mem_Union : x ∈ π.Union ↔ ∃ J ∈ π, x ∈ J :=
-  Set.mem_bUnion_iff
+  Set.mem_Union₂
 
 theorem subset_Union (h : J ∈ π) : ↑J ⊆ π.Union :=
   subset_bUnion_of_mem h

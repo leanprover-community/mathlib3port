@@ -1,3 +1,4 @@
+import Mathbin.Algebra.Invertible
 import Mathbin.Data.Int.Cast
 
 /-!
@@ -22,8 +23,14 @@ section Monoidₓ
 variable [Monoidₓ M] [Monoidₓ N] [AddMonoidₓ A] [AddMonoidₓ B]
 
 @[simp]
-theorem nsmul_one [HasOne A] : ∀ n : ℕ, n • (1 : A) = n :=
-  AddMonoidHom.eq_nat_cast ⟨fun n => n • (1 : A), zero_nsmul _, fun _ _ => add_nsmul _ _ _⟩ (one_nsmul _)
+theorem nsmul_one [HasOne A] : ∀ n : ℕ, n • (1 : A) = n := by
+  refine' eq_nat_cast' (⟨_, _, _⟩ : ℕ →+ A) _
+  · simp [zero_nsmul]
+    
+  · simp [add_nsmul]
+    
+  · simp
+    
 
 @[simp, norm_cast, to_additive]
 theorem Units.coe_pow (u : (M)ˣ) (n : ℕ) : ((u ^ n : (M)ˣ) : M) = u ^ n :=

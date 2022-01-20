@@ -252,7 +252,7 @@ theorem trans_apply (γ : Path x y) (γ' : Path y z) (t : I) :
 @[simp]
 theorem trans_symm (γ : Path x y) (γ' : Path y z) : (γ.trans γ').symm = γ'.symm.trans γ.symm := by
   ext t
-  simp only [trans_apply, one_div, symm_apply, not_leₓ, comp_app]
+  simp only [trans_apply, ← one_div, symm_apply, not_leₓ, comp_app]
   split_ifs with h h₁ h₂ h₃ h₄ <;> rw [coe_symm_eq] at h
   · have ht : (t : ℝ) = 1 / 2 := by
       linarith [UnitInterval.nonneg t, UnitInterval.le_one t]
@@ -436,24 +436,66 @@ theorem trans_continuous_family {X ι : Type _} [TopologicalSpace X] [Topologica
     simp [hst, mul_inv_cancel (@two_ne_zero ℝ _ _)]
     
 
-/-! #### Product of two paths -/
+/-! #### Product of paths -/
 
+
+section Prod
+
+variable {a₁ a₂ a₃ : X} {b₁ b₂ b₃ : Y}
 
 /-- Given a path in `X` and a path in `Y`, we can take their pointwise product to get a path in
 `X × Y`. -/
-protected def Prod {a₁ b₁ : X} {a₂ b₂ : Y} (γ₁ : Path a₁ b₁) (γ₂ : Path a₂ b₂) : Path (a₁, a₂) (b₁, b₂) where
+protected def Prod (γ₁ : Path a₁ a₂) (γ₂ : Path b₁ b₂) : Path (a₁, b₁) (a₂, b₂) where
   toContinuousMap := ContinuousMap.prodMk γ₁.to_continuous_map γ₂.to_continuous_map
   source' := by
-    dsimp [ContinuousMap.prodMk] <;> rwa [γ₁.source, γ₂.source]
+    simp
   target' := by
-    dsimp [ContinuousMap.prodMk] <;> rwa [γ₁.target, γ₂.target]
+    simp
+
+@[simp]
+theorem prod_coe_fn (γ₁ : Path a₁ a₂) (γ₂ : Path b₁ b₂) : coeFn (γ₁.prod γ₂) = fun t => (γ₁ t, γ₂ t) :=
+  rfl
+
+/-- Path composition commutes with products -/
+theorem trans_prod_eq_prod_trans (γ₁ : Path a₁ a₂) (δ₁ : Path a₂ a₃) (γ₂ : Path b₁ b₂) (δ₂ : Path b₂ b₃) :
+    (γ₁.prod γ₂).trans (δ₁.prod δ₂) = (γ₁.trans δ₁).Prod (γ₂.trans δ₂) := by
+  ext t <;> unfold Path.trans <;> simp only [Path.coe_mk, Path.prod_coe_fn, Function.comp_app] <;> split_ifs <;> rfl
+
+end Prod
+
+section Pi
+
+variable {χ : ι → Type _} [∀ i, TopologicalSpace (χ i)] {as bs cs : ∀ i, χ i}
+
+/-- Given a family of paths, one in each Xᵢ, we take their pointwise product to get a path in
+Π i, Xᵢ. -/
+protected def pi (γ : ∀ i, Path (as i) (bs i)) : Path as bs where
+  toContinuousMap := ContinuousMap.pi fun i => (γ i).toContinuousMap
+  source' := by
+    simp
+  target' := by
+    simp
+
+@[simp]
+theorem pi_coe_fn (γ : ∀ i, Path (as i) (bs i)) : coeFn (Path.pi γ) = fun t i => γ i t :=
+  rfl
+
+/-- Path composition commutes with products -/
+theorem trans_pi_eq_pi_trans (γ₀ : ∀ i, Path (as i) (bs i)) (γ₁ : ∀ i, Path (bs i) (cs i)) :
+    (Path.pi γ₀).trans (Path.pi γ₁) = Path.pi fun i => (γ₀ i).trans (γ₁ i) := by
+  ext t i
+  unfold Path.trans
+  simp only [Path.coe_mk, Function.comp_app, pi_coe_fn]
+  split_ifs <;> rfl
+
+end Pi
 
 /-! #### Pointwise multiplication/addition of two paths in a topological (additive) group -/
 
 
 /-- Pointwise multiplication of paths in a topological group. The additive version is probably more
 useful. -/
-@[to_additive "Pointwise addition of paths in a topological additive group. -/"]
+@[to_additive "Pointwise addition of paths in a topological additive group."]
 protected def mul [Mul X] [HasContinuousMul X] {a₁ b₁ a₂ b₂ : X} (γ₁ : Path a₁ b₁) (γ₂ : Path a₂ b₂) :
     Path (a₁ * a₂) (b₁ * b₂) :=
   (γ₁.prod γ₂).map continuous_mul
@@ -816,7 +858,7 @@ theorem is_path_connected_iff_eq : IsPathConnected F ↔ ∃ x ∈ F, PathCompon
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » F)
 theorem IsPathConnected.joined_in (h : IsPathConnected F) : ∀ x y _ : x ∈ F _ : y ∈ F, JoinedIn F x y :=
-  fun x y x_in y_in =>
+  fun x x_in x y_in =>
   let ⟨b, b_in, hb⟩ := h
   (hb x_in).symm.trans (hb y_in)
 
@@ -826,7 +868,7 @@ theorem is_path_connected_iff : IsPathConnected F ↔ F.nonempty ∧ ∀ x y _ :
     ⟨let ⟨b, b_in, hb⟩ := h
       ⟨b, b_in⟩,
       h.joined_in⟩,
-    fun ⟨⟨b, b_in⟩, h⟩ => ⟨b, b_in, fun x x_in => h b x b_in x_in⟩⟩
+    fun ⟨⟨b, b_in⟩, h⟩ => ⟨b, b_in, fun x x_in => h b b_in x x_in⟩⟩
 
 theorem IsPathConnected.image {Y : Type _} [TopologicalSpace Y] (hF : IsPathConnected F) {f : X → Y}
     (hf : Continuous f) : IsPathConnected (f '' F) := by
@@ -837,7 +879,7 @@ theorem IsPathConnected.image {Y : Type _} [TopologicalSpace Y] (hF : IsPathConn
 
 theorem IsPathConnected.mem_path_component (h : IsPathConnected F) (x_in : x ∈ F) (y_in : y ∈ F) :
     y ∈ PathComponent x :=
-  (h.joined_in x y x_in y_in).Joined
+  (h.joined_in x x_in y y_in).Joined
 
 theorem IsPathConnected.subset_path_component (h : IsPathConnected F) (x_in : x ∈ F) : F ⊆ PathComponent x :=
   fun y y_in => h.mem_path_component x_in y_in
@@ -847,9 +889,9 @@ theorem IsPathConnected.union {U V : Set X} (hU : IsPathConnected U) (hV : IsPat
   rcases hUV with ⟨x, xU, xV⟩
   use x, Or.inl xU
   rintro y (yU | yV)
-  · exact (hU.joined_in x y xU yU).mono (subset_union_left U V)
+  · exact (hU.joined_in x xU y yU).mono (subset_union_left U V)
     
-  · exact (hV.joined_in x y xV yV).mono (subset_union_right U V)
+  · exact (hV.joined_in x xV y yV).mono (subset_union_right U V)
     
 
 /-- If a set `W` is path-connected, then it is also path-connected when seen as a set in a smaller
@@ -888,7 +930,7 @@ theorem IsPathConnected.exists_path_through_family {X : Type _} [TopologicalSpac
         
       
     · rcases hn fun i hi => hp' i $ Nat.le_succ_of_leₓ hi with ⟨γ₀, hγ₀⟩
-      rcases h.joined_in (p' n) (p' $ n + 1) (hp' n n.le_succ) (hp' (n + 1) $ le_reflₓ _) with ⟨γ₁, hγ₁⟩
+      rcases h.joined_in (p' n) (hp' n n.le_succ) (p' $ n + 1) (hp' (n + 1) $ le_rfl) with ⟨γ₁, hγ₁⟩
       let γ : Path (p' 0) (p' $ n + 1) := γ₀.trans γ₁
       use γ
       have range_eq : range γ = range γ₀ ∪ range γ₁ := γ₀.trans_range γ₁
@@ -983,11 +1025,11 @@ theorem is_path_connected_iff_path_connected_space : IsPathConnected F ↔ PathC
   · rintro ⟨⟨x, x_in⟩, h⟩
     refine' ⟨⟨⟨x, x_in⟩⟩, _⟩
     rintro ⟨y, y_in⟩ ⟨z, z_in⟩
-    have H := h y z y_in z_in
+    have H := h y y_in z z_in
     rwa [joined_in_iff_joined y_in z_in] at H
     
   · rintro ⟨⟨x, x_in⟩, H⟩
-    refine' ⟨⟨x, x_in⟩, fun y z y_in z_in => _⟩
+    refine' ⟨⟨x, x_in⟩, fun y y_in z z_in => _⟩
     rw [joined_in_iff_joined y_in z_in]
     apply H
     
@@ -996,8 +1038,8 @@ theorem path_connected_space_iff_univ : PathConnectedSpace X ↔ IsPathConnected
   constructor
   · intro h
     inhabit X
-    refine' ⟨default X, mem_univ _, _⟩
-    simpa using PathConnectedSpace.joined (default X)
+    refine' ⟨default, mem_univ _, _⟩
+    simpa using PathConnectedSpace.joined default
     
   · intro h
     have h' := h.joined_in
@@ -1080,10 +1122,8 @@ theorem path_connected_space_iff_connected_space [LocPathConnectedSpace X] : Pat
     infer_instance
     
   · intro hX
-    inhabit X
-    let x₀ := default X
     rw [path_connected_space_iff_eq]
-    use x₀
+    use Classical.arbitrary X
     refine'
       eq_univ_of_nonempty_clopen
         (by
@@ -1100,7 +1140,7 @@ theorem path_connected_space_iff_connected_space [LocPathConnectedSpace X] : Pat
       intro y H
       rcases(path_connected_basis y).ex_mem with ⟨U, ⟨U_in, hU⟩⟩
       rcases H U U_in with ⟨z, hz, hz'⟩
-      exact (hU.joined_in z y hz $ mem_of_mem_nhds U_in).Joined.mem_path_component hz'
+      exact (hU.joined_in z hz y $ mem_of_mem_nhds U_in).Joined.mem_path_component hz'
       
     
 

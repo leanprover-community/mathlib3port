@@ -187,7 +187,7 @@ omit dec_ι
 /-- The natural equivalence between `⨁ _ : ι, M` and `M` when `unique ι`. -/
 protected def id (M : Type v) (ι : Type _ := PUnit) [AddCommMonoidₓ M] [Unique ι] : (⨁ _ : ι, M) ≃+ M :=
   { DirectSum.toAddMonoid fun _ => AddMonoidHom.id M with toFun := DirectSum.toAddMonoid fun _ => AddMonoidHom.id M,
-    invFun := of (fun _ => M) (default ι),
+    invFun := of (fun _ => M) default,
     left_inv := fun x =>
       DirectSum.induction_on x
         (by

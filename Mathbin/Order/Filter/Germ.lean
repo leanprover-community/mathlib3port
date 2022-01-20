@@ -239,7 +239,7 @@ theorem lift_rel_const_iff [ne_bot l] {r : β → γ → Prop} {x : β} {y : γ}
   @eventually_const _ _ _ (r x y)
 
 instance [Inhabited β] : Inhabited (germ l β) :=
-  ⟨↑default β⟩
+  ⟨↑(default : β)⟩
 
 section Monoidₓ
 

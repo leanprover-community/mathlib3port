@@ -44,6 +44,9 @@ instance {S : Type _} [Semiringₓ S] [HasScalar R S] [∀ i, Module S (M i)] [�
     IsScalarTower R S (⨁ i, M i) :=
   Dfinsupp.is_scalar_tower
 
+instance [∀ i, Module (Rᵐᵒᵖ) (M i)] [∀ i, IsCentralScalar R (M i)] : IsCentralScalar R (⨁ i, M i) :=
+  Dfinsupp.is_central_scalar
+
 theorem smul_apply (b : R) (v : ⨁ i, M i) (i : ι) : (b • v) i = b • v i :=
   Dfinsupp.smul_apply _ _ _
 

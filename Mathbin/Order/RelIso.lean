@@ -470,7 +470,7 @@ instance (r : α → α → Prop) : Inhabited (r ≃r r) :=
   ⟨RelIso.refl _⟩
 
 @[simp]
-theorem default_def (r : α → α → Prop) : default (r ≃r r) = RelIso.refl r :=
+theorem default_def (r : α → α → Prop) : default = RelIso.refl r :=
   rfl
 
 /-- a relation isomorphism is also a relation isomorphism between dual relations. -/

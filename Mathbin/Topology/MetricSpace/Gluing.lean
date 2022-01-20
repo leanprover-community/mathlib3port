@@ -269,11 +269,11 @@ Since there is an arbitrary choice in this construction, it is not an instance b
 def sum.dist : Sum X Y → Sum X Y → ℝ
   | inl a, inl a' => dist a a'
   | inr b, inr b' => dist b b'
-  | inl a, inr b => dist a (default X) + 1 + dist (default Y) b
-  | inr b, inl a => dist b (default Y) + 1 + dist (default X) a
+  | inl a, inr b => dist a default + 1 + dist default b
+  | inr b, inl a => dist b default + 1 + dist default a
 
 theorem sum.dist_eq_glue_dist {p q : Sum X Y} :
-    sum.dist p q = glue_dist (fun _ : Unit => default X) (fun _ : Unit => default Y) 1 p q := by
+    sum.dist p q = glue_dist (fun _ : Unit => default) (fun _ : Unit => default) 1 p q := by
   cases p <;>
     cases q <;>
       first |
@@ -382,10 +382,10 @@ def to_glue_r (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (y : Y) : glue_space hΦ h
   let this' : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ <;> exact ⟦inr y⟧
 
 instance inhabited_left (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited X] : Inhabited (glue_space hΦ hΨ) :=
-  ⟨to_glue_l _ _ (default _)⟩
+  ⟨to_glue_l _ _ default⟩
 
 instance inhabited_right (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited Y] : Inhabited (glue_space hΦ hΨ) :=
-  ⟨to_glue_r _ _ (default _)⟩
+  ⟨to_glue_r _ _ default⟩
 
 theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : to_glue_l hΦ hΨ ∘ Φ = to_glue_r hΦ hΨ ∘ Ψ := by
   let this' : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ
@@ -481,7 +481,7 @@ def to_inductive_limit (I : ∀ n, Isometry (f n)) (n : ℕ) (x : X n) : Metric.
   let this' : PseudoMetricSpace (Σ n, X n) := inductive_premetric I <;> exact ⟦Sigma.mk n x⟧
 
 instance (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (inductive_limit I) :=
-  ⟨to_inductive_limit _ 0 (default _)⟩
+  ⟨to_inductive_limit _ 0 default⟩
 
 /-- The map `to_inductive_limit n` mapping `X n` to the inductive limit is an isometry. -/
 theorem to_inductive_limit_isometry (I : ∀ n, Isometry (f n)) (n : ℕ) : Isometry (to_inductive_limit I n) :=

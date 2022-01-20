@@ -37,7 +37,7 @@ vectors.
   over an auxiliary `s : finset ι`;
 * `linear_independent_empty_type`: a family indexed by an empty type is linearly independent;
 * `linear_independent_unique_iff`: if `ι` is a singleton, then `linear_independent K v` is
-  equivalent to `v (default ι) ≠ 0`;
+  equivalent to `v default ≠ 0`;
 * linear_independent_option`, `linear_independent_sum`, `linear_independent_fin_cons`,
   `linear_independent_fin_succ`: type-specific tests for linear independence of families of vector
   fields;
@@ -1016,10 +1016,10 @@ variable [Module R M] [NoZeroSmulDivisors R M] [Module R M']
 
 variable {v : ι → M} {s t : Set M} {x y z : M}
 
-theorem linear_independent_unique_iff (v : ι → M) [Unique ι] : LinearIndependent R v ↔ v (default ι) ≠ 0 := by
+theorem linear_independent_unique_iff (v : ι → M) [Unique ι] : LinearIndependent R v ↔ v default ≠ 0 := by
   simp only [linear_independent_iff, Finsupp.total_unique, smul_eq_zero]
   refine' ⟨fun h hv => _, fun hv l hl => Finsupp.unique_ext $ hl.resolve_right hv⟩
-  have := h (Finsupp.single (default ι) 1) (Or.inr hv)
+  have := h (Finsupp.single default 1) (Or.inr hv)
   exact one_ne_zero (Finsupp.single_eq_zero.1 this)
 
 alias linear_independent_unique_iff ↔ _ linear_independent_unique
@@ -1155,7 +1155,7 @@ theorem linear_independent_fin_succ' {n} {v : Finₓ (n + 1) → V} :
 
 theorem linear_independent_fin2 {f : Finₓ 2 → V} : LinearIndependent K f ↔ f 1 ≠ 0 ∧ ∀ a : K, a • f 1 ≠ f 0 := by
   rw [linear_independent_fin_succ, linear_independent_unique_iff, range_unique, mem_span_singleton, not_exists,
-    show Finₓ.tail f (default (Finₓ 1)) = f 1 by
+    show Finₓ.tail f default = f 1 by
       rw [← Finₓ.succ_zero_eq_one] <;> rfl]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (b «expr ⊆ » t)

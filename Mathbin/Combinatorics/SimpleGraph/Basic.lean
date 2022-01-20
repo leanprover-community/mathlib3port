@@ -72,7 +72,7 @@ universe u v w
 
 /-- A simple graph is an irreflexive symmetric relation `adj` on a vertex type `V`.
 The relation describes which pairs of vertices are adjacent.
-There is exactly one edge for every pair of adjacent edges;
+There is exactly one edge for every pair of adjacent vertices;
 see `simple_graph.edge_set` for the corresponding edge set.
 -/
 @[ext]
@@ -403,6 +403,10 @@ theorem edge_set_univ_card [DecidableEq V] [Fintype V] [DecidableRel G.adj] :
 
 @[simp]
 theorem mem_neighbor_set (v w : V) : w ∈ G.neighbor_set v ↔ G.adj v w :=
+  Iff.rfl
+
+@[simp]
+theorem mem_neighbor_set' (v w : V) : G.neighbor_set v w ↔ G.adj v w :=
   Iff.rfl
 
 @[simp]
@@ -793,8 +797,7 @@ theorem card_common_neighbors_le_degree_left [DecidableRel G.adj] (v w : V) :
 
 theorem card_common_neighbors_le_degree_right [DecidableRel G.adj] (v w : V) :
     Fintype.card (G.common_neighbors v w) ≤ G.degree w := by
-  convert G.card_common_neighbors_le_degree_left w v using 3
-  apply common_neighbors_symm
+  simp_rw [common_neighbors_symm _ v w, card_common_neighbors_le_degree_left]
 
 theorem card_common_neighbors_lt_card_verts [DecidableRel G.adj] (v w : V) :
     Fintype.card (G.common_neighbors v w) < Fintype.card V :=

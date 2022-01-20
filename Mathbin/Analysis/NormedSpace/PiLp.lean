@@ -67,7 +67,7 @@ def PiLp {ι : Type _} (p : ℝ) (α : ι → Type _) : Type _ :=
   ∀ i : ι, α i
 
 instance {ι : Type _} (p : ℝ) (α : ι → Type _) [∀ i, Inhabited (α i)] : Inhabited (PiLp p α) :=
-  ⟨fun i => default (α i)⟩
+  ⟨fun i => default⟩
 
 theorem fact_one_le_one_real : Fact ((1 : ℝ) ≤ 1) :=
   ⟨rfl.le⟩
@@ -276,8 +276,8 @@ include fact_one_le_p
 
 variable (𝕜 : Type _) [NormedField 𝕜]
 
-/-- The product of finitely many seminormed spaces is a seminormed space, with the `L^p` norm. -/
-instance SemiNormedSpace [∀ i, SemiNormedGroup (β i)] [∀ i, SemiNormedSpace 𝕜 (β i)] : SemiNormedSpace 𝕜 (PiLp p β) :=
+/-- The product of finitely many normed spaces is a normed space, with the `L^p` norm. -/
+instance NormedSpace [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] : NormedSpace 𝕜 (PiLp p β) :=
   { Pi.module ι β 𝕜 with
     norm_smul_le := by
       intro c f
@@ -286,11 +286,7 @@ instance SemiNormedSpace [∀ i, SemiNormedGroup (β i)] [∀ i, SemiNormedSpace
       rw [mul_rpow (rpow_nonneg_of_nonneg (norm_nonneg _) _), ← rpow_mul (norm_nonneg _), this, rpow_one]
       exact Finset.sum_nonneg fun i hi => rpow_nonneg_of_nonneg (norm_nonneg _) _ }
 
-/-- The product of finitely many normed spaces is a normed space, with the `L^p` norm. -/
-instance NormedSpace [∀ i, NormedGroup (α i)] [∀ i, NormedSpace 𝕜 (α i)] : NormedSpace 𝕜 (PiLp p α) :=
-  { PiLp.semiNormedSpace p α 𝕜 with }
-
-variable {𝕜 p α} [∀ i, SemiNormedGroup (β i)] [∀ i, SemiNormedSpace 𝕜 (β i)] (c : 𝕜) (x y : PiLp p β) (i : ι)
+variable {𝕜 p α} [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] (c : 𝕜) (x y : PiLp p β) (i : ι)
 
 @[simp]
 theorem add_apply : (x + y) i = x i + y i :=

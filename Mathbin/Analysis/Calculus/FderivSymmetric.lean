@@ -140,9 +140,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
           refine' ⟨_, xt_mem t ⟨ht.1, ht.2.le⟩⟩
           rw [add_assocₓ, add_mem_ball_iff_norm]
           exact I.trans_lt hδ
-        have := sδ H
-        simp only [mem_set_of_eq] at this
-        convert this <;> abel _ ≤ ε * (∥h • v∥ + ∥h • w∥) * ∥h • w∥ := by
+        simpa only [mem_set_of_eq, add_assocₓ x, add_sub_cancel'] using sδ H _ ≤ ε * (∥h • v∥ + ∥h • w∥) * ∥h • w∥ := by
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
         apply mul_le_mul_of_nonneg_left _ εpos.le
         apply (norm_add_le _ _).trans

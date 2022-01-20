@@ -636,8 +636,8 @@ section Dvr
 
 
 instance : LocalRing ℤ_[p] :=
-  local_of_nonunits_ideal zero_ne_one $ fun x y => by
-    simp <;> exact norm_lt_one_add
+  local_of_nonunits_ideal zero_ne_one $ by
+    simp only [mem_nonunits] <;> exact fun x h y => norm_lt_one_add h
 
 theorem p_nonnunit : (p : ℤ_[p]) ∈ Nonunits ℤ_[p] := by
   have : (p : ℝ)⁻¹ < 1 :=

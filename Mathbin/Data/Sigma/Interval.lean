@@ -1,0 +1,96 @@
+import Mathbin.Data.Sigma.Order
+import Mathbin.Order.LocallyFinite
+
+/-!
+# Finite intervals in a sigma type
+
+This file provides the `locally_finite_order` instance for the disjoint sum of orders `Σ i, α i` and
+calculates the cardinality of its finite intervals.
+
+## TODO
+
+Do the same for the lexicographical order
+-/
+
+
+open Finset Function
+
+namespace Sigma
+
+variable {ι : Type _} {α : ι → Type _}
+
+/-! ### Disjoint sum of orders -/
+
+
+section Disjoint
+
+variable [DecidableEq ι] [∀ i, Preorderₓ (α i)] [∀ i, LocallyFiniteOrder (α i)]
+
+instance : LocallyFiniteOrder (Σ i, α i) where
+  finsetIcc := sigma_lift fun _ => Icc
+  finsetIco := sigma_lift fun _ => Ico
+  finsetIoc := sigma_lift fun _ => Ioc
+  finsetIoo := sigma_lift fun _ => Ioo
+  finset_mem_Icc := fun ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ => by
+    simp_rw [mem_sigma_lift, le_def, mem_Icc, exists_and_distrib_left, ← exists_and_distrib_right, ← exists_prop]
+    exact
+      bex_congr fun _ _ => by
+        constructor <;> rintro ⟨⟨⟩, ht⟩ <;> exact ⟨rfl, ht⟩
+  finset_mem_Ico := fun ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ => by
+    simp_rw [mem_sigma_lift, le_def, lt_def, mem_Ico, exists_and_distrib_left, ← exists_and_distrib_right, ←
+      exists_prop]
+    exact
+      bex_congr fun _ _ => by
+        constructor <;> rintro ⟨⟨⟩, ht⟩ <;> exact ⟨rfl, ht⟩
+  finset_mem_Ioc := fun ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ => by
+    simp_rw [mem_sigma_lift, le_def, lt_def, mem_Ioc, exists_and_distrib_left, ← exists_and_distrib_right, ←
+      exists_prop]
+    exact
+      bex_congr fun _ _ => by
+        constructor <;> rintro ⟨⟨⟩, ht⟩ <;> exact ⟨rfl, ht⟩
+  finset_mem_Ioo := fun ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ => by
+    simp_rw [mem_sigma_lift, lt_def, mem_Ioo, exists_and_distrib_left, ← exists_and_distrib_right, ← exists_prop]
+    exact
+      bex_congr fun _ _ => by
+        constructor <;> rintro ⟨⟨⟩, ht⟩ <;> exact ⟨rfl, ht⟩
+
+section
+
+variable (a b : Σ i, α i)
+
+theorem card_Icc : (Icc a b).card = if h : a.1 = b.1 then (Icc (h.rec a.2) b.2).card else 0 :=
+  card_sigma_lift _ _ _
+
+theorem card_Ico : (Ico a b).card = if h : a.1 = b.1 then (Ico (h.rec a.2) b.2).card else 0 :=
+  card_sigma_lift _ _ _
+
+theorem card_Ioc : (Ioc a b).card = if h : a.1 = b.1 then (Ioc (h.rec a.2) b.2).card else 0 :=
+  card_sigma_lift _ _ _
+
+theorem card_Ioo : (Ioo a b).card = if h : a.1 = b.1 then (Ioo (h.rec a.2) b.2).card else 0 :=
+  card_sigma_lift _ _ _
+
+end
+
+variable (i : ι) (a b : α i)
+
+@[simp]
+theorem Icc_mk_mk : Icc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Icc a b).map (embedding.sigma_mk i) :=
+  dif_pos rfl
+
+@[simp]
+theorem Ico_mk_mk : Ico (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ico a b).map (embedding.sigma_mk i) :=
+  dif_pos rfl
+
+@[simp]
+theorem Ioc_mk_mk : Ioc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ioc a b).map (embedding.sigma_mk i) :=
+  dif_pos rfl
+
+@[simp]
+theorem Ioo_mk_mk : Ioo (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ioo a b).map (embedding.sigma_mk i) :=
+  dif_pos rfl
+
+end Disjoint
+
+end Sigma
+

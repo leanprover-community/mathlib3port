@@ -17,7 +17,7 @@ namespace Streamₓ
 variable {α : Type u} {β : Type v} {δ : Type w}
 
 instance {α} [Inhabited α] : Inhabited (Streamₓ α) :=
-  ⟨Streamₓ.const (default _)⟩
+  ⟨Streamₓ.const default⟩
 
 protected theorem eta (s : Streamₓ α) : head s :: tail s = s :=
   funext fun i => by

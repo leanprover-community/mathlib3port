@@ -65,7 +65,7 @@ instance decidable_exists_mem {p : α → Prop} [DecidablePred p] : ∀ o : Opti
 @[reducible]
 def iget [Inhabited α] : Option α → α
   | some x => x
-  | none => default α
+  | none => default
 
 @[simp]
 theorem iget_some [Inhabited α] {a : α} : (some a).iget = a :=

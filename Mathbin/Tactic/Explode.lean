@@ -146,7 +146,7 @@ end
 
 unsafe def explode_expr (e : expr) (hide_non_prop := tt) : tactic entries :=
   let filter := if hide_non_prop then fun e => may_be_proof e >>= guardb else fun _ => skip
-  tactic.explode.core filter e tt 0 (default _)
+  tactic.explode.core filter e tt 0 default
 
 unsafe def explode (n : Name) : tactic Unit := do
   let const n _ ← resolve_name n | fail "cannot resolve name"

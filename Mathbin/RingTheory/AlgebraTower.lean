@@ -253,7 +253,7 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
   let s : Finset B := (Finset.product (x ∪ y * y) y).Image (Function.uncurry f)
   have hsx : ∀, ∀ xi ∈ x, ∀, ∀ yj ∈ y, ∀, f xi yj ∈ s := fun xi hxi yj hyj =>
     show Function.uncurry f (xi, yj) ∈ s from mem_image_of_mem _ $ mem_product.2 ⟨mem_union_left _ hxi, hyj⟩
-  have hsy : ∀ yi yj yk _ : yi ∈ y _ : yj ∈ y _ : yk ∈ y, f (yi * yj) yk ∈ s := fun yi yj yk hyi hyj hyk =>
+  have hsy : ∀ yi yj yk _ : yi ∈ y _ : yj ∈ y _ : yk ∈ y, f (yi * yj) yk ∈ s := fun yi hyi yj hyj yk hyk =>
     show Function.uncurry f (yi * yj, yk) ∈ s from
       mem_image_of_mem _ $ mem_product.2 ⟨mem_union_right _ $ Finset.mul_mem_mul hyi hyj, hyk⟩
   have hxy : ∀, ∀ xi ∈ x, ∀, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=
@@ -283,7 +283,7 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
         SetLike.mem_coe.2
           (sum_mem _ $ fun yk hyk =>
             smul_mem (span (Algebra.adjoin A (↑s : Set B)) (insert 1 (↑y) : Set C))
-              ⟨f (yi * yj) yk, Algebra.subset_adjoin $ hsy yi yj yk hyi hyj hyk⟩
+              ⟨f (yi * yj) yk, Algebra.subset_adjoin $ hsy yi hyi yj hyj yk hyk⟩
               (subset_span $ Set.mem_insert_of_mem _ hyk : yk ∈ _))
       
   refine' ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fg_adjoin_finset _, insert 1 y, _⟩

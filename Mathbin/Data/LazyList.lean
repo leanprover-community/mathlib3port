@@ -45,10 +45,10 @@ def to_list : LazyList α → List α
   | cons h t => h :: to_list (t ())
 
 /-- Returns the first element of the lazy list,
-or `default α` if the lazy list is empty.
+or `default` if the lazy list is empty.
 -/
 def head [Inhabited α] : LazyList α → α
-  | nil => default α
+  | nil => default
   | cons h t => h
 
 /-- Removes the first element of the lazy list.

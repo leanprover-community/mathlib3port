@@ -42,7 +42,7 @@ in the file `ring_theory/laurent_series`.
 -/
 
 
-open Finset
+open Finset Function
 
 open_locale BigOperators Classical Pointwise
 
@@ -53,7 +53,7 @@ noncomputable section
 @[ext]
 structure HahnSeries (Γ : Type _) (R : Type _) [PartialOrderₓ Γ] [HasZero R] where
   coeff : Γ → R
-  is_pwo_support' : (Function.Support coeff).IsPwo
+  is_pwo_support' : (support coeff).IsPwo
 
 variable {Γ : Type _} {R : Type _}
 
@@ -63,10 +63,17 @@ section Zero
 
 variable [PartialOrderₓ Γ] [HasZero R]
 
+theorem coeff_injective : injective (coeff : HahnSeries Γ R → Γ → R) :=
+  ext
+
+@[simp]
+theorem coeff_inj {x y : HahnSeries Γ R} : x.coeff = y.coeff ↔ x = y :=
+  coeff_injective.eq_iff
+
 /-- The support of a Hahn series is just the set of indices whose coefficients are nonzero.
   Notably, it is well-founded. -/
 def support (x : HahnSeries Γ R) : Set Γ :=
-  Function.Support x.coeff
+  support x.coeff
 
 @[simp]
 theorem is_pwo_support (x : HahnSeries Γ R) : x.support.is_pwo :=
@@ -95,6 +102,10 @@ instance [Subsingleton R] : Subsingleton (HahnSeries Γ R) :=
 theorem zero_coeff {a : Γ} : (0 : HahnSeries Γ R).coeff a = 0 :=
   rfl
 
+@[simp]
+theorem coeff_fun_eq_zero_iff {x : HahnSeries Γ R} : x.coeff = 0 ↔ x = 0 :=
+  coeff_injective.eq_iff' rfl
+
 theorem ne_zero_of_coeff_ne_zero {x : HahnSeries Γ R} {g : Γ} (h : x.coeff g ≠ 0) : x ≠ 0 :=
   mt (fun x0 => (x0.symm ▸ zero_coeff : x.coeff g = 0)) h
 
@@ -104,18 +115,11 @@ theorem support_zero : support (0 : HahnSeries Γ R) = ∅ :=
 
 @[simp]
 theorem support_nonempty_iff {x : HahnSeries Γ R} : x.support.nonempty ↔ x ≠ 0 := by
-  constructor
-  · rintro ⟨a, ha⟩ rfl
-    apply ha zero_coeff
-    
-  · contrapose!
-    rw [Set.not_nonempty_iff_eq_empty]
-    intro h
-    ext a
-    have ha := Set.not_mem_empty a
-    rw [← h, mem_support, not_not] at ha
-    rw [ha, zero_coeff]
-    
+  rw [support, support_nonempty_iff, Ne.def, coeff_fun_eq_zero_iff]
+
+@[simp]
+theorem support_eq_empty_iff {x : HahnSeries Γ R} : x.support = ∅ ↔ x = 0 :=
+  support_eq_empty_iff.trans coeff_fun_eq_zero_iff
 
 /-- `single a r` is the Hahn series which has coefficient `r` at `a` and zero otherwise. -/
 def single (a : Γ) : ZeroHom R (HahnSeries Γ R) where
@@ -159,8 +163,8 @@ instance [Nonempty Γ] [Nontrivial R] : Nontrivial (HahnSeries Γ R) :=
   ⟨by
     obtain ⟨r, s, rs⟩ := exists_pair_ne R
     inhabit Γ
-    refine' ⟨single (arbitraryₓ Γ) r, single (arbitraryₓ Γ) s, fun con => rs _⟩
-    rw [← single_coeff_same (arbitraryₓ Γ) r, Con, single_coeff_same]⟩
+    refine' ⟨single (arbitrary Γ) r, single (arbitrary Γ) s, fun con => rs _⟩
+    rw [← single_coeff_same (arbitrary Γ) r, Con, single_coeff_same]⟩
 
 section Order
 
@@ -190,6 +194,15 @@ theorem order_le_of_coeff_ne_zero {Γ} [LinearOrderedCancelAddCommMonoid Γ] {x 
 theorem order_single (h : r ≠ 0) : (single a r).order = a :=
   (order_of_ne (single_ne_zero h)).trans
     (support_single_subset ((single a r).is_wf_support.min_mem (support_nonempty_iff.2 (single_ne_zero h))))
+
+theorem coeff_eq_zero_of_lt_order {x : HahnSeries Γ R} {i : Γ} (hi : i < x.order) : x.coeff i = 0 := by
+  rcases eq_or_ne x 0 with (rfl | hx)
+  · simp
+    
+  contrapose! hi
+  rw [← Ne.def, ← mem_support] at hi
+  rw [order_of_ne hx]
+  exact Set.IsWf.not_lt_min _ _ hi
 
 end Order
 
@@ -775,23 +788,26 @@ instance [Ringₓ R] : Ringₓ (HahnSeries Γ R) :=
 instance [CommRingₓ R] : CommRingₓ (HahnSeries Γ R) :=
   { HahnSeries.commSemiring, HahnSeries.ring with }
 
+instance {Γ} [LinearOrderedCancelAddCommMonoid Γ] [NonUnitalNonAssocSemiring R] [NoZeroDivisors R] :
+    NoZeroDivisors (HahnSeries Γ R) where
+  eq_zero_or_eq_zero_of_mul_eq_zero := fun x y xy => by
+    by_cases' hx : x = 0
+    · left
+      exact hx
+      
+    right
+    contrapose! xy
+    rw [HahnSeries.ext_iff, Function.funext_iffₓ, not_forall]
+    refine' ⟨x.order + y.order, _⟩
+    rw [mul_coeff_order_add_order x y, zero_coeff, mul_eq_zero]
+    simp [coeff_order_ne_zero, hx, xy]
+
 instance {Γ} [LinearOrderedCancelAddCommMonoid Γ] [Ringₓ R] [IsDomain R] : IsDomain (HahnSeries Γ R) :=
-  { HahnSeries.nontrivial, HahnSeries.ring with
-    eq_zero_or_eq_zero_of_mul_eq_zero := fun x y xy => by
-      by_cases' hx : x = 0
-      · left
-        exact hx
-        
-      right
-      contrapose! xy
-      rw [HahnSeries.ext_iff, Function.funext_iffₓ, not_forall]
-      refine' ⟨x.order + y.order, _⟩
-      rw [mul_coeff_order_add_order x y, zero_coeff, mul_eq_zero]
-      simp [coeff_order_ne_zero, hx, xy] }
+  { HahnSeries.no_zero_divisors, HahnSeries.nontrivial, HahnSeries.ring with }
 
 @[simp]
-theorem order_mul {Γ} [LinearOrderedCancelAddCommMonoid Γ] [Ringₓ R] [IsDomain R] {x y : HahnSeries Γ R} (hx : x ≠ 0)
-    (hy : y ≠ 0) : (x * y).order = x.order + y.order := by
+theorem order_mul {Γ} [LinearOrderedCancelAddCommMonoid Γ] [NonUnitalNonAssocSemiring R] [NoZeroDivisors R]
+    {x y : HahnSeries Γ R} (hx : x ≠ 0) (hy : y ≠ 0) : (x * y).order = x.order + y.order := by
   apply le_antisymmₓ
   · apply order_le_of_coeff_ne_zero
     rw [mul_coeff_order_add_order x y]
@@ -800,6 +816,17 @@ theorem order_mul {Γ} [LinearOrderedCancelAddCommMonoid Γ] [Ringₓ R] [IsDoma
   · rw [order_of_ne hx, order_of_ne hy, order_of_ne (mul_ne_zero hx hy), ← Set.IsWf.min_add]
     exact Set.IsWf.min_le_min_of_subset support_mul_subset_add_support
     
+
+@[simp]
+theorem order_pow {Γ} [LinearOrderedCancelAddCommMonoid Γ] [Semiringₓ R] [NoZeroDivisors R] (x : HahnSeries Γ R)
+    (n : ℕ) : (x ^ n).order = n • x.order := by
+  induction' n with h IH
+  · simp
+    
+  rcases eq_or_ne x 0 with (rfl | hx)
+  · simp
+    
+  rw [pow_succ'ₓ, order_mul (pow_ne_zero _ hx) hx, succ_nsmul', IH]
 
 section NonUnitalNonAssocSemiring
 
@@ -1050,6 +1077,44 @@ theorem of_power_series_apply (x : PowerSeries R) :
 theorem of_power_series_apply_coeff (x : PowerSeries R) (n : ℕ) :
     (of_power_series Γ R x).coeff n = PowerSeries.coeff R n x := by
   simp
+
+@[simp]
+theorem of_power_series_C (r : R) : of_power_series Γ R (PowerSeries.c R r) = HahnSeries.c r := by
+  ext n
+  simp only [C, single_coeff, of_power_series_apply, RingHom.coe_mk]
+  split_ifs with hn hn
+  · rw [hn]
+    convert @emb_domain_coeff _ _ _ _ _ _ _ _ 0
+    simp
+    
+  · rw [emb_domain_notin_image_support]
+    simp only [not_exists, Set.mem_image, to_power_series_symm_apply_coeff, mem_support, PowerSeries.coeff_C]
+    intro
+    simp (config := { contextual := true })[Ne.symm hn]
+    
+
+@[simp]
+theorem of_power_series_X : of_power_series Γ R PowerSeries.x = single 1 1 := by
+  ext n
+  simp only [single_coeff, of_power_series_apply, RingHom.coe_mk]
+  split_ifs with hn hn
+  · rw [hn]
+    convert @emb_domain_coeff _ _ _ _ _ _ _ _ 1 <;> simp
+    
+  · rw [emb_domain_notin_image_support]
+    simp only [not_exists, Set.mem_image, to_power_series_symm_apply_coeff, mem_support, PowerSeries.coeff_X]
+    intro
+    simp (config := { contextual := true })[Ne.symm hn]
+    
+
+@[simp]
+theorem of_power_series_X_pow {R} [CommSemiringₓ R] (n : ℕ) :
+    of_power_series Γ R (PowerSeries.x ^ n) = single (n : Γ) 1 := by
+  rw [RingHom.map_pow]
+  induction' n with n ih
+  · rfl
+    
+  rw [pow_succₓ, ih, of_power_series_X, mul_commₓ, single_mul_single, one_mulₓ, Nat.cast_succ]
 
 end Semiringₓ
 

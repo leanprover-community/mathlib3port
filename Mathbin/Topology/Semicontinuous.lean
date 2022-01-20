@@ -310,7 +310,7 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
     LowerSemicontinuousWithinAt (fun z => f z + g z) s x := by
   intro y hy
   obtain ⟨u, v, u_open, xu, v_open, xv, h⟩ :
-    ∃ u v : Set γ, IsOpen u ∧ f x ∈ u ∧ IsOpen v ∧ g x ∈ v ∧ u.prod v ⊆ { p : γ × γ | y < p.fst + p.snd } :=
+    ∃ u v : Set γ, IsOpen u ∧ f x ∈ u ∧ IsOpen v ∧ g x ∈ v ∧ u ×ˢ v ⊆ { p : γ × γ | y < p.fst + p.snd } :=
     mem_nhds_prod_iff'.1 (hcont (is_open_Ioi.mem_nhds hy))
   by_cases' hx₁ : ∃ l, l < f x
   · obtain ⟨z₁, z₁lt, h₁⟩ : ∃ z₁ < f x, Ioc z₁ (f x) ⊆ u := exists_Ioc_subset_of_mem_nhds (u_open.mem_nhds xu) hx₁
@@ -334,7 +334,7 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
         · simp [le_of_not_leₓ H]
           exact h₂ ⟨z₂lt, le_reflₓ _⟩
           
-      have : (min (f z) (f x), min (g z) (g x)) ∈ u.prod v := ⟨A1, A2⟩
+      have : (min (f z) (f x), min (g z) (g x)) ∈ u ×ˢ v := ⟨A1, A2⟩
       calc y < min (f z) (f x) + min (g z) (g x) := h this _ ≤ f z + g z :=
           add_le_add (min_le_leftₓ _ _) (min_le_leftₓ _ _)
       
@@ -349,7 +349,7 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
         · simp [le_of_not_leₓ H]
           exact h₁ ⟨z₁lt, le_reflₓ _⟩
           
-      have : (min (f z) (f x), g x) ∈ u.prod v := ⟨A1, xv⟩
+      have : (min (f z) (f x), g x) ∈ u ×ˢ v := ⟨A1, xv⟩
       calc y < min (f z) (f x) + g x := h this _ ≤ f z + g z := add_le_add (min_le_leftₓ _ _) (hx₂ (g z))
       
     
@@ -366,13 +366,13 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
         · simp [le_of_not_leₓ H]
           exact h₂ ⟨z₂lt, le_reflₓ _⟩
           
-      have : (f x, min (g z) (g x)) ∈ u.prod v := ⟨xu, A2⟩
+      have : (f x, min (g z) (g x)) ∈ u ×ˢ v := ⟨xu, A2⟩
       calc y < f x + min (g z) (g x) := h this _ ≤ f z + g z := add_le_add (hx₁ (f z)) (min_le_leftₓ _ _)
       
     · simp only [not_exists, not_ltₓ] at hx₁ hx₂
       apply Filter.eventually_of_forall
       intro z
-      have : (f x, g x) ∈ u.prod v := ⟨xu, xv⟩
+      have : (f x, g x) ∈ u ×ˢ v := ⟨xu, xv⟩
       calc y < f x + g x := h this _ ≤ f z + g z := add_le_add (hx₁ (f z)) (hx₂ (g z))
       
     

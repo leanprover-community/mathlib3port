@@ -268,12 +268,12 @@ theorem complete_space_extension {m : β → α} (hm : UniformInducing m) (dense
       ⟨‹ne_bot g›, fun s hs =>
         let ⟨s₁, hs₁, (comp_s₁ : CompRel s₁ s₁ ⊆ s)⟩ := comp_mem_uniformity_sets hs
         let ⟨s₂, hs₂, (comp_s₂ : CompRel s₂ s₂ ⊆ s₁)⟩ := comp_mem_uniformity_sets hs₁
-        let ⟨t, ht, (prod_t : Set.Prod t t ⊆ s₂)⟩ := mem_prod_same_iff.mp (hf.right hs₂)
+        let ⟨t, ht, (prod_t : t ×ˢ t ⊆ s₂)⟩ := mem_prod_same_iff.mp (hf.right hs₂)
         have hg₁ : p (preimage Prod.swap s₁) t ∈ g := mem_lift (symm_le_uniformity hs₁) $ @mem_lift' α α f _ t ht
         have hg₂ : p s₂ t ∈ g := mem_lift hs₂ $ @mem_lift' α α f _ t ht
-        have hg : Set.Prod (p (preimage Prod.swap s₁) t) (p s₂ t) ∈ g ×ᶠ g := @prod_mem_prod α α _ _ g g hg₁ hg₂
+        have hg : p (Prod.swap ⁻¹' s₁) t ×ˢ p s₂ t ∈ g ×ᶠ g := @prod_mem_prod α α _ _ g g hg₁ hg₂
         (g ×ᶠ g).sets_of_superset hg fun ⟨a, b⟩ ⟨⟨c₁, c₁t, hc₁⟩, ⟨c₂, c₂t, hc₂⟩⟩ =>
-          have : (c₁, c₂) ∈ Set.Prod t t := ⟨c₁t, c₂t⟩
+          have : (c₁, c₂) ∈ t ×ˢ t := ⟨c₁t, c₂t⟩
           comp_s₁ $ prod_mk_mem_comp_rel hc₁ $ comp_s₂ $ prod_mk_mem_comp_rel (prod_t this) hc₂⟩
     have : Cauchy (Filter.comap m g) := ‹Cauchy g›.comap' (le_of_eqₓ hm.comap_uniformity) ‹_›
     let ⟨x, (hx : map m (Filter.comap m g) ≤ 𝓝 x)⟩ := h _ this
@@ -365,22 +365,21 @@ theorem uniform_continuous_uniformly_extend [cγ : CompleteSpace γ] : UniformCo
       have : 𝓝 (x₁, x₂) ≤ 𝓟 (Interior t) := is_open_iff_nhds.mp is_open_interior (x₁, x₂) hx_t
       have : Interior t ∈ 𝓝 x₁ ×ᶠ 𝓝 x₂ := by
         rwa [nhds_prod_eq, le_principal_iff] at this
-      let ⟨m₁, hm₁, m₂, hm₂, (hm : Set.Prod m₁ m₂ ⊆ Interior t)⟩ := mem_prod_iff.mp this
+      let ⟨m₁, hm₁, m₂, hm₂, (hm : m₁ ×ˢ m₂ ⊆ Interior t)⟩ := mem_prod_iff.mp this
       let ⟨a, ha₁, _, ha₂⟩ := h_pnt hm₁
       let ⟨b, hb₁, hb₂, _⟩ := h_pnt hm₂
-      have : Set.Prod (preimage e m₁) (preimage e m₂) ⊆ preimage (fun p : β × β => (f p.1, f p.2)) s :=
+      have : e ⁻¹' m₁ ×ˢ e ⁻¹' m₂ ⊆ (fun p : β × β => (f p.1, f p.2)) ⁻¹' s :=
         calc
           _ ⊆ preimage (fun p : β × β => (e p.1, e p.2)) (Interior t) := preimage_mono hm
           _ ⊆ preimage (fun p : β × β => (e p.1, e p.2)) t := preimage_mono interior_subset
           _ ⊆ preimage (fun p : β × β => (f p.1, f p.2)) s := ts
           
-      have : Set.Prod (f '' preimage e m₁) (f '' preimage e m₂) ⊆ s :=
+      have : f '' (e ⁻¹' m₁) ×ˢ f '' (e ⁻¹' m₂) ⊆ s :=
         calc
-          Set.Prod (f '' preimage e m₁) (f '' preimage e m₂) =
-              (fun p : β × β => (f p.1, f p.2)) '' Set.Prod (preimage e m₁) (preimage e m₂) :=
+          f '' (e ⁻¹' m₁) ×ˢ f '' (e ⁻¹' m₂) = (fun p : β × β => (f p.1, f p.2)) '' (e ⁻¹' m₁ ×ˢ e ⁻¹' m₂) :=
             prod_image_image_eq
-          _ ⊆ (fun p : β × β => (f p.1, f p.2)) '' preimage (fun p : β × β => (f p.1, f p.2)) s := monotone_image this
-          _ ⊆ s := image_subset_iff.mpr $ subset.refl _
+          _ ⊆ (fun p : β × β => (f p.1, f p.2)) '' ((fun p : β × β => (f p.1, f p.2)) ⁻¹' s) := monotone_image this
+          _ ⊆ s := image_preimage_subset _ _
           
       have : (a, b) ∈ s := @this (a, b) ⟨ha₁, hb₁⟩
       hs_comp $ show (ψ x₁, ψ x₂) ∈ CompRel s (CompRel s s) from ⟨a, ha₂, ⟨b, this, hb₂⟩⟩

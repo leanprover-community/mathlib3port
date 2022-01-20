@@ -30,7 +30,7 @@ open Set
 
 open order_dual (toDual ofDual)
 
-section Intervals
+section Preorderₓ
 
 variable {α : Type u} [Preorderₓ α] {a a₁ a₂ b b₁ b₂ x : α}
 
@@ -217,12 +217,12 @@ theorem nonempty_Ioo [DenselyOrdered α] : (Ioo a b).Nonempty ↔ a < b :=
   ⟨fun ⟨x, ha, hb⟩ => ha.trans hb, exists_between⟩
 
 @[simp]
-theorem nonempty_Ioi [NoTopOrder α] : (Ioi a).Nonempty :=
-  no_top a
+theorem nonempty_Ioi [NoMaxOrder α] : (Ioi a).Nonempty :=
+  exists_gt a
 
 @[simp]
-theorem nonempty_Iio [NoBotOrder α] : (Iio a).Nonempty :=
-  no_bot a
+theorem nonempty_Iio [NoMinOrder α] : (Iio a).Nonempty :=
+  exists_lt a
 
 theorem nonempty_Icc_subtype (h : a ≤ b) : Nonempty (Icc a b) :=
   nonempty.to_subtype (nonempty_Icc.mpr h)
@@ -244,12 +244,12 @@ instance nonempty_Iic_subtype : Nonempty (Iic a) :=
 theorem nonempty_Ioo_subtype [DenselyOrdered α] (h : a < b) : Nonempty (Ioo a b) :=
   nonempty.to_subtype (nonempty_Ioo.mpr h)
 
-/-- In a `no_top_order`, the intervals `Ioi` are nonempty. -/
-instance nonempty_Ioi_subtype [NoTopOrder α] : Nonempty (Ioi a) :=
+/-- In an order without maximal elements, the intervals `Ioi` are nonempty. -/
+instance nonempty_Ioi_subtype [NoMaxOrder α] : Nonempty (Ioi a) :=
   nonempty.to_subtype nonempty_Ioi
 
-/-- In a `no_bot_order`, the intervals `Iio` are nonempty. -/
-instance nonempty_Iio_subtype [NoBotOrder α] : Nonempty (Iio a) :=
+/-- In an order without minimal elements, the intervals `Iio` are nonempty. -/
+instance nonempty_Iio_subtype [NoMinOrder α] : Nonempty (Iio a) :=
   nonempty.to_subtype nonempty_Iio
 
 @[simp]
@@ -479,7 +479,19 @@ theorem Ioc_eq_empty_iff : Ioc a b = ∅ ↔ ¬a < b := by
 theorem Ioo_eq_empty_iff [DenselyOrdered α] : Ioo a b = ∅ ↔ ¬a < b := by
   rw [← not_nonempty_iff_eq_empty, not_iff_not, nonempty_Ioo]
 
-end Intervals
+theorem _root_.is_top.Iic_eq (h : IsTop a) : Iic a = univ :=
+  eq_univ_of_forall h
+
+theorem _root_.is_bot.Ici_eq (h : IsBot a) : Ici a = univ :=
+  eq_univ_of_forall h
+
+theorem _root_.is_top.Ioi_eq (h : IsTop a) : Ioi a = ∅ :=
+  eq_empty_of_subset_empty $ fun b hb => (h b).not_lt hb
+
+theorem _root_.is_bot.Iio_eq (h : IsBot a) : Iio a = ∅ :=
+  eq_empty_of_subset_empty $ fun b hb => (h b).not_lt hb
+
+end Preorderₓ
 
 section PartialOrderₓ
 
@@ -647,29 +659,32 @@ theorem mem_Ioo_or_eq_right_of_mem_Ioc {x : α} (hmem : x ∈ Ioc a b) : x = b �
   rw [dual_Ioo, dual_Ico] at this
   exact this hmem
 
-theorem Ici_singleton_of_top {a : α} (h_top : ∀ x, x ≤ a) : Ici a = {a} := by
-  ext
-  exact ⟨fun h => (h_top _).antisymm h, fun h => h.ge⟩
+theorem _root_.is_top.Ici_eq (h : IsTop a) : Ici a = {a} :=
+  eq_singleton_iff_unique_mem.2 ⟨left_mem_Ici, fun x => (h x).antisymm⟩
 
-theorem Iic_singleton_of_bot {a : α} (h_bot : ∀ x, a ≤ x) : Iic a = {a} :=
-  @Ici_singleton_of_top (OrderDual α) _ a h_bot
+theorem _root_.is_bot.Iic_eq (h : IsBot a) : Iic a = {a} :=
+  h.to_dual.Ici_eq
 
-theorem Iic_inter_Ioc_of_le {a b c : α} (h : a ≤ c) : Iic a ∩ Ioc b c = Ioc b a :=
+theorem Iic_inter_Ioc_of_le (h : a ≤ c) : Iic a ∩ Ioc b c = Ioc b a :=
   ext $ fun x => ⟨fun H => ⟨H.2.1, H.1⟩, fun H => ⟨H.2, H.1, H.2.trans h⟩⟩
 
 end PartialOrderₓ
 
 section OrderTop
 
+@[simp]
+theorem Ici_top {α : Type u} [PartialOrderₓ α] [OrderTop α] : Ici (⊤ : α) = {⊤} :=
+  is_top_top.Ici_eq
+
 variable {α : Type u} [Preorderₓ α] [OrderTop α] {a : α}
 
 @[simp]
-theorem Ici_top {α : Type u} [PartialOrderₓ α] [OrderTop α] : Ici (⊤ : α) = {⊤} :=
-  Ici_singleton_of_top fun _ => le_top
+theorem Ioi_top : Ioi (⊤ : α) = ∅ :=
+  is_top_top.Ioi_eq
 
 @[simp]
 theorem Iic_top : Iic (⊤ : α) = univ :=
-  eq_univ_of_forall $ fun x => le_top
+  is_top_top.Iic_eq
 
 @[simp]
 theorem Icc_top : Icc a ⊤ = Ici a := by
@@ -683,15 +698,19 @@ end OrderTop
 
 section OrderBot
 
+@[simp]
+theorem Iic_bot {α : Type u} [PartialOrderₓ α] [OrderBot α] : Iic (⊥ : α) = {⊥} :=
+  is_bot_bot.Iic_eq
+
 variable {α : Type u} [Preorderₓ α] [OrderBot α] {a : α}
 
 @[simp]
-theorem Iic_bot {α : Type u} [PartialOrderₓ α] [OrderBot α] : Iic (⊥ : α) = {⊥} :=
-  Iic_singleton_of_bot fun _ => bot_le
+theorem Iio_bot : Iio (⊥ : α) = ∅ :=
+  is_bot_bot.Iio_eq
 
 @[simp]
 theorem Ici_bot : Ici (⊥ : α) = univ :=
-  @Iic_top (OrderDual α) _ _
+  is_bot_bot.Ici_eq
 
 @[simp]
 theorem Icc_bot : Icc ⊥ a = Iic a := by
@@ -1456,25 +1475,25 @@ section Prod
 variable {α β : Type _} [Preorderₓ α] [Preorderₓ β]
 
 @[simp]
-theorem Iic_prod_Iic (a : α) (b : β) : (Iic a).Prod (Iic b) = Iic (a, b) :=
+theorem Iic_prod_Iic (a : α) (b : β) : Iic a ×ˢ Iic b = Iic (a, b) :=
   rfl
 
 @[simp]
-theorem Ici_prod_Ici (a : α) (b : β) : (Ici a).Prod (Ici b) = Ici (a, b) :=
+theorem Ici_prod_Ici (a : α) (b : β) : Ici a ×ˢ Ici b = Ici (a, b) :=
   rfl
 
-theorem Ici_prod_eq (a : α × β) : Ici a = (Ici a.1).Prod (Ici a.2) :=
+theorem Ici_prod_eq (a : α × β) : Ici a = Ici a.1 ×ˢ Ici a.2 :=
   rfl
 
-theorem Iic_prod_eq (a : α × β) : Iic a = (Iic a.1).Prod (Iic a.2) :=
+theorem Iic_prod_eq (a : α × β) : Iic a = Iic a.1 ×ˢ Iic a.2 :=
   rfl
 
 @[simp]
-theorem Icc_prod_Icc (a₁ a₂ : α) (b₁ b₂ : β) : (Icc a₁ a₂).Prod (Icc b₁ b₂) = Icc (a₁, b₁) (a₂, b₂) := by
+theorem Icc_prod_Icc (a₁ a₂ : α) (b₁ b₂ : β) : Icc a₁ a₂ ×ˢ Icc b₁ b₂ = Icc (a₁, b₁) (a₂, b₂) := by
   ext ⟨x, y⟩
   simp [And.assoc, and_comm, And.left_comm]
 
-theorem Icc_prod_eq (a b : α × β) : Icc a b = (Icc a.1 b.1).Prod (Icc a.2 b.2) := by
+theorem Icc_prod_eq (a b : α × β) : Icc a b = Icc a.1 b.1 ×ˢ Icc a.2 b.2 := by
   simp
 
 end Prod

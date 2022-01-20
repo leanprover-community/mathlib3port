@@ -156,8 +156,9 @@ theorem dist_le_of_approx_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s :
   intro t ht
   have := dist_triangle4_right (f' t) (g' t) (v t (f t)) (v t (g t))
   rw [dist_eq_norm] at this
-  apply le_transₓ this
-  apply le_transₓ (add_le_add (add_le_add (f_bound t ht) (g_bound t ht)) (hv t (f t) (g t) (hfs t ht) (hgs t ht)))
+  refine'
+    this.trans
+      ((add_le_add (add_le_add (f_bound t ht) (g_bound t ht)) (hv t (f t) (hfs t ht) (g t) (hgs t ht))).trans _)
   rw [dist_eq_norm, add_commₓ]
 
 /-- If `f` and `g` are two approximate solutions of the same ODE, then the distance between them
@@ -173,7 +174,7 @@ theorem dist_le_of_approx_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0 } 
     (g_bound : ∀, ∀ t ∈ Ico a b, ∀, dist (g' t) (v t (g t)) ≤ εg) (ha : dist (f a) (g a) ≤ δ) :
     ∀, ∀ t ∈ Icc a b, ∀, dist (f t) (g t) ≤ gronwallBound δ K (εf + εg) (t - a) :=
   have hfs : ∀, ∀ t ∈ Ico a b, ∀, f t ∈ @univ E := fun t ht => trivialₓ
-  dist_le_of_approx_trajectories_ODE_of_mem_set (fun t x y hx hy => (hv t).dist_le_mul x y) hf hf' f_bound hfs hg hg'
+  dist_le_of_approx_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' f_bound hfs hg hg'
     g_bound (fun t ht => trivialₓ) ha
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » s t)
@@ -209,7 +210,7 @@ theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0 } (hv : �
     (hg : ContinuousOn g (Icc a b)) (hg' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt g (v t (g t)) (Ici t) t)
     (ha : dist (f a) (g a) ≤ δ) : ∀, ∀ t ∈ Icc a b, ∀, dist (f t) (g t) ≤ δ * exp (K * (t - a)) :=
   have hfs : ∀, ∀ t ∈ Ico a b, ∀, f t ∈ @univ E := fun t ht => trivialₓ
-  dist_le_of_trajectories_ODE_of_mem_set (fun t x y hx hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg'
+  dist_le_of_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg'
     (fun t ht => trivialₓ) ha
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » s t)
@@ -233,5 +234,5 @@ theorem ODE_solution_unique {v : ℝ → E → E} {K : ℝ≥0 } (hv : ∀ t, Li
     (hg : ContinuousOn g (Icc a b)) (hg' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt g (v t (g t)) (Ici t) t)
     (ha : f a = g a) : ∀, ∀ t ∈ Icc a b, ∀, f t = g t :=
   have hfs : ∀, ∀ t ∈ Ico a b, ∀, f t ∈ @univ E := fun t ht => trivialₓ
-  ODE_solution_unique_of_mem_set (fun t x y hx hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg' (fun t ht => trivialₓ) ha
+  ODE_solution_unique_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg' (fun t ht => trivialₓ) ha
 

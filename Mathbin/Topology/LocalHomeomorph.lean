@@ -822,7 +822,7 @@ on the right is continuous on the corresponding set. -/
 theorem continuous_on_iff_continuous_on_comp_right {f : β → γ} {s : Set β} (h : s ⊆ e.target) :
     ContinuousOn f s ↔ ContinuousOn (f ∘ e) (e.source ∩ e ⁻¹' s) := by
   simp only [← e.symm_image_eq_source_inter_preimage h, ContinuousOn, ball_image_iff]
-  refine' forall_congrₓ fun x => forall_congrₓ $ fun hx => _
+  refine' forall₂_congrₓ fun x hx => _
   rw [e.continuous_within_at_iff_continuous_within_at_comp_right (h hx), e.symm_image_eq_source_inter_preimage h,
     inter_comm, continuous_within_at_inter]
   exact IsOpen.mem_nhds e.open_source (e.map_target (h hx))
@@ -858,9 +858,8 @@ theorem continuous_at_iff_continuous_at_comp_left {f : γ → α} {x : γ} (h : 
 on the left is continuous on the corresponding set. -/
 theorem continuous_on_iff_continuous_on_comp_left {f : γ → α} {s : Set γ} (h : s ⊆ f ⁻¹' e.source) :
     ContinuousOn f s ↔ ContinuousOn (e ∘ f) s :=
-  forall_congrₓ $ fun x =>
-    forall_congrₓ $ fun hx =>
-      e.continuous_within_at_iff_continuous_within_at_comp_left (h hx) (mem_of_superset self_mem_nhds_within h)
+  forall₂_congrₓ $ fun x hx =>
+    e.continuous_within_at_iff_continuous_within_at_comp_left (h hx) (mem_of_superset self_mem_nhds_within h)
 
 end Continuity
 

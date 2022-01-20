@@ -32,8 +32,8 @@ See https://stacks.math.columbia.edu/tag/001G.
 def over (X : T) :=
   costructured_arrow (𝟭 T) X deriving category
 
-instance over.inhabited [Inhabited T] : Inhabited (over (default T)) where
-  default := { left := default T, Hom := 𝟙 _ }
+instance over.inhabited [Inhabited T] : Inhabited (over (default : T)) where
+  default := { left := default, Hom := 𝟙 _ }
 
 namespace Over
 
@@ -287,8 +287,8 @@ end Over
 def under (X : T) :=
   structured_arrow X (𝟭 T)deriving category
 
-instance under.inhabited [Inhabited T] : Inhabited (under (default T)) where
-  default := { right := default T, Hom := 𝟙 _ }
+instance under.inhabited [Inhabited T] : Inhabited (under (default : T)) where
+  default := { right := default, Hom := 𝟙 _ }
 
 namespace Under
 

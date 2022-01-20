@@ -38,15 +38,15 @@ def at_bot [Preorderₓ α] : Filter α :=
 theorem mem_at_top [Preorderₓ α] (a : α) : { b : α | a ≤ b } ∈ @at_top α _ :=
   mem_infi_of_mem a $ subset.refl _
 
-theorem Ioi_mem_at_top [Preorderₓ α] [NoTopOrder α] (x : α) : Ioi x ∈ (at_top : Filter α) :=
-  let ⟨z, hz⟩ := no_top x
+theorem Ioi_mem_at_top [Preorderₓ α] [NoMaxOrder α] (x : α) : Ioi x ∈ (at_top : Filter α) :=
+  let ⟨z, hz⟩ := exists_gt x
   mem_of_superset (mem_at_top z) $ fun y h => lt_of_lt_of_leₓ hz h
 
 theorem mem_at_bot [Preorderₓ α] (a : α) : { b : α | b ≤ a } ∈ @at_bot α _ :=
   mem_infi_of_mem a $ subset.refl _
 
-theorem Iio_mem_at_bot [Preorderₓ α] [NoBotOrder α] (x : α) : Iio x ∈ (at_bot : Filter α) :=
-  let ⟨z, hz⟩ := no_bot x
+theorem Iio_mem_at_bot [Preorderₓ α] [NoMinOrder α] (x : α) : Iio x ∈ (at_bot : Filter α) :=
+  let ⟨z, hz⟩ := exists_lt x
   mem_of_superset (mem_at_bot z) $ fun y h => lt_of_le_of_ltₓ h hz
 
 theorem at_top_basis [Nonempty α] [SemilatticeSup α] : (@at_top α _).HasBasis (fun _ => True) Ici :=
@@ -98,15 +98,18 @@ theorem eventually_ge_at_top [Preorderₓ α] (a : α) : ∀ᶠ x in at_top, a �
 theorem eventually_le_at_bot [Preorderₓ α] (a : α) : ∀ᶠ x in at_bot, x ≤ a :=
   mem_at_bot a
 
-theorem eventually_gt_at_top [Preorderₓ α] [NoTopOrder α] (a : α) : ∀ᶠ x in at_top, a < x :=
+theorem eventually_gt_at_top [Preorderₓ α] [NoMaxOrder α] (a : α) : ∀ᶠ x in at_top, a < x :=
   Ioi_mem_at_top a
 
-theorem eventually_lt_at_bot [Preorderₓ α] [NoBotOrder α] (a : α) : ∀ᶠ x in at_bot, x < a :=
+theorem eventually_ne_at_top [Preorderₓ α] [NoMaxOrder α] (a : α) : ∀ᶠ x in at_top, x ≠ a :=
+  (eventually_gt_at_top a).mono fun x hx => hx.ne.symm
+
+theorem eventually_lt_at_bot [Preorderₓ α] [NoMinOrder α] (a : α) : ∀ᶠ x in at_bot, x < a :=
   Iio_mem_at_bot a
 
-theorem at_top_basis_Ioi [Nonempty α] [SemilatticeSup α] [NoTopOrder α] : (@at_top α _).HasBasis (fun _ => True) Ioi :=
+theorem at_top_basis_Ioi [Nonempty α] [SemilatticeSup α] [NoMaxOrder α] : (@at_top α _).HasBasis (fun _ => True) Ioi :=
   (at_top_basis.to_has_basis fun a ha => ⟨a, ha, Ioi_subset_Ici_self⟩) $ fun a ha =>
-    (no_top a).imp $ fun b hb => ⟨ha, Ici_subset_Ioi.2 hb⟩
+    (exists_gt a).imp $ fun b hb => ⟨ha, Ici_subset_Ioi.2 hb⟩
 
 theorem at_top_countable_basis [Nonempty α] [SemilatticeSup α] [Encodable α] :
     has_countable_basis (at_top : Filter α) (fun _ => True) Ici :=
@@ -163,11 +166,11 @@ theorem frequently_at_top [SemilatticeSup α] [Nonempty α] {p : α → Prop} : 
 theorem frequently_at_bot [SemilatticeInf α] [Nonempty α] {p : α → Prop} : (∃ᶠ x in at_bot, p x) ↔ ∀ a, ∃ b ≤ a, p b :=
   @frequently_at_top (OrderDual α) _ _ _
 
-theorem frequently_at_top' [SemilatticeSup α] [Nonempty α] [NoTopOrder α] {p : α → Prop} :
+theorem frequently_at_top' [SemilatticeSup α] [Nonempty α] [NoMaxOrder α] {p : α → Prop} :
     (∃ᶠ x in at_top, p x) ↔ ∀ a, ∃ b > a, p b := by
   simp [at_top_basis_Ioi.frequently_iff]
 
-theorem frequently_at_bot' [SemilatticeInf α] [Nonempty α] [NoBotOrder α] {p : α → Prop} :
+theorem frequently_at_bot' [SemilatticeInf α] [Nonempty α] [NoMinOrder α] {p : α → Prop} :
     (∃ᶠ x in at_bot, p x) ↔ ∀ a, ∃ b < a, p b :=
   @frequently_at_top' (OrderDual α) _ _ _ _
 
@@ -271,21 +274,21 @@ theorem exists_le_of_tendsto_at_bot [SemilatticeSup α] [Preorderₓ β] {u : α
     ∀ a b, ∃ a' ≥ a, u a' ≤ b :=
   @exists_le_of_tendsto_at_top _ (OrderDual β) _ _ _ h
 
-theorem exists_lt_of_tendsto_at_top [SemilatticeSup α] [Preorderₓ β] [NoTopOrder β] {u : α → β}
+theorem exists_lt_of_tendsto_at_top [SemilatticeSup α] [Preorderₓ β] [NoMaxOrder β] {u : α → β}
     (h : tendsto u at_top at_top) (a : α) (b : β) : ∃ a' ≥ a, b < u a' := by
-  cases' no_top b with b' hb'
+  cases' exists_gt b with b' hb'
   rcases exists_le_of_tendsto_at_top h a b' with ⟨a', ha', ha''⟩
   exact ⟨a', ha', lt_of_lt_of_leₓ hb' ha''⟩
 
 @[nolint ge_or_gt]
-theorem exists_lt_of_tendsto_at_bot [SemilatticeSup α] [Preorderₓ β] [NoBotOrder β] {u : α → β}
+theorem exists_lt_of_tendsto_at_bot [SemilatticeSup α] [Preorderₓ β] [NoMinOrder β] {u : α → β}
     (h : tendsto u at_top at_bot) : ∀ a b, ∃ a' ≥ a, u a' < b :=
   @exists_lt_of_tendsto_at_top _ (OrderDual β) _ _ _ _ h
 
 /-- If `u` is a sequence which is unbounded above,
 then after any point, it reaches a value strictly greater than all previous values.
 -/
-theorem high_scores [LinearOrderₓ β] [NoTopOrder β] {u : ℕ → β} (hu : tendsto u at_top at_top) :
+theorem high_scores [LinearOrderₓ β] [NoMaxOrder β] {u : ℕ → β} (hu : tendsto u at_top at_top) :
     ∀ N, ∃ n ≥ N, ∀, ∀ k < n, ∀, u k < u n := by
   intro N
   obtain ⟨k : ℕ, hkn : k ≤ N, hku : ∀, ∀ l ≤ N, ∀, u l ≤ u k⟩ : ∃ k ≤ N, ∀, ∀ l ≤ N, ∀, u l ≤ u k
@@ -310,25 +313,25 @@ theorem high_scores [LinearOrderₓ β] [NoTopOrder β] {u : ℕ → β} (hu : t
 then after any point, it reaches a value strictly smaller than all previous values.
 -/
 @[nolint ge_or_gt]
-theorem low_scores [LinearOrderₓ β] [NoBotOrder β] {u : ℕ → β} (hu : tendsto u at_top at_bot) :
+theorem low_scores [LinearOrderₓ β] [NoMinOrder β] {u : ℕ → β} (hu : tendsto u at_top at_bot) :
     ∀ N, ∃ n ≥ N, ∀, ∀ k < n, ∀, u n < u k :=
   @high_scores (OrderDual β) _ _ _ hu
 
 /-- If `u` is a sequence which is unbounded above,
 then it `frequently` reaches a value strictly greater than all previous values.
 -/
-theorem frequently_high_scores [LinearOrderₓ β] [NoTopOrder β] {u : ℕ → β} (hu : tendsto u at_top at_top) :
+theorem frequently_high_scores [LinearOrderₓ β] [NoMaxOrder β] {u : ℕ → β} (hu : tendsto u at_top at_top) :
     ∃ᶠ n in at_top, ∀, ∀ k < n, ∀, u k < u n := by
   simpa [frequently_at_top] using high_scores hu
 
 /-- If `u` is a sequence which is unbounded below,
 then it `frequently` reaches a value strictly smaller than all previous values.
 -/
-theorem frequently_low_scores [LinearOrderₓ β] [NoBotOrder β] {u : ℕ → β} (hu : tendsto u at_top at_bot) :
+theorem frequently_low_scores [LinearOrderₓ β] [NoMinOrder β] {u : ℕ → β} (hu : tendsto u at_top at_bot) :
     ∃ᶠ n in at_top, ∀, ∀ k < n, ∀, u n < u k :=
   @frequently_high_scores (OrderDual β) _ _ _ hu
 
-theorem strict_mono_subseq_of_tendsto_at_top {β : Type _} [LinearOrderₓ β] [NoTopOrder β] {u : ℕ → β}
+theorem strict_mono_subseq_of_tendsto_at_top {β : Type _} [LinearOrderₓ β] [NoMaxOrder β] {u : ℕ → β}
     (hu : tendsto u at_top at_top) : ∃ φ : ℕ → ℕ, StrictMono φ ∧ StrictMono (u ∘ φ) :=
   let ⟨φ, h, h'⟩ := extraction_of_frequently_at_top (frequently_high_scores hu)
   ⟨φ, h, fun n m hnm => h' m _ (h hnm)⟩
@@ -964,9 +967,9 @@ theorem map_coe_Ici_at_top [SemilatticeSup α] (a : α) : map (coeₓ : Ici a �
 
 /-- The image of the filter `at_top` on `Ioi a` under the coercion equals `at_top`. -/
 @[simp]
-theorem map_coe_Ioi_at_top [SemilatticeSup α] [NoTopOrder α] (a : α) : map (coeₓ : Ioi a → α) at_top = at_top := by
-  rcases no_top a with ⟨b, hb⟩
-  exact map_coe_at_top_of_Ici_subset (Ici_subset_Ioi.2 hb)
+theorem map_coe_Ioi_at_top [SemilatticeSup α] [NoMaxOrder α] (a : α) : map (coeₓ : Ioi a → α) at_top = at_top :=
+  let ⟨b, hb⟩ := exists_gt a
+  map_coe_at_top_of_Ici_subset $ Ici_subset_Ioi.2 hb
 
 /-- The `at_top` filter for an open interval `Ioi a` comes from the `at_top` filter in the ambient
 order. -/
@@ -983,7 +986,7 @@ theorem at_top_Ici_eq [SemilatticeSup α] (a : α) : at_top = comap (coeₓ : Ic
 /-- The `at_bot` filter for an open interval `Iio a` comes from the `at_bot` filter in the ambient
 order. -/
 @[simp]
-theorem map_coe_Iio_at_bot [SemilatticeInf α] [NoBotOrder α] (a : α) : map (coeₓ : Iio a → α) at_bot = at_bot :=
+theorem map_coe_Iio_at_bot [SemilatticeInf α] [NoMinOrder α] (a : α) : map (coeₓ : Iio a → α) at_bot = at_bot :=
   @map_coe_Ioi_at_top (OrderDual α) _ _ _
 
 /-- The `at_bot` filter for an open interval `Iio a` comes from the `at_bot` filter in the ambient
@@ -1019,7 +1022,7 @@ theorem tendsto_Iic_at_bot [SemilatticeInf α] {a : α} {f : β → Iic a} {l : 
   rw [at_bot_Iic_eq, tendsto_comap_iff]
 
 @[simp]
-theorem tendsto_comp_coe_Ioi_at_top [SemilatticeSup α] [NoTopOrder α] {a : α} {f : α → β} {l : Filter β} :
+theorem tendsto_comp_coe_Ioi_at_top [SemilatticeSup α] [NoMaxOrder α] {a : α} {f : α → β} {l : Filter β} :
     tendsto (fun x : Ioi a => f x) at_top l ↔ tendsto f at_top l := by
   rw [← map_coe_Ioi_at_top a, tendsto_map'_iff]
 
@@ -1029,7 +1032,7 @@ theorem tendsto_comp_coe_Ici_at_top [SemilatticeSup α] {a : α} {f : α → β}
   rw [← map_coe_Ici_at_top a, tendsto_map'_iff]
 
 @[simp]
-theorem tendsto_comp_coe_Iio_at_bot [SemilatticeInf α] [NoBotOrder α] {a : α} {f : α → β} {l : Filter β} :
+theorem tendsto_comp_coe_Iio_at_bot [SemilatticeInf α] [NoMinOrder α] {a : α} {f : α → β} {l : Filter β} :
     tendsto (fun x : Iio a => f x) at_bot l ↔ tendsto f at_bot l := by
   rw [← map_coe_Iio_at_bot a, tendsto_map'_iff]
 
@@ -1093,22 +1096,22 @@ theorem tendsto_at_bot_at_bot_of_monotone' [Preorderₓ ι] [LinearOrderₓ α] 
     (H : ¬BddBelow (range u)) : tendsto u at_bot at_bot :=
   @tendsto_at_top_at_top_of_monotone' (OrderDual ι) (OrderDual α) _ _ _ h.dual H
 
-theorem unbounded_of_tendsto_at_top [Nonempty α] [SemilatticeSup α] [Preorderₓ β] [NoTopOrder β] {f : α → β}
+theorem unbounded_of_tendsto_at_top [Nonempty α] [SemilatticeSup α] [Preorderₓ β] [NoMaxOrder β] {f : α → β}
     (h : tendsto f at_top at_top) : ¬BddAbove (range f) := by
   rintro ⟨M, hM⟩
   cases' mem_at_top_sets.mp (h $ Ioi_mem_at_top M) with a ha
   apply lt_irreflₓ M
   calc M < f a := ha a (le_reflₓ _)_ ≤ M := hM (Set.mem_range_self a)
 
-theorem unbounded_of_tendsto_at_bot [Nonempty α] [SemilatticeSup α] [Preorderₓ β] [NoBotOrder β] {f : α → β}
+theorem unbounded_of_tendsto_at_bot [Nonempty α] [SemilatticeSup α] [Preorderₓ β] [NoMinOrder β] {f : α → β}
     (h : tendsto f at_top at_bot) : ¬BddBelow (range f) :=
   @unbounded_of_tendsto_at_top _ (OrderDual β) _ _ _ _ _ h
 
-theorem unbounded_of_tendsto_at_top' [Nonempty α] [SemilatticeInf α] [Preorderₓ β] [NoTopOrder β] {f : α → β}
+theorem unbounded_of_tendsto_at_top' [Nonempty α] [SemilatticeInf α] [Preorderₓ β] [NoMaxOrder β] {f : α → β}
     (h : tendsto f at_bot at_top) : ¬BddAbove (range f) :=
   @unbounded_of_tendsto_at_top (OrderDual α) _ _ _ _ _ _ h
 
-theorem unbounded_of_tendsto_at_bot' [Nonempty α] [SemilatticeInf α] [Preorderₓ β] [NoBotOrder β] {f : α → β}
+theorem unbounded_of_tendsto_at_bot' [Nonempty α] [SemilatticeInf α] [Preorderₓ β] [NoMinOrder β] {f : α → β}
     (h : tendsto f at_bot at_bot) : ¬BddBelow (range f) :=
   @unbounded_of_tendsto_at_top (OrderDual α) (OrderDual β) _ _ _ _ _ h
 

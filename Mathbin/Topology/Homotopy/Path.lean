@@ -296,8 +296,26 @@ protected def Setoidₓ (x₀ x₁ : X) : Setoidₓ (Path x₀ x₁) :=
 protected def Quotientₓ (x₀ x₁ : X) :=
   Quotientₓ (homotopic.setoid x₀ x₁)
 
+attribute [local instance] homotopic.setoid
+
 instance : Inhabited (homotopic.quotient () ()) :=
-  ⟨@Quotientₓ.mk _ (homotopic.setoid _ _) $ Path.refl ()⟩
+  ⟨Quotientₓ.mk $ Path.refl ()⟩
+
+/-- The composition of path homotopy classes. This is `path.trans` descended to the quotient. -/
+def quotient.comp (P₀ : Path.Homotopic.Quotient x₀ x₁) (P₁ : Path.Homotopic.Quotient x₁ x₂) :
+    Path.Homotopic.Quotient x₀ x₂ :=
+  Quotientₓ.map₂ Path.trans (fun p₀ : Path x₀ x₁ p₁ hp q₀ : Path x₁ x₂ q₁ hq => hcomp hp hq) P₀ P₁
+
+theorem comp_lift (P₀ : Path x₀ x₁) (P₁ : Path x₁ x₂) : ⟦P₀.trans P₁⟧ = quotient.comp (⟦P₀⟧) (⟦P₁⟧) :=
+  rfl
+
+/-- The image of a path homotopy class `P₀` under a map `f`.
+    This is `path.map` descended to the quotient -/
+def quotient.map_fn (P₀ : Path.Homotopic.Quotient x₀ x₁) (f : C(X, Y)) : Path.Homotopic.Quotient (f x₀) (f x₁) :=
+  Quotientₓ.map (fun q : Path x₀ x₁ => q.map f.continuous) (fun p₀ p₁ h => Path.Homotopic.map h f) P₀
+
+theorem map_lift (P₀ : Path x₀ x₁) (f : C(X, Y)) : ⟦P₀.map f.continuous⟧ = quotient.map_fn (⟦P₀⟧) f :=
+  rfl
 
 end Homotopic
 

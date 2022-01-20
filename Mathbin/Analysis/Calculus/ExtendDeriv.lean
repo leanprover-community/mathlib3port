@@ -46,13 +46,13 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
     mem_nhds_within_iff.2
       ⟨δ, δ_pos, fun y hy => by
         simpa using this y hy⟩
-  suffices ∀ p : E × E, p ∈ Closure ((B ∩ s).Prod (B ∩ s)) → ∥f p.2 - f p.1 - (f' p.2 - f' p.1)∥ ≤ ε * ∥p.2 - p.1∥ by
+  suffices ∀ p : E × E, p ∈ Closure ((B ∩ s) ×ˢ (B ∩ s)) → ∥f p.2 - f p.1 - (f' p.2 - f' p.1)∥ ≤ ε * ∥p.2 - p.1∥ by
     rw [closure_prod_eq] at this
     intro y y_in
     apply this ⟨x, y⟩
     have : B ∩ Closure s ⊆ Closure (B ∩ s) := closure_inter_open is_open_ball
     exact ⟨this ⟨mem_ball_self δ_pos, hx⟩, this y_in⟩
-  have key : ∀ p : E × E, p ∈ (B ∩ s).Prod (B ∩ s) → ∥f p.2 - f p.1 - (f' p.2 - f' p.1)∥ ≤ ε * ∥p.2 - p.1∥ := by
+  have key : ∀ p : E × E, p ∈ (B ∩ s) ×ˢ (B ∩ s) → ∥f p.2 - f p.1 - (f' p.2 - f' p.1)∥ ≤ ε * ∥p.2 - p.1∥ := by
     rintro ⟨u, v⟩ ⟨u_in, v_in⟩
     have conv : Convex ℝ (B ∩ s) := (convex_ball _ _).inter s_conv
     have diff : DifferentiableOn ℝ f (B ∩ s) := f_diff.mono (inter_subset_right _ _)
@@ -69,7 +69,7 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
     intro y y_in
     exact tendsto.sub (f_cont y y_in) f'.cont.continuous_within_at
   all_goals
-    have : (B ∩ s).Prod (B ∩ s) ⊆ s.prod s := by
+    have : (B ∩ s) ×ˢ (B ∩ s) ⊆ s ×ˢ s := by
       mono <;> exact inter_subset_right _ _
     obtain ⟨u_in, v_in⟩ : u ∈ Closure s ∧ v ∈ Closure s := by
       simpa [closure_prod_eq] using closure_mono this uv_in

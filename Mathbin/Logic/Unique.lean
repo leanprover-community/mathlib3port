@@ -39,7 +39,7 @@ universe u v w
 
 variable {α : Sort u} {β : Sort v} {γ : Sort w}
 
-/-- `unique α` expresses that `α` is a type with a unique term `default α`.
+/-- `unique α` expresses that `α` is a type with a unique term `default`.
 
 This is implemented as a type, rather than a `Prop`-valued predicate,
 for good definitional properties of the default term. -/
@@ -82,7 +82,7 @@ instance inhabitedFinOneAdd (n : ℕ) : Inhabited (Finₓ (1 + n)) :=
   ⟨⟨0, Nat.zero_lt_one_add n⟩⟩
 
 @[simp]
-theorem Finₓ.default_eq_zero (n : ℕ) : default (Finₓ n.succ) = 0 :=
+theorem Finₓ.default_eq_zero (n : ℕ) : (default : Finₓ n.succ) = 0 :=
   rfl
 
 instance Finₓ.unique : Unique (Finₓ 1) :=
@@ -99,21 +99,21 @@ variable [Unique α]
 instance (priority := 100) : Inhabited α :=
   to_inhabited ‹Unique α›
 
-theorem eq_default (a : α) : a = default α :=
+theorem eq_default (a : α) : a = default :=
   uniq _ a
 
-theorem default_eq (a : α) : default α = a :=
+theorem default_eq (a : α) : default = a :=
   (uniq _ a).symm
 
 instance (priority := 100) : Subsingleton α :=
   subsingleton_of_forall_eq _ eq_default
 
-theorem forall_iff {p : α → Prop} : (∀ a, p a) ↔ p (default α) :=
+theorem forall_iff {p : α → Prop} : (∀ a, p a) ↔ p default :=
   ⟨fun h => h _, fun h x => by
     rwa [Unique.eq_default x]⟩
 
-theorem exists_iff {p : α → Prop} : Exists p ↔ p (default α) :=
-  ⟨fun ⟨a, ha⟩ => eq_default a ▸ ha, Exists.introₓ (default α)⟩
+theorem exists_iff {p : α → Prop} : Exists p ↔ p default :=
+  ⟨fun ⟨a, ha⟩ => eq_default a ▸ ha, Exists.introₓ default⟩
 
 end
 
@@ -134,10 +134,11 @@ def mk' (α : Sort u) [h₁ : Inhabited α] [Subsingleton α] : Unique α :=
 end Unique
 
 @[simp]
-theorem Pi.default_def {β : ∀ a : α, Sort v} [∀ a, Inhabited (β a)] : default (∀ a, β a) = fun a => default (β a) :=
+theorem Pi.default_def {β : ∀ a : α, Sort v} [∀ a, Inhabited (β a)] :
+    @default (∀ a, β a) _ = fun a : α => @default (β a) _ :=
   rfl
 
-theorem Pi.default_apply {β : ∀ a : α, Sort v} [∀ a, Inhabited (β a)] (a : α) : default (∀ a, β a) a = default (β a) :=
+theorem Pi.default_apply {β : ∀ a : α, Sort v} [∀ a, Inhabited (β a)] (a : α) : @default (∀ a, β a) _ a = default :=
   rfl
 
 instance Pi.unique {β : ∀ a : α, Sort v} [∀ a, Unique (β a)] : Unique (∀ a, β a) :=
@@ -155,7 +156,7 @@ variable {f : α → β}
 /-- If the domain of a surjective function is a singleton,
 then the codomain is a singleton as well. -/
 protected def surjective.unique (hf : surjective f) [Unique α] : Unique β where
-  default := f (default _)
+  default := f default
   uniq := fun b =>
     let ⟨a, ha⟩ := hf b
     ha ▸ congr_argₓ f (Unique.eq_default _)

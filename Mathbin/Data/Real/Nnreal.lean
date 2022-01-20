@@ -114,7 +114,7 @@ noncomputable example : HasInv ℝ≥0 := by
 noncomputable example : Div ℝ≥0 := by
   infer_instance
 
-noncomputable example : LE ℝ≥0 := by
+example : LE ℝ≥0 := by
   infer_instance
 
 example : HasBot ℝ≥0 := by
@@ -298,7 +298,7 @@ theorem nsmul_coe (r : ℝ≥0 ) (n : ℕ) : ↑(n • r) = n • (r : ℝ) := b
 
 @[simp, norm_cast]
 protected theorem coe_nat_cast (n : ℕ) : (↑(↑n : ℝ≥0 ) : ℝ) = n :=
-  to_real_hom.map_nat_cast n
+  map_nat_cast to_real_hom n
 
 noncomputable example : LinearOrderₓ ℝ≥0 := by
   infer_instance
@@ -378,7 +378,7 @@ example : CanonicallyOrderedCommSemiring ℝ≥0 := by
 example : DenselyOrdered ℝ≥0 := by
   infer_instance
 
-example : NoTopOrder ℝ≥0 := by
+example : NoMaxOrder ℝ≥0 := by
   infer_instance
 
 theorem bdd_above_coe {s : Set ℝ≥0 } : BddAbove ((coeₓ : ℝ≥0 → ℝ) '' s) ↔ BddAbove s :=

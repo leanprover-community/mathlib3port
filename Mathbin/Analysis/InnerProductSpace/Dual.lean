@@ -41,7 +41,7 @@ variable (E : Type _) [IsROrC 𝕜] [InnerProductSpace 𝕜 E]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
-local postfix:90 "†" => starRingAut
+local postfix:90 "†" => starRingEnd _
 
 /-- An element `x` of an inner product space `E` induces an element of the dual space `dual 𝕜 E`,
 the map `λ y, ⟪x, y⟫`; moreover this operation is a conjugate-linear isometric embedding of `E`
@@ -105,7 +105,7 @@ def to_dual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
         have h₄ :=
           calc
             ⟪(ℓ z† / ⟪z, z⟫) • z, x⟫ = ℓ z / ⟪z, z⟫ * ⟪z, x⟫ := by
-              simp [inner_smul_left, RingEquiv.map_div, conj_conj]
+              simp [inner_smul_left, RingHom.map_div, conj_conj]
             _ = ℓ z * ⟪z, x⟫ / ⟪z, z⟫ := by
               rw [← div_mul_eq_mul_div]
             _ = ℓ x * ⟪z, z⟫ / ⟪z, z⟫ := by

@@ -247,10 +247,10 @@ section PartialOrderₓ
 variable [PartialOrderₓ α] [Preorderₓ β] {f : α → β} {s : Set α}
 
 theorem monotone_iff_forall_lt : Monotone f ↔ ∀ ⦃a b⦄, a < b → f a ≤ f b :=
-  forall₂_congr $ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).le) hf⟩
+  forall₂_congrₓ $ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).le) hf⟩
 
 theorem antitone_iff_forall_lt : Antitone f ↔ ∀ ⦃a b⦄, a < b → f b ≤ f a :=
-  forall₂_congr $ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).Ge) hf⟩
+  forall₂_congrₓ $ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).Ge) hf⟩
 
 theorem monotone_on_iff_forall_lt : MonotoneOn f s ↔ ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f a ≤ f b :=
   ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).le) (hf ha hb)⟩

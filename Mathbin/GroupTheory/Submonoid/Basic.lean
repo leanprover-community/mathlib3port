@@ -193,9 +193,9 @@ instance : HasInfₓ (Submonoid M) :=
         Set.mem_bInter $ fun i h =>
           i.mul_mem
             (by
-              apply Set.mem_bInter_iff.1 hx i h)
+              apply Set.mem_Inter₂.1 hx i h)
             (by
-              apply Set.mem_bInter_iff.1 hy i h) }⟩
+              apply Set.mem_Inter₂.1 hy i h) }⟩
 
 @[simp, norm_cast, to_additive]
 theorem coe_Inf (S : Set (Submonoid M)) : ((Inf S : Submonoid M) : Set M) = ⋂ s ∈ S, ↑s :=
@@ -203,7 +203,7 @@ theorem coe_Inf (S : Set (Submonoid M)) : ((Inf S : Submonoid M) : Set M) = ⋂ 
 
 @[to_additive]
 theorem mem_Inf {S : Set (Submonoid M)} {x : M} : x ∈ Inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
-  Set.mem_bInter_iff
+  Set.mem_Inter₂
 
 @[to_additive]
 theorem mem_infi {ι : Sort _} {S : ι → Submonoid M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
@@ -336,6 +336,19 @@ theorem closure_union (s t : Set M) : closure (s ∪ t) = closure s⊔closure t 
 @[to_additive]
 theorem closure_Union {ι} (s : ι → Set M) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
   (Submonoid.gi M).gc.l_supr
+
+@[simp, to_additive]
+theorem closure_singleton_le_iff_mem (m : M) (p : Submonoid M) : closure {m} ≤ p ↔ m ∈ p := by
+  rw [closure_le, singleton_subset_iff, SetLike.mem_coe]
+
+@[to_additive]
+theorem mem_supr {ι : Sort _} (p : ι → Submonoid M) {m : M} : (m ∈ ⨆ i, p i) ↔ ∀ N, (∀ i, p i ≤ N) → m ∈ N := by
+  rw [← closure_singleton_le_iff_mem, le_supr_iff]
+  simp only [closure_singleton_le_iff_mem]
+
+@[to_additive]
+theorem supr_eq_closure {ι : Sort _} (p : ι → Submonoid M) : (⨆ i, p i) = Submonoid.closure (⋃ i, (p i : Set M)) := by
+  simp_rw [Submonoid.closure_Union, Submonoid.closure_eq]
 
 end Submonoid
 

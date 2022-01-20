@@ -19,7 +19,7 @@ convex spaces), but these are not yet in `mathlib`.
 open Set
 
 variable {E F 𝕜 𝕜₂ : Type _} [SemiNormedGroup E] [SemiNormedGroup F] [NondiscreteNormedField 𝕜]
-  [NondiscreteNormedField 𝕜₂] [SemiNormedSpace 𝕜 E] [SemiNormedSpace 𝕜₂ F] {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
+  [NondiscreteNormedField 𝕜₂] [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
 
 /-- This is the standard Banach-Steinhaus theorem, or Uniform Boundedness Principle.
 If a family of continuous linear maps from a Banach space into a normed space is pointwise

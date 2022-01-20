@@ -1,5 +1,4 @@
-import Mathbin.Logic.Function.Basic
-import Mathbin.Tactic.Protected
+import Mathbin.Data.Option.Basic
 
 /-!
 # Disjoint union of types
@@ -81,6 +80,14 @@ def is_left : Sum α β → Bool
 def is_right : Sum α β → Bool
   | inl _ => ff
   | inr _ => tt
+
+variable {x y : Sum α β}
+
+theorem get_left_eq_none_iff : x.get_left = none ↔ x.is_right := by
+  cases x <;> simp only [get_left, is_right, coe_sort_tt, coe_sort_ff, eq_self_iff_true]
+
+theorem get_right_eq_none_iff : x.get_right = none ↔ x.is_left := by
+  cases x <;> simp only [get_right, is_left, coe_sort_tt, coe_sort_ff, eq_self_iff_true]
 
 end get
 
@@ -235,6 +242,68 @@ theorem swap_left_inverse : Function.LeftInverse (@swap α β) swap :=
 theorem swap_right_inverse : Function.RightInverse (@swap α β) swap :=
   swap_swap
 
+section LiftRel
+
+/-- Lifts pointwise two relations between `α` and `γ` and between `β` and `δ` to a relation between
+`α ⊕ β` and `γ ⊕ δ`. -/
+inductive lift_rel (r : α → γ → Prop) (s : β → δ → Prop) : Sum α β → Sum γ δ → Prop
+  | inl {a c} : r a c → lift_rel (inl a) (inl c)
+  | inr {b d} : s b d → lift_rel (inr b) (inr d)
+
+attribute [protected] lift_rel.inl lift_rel.inr
+
+variable {r r₁ r₂ : α → γ → Prop} {s s₁ s₂ : β → δ → Prop} {a : α} {b : β} {c : γ} {d : δ} {x : Sum α β} {y : Sum γ δ}
+
+@[simp]
+theorem lift_rel_inl_inl : lift_rel r s (inl a) (inl c) ↔ r a c :=
+  ⟨fun h => by
+    cases h
+    assumption, lift_rel.inl⟩
+
+@[simp]
+theorem not_lift_rel_inl_inr : ¬lift_rel r s (inl a) (inr d) :=
+  fun.
+
+@[simp]
+theorem not_lift_rel_inr_inl : ¬lift_rel r s (inr b) (inl c) :=
+  fun.
+
+@[simp]
+theorem lift_rel_inr_inr : lift_rel r s (inr b) (inr d) ↔ s b d :=
+  ⟨fun h => by
+    cases h
+    assumption, lift_rel.inr⟩
+
+instance [∀ a c, Decidable (r a c)] [∀ b d, Decidable (s b d)] :
+    ∀ ab : Sum α β cd : Sum γ δ, Decidable (lift_rel r s ab cd)
+  | inl a, inl c => decidableOfIff' _ lift_rel_inl_inl
+  | inl a, inr d => Decidable.isFalse not_lift_rel_inl_inr
+  | inr b, inl c => Decidable.isFalse not_lift_rel_inr_inl
+  | inr b, inr d => decidableOfIff' _ lift_rel_inr_inr
+
+theorem lift_rel.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : lift_rel r₁ s₁ x y) :
+    lift_rel r₂ s₂ x y := by
+  cases h
+  exacts[lift_rel.inl (hr _ _ ‹_›), lift_rel.inr (hs _ _ ‹_›)]
+
+theorem lift_rel.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : lift_rel r₁ s x y) : lift_rel r₂ s x y :=
+  h.mono hr $ fun _ _ => id
+
+theorem lift_rel.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : lift_rel r s₁ x y) : lift_rel r s₂ x y :=
+  h.mono (fun _ _ => id) hs
+
+protected theorem lift_rel.swap (h : lift_rel r s x y) : lift_rel s r x.swap y.swap := by
+  cases h
+  exacts[lift_rel.inr ‹_›, lift_rel.inl ‹_›]
+
+@[simp]
+theorem lift_rel_swap_iff : lift_rel s r x.swap y.swap ↔ lift_rel r s x y :=
+  ⟨fun h => by
+    rw [← swap_swap x, ← swap_swap y]
+    exact h.swap, lift_rel.swap⟩
+
+end LiftRel
+
 section Lex
 
 /-- Lexicographic order for sum. Sort all the `inl a` before the `inr b`, otherwise use the
@@ -265,6 +334,16 @@ theorem lex_inr_inr : lex r s (inr b₁) (inr b₂) ↔ s b₁ b₂ :=
 @[simp]
 theorem lex_inr_inl : ¬lex r s (inr b) (inl a) :=
   fun.
+
+instance [DecidableRel r] [DecidableRel s] : DecidableRel (lex r s)
+  | inl a, inl c => decidableOfIff' _ lex_inl_inl
+  | inl a, inr d => Decidable.isTrue (lex.sep _ _)
+  | inr b, inl c => Decidable.isFalse lex_inr_inl
+  | inr b, inr d => decidableOfIff' _ lex_inr_inr
+
+protected theorem lift_rel.lex {a b : Sum α β} (h : lift_rel r s a b) : lex r s a b := by
+  cases h
+  exacts[lex.inl ‹_›, lex.inr ‹_›]
 
 theorem lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : lex r₁ s₁ x y) : lex r₂ s₂ x y := by
   cases h

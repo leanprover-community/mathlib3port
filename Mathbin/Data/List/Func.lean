@@ -48,14 +48,14 @@ def Set (a : α) : List α → ℕ → List α
   | _ :: as, 0 => a :: as
   | [], 0 => [a]
   | h :: as, k + 1 => h :: Set as k
-  | [], k + 1 => default α :: Set ([] : List α) k
+  | [], k + 1 => default :: Set ([] : List α) k
 
 localized [List.Func] notation as " {" m " ↦ " a "}" => List.Func.set a as m
 
 /-- Get element of a list by index. If the index is out of range, return the default element -/
 @[simp]
 def get : ℕ → List α → α
-  | _, [] => default α
+  | _, [] => default
   | 0, a :: as => a
   | n + 1, a :: as => get n as
 
@@ -69,8 +69,8 @@ def Equivₓ (as1 as2 : List α) : Prop :=
 @[simp]
 def pointwise (f : α → β → γ) : List α → List β → List γ
   | [], [] => []
-  | [], b :: bs => map (f $ default α) (b :: bs)
-  | a :: as, [] => map (fun x => f x $ default β) (a :: as)
+  | [], b :: bs => map (f default) (b :: bs)
+  | a :: as, [] => map (fun x => f x default) (a :: as)
   | a :: as, b :: bs => f a b :: pointwise as bs
 
 /-- Pointwise addition on lists. If lists are different lengths, use zero. -/
@@ -93,10 +93,10 @@ theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.
     simp only [Set, Nat.max_succ_succ, length, @length_set m]
 
 @[simp]
-theorem get_nil {k : ℕ} : get k [] = default α := by
+theorem get_nil {k : ℕ} : (get k [] : α) = default := by
   cases k <;> rfl
 
-theorem get_eq_default_of_le : ∀ k : ℕ {as : List α}, as.length ≤ k → get k as = default α
+theorem get_eq_default_of_le : ∀ k : ℕ {as : List α}, as.length ≤ k → get k as = default
   | 0, [], h1 => rfl
   | 0, a :: as, h1 => by
     cases h1
@@ -138,7 +138,7 @@ theorem mem_get_of_le : ∀ {n : ℕ} {as : List α}, n < as.length → get n as
     apply mem_get_of_le
     apply Nat.lt_of_succ_lt_succₓ h1
 
-theorem mem_get_of_ne_zero : ∀ {n : ℕ} {as : List α}, get n as ≠ default α → get n as ∈ as
+theorem mem_get_of_ne_zero : ∀ {n : ℕ} {as : List α}, get n as ≠ default → get n as ∈ as
   | _, [], h1 => by
     exfalso
     apply h1
@@ -157,7 +157,7 @@ theorem get_set_eq_of_ne {a : α} : ∀ {as : List α} k : ℕ m : ℕ, m ≠ k 
   | as, k + 1, m, h1 => by
     cases as <;> cases m
     simp only [Set, get]
-    · have h3 : get m (nil {k ↦ a}) = default α := by
+    · have h3 : get m (nil {k ↦ a}) = default := by
         rw [get_set_eq_of_ne k m, get_nil]
         intro hc
         apply h1
@@ -181,7 +181,7 @@ theorem get_map {f : α → β} : ∀ {n : ℕ} {as : List α}, n < as.length �
       apply h1
     apply get_map h2
 
-theorem get_map' {f : α → β} {n : ℕ} {as : List α} : f (default α) = default β → get n (as.map f) = f (get n as) := by
+theorem get_map' {f : α → β} {n : ℕ} {as : List α} : f default = default → get n (as.map f) = f (get n as) := by
   intro h1
   by_cases' h2 : n < as.length
   · apply get_map h2
@@ -192,8 +192,8 @@ theorem get_map' {f : α → β} {n : ℕ} {as : List α} : f (default α) = def
     apply h2
     
 
-theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} :
-    p (default α) → (∀, ∀ x ∈ as, ∀, p x) → ∀ n, p (get n as) := by
+theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} : p default → (∀, ∀ x ∈ as, ∀, p x) → ∀ n, p (get n as) :=
+  by
   intro h1 h2 n
   by_cases' h3 : n < as.length
   · apply h2 _ (mem_get_of_le h3)
@@ -246,24 +246,24 @@ theorem length_neg [Neg α] (as : List α) : (neg as).length = as.length := by
 
 variable [Inhabited α] [Inhabited β]
 
-theorem nil_pointwise {f : α → β → γ} : ∀ bs : List β, pointwise f [] bs = bs.map (f $ default α)
+theorem nil_pointwise {f : α → β → γ} : ∀ bs : List β, pointwise f [] bs = bs.map (f default)
   | [] => rfl
   | b :: bs => by
     simp only [nil_pointwise bs, pointwise, eq_self_iff_true, and_selfₓ, map]
 
-theorem pointwise_nil {f : α → β → γ} : ∀ as : List α, pointwise f as [] = as.map fun a => f a $ default β
+theorem pointwise_nil {f : α → β → γ} : ∀ as : List α, pointwise f as [] = as.map fun a => f a default
   | [] => rfl
   | a :: as => by
     simp only [pointwise_nil as, pointwise, eq_self_iff_true, and_selfₓ, List.map]
 
-theorem get_pointwise [Inhabited γ] {f : α → β → γ} (h1 : f (default α) (default β) = default γ) :
+theorem get_pointwise [Inhabited γ] {f : α → β → γ} (h1 : f default default = default) :
     ∀ k : Nat as : List α bs : List β, get k (pointwise f as bs) = f (get k as) (get k bs)
   | k, [], [] => by
     simp only [h1, get_nil, pointwise, get]
   | 0, [], b :: bs => by
     simp only [get_pointwise, get_nil, pointwise, get, Nat.nat_zero_eq_zero, map]
   | k + 1, [], b :: bs => by
-    have : get k (map (f $ default α) bs) = f (default α) (get k bs) := by
+    have : get k (map (f default) bs) = f default (get k bs) := by
       simpa [nil_pointwise, get_nil] using get_pointwise k [] bs
     simpa [get, get_nil, pointwise, map]
   | 0, a :: as, [] => by
@@ -304,18 +304,14 @@ theorem nil_add {α : Type u} [AddMonoidₓ α] (as : List α) : add [] as = as 
   rw [add, @nil_pointwise α α α ⟨0⟩ ⟨0⟩]
   apply Eq.trans _ (map_id as)
   congr with x
-  have : @default α ⟨0⟩ = 0 := rfl
-  rw [this, zero_addₓ]
-  rfl
+  rw [zero_addₓ, id]
 
 @[simp]
 theorem add_nil {α : Type u} [AddMonoidₓ α] (as : List α) : add as [] = as := by
   rw [add, @pointwise_nil α α α ⟨0⟩ ⟨0⟩]
   apply Eq.trans _ (map_id as)
   congr with x
-  have : @default α ⟨0⟩ = 0 := rfl
-  rw [this, add_zeroₓ]
-  rfl
+  rw [add_zeroₓ, id]
 
 theorem map_add_map {α : Type u} [AddMonoidₓ α] (f g : α → α) {as : List α} :
     add (as.map f) (as.map g) = as.map fun x => f x + g x := by
@@ -352,17 +348,14 @@ theorem length_sub [HasZero α] [Sub α] {xs ys : List α} : (sub xs ys).length 
 theorem nil_sub {α : Type} [AddGroupₓ α] (as : List α) : sub [] as = neg as := by
   rw [sub, nil_pointwise]
   congr with x
-  have : @default α ⟨0⟩ = 0 := rfl
-  rw [this, zero_sub]
+  rw [zero_sub]
 
 @[simp]
 theorem sub_nil {α : Type} [AddGroupₓ α] (as : List α) : sub as [] = as := by
   rw [sub, pointwise_nil]
   apply Eq.trans _ (map_id as)
   congr with x
-  have : @default α ⟨0⟩ = 0 := rfl
-  rw [this, sub_zero]
-  rfl
+  rw [sub_zero, id]
 
 end Func
 

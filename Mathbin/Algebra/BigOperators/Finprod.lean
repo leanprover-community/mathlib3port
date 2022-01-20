@@ -135,8 +135,8 @@ theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ x _ : x ≠ a, f x =
   rw [finprod_eq_prod_plift_of_mul_support_subset this, Finset.prod_singleton]
 
 @[to_additive]
-theorem finprod_unique [Unique α] (f : α → M) : (∏ᶠ i, f i) = f (default α) :=
-  finprod_eq_single f (default α) $ fun x hx => (hx $ Unique.eq_default _).elim
+theorem finprod_unique [Unique α] (f : α → M) : (∏ᶠ i, f i) = f default :=
+  finprod_eq_single f default $ fun x hx => (hx $ Unique.eq_default _).elim
 
 @[simp, to_additive]
 theorem finprod_true (f : True → M) : (∏ᶠ i, f i) = f trivialₓ :=
@@ -373,6 +373,11 @@ theorem finprod_mem_eq_one_of_infinite {f : α → M} {s : Set α} (hs : (s ∩ 
   rwa [← mul_support_mul_indicator] at hs
 
 @[to_additive]
+theorem finprod_mem_eq_one_of_forall_eq_one {f : α → M} {s : Set α} (h : ∀, ∀ x ∈ s, ∀, f x = 1) :
+    (∏ᶠ i ∈ s, f i) = 1 := by
+  simp (config := { contextual := true })[h]
+
+@[to_additive]
 theorem finprod_mem_inter_mul_support (f : α → M) (s : Set α) : (∏ᶠ i ∈ s ∩ mul_support f, f i) = ∏ᶠ i ∈ s, f i := by
   rw [finprod_mem_def, finprod_mem_def, mul_indicator_inter_mul_support]
 
@@ -397,6 +402,10 @@ variable {f g : α → M} {a b : α} {s t : Set α}
 @[to_additive]
 theorem finprod_mem_congr (h₀ : s = t) (h₁ : ∀, ∀ x ∈ t, ∀, f x = g x) : (∏ᶠ i ∈ s, f i) = ∏ᶠ i ∈ t, g i :=
   h₀.symm ▸ (finprod_congr $ fun i => finprod_congr_Prop rfl (h₁ i))
+
+@[to_additive]
+theorem finprod_eq_one_of_forall_eq_one {f : α → M} (h : ∀ x, f x = 1) : (∏ᶠ i, f i) = 1 := by
+  simp (config := { contextual := true })[h]
 
 /-!
 ### Distributivity w.r.t. addition, subtraction, and (scalar) multiplication

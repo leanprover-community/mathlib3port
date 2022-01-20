@@ -92,7 +92,7 @@ theorem to_list_nonempty : ∀ {s : Stringₓ}, s ≠ Stringₓ.empty → s.to_l
     cases s <;> [cases h rfl, rfl]
 
 @[simp]
-theorem head_empty : "".head = default _ :=
+theorem head_empty : "".head = default :=
   rfl
 
 @[simp]

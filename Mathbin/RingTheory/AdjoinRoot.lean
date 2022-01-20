@@ -82,11 +82,11 @@ instance [CommSemiringₓ S] [Algebra S R] : Algebra S (AdjoinRoot f) :=
 
 instance [CommSemiringₓ S] [CommSemiringₓ K] [HasScalar S K] [Algebra S R] [Algebra K R] [IsScalarTower S K R] :
     IsScalarTower S K (AdjoinRoot f) :=
-  Submodule.Quotient.HasQuotient.Quotient.is_scalar_tower _ _
+  Submodule.Quotient.is_scalar_tower _ _
 
 instance [CommSemiringₓ S] [CommSemiringₓ K] [Algebra S R] [Algebra K R] [SmulCommClass S K R] :
     SmulCommClass S K (AdjoinRoot f) :=
-  Submodule.Quotient.HasQuotient.Quotient.smul_comm_class _ _
+  Submodule.Quotient.smul_comm_class _ _
 
 @[simp]
 theorem algebra_map_eq : algebraMap R (AdjoinRoot f) = of f :=

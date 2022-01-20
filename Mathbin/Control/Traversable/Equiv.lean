@@ -113,7 +113,7 @@ variable {α β γ : Type u}
 
 open IsLawfulTraversable Functor
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:374:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 protected theorem id_traverse (x : t' α) : Equivₓ.traverse eqv id.mk x = x := by
   simp' [Equivₓ.traverse, idBind, id_traverse, Functor.map] with functor_norm
 

@@ -27,7 +27,7 @@ Alternate forms which operate on `[is_scalar_tower ℝ 𝕜 F]` instead are prov
 
 open IsROrC
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SemiNormedGroup F] [SemiNormedSpace 𝕜 F]
+variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SemiNormedGroup F] [NormedSpace 𝕜 F]
 
 local notation "abs𝕜" => @IsROrC.abs 𝕜 _
 
@@ -72,7 +72,7 @@ theorem LinearMap.extend_to_𝕜'_apply [Module ℝ F] [IsScalarTower ℝ 𝕜 F
   rfl
 
 /-- The norm of the extension is bounded by `∥fr∥`. -/
-theorem norm_bound [SemiNormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) (x : F) :
+theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) (x : F) :
     ∥(fr.to_linear_map.extend_to_𝕜' x : 𝕜)∥ ≤ ∥fr∥ * ∥x∥ := by
   let lm : F →ₗ[𝕜] 𝕜 := fr.to_linear_map.extend_to_𝕜'
   classical
@@ -109,11 +109,10 @@ theorem norm_bound [SemiNormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F �
       rw [norm_eq_abs, ht, one_mulₓ]
 
 /-- Extend `fr : F →L[ℝ] ℝ` to `F →L[𝕜] 𝕜`. -/
-noncomputable def ContinuousLinearMap.extendTo𝕜' [SemiNormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) :
-    F →L[𝕜] 𝕜 :=
+noncomputable def ContinuousLinearMap.extendTo𝕜' [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) : F →L[𝕜] 𝕜 :=
   LinearMap.mkContinuous _ ∥fr∥ (norm_bound _)
 
-theorem ContinuousLinearMap.extend_to_𝕜'_apply [SemiNormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) (x : F) :
+theorem ContinuousLinearMap.extend_to_𝕜'_apply [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) (x : F) :
     fr.extend_to_𝕜' x = (fr x : 𝕜) - (I : 𝕜) * fr ((I : 𝕜) • x) :=
   rfl
 

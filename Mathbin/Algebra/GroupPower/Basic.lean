@@ -121,9 +121,6 @@ theorem Commute.mul_pow {a b : M} (h : Commute a b) (n : ℕ) : (a * b) ^ n = a 
     fun n ihn => by
     simp only [pow_succₓ, ihn, ← mul_assocₓ, (h.pow_left n).right_comm]
 
-theorem neg_pow [Ringₓ R] (a : R) (n : ℕ) : -a ^ n = -1 ^ n * a ^ n :=
-  neg_one_mul a ▸ (Commute.neg_one_left a).mul_pow n
-
 @[to_additive bit0_nsmul']
 theorem pow_bit0' (a : M) (n : ℕ) : a ^ bit0 n = (a * a) ^ n := by
   rw [pow_bit0, (Commute.refl a).mul_pow]
@@ -131,14 +128,6 @@ theorem pow_bit0' (a : M) (n : ℕ) : a ^ bit0 n = (a * a) ^ n := by
 @[to_additive bit1_nsmul']
 theorem pow_bit1' (a : M) (n : ℕ) : a ^ bit1 n = (a * a) ^ n * a := by
   rw [bit1, pow_succ'ₓ, pow_bit0']
-
-@[simp]
-theorem neg_pow_bit0 [Ringₓ R] (a : R) (n : ℕ) : -a ^ bit0 n = a ^ bit0 n := by
-  rw [pow_bit0', neg_mul_neg, pow_bit0']
-
-@[simp]
-theorem neg_pow_bit1 [Ringₓ R] (a : R) (n : ℕ) : -a ^ bit1 n = -(a ^ bit1 n) := by
-  simp only [bit1, pow_succₓ, neg_pow_bit0, neg_mul_eq_neg_mul]
 
 end Monoidₓ
 
@@ -196,6 +185,10 @@ theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a := by
 @[to_additive neg_one_zsmul]
 theorem zpow_neg_one (x : G) : x ^ (-1 : ℤ) = x⁻¹ :=
   (zpow_neg_succ_of_nat x 0).trans $ congr_argₓ HasInv.inv (pow_oneₓ x)
+
+@[to_additive]
+theorem zpow_neg_coe_of_pos (a : G) : ∀ {n : ℕ}, 0 < n → a ^ -(n : ℤ) = (a ^ n)⁻¹
+  | n + 1, _ => zpow_neg_succ_of_nat _ _
 
 end DivInvMonoidₓ
 
@@ -316,29 +309,6 @@ protected theorem map_pow (f : R →+* S) a : ∀ n : ℕ, f (a ^ n) = f a ^ n :
 
 end RingHom
 
-section
-
-variable (R)
-
-theorem neg_one_pow_eq_or [Ringₓ R] : ∀ n : ℕ, (-1 : R) ^ n = 1 ∨ (-1 : R) ^ n = -1
-  | 0 => Or.inl (pow_zeroₓ _)
-  | n + 1 =>
-    (neg_one_pow_eq_or n).swap.imp
-      (fun h => by
-        rw [pow_succₓ, h, neg_one_mul, neg_negₓ])
-      fun h => by
-      rw [pow_succₓ, h, mul_oneₓ]
-
-end
-
-@[simp]
-theorem neg_one_pow_mul_eq_zero_iff [Ringₓ R] {n : ℕ} {r : R} : -1 ^ n * r = 0 ↔ r = 0 := by
-  rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
-
-@[simp]
-theorem mul_neg_one_pow_eq_zero_iff [Ringₓ R] {n : ℕ} {r : R} : r * -1 ^ n = 0 ↔ r = 0 := by
-  rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
-
 theorem pow_dvd_pow [Monoidₓ R] (a : R) {m n : ℕ} (h : m ≤ n) : a ^ m ∣ a ^ n :=
   ⟨a ^ (n - m), by
     rw [← pow_addₓ, Nat.add_comm, tsub_add_cancel_of_le h]⟩
@@ -349,14 +319,6 @@ theorem pow_dvd_pow_of_dvd [CommMonoidₓ R] {a b : R} (h : a ∣ b) : ∀ n : �
   | n + 1 => by
     rw [pow_succₓ, pow_succₓ]
     exact mul_dvd_mul h (pow_dvd_pow_of_dvd n)
-
-theorem sq_sub_sq {R : Type _} [CommRingₓ R] (a b : R) : a ^ 2 - b ^ 2 = (a + b) * (a - b) := by
-  rw [sq, sq, mul_self_sub_mul_self]
-
-alias sq_sub_sq ← pow_two_sub_pow_two
-
-theorem eq_or_eq_neg_of_sq_eq_sq [CommRingₓ R] [IsDomain R] (a b : R) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b := by
-  rwa [← add_eq_zero_iff_eq_neg, ← sub_eq_zero, or_comm, ← mul_eq_zero, ← sq_sub_sq a b, sub_eq_zero]
 
 theorem pow_eq_zero [MonoidWithZeroₓ R] [NoZeroDivisors R] {x : R} {n : ℕ} (H : x ^ n = 0) : x = 0 := by
   induction' n with n ih
@@ -402,16 +364,70 @@ alias add_sq ← add_pow_two
 
 end CommSemiringₓ
 
+section Ringₓ
+
+variable [Ringₓ R]
+
+section
+
+variable (R)
+
+theorem neg_one_pow_eq_or : ∀ n : ℕ, (-1 : R) ^ n = 1 ∨ (-1 : R) ^ n = -1
+  | 0 => Or.inl (pow_zeroₓ _)
+  | n + 1 =>
+    (neg_one_pow_eq_or n).swap.imp
+      (fun h => by
+        rw [pow_succₓ, h, neg_one_mul, neg_negₓ])
+      fun h => by
+      rw [pow_succₓ, h, mul_oneₓ]
+
+end
+
 @[simp]
-theorem neg_sq {α} [Ringₓ α] (z : α) : -z ^ 2 = z ^ 2 := by
+theorem neg_one_pow_mul_eq_zero_iff {n : ℕ} {r : R} : -1 ^ n * r = 0 ↔ r = 0 := by
+  rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
+
+@[simp]
+theorem mul_neg_one_pow_eq_zero_iff {n : ℕ} {r : R} : r * -1 ^ n = 0 ↔ r = 0 := by
+  rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
+
+theorem neg_pow (a : R) (n : ℕ) : -a ^ n = -1 ^ n * a ^ n :=
+  neg_one_mul a ▸ (Commute.neg_one_left a).mul_pow n
+
+@[simp]
+theorem neg_pow_bit0 (a : R) (n : ℕ) : -a ^ bit0 n = a ^ bit0 n := by
+  rw [pow_bit0', neg_mul_neg, pow_bit0']
+
+@[simp]
+theorem neg_pow_bit1 (a : R) (n : ℕ) : -a ^ bit1 n = -(a ^ bit1 n) := by
+  simp only [bit1, pow_succₓ, neg_pow_bit0, neg_mul_eq_neg_mul]
+
+@[simp]
+theorem neg_sq (a : R) : -a ^ 2 = a ^ 2 := by
   simp [sq]
 
 alias neg_sq ← neg_pow_two
 
-theorem sub_sq {R} [CommRingₓ R] (a b : R) : (a - b) ^ 2 = a ^ 2 - 2 * a * b + b ^ 2 := by
+end Ringₓ
+
+section CommRingₓ
+
+variable [CommRingₓ R]
+
+theorem sq_sub_sq (a b : R) : a ^ 2 - b ^ 2 = (a + b) * (a - b) := by
+  rw [sq, sq, mul_self_sub_mul_self]
+
+alias sq_sub_sq ← pow_two_sub_pow_two
+
+theorem eq_or_eq_neg_of_sq_eq_sq [IsDomain R] (a b : R) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b := by
+  rwa [← add_eq_zero_iff_eq_neg, ← sub_eq_zero, or_comm, ← mul_eq_zero, ← sq_sub_sq a b, sub_eq_zero]
+
+theorem sub_sq (a b : R) : (a - b) ^ 2 = a ^ 2 - 2 * a * b + b ^ 2 := by
   rw [sub_eq_add_neg, add_sq, neg_sq, mul_neg_eq_neg_mul_symm, ← sub_eq_add_neg]
 
 alias sub_sq ← sub_pow_two
+
+end CommRingₓ
 
 theorem of_add_nsmul [AddMonoidₓ A] (x : A) (n : ℕ) : Multiplicative.ofAdd (n • x) = Multiplicative.ofAdd x ^ n :=
   rfl
@@ -419,7 +435,7 @@ theorem of_add_nsmul [AddMonoidₓ A] (x : A) (n : ℕ) : Multiplicative.ofAdd (
 theorem of_add_zsmul [AddGroupₓ A] (x : A) (n : ℤ) : Multiplicative.ofAdd (n • x) = Multiplicative.ofAdd x ^ n :=
   rfl
 
-theorem of_mul_pow {A : Type _} [Monoidₓ A] (x : A) (n : ℕ) : Additive.ofMul (x ^ n) = n • Additive.ofMul x :=
+theorem of_mul_pow [Monoidₓ A] (x : A) (n : ℕ) : Additive.ofMul (x ^ n) = n • Additive.ofMul x :=
   rfl
 
 theorem of_mul_zpow [Groupₓ G] (x : G) (n : ℤ) : Additive.ofMul (x ^ n) = n • Additive.ofMul x :=

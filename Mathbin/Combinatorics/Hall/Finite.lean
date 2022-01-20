@@ -185,11 +185,9 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
   set ι'' := (s : Set ι)ᶜ with ι''_def
   let t'' : ι'' → Finset α := fun a'' => t a'' \ s.bUnion t
   have card_ι''_le : Fintype.card ι'' ≤ n := by
-    apply Nat.le_of_lt_succₓ
-    rw [← hn]
-    convert (card_compl_lt_iff_nonempty _).mpr hs
-    convert Fintype.card_coe (sᶜ)
-    exact (Finset.coe_compl s).symm
+    simp_rw [← Nat.lt_succ_iffₓ, ← hn, ι'', ← Finset.coe_compl, coe_sort_coe]
+    rw [Fintype.card_congr' rfl, Fintype.card_coe]
+    rwa [card_compl_lt_iff_nonempty]
   rcases ih t'' card_ι''_le (hall_cond_of_compl hus ht) with ⟨f'', hf'', hsf''⟩
   have f'_mem_bUnion : ∀ {x'} hx' : x' ∈ s, f' ⟨x', hx'⟩ ∈ s.bUnion t := by
     intro x' hx'

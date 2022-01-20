@@ -200,7 +200,7 @@ theorem _root_.measurable.strongly_measurable [EmetricSpace β] [OpensMeasurable
     
   · inhabit β
     exact
-      ⟨simple_func.approx_on f hf Set.Univ (default β) (Set.mem_univ _), fun x =>
+      ⟨simple_func.approx_on f hf Set.Univ default (Set.mem_univ _), fun x =>
         simple_func.tendsto_approx_on hf (Set.mem_univ _)
           (by
             simp )⟩

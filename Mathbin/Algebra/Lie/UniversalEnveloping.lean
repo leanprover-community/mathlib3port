@@ -1,6 +1,6 @@
 import Mathbin.Algebra.Lie.OfAssociative
 import Mathbin.Algebra.RingQuot
-import Mathbin.LinearAlgebra.TensorAlgebra
+import Mathbin.LinearAlgebra.TensorAlgebra.Basic
 
 /-!
 # Universal enveloping algebra

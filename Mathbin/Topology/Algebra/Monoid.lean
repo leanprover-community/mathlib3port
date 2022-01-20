@@ -217,9 +217,10 @@ variable [TopologicalSpace M] [Monoidₓ M] [HasContinuousMul M]
 theorem Submonoid.top_closure_mul_self_subset (s : Submonoid M) :
     Closure (s : Set M) * Closure (s : Set M) ⊆ Closure (s : Set M) :=
   calc
-    Closure (s : Set M) * Closure (s : Set M) = (fun p : M × M => p.1 * p.2) '' Closure ((s : Set M).Prod s) := by
+    Closure (s : Set M) * Closure (s : Set M) = (fun p : M × M => p.1 * p.2) '' Closure ((s : Set M) ×ˢ (s : Set M)) :=
+      by
       simp [closure_prod_eq]
-    _ ⊆ Closure ((fun p : M × M => p.1 * p.2) '' (s : Set M).Prod s) :=
+    _ ⊆ Closure ((fun p : M × M => p.1 * p.2) '' ((s : Set M) ×ˢ (s : Set M))) :=
       image_closure_subset_closure_image continuous_mul
     _ = Closure s := by
       simp [s.coe_mul_self_eq]
@@ -247,12 +248,15 @@ instance Submonoid.topological_closure_has_continuous_mul (s : Submonoid M) :
     change Continuous fun p : s.topological_closure × s.topological_closure => (p.1 : M) * (p.2 : M)
     continuity
 
+@[to_additive]
 theorem Submonoid.submonoid_topological_closure (s : Submonoid M) : s ≤ s.topological_closure :=
   subset_closure
 
+@[to_additive]
 theorem Submonoid.is_closed_topological_closure (s : Submonoid M) : IsClosed (s.topological_closure : Set M) := by
   convert is_closed_closure
 
+@[to_additive]
 theorem Submonoid.topological_closure_minimal (s : Submonoid M) {t : Submonoid M} (h : s ≤ t)
     (ht : IsClosed (t : Set M)) : s.topological_closure ≤ t :=
   closure_minimal h ht
@@ -306,7 +310,7 @@ theorem continuous_list_prod {f : ι → X → M} (l : List ι) (h : ∀, ∀ i 
     Continuous fun a => (l.map fun i => f i a).Prod :=
   continuous_iff_continuous_at.2 $ fun x => tendsto_list_prod l $ fun c hc => continuous_iff_continuous_at.1 (h c hc) x
 
-@[continuity]
+@[continuity, to_additive continuous_nsmul]
 theorem continuous_pow : ∀ n : ℕ, Continuous fun a : M => a ^ n
   | 0 => by
     simpa using continuous_const
@@ -314,27 +318,33 @@ theorem continuous_pow : ∀ n : ℕ, Continuous fun a : M => a ^ n
     simp only [pow_succₓ]
     exact continuous_id.mul (continuous_pow _)
 
-@[continuity]
+@[continuity, to_additive Continuous.nsmul]
 theorem Continuous.pow {f : X → M} (h : Continuous f) (n : ℕ) : Continuous fun b => f b ^ n :=
   (continuous_pow n).comp h
 
+@[to_additive continuous_on_nsmul]
 theorem continuous_on_pow {s : Set M} (n : ℕ) : ContinuousOn (fun x => x ^ n) s :=
   (continuous_pow n).ContinuousOn
 
+@[to_additive continuous_at_nsmul]
 theorem continuous_at_pow (x : M) (n : ℕ) : ContinuousAt (fun x => x ^ n) x :=
   (continuous_pow n).ContinuousAt
 
+@[to_additive Filter.Tendsto.nsmul]
 theorem Filter.Tendsto.pow {l : Filter α} {f : α → M} {x : M} (hf : tendsto f l (𝓝 x)) (n : ℕ) :
     tendsto (fun x => f x ^ n) l (𝓝 (x ^ n)) :=
   (continuous_at_pow _ _).Tendsto.comp hf
 
+@[to_additive ContinuousWithinAt.nsmul]
 theorem ContinuousWithinAt.pow {f : X → M} {x : X} {s : Set X} (hf : ContinuousWithinAt f s x) (n : ℕ) :
     ContinuousWithinAt (fun x => f x ^ n) s x :=
   hf.pow n
 
+@[to_additive ContinuousAt.nsmul]
 theorem ContinuousAt.pow {f : X → M} {x : X} (hf : ContinuousAt f x) (n : ℕ) : ContinuousAt (fun x => f x ^ n) x :=
   hf.pow n
 
+@[to_additive ContinuousOn.nsmul]
 theorem ContinuousOn.pow {f : X → M} {s : Set X} (hf : ContinuousOn f s) (n : ℕ) : ContinuousOn (fun x => f x ^ n) s :=
   fun x hx => (hf x hx).pow n
 

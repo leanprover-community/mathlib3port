@@ -28,9 +28,8 @@ def to_multiset : (α →₀ ℕ) ≃+ Multiset α where
       simp ⟩
   left_inv := fun f =>
     ext $ fun a => by
-      simp only [Sum, Multiset.count_sum', Multiset.count_singleton, mul_boole, coe_mk, Multiset.mem_to_finset,
-        iff_selfₓ, not_not, mem_support_iff, ite_eq_left_iff, Ne.def, Multiset.count_eq_zero, Multiset.count_nsmul,
-        Finset.sum_ite_eq, ite_not]
+      simp only [Sum, Multiset.count_sum', Multiset.count_singleton, mul_boole, coe_mk, mem_support_iff,
+        Multiset.count_nsmul, Finset.sum_ite_eq, ite_not, ite_eq_right_iff]
       exact Eq.symm
   right_inv := fun s => by
     simp only [Sum, coe_mk, Multiset.to_finset_sum_count_nsmul_eq]

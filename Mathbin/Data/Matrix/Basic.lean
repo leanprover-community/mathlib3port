@@ -12,6 +12,15 @@ import Mathbin.Data.Fintype.Card
 
 This file defines basic properties of matrices.
 
+## Notation
+
+The locale `matrix` gives the following notation:
+
+* `⬝ᵥ` for `matrix.dot_product`
+* `⬝` for `matrix.mul`
+* `ᵀ` for `matrix.transpose`
+* `ᴴ` for `matrix.conj_transpose`
+
 ## TODO
 
 Under various conditions, multiplication of infinite matrices makes sense.
@@ -356,15 +365,17 @@ variable [Fintype m]
 def dot_product [Mul α] [AddCommMonoidₓ α] (v w : m → α) : α :=
   ∑ i, v i * w i
 
+localized [Matrix] infixl:72 " ⬝ᵥ " => Matrix.dotProduct
+
 theorem dot_product_assoc [Fintype n] [NonUnitalSemiring α] (u : m → α) (w : n → α) (v : Matrix m n α) :
-    dot_product (fun j => dot_product u fun i => v i j) w = dot_product u fun i => dot_product (v i) w := by
+    (fun j => u ⬝ᵥ fun i => v i j) ⬝ᵥ w = u ⬝ᵥ fun i => v i ⬝ᵥ w := by
   simpa [dot_product, Finset.mul_sum, Finset.sum_mul, mul_assocₓ] using Finset.sum_comm
 
-theorem dot_product_comm [CommSemiringₓ α] (v w : m → α) : dot_product v w = dot_product w v := by
+theorem dot_product_comm [CommSemiringₓ α] (v w : m → α) : v ⬝ᵥ w = w ⬝ᵥ v := by
   simp_rw [dot_product, mul_commₓ]
 
 @[simp]
-theorem dot_product_punit [AddCommMonoidₓ α] [Mul α] (v w : PUnit → α) : dot_product v w = v ⟨⟩ * w ⟨⟩ := by
+theorem dot_product_punit [AddCommMonoidₓ α] [Mul α] (v w : PUnit → α) : v ⬝ᵥ w = v ⟨⟩ * w ⟨⟩ := by
   simp [dot_product]
 
 section NonUnitalNonAssocSemiring
@@ -372,27 +383,27 @@ section NonUnitalNonAssocSemiring
 variable [NonUnitalNonAssocSemiring α] (u v w : m → α)
 
 @[simp]
-theorem dot_product_zero : dot_product v 0 = 0 := by
+theorem dot_product_zero : v ⬝ᵥ 0 = 0 := by
   simp [dot_product]
 
 @[simp]
-theorem dot_product_zero' : (dot_product v fun _ => 0) = 0 :=
+theorem dot_product_zero' : (v ⬝ᵥ fun _ => 0) = 0 :=
   dot_product_zero v
 
 @[simp]
-theorem zero_dot_product : dot_product 0 v = 0 := by
+theorem zero_dot_product : 0 ⬝ᵥ v = 0 := by
   simp [dot_product]
 
 @[simp]
-theorem zero_dot_product' : dot_product (fun _ => (0 : α)) v = 0 :=
+theorem zero_dot_product' : (fun _ => (0 : α)) ⬝ᵥ v = 0 :=
   zero_dot_product v
 
 @[simp]
-theorem add_dot_product : dot_product (u + v) w = dot_product u w + dot_product v w := by
+theorem add_dot_product : (u + v) ⬝ᵥ w = u ⬝ᵥ w + v ⬝ᵥ w := by
   simp [dot_product, add_mulₓ, Finset.sum_add_distrib]
 
 @[simp]
-theorem dot_product_add : dot_product u (v + w) = dot_product u v + dot_product u w := by
+theorem dot_product_add : u ⬝ᵥ (v + w) = u ⬝ᵥ v + u ⬝ᵥ w := by
   simp [dot_product, mul_addₓ, Finset.sum_add_distrib]
 
 end NonUnitalNonAssocSemiring
@@ -403,35 +414,35 @@ variable [DecidableEq m] [NonUnitalNonAssocSemiring α] (u v w : m → α)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
-theorem diagonal_dot_product (i : m) : dot_product (diagonal v i) w = v i * w i := by
+theorem diagonal_dot_product (i : m) : diagonal v i ⬝ᵥ w = v i * w i := by
   have : ∀ j _ : j ≠ i, diagonal v i j * w j = 0 := fun j hij => by
     simp [diagonal_apply_ne' hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
-theorem dot_product_diagonal (i : m) : dot_product v (diagonal w i) = v i * w i := by
+theorem dot_product_diagonal (i : m) : v ⬝ᵥ diagonal w i = v i * w i := by
   have : ∀ j _ : j ≠ i, v j * diagonal w i j = 0 := fun j hij => by
     simp [diagonal_apply_ne' hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
-theorem dot_product_diagonal' (i : m) : (dot_product v fun j => diagonal w j i) = v i * w i := by
+theorem dot_product_diagonal' (i : m) : (v ⬝ᵥ fun j => diagonal w j i) = v i * w i := by
   have : ∀ j _ : j ≠ i, v j * diagonal w j i = 0 := fun j hij => by
     simp [diagonal_apply_ne hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
-theorem single_dot_product (x : α) (i : m) : dot_product (Pi.single i x) v = x * v i := by
+theorem single_dot_product (x : α) (i : m) : Pi.single i x ⬝ᵥ v = x * v i := by
   have : ∀ j _ : j ≠ i, Pi.single i x j * v j = 0 := fun j hij => by
     simp [Pi.single_eq_of_ne hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
-theorem dot_product_single (x : α) (i : m) : dot_product v (Pi.single i x) = v i * x := by
+theorem dot_product_single (x : α) (i : m) : v ⬝ᵥ Pi.single i x = v i * x := by
   have : ∀ j _ : j ≠ i, v j * Pi.single i x j = 0 := fun j hij => by
     simp [Pi.single_eq_of_ne hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
@@ -443,19 +454,19 @@ section Ringₓ
 variable [Ringₓ α] (u v w : m → α)
 
 @[simp]
-theorem neg_dot_product : dot_product (-v) w = -dot_product v w := by
+theorem neg_dot_product : -v ⬝ᵥ w = -(v ⬝ᵥ w) := by
   simp [dot_product]
 
 @[simp]
-theorem dot_product_neg : dot_product v (-w) = -dot_product v w := by
+theorem dot_product_neg : v ⬝ᵥ -w = -(v ⬝ᵥ w) := by
   simp [dot_product]
 
 @[simp]
-theorem sub_dot_product : dot_product (u - v) w = dot_product u w - dot_product v w := by
+theorem sub_dot_product : (u - v) ⬝ᵥ w = u ⬝ᵥ w - v ⬝ᵥ w := by
   simp [sub_eq_add_neg]
 
 @[simp]
-theorem dot_product_sub : dot_product u (v - w) = dot_product u v - dot_product u w := by
+theorem dot_product_sub : u ⬝ᵥ (v - w) = u ⬝ᵥ v - u ⬝ᵥ w := by
   simp [sub_eq_add_neg]
 
 end Ringₓ
@@ -465,11 +476,11 @@ section DistribMulAction
 variable [Monoidₓ R] [Mul α] [AddCommMonoidₓ α] [DistribMulAction R α]
 
 @[simp]
-theorem smul_dot_product [IsScalarTower R α α] (x : R) (v w : m → α) : dot_product (x • v) w = x • dot_product v w := by
+theorem smul_dot_product [IsScalarTower R α α] (x : R) (v w : m → α) : x • v ⬝ᵥ w = x • (v ⬝ᵥ w) := by
   simp [dot_product, Finset.smul_sum, smul_mul_assoc]
 
 @[simp]
-theorem dot_product_smul [SmulCommClass R α α] (x : R) (v w : m → α) : dot_product v (x • w) = x • dot_product v w := by
+theorem dot_product_smul [SmulCommClass R α α] (x : R) (v w : m → α) : v ⬝ᵥ x • w = x • (v ⬝ᵥ w) := by
   simp [dot_product, Finset.smul_sum, mul_smul_comm]
 
 end DistribMulAction
@@ -478,24 +489,26 @@ section StarRing
 
 variable [Semiringₓ α] [StarRing α] (v w : m → α)
 
-theorem star_dot_product_star : dot_product (star v) (star w) = star (dot_product w v) := by
+theorem star_dot_product_star : star v ⬝ᵥ star w = star (w ⬝ᵥ v) := by
   simp [dot_product]
 
-theorem star_dot_product : dot_product (star v) w = star (dot_product (star w) v) := by
+theorem star_dot_product : star v ⬝ᵥ w = star (star w ⬝ᵥ v) := by
   simp [dot_product]
 
-theorem dot_product_star : dot_product v (star w) = star (dot_product w (star v)) := by
+theorem dot_product_star : v ⬝ᵥ star w = star (w ⬝ᵥ star v) := by
   simp [dot_product]
 
 end StarRing
 
 end DotProduct
 
+open_locale Matrix
+
 /-- `M ⬝ N` is the usual product of matrices `M` and `N`, i.e. we have that
 `(M ⬝ N) i k` is the dot product of the `i`-th row of `M` by the `k`-th column of `N`.
 This is currently only defined when `m` is finite. -/
 protected def mul [Fintype m] [Mul α] [AddCommMonoidₓ α] (M : Matrix l m α) (N : Matrix m n α) : Matrix l n α :=
-  fun i k => dot_product (fun j => M i j) fun j => N j k
+  fun i k => (fun j => M i j) ⬝ᵥ fun j => N j k
 
 localized [Matrix] infixl:75 " ⬝ " => Matrix.mul
 
@@ -511,7 +524,7 @@ theorem mul_eq_mul [Fintype n] [Mul α] [AddCommMonoidₓ α] (M N : Matrix n n 
   rfl
 
 theorem mul_apply' [Fintype m] [Mul α] [AddCommMonoidₓ α] {M : Matrix l m α} {N : Matrix m n α} {i k} :
-    (M ⬝ N) i k = dot_product (fun j => M i j) fun j => N j k :=
+    (M ⬝ N) i k = (fun j => M i j) ⬝ᵥ fun j => N j k :=
   rfl
 
 @[simp]
@@ -736,7 +749,7 @@ theorem scalar_inj [Nonempty n] {r s : α} : scalar n r = scalar n s ↔ r = s :
   constructor
   · intro h
     inhabit n
-    rw [← scalar_apply_eq r (arbitraryₓ n), ← scalar_apply_eq s (arbitraryₓ n), h]
+    rw [← scalar_apply_eq r (arbitrary n), ← scalar_apply_eq s (arbitrary n), h]
     
   · rintro rfl
     rfl
@@ -1071,13 +1084,13 @@ variable [NonUnitalNonAssocSemiring α]
     Put another way, `mul_vec M v` is the vector whose entries
     are those of `M ⬝ col v` (see `col_mul_vec`). -/
 def mul_vec [Fintype n] (M : Matrix m n α) (v : n → α) : m → α
-  | i => dot_product (fun j => M i j) v
+  | i => (fun j => M i j) ⬝ᵥ v
 
 /-- `vec_mul v M` is the vector-matrix product of `v` and `M`, where `v` is seen as a row matrix.
     Put another way, `vec_mul v M` is the vector whose entries
     are those of `row v ⬝ M` (see `row_vec_mul`). -/
 def vec_mul [Fintype m] (v : m → α) (M : Matrix m n α) : n → α
-  | j => dot_product v fun i => M i j
+  | j => v ⬝ᵥ fun i => M i j
 
 /-- Left multiplication by a matrix, as an `add_monoid_hom` from vectors to vectors. -/
 @[simps]
@@ -1097,7 +1110,7 @@ theorem vec_mul_diagonal [Fintype m] [DecidableEq m] (v w : m → α) (x : m) : 
 
 /-- Associate the dot product of `mul_vec` to the left. -/
 theorem dot_product_mul_vec [Fintype n] [Fintype m] [NonUnitalSemiring R] (v : m → R) (A : Matrix m n R) (w : n → R) :
-    dot_product v (mul_vec A w) = dot_product (vec_mul v A) w := by
+    v ⬝ᵥ mul_vec A w = vec_mul v A ⬝ᵥ w := by
   simp only [dot_product, vec_mul, mul_vec, Finset.mul_sum, Finset.sum_mul, mul_assocₓ] <;> exact Finset.sum_comm
 
 @[simp]
@@ -1724,8 +1737,7 @@ theorem row_mul_vec [Fintype n] [Semiringₓ α] (M : Matrix m n α) (v : n → 
   rfl
 
 @[simp]
-theorem row_mul_col_apply [Fintype m] [Mul α] [AddCommMonoidₓ α] (v w : m → α) i j :
-    (row v ⬝ col w) i j = dot_product v w :=
+theorem row_mul_col_apply [Fintype m] [Mul α] [AddCommMonoidₓ α] (v w : m → α) i j : (row v ⬝ col w) i j = v ⬝ᵥ w :=
   rfl
 
 end RowCol
@@ -1835,8 +1847,7 @@ theorem map_matrix_mul (M : Matrix m n α) (N : Matrix n o α) (i : m) (j : o) (
     f (Matrix.mul M N i j) = Matrix.mul (fun i j => f (M i j)) (fun i j => f (N i j)) i j := by
   simp [Matrix.mul_apply, RingHom.map_sum]
 
-theorem map_dot_product [Semiringₓ R] [Semiringₓ S] (f : R →+* S) (v w : n → R) :
-    f (Matrix.dotProduct v w) = Matrix.dotProduct (f ∘ v) (f ∘ w) := by
+theorem map_dot_product [Semiringₓ R] [Semiringₓ S] (f : R →+* S) (v w : n → R) : f (v ⬝ᵥ w) = f ∘ v ⬝ᵥ f ∘ w := by
   simp only [Matrix.dotProduct, f.map_sum, f.map_mul]
 
 theorem map_vec_mul [Semiringₓ R] [Semiringₓ S] (f : R →+* S) (M : Matrix n m R) (v : n → R) (i : m) :

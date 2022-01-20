@@ -2,6 +2,7 @@ import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.NumberTheory.Divisors
 import Mathbin.Algebra.Squarefree
 import Mathbin.Algebra.Invertible
+import Mathbin.Data.Nat.Factorization
 
 /-!
 # Arithmetic Functions and Dirichlet Convolution
@@ -630,6 +631,12 @@ theorem pmul [CommSemiringₓ R] {f g : arithmetic_function R} (hf : f.is_multip
     simp [hf, hg], fun m n cop => by
     simp only [pmul_apply, hf.map_mul_of_coprime cop, hg.map_mul_of_coprime cop]
     ring⟩
+
+/-- For any multiplicative function `f` and any `n > 0`,
+we can evaluate `f n` by evaluating `f` at `p ^ k` over the factorization of `n` -/
+theorem multiplicative_factorization [CommMonoidWithZero R] (f : arithmetic_function R) (hf : f.is_multiplicative) :
+    ∀ {n : ℕ}, n ≠ 0 → f n = n.factorization.prod fun p k => f (p ^ k) := fun n hn =>
+  multiplicative_factorization f hf.2 hf.1 hn
 
 end IsMultiplicative
 

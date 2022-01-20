@@ -155,7 +155,7 @@ theorem continuous_within_at_const_smul_iff (c : G) :
 
 @[to_additive]
 theorem continuous_on_const_smul_iff (c : G) : ContinuousOn (fun x => c • f x) s ↔ ContinuousOn f s :=
-  forall_congrₓ $ fun b => forall_congrₓ $ fun hb => continuous_within_at_const_smul_iff c
+  forall₂_congrₓ $ fun b hb => continuous_within_at_const_smul_iff c
 
 @[to_additive]
 theorem continuous_at_const_smul_iff (c : G) : ContinuousAt (fun x => c • f x) b ↔ ContinuousAt f b :=

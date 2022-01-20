@@ -1,4 +1,5 @@
 import Mathbin.MeasureTheory.Function.L1Space
+import Mathbin.MeasureTheory.Function.LpOrder
 
 /-!
 # Density of simple functions
@@ -813,6 +814,132 @@ def coe_to_Lp : Lp.simple_func E p μ →L[𝕜] Lp E p μ :=
 variable {α E 𝕜}
 
 end CoeToLp
+
+section Order
+
+variable {G : Type _} [NormedLatticeAddCommGroup G] [MeasurableSpace G] [BorelSpace G] [second_countable_topology G]
+
+theorem coe_fn_le (f g : Lp.simple_func G p μ) : f ≤ᵐ[μ] g ↔ f ≤ g := by
+  rw [← Subtype.coe_le_coe, ← Lp.coe_fn_le, coe_fn_coe_base', coe_fn_coe_base' g]
+
+instance : CovariantClass (Lp.simple_func G p μ) (Lp.simple_func G p μ) (· + ·) (· ≤ ·) := by
+  refine' ⟨fun f g₁ g₂ hg₁₂ => _⟩
+  rw [← Lp.simple_func.coe_fn_le] at hg₁₂⊢
+  have h_add_1 : ⇑(f + g₁) =ᵐ[μ] f + g₁ := Lp.coe_fn_add _ _
+  have h_add_2 : ⇑(f + g₂) =ᵐ[μ] f + g₂ := Lp.coe_fn_add _ _
+  filter_upwards [h_add_1, h_add_2, hg₁₂]
+  intro a h1 h2 h3
+  rw [h1, h2, Pi.add_apply, Pi.add_apply]
+  exact add_le_add le_rfl h3
+
+variable (p μ G)
+
+theorem coe_fn_zero : (0 : Lp.simple_func G p μ) =ᵐ[μ] (0 : α → G) :=
+  Lp.coe_fn_zero _ _ _
+
+variable {p μ G}
+
+theorem coe_fn_nonneg (f : Lp.simple_func G p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f := by
+  rw [← Lp.simple_func.coe_fn_le]
+  have h0 : (0 : Lp.simple_func G p μ) =ᵐ[μ] (0 : α → G) := Lp.simple_func.coe_fn_zero p μ G
+  constructor <;> intro h <;> filter_upwards [h, h0] <;> intro a h1 h2
+  · rwa [h2]
+    
+  · rwa [← h2]
+    
+
+theorem exists_simple_func_nonneg_ae_eq {f : Lp.simple_func G p μ} (hf : 0 ≤ f) : ∃ f' : α →ₛ G, 0 ≤ f' ∧ f =ᵐ[μ] f' :=
+  by
+  rw [← Lp.simple_func.coe_fn_nonneg] at hf
+  have hf_ae : 0 ≤ᵐ[μ] simple_func.to_simple_func f := by
+    filter_upwards [to_simple_func_eq_to_fun f, hf]
+    intro x h1 h2
+    rwa [h1]
+  let s := to_measurable μ { x | ¬0 ≤ simple_func.to_simple_func f x }ᶜ
+  have hs_zero : μ (sᶜ) = 0 := by
+    rw [compl_compl, measure_to_measurable]
+    rwa [eventually_le, ae_iff] at hf_ae
+  have hfs_nonneg : ∀, ∀ x ∈ s, ∀, 0 ≤ simple_func.to_simple_func f x := by
+    intro x hxs
+    rw [mem_compl_iff] at hxs
+    have hx' : x ∉ { a : α | ¬0 ≤ simple_func.to_simple_func f a } := fun h => hxs (subset_to_measurable μ _ h)
+    rwa [Set.nmem_set_of_eq, not_not] at hx'
+  let f' :=
+    simple_func.piecewise s (measurable_set_to_measurable μ _).Compl (simple_func.to_simple_func f)
+      (simple_func.const α (0 : G))
+  refine' ⟨f', fun x => _, _⟩
+  · rw [simple_func.piecewise_apply]
+    by_cases' hxs : x ∈ s
+    · simp only [hxs, hfs_nonneg x hxs, if_true, Pi.zero_apply, simple_func.coe_zero]
+      
+    · simp only [hxs, simple_func.const_zero, if_false]
+      
+    
+  · rw [simple_func.coe_piecewise]
+    have : s =ᵐ[μ] univ := by
+      rw [ae_eq_set]
+      simp only [true_andₓ, measure_empty, eq_self_iff_true, diff_univ, ← compl_eq_univ_diff]
+      exact hs_zero
+    refine' eventually_eq.trans (to_simple_func_eq_to_fun f).symm _
+    refine' eventually_eq.trans _ (piecewise_ae_eq_of_ae_eq_set this.symm)
+    simp only [simple_func.const_zero, indicator_univ, piecewise_eq_indicator, simple_func.coe_zero]
+    
+
+variable (p μ G)
+
+/-- Coercion from nonnegative simple functions of Lp to nonnegative functions of Lp. -/
+def coe_simple_func_nonneg_to_Lp_nonneg : { g : Lp.simple_func G p μ // 0 ≤ g } → { g : Lp G p μ // 0 ≤ g } := fun g =>
+  ⟨g, g.2⟩
+
+theorem dense_range_coe_simple_func_nonneg_to_Lp_nonneg [hp : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) :
+    DenseRange (coe_simple_func_nonneg_to_Lp_nonneg p μ G) := by
+  intro g
+  rw [mem_closure_iff_seq_limit]
+  have hg_mem_ℒp : mem_ℒp g p μ := Lp.mem_ℒp g
+  let x := fun n => simple_func.approx_on g (Lp.measurable g) { y | 0 ≤ y } 0 le_rfl n
+  have hx_nonneg : ∀ n, 0 ≤ x n := fun n a => simple_func.approx_on_mem (Lp.measurable g) _ n a
+  have hx_mem_ℒp : ∀ n, mem_ℒp (x n) p μ :=
+    simple_func.mem_ℒp_approx_on _ hg_mem_ℒp _
+      ⟨ae_measurable_const, by
+        simp ⟩
+  have h_to_Lp := fun n => mem_ℒp.coe_fn_to_Lp (hx_mem_ℒp n)
+  have hx_nonneg_Lp : ∀ n, 0 ≤ to_Lp (x n) (hx_mem_ℒp n) := by
+    intro n
+    rw [← Lp.simple_func.coe_fn_le, coe_fn_coe_base' (simple_func.to_Lp (x n) _), Lp.simple_func.to_Lp_eq_to_Lp]
+    have h0 := Lp.simple_func.coe_fn_zero p μ G
+    filter_upwards [Lp.simple_func.coe_fn_zero p μ G, h_to_Lp n]
+    intro a ha0 ha_to_Lp
+    rw [ha0, ha_to_Lp]
+    exact hx_nonneg n a
+  have hx_tendsto : tendsto (fun n : ℕ => snorm (x n - g) p μ) at_top (𝓝 0) := by
+    refine'
+      @simple_func.tendsto_approx_on_Lp_snorm α G _ _ _ p _ g (Lp.measurable g) { y | 0 ≤ y } 0 le_rfl _ hp_ne_top μ _ _
+    · have hg_nonneg : 0 ≤ᵐ[μ] g := (Lp.coe_fn_nonneg _).mpr g.2
+      refine' hg_nonneg.mono fun a ha => subset_closure _
+      simpa using ha
+      
+    · simp_rw [sub_zero]
+      exact hg_mem_ℒp.snorm_lt_top
+      
+  refine'
+    ⟨fun n => (coe_simple_func_nonneg_to_Lp_nonneg p μ G) ⟨to_Lp (x n) (hx_mem_ℒp n), hx_nonneg_Lp n⟩, fun n =>
+      mem_range_self _, _⟩
+  suffices tendsto (fun n : ℕ => ↑to_Lp (x n) (hx_mem_ℒp n)) at_top (𝓝 (g : Lp G p μ)) by
+    rw [tendsto_iff_dist_tendsto_zero] at this⊢
+    simp_rw [Subtype.pseudo_dist_eq]
+    convert this
+  rw [Lp.tendsto_Lp_iff_tendsto_ℒp']
+  convert hx_tendsto
+  refine' funext fun n => snorm_congr_ae (eventually_eq.sub _ _)
+  · rw [Lp.simple_func.to_Lp_eq_to_Lp]
+    exact h_to_Lp n
+    
+  · rw [← coe_fn_coe_base]
+    
+
+variable {p μ G}
+
+end Order
 
 end SimpleFunc
 

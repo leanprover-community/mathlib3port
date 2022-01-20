@@ -44,7 +44,7 @@ structure LinearRecurrence (α : Type _) [CommSemiringₓ α] where
   coeffs : Finₓ order → α
 
 instance (α : Type _) [CommSemiringₓ α] : Inhabited (LinearRecurrence α) :=
-  ⟨⟨0, default _⟩⟩
+  ⟨⟨0, default⟩⟩
 
 namespace LinearRecurrence
 

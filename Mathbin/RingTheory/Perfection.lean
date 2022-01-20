@@ -346,7 +346,7 @@ instance : CommRingₓ (ModP K v O hv p) :=
 include hp hvp
 
 instance : CharP (ModP K v O hv p) p :=
-  CharP.quotient O p $ mt hv.one_of_is_unit $ ((algebraMap O K).map_nat_cast p).symm ▸ hvp.1
+  CharP.quotient O p $ mt hv.one_of_is_unit $ (map_nat_cast (algebraMap O K) p).symm ▸ hvp.1
 
 instance : Nontrivial (ModP K v O hv p) :=
   CharP.nontrivial_of_char_ne_one hp.1.ne_one
@@ -421,7 +421,7 @@ theorem v_p_lt_pre_val {x : ModP K v O hv p} : v p < pre_val K v O hv p x ↔ x 
       rw [hx, pre_val_zero] at h
       exact not_lt_zero' h, fun h => lt_of_not_ge' $ fun hp => h _⟩
   obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
-  rw [pre_val_mk h, ← (algebraMap O K).map_nat_cast p, hv.le_iff_dvd] at hp
+  rw [pre_val_mk h, ← map_nat_cast (algebraMap O K) p, hv.le_iff_dvd] at hp
   rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
   exact hp
 
@@ -435,7 +435,7 @@ theorem pre_val_eq_zero {x : ModP K v O hv p} : pre_val K v O hv p x = 0 ↔ x =
 variable (hv hvp)
 
 theorem v_p_lt_val {x : O} : v p < v (algebraMap O K x) ↔ (Ideal.Quotient.mk _ x : ModP K v O hv p) ≠ 0 := by
-  rw [lt_iff_not_ge', not_iff_not, ← (algebraMap O K).map_nat_cast p, hv.le_iff_dvd, Ideal.Quotient.eq_zero_iff_mem,
+  rw [lt_iff_not_ge', not_iff_not, ← map_nat_cast (algebraMap O K) p, hv.le_iff_dvd, Ideal.Quotient.eq_zero_iff_mem,
     Ideal.mem_span_singleton]
 
 open Nnreal
@@ -462,7 +462,7 @@ theorem mul_ne_zero_of_pow_p_ne_zero {x y : ModP K v O hv p} (hx : x ^ p ≠ 0) 
   replace hvp := zero_lt_iff.2 hvp
   conv_lhs => rw [← rpow_one (v p)]
   rw [← rpow_add (ne_of_gtₓ hvp)]
-  refine' rpow_le_rpow_of_exponent_ge hvp ((algebraMap O K).map_nat_cast p ▸ hv.2 _) _
+  refine' rpow_le_rpow_of_exponent_ge hvp (map_nat_cast (algebraMap O K) p ▸ hv.2 _) _
   rw [← add_div, div_le_one (Nat.cast_pos.2 hp.1.Pos : 0 < (p : ℝ))]
   exact_mod_cast hp.1.two_le
 

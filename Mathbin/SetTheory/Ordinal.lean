@@ -1,6 +1,7 @@
-import Mathbin.SetTheory.Cardinal
+import Mathbin.Data.Sum.Order
 import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.Order.SuccPred
+import Mathbin.SetTheory.Cardinal
 
 /-!
 # Ordinals
@@ -837,6 +838,20 @@ protected theorem le_zero {o : Ordinal} : o ≤ 0 ↔ o = 0 := by
 protected theorem pos_iff_ne_zero {o : Ordinal} : 0 < o ↔ o ≠ 0 := by
   simp only [lt_iff_le_and_ne, Ordinal.zero_le, true_andₓ, Ne.def, eq_comm]
 
+theorem eq_zero_of_out_empty (o : Ordinal) [h : IsEmpty o.out.α] : o = 0 := by
+  by_contra ho
+  replace ho := Ordinal.pos_iff_ne_zero.2 ho
+  rw [← type_out o] at ho
+  have α := enum o.out.r 0 ho
+  exact h.elim α
+
+@[simp]
+theorem out_empty_iff_eq_zero {o : Ordinal} : IsEmpty o.out.α ↔ o = 0 := by
+  refine' ⟨@eq_zero_of_out_empty o, fun h => ⟨fun i => _⟩⟩
+  have := typein_lt_self i
+  subst h
+  exact not_lt_of_le (Ordinal.zero_le _) this
+
 instance : HasOne Ordinal :=
   ⟨⟦⟨PUnit, EmptyRelation, by
         infer_instance⟩⟧⟩
@@ -1018,7 +1033,7 @@ the addition, together with properties of the other operations, are proved in
 instance : Add Ordinal.{u} :=
   ⟨fun o₁ o₂ =>
     Quotientₓ.liftOn₂ o₁ o₂
-        (fun ⟨α, r, wo⟩ ⟨β, s, wo'⟩ => ⟦⟨Sum α β, Sum.Lex r s, Sum.Lex.is_well_order⟩⟧ :
+        (fun ⟨α, r, wo⟩ ⟨β, s, wo'⟩ => ⟦⟨Sum α β, Sum.Lex r s, Sum.Lex.is_well_order _ _⟩⟧ :
           WellOrder → WellOrder → Ordinal) $
       fun ⟨α₁, r₁, o₁⟩ ⟨α₂, r₂, o₂⟩ ⟨β₁, s₁, p₁⟩ ⟨β₂, s₂, p₂⟩ ⟨f⟩ ⟨g⟩ => Quot.sound ⟨RelIso.sumLexCongr f g⟩⟩
 
@@ -1056,7 +1071,7 @@ instance : AddMonoidₓ Ordinal.{u} where
         ⟨⟨sum_assoc _ _ _, fun a b => by
             rcases a with (⟨a | a⟩ | a) <;>
               rcases b with (⟨b | b⟩ | b) <;>
-                simp only [sum_assoc_apply_in1, sum_assoc_apply_in2, sum_assoc_apply_in3, Sum.lex_inl_inl,
+                simp only [sum_assoc_apply_inl_inl, sum_assoc_apply_inl_inr, sum_assoc_apply_inr, Sum.lex_inl_inl,
                   Sum.lex_inr_inr, Sum.Lex.sep, Sum.lex_inr_inl]⟩⟩
 
 theorem add_le_add_left {a b : Ordinal} : a ≤ b → ∀ c, c + a ≤ c + b :=
@@ -1281,6 +1296,9 @@ theorem le_omin {S H a} : a ≤ omin S H ↔ ∀, ∀ i ∈ S, ∀, a ≤ i :=
 theorem omin_le {S H i} (h : i ∈ S) : omin S H ≤ i :=
   le_omin.1 (le_reflₓ _) _ h
 
+theorem not_lt_omin {S H i} (h : i ∈ S) : ¬i < omin S H :=
+  not_lt_of_le (omin_le h)
+
 @[simp]
 theorem lift_min {ι} I (f : ι → Ordinal) : lift (min I f) = min I (lift ∘ f) :=
   le_antisymmₓ (le_minₓ.2 $ fun a => lift_le.2 $ min_le _ a) $ by
@@ -1300,6 +1318,9 @@ instance : ConditionallyCompleteLinearOrderBot Ordinal :=
 theorem bot_eq_zero : (⊥ : Ordinal) = 0 :=
   rfl
 
+protected theorem not_lt_zero (o : Ordinal) : ¬o < 0 :=
+  not_lt_bot
+
 theorem Inf_eq_omin {s : Set Ordinal} (hs : s.nonempty) : Inf s = omin s hs := by
   simp only [Inf, ConditionallyCompleteLattice.infₓ, omin, ConditionallyCompleteLinearOrder.infₓ,
     ConditionallyCompleteLinearOrderBot.infₓ, hs, dif_pos]
@@ -1310,7 +1331,7 @@ theorem Inf_mem {s : Set Ordinal} (hs : s.nonempty) : Inf s ∈ s := by
   rw [Inf_eq_omin hs]
   exact omin_mem _ hs
 
-instance : NoTopOrder Ordinal :=
+instance : NoMaxOrder Ordinal :=
   ⟨fun a => ⟨a.succ, lt_succ_self a⟩⟩
 
 end Ordinal

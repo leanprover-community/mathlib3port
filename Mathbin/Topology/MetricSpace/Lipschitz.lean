@@ -348,7 +348,7 @@ of continuity of `f` on subsets of the product space. -/
 theorem continuous_on_prod_of_continuous_on_lipschitz_on [PseudoEmetricSpace α] [TopologicalSpace β]
     [PseudoEmetricSpace γ] (f : α × β → γ) {s : Set α} {t : Set β} (K : ℝ≥0 )
     (ha : ∀, ∀ a ∈ s, ∀, ContinuousOn (fun y => f (a, y)) t)
-    (hb : ∀, ∀ b ∈ t, ∀, LipschitzOnWith K (fun x => f (x, b)) s) : ContinuousOn f (s.prod t) := by
+    (hb : ∀, ∀ b ∈ t, ∀, LipschitzOnWith K (fun x => f (x, b)) s) : ContinuousOn f (s ×ˢ t) := by
   rintro ⟨x, y⟩ ⟨hx : x ∈ s, hy : y ∈ t⟩
   refine' Emetric.tendsto_nhds.2 fun ε ε0 : 0 < ε => _
   replace ε0 : 0 < ε / 2 := Ennreal.half_pos (ne_of_gtₓ ε0)

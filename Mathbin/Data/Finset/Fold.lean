@@ -58,7 +58,7 @@ theorem fold_image [DecidableEq α] {g : γ → α} {s : Finset γ} (H : ∀, �
 
 @[congr]
 theorem fold_congr {g : α → β} (H : ∀, ∀ x ∈ s, ∀, f x = g x) : s.fold op b f = s.fold op b g := by
-  rw [fold, fold, map_congr H]
+  rw [fold, fold, map_congr rfl H]
 
 theorem fold_op_distrib {f g : α → β} {b₁ b₂ : β} :
     (s.fold op (b₁*b₂) fun x => f x*g x) = s.fold op b₁ f*s.fold op b₂ g := by

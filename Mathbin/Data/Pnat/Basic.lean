@@ -25,6 +25,18 @@ instance : HasRepr ℕ+ :=
 def Pnat.natPred (i : ℕ+) : ℕ :=
   i - 1
 
+@[simp]
+theorem Pnat.one_add_nat_pred (n : ℕ+) : 1 + n.nat_pred = n := by
+  rw [Pnat.natPred, add_tsub_cancel_iff_le.mpr $ show 1 ≤ (n : ℕ) from n.2]
+
+@[simp]
+theorem Pnat.nat_pred_add_one (n : ℕ+) : n.nat_pred + 1 = n :=
+  (add_commₓ _ _).trans n.one_add_nat_pred
+
+@[simp]
+theorem Pnat.nat_pred_eq_pred {n : ℕ} (h : 0 < n) : Pnat.natPred (⟨n, h⟩ : ℕ+) = n.pred :=
+  rfl
+
 namespace Nat
 
 /-- Convert a natural number to a positive natural number. The

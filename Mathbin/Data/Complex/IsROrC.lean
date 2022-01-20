@@ -284,7 +284,7 @@ theorem eq_conj_iff_real {z : K} : conj z = z ↔ ∃ r : ℝ, z = (r : K) := by
       simp [this]
     contrapose! h
     rw [← re_add_im z]
-    simp only [conj_of_real, RingEquiv.map_add, RingEquiv.map_mul, conj_I_ax]
+    simp only [conj_of_real, RingHom.map_add, RingHom.map_mul, conj_I_ax]
     rw [add_left_cancel_iffₓ, ext_iff]
     simpa [neg_eq_iff_add_eq_zero, add_self_eq_zero]
     
@@ -486,7 +486,7 @@ instance (priority := 100) : CstarRing K where
 
 @[simp, norm_cast]
 theorem of_real_nat_cast (n : ℕ) : ((n : ℝ) : K) = n :=
-  of_real_hom.map_nat_cast n
+  show (algebraMap ℝ K) n = n from map_nat_cast of_real_hom n
 
 @[simp, norm_cast]
 theorem nat_cast_re (n : ℕ) : re (n : K) = n := by
@@ -837,17 +837,17 @@ noncomputable instance Real.isROrC : IsROrC ℝ where
   mul_im_ax := fun z w => by
     simp only [add_zeroₓ, zero_mul, mul_zero, AddMonoidHom.zero_apply]
   conj_re_ax := fun z => by
-    simp only [star_ring_aut_apply, star_id_of_comm]
+    simp only [star_ring_end_apply, star_id_of_comm]
   conj_im_ax := fun z => by
     simp only [neg_zero, AddMonoidHom.zero_apply]
   conj_I_ax := by
-    simp only [RingEquiv.map_zero, neg_zero]
+    simp only [RingHom.map_zero, neg_zero]
   norm_sq_eq_def_ax := fun z => by
     simp only [sq, norm, ← abs_mul, abs_mul_self z, add_zeroₓ, mul_zero, AddMonoidHom.zero_apply, AddMonoidHom.id_apply]
   mul_im_I_ax := fun z => by
     simp only [mul_zero, AddMonoidHom.zero_apply]
   inv_def_ax := fun z => by
-    simp only [star_ring_aut_apply, star, sq, Real.norm_eq_abs, abs_mul_abs_self, ← div_eq_mul_inv,
+    simp only [star_ring_end_apply, star, sq, Real.norm_eq_abs, abs_mul_abs_self, ← div_eq_mul_inv,
       Algebra.id.map_eq_id, id.def, RingHom.id_apply, div_self_mul_self']
   div_I_ax := fun z => by
     simp only [div_zero, mul_zero, neg_zero]
@@ -967,7 +967,7 @@ theorem continuous_im : Continuous (im : K → ℝ) :=
 
 /-- Conjugate as an `ℝ`-algebra equivalence -/
 noncomputable def conj_ae : K ≃ₐ[ℝ] K :=
-  { starRingAut with commutes' := conj_of_real }
+  { conj with invFun := conj, left_inv := conj_conj, right_inv := conj_conj, commutes' := conj_of_real }
 
 @[simp]
 theorem conj_ae_coe : (conj_ae : K → K) = conj :=

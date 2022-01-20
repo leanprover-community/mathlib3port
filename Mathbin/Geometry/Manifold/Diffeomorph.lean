@@ -288,7 +288,7 @@ theorem times_cont_mdiff_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N)
 @[simp]
 theorem times_cont_mdiff_on_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) {s} :
     TimesContMdiffOn I' J m (h ∘ f) s ↔ TimesContMdiffOn I' I m f s :=
-  forall_congrₓ $ fun x => forall_congrₓ $ fun hx => h.times_cont_mdiff_within_at_diffeomorph_comp_iff hm
+  forall₂_congrₓ $ fun x hx => h.times_cont_mdiff_within_at_diffeomorph_comp_iff hm
 
 @[simp]
 theorem times_cont_mdiff_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) :

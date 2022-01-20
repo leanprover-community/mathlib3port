@@ -101,7 +101,7 @@ theorem is_complement_singleton_right {g : G} : is_complement S {g} ↔ S = ⊤ 
 
 @[to_additive]
 theorem is_complement_top_left : is_complement ⊤ S ↔ ∃ g : G, S = {g} := by
-  refine' ⟨fun h => set.exists_eq_singleton_iff_nonempty_unique_mem.mpr ⟨_, fun a b ha hb => _⟩, _⟩
+  refine' ⟨fun h => set.exists_eq_singleton_iff_nonempty_unique_mem.mpr ⟨_, fun a ha b hb => _⟩, _⟩
   · obtain ⟨a, ha⟩ := h.2 1
     exact ⟨a.2.1, a.2.2⟩
     
@@ -115,7 +115,7 @@ theorem is_complement_top_left : is_complement ⊤ S ↔ ∃ g : G, S = {g} := b
 
 @[to_additive]
 theorem is_complement_top_right : is_complement S ⊤ ↔ ∃ g : G, S = {g} := by
-  refine' ⟨fun h => set.exists_eq_singleton_iff_nonempty_unique_mem.mpr ⟨_, fun a b ha hb => _⟩, _⟩
+  refine' ⟨fun h => set.exists_eq_singleton_iff_nonempty_unique_mem.mpr ⟨_, fun a ha b hb => _⟩, _⟩
   · obtain ⟨a, ha⟩ := h.2 1
     exact ⟨a.1.1, a.1.2⟩
     

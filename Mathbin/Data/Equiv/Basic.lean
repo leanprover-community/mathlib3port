@@ -205,7 +205,7 @@ protected theorem Nonempty (e : α ≃ β) [Nonempty β] : Nonempty α :=
 
 /-- If `α ≃ β` and `β` is inhabited, then so is `α`. -/
 protected def Inhabited [Inhabited β] (e : α ≃ β) : Inhabited α :=
-  ⟨e.symm (default _)⟩
+  ⟨e.symm default⟩
 
 /-- If `α ≃ β` and `β` is a singleton type, then so is `α`. -/
 protected def Unique [Unique β] (e : α ≃ β) : Unique α :=
@@ -629,7 +629,7 @@ def arrow_punit_equiv_punit (α : Sort _) : (α → PUnit.{v}) ≃ PUnit.{w} :=
 /-- If `α` has a unique term, then the type of function `α → β` is equivalent to `β`. -/
 @[simps (config := { fullyApplied := ff })]
 def fun_unique α β [Unique α] : (α → β) ≃ β where
-  toFun := eval (default α)
+  toFun := eval default
   invFun := const α
   left_inv := fun f => funext $ fun a => congr_argₓ f $ Subsingleton.elimₓ _ _
   right_inv := fun b => rfl
@@ -804,7 +804,7 @@ noncomputable def Prop_equiv_bool : Prop ≃ Bool :=
 
 /-- Sum of types is commutative up to an equivalence. -/
 @[simps apply]
-def sum_comm (α β : Sort _) : Sum α β ≃ Sum β α :=
+def sum_comm (α β : Type _) : Sum α β ≃ Sum β α :=
   ⟨Sum.swap, Sum.swap, Sum.swap_swap, Sum.swap_swap⟩
 
 @[simp]
@@ -812,22 +812,34 @@ theorem sum_comm_symm α β : (sum_comm α β).symm = sum_comm β α :=
   rfl
 
 /-- Sum of types is associative up to an equivalence. -/
-def sum_assoc (α β γ : Sort _) : Sum (Sum α β) γ ≃ Sum α (Sum β γ) :=
+def sum_assoc (α β γ : Type _) : Sum (Sum α β) γ ≃ Sum α (Sum β γ) :=
   ⟨Sum.elim (Sum.elim Sum.inl (Sum.inr ∘ Sum.inl)) (Sum.inr ∘ Sum.inr),
     Sum.elim (Sum.inl ∘ Sum.inl) $ Sum.elim (Sum.inl ∘ Sum.inr) Sum.inr, by
     rintro (⟨_ | _⟩ | _) <;> rfl, by
     rintro (_ | ⟨_ | _⟩) <;> rfl⟩
 
 @[simp]
-theorem sum_assoc_apply_in1 {α β γ} a : sum_assoc α β γ (inl (inl a)) = inl a :=
+theorem sum_assoc_apply_inl_inl {α β γ} a : sum_assoc α β γ (inl (inl a)) = inl a :=
   rfl
 
 @[simp]
-theorem sum_assoc_apply_in2 {α β γ} b : sum_assoc α β γ (inl (inr b)) = inr (inl b) :=
+theorem sum_assoc_apply_inl_inr {α β γ} b : sum_assoc α β γ (inl (inr b)) = inr (inl b) :=
   rfl
 
 @[simp]
-theorem sum_assoc_apply_in3 {α β γ} c : sum_assoc α β γ (inr c) = inr (inr c) :=
+theorem sum_assoc_apply_inr {α β γ} c : sum_assoc α β γ (inr c) = inr (inr c) :=
+  rfl
+
+@[simp]
+theorem sum_assoc_symm_apply_inl {α β γ} a : (sum_assoc α β γ).symm (inl a) = inl (inl a) :=
+  rfl
+
+@[simp]
+theorem sum_assoc_symm_apply_inr_inl {α β γ} b : (sum_assoc α β γ).symm (inr (inl b)) = inl (inr b) :=
+  rfl
+
+@[simp]
+theorem sum_assoc_symm_apply_inr_inr {α β γ} c : (sum_assoc α β γ).symm (inr (inr c)) = inr c :=
   rfl
 
 /-- Sum with `empty` is equivalent to the original type. -/
@@ -1336,11 +1348,11 @@ def prod_extend_right : perm (α₁ × β₁) where
   invFun := fun ab => if ab.fst = a then (a, e.symm ab.snd) else ab
   left_inv := by
     rintro ⟨k', x⟩
-    simp only
+    dsimp only
     split_ifs with h <;> simp [h]
   right_inv := by
     rintro ⟨k', x⟩
-    simp only
+    dsimp only
     split_ifs with h <;> simp [h]
 
 @[simp]
@@ -2121,7 +2133,7 @@ universe ua1 ua2 ub1 ub2 ug1 ug2
 
 variable {α₁ : Sort ua1} {α₂ : Sort ua2} {β₁ : Sort ub1} {β₂ : Sort ub2} {γ₁ : Sort ug1} {γ₂ : Sort ug2}
 
-protected theorem forall₂_congr {p : α₁ → β₁ → Prop} {q : α₂ → β₂ → Prop} (eα : α₁ ≃ α₂) (eβ : β₁ ≃ β₂)
+protected theorem forall₂_congrₓ {p : α₁ → β₁ → Prop} {q : α₂ → β₂ → Prop} (eα : α₁ ≃ α₂) (eβ : β₁ ≃ β₂)
     (h : ∀ {x y}, p x y ↔ q (eα x) (eβ y)) : (∀ x y, p x y) ↔ ∀ x y, q x y := by
   apply Equivₓ.forall_congr
   intros
@@ -2276,8 +2288,8 @@ theorem Function.Injective.swap_comp [DecidableEq α] [DecidableEq β] {f : α �
 
 /-- If both `α` and `β` are singletons, then `α ≃ β`. -/
 def equivOfUniqueOfUnique [Unique α] [Unique β] : α ≃ β where
-  toFun := fun _ => default β
-  invFun := fun _ => default α
+  toFun := fun _ => default
+  invFun := fun _ => default
   left_inv := fun _ => Subsingleton.elimₓ _ _
   right_inv := fun _ => Subsingleton.elimₓ _ _
 
