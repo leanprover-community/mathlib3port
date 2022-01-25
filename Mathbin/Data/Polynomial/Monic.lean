@@ -446,7 +446,7 @@ theorem is_unit_leading_coeff_mul_right_eq_zero_iff (h : IsUnit p.leading_coeff)
       ext
       simp only [Units.smul_def, coeff_smul, coeff_mul, smul_eq_mul, mul_sum]
       refine' sum_congr rfl fun x hx => _
-      rw [← mul_assocₓ]
+      rw [← mul_assoc]
     rwa [this, monic.mul_right_eq_zero_iff] at hp
     exact monic_of_is_unit_leading_coeff_inv_smul _
     
@@ -460,7 +460,7 @@ theorem is_unit_leading_coeff_mul_left_eq_zero_iff (h : IsUnit p.leading_coeff) 
   · intro hp
     replace hp := congr_argₓ (· * C (↑h.unit⁻¹)) hp
     simp only [zero_mul] at hp
-    rwa [mul_assocₓ, monic.mul_left_eq_zero_iff] at hp
+    rwa [mul_assoc, monic.mul_left_eq_zero_iff] at hp
     nontriviality
     refine' monic_mul_C_of_leading_coeff_mul_eq_one _
     simp [Units.mul_inv_eq_iff_eq_mul, IsUnit.unit_spec]

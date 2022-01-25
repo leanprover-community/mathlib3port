@@ -58,7 +58,7 @@ theorem gold_mul_gold_conj : φ * ψ = -1 := by
 
 @[simp]
 theorem gold_conj_mul_gold : ψ * φ = -1 := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact gold_mul_gold_conj
 
 @[simp]

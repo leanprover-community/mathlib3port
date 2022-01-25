@@ -152,10 +152,10 @@ theorem mirror_mul_of_domain {R : Type _} [Ringₓ R] [IsDomain R] (p q : Polyno
   · rw [hq, mul_zero, mirror_zero, mul_zero]
     
   rw [mirror, mirror, mirror, reverse_mul_of_domain, nat_trailing_degree_mul hp hq, pow_addₓ]
-  rw [mul_assocₓ, ← mul_assocₓ q.reverse]
+  rw [mul_assoc, ← mul_assoc q.reverse]
   conv_lhs => congr skip congr rw [← X_pow_mul]
   repeat'
-    rw [mul_assocₓ]
+    rw [mul_assoc]
 
 theorem mirror_smul {R : Type _} [Ringₓ R] [IsDomain R] (p : Polynomial R) (a : R) : (a • p).mirror = a • p.mirror := by
   rw [← C_mul', ← C_mul', mirror_mul_of_domain, mirror_C]
@@ -172,8 +172,8 @@ theorem irreducible_of_mirror {R : Type _} [CommRingₓ R] [IsDomain R] {f : Pol
   · intro g h fgh
     let k := g * h.mirror
     have key : f * f.mirror = k * k.mirror := by
-      rw [fgh, mirror_mul_of_domain, mirror_mul_of_domain, mirror_mirror, mul_assocₓ, mul_commₓ h, mul_commₓ g.mirror,
-        mul_assocₓ, ← mul_assocₓ]
+      rw [fgh, mirror_mul_of_domain, mirror_mul_of_domain, mirror_mirror, mul_assoc, mul_comm h, mul_comm g.mirror,
+        mul_assoc, ← mul_assoc]
     have g_dvd_f : g ∣ f := by
       rw [fgh]
       exact dvd_mul_right g h

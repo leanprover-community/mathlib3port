@@ -59,7 +59,7 @@ theorem pow_mul_comm' (a : M) (n : ℕ) : a ^ n * a = a * a ^ n :=
 @[to_additive add_nsmul]
 theorem pow_addₓ (a : M) (m n : ℕ) : a ^ (m + n) = a ^ m * a ^ n := by
   induction' n with n ih <;> [rw [Nat.add_zero, pow_zeroₓ, mul_oneₓ],
-    rw [pow_succ'ₓ, ← mul_assocₓ, ← ih, ← pow_succ'ₓ, Nat.add_assoc]]
+    rw [pow_succ'ₓ, ← mul_assoc, ← ih, ← pow_succ'ₓ, Nat.add_assoc]]
 
 @[simp]
 theorem pow_ite (P : Prop) [Decidable P] (a : M) (b c : ℕ) : (a ^ if P then b else c) = if P then a ^ b else a ^ c := by
@@ -119,7 +119,7 @@ theorem Commute.mul_pow {a b : M} (h : Commute a b) (n : ℕ) : (a * b) ^ n = a 
       (by
         simp only [pow_zeroₓ, one_mulₓ]) $
     fun n ihn => by
-    simp only [pow_succₓ, ihn, ← mul_assocₓ, (h.pow_left n).right_comm]
+    simp only [pow_succₓ, ihn, ← mul_assoc, (h.pow_left n).right_comm]
 
 @[to_additive bit0_nsmul']
 theorem pow_bit0' (a : M) (n : ℕ) : a ^ bit0 n = (a * a) ^ n := by

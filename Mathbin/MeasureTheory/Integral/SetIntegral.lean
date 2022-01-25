@@ -771,10 +771,10 @@ theorem integral_conj {f : α → 𝕜} : (∫ a, conj (f a) ∂μ) = conj (∫ 
 
 theorem integral_coe_re_add_coe_im {f : α → 𝕜} (hf : integrable f μ) :
     (∫ x, (IsROrC.re (f x) : 𝕜) ∂μ) + (∫ x, IsROrC.im (f x) ∂μ) * IsROrC.i = ∫ x, f x ∂μ := by
-  rw [mul_commₓ, ← smul_eq_mul, ← integral_smul, ← integral_add]
+  rw [mul_comm, ← smul_eq_mul, ← integral_smul, ← integral_add]
   · congr
     ext1 x
-    rw [smul_eq_mul, mul_commₓ, IsROrC.re_add_im]
+    rw [smul_eq_mul, mul_comm, IsROrC.re_add_im]
     
   · exact hf.re.of_real
     

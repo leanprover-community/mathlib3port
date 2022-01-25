@@ -92,7 +92,7 @@ theorem map_coord_zero {m : ∀ i, M₁ i} (i : ι) (h : m i = 0) : f m = 0 :=
 theorem map_zero [Nonempty ι] : f 0 = 0 :=
   f.to_multilinear_map.map_zero
 
-instance : HasZero (ContinuousMultilinearMap R M₁ M₂) :=
+instance : Zero (ContinuousMultilinearMap R M₁ M₂) :=
   ⟨{ (0 : MultilinearMap R M₁ M₂) with cont := continuous_const }⟩
 
 instance : Inhabited (ContinuousMultilinearMap R M₁ M₂) :=

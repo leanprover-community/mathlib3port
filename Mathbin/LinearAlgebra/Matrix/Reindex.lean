@@ -73,7 +73,7 @@ theorem reindex_linear_equiv_comp_apply (e₁ : m ≃ m') (e₂ : n ≃ n') (e�
       reindex_linear_equiv R A (e₁.trans e₁') (e₂.trans e₂') M :=
   minor_minor _ _ _ _ _
 
-theorem reindex_linear_equiv_one [DecidableEq m] [DecidableEq m'] [HasOne A] (e : m ≃ m') :
+theorem reindex_linear_equiv_one [DecidableEq m] [DecidableEq m'] [One A] (e : m ≃ m') :
     reindex_linear_equiv R A e e (1 : Matrix m m A) = 1 :=
   minor_one_equiv e.symm
 

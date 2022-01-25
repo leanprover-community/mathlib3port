@@ -78,7 +78,7 @@ theorem factorial_mul_pow_le_factorial : ∀ {m n : ℕ}, m ! * m.succ ^ n ≤ (
   | m, 0 => by
     simp
   | m, n + 1 => by
-    rw [← add_assocₓ, Nat.factorial_succ, mul_commₓ (Nat.succ _), pow_succ'ₓ, ← mul_assocₓ] <;>
+    rw [← add_assocₓ, Nat.factorial_succ, mul_comm (Nat.succ _), pow_succ'ₓ, ← mul_assoc] <;>
       exact
         mul_le_mul factorial_mul_pow_le_factorial (Nat.succ_le_succₓ (Nat.le_add_rightₓ _ _)) (Nat.zero_leₓ _)
           (Nat.zero_leₓ _)
@@ -357,7 +357,7 @@ theorem factorial_mul_desc_factorial : ∀ {n k : ℕ}, k ≤ n → (n - k)! * n
     exfalso
     exact not_succ_le_zero k h
   | succ n, succ k => fun h => by
-    rw [succ_desc_factorial_succ, succ_sub_succ, ← mul_assocₓ, mul_commₓ (n - k)!, mul_assocₓ,
+    rw [succ_desc_factorial_succ, succ_sub_succ, ← mul_assoc, mul_comm (n - k)!, mul_assoc,
       factorial_mul_desc_factorial (Nat.succ_le_succ_iff.1 h), factorial_succ]
 
 /-- Avoid in favor of `nat.factorial_mul_desc_factorial` if you can. ℕ-division isn't worth it. -/
@@ -409,7 +409,7 @@ theorem desc_factorial_lt_pow {n : ℕ} (hn : 1 ≤ n) : ∀ {k : ℕ}, 2 ≤ k 
   | 1 => by
     rintro (_ | ⟨_, ⟨⟩⟩)
   | k + 2 => fun _ => by
-    rw [desc_factorial_succ, pow_succ'ₓ, mul_commₓ]
+    rw [desc_factorial_succ, pow_succ'ₓ, mul_comm]
     exact Nat.mul_lt_mul'ₓ (desc_factorial_le_pow _ _) (tsub_lt_self hn k.zero_lt_succ) (pow_pos hn _)
 
 end DescFactorial

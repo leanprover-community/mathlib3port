@@ -125,7 +125,7 @@ class PseudoMetricSpace (α : Type u) extends HasDist α : Type u where
   dist_self : ∀ x : α, dist x x = 0
   dist_comm : ∀ x y : α, dist x y = dist y x
   dist_triangle : ∀ x y z : α, dist x z ≤ dist x y + dist y z
-  edist : α → α → ℝ≥0∞ := fun x y => @coeₓ ℝ≥0 _ _ ⟨dist x y, pseudo_metric_space.dist_nonneg' _ ‹_› ‹_› ‹_›⟩
+  edist : α → α → ℝ≥0∞ := fun x y => @coe ℝ≥0 _ _ ⟨dist x y, pseudo_metric_space.dist_nonneg' _ ‹_› ‹_› ‹_›⟩
   edist_dist : ∀ x y : α, edist x y = Ennreal.ofReal (dist x y) := by
     run_tac
       pseudo_metric_space.edist_dist_tac
@@ -521,6 +521,22 @@ theorem exists_ball_subset_ball (h : y ∈ ball x ε) : ∃ ε' > 0, ball y ε' 
     ball_subset $ by
       rw [sub_sub_self]⟩
 
+/-- If a property holds for all points in closed balls of arbitrarily large radii, then it holds for
+all points. -/
+theorem forall_of_forall_mem_closed_ball (p : α → Prop) (x : α)
+    (H : ∃ᶠ R : ℝ in at_top, ∀, ∀ y ∈ closed_ball x R, ∀, p y) (y : α) : p y := by
+  obtain ⟨R, hR, h⟩ : ∃ (R : ℝ)(H : dist y x ≤ R), ∀ z : α, z ∈ closed_ball x R → p z :=
+    frequently_iff.1 H (Ici_mem_at_top (dist y x))
+  exact h _ hR
+
+/-- If a property holds for all points in balls of arbitrarily large radii, then it holds for all
+points. -/
+theorem forall_of_forall_mem_ball (p : α → Prop) (x : α) (H : ∃ᶠ R : ℝ in at_top, ∀, ∀ y ∈ ball x R, ∀, p y) (y : α) :
+    p y := by
+  obtain ⟨R, hR, h⟩ : ∃ (R : ℝ)(H : dist y x < R), ∀ z : α, z ∈ ball x R → p z :=
+    frequently_iff.1 H (Ioi_mem_at_top (dist y x))
+  exact h _ hR
+
 theorem uniformity_basis_dist : (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : α × α | dist p.1 p.2 < ε } := by
   rw [← pseudo_metric_space.uniformity_dist.symm]
   refine' has_basis_binfi_principal _ nonempty_Ioi
@@ -650,7 +666,7 @@ theorem totally_bounded_iff {s : Set α} :
   ⟨fun H ε ε0 => H _ (dist_mem_uniformity ε0), fun H r ru =>
     let ⟨ε, ε0, hε⟩ := mem_uniformity_dist.1 ru
     let ⟨t, ft, h⟩ := H ε ε0
-    ⟨t, ft, subset.trans h $ Union_subset_Union $ fun y => Union_subset_Union $ fun yt z => hε⟩⟩
+    ⟨t, ft, h.trans $ Union₂_mono $ fun y yt z => hε⟩⟩
 
 /-- A pseudometric space is totally bounded if one can reconstruct up to any ε>0 any element of the
 space from finitely many data. -/
@@ -1230,7 +1246,7 @@ def UniformInducing.comapPseudoMetricSpace {α β} [UniformSpace α] [PseudoMetr
 
 instance Subtype.psudoMetricSpace {α : Type _} {p : α → Prop} [t : PseudoMetricSpace α] :
     PseudoMetricSpace (Subtype p) :=
-  PseudoMetricSpace.induced coeₓ t
+  PseudoMetricSpace.induced coe t
 
 theorem Subtype.pseudo_dist_eq {p : α → Prop} (x y : Subtype p) : dist x y = dist (x : α) y :=
   rfl
@@ -1677,7 +1693,7 @@ theorem second_countable_of_almost_dense_set
     H ε'
       (by
         exact_mod_cast ε'0)
-  refine' ⟨s, hsc, bUnion_eq_univ_iff.2 fun x => ⟨y x, hys _, le_transₓ _ ε'ε.le⟩⟩
+  refine' ⟨s, hsc, Union₂_eq_univ_iff.2 fun x => ⟨y x, hys _, le_transₓ _ ε'ε.le⟩⟩
   exact_mod_cast hyx x
 
 end SecondCountable
@@ -2040,7 +2056,7 @@ theorem diam_le_of_subset_closed_ball {r : ℝ} (hr : 0 ≤ r) (h : s ⊆ closed
       dist a b ≤ dist a x + dist b x := dist_triangle_right _ _ _
       _ ≤ r + r := add_le_add (h ha) (h hb)
       _ = 2 * r := by
-        simp [mul_two, mul_commₓ]
+        simp [mul_two, mul_comm]
       
 
 /-- The diameter of a closed ball of radius `r` is at most `2 r`. -/
@@ -2079,10 +2095,10 @@ namespace Int
 open Metric
 
 /-- Under the coercion from `ℤ` to `ℝ`, inverse images of compact sets are finite. -/
-theorem tendsto_coe_cofinite : tendsto (coeₓ : ℤ → ℝ) cofinite (cocompact ℝ) := by
+theorem tendsto_coe_cofinite : tendsto (coe : ℤ → ℝ) cofinite (cocompact ℝ) := by
   refine' tendsto_cocompact_of_tendsto_dist_comp_at_top (0 : ℝ) _
   simp only [Filter.tendsto_at_top, eventually_cofinite, not_leₓ, ← mem_ball]
-  change ∀ r : ℝ, finite (coeₓ ⁻¹' ball (0 : ℝ) r)
+  change ∀ r : ℝ, finite (coe ⁻¹' ball (0 : ℝ) r)
   simp [Real.ball_eq_Ioo, Set.finite_Ioo]
 
 end Int
@@ -2255,7 +2271,7 @@ def UniformEmbedding.comapMetricSpace {α β} [UniformSpace α] [MetricSpace β]
   (MetricSpace.induced f h.inj ‹_›).replaceUniformity h.comap_uniformity.symm
 
 instance Subtype.metricSpace {α : Type _} {p : α → Prop} [t : MetricSpace α] : MetricSpace (Subtype p) :=
-  MetricSpace.induced coeₓ (fun x y => Subtype.ext) t
+  MetricSpace.induced coe (fun x y => Subtype.ext) t
 
 theorem Subtype.dist_eq {p : α → Prop} (x y : Subtype p) : dist x y = dist (x : α) y :=
   rfl

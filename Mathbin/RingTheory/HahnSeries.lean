@@ -51,7 +51,7 @@ noncomputable section
 /-- If `Γ` is linearly ordered and `R` has zero, then `hahn_series Γ R` consists of
   formal series over `Γ` with coefficients in `R`, whose supports are well-founded. -/
 @[ext]
-structure HahnSeries (Γ : Type _) (R : Type _) [PartialOrderₓ Γ] [HasZero R] where
+structure HahnSeries (Γ : Type _) (R : Type _) [PartialOrderₓ Γ] [Zero R] where
   coeff : Γ → R
   is_pwo_support' : (support coeff).IsPwo
 
@@ -61,7 +61,7 @@ namespace HahnSeries
 
 section Zero
 
-variable [PartialOrderₓ Γ] [HasZero R]
+variable [PartialOrderₓ Γ] [Zero R]
 
 theorem coeff_injective : injective (coeff : HahnSeries Γ R → Γ → R) :=
   ext
@@ -87,7 +87,7 @@ theorem is_wf_support (x : HahnSeries Γ R) : x.support.is_wf :=
 theorem mem_support (x : HahnSeries Γ R) (a : Γ) : a ∈ x.support ↔ x.coeff a ≠ 0 :=
   Iff.refl _
 
-instance : HasZero (HahnSeries Γ R) :=
+instance : Zero (HahnSeries Γ R) :=
   ⟨{ coeff := 0,
       is_pwo_support' := by
         simp }⟩
@@ -168,7 +168,7 @@ instance [Nonempty Γ] [Nontrivial R] : Nontrivial (HahnSeries Γ R) :=
 
 section Order
 
-variable [HasZero Γ]
+variable [Zero Γ]
 
 /-- The order of a nonzero Hahn series `x` is a minimal element of `Γ` where `x` has a
   nonzero coefficient, the order of 0 is 0. -/
@@ -509,15 +509,15 @@ section Multiplication
 
 variable [OrderedCancelAddCommMonoid Γ]
 
-instance [HasZero R] [HasOne R] : HasOne (HahnSeries Γ R) :=
+instance [Zero R] [One R] : One (HahnSeries Γ R) :=
   ⟨single 0 1⟩
 
 @[simp]
-theorem one_coeff [HasZero R] [HasOne R] {a : Γ} : (1 : HahnSeries Γ R).coeff a = if a = 0 then 1 else 0 :=
+theorem one_coeff [Zero R] [One R] {a : Γ} : (1 : HahnSeries Γ R).coeff a = if a = 0 then 1 else 0 :=
   single_coeff
 
 @[simp]
-theorem single_zero_one [HasZero R] [HasOne R] : single 0 (1 : R) = 1 :=
+theorem single_zero_one [Zero R] [One R] : single 0 (1 : R) = 1 :=
   rfl
 
 @[simp]
@@ -724,10 +724,10 @@ private theorem mul_assoc' [NonUnitalSemiring R] (x y z : HahnSeries Γ R) : x *
     obtain ⟨⟨rfl, nx, H⟩, rfl, ny, nz⟩ := H1
     exact
       ⟨i + k, l, i, k, ⟨⟨add_assocₓ _ _ _, Set.add_mem_add nx ny, nz⟩, rfl, nx, ny⟩, fun con =>
-        H2 ((mul_assocₓ _ _ _).symm.trans Con), ⟨rfl, rfl⟩, rfl, rfl⟩
+        H2 ((mul_assoc _ _ _).symm.trans Con), ⟨rfl, rfl⟩, rfl, rfl⟩
     
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H1 H2
-    simp [mul_assocₓ]
+    simp [mul_assoc]
     
 
 instance [NonUnitalNonAssocSemiring R] : NonUnitalNonAssocSemiring (HahnSeries Γ R) :=
@@ -758,7 +758,7 @@ instance [CommSemiringₓ R] : CommSemiringₓ (HahnSeries Γ R) :=
   { HahnSeries.semiring with
     mul_comm := fun x y => by
       ext
-      simp_rw [mul_coeff, mul_commₓ]
+      simp_rw [mul_coeff, mul_comm]
       refine'
         sum_bij (fun a ha => ⟨a.2, a.1⟩) _
           (fun a ha => by
@@ -1068,7 +1068,7 @@ theorem of_power_series_injective : Function.Injective (of_power_series Γ R) :=
 theorem of_power_series_apply (x : PowerSeries R) :
     of_power_series Γ R x =
       HahnSeries.embDomain
-        ⟨⟨(coeₓ : ℕ → Γ), Nat.strict_mono_cast.Injective⟩, fun a b => by
+        ⟨⟨(coe : ℕ → Γ), Nat.strict_mono_cast.Injective⟩, fun a b => by
           simp only [Function.Embedding.coe_fn_mk]
           exact Nat.cast_le⟩
         (to_power_series.symm x) :=
@@ -1114,7 +1114,7 @@ theorem of_power_series_X_pow {R} [CommSemiringₓ R] (n : ℕ) :
   induction' n with n ih
   · rfl
     
-  rw [pow_succₓ, ih, of_power_series_X, mul_commₓ, single_mul_single, one_mulₓ, Nat.cast_succ]
+  rw [pow_succₓ, ih, of_power_series_X, mul_comm, single_mul_single, one_mulₓ, Nat.cast_succ]
 
 end Semiringₓ
 
@@ -1272,7 +1272,7 @@ instance : Add (summable_family Γ R α) :=
         (x.is_pwo_Union_support.union y.is_pwo_Union_support).mono
           (by
             rw [← Set.Union_union_distrib]
-            exact Set.Union_subset_Union fun a => support_add_subset),
+            exact Set.Union_mono fun a => support_add_subset),
       finite_co_support' := fun g =>
         ((x.finite_co_support g).union (y.finite_co_support g)).Subset
           (by
@@ -1282,7 +1282,7 @@ instance : Add (summable_family Γ R α) :=
             contrapose! ha
             rw [ha.1, ha.2, add_zeroₓ]) }⟩
 
-instance : HasZero (summable_family Γ R α) :=
+instance : Zero (summable_family Γ R α) :=
   ⟨⟨0, by
       simp , by
       simp ⟩⟩
@@ -1392,7 +1392,7 @@ instance : HasScalar (HahnSeries Γ R) (summable_family Γ R α) where
     { toFun := fun a => x * s a,
       is_pwo_Union_support' := by
         apply (x.is_pwo_support.add s.is_pwo_Union_support).mono
-        refine' Set.Subset.trans (Set.Union_subset_Union fun a => support_mul_subset_add_support) _
+        refine' Set.Subset.trans (Set.Union_mono fun a => support_mul_subset_add_support) _
         intro g
         simp only [Set.mem_Union, exists_imp_distrib]
         exact fun a ha => (Set.add_subset_add (Set.Subset.refl _) (Set.subset_Union _ a)) ha,
@@ -1421,7 +1421,7 @@ instance : Module (HahnSeries Γ R) (summable_family Γ R α) where
   one_smul := fun x => ext fun a => one_mulₓ _
   add_smul := fun x y s => ext fun a => add_mulₓ _ _ _
   smul_add := fun x s t => ext fun a => mul_addₓ _ _ _
-  mul_smul := fun x y s => ext fun a => mul_assocₓ _ _ _
+  mul_smul := fun x y s => ext fun a => mul_assoc _ _ _
 
 @[simp]
 theorem hsum_smul {x : HahnSeries Γ R} {s : summable_family Γ R α} : (x • s).hsum = x * s.hsum := by
@@ -1659,7 +1659,7 @@ theorem unit_aux (x : HahnSeries Γ R) {r : R} (hr : r * x.coeff x.order = 1) :
     rw [Ne.def, WithTop.coe_eq_coe]
     intro con
     apply coeff_order_ne_zero h
-    rw [← Con, mul_assocₓ, sub_coeff, one_coeff, if_pos rfl, C_mul_eq_smul, smul_coeff, smul_eq_mul, ←
+    rw [← Con, mul_assoc, sub_coeff, one_coeff, if_pos rfl, C_mul_eq_smul, smul_coeff, smul_eq_mul, ←
       add_neg_selfₓ x.order, single_mul_coeff_add, one_mulₓ, hr, sub_self]
     
 
@@ -1692,7 +1692,7 @@ instance [Field R] : Field (HahnSeries Γ R) :=
       refine' (congr rfl (dif_neg x0)).trans _
       have h := summable_family.one_sub_self_mul_hsum_powers (unit_aux x (inv_mul_cancel (coeff_order_ne_zero x0)))
       rw [sub_sub_cancel] at h
-      rw [← mul_assocₓ, mul_commₓ x, h] }
+      rw [← mul_assoc, mul_comm x, h] }
 
 end Inversion
 

@@ -432,7 +432,7 @@ def list_blank.bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (l : list_blank Γ) 
       rintro l _ ⟨i, rfl⟩
       cases' hf with n e
       refine' Quotientₓ.sound' (Or.inl ⟨i * n, _⟩)
-      rw [List.bind_append, mul_commₓ]
+      rw [List.bind_append, mul_comm]
       congr
       induction' i with i IH
       rfl

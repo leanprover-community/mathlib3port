@@ -294,7 +294,7 @@ theorem le_padic_val_rat_add_of_le {q r : ℚ} (hqr : q + r ≠ 0) (h : padicVal
             (by
               rw [@multiplicity.mul _ _ _ _ (_ * _) _ (Nat.prime_iff_prime_int.1 p_prime.1), add_commₓ])
             (by
-              rw [mul_assocₓ, @multiplicity.mul _ _ _ _ (q.denom : ℤ) (_ * _) (Nat.prime_iff_prime_int.1 p_prime.1)] <;>
+              rw [mul_assoc, @multiplicity.mul _ _ _ _ (q.denom : ℤ) (_ * _) (Nat.prime_iff_prime_int.1 p_prime.1)] <;>
                 exact add_le_add_left h _)_ ≤ _ :=
           min_le_multiplicity_add
 
@@ -356,7 +356,7 @@ protected theorem div_of_dvd (p : ℕ) [hp : Fact p.prime] {a b : ℕ} (h : b �
     
   obtain ⟨k, rfl⟩ := h
   obtain ⟨hb, hk⟩ := mul_ne_zero_iff.mp ha
-  rw [mul_commₓ, k.mul_div_cancel hb.bot_lt, padicValNat.mul p hk hb, Nat.add_sub_cancel]
+  rw [mul_comm, k.mul_div_cancel hb.bot_lt, padicValNat.mul p hk hb, Nat.add_sub_cancel]
 
 /-- Dividing out by a prime factor reduces the padic_val_nat by 1.
 -/
@@ -701,7 +701,7 @@ protected theorem mul (q r : ℚ) : padicNorm p (q * r) = padicNorm p q * padicN
       have : q * r ≠ 0 := mul_ne_zero hq hr
       have : (↑p : ℚ) ≠ 0 := by
         simp [hp.1.ne_zero]
-      simp [padicNorm, *, padicValRat.mul, zpow_add₀ this, mul_commₓ]
+      simp [padicNorm, *, padicValRat.mul, zpow_add₀ this, mul_comm]
 
 /-- The p-adic norm respects division.
 -/

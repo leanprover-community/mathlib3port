@@ -114,7 +114,7 @@ end LinearOrderedAddCommMonoidWithTop
 See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.orderedAddCommMonoid "Pullback an `ordered_add_comm_monoid` under an injective map."]
-def Function.Injective.orderedCommMonoid [OrderedCommMonoid α] {β : Type _} [HasOne β] [Mul β] (f : β → α)
+def Function.Injective.orderedCommMonoid [OrderedCommMonoid α] {β : Type _} [One β] [Mul β] (f : β → α)
     (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : OrderedCommMonoid β :=
   { PartialOrderₓ.lift f hf, hf.comm_monoid f one mul with
     mul_le_mul_left := fun a b ab c =>
@@ -128,7 +128,7 @@ See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.linearOrderedAddCommMonoid
       "Pullback an `ordered_add_comm_monoid` under an injective map."]
-def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β : Type _} [HasOne β] [Mul β] (f : β → α)
+def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β : Type _} [One β] [Mul β] (f : β → α)
     (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : LinearOrderedCommMonoid β :=
   { hf.ordered_comm_monoid f one mul, LinearOrderₓ.lift f hf with }
 
@@ -139,7 +139,7 @@ namespace Units
 
 @[to_additive]
 instance [Monoidₓ α] [Preorderₓ α] : Preorderₓ (α)ˣ :=
-  Preorderₓ.lift (coeₓ : (α)ˣ → α)
+  Preorderₓ.lift (coe : (α)ˣ → α)
 
 @[simp, norm_cast, to_additive]
 theorem coe_le_coe [Monoidₓ α] [Preorderₓ α] {a b : (α)ˣ} : (a : α) ≤ b ↔ a ≤ b :=
@@ -151,11 +151,11 @@ theorem coe_lt_coe [Monoidₓ α] [Preorderₓ α] {a b : (α)ˣ} : (a : α) < b
 
 @[to_additive]
 instance [Monoidₓ α] [PartialOrderₓ α] : PartialOrderₓ (α)ˣ :=
-  PartialOrderₓ.lift coeₓ Units.ext
+  PartialOrderₓ.lift coe Units.ext
 
 @[to_additive]
 instance [Monoidₓ α] [LinearOrderₓ α] : LinearOrderₓ (α)ˣ :=
-  LinearOrderₓ.lift coeₓ Units.ext
+  LinearOrderₓ.lift coe Units.ext
 
 @[simp, norm_cast, to_additive]
 theorem max_coe [Monoidₓ α] [LinearOrderₓ α] {a b : (α)ˣ} : (↑max a b : α) = max a b := by
@@ -260,12 +260,12 @@ end WithZero
 
 namespace WithTop
 
-section HasOne
+section One
 
-variable [HasOne α]
+variable [One α]
 
 @[to_additive]
-instance : HasOne (WithTop α) :=
+instance : One (WithTop α) :=
   ⟨(1 : α)⟩
 
 @[simp, norm_cast, to_additive]
@@ -288,7 +288,7 @@ theorem top_ne_one : ⊤ ≠ (1 : WithTop α) :=
 theorem one_ne_top : (1 : WithTop α) ≠ ⊤ :=
   fun.
 
-end HasOne
+end One
 
 instance [Add α] : Add (WithTop α) :=
   ⟨fun o₁ o₂ => o₁.bind fun a => o₂.map fun b => a + b⟩
@@ -302,7 +302,7 @@ theorem coe_bit0 [Add α] {a : α} : ((bit0 a : α) : WithTop α) = bit0 a :=
   rfl
 
 @[norm_cast]
-theorem coe_bit1 [Add α] [HasOne α] {a : α} : ((bit1 a : α) : WithTop α) = bit1 a :=
+theorem coe_bit1 [Add α] [One α] {a : α} : ((bit1 a : α) : WithTop α) = bit1 a :=
   rfl
 
 @[simp]
@@ -393,10 +393,10 @@ instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoidWithTop (Wi
 
 /-- Coercion from `α` to `with_top α` as an `add_monoid_hom`. -/
 def coe_add_hom [AddMonoidₓ α] : α →+ WithTop α :=
-  ⟨coeₓ, rfl, fun _ _ => rfl⟩
+  ⟨coe, rfl, fun _ _ => rfl⟩
 
 @[simp]
-theorem coe_coe_add_hom [AddMonoidₓ α] : ⇑(coe_add_hom : α →+ WithTop α) = coeₓ :=
+theorem coe_coe_add_hom [AddMonoidₓ α] : ⇑(coe_add_hom : α →+ WithTop α) = coe :=
   rfl
 
 @[simp]
@@ -411,10 +411,10 @@ end WithTop
 
 namespace WithBot
 
-instance [HasZero α] : HasZero (WithBot α) :=
+instance [Zero α] : Zero (WithBot α) :=
   WithTop.hasZero
 
-instance [HasOne α] : HasOne (WithBot α) :=
+instance [One α] : One (WithBot α) :=
   WithTop.hasOne
 
 instance [AddSemigroupₓ α] : AddSemigroupₓ (WithBot α) :=
@@ -447,10 +447,10 @@ instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithBot α) := by
 instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoid (WithBot α) :=
   { WithBot.linearOrder, WithBot.orderedAddCommMonoid with }
 
-theorem coe_zero [HasZero α] : ((0 : α) : WithBot α) = 0 :=
+theorem coe_zero [Zero α] : ((0 : α) : WithBot α) = 0 :=
   rfl
 
-theorem coe_one [HasOne α] : ((1 : α) : WithBot α) = 1 :=
+theorem coe_one [One α] : ((1 : α) : WithBot α) = 1 :=
   rfl
 
 theorem coe_eq_zero {α : Type _} [AddMonoidₓ α] {a : α} : (a : WithBot α) = 0 ↔ a = 0 := by
@@ -462,7 +462,7 @@ theorem coe_add [AddSemigroupₓ α] (a b : α) : ((a + b : α) : WithBot α) = 
 theorem coe_bit0 [AddSemigroupₓ α] {a : α} : ((bit0 a : α) : WithBot α) = bit0 a := by
   norm_cast
 
-theorem coe_bit1 [AddSemigroupₓ α] [HasOne α] {a : α} : ((bit1 a : α) : WithBot α) = bit1 a := by
+theorem coe_bit1 [AddSemigroupₓ α] [One α] {a : α} : ((bit1 a : α) : WithBot α) = bit1 a := by
   norm_cast
 
 @[simp]
@@ -526,7 +526,7 @@ theorem self_le_mul_right (a b : α) : a ≤ a * b :=
 
 @[to_additive]
 theorem self_le_mul_left (a b : α) : a ≤ b * a := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact self_le_mul_right a b
 
 @[simp, to_additive zero_le]
@@ -618,7 +618,7 @@ instance WithZero.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedA
       · simp only [le_iff_exists_add, WithZero.coe_le_coe]
         intros
         constructor <;> rintro ⟨c, h⟩
-        · exact ⟨c, congr_argₓ coeₓ h⟩
+        · exact ⟨c, congr_argₓ coe h⟩
           
         · induction c using WithZero.cases_on
           · refine' ⟨0, _⟩
@@ -756,7 +756,7 @@ See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.orderedCancelAddCommMonoid
       "Pullback an `ordered_cancel_add_comm_monoid` under an injective map."]
-def Function.Injective.orderedCancelCommMonoid {β : Type _} [HasOne β] [Mul β] (f : β → α) (hf : Function.Injective f)
+def Function.Injective.orderedCancelCommMonoid {β : Type _} [One β] [Mul β] (f : β → α) (hf : Function.Injective f)
     (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : OrderedCancelCommMonoid β :=
   { hf.left_cancel_semigroup f mul, hf.ordered_comm_monoid f one mul with
     le_of_mul_le_mul_left := fun a b c bc : f (a * b) ≤ f (a * c) =>
@@ -773,7 +773,7 @@ end OrderedCancelCommMonoid
 @[to_additive]
 theorem fn_min_mul_fn_max {β} [LinearOrderₓ α] [CommSemigroupₓ β] (f : α → β) (n m : α) :
     f (min n m) * f (max n m) = f n * f m := by
-  cases' le_totalₓ n m with h h <;> simp [h, mul_commₓ]
+  cases' le_totalₓ n m with h h <;> simp [h, mul_comm]
 
 @[to_additive]
 theorem min_mul_max [LinearOrderₓ α] [CommSemigroupₓ α] (n m : α) : min n m * max n m = n * m :=
@@ -856,7 +856,7 @@ See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.linearOrderedCancelAddCommMonoid
       "Pullback a `linear_ordered_cancel_add_comm_monoid` under an injective map."]
-def Function.Injective.linearOrderedCancelCommMonoid {β : Type _} [HasOne β] [Mul β] (f : β → α)
+def Function.Injective.linearOrderedCancelCommMonoid {β : Type _} [One β] [Mul β] (f : β → α)
     (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) :
     LinearOrderedCancelCommMonoid β :=
   { hf.linear_ordered_comm_monoid f one mul, hf.ordered_cancel_comm_monoid f one mul with }
@@ -870,7 +870,7 @@ instance [h : Mul α] : Mul (OrderDual α) :=
   h
 
 @[to_additive]
-instance [h : HasOne α] : HasOne (OrderDual α) :=
+instance [h : One α] : One (OrderDual α) :=
   h
 
 @[to_additive]

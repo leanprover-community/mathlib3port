@@ -238,7 +238,7 @@ theorem dense_image {s : Set α} : Dense (e '' s) ↔ Dense s :=
 
 end DenseEmbedding
 
-theorem Dense.dense_embedding_coe [TopologicalSpace α] {s : Set α} (hs : Dense s) : DenseEmbedding (coeₓ : s → α) :=
+theorem Dense.dense_embedding_coe [TopologicalSpace α] {s : Set α} (hs : Dense s) : DenseEmbedding (coe : s → α) :=
   { embedding_subtype_coe with dense := hs.dense_range_coe }
 
 theorem is_closed_property [TopologicalSpace β] {e : α → β} {p : β → Prop} (he : DenseRange e)

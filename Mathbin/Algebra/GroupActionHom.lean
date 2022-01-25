@@ -141,7 +141,7 @@ variable {G} (H)
 
 /-- The canonical map to the left cosets. -/
 def to_quotient : G →[G] G ⧸ H :=
-  ⟨coeₓ, fun g x => rfl⟩
+  ⟨coe, fun g x => rfl⟩
 
 @[simp]
 theorem to_quotient_apply (g : G) : to_quotient H g = g :=
@@ -238,12 +238,12 @@ theorem id_apply (x : A) : DistribMulActionHom.id M x = x :=
 
 variable {M A B C}
 
-instance : HasZero (A →+[M] B) :=
+instance : Zero (A →+[M] B) :=
   ⟨{ (0 : A →+ B) with
       map_smul' := by
         simp }⟩
 
-instance : HasOne (A →+[M] A) :=
+instance : One (A →+[M] A) :=
   ⟨DistribMulActionHom.id M⟩
 
 @[simp]
@@ -414,7 +414,7 @@ def IsInvariantSubring.subtypeHom : U →+*[M] R' :=
   { U.subtype with map_smul' := fun m s => rfl }
 
 @[simp]
-theorem IsInvariantSubring.coe_subtype_hom : (IsInvariantSubring.subtypeHom M U : U → R') = coeₓ :=
+theorem IsInvariantSubring.coe_subtype_hom : (IsInvariantSubring.subtypeHom M U : U → R') = coe :=
   rfl
 
 @[simp]

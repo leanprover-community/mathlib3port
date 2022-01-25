@@ -1,4 +1,3 @@
-import Mathbin.Order.Lattice
 import Mathbin.Data.Set.Basic
 
 /-!
@@ -36,7 +35,7 @@ def DirectedOn (s : Set α) :=
 
 variable {r}
 
-theorem directed_on_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coeₓ : s → α) := by
+theorem directed_on_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coe : s → α) := by
   simp [Directed, DirectedOn] <;>
     refine'
       ball_congr fun x hx => by
@@ -101,8 +100,19 @@ theorem directed_of (r : α → α → Prop) [IsDirected α r] (a b : α) : ∃ 
 theorem directed_id [IsDirected α r] : Directed r id := by
   convert directed_of r
 
-theorem directed_id_iff_is_directed : Directed r id ↔ IsDirected α r :=
+theorem directed_id_iff : Directed r id ↔ IsDirected α r :=
   ⟨fun h => ⟨h⟩, @directed_id _ _⟩
+
+theorem directed_on_univ [IsDirected α r] : DirectedOn r Set.Univ := fun a _ b _ =>
+  let ⟨c, hc⟩ := directed_of r a b
+  ⟨c, trivialₓ, hc⟩
+
+theorem directed_on_univ_iff : DirectedOn r Set.Univ ↔ IsDirected α r :=
+  ⟨fun h =>
+    ⟨fun a b =>
+      let ⟨c, _, hc⟩ := h a trivialₓ b trivialₓ
+      ⟨c, hc⟩⟩,
+    @directed_on_univ _ _⟩
 
 instance (priority := 100) IsTotal.to_is_directed [IsTotal α r] : IsDirected α r :=
   ⟨fun a b => Or.cases_on (total_of r a b) (fun h => ⟨b, h, refl _⟩) fun h => ⟨a, refl _, h⟩⟩
@@ -129,4 +139,10 @@ instance (priority := 100) SemilatticeSup.to_is_directed_le [SemilatticeSup α] 
 
 instance (priority := 100) SemilatticeInf.to_is_directed_ge [SemilatticeInf α] : IsDirected α (swap (· ≤ ·)) :=
   ⟨fun a b => ⟨a⊓b, inf_le_left, inf_le_right⟩⟩
+
+instance (priority := 100) OrderTop.to_is_directed_le [LE α] [OrderTop α] : IsDirected α (· ≤ ·) :=
+  ⟨fun a b => ⟨⊤, le_top, le_top⟩⟩
+
+instance (priority := 100) OrderBot.to_is_directed_ge [LE α] [OrderBot α] : IsDirected α (swap (· ≤ ·)) :=
+  ⟨fun a b => ⟨⊥, bot_le, bot_le⟩⟩
 

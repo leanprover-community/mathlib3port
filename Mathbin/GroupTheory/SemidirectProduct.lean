@@ -56,7 +56,7 @@ private def inv_aux (a : N ⋊[φ] G) : N ⋊[φ] G :=
   ⟨φ i (a.1⁻¹), i⟩
 
 private theorem mul_assoc_aux (a b c : N ⋊[φ] G) : mul_aux (mul_aux a b) c = mul_aux a (mul_aux b c) := by
-  simp [mul_aux, mul_assocₓ, MulEquiv.map_mul]
+  simp [mul_aux, mul_assoc, MulEquiv.map_mul]
 
 private theorem mul_one_aux (a : N ⋊[φ] G) : mul_aux a one_aux = a := by
   cases a <;> simp [mul_aux, one_aux]
@@ -211,7 +211,7 @@ def lift (f₁ : N →* H) (f₂ : G →* H) (h : ∀ g, f₁.comp (φ g).toMono
   map_mul' := fun a b => by
     have := fun n g => MonoidHom.ext_iff.1 (h n) g
     simp only [MulAut.conj_apply, MonoidHom.comp_apply, MulEquiv.coe_to_monoid_hom] at this
-    simp [this, mul_assocₓ]
+    simp [this, mul_assoc]
 
 @[simp]
 theorem lift_inl (n : N) : lift f₁ f₂ h (inl n) = f₁ n := by

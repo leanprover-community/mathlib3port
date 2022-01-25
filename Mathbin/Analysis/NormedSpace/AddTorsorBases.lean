@@ -83,8 +83,8 @@ open AffineMap
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
 theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu : IsOpen u) (hsu : s ⊆ u)
-    (hne : s.nonempty) (h : AffineIndependent ℝ (coeₓ : s → P)) :
-    ∃ t : Set P, s ⊆ t ∧ t ⊆ u ∧ AffineIndependent ℝ (coeₓ : t → P) ∧ affineSpan ℝ t = ⊤ := by
+    (hne : s.nonempty) (h : AffineIndependent ℝ (coe : s → P)) :
+    ∃ t : Set P, s ⊆ t ∧ t ⊆ u ∧ AffineIndependent ℝ (coe : t → P) ∧ affineSpan ℝ t = ⊤ := by
   obtain ⟨q, hq⟩ := hne
   obtain ⟨ε, hε, hεu⟩ := metric.is_open_iff.mp hu q (hsu hq)
   obtain ⟨t, ht₁, ht₂, ht₃⟩ := exists_subset_affine_independent_affine_span_eq_top h
@@ -132,21 +132,21 @@ theorem interior_convex_hull_nonempty_iff_aff_span_eq_top [FiniteDimensional ℝ
     let t : Set V := {x}
     obtain ⟨b, hb₁, hb₂, hb₃, hb₄⟩ :=
       exists_subset_affine_independent_span_eq_top_of_open hu₂ (singleton_subset_iff.mpr hu₃) (singleton_nonempty x)
-        (affine_independent_of_subsingleton ℝ (coeₓ : t → V))
+        (affine_independent_of_subsingleton ℝ (coe : t → V))
     rw [eq_top_iff, ← hb₄, ← affine_span_convex_hull s]
     mono
     exact hb₂.trans hu₁
     
   · intro h
     obtain ⟨t, hts, h_tot, h_ind⟩ := exists_affine_independent ℝ V s
-    suffices (Interior (convexHull ℝ (range (coeₓ : t → V)))).Nonempty by
+    suffices (Interior (convexHull ℝ (range (coe : t → V)))).Nonempty by
       rw [Subtype.range_coe_subtype, set_of_mem_eq] at this
       apply nonempty.mono _ this
       mono*
     have : Fintype t := fintypeOfFinDimAffineIndependent ℝ h_ind
-    use Finset.centroid ℝ (Finset.univ : Finset t) (coeₓ : t → V)
+    use Finset.centroid ℝ (Finset.univ : Finset t) (coe : t → V)
     rw [h, ← @set_of_mem_eq V t, ← Subtype.range_coe_subtype] at h_tot
-    let b : AffineBasis t ℝ V := ⟨coeₓ, h_ind, h_tot⟩
+    let b : AffineBasis t ℝ V := ⟨coe, h_ind, h_tot⟩
     rw [interior_convex_hull_aff_basis b]
     have htne : (Finset.univ : Finset t).Nonempty := by
       simpa [Finset.univ_nonempty_iff] using AffineSubspace.nonempty_of_affine_span_eq_top ℝ V V h_tot

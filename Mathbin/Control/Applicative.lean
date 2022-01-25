@@ -139,14 +139,14 @@ theorem Comp.seq_mk {α β : Type w} {f : Type u → Type v} {g : Type w → Typ
     (h : f (g (α → β))) (x : f (g α)) : comp.mk h <*> comp.mk x = comp.mk (Seqₓ.seq <$> h <*> x) :=
   rfl
 
-instance {α} [HasOne α] [Mul α] : Applicativeₓ (const α) where
+instance {α} [One α] [Mul α] : Applicativeₓ (const α) where
   pure := fun β x => (1 : α)
   seq := fun β γ f x => (f * x : α)
 
 instance {α} [Monoidₓ α] : IsLawfulApplicative (const α) := by
-  refine' { .. } <;> intros <;> simp [mul_assocₓ, · <$> ·, · <*> ·, pure]
+  refine' { .. } <;> intros <;> simp [mul_assoc, · <$> ·, · <*> ·, pure]
 
-instance {α} [HasZero α] [Add α] : Applicativeₓ (add_const α) where
+instance {α} [Zero α] [Add α] : Applicativeₓ (add_const α) where
   pure := fun β x => (0 : α)
   seq := fun β γ f x => (f + x : α)
 

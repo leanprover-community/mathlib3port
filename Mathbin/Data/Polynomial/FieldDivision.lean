@@ -86,7 +86,7 @@ theorem roots_C_mul (p : Polynomial R) {a : R} (hzero : a ≠ 0) : (C a * p).roo
   simp only [mulzero, zero_addₓ]
 
 theorem roots_normalize [NormalizationMonoid R] {p : Polynomial R} : (normalize p).roots = p.roots := by
-  rw [normalize_apply, mul_commₓ, coe_norm_unit, roots_C_mul _ (norm_unit (leading_coeff p)).ne_zero]
+  rw [normalize_apply, mul_comm, coe_norm_unit, roots_C_mul _ (norm_unit (leading_coeff p)).ne_zero]
 
 end IsDomain
 
@@ -148,7 +148,7 @@ theorem irreducible_of_monic {p : Polynomial R} (hp1 : p.monic) (hp2 : p ≠ 1) 
         hp3 (f * C (f.leading_coeff⁻¹)) (g * C (g.leading_coeff⁻¹)) (monic_mul_leading_coeff_inv hf)
             (monic_mul_leading_coeff_inv hg) $
           by
-          rw [mul_assocₓ, mul_left_commₓ _ g, ← mul_assocₓ, ← C_mul, ← mul_inv₀, ← leading_coeff_mul, ← hp,
+          rw [mul_assoc, mul_left_commₓ _ g, ← mul_assoc, ← C_mul, ← mul_inv₀, ← leading_coeff_mul, ← hp,
             monic.def.1 hp1, inv_one, C_1, mul_oneₓ]⟩⟩
 
 /-- Division of polynomials. See polynomial.div_by_monic for more details.-/
@@ -165,7 +165,7 @@ private theorem quotient_mul_add_remainder_eq_aux (p q : Polynomial R) : q * div
     simp only [h, zero_mul, mod, mod_by_monic_zero, zero_addₓ]
   else by
     conv => rhs rw [← mod_by_monic_add_div p (monic_mul_leading_coeff_inv h)]
-    rw [div, mod, add_commₓ, mul_assocₓ]
+    rw [div, mod, add_commₓ, mul_assoc]
 
 private theorem remainder_lt_aux (p : Polynomial R) (hq : q ≠ 0) : degree (mod p q) < degree q := by
   rw [← degree_mul_leading_coeff_inv q hq] <;> exact degree_mod_by_monic_lt p (monic_mul_leading_coeff_inv hq)
@@ -234,12 +234,12 @@ theorem degree_div_le (p q : Polynomial R) : degree (p / q) ≤ degree p :=
   if hq : q = 0 then by
     simp [hq]
   else by
-    rw [div_def, mul_commₓ, degree_mul_leading_coeff_inv _ hq] <;> exact degree_div_by_monic_le _ _
+    rw [div_def, mul_comm, degree_mul_leading_coeff_inv _ hq] <;> exact degree_div_by_monic_le _ _
 
 theorem degree_div_lt (hp : p ≠ 0) (hq : 0 < degree q) : degree (p / q) < degree p := by
   have hq0 : q ≠ 0 := fun hq0 => by
     simpa [hq0] using hq
-  rw [div_def, mul_commₓ, degree_mul_leading_coeff_inv _ hq0] <;>
+  rw [div_def, mul_comm, degree_mul_leading_coeff_inv _ hq0] <;>
     exact
       degree_div_by_monic_lt _ (monic_mul_leading_coeff_inv hq0) hp
         (by
@@ -389,26 +389,26 @@ theorem leading_coeff_div (hpq : q.degree ≤ p.degree) : (p / q).leadingCoeff =
   · simp [hq]
     
   rw [div_def, leading_coeff_mul, leading_coeff_C,
-    leading_coeff_div_by_monic_of_monic (monic_mul_leading_coeff_inv hq) _, mul_commₓ, div_eq_mul_inv]
+    leading_coeff_div_by_monic_of_monic (monic_mul_leading_coeff_inv hq) _, mul_comm, div_eq_mul_inv]
   rwa [degree_mul_leading_coeff_inv q hq]
 
 theorem div_C_mul : p / (C a * q) = C (a⁻¹) * (p / q) := by
   by_cases' ha : a = 0
   · simp [ha]
     
-  simp only [div_def, leading_coeff_mul, mul_inv₀, leading_coeff_C, C.map_mul, mul_assocₓ]
+  simp only [div_def, leading_coeff_mul, mul_inv₀, leading_coeff_C, C.map_mul, mul_assoc]
   congr 3
-  rw [mul_left_commₓ q, ← mul_assocₓ, ← C.map_mul, mul_inv_cancel ha, C.map_one, one_mulₓ]
+  rw [mul_left_commₓ q, ← mul_assoc, ← C.map_mul, mul_inv_cancel ha, C.map_one, one_mulₓ]
 
 theorem C_mul_dvd (ha : a ≠ 0) : C a * p ∣ q ↔ p ∣ q :=
   ⟨fun h => dvd_trans (dvd_mul_left _ _) h, fun ⟨r, hr⟩ =>
     ⟨C (a⁻¹) * r, by
-      rw [mul_assocₓ, mul_left_commₓ p, ← mul_assocₓ, ← C.map_mul, _root_.mul_inv_cancel ha, C.map_one, one_mulₓ, hr]⟩⟩
+      rw [mul_assoc, mul_left_commₓ p, ← mul_assoc, ← C.map_mul, _root_.mul_inv_cancel ha, C.map_one, one_mulₓ, hr]⟩⟩
 
 theorem dvd_C_mul (ha : a ≠ 0) : p ∣ Polynomial.c a * q ↔ p ∣ q :=
   ⟨fun ⟨r, hr⟩ =>
     ⟨C (a⁻¹) * r, by
-      rw [mul_left_commₓ p, ← hr, ← mul_assocₓ, ← C.map_mul, _root_.inv_mul_cancel ha, C.map_one, one_mulₓ]⟩,
+      rw [mul_left_commₓ p, ← hr, ← mul_assoc, ← C.map_mul, _root_.inv_mul_cancel ha, C.map_one, one_mulₓ]⟩,
     fun h => dvd_trans h (dvd_mul_left _ _)⟩
 
 theorem coe_norm_unit_of_ne_zero (hp : p ≠ 0) : (norm_unit p : Polynomial R) = C (p.leading_coeff⁻¹) := by

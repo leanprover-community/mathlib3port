@@ -106,22 +106,22 @@ theorem derivative_succ_aux (n ν : ℕ) :
     simpa [Polynomial.derivative_pow, ← sub_eq_add_neg]
   conv_rhs => rw [mul_sub]
   refine' congr (congr_argₓ Sub.sub _) _
-  · simp only [← mul_assocₓ]
+  · simp only [← mul_assoc]
     refine' congr (congr_argₓ (· * ·) (congr (congr_argₓ (· * ·) _) rfl)) rfl
     exact_mod_cast congr_argₓ (fun m : ℕ => (m : Polynomial R)) (Nat.succ_mul_choose_eq n ν).symm
     
-  · rw [← tsub_add_eq_tsub_tsub, ← mul_assocₓ, ← mul_assocₓ]
+  · rw [← tsub_add_eq_tsub_tsub, ← mul_assoc, ← mul_assoc]
     congr 1
-    rw [mul_commₓ]
-    rw [← mul_assocₓ, ← mul_assocₓ]
+    rw [mul_comm]
+    rw [← mul_assoc, ← mul_assoc]
     congr 1
     norm_cast
     congr 1
     convert (Nat.choose_mul_succ_eq n (ν + 1)).symm using 1
-    · convert mul_commₓ _ _ using 2
+    · convert mul_comm _ _ using 2
       simp
       
-    · apply mul_commₓ
+    · apply mul_comm
       
     
 
@@ -293,7 +293,7 @@ theorem Sum (n : ℕ) : (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n
   calc
     (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = (X + (1 - X)) ^ n := by
       rw [add_pow]
-      simp only [bernsteinPolynomial, mul_commₓ, mul_assocₓ, mul_left_commₓ]
+      simp only [bernsteinPolynomial, mul_comm, mul_assoc, mul_left_commₓ]
     _ = 1 := by
       simp
     
@@ -387,7 +387,7 @@ theorem variance (n : ℕ) :
     rfl
   conv at p =>
     lhs rw [Finset.mul_sum, Finset.mul_sum, ← Finset.sum_add_distrib, ←
-      Finset.sum_add_distrib]simp only [← nat_cast_mul]simp only [← mul_assocₓ]simp only [← add_mulₓ]
+      Finset.sum_add_distrib]simp only [← nat_cast_mul]simp only [← mul_assoc]simp only [← add_mulₓ]
   conv at p => rhs rw [Sum, sum_smul, sum_mul_smul, ← nat_cast_mul]
   calc _ = _ := Finset.sum_congr rfl fun k m => _ _ = _ := p _ = _ := _
   · congr 1

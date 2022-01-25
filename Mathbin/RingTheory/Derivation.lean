@@ -147,7 +147,7 @@ on the whole algebra. -/
 theorem ext_of_adjoin_eq_top (s : Set A) (hs : adjoin R s = ⊤) (h : Set.EqOn D1 D2 s) : D1 = D2 :=
   ext $ fun a => eq_on_adjoin h $ hs.symm ▸ trivialₓ
 
-instance : HasZero (Derivation R A M) :=
+instance : Zero (Derivation R A M) :=
   ⟨{ toLinearMap := 0, map_one_eq_zero' := rfl,
       leibniz' := fun a b => by
         simp only [add_zeroₓ, LinearMap.zero_apply, smul_zero] }⟩

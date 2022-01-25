@@ -45,7 +45,7 @@ variable {A : Type v} [Semiringₓ A] [Algebra R A]
 variable (S T : Set A) {M N P Q : Submodule R A} {m n : A}
 
 /-- `1 : submodule R A` is the submodule R of A. -/
-instance : HasOne (Submodule R A) :=
+instance : One (Submodule R A) :=
   ⟨(Algebra.linearMap R A).range⟩
 
 theorem one_eq_range : (1 : Submodule R A) = (Algebra.linearMap R A).range :=
@@ -78,10 +78,26 @@ theorem mul_le : M * N ≤ P ↔ ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, m * n 
   ⟨fun H m hm n hn => H $ mul_mem_mul hm hn, fun H =>
     supr_le $ fun ⟨m, hm⟩ => map_le_iff_le_comap.2 $ fun n hn => H m hm n hn⟩
 
+theorem mul_to_add_submonoid : (M * N).toAddSubmonoid = M.to_add_submonoid * N.to_add_submonoid := by
+  dsimp [Mul.mul]
+  simp_rw [← Algebra.lmul_left_to_add_monoid_hom R, Algebra.lmulLeft, ← map_to_add_submonoid]
+  rw [supr_to_add_submonoid]
+  rfl
+
 @[elab_as_eliminator]
 protected theorem mul_induction_on {C : A → Prop} {r : A} (hr : r ∈ M * N) (hm : ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, C (m * n))
-    (h0 : C 0) (ha : ∀ x y, C x → C y → C (x + y)) (hs : ∀ r : R x, C x → C (r • x)) : C r :=
-  (@mul_le _ _ _ _ _ _ _ ⟨C, h0, ha, hs⟩).2 hm hr
+    (ha : ∀ x y, C x → C y → C (x + y)) : C r := by
+  rw [← mem_to_add_submonoid, mul_to_add_submonoid] at hr
+  exact AddSubmonoid.mul_induction_on hr hm ha
+
+/-- A dependent version of `mul_induction_on`. -/
+@[elab_as_eliminator]
+protected theorem mul_induction_on' {C : ∀ r, r ∈ M * N → Prop}
+    (hm : ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, C (m * n) (mul_mem_mul ‹_› ‹_›))
+    (ha : ∀ x hx y hy, C x hx → C y hy → C (x + y) (add_mem _ ‹_› ‹_›)) {r : A} (hr : r ∈ M * N) : C r hr := by
+  refine' Exists.elim _ fun hr : r ∈ M * N hc : C r hr => hc
+  exact
+    Submodule.mul_induction_on hr (fun x hx y hy => ⟨_, hm _ hx _ hy⟩) fun x y ⟨_, hx⟩ ⟨_, hy⟩ => ⟨_, ha _ _ _ _ hx hy⟩
 
 variable (R)
 
@@ -114,16 +130,16 @@ variable {R}
 
 variable (M N P Q)
 
-protected theorem mul_assocₓ : M * N * P = M * (N * P) :=
+protected theorem mul_assoc : M * N * P = M * (N * P) :=
   le_antisymmₓ
     (mul_le.2 $ fun mn hmn p hp =>
       suffices M * N ≤ (M * (N * P)).comap (Algebra.lmulRight R p) from this hmn
       mul_le.2 $ fun m hm n hn =>
-        show m * n * p ∈ M * (N * P) from (mul_assocₓ m n p).symm ▸ mul_mem_mul hm (mul_mem_mul hn hp))
+        show m * n * p ∈ M * (N * P) from (mul_assoc m n p).symm ▸ mul_mem_mul hm (mul_mem_mul hn hp))
     (mul_le.2 $ fun m hm np hnp =>
       suffices N * P ≤ (M * N * P).comap (Algebra.lmulLeft R m) from this hnp
       mul_le.2 $ fun n hn p hp =>
-        show m * (n * p) ∈ M * N * P from mul_assocₓ m n p ▸ mul_mem_mul (mul_mem_mul hm hn) hp)
+        show m * (n * p) ∈ M * N * P from mul_assoc m n p ▸ mul_mem_mul (mul_mem_mul hm hn) hp)
 
 @[simp]
 theorem mul_bot : M * ⊥ = ⊥ :=
@@ -257,6 +273,28 @@ theorem pow_subset_pow {n : ℕ} : (↑M : Set A) ^ n ⊆ ↑(M ^ n : Submodule 
     apply mul_subset_mul
     
 
+/-- Dependent version of `submodule.pow_induction_on`. -/
+protected theorem pow_induction_on' {C : ∀ n : ℕ x, x ∈ M ^ n → Prop}
+    (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebra_map_mem r))
+    (hadd : ∀ x y i hx hy, C i x hx → C i y hy → C i (x + y) (add_mem _ ‹_› ‹_›))
+    (hmul : ∀, ∀ m ∈ M, ∀ i x hx, C i x hx → C i.succ (m * x) (mul_mem_mul H hx)) {x : A} {n : ℕ} (hx : x ∈ M ^ n) :
+    C n x hx := by
+  induction' n with n n_ih generalizing x
+  · rw [pow_zeroₓ] at hx
+    obtain ⟨r, rfl⟩ := hx
+    exact hr r
+    
+  exact
+    Submodule.mul_induction_on' (fun m hm x ih => hmul _ hm _ _ _ (n_ih ih))
+      (fun x hx y hy Cx Cy => hadd _ _ _ _ _ Cx Cy) hx
+
+/-- To show a property on elements of `M ^ n` holds, it suffices to show that it holds for scalars,
+is closed under addition, and holds for `m * x` where `m ∈ M` and it holds for `x` -/
+protected theorem pow_induction_on {C : A → Prop} (hr : ∀ r : R, C (algebraMap _ _ r))
+    (hadd : ∀ x y, C x → C y → C (x + y)) (hmul : ∀, ∀ m ∈ M, ∀ x, C x → C (m * x)) {x : A} {n : ℕ} (hx : x ∈ M ^ n) :
+    C x :=
+  Submodule.pow_induction_on' M hr (fun x y i hx hy => hadd x y) (fun m hm i x hx => hmul _ hm _) hx
+
 /-- `span` is a semiring homomorphism (recall multiplication is pointwise multiplication of subsets
 on either side). -/
 def span.ring_hom : set_semiring A →+* Submodule R A where
@@ -276,11 +314,11 @@ variable {A : Type v} [CommSemiringₓ A] [Algebra R A]
 variable {M N : Submodule R A} {m n : A}
 
 theorem mul_mem_mul_rev (hm : m ∈ M) (hn : n ∈ N) : n * m ∈ M * N :=
-  mul_commₓ m n ▸ mul_mem_mul hm hn
+  mul_comm m n ▸ mul_mem_mul hm hn
 
 variable (M N)
 
-protected theorem mul_commₓ : M * N = N * M :=
+protected theorem mul_comm : M * N = N * M :=
   le_antisymmₓ (mul_le.2 $ fun r hrm s hsn => mul_mem_mul_rev hsn hrm)
     (mul_le.2 $ fun r hrn s hsm => mul_mem_mul_rev hsm hrn)
 
@@ -313,7 +351,7 @@ instance module_set : Module (set_semiring A) (Submodule R A) where
       erw [span_union, right_distrib]
   mul_smul := fun s t P =>
     show _ = _ * (_ * _) by
-      rw [← mul_assocₓ, span_mul_span, ← image_mul_prod]
+      rw [← mul_assoc, span_mul_span, ← image_mul_prod]
   one_smul := fun P =>
     show span R {(1 : A)} * P = _ by
       conv_lhs => erw [← span_eq P]
@@ -401,7 +439,7 @@ theorem mul_one_div_le_one {I : Submodule R A} : I * (1 / I) ≤ 1 := by
   rw [Submodule.mul_le]
   intro m hm n hn
   rw [Submodule.mem_div_iff_forall_mul_mem] at hn
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact hn m hm
 
 @[simp]

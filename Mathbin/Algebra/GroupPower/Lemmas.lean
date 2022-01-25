@@ -23,7 +23,7 @@ section Monoidₓ
 variable [Monoidₓ M] [Monoidₓ N] [AddMonoidₓ A] [AddMonoidₓ B]
 
 @[simp]
-theorem nsmul_one [HasOne A] : ∀ n : ℕ, n • (1 : A) = n := by
+theorem nsmul_one [One A] : ∀ n : ℕ, n • (1 : A) = n := by
   refine' eq_nat_cast' (⟨_, _, _⟩ : ℕ →+ A) _
   · simp [zero_nsmul]
     
@@ -103,7 +103,7 @@ attribute [local ematch] le_of_ltₓ
 
 open Nat
 
-theorem zsmul_one [HasOne A] (n : ℤ) : n • (1 : A) = n := by
+theorem zsmul_one [One A] (n : ℤ) : n • (1 : A) = n := by
   cases n <;> simp
 
 @[to_additive add_one_zsmul]
@@ -129,9 +129,9 @@ theorem zpow_add (a : G) (m n : ℤ) : a ^ (m + n) = a ^ m * a ^ n := by
   induction' n using Int.induction_on with n ihn n ihn
   case hz =>
     simp
-  · simp only [← add_assocₓ, zpow_add_one, ihn, mul_assocₓ]
+  · simp only [← add_assocₓ, zpow_add_one, ihn, mul_assoc]
     
-  · rw [zpow_sub_one, ← mul_assocₓ, ← ihn, ← zpow_sub_one, add_sub_assoc]
+  · rw [zpow_sub_one, ← mul_assoc, ← ihn, ← zpow_sub_one, add_sub_assoc]
     
 
 @[to_additive add_zsmul_self]
@@ -168,7 +168,7 @@ theorem zpow_mul (a : G) (m n : ℤ) : a ^ (m * n) = (a ^ m) ^ n :=
 
 @[to_additive mul_zsmul]
 theorem zpow_mul' (a : G) (m n : ℤ) : a ^ (m * n) = (a ^ n) ^ m := by
-  rw [mul_commₓ, zpow_mul]
+  rw [mul_comm, zpow_mul]
 
 @[to_additive bit0_zsmul]
 theorem zpow_bit0 (a : G) (n : ℤ) : a ^ bit0 n = a ^ n * a ^ n :=
@@ -349,7 +349,7 @@ end LinearOrderedAddCommGroup
 
 @[simp]
 theorem WithBot.coe_nsmul [AddMonoidₓ A] (a : A) (n : ℕ) : ((n • a : A) : WithBot A) = n • a :=
-  AddMonoidHom.map_nsmul ⟨(coeₓ : A → WithBot A), WithBot.coe_zero, WithBot.coe_add⟩ a n
+  AddMonoidHom.map_nsmul ⟨(coe : A → WithBot A), WithBot.coe_zero, WithBot.coe_add⟩ a n
 
 theorem nsmul_eq_mul' [Semiringₓ R] (a : R) (n : ℕ) : n • a = a * n := by
   induction' n with n ih <;> [rw [zero_nsmul, Nat.cast_zero, mul_zero],
@@ -360,10 +360,10 @@ theorem nsmul_eq_mul [Semiringₓ R] (n : ℕ) (a : R) : n • a = n * a := by
   rw [nsmul_eq_mul', (n.cast_commute a).Eq]
 
 theorem mul_nsmul_left [Semiringₓ R] (a b : R) (n : ℕ) : n • (a * b) = a * n • b := by
-  rw [nsmul_eq_mul', nsmul_eq_mul', mul_assocₓ]
+  rw [nsmul_eq_mul', nsmul_eq_mul', mul_assoc]
 
 theorem mul_nsmul_assoc [Semiringₓ R] (a b : R) (n : ℕ) : n • (a * b) = n • a * b := by
-  rw [nsmul_eq_mul, nsmul_eq_mul, mul_assocₓ]
+  rw [nsmul_eq_mul, nsmul_eq_mul, mul_assoc]
 
 @[simp, norm_cast]
 theorem Nat.cast_pow [Semiringₓ R] (n m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m := by
@@ -409,10 +409,10 @@ theorem zsmul_eq_mul' [Ringₓ R] (a : R) (n : ℤ) : n • a = a * n := by
   rw [zsmul_eq_mul, (n.cast_commute a).Eq]
 
 theorem mul_zsmul_left [Ringₓ R] (a b : R) (n : ℤ) : n • (a * b) = a * n • b := by
-  rw [zsmul_eq_mul', zsmul_eq_mul', mul_assocₓ]
+  rw [zsmul_eq_mul', zsmul_eq_mul', mul_assoc]
 
 theorem mul_zsmul_assoc [Ringₓ R] (a b : R) (n : ℤ) : n • (a * b) = n • a * b := by
-  rw [zsmul_eq_mul, zsmul_eq_mul, mul_assocₓ]
+  rw [zsmul_eq_mul, zsmul_eq_mul, mul_assoc]
 
 theorem zsmul_int_int (a b : ℤ) : a • b = a * b := by
   simp
@@ -448,11 +448,11 @@ theorem one_add_mul_le_pow' (Hsq : 0 ≤ a * a) (Hsq' : 0 ≤ (1 + a) * (1 + a))
     calc
       1 + (↑(n + 2) : R) * a ≤ 1 + ↑(n + 2) * a + (n * (a * a * (2 + a)) + a * a) := (le_add_iff_nonneg_right _).2 this
       _ = (1 + a) * (1 + a) * (1 + n * a) := by
-        simp [add_mulₓ, mul_addₓ, bit0, mul_assocₓ, (n.cast_commute (_ : R)).left_comm]
+        simp [add_mulₓ, mul_addₓ, bit0, mul_assoc, (n.cast_commute (_ : R)).left_comm]
         ac_rfl
       _ ≤ (1 + a) * (1 + a) * (1 + a) ^ n := mul_le_mul_of_nonneg_left (one_add_mul_le_pow' n) Hsq'
       _ = (1 + a) ^ (n + 2) := by
-        simp only [pow_succₓ, mul_assocₓ]
+        simp only [pow_succₓ, mul_assoc]
       
 
 private theorem pow_le_pow_of_le_one_aux (h : 0 ≤ a) (ha : a ≤ 1) (i : ℕ) : ∀ k : ℕ, a ^ (i + k) ≤ a ^ i

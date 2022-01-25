@@ -169,9 +169,9 @@ def sections_subring (U : opens (prime_spectrum.Top R)ᵒᵖ) : Subring (∀ x :
       
     · simp only [add_mulₓ, RingHom.map_add, Pi.add_apply, RingHom.map_mul]
       erw [← wa, ← wb]
-      simp only [mul_assocₓ]
+      simp only [mul_assoc]
       congr 2
-      rw [mul_commₓ]
+      rw [mul_comm]
       rfl
       
   neg_mem' := by
@@ -201,7 +201,7 @@ def sections_subring (U : opens (prime_spectrum.Top R)ᵒᵖ) : Subring (∀ x :
       
     · simp only [Pi.mul_apply, RingHom.map_mul]
       erw [← wa, ← wb]
-      simp only [mul_left_commₓ, mul_assocₓ, mul_commₓ]
+      simp only [mul_left_commₓ, mul_assoc, mul_comm]
       rfl
       
 
@@ -328,14 +328,14 @@ theorem const_congr {f₁ f₂ g₁ g₂ : R} {U hu} (hf : f₁ = f₂) (hg : g�
   substs hf hg
 
 theorem const_mul_rev (f g : R) U hu₁ hu₂ : const R f g U hu₁ * const R g f U hu₂ = 1 := by
-  rw [const_mul, const_congr R rfl (mul_commₓ g f), const_self]
+  rw [const_mul, const_congr R rfl (mul_comm g f), const_self]
 
 theorem const_mul_cancel (f g₁ g₂ : R) U hu₁ hu₂ : const R f g₁ U hu₁ * const R g₁ g₂ U hu₂ = const R f g₂ U hu₂ := by
   rw [const_mul, const_ext]
-  rw [mul_assocₓ]
+  rw [mul_assoc]
 
 theorem const_mul_cancel' (f g₁ g₂ : R) U hu₁ hu₂ : const R g₁ g₂ U hu₂ * const R f g₁ U hu₁ = const R f g₂ U hu₂ := by
-  rw [mul_commₓ, const_mul_cancel]
+  rw [mul_comm, const_mul_cancel]
 
 /-- The canonical ring homomorphism interpreting an element of `R` as
 a section of the structure sheaf. -/
@@ -548,7 +548,7 @@ theorem to_basic_open_injective (f : R) : Function.Injective (to_basic_open R f)
         simp only [mul_addₓ, hr₁, hr₂],
       smul_mem' := fun r₁ r₂ hr₂ => by
         dsimp  at hr₂⊢
-        simp only [mul_commₓ r₁ r₂, ← mul_assocₓ, hr₂] }
+        simp only [mul_comm r₁ r₂, ← mul_assoc, hr₂] }
   suffices f ∈ I.radical by
     cases' this with n hn
     exact ⟨⟨f ^ n, n, rfl⟩, hn⟩
@@ -585,7 +585,7 @@ theorem locally_const_basic_open (U : opens (prime_spectrum.Top R)) (s : (struct
     exact (Set.Subset.trans hDhV hVDg : _) hy
     
   apply const_ext
-  rw [mul_assocₓ f c g, hc]
+  rw [mul_assoc f c g, hc]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i j «expr ∈ » t)
 theorem normalize_finite_fraction_representation (U : opens (prime_spectrum.Top R))
@@ -714,7 +714,7 @@ theorem to_basic_open_surjective (f : R) : Function.Surjective (to_basic_open R 
   rw [← hb, Finset.sum_mul, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro j hj
-  rw [mul_assocₓ, ah_ha j hj i hi]
+  rw [mul_assoc, ah_ha j hj i hi]
   ring
 
 instance is_iso_to_basic_open (f : R) : is_iso (show CommRingₓₓ.of _ ⟶ _ from to_basic_open R f) :=

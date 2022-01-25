@@ -100,15 +100,15 @@ open Label
 
 /-- Count how many coercions are at the top of the expression. -/
 unsafe def count_head_coes : expr → ℕ
-  | quote.1 (coeₓ (%%ₓe)) => count_head_coes e + 1
-  | quote.1 (coeSortₓ (%%ₓe)) => count_head_coes e + 1
+  | quote.1 (coe (%%ₓe)) => count_head_coes e + 1
+  | quote.1 (coeSort (%%ₓe)) => count_head_coes e + 1
   | quote.1 (coeFn (%%ₓe)) => count_head_coes e + 1
   | _ => 0
 
 /-- Count how many coercions are inside the expression, including the top ones. -/
 unsafe def count_coes : expr → tactic ℕ
-  | quote.1 (coeₓ (%%ₓe)) => (· + 1) <$> count_coes e
-  | quote.1 (coeSortₓ (%%ₓe)) => (· + 1) <$> count_coes e
+  | quote.1 (coe (%%ₓe)) => (· + 1) <$> count_coes e
+  | quote.1 (coeSort (%%ₓe)) => (· + 1) <$> count_coes e
   | quote.1 (coeFn (%%ₓe)) => (· + 1) <$> count_coes e
   | app (quote.1 (coeFn (%%ₓe))) x => (· + ·) <$> count_coes x <*> (· + 1) <$> count_coes e
   | expr.lam n bi t e => do
@@ -322,13 +322,13 @@ when (↑(↑(x : α) : β) : γ) = (↑(x : α) : γ) can be proven with a squa
 unsafe def splitting_procedure : expr → tactic (expr × expr)
   | app (app op x) y =>
     (do
-        let quote.1 (@coeₓ (%%ₓα) (%%ₓδ) (%%ₓcoe1) (%%ₓxx)) ← return x
-        let quote.1 (@coeₓ (%%ₓβ) (%%ₓγ) (%%ₓcoe2) (%%ₓyy)) ← return y
+        let quote.1 (@coe (%%ₓα) (%%ₓδ) (%%ₓcoe1) (%%ₓxx)) ← return x
+        let quote.1 (@coe (%%ₓβ) (%%ₓγ) (%%ₓcoe2) (%%ₓyy)) ← return y
         success_if_fail $ is_def_eq α β
         is_def_eq δ γ
         (do
               let coe3 ← mk_app `has_lift_t [α, β] >>= mk_instance_fast
-              let new_x ← to_expr (pquote.1 (@coeₓ (%%ₓβ) (%%ₓδ) (%%ₓcoe2) (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe3) (%%ₓxx))))
+              let new_x ← to_expr (pquote.1 (@coe (%%ₓβ) (%%ₓδ) (%%ₓcoe2) (@coe (%%ₓα) (%%ₓβ) (%%ₓcoe3) (%%ₓxx))))
               let new_e := app (app op new_x) y
               let eq_x ← prove_eq_using_down x new_x
               let pr ← mk_congr_arg op eq_x
@@ -336,43 +336,43 @@ unsafe def splitting_procedure : expr → tactic (expr × expr)
               return (new_e, pr)) <|>
             do
             let coe3 ← mk_app `has_lift_t [β, α] >>= mk_instance_fast
-            let new_y ← to_expr (pquote.1 (@coeₓ (%%ₓα) (%%ₓδ) (%%ₓcoe1) (@coeₓ (%%ₓβ) (%%ₓα) (%%ₓcoe3) (%%ₓyy))))
+            let new_y ← to_expr (pquote.1 (@coe (%%ₓα) (%%ₓδ) (%%ₓcoe1) (@coe (%%ₓβ) (%%ₓα) (%%ₓcoe3) (%%ₓyy))))
             let new_e := app (app op x) new_y
             let eq_y ← prove_eq_using_down y new_y
             let pr ← mk_congr_arg (app op x) eq_y
             return (new_e, pr)) <|>
       (do
-          let quote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (%%ₓxx)) ← return x
-          let quote.1 (@HasOne.one (%%ₓβ) (%%ₓh1)) ← return y
-          let h2 ← to_expr (pquote.1 (HasOne (%%ₓα))) >>= mk_instance_fast
-          let new_y ← to_expr (pquote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (@HasOne.one (%%ₓα) (%%ₓh2))))
+          let quote.1 (@coe (%%ₓα) (%%ₓβ) (%%ₓcoe1) (%%ₓxx)) ← return x
+          let quote.1 (@One.one (%%ₓβ) (%%ₓh1)) ← return y
+          let h2 ← to_expr (pquote.1 (One (%%ₓα))) >>= mk_instance_fast
+          let new_y ← to_expr (pquote.1 (@coe (%%ₓα) (%%ₓβ) (%%ₓcoe1) (@One.one (%%ₓα) (%%ₓh2))))
           let eq_y ← prove_eq_using_down y new_y
           let new_e := app (app op x) new_y
           let pr ← mk_congr_arg (app op x) eq_y
           return (new_e, pr)) <|>
         (do
-            let quote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (%%ₓxx)) ← return x
-            let quote.1 (@HasZero.zero (%%ₓβ) (%%ₓh1)) ← return y
-            let h2 ← to_expr (pquote.1 (HasZero (%%ₓα))) >>= mk_instance_fast
-            let new_y ← to_expr (pquote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (@HasZero.zero (%%ₓα) (%%ₓh2))))
+            let quote.1 (@coe (%%ₓα) (%%ₓβ) (%%ₓcoe1) (%%ₓxx)) ← return x
+            let quote.1 (@Zero.zero (%%ₓβ) (%%ₓh1)) ← return y
+            let h2 ← to_expr (pquote.1 (Zero (%%ₓα))) >>= mk_instance_fast
+            let new_y ← to_expr (pquote.1 (@coe (%%ₓα) (%%ₓβ) (%%ₓcoe1) (@Zero.zero (%%ₓα) (%%ₓh2))))
             let eq_y ← prove_eq_using_down y new_y
             let new_e := app (app op x) new_y
             let pr ← mk_congr_arg (app op x) eq_y
             return (new_e, pr)) <|>
           (do
-              let quote.1 (@HasOne.one (%%ₓβ) (%%ₓh1)) ← return x
-              let quote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (%%ₓxx)) ← return y
-              let h1 ← to_expr (pquote.1 (HasOne (%%ₓα))) >>= mk_instance_fast
-              let new_x ← to_expr (pquote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (@HasOne.one (%%ₓα) (%%ₓh1))))
+              let quote.1 (@One.one (%%ₓβ) (%%ₓh1)) ← return x
+              let quote.1 (@coe (%%ₓα) (%%ₓβ) (%%ₓcoe1) (%%ₓxx)) ← return y
+              let h1 ← to_expr (pquote.1 (One (%%ₓα))) >>= mk_instance_fast
+              let new_x ← to_expr (pquote.1 (@coe (%%ₓα) (%%ₓβ) (%%ₓcoe1) (@One.one (%%ₓα) (%%ₓh1))))
               let eq_x ← prove_eq_using_down x new_x
               let new_e := app (app op new_x) y
               let pr ← mk_congr_arg (lam `x BinderInfo.default β (app (app op (var 0)) y)) eq_x
               return (new_e, pr)) <|>
             do
-            let quote.1 (@HasZero.zero (%%ₓβ) (%%ₓh1)) ← return x
-            let quote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (%%ₓxx)) ← return y
-            let h1 ← to_expr (pquote.1 (HasZero (%%ₓα))) >>= mk_instance_fast
-            let new_x ← to_expr (pquote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (@HasZero.zero (%%ₓα) (%%ₓh1))))
+            let quote.1 (@Zero.zero (%%ₓβ) (%%ₓh1)) ← return x
+            let quote.1 (@coe (%%ₓα) (%%ₓβ) (%%ₓcoe1) (%%ₓxx)) ← return y
+            let h1 ← to_expr (pquote.1 (Zero (%%ₓα))) >>= mk_instance_fast
+            let new_x ← to_expr (pquote.1 (@coe (%%ₓα) (%%ₓβ) (%%ₓcoe1) (@Zero.zero (%%ₓα) (%%ₓh1))))
             let eq_x ← prove_eq_using_down x new_x
             let new_e := app (app op new_x) y
             let pr ← mk_congr_arg (lam `x BinderInfo.default β (app (app op (var 0)) y)) eq_x
@@ -418,7 +418,7 @@ unsafe def numeral_to_coe (e : expr) : tactic (expr × expr) := do
   let n ← e.to_nat
   let h1 ← mk_app `has_lift_t [quote.1 ℕ, α] >>= mk_instance_fast
   let new_e : expr := reflect n
-  let new_e ← to_expr (pquote.1 (@coeₓ ℕ (%%ₓα) (%%ₓh1) (%%ₓnew_e)))
+  let new_e ← to_expr (pquote.1 (@coe ℕ (%%ₓα) (%%ₓh1) (%%ₓnew_e)))
   let pr ← prove_eq_using_down e new_e
   return (new_e, pr)
 
@@ -426,7 +426,7 @@ unsafe def numeral_to_coe (e : expr) : tactic (expr × expr) := do
 Returns a pair of the new expression and proof that they are equal.
 -/
 unsafe def coe_to_numeral (e : expr) : tactic (expr × expr) := do
-  let quote.1 (@coeₓ ℕ (%%ₓα) (%%ₓh1) (%%ₓe')) ← return e
+  let quote.1 (@coe ℕ (%%ₓα) (%%ₓh1) (%%ₓe')) ← return e
   let n ← e'.to_nat
   is_def_eq (reflect n) e' reducible
   let e := e.app_fn (reflect n)

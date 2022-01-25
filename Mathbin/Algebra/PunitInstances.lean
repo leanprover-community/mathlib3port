@@ -142,7 +142,7 @@ instance : SmulCommClass R S PUnit :=
 instance [HasScalar R S] : IsScalarTower R S PUnit :=
   ⟨fun _ _ _ => Subsingleton.elimₓ _ _⟩
 
-instance [HasZero R] : SmulWithZero R PUnit := by
+instance [Zero R] : SmulWithZero R PUnit := by
   refine' { PUnit.hasScalar with .. } <;> intros <;> exact Subsingleton.elimₓ _ _
 
 instance [Monoidₓ R] : MulAction R PUnit := by

@@ -189,7 +189,7 @@ theorem divisors_antidiagonal_one : divisors_antidiagonal 1 = {(1, 1)} := by
 
 theorem swap_mem_divisors_antidiagonal {x : ℕ × ℕ} (h : x ∈ divisors_antidiagonal n) :
     x.swap ∈ divisors_antidiagonal n := by
-  rw [mem_divisors_antidiagonal, mul_commₓ] at h
+  rw [mem_divisors_antidiagonal, mul_comm] at h
   simp [h.1, h.2]
 
 theorem fst_mem_divisors_of_mem_antidiagonal {x : ℕ × ℕ} (h : x ∈ divisors_antidiagonal n) : x.fst ∈ divisors n := by
@@ -208,11 +208,11 @@ theorem map_swap_divisors_antidiagonal :
     Prod.swap_prod_mkₓ, Prod.exists]
   constructor
   · rintro ⟨x, y, ⟨⟨rfl, h⟩, rfl⟩⟩
-    simp [mul_commₓ, h]
+    simp [mul_comm, h]
     
   · rintro ⟨rfl, h⟩
     use a.snd, a.fst
-    rw [mul_commₓ]
+    rw [mul_comm]
     simp [h]
     
 

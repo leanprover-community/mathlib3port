@@ -72,17 +72,17 @@ theorem mul_left (hac : Commute a c) (hbc : Commute b c) : Commute (a * b) c :=
 
 @[to_additive]
 protected theorem right_comm (h : Commute b c) (a : S) : a * b * c = a * c * b := by
-  simp only [mul_assocₓ, h.eq]
+  simp only [mul_assoc, h.eq]
 
 @[to_additive]
 protected theorem left_comm (h : Commute a b) c : a * (b * c) = b * (a * c) := by
-  simp only [← mul_assocₓ, h.eq]
+  simp only [← mul_assoc, h.eq]
 
 end Semigroupₓ
 
 @[to_additive]
 protected theorem all {S : Type _} [CommSemigroupₓ S] (a b : S) : Commute a b :=
-  mul_commₓ a b
+  mul_comm a b
 
 section MulOneClass
 
@@ -167,11 +167,11 @@ theorem is_unit_mul_iff (h : Commute a b) : IsUnit (a * b) ↔ IsUnit a ∧ IsUn
     rw [← this.units_inv_right.right_comm, ← h.eq, ← hu, u.mul_inv]
   constructor
   · refine' ⟨⟨a, b * ↑u⁻¹, _, this⟩, rfl⟩
-    rw [← mul_assocₓ, ← hu, u.mul_inv]
+    rw [← mul_assoc, ← hu, u.mul_inv]
     
-  · rw [mul_assocₓ] at this
+  · rw [mul_assoc] at this
     refine' ⟨⟨b, ↑u⁻¹ * a, this, _⟩, rfl⟩
-    rw [mul_assocₓ, ← hu, u.inv_mul]
+    rw [mul_assoc, ← hu, u.inv_mul]
     
 
 @[simp, to_additive]
@@ -214,7 +214,7 @@ protected theorem inv_mul_cancel (h : Commute a b) : a⁻¹ * b * a = b := by
 
 @[to_additive]
 theorem inv_mul_cancel_assoc (h : Commute a b) : a⁻¹ * (b * a) = b := by
-  rw [← mul_assocₓ, h.inv_mul_cancel]
+  rw [← mul_assoc, h.inv_mul_cancel]
 
 @[to_additive]
 protected theorem mul_inv_cancel (h : Commute a b) : a * b * a⁻¹ = b := by
@@ -222,7 +222,7 @@ protected theorem mul_inv_cancel (h : Commute a b) : a * b * a⁻¹ = b := by
 
 @[to_additive]
 theorem mul_inv_cancel_assoc (h : Commute a b) : a * (b * a⁻¹) = b := by
-  rw [← mul_assocₓ, h.mul_inv_cancel]
+  rw [← mul_assoc, h.mul_inv_cancel]
 
 end Groupₓ
 

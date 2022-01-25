@@ -362,8 +362,8 @@ theorem AffineEquiv.affine_independent_iff {p : ι → P} (e : P ≃ᵃ[k] P₂)
 
 /-- Affine equivalences preserve affine independence of subsets. -/
 theorem AffineEquiv.affine_independent_set_of_eq_iff {s : Set P} (e : P ≃ᵃ[k] P₂) :
-    AffineIndependent k (coeₓ : e '' s → P₂) ↔ AffineIndependent k (coeₓ : s → P) := by
-  have : e ∘ (coeₓ : s → P) = (coeₓ : e '' s → P₂) ∘ (e : P ≃ P₂).Image s := rfl
+    AffineIndependent k (coe : e '' s → P₂) ↔ AffineIndependent k (coe : s → P) := by
+  have : e ∘ (coe : s → P) = (coe : e '' s → P₂) ∘ (e : P ≃ P₂).Image s := rfl
   rw [← e.affine_independent_iff, this, affine_independent_equiv]
 
 end Composition
@@ -423,13 +423,13 @@ theorem AffineIndependent.not_mem_affine_span_diff [Nontrivial k] {p : ι → P}
     (s : Set ι) : p i ∉ affineSpan k (p '' (s \ {i})) := by
   simp [ha]
 
-theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V} (h : ¬AffineIndependent k (coeₓ : t → V)) :
+theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V} (h : ¬AffineIndependent k (coe : t → V)) :
     ∃ f : V → k, (∑ e in t, f e • e) = 0 ∧ (∑ e in t, f e) = 0 ∧ ∃ x ∈ t, f x ≠ 0 := by
   classical
   rw [affine_independent_iff_of_fintype] at h
   simp only [exists_prop, not_forall] at h
   obtain ⟨w, hw, hwt, i, hi⟩ := h
-  simp only [Finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero _ w (coeₓ : t → V) hw 0, vsub_eq_sub,
+  simp only [Finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero _ w (coe : t → V) hw 0, vsub_eq_sub,
     Finset.weighted_vsub_of_point_apply, sub_zero] at hwt
   let f : ∀ x : V, x ∈ t → k := fun x hx => w ⟨x, hx⟩
   refine'
@@ -493,7 +493,7 @@ variable (k V)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_affine_independent (s : Set P) :
-    ∃ (t : _)(_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coeₓ : t → P) := by
+    ∃ (t : _)(_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coe : t → P) := by
   rcases s.eq_empty_or_nonempty with (rfl | ⟨p, hp⟩)
   · exact ⟨∅, Set.empty_subset ∅, rfl, affine_independent_of_subsingleton k _⟩
     

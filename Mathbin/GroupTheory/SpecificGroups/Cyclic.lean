@@ -290,7 +290,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
               mem_filter.2
                 ⟨mem_univ _, by
                   let ⟨i, hi⟩ := b.2
-                  rw [← hi, ← zpow_coe_nat, ← zpow_mul, mul_commₓ, zpow_mul, zpow_coe_nat, pow_order_of_eq_one,
+                  rw [← hi, ← zpow_coe_nat, ← zpow_mul, mul_comm, zpow_mul, zpow_coe_nat, pow_order_of_eq_one,
                     one_zpow]⟩⟩)
           fun _ _ h => Subtype.eq (Subtype.mk.injₓ h)
       _ = (univ.filter fun b : α => b ^ orderOf a = 1).card := Fintype.card_of_finset _ _
@@ -469,11 +469,11 @@ theorem commutative_of_cyclic_center_quotient [IsCyclic H] (f : G →* H) (hf : 
         rw [f.mem_ker, f.map_mul, f.map_zpow, hxy, zpow_neg, hn, inv_mul_selfₓ])
   calc
     a * b = y ^ m * (y ^ -m * a * y ^ n) * (y ^ -n * b) := by
-      simp [mul_assocₓ]
+      simp [mul_assoc]
     _ = y ^ m * (y ^ n * (y ^ -m * a)) * (y ^ -n * b) := by
       rw [mem_center_iff.1 ha]
     _ = y ^ m * y ^ n * y ^ -m * (a * (y ^ -n * b)) := by
-      simp [mul_assocₓ]
+      simp [mul_assoc]
     _ = y ^ m * y ^ n * y ^ -m * (y ^ -n * b * a) := by
       rw [mem_center_iff.1 hb]
     _ = b * a := by

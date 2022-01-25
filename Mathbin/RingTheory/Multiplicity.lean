@@ -84,7 +84,7 @@ theorem finite_of_finite_mul_left {a b c : α} : finite a (b * c) → finite a c
           simp [mul_powₓ]))⟩
 
 theorem finite_of_finite_mul_right {a b c : α} : finite a (b * c) → finite a b := by
-  rw [mul_commₓ] <;> exact finite_of_finite_mul_left
+  rw [mul_comm] <;> exact finite_of_finite_mul_left
 
 variable [DecidableRel (· ∣ · : α → α → Prop)]
 
@@ -207,7 +207,7 @@ theorem exists_eq_pow_mul_and_not_dvd {a b : α} (hfin : finite a b) :
   obtain ⟨c, hc⟩ := multiplicity.pow_multiplicity_dvd hfin
   refine' ⟨c, hc, _⟩
   rintro ⟨k, hk⟩
-  rw [hk, ← mul_assocₓ, ← pow_succ'ₓ] at hc
+  rw [hk, ← mul_assoc, ← pow_succ'ₓ] at hc
   have h₁ : a ^ ((multiplicity a b).get hfin + 1) ∣ b := ⟨k, hc⟩
   exact
     (multiplicity.eq_coe_iff.1
@@ -374,7 +374,7 @@ theorem finite_mul_aux {p : α} (hp : Prime p) :
   | n, m => fun a b ha hb ⟨s, hs⟩ =>
     have : p ∣ a * b :=
       ⟨p ^ (n + m) * s, by
-        simp [hs, pow_addₓ, mul_commₓ, mul_assocₓ, mul_left_commₓ]⟩
+        simp [hs, pow_addₓ, mul_comm, mul_assoc, mul_left_commₓ]⟩
     (hp.2.2 a b this).elim
       (fun ⟨x, hx⟩ =>
         have hn0 : 0 < n :=
@@ -390,7 +390,7 @@ theorem finite_mul_aux {p : α} (hp : Prime p) :
               ⟨y,
                 mul_right_cancel₀ hp.1 $ by
                   rw [tsub_add_cancel_of_le (succ_le_of_lt hn0)] at hy <;>
-                    simp [hy, pow_addₓ, mul_commₓ, mul_assocₓ, mul_left_commₓ]⟩)
+                    simp [hy, pow_addₓ, mul_comm, mul_assoc, mul_left_commₓ]⟩)
         have : 1 ≤ n + m := le_transₓ hn0 (Nat.le_add_rightₓ n m)
         finite_mul_aux hpx hb
           ⟨s,
@@ -398,7 +398,7 @@ theorem finite_mul_aux {p : α} (hp : Prime p) :
               (by
                 rw [tsub_add_eq_add_tsub (succ_le_of_lt hn0), tsub_add_cancel_of_le this]
                 clear _fun_match _fun_match finite_mul_aux
-                simp_all [mul_commₓ, mul_assocₓ, mul_left_commₓ, pow_addₓ])⟩)
+                simp_all [mul_comm, mul_assoc, mul_left_commₓ, pow_addₓ])⟩)
       fun ⟨x, hx⟩ =>
       have hm0 : 0 < m :=
         Nat.pos_of_ne_zeroₓ fun hm0 => by
@@ -413,14 +413,14 @@ theorem finite_mul_aux {p : α} (hp : Prime p) :
             ⟨y,
               mul_right_cancel₀ hp.1 $ by
                 rw [tsub_add_cancel_of_le (succ_le_of_lt hm0)] at hy <;>
-                  simp [hy, pow_addₓ, mul_commₓ, mul_assocₓ, mul_left_commₓ]⟩)
+                  simp [hy, pow_addₓ, mul_comm, mul_assoc, mul_left_commₓ]⟩)
       finite_mul_aux ha hpx
         ⟨s,
           mul_right_cancel₀ hp.1
             (by
               rw [add_assocₓ, tsub_add_cancel_of_le (succ_le_of_lt hm0)]
               clear _fun_match _fun_match finite_mul_aux
-              simp_all [mul_commₓ, mul_assocₓ, mul_left_commₓ, pow_addₓ])⟩
+              simp_all [mul_comm, mul_assoc, mul_left_commₓ, pow_addₓ])⟩
 
 theorem finite_mul {p a b : α} (hp : Prime p) : finite p a → finite p b → finite p (a * b) := fun ⟨n, hn⟩ ⟨m, hm⟩ =>
   ⟨n + m, finite_mul_aux hp hn hm⟩
@@ -449,7 +449,7 @@ theorem multiplicity_self {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : multiplic
             ⟨b,
               mul_left_cancel₀ ha0 $ by
                 clear _fun_match
-                simpa [pow_succₓ, mul_assocₓ] using hb⟩)⟩
+                simpa [pow_succₓ, mul_assoc] using hb⟩)⟩
 
 @[simp]
 theorem get_multiplicity_self {a : α} (ha : finite a a) : get (multiplicity a a) ha = 1 :=
@@ -457,7 +457,7 @@ theorem get_multiplicity_self {a : α} (ha : finite a a) : get (multiplicity a a
     (eq_coe_iff.2
       ⟨by
         simp , fun ⟨b, hb⟩ => by
-        rw [← mul_oneₓ a, pow_addₓ, pow_oneₓ, mul_assocₓ, mul_assocₓ, mul_right_inj' (ne_zero_of_finite ha)] at hb <;>
+        rw [← mul_oneₓ a, pow_addₓ, pow_oneₓ, mul_assoc, mul_assoc, mul_right_inj' (ne_zero_of_finite ha)] at hb <;>
           exact
             mt is_unit_iff_dvd_one.2 (not_unit_of_finite ha)
               ⟨b, by

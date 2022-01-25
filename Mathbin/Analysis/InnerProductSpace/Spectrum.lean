@@ -221,7 +221,7 @@ theorem diagonalization_basis_apply_self_apply (v : E) (i : Finₓ n) :
     simpa [-diagonalization_basis_symm_apply] using
       congr_argₓ (fun v => hT.diagonalization_basis hn v i) (this (hT.diagonalization_basis hn v))
   intro w
-  simp [mul_commₓ, mul_smul]
+  simp [mul_comm, mul_smul]
 
 end Version2
 

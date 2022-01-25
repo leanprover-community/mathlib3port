@@ -69,7 +69,7 @@ theorem lhopital_zero_right_on_Ioo (hff' : ∀, ∀ x ∈ Ioo a b, ∀, HasDeriv
     rcases hc x hx with ⟨h₁, h₂⟩
     field_simp [hg x hx, hg' (c x) ((sub x hx) h₁)]
     simp only [h₂]
-    rwa [mul_commₓ]
+    rwa [mul_comm]
   have cmp : ∀, ∀ x ∈ Ioo a b, ∀, a < c x ∧ c x < x := fun x hx => (hc x hx).1
   rw [← nhds_within_Ioo_eq_nhds_within_Ioi hab]
   apply tendsto_nhds_within_congr this
@@ -121,7 +121,7 @@ theorem lhopital_zero_left_on_Ioo (hff' : ∀, ∀ x ∈ Ioo a b, ∀, HasDerivA
             (by
               rw [← preimage_neg_Ioo] at hx
               exact hx)
-        rwa [mul_commₓ, ← neg_eq_neg_one_mul, neg_eq_zero] at h)
+        rwa [mul_comm, ← neg_eq_neg_one_mul, neg_eq_zero] at h)
       (hfb.comp tendsto_neg_nhds_within_Ioi_neg) (hgb.comp tendsto_neg_nhds_within_Ioi_neg)
       (by
         simp only [neg_div_neg_eq, mul_oneₓ, mul_neg_eq_neg_mul_symm]
@@ -196,7 +196,7 @@ theorem lhopital_zero_at_bot_on_Iio (hff' : ∀, ∀ x ∈ Iio a, ∀, HasDerivA
             (by
               rw [← preimage_neg_Iio] at hx
               exact hx)
-        rwa [mul_commₓ, ← neg_eq_neg_one_mul, neg_eq_zero] at h)
+        rwa [mul_comm, ← neg_eq_neg_one_mul, neg_eq_zero] at h)
       (hfbot.comp tendsto_neg_at_top_at_bot) (hgbot.comp tendsto_neg_at_top_at_bot)
       (by
         simp only [mul_oneₓ, mul_neg_eq_neg_mul_symm, neg_div_neg_eq]

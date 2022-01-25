@@ -265,7 +265,7 @@ theorem subst_into_smul_upcast {α} [AddCommGroupₓ α] l r tl zl tr t (prl₁ 
 unsafe def eval_smul' (c : context) (eval : expr → tactic (normal_expr × expr)) (is_smulg : Bool) (orig e₁ e₂ : expr) :
     tactic (normal_expr × expr) := do
   let (e₁', p₁) ← norm_num.derive e₁ <|> refl_conv e₁
-  match if is_smulg then e₁'.to_int else coeₓ <$> e₁'.to_nat with
+  match if is_smulg then e₁'.to_int else coe <$> e₁'.to_nat with
     | some n => do
       let (e₂', p₂) ← eval e₂
       if c.is_group = is_smulg then do
@@ -311,7 +311,7 @@ unsafe def eval (c : context) : expr → tactic (normal_expr × expr)
   | e@(quote.1 (@HasScalar.smul Int _ SubNegMonoidₓ.hasScalarInt (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval tt e e₁ e₂
   | e@(quote.1 (smul (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval ff e e₁ e₂
   | e@(quote.1 (smulg (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval tt e e₁ e₂
-  | e@(quote.1 (@HasZero.zero _ _)) =>
+  | e@(quote.1 (@Zero.zero _ _)) =>
     mcond (succeeds (is_def_eq e c.α0)) (mk_eq_refl c.α0 >>= fun p => pure (zero' c, p)) (eval_atom c e)
   | e => eval_atom c e
 

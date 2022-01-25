@@ -67,7 +67,7 @@ theorem mul : m₁ = m₂ := by
 then these operations are commutative.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
-theorem mul_commₓ : IsCommutative _ m₂ :=
+theorem mul_comm : IsCommutative _ m₂ :=
   ⟨fun a b => by
     simpa [mul h₁ h₂ distrib, h₂.left_id, h₂.right_id] using distrib e₂ a b e₂⟩
 
@@ -75,7 +75,7 @@ theorem mul_commₓ : IsCommutative _ m₂ :=
 then these operations are associative.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
-theorem mul_assocₓ : IsAssociative _ m₂ :=
+theorem mul_assoc : IsAssociative _ m₂ :=
   ⟨fun a b c => by
     simpa [mul h₁ h₂ distrib, h₂.left_id, h₂.right_id] using distrib a b e₂ c⟩
 
@@ -86,8 +86,8 @@ operations, then the magma structure is a commutative monoid. -/
 @[to_additive
       "If a type carries a unital additive magma structure that distributes over a\nunital binary operations, then the additive magma structure is a commutative additive monoid."]
 def CommMonoidₓ [h : MulOneClass X] (distrib : ∀ a b c d, ((a * b)<m₁>c * d) = (a<m₁>c) * b<m₁>d) : CommMonoidₓ X :=
-  { h with mul := · * ·, one := 1, mul_comm := (mul_commₓ h₁ mul_one_class.is_unital distrib).comm,
-    mul_assoc := (mul_assocₓ h₁ mul_one_class.is_unital distrib).assoc }
+  { h with mul := · * ·, one := 1, mul_comm := (mul_comm h₁ mul_one_class.is_unital distrib).comm,
+    mul_assoc := (mul_assoc h₁ mul_one_class.is_unital distrib).assoc }
 
 /-- If a type carries a group structure that distributes over a unital binary operation,
 then the group is commutative. -/

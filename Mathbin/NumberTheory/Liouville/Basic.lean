@@ -40,7 +40,7 @@ theorem Irrational {x : ℝ} (h : Liouville x) : Irrational x := by
       Int.cast_sub, ← Int.cast_abs, ← Int.cast_mul, Int.cast_lt] at a1
     
   replace a0 : ¬a * q - ↑b * p = 0
-  · rwa [Ne.def, div_eq_div_iff b0 (ne_of_gtₓ qR0), mul_commₓ (↑p), ← sub_eq_zero, ← Int.cast_coe_nat, ← Int.cast_mul, ←
+  · rwa [Ne.def, div_eq_div_iff b0 (ne_of_gtₓ qR0), mul_comm (↑p), ← sub_eq_zero, ← Int.cast_coe_nat, ← Int.cast_mul, ←
       Int.cast_mul, ← Int.cast_sub, Int.cast_eq_zero] at a0
     
   lift q to ℕ using (zero_lt_one.trans q1).le
@@ -106,7 +106,7 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
       fun z a hq => _
   · exact fun a => one_le_pow_of_one_le ((le_add_iff_nonneg_left 1).mpr a.cast_nonneg) _
     
-  · rw [mul_commₓ]
+  · rw [mul_comm]
     rw [Real.closed_ball_eq_Icc] at hy
     refine'
       Convex.norm_image_sub_le_of_norm_deriv_le (fun _ _ => fR.differentiable_at)
@@ -142,7 +142,7 @@ theorem Transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
         rw [← Int.cast_one]
         exact int.cast_lt.mpr b1)
   refine' lt_irreflₓ ((b : ℝ) ^ f.nat_degree * |x - ↑a / ↑b|) _
-  rw [lt_div_iff' (pow_pos b0 _), pow_addₓ, mul_assocₓ] at a1
+  rw [lt_div_iff' (pow_pos b0 _), pow_addₓ, mul_assoc] at a1
   refine' (_ : (b : ℝ) ^ f.nat_degree * |x - a / b| < 1 / A).trans_le _
   · refine' (lt_div_iff' hA).mpr _
     refine' lt_of_le_of_ltₓ _ a1
@@ -153,7 +153,7 @@ theorem Transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
     
   · lift b to ℕ using zero_le_one.trans b1.le
     specialize h a b.pred
-    rwa [Nat.succ_pred_eq_of_posₓ (zero_lt_one.trans _), ← mul_assocₓ, ← div_le_iff hA] at h
+    rwa [Nat.succ_pred_eq_of_posₓ (zero_lt_one.trans _), ← mul_assoc, ← div_le_iff hA] at h
     exact int.coe_nat_lt.mp b1
     
 

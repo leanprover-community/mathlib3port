@@ -67,7 +67,7 @@ theorem conjugate_eq : conjugate_exponent p = q :=
   h.conj_eq.symm
 
 theorem sub_one_mul_conj : (p - 1) * q = p :=
-  mul_commₓ q (p - 1) ▸ (eq_div_iff h.sub_one_ne_zero).1 h.conj_eq
+  mul_comm q (p - 1) ▸ (eq_div_iff h.sub_one_ne_zero).1 h.conj_eq
 
 theorem mul_eq_add : p * q = p + q := by
   simpa only [sub_mul, sub_eq_iff_eq_add, one_mulₓ] using h.sub_one_mul_conj

@@ -106,11 +106,11 @@ theorem QuotientGroup.mk'_eq_mk' {G : Type _} [Groupₓ G] {N : Subgroup G} [hN 
   (@Quotientₓ.eq _ (QuotientGroup.leftRel _) _ _).trans
     ⟨fun h : x⁻¹ * y ∈ N =>
       ⟨_, h, by
-        rw [← mul_assocₓ, mul_right_invₓ, one_mulₓ]⟩,
+        rw [← mul_assoc, mul_right_invₓ, one_mulₓ]⟩,
       fun ⟨z, z_mem, eq_y⟩ => by
       rw [← eq_y]
       show x⁻¹ * (x * z) ∈ N
-      rwa [← mul_assocₓ, mul_left_invₓ, one_mulₓ]⟩
+      rwa [← mul_assoc, mul_left_invₓ, one_mulₓ]⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » (0 : K))
 theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J : (Ideal R)⁰} :
@@ -119,12 +119,12 @@ theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J
   constructor
   · rintro ⟨_, ⟨x, rfl⟩, hx⟩
     refine' ⟨x, x.ne_zero, _⟩
-    simpa only [mul_commₓ, coe_mk0, MonoidHom.to_fun_eq_coe, coe_to_principal_ideal, Units.coe_mul] using
-      congr_argₓ (coeₓ : _ → FractionalIdeal R⁰ K) hx
+    simpa only [mul_comm, coe_mk0, MonoidHom.to_fun_eq_coe, coe_to_principal_ideal, Units.coe_mul] using
+      congr_argₓ (coe : _ → FractionalIdeal R⁰ K) hx
     
   · rintro ⟨x, hx, eq_J⟩
     refine' ⟨_, ⟨Units.mk0 x hx, rfl⟩, Units.ext _⟩
-    simpa only [FractionalIdeal.mk0_apply, Units.coe_mk0, mul_commₓ, coe_to_principal_ideal, coe_coe,
+    simpa only [FractionalIdeal.mk0_apply, Units.coe_mk0, mul_comm, coe_to_principal_ideal, coe_coe,
       Units.coe_mul] using eq_J
     
 
@@ -177,13 +177,13 @@ theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :
     obtain ⟨x, x_ne, x_mem⟩ := exists_ne_zero_mem_is_integer I.ne_zero
     refine' ⟨a * x, _, mul_ne_zero a_ne_zero x_ne⟩
     change (algebraMap R K) a⁻¹ * (algebraMap R K) (a * x) ∈ I.1
-    rwa [RingHom.map_mul, ← mul_assocₓ, inv_mul_cancel fa_ne_zero, one_mulₓ]
+    rwa [RingHom.map_mul, ← mul_assoc, inv_mul_cancel fa_ne_zero, one_mulₓ]
     
   · symm
     apply Quotientₓ.sound
     refine' ⟨Units.mk0 (algebraMap R K a) fa_ne_zero, _⟩
     apply @mul_left_cancelₓ _ _ I
-    rw [← mul_assocₓ, mul_right_invₓ, one_mulₓ, eq_comm, mul_commₓ I]
+    rw [← mul_assoc, mul_right_invₓ, one_mulₓ, eq_comm, mul_comm I]
     apply Units.ext
     simp only [MonoidHom.coe_mk, Subtype.coe_mk, RingHom.map_mul, coe_coe, Units.coe_mul, coe_to_principal_ideal,
       coe_mk0, FractionalIdeal.eq_span_singleton_mul]
@@ -191,14 +191,14 @@ theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :
     · intro zJ' hzJ'
       obtain ⟨zJ, hzJ : algebraMap R K a⁻¹ * algebraMap R K zJ ∈ ↑I, rfl⟩ := (mem_coe_ideal R⁰).mp hzJ'
       refine' ⟨_, hzJ, _⟩
-      rw [← mul_assocₓ, mul_inv_cancel fa_ne_zero, one_mulₓ]
+      rw [← mul_assoc, mul_inv_cancel fa_ne_zero, one_mulₓ]
       
     · intro zI' hzI'
       obtain ⟨y, hy⟩ := ha zI' hzI'
       rw [← Algebra.smul_def, FractionalIdeal.mk0_apply, coe_mk0, coe_coe, mem_coe_ideal]
       refine' ⟨y, _, hy⟩
       show algebraMap R K a⁻¹ * algebraMap R K y ∈ (I : FractionalIdeal R⁰ K)
-      rwa [hy, Algebra.smul_def, ← mul_assocₓ, inv_mul_cancel fa_ne_zero, one_mulₓ]
+      rwa [hy, Algebra.smul_def, ← mul_assoc, inv_mul_cancel fa_ne_zero, one_mulₓ]
       
     
 

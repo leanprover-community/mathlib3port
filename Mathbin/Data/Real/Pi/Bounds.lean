@@ -25,7 +25,7 @@ theorem pi_gt_sqrt_two_add_series (n : ℕ) : 2 ^ (n + 1) * sqrt (2 - sqrt_two_a
       apply pow_pos
       norm_num
   apply lt_of_le_of_ltₓ (le_of_eqₓ _) this
-  rw [pow_succₓ _ (n + 1), ← mul_assocₓ, div_mul_cancel, mul_commₓ]
+  rw [pow_succₓ _ (n + 1), ← mul_assoc, div_mul_cancel, mul_comm]
   norm_num
 
 theorem pi_lt_sqrt_two_add_series (n : ℕ) : π < 2 ^ (n + 1) * sqrt (2 - sqrt_two_add_series 0 n) + 1 / 4 ^ n := by
@@ -68,7 +68,7 @@ theorem pi_lt_sqrt_two_add_series (n : ℕ) : π < 2 ^ (n + 1) * sqrt (2 - sqrt_
     refine' le_transₓ ((div_le_div_right _).mpr pi_le_four) _
     apply pow_pos
     norm_num
-    rw [pow_succₓ, pow_succₓ, ← mul_assocₓ, ← div_div_eq_div_mul]
+    rw [pow_succₓ, pow_succₓ, ← mul_assoc, ← div_div_eq_div_mul]
     convert le_reflₓ _
     all_goals
       repeat'
@@ -77,16 +77,16 @@ theorem pi_lt_sqrt_two_add_series (n : ℕ) : π < 2 ^ (n + 1) * sqrt (2 - sqrt_
   apply lt_of_lt_of_leₓ this (le_of_eqₓ _)
   rw [add_mulₓ]
   congr 1
-  · rw [pow_succₓ _ (n + 1), ← mul_assocₓ, div_mul_cancel, mul_commₓ]
+  · rw [pow_succₓ _ (n + 1), ← mul_assoc, div_mul_cancel, mul_comm]
     norm_num
     
-  rw [pow_succₓ, ← pow_mulₓ, mul_commₓ n 2, pow_mulₓ,
+  rw [pow_succₓ, ← pow_mulₓ, mul_comm n 2, pow_mulₓ,
     show (2 : ℝ) ^ 2 = 4 by
       norm_num,
-    pow_succₓ, pow_succₓ, ← mul_assocₓ (2 : ℝ),
+    pow_succₓ, pow_succₓ, ← mul_assoc (2 : ℝ),
     show (2 : ℝ) * 2 = 4 by
       norm_num,
-    ← mul_assocₓ, div_mul_cancel, mul_commₓ ((2 : ℝ) ^ n), ← div_div_eq_div_mul, div_mul_cancel]
+    ← mul_assoc, div_mul_cancel, mul_comm ((2 : ℝ) ^ n), ← div_div_eq_div_mul, div_mul_cancel]
   apply pow_ne_zero
   norm_num
   norm_num
@@ -97,7 +97,7 @@ thanks to basic trigonometric inequalities as expressed in `pi_gt_sqrt_two_add_s
 theorem pi_lower_bound_start (n : ℕ) {a} (h : sqrt_two_add_series ((0 : ℕ) / (1 : ℕ)) n ≤ 2 - (a / 2 ^ (n + 1)) ^ 2) :
     a < π := by
   refine' lt_of_le_of_ltₓ _ (pi_gt_sqrt_two_add_series n)
-  rw [mul_commₓ]
+  rw [mul_comm]
   refine'
     (div_le_iff
           (pow_pos

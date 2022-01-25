@@ -32,10 +32,10 @@ This function is similar to `expr.of_rat` but takes more hypotheses and is not t
  -/
 unsafe def rat.mk_numeral (type has_zero has_one has_add has_neg has_div : expr) : ℚ → expr
   | ⟨num, denom, _, _⟩ =>
-    let nume := num.mk_numeral type HasZero HasOne Add Neg
+    let nume := num.mk_numeral type Zero One Add Neg
     if denom = 1 then nume
     else
-      let dene := denom.mk_numeral type HasZero HasOne Add
+      let dene := denom.mk_numeral type Zero One Add
       quote.1 (@Div.div.{0} (%%ₓtype) (%%ₓDiv) (%%ₓnume) (%%ₓdene))
 
 /-- `rat.reflect q` represents the rational number `q` as a numeral expression of type `ℚ`. -/
@@ -43,10 +43,10 @@ protected unsafe def rat.reflect : ℚ → expr :=
   rat.mk_numeral (quote.1 ℚ)
     (quote.1
       (by
-        infer_instance : HasZero ℚ))
+        infer_instance : Zero ℚ))
     (quote.1
       (by
-        infer_instance : HasOne ℚ))
+        infer_instance : One ℚ))
     (quote.1
       (by
         infer_instance : Add ℚ))
@@ -89,8 +89,8 @@ protected unsafe def expr.to_rat : expr → Option ℚ
 /-- Evaluates an expression into a rational number, if that expression is built up from
   numerals, +, -, *, /, ⁻¹  -/
 protected unsafe def expr.eval_rat : expr → Option ℚ
-  | quote.1 HasZero.zero => some 0
-  | quote.1 HasOne.one => some 1
+  | quote.1 Zero.zero => some 0
+  | quote.1 One.one => some 1
   | quote.1 (bit0 (%%ₓq)) => (· * ·) 2 <$> q.eval_rat
   | quote.1 (bit1 (%%ₓq)) => (· + ·) 1 <$> (· * ·) 2 <$> q.eval_rat
   | quote.1 ((%%ₓa) + %%ₓb) => (· + ·) <$> a.eval_rat <*> b.eval_rat

@@ -158,12 +158,12 @@ theorem IsCompact.elim_nhds_subcover' (hs : IsCompact s) (U : ∀, ∀ x ∈ s, 
     (hU : ∀, ∀ x ∈ s, ∀, U x ‹x ∈ s› ∈ 𝓝 x) : ∃ t : Finset s, s ⊆ ⋃ x ∈ t, U (x : s) x.2 :=
   (hs.elim_finite_subcover (fun x : s => Interior (U x x.2)) (fun x => is_open_interior) fun x hx =>
         mem_Union.2 ⟨⟨x, hx⟩, mem_interior_iff_mem_nhds.2 $ hU _ _⟩).imp $
-    fun t ht => subset.trans ht $ bUnion_mono $ fun _ _ => interior_subset
+    fun t ht => subset.trans ht $ Union₂_mono $ fun _ _ => interior_subset
 
 theorem IsCompact.elim_nhds_subcover (hs : IsCompact s) (U : α → Set α) (hU : ∀, ∀ x ∈ s, ∀, U x ∈ 𝓝 x) :
     ∃ t : Finset α, (∀, ∀ x ∈ t, ∀, x ∈ s) ∧ s ⊆ ⋃ x ∈ t, U x :=
   let ⟨t, ht⟩ := hs.elim_nhds_subcover' (fun x _ => U x) hU
-  ⟨t.image coeₓ, fun x hx =>
+  ⟨t.image coe, fun x hx =>
     let ⟨y, hyt, hyx⟩ := Finset.mem_image.1 hx
     hyx ▸ y.2,
     by
@@ -211,7 +211,7 @@ theorem IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed {ι : Type 
   intro i₀
   let Z' := fun i => Z i ∩ Z i₀
   suffices (⋂ i, Z' i).Nonempty by
-    exact nonempty.mono (Inter_subset_Inter $ fun i => inter_subset_left (Z i) (Z i₀)) this
+    exact this.mono (Inter_mono $ fun i => inter_subset_left (Z i) (Z i₀))
   rw [← ne_empty_iff_nonempty]
   intro H
   obtain ⟨t, ht⟩ : ∃ t : Finset ι, (Z i₀ ∩ ⋂ i ∈ t, Z' i) = ∅
@@ -228,8 +228,7 @@ theorem IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed {ι : Type 
   suffices (Z i₀ ∩ ⋂ i ∈ t, Z' i).Nonempty by
     rw [← ne_empty_iff_nonempty] at this
     contradiction
-  refine' nonempty.mono _ (hZn i₁)
-  exact subset_inter hi₁.left (subset_bInter hi₁.right)
+  exact (hZn i₁).mono (subset_inter hi₁.left $ subset_Inter₂ hi₁.right)
 
 /-- Cantor's intersection theorem for sequences indexed by `ℕ`:
 the intersection of a decreasing sequence of nonempty compact closed sets is nonempty. -/
@@ -248,7 +247,7 @@ theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (h
     ∃ (b' : _)(_ : b' ⊆ b), finite b' ∧ s ⊆ ⋃ i ∈ b', c i := by
   rcases hs.elim_finite_subcover (fun i => c i : b → Set α) _ _ with ⟨d, hd⟩ <;> [skip, simpa using hc₁,
     simpa using hc₂]
-  refine' ⟨↑d.image coeₓ, _, Finset.finite_to_set _, _⟩
+  refine' ⟨↑d.image coe, _, Finset.finite_to_set _, _⟩
   · simp
     
   · rwa [Finset.coe_image, bUnion_image]
@@ -378,7 +377,7 @@ theorem Set.Finite.compact_bUnion {s : Set ι} {f : ι → Set α} (hs : finite 
     have : Fintype (Subtype s) := hs.fintype
     let t := Finset.bUnion Finset.univ finite_subcovers
     have : (⋃ i ∈ s, f i) ⊆ ⋃ i ∈ t, U i :=
-      bUnion_subset $ fun i hi =>
+      Union₂_subset $ fun i hi =>
         calc
           f i ⊆ ⋃ j ∈ finite_subcovers ⟨i, hi⟩, U j := h ⟨i, hi⟩
           _ ⊆ ⋃ j ∈ t, U j := bUnion_subset_bUnion_left $ fun j hj => finset.mem_bUnion.mpr ⟨_, Finset.mem_univ _, hj⟩
@@ -546,7 +545,7 @@ theorem nhds_contain_boxes_of_compact {s : Set α} (hs : IsCompact s) (t : Set �
   let v := ⋂ i ∈ s0, (uvs i).2
   have : IsOpen u := is_open_bUnion fun i _ => (h i).1
   have : IsOpen v := is_open_bInter s0.finite_to_set fun i _ => (h i).2.1
-  have : t ⊆ v := subset_bInter fun i _ => (h i).2.2.2.1
+  have : t ⊆ v := subset_Inter₂ fun i _ => (h i).2.2.2.1
   have : u ×ˢ v ⊆ n := fun ⟨x', y'⟩ ⟨hx', hy'⟩ =>
     have : ∃ i ∈ s0, x' ∈ (uvs i).1 := by
       simpa using hx'
@@ -647,7 +646,7 @@ theorem finite_cover_nhds_interior [CompactSpace α] {U : α → Set α} (hU : �
 theorem finite_cover_nhds [CompactSpace α] {U : α → Set α} (hU : ∀ x, U x ∈ 𝓝 x) :
     ∃ t : Finset α, (⋃ x ∈ t, U x) = univ :=
   let ⟨t, ht⟩ := finite_cover_nhds_interior hU
-  ⟨t, univ_subset_iff.1 $ ht ▸ bUnion_mono fun x hx => interior_subset⟩
+  ⟨t, univ_subset_iff.1 $ ht.symm.subset.trans $ Union₂_mono $ fun x hx => interior_subset⟩
 
 /-- If `α` is a compact space, then a locally finite family of sets of `α` can have only finitely
 many nonempty elements. -/
@@ -768,7 +767,7 @@ theorem ClosedEmbedding.tendsto_cocompact {f : α → β} (hf : ClosedEmbedding 
   Filter.has_basis_cocompact.tendsto_right_iff.mpr $ fun K hK => (hf.is_compact_preimage hK).compl_mem_cocompact
 
 theorem compact_iff_compact_in_subtype {p : α → Prop} {s : Set { a // p a }} :
-    IsCompact s ↔ IsCompact ((coeₓ : _ → α) '' s) :=
+    IsCompact s ↔ IsCompact ((coe : _ → α) '' s) :=
   embedding_subtype_coe.is_compact_iff_is_compact_image
 
 theorem is_compact_iff_is_compact_univ {s : Set α} : IsCompact s ↔ IsCompact (univ : Set s) := by
@@ -1214,7 +1213,7 @@ noncomputable def choice (X : Type _) [TopologicalSpace X] [LocallyCompactSpace 
   · exact subset.trans (exists_compact_superset (K n).2).some_spec.2 (interior_mono $ subset_union_left _ _)
     
   · refine' univ_subset_iff.1 (Union_compact_covering X ▸ _)
-    exact Union_subset_Union2 fun n => ⟨n + 1, subset_union_right _ _⟩
+    exact Union_mono' fun n => ⟨n + 1, subset_union_right _ _⟩
     
 
 noncomputable instance [LocallyCompactSpace α] [SigmaCompactSpace α] : Inhabited (CompactExhaustion α) :=

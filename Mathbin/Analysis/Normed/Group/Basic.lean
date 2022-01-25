@@ -657,7 +657,7 @@ theorem add_lipschitz_with (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg 
   refine' AntilipschitzWith.of_le_mul_dist fun x y => _
   rw [Nnreal.coe_inv, ← div_eq_inv_mul]
   rw [le_div_iff (Nnreal.coe_pos.2 $ tsub_pos_iff_lt.2 hK)]
-  rw [mul_commₓ, Nnreal.coe_sub hK.le, sub_mul]
+  rw [mul_comm, Nnreal.coe_sub hK.le, sub_mul]
   calc ↑Kf⁻¹ * dist x y - Kg * dist x y ≤ dist (f x) (f y) - dist (g x) (g y) :=
       sub_le_sub (hf.mul_le_dist x y) (hg.dist_le_mul x y)_ ≤ _ :=
       le_transₓ (le_abs_self _) (abs_dist_sub_le_dist_add_add _ _ _ _)
@@ -718,21 +718,21 @@ noncomputable instance Prod.semiNormedGroup : SemiNormedGroup (E × F) where
     show max (dist x.1 y.1) (dist x.2 y.2) = max ∥(x - y).1∥ ∥(x - y).2∥ by
       simp [dist_eq_norm]
 
-theorem Prod.semi_norm_def (x : E × F) : ∥x∥ = max ∥x.1∥ ∥x.2∥ :=
+theorem Prod.norm_def (x : E × F) : ∥x∥ = max ∥x.1∥ ∥x.2∥ :=
   rfl
 
-theorem Prod.nnsemi_norm_def (x : E × F) : ∥x∥₊ = max ∥x.1∥₊ ∥x.2∥₊ := by
-  have := x.semi_norm_def
+theorem Prod.nnnorm_def (x : E × F) : ∥x∥₊ = max ∥x.1∥₊ ∥x.2∥₊ := by
+  have := x.norm_def
   simp only [← coe_nnnorm] at this
   exact_mod_cast this
 
-theorem semi_norm_fst_le (x : E × F) : ∥x.1∥ ≤ ∥x∥ :=
+theorem norm_fst_le (x : E × F) : ∥x.1∥ ≤ ∥x∥ :=
   le_max_leftₓ _ _
 
-theorem semi_norm_snd_le (x : E × F) : ∥x.2∥ ≤ ∥x∥ :=
+theorem norm_snd_le (x : E × F) : ∥x.2∥ ≤ ∥x∥ :=
   le_max_rightₓ _ _
 
-theorem semi_norm_prod_le_iff {x : E × F} {r : ℝ} : ∥x∥ ≤ r ↔ ∥x.1∥ ≤ r ∧ ∥x.2∥ ≤ r :=
+theorem norm_prod_le_iff {x : E × F} {r : ℝ} : ∥x∥ ≤ r ↔ ∥x.1∥ ≤ r ∧ ∥x.2∥ ≤ r :=
   max_le_iff
 
 /-- seminormed group instance on the product of finitely many seminormed groups,
@@ -741,33 +741,33 @@ noncomputable instance Pi.semiNormedGroup {π : ι → Type _} [Fintype ι] [∀
     SemiNormedGroup (∀ i, π i) where
   norm := fun f => ((Finset.sup Finset.univ fun b => ∥f b∥₊ : ℝ≥0 ) : ℝ)
   dist_eq := fun x y =>
-    congr_argₓ (coeₓ : ℝ≥0 → ℝ) $
+    congr_argₓ (coe : ℝ≥0 → ℝ) $
       congr_argₓ (Finset.sup Finset.univ) $
         funext $ fun a => show nndist (x a) (y a) = ∥x a - y a∥₊ from nndist_eq_nnnorm _ _
 
 /-- The seminorm of an element in a product space is `≤ r` if and only if the norm of each
 component is. -/
-theorem pi_semi_norm_le_iff {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (π i)] {r : ℝ} (hr : 0 ≤ r)
-    {x : ∀ i, π i} : ∥x∥ ≤ r ↔ ∀ i, ∥x i∥ ≤ r := by
+theorem pi_norm_le_iff {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (π i)] {r : ℝ} (hr : 0 ≤ r) {x : ∀ i, π i} :
+    ∥x∥ ≤ r ↔ ∀ i, ∥x i∥ ≤ r := by
   simp only [← dist_zero_right, dist_pi_le_iff hr, Pi.zero_apply]
 
 /-- The seminorm of an element in a product space is `< r` if and only if the norm of each
 component is. -/
-theorem pi_semi_norm_lt_iff {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (π i)] {r : ℝ} (hr : 0 < r)
-    {x : ∀ i, π i} : ∥x∥ < r ↔ ∀ i, ∥x i∥ < r := by
+theorem pi_norm_lt_iff {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (π i)] {r : ℝ} (hr : 0 < r) {x : ∀ i, π i} :
+    ∥x∥ < r ↔ ∀ i, ∥x i∥ < r := by
   simp only [← dist_zero_right, dist_pi_lt_iff hr, Pi.zero_apply]
 
-theorem semi_norm_le_pi_norm {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (π i)] (x : ∀ i, π i) (i : ι) :
+theorem norm_le_pi_norm {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (π i)] (x : ∀ i, π i) (i : ι) :
     ∥x i∥ ≤ ∥x∥ :=
-  (pi_semi_norm_le_iff (norm_nonneg x)).1 (le_reflₓ _) i
+  (pi_norm_le_iff (norm_nonneg x)).1 (le_reflₓ _) i
 
 @[simp]
-theorem pi_semi_norm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥ = ∥a∥ := by
+theorem pi_norm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥ = ∥a∥ := by
   simpa only [← dist_zero_right] using dist_pi_const a 0
 
 @[simp]
-theorem pi_nnsemi_norm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥₊ = ∥a∥₊ :=
-  Nnreal.eq $ pi_semi_norm_const a
+theorem pi_nnnorm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥₊ = ∥a∥₊ :=
+  Nnreal.eq $ pi_norm_const a
 
 theorem tendsto_iff_norm_tendsto_zero {f : α → E} {a : Filter α} {b : E} :
     tendsto f a (𝓝 b) ↔ tendsto (fun e => ∥f e - b∥) a (𝓝 0) := by
@@ -887,7 +887,7 @@ instance (priority := 100) normed_uniform_group : UniformAddGroup E :=
 instance (priority := 100) normed_top_group : TopologicalAddGroup E := by
   infer_instance
 
-theorem Nat.norm_cast_le [HasOne E] : ∀ n : ℕ, ∥(n : E)∥ ≤ n * ∥(1 : E)∥
+theorem Nat.norm_cast_le [One E] : ∀ n : ℕ, ∥(n : E)∥ ≤ n * ∥(1 : E)∥
   | 0 => by
     simp
   | n + 1 => by
@@ -1010,52 +1010,15 @@ instance Submodule.normedGroup {𝕜 : Type _} {_ : Ringₓ 𝕜} {E : Type _} [
 noncomputable instance Prod.normedGroup : NormedGroup (E × F) :=
   { Prod.semiNormedGroup with }
 
-theorem Prod.norm_def (x : E × F) : ∥x∥ = max ∥x.1∥ ∥x.2∥ :=
-  rfl
-
-theorem Prod.nnnorm_def (x : E × F) : ∥x∥₊ = max ∥x.1∥₊ ∥x.2∥₊ := by
-  have := x.norm_def
-  simp only [← coe_nnnorm] at this
-  exact_mod_cast this
-
-theorem norm_fst_le (x : E × F) : ∥x.1∥ ≤ ∥x∥ :=
-  le_max_leftₓ _ _
-
-theorem norm_snd_le (x : E × F) : ∥x.2∥ ≤ ∥x∥ :=
-  le_max_rightₓ _ _
-
-theorem norm_prod_le_iff {x : E × F} {r : ℝ} : ∥x∥ ≤ r ↔ ∥x.1∥ ≤ r ∧ ∥x.2∥ ≤ r :=
-  max_le_iff
-
 /-- normed group instance on the product of finitely many normed groups, using the sup norm. -/
 noncomputable instance Pi.normedGroup {π : ι → Type _} [Fintype ι] [∀ i, NormedGroup (π i)] : NormedGroup (∀ i, π i) :=
   { Pi.semiNormedGroup with }
 
-/-- The norm of an element in a product space is `≤ r` if and only if the norm of each
-component is. -/
-theorem pi_norm_le_iff {π : ι → Type _} [Fintype ι] [∀ i, NormedGroup (π i)] {r : ℝ} (hr : 0 ≤ r) {x : ∀ i, π i} :
-    ∥x∥ ≤ r ↔ ∀ i, ∥x i∥ ≤ r := by
-  simp only [← dist_zero_right, dist_pi_le_iff hr, Pi.zero_apply]
-
-/-- The norm of an element in a product space is `< r` if and only if the norm of each
-component is. -/
-theorem pi_norm_lt_iff {π : ι → Type _} [Fintype ι] [∀ i, NormedGroup (π i)] {r : ℝ} (hr : 0 < r) {x : ∀ i, π i} :
-    ∥x∥ < r ↔ ∀ i, ∥x i∥ < r := by
-  simp only [← dist_zero_right, dist_pi_lt_iff hr, Pi.zero_apply]
-
-theorem norm_le_pi_norm {π : ι → Type _} [Fintype ι] [∀ i, NormedGroup (π i)] (x : ∀ i, π i) (i : ι) : ∥x i∥ ≤ ∥x∥ :=
-  (pi_norm_le_iff (norm_nonneg x)).1 (le_reflₓ _) i
-
-@[simp]
-theorem pi_norm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥ = ∥a∥ := by
-  simpa only [← dist_zero_right] using dist_pi_const a 0
-
-@[simp]
-theorem pi_nnnorm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥₊ = ∥a∥₊ :=
-  Nnreal.eq $ pi_norm_const a
+theorem tendsto_norm_sub_self_punctured_nhds (a : E) : tendsto (fun x => ∥x - a∥) (𝓝[≠] a) (𝓝[>] 0) :=
+  (tendsto_norm_sub_self a).inf $ tendsto_principal_principal.2 $ fun x hx => norm_pos_iff.2 $ sub_ne_zero.2 hx
 
 theorem tendsto_norm_nhds_within_zero : tendsto (norm : E → ℝ) (𝓝[≠] 0) (𝓝[>] 0) :=
-  (continuous_norm.tendsto' (0 : E) 0 norm_zero).inf $ tendsto_principal_principal.2 $ fun x => norm_pos_iff.2
+  tendsto_norm_zero.inf $ tendsto_principal_principal.2 $ fun x => norm_pos_iff.2
 
 end NormedGroup
 

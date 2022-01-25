@@ -189,7 +189,7 @@ theorem iff_quotient_mv_polynomial :
     finite_type R A ↔ ∃ (s : Finset A)(f : MvPolynomial { x // x ∈ s } R →ₐ[R] A), surjective f := by
   constructor
   · rintro ⟨s, hs⟩
-    use s, MvPolynomial.aeval coeₓ
+    use s, MvPolynomial.aeval coe
     intro x
     have hrw : (↑s : Set A) = fun x : A => x ∈ s.val := rfl
     rw [← Set.mem_range, ← AlgHom.coe_range, ← adjoin_eq_range, ← hrw, hs]
@@ -420,7 +420,7 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.finite) (hf : f.finite) : (
     (by
       fconstructor
       intro a b c
-      simp only [Algebra.smul_def, RingHom.map_mul, mul_assocₓ]
+      simp only [Algebra.smul_def, RingHom.map_mul, mul_assoc]
       rfl)
     hf hg
 
@@ -459,7 +459,7 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.finite_type) (hf : f.finite
     (by
       fconstructor
       intro a b c
-      simp only [Algebra.smul_def, RingHom.map_mul, mul_assocₓ]
+      simp only [Algebra.smul_def, RingHom.map_mul, mul_assoc]
       rfl)
     hf hg
 
@@ -501,7 +501,7 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.finite_presentation) (hf : 
     (g.comp f).FinitePresentation :=
   @Algebra.FinitePresentation.trans A B C _ _ f.to_algebra _ (g.comp f).toAlgebra g.to_algebra
     { smul_assoc := fun a b c => by
-        simp only [Algebra.smul_def, RingHom.map_mul, mul_assocₓ]
+        simp only [Algebra.smul_def, RingHom.map_mul, mul_assoc]
         rfl }
     hf hg
 

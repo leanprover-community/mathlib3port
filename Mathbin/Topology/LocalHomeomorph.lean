@@ -977,7 +977,7 @@ noncomputable def local_homeomorph_subtype_coe : LocalHomeomorph s α :=
   OpenEmbedding.toLocalHomeomorph _ s.2.open_embedding_subtype_coe
 
 @[simp, mfld_simps]
-theorem local_homeomorph_subtype_coe_coe : (s.local_homeomorph_subtype_coe : s → α) = coeₓ :=
+theorem local_homeomorph_subtype_coe_coe : (s.local_homeomorph_subtype_coe : s → α) = coe :=
   rfl
 
 @[simp, mfld_simps]
@@ -1012,7 +1012,7 @@ theorem subtype_restr_coe : ((e.subtype_restr s : LocalHomeomorph s β) : s → 
   rfl
 
 @[simp, mfld_simps]
-theorem subtype_restr_source : (e.subtype_restr s).Source = coeₓ ⁻¹' e.source := by
+theorem subtype_restr_source : (e.subtype_restr s).Source = coe ⁻¹' e.source := by
   simp' only [subtype_restr_def] with mfld_simps
 
 theorem subtype_restr_symm_trans_subtype_restr (f f' : LocalHomeomorph α β) :

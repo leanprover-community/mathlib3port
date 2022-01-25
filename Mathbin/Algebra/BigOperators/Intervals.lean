@@ -64,7 +64,7 @@ theorem prod_range_mul_prod_Ico (f : ℕ → β) {m n : ℕ} (h : m ≤ n) :
 theorem prod_Ico_eq_mul_inv {δ : Type _} [CommGroupₓ δ] (f : ℕ → δ) {m n : ℕ} (h : m ≤ n) :
     (∏ k in Ico m n, f k) = (∏ k in range n, f k) * (∏ k in range m, f k)⁻¹ :=
   eq_mul_inv_iff_mul_eq.2 $ by
-    rw [mul_commₓ] <;> exact prod_range_mul_prod_Ico f h
+    rw [mul_comm] <;> exact prod_range_mul_prod_Ico f h
 
 theorem sum_Ico_eq_sub {δ : Type _} [AddCommGroupₓ δ] (f : ℕ → δ) {m n : ℕ} (h : m ≤ n) :
     (∑ k in Ico m n, f k) = (∑ k in range n, f k) - ∑ k in range m, f k := by
@@ -131,7 +131,7 @@ theorem prod_Ico_id_eq_factorial : ∀ n : ℕ, (∏ x in Ico 1 (n + 1), x) = n 
   | 0 => rfl
   | n + 1 => by
     rw [prod_Ico_succ_top $ Nat.succ_le_succₓ $ zero_le n, Nat.factorial_succ, prod_Ico_id_eq_factorial n,
-      Nat.succ_eq_add_one, mul_commₓ]
+      Nat.succ_eq_add_one, mul_comm]
 
 @[simp]
 theorem prod_range_add_one_eq_factorial : ∀ n : ℕ, (∏ x in range n, x + 1) = n !

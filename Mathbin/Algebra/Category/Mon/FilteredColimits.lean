@@ -59,7 +59,7 @@ variable [is_filtered J]
 -/
 @[to_additive
       "As `J` is nonempty, we can pick an arbitrary object `j₀ : J`. We use this object to\ndefine the \"zero\" in the colimit as the equivalence class of `⟨j₀, 0 : F.obj j₀⟩`."]
-instance colimit_has_one : HasOne M where
+instance colimit_has_one : One M where
   one := M.mk ⟨is_filtered.nonempty.some, 1⟩
 
 /-- The definition of the "one" in the colimit is independent of the chosen object of `J`.
@@ -174,7 +174,7 @@ instance colimit_monoid : Monoidₓ M :=
         colimit_mul_mk_eq F ⟨max₃ j₁ j₂ j₃, _⟩ ⟨j₃, z⟩ _ (𝟙 _) (third_to_max₃ j₁ j₂ j₃),
         colimit_mul_mk_eq F ⟨j₂, y⟩ ⟨j₃, z⟩ _ (second_to_max₃ j₁ j₂ j₃) (third_to_max₃ j₁ j₂ j₃),
         colimit_mul_mk_eq F ⟨j₁, x⟩ ⟨max₃ j₁ j₂ j₃, _⟩ _ (first_to_max₃ j₁ j₂ j₃) (𝟙 _)]
-      simp only [F.map_id, id_apply, mul_assocₓ] }
+      simp only [F.map_id, id_apply, mul_assoc] }
 
 /-- The bundled monoid giving the filtered colimit of a diagram. -/
 @[to_additive "The bundled additive monoid giving the filtered colimit of a diagram."]
@@ -197,7 +197,7 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ cocone_morphis
   MonoidHom.coe_inj ((types.colimit_cocone (F ⋙ forget Mon)).ι.naturality f)
 
 /-- The cocone over the proposed colimit monoid. -/
-@[to_additive "/-- The cocone over the proposed colimit additive monoid. -/"]
+@[to_additive "The cocone over the proposed colimit additive monoid."]
 def colimit_cocone : cocone F where
   x := colimit
   ι := { app := cocone_morphism }
@@ -273,7 +273,7 @@ instance colimit_comm_monoid : CommMonoidₓ M :=
       let g := right_to_max x.1 y.1
       rw [colimit_mul_mk_eq _ x y k f g, colimit_mul_mk_eq _ y x k g f]
       dsimp
-      rw [mul_commₓ] }
+      rw [mul_comm] }
 
 /-- The bundled commutative monoid giving the filtered colimit of a diagram. -/
 @[to_additive "The bundled additive commutative monoid giving the filtered colimit of a diagram."]

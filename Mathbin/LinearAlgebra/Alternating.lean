@@ -124,7 +124,7 @@ theorem coe_multilinear_map : ⇑(f : MultilinearMap R (fun i : ι => M) N) = f 
   rfl
 
 theorem coe_multilinear_map_injective :
-    Function.Injective (coeₓ : AlternatingMap R M N ι → MultilinearMap R (fun i : ι => M) N) := fun x y h =>
+    Function.Injective (coe : AlternatingMap R M N ι → MultilinearMap R (fun i : ι => M) N) := fun x y h =>
   ext $ MultilinearMap.congr_fun h
 
 @[simp]
@@ -204,7 +204,7 @@ theorem add_apply : (f + f') v = f v + f' v :=
 theorem coe_add : (↑(f + f') : MultilinearMap R (fun i : ι => M) N) = f + f' :=
   rfl
 
-instance : HasZero (AlternatingMap R M N ι) :=
+instance : Zero (AlternatingMap R M N ι) :=
   ⟨{ (0 : MultilinearMap R (fun i : ι => M) N) with
       map_eq_zero_of_eq' := fun v i j h hij => by
         simp }⟩

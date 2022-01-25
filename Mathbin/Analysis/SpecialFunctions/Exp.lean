@@ -219,7 +219,7 @@ theorem coe_exp_order_iso_apply (x : ℝ) : (exp_order_iso x : ℝ) = exp x :=
   rfl
 
 @[simp]
-theorem coe_comp_exp_order_iso : coeₓ ∘ exp_order_iso = exp :=
+theorem coe_comp_exp_order_iso : coe ∘ exp_order_iso = exp :=
   rfl
 
 @[simp]

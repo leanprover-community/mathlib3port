@@ -83,21 +83,21 @@ instance MulAction.OppositeRegular.is_pretransitive {G : Type _} [Groupₓ G] : 
 
 @[to_additive]
 instance Semigroupₓ.opposite_smul_comm_class [Semigroupₓ α] : SmulCommClass (αᵐᵒᵖ) α α where
-  smul_comm := fun x y z => mul_assocₓ _ _ _
+  smul_comm := fun x y z => mul_assoc _ _ _
 
 @[to_additive]
 instance Semigroupₓ.opposite_smul_comm_class' [Semigroupₓ α] : SmulCommClass α (αᵐᵒᵖ) α :=
   SmulCommClass.symm _ _ _
 
 instance CommSemigroupₓ.is_central_scalar [CommSemigroupₓ α] : IsCentralScalar α α :=
-  ⟨fun r m => mul_commₓ _ _⟩
+  ⟨fun r m => mul_comm _ _⟩
 
 /-- Like `monoid.to_mul_action`, but multiplies on the right. -/
 @[to_additive]
 instance Monoidₓ.toOppositeMulAction [Monoidₓ α] : MulAction (αᵐᵒᵖ) α where
   smul := · • ·
   one_smul := mul_oneₓ
-  mul_smul := fun x y r => (mul_assocₓ _ _ _).symm
+  mul_smul := fun x y r => (mul_assoc _ _ _).symm
 
 instance IsScalarTower.opposite_mid {M N} [Monoidₓ N] [HasScalar M N] [SmulCommClass M N N] :
     IsScalarTower M (Nᵐᵒᵖ) N :=

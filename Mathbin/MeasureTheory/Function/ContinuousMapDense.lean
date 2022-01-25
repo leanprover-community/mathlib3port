@@ -168,7 +168,7 @@ theorem to_Lp_dense_range [μ.weakly_regular] [is_finite_measure μ] :
   have : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
   suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤ by
-    exact congr_argₓ coeₓ this
+    exact congr_argₓ coe this
   simp [range_to_Lp p μ, MeasureTheory.lp.bounded_continuous_function_dense E hp]
 
 end BoundedContinuousFunction
@@ -180,7 +180,7 @@ theorem to_Lp_dense_range [CompactSpace α] [μ.weakly_regular] [is_finite_measu
   have : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
   suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤ by
-    exact congr_argₓ coeₓ this
+    exact congr_argₓ coe this
   simp [range_to_Lp p μ, MeasureTheory.lp.bounded_continuous_function_dense E hp]
 
 end ContinuousMap

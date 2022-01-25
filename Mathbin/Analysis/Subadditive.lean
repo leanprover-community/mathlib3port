@@ -70,7 +70,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
     let s := p / n
     let r := p % n
     have hp : p = s * n + r := by
-      rw [mul_commₓ, Nat.div_add_mod]
+      rw [mul_comm, Nat.div_add_mod]
     calc u p = u (s * n + r) := by
         rw [hp]_ ≤ s * u n + u r := h.apply_mul_add_le _ _ _ _ = s * n * (u n / n) + u r := by
         field_simp [I _ hn.bot_lt]
@@ -85,7 +85,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
     refine' eventually_at_top.2 ⟨1, fun p hp => _⟩
     simp' only [I p hp, Ne.def, not_false_iff] with field_simps
     refine' div_le_div_of_le_of_nonneg _ (Nat.cast_nonneg _)
-    rw [mul_commₓ]
+    rw [mul_comm]
     exact A _
   have C : ∀ᶠ p : ℕ in at_top, w + x / p < L := by
     have : tendsto (fun p : ℕ => w + x / p) at_top (𝓝 (w + 0)) :=

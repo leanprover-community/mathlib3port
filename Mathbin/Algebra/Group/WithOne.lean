@@ -30,7 +30,7 @@ instance : Monadₓ WithOne :=
   Option.monad
 
 @[to_additive]
-instance : HasOne (WithOne α) :=
+instance : One (WithOne α) :=
   ⟨none⟩
 
 @[to_additive]
@@ -71,7 +71,7 @@ theorem ne_one_iff_exists {x : WithOne α} : x ≠ 1 ↔ ∃ a : α, ↑a = x :=
 
 @[to_additive]
 instance : CanLift (WithOne α) α where
-  coe := coeₓ
+  coe := coe
   cond := fun a => a ≠ 1
   prf := fun a => ne_one_iff_exists.1
 
@@ -106,7 +106,7 @@ section
 /-- `coe` as a bundled morphism -/
 @[to_additive "`coe` as a bundled morphism", simps apply]
 def coe_mul_hom [Mul α] : MulHom α (WithOne α) where
-  toFun := coeₓ
+  toFun := coe
   map_mul' := fun x y => rfl
 
 end
@@ -186,11 +186,11 @@ end WithOne
 
 namespace WithZero
 
-instance [one : HasOne α] : HasOne (WithZero α) :=
+instance [one : One α] : One (WithZero α) :=
   { one with }
 
 @[simp, norm_cast]
-theorem coe_one [HasOne α] : ((1 : α) : WithZero α) = 1 :=
+theorem coe_one [One α] : ((1 : α) : WithZero α) = 1 :=
   rfl
 
 instance [Mul α] : MulZeroClass (WithZero α) :=
@@ -217,7 +217,7 @@ instance [Semigroupₓ α] : SemigroupWithZero (WithZero α) :=
       | none, _, _ => rfl
       | some a, none, _ => rfl
       | some a, some b, none => rfl
-      | some a, some b, some c => congr_argₓ some (mul_assocₓ _ _ _) }
+      | some a, some b, some c => congr_argₓ some (mul_assoc _ _ _) }
 
 instance [CommSemigroupₓ α] : CommSemigroupₓ (WithZero α) :=
   { WithZero.semigroupWithZero with
@@ -225,7 +225,7 @@ instance [CommSemigroupₓ α] : CommSemigroupₓ (WithZero α) :=
       match a, b with
       | none, _ => (mul_zero _).symm
       | some a, none => rfl
-      | some a, some b => congr_argₓ some (mul_commₓ _ _) }
+      | some a, some b => congr_argₓ some (mul_comm _ _) }
 
 instance [MulOneClass α] : MulZeroOneClass (WithZero α) :=
   { WithZero.mulZeroClass, WithZero.hasOne with
@@ -238,7 +238,7 @@ instance [MulOneClass α] : MulZeroOneClass (WithZero α) :=
       | none => rfl
       | some a => congr_argₓ some $ mul_oneₓ _ }
 
-instance [HasOne α] [Pow α ℕ] : Pow (WithZero α) ℕ :=
+instance [One α] [Pow α ℕ] : Pow (WithZero α) ℕ :=
   ⟨fun x n =>
     match x, n with
     | none, 0 => 1
@@ -246,7 +246,7 @@ instance [HasOne α] [Pow α ℕ] : Pow (WithZero α) ℕ :=
     | some x, n => ↑(x ^ n)⟩
 
 @[simp, norm_cast]
-theorem coe_pow [HasOne α] [Pow α ℕ] {a : α} (n : ℕ) : ↑(a ^ n : α) = (↑a ^ n : WithZero α) :=
+theorem coe_pow [One α] [Pow α ℕ] {a : α} (n : ℕ) : ↑(a ^ n : α) = (↑a ^ n : WithZero α) :=
   rfl
 
 instance [Monoidₓ α] : MonoidWithZeroₓ (WithZero α) :=
@@ -283,7 +283,7 @@ instance [Div α] : Div (WithZero α) :=
 theorem coe_div [Div α] (a b : α) : ↑(a / b : α) = (a / b : WithZero α) :=
   rfl
 
-instance [HasOne α] [Pow α ℤ] : Pow (WithZero α) ℤ :=
+instance [One α] [Pow α ℤ] : Pow (WithZero α) ℤ :=
   ⟨fun x n =>
     match x, n with
     | none, Int.ofNat 0 => 1

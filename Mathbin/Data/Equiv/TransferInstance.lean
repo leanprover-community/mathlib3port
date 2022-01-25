@@ -32,11 +32,11 @@ variable (e : α ≃ β)
 
 /-- Transfer `has_one` across an `equiv` -/
 @[to_additive "Transfer `has_zero` across an `equiv`"]
-protected def HasOne [HasOne β] : HasOne α :=
+protected def One [One β] : One α :=
   ⟨e.symm 1⟩
 
 @[to_additive]
-theorem one_def [HasOne β] : @HasOne.one _ (Equivₓ.hasOne e) = e.symm 1 :=
+theorem one_def [One β] : @One.one _ (Equivₓ.hasOne e) = e.symm 1 :=
   rfl
 
 /-- Transfer `has_mul` across an `equiv` -/

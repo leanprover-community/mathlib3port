@@ -230,6 +230,8 @@ theorem is_open_preimage (h : α ≃ₜ β) {s : Set β} : IsOpen (h ⁻¹' s) �
 theorem is_open_image (h : α ≃ₜ β) {s : Set α} : IsOpen (h '' s) ↔ IsOpen s := by
   rw [← preimage_symm, is_open_preimage]
 
+protected theorem IsOpenMap (h : α ≃ₜ β) : IsOpenMap h := fun s => h.is_open_image.2
+
 @[simp]
 theorem is_closed_preimage (h : α ≃ₜ β) {s : Set β} : IsClosed (h ⁻¹' s) ↔ IsClosed s := by
   simp only [← is_open_compl_iff, ← preimage_compl, is_open_preimage]
@@ -238,14 +240,6 @@ theorem is_closed_preimage (h : α ≃ₜ β) {s : Set β} : IsClosed (h ⁻¹' 
 theorem is_closed_image (h : α ≃ₜ β) {s : Set α} : IsClosed (h '' s) ↔ IsClosed s := by
   rw [← preimage_symm, is_closed_preimage]
 
-theorem preimage_closure (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Closure s = Closure (h ⁻¹' s) := by
-  rw [h.embedding.closure_eq_preimage_closure_image, h.image_preimage]
-
-theorem image_closure (h : α ≃ₜ β) (s : Set α) : h '' Closure s = Closure (h '' s) := by
-  rw [← preimage_symm, preimage_closure]
-
-protected theorem IsOpenMap (h : α ≃ₜ β) : IsOpenMap h := fun s => h.is_open_image.2
-
 protected theorem IsClosedMap (h : α ≃ₜ β) : IsClosedMap h := fun s => h.is_closed_image.2
 
 protected theorem OpenEmbedding (h : α ≃ₜ β) : OpenEmbedding h :=
@@ -253,6 +247,18 @@ protected theorem OpenEmbedding (h : α ≃ₜ β) : OpenEmbedding h :=
 
 protected theorem ClosedEmbedding (h : α ≃ₜ β) : ClosedEmbedding h :=
   closed_embedding_of_embedding_closed h.embedding h.is_closed_map
+
+theorem preimage_closure (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Closure s = Closure (h ⁻¹' s) :=
+  h.is_open_map.preimage_closure_eq_closure_preimage h.continuous _
+
+theorem image_closure (h : α ≃ₜ β) (s : Set α) : h '' Closure s = Closure (h '' s) := by
+  rw [← preimage_symm, preimage_closure]
+
+theorem preimage_interior (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Interior s = Interior (h ⁻¹' s) :=
+  h.is_open_map.preimage_interior_eq_interior_preimage h.continuous _
+
+theorem image_interior (h : α ≃ₜ β) (s : Set α) : h '' Interior s = Interior (h '' s) := by
+  rw [← preimage_symm, preimage_interior]
 
 theorem preimage_frontier (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Frontier s = Frontier (h ⁻¹' s) :=
   h.is_open_map.preimage_frontier_eq_frontier_preimage h.continuous _

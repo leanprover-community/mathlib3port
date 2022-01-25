@@ -158,10 +158,10 @@ variable (p n R)
 
 include hp
 
-instance : HasZero (TruncatedWittVector p n R) :=
+instance : Zero (TruncatedWittVector p n R) :=
   ⟨truncate_fun n 0⟩
 
-instance : HasOne (TruncatedWittVector p n R) :=
+instance : One (TruncatedWittVector p n R) :=
   ⟨truncate_fun n 1⟩
 
 instance : Add (TruncatedWittVector p n R) :=

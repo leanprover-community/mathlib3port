@@ -44,7 +44,7 @@ variable {R M : Type _}
 instance [HasScalar R M] : HasScalar R (OrderDual M) where
   smul := fun k x => OrderDual.rec (fun x' => (k • x' : M)) x
 
-instance [HasZero R] [AddZeroClass M] [h : SmulWithZero R M] : SmulWithZero R (OrderDual M) :=
+instance [Zero R] [AddZeroClass M] [h : SmulWithZero R M] : SmulWithZero R (OrderDual M) :=
   { OrderDual.hasScalar with zero_smul := fun m => OrderDual.rec (zero_smul _) m,
     smul_zero := fun r => OrderDual.rec (smul_zero' _) r }
 

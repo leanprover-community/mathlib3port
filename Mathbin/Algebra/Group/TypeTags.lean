@@ -120,13 +120,13 @@ theorem to_mul_add [Mul α] (x y : Additive α) : (x + y).toMul = x.to_mul * y.t
   rfl
 
 instance [Semigroupₓ α] : AddSemigroupₓ (Additive α) :=
-  { Additive.hasAdd with add_assoc := @mul_assocₓ α _ }
+  { Additive.hasAdd with add_assoc := @mul_assoc α _ }
 
 instance [AddSemigroupₓ α] : Semigroupₓ (Multiplicative α) :=
   { Multiplicative.hasMul with mul_assoc := @add_assocₓ α _ }
 
 instance [CommSemigroupₓ α] : AddCommSemigroupₓ (Additive α) :=
-  { Additive.addSemigroup with add_comm := @mul_commₓ _ _ }
+  { Additive.addSemigroup with add_comm := @mul_comm _ _ }
 
 instance [AddCommSemigroupₓ α] : CommSemigroupₓ (Multiplicative α) :=
   { Multiplicative.semigroup with mul_comm := @add_commₓ _ _ }
@@ -143,34 +143,34 @@ instance [RightCancelSemigroup α] : AddRightCancelSemigroup (Additive α) :=
 instance [AddRightCancelSemigroup α] : RightCancelSemigroup (Multiplicative α) :=
   { Multiplicative.semigroup with mul_right_cancel := @add_right_cancelₓ _ _ }
 
-instance [HasOne α] : HasZero (Additive α) :=
+instance [One α] : Zero (Additive α) :=
   ⟨Additive.ofMul 1⟩
 
 @[simp]
-theorem of_mul_one [HasOne α] : @Additive.ofMul α 1 = 0 :=
+theorem of_mul_one [One α] : @Additive.ofMul α 1 = 0 :=
   rfl
 
 @[simp]
-theorem of_mul_eq_zero {A : Type _} [HasOne A] {x : A} : Additive.ofMul x = 0 ↔ x = 1 :=
+theorem of_mul_eq_zero {A : Type _} [One A] {x : A} : Additive.ofMul x = 0 ↔ x = 1 :=
   Iff.rfl
 
 @[simp]
-theorem to_mul_zero [HasOne α] : (0 : Additive α).toMul = 1 :=
+theorem to_mul_zero [One α] : (0 : Additive α).toMul = 1 :=
   rfl
 
-instance [HasZero α] : HasOne (Multiplicative α) :=
+instance [Zero α] : One (Multiplicative α) :=
   ⟨Multiplicative.ofAdd 0⟩
 
 @[simp]
-theorem of_add_zero [HasZero α] : @Multiplicative.ofAdd α 0 = 1 :=
+theorem of_add_zero [Zero α] : @Multiplicative.ofAdd α 0 = 1 :=
   rfl
 
 @[simp]
-theorem of_add_eq_one {A : Type _} [HasZero A] {x : A} : Multiplicative.ofAdd x = 1 ↔ x = 0 :=
+theorem of_add_eq_one {A : Type _} [Zero A] {x : A} : Multiplicative.ofAdd x = 1 ↔ x = 0 :=
   Iff.rfl
 
 @[simp]
-theorem to_add_one [HasZero α] : (1 : Multiplicative α).toAdd = 0 :=
+theorem to_add_one [Zero α] : (1 : Multiplicative α).toAdd = 0 :=
   rfl
 
 instance [MulOneClass α] : AddZeroClass (Additive α) where

@@ -243,7 +243,7 @@ theorem stereo_right_inv (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) : stereoToFun v (
 /-- Stereographic projection from the unit sphere in `E`, centred at a unit vector `v` in `E`; this
 is the version as a local homeomorphism. -/
 def stereographic (hv : ∥v∥ = 1) : LocalHomeomorph (sphere (0 : E) 1) (ℝ∙v)ᗮ where
-  toFun := stereoToFun v ∘ coeₓ
+  toFun := stereoToFun v ∘ coe
   invFun := stereoInvFun hv
   Source :=
     {⟨v, by
@@ -361,7 +361,7 @@ instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : SmoothManifoldWithCorners (�
 
 /-- The inclusion map (i.e., `coe`) from the sphere in `E` to `E` is smooth.  -/
 theorem times_cont_mdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
-    TimesContMdiff (𝓡 n) 𝓘(ℝ, E) ∞ (coeₓ : sphere (0 : E) 1 → E) := by
+    TimesContMdiff (𝓡 n) 𝓘(ℝ, E) ∞ (coe : sphere (0 : E) 1 → E) := by
   rw [times_cont_mdiff_iff]
   constructor
   · exact continuous_subtype_coe
@@ -430,7 +430,7 @@ instance : SmoothManifoldWithCorners (𝓡 1) circle :=
 instance : LieGroup (𝓡 1) circle where
   smooth_mul := by
     apply TimesContMdiff.cod_restrict_sphere
-    let c : circle → ℂ := coeₓ
+    let c : circle → ℂ := coe
     have h₂ : TimesContMdiff (𝓘(ℝ, ℂ).Prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd := by
       rw [times_cont_mdiff_iff]
       exact ⟨continuous_mul, fun x y => (times_cont_diff_mul.restrict_scalars ℝ).TimesContDiffOn⟩

@@ -43,7 +43,7 @@ noncomputable section
 
 open Set FiniteDimensional TopologicalSpace Filter Asymptotics
 
-open_locale Classical BigOperators Filter TopologicalSpace Asymptotics
+open_locale Classical BigOperators Filter TopologicalSpace Asymptotics Nnreal
 
 namespace LinearIsometry
 
@@ -198,7 +198,7 @@ theorem continuous_equiv_fun_basis {ι : Type v} [Fintype ι] (ξ : Basis ι �
     have C_nonneg : 0 ≤ C := Finset.sum_nonneg fun i hi => (hC0 i).1
     have C0_le : ∀ i, C0 i ≤ C := fun i => Finset.single_le_sum (fun j hj => (hC0 j).1) (Finset.mem_univ _)
     apply ξ.equiv_fun.to_linear_map.continuous_of_bound C fun x => _
-    rw [pi_semi_norm_le_iff]
+    rw [pi_norm_le_iff]
     · exact fun i => le_transₓ ((hC0 i).2 x) (mul_le_mul_of_nonneg_right (C0_le i) (norm_nonneg _))
       
     · exact mul_nonneg C_nonneg (norm_nonneg _)
@@ -248,7 +248,7 @@ variable [FiniteDimensional 𝕜 E]
 /-- The continuous linear map induced by a linear map on a finite dimensional space -/
 def to_continuous_linear_map : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F' where
   toFun := fun f => ⟨f, f.continuous_of_finite_dimensional⟩
-  invFun := coeₓ
+  invFun := coe
   map_add' := fun f g => rfl
   map_smul' := fun c f => rfl
   left_inv := fun f => rfl
@@ -263,19 +263,92 @@ theorem coe_to_continuous_linear_map (f : E →ₗ[𝕜] F') : (f.to_continuous_
   rfl
 
 @[simp]
-theorem coe_to_continuous_linear_map_symm : ⇑(to_continuous_linear_map : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F').symm = coeₓ :=
+theorem coe_to_continuous_linear_map_symm : ⇑(to_continuous_linear_map : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F').symm = coe :=
   rfl
 
 end LinearMap
 
+namespace LinearEquiv
+
+variable [FiniteDimensional 𝕜 E]
+
 /-- The continuous linear equivalence induced by a linear equivalence on a finite dimensional
 space. -/
-@[simps]
-def LinearEquiv.toContinuousLinearEquiv [FiniteDimensional 𝕜 E] (e : E ≃ₗ[𝕜] F) : E ≃L[𝕜] F :=
+def to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : E ≃L[𝕜] F :=
   { e with continuous_to_fun := e.to_linear_map.continuous_of_finite_dimensional,
     continuous_inv_fun :=
       have : FiniteDimensional 𝕜 F := e.finite_dimensional
       e.symm.to_linear_map.continuous_of_finite_dimensional }
+
+@[simp]
+theorem coe_to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : (e.to_continuous_linear_equiv : E →ₗ[𝕜] F) = e :=
+  rfl
+
+@[simp]
+theorem coe_to_continuous_linear_equiv' (e : E ≃ₗ[𝕜] F) : (e.to_continuous_linear_equiv : E → F) = e :=
+  rfl
+
+@[simp]
+theorem coe_to_continuous_linear_equiv_symm (e : E ≃ₗ[𝕜] F) :
+    (e.to_continuous_linear_equiv.symm : F →ₗ[𝕜] E) = e.symm :=
+  rfl
+
+@[simp]
+theorem coe_to_continuous_linear_equiv_symm' (e : E ≃ₗ[𝕜] F) : (e.to_continuous_linear_equiv.symm : F → E) = e.symm :=
+  rfl
+
+@[simp]
+theorem to_linear_equiv_to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : e.to_continuous_linear_equiv.to_linear_equiv = e :=
+  by
+  ext x
+  rfl
+
+@[simp]
+theorem to_linear_equiv_to_continuous_linear_equiv_symm (e : E ≃ₗ[𝕜] F) :
+    e.to_continuous_linear_equiv.symm.to_linear_equiv = e.symm := by
+  ext x
+  rfl
+
+end LinearEquiv
+
+/-- Any `K`-Lipschitz map from a subset `s` of a metric space `α` to a finite-dimensional real
+vector space `E'` can be extended to a Lipschitz map on the whole space `α`, with a slightly worse
+constant `C * K` where `C` only depends on `E'`. We record a working value for this constant `C`
+as `lipschitz_extension_constant E'`. -/
+irreducible_def lipschitzExtensionConstant (E' : Type _) [NormedGroup E'] [NormedSpace ℝ E']
+  [FiniteDimensional ℝ E'] : ℝ≥0 :=
+  let A := (Basis.ofVectorSpace ℝ E').equivFun.toContinuousLinearEquiv
+  max (∥A.symm.to_continuous_linear_map∥₊ * ∥A.to_continuous_linear_map∥₊) 1
+
+theorem lipschitz_extension_constant_pos (E' : Type _) [NormedGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] :
+    0 < lipschitzExtensionConstant E' := by
+  rw [lipschitzExtensionConstant]
+  exact zero_lt_one.trans_le (le_max_rightₓ _ _)
+
+/-- Any `K`-Lipschitz map from a subset `s` of a metric space `α` to a finite-dimensional real
+vector space `E'` can be extended to a Lipschitz map on the whole space `α`, with a slightly worse
+constant `lipschitz_extension_constant E' * K`. -/
+theorem LipschitzOnWith.extend_finite_dimension {α : Type _} [PseudoMetricSpace α] {E' : Type _} [NormedGroup E']
+    [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] {s : Set α} {f : α → E'} {K : ℝ≥0 } (hf : LipschitzOnWith K f s) :
+    ∃ g : α → E', LipschitzWith (lipschitzExtensionConstant E' * K) g ∧ eq_on f g s := by
+  let ι : Type _ := Basis.OfVectorSpaceIndex ℝ E'
+  let A := (Basis.ofVectorSpace ℝ E').equivFun.toContinuousLinearEquiv
+  have LA : LipschitzWith ∥A.to_continuous_linear_map∥₊ A := by
+    apply A.lipschitz
+  have L : LipschitzOnWith (∥A.to_continuous_linear_map∥₊ * K) (A ∘ f) s := LA.comp_lipschitz_on_with hf
+  obtain ⟨g, hg, gs⟩ : ∃ g : α → ι → ℝ, LipschitzWith (∥A.to_continuous_linear_map∥₊ * K) g ∧ eq_on (A ∘ f) g s :=
+    L.extend_pi
+  refine' ⟨A.symm ∘ g, _, _⟩
+  · have LAsymm : LipschitzWith ∥A.symm.to_continuous_linear_map∥₊ A.symm := by
+      apply A.symm.lipschitz
+    apply (LAsymm.comp hg).weaken
+    rw [lipschitzExtensionConstant, ← mul_assoc]
+    refine' mul_le_mul' (le_max_leftₓ _ _) le_rfl
+    
+  · intro x hx
+    have : A (f x) = g x := gs hx
+    simp only [· ∘ ·, ← this, A.symm_apply_apply]
+    
 
 theorem LinearMap.exists_antilipschitz_with [FiniteDimensional 𝕜 E] (f : E →ₗ[𝕜] F) (hf : f.ker = ⊥) :
     ∃ K > 0, AntilipschitzWith K f := by
@@ -306,7 +379,7 @@ protected theorem LinearIndependent.eventually {ι} [Fintype ι] {f : ι → E} 
     LinearMap.proj_apply, LinearMap.smul_right_apply, LinearMap.id_apply, ← Finset.sum_sub_distrib, ← smul_sub, ←
     sub_smul, Nnreal.coe_sum, coe_nnnorm, Finset.sum_mul]
   refine' norm_sum_le_of_le _ fun i _ => _
-  rw [norm_smul, mul_commₓ]
+  rw [norm_smul, mul_comm]
   exact mul_le_mul_of_nonneg_left (norm_le_pi_norm (v - u) i) (norm_nonneg _)
 
 theorem is_open_set_of_linear_independent {ι : Type _} [Fintype ι] : IsOpen { f : ι → E | LinearIndependent 𝕜 f } :=
@@ -375,7 +448,7 @@ theorem Basis.sup_norm_le_norm (v : Basis ι 𝕜 E) : ∃ C > (0 : ℝ), ∀ e 
   calc (∑ i, ∥φ e i∥) ≤ ∑ i : ι, ∥φ e∥ := by
       apply Finset.sum_le_sum
       exact fun i hi => norm_le_pi_norm (φ e) i _ = ∥φ e∥ * Fintype.card ι := by
-      simpa only [mul_commₓ, Finset.sum_const, nsmul_eq_mul]_ ≤ ∥φ∥ * ∥e∥ * Fintype.card ι :=
+      simpa only [mul_comm, Finset.sum_const, nsmul_eq_mul]_ ≤ ∥φ∥ * ∥e∥ * Fintype.card ι :=
       mul_le_mul_of_nonneg_right (φ.le_op_norm e) (Fintype.card ι).cast_nonneg _ = ∥φ∥ * Fintype.card ι * ∥e∥ := by
       ring _ ≤ max C 1 * ∥e∥ := mul_le_mul_of_nonneg_right (le_max_leftₓ _ _) (norm_nonneg _)
 
@@ -427,7 +500,7 @@ instance [FiniteDimensional 𝕜 E] [second_countable_topology F] : second_count
     · simp [hn]
       
     have : C * (ε / (2 * C)) = ε / 2 := by
-      rw [eq_div_iff (two_ne_zero : (2 : ℝ) ≠ 0), mul_commₓ, ← mul_assocₓ, mul_div_cancel' _ (ne_of_gtₓ h_2C)]
+      rw [eq_div_iff (two_ne_zero : (2 : ℝ) ≠ 0), mul_comm, ← mul_assoc, mul_div_cancel' _ (ne_of_gtₓ h_2C)]
     specialize hC (le_of_ltₓ hε2C) hn
     rwa [this] at hC
   choose n hn using this

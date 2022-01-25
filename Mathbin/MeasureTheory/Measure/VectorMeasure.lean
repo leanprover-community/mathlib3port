@@ -234,7 +234,7 @@ variable {M : Type _} [AddCommMonoidₓ M] [TopologicalSpace M]
 
 include m
 
-instance : HasZero (vector_measure α M) :=
+instance : Zero (vector_measure α M) :=
   ⟨⟨0, rfl, fun _ _ => rfl, fun _ _ _ => has_sum_zero⟩⟩
 
 instance : Inhabited (vector_measure α M) :=
@@ -1287,7 +1287,7 @@ include m
 /-- The underlying function for `signed_measure.to_measure_of_zero_le`. -/
 def to_measure_of_zero_le' (s : signed_measure α) (i : Set α) (hi : 0 ≤[i] s) (j : Set α) (hj : MeasurableSet j) :
     ℝ≥0∞ :=
-  @coeₓ ℝ≥0 ℝ≥0∞ _
+  @coe ℝ≥0 ℝ≥0∞ _
     ⟨s.restrict i j,
       le_transₓ
         (by
@@ -1322,7 +1322,7 @@ variable (s : signed_measure α) {i j : Set α}
 
 theorem to_measure_of_zero_le_apply (hi : 0 ≤[i] s) (hi₁ : MeasurableSet i) (hj₁ : MeasurableSet j) :
     s.to_measure_of_zero_le i hi₁ hi j =
-      @coeₓ ℝ≥0 ℝ≥0∞ _
+      @coe ℝ≥0 ℝ≥0∞ _
         ⟨s (i ∩ j), nonneg_of_zero_le_restrict s (zero_le_restrict_subset s hi₁ (Set.inter_subset_left _ _) hi)⟩ :=
   by
   simp_rw [to_measure_of_zero_le, measure.of_measurable_apply _ hj₁, to_measure_of_zero_le', s.restrict_apply hi₁ hj₁,
@@ -1335,7 +1335,7 @@ def to_measure_of_le_zero (s : signed_measure α) (i : Set α) (hi₁ : Measurab
 
 theorem to_measure_of_le_zero_apply (hi : s ≤[i] 0) (hi₁ : MeasurableSet i) (hj₁ : MeasurableSet j) :
     s.to_measure_of_le_zero i hi₁ hi j =
-      @coeₓ ℝ≥0 ℝ≥0∞ _
+      @coe ℝ≥0 ℝ≥0∞ _
         ⟨-s (i ∩ j),
           neg_apply s (i ∩ j) ▸
             nonneg_of_zero_le_restrict _

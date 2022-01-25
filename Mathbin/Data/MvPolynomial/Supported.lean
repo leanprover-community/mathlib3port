@@ -38,13 +38,13 @@ open_locale Classical
 
 open Algebra
 
-theorem supported_eq_range_rename (s : Set σ) : supported R s = (rename (coeₓ : s → σ)).range := by
+theorem supported_eq_range_rename (s : Set σ) : supported R s = (rename (coe : s → σ)).range := by
   rw [supported, Set.image_eq_range, adjoin_range_eq_range_aeval, rename]
 
 /-- The isomorphism between the subalgebra of polynomials supported by `s` and `mv_polynomial s R`-/
 noncomputable def supported_equiv_mv_polynomial (s : Set σ) : supported R s ≃ₐ[R] MvPolynomial s R :=
   (Subalgebra.equivOfEq _ _ (supported_eq_range_rename s)).trans
-    (AlgEquiv.ofInjective (rename (coeₓ : s → σ)) (rename_injective _ Subtype.val_injective)).symm
+    (AlgEquiv.ofInjective (rename (coe : s → σ)) (rename_injective _ Subtype.val_injective)).symm
 
 @[simp]
 theorem supported_equiv_mv_polynomial_symm_C (s : Set σ) (x : R) :
@@ -68,7 +68,7 @@ theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s := by
     
   · intro hs
     exact
-      exists_rename_eq_of_vars_subset_range p (coeₓ : s → σ) Subtype.val_injective
+      exists_rename_eq_of_vars_subset_range p (coe : s → σ) Subtype.val_injective
         (by
           simpa)
     

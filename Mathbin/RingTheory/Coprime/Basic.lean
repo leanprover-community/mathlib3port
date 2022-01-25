@@ -42,7 +42,7 @@ theorem is_coprime_comm : IsCoprime x y ↔ IsCoprime y x :=
 theorem is_coprime_self : IsCoprime x x ↔ IsUnit x :=
   ⟨fun ⟨a, b, h⟩ =>
     is_unit_of_mul_eq_one x (a + b) $ by
-      rwa [mul_commₓ, add_mulₓ],
+      rwa [mul_comm, add_mulₓ],
     fun h =>
     let ⟨b, hb⟩ := is_unit_iff_exists_inv'.1 h
     ⟨b, 0, by
@@ -51,7 +51,7 @@ theorem is_coprime_self : IsCoprime x x ↔ IsUnit x :=
 theorem is_coprime_zero_left : IsCoprime 0 x ↔ IsUnit x :=
   ⟨fun ⟨a, b, H⟩ =>
     is_unit_of_mul_eq_one x b $ by
-      rwa [mul_zero, zero_addₓ, mul_commₓ] at H,
+      rwa [mul_zero, zero_addₓ, mul_comm] at H,
     fun H =>
     let ⟨b, hb⟩ := is_unit_iff_exists_inv'.1 H
     ⟨1, b, by
@@ -78,12 +78,12 @@ theorem is_coprime_one_right : IsCoprime x 1 :=
 
 theorem IsCoprime.dvd_of_dvd_mul_right (H1 : IsCoprime x z) (H2 : x ∣ y * z) : x ∣ y := by
   let ⟨a, b, H⟩ := H1
-  rw [← mul_oneₓ y, ← H, mul_addₓ, ← mul_assocₓ, mul_left_commₓ]
+  rw [← mul_oneₓ y, ← H, mul_addₓ, ← mul_assoc, mul_left_commₓ]
   exact dvd_add (dvd_mul_left _ _) (H2.mul_left _)
 
 theorem IsCoprime.dvd_of_dvd_mul_left (H1 : IsCoprime x y) (H2 : x ∣ y * z) : x ∣ z := by
   let ⟨a, b, H⟩ := H1
-  rw [← one_mulₓ z, ← H, add_mulₓ, mul_right_commₓ, mul_assocₓ b]
+  rw [← one_mulₓ z, ← H, add_mulₓ, mul_right_commₓ, mul_assoc b]
   exact dvd_add (dvd_mul_left _ _) (H2.mul_left _)
 
 theorem IsCoprime.mul_left (H1 : IsCoprime x z) (H2 : IsCoprime y z) : IsCoprime (x * y) z :=
@@ -105,20 +105,20 @@ theorem IsCoprime.mul_dvd (H : IsCoprime x y) (H1 : x ∣ z) (H2 : y ∣ z) : x 
   obtain ⟨a, b, h⟩ := H
   rw [← mul_oneₓ z, ← h, mul_addₓ]
   apply dvd_add
-  · rw [mul_commₓ z, mul_assocₓ]
+  · rw [mul_comm z, mul_assoc]
     exact (mul_dvd_mul_left _ H2).mul_left _
     
-  · rw [mul_commₓ b, ← mul_assocₓ]
+  · rw [mul_comm b, ← mul_assoc]
     exact (mul_dvd_mul_right H1 _).mul_right _
     
 
 theorem IsCoprime.of_mul_left_left (H : IsCoprime (x * y) z) : IsCoprime x z :=
   let ⟨a, b, h⟩ := H
   ⟨a * y, b, by
-    rwa [mul_right_commₓ, mul_assocₓ]⟩
+    rwa [mul_right_commₓ, mul_assoc]⟩
 
 theorem IsCoprime.of_mul_left_right (H : IsCoprime (x * y) z) : IsCoprime y z := by
-  rw [mul_commₓ] at H
+  rw [mul_comm] at H
   exact H.of_mul_left_left
 
 theorem IsCoprime.of_mul_right_left (H : IsCoprime x (y * z)) : IsCoprime x y := by
@@ -126,7 +126,7 @@ theorem IsCoprime.of_mul_right_left (H : IsCoprime x (y * z)) : IsCoprime x y :=
   exact H.of_mul_left_left
 
 theorem IsCoprime.of_mul_right_right (H : IsCoprime x (y * z)) : IsCoprime x z := by
-  rw [mul_commₓ] at H
+  rw [mul_comm] at H
   exact H.of_mul_right_left
 
 theorem IsCoprime.mul_left_iff : IsCoprime (x * y) z ↔ IsCoprime x z ∧ IsCoprime y z :=
@@ -159,11 +159,10 @@ variable {x y z}
 theorem IsCoprime.of_add_mul_left_left (h : IsCoprime (x + y * z) y) : IsCoprime x y :=
   let ⟨a, b, H⟩ := h
   ⟨a, a * z + b, by
-    simpa only [add_mulₓ, mul_addₓ, add_assocₓ, add_commₓ, add_left_commₓ, mul_assocₓ, mul_commₓ, mul_left_commₓ] using
-      H⟩
+    simpa only [add_mulₓ, mul_addₓ, add_assocₓ, add_commₓ, add_left_commₓ, mul_assoc, mul_comm, mul_left_commₓ] using H⟩
 
 theorem IsCoprime.of_add_mul_right_left (h : IsCoprime (x + z * y) y) : IsCoprime x y := by
-  rw [mul_commₓ] at h
+  rw [mul_comm] at h
   exact h.of_add_mul_left_left
 
 theorem IsCoprime.of_add_mul_left_right (h : IsCoprime x (y + x * z)) : IsCoprime x y := by
@@ -171,7 +170,7 @@ theorem IsCoprime.of_add_mul_left_right (h : IsCoprime x (y + x * z)) : IsCoprim
   exact h.of_add_mul_left_left
 
 theorem IsCoprime.of_add_mul_right_right (h : IsCoprime x (y + z * x)) : IsCoprime x y := by
-  rw [mul_commₓ] at h
+  rw [mul_comm] at h
   exact h.of_add_mul_left_right
 
 theorem IsCoprime.of_mul_add_left_left (h : IsCoprime (y * z + x) y) : IsCoprime x y := by
@@ -203,7 +202,7 @@ theorem add_mul_left_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x +
     simpa only [mul_neg_eq_neg_mul_symm, add_neg_cancel_rightₓ] using h
 
 theorem add_mul_right_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x + z * y) y := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact h.add_mul_left_left z
 
 theorem add_mul_left_right {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime x (y + x * z) := by

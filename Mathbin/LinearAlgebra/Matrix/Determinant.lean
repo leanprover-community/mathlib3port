@@ -148,7 +148,7 @@ theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
           injection h)
         fun b _ => ⟨b, mem_filter.2 ⟨mem_univ _, b.bijective⟩, coe_fn_injective rfl⟩
     _ = ∑ σ : perm n, ∑ τ : perm n, (∏ i, N (σ i) i) * ε τ * ∏ j, M (τ j) (σ j) := by
-      simp only [mul_commₓ, mul_left_commₓ, prod_mul_distrib, mul_assocₓ]
+      simp only [mul_comm, mul_left_commₓ, prod_mul_distrib, mul_assoc]
     _ = ∑ σ : perm n, ∑ τ : perm n, (∏ i, N (σ i) i) * (ε σ * ε τ) * ∏ i, M (τ i) i :=
       sum_congr rfl fun σ _ =>
         Fintype.sum_equiv (Equivₓ.mulRight (σ⁻¹)) _ _ fun τ => by
@@ -158,7 +158,7 @@ theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
           have h : ε σ * ε(τ * σ⁻¹) = ε τ :=
             calc
               ε σ * ε(τ * σ⁻¹) = ε(τ * σ⁻¹ * σ) := by
-                rw [mul_commₓ, sign_mul (τ * σ⁻¹)]
+                rw [mul_comm, sign_mul (τ * σ⁻¹)]
                 simp only [Int.cast_mul, Units.coe_mul]
               _ = ε τ := by
                 simp only [inv_mul_cancel_right]
@@ -166,7 +166,7 @@ theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
           simp_rw [Equivₓ.coe_mul_right, h]
           simp only [this]
     _ = det M * det N := by
-      simp only [det_apply', Finset.mul_sum, mul_commₓ, mul_left_commₓ]
+      simp only [det_apply', Finset.mul_sum, mul_comm, mul_left_commₓ]
     
 
 /-- The determinant of a matrix, as a monoid homomorphism. -/
@@ -181,7 +181,7 @@ theorem coe_det_monoid_hom : (det_monoid_hom : Matrix n n R → R) = det :=
 
 /-- On square matrices, `mul_comm` applies under `det`. -/
 theorem det_mul_comm (M N : Matrix m m R) : det (M ⬝ N) = det (N ⬝ M) := by
-  rw [det_mul, det_mul, mul_commₓ]
+  rw [det_mul, det_mul, mul_comm]
 
 /-- On square matrices, `mul_left_comm` applies under `det`. -/
 theorem det_mul_left_comm (M N P : Matrix m m R) : det (M ⬝ (N ⬝ P)) = det (N ⬝ (M ⬝ P)) := by
@@ -258,9 +258,9 @@ theorem det_mul_row (v : n → R) (A : Matrix n n R) : (det fun i j => v j * A i
     (det fun i j => v j * A i j) = det (A ⬝ diagonal v) :=
       congr_argₓ det $ by
         ext
-        simp [mul_commₓ]
+        simp [mul_comm]
     _ = (∏ i, v i) * det A := by
-      rw [det_mul, det_diagonal, mul_commₓ]
+      rw [det_mul, det_diagonal, mul_comm]
     
 
 /-- Multiplying each column by a fixed `v j` multiplies the determinant by
@@ -662,7 +662,7 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.suc
     
   have : (-1 : R) ^ (i : ℕ) = i.cycle_range.sign := by
     simp [Finₓ.sign_cycle_range]
-  rw [Finₓ.coe_succ, pow_succₓ, this, mul_assocₓ, mul_assocₓ, mul_left_commₓ (↑Equivₓ.Perm.sign _), ← det_permute,
+  rw [Finₓ.coe_succ, pow_succₓ, this, mul_assoc, mul_assoc, mul_left_commₓ (↑Equivₓ.Perm.sign _), ← det_permute,
     Matrix.det_apply, Finset.mul_sum, Finset.mul_sum]
   refine' Finset.sum_congr rfl fun σ _ => _
   rw [Equivₓ.Perm.decomposeFin.symm_sign, if_neg (Finₓ.succ_ne_zero i)]
@@ -676,7 +676,7 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.suc
         -1 *
           (A (Finₓ.succ i) 0 * (σ.sign : ℤ) • ∏ i', A ((Finₓ.succ i).succAbove (Finₓ.cycleRange i (σ i'))) i'.succ) :=
       by
-      simp only [mul_assocₓ, mul_commₓ, neg_mul_eq_neg_mul_symm, one_mulₓ, zsmul_eq_mul, neg_inj, neg_smul,
+      simp only [mul_assoc, mul_comm, neg_mul_eq_neg_mul_symm, one_mulₓ, zsmul_eq_mul, neg_inj, neg_smul,
         Finₓ.succ_above_cycle_range]
 
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along row 0. -/
@@ -690,16 +690,16 @@ theorem det_succ_row_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) 
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along row `i`. -/
 theorem det_succ_row {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) (i : Finₓ n.succ) :
     det A = ∑ j : Finₓ n.succ, -1 ^ (i + j : ℕ) * A i j * det (A.minor i.succ_above j.succ_above) := by
-  simp_rw [pow_addₓ, mul_assocₓ, ← mul_sum]
+  simp_rw [pow_addₓ, mul_assoc, ← mul_sum]
   have : det A = (-1 : R) ^ (i : ℕ) * i.cycle_range⁻¹.sign * det A := by
     calc det A = ↑((-1 : (ℤ)ˣ) ^ (i : ℕ) * (-1 : (ℤ)ˣ) ^ (i : ℕ) : (ℤ)ˣ) * det A := by
         simp _ = (-1 : R) ^ (i : ℕ) * i.cycle_range⁻¹.sign * det A := by
         simp [-Int.units_mul_self]
-  rw [this, mul_assocₓ]
+  rw [this, mul_assoc]
   congr
   rw [← det_permute, det_succ_row_zero]
   refine' Finset.sum_congr rfl fun j _ => _
-  rw [mul_assocₓ, Matrix.minor, Matrix.minor]
+  rw [mul_assoc, Matrix.minor, Matrix.minor]
   congr
   · rw [Equivₓ.Perm.inv_def, Finₓ.cycle_range_symm_zero]
     

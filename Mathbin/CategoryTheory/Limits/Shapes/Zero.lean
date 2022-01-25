@@ -34,7 +34,7 @@ variable (C : Type u) [category.{v} C]
 /-- A category "has zero morphisms" if there is a designated "zero morphism" in each morphism space,
 and compositions of zero morphisms with anything give the zero morphism. -/
 class has_zero_morphisms where
-  [HasZero : ∀ X Y : C, HasZero (X ⟶ Y)]
+  [HasZero : ∀ X Y : C, Zero (X ⟶ Y)]
   comp_zero' : ∀ {X Y : C} f : X ⟶ Y Z : C, f ≫ (0 : Y ⟶ Z) = (0 : X ⟶ Z) := by
     run_tac
       obviously
@@ -187,7 +187,7 @@ variable [has_zero_object C]
 /-- Construct a `has_zero C` for a category with a zero object.
 This can not be a global instance as it will trigger for every `has_zero C` typeclass search.
 -/
-protected def HasZero : HasZero C where
+protected def Zero : Zero C where
   zero := has_zero_object.zero
 
 localized [ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.hasZero
@@ -226,11 +226,11 @@ instance {X : C} (f : X ⟶ 0) : epi f where
 def zero_morphisms_of_zero_object : has_zero_morphisms C where
   HasZero := fun X Y => { zero := (default : X ⟶ 0) ≫ default }
   zero_comp' := fun X Y Z f => by
-    dunfold HasZero.zero
+    dunfold Zero.zero
     rw [category.assoc]
     congr
   comp_zero' := fun X Y Z f => by
-    dunfold HasZero.zero
+    dunfold Zero.zero
     rw [← category.assoc]
     congr
 

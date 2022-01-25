@@ -296,7 +296,7 @@ def diagonal (α : Type _) : Set (α × α) :=
 theorem mem_diagonal (x : α) : (x, x) ∈ diagonal α := by
   simp [diagonal]
 
-theorem preimage_coe_coe_diagonal (s : Set α) : Prod.map coeₓ coeₓ ⁻¹' diagonal α = diagonal s := by
+theorem preimage_coe_coe_diagonal (s : Set α) : Prod.map coe coe ⁻¹' diagonal α = diagonal s := by
   ext ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
   simp [Set.Diagonal]
 

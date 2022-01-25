@@ -207,7 +207,7 @@ theorem const_comp (n : ℕ) (c : γ) (f : A →*[n] β) {hf} : (const B n c).co
 
 /-- `1` is the Freiman homomorphism sending everything to `1`. -/
 @[to_additive "`0` is the Freiman homomorphism sending everything to `0`."]
-instance : HasOne (A →*[n] β) :=
+instance : One (A →*[n] β) :=
   ⟨const A n 1⟩
 
 @[simp, to_additive]
@@ -286,7 +286,7 @@ instance : CommMonoidₓ (A →*[n] β) where
   mul := · * ·
   mul_assoc := fun a b c => by
     ext
-    apply mul_assocₓ
+    apply mul_assoc
   one := 1
   one_mul := fun a => by
     ext
@@ -296,7 +296,7 @@ instance : CommMonoidₓ (A →*[n] β) where
     apply mul_oneₓ
   mul_comm := fun a b => by
     ext
-    apply mul_commₓ
+    apply mul_comm
   npow := fun m f =>
     { toFun := fun x => f x ^ m,
       map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by

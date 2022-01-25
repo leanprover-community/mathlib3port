@@ -143,23 +143,23 @@ theorem is_artinian_iff_well_founded : IsArtinian R M ↔ WellFounded (· < · :
 variable {R M}
 
 theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] {s : Set M}
-    (hs : LinearIndependent R (coeₓ : s → M)) : s.finite := by
+    (hs : LinearIndependent R (coe : s → M)) : s.finite := by
   refine'
     Classical.by_contradiction fun hf =>
       (RelEmbedding.well_founded_iff_no_descending_seq.1 (well_founded_submodule_lt R M)).elim' _
   have f : ℕ ↪ s := @Infinite.natEmbedding s ⟨fun f => hf ⟨f⟩⟩
-  have : ∀ n, coeₓ ∘ f '' { m | n ≤ m } ⊆ s := by
+  have : ∀ n, coe ∘ f '' { m | n ≤ m } ⊆ s := by
     rintro n x ⟨y, hy₁, hy₂⟩
     subst hy₂
     exact (f y).2
-  have : ∀ a b : ℕ, a ≤ b ↔ span R (coeₓ ∘ f '' { m | b ≤ m }) ≤ span R (coeₓ ∘ f '' { m | a ≤ m }) := by
+  have : ∀ a b : ℕ, a ≤ b ↔ span R (coe ∘ f '' { m | b ≤ m }) ≤ span R (coe ∘ f '' { m | a ≤ m }) := by
     intro a b
     rw [span_le_span_iff hs (this b) (this a), Set.image_subset_image_iff (subtype.coe_injective.comp f.injective),
       Set.subset_def]
     simp only [Set.mem_set_of_eq]
     exact ⟨fun hab x => le_transₓ hab, fun h => h _ (le_reflₓ _)⟩
   exact
-    ⟨⟨fun n => span R (coeₓ ∘ f '' { m | n ≤ m }), fun x y => by
+    ⟨⟨fun n => span R (coe ∘ f '' { m | n ≤ m }), fun x y => by
         simp (config := { contextual := true })[le_antisymm_iffₓ, (this _ _).symm]⟩,
       by
       intro a b
@@ -378,10 +378,10 @@ theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R))
     exact lt_of_le_of_neₓ le_sup_left fun h => H $ h.symm ▸ le_sup_right
   have : Ideal.span {x} * Jac ^ (n + 1) ≤ ⊥
   calc Ideal.span {x} * Jac ^ (n + 1) = Ideal.span {x} * Jac * Jac ^ n := by
-      rw [pow_succₓ, ← mul_assocₓ]_ ≤ J * Jac ^ n :=
+      rw [pow_succₓ, ← mul_assoc]_ ≤ J * Jac ^ n :=
       mul_le_mul
         (by
-          rwa [mul_commₓ])
+          rwa [mul_comm])
         (le_reflₓ _)_ = ⊥ :=
       by
       simp [J]

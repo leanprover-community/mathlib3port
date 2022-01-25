@@ -618,7 +618,7 @@ omit H
 @[simp]
 theorem LocallyRingedSpace_to_LocallyRingedSpace {X Y : LocallyRingedSpace} (f : X ⟶ Y)
     [LocallyRingedSpace.is_open_immersion f] :
-    @to_LocallyRingedSpace X.to_PresheafedSpace Y (@coeₓ (@coeToLift (@coeBaseₓ coeSubtype)) f)
+    @to_LocallyRingedSpace X.to_PresheafedSpace Y (@coe (@coeToLift (@coeBaseₓ coeSubtype)) f)
         (show is_open_immersion f.val by
           infer_instance) =
       X :=

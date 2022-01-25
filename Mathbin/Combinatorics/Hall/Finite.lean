@@ -46,7 +46,7 @@ variable {t : ι → Finset α} [DecidableEq α]
 theorem hall_cond_of_erase {x : ι} (a : α) (ha : ∀ s : Finset ι, s.nonempty → s ≠ univ → s.card < (s.bUnion t).card)
     (s' : Finset { x' : ι | x' ≠ x }) : s'.card ≤ (s'.bUnion fun x' => (t x').erase a).card := by
   have := Classical.decEq ι
-  specialize ha (s'.image coeₓ)
+  specialize ha (s'.image coe)
   rw [nonempty.image_iff, Finset.card_image_of_injective s' Subtype.coe_injective] at ha
   by_cases' he : s'.nonempty
   · have ha' : s'.card < (s'.bUnion fun x => t x).card := by
@@ -124,7 +124,7 @@ theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset �
     (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (s' : Finset (s : Set ι)) :
     s'.card ≤ (s'.bUnion fun a' => t a').card := by
   have := Classical.decEq ι
-  convert ht (s'.image coeₓ) using 1
+  convert ht (s'.image coe) using 1
   · rw [card_image_of_injective _ Subtype.coe_injective]
     
   · apply congr_argₓ
@@ -136,7 +136,7 @@ theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι} 
     (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (s' : Finset (sᶜ : Set ι)) :
     s'.card ≤ (s'.bUnion fun x' => t x' \ s.bUnion t).card := by
   have := Classical.decEq ι
-  have : s'.card = (s ∪ s'.image coeₓ).card - s.card := by
+  have : s'.card = (s ∪ s'.image coe).card - s.card := by
     rw [card_disjoint_union, add_tsub_cancel_left, card_image_of_injective _ Subtype.coe_injective]
     simp only [disjoint_left, not_exists, mem_image, exists_prop, SetCoe.exists, exists_and_distrib_right,
       exists_eq_right, Subtype.coe_mk]
@@ -238,15 +238,14 @@ of the second direction.
 -/
 theorem hall_hard_inductive {n : ℕ} (hn : Fintype.card ι = n) (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
-  run_tac
-    tactic.unfreeze_local_instances
   revert ι
   refine' Nat.strong_induction_onₓ n fun n' ih => _
   intro _ _ t hn ht
   rcases n' with (_ | _)
   · exact hall_hard_inductive_zero t hn
     
-  · apply hall_hard_inductive_step hn ht
+  · skip
+    apply hall_hard_inductive_step hn ht
     intros ι' _ _ hι'
     exact ih (Fintype.card ι') (Nat.lt_succ_of_leₓ hι') rfl
     

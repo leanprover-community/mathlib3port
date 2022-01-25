@@ -354,9 +354,9 @@ theorem pow_iff_coprime (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) (i : ℕ) : IsPr
   suffices b = k by
     rwa [this, ← one_mulₓ k, Nat.mul_left_inj h0, eq_comm] at hb
   rw [ha] at hi
-  rw [mul_commₓ] at hb
+  rw [mul_comm] at hb
   apply Nat.dvd_antisymm ⟨i.gcd k, hb⟩ (hi.dvd_of_pow_eq_one b _)
-  rw [← pow_mul', ← mul_assocₓ, ← hb, pow_mulₓ, h.pow_eq_one, one_pow]
+  rw [← pow_mul', ← mul_assoc, ← hb, pow_mulₓ, h.pow_eq_one, one_pow]
 
 protected theorem orderOf (ζ : M) : IsPrimitiveRoot ζ (orderOf ζ) :=
   ⟨pow_order_of_eq_one ζ, fun l => order_of_dvd_of_pow_eq_one⟩
@@ -863,7 +863,7 @@ theorem nth_roots_one_eq_bUnion_primitive_roots' {ζ : R} {n : ℕ+} (h : IsPrim
       rintro k ⟨H, hk⟩
       have hdvd := H
       rcases H with ⟨d, hd⟩
-      rw [mul_commₓ] at hd
+      rw [mul_comm] at hd
       rw [(h.pow n.pos hd).card_primitive_roots]
       
     · intro i hi j hj hdiff
@@ -945,7 +945,7 @@ theorem minpoly_dvd_expand {p : ℕ} (hprime : Nat.Prime p) (hdiv : ¬p ∣ n) :
   have hpos := Nat.pos_of_ne_zeroₓ hn
   apply minpoly.gcd_domain_dvd ℚ (h.is_integral hpos)
   · apply monic.is_primitive
-    rw [Polynomial.Monic, leading_coeff, nat_degree_expand, mul_commₓ, coeff_expand_mul' (Nat.Prime.pos hprime), ←
+    rw [Polynomial.Monic, leading_coeff, nat_degree_expand, mul_comm, coeff_expand_mul' (Nat.Prime.pos hprime), ←
       leading_coeff, ← Polynomial.Monic]
     exact minpoly.monic (IsIntegral (pow_of_prime h hprime hdiv) hpos)
     
@@ -1006,7 +1006,7 @@ theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.prime] (hdiv : ¬p ∣ n) : mi
   replace prod := RingHom.map_dvd (map_ring_hom (Int.castRingHom (Zmod p))) Prod
   rw [coe_map_ring_hom, Polynomial.map_mul, Polynomial.map_sub, Polynomial.map_one, Polynomial.map_pow, map_X] at prod
   obtain ⟨R, hR⟩ := minpoly_dvd_mod_p h hdiv
-  rw [hR, ← mul_assocₓ, ← Polynomial.map_mul, ← sq, Polynomial.map_pow] at prod
+  rw [hR, ← mul_assoc, ← Polynomial.map_mul, ← sq, Polynomial.map_pow] at prod
   have habs : map (Int.castRingHom (Zmod p)) P ^ 2 ∣ map (Int.castRingHom (Zmod p)) P ^ 2 * R := by
     use R
   replace habs :=

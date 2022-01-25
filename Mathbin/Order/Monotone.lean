@@ -608,9 +608,9 @@ theorem StrictMono.id_le {φ : ℕ → ℕ} (h : StrictMono φ) : ∀ n, n ≤ �
 
 end Preorderₓ
 
-theorem Subtype.mono_coe [Preorderₓ α] (t : Set α) : Monotone (coeₓ : Subtype t → α) := fun x y => id
+theorem Subtype.mono_coe [Preorderₓ α] (t : Set α) : Monotone (coe : Subtype t → α) := fun x y => id
 
-theorem Subtype.strict_mono_coe [Preorderₓ α] (t : Set α) : StrictMono (coeₓ : Subtype t → α) := fun x y => id
+theorem Subtype.strict_mono_coe [Preorderₓ α] (t : Set α) : StrictMono (coe : Subtype t → α) := fun x y => id
 
 theorem monotone_fst {α β : Type _} [Preorderₓ α] [Preorderₓ β] : Monotone (@Prod.fst α β) := fun x y h => h.1
 

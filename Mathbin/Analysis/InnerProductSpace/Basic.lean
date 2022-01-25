@@ -234,7 +234,7 @@ theorem inner_sub_right {x y z : F} : ⟪x, y - z⟫ = ⟪x, y⟫ - ⟪x, z⟫ :
   simp [sub_eq_add_neg, inner_add_right, inner_neg_right]
 
 theorem inner_mul_conj_re_abs {x y : F} : re (⟪x, y⟫ * ⟪y, x⟫) = abs (⟪x, y⟫ * ⟪y, x⟫) := by
-  rw [← inner_conj_sym, mul_commₓ]
+  rw [← inner_conj_sym, mul_comm]
   exact re_eq_abs_of_mul_conj (inner y x)
 
 /-- Expand `inner (x + y) (x + y)` -/
@@ -283,7 +283,7 @@ theorem inner_mul_inner_self_le (x y : F) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
           simp only [inner_sub_sub_self, inner_smul_left, inner_smul_right, h₁, h₂, neg_mul_eq_neg_mul_symm,
             AddMonoidHom.map_add, mul_re, conj_im, AddMonoidHom.map_sub, mul_neg_eq_neg_mul_symm, conj_re, neg_negₓ]
         _ = re ⟪x, x⟫ - re (T† * ⟪y, x⟫) - re (T * ⟪x, y⟫) + re (T * T† * ⟪y, y⟫) := by
-          simp only [inner_smul_left, inner_smul_right, mul_assocₓ]
+          simp only [inner_smul_left, inner_smul_right, mul_assoc]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ / ⟪y, y⟫ * ⟪y, x⟫) := by
           field_simp [-mul_re, inner_conj_sym, hT, RingHom.map_div, h₁, h₃]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / ⟪y, y⟫) := by
@@ -357,7 +357,7 @@ def to_normed_group : NormedGroup F :=
         have h₄ : re ⟪y, x⟫ ≤ ∥x∥ * ∥y∥ := by
           rwa [← inner_conj_sym, conj_re]
         have : ∥x + y∥ * ∥x + y∥ ≤ (∥x∥ + ∥y∥) * (∥x∥ + ∥y∥) := by
-          simp [← inner_self_eq_norm_mul_norm, inner_add_add_self, add_mulₓ, mul_addₓ, mul_commₓ]
+          simp [← inner_self_eq_norm_mul_norm, inner_add_add_self, add_mulₓ, mul_addₓ, mul_comm]
           linarith
         exact nonneg_le_nonneg_of_sq_le_sq (add_nonneg (sqrt_nonneg _) (sqrt_nonneg _)) this,
       norm_neg := fun x => by
@@ -368,7 +368,7 @@ attribute [local instance] to_normed_group
 /-- Normed space structure constructed from a `inner_product_space.core` structure -/
 def to_normed_space : NormedSpace 𝕜 F where
   norm_smul_le := fun r x => by
-    rw [norm_eq_sqrt_inner, inner_smul_left, inner_smul_right, ← mul_assocₓ]
+    rw [norm_eq_sqrt_inner, inner_smul_left, inner_smul_right, ← mul_assoc]
     rw [conj_mul_eq_norm_sq_left, of_real_mul_re, sqrt_mul, ← inner_norm_sq_eq_inner_self, of_real_re]
     · simp [sqrt_norm_sq_eq_norm, IsROrC.sqrt_norm_sq_eq_norm]
       
@@ -619,7 +619,7 @@ theorem inner_sub_right {x y z : E} : ⟪x, y - z⟫ = ⟪x, y⟫ - ⟪x, z⟫ :
   simp [sub_eq_add_neg, inner_add_right]
 
 theorem inner_mul_conj_re_abs {x y : E} : re (⟪x, y⟫ * ⟪y, x⟫) = abs (⟪x, y⟫ * ⟪y, x⟫) := by
-  rw [← inner_conj_sym, mul_commₓ]
+  rw [← inner_conj_sym, mul_comm]
   exact re_eq_abs_of_mul_conj (inner y x)
 
 /-- Expand `⟪x + y, x + y⟫` -/
@@ -683,7 +683,7 @@ theorem inner_mul_inner_self_le (x y : E) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
           simp only [inner_sub_sub_self, inner_smul_left, inner_smul_right, h₁, h₂, neg_mul_eq_neg_mul_symm,
             AddMonoidHom.map_add, conj_im, AddMonoidHom.map_sub, mul_neg_eq_neg_mul_symm, conj_re, neg_negₓ, mul_re]
         _ = re ⟪x, x⟫ - re (T† * ⟪y, x⟫) - re (T * ⟪x, y⟫) + re (T * T† * ⟪y, y⟫) := by
-          simp only [inner_smul_left, inner_smul_right, mul_assocₓ]
+          simp only [inner_smul_left, inner_smul_right, mul_assoc]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ / ⟪y, y⟫ * ⟪y, x⟫) := by
           field_simp [-mul_re, hT, RingHom.map_div, h₁, h₃, inner_conj_sym]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / ⟪y, y⟫) := by
@@ -782,7 +782,7 @@ include dec_E
 /-- `if ... then ... else` characterization of a set of vectors being orthonormal.  (Inner product
 equals Kronecker delta.) -/
 theorem orthonormal_subtype_iff_ite {s : Set E} :
-    Orthonormal 𝕜 (coeₓ : s → E) ↔ ∀, ∀ v ∈ s, ∀, ∀, ∀ w ∈ s, ∀, ⟪v, w⟫ = if v = w then 1 else 0 := by
+    Orthonormal 𝕜 (coe : s → E) ↔ ∀, ∀ v ∈ s, ∀, ∀, ∀ w ∈ s, ∀, ⟪v, w⟫ = if v = w then 1 else 0 := by
   rw [orthonormal_iff_ite]
   constructor
   · intro h v hv w hw
@@ -842,7 +842,7 @@ theorem Orthonormal.inner_finsupp_eq_sum_left {v : ι → E} (hv : Orthonormal �
 a sum over the second `finsupp`. -/
 theorem Orthonormal.inner_finsupp_eq_sum_right {v : ι → E} (hv : Orthonormal 𝕜 v) (l₁ l₂ : ι →₀ 𝕜) :
     ⟪Finsupp.total ι E 𝕜 v l₁, Finsupp.total ι E 𝕜 v l₂⟫ = l₂.sum fun i y => conj (l₁ i) * y := by
-  simp [Finsupp.total_apply _ l₂, Finsupp.inner_sum, hv.inner_left_finsupp, mul_commₓ]
+  simp [Finsupp.total_apply _ l₂, Finsupp.inner_sum, hv.inner_left_finsupp, mul_comm]
 
 /-- The inner product of two linear combinations of a set of orthonormal vectors, expressed as
 a sum. -/
@@ -923,9 +923,9 @@ theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· �
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (u «expr ⊇ » w)
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/
-theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coeₓ : s → E)) :
-    ∃ (w : _)(_ : w ⊇ s), Orthonormal 𝕜 (coeₓ : w → E) ∧ ∀ u _ : u ⊇ w, Orthonormal 𝕜 (coeₓ : u → E) → u = w := by
-  rcases Zorn.zorn_subset_nonempty { b | Orthonormal 𝕜 (coeₓ : b → E) } _ _ hs with ⟨b, bi, sb, h⟩
+theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :
+    ∃ (w : _)(_ : w ⊇ s), Orthonormal 𝕜 (coe : w → E) ∧ ∀ u _ : u ⊇ w, Orthonormal 𝕜 (coe : u → E) → u = w := by
+  rcases Zorn.zorn_subset_nonempty { b | Orthonormal 𝕜 (coe : b → E) } _ _ hs with ⟨b, bi, sb, h⟩
   · refine' ⟨b, sb, bi, _⟩
     exact fun u hus hu => h u hu hus
     
@@ -1247,7 +1247,7 @@ theorem abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul {x : E} {r 
   have hr' : abs r ≠ 0 := by
     simp [IsROrC.abs_eq_zero, hr]
   rw [inner_smul_right, IsROrC.abs_mul, ← inner_self_re_abs, inner_self_eq_norm_mul_norm, norm_smul]
-  rw [IsROrC.norm_eq_abs, ← mul_assocₓ, ← div_div_eq_div_mul, mul_div_cancel _ hx', ← div_div_eq_div_mul, mul_commₓ,
+  rw [IsROrC.norm_eq_abs, ← mul_assoc, ← div_div_eq_div_mul, mul_div_cancel _ hx', ← div_div_eq_div_mul, mul_comm,
     mul_div_cancel _ hr', div_self hx']
 
 /-- The inner product of a nonzero vector with a nonzero multiple of
@@ -1262,7 +1262,7 @@ theorem abs_real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul {x : F
 itself, divided by the product of their norms, has value 1. -/
 theorem real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_pos_mul {x : F} {r : ℝ} (hx : x ≠ 0) (hr : 0 < r) :
     ⟪x, r • x⟫_ℝ / (∥x∥ * ∥r • x∥) = 1 := by
-  rw [real_inner_smul_self_right, norm_smul, Real.norm_eq_abs, ← mul_assocₓ ∥x∥, mul_commₓ _ (absR r), mul_assocₓ,
+  rw [real_inner_smul_self_right, norm_smul, Real.norm_eq_abs, ← mul_assoc ∥x∥, mul_comm _ (absR r), mul_assoc,
     _root_.abs_of_nonneg (le_of_ltₓ hr), div_self]
   exact mul_ne_zero (ne_of_gtₓ hr) fun h => hx (norm_eq_zero.1 (eq_zero_of_mul_self_eq_zero h))
 
@@ -1270,7 +1270,7 @@ theorem real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_pos_mul {x : F} {r : �
 itself, divided by the product of their norms, has value -1. -/
 theorem real_inner_div_norm_mul_norm_eq_neg_one_of_ne_zero_of_neg_mul {x : F} {r : ℝ} (hx : x ≠ 0) (hr : r < 0) :
     ⟪x, r • x⟫_ℝ / (∥x∥ * ∥r • x∥) = -1 := by
-  rw [real_inner_smul_self_right, norm_smul, Real.norm_eq_abs, ← mul_assocₓ ∥x∥, mul_commₓ _ (absR r), mul_assocₓ,
+  rw [real_inner_smul_self_right, norm_smul, Real.norm_eq_abs, ← mul_assoc ∥x∥, mul_comm _ (absR r), mul_assoc,
     abs_of_neg hr, ← neg_mul_eq_neg_mul, div_neg_eq_neg_div, div_self]
   exact mul_ne_zero (ne_of_ltₓ hr) fun h => hx (norm_eq_zero.1 (eq_zero_of_mul_self_eq_zero h))
 
@@ -1298,7 +1298,7 @@ theorem abs_inner_div_norm_mul_norm_eq_one_iff (x y : E) :
     · rw [← sub_add_cancel y (r • x), ← ht, inner_add_right, ht0, zero_addₓ, inner_smul_right, IsROrC.abs_div,
         IsROrC.abs_mul, ← inner_self_re_abs, inner_self_eq_norm_mul_norm] at h
       norm_cast  at h
-      rwa [_root_.abs_mul, abs_norm_eq_norm, abs_norm_eq_norm, ← mul_assocₓ, mul_commₓ,
+      rwa [_root_.abs_mul, abs_norm_eq_norm, abs_norm_eq_norm, ← mul_assoc, mul_comm,
         mul_div_mul_left _ _ fun h => hx0 (norm_eq_zero.1 h), ← IsROrC.norm_eq_abs, ← norm_smul] at h
       
     have hr0 : r ≠ 0 := by
@@ -1481,7 +1481,7 @@ theorem inner_sum_smul_sum_smul_of_sum_eq_zero {ι₁ : Type _} {s₁ : Finset �
     real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two, ← div_sub_div_same, ← div_add_div_same,
     mul_sub_left_distrib, left_distrib, Finset.sum_sub_distrib, Finset.sum_add_distrib, ← Finset.mul_sum, ←
     Finset.sum_mul, h₁, h₂, zero_mul, mul_zero, Finset.sum_const_zero, zero_addₓ, zero_sub, Finset.mul_sum, neg_div,
-    Finset.sum_div, mul_div_assoc, mul_assocₓ]
+    Finset.sum_div, mul_div_assoc, mul_assoc]
 
 /-- The inner product as a sesquilinear map. -/
 def innerₛₗ : E →ₗ⋆[𝕜] E →ₗ[𝕜] 𝕜 :=
@@ -1601,7 +1601,7 @@ theorem Orthonormal.sum_inner_products_le {s : Finset ι} (hv : Orthonormal 𝕜
     
   rw [norm_sub_sq, sub_add]
   simp only [InnerProductSpace.norm_sq_eq_inner, inner_sum]
-  simp only [sum_inner, two_mul, inner_smul_right, inner_conj_sym, ← mul_assocₓ, h₂, ← h₃, inner_conj_sym,
+  simp only [sum_inner, two_mul, inner_smul_right, inner_conj_sym, ← mul_assoc, h₂, ← h₃, inner_conj_sym,
     AddMonoidHom.map_sum, Finset.mul_sum, ← Finset.sum_sub_distrib, inner_smul_left, add_sub_cancel']
 
 /-- Bessel's inequality. -/
@@ -1629,13 +1629,13 @@ instance IsROrC.innerProductSpace : InnerProductSpace 𝕜 𝕜 where
   inner := fun x y => conj x * y
   norm_sq_eq_inner := fun x => by
     unfold inner
-    rw [mul_commₓ, mul_conj, of_real_re, norm_sq_eq_def']
+    rw [mul_comm, mul_conj, of_real_re, norm_sq_eq_def']
   conj_sym := fun x y => by
-    simp [mul_commₓ]
+    simp [mul_comm]
   add_left := fun x y z => by
     simp [inner, add_mulₓ]
   smulLeft := fun x y z => by
-    simp [inner, mul_assocₓ]
+    simp [inner, mul_assoc]
 
 @[simp]
 theorem IsROrC.inner_apply (x y : 𝕜) : ⟪x, y⟫ = conj x * y :=
@@ -1964,7 +1964,7 @@ theorem ContinuousLinearMap.re_apply_inner_self_continuous (T : E →L[𝕜] E) 
 theorem ContinuousLinearMap.re_apply_inner_self_smul (T : E →L[𝕜] E) (x : E) {c : 𝕜} :
     T.re_apply_inner_self (c • x) = ∥c∥ ^ 2 * T.re_apply_inner_self x := by
   simp only [ContinuousLinearMap.map_smul, ContinuousLinearMap.re_apply_inner_self_apply, inner_smul_left,
-    inner_smul_right, ← mul_assocₓ, mul_conj, norm_sq_eq_def', ← smul_re, Algebra.smul_def (∥c∥ ^ 2) ⟪T x, x⟫,
+    inner_smul_right, ← mul_assoc, mul_conj, norm_sq_eq_def', ← smul_re, Algebra.smul_def (∥c∥ ^ 2) ⟪T x, x⟫,
     algebra_map_eq_of_real]
 
 end ReApplyInnerSelf

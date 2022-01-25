@@ -238,7 +238,7 @@ instance : CountableInterFilter (residual α) :=
     choose T hTs hT using hS
     refine' ⟨⋂ s ∈ S, T s ‹_›, _, _, _⟩
     · rw [sInter_eq_bInter]
-      exact Inter_subset_Inter fun s => Inter_subset_Inter $ hTs s
+      exact Inter₂_mono hTs
       
     · exact is_Gδ_bInter hSc fun s hs => (hT s hs).1
       

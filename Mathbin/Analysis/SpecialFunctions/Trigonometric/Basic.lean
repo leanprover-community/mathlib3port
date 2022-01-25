@@ -474,11 +474,11 @@ theorem cos_eq_one_iff (x : ℝ) : cos x = 1 ↔ ∃ n : ℤ, (n : ℝ) * (2 * �
     ⟨n / 2,
       (Int.mod_two_eq_zero_or_one n).elim
         (fun hn0 => by
-          rwa [← mul_assocₓ, ← @Int.cast_two ℝ, ← Int.cast_mul,
+          rwa [← mul_assoc, ← @Int.cast_two ℝ, ← Int.cast_mul,
             Int.div_mul_cancel ((Int.dvd_iff_mod_eq_zero _ _).2 hn0)])
         fun hn1 => by
-        rw [← Int.mod_add_div n 2, hn1, Int.cast_add, Int.cast_one, add_mulₓ, one_mulₓ, add_commₓ, mul_commₓ (2 : ℤ),
-            Int.cast_mul, mul_assocₓ, Int.cast_two] at hn <;>
+        rw [← Int.mod_add_div n 2, hn1, Int.cast_add, Int.cast_one, add_mulₓ, one_mulₓ, add_commₓ, mul_comm (2 : ℤ),
+            Int.cast_mul, mul_assoc, Int.cast_two] at hn <;>
           rw [← hn, cos_int_mul_two_pi_add_pi] at h <;>
             exact
               absurd h
@@ -733,7 +733,7 @@ theorem cos_pi_over_two_pow : ∀ n : ℕ, cos (π / 2 ^ (n + 1)) = sqrt_two_add
     congr
     · norm_num
       
-    rw [mul_commₓ, sq, mul_assocₓ, ← mul_div_assoc, mul_div_cancel_left, ← mul_div_assoc, mul_div_cancel_left] <;>
+    rw [mul_comm, sq, mul_assoc, ← mul_div_assoc, mul_div_cancel_left, ← mul_div_assoc, mul_div_cancel_left] <;>
       try
         exact this
     apply add_nonneg
@@ -778,7 +778,7 @@ theorem sin_pi_over_two_pow_succ (n : ℕ) : sin (π / 2 ^ (n + 2)) = sqrt (2 - 
   rw [sqrt_eq_iff_sq_eq, mul_powₓ, sin_sq_pi_over_two_pow_succ, sub_mul]
   · congr
     norm_num
-    rw [mul_commₓ]
+    rw [mul_comm]
     convert mul_div_cancel' _ _
     norm_num
     norm_num
@@ -1333,7 +1333,7 @@ theorem exp_antiperiodic : Function.Antiperiodic exp (π * I) := by
   simp [exp_add, exp_mul_I]
 
 theorem exp_periodic : Function.Periodic exp (2 * π * I) :=
-  (mul_assocₓ (2 : ℂ) π I).symm ▸ exp_antiperiodic.Periodic
+  (mul_assoc (2 : ℂ) π I).symm ▸ exp_antiperiodic.Periodic
 
 theorem exp_mul_I_antiperiodic : Function.Antiperiodic (fun x => exp (x * I)) π := by
   simpa only [mul_inv_cancel_right₀ I_ne_zero] using exp_antiperiodic.mul_const I_ne_zero

@@ -47,7 +47,7 @@ theorem has_integral_indicator_const (l : integration_params) (hl : l.bRiemann =
   choose! rs' hrs'F
   set r : (ι → ℝ) → Ioi (0 : ℝ) := s.piecewise rs rs'
   refine' ⟨fun c => r, fun c => l.r_cond_of_bRiemann_eq_ff hl, fun c π hπ hπp => _⟩
-  rw [mul_commₓ]
+  rw [mul_comm]
   dsimp [integral_sum]
   simp only [mem_closed_ball, dist_eq_norm, ← indicator_smul_apply, sum_indicator_eq_sum_filter, ← sum_smul, ← sub_smul,
     norm_smul, Real.norm_eq_abs, ← prepartition.filter_boxes, ← prepartition.measure_Union_to_real]
@@ -131,7 +131,7 @@ theorem has_integral_zero_of_ae_eq_zero {l : integration_params} {I : box ι} {f
     exact ⟨hrU _ (hπ.1 _ hJ (box.coe_subset_Icc hx)), π.le_of_mem' J hJ hx⟩
   lift m to ℝ≥0 using ne_top_of_lt this
   rw [Ennreal.coe_to_real, ← Nnreal.coe_nat_cast, ← Nnreal.coe_mul, Nnreal.coe_le_coe, ← Ennreal.coe_le_coe,
-    Ennreal.coe_mul, Ennreal.coe_nat, mul_commₓ]
+    Ennreal.coe_mul, Ennreal.coe_nat, mul_comm]
   exact (mul_le_mul_left' this.le _).trans Ennreal.mul_div_le
 
 /-- If `f` has integral `y` on a box `I` with respect to a locally finite measure `μ` and `g` is

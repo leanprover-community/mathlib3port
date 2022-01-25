@@ -63,12 +63,12 @@ def strongly_measurable [MeasurableSpace α] (f : α → β) : Prop :=
 
 /-- A function is `fin_strongly_measurable` with respect to a measure if it is the limit of simple
   functions with support with finite measure. -/
-def fin_strongly_measurable [HasZero β] {m0 : MeasurableSpace α} (f : α → β) (μ : Measureₓ α) : Prop :=
+def fin_strongly_measurable [Zero β] {m0 : MeasurableSpace α} (f : α → β) (μ : Measureₓ α) : Prop :=
   ∃ fs : ℕ → α →ₛ β, (∀ n, μ (support (fs n)) < ∞) ∧ ∀ x, tendsto (fun n => fs n x) at_top (𝓝 (f x))
 
 /-- A function is `ae_fin_strongly_measurable` with respect to a measure if it is almost everywhere
 equal to the limit of a sequence of simple functions with support with finite measure. -/
-def ae_fin_strongly_measurable [HasZero β] {m0 : MeasurableSpace α} (f : α → β) (μ : Measureₓ α) : Prop :=
+def ae_fin_strongly_measurable [Zero β] {m0 : MeasurableSpace α} (f : α → β) (μ : Measureₓ α) : Prop :=
   ∃ g, fin_strongly_measurable g μ ∧ f =ᵐ[μ] g
 
 end Definitions
@@ -102,7 +102,7 @@ protected theorem tendsto_approx [MeasurableSpace α] [TopologicalSpace β] (hf 
   hf.some_spec
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ∉ » t)
-theorem fin_strongly_measurable_of_set_sigma_finite [TopologicalSpace β] [HasZero β] {m : MeasurableSpace α}
+theorem fin_strongly_measurable_of_set_sigma_finite [TopologicalSpace β] [Zero β] {m : MeasurableSpace α}
     {μ : Measureₓ α} (hf_meas : strongly_measurable f) {t : Set α} (ht : MeasurableSet t)
     (hft_zero : ∀, ∀ x ∈ tᶜ, ∀, f x = 0) (htμ : sigma_finite (μ.restrict t)) : fin_strongly_measurable f μ := by
   have : sigma_finite (μ.restrict t) := htμ
@@ -156,7 +156,7 @@ theorem fin_strongly_measurable_of_set_sigma_finite [TopologicalSpace β] [HasZe
 
 /-- If the measure is sigma-finite, all strongly measurable functions are
   `fin_strongly_measurable`. -/
-protected theorem fin_strongly_measurable [TopologicalSpace β] [HasZero β] {m0 : MeasurableSpace α}
+protected theorem fin_strongly_measurable [TopologicalSpace β] [Zero β] {m0 : MeasurableSpace α}
     (hf : strongly_measurable f) (μ : Measureₓ α) [sigma_finite μ] : fin_strongly_measurable f μ :=
   hf.fin_strongly_measurable_of_set_sigma_finite MeasurableSet.univ
     (by
@@ -218,7 +218,7 @@ end SecondCountableStronglyMeasurable
 
 namespace FinStronglyMeasurable
 
-variable {α β : Type _} [HasZero β] {m0 : MeasurableSpace α} {μ : Measureₓ α} {f : α → β}
+variable {α β : Type _} [Zero β] {m0 : MeasurableSpace α} {μ : Measureₓ α} {f : α → β}
 
 theorem ae_fin_strongly_measurable [TopologicalSpace β] (hf : fin_strongly_measurable f μ) :
     ae_fin_strongly_measurable f μ :=
@@ -300,7 +300,7 @@ protected theorem sub {β} [TopologicalSpace β] [AddGroupₓ β] [HasContinuous
 end FinStronglyMeasurable
 
 theorem fin_strongly_measurable_iff_strongly_measurable_and_exists_set_sigma_finite {α β} {f : α → β}
-    [TopologicalSpace β] [T2Space β] [HasZero β] {m : MeasurableSpace α} {μ : Measureₓ α} :
+    [TopologicalSpace β] [T2Space β] [Zero β] {m : MeasurableSpace α} {μ : Measureₓ α} :
     fin_strongly_measurable f μ ↔
       strongly_measurable f ∧ ∃ t, MeasurableSet t ∧ (∀, ∀ x ∈ tᶜ, ∀, f x = 0) ∧ sigma_finite (μ.restrict t) :=
   ⟨fun hf => ⟨hf.strongly_measurable, hf.exists_set_sigma_finite⟩, fun hf =>
@@ -322,7 +322,7 @@ protected theorem sub [AddGroupₓ β] [HasContinuousSub β] (hf : ae_fin_strong
     (hg : ae_fin_strongly_measurable g μ) : ae_fin_strongly_measurable (f - g) μ :=
   ⟨hf.some - hg.some, hf.some_spec.1.sub hg.some_spec.1, hf.some_spec.2.sub hg.some_spec.2⟩
 
-variable [HasZero β] [T2Space β]
+variable [Zero β] [T2Space β]
 
 theorem exists_set_sigma_finite (hf : ae_fin_strongly_measurable f μ) :
     ∃ t, MeasurableSet t ∧ f =ᵐ[μ.restrict (tᶜ)] 0 ∧ sigma_finite (μ.restrict t) := by

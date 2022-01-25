@@ -109,7 +109,7 @@ theorem Isometry.maps_to_emetric_closed_ball (hf : Isometry f) (x : α) (r : ℝ
   rwa [Emetric.mem_closed_ball, hf]
 
 /-- The injection from a subtype is an isometry -/
-theorem isometry_subtype_coe {s : Set α} : Isometry (coeₓ : s → α) := fun x y => rfl
+theorem isometry_subtype_coe {s : Set α} : Isometry (coe : s → α) := fun x y => rfl
 
 theorem Isometry.comp_continuous_on_iff {γ} [TopologicalSpace γ] (hf : Isometry f) {g : γ → α} {s : Set γ} :
     ContinuousOn (f ∘ g) s ↔ ContinuousOn g s :=

@@ -48,7 +48,7 @@ theorem coe_id (V : SemiNormedGroupₓ) : ⇑𝟙 V = id :=
 theorem coe_comp {M N K : SemiNormedGroupₓ} (f : M ⟶ N) (g : N ⟶ K) : (f ≫ g : M → K) = g ∘ f :=
   rfl
 
-instance : HasZero SemiNormedGroupₓ :=
+instance : Zero SemiNormedGroupₓ :=
   ⟨of PUnit⟩
 
 instance : Inhabited SemiNormedGroupₓ :=
@@ -155,7 +155,7 @@ theorem coe_comp' {M N K : SemiNormedGroup₁} (f : M ⟶ N) (g : N ⟶ K) :
     (f ≫ g : NormedGroupHom M K) = (↑g : NormedGroupHom N K).comp (↑f) :=
   rfl
 
-instance : HasZero SemiNormedGroup₁ :=
+instance : Zero SemiNormedGroup₁ :=
   ⟨of PUnit⟩
 
 instance : Inhabited SemiNormedGroup₁ :=

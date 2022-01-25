@@ -76,7 +76,7 @@ noncomputable def fintypeOfFinDimAffineIndependent [FiniteDimensional k V] {p : 
 
 /-- An affine-independent subset of a finite-dimensional affine space is finite. -/
 theorem finite_of_fin_dim_affine_independent [FiniteDimensional k V] {s : Set P}
-    (hi : AffineIndependent k (coeₓ : s → P)) : s.finite :=
+    (hi : AffineIndependent k (coe : s → P)) : s.finite :=
   ⟨fintypeOfFinDimAffineIndependent k hi⟩
 
 variable {k}

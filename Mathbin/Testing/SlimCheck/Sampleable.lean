@@ -279,7 +279,7 @@ def sampleable.lift (α : Type u) {β : Type u} [sampleable α] (f : α → β) 
 instance nat.sampleable : sampleable ℕ where
   sample :=
     sized $ fun sz =>
-      freq [(1, coeₓ <$> choose_any (Finₓ $ succ (sz ^ 3))), (3, coeₓ <$> choose_any (Finₓ $ succ sz))]
+      freq [(1, coe <$> choose_any (Finₓ $ succ (sz ^ 3))), (3, coe <$> choose_any (Finₓ $ succ sz))]
         (by
           decide)
   shrink := fun x => LazyList.ofList $ nat.shrink x
@@ -561,7 +561,7 @@ instance list.sampleable : sampleable_functor List.{u} where
 
 instance Prop.sampleable_ext : sampleable_ext Prop where
   ProxyRepr := Bool
-  interp := coeₓ
+  interp := coe
   sample := choose_any Bool
   shrink := fun _ => LazyList.nil
 

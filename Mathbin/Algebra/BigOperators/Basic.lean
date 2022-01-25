@@ -804,7 +804,7 @@ theorem prod_dite_of_false {p : α → Prop} {hp : DecidablePred p} (h : ∀, �
     (fun a ha => by
       dsimp
       rw [dif_neg])
-    (fun a₁ a₂ h₁ h₂ hh => congr_argₓ coeₓ hh) fun b hb =>
+    (fun a₁ a₂ h₁ h₂ hh => congr_argₓ coe hh) fun b hb =>
     ⟨b.1, b.2, by
       simp ⟩
 
@@ -817,7 +817,7 @@ theorem prod_dite_of_true {p : α → Prop} {hp : DecidablePred p} (h : ∀, ∀
     (fun a ha => by
       dsimp
       rw [dif_pos])
-    (fun a₁ a₂ h₁ h₂ hh => congr_argₓ coeₓ hh) fun b hb =>
+    (fun a₁ a₂ h₁ h₂ hh => congr_argₓ coe hh) fun b hb =>
     ⟨b.1, b.2, by
       simp ⟩
 
@@ -838,7 +838,7 @@ theorem prod_range_succ_comm (f : ℕ → β) (n : ℕ) : (∏ x in range (n + 1
 
 @[to_additive]
 theorem prod_range_succ (f : ℕ → β) (n : ℕ) : (∏ x in range (n + 1), f x) = (∏ x in range n, f x) * f n := by
-  simp only [mul_commₓ, prod_range_succ_comm]
+  simp only [mul_comm, prod_range_succ_comm]
 
 @[to_additive]
 theorem prod_range_succ' (f : ℕ → β) : ∀ n : ℕ, (∏ k in range (n + 1), f k) = (∏ k in range n, f (k + 1)) * f 0
@@ -863,7 +863,7 @@ theorem prod_range_add (f : ℕ → β) (n m : ℕ) :
   induction' m with m hm
   · simp
     
-  · rw [Nat.add_succ, prod_range_succ, hm, prod_range_succ, mul_assocₓ]
+  · rw [Nat.add_succ, prod_range_succ, hm, prod_range_succ, mul_assoc]
     
 
 @[to_additive]
@@ -891,7 +891,7 @@ theorem prod_multiset_map_count [DecidableEq α] (s : Multiset α) {M : Type _} 
   simp only [Multiset.prod_cons, map_cons, to_finset_cons, ih]
   by_cases' has : a ∈ s.to_finset
   · rw [insert_eq_of_mem has, ← insert_erase has, prod_insert (not_mem_erase _ _), prod_insert (not_mem_erase _ _), ←
-      mul_assocₓ, count_cons_self, pow_succₓ]
+      mul_assoc, count_cons_self, pow_succₓ]
     congr 1
     refine' prod_congr rfl fun x hx => _
     rw [count_cons_of_ne (ne_of_mem_erase hx)]
@@ -948,7 +948,7 @@ theorem prod_range_induction {M : Type _} [CommMonoidₓ M] (f s : ℕ → M) (h
   induction' n with k hk
   · simp only [h0, Finset.prod_range_zero]
     
-  · simp only [hk, Finset.prod_range_succ, h, mul_commₓ]
+  · simp only [hk, Finset.prod_range_succ, h, mul_comm]
     
 
 /-- For any sum along `{0, ..., n-1}` of a commutative-monoid-valued function,
@@ -1113,7 +1113,7 @@ theorem prod_eq_mul_prod_diff_singleton [DecidableEq α] {s : Finset α} {i : α
 @[to_additive]
 theorem prod_eq_prod_diff_singleton_mul [DecidableEq α] {s : Finset α} {i : α} (h : i ∈ s) (f : α → β) :
     (∏ x in s, f x) = (∏ x in s \ {i}, f x) * f i := by
-  rw [prod_eq_mul_prod_diff_singleton h, mul_commₓ]
+  rw [prod_eq_mul_prod_diff_singleton h, mul_comm]
 
 @[to_additive]
 theorem _root_.fintype.prod_eq_mul_prod_compl [DecidableEq α] [Fintype α] (a : α) (f : α → β) :
@@ -1195,7 +1195,7 @@ theorem mul_prod_erase [DecidableEq α] (s : Finset α) (f : α → β) {a : α}
 @[to_additive "A variant of `finset.add_sum_erase` with the addition swapped."]
 theorem prod_erase_mul [DecidableEq α] (s : Finset α) (f : α → β) {a : α} (h : a ∈ s) :
     (∏ x in s.erase a, f x) * f a = ∏ x in s, f x := by
-  rw [mul_commₓ, mul_prod_erase s f h]
+  rw [mul_comm, mul_prod_erase s f h]
 
 /-- If a function applied at a point is 1, a product is unchanged by
 removing that point, if present, from a `finset`. -/
@@ -1545,12 +1545,12 @@ theorem exists_smul_of_dvd_count (s : Multiset α) {k : ℕ} (h : ∀ a : α, a 
 end Multiset
 
 @[simp, norm_cast]
-theorem Nat.cast_sum [AddCommMonoidₓ β] [HasOne β] (s : Finset α) (f : α → ℕ) :
+theorem Nat.cast_sum [AddCommMonoidₓ β] [One β] (s : Finset α) (f : α → ℕ) :
     ↑(∑ x in s, f x : ℕ) = ∑ x in s, (f x : β) :=
   (Nat.castAddMonoidHom β).map_sum f s
 
 @[simp, norm_cast]
-theorem Int.cast_sum [AddCommGroupₓ β] [HasOne β] (s : Finset α) (f : α → ℤ) :
+theorem Int.cast_sum [AddCommGroupₓ β] [One β] (s : Finset α) (f : α → ℤ) :
     ↑(∑ x in s, f x : ℤ) = ∑ x in s, (f x : β) :=
   (Int.castAddHom β).map_sum f s
 

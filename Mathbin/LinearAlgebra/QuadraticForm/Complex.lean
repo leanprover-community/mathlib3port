@@ -65,7 +65,7 @@ noncomputable def isometry_sum_squares_units [DecidableEq ι] (w : ι → Units 
   have hw1 : (fun i => if (w i : ℂ) = 0 then 0 else 1 : ι → ℂ) = 1 := by
     ext i : 1
     exact dif_neg (w i).ne_zero
-  have := isometry_sum_squares (coeₓ ∘ w)
+  have := isometry_sum_squares (coe ∘ w)
   rw [hw1] at this
   exact this
 

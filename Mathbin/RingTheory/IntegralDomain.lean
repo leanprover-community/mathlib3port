@@ -104,7 +104,7 @@ variable (S : Subgroup (R)ˣ) [Fintype S]
 
 /-- A finite subgroup of the units of an integral domain is cyclic. -/
 instance subgroup_units_cyclic : IsCyclic S := by
-  refine' is_cyclic_of_subgroup_is_domain ⟨(coeₓ : S → R), _, _⟩ (units.ext.comp Subtype.val_injective)
+  refine' is_cyclic_of_subgroup_is_domain ⟨(coe : S → R), _, _⟩ (units.ext.comp Subtype.val_injective)
   · simp
     
   · intros
@@ -146,7 +146,7 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
   let c := (univ.filter fun g => f.to_hom_units g = 1).card
   calc (∑ g : G, f g) = ∑ g : G, f.to_hom_units g :=
       rfl _ = ∑ u : (R)ˣ in univ.image f.to_hom_units, (univ.filter fun g => f.to_hom_units g = u).card • u :=
-      sum_comp (coeₓ : (R)ˣ → R) f.to_hom_units _ = ∑ u : (R)ˣ in univ.image f.to_hom_units, c • u :=
+      sum_comp (coe : (R)ˣ → R) f.to_hom_units _ = ∑ u : (R)ˣ in univ.image f.to_hom_units, c • u :=
       sum_congr rfl fun u hu => congr_arg2ₓ _ _ rfl _ = ∑ b : MonoidHom.range f.to_hom_units, c • ↑b :=
       Finset.sum_subtype _
         (by

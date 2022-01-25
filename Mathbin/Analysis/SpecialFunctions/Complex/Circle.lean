@@ -38,7 +38,7 @@ namespace circle
 `source = set.univ` and `target = set.Ioc (-π) π`. -/
 @[simps (config := { fullyApplied := ff })]
 noncomputable def arg_local_equiv : LocalEquiv circle ℝ where
-  toFun := arg ∘ coeₓ
+  toFun := arg ∘ coe
   invFun := expMapCircle
   Source := univ
   Target := Ioc (-π) π
@@ -51,16 +51,16 @@ noncomputable def arg_local_equiv : LocalEquiv circle ℝ where
 @[simps (config := { fullyApplied := ff })]
 noncomputable def arg_equiv : circle ≃ Ioc (-π) π where
   toFun := fun z => ⟨arg z, neg_pi_lt_arg _, arg_le_pi _⟩
-  invFun := expMapCircle ∘ coeₓ
+  invFun := expMapCircle ∘ coe
   left_inv := fun z => arg_local_equiv.left_inv trivialₓ
   right_inv := fun x => Subtype.ext $ arg_local_equiv.right_inv x.2
 
 end circle
 
-theorem left_inverse_exp_map_circle_arg : left_inverse expMapCircle (arg ∘ coeₓ) :=
+theorem left_inverse_exp_map_circle_arg : left_inverse expMapCircle (arg ∘ coe) :=
   exp_map_circle_arg
 
-theorem inv_on_arg_exp_map_circle : inv_on (arg ∘ coeₓ) expMapCircle (Ioc (-π) π) univ :=
+theorem inv_on_arg_exp_map_circle : inv_on (arg ∘ coe) expMapCircle (Ioc (-π) π) univ :=
   circle.argLocalEquiv.symm.InvOn
 
 theorem surj_on_exp_map_circle_neg_pi_pi : surj_on expMapCircle (Ioc (-π) π) univ :=
@@ -70,7 +70,7 @@ theorem exp_map_circle_eq_exp_map_circle {x y : ℝ} : expMapCircle x = expMapCi
   by
   rw [Subtype.ext_iff, exp_map_circle_apply, exp_map_circle_apply, exp_eq_exp_iff_exists_int]
   refine' exists_congr fun n => _
-  rw [← mul_assocₓ, ← add_mulₓ, mul_left_inj' I_ne_zero, ← of_real_one, ← of_real_bit0, ← of_real_mul, ←
+  rw [← mul_assoc, ← add_mulₓ, mul_left_inj' I_ne_zero, ← of_real_one, ← of_real_bit0, ← of_real_mul, ←
     of_real_int_cast, ← of_real_mul, ← of_real_add, of_real_inj]
 
 theorem periodic_exp_map_circle : periodic expMapCircle (2 * π) := fun z =>

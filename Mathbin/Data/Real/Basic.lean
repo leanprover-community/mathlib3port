@@ -57,10 +57,10 @@ private irreducible_def neg : ℝ → ℝ
 private irreducible_def mul : ℝ → ℝ → ℝ
   | ⟨a⟩, ⟨b⟩ => ⟨a * b⟩
 
-instance : HasZero ℝ :=
+instance : Zero ℝ :=
   ⟨zero⟩
 
-instance : HasOne ℝ :=
+instance : One ℝ :=
   ⟨one⟩
 
 instance : Add ℝ :=
@@ -105,8 +105,8 @@ instance : CommRingₓ ℝ := by
           first |
             apply add_assocₓ|
             apply add_commₓ|
-            apply mul_assocₓ|
-            apply mul_commₓ|
+            apply mul_assoc|
+            apply mul_comm|
             apply left_distrib|
             apply right_distrib|
             apply sub_eq_add_neg|
@@ -375,7 +375,7 @@ noncomputable instance : LinearOrderedField ℝ :=
   { Real.linearOrderedCommRing with inv := HasInv.inv,
     mul_inv_cancel := by
       rintro ⟨a⟩ h
-      rw [mul_commₓ]
+      rw [mul_comm]
       simp only [inv_cauchy, mul_cauchy, ← one_cauchy, ← zero_cauchy, Ne.def] at *
       exact CauSeq.Completion.inv_mul_cancel h,
     inv_zero := by

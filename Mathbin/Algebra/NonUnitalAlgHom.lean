@@ -153,12 +153,12 @@ theorem map_mul (f : NonUnitalAlgHom R A B) (x y : A) : f (x * y) = f x * f y :=
 theorem map_zero (f : NonUnitalAlgHom R A B) : f 0 = 0 :=
   f.to_distrib_mul_action_hom.map_zero
 
-instance : HasZero (NonUnitalAlgHom R A B) :=
+instance : Zero (NonUnitalAlgHom R A B) :=
   ⟨{ (0 : A →+[R] B) with
       map_mul' := by
         simp }⟩
 
-instance : HasOne (NonUnitalAlgHom R A A) :=
+instance : One (NonUnitalAlgHom R A A) :=
   ⟨{ (1 : A →+[R] A) with
       map_mul' := by
         simp }⟩

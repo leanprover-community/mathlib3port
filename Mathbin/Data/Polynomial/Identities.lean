@@ -57,7 +57,7 @@ private theorem poly_binom_aux3 (f : Polynomial R) (x y : R) :
         f.sum fun e a => a * (poly_binom_aux1 x y e a).val * y ^ 2 :=
   by
   rw [poly_binom_aux2]
-  simp [left_distrib, sum_add, mul_assocₓ]
+  simp [left_distrib, sum_add, mul_assoc]
 
 /-- A polynomial `f` evaluated at `x + y` can be expressed as
 the evaluation of `f` at `x`, plus `y` times the (polynomial) derivative of `f` at `x`,
@@ -102,7 +102,7 @@ def eval_sub_factor (f : Polynomial R) (x y : R) : { z : R // f.eval x - f.eval 
   simp only [Sum, ← Finset.sum_sub_distrib, Finset.sum_mul]
   dsimp
   congr with i r
-  rw [mul_assocₓ, ← (pow_sub_pow_factor x y _).Prop, mul_sub]
+  rw [mul_assoc, ← (pow_sub_pow_factor x y _).Prop, mul_sub]
 
 end Identities
 

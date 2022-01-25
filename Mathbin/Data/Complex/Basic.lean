@@ -66,14 +66,14 @@ theorem of_real_def (r : ℝ) : (r : ℂ) = ⟨r, 0⟩ :=
 theorem of_real_inj {z w : ℝ} : (z : ℂ) = w ↔ z = w :=
   ⟨congr_argₓ re, congr_argₓ _⟩
 
-theorem of_real_injective : Function.Injective (coeₓ : ℝ → ℂ) := fun z w => congr_argₓ re
+theorem of_real_injective : Function.Injective (coe : ℝ → ℂ) := fun z w => congr_argₓ re
 
 instance : CanLift ℂ ℝ where
   cond := fun z => z.im = 0
-  coe := coeₓ
+  coe := coe
   prf := fun z hz => ⟨z.re, ext rfl hz.symm⟩
 
-instance : HasZero ℂ :=
+instance : Zero ℂ :=
   ⟨(0 : ℝ)⟩
 
 instance : Inhabited ℂ :=
@@ -98,7 +98,7 @@ theorem of_real_eq_zero {z : ℝ} : (z : ℂ) = 0 ↔ z = 0 :=
 theorem of_real_ne_zero {z : ℝ} : (z : ℂ) ≠ 0 ↔ z ≠ 0 :=
   not_congr of_real_eq_zero
 
-instance : HasOne ℂ :=
+instance : One ℂ :=
   ⟨(1 : ℝ)⟩
 
 @[simp]
@@ -392,7 +392,7 @@ theorem norm_sq_add_mul_I (x y : ℝ) : norm_sq (x + y * I) = x ^ 2 + y ^ 2 := b
   rw [← mk_eq_add_mul_I, norm_sq_mk, sq, sq]
 
 theorem norm_sq_eq_conj_mul_self {z : ℂ} : (norm_sq z : ℂ) = conj z * z := by
-  ext <;> simp [norm_sq, mul_commₓ]
+  ext <;> simp [norm_sq, mul_comm]
 
 @[simp]
 theorem norm_sq_zero : norm_sq 0 = 0 :=
@@ -441,7 +441,7 @@ theorem im_sq_le_norm_sq (z : ℂ) : z.im * z.im ≤ norm_sq z :=
 
 theorem mul_conj (z : ℂ) : z * conj z = norm_sq z :=
   ext_iff.2 $ by
-    simp [norm_sq, mul_commₓ, sub_eq_neg_add, add_commₓ]
+    simp [norm_sq, mul_comm, sub_eq_neg_add, add_commₓ]
 
 theorem add_conj (z : ℂ) : z + conj z = (2 * z.re : ℝ) :=
   ext_iff.2 $ by
@@ -449,7 +449,7 @@ theorem add_conj (z : ℂ) : z + conj z = (2 * z.re : ℝ) :=
 
 /-- The coercion `ℝ → ℂ` as a `ring_hom`. -/
 def of_real : ℝ →+* ℂ :=
-  ⟨coeₓ, of_real_one, of_real_mul, of_real_zero, of_real_add⟩
+  ⟨coe, of_real_one, of_real_mul, of_real_zero, of_real_add⟩
 
 @[simp]
 theorem of_real_eq_coe (r : ℝ) : of_real r = r :=
@@ -510,7 +510,7 @@ protected theorem inv_zero : (0⁻¹ : ℂ) = 0 := by
   rw [← of_real_zero, ← of_real_inv, inv_zero]
 
 protected theorem mul_inv_cancel {z : ℂ} (h : z ≠ 0) : z * z⁻¹ = 1 := by
-  rw [inv_def, ← mul_assocₓ, mul_conj, ← of_real_mul, mul_inv_cancel (mt norm_sq_eq_zero.1 h), of_real_one]
+  rw [inv_def, ← mul_assoc, mul_conj, ← of_real_mul, mul_inv_cancel (mt norm_sq_eq_zero.1 h), of_real_one]
 
 /-! ### Field instance and lemmas -/
 
@@ -528,10 +528,10 @@ theorem I_zpow_bit1 (n : ℤ) : I ^ bit1 n = -1 ^ n * I := by
   rw [zpow_bit1', I_mul_I]
 
 theorem div_re (z w : ℂ) : (z / w).re = z.re * w.re / norm_sq w + z.im * w.im / norm_sq w := by
-  simp [div_eq_mul_inv, mul_assocₓ, sub_eq_add_neg]
+  simp [div_eq_mul_inv, mul_assoc, sub_eq_add_neg]
 
 theorem div_im (z w : ℂ) : (z / w).im = z.im * w.re / norm_sq w - z.re * w.im / norm_sq w := by
-  simp [div_eq_mul_inv, mul_assocₓ, sub_eq_add_neg, add_commₓ]
+  simp [div_eq_mul_inv, mul_assoc, sub_eq_add_neg, add_commₓ]
 
 @[simp, norm_cast]
 theorem of_real_div (r s : ℝ) : ((r / s : ℝ) : ℂ) = r / s :=
@@ -544,7 +544,7 @@ theorem of_real_zpow (r : ℝ) (n : ℤ) : ((r ^ n : ℝ) : ℂ) = (r : ℂ) ^ n
 @[simp]
 theorem div_I (z : ℂ) : z / I = -(z * I) :=
   (div_eq_iff_mul_eq I_ne_zero).2 $ by
-    simp [mul_assocₓ]
+    simp [mul_assoc]
 
 @[simp]
 theorem inv_I : I⁻¹ = -I := by
@@ -719,7 +719,7 @@ theorem im_le_abs (z : ℂ) : z.im ≤ abs z :=
 theorem abs_add (z w : ℂ) : abs (z + w) ≤ abs z + abs w :=
   (mul_self_le_mul_self_iff (abs_nonneg _) (add_nonneg (abs_nonneg _) (abs_nonneg _))).2 $ by
     rw [mul_self_abs, add_mul_self_eq, mul_self_abs, mul_self_abs, add_right_commₓ, norm_sq_add, add_le_add_iff_left,
-      mul_assocₓ, mul_le_mul_left (@zero_lt_two ℝ _ _)]
+      mul_assoc, mul_le_mul_left (@zero_lt_two ℝ _ _)]
     simpa [-mul_re] using re_le_abs (z * conj w)
 
 instance : IsAbsoluteValue abs where

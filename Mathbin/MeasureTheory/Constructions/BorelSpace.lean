@@ -351,7 +351,7 @@ theorem bsupr_measure_Iic {μ : Measureₓ α} {s : Set α} (hsc : countable s) 
     (hdir : DirectedOn (· ≤ ·) s) : (⨆ x ∈ s, μ (Iic x)) = μ univ := by
   rw [← measure_bUnion_eq_supr hsc]
   · congr
-    exact bUnion_eq_univ_iff.2 hst
+    exact Union₂_eq_univ_iff.2 hst
     
   · exact fun _ _ => measurable_set_Iic
     
@@ -427,7 +427,7 @@ theorem Set.OrdConnected.measurable_set (h : ord_connected s) : MeasurableSet s 
     by_contra h
     push_neg  at h
     exact hy.2 (mem_Union₂.mpr ⟨x, hx.1, mem_Union₂.mpr ⟨z, hz.1, lt_of_le_of_neₓ hxy h.1, lt_of_le_of_neₓ hyz h.2⟩⟩)
-  have : u ⊆ s := bUnion_subset fun x hx => bUnion_subset fun y hy => Ioo_subset_Icc_self.trans (h.out hx hy)
+  have : u ⊆ s := Union₂_subset fun x hx => Union₂_subset fun y hy => Ioo_subset_Icc_self.trans (h.out hx hy)
   rw [← union_diff_cancel this]
   exact humeas.union hfinite.measurable_set
 
@@ -813,7 +813,7 @@ instance Prod.borel_space [second_countable_topology α] [second_countable_topol
 
 protected theorem Embedding.measurable_embedding {f : α → β} (h₁ : Embedding f) (h₂ : MeasurableSet (range f)) :
     MeasurableEmbedding f :=
-  show MeasurableEmbedding (coeₓ ∘ (Homeomorph.ofEmbedding f h₁).toMeasurableEquiv) from
+  show MeasurableEmbedding (coe ∘ (Homeomorph.ofEmbedding f h₁).toMeasurableEquiv) from
     (MeasurableEmbedding.subtype_coe h₂).comp (MeasurableEquiv.measurable_embedding _)
 
 protected theorem ClosedEmbedding.measurable_embedding {f : α → β} (h : ClosedEmbedding f) : MeasurableEmbedding f :=
@@ -977,7 +977,7 @@ protected theorem Monotone.measurable [LinearOrderₓ β] [OrderClosedTopology �
 
 theorem ae_measurable_restrict_of_monotone_on [LinearOrderₓ β] [OrderClosedTopology β] {μ : Measureₓ β} {s : Set β}
     (hs : MeasurableSet s) {f : β → α} (hf : MonotoneOn f s) : AeMeasurable f (μ.restrict s) :=
-  have this : Monotone (f ∘ coeₓ : s → α) := fun ⟨x, hx⟩ ⟨y, hy⟩ hxy : x ≤ y => hf hx hy hxy
+  have this : Monotone (f ∘ coe : s → α) := fun ⟨x, hx⟩ ⟨y, hy⟩ hxy : x ≤ y => hf hx hy hxy
   ae_measurable_restrict_of_measurable_subtype hs this.measurable
 
 protected theorem Antitone.measurable [LinearOrderₓ β] [OrderClosedTopology β] {f : β → α} (hf : Antitone f) :
@@ -1392,7 +1392,7 @@ theorem borel_eq_generate_from_Ioo_rat : borel ℝ = generate_from (⋃ (a : ℚ
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (a b)
 theorem is_pi_system_Ioo_rat : @IsPiSystem ℝ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) := by
-  convert is_pi_system_Ioo (coeₓ : ℚ → ℝ) (coeₓ : ℚ → ℝ)
+  convert is_pi_system_Ioo (coe : ℚ → ℝ) (coe : ℚ → ℝ)
   ext x
   simp [eq_comm]
 
@@ -1468,7 +1468,7 @@ theorem AeMeasurable.real_to_nnreal {f : α → ℝ} {μ : Measureₓ α} (hf : 
   measurable_real_to_nnreal.comp_ae_measurable hf
 
 @[measurability]
-theorem measurable_coe_nnreal_real : Measurable (coeₓ : ℝ≥0 → ℝ) :=
+theorem measurable_coe_nnreal_real : Measurable (coe : ℝ≥0 → ℝ) :=
   Nnreal.continuous_coe.Measurable
 
 @[measurability]
@@ -1481,7 +1481,7 @@ theorem AeMeasurable.coe_nnreal_real {f : α → ℝ≥0 } {μ : Measureₓ α} 
   measurable_coe_nnreal_real.comp_ae_measurable hf
 
 @[measurability]
-theorem measurable_coe_nnreal_ennreal : Measurable (coeₓ : ℝ≥0 → ℝ≥0∞) :=
+theorem measurable_coe_nnreal_ennreal : Measurable (coe : ℝ≥0 → ℝ≥0∞) :=
   Ennreal.continuous_coe.Measurable
 
 @[measurability]
@@ -1609,7 +1609,7 @@ theorem AeMeasurable.ennreal_tsum {ι} [Encodable ι] {f : ι → α → ℝ≥0
   exact fun s => Finset.ae_measurable_sum s fun i _ => h i
 
 @[measurability]
-theorem measurable_coe_real_ereal : Measurable (coeₓ : ℝ → Ereal) :=
+theorem measurable_coe_real_ereal : Measurable (coe : ℝ → Ereal) :=
   continuous_coe_real_ereal.Measurable
 
 @[measurability]
@@ -1647,7 +1647,7 @@ theorem AeMeasurable.ereal_to_real {f : α → Ereal} {μ : Measureₓ α} (hf :
   measurable_ereal_to_real.comp_ae_measurable hf
 
 @[measurability]
-theorem measurable_coe_ennreal_ereal : Measurable (coeₓ : ℝ≥0∞ → Ereal) :=
+theorem measurable_coe_ennreal_ereal : Measurable (coe : ℝ≥0∞ → Ereal) :=
   continuous_coe_ennreal_ereal.Measurable
 
 @[measurability]

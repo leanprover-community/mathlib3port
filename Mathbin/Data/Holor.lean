@@ -87,7 +87,7 @@ variable {α : Type} {d : ℕ} {ds : List ℕ} {ds₁ : List ℕ} {ds₂ : List 
 instance [Inhabited α] : Inhabited (Holor α ds) :=
   ⟨fun t => default⟩
 
-instance [HasZero α] : HasZero (Holor α ds) :=
+instance [Zero α] : Zero (Holor α ds) :=
   ⟨fun t => 0⟩
 
 instance [Add α] : Add (Holor α ds) :=
@@ -152,13 +152,13 @@ theorem mul_assoc0 [Semigroupₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (
   funext fun t : HolorIndex (ds₁ ++ ds₂ ++ ds₃) => by
     rw [assoc_left]
     unfold mul
-    rw [mul_assocₓ]
+    rw [mul_assoc]
     rw [← HolorIndex.take_take, ← HolorIndex.drop_take, ← HolorIndex.drop_drop]
     rw [cast_type]
     rfl
     rw [append_assoc]
 
-theorem mul_assocₓ [Semigroupₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
+theorem mul_assoc [Semigroupₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
     HEq (mul (mul x y) z) (mul x (mul y z)) := by
   simp [cast_heq, mul_assoc0, assoc_left]
 
@@ -229,7 +229,7 @@ theorem slice_add [Add α] (i : ℕ) (hid : i < d) (x : Holor α (d :: ds)) (y :
   funext fun t => by
     simp [slice, · + ·]
 
-theorem slice_zero [HasZero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d :: ds)) i hid = 0 :=
+theorem slice_zero [Zero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d :: ds)) i hid = 0 :=
   rfl
 
 theorem slice_sum [AddCommMonoidₓ α] {β : Type} (i : ℕ) (hid : i < d) (s : Finset β) (f : β → Holor α (d :: ds)) :

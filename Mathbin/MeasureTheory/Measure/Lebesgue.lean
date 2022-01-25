@@ -296,10 +296,10 @@ theorem volume_preimage_mul_left {a : ℝ} (h : a ≠ 0) (s : Set ℝ) :
     
 
 theorem smul_map_volume_mul_right {a : ℝ} (h : a ≠ 0) : Ennreal.ofReal |a| • measure.map (· * a) volume = volume := by
-  simpa only [mul_commₓ] using Real.smul_map_volume_mul_left h
+  simpa only [mul_comm] using Real.smul_map_volume_mul_left h
 
 theorem map_volume_mul_right {a : ℝ} (h : a ≠ 0) : measure.map (· * a) volume = Ennreal.ofReal |a⁻¹| • volume := by
-  simpa only [mul_commₓ] using Real.map_volume_mul_left h
+  simpa only [mul_comm] using Real.map_volume_mul_left h
 
 @[simp]
 theorem volume_preimage_mul_right {a : ℝ} (h : a ≠ 0) (s : Set ℝ) :
@@ -366,7 +366,7 @@ theorem smul_map_diagonal_volume_pi [DecidableEq ι] {D : ι → ℝ} (h : det (
     have A : D i ≠ 0 := by
       simp only [det_diagonal, Ne.def] at h
       exact Finset.prod_ne_zero_iff.1 h i (Finset.mem_univ i)
-    rw [volume_preimage_mul_left A, ← mul_assocₓ, ← Ennreal.of_real_mul (abs_nonneg _), ← abs_mul, mul_inv_cancel A,
+    rw [volume_preimage_mul_left A, ← mul_assoc, ← Ennreal.of_real_mul (abs_nonneg _), ← abs_mul, mul_inv_cancel A,
       abs_one, Ennreal.of_real_one, one_mulₓ]
   rw [this, volume_pi_pi, Finset.abs_prod, Ennreal.of_real_prod_of_nonneg fun i hi => abs_nonneg (D i), ←
     Finset.prod_mul_distrib]
@@ -427,7 +427,7 @@ theorem map_matrix_volume_pi_eq_smul_volume_pi [DecidableEq ι] {M : Matrix ι �
       abs_one]
     
   · rw [to_lin'_mul, det_mul, LinearMap.coe_comp, ← measure.map_map, IHB, LinearMap.map_smul, IHA, smul_smul, ←
-      Ennreal.of_real_mul (abs_nonneg _), ← abs_mul, mul_commₓ, mul_inv₀]
+      Ennreal.of_real_mul (abs_nonneg _), ← abs_mul, mul_comm, mul_inv₀]
     · apply Continuous.measurable
       apply LinearMap.continuous_on_pi
       

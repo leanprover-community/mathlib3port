@@ -95,7 +95,7 @@ theorem continuum_mul_omega : 𝔠 * ω = 𝔠 :=
 
 @[simp]
 theorem omega_mul_continuum : ω * 𝔠 = 𝔠 :=
-  (mul_commₓ _ _).trans continuum_mul_omega
+  (mul_comm _ _).trans continuum_mul_omega
 
 @[simp]
 theorem nat_mul_continuum {n : ℕ} (hn : n ≠ 0) : ↑n * 𝔠 = 𝔠 :=
@@ -103,7 +103,7 @@ theorem nat_mul_continuum {n : ℕ} (hn : n ≠ 0) : ↑n * 𝔠 = 𝔠 :=
 
 @[simp]
 theorem continuum_mul_nat {n : ℕ} (hn : n ≠ 0) : 𝔠 * n = 𝔠 :=
-  (mul_commₓ _ _).trans (nat_mul_continuum hn)
+  (mul_comm _ _).trans (nat_mul_continuum hn)
 
 /-!
 ### Power

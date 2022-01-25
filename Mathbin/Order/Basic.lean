@@ -20,9 +20,8 @@ classes and allows to transfer order instances.
 - `partial_order.lift`, `linear_order.lift`: Transfers a partial (resp., linear) order on `β` to a
   partial (resp., linear) order on `α` using an injective function `f`.
 
-### Extra classes
+### Extra class
 
-- `no_max_order`, `no_min_order`: An order without a maximal/minimal element.
 - `densely_ordered`: An order with no gap, i.e. for any two elements `a < b` there exists `c` such
   that `a < c < b`.
 
@@ -407,7 +406,7 @@ instance (α : Type _) [LE α] : LE (OrderDual α) :=
 instance (α : Type _) [LT α] : LT (OrderDual α) :=
   ⟨fun x y : α => y < x⟩
 
-instance (α : Type _) [HasZero α] : HasZero (OrderDual α) :=
+instance (α : Type _) [Zero α] : Zero (OrderDual α) :=
   ⟨(0 : α)⟩
 
 theorem dual_le [LE α] {a b : α} : @LE.le (OrderDual α) _ a b ↔ @LE.le α _ b a :=
@@ -506,7 +505,7 @@ def LinearOrderₓ.lift {α β} [LinearOrderₓ β] (f : α → β) (inj : injec
     DecidableEq := fun x y => decidableOfIff _ inj.eq_iff }
 
 instance Subtype.preorder {α} [Preorderₓ α] (p : α → Prop) : Preorderₓ (Subtype p) :=
-  Preorderₓ.lift (coeₓ : Subtype p → α)
+  Preorderₓ.lift (coe : Subtype p → α)
 
 @[simp]
 theorem Subtype.mk_le_mk {α} [Preorderₓ α] {p : α → Prop} {x y : α} {hx : p x} {hy : p y} :
@@ -527,13 +526,13 @@ theorem Subtype.coe_lt_coe {α} [Preorderₓ α] {p : α → Prop} {x y : Subtyp
   Iff.rfl
 
 instance Subtype.partialOrder {α} [PartialOrderₓ α] (p : α → Prop) : PartialOrderₓ (Subtype p) :=
-  PartialOrderₓ.lift coeₓ Subtype.coe_injective
+  PartialOrderₓ.lift coe Subtype.coe_injective
 
 /-- A subtype of a linear order is a linear order. We explicitly give the proof of decidable
   equality as the existing instance, in order to not have two instances of decidable equality that
   are not definitionally equal. -/
 instance Subtype.linearOrder {α} [LinearOrderₓ α] (p : α → Prop) : LinearOrderₓ (Subtype p) :=
-  { LinearOrderₓ.lift coeₓ Subtype.coe_injective with DecidableEq := Subtype.decidableEq }
+  { LinearOrderₓ.lift coe Subtype.coe_injective with DecidableEq := Subtype.decidableEq }
 
 /-!
 ### Pointwise order on `α × β`
@@ -590,68 +589,6 @@ end Prod
 
 /-! ### Additional order classes -/
 
-
-/-- Order without a maximal element. Sometimes called cofinal. -/
-class NoMaxOrder (α : Type u) [LT α] : Prop where
-  exists_gt (a : α) : ∃ b, a < b
-
-theorem exists_gt [LT α] [NoMaxOrder α] : ∀ a : α, ∃ a', a < a' :=
-  NoMaxOrder.exists_gt
-
-instance nonempty_gt [LT α] [NoMaxOrder α] (a : α) : Nonempty { x // a < x } :=
-  nonempty_subtype.2 (exists_gt a)
-
-/-- `a : α` is a top element of `α` if it is greater than or equal to any other element of `α`.
-This predicate is roughly an unbundled version of `order_bot`, except that a preorder may have
-several top elements. When `α` is linear, this is useful to make a case disjunction on
-`no_max_order α` within a proof. -/
-def IsTop {α : Type u} [LE α] (a : α) : Prop :=
-  ∀ b, b ≤ a
-
-@[simp]
-theorem not_is_top [Preorderₓ α] [NoMaxOrder α] (a : α) : ¬IsTop a := fun h =>
-  let ⟨b, hb⟩ := exists_gt a
-  hb.not_le (h b)
-
-theorem IsTop.unique {α : Type u} [PartialOrderₓ α] {a b : α} (ha : IsTop a) (hb : a ≤ b) : a = b :=
-  le_antisymmₓ hb (ha b)
-
-theorem is_top_or_exists_gt [LinearOrderₓ α] (a : α) : IsTop a ∨ ∃ b, a < b := by
-  simpa only [or_iff_not_imp_left, IsTop, not_forall, not_leₓ] using id
-
-/-- Order without a minimal element. Sometimes called coinitial or dense. -/
-class NoMinOrder (α : Type u) [LT α] : Prop where
-  exists_lt (a : α) : ∃ b, b < a
-
-theorem exists_lt [LT α] [NoMinOrder α] : ∀ a : α, ∃ a', a' < a :=
-  NoMinOrder.exists_lt
-
-/-- `a : α` is a bottom element of `α` if it is less than or equal to any other element of `α`.
-This predicate is roughly an unbundled version of `order_bot`, except that a preorder may have
-several bottom elements. When `α` is linear, this is useful to make a case disjunction on
-`no_min_order α` within a proof. -/
-def IsBot {α : Type u} [LE α] (a : α) : Prop :=
-  ∀ b, a ≤ b
-
-@[simp]
-theorem not_is_bot [Preorderₓ α] [NoMinOrder α] (a : α) : ¬IsBot a := fun h =>
-  let ⟨b, hb⟩ := exists_lt a
-  hb.not_le (h b)
-
-theorem IsBot.unique {α : Type u} [PartialOrderₓ α] {a b : α} (ha : IsBot a) (hb : b ≤ a) : a = b :=
-  le_antisymmₓ (ha b) hb
-
-theorem is_bot_or_exists_lt [LinearOrderₓ α] (a : α) : IsBot a ∨ ∃ b, b < a :=
-  @is_top_or_exists_gt (OrderDual α) _ a
-
-instance OrderDual.no_max_order (α : Type u) [LT α] [NoMinOrder α] : NoMaxOrder (OrderDual α) :=
-  ⟨fun a => @exists_lt α _ _ a⟩
-
-instance OrderDual.no_min_order (α : Type u) [LT α] [NoMaxOrder α] : NoMinOrder (OrderDual α) :=
-  ⟨fun a => @exists_gt α _ _ a⟩
-
-instance nonempty_lt [LT α] [NoMinOrder α] (a : α) : Nonempty { x // x < a } :=
-  nonempty_subtype.2 (exists_lt a)
 
 /-- An order is dense if there is an element between any pair of distinct elements. -/
 class DenselyOrdered (α : Type u) [LT α] : Prop where

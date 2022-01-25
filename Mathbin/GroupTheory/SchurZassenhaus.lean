@@ -32,7 +32,7 @@ instance : MulAction G (left_transversals (H : Set G)) where
     ⟨LeftCoset g T,
       mem_left_transversals_iff_exists_unique_inv_mul_mem.mpr fun g' => by
         obtain ⟨t, ht1, ht2⟩ := mem_left_transversals_iff_exists_unique_inv_mul_mem.mp T.2 (g⁻¹ * g')
-        simp_rw [← mul_assocₓ, ← mul_inv_rev]  at ht1 ht2
+        simp_rw [← mul_assoc, ← mul_inv_rev]  at ht1 ht2
         refine' ⟨⟨g * t, mem_left_coset g t.2⟩, ht1, _⟩
         rintro ⟨_, t', ht', rfl⟩ h
         exact Subtype.ext ((mul_right_injₓ g).mpr (subtype.ext_iff.mp (ht2 ⟨t', ht'⟩ h)))⟩
@@ -68,7 +68,7 @@ theorem diff_mul_diff [normal H] : diff α β * diff β γ = diff α γ :=
     (Finset.prod_congr rfl fun x hx =>
       Subtype.ext
         (by
-          rw [coe_mul, coe_mk, coe_mk, coe_mk, mul_assocₓ, inv_mul_cancel_leftₓ]))
+          rw [coe_mul, coe_mk, coe_mk, coe_mk, mul_assoc, inv_mul_cancel_leftₓ]))
 
 @[to_additive]
 theorem diff_self [normal H] : diff α α = 1 :=
@@ -89,7 +89,7 @@ theorem smul_diff_smul [hH : normal H] (g : G) :
       map_mul' := fun h₁ h₂ =>
         Subtype.ext
           (by
-            rw [coe_mk, coe_mul, coe_mul, coe_mk, coe_mk, mul_assocₓ, mul_assocₓ, mul_assocₓ, mul_assocₓ, mul_assocₓ,
+            rw [coe_mk, coe_mul, coe_mul, coe_mk, coe_mk, mul_assoc, mul_assoc, mul_assoc, mul_assoc, mul_assoc,
               inv_mul_cancel_leftₓ]) }
   refine'
     Eq.trans
@@ -98,13 +98,13 @@ theorem smul_diff_smul [hH : normal H] (g : G) :
         inv_mul_cancel_leftₓ g q)
       (ϕ.map_prod _ _).symm
   change _ * _ = g * (_ * _) * g⁻¹
-  simp_rw [smul_symm_apply_eq_mul_symm_apply_inv_smul, mul_inv_rev, mul_assocₓ]
+  simp_rw [smul_symm_apply_eq_mul_symm_apply_inv_smul, mul_inv_rev, mul_assoc]
   rfl
 
 theorem smul_diff [H.normal] (h : H) : diff (h • α) β = h ^ H.index * diff α β := by
   rw [diff, diff, index_eq_card, ← Finset.card_univ, ← Finset.prod_const, ← Finset.prod_mul_distrib]
   refine' Finset.prod_congr rfl fun q _ => _
-  rw [Subtype.ext_iff, coe_mul, coe_mk, coe_mk, ← mul_assocₓ, mul_right_cancel_iffₓ]
+  rw [Subtype.ext_iff, coe_mul, coe_mk, coe_mk, ← mul_assoc, mul_right_cancel_iffₓ]
   rw [show h • α = (h : G) • α from rfl, smul_symm_apply_eq_mul_symm_apply_inv_smul]
   rw [mul_left_cancel_iffₓ, ← Subtype.ext_iff, Equivₓ.apply_eq_iff_eq, inv_smul_eq_iff]
   exact self_eq_mul_left.mpr ((QuotientGroup.eq_one_iff _).mpr h.2)
@@ -163,7 +163,7 @@ theorem is_complement'_stabilizer_of_coprime [Fintype G] [H.normal] {α : H.quot
   have key := card_eq_card_quotient_mul_card_subgroup (MulAction.stabilizer G α)
   rw [← Fintype.card_congr (ϕ.trans (MulAction.orbitEquivQuotientStabilizer G α))] at key
   apply is_complement'_of_coprime key.symm
-  rw [card_eq_card_quotient_mul_card_subgroup H, mul_commₓ, mul_right_inj'] at key
+  rw [card_eq_card_quotient_mul_card_subgroup H, mul_comm, mul_right_inj'] at key
   · rwa [← key, ← index_eq_card]
     
   · rw [← pos_iff_ne_zero, Fintype.card_pos_iff]
@@ -237,7 +237,7 @@ private theorem step1 (K : Subgroup G) (hK : K⊔N = ⊤) : K = ⊤ := by
             (hH.symm.card_mul.trans (N.comap K.subtype).index_mul_card.symm))).trans
       h4
   have h7 : Fintype.card N * Fintype.card (H.map K.subtype) = Fintype.card G := by
-    rw [hH, ← N.index_mul_card, mul_commₓ]
+    rw [hH, ← N.index_mul_card, mul_comm]
   have h8 : (Fintype.card N).Coprime (Fintype.card (H.map K.subtype)) := by
     rwa [hH]
   exact ⟨H.map K.subtype, is_complement'_of_coprime h7 h8⟩

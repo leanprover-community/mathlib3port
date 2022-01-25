@@ -195,7 +195,7 @@ theorem even_pow' (h : n ≠ 0) : Even (m ^ n) ↔ Even m :=
   even_pow.trans $ and_iff_left h
 
 theorem even_div : Even (m / n) ↔ m % (2 * n) / n = 0 := by
-  rw [even_iff_two_dvd, dvd_iff_mod_eq_zero, Nat.div_mod_eq_mod_mul_div, mul_commₓ]
+  rw [even_iff_two_dvd, dvd_iff_mod_eq_zero, Nat.div_mod_eq_mod_mul_div, mul_comm]
 
 @[parity_simps]
 theorem odd_add : Odd (m + n) ↔ (Odd m ↔ Even n) := by
@@ -235,7 +235,7 @@ theorem even_mul_self_pred (n : ℕ) : Even (n * (n - 1)) := by
   cases n
   · exact even_zero
     
-  · rw [mul_commₓ]
+  · rw [mul_comm]
     apply even_mul_succ_self
     
 

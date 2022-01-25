@@ -181,7 +181,7 @@ instance : CstarRing (E →L[𝕜] E) :=
       calc ∥A x∥ = Real.sqrt (re ⟪(A† * A) x, x⟫) := by
           rw [apply_norm_eq_sqrt_inner_adjoint_left]_ ≤ Real.sqrt (∥A† * A∥ * ∥x∥ * ∥x∥) :=
           Real.sqrt_le_sqrt this _ = Real.sqrt ∥A† * A∥ * ∥x∥ := by
-          rw [mul_assocₓ, Real.sqrt_mul (norm_nonneg _), Real.sqrt_mul_self (norm_nonneg _)]
+          rw [mul_assoc, Real.sqrt_mul (norm_nonneg _), Real.sqrt_mul_self (norm_nonneg _)]
       ⟩
 
 section Real

@@ -34,7 +34,7 @@ open CategoryTheory.Category
 variable (C : Type u) [category.{v} C] [has_zero_object C] [has_shift C ℤ] [preadditive C]
   [∀ n : ℤ, functor.additive (shift_functor C n)]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (T₁ «expr ≅ » T₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (T₂ «expr ≅ » T₁)
 /-- A preadditive category `C` with an additive shift, and a class of "distinguished triangles"
 relative to that shift is called pretriangulated if the following hold:
 * Any triangle that is isomorphic to a distinguished triangle is also distinguished.
@@ -58,8 +58,7 @@ See https://stacks.math.columbia.edu/tag/0145
 -/
 class pretriangulated where
   DistinguishedTriangles {} : Set (triangle C)
-  isomorphic_distinguished :
-    ∀, ∀ T₁ ∈ distinguished_triangles, ∀ T₂ : triangle C T₁ _ : T₁ ≅ T₂, T₂ ∈ distinguished_triangles
+  isomorphic_distinguished : ∀, ∀ T₁ ∈ distinguished_triangles, ∀ T₂ _ : T₂ ≅ T₁, T₂ ∈ distinguished_triangles
   contractible_distinguished : ∀ X : C, contractible_triangle C X ∈ distinguished_triangles
   distinguished_cocone_triangle :
     ∀ X Y : C f : X ⟶ Y, ∃ (Z : C)(g : Y ⟶ Z)(h : Z ⟶ X⟦(1 : ℤ)⟧), triangle.mk _ f g h ∈ distinguished_triangles
@@ -86,7 +85,7 @@ theorem rot_of_dist_triangle T (_ : T ∈ (dist_triang C)) : T.rotate ∈ (dist_
 -/
 theorem inv_rot_of_dist_triangle T (_ : T ∈ (dist_triang C)) : T.inv_rotate ∈ (dist_triang C) :=
   (rotate_distinguished_triangle T.inv_rotate).mpr
-    (isomorphic_distinguished T H T.inv_rotate.rotate T (inv_rot_comp_rot.symm.app T))
+    (isomorphic_distinguished T H T.inv_rotate.rotate (inv_rot_comp_rot.app T))
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle

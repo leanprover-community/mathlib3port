@@ -170,7 +170,7 @@ theorem polar_sub_right (x y y' : M) : polar Q x (y - y') = polar Q x y - polar 
 
 @[simp]
 theorem polar_self (x : M) : polar Q x x = 2 * Q x := by
-  rw [polar, map_add_self, sub_sub, sub_eq_iff_eq_add, ← two_mul, ← two_mul, ← mul_assocₓ]
+  rw [polar, map_add_self, sub_sub, sub_eq_iff_eq_add, ← two_mul, ← two_mul, ← mul_assoc]
   norm_num
 
 section OfTower
@@ -208,7 +208,7 @@ theorem congr_funₓ (h : Q = Q') (x : M) : Q x = Q' x :=
 theorem ext_iff : Q = Q' ↔ ∀ x, Q x = Q' x :=
   ⟨congr_funₓ, ext⟩
 
-instance : HasZero (QuadraticForm R M) :=
+instance : Zero (QuadraticForm R M) :=
   ⟨{ toFun := fun x => 0,
       to_fun_smul := fun a x => by
         simp only [mul_zero],
@@ -516,7 +516,7 @@ theorem polar_to_quadratic_form (x y : M) : polar (fun x => B x x) x y = B x y +
 /-- A bilinear form gives a quadratic form by applying the argument twice. -/
 def to_quadratic_form (B : BilinForm R M) : QuadraticForm R M :=
   ⟨fun x => B x x, fun a x => by
-    simp only [mul_assocₓ, smul_right, smul_left], fun x x' y => by
+    simp only [mul_assoc, smul_right, smul_left], fun x x' y => by
     simp only [add_assocₓ, add_right, add_left_injₓ, polar_to_quadratic_form, add_left, add_left_commₓ], fun a x y => by
     simp only [smul_add, add_left_injₓ, polar_to_quadratic_form, smul_right, smul_eq_mul, smul_left, smul_right,
       mul_addₓ],
@@ -565,12 +565,12 @@ def associated_hom : QuadraticForm R M →ₗ[S] BilinForm R M where
         rw [← mul_addₓ, polar_add_left],
       bilin_smul_left := fun x y z => by
         have htwo : x * ⅟ 2 = ⅟ 2 * x := (Commute.one_right x).bit0_right.inv_of_right
-        simp only [polar_smul_left, ← mul_assocₓ, htwo],
+        simp only [polar_smul_left, ← mul_assoc, htwo],
       bilin_add_right := fun x y z => by
         rw [← mul_addₓ, polar_add_right],
       bilin_smul_right := fun x y z => by
         have htwo : x * ⅟ 2 = ⅟ 2 * x := (Commute.one_right x).bit0_right.inv_of_right
-        simp only [polar_smul_right, ← mul_assocₓ, htwo] }
+        simp only [polar_smul_right, ← mul_assoc, htwo] }
   map_add' := fun Q Q' => by
     ext
     simp only [BilinForm.add_apply, coe_fn_mk, polar_add, coe_fn_add, mul_addₓ]
@@ -599,7 +599,7 @@ theorem associated_to_quadratic_form (B : BilinForm R M) (x y : M) :
 
 theorem associated_left_inverse (h : B₁.is_symm) : associated_hom S B₁.to_quadratic_form = B₁ :=
   BilinForm.ext $ fun x y => by
-    rw [associated_to_quadratic_form, is_symm.eq h x y, ← two_mul, ← mul_assocₓ, inv_of_mul_self, one_mulₓ]
+    rw [associated_to_quadratic_form, is_symm.eq h x y, ← two_mul, ← mul_assoc, inv_of_mul_self, one_mulₓ]
 
 theorem to_quadratic_form_associated : (associated_hom S Q).toQuadraticForm = Q :=
   QuadraticForm.ext $ fun x =>
@@ -608,7 +608,7 @@ theorem to_quadratic_form_associated : (associated_hom S Q).toQuadraticForm = Q 
         simp only [add_assocₓ, add_sub_cancel', one_mulₓ, to_quadratic_form_apply, add_mulₓ, associated_apply,
           map_add_self, bit0]
       _ = Q x := by
-        rw [← two_mul (Q x), ← mul_assocₓ, inv_of_mul_self, one_mulₓ]
+        rw [← two_mul (Q x), ← mul_assoc, inv_of_mul_self, one_mulₓ]
       
 
 theorem associated_right_inverse :
@@ -621,7 +621,7 @@ theorem associated_eq_self_apply (x : M) : associated_hom S Q x x = Q x := by
     convert this
     simp only [bit0, add_mulₓ, one_mulₓ]
     abel
-  simp only [← mul_assocₓ, one_mulₓ, inv_of_mul_self]
+  simp only [← mul_assoc, one_mulₓ, inv_of_mul_self]
 
 /-- `associated'` is the `ℤ`-linear map that sends a quadratic form on a module `M` over `R` to its
 associated symmetric bilinear form. -/
@@ -791,7 +791,7 @@ theorem discr_smul (a : R₁) : (a • Q).discr = a ^ Fintype.card n * Q.discr :
   simp only [discr, to_matrix'_smul, Matrix.det_smul]
 
 theorem discr_comp (f : (n → R₁) →ₗ[R₁] n → R₁) : (Q.comp f).discr = f.to_matrix'.det * f.to_matrix'.det * Q.discr := by
-  simp only [Matrix.det_transpose, mul_left_commₓ, QuadraticForm.to_matrix'_comp, mul_commₓ, Matrix.det_mul, discr]
+  simp only [Matrix.det_transpose, mul_left_commₓ, QuadraticForm.to_matrix'_comp, mul_comm, Matrix.det_mul, discr]
 
 end Discriminant
 
@@ -910,8 +910,6 @@ variable [FiniteDimensional K V]
 in which `2` is invertible, there exists an orthogonal basis with respect to `B`. -/
 theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (hB₂ : B.is_symm) :
     ∃ v : Basis (Finₓ (finrank K V)) K V, B.is_Ortho v := by
-  run_tac
-    tactic.unfreeze_local_instances
   induction' hd : finrank K V with d ih generalizing V
   · exact ⟨basisOfFinrankZero hd, fun _ _ _ => zero_left _⟩
     

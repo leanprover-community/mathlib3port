@@ -27,9 +27,9 @@ namespace Finsupp
 /-! ### Order structures -/
 
 
-section HasZero
+section Zero
 
-variable [HasZero α]
+variable [Zero α]
 
 section LE
 
@@ -89,7 +89,7 @@ theorem sup_apply [SemilatticeSup α] {i : ι} {f g : ι →₀ α} : (f⊔g) i 
 instance Lattice [Lattice α] : Lattice (ι →₀ α) :=
   { Finsupp.semilatticeInf, Finsupp.semilatticeSup with }
 
-end HasZero
+end Zero
 
 /-! ### Algebraic order structures -/
 

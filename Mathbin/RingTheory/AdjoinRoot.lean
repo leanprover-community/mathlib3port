@@ -231,7 +231,7 @@ instance is_maximal_span : is_maximal (span {f} : Ideal (Polynomial K)) :=
 noncomputable instance Field : Field (AdjoinRoot f) :=
   { AdjoinRoot.commRing f, Ideal.Quotient.field (span {f} : Ideal (Polynomial K)) with }
 
-theorem coe_injective : Function.Injective (coeₓ : K → AdjoinRoot f) :=
+theorem coe_injective : Function.Injective (coe : K → AdjoinRoot f) :=
   (of f).Injective
 
 variable (f)

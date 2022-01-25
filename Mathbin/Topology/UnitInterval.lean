@@ -34,7 +34,7 @@ theorem mem_iff_one_sub_mem {t : ℝ} : t ∈ I ↔ 1 - t ∈ I := by
   rw [mem_Icc, mem_Icc]
   constructor <;> intro <;> constructor <;> linarith
 
-instance HasZero : HasZero I :=
+instance Zero : Zero I :=
   ⟨⟨0, by
       constructor <;> norm_num⟩⟩
 
@@ -51,7 +51,7 @@ theorem coe_eq_zero {x : I} : (x : ℝ) = 0 ↔ x = 0 := by
   symm
   exact Subtype.ext_iff
 
-instance HasOne : HasOne I :=
+instance One : One I :=
   ⟨⟨1, by
       constructor <;> norm_num⟩⟩
 
@@ -152,11 +152,11 @@ theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ Set.Icc
   constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor
   · exact nonneg_of_mul_nonneg_left h₁ ha
     
-  · rwa [le_div_iff ha, mul_commₓ]
+  · rwa [le_div_iff ha, mul_comm]
     
   · exact mul_nonneg ha.le h₁
     
-  · rwa [le_div_iff ha, mul_commₓ] at h₂
+  · rwa [le_div_iff ha, mul_comm] at h₂
     
 
 theorem two_mul_sub_one_mem_iff {t : ℝ} : 2 * t - 1 ∈ I ↔ t ∈ Set.Icc (1 / 2 : ℝ) 1 := by

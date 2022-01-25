@@ -30,11 +30,11 @@ namespace CategoryTheory
 
 open Limits
 
-universe v u₁ u₂ u₃
+universe v v₁ v₂ v₃ u₁ u₂ u₃
 
-variable {S : Type v} {L : Type u₂} {D : Type u₃}
+variable {S : Type u₁} {L : Type u₂} {D : Type u₃}
 
-variable [category.{v} S] [category.{v} L] [category.{v} D]
+variable [category.{v₁} S] [category.{v₂} L] [category.{v₃} D]
 
 variable (ι : S ⥤ L)
 

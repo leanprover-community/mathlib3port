@@ -135,7 +135,7 @@ variable [MeasurableSpace β] {f : β → α}
 noncomputable def approx_on (f : β → α) (hf : Measurable f) (s : Set α) (y₀ : α) (h₀ : y₀ ∈ s) [separable_space s]
     (n : ℕ) : β →ₛ α :=
   have : Nonempty s := ⟨⟨y₀, h₀⟩⟩
-  comp (nearest_pt (fun k => Nat.casesOn k y₀ (coeₓ ∘ dense_seq s) : ℕ → α) n) f hf
+  comp (nearest_pt (fun k => Nat.casesOn k y₀ (coe ∘ dense_seq s) : ℕ → α) n) f hf
 
 @[simp]
 theorem approx_on_zero {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [separable_space s] (x : β) :
@@ -145,7 +145,7 @@ theorem approx_on_zero {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : 
 theorem approx_on_mem {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [separable_space s] (n : ℕ)
     (x : β) : approx_on f hf s y₀ h₀ n x ∈ s := by
   have : Nonempty s := ⟨⟨y₀, h₀⟩⟩
-  suffices ∀ n, (Nat.casesOn n y₀ (coeₓ ∘ dense_seq s) : α) ∈ s by
+  suffices ∀ n, (Nat.casesOn n y₀ (coe ∘ dense_seq s) : α) ∈ s by
     apply this
   rintro (_ | n)
   exacts[h₀, Subtype.mem _]
@@ -162,7 +162,7 @@ theorem tendsto_approx_on {f : β → α} (hf : Measurable f) {s : Set α} {y₀
   rw [← @Subtype.range_coe _ s, ← image_univ, ← (dense_range_dense_seq s).closure_eq] at hx
   simp only [approx_on, coe_comp]
   refine' tendsto_nearest_pt (closure_minimal _ is_closed_closure hx)
-  simp only [Nat.range_cases_on, closure_union, range_comp coeₓ]
+  simp only [Nat.range_cases_on, closure_union, range_comp coe]
   exact subset.trans (image_closure_subset_closure_image continuous_subtype_coe) (subset_union_right _ _)
 
 theorem edist_approx_on_mono {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [separable_space s]
@@ -465,8 +465,7 @@ theorem measure_preimage_lt_top_of_integrable (f : α →ₛ E) (hf : integrable
   integrable_iff.mp hf x hx
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y «expr ≠ » 0)
-theorem measure_support_lt_top [HasZero β] (f : α →ₛ β) (hf : ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞) : μ (support f) < ∞ :=
-  by
+theorem measure_support_lt_top [Zero β] (f : α →ₛ β) (hf : ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞) : μ (support f) < ∞ := by
   rw [support_eq]
   refine' (measure_bUnion_finset_le _ _).trans_lt (ennreal.sum_lt_top_iff.mpr fun y hy => _)
   rw [Finset.mem_filter] at hy
@@ -774,16 +773,16 @@ section CoeToLp
 
 variable [Fact (1 ≤ p)]
 
-protected theorem UniformContinuous : UniformContinuous (coeₓ : Lp.simple_func E p μ → Lp E p μ) :=
+protected theorem UniformContinuous : UniformContinuous (coe : Lp.simple_func E p μ → Lp E p μ) :=
   uniform_continuous_comap
 
-protected theorem UniformEmbedding : UniformEmbedding (coeₓ : Lp.simple_func E p μ → Lp E p μ) :=
+protected theorem UniformEmbedding : UniformEmbedding (coe : Lp.simple_func E p μ → Lp E p μ) :=
   uniform_embedding_comap Subtype.val_injective
 
-protected theorem UniformInducing : UniformInducing (coeₓ : Lp.simple_func E p μ → Lp E p μ) :=
+protected theorem UniformInducing : UniformInducing (coe : Lp.simple_func E p μ → Lp E p μ) :=
   simple_func.uniform_embedding.to_uniform_inducing
 
-protected theorem DenseEmbedding (hp_ne_top : p ≠ ∞) : DenseEmbedding (coeₓ : Lp.simple_func E p μ → Lp E p μ) := by
+protected theorem DenseEmbedding (hp_ne_top : p ≠ ∞) : DenseEmbedding (coe : Lp.simple_func E p μ → Lp E p μ) := by
   apply simple_func.uniform_embedding.dense_embedding
   intro f
   rw [mem_closure_iff_seq_limit]
@@ -796,10 +795,10 @@ protected theorem DenseEmbedding (hp_ne_top : p ≠ ∞) : DenseEmbedding (coe�
   convert simple_func.tendsto_approx_on_univ_Lp hp_ne_top (Lp.measurable f) hfi'
   rw [to_Lp_coe_fn f (Lp.mem_ℒp f)]
 
-protected theorem DenseInducing (hp_ne_top : p ≠ ∞) : DenseInducing (coeₓ : Lp.simple_func E p μ → Lp E p μ) :=
+protected theorem DenseInducing (hp_ne_top : p ≠ ∞) : DenseInducing (coe : Lp.simple_func E p μ → Lp E p μ) :=
   (simple_func.dense_embedding hp_ne_top).to_dense_inducing
 
-protected theorem DenseRange (hp_ne_top : p ≠ ∞) : DenseRange (coeₓ : Lp.simple_func E p μ → Lp E p μ) :=
+protected theorem DenseRange (hp_ne_top : p ≠ ∞) : DenseRange (coe : Lp.simple_func E p μ → Lp E p μ) :=
   (simple_func.dense_inducing hp_ne_top).dense
 
 variable [NormedField 𝕜] [NormedSpace 𝕜 E] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]

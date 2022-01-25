@@ -34,7 +34,7 @@ open UniformSpace Cauchyₓ Filter Set
 
 variable {α : Type u} [UniformSpace α]
 
-instance [HasZero α] : HasZero (completion α) :=
+instance [Zero α] : Zero (completion α) :=
   ⟨(0 : α)⟩
 
 instance [Neg α] : Neg (completion α) :=
@@ -47,7 +47,7 @@ instance [Sub α] : Sub (completion α) :=
   ⟨completion.map₂ Sub.sub⟩
 
 @[norm_cast]
-theorem UniformSpace.Completion.coe_zero [HasZero α] : ((0 : α) : completion α) = 0 :=
+theorem UniformSpace.Completion.coe_zero [Zero α] : ((0 : α) : completion α) = 0 :=
   rfl
 
 end Groupₓ
@@ -101,7 +101,7 @@ instance : SubNegMonoidₓ (completion α) :=
         (is_closed_eq (continuous_map₂ continuous_fst continuous_snd)
           (continuous_map₂ continuous_fst (continuous_map.comp continuous_snd)))
         fun a b => by
-        exact_mod_cast congr_argₓ coeₓ (sub_eq_add_neg a b) }
+        exact_mod_cast congr_argₓ coe (sub_eq_add_neg a b) }
 
 instance : AddGroupₓ (completion α) :=
   { completion.sub_neg_monoid with
@@ -118,7 +118,7 @@ instance : UniformAddGroup (completion α) :=
 /-- The map from a group to its completion as a group hom. -/
 @[simps]
 def to_compl : α →+ completion α where
-  toFun := coeₓ
+  toFun := coe
   map_add' := coe_add
   map_zero' := coe_zero
 

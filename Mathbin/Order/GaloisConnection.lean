@@ -689,8 +689,7 @@ end GaloisCoinsertion
 
 /-- If `α` is a partial order with bottom element (e.g., `ℕ`, `ℝ≥0`), then
 `λ o : with_bot α, o.get_or_else ⊥` and coercion form a Galois insertion. -/
-def WithBot.giGetOrElseBot [Preorderₓ α] [OrderBot α] :
-    GaloisInsertion (fun o : WithBot α => o.get_or_else ⊥) coeₓ where
+def WithBot.giGetOrElseBot [Preorderₓ α] [OrderBot α] : GaloisInsertion (fun o : WithBot α => o.get_or_else ⊥) coe where
   gc := fun a b => WithBot.get_or_else_bot_le_iff
   le_l_u := fun a => le_rfl
   choice := fun o ho => _

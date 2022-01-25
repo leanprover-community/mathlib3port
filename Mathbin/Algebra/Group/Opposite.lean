@@ -59,7 +59,7 @@ We also generate additive structures on `αᵃᵒᵖ` using `to_additive`
 @[to_additive]
 instance [Semigroupₓ α] : Semigroupₓ (αᵐᵒᵖ) :=
   { MulOpposite.hasMul α with
-    mul_assoc := fun x y z => unop_injective $ Eq.symm $ mul_assocₓ (unop z) (unop y) (unop x) }
+    mul_assoc := fun x y z => unop_injective $ Eq.symm $ mul_assoc (unop z) (unop y) (unop x) }
 
 @[to_additive]
 instance [RightCancelSemigroup α] : LeftCancelSemigroup (αᵐᵒᵖ) :=
@@ -71,7 +71,7 @@ instance [LeftCancelSemigroup α] : RightCancelSemigroup (αᵐᵒᵖ) :=
 
 @[to_additive]
 instance [CommSemigroupₓ α] : CommSemigroupₓ (αᵐᵒᵖ) :=
-  { MulOpposite.semigroup α with mul_comm := fun x y => unop_injective $ mul_commₓ (unop y) (unop x) }
+  { MulOpposite.semigroup α with mul_comm := fun x y => unop_injective $ mul_comm (unop y) (unop x) }
 
 @[to_additive]
 instance [MulOneClass α] : MulOneClass (αᵐᵒᵖ) :=
@@ -183,7 +183,7 @@ instance [RightCancelSemigroup α] : RightCancelSemigroup (αᵃᵒᵖ) :=
   unop_injective.RightCancelSemigroup _ fun x y => rfl
 
 instance [CommSemigroupₓ α] : CommSemigroupₓ (αᵃᵒᵖ) :=
-  { AddOpposite.semigroup α with mul_comm := fun x y => unop_injective $ mul_commₓ (unop x) (unop y) }
+  { AddOpposite.semigroup α with mul_comm := fun x y => unop_injective $ mul_comm (unop x) (unop y) }
 
 instance [MulOneClass α] : MulOneClass (αᵃᵒᵖ) :=
   unop_injective.MulOneClass _ rfl fun x y => rfl
@@ -232,7 +232,7 @@ open MulOpposite
 /-- Inversion on a group is a `mul_equiv` to the opposite group. When `G` is commutative, there is
 `mul_equiv.inv`. -/
 @[to_additive
-      "/-- Negation on an additive group is an `add_equiv` to the opposite group. When `G`\nis commutative, there is `add_equiv.inv`. -/",
+      "Negation on an additive group is an `add_equiv` to the opposite group. When `G`\nis commutative, there is `add_equiv.inv`.",
   simps (config := { fullyApplied := ff, simpRhs := tt })]
 def MulEquiv.inv' (G : Type _) [Groupₓ G] : G ≃* Gᵐᵒᵖ :=
   { (Equivₓ.inv G).trans op_equiv with map_mul' := fun x y => unop_injective $ mul_inv_rev x y }
@@ -240,7 +240,7 @@ def MulEquiv.inv' (G : Type _) [Groupₓ G] : G ≃* Gᵐᵒᵖ :=
 /-- A monoid homomorphism `f : M →* N` such that `f x` commutes with `f y` for all `x, y` defines
 a monoid homomorphism to `Nᵐᵒᵖ`. -/
 @[to_additive
-      "/-- An additive monoid homomorphism `f : M →+ N` such that `f x` additively commutes\nwith `f y` for all `x, y` defines an additive monoid homomorphism to `Sᵃᵒᵖ`. -/",
+      "An additive monoid homomorphism `f : M →+ N` such that `f x` additively commutes\nwith `f y` for all `x, y` defines an additive monoid homomorphism to `Sᵃᵒᵖ`.",
   simps (config := { fullyApplied := ff })]
 def MonoidHom.toOpposite {M N : Type _} [MulOneClass M] [MulOneClass N] (f : M →* N) (hf : ∀ x y, Commute (f x) (f y)) :
     M →* Nᵐᵒᵖ where
@@ -252,7 +252,7 @@ def MonoidHom.toOpposite {M N : Type _} [MulOneClass M] [MulOneClass N] (f : M �
 /-- A monoid homomorphism `f : M →* N` such that `f x` commutes with `f y` for all `x, y` defines
 a monoid homomorphism from `Mᵐᵒᵖ`. -/
 @[to_additive
-      "/-- An additive monoid homomorphism `f : M →+ N` such that `f x` additively commutes\nwith `f y` for all `x`, `y` defines an additive monoid homomorphism from `Mᵃᵒᵖ`. -/",
+      "An additive monoid homomorphism `f : M →+ N` such that `f x` additively commutes\nwith `f y` for all `x`, `y` defines an additive monoid homomorphism from `Mᵃᵒᵖ`.",
   simps (config := { fullyApplied := ff })]
 def MonoidHom.fromOpposite {M N : Type _} [MulOneClass M] [MulOneClass N] (f : M →* N)
     (hf : ∀ x y, Commute (f x) (f y)) : Mᵐᵒᵖ →* N where
@@ -283,7 +283,7 @@ theorem Units.coe_op_equiv_symm {M} [Monoidₓ M] (u : (M)ˣᵐᵒᵖ) : (Units.
 /-- A monoid homomorphism `M →* N` can equivalently be viewed as a monoid homomorphism
 `Mᵐᵒᵖ →* Nᵐᵒᵖ`. This is the action of the (fully faithful) `ᵐᵒᵖ`-functor on morphisms. -/
 @[to_additive
-      "/-- An additive monoid homomorphism `M →+ N` can equivalently be viewed as an\nadditive monoid homomorphism `Mᵃᵒᵖ →+ Nᵃᵒᵖ`. This is the action of the (fully faithful)\n`ᵃᵒᵖ`-functor on morphisms. -/",
+      "An additive monoid homomorphism `M →+ N` can equivalently be viewed as an\nadditive monoid homomorphism `Mᵃᵒᵖ →+ Nᵃᵒᵖ`. This is the action of the (fully faithful)\n`ᵃᵒᵖ`-functor on morphisms.",
   simps]
 def MonoidHom.op {M N} [MulOneClass M] [MulOneClass N] : (M →* N) ≃ (Mᵐᵒᵖ →* Nᵐᵒᵖ) where
   toFun := fun f =>
@@ -346,7 +346,7 @@ def AddEquiv.mulUnop {α β} [Add α] [Add β] : αᵐᵒᵖ ≃+ βᵐᵒᵖ �
   AddEquiv.mulOp.symm
 
 /-- A iso `α ≃* β` can equivalently be viewed as an iso `αᵐᵒᵖ ≃* βᵐᵒᵖ`. -/
-@[to_additive "A iso `α ≃+ β` can equivalently be viewed as an iso `αᵃᵒᵖ ≃+ βᵃᵒᵖ`. -/", simps]
+@[to_additive "A iso `α ≃+ β` can equivalently be viewed as an iso `αᵃᵒᵖ ≃+ βᵃᵒᵖ`.", simps]
 def MulEquiv.op {α β} [Mul α] [Mul β] : α ≃* β ≃ (αᵐᵒᵖ ≃* βᵐᵒᵖ) where
   toFun := fun f =>
     { toFun := op ∘ f ∘ unop, invFun := op ∘ f.symm ∘ unop,

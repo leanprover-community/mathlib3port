@@ -52,7 +52,7 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf : Measu
       measure.restrict_apply]
     ring_nf
     congr
-    rw [mul_commₓ, h_ind s' T h_meas_s' (Set.mem_singleton _)]
+    rw [mul_comm, h_ind s' T h_meas_s' (Set.mem_singleton _)]
     
   · intro f' g h_univ h_meas_f' h_meas_g h_ind_f' h_ind_g
     have h_measM_f' : Measurable f' := h_meas_f'.mono hMf le_rfl

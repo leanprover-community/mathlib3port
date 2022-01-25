@@ -23,7 +23,7 @@ open_locale Classical TopologicalSpace BigOperators Pointwise
 variable {ι α X M N : Type _} [TopologicalSpace X]
 
 @[to_additive]
-theorem continuous_one [TopologicalSpace M] [HasOne M] : Continuous (1 : X → M) :=
+theorem continuous_one [TopologicalSpace M] [One M] : Continuous (1 : X → M) :=
   @continuous_const _ _ _ _ 1
 
 /-- Basic hypothesis to talk about a topological additive monoid or a topological additive
@@ -131,7 +131,7 @@ theorem HasContinuousMul.of_nhds_one {M : Type u} [Monoidₓ M] [TopologicalSpac
     rintro ⟨x₀, y₀⟩
     have key : (fun p : M × M => x₀ * p.1 * (p.2 * y₀)) = ((fun x => x₀ * x) ∘ fun x => x * y₀) ∘ uncurry (· * ·) := by
       ext p
-      simp [uncurry, mul_assocₓ]
+      simp [uncurry, mul_assoc]
     have key₂ : ((fun x => x₀ * x) ∘ fun x => y₀ * x) = fun x => x₀ * y₀ * x := by
       ext x
       simp
@@ -150,7 +150,7 @@ theorem has_continuous_mul_of_comm_of_nhds_one (M : Type u) [CommMonoidₓ M] [T
     (hleft : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1)) : HasContinuousMul M := by
   apply HasContinuousMul.of_nhds_one hmul hleft
   intro x₀
-  simp_rw [mul_commₓ, hleft x₀]
+  simp_rw [mul_comm, hleft x₀]
 
 end HasContinuousMul
 
@@ -159,7 +159,7 @@ section PointwiseLimits
 variable (M₁ M₂ : Type _) [TopologicalSpace M₂] [T2Space M₂]
 
 @[to_additive]
-theorem is_closed_set_of_map_one [HasOne M₁] [HasOne M₂] : IsClosed { f : M₁ → M₂ | f 1 = 1 } :=
+theorem is_closed_set_of_map_one [One M₁] [One M₂] : IsClosed { f : M₁ → M₂ | f 1 = 1 } :=
   is_closed_eq (continuous_apply 1) continuous_const
 
 @[to_additive]
@@ -177,7 +177,7 @@ variable {M₁ M₂} [MulOneClass M₁] [MulOneClass M₂] [HasContinuousMul M�
 belongs to the closure of the range of the coercion from `M₁ →* M₂` (or another type of bundled
 homomorphisms that has a `monoid_hom_class` instance) to `M₁ → M₂`. -/
 @[to_additive
-      "/-- Construct a bundled additive monoid homomorphism `M₁ →+ M₂` from a function `f`\nand a proof that it belongs to the closure of the range of the coercion from `M₁ →+ M₂` (or another\ntype of bundled homomorphisms that has a `add_monoid_hom_class` instance) to `M₁ → M₂`. -/",
+      "Construct a bundled additive monoid homomorphism `M₁ →+ M₂` from a function `f`\nand a proof that it belongs to the closure of the range of the coercion from `M₁ →+ M₂` (or another\ntype of bundled homomorphisms that has a `add_monoid_hom_class` instance) to `M₁ → M₂`.",
   simps (config := { fullyApplied := ff })]
 def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂) (hf : f ∈ Closure (range fun f : F x : M₁ => f x)) : M₁ →* M₂ where
   toFun := f
@@ -283,7 +283,7 @@ theorem exists_nhds_one_split4 {u : Set M} (hu : u ∈ 𝓝 (1 : M)) :
   rcases exists_nhds_one_split W1 with ⟨V, V1, h'⟩
   use V, V1
   intro v w s t v_in w_in s_in t_in
-  simpa only [mul_assocₓ] using h _ (h' v v_in w w_in) _ (h' s s_in t t_in)
+  simpa only [mul_assoc] using h _ (h' v v_in w w_in) _ (h' s s_in t t_in)
 
 /-- Given a neighborhood `U` of `1` there is an open neighborhood `V` of `1`
 such that `VV ⊆ U`. -/
@@ -391,7 +391,7 @@ instance : TopologicalSpace (α)ˣ :=
 theorem continuous_embed_product : Continuous (embedProduct α) :=
   continuous_induced_dom
 
-theorem continuous_coe : Continuous (coeₓ : (α)ˣ → α) := by
+theorem continuous_coe : Continuous (coe : (α)ˣ → α) := by
   convert continuous_fst.comp continuous_induced_dom
 
 variable [HasContinuousMul α]

@@ -306,7 +306,7 @@ instance : Coe (M₁ →SL[σ₁₂] M₂) (M₁ →ₛₗ[σ₁₂] M₂) :=
 theorem to_linear_map_eq_coe (f : M₁ →SL[σ₁₂] M₂) : f.to_linear_map = f :=
   rfl
 
-theorem coe_injective : Function.Injective (coeₓ : (M₁ →SL[σ₁₂] M₂) → M₁ →ₛₗ[σ₁₂] M₂) := by
+theorem coe_injective : Function.Injective (coe : (M₁ →SL[σ₁₂] M₂) → M₁ →ₛₗ[σ₁₂] M₂) := by
   intro f g H
   cases f
   cases g
@@ -426,7 +426,7 @@ theorem _root_.dense_range.topological_closure_map_submodule [RingHomSurjective 
   exact hf'.dense_image f.continuous hs
 
 /-- The continuous map that is constantly zero. -/
-instance : HasZero (M₁ →SL[σ₁₂] M₂) :=
+instance : Zero (M₁ →SL[σ₁₂] M₂) :=
   ⟨⟨0, continuous_zero⟩⟩
 
 instance : Inhabited (M₁ →SL[σ₁₂] M₂) :=
@@ -464,7 +464,7 @@ def id : M₁ →L[R₁] M₁ :=
 
 end
 
-instance : HasOne (M₁ →L[R₁] M₁) :=
+instance : One (M₁ →L[R₁] M₁) :=
   ⟨id R₁ M₁⟩
 
 theorem one_def : (1 : M₁ →L[R₁] M₁) = id R₁ M₁ :=
@@ -548,7 +548,7 @@ instance : AddCommMonoidₓ (M₁ →SL[σ₁₂] M₂) where
 @[simp, norm_cast]
 theorem coe_sum {ι : Type _} (t : Finset ι) (f : ι → M₁ →SL[σ₁₂] M₂) :
     (↑∑ d in t, f d) = (∑ d in t, f d : M₁ →ₛₗ[σ₁₂] M₂) :=
-  (AddMonoidHom.mk (coeₓ : (M₁ →SL[σ₁₂] M₂) → M₁ →ₛₗ[σ₁₂] M₂) rfl fun _ _ => rfl).map_sum _ _
+  (AddMonoidHom.mk (coe : (M₁ →SL[σ₁₂] M₂) → M₁ →ₛₗ[σ₁₂] M₂) rfl fun _ _ => rfl).map_sum _ _
 
 @[simp, norm_cast]
 theorem coe_sum' {ι : Type _} (t : Finset ι) (f : ι → M₁ →SL[σ₁₂] M₂) : (⇑∑ d in t, f d) = ∑ d in t, f d := by
@@ -1247,7 +1247,7 @@ def prodₗ : ((M →L[R] N₂) × (M →L[R] N₃)) ≃ₗ[S] M →L[R] N₂ ×
 /-- The coercion from `M →L[R] M₂` to `M →ₗ[R] M₂`, as a linear map. -/
 @[simps]
 def coe_lm : (M →L[R] N₃) →ₗ[S] M →ₗ[R] N₃ where
-  toFun := coeₓ
+  toFun := coe
   map_add' := fun f g => coe_add f g
   map_smul' := fun c f => coe_smul c f
 
@@ -1256,7 +1256,7 @@ variable {S} (σ₁₃)
 /-- The coercion from `M →SL[σ] M₂` to `M →ₛₗ[σ] M₂`, as a linear map. -/
 @[simps]
 def coe_lmₛₗ : (M →SL[σ₁₃] M₃) →ₗ[S₃] M →ₛₗ[σ₁₃] M₃ where
-  toFun := coeₓ
+  toFun := coe
   map_add' := fun f g => coe_add f g
   map_smul' := fun c f => coe_smul c f
 
@@ -1425,7 +1425,7 @@ theorem to_linear_equiv_injective : Function.Injective (to_linear_equiv : (M₁ 
 theorem ext {f g : M₁ ≃SL[σ₁₂] M₂} (h : (f : M₁ → M₂) = g) : f = g :=
   to_linear_equiv_injective $ LinearEquiv.ext $ congr_funₓ h
 
-theorem coe_injective : Function.Injective (coeₓ : (M₁ ≃SL[σ₁₂] M₂) → M₁ →SL[σ₁₂] M₂) := fun e e' h =>
+theorem coe_injective : Function.Injective (coe : (M₁ ≃SL[σ₁₂] M₂) → M₁ →SL[σ₁₂] M₂) := fun e e' h =>
   ext $ funext $ ContinuousLinearMap.ext_iff.1 h
 
 @[simp, norm_cast]

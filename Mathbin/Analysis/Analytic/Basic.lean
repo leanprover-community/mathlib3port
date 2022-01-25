@@ -436,7 +436,7 @@ theorem HasFpowerSeriesOnBall.uniform_geometric_approx' {r' : ℝ≥0 } (hf : Ha
       mul_le_mul_of_nonneg_right (hp n)
         (pow_nonneg (div_nonneg (norm_nonneg _) r'.coe_nonneg) _)_ ≤ C * (a * (∥y∥ / r')) ^ n :=
       by
-      rw [mul_powₓ, mul_assocₓ]
+      rw [mul_powₓ, mul_assoc]
 
 /-- If a function admits a power series expansion, then it is exponentially close to the partial
 sums of this power series on strict subdisks of the disk of convergence. -/
@@ -471,7 +471,7 @@ theorem HasFpowerSeriesAt.is_O_sub_partial_sum_pow (hf : HasFpowerSeriesAt f p x
     
   filter_upwards [Metric.ball_mem_nhds (0 : E) r'0]
   intro y hy
-  simpa [mul_powₓ, mul_div_assoc, mul_assocₓ, div_mul_eq_mul_div] using hp y hy n
+  simpa [mul_powₓ, mul_div_assoc, mul_assoc, div_mul_eq_mul_div] using hp y hy n
 
 attribute [-instance] Unique.subsingleton Pi.subsingleton
 
@@ -508,7 +508,7 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : Has
     have hAB : ∀ n, ∥A (n + 2)∥ ≤ B n := fun n =>
       calc
         ∥A (n + 2)∥ ≤ ∥p (n + 2)∥ * ↑(n + 2) * ∥y - (x, x)∥ ^ (n + 1) * ∥y.1 - y.2∥ := by
-          simpa only [Fintype.card_fin, pi_norm_const, Prod.norm_def, Pi.sub_def, Prod.fst_sub, Prod.snd_sub,
+          simpa only [Fintype.card_fin, pi_norm_const (_ : E), Prod.norm_def, Pi.sub_def, Prod.fst_sub, Prod.snd_sub,
             sub_sub_sub_cancel_right] using (p $ n + 2).norm_image_sub_le (fun _ => y.1 - x) fun _ => y.2 - x
         _ = ∥p (n + 2)∥ * ∥y - (x, x)∥ ^ n * (↑(n + 2) * ∥y - (x, x)∥ * ∥y.1 - y.2∥) := by
           rw [pow_succₓ ∥y - (x, x)∥]
@@ -518,7 +518,7 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : Has
             pow_nonneg, div_nonneg, mul_nonneg, Nat.cast_nonneg, hC.le, r'.coe_nonneg, ha.1.le]
         _ = B n := by
           field_simp [B, pow_succₓ, hr'0.ne']
-          simp only [mul_assocₓ, mul_commₓ, mul_left_commₓ]
+          simp only [mul_assoc, mul_comm, mul_left_commₓ]
         
     have hBL : HasSum B (L y) := by
       apply HasSum.mul_left
@@ -543,7 +543,7 @@ theorem HasFpowerSeriesOnBall.image_sub_sub_deriv_le (hf : HasFpowerSeriesOnBall
       ∀ y z _ : y ∈ Emetric.Ball x r' _ : z ∈ Emetric.Ball x r',
         ∥f y - f z - p 1 fun _ => y - z∥ ≤ C * max ∥y - x∥ ∥z - x∥ * ∥y - z∥ :=
   by
-  simpa only [is_O_principal, mul_assocₓ, NormedField.norm_mul, norm_norm, Prod.forall, Emetric.mem_ball, Prod.edist_eq,
+  simpa only [is_O_principal, mul_assoc, NormedField.norm_mul, norm_norm, Prod.forall, Emetric.mem_ball, Prod.edist_eq,
     max_lt_iff, and_imp, @forall_swap (_ < _) E] using hf.is_O_image_sub_image_sub_deriv_principal hr
 
 /-- If `f` has formal power series `∑ n, pₙ` at `x`, then
@@ -791,7 +791,7 @@ theorem change_origin_series_summable_aux₁ {r r' : ℝ≥0 } (hr : (r + r' : �
     intro n
     convert_to HasSum (fun s : Finset (Finₓ n) => ∥p n∥₊ * (r ^ s.card * r' ^ (n - s.card))) _
     · ext1 s
-      rw [tsub_add_cancel_of_le (card_finset_fin_le _), mul_assocₓ]
+      rw [tsub_add_cancel_of_le (card_finset_fin_le _), mul_assoc]
       
     rw [← Finₓ.sum_pow_mul_eq_add_pow]
     exact (has_sum_fintype _).mul_left _

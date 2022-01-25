@@ -81,7 +81,7 @@ def Equivₓ.Perm.decomposeOption {α : Type _} [DecidableEq α] : perm (Option 
     have : remove_none (swap none x * EquivFunctor.mapEquiv Option σ) = σ :=
       EquivFunctor.map_equiv_option_injective
         (by
-          simp [← mul_assocₓ, EquivFunctor.map])
+          simp [← mul_assoc, EquivFunctor.map])
     simp [← perm.eq_inv_iff_eq, EquivFunctor.map, this]
 
 theorem Equivₓ.Perm.decompose_option_symm_of_none_apply {α : Type _} [DecidableEq α] (e : perm α) (i : Option α) :

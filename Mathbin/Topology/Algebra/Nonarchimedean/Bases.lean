@@ -47,7 +47,7 @@ theorem of_comm {A ι : Type _} [CommRingₓ A] (B : ι → AddSubgroup A) (inte
       intro x i
       cases' leftMul x i with j hj
       use j
-      simpa [mul_commₓ] using hj }
+      simpa [mul_comm] using hj }
 
 /-- Every subgroups basis on a ring leads to a ring filter basis. -/
 def to_ring_filter_basis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) : RingFilterBasis A where

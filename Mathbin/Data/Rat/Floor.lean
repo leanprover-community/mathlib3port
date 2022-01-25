@@ -60,7 +60,7 @@ theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d :
       have q_denom_mul_c_pos : (0 : ℤ) < q.denom * c := by
         have : (d : ℤ) > 0 := by
           exact_mod_cast pos_iff_ne_zero.elim_right d_ne_zero
-        rwa [d_eq_c_mul_denom, mul_commₓ] at this
+        rwa [d_eq_c_mul_denom, mul_comm] at this
       suffices : (0 : ℤ) ≤ q.denom
       exact pos_of_mul_pos_left q_denom_mul_c_pos this
       exact_mod_cast le_of_ltₓ q.pos
@@ -144,7 +144,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract (q⁻¹))
       rw [q_num_abs_eq_q_num]
       exact_mod_cast Rat.denom_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
       
-  rwa [q_inv_eq, this.left, this.right, q_num_abs_eq_q_num, mul_commₓ] at q_inv_num_denom_ineq
+  rwa [q_inv_eq, this.left, this.right, q_num_abs_eq_q_num, mul_comm] at q_inv_num_denom_ineq
 
 end Rat
 

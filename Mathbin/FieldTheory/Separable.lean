@@ -70,7 +70,7 @@ theorem separable.of_mul_left {f g : Polynomial R} (h : (f * g).Separable) : f.s
   exact IsCoprime.of_mul_right_left (IsCoprime.of_add_mul_left_right this)
 
 theorem separable.of_mul_right {f g : Polynomial R} (h : (f * g).Separable) : g.separable := by
-  rw [mul_commₓ] at h
+  rw [mul_comm] at h
   exact h.of_mul_left
 
 theorem separable.of_dvd {f g : Polynomial R} (hf : f.separable) (hfg : g ∣ f) : g.separable := by
@@ -131,7 +131,7 @@ theorem expand_X : expand R p X = X ^ p :=
 
 @[simp]
 theorem expand_monomial (r : R) : expand R p (monomial q r) = monomial (q * p) r := by
-  simp_rw [monomial_eq_smul_X, AlgHom.map_smul, AlgHom.map_pow, expand_X, mul_commₓ, pow_mulₓ]
+  simp_rw [monomial_eq_smul_X, AlgHom.map_smul, AlgHom.map_pow, expand_X, mul_comm, pow_mulₓ]
 
 theorem expand_expand (f : Polynomial R) : expand R p (expand R q f) = expand R (p * q) f :=
   Polynomial.induction_on f
@@ -201,7 +201,7 @@ theorem coeff_expand_mul {p : ℕ} (hp : 0 < p) (f : Polynomial R) (n : ℕ) : (
 @[simp]
 theorem coeff_expand_mul' {p : ℕ} (hp : 0 < p) (f : Polynomial R) (n : ℕ) : (expand R p f).coeff (p * n) = f.coeff n :=
   by
-  rw [mul_commₓ, coeff_expand_mul hp]
+  rw [mul_comm, coeff_expand_mul hp]
 
 theorem expand_inj {p : ℕ} (hp : 0 < p) {f g : Polynomial R} : expand R p f = expand R p g ↔ f = g :=
   ⟨fun H =>
@@ -277,7 +277,7 @@ theorem is_unit_of_self_mul_dvd_separable {p q : Polynomial R} (hp : p.separable
   obtain ⟨p, rfl⟩ := hq
   apply is_coprime_self.mp
   have : IsCoprime (q * (q * p)) (q * (q.derivative * p + q.derivative * p + q * p.derivative)) := by
-    simp only [← mul_assocₓ, mul_addₓ]
+    simp only [← mul_assoc, mul_addₓ]
     convert hp
     rw [derivative_mul, derivative_mul]
     ring
@@ -338,7 +338,7 @@ theorem map_expand_pow_char (f : Polynomial R) (n : ℕ) : map (frobenius R p ^ 
   · simp [RingHom.one_def]
     
   symm
-  rw [pow_succ'ₓ, pow_mulₓ, ← n_ih, ← expand_char, pow_succₓ, RingHom.mul_def, ← map_map, mul_commₓ, expand_mul, ←
+  rw [pow_succ'ₓ, pow_mulₓ, ← n_ih, ← expand_char, pow_succₓ, RingHom.mul_def, ← map_map, mul_comm, expand_mul, ←
     map_expand]
 
 end CharP
@@ -391,7 +391,7 @@ theorem separable.inj_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} {f : ι → R
     (hfs : (∏ i in s, X - C (f i)).Separable) {x y : ι} (hx : x ∈ s) (hy : y ∈ s) (hfxy : f x = f y) : x = y := by
   by_contra hxy
   rw [← insert_erase hx, prod_insert (not_mem_erase _ _), ← insert_erase (mem_erase_of_ne_of_mem (Ne.symm hxy) hy),
-    prod_insert (not_mem_erase _ _), ← mul_assocₓ, hfxy, ← sq] at hfs
+    prod_insert (not_mem_erase _ _), ← mul_assoc, hfxy, ← sq] at hfs
   cases (hfs.of_mul_left.of_pow (not_is_unit_X_sub_C _) two_ne_zero).2
 
 theorem separable.injective_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} [Fintype ι] {f : ι → R}

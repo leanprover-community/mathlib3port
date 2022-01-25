@@ -100,11 +100,11 @@ section Defs
 variable (A : ι → Type _)
 
 /-- A graded version of `has_one`, which must be of grade 0. -/
-class ghas_one [HasZero ι] where
+class ghas_one [Zero ι] where
   one : A 0
 
 /-- `ghas_one` implies `has_one (graded_monoid A)` -/
-instance ghas_one.to_has_one [HasZero ι] [ghas_one A] : HasOne (GradedMonoid A) :=
+instance ghas_one.to_has_one [Zero ι] [ghas_one A] : One (GradedMonoid A) :=
   ⟨⟨_, ghas_one.one⟩⟩
 
 /-- A graded version of `has_mul`. Multiplication combines grades additively, like
@@ -212,11 +212,11 @@ variable (A : ι → Type _)
 
 section One
 
-variable [HasZero ι] [ghas_one A]
+variable [Zero ι] [ghas_one A]
 
 /-- `1 : A 0` is the value provided in `ghas_one.one`. -/
 @[nolint unused_arguments]
-instance grade_zero.has_one : HasOne (A 0) :=
+instance grade_zero.has_one : One (A 0) :=
   ⟨ghas_one.one⟩
 
 end One
@@ -366,7 +366,7 @@ section
 variable (ι) {R : Type _}
 
 @[simps one]
-instance HasOne.ghasOne [HasZero ι] [HasOne R] : GradedMonoid.GhasOne fun i : ι => R where
+instance One.ghasOne [Zero ι] [One R] : GradedMonoid.GhasOne fun i : ι => R where
   one := 1
 
 @[simps mul]
@@ -377,16 +377,16 @@ instance Mul.ghasMul [Add ι] [Mul R] : GradedMonoid.GhasMul fun i : ι => R whe
 structure. -/
 @[simps gnpow]
 instance Monoidₓ.gmonoid [AddMonoidₓ ι] [Monoidₓ R] : GradedMonoid.Gmonoid fun i : ι => R :=
-  { HasOne.ghasOne ι, Mul.ghasMul ι with one_mul := fun a => Sigma.ext (zero_addₓ _) (heq_of_eq (one_mulₓ _)),
+  { One.ghasOne ι, Mul.ghasMul ι with one_mul := fun a => Sigma.ext (zero_addₓ _) (heq_of_eq (one_mulₓ _)),
     mul_one := fun a => Sigma.ext (add_zeroₓ _) (heq_of_eq (mul_oneₓ _)),
-    mul_assoc := fun a b c => Sigma.ext (add_assocₓ _ _ _) (heq_of_eq (mul_assocₓ _ _ _)), gnpow := fun n i a => a ^ n,
+    mul_assoc := fun a b c => Sigma.ext (add_assocₓ _ _ _) (heq_of_eq (mul_assoc _ _ _)), gnpow := fun n i a => a ^ n,
     gnpow_zero' := fun a => Sigma.ext (zero_nsmul _) (heq_of_eq (Monoidₓ.npow_zero' _)),
     gnpow_succ' := fun n ⟨i, a⟩ => Sigma.ext (succ_nsmul _ _) (heq_of_eq (Monoidₓ.npow_succ' _ _)) }
 
 /-- If all grades are the same type and themselves form a commutative monoid, then there is a
 trivial grading structure. -/
 instance CommMonoidₓ.gcommMonoid [AddCommMonoidₓ ι] [CommMonoidₓ R] : GradedMonoid.GcommMonoid fun i : ι => R :=
-  { Monoidₓ.gmonoid ι with mul_comm := fun a b => Sigma.ext (add_commₓ _ _) (heq_of_eq (mul_commₓ _ _)) }
+  { Monoidₓ.gmonoid ι with mul_comm := fun a b => Sigma.ext (add_commₓ _ _) (heq_of_eq (mul_comm _ _)) }
 
 /-- When all the indexed types are the same, the dependent product is just the regular product. -/
 @[simp]
@@ -410,15 +410,15 @@ section Subobjects
 variable {R : Type _}
 
 /-- A version of `graded_monoid.ghas_one` for internally graded objects. -/
-class SetLike.HasGradedOne {S : Type _} [SetLike S R] [HasOne R] [HasZero ι] (A : ι → S) : Prop where
+class SetLike.HasGradedOne {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι → S) : Prop where
   one_mem : (1 : R) ∈ A 0
 
-instance SetLike.ghasOne {S : Type _} [SetLike S R] [HasOne R] [HasZero ι] (A : ι → S) [SetLike.HasGradedOne A] :
+instance SetLike.ghasOne {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι → S) [SetLike.HasGradedOne A] :
     GradedMonoid.GhasOne fun i => A i where
   one := ⟨1, SetLike.HasGradedOne.one_mem⟩
 
 @[simp]
-theorem SetLike.coe_ghas_one {S : Type _} [SetLike S R] [HasOne R] [HasZero ι] (A : ι → S) [SetLike.HasGradedOne A] :
+theorem SetLike.coe_ghas_one {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι → S) [SetLike.HasGradedOne A] :
     ↑@GradedMonoid.GhasOne.one _ (fun i => A i) _ _ = (1 : R) :=
   rfl
 
@@ -476,7 +476,7 @@ instance SetLike.gmonoid {S : Type _} [SetLike S R] [Monoidₓ R] [AddMonoidₓ 
     GradedMonoid.Gmonoid fun i => A i :=
   { SetLike.ghasOne A, SetLike.ghasMul A with one_mul := fun ⟨i, a, h⟩ => Sigma.subtype_ext (zero_addₓ _) (one_mulₓ _),
     mul_one := fun ⟨i, a, h⟩ => Sigma.subtype_ext (add_zeroₓ _) (mul_oneₓ _),
-    mul_assoc := fun ⟨i, a, ha⟩ ⟨j, b, hb⟩ ⟨k, c, hc⟩ => Sigma.subtype_ext (add_assocₓ _ _ _) (mul_assocₓ _ _ _),
+    mul_assoc := fun ⟨i, a, ha⟩ ⟨j, b, hb⟩ ⟨k, c, hc⟩ => Sigma.subtype_ext (add_assocₓ _ _ _) (mul_assoc _ _ _),
     gnpow := fun n i a => ⟨a ^ n, SetLike.GradedMonoid.pow_mem n a.prop⟩,
     gnpow_zero' := fun n => Sigma.subtype_ext (zero_nsmul _) (pow_zeroₓ _),
     gnpow_succ' := fun n a => Sigma.subtype_ext (succ_nsmul _ _) (pow_succₓ _ _) }
@@ -489,7 +489,7 @@ theorem SetLike.coe_gnpow {S : Type _} [SetLike S R] [Monoidₓ R] [AddMonoidₓ
 /-- Build a `gcomm_monoid` instance for a collection of subobjects. -/
 instance SetLike.gcommMonoid {S : Type _} [SetLike S R] [CommMonoidₓ R] [AddCommMonoidₓ ι] (A : ι → S)
     [SetLike.GradedMonoid A] : GradedMonoid.GcommMonoid fun i => A i :=
-  { SetLike.gmonoid A with mul_comm := fun ⟨i, a, ha⟩ ⟨j, b, hb⟩ => Sigma.subtype_ext (add_commₓ _ _) (mul_commₓ _ _) }
+  { SetLike.gmonoid A with mul_comm := fun ⟨i, a, ha⟩ ⟨j, b, hb⟩ => Sigma.subtype_ext (add_commₓ _ _) (mul_comm _ _) }
 
 section Dprod
 
@@ -529,7 +529,7 @@ variable {R S : Type _} [SetLike S R]
 def SetLike.IsHomogeneous (A : ι → S) (a : R) : Prop :=
   ∃ i, a ∈ A i
 
-theorem SetLike.is_homogeneous_one [HasZero ι] [HasOne R] (A : ι → S) [SetLike.HasGradedOne A] :
+theorem SetLike.is_homogeneous_one [Zero ι] [One R] (A : ι → S) [SetLike.HasGradedOne A] :
     SetLike.IsHomogeneous A (1 : R) :=
   ⟨0, SetLike.HasGradedOne.one_mem⟩
 

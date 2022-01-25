@@ -120,7 +120,7 @@ theorem is_special_iff : u.is_special ↔ u.is_special' := by
     ring
     
   · apply Nat.succ.injₓ
-    replace h := congr_argₓ (coeₓ : ℕ+ → ℕ) h
+    replace h := congr_argₓ (coe : ℕ+ → ℕ) h
     rw [mul_coe, w, z] at h
     repeat'
       rw [succ_pnat_coe, Nat.succ_eq_add_one] at h
@@ -181,7 +181,7 @@ theorem flip_is_reduced : (flip u).IsReduced ↔ u.is_reduced := by
 
 theorem flip_is_special : (flip u).IsSpecial ↔ u.is_special := by
   dsimp [is_special, flip]
-  rw [mul_commₓ u.x, mul_commₓ u.zp, add_commₓ u.zp]
+  rw [mul_comm u.x, mul_comm u.zp, add_commₓ u.zp]
 
 theorem flip_v : (flip u).V = u.v.swap := by
   dsimp [v]
@@ -266,7 +266,7 @@ theorem step_wf (hr : u.r ≠ 0) : sizeof u.step < sizeof u := by
 
 theorem step_is_special (hs : u.is_special) : u.step.is_special := by
   dsimp [is_special, step]  at hs⊢
-  rw [mul_addₓ, mul_commₓ u.y u.x, ← hs]
+  rw [mul_addₓ, mul_comm u.y u.x, ← hs]
   ring
 
 /-- The reduction step does not change the product vector. -/
@@ -417,7 +417,7 @@ theorem gcd_props :
   constructor
   exact Eq hb''
   have hza' : (z * a' : ℕ) = x * b' + 1 := by
-    rw [ha', hb', mul_addₓ, mul_addₓ, mul_commₓ (z : ℕ), hdet']
+    rw [ha', hb', mul_addₓ, mul_addₓ, mul_comm (z : ℕ), hdet']
     ring
   have hwb' : (w * b' : ℕ) = y * a' + 1 := by
     rw [ha', hb', mul_addₓ, mul_addₓ, hdet']
@@ -432,7 +432,7 @@ theorem gcd_props :
     
   rw [ha'', hb'']
   repeat'
-    rw [← mul_assocₓ]
+    rw [← mul_assoc]
   rw [hza', hwb']
   constructor <;> ring
 
@@ -440,8 +440,8 @@ theorem gcd_eq : gcd_d a b = gcd a b := by
   rcases gcd_props a b with ⟨h₀, h₁, h₂, h₃, h₄, h₅, h₆⟩
   apply dvd_antisymm
   · apply dvd_gcd
-    exact Dvd.intro (gcd_a' a b) (h₁.trans (mul_commₓ _ _)).symm
-    exact Dvd.intro (gcd_b' a b) (h₂.trans (mul_commₓ _ _)).symm
+    exact Dvd.intro (gcd_a' a b) (h₁.trans (mul_comm _ _)).symm
+    exact Dvd.intro (gcd_b' a b) (h₂.trans (mul_comm _ _)).symm
     
   · have h₇ : (gcd a b : ℕ) ∣ gcd_z a b * a := (Nat.gcd_dvd_leftₓ a b).trans (dvd_mul_left _ _)
     have h₈ : (gcd a b : ℕ) ∣ gcd_x a b * b := (Nat.gcd_dvd_rightₓ a b).trans (dvd_mul_left _ _)

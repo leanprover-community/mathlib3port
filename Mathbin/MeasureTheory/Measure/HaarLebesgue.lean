@@ -176,7 +176,7 @@ theorem map_linear_map_add_haar_pi_eq_smul_add_haar {ι : Type _} [Fintype ι] {
     (μ : Measureₓ (ι → ℝ)) [is_add_haar_measure μ] : measure.map f μ = Ennreal.ofReal (abs (f.det⁻¹)) • μ := by
   have := add_haar_measure_unique (is_add_left_invariant_add_haar μ) (pi_Icc01 ι)
   rw [this]
-  simp [add_haar_measure_eq_volume_pi, Real.map_linear_map_volume_pi_eq_smul_volume_pi hf, smul_smul, mul_commₓ]
+  simp [add_haar_measure_eq_volume_pi, Real.map_linear_map_volume_pi_eq_smul_volume_pi hf, smul_smul, mul_comm]
 
 theorem map_linear_map_add_haar_eq_smul_add_haar {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
     [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measureₓ E) [is_add_haar_measure μ] {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) :
@@ -260,9 +260,8 @@ theorem add_haar_image_linear_map {E : Type _} [NormedGroup E] [NormedSpace ℝ 
     rw [ContinuousLinearEquiv.image_eq_preimage g s, add_haar_preimage_continuous_linear_equiv]
     congr
     ext x
-    simp only [LinearEquiv.of_is_unit_det_apply, LinearEquiv.to_continuous_linear_equiv_apply,
-      ContinuousLinearEquiv.symm_symm, ContinuousLinearEquiv.coe_coe, ContinuousLinearMap.coe_coe,
-      LinearEquiv.to_fun_eq_coe, coe_coe]
+    simp only [LinearEquiv.coe_to_continuous_linear_equiv, LinearEquiv.of_is_unit_det_apply, LinearEquiv.coe_coe,
+      ContinuousLinearEquiv.symm_symm]
     
   · simp only [hf, zero_mul, Ennreal.of_real_zero, abs_zero]
     have : μ f.range = 0 := add_haar_submodule μ _ (LinearMap.range_lt_top_of_det_eq_zero hf).Ne

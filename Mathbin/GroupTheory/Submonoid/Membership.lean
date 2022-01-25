@@ -42,11 +42,11 @@ theorem coe_pow (x : S) (n : ℕ) : ↑(x ^ n) = (x ^ n : M) :=
   S.subtype.map_pow x n
 
 @[simp, norm_cast, to_additive]
-theorem coe_list_prod (l : List S) : (l.prod : M) = (l.map coeₓ).Prod :=
+theorem coe_list_prod (l : List S) : (l.prod : M) = (l.map coe).Prod :=
   S.subtype.map_list_prod l
 
 @[simp, norm_cast, to_additive]
-theorem coe_multiset_prod {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset S) : (m.prod : M) = (m.map coeₓ).Prod :=
+theorem coe_multiset_prod {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset S) : (m.prod : M) = (m.map coe).Prod :=
   S.subtype.map_multiset_prod m
 
 @[simp, norm_cast, to_additive]
@@ -182,7 +182,7 @@ theorem closure_singleton_one : closure ({1} : Set M) = ⊥ := by
   simp [eq_bot_iff_forall, mem_closure_singleton]
 
 @[to_additive]
-theorem closure_eq_mrange (s : Set M) : closure s = (FreeMonoid.lift (coeₓ : s → M)).mrange := by
+theorem closure_eq_mrange (s : Set M) : closure s = (FreeMonoid.lift (coe : s → M)).mrange := by
   rw [mrange_eq_map, ← FreeMonoid.closure_range_of, map_mclosure, ← Set.range_comp, FreeMonoid.lift_comp_of,
     Subtype.range_coe]
 
@@ -192,7 +192,7 @@ theorem exists_list_of_mem_closure {s : Set M} {x : M} (hx : x ∈ closure s) :
   rw [closure_eq_mrange, mem_mrange] at hx
   rcases hx with ⟨l, hx⟩
   exact
-    ⟨List.map coeₓ l, fun y hy =>
+    ⟨List.map coe l, fun y hy =>
       let ⟨z, hz, hy⟩ := List.mem_mapₓ.1 hy
       hy ▸ z.2,
       hx⟩
@@ -230,6 +230,9 @@ theorem powers_subset {n : M} {P : Submonoid M} (h : n ∈ P) : powers n ≤ P :
 def pow (n : M) (m : ℕ) : powers n :=
   (powersHom M n).mrangeRestrict (Multiplicative.ofAdd m)
 
+theorem pow_apply (n : M) (m : ℕ) : Submonoid.pow n m = ⟨n ^ m, m, rfl⟩ :=
+  rfl
+
 /-- Logarithms from powers to natural numbers. -/
 def log [DecidableEq M] {n : M} (p : powers n) : ℕ :=
   Nat.findₓ $ (mem_powers_iff p.val n).mp p.prop
@@ -242,6 +245,7 @@ theorem pow_right_injective_iff_pow_injective {n : M} :
     (Function.Injective fun m : ℕ => n ^ m) ↔ Function.Injective (pow n) :=
   Subtype.coe_injective.of_comp_iff (pow n)
 
+@[simp]
 theorem log_pow_eq_self [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n ^ m) (m : ℕ) :
     log (pow n m) = m :=
   pow_right_injective_iff_pow_injective.mp h $ pow_log_eq_self _
@@ -257,6 +261,10 @@ def pow_log_equiv [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ =>
   right_inv := pow_log_eq_self
   map_mul' := fun _ _ => by
     simp only [pow, map_mul, of_add_add, to_add_mul]
+
+theorem log_mul [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n ^ m) (x y : powers (n : M)) :
+    log (x * y) = log x + log y :=
+  (pow_log_equiv h).symm.map_mul x y
 
 theorem log_pow_int_eq_self {x : ℤ} (h : 1 < x.nat_abs) (m : ℕ) : log (pow x m) = m :=
   (pow_log_equiv (Int.pow_right_injective h)).symm_apply_apply _

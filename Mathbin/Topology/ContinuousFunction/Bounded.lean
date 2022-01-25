@@ -418,8 +418,8 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
     (in_s : ∀ f : α →ᵇ β x : α, f ∈ A → f x ∈ s)
     (H : ∀ x : α, ∀ ε > 0, ∀, ∃ U ∈ 𝓝 x, ∀ y z _ : y ∈ U _ : z ∈ U f : α →ᵇ β, f ∈ A → dist (f y) (f z) < ε) :
     IsCompact A := by
-  have M : LipschitzWith 1 coeₓ := LipschitzWith.subtype_coe s
-  let F : (α →ᵇ s) → α →ᵇ β := comp coeₓ M
+  have M : LipschitzWith 1 coe := LipschitzWith.subtype_coe s
+  let F : (α →ᵇ s) → α →ᵇ β := comp coe M
   refine' compact_of_is_closed_subset ((_ : IsCompact (F ⁻¹' A)).Image (continuous_comp M)) closed fun f hf => _
   · have : CompactSpace s := is_compact_iff_compact_space.1 hs
     refine'
@@ -481,7 +481,7 @@ section HasLipschitzAdd
 
 variable [TopologicalSpace α] [MetricSpace β] [AddMonoidₓ β]
 
-instance : HasZero (α →ᵇ β) :=
+instance : Zero (α →ᵇ β) :=
   ⟨const α 0⟩
 
 @[simp]
@@ -933,7 +933,7 @@ instance : Ringₓ (α →ᵇ R) :=
         le_transₓ (NormedRing.norm_mul (f x) (g x)) $
           mul_le_mul (f.norm_coe_le_norm x) (g.norm_coe_le_norm x) (norm_nonneg _) (norm_nonneg _),
     one_mul := fun f => ext $ fun x => one_mulₓ (f x), mul_one := fun f => ext $ fun x => mul_oneₓ (f x),
-    mul_assoc := fun f₁ f₂ f₃ => ext $ fun x => mul_assocₓ _ _ _,
+    mul_assoc := fun f₁ f₂ f₃ => ext $ fun x => mul_assoc _ _ _,
     left_distrib := fun f₁ f₂ f₃ => ext $ fun x => left_distrib _ _ _,
     right_distrib := fun f₁ f₂ f₃ => ext $ fun x => right_distrib _ _ _ }
 
@@ -963,7 +963,7 @@ pointwise operations and checking that they are compatible with the uniform dist
 variable [TopologicalSpace α] {R : Type _} [NormedCommRing R]
 
 instance : CommRingₓ (α →ᵇ R) :=
-  { BoundedContinuousFunction.ring with mul_comm := fun f₁ f₂ => ext $ fun x => mul_commₓ _ _ }
+  { BoundedContinuousFunction.ring with mul_comm := fun f₁ f₂ => ext $ fun x => mul_comm _ _ }
 
 instance : NormedCommRing (α →ᵇ R) :=
   { BoundedContinuousFunction.commRing, BoundedContinuousFunction.normedGroup with }

@@ -377,7 +377,7 @@ instance Mul : Mul S :=
 
 /-- A submonoid of a monoid inherits a 1. -/
 @[to_additive "An `add_submonoid` of an `add_monoid` inherits a zero."]
-instance HasOne : HasOne S :=
+instance One : One S :=
   ⟨⟨_, S.one_mem⟩⟩
 
 @[simp, norm_cast, to_additive]
@@ -403,32 +403,32 @@ theorem one_def : (1 : S) = ⟨1, S.one_mem⟩ :=
 /-- A submonoid of a unital magma inherits a unital magma structure. -/
 @[to_additive "An `add_submonoid` of an unital additive magma inherits an unital additive magma\nstructure."]
 instance to_mul_one_class {M : Type _} [MulOneClass M] (S : Submonoid M) : MulOneClass S :=
-  Subtype.coe_injective.MulOneClass coeₓ rfl fun _ _ => rfl
+  Subtype.coe_injective.MulOneClass coe rfl fun _ _ => rfl
 
 /-- A submonoid of a monoid inherits a monoid structure. -/
 @[to_additive "An `add_submonoid` of an `add_monoid` inherits an `add_monoid`\nstructure."]
 instance to_monoid {M : Type _} [Monoidₓ M] (S : Submonoid M) : Monoidₓ S :=
-  Subtype.coe_injective.Monoid coeₓ rfl fun _ _ => rfl
+  Subtype.coe_injective.Monoid coe rfl fun _ _ => rfl
 
 /-- A submonoid of a `comm_monoid` is a `comm_monoid`. -/
 @[to_additive "An `add_submonoid` of an `add_comm_monoid` is\nan `add_comm_monoid`."]
 instance to_comm_monoid {M} [CommMonoidₓ M] (S : Submonoid M) : CommMonoidₓ S :=
-  Subtype.coe_injective.CommMonoid coeₓ rfl fun _ _ => rfl
+  Subtype.coe_injective.CommMonoid coe rfl fun _ _ => rfl
 
 /-- A submonoid of an `ordered_comm_monoid` is an `ordered_comm_monoid`. -/
 @[to_additive "An `add_submonoid` of an `ordered_add_comm_monoid` is\nan `ordered_add_comm_monoid`."]
 instance to_ordered_comm_monoid {M} [OrderedCommMonoid M] (S : Submonoid M) : OrderedCommMonoid S :=
-  Subtype.coe_injective.OrderedCommMonoid coeₓ rfl fun _ _ => rfl
+  Subtype.coe_injective.OrderedCommMonoid coe rfl fun _ _ => rfl
 
 /-- A submonoid of a `linear_ordered_comm_monoid` is a `linear_ordered_comm_monoid`. -/
 @[to_additive "An `add_submonoid` of a `linear_ordered_add_comm_monoid` is\na `linear_ordered_add_comm_monoid`."]
 instance to_linear_ordered_comm_monoid {M} [LinearOrderedCommMonoid M] (S : Submonoid M) : LinearOrderedCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCommMonoid coeₓ rfl fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedCommMonoid coe rfl fun _ _ => rfl
 
 /-- A submonoid of an `ordered_cancel_comm_monoid` is an `ordered_cancel_comm_monoid`. -/
 @[to_additive "An `add_submonoid` of an `ordered_cancel_add_comm_monoid` is\nan `ordered_cancel_add_comm_monoid`."]
 instance to_ordered_cancel_comm_monoid {M} [OrderedCancelCommMonoid M] (S : Submonoid M) : OrderedCancelCommMonoid S :=
-  Subtype.coe_injective.OrderedCancelCommMonoid coeₓ rfl fun _ _ => rfl
+  Subtype.coe_injective.OrderedCancelCommMonoid coe rfl fun _ _ => rfl
 
 /-- A submonoid of a `linear_ordered_cancel_comm_monoid` is a `linear_ordered_cancel_comm_monoid`.
 -/
@@ -436,15 +436,15 @@ instance to_ordered_cancel_comm_monoid {M} [OrderedCancelCommMonoid M] (S : Subm
       "An `add_submonoid` of a `linear_ordered_cancel_add_comm_monoid` is\na `linear_ordered_cancel_add_comm_monoid`."]
 instance to_linear_ordered_cancel_comm_monoid {M} [LinearOrderedCancelCommMonoid M] (S : Submonoid M) :
     LinearOrderedCancelCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCancelCommMonoid coeₓ rfl fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedCancelCommMonoid coe rfl fun _ _ => rfl
 
 /-- The natural monoid hom from a submonoid of monoid `M` to `M`. -/
 @[to_additive "The natural monoid hom from an `add_submonoid` of `add_monoid` `M` to `M`."]
 def Subtype : S →* M :=
-  ⟨coeₓ, rfl, fun _ _ => rfl⟩
+  ⟨coe, rfl, fun _ _ => rfl⟩
 
 @[simp, to_additive]
-theorem coeSubtype : ⇑S.subtype = coeₓ :=
+theorem coeSubtype : ⇑S.subtype = coe :=
   rfl
 
 /-- A submonoid is isomorphic to its image under an injective function -/
@@ -475,7 +475,7 @@ theorem closure_induction' (s : Set M) {p : closure s → Prop} (Hs : ∀ x h : 
         Exists.elim hx $ fun hx' hx => Exists.elim hy $ fun hy' hy => ⟨mul_mem _ hx' hy', Hmul _ _ hx hy⟩
 
 @[simp, to_additive]
-theorem closure_closure_coe_preimage {s : Set M} : closure ((coeₓ : closure s → M) ⁻¹' s) = ⊤ := by
+theorem closure_closure_coe_preimage {s : Set M} : closure ((coe : closure s → M) ⁻¹' s) = ⊤ := by
   refine' eq_top_iff.2 fun x hx => closure_induction' (fun x => _) _ _ (fun g₁ g₂ hg₁ hg₂ => _) x
   · intro g hg
     exact subset_closure hg

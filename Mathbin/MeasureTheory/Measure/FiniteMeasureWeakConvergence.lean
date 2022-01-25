@@ -120,7 +120,7 @@ theorem ennreal_coe_fn_eq_coe_fn_to_measure (ν : finite_measure α) (s : Set α
 theorem val_eq_to_measure (ν : finite_measure α) : ν.val = (ν : Measureₓ α) :=
   rfl
 
-theorem coe_injective : Function.Injective (coeₓ : finite_measure α → Measureₓ α) :=
+theorem coe_injective : Function.Injective (coe : finite_measure α → Measureₓ α) :=
   Subtype.coe_injective
 
 /-- The (total) mass of a finite measure `μ` is `μ univ`, i.e., the cast to `nnreal` of
@@ -132,7 +132,7 @@ def mass (μ : finite_measure α) : ℝ≥0 :=
 theorem ennreal_mass {μ : finite_measure α} : (μ.mass : ℝ≥0∞) = (μ : Measureₓ α) univ :=
   ennreal_coe_fn_eq_coe_fn_to_measure μ Set.Univ
 
-instance HasZero : HasZero (finite_measure α) where
+instance Zero : Zero (finite_measure α) where
   zero := ⟨0, MeasureTheory.is_finite_measure_zero⟩
 
 instance : Inhabited (finite_measure α) :=
@@ -145,7 +145,7 @@ instance : HasScalar ℝ≥0 (finite_measure α) where
   smul := fun c : ℝ≥0 μ => ⟨c • μ, MeasureTheory.is_finite_measure_smul_nnreal⟩
 
 @[simp, norm_cast]
-theorem coe_zero : (coeₓ : finite_measure α → Measureₓ α) 0 = 0 :=
+theorem coe_zero : (coe : finite_measure α → Measureₓ α) 0 = 0 :=
   rfl
 
 @[simp, norm_cast]
@@ -172,13 +172,13 @@ theorem coe_fn_smul (c : ℝ≥0 ) (μ : finite_measure α) : (⇑(c • μ) : S
   simp [← Ennreal.coe_eq_coe]
 
 instance : AddCommMonoidₓ (finite_measure α) :=
-  finite_measure.coe_injective.AddCommMonoid (coeₓ : finite_measure α → Measureₓ α) finite_measure.coe_zero
+  finite_measure.coe_injective.AddCommMonoid (coe : finite_measure α → Measureₓ α) finite_measure.coe_zero
     finite_measure.coe_add
 
 /-- Coercion is an `add_monoid_hom`. -/
 @[simps]
 def coe_add_monoid_hom : finite_measure α →+ Measureₓ α where
-  toFun := coeₓ
+  toFun := coe
   map_zero' := coe_zero
   map_add' := coe_add
 
@@ -264,14 +264,14 @@ theorem test_against_nn_lipschitz (μ : finite_measure α) :
   apply abs_le.mpr
   constructor
   · have key' := μ.test_against_nn_lipschitz_estimate f₂ f₁
-    rw [mul_commₓ] at key'
+    rw [mul_comm] at key'
     suffices ↑μ.test_against_nn f₂ ≤ ↑μ.test_against_nn f₁ + ↑μ.mass * dist f₁ f₂ by
       linarith
     have key := Nnreal.coe_mono key'
     rwa [Nnreal.coe_add, Nnreal.coe_mul, nndist_comm] at key
     
   · have key' := μ.test_against_nn_lipschitz_estimate f₁ f₂
-    rw [mul_commₓ] at key'
+    rw [mul_comm] at key'
     suffices ↑μ.test_against_nn f₁ ≤ ↑μ.test_against_nn f₂ + ↑μ.mass * dist f₁ f₂ by
       linarith
     have key := Nnreal.coe_mono key'
@@ -316,7 +316,7 @@ theorem coe_fn_eq_to_nnreal_coe_fn_to_measure (ν : probability_measure α) :
 theorem val_eq_to_measure (ν : probability_measure α) : ν.val = (ν : Measureₓ α) :=
   rfl
 
-theorem coe_injective : Function.Injective (coeₓ : probability_measure α → Measureₓ α) :=
+theorem coe_injective : Function.Injective (coe : probability_measure α → Measureₓ α) :=
   Subtype.coe_injective
 
 @[simp]
@@ -353,7 +353,7 @@ variable [TopologicalSpace α]
 function is obtained by (Lebesgue) integrating the (test) function against the measure. This
 is `probability_measure.test_against_nn`. -/
 def test_against_nn (μ : probability_measure α) (f : α →ᵇ ℝ≥0 ) : ℝ≥0 :=
-  (lintegral (μ : Measureₓ α) ((coeₓ : ℝ≥0 → ℝ≥0∞) ∘ f)).toNnreal
+  (lintegral (μ : Measureₓ α) ((coe : ℝ≥0 → ℝ≥0∞) ∘ f)).toNnreal
 
 theorem lintegral_lt_top_of_bounded_continuous_to_nnreal (μ : probability_measure α) (f : α →ᵇ ℝ≥0 ) :
     (∫⁻ x, f x ∂(μ : Measureₓ α)) < ∞ :=

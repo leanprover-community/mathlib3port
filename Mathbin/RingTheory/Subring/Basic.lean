@@ -295,7 +295,7 @@ theorem coe_eq_zero_iff {x : s} : (x : R) = 0 ↔ x = 0 :=
 
 /-- A subring of a `comm_ring` is a `comm_ring`. -/
 instance to_comm_ring {R} [CommRingₓ R] (s : Subring R) : CommRingₓ s :=
-  { Subring.toRing s with mul_comm := fun _ _ => Subtype.eq $ mul_commₓ _ _ }
+  { Subring.toRing s with mul_comm := fun _ _ => Subtype.eq $ mul_comm _ _ }
 
 /-- A subring of a non-trivial ring is non-trivial. -/
 instance {R} [Ringₓ R] [Nontrivial R] (s : Subring R) : Nontrivial s :=
@@ -311,27 +311,27 @@ instance {R} [Ringₓ R] [IsDomain R] (s : Subring R) : IsDomain s :=
 
 /-- A subring of an `ordered_ring` is an `ordered_ring`. -/
 instance to_ordered_ring {R} [OrderedRing R] (s : Subring R) : OrderedRing s :=
-  Subtype.coe_injective.OrderedRing coeₓ rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.OrderedRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
 
 /-- A subring of an `ordered_comm_ring` is an `ordered_comm_ring`. -/
 instance to_ordered_comm_ring {R} [OrderedCommRing R] (s : Subring R) : OrderedCommRing s :=
-  Subtype.coe_injective.OrderedCommRing coeₓ rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.OrderedCommRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
 
 /-- A subring of a `linear_ordered_ring` is a `linear_ordered_ring`. -/
 instance to_linear_ordered_ring {R} [LinearOrderedRing R] (s : Subring R) : LinearOrderedRing s :=
-  Subtype.coe_injective.LinearOrderedRing coeₓ rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
 
 /-- A subring of a `linear_ordered_comm_ring` is a `linear_ordered_comm_ring`. -/
 instance to_linear_ordered_comm_ring {R} [LinearOrderedCommRing R] (s : Subring R) : LinearOrderedCommRing s :=
-  Subtype.coe_injective.LinearOrderedCommRing coeₓ rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ _ =>
+  Subtype.coe_injective.LinearOrderedCommRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ _ =>
     rfl
 
 /-- The natural ring hom from a subring of ring `R` to `R`. -/
 def Subtype (s : Subring R) : s →+* R :=
-  { s.to_submonoid.subtype, s.to_add_subgroup.subtype with toFun := coeₓ }
+  { s.to_submonoid.subtype, s.to_add_subgroup.subtype with toFun := coe }
 
 @[simp]
-theorem coeSubtype : ⇑s.subtype = coeₓ :=
+theorem coeSubtype : ⇑s.subtype = coe :=
   rfl
 
 @[simp, norm_cast]
@@ -490,7 +490,7 @@ instance : HasBot (Subring R) :=
 instance : Inhabited (Subring R) :=
   ⟨⊥⟩
 
-theorem coe_bot : ((⊥ : Subring R) : Set R) = Set.Range (coeₓ : ℤ → R) :=
+theorem coe_bot : ((⊥ : Subring R) : Set R) = Set.Range (coe : ℤ → R) :=
   RingHom.coe_range (Int.castRingHom R)
 
 theorem mem_bot {x : R} : x ∈ (⊥ : Subring R) ↔ ∃ n : ℤ, ↑n = x :=
@@ -703,7 +703,7 @@ theorem exists_list_of_mem_closure {s : Set R} {x : R} (h : x ∈ closure s) :
 variable (R)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
-protected def gi : GaloisInsertion (@closure R _) coeₓ where
+protected def gi : GaloisInsertion (@closure R _) coe where
   choice := fun s _ => closure s
   gc := fun s t => closure_le
   le_l_u := fun s => subset_closure

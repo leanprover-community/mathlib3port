@@ -56,7 +56,7 @@ theorem euler_criterion_units (x : (Zmod p)ˣ) : (∃ y : (Zmod p)ˣ, y ^ 2 = x)
           decide)
     obtain ⟨m, rfl⟩ := dvd_of_mul_dvd_mul_right this key
     refine' ⟨g ^ m, _⟩
-    rw [mul_commₓ, pow_mulₓ]
+    rw [mul_comm, pow_mulₓ]
     
 
 /-- Euler's Criterion: a nonzero `a : zmod p` is a square if and only if `x ^ (p / 2) = 1`. -/
@@ -302,7 +302,7 @@ private theorem eisenstein_lemma_aux₂ (p : ℕ) [Fact p.prime] [Fact (p % 2 = 
   have ha2 : (a : Zmod 2) = (1 : ℕ) := (eq_iff_modeq_nat _).2 ha2
   (eq_iff_modeq_nat 2).1 $
     sub_eq_zero.1 $ by
-      simpa [add_left_commₓ, sub_eq_add_neg, finset.mul_sum.symm, mul_commₓ, ha2, Nat.cast_sum,
+      simpa [add_left_commₓ, sub_eq_add_neg, finset.mul_sum.symm, mul_comm, ha2, Nat.cast_sum,
         add_neg_eq_iff_eq_add.symm, neg_eq_self_mod_two, add_assocₓ] using Eq.symm (eisenstein_lemma_aux₁ p hap)
 
 theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
@@ -389,7 +389,7 @@ private theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.prim
           (by
             decide))
     have : (x.1 : Zmod p) = 0 := by
-      simpa [hq0] using congr_argₓ (coeₓ : ℕ → Zmod p) (le_antisymmₓ hpq hqp)
+      simpa [hq0] using congr_argₓ (coe : ℕ → Zmod p) (le_antisymmₓ hpq hqp)
     apply_fun Zmod.val  at this
     rw [val_cast_of_lt hxp, val_zero] at this
     simpa only [this, nonpos_iff_eq_zero, mem_Ico, one_ne_zero, false_andₓ, mem_product] using hx
@@ -489,7 +489,7 @@ theorem quadratic_reciprocity [hp1 : Fact (p % 2 = 1)] [hq1 : Fact (q % 2 = 1)] 
   have hpq0 : (p : Zmod q) ≠ 0 := prime_ne_zero q p hpq.symm
   have hqp0 : (q : Zmod p) ≠ 0 := prime_ne_zero p q hpq
   rw [eisenstein_lemma q hp1.1 hpq0, eisenstein_lemma p hq1.1 hqp0, ← pow_addₓ,
-    sum_mul_div_add_sum_mul_div_eq_mul q p hpq0, mul_commₓ]
+    sum_mul_div_add_sum_mul_div_eq_mul q p hpq0, mul_comm]
 
 attribute [local instance] Nat.fact_prime_two
 
@@ -520,7 +520,7 @@ theorem legendre_sym_two [hp1 : Fact (p % 2 = 1)] : legendre_sym 2 p = -1 ^ (p /
     Disjoint ((Ico 1 (p / 2).succ).filter fun x => p / 2 < ((2 : ℕ) * x : Zmod p).val)
       ((Ico 1 (p / 2).succ).filter fun x => x * 2 ≤ p / 2) :=
     disjoint_filter.2 fun x hx => by
-      simp [hx2 _ hx, mul_commₓ]
+      simp [hx2 _ hx, mul_comm]
   have hunion :
     (((Ico 1 (p / 2).succ).filter fun x => p / 2 < ((2 : ℕ) * x : Zmod p).val) ∪
         (Ico 1 (p / 2).succ).filter fun x => x * 2 ≤ p / 2) =
@@ -530,7 +530,7 @@ theorem legendre_sym_two [hp1 : Fact (p % 2 = 1)] : legendre_sym 2 p = -1 ^ (p /
     conv_rhs => rw [← @filter_true _ (Ico 1 (p / 2).succ)]
     exact
       filter_congr fun x hx => by
-        simp [hx2 _ hx, lt_or_leₓ, mul_commₓ]
+        simp [hx2 _ hx, lt_or_leₓ, mul_comm]
   rw [gauss_lemma p (prime_ne_zero p 2 hp2), neg_one_pow_eq_pow_mod_two,
     @neg_one_pow_eq_pow_mod_two _ _ (p / 4 + p / 2)]
   refine' congr_arg2ₓ _ rfl ((eq_iff_modeq_nat 2).1 _)

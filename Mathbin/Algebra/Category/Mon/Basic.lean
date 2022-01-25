@@ -142,7 +142,7 @@ example (R : CommMon.{u}) : R ⟶ R :=
     map_one' := by
       simp ,
     map_mul' := fun x y => by
-      rw [mul_assocₓ x y (x * y), ← mul_assocₓ y x y, mul_commₓ y x, mul_assocₓ, mul_assocₓ] }
+      rw [mul_assoc x y (x * y), ← mul_assoc y x y, mul_comm y x, mul_assoc, mul_assoc] }
 
 variable {X Y : Type u}
 

@@ -67,7 +67,7 @@ theorem measurable_im : Measurable im :=
   continuous_im.Measurable
 
 @[measurability]
-theorem measurable_of_real : Measurable (coeₓ : ℝ → ℂ) :=
+theorem measurable_of_real : Measurable (coe : ℝ → ℂ) :=
   continuous_of_real.Measurable
 
 @[measurability]
@@ -227,7 +227,7 @@ section
 variable {α 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {f : α → 𝕜} {μ : MeasureTheory.Measure α}
 
 @[measurability]
-theorem IsROrC.measurable_of_real : Measurable (coeₓ : ℝ → 𝕜) :=
+theorem IsROrC.measurable_of_real : Measurable (coe : ℝ → 𝕜) :=
   IsROrC.continuous_of_real.Measurable
 
 theorem measurable_of_re_im (hre : Measurable fun x => IsROrC.re (f x)) (him : Measurable fun x => IsROrC.im (f x)) :

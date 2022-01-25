@@ -211,13 +211,13 @@ instance : HasInv s :=
 
 /-- A subfield inherits a field structure -/
 instance to_field : Field s :=
-  Subtype.coe_injective.Field coeₓ rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.Field coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ => rfl) fun _ _ => rfl
 
 /-- A subfield of a `linear_ordered_field` is a `linear_ordered_field`. -/
 instance to_linear_ordered_field {K} [LinearOrderedField K] (s : Subfield K) : LinearOrderedField s :=
-  Subtype.coe_injective.LinearOrderedField coeₓ rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
-    (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedField coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ => rfl) fun _ _ => rfl
 
 @[simp, norm_cast]
 theorem coe_add (x y : s) : (↑(x + y) : K) = ↑x + ↑y :=
@@ -253,13 +253,13 @@ theorem coe_one : ((1 : s) : K) = 1 :=
 
 /-- The embedding from a subfield of the field `K` to `K`. -/
 def Subtype (s : Subfield K) : s →+* K :=
-  { s.to_submonoid.subtype, s.to_add_subgroup.subtype with toFun := coeₓ }
+  { s.to_submonoid.subtype, s.to_add_subgroup.subtype with toFun := coe }
 
 instance to_algebra : Algebra s K :=
   RingHom.toAlgebra s.subtype
 
 @[simp]
-theorem coeSubtype : ⇑s.subtype = coeₓ :=
+theorem coeSubtype : ⇑s.subtype = coe :=
   rfl
 
 theorem to_subring.subtype_eq_subtype (F : Type _) [Field F] (S : Subfield F) : S.to_subring.subtype = S.subtype :=
@@ -530,7 +530,7 @@ theorem closure_induction {s : Set K} {p : K → Prop} {x} (h : x ∈ closure s)
 variable (K)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
-protected def gi : GaloisInsertion (@closure K _) coeₓ where
+protected def gi : GaloisInsertion (@closure K _) coe where
   choice := fun s _ => closure s
   gc := fun s t => closure_le
   le_l_u := fun s => subset_closure

@@ -139,7 +139,7 @@ theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⊥ₘ μ) :
         exact measure_mono (union_subset_union_right _ (inter_subset_right _ _))_ ≤ μ (s ∩ o) + μ (oᶜ) :=
         measure_union_le _ _ _ = μ (s ∩ o) := by
         rw [μo, add_zeroₓ]_ = ε⁻¹ * (ε • μ) (s ∩ o) := by
-        simp only [coe_nnreal_smul_apply, ← mul_assocₓ, mul_commₓ _ (ε : ℝ≥0∞)]
+        simp only [coe_nnreal_smul_apply, ← mul_assoc, mul_comm _ (ε : ℝ≥0∞)]
         rw [Ennreal.mul_inv_cancel (Ennreal.coe_pos.2 εpos).ne' Ennreal.coe_ne_top, one_mulₓ]_ ≤ ε⁻¹ * ρ (s ∩ o) := by
         apply Ennreal.mul_le_mul le_rfl
         refine' v.measure_le_of_frequently_le ρ ((measure.absolutely_continuous.refl μ).smul ε) _ _
@@ -440,7 +440,7 @@ theorem measure_lim_ratio_meas_top : μ { x | v.lim_ratio_meas hρ x = ∞ } = 0
   have ρs : ρ s ≠ ∞ := ((measure_mono (inter_subset_right _ _)).trans_lt μo).Ne
   have A : ∀ q : ℝ≥0 , 1 ≤ q → μ s ≤ q⁻¹ * ρ s := by
     intro q hq
-    rw [mul_commₓ, ← div_eq_mul_inv, Ennreal.le_div_iff_mul_le _ (Or.inr ρs), mul_commₓ]
+    rw [mul_comm, ← div_eq_mul_inv, Ennreal.le_div_iff_mul_le _ (Or.inr ρs), mul_comm]
     · apply v.mul_measure_le_of_subset_lt_lim_ratio_meas hρ
       intro y hy
       have : v.lim_ratio_meas hρ y = ∞ := hy.1
@@ -511,7 +511,7 @@ theorem with_density_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0 } (
         simp only [lintegral_const, MeasurableSet.univ, measure.restrict_apply,
           univ_inter]_ = t ^ (2 : ℤ) * (t ^ (n - 1) * μ (s ∩ f ⁻¹' I)) :=
         by
-        rw [← mul_assocₓ, ← Ennreal.zpow_add t_ne_zero Ennreal.coe_ne_top]
+        rw [← mul_assoc, ← Ennreal.zpow_add t_ne_zero Ennreal.coe_ne_top]
         congr 2
         abel _ ≤ t ^ 2 * ρ (s ∩ f ⁻¹' I) := by
         apply Ennreal.mul_le_mul le_rfl _
@@ -623,6 +623,8 @@ theorem ae_tendsto_rn_deriv_of_absolutely_continuous :
 
 end AbsolutelyContinuous
 
+variable (ρ)
+
 /-- Main theorem on differentiation of measures: given a Vitali family `v` for a locally finite
 measure `μ`, and another locally finite measure `ρ`, then for `μ`-almost every `x` the
 ratio `ρ a / μ a` converges, when `a` shrinks to `x` along the Vitali family, towards the
@@ -644,6 +646,42 @@ theorem ae_tendsto_rn_deriv : ∀ᵐ x ∂μ, tendsto (fun a => ρ a / μ a) (v.
     
   · simp only [Bx, zero_addₓ]
     
+
+/-- Given a measurable set `s`, then `μ (s ∩ a) / μ a` converges when `a` shrinks to a typical
+point `x` along a Vitali family. The limit is `1` for `x ∈ s` and `0` for `x ∉ s`. This shows that
+almost every point of `s` is a Lebesgue density point for `s`. A version for non-measurable sets
+holds, but it only gives the first conclusion, see `ae_tendsto_measure_inter_div`. -/
+theorem ae_tendsto_measure_inter_div_of_measurable_set {s : Set α} (hs : MeasurableSet s) :
+    ∀ᵐ x ∂μ, tendsto (fun a => μ (s ∩ a) / μ a) (v.filter_at x) (𝓝 (s.indicator 1 x)) := by
+  have : is_locally_finite_measure (μ.restrict s) := is_locally_finite_measure_of_le restrict_le_self
+  filter_upwards [ae_tendsto_rn_deriv v (μ.restrict s), rn_deriv_restrict μ hs]
+  intro x hx h'x
+  simpa only [h'x, restrict_apply' hs, inter_comm] using hx
+
+/-- Given an arbitrary set `s`, then `μ (s ∩ a) / μ a` converges to `1` when `a` shrinks to a
+typical point of `s` along a Vitali family. This shows that almost every point of `s` is a
+Lebesgue density point for `s`. A stronger version for measurable sets is given
+in `ae_tendsto_measure_inter_div_of_measurable_set`. -/
+theorem ae_tendsto_measure_inter_div (s : Set α) :
+    ∀ᵐ x ∂μ.restrict s, tendsto (fun a => μ (s ∩ a) / μ a) (v.filter_at x) (𝓝 1) := by
+  let t := to_measurable μ s
+  have A : ∀ᵐ x ∂μ.restrict s, tendsto (fun a => μ (t ∩ a) / μ a) (v.filter_at x) (𝓝 (t.indicator 1 x)) := by
+    apply ae_mono restrict_le_self
+    apply ae_tendsto_measure_inter_div_of_measurable_set
+    exact measurable_set_to_measurable _ _
+  have B : ∀ᵐ x ∂μ.restrict s, t.indicator 1 x = (1 : ℝ≥0∞) := by
+    refine' ae_restrict_of_ae_restrict_of_subset (subset_to_measurable μ s) _
+    filter_upwards [ae_restrict_mem (measurable_set_to_measurable μ s)]
+    intro x hx
+    simp only [hx, Pi.one_apply, indicator_of_mem]
+  filter_upwards [A, B]
+  intro x hx h'x
+  rw [h'x] at hx
+  apply hx.congr' _
+  filter_upwards [v.eventually_filter_at_measurable_set x]
+  intro a ha
+  congr 1
+  exact measure_to_measurable_inter_of_sigma_finite ha _
 
 end
 

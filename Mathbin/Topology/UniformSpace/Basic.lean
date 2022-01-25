@@ -807,7 +807,7 @@ theorem is_open_iff_open_ball_subset {s : Set α} : IsOpen s ↔ ∀, ∀ x ∈ 
 /-- The uniform neighborhoods of all points of a dense set cover the whole space. -/
 theorem Dense.bUnion_uniformity_ball {s : Set α} {U : Set (α × α)} (hs : Dense s) (hU : U ∈ 𝓤 α) :
     (⋃ x ∈ s, ball x U) = univ := by
-  refine' bUnion_eq_univ_iff.2 fun y => _
+  refine' Union₂_eq_univ_iff.2 fun y => _
   rcases hs.inter_nhds_nonempty (mem_nhds_right y hU) with ⟨x, hxs, hxy : (x, y) ∈ U⟩
   exact ⟨x, hxs, hxy⟩
 
@@ -1146,10 +1146,10 @@ theorem uniform_continuous_on_iff_restrict [UniformSpace α] [UniformSpace β] {
     UniformContinuousOn f s ↔ UniformContinuous (s.restrict f) := by
   unfold UniformContinuousOn Set.restrict UniformContinuous tendsto
   rw
-    [show (fun x : s × s => (f x.1, f x.2)) = Prod.map f f ∘ coeₓ by
+    [show (fun x : s × s => (f x.1, f x.2)) = Prod.map f f ∘ coe by
       ext x <;> cases x <;> rfl,
     uniformity_comap rfl,
-    show Prod.map Subtype.val Subtype.val = (coeₓ : s × s → α × α) by
+    show Prod.map Subtype.val Subtype.val = (coe : s × s → α × α) by
       ext x <;> cases x <;> rfl]
   conv in map _ (comap _ _) => rw [← Filter.map_map]
   rw [subtype_coe_map_comap_prod]

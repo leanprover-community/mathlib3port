@@ -53,7 +53,7 @@ structure UniformEmbedding (f : α → β) extends UniformInducing f : Prop wher
 theorem uniform_embedding_subtype_val {p : α → Prop} : UniformEmbedding (Subtype.val : Subtype p → α) :=
   { comap_uniformity := rfl, inj := Subtype.val_injective }
 
-theorem uniform_embedding_subtype_coe {p : α → Prop} : UniformEmbedding (coeₓ : Subtype p → α) :=
+theorem uniform_embedding_subtype_coe {p : α → Prop} : UniformEmbedding (coe : Subtype p → α) :=
   uniform_embedding_subtype_val
 
 theorem uniform_embedding_set_inclusion {s t : Set α} (hst : s ⊆ t) : UniformEmbedding (inclusion hst) :=
@@ -211,7 +211,7 @@ theorem is_complete_image_iff {m : α → β} {s : Set α} (hm : UniformInducing
   by
   refine' ⟨is_complete_of_complete_image hm, fun c => _⟩
   have : CompleteSpace s := c.complete_space_coe
-  set m' : s → β := m ∘ coeₓ
+  set m' : s → β := m ∘ coe
   suffices IsComplete (range m') by
     rwa [range_comp, Subtype.range_coe] at this
   have hm' : UniformInducing m' := hm.comp uniform_embedding_subtype_coe.to_uniform_inducing

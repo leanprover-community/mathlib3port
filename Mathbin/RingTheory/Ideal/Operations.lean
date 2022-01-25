@@ -133,7 +133,7 @@ theorem annihilator_mul (I : Ideal R) : annihilator I * I = ⊥ :=
 
 @[simp]
 theorem mul_annihilator (I : Ideal R) : I * annihilator I = ⊥ := by
-  rw [mul_commₓ, annihilator_mul]
+  rw [mul_comm, annihilator_mul]
 
 variable (I J N P)
 
@@ -188,13 +188,13 @@ theorem span_smul_span : Ideal.span S • span R T = span R (⋃ (s ∈ S) (t �
               (fun n hnT => subset_span $ Set.mem_bUnion hrS $ Set.mem_bUnion hnT $ Set.mem_singleton _)
               ((smul_zero r : r • 0 = (0 : M)).symm ▸ Submodule.zero_mem _)
               (fun x y => (smul_add r x y).symm ▸ Submodule.add_mem _) fun c m => by
-              rw [smul_smul, mul_commₓ, mul_smul] <;> exact Submodule.smul_mem _ _)
+              rw [smul_smul, mul_comm, mul_smul] <;> exact Submodule.smul_mem _ _)
           ((zero_smul R n).symm ▸ Submodule.zero_mem _) (fun r s => (add_smul r s n).symm ▸ Submodule.add_mem _)
           fun c r => by
           rw [smul_eq_mul, mul_smul] <;> exact Submodule.smul_mem _ _) $
     span_le.2 $
-      Set.bUnion_subset $ fun r hrS =>
-        Set.bUnion_subset $ fun n hnT => Set.singleton_subset_iff.2 $ smul_mem_smul (subset_span hrS) (subset_span hnT)
+      Set.Union₂_subset $ fun r hrS =>
+        Set.Union₂_subset $ fun n hnT => Set.singleton_subset_iff.2 $ smul_mem_smul (subset_span hrS) (subset_span hnT)
 
 theorem union_eq_smul_set (r : R) (T : Set M) : (⋃ (t : M) (x : t ∈ T), {r • t}) = r • T := by
   tidy
@@ -313,7 +313,7 @@ theorem mul_mem_mul {r s} (hr : r ∈ I) (hs : s ∈ J) : r * s ∈ I * J :=
   Submodule.smul_mem_smul hr hs
 
 theorem mul_mem_mul_rev {r s} (hr : r ∈ I) (hs : s ∈ J) : s * r ∈ I * J :=
-  mul_commₓ r s ▸ mul_mem_mul hr hs
+  mul_comm r s ▸ mul_mem_mul hr hs
 
 theorem pow_mem_pow {x : R} (hx : x ∈ I) (n : ℕ) : x ^ n ∈ I ^ n := by
   induction' n with n ih
@@ -348,11 +348,11 @@ theorem mul_left_self_sup : J * I⊔I = I :=
 
 variable (I J K)
 
-protected theorem mul_commₓ : I * J = J * I :=
+protected theorem mul_comm : I * J = J * I :=
   le_antisymmₓ (mul_le.2 $ fun r hrI s hsJ => mul_mem_mul_rev hsJ hrI)
     (mul_le.2 $ fun r hrJ s hsI => mul_mem_mul_rev hsI hrJ)
 
-protected theorem mul_assocₓ : I * J * K = I * (J * K) :=
+protected theorem mul_assoc : I * J * K = I * (J * K) :=
   Submodule.smul_assoc I J K
 
 theorem span_mul_span (S T : Set R) : span S * span T = span (⋃ (s ∈ S) (t ∈ T), {s * t}) :=
@@ -378,7 +378,7 @@ theorem mem_mul_span_singleton {x y : R} {I : Ideal R} : x ∈ I * span {y} ↔ 
   Submodule.mem_smul_span_singleton
 
 theorem mem_span_singleton_mul {x y : R} {I : Ideal R} : x ∈ span {y} * I ↔ ∃ z ∈ I, y * z = x := by
-  simp only [mul_commₓ, mem_mul_span_singleton]
+  simp only [mul_comm, mem_mul_span_singleton]
 
 theorem le_span_singleton_mul_iff {x : R} {I J : Ideal R} : I ≤ span {x} * J ↔ ∀, ∀ zI ∈ I, ∀, ∃ zJ ∈ J, x * zJ = zI :=
   show (∀ {zI} hzI : zI ∈ I, zI ∈ span {x} * J) ↔ ∀, ∀ zI ∈ I, ∀, ∃ zJ ∈ J, x * zJ = zI by
@@ -391,7 +391,7 @@ theorem span_singleton_mul_le_iff {x : R} {I J : Ideal R} : span {x} * I ≤ J �
     exact h x (dvd_refl x) zI hzI
     
   · rintro h _ ⟨z, rfl⟩ zI hzI
-    rw [mul_commₓ x z, mul_assocₓ]
+    rw [mul_comm x z, mul_assoc]
     exact J.mul_mem_left _ (h zI hzI)
     
 
@@ -609,8 +609,8 @@ theorem radical_eq_Inf (I : Ideal R) : radical I = Inf { J : Ideal R | I ≤ J �
               let ⟨d, hdyg⟩ := mem_span_singleton'.1 hg
               hrm
                 ⟨n + k, by
-                  rw [pow_addₓ, ← hpqrn, ← hcxq, ← hfgrk, ← hdyg, add_mulₓ, mul_addₓ (c * x), mul_assocₓ c x (d * y),
-                      mul_left_commₓ x, ← mul_assocₓ] <;>
+                  rw [pow_addₓ, ← hpqrn, ← hcxq, ← hfgrk, ← hdyg, add_mulₓ, mul_addₓ (c * x), mul_assoc c x (d * y),
+                      mul_left_commₓ x, ← mul_assoc] <;>
                     refine'
                       m.add_mem (m.mul_mem_right _ hpm) (m.add_mem (m.mul_mem_left _ hfm) (m.mul_mem_left _ hxym))⟩⟩
       hrm $ this.radical.symm ▸ (Inf_le ⟨him, this⟩ : Inf { J : Ideal R | I ≤ J ∧ is_prime J } ≤ m) hr
@@ -841,8 +841,6 @@ theorem subset_union_prime {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι 
       Set.Subset.trans hi $ Set.subset_bUnion_of_mem $ show i ∈ (↑s : Set ι) from his⟩
   fun h : (I : Set R) ⊆ ⋃ i ∈ (↑s : Set ι), f i => by
   classical
-  run_tac
-    tactic.unfreeze_local_instances
   by_cases' has : a ∈ s
   · obtain ⟨t, hat, rfl⟩ : ∃ t, a ∉ t ∧ insert a t = s := ⟨s.erase a, Finset.not_mem_erase a s, Finset.insert_erase has⟩
     by_cases' hbt : b ∈ t
@@ -851,7 +849,9 @@ theorem subset_union_prime {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι 
       have hp' : ∀, ∀ i ∈ u, ∀, is_prime (f i) := by
         intro i hiu
         refine' hp i (Finset.mem_insert_of_mem (Finset.mem_insert_of_mem hiu)) _ _ <;>
-          rintro rfl <;> solve_by_elim only [Finset.mem_insert_of_mem, *]
+          (
+              rintro rfl) <;>
+            solve_by_elim only [Finset.mem_insert_of_mem, *]
       rw [Finset.coe_insert, Finset.coe_insert, Set.bUnion_insert, Set.bUnion_insert, ← Set.union_assoc,
         subset_union_prime' hp', bex_def] at h
       rwa [Finset.exists_mem_insert, Finset.exists_mem_insert]
@@ -859,7 +859,9 @@ theorem subset_union_prime {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι 
     · have hp' : ∀, ∀ j ∈ t, ∀, is_prime (f j) := by
         intro j hj
         refine' hp j (Finset.mem_insert_of_mem hj) _ _ <;>
-          rintro rfl <;> solve_by_elim only [Finset.mem_insert_of_mem, *]
+          (
+              rintro rfl) <;>
+            solve_by_elim only [Finset.mem_insert_of_mem, *]
       rw [Finset.coe_insert, Set.bUnion_insert, ← Set.union_self (f a : Set R), subset_union_prime' hp', ← or_assoc,
         or_selfₓ, bex_def] at h
       rwa [Finset.exists_mem_insert]
@@ -871,7 +873,9 @@ theorem subset_union_prime {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι 
       have hp' : ∀, ∀ j ∈ t, ∀, is_prime (f j) := by
         intro j hj
         refine' hp j (Finset.mem_insert_of_mem hj) _ _ <;>
-          rintro rfl <;> solve_by_elim only [Finset.mem_insert_of_mem, *]
+          (
+              rintro rfl) <;>
+            solve_by_elim only [Finset.mem_insert_of_mem, *]
       rw [Finset.coe_insert, Set.bUnion_insert, ← Set.union_self (f b : Set R), subset_union_prime' hp', ← or_assoc,
         or_selfₓ, bex_def] at h
       rwa [Finset.exists_mem_insert]
@@ -888,7 +892,9 @@ theorem subset_union_prime {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι 
       have hp' : ∀, ∀ j ∈ t, ∀, is_prime (f j) := by
         intro j hj
         refine' hp j (Finset.mem_insert_of_mem hj) _ _ <;>
-          rintro rfl <;> solve_by_elim only [Finset.mem_insert_of_mem, *]
+          (
+              rintro rfl) <;>
+            solve_by_elim only [Finset.mem_insert_of_mem, *]
       rw [Finset.coe_insert, Set.bUnion_insert, ← Set.union_self (f i : Set R), subset_union_prime' hp', ← or_assoc,
         or_selfₓ, bex_def] at h
       rwa [Finset.exists_mem_insert]
@@ -1305,8 +1311,8 @@ theorem map_mul : map f (I * J) = map f I * map f J :=
           rw [f.map_mul] <;> exact mul_mem_mul (mem_map_of_mem f hri) (mem_map_of_mem f hsj))
     (trans_rel_right _ (span_mul_span _ _) $
       span_le.2 $
-        Set.bUnion_subset $ fun i ⟨r, hri, hfri⟩ =>
-          Set.bUnion_subset $ fun j ⟨s, hsj, hfsj⟩ =>
+        Set.Union₂_subset $ fun i ⟨r, hri, hfri⟩ =>
+          Set.Union₂_subset $ fun j ⟨s, hsj, hfsj⟩ =>
             Set.singleton_subset_iff.2 $
               hfri ▸
                 hfsj ▸ by
@@ -1633,7 +1639,7 @@ instance quotient.algebra {I : Ideal A} : Algebra R₁ (A ⧸ I) :=
     smul_def' := fun r x =>
       Quotientₓ.induction_on' x $ fun x =>
         ((Quotientₓ.mk I).congr_arg $ Algebra.smul_def _ _).trans (RingHom.map_mul _ _ _),
-    commutes' := fun _ _ => mul_commₓ _ _ }
+    commutes' := fun _ _ => mul_comm _ _ }
 
 instance quotient.is_scalar_tower [HasScalar R₁ R₂] [IsScalarTower R₁ R₂ A] (I : Ideal A) :
     IsScalarTower R₁ R₂ (A ⧸ I) := by

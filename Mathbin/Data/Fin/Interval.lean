@@ -252,7 +252,7 @@ theorem prod_filter_lt_mul_neg_eq_prod_off_diag {R : Type _} [CommMonoidₓ R] {
     intro i x y
     apply lt_asymmₓ
   simp only [prod_union, this, prod_mul_distrib]
-  rw [mul_commₓ]
+  rw [mul_comm]
   congr 1
   rw [prod_sigma', prod_sigma']
   refine' prod_bij' (fun i hi => ⟨i.2, i.1⟩) _ _ (fun i hi => ⟨i.2, i.1⟩) _ _ _ <;> simp

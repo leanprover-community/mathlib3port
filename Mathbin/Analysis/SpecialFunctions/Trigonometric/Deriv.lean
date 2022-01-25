@@ -30,7 +30,7 @@ theorem has_strict_deriv_at_sin (x : ℂ) : HasStrictDerivAt sin (cos x) x := by
           I).mul_const
       ((2 : ℂ)⁻¹)
   simp only [Function.comp, id]
-  rw [sub_mul, mul_assocₓ, mul_assocₓ, I_mul_I, neg_one_mul, neg_negₓ, mul_oneₓ, one_mulₓ, mul_assocₓ, I_mul_I,
+  rw [sub_mul, mul_assoc, mul_assoc, I_mul_I, neg_one_mul, neg_negₓ, mul_oneₓ, one_mulₓ, mul_assoc, I_mul_I,
     mul_neg_one, sub_neg_eq_add, add_commₓ]
 
 /-- The complex sine function is everywhere differentiable, with the derivative `cos x`. -/

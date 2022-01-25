@@ -1,6 +1,6 @@
 import Mathbin.Control.Monad.Basic
 import Mathbin.Data.Part
-import Mathbin.Order.Hom.Lattice
+import Mathbin.Order.Hom.Order
 import Mathbin.Tactic.Monotonicity.Default
 import Mathbin.Tactic.Wlog
 

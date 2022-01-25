@@ -23,14 +23,14 @@ variable {M : Type uM} {N : Type uN} {P : Type uP} {Q : Type uQ}
 instance [MulOneClass M] [CommMonoidₓ N] : CommMonoidₓ (M →* N) where
   mul := · * ·
   mul_assoc := by
-    intros <;> ext <;> apply mul_assocₓ
+    intros <;> ext <;> apply mul_assoc
   one := 1
   one_mul := by
     intros <;> ext <;> apply one_mulₓ
   mul_one := by
     intros <;> ext <;> apply mul_oneₓ
   mul_comm := by
-    intros <;> ext <;> apply mul_commₓ
+    intros <;> ext <;> apply mul_comm
   npow := fun n f =>
     { toFun := fun x => f x ^ n,
       map_one' := by

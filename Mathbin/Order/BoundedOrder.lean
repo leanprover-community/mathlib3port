@@ -1,7 +1,7 @@
 import Mathbin.Data.Option.Basic
 import Mathbin.Logic.Nontrivial
 import Mathbin.Order.Lattice
-import Mathbin.Order.OrderDual
+import Mathbin.Order.Max
 import Mathbin.Tactic.PiInstances
 
 /-!
@@ -529,7 +529,7 @@ theorem bot_lt_coe [LT α] (a : α) : (⊥ : WithBot α) < a :=
   none_lt_some a
 
 instance : CanLift (WithBot α) α where
-  coe := coeₓ
+  coe := coe
   cond := fun r => r ≠ ⊥
   prf := fun x hx => ⟨Option.getₓ $ Option.ne_none_iff_is_some.1 hx, Option.some_getₓ _⟩
 
@@ -820,7 +820,7 @@ theorem some_lt_none [LT α] (a : α) : @LT.lt (WithTop α) _ (some a) none := b
 theorem not_none_lt [LT α] (a : Option α) : ¬@LT.lt (WithTop α) _ none a := fun ⟨_, h, _⟩ => Option.not_mem_none _ h
 
 instance : CanLift (WithTop α) α where
-  coe := coeₓ
+  coe := coe
   cond := fun r => r ≠ ⊤
   prf := fun x hx => ⟨Option.getₓ $ Option.ne_none_iff_is_some.1 hx, Option.some_getₓ _⟩
 

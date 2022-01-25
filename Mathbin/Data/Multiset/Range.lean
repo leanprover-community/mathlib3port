@@ -40,7 +40,7 @@ theorem self_mem_range_succ (n : ℕ) : n ∈ range (n + 1) :=
   List.self_mem_range_succ n
 
 theorem range_add (a b : ℕ) : range (a + b) = range a + (range b).map fun x => a + x :=
-  congr_argₓ coeₓ (List.range_add _ _)
+  congr_argₓ coe (List.range_add _ _)
 
 theorem range_disjoint_map_add (a : ℕ) (m : Multiset ℕ) : (range a).Disjoint (m.map fun x => a + x) := by
   intro x hxa hxb

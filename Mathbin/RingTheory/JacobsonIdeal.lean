@@ -88,7 +88,7 @@ theorem mem_jacobson_iff {x : R} : x ∈ jacobson I ↔ ∀ y, ∃ z, x * y * z 
         let ⟨p, hpi, q, hq, hpq⟩ := Submodule.mem_sup.1 ((eq_top_iff_one _).1 hxy)
         let ⟨r, hr⟩ := mem_span_singleton.1 hq
         ⟨r, by
-          rw [← one_mulₓ r, ← mul_assocₓ, ← add_mulₓ, mul_oneₓ, ← hr, ← hpq, ← neg_sub, add_sub_cancel] <;>
+          rw [← one_mulₓ r, ← mul_assoc, ← add_mulₓ, mul_oneₓ, ← hr, ← hpq, ← neg_sub, add_sub_cancel] <;>
             exact I.neg_mem hpi⟩)
       fun hxy : I⊔span {x * y + 1} ≠ ⊤ =>
       let ⟨M, hm1, hm2⟩ := exists_le_maximal _ hxy
@@ -108,8 +108,8 @@ theorem mem_jacobson_iff {x : R} : x ∈ jacobson I ↔ ∀ y, ∃ z, x * y * z 
             sub_sub_cancel (x * -y * z + z) 1 ▸
               M.sub_mem
                 (by
-                  rw [← one_mulₓ z, ← mul_assocₓ, ← add_mulₓ, mul_oneₓ, mul_neg_eq_neg_mul_symm, neg_add_eq_sub, ←
-                    neg_sub, neg_mul_eq_neg_mul_symm, neg_mul_eq_mul_neg, mul_commₓ x y, mul_commₓ _ (-z)]
+                  rw [← one_mulₓ z, ← mul_assoc, ← add_mulₓ, mul_oneₓ, mul_neg_eq_neg_mul_symm, neg_add_eq_sub, ←
+                    neg_sub, neg_mul_eq_neg_mul_symm, neg_mul_eq_mul_neg, mul_comm x y, mul_comm _ (-z)]
                   rcases hy with ⟨i, hi, df⟩
                   rw [← sub_eq_iff_eq_add.mpr df.symm, sub_sub, add_commₓ, ← sub_sub, sub_self, zero_sub]
                   refine' M.mul_mem_left (-z) ((neg_mem_iff _).mpr hi))
@@ -334,7 +334,7 @@ theorem is_local.mem_jacobson_or_exists_inv {I : Ideal R} (hi : is_local I) (x :
       let ⟨r, hr⟩ := mem_span_singleton.1 hq
       Or.inr
         ⟨r, by
-          rw [← hpq, mul_commₓ, ← hr, ← neg_sub, add_sub_cancel] <;> exact I.neg_mem hpi⟩)
+          rw [← hpq, mul_comm, ← hr, ← neg_sub, add_sub_cancel] <;> exact I.neg_mem hpi⟩)
     fun h : I⊔span {x} ≠ ⊤ =>
     Or.inl $ le_transₓ le_sup_right (hi.le_jacobson le_sup_left h) $ mem_span_singleton.2 $ dvd_refl x
 

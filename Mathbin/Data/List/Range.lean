@@ -215,7 +215,7 @@ theorem fin_range_eq_nil {n : ℕ} : fin_range n = [] ↔ n = 0 := by
   rw [← length_eq_zero, length_fin_range]
 
 @[simp]
-theorem map_coe_fin_range (n : ℕ) : (fin_range n).map coeₓ = List.range n := by
+theorem map_coe_fin_range (n : ℕ) : (fin_range n).map coe = List.range n := by
   simp_rw [fin_range, map_pmap, Finₓ.mk, Subtype.coe_mk, pmap_eq_map]
   exact List.map_id _
 
@@ -240,7 +240,7 @@ theorem prod_range_succ' {α : Type u} [Monoidₓ α] (f : ℕ → α) (n : ℕ)
     (show 1 * f 0 = f 0 * 1 by
       rw [one_mulₓ, mul_oneₓ])
     fun _ hd => by
-    rw [List.prod_range_succ, hd, mul_assocₓ, ← List.prod_range_succ]
+    rw [List.prod_range_succ, hd, mul_assoc, ← List.prod_range_succ]
 
 @[simp]
 theorem enum_from_map_fst : ∀ n l : List α, map Prod.fst (enum_from n l) = range' n l.length

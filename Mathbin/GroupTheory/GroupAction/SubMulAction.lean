@@ -103,7 +103,7 @@ variable (p)
 
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
 protected def Subtype : p →[R] M := by
-  refine' { toFun := coeₓ, .. } <;> simp [coe_smul]
+  refine' { toFun := coe, .. } <;> simp [coe_smul]
 
 @[simp]
 theorem subtype_apply (x : p) : p.subtype x = x :=
@@ -182,7 +182,7 @@ theorem zero_mem (h : (p : Set M).Nonempty) : (0 : M) ∈ p :=
 
 /-- If the scalar product forms a `module`, and the `sub_mul_action` is not `⊥`, then the
 subset inherits the zero. -/
-instance [n_empty : Nonempty p] : HasZero p where
+instance [n_empty : Nonempty p] : Zero p where
   zero := ⟨0, n_empty.elim $ fun x => p.zero_mem ⟨x, x.prop⟩⟩
 
 end Module

@@ -176,7 +176,7 @@ theorem untrop_monotone [Preorderₓ R] : Monotone (untrop : Tropical R → R) :
 instance [PartialOrderₓ R] : PartialOrderₓ (Tropical R) :=
   { Tropical.preorder with le_antisymm := fun _ _ h h' => untrop_injective (le_antisymmₓ h h') }
 
-instance [HasTop R] : HasZero (Tropical R) :=
+instance [HasTop R] : Zero (Tropical R) :=
   ⟨trop ⊤⟩
 
 instance [HasTop R] : HasTop (Tropical R) :=
@@ -332,18 +332,18 @@ theorem untrop_mul [Add R] (x y : Tropical R) : untrop (x * y) = untrop x + untr
 theorem trop_mul_def [Add R] (x y : Tropical R) : x * y = trop (untrop x + untrop y) :=
   rfl
 
-instance [HasZero R] : HasOne (Tropical R) :=
+instance [Zero R] : One (Tropical R) :=
   ⟨trop 0⟩
 
 @[simp]
-theorem trop_zero [HasZero R] : trop (0 : R) = 1 :=
+theorem trop_zero [Zero R] : trop (0 : R) = 1 :=
   rfl
 
 @[simp]
-theorem untrop_one [HasZero R] : untrop (1 : Tropical R) = 0 :=
+theorem untrop_one [Zero R] : untrop (1 : Tropical R) = 0 :=
   rfl
 
-instance [HasZero R] : Nontrivial (Tropical (WithTop R)) :=
+instance [Zero R] : Nontrivial (Tropical (WithTop R)) :=
   ⟨⟨0, 1, trop_injective.Ne WithTop.top_ne_coe⟩⟩
 
 instance [Neg R] : HasInv (Tropical R) :=

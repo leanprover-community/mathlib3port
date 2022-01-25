@@ -316,7 +316,7 @@ protected theorem finite_spanning_sets_in.outer_regular [OpensMeasurableSpace α
     rw [H₁, H₁, inter_eq_self_of_subset_left (hAs _)] at hU
     exact ⟨U ∩ s.set n, subset_inter hAU (hAs _), hUo.inter (s.set_mem n).1, hU⟩
   choose U hAU hUo hU
-  refine' ⟨⋃ n, U n, Union_subset_Union hAU, is_open_Union hUo, _⟩
+  refine' ⟨⋃ n, U n, Union_mono hAU, is_open_Union hUo, _⟩
   calc μ (⋃ n, U n) ≤ ∑' n, μ (U n) := measure_Union_le _ _ ≤ ∑' n, μ (A n) + δ n :=
       Ennreal.tsum_le_tsum fun n => (hU n).le _ = (∑' n, μ (A n)) + ∑' n, δ n :=
       Ennreal.tsum_add _ = μ (⋃ n, A n) + ∑' n, δ n := congr_arg2ₓ (· + ·) (measure_Union hAd hAm).symm rfl _ < r := hδε
@@ -384,7 +384,7 @@ theorem weakly_regular_of_finite [BorelSpace α] (μ : Measureₓ α) [is_finite
       exact tendsto.add ennreal.summable.has_sum tendsto_const_nhds
     rcases(this.eventually $ lt_mem_nhds $ Ennreal.lt_add_right hfin ε0').exists with ⟨t, ht⟩
     refine'
-      ⟨⋃ k ∈ t, F k, Union_subset_Union $ fun k => Union_subset $ fun _ => hFs _, ⋃ n, U n, Union_subset_Union hsU,
+      ⟨⋃ k ∈ t, F k, Union_mono $ fun k => Union_subset $ fun _ => hFs _, ⋃ n, U n, Union_mono hsU,
         is_closed_bUnion t.finite_to_set $ fun k _ => hFc k, is_open_Union hUo, ht.le.trans _, _⟩
     · calc (∑ k in t, μ (s k)) + ε / 2 ≤ ((∑ k in t, μ (F k)) + ∑ k in t, δ k) + ε / 2 := by
           rw [← sum_add_distrib]

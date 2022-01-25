@@ -23,14 +23,14 @@ theorem smul_ball {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • ball x r =
   ext y
   rw [mem_smul_set_iff_inv_smul_mem₀ hc]
   conv_lhs => rw [← inv_smul_smul₀ hc x]
-  simp [← div_eq_inv_mul, div_lt_iff (norm_pos_iff.2 hc), mul_commₓ _ r, dist_smul]
+  simp [← div_eq_inv_mul, div_lt_iff (norm_pos_iff.2 hc), mul_comm _ r, dist_smul]
 
 theorem smul_sphere' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • sphere x r = sphere (c • x) (∥c∥ * r) := by
   ext y
   rw [mem_smul_set_iff_inv_smul_mem₀ hc]
   conv_lhs => rw [← inv_smul_smul₀ hc x]
   simp only [mem_sphere, dist_smul, NormedField.norm_inv, ← div_eq_inv_mul, div_eq_iff (norm_pos_iff.2 hc).ne',
-    mul_commₓ r]
+    mul_comm r]
 
 /-- In a nontrivial real normed space, a sphere is nonempty if and only if its radius is
 nonnegative. -/

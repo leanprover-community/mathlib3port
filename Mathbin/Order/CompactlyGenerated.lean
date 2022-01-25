@@ -331,7 +331,7 @@ theorem CompleteLattice.set_independent_Union_of_directed {η : Type _} {s : η 
     intro t ht
     obtain ⟨I, fi, hI⟩ := Set.finite_subset_Union t.finite_to_set ht
     obtain ⟨i, hi⟩ := hs.finset_le fi.to_finset
-    exact (h i).mono (Set.Subset.trans hI $ Set.bUnion_subset $ fun j hj => hi j (fi.mem_to_finset.2 hj))
+    exact (h i).mono (Set.Subset.trans hI $ Set.Union₂_subset $ fun j hj => hi j (fi.mem_to_finset.2 hj))
     
   · rintro a ⟨_, ⟨i, _⟩, _⟩
     exfalso

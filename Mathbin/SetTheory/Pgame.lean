@@ -191,7 +191,7 @@ unsafe def pgame_wf_tac :=
   sorry
 
 /-- The pre-game `zero` is defined by `0 = { | }`. -/
-instance : HasZero Pgame :=
+instance : Zero Pgame :=
   ⟨⟨Pempty, Pempty, Pempty.elimₓ, Pempty.elimₓ⟩⟩
 
 @[simp]
@@ -206,7 +206,7 @@ instance : Inhabited Pgame :=
   ⟨0⟩
 
 /-- The pre-game `one` is defined by `1 = { 0 | }`. -/
-instance : HasOne Pgame :=
+instance : One Pgame :=
   ⟨⟨PUnit, Pempty, fun _ => 0, Pempty.elimₓ⟩⟩
 
 @[simp]
@@ -620,7 +620,7 @@ theorem neg_negₓ : ∀ {x : Pgame}, - -x = x
 
 @[simp]
 theorem neg_zero : -(0 : Pgame) = 0 := by
-  dsimp [HasZero.zero, Neg.neg, neg]
+  dsimp [Zero.zero, Neg.neg, neg]
   congr <;> funext i <;> cases i
 
 /-- An explicit equivalence between the moves for Left in `-x` and the moves for Right in `x`. -/

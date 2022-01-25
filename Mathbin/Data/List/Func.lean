@@ -74,11 +74,11 @@ def pointwise (f : α → β → γ) : List α → List β → List γ
   | a :: as, b :: bs => f a b :: pointwise as bs
 
 /-- Pointwise addition on lists. If lists are different lengths, use zero. -/
-def add {α : Type u} [HasZero α] [Add α] : List α → List α → List α :=
+def add {α : Type u} [Zero α] [Add α] : List α → List α → List α :=
   @pointwise α α α ⟨0⟩ ⟨0⟩ (· + ·)
 
 /-- Pointwise subtraction on lists. If lists are different lengths, use zero. -/
-def sub {α : Type u} [HasZero α] [Sub α] : List α → List α → List α :=
+def sub {α : Type u} [Zero α] [Sub α] : List α → List α → List α :=
   @pointwise α α α ⟨0⟩ ⟨0⟩ (@Sub.sub α _)
 
 theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.length (m + 1)
@@ -296,7 +296,7 @@ theorem get_add {α : Type u} [AddMonoidₓ α] {k : ℕ} {xs ys : List α} :
   apply zero_addₓ
 
 @[simp]
-theorem length_add {α : Type u} [HasZero α] [Add α] {xs ys : List α} : (add xs ys).length = max xs.length ys.length :=
+theorem length_add {α : Type u} [Zero α] [Add α] {xs ys : List α} : (add xs ys).length = max xs.length ys.length :=
   @length_pointwise α α α ⟨0⟩ ⟨0⟩ _ _ _
 
 @[simp]
@@ -341,7 +341,7 @@ theorem get_sub {α : Type u} [AddGroupₓ α] {k : ℕ} {xs ys : List α} :
   apply sub_zero
 
 @[simp]
-theorem length_sub [HasZero α] [Sub α] {xs ys : List α} : (sub xs ys).length = max xs.length ys.length :=
+theorem length_sub [Zero α] [Sub α] {xs ys : List α} : (sub xs ys).length = max xs.length ys.length :=
   @length_pointwise α α α ⟨0⟩ ⟨0⟩ _ _ _
 
 @[simp]

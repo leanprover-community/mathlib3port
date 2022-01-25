@@ -260,6 +260,10 @@ theorem mem_and_mem_iff {x y : α} {z : Sym2 α} (hne : x ≠ y) : x ∈ z ∧ y
     simp
     
 
+theorem eq_of_ne_mem {x y : α} {z z' : Sym2 α} (h : x ≠ y) (h1 : x ∈ z) (h2 : y ∈ z) (h3 : x ∈ z') (h4 : y ∈ z') :
+    z = z' :=
+  ((mem_and_mem_iff h).mp ⟨h1, h2⟩).trans ((mem_and_mem_iff h).mp ⟨h3, h4⟩).symm
+
 @[ext]
 protected theorem ext (z z' : Sym2 α) (h : ∀ x, x ∈ z ↔ x ∈ z') : z = z' := by
   refine' Quotientₓ.recOnSubsingleton z (fun w => _) h

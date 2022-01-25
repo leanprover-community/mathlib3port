@@ -108,7 +108,7 @@ noncomputable def epsilon : ℝ* :=
 
 /-- A sample infinite hyperreal-/
 noncomputable def omega : ℝ* :=
-  of_seq coeₓ
+  of_seq coe
 
 localized [Hyperreal] notation "ε" => Hyperreal.epsilon
 
@@ -618,7 +618,7 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : is_st x r) (hys : is_
             have : (|s| : ℝ*) ≠ 0 := by
               simpa
             have : (2 : ℝ*) ≠ 0 := two_ne_zero
-            field_simp [*, add_mulₓ, mul_addₓ, mul_assocₓ, mul_commₓ, mul_left_commₓ]
+            field_simp [*, add_mulₓ, mul_addₓ, mul_assoc, mul_comm, mul_left_commₓ]
           _ < (d / 2 * 1 + d / 2 : ℝ*) :=
             add_lt_add_right
               (mul_lt_mul_of_pos_left ((div_lt_one $ lt_of_le_of_ltₓ (abs_nonneg x) ht).mpr ht) $
@@ -639,7 +639,7 @@ theorem is_st_mul {x y : ℝ*} {r s : ℝ} (hxr : is_st x r) (hys : is_st y s) :
         have hys' : _ :=
           is_st_iff_abs_sub_lt_delta.mp hys (d / t) (div_pos hd (coe_pos.1 (lt_of_le_of_ltₓ (abs_nonneg x) ht)))
         rw [hs, coe_zero, sub_zero] at hys'
-        rw [hs, mul_zero, coe_zero, sub_zero, abs_mul, mul_commₓ, ←
+        rw [hs, mul_zero, coe_zero, sub_zero, abs_mul, mul_comm, ←
           div_mul_cancel (d : ℝ*) (ne_of_gtₓ (lt_of_le_of_ltₓ (abs_nonneg x) ht)), ← coe_div]
         exact mul_lt_mul'' hys' ht (abs_nonneg _) (abs_nonneg _)
         
@@ -832,7 +832,7 @@ theorem infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos {x y : ℝ*} :
 
 theorem infinite_pos_mul_of_not_infinitesimal_pos_infinite_pos {x y : ℝ*} :
     ¬infinitesimal x → 0 < x → infinite_pos y → infinite_pos (x * y) := fun hx hp hy => by
-  rw [mul_commₓ] <;> exact infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos hy hx hp
+  rw [mul_comm] <;> exact infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos hy hx hp
 
 theorem infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg {x y : ℝ*} :
     infinite_neg x → ¬infinitesimal y → y < 0 → infinite_pos (x * y) := by
@@ -841,7 +841,7 @@ theorem infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg {x y : ℝ*} :
 
 theorem infinite_pos_mul_of_not_infinitesimal_neg_infinite_neg {x y : ℝ*} :
     ¬infinitesimal x → x < 0 → infinite_neg y → infinite_pos (x * y) := fun hx hp hy => by
-  rw [mul_commₓ] <;> exact infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg hy hx hp
+  rw [mul_comm] <;> exact infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg hy hx hp
 
 theorem infinite_neg_mul_of_infinite_pos_not_infinitesimal_neg {x y : ℝ*} :
     infinite_pos x → ¬infinitesimal y → y < 0 → infinite_neg (x * y) := by
@@ -850,7 +850,7 @@ theorem infinite_neg_mul_of_infinite_pos_not_infinitesimal_neg {x y : ℝ*} :
 
 theorem infinite_neg_mul_of_not_infinitesimal_neg_infinite_pos {x y : ℝ*} :
     ¬infinitesimal x → x < 0 → infinite_pos y → infinite_neg (x * y) := fun hx hp hy => by
-  rw [mul_commₓ] <;> exact infinite_neg_mul_of_infinite_pos_not_infinitesimal_neg hy hx hp
+  rw [mul_comm] <;> exact infinite_neg_mul_of_infinite_pos_not_infinitesimal_neg hy hx hp
 
 theorem infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos {x y : ℝ*} :
     infinite_neg x → ¬infinitesimal y → 0 < y → infinite_neg (x * y) := by
@@ -859,7 +859,7 @@ theorem infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos {x y : ℝ*} :
 
 theorem infinite_neg_mul_of_not_infinitesimal_pos_infinite_neg {x y : ℝ*} :
     ¬infinitesimal x → 0 < x → infinite_neg y → infinite_neg (x * y) := fun hx hp hy => by
-  rw [mul_commₓ] <;> exact infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos hy hx hp
+  rw [mul_comm] <;> exact infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos hy hx hp
 
 theorem infinite_pos_mul_infinite_pos {x y : ℝ*} : infinite_pos x → infinite_pos y → infinite_pos (x * y) :=
   fun hx hy => infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos hx (not_infinitesimal_of_infinite_pos hy) (hy 0)
@@ -884,7 +884,7 @@ theorem infinite_mul_of_infinite_not_infinitesimal {x y : ℝ*} : Infinite x →
 
 theorem infinite_mul_of_not_infinitesimal_infinite {x y : ℝ*} : ¬infinitesimal x → Infinite y → Infinite (x * y) :=
   fun hx hy => by
-  rw [mul_commₓ] <;> exact infinite_mul_of_infinite_not_infinitesimal hy hx
+  rw [mul_comm] <;> exact infinite_mul_of_infinite_not_infinitesimal hy hx
 
 theorem infinite_mul_infinite {x y : ℝ*} : Infinite x → Infinite y → Infinite (x * y) := fun hx hy =>
   infinite_mul_of_infinite_not_infinitesimal hx (not_infinitesimal_of_infinite hy)

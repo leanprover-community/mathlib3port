@@ -81,7 +81,7 @@ theorem prod_map_add [CommSemiringₓ β] {s : Multiset α} {f g : α → β} :
     
   · intro a s ih
     have := @sum_map_mul_left α β _
-    simp [ih, add_mulₓ, mul_commₓ, mul_left_commₓ (f a), mul_left_commₓ (g a), mul_assocₓ, sum_map_mul_left.symm]
+    simp [ih, add_mulₓ, mul_comm, mul_left_commₓ (f a), mul_left_commₓ (g a), mul_assoc, sum_map_mul_left.symm]
     cc
     
 

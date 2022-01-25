@@ -473,7 +473,7 @@ theorem insert_nth_last' (x : β) (p : Finₓ n → β) : @insert_nth _ (fun _ =
   simp [insert_nth_last]
 
 @[simp]
-theorem insert_nth_zero_right [∀ j, HasZero (α j)] (i : Finₓ (n + 1)) (x : α i) : i.insert_nth x 0 = Pi.single i x :=
+theorem insert_nth_zero_right [∀ j, Zero (α j)] (i : Finₓ (n + 1)) (x : α i) : i.insert_nth x 0 = Pi.single i x :=
   insert_nth_eq_iff.2 $ by
     simp [succ_above_ne, Pi.zero_def]
 

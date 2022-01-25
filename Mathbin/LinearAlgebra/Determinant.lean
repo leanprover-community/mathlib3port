@@ -76,7 +76,7 @@ def index_equiv_of_inv [IsDomain A] [DecidableEq m] [DecidableEq n] {M : Matrix 
   equivOfPiLequivPi (to_lin'_of_inv hMM' hM'M)
 
 theorem det_comm [DecidableEq n] (M N : Matrix n n A) : det (M ⬝ N) = det (N ⬝ M) := by
-  rw [det_mul, det_mul, mul_commₓ]
+  rw [det_mul, det_mul, mul_comm]
 
 /-- If there exists a two-sided inverse `M'` for `M` (indexed differently),
 then `det (N ⬝ M) = det (M ⬝ N)`. -/

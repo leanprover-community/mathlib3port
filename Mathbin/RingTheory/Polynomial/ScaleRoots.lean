@@ -93,10 +93,10 @@ theorem scale_roots_eval₂_eq_zero {p : Polynomial S} (f : S →+* R) {r : R} {
         simp [this]
     _ = p.support.sum fun i : ℕ => f (p.coeff i) * f s ^ (p.nat_degree - i + i) * r ^ i :=
       Finset.sum_congr rfl fun i hi => by
-        simp_rw [f.map_mul, f.map_pow, pow_addₓ, mul_powₓ, mul_assocₓ]
+        simp_rw [f.map_mul, f.map_pow, pow_addₓ, mul_powₓ, mul_assoc]
     _ = p.support.sum fun i : ℕ => f s ^ p.nat_degree * (f (p.coeff i) * r ^ i) :=
       Finset.sum_congr rfl fun i hi => by
-        rw [mul_assocₓ, mul_left_commₓ, tsub_add_cancel_of_le]
+        rw [mul_assoc, mul_left_commₓ, tsub_add_cancel_of_le]
         exact le_nat_degree_of_ne_zero (polynomial.mem_support_iff.mp hi)
     _ = f s ^ p.nat_degree * p.support.sum fun i : ℕ => f (p.coeff i) * r ^ i := Finset.mul_sum.symm
     _ = f s ^ p.nat_degree * eval₂ f r p := by
@@ -112,7 +112,7 @@ theorem scale_roots_aeval_eq_zero [Algebra S R] {p : Polynomial S} {r : R} {s : 
 theorem scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero {p : Polynomial A} {f : A →+* K} (hf : Function.Injective f)
     {r s : A} (hr : eval₂ f (f r / f s) p = 0) (hs : s ∈ nonZeroDivisors A) : eval₂ f (f r) (scaleRoots p s) = 0 := by
   convert scale_roots_eval₂_eq_zero f hr
-  rw [← mul_div_assoc, mul_commₓ, mul_div_cancel]
+  rw [← mul_div_assoc, mul_comm, mul_div_cancel]
   exact f.map_ne_zero_of_mem_non_zero_divisors hf hs
 
 theorem scale_roots_aeval_eq_zero_of_aeval_div_eq_zero [Algebra A K] (inj : Function.Injective (algebraMap A K))

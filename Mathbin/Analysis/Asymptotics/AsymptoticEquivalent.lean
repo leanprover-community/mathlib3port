@@ -189,7 +189,7 @@ theorem is_equivalent_of_tendsto_one' (hz : ∀ x, v x = 0 → u x = 0) (huv : t
 theorem is_equivalent_iff_tendsto_one (hz : ∀ᶠ x in l, v x ≠ 0) : u ~[l] v ↔ tendsto (u / v) l (𝓝 1) := by
   constructor
   · intro hequiv
-    have := hequiv.is_o.tendsto_0
+    have := hequiv.is_o.tendsto_div_nhds_zero
     simp only [Pi.sub_apply, sub_div] at this
     have key : tendsto (fun x => v x / v x) l (𝓝 1) :=
       (tendsto_congr' $ hz.mono $ fun x hnz => @div_self _ _ (v x) hnz).mpr tendsto_const_nhds
@@ -213,7 +213,7 @@ theorem is_equivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedGroup 
   have : ((fun x : α => a x • u x) - fun x : α => b x • v x) =ᶠ[l] fun x => b x • (φ x • u x - v x) := by
     convert (habφ.comp₂ (· • ·) $ eventually_eq.refl _ u).sub (eventually_eq.refl _ fun x => b x • v x)
     ext
-    rw [Pi.mul_apply, mul_commₓ, mul_smul, ← smul_sub]
+    rw [Pi.mul_apply, mul_comm, mul_smul, ← smul_sub]
   refine' (is_o_congr this.symm $ eventually_eq.rfl).mp ((is_O_refl b l).smul_is_o _)
   rcases huv.is_O.exists_pos with ⟨C, hC, hCuv⟩
   rw [is_equivalent] at *
@@ -287,7 +287,7 @@ variable {α β : Type _} [NormedLinearOrderedField β] {u v : α → β} {l : F
 theorem is_equivalent.tendsto_at_top [OrderTopology β] (huv : u ~[l] v) (hu : tendsto u l at_top) :
     tendsto v l at_top :=
   let ⟨φ, hφ, h⟩ := huv.symm.exists_eq_mul
-  tendsto.congr' h.symm (mul_commₓ u φ ▸ hu.at_top_mul zero_lt_one hφ)
+  tendsto.congr' h.symm (mul_comm u φ ▸ hu.at_top_mul zero_lt_one hφ)
 
 theorem is_equivalent.tendsto_at_top_iff [OrderTopology β] (huv : u ~[l] v) : tendsto u l at_top ↔ tendsto v l at_top :=
   ⟨huv.tendsto_at_top, huv.symm.tendsto_at_top⟩

@@ -55,7 +55,7 @@ theorem rat_mul_continuous_lemma {ε K₁ K₂ : α} (ε0 : 0 < ε) :
   have :=
     add_lt_add (mul_lt_mul' (le_of_ltₓ h₁) hb₂ (abv_nonneg abv _) εK)
       (mul_lt_mul' (le_of_ltₓ h₂) ha₁ (abv_nonneg abv _) εK)
-  rw [← abv_mul abv, mul_commₓ, div_mul_cancel _ (ne_of_gtₓ K0), ← abv_mul abv, add_halves] at this
+  rw [← abv_mul abv, mul_comm, div_mul_cancel _ (ne_of_gtₓ K0), ← abv_mul abv, add_halves] at this
   simpa [mul_addₓ, add_mulₓ, sub_eq_add_neg, add_commₓ, add_left_commₓ] using lt_of_le_of_ltₓ (abv_add abv _ _) this
 
 theorem rat_inv_continuous_lemma {β : Type _} [Field β] (abv : β → α) [IsAbsoluteValue abv] {ε K : α} (ε0 : 0 < ε)
@@ -65,7 +65,7 @@ theorem rat_inv_continuous_lemma {β : Type _} [Field β] (abv : β → α) [IsA
   refine' ⟨_, εK, fun a b ha hb h => _⟩
   have a0 := lt_of_lt_of_leₓ K0 ha
   have b0 := lt_of_lt_of_leₓ K0 hb
-  rw [inv_sub_inv ((abv_pos abv).1 a0) ((abv_pos abv).1 b0), abv_div abv, abv_mul abv, mul_commₓ, abv_sub abv, ←
+  rw [inv_sub_inv ((abv_pos abv).1 a0) ((abv_pos abv).1 b0), abv_div abv, abv_mul abv, mul_comm, abv_sub abv, ←
     mul_div_cancel ε (ne_of_gtₓ KK)]
   exact div_lt_div h (mul_le_mul hb ha (le_of_ltₓ K0) (abv_nonneg abv _)) (le_of_ltₓ $ mul_pos ε0 KK) KK
 
@@ -196,10 +196,10 @@ theorem const_apply (x : β) (i : ℕ) : (const x : ℕ → β) i = x :=
 theorem const_inj {x y : β} : (const x : CauSeq β abv) = const y ↔ x = y :=
   ⟨fun h => congr_argₓ (fun f : CauSeq β abv => (f : ℕ → β) 0) h, congr_argₓ _⟩
 
-instance : HasZero (CauSeq β abv) :=
+instance : Zero (CauSeq β abv) :=
   ⟨const 0⟩
 
-instance : HasOne (CauSeq β abv) :=
+instance : One (CauSeq β abv) :=
   ⟨const 1⟩
 
 instance : Inhabited (CauSeq β abv) :=
@@ -270,12 +270,12 @@ instance : Ringₓ (CauSeq β abv) := by
     intros <;>
       try
           rfl <;>
-        apply ext <;> simp [mul_addₓ, mul_assocₓ, add_mulₓ, add_commₓ, add_left_commₓ, sub_eq_add_neg]
+        apply ext <;> simp [mul_addₓ, mul_assoc, add_mulₓ, add_commₓ, add_left_commₓ, sub_eq_add_neg]
 
 instance {β : Type _} [CommRingₓ β] {abv : β → α} [IsAbsoluteValue abv] : CommRingₓ (CauSeq β abv) :=
   { CauSeq.ring with
     mul_comm := by
-      intros <;> apply ext <;> simp [mul_left_commₓ, mul_commₓ] }
+      intros <;> apply ext <;> simp [mul_left_commₓ, mul_comm] }
 
 /-- `lim_zero f` holds when `f` approaches 0. -/
 def lim_zero {abv : β → α} (f : CauSeq β abv) : Prop :=
@@ -292,7 +292,7 @@ theorem mul_lim_zero_right (f : CauSeq β abv) {g} (hg : lim_zero g) : lim_zero 
     let ⟨F, F0, hF⟩ := f.bounded' 0
     (hg _ $ div_pos ε0 F0).imp $ fun i H j ij => by
       have := mul_lt_mul' (le_of_ltₓ $ hF j) (H _ ij) (abv_nonneg abv _) F0 <;>
-        rwa [mul_commₓ F, div_mul_cancel _ (ne_of_gtₓ F0), ← abv_mul abv] at this
+        rwa [mul_comm F, div_mul_cancel _ (ne_of_gtₓ F0), ← abv_mul abv] at this
 
 theorem mul_lim_zero_left {f} (g : CauSeq β abv) (hg : lim_zero f) : lim_zero (f * g)
   | ε, ε0 =>
@@ -430,7 +430,7 @@ section CommRingₓ
 variable {β : Type _} [CommRingₓ β] {abv : β → α} [IsAbsoluteValue abv]
 
 theorem mul_equiv_zero' (g : CauSeq _ abv) {f : CauSeq _ abv} (hf : f ≈ 0) : f * g ≈ 0 := by
-  rw [mul_commₓ] <;> apply mul_equiv_zero _ hf
+  rw [mul_comm] <;> apply mul_equiv_zero _ hf
 
 end CommRingₓ
 

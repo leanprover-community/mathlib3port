@@ -296,7 +296,7 @@ theorem id_apply (x : L₁) : (id : L₁ →ₗ⁅R⁆ L₁) x = x :=
   rfl
 
 /-- The constant 0 map is a Lie algebra morphism. -/
-instance : HasZero (L₁ →ₗ⁅R⁆ L₂) :=
+instance : Zero (L₁ →ₗ⁅R⁆ L₂) :=
   ⟨{ (0 : L₁ →ₗ[R] L₂) with
       map_lie' := by
         simp }⟩
@@ -309,7 +309,7 @@ theorem zero_apply (x : L₁) : (0 : L₁ →ₗ⁅R⁆ L₂) x = 0 :=
   rfl
 
 /-- The identity map is a Lie algebra morphism. -/
-instance : HasOne (L₁ →ₗ⁅R⁆ L₁) :=
+instance : One (L₁ →ₗ⁅R⁆ L₁) :=
   ⟨id⟩
 
 @[simp]
@@ -438,7 +438,7 @@ theorem to_linear_equiv_mk (f : L₁ →ₗ⁅R⁆ L₂) g h₁ h₂ :
     (mk f g h₁ h₂ : L₁ ≃ₗ[R] L₂) = { f with invFun := g, left_inv := h₁, right_inv := h₂ } :=
   rfl
 
-theorem coe_linear_equiv_injective : injective (coeₓ : (L₁ ≃ₗ⁅R⁆ L₂) → L₁ ≃ₗ[R] L₂) := by
+theorem coe_linear_equiv_injective : injective (coe : (L₁ ≃ₗ⁅R⁆ L₂) → L₁ ≃ₗ[R] L₂) := by
   intro f₁ f₂ h
   cases f₁
   cases f₂
@@ -454,7 +454,7 @@ theorem coe_injective : @injective (L₁ ≃ₗ⁅R⁆ L₂) (L₁ → L₂) coe
 theorem ext {f g : L₁ ≃ₗ⁅R⁆ L₂} (h : ∀ x, f x = g x) : f = g :=
   coe_injective $ funext h
 
-instance : HasOne (L₁ ≃ₗ⁅R⁆ L₁) :=
+instance : One (L₁ ≃ₗ⁅R⁆ L₁) :=
   ⟨{ (1 : L₁ ≃ₗ[R] L₁) with map_lie' := fun x y => rfl }⟩
 
 @[simp]
@@ -600,7 +600,7 @@ theorem id_apply (x : M) : (id : M →ₗ⁅R,L⁆ M) x = x :=
   rfl
 
 /-- The constant 0 map is a Lie module morphism. -/
-instance : HasZero (M →ₗ⁅R,L⁆ N) :=
+instance : Zero (M →ₗ⁅R,L⁆ N) :=
   ⟨{ (0 : M →ₗ[R] N) with
       map_lie' := by
         simp }⟩
@@ -613,7 +613,7 @@ theorem zero_apply (m : M) : (0 : M →ₗ⁅R,L⁆ N) m = 0 :=
   rfl
 
 /-- The identity map is a Lie module morphism. -/
-instance : HasOne (M →ₗ⁅R,L⁆ M) :=
+instance : One (M →ₗ⁅R,L⁆ M) :=
   ⟨id⟩
 
 instance : Inhabited (M →ₗ⁅R,L⁆ N) :=
@@ -824,7 +824,7 @@ theorem to_equiv_injective : Function.Injective (to_equiv : (M ≃ₗ⁅R,L⁆ N
 theorem ext (e₁ e₂ : M ≃ₗ⁅R,L⁆ N) (h : ∀ m, e₁ m = e₂ m) : e₁ = e₂ :=
   to_equiv_injective (Equivₓ.ext h)
 
-instance : HasOne (M ≃ₗ⁅R,L⁆ M) :=
+instance : One (M ≃ₗ⁅R,L⁆ M) :=
   ⟨{ (1 : M ≃ₗ[R] M) with map_lie' := fun x m => rfl }⟩
 
 @[simp]

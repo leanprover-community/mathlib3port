@@ -919,56 +919,56 @@ theorem times_cont_mdiff_const : TimesContMdiff I I' n fun x : M => c := by
   exact times_cont_diff_within_at_const
 
 @[to_additive]
-theorem times_cont_mdiff_one [HasOne M'] : TimesContMdiff I I' n (1 : M → M') := by
+theorem times_cont_mdiff_one [One M'] : TimesContMdiff I I' n (1 : M → M') := by
   simp only [Pi.one_def, times_cont_mdiff_const]
 
 theorem smooth_const : Smooth I I' fun x : M => c :=
   times_cont_mdiff_const
 
 @[to_additive]
-theorem smooth_one [HasOne M'] : Smooth I I' (1 : M → M') := by
+theorem smooth_one [One M'] : Smooth I I' (1 : M → M') := by
   simp only [Pi.one_def, smooth_const]
 
 theorem times_cont_mdiff_on_const : TimesContMdiffOn I I' n (fun x : M => c) s :=
   times_cont_mdiff_const.TimesContMdiffOn
 
 @[to_additive]
-theorem times_cont_mdiff_on_one [HasOne M'] : TimesContMdiffOn I I' n (1 : M → M') s :=
+theorem times_cont_mdiff_on_one [One M'] : TimesContMdiffOn I I' n (1 : M → M') s :=
   times_cont_mdiff_one.TimesContMdiffOn
 
 theorem smooth_on_const : SmoothOn I I' (fun x : M => c) s :=
   times_cont_mdiff_on_const
 
 @[to_additive]
-theorem smooth_on_one [HasOne M'] : SmoothOn I I' (1 : M → M') s :=
+theorem smooth_on_one [One M'] : SmoothOn I I' (1 : M → M') s :=
   times_cont_mdiff_on_one
 
 theorem times_cont_mdiff_at_const : TimesContMdiffAt I I' n (fun x : M => c) x :=
   times_cont_mdiff_const.TimesContMdiffAt
 
 @[to_additive]
-theorem times_cont_mdiff_at_one [HasOne M'] : TimesContMdiffAt I I' n (1 : M → M') x :=
+theorem times_cont_mdiff_at_one [One M'] : TimesContMdiffAt I I' n (1 : M → M') x :=
   times_cont_mdiff_one.TimesContMdiffAt
 
 theorem smooth_at_const : SmoothAt I I' (fun x : M => c) x :=
   times_cont_mdiff_at_const
 
 @[to_additive]
-theorem smooth_at_one [HasOne M'] : SmoothAt I I' (1 : M → M') x :=
+theorem smooth_at_one [One M'] : SmoothAt I I' (1 : M → M') x :=
   times_cont_mdiff_at_one
 
 theorem times_cont_mdiff_within_at_const : TimesContMdiffWithinAt I I' n (fun x : M => c) s x :=
   times_cont_mdiff_at_const.TimesContMdiffWithinAt
 
 @[to_additive]
-theorem times_cont_mdiff_within_at_one [HasOne M'] : TimesContMdiffWithinAt I I' n (1 : M → M') s x :=
+theorem times_cont_mdiff_within_at_one [One M'] : TimesContMdiffWithinAt I I' n (1 : M → M') s x :=
   times_cont_mdiff_at_const.TimesContMdiffWithinAt
 
 theorem smooth_within_at_const : SmoothWithinAt I I' (fun x : M => c) s x :=
   times_cont_mdiff_within_at_const
 
 @[to_additive]
-theorem smooth_within_at_one [HasOne M'] : SmoothWithinAt I I' (1 : M → M') s x :=
+theorem smooth_within_at_one [One M'] : SmoothWithinAt I I' (1 : M → M') s x :=
   times_cont_mdiff_within_at_one
 
 end id

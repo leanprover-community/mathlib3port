@@ -214,7 +214,7 @@ theorem Irreducible (hx : IsIntegral A x) : Irreducible (minpoly A x) := by
     rw [monic.def]
     simp only [coeff_prod, leading_coeff_mul, leading_coeff_C]
   have hbmonic : (b * C a.leading_coeff).Monic := by
-    rw [monic.def, mul_commₓ]
+    rw [monic.def, mul_comm]
     simp only [coeff_prod, leading_coeff_mul, leading_coeff_C]
   have prod : minpoly A x = a * C b.leading_coeff * (b * C a.leading_coeff) := by
     symm
@@ -229,7 +229,7 @@ theorem Irreducible (hx : IsIntegral A x) : Irreducible (minpoly A x) := by
     exact ⟨hamonic.ne_zero, _, mt is_unit_of_mul_is_unit_left hb_nunit, Prod⟩
     
   · refine' aeval_ne_zero_of_dvd_not_unit_minpoly hx hbmonic _ hzero
-    rw [mul_commₓ] at prod
+    rw [mul_comm] at prod
     exact ⟨hbmonic.ne_zero, _, mt is_unit_of_mul_is_unit_left ha_nunit, Prod⟩
     
 

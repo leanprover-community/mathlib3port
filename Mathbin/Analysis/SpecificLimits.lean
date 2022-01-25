@@ -210,24 +210,24 @@ theorem geom_lt {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n
   refine' (monotone_mul_left_of_nonneg hc).seq_pos_lt_seq_of_le_of_lt hn _ _ h
   · simp
     
-  · simp [pow_succₓ, mul_assocₓ, le_reflₓ]
+  · simp [pow_succₓ, mul_assoc, le_reflₓ]
     
 
 theorem geom_le {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀, ∀ k < n, ∀, c * u k ≤ u (k + 1)) : c ^ n * u 0 ≤ u n :=
   by
-  refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ _ h <;> simp [pow_succₓ, mul_assocₓ, le_reflₓ]
+  refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ _ h <;> simp [pow_succₓ, mul_assoc, le_reflₓ]
 
 theorem lt_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n) (h : ∀, ∀ k < n, ∀, u (k + 1) < c * u k) :
     u n < c ^ n * u 0 := by
   refine' (monotone_mul_left_of_nonneg hc).seq_pos_lt_seq_of_lt_of_le hn _ h _
   · simp
     
-  · simp [pow_succₓ, mul_assocₓ, le_reflₓ]
+  · simp [pow_succₓ, mul_assoc, le_reflₓ]
     
 
 theorem le_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀, ∀ k < n, ∀, u (k + 1) ≤ c * u k) : u n ≤ c ^ n * u 0 :=
   by
-  refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ h _ <;> simp [pow_succₓ, mul_assocₓ, le_reflₓ]
+  refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ h _ <;> simp [pow_succₓ, mul_assoc, le_reflₓ]
 
 /-- For any natural `k` and a real `r > 1` we have `n ^ k = o(r ^ n)` as `n → ∞`. -/
 theorem is_o_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ) {r : ℝ} (hr : 1 < r) :
@@ -238,7 +238,7 @@ theorem is_o_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ)
   have h0 : 0 ≤ r' := zero_le_one.trans h1.le
   suffices : is_O _ (fun n : ℕ => (r' ^ k) ^ n) at_top
   exact this.trans_is_o (is_o_pow_pow_of_lt_left (pow_nonneg h0 _) hr')
-  conv in (r' ^ _) ^ _ => rw [← pow_mulₓ, mul_commₓ, pow_mulₓ]
+  conv in (r' ^ _) ^ _ => rw [← pow_mulₓ, mul_comm, pow_mulₓ]
   suffices : ∀ n : ℕ, ∥(n : R)∥ ≤ (r' - 1)⁻¹ * ∥(1 : R)∥ * ∥r' ^ n∥
   exact (is_O_of_le' _ this).pow _
   intro n
@@ -248,7 +248,7 @@ theorem is_o_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ)
 
 /-- For a real `r > 1` we have `n = o(r ^ n)` as `n → ∞`. -/
 theorem is_o_coe_const_pow_of_one_lt {R : Type _} [NormedRing R] {r : ℝ} (hr : 1 < r) :
-    is_o (coeₓ : ℕ → R) (fun n => r ^ n) at_top := by
+    is_o (coe : ℕ → R) (fun n => r ^ n) at_top := by
   simpa only [pow_oneₓ] using is_o_pow_const_const_pow_of_one_lt 1 hr
 
 /-- If `∥r₁∥ < r₂`, then for any naturak `k` we have `n ^ k r₁ ^ n = o (r₂ ^ n)` as `n → ∞`. -/
@@ -270,7 +270,7 @@ theorem is_o_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [NormedRi
 
 theorem tendsto_pow_const_div_const_pow_of_one_lt (k : ℕ) {r : ℝ} (hr : 1 < r) :
     tendsto (fun n => n ^ k / r ^ n : ℕ → ℝ) at_top (𝓝 0) :=
-  (is_o_pow_const_const_pow_of_one_lt k hr).tendsto_0
+  (is_o_pow_const_const_pow_of_one_lt k hr).tendsto_div_nhds_zero
 
 /-- If `|r| < 1`, then `n ^ k r ^ n` tends to zero for any natural `k`. -/
 theorem tendsto_pow_const_mul_const_pow_of_abs_lt_one (k : ℕ) {r : ℝ} (hr : |r| < 1) :
@@ -507,7 +507,7 @@ omit hr hC
 theorem edist_le_of_edist_le_geometric_of_tendsto {a : α} (ha : tendsto f at_top (𝓝 a)) (n : ℕ) :
     edist (f n) a ≤ C * r ^ n / (1 - r) := by
   convert edist_le_tsum_of_edist_le_of_tendsto _ hu ha _
-  simp only [pow_addₓ, Ennreal.tsum_mul_left, Ennreal.tsum_geometric, div_eq_mul_inv, mul_assocₓ]
+  simp only [pow_addₓ, Ennreal.tsum_mul_left, Ennreal.tsum_geometric, div_eq_mul_inv, mul_assoc]
 
 /-- If `edist (f n) (f (n+1))` is bounded by `C * r^n`, then the distance from
 `f 0` to the limit of `f` is bounded above by `C / (1 - r)`. -/
@@ -538,7 +538,7 @@ include ha
 `f n` to the limit of `f` is bounded above by `2 * C * 2^-n`. -/
 theorem edist_le_of_edist_le_geometric_two_of_tendsto (n : ℕ) : edist (f n) a ≤ 2 * C / 2 ^ n := by
   simp only [div_eq_mul_inv, Ennreal.inv_pow] at *
-  rw [mul_assocₓ, mul_commₓ]
+  rw [mul_assoc, mul_comm]
   convert edist_le_of_edist_le_geometric_of_tendsto (2⁻¹) C hu ha n
   rw [Ennreal.one_sub_inv_two, Ennreal.inv_inv]
 
@@ -584,7 +584,7 @@ theorem dist_le_of_le_geometric_of_tendsto {a : α} (ha : tendsto f at_top (𝓝
   have := aux_has_sum_of_le_geometric hr hu
   convert dist_le_tsum_of_dist_le_of_tendsto _ hu ⟨_, this⟩ ha n
   simp only [pow_addₓ, mul_left_commₓ C, mul_div_right_comm]
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact (this.mul_left _).tsum_eq.symm
 
 omit hr hu
@@ -767,7 +767,7 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SemiNormedGroup α] 
     refine'
       summable_of_norm_bounded (fun n => ∥f N∥ * r ^ n) (Summable.mul_left _ $ summable_geometric_of_lt_1 hr₀ hr₁)
         fun n => _
-    conv_rhs => rw [mul_commₓ, ← zero_addₓ N]
+    conv_rhs => rw [mul_comm, ← zero_addₓ N]
     refine' le_geom hr₀ n fun i _ => _
     convert hN (i + N) (N.le_add_left i) using 3
     ac_rfl

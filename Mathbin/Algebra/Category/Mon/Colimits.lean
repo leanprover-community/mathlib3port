@@ -68,7 +68,7 @@ inductive relation : prequotient F → prequotient F → Prop
   | one : ∀ j, relation (of j 1) one
   | mul_1 : ∀ x x' y r : relation x x', relation (mul x y) (mul x' y)
   | mul_2 : ∀ x y y' r : relation y y', relation (mul x y) (mul x y')
-  | mul_assocₓ : ∀ x y z, relation (mul (mul x y) z) (mul x (mul y z))
+  | mul_assoc : ∀ x y z, relation (mul (mul x y) z) (mul x (mul y z))
   | one_mulₓ : ∀ x, relation (mul one x) x
   | mul_oneₓ : ∀ x, relation (mul x one) x
 
@@ -204,7 +204,7 @@ def desc_fun (s : cocone F) : colimit_type F → s.X := by
       
     · rw [r_ih]
       
-    · rw [mul_assocₓ]
+    · rw [mul_assoc]
       
     · rw [one_mulₓ]
       

@@ -43,7 +43,7 @@ instance : InnerProductSpace ℝ ℍ :=
   InnerProductSpace.ofCore
     { inner := HasInner.inner,
       conj_sym := fun x y => by
-        simp [inner_def, mul_commₓ],
+        simp [inner_def, mul_comm],
       nonneg_re := fun x => norm_sq_nonneg, definite := fun x => norm_sq_eq_zero.1,
       add_left := fun x y z => by
         simp only [inner_def, add_mulₓ, add_re],
@@ -119,7 +119,7 @@ theorem coe_complex_coe (r : ℝ) : ((r : ℂ) : ℍ) = r :=
 
 /-- Coercion `ℂ →ₐ[ℝ] ℍ` as an algebra homomorphism. -/
 def of_complex : ℂ →ₐ[ℝ] ℍ where
-  toFun := coeₓ
+  toFun := coe
   map_one' := rfl
   map_zero' := rfl
   map_add' := coe_complex_add
@@ -127,7 +127,7 @@ def of_complex : ℂ →ₐ[ℝ] ℍ where
   commutes' := fun x => rfl
 
 @[simp]
-theorem coe_of_complex : ⇑of_complex = coeₓ :=
+theorem coe_of_complex : ⇑of_complex = coe :=
   rfl
 
 end Quaternion

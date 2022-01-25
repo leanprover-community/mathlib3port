@@ -101,7 +101,7 @@ theorem to_equiv_injective : Function.Injective (to_equiv : (M ≃ₛₗ[σ] M�
 theorem to_equiv_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : e₁.to_equiv = e₂.to_equiv ↔ e₁ = e₂ :=
   to_equiv_injective.eq_iff
 
-theorem to_linear_map_injective : injective (coeₓ : (M ≃ₛₗ[σ] M₂) → M →ₛₗ[σ] M₂) := fun e₁ e₂ H =>
+theorem to_linear_map_injective : injective (coe : (M ≃ₛₗ[σ] M₂) → M →ₛₗ[σ] M₂) := fun e₁ e₂ H =>
   to_equiv_injective $ Equivₓ.ext $ LinearMap.congr_fun H
 
 @[simp, norm_cast]
@@ -491,7 +491,7 @@ instance automorphism_group : Groupₓ (M ≃ₗ[R] M) where
 promoted to a monoid hom. -/
 @[simps]
 def automorphism_group.to_linear_map_monoid_hom : (M ≃ₗ[R] M) →* M →ₗ[R] M where
-  toFun := coeₓ
+  toFun := coe
   map_one' := rfl
   map_mul' := fun _ _ => rfl
 

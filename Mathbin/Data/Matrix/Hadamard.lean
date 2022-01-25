@@ -46,10 +46,10 @@ section BasicProperties
 variable (A : Matrix m n α) (B : Matrix m n α) (C : Matrix m n α)
 
 theorem hadamard_comm [CommSemigroupₓ α] : A ⊙ B = B ⊙ A :=
-  ext $ fun _ _ => mul_commₓ _ _
+  ext $ fun _ _ => mul_comm _ _
 
 theorem hadamard_assoc [Semigroupₓ α] : A ⊙ B ⊙ C = A ⊙ (B ⊙ C) :=
-  ext $ fun _ _ => mul_assocₓ _ _ _
+  ext $ fun _ _ => mul_assoc _ _ _
 
 theorem hadamard_add [Distrib α] : A ⊙ (B + C) = A ⊙ B + A ⊙ C :=
   ext $ fun _ _ => left_distrib _ _ _
@@ -120,7 +120,7 @@ theorem sum_hadamard_eq : (∑ (i : m) (j : n), (A ⊙ B) i j) = trace m R α (A
 theorem dot_product_vec_mul_hadamard [DecidableEq m] [DecidableEq n] (v : m → α) (w : n → α) :
     dot_product (vec_mul v (A ⊙ B)) w = trace m R α (diagonal v ⬝ A ⬝ (B ⬝ diagonal w)ᵀ) := by
   rw [← sum_hadamard_eq, Finset.sum_comm]
-  simp [dot_product, vec_mul, Finset.sum_mul, mul_assocₓ]
+  simp [dot_product, vec_mul, Finset.sum_mul, mul_assoc]
 
 end trace
 

@@ -92,7 +92,7 @@ theorem frequently_lt_rpow_neg (h : LiouvilleWith p x) (hlt : q < p) :
   rintro n ⟨hnC, hn, m, hne, hlt⟩
   replace hn : (0 : ℝ) < n := Nat.cast_pos.2 hn
   refine' ⟨m, hne, hlt.trans $ (div_lt_iff $ rpow_pos_of_pos hn _).2 _⟩
-  rwa [mul_commₓ, ← rpow_add hn, ← sub_eq_add_neg]
+  rwa [mul_comm, ← rpow_add hn, ← sub_eq_add_neg]
 
 /-- The product of a Liouville number and a nonzero rational number is again a Liouville number.  -/
 theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r) := by
@@ -100,7 +100,7 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
   refine' ⟨r.denom ^ p * (|r| * C), (tendsto_id.nsmul_at_top r.pos).Frequently (hC.mono _)⟩
   rintro n ⟨hn, m, hne, hlt⟩
   have A : (↑(r.num * m) : ℝ) / ↑(r.denom • id n) = m / n * r := by
-    simp [← div_mul_div, ← r.cast_def, mul_commₓ]
+    simp [← div_mul_div, ← r.cast_def, mul_comm]
   refine' ⟨r.num * m, _, _⟩
   · rw [A]
     simp [hne, hr]
@@ -108,7 +108,7 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
   · rw [A, ← sub_mul, abs_mul]
     simp only [smul_eq_mul, id.def, Nat.cast_mul]
     refine' (mul_lt_mul_of_pos_right hlt $ abs_pos.2 $ Rat.cast_ne_zero.2 hr).trans_le _
-    rw [mul_rpow, mul_div_mul_left, mul_commₓ, mul_div_assoc]
+    rw [mul_rpow, mul_div_mul_left, mul_comm, mul_div_assoc]
     exacts[(rpow_pos_of_pos (Nat.cast_pos.2 r.pos) _).ne', Nat.cast_nonneg _, Nat.cast_nonneg _]
     
 
@@ -116,13 +116,13 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
 `x` satisfies the same condition. -/
 theorem mul_rat_iff (hr : r ≠ 0) : LiouvilleWith p (x * r) ↔ LiouvilleWith p x :=
   ⟨fun h => by
-    simpa only [mul_assocₓ, ← Rat.cast_mul, mul_inv_cancel hr, Rat.cast_one, mul_oneₓ] using h.mul_rat (inv_ne_zero hr),
+    simpa only [mul_assoc, ← Rat.cast_mul, mul_inv_cancel hr, Rat.cast_one, mul_oneₓ] using h.mul_rat (inv_ne_zero hr),
     fun h => h.mul_rat hr⟩
 
 /-- The product `r * x`, `r : ℚ`, `r ≠ 0`, is a Liouville number with exponent `p` if and only if
 `x` satisfies the same condition. -/
 theorem rat_mul_iff (hr : r ≠ 0) : LiouvilleWith p (r * x) ↔ LiouvilleWith p x := by
-  rw [mul_commₓ, mul_rat_iff hr]
+  rw [mul_comm, mul_rat_iff hr]
 
 theorem rat_mul (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (r * x) :=
   (rat_mul_iff hr).2 h
@@ -134,7 +134,7 @@ theorem mul_int (h : LiouvilleWith p x) (hm : m ≠ 0) : LiouvilleWith p (x * m)
   (mul_int_iff hm).2 h
 
 theorem int_mul_iff (hm : m ≠ 0) : LiouvilleWith p (m * x) ↔ LiouvilleWith p x := by
-  rw [mul_commₓ, mul_int_iff hm]
+  rw [mul_comm, mul_int_iff hm]
 
 theorem int_mul (h : LiouvilleWith p x) (hm : m ≠ 0) : LiouvilleWith p (m * x) :=
   (int_mul_iff hm).2 h
@@ -146,10 +146,10 @@ theorem mul_nat (h : LiouvilleWith p x) (hn : n ≠ 0) : LiouvilleWith p (x * n)
   (mul_nat_iff hn).2 h
 
 theorem nat_mul_iff (hn : n ≠ 0) : LiouvilleWith p (n * x) ↔ LiouvilleWith p x := by
-  rw [mul_commₓ, mul_nat_iff hn]
+  rw [mul_comm, mul_nat_iff hn]
 
 theorem nat_mul (h : LiouvilleWith p x) (hn : n ≠ 0) : LiouvilleWith p (n * x) := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact h.mul_nat hn
 
 theorem add_rat (h : LiouvilleWith p x) (r : ℚ) : LiouvilleWith p (x + r) := by

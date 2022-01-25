@@ -26,13 +26,13 @@ def unitary (R : Type _) [Monoidₓ R] [StarMonoid R] : Submonoid R where
   mul_mem' := fun U B ⟨hA₁, hA₂⟩ ⟨hB₁, hB₂⟩ => by
     refine' ⟨_, _⟩
     · calc star (U * B) * (U * B) = star B * star U * U * B := by
-          simp only [mul_assocₓ, star_mul]_ = star B * (star U * U) * B := by
-          rw [← mul_assocₓ]_ = 1 := by
+          simp only [mul_assoc, star_mul]_ = star B * (star U * U) * B := by
+          rw [← mul_assoc]_ = 1 := by
           rw [hA₁, mul_oneₓ, hB₁]
       
     · calc U * B * star (U * B) = U * B * (star B * star U) := by
           rw [star_mul]_ = U * (B * star B) * star U := by
-          simp_rw [← mul_assocₓ]_ = 1 := by
+          simp_rw [← mul_assoc]_ = 1 := by
           rw [hB₂, mul_oneₓ, hA₂]
       
 
@@ -127,10 +127,10 @@ instance : CommGroupₓ (unitary R) :=
   { unitary.group, Submonoid.toCommMonoid _ with }
 
 theorem mem_iff_star_mul_self {U : R} : U ∈ unitary R ↔ star U * U = 1 :=
-  mem_iff.trans $ and_iff_left_of_imp $ fun h => mul_commₓ (star U) U ▸ h
+  mem_iff.trans $ and_iff_left_of_imp $ fun h => mul_comm (star U) U ▸ h
 
 theorem mem_iff_self_mul_star {U : R} : U ∈ unitary R ↔ U * star U = 1 :=
-  mem_iff.trans $ and_iff_right_of_imp $ fun h => mul_commₓ U (star U) ▸ h
+  mem_iff.trans $ and_iff_right_of_imp $ fun h => mul_comm U (star U) ▸ h
 
 end CommMonoidₓ
 

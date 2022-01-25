@@ -24,11 +24,11 @@ namespace Filter
 open Set
 
 @[to_additive]
-instance [HasOne α] : HasOne (Filter α) :=
+instance [One α] : One (Filter α) :=
   ⟨principal 1⟩
 
 @[simp, to_additive]
-theorem mem_one [HasOne α] (s : Set α) : s ∈ (1 : Filter α) ↔ (1 : α) ∈ s :=
+theorem mem_one [One α] (s : Set α) : s ∈ (1 : Filter α) ↔ (1 : α) ∈ s :=
   calc
     s ∈ (1 : Filter α) ↔ 1 ⊆ s := Iff.rfl
     _ ↔ (1 : α) ∈ s := by
@@ -73,17 +73,17 @@ theorem ne_bot.mul [Monoidₓ α] {f g : Filter α} : ne_bot f → ne_bot g → 
   exact ((hf a ha).mul (hg b hb)).mono ab
 
 @[to_additive]
-protected theorem mul_assocₓ [Monoidₓ α] (f g h : Filter α) : f * g * h = f * (g * h) := by
+protected theorem mul_assoc [Monoidₓ α] (f g h : Filter α) : f * g * h = f * (g * h) := by
   ext s
   constructor
   · rintro ⟨a, b, ⟨a₁, a₂, ha₁, ha₂, a₁a₂⟩, hb, ab⟩
     refine' ⟨a₁, a₂ * b, ha₁, mul_mem_mul ha₂ hb, _⟩
-    rw [← mul_assocₓ]
+    rw [← mul_assoc]
     calc a₁ * a₂ * b ⊆ a * b := mul_subset_mul a₁a₂ (subset.refl _)_ ⊆ s := ab
     
   · rintro ⟨a, b, ha, ⟨b₁, b₂, hb₁, hb₂, b₁b₂⟩, ab⟩
     refine' ⟨a * b₁, b₂, mul_mem_mul ha hb₁, hb₂, _⟩
-    rw [mul_assocₓ]
+    rw [mul_assoc]
     calc a * (b₁ * b₂) ⊆ a * b := mul_subset_mul (subset.refl _) b₁b₂ _ ⊆ s := ab
     
 

@@ -130,7 +130,7 @@ protected theorem Commute.geom_sum₂_mul_add {x y : α} (h : Commute x y) (n : 
     have f_succ : ∀ i, i ∈ range n → f (n + 1) i = y * f n i := fun i hi => by
       dsimp [f]
       have : Commute y ((x + y) ^ i) := (h.symm.add_right (Commute.refl y)).pow_right i
-      rw [← mul_assocₓ, this.eq, mul_assocₓ, ← pow_succₓ y (n - 1 - i)]
+      rw [← mul_assoc, this.eq, mul_assoc, ← pow_succₓ y (n - 1 - i)]
       congr 2
       rw [add_tsub_cancel_right, ← tsub_add_eq_tsub_tsub, add_commₓ 1 i]
       have : i + 1 + (n - (i + 1)) = n := add_tsub_cancel_of_le (mem_range.mp hi)
@@ -139,7 +139,7 @@ protected theorem Commute.geom_sum₂_mul_add {x y : α} (h : Commute x y) (n : 
     rw [pow_succₓ (x + y), add_mulₓ, sum_range_succ_comm, add_mulₓ, f_last, add_assocₓ]
     rw [(((Commute.refl x).add_right h).pow_right n).Eq]
     congr 1
-    rw [sum_congr rfl f_succ, ← mul_sum, pow_succₓ y, mul_assocₓ, ← mul_addₓ y, ih]
+    rw [sum_congr rfl f_succ, ← mul_sum, pow_succₓ y, mul_assoc, ← mul_addₓ y, ih]
     
 
 end Semiringₓ
@@ -240,14 +240,14 @@ protected theorem Commute.mul_geom_sum₂_Ico [Ringₓ α] {x y : α} (h : Commu
     rw [← tsub_add_eq_tsub_tsub m, h', ← tsub_add_eq_tsub_tsub]
   rw [this]
   simp_rw [pow_mul_commₓ y (n - m) _]
-  simp_rw [← mul_assocₓ]
-  rw [← sum_mul, ← geom_sum₂_def, mul_sub, h.mul_geom_sum₂, ← mul_assocₓ, h.mul_geom_sum₂, sub_mul, ← pow_addₓ,
+  simp_rw [← mul_assoc]
+  rw [← sum_mul, ← geom_sum₂_def, mul_sub, h.mul_geom_sum₂, ← mul_assoc, h.mul_geom_sum₂, sub_mul, ← pow_addₓ,
     add_tsub_cancel_of_le hmn, sub_sub_sub_cancel_right (x ^ n) (x ^ m * y ^ (n - m)) (y ^ n)]
 
 protected theorem Commute.geom_sum₂_succ_eq {α : Type u} [Ringₓ α] {x y : α} (h : Commute x y) {n : ℕ} :
     geomSum₂ x y (n + 1) = x ^ n + y * geomSum₂ x y n := by
   simp_rw [geomSum₂, mul_sum, sum_range_succ_comm, Nat.add_succ_sub_one, add_zeroₓ, tsub_self, pow_zeroₓ, mul_oneₓ,
-    add_right_injₓ, ← mul_assocₓ, (h.symm.pow_right _).Eq, mul_assocₓ, ← pow_succₓ]
+    add_right_injₓ, ← mul_assoc, (h.symm.pow_right _).Eq, mul_assoc, ← pow_succₓ]
   refine' sum_congr rfl fun i hi => _
   suffices n - 1 - i + 1 = n - i by
     rw [this]
@@ -316,9 +316,9 @@ theorem geom_sum_inv [DivisionRing α] {x : α} (hx1 : x ≠ 1) (hx0 : x ≠ 0) 
       (by
         simp )
       fun n h => by
-      rw [pow_succₓ, mul_inv_rev₀, ← mul_assocₓ, h, mul_assocₓ, mul_inv_cancel hx0, mul_assocₓ, inv_mul_cancel hx0]
-  rw [geom_sum_eq h₁, div_eq_iff_mul_eq h₂, ← mul_right_inj' h₃, ← mul_assocₓ, ← mul_assocₓ, mul_inv_cancel h₃]
-  simp [mul_addₓ, add_mulₓ, mul_inv_cancel hx0, mul_assocₓ, h₄, sub_eq_add_neg, add_commₓ, add_left_commₓ]
+      rw [pow_succₓ, mul_inv_rev₀, ← mul_assoc, h, mul_assoc, mul_inv_cancel hx0, mul_assoc, inv_mul_cancel hx0]
+  rw [geom_sum_eq h₁, div_eq_iff_mul_eq h₂, ← mul_right_inj' h₃, ← mul_assoc, ← mul_assoc, mul_inv_cancel h₃]
+  simp [mul_addₓ, add_mulₓ, mul_inv_cancel hx0, mul_assoc, h₄, sub_eq_add_neg, add_commₓ, add_left_commₓ]
 
 variable {β : Type _}
 
@@ -338,7 +338,7 @@ theorem Nat.pred_mul_geom_sum_le (a b n : ℕ) : ((b - 1) * ∑ i in range n.suc
     ((b - 1) * ∑ i in range n.succ, a / b ^ i) =
         (∑ i in range n, a / b ^ (i + 1) * b) + a * b - ((∑ i in range n, a / b ^ i) + a / b ^ n) :=
       by
-      rw [tsub_mul, mul_commₓ, sum_mul, one_mulₓ, sum_range_succ', sum_range_succ, pow_zeroₓ, Nat.div_oneₓ]
+      rw [tsub_mul, mul_comm, sum_mul, one_mulₓ, sum_range_succ', sum_range_succ, pow_zeroₓ, Nat.div_oneₓ]
     _ ≤ (∑ i in range n, a / b ^ i) + a * b - ((∑ i in range n, a / b ^ i) + a / b ^ n) := by
       refine' tsub_le_tsub_right (add_le_add_right (sum_le_sum $ fun i _ => _) _) _
       rw [pow_succ'ₓ, ← Nat.div_div_eq_div_mulₓ]
@@ -352,7 +352,7 @@ theorem Nat.geom_sum_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) : (∑ i in range n
   · rw [sum_range_zero, zero_mul]
     exact Nat.zero_leₓ _
     
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact (Nat.pred_mul_geom_sum_le a b n).trans tsub_le_self
 
 theorem Nat.geom_sum_Ico_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) : (∑ i in Ico 1 n, a / b ^ i) ≤ a / (b - 1) := by

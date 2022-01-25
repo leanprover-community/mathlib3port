@@ -58,11 +58,11 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
       (mul_eq_zero.mpr ∘ Or.inr) _
   calc
     (∑ x : σ → K, ∏ i, x i ^ d i) =
-        ∑ (x₀ : { j // j ≠ i } → K) (x : { x : σ → K // x ∘ coeₓ = x₀ }), ∏ j, (x : σ → K) j ^ d j :=
+        ∑ (x₀ : { j // j ≠ i } → K) (x : { x : σ → K // x ∘ coe = x₀ }), ∏ j, (x : σ → K) j ^ d j :=
       (Fintype.sum_fiberwise _ _).symm _ = 0 := Fintype.sum_eq_zero _ _
   intro x₀
-  let e : K ≃ { x // x ∘ coeₓ = x₀ } := (Equivₓ.subtypeEquivCodomain _).symm
-  calc (∑ x : { x : σ → K // x ∘ coeₓ = x₀ }, ∏ j, (x : σ → K) j ^ d j) = ∑ a : K, ∏ j : σ, (e a : σ → K) j ^ d j :=
+  let e : K ≃ { x // x ∘ coe = x₀ } := (Equivₓ.subtypeEquivCodomain _).symm
+  calc (∑ x : { x : σ → K // x ∘ coe = x₀ }, ∏ j, (x : σ → K) j ^ d j) = ∑ a : K, ∏ j : σ, (e a : σ → K) j ^ d j :=
       (e.sum_comp _).symm _ = ∑ a : K, (∏ j, x₀ j ^ d j) * a ^ d i :=
       Fintype.sum_congr _ _ _ _ = (∏ j, x₀ j ^ d j) * ∑ a : K, a ^ d i := by
       rw [mul_sum]_ = 0 := by
@@ -74,7 +74,7 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
       rw [← e'.prod_comp, Fintype.prod_sum_type, univ_unique, prod_singleton]
       rfl _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
       rw [Equivₓ.subtype_equiv_codomain_symm_apply_eq]_ = a ^ d i * ∏ j, x₀ j ^ d j :=
-      congr_argₓ _ (Fintype.prod_congr _ _ _)_ = (∏ j, x₀ j ^ d j) * a ^ d i := mul_commₓ _ _
+      congr_argₓ _ (Fintype.prod_congr _ _ _)_ = (∏ j, x₀ j ^ d j) * a ^ d i := mul_comm _ _
   · rintro ⟨j, hj⟩
     show (e a : σ → K) j ^ d j = x₀ ⟨j, hj⟩ ^ d j
     rw [Equivₓ.subtype_equiv_codomain_symm_apply_ne]

@@ -227,7 +227,7 @@ theorem ae_nonneg_of_forall_set_integral_nonneg_of_finite_measure_of_measurable 
       refine' set_integral_mono_ae_restrict hf.integrable_on (integrable_on_const.mpr (Or.inr (measure_lt_top μ s))) _
       rw [eventually_le, ae_restrict_iff hs]
       exact eventually_of_forall fun x hxs => hxs
-    rwa [set_integral_const, smul_eq_mul, mul_commₓ] at h_const_le
+    rwa [set_integral_const, smul_eq_mul, mul_comm] at h_const_le
   by_contra
   refine' (lt_self_iff_false (∫ x in s, f x ∂μ)).mp (h_int_gt.trans_lt _)
   refine' (mul_neg_iff.mpr (Or.inr ⟨hb_neg, _⟩)).trans_le _

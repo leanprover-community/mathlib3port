@@ -65,7 +65,7 @@ theorem abs_mul_exp_arg_mul_I (x : ℂ) : ↑abs x * exp (arg x * I) = x := by
   · simp
     
   · have : abs x ≠ 0 := abs_ne_zero.2 hx
-    ext <;> field_simp [sin_arg, cos_arg hx, this, mul_commₓ (abs x)]
+    ext <;> field_simp [sin_arg, cos_arg hx, this, mul_comm (abs x)]
     
 
 @[simp]
@@ -176,7 +176,7 @@ theorem arg_real_mul (x : ℂ) {r : ℝ} (hr : 0 < r) : arg (r * x) = arg x := b
   · rw [mul_zero]
     
   conv_lhs =>
-    rw [← abs_mul_cos_add_sin_mul_I x, ← mul_assocₓ, ← of_real_mul,
+    rw [← abs_mul_cos_add_sin_mul_I x, ← mul_assoc, ← of_real_mul,
       arg_mul_cos_add_sin_mul_I (mul_pos hr (abs_pos.2 hx)) x.arg_mem_Ioc]
 
 theorem arg_eq_arg_iff {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) : arg x = arg y ↔ (abs y / abs x : ℂ) * x = y := by
@@ -304,7 +304,7 @@ theorem arg_conj (x : ℂ) : arg (conj x) = if arg x = π then π else -arg x :=
     
 
 theorem arg_inv (x : ℂ) : arg (x⁻¹) = if arg x = π then π else -arg x := by
-  rw [← arg_conj, inv_def, mul_commₓ]
+  rw [← arg_conj, inv_def, mul_comm]
   by_cases' hx : x = 0
   · simp [hx]
     

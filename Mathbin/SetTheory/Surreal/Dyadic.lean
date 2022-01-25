@@ -1,5 +1,5 @@
 import Mathbin.Algebra.Algebra.Basic
-import Mathbin.GroupTheory.MonoidLocalization
+import Mathbin.RingTheory.Localization
 import Mathbin.SetTheory.Surreal.Basic
 
 /-!
@@ -153,7 +153,7 @@ theorem nsmul_pow_two_pow_half (n : ℕ) : 2 ^ n • pow_half n = 1 := by
   induction' n with n hn
   · simp only [nsmul_one, pow_half_zero, Nat.cast_one, pow_zeroₓ]
     
-  · rw [← hn, ← double_pow_half_succ_eq_pow_half n, smul_smul (2 ^ n) 2 (pow_half n.succ), mul_commₓ, pow_succₓ]
+  · rw [← hn, ← double_pow_half_succ_eq_pow_half n, smul_smul (2 ^ n) 2 (pow_half n.succ), mul_comm, pow_succₓ]
     
 
 theorem nsmul_pow_two_pow_half' (n k : ℕ) : 2 ^ n • pow_half (n + k) = pow_half k := by
@@ -175,7 +175,7 @@ theorem dyadic_aux {m₁ m₂ : ℤ} {y₁ y₂ : ℕ} (h₂ : m₁ * 2 ^ y₁ =
   wlog h : y₁ ≤ y₂
   intro m₁ m₂ h₂
   obtain ⟨c, rfl⟩ := le_iff_exists_add.mp h
-  rw [add_commₓ, pow_addₓ, ← mul_assocₓ, mul_eq_mul_right_iff] at h₂
+  rw [add_commₓ, pow_addₓ, ← mul_assoc, mul_eq_mul_right_iff] at h₂
   cases h₂
   · rw [h₂, add_commₓ, zsmul_pow_two_pow_half m₂ c y₁]
     
@@ -183,27 +183,53 @@ theorem dyadic_aux {m₁ m₂ : ℤ} {y₁ y₂ : ℕ} (h₂ : m₁ * 2 ^ y₁ =
     linarith
     
 
-/-- The map `dyadic_map` sends ⟦⟨m, 2^n⟩⟧ to m • half ^ n. -/
-def dyadic_map (x : Localization (Submonoid.powers (2 : ℤ))) : Surreal :=
-  (Localization.liftOn x fun x y => x • pow_half (Submonoid.log y)) $ by
-    intro m₁ m₂ n₁ n₂ h₁
-    obtain ⟨⟨n₃, y₃, hn₃⟩, h₂⟩ := localization.r_iff_exists.mp h₁
-    simp only [Subtype.coe_mk, mul_eq_mul_right_iff] at h₂
-    cases h₂
-    · simp only
-      obtain ⟨a₁, ha₁⟩ := n₁.prop
-      obtain ⟨a₂, ha₂⟩ := n₂.prop
-      have hn₁ : n₁ = Submonoid.pow 2 a₁ := Subtype.ext ha₁.symm
-      have hn₂ : n₂ = Submonoid.pow 2 a₂ := Subtype.ext ha₂.symm
-      have h₂ : 1 < (2 : ℤ).natAbs := by
-        decide
-      rw [hn₁, hn₂, Submonoid.log_pow_int_eq_self h₂, Submonoid.log_pow_int_eq_self h₂]
-      apply dyadic_aux
-      rwa [ha₁, ha₂]
-      
-    · have := Nat.one_le_pow y₃ 2 Nat.succ_pos'
-      linarith
-      
+/-- The additive monoid morphism `dyadic_map` sends ⟦⟨m, 2^n⟩⟧ to m • half ^ n. -/
+def dyadic_map : Localization.Away (2 : ℤ) →+ Surreal where
+  toFun := fun x =>
+    (Localization.liftOn x fun x y => x • pow_half (Submonoid.log y)) $ by
+      intro m₁ m₂ n₁ n₂ h₁
+      obtain ⟨⟨n₃, y₃, hn₃⟩, h₂⟩ := localization.r_iff_exists.mp h₁
+      simp only [Subtype.coe_mk, mul_eq_mul_right_iff] at h₂
+      cases h₂
+      · simp only
+        obtain ⟨a₁, ha₁⟩ := n₁.prop
+        obtain ⟨a₂, ha₂⟩ := n₂.prop
+        have hn₁ : n₁ = Submonoid.pow 2 a₁ := Subtype.ext ha₁.symm
+        have hn₂ : n₂ = Submonoid.pow 2 a₂ := Subtype.ext ha₂.symm
+        have h₂ : 1 < (2 : ℤ).natAbs := one_lt_two
+        rw [hn₁, hn₂, Submonoid.log_pow_int_eq_self h₂, Submonoid.log_pow_int_eq_self h₂]
+        apply dyadic_aux
+        rwa [ha₁, ha₂]
+        
+      · have := Nat.one_le_pow y₃ 2 Nat.succ_pos'
+        linarith
+        
+  map_zero' := Localization.lift_on_zero _ _
+  map_add' := fun x y =>
+    Localization.induction_on₂ x y $ by
+      rintro ⟨a, ⟨b, ⟨b', rfl⟩⟩⟩ ⟨c, ⟨d, ⟨d', rfl⟩⟩⟩
+      have h₂ : 1 < (2 : ℤ).natAbs := one_lt_two
+      have hpow₂ := Submonoid.log_pow_int_eq_self h₂
+      simp_rw [Submonoid.pow_apply]  at hpow₂
+      simp_rw [Localization.add_mk, Localization.lift_on_mk, Subtype.coe_mk,
+        Submonoid.log_mul (Int.pow_right_injective h₂), hpow₂]
+      calc
+        (2 ^ b' * c + 2 ^ d' * a) • pow_half (b' + d') =
+            (c * 2 ^ b') • pow_half (b' + d') + (a * 2 ^ d') • pow_half (d' + b') :=
+          by
+          simp only [add_smul, mul_comm, add_commₓ]_ = c • pow_half d' + a • pow_half b' := by
+          simp only [zsmul_pow_two_pow_half]_ = a • pow_half b' + c • pow_half d' := add_commₓ _ _
+
+@[simp]
+theorem dyadic_map_apply (m : ℤ) (p : Submonoid.powers (2 : ℤ)) :
+    dyadic_map (IsLocalization.mk' (Localization (Submonoid.powers 2)) m p) = m • pow_half (Submonoid.log p) := by
+  rw [← Localization.mk_eq_mk']
+  rfl
+
+@[simp]
+theorem dyadic_map_apply_pow (m : ℤ) (n : ℕ) :
+    dyadic_map (IsLocalization.mk' (Localization (Submonoid.powers 2)) m (Submonoid.pow 2 n)) = m • pow_half n := by
+  rw [dyadic_map_apply, @Submonoid.log_pow_int_eq_self 2 one_lt_two]
 
 /-- We define dyadic surreals as the range of the map `dyadic_map`. -/
 def dyadic : Set Surreal :=

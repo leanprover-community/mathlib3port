@@ -610,7 +610,7 @@ def lin_mul_lin (f g : M₂ →ₗ[R₂] R₂) : BilinForm R₂ M₂ where
   bilin_add_left := fun x y z => by
     rw [LinearMap.map_add, add_mulₓ]
   bilin_smul_left := fun x y z => by
-    rw [LinearMap.map_smul, smul_eq_mul, mul_assocₓ]
+    rw [LinearMap.map_smul, smul_eq_mul, mul_assoc]
   bilin_add_right := fun x y z => by
     rw [LinearMap.map_add, mul_addₓ]
   bilin_smul_right := fun x y z => by
@@ -752,11 +752,11 @@ def Matrix.toBilin'Aux [Fintype n] (M : Matrix n n R₂) : BilinForm R₂ (n →
   bilin_add_left := fun x y z => by
     simp only [Pi.add_apply, add_mulₓ, sum_add_distrib]
   bilin_smul_left := fun a x y => by
-    simp only [Pi.smul_apply, smul_eq_mul, mul_assocₓ, mul_sum]
+    simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, mul_sum]
   bilin_add_right := fun x y z => by
     simp only [Pi.add_apply, mul_addₓ, sum_add_distrib]
   bilin_smul_right := fun a x y => by
-    simp only [Pi.smul_apply, smul_eq_mul, mul_assocₓ, mul_left_commₓ, mul_sum]
+    simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, mul_left_commₓ, mul_sum]
 
 theorem Matrix.to_bilin'_aux_std_basis [Fintype n] [DecidableEq n] (M : Matrix n n R₂) (i j : n) :
     M.to_bilin'_aux (std_basis R₂ (fun _ => R₂) i 1) (std_basis R₂ (fun _ => R₂) j 1) = M i j := by
@@ -840,7 +840,7 @@ theorem Matrix.to_bilin'_apply' (M : Matrix n n R₃) (v w : n → R₃) :
   refine' Finset.sum_congr rfl fun _ _ => _
   rw [Finset.mul_sum]
   refine' Finset.sum_congr rfl fun _ _ => _
-  rw [← mul_assocₓ]
+  rw [← mul_assoc]
 
 @[simp]
 theorem Matrix.to_bilin'_std_basis (M : Matrix n n R₃) (i j : n) :
@@ -882,7 +882,7 @@ theorem BilinForm.to_matrix'_comp (B : BilinForm R₃ (n → R₃)) (l r : (o �
     rw [Finsupp.sum_fintype]
     · apply sum_congr rfl
       rintro j' -
-      simp only [smul_eq_mul, Pi.basis_fun_repr, mul_assocₓ, mul_commₓ, mul_left_commₓ, Pi.basis_fun_apply]
+      simp only [smul_eq_mul, Pi.basis_fun_repr, mul_assoc, mul_comm, mul_left_commₓ, Pi.basis_fun_apply]
       
     · intros
       simp only [zero_smul, smul_zero]
@@ -1013,7 +1013,7 @@ theorem BilinForm.to_matrix_comp (B : BilinForm R₃ M₃) (l r : M₃' →ₗ[R
     rw [Finsupp.sum_fintype]
     · apply sum_congr rfl
       rintro j' -
-      simp only [smul_eq_mul, LinearMap.to_matrix_apply, Basis.equiv_fun_apply, mul_assocₓ, mul_commₓ, mul_left_commₓ]
+      simp only [smul_eq_mul, LinearMap.to_matrix_apply, Basis.equiv_fun_apply, mul_assoc, mul_comm, mul_left_commₓ]
       
     · intros
       simp only [zero_smul, smul_zero]
@@ -1341,12 +1341,12 @@ theorem Matrix.is_adjoint_pair_equiv [DecidableEq n] (P : Matrix n n R₃) (h : 
     dunfold Matrix.IsAdjointPair
     repeat'
       rw [Matrix.transpose_mul]
-    simp only [← Matrix.mul_eq_mul, ← mul_assocₓ, P.transpose_nonsing_inv]
-    conv_lhs => rhs rw [mul_assocₓ, mul_assocₓ]congr skip rw [← mul_assocₓ]
-    conv_rhs => rw [mul_assocₓ, mul_assocₓ]conv => lhs congr skip rw [← mul_assocₓ]
+    simp only [← Matrix.mul_eq_mul, ← mul_assoc, P.transpose_nonsing_inv]
+    conv_lhs => rhs rw [mul_assoc, mul_assoc]congr skip rw [← mul_assoc]
+    conv_rhs => rw [mul_assoc, mul_assoc]conv => lhs congr skip rw [← mul_assoc]
     exact this
   rw [Units.eq_mul_inv_iff_mul_eq]
-  conv_rhs => rw [mul_assocₓ]
+  conv_rhs => rw [mul_assoc]
   rw [v.inv_mul_eq_iff_eq_mul]
 
 variable [DecidableEq n]

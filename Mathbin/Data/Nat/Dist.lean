@@ -91,7 +91,7 @@ theorem dist_mul_right (n k m : ℕ) : dist (n * k) (m * k) = dist n m * k := by
   rw [dist.def, dist.def, right_distrib, tsub_mul, tsub_mul]
 
 theorem dist_mul_left (k n m : ℕ) : dist (k * n) (k * m) = k * dist n m := by
-  rw [mul_commₓ k n, mul_commₓ k m, dist_mul_right, mul_commₓ]
+  rw [mul_comm k n, mul_comm k m, dist_mul_right, mul_comm]
 
 theorem dist_succ_succ {i j : Nat} : dist (succ i) (succ j) = dist i j := by
   simp [dist.def, succ_sub_succ]

@@ -47,7 +47,7 @@ variable {M}
 @[simp, to_additive add_mem_add_center]
 theorem mul_mem_center [Semigroupₓ M] {a b : M} (ha : a ∈ Set.Center M) (hb : b ∈ Set.Center M) :
     a * b ∈ Set.Center M := fun g => by
-  rw [mul_assocₓ, ← hb g, ← mul_assocₓ, ha g, mul_assocₓ]
+  rw [mul_assoc, ← hb g, ← mul_assoc, ha g, mul_assoc]
 
 @[simp, to_additive neg_mem_add_center]
 theorem inv_mem_center [Groupₓ M] {a : M} (ha : a ∈ Set.Center M) : a⁻¹ ∈ Set.Center M := fun g => by
@@ -63,10 +63,10 @@ theorem neg_mem_center [Ringₓ M] {a : M} (ha : a ∈ Set.Center M) : -a ∈ Se
   rw [← neg_mul_comm, ha (-c), neg_mul_comm]
 
 @[to_additive subset_add_center_add_units]
-theorem subset_center_units [Monoidₓ M] : (coeₓ : (M)ˣ → M) ⁻¹' center M ⊆ Set.Center (M)ˣ := fun a ha b =>
+theorem subset_center_units [Monoidₓ M] : (coe : (M)ˣ → M) ⁻¹' center M ⊆ Set.Center (M)ˣ := fun a ha b =>
   Units.ext $ ha _
 
-theorem center_units_subset [GroupWithZeroₓ M] : Set.Center (M)ˣ ⊆ (coeₓ : (M)ˣ → M) ⁻¹' center M := fun a ha b => by
+theorem center_units_subset [GroupWithZeroₓ M] : Set.Center (M)ˣ ⊆ (coe : (M)ˣ → M) ⁻¹' center M := fun a ha b => by
   obtain rfl | hb := eq_or_ne b 0
   · rw [zero_mul, mul_zero]
     
@@ -74,7 +74,7 @@ theorem center_units_subset [GroupWithZeroₓ M] : Set.Center (M)ˣ ⊆ (coeₓ 
     
 
 /-- In a group with zero, the center of the units is the preimage of the center. -/
-theorem center_units_eq [GroupWithZeroₓ M] : Set.Center (M)ˣ = (coeₓ : (M)ˣ → M) ⁻¹' center M :=
+theorem center_units_eq [GroupWithZeroₓ M] : Set.Center (M)ˣ = (coe : (M)ˣ → M) ⁻¹' center M :=
   subset.antisymm center_units_subset subset_center_units
 
 @[simp]
@@ -102,7 +102,7 @@ variable (M)
 
 @[simp, to_additive add_center_eq_univ]
 theorem center_eq_univ [CommSemigroupₓ M] : center M = Set.Univ :=
-  subset.antisymm (subset_univ _) $ fun x _ y => mul_commₓ y x
+  subset.antisymm (subset_univ _) $ fun x _ y => mul_comm y x
 
 end Set
 

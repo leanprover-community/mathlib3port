@@ -211,7 +211,7 @@ theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
         simp only [true_orₓ, dvd_zero]
         
       obtain ⟨m, u, rfl⟩ := spec.2 ha
-      rw [mul_assocₓ, mul_left_commₓ, IsUnit.dvd_mul_left _ _ _ (Units.is_unit _)] at h
+      rw [mul_assoc, mul_left_commₓ, IsUnit.dvd_mul_left _ _ _ (Units.is_unit _)] at h
       rw [IsUnit.dvd_mul_right (Units.is_unit _)]
       by_cases' hm : m = 0
       · simp only [hm, one_mulₓ, pow_zeroₓ] at h⊢
@@ -349,7 +349,7 @@ theorem eq_unit_mul_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irre
   obtain ⟨n, hn⟩ := associated_pow_irreducible hx hirr
   obtain ⟨u, rfl⟩ := hn.symm
   use n, u
-  apply mul_commₓ
+  apply mul_comm
 
 open Submodule.IsPrincipal
 
@@ -370,7 +370,7 @@ theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible 
     rw [Multiset.prod_repeat, Multiset.prod_repeat, Associated]
     refine' ⟨u * v⁻¹, _⟩
     simp only [Units.coe_mul]
-    rw [mul_left_commₓ, ← mul_assocₓ, h, mul_right_commₓ, Units.mul_inv, one_mulₓ]
+    rw [mul_left_commₓ, ← mul_assoc, h, mul_right_commₓ, Units.mul_inv, one_mulₓ]
   have := Multiset.card_eq_card_of_rel (UniqueFactorizationMonoid.factors_unique _ _ key)
   · simpa only [Multiset.card_repeat]
     
@@ -406,7 +406,7 @@ noncomputable def add_val (R : Type u) [CommRingₓ R] [IsDomain R] [DiscreteVal
 theorem add_val_def (r : R) (u : (R)ˣ) {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) (hr : r = u * ϖ ^ n) : add_val R r = n := by
   rw [add_val, add_valuation_apply, hr,
     eq_of_associated_left (associated_of_irreducible R hϖ (Classical.some_spec (exists_prime R)).Irreducible),
-    eq_of_associated_right (Associated.symm ⟨u, mul_commₓ _ _⟩),
+    eq_of_associated_right (Associated.symm ⟨u, mul_comm _ _⟩),
     multiplicity_pow_self_of_prime (PrincipalIdealRing.irreducible_iff_prime.1 hϖ)]
 
 theorem add_val_def' (u : (R)ˣ) {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) : add_val R ((u : R) * ϖ ^ n) = n :=
@@ -442,7 +442,7 @@ theorem add_val_eq_top_iff {a : R} : add_val R a = ⊤ ↔ a = 0 := by
     intro h
     obtain ⟨n, ha⟩ := associated_pow_irreducible h hi
     obtain ⟨u, rfl⟩ := ha.symm
-    rw [mul_commₓ, add_val_def' u hi n]
+    rw [mul_comm, add_val_def' u hi n]
     exact Enat.coe_ne_top _
     
   · rintro rfl

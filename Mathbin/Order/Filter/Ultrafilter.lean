@@ -53,7 +53,7 @@ instance ne_bot (f : Ultrafilter α) : ne_bot (f : Filter α) :=
 theorem mem_coe : s ∈ (f : Filter α) ↔ s ∈ f :=
   Iff.rfl
 
-theorem coe_injective : injective (coeₓ : Ultrafilter α → Filter α)
+theorem coe_injective : injective (coe : Ultrafilter α → Filter α)
   | ⟨f, h₁, h₂⟩, ⟨g, h₃, h₄⟩, rfl => by
     congr
 
@@ -229,7 +229,7 @@ attribute [local instance] Filter.monad Filter.is_lawful_monad
 
 instance IsLawfulMonad : IsLawfulMonad Ultrafilter where
   id_map := fun α f => coe_injective (id_map f.1)
-  pure_bind := fun α β a f => coe_injective (pure_bind a (coeₓ ∘ f))
+  pure_bind := fun α β a f => coe_injective (pure_bind a (coe ∘ f))
   bind_assoc := fun α β γ f m₁ m₂ => coe_injective (filter_eq rfl)
   bind_pure_comp_eq_map := fun α β f x => coe_injective (bind_pure_comp_eq_map f x.1)
 
@@ -297,12 +297,12 @@ open Ultrafilter
 
 theorem mem_iff_ultrafilter {s : Set α} {f : Filter α} : s ∈ f ↔ ∀ g : Ultrafilter α, ↑g ≤ f → s ∈ g := by
   refine' ⟨fun hf g hg => hg hf, fun H => by_contra $ fun hf => _⟩
-  set g : Filter (↥sᶜ) := comap coeₓ f
+  set g : Filter (↥sᶜ) := comap coe f
   have : ne_bot g :=
     comap_ne_bot_iff_compl_range.2
       (by
         simpa [compl_set_of])
-  simpa using H ((of g).map coeₓ) (map_le_iff_le_comap.mpr (of_le g))
+  simpa using H ((of g).map coe) (map_le_iff_le_comap.mpr (of_le g))
 
 theorem le_iff_ultrafilter {f₁ f₂ : Filter α} : f₁ ≤ f₂ ↔ ∀ g : Ultrafilter α, ↑g ≤ f₁ → ↑g ≤ f₂ :=
   ⟨fun h g h₁ => h₁.trans h, fun h s hs => mem_iff_ultrafilter.2 $ fun g hg => h g hg hs⟩

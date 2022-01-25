@@ -347,7 +347,7 @@ theorem le_inv' : a ≤ b⁻¹ ↔ b ≤ a⁻¹ :=
 
 @[to_additive]
 theorem mul_inv_le_inv_mul_iff : a * b⁻¹ ≤ d⁻¹ * c ↔ d * a ≤ c * b := by
-  rw [← mul_le_mul_iff_left d, ← mul_le_mul_iff_right b, mul_inv_cancel_left, mul_assocₓ, inv_mul_cancel_right]
+  rw [← mul_le_mul_iff_left d, ← mul_le_mul_iff_right b, mul_inv_cancel_left, mul_assoc, inv_mul_cancel_right]
 
 @[simp, to_additive]
 theorem div_le_self_iff (a : α) {b : α} : a / b ≤ a ↔ 1 ≤ b := by
@@ -388,7 +388,7 @@ attribute [to_additive neg_lt_of_neg_lt] inv_lt_of_inv_lt'
 
 @[to_additive]
 theorem mul_inv_lt_inv_mul_iff : a * b⁻¹ < d⁻¹ * c ↔ d * a < c * b := by
-  rw [← mul_lt_mul_iff_left d, ← mul_lt_mul_iff_right b, mul_inv_cancel_left, mul_assocₓ, inv_mul_cancel_right]
+  rw [← mul_lt_mul_iff_left d, ← mul_lt_mul_iff_right b, mul_inv_cancel_left, mul_assoc, inv_mul_cancel_right]
 
 @[simp, to_additive]
 theorem div_lt_self_iff (a : α) {b : α} : a / b < a ↔ 1 < b := by
@@ -476,15 +476,15 @@ variable [LE α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b c d : α}
 
 @[to_additive]
 theorem inv_mul_le_iff_le_mul' : c⁻¹ * a ≤ b ↔ a ≤ b * c := by
-  rw [inv_mul_le_iff_le_mul, mul_commₓ]
+  rw [inv_mul_le_iff_le_mul, mul_comm]
 
 @[simp, to_additive]
 theorem mul_inv_le_iff_le_mul' : a * b⁻¹ ≤ c ↔ a ≤ b * c := by
-  rw [← inv_mul_le_iff_le_mul, mul_commₓ]
+  rw [← inv_mul_le_iff_le_mul, mul_comm]
 
 @[to_additive add_neg_le_add_neg_iff]
 theorem mul_inv_le_mul_inv_iff' : a * b⁻¹ ≤ c * d⁻¹ ↔ a * d ≤ c * b := by
-  rw [mul_commₓ c, mul_inv_le_inv_mul_iff, mul_commₓ]
+  rw [mul_comm c, mul_inv_le_inv_mul_iff, mul_comm]
 
 end LE
 
@@ -494,15 +494,15 @@ variable [LT α] [CovariantClass α α (· * ·) (· < ·)] {a b c d : α}
 
 @[to_additive]
 theorem inv_mul_lt_iff_lt_mul' : c⁻¹ * a < b ↔ a < b * c := by
-  rw [inv_mul_lt_iff_lt_mul, mul_commₓ]
+  rw [inv_mul_lt_iff_lt_mul, mul_comm]
 
 @[simp, to_additive]
 theorem mul_inv_lt_iff_le_mul' : a * b⁻¹ < c ↔ a < b * c := by
-  rw [← inv_mul_lt_iff_lt_mul, mul_commₓ]
+  rw [← inv_mul_lt_iff_lt_mul, mul_comm]
 
 @[to_additive add_neg_lt_add_neg_iff]
 theorem mul_inv_lt_mul_inv_iff' : a * b⁻¹ < c * d⁻¹ ↔ a * d < c * b := by
-  rw [mul_commₓ c, mul_inv_lt_inv_mul_iff, mul_commₓ]
+  rw [mul_comm c, mul_inv_lt_inv_mul_iff, mul_comm]
 
 end LT
 
@@ -602,9 +602,9 @@ attribute [to_additive OrderedAddCommGroup.lt_of_add_lt_add_left] OrderedCommGro
 See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.orderedAddCommGroup "Pullback an `ordered_add_comm_group` under an injective map."]
-def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [HasOne β] [Mul β] [HasInv β] [Div β]
-    (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : OrderedCommGroup β :=
+def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [One β] [Mul β] [HasInv β] [Div β] (f : β → α)
+    (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹)
+    (div : ∀ x y, f (x / y) = f x / f y) : OrderedCommGroup β :=
   { PartialOrderₓ.lift f hf, hf.ordered_comm_monoid f one mul, hf.comm_group f one mul inv div with }
 
 section Groupₓ
@@ -708,13 +708,13 @@ theorem div_le_div_iff' : a / b ≤ c / d ↔ a * d ≤ c * b := by
 
 @[to_additive]
 theorem le_div_iff_mul_le' : b ≤ c / a ↔ a * b ≤ c := by
-  rw [le_div_iff_mul_le, mul_commₓ]
+  rw [le_div_iff_mul_le, mul_comm]
 
 alias le_sub_iff_add_le' ↔ add_le_of_le_sub_left le_sub_left_of_add_le
 
 @[to_additive]
 theorem div_le_iff_le_mul' : a / b ≤ c ↔ a ≤ b * c := by
-  rw [div_le_iff_le_mul, mul_commₓ]
+  rw [div_le_iff_le_mul, mul_comm]
 
 alias sub_le_iff_le_add' ↔ le_add_of_sub_left_le sub_left_le_of_le_add
 
@@ -724,7 +724,7 @@ theorem inv_le_div_iff_le_mul : b⁻¹ ≤ a / c ↔ c ≤ a * b :=
 
 @[to_additive]
 theorem inv_le_div_iff_le_mul' : a⁻¹ ≤ b / c ↔ c ≤ a * b := by
-  rw [inv_le_div_iff_le_mul, mul_commₓ]
+  rw [inv_le_div_iff_le_mul, mul_comm]
 
 @[to_additive sub_le]
 theorem div_le'' : a / b ≤ c ↔ a / c ≤ b :=
@@ -742,7 +742,7 @@ variable [Preorderₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b c d 
 
 @[to_additive sub_le_sub]
 theorem div_le_div'' (hab : a ≤ b) (hcd : c ≤ d) : a / d ≤ b / c := by
-  rw [div_eq_mul_inv, div_eq_mul_inv, mul_commₓ b, mul_inv_le_inv_mul_iff, mul_commₓ]
+  rw [div_eq_mul_inv, div_eq_mul_inv, mul_comm b, mul_inv_le_inv_mul_iff, mul_comm]
   exact mul_le_mul' hab hcd
 
 end Preorderₓ
@@ -828,13 +828,13 @@ theorem div_lt_div_iff' : a / b < c / d ↔ a * d < c * b := by
 
 @[to_additive]
 theorem lt_div_iff_mul_lt' : b < c / a ↔ a * b < c := by
-  rw [lt_div_iff_mul_lt, mul_commₓ]
+  rw [lt_div_iff_mul_lt, mul_comm]
 
 alias lt_sub_iff_add_lt' ↔ add_lt_of_lt_sub_left lt_sub_left_of_add_lt
 
 @[to_additive]
 theorem div_lt_iff_lt_mul' : a / b < c ↔ a < b * c := by
-  rw [div_lt_iff_lt_mul, mul_commₓ]
+  rw [div_lt_iff_lt_mul, mul_comm]
 
 alias sub_lt_iff_lt_add' ↔ lt_add_of_sub_left_lt sub_left_lt_of_lt_add
 
@@ -858,7 +858,7 @@ variable [Preorderₓ α] [CovariantClass α α (· * ·) (· < ·)] {a b c d : 
 
 @[to_additive sub_lt_sub]
 theorem div_lt_div'' (hab : a < b) (hcd : c < d) : a / d < b / c := by
-  rw [div_eq_mul_inv, div_eq_mul_inv, mul_commₓ b, mul_inv_lt_inv_mul_iff, mul_commₓ]
+  rw [div_eq_mul_inv, div_eq_mul_inv, mul_comm b, mul_inv_lt_inv_mul_iff, mul_comm]
   exact mul_lt_mul_of_lt_of_lt hab hcd
 
 end Preorderₓ
@@ -892,7 +892,7 @@ theorem div_le_inv_mul_iff [CovariantClass α α (swap (· * ·)) (· ≤ ·)] :
 @[simp, to_additive]
 theorem div_le_div_flip {α : Type _} [CommGroupₓ α] [LinearOrderₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α} :
     a / b ≤ b / a ↔ a ≤ b := by
-  rw [div_eq_mul_inv b, mul_commₓ]
+  rw [div_eq_mul_inv b, mul_comm]
   exact div_le_inv_mul_iff
 
 @[simp, to_additive]
@@ -979,7 +979,7 @@ See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.linearOrderedAddCommGroup
       "Pullback a `linear_ordered_add_comm_group` under an injective map."]
-def Function.Injective.linearOrderedCommGroup {β : Type _} [HasOne β] [Mul β] [HasInv β] [Div β] (f : β → α)
+def Function.Injective.linearOrderedCommGroup {β : Type _} [One β] [Mul β] [HasInv β] [Div β] (f : β → α)
     (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) : LinearOrderedCommGroup β :=
   { LinearOrderₓ.lift f hf, hf.ordered_comm_group f one mul inv div with }

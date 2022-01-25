@@ -237,7 +237,7 @@ theorem val_between_map_mul {i : Int} {as : List Int} {l : Nat} :
     rw [@val_between_map_mul m, mul_addₓ]
     apply fun_mono_2 rfl
     by_cases' h1 : l + m < as.length
-    · rw [get_map h1, mul_assocₓ]
+    · rw [get_map h1, mul_assoc]
       
     rw [not_ltₓ] at h1
     rw [get_eq_default_of_le, get_eq_default_of_le] <;>
@@ -284,7 +284,7 @@ theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀, ∀ x
             apply Int.zero_div
           _ = get (l + m) as * v (l + m) / i := by
             repeat'
-              rw [mul_commₓ _ (v (l + m))]
+              rw [mul_comm _ (v (l + m))]
             rw [Int.mul_div_assoc]
             apply forall_val_dvd_of_forall_mem_dvd h1
           

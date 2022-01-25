@@ -69,7 +69,7 @@ theorem eq_bot_of_generator_maximal_submodule_image_eq_zero {N O : Submodule R M
     [(ϕ.submodule_image N).IsPrincipal] (hgen : generator (ϕ.submodule_image N) = 0) : N = ⊥ := by
   rw [Submodule.eq_bot_iff]
   intro x hx
-  refine' congr_argₓ coeₓ (show (⟨x, hNO hx⟩ : O) = 0 from b.ext_elem fun i => _)
+  refine' congr_argₓ coe (show (⟨x, hNO hx⟩ : O) = 0 from b.ext_elem fun i => _)
   rw [(eq_bot_iff_generator_eq_zero _).mpr hgen] at hϕ
   rw [LinearEquiv.map_zero, Finsupp.zero_apply]
   refine' (Submodule.eq_bot_iff _).mp (hϕ (Finsupp.lapply i ∘ₗ ↑b.repr) bot_le) _ _
@@ -189,7 +189,7 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
         simp only [LinearMap.map_sum, LinearMap.map_smul]
         rfl)
   have a_smul_y' : a • y' = y := by
-    refine' congr_argₓ coeₓ (show (a • ⟨y', y'M⟩ : M) = ⟨y, N_le_M yN⟩ from _)
+    refine' congr_argₓ coe (show (a • ⟨y', y'M⟩ : M) = ⟨y, N_le_M yN⟩ from _)
     rw [← b'M.sum_repr ⟨y, N_le_M yN⟩, mk_y', Finset.smul_sum]
     refine' Finset.sum_congr rfl fun i _ => _
     rw [← mul_smul, ← hc]
@@ -226,7 +226,7 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
   have ay'_ortho_N' : ∀ c : R, ∀ z ∈ N', ∀, c • a • y' + z = 0 → c = 0 := by
     intro c z zN' hc
     refine' (mul_eq_zero.mp (y'_ortho_M' (a * c) z (N'_le_M' zN') _)).resolve_left a_zero
-    rw [mul_commₓ, mul_smul, hc]
+    rw [mul_comm, mul_smul, hc]
   refine' ⟨y'_ortho_M', ay'_ortho_N', fun n' bN' => ⟨_, _⟩⟩
   · refine' Basis.mkFinConsOfLe y yN bN' N'_le_N _ _
     · intro c z zN' hc
@@ -237,7 +237,7 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
       obtain ⟨b, hb⟩ : _ ∣ ϕ ⟨z, N_le_M zN⟩ := generator_submodule_image_dvd_of_mem N_le_M ϕ zN
       refine' ⟨-b, submodule.mem_map.mpr ⟨⟨_, N.sub_mem zN (N.smul_mem b yN)⟩, _, _⟩⟩
       · refine' linear_map.mem_ker.mpr (show ϕ (⟨z, N_le_M zN⟩ - b • ⟨y, N_le_M yN⟩) = 0 from _)
-        rw [LinearMap.map_sub, LinearMap.map_smul, hb, ϕy_eq, smul_eq_mul, mul_commₓ, sub_self]
+        rw [LinearMap.map_sub, LinearMap.map_smul, hb, ϕy_eq, smul_eq_mul, mul_comm, sub_self]
         
       · simp only [sub_eq_add_neg, neg_smul]
         rfl
@@ -334,9 +334,9 @@ noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
   have := exists_maximal_independent R s
   let I : Set ι := this.some
   obtain
-    ⟨indepI : LinearIndependent R (s ∘ coeₓ : I → M), hI : ∀ i _ : i ∉ I, ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I)⟩ :=
+    ⟨indepI : LinearIndependent R (s ∘ coe : I → M), hI : ∀ i _ : i ∉ I, ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I)⟩ :=
     this.some_spec
-  let N := span R (range $ (s ∘ coeₓ : I → M))
+  let N := span R (range $ (s ∘ coe : I → M))
   let sI : I → N := fun i => ⟨s i.1, subset_span (mem_range_self i)⟩
   let sI_basis : Basis I R N
   exact Basis.span indepI

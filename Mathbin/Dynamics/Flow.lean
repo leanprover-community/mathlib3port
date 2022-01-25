@@ -45,10 +45,10 @@ theorem is_invariant_iff_image : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s ⊆ s := 
 
 /-- A set `s ⊆ α` is forward-invariant under `ϕ : τ → α → α` if
     `ϕ t s ⊆ s` for all `t ≥ 0`. -/
-def IsFwInvariant [Preorderₓ τ] [HasZero τ] (ϕ : τ → α → α) (s : Set α) : Prop :=
+def IsFwInvariant [Preorderₓ τ] [Zero τ] (ϕ : τ → α → α) (s : Set α) : Prop :=
   ∀ ⦃t⦄, 0 ≤ t → maps_to (ϕ t) s s
 
-theorem IsInvariant.is_fw_invariant [Preorderₓ τ] [HasZero τ] {ϕ : τ → α → α} {s : Set α} (h : IsInvariant ϕ s) :
+theorem IsInvariant.is_fw_invariant [Preorderₓ τ] [Zero τ] {ϕ : τ → α → α} {s : Set α} (h : IsInvariant ϕ s) :
     IsFwInvariant ϕ s := fun t ht => h t
 
 /-- If `τ` is a `canonically_ordered_add_monoid` (e.g., `ℕ` or `ℝ≥0`), then the notions

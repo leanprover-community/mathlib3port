@@ -101,10 +101,10 @@ theorem norm_sub_mod_part_aux (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : ↑p �
   by
   rw [← Zmod.int_coe_zmod_eq_zero_iff_dvd]
   simp only [Int.cast_coe_nat, Zmod.nat_cast_mod p, Int.cast_mul, Int.cast_sub]
-  have := congr_argₓ (coeₓ : ℤ → Zmod p) (gcd_eq_gcd_ab r.denom p)
+  have := congr_argₓ (coe : ℤ → Zmod p) (gcd_eq_gcd_ab r.denom p)
   simp only [Int.cast_coe_nat, add_zeroₓ, Int.cast_add, Zmod.nat_cast_self, Int.cast_mul, zero_mul] at this
   push_cast
-  rw [mul_right_commₓ, mul_assocₓ, ← this]
+  rw [mul_right_commₓ, mul_assoc, ← this]
   suffices rdcp : r.denom.coprime p
   · rw [rdcp.gcd_eq_one]
     simp only [mul_oneₓ, cast_one, sub_self]
@@ -365,7 +365,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
   apply mul_dvd_mul_left
   obtain hc0 | hc0 := c.valuation.nat_abs.eq_zero_or_pos
   · simp only [hc0, mul_oneₓ, pow_zeroₓ]
-    rw [mul_commₓ, unit_coeff_spec h] at hc
+    rw [mul_comm, unit_coeff_spec h] at hc
     suffices c = unit_coeff h by
       rw [← this, ← Ideal.mem_span_singleton, ← maximal_ideal_eq_span_p]
       apply to_zmod_spec

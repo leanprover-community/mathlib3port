@@ -448,8 +448,8 @@ theorem prod_mul_prod_eq_prod_zip_with_mul_prod_drop :
     simp
   | x :: xs, y :: ys => by
     simp only [drop, length, zip_with_cons_cons, prod_cons]
-    rw [mul_assocₓ x, mul_commₓ xs.prod, mul_assocₓ y, mul_commₓ ys.prod,
-      prod_mul_prod_eq_prod_zip_with_mul_prod_drop xs ys, mul_assocₓ, mul_assocₓ, mul_assocₓ, mul_assocₓ]
+    rw [mul_assoc x, mul_comm xs.prod, mul_assoc y, mul_comm ys.prod,
+      prod_mul_prod_eq_prod_zip_with_mul_prod_drop xs ys, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
 
 @[to_additive]
 theorem prod_mul_prod_eq_prod_zip_with_of_length_eq (L L' : List α) (h : L.length = L'.length) :

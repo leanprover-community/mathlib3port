@@ -76,7 +76,7 @@ theorem val_canonize {v : Nat → Int} : ∀ {t : preterm}, (canonize t).val v =
       
     · simp only [neg_mul_eq_neg_mul_symm, one_mulₓ, h2]
       
-    · rw [mul_commₓ]
+    · rw [mul_comm]
       
   | t+*s => by
     simp only [canonize, val_canonize, term.val_add, preterm.val]

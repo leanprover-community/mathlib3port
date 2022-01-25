@@ -19,7 +19,7 @@ variable (ι : Type u) {γ : Type w} (β : ι → Type v) {β₁ : ι → Type v
 
 namespace Dfinsupp
 
-variable [∀ i, HasZero (β i)]
+variable [∀ i, Zero (β i)]
 
 /-- An auxiliary structure used in the definition of of `dfinsupp`,
 the type used to make infinite direct sum of modules over a ring. -/
@@ -41,7 +41,7 @@ variable {ι}
 
 /-- A dependent function `Π i, β i` with finite support. -/
 @[reducible]
-def Dfinsupp [∀ i, HasZero (β i)] : Type _ :=
+def Dfinsupp [∀ i, Zero (β i)] : Type _ :=
   Quotientₓ (Dfinsupp.Pre.setoid ι β)
 
 variable {β}
@@ -54,12 +54,12 @@ namespace Dfinsupp
 
 section Basic
 
-variable [∀ i, HasZero (β i)] [∀ i, HasZero (β₁ i)] [∀ i, HasZero (β₂ i)]
+variable [∀ i, Zero (β i)] [∀ i, Zero (β₁ i)] [∀ i, Zero (β₂ i)]
 
 instance : CoeFun (Π₀ i, β i) fun _ => ∀ i, β i :=
   ⟨fun f => Quotientₓ.liftOn f pre.to_fun $ fun _ _ => funext⟩
 
-instance : HasZero (Π₀ i, β i) :=
+instance : Zero (Π₀ i, β i) :=
   ⟨⟦⟨0, ∅, fun i => Or.inr rfl⟩⟧⟩
 
 instance : Inhabited (Π₀ i, β i) :=
@@ -327,7 +327,7 @@ end Algebra
 section FilterAndSubtypeDomain
 
 /-- `filter p f` is the function which is `f i` if `p i` is true and 0 otherwise. -/
-def filter [∀ i, HasZero (β i)] (p : ι → Prop) [DecidablePred p] : (Π₀ i, β i) → Π₀ i, β i :=
+def filter [∀ i, Zero (β i)] (p : ι → Prop) [DecidablePred p] : (Π₀ i, β i) → Π₀ i, β i :=
   Quotientₓ.map
     (fun x =>
       ⟨fun i => if p i then x.1 i else 0, x.2, fun i =>
@@ -337,15 +337,15 @@ def filter [∀ i, HasZero (β i)] (p : ι → Prop) [DecidablePred p] : (Π₀ 
     simp only [H i]
 
 @[simp]
-theorem filter_apply [∀ i, HasZero (β i)] (p : ι → Prop) [DecidablePred p] (i : ι) (f : Π₀ i, β i) :
+theorem filter_apply [∀ i, Zero (β i)] (p : ι → Prop) [DecidablePred p] (i : ι) (f : Π₀ i, β i) :
     f.filter p i = if p i then f i else 0 :=
   Quotientₓ.induction_on f $ fun x => rfl
 
-theorem filter_apply_pos [∀ i, HasZero (β i)] {p : ι → Prop} [DecidablePred p] (f : Π₀ i, β i) {i : ι} (h : p i) :
+theorem filter_apply_pos [∀ i, Zero (β i)] {p : ι → Prop} [DecidablePred p] (f : Π₀ i, β i) {i : ι} (h : p i) :
     f.filter p i = f i := by
   simp only [filter_apply, if_pos h]
 
-theorem filter_apply_neg [∀ i, HasZero (β i)] {p : ι → Prop} [DecidablePred p] (f : Π₀ i, β i) {i : ι} (h : ¬p i) :
+theorem filter_apply_neg [∀ i, Zero (β i)] {p : ι → Prop} [DecidablePred p] (f : Π₀ i, β i) {i : ι} (h : ¬p i) :
     f.filter p i = 0 := by
   simp only [filter_apply, if_neg h]
 
@@ -355,7 +355,7 @@ theorem filter_pos_add_filter_neg [∀ i, AddZeroClass (β i)] (f : Π₀ i, β 
     simp only [add_apply, filter_apply] <;> split_ifs <;> simp only [add_zeroₓ, zero_addₓ]
 
 @[simp]
-theorem filter_zero [∀ i, HasZero (β i)] (p : ι → Prop) [DecidablePred p] : (0 : Π₀ i, β i).filter p = 0 := by
+theorem filter_zero [∀ i, Zero (β i)] (p : ι → Prop) [DecidablePred p] : (0 : Π₀ i, β i).filter p = 0 := by
   ext
   simp
 
@@ -402,7 +402,7 @@ theorem filter_sub [∀ i, AddGroupₓ (β i)] (p : ι → Prop) [DecidablePred 
 
 /-- `subtype_domain p f` is the restriction of the finitely supported function
   `f` to the subtype `p`. -/
-def subtype_domain [∀ i, HasZero (β i)] (p : ι → Prop) [DecidablePred p] : (Π₀ i, β i) → Π₀ i : Subtype p, β i :=
+def subtype_domain [∀ i, Zero (β i)] (p : ι → Prop) [DecidablePred p] : (Π₀ i, β i) → Π₀ i : Subtype p, β i :=
   Quotientₓ.map
     (fun x =>
       ⟨fun i => x.1 (i : ι), (x.2.filter p).attach.map $ fun j => ⟨j, (Multiset.mem_filter.1 j.2).2⟩, fun i =>
@@ -411,12 +411,11 @@ def subtype_domain [∀ i, HasZero (β i)] (p : ι → Prop) [DecidablePred p] :
     fun x y H i => H i
 
 @[simp]
-theorem subtype_domain_zero [∀ i, HasZero (β i)] {p : ι → Prop} [DecidablePred p] :
-    subtype_domain p (0 : Π₀ i, β i) = 0 :=
+theorem subtype_domain_zero [∀ i, Zero (β i)] {p : ι → Prop} [DecidablePred p] : subtype_domain p (0 : Π₀ i, β i) = 0 :=
   rfl
 
 @[simp]
-theorem subtype_domain_apply [∀ i, HasZero (β i)] {p : ι → Prop} [DecidablePred p] {i : Subtype p} {v : Π₀ i, β i} :
+theorem subtype_domain_apply [∀ i, Zero (β i)] {p : ι → Prop} [DecidablePred p] {i : Subtype p} {v : Π₀ i, β i} :
     (subtype_domain p v) i = v i :=
   Quotientₓ.induction_on v $ fun x => rfl
 
@@ -471,7 +470,7 @@ include dec
 
 section Basic
 
-variable [∀ i, HasZero (β i)]
+variable [∀ i, Zero (β i)]
 
 omit dec
 
@@ -940,7 +939,7 @@ theorem mk_add [∀ i, AddZeroClass (β i)] {s : Finset ι} {x y : ∀ i : (↑s
     simp only [add_apply, mk_apply] <;> split_ifs <;> [rfl, rw [zero_addₓ]]
 
 @[simp]
-theorem mk_zero [∀ i, HasZero (β i)] {s : Finset ι} : mk s (0 : ∀ i : (↑s : Set ι), β i.1) = 0 :=
+theorem mk_zero [∀ i, Zero (β i)] {s : Finset ι} : mk s (0 : ∀ i : (↑s : Set ι), β i.1) = 0 :=
   ext $ fun i => by
     simp only [mk_apply] <;> split_ifs <;> rfl
 
@@ -980,7 +979,7 @@ end
 
 section SupportBasic
 
-variable [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
+variable [∀ i, Zero (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
 
 /-- Set `{i | f x ≠ 0}` as a `finset`. -/
 def support (f : Π₀ i, β i) : Finset ι :=
@@ -1053,7 +1052,7 @@ theorem support_single_subset {i : ι} {b : β i} : (single i b).support ⊆ {i}
 
 section MapRangeAndZipWith
 
-variable [∀ i, HasZero (β₁ i)] [∀ i, HasZero (β₂ i)]
+variable [∀ i, Zero (β₁ i)] [∀ i, Zero (β₂ i)]
 
 theorem map_range_def [∀ i x : β₁ i, Decidable (x ≠ 0)] {f : ∀ i, β₁ i → β₂ i} {hf : ∀ i, f i 0 = 0} {g : Π₀ i, β₁ i} :
     map_range f hf g = mk g.support fun i => f i.1 (g i.1) := by
@@ -1077,7 +1076,7 @@ theorem support_map_range {f : ∀ i, β₁ i → β₂ i} {hf : ∀ i, f i 0 = 
   simp [map_range_def]
 
 theorem zip_with_def {ι : Type u} {β : ι → Type v} {β₁ : ι → Type v₁} {β₂ : ι → Type v₂} [dec : DecidableEq ι]
-    [∀ i : ι, HasZero (β i)] [∀ i : ι, HasZero (β₁ i)] [∀ i : ι, HasZero (β₂ i)] [∀ i : ι x : β₁ i, Decidable (x ≠ 0)]
+    [∀ i : ι, Zero (β i)] [∀ i : ι, Zero (β₁ i)] [∀ i : ι, Zero (β₂ i)] [∀ i : ι x : β₁ i, Decidable (x ≠ 0)]
     [∀ i : ι x : β₂ i, Decidable (x ≠ 0)] {f : ∀ i, β₁ i → β₂ i → β i} {hf : ∀ i, f i 0 0 = 0} {g₁ : Π₀ i, β₁ i}
     {g₂ : Π₀ i, β₂ i} : zip_with f hf g₁ g₂ = mk (g₁.support ∪ g₂.support) fun i => f i.1 (g₁ i.1) (g₂ i.1) := by
   ext i
@@ -1159,7 +1158,7 @@ theorem support_smul {γ : Type w} [Semiringₓ γ] [∀ i, AddCommMonoidₓ (β
     [∀ i : ι x : β i, Decidable (x ≠ 0)] (b : γ) (v : Π₀ i, β i) : (b • v).support ⊆ v.support :=
   support_map_range
 
-instance [∀ i, HasZero (β i)] [∀ i, DecidableEq (β i)] : DecidableEq (Π₀ i, β i) := fun f g =>
+instance [∀ i, Zero (β i)] [∀ i, DecidableEq (β i)] : DecidableEq (Π₀ i, β i) := fun f g =>
   decidableOfIff (f.support = g.support ∧ ∀, ∀ i ∈ f.support, ∀, f i = g i)
     ⟨fun ⟨h₁, h₂⟩ =>
       ext $ fun i =>
@@ -1177,11 +1176,11 @@ section ProdAndSum
 
 /-- `prod f g` is the product of `g i (f i)` over the support of `f`. -/
 @[to_additive "`sum f g` is the sum of `g i (f i)` over the support of `f`."]
-def Prod [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ] (f : Π₀ i, β i) (g : ∀ i, β i → γ) : γ :=
+def Prod [∀ i, Zero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ] (f : Π₀ i, β i) (g : ∀ i, β i → γ) : γ :=
   ∏ i in f.support, g i (f i)
 
 @[to_additive]
-theorem prod_map_range_index {β₁ : ι → Type v₁} {β₂ : ι → Type v₂} [∀ i, HasZero (β₁ i)] [∀ i, HasZero (β₂ i)]
+theorem prod_map_range_index {β₁ : ι → Type v₁} {β₂ : ι → Type v₂} [∀ i, Zero (β₁ i)] [∀ i, Zero (β₂ i)]
     [∀ i x : β₁ i, Decidable (x ≠ 0)] [∀ i x : β₂ i, Decidable (x ≠ 0)] [CommMonoidₓ γ] {f : ∀ i, β₁ i → β₂ i}
     {hf : ∀ i, f i 0 = 0} {g : Π₀ i, β₁ i} {h : ∀ i, β₂ i → γ} (h0 : ∀ i, h i 0 = 1) :
     (map_range f hf g).Prod h = g.prod fun i b => h i (f i b) := by
@@ -1204,7 +1203,7 @@ theorem prod_zero_index [∀ i, AddCommMonoidₓ (β i)] [∀ i x : β i, Decida
   rfl
 
 @[to_additive]
-theorem prod_single_index [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ] {i : ι} {b : β i}
+theorem prod_single_index [∀ i, Zero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ] {i : ι} {b : β i}
     {h : ∀ i, β i → γ} (h_zero : h i 0 = 1) : (single i b).Prod h = h i b := by
   by_cases' h : b ≠ 0
   · simp [Dfinsupp.prod, support_single_ne_zero h]
@@ -1223,21 +1222,21 @@ omit dec
 
 @[to_additive]
 theorem prod_comm {ι₁ ι₂ : Sort _} {β₁ : ι₁ → Type _} {β₂ : ι₂ → Type _} [DecidableEq ι₁] [DecidableEq ι₂]
-    [∀ i, HasZero (β₁ i)] [∀ i, HasZero (β₂ i)] [∀ i x : β₁ i, Decidable (x ≠ 0)] [∀ i x : β₂ i, Decidable (x ≠ 0)]
+    [∀ i, Zero (β₁ i)] [∀ i, Zero (β₂ i)] [∀ i x : β₁ i, Decidable (x ≠ 0)] [∀ i x : β₂ i, Decidable (x ≠ 0)]
     [CommMonoidₓ γ] (f₁ : Π₀ i, β₁ i) (f₂ : Π₀ i, β₂ i) (h : ∀ i, β₁ i → ∀ i, β₂ i → γ) :
     (f₁.prod fun i₁ x₁ => f₂.prod $ fun i₂ x₂ => h i₁ x₁ i₂ x₂) =
       f₂.prod fun i₂ x₂ => f₁.prod $ fun i₁ x₁ => h i₁ x₁ i₂ x₂ :=
   Finset.prod_comm
 
 @[simp]
-theorem sum_apply {ι₁ : Type u₁} [DecidableEq ι₁] {β₁ : ι₁ → Type v₁} [∀ i₁, HasZero (β₁ i₁)]
+theorem sum_apply {ι₁ : Type u₁} [DecidableEq ι₁] {β₁ : ι₁ → Type v₁} [∀ i₁, Zero (β₁ i₁)]
     [∀ i x : β₁ i, Decidable (x ≠ 0)] [∀ i, AddCommMonoidₓ (β i)] {f : Π₀ i₁, β₁ i₁} {g : ∀ i₁, β₁ i₁ → Π₀ i, β i}
     {i₂ : ι} : (f.sum g) i₂ = f.sum fun i₁ b => g i₁ b i₂ :=
   (eval_add_monoid_hom i₂ : (Π₀ i, β i) →+ β i₂).map_sum _ f.support
 
 include dec
 
-theorem support_sum {ι₁ : Type u₁} [DecidableEq ι₁] {β₁ : ι₁ → Type v₁} [∀ i₁, HasZero (β₁ i₁)]
+theorem support_sum {ι₁ : Type u₁} [DecidableEq ι₁] {β₁ : ι₁ → Type v₁} [∀ i₁, Zero (β₁ i₁)]
     [∀ i x : β₁ i, Decidable (x ≠ 0)] [∀ i, AddCommMonoidₓ (β i)] [∀ i x : β i, Decidable (x ≠ 0)] {f : Π₀ i₁, β₁ i₁}
     {g : ∀ i₁, β₁ i₁ → Π₀ i, β i} : (f.sum g).support ⊆ f.support.bUnion fun i => (g i (f i)).support := by
   have : ∀ i₁ : ι, (f.sum fun i : ι₁ b : β₁ i => (g i b) i₁) ≠ 0 → ∃ i : ι₁, f i ≠ 0 ∧ ¬(g i (f i)) i₁ = 0 :=
@@ -1282,12 +1281,12 @@ theorem prod_add_index [∀ i, AddCommMonoidₓ (β i)] [∀ i x : β i, Decidab
     
 
 @[to_additive]
-theorem _root_.submonoid.dfinsupp_prod_mem [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ]
+theorem _root_.submonoid.dfinsupp_prod_mem [∀ i, Zero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ]
     (S : Submonoid γ) (f : Π₀ i, β i) (g : ∀ i, β i → γ) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) : f.prod g ∈ S :=
   S.prod_mem $ fun i hi => h _ $ mem_support_iff.1 hi
 
 @[simp, to_additive]
-theorem prod_eq_prod_fintype [Fintype ι] [∀ i, HasZero (β i)] [∀ i : ι x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ]
+theorem prod_eq_prod_fintype [Fintype ι] [∀ i, Zero (β i)] [∀ i : ι x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ]
     (v : Π₀ i, β i) {f : ∀ i, β i → γ} (hf : ∀ i, f i 0 = 1) : v.prod f = ∏ i, f i (Dfinsupp.equivFunOnFintype v i) :=
   by
   suffices (∏ i in v.support, f i (v i)) = ∏ i, f i (v i) by
@@ -1524,7 +1523,7 @@ theorem prod_finset_sum_index {γ : Type w} {α : Type x} [∀ i, AddCommMonoid�
         simp (config := { contextual := true })[prod_add_index, h_zero, h_add])
 
 @[to_additive]
-theorem prod_sum_index {ι₁ : Type u₁} [DecidableEq ι₁] {β₁ : ι₁ → Type v₁} [∀ i₁, HasZero (β₁ i₁)]
+theorem prod_sum_index {ι₁ : Type u₁} [DecidableEq ι₁] {β₁ : ι₁ → Type v₁} [∀ i₁, Zero (β₁ i₁)]
     [∀ i x : β₁ i, Decidable (x ≠ 0)] [∀ i, AddCommMonoidₓ (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ]
     {f : Π₀ i₁, β₁ i₁} {g : ∀ i₁, β₁ i₁ → Π₀ i, β i} {h : ∀ i, β i → γ} (h_zero : ∀ i, h i 0 = 1)
     (h_add : ∀ i b₁ b₂, h i (b₁ + b₂) = h i b₁ * h i b₂) : (f.sum g).Prod h = f.prod fun i b => (g i b).Prod h :=
@@ -1537,7 +1536,7 @@ theorem sum_single [∀ i, AddCommMonoidₓ (β i)] [∀ i x : β i, Decidable (
   exact this
 
 @[to_additive]
-theorem prod_subtype_domain_index [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ] {v : Π₀ i, β i}
+theorem prod_subtype_domain_index [∀ i, Zero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ] {v : Π₀ i, β i}
     {p : ι → Prop} [DecidablePred p] {h : ∀ i, β i → γ} (hp : ∀, ∀ x ∈ v.support, ∀, p x) :
     ((v.subtype_domain p).Prod fun i b => h i b) = v.prod h :=
   Finset.prod_bij (fun p _ => p)
@@ -1557,9 +1556,9 @@ theorem subtype_domain_sum [∀ i, AddCommMonoidₓ (β i)] {s : Finset γ} {h :
     [DecidablePred p] : (∑ c in s, h c).subtypeDomain p = ∑ c in s, (h c).subtypeDomain p :=
   (subtype_domain_add_monoid_hom β p).map_sum _ s
 
-theorem subtype_domain_finsupp_sum {δ : γ → Type x} [DecidableEq γ] [∀ c, HasZero (δ c)]
-    [∀ c x : δ c, Decidable (x ≠ 0)] [∀ i, AddCommMonoidₓ (β i)] {p : ι → Prop} [DecidablePred p] {s : Π₀ c, δ c}
-    {h : ∀ c, δ c → Π₀ i, β i} : (s.sum h).subtypeDomain p = s.sum fun c d => (h c d).subtypeDomain p :=
+theorem subtype_domain_finsupp_sum {δ : γ → Type x} [DecidableEq γ] [∀ c, Zero (δ c)] [∀ c x : δ c, Decidable (x ≠ 0)]
+    [∀ i, AddCommMonoidₓ (β i)] {p : ι → Prop} [DecidablePred p] {s : Π₀ c, δ c} {h : ∀ c, δ c → Π₀ i, β i} :
+    (s.sum h).subtypeDomain p = s.sum fun c d => (h c d).subtypeDomain p :=
   subtype_domain_sum
 
 end ProdAndSum
@@ -1650,7 +1649,7 @@ namespace MonoidHom
 
 variable {R S : Type _}
 
-variable [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
+variable [∀ i, Zero (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
 
 @[simp, to_additive]
 theorem map_dfinsupp_prod [CommMonoidₓ R] [CommMonoidₓ S] (h : R →* S) (f : Π₀ i, β i) (g : ∀ i, β i → R) :
@@ -1673,7 +1672,7 @@ namespace RingHom
 
 variable {R S : Type _}
 
-variable [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
+variable [∀ i, Zero (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
 
 @[simp]
 theorem map_dfinsupp_prod [CommSemiringₓ R] [CommSemiringₓ S] (h : R →+* S) (f : Π₀ i, β i) (g : ∀ i, β i → R) :
@@ -1691,7 +1690,7 @@ namespace MulEquiv
 
 variable {R S : Type _}
 
-variable [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
+variable [∀ i, Zero (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
 
 @[simp, to_additive]
 theorem map_dfinsupp_prod [CommMonoidₓ R] [CommMonoidₓ S] (h : R ≃* S) (f : Π₀ i, β i) (g : ∀ i, β i → R) :

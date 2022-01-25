@@ -123,7 +123,7 @@ theorem is_Gδ_compl_singleton (a : α) : IsGδ ({a}ᶜ : Set α) :=
   is_open_compl_singleton.IsGδ
 
 theorem Set.Countable.is_Gδ_compl {s : Set α} (hs : countable s) : IsGδ (sᶜ) := by
-  rw [← bUnion_of_singleton s, compl_bUnion]
+  rw [← bUnion_of_singleton s, compl_Union₂]
   exact is_Gδ_bInter hs fun x _ => is_Gδ_compl_singleton x
 
 theorem Set.Finite.is_Gδ_compl {s : Set α} (hs : finite s) : IsGδ (sᶜ) :=

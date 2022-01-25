@@ -638,7 +638,7 @@ theorem exists_degree_lt [Fintype σ] (f : MvPolynomial σ R) (n : ℕ) (h : f.t
     {d : σ →₀ ℕ} (hd : d ∈ f.support) : ∃ i, d i < n := by
   contrapose! h
   calc n * Fintype.card σ = ∑ s : σ, n := by
-      rw [Finset.sum_const, Nat.nsmul_eq_mul, mul_commₓ, Finset.card_univ]_ ≤ ∑ s, d s :=
+      rw [Finset.sum_const, Nat.nsmul_eq_mul, mul_comm, Finset.card_univ]_ ≤ ∑ s, d s :=
       Finset.sum_le_sum fun s _ => h s _ ≤ d.sum fun i e => e := by
       rw [Finsupp.sum_fintype]
       intros

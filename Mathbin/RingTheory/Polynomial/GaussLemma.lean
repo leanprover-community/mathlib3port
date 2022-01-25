@@ -111,8 +111,8 @@ theorem is_primitive.irreducible_iff_irreducible_map_fraction_map {p : Polynomia
       normalize_content, ← mul_oneₓ (normalize c * normalize d), ← hp.content_eq_one, ← content_C, ← content_C, ←
       content_mul, ← content_mul, ← content_mul, h1]
   rw [← RingHom.map_mul, eq_comm, (integer_normalization R⁰ a).eq_C_content_mul_prim_part,
-    (integer_normalization R⁰ b).eq_C_content_mul_prim_part, mul_assocₓ, mul_commₓ _ (C _ * _), ← mul_assocₓ, ←
-    mul_assocₓ, ← RingHom.map_mul, ← hu, RingHom.map_mul, mul_assocₓ, mul_assocₓ, ← mul_assocₓ (C (↑u))] at h1
+    (integer_normalization R⁰ b).eq_C_content_mul_prim_part, mul_assoc, mul_comm _ (C _ * _), ← mul_assoc, ← mul_assoc,
+    ← RingHom.map_mul, ← hu, RingHom.map_mul, mul_assoc, mul_assoc, ← mul_assoc (C (↑u))] at h1
   have h0 : a ≠ 0 ∧ b ≠ 0 := by
     classical
     rw [Ne.def, Ne.def, ← Decidable.not_or_iff_and_not, ← mul_eq_zero, ← hab]
@@ -135,7 +135,7 @@ theorem is_primitive.dvd_of_fraction_map_dvd_fraction_map {p q : Polynomial R} (
   have h : p ∣ q * C s := by
     use integer_normalization R⁰ r
     apply map_injective (algebraMap R K) (IsFractionRing.injective _ _)
-    rw [map_mul, map_mul, hs, hr, mul_assocₓ, mul_commₓ r]
+    rw [map_mul, map_mul, hs, hr, mul_assoc, mul_comm r]
     simp
   rw [← hp.dvd_prim_part_iff_dvd, prim_part_mul, hq.prim_part_eq, Associated.dvd_iff_dvd_right] at h
   · exact h

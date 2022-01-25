@@ -131,10 +131,9 @@ theorem factorial_smul_hasse_deriv : ⇑(k ! • @hasse_deriv R _ k) = @derivati
   rw [iterate_succ_apply', ← ih]
   simp only [LinearMap.smul_apply, coeff_smul, LinearMap.map_smul_of_tower, coeff_derivative, hasse_deriv_coeff, ←
     @choose_symm_add _ k]
-  simp only [nsmul_eq_mul, factorial_succ, mul_assocₓ, succ_eq_add_one, ← add_assocₓ, add_right_commₓ n 1 k, ←
-    cast_succ]
+  simp only [nsmul_eq_mul, factorial_succ, mul_assoc, succ_eq_add_one, ← add_assocₓ, add_right_commₓ n 1 k, ← cast_succ]
   rw [← (cast_commute (n + 1) (f.coeff (n + k + 1))).Eq]
-  simp only [← mul_assocₓ]
+  simp only [← mul_assoc]
   norm_cast
   congr 2
   apply @cast_injective ℚ
@@ -249,8 +248,8 @@ theorem hasse_deriv_mul (f g : Polynomial R) :
     · simp only [Nat.choose_eq_zero_of_lt hn, Nat.cast_zero, zero_mul, mul_zero, monomial_zero_right]
       
     push_neg  at hm hn
-    rw [tsub_add_eq_add_tsub hm, ← add_tsub_assoc_of_le hn, ← tsub_add_eq_tsub_tsub, add_commₓ x.2 x.1, mul_assocₓ, ←
-      mul_assocₓ r, ← (Nat.cast_commute _ r).Eq, mul_assocₓ, mul_assocₓ]
+    rw [tsub_add_eq_add_tsub hm, ← add_tsub_assoc_of_le hn, ← tsub_add_eq_tsub_tsub, add_commₓ x.2 x.1, mul_assoc, ←
+      mul_assoc r, ← (Nat.cast_commute _ r).Eq, mul_assoc, mul_assoc]
   conv_rhs => apply_congr skip rw [aux _ H]
   rw_mod_cast [← LinearMap.map_sum, ← Finset.sum_mul, ← Nat.add_choose_eq]
 

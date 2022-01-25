@@ -168,7 +168,7 @@ theorem inner_content_Sup_nat [T2Space G] (U : ℕ → opens G) :
   · convert hK
     rw [opens.supr_def, Subtype.coe_mk]
     
-  rcases K.2.finite_compact_cover t (coeₓ ∘ U) (fun i _ => (U _).Prop)
+  rcases K.2.finite_compact_cover t (coe ∘ U) (fun i _ => (U _).Prop)
       (by
         simp only [ht]) with
     ⟨K', h1K', h2K', h3K'⟩

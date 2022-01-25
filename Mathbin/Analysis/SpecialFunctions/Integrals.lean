@@ -73,7 +73,7 @@ theorem interval_integrable.const_mul (h : IntervalIntegrable f ν a b) : Interv
 @[simp]
 theorem interval_integrable.mul_const (h : IntervalIntegrable f ν a b) : IntervalIntegrable (fun x => f x * c) ν a b :=
   by
-  simp only [mul_commₓ, interval_integrable.const_mul c h]
+  simp only [mul_comm, interval_integrable.const_mul c h]
 
 @[simp]
 theorem interval_integrable.div (h : IntervalIntegrable f ν a b) : IntervalIntegrable (fun x => f x / c) ν a b :=
@@ -297,7 +297,7 @@ theorem integral_log (h : (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lea
         (continuous_on_inv₀.mono $ subset_compl_singleton_iff.mpr h).IntervalIntegrable
         continuous_on_const.interval_integrable using
       1 <;>
-    simp [integral_congr HEq, mul_commₓ, ← sub_add]
+    simp [integral_congr HEq, mul_comm, ← sub_add]
 
 @[simp]
 theorem integral_log_of_pos (ha : 0 < a) (hb : 0 < b) : (∫ x in a..b, log x) = b * log b - a * log a - b + a :=
@@ -470,7 +470,7 @@ theorem integral_sin_pow_mul_cos_pow_odd (m n : ℕ) :
     continuity
   calc
     (∫ x in a..b, sin x ^ m * cos x ^ (2 * n + 1)) = ∫ x in a..b, sin x ^ m * (1 - sin x ^ 2) ^ n * cos x := by
-      simp only [pow_succ'ₓ, ← mul_assocₓ, pow_mulₓ, cos_sq']
+      simp only [pow_succ'ₓ, ← mul_assoc, pow_mulₓ, cos_sq']
     _ = ∫ u in sin a..sin b, u ^ m * (1 - u ^ 2) ^ n :=
       integral_comp_mul_deriv (fun x hx => has_deriv_at_sin x) continuous_on_cos hc
     

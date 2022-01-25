@@ -234,7 +234,7 @@ theorem cons_mul_vec [Fintype n'] (v : n' → α) (A : Finₓ m → n' → α) (
 theorem mul_vec_cons {α} [CommSemiringₓ α] (A : m' → Finₓ n.succ → α) (x : α) (v : Finₓ n → α) :
     mul_vec A (vec_cons x v) = x • vec_head ∘ A + mul_vec (vec_tail ∘ A) v := by
   ext i
-  simp [mul_vec, mul_commₓ]
+  simp [mul_vec, mul_comm]
 
 end MulVec
 

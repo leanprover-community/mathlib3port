@@ -44,7 +44,7 @@ namespace Caratheodory
 
 /-- If `x` is in the convex hull of some finset `t` whose elements are not affine-independent,
 then it is in the convex hull of a strict subset of `t`. -/
-theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndependent 𝕜 (coeₓ : t → E)) {x : E}
+theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndependent 𝕜 (coe : t → E)) {x : E}
     (m : x ∈ convexHull 𝕜 (↑t : Set E)) : ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑t.erase y : Set E) := by
   simp only [Finset.convex_hull_eq, mem_set_of_eq] at m⊢
   obtain ⟨f, fpos, fsum, rfl⟩ := m
@@ -125,7 +125,7 @@ theorem min_card_finset_of_mem_convex_hull_card_le_card {t : Finset E} (ht₁ : 
   Function.argmin_on_le _ _ _ ⟨ht₁, ht₂⟩
 
 theorem affine_independent_min_card_finset_of_mem_convex_hull :
-    AffineIndependent 𝕜 (coeₓ : min_card_finset_of_mem_convex_hull hx → E) := by
+    AffineIndependent 𝕜 (coe : min_card_finset_of_mem_convex_hull hx → E) := by
   let k := (min_card_finset_of_mem_convex_hull hx).card - 1
   have hk : (min_card_finset_of_mem_convex_hull hx).card = k + 1 :=
     (Nat.succ_pred_eq_of_posₓ (finset.card_pos.mpr (min_card_finset_of_mem_convex_hull_nonempty hx))).symm
@@ -148,7 +148,7 @@ variable {s : Set E}
 
 /-- **Carathéodory's convexity theorem** -/
 theorem convex_hull_eq_union :
-    convexHull 𝕜 s = ⋃ (t : Finset E) (hss : ↑t ⊆ s) (hai : AffineIndependent 𝕜 (coeₓ : t → E)), convexHull 𝕜 (↑t) := by
+    convexHull 𝕜 s = ⋃ (t : Finset E) (hss : ↑t ⊆ s) (hai : AffineIndependent 𝕜 (coe : t → E)), convexHull 𝕜 (↑t) := by
   apply Set.Subset.antisymm
   · intro x hx
     simp only [exists_prop, Set.mem_Union]
@@ -175,7 +175,7 @@ theorem eq_pos_convex_span_of_mem_convex_hull {x : E} (hx : x ∈ convexHull �
   simp only [t.convex_hull_eq, exists_prop, Set.mem_set_of_eq] at ht₃
   obtain ⟨w, hw₁, hw₂, hw₃⟩ := ht₃
   let t' := t.filter fun i => w i ≠ 0
-  refine' ⟨t', t'.fintype_coe_sort, (coeₓ : t' → E), w ∘ (coeₓ : t' → E), _, _, _, _, _⟩
+  refine' ⟨t', t'.fintype_coe_sort, (coe : t' → E), w ∘ (coe : t' → E), _, _, _, _, _⟩
   · rw [Subtype.range_coe_subtype]
     exact subset.trans (Finset.filter_subset _ t) ht₁
     

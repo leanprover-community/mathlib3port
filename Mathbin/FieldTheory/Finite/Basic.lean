@@ -197,7 +197,7 @@ theorem forall_pow_eq_one_iff (i : ℕ) : (∀ x : (K)ˣ, x ^ i = 1) ↔ q - 1 �
   · intro h y
     simp_rw [← mem_powers_iff_mem_zpowers]  at hx
     rcases hx y with ⟨j, rfl⟩
-    rw [← pow_mulₓ, mul_commₓ, pow_mulₓ, h, one_pow]
+    rw [← pow_mulₓ, mul_comm, pow_mulₓ, h, one_pow]
     
 
 /-- The sum of `x ^ i` as `x` ranges over the units of a finite field of cardinality `q`
@@ -239,7 +239,7 @@ theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : (∑ x : K, x ^ i) =
   have hiq : ¬q - 1 ∣ i := by
     contrapose! h
     exact Nat.le_of_dvdₓ (Nat.pos_of_ne_zeroₓ hi) h
-  let φ : (K)ˣ ↪ K := ⟨coeₓ, Units.ext⟩
+  let φ : (K)ˣ ↪ K := ⟨coe, Units.ext⟩
   have : univ.map φ = univ \ {0} := by
     ext x
     simp only [true_andₓ, embedding.coe_fn_mk, mem_sdiff, Units.exists_iff_ne_zero, mem_univ, mem_map,
@@ -401,7 +401,7 @@ theorem Nat.Modeq.pow_totient {x n : ℕ} (h : Nat.Coprime x n) : x ^ φ n ≡ 1
   rw [← Zmod.eq_iff_modeq_nat]
   let x' : Units (Zmod (n + 1)) := Zmod.unitOfCoprime _ h
   have := Zmod.pow_totient x'
-  apply_fun (coeₓ : Units (Zmod (n + 1)) → Zmod (n + 1))  at this
+  apply_fun (coe : Units (Zmod (n + 1)) → Zmod (n + 1))  at this
   simpa only [-Zmod.pow_totient, Nat.succ_eq_add_one, Nat.cast_pow, Units.coe_one, Nat.cast_one, coe_unit_of_coprime,
     Units.coe_pow]
 

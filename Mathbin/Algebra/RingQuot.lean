@@ -86,10 +86,10 @@ private irreducible_def sub {R : Type u₁} [Ringₓ R] (r : R → R → Prop) :
 private irreducible_def smul [Algebra S R] (n : S) : RingQuot r → RingQuot r
   | ⟨a⟩ => ⟨Quot.map (fun a => n • a) (rel.smul n) a⟩
 
-instance : HasZero (RingQuot r) :=
+instance : Zero (RingQuot r) :=
   ⟨zero r⟩
 
-instance : HasOne (RingQuot r) :=
+instance : One (RingQuot r) :=
   ⟨one r⟩
 
 instance : Add (RingQuot r) :=
@@ -166,7 +166,7 @@ instance (r : R → R → Prop) : Semiringₓ (RingQuot r) where
     simp [add_quot, add_commₓ]
   mul_assoc := by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩
-    simp [mul_quot, mul_assocₓ]
+    simp [mul_quot, mul_assoc]
   one_mul := by
     rintro ⟨⟨⟩⟩
     simp [mul_quot, ← one_quot]
@@ -201,7 +201,7 @@ instance {R : Type u₁} [CommSemiringₓ R] (r : R → R → Prop) : CommSemiri
   { RingQuot.semiring r with
     mul_comm := by
       rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩
-      simp [mul_quot, mul_commₓ] }
+      simp [mul_quot, mul_comm] }
 
 instance {R : Type u₁} [CommRingₓ R] (r : R → R → Prop) : CommRingₓ (RingQuot r) :=
   { RingQuot.commSemiring r, RingQuot.ring r with }

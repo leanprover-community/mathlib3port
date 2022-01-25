@@ -82,7 +82,7 @@ protected theorem injective {α : Type _} {β : Type _} [EmetricSpace α] [Pseud
   simpa only [h, edist_self, mul_zero, edist_le_zero] using hf x y
 
 theorem mul_le_edist (hf : AntilipschitzWith K f) (x y : α) : (K⁻¹ * edist x y : ℝ≥0∞) ≤ edist (f x) (f y) := by
-  rw [mul_commₓ, ← div_eq_mul_inv]
+  rw [mul_comm, ← div_eq_mul_inv]
   exact Ennreal.div_le_of_le_mul' (hf x y)
 
 theorem ediam_preimage_le (hf : AntilipschitzWith K f) (s : Set β) : diam (f ⁻¹' s) ≤ K * diam s :=
@@ -100,7 +100,7 @@ theorem comp {Kg : ℝ≥0 } {g : β → γ} (hg : AntilipschitzWith Kg g) {Kf :
     edist x y ≤ Kf * edist (f x) (f y) := hf x y
     _ ≤ Kf * (Kg * edist (g (f x)) (g (f y))) := Ennreal.mul_left_mono (hg _ _)
     _ = _ := by
-      rw [Ennreal.coe_mul, mul_assocₓ]
+      rw [Ennreal.coe_mul, mul_assoc]
     
 
 theorem restrict (hf : AntilipschitzWith K f) (s : Set α) : AntilipschitzWith K (s.restrict f) := fun x y => hf x y
@@ -127,8 +127,8 @@ theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod
   refine' ((uniformity_basis_edist.comap _).le_basis_iff uniformity_basis_edist).2 fun ε h₀ => _
   refine' ⟨K⁻¹ * ε, Ennreal.mul_pos (Ennreal.inv_ne_zero.2 Ennreal.coe_ne_top) h₀.ne', _⟩
   refine' fun x hx => (hf x.1 x.2).trans_lt _
-  rw [mul_commₓ, ← div_eq_mul_inv] at hx
-  rw [mul_commₓ]
+  rw [mul_comm, ← div_eq_mul_inv] at hx
+  rw [mul_comm]
   exact Ennreal.mul_lt_of_lt_div hx
 
 protected theorem UniformInducing (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : UniformInducing f :=
@@ -150,7 +150,7 @@ theorem ClosedEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [EmetricSp
     [CompleteSpace α] (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : ClosedEmbedding f :=
   { (hf.uniform_embedding hfc).Embedding with closed_range := hf.is_closed_range hfc }
 
-theorem subtype_coe (s : Set α) : AntilipschitzWith 1 (coeₓ : s → α) :=
+theorem subtype_coe (s : Set α) : AntilipschitzWith 1 (coe : s → α) :=
   AntilipschitzWith.id.restrict s
 
 theorem of_subsingleton [Subsingleton α] {K : ℝ≥0 } : AntilipschitzWith K f := fun x y => by

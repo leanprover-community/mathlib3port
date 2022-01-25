@@ -88,7 +88,7 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
     apply lt_transₓ h0
     simp [a_n, m]
   have h2 : m * sgm v b as n = symmod b m + coeffs.val v (as.map fun x => symmod x m) := by
-    simp only [sgm, mul_commₓ m]
+    simp only [sgm, mul_comm m]
     rw [Int.div_mul_cancel]
     have h4 :
       ∃ c, m * c + (symmod b (get n as + 1) + coeffs.val v (as.map fun x : ℤ => symmod x m)) = term.val v (b, as) := by
@@ -230,9 +230,9 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
         ring
         simp only [coeffs.val_except, add_mulₓ _ _ m]
         apply fun_mono_2
-        · rw [mul_commₓ _ m, ← coeffs.val_between_map_mul, List.map_mapₓ]
+        · rw [mul_comm _ m, ← coeffs.val_between_map_mul, List.map_mapₓ]
           
-        simp only [List.length_map, mul_commₓ _ m]
+        simp only [List.length_map, mul_comm _ m]
         rw [← coeffs.val_between_map_mul, List.map_mapₓ]
       _ = (sym_sym m b + (coeffs.val_except n v (as.map (sym_sym m)) + -a_n * sgm v b as n)) * m := by
         ring

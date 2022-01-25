@@ -144,7 +144,7 @@ theorem reflect_mul_induction (cf cg : ℕ) :
   · induction' cg with cg hcg
     · intro N O f g Cf Cg Nf Og
       rw [← C_mul_X_pow_eq_self Cf, ← C_mul_X_pow_eq_self Cg]
-      simp only [mul_assocₓ, X_pow_mul, ← pow_addₓ X, reflect_C_mul, reflect_monomial, add_commₓ, rev_at_add Nf Og]
+      simp only [mul_assoc, X_pow_mul, ← pow_addₓ X, reflect_C_mul, reflect_monomial, add_commₓ, rev_at_add Nf Og]
       
     · intro N O f g Cf Cg Nf Og
       by_cases' g0 : g = 0

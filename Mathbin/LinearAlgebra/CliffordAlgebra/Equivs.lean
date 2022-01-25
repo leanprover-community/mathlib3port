@@ -79,7 +79,7 @@ instance : CommRingₓ (CliffordAlgebra (0 : QuadraticForm R Unit)) :=
       case h_add x₁ x₂ hx₁ hx₂ =>
         rw [mul_addₓ, add_mulₓ, hx₁, hx₂]
       case h_mul x₁ x₂ hx₁ hx₂ =>
-        rw [mul_assocₓ, hx₂, ← mul_assocₓ, hx₁, ← mul_assocₓ] }
+        rw [mul_assoc, hx₂, ← mul_assoc, hx₁, ← mul_assoc] }
 
 theorem reverse_apply (x : CliffordAlgebra (0 : QuadraticForm R Unit)) : x.reverse = x := by
   induction x using CliffordAlgebra.induction
@@ -88,7 +88,7 @@ theorem reverse_apply (x : CliffordAlgebra (0 : QuadraticForm R Unit)) : x.rever
   case h_grade1 x =>
     rw [ι_eq_zero, LinearMap.zero_apply, reverse.map_zero]
   case h_mul x₁ x₂ hx₁ hx₂ =>
-    rw [reverse.map_mul, mul_commₓ, hx₁, hx₂]
+    rw [reverse.map_mul, mul_comm, hx₁, hx₂]
   case h_add x₁ x₂ hx₁ hx₂ =>
     rw [reverse.map_add, hx₁, hx₂]
 
@@ -198,7 +198,7 @@ instance : CommRingₓ (CliffordAlgebra Q) :=
   { CliffordAlgebra.ring _ with
     mul_comm := fun x y =>
       CliffordAlgebraComplex.equiv.Injective $ by
-        rw [AlgEquiv.map_mul, mul_commₓ, AlgEquiv.map_mul] }
+        rw [AlgEquiv.map_mul, mul_comm, AlgEquiv.map_mul] }
 
 /-- `reverse` is a no-op over `clifford_algebra_complex.Q`. -/
 theorem reverse_apply (x : CliffordAlgebra Q) : x.reverse = x := by
@@ -208,7 +208,7 @@ theorem reverse_apply (x : CliffordAlgebra Q) : x.reverse = x := by
   case h_grade1 x =>
     rw [reverse_ι]
   case h_mul x₁ x₂ hx₁ hx₂ =>
-    rw [reverse.map_mul, mul_commₓ, hx₁, hx₂]
+    rw [reverse.map_mul, mul_comm, hx₁, hx₂]
   case h_add x₁ x₂ hx₁ hx₂ =>
     rw [reverse.map_add, hx₁, hx₂]
 

@@ -108,24 +108,24 @@ instance : NonUnitalSemiring (MonoidAlgebra k G) :=
   { MonoidAlgebra.nonUnitalNonAssocSemiring with zero := 0, mul := · * ·, add := · + ·,
     mul_assoc := fun f g h => by
       simp only [mul_def, sum_sum_index, sum_zero_index, sum_add_index, sum_single_index, single_zero, single_add,
-        eq_self_iff_true, forall_true_iff, forall_3_true_iff, add_mulₓ, mul_addₓ, add_assocₓ, mul_assocₓ, zero_mul,
+        eq_self_iff_true, forall_true_iff, forall_3_true_iff, add_mulₓ, mul_addₓ, add_assocₓ, mul_assoc, zero_mul,
         mul_zero, sum_zero, sum_add] }
 
 end Semigroupₓ
 
-section HasOne
+section One
 
-variable [Semiringₓ k] [HasOne G]
+variable [Semiringₓ k] [One G]
 
 /-- The unit of the multiplication is `single 1 1`, i.e. the function
   that is `1` at `1` and zero elsewhere. -/
-instance : HasOne (MonoidAlgebra k G) :=
+instance : One (MonoidAlgebra k G) :=
   ⟨single 1 1⟩
 
 theorem one_def : (1 : MonoidAlgebra k G) = single 1 1 :=
   rfl
 
-end HasOne
+end One
 
 section MulOneClass
 
@@ -163,7 +163,7 @@ theorem lift_nc_mul (f : k →+* R) (g : G →* R) (a b : MonoidAlgebra k G)
   conv_rhs => rw [← sum_single a, ← sum_single b]
   simp_rw [mul_def, (lift_nc _ g).map_finsupp_sum, lift_nc_single, Finsupp.sum_mul, Finsupp.mul_sum]
   refine' Finset.sum_congr rfl fun y hy => Finset.sum_congr rfl fun x hx => _
-  simp [mul_assocₓ, (h_comm hy).left_comm]
+  simp [mul_assoc, (h_comm hy).left_comm]
 
 end MulOneClass
 
@@ -190,9 +190,9 @@ end Semiringₓ
 instance [CommSemiringₓ k] [CommMonoidₓ G] : CommSemiringₓ (MonoidAlgebra k G) :=
   { MonoidAlgebra.semiring with
     mul_comm := fun f g => by
-      simp only [mul_def, Finsupp.sum, mul_commₓ]
+      simp only [mul_def, Finsupp.sum, mul_comm]
       rw [Finset.sum_comm]
-      simp only [mul_commₓ] }
+      simp only [mul_comm] }
 
 instance [Semiringₓ k] [Nontrivial k] [Nonempty G] : Nontrivial (MonoidAlgebra k G) :=
   Finsupp.nontrivial
@@ -215,7 +215,7 @@ instance [Ringₓ k] [Monoidₓ G] : Ringₓ (MonoidAlgebra k G) :=
   { MonoidAlgebra.nonUnitalNonAssocRing, MonoidAlgebra.semiring with }
 
 instance [CommRingₓ k] [CommMonoidₓ G] : CommRingₓ (MonoidAlgebra k G) :=
-  { MonoidAlgebra.ring with mul_comm := mul_commₓ }
+  { MonoidAlgebra.ring with mul_comm := mul_comm }
 
 variable {R S : Type _}
 
@@ -416,7 +416,7 @@ theorem lift_nc_smul [MulOneClass G] {R : Type _} [Semiringₓ R] (f : k →+* R
     (lift_nc (↑f) g).comp (smulAddHom k (MonoidAlgebra k G) c) = (AddMonoidHom.mulLeft (f c)).comp (lift_nc (↑f) g)
   exact AddMonoidHom.congr_fun this φ
   ext a b
-  simp [mul_assocₓ]
+  simp [mul_assoc]
 
 end MiscTheorems
 
@@ -508,7 +508,7 @@ attribute [local reducible] MonoidAlgebra
 theorem single_one_comm [CommSemiringₓ k] [MulOneClass G] (r : k) (f : MonoidAlgebra k G) :
     single 1 r * f = f * single 1 r := by
   ext
-  rw [single_one_mul_apply, mul_single_one_apply, mul_commₓ]
+  rw [single_one_mul_apply, mul_single_one_apply, mul_comm]
 
 /-- `finsupp.single 1` as a `ring_hom` -/
 @[simps]
@@ -860,19 +860,19 @@ instance : NonUnitalNonAssocSemiring (AddMonoidAlgebra k G) :=
 
 end Mul
 
-section HasOne
+section One
 
-variable [Semiringₓ k] [HasZero G]
+variable [Semiringₓ k] [Zero G]
 
 /-- The unit of the multiplication is `single 1 1`, i.e. the function
   that is `1` at `0` and zero elsewhere. -/
-instance : HasOne (AddMonoidAlgebra k G) :=
+instance : One (AddMonoidAlgebra k G) :=
   ⟨single 0 1⟩
 
 theorem one_def : (1 : AddMonoidAlgebra k G) = single 0 1 :=
   rfl
 
-end HasOne
+end One
 
 section Semigroupₓ
 
@@ -882,7 +882,7 @@ instance : NonUnitalSemiring (AddMonoidAlgebra k G) :=
   { AddMonoidAlgebra.nonUnitalNonAssocSemiring with zero := 0, mul := · * ·, add := · + ·,
     mul_assoc := fun f g h => by
       simp only [mul_def, sum_sum_index, sum_zero_index, sum_add_index, sum_single_index, single_zero, single_add,
-        eq_self_iff_true, forall_true_iff, forall_3_true_iff, add_mulₓ, mul_addₓ, add_assocₓ, mul_assocₓ, zero_mul,
+        eq_self_iff_true, forall_true_iff, forall_3_true_iff, add_mulₓ, mul_addₓ, add_assocₓ, mul_assoc, zero_mul,
         mul_zero, sum_zero, sum_add] }
 
 end Semigroupₓ
@@ -950,7 +950,7 @@ def lift_nc_ring_hom (f : k →+* R) (g : Multiplicative G →* R) (h_comm : ∀
 end Semiringₓ
 
 instance [CommSemiringₓ k] [AddCommMonoidₓ G] : CommSemiringₓ (AddMonoidAlgebra k G) :=
-  { AddMonoidAlgebra.semiring with mul_comm := @mul_commₓ (MonoidAlgebra k $ Multiplicative G) _ }
+  { AddMonoidAlgebra.semiring with mul_comm := @mul_comm (MonoidAlgebra k $ Multiplicative G) _ }
 
 instance [Semiringₓ k] [Nontrivial k] [Nonempty G] : Nontrivial (AddMonoidAlgebra k G) :=
   Finsupp.nontrivial
@@ -973,7 +973,7 @@ instance [Ringₓ k] [AddMonoidₓ G] : Ringₓ (AddMonoidAlgebra k G) :=
   { AddMonoidAlgebra.nonUnitalNonAssocRing, AddMonoidAlgebra.semiring with }
 
 instance [CommRingₓ k] [AddCommMonoidₓ G] : CommRingₓ (AddMonoidAlgebra k G) :=
-  { AddMonoidAlgebra.ring with mul_comm := mul_commₓ }
+  { AddMonoidAlgebra.ring with mul_comm := mul_comm }
 
 variable {R S : Type _}
 

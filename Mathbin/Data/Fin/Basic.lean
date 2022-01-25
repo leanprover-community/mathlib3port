@@ -105,7 +105,7 @@ instance fin_to_nat (n : ℕ) : Coe (Finₓ n) Nat :=
 theorem pos_iff_nonempty {n : ℕ} : 0 < n ↔ Nonempty (Finₓ n) :=
   ⟨fun h => ⟨⟨0, h⟩⟩, fun ⟨i⟩ => lt_of_le_of_ltₓ (Nat.zero_leₓ _) i.2⟩
 
-section coeₓ
+section coe
 
 /-!
 ### coercions and constructions
@@ -123,7 +123,7 @@ theorem ext {a b : Finₓ n} (h : (a : ℕ) = b) : a = b :=
 theorem ext_iff (a b : Finₓ n) : a = b ↔ (a : ℕ) = b :=
   Iff.intro (congr_argₓ _) Finₓ.eq_of_veq
 
-theorem coe_injective {n : ℕ} : injective (coeₓ : Finₓ n → ℕ) :=
+theorem coe_injective {n : ℕ} : injective (coe : Finₓ n → ℕ) :=
   Subtype.coe_injective
 
 theorem eq_iff_veq (a b : Finₓ n) : a = b ↔ a.1 = b.1 :=
@@ -176,7 +176,7 @@ theorem exists_iff {p : Finₓ n → Prop} : (∃ i, p i) ↔ ∃ i h, p ⟨i, h
 theorem forall_iff {p : Finₓ n → Prop} : (∀ i, p i) ↔ ∀ i h, p ⟨i, h⟩ :=
   ⟨fun h i hi => h ⟨i, hi⟩, fun h ⟨i, hi⟩ => h i hi⟩
 
-end coeₓ
+end coe
 
 section Order
 
@@ -214,12 +214,12 @@ theorem coe_fin_le {n : ℕ} {a b : Finₓ n} : (a : ℕ) ≤ (b : ℕ) ↔ a �
   Iff.rfl
 
 instance {n : ℕ} : LinearOrderₓ (Finₓ n) :=
-  { LinearOrderₓ.lift (coeₓ : Finₓ n → ℕ) (@Finₓ.eq_of_veq _) with le := · ≤ ·, lt := · < ·,
+  { LinearOrderₓ.lift (coe : Finₓ n → ℕ) (@Finₓ.eq_of_veq _) with le := · ≤ ·, lt := · < ·,
     decidableLe := Finₓ.decidableLe, decidableLt := Finₓ.decidableLt, DecidableEq := Finₓ.decidableEq _ }
 
 /-- The inclusion map `fin n → ℕ` is a relation embedding. -/
 def coe_embedding n : Finₓ n ↪o ℕ :=
-  ⟨⟨coeₓ, @Finₓ.eq_of_veq _⟩, fun a b => Iff.rfl⟩
+  ⟨⟨coe, @Finₓ.eq_of_veq _⟩, fun a b => Iff.rfl⟩
 
 /-- The ordering on `fin n` is a well order. -/
 instance fin.lt.is_well_order n : IsWellOrder (Finₓ n) (· < ·) :=
@@ -236,7 +236,7 @@ def factorial {n : ℕ} : fin n → ℕ
 ```
 -/
 instance {n : ℕ} : HasWellFounded (Finₓ n) :=
-  ⟨_, measure_wf coeₓ⟩
+  ⟨_, measure_wf coe⟩
 
 @[simp]
 theorem coe_zero {n : ℕ} : ((0 : Finₓ (n + 1)) : ℕ) = 0 :=
@@ -342,7 +342,7 @@ instance order_iso_unique : Unique (Finₓ n ≃o Finₓ n) :=
 are equal. -/
 theorem strict_mono_unique {f g : Finₓ n → α} (hf : StrictMono f) (hg : StrictMono g) (h : range f = range g) : f = g :=
   have : (hf.order_iso f).trans (OrderIso.setCongr _ _ h) = hg.order_iso g := Subsingleton.elimₓ _ _
-  congr_argₓ (Function.comp (coeₓ : range g → α)) (funext $ RelIso.ext_iff.1 this)
+  congr_argₓ (Function.comp (coe : range g → α)) (funext $ RelIso.ext_iff.1 this)
 
 /-- Two order embeddings of `fin n` are equal provided that their ranges are equal. -/
 theorem order_embedding_eq {f g : Finₓ n ↪o α} (h : range f = range g) : f = g :=
@@ -684,7 +684,7 @@ theorem range_cast_le {n k : ℕ} (h : n ≤ k) : Set.Range (cast_le h) = { i | 
 theorem coe_of_injective_cast_le_symm {n k : ℕ} (h : n ≤ k) (i : Finₓ k) hi :
     ((Equivₓ.ofInjective _ (cast_le h).Injective).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_le]
-  exact congr_argₓ coeₓ (Equivₓ.apply_of_injective_symm _ _)
+  exact congr_argₓ coe (Equivₓ.apply_of_injective_symm _ _)
 
 @[simp]
 theorem cast_le_succ {m n : ℕ} (h : m + 1 ≤ n + 1) (i : Finₓ m) :
@@ -879,7 +879,7 @@ theorem range_cast_succ {n : ℕ} : Set.Range (cast_succ : Finₓ n → Finₓ n
 theorem coe_of_injective_cast_succ_symm {n : ℕ} (i : Finₓ n.succ) hi :
     ((Equivₓ.ofInjective cast_succ (cast_succ_injective _)).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_succ]
-  exact congr_argₓ coeₓ (Equivₓ.apply_of_injective_symm _ _)
+  exact congr_argₓ coe (Equivₓ.apply_of_injective_symm _ _)
 
 theorem succ_cast_succ {n : ℕ} (i : Finₓ n) : i.cast_succ.succ = i.succ.cast_succ :=
   Finₓ.ext
@@ -1067,7 +1067,7 @@ section DivMod
 
 /-- Compute `i / n`, where `n` is a `nat` and inferred the type of `i`. -/
 def div_nat (i : Finₓ (m * n)) : Finₓ m :=
-  ⟨i / n, Nat.div_lt_of_lt_mul $ mul_commₓ m n ▸ i.prop⟩
+  ⟨i / n, Nat.div_lt_of_lt_mul $ mul_comm m n ▸ i.prop⟩
 
 @[simp]
 theorem coe_div_nat (i : Finₓ (m * n)) : (i.div_nat : ℕ) = i / n :=

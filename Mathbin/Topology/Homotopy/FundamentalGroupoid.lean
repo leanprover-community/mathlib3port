@@ -45,7 +45,7 @@ theorem continuous_refl_trans_symm_aux : Continuous refl_trans_symm_aux := by
   · continuity
     
   intro x hx
-  norm_num [hx, mul_assocₓ]
+  norm_num [hx, mul_assoc]
 
 theorem refl_trans_symm_aux_mem_I (x : I × I) : refl_trans_symm_aux x ∈ I := by
   dsimp only [refl_trans_symm_aux]
@@ -61,7 +61,7 @@ theorem refl_trans_symm_aux_mem_I (x : I × I) : refl_trans_symm_aux x ∈ I := 
       · unit_interval
         
       
-    · rw [mul_assocₓ]
+    · rw [mul_assoc]
       apply mul_le_one
       · unit_interval
         

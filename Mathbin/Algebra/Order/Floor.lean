@@ -56,7 +56,7 @@ class FloorSemiring (α) [OrderedSemiring α] where
   ceil : α → ℕ
   floor_of_neg {a : α} (ha : a < 0) : floor a = 0
   gc_floor {a : α} {n : ℕ} (ha : 0 ≤ a) : n ≤ floor a ↔ (n : α) ≤ a
-  gc_ceil : GaloisConnection ceil coeₓ
+  gc_ceil : GaloisConnection ceil coe
 
 instance : FloorSemiring ℕ where
   floor := id
@@ -190,7 +190,7 @@ theorem preimage_floor_of_ne_zero {n : ℕ} (hn : n ≠ 0) : (floor : α → ℕ
 /-! #### Ceil -/
 
 
-theorem gc_ceil_coe : GaloisConnection (ceil : α → ℕ) coeₓ :=
+theorem gc_ceil_coe : GaloisConnection (ceil : α → ℕ) coe :=
   FloorSemiring.gc_ceil
 
 @[simp]
@@ -365,8 +365,8 @@ theorem subsingleton_floor_semiring {α} [LinearOrderedSemiring α] : Subsinglet
 class FloorRing (α) [LinearOrderedRing α] where
   floor : α → ℤ
   ceil : α → ℤ
-  gc_coe_floor : GaloisConnection coeₓ floor
-  gc_ceil_coe : GaloisConnection ceil coeₓ
+  gc_coe_floor : GaloisConnection coe floor
+  gc_ceil_coe : GaloisConnection ceil coe
 
 instance : FloorRing ℤ where
   floor := id
@@ -379,14 +379,14 @@ instance : FloorRing ℤ where
     rfl
 
 /-- A `floor_ring` constructor from the `floor` function alone. -/
-def FloorRing.ofFloor α [LinearOrderedRing α] (floor : α → ℤ) (gc_coe_floor : GaloisConnection coeₓ floor) :
+def FloorRing.ofFloor α [LinearOrderedRing α] (floor : α → ℤ) (gc_coe_floor : GaloisConnection coe floor) :
     FloorRing α :=
   { floor, ceil := fun a => -floor (-a), gc_coe_floor,
     gc_ceil_coe := fun a z => by
       rw [neg_le, ← gc_coe_floor, Int.cast_neg, neg_le_neg_iff] }
 
 /-- A `floor_ring` constructor from the `ceil` function alone. -/
-def FloorRing.ofCeil α [LinearOrderedRing α] (ceil : α → ℤ) (gc_ceil_coe : GaloisConnection ceil coeₓ) : FloorRing α :=
+def FloorRing.ofCeil α [LinearOrderedRing α] (ceil : α → ℤ) (gc_ceil_coe : GaloisConnection ceil coe) : FloorRing α :=
   { floor := fun a => -ceil (-a), ceil,
     gc_coe_floor := fun a z => by
       rw [le_neg, gc_ceil_coe, Int.cast_neg, neg_le_neg_iff],
@@ -423,7 +423,7 @@ theorem floor_ring_ceil_eq : @FloorRing.ceil = @Int.ceil :=
 /-! #### Floor -/
 
 
-theorem gc_coe_floor : GaloisConnection (coeₓ : ℤ → α) floor :=
+theorem gc_coe_floor : GaloisConnection (coe : ℤ → α) floor :=
   FloorRing.gc_coe_floor
 
 theorem le_floor : z ≤ ⌊a⌋ ↔ (z : α) ≤ a :=
@@ -667,7 +667,7 @@ theorem image_fract (s : Set α) : fract '' s = ⋃ m : ℤ, (fun x => x - m) ''
 /-! #### Ceil -/
 
 
-theorem gc_ceil_coe : GaloisConnection ceil (coeₓ : ℤ → α) :=
+theorem gc_ceil_coe : GaloisConnection ceil (coe : ℤ → α) :=
   FloorRing.gc_ceil_coe
 
 theorem ceil_le : ⌈a⌉ ≤ z ↔ a ≤ z :=
@@ -756,42 +756,42 @@ theorem preimage_ceil_singleton (m : ℤ) : (ceil : α → ℤ) ⁻¹' {m} = Ioc
 
 
 @[simp]
-theorem preimage_Ioo {a b : α} : (coeₓ : ℤ → α) ⁻¹' Set.Ioo a b = Set.Ioo ⌊a⌋ ⌈b⌉ := by
+theorem preimage_Ioo {a b : α} : (coe : ℤ → α) ⁻¹' Set.Ioo a b = Set.Ioo ⌊a⌋ ⌈b⌉ := by
   ext
   simp [floor_lt, lt_ceil]
 
 @[simp]
-theorem preimage_Ico {a b : α} : (coeₓ : ℤ → α) ⁻¹' Set.Ico a b = Set.Ico ⌈a⌉ ⌈b⌉ := by
+theorem preimage_Ico {a b : α} : (coe : ℤ → α) ⁻¹' Set.Ico a b = Set.Ico ⌈a⌉ ⌈b⌉ := by
   ext
   simp [ceil_le, lt_ceil]
 
 @[simp]
-theorem preimage_Ioc {a b : α} : (coeₓ : ℤ → α) ⁻¹' Set.Ioc a b = Set.Ioc ⌊a⌋ ⌊b⌋ := by
+theorem preimage_Ioc {a b : α} : (coe : ℤ → α) ⁻¹' Set.Ioc a b = Set.Ioc ⌊a⌋ ⌊b⌋ := by
   ext
   simp [floor_lt, le_floor]
 
 @[simp]
-theorem preimage_Icc {a b : α} : (coeₓ : ℤ → α) ⁻¹' Set.Icc a b = Set.Icc ⌈a⌉ ⌊b⌋ := by
+theorem preimage_Icc {a b : α} : (coe : ℤ → α) ⁻¹' Set.Icc a b = Set.Icc ⌈a⌉ ⌊b⌋ := by
   ext
   simp [ceil_le, le_floor]
 
 @[simp]
-theorem preimage_Ioi : (coeₓ : ℤ → α) ⁻¹' Set.Ioi a = Set.Ioi ⌊a⌋ := by
+theorem preimage_Ioi : (coe : ℤ → α) ⁻¹' Set.Ioi a = Set.Ioi ⌊a⌋ := by
   ext
   simp [floor_lt]
 
 @[simp]
-theorem preimage_Ici : (coeₓ : ℤ → α) ⁻¹' Set.Ici a = Set.Ici ⌈a⌉ := by
+theorem preimage_Ici : (coe : ℤ → α) ⁻¹' Set.Ici a = Set.Ici ⌈a⌉ := by
   ext
   simp [ceil_le]
 
 @[simp]
-theorem preimage_Iio : (coeₓ : ℤ → α) ⁻¹' Set.Iio a = Set.Iio ⌈a⌉ := by
+theorem preimage_Iio : (coe : ℤ → α) ⁻¹' Set.Iio a = Set.Iio ⌈a⌉ := by
   ext
   simp [lt_ceil]
 
 @[simp]
-theorem preimage_Iic : (coeₓ : ℤ → α) ⁻¹' Set.Iic a = Set.Iic ⌊a⌋ := by
+theorem preimage_Iic : (coe : ℤ → α) ⁻¹' Set.Iic a = Set.Iic ⌊a⌋ := by
   ext
   simp [le_floor]
 

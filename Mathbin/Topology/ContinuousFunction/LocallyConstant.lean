@@ -17,7 +17,7 @@ monoid hom. -/
 @[to_additive "The inclusion of locally-constant functions into continuous functions as an\nadditive monoid hom.",
   simps]
 def to_continuous_map_monoid_hom [Monoidₓ Y] [HasContinuousMul Y] : LocallyConstant X Y →* C(X, Y) where
-  toFun := coeₓ
+  toFun := coe
   map_one' := by
     ext
     simp
@@ -29,7 +29,7 @@ def to_continuous_map_monoid_hom [Monoidₓ Y] [HasContinuousMul Y] : LocallyCon
 @[simps]
 def to_continuous_map_linear_map (R : Type _) [Semiringₓ R] [TopologicalSpace R] [AddCommMonoidₓ Y] [Module R Y]
     [HasContinuousAdd Y] [HasContinuousSmul R Y] : LocallyConstant X Y →ₗ[R] C(X, Y) where
-  toFun := coeₓ
+  toFun := coe
   map_add' := fun x y => by
     ext
     simp
@@ -41,7 +41,7 @@ def to_continuous_map_linear_map (R : Type _) [Semiringₓ R] [TopologicalSpace 
 @[simps]
 def to_continuous_map_alg_hom (R : Type _) [CommSemiringₓ R] [TopologicalSpace R] [Semiringₓ Y] [Algebra R Y]
     [TopologicalRing Y] [HasContinuousSmul R Y] : LocallyConstant X Y →ₐ[R] C(X, Y) where
-  toFun := coeₓ
+  toFun := coe
   map_one' := by
     ext
     simp

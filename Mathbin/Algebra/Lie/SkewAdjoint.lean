@@ -96,7 +96,7 @@ theorem Matrix.is_skew_adjoint_bracket (A B : Matrix n n R) (hA : A ∈ skewAdjo
   change (B)ᵀ ⬝ J = J ⬝ -B at hB
   simp only [← Matrix.mul_eq_mul] at *
   rw [Matrix.lie_transpose, LieRing.of_associative_ring_bracket, LieRing.of_associative_ring_bracket, sub_mul,
-    mul_assocₓ, mul_assocₓ, hA, hB, ← mul_assocₓ, ← mul_assocₓ, hA, hB]
+    mul_assoc, mul_assoc, hA, hB, ← mul_assoc, ← mul_assoc, hA, hB]
   noncomm_ring
 
 /-- The Lie subalgebra of skew-adjoint square matrices corresponding to a square matrix `J`. -/

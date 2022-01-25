@@ -17,9 +17,9 @@ open Set Filter Classical
 
 open_locale Filter Classical
 
-section HasZero
+section Zero
 
-variable [HasZero M] {s t : Set α} {f g : α → M} {a : α} {l : Filter α}
+variable [Zero M] {s t : Set α} {f g : α → M} {a : α} {l : Filter α}
 
 theorem indicator_eventually_eq (hf : f =ᶠ[l⊓𝓟 s] g) (hs : s =ᶠ[l] t) : indicator s f =ᶠ[l] indicator t g :=
   (eventually_inf_principal.1 hf).mp $
@@ -30,7 +30,7 @@ theorem indicator_eventually_eq (hf : f =ᶠ[l⊓𝓟 s] g) (hs : s =ᶠ[l] t) :
         fun hxs => by
         simp only [indicator_of_not_mem hxs, indicator_of_not_mem (mt hst.2 hxs)]
 
-end HasZero
+end Zero
 
 section AddMonoidₓ
 
@@ -44,14 +44,14 @@ end AddMonoidₓ
 
 section Order
 
-variable [HasZero β] [Preorderₓ β] {s t : Set α} {f g : α → β} {a : α} {l : Filter α}
+variable [Zero β] [Preorderₓ β] {s t : Set α} {f g : α → β} {a : α} {l : Filter α}
 
 theorem indicator_eventually_le_indicator (h : f ≤ᶠ[l⊓𝓟 s] g) : indicator s f ≤ᶠ[l] indicator s g :=
   (eventually_inf_principal.1 h).mono $ fun a h => indicator_rel_indicator (le_reflₓ _) h
 
 end Order
 
-theorem Monotone.tendsto_indicator {ι} [Preorderₓ ι] [HasZero β] (s : ι → Set α) (hs : Monotone s) (f : α → β) (a : α) :
+theorem Monotone.tendsto_indicator {ι} [Preorderₓ ι] [Zero β] (s : ι → Set α) (hs : Monotone s) (f : α → β) (a : α) :
     tendsto (fun i => indicator (s i) f a) at_top (pure $ indicator (⋃ i, s i) f a) := by
   by_cases' h : ∃ i, a ∈ s i
   · rcases h with ⟨i, hi⟩
@@ -65,7 +65,7 @@ theorem Monotone.tendsto_indicator {ι} [Preorderₓ ι] [HasZero β] (s : ι �
     simpa only [not_exists, mem_Union]
     
 
-theorem Antitone.tendsto_indicator {ι} [Preorderₓ ι] [HasZero β] (s : ι → Set α) (hs : Antitone s) (f : α → β) (a : α) :
+theorem Antitone.tendsto_indicator {ι} [Preorderₓ ι] [Zero β] (s : ι → Set α) (hs : Antitone s) (f : α → β) (a : α) :
     tendsto (fun i => indicator (s i) f a) at_top (pure $ indicator (⋂ i, s i) f a) := by
   by_cases' h : ∃ i, a ∉ s i
   · rcases h with ⟨i, hi⟩
@@ -83,7 +83,7 @@ theorem Antitone.tendsto_indicator {ι} [Preorderₓ ι] [HasZero β] (s : ι �
     simp only [indicator_of_mem, h, mem_Inter.2 h, tendsto_const_pure]
     
 
-theorem tendsto_indicator_bUnion_finset {ι} [HasZero β] (s : ι → Set α) (f : α → β) (a : α) :
+theorem tendsto_indicator_bUnion_finset {ι} [Zero β] (s : ι → Set α) (f : α → β) (a : α) :
     tendsto (fun n : Finset ι => indicator (⋃ i ∈ n, s i) f a) at_top (pure $ indicator (Union s) f a) := by
   rw [Union_eq_Union_finset s]
   refine' Monotone.tendsto_indicator (fun n : Finset ι => ⋃ i ∈ n, s i) _ f a

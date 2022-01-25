@@ -90,10 +90,10 @@ theorem coeff_list_prod_of_nat_degree_le (l : List (Polynomial α)) (n : ℕ) (h
     
   · have hl' : ∀, ∀ p ∈ tl, ∀, nat_degree p ≤ n := fun p hp => hl p (List.mem_cons_of_memₓ _ hp)
     simp only [List.prod_cons, List.map, List.length]
-    rw [add_mulₓ, one_mulₓ, add_commₓ, ← IH hl', mul_commₓ tl.length]
+    rw [add_mulₓ, one_mulₓ, add_commₓ, ← IH hl', mul_comm tl.length]
     have h : nat_degree tl.prod ≤ n * tl.length := by
       refine' (nat_degree_list_prod_le _).trans _
-      rw [← tl.length_map nat_degree, mul_commₓ]
+      rw [← tl.length_map nat_degree, mul_comm]
       refine' List.sum_le_of_forall_le _ _ _
       simpa using hl'
     have hdn : nat_degree hd ≤ n := hl _ (List.mem_cons_selfₓ _ _)

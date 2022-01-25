@@ -308,7 +308,7 @@ variable (M)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
 @[to_additive "`closure` forms a Galois insertion with the coercion to set."]
-protected def gi : GaloisInsertion (@closure M _) coeₓ where
+protected def gi : GaloisInsertion (@closure M _) coe where
   choice := fun s _ => closure s
   gc := fun s t => closure_le
   le_l_u := fun s => subset_closure
@@ -425,7 +425,7 @@ def of_mdense {M N} [Monoidₓ M] [Monoidₓ N] {s : Set M} (f : M → N) (hs : 
       (by
         simp [h1])
       (fun y₁ y₂ h₁ h₂ x => by
-        simp only [← mul_assocₓ, h₁, h₂])
+        simp only [← mul_assoc, h₁, h₂])
       x
 
 /-- Let `s` be a subset of an additive monoid `M` such that the closure of `s` is the whole monoid.

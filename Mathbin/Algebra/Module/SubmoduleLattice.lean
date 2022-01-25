@@ -87,7 +87,7 @@ protected theorem ne_bot_iff (p : Submodule R M) : p ≠ ⊥ ↔ ∃ x ∈ p, x 
 
 theorem nonzero_mem_of_bot_lt {p : Submodule R M} (bot_lt : ⊥ < p) : ∃ a : p, a ≠ 0 :=
   let ⟨b, hb₁, hb₂⟩ := p.ne_bot_iff.mp bot_lt.ne'
-  ⟨⟨b, hb₁⟩, hb₂ ∘ congr_argₓ coeₓ⟩
+  ⟨⟨b, hb₁⟩, hb₂ ∘ congr_argₓ coe⟩
 
 theorem exists_mem_ne_zero_of_ne_bot {p : Submodule R M} (h : p ≠ ⊥) : ∃ b : M, b ∈ p ∧ b ≠ 0 :=
   let ⟨b, hb₁, hb₂⟩ := p.ne_bot_iff.mp h
@@ -114,7 +114,7 @@ def bot_equiv_punit : (⊥ : Submodule R M) ≃ₗ[R] PUnit where
 theorem eq_bot_of_subsingleton (p : Submodule R M) [Subsingleton p] : p = ⊥ := by
   rw [eq_bot_iff]
   intro v hv
-  exact congr_argₓ coeₓ (Subsingleton.elimₓ (⟨v, hv⟩ : p) 0)
+  exact congr_argₓ coe (Subsingleton.elimₓ (⟨v, hv⟩ : p) 0)
 
 /-- The universal set is the top element of the lattice of submodules. -/
 instance : HasTop (Submodule R M) :=
@@ -184,7 +184,7 @@ private theorem Inf_le' {S : Set (Submodule R M)} {p} : p ∈ S → Inf S ≤ p 
   Set.bInter_subset_of_mem
 
 private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀, ∀ q ∈ S, ∀, p ≤ q) → p ≤ Inf S :=
-  Set.subset_bInter
+  Set.subset_Inter₂
 
 instance : HasInf (Submodule R M) :=
   ⟨fun p q =>

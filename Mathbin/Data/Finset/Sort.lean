@@ -158,7 +158,7 @@ theorem order_emb_of_fin_mem (s : Finset α) {k : ℕ} (h : s.card = k) (i : Fin
 
 @[simp]
 theorem range_order_emb_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Set.Range (s.order_emb_of_fin h) = s := by
-  simp [order_emb_of_fin, Set.range_comp coeₓ (s.order_iso_of_fin h)]
+  simp [order_emb_of_fin, Set.range_comp coe (s.order_iso_of_fin h)]
 
 /-- The bijection `order_emb_of_fin s h` sends `0` to the minimum of `s`. -/
 theorem order_emb_of_fin_zero {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0 < k) :

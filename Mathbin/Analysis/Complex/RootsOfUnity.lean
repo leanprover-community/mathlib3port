@@ -30,10 +30,10 @@ theorem is_primitive_root_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.copr
     exact_mod_cast h0
   constructor
   · use i
-    field_simp [hn0, mul_commₓ (i : ℂ), mul_commₓ (n : ℂ)]
+    field_simp [hn0, mul_comm (i : ℂ), mul_comm (n : ℂ)]
     
   · simp' only [hn0, mul_right_commₓ _ _ (↑n), mul_left_inj' two_pi_I_ne_zero, Ne.def, not_false_iff,
-      mul_commₓ _ (i : ℂ), ← mul_assocₓ _ (i : ℂ), exists_imp_distrib] with field_simps
+      mul_comm _ (i : ℂ), ← mul_assoc _ (i : ℂ), exists_imp_distrib] with field_simps
     norm_cast
     rintro l k hk
     have : n ∣ i * l := by
@@ -59,7 +59,7 @@ theorem is_primitive_root_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
   refine' ⟨i, hi, ((is_primitive_root_exp n hn).pow_iff_coprime (Nat.pos_of_ne_zeroₓ hn) i).mp h, _⟩
   rw [← exp_nat_mul]
   congr 1
-  field_simp [hn0, mul_commₓ (i : ℂ)]
+  field_simp [hn0, mul_comm (i : ℂ)]
 
 /-- The complex `n`-th roots of unity are exactly the
 complex numbers of the form `e ^ (2 * real.pi * complex.I * (i / n))` for some `i < n`. -/
@@ -75,12 +75,12 @@ theorem mem_roots_of_unity (n : ℕ+) (x : Units ℂ) :
     refine' ⟨i, hi, _⟩
     rw [← H, ← exp_nat_mul]
     congr 1
-    field_simp [hn0, mul_commₓ (i : ℂ)]
+    field_simp [hn0, mul_comm (i : ℂ)]
     
   · rintro ⟨i, hi, H⟩
     rw [← H, ← exp_nat_mul, exp_eq_one_iff]
     use i
-    field_simp [hn0, mul_commₓ ((n : ℕ) : ℂ), mul_commₓ (i : ℂ)]
+    field_simp [hn0, mul_comm ((n : ℕ) : ℂ), mul_comm (i : ℂ)]
     
 
 theorem card_roots_of_unity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :=

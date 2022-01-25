@@ -52,9 +52,9 @@ theorem sin_ne_zero_iff {θ : ℂ} : sin θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π
 
 theorem tan_eq_zero_iff {θ : ℂ} : tan θ = 0 ↔ ∃ k : ℤ, θ = k * π / 2 := by
   have h := (sin_two_mul θ).symm
-  rw [mul_assocₓ] at h
+  rw [mul_assoc] at h
   rw [tan, div_eq_zero_iff, ← mul_eq_zero, ← zero_mul (1 / 2 : ℂ), mul_one_div,
-    CancelFactors.cancel_factors_eq_div h two_ne_zero', mul_commₓ]
+    CancelFactors.cancel_factors_eq_div h two_ne_zero', mul_comm]
   simpa only [zero_div, zero_mul, Ne.def, not_false_iff] with field_simps using sin_eq_zero_iff
 
 theorem tan_ne_zero_iff {θ : ℂ} : tan θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π / 2 := by
@@ -80,7 +80,7 @@ theorem cos_eq_cos_iff {x y : ℂ} : cos x = cos y ↔ ∃ k : ℤ, y = 2 * k * 
         field_simp [sin_eq_zero_iff,
           (by
             norm_num : -(2 : ℂ) ≠ 0),
-          eq_sub_iff_add_eq', sub_eq_iff_eq_add, mul_commₓ (2 : ℂ), mul_right_commₓ _ (2 : ℂ)]
+          eq_sub_iff_add_eq', sub_eq_iff_eq_add, mul_comm (2 : ℂ), mul_right_commₓ _ (2 : ℂ)]
       constructor <;>
         · rintro ⟨k, rfl⟩
           use -k
@@ -129,7 +129,7 @@ theorem tan_add_mul_I {x y : ℂ}
       ((∀ k : ℤ, x ≠ (2 * k + 1) * π / 2) ∧ ∀ l : ℤ, y * I ≠ (2 * l + 1) * π / 2) ∨
         (∃ k : ℤ, x = (2 * k + 1) * π / 2) ∧ ∃ l : ℤ, y * I = (2 * l + 1) * π / 2) :
     tan (x + y * I) = (tan x + tanh y * I) / (1 - tan x * tanh y * I) := by
-  rw [tan_add h, tan_mul_I, mul_assocₓ]
+  rw [tan_add h, tan_mul_I, mul_assoc]
 
 theorem tan_eq {z : ℂ}
     (h :

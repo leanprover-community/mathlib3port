@@ -81,14 +81,14 @@ theorem coe_im_j : (x : ℍ[R,c₁,c₂]).imJ = 0 :=
 theorem coe_im_k : (x : ℍ[R,c₁,c₂]).imK = 0 :=
   rfl
 
-theorem coe_injective : Function.Injective (coeₓ : R → ℍ[R,c₁,c₂]) := fun x y h => congr_argₓ re h
+theorem coe_injective : Function.Injective (coe : R → ℍ[R,c₁,c₂]) := fun x y h => congr_argₓ re h
 
 @[simp]
 theorem coe_inj {x y : R} : (x : ℍ[R,c₁,c₂]) = y ↔ x = y :=
   coe_injective.eq_iff
 
 @[simps]
-instance : HasZero ℍ[R,c₁,c₂] :=
+instance : Zero ℍ[R,c₁,c₂] :=
   ⟨⟨0, 0, 0, 0⟩⟩
 
 @[simp, norm_cast]
@@ -99,7 +99,7 @@ instance : Inhabited ℍ[R,c₁,c₂] :=
   ⟨0⟩
 
 @[simps]
-instance : HasOne ℍ[R,c₁,c₂] :=
+instance : One ℍ[R,c₁,c₂] :=
   ⟨⟨1, 0, 0, 0⟩⟩
 
 @[simp, norm_cast]
@@ -167,7 +167,7 @@ instance : Ringₓ ℍ[R,c₁,c₂] := by
 
 instance : Algebra R ℍ[R,c₁,c₂] where
   smul := fun r a => ⟨r * a.1, r * a.2, r * a.3, r * a.4⟩
-  toFun := coeₓ
+  toFun := coe
   map_one' := rfl
   map_zero' := rfl
   map_mul' := fun x y => by
@@ -177,7 +177,7 @@ instance : Algebra R ℍ[R,c₁,c₂] where
   smul_def' := fun r x => by
     ext <;> simp
   commutes' := fun r x => by
-    ext <;> simp [mul_commₓ]
+    ext <;> simp [mul_comm]
 
 @[simp]
 theorem smul_re : (r • a).re = r • a.re :=
@@ -266,7 +266,7 @@ theorem mul_coe_eq_smul : a * r = r • a := by
   rw [← coe_commutes, coe_mul_eq_smul]
 
 @[norm_cast, simp]
-theorem coe_algebra_map : ⇑algebraMap R ℍ[R,c₁,c₂] = coeₓ :=
+theorem coe_algebra_map : ⇑algebraMap R ℍ[R,c₁,c₂] = coe :=
   rfl
 
 theorem smul_coe : x • (y : ℍ[R,c₁,c₂]) = ↑(x * y) := by
@@ -364,7 +364,7 @@ theorem conj_one : conj (1 : ℍ[R,c₁,c₂]) = 1 :=
 theorem eq_re_of_eq_coe {a : ℍ[R,c₁,c₂]} {x : R} (h : a = x) : a = a.re := by
   rw [h, coe_re]
 
-theorem eq_re_iff_mem_range_coe {a : ℍ[R,c₁,c₂]} : a = a.re ↔ a ∈ Set.Range (coeₓ : R → ℍ[R,c₁,c₂]) :=
+theorem eq_re_iff_mem_range_coe {a : ℍ[R,c₁,c₂]} : a = a.re ↔ a ∈ Set.Range (coe : R → ℍ[R,c₁,c₂]) :=
   ⟨fun h => ⟨a.re, h.symm⟩, fun ⟨x, h⟩ => eq_re_of_eq_coe h.symm⟩
 
 @[simp]
@@ -416,7 +416,7 @@ end QuaternionAlgebra
 
 /-- Space of quaternions over a type. Implemented as a structure with four fields:
 `re`, `im_i`, `im_j`, and `im_k`. -/
-def Quaternion (R : Type _) [HasOne R] [Neg R] :=
+def Quaternion (R : Type _) [One R] [Neg R] :=
   QuaternionAlgebra R (-1) (-1)
 
 localized [Quaternion] notation "ℍ[" R "]" => Quaternion R
@@ -589,7 +589,7 @@ theorem mul_im_k : (a * b).imK = a.re * b.im_k + a.im_i * b.im_j - a.im_j * b.im
 theorem coe_mul : ((x * y : R) : ℍ[R]) = x * y :=
   QuaternionAlgebra.coe_mul x y
 
-theorem coe_injective : Function.Injective (coeₓ : R → ℍ[R]) :=
+theorem coe_injective : Function.Injective (coe : R → ℍ[R]) :=
   QuaternionAlgebra.coe_injective
 
 @[simp]
@@ -625,7 +625,7 @@ theorem mul_coe_eq_smul : a * r = r • a :=
   QuaternionAlgebra.mul_coe_eq_smul r a
 
 @[simp]
-theorem algebra_map_def : ⇑algebraMap R ℍ[R] = coeₓ :=
+theorem algebra_map_def : ⇑algebraMap R ℍ[R] = coe :=
   rfl
 
 theorem smul_coe : x • (y : ℍ[R]) = ↑(x * y) :=
@@ -710,7 +710,7 @@ theorem conj_one : conj (1 : ℍ[R]) = 1 :=
 theorem eq_re_of_eq_coe {a : ℍ[R]} {x : R} (h : a = x) : a = a.re :=
   QuaternionAlgebra.eq_re_of_eq_coe h
 
-theorem eq_re_iff_mem_range_coe {a : ℍ[R]} : a = a.re ↔ a ∈ Set.Range (coeₓ : R → ℍ[R]) :=
+theorem eq_re_iff_mem_range_coe {a : ℍ[R]} : a = a.re ↔ a ∈ Set.Range (coe : R → ℍ[R]) :=
   QuaternionAlgebra.eq_re_iff_mem_range_coe
 
 @[simp]
@@ -755,7 +755,7 @@ def norm_sq : MonoidWithZeroHom ℍ[R] R where
   map_mul' := fun x y =>
     coe_injective $ by
       conv_lhs =>
-        rw [← mul_conj_eq_coe, conj_mul, mul_assocₓ, ← mul_assocₓ y, y.mul_conj_eq_coe, coe_commutes, ← mul_assocₓ,
+        rw [← mul_conj_eq_coe, conj_mul, mul_assoc, ← mul_assoc y, y.mul_conj_eq_coe, coe_commutes, ← mul_assoc,
           x.mul_conj_eq_coe, ← coe_mul]
 
 theorem norm_sq_def : norm_sq a = (a * a.conj).re :=

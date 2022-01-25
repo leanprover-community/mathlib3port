@@ -102,7 +102,7 @@ theorem pow_left_strict_mono {m : ℕ} (k : 1 ≤ m) : StrictMono fun x : ℕ =>
   pow_lt_pow_of_lt_left h k
 
 theorem mul_lt_mul_pow_succ {n a q : ℕ} (a0 : 0 < a) (q1 : 1 < q) : n * q < a * q ^ (n + 1) := by
-  rw [pow_succ'ₓ, ← mul_assocₓ, mul_lt_mul_right (zero_lt_one.trans q1)]
+  rw [pow_succ'ₓ, ← mul_assoc, mul_lt_mul_right (zero_lt_one.trans q1)]
   exact lt_mul_of_one_le_of_lt (nat.succ_le_iff.mpr a0) (Nat.lt_pow_self q1 n)
 
 end Nat
@@ -151,7 +151,7 @@ theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w
     simp only [Ge, pow_succₓ] at h₁
     rw [sub_mul_mod _ _ _ h₁, sub_mul_div _ _ _ h₁]
     have p_b_ge : b ^ w ≤ p / b := by
-      rw [le_div_iff_mul_le _ _ b_pos, mul_commₓ]
+      rw [le_div_iff_mul_le _ _ b_pos, mul_comm]
       exact h₁
     rw [Eq.symm (mod_eq_sub_mod p_b_ge)]
     
@@ -211,7 +211,7 @@ theorem shiftl_eq_mul_pow m : ∀ n, shiftl m n = m * 2 ^ n
   | 0 => (Nat.mul_one _).symm
   | k + 1 =>
     show bit0 (shiftl m k) = m * (2 * 2 ^ k) by
-      rw [bit0_val, shiftl_eq_mul_pow, mul_left_commₓ, mul_commₓ 2]
+      rw [bit0_val, shiftl_eq_mul_pow, mul_left_commₓ, mul_comm 2]
 
 theorem shiftl'_tt_eq_mul_pow m : ∀ n, shiftl' tt m n + 1 = (m + 1) * 2 ^ n
   | 0 => by
@@ -220,7 +220,7 @@ theorem shiftl'_tt_eq_mul_pow m : ∀ n, shiftl' tt m n + 1 = (m + 1) * 2 ^ n
     change bit1 (shiftl' tt m k) + 1 = (m + 1) * (2 * 2 ^ k)
     rw [bit1_val]
     change 2 * (shiftl' tt m k + 1) = _
-    rw [shiftl'_tt_eq_mul_pow, mul_left_commₓ, mul_commₓ 2]
+    rw [shiftl'_tt_eq_mul_pow, mul_left_commₓ, mul_comm 2]
 
 theorem one_shiftl n : shiftl 1 n = 2 ^ n :=
   (shiftl_eq_mul_pow _ _).trans (Nat.one_mul _)
@@ -233,7 +233,7 @@ theorem shiftr_eq_div_pow m : ∀ n, shiftr m n = m / 2 ^ n
   | 0 => (Nat.div_oneₓ _).symm
   | k + 1 =>
     (congr_argₓ div2 (shiftr_eq_div_pow k)).trans $ by
-      rw [div2_val, Nat.div_div_eq_div_mulₓ, mul_commₓ] <;> rfl
+      rw [div2_val, Nat.div_div_eq_div_mulₓ, mul_comm] <;> rfl
 
 @[simp]
 theorem zero_shiftr n : shiftr 0 n = 0 :=

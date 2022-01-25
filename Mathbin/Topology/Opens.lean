@@ -62,7 +62,7 @@ theorem ext {U V : opens α} (h : (U : Set α) = V) : U = V :=
 
 @[ext]
 theorem ext_iff {U V : opens α} : (U : Set α) = V ↔ U = V :=
-  ⟨opens.ext, congr_argₓ coeₓ⟩
+  ⟨opens.ext, congr_argₓ coe⟩
 
 instance : PartialOrderₓ (opens α) :=
   Subtype.partialOrder _
@@ -71,7 +71,7 @@ instance : PartialOrderₓ (opens α) :=
 def Interior (s : Set α) : opens α :=
   ⟨Interior s, is_open_interior⟩
 
-theorem gc : GaloisConnection (coeₓ : opens α → Set α) Interior := fun U s =>
+theorem gc : GaloisConnection (coe : opens α → Set α) Interior := fun U s =>
   ⟨fun h => interior_maximal h U.property, fun h => le_transₓ h interior_subset⟩
 
 open order_dual (ofDual toDual)
@@ -142,7 +142,7 @@ theorem empty_eq : (∅ : opens α) = ⊥ :=
   rfl
 
 @[simp]
-theorem Sup_s {Us : Set (opens α)} : ↑Sup Us = ⋃₀((coeₓ : _ → Set α) '' Us) := by
+theorem Sup_s {Us : Set (opens α)} : ↑Sup Us = ⋃₀((coe : _ → Set α) '' Us) := by
   rw [(@gc α _).l_Sup, Set.sUnion_image]
   rfl
 
@@ -171,7 +171,7 @@ theorem mem_Sup {Us : Set (opens α)} {x : α} : x ∈ Sup Us ↔ ∃ u ∈ Us, 
   simp_rw [Sup_eq_supr, mem_supr]
 
 theorem open_embedding_of_le {U V : opens α} (i : U ≤ V) : OpenEmbedding (Set.inclusion i) :=
-  { inj := Set.inclusion_injective i, induced := (@induced_compose _ _ _ _ (Set.inclusion i) coeₓ).symm,
+  { inj := Set.inclusion_injective i, induced := (@induced_compose _ _ _ _ (Set.inclusion i) coe).symm,
     open_range := by
       rw [Set.range_inclusion i]
       exact U.property.preimage continuous_subtype_val }
@@ -184,7 +184,7 @@ theorem ne_bot_iff_nonempty (U : opens α) : U ≠ ⊥ ↔ Set.Nonempty (U : Set
 
 /-- A set of `opens α` is a basis if the set of corresponding sets is a topological basis. -/
 def is_basis (B : Set (opens α)) : Prop :=
-  is_topological_basis ((coeₓ : _ → Set α) '' B)
+  is_topological_basis ((coe : _ → Set α) '' B)
 
 theorem is_basis_iff_nbhd {B : Set (opens α)} : is_basis B ↔ ∀ {U : opens α} {x}, x ∈ U → ∃ U' ∈ B, x ∈ U' ∧ U' ⊆ U :=
   by

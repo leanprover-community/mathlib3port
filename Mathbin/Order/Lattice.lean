@@ -147,6 +147,12 @@ theorem le_sup_of_le_left (h : c ≤ a) : c ≤ a⊔b :=
 theorem le_sup_of_le_right (h : c ≤ b) : c ≤ a⊔b :=
   le_transₓ h le_sup_right
 
+theorem lt_sup_of_lt_left (h : c < a) : c < a⊔b :=
+  h.trans_le le_sup_left
+
+theorem lt_sup_of_lt_right (h : c < b) : c < a⊔b :=
+  h.trans_le le_sup_right
+
 theorem sup_le : a ≤ c → b ≤ c → a⊔b ≤ c :=
   SemilatticeSup.sup_le a b c
 
@@ -220,7 +226,7 @@ theorem lt_sup_iff [IsTotal α (· ≤ ·)] {a b c : α} : a < b⊔c ↔ a < b �
         rwa [sup_eq_left.2 bc] at h)
       fun bc => by
       rwa [sup_eq_right.2 bc] at h,
-    fun h => h.elim (fun h => h.trans_le le_sup_left) fun h => h.trans_le le_sup_right⟩
+    fun h => h.elim lt_sup_of_lt_left lt_sup_of_lt_right⟩
 
 @[simp]
 theorem sup_idem : a⊔a = a := by
@@ -365,6 +371,12 @@ theorem inf_le_of_left_le (h : a ≤ c) : a⊓b ≤ c :=
 
 theorem inf_le_of_right_le (h : b ≤ c) : a⊓b ≤ c :=
   le_transₓ inf_le_right h
+
+theorem inf_lt_of_left_lt (h : a < c) : a⊓b < c :=
+  lt_of_le_of_ltₓ inf_le_left h
+
+theorem inf_lt_of_right_lt (h : b < c) : a⊓b < c :=
+  lt_of_le_of_ltₓ inf_le_right h
 
 @[simp]
 theorem le_inf_iff : a ≤ b⊓c ↔ a ≤ b ∧ a ≤ c :=

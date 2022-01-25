@@ -193,10 +193,8 @@ instance is_solvable_bot : is_solvable R (↥(⊥ : LieIdeal R L)) :=
 
 instance is_solvable_add {I J : LieIdeal R L} [hI : is_solvable R I] [hJ : is_solvable R J] :
     is_solvable R (↥(I + J)) := by
-  run_tac
-    tactic.unfreeze_local_instances
-  obtain ⟨k, hk⟩ := hI
-  obtain ⟨l, hl⟩ := hJ
+  obtain ⟨k, hk⟩ := id hI
+  obtain ⟨l, hl⟩ := id hJ
   exact ⟨⟨k + l, LieIdeal.derived_series_add_eq_bot hk hl⟩⟩
 
 end LieAlgebra
@@ -208,18 +206,14 @@ namespace Function
 open LieAlgebra
 
 theorem injective.lie_algebra_is_solvable [h₁ : is_solvable R L] (h₂ : injective f) : is_solvable R L' := by
-  run_tac
-    tactic.unfreeze_local_instances
-  obtain ⟨k, hk⟩ := h₁
+  obtain ⟨k, hk⟩ := id h₁
   use k
   apply LieIdeal.bot_of_map_eq_bot h₂
   rw [eq_bot_iff, ← hk]
   apply LieIdeal.derived_series_map_le
 
 theorem surjective.lie_algebra_is_solvable [h₁ : is_solvable R L'] (h₂ : surjective f) : is_solvable R L := by
-  run_tac
-    tactic.unfreeze_local_instances
-  obtain ⟨k, hk⟩ := h₁
+  obtain ⟨k, hk⟩ := id h₁
   use k
   rw [← LieIdeal.derived_series_map_eq k h₂, hk]
   simp only [LieIdeal.map_eq_bot_iff, bot_le]
@@ -335,9 +329,7 @@ theorem derived_length_zero (I : LieIdeal R L) [hI : is_solvable R I] : derived_
   change Inf s = 0 ↔ _
   have hne : s ≠ ∅ := by
     rw [Set.ne_empty_iff_nonempty]
-    run_tac
-      tactic.unfreeze_local_instances
-    obtain ⟨k, hk⟩ := hI
+    obtain ⟨k, hk⟩ := id hI
     use k
     rw [derived_series_def, LieIdeal.derived_series_eq_bot_iff] at hk
     exact hk

@@ -94,7 +94,7 @@ theorem prod_take_mul_prod_drop : ∀ L : List M i : ℕ, (L.take i).Prod * (L.d
     simp
   | h :: t, n + 1 => by
     dsimp
-    rw [prod_cons, prod_cons, mul_assocₓ, prod_take_mul_prod_drop]
+    rw [prod_cons, prod_cons, mul_assoc, prod_take_mul_prod_drop]
 
 @[simp, to_additive]
 theorem prod_take_succ : ∀ L : List M i : ℕ p, (L.take (i + 1)).Prod = (L.take i).Prod * L.nth_le i p
@@ -104,7 +104,7 @@ theorem prod_take_succ : ∀ L : List M i : ℕ p, (L.take (i + 1)).Prod = (L.ta
     simp
   | h :: t, n + 1, _ => by
     dsimp
-    rw [prod_cons, prod_cons, prod_take_succ, mul_assocₓ]
+    rw [prod_cons, prod_cons, prod_take_succ, mul_assoc]
 
 /-- A list with product not one must have positive length. -/
 @[to_additive]
@@ -123,7 +123,7 @@ theorem prod_update_nth :
   | x :: xs, 0, a => by
     simp [update_nth]
   | x :: xs, i + 1, a => by
-    simp [update_nth, prod_update_nth xs i a, mul_assocₓ]
+    simp [update_nth, prod_update_nth xs i a, mul_assoc]
   | [], _, _ => by
     simp [update_nth, (Nat.zero_leₓ _).not_lt]
 
@@ -213,7 +213,7 @@ theorem prod_inv : ∀ L : List G, L.prod⁻¹ = (L.map fun x => x⁻¹).Prod
   | [] => by
     simp
   | x :: xs => by
-    simp [mul_commₓ, prod_inv xs]
+    simp [mul_comm, prod_inv xs]
 
 /-- Alternative version of `list.prod_update_nth` when the list is over a group -/
 @[to_additive "Alternative version of `list.sum_update_nth` when the list is over a group"]
@@ -221,8 +221,8 @@ theorem prod_update_nth' (L : List G) (n : ℕ) (a : G) :
     (L.update_nth n a).Prod = L.prod * if hn : n < L.length then L.nth_le n hn⁻¹ * a else 1 := by
   refine' (prod_update_nth L n a).trans _
   split_ifs with hn hn
-  · rw [mul_commₓ _ a, mul_assocₓ a, prod_drop_succ L n hn, mul_commₓ _ (drop n L).Prod, ← mul_assocₓ (take n L).Prod,
-      prod_take_mul_prod_drop, mul_commₓ a, mul_assocₓ]
+  · rw [mul_comm _ a, mul_assoc a, prod_drop_succ L n hn, mul_comm _ (drop n L).Prod, ← mul_assoc (take n L).Prod,
+      prod_take_mul_prod_drop, mul_comm a, mul_assoc]
     
   · simp only [take_all_of_le (le_of_not_ltₓ hn), prod_nil, mul_oneₓ,
       drop_eq_nil_of_le ((le_of_not_ltₓ hn).trans n.le_succ)]

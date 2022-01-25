@@ -26,10 +26,10 @@ variable {R S : Type u} {x y : R}
 Note that we require only the bare minimum assumptions for the definition to make sense. Even
 `monoid_with_zero` is too strong since nilpotency is important in the study of rings that are only
 power-associative. -/
-def IsNilpotent [HasZero R] [Pow R ℕ] (x : R) : Prop :=
+def IsNilpotent [Zero R] [Pow R ℕ] (x : R) : Prop :=
   ∃ n : ℕ, x ^ n = 0
 
-theorem IsNilpotent.mk [HasZero R] [Pow R ℕ] (x : R) (n : ℕ) (e : x ^ n = 0) : IsNilpotent x :=
+theorem IsNilpotent.mk [Zero R] [Pow R ℕ] (x : R) (n : ℕ) (e : x ^ n = 0) : IsNilpotent x :=
   ⟨n, e⟩
 
 theorem IsNilpotent.zero [MonoidWithZeroₓ R] : IsNilpotent (0 : R) :=
@@ -50,16 +50,16 @@ theorem IsNilpotent.map [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] {r : R} {F :
   rw [← map_pow, hr.some_spec, map_zero]
 
 /-- A structure that has zero and pow is reduced if it has no nonzero nilpotent elements. -/
-class IsReduced (R : Type _) [HasZero R] [Pow R ℕ] : Prop where
+class IsReduced (R : Type _) [Zero R] [Pow R ℕ] : Prop where
   eq_zero : ∀ x : R, IsNilpotent x → x = 0
 
 instance (priority := 900) is_reduced_of_no_zero_divisors [MonoidWithZeroₓ R] [NoZeroDivisors R] : IsReduced R :=
   ⟨fun _ ⟨_, hn⟩ => pow_eq_zero hn⟩
 
-instance (priority := 900) is_reduced_of_subsingleton [HasZero R] [Pow R ℕ] [Subsingleton R] : IsReduced R :=
+instance (priority := 900) is_reduced_of_subsingleton [Zero R] [Pow R ℕ] [Subsingleton R] : IsReduced R :=
   ⟨fun _ _ => Subsingleton.elimₓ _ _⟩
 
-theorem IsNilpotent.eq_zero [HasZero R] [Pow R ℕ] [IsReduced R] (h : IsNilpotent x) : x = 0 :=
+theorem IsNilpotent.eq_zero [Zero R] [Pow R ℕ] [IsReduced R] (h : IsNilpotent x) : x = 0 :=
   IsReduced.eq_zero x h
 
 @[simp]

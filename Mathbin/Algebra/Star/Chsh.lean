@@ -102,31 +102,31 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarOrderedRing R] [Algebra
   have i₁ : 0 ≤ P := by
     have idem : P * P = 4 * P := by
       dsimp [P]
-      simp only [add_mulₓ, mul_addₓ, sub_mul, mul_sub, mul_commₓ, mul_assocₓ, add_assocₓ]
+      simp only [add_mulₓ, mul_addₓ, sub_mul, mul_sub, mul_comm, mul_assoc, add_assocₓ]
       repeat'
-        conv in B₀ * (A₀ * B₀) => rw [T.A₀B₀_commutes, ← mul_assocₓ B₀ B₀ A₀, ← sq, T.B₀_inv, one_mulₓ]
+        conv in B₀ * (A₀ * B₀) => rw [T.A₀B₀_commutes, ← mul_assoc B₀ B₀ A₀, ← sq, T.B₀_inv, one_mulₓ]
       repeat'
-        conv in B₀ * (A₁ * B₀) => rw [T.A₁B₀_commutes, ← mul_assocₓ B₀ B₀ A₁, ← sq, T.B₀_inv, one_mulₓ]
+        conv in B₀ * (A₁ * B₀) => rw [T.A₁B₀_commutes, ← mul_assoc B₀ B₀ A₁, ← sq, T.B₀_inv, one_mulₓ]
       repeat'
-        conv in B₁ * (A₀ * B₁) => rw [T.A₀B₁_commutes, ← mul_assocₓ B₁ B₁ A₀, ← sq, T.B₁_inv, one_mulₓ]
+        conv in B₁ * (A₀ * B₁) => rw [T.A₀B₁_commutes, ← mul_assoc B₁ B₁ A₀, ← sq, T.B₁_inv, one_mulₓ]
       repeat'
-        conv in B₁ * (A₁ * B₁) => rw [T.A₁B₁_commutes, ← mul_assocₓ B₁ B₁ A₁, ← sq, T.B₁_inv, one_mulₓ]
+        conv in B₁ * (A₁ * B₁) => rw [T.A₁B₁_commutes, ← mul_assoc B₁ B₁ A₁, ← sq, T.B₁_inv, one_mulₓ]
       conv in A₀ * (B₀ * (A₀ * B₁)) =>
-        rw [← mul_assocₓ, T.A₀B₀_commutes, mul_assocₓ, ← mul_assocₓ A₀, ← sq, T.A₀_inv, one_mulₓ]
+        rw [← mul_assoc, T.A₀B₀_commutes, mul_assoc, ← mul_assoc A₀, ← sq, T.A₀_inv, one_mulₓ]
       conv in A₀ * (B₁ * (A₀ * B₀)) =>
-        rw [← mul_assocₓ, T.A₀B₁_commutes, mul_assocₓ, ← mul_assocₓ A₀, ← sq, T.A₀_inv, one_mulₓ]
+        rw [← mul_assoc, T.A₀B₁_commutes, mul_assoc, ← mul_assoc A₀, ← sq, T.A₀_inv, one_mulₓ]
       conv in A₁ * (B₀ * (A₁ * B₁)) =>
-        rw [← mul_assocₓ, T.A₁B₀_commutes, mul_assocₓ, ← mul_assocₓ A₁, ← sq, T.A₁_inv, one_mulₓ]
+        rw [← mul_assoc, T.A₁B₀_commutes, mul_assoc, ← mul_assoc A₁, ← sq, T.A₁_inv, one_mulₓ]
       conv in A₁ * (B₁ * (A₁ * B₀)) =>
-        rw [← mul_assocₓ, T.A₁B₁_commutes, mul_assocₓ, ← mul_assocₓ A₁, ← sq, T.A₁_inv, one_mulₓ]
+        rw [← mul_assoc, T.A₁B₁_commutes, mul_assoc, ← mul_assoc A₁, ← sq, T.A₁_inv, one_mulₓ]
       simp only [← sq, T.A₀_inv, T.A₁_inv]
-      simp only [mul_commₓ A₁ A₀, mul_commₓ B₁ B₀, mul_left_commₓ A₁ A₀, mul_left_commₓ B₁ B₀, mul_left_commₓ B₀ A₀,
+      simp only [mul_comm A₁ A₀, mul_comm B₁ B₀, mul_left_commₓ A₁ A₀, mul_left_commₓ B₁ B₀, mul_left_commₓ B₀ A₀,
         mul_left_commₓ B₀ A₁, mul_left_commₓ B₁ A₀, mul_left_commₓ B₁ A₁]
       norm_num
-      simp only [mul_commₓ _ (2 : R), mul_commₓ _ (4 : R), mul_left_commₓ _ (2 : R), mul_left_commₓ _ (4 : R)]
+      simp only [mul_comm _ (2 : R), mul_comm _ (4 : R), mul_left_commₓ _ (2 : R), mul_left_commₓ _ (4 : R)]
       abel
       simp only [neg_mul_eq_neg_mul_symm, mul_oneₓ, Int.cast_bit0, one_mulₓ, Int.cast_one, zsmul_eq_mul, Int.cast_neg]
-      simp only [← mul_assocₓ, ← add_assocₓ]
+      simp only [← mul_assoc, ← add_assocₓ]
       norm_num
     have idem' : P = (1 / 4 : ℝ) • (P * P) := by
       have h : 4 * P = (4 : ℝ) • P := by
@@ -135,8 +135,8 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarOrderedRing R] [Algebra
       norm_num
     have sa : star P = P := by
       dsimp [P]
-      simp only [star_add, star_sub, star_mul, star_bit0, star_one, T.A₀_sa, T.A₁_sa, T.B₀_sa, T.B₁_sa, mul_commₓ B₀,
-        mul_commₓ B₁]
+      simp only [star_add, star_sub, star_mul, star_bit0, star_one, T.A₀_sa, T.A₁_sa, T.B₀_sa, T.B₁_sa, mul_comm B₀,
+        mul_comm B₁]
     rw [idem']
     conv_rhs => congr skip congr rw [← sa]
     convert smul_le_smul_of_nonneg (star_mul_self_nonneg : 0 ≤ star P * P) _

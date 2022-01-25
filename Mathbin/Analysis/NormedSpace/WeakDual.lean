@@ -170,7 +170,7 @@ variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 /-- The polar `polar 𝕜 s` of a set `s : E` is a closed subset when the weak star topology
 is used, i.e., when `polar 𝕜 s` is interpreted as a subset of `weak_dual 𝕜 E`. -/
 theorem WeakDual.is_closed_polar (s : Set E) : IsClosed (WeakDual.Polar 𝕜 s) := by
-  rw [WeakDual.Polar, polar_eq_Inter, preimage_bInter]
+  rw [WeakDual.Polar, polar_eq_Inter, preimage_Inter₂]
   apply is_closed_bInter
   intro z hz
   rw [Set.preimage_set_of_eq]

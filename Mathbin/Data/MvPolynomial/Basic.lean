@@ -284,7 +284,7 @@ theorem monomial_sum_index {α : Type _} (s : Finset α) (f : α → σ →₀ �
     monomial (∑ i in s, f i) a = C a * ∏ i in s, monomial (f i) 1 := by
   rw [← monomial_sum_one, C_mul', ← (monomial _).map_smul, smul_eq_mul, mul_oneₓ]
 
-theorem monomial_finsupp_sum_index {α β : Type _} [HasZero β] (f : α →₀ β) (g : α → β → σ →₀ ℕ) (a : R) :
+theorem monomial_finsupp_sum_index {α β : Type _} [Zero β] (f : α →₀ β) (g : α → β → σ →₀ ℕ) (a : R) :
     monomial (f.sum g) a = C a * f.prod fun a b => monomial (g a b) 1 :=
   monomial_sum_index _ _ _
 
@@ -304,7 +304,7 @@ theorem induction_on_monomial {M : MvPolynomial σ R → Prop} (h_C : ∀ a, M (
       induction e
       · simp [ih]
         
-      · simp [ih, pow_succ'ₓ, (mul_assocₓ _ _ _).symm, h_X, e_ih]
+      · simp [ih, pow_succ'ₓ, (mul_assoc _ _ _).symm, h_X, e_ih]
         
     simp [add_commₓ, monomial_add_single, this]
     
@@ -606,7 +606,7 @@ theorem coeff_mul_monomial' m (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R
 
 theorem coeff_monomial_mul' m (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R) :
     coeff m (monomial s r * p) = if s ≤ m then r * coeff (m - s) p else 0 := by
-  rw [mul_commₓ, mul_commₓ r]
+  rw [mul_comm, mul_comm r]
   exact coeff_mul_monomial' _ _ _ _
 
 theorem coeff_mul_X' [DecidableEq σ] m (s : σ) (p : MvPolynomial σ R) :
@@ -770,9 +770,9 @@ theorem eval₂_mul_monomial : ∀ {s a}, (p * monomial s a).eval₂ f g = p.eva
     exact
       calc
         (p * X n * monomial s a).eval₂ f g = (p * monomial (single n 1 + s) a).eval₂ f g := by
-          rw [monomial_single_add, pow_oneₓ, mul_assocₓ]
+          rw [monomial_single_add, pow_oneₓ, mul_assoc]
         _ = (p * monomial (single n 1) 1).eval₂ f g * f a * s.prod fun n e => g n ^ e := by
-          simp [ih, prod_single_index, prod_add_index, pow_oneₓ, pow_addₓ, mul_assocₓ, mul_left_commₓ, f.map_one,
+          simp [ih, prod_single_index, prod_add_index, pow_oneₓ, pow_addₓ, mul_assoc, mul_left_commₓ, f.map_one,
             -add_commₓ]
         
     
@@ -788,7 +788,7 @@ theorem eval₂_mul : ∀ {p}, (p * q).eval₂ f g = p.eval₂ f g * q.eval₂ f
     
   · simp (config := { contextual := true })[mul_addₓ, eval₂_add]
     
-  · simp (config := { contextual := true })[X, eval₂_monomial, eval₂_mul_monomial, ← mul_assocₓ]
+  · simp (config := { contextual := true })[X, eval₂_monomial, eval₂_mul_monomial, ← mul_assoc]
     
 
 @[simp]
@@ -1242,7 +1242,7 @@ theorem _root_.algebra.adjoin_range_eq_range_aeval : Algebra.adjoin R (Set.Range
   simp only [← Algebra.map_top, ← MvPolynomial.adjoin_range_X, AlgHom.map_adjoin, ← Set.range_comp, · ∘ ·,
     MvPolynomial.aeval_X]
 
-theorem _root_.algebra.adjoin_eq_range (s : Set S₁) : Algebra.adjoin R s = (MvPolynomial.aeval (coeₓ : s → S₁)).range :=
+theorem _root_.algebra.adjoin_eq_range (s : Set S₁) : Algebra.adjoin R s = (MvPolynomial.aeval (coe : s → S₁)).range :=
   by
   rw [← Algebra.adjoin_range_eq_range_aeval, Subtype.range_coe]
 

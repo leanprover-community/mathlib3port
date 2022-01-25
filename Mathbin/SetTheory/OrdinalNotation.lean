@@ -33,7 +33,7 @@ inductive Onote : Type
 namespace Onote
 
 /-- Notation for 0 -/
-instance : HasZero Onote :=
+instance : Zero Onote :=
   ⟨zero⟩
 
 @[simp]
@@ -44,7 +44,7 @@ instance : Inhabited Onote :=
   ⟨0⟩
 
 /-- Notation for 1 -/
-instance : HasOne Onote :=
+instance : One Onote :=
   ⟨oadd 0 1 0⟩
 
 /-- Notation for ω -/
@@ -568,15 +568,15 @@ theorem repr_mul : ∀ o₁ o₂ [NF o₁] [NF o₂], reprₓ (o₁ * o₂) = re
     by_cases' e0 : e₂ = 0 <;> simp [e0, mul]
     · cases' Nat.exists_eq_succ_of_ne_zero n₂.ne_zero with x xe
       simp [h₂.zero_of_zero e0, xe, -Nat.cast_succ]
-      rw [← nat_cast_succ x, add_mul_succ _ ao, mul_assocₓ]
+      rw [← nat_cast_succ x, add_mul_succ _ ao, mul_assoc]
       
     · have := h₁.fst
       have := h₂.fst
       simp [IH, repr_add, opow_add, Ordinal.mul_add]
-      rw [← mul_assocₓ]
+      rw [← mul_assoc]
       congr 2
       have := mt repr_inj.1 e0
-      rw [add_mul_limit ao (opow_is_limit_left omega_is_limit this), mul_assocₓ,
+      rw [add_mul_limit ao (opow_is_limit_left omega_is_limit this), mul_assoc,
         mul_omega_dvd (nat_cast_pos.2 n₁.pos) (nat_lt_omega _)]
       simpa using opow_dvd_opow ω (one_le_iff_ne_zero.2 this)
       
@@ -695,7 +695,7 @@ theorem NF_repr_split' : ∀ {o o' m} [NF o], split' o = (o', m) → NF o' ∧ r
         exact h.snd'.repr_lt
         
       · rw [this]
-        simp [Ordinal.mul_add, mul_assocₓ, add_assocₓ]
+        simp [Ordinal.mul_add, mul_assoc, add_assocₓ]
         
       
 
@@ -792,7 +792,7 @@ theorem scale_opow_aux (e a0 a : Onote) [NF e] [NF a0] [NF a] :
   | 0, m => by
     cases m <;> simp [opow_aux]
   | k + 1, m => by
-    by_cases' m = 0 <;> simp [h, opow_aux, Ordinal.mul_add, opow_add, mul_assocₓ, scale_opow_aux]
+    by_cases' m = 0 <;> simp [h, opow_aux, Ordinal.mul_add, opow_add, mul_assoc, scale_opow_aux]
 
 theorem repr_opow_aux₁ {e a} [Ne : NF e] [Na : NF a] {a' : Ordinal} (e0 : reprₓ e ≠ 0) (h : a' < ω ^ reprₓ e)
     (aa : reprₓ a = a') (n : ℕ+) : (ω ^ reprₓ e * (n : ℕ) + a') ^ ω = (ω ^ reprₓ e) ^ ω := by
@@ -863,7 +863,7 @@ theorem repr_opow_aux₂ {a0 a'} [N0 : NF a0] [Na' : NF a'] (m : ℕ) (d : ω �
     have e0 := Ordinal.pos_iff_ne_zero.2 e0
     have rr0 := lt_of_lt_of_leₓ e0 (le_add_left _ _)
     apply add_lt_omega_opow
-    · simp [opow_mul, ω0, opow_add, mul_assocₓ]
+    · simp [opow_mul, ω0, opow_add, mul_assoc]
       rw [mul_lt_mul_iff_left ω00, ← Ordinal.opow_add]
       have := (No.below_of_lt _).repr_lt
       unfold reprₓ  at this
@@ -876,7 +876,7 @@ theorem repr_opow_aux₂ {a0 a'} [N0 : NF a0] [Na' : NF a'] (m : ℕ) (d : ω �
       
     
   calc (ω0^k.succ) * α' + R' = (ω0^succ k) * α' + ((ω0^k) * α' * m + R) := by
-      rw [nat_cast_succ, RR, ← mul_assocₓ]_ = ((ω0^k) * α' + R) * α' + ((ω0^k) * α' + R) * m :=
+      rw [nat_cast_succ, RR, ← mul_assoc]_ = ((ω0^k) * α' + R) * α' + ((ω0^k) * α' + R) * m :=
       _ _ = (α' + m^succ k.succ) := by
       rw [← Ordinal.mul_add, ← nat_cast_succ, opow_succ, IH.2]
   congr 1
@@ -887,8 +887,8 @@ theorem repr_opow_aux₂ {a0 a'} [N0 : NF a0] [Na' : NF a'] (m : ℕ) (d : ω �
             simpa using opow_dvd_opow ω (one_le_iff_ne_zero.2 e0))
           _)
         d
-    rw [Ordinal.mul_add (ω0^k), add_assocₓ, ← mul_assocₓ, ← opow_succ,
-      add_mul_limit _ (is_limit_iff_omega_dvd.2 ⟨ne_of_gtₓ α0, αd⟩), mul_assocₓ,
+    rw [Ordinal.mul_add (ω0^k), add_assocₓ, ← mul_assoc, ← opow_succ,
+      add_mul_limit _ (is_limit_iff_omega_dvd.2 ⟨ne_of_gtₓ α0, αd⟩), mul_assoc,
       @mul_omega_dvd n (nat_cast_pos.2 n.pos) (nat_lt_omega _) _ αd]
     apply @add_absorp _ (reprₓ a0 * succ k)
     · refine' add_lt_omega_opow _ Rl
@@ -943,7 +943,7 @@ theorem repr_opow o₁ o₂ [NF o₁] [NF o₂] : reprₓ (o₁ ^ o₂) = repr�
     cases' k with k <;> skip
     · simp [opow, r₂, opow_mul, repr_opow_aux₁ a00 al aa, add_assocₓ]
       
-    · simp [succ_eq_add_one, opow, r₂, opow_add, opow_mul, mul_assocₓ, add_assocₓ]
+    · simp [succ_eq_add_one, opow, r₂, opow_add, opow_mul, mul_assoc, add_assocₓ]
       rw [repr_opow_aux₁ a00 al aa, scale_opow_aux]
       simp [opow_mul]
       rw [← Ordinal.mul_add, ← add_assocₓ (ω ^ reprₓ a0 * (n : ℕ))]
@@ -1000,7 +1000,7 @@ instance : Preorderₓ Nonote where
   le_trans := fun a b c => @le_transₓ Ordinal _ _ _ _
   lt_iff_le_not_le := fun a b => @lt_iff_le_not_leₓ Ordinal _ _ _
 
-instance : HasZero Nonote :=
+instance : Zero Nonote :=
   ⟨⟨0, NF.zero⟩⟩
 
 instance : Inhabited Nonote :=

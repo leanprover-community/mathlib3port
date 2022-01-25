@@ -70,12 +70,12 @@ section Ringₓ
 
 variable [Ringₓ R] [StarRing R]
 
-instance : HasOne (selfAdjoint R) :=
+instance : One (selfAdjoint R) :=
   ⟨⟨1, by
       rw [mem_iff, star_one]⟩⟩
 
 @[simp, norm_cast]
-theorem coe_one : (coeₓ : selfAdjoint R → R) (1 : selfAdjoint R) = (1 : R) :=
+theorem coe_one : (coe : selfAdjoint R → R) (1 : selfAdjoint R) = (1 : R) :=
   rfl
 
 instance [Nontrivial R] : Nontrivial (selfAdjoint R) :=
@@ -91,10 +91,10 @@ theorem bit1_mem {x : R} (hx : x ∈ selfAdjoint R) : bit1 x ∈ selfAdjoint R :
   simp only [mem_iff, star_bit1, mem_iff.mp hx]
 
 theorem conjugate {x : R} (hx : x ∈ selfAdjoint R) (z : R) : z * x * star z ∈ selfAdjoint R := by
-  simp only [mem_iff, star_mul, star_star, mem_iff.mp hx, mul_assocₓ]
+  simp only [mem_iff, star_mul, star_star, mem_iff.mp hx, mul_assoc]
 
 theorem conjugate' {x : R} (hx : x ∈ selfAdjoint R) (z : R) : star z * x * z ∈ selfAdjoint R := by
-  simp only [mem_iff, star_mul, star_star, mem_iff.mp hx, mul_assocₓ]
+  simp only [mem_iff, star_mul, star_star, mem_iff.mp hx, mul_assoc]
 
 end Ringₓ
 
@@ -108,14 +108,14 @@ instance : Mul (selfAdjoint R) :=
       simp only [mem_iff, star_mul', star_coe_eq]⟩⟩
 
 @[simp, norm_cast]
-theorem coe_mul (x y : selfAdjoint R) : (coeₓ : selfAdjoint R → R) (x * y) = (x : R) * y :=
+theorem coe_mul (x y : selfAdjoint R) : (coe : selfAdjoint R → R) (x * y) = (x : R) * y :=
   rfl
 
 instance : CommRingₓ (selfAdjoint R) :=
   { selfAdjoint.addCommGroup, selfAdjoint.hasOne, selfAdjoint.hasMul with
     mul_assoc := fun x y z => by
       ext
-      exact mul_assocₓ _ _ _,
+      exact mul_assoc _ _ _,
     one_mul := fun x => by
       ext
       simp only [coe_mul, one_mulₓ, coe_one],
@@ -124,7 +124,7 @@ instance : CommRingₓ (selfAdjoint R) :=
       simp only [mul_oneₓ, coe_mul, coe_one],
     mul_comm := fun x y => by
       ext
-      exact mul_commₓ _ _,
+      exact mul_comm _ _,
     left_distrib := fun x y z => by
       ext
       exact left_distrib _ _ _,
@@ -152,7 +152,7 @@ instance : Field (selfAdjoint R) :=
       exact inv_zero }
 
 @[simp, norm_cast]
-theorem coe_inv (x : selfAdjoint R) : (coeₓ : selfAdjoint R → R) (x⁻¹) = (x : R)⁻¹ :=
+theorem coe_inv (x : selfAdjoint R) : (coe : selfAdjoint R → R) (x⁻¹) = (x : R)⁻¹ :=
   rfl
 
 end Field
@@ -168,7 +168,7 @@ instance : HasScalar R (selfAdjoint A) :=
       rw [mem_iff, star_smul, star_trivial, star_coe_eq]⟩⟩
 
 @[simp, norm_cast]
-theorem coe_smul (r : R) (x : selfAdjoint A) : (coeₓ : selfAdjoint A → A) (r • x) = r • x :=
+theorem coe_smul (r : R) (x : selfAdjoint A) : (coe : selfAdjoint A → A) (r • x) = r • x :=
   rfl
 
 instance : MulAction R (selfAdjoint A) where

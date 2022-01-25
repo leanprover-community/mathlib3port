@@ -46,13 +46,13 @@ instance coe_nat : Coe PrimeMultiset (Multiset ℕ) :=
 /-- `prime_multiset.coe`, the coercion from a multiset of primes to a multiset of
 naturals, promoted to an `add_monoid_hom`. -/
 def coe_nat_monoid_hom : PrimeMultiset →+ Multiset ℕ :=
-  { Multiset.mapAddMonoidHom coeₓ with toFun := coeₓ }
+  { Multiset.mapAddMonoidHom coe with toFun := coe }
 
 @[simp]
-theorem coe_coe_nat_monoid_hom : (coe_nat_monoid_hom : PrimeMultiset → Multiset ℕ) = coeₓ :=
+theorem coe_coe_nat_monoid_hom : (coe_nat_monoid_hom : PrimeMultiset → Multiset ℕ) = coe :=
   rfl
 
-theorem coe_nat_injective : Function.Injective (coeₓ : PrimeMultiset → Multiset ℕ) :=
+theorem coe_nat_injective : Function.Injective (coe : PrimeMultiset → Multiset ℕ) :=
   Multiset.map_injective Nat.Primes.coe_nat_inj
 
 theorem coe_nat_of_prime (p : Nat.Primes) : (of_prime p : Multiset ℕ) = {p} :=
@@ -71,13 +71,13 @@ instance coe_pnat : Coe PrimeMultiset (Multiset ℕ+) :=
 /-- `coe_pnat`, the coercion from a multiset of primes to a multiset of positive
 naturals, regarded as an `add_monoid_hom`. -/
 def coe_pnat_monoid_hom : PrimeMultiset →+ Multiset ℕ+ :=
-  { Multiset.mapAddMonoidHom coeₓ with toFun := coeₓ }
+  { Multiset.mapAddMonoidHom coe with toFun := coe }
 
 @[simp]
-theorem coe_coe_pnat_monoid_hom : (coe_pnat_monoid_hom : PrimeMultiset → Multiset ℕ+) = coeₓ :=
+theorem coe_coe_pnat_monoid_hom : (coe_pnat_monoid_hom : PrimeMultiset → Multiset ℕ+) = coe :=
   rfl
 
-theorem coe_pnat_injective : Function.Injective (coeₓ : PrimeMultiset → Multiset ℕ+) :=
+theorem coe_pnat_injective : Function.Injective (coe : PrimeMultiset → Multiset ℕ+) :=
   Multiset.map_injective Nat.Primes.coe_pnat_inj
 
 theorem coe_pnat_of_prime (p : Nat.Primes) : (of_prime p : Multiset ℕ+) = {(p : ℕ+)} :=
@@ -91,7 +91,7 @@ instance coe_multiset_pnat_nat : Coe (Multiset ℕ+) (Multiset ℕ) :=
   ⟨fun v => v.map fun n => (n : ℕ)⟩
 
 theorem coePnatNat (v : PrimeMultiset) : ((v : Multiset ℕ+) : Multiset ℕ) = (v : Multiset ℕ) := by
-  change (v.map (coeₓ : Nat.Primes → ℕ+)).map Subtype.val = v.map Subtype.val
+  change (v.map (coe : Nat.Primes → ℕ+)).map Subtype.val = v.map Subtype.val
   rw [Multiset.map_map]
   congr
 
@@ -100,9 +100,9 @@ def Prod (v : PrimeMultiset) : ℕ+ :=
   (v : Multiset Pnat).Prod
 
 theorem coe_prod (v : PrimeMultiset) : (v.prod : ℕ) = (v : Multiset ℕ).Prod := by
-  let h : (v.prod : ℕ) = ((v.map coeₓ).map coeₓ).Prod := pnat.coe_monoid_hom.map_multiset_prod v.to_pnat_multiset
+  let h : (v.prod : ℕ) = ((v.map coe).map coe).Prod := pnat.coe_monoid_hom.map_multiset_prod v.to_pnat_multiset
   rw [Multiset.map_map] at h
-  have : (coeₓ : ℕ+ → ℕ) ∘ (coeₓ : Nat.Primes → ℕ+) = coeₓ := funext fun p => rfl
+  have : (coe : ℕ+ → ℕ) ∘ (coe : Nat.Primes → ℕ+) = coe := funext fun p => rfl
   rw [this] at h
   exact h
 
@@ -131,7 +131,7 @@ def of_pnat_multiset (v : Multiset ℕ+) (h : ∀ p : ℕ+, p ∈ v → p.prime)
 theorem to_of_pnat_multiset (v : Multiset ℕ+) h : (of_pnat_multiset v h : Multiset ℕ+) = v := by
   unfold_coes
   dsimp [of_pnat_multiset, to_pnat_multiset]
-  have : (fun p : ℕ+ h : p.prime => (coeₓ : Nat.Primes → ℕ+) ⟨p, h⟩) = fun p h => id p := by
+  have : (fun p : ℕ+ h : p.prime => (coe : Nat.Primes → ℕ+) ⟨p, h⟩) = fun p h => id p := by
     funext p h
     apply Subtype.eq
     rfl
@@ -175,7 +175,7 @@ theorem prod_add (u v : PrimeMultiset) : (u + v).Prod = u.prod * v.prod := by
 theorem prod_smul (d : ℕ) (u : PrimeMultiset) : (d • u).Prod = u.prod ^ d := by
   induction' d with d ih
   rfl
-  rw [succ_nsmul, prod_add, ih, Nat.succ_eq_add_one, pow_succₓ, mul_commₓ]
+  rw [succ_nsmul, prod_add, ih, Nat.succ_eq_add_one, pow_succₓ, mul_comm]
 
 end PrimeMultiset
 
@@ -208,7 +208,7 @@ theorem factor_multiset_prod (v : PrimeMultiset) : v.prod.factor_multiset = v :=
   unfold_coes
   dsimp [PrimeMultiset.toNatMultiset]
   rw [Multiset.coe_prod]
-  let l' := l.map (coeₓ : Nat.Primes → ℕ)
+  let l' := l.map (coe : Nat.Primes → ℕ)
   have : ∀ p : ℕ, p ∈ l' → p.prime := fun p hp => by
     rcases list.mem_map.mp hp with ⟨⟨p', hp'⟩, ⟨h_mem, h_eq⟩⟩
     exact h_eq ▸ hp'

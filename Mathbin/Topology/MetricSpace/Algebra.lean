@@ -93,7 +93,7 @@ end HasLipschitzMul
 
 section HasBoundedSmul
 
-variable [HasZero α] [HasZero β] [HasScalar α β]
+variable [Zero α] [Zero β] [HasScalar α β]
 
 /-- Mixin typeclass on a scalar action of a metric space `α` on a metric space `β` both with
 distinguished points `0`, requiring compatibility of the action in the sense that

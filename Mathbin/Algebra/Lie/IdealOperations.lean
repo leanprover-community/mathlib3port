@@ -31,13 +31,15 @@ universe u v w w₁ w₂
 
 namespace LieSubmodule
 
-variable {R : Type u} {L : Type v} {M : Type w}
+variable {R : Type u} {L : Type v} {M : Type w} {M₂ : Type w₁}
 
-variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [AddCommGroupₓ M] [Module R M]
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
-variable [LieRingModule L M] [LieModule R L M]
+variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
-variable (N N' : LieSubmodule R L M) (I J : LieIdeal R L)
+variable [AddCommGroupₓ M₂] [Module R M₂] [LieRingModule L M₂] [LieModule R L M₂]
+
+variable (N N' : LieSubmodule R L M) (I J : LieIdeal R L) (N₂ : LieSubmodule R L M₂)
 
 section LieIdealOperations
 
@@ -214,8 +216,9 @@ theorem inf_lie : ⁅I⊓J,N⁆ ≤ ⁅I,N⁆⊓⁅J,N⁆ := by
   rw [le_inf_iff]
   constructor <;> apply mono_lie_left <;> [exact inf_le_left, exact inf_le_right]
 
-theorem map_bracket_eq {M₂ : Type w₁} [AddCommGroupₓ M₂] [Module R M₂] [LieRingModule L M₂] [LieModule R L M₂]
-    (f : M →ₗ⁅R,L⁆ M₂) : map f ⁅I,N⁆ = ⁅I,map f N⁆ := by
+variable (f : M →ₗ⁅R,L⁆ M₂)
+
+theorem map_bracket_eq : map f ⁅I,N⁆ = ⁅I,map f N⁆ := by
   rw [← coe_to_submodule_eq_iff, coe_submodule_map, lie_ideal_oper_eq_linear_span, lie_ideal_oper_eq_linear_span,
     Submodule.map_span]
   congr
@@ -231,6 +234,29 @@ theorem map_bracket_eq {M₂ : Type w₁} [AddCommGroupₓ M₂] [Module R M₂]
       ⟨⁅x,n⁆, ⟨x, ⟨n, hn⟩, rfl⟩, by
         simp ⟩
     
+
+theorem map_comap_le : map f (comap f N₂) ≤ N₂ :=
+  (N₂ : Set M₂).image_preimage_subset f
+
+theorem map_comap_eq (hf : N₂ ≤ f.range) : map f (comap f N₂) = N₂ := by
+  rw [SetLike.ext'_iff]
+  exact Set.image_preimage_eq_of_subset hf
+
+theorem le_comap_map : N ≤ comap f (map f N) :=
+  (N : Set M).subset_preimage_image f
+
+theorem comap_map_eq (hf : f.ker = ⊥) : comap f (map f N) = N := by
+  rw [SetLike.ext'_iff]
+  exact (N : Set M).preimage_image_eq (f.ker_eq_bot.mp hf)
+
+theorem comap_bracket_eq (hf₁ : f.ker = ⊥) (hf₂ : N₂ ≤ f.range) : comap f ⁅I,N₂⁆ = ⁅I,comap f N₂⁆ := by
+  conv_lhs => rw [← map_comap_eq N₂ f hf₂]
+  rw [← map_bracket_eq, comap_map_eq _ f hf₁]
+
+@[simp]
+theorem map_comap_incl : map N.incl (comap N.incl N') = N⊓N' := by
+  rw [← coe_to_submodule_eq_iff]
+  exact (N : Submodule R M).map_comap_subtype N'
 
 end LieIdealOperations
 

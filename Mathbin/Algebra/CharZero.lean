@@ -30,10 +30,10 @@ from the natural numbers into it is injective.
 
 /-- Typeclass for monoids with characteristic zero.
   (This is usually stated on fields but it makes sense for any additive monoid with 1.) -/
-class CharZero (R : Type _) [AddMonoidₓ R] [HasOne R] : Prop where
-  cast_injective : Function.Injective (coeₓ : ℕ → R)
+class CharZero (R : Type _) [AddMonoidₓ R] [One R] : Prop where
+  cast_injective : Function.Injective (coe : ℕ → R)
 
-theorem char_zero_of_inj_zero {R : Type _} [AddLeftCancelMonoid R] [HasOne R] (H : ∀ n : ℕ, (n : R) = 0 → n = 0) :
+theorem char_zero_of_inj_zero {R : Type _} [AddLeftCancelMonoid R] [One R] (H : ∀ n : ℕ, (n : R) = 0 → n = 0) :
     CharZero R :=
   ⟨fun m n => by
     intro h
@@ -52,15 +52,15 @@ instance (priority := 100) LinearOrderedSemiring.to_char_zero {R : Type _} [Line
 
 namespace Nat
 
-variable {R : Type _} [AddMonoidₓ R] [HasOne R] [CharZero R]
+variable {R : Type _} [AddMonoidₓ R] [One R] [CharZero R]
 
-theorem cast_injective : Function.Injective (coeₓ : ℕ → R) :=
+theorem cast_injective : Function.Injective (coe : ℕ → R) :=
   CharZero.cast_injective
 
 /-- `nat.cast` as an embedding into monoids of characteristic `0`. -/
 @[simps]
 def cast_embedding : ℕ ↪ R :=
-  ⟨coeₓ, cast_injective⟩
+  ⟨coe, cast_injective⟩
 
 @[simp, norm_cast]
 theorem cast_inj {m n : ℕ} : (m : R) = n ↔ m = n :=
@@ -91,10 +91,10 @@ end Nat
 
 section
 
-variable (M : Type _) [AddMonoidₓ M] [HasOne M] [CharZero M]
+variable (M : Type _) [AddMonoidₓ M] [One M] [CharZero M]
 
 instance (priority := 100) CharZero.infinite : Infinite M :=
-  Infinite.of_injective coeₓ Nat.cast_injective
+  Infinite.of_injective coe Nat.cast_injective
 
 variable {M}
 
@@ -198,7 +198,7 @@ end
 
 namespace WithTop
 
-instance {R : Type _} [AddMonoidₓ R] [HasOne R] [CharZero R] : CharZero (WithTop R) where
+instance {R : Type _} [AddMonoidₓ R] [One R] [CharZero R] : CharZero (WithTop R) where
   cast_injective := fun m n h => by
     rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h
 

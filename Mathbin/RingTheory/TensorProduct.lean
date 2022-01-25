@@ -370,11 +370,11 @@ theorem mul_assoc' (mul : A ⊗[R] B →ₗ[R] A ⊗[R] B →ₗ[R] A ⊗[R] B)
     simp only [LinearMap.map_add, *, LinearMap.add_apply]
     
 
-theorem mul_assocₓ (x y z : A ⊗[R] B) : mul (mul x y) z = mul x (mul y z) :=
+theorem mul_assoc (x y z : A ⊗[R] B) : mul (mul x y) z = mul x (mul y z) :=
   mul_assoc' mul
     (by
       intros
-      simp only [mul_apply, mul_assocₓ])
+      simp only [mul_apply, mul_assoc])
     x y z
 
 theorem one_mulₓ (x : A ⊗[R] B) : mul (1 ⊗ₜ 1) x = x := by
@@ -387,7 +387,7 @@ instance : Semiringₓ (A ⊗[R] B) :=
   { (by
       infer_instance : AddCommMonoidₓ (A ⊗[R] B)) with
     zero := 0, add := · + ·, one := 1 ⊗ₜ 1, mul := fun a b => mul a b, one_mul := one_mulₓ, mul_one := mul_oneₓ,
-    mul_assoc := mul_assocₓ,
+    mul_assoc := mul_assoc,
     zero_mul := by
       simp ,
     mul_zero := by
@@ -544,7 +544,7 @@ instance : CommRingₓ (A ⊗[R] B) :=
         · simp
           
         · intro a₂ b₂
-          simp [mul_commₓ]
+          simp [mul_comm]
           
         · intro a₂ b₂ ha hb
           simp [mul_addₓ, add_mulₓ, ha, hb]

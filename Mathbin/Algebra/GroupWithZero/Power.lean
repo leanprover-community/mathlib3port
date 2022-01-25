@@ -142,12 +142,12 @@ theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a
     simp [Int.neg_succ_of_nat_eq, ha]
   | -[1+ n + 1] => by
     rw [Int.neg_succ_of_nat_eq, zpow_neg₀, neg_add, neg_add_cancel_right, zpow_neg₀, ← Int.coe_nat_succ, zpow_coe_nat,
-      zpow_coe_nat, pow_succₓ _ (n + 1), mul_inv_rev₀, mul_assocₓ, inv_mul_cancel ha, mul_oneₓ]
+      zpow_coe_nat, pow_succₓ _ (n + 1), mul_inv_rev₀, mul_assoc, inv_mul_cancel ha, mul_oneₓ]
 
 theorem zpow_sub_one₀ {a : G₀} (ha : a ≠ 0) (n : ℤ) : a ^ (n - 1) = a ^ n * a⁻¹ :=
   calc
     a ^ (n - 1) = a ^ (n - 1) * a * a⁻¹ := by
-      rw [mul_assocₓ, mul_inv_cancel ha, mul_oneₓ]
+      rw [mul_assoc, mul_inv_cancel ha, mul_oneₓ]
     _ = a ^ n * a⁻¹ := by
       rw [← zpow_add_one₀ ha, sub_add_cancel]
     
@@ -156,9 +156,9 @@ theorem zpow_add₀ {a : G₀} (ha : a ≠ 0) (m n : ℤ) : a ^ (m + n) = a ^ m 
   induction' n using Int.induction_on with n ihn n ihn
   case hz =>
     simp
-  · simp only [← add_assocₓ, zpow_add_one₀ ha, ihn, mul_assocₓ]
+  · simp only [← add_assocₓ, zpow_add_one₀ ha, ihn, mul_assoc]
     
-  · rw [zpow_sub_one₀ ha, ← mul_assocₓ, ← ihn, ← zpow_sub_one₀ ha, add_sub_assoc]
+  · rw [zpow_sub_one₀ ha, ← mul_assoc, ← ihn, ← zpow_sub_one₀ ha, add_sub_assoc]
     
 
 theorem zpow_add' {a : G₀} {m n : ℤ} (h : a ≠ 0 ∨ m + n ≠ 0 ∨ m = 0 ∧ n = 0) : a ^ (m + n) = a ^ m * a ^ n := by
@@ -235,7 +235,7 @@ theorem zpow_mul₀ (a : G₀) : ∀ m n : ℤ, a ^ (m * n) = (a ^ m) ^ n
     rfl
 
 theorem zpow_mul₀' (a : G₀) (m n : ℤ) : a ^ (m * n) = (a ^ n) ^ m := by
-  rw [mul_commₓ, zpow_mul₀]
+  rw [mul_comm, zpow_mul₀]
 
 @[simp, norm_cast]
 theorem Units.coe_zpow₀ (u : (G₀)ˣ) : ∀ n : ℤ, ((u ^ n : (G₀)ˣ) : G₀) = u ^ n
@@ -310,7 +310,7 @@ theorem div_sq_cancel (a b : G₀) : a ^ 2 * b / a = a * b := by
   by_cases' ha : a = 0
   · simp [ha]
     
-  rw [sq, mul_assocₓ, mul_div_cancel_left _ ha]
+  rw [sq, mul_assoc, mul_div_cancel_left _ ha]
 
 /-- The `n`-th power map (`n` an integer) on a commutative group with zero, considered as a group
 homomorphism. -/

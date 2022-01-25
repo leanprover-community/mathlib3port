@@ -416,7 +416,7 @@ theorem AddEquiv.map_sub [AddGroupₓ A] [AddGroupₓ B] (h : A ≃+ B) (x y : A
 @[to_additive toAddUnits "An additive group is isomorphic to its group of additive units"]
 def toUnits [Groupₓ G] : G ≃* (G)ˣ where
   toFun := fun x => ⟨x, x⁻¹, mul_inv_selfₓ _, inv_mul_selfₓ _⟩
-  invFun := coeₓ
+  invFun := coe
   left_inv := fun x => rfl
   right_inv := fun u => Units.ext rfl
   map_mul' := fun x y => Units.ext rfl

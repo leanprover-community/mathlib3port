@@ -776,7 +776,7 @@ theorem induced_order_topology {α : Type u} {β : Type v} [PartialOrderₓ α] 
 order is the same as the restriction to the subset of the order topology. -/
 instance order_topology_of_ord_connected {α : Type u} [ta : TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α]
     {t : Set α} [ht : ord_connected t] : OrderTopology t := by
-  let this' := induced (coeₓ : t → α) ta
+  let this' := induced (coe : t → α) ta
   refine' ⟨eq_of_nhds_eq_nhds fun a => _⟩
   rw [nhds_induced, nhds_generate_from, nhds_eq_order (a : α)]
   apply le_antisymmₓ
@@ -1617,7 +1617,7 @@ theorem mul_tendsto_nhds_zero_left (x : α) : tendsto (uncurry (· * · : α →
   have := mul_tendsto_nhds_zero_right x hs
   rw [Filter.mem_map, mem_prod_iff] at this⊢
   obtain ⟨U, hU, V, hV, h⟩ := this
-  exact ⟨V, hV, U, hU, fun y hy => (mul_commₓ y.2 y.1 ▸ h (⟨hy.2, hy.1⟩ : Prod.mk y.2 y.1 ∈ U ×ˢ V) : y.1 * y.2 ∈ s)⟩
+  exact ⟨V, hV, U, hU, fun y hy => (mul_comm y.2 y.1 ▸ h (⟨hy.2, hy.1⟩ : Prod.mk y.2 y.1 ∈ U ×ˢ V) : y.1 * y.2 ∈ s)⟩
 
 theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1) := by
   have hx₀' : 0 < |x₀| := abs_pos.2 hx₀
@@ -1648,7 +1648,7 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x�
     
 
 theorem nhds_eq_map_mul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x₀ = map (fun x => x * x₀) (𝓝 1) := by
-  simp_rw [mul_commₓ _ x₀, nhds_eq_map_mul_left_nhds_one hx₀]
+  simp_rw [mul_comm _ x₀, nhds_eq_map_mul_left_nhds_one hx₀]
 
 theorem mul_tendsto_nhds_one_nhds_one : tendsto (uncurry (· * · : α → α → α)) (𝓝 1 ×ᶠ 𝓝 1) $ 𝓝 1 := by
   rw
@@ -1706,7 +1706,7 @@ instance (priority := 100) LinearOrderedField.has_continuous_mul : HasContinuous
     have hxy : x₀ * y₀ ≠ 0 := mul_ne_zero hx₀ hy₀
     have key : (fun p : α × α => x₀ * p.1 * (p.2 * y₀)) = ((fun x => x₀ * x) ∘ fun x => x * y₀) ∘ uncurry (· * ·) := by
       ext p
-      simp [uncurry, mul_assocₓ]
+      simp [uncurry, mul_assoc]
     have key₂ : ((fun x => x₀ * x) ∘ fun x => y₀ * x) = fun x => x₀ * y₀ * x := by
       ext x
       simp
@@ -1734,7 +1734,7 @@ theorem Filter.Tendsto.at_top_mul {C : α} (hC : 0 < C) (hf : tendsto f l at_top
 `g` tends to `at_top` then `f * g` tends to `at_top`. -/
 theorem Filter.Tendsto.mul_at_top {C : α} (hC : 0 < C) (hf : tendsto f l (𝓝 C)) (hg : tendsto g l at_top) :
     tendsto (fun x => f x * g x) l at_top := by
-  simpa only [mul_commₓ] using hg.at_top_mul hC hf
+  simpa only [mul_comm] using hg.at_top_mul hC hf
 
 /-- In a linearly ordered field with the order topology, if `f` tends to `at_top` and `g` tends to
 a negative constant `C` then `f * g` tends to `at_bot`. -/
@@ -1747,7 +1747,7 @@ theorem Filter.Tendsto.at_top_mul_neg {C : α} (hC : C < 0) (hf : tendsto f l at
 `g` tends to `at_top` then `f * g` tends to `at_bot`. -/
 theorem Filter.Tendsto.neg_mul_at_top {C : α} (hC : C < 0) (hf : tendsto f l (𝓝 C)) (hg : tendsto g l at_top) :
     tendsto (fun x => f x * g x) l at_bot := by
-  simpa only [mul_commₓ] using hg.at_top_mul_neg hC hf
+  simpa only [mul_comm] using hg.at_top_mul_neg hC hf
 
 /-- In a linearly ordered field with the order topology, if `f` tends to `at_bot` and `g` tends to
 a positive constant `C` then `f * g` tends to `at_bot`. -/
@@ -1765,13 +1765,13 @@ theorem Filter.Tendsto.at_bot_mul_neg {C : α} (hC : C < 0) (hf : tendsto f l at
 `g` tends to `at_bot` then `f * g` tends to `at_bot`. -/
 theorem Filter.Tendsto.mul_at_bot {C : α} (hC : 0 < C) (hf : tendsto f l (𝓝 C)) (hg : tendsto g l at_bot) :
     tendsto (fun x => f x * g x) l at_bot := by
-  simpa only [mul_commₓ] using hg.at_bot_mul hC hf
+  simpa only [mul_comm] using hg.at_bot_mul hC hf
 
 /-- In a linearly ordered field with the order topology, if `f` tends to a negative constant `C` and
 `g` tends to `at_bot` then `f * g` tends to `at_top`. -/
 theorem Filter.Tendsto.neg_mul_at_bot {C : α} (hC : C < 0) (hf : tendsto f l (𝓝 C)) (hg : tendsto g l at_bot) :
     tendsto (fun x => f x * g x) l at_top := by
-  simpa only [mul_commₓ] using hg.at_bot_mul_neg hC hf
+  simpa only [mul_comm] using hg.at_bot_mul_neg hC hf
 
 /-- The function `x ↦ x⁻¹` tends to `+∞` on the right of `0`. -/
 theorem tendsto_inv_zero_at_top : tendsto (fun x : α => x⁻¹) (𝓝[>] (0 : α)) at_top := by
@@ -2301,7 +2301,7 @@ theorem right_nhds_within_Ioo_ne_bot {a b : α} (H : a < b) : ne_bot (𝓝[Ioo a
   (is_lub_Ioo H).nhds_within_ne_bot (nonempty_Ioo.2 H)
 
 theorem comap_coe_nhds_within_Iio_of_Ioo_subset (hb : s ⊆ Iio b) (hs : s.nonempty → ∃ a < b, Ioo a b ⊆ s) :
-    comap (coeₓ : s → α) (𝓝[<] b) = at_top := by
+    comap (coe : s → α) (𝓝[<] b) = at_top := by
   nontriviality
   have : Nonempty s := nontrivial_iff_nonempty.1 ‹_›
   rcases hs (nonempty_subtype.1 ‹_›) with ⟨a, h, hs⟩
@@ -2321,12 +2321,12 @@ theorem comap_coe_nhds_within_Iio_of_Ioo_subset (hb : s ⊆ Iio b) (hs : s.nonem
     
 
 theorem comap_coe_nhds_within_Ioi_of_Ioo_subset (ha : s ⊆ Ioi a) (hs : s.nonempty → ∃ b > a, Ioo a b ⊆ s) :
-    comap (coeₓ : s → α) (𝓝[>] a) = at_bot :=
+    comap (coe : s → α) (𝓝[>] a) = at_bot :=
   comap_coe_nhds_within_Iio_of_Ioo_subset (show of_dual ⁻¹' s ⊆ Iio (to_dual a) from ha) fun h => by
     simpa only [OrderDual.exists, dual_Ioo] using hs h
 
 theorem map_coe_at_top_of_Ioo_subset (hb : s ⊆ Iio b) (hs : ∀, ∀ a' < b, ∀, ∃ a < b, Ioo a b ⊆ s) :
-    map (coeₓ : s → α) at_top = 𝓝[<] b := by
+    map (coe : s → α) at_top = 𝓝[<] b := by
   rcases eq_empty_or_nonempty (Iio b) with (hb' | ⟨a, ha⟩)
   · rw [filter_eq_bot_of_is_empty at_top, map_bot, hb', nhds_within_empty]
     exact ⟨fun x => hb'.subset (hb x.2)⟩
@@ -2337,40 +2337,40 @@ theorem map_coe_at_top_of_Ioo_subset (hb : s ⊆ Iio b) (hs : ∀, ∀ a' < b, �
     
 
 theorem map_coe_at_bot_of_Ioo_subset (ha : s ⊆ Ioi a) (hs : ∀, ∀ b' > a, ∀, ∃ b > a, Ioo a b ⊆ s) :
-    map (coeₓ : s → α) at_bot = 𝓝[>] a := by
+    map (coe : s → α) at_bot = 𝓝[>] a := by
   refine' (map_coe_at_top_of_Ioo_subset (show of_dual ⁻¹' s ⊆ Iio (to_dual a) from ha) fun b' hb' => _ : _)
   simpa only [OrderDual.exists, dual_Ioo] using hs b' hb'
 
 /-- The `at_top` filter for an open interval `Ioo a b` comes from the left-neighbourhoods filter at
 the right endpoint in the ambient order. -/
-theorem comap_coe_Ioo_nhds_within_Iio (a b : α) : comap (coeₓ : Ioo a b → α) (𝓝[<] b) = at_top :=
+theorem comap_coe_Ioo_nhds_within_Iio (a b : α) : comap (coe : Ioo a b → α) (𝓝[<] b) = at_top :=
   comap_coe_nhds_within_Iio_of_Ioo_subset Ioo_subset_Iio_self $ fun h => ⟨a, nonempty_Ioo.1 h, subset.refl _⟩
 
 /-- The `at_bot` filter for an open interval `Ioo a b` comes from the right-neighbourhoods filter at
 the left endpoint in the ambient order. -/
-theorem comap_coe_Ioo_nhds_within_Ioi (a b : α) : comap (coeₓ : Ioo a b → α) (𝓝[>] a) = at_bot :=
+theorem comap_coe_Ioo_nhds_within_Ioi (a b : α) : comap (coe : Ioo a b → α) (𝓝[>] a) = at_bot :=
   comap_coe_nhds_within_Ioi_of_Ioo_subset Ioo_subset_Ioi_self $ fun h => ⟨b, nonempty_Ioo.1 h, subset.refl _⟩
 
-theorem comap_coe_Ioi_nhds_within_Ioi (a : α) : comap (coeₓ : Ioi a → α) (𝓝[>] a) = at_bot :=
+theorem comap_coe_Ioi_nhds_within_Ioi (a : α) : comap (coe : Ioi a → α) (𝓝[>] a) = at_bot :=
   comap_coe_nhds_within_Ioi_of_Ioo_subset (subset.refl _) $ fun ⟨x, hx⟩ => ⟨x, hx, Ioo_subset_Ioi_self⟩
 
-theorem comap_coe_Iio_nhds_within_Iio (a : α) : comap (coeₓ : Iio a → α) (𝓝[<] a) = at_top :=
+theorem comap_coe_Iio_nhds_within_Iio (a : α) : comap (coe : Iio a → α) (𝓝[<] a) = at_top :=
   @comap_coe_Ioi_nhds_within_Ioi (OrderDual α) _ _ _ _ a
 
 @[simp]
-theorem map_coe_Ioo_at_top {a b : α} (h : a < b) : map (coeₓ : Ioo a b → α) at_top = 𝓝[<] b :=
+theorem map_coe_Ioo_at_top {a b : α} (h : a < b) : map (coe : Ioo a b → α) at_top = 𝓝[<] b :=
   map_coe_at_top_of_Ioo_subset Ioo_subset_Iio_self $ fun _ _ => ⟨_, h, subset.refl _⟩
 
 @[simp]
-theorem map_coe_Ioo_at_bot {a b : α} (h : a < b) : map (coeₓ : Ioo a b → α) at_bot = 𝓝[>] a :=
+theorem map_coe_Ioo_at_bot {a b : α} (h : a < b) : map (coe : Ioo a b → α) at_bot = 𝓝[>] a :=
   map_coe_at_bot_of_Ioo_subset Ioo_subset_Ioi_self $ fun _ _ => ⟨_, h, subset.refl _⟩
 
 @[simp]
-theorem map_coe_Ioi_at_bot (a : α) : map (coeₓ : Ioi a → α) at_bot = 𝓝[>] a :=
+theorem map_coe_Ioi_at_bot (a : α) : map (coe : Ioi a → α) at_bot = 𝓝[>] a :=
   map_coe_at_bot_of_Ioo_subset (subset.refl _) $ fun b hb => ⟨b, hb, Ioo_subset_Ioi_self⟩
 
 @[simp]
-theorem map_coe_Iio_at_top (a : α) : map (coeₓ : Iio a → α) at_top = 𝓝[<] a :=
+theorem map_coe_Iio_at_top (a : α) : map (coe : Iio a → α) at_top = 𝓝[<] a :=
   @map_coe_Ioi_at_bot (OrderDual α) _ _ _ _ _
 
 variable {l : Filter β} {f : α → β}

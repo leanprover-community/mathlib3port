@@ -280,7 +280,7 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
     rw [← add_tsub_cancel_of_le h, Finset.sum_range_add, ← sub_sub, sub_self, zero_sub, neg_mem_iff]
     apply Submodule.sum_mem
     intro n hn
-    rw [mul_powₓ, pow_addₓ, mul_assocₓ]
+    rw [mul_powₓ, pow_addₓ, mul_assoc]
     exact Ideal.mul_mem_right _ (I ^ m) (Ideal.pow_mem_pow hx m)
   obtain ⟨L, hL⟩ := IsPrecomplete.prec to_is_precomplete hf
   · rw [is_unit_iff_exists_inv]

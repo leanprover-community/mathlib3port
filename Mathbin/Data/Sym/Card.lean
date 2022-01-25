@@ -53,7 +53,7 @@ theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.off_diag.image Quot
   rw
     [card_eq_sum_card_fiberwise
       (fun x => mem_image_of_mem _ : ∀, ∀ x ∈ s.off_diag, ∀, Quotientₓ.mk x ∈ s.off_diag.image Quotientₓ.mk),
-    sum_const_nat (Quotientₓ.ind _), mul_commₓ]
+    sum_const_nat (Quotientₓ.ind _), mul_comm]
   rintro ⟨x, y⟩ hxy
   simp_rw [mem_image, exists_prop, mem_off_diag, Quotientₓ.eq]  at hxy
   obtain ⟨a, ⟨ha₁, ha₂, ha⟩, h⟩ := hxy
@@ -94,7 +94,7 @@ theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.is_diag }
 /-- Finset **stars and bars** for the case `n = 2`. -/
 theorem _root_.finset.card_sym2 (s : Finset α) : s.sym2.card = s.card * (s.card + 1) / 2 := by
   rw [← image_diag_union_image_off_diag, card_union_eq, Sym2.card_image_diag, Sym2.card_image_off_diag,
-    Nat.choose_two_right, add_commₓ, ← Nat.triangle_succ, Nat.succ_sub_one, mul_commₓ]
+    Nat.choose_two_right, add_commₓ, ← Nat.triangle_succ, Nat.succ_sub_one, mul_comm]
   rintro m he
   rw [inf_eq_inter, mem_inter, mem_image, mem_image] at he
   obtain ⟨⟨a, ha, rfl⟩, b, hb, hab⟩ := he

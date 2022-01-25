@@ -22,7 +22,7 @@ variable [TopologicalSpace R]
 This is not a global instance since other topologies could be relevant. Instead there is a class
 `induced_units` asserting that something equivalent to this construction holds. -/
 def topological_space_units : TopologicalSpace (R)ˣ :=
-  induced (coeₓ : (R)ˣ → R) ‹_›
+  induced (coe : (R)ˣ → R) ‹_›
 
 /-- Asserts the topology on units is the induced topology.
 
@@ -31,24 +31,24 @@ def topological_space_units : TopologicalSpace (R)ˣ :=
  with the units embedded via $u \mapsto (u, u^{-1})$.
  These topologies are not (propositionally) equal in general. -/
 class induced_units [t : TopologicalSpace $ (R)ˣ] : Prop where
-  top_eq : t = induced (coeₓ : (R)ˣ → R) ‹_›
+  top_eq : t = induced (coe : (R)ˣ → R) ‹_›
 
 variable [TopologicalSpace $ (R)ˣ]
 
-theorem units_topology_eq [induced_units R] : ‹TopologicalSpace (R)ˣ› = induced (coeₓ : (R)ˣ → R) ‹_› :=
+theorem units_topology_eq [induced_units R] : ‹TopologicalSpace (R)ˣ› = induced (coe : (R)ˣ → R) ‹_› :=
   induced_units.top_eq
 
-theorem induced_units.continuous_coe [induced_units R] : Continuous (coeₓ : (R)ˣ → R) :=
+theorem induced_units.continuous_coe [induced_units R] : Continuous (coe : (R)ˣ → R) :=
   (units_topology_eq R).symm ▸ continuous_induced_dom
 
-theorem units_embedding [induced_units R] : Embedding (coeₓ : (R)ˣ → R) :=
+theorem units_embedding [induced_units R] : Embedding (coe : (R)ˣ → R) :=
   { induced := units_topology_eq R, inj := fun x y h => Units.ext h }
 
 instance top_monoid_units [TopologicalRing R] [induced_units R] : HasContinuousMul (R)ˣ :=
   ⟨by
     let mulR := fun p : R × R => p.1 * p.2
     let mulRx := fun p : (R)ˣ × (R)ˣ => p.1 * p.2
-    have key : coeₓ ∘ mulRx = mulR ∘ fun p => (p.1.val, p.2.val) := rfl
+    have key : coe ∘ mulRx = mulR ∘ fun p => (p.1.val, p.2.val) := rfl
     rw [continuous_iff_le_induced, units_topology_eq R, prod_induced_induced, induced_compose, key, ← induced_compose]
     apply induced_mono
     rw [← continuous_iff_le_induced]
@@ -89,7 +89,7 @@ variable [TopologicalDivisionRing K]
 theorem units_top_group : TopologicalGroup (K)ˣ :=
   { TopologicalRing.top_monoid_units K with
     continuous_inv := by
-      have : (coeₓ : (K)ˣ → K) ∘ (fun x => x⁻¹ : (K)ˣ → (K)ˣ) = (fun x => x⁻¹ : K → K) ∘ (coeₓ : (K)ˣ → K) :=
+      have : (coe : (K)ˣ → K) ∘ (fun x => x⁻¹ : (K)ˣ → (K)ˣ) = (fun x => x⁻¹ : K → K) ∘ (coe : (K)ˣ → K) :=
         funext Units.coe_inv'
       rw [continuous_iff_continuous_at]
       intro x

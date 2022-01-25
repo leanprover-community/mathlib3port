@@ -754,7 +754,7 @@ theorem mem_infi_finset {s : Finset α} {f : α → Filter β} {t : Set β} :
     refine'
       ⟨fun a => if h : a ∈ s then p ⟨a, h⟩ else univ, fun a ha => by
         simpa [ha] using hp ⟨a, ha⟩, _⟩
-    refine' Inter_congr id surjective_id _
+    refine' Inter_congr_of_surjective id surjective_id _
     rintro ⟨a, ha⟩
     simp [ha]
     
@@ -1747,6 +1747,9 @@ theorem comap_bot : comap m ⊥ = ⊥ :=
       simp only [mem_bot], by
       simp only [empty_subset, preimage_empty]⟩
 
+theorem disjoint_comap (h : Disjoint g₁ g₂) : Disjoint (comap m g₁) (comap m g₂) := by
+  simp only [disjoint_iff, ← comap_inf, h.eq_bot, comap_bot]
+
 theorem comap_supr {ι} {f : ι → Filter β} {m : α → β} : comap m (supr f) = ⨆ i, comap m (f i) :=
   le_antisymmₓ
     (fun s hs =>
@@ -1774,6 +1777,11 @@ theorem map_comap (f : Filter β) (m : α → β) : (f.comap m).map m = f⊓𝓟
 theorem map_comap_of_mem {f : Filter β} {m : α → β} (hf : range m ∈ f) : (f.comap m).map m = f := by
   rw [map_comap, inf_eq_left.2 (le_principal_iff.2 hf)]
 
+instance [CanLift α β] : CanLift (Filter α) (Filter β) where
+  coe := map CanLift.coe
+  cond := fun f => ∀ᶠ x : α in f, CanLift.Cond β x
+  prf := fun f hf => ⟨comap CanLift.coe f, map_comap_of_mem $ hf.mono CanLift.prf⟩
+
 theorem comap_le_comap_iff {f g : Filter β} {m : α → β} (hf : range m ∈ f) : comap m f ≤ comap m g ↔ f ≤ g :=
   ⟨fun h => map_comap_of_mem hf ▸ (map_mono h).trans map_comap_le, fun h => comap_mono h⟩
 
@@ -1784,12 +1792,12 @@ theorem map_comap_of_surjective {f : α → β} (hf : surjective f) (l : Filter 
 theorem _root_.function.surjective.filter_map_top {f : α → β} (hf : surjective f) : map f ⊤ = ⊤ :=
   (congr_argₓ _ comap_top).symm.trans $ map_comap_of_surjective hf ⊤
 
-theorem subtype_coe_map_comap (s : Set α) (f : Filter α) : map (coeₓ : s → α) (comap (coeₓ : s → α) f) = f⊓𝓟 s := by
+theorem subtype_coe_map_comap (s : Set α) (f : Filter α) : map (coe : s → α) (comap (coe : s → α) f) = f⊓𝓟 s := by
   rw [map_comap, Subtype.range_coe]
 
 theorem subtype_coe_map_comap_prod (s : Set α) (f : Filter (α × α)) :
-    map (coeₓ : s × s → α × α) (comap (coeₓ : s × s → α × α) f) = f⊓𝓟 (s ×ˢ s) := by
-  have : (coeₓ : s × s → α × α) = fun x => (x.1, x.2) := by
+    map (coe : s × s → α × α) (comap (coe : s × s → α × α) f) = f⊓𝓟 (s ×ˢ s) := by
+  have : (coe : s × s → α × α) = fun x => (x.1, x.2) := by
     ext ⟨x, y⟩ <;> rfl
   simp [this, map_comap, ← prod_range_range_eq]
 
@@ -1799,7 +1807,7 @@ theorem image_mem_of_mem_comap {f : Filter α} {c : β → α} (h : range c ∈ 
   exact image_mem_map W_in
 
 theorem image_coe_mem_of_mem_comap {f : Filter α} {U : Set α} (h : U ∈ f) {W : Set U}
-    (W_in : W ∈ comap (coeₓ : U → α) f) : coeₓ '' W ∈ f :=
+    (W_in : W ∈ comap (coe : U → α) f) : coe '' W ∈ f :=
   image_mem_of_mem_comap
     (by
       simp [h])
@@ -1904,7 +1912,7 @@ theorem comap_inf_principal_ne_bot_of_image_mem {f : Filter β} {m : α → β} 
   exact absurd hxs (hts hxt)
 
 theorem comap_coe_ne_bot_of_le_principal {s : Set γ} {l : Filter γ} [h : ne_bot l] (h' : l ≤ 𝓟 s) :
-    ne_bot (comap (coeₓ : s → γ) l) :=
+    ne_bot (comap (coe : s → γ) l) :=
   h.comap_of_range_mem $ (@Subtype.range_coe γ s).symm ▸ h' (mem_principal_self s)
 
 theorem ne_bot.comap_of_surj {f : Filter β} {m : α → β} (hf : ne_bot f) (hm : surjective m) : ne_bot (comap m f) :=
@@ -1968,26 +1976,22 @@ theorem map_binfi_eq {ι : Type w} {f : ι → Filter α} {m : α → β} {p : �
 theorem map_inf_le {f g : Filter α} {m : α → β} : map m (f⊓g) ≤ map m f⊓map m g :=
   (@map_mono _ _ m).map_inf_le f g
 
-theorem map_inf' {f g : Filter α} {m : α → β} {t : Set α} (htf : t ∈ f) (htg : t ∈ g)
-    (h : ∀, ∀ x ∈ t, ∀, ∀, ∀ y ∈ t, ∀, m x = m y → x = y) : map m (f⊓g) = map m f⊓map m g := by
-  refine' le_antisymmₓ map_inf_le fun s hs => _
-  simp only [mem_inf_iff, exists_prop, mem_map, mem_preimage, mem_inf_iff] at hs
-  rcases hs with ⟨t₁, h₁, t₂, h₂, hs : m ⁻¹' s = t₁ ∩ t₂⟩
-  have : m '' (t₁ ∩ t) ∩ m '' (t₂ ∩ t) ∈ map m f⊓map m g := by
-    apply inter_mem_inf <;> apply image_mem_map
-    exacts[inter_mem h₁ htf, inter_mem h₂ htg]
-  apply mem_of_superset this
-  · rw [image_inter_on]
-    · refine' image_subset_iff.2 _
-      rw [hs]
-      exact fun x ⟨⟨h₁, _⟩, h₂, _⟩ => ⟨h₁, h₂⟩
-      
-    · exact fun x ⟨_, hx⟩ y ⟨_, hy⟩ => h x hx y hy
-      
-    
+theorem map_inf {f g : Filter α} {m : α → β} (h : injective m) : map m (f⊓g) = map m f⊓map m g := by
+  refine' map_inf_le.antisymm _
+  rintro t ⟨s₁, hs₁, s₂, hs₂, ht : m ⁻¹' t = s₁ ∩ s₂⟩
+  refine' mem_inf_of_inter (image_mem_map hs₁) (image_mem_map hs₂) _
+  rw [image_inter h, image_subset_iff, ht]
 
-theorem map_inf {f g : Filter α} {m : α → β} (h : injective m) : map m (f⊓g) = map m f⊓map m g :=
-  map_inf' univ_mem univ_mem fun x _ y _ hxy => h hxy
+theorem map_inf' {f g : Filter α} {m : α → β} {t : Set α} (htf : t ∈ f) (htg : t ∈ g) (h : inj_on m t) :
+    map m (f⊓g) = map m f⊓map m g := by
+  lift f to Filter t using htf
+  lift g to Filter t using htg
+  replace h : injective (m ∘ coe) := h.injective
+  simp only [map_map, ← map_inf Subtype.coe_injective, map_inf h]
+
+theorem disjoint_map {m : α → β} (hm : injective m) {f₁ f₂ : Filter α} :
+    Disjoint (map m f₁) (map m f₂) ↔ Disjoint f₁ f₂ := by
+  simp only [disjoint_iff, ← map_inf hm, map_eq_bot_iff]
 
 theorem map_eq_comap_of_inverse {f : Filter α} {m : α → β} {n : β → α} (h₁ : m ∘ n = id) (h₂ : n ∘ m = id) :
     map m f = comap n f :=
@@ -2278,6 +2282,10 @@ theorem tendsto_iff_comap {f : α → β} {l₁ : Filter α} {l₂ : Filter β} 
   map_le_iff_le_comap
 
 alias tendsto_iff_comap ↔ Filter.Tendsto.le_comap _
+
+protected theorem tendsto.disjoint {f : α → β} {la₁ la₂ : Filter α} {lb₁ lb₂ : Filter β} (h₁ : tendsto f la₁ lb₁)
+    (hd : Disjoint lb₁ lb₂) (h₂ : tendsto f la₂ lb₂) : Disjoint la₁ la₂ :=
+  (disjoint_comap hd).mono h₁.le_comap h₂.le_comap
 
 theorem tendsto_congr' {f₁ f₂ : α → β} {l₁ : Filter α} {l₂ : Filter β} (hl : f₁ =ᶠ[l₁] f₂) :
     tendsto f₁ l₁ l₂ ↔ tendsto f₂ l₁ l₂ := by

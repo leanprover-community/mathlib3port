@@ -109,7 +109,7 @@ theorem coe_fn_coe_base' {α β} {γ : outParam $ _} [Coe α β] [CoeFun β fun 
   rfl
 
 theorem coe_sort_coe_trans {α β γ δ} [Coe α β] [HasCoeTAux β γ] [CoeSort γ δ] (x : α) :
-    @coeSortₓ α _ _ x = @coeSortₓ β _ _ x :=
+    @coeSort α _ _ x = @coeSort β _ _ x :=
   rfl
 
 /-- Many structures such as bundled morphisms coerce to functions so that you can
@@ -139,7 +139,7 @@ often causes loops in the simplifier.)
 library_note "function coercion"
 
 @[simp]
-theorem coe_sort_coe_base {α β γ} [Coe α β] [CoeSort β γ] (x : α) : @coeSortₓ α _ _ x = @coeSortₓ β _ _ x :=
+theorem coe_sort_coe_base {α β γ} [Coe α β] [CoeSort β γ] (x : α) : @coeSort α _ _ x = @coeSort β _ _ x :=
   rfl
 
 /-- `pempty` is the universe-polymorphic analogue of `empty`. -/

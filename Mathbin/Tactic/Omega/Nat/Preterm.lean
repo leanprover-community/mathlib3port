@@ -58,7 +58,7 @@ theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m * v n := by
   simp only [val]
   by_cases' h1 : m = 1
   rw [if_pos h1, h1, one_mulₓ]
-  rw [if_neg h1, mul_commₓ]
+  rw [if_neg h1, mul_comm]
 
 @[simp]
 theorem val_add {v : Nat → Nat} {t s : preterm} : (t +* s).val v = t.val v + s.val v :=

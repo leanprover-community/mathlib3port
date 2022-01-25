@@ -108,7 +108,7 @@ theorem cos_angle (x y : V) : Real.cos (angle x y) = inner x y / (∥x∥ * ∥y
 /-- The angle between two vectors does not depend on their order. -/
 theorem angle_comm (x y : V) : angle x y = angle y x := by
   unfold angle
-  rw [real_inner_comm, mul_commₓ]
+  rw [real_inner_comm, mul_comm]
 
 /-- The angle between the negation of two vectors. -/
 @[simp]
@@ -166,8 +166,8 @@ theorem angle_neg_self_of_nonzero {x : V} (hx : x ≠ 0) : angle (-x) x = π := 
 @[simp]
 theorem angle_smul_right_of_pos (x y : V) {r : ℝ} (hr : 0 < r) : angle x (r • y) = angle x y := by
   unfold angle
-  rw [inner_smul_right, norm_smul, Real.norm_eq_abs, abs_of_nonneg (le_of_ltₓ hr), ← mul_assocₓ, mul_commₓ _ r,
-    mul_assocₓ, mul_div_mul_left _ _ (ne_of_gtₓ hr)]
+  rw [inner_smul_right, norm_smul, Real.norm_eq_abs, abs_of_nonneg (le_of_ltₓ hr), ← mul_assoc, mul_comm _ r, mul_assoc,
+    mul_div_mul_left _ _ (ne_of_gtₓ hr)]
 
 /-- The angle between a positive multiple of a vector and a vector. -/
 @[simp]
@@ -566,7 +566,7 @@ theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) 
     rw [discrim]
     ring
   rw [quadratic_eq_zero_iff hvi hd, add_left_negₓ, zero_div, neg_mul_eq_neg_mul, ← mul_sub_right_distrib,
-    sub_eq_add_neg, ← mul_two, mul_assocₓ, mul_div_assoc, mul_div_mul_left, mul_div_assoc]
+    sub_eq_add_neg, ← mul_two, mul_assoc, mul_div_assoc, mul_div_mul_left, mul_div_assoc]
   norm_num
 
 open AffineSubspace FiniteDimensional
@@ -906,7 +906,7 @@ theorem dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd {s : AffineSubspace �
       rw [norm_smul, Real.norm_eq_abs]
       ring
     _ = dist p1 p2 * dist p1 p2 + (r1 - r2) * (r1 - r2) * (∥v∥ * ∥v∥) := by
-      rw [dist_eq_norm_vsub V p1, abs_mul_abs_self, mul_assocₓ]
+      rw [dist_eq_norm_vsub V p1, abs_mul_abs_self, mul_assoc]
     
 
 /-- Reflection in an affine subspace, which is expected to be nonempty

@@ -63,7 +63,7 @@ theorem val_eq_coe (n : ℝ≥0 ) : n.val = n :=
   rfl
 
 instance : CanLift ℝ ℝ≥0 where
-  coe := coeₓ
+  coe := coe
   cond := fun r => 0 ≤ r
   prf := fun x hx => ⟨⟨x, hx⟩, rfl⟩
 
@@ -71,7 +71,7 @@ protected theorem Eq {n m : ℝ≥0 } : (n : ℝ) = (m : ℝ) → n = m :=
   Subtype.eq
 
 protected theorem eq_iff {n m : ℝ≥0 } : (n : ℝ) = (m : ℝ) ↔ n = m :=
-  Iff.intro Nnreal.eq (congr_argₓ coeₓ)
+  Iff.intro Nnreal.eq (congr_argₓ coe)
 
 theorem ne_iff {x y : ℝ≥0 } : (x : ℝ) ≠ (y : ℝ) ↔ x ≠ y :=
   not_iff_not_of_iff $ Nnreal.eq_iff
@@ -93,10 +93,10 @@ theorem coe_nonneg (r : ℝ≥0 ) : (0 : ℝ) ≤ r :=
 theorem coe_mk (a : ℝ) ha : ((⟨a, ha⟩ : ℝ≥0 ) : ℝ) = a :=
   rfl
 
-example : HasZero ℝ≥0 := by
+example : Zero ℝ≥0 := by
   infer_instance
 
-example : HasOne ℝ≥0 := by
+example : One ℝ≥0 := by
   infer_instance
 
 example : Add ℝ≥0 := by
@@ -126,7 +126,7 @@ example : Inhabited ℝ≥0 := by
 example : Nontrivial ℝ≥0 := by
   infer_instance
 
-protected theorem coe_injective : Function.Injective (coeₓ : ℝ≥0 → ℝ) :=
+protected theorem coe_injective : Function.Injective (coe : ℝ≥0 → ℝ) :=
   Subtype.coe_injective
 
 @[simp, norm_cast]
@@ -181,10 +181,10 @@ example : CommSemiringₓ ℝ≥0 := by
 
 /-- Coercion `ℝ≥0 → ℝ` as a `ring_hom`. -/
 def to_real_hom : ℝ≥0 →+* ℝ :=
-  ⟨coeₓ, Nnreal.coe_one, Nnreal.coe_mul, Nnreal.coe_zero, Nnreal.coe_add⟩
+  ⟨coe, Nnreal.coe_one, Nnreal.coe_mul, Nnreal.coe_zero, Nnreal.coe_add⟩
 
 @[simp]
-theorem coe_to_real_hom : ⇑to_real_hom = coeₓ :=
+theorem coe_to_real_hom : ⇑to_real_hom = coe :=
   rfl
 
 section Actions
@@ -256,19 +256,19 @@ theorem coe_zpow (r : ℝ≥0 ) (n : ℤ) : ((r ^ n : ℝ≥0 ) : ℝ) = r ^ n :
   cases n <;> simp
 
 @[norm_cast]
-theorem coe_list_sum (l : List ℝ≥0 ) : ((l.sum : ℝ≥0 ) : ℝ) = (l.map coeₓ).Sum :=
+theorem coe_list_sum (l : List ℝ≥0 ) : ((l.sum : ℝ≥0 ) : ℝ) = (l.map coe).Sum :=
   to_real_hom.map_list_sum l
 
 @[norm_cast]
-theorem coe_list_prod (l : List ℝ≥0 ) : ((l.prod : ℝ≥0 ) : ℝ) = (l.map coeₓ).Prod :=
+theorem coe_list_prod (l : List ℝ≥0 ) : ((l.prod : ℝ≥0 ) : ℝ) = (l.map coe).Prod :=
   to_real_hom.map_list_prod l
 
 @[norm_cast]
-theorem coe_multiset_sum (s : Multiset ℝ≥0 ) : ((s.sum : ℝ≥0 ) : ℝ) = (s.map coeₓ).Sum :=
+theorem coe_multiset_sum (s : Multiset ℝ≥0 ) : ((s.sum : ℝ≥0 ) : ℝ) = (s.map coe).Sum :=
   to_real_hom.map_multiset_sum s
 
 @[norm_cast]
-theorem coe_multiset_prod (s : Multiset ℝ≥0 ) : ((s.prod : ℝ≥0 ) : ℝ) = (s.map coeₓ).Prod :=
+theorem coe_multiset_prod (s : Multiset ℝ≥0 ) : ((s.prod : ℝ≥0 ) : ℝ) = (s.map coe).Prod :=
   to_real_hom.map_multiset_prod s
 
 @[norm_cast]
@@ -315,7 +315,7 @@ protected theorem coe_lt_coe {r₁ r₂ : ℝ≥0 } : (r₁ : ℝ) < r₂ ↔ r�
 protected theorem coe_pos {r : ℝ≥0 } : (0 : ℝ) < r ↔ 0 < r :=
   Iff.rfl
 
-protected theorem coe_mono : Monotone (coeₓ : ℝ≥0 → ℝ) := fun _ _ => Nnreal.coe_le_coe.2
+protected theorem coe_mono : Monotone (coe : ℝ≥0 → ℝ) := fun _ _ => Nnreal.coe_le_coe.2
 
 protected theorem _root_.real.to_nnreal_mono : Monotone Real.toNnreal := fun x y h => max_le_max h (le_reflₓ 0)
 
@@ -333,7 +333,7 @@ theorem to_nnreal_coe_nat (n : ℕ) : Real.toNnreal n = n :=
     simp [Real.coe_to_nnreal]
 
 /-- `real.to_nnreal` and `coe : ℝ≥0 → ℝ` form a Galois insertion. -/
-noncomputable def gi : GaloisInsertion Real.toNnreal coeₓ :=
+noncomputable def gi : GaloisInsertion Real.toNnreal coe :=
   GaloisInsertion.monotoneIntro Nnreal.coe_mono Real.to_nnreal_mono Real.le_coe_to_nnreal fun _ => Real.to_nnreal_coe
 
 example : OrderBot ℝ≥0 := by
@@ -381,22 +381,22 @@ example : DenselyOrdered ℝ≥0 := by
 example : NoMaxOrder ℝ≥0 := by
   infer_instance
 
-theorem bdd_above_coe {s : Set ℝ≥0 } : BddAbove ((coeₓ : ℝ≥0 → ℝ) '' s) ↔ BddAbove s :=
+theorem bdd_above_coe {s : Set ℝ≥0 } : BddAbove ((coe : ℝ≥0 → ℝ) '' s) ↔ BddAbove s :=
   Iff.intro
     (fun ⟨b, hb⟩ =>
       ⟨Real.toNnreal b, fun ⟨y, hy⟩ hys => show y ≤ max b 0 from le_max_of_le_left $ hb $ Set.mem_image_of_mem _ hys⟩)
     fun ⟨b, hb⟩ => ⟨b, fun y ⟨x, hx, Eq⟩ => Eq ▸ hb hx⟩
 
-theorem bdd_below_coe (s : Set ℝ≥0 ) : BddBelow ((coeₓ : ℝ≥0 → ℝ) '' s) :=
+theorem bdd_below_coe (s : Set ℝ≥0 ) : BddBelow ((coe : ℝ≥0 → ℝ) '' s) :=
   ⟨0, fun r ⟨q, _, Eq⟩ => Eq ▸ q.2⟩
 
 noncomputable instance : ConditionallyCompleteLinearOrderBot ℝ≥0 :=
   Nonneg.conditionallyCompleteLinearOrderBot Real.Sup_empty.le
 
-theorem coe_Sup (s : Set ℝ≥0 ) : (↑Sup s : ℝ) = Sup ((coeₓ : ℝ≥0 → ℝ) '' s) :=
+theorem coe_Sup (s : Set ℝ≥0 ) : (↑Sup s : ℝ) = Sup ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm $ @subset_Sup_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0 )⟩ s $ Real.Sup_nonneg _ $ fun y ⟨x, _, hy⟩ => hy ▸ x.2
 
-theorem coe_Inf (s : Set ℝ≥0 ) : (↑Inf s : ℝ) = Inf ((coeₓ : ℝ≥0 → ℝ) '' s) :=
+theorem coe_Inf (s : Set ℝ≥0 ) : (↑Inf s : ℝ) = Inf ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm $ @subset_Inf_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0 )⟩ s $ Real.Inf_nonneg _ $ fun y ⟨x, _, hy⟩ => hy ▸ x.2
 
 example : Archimedean ℝ≥0 := by
@@ -672,18 +672,18 @@ theorem inv_le_of_le_mul {r p : ℝ≥0 } (h : 1 ≤ r * p) : r⁻¹ ≤ p := by
 
 @[simp]
 theorem le_inv_iff_mul_le {r p : ℝ≥0 } (h : p ≠ 0) : r ≤ p⁻¹ ↔ r * p ≤ 1 := by
-  rw [← mul_le_mul_left (pos_iff_ne_zero.2 h), mul_inv_cancel h, mul_commₓ]
+  rw [← mul_le_mul_left (pos_iff_ne_zero.2 h), mul_inv_cancel h, mul_comm]
 
 @[simp]
 theorem lt_inv_iff_mul_lt {r p : ℝ≥0 } (h : p ≠ 0) : r < p⁻¹ ↔ r * p < 1 := by
-  rw [← mul_lt_mul_left (pos_iff_ne_zero.2 h), mul_inv_cancel h, mul_commₓ]
+  rw [← mul_lt_mul_left (pos_iff_ne_zero.2 h), mul_inv_cancel h, mul_comm]
 
 theorem mul_le_iff_le_inv {a b r : ℝ≥0 } (hr : r ≠ 0) : r * a ≤ b ↔ a ≤ r⁻¹ * b := by
   have : 0 < r := lt_of_le_of_neₓ (zero_le r) hr.symm
-  rw [← @mul_le_mul_left _ _ a _ r this, ← mul_assocₓ, mul_inv_cancel hr, one_mulₓ]
+  rw [← @mul_le_mul_left _ _ a _ r this, ← mul_assoc, mul_inv_cancel hr, one_mulₓ]
 
 theorem le_div_iff_mul_le {a b r : ℝ≥0 } (hr : r ≠ 0) : a ≤ b / r ↔ a * r ≤ b := by
-  rw [div_eq_inv_mul, ← mul_le_iff_le_inv hr, mul_commₓ]
+  rw [div_eq_inv_mul, ← mul_le_iff_le_inv hr, mul_comm]
 
 theorem div_le_iff {a b r : ℝ≥0 } (hr : r ≠ 0) : a / r ≤ b ↔ a ≤ b * r :=
   @div_le_iff ℝ _ a r b $ pos_iff_ne_zero.2 hr
@@ -697,7 +697,7 @@ theorem div_le_of_le_mul {a b c : ℝ≥0 } (h : a ≤ b * c) : a / c ≤ b :=
   else (div_le_iff h0).2 h
 
 theorem div_le_of_le_mul' {a b c : ℝ≥0 } (h : a ≤ b * c) : a / b ≤ c :=
-  div_le_of_le_mul $ mul_commₓ b c ▸ h
+  div_le_of_le_mul $ mul_comm b c ▸ h
 
 theorem le_div_iff {a b r : ℝ≥0 } (hr : r ≠ 0) : a ≤ b / r ↔ a * r ≤ b :=
   @le_div_iff ℝ _ a b r $ pos_iff_ne_zero.2 hr
@@ -742,7 +742,7 @@ theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0 } (h : ∀, ∀ a < 1, ∀, a 
     have : a * x⁻¹ < 1 := by
       rwa [← lt_inv_iff_mul_lt hx', inv_inv₀]
     have : a * x⁻¹ * x ≤ y := h _ this
-    rwa [mul_assocₓ, inv_mul_cancel hx, mul_oneₓ] at this
+    rwa [mul_assoc, inv_mul_cancel hx, mul_oneₓ] at this
 
 theorem div_add_div_same (a b c : ℝ≥0 ) : a / c + b / c = (a + b) / c :=
   Eq.symm $ right_distrib a b (c⁻¹)
@@ -807,6 +807,12 @@ theorem zpow_pos {x : ℝ≥0 } (hx : x ≠ 0) (n : ℤ) : 0 < x ^ n := by
     
   · simp [pow_pos hx.bot_lt _]
     
+
+theorem inv_lt_inv_iff {x y : ℝ≥0 } (hx : x ≠ 0) (hy : y ≠ 0) : y⁻¹ < x⁻¹ ↔ x < y := by
+  rw [← one_div, div_lt_iff hy, ← div_eq_inv_mul, lt_div_iff hx, one_mulₓ]
+
+theorem inv_lt_inv {x y : ℝ≥0 } (hx : x ≠ 0) (h : x < y) : y⁻¹ < x⁻¹ :=
+  (inv_lt_inv_iff hx (bot_le.trans_lt h).ne').2 h
 
 end Inv
 

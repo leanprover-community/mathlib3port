@@ -85,9 +85,9 @@ private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) m' (hm
     Nat.mul_ne_zero b0 b0
   have lb : n - r * r < 2 * r * 2 ^ m + 2 ^ m * 2 ^ m ↔ n < (r + 2 ^ m) * (r + 2 ^ m) := by
     rw [tsub_lt_iff_right h₁]
-    simp [left_distrib, right_distrib, two_mul, mul_commₓ, mul_assocₓ, add_commₓ, add_assocₓ, add_left_commₓ]
+    simp [left_distrib, right_distrib, two_mul, mul_comm, mul_assoc, add_commₓ, add_assocₓ, add_left_commₓ]
   have re : div2 (2 * r * 2 ^ m) = r * 2 ^ m := by
-    rw [div2_val, mul_assocₓ,
+    rw [div2_val, mul_assoc,
       Nat.mul_div_cancel_leftₓ _
         (by
           decide : 2 > 0)]
@@ -104,7 +104,7 @@ private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) m' (hm
     apply tsub_eq_of_eq_add_rev
     rw [← add_assocₓ, (_ : r * r + _ = _)]
     exact (add_tsub_cancel_of_le hl).symm
-    simp [left_distrib, right_distrib, two_mul, mul_commₓ, mul_assocₓ, add_assocₓ]
+    simp [left_distrib, right_distrib, two_mul, mul_comm, mul_assoc, add_assocₓ]
     
 
 private theorem sqrt_aux_is_sqrt n :
@@ -117,7 +117,7 @@ private theorem sqrt_aux_is_sqrt n :
     apply
         sqrt_aux_is_sqrt_lemma (m + 1) r n h₁ (2 ^ m * 2 ^ m)
           (by
-            simp [shiftr, pow_succₓ, div2_val, mul_commₓ, mul_left_commₓ] <;>
+            simp [shiftr, pow_succₓ, div2_val, mul_comm, mul_left_commₓ] <;>
               repeat'
                 rw
                   [@Nat.mul_div_cancel_leftₓ _ 2
@@ -125,13 +125,13 @@ private theorem sqrt_aux_is_sqrt n :
                       decide)]) <;>
       intro h
     · have := sqrt_aux_is_sqrt m r h₁ h
-      simpa [pow_succₓ, mul_commₓ, mul_assocₓ]
+      simpa [pow_succₓ, mul_comm, mul_assoc]
       
     · rw [pow_succ'ₓ, mul_two, ← add_assocₓ] at h₂
       have := sqrt_aux_is_sqrt m (r + 2 ^ (m + 1)) h h₂
       rwa
         [show (r + 2 ^ (m + 1)) * 2 ^ (m + 1) = 2 * (r + 2 ^ (m + 1)) * 2 ^ m by
-          simp [pow_succₓ, mul_commₓ, mul_left_commₓ]]
+          simp [pow_succₓ, mul_comm, mul_left_commₓ]]
       
 
 private theorem sqrt_is_sqrt (n : ℕ) : is_sqrt n (sqrt n) := by

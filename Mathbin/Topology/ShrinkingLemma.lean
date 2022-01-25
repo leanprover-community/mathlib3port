@@ -235,8 +235,7 @@ theorem exists_subset_Union_closed_subset (hs : IsClosed s) (uo : ∀ i, IsOpen 
     (uf : ∀, ∀ x ∈ s, ∀, finite { i | x ∈ u i }) (us : s ⊆ ⋃ i, u i) :
     ∃ v : ι → Set X, s ⊆ Union v ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
   let ⟨v, hsv, hvo, hv⟩ := exists_subset_Union_closure_subset hs uo uf us
-  ⟨fun i => Closure (v i), subset.trans hsv (Union_subset_Union $ fun i => subset_closure), fun i => is_closed_closure,
-    hv⟩
+  ⟨fun i => Closure (v i), subset.trans hsv (Union_mono $ fun i => subset_closure), fun i => is_closed_closure, hv⟩
 
 /-- Shrinking lemma. A point-finite open cover of a closed subset of a normal space can be "shrunk"
 to a new open cover so that the closure of each new open set is contained in the corresponding

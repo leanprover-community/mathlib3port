@@ -60,12 +60,12 @@ noncomputable def isometry_sign_weighted_sum_squares [DecidableEq ι] (w : ι �
   suffices
     (u j : ℝ).sign * v j * v j = (sign (u j) * u j) ^ -(1 / 2 : ℝ) * (sign (u j) * u j) ^ -(1 / 2 : ℝ) * u j * v j * v j
     by
-    erw [← mul_assocₓ, this]
+    erw [← mul_assoc, this]
     ring
   rw [← Real.rpow_add (sign_mul_pos_of_ne_zero _ $ Units.ne_zero _),
     show -(1 / 2 : ℝ) + -(1 / 2) = -1 by
       ring,
-    Real.rpow_neg_one, mul_inv₀, inv_sign, mul_assocₓ (sign (u j)) (u j⁻¹), inv_mul_cancel (Units.ne_zero _), mul_oneₓ]
+    Real.rpow_neg_one, mul_inv₀, inv_sign, mul_assoc (sign (u j)) (u j⁻¹), inv_mul_cancel (Units.ne_zero _), mul_oneₓ]
   infer_instance
 
 /-- **Sylvester's law of inertia**: A nondegenerate real quadratic form is equivalent to a weighted
@@ -75,8 +75,8 @@ theorem equivalent_one_neg_one_weighted_sum_squared {M : Type _} [AddCommGroup�
     ∃ w : Finₓ (FiniteDimensional.finrank ℝ M) → ℝ,
       (∀ i, w i = -1 ∨ w i = 1) ∧ equivalent Q (weighted_sum_squares ℝ w) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weighted_sum_squares_units_of_nondegenerate' hQ
-  ⟨sign ∘ coeₓ ∘ w, fun i => sign_apply_eq_of_ne_zero (w i) (w i).ne_zero,
-    ⟨hw₁.trans (isometry_sign_weighted_sum_squares (coeₓ ∘ w))⟩⟩
+  ⟨sign ∘ coe ∘ w, fun i => sign_apply_eq_of_ne_zero (w i) (w i).ne_zero,
+    ⟨hw₁.trans (isometry_sign_weighted_sum_squares (coe ∘ w))⟩⟩
 
 /-- **Sylvester's law of inertia**: A real quadratic form is equivalent to a weighted
 sum of squares with the weights being ±1 or 0. -/
@@ -85,7 +85,7 @@ theorem equivalent_one_zero_neg_one_weighted_sum_squared {M : Type _} [AddCommGr
     ∃ w : Finₓ (FiniteDimensional.finrank ℝ M) → ℝ,
       (∀ i, w i = -1 ∨ w i = 0 ∨ w i = 1) ∧ equivalent Q (weighted_sum_squares ℝ w) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weighted_sum_squares
-  ⟨sign ∘ coeₓ ∘ w, fun i => sign_apply_eq (w i), ⟨hw₁.trans (isometry_sign_weighted_sum_squares w)⟩⟩
+  ⟨sign ∘ coe ∘ w, fun i => sign_apply_eq (w i), ⟨hw₁.trans (isometry_sign_weighted_sum_squares w)⟩⟩
 
 end QuadraticForm
 

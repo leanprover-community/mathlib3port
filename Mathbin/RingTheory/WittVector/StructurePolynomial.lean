@@ -263,7 +263,7 @@ theorem map_witt_structure_int (Φ : MvPolynomial idx ℤ) (n : ℕ) :
   intro n IH
   rw [wittStructureInt, map_map_range_eq_iff, Int.coe_cast_ring_hom]
   intro c
-  rw [witt_structure_rat_rec, coeff_C_mul, mul_commₓ, mul_div_assoc', mul_oneₓ]
+  rw [witt_structure_rat_rec, coeff_C_mul, mul_comm, mul_div_assoc', mul_oneₓ]
   have sum_induction_steps :
     map (Int.castRingHom ℚ) (∑ i in range n, C (p ^ i : ℤ) * wittStructureInt p Φ i ^ p ^ (n - i)) =
       ∑ i in range n, C (p ^ i : ℚ) * wittStructureRat p (map (Int.castRingHom ℚ) Φ) i ^ p ^ (n - i) :=

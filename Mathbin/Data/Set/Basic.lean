@@ -144,7 +144,7 @@ instance pi_set_coe.can_lift' (ι : Type u) (α : Type v) [ne : Nonempty α] (s 
   pi_set_coe.can_lift ι (fun _ => α) s
 
 instance set_coe.can_lift (s : Set α) : CanLift α s where
-  coe := coeₓ
+  coe := coe
   cond := fun a => a ∈ s
   prf := fun a ha => ⟨⟨a, ha⟩, rfl⟩
 
@@ -154,7 +154,7 @@ section SetCoe
 
 variable {α : Type u}
 
-theorem Set.set_coe_eq_subtype (s : Set α) : coeSortₓ.{u + 1, u + 2} s = { x // x ∈ s } :=
+theorem Set.set_coe_eq_subtype (s : Set α) : coeSort.{u + 1, u + 2} s = { x // x ∈ s } :=
   rfl
 
 @[simp]
@@ -1892,6 +1892,9 @@ theorem subsingleton_empty : (∅ : Set α).Subsingleton := fun x => False.elim
 theorem subsingleton_singleton {a} : ({a} : Set α).Subsingleton := fun x hx y hy =>
   (eq_of_mem_singleton hx).symm ▸ (eq_of_mem_singleton hy).symm ▸ rfl
 
+theorem subsingleton_of_forall_eq (a : α) (h : ∀, ∀ b ∈ s, ∀, b = a) : s.subsingleton := fun b hb c hc =>
+  (h _ hb).trans (h _ hc).symm
+
 theorem subsingleton_iff_singleton {x} (hx : x ∈ s) : s.subsingleton ↔ s = {x} :=
   ⟨fun h => h.eq_singleton_of_mem hx, fun h => h.symm ▸ subsingleton_singleton⟩
 
@@ -2209,7 +2212,7 @@ theorem range_factorization_coe (f : ι → β) (a : ι) : (range_factorization 
   rfl
 
 @[simp]
-theorem coe_comp_range_factorization (f : ι → β) : coeₓ ∘ range_factorization f = f :=
+theorem coe_comp_range_factorization (f : ι → β) : coe ∘ range_factorization f = f :=
   rfl
 
 theorem surjective_onto_range : surjective (range_factorization f) := fun ⟨_, ⟨i, rfl⟩⟩ => ⟨i, rfl⟩
@@ -2274,7 +2277,7 @@ theorem apply_range_splitting (f : α → β) (x : range f) : f (range_splitting
   x.2.some_spec
 
 @[simp]
-theorem comp_range_splitting (f : α → β) : f ∘ range_splitting f = coeₓ := by
+theorem comp_range_splitting (f : α → β) : f ∘ range_splitting f = coe := by
   ext
   simp only [Function.comp_app]
   apply apply_range_splitting
@@ -2402,16 +2405,16 @@ namespace Subtype
 
 variable {α : Type _}
 
-theorem coe_image {p : α → Prop} {s : Set (Subtype p)} : coeₓ '' s = { x | ∃ h : p x, (⟨x, h⟩ : Subtype p) ∈ s } :=
+theorem coe_image {p : α → Prop} {s : Set (Subtype p)} : coe '' s = { x | ∃ h : p x, (⟨x, h⟩ : Subtype p) ∈ s } :=
   Set.ext $ fun a => ⟨fun ⟨⟨a', ha'⟩, in_s, h_eq⟩ => h_eq ▸ ⟨ha', in_s⟩, fun ⟨ha, in_s⟩ => ⟨⟨a, ha⟩, in_s, rfl⟩⟩
 
 @[simp]
-theorem coe_image_of_subset {s t : Set α} (h : t ⊆ s) : coeₓ '' { x : ↥s | ↑x ∈ t } = t := by
+theorem coe_image_of_subset {s t : Set α} (h : t ⊆ s) : coe '' { x : ↥s | ↑x ∈ t } = t := by
   ext x
   rw [Set.mem_image]
   exact ⟨fun ⟨x', hx', hx⟩ => hx ▸ hx', fun hx => ⟨⟨x, h hx⟩, hx, rfl⟩⟩
 
-theorem range_coe {s : Set α} : range (coeₓ : s → α) = s := by
+theorem range_coe {s : Set α} : range (coe : s → α) = s := by
   rw [← Set.image_univ]
   simp [-Set.image_univ, coe_image]
 
@@ -2425,30 +2428,30 @@ theorem range_val {s : Set α} : range (Subtype.val : s → α) = s :=
   for `s : set α` the function `coe : s → α`, then the inferred implicit arguments of `coe` are
   `coe α (λ x, x ∈ s)`. -/
 @[simp]
-theorem range_coe_subtype {p : α → Prop} : range (coeₓ : Subtype p → α) = { x | p x } :=
+theorem range_coe_subtype {p : α → Prop} : range (coe : Subtype p → α) = { x | p x } :=
   range_coe
 
 @[simp]
-theorem coe_preimage_self (s : Set α) : (coeₓ : s → α) ⁻¹' s = univ := by
-  rw [← preimage_range (coeₓ : s → α), range_coe]
+theorem coe_preimage_self (s : Set α) : (coe : s → α) ⁻¹' s = univ := by
+  rw [← preimage_range (coe : s → α), range_coe]
 
 theorem range_val_subtype {p : α → Prop} : range (Subtype.val : Subtype p → α) = { x | p x } :=
   range_coe
 
-theorem coe_image_subset (s : Set α) (t : Set s) : coeₓ '' t ⊆ s := fun x ⟨y, yt, yvaleq⟩ => by
+theorem coe_image_subset (s : Set α) (t : Set s) : coe '' t ⊆ s := fun x ⟨y, yt, yvaleq⟩ => by
   rw [← yvaleq] <;> exact y.property
 
-theorem coe_image_univ (s : Set α) : (coeₓ : s → α) '' Set.Univ = s :=
+theorem coe_image_univ (s : Set α) : (coe : s → α) '' Set.Univ = s :=
   image_univ.trans range_coe
 
 @[simp]
-theorem image_preimage_coe (s t : Set α) : (coeₓ : s → α) '' (coeₓ ⁻¹' t) = t ∩ s :=
+theorem image_preimage_coe (s t : Set α) : (coe : s → α) '' (coe ⁻¹' t) = t ∩ s :=
   image_preimage_eq_inter_range.trans $ congr_argₓ _ range_coe
 
 theorem image_preimage_val (s t : Set α) : (Subtype.val : s → α) '' (Subtype.val ⁻¹' t) = t ∩ s :=
   image_preimage_coe s t
 
-theorem preimage_coe_eq_preimage_coe_iff {s t u : Set α} : (coeₓ : s → α) ⁻¹' t = coeₓ ⁻¹' u ↔ t ∩ s = u ∩ s := by
+theorem preimage_coe_eq_preimage_coe_iff {s t u : Set α} : (coe : s → α) ⁻¹' t = coe ⁻¹' u ↔ t ∩ s = u ∩ s := by
   rw [← image_preimage_coe, ← image_preimage_coe]
   constructor
   · intro h
@@ -2461,33 +2464,32 @@ theorem preimage_val_eq_preimage_val_iff (s t u : Set α) :
     (Subtype.val : s → α) ⁻¹' t = Subtype.val ⁻¹' u ↔ t ∩ s = u ∩ s :=
   preimage_coe_eq_preimage_coe_iff
 
-theorem exists_set_subtype {t : Set α} (p : Set α → Prop) : (∃ s : Set t, p (coeₓ '' s)) ↔ ∃ s : Set α, s ⊆ t ∧ p s :=
-  by
+theorem exists_set_subtype {t : Set α} (p : Set α → Prop) : (∃ s : Set t, p (coe '' s)) ↔ ∃ s : Set α, s ⊆ t ∧ p s := by
   constructor
   · rintro ⟨s, hs⟩
-    refine' ⟨coeₓ '' s, _, hs⟩
+    refine' ⟨coe '' s, _, hs⟩
     convert image_subset_range _ _
     rw [range_coe]
     
   rintro ⟨s, hs₁, hs₂⟩
-  refine' ⟨coeₓ ⁻¹' s, _⟩
+  refine' ⟨coe ⁻¹' s, _⟩
   rw [image_preimage_eq_of_subset]
   exact hs₂
   rw [range_coe]
   exact hs₁
 
-theorem preimage_coe_nonempty {s t : Set α} : ((coeₓ : s → α) ⁻¹' t).Nonempty ↔ (s ∩ t).Nonempty := by
+theorem preimage_coe_nonempty {s t : Set α} : ((coe : s → α) ⁻¹' t).Nonempty ↔ (s ∩ t).Nonempty := by
   rw [inter_comm, ← image_preimage_coe, nonempty_image_iff]
 
-theorem preimage_coe_eq_empty {s t : Set α} : (coeₓ : s → α) ⁻¹' t = ∅ ↔ s ∩ t = ∅ := by
+theorem preimage_coe_eq_empty {s t : Set α} : (coe : s → α) ⁻¹' t = ∅ ↔ s ∩ t = ∅ := by
   simp only [← not_nonempty_iff_eq_empty, preimage_coe_nonempty]
 
 @[simp]
-theorem preimage_coe_compl (s : Set α) : (coeₓ : s → α) ⁻¹' sᶜ = ∅ :=
+theorem preimage_coe_compl (s : Set α) : (coe : s → α) ⁻¹' sᶜ = ∅ :=
   preimage_coe_eq_empty.2 (inter_compl_self s)
 
 @[simp]
-theorem preimage_coe_compl' (s : Set α) : (coeₓ : sᶜ → α) ⁻¹' s = ∅ :=
+theorem preimage_coe_compl' (s : Set α) : (coe : sᶜ → α) ⁻¹' s = ∅ :=
   preimage_coe_eq_empty.2 (compl_inter_self s)
 
 end Subtype

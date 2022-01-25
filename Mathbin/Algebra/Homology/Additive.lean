@@ -30,7 +30,7 @@ variable (f g : C ⟶ D) (h k : D ⟶ E) (i : ι)
 
 namespace HomologicalComplex
 
-instance : HasZero (C ⟶ D) :=
+instance : Zero (C ⟶ D) :=
   ⟨{ f := fun i => 0 }⟩
 
 instance : Add (C ⟶ D) :=

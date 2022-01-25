@@ -22,7 +22,7 @@ universe u v w
 variable {α : Type u} {β : Type v} {γ : Type w}
 
 instance : MetricSpace ℚ :=
-  MetricSpace.induced coeₓ Rat.cast_injective Real.metricSpace
+  MetricSpace.induced coe Rat.cast_injective Real.metricSpace
 
 namespace Rat
 
@@ -33,23 +33,23 @@ theorem dist_eq (x y : ℚ) : dist x y = |x - y| :=
 theorem dist_cast (x y : ℚ) : dist (x : ℝ) y = dist x y :=
   rfl
 
-theorem uniform_continuous_coe_real : UniformContinuous (coeₓ : ℚ → ℝ) :=
+theorem uniform_continuous_coe_real : UniformContinuous (coe : ℚ → ℝ) :=
   uniform_continuous_comap
 
-theorem uniform_embedding_coe_real : UniformEmbedding (coeₓ : ℚ → ℝ) :=
+theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℚ → ℝ) :=
   uniform_embedding_comap Rat.cast_injective
 
-theorem dense_embedding_coe_real : DenseEmbedding (coeₓ : ℚ → ℝ) :=
+theorem dense_embedding_coe_real : DenseEmbedding (coe : ℚ → ℝ) :=
   uniform_embedding_coe_real.DenseEmbedding $ fun x =>
     mem_closure_iff_nhds.2 $ fun t ht =>
       let ⟨ε, ε0, hε⟩ := Metric.mem_nhds_iff.1 ht
       let ⟨q, h⟩ := exists_rat_near x ε0
       ⟨_, hε (mem_ball'.2 h), q, rfl⟩
 
-theorem embedding_coe_real : Embedding (coeₓ : ℚ → ℝ) :=
+theorem embedding_coe_real : Embedding (coe : ℚ → ℝ) :=
   dense_embedding_coe_real.toEmbedding
 
-theorem continuous_coe_real : Continuous (coeₓ : ℚ → ℝ) :=
+theorem continuous_coe_real : Continuous (coe : ℚ → ℝ) :=
   uniform_continuous_coe_real.Continuous
 
 end Rat
@@ -76,27 +76,27 @@ theorem pairwise_one_le_dist : Pairwise fun m n : ℤ => 1 ≤ dist m n := by
   norm_cast
   rwa [← zero_addₓ (1 : ℤ), Int.add_one_le_iff, abs_pos, sub_ne_zero]
 
-theorem uniform_embedding_coe_rat : UniformEmbedding (coeₓ : ℤ → ℚ) :=
+theorem uniform_embedding_coe_rat : UniformEmbedding (coe : ℤ → ℚ) :=
   uniform_embedding_bot_of_pairwise_le_dist zero_lt_one $ by
     simpa using pairwise_one_le_dist
 
-theorem closed_embedding_coe_rat : ClosedEmbedding (coeₓ : ℤ → ℚ) :=
+theorem closed_embedding_coe_rat : ClosedEmbedding (coe : ℤ → ℚ) :=
   closed_embedding_of_pairwise_le_dist zero_lt_one $ by
     simpa using pairwise_one_le_dist
 
-theorem uniform_embedding_coe_real : UniformEmbedding (coeₓ : ℤ → ℝ) :=
+theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℤ → ℝ) :=
   uniform_embedding_bot_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
 
-theorem closed_embedding_coe_real : ClosedEmbedding (coeₓ : ℤ → ℝ) :=
+theorem closed_embedding_coe_real : ClosedEmbedding (coe : ℤ → ℝ) :=
   closed_embedding_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
 
 instance : MetricSpace ℤ :=
   Int.uniform_embedding_coe_real.comapMetricSpace _
 
-theorem preimage_ball (x : ℤ) (r : ℝ) : coeₓ ⁻¹' ball (x : ℝ) r = ball x r :=
+theorem preimage_ball (x : ℤ) (r : ℝ) : coe ⁻¹' ball (x : ℝ) r = ball x r :=
   rfl
 
-theorem preimage_closed_ball (x : ℤ) (r : ℝ) : coeₓ ⁻¹' closed_ball (x : ℝ) r = closed_ball x r :=
+theorem preimage_closed_ball (x : ℤ) (r : ℝ) : coe ⁻¹' closed_ball (x : ℝ) r = closed_ball x r :=
   rfl
 
 theorem ball_eq_Ioo (x : ℤ) (r : ℝ) : ball x r = Ioo ⌊↑x - r⌋ ⌈↑x + r⌉ := by
@@ -281,7 +281,7 @@ theorem Rat.totally_bounded_Icc (a b : ℚ) : TotallyBounded (Icc a b) := by
 
 section
 
-theorem closure_of_rat_image_lt {q : ℚ} : Closure ((coeₓ : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
+theorem closure_of_rat_image_lt {q : ℚ} : Closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
   subset.antisymm
       ((is_closed_ge' _).closure_subset_iff.2
         (image_subset_iff.2 $ fun p h => le_of_ltₓ $ (@Rat.cast_lt ℝ _ _ _).2 h)) $

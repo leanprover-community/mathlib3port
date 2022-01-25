@@ -170,10 +170,10 @@ theorem order_of_eq_of_pow_and_pow_div_prime (hn : 0 < n) (hx : x ^ n = 1)
   by_contra
   have a_min_fac_dvd_p_sub_one : a.min_fac ∣ n := by
     obtain ⟨b, hb⟩ : ∃ b : ℕ, a = b * a.min_fac := exists_eq_mul_left_of_dvd a.min_fac_dvd
-    rw [hb, ← mul_assocₓ] at ha
+    rw [hb, ← mul_assoc] at ha
     exact Dvd.intro_left (orderOf x * b) ha.symm
   refine' hd a.min_fac (Nat.min_fac_prime h) a_min_fac_dvd_p_sub_one _
-  rw [← order_of_dvd_iff_pow_eq_one, Nat.dvd_div_iff a_min_fac_dvd_p_sub_one, ha, mul_commₓ,
+  rw [← order_of_dvd_iff_pow_eq_one, Nat.dvd_div_iff a_min_fac_dvd_p_sub_one, ha, mul_comm,
     Nat.mul_dvd_mul_iff_left (order_of_pos' _)]
   · exact Nat.min_fac_dvd a
     
@@ -560,7 +560,7 @@ theorem order_of_dvd_card_univ : orderOf x ∣ Fintype.card G := by
   exact
     Dvd.intro (@Fintype.card (G ⧸ Subgroup.zpowers x) ft_cosets)
       (by
-        rw [eq₁, eq₂, mul_commₓ])
+        rw [eq₁, eq₂, mul_comm])
 
 @[simp, to_additive card_nsmul_eq_zero]
 theorem pow_card_eq_one : x ^ Fintype.card G = 1 := by
@@ -655,7 +655,7 @@ def subgroupOfIdempotent {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS1 
 
 /-- If `S` is a nonempty subset of a finite group `G`, then `S ^ |G|` is a subgroup -/
 @[to_additive smulCardAddSubgroup
-      "If `S` is a nonempty subset of a finite add group `G`,\n  then `|G| • S` is a subgroup -/",
+      "If `S` is a nonempty subset of a finite add group `G`,\n  then `|G| • S` is a subgroup",
   simps]
 def powCardSubgroup {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS : S.nonempty) : Subgroup G :=
   have one_mem : (1 : G) ∈ S ^ Fintype.card G := by

@@ -221,7 +221,7 @@ theorem cramer_eq_adjugate_mul_vec (A : Matrix n n α) (b : n → α) : cramer A
     congr
   nth_rw 0[this]
   ext k
-  simp [mul_vec, dot_product, mul_commₓ]
+  simp [mul_vec, dot_product, mul_comm]
 
 theorem mul_adjugate_apply (A : Matrix n n α) i j k : A i k * adjugate A k j = cramer (A)ᵀ (Pi.single k (A i k)) j := by
   erw [← smul_eq_mul, ← Pi.smul_apply, ← LinearMap.map_smul, ← Pi.single_smul', smul_eq_mul, mul_oneₓ]
@@ -358,7 +358,7 @@ theorem adjugate_mul_distrib_aux (A B : Matrix n n α) (hA : IsLeftRegular A.det
     exact hA.mul hB
   refine' (is_regular_of_is_left_regular_det hAB).left _
   rw [mul_eq_mul, mul_adjugate, mul_eq_mul, Matrix.mul_assoc, ← Matrix.mul_assoc B, mul_adjugate, smul_mul,
-    Matrix.one_mul, mul_smul, mul_adjugate, smul_smul, mul_commₓ, ← det_mul]
+    Matrix.one_mul, mul_smul, mul_adjugate, smul_smul, mul_comm, ← det_mul]
 
 /-- Proof follows from "The trace Cayley-Hamilton theorem" by Darij Grinberg, Section 5.3
 -/

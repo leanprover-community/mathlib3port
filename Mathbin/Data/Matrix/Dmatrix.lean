@@ -74,7 +74,7 @@ instance [∀ i j, AddSemigroupₓ (α i j)] : AddSemigroupₓ (Dmatrix m n α) 
 instance [∀ i j, AddCommSemigroupₓ (α i j)] : AddCommSemigroupₓ (Dmatrix m n α) :=
   Pi.addCommSemigroup
 
-instance [∀ i j, HasZero (α i j)] : HasZero (Dmatrix m n α) :=
+instance [∀ i j, Zero (α i j)] : Zero (Dmatrix m n α) :=
   Pi.hasZero
 
 instance [∀ i j, AddMonoidₓ (α i j)] : AddMonoidₓ (Dmatrix m n α) :=
@@ -102,7 +102,7 @@ instance [∀ i j, Subsingleton (α i j)] : Subsingleton (Dmatrix m n α) :=
   Pi.subsingleton
 
 @[simp]
-theorem zero_apply [∀ i j, HasZero (α i j)] i j : (0 : Dmatrix m n α) i j = 0 :=
+theorem zero_apply [∀ i j, Zero (α i j)] i j : (0 : Dmatrix m n α) i j = 0 :=
   rfl
 
 @[simp]
@@ -118,7 +118,7 @@ theorem sub_apply [∀ i j, Sub (α i j)] (M N : Dmatrix m n α) i j : (M - N) i
   rfl
 
 @[simp]
-theorem map_zero [∀ i j, HasZero (α i j)] {β : m → n → Type w} [∀ i j, HasZero (β i j)] {f : ∀ ⦃i j⦄, α i j → β i j}
+theorem map_zero [∀ i j, Zero (α i j)] {β : m → n → Type w} [∀ i j, Zero (β i j)] {f : ∀ ⦃i j⦄, α i j → β i j}
     (h : ∀ i j, f (0 : α i j) = 0) : (0 : Dmatrix m n α).map f = 0 := by
   ext
   simp [h]

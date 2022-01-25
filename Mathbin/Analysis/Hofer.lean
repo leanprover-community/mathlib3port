@@ -26,7 +26,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   by_contra H
   have reformulation : ∀ x' k : ℕ, ε * ϕ x ≤ ε / 2 ^ k * ϕ x' ↔ 2 ^ k * ϕ x ≤ ϕ x' := by
     intro x' k
-    rw [div_mul_eq_mul_div, le_div_iff, mul_assocₓ, mul_le_mul_left ε_pos, mul_commₓ]
+    rw [div_mul_eq_mul_div, le_div_iff, mul_assoc, mul_le_mul_left ε_pos, mul_comm]
     exact
       pow_pos
         (by

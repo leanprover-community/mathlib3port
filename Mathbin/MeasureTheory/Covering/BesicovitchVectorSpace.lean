@@ -67,7 +67,7 @@ def center_and_rescale : satellite_config E N τ where
         convert H.1 using 2
         abel
         
-      · rw [← mul_assocₓ, mul_commₓ τ, mul_assocₓ]
+      · rw [← mul_assoc, mul_comm τ, mul_assoc]
         refine' mul_le_mul_of_nonneg_left _ (inv_nonneg.2 (a.rpos _).le)
         exact H.2
         
@@ -80,7 +80,7 @@ def center_and_rescale : satellite_config E N τ where
         convert H.1 using 2
         abel
         
-      · rw [← mul_assocₓ, mul_commₓ τ, mul_assocₓ]
+      · rw [← mul_assoc, mul_comm τ, mul_assoc]
         refine' mul_le_mul_of_nonneg_left _ (inv_nonneg.2 (a.rpos _).le)
         exact H.2
         
@@ -94,7 +94,7 @@ def center_and_rescale : satellite_config E N τ where
       convert H.1 using 2
       abel
       
-    · rw [← mul_assocₓ, mul_commₓ τ, mul_assocₓ]
+    · rw [← mul_assoc, mul_comm τ, mul_assoc]
       refine' mul_le_mul_of_nonneg_left _ (inv_nonneg.2 (a.rpos _).le)
       exact H.2
       
@@ -147,7 +147,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀, ∀ c ∈ s, ∀, ∥c∥
     convert h c hc d hd hcd
     norm_num
   have A_subset : A ⊆ ball (0 : E) ρ := by
-    refine' bUnion_subset fun x hx => _
+    refine' Union₂_subset fun x hx => _
     apply ball_subset_ball'
     calc δ + dist x 0 ≤ δ + 2 := by
         rw [dist_zero_right]
@@ -161,7 +161,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀, ∀ c ∈ s, ∀, ∥c∥
         rw [hA, measure_bUnion_finset D fun c hc => measurable_set_ball]
         have I : 0 < δ := by
           norm_num [δ]
-        simp only [μ.add_haar_ball_of_pos _ I, one_div, one_pow, Finset.sum_const, nsmul_eq_mul, div_pow, mul_assocₓ]
+        simp only [μ.add_haar_ball_of_pos _ I, one_div, one_pow, Finset.sum_const, nsmul_eq_mul, div_pow, mul_assoc]
       _ ≤ μ (ball (0 : E) ρ) := measure_mono A_subset
       _ = Ennreal.ofReal (ρ ^ finrank ℝ E) * μ (ball 0 1) := by
         simp only [μ.add_haar_ball_of_pos _ ρpos]
@@ -375,7 +375,7 @@ theorem exists_normalized_aux1 {N : ℕ} {τ : ℝ} (a : satellite_config E N τ
     
   have hτ' : ∀ k, τ⁻¹ ≤ a.r k := by
     intro k
-    rw [inv_eq_one_div, div_le_iff τpos, ← lastr, mul_commₓ]
+    rw [inv_eq_one_div, div_le_iff τpos, ← lastr, mul_comm]
     exact a.hlast' k hτ
   rcases ah i j inej with (H | H)
   · apply le_transₓ _ H.1
@@ -440,7 +440,7 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : satellite_config E N τ
         refine' mul_le_of_le_one_left δnonneg _
         linarith only [C]_ = (1 - δ / 4) * a.r j := by
         ring _ ≤ (1 - δ / 4) * (τ * a.r i) := mul_le_mul_of_nonneg_left H.2 D _ ≤ 1 * a.r i := by
-        rw [← mul_assocₓ]
+        rw [← mul_assoc]
         apply mul_le_mul_of_nonneg_right J (a.rpos _).le _ ≤ ∥a.c i - a.c j∥ := by
         rw [one_mulₓ]
         exact H.1

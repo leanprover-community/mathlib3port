@@ -38,9 +38,9 @@ theorem denoms_clearable_C_mul_X_pow {N : ℕ} (a : R) (bu : bi * i b = 1) {n : 
     DenomsClearable a b N (C r * X ^ n) i := by
   refine' ⟨r * a ^ n * b ^ (N - n), bi, bu, _⟩
   rw [C_mul_X_pow_eq_monomial, map_monomial, ← C_mul_X_pow_eq_monomial, eval_mul, eval_pow, eval_C]
-  rw [RingHom.map_mul, RingHom.map_mul, RingHom.map_pow, RingHom.map_pow, eval_X, mul_commₓ]
+  rw [RingHom.map_mul, RingHom.map_mul, RingHom.map_pow, RingHom.map_pow, eval_X, mul_comm]
   rw [← tsub_add_cancel_of_le nN]
-  rw [pow_addₓ, mul_assocₓ, mul_commₓ (i b ^ n), mul_powₓ, mul_assocₓ, mul_assocₓ (i a ^ n), ← mul_powₓ]
+  rw [pow_addₓ, mul_assoc, mul_comm (i b ^ n), mul_powₓ, mul_assoc, mul_assoc (i a ^ n), ← mul_powₓ]
   rw [bu, one_pow, mul_oneₓ]
 
 theorem DenomsClearable.add {N : ℕ} {f g : Polynomial R} :
@@ -49,7 +49,7 @@ theorem DenomsClearable.add {N : ℕ} {f g : Polynomial R} :
   ⟨Df + Dg, bf, bfu, by
     rw [RingHom.map_add, Polynomial.map_add, eval_add, mul_addₓ, Hf, Hg]
     congr
-    refine' @inv_unique K _ (i b) bg bf _ _ <;> rwa [mul_commₓ]⟩
+    refine' @inv_unique K _ (i b) bg bf _ _ <;> rwa [mul_comm]⟩
 
 theorem denoms_clearable_of_nat_degree_le (N : ℕ) (a : R) (bu : bi * i b = 1) :
     ∀ f : Polynomial R, f.nat_degree ≤ N → DenomsClearable a b N f i :=

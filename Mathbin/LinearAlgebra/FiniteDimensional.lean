@@ -302,7 +302,7 @@ theorem finrank_zero_iff [FiniteDimensional K V] : finrank K V = 0 ↔ Subsingle
 theorem finrank_zero_of_subsingleton [h : Subsingleton V] : finrank K V = 0 :=
   finrank_zero_iff.2 h
 
-theorem Basis.subset_extend {s : Set V} (hs : LinearIndependent K (coeₓ : s → V)) : s ⊆ hs.extend (Set.subset_univ _) :=
+theorem Basis.subset_extend {s : Set V} (hs : LinearIndependent K (coe : s → V)) : s ⊆ hs.extend (Set.subset_univ _) :=
   hs.subset_extend _
 
 /-- If a submodule has maximal dimension in a finite dimensional space, then it is equal to the
@@ -310,7 +310,7 @@ whole space. -/
 theorem eq_top_of_finrank_eq [FiniteDimensional K V] {S : Submodule K V} (h : finrank K S = finrank K V) : S = ⊤ := by
   have : IsNoetherian K V := iff_fg.2 inferInstance
   set bS := Basis.ofVectorSpace K S with bS_eq
-  have : LinearIndependent K (coeₓ : (coeₓ '' Basis.OfVectorSpaceIndex K S : Set V) → V) :=
+  have : LinearIndependent K (coe : (coe '' Basis.OfVectorSpaceIndex K S : Set V) → V) :=
     @LinearIndependent.image_subtype _ _ _ _ _ _ _ _ _ (Submodule.subtype S)
       (by
         simpa using bS.linear_independent)
@@ -321,12 +321,12 @@ theorem eq_top_of_finrank_eq [FiniteDimensional K V] {S : Submodule K V} (h : fi
     (finite_of_linear_independent
         (by
           simpa using b.linear_independent)).Fintype
-  let this' : Fintype (coeₓ '' Basis.OfVectorSpaceIndex K S) := (finite_of_linear_independent this).Fintype
+  let this' : Fintype (coe '' Basis.OfVectorSpaceIndex K S) := (finite_of_linear_independent this).Fintype
   let this' : Fintype (Basis.OfVectorSpaceIndex K S) :=
     (finite_of_linear_independent
         (by
           simpa using bS.linear_independent)).Fintype
-  have : coeₓ '' Basis.OfVectorSpaceIndex K S = this.extend (Set.subset_univ _) :=
+  have : coe '' Basis.OfVectorSpaceIndex K S = this.extend (Set.subset_univ _) :=
     Set.eq_of_subset_of_card_le (this.subset_extend _)
       (by
         rw [Set.card_image_of_injective _ Subtype.coe_injective, ← finrank_eq_card_basis bS, ← finrank_eq_card_basis b,
@@ -846,7 +846,7 @@ theorem mul_eq_one_of_mul_eq_one [FiniteDimensional K V] {f g : V →ₗ[K] V} (
           rw [hfg] <;> rfl⟩
   let ⟨i, hi⟩ := g.exists_right_inverse_of_surjective (range_eq_top.2 (injective_iff_surjective.1 ginj))
   have : f * (g * i) = f * 1 := congr_argₓ _ hi
-  rw [← mul_assocₓ, hfg, one_mulₓ, mul_oneₓ] at this <;> rwa [← this]
+  rw [← mul_assoc, hfg, one_mulₓ, mul_oneₓ] at this <;> rwa [← this]
 
 /-- In a finite-dimensional space, linear maps are inverse to each other on one side if and only if
 they are inverse to each other on the other side. -/
@@ -1101,14 +1101,14 @@ theorem finrank_span_eq_card {ι : Type _} [Fintype ι] {b : ι → V} (hb : Lin
   rwa [← finrank_eq_dim, ← lift_inj, mk_range_eq_of_injective hb.injective, Cardinal.mk_fintype, lift_nat_cast,
     lift_nat_cast, nat_cast_inj] at this
 
-theorem finrank_span_set_eq_card (s : Set V) [fin : Fintype s] (hs : LinearIndependent K (coeₓ : s → V)) :
+theorem finrank_span_set_eq_card (s : Set V) [fin : Fintype s] (hs : LinearIndependent K (coe : s → V)) :
     finrank K (span K s) = s.to_finset.card := by
   have := span_of_finite K ⟨Finₓ⟩
   have : Module.rank K (span K s) = # s := dim_span_set hs
   rw [← finrank_eq_dim, Cardinal.mk_fintype, ← Set.to_finset_card] at this
   exact_mod_cast this
 
-theorem finrank_span_finset_eq_card (s : Finset V) (hs : LinearIndependent K (coeₓ : s → V)) :
+theorem finrank_span_finset_eq_card (s : Finset V) (hs : LinearIndependent K (coe : s → V)) :
     finrank K (span K (s : Set V)) = s.card := by
   convert finrank_span_set_eq_card (↑s) hs
   ext
@@ -1212,14 +1212,14 @@ theorem coe_basis_of_span_eq_top_of_card_eq_finrank {ι : Type _} [Fintype ι] (
 @[simps]
 noncomputable def finsetBasisOfSpanEqTopOfCardEqFinrank {s : Finset V} (span_eq : span K (s : Set V) = ⊤)
     (card_eq : s.card = finrank K V) : Basis (s : Set V) K V :=
-  basisOfSpanEqTopOfCardEqFinrank (coeₓ : (s : Set V) → V)
-    ((@Subtype.range_coe_subtype _ fun x => x ∈ s).symm ▸ span_eq) (trans (Fintype.card_coe _) card_eq)
+  basisOfSpanEqTopOfCardEqFinrank (coe : (s : Set V) → V) ((@Subtype.range_coe_subtype _ fun x => x ∈ s).symm ▸ span_eq)
+    (trans (Fintype.card_coe _) card_eq)
 
 /-- A set of `finrank K V` vectors forms a basis if they span the whole space. -/
 @[simps]
 noncomputable def setBasisOfSpanEqTopOfCardEqFinrank {s : Set V} [Fintype s] (span_eq : span K s = ⊤)
     (card_eq : s.to_finset.card = finrank K V) : Basis s K V :=
-  basisOfSpanEqTopOfCardEqFinrank (coeₓ : s → V) ((@Subtype.range_coe_subtype _ s).symm ▸ span_eq)
+  basisOfSpanEqTopOfCardEqFinrank (coe : s → V) ((@Subtype.range_coe_subtype _ s).symm ▸ span_eq)
     (trans s.to_finset_card.symm card_eq)
 
 theorem span_eq_top_of_linear_independent_of_card_eq_finrank {ι : Type _} [hι : Nonempty ι] [Fintype ι] {b : ι → V}
@@ -1252,26 +1252,26 @@ theorem coe_basis_of_linear_independent_of_card_eq_finrank {ι : Type _} [Nonemp
 /-- A linear independent finset of `finrank K V` vectors forms a basis. -/
 @[simps]
 noncomputable def finsetBasisOfLinearIndependentOfCardEqFinrank {s : Finset V} (hs : s.nonempty)
-    (lin_ind : LinearIndependent K (coeₓ : s → V)) (card_eq : s.card = finrank K V) : Basis s K V :=
+    (lin_ind : LinearIndependent K (coe : s → V)) (card_eq : s.card = finrank K V) : Basis s K V :=
   @basisOfLinearIndependentOfCardEqFinrank _ _ _ _ _ _ ⟨(⟨hs.some, hs.some_spec⟩ : s)⟩ _ _ lin_ind
     (trans (Fintype.card_coe _) card_eq)
 
 @[simp]
 theorem coe_finset_basis_of_linear_independent_of_card_eq_finrank {s : Finset V} (hs : s.nonempty)
-    (lin_ind : LinearIndependent K (coeₓ : s → V)) (card_eq : s.card = finrank K V) :
-    ⇑finsetBasisOfLinearIndependentOfCardEqFinrank hs lin_ind card_eq = coeₓ :=
+    (lin_ind : LinearIndependent K (coe : s → V)) (card_eq : s.card = finrank K V) :
+    ⇑finsetBasisOfLinearIndependentOfCardEqFinrank hs lin_ind card_eq = coe :=
   Basis.coe_mk _ _
 
 /-- A linear independent set of `finrank K V` vectors forms a basis. -/
 @[simps]
 noncomputable def setBasisOfLinearIndependentOfCardEqFinrank {s : Set V} [Nonempty s] [Fintype s]
-    (lin_ind : LinearIndependent K (coeₓ : s → V)) (card_eq : s.to_finset.card = finrank K V) : Basis s K V :=
+    (lin_ind : LinearIndependent K (coe : s → V)) (card_eq : s.to_finset.card = finrank K V) : Basis s K V :=
   basisOfLinearIndependentOfCardEqFinrank lin_ind (trans s.to_finset_card.symm card_eq)
 
 @[simp]
 theorem coe_set_basis_of_linear_independent_of_card_eq_finrank {s : Set V} [Nonempty s] [Fintype s]
-    (lin_ind : LinearIndependent K (coeₓ : s → V)) (card_eq : s.to_finset.card = finrank K V) :
-    ⇑setBasisOfLinearIndependentOfCardEqFinrank lin_ind card_eq = coeₓ :=
+    (lin_ind : LinearIndependent K (coe : s → V)) (card_eq : s.to_finset.card = finrank K V) :
+    ⇑setBasisOfLinearIndependentOfCardEqFinrank lin_ind card_eq = coe :=
   Basis.coe_mk _ _
 
 end Basis
@@ -1417,7 +1417,7 @@ theorem Subalgebra.eq_bot_of_finrank_one {S : Subalgebra F E} (h : finrank F S =
   rw [eq_bot_iff]
   let b : Set S := {1}
   have : Fintype b := Unique.fintype
-  have b_lin_ind : LinearIndependent F (coeₓ : b → S) := linear_independent_singleton one_ne_zero
+  have b_lin_ind : LinearIndependent F (coe : b → S) := linear_independent_singleton one_ne_zero
   have b_card : Fintype.card b = 1 := Fintype.card_of_subsingleton _
   let hb :=
     setBasisOfLinearIndependentOfCardEqFinrank b_lin_ind

@@ -62,7 +62,7 @@ open Measureₓ VectorMeasure
 
 variable (j : jordan_decomposition α)
 
-instance : HasZero (jordan_decomposition α) where
+instance : Zero (jordan_decomposition α) where
   zero := ⟨0, 0, mutually_singular.zero_right⟩
 
 instance : Inhabited (jordan_decomposition α) where

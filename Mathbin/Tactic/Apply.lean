@@ -27,9 +27,9 @@ namespace Tactic
 or leave them in place. The `bool` values in `gs` indicates whether the goal is dependent or not. -/
 def reorder_goals {α} (gs : List (Bool × α)) : new_goals → List α
   | new_goals.non_dep_first =>
-    let ⟨dep, non_dep⟩ := gs.partition (coeₓ ∘ Prod.fst)
+    let ⟨dep, non_dep⟩ := gs.partition (coe ∘ Prod.fst)
     non_dep.map Prod.snd ++ dep.map Prod.snd
-  | new_goals.non_dep_only => (gs.filter (coeₓ ∘ bnot ∘ Prod.fst)).map Prod.snd
+  | new_goals.non_dep_only => (gs.filter (coe ∘ bnot ∘ Prod.fst)).map Prod.snd
   | new_goals.all => gs.map Prod.snd
 
 private unsafe def has_opt_auto_param_inst_for_apply (ms : List (Name × expr)) : tactic Bool :=

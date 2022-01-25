@@ -146,7 +146,7 @@ theorem digits_add (b : ℕ) (h : 2 ≤ b) (x y : ℕ) (w : x < b) (w' : 0 < x �
       · congr
         · simp [Nat.add_modₓ, Nat.mod_eq_of_ltₓ w]
           
-        · simp [mul_commₓ (b + 2), Nat.add_mul_div_rightₓ, Nat.div_eq_of_ltₓ w]
+        · simp [mul_comm (b + 2), Nat.add_mul_div_rightₓ, Nat.div_eq_of_ltₓ w]
           
         
       · apply Nat.succ_posₓ

@@ -46,7 +46,7 @@ private theorem card_embedding_aux {n : ℕ} {β} [Fintype β] [DecidableEq β] 
   rw [card_sigma]
   simp only [this, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, Nat.cast_id]
   replace h := (Nat.lt_of_succ_leₓ h).le
-  rw [Nat.desc_factorial_succ, hn h, mul_commₓ]
+  rw [Nat.desc_factorial_succ, hn h, mul_comm]
 
 @[simp]
 theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β] :

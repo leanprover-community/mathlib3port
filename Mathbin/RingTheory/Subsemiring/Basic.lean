@@ -218,27 +218,27 @@ theorem coe_pow {R} [Semiringₓ R] (s : Subsemiring R) (x : s) (n : ℕ) : ((x 
 
 /-- A subsemiring of a `comm_semiring` is a `comm_semiring`. -/
 instance to_comm_semiring {R} [CommSemiringₓ R] (s : Subsemiring R) : CommSemiringₓ s :=
-  { s.to_semiring with mul_comm := fun _ _ => Subtype.eq $ mul_commₓ _ _ }
+  { s.to_semiring with mul_comm := fun _ _ => Subtype.eq $ mul_comm _ _ }
 
 /-- The natural ring hom from a subsemiring of semiring `R` to `R`. -/
 def Subtype : s →+* R :=
-  { s.to_submonoid.subtype, s.to_add_submonoid.subtype with toFun := coeₓ }
+  { s.to_submonoid.subtype, s.to_add_submonoid.subtype with toFun := coe }
 
 @[simp]
-theorem coeSubtype : ⇑s.subtype = coeₓ :=
+theorem coeSubtype : ⇑s.subtype = coe :=
   rfl
 
 /-- A subsemiring of an `ordered_semiring` is an `ordered_semiring`. -/
 instance to_ordered_semiring {R} [OrderedSemiring R] (s : Subsemiring R) : OrderedSemiring s :=
-  Subtype.coe_injective.OrderedSemiring coeₓ rfl rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.OrderedSemiring coe rfl rfl (fun _ _ => rfl) fun _ _ => rfl
 
 /-- A subsemiring of an `ordered_comm_semiring` is an `ordered_comm_semiring`. -/
 instance to_ordered_comm_semiring {R} [OrderedCommSemiring R] (s : Subsemiring R) : OrderedCommSemiring s :=
-  Subtype.coe_injective.OrderedCommSemiring coeₓ rfl rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.OrderedCommSemiring coe rfl rfl (fun _ _ => rfl) fun _ _ => rfl
 
 /-- A subsemiring of a `linear_ordered_semiring` is a `linear_ordered_semiring`. -/
 instance to_linear_ordered_semiring {R} [LinearOrderedSemiring R] (s : Subsemiring R) : LinearOrderedSemiring s :=
-  Subtype.coe_injective.LinearOrderedSemiring coeₓ rfl rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedSemiring coe rfl rfl (fun _ _ => rfl) fun _ _ => rfl
 
 /-! Note: currently, there is no `linear_ordered_comm_semiring`. -/
 
@@ -364,7 +364,7 @@ instance : HasBot (Subsemiring R) :=
 instance : Inhabited (Subsemiring R) :=
   ⟨⊥⟩
 
-theorem coe_bot : ((⊥ : Subsemiring R) : Set R) = Set.Range (coeₓ : ℕ → R) :=
+theorem coe_bot : ((⊥ : Subsemiring R) : Set R) = Set.Range (coe : ℕ → R) :=
   (Nat.castRingHom R).coe_srange
 
 theorem mem_bot {x : R} : x ∈ (⊥ : Subsemiring R) ↔ ∃ n : ℕ, ↑n = x :=
@@ -573,7 +573,7 @@ theorem mem_closure_iff_exists_list {R} [Semiringₓ R] {s : Set R} {x} :
 variable (R)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
-protected def gi : GaloisInsertion (@closure R _) coeₓ where
+protected def gi : GaloisInsertion (@closure R _) coe where
   choice := fun s _ => closure s
   gc := fun s t => closure_le
   le_l_u := fun s => subset_closure

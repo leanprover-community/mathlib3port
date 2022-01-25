@@ -17,7 +17,7 @@ variable {ι : Type _} {α : ι → Type _}
 
 namespace Finset
 
-variable [DecidableEq ι] [∀ i, HasZero (α i)] {s : Finset ι} {f : Π₀ i, α i} {t : ∀ i, Finset (α i)}
+variable [DecidableEq ι] [∀ i, Zero (α i)] {s : Finset ι} {f : Π₀ i, α i} {t : ∀ i, Finset (α i)}
 
 /-- Finitely supported product of finsets. -/
 def Dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
@@ -76,7 +76,7 @@ variable [DecidableEq ι] [∀ i, DecidableEq (α i)]
 
 section BundledSingleton
 
-variable [∀ i, HasZero (α i)] {f : Π₀ i, α i} {i : ι} {a : α i}
+variable [∀ i, Zero (α i)] {f : Π₀ i, α i} {i : ι} {a : α i}
 
 /-- Pointwise `finset.singleton` bundled as a `dfinsupp`. -/
 def singleton (f : Π₀ i, α i) : Π₀ i, Finset (α i) :=
@@ -90,7 +90,7 @@ end BundledSingleton
 
 section BundledIcc
 
-variable [∀ i, HasZero (α i)] [∀ i, PartialOrderₓ (α i)] [∀ i, LocallyFiniteOrder (α i)] {f g : Π₀ i, α i} {i : ι}
+variable [∀ i, Zero (α i)] [∀ i, PartialOrderₓ (α i)] [∀ i, LocallyFiniteOrder (α i)] {f g : Π₀ i, α i} {i : ι}
   {a : α i}
 
 /-- Pointwise `finset.Icc` bundled as a `dfinsupp`. -/
@@ -121,7 +121,7 @@ end BundledIcc
 
 section Pi
 
-variable [∀ i, HasZero (α i)]
+variable [∀ i, Zero (α i)]
 
 /-- Given a finitely supported function `f : Π₀ i, finset (α i)`, one can define the finset
 `f.pi` of all finitely supported functions whose value at `i` is in `f i` for all `i`. -/
@@ -143,7 +143,7 @@ end Pi
 
 section LocallyFinite
 
-variable [∀ i, PartialOrderₓ (α i)] [∀ i, HasZero (α i)] [∀ i, LocallyFiniteOrder (α i)]
+variable [∀ i, PartialOrderₓ (α i)] [∀ i, Zero (α i)] [∀ i, LocallyFiniteOrder (α i)]
 
 instance : LocallyFiniteOrder (Π₀ i, α i) :=
   LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp $ f.range_Icc g) fun f g x => by

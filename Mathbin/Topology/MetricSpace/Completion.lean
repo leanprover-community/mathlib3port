@@ -84,7 +84,7 @@ protected theorem completion.mem_uniformity_dist (s : Set (completion α × comp
   constructor
   · intro hs
     rcases mem_uniformity_is_closed hs with ⟨t, ht, ⟨tclosed, ts⟩⟩
-    have A : { x : α × α | (coeₓ x.1, coeₓ x.2) ∈ t } ∈ uniformity α :=
+    have A : { x : α × α | (coe x.1, coe x.2) ∈ t } ∈ uniformity α :=
       uniform_continuous_def.1 (uniform_continuous_coe α) t ht
     rcases mem_uniformity_dist.1 A with ⟨ε, εpos, hε⟩
     refine' ⟨ε, εpos, fun x y hxy => _⟩
@@ -168,7 +168,7 @@ instance completion.metric_space : MetricSpace (completion α) where
   uniformity_dist := completion.uniformity_dist
 
 /-- The embedding of a metric space in its completion is an isometry. -/
-theorem completion.coe_isometry : Isometry (coeₓ : α → completion α) :=
+theorem completion.coe_isometry : Isometry (coe : α → completion α) :=
   isometry_emetric_iff_metric.2 completion.dist_eq
 
 end Metric

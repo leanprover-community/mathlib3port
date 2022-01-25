@@ -1449,8 +1449,8 @@ unsafe def make_eval_info (α : expr) : tactic eval_info := do
   let ha_instance ← mk_app `` Add [α] >>= mk_instance
   let hm_instance ← mk_app `` Mul [α] >>= mk_instance
   let hp_instance ← mk_mapp `` Monoidₓ.hasPow [some α, none]
-  let z ← mk_mapp `` HasZero.zero [α, none]
-  let o ← mk_mapp `` HasOne.one [α, none]
+  let z ← mk_mapp `` Zero.zero [α, none]
+  let o ← mk_mapp `` One.one [α, none]
   pure ⟨α, u, csr_instance, ha_instance, hm_instance, hp_instance, ring_instance, dr_instance, z, o⟩
 
 /-- Use `e` to build the context for running `mx`. -/

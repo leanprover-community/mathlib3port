@@ -87,7 +87,7 @@ theorem nat_degree_C_mul_eq_of_mul_eq_one {ai : R} (au : ai * a = 1) : (C a * p)
       p.nat_degree = (1 * p).natDegree := by
         nth_rw 0[← one_mulₓ p]
       _ = (C ai * (C a * p)).natDegree := by
-        rw [← C_1, ← au, RingHom.map_mul, ← mul_assocₓ]
+        rw [← C_1, ← au, RingHom.map_mul, ← mul_assoc]
       _ ≤ (C a * p).natDegree := nat_degree_C_mul_le ai (C a * p)
       )
 
@@ -97,7 +97,7 @@ theorem nat_degree_mul_C_eq_of_mul_eq_one {ai : R} (au : a * ai = 1) : (p * C a)
       p.nat_degree = (p * 1).natDegree := by
         nth_rw 0[← mul_oneₓ p]
       _ = (p * C a * C ai).natDegree := by
-        rw [← C_1, ← au, RingHom.map_mul, ← mul_assocₓ]
+        rw [← C_1, ← au, RingHom.map_mul, ← mul_assoc]
       _ ≤ (p * C a).natDegree := nat_degree_mul_C_le (p * C a) ai
       )
 

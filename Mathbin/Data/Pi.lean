@@ -30,27 +30,27 @@ namespace Pi
 
 
 @[to_additive]
-instance HasOne [∀ i, HasOne $ f i] : HasOne (∀ i : I, f i) :=
+instance One [∀ i, One $ f i] : One (∀ i : I, f i) :=
   ⟨fun _ => 1⟩
 
 @[simp, to_additive]
-theorem one_apply [∀ i, HasOne $ f i] : (1 : ∀ i, f i) i = 1 :=
+theorem one_apply [∀ i, One $ f i] : (1 : ∀ i, f i) i = 1 :=
   rfl
 
 @[to_additive]
-theorem one_def [∀ i, HasOne $ f i] : (1 : ∀ i, f i) = fun i => 1 :=
+theorem one_def [∀ i, One $ f i] : (1 : ∀ i, f i) = fun i => 1 :=
   rfl
 
 @[simp, to_additive]
-theorem const_one [HasOne β] : const α (1 : β) = 1 :=
+theorem const_one [One β] : const α (1 : β) = 1 :=
   rfl
 
 @[simp, to_additive]
-theorem one_comp [HasOne γ] (x : α → β) : (1 : β → γ) ∘ x = 1 :=
+theorem one_comp [One γ] (x : α → β) : (1 : β → γ) ∘ x = 1 :=
   rfl
 
 @[simp, to_additive]
-theorem comp_one [HasOne β] (x : β → γ) : x ∘ 1 = const α (x 1) :=
+theorem comp_one [One β] (x : β → γ) : x ∘ 1 = const α (x 1) :=
   rfl
 
 @[to_additive]
@@ -78,7 +78,7 @@ theorem bit0_apply [∀ i, Add $ f i] : (bit0 x) i = bit0 (x i) :=
   rfl
 
 @[simp]
-theorem bit1_apply [∀ i, Add $ f i] [∀ i, HasOne $ f i] : (bit1 x) i = bit1 (x i) :=
+theorem bit1_apply [∀ i, Add $ f i] [∀ i, One $ f i] : (bit1 x) i = bit1 (x i) :=
   rfl
 
 @[to_additive]
@@ -125,7 +125,7 @@ section
 
 variable [DecidableEq I]
 
-variable [∀ i, HasZero (f i)] [∀ i, HasZero (g i)] [∀ i, HasZero (h i)]
+variable [∀ i, Zero (f i)] [∀ i, Zero (g i)] [∀ i, Zero (h i)]
 
 /-- The function supported at `i`, with value `x` there. -/
 def single (i : I) (x : f i) : ∀ i, f i :=
@@ -149,11 +149,11 @@ theorem single_zero (i : I) : single i (0 : f i) = 0 :=
   Function.update_eq_self _ _
 
 /-- On non-dependent functions, `pi.single` can be expressed as an `ite` -/
-theorem single_apply {β : Sort _} [HasZero β] (i : I) (x : β) (i' : I) : single i x i' = if i' = i then x else 0 :=
+theorem single_apply {β : Sort _} [Zero β] (i : I) (x : β) (i' : I) : single i x i' = if i' = i then x else 0 :=
   Function.update_apply 0 i x i'
 
 /-- On non-dependent functions, `pi.single` is symmetric in the two indices. -/
-theorem single_comm {β : Sort _} [HasZero β] (i : I) (x : β) (i' : I) : single i x i' = single i' x i := by
+theorem single_comm {β : Sort _} [Zero β] (i : I) (x : β) (i' : I) : single i x i' = single i' x i := by
   simp [single_apply, eq_comm]
 
 theorem apply_single (f' : ∀ i, f i → g i) (hf' : ∀ i, f' i 0 = 0) (i : I) (x : f i) (j : I) :
@@ -169,11 +169,11 @@ theorem apply_single₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 0 0
   · simp only [single_eq_of_ne h, hf']
     
 
-theorem single_op {g : I → Type _} [∀ i, HasZero (g i)] (op : ∀ i, f i → g i) (h : ∀ i, op i 0 = 0) (i : I) (x : f i) :
+theorem single_op {g : I → Type _} [∀ i, Zero (g i)] (op : ∀ i, f i → g i) (h : ∀ i, op i 0 = 0) (i : I) (x : f i) :
     single i (op i x) = fun j => op j (single i x j) :=
   Eq.symm $ funext $ apply_single op h i x
 
-theorem single_op₂ {g₁ g₂ : I → Type _} [∀ i, HasZero (g₁ i)] [∀ i, HasZero (g₂ i)] (op : ∀ i, g₁ i → g₂ i → f i)
+theorem single_op₂ {g₁ g₂ : I → Type _} [∀ i, Zero (g₁ i)] [∀ i, Zero (g₂ i)] (op : ∀ i, g₁ i → g₂ i → f i)
     (h : ∀ i, op i 0 0 = 0) (i : I) (x₁ : g₁ i) (x₂ : g₂ i) :
     single i (op i x₁ x₂) = fun j => op j (single i x₁ j) (single i x₂ j) :=
   Eq.symm $ funext $ apply_single₂ op h i x₁ x₂
@@ -196,7 +196,7 @@ namespace Function
 section Extend
 
 @[to_additive]
-theorem extend_one [HasOne γ] (f : α → β) : Function.extendₓ f (1 : α → γ) (1 : β → γ) = 1 :=
+theorem extend_one [One γ] (f : α → β) : Function.extendₓ f (1 : α → γ) (1 : β → γ) = 1 :=
   funext $ fun _ => by
     apply if_t_t _ _
 
@@ -233,7 +233,7 @@ theorem bijective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, bijective (F i)) 
 
 end Function
 
-theorem Subsingleton.pi_single_eq {α : Type _} [DecidableEq I] [Subsingleton I] [HasZero α] (i : I) (x : α) :
+theorem Subsingleton.pi_single_eq {α : Type _} [DecidableEq I] [Subsingleton I] [Zero α] (i : I) (x : α) :
     Pi.single i x = fun _ => x :=
   funext $ fun j => by
     rw [Subsingleton.elimₓ j i, Pi.single_eq_same]

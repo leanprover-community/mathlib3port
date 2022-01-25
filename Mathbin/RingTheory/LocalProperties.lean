@@ -147,7 +147,7 @@ theorem ideal_eq_zero_of_localization (I : Ideal R)
   apply m.prop
   refine' hp₂ _
   erw [Submodule.mem_annihilator_span_singleton]
-  rwa [mul_commₓ] at hm
+  rwa [mul_comm] at hm
 
 theorem eq_zero_of_localization (r : R)
     (h : ∀ J : Ideal R hJ : J.is_maximal, algebraMap R (Localization.AtPrime J) r = 0) : r = 0 := by
@@ -178,13 +178,13 @@ theorem localization_is_reduced : LocalizationPreserves fun R hR => IsReduced R 
   rw [← (algebraMap R S).map_zero] at hx'
   obtain ⟨m', hm'⟩ := (IsLocalization.eq_iff_exists M S).mp hx'
   apply_fun · * m' ^ n  at hm'
-  simp only [mul_assocₓ, zero_mul] at hm'
-  rw [mul_commₓ, ← pow_succₓ, ← mul_powₓ] at hm'
+  simp only [mul_assoc, zero_mul] at hm'
+  rw [mul_comm, ← pow_succₓ, ← mul_powₓ] at hm'
   replace hm' := IsNilpotent.eq_zero ⟨_, hm'.symm⟩
   rw [← (IsLocalization.map_units S m).mul_left_inj, hx, zero_mul, IsLocalization.map_eq_zero_iff M]
   exact
     ⟨m', by
-      rw [← hm', mul_commₓ]⟩
+      rw [← hm', mul_comm]⟩
 
 instance [IsReduced R] : IsReduced (Localization M) :=
   localization_is_reduced M _ inferInstance
@@ -213,14 +213,12 @@ theorem localization_finite : RingHom.LocalizationPreserves @RingHom.Finite := b
   let this' := f'.to_algebra
   have : IsScalarTower R R' S' := IsScalarTower.of_algebra_map_eq' (IsLocalization.map_comp _).symm
   let fₐ : S →ₐ[R] S' := AlgHom.mk' (algebraMap S S') fun c x => RingHom.map_mul _ _ _
-  run_tac
-    tactic.unfreeze_local_instances
   obtain ⟨T, hT⟩ := hf
   use T.image (algebraMap S S')
   rw [eq_top_iff]
   rintro x -
   obtain ⟨y, ⟨_, ⟨r, hr, rfl⟩⟩, rfl⟩ := IsLocalization.mk'_surjective (M.map (f : R →* S)) x
-  rw [IsLocalization.mk'_eq_mul_mk'_one, mul_commₓ, Finset.coe_image]
+  rw [IsLocalization.mk'_eq_mul_mk'_one, mul_comm, Finset.coe_image]
   have hy : y ∈ Submodule.span R (↑T) := by
     rw [hT]
     trivial
@@ -273,10 +271,10 @@ theorem IsLocalization.smul_mem_finset_integer_multiple_span [Algebra R S] [Alge
       a hx' using
     1
   convert ha₂.symm
-  · rw [mul_commₓ (y' • x), Subtype.coe_mk, Submonoid.smul_def, Submonoid.coe_mul, ← smul_smul]
+  · rw [mul_comm (y' • x), Subtype.coe_mk, Submonoid.smul_def, Submonoid.coe_mul, ← smul_smul]
     exact Algebra.smul_def _ _
     
-  · rw [mul_commₓ]
+  · rw [mul_comm]
     exact Algebra.smul_def _ _
     
 
@@ -301,11 +299,11 @@ theorem multiple_mem_span_of_mem_localization_span [Algebra R' S] [Algebra R S] 
   rcases hx with ⟨y, z, hz, rfl⟩
   rcases IsLocalization.surj M y with ⟨⟨y', s'⟩, e⟩
   replace e : _ * a = _ * a := (congr_argₓ (fun x => algebraMap R' S x * a) e : _)
-  simp_rw [RingHom.map_mul, ← IsScalarTower.algebra_map_apply, mul_commₓ (algebraMap R' S y), mul_assocₓ, ←
+  simp_rw [RingHom.map_mul, ← IsScalarTower.algebra_map_apply, mul_comm (algebraMap R' S y), mul_assoc, ←
     Algebra.smul_def]  at e
   rcases hs _ hz with ⟨t, ht⟩
   refine' ⟨t * s', t * y', _, (Submodule.span R (s : Set S)).smul_mem s' ht, _⟩
-  rw [smul_add, ← smul_smul, mul_commₓ, ← smul_smul, ← smul_smul, ← e]
+  rw [smul_add, ← smul_smul, mul_comm, ← smul_smul, ← smul_smul, ← e]
   rfl
 
 /-- If `S` is an `R' = M⁻¹R` algebra, and `x ∈ adjoin R' s`,
@@ -370,14 +368,12 @@ theorem localization_finite_type : RingHom.LocalizationPreserves @RingHom.Finite
   let this' := f'.to_algebra
   have : IsScalarTower R R' S' := IsScalarTower.of_algebra_map_eq' (IsLocalization.map_comp _).symm
   let fₐ : S →ₐ[R] S' := AlgHom.mk' (algebraMap S S') fun c x => RingHom.map_mul _ _ _
-  run_tac
-    tactic.unfreeze_local_instances
-  obtain ⟨T, hT⟩ := hf
+  obtain ⟨T, hT⟩ := id hf
   use T.image (algebraMap S S')
   rw [eq_top_iff]
   rintro x -
   obtain ⟨y, ⟨_, ⟨r, hr, rfl⟩⟩, rfl⟩ := IsLocalization.mk'_surjective (M.map (f : R →* S)) x
-  rw [IsLocalization.mk'_eq_mul_mk'_one, mul_commₓ, Finset.coe_image]
+  rw [IsLocalization.mk'_eq_mul_mk'_one, mul_comm, Finset.coe_image]
   have hy : y ∈ Algebra.adjoin R (T : Set S) := by
     rw [hT]
     trivial
@@ -429,11 +425,11 @@ theorem IsLocalization.lift_mem_adjoin_finset_integer_multiple [Algebra R S] [Al
       hx' a using
     1
   convert ha₂.symm
-  · rw [mul_commₓ (y' ^ n • x), Subtype.coe_mk, Submonoid.smul_def, Submonoid.coe_mul, ← smul_smul, Algebra.smul_def,
+  · rw [mul_comm (y' ^ n • x), Subtype.coe_mk, Submonoid.smul_def, Submonoid.coe_mul, ← smul_smul, Algebra.smul_def,
       Submonoid.coe_pow]
     rfl
     
-  · rw [mul_commₓ]
+  · rw [mul_comm]
     exact Algebra.smul_def _ _
     
 

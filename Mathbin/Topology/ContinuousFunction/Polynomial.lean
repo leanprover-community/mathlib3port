@@ -175,7 +175,7 @@ theorem polynomialFunctions.comap'_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h
         ring
         
       · change _ + _ ∈ I
-        rw [mul_commₓ ((b - a)⁻¹), ← neg_mul_eq_neg_mul_symm, ← add_mulₓ, ← sub_eq_add_neg]
+        rw [mul_comm ((b - a)⁻¹), ← neg_mul_eq_neg_mul_symm, ← add_mulₓ, ← sub_eq_add_neg]
         have w₁ : 0 < (b - a)⁻¹ := inv_pos.mpr (sub_pos.mpr h)
         have w₂ : 0 ≤ (x : ℝ) - a := sub_nonneg.mpr x.2.1
         have w₃ : (x : ℝ) - a ≤ b - a := sub_le_sub_right x.2.2 a
@@ -194,7 +194,7 @@ theorem polynomialFunctions.comap'_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h
     · simp
       
     · ext x
-      simp [mul_commₓ]
+      simp [mul_comm]
       
     
 

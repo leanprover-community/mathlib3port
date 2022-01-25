@@ -21,7 +21,7 @@ protected unsafe def reflect' (u : level) (α : expr) : Tree expr → expr
 
 /-- Returns an element indexed by `n`, or zero if `n` isn't a valid index.
 See `tree.get`. -/
-protected def get_or_zero {α} [HasZero α] (t : Tree α) (n : PosNum) : α :=
+protected def get_or_zero {α} [Zero α] (t : Tree α) (n : PosNum) : α :=
   t.get_or_else n 0
 
 end Tree
@@ -74,10 +74,10 @@ def is_cs : horner_expr → Prop
   | const n => ∃ m : Num, n = m.to_znum
   | horner a x n b => is_cs a ∧ is_cs b
 
-instance : HasZero horner_expr :=
+instance : Zero horner_expr :=
   ⟨const 0⟩
 
-instance : HasOne horner_expr :=
+instance : One horner_expr :=
   ⟨const 1⟩
 
 instance : Inhabited horner_expr :=
@@ -275,7 +275,7 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : horner_e
       fun _ e₂ c => ⟨c, (zero_addₓ _).symm⟩
     cases' e : Num.sub' n₁ n₂ with k k <;> simp
     · have : n₁ = n₂ := by
-        have := congr_argₓ (coeₓ : Znum → ℤ) e
+        have := congr_argₓ (coe : Znum → ℤ) e
         simp at this
         have := sub_eq_zero.1 this
         rw [← Num.to_nat_to_int, ← Num.to_nat_to_int] at this
@@ -298,7 +298,7 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : horner_e
       apply Tactic.Ring.horner_add_horner_gtₓ
       · change (_ + k : ℕ) = _
         rw [← Int.coe_nat_inj', Int.coe_nat_add, eq_comm, ← sub_eq_iff_eq_add']
-        simpa using congr_argₓ (coeₓ : Znum → ℤ) e
+        simpa using congr_argₓ (coe : Znum → ℤ) e
         
       · rfl
         
@@ -311,7 +311,7 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : horner_e
       apply Tactic.Ring.horner_add_horner_ltₓ
       · change (_ + k : ℕ) = _
         rw [← Int.coe_nat_inj', Int.coe_nat_add, eq_comm, ← sub_eq_iff_eq_add', ← neg_inj, neg_sub]
-        simpa using congr_argₓ (coeₓ : Znum → ℤ) e
+        simpa using congr_argₓ (coe : Znum → ℤ) e
         
       all_goals
         rfl
@@ -360,7 +360,7 @@ theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : horner_e
     (mul e₁ e₂).IsCs ∧ cseval t (mul e₁ e₂) = cseval t e₁ * cseval t e₂ := by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp
   · rcases cs₁ with ⟨n₁, rfl⟩
-    simpa [mul_commₓ] using cseval_mul_const t n₁ cs₂
+    simpa [mul_comm] using cseval_mul_const t n₁ cs₂
     
   induction' e₂ with n₂ a₂ x₂ n₂ b₂ A₂ B₂
   · rcases cs₂ with ⟨n₂, rfl⟩
@@ -398,9 +398,9 @@ theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : horner_e
       
     
   · simp [A₂ csa₂, B₂ csb₂]
-    rw [mul_commₓ, eq_comm]
+    rw [mul_comm, eq_comm]
     apply Tactic.Ring.horner_const_mulₓ
-    · apply mul_commₓ
+    · apply mul_comm
       
     · rfl
       

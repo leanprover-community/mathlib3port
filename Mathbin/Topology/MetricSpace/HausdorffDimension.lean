@@ -276,7 +276,7 @@ theorem HolderOnWith.dimH_image_le (h : HolderOnWith C r f s) (hr : 0 < r) : dim
   have Hrd : μH[(r * d : ℝ≥0 )] s = ⊤ := by
     contrapose this
     exact Ennreal.mul_ne_top Ennreal.coe_ne_top this
-  rw [Ennreal.le_div_iff_mul_le, mul_commₓ, ← Ennreal.coe_mul]
+  rw [Ennreal.le_div_iff_mul_le, mul_comm, ← Ennreal.coe_mul]
   exacts[le_dimH_of_hausdorff_measure_eq_top Hrd, Or.inl (mt Ennreal.coe_eq_zero.1 hr.ne'), Or.inl Ennreal.coe_ne_top]
 
 namespace HolderWith
@@ -302,8 +302,8 @@ theorem dimH_image_le_of_locally_holder_on [second_countable_topology X] {r : �
   choose! C t htn hC using hf
   rcases countable_cover_nhds_within htn with ⟨u, hus, huc, huU⟩
   replace huU := inter_eq_self_of_subset_left huU
-  rw [inter_bUnion] at huU
-  rw [← huU, image_bUnion, dimH_bUnion huc, dimH_bUnion huc]
+  rw [inter_Union₂] at huU
+  rw [← huU, image_Union₂, dimH_bUnion huc, dimH_bUnion huc]
   simp only [Ennreal.supr_div]
   exact bsupr_le_bsupr fun x hx => ((hC x (hus hx)).mono (inter_subset_right _ _)).dimH_image_le hr
 

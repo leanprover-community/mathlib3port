@@ -633,7 +633,7 @@ theorem lift_mul a b : lift (a * b) = lift a * lift b :=
 
 @[simp]
 theorem card_mul a b : card (a * b) = card a * card b :=
-  Quotientₓ.induction_on₂ a b $ fun ⟨α, r, _⟩ ⟨β, s, _⟩ => mul_commₓ (mk β) (mk α)
+  Quotientₓ.induction_on₂ a b $ fun ⟨α, r, _⟩ ⟨β, s, _⟩ => mul_comm (mk β) (mk α)
 
 @[simp]
 theorem mul_zero (a : Ordinal) : a * 0 = 0 :=
@@ -1632,7 +1632,7 @@ theorem opow_add (a b c : Ordinal) : (a^b + c) = (a^b) * (a^c) := by
   · simp only [add_zeroₓ, opow_zero, mul_oneₓ]
     
   · intro c IH
-    rw [add_succ, opow_succ, IH, opow_succ, mul_assocₓ]
+    rw [add_succ, opow_succ, IH, opow_succ, mul_assoc]
     
   · intro c l IH
     refine' eq_of_forall_ge_iff fun d => (((opow_is_normal a1).trans (add_is_normal b)).limit_le l).trans _
@@ -1980,9 +1980,9 @@ theorem nat_cast_div {m n : ℕ} : ((m / n : ℕ) : Ordinal) = m / n :=
     have n0' := nat_cast_ne_zero.2 n0
     le_antisymmₓ
       (by
-        rw [le_div n0', ← nat_cast_mul, nat_cast_le, mul_commₓ] <;> apply Nat.div_mul_le_selfₓ)
+        rw [le_div n0', ← nat_cast_mul, nat_cast_le, mul_comm] <;> apply Nat.div_mul_le_selfₓ)
       (by
-        rw [div_le n0', succ, ← Nat.cast_succ, ← nat_cast_mul, nat_cast_lt, mul_commₓ, ←
+        rw [div_le n0', succ, ← Nat.cast_succ, ← nat_cast_mul, nat_cast_lt, mul_comm, ←
             Nat.div_lt_iff_lt_mulₓ _ _ (Nat.pos_of_ne_zeroₓ n0)] <;>
           apply Nat.lt_succ_selfₓ)
 
@@ -2216,7 +2216,7 @@ theorem mul_lt_omega_opow {a b c : Ordinal} (c0 : 0 < c) (ha : a < (omega^c)) (h
   · rw [opow_succ] at ha
     rcases((mul_is_normal $ opow_pos _ omega_pos).limit_lt omega_is_limit).1 ha with ⟨n, hn, an⟩
     refine' lt_of_le_of_ltₓ (mul_le_mul_right _ (le_of_ltₓ an)) _
-    rw [opow_succ, mul_assocₓ, mul_lt_mul_iff_left (opow_pos _ omega_pos)]
+    rw [opow_succ, mul_assoc, mul_lt_mul_iff_left (opow_pos _ omega_pos)]
     exact mul_lt_omega hn hb
     
   · rcases((opow_is_normal one_lt_omega).limit_lt l).1 ha with ⟨x, hx, ax⟩
@@ -2227,7 +2227,7 @@ theorem mul_lt_omega_opow {a b c : Ordinal} (c0 : 0 < c) (ha : a < (omega^c)) (h
 
 theorem mul_omega_dvd {a : Ordinal} (a0 : 0 < a) (ha : a < omega) : ∀ {b}, omega ∣ b → a * b = b
   | _, ⟨b, rfl⟩ => by
-    rw [← mul_assocₓ, mul_omega a0 ha]
+    rw [← mul_assoc, mul_omega a0 ha]
 
 theorem mul_omega_opow_opow {a b : Ordinal} (a0 : 0 < a) (h : a < (omega^omega^b)) :
     a * (omega^omega^b) = (omega^omega^b) := by

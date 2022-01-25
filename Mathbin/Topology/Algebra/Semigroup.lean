@@ -26,7 +26,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
       apply N_minimal
       · refine' ⟨(continuous_mul_left m).IsClosedMap _ N_closed, ⟨_, ⟨m, hm, rfl⟩⟩, _⟩
         rintro _ ⟨m'', hm'', rfl⟩ _ ⟨m', hm', rfl⟩
-        refine' ⟨m'' * m * m', N_mul _ (N_mul _ hm'' _ hm) _ hm', mul_assocₓ _ _ _⟩
+        refine' ⟨m'' * m * m', N_mul _ (N_mul _ hm'' _ hm) _ hm', mul_assoc _ _ _⟩
         
       · rintro _ ⟨m', hm', rfl⟩
         exact N_mul _ hm' _ hm
@@ -39,7 +39,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
           
         · rintro m'' ⟨mem'', eq'' : _ = m⟩ m' ⟨mem', eq' : _ = m⟩
           refine' ⟨N_mul _ mem'' _ mem', _⟩
-          rw [Set.mem_set_of_eq, mul_assocₓ, eq', eq'']
+          rw [Set.mem_set_of_eq, mul_assoc, eq', eq'']
           
         
       apply Set.inter_subset_left
@@ -54,7 +54,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
       
     convert
       @IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed _ _ _ (c.nonempty_coe_sort.mpr hcnemp)
-        (coeₓ : c → Set M) _ _ _ _
+        (coe : c → Set M) _ _ _ _
     · simp only [Subtype.range_coe_subtype, Set.set_of_mem_eq]
       
     · refine' directed_on_iff_directed.mp (Zorn.Chain.directed_on _)
@@ -89,7 +89,7 @@ theorem exists_idempotent_in_compact_subsemigroup {M} [Semigroupₓ M] [Topologi
     (s_add : ∀ x y _ : x ∈ s _ : y ∈ s, x * y ∈ s) : ∃ m ∈ s, m * m = m := by
   let M' := { m // m ∈ s }
   let this' : Semigroupₓ M' :=
-    { mul := fun p q => ⟨p.1 * q.1, s_add _ p.2 _ q.2⟩, mul_assoc := fun p q r => Subtype.eq (mul_assocₓ _ _ _) }
+    { mul := fun p q => ⟨p.1 * q.1, s_add _ p.2 _ q.2⟩, mul_assoc := fun p q r => Subtype.eq (mul_assoc _ _ _) }
   have : CompactSpace M' := is_compact_iff_compact_space.mp s_compact
   have : Nonempty M' := nonempty_subtype.mpr snemp
   have : ∀ p : M', Continuous (· * p) := fun p =>

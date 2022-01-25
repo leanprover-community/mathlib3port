@@ -88,7 +88,7 @@ theorem frequently_measure_inter_ne_zero (hf : conservative f μ) (hs : Measurab
     hs.inter (MeasurableSet.bUnion (countable_encodable _) fun _ _ => hf.measurable.iterate _ hs)
   have hμT : μ T = 0 := by
     convert (measure_bUnion_null_iff $ countable_encodable _).2 hN
-    rw [← Set.inter_bUnion]
+    rw [← inter_Union₂]
     rfl
   have : μ (s ∩ f^[n] ⁻¹' s \ T) ≠ 0 := by
     rwa [measure_diff_null hμT]

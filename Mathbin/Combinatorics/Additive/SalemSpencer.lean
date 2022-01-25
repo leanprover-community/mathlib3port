@@ -109,7 +109,7 @@ theorem mul_salem_spencer_insert :
     
   · exact mul_right_cancelₓ h
     
-  · exact (ha hb hd $ (mul_commₓ _ _).trans h).symm
+  · exact (ha hb hd $ (mul_comm _ _).trans h).symm
     
   · exact ha' hb hc h
     

@@ -47,6 +47,11 @@ def normalizer : LieSubalgebra R L where
 theorem mem_normalizer_iff (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅x,y⁆ ∈ H :=
   Iff.rfl
 
+theorem mem_normalizer_iff' (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅y,x⁆ ∈ H :=
+  forall_congrₓ fun y =>
+    forall_congrₓ fun hy => by
+      rw [← lie_skew, H.neg_mem_iff]
+
 theorem le_normalizer : H ≤ H.normalizer := fun x hx => show ∀ y : L, y ∈ H → ⁅x,y⁆ ∈ H from fun y => H.lie_mem hx
 
 /-- A Lie subalgebra is an ideal of its normalizer. -/
@@ -56,6 +61,26 @@ theorem ideal_in_normalizer : ∀ x y : L, x ∈ H.normalizer → y ∈ H → �
 ideal. -/
 theorem le_normalizer_of_ideal {N : LieSubalgebra R L} (h : ∀ x y : L, x ∈ N → y ∈ H → ⁅x,y⁆ ∈ H) : N ≤ H.normalizer :=
   fun x hx y => h x y hx
+
+theorem normalizer_eq_self_iff : H.normalizer = H ↔ (LieModule.maxTrivSubmodule R H $ L ⧸ H.to_lie_submodule) = ⊥ := by
+  rw [LieSubmodule.eq_bot_iff]
+  refine' ⟨fun h => _, fun h => le_antisymmₓ (fun x hx => _) H.le_normalizer⟩
+  · rintro ⟨x⟩ hx
+    suffices x ∈ H by
+      simpa
+    rw [← h, H.mem_normalizer_iff']
+    intro y hy
+    replace hx : ⁅_,LieSubmodule.Quotient.mk' _ x⁆ = 0 := hx ⟨y, hy⟩
+    rwa [← LieModuleHom.map_lie, LieSubmodule.Quotient.mk_eq_zero] at hx
+    
+  · let y := LieSubmodule.Quotient.mk' H.to_lie_submodule x
+    have hy : y ∈ LieModule.maxTrivSubmodule R H (L ⧸ H.to_lie_submodule) := by
+      rintro ⟨z, hz⟩
+      rw [← LieModuleHom.map_lie, LieSubmodule.Quotient.mk_eq_zero, coe_bracket_of_module, Submodule.coe_mk,
+        mem_to_lie_submodule]
+      exact (H.mem_normalizer_iff' x).mp hx z hz
+    simpa using h y hy
+    
 
 /-- A Cartan subalgebra is a nilpotent, self-normalizing subalgebra. -/
 class is_cartan_subalgebra : Prop where

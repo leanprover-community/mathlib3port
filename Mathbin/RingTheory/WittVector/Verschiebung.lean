@@ -56,7 +56,7 @@ theorem ghost_component_verschiebung_fun (x : 𝕎 R) (n : ℕ) :
   rw [Finset.sum_range_succ', verschiebung_fun_coeff, if_pos rfl, zero_pow (pow_pos hp.1.Pos _), mul_zero, add_zeroₓ,
     Finset.mul_sum, Finset.sum_congr rfl]
   rintro i -
-  simp only [pow_succₓ, mul_assocₓ, verschiebung_fun_coeff, if_neg (Nat.succ_ne_zero i), Nat.succ_sub_succ, tsub_zero]
+  simp only [pow_succₓ, mul_assoc, verschiebung_fun_coeff, if_neg (Nat.succ_ne_zero i), Nat.succ_sub_succ, tsub_zero]
 
 omit hp
 

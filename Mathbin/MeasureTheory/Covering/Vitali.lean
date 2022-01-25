@@ -305,7 +305,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     calc (∑' a : v, μ a) = μ (⋃ a ∈ v, a) := by
         rw [measure_bUnion (u_count.mono vu) _ fun a ha => (h't _ (vu.trans ut ha)).MeasurableSet]
         exact u_disj.subset vu _ ≤ μ (closed_ball x R) :=
-        measure_mono (bUnion_subset fun a ha => hR a (vu ha) ha.2)_ < ∞ := μR
+        measure_mono (Union₂_subset fun a ha => hR a (vu ha) ha.2)_ < ∞ := μR
   obtain ⟨w, hw⟩ : ∃ w : Finset (↥v), (∑' a : { a // a ∉ w }, μ a) < ε / C := by
     have : ne_bot (at_top : Filter (Finset v)) := at_top_ne_bot
     have : 0 < ε / C := by
@@ -451,7 +451,7 @@ protected def VitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurabl
       
     · rw [bUnion_image]
       convert μu using 3
-      exact bUnion_congr fun a ha => inj_on_x.left_inv_on_inv_fun_on ha
+      exact Union₂_congr fun a ha => inj_on_x.left_inv_on_inv_fun_on ha
       
 
 end Vitali

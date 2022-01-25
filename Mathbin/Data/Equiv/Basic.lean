@@ -950,7 +950,7 @@ is naturally equivalent to `α`.
 See `subtype_or_equiv` for sum types over subtypes `{x // p x}` and `{x // q x}`
 that are not necessarily `is_compl p q`.  -/
 def sum_compl {α : Type _} (p : α → Prop) [DecidablePred p] : Sum { a // p a } { a // ¬p a } ≃ α where
-  toFun := Sum.elim coeₓ coeₓ
+  toFun := Sum.elim coe coe
   invFun := fun a => if h : p a then Sum.inl ⟨a, h⟩ else Sum.inr ⟨a, h⟩
   left_inv := by
     rintro (⟨x, hx⟩ | ⟨x, hx⟩) <;> dsimp <;> [rw [dif_pos], rw [dif_neg]]
@@ -1055,8 +1055,8 @@ variable (p : α → Prop) [DecidablePred p] (x₀ : { a // p a } → β)
 the subtype of functions `x : α → β` that agree with `x₀` on the subtype `{a // p a}`
 is naturally equivalent to the type of functions `{a // ¬ p a} → β`. -/
 @[simps]
-def subtype_preimage : { x : α → β // x ∘ coeₓ = x₀ } ≃ ({ a // ¬p a } → β) where
-  toFun := fun x : { x : α → β // x ∘ coeₓ = x₀ } a => (x : α → β) a
+def subtype_preimage : { x : α → β // x ∘ coe = x₀ } ≃ ({ a // ¬p a } → β) where
+  toFun := fun x : { x : α → β // x ∘ coe = x₀ } a => (x : α → β) a
   invFun := fun x => ⟨fun a => if h : p a then x₀ ⟨a, h⟩ else x ⟨a, h⟩, funext $ fun ⟨a, h⟩ => dif_pos h⟩
   left_inv := fun ⟨x, hx⟩ =>
     Subtype.val_injective $
@@ -1787,7 +1787,7 @@ variable {X : Type _} {Y : Type _} [DecidableEq X] {x : X}
 
 /-- The type of all functions `X → Y` with prescribed values for all `x' ≠ x`
 is equivalent to the codomain `Y`. -/
-def subtype_equiv_codomain (f : { x' // x' ≠ x } → Y) : { g : X → Y // g ∘ coeₓ = f } ≃ Y :=
+def subtype_equiv_codomain (f : { x' // x' ≠ x } → Y) : { g : X → Y // g ∘ coe = f } ≃ Y :=
   (subtype_preimage _ f).trans $
     @fun_unique { x' // ¬x' ≠ x } _ $
       show Unique { x' // ¬x' ≠ x } from
@@ -1797,16 +1797,16 @@ def subtype_equiv_codomain (f : { x' // x' ≠ x } → Y) : { g : X → Y // g �
 
 @[simp]
 theorem coe_subtype_equiv_codomain (f : { x' // x' ≠ x } → Y) :
-    (subtype_equiv_codomain f : { g : X → Y // g ∘ coeₓ = f } → Y) = fun g => (g : X → Y) x :=
+    (subtype_equiv_codomain f : { g : X → Y // g ∘ coe = f } → Y) = fun g => (g : X → Y) x :=
   rfl
 
 @[simp]
-theorem subtype_equiv_codomain_apply (f : { x' // x' ≠ x } → Y) (g : { g : X → Y // g ∘ coeₓ = f }) :
+theorem subtype_equiv_codomain_apply (f : { x' // x' ≠ x } → Y) (g : { g : X → Y // g ∘ coe = f }) :
     subtype_equiv_codomain f g = (g : X → Y) x :=
   rfl
 
 theorem coe_subtype_equiv_codomain_symm (f : { x' // x' ≠ x } → Y) :
-    ((subtype_equiv_codomain f).symm : Y → { g : X → Y // g ∘ coeₓ = f }) = fun y =>
+    ((subtype_equiv_codomain f).symm : Y → { g : X → Y // g ∘ coe = f }) = fun y =>
       ⟨fun x' => if h : x' ≠ x then f ⟨x', h⟩ else y, by
         funext x'
         dsimp

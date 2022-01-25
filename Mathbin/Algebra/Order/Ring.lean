@@ -332,7 +332,7 @@ theorem one_le_mul_of_one_le_of_one_le {a b : α} : 1 ≤ a → 1 ≤ b → (1 :
 /-- Pullback an `ordered_semiring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.orderedSemiring {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] (f : β → α)
+def Function.Injective.orderedSemiring {β : Type _} [Zero β] [One β] [Add β] [Mul β] (f : β → α)
     (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) : OrderedSemiring β :=
   { hf.ordered_cancel_add_comm_monoid f zero add, hf.semiring f zero one add mul with
@@ -455,7 +455,7 @@ class OrderedCommSemiring (α : Type u) extends OrderedSemiring α, CommSemiring
 /-- Pullback an `ordered_comm_semiring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.orderedCommSemiring [OrderedCommSemiring α] {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β]
+def Function.Injective.orderedCommSemiring [OrderedCommSemiring α] {β : Type _} [Zero β] [One β] [Add β] [Mul β]
     (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) : OrderedCommSemiring β :=
   { hf.comm_semiring f zero one add mul, hf.ordered_semiring f zero one add mul with }
@@ -725,7 +725,7 @@ instance (priority := 100) LinearOrderedSemiring.to_no_max_order {α : Type _} [
 /-- Pullback a `linear_ordered_semiring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedSemiring {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] (f : β → α)
+def Function.Injective.linearOrderedSemiring {β : Type _} [Zero β] [One β] [Add β] [Mul β] (f : β → α)
     (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) : LinearOrderedSemiring β :=
   { LinearOrderₓ.lift f hf, pullback_nonzero f zero one, hf.ordered_semiring f zero one add mul with }
@@ -918,7 +918,7 @@ theorem mul_pos_of_neg_of_neg {a b : α} (ha : a < 0) (hb : b < 0) : 0 < a * b :
 /-- Pullback an `ordered_ring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.orderedRing {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
+def Function.Injective.orderedRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
     (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
     OrderedRing β :=
@@ -954,10 +954,10 @@ instance (priority := 100) OrderedCommRing.toOrderedCommSemiring {α : Type u} [
 /-- Pullback an `ordered_comm_ring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.orderedCommRing [OrderedCommRing α] {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β]
-    [Sub β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
-    (sub : ∀ x y, f (x - y) = f x - f y) : OrderedCommRing β :=
+def Function.Injective.orderedCommRing [OrderedCommRing α] {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β]
+    (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
+    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
+    OrderedCommRing β :=
   { hf.ordered_ring f zero one add mul neg sub, hf.comm_ring f zero one add mul neg sub with }
 
 end OrderedCommRing
@@ -1217,7 +1217,7 @@ theorem abs_le_one_iff_mul_self_le_one : |a| ≤ 1 ↔ a * a ≤ 1 := by
 /-- Pullback a `linear_ordered_ring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedRing {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
+def Function.Injective.linearOrderedRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
     (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
     LinearOrderedRing β :=
@@ -1249,13 +1249,13 @@ theorem max_mul_mul_le_max_mul_max (b c : α) (ha : 0 ≤ a) (hd : 0 ≤ d) : ma
     Decidable.mul_le_mul (le_max_rightₓ a c) (le_max_rightₓ b d) hd (le_transₓ ha (le_max_leftₓ a c))
   max_leₓ
     (by
-      simpa [mul_commₓ, max_commₓ] using ba)
+      simpa [mul_comm, max_commₓ] using ba)
     (by
-      simpa [mul_commₓ, max_commₓ] using cd)
+      simpa [mul_comm, max_commₓ] using cd)
 
 theorem abs_sub_sq (a b : α) : |a - b| * |a - b| = a * a + b * b - (1 + 1) * a * b := by
   rw [abs_mul_abs_self]
-  simp only [mul_addₓ, add_commₓ, add_left_commₓ, mul_commₓ, sub_eq_add_neg, mul_oneₓ, mul_neg_eq_neg_mul_symm,
+  simp only [mul_addₓ, add_commₓ, add_left_commₓ, mul_comm, sub_eq_add_neg, mul_oneₓ, mul_neg_eq_neg_mul_symm,
     neg_add_rev, neg_negₓ]
 
 end LinearOrderedCommRing
@@ -1296,8 +1296,8 @@ variable [LinearOrderedCommRing α]
 /-- Pullback a `linear_ordered_comm_ring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedCommRing {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β] [Sub β]
-    (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
+def Function.Injective.linearOrderedCommRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
+    (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
     LinearOrderedCommRing β :=
   { LinearOrderₓ.lift f hf, pullback_nonzero f zero one, hf.ordered_comm_ring f zero one add mul neg sub with }
@@ -1422,7 +1422,7 @@ protected theorem mul_tsub (h : AddLeCancellable (a * c)) : a * (b - c) = a * b 
     
 
 protected theorem tsub_mul (h : AddLeCancellable (b * c)) : (a - b) * c = a * c - b * c := by
-  simp only [mul_commₓ _ c] at *
+  simp only [mul_comm _ c] at *
   exact h.mul_tsub
 
 end AddLeCancellable
@@ -1453,7 +1453,7 @@ variable [DecidableEq α]
 
 section Mul
 
-variable [HasZero α] [Mul α]
+variable [Zero α] [Mul α]
 
 instance : MulZeroClass (WithTop α) where
   zero := 0
@@ -1558,7 +1558,7 @@ instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithTop
       cases c
       · by_cases' ha : a = 0 <;> by_cases' hb : b = 0 <;> simp [*, none_eq_top, some_eq_coe]
         
-      simp [some_eq_coe, coe_mul.symm, mul_assocₓ] }
+      simp [some_eq_coe, coe_mul.symm, mul_assoc] }
 
 instance [MonoidWithZeroₓ α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZeroₓ (WithTop α) :=
   { WithTop.mulZeroOneClass, WithTop.semigroupWithZero with }
@@ -1572,7 +1572,7 @@ instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoi
       by_cases' hb : b = 0
       · simp [hb]
         
-      simp [ha, hb, mul_def, Option.bind_comm a b, mul_commₓ] }
+      simp [ha, hb, mul_def, Option.bind_comm a b, mul_comm] }
 
 variable [CanonicallyOrderedCommSemiring α]
 
@@ -1599,7 +1599,7 @@ of which are required for distributivity. -/
 instance [Nontrivial α] : CommSemiringₓ (WithTop α) :=
   { WithTop.addCommMonoid, WithTop.commMonoidWithZero with right_distrib := distrib',
     left_distrib := fun a b c => by
-      rw [mul_commₓ, distrib', mul_commₓ b, mul_commₓ c] <;> rfl }
+      rw [mul_comm, distrib', mul_comm b, mul_comm c] <;> rfl }
 
 instance [Nontrivial α] : CanonicallyOrderedCommSemiring (WithTop α) :=
   { WithTop.commSemiring, WithTop.canonicallyOrderedAddMonoid, WithTop.no_zero_divisors with }
@@ -1615,7 +1615,7 @@ variable [DecidableEq α]
 
 section Mul
 
-variable [HasZero α] [Mul α]
+variable [Zero α] [Mul α]
 
 instance : MulZeroClass (WithBot α) :=
   WithTop.mulZeroClass

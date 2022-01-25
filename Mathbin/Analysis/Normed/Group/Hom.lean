@@ -310,7 +310,7 @@ theorem add_apply (f g : NormedGroupHom V₁ V₂) (v : V₁) : (f + g : NormedG
 /-! ### The zero normed group hom -/
 
 
-instance : HasZero (NormedGroupHom V₁ V₂) :=
+instance : Zero (NormedGroupHom V₁ V₂) :=
   ⟨(0 : V₁ →+ V₂).mkNormedGroupHom 0
       (by
         simp )⟩
@@ -472,7 +472,7 @@ protected def comp (g : NormedGroupHom V₂ V₃) (f : NormedGroupHom V₁ V₂)
       ∥g (f v)∥ ≤ ∥g∥ * ∥f v∥ := le_op_norm _ _
       _ ≤ ∥g∥ * (∥f∥ * ∥v∥) := mul_le_mul_of_nonneg_left (le_op_norm _ _) (op_norm_nonneg _)
       _ = ∥g∥ * ∥f∥ * ∥v∥ := by
-        rw [mul_assocₓ]
+        rw [mul_assoc]
       
 
 theorem norm_comp_le (g : NormedGroupHom V₂ V₃) (f : NormedGroupHom V₁ V₂) : ∥g.comp f∥ ≤ ∥g∥ * ∥f∥ :=
@@ -531,7 +531,7 @@ variable [SemiNormedGroup V] [SemiNormedGroup W] [SemiNormedGroup V₁] [SemiNor
 /-- The inclusion of an `add_subgroup`, as bounded group homomorphism. -/
 @[simps]
 def incl (s : AddSubgroup V) : NormedGroupHom s V where
-  toFun := (coeₓ : s → V)
+  toFun := (coe : s → V)
   map_add' := fun v w => AddSubgroup.coe_add _ _ _
   bound' :=
     ⟨1, fun v => by
@@ -846,7 +846,7 @@ theorem controlled_closure_of_complete {f : NormedGroupHom G H} {K : AddSubgroup
     rintro n (hn : n ≥ 1)
     calc ∥u n∥ ≤ C * ∥v n∥ := hnorm_u n _ ≤ C * b n :=
         mul_le_mul_of_nonneg_left (hv _ $ nat.succ_le_iff.mp hn).le hC.le _ = (1 / 2) ^ n * (ε * ∥h∥ / 2) := by
-        simp [b, mul_div_cancel' _ hC.ne.symm]_ = ε * ∥h∥ / 2 * (1 / 2) ^ n := mul_commₓ _ _
+        simp [b, mul_div_cancel' _ hC.ne.symm]_ = ε * ∥h∥ / 2 * (1 / 2) ^ n := mul_comm _ _
   obtain ⟨g : G, hg⟩ := cauchy_seq_tendsto_of_complete this
   refine' ⟨g, _, _⟩
   · have : f ∘ s = fun n => ∑ k in range (n + 1), v k := by

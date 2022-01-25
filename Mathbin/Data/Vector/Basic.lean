@@ -65,7 +65,7 @@ theorem mk_to_list : ∀ v : Vector α n h, (⟨to_list v, h⟩ : Vector α n) =
   | ⟨l, h₁⟩, h₂ => rfl
 
 @[simp]
-theorem length_coe (v : Vector α n) : ((coeₓ : { l : List α // l.length = n } → List α) v).length = n :=
+theorem length_coe (v : Vector α n) : ((coe : { l : List α // l.length = n } → List α) v).length = n :=
   v.2
 
 @[simp]
@@ -543,7 +543,7 @@ theorem prod_update_nth' [CommGroupₓ α] (v : Vector α n) (i : Finₓ n) (a :
     (v.update_nth i a).toList.Prod = v.to_list.prod * v.nth i⁻¹ * a := by
   refine' (List.prod_update_nth' v.to_list i a).trans _
   have : ↑i < v.to_list.length := lt_of_lt_of_leₓ i.2 (le_of_eqₓ v.2.symm)
-  simp [this, nth_eq_nth_le, mul_assocₓ]
+  simp [this, nth_eq_nth_le, mul_assoc]
 
 end UpdateNth
 

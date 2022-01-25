@@ -150,7 +150,7 @@ instance : Add (MultilinearMap R M₁ M₂) :=
 theorem add_apply (m : ∀ i, M₁ i) : (f + f') m = f m + f' m :=
   rfl
 
-instance : HasZero (MultilinearMap R M₁ M₂) :=
+instance : Zero (MultilinearMap R M₁ M₂) :=
   ⟨⟨fun _ => 0, fun m i x y => by
       simp , fun m i c x => by
       simp ⟩⟩
@@ -1014,7 +1014,7 @@ protected def pi_ring_equiv [Fintype ι] : M₂ ≃ₗ[R] MultilinearMap R (fun 
     simp [smul_add]
   map_smul' := fun c z => by
     ext m
-    simp [smul_smul, mul_commₓ]
+    simp [smul_smul, mul_comm]
   left_inv := fun z => by
     simp
   right_inv := fun f => f.mk_pi_ring_apply_one_eq_self
@@ -1435,12 +1435,11 @@ instance : FiniteDimensional R (MultilinearMap R M₁ M₂) := by
     have e := dom_dom_congr_linear_equiv' R M₁ M₂ (Fintype.equivFin ι)
     exact e.symm.finite_dimensional
   intros
-  run_tac
-    tactic.unfreeze_local_instances
   induction' n with n ih
   · exact (const_linear_equiv_of_is_empty R N M₂ : _).FiniteDimensional
     
-  · suffices FiniteDimensional R (N 0 →ₗ[R] MultilinearMap R (fun i : Finₓ n => N i.succ) M₂) by
+  · skip
+    suffices FiniteDimensional R (N 0 →ₗ[R] MultilinearMap R (fun i : Finₓ n => N i.succ) M₂) by
       exact (multilinearCurryLeftEquiv R N M₂).FiniteDimensional
     apply LinearMap.finite_dimensional
     

@@ -142,7 +142,7 @@ variable (R) [Fact p.prime]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
-instance : HasZero (𝕎 R) :=
+instance : Zero (𝕎 R) :=
   ⟨eval (witt_zero p)
       («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")⟩
 
@@ -151,7 +151,7 @@ instance : Inhabited (𝕎 R) :=
 
 -- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
-instance : HasOne (𝕎 R) :=
+instance : One (𝕎 R) :=
   ⟨eval (witt_one p)
       («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")⟩
 

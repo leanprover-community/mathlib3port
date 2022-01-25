@@ -92,7 +92,7 @@ instance [CommSemiringₓ R] [Algebra R ℝ] : Algebra R ℂ :=
       ext <;> simp [smul_re, smul_im, Algebra.commutes] }
 
 @[simp]
-theorem coe_algebra_map : (algebraMap ℝ ℂ : ℝ → ℂ) = coeₓ :=
+theorem coe_algebra_map : (algebraMap ℝ ℂ : ℝ → ℂ) = coe :=
   rfl
 
 section
@@ -247,7 +247,7 @@ def of_real_am : ℝ →ₐ[ℝ] ℂ :=
   Algebra.ofId ℝ ℂ
 
 @[simp]
-theorem of_real_am_coe : ⇑of_real_am = coeₓ :=
+theorem of_real_am_coe : ⇑of_real_am = coe :=
   rfl
 
 /-- `ℝ`-algebra isomorphism version of the complex conjugation function from `ℂ` to `ℂ` -/
@@ -293,7 +293,7 @@ def lift_aux (I' : A) (hf : I' * I' = -1) : ℂ →ₐ[ℝ] A :=
       · rw [smul_mul_smul, hf, smul_neg, ← Algebra.algebra_map_eq_smul_one, ← sub_eq_add_neg, ← RingHom.map_mul, ←
           RingHom.map_sub]
         
-      · rw [Algebra.smul_def, Algebra.smul_def, Algebra.smul_def, ← Algebra.right_comm _ x₂, ← mul_assocₓ, ← add_mulₓ, ←
+      · rw [Algebra.smul_def, Algebra.smul_def, Algebra.smul_def, ← Algebra.right_comm _ x₂, ← mul_assoc, ← add_mulₓ, ←
           RingHom.map_mul, ← RingHom.map_mul, ← RingHom.map_add]
         
 

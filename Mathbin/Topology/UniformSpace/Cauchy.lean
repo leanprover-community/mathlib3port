@@ -367,7 +367,7 @@ theorem TotallyBounded.closure {s : Set α} (h : TotallyBounded s) : TotallyBoun
       _ = _ :=
         IsClosed.closure_eq $
           is_closed_bUnion hcf $ fun i hi => continuous_iff_is_closed.mp (continuous_id.prod_mk continuous_const) _ hct'
-      _ ⊆ _ := bUnion_subset $ fun i hi => subset.trans (fun x => @htt' (x, i)) (subset_bUnion_of_mem hi)
+      _ ⊆ _ := Union₂_subset $ fun i hi => subset.trans (fun x => @htt' (x, i)) (subset_bUnion_of_mem hi)
       ⟩
 
 /-- The image of a totally bounded set under a unifromly continuous map is totally bounded. -/

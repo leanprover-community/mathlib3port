@@ -33,14 +33,10 @@ theorem set_of_liouville_eq_irrational_inter_Inter_Union :
   refine' subset.antisymm _ _
   · refine' subset_inter (fun x hx => hx.irrational) _
     rw [set_of_liouville_eq_Inter_Union]
-    exact
-      Inter_subset_Inter fun n =>
-        Union_subset_Union $ fun a => Union_subset_Union $ fun b => Union_subset_Union $ fun hb => diff_subset _ _
+    exact Inter_mono fun n => Union₂_mono $ fun a b => Union_mono $ fun hb => diff_subset _ _
     
   · simp only [inter_Inter, inter_Union, set_of_liouville_eq_Inter_Union]
-    refine'
-      Inter_subset_Inter fun n =>
-        Union_subset_Union $ fun a => Union_subset_Union $ fun b => Union_subset_Union $ fun hb => _
+    refine' Inter_mono fun n => Union₂_mono $ fun a b => Union_mono $ fun hb => _
     rw [inter_comm]
     refine' diff_subset_diff subset.rfl (singleton_subset_iff.2 ⟨a / b, _⟩)
     norm_cast

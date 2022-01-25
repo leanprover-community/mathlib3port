@@ -32,14 +32,14 @@ We also add an `instance`:
 
 variable {R R' M M' : Type _}
 
-section HasZero
+section Zero
 
 variable (R M)
 
 /-- `smul_with_zero` is a class consisting of a Type `R` with `0 ∈ R` and a scalar multiplication
 of `R` on a Type `M` with `0`, such that the equality `r • m = 0` holds if at least one among `r`
 or `m` equals `0`. -/
-class SmulWithZero [HasZero R] [HasZero M] extends HasScalar R M where
+class SmulWithZero [Zero R] [Zero M] extends HasScalar R M where
   smul_zero : ∀ r : R, r • (0 : M) = 0
   zero_smul : ∀ m : M, (0 : R) • m = 0
 
@@ -58,7 +58,7 @@ instance AddMonoidₓ.toSmulWithZero [AddMonoidₓ M] : SmulWithZero ℕ M where
   smul_zero := nsmul_zero
   zero_smul := zero_nsmul
 
-variable (R) {M} [HasZero R] [HasZero M] [SmulWithZero R M]
+variable (R) {M} [Zero R] [Zero M] [SmulWithZero R M]
 
 @[simp]
 theorem zero_smul (m : M) : (0 : R) • m = 0 :=
@@ -71,7 +71,7 @@ variable {R} (M)
 theorem smul_zero' (r : R) : r • (0 : M) = 0 :=
   SmulWithZero.smul_zero r
 
-variable {R M} [HasZero R'] [HasZero M'] [HasScalar R M']
+variable {R M} [Zero R'] [Zero M'] [HasScalar R M']
 
 /-- Pullback a `smul_with_zero` structure along an injective zero-preserving homomorphism.
 See note [reducible non-instances]. -/
@@ -108,11 +108,11 @@ def SmulWithZero.compHom (f : ZeroHom R' R) : SmulWithZero R' M where
   zero_smul := fun m => by
     simp
 
-end HasZero
+end Zero
 
 section MonoidWithZeroₓ
 
-variable [MonoidWithZeroₓ R] [MonoidWithZeroₓ R'] [HasZero M]
+variable [MonoidWithZeroₓ R] [MonoidWithZeroₓ R'] [Zero M]
 
 variable (R M)
 
@@ -135,7 +135,7 @@ instance MonoidWithZeroₓ.toMulActionWithZero : MulActionWithZero R R :=
 instance MonoidWithZeroₓ.toOppositeMulActionWithZero : MulActionWithZero (Rᵐᵒᵖ) R :=
   { MulZeroClass.toOppositeSmulWithZero R, Monoidₓ.toOppositeMulAction R with }
 
-variable {R M} [MulActionWithZero R M] [HasZero M'] [HasScalar R M']
+variable {R M} [MulActionWithZero R M] [Zero M'] [HasScalar R M']
 
 /-- Pullback a `mul_action_with_zero` structure along an injective zero-preserving homomorphism.
 See note [reducible non-instances]. -/

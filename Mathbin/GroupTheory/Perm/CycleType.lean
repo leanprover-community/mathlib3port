@@ -244,7 +244,7 @@ theorem is_conj_of_cycle_type_eq {σ τ : perm α} (h : cycle_type σ = cycle_ty
       have key : IsConj (σ' * (π * σ'⁻¹)) π := by
         rw [is_conj_iff]
         use σ'⁻¹
-        simp [mul_assocₓ]
+        simp [mul_assoc]
       refine' IsConj.trans _ key
       have hs : σ.cycle_type = σ'.cycle_type := by
         rw [← Finset.mem_def, mem_cycle_factors_finset_iff] at hσ'l
@@ -635,7 +635,7 @@ theorem is_swap.mul_mem_closure_three_cycles {σ τ : perm α} (hσ : is_swap σ
     exact swap_mul_swap_same_mem_closure_three_cycles ab cd
     
   have h' : swap a b * swap c d = swap a b * swap a c * (swap c a * swap c d) := by
-    simp [swap_comm c a, mul_assocₓ]
+    simp [swap_comm c a, mul_assoc]
   rw [h']
   exact
     mul_mem _ (swap_mul_swap_same_mem_closure_three_cycles ab ac)

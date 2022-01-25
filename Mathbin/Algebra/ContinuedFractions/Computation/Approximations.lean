@@ -568,7 +568,7 @@ theorem abs_sub_convergents_le' {b : K} (nth_part_denom_eq : (of v).partialDenom
       this
   have denoms_ineq : b * B * B ≤ B * nB := by
     have : b * B ≤ nB := le_of_succ_nth_denom nth_part_denom_eq
-    rwa [mul_commₓ B nB, mul_le_mul_right zero_lt_B]
+    rwa [mul_comm B nB, mul_le_mul_right zero_lt_B]
   have : (0 : K) < b * B * B := by
     have : 0 < b := lt_of_lt_of_leₓ zero_lt_one (of_one_le_nth_part_denom nth_part_denom_eq)
     any_goals {

@@ -147,7 +147,7 @@ theorem ae_cover.inter_restrict {φ : ι → Set α} (hφ : ae_cover μ l φ) {s
   ae_cover_restrict_of_ae_imp hs (hφ.ae_eventually_mem.mono fun x hx hxs => hx.mono $ fun i hi => ⟨hi, hxs⟩) fun i =>
     (hφ.measurable i).inter hs
 
-theorem ae_cover.ae_tendsto_indicator {β : Type _} [HasZero β] [TopologicalSpace β] (f : α → β) {φ : ι → Set α}
+theorem ae_cover.ae_tendsto_indicator {β : Type _} [Zero β] [TopologicalSpace β] (f : α → β) {φ : ι → Set α}
     (hφ : ae_cover μ l φ) : ∀ᵐ x ∂μ, tendsto (fun i => (φ i).indicator f x) l (𝓝 $ f x) :=
   hφ.ae_eventually_mem.mono fun x hx => tendsto_const_nhds.congr' $ hx.mono $ fun n hn => (indicator_of_mem hn _).symm
 

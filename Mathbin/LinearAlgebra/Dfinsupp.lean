@@ -238,7 +238,7 @@ variable [Semiringₓ R] [AddCommMonoidₓ N] [Module R N]
 
 open Dfinsupp
 
-theorem dfinsupp_sum_mem {β : ι → Type _} [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] (S : Submodule R N)
+theorem dfinsupp_sum_mem {β : ι → Type _} [∀ i, Zero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] (S : Submodule R N)
     (f : Π₀ i, β i) (g : ∀ i, β i → N) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) : f.sum g ∈ S :=
   S.to_add_submonoid.dfinsupp_sum_mem f g h
 

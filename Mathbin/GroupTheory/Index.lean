@@ -77,7 +77,7 @@ variable {H K L}
 
 @[to_additive]
 theorem relindex_mul_index (h : H ≤ K) : H.relindex K * K.index = H.index :=
-  ((mul_commₓ _ _).trans (Cardinal.to_nat_mul _ _).symm).trans
+  ((mul_comm _ _).trans (Cardinal.to_nat_mul _ _).symm).trans
     (congr_argₓ Cardinal.toNat (Equivₓ.cardinal_eq (quotient_equiv_prod_of_le h))).symm
 
 @[to_additive]
@@ -188,7 +188,7 @@ theorem index_eq_card [Fintype (G ⧸ H)] : H.index = Fintype.card (G ⧸ H) :=
 
 @[to_additive index_mul_card]
 theorem index_mul_card [Fintype G] [hH : Fintype H] : H.index * Fintype.card H = Fintype.card G := by
-  rw [← relindex_bot_left_eq_card, ← index_bot_eq_card, mul_commₓ] <;> exact relindex_mul_index bot_le
+  rw [← relindex_bot_left_eq_card, ← index_bot_eq_card, mul_comm] <;> exact relindex_mul_index bot_le
 
 @[to_additive]
 theorem index_dvd_card [Fintype G] : H.index ∣ Fintype.card G := by

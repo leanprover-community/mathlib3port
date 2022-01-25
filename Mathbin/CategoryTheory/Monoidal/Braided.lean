@@ -300,7 +300,7 @@ instance comm_monoid_discrete : CommMonoidₓ (discrete M) := by
   infer_instance
 
 instance : braided_category (discrete M) where
-  braiding := fun X Y => eq_to_iso (mul_commₓ X Y)
+  braiding := fun X Y => eq_to_iso (mul_comm X Y)
 
 variable {M} {N : Type u} [CommMonoidₓ N]
 

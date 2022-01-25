@@ -19,20 +19,20 @@ group_theory
 
 @[to_additive]
 theorem Tactic.Group.zpow_trick {G : Type _} [Groupₓ G] (a b : G) (n m : ℤ) : a * b ^ n * b ^ m = a * b ^ (n + m) := by
-  rw [mul_assocₓ, ← zpow_add]
+  rw [mul_assoc, ← zpow_add]
 
 @[to_additive]
 theorem Tactic.Group.zpow_trick_one {G : Type _} [Groupₓ G] (a b : G) (m : ℤ) : a * b * b ^ m = a * b ^ (m + 1) := by
-  rw [mul_assocₓ, mul_self_zpow]
+  rw [mul_assoc, mul_self_zpow]
 
 @[to_additive]
 theorem Tactic.Group.zpow_trick_one' {G : Type _} [Groupₓ G] (a b : G) (n : ℤ) : a * b ^ n * b = a * b ^ (n + 1) := by
-  rw [mul_assocₓ, mul_zpow_self]
+  rw [mul_assoc, mul_zpow_self]
 
 @[to_additive]
 theorem Tactic.Group.zpow_trick_sub {G : Type _} [Groupₓ G] (a b : G) (n m : ℤ) :
     a * b ^ n * b ^ -m = a * b ^ (n - m) := by
-  rw [mul_assocₓ, ← zpow_add] <;> rfl
+  rw [mul_assoc, ← zpow_add] <;> rfl
 
 namespace Tactic
 
@@ -51,9 +51,9 @@ unsafe def aux_group₁ (locat : loc) : tactic Unit :=
         expr (pquote.1 Int.neg_mul_eq_neg_mul_symm), symm_expr (pquote.1 zpow_coe_nat),
         symm_expr (pquote.1 zpow_neg_one), symm_expr (pquote.1 zpow_mul), symm_expr (pquote.1 zpow_add_one),
         symm_expr (pquote.1 zpow_one_add), symm_expr (pquote.1 zpow_add), expr (pquote.1 mul_zpow_neg_one),
-        expr (pquote.1 zpow_zero), expr (pquote.1 mul_zpow), symm_expr (pquote.1 mul_assocₓ),
-        expr (pquote.1 zpow_trick), expr (pquote.1 zpow_trick_one), expr (pquote.1 zpow_trick_one'),
-        expr (pquote.1 zpow_trick_sub), expr (pquote.1 Tactic.Ring.hornerₓ)]
+        expr (pquote.1 zpow_zero), expr (pquote.1 mul_zpow), symm_expr (pquote.1 mul_assoc), expr (pquote.1 zpow_trick),
+        expr (pquote.1 zpow_trick_one), expr (pquote.1 zpow_trick_one'), expr (pquote.1 zpow_trick_sub),
+        expr (pquote.1 Tactic.Ring.hornerₓ)]
       [] locat >>
     skip
 

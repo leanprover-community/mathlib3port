@@ -33,11 +33,11 @@ theorem ndinsert_zero (a : α) : ndinsert a 0 = {a} :=
 
 @[simp]
 theorem ndinsert_of_mem {a : α} {s : Multiset α} : a ∈ s → ndinsert a s = s :=
-  Quot.induction_on s $ fun l h => congr_argₓ coeₓ $ insert_of_mem h
+  Quot.induction_on s $ fun l h => congr_argₓ coe $ insert_of_mem h
 
 @[simp]
 theorem ndinsert_of_not_mem {a : α} {s : Multiset α} : a ∉ s → ndinsert a s = a ::ₘ s :=
-  Quot.induction_on s $ fun l h => congr_argₓ coeₓ $ insert_of_not_mem h
+  Quot.induction_on s $ fun l h => congr_argₓ coe $ insert_of_not_mem h
 
 @[simp]
 theorem mem_ndinsert {a b : α} {s : Multiset α} : a ∈ ndinsert b s ↔ a = b ∨ a ∈ s :=
@@ -168,7 +168,7 @@ theorem ndunion_eq_union {s t : Multiset α} (d : nodup s) : ndunion s t = s ∪
   le_antisymmₓ (ndunion_le_union _ _) $ union_le (le_ndunion_left _ d) (le_ndunion_right _ _)
 
 theorem erase_dup_add (s t : Multiset α) : erase_dup (s + t) = ndunion s (erase_dup t) :=
-  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ => congr_argₓ coeₓ $ erase_dup_append _ _
+  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ => congr_argₓ coe $ erase_dup_append _ _
 
 /-! ### finset inter -/
 

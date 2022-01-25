@@ -65,11 +65,11 @@ theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree [CommRingₓ R] [
       tsub_add_cancel_of_le h]
     
   · contrapose! h0
-    rw [← leading_coeff_eq_zero, leading_coeff, h0, mul_assocₓ, mul_commₓ _ p, ← tsub_add_cancel_of_le h,
+    rw [← leading_coeff_eq_zero, leading_coeff, h0, mul_assoc, mul_comm _ p, ← tsub_add_cancel_of_le h,
       add_commₓ _ p.nat_degree]
     simp only [coeff_mul_X_pow, coeff_neg, coeff_C_mul, add_tsub_cancel_left, coeff_add]
-    rw [add_commₓ p.nat_degree, tsub_add_cancel_of_le h, ← leading_coeff, ← leading_coeff, mul_commₓ _ q.leading_coeff,
-      ← sub_eq_add_neg, ← mul_sub, sub_self, mul_zero]
+    rw [add_commₓ p.nat_degree, tsub_add_cancel_of_le h, ← leading_coeff, ← leading_coeff, mul_comm _ q.leading_coeff, ←
+      sub_eq_add_neg, ← mul_sub, sub_self, mul_zero]
     
 
 end Polynomial

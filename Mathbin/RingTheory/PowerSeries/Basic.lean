@@ -79,7 +79,7 @@ variable {σ R : Type _}
 instance [Inhabited R] : Inhabited (MvPowerSeries σ R) :=
   ⟨fun _ => default⟩
 
-instance [HasZero R] : HasZero (MvPowerSeries σ R) :=
+instance [Zero R] : Zero (MvPowerSeries σ R) :=
   Pi.hasZero
 
 instance [AddMonoidₓ R] : AddMonoidₓ (MvPowerSeries σ R) :=
@@ -155,7 +155,7 @@ theorem coeff_zero (n : σ →₀ ℕ) : coeff R n (0 : MvPowerSeries σ R) = 0 
 
 variable (m n : σ →₀ ℕ) (φ ψ : MvPowerSeries σ R)
 
-instance : HasOne (MvPowerSeries σ R) :=
+instance : One (MvPowerSeries σ R) :=
   ⟨monomial R (0 : σ →₀ ℕ) 1⟩
 
 theorem coeff_one [DecidableEq σ] : coeff R n (1 : MvPowerSeries σ R) = if n = 0 then 1 else 0 :=
@@ -219,7 +219,7 @@ protected theorem add_mulₓ (φ₁ φ₂ φ₃ : MvPowerSeries σ R) : (φ₁ +
   ext $ fun n => by
     simp only [coeff_mul, add_mulₓ, Finset.sum_add_distrib, LinearMap.map_add]
 
-protected theorem mul_assocₓ (φ₁ φ₂ φ₃ : MvPowerSeries σ R) : φ₁ * φ₂ * φ₃ = φ₁ * (φ₂ * φ₃) := by
+protected theorem mul_assoc (φ₁ φ₂ φ₃ : MvPowerSeries σ R) : φ₁ * φ₂ * φ₃ = φ₁ * (φ₂ * φ₃) := by
   ext1 n
   simp only [coeff_mul, Finset.sum_mul, Finset.mul_sum, Finset.sum_sigma']
   refine' Finset.sum_bij (fun p _ => ⟨(p.2.1, p.2.2 + p.1.2), (p.2.2, p.1.2)⟩) _ _ _ _ <;>
@@ -232,7 +232,7 @@ protected theorem mul_assocₓ (φ₁ φ₂ φ₃ : MvPowerSeries σ R) : φ₁ 
   · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩
     dsimp only
     rintro rfl rfl
-    apply mul_assocₓ
+    apply mul_assoc
     
   · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩ ⟨⟨i, j⟩, ⟨k, l⟩⟩
     dsimp only
@@ -256,7 +256,7 @@ instance [CommSemiringₓ R] : CommSemiringₓ (MvPowerSeries σ R) :=
   { MvPowerSeries.semiring with
     mul_comm := fun φ ψ =>
       ext $ fun n => by
-        simpa only [coeff_mul, mul_commₓ] using sum_antidiagonal_swap n fun a b => coeff R a φ * coeff R b ψ }
+        simpa only [coeff_mul, mul_comm] using sum_antidiagonal_swap n fun a b => coeff R a φ * coeff R b ψ }
 
 instance [Ringₓ R] : Ringₓ (MvPowerSeries σ R) :=
   { MvPowerSeries.semiring, MvPowerSeries.addCommGroup with }
@@ -831,13 +831,13 @@ protected theorem mul_inv (φ : MvPowerSeries σ k) (h : constant_coeff σ k φ 
 
 @[simp]
 protected theorem inv_mul (φ : MvPowerSeries σ k) (h : constant_coeff σ k φ ≠ 0) : φ⁻¹ * φ = 1 := by
-  rw [mul_commₓ, φ.mul_inv h]
+  rw [mul_comm, φ.mul_inv h]
 
 protected theorem eq_mul_inv_iff_mul_eq {φ₁ φ₂ φ₃ : MvPowerSeries σ k} (h : constant_coeff σ k φ₃ ≠ 0) :
     φ₁ = φ₂ * φ₃⁻¹ ↔ φ₁ * φ₃ = φ₂ :=
   ⟨fun k => by
-    simp [k, mul_assocₓ, MvPowerSeries.inv_mul _ h], fun k => by
-    simp [← k, mul_assocₓ, MvPowerSeries.mul_inv _ h]⟩
+    simp [k, mul_assoc, MvPowerSeries.inv_mul _ h], fun k => by
+    simp [← k, mul_assoc, MvPowerSeries.mul_inv _ h]⟩
 
 protected theorem eq_inv_iff_mul_eq_one {φ ψ : MvPowerSeries σ k} (h : constant_coeff σ k ψ ≠ 0) :
     φ = ψ⁻¹ ↔ φ * ψ = 1 := by
@@ -913,7 +913,7 @@ theorem coe_X (s : σ) : ((X s : MvPolynomial σ R) : MvPowerSeries σ R) = MvPo
 
 variable (σ R)
 
-theorem coe_injective : Function.Injective (coeₓ : MvPolynomial σ R → MvPowerSeries σ R) := fun x y h => by
+theorem coe_injective : Function.Injective (coe : MvPolynomial σ R → MvPowerSeries σ R) := fun x y h => by
   ext
   simp_rw [← coeff_coe, h]
 
@@ -935,7 +935,7 @@ theorem coe_eq_one_iff : (φ : MvPowerSeries σ R) = 1 ↔ φ = 1 := by
 as a ring homomorphism.
 -/
 def coe_to_mv_power_series.ring_hom : MvPolynomial σ R →+* MvPowerSeries σ R where
-  toFun := (coeₓ : MvPolynomial σ R → MvPowerSeries σ R)
+  toFun := (coe : MvPolynomial σ R → MvPowerSeries σ R)
   map_zero' := coe_zero
   map_one' := coe_one
   map_add' := coe_add
@@ -2035,7 +2035,7 @@ theorem coeff_mul_prod_one_sub_of_lt_order {R ι : Type _} [CommRingₓ R] (k : 
     
   · intro a s ha ih t
     simp only [Finset.mem_insert, forall_eq_or_imp] at t
-    rw [Finset.prod_insert ha, ← mul_assocₓ, mul_right_commₓ, coeff_mul_one_sub_of_lt_order _ t.1]
+    rw [Finset.prod_insert ha, ← mul_assoc, mul_right_commₓ, coeff_mul_one_sub_of_lt_order _ t.1]
     exact ih t.2
     
 
@@ -2136,7 +2136,7 @@ theorem coe_X : ((X : Polynomial R) : PowerSeries R) = PowerSeries.x :=
 
 variable (R)
 
-theorem coe_injective : Function.Injective (coeₓ : Polynomial R → PowerSeries R) := fun x y h => by
+theorem coe_injective : Function.Injective (coe : Polynomial R → PowerSeries R) := fun x y h => by
   ext
   simp_rw [← coeff_coe, h]
 
@@ -2160,7 +2160,7 @@ variable (φ ψ)
 as a ring homomorphism.
 -/
 def coe_to_power_series.ring_hom : Polynomial R →+* PowerSeries R where
-  toFun := (coeₓ : Polynomial R → PowerSeries R)
+  toFun := (coe : Polynomial R → PowerSeries R)
   map_zero' := coe_zero
   map_one' := coe_one
   map_add' := coe_add

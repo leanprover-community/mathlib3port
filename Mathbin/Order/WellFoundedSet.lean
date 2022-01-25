@@ -57,14 +57,14 @@ def well_founded_on (s : Set α) (r : α → α → Prop) : Prop :=
 theorem well_founded_on_iff {s : Set α} {r : α → α → Prop} :
     s.well_founded_on r ↔ WellFounded fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s := by
   have f : RelEmbedding (fun a : s b : s => r a b) fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s :=
-    ⟨⟨coeₓ, Subtype.coe_injective⟩, fun a b => by
+    ⟨⟨coe, Subtype.coe_injective⟩, fun a b => by
       simp ⟩
   refine' ⟨fun h => _, f.well_founded⟩
   rw [WellFounded.well_founded_iff_has_min]
   intro t ht
   by_cases' hst : (s ∩ t).Nonempty
   · rw [← Subtype.preimage_coe_nonempty] at hst
-    rcases WellFounded.well_founded_iff_has_min.1 h (coeₓ ⁻¹' t) hst with ⟨⟨m, ms⟩, mt, hm⟩
+    rcases WellFounded.well_founded_iff_has_min.1 h (coe ⁻¹' t) hst with ⟨⟨m, ms⟩, mt, hm⟩
     exact ⟨m, mt, fun x xt ⟨xm, xs, ms⟩ => hm ⟨x, xs⟩ xt xm⟩
     
   · rcases ht with ⟨m, mt⟩
@@ -202,7 +202,7 @@ theorem _root_.is_antichain.finite_of_partially_well_ordered_on {s : Set α} {r 
   exact
     hmn.ne
       ((hi.nat_embedding _).Injective $
-        Subtype.val_injective $ ha.eq_of_related (hi.nat_embedding _ m).2 (hi.nat_embedding _ n).2 h)
+        Subtype.val_injective $ ha.eq (hi.nat_embedding _ m).2 (hi.nat_embedding _ n).2 h)
 
 theorem finite.partially_well_ordered_on {s : Set α} {r : α → α → Prop} [IsRefl α r] (hs : s.finite) :
     s.partially_well_ordered_on r := by
@@ -684,7 +684,7 @@ theorem submonoid_closure [OrderedCancelCommMonoid α] {s : Set α} (hpos : ∀ 
   obtain ⟨l, hll1, hll2⟩ := List.sublist_forall₂_iff.1 h12
   refine' le_transₓ (List.rel_prod (le_reflₓ 1) (fun a b ab c d cd => mul_le_mul' ab cd) hll1) _
   obtain ⟨l', hl'⟩ := hll2.exists_perm_append
-  rw [hl'.prod_eq, List.prod_append, ← mul_oneₓ l.prod, mul_assocₓ, one_mulₓ]
+  rw [hl'.prod_eq, List.prod_append, ← mul_oneₓ l.prod, mul_assoc, one_mulₓ]
   apply mul_le_mul_left'
   have hl's := fun x hx => hl2 x (List.Subset.trans (l.subset_append_right _) hl'.symm.subset hx)
   clear hl'

@@ -169,7 +169,7 @@ theorem smul_mem_iff' [Groupₓ G] [MulAction G M] [HasScalar G R] [IsScalarTowe
 instance : Add p :=
   ⟨fun x y => ⟨x.1 + y.1, add_mem _ x.2 y.2⟩⟩
 
-instance : HasZero p :=
+instance : Zero p :=
   ⟨⟨0, zero_mem _⟩⟩
 
 instance : Inhabited p :=
@@ -240,18 +240,18 @@ instance : Module R p :=
 
 instance NoZeroSmulDivisors [NoZeroSmulDivisors R M] : NoZeroSmulDivisors R p :=
   ⟨fun c x h =>
-    have : c = 0 ∨ (x : M) = 0 := eq_zero_or_eq_zero_of_smul_eq_zero (congr_argₓ coeₓ h)
+    have : c = 0 ∨ (x : M) = 0 := eq_zero_or_eq_zero_of_smul_eq_zero (congr_argₓ coe h)
     this.imp_right (@Subtype.ext_iff _ _ x 0).mpr⟩
 
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
 protected def Subtype : p →ₗ[R] M := by
-  refine' { toFun := coeₓ, .. } <;> simp [coe_smul]
+  refine' { toFun := coe, .. } <;> simp [coe_smul]
 
 @[simp]
 theorem subtype_apply (x : p) : p.subtype x = x :=
   rfl
 
-theorem coeSubtype : (Submodule.subtype p : p → M) = coeₓ :=
+theorem coeSubtype : (Submodule.subtype p : p → M) = coe :=
   rfl
 
 /-- Note the `add_submonoid` version of this lemma is called `add_submonoid.coe_finset_sum`. -/
@@ -416,23 +416,23 @@ variable [Semiringₓ R]
 /-- A submodule of an `ordered_add_comm_monoid` is an `ordered_add_comm_monoid`. -/
 instance to_ordered_add_comm_monoid {M} [OrderedAddCommMonoid M] [Module R M] (S : Submodule R M) :
     OrderedAddCommMonoid S :=
-  Subtype.coe_injective.OrderedAddCommMonoid coeₓ rfl fun _ _ => rfl
+  Subtype.coe_injective.OrderedAddCommMonoid coe rfl fun _ _ => rfl
 
 /-- A submodule of a `linear_ordered_add_comm_monoid` is a `linear_ordered_add_comm_monoid`. -/
 instance to_linear_ordered_add_comm_monoid {M} [LinearOrderedAddCommMonoid M] [Module R M] (S : Submodule R M) :
     LinearOrderedAddCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedAddCommMonoid coeₓ rfl fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedAddCommMonoid coe rfl fun _ _ => rfl
 
 /-- A submodule of an `ordered_cancel_add_comm_monoid` is an `ordered_cancel_add_comm_monoid`. -/
 instance to_ordered_cancel_add_comm_monoid {M} [OrderedCancelAddCommMonoid M] [Module R M] (S : Submodule R M) :
     OrderedCancelAddCommMonoid S :=
-  Subtype.coe_injective.OrderedCancelAddCommMonoid coeₓ rfl fun _ _ => rfl
+  Subtype.coe_injective.OrderedCancelAddCommMonoid coe rfl fun _ _ => rfl
 
 /-- A submodule of a `linear_ordered_cancel_add_comm_monoid` is a
 `linear_ordered_cancel_add_comm_monoid`. -/
 instance to_linear_ordered_cancel_add_comm_monoid {M} [LinearOrderedCancelAddCommMonoid M] [Module R M]
     (S : Submodule R M) : LinearOrderedCancelAddCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCancelAddCommMonoid coeₓ rfl fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedCancelAddCommMonoid coe rfl fun _ _ => rfl
 
 end OrderedMonoid
 
@@ -443,13 +443,13 @@ variable [Ringₓ R]
 /-- A submodule of an `ordered_add_comm_group` is an `ordered_add_comm_group`. -/
 instance to_ordered_add_comm_group {M} [OrderedAddCommGroup M] [Module R M] (S : Submodule R M) :
     OrderedAddCommGroup S :=
-  Subtype.coe_injective.OrderedAddCommGroup coeₓ rfl (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.OrderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
 
 /-- A submodule of a `linear_ordered_add_comm_group` is a
 `linear_ordered_add_comm_group`. -/
 instance to_linear_ordered_add_comm_group {M} [LinearOrderedAddCommGroup M] [Module R M] (S : Submodule R M) :
     LinearOrderedAddCommGroup S :=
-  Subtype.coe_injective.LinearOrderedAddCommGroup coeₓ rfl (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
 
 end OrderedGroup
 

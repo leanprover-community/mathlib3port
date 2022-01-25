@@ -261,9 +261,9 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : fun_space v} {n : ℕ} {d : ℝ}
         exact interval_subset_Icc v.t₀.2 t.2 $ Ioc_subset_Icc_self hτ
         _ = (v.L * |t - v.t₀|) ^ (n + 1) / (n + 1)! * d :=
       _
-  simp_rw [mul_powₓ, div_eq_mul_inv, mul_assocₓ, MeasureTheory.integral_mul_left, MeasureTheory.integral_mul_right,
+  simp_rw [mul_powₓ, div_eq_mul_inv, mul_assoc, MeasureTheory.integral_mul_left, MeasureTheory.integral_mul_right,
     integral_pow_abs_sub_interval_oc, div_eq_mul_inv, pow_succₓ (v.L : ℝ), Nat.factorial_succ, Nat.cast_mul,
-    Nat.cast_succ, mul_inv₀, mul_assocₓ]
+    Nat.cast_succ, mul_inv₀, mul_assoc]
 
 theorem dist_iterate_next_apply_le (f₁ f₂ : fun_space v) (n : ℕ) (t : Icc v.t_min v.t_max) :
     dist ((next^[n]) f₁ t) ((next^[n]) f₂ t) ≤ (v.L * |t - v.t₀|) ^ n / n ! * dist f₁ f₂ := by

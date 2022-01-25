@@ -74,7 +74,7 @@ def LinearMap.toContinuousLinearMap₁ (f : 𝕜 →ₗ[𝕜] E) : 𝕜 →L[�
   f.mk_continuous ∥f 1∥ $ fun x =>
     le_of_eqₓ $ by
       conv_lhs => rw [← mul_oneₓ x]
-      rw [← smul_eq_mul, f.map_smul, norm_smul, mul_commₓ]
+      rw [← smul_eq_mul, f.map_smul, norm_smul, mul_comm]
 
 /-- Construct a continuous linear map from a linear map and the existence of a bound on this linear
 map. If you have an explicit bound, use `linear_map.mk_continuous` instead, as a norm estimate will
@@ -188,7 +188,7 @@ def of_homothety (f : E →ₛₗ[σ₁₂] F) (a : ℝ) (hf : ∀ x, ∥f x∥ 
 variable (𝕜)
 
 theorem to_span_singleton_homothety (x : E) (c : 𝕜) : ∥LinearMap.toSpanSingleton 𝕜 E x c∥ = ∥x∥ * ∥c∥ := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact norm_smul _ _
 
 /-- Given an element `x` of a normed space `E` over a field `𝕜`, the natural continuous
@@ -272,6 +272,12 @@ theorem op_norm_eq_of_bounds {φ : E →SL[σ₁₂] F} {M : ℝ} (M_nonneg : 0 
 
 theorem op_norm_neg (f : E →SL[σ₁₂] F) : ∥-f∥ = ∥f∥ := by
   simp only [norm_def, neg_apply, norm_neg]
+
+theorem antilipschitz_of_bound (f : E →SL[σ₁₂] F) {K : ℝ≥0 } (h : ∀ x, ∥x∥ ≤ K * ∥f x∥) : AntilipschitzWith K f :=
+  LinearMap.antilipschitz_of_bound _ h
+
+theorem bound_of_antilipschitz (f : E →SL[σ₁₂] F) {K : ℝ≥0 } (h : AntilipschitzWith K f) x : ∥x∥ ≤ K * ∥f x∥ :=
+  LinearMap.bound_of_antilipschitz _ h x
 
 section
 
@@ -374,7 +380,7 @@ theorem norm_id_of_nontrivial_seminorm (h : ∃ x : E, ∥x∥ ≠ 0) : ∥id �
 theorem op_norm_smul_le {𝕜' : Type _} [NormedField 𝕜'] [NormedSpace 𝕜' F] [SmulCommClass 𝕜₂ 𝕜' F] (c : 𝕜')
     (f : E →SL[σ₁₂] F) : ∥c • f∥ ≤ ∥c∥ * ∥f∥ :=
   (c • f).op_norm_le_bound (mul_nonneg (norm_nonneg _) (op_norm_nonneg _)) fun _ => by
-    erw [norm_smul, mul_assocₓ]
+    erw [norm_smul, mul_assoc]
     exact mul_le_mul_of_nonneg_left (le_op_norm _ _) (norm_nonneg _)
 
 /-- Continuous linear maps themselves form a seminormed space with respect to
@@ -392,7 +398,7 @@ include σ₁₃
 theorem op_norm_comp_le (f : E →SL[σ₁₂] F) : ∥h.comp f∥ ≤ ∥h∥ * ∥f∥ :=
   cInf_le bounds_bdd_below
     ⟨mul_nonneg (op_norm_nonneg _) (op_norm_nonneg _), fun x => by
-      rw [mul_assocₓ]
+      rw [mul_assoc]
       exact h.le_op_norm_of_le (f.le_op_norm x)⟩
 
 omit σ₁₃
@@ -410,7 +416,7 @@ theorem lipschitz : LipschitzWith ∥f∥₊ f :=
 
 /-- Evaluation of a continuous linear map `f` at a point is Lipschitz continuous in `f`. -/
 theorem lipschitz_apply (x : E) : LipschitzWith ∥x∥₊ fun f : E →SL[σ₁₂] F => f x :=
-  lipschitz_with_iff_norm_sub_le.2 $ fun f g => ((f - g).le_op_norm x).trans_eq (mul_commₓ _ _)
+  lipschitz_with_iff_norm_sub_le.2 $ fun f g => ((f - g).le_op_norm x).trans_eq (mul_comm _ _)
 
 end
 
@@ -441,7 +447,7 @@ end
 theorem op_norm_prod (f : E →L[𝕜] Fₗ) (g : E →L[𝕜] Gₗ) : ∥f.prod g∥ = ∥(f, g)∥ :=
   le_antisymmₓ
       (op_norm_le_bound _ (norm_nonneg _) $ fun x => by
-        simpa only [prod_apply, Prod.semi_norm_def, max_mul_of_nonneg, norm_nonneg] using
+        simpa only [prod_apply, Prod.norm_def, max_mul_of_nonneg, norm_nonneg] using
           max_le_max (le_op_norm f x) (le_op_norm g x)) $
     max_leₓ (op_norm_le_bound _ (norm_nonneg _) $ fun x => (le_max_leftₓ _ _).trans ((f.prod g).le_op_norm x))
       (op_norm_le_bound _ (norm_nonneg _) $ fun x => (le_max_rightₓ _ _).trans ((f.prod g).le_op_norm x))
@@ -764,7 +770,7 @@ theorem lmul_right_apply (x y : 𝕜') : lmul_right 𝕜 𝕜' x y = y * x :=
 
 @[simp]
 theorem op_norm_lmul_right_apply (x : 𝕜') : ∥lmul_right 𝕜 𝕜' x∥ = ∥x∥ :=
-  le_antisymmₓ (op_norm_le_bound _ (norm_nonneg x) fun y => (norm_mul_le y x).trans_eq (mul_commₓ _ _))
+  le_antisymmₓ (op_norm_le_bound _ (norm_nonneg x) fun y => (norm_mul_le y x).trans_eq (mul_comm _ _))
     (by
       convert ratio_le_op_norm _ (1 : 𝕜')
       simp [NormedAlgebra.norm_one 𝕜 𝕜']
@@ -791,7 +797,7 @@ theorem lmul_left_right_apply (x y z : 𝕜') : lmul_left_right 𝕜 𝕜' x y z
 
 theorem op_norm_lmul_left_right_apply_apply_le (x y : 𝕜') : ∥lmul_left_right 𝕜 𝕜' x y∥ ≤ ∥x∥ * ∥y∥ :=
   (op_norm_comp_le _ _).trans_eq $ by
-    simp [mul_commₓ]
+    simp [mul_comm]
 
 theorem op_norm_lmul_left_right_apply_le (x : 𝕜') : ∥lmul_left_right 𝕜 𝕜' x∥ ≤ ∥x∥ :=
   op_norm_le_bound _ (norm_nonneg x) (op_norm_lmul_left_right_apply_apply_le 𝕜 𝕜' x)
@@ -818,10 +824,10 @@ variable {𝕜'}
 
 theorem norm_to_span_singleton (x : E) : ∥to_span_singleton 𝕜 x∥ = ∥x∥ := by
   refine' op_norm_eq_of_bounds (norm_nonneg _) (fun x => _) fun N hN_nonneg h => _
-  · rw [to_span_singleton_apply, norm_smul, mul_commₓ]
+  · rw [to_span_singleton_apply, norm_smul, mul_comm]
     
   · specialize h 1
-    rw [to_span_singleton_apply, norm_smul, mul_commₓ] at h
+    rw [to_span_singleton_apply, norm_smul, mul_comm] at h
     exact
       (mul_le_mul_right
             (by
@@ -980,7 +986,7 @@ theorem homothety_inverse (a : ℝ) (ha : 0 < a) (f : E ≃ₛₗ[σ₁₂] F) :
   calc ∥f.symm y∥ = a⁻¹ * (a * ∥f.symm y∥) := _ _ = a⁻¹ * ∥f (f.symm y)∥ := by
       rw [hf]_ = a⁻¹ * ∥y∥ := by
       simp
-  rw [← mul_assocₓ, inv_mul_cancel (ne_of_ltₓ ha).symm, one_mulₓ]
+  rw [← mul_assoc, inv_mul_cancel (ne_of_ltₓ ha).symm, one_mulₓ]
 
 /-- A linear equivalence which is a homothety is a continuous linear equivalence. -/
 def of_homothety (f : E ≃ₛₗ[σ₁₂] F) (a : ℝ) (ha : 0 < a) (hf : ∀ x, ∥f x∥ = a * ∥x∥) : E ≃SL[σ₁₂] F where
@@ -1109,7 +1115,7 @@ theorem LinearMap.continuous_iff_is_closed_ker {f : E →ₗ[𝕜] 𝕜} : Conti
         have fy_zero : f y = 0 := by
           calc f y = f x₀ - f x₀ * f x⁻¹ * f x := by
               simp [y]_ = 0 := by
-              rw [mul_assocₓ, inv_mul_cancel hx, mul_oneₓ, sub_eq_zero_of_eq]
+              rw [mul_assoc, inv_mul_cancel hx, mul_oneₓ, sub_eq_zero_of_eq]
               rfl
         have A : r * ∥x₀∥ ≤ ∥f x₀∥ * ∥f x∥⁻¹ * ∥x∥ :=
           calc
@@ -1408,7 +1414,7 @@ theorem op_norm_extend_le : ∥ψ∥ ≤ N * ∥f∥ := by
       rw [Eq]
       calc ∥f x∥ ≤ ∥f∥ * ∥x∥ := le_op_norm _ _ _ ≤ ∥f∥ * (N * ∥e x∥) :=
           mul_le_mul_of_nonneg_left (h_e x) (norm_nonneg _)_ ≤ N * ∥f∥ * ∥e x∥ := by
-          rw [mul_commₓ (↑N) ∥f∥, mul_assocₓ]
+          rw [mul_comm (↑N) ∥f∥, mul_assoc]
       
     
   · have he : ∀ x : E, x = 0 := by
@@ -1593,7 +1599,7 @@ omit σ₂₁
 
 theorem one_le_norm_mul_norm_symm [RingHomIsometric σ₁₂] [Nontrivial E] (e : E ≃SL[σ₁₂] F) :
     1 ≤ ∥(e : E →SL[σ₁₂] F)∥ * ∥(e.symm : F →SL[σ₂₁] E)∥ := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   convert (e.symm : F →SL[σ₂₁] E).op_norm_comp_le (e : E →SL[σ₁₂] F)
   rw [e.coe_symm_comp_coe, ContinuousLinearMap.norm_id]
 

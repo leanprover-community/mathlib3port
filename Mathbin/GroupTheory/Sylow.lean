@@ -58,10 +58,10 @@ theorem ext {P Q : Sylow p G} (h : (P : Subgroup G) = Q) : P = Q := by
   cases P <;> cases Q <;> congr
 
 theorem ext_iff {P Q : Sylow p G} : P = Q ↔ (P : Subgroup G) = Q :=
-  ⟨congr_argₓ coeₓ, ext⟩
+  ⟨congr_argₓ coe, ext⟩
 
 instance : SetLike (Sylow p G) G where
-  coe := coeₓ
+  coe := coe
   coe_injective' := fun P Q h => ext (SetLike.coe_injective h)
 
 end Sylow
@@ -287,7 +287,7 @@ theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fi
           (inv_mem_iff H).1 $
             (hx _).2 $
               (mul_mem_cancel_left H (H.inv_mem hb₁)).1 $ by
-                rw [hx] at hb₂ <;> simpa [mul_inv_rev, mul_assocₓ] using hb₂)⟩
+                rw [hx] at hb₂ <;> simpa [mul_inv_rev, mul_assoc] using hb₂)⟩
 
 def fixed_points_mul_left_cosets_equiv_quotient (H : Subgroup G) [Fintype (H : Set G)] :
     MulAction.FixedPoints H (G ⧸ H) ≃ normalizer H ⧸ Subgroup.comap ((normalizer H).Subtype : normalizer H →* G) H :=
@@ -325,7 +325,7 @@ theorem prime_dvd_card_quotient_normalizer [Fintype G] {p : ℕ} {n : ℕ} [hp :
   have hcard : card (G ⧸ H) = s * p :=
     (Nat.mul_left_inj (show card H > 0 from Fintype.card_pos_iff.2 ⟨⟨1, H.one_mem⟩⟩)).1
       (by
-        rwa [← card_eq_card_quotient_mul_card_subgroup H, hH, hs, pow_succ'ₓ, mul_assocₓ, mul_commₓ p])
+        rwa [← card_eq_card_quotient_mul_card_subgroup H, hH, hs, pow_succ'ₓ, mul_assoc, mul_comm p])
   have hm : s * p % p = card (normalizer H ⧸ Subgroup.comap ((normalizer H).Subtype : normalizer H →* G) H) % p :=
     hcard ▸ (card_quotient_normalizer_modeq_card_quotient hH).symm
   Nat.dvd_of_mod_eq_zeroₓ
@@ -347,7 +347,7 @@ theorem exists_subgroup_card_pow_succ [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact
   have hcard : card (G ⧸ H) = s * p :=
     (Nat.mul_left_inj (show card H > 0 from Fintype.card_pos_iff.2 ⟨⟨1, H.one_mem⟩⟩)).1
       (by
-        rwa [← card_eq_card_quotient_mul_card_subgroup H, hH, hs, pow_succ'ₓ, mul_assocₓ, mul_commₓ p])
+        rwa [← card_eq_card_quotient_mul_card_subgroup H, hH, hs, pow_succ'ₓ, mul_assoc, mul_comm p])
   have hm : s * p % p = card (normalizer H ⧸ Subgroup.comap (normalizer H).Subtype H) % p :=
     card_congr (fixed_points_mul_left_cosets_equiv_quotient H) ▸
       hcard ▸ (IsPGroup.of_card hH).card_modeq_card_fixed_points _

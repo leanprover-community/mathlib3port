@@ -64,7 +64,7 @@ instance [SemigroupWithZero β] : SemigroupWithZero (α →₀ β) :=
   { (inferInstance : MulZeroClass (α →₀ β)) with mul := · * ·,
     mul_assoc := fun f g h => by
       ext
-      simp only [mul_apply, mul_assocₓ] }
+      simp only [mul_apply, mul_assoc] }
 
 instance [NonUnitalNonAssocSemiring β] : NonUnitalNonAssocSemiring (α →₀ β) :=
   { (inferInstance : MulZeroClass (α →₀ β)), (inferInstance : AddCommMonoidₓ (α →₀ β)) with

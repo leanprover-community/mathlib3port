@@ -22,26 +22,95 @@ lie algebra, lower central series, nilpotent
 
 universe u v w w₁ w₂
 
-namespace LieModule
+section NilpotentModules
 
-variable (R : Type u) (L : Type v) (M : Type w)
+variable {R : Type u} {L : Type v} {M : Type w}
 
 variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [AddCommGroupₓ M] [Module R M]
 
 variable [LieRingModule L M] [LieModule R L M]
 
+variable (k : ℕ) (N : LieSubmodule R L M)
+
+namespace LieSubmodule
+
+/-- A generalisation of the lower central series. The zeroth term is a specified Lie submodule of
+a Lie module. In the case when we specify the top ideal `⊤` of the Lie algebra, regarded as a Lie
+module over itself, we get the usual lower central series of a Lie algebra.
+
+It can be more convenient to work with this generalisation when considering the lower central series
+of a Lie submodule, regarded as a Lie module in its own right, since it provides a type-theoretic
+expression of the fact that the terms of the Lie submodule's lower central series are also Lie
+submodules of the enclosing Lie module.
+
+See also `lie_module.lower_central_series_eq_lcs_comap` and
+`lie_module.lower_central_series_map_eq_lcs` below. -/
+def lcs : LieSubmodule R L M → LieSubmodule R L M :=
+  (fun N => ⁅(⊤ : LieIdeal R L),N⁆)^[k]
+
+@[simp]
+theorem lcs_zero (N : LieSubmodule R L M) : N.lcs 0 = N :=
+  rfl
+
+@[simp]
+theorem lcs_succ : N.lcs (k + 1) = ⁅(⊤ : LieIdeal R L),N.lcs k⁆ :=
+  Function.iterate_succ_apply' (fun N' => ⁅⊤,N'⁆) k N
+
+end LieSubmodule
+
+namespace LieModule
+
+variable (R L M)
+
 /-- The lower central series of Lie submodules of a Lie module. -/
-def lower_central_series (k : ℕ) : LieSubmodule R L M :=
-  ((fun I => ⁅(⊤ : LieIdeal R L),I⁆)^[k]) ⊤
+def lower_central_series : LieSubmodule R L M :=
+  (⊤ : LieSubmodule R L M).lcs k
 
 @[simp]
 theorem lower_central_series_zero : lower_central_series R L M 0 = ⊤ :=
   rfl
 
 @[simp]
-theorem lower_central_series_succ (k : ℕ) :
+theorem lower_central_series_succ :
     lower_central_series R L M (k + 1) = ⁅(⊤ : LieIdeal R L),lower_central_series R L M k⁆ :=
-  Function.iterate_succ_apply' (fun I => ⁅(⊤ : LieIdeal R L),I⁆) k ⊤
+  (⊤ : LieSubmodule R L M).lcs_succ k
+
+end LieModule
+
+namespace LieSubmodule
+
+open LieModule
+
+variable {R L M}
+
+theorem lcs_le_self : N.lcs k ≤ N := by
+  induction' k with k ih
+  · simp
+    
+  · simp only [lcs_succ]
+    exact (LieSubmodule.mono_lie_right _ _ ⊤ ih).trans (N.lie_le_right ⊤)
+    
+
+theorem lower_central_series_eq_lcs_comap : lower_central_series R L N k = (N.lcs k).comap N.incl := by
+  induction' k with k ih
+  · simp
+    
+  · simp only [lcs_succ, lower_central_series_succ] at ih⊢
+    have : N.lcs k ≤ N.incl.range := by
+      rw [N.range_incl]
+      apply lcs_le_self
+    rw [ih, LieSubmodule.comap_bracket_eq _ _ N.incl N.ker_incl this]
+    
+
+theorem lower_central_series_map_eq_lcs : (lower_central_series R L N k).map N.incl = N.lcs k := by
+  rw [lower_central_series_eq_lcs_comap, LieSubmodule.map_comap_incl, inf_eq_right]
+  apply lcs_le_self
+
+end LieSubmodule
+
+namespace LieModule
+
+variable (R L M)
 
 theorem antitone_lower_central_series : Antitone $ lower_central_series R L M := by
   intro l k
@@ -227,6 +296,8 @@ theorem nontrivial_max_triv_of_is_nilpotent [Nontrivial M] [IsNilpotent R L M] :
 
 end LieModule
 
+end NilpotentModules
+
 instance (priority := 100) LieAlgebra.is_solvable_of_is_nilpotent (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L]
     [LieAlgebra R L] [hL : LieModule.IsNilpotent R L L] : LieAlgebra.IsSolvable R L := by
   obtain ⟨k, h⟩ : ∃ k, LieModule.lowerCentralSeries R L L k = ⊥ := hL.nilpotent
@@ -316,9 +387,7 @@ theorem LieIdeal.lower_central_series_map_eq (k : ℕ) {f : L →ₗ⁅R⁆ L'} 
 theorem Function.Injective.lie_algebra_is_nilpotent [h₁ : IsNilpotent R L'] {f : L →ₗ⁅R⁆ L'}
     (h₂ : Function.Injective f) : IsNilpotent R L :=
   { nilpotent := by
-      run_tac
-        tactic.unfreeze_local_instances
-      obtain ⟨k, hk⟩ := h₁
+      obtain ⟨k, hk⟩ := id h₁
       use k
       apply LieIdeal.bot_of_map_eq_bot h₂
       rw [eq_bot_iff, ← hk]
@@ -327,9 +396,7 @@ theorem Function.Injective.lie_algebra_is_nilpotent [h₁ : IsNilpotent R L'] {f
 theorem Function.Surjective.lie_algebra_is_nilpotent [h₁ : IsNilpotent R L] {f : L →ₗ⁅R⁆ L'}
     (h₂ : Function.Surjective f) : IsNilpotent R L' :=
   { nilpotent := by
-      run_tac
-        tactic.unfreeze_local_instances
-      obtain ⟨k, hk⟩ := h₁
+      obtain ⟨k, hk⟩ := id h₁
       use k
       rw [← LieIdeal.lower_central_series_map_eq k h₂, hk]
       simp only [LieIdeal.map_eq_bot_iff, bot_le] }

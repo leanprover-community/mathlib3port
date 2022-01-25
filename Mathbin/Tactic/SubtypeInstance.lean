@@ -38,7 +38,7 @@ unsafe def derive_field_subtype : tactic Unit := do
               return n
       let mem_field ← resolve_constant $ mk_mem_name subname field
       let val_mem ← mk_app mem_field hyps
-      let quote.1 (coeSortₓ (%%ₓs)) ← target >>= instantiate_mvars
+      let quote.1 (coeSort (%%ₓs)) ← target >>= instantiate_mvars
       tactic.refine (pquote.1 (@Subtype.mk _ (%%ₓs) (%%ₓval) (%%ₓval_mem)))
 
 namespace Interactive

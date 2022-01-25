@@ -82,7 +82,7 @@ protected theorem mul_left' (hc : 0 ≤ c) (h : a ≡ b [ZMOD n]) : c * a ≡ c 
     simp [hc.symm]
 
 protected theorem mul_right' (hc : 0 ≤ c) (h : a ≡ b [ZMOD n]) : a * c ≡ b * c [ZMOD n * c] := by
-  rw [mul_commₓ a, mul_commₓ b, mul_commₓ n] <;> exact h.mul_left' hc
+  rw [mul_comm a, mul_comm b, mul_comm n] <;> exact h.mul_left' hc
 
 protected theorem add (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a + c ≡ b + d [ZMOD n] :=
   modeq_iff_dvd.2 $ by
@@ -133,7 +133,7 @@ protected theorem mul_left (c : ℤ) (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [Z
       exact ((h.mul_left' $ neg_nonneg.2 hc).modeq_of_dvd (dvd_mul_left _ _)).neg
 
 protected theorem mul_right (c : ℤ) (h : a ≡ b [ZMOD n]) : a * c ≡ b * c [ZMOD n] := by
-  rw [mul_commₓ a, mul_commₓ b]
+  rw [mul_comm a, mul_comm b]
   exact h.mul_left c
 
 protected theorem mul (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a * c ≡ b * d [ZMOD n] :=
@@ -150,7 +150,7 @@ theorem of_modeq_mul_left (m : ℤ) (h : a ≡ b [ZMOD m * n]) : a ≡ b [ZMOD n
   rw [modeq_iff_dvd] at * <;> exact (dvd_mul_left n m).trans h
 
 theorem of_modeq_mul_right (m : ℤ) : a ≡ b [ZMOD n * m] → a ≡ b [ZMOD n] :=
-  mul_commₓ m n ▸ of_modeq_mul_left _
+  mul_comm m n ▸ of_modeq_mul_left _
 
 end Modeq
 

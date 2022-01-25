@@ -88,11 +88,11 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
     rw [d0, zero_mul] at this
     contradiction
   rw [num_denom'] at e
-  have := congr_argₓ (coeₓ : ℤ → α) ((mk_eq b0' $ ne_of_gtₓ $ Int.coe_nat_pos.2 h).1 e)
+  have := congr_argₓ (coe : ℤ → α) ((mk_eq b0' $ ne_of_gtₓ $ Int.coe_nat_pos.2 h).1 e)
   rw [Int.cast_mul, Int.cast_mul, Int.cast_coe_nat] at this
   symm
   change (a / b : α) = n / d
-  rw [div_eq_mul_inv, eq_div_iff_mul_eq d0, mul_assocₓ, (d.commute_cast _).Eq, ← mul_assocₓ, this, mul_assocₓ,
+  rw [div_eq_mul_inv, eq_div_iff_mul_eq d0, mul_assoc, (d.commute_cast _).Eq, ← mul_assoc, this, mul_assoc,
     mul_inv_cancel b0, mul_oneₓ]
 
 @[norm_cast]
@@ -107,12 +107,12 @@ theorem cast_add_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom
     rw [num_denom', num_denom', add_def d₁0' d₂0']
     suffices (n₁ * (d₂ * (d₂⁻¹ * d₁⁻¹)) + n₂ * (d₁ * d₂⁻¹) * d₁⁻¹ : α) = n₁ * d₁⁻¹ + n₂ * d₂⁻¹ by
       rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
-      · simpa [division_def, left_distrib, right_distrib, mul_inv_rev₀, d₁0, d₂0, mul_assocₓ]
+      · simpa [division_def, left_distrib, right_distrib, mul_inv_rev₀, d₁0, d₂0, mul_assoc]
         
       all_goals
         simp [d₁0, d₂0]
-    rw [← mul_assocₓ (d₂ : α), mul_inv_cancel d₂0, one_mulₓ, (Nat.cast_commute _ _).Eq]
-    simp [d₁0, mul_assocₓ]
+    rw [← mul_assoc (d₂ : α), mul_inv_cancel d₂0, one_mulₓ, (Nat.cast_commute _ _).Eq]
+    simp [d₁0, mul_assoc]
 
 @[simp, norm_cast]
 theorem cast_neg : ∀ n, ((-n : ℚ) : α) = -n
@@ -139,7 +139,7 @@ theorem cast_mul_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom
     rw [num_denom', num_denom', mul_def d₁0' d₂0']
     suffices (n₁ * (n₂ * d₂⁻¹ * d₁⁻¹) : α) = n₁ * (d₁⁻¹ * (n₂ * d₂⁻¹)) by
       rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
-      · simpa [division_def, mul_inv_rev₀, d₁0, d₂0, mul_assocₓ]
+      · simpa [division_def, mul_inv_rev₀, d₁0, d₂0, mul_assoc]
         
       all_goals
         simp [d₁0, d₂0]
@@ -179,7 +179,7 @@ theorem cast_div_of_ne_zero {m n : ℚ} (md : (m.denom : α) ≠ 0) (nn : (n.num
     conv in n⁻¹.denom => rw [← @num_denom n, inv_def] <;> apply denom_dvd
   have : (n⁻¹.denom : α) = 0 → (n.num : α) = 0 := fun h => by
     let ⟨k, e⟩ := this
-    have := congr_argₓ (coeₓ : ℤ → α) e <;> rwa [Int.cast_mul, Int.cast_coe_nat, h, zero_mul] at this
+    have := congr_argₓ (coe : ℤ → α) e <;> rwa [Int.cast_mul, Int.cast_coe_nat, h, zero_mul] at this
   rw [division_def, cast_mul_of_ne_zero md (mt this nn), cast_inv_of_ne_zero nn nd, division_def]
 
 @[simp, norm_cast]
@@ -192,11 +192,11 @@ theorem cast_inj [CharZero α] : ∀ {m n : ℚ}, (m : α) = n ↔ m = n
     have d₂a : (d₂ : α) ≠ 0 := Nat.cast_ne_zero.2 d₂0
     rw [num_denom', num_denom'] at h⊢
     rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero] at h <;> simp [d₁0, d₂0] at h⊢
-    rwa [eq_div_iff_mul_eq d₂a, division_def, mul_assocₓ, (d₁.cast_commute (d₂ : α)).inv_left₀.Eq, ← mul_assocₓ, ←
+    rwa [eq_div_iff_mul_eq d₂a, division_def, mul_assoc, (d₁.cast_commute (d₂ : α)).inv_left₀.Eq, ← mul_assoc, ←
       division_def, eq_comm, eq_div_iff_mul_eq d₁a, eq_comm, ← Int.cast_coe_nat, ← Int.cast_mul, ← Int.cast_coe_nat, ←
       Int.cast_mul, Int.cast_inj, ← mk_eq (Int.coe_nat_ne_zero.2 d₁0) (Int.coe_nat_ne_zero.2 d₂0)] at h
 
-theorem cast_injective [CharZero α] : Function.Injective (coeₓ : ℚ → α)
+theorem cast_injective [CharZero α] : Function.Injective (coe : ℚ → α)
   | m, n => cast_inj.1
 
 @[simp]
@@ -230,12 +230,12 @@ variable (α)
 
 /-- Coercion `ℚ → α` as a `ring_hom`. -/
 def cast_hom [CharZero α] : ℚ →+* α :=
-  ⟨coeₓ, cast_one, cast_mul, cast_zero, cast_add⟩
+  ⟨coe, cast_one, cast_mul, cast_zero, cast_add⟩
 
 variable {α}
 
 @[simp]
-theorem coe_cast_hom [CharZero α] : ⇑cast_hom α = coeₓ :=
+theorem coe_cast_hom [CharZero α] : ⇑cast_hom α = coe :=
   rfl
 
 @[simp, norm_cast]
@@ -331,7 +331,7 @@ theorem RingHom.ext_rat {R : Type _} [Semiringₓ R] (f g : ℚ →+* R) : f = g
         f.map_mul]_ = g a * f (b⁻¹) * (f (b : ℤ) * g (b⁻¹)) :=
       by
       rw [this a, ← this b]_ = g (a * b⁻¹) := by
-      rw [Int.cast_coe_nat, mul_assocₓ, ← mul_assocₓ (f (b⁻¹)), ← f.map_mul, inv_mul_cancel b0', f.map_one, one_mulₓ,
+      rw [Int.cast_coe_nat, mul_assoc, ← mul_assoc (f (b⁻¹)), ← f.map_mul, inv_mul_cancel b0', f.map_one, one_mulₓ,
         g.map_mul]
 
 instance Rat.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℚ →+* R) :=

@@ -443,7 +443,7 @@ end Sub
 
 section Zero
 
-variable [HasZero α]
+variable [Zero α]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»

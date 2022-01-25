@@ -31,9 +31,9 @@ theorem monotone_accumulate [Preorderₓ α] : Monotone (accumulate s) := fun x 
 
 theorem bUnion_accumulate [Preorderₓ α] (x : α) : (⋃ y ≤ x, accumulate s y) = ⋃ y ≤ x, s y := by
   apply subset.antisymm
-  · exact bUnion_subset fun x hx => (monotone_accumulate hx : _)
+  · exact Union₂_subset fun y hy => monotone_accumulate hy
     
-  · exact bUnion_mono fun x hx => subset_accumulate
+  · exact Union₂_mono fun y hy => subset_accumulate
     
 
 theorem Union_accumulate [Preorderₓ α] : (⋃ x, accumulate s x) = ⋃ x, s x := by
@@ -42,7 +42,7 @@ theorem Union_accumulate [Preorderₓ α] : (⋃ x, accumulate s x) = ⋃ x, s x
     intro z x x' hx'x hz
     exact ⟨x', hz⟩
     
-  · exact Union_subset_Union fun i => subset_accumulate
+  · exact Union_mono fun i => subset_accumulate
     
 
 end Set

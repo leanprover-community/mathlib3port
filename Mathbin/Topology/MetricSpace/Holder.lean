@@ -98,7 +98,7 @@ theorem edist_le_of_le (h : HolderOnWith C r f s) {x y : X} (hx : x ∈ s) (hy :
 theorem comp {Cg rg : ℝ≥0 } {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t) {Cf rf : ℝ≥0 } {f : X → Y}
     (hf : HolderOnWith Cf rf f s) (hst : maps_to f s t) : HolderOnWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) s := by
   intro x hx y hy
-  rw [Ennreal.coe_mul, mul_commₓ rg, Nnreal.coe_mul, Ennreal.rpow_mul, mul_assocₓ, ←
+  rw [Ennreal.coe_mul, mul_comm rg, Nnreal.coe_mul, Ennreal.rpow_mul, mul_assoc, ←
     Ennreal.coe_rpow_of_nonneg _ rg.coe_nonneg, ← Ennreal.mul_rpow_of_nonneg _ _ rg.coe_nonneg]
   exact hg.edist_le_of_le (hst hx) (hst hy) (hf.edist_le hx hy)
 

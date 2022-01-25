@@ -95,7 +95,7 @@ theorem cpow_add {x : ℂ} (y z : ℂ) (hx : x ≠ 0) : x ^ (y + z) = x ^ y * x 
 theorem cpow_mul {x y : ℂ} (z : ℂ) (h₁ : -π < (log x * y).im) (h₂ : (log x * y).im ≤ π) : x ^ (y * z) = (x ^ y) ^ z :=
   by
   simp only [cpow_def]
-  split_ifs <;> simp_all [exp_ne_zero, log_exp h₁ h₂, mul_assocₓ]
+  split_ifs <;> simp_all [exp_ne_zero, log_exp h₁ h₂, mul_assoc]
 
 theorem cpow_neg (x y : ℂ) : x ^ -y = (x ^ y)⁻¹ := by
   simp [cpow_def] <;> split_ifs <;> simp [exp_neg]
@@ -129,7 +129,7 @@ theorem cpow_nat_inv_pow (x : ℂ) {n : ℕ} (hn : 0 < n) : (x ^ (n⁻¹ : ℂ))
   suffices im (log x * n⁻¹) ∈ Set.Ioc (-π) π by
     rw [← cpow_nat_cast, ← cpow_mul _ this.1 this.2, inv_mul_cancel, cpow_one]
     exact_mod_cast hn.ne'
-  rw [mul_commₓ, ← of_real_nat_cast, ← of_real_inv, of_real_mul_im, ← div_eq_inv_mul]
+  rw [mul_comm, ← of_real_nat_cast, ← of_real_inv, of_real_mul_im, ← div_eq_inv_mul]
   have hn' : 0 < (n : ℝ) := by
     assumption_mod_cast
   have hn1 : 1 ≤ (n : ℝ) := by
@@ -307,7 +307,7 @@ theorem rpow_def_of_neg {x : ℝ} (hx : x < 0) (y : ℝ) : x ^ y = exp (log x * 
     simp only [Complex.log, abs_of_neg hx, Complex.arg_of_real_of_neg hx, Complex.abs_of_real, Complex.of_real_mul]
     ring
   · rw [this, Complex.exp_add_mul_I, ← Complex.of_real_exp, ← Complex.of_real_cos, ← Complex.of_real_sin, mul_addₓ, ←
-      Complex.of_real_mul, ← mul_assocₓ, ← Complex.of_real_mul, Complex.add_re, Complex.of_real_re, Complex.mul_re,
+      Complex.of_real_mul, ← mul_assoc, ← Complex.of_real_mul, Complex.add_re, Complex.of_real_re, Complex.mul_re,
       Complex.I_re, Complex.of_real_im, Real.log_neg_eq_log]
     ring
     
@@ -468,7 +468,7 @@ theorem rpow_sub' {x : ℝ} (hx : 0 ≤ x) {y z : ℝ} (h : y - z ≠ 0) : x ^ (
 
 theorem rpow_add_int {x : ℝ} (hx : x ≠ 0) (y : ℝ) (n : ℤ) : x ^ (y + n) = x ^ y * x ^ n := by
   rw [rpow_def, Complex.of_real_add, Complex.cpow_add _ _ (complex.of_real_ne_zero.mpr hx), Complex.of_real_int_cast,
-    Complex.cpow_int_cast, ← Complex.of_real_zpow, mul_commₓ, Complex.of_real_mul_re, ← rpow_def, mul_commₓ]
+    Complex.cpow_int_cast, ← Complex.of_real_zpow, mul_comm, Complex.of_real_mul_re, ← rpow_def, mul_comm]
 
 theorem rpow_add_nat {x : ℝ} (hx : x ≠ 0) (y : ℝ) (n : ℕ) : x ^ (y + n) = x ^ y * x ^ n :=
   rpow_add_int hx y n
@@ -527,14 +527,14 @@ theorem mul_rpow {x y z : ℝ} (h : 0 ≤ x) (h₁ : 0 ≤ y) : (x * y) ^ z = x 
     
 
 theorem inv_rpow (hx : 0 ≤ x) (y : ℝ) : x⁻¹ ^ y = (x ^ y)⁻¹ := by
-  simp only [← rpow_neg_one, ← rpow_mul hx, mul_commₓ]
+  simp only [← rpow_neg_one, ← rpow_mul hx, mul_comm]
 
 theorem div_rpow (hx : 0 ≤ x) (hy : 0 ≤ y) (z : ℝ) : (x / y) ^ z = x ^ z / y ^ z := by
   simp only [div_eq_mul_inv, mul_rpow hx (inv_nonneg.2 hy), inv_rpow hy]
 
 theorem log_rpow {x : ℝ} (hx : 0 < x) (y : ℝ) : log (x ^ y) = y * log x := by
   apply exp_injective
-  rw [exp_log (rpow_pos_of_pos hx y), ← exp_log hx, mul_commₓ, rpow_def_of_pos (exp_pos (log x)) y]
+  rw [exp_log (rpow_pos_of_pos hx y), ← exp_log hx, mul_comm, rpow_def_of_pos (exp_pos (log x)) y]
 
 theorem rpow_lt_rpow (hx : 0 ≤ x) (hxy : x < y) (hz : 0 < z) : x ^ z < y ^ z := by
   rw [le_iff_eq_or_lt] at hx
@@ -997,6 +997,20 @@ theorem rpow_lt_rpow_of_exponent_gt {x : ℝ≥0 } {y z : ℝ} (hx0 : 0 < x) (hx
 theorem rpow_le_rpow_of_exponent_ge {x : ℝ≥0 } {y z : ℝ} (hx0 : 0 < x) (hx1 : x ≤ 1) (hyz : z ≤ y) : x ^ y ≤ x ^ z :=
   Real.rpow_le_rpow_of_exponent_ge hx0 hx1 hyz
 
+theorem rpow_pos {p : ℝ} {x : ℝ≥0 } (hx_pos : 0 < x) : 0 < x ^ p := by
+  have rpow_pos_of_nonneg : ∀ {p : ℝ}, 0 < p → 0 < x ^ p := by
+    intro p hp_pos
+    rw [← zero_rpow hp_pos.ne']
+    exact rpow_lt_rpow hx_pos hp_pos
+  rcases lt_trichotomyₓ 0 p with (hp_pos | rfl | hp_neg)
+  · exact rpow_pos_of_nonneg hp_pos
+    
+  · simp only [zero_lt_one, rpow_zero]
+    
+  · rw [← neg_negₓ p, rpow_neg, inv_pos]
+    exact rpow_pos_of_nonneg (neg_pos.mpr hp_neg)
+    
+
 theorem rpow_lt_one {x : ℝ≥0 } {z : ℝ} (hx : 0 ≤ x) (hx1 : x < 1) (hz : 0 < z) : x ^ z < 1 :=
   Real.rpow_lt_one hx hx1 hz
 
@@ -1325,7 +1339,7 @@ theorem mul_rpow_eq_ite (x y : ℝ≥0∞) (z : ℝ) :
     norm_cast  at *
     rw [coe_rpow_of_ne_zero (mul_ne_zero hx0 hy0), Nnreal.mul_rpow]
     
-  · convert this using 2 <;> simp only [mul_commₓ, and_comm, or_comm]
+  · convert this using 2 <;> simp only [mul_comm, and_comm, or_comm]
     
 
 theorem mul_rpow_of_ne_top {x y : ℝ≥0∞} (hx : x ≠ ⊤) (hy : y ≠ ⊤) (z : ℝ) : (x * y) ^ z = x ^ z * y ^ z := by

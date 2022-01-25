@@ -305,10 +305,10 @@ variable (s : Set α)
 
 /-- The restriction of a continuous function `α → β` to a subset `s` of `α`. -/
 def restrict (f : C(α, β)) : C(s, β) :=
-  ⟨f ∘ coeₓ⟩
+  ⟨f ∘ coe⟩
 
 @[simp]
-theorem coe_restrict (f : C(α, β)) : ⇑f.restrict s = f ∘ coeₓ :=
+theorem coe_restrict (f : C(α, β)) : ⇑f.restrict s = f ∘ coe :=
   rfl
 
 end Restrict
@@ -373,7 +373,7 @@ include hF hA
 of sets in `α` which contain a neighbourhood of each point in `α` and (2) the functions `F s` agree
 pairwise on intersections, can be glued to construct a continuous map in `C(α, β)`. -/
 noncomputable def lift_cover' : C(α, β) := by
-  let S : A → Set α := coeₓ
+  let S : A → Set α := coe
   let F : ∀ i : A, C(i, β) := fun i => F i i.prop
   refine' lift_cover S F (fun i j => hF i i.prop j j.prop) _
   intro x
@@ -384,7 +384,7 @@ variable {A F hF hA}
 
 @[simp]
 theorem lift_cover_coe' {s : Set α} {hs : s ∈ A} (x : s) : lift_cover' A F hF hA x = F s hs x :=
-  let x' : (coeₓ : A → Set α) ⟨s, hs⟩ := x
+  let x' : (coe : A → Set α) ⟨s, hs⟩ := x
   lift_cover_coe x'
 
 @[simp]

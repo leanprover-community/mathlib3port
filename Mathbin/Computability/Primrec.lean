@@ -1160,7 +1160,7 @@ theorem fin_val_iff {n} {f : α → Finₓ n} : (Primrec fun a => (f a).1) ↔ P
           subtype_val_iff).trans
       (of_equiv_iff _)
 
-theorem fin_val {n} : Primrec (coeₓ : Finₓ n → ℕ) :=
+theorem fin_val {n} : Primrec (coe : Finₓ n → ℕ) :=
   fin_val_iff.2 Primrec.id
 
 theorem fin_succ {n} : Primrec (@Finₓ.succ n) :=

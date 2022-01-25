@@ -34,7 +34,7 @@ in the definition, then prove it for any `f` in `tendsto_at_top_is_lub`.
 
 This property holds for linear orders with order topology as well as their products. -/
 class SupConvergenceClass (α : Type _) [Preorderₓ α] [TopologicalSpace α] : Prop where
-  tendsto_coe_at_top_is_lub : ∀ a : α s : Set α, IsLub s a → tendsto (coeₓ : s → α) at_top (𝓝 a)
+  tendsto_coe_at_top_is_lub : ∀ a : α s : Set α, IsLub s a → tendsto (coe : s → α) at_top (𝓝 a)
 
 /-- We say that `α` is an `Inf_convergence_class` if the following holds. Let `f : ι → α` be a
 monotone function, let `a : α` be a greatest lower bound of `set.range f`. Then `f x` tends to `𝓝 a`
@@ -43,7 +43,7 @@ as `x → -∞` (formally, at the filter `filter.at_bot`). We require this for `
 
 This property holds for linear orders with order topology as well as their products. -/
 class InfConvergenceClass (α : Type _) [Preorderₓ α] [TopologicalSpace α] : Prop where
-  tendsto_coe_at_bot_is_glb : ∀ a : α s : Set α, IsGlb s a → tendsto (coeₓ : s → α) at_bot (𝓝 a)
+  tendsto_coe_at_bot_is_glb : ∀ a : α s : Set α, IsGlb s a → tendsto (coe : s → α) at_bot (𝓝 a)
 
 instance OrderDual.Sup_convergence_class [Preorderₓ α] [TopologicalSpace α] [InfConvergenceClass α] :
     SupConvergenceClass (OrderDual α) :=

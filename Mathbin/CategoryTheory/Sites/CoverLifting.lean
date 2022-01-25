@@ -37,7 +37,7 @@ but they are actually equivalent via `category_theory.grothendieck_topology.supe
 -/
 
 
-universe v u
+universe w v v₁ v₂ v₃ u u₁ u₂ u₃
 
 noncomputable section
 
@@ -104,9 +104,9 @@ A `X ⟶ 𝒢(U)`. The remaining work is to verify that this is indeed the amalg
 -/
 
 
-variable {C D : Type u} [category.{u} C] [category.{u} D]
+variable {C D : Type u} [category.{v} C] [category.{v} D]
 
-variable {A : Type v} [category.{u} A] [has_limits A]
+variable {A : Type w} [category.{max u v} A] [has_limits A]
 
 variable {J : grothendieck_topology C} {K : grothendieck_topology D}
 
@@ -115,6 +115,10 @@ namespace RanIsSheafOfCoverLifting
 variable {G : C ⥤ D} (hu : cover_lifting J K G) (ℱ : Sheaf J A)
 
 variable {X : A} {U : D} (S : sieve U) (hS : S ∈ K U)
+
+instance (X : Dᵒᵖ) : has_limits_of_shape (structured_arrow X G.op) A :=
+  have := limits.has_limits_of_size_shrink.{v, max u v, max u v, max u v} A
+  has_limits_of_size.has_limits_of_shape _
 
 variable (x : S.arrows.family_of_elements ((Ran G.op).obj ℱ.val ⋙ coyoneda.obj (op X)))
 

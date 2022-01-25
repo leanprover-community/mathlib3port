@@ -2322,7 +2322,7 @@ theorem nat_of_done {val : ℕ} (h : Nat cb n = done n' val) :
     induction' l with hd tl hl
     · simp
       
-    · simp [hl, pow_succₓ, mul_commₓ]
+    · simp [hl, pow_succₓ, mul_comm]
       
   simp only [Nat, pure_eq_done, natm, decorate_error_eq_done, bind_eq_done] at h
   obtain ⟨n', l, hp, rfl, rfl⟩ := h
@@ -2386,7 +2386,7 @@ theorem nat_of_done {val : ℕ} (h : Nat cb n = done n' val) :
       
     · exact Nat.le_pred_of_lt (bounded.of_done hp)
       
-  simp [IH _ hdm, hx, hk, rearr, ← chdh, ← ltll, hpow, add_assocₓ, Nat.of_digits_append, mul_commₓ]
+  simp [IH _ hdm, hx, hk, rearr, ← chdh, ← ltll, hpow, add_assocₓ, Nat.of_digits_append, mul_comm]
 
 /-- If we know that `parser.nat` was successful, starting at position `n` and ending at position `n'`,
 then it must be the case that for all `k : ℕ`, `n ≤ k`, `k < n'`, the character at the `k`th
@@ -2541,13 +2541,13 @@ theorem nat_eq_done {val : ℕ} :
         induction' l with hd tl hl
         · simp
           
-        · simp [hl, pow_succₓ, mul_commₓ]
+        · simp [hl, pow_succₓ, mul_comm]
           
       have hml : ltl.length + 1 = m := by
         simpa using many1_length_of_done hdl
       have ltll : min m tl.length = m := by
         simpa [← H.right, le_tsub_iff_right (hn''.trans_le hn').le, add_commₓ, add_assocₓ, add_left_commₓ] using hn'
-      simp [this, hpow, Nat.of_digits_append, mul_commₓ, ← pow_succₓ 10, hml, ltll]
+      simp [this, hpow, Nat.of_digits_append, mul_comm, ← pow_succₓ 10, hml, ltll]
       
     · have : n' = n + 1 := le_antisymmₓ hn'' (Nat.succ_le_of_ltₓ hn)
       subst this

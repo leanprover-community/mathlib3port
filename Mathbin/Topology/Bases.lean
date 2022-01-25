@@ -71,7 +71,7 @@ theorem is_topological_basis_of_subbasis {s : Set (Set α)} (hs : t = generate_f
     have : ⋂₀(t₁ ∪ t₂) = ⋂₀t₁ ∩ ⋂₀t₂ := sInter_union t₁ t₂
     exact ⟨_, ⟨t₁ ∪ t₂, ⟨hft₁.union hft₂, union_subset ht₁b ht₂b, this.symm ▸ ⟨x, h⟩⟩, this⟩, h, subset.rfl⟩
     
-  · rw [sUnion_image, bUnion_eq_univ_iff]
+  · rw [sUnion_image, Union₂_eq_univ_iff]
     intro x
     have : x ∈ ⋂₀∅ := by
       rw [sInter_empty]
@@ -161,7 +161,7 @@ theorem is_topological_basis.open_eq_sUnion {B : Set (Set α)} (hB : is_topologi
 
 theorem is_topological_basis.open_eq_Union {B : Set (Set α)} (hB : is_topological_basis B) {u : Set α} (ou : IsOpen u) :
     ∃ (β : Type u)(f : β → Set α), (u = ⋃ i, f i) ∧ ∀ i, f i ∈ B :=
-  ⟨↥{ s ∈ B | s ⊆ u }, coeₓ, by
+  ⟨↥{ s ∈ B | s ⊆ u }, coe, by
     rw [← sUnion_eq_Union]
     apply hB.open_eq_sUnion' ou, fun s => And.left s.2⟩
 
@@ -226,7 +226,7 @@ protected theorem is_topological_basis.inducing {β} [TopologicalSpace β] {f : 
 
 theorem is_topological_basis_of_cover {ι} {U : ι → Set α} (Uo : ∀ i, IsOpen (U i)) (Uc : (⋃ i, U i) = univ)
     {b : ∀ i, Set (Set (U i))} (hb : ∀ i, is_topological_basis (b i)) :
-    is_topological_basis (⋃ i : ι, image (coeₓ : U i → α) '' b i) := by
+    is_topological_basis (⋃ i : ι, image (coe : U i → α) '' b i) := by
   refine' is_topological_basis_of_open_of_nhds (fun u hu => _) _
   · simp only [mem_Union, mem_image] at hu
     rcases hu with ⟨i, s, sb, rfl⟩
@@ -236,7 +236,7 @@ theorem is_topological_basis_of_cover {ι} {U : ι → Set α} (Uo : ∀ i, IsOp
     rcases Union_eq_univ_iff.1 Uc a with ⟨i, hi⟩
     lift a to ↥U i using hi
     rcases(hb i).exists_subset_of_mem_open ha (uo.preimage continuous_subtype_coe) with ⟨v, hvb, hav, hvu⟩
-    exact ⟨coeₓ '' v, mem_Union.2 ⟨i, mem_image_of_mem _ hvb⟩, mem_image_of_mem _ hav, image_subset_iff.2 hvu⟩
+    exact ⟨coe '' v, mem_Union.2 ⟨i, mem_image_of_mem _ hvb⟩, mem_image_of_mem _ hav, image_subset_iff.2 hvu⟩
     
 
 protected theorem is_topological_basis.continuous {β : Type _} [TopologicalSpace β] {B : Set (Set β)}
@@ -383,7 +383,7 @@ protected theorem DenseRange.separable_space {α β : Type _} [TopologicalSpace 
 theorem Dense.exists_countable_dense_subset {α : Type _} [TopologicalSpace α] {s : Set α} [separable_space s]
     (hs : Dense s) : ∃ (t : _)(_ : t ⊆ s), countable t ∧ Dense t :=
   let ⟨t, htc, htd⟩ := exists_countable_dense s
-  ⟨coeₓ '' t, image_subset_iff.2 $ fun x _ => mem_preimage.2 $ Subtype.coe_prop _, htc.image coeₓ,
+  ⟨coe '' t, image_subset_iff.2 $ fun x _ => mem_preimage.2 $ Subtype.coe_prop _, htc.image coe,
     hs.dense_range_coe.dense_image continuous_subtype_val htd⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
@@ -519,7 +519,7 @@ theorem second_countable_topology_induced β [t : TopologicalSpace β] [second_c
   rw [Eq, induced_generate_from_eq]
 
 instance subtype.second_countable_topology (s : Set α) [second_countable_topology α] : second_countable_topology s :=
-  second_countable_topology_induced s α coeₓ
+  second_countable_topology_induced s α coe
 
 instance {β : Type _} [TopologicalSpace β] [second_countable_topology α] [second_countable_topology β] :
     second_countable_topology (α × β) :=
@@ -576,7 +576,7 @@ are themselves second countable. -/
 theorem second_countable_topology_of_countable_cover {ι} [Encodable ι] {U : ι → Set α}
     [∀ i, second_countable_topology (U i)] (Uo : ∀ i, IsOpen (U i)) (hc : (⋃ i, U i) = univ) :
     second_countable_topology α :=
-  have : is_topological_basis (⋃ i, image (coeₓ : U i → α) '' countable_basis (U i)) :=
+  have : is_topological_basis (⋃ i, image (coe : U i → α) '' countable_basis (U i)) :=
     is_topological_basis_of_cover Uo hc fun i => is_basis_countable_basis (U i)
   this.second_countable_topology (countable_Union $ fun i => (countable_countable_basis _).Image _)
 
@@ -587,7 +587,7 @@ theorem is_open_Union_countable [second_countable_topology α] {ι} (s : ι → 
   let B := { b ∈ countable_basis α | ∃ i, b ⊆ s i }
   choose f hf using fun b : B => b.2.2
   have : Encodable B := ((countable_countable_basis α).mono (sep_subset _ _)).toEncodable
-  refine' ⟨_, countable_range f, subset.antisymm (bUnion_subset_Union _ _) (sUnion_subset _)⟩
+  refine' ⟨_, countable_range f, (Union₂_subset_Union _ _).antisymm (sUnion_subset _)⟩
   rintro _ ⟨i, rfl⟩ x xs
   rcases(is_basis_countable_basis α).exists_subset_of_mem_open xs (H _) with ⟨b, hb, xb, bs⟩
   exact ⟨_, ⟨_, rfl⟩, _, ⟨⟨⟨_, hb, _, bs⟩, rfl⟩, rfl⟩, hf _ xb⟩
@@ -605,16 +605,16 @@ theorem countable_cover_nhds [second_countable_topology α] {f : α → Set α} 
     ∃ s : Set α, countable s ∧ (⋃ x ∈ s, f x) = univ := by
   rcases is_open_Union_countable (fun x => Interior (f x)) fun x => is_open_interior with ⟨s, hsc, hsU⟩
   suffices : (⋃ x ∈ s, Interior (f x)) = univ
-  exact ⟨s, hsc, flip eq_univ_of_subset this (bUnion_mono $ fun _ _ => interior_subset)⟩
+  exact ⟨s, hsc, flip eq_univ_of_subset this $ Union₂_mono $ fun _ _ => interior_subset⟩
   simp only [hsU, eq_univ_iff_forall, mem_Union]
   exact fun x => ⟨x, mem_interior_iff_mem_nhds.2 (hf x)⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem countable_cover_nhds_within [second_countable_topology α] {f : α → Set α} {s : Set α}
     (hf : ∀, ∀ x ∈ s, ∀, f x ∈ 𝓝[s] x) : ∃ (t : _)(_ : t ⊆ s), countable t ∧ s ⊆ ⋃ x ∈ t, f x := by
-  have : ∀ x : s, coeₓ ⁻¹' f x ∈ 𝓝 x := fun x => preimage_coe_mem_nhds_subtype.2 (hf x x.2)
+  have : ∀ x : s, coe ⁻¹' f x ∈ 𝓝 x := fun x => preimage_coe_mem_nhds_subtype.2 (hf x x.2)
   rcases countable_cover_nhds this with ⟨t, htc, htU⟩
-  refine' ⟨coeₓ '' t, Subtype.coe_image_subset _ _, htc.image _, fun x hx => _⟩
+  refine' ⟨coe '' t, Subtype.coe_image_subset _ _, htc.image _, fun x hx => _⟩
   simp only [bUnion_image, eq_univ_iff_forall, ← preimage_Union, mem_preimage] at htU⊢
   exact htU ⟨x, hx⟩
 

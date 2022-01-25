@@ -72,6 +72,9 @@ theorem Pairwise.mono (h : t ⊆ s) (hs : s.pairwise r) : t.pairwise r := fun x 
 theorem pairwise.mono' (H : r ≤ p) (hr : s.pairwise r) : s.pairwise p :=
   hr.imp H
 
+protected theorem pairwise.eq (hs : s.pairwise r) (ha : a ∈ s) (hb : b ∈ s) (h : ¬r a b) : a = b :=
+  of_not_not $ fun hab => h $ hs ha hb hab
+
 theorem pairwise_top (s : Set α) : s.pairwise ⊤ :=
   pairwise_of_forall s _ fun a b => trivialₓ
 
@@ -267,7 +270,7 @@ theorem pairwise_disjoint_sUnion {s : Set (Set ι)} (h : DirectedOn (· ⊆ ·) 
 
 theorem pairwise_disjoint.elim (hs : s.pairwise_disjoint f) {i j : ι} (hi : i ∈ s) (hj : j ∈ s)
     (h : ¬Disjoint (f i) (f j)) : i = j :=
-  of_not_not $ fun hij => h $ hs hi hj hij
+  hs.eq hi hj h
 
 theorem pairwise_disjoint.elim' (hs : s.pairwise_disjoint f) {i j : ι} (hi : i ∈ s) (hj : j ∈ s) (h : f i⊓f j ≠ ⊥) :
     i = j :=
@@ -313,7 +316,7 @@ theorem pairwise_disjoint.elim_set {s : Set ι} {f : ι → Set α} (hs : s.pair
 theorem bUnion_diff_bUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).PairwiseDisjoint f) :
     ((⋃ i ∈ s, f i) \ ⋃ i ∈ t, f i) = ⋃ i ∈ s \ t, f i := by
   refine'
-    (bUnion_diff_bUnion_subset f s t).antisymm (bUnion_subset $ fun i hi a ha => (mem_diff _).2 ⟨mem_bUnion hi.1 ha, _⟩)
+    (bUnion_diff_bUnion_subset f s t).antisymm (Union₂_subset $ fun i hi a ha => (mem_diff _).2 ⟨mem_bUnion hi.1 ha, _⟩)
   rw [mem_Union₂]
   rintro ⟨j, hj, haj⟩
   exact h (Or.inl hi.1) (Or.inr hj) (ne_of_mem_of_not_mem hj hi.2).symm ⟨ha, haj⟩

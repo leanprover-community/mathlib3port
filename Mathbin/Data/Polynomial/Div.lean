@@ -29,9 +29,9 @@ variable [CommSemiringₓ R]
 
 theorem X_dvd_iff {α : Type u} [CommSemiringₓ α] {f : Polynomial α} : X ∣ f ↔ f.coeff 0 = 0 :=
   ⟨fun ⟨g, hfg⟩ => by
-    rw [hfg, mul_commₓ, coeff_mul_X_zero], fun hf =>
+    rw [hfg, mul_comm, coeff_mul_X_zero], fun hf =>
     ⟨f.div_X, by
-      rw [mul_commₓ, ← add_zeroₓ (f.div_X * X), ← C_0, ← hf, div_X_mul_X_add]⟩⟩
+      rw [mul_comm, ← add_zeroₓ (f.div_X * X), ← C_0, ← hf, div_X_mul_X_add]⟩⟩
 
 end CommSemiringₓ
 
@@ -196,7 +196,7 @@ theorem mod_by_monic_eq_sub_mul_div : ∀ p : Polynomial R {q : Polynomial R} hq
       rw [mod_by_monic, dif_pos hq] at ih
       refine' ih.trans _
       unfold div_by_monic
-      rw [dif_pos hq, dif_pos hq, if_pos h, mul_addₓ, sub_add_eq_sub_sub, mul_commₓ]
+      rw [dif_pos hq, dif_pos hq, if_pos h, mul_addₓ, sub_add_eq_sub_sub, mul_comm]
     else by
       unfold mod_by_monic div_by_monic div_mod_by_monic_aux
       rw [dif_pos hq, if_neg h, dif_pos hq, if_neg h, mul_zero, sub_zero]
@@ -286,7 +286,7 @@ theorem div_mod_by_monic_unique {f g} (q r : Polynomial R) (hg : monic g) (h : r
     eq_of_sub_eq_zero
       (by
         rw [← sub_eq_zero_of_eq (h.1.trans (mod_by_monic_add_div f hg).symm)] <;>
-          simp [mul_addₓ, mul_commₓ, sub_eq_add_neg, add_commₓ, add_left_commₓ, add_assocₓ])
+          simp [mul_addₓ, mul_comm, sub_eq_add_neg, add_commₓ, add_left_commₓ, add_assocₓ])
   have h₂ : degree (r - f %ₘ g) = degree (g * (q - f /ₘ g)) := by
     simp [h₁]
   have h₄ : degree (r - f %ₘ g) < degree g :=
@@ -508,7 +508,7 @@ theorem div_by_monic_mul_pow_root_multiplicity_eq (p : Polynomial R) (a : R) :
   have : monic ((X - C a) ^ root_multiplicity a p) := monic_pow (monic_X_sub_C _) _
   conv_rhs =>
       rw [← mod_by_monic_add_div p this, (dvd_iff_mod_by_monic_eq_zero this).2 (pow_root_multiplicity_dvd _ _)] <;>
-    simp [mul_commₓ]
+    simp [mul_comm]
 
 theorem eval_div_by_monic_pow_root_multiplicity_ne_zero {p : Polynomial R} (a : R) (hp : p ≠ 0) :
     eval a (p /ₘ (X - C a) ^ root_multiplicity a p) ≠ 0 := by
@@ -516,7 +516,7 @@ theorem eval_div_by_monic_pow_root_multiplicity_ne_zero {p : Polynomial R} (a : 
   rw [Ne.def, ← is_root.def, ← dvd_iff_is_root]
   rintro ⟨q, hq⟩
   have := div_by_monic_mul_pow_root_multiplicity_eq p a
-  rw [mul_commₓ, hq, ← mul_assocₓ, ← pow_succ'ₓ, root_multiplicity_eq_multiplicity, dif_neg hp] at this
+  rw [mul_comm, hq, ← mul_assoc, ← pow_succ'ₓ, root_multiplicity_eq_multiplicity, dif_neg hp] at this
   exact
     multiplicity.is_greatest'
       (multiplicity_finite_of_degree_pos_of_monic

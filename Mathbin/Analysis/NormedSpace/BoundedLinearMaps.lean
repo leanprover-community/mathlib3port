@@ -112,7 +112,7 @@ theorem smul (c : 𝕜) (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap �
     calc
       ∥c • f x∥ = ∥c∥ * ∥f x∥ := norm_smul c (f x)
       _ ≤ ∥c∥ * (M * ∥x∥) := mul_le_mul_of_nonneg_left (hM _) (norm_nonneg _)
-      _ = ∥c∥ * M * ∥x∥ := (mul_assocₓ _ _ _).symm
+      _ = ∥c∥ * M * ∥x∥ := (mul_assoc _ _ _).symm
       
 
 theorem neg (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap 𝕜 fun e => -f e := by
@@ -269,7 +269,7 @@ protected theorem IsBoundedBilinearMap.is_O (h : IsBoundedBilinearMap 𝕜 f) :
   let ⟨C, Cpos, hC⟩ := h.bound
   Asymptotics.IsO.of_bound _ $
     Filter.eventually_of_forall $ fun ⟨x, y⟩ => by
-      simpa [mul_assocₓ] using hC x y
+      simpa [mul_assoc] using hC x y
 
 theorem IsBoundedBilinearMap.is_O_comp {α : Type _} (H : IsBoundedBilinearMap 𝕜 f) {g : α → E} {h : α → F}
     {l : Filter α} : Asymptotics.IsO (fun x => f (g x, h x)) (fun x => ∥g x∥ * ∥h x∥) l :=
@@ -309,7 +309,7 @@ theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Cont
   intro x
   have H : ∀ a : E b : F, ∥f (a, b)∥ ≤ C * ∥∥a∥ * ∥b∥∥ := by
     intro a b
-    simpa [mul_assocₓ] using hC a b
+    simpa [mul_assoc] using hC a b
   have h₁ : Asymptotics.IsOₓ (fun e : E × F => f (e.1 - x.1, e.2)) (fun e => (1 : ℝ)) (𝓝 x) := by
     refine' (Asymptotics.is_O_of_le' (𝓝 x) fun e => H (e.1 - x.1) e.2).trans_is_o _
     rw [Asymptotics.is_o_const_iff one_ne]
@@ -447,7 +447,7 @@ theorem is_bounded_bilinear_map_smul_right :
       simp [smul_add],
     smulRight := fun c m f => by
       ext z
-      simp [smul_smul, mul_commₓ],
+      simp [smul_smul, mul_comm],
     bound :=
       ⟨1, zero_lt_one, fun m f => by
         simp ⟩ }
@@ -556,7 +556,7 @@ spaces is an open subset of the space of linear maps between them.
 -/
 
 
-protected theorem IsOpen [CompleteSpace E] : IsOpen (range (coeₓ : (E ≃L[𝕜] F) → E →L[𝕜] F)) := by
+protected theorem IsOpen [CompleteSpace E] : IsOpen (range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F)) := by
   rw [is_open_iff_mem_nhds, forall_range_iff]
   refine' fun e => IsOpen.mem_nhds _ (mem_range_self _)
   let O : (E →L[𝕜] F) → E →L[𝕜] E := fun f => (e.symm : F →L[𝕜] E).comp f
@@ -573,7 +573,7 @@ protected theorem IsOpen [CompleteSpace E] : IsOpen (range (coeₓ : (E ≃L[�
     simp [coe_fn_coe_base' w, hw]
     
 
-protected theorem nhds [CompleteSpace E] (e : E ≃L[𝕜] F) : range (coeₓ : (E ≃L[𝕜] F) → E →L[𝕜] F) ∈ 𝓝 (e : E →L[𝕜] F) :=
+protected theorem nhds [CompleteSpace E] (e : E ≃L[𝕜] F) : range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F) ∈ 𝓝 (e : E →L[𝕜] F) :=
   IsOpen.mem_nhds ContinuousLinearEquiv.is_open
     (by
       simp )

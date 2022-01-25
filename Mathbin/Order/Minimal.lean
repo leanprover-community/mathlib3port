@@ -104,10 +104,10 @@ theorem inter_minimals_subset : s ∩ Minimals r t ⊆ Minimals r (s ∩ t) :=
   inter_maximals_subset
 
 theorem _root_.is_antichain.maximals_eq (h : IsAntichain r s) : Maximals r s = s :=
-  (maximals_subset _ _).antisymm $ fun a ha => ⟨ha, fun b => h.eq_of_related ha⟩
+  (maximals_subset _ _).antisymm $ fun a ha => ⟨ha, fun b => h.eq ha⟩
 
 theorem _root_.is_antichain.minimals_eq (h : IsAntichain r s) : Minimals r s = s :=
-  (minimals_subset _ _).antisymm $ fun a ha => ⟨ha, fun b => h.eq_of_related' ha⟩
+  (minimals_subset _ _).antisymm $ fun a ha => ⟨ha, fun b => h.eq' ha⟩
 
 @[simp]
 theorem maximals_idem : Maximals r (Maximals r s) = Maximals r s :=

@@ -99,7 +99,7 @@ theorem eigenspace_div (f : End K V) (a b : K) (hb : b ≠ 0) :
     eigenspace f (a / b) = (b • f - algebraMap K (End K V) a).ker :=
   calc
     eigenspace f (a / b) = eigenspace f (b⁻¹ * a) := by
-      rw [div_eq_mul_inv, mul_commₓ]
+      rw [div_eq_mul_inv, mul_comm]
     _ = (f - (b⁻¹ * a) • LinearMap.id).ker := rfl
     _ = (f - b⁻¹ • a • LinearMap.id).ker := by
       rw [smul_smul]
@@ -143,8 +143,8 @@ theorem aeval_apply_of_has_eigenvector {f : End K V} {p : Polynomial K} {μ : K}
     simp [hp, hq, add_smul]
     
   · intro n a hna
-    rw [mul_commₓ, pow_succₓ, mul_assocₓ, AlgHom.map_mul, LinearMap.mul_apply, mul_commₓ, hna]
-    simp [algebra_map_End_apply, mem_eigenspace_iff.1 h.1, smul_smul, mul_commₓ]
+    rw [mul_comm, pow_succₓ, mul_assoc, AlgHom.map_mul, LinearMap.mul_apply, mul_comm, hna]
+    simp [algebra_map_End_apply, mem_eigenspace_iff.1 h.1, smul_smul, mul_comm]
     
 
 section minpoly
@@ -289,7 +289,7 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
       · rw [h_cases]
         exact_mod_cast this
         
-      exact congr_argₓ (coeₓ : _ → V) (h_lμ_eq_0 μ h_cases)
+      exact congr_argₓ (coe : _ → V) (h_lμ_eq_0 μ h_cases)
       
     
 
@@ -300,9 +300,8 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
     eigenvalue in the image of `xs`. -/
 theorem eigenvectors_linear_independent (f : End K V) (μs : Set K) (xs : μs → V)
     (h_eigenvec : ∀ μ : μs, f.has_eigenvector μ (xs μ)) : LinearIndependent K xs :=
-  CompleteLattice.Independent.linear_independent _
-    (f.eigenspaces_independent.comp (coeₓ : μs → K) Subtype.coe_injective) (fun μ => (h_eigenvec μ).1) fun μ =>
-    (h_eigenvec μ).2
+  CompleteLattice.Independent.linear_independent _ (f.eigenspaces_independent.comp (coe : μs → K) Subtype.coe_injective)
+    (fun μ => (h_eigenvec μ).1) fun μ => (h_eigenvec μ).2
 
 /-- The generalized eigenspace for a linear map `f`, a scalar `μ`, and an exponent `k ∈ ℕ` is the
 kernel of `(f - μ • id) ^ k`. (Def 8.10 of [axler2015]). Furthermore, a generalized eigenspace for
@@ -432,7 +431,7 @@ theorem eigenspace_restrict_le_eigenspace (f : End R M) {p : Submodule R M} (hfp
     (eigenspace (f.restrict hfp) μ).map p.subtype ≤ f.eigenspace μ := by
   rintro a ⟨x, hx, rfl⟩
   simp only [SetLike.mem_coe, mem_eigenspace_iff, LinearMap.restrict_apply] at hx⊢
-  exact congr_argₓ coeₓ hx
+  exact congr_argₓ coe hx
 
 /-- Generalized eigenrange and generalized eigenspace for exponent `finrank K V` are disjoint. -/
 theorem generalized_eigenvec_disjoint_range_ker [FiniteDimensional K V] (f : End K V) (μ : K) :
@@ -487,8 +486,6 @@ theorem map_generalized_eigenrange_le {f : End K V} {μ : K} {n : ℕ} :
 /-- The generalized eigenvectors span the entire vector space (Lemma 8.21 of [axler2015]). -/
 theorem supr_generalized_eigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K V] (f : End K V) :
     (⨆ (μ : K) (k : ℕ), f.generalized_eigenspace μ k) = ⊤ := by
-  run_tac
-    tactic.unfreeze_local_instances
   induction' h_dim : finrank K V using Nat.strong_induction_onₓ with n ih generalizing V
   cases n
   · rw [← top_le_iff]

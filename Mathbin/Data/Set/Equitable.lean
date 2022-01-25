@@ -23,11 +23,11 @@ variable {α β : Type _}
 namespace Set
 
 /-- A set is equitable if no element value is more than one bigger than another. -/
-def equitable_on [LE β] [Add β] [HasOne β] (s : Set α) (f : α → β) : Prop :=
+def equitable_on [LE β] [Add β] [One β] (s : Set α) (f : α → β) : Prop :=
   ∀ ⦃a₁ a₂⦄, a₁ ∈ s → a₂ ∈ s → f a₁ ≤ f a₂ + 1
 
 @[simp]
-theorem equitable_on_empty [LE β] [Add β] [HasOne β] (f : α → β) : equitable_on ∅ f := fun a _ ha =>
+theorem equitable_on_empty [LE β] [Add β] [One β] (f : α → β) : equitable_on ∅ f := fun a _ ha =>
   (Set.not_mem_empty _ ha).elim
 
 theorem equitable_on_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
@@ -96,10 +96,10 @@ theorem equitable_on_iff_le_le_add_one {s : Finset α} {f : α → ℕ} :
     Nat.div_eq_of_lt_leₓ
       (le_transₓ
         (by
-          simp [mul_commₓ])
+          simp [mul_comm])
         (sum_le_sum fun a ha => (hb a ha).1))
       ((sum_lt_sum (fun a ha => (hb a ha).2) ⟨_, hx₁, (hb _ hx₁).2.lt_of_ne hx₂⟩).trans_le _)
-  rw [mul_commₓ, sum_const_nat]
+  rw [mul_comm, sum_const_nat]
   exact fun _ _ => rfl
 
 theorem equitable_on_iff {s : Finset α} {f : α → ℕ} :

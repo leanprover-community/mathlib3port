@@ -255,7 +255,7 @@ theorem is_complement'.card_mul [Fintype G] [Fintype H] [Fintype K] (h : is_comp
 theorem is_complement'_of_card_mul_and_disjoint [Fintype G] [Fintype H] [Fintype K]
     (h1 : Fintype.card H * Fintype.card K = Fintype.card G) (h2 : Disjoint H K) : is_complement' H K := by
   refine' (Fintype.bijective_iff_injective_and_card _).mpr ⟨fun x y h => _, (Fintype.card_prod H K).trans h1⟩
-  rw [← eq_inv_mul_iff_mul_eq, ← mul_assocₓ, ← mul_inv_eq_iff_eq_mul] at h
+  rw [← eq_inv_mul_iff_mul_eq, ← mul_assoc, ← mul_inv_eq_iff_eq_mul] at h
   change ↑(x.2 * y.2⁻¹) = ↑(x.1⁻¹ * y.1) at h
   rw [Prod.ext_iff, ← @inv_mul_eq_one H _ x.1 y.1, ← @mul_inv_eq_one K _ x.2 y.2, Subtype.ext_iff, Subtype.ext_iff,
     coe_one, coe_one, h, and_selfₓ, ← mem_bot, ← h2.eq_bot, mem_inf]

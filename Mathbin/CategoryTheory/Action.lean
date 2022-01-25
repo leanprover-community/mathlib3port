@@ -75,7 +75,7 @@ variable (M X)
 
 /-- An object of the action category given by M ↻ X corresponds to an element of X. -/
 def obj_equiv : X ≃ action_category M X where
-  toFun := coeₓ
+  toFun := coe
   invFun := fun x => x.back
   left_inv := coe_back
   right_inv := back_coe

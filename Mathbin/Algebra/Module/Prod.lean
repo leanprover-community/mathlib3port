@@ -12,12 +12,11 @@ variable {R : Type _} {S : Type _} {M : Type _} {N : Type _}
 
 namespace Prod
 
-instance SmulWithZero [HasZero R] [HasZero M] [HasZero N] [SmulWithZero R M] [SmulWithZero R N] :
-    SmulWithZero R (M × N) :=
+instance SmulWithZero [Zero R] [Zero M] [Zero N] [SmulWithZero R M] [SmulWithZero R N] : SmulWithZero R (M × N) :=
   { Prod.hasScalar with smul_zero := fun r => Prod.extₓ (smul_zero' _ _) (smul_zero' _ _),
     zero_smul := fun ⟨m, n⟩ => Prod.extₓ (zero_smul _ _) (zero_smul _ _) }
 
-instance MulActionWithZero [MonoidWithZeroₓ R] [HasZero M] [HasZero N] [MulActionWithZero R M] [MulActionWithZero R N] :
+instance MulActionWithZero [MonoidWithZeroₓ R] [Zero M] [Zero N] [MulActionWithZero R M] [MulActionWithZero R N] :
     MulActionWithZero R (M × N) :=
   { Prod.mulAction with smul_zero := fun r => Prod.extₓ (smul_zero' _ _) (smul_zero' _ _),
     zero_smul := fun ⟨m, n⟩ => Prod.extₓ (zero_smul _ _) (zero_smul _ _) }

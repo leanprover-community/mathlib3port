@@ -27,7 +27,7 @@ namespace Multiset
 def join : Multiset (Multiset α) → Multiset α :=
   Sum
 
-theorem coe_join : ∀ L : List (List α), join (L.map (@coeₓ _ (Multiset α) _) : Multiset (Multiset α)) = L.join
+theorem coe_join : ∀ L : List (List α), join (L.map (@coe _ (Multiset α) _) : Multiset (Multiset α)) = L.join
   | [] => rfl
   | l :: L => congr_argₓ (fun s : Multiset α => ↑l + s) (coe_join L)
 
@@ -256,7 +256,7 @@ theorem mem_product {s t} : ∀ {p : α × β}, p ∈ @product α β s t ↔ p.1
 
 @[simp]
 theorem card_product : (s.product t).card = s.card * t.card := by
-  simp [product, repeat, · ∘ ·, mul_commₓ]
+  simp [product, repeat, · ∘ ·, mul_comm]
 
 end Product
 

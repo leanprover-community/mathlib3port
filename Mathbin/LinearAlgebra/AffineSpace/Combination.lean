@@ -290,8 +290,8 @@ theorem attach_affine_combination_of_injective (s : Finset P) (w : P → k) (f :
   exact fun _ _ _ _ hxy => hf hxy
 
 theorem attach_affine_combination_coe (s : Finset P) (w : P → k) :
-    s.attach.affine_combination (coeₓ : s → P) (w ∘ coeₓ) = s.affine_combination id w := by
-  rw [attach_affine_combination_of_injective s w (coeₓ : s → P) Subtype.coe_injective, univ_eq_attach, attach_image_coe]
+    s.attach.affine_combination (coe : s → P) (w ∘ coe) = s.affine_combination id w := by
+  rw [attach_affine_combination_of_injective s w (coe : s → P) Subtype.coe_injective, univ_eq_attach, attach_image_coe]
 
 omit S
 
@@ -482,7 +482,7 @@ def centroid (p : ι → P) : P :=
 theorem centroid_def (p : ι → P) : s.centroid k p = s.affine_combination p (s.centroid_weights k) :=
   rfl
 
-theorem centroid_univ (s : Finset P) : univ.centroid k (coeₓ : s → P) = s.centroid k id := by
+theorem centroid_univ (s : Finset P) : univ.centroid k (coe : s → P) = s.centroid k id := by
   rw [centroid, centroid, ← s.attach_affine_combination_coe]
   congr
   ext
@@ -804,7 +804,7 @@ all other members of the set along the line joining them to this base point, the
 unchanged. -/
 theorem affine_span_eq_affine_span_line_map_units [Nontrivial k] {s : Set P} {p : P} (hp : p ∈ s) (w : s → Units k) :
     affineSpan k (Set.Range fun q : s => AffineMap.lineMap p (↑q) (w q : k)) = affineSpan k s := by
-  have : s = Set.Range (coeₓ : s → P) := by
+  have : s = Set.Range (coe : s → P) := by
     simp
   conv_rhs => rw [this]
   apply le_antisymmₓ <;>

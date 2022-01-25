@@ -149,10 +149,10 @@ def sbb (x y : Bitvec n) (b : Bool) : Bool × Bitvec n :=
 protected def sub (x y : Bitvec n) : Bitvec n :=
   Prod.snd (sbb x y ff)
 
-instance : HasZero (Bitvec n) :=
+instance : Zero (Bitvec n) :=
   ⟨Bitvec.zero n⟩
 
-instance : HasOne (Bitvec n) :=
+instance : One (Bitvec n) :=
   ⟨Bitvec.one n⟩
 
 instance : Add (Bitvec n) :=

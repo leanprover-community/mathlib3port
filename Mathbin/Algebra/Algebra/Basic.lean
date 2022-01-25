@@ -126,7 +126,7 @@ def RingHom.toAlgebra' {R S} [CommSemiringₓ R] [Semiringₓ S] (i : R →+* S)
 
 /-- Creating an algebra from a morphism to a commutative semiring. -/
 def RingHom.toAlgebra {R S} [CommSemiringₓ R] [CommSemiringₓ S] (i : R →+* S) : Algebra R S :=
-  i.to_algebra' $ fun _ => mul_commₓ _
+  i.to_algebra' $ fun _ => mul_comm _
 
 theorem RingHom.algebra_map_to_algebra {R S} [CommSemiringₓ R] [CommSemiringₓ S] (i : R →+* S) :
     @algebraMap R S _ _ i.to_algebra = i :=
@@ -212,7 +212,7 @@ instance (priority := 200) to_module : Module R A where
   one_smul := by
     simp [smul_def'']
   mul_smul := by
-    simp [smul_def'', mul_assocₓ]
+    simp [smul_def'', mul_assoc]
   smul_add := by
     simp [smul_def'', mul_addₓ]
   smul_zero := by
@@ -242,15 +242,15 @@ theorem commutes (r : R) (x : A) : algebraMap R A r * x = x * algebraMap R A r :
 
 /-- `mul_left_comm` for `algebra`s when one element is from the base ring. -/
 theorem left_comm (x : A) (r : R) (y : A) : x * (algebraMap R A r * y) = algebraMap R A r * (x * y) := by
-  rw [← mul_assocₓ, ← commutes, mul_assocₓ]
+  rw [← mul_assoc, ← commutes, mul_assoc]
 
 /-- `mul_right_comm` for `algebra`s when one element is from the base ring. -/
 theorem right_comm (x : A) (r : R) (y : A) : x * algebraMap R A r * y = x * y * algebraMap R A r := by
-  rw [mul_assocₓ, commutes, ← mul_assocₓ]
+  rw [mul_assoc, commutes, ← mul_assoc]
 
 instance _root_.is_scalar_tower.right : IsScalarTower R A A :=
   ⟨fun x y z => by
-    rw [smul_eq_mul, smul_eq_mul, smul_def, smul_def, mul_assocₓ]⟩
+    rw [smul_eq_mul, smul_eq_mul, smul_def, smul_def, mul_assoc]⟩
 
 /-- This is just a special case of the global `mul_smul_comm` lemma that requires less typeclass
 search (and was here first). -/
@@ -415,7 +415,7 @@ theorem mul_sub_algebra_map_pow_commutes [Ringₓ A] [Algebra R A] (x : A) (r : 
   induction' n with n ih
   · simp
     
-  · rw [pow_succₓ, ← mul_assocₓ, mul_sub_algebra_map_commutes, mul_assocₓ, ih, ← mul_assocₓ]
+  · rw [pow_succₓ, ← mul_assoc, mul_sub_algebra_map_commutes, mul_assoc, ih, ← mul_assoc]
     
 
 end Ringₓ
@@ -591,13 +591,13 @@ theorem coe_fn_injective : @Function.Injective (A →ₐ[R] B) (A → B) coeFn :
 theorem coe_fn_inj {φ₁ φ₂ : A →ₐ[R] B} : (φ₁ : A → B) = φ₂ ↔ φ₁ = φ₂ :=
   FunLike.coe_fn_eq
 
-theorem coe_ring_hom_injective : Function.Injective (coeₓ : (A →ₐ[R] B) → A →+* B) := fun φ₁ φ₂ H =>
+theorem coe_ring_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →+* B) := fun φ₁ φ₂ H =>
   coe_fn_injective $ show ((φ₁ : A →+* B) : A → B) = ((φ₂ : A →+* B) : A → B) from congr_argₓ _ H
 
-theorem coe_monoid_hom_injective : Function.Injective (coeₓ : (A →ₐ[R] B) → A →* B) :=
+theorem coe_monoid_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →* B) :=
   RingHom.coe_monoid_hom_injective.comp coe_ring_hom_injective
 
-theorem coe_add_monoid_hom_injective : Function.Injective (coeₓ : (A →ₐ[R] B) → A →+ B) :=
+theorem coe_add_monoid_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →+ B) :=
   RingHom.coe_add_monoid_hom_injective.comp coe_ring_hom_injective
 
 protected theorem congr_funₓ {φ₁ φ₂ : A →ₐ[R] B} (H : φ₁ = φ₂) (x : A) : φ₁ x = φ₂ x :=
@@ -646,7 +646,7 @@ theorem map_smul (r : R) (x : A) : φ (r • x) = r • φ x := by
 theorem map_sum {ι : Type _} (f : ι → A) (s : Finset ι) : φ (∑ x in s, f x) = ∑ x in s, φ (f x) :=
   φ.to_ring_hom.map_sum f s
 
-theorem map_finsupp_sum {α : Type _} [HasZero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A) :
+theorem map_finsupp_sum {α : Type _} [Zero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A) :
     φ (f.sum g) = f.sum fun i a => φ (g i a) :=
   φ.map_sum _ _
 
@@ -790,7 +790,7 @@ theorem map_multiset_prod (s : Multiset A) : φ s.prod = (s.map φ).Prod :=
 theorem map_prod {ι : Type _} (f : ι → A) (s : Finset ι) : φ (∏ x in s, f x) = ∏ x in s, φ (f x) :=
   φ.to_ring_hom.map_prod f s
 
-theorem map_finsupp_prod {α : Type _} [HasZero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A) :
+theorem map_finsupp_prod {α : Type _} [Zero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A) :
     φ (f.prod g) = f.prod fun i a => φ (g i a) :=
   φ.map_prod _ _
 
@@ -922,7 +922,7 @@ theorem coe_ring_equiv : ((e : A₁ ≃+* A₂) : A₁ → A₂) = e :=
 theorem coe_ring_equiv' : (e.to_ring_equiv : A₁ → A₂) = e :=
   rfl
 
-theorem coe_ring_equiv_injective : Function.Injective (coeₓ : (A₁ ≃ₐ[R] A₂) → A₁ ≃+* A₂) := fun e₁ e₂ h =>
+theorem coe_ring_equiv_injective : Function.Injective (coe : (A₁ ≃ₐ[R] A₂) → A₁ ≃+* A₂) := fun e₁ e₂ h =>
   ext $ RingEquiv.congr_fun h
 
 @[simp]
@@ -952,7 +952,7 @@ theorem map_smul (r : R) (x : A₁) : e (r • x) = r • e x := by
 theorem map_sum {ι : Type _} (f : ι → A₁) (s : Finset ι) : e (∑ x in s, f x) = ∑ x in s, e (f x) :=
   e.to_add_equiv.map_sum f s
 
-theorem map_finsupp_sum {α : Type _} [HasZero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A₁) :
+theorem map_finsupp_sum {α : Type _} [Zero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A₁) :
     e (f.sum g) = f.sum fun i b => e (g i b) :=
   e.map_sum _ _
 
@@ -974,7 +974,7 @@ theorem to_alg_hom_eq_coe : e.to_alg_hom = e :=
 theorem coe_alg_hom : ((e : A₁ →ₐ[R] A₂) : A₁ → A₂) = e :=
   rfl
 
-theorem coe_alg_hom_injective : Function.Injective (coeₓ : (A₁ ≃ₐ[R] A₂) → A₁ →ₐ[R] A₂) := fun e₁ e₂ h =>
+theorem coe_alg_hom_injective : Function.Injective (coe : (A₁ ≃ₐ[R] A₂) → A₁ →ₐ[R] A₂) := fun e₁ e₂ h =>
   ext $ AlgHom.congr_fun h
 
 /-- The two paths coercion can take to a `ring_hom` are equivalent -/
@@ -994,7 +994,7 @@ theorem surjective : Function.Surjective e :=
 theorem bijective : Function.Bijective e :=
   e.to_equiv.bijective
 
-instance : HasOne (A₁ ≃ₐ[R] A₁) :=
+instance : One (A₁ ≃ₐ[R] A₁) :=
   ⟨{ (1 : A₁ ≃+* A₁) with commutes' := fun r => rfl }⟩
 
 instance : Inhabited (A₁ ≃ₐ[R] A₁) :=
@@ -1326,7 +1326,7 @@ variable [Algebra R A₁] [Algebra R A₂] (e : A₁ ≃ₐ[R] A₂)
 theorem map_prod {ι : Type _} (f : ι → A₁) (s : Finset ι) : e (∏ x in s, f x) = ∏ x in s, e (f x) :=
   e.to_alg_hom.map_prod f s
 
-theorem map_finsupp_prod {α : Type _} [HasZero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A₁) :
+theorem map_finsupp_prod {α : Type _} [Zero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A₁) :
     e (f.prod g) = f.prod fun i a => e (g i a) :=
   e.to_alg_hom.map_finsupp_prod f g
 

@@ -138,7 +138,7 @@ instance : MulAction (ConjAct G) G where
   one_smul := by
     simp [smul_def]
   mul_smul := by
-    simp [smul_def, mul_assocₓ, mul_inv_rev₀]
+    simp [smul_def, mul_assoc, mul_inv_rev₀]
 
 end GroupWithZeroₓ
 
@@ -147,13 +147,13 @@ variable [Groupₓ G]
 instance : MulDistribMulAction (ConjAct G) G where
   smul := · • ·
   smul_mul := by
-    simp [smul_def, mul_assocₓ]
+    simp [smul_def, mul_assoc]
   smul_one := by
     simp [smul_def]
   one_smul := by
     simp [smul_def]
   mul_smul := by
-    simp [smul_def, mul_assocₓ]
+    simp [smul_def, mul_assoc]
 
 theorem smul_eq_mul_aut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (of_conj_act g) h :=
   rfl

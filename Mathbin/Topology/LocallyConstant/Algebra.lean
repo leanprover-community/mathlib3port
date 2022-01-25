@@ -15,15 +15,15 @@ namespace LocallyConstant
 variable {X Y : Type _} [TopologicalSpace X]
 
 @[to_additive]
-instance [HasOne Y] : HasOne (LocallyConstant X Y) where
+instance [One Y] : One (LocallyConstant X Y) where
   one := const X 1
 
 @[simp, to_additive]
-theorem coe_one [HasOne Y] : ⇑(1 : LocallyConstant X Y) = (1 : X → Y) :=
+theorem coe_one [One Y] : ⇑(1 : LocallyConstant X Y) = (1 : X → Y) :=
   rfl
 
 @[to_additive]
-theorem one_apply [HasOne Y] (x : X) : (1 : LocallyConstant X Y) x = 1 :=
+theorem one_apply [One Y] (x : X) : (1 : LocallyConstant X Y) x = 1 :=
   rfl
 
 @[to_additive]
@@ -108,7 +108,7 @@ instance [Semigroupₓ Y] : Semigroupₓ (LocallyConstant X Y) :=
     mul_assoc := by
       intros
       ext
-      simp only [mul_apply, mul_assocₓ] }
+      simp only [mul_apply, mul_assoc] }
 
 instance [SemigroupWithZero Y] : SemigroupWithZero (LocallyConstant X Y) :=
   { LocallyConstant.mulZeroClass, LocallyConstant.semigroup with }
@@ -119,7 +119,7 @@ instance [CommSemigroupₓ Y] : CommSemigroupₓ (LocallyConstant X Y) :=
     mul_comm := by
       intros
       ext
-      simp only [mul_apply, mul_commₓ] }
+      simp only [mul_apply, mul_comm] }
 
 @[to_additive]
 instance [Monoidₓ Y] : Monoidₓ (LocallyConstant X Y) :=

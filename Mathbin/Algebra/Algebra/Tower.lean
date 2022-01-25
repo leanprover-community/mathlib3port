@@ -76,7 +76,7 @@ variable {R S A}
 theorem of_algebra_map_eq [Algebra R A] (h : ∀ x, algebraMap R A x = algebraMap S A (algebraMap R S x)) :
     IsScalarTower R S A :=
   ⟨fun x y z => by
-    simp_rw [Algebra.smul_def, RingHom.map_mul, mul_assocₓ, h]⟩
+    simp_rw [Algebra.smul_def, RingHom.map_mul, mul_assoc, h]⟩
 
 /-- See note [partially-applied ext lemmas]. -/
 theorem of_algebra_map_eq' [Algebra R A] (h : algebraMap R A = (algebraMap S A).comp (algebraMap R S)) :

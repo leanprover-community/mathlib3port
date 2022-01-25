@@ -124,9 +124,9 @@ theorem contraction_degree_eq_or_insep [hq : Fact q.prime] [CharP F q] (g g' : P
       rw [h_expand]
     rw [nat_degree_expand (q ^ m') g, nat_degree_expand (q ^ m') g'] at expand_deg
     apply Nat.eq_of_mul_eq_mul_leftₓ (pow_pos hq.1.Pos m')
-    rw [mul_commₓ] at expand_deg
+    rw [mul_comm] at expand_deg
     rw [expand_deg]
-    rw [mul_commₓ]
+    rw [mul_comm]
     
   · cases Ne.lt_or_lt h
     · exact contraction_degree_eq_aux q g g' m m' h_expand h_1 hg

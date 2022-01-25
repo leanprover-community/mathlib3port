@@ -102,7 +102,7 @@ theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R
   have h := LinearMap.toMatrix (choose_basis R M) (choose_basis R N)
   let b := (Matrix.stdBasis _ _ _).map h.symm
   rw [finrank, dim_eq_card_basis b, ← mk_fintype, mk_to_nat_eq_card, finrank, finrank, rank_eq_card_choose_basis_index,
-    rank_eq_card_choose_basis_index, mk_to_nat_eq_card, mk_to_nat_eq_card, card_prod, mul_commₓ]
+    rank_eq_card_choose_basis_index, mk_to_nat_eq_card, mk_to_nat_eq_card, card_prod, mul_comm]
 
 /-- The finrank of `M ⊗[R] N` is `(finrank R M) * (finrank R N)`. -/
 @[simp]

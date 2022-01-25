@@ -61,7 +61,7 @@ theorem Finset.center_mass_eq_of_sum_1 (hw : (∑ i in t, w i) = 1) : t.center_m
   simp only [Finset.centerMass, hw, inv_one, one_smul]
 
 theorem Finset.center_mass_smul : (t.center_mass w fun i => c • z i) = c • t.center_mass w z := by
-  simp only [Finset.centerMass, Finset.smul_sum, (mul_smul _ _ _).symm, mul_commₓ c, mul_assocₓ]
+  simp only [Finset.centerMass, Finset.smul_sum, (mul_smul _ _ _).symm, mul_comm c, mul_assoc]
 
 /-- A convex combination of two centers of mass is a center of mass as well. This version
 deals with two different index types. -/
@@ -368,7 +368,7 @@ theorem convex_hull_prod (s : Set E) (t : Set F) : convexHull R (s ×ˢ t) = con
     have : (∑ y : κ in b, w i * v y) = ∑ y : κ in b, v y * w i := by
       congr
       ext
-      simp [mul_commₓ]
+      simp [mul_comm]
     rw [this, ← Finset.sum_mul, hv']
     simp
   refine' ⟨ι × κ, a.product b, fun p => w p.1 * v p.2, fun p => (S p.1, T p.2), fun p hp => _, h_sum, fun p hp => _, _⟩

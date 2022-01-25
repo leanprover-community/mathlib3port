@@ -104,22 +104,20 @@ theorem norm_algebra_map (x : K) : norm K (algebraMap K L x) = x ^ finrank K L :
 section EqProdRoots
 
 /-- Given `pb : power_basis K S`, then the norm of `pb.gen` is
-`(-1) ^ pb.dim * coeff ((minpoly K pb.gen).map (algebra_map K F)) 0`. -/
+`(-1) ^ pb.dim * coeff (minpoly K pb.gen) 0`. -/
 theorem power_basis.norm_gen_eq_coeff_zero_minpoly [Algebra K S] (pb : PowerBasis K S) :
-    (algebraMap K F) (norm K pb.gen) = -1 ^ pb.dim * coeff ((minpoly K pb.gen).map (algebraMap K F)) 0 := by
-  rw [norm_eq_matrix_det pb.basis, det_eq_sign_charpoly_coeff, charpoly_left_mul_matrix, RingHom.map_mul, map_pow,
-    RingHom.map_neg, RingHom.map_one, ← coeff_map, Fintype.card_fin]
+    norm K pb.gen = -1 ^ pb.dim * coeff (minpoly K pb.gen) 0 := by
+  rw [norm_eq_matrix_det pb.basis, det_eq_sign_charpoly_coeff, charpoly_left_mul_matrix, Fintype.card_fin]
 
 /-- Given `pb : power_basis K S`, then the norm of `pb.gen` is
 `((minpoly K pb.gen).map (algebra_map K F)).roots.prod`. -/
 theorem power_basis.norm_gen_eq_prod_roots [Algebra K S] (pb : PowerBasis K S)
     (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
     algebraMap K F (norm K pb.gen) = ((minpoly K pb.gen).map (algebraMap K F)).roots.Prod := by
-  rw [power_basis.norm_gen_eq_coeff_zero_minpoly, ← pb.nat_degree_minpoly,
+  rw [power_basis.norm_gen_eq_coeff_zero_minpoly, ← pb.nat_degree_minpoly, RingHom.map_mul, ← coeff_map,
     prod_roots_eq_coeff_zero_of_monic_of_split (monic_map _ (minpoly.monic (PowerBasis.is_integral_gen _)))
-      ((splits_id_iff_splits _).2 hf)]
-  simp only [PowerBasis.nat_degree_minpoly, nat_degree_map]
-  rw [← mul_assocₓ, ← mul_powₓ]
+      ((splits_id_iff_splits _).2 hf),
+    nat_degree_map, map_pow, ← mul_assoc, ← mul_powₓ]
   simp
 
 end EqProdRoots

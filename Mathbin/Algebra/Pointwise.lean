@@ -52,33 +52,33 @@ variable {s s₁ s₂ t t₁ t₂ u : Set α} {a b : α} {x y : β}
 
 /-- The set `(1 : set α)` is defined as `{1}` in locale `pointwise`. -/
 @[to_additive "The set `(0 : set α)` is defined as `{0}` in locale `pointwise`. "]
-protected def HasOne [HasOne α] : HasOne (Set α) :=
+protected def One [One α] : One (Set α) :=
   ⟨{1}⟩
 
 localized [Pointwise] attribute [instance] Set.hasOne Set.hasZero
 
 @[to_additive]
-theorem singleton_one [HasOne α] : ({1} : Set α) = 1 :=
+theorem singleton_one [One α] : ({1} : Set α) = 1 :=
   rfl
 
 @[simp, to_additive]
-theorem mem_one [HasOne α] : a ∈ (1 : Set α) ↔ a = 1 :=
+theorem mem_one [One α] : a ∈ (1 : Set α) ↔ a = 1 :=
   Iff.rfl
 
 @[to_additive]
-theorem one_mem_one [HasOne α] : (1 : α) ∈ (1 : Set α) :=
+theorem one_mem_one [One α] : (1 : α) ∈ (1 : Set α) :=
   Eq.refl _
 
 @[simp, to_additive]
-theorem one_subset [HasOne α] : 1 ⊆ s ↔ (1 : α) ∈ s :=
+theorem one_subset [One α] : 1 ⊆ s ↔ (1 : α) ∈ s :=
   singleton_subset_iff
 
 @[to_additive]
-theorem one_nonempty [HasOne α] : (1 : Set α).Nonempty :=
+theorem one_nonempty [One α] : (1 : Set α).Nonempty :=
   ⟨1, rfl⟩
 
 @[simp, to_additive]
-theorem image_one [HasOne α] {f : α → β} : f '' 1 = {f 1} :=
+theorem image_one [One α] {f : α → β} : f '' 1 = {f 1} :=
   image_singleton
 
 /-! ### Properties about multiplication -/
@@ -160,8 +160,8 @@ theorem singleton_mul_singleton [Mul α] : ({a} : Set α) * {b} = {a * b} :=
   image2_singleton
 
 @[to_additive]
-protected theorem mul_commₓ [CommSemigroupₓ α] : s * t = t * s := by
-  simp only [← image2_mul, image2_swap _ s, mul_commₓ]
+protected theorem mul_comm [CommSemigroupₓ α] : s * t = t * s := by
+  simp only [← image2_mul, image2_swap _ s, mul_comm]
 
 /-- `set α` is a `mul_one_class` under pointwise operations if `α` is. -/
 @[to_additive "`set α` is an `add_zero_class` under pointwise operations if `α` is."]
@@ -175,7 +175,7 @@ protected def MulOneClass [MulOneClass α] : MulOneClass (Set α) :=
 /-- `set α` is a `semigroup` under pointwise operations if `α` is. -/
 @[to_additive "`set α` is an `add_semigroup` under pointwise operations if `α` is. "]
 protected def Semigroupₓ [Semigroupₓ α] : Semigroupₓ (Set α) :=
-  { Set.hasMul with mul_assoc := fun _ _ _ => image2_assoc mul_assocₓ }
+  { Set.hasMul with mul_assoc := fun _ _ _ => image2_assoc mul_assoc }
 
 /-- `set α` is a `monoid` under pointwise operations if `α` is. -/
 @[to_additive "`set α` is an `add_monoid` under pointwise operations if `α` is. "]
@@ -706,15 +706,14 @@ open_locale Pointwise
 section
 
 /-- A nonempty set is scaled by zero to the singleton set containing 0. -/
-theorem zero_smul_set [HasZero α] [HasZero β] [SmulWithZero α β] {s : Set β} (h : s.nonempty) :
-    (0 : α) • s = (0 : Set β) := by
+theorem zero_smul_set [Zero α] [Zero β] [SmulWithZero α β] {s : Set β} (h : s.nonempty) : (0 : α) • s = (0 : Set β) :=
+  by
   simp only [← image_smul, image_eta, zero_smul, h.image_const, singleton_zero]
 
-theorem zero_smul_subset [HasZero α] [HasZero β] [SmulWithZero α β] (s : Set β) : (0 : α) • s ⊆ 0 :=
+theorem zero_smul_subset [Zero α] [Zero β] [SmulWithZero α β] (s : Set β) : (0 : α) • s ⊆ 0 :=
   image_subset_iff.2 $ fun x _ => zero_smul α x
 
-theorem subsingleton_zero_smul_set [HasZero α] [HasZero β] [SmulWithZero α β] (s : Set β) :
-    ((0 : α) • s).Subsingleton :=
+theorem subsingleton_zero_smul_set [Zero α] [Zero β] [SmulWithZero α β] (s : Set β) : ((0 : α) • s).Subsingleton :=
   subsingleton_singleton.mono (zero_smul_subset s)
 
 theorem smul_add_set [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction α β] (c : α) (s t : Set β) :
@@ -802,17 +801,17 @@ variable {a : α} {s s₁ s₂ t t₁ t₂ : Finset α}
 
 /-- The finset `(1 : finset α)` is defined as `{1}` in locale `pointwise`. -/
 @[to_additive "The finset `(0 : finset α)` is defined as `{0}` in locale `pointwise`. "]
-protected def HasOne [HasOne α] : HasOne (Finset α) :=
+protected def One [One α] : One (Finset α) :=
   ⟨{1}⟩
 
 localized [Pointwise] attribute [instance] Finset.hasOne Finset.hasZero
 
 @[simp, to_additive]
-theorem mem_one [HasOne α] : a ∈ (1 : Finset α) ↔ a = 1 := by
-  simp [HasOne.one]
+theorem mem_one [One α] : a ∈ (1 : Finset α) ↔ a = 1 := by
+  simp [One.one]
 
 @[simp, to_additive]
-theorem one_subset [HasOne α] : (1 : Finset α) ⊆ s ↔ (1 : α) ∈ s :=
+theorem one_subset [One α] : (1 : Finset α) ⊆ s ↔ (1 : α) ∈ s :=
   singleton_subset_iff
 
 section DecidableEq
@@ -852,7 +851,7 @@ theorem mul_mem_mul {x y : α} (hx : x ∈ s) (hy : y ∈ t) : x * y ∈ s * t :
 @[to_additive]
 theorem mul_card_le : (s * t).card ≤ s.card * t.card := by
   convert Finset.card_image_le
-  rw [Finset.card_product, mul_commₓ]
+  rw [Finset.card_product, mul_comm]
 
 @[simp, to_additive]
 theorem empty_mul (s : Finset α) : ∅ * s = ∅ :=
@@ -873,6 +872,8 @@ theorem mul_nonempty_iff (s t : Finset α) : (s * t).Nonempty ↔ s.nonempty ∧
 @[to_additive, mono]
 theorem mul_subset_mul (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ * t₁ ⊆ s₂ * t₂ :=
   image_subset_image (product_subset_product hs ht)
+
+attribute [mono] add_subset_add
 
 @[simp, to_additive]
 theorem mul_singleton (a : α) : s * {a} = s.image (· * a) := by
@@ -920,19 +921,19 @@ open_locale Pointwise
 variable {u : Finset α} {b : α} {x y : β}
 
 @[to_additive]
-theorem singleton_one [HasOne α] : ({1} : Finset α) = 1 :=
+theorem singleton_one [One α] : ({1} : Finset α) = 1 :=
   rfl
 
 @[to_additive]
-theorem one_mem_one [HasOne α] : (1 : α) ∈ (1 : Finset α) := by
-  simp [HasOne.one]
+theorem one_mem_one [One α] : (1 : α) ∈ (1 : Finset α) := by
+  simp [One.one]
 
 @[to_additive]
-theorem one_nonempty [HasOne α] : (1 : Finset α).Nonempty :=
+theorem one_nonempty [One α] : (1 : Finset α).Nonempty :=
   ⟨1, one_mem_one⟩
 
 @[simp, to_additive]
-theorem image_one [DecidableEq β] [HasOne α] {f : α → β} : image f 1 = {f 1} :=
+theorem image_one [DecidableEq β] [One α] {f : α → β} : image f 1 = {f 1} :=
   image_singleton f 1
 
 @[to_additive add_image_prod]
@@ -996,7 +997,7 @@ theorem preimage_mul_right_one' [Groupₓ α] :
   simp
 
 @[to_additive]
-protected theorem mul_commₓ [DecidableEq α] [CommSemigroupₓ α] : s * t = t * s := by
+protected theorem mul_comm [DecidableEq α] [CommSemigroupₓ α] : s * t = t * s := by
   exact_mod_cast @Set.mul_comm _ (s : Set α) t _
 
 /-- `finset α` is a `mul_one_class` under pointwise operations if `α` is. -/
@@ -1122,7 +1123,7 @@ theorem pow_smul_mem_closure_smul {N : Type _} [CommMonoidₓ N] [MulAction M N]
   · rintro x y ⟨nx, hx⟩ ⟨ny, hy⟩
     use nx + ny
     convert mul_mem _ hx hy
-    rw [pow_addₓ, smul_mul_assoc, mul_smul, mul_commₓ, ← smul_mul_assoc, mul_commₓ]
+    rw [pow_addₓ, smul_mul_assoc, mul_smul, mul_comm, ← smul_mul_assoc, mul_comm]
     
 
 end Submonoid
@@ -1178,7 +1179,7 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
     · convert key a (S ^ n) ({a} * S ^ n) fun b hb => Set.mul_mem_mul (Set.mem_singleton a) hb
       
     
-  rw [pow_succ'ₓ, ← h, mul_assocₓ, ← pow_succ'ₓ, h]
+  rw [pow_succ'ₓ, ← h, mul_assoc, ← pow_succ'ₓ, h]
   rintro _ ⟨b, c, hb, hc, rfl⟩
   rwa [set.mem_singleton_iff.mp hb, inv_mul_cancel_leftₓ]
 

@@ -467,10 +467,10 @@ instance Field : Field ℚ_[p] :=
 instance : Inhabited ℚ_[p] :=
   ⟨0⟩
 
-instance : HasZero ℚ_[p] := by
+instance : Zero ℚ_[p] := by
   infer_instance
 
-instance : HasOne ℚ_[p] := by
+instance : One ℚ_[p] := by
   infer_instance
 
 instance : Add ℚ_[p] := by
@@ -981,7 +981,7 @@ protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ∥q∥ = ↑((
   Quotientₓ.induction_on q $ fun f hf =>
     have : ¬f ≈ 0 := (PadicSeq.ne_zero_iff_nequiv_zero f).1 hf
     let ⟨n, hn⟩ := PadicSeq.norm_values_discrete f this
-    ⟨n, congr_argₓ coeₓ hn⟩
+    ⟨n, congr_argₓ coe hn⟩
 
 protected theorem is_rat (q : ℚ_[p]) : ∃ q' : ℚ, ∥q∥ = ↑q' :=
   if h : q = 0 then

@@ -97,7 +97,7 @@ def of_hom {R : Type u} [Ringₓ R] {X Y : Type u} [AddCommGroupₓ X] [Module R
     (f : X →ₗ[R] Y) : of R X ⟶ of R Y :=
   f
 
-instance : HasZero (ModuleCat R) :=
+instance : Zero (ModuleCat R) :=
   ⟨of R PUnit⟩
 
 instance : Inhabited (ModuleCat R) :=

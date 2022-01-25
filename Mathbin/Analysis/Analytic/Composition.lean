@@ -197,7 +197,7 @@ theorem comp_along_composition_aux_bound {n : ℕ} (p : FormalMultilinearSeries 
       refine' Finset.prod_le_prod (fun i hi => norm_nonneg _) fun i hi => _
       apply ContinuousMultilinearMap.le_op_norm
     _ = (∥f∥ * ∏ i, ∥p (c.blocks_fun i)∥) * ∏ (i) (j : Finₓ (c.blocks_fun i)), ∥(v ∘ c.embedding i) j∥ := by
-      rw [Finset.prod_mul_distrib, mul_assocₓ]
+      rw [Finset.prod_mul_distrib, mul_assoc]
     _ = (∥f∥ * ∏ i, ∥p (c.blocks_fun i)∥) * ∏ i : Finₓ n, ∥v i∥ := by
       rw [← c.blocks_fin_equiv.prod_comp, ← Finset.univ_sigma_univ, Finset.prod_sigma]
       congr
@@ -484,7 +484,7 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
   convert (Nnreal.summable_geometric (Nnreal.div_lt_one_of_lt one_lt_two)).mul_left (1 / 4)
   ext1 n
   rw [(this _).tsum_eq, add_tsub_cancel_right]
-  field_simp [← mul_assocₓ, pow_succ'ₓ, mul_powₓ, show (4 : ℝ≥0 ) = 2 * 2 from (two_mul 2).symm, mul_right_commₓ]
+  field_simp [← mul_assoc, pow_succ'ₓ, mul_powₓ, show (4 : ℝ≥0 ) = 2 * 2 from (two_mul 2).symm, mul_right_commₓ]
 
 end
 

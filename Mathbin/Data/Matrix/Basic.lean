@@ -118,7 +118,7 @@ instance [AddSemigroupₓ α] : AddSemigroupₓ (Matrix m n α) :=
 instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (Matrix m n α) :=
   Pi.addCommSemigroup
 
-instance [HasZero α] : HasZero (Matrix m n α) :=
+instance [Zero α] : Zero (Matrix m n α) :=
   Pi.hasZero
 
 instance [AddZeroClass α] : AddZeroClass (Matrix m n α) :=
@@ -173,7 +173,7 @@ instance [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] : Module R (Matrix 
   Pi.module _ _ _
 
 @[simp]
-theorem map_zero [HasZero α] [HasZero β] (f : α → β) (h : f 0 = 0) : (0 : Matrix m n α).map f = 0 := by
+theorem map_zero [Zero α] [Zero β] (f : α → β) (h : f 0 = 0) : (0 : Matrix m n α).map f = 0 := by
   ext
   simp [h]
 
@@ -225,31 +225,31 @@ Note that bundled versions exist as:
 * `matrix.diagonal_ring_hom`
 * `matrix.diagonal_alg_hom`
 -/
-def diagonal [HasZero α] (d : n → α) : Matrix n n α
+def diagonal [Zero α] (d : n → α) : Matrix n n α
   | i, j => if i = j then d i else 0
 
 @[simp]
-theorem diagonal_apply_eq [HasZero α] {d : n → α} (i : n) : (diagonal d) i i = d i := by
+theorem diagonal_apply_eq [Zero α] {d : n → α} (i : n) : (diagonal d) i i = d i := by
   simp [diagonal]
 
 @[simp]
-theorem diagonal_apply_ne [HasZero α] {d : n → α} {i j : n} (h : i ≠ j) : (diagonal d) i j = 0 := by
+theorem diagonal_apply_ne [Zero α] {d : n → α} {i j : n} (h : i ≠ j) : (diagonal d) i j = 0 := by
   simp [diagonal, h]
 
-theorem diagonal_apply_ne' [HasZero α] {d : n → α} {i j : n} (h : j ≠ i) : (diagonal d) i j = 0 :=
+theorem diagonal_apply_ne' [Zero α] {d : n → α} {i j : n} (h : j ≠ i) : (diagonal d) i j = 0 :=
   diagonal_apply_ne h.symm
 
-theorem diagonal_injective [HasZero α] : Function.Injective (diagonal : (n → α) → Matrix n n α) := fun d₁ d₂ h =>
+theorem diagonal_injective [Zero α] : Function.Injective (diagonal : (n → α) → Matrix n n α) := fun d₁ d₂ h =>
   funext $ fun i => by
     simpa using matrix.ext_iff.mpr h i i
 
 @[simp]
-theorem diagonal_zero [HasZero α] : (diagonal fun _ => 0 : Matrix n n α) = 0 := by
+theorem diagonal_zero [Zero α] : (diagonal fun _ => 0 : Matrix n n α) = 0 := by
   ext
   simp [diagonal]
 
 @[simp]
-theorem diagonal_transpose [HasZero α] (v : n → α) : (diagonal v)ᵀ = diagonal v := by
+theorem diagonal_transpose [Zero α] (v : n → α) : (diagonal v)ᵀ = diagonal v := by
   ext i j
   by_cases' h : i = j
   · simp [h, transpose]
@@ -285,7 +285,7 @@ def diagonal_linear_map [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] : (n
 variable {n α R}
 
 @[simp]
-theorem diagonal_map [HasZero α] [HasZero β] {f : α → β} (h : f 0 = 0) {d : n → α} :
+theorem diagonal_map [Zero α] [Zero β] {f : α → β} (h : f 0 = 0) {d : n → α} :
     (diagonal d).map f = diagonal fun m => f (d m) := by
   ext
   simp only [diagonal, map_apply]
@@ -298,9 +298,9 @@ theorem diagonal_conj_transpose [Semiringₓ α] [StarRing α] (v : n → α) : 
 
 section One
 
-variable [HasZero α] [HasOne α]
+variable [Zero α] [One α]
 
-instance : HasOne (Matrix n n α) :=
+instance : One (Matrix n n α) :=
   ⟨diagonal fun _ => 1⟩
 
 @[simp]
@@ -322,7 +322,7 @@ theorem one_apply_ne' {i j} : j ≠ i → (1 : Matrix n n α) i j = 0 :=
   diagonal_apply_ne'
 
 @[simp]
-theorem map_one [HasZero β] [HasOne β] (f : α → β) (h₀ : f 0 = 0) (h₁ : f 1 = 1) :
+theorem map_one [Zero β] [One β] (f : α → β) (h₀ : f 0 = 0) (h₁ : f 1 = 1) :
     (1 : Matrix n n α).map f = (1 : Matrix n n β) := by
   ext
   simp only [one_apply, map_apply]
@@ -339,7 +339,7 @@ section Numeral
 theorem bit0_apply [Add α] (M : Matrix m m α) (i : m) (j : m) : (bit0 M) i j = bit0 (M i j) :=
   rfl
 
-variable [AddMonoidₓ α] [HasOne α]
+variable [AddMonoidₓ α] [One α]
 
 theorem bit1_apply (M : Matrix n n α) (i : n) (j : n) : (bit1 M) i j = if i = j then bit1 (M i j) else bit0 (M i j) :=
   by
@@ -369,10 +369,10 @@ localized [Matrix] infixl:72 " ⬝ᵥ " => Matrix.dotProduct
 
 theorem dot_product_assoc [Fintype n] [NonUnitalSemiring α] (u : m → α) (w : n → α) (v : Matrix m n α) :
     (fun j => u ⬝ᵥ fun i => v i j) ⬝ᵥ w = u ⬝ᵥ fun i => v i ⬝ᵥ w := by
-  simpa [dot_product, Finset.mul_sum, Finset.sum_mul, mul_assocₓ] using Finset.sum_comm
+  simpa [dot_product, Finset.mul_sum, Finset.sum_mul, mul_assoc] using Finset.sum_comm
 
 theorem dot_product_comm [CommSemiringₓ α] (v w : m → α) : v ⬝ᵥ w = w ⬝ᵥ v := by
-  simp_rw [dot_product, mul_commₓ]
+  simp_rw [dot_product, mul_comm]
 
 @[simp]
 theorem dot_product_punit [AddCommMonoidₓ α] [Mul α] (v w : PUnit → α) : v ⬝ᵥ w = v ⟨⟩ * w ⟨⟩ := by
@@ -640,7 +640,7 @@ section NonUnitalSemiring
 
 variable [NonUnitalSemiring α] [Fintype m] [Fintype n]
 
-protected theorem mul_assocₓ (L : Matrix l m α) (M : Matrix m n α) (N : Matrix n o α) : L ⬝ M ⬝ N = L ⬝ (M ⬝ N) := by
+protected theorem mul_assoc (L : Matrix l m α) (M : Matrix m n α) (N : Matrix n o α) : L ⬝ M ⬝ N = L ⬝ (M ⬝ N) := by
   ext
   apply dot_product_assoc
 
@@ -729,7 +729,7 @@ def scalar (n : Type u) [DecidableEq n] [Fintype n] : α →+* Matrix n n α :=
     map_mul' := by
       intros
       ext
-      simp [mul_assocₓ] }
+      simp [mul_assoc] }
 
 section Scalar
 
@@ -765,7 +765,7 @@ variable [CommSemiringₓ α] [Fintype n]
 
 theorem smul_eq_mul_diagonal [DecidableEq n] (M : Matrix m n α) (a : α) : a • M = M ⬝ diagonal fun _ => a := by
   ext
-  simp [mul_commₓ]
+  simp [mul_comm]
 
 @[simp]
 theorem mul_mul_right (M : Matrix m n α) (N : Matrix n o α) (a : α) : (M ⬝ fun i j => a * N i j) = a • M ⬝ N :=
@@ -1111,7 +1111,7 @@ theorem vec_mul_diagonal [Fintype m] [DecidableEq m] (v w : m → α) (x : m) : 
 /-- Associate the dot product of `mul_vec` to the left. -/
 theorem dot_product_mul_vec [Fintype n] [Fintype m] [NonUnitalSemiring R] (v : m → R) (A : Matrix m n R) (w : n → R) :
     v ⬝ᵥ mul_vec A w = vec_mul v A ⬝ᵥ w := by
-  simp only [dot_product, vec_mul, mul_vec, Finset.mul_sum, Finset.sum_mul, mul_assocₓ] <;> exact Finset.sum_comm
+  simp only [dot_product, vec_mul, mul_vec, Finset.mul_sum, Finset.sum_mul, mul_assoc] <;> exact Finset.sum_comm
 
 @[simp]
 theorem mul_vec_zero [Fintype n] (A : Matrix m n α) : mul_vec A 0 = 0 := by
@@ -1264,13 +1264,13 @@ theorem transpose_transpose (M : Matrix m n α) : (M)ᵀᵀ = M := by
   ext <;> rfl
 
 @[simp]
-theorem transpose_zero [HasZero α] : ((0 : Matrix m n α))ᵀ = 0 := by
+theorem transpose_zero [Zero α] : ((0 : Matrix m n α))ᵀ = 0 := by
   ext i j <;> rfl
 
 @[simp]
-theorem transpose_one [DecidableEq n] [HasZero α] [HasOne α] : ((1 : Matrix n n α))ᵀ = 1 := by
+theorem transpose_one [DecidableEq n] [Zero α] [One α] : ((1 : Matrix n n α))ᵀ = 1 := by
   ext i j
-  unfold HasOne.one transpose
+  unfold One.one transpose
   by_cases' i = j
   · simp only [h, diagonal_apply_eq]
     
@@ -1376,7 +1376,7 @@ theorem conj_transpose_sub [AddGroupₓ α] [StarAddMonoid α] (M N : Matrix m n
 
 @[simp]
 theorem conj_transpose_smul [CommMonoidₓ α] [StarMonoid α] (c : α) (M : Matrix m n α) : (c • M)ᴴ = star c • (M)ᴴ := by
-  ext i j <;> simp [mul_commₓ]
+  ext i j <;> simp [mul_comm]
 
 @[simp]
 theorem conj_transpose_mul [Fintype n] [Semiringₓ α] [StarRing α] (M : Matrix m n α) (N : Matrix n l α) :
@@ -1501,7 +1501,7 @@ theorem minor_sub [Sub α] (A B : Matrix m n α) :
   rfl
 
 @[simp]
-theorem minor_zero [HasZero α] : ((0 : Matrix m n α).minor : (l → m) → (o → n) → Matrix l o α) = 0 :=
+theorem minor_zero [Zero α] : ((0 : Matrix m n α).minor : (l → m) → (o → n) → Matrix l o α) = 0 :=
   rfl
 
 theorem minor_smul {R : Type _} [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] (r : R) (A : Matrix m n α) :
@@ -1514,7 +1514,7 @@ theorem minor_map (f : α → β) (e₁ : l → m) (e₂ : o → n) (A : Matrix 
 
 /-- Given a `(m × m)` diagonal matrix defined by a map `d : m → α`, if the reindexing map `e` is
   injective, then the resulting matrix is again diagonal. -/
-theorem minor_diagonal [HasZero α] [DecidableEq m] [DecidableEq l] (d : m → α) (e : l → m) (he : Function.Injective e) :
+theorem minor_diagonal [Zero α] [DecidableEq m] [DecidableEq l] (d : m → α) (e : l → m) (he : Function.Injective e) :
     (diagonal d).minor e e = diagonal (d ∘ e) :=
   ext $ fun i j => by
     rw [minor_apply]
@@ -1524,7 +1524,7 @@ theorem minor_diagonal [HasZero α] [DecidableEq m] [DecidableEq l] (d : m → �
     · rw [diagonal_apply_ne h, diagonal_apply_ne (he.ne h)]
       
 
-theorem minor_one [HasZero α] [HasOne α] [DecidableEq m] [DecidableEq l] (e : l → m) (he : Function.Injective e) :
+theorem minor_one [Zero α] [One α] [DecidableEq m] [DecidableEq l] (e : l → m) (he : Function.Injective e) :
     (1 : Matrix m m α).minor e e = 1 :=
   minor_diagonal _ e he
 
@@ -1538,22 +1538,22 @@ when the mappings are bundled. -/
 
 
 @[simp]
-theorem minor_diagonal_embedding [HasZero α] [DecidableEq m] [DecidableEq l] (d : m → α) (e : l ↪ m) :
+theorem minor_diagonal_embedding [Zero α] [DecidableEq m] [DecidableEq l] (d : m → α) (e : l ↪ m) :
     (diagonal d).minor e e = diagonal (d ∘ e) :=
   minor_diagonal d e e.injective
 
 @[simp]
-theorem minor_diagonal_equiv [HasZero α] [DecidableEq m] [DecidableEq l] (d : m → α) (e : l ≃ m) :
+theorem minor_diagonal_equiv [Zero α] [DecidableEq m] [DecidableEq l] (d : m → α) (e : l ≃ m) :
     (diagonal d).minor e e = diagonal (d ∘ e) :=
   minor_diagonal d e e.injective
 
 @[simp]
-theorem minor_one_embedding [HasZero α] [HasOne α] [DecidableEq m] [DecidableEq l] (e : l ↪ m) :
+theorem minor_one_embedding [Zero α] [One α] [DecidableEq m] [DecidableEq l] (e : l ↪ m) :
     (1 : Matrix m m α).minor e e = 1 :=
   minor_one e e.injective
 
 @[simp]
-theorem minor_one_equiv [HasZero α] [HasOne α] [DecidableEq m] [DecidableEq l] (e : l ≃ m) :
+theorem minor_one_equiv [Zero α] [One α] [DecidableEq m] [DecidableEq l] (e : l ≃ m) :
     (1 : Matrix m m α).minor e e = 1 :=
   minor_one e e.injective
 

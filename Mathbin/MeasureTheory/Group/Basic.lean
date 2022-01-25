@@ -319,6 +319,11 @@ class is_add_haar_measure {G : Type _} [AddGroupₓ G] [TopologicalSpace G] [Mea
 
 attribute [to_additive] is_haar_measure
 
+@[to_additive]
+instance (priority := 100) is_locally_finite_measure_of_is_haar_measure [Groupₓ G] [MeasurableSpace G]
+    [TopologicalSpace G] [LocallyCompactSpace G] (μ : Measureₓ G) [is_haar_measure μ] : is_locally_finite_measure μ :=
+  is_locally_finite_measure_of_is_finite_measure_on_compacts
+
 section
 
 variable [Groupₓ G] [MeasurableSpace G] [TopologicalSpace G] (μ : Measureₓ G) [is_haar_measure μ]
@@ -347,7 +352,7 @@ theorem haar_singleton [TopologicalGroup G] [BorelSpace G] (g : G) : μ {g} = μ
 @[simp, to_additive]
 theorem haar_preimage_mul_right {G : Type _} [CommGroupₓ G] [MeasurableSpace G] [TopologicalSpace G] (μ : Measureₓ G)
     [is_haar_measure μ] [TopologicalGroup G] [BorelSpace G] (g : G) (A : Set G) : μ ((fun h => h * g) ⁻¹' A) = μ A := by
-  simp_rw [mul_commₓ, haar_preimage_mul μ g A]
+  simp_rw [mul_comm, haar_preimage_mul μ g A]
 
 @[to_additive MeasureTheory.Measure.IsAddHaarMeasure.smul]
 theorem is_haar_measure.smul {c : ℝ≥0∞} (cpos : c ≠ 0) (ctop : c ≠ ∞) : is_haar_measure (c • μ) :=
@@ -445,7 +450,7 @@ instance (priority := 100) is_haar_measure.has_no_atoms {G : Type _} [Groupₓ G
         exact measurable_set_singleton b
         
     rw [B] at A
-    rwa [Ennreal.le_div_iff_mul_le _ (Or.inr μKlt), mul_commₓ]
+    rwa [Ennreal.le_div_iff_mul_le _ (Or.inr μKlt), mul_comm]
     right
     apply ne_of_gtₓ (haar_pos_of_nonempty_interior μ ⟨_, K_int⟩)
   have J : tendsto (fun n : ℕ => μ K / n) at_top (𝓝 (μ K / ∞)) :=

@@ -89,10 +89,10 @@ protected theorem mul_left (c : ℕ) (h : a ≡ b [MOD n]) : c * a ≡ c * b [MO
   (h.mul_left' _).modeq_of_dvd (dvd_mul_left _ _)
 
 protected theorem mul_right' (c : ℕ) (h : a ≡ b [MOD n]) : a * c ≡ b * c [MOD n * c] := by
-  rw [mul_commₓ a, mul_commₓ b, mul_commₓ n] <;> exact h.mul_left' c
+  rw [mul_comm a, mul_comm b, mul_comm n] <;> exact h.mul_left' c
 
 protected theorem mul_right (c : ℕ) (h : a ≡ b [MOD n]) : a * c ≡ b * c [MOD n] := by
-  rw [mul_commₓ a, mul_commₓ b] <;> exact h.mul_left c
+  rw [mul_comm a, mul_comm b] <;> exact h.mul_left c
 
 protected theorem mul (h₁ : a ≡ b [MOD n]) (h₂ : c ≡ d [MOD n]) : a * c ≡ b * d [MOD n] :=
   (h₂.mul_left _).trans (h₁.mul_right _)
@@ -135,7 +135,7 @@ theorem of_modeq_mul_left (m : ℕ) (h : a ≡ b [MOD m * n]) : a ≡ b [MOD n] 
   exact (dvd_mul_left (n : ℤ) (m : ℤ)).trans h
 
 theorem of_modeq_mul_right (m : ℕ) : a ≡ b [MOD n * m] → a ≡ b [MOD n] :=
-  mul_commₓ m n ▸ of_modeq_mul_left _
+  mul_comm m n ▸ of_modeq_mul_left _
 
 end Modeq
 
@@ -208,7 +208,7 @@ def chinese_remainder' (h : a ≡ b [MOD gcd n m]) : { k // k ≡ a [MOD n] ∧ 
         · rw [← sub_eq_iff_eq_add'] at this
           rw [← this, sub_mul, ← add_sub_assoc, add_commₓ, add_sub_assoc, ← mul_sub, Int.add_div_of_dvd_left,
             Int.mul_div_cancel_left _ hnonzero, Int.mul_div_assoc _ h.dvd, ← sub_sub, sub_self, zero_sub, dvd_neg,
-            mul_assocₓ]
+            mul_assoc]
           exact dvd_mul_right _ _
           norm_cast
           exact dvd_mul_right _ _
@@ -217,7 +217,7 @@ def chinese_remainder' (h : a ≡ b [MOD gcd n m]) : { k // k ≡ a [MOD n] ∧ 
           
         · rw [← sub_eq_iff_eq_add] at this
           rw [← this, sub_mul, sub_add, ← mul_sub, Int.sub_div_of_dvd, Int.mul_div_cancel_left _ hnonzero,
-            Int.mul_div_assoc _ h.dvd, ← sub_add, sub_self, zero_addₓ, mul_assocₓ]
+            Int.mul_div_assoc _ h.dvd, ← sub_add, sub_self, zero_addₓ, mul_assoc]
           exact dvd_mul_right _ _
           exact hcoedvd _
           
@@ -256,7 +256,7 @@ theorem coprime_of_mul_modeq_one (b : ℕ) {a n : ℕ} (h : a * b ≡ 1 [MOD n])
         rw [hka, hkb, modeq_iff_dvd] at h
         cases' h with z hz
         rw [sub_eq_iff_eq_add] at hz
-        rw [hz, Int.coe_nat_mul, mul_assocₓ, mul_assocₓ, Int.coe_nat_mul, ← mul_addₓ]
+        rw [hz, Int.coe_nat_mul, mul_assoc, mul_assoc, Int.coe_nat_mul, ← mul_addₓ]
         exact dvd_mul_right _ _)
 
 @[simp]
@@ -274,7 +274,7 @@ theorem div_mod_eq_mod_mul_div (a b c : ℕ) : a / b % c = a % (b * c) / b :=
     rw [← @add_right_cancel_iffₓ _ _ (c * (a / b / c)), mod_add_div, Nat.div_div_eq_div_mulₓ, ←
       Nat.mul_right_inj (Nat.pos_of_ne_zeroₓ hb0), ← @add_left_cancel_iffₓ _ _ (a % b), mod_add_div, mul_addₓ, ←
       @add_left_cancel_iffₓ _ _ (a % (b * c) % b), add_left_commₓ, ← add_assocₓ (a % (b * c) % b), mod_add_div, ←
-      mul_assocₓ, mod_add_div, mod_mul_right_mod]
+      mul_assoc, mod_add_div, mod_mul_right_mod]
 
 theorem add_mod_add_ite (a b c : ℕ) : ((a + b) % c + if c ≤ a % c + b % c then c else 0) = a % c + b % c :=
   have : (a + b) % c = (a % c + b % c) % c := ((mod_modeq _ _).add $ mod_modeq _ _).symm

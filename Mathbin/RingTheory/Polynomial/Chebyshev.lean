@@ -68,7 +68,7 @@ theorem T_one : T R 1 = X :=
   rfl
 
 theorem T_two : T R 2 = 2 * X ^ 2 - 1 := by
-  simp only [T, sub_left_inj, sq, mul_assocₓ]
+  simp only [T, sub_left_inj, sq, mul_assoc]
 
 @[simp]
 theorem T_add_two (n : ℕ) : T R (n + 2) = 2 * X * T R (n + 1) - T R n := by

@@ -23,20 +23,20 @@ namespace Pi
 theorem _root_.is_smul_regular.pi {α : Type _} [∀ i, HasScalar α $ f i] {k : α} (hk : ∀ i, IsSmulRegular (f i) k) :
     IsSmulRegular (∀ i, f i) k := fun _ _ h => funext $ fun i => hk i (congr_funₓ h i : _)
 
-instance SmulWithZero α [HasZero α] [∀ i, HasZero (f i)] [∀ i, SmulWithZero α (f i)] : SmulWithZero α (∀ i, f i) :=
+instance SmulWithZero α [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α (f i)] : SmulWithZero α (∀ i, f i) :=
   { Pi.hasScalar with smul_zero := fun _ => funext $ fun _ => smul_zero' (f _) _,
     zero_smul := fun _ => funext $ fun _ => zero_smul _ _ }
 
-instance smul_with_zero' {g : I → Type _} [∀ i, HasZero (g i)] [∀ i, HasZero (f i)] [∀ i, SmulWithZero (g i) (f i)] :
+instance smul_with_zero' {g : I → Type _} [∀ i, Zero (g i)] [∀ i, Zero (f i)] [∀ i, SmulWithZero (g i) (f i)] :
     SmulWithZero (∀ i, g i) (∀ i, f i) :=
   { Pi.hasScalar' with smul_zero := fun _ => funext $ fun _ => smul_zero' (f _) _,
     zero_smul := fun _ => funext $ fun _ => zero_smul _ _ }
 
-instance MulActionWithZero α [MonoidWithZeroₓ α] [∀ i, HasZero (f i)] [∀ i, MulActionWithZero α (f i)] :
+instance MulActionWithZero α [MonoidWithZeroₓ α] [∀ i, Zero (f i)] [∀ i, MulActionWithZero α (f i)] :
     MulActionWithZero α (∀ i, f i) :=
   { Pi.mulAction _, Pi.smulWithZero _ with }
 
-instance mul_action_with_zero' {g : I → Type _} [∀ i, MonoidWithZeroₓ (g i)] [∀ i, HasZero (f i)]
+instance mul_action_with_zero' {g : I → Type _} [∀ i, MonoidWithZeroₓ (g i)] [∀ i, Zero (f i)]
     [∀ i, MulActionWithZero (g i) (f i)] : MulActionWithZero (∀ i, g i) (∀ i, f i) :=
   { Pi.mulAction', Pi.smulWithZero' with }
 

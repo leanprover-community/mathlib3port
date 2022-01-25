@@ -55,8 +55,6 @@ variable {V : Type u} [category.{v} V] [abelian V]
 
 attribute [local instance] preadditive.has_equalizers_of_has_kernels
 
-attribute [local instance] object_to_sort hom_to_fun
-
 open_locale Pseudoelement
 
 namespace CategoryTheory.Abelian

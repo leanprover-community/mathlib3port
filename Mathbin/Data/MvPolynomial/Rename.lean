@@ -173,7 +173,7 @@ end
 
 /-- Every polynomial is a polynomial in finitely many variables. -/
 theorem exists_finset_rename (p : MvPolynomial σ R) :
-    ∃ (s : Finset σ)(q : MvPolynomial { x // x ∈ s } R), p = rename coeₓ q := by
+    ∃ (s : Finset σ)(q : MvPolynomial { x // x ∈ s } R), p = rename coe q := by
   apply induction_on p
   · intro r
     exact
@@ -205,7 +205,7 @@ theorem exists_fin_rename (p : MvPolynomial σ R) :
   obtain ⟨s, q, rfl⟩ := exists_finset_rename p
   let n := Fintype.card { x // x ∈ s }
   let e := Fintype.equivFin { x // x ∈ s }
-  refine' ⟨n, coeₓ ∘ e.symm, subtype.val_injective.comp e.symm.injective, rename e q, _⟩
+  refine' ⟨n, coe ∘ e.symm, subtype.val_injective.comp e.symm.injective, rename e q, _⟩
   rw [← rename_rename, rename_rename e]
   simp only [Function.comp, Equivₓ.symm_apply_apply, rename_rename]
 

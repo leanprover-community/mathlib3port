@@ -34,7 +34,7 @@ open Parser ParseResult
 
 namespace Parser
 
-variable (α : Type) [HasZero α] [HasOne α] [Add α]
+variable (α : Type) [Zero α] [One α] [Add α]
 
 /-- Parse a string of digits as a numeral while casting it to target type `α`.
 -/

@@ -74,36 +74,36 @@ theorem superpolynomial_decay.add [HasContinuousAdd β] (hf : superpolynomial_de
 
 theorem superpolynomial_decay.mul [HasContinuousMul β] (hf : superpolynomial_decay l k f)
     (hg : superpolynomial_decay l k g) : superpolynomial_decay l k (f * g) := fun z => by
-  simpa only [mul_assocₓ, one_mulₓ, mul_zero, pow_zeroₓ] using (hf z).mul (hg 0)
+  simpa only [mul_assoc, one_mulₓ, mul_zero, pow_zeroₓ] using (hf z).mul (hg 0)
 
 theorem superpolynomial_decay.mul_const [HasContinuousMul β] (hf : superpolynomial_decay l k f) (c : β) :
     superpolynomial_decay l k fun n => f n * c := fun z => by
-  simpa only [← mul_assocₓ, zero_mul] using tendsto.mul_const c (hf z)
+  simpa only [← mul_assoc, zero_mul] using tendsto.mul_const c (hf z)
 
 theorem superpolynomial_decay.const_mul [HasContinuousMul β] (hf : superpolynomial_decay l k f) (c : β) :
     superpolynomial_decay l k fun n => c * f n :=
-  (hf.mul_const c).congr fun _ => mul_commₓ _ _
+  (hf.mul_const c).congr fun _ => mul_comm _ _
 
 theorem superpolynomial_decay.param_mul (hf : superpolynomial_decay l k f) : superpolynomial_decay l k (k * f) :=
   fun z =>
   tendsto_nhds.2 fun s hs hs0 =>
     l.sets_of_superset ((tendsto_nhds.1 (hf $ z + 1)) s hs hs0) fun x hx => by
-      simpa only [Set.mem_preimage, Pi.mul_apply, ← mul_assocₓ, ← pow_succ'ₓ] using hx
+      simpa only [Set.mem_preimage, Pi.mul_apply, ← mul_assoc, ← pow_succ'ₓ] using hx
 
 theorem superpolynomial_decay.mul_param (hf : superpolynomial_decay l k f) : superpolynomial_decay l k (f * k) :=
-  hf.param_mul.congr fun _ => mul_commₓ _ _
+  hf.param_mul.congr fun _ => mul_comm _ _
 
 theorem superpolynomial_decay.param_pow_mul (hf : superpolynomial_decay l k f) (n : ℕ) :
     superpolynomial_decay l k (k ^ n * f) := by
   induction' n with n hn
   · simpa only [one_mulₓ, pow_zeroₓ] using hf
     
-  · simpa only [pow_succₓ, mul_assocₓ] using hn.param_mul
+  · simpa only [pow_succₓ, mul_assoc] using hn.param_mul
     
 
 theorem superpolynomial_decay.mul_param_pow (hf : superpolynomial_decay l k f) (n : ℕ) :
     superpolynomial_decay l k (f * k ^ n) :=
-  (hf.param_pow_mul n).congr fun _ => mul_commₓ _ _
+  (hf.param_pow_mul n).congr fun _ => mul_comm _ _
 
 theorem superpolynomial_decay.polynomial_mul [HasContinuousAdd β] [HasContinuousMul β]
     (hf : superpolynomial_decay l k f) (p : Polynomial β) : superpolynomial_decay l k fun x => (p.eval $ k x) * f x :=
@@ -111,11 +111,11 @@ theorem superpolynomial_decay.polynomial_mul [HasContinuousAdd β] [HasContinuou
     (fun p q hp hq => by
       simpa [add_mulₓ] using hp.add hq)
     fun n c => by
-    simpa [mul_assocₓ] using (hf.param_pow_mul n).const_mul c
+    simpa [mul_assoc] using (hf.param_pow_mul n).const_mul c
 
 theorem superpolynomial_decay.mul_polynomial [HasContinuousAdd β] [HasContinuousMul β]
     (hf : superpolynomial_decay l k f) (p : Polynomial β) : superpolynomial_decay l k fun x => f x * (p.eval $ k x) :=
-  (hf.polynomial_mul p).congr fun _ => mul_commₓ _ _
+  (hf.polynomial_mul p).congr fun _ => mul_comm _ _
 
 end CommSemiringₓ
 
@@ -172,14 +172,14 @@ theorem superpolynomial_decay_mul_const_iff [HasContinuousMul β] {c : β} (hc0 
     (superpolynomial_decay l k fun n => f n * c) ↔ superpolynomial_decay l k f :=
   ⟨fun h =>
     (h.mul_const (c⁻¹)).congr fun x => by
-      simp [mul_assocₓ, mul_inv_cancel hc0],
+      simp [mul_assoc, mul_inv_cancel hc0],
     fun h => h.mul_const c⟩
 
 theorem superpolynomial_decay_const_mul_iff [HasContinuousMul β] {c : β} (hc0 : c ≠ 0) :
     (superpolynomial_decay l k fun n => c * f n) ↔ superpolynomial_decay l k f :=
   ⟨fun h =>
     (h.const_mul (c⁻¹)).congr fun x => by
-      simp [← mul_assocₓ, inv_mul_cancel hc0],
+      simp [← mul_assoc, inv_mul_cancel hc0],
     fun h => h.const_mul c⟩
 
 variable {l k f}
@@ -206,7 +206,7 @@ theorem superpolynomial_decay_iff_abs_is_bounded_under (hk : tendsto k l at_top)
       ((eventually_map.1 hm).mp _)
   refine' (eventually_ne_of_tendsto_at_top hk 0).mono $ fun x hk0 hx => _
   refine' le_transₓ (le_of_eqₓ _) (mul_le_mul_of_nonneg_left hx $ abs_nonneg (k x⁻¹))
-  rw [← abs_mul, ← mul_assocₓ, pow_succₓ, ← mul_assocₓ, inv_mul_cancel hk0, one_mulₓ]
+  rw [← abs_mul, ← mul_assoc, pow_succₓ, ← mul_assoc, inv_mul_cancel hk0, one_mulₓ]
 
 theorem superpolynomial_decay_iff_zpow_tendsto_zero (hk : tendsto k l at_top) :
     superpolynomial_decay l k f ↔ ∀ z : ℤ, tendsto (fun a : α => k a ^ z * f a) l (𝓝 0) := by
@@ -229,11 +229,11 @@ theorem superpolynomial_decay.param_zpow_mul (hk : tendsto k l at_top) (hf : sup
     superpolynomial_decay l k fun a => k a ^ z * f a := by
   rw [superpolynomial_decay_iff_zpow_tendsto_zero _ hk] at hf⊢
   refine' fun z' => (hf $ z' + z).congr' ((eventually_ne_of_tendsto_at_top hk 0).mono fun x hx => _)
-  simp [zpow_add₀ hx, mul_assocₓ, Pi.mul_apply]
+  simp [zpow_add₀ hx, mul_assoc, Pi.mul_apply]
 
 theorem superpolynomial_decay.mul_param_zpow (hk : tendsto k l at_top) (hf : superpolynomial_decay l k f) (z : ℤ) :
     superpolynomial_decay l k fun a => f a * k a ^ z :=
-  (hf.param_zpow_mul hk z).congr fun _ => mul_commₓ _ _
+  (hf.param_zpow_mul hk z).congr fun _ => mul_comm _ _
 
 theorem superpolynomial_decay.inv_param_mul (hk : tendsto k l at_top) (hf : superpolynomial_decay l k f) :
     superpolynomial_decay l k (k⁻¹ * f) := by
@@ -241,7 +241,7 @@ theorem superpolynomial_decay.inv_param_mul (hk : tendsto k l at_top) (hf : supe
 
 theorem superpolynomial_decay.param_inv_mul (hk : tendsto k l at_top) (hf : superpolynomial_decay l k f) :
     superpolynomial_decay l k (f * k⁻¹) :=
-  (hf.inv_param_mul hk).congr fun _ => mul_commₓ _ _
+  (hf.inv_param_mul hk).congr fun _ => mul_comm _ _
 
 variable (f)
 
@@ -250,24 +250,24 @@ theorem superpolynomial_decay_param_mul_iff (hk : tendsto k l at_top) :
   ⟨fun h =>
     (h.inv_param_mul hk).congr'
       ((eventually_ne_of_tendsto_at_top hk 0).mono fun x hx => by
-        simp [← mul_assocₓ, inv_mul_cancel hx]),
+        simp [← mul_assoc, inv_mul_cancel hx]),
     fun h => h.param_mul⟩
 
 theorem superpolynomial_decay_mul_param_iff (hk : tendsto k l at_top) :
     superpolynomial_decay l k (f * k) ↔ superpolynomial_decay l k f := by
-  simpa [mul_commₓ k] using superpolynomial_decay_param_mul_iff f hk
+  simpa [mul_comm k] using superpolynomial_decay_param_mul_iff f hk
 
 theorem superpolynomial_decay_param_pow_mul_iff (hk : tendsto k l at_top) (n : ℕ) :
     superpolynomial_decay l k (k ^ n * f) ↔ superpolynomial_decay l k f := by
   induction' n with n hn
   · simp
     
-  · simpa [pow_succₓ, ← mul_commₓ k, mul_assocₓ, superpolynomial_decay_param_mul_iff (k ^ n * f) hk] using hn
+  · simpa [pow_succₓ, ← mul_comm k, mul_assoc, superpolynomial_decay_param_mul_iff (k ^ n * f) hk] using hn
     
 
 theorem superpolynomial_decay_mul_param_pow_iff (hk : tendsto k l at_top) (n : ℕ) :
     superpolynomial_decay l k (f * k ^ n) ↔ superpolynomial_decay l k f := by
-  simpa [mul_commₓ f] using superpolynomial_decay_param_pow_mul_iff f hk n
+  simpa [mul_comm f] using superpolynomial_decay_param_pow_mul_iff f hk n
 
 variable {f}
 
@@ -302,13 +302,13 @@ theorem superpolynomial_decay_iff_is_O (hk : tendsto k l at_top) :
     have : (fun a : α => k a ^ z)⁻¹ = fun a : α => k a ^ -z :=
       funext fun x => by
         simp
-    rw [div_eq_mul_inv, mul_commₓ f, this]
+    rw [div_eq_mul_inv, mul_comm f, this]
     exact h (-z)
     
   · suffices : is_O (fun a : α => k a ^ z * f a) (fun a : α => k a⁻¹) l
     exact is_O.trans_tendsto this hk.inv_tendsto_at_top
     refine' ((is_O_refl (fun a => k a ^ z) l).mul (h (-(z + 1)))).trans (is_O.of_bound 1 $ hk0.mono fun a ha0 => _)
-    simp only [one_mulₓ, neg_add z 1, zpow_add₀ ha0, ← mul_assocₓ, zpow_neg₀, mul_inv_cancel (zpow_ne_zero z ha0),
+    simp only [one_mulₓ, neg_add z 1, zpow_add₀ ha0, ← mul_assoc, zpow_neg₀, mul_inv_cancel (zpow_ne_zero z ha0),
       zpow_one]
     
 
@@ -323,7 +323,7 @@ theorem superpolynomial_decay_iff_is_o (hk : tendsto k l at_top) :
   have : is_o f (fun x : α => k x * k x ^ (z - 1)) l := by
     simpa using this.mul_is_O ((superpolynomial_decay_iff_is_O f hk).1 h $ z - 1)
   refine' this.trans_is_O (is_O.of_bound 1 (hk0.mono $ fun x hkx => le_of_eqₓ _))
-  rw [one_mulₓ, zpow_sub_one₀ hkx, mul_commₓ (k x), mul_assocₓ, inv_mul_cancel hkx, mul_oneₓ]
+  rw [one_mulₓ, zpow_sub_one₀ hkx, mul_comm (k x), mul_assoc, inv_mul_cancel hkx, mul_oneₓ]
 
 variable {f}
 

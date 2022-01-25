@@ -73,7 +73,7 @@ theorem subset_Union (h : J ∈ π) : ↑J ⊆ π.Union :=
   subset_bUnion_of_mem h
 
 theorem Union_subset : π.Union ⊆ I :=
-  bUnion_subset π.le_of_mem'
+  Union₂_subset π.le_of_mem'
 
 /-- A tagged prepartition is a partition if it covers the whole box. -/
 def is_partition :=

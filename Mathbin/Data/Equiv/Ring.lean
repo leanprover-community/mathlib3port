@@ -246,7 +246,7 @@ variable (R) [CommSemiringₓ R]
 
 /-- A commutative ring is isomorphic to its opposite. -/
 def to_opposite : R ≃+* Rᵐᵒᵖ :=
-  { MulOpposite.opEquiv with map_add' := fun x y => rfl, map_mul' := fun x y => mul_commₓ (op y) (op x) }
+  { MulOpposite.opEquiv with map_add' := fun x y => rfl, map_mul' := fun x y => mul_comm (op y) (op x) }
 
 @[simp]
 theorem to_opposite_apply (r : R) : to_opposite R r = op r :=

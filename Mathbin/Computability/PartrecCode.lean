@@ -139,7 +139,7 @@ theorem encode_lt_pair cf cg : encode cf < encode (pair cf cg) ∧ encode cg < e
     Nat.mul_le_mul_rightₓ _
       (by
         decide : 1 ≤ 2 * 2)
-  rw [one_mulₓ, mul_assocₓ, ← bit0_eq_two_mul, ← bit0_eq_two_mul] at this
+  rw [one_mulₓ, mul_assoc, ← bit0_eq_two_mul, ← bit0_eq_two_mul] at this
   have :=
     lt_of_le_of_ltₓ this
       (lt_add_of_pos_right _
@@ -165,7 +165,7 @@ theorem encode_lt_rfind' cf : encode cf < encode (rfind' cf) := by
     Nat.mul_le_mul_rightₓ _
       (by
         decide : 1 ≤ 2 * 2)
-  rw [one_mulₓ, mul_assocₓ, ← bit0_eq_two_mul, ← bit0_eq_two_mul] at this
+  rw [one_mulₓ, mul_assoc, ← bit0_eq_two_mul, ← bit0_eq_two_mul] at this
   refine'
     lt_of_le_of_ltₓ (le_transₓ this _)
       (lt_add_of_pos_right _

@@ -41,7 +41,7 @@ variable {e : ℂ → ℂ} {e' : ℂ} {z : ℝ}
 differentiable at this point, with a derivative equal to the real part of the complex derivative. -/
 theorem HasStrictDerivAt.real_of_complex (h : HasStrictDerivAt e e' z) :
     HasStrictDerivAt (fun x : ℝ => (e x).re) e'.re z := by
-  have A : HasStrictFderivAt (coeₓ : ℝ → ℂ) of_real_clm z := of_real_clm.has_strict_fderiv_at
+  have A : HasStrictFderivAt (coe : ℝ → ℂ) of_real_clm z := of_real_clm.has_strict_fderiv_at
   have B : HasStrictFderivAt e ((ContinuousLinearMap.smulRight 1 e' : ℂ →L[ℂ] ℂ).restrictScalars ℝ) (of_real_clm z) :=
     h.has_strict_fderiv_at.restrict_scalars ℝ
   have C : HasStrictFderivAt re re_clm (e (of_real_clm z)) := re_clm.has_strict_fderiv_at
@@ -50,7 +50,7 @@ theorem HasStrictDerivAt.real_of_complex (h : HasStrictDerivAt e e' z) :
 /-- If a complex function is differentiable at a real point, then the induced real function is also
 differentiable at this point, with a derivative equal to the real part of the complex derivative. -/
 theorem HasDerivAt.real_of_complex (h : HasDerivAt e e' z) : HasDerivAt (fun x : ℝ => (e x).re) e'.re z := by
-  have A : HasFderivAt (coeₓ : ℝ → ℂ) of_real_clm z := of_real_clm.has_fderiv_at
+  have A : HasFderivAt (coe : ℝ → ℂ) of_real_clm z := of_real_clm.has_fderiv_at
   have B : HasFderivAt e ((ContinuousLinearMap.smulRight 1 e' : ℂ →L[ℂ] ℂ).restrictScalars ℝ) (of_real_clm z) :=
     h.has_fderiv_at.restrict_scalars ℝ
   have C : HasFderivAt re re_clm (e (of_real_clm z)) := re_clm.has_fderiv_at
@@ -58,7 +58,7 @@ theorem HasDerivAt.real_of_complex (h : HasDerivAt e e' z) : HasDerivAt (fun x :
 
 theorem TimesContDiffAt.real_of_complex {n : WithTop ℕ} (h : TimesContDiffAt ℂ n e z) :
     TimesContDiffAt ℝ n (fun x : ℝ => (e x).re) z := by
-  have A : TimesContDiffAt ℝ n (coeₓ : ℝ → ℂ) z := of_real_clm.times_cont_diff.times_cont_diff_at
+  have A : TimesContDiffAt ℝ n (coe : ℝ → ℂ) z := of_real_clm.times_cont_diff.times_cont_diff_at
   have B : TimesContDiffAt ℝ n e z := h.restrict_scalars ℝ
   have C : TimesContDiffAt ℝ n re (e z) := re_clm.times_cont_diff.times_cont_diff_at
   exact C.comp z (B.comp z A)

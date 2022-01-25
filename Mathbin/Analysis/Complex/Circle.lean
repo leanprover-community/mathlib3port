@@ -79,7 +79,7 @@ theorem coe_inv_circle_eq_conj (z : circle) : ↑z⁻¹ = conj (z : ℂ) :=
 theorem coe_inv_circle (z : circle) : ↑z⁻¹ = (z : ℂ)⁻¹ := by
   rw [coe_inv_circle_eq_conj]
   apply eq_inv_of_mul_right_eq_one
-  rw [mul_commₓ, ← Complex.norm_sq_eq_conj_mul_self]
+  rw [mul_comm, ← Complex.norm_sq_eq_conj_mul_self]
   simp
 
 @[simp]

@@ -159,7 +159,7 @@ theorem map_frobenius_poly (n : ℕ) :
     rw [← mul_powₓ, mul_inv_of_self, one_pow]
   rw [bind₁_X_right, Function.comp_app, witt_polynomial_eq_sum_C_mul_X_pow, sum_range_succ, sum_range_succ, tsub_self,
     add_tsub_cancel_left, pow_zeroₓ, pow_oneₓ, pow_oneₓ, sub_mul, add_mulₓ, add_mulₓ, mul_right_commₓ,
-    mul_right_commₓ (C (↑p ^ (n + 1))), ← C_mul, ← C_mul, pow_succₓ, mul_assocₓ (↑p) (↑p ^ n), h1, mul_oneₓ, C_1,
+    mul_right_commₓ (C (↑p ^ (n + 1))), ← C_mul, ← C_mul, pow_succₓ, mul_assoc (↑p) (↑p ^ n), h1, mul_oneₓ, C_1,
     one_mulₓ, add_commₓ _ (X n ^ p), add_assocₓ, ← add_sub, add_right_injₓ, frobenius_poly_aux_eq, RingHom.map_sub,
     map_X, mul_sub, sub_eq_add_neg, add_commₓ _ (C (↑p) * X (n + 1)), ← add_sub, add_right_injₓ, neg_eq_iff_neg_eq,
     neg_sub]
@@ -177,8 +177,8 @@ theorem map_frobenius_poly (n : ℕ) :
   rw [mem_range] at hj
   rw [RingHom.map_mul, RingHom.map_mul, RingHom.map_pow, RingHom.map_pow, RingHom.map_pow, RingHom.map_pow,
     RingHom.map_pow, map_C, map_X, mul_powₓ]
-  rw [mul_commₓ (C (↑p) ^ i), mul_commₓ _ ((X i ^ p) ^ _), mul_commₓ (C (↑p) ^ (j + 1)), mul_commₓ (C (↑p))]
-  simp only [mul_assocₓ]
+  rw [mul_comm (C (↑p) ^ i), mul_comm _ ((X i ^ p) ^ _), mul_comm (C (↑p) ^ (j + 1)), mul_comm (C (↑p))]
+  simp only [mul_assoc]
   apply congr_argₓ
   apply congr_argₓ
   rw [← C_eq_coe_nat]
@@ -196,7 +196,7 @@ theorem map_frobenius_poly (n : ℕ) :
       apply pow_ne_zero
       exact_mod_cast hp.1.ne_zero
     simpa [aux, -one_div] with field_simps using this.symm
-  rw [mul_commₓ _ (p : ℚ), mul_assocₓ, mul_assocₓ, ← pow_addₓ, map_frobenius_poly.key₂ p hi hj]
+  rw [mul_comm _ (p : ℚ), mul_assoc, mul_assoc, ← pow_addₓ, map_frobenius_poly.key₂ p hi hj]
   ring_exp
 
 theorem frobenius_poly_zmod (n : ℕ) : MvPolynomial.map (Int.castRingHom (Zmod p)) (frobenius_poly p n) = X n ^ p := by

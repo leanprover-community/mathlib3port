@@ -45,7 +45,7 @@ namespace Quotientₓ
 
 variable {I} {x y : R}
 
-instance HasOne (I : Ideal R) : HasOne (R ⧸ I) :=
+instance One (I : Ideal R) : One (R ⧸ I) :=
   ⟨Submodule.Quotient.mk 1⟩
 
 instance Mul (I : Ideal R) : Mul (R ⧸ I) :=
@@ -54,7 +54,7 @@ instance Mul (I : Ideal R) : Mul (R ⧸ I) :=
       Quot.sound $ by
         have F := I.add_mem (I.mul_mem_left a₂ h₁) (I.mul_mem_right b₁ h₂)
         have : a₁ * a₂ - b₁ * b₂ = a₂ * (a₁ - b₁) + (a₂ - b₂) * b₁ := by
-          rw [mul_sub, sub_mul, sub_add_sub_cancel, mul_commₓ, mul_commₓ b₁]
+          rw [mul_sub, sub_mul, sub_add_sub_cancel, mul_comm, mul_comm b₁]
         rw [← this] at F
         change _ ∈ _
         convert F⟩
@@ -62,8 +62,8 @@ instance Mul (I : Ideal R) : Mul (R ⧸ I) :=
 instance CommRingₓ (I : Ideal R) : CommRingₓ (R ⧸ I) :=
   { Submodule.Quotient.addCommGroup I with mul := · * ·, one := 1,
     mul_assoc := fun a b c =>
-      Quotientₓ.induction_on₃' a b c $ fun a b c => congr_argₓ Submodule.Quotient.mk (mul_assocₓ a b c),
-    mul_comm := fun a b => Quotientₓ.induction_on₂' a b $ fun a b => congr_argₓ Submodule.Quotient.mk (mul_commₓ a b),
+      Quotientₓ.induction_on₃' a b c $ fun a b c => congr_argₓ Submodule.Quotient.mk (mul_assoc a b c),
+    mul_comm := fun a b => Quotientₓ.induction_on₂' a b $ fun a b => congr_argₓ Submodule.Quotient.mk (mul_comm a b),
     one_mul := fun a => Quotientₓ.induction_on' a $ fun a => congr_argₓ Submodule.Quotient.mk (one_mulₓ a),
     mul_one := fun a => Quotientₓ.induction_on' a $ fun a => congr_argₓ Submodule.Quotient.mk (mul_oneₓ a),
     left_distrib := fun a b c =>
@@ -134,7 +134,7 @@ theorem is_domain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.is_prime :=
 theorem exists_inv {I : Ideal R} [hI : I.is_maximal] : ∀ {a : R ⧸ I}, a ≠ 0 → ∃ b : R ⧸ I, a * b = 1 := by
   rintro ⟨a⟩ h
   rcases hI.exists_inv (mt eq_zero_iff_mem.2 h) with ⟨b, c, hc, abc⟩
-  rw [mul_commₓ] at abc
+  rw [mul_comm] at abc
   refine' ⟨mk _ b, Quot.sound _⟩
   rw [← eq_sub_iff_add_eq'] at abc
   rw [abc, ← neg_mem_iff, neg_sub] at hc
@@ -245,7 +245,7 @@ instance module_pi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι) where
     change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     simp only [· • ·]
     congr with i
-    exact mul_assocₓ a b (c i)
+    exact mul_assoc a b (c i)
   smul_add := by
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
     change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _

@@ -334,7 +334,7 @@ variable (k V P)
 
 theorem exists_affine_basis : ∃ s : Set P, Nonempty (AffineBasis (↥s) k P) := by
   obtain ⟨s, -, h_tot, h_ind⟩ := exists_affine_independent k V (Set.Univ : Set P)
-  refine' ⟨s, ⟨⟨(coeₓ : s → P), h_ind, _⟩⟩⟩
+  refine' ⟨s, ⟨⟨(coe : s → P), h_ind, _⟩⟩⟩
   rw [Subtype.range_coe, h_tot, AffineSubspace.span_univ]
 
 variable {k V P}

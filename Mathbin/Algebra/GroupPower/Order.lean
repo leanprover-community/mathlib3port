@@ -71,7 +71,7 @@ theorem pow_lt_pow' [CovariantClass M M (· * ·) (· < ·)] {a : M} {n m : ℕ}
   by
   rcases Nat.Le.dest h with ⟨k, rfl⟩
   clear h
-  rw [pow_addₓ, pow_succ'ₓ, mul_assocₓ, ← pow_succₓ]
+  rw [pow_addₓ, pow_succ'ₓ, mul_assoc, ← pow_succₓ]
   exact lt_mul_of_one_lt_right' _ (one_lt_pow' ha k.succ_ne_zero)
 
 end Preorderₓ

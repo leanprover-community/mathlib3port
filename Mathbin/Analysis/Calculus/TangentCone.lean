@@ -104,7 +104,7 @@ theorem TangentConeAt.lim_zero {α : Type _} (l : Filter α) {c : α → 𝕜} {
   rw [zero_mul] at C
   have : ∀ᶠ n in l, ∥c n∥⁻¹ * ∥c n • d n∥ = ∥d n∥ := by
     apply (eventually_ne_of_tendsto_norm_at_top hc 0).mono fun n hn => _
-    rw [norm_smul, ← mul_assocₓ, inv_mul_cancel, one_mulₓ]
+    rw [norm_smul, ← mul_assoc, inv_mul_cancel, one_mulₓ]
     rwa [Ne.def, norm_eq_zero]
   have D : tendsto (fun n => ∥d n∥) l (𝓝 0) := tendsto.congr' this C
   rw [tendsto_zero_iff_norm_tendsto_zero]

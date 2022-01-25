@@ -38,7 +38,7 @@ def gcd (n m : ℕ+) : ℕ+ :=
 def lcm (n m : ℕ+) : ℕ+ :=
   ⟨Nat.lcmₓ (n : ℕ) (m : ℕ), by
     let h := mul_pos n.pos m.pos
-    rw [← gcd_mul_lcm (n : ℕ) (m : ℕ), mul_commₓ] at h
+    rw [← gcd_mul_lcm (n : ℕ) (m : ℕ), mul_comm] at h
     exact pos_of_dvd_of_pos (Dvd.intro (Nat.gcdₓ (n : ℕ) (m : ℕ)) rfl) h⟩
 
 @[simp]
@@ -174,7 +174,7 @@ theorem coprime.gcd_mul_left_cancel (m : ℕ+) {n k : ℕ+} : k.coprime n → (k
   simpa
 
 theorem coprime.gcd_mul_right_cancel (m : ℕ+) {n k : ℕ+} : k.coprime n → (m * k).gcd n = m.gcd n := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   apply coprime.gcd_mul_left_cancel
 
 theorem coprime.gcd_mul_left_cancel_right (m : ℕ+) {n k : ℕ+} : k.coprime m → m.gcd (k * n) = m.gcd n := by
@@ -185,7 +185,7 @@ theorem coprime.gcd_mul_left_cancel_right (m : ℕ+) {n k : ℕ+} : k.coprime m 
   apply coprime.gcd_mul_left_cancel _ h
 
 theorem coprime.gcd_mul_right_cancel_right (m : ℕ+) {n k : ℕ+} : k.coprime m → m.gcd (n * k) = m.gcd n := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   apply coprime.gcd_mul_left_cancel_right
 
 @[simp]
@@ -228,7 +228,7 @@ theorem coprime.factor_eq_gcd_left {a b m n : ℕ+} (cop : m.coprime n) (am : a 
 
 theorem coprime.factor_eq_gcd_right {a b m n : ℕ+} (cop : m.coprime n) (am : a ∣ m) (bn : b ∣ n) : a = (b * a).gcd m :=
   by
-  rw [mul_commₓ]
+  rw [mul_comm]
   apply coprime.factor_eq_gcd_left cop am bn
 
 theorem coprime.factor_eq_gcd_left_right {a b m n : ℕ+} (cop : m.coprime n) (am : a ∣ m) (bn : b ∣ n) :

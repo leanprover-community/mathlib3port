@@ -89,7 +89,7 @@ theorem countable.exists_surjective {s : Set α} (hc : countable s) (hs : s.none
   have : countable (univ : Set s) := countable_encodable _
   rcases countable_iff_exists_surjective.1 this with ⟨g, hg⟩
   have : range g = univ := univ_subset_iff.1 hg
-  use coeₓ ∘ g
+  use coe ∘ g
   simp only [range_comp, this, image_univ, Subtype.range_coe]
 
 @[simp]

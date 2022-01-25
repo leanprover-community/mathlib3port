@@ -318,7 +318,7 @@ protected theorem coe_mul (x y : FreeRing α) : ↑(x * y) = (x : FreeCommRing �
 
 variable (α)
 
-protected theorem coe_surjective : surjective (coeₓ : FreeRing α → FreeCommRing α) := fun x => by
+protected theorem coe_surjective : surjective (coe : FreeRing α → FreeCommRing α) := fun x => by
   apply FreeCommRing.induction_on x
   · use -1
     rfl
@@ -337,7 +337,7 @@ protected theorem coe_surjective : surjective (coeₓ : FreeRing α → FreeComm
     
 
 theorem coe_eq :
-    (coeₓ : FreeRing α → FreeCommRing α) = @Functor.map FreeAbelianGroup _ _ _ fun l : List α => (l : Multiset α) :=
+    (coe : FreeRing α → FreeCommRing α) = @Functor.map FreeAbelianGroup _ _ _ fun l : List α => (l : Multiset α) :=
   funext $ fun x =>
     FreeAbelianGroup.lift.unique _ _ $ fun L => by
       simp_rw [FreeAbelianGroup.lift.of, · ∘ ·]
@@ -366,7 +366,7 @@ instance [Subsingleton α] : CommRingₓ (FreeRing α) :=
   { FreeRing.ring α with
     mul_comm := fun x y => by
       rw [← (subsingleton_equiv_free_comm_ring α).symm_apply_apply (y * x),
-        (subsingleton_equiv_free_comm_ring α).map_mul, mul_commₓ, ← (subsingleton_equiv_free_comm_ring α).map_mul,
+        (subsingleton_equiv_free_comm_ring α).map_mul, mul_comm, ← (subsingleton_equiv_free_comm_ring α).map_mul,
         (subsingleton_equiv_free_comm_ring α).symm_apply_apply] }
 
 end FreeRing

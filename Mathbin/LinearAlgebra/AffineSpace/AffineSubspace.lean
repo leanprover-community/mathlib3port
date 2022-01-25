@@ -323,7 +323,7 @@ theorem vsub_left_mem_direction_iff_mem {s : AffineSubspace k P} {p : P} (hp : p
 
 /-- Two affine subspaces are equal if they have the same points. -/
 @[ext]
-theorem coe_injective : Function.Injective (coeₓ : AffineSubspace k P → Set P) := fun s1 s2 h => by
+theorem coe_injective : Function.Injective (coe : AffineSubspace k P → Set P) := fun s1 s2 h => by
   cases s1
   cases s2
   congr
@@ -499,8 +499,7 @@ variable {k : Type _} {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] 
 include S
 
 instance : CompleteLattice (AffineSubspace k P) :=
-  { PartialOrderₓ.lift (coeₓ : AffineSubspace k P → Set P) coe_injective with
-    sup := fun s1 s2 => affineSpan k (s1 ∪ s2),
+  { PartialOrderₓ.lift (coe : AffineSubspace k P → Set P) coe_injective with sup := fun s1 s2 => affineSpan k (s1 ∪ s2),
     le_sup_left := fun s1 s2 => Set.Subset.trans (Set.subset_union_left s1 s2) (subset_span_points k _),
     le_sup_right := fun s1 s2 => Set.Subset.trans (Set.subset_union_right s1 s2) (subset_span_points k _),
     sup_le := fun s1 s2 s3 hs1 hs2 => span_points_subset_coe_of_subset_coe (Set.union_subset hs1 hs2),
@@ -518,8 +517,8 @@ instance : CompleteLattice (AffineSubspace k P) :=
           rw [Set.mem_Inter₂] at *
           exact s2.smul_vsub_vadd_mem c (hp1 s2 hs2) (hp2 s2 hs2) (hp3 s2 hs2),
     le_Sup := fun _ _ h => Set.Subset.trans (Set.subset_bUnion_of_mem h) (subset_span_points k _),
-    Sup_le := fun _ _ h => span_points_subset_coe_of_subset_coe (Set.bUnion_subset h),
-    Inf_le := fun _ _ => Set.bInter_subset_of_mem, le_Inf := fun _ _ => Set.subset_bInter }
+    Sup_le := fun _ _ h => span_points_subset_coe_of_subset_coe (Set.Union₂_subset h),
+    Inf_le := fun _ _ => Set.bInter_subset_of_mem, le_Inf := fun _ _ => Set.subset_Inter₂ }
 
 instance : Inhabited (AffineSubspace k P) :=
   ⟨⊤⟩
@@ -567,13 +566,14 @@ variable (k V)
 /-- The affine span is the `Inf` of subspaces containing the given
 points. -/
 theorem affine_span_eq_Inf (s : Set P) : affineSpan k s = Inf { s' | s ⊆ s' } :=
-  le_antisymmₓ (span_points_subset_coe_of_subset_coe (Set.subset_bInter fun _ h => h)) (Inf_le (subset_span_points k _))
+  le_antisymmₓ (span_points_subset_coe_of_subset_coe $ Set.subset_Inter₂ $ fun _ => id)
+    (Inf_le (subset_span_points k _))
 
 variable (P)
 
 /-- The Galois insertion formed by `affine_span` and coercion back to
 a set. -/
-protected def gi : GaloisInsertion (affineSpan k) (coeₓ : AffineSubspace k P → Set P) where
+protected def gi : GaloisInsertion (affineSpan k) (coe : AffineSubspace k P → Set P) where
   choice := fun s _ => affineSpan k s
   gc := fun s1 s2 => ⟨fun h => Set.Subset.trans (subset_span_points k s1) h, span_points_subset_coe_of_subset_coe⟩
   le_l_u := fun _ => subset_span_points k _
@@ -1006,7 +1006,7 @@ variable {k}
 /-- Suppose a set of vectors spans `V`.  Then a point `p`, together
 with those vectors added to `p`, spans `P`. -/
 theorem affine_span_singleton_union_vadd_eq_top_of_span_eq_top {s : Set V} (p : P)
-    (h : Submodule.span k (Set.Range (coeₓ : s → V)) = ⊤) : affineSpan k ({p} ∪ (fun v => v +ᵥ p) '' s) = ⊤ := by
+    (h : Submodule.span k (Set.Range (coe : s → V)) = ⊤) : affineSpan k ({p} ∪ (fun v => v +ᵥ p) '' s) = ⊤ := by
   convert ext_of_direction_eq _ ⟨p, mem_affine_span k (Set.mem_union_left _ (Set.mem_singleton _)), mem_top k V p⟩
   rw [direction_affine_span, direction_top,
     vector_span_eq_span_vsub_set_right k (Set.mem_union_left _ (Set.mem_singleton _) : p ∈ _), eq_top_iff, ← h]

@@ -234,14 +234,14 @@ theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣
     rw [Int.even_add, ← Int.even_sub] at h
     obtain ⟨k, hk⟩ := h
     convert dvd_mul_right 4 k
-    rw [eq_add_of_sub_eq hk, mul_addₓ, add_assocₓ, add_sub_cancel, ← mul_assocₓ]
+    rw [eq_add_of_sub_eq hk, mul_addₓ, add_assocₓ, add_sub_cancel, ← mul_assoc]
     norm_num
     
   · left
     obtain ⟨k, hk⟩ := h
     convert dvd_mul_right 4 (k + 1)
     rw [eq_sub_of_add_eq hk, add_right_commₓ, ← add_sub, mul_addₓ, mul_sub, add_assocₓ, add_assocₓ, sub_add, add_assocₓ,
-      ← sub_sub (2 * n), sub_self, zero_sub, sub_neg_eq_add, ← mul_assocₓ, mul_addₓ]
+      ← sub_sub (2 * n), sub_self, zero_sub, sub_neg_eq_add, ← mul_assoc, mul_addₓ]
     norm_num
     
 

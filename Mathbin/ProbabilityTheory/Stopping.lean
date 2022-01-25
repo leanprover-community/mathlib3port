@@ -93,7 +93,7 @@ end Adapted
 
 variable (β)
 
-theorem adapted_zero [HasZero β] (f : filtration ι m) : adapted f (0 : ι → α → β) := fun i =>
+theorem adapted_zero [Zero β] (f : filtration ι m) : adapted f (0 : ι → α → β) := fun i =>
   @measurable_zero β α (f i) _ _
 
 variable {β}

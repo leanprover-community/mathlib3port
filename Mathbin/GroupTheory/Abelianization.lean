@@ -13,10 +13,13 @@ groups, which can be found in `algebra/category/Group/adjunctions`.
 * `commutator`: defines the commutator of a group `G` as a subgroup of `G`.
 * `abelianization`: defines the abelianization of a group `G` as the quotient of a group by its
   commutator subgroup.
+* `abelianization.map`: lifts a group homomorphism to a homomorphism between the abelianizations
+* `mul_equiv.abelianization_congr`: Equivalent groups have equivalent abelianizations
+
 -/
 
 
-universe u v
+universe u v w
 
 variable (G : Type u) [Groupₓ G]
 
@@ -57,6 +60,10 @@ def of : G →* Abelianization G where
   map_one' := rfl
   map_mul' := fun x y => rfl
 
+@[simp]
+theorem mk_eq_of (a : G) : Quot.mk _ a = of a :=
+  rfl
+
 section lift
 
 variable {A : Type v} [CommGroupₓ A] (f : G →* A)
@@ -82,6 +89,10 @@ theorem lift.unique (φ : Abelianization G →* A) (hφ : ∀ x : G, φ (of x) =
     φ x = lift f x :=
   QuotientGroup.induction_on x hφ
 
+@[simp]
+theorem lift_of : lift of = MonoidHom.id (Abelianization G) :=
+  lift.apply_symm_apply $ MonoidHom.id _
+
 end lift
 
 variable {A : Type v} [Monoidₓ A]
@@ -91,5 +102,67 @@ variable {A : Type v} [Monoidₓ A]
 theorem hom_ext (φ ψ : Abelianization G →* A) (h : φ.comp of = ψ.comp of) : φ = ψ :=
   MonoidHom.ext $ fun x => QuotientGroup.induction_on x $ MonoidHom.congr_fun h
 
+section Map
+
+variable {H : Type v} [Groupₓ H] (f : G →* H)
+
+/-- The map operation of the `abelianization` functor -/
+def map : Abelianization G →* Abelianization H :=
+  lift (of.comp f)
+
+@[simp]
+theorem map_of (x : G) : map f (of x) = of (f x) :=
+  rfl
+
+@[simp]
+theorem map_id : map (MonoidHom.id G) = MonoidHom.id (Abelianization G) :=
+  hom_ext _ _ rfl
+
+@[simp]
+theorem map_comp {I : Type w} [Groupₓ I] (g : H →* I) : (map g).comp (map f) = map (g.comp f) :=
+  hom_ext _ _ rfl
+
+@[simp]
+theorem map_map_apply {I : Type w} [Groupₓ I] {g : H →* I} {x : Abelianization G} :
+    map g (map f x) = map (g.comp f) x :=
+  MonoidHom.congr_fun (map_comp _ _) x
+
+end Map
+
 end Abelianization
+
+section AbelianizationCongr
+
+variable {G} {H : Type v} [Groupₓ H] (e : G ≃* H)
+
+/-- Equivalent groups have equivalent abelianizations -/
+def MulEquiv.abelianizationCongr : Abelianization G ≃* Abelianization H where
+  toFun := Abelianization.map e.to_monoid_hom
+  invFun := Abelianization.map e.symm.to_monoid_hom
+  left_inv := by
+    rintro ⟨a⟩
+    simp
+  right_inv := by
+    rintro ⟨a⟩
+    simp
+  map_mul' := MonoidHom.map_mul _
+
+@[simp]
+theorem abelianization_congr_of (x : G) : e.abelianization_congr (Abelianization.of x) = Abelianization.of (e x) :=
+  rfl
+
+@[simp]
+theorem abelianization_congr_refl : (MulEquiv.refl G).abelianizationCongr = MulEquiv.refl (Abelianization G) :=
+  MulEquiv.to_monoid_hom_injective Abelianization.lift_of
+
+@[simp]
+theorem abelianization_congr_symm : e.abelianization_congr.symm = e.symm.abelianization_congr :=
+  rfl
+
+@[simp]
+theorem abelianization_congr_trans {I : Type v} [Groupₓ I] (e₂ : H ≃* I) :
+    e.abelianization_congr.trans e₂.abelianization_congr = (e.trans e₂).abelianizationCongr :=
+  MulEquiv.to_monoid_hom_injective (Abelianization.hom_ext _ _ rfl)
+
+end AbelianizationCongr
 

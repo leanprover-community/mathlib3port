@@ -33,7 +33,7 @@ open Function
 /-- Multiplicative opposite of a type. This type inherits all additive structures on `α` and
 reverses left and right in multiplication.-/
 @[to_additive
-      "/-- Additive opposite of a type. This type inherits all multiplicative structures on\n`α` and reverses left and right in addition. -/"]
+      "Additive opposite of a type. This type inherits all multiplicative structures on\n`α` and reverses left and right in addition."]
 def MulOpposite (α : Type u) : Type u :=
   α
 
@@ -139,11 +139,11 @@ instance [Unique α] : Unique (αᵐᵒᵖ) :=
 instance [IsEmpty α] : IsEmpty (αᵐᵒᵖ) :=
   Function.is_empty unop
 
-instance [HasZero α] : HasZero (αᵐᵒᵖ) where
+instance [Zero α] : Zero (αᵐᵒᵖ) where
   zero := op 0
 
 @[to_additive]
-instance [HasOne α] : HasOne (αᵐᵒᵖ) where
+instance [One α] : One (αᵐᵒᵖ) where
   one := op 1
 
 instance [Add α] : Add (αᵐᵒᵖ) where
@@ -172,19 +172,19 @@ section
 variable (α)
 
 @[simp]
-theorem op_zero [HasZero α] : op (0 : α) = 0 :=
+theorem op_zero [Zero α] : op (0 : α) = 0 :=
   rfl
 
 @[simp]
-theorem unop_zero [HasZero α] : unop (0 : αᵐᵒᵖ) = 0 :=
+theorem unop_zero [Zero α] : unop (0 : αᵐᵒᵖ) = 0 :=
   rfl
 
 @[simp, to_additive]
-theorem op_one [HasOne α] : op (1 : α) = 1 :=
+theorem op_one [One α] : op (1 : α) = 1 :=
   rfl
 
 @[simp, to_additive]
-theorem unop_one [HasOne α] : unop (1 : αᵐᵒᵖ) = 1 :=
+theorem unop_one [One α] : unop (1 : αᵐᵒᵖ) = 1 :=
   rfl
 
 variable {α}
@@ -242,48 +242,48 @@ end
 variable {α}
 
 @[simp]
-theorem unop_eq_zero_iff [HasZero α] (a : αᵐᵒᵖ) : a.unop = (0 : α) ↔ a = (0 : αᵐᵒᵖ) :=
+theorem unop_eq_zero_iff [Zero α] (a : αᵐᵒᵖ) : a.unop = (0 : α) ↔ a = (0 : αᵐᵒᵖ) :=
   unop_injective.eq_iff' rfl
 
 @[simp]
-theorem op_eq_zero_iff [HasZero α] (a : α) : op a = (0 : αᵐᵒᵖ) ↔ a = (0 : α) :=
+theorem op_eq_zero_iff [Zero α] (a : α) : op a = (0 : αᵐᵒᵖ) ↔ a = (0 : α) :=
   op_injective.eq_iff' rfl
 
-theorem unop_ne_zero_iff [HasZero α] (a : αᵐᵒᵖ) : a.unop ≠ (0 : α) ↔ a ≠ (0 : αᵐᵒᵖ) :=
+theorem unop_ne_zero_iff [Zero α] (a : αᵐᵒᵖ) : a.unop ≠ (0 : α) ↔ a ≠ (0 : αᵐᵒᵖ) :=
   not_congr $ unop_eq_zero_iff a
 
-theorem op_ne_zero_iff [HasZero α] (a : α) : op a ≠ (0 : αᵐᵒᵖ) ↔ a ≠ (0 : α) :=
+theorem op_ne_zero_iff [Zero α] (a : α) : op a ≠ (0 : αᵐᵒᵖ) ↔ a ≠ (0 : α) :=
   not_congr $ op_eq_zero_iff a
 
 @[simp, to_additive]
-theorem unop_eq_one_iff [HasOne α] (a : αᵐᵒᵖ) : a.unop = 1 ↔ a = 1 :=
+theorem unop_eq_one_iff [One α] (a : αᵐᵒᵖ) : a.unop = 1 ↔ a = 1 :=
   unop_injective.eq_iff' rfl
 
 @[simp, to_additive]
-theorem op_eq_one_iff [HasOne α] (a : α) : op a = 1 ↔ a = 1 :=
+theorem op_eq_one_iff [One α] (a : α) : op a = 1 ↔ a = 1 :=
   op_injective.eq_iff' rfl
 
 end MulOpposite
 
 namespace AddOpposite
 
-instance [HasOne α] : HasOne (αᵃᵒᵖ) where
+instance [One α] : One (αᵃᵒᵖ) where
   one := op 1
 
 @[simp]
-theorem op_one [HasOne α] : op (1 : α) = 1 :=
+theorem op_one [One α] : op (1 : α) = 1 :=
   rfl
 
 @[simp]
-theorem unop_one [HasOne α] : unop 1 = (1 : α) :=
+theorem unop_one [One α] : unop 1 = (1 : α) :=
   rfl
 
 @[simp]
-theorem op_eq_one_iff [HasOne α] {a : α} : op a = 1 ↔ a = 1 :=
+theorem op_eq_one_iff [One α] {a : α} : op a = 1 ↔ a = 1 :=
   op_injective.eq_iff' op_one
 
 @[simp]
-theorem unop_eq_one_iff [HasOne α] {a : αᵃᵒᵖ} : unop a = 1 ↔ a = 1 :=
+theorem unop_eq_one_iff [One α] {a : αᵃᵒᵖ} : unop a = 1 ↔ a = 1 :=
   unop_injective.eq_iff' unop_one
 
 instance [Mul α] : Mul (αᵃᵒᵖ) where

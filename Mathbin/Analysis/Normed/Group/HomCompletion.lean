@@ -126,7 +126,7 @@ theorem NormedGroupHom.zero_completion : (0 : NormedGroupHom G H).Completion = 0
 
 /-- The map from a normed group to its completion, as a normed group hom. -/
 def NormedGroup.toCompl : NormedGroupHom G (completion G) where
-  toFun := coeₓ
+  toFun := coe
   map_add' := completion.to_compl.map_add
   bound' :=
     ⟨1, by
@@ -202,7 +202,7 @@ theorem NormedGroupHom.ker_completion {f : NormedGroupHom G H} {C : ℝ} (h : f.
         rw [norm_sub_rev, f.norm_completion]
     have : ∥(g' : completion G)∥ ≤ C' * ∥f∥ * ∥hatg - g∥
     calc ∥(g' : completion G)∥ = ∥g'∥ := completion.norm_coe _ _ ≤ C' * ∥f g∥ := hfg _ ≤ C' * ∥f∥ * ∥hatg - g∥ := by
-        rw [mul_assocₓ]
+        rw [mul_assoc]
         exact (mul_le_mul_left C'_pos).mpr this
     refine' ⟨g - g', _, _⟩
     · norm_cast

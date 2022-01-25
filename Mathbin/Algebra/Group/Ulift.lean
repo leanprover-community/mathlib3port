@@ -21,11 +21,11 @@ variable {α : Type u} {x y : Ulift.{v} α}
 namespace Ulift
 
 @[to_additive]
-instance HasOne [HasOne α] : HasOne (Ulift α) :=
+instance One [One α] : One (Ulift α) :=
   ⟨⟨1⟩⟩
 
 @[simp, to_additive]
-theorem one_down [HasOne α] : (1 : Ulift α).down = 1 :=
+theorem one_down [One α] : (1 : Ulift α).down = 1 :=
   rfl
 
 @[to_additive]

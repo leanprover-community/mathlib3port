@@ -98,7 +98,7 @@ theorem ext : ∀ F G : pfilter P, (F : Set P) = G → F = G
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/
 instance : PartialOrderₓ (pfilter P) :=
-  PartialOrderₓ.lift coeₓ ext
+  PartialOrderₓ.lift coe ext
 
 @[trans]
 theorem mem_of_mem_of_le {F G : pfilter P} : x ∈ F → F ≤ G → x ∈ G :=

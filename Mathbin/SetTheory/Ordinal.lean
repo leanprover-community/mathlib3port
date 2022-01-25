@@ -814,7 +814,7 @@ theorem card_typein {r : α → α → Prop} [wo : IsWellOrder α r] (x : α) : 
 theorem card_le_card {o₁ o₂ : Ordinal} : o₁ ≤ o₂ → card o₁ ≤ card o₂ :=
   induction_on o₁ $ fun α r _ => induction_on o₂ $ fun β s _ ⟨⟨⟨f, _⟩, _⟩⟩ => ⟨f⟩
 
-instance : HasZero Ordinal :=
+instance : Zero Ordinal :=
   ⟨⟦⟨Pempty, EmptyRelation, by
         infer_instance⟩⟧⟩
 
@@ -852,7 +852,7 @@ theorem out_empty_iff_eq_zero {o : Ordinal} : IsEmpty o.out.α ↔ o = 0 := by
   subst h
   exact not_lt_of_le (Ordinal.zero_le _) this
 
-instance : HasOne Ordinal :=
+instance : One Ordinal :=
   ⟨⟦⟨PUnit, EmptyRelation, by
         infer_instance⟩⟧⟩
 

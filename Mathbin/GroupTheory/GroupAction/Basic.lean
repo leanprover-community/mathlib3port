@@ -287,7 +287,7 @@ def mul_left_cosets (H : Subgroup α) (x : α) (y : α ⧸ H) : α ⧸ H :=
   Quotientₓ.liftOn' y (fun y => QuotientGroup.mk ((x : α) * y)) fun a b hab : _ ∈ H =>
     QuotientGroup.eq.2
       (by
-        rwa [mul_inv_rev, ← mul_assocₓ, mul_assocₓ (a⁻¹), inv_mul_selfₓ, mul_oneₓ])
+        rwa [mul_inv_rev, ← mul_assoc, mul_assoc (a⁻¹), inv_mul_selfₓ, mul_oneₓ])
 
 @[to_additive]
 instance Quotientₓ (H : Subgroup α) : MulAction α (α ⧸ H) where
@@ -301,7 +301,7 @@ instance Quotientₓ (H : Subgroup α) : MulAction α (α ⧸ H) where
     Quotientₓ.induction_on' a fun a =>
       QuotientGroup.eq.2
         (by
-          simp [mul_inv_rev, Subgroup.one_mem, mul_assocₓ])
+          simp [mul_inv_rev, Subgroup.one_mem, mul_assoc])
 
 @[simp, to_additive]
 theorem quotient.smul_mk (H : Subgroup α) (a x : α) : (a • QuotientGroup.mk x : α ⧸ H) = QuotientGroup.mk (a * x) :=

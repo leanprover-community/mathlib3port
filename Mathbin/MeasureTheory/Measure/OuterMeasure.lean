@@ -204,7 +204,7 @@ theorem ext_nonempty {μ₁ μ₂ : outer_measure α} (h : ∀ s : Set α, s.non
         rw [he, empty', empty'])
       (h s)
 
-instance : HasZero (outer_measure α) :=
+instance : Zero (outer_measure α) :=
   ⟨{ measureOf := fun _ => 0, Empty := rfl, mono := fun _ _ _ => le_reflₓ 0, Union_nat := fun s => zero_le _ }⟩
 
 @[simp]
@@ -433,7 +433,7 @@ theorem comap_supr {β ι} (f : α → β) (m : ι → outer_measure β) : comap
 
 /-- Restrict an `outer_measure` to a set. -/
 def restrict (s : Set α) : outer_measure α →ₗ[ℝ≥0∞] outer_measure α :=
-  (map coeₓ).comp (comap (coeₓ : s → α))
+  (map coe).comp (comap (coe : s → α))
 
 @[simp]
 theorem restrict_apply (s t : Set α) (m : outer_measure α) : restrict s m t = m (t ∩ s) := by
@@ -628,7 +628,7 @@ theorem of_function_union_of_top_of_nonempty_inter {s t : Set α}
       add_le_add (hI _ $ subset_union_left _ _) (hI _ $ subset_union_right _ _)_ = ∑' i : I s ∪ I t, μ (f i) :=
       (@tsum_union_disjoint _ _ _ _ _ (fun i => μ (f i)) _ _ _ hd Ennreal.summable
           Ennreal.summable).symm _ ≤ ∑' i, μ (f i) :=
-      tsum_le_tsum_of_inj coeₓ Subtype.coe_injective (fun _ _ => zero_le _) (fun _ => le_rfl) Ennreal.summable
+      tsum_le_tsum_of_inj coe Subtype.coe_injective (fun _ _ => zero_le _) (fun _ => le_rfl) Ennreal.summable
         Ennreal.summable _ ≤ ∑' i, m (f i) :=
       Ennreal.tsum_le_tsum fun i => of_function_le _
 
@@ -847,7 +847,7 @@ theorem is_caratheodory_Union_nat {s : ℕ → Set α} (h : ∀ i, is_caratheodo
     rw [Ennreal.supr_add]
     refine' supr_le fun n => le_transₓ (add_le_add_left _ _) (ge_of_eq (is_caratheodory_Union_lt m (fun i _ => h i) _))
     refine' m.mono (diff_subset_diff_right _)
-    exact bUnion_subset fun i _ => subset_Union _ i
+    exact Union₂_subset fun i _ => subset_Union _ i
 
 theorem f_Union {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i)) (hd : Pairwise (Disjoint on s)) :
     m (⋃ i, s i) = ∑' i, m (s i) := by
@@ -857,7 +857,7 @@ theorem f_Union {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i)) (hd : Pa
   have := @is_caratheodory_sum _ m _ h hd univ n
   simp at this
   simp [this]
-  exact m.mono (bUnion_subset fun i _ => subset_Union _ i)
+  exact m.mono (Union₂_subset fun i _ => subset_Union _ i)
 
 /-- The Carathéodory-measurable sets for an outer measure `m` form a Dynkin system.  -/
 def caratheodory_dynkin : MeasurableSpace.DynkinSystem α where
@@ -1069,15 +1069,15 @@ theorem map_binfi_comap {ι β} {I : Set ι} (hI : I.nonempty) {f : α → β} (
 theorem restrict_infi_restrict {ι} (s : Set α) (m : ι → outer_measure α) :
     restrict s (⨅ i, restrict s (m i)) = restrict s (⨅ i, m i) :=
   calc
-    restrict s (⨅ i, restrict s (m i)) = restrict (range (coeₓ : s → α)) (⨅ i, restrict s (m i)) := by
+    restrict s (⨅ i, restrict s (m i)) = restrict (range (coe : s → α)) (⨅ i, restrict s (m i)) := by
       rw [Subtype.range_coe]
-    _ = map (coeₓ : s → α) (⨅ i, comap coeₓ (m i)) := (map_infi Subtype.coe_injective _).symm
-    _ = restrict s (⨅ i, m i) := congr_argₓ (map coeₓ) (comap_infi _ _).symm
+    _ = map (coe : s → α) (⨅ i, comap coe (m i)) := (map_infi Subtype.coe_injective _).symm
+    _ = restrict s (⨅ i, m i) := congr_argₓ (map coe) (comap_infi _ _).symm
     
 
 theorem restrict_infi {ι} [Nonempty ι] (s : Set α) (m : ι → outer_measure α) :
     restrict s (⨅ i, m i) = ⨅ i, restrict s (m i) :=
-  (congr_argₓ (map coeₓ) (comap_infi _ _)).trans (map_infi_comap _)
+  (congr_argₓ (map coe) (comap_infi _ _)).trans (map_infi_comap _)
 
 theorem restrict_binfi {ι} {I : Set ι} (hI : I.nonempty) (s : Set α) (m : ι → outer_measure α) :
     restrict s (⨅ i ∈ I, m i) = ⨅ i ∈ I, restrict s (m i) := by

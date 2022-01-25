@@ -93,7 +93,7 @@ theorem tendsto_sum_pi_div_four :
         
       · simp only [Nat.add_succ_sub_one, add_zeroₓ, mul_oneₓ, id.def, Nat.cast_bit0, Nat.cast_add, Nat.cast_one,
           Nat.cast_mul]
-        rw [← mul_assocₓ,
+        rw [← mul_assoc,
           @div_mul_cancel _ _ _ (2 * (i : ℝ) + 1)
             (by
               norm_cast

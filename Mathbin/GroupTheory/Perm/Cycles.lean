@@ -216,7 +216,7 @@ theorem is_cycle_swap_mul_aux₂ {α : Type _} [DecidableEq α] :
         is_cycle_swap_mul_aux₁ n hb
           (show (f⁻¹ ^ n) ((f⁻¹) x) = (f⁻¹) b by
             rw [← zpow_coe_nat, ← h, ← mul_apply, ← mul_apply, ← mul_apply, zpow_neg_succ_of_nat, ← inv_pow, pow_succ'ₓ,
-              mul_assocₓ, mul_assocₓ, inv_mul_selfₓ, mul_oneₓ, zpow_coe_nat, ← pow_succ'ₓ, ← pow_succₓ])
+              mul_assoc, mul_assoc, inv_mul_selfₓ, mul_oneₓ, zpow_coe_nat, ← pow_succ'ₓ, ← pow_succₓ])
       have h : (swap x ((f⁻¹) x) * f⁻¹) (f x) = (f⁻¹) x := by
         rw [mul_apply, inv_apply_self, swap_apply_left]
       ⟨-i, by
@@ -266,7 +266,7 @@ theorem is_cycle.sign : ∀ {f : perm α} hf : is_cycle f, sign f = -(-1 ^ f.sup
     let ⟨x, hx⟩ := hf
     calc
       sign f = sign (swap x (f x) * (swap x (f x) * f)) := by
-        rw [← mul_assocₓ, mul_def, mul_def, swap_swap, trans_refl]
+        rw [← mul_assoc, mul_def, mul_def, swap_swap, trans_refl]
       _ = -(-1 ^ f.support.card) :=
         if h1 : f (f x) = x then by
           have h : swap x (f x) * f = 1 := by
@@ -1123,7 +1123,7 @@ theorem cycle_factors_finset_mul_inv_mem_eq_sdiff [Fintype α] {f g : perm α} (
   · intro σ τ hd hc hσ hτ f
     simp_rw [hd.cycle_factors_finset_mul_eq_union, mem_union]
     rintro (hf | hf)
-    · rw [hd.commute.eq, union_comm, union_sdiff_distrib, sdiff_singleton_eq_erase, erase_eq_of_not_mem, mul_assocₓ,
+    · rw [hd.commute.eq, union_comm, union_sdiff_distrib, sdiff_singleton_eq_erase, erase_eq_of_not_mem, mul_assoc,
         disjoint.cycle_factors_finset_mul_eq_union, hσ hf]
       · rw [mem_cycle_factors_finset_iff] at hf
         intro x
@@ -1144,7 +1144,7 @@ theorem cycle_factors_finset_mul_inv_mem_eq_sdiff [Fintype α] {f g : perm α} (
       · exact fun H => hd.disjoint_cycle_factors_finset (mem_inter_of_mem hf H)
         
       
-    · rw [union_sdiff_distrib, sdiff_singleton_eq_erase, erase_eq_of_not_mem, mul_assocₓ,
+    · rw [union_sdiff_distrib, sdiff_singleton_eq_erase, erase_eq_of_not_mem, mul_assoc,
         disjoint.cycle_factors_finset_mul_eq_union, hτ hf]
       · rw [mem_cycle_factors_finset_iff] at hf
         intro x

@@ -47,7 +47,7 @@ theorem mul_right (h : SemiconjBy a x y) (h' : SemiconjBy a x' y') : SemiconjBy 
 /-- If both `a` and `b` semiconjugate `x` to `y`, then so does `a * b`. -/
 @[to_additive]
 theorem mul_left (ha : SemiconjBy a y z) (hb : SemiconjBy b x y) : SemiconjBy (a * b) x z := by
-  unfold SemiconjBy <;> assoc_rw [hb.eq, ha.eq, mul_assocₓ]
+  unfold SemiconjBy <;> assoc_rw [hb.eq, ha.eq, mul_assoc]
 
 /-- The relation “there exists an element that semiconjugates `a` to `b`” on a semigroup
 is transitive. -/
@@ -91,7 +91,7 @@ theorem units_inv_right {a : M} {x y : (M)ˣ} (h : SemiconjBy a x y) : SemiconjB
     a * ↑x⁻¹ = ↑y⁻¹ * (y * a) * ↑x⁻¹ := by
       rw [Units.inv_mul_cancel_left]
     _ = ↑y⁻¹ * a := by
-      rw [← h.eq, mul_assocₓ, Units.mul_inv_cancel_right]
+      rw [← h.eq, mul_assoc, Units.mul_inv_cancel_right]
     
 
 @[simp, to_additive]
@@ -105,7 +105,7 @@ theorem units_inv_symm_left {a : (M)ˣ} {x y : M} (h : SemiconjBy (↑a) x y) : 
     ↑a⁻¹ * y = ↑a⁻¹ * (y * a * ↑a⁻¹) := by
       rw [Units.mul_inv_cancel_right]
     _ = x * ↑a⁻¹ := by
-      rw [← h.eq, ← mul_assocₓ, Units.inv_mul_cancel_left]
+      rw [← h.eq, ← mul_assoc, Units.inv_mul_cancel_left]
     
 
 @[simp, to_additive]
@@ -167,7 +167,7 @@ theorem inv_inv_symm_iff : SemiconjBy (a⁻¹) (y⁻¹) (x⁻¹) ↔ SemiconjBy 
 /-- `a` semiconjugates `x` to `a * x * a⁻¹`. -/
 @[to_additive]
 theorem conj_mk (a x : G) : SemiconjBy a x (a * x * a⁻¹) := by
-  unfold SemiconjBy <;> rw [mul_assocₓ, inv_mul_selfₓ, mul_oneₓ]
+  unfold SemiconjBy <;> rw [mul_assoc, inv_mul_selfₓ, mul_oneₓ]
 
 end Groupₓ
 
@@ -175,8 +175,8 @@ end SemiconjBy
 
 @[simp, to_additive add_semiconj_by_iff_eq]
 theorem semiconj_by_iff_eq {M : Type u} [CancelCommMonoid M] {a x y : M} : SemiconjBy a x y ↔ x = y :=
-  ⟨fun h => mul_left_cancelₓ (h.trans (mul_commₓ _ _)), fun h => by
-    rw [h, SemiconjBy, mul_commₓ]⟩
+  ⟨fun h => mul_left_cancelₓ (h.trans (mul_comm _ _)), fun h => by
+    rw [h, SemiconjBy, mul_comm]⟩
 
 /-- `a` semiconjugates `x` to `a * x * a⁻¹`. -/
 @[to_additive]

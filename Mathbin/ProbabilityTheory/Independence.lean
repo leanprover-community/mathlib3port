@@ -155,7 +155,7 @@ section Indep
 theorem indep_sets.symm {α} {s₁ s₂ : Set (Set α)} [MeasurableSpace α] {μ : Measureₓ α} (h : indep_sets s₁ s₂ μ) :
     indep_sets s₂ s₁ μ := by
   intro t1 t2 ht1 ht2
-  rw [Set.inter_comm, mul_commₓ]
+  rw [Set.inter_comm, mul_comm]
   exact h t2 t1 ht2 ht1
 
 theorem indep.symm {α} {m₁ m₂ : MeasurableSpace α} [MeasurableSpace α] {μ : Measureₓ α} (h : indep m₁ m₂ μ) :
@@ -311,13 +311,13 @@ theorem indep_sets.indep {α} {m1 m2 : MeasurableSpace α} {m : MeasurableSpace 
   have h_univ : μ_inter Set.Univ = ν Set.Univ := by
     rw [measure.restrict_apply_univ, measure.smul_apply, measure_univ, mul_oneₓ]
   have : is_finite_measure μ_inter := @restrict.is_finite_measure α _ t2 μ ⟨measure_lt_top μ t2⟩
-  rw [mul_commₓ, ← @measure.restrict_apply α _ μ t2 t1 (h1 t1 ht1)]
+  rw [mul_comm, ← @measure.restrict_apply α _ μ t2 t1 (h1 t1 ht1)]
   refine' ext_on_measurable_space_of_generate_finite m p1 (fun t ht => _) h1 hpm1 hp1 h_univ ht1
   have ht1 : m.measurable_set' t := by
     refine' h1 _ _
     rw [hpm1]
     exact measurable_set_generate_from ht
-  rw [measure.restrict_apply ht1, measure.smul_apply, mul_commₓ]
+  rw [measure.restrict_apply ht1, measure.smul_apply, mul_comm]
   exact indep_sets.indep_aux h2 hp2 hpm2 hyp ht ht2
 
 end FromPiSystemsToMeasurableSpaces

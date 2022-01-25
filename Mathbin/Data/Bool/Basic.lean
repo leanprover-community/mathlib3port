@@ -18,10 +18,10 @@ prefix:90 "!" => bnot
 
 namespace Bool
 
-theorem coe_sort_tt : coeSortₓ.{1, 1} tt = True :=
+theorem coe_sort_tt : coeSort.{1, 1} tt = True :=
   coe_sort_tt
 
-theorem coe_sort_ff : coeSortₓ.{1, 1} ff = False :=
+theorem coe_sort_ff : coeSort.{1, 1} ff = False :=
   coe_sort_ff
 
 theorem to_bool_true {h} : @to_bool True h = tt :=

@@ -42,7 +42,7 @@ namespace Set
 takes an argument `↥s` instead of `subtype s`. -/
 def restrict (f : α → β) (s : Set α) : s → β := fun x => f x
 
-theorem restrict_eq (f : α → β) (s : Set α) : s.restrict f = f ∘ coeₓ :=
+theorem restrict_eq (f : α → β) (s : Set α) : s.restrict f = f ∘ coe :=
   rfl
 
 @[simp]
@@ -53,7 +53,7 @@ theorem restrict_apply (f : α → β) (s : Set α) (x : s) : restrict f s x = f
 theorem range_restrict (f : α → β) (s : Set α) : Set.Range (restrict f s) = f '' s :=
   (range_comp _ _).trans $ congr_argₓ ((· '' ·) f) Subtype.range_coe
 
-theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coeₓ ⁻¹' t) = f '' (t ∩ s) := by
+theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻¹' t) = f '' (t ∩ s) := by
   rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » s)
@@ -94,7 +94,7 @@ theorem restrict_extend_range (f : α → β) (g : α → γ) (g' : β → γ) :
 
 @[simp]
 theorem restrict_extend_compl_range (f : α → β) (g : α → γ) (g' : β → γ) :
-    restrict (extend f g g') (range fᶜ) = g' ∘ coeₓ := by
+    restrict (extend f g g') (range fᶜ) = g' ∘ coe := by
   convert restrict_dite_compl _ _
 
 theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) : range (extend f g g') ⊆ range g ∪ g' '' range fᶜ :=
@@ -375,6 +375,8 @@ theorem inj_on.comp (hg : inj_on g t) (hf : inj_on f s) (h : maps_to f s t) : in
 
 theorem inj_on_iff_injective : inj_on f s ↔ injective (restrict f s) :=
   ⟨fun H a b h => Subtype.eq $ H a.2 b.2 h, fun H a as b bs h => congr_argₓ Subtype.val $ @H ⟨a, as⟩ ⟨b, bs⟩ h⟩
+
+alias inj_on_iff_injective ↔ Set.InjOn.injective _
 
 theorem inj_on_preimage {B : Set (Set β)} (hB : B ⊆ 𝒫 range f) : inj_on (preimage f) B := fun s hs t ht hst =>
   (preimage_eq_preimage' (hB hs) (hB ht)).1 hst

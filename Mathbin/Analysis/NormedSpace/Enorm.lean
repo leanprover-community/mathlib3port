@@ -71,7 +71,7 @@ theorem map_smul (c : 𝕜) (x : V) : e (c • x) = nnnorm c * e x :=
         rw [inv_smul_smul₀ hc]_ ≤ nnnorm c * (nnnorm (c⁻¹) * e (c • x)) := _ _ = e (c • x) := _
     · exact Ennreal.mul_le_mul (le_reflₓ _) (e.map_smul_le' _ _)
       
-    · rw [← mul_assocₓ, NormedField.nnnorm_inv, Ennreal.coe_inv, Ennreal.mul_inv_cancel _ Ennreal.coe_ne_top,
+    · rw [← mul_assoc, NormedField.nnnorm_inv, Ennreal.coe_inv, Ennreal.mul_inv_cancel _ Ennreal.coe_ne_top,
           one_mulₓ] <;>
         simp [hc]
       

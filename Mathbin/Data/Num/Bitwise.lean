@@ -181,13 +181,13 @@ inductive Snum : Type
 instance : Coe Nzsnum Snum :=
   ⟨Snum.nz⟩
 
-instance : HasZero Snum :=
+instance : Zero Snum :=
   ⟨Snum.zero ff⟩
 
-instance : HasOne Nzsnum :=
+instance : One Nzsnum :=
   ⟨Nzsnum.msb tt⟩
 
-instance : HasOne Snum :=
+instance : One Snum :=
   ⟨Snum.nz 1⟩
 
 instance : Inhabited Nzsnum :=

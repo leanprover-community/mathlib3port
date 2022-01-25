@@ -34,7 +34,7 @@ theorem mul_comp {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [
   ext <;> simp only [TimesContMdiffMap.comp_apply, coe_mul, Pi.mul_apply]
 
 @[to_additive]
-instance HasOne {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace H' G] : HasOne C^∞⟮I, N; I', G⟯ :=
+instance One {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace H' G] : One C^∞⟮I, N; I', G⟯ :=
   ⟨TimesContMdiffMap.const (1 : G)⟩
 
 @[simp, to_additive]
@@ -56,7 +56,7 @@ instance Semigroupₓ {G : Type _} [Semigroupₓ G] [TopologicalSpace G] [Charte
     Semigroupₓ C^∞⟮I, N; I', G⟯ :=
   { SmoothMap.hasMul with
     mul_assoc := fun a b c => by
-      ext <;> exact mul_assocₓ _ _ _ }
+      ext <;> exact mul_assoc _ _ _ }
 
 @[to_additive]
 instance Monoidₓ {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G] :
@@ -80,7 +80,7 @@ instance CommMonoidₓ {G : Type _} [CommMonoidₓ G] [TopologicalSpace G] [Char
     CommMonoidₓ C^∞⟮I, N; I', G⟯ :=
   { SmoothMap.monoid, SmoothMap.hasOne with
     mul_comm := fun a b => by
-      ext <;> exact mul_commₓ _ _ }
+      ext <;> exact mul_comm _ _ }
 
 @[to_additive]
 instance Groupₓ {G : Type _} [Groupₓ G] [TopologicalSpace G] [ChartedSpace H' G] [LieGroup I' G] :

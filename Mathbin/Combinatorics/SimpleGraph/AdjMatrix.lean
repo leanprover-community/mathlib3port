@@ -39,7 +39,7 @@ namespace Matrix
     (1) every entry of `A` is `0` or `1`,
     (2) `A` is symmetric,
     (3) every diagonal entry of `A` is `0`. -/
-structure is_adj_matrix [HasZero α] [HasOne α] (A : Matrix V V α) : Prop where
+structure is_adj_matrix [Zero α] [One α] (A : Matrix V V α) : Prop where
   zero_or_one : ∀ i j, A i j = 0 ∨ A i j = 1 := by
     run_tac
       obviously
@@ -86,7 +86,7 @@ end IsAdjMatrix
 
 /-- For `A : matrix V V α`, `A.compl` is supposed to be the adjacency matrix of
     the complement graph of the graph induced by `A.adj_matrix`. -/
-def compl [HasZero α] [HasOne α] [DecidableEq α] [DecidableEq V] (A : Matrix V V α) : Matrix V V α := fun i j =>
+def compl [Zero α] [One α] [DecidableEq α] [DecidableEq V] (A : Matrix V V α) : Matrix V V α := fun i j =>
   ite (i = j) 0 (ite (A i j = 0) 1 0)
 
 section Compl
@@ -94,21 +94,21 @@ section Compl
 variable [DecidableEq α] [DecidableEq V] (A : Matrix V V α)
 
 @[simp]
-theorem compl_apply_diag [HasZero α] [HasOne α] (i : V) : A.compl i i = 0 := by
+theorem compl_apply_diag [Zero α] [One α] (i : V) : A.compl i i = 0 := by
   simp [compl]
 
 @[simp]
-theorem compl_apply [HasZero α] [HasOne α] (i j : V) : A.compl i j = 0 ∨ A.compl i j = 1 := by
+theorem compl_apply [Zero α] [One α] (i j : V) : A.compl i j = 0 ∨ A.compl i j = 1 := by
   unfold compl
   split_ifs <;> simp
 
 @[simp]
-theorem is_symm_compl [HasZero α] [HasOne α] (h : A.is_symm) : A.compl.is_symm := by
+theorem is_symm_compl [Zero α] [One α] (h : A.is_symm) : A.compl.is_symm := by
   ext
   simp [compl, h.apply, eq_comm]
 
 @[simp]
-theorem is_adj_matrix_compl [HasZero α] [HasOne α] (h : A.is_symm) : is_adj_matrix A.compl :=
+theorem is_adj_matrix_compl [Zero α] [One α] (h : A.is_symm) : is_adj_matrix A.compl :=
   { symm := by
       simp [h] }
 
@@ -117,7 +117,7 @@ namespace IsAdjMatrix
 variable {A}
 
 @[simp]
-theorem compl [HasZero α] [HasOne α] (h : is_adj_matrix A) : is_adj_matrix A.compl :=
+theorem compl [Zero α] [One α] (h : is_adj_matrix A) : is_adj_matrix A.compl :=
   is_adj_matrix_compl A h.symm
 
 theorem to_graph_compl_eq [MulZeroOneClass α] [Nontrivial α] (h : is_adj_matrix A) : h.compl.to_graph = h.to_graphᶜ :=
@@ -141,29 +141,29 @@ variable (α)
 
 /-- `adj_matrix G α` is the matrix `A` such that `A i j = (1 : α)` if `i` and `j` are
   adjacent in the simple graph `G`, and otherwise `A i j = 0`. -/
-def adj_matrix [HasZero α] [HasOne α] : Matrix V V α
+def adj_matrix [Zero α] [One α] : Matrix V V α
   | i, j => if G.adj i j then 1 else 0
 
 variable {α}
 
 @[simp]
-theorem adj_matrix_apply (v w : V) [HasZero α] [HasOne α] : G.adj_matrix α v w = if G.adj v w then 1 else 0 :=
+theorem adj_matrix_apply (v w : V) [Zero α] [One α] : G.adj_matrix α v w = if G.adj v w then 1 else 0 :=
   rfl
 
 @[simp]
-theorem transpose_adj_matrix [HasZero α] [HasOne α] : (G.adj_matrix α)ᵀ = G.adj_matrix α := by
+theorem transpose_adj_matrix [Zero α] [One α] : (G.adj_matrix α)ᵀ = G.adj_matrix α := by
   ext
   simp [adj_comm]
 
 @[simp]
-theorem is_symm_adj_matrix [HasZero α] [HasOne α] : (G.adj_matrix α).IsSymm :=
+theorem is_symm_adj_matrix [Zero α] [One α] : (G.adj_matrix α).IsSymm :=
   transpose_adj_matrix G
 
 variable (α)
 
 /-- The adjacency matrix of `G` is an adjacency matrix. -/
 @[simp]
-theorem is_adj_matrix_adj_matrix [HasZero α] [HasOne α] : (G.adj_matrix α).IsAdjMatrix :=
+theorem is_adj_matrix_adj_matrix [Zero α] [One α] : (G.adj_matrix α).IsAdjMatrix :=
   { zero_or_one := fun i j => by
       by_cases' G.adj i j <;> simp [h] }
 

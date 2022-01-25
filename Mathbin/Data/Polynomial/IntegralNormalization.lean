@@ -99,7 +99,7 @@ theorem integral_normalization_eval₂_eq_zero {p : Polynomial R} (f : R →+* S
         p.support.attach.sum fun i => f (coeff (integral_normalization p) i.1 * p.leading_coeff ^ i.1) * z ^ i.1 :=
       by
       rw [eval₂, sum_def, support_integral_normalization]
-      simp only [mul_commₓ z, mul_powₓ, mul_assocₓ, RingHom.map_pow, RingHom.map_mul]
+      simp only [mul_comm z, mul_powₓ, mul_assoc, RingHom.map_pow, RingHom.map_mul]
       exact finset.sum_attach.symm
     _ = p.support.attach.sum fun i => f (coeff p i.1 * p.leading_coeff ^ (nat_degree p - 1)) * z ^ i.1 := by
       by_cases' hp : p = 0
@@ -115,10 +115,10 @@ theorem integral_normalization_eval₂_eq_zero {p : Polynomial R} (f : R →+* S
         
       · have : i.1 ≤ p.nat_degree - 1 :=
           Nat.le_pred_of_lt (lt_of_le_of_neₓ (le_nat_degree_of_ne_zero (mem_support_iff.mp i.2)) hi)
-        rw [integral_normalization_coeff_ne_nat_degree hi, mul_assocₓ, ← pow_addₓ, tsub_add_cancel_of_le this]
+        rw [integral_normalization_coeff_ne_nat_degree hi, mul_assoc, ← pow_addₓ, tsub_add_cancel_of_le this]
         
     _ = f p.leading_coeff ^ (nat_degree p - 1) * eval₂ f z p := by
-      simp_rw [eval₂, sum_def, fun i => mul_commₓ (coeff p i), RingHom.map_mul, RingHom.map_pow, mul_assocₓ, ←
+      simp_rw [eval₂, sum_def, fun i => mul_comm (coeff p i), RingHom.map_mul, RingHom.map_pow, mul_assoc, ←
         Finset.mul_sum]
       congr 1
       exact @Finset.sum_attach _ _ p.support _ fun i => f (p.coeff i) * z ^ i

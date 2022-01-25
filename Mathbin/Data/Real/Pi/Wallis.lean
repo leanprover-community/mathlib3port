@@ -77,7 +77,7 @@ theorem tendsto_prod_pi_div_two :
   · have := tendsto.const_mul (π / 2) h
     have h : π / 2 ≠ 0
     norm_num [pi_ne_zero]
-    simp only [← mul_assocₓ, ← @inv_div _ _ π 2, mul_inv_cancel h, one_mulₓ, mul_oneₓ] at this
+    simp only [← mul_assoc, ← @inv_div _ _ π 2, mul_inv_cancel h, one_mulₓ, mul_oneₓ] at this
     exact this
     
   have h :

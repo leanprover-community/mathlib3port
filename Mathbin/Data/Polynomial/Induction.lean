@@ -67,10 +67,10 @@ protected theorem induction_on' {M : Polynomial R → Prop} (p : Polynomial R) (
 section Coeff
 
 theorem coeff_mul_monomial (p : Polynomial R) (n d : ℕ) (r : R) : coeff (p * monomial n r) (d + n) = coeff p d * r := by
-  rw [monomial_eq_C_mul_X, ← X_pow_mul, ← mul_assocₓ, coeff_mul_C, coeff_mul_X_pow]
+  rw [monomial_eq_C_mul_X, ← X_pow_mul, ← mul_assoc, coeff_mul_C, coeff_mul_X_pow]
 
 theorem coeff_monomial_mul (p : Polynomial R) (n d : ℕ) (r : R) : coeff (monomial n r * p) (d + n) = r * coeff p d := by
-  rw [monomial_eq_C_mul_X, mul_assocₓ, coeff_C_mul, X_pow_mul, coeff_mul_X_pow]
+  rw [monomial_eq_C_mul_X, mul_assoc, coeff_C_mul, X_pow_mul, coeff_mul_X_pow]
 
 theorem coeff_mul_monomial_zero (p : Polynomial R) (d : ℕ) (r : R) : coeff (p * monomial 0 r) d = coeff p d * r :=
   coeff_mul_monomial p 0 d r

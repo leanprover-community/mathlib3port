@@ -79,7 +79,7 @@ theorem delta_lt_false {a b : ℕ} (h₁ : delta * a < b) (h₂ : delta * b < a)
           h₁)
         h₂) $
     by
-    simpa [mul_assocₓ] using
+    simpa [mul_assoc] using
       Nat.mul_le_mul_rightₓ a
         (by
           decide : 1 ≤ delta * delta)

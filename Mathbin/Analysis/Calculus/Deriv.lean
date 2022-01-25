@@ -1068,14 +1068,14 @@ theorem HasDerivAtFilter.comp_has_fderiv_at_filter {f : E → 𝕜} {f' : E →L
     HasFderivAtFilter (h₁ ∘ f) (h₁' • f') x L' := by
   convert hh₁.comp x hf hL
   ext x
-  simp [mul_commₓ]
+  simp [mul_comm]
 
 theorem HasStrictDerivAt.comp_has_strict_fderiv_at {f : E → 𝕜} {f' : E →L[𝕜] 𝕜} x (hh₁ : HasStrictDerivAt h₁ h₁' (f x))
     (hf : HasStrictFderivAt f f' x) : HasStrictFderivAt (h₁ ∘ f) (h₁' • f') x := by
   rw [HasStrictDerivAt] at hh₁
   convert hh₁.comp x hf
   ext x
-  simp [mul_commₓ]
+  simp [mul_comm]
 
 theorem HasDerivAt.comp_has_fderiv_at {f : E → 𝕜} {f' : E →L[𝕜] 𝕜} x (hh₁ : HasDerivAt h₁ h₁' (f x))
     (hf : HasFderivAt f f' x) : HasFderivAt (h₁ ∘ f) (h₁' • f') x :=
@@ -1095,12 +1095,12 @@ theorem HasDerivWithinAt.comp_has_fderiv_within_at {f : E → 𝕜} {f' : E →L
 
 theorem HasDerivAtFilter.comp (hh₂ : HasDerivAtFilter h₂ h₂' (h x) L') (hh : HasDerivAtFilter h h' x L)
     (hL : tendsto h L L') : HasDerivAtFilter (h₂ ∘ h) (h₂' * h') x L := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact hh₂.scomp x hh hL
 
 theorem HasDerivWithinAt.comp (hh₂ : HasDerivWithinAt h₂ h₂' s' (h x)) (hh : HasDerivWithinAt h h' s x)
     (hst : maps_to h s s') : HasDerivWithinAt (h₂ ∘ h) (h₂' * h') s x := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact hh₂.scomp x hh hst
 
 /-- The chain rule. -/
@@ -1109,7 +1109,7 @@ theorem HasDerivAt.comp (hh₂ : HasDerivAt h₂ h₂' (h x)) (hh : HasDerivAt h
 
 theorem HasStrictDerivAt.comp (hh₂ : HasStrictDerivAt h₂ h₂' (h x)) (hh : HasStrictDerivAt h h' x) :
     HasStrictDerivAt (h₂ ∘ h) (h₂' * h') x := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact hh₂.scomp x hh
 
 theorem HasDerivAt.comp_has_deriv_within_at (hh₂ : HasDerivAt h₂ h₂' (h x)) (hh : HasDerivWithinAt h h' s x) :
@@ -1291,7 +1291,7 @@ theorem deriv_const_mul (c : 𝔸) (hd : DifferentiableAt 𝕜 d x) : deriv (fun
   (hd.has_deriv_at.const_mul c).deriv
 
 theorem deriv_const_mul_field (u : 𝕜') : deriv (fun y => u * v y) x = u * deriv v x := by
-  simp only [mul_commₓ u, deriv_mul_const_field]
+  simp only [mul_comm u, deriv_mul_const_field]
 
 @[simp]
 theorem deriv_const_mul_field' (u : 𝕜') : (deriv fun x => u * v x) = fun x => u * deriv v x :=
@@ -1646,7 +1646,7 @@ protected theorem HasStrictDerivAt (x : 𝕜) : HasStrictDerivAt (fun x => p.eva
   · intro n a h
     convert h.mul (has_strict_deriv_at_id x)
     · ext y
-      simp [pow_addₓ, mul_assocₓ]
+      simp [pow_addₓ, mul_assoc]
       
     · simp [pow_addₓ]
       ring
@@ -1799,7 +1799,7 @@ theorem has_strict_deriv_at_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) 
       exact zpow_ne_zero_of_ne_zero hx _]
     simp only [· ∘ ·, zpow_neg₀, one_div, inv_inv₀, smul_eq_mul] at this
     convert this using 1
-    rw [sq, mul_inv₀, inv_inv₀, Int.cast_neg, ← neg_mul_eq_neg_mul, neg_mul_neg, ← zpow_add₀ hx, mul_assocₓ, ←
+    rw [sq, mul_inv₀, inv_inv₀, Int.cast_neg, ← neg_mul_eq_neg_mul, neg_mul_neg, ← zpow_add₀ hx, mul_assoc, ←
       zpow_add₀ hx]
     congr
     abel
@@ -1851,7 +1851,7 @@ theorem iter_deriv_zpow' (m : ℤ) (k : ℕ) :
   · simp only [one_mulₓ, Int.coe_nat_zero, id, sub_zero, Finset.prod_range_zero, Function.iterate_zero]
     
   · simp only [Function.iterate_succ_apply', ihk, deriv_const_mul_field', deriv_zpow', Finset.prod_range_succ,
-      Int.coe_nat_succ, ← sub_sub, Int.cast_sub, Int.cast_coe_nat, mul_assocₓ]
+      Int.coe_nat_succ, ← sub_sub, Int.cast_sub, Int.cast_coe_nat, mul_assoc]
     
 
 theorem iter_deriv_zpow (m : ℤ) (x : 𝕜) (k : ℕ) :

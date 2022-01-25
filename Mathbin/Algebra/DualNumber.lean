@@ -37,7 +37,7 @@ abbrev DualNumber (R : Type _) : Type _ :=
   TrivSqZeroExt R R
 
 /-- The unit element $ε$ that squares to zero. -/
-def DualNumber.eps [HasZero R] [HasOne R] : DualNumber R :=
+def DualNumber.eps [Zero R] [One R] : DualNumber R :=
   TrivSqZeroExt.inr 1
 
 localized [DualNumber] notation "ε" => DualNumber.eps
@@ -51,11 +51,11 @@ namespace DualNumber
 open TrivSqZeroExt
 
 @[simp]
-theorem fst_eps [HasZero R] [HasOne R] : fst ε = (0 : R) :=
+theorem fst_eps [Zero R] [One R] : fst ε = (0 : R) :=
   fst_inr _ _
 
 @[simp]
-theorem snd_eps [HasZero R] [HasOne R] : snd ε = (1 : R) :=
+theorem snd_eps [Zero R] [One R] : snd ε = (1 : R) :=
   snd_inr _ _
 
 /-- A version of `triv_sq_zero_ext.snd_mul` with `*` instead of `•`. -/

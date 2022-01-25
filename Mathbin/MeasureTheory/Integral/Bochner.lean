@@ -243,7 +243,7 @@ namespace SimpleFunc
 
 section PosPart
 
-variable [LinearOrderₓ E] [HasZero E] [MeasurableSpace α]
+variable [LinearOrderₓ E] [Zero E] [MeasurableSpace α]
 
 /-- Positive part of a simple function. -/
 def pos_part (f : α →ₛ E) : α →ₛ E :=
@@ -352,7 +352,7 @@ theorem integral_eq_lintegral' {f : α →ₛ E} {g : E → ℝ≥0∞} (hf : in
   simp only [← map_apply g f, lintegral_eq_lintegral]
   rw [map_integral f _ hf, map_lintegral, Ennreal.to_real_sum]
   · refine' Finset.sum_congr rfl fun b hb => _
-    rw [smul_eq_mul, to_real_mul, mul_commₓ]
+    rw [smul_eq_mul, to_real_mul, mul_comm]
     
   · intro a ha
     by_cases' a0 : a = 0
@@ -674,7 +674,7 @@ attribute [local instance] fact_one_le_one_ennreal
 
 theorem integral_eq_norm_pos_part_sub (f : α →₁[μ] ℝ) : integral f = ∥Lp.pos_part f∥ - ∥Lp.neg_part f∥ := by
   refine'
-    @is_closed_property _ _ _ (coeₓ : (α →₁ₛ[μ] ℝ) → α →₁[μ] ℝ)
+    @is_closed_property _ _ _ (coe : (α →₁ₛ[μ] ℝ) → α →₁[μ] ℝ)
       (fun f : α →₁[μ] ℝ => integral f = ∥Lp.pos_part f∥ - ∥Lp.neg_part f∥) (simple_func.dense_range one_ne_top)
       (is_closed_eq _ _) _ f
   · exact cont _
@@ -785,7 +785,7 @@ theorem integral_mul_left (r : ℝ) (f : α → ℝ) : (∫ a, r * f a ∂μ) = 
   integral_smul r f
 
 theorem integral_mul_right (r : ℝ) (f : α → ℝ) : (∫ a, f a * r ∂μ) = (∫ a, f a ∂μ) * r := by
-  simp only [mul_commₓ]
+  simp only [mul_comm]
   exact integral_mul_left r f
 
 theorem integral_div (r : ℝ) (f : α → ℝ) : (∫ a, f a / r ∂μ) = (∫ a, f a ∂μ) / r :=
@@ -1156,7 +1156,7 @@ theorem norm_integral_le_of_norm_le_const [is_finite_measure μ] {f : α → E} 
   calc
     ∥∫ x, f x ∂μ∥ ≤ ∫ x, C ∂μ := norm_integral_le_of_norm_le (integrable_const C) h
     _ = C * (μ univ).toReal := by
-      rw [integral_const, smul_eq_mul, mul_commₓ]
+      rw [integral_const, smul_eq_mul, mul_comm]
     
 
 theorem tendsto_integral_approx_on_univ_of_measurable {f : α → E} (fmeas : Measurable f) (hf : integrable f μ) :

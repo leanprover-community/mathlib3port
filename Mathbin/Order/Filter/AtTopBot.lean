@@ -38,6 +38,9 @@ def at_bot [Preorderₓ α] : Filter α :=
 theorem mem_at_top [Preorderₓ α] (a : α) : { b : α | a ≤ b } ∈ @at_top α _ :=
   mem_infi_of_mem a $ subset.refl _
 
+theorem Ici_mem_at_top [Preorderₓ α] (a : α) : Ici a ∈ (at_top : Filter α) :=
+  mem_at_top a
+
 theorem Ioi_mem_at_top [Preorderₓ α] [NoMaxOrder α] (x : α) : Ioi x ∈ (at_top : Filter α) :=
   let ⟨z, hz⟩ := exists_gt x
   mem_of_superset (mem_at_top z) $ fun y h => lt_of_lt_of_leₓ hz h
@@ -634,7 +637,7 @@ theorem tendsto.const_mul_at_top (hr : 0 < r) (hf : tendsto f l at_top) : tendst
 constant (on the right) also tends to infinity. For a version working in `ℕ` or `ℤ`, use
 `filter.tendsto.at_top_mul_const'` instead. -/
 theorem tendsto.at_top_mul_const (hr : 0 < r) (hf : tendsto f l at_top) : tendsto (fun x => f x * r) l at_top := by
-  simpa only [mul_commₓ] using hf.const_mul_at_top hr
+  simpa only [mul_comm] using hf.const_mul_at_top hr
 
 /-- If a function tends to infinity along a filter, then this function divided by a positive
 constant also tends to infinity. -/
@@ -650,7 +653,7 @@ theorem tendsto.neg_const_mul_at_top (hr : r < 0) (hf : tendsto f l at_top) : te
 /-- If a function tends to infinity along a filter, then this function multiplied by a negative
 constant (on the right) tends to negative infinity. -/
 theorem tendsto.at_top_mul_neg_const (hr : r < 0) (hf : tendsto f l at_top) : tendsto (fun x => f x * r) l at_bot := by
-  simpa only [mul_commₓ] using hf.neg_const_mul_at_top hr
+  simpa only [mul_comm] using hf.neg_const_mul_at_top hr
 
 /-- If a function tends to negative infinity along a filter, then this function multiplied by
 a positive constant (on the left) also tends to negative infinity. -/
@@ -661,7 +664,7 @@ theorem tendsto.const_mul_at_bot (hr : 0 < r) (hf : tendsto f l at_bot) : tendst
 /-- If a function tends to negative infinity along a filter, then this function multiplied by
 a positive constant (on the right) also tends to negative infinity. -/
 theorem tendsto.at_bot_mul_const (hr : 0 < r) (hf : tendsto f l at_bot) : tendsto (fun x => f x * r) l at_bot := by
-  simpa only [mul_commₓ] using hf.const_mul_at_bot hr
+  simpa only [mul_comm] using hf.const_mul_at_bot hr
 
 /-- If a function tends to negative infinity along a filter, then this function divided by
 a positive constant also tends to negative infinity. -/
@@ -677,7 +680,7 @@ theorem tendsto.neg_const_mul_at_bot (hr : r < 0) (hf : tendsto f l at_bot) : te
 /-- If a function tends to negative infinity along a filter, then this function multiplied by
 a negative constant (on the right) tends to positive infinity. -/
 theorem tendsto.at_bot_mul_neg_const (hr : r < 0) (hf : tendsto f l at_bot) : tendsto (fun x => f x * r) l at_top := by
-  simpa only [mul_commₓ] using hf.neg_const_mul_at_bot hr
+  simpa only [mul_comm] using hf.neg_const_mul_at_bot hr
 
 theorem tendsto_const_mul_pow_at_top {c : α} {n : ℕ} (hn : 1 ≤ n) (hc : 0 < c) :
     tendsto (fun x => c * x ^ n) at_top at_top :=
@@ -939,7 +942,7 @@ theorem map_at_bot_eq_of_gc [SemilatticeInf α] [SemilatticeInf β] {f : α → 
   @map_at_top_eq_of_gc (OrderDual α) (OrderDual β) _ _ _ _ _ hf.dual gc hgi
 
 theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (h : Ici a ⊆ s) :
-    map (coeₓ : s → α) at_top = at_top := by
+    map (coe : s → α) at_top = at_top := by
   have : Directed (· ≥ ·) fun x : s => 𝓟 (Ici x) := by
     intro x y
     use ⟨x⊔y⊔a, h le_sup_right⟩
@@ -962,47 +965,47 @@ theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (
 
 /-- The image of the filter `at_top` on `Ici a` under the coercion equals `at_top`. -/
 @[simp]
-theorem map_coe_Ici_at_top [SemilatticeSup α] (a : α) : map (coeₓ : Ici a → α) at_top = at_top :=
+theorem map_coe_Ici_at_top [SemilatticeSup α] (a : α) : map (coe : Ici a → α) at_top = at_top :=
   map_coe_at_top_of_Ici_subset (subset.refl _)
 
 /-- The image of the filter `at_top` on `Ioi a` under the coercion equals `at_top`. -/
 @[simp]
-theorem map_coe_Ioi_at_top [SemilatticeSup α] [NoMaxOrder α] (a : α) : map (coeₓ : Ioi a → α) at_top = at_top :=
+theorem map_coe_Ioi_at_top [SemilatticeSup α] [NoMaxOrder α] (a : α) : map (coe : Ioi a → α) at_top = at_top :=
   let ⟨b, hb⟩ := exists_gt a
   map_coe_at_top_of_Ici_subset $ Ici_subset_Ioi.2 hb
 
 /-- The `at_top` filter for an open interval `Ioi a` comes from the `at_top` filter in the ambient
 order. -/
-theorem at_top_Ioi_eq [SemilatticeSup α] (a : α) : at_top = comap (coeₓ : Ioi a → α) at_top := by
+theorem at_top_Ioi_eq [SemilatticeSup α] (a : α) : at_top = comap (coe : Ioi a → α) at_top := by
   nontriviality
   rcases nontrivial_iff_nonempty.1 ‹_› with ⟨b, hb⟩
   rw [← map_coe_at_top_of_Ici_subset (Ici_subset_Ioi.2 hb), comap_map Subtype.coe_injective]
 
 /-- The `at_top` filter for an open interval `Ici a` comes from the `at_top` filter in the ambient
 order. -/
-theorem at_top_Ici_eq [SemilatticeSup α] (a : α) : at_top = comap (coeₓ : Ici a → α) at_top := by
+theorem at_top_Ici_eq [SemilatticeSup α] (a : α) : at_top = comap (coe : Ici a → α) at_top := by
   rw [← map_coe_Ici_at_top a, comap_map Subtype.coe_injective]
 
 /-- The `at_bot` filter for an open interval `Iio a` comes from the `at_bot` filter in the ambient
 order. -/
 @[simp]
-theorem map_coe_Iio_at_bot [SemilatticeInf α] [NoMinOrder α] (a : α) : map (coeₓ : Iio a → α) at_bot = at_bot :=
+theorem map_coe_Iio_at_bot [SemilatticeInf α] [NoMinOrder α] (a : α) : map (coe : Iio a → α) at_bot = at_bot :=
   @map_coe_Ioi_at_top (OrderDual α) _ _ _
 
 /-- The `at_bot` filter for an open interval `Iio a` comes from the `at_bot` filter in the ambient
 order. -/
-theorem at_bot_Iio_eq [SemilatticeInf α] (a : α) : at_bot = comap (coeₓ : Iio a → α) at_bot :=
+theorem at_bot_Iio_eq [SemilatticeInf α] (a : α) : at_bot = comap (coe : Iio a → α) at_bot :=
   @at_top_Ioi_eq (OrderDual α) _ _
 
 /-- The `at_bot` filter for an open interval `Iic a` comes from the `at_bot` filter in the ambient
 order. -/
 @[simp]
-theorem map_coe_Iic_at_bot [SemilatticeInf α] (a : α) : map (coeₓ : Iic a → α) at_bot = at_bot :=
+theorem map_coe_Iic_at_bot [SemilatticeInf α] (a : α) : map (coe : Iic a → α) at_bot = at_bot :=
   @map_coe_Ici_at_top (OrderDual α) _ _
 
 /-- The `at_bot` filter for an open interval `Iic a` comes from the `at_bot` filter in the ambient
 order. -/
-theorem at_bot_Iic_eq [SemilatticeInf α] (a : α) : at_bot = comap (coeₓ : Iic a → α) at_bot :=
+theorem at_bot_Iic_eq [SemilatticeInf α] (a : α) : at_bot = comap (coe : Iic a → α) at_bot :=
   @at_top_Ici_eq (OrderDual α) _ _
 
 theorem tendsto_Ioi_at_top [SemilatticeSup α] {a : α} {f : β → Ioi a} {l : Filter β} :

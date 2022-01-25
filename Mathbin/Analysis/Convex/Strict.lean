@@ -45,14 +45,8 @@ def StrictConvex : Prop :=
 variable {𝕜 s} {x y : E}
 
 theorem strict_convex_iff_open_segment_subset :
-    StrictConvex 𝕜 s ↔ s.pairwise fun x y => OpenSegment 𝕜 x y ⊆ Interior s := by
-  constructor
-  · rintro h x hx y hy hxy z ⟨a, b, ha, hb, hab, rfl⟩
-    exact h hx hy hxy ha hb hab
-    
-  · rintro h x hx y hy hxy a b ha hb hab
-    exact h hx hy hxy ⟨a, b, ha, hb, hab, rfl⟩
-    
+    StrictConvex 𝕜 s ↔ s.pairwise fun x y => OpenSegment 𝕜 x y ⊆ Interior s :=
+  forall₅_congr $ fun x hx y hy hxy => (open_segment_subset_iff 𝕜).symm
 
 theorem StrictConvex.open_segment_subset (hs : StrictConvex 𝕜 s) (hx : x ∈ s) (hy : y ∈ s) (h : x ≠ y) :
     OpenSegment 𝕜 x y ⊆ Interior s :=
@@ -95,6 +89,7 @@ variable [Module 𝕜 E] [Module 𝕜 F] {s : Set E}
 protected theorem StrictConvex.convex (hs : StrictConvex 𝕜 s) : Convex 𝕜 s :=
   convex_iff_pairwise_pos.2 $ fun x hx y hy hxy a b ha hb hab => interior_subset $ hs hx hy hxy ha hb hab
 
+/-- An open convex set is strictly convex. -/
 protected theorem Convex.strict_convex (h : IsOpen s) (hs : Convex 𝕜 s) : StrictConvex 𝕜 s :=
   fun x hx y hy _ a b ha hb hab => h.interior_eq.symm ▸ hs hx hy ha.le hb.le hab
 
@@ -378,6 +373,7 @@ section
 
 variable [TopologicalSpace E]
 
+/-- A set in a linear ordered field is strictly convex if and only if it is convex. -/
 @[simp]
 theorem strict_convex_iff_convex [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] {s : Set 𝕜} :
     StrictConvex 𝕜 s ↔ Convex 𝕜 s := by

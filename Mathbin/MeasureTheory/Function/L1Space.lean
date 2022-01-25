@@ -204,7 +204,7 @@ theorem has_finite_integral_norm_iff (f : α → β) : has_finite_integral (fun 
 
 theorem has_finite_integral_to_real_of_lintegral_ne_top {f : α → ℝ≥0∞} (hf : (∫⁻ x, f x ∂μ) ≠ ∞) :
     has_finite_integral (fun x => (f x).toReal) μ := by
-  have : ∀ x, (∥(f x).toReal∥₊ : ℝ≥0∞) = @coeₓ ℝ≥0 ℝ≥0∞ _ (⟨(f x).toReal, Ennreal.to_real_nonneg⟩ : ℝ≥0 ) := by
+  have : ∀ x, (∥(f x).toReal∥₊ : ℝ≥0∞) = @coe ℝ≥0 ℝ≥0∞ _ (⟨(f x).toReal, Ennreal.to_real_nonneg⟩ : ℝ≥0 ) := by
     intro x
     rw [Real.nnnorm_of_nonneg]
   simp_rw [has_finite_integral, this]
@@ -342,7 +342,7 @@ theorem has_finite_integral.const_mul {f : α → ℝ} (h : has_finite_integral 
 
 theorem has_finite_integral.mul_const {f : α → ℝ} (h : has_finite_integral f μ) (c : ℝ) :
     has_finite_integral (fun x => f x * c) μ := by
-  simp_rw [mul_commₓ, h.const_mul _]
+  simp_rw [mul_comm, h.const_mul _]
 
 end NormedSpace
 
@@ -570,7 +570,7 @@ theorem integrable_with_density_iff {f : α → ℝ≥0∞} (hf : Measurable f) 
     
   rw [lintegral_with_density_eq_lintegral_mul _ hf hg.nnnorm.coe_nnreal_ennreal]
   refine' lintegral_congr_ae _
-  rw [mul_commₓ]
+  rw [mul_comm]
   refine' Filter.EventuallyEq.mul (ae_eq_refl _) ((of_real_to_real_ae_eq hflt).symm.trans _)
   convert ae_eq_refl _
   ext1 x
@@ -612,7 +612,7 @@ theorem integrable.const_mul {f : α → ℝ} (h : integrable f μ) (c : ℝ) : 
   integrable.smul c h
 
 theorem integrable.mul_const {f : α → ℝ} (h : integrable f μ) (c : ℝ) : integrable (fun x => f x * c) μ := by
-  simp_rw [mul_commₓ, h.const_mul _]
+  simp_rw [mul_comm, h.const_mul _]
 
 end NormedSpace
 

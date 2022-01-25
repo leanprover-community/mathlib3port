@@ -139,9 +139,7 @@ instance (priority := 100) CommGroupₓ.is_solvable {G : Type _} [CommGroupₓ G
 
 theorem is_solvable_of_comm {G : Type _} [hG : Groupₓ G] (h : ∀ a b : G, a * b = b * a) : IsSolvable G := by
   let hG' : CommGroupₓ G := { hG with mul_comm := h }
-  run_tac
-    tactic.unfreeze_local_instances
-  cases hG
+  cases' hG
   exact CommGroupₓ.is_solvable
 
 theorem is_solvable_of_top_eq_bot (h : (⊤ : Subgroup G) = ⊥) : IsSolvable G :=
@@ -180,11 +178,9 @@ instance solvable_quotient_of_solvable (H : Subgroup G) [H.normal] [h : IsSolvab
 
 theorem solvable_of_ker_le_range {G' G'' : Type _} [Groupₓ G'] [Groupₓ G''] (f : G' →* G) (g : G →* G'')
     (hfg : g.ker ≤ f.range) [hG' : IsSolvable G'] [hG'' : IsSolvable G''] : IsSolvable G := by
-  run_tac
-    tactic.unfreeze_local_instances
-  obtain ⟨n, hn⟩ := hG''
+  obtain ⟨n, hn⟩ := id hG''
   suffices ∀ k : ℕ, derivedSeries G (n + k) ≤ (derivedSeries G' k).map f by
-    obtain ⟨m, hm⟩ := hG'
+    obtain ⟨m, hm⟩ := id hG'
     use n + m
     specialize this m
     rwa [hm, map_bot, le_bot_iff] at this
@@ -227,7 +223,7 @@ theorem IsSimpleGroup.comm_iff_is_solvable : (∀ a b : G, a * b = b * a) ↔ Is
       
     · rw [IsSimpleGroup.derived_series_succ] at hn
       intro a b
-      rw [← mul_inv_eq_one, mul_inv_rev, ← mul_assocₓ, ← mem_bot, ← hn]
+      rw [← mul_inv_eq_one, mul_inv_rev, ← mul_assoc, ← mem_bot, ← hn]
       exact subset_normal_closure ⟨a, b, rfl⟩
       ⟩
 

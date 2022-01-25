@@ -104,7 +104,7 @@ theorem induction_on_irreducible {P : α → Prop} (a : α) (h0 : P 0) (hu : ∀
             hi _ _ hb0 hii
               (ih _
                 ⟨hb0, i, hii.1, by
-                  rw [hb, mul_commₓ]⟩))
+                  rw [hb, mul_comm]⟩))
     a
 
 theorem exists_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀, ∀ b ∈ f, ∀, Irreducible b) ∧ Associated f.prod a :=
@@ -302,8 +302,8 @@ theorem prime_factors_irreducible [CancelCommMonoidWithZero α] {a : α} {f : Mu
             (by
               simp [hq])).2.1
     refine' (ha.is_unit_or_is_unit (_ : _ = p * ↑u * (s.erase q).Prod * _)).resolve_left _
-    · rw [mul_right_commₓ _ _ q, mul_assocₓ, ← Multiset.prod_cons, Multiset.cons_erase hq, ← hu, mul_commₓ,
-        mul_commₓ p _, mul_assocₓ]
+    · rw [mul_right_commₓ _ _ q, mul_assoc, ← Multiset.prod_cons, Multiset.cons_erase hq, ← hu, mul_comm, mul_comm p _,
+        mul_assoc]
       simp
       
     apply mt is_unit_of_mul_is_unit_left (mt is_unit_of_mul_is_unit_left _)
@@ -709,7 +709,7 @@ theorem dvd_of_dvd_mul_left_of_no_prime_factors {a b c : R} (ha : a ≠ 0) :
 Compare `is_coprime.dvd_of_dvd_mul_right`. -/
 theorem dvd_of_dvd_mul_right_of_no_prime_factors {a b c : R} (ha : a ≠ 0)
     (no_factors : ∀ {d}, d ∣ a → d ∣ b → ¬Prime d) : a ∣ b * c → a ∣ c := by
-  simpa [mul_commₓ b c] using dvd_of_dvd_mul_left_of_no_prime_factors ha @no_factors
+  simpa [mul_comm b c] using dvd_of_dvd_mul_left_of_no_prime_factors ha @no_factors
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ≠ » (0 : R))
 /-- If `a ≠ 0, b` are elements of a unique factorization domain, then dividing
@@ -736,9 +736,9 @@ theorem exists_reduced_factors :
     · rcases h with ⟨b, rfl⟩
       obtain ⟨a', b', c', no_factor, ha', hb'⟩ := ih_a a_ne_zero b
       refine' ⟨a', b', p * c', @no_factor, _, _⟩
-      · rw [mul_assocₓ, ha']
+      · rw [mul_assoc, ha']
         
-      · rw [mul_assocₓ, hb']
+      · rw [mul_assoc, hb']
         
       
     · obtain ⟨a', b', c', coprime, rfl, rfl⟩ := ih_a a_ne_zero b
@@ -775,8 +775,8 @@ theorem le_multiplicity_iff_repeat_le_normalized_factors {a b : R} {n : ℕ} (ha
   intro b hb
   constructor
   · rintro ⟨c, rfl⟩
-    rw [Ne.def, pow_succₓ, mul_assocₓ, mul_eq_zero, Decidable.not_or_iff_and_not] at hb
-    rw [pow_succₓ, mul_assocₓ, normalized_factors_mul hb.1 hb.2, repeat_succ, normalized_factors_irreducible ha,
+    rw [Ne.def, pow_succₓ, mul_assoc, mul_eq_zero, Decidable.not_or_iff_and_not] at hb
+    rw [pow_succₓ, mul_assoc, normalized_factors_mul hb.1 hb.2, repeat_succ, normalized_factors_irreducible ha,
       singleton_add, cons_le_cons_iff, ← ih hb.2]
     apply Dvd.intro _ rfl
     
@@ -839,14 +839,14 @@ theorem factor_set.sup_add_inf_eq_add [DecidableEq (Associates α)] : ∀ a b : 
   or `0` if there is none. -/
 def factor_set.prod : factor_set α → Associates α
   | none => 0
-  | some s => (s.map coeₓ).Prod
+  | some s => (s.map coe).Prod
 
 @[simp]
 theorem prod_top : (⊤ : factor_set α).Prod = 0 :=
   rfl
 
 @[simp]
-theorem prod_coe {s : Multiset { a : Associates α // Irreducible a }} : (s : factor_set α).Prod = (s.map coeₓ).Prod :=
+theorem prod_coe {s : Multiset { a : Associates α // Irreducible a }} : (s : factor_set α).Prod = (s.map coe).Prod :=
   rfl
 
 @[simp]
@@ -1015,7 +1015,7 @@ noncomputable def factors' (a : α) : Multiset { a : Associates α // Irreducibl
   (factors a).pmap (fun a ha => ⟨Associates.mk a, (irreducible_mk _).2 ha⟩) irreducible_of_factor
 
 @[simp]
-theorem map_subtype_coe_factors' {a : α} : (factors' a).map coeₓ = (factors a).map Associates.mk := by
+theorem map_subtype_coe_factors' {a : α} : (factors' a).map coe = (factors a).map Associates.mk := by
   simp [factors', Multiset.map_pmap, Multiset.pmap_eq_map]
 
 theorem factors'_cong {a b : α} (h : a ~ᵤ b) : factors' a = factors' b := by
@@ -1473,7 +1473,7 @@ noncomputable def UniqueFactorizationMonoid.toGcdMonoid (α : Type _) [CancelCom
       Associates.quot_out]
   gcd_mul_lcm := fun a b => by
     rw [← mk_eq_mk_iff_associated, ← Associates.mk_mul_mk, ← associated_iff_eq, Associates.quot_out,
-      Associates.quot_out, mul_commₓ, sup_mul_inf, Associates.mk_mul_mk]
+      Associates.quot_out, mul_comm, sup_mul_inf, Associates.mk_mul_mk]
 
 /-- `to_normalized_gcd_monoid` constructs a GCD monoid out of a normalization on a
   unique factorization domain. -/
@@ -1494,7 +1494,7 @@ noncomputable def UniqueFactorizationMonoid.toNormalizedGcdMonoid (α : Type _) 
       show (Associates.mk a⊔⊤).out = 0 by
         simp ,
     gcd_mul_lcm := fun a b => by
-      rw [← out_mul, mul_commₓ, sup_mul_inf, mk_mul_mk, out_mk]
+      rw [← out_mul, mul_comm, sup_mul_inf, mk_mul_mk, out_mk]
       exact normalize_associated (a * b),
     normalize_gcd := fun a b => by
       convert normalize_out _,
@@ -1538,7 +1538,7 @@ noncomputable def fintype_subtype_dvd {M : Type _} [CancelCommMonoidWithZero M] 
       refine' mt (fun hx => _) hy
       rwa [hx, zero_dvd_iff] at h
     obtain ⟨u, hu⟩ := normalized_factors_prod hx
-    refine' ⟨⟨normalized_factors x, u⟩, _, (mul_commₓ _ _).trans hu⟩
+    refine' ⟨⟨normalized_factors x, u⟩, _, (mul_comm _ _).trans hu⟩
     exact (dvd_iff_normalized_factors_le_normalized_factors hx hy).mp h
     
 

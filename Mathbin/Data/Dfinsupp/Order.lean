@@ -27,9 +27,9 @@ namespace Dfinsupp
 /-! ### Order structures -/
 
 
-section HasZero
+section Zero
 
-variable (α) [∀ i, HasZero (α i)]
+variable (α) [∀ i, Zero (α i)]
 
 section LE
 
@@ -107,7 +107,7 @@ theorem sup_apply [∀ i, SemilatticeSup (α i)] (f g : Π₀ i, α i) (i : ι) 
 instance Lattice [∀ i, Lattice (α i)] : Lattice (Π₀ i, α i) :=
   { Dfinsupp.semilatticeInf α, Dfinsupp.semilatticeSup α with }
 
-end HasZero
+end Zero
 
 /-! ### Algebraic order structures -/
 

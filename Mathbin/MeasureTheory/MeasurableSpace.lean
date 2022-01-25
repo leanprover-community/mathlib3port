@@ -56,7 +56,7 @@ measurable space, σ-algebra, measurable function, measurable equivalence, dynki
 
 open Set Encodable Function Equivₓ
 
-open_locale Classical Filter MeasureTheory
+open_locale Filter MeasureTheory
 
 variable {α β γ δ δ' : Type _} {ι : Sort _} {s t u : Set α}
 
@@ -208,7 +208,7 @@ theorem measurable_of_subsingleton_codomain [Subsingleton β] (f : α → β) : 
   Subsingleton.set_cases MeasurableSet.empty MeasurableSet.univ s
 
 @[to_additive]
-theorem measurable_one [HasOne α] : Measurable (1 : β → α) :=
+theorem measurable_one [One α] : Measurable (1 : β → α) :=
   @measurable_const _ _ _ _ 1
 
 theorem measurable_of_empty [IsEmpty α] (f : α → β) : Measurable f :=
@@ -262,15 +262,13 @@ theorem Measurable.ite {p : α → Prop} {_ : DecidablePred p} (hp : MeasurableS
   Measurable.piecewise hp hf hg
 
 @[measurability]
-theorem Measurable.indicator [HasZero β] (hf : Measurable f) (hs : MeasurableSet s) : Measurable (s.indicator f) :=
+theorem Measurable.indicator [Zero β] (hf : Measurable f) (hs : MeasurableSet s) : Measurable (s.indicator f) :=
   hf.piecewise hs measurable_const
 
-@[to_additive, measurability]
-theorem measurable_set_mul_support [HasOne β] [MeasurableSingletonClass β] (hf : Measurable f) :
+@[measurability, to_additive]
+theorem measurable_set_mul_support [One β] [MeasurableSingletonClass β] (hf : Measurable f) :
     MeasurableSet (mul_support f) :=
   hf (measurable_set_singleton 1).Compl
-
-attribute [measurability] measurable_set_support
 
 /-- If a function coincides with a measurable function outside of a countable set, it is
 measurable. -/
@@ -311,6 +309,24 @@ instance : MeasurableSpace ℤ :=
 instance : MeasurableSpace ℚ :=
   ⊤
 
+instance : MeasurableSingletonClass Empty :=
+  ⟨fun _ => trivialₓ⟩
+
+instance : MeasurableSingletonClass PUnit :=
+  ⟨fun _ => trivialₓ⟩
+
+instance : MeasurableSingletonClass Bool :=
+  ⟨fun _ => trivialₓ⟩
+
+instance : MeasurableSingletonClass ℕ :=
+  ⟨fun _ => trivialₓ⟩
+
+instance : MeasurableSingletonClass ℤ :=
+  ⟨fun _ => trivialₓ⟩
+
+instance : MeasurableSingletonClass ℚ :=
+  ⟨fun _ => trivialₓ⟩
+
 theorem measurable_to_encodable [MeasurableSpace α] [Encodable α] {f : β → α} (h : ∀ y, MeasurableSet (f ⁻¹' {f y})) :
     Measurable f := by
   intro s hs
@@ -338,13 +354,13 @@ theorem measurable_from_nat {f : ℕ → α} : Measurable f :=
 theorem measurable_to_nat {f : α → ℕ} : (∀ y, MeasurableSet (f ⁻¹' {f y})) → Measurable f :=
   measurable_to_encodable
 
-theorem measurable_find_greatest' {p : α → ℕ → Prop} {N : ℕ}
+theorem measurable_find_greatest' {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N : ℕ}
     (hN : ∀, ∀ k ≤ N, ∀, MeasurableSet { x | Nat.findGreatest (p x) N = k }) :
     Measurable fun x => Nat.findGreatest (p x) N :=
   measurable_to_nat $ fun x => hN _ N.find_greatest_le
 
-theorem measurable_find_greatest {p : α → ℕ → Prop} {N} (hN : ∀, ∀ k ≤ N, ∀, MeasurableSet { x | p x k }) :
-    Measurable fun x => Nat.findGreatest (p x) N := by
+theorem measurable_find_greatest {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N}
+    (hN : ∀, ∀ k ≤ N, ∀, MeasurableSet { x | p x k }) : Measurable fun x => Nat.findGreatest (p x) N := by
   refine' measurable_find_greatest' fun k hk => _
   simp only [Nat.find_greatest_eq_iff, set_of_and, set_of_forall, ← compl_set_of]
   repeat'
@@ -353,8 +369,8 @@ theorem measurable_find_greatest {p : α → ℕ → Prop} {N} (hN : ∀, ∀ k 
       try
         intros
 
-theorem measurable_find {p : α → ℕ → Prop} (hp : ∀ x, ∃ N, p x N) (hm : ∀ k, MeasurableSet { x | p x k }) :
-    Measurable fun x => Nat.findₓ (hp x) := by
+theorem measurable_find {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] (hp : ∀ x, ∃ N, p x N)
+    (hm : ∀ k, MeasurableSet { x | p x k }) : Measurable fun x => Nat.findₓ (hp x) := by
   refine' measurable_to_nat fun x => _
   rw [preimage_find_eq_disjointed]
   exact MeasurableSet.disjointed hm _
@@ -395,14 +411,14 @@ theorem measurable_quot_mk {r : α → α → Prop} : Measurable (Quot.mk r) := 
 
 @[to_additive]
 theorem QuotientGroup.measurable_coe {G} [Groupₓ G] [MeasurableSpace G] {S : Subgroup G} :
-    Measurable (coeₓ : G → G ⧸ S) :=
+    Measurable (coe : G → G ⧸ S) :=
   measurable_quotient_mk'
 
 attribute [measurability] QuotientGroup.measurable_coe QuotientAddGroup.measurable_coe
 
 @[to_additive]
 theorem QuotientGroup.measurable_from_quotient {G} [Groupₓ G] [MeasurableSpace G] {S : Subgroup G} {f : G ⧸ S → α} :
-    Measurable f ↔ Measurable (f ∘ (coeₓ : G → G ⧸ S)) :=
+    Measurable f ↔ Measurable (f ∘ (coe : G → G ⧸ S)) :=
   measurable_from_quotient
 
 end Quotientₓ
@@ -410,14 +426,14 @@ end Quotientₓ
 section Subtype
 
 instance {α} {p : α → Prop} [m : MeasurableSpace α] : MeasurableSpace (Subtype p) :=
-  m.comap (coeₓ : _ → α)
+  m.comap (coe : _ → α)
 
 section
 
 variable [MeasurableSpace α]
 
 @[measurability]
-theorem measurable_subtype_coe {p : α → Prop} : Measurable (coeₓ : Subtype p → α) :=
+theorem measurable_subtype_coe {p : α → Prop} : Measurable (coe : Subtype p → α) :=
   MeasurableSpace.le_map_comap
 
 instance {p : α → Prop} [MeasurableSingletonClass α] : MeasurableSingletonClass (Subtype p) where
@@ -445,8 +461,8 @@ theorem Measurable.subtype_mk {p : β → Prop} {f : α → β} (hf : Measurable
     simp only [← preimage_comp, · ∘ ·, Subtype.coe_mk, hf hs.1]
 
 theorem MeasurableSet.subtype_image {s : Set α} {t : Set s} (hs : MeasurableSet s) :
-    MeasurableSet t → MeasurableSet ((coeₓ : s → α) '' t)
-  | ⟨u, (hu : MeasurableSet u), (Eq : coeₓ ⁻¹' u = t)⟩ => by
+    MeasurableSet t → MeasurableSet ((coe : s → α) '' t)
+  | ⟨u, (hu : MeasurableSet u), (Eq : coe ⁻¹' u = t)⟩ => by
     rw [← Eq, Subtype.image_preimage_coe]
     exact hu.inter hs
 
@@ -454,7 +470,7 @@ theorem measurable_of_measurable_union_cover {f : α → β} (s t : Set α) (hs 
     (h : univ ⊆ s ∪ t) (hc : Measurable fun a : s => f a) (hd : Measurable fun a : t => f a) : Measurable f := by
   intro u hu
   convert (hs.subtype_image (hc hu)).union (ht.subtype_image (hd hu))
-  change f ⁻¹' u = coeₓ '' (coeₓ ⁻¹' (f ⁻¹' u) : Set s) ∪ coeₓ '' (coeₓ ⁻¹' (f ⁻¹' u) : Set t)
+  change f ⁻¹' u = coe '' (coe ⁻¹' (f ⁻¹' u) : Set s) ∪ coe '' (coe ⁻¹' (f ⁻¹' u) : Set t)
   rw [image_preimage_eq_inter_range, image_preimage_eq_inter_range, Subtype.range_coe, Subtype.range_coe, ←
     inter_distrib_left, univ_subset_iff.1 h, inter_univ]
 
@@ -581,7 +597,9 @@ theorem measurable_set_swap_iff {s : Set (α × β)} : MeasurableSet (Prod.swap 
     ext ⟨x, y⟩
     rfl, fun hs => measurable_swap hs⟩
 
-theorem measurable_from_prod_encodable [Encodable β] [MeasurableSingletonClass β] {f : α × β → γ}
+omit m
+
+theorem measurable_from_prod_encodable [MeasurableSpace α] [Encodable β] [MeasurableSingletonClass β] {f : α × β → γ}
     (hf : ∀ y, Measurable fun x => f (x, y)) : Measurable f := by
   intro s hs
   have : f ⁻¹' s = ⋃ y, (fun x => f (x, y)) ⁻¹' s ×ˢ ({y} : Set β) := by
@@ -589,6 +607,48 @@ theorem measurable_from_prod_encodable [Encodable β] [MeasurableSingletonClass 
     simp [and_assoc, And.left_comm]
   rw [this]
   exact MeasurableSet.Union fun y => (hf y hs).Prod (measurable_set_singleton y)
+
+/-- A piecewise function on countably many pieces is measurable if all the data is measurable. -/
+@[measurability]
+theorem Measurable.find {m : MeasurableSpace α} {f : ℕ → α → β} {p : ℕ → α → Prop} [∀ n, DecidablePred (p n)]
+    (hf : ∀ n, Measurable (f n)) (hp : ∀ n, MeasurableSet { x | p n x }) (h : ∀ x, ∃ n, p n x) :
+    Measurable fun x => f (Nat.findₓ (h x)) x :=
+  have : Measurable fun p : α × ℕ => f p.2 p.1 := measurable_from_prod_encodable fun n => hf n
+  this.comp (Measurable.prod_mk measurable_id (measurable_find h hp))
+
+/-- Given countably many disjoint measurable sets `t n` and countably many measurable
+functions `g n`, one can construct a measurable function that coincides with `g n` on `t n`. -/
+theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Set β) (t_meas : ∀ n, MeasurableSet (t n))
+    (t_disj : Pairwise (Disjoint on t)) (g : ℕ → β → α) (hg : ∀ n, Measurable (g n)) :
+    ∃ f : β → α, Measurable f ∧ ∀ n x, x ∈ t n → f x = g n x := by
+  classical
+  let p : ℕ → β → Prop := fun n x => x ∈ t n ∪ (⋃ k, t k)ᶜ
+  have M : ∀ n, MeasurableSet { x | p n x } := fun n =>
+    (t_meas n).union (MeasurableSet.compl (MeasurableSet.Union t_meas))
+  have P : ∀ x, ∃ n, p n x := by
+    intro x
+    by_cases' H : ∀ i : ℕ, x ∉ t i
+    · exact
+        ⟨0,
+          Or.inr
+            (by
+              simpa only [mem_Inter, compl_Union] using H)⟩
+      
+    · simp only [not_forall, not_not_mem] at H
+      rcases H with ⟨n, hn⟩
+      exact ⟨n, Or.inl hn⟩
+      
+  refine' ⟨fun x => g (Nat.findₓ (P x)) x, Measurable.find hg M P, _⟩
+  intro n x hx
+  have : x ∈ t (Nat.findₓ (P x)) := by
+    have B : x ∈ t (Nat.findₓ (P x)) ∪ (⋃ k, t k)ᶜ := Nat.find_specₓ (P x)
+    have B' : (∀ i : ℕ, x ∉ t i) ↔ False := by
+      simp only [iff_falseₓ, not_forall, not_not_mem]
+      exact ⟨n, hx⟩
+    simpa only [B', mem_union_eq, mem_Inter, or_falseₓ, compl_Union, mem_compl_eq] using B
+  congr
+  by_contra h
+  exact t_disj n (Nat.findₓ (P x)) (Ne.symm h) ⟨hx, this⟩
 
 end Prod
 
@@ -621,7 +681,7 @@ theorem measurable_pi_lambda (f : α → ∀ a, π a) (hf : ∀ a, Measurable fu
   This doesn't require `f` to be measurable.
   This should not be confused with the statement that `update f a x` is measurable. -/
 @[measurability]
-theorem measurable_update (f : ∀ a : δ, π a) {a : δ} : Measurable (update f a) := by
+theorem measurable_update (f : ∀ a : δ, π a) {a : δ} [DecidableEq δ] : Measurable (update f a) := by
   apply measurable_pi_lambda
   intro x
   by_cases' hx : x = a
@@ -645,6 +705,7 @@ theorem MeasurableSet.univ_pi [Encodable δ] {t : ∀ i : δ, Set (π i)} (ht : 
 
 theorem measurable_set_pi_of_nonempty {s : Set δ} {t : ∀ i, Set (π i)} (hs : countable s) (h : (pi s t).Nonempty) :
     MeasurableSet (pi s t) ↔ ∀, ∀ i ∈ s, ∀, MeasurableSet (t i) := by
+  classical
   rcases h with ⟨f, hf⟩
   refine' ⟨fun hst i hi => _, MeasurableSet.pi hs⟩
   convert measurable_update f hst
@@ -722,7 +783,8 @@ theorem measurable_tprod_mk (l : List δ) : Measurable (@tprod.mk δ π l) := by
   · exact (measurable_pi_apply i).prod_mk ih
     
 
-theorem measurable_tprod_elim : ∀ {l : List δ} {i : δ} hi : i ∈ l, Measurable fun v : tprod π l => v.elim hi
+theorem measurable_tprod_elim [DecidableEq δ] :
+    ∀ {l : List δ} {i : δ} hi : i ∈ l, Measurable fun v : tprod π l => v.elim hi
   | i :: is, j, hj => by
     by_cases' hji : j = i
     · subst hji
@@ -732,7 +794,8 @@ theorem measurable_tprod_elim : ∀ {l : List δ} {i : δ} hi : i ∈ l, Measura
       exact (measurable_tprod_elim (hj.resolve_left hji)).comp measurable_snd
       
 
-theorem measurable_tprod_elim' {l : List δ} (h : ∀ i, i ∈ l) : Measurable (tprod.elim' h : tprod π l → ∀ i, π i) :=
+theorem measurable_tprod_elim' [DecidableEq δ] {l : List δ} (h : ∀ i, i ∈ l) :
+    Measurable (tprod.elim' h : tprod π l → ∀ i, π i) :=
   measurable_pi_lambda _ fun i => measurable_tprod_elim (h i)
 
 theorem MeasurableSet.tprod (l : List δ) {s : ∀ i, Set (π i)} (hs : ∀ i, MeasurableSet (s i)) :
@@ -844,7 +907,7 @@ theorem comp (hg : MeasurableEmbedding g) (hf : MeasurableEmbedding f) : Measura
   ⟨hg.injective.comp hf.injective, hg.measurable.comp hf.measurable, fun s hs => by
     rwa [← image_image, hg.measurable_set_image, hf.measurable_set_image]⟩
 
-theorem subtype_coe {s : Set α} (hs : MeasurableSet s) : MeasurableEmbedding (coeₓ : s → α) :=
+theorem subtype_coe {s : Set α} (hs : MeasurableSet s) : MeasurableEmbedding (coe : s → α) :=
   { Injective := Subtype.coe_injective, Measurable := measurable_subtype_coe,
     measurable_set_image' := fun _ => MeasurableSet.subtype_image hs }
 
@@ -1220,7 +1283,7 @@ def Pi_congr_right (e : ∀ a, π a ≃ᵐ π' a) : (∀ a, π a) ≃ᵐ ∀ a, 
 
 /-- Pi-types are measurably equivalent to iterated products. -/
 @[simps (config := { fullyApplied := ff })]
-noncomputable def pi_measurable_equiv_tprod {l : List δ'} (hnd : l.nodup) (h : ∀ i, i ∈ l) :
+def pi_measurable_equiv_tprod [DecidableEq δ'] {l : List δ'} (hnd : l.nodup) (h : ∀ i, i ∈ l) :
     (∀ i, π i) ≃ᵐ List.Tprod π l where
   toEquiv := List.Tprod.piEquivTprod hnd h
   measurable_to_fun := measurable_tprod_mk l
@@ -1325,9 +1388,9 @@ instance infi_is_measurably_generated {f : ι → Filter α} [∀ i, is_measurab
     refine' ⟨t, ht, U, hUf, rfl⟩
     
   · have := ht.countable.to_encodable
-    refine' MeasurableSet.Inter fun i => (hU i).1
+    exact MeasurableSet.Inter fun i => (hU i).1
     
-  · exact Inter_subset_Inter fun i => (hU i).2
+  · exact Inter_mono fun i => (hU i).2
     
 
 end Filter

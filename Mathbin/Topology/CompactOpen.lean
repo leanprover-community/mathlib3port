@@ -125,10 +125,10 @@ theorem compact_open_le_induced (s : Set α) :
   simp only [induced_generate_from_eq, ContinuousMap.compactOpen]
   apply generate_from_mono
   rintro b ⟨a, ⟨c, hc, u, hu, rfl⟩, rfl⟩
-  refine' ⟨coeₓ '' c, hc.image continuous_subtype_coe, u, hu, _⟩
+  refine' ⟨coe '' c, hc.image continuous_subtype_coe, u, hu, _⟩
   ext f
   simp only [compact_open.gen, mem_set_of_eq, mem_preimage, ContinuousMap.coe_restrict]
-  rw [image_comp f (coeₓ : s → α)]
+  rw [image_comp f (coe : s → α)]
 
 /-- The compact-open topology on `C(α, β)` is equal to the infimum of the compact-open topologies
 on `C(s, β)` for `s` a compact subset of `α`.  The key point of the proof is that the union of the
@@ -148,7 +148,7 @@ theorem compact_open_eq_Inf_induced :
   refine' ⟨s, hs, _, ⟨univ, is_compact_iff_is_compact_univ.mp hs, u, hu, rfl⟩, _⟩
   ext f
   simp only [compact_open.gen, mem_set_of_eq, mem_preimage, ContinuousMap.coe_restrict]
-  rw [image_comp f (coeₓ : s → α)]
+  rw [image_comp f (coe : s → α)]
   simp
 
 /-- For any subset `s` of `α`, the restriction of continuous functions to `s` is continuous as a

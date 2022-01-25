@@ -36,7 +36,7 @@ theorem log_im_le_pi (x : ℂ) : (log x).im ≤ π := by
 
 theorem exp_log {x : ℂ} (hx : x ≠ 0) : exp (log x) = x := by
   rw [log, exp_add_mul_I, ← of_real_sin, sin_arg, ← of_real_cos, cos_arg hx, ← of_real_exp, Real.exp_log (abs_pos.2 hx),
-    mul_addₓ, of_real_div, of_real_div, mul_div_cancel' _ (of_real_ne_zero.2 (mt abs_eq_zero.1 hx)), ← mul_assocₓ,
+    mul_addₓ, of_real_div, of_real_div, mul_div_cancel' _ (of_real_ne_zero.2 (mt abs_eq_zero.1 hx)), ← mul_assoc,
     mul_div_cancel' _ (of_real_ne_zero.2 (mt abs_eq_zero.1 hx)), re_add_im]
 
 @[simp]

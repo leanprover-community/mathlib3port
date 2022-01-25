@@ -202,7 +202,7 @@ into a dependent family of values, as functions supported at a point.
 
 This is the `zero_hom` version of `pi.single`. -/
 @[simps]
-def ZeroHom.single [∀ i, HasZero $ f i] (i : I) : ZeroHom (f i) (∀ i, f i) where
+def ZeroHom.single [∀ i, Zero $ f i] (i : I) : ZeroHom (f i) (∀ i, f i) where
   toFun := single i
   map_zero' := single_zero i
 
@@ -251,7 +251,7 @@ end Single
 namespace Function
 
 @[simp, to_additive]
-theorem update_one [∀ i, HasOne (f i)] [DecidableEq I] (i : I) : update (1 : ∀ i, f i) i 1 = 1 :=
+theorem update_one [∀ i, One (f i)] [DecidableEq I] (i : I) : update (1 : ∀ i, f i) i 1 = 1 :=
   update_eq_self i 1
 
 @[to_additive]

@@ -193,7 +193,7 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A := by
   rintro _ ⟨F, hF, rfl⟩
   let fsu := Finset (Set (Ultrafilter X))
   let ssu := Set (Set (Ultrafilter X))
-  let ι : fsu → ssu := coeₓ
+  let ι : fsu → ssu := coe
   let C0 : ssu := { Z | ∃ B ∈ F, X.str ⁻¹' B = Z }
   let AA := { G : Ultrafilter X | A ∈ G }
   let C1 := insert AA C0
@@ -250,7 +250,7 @@ theorem is_closed_cl {X : Compactum} (A : Set X) : IsClosed (cl A) := by
 theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x := by
   let fsu := Finset (Set (Ultrafilter X))
   let ssu := Set (Set (Ultrafilter X))
-  let ι : fsu → ssu := coeₓ
+  let ι : fsu → ssu := coe
   let T0 : ssu := { S | ∃ A ∈ F, S = basic A }
   let AA := X.str ⁻¹' {x}
   let T1 := insert AA T0

@@ -105,13 +105,13 @@ theorem from_blocks_conj_transpose [HasStar α] (A : Matrix n l α) (B : Matrix 
   simp only [conj_transpose, from_blocks_transpose, from_blocks_map]
 
 /-- A 2x2 block matrix is block diagonal if the blocks outside of the diagonal vanish -/
-def is_two_block_diagonal [HasZero α] (A : Matrix (Sum n o) (Sum l m) α) : Prop :=
+def is_two_block_diagonal [Zero α] (A : Matrix (Sum n o) (Sum l m) α) : Prop :=
   to_blocks₁₂ A = 0 ∧ to_blocks₂₁ A = 0
 
 /-- Let `p` pick out certain rows and `q` pick out certain columns of a matrix `M`. Then
   `to_block M p q` is the corresponding block matrix. -/
 def to_block (M : Matrix m n α) (p : m → Prop) (q : n → Prop) : Matrix { a // p a } { a // q a } α :=
-  M.minor coeₓ coeₓ
+  M.minor coe coe
 
 @[simp]
 theorem to_block_apply (M : Matrix m n α) (p : m → Prop) (q : n → Prop) (i : { a // p a }) (j : { a // q a }) :
@@ -122,7 +122,7 @@ theorem to_block_apply (M : Matrix m n α) (p : m → Prop) (q : n → Prop) (i 
   `to_square_block M b k` is the block `k` matrix. -/
 def to_square_block (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
     Matrix { a // b a = k } { a // b a = k } α :=
-  M.minor coeₓ coeₓ
+  M.minor coe coe
 
 @[simp]
 theorem to_square_block_def (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
@@ -132,7 +132,7 @@ theorem to_square_block_def (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (
 /-- Alternate version with `b : m → nat`. Let `b` map rows and columns of a square matrix `M` to
   blocks. Then `to_square_block' M b k` is the block `k` matrix. -/
 def to_square_block' (M : Matrix m m α) (b : m → Nat) (k : Nat) : Matrix { a // b a = k } { a // b a = k } α :=
-  M.minor coeₓ coeₓ
+  M.minor coe coe
 
 @[simp]
 theorem to_square_block_def' (M : Matrix m m α) (b : m → Nat) (k : Nat) :
@@ -142,7 +142,7 @@ theorem to_square_block_def' (M : Matrix m m α) (b : m → Nat) (k : Nat) :
 /-- Let `p` pick out certain rows and columns of a square matrix `M`. Then
   `to_square_block_prop M p` is the corresponding block matrix. -/
 def to_square_block_prop (M : Matrix m m α) (p : m → Prop) : Matrix { a // p a } { a // p a } α :=
-  M.minor coeₓ coeₓ
+  M.minor coe coe
 
 @[simp]
 theorem to_square_block_prop_def (M : Matrix m m α) (p : m → Prop) :
@@ -192,9 +192,9 @@ section BlockDiagonal
 
 variable (M N : o → Matrix m n α) [DecidableEq o]
 
-section HasZero
+section Zero
 
-variable [HasZero α] [HasZero β]
+variable [Zero α] [Zero β]
 
 /-- `matrix.block_diagonal M` turns a homogenously-indexed collection of matrices
 `M : o → matrix m n α'` into a `m × o`-by-`n × o` block matrix which has the entries of `M` along
@@ -253,11 +253,11 @@ theorem block_diagonal_diagonal [DecidableEq m] (d : o → m → α) :
   rw [and_comm]
 
 @[simp]
-theorem block_diagonal_one [DecidableEq m] [HasOne α] : block_diagonal (1 : o → Matrix m m α) = 1 :=
+theorem block_diagonal_one [DecidableEq m] [One α] : block_diagonal (1 : o → Matrix m m α) = 1 :=
   show (block_diagonal fun _ : o => diagonal fun _ : m => (1 : α)) = diagonal fun _ => 1 by
     rw [block_diagonal_diagonal]
 
-end HasZero
+end Zero
 
 @[simp]
 theorem block_diagonal_add [AddMonoidₓ α] : block_diagonal (M + N) = block_diagonal M + block_diagonal N := by
@@ -295,9 +295,9 @@ section BlockDiagonal'
 
 variable (M N : ∀ i, Matrix (m' i) (n' i) α) [DecidableEq o]
 
-section HasZero
+section Zero
 
-variable [HasZero α] [HasZero β]
+variable [Zero α] [Zero β]
 
 /-- `matrix.block_diagonal' M` turns `M : Π i, matrix (m i) (n i) α` into a
 `Σ i, m i`-by-`Σ i, n i` block matrix which has the entries of `M` along the diagonal
@@ -359,12 +359,11 @@ theorem block_diagonal'_diagonal [∀ i, DecidableEq (m' i)] (d : ∀ i, m' i �
   split_ifs <;> cc
 
 @[simp]
-theorem block_diagonal'_one [∀ i, DecidableEq (m' i)] [HasOne α] :
-    block_diagonal' (1 : ∀ i, Matrix (m' i) (m' i) α) = 1 :=
+theorem block_diagonal'_one [∀ i, DecidableEq (m' i)] [One α] : block_diagonal' (1 : ∀ i, Matrix (m' i) (m' i) α) = 1 :=
   show (block_diagonal' fun i : o => diagonal fun _ : m' i => (1 : α)) = diagonal fun _ => 1 by
     rw [block_diagonal'_diagonal]
 
-end HasZero
+end Zero
 
 @[simp]
 theorem block_diagonal'_add [AddMonoidₓ α] : block_diagonal' (M + N) = block_diagonal' M + block_diagonal' N := by

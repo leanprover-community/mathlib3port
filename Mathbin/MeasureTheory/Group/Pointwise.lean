@@ -25,7 +25,7 @@ theorem MeasurableSet.const_smul_of_ne_zero {G₀ α : Type _} [GroupWithZeroₓ
   rw [← preimage_smul_inv₀ ha]
   exact measurable_const_smul _ hs
 
-theorem MeasurableSet.const_smul₀ {G₀ α : Type _} [GroupWithZeroₓ G₀] [HasZero α] [MulActionWithZero G₀ α]
+theorem MeasurableSet.const_smul₀ {G₀ α : Type _} [GroupWithZeroₓ G₀] [Zero α] [MulActionWithZero G₀ α]
     [MeasurableSpace G₀] [MeasurableSpace α] [HasMeasurableSmul G₀ α] [MeasurableSingletonClass α] {s : Set α}
     (hs : MeasurableSet s) (a : G₀) : MeasurableSet (a • s) := by
   rcases eq_or_ne a 0 with (rfl | ha)

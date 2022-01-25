@@ -98,14 +98,14 @@ protected theorem mul_const (hm : is_periodic_pt f m x) (n : ℕ) : is_periodic_
   simp only [is_periodic_pt, iterate_mul, hm.is_fixed_pt.iterate n]
 
 protected theorem const_mul (hm : is_periodic_pt f m x) (n : ℕ) : is_periodic_pt f (n * m) x := by
-  simp only [mul_commₓ n, hm.mul_const n]
+  simp only [mul_comm n, hm.mul_const n]
 
 theorem trans_dvd (hm : is_periodic_pt f m x) {n : ℕ} (hn : m ∣ n) : is_periodic_pt f n x :=
   let ⟨k, hk⟩ := hn
   hk.symm ▸ hm.mul_const k
 
 protected theorem iterate (hf : is_periodic_pt f n x) (m : ℕ) : is_periodic_pt (f^[m]) n x := by
-  rw [is_periodic_pt, ← iterate_mul, mul_commₓ, iterate_mul]
+  rw [is_periodic_pt, ← iterate_mul, mul_comm, iterate_mul]
   exact hf.is_fixed_pt.iterate m
 
 theorem comp {g : α → α} (hco : Commute f g) (hf : is_periodic_pt f n x) (hg : is_periodic_pt g n x) :
@@ -311,13 +311,13 @@ private theorem minimal_period_iterate_eq_div_gcd_aux (h : 0 < gcd (minimal_peri
     minimal_period (f^[n]) x = minimal_period f x / Nat.gcdₓ (minimal_period f x) n := by
   apply Nat.dvd_antisymm
   · apply is_periodic_pt.minimal_period_dvd
-    rw [is_periodic_pt, is_fixed_pt, ← iterate_mul, ← Nat.mul_div_assocₓ _ (gcd_dvd_left _ _), mul_commₓ,
-      Nat.mul_div_assocₓ _ (gcd_dvd_right _ _), mul_commₓ, iterate_mul]
+    rw [is_periodic_pt, is_fixed_pt, ← iterate_mul, ← Nat.mul_div_assocₓ _ (gcd_dvd_left _ _), mul_comm,
+      Nat.mul_div_assocₓ _ (gcd_dvd_right _ _), mul_comm, iterate_mul]
     exact (is_periodic_pt_minimal_period f x).iterate _
     
   · apply coprime.dvd_of_dvd_mul_right (coprime_div_gcd_div_gcd h)
     apply dvd_of_mul_dvd_mul_right h
-    rw [Nat.div_mul_cancelₓ (gcd_dvd_left _ _), mul_assocₓ, Nat.div_mul_cancelₓ (gcd_dvd_right _ _), mul_commₓ]
+    rw [Nat.div_mul_cancelₓ (gcd_dvd_left _ _), mul_assoc, Nat.div_mul_cancelₓ (gcd_dvd_right _ _), mul_comm]
     apply is_periodic_pt.minimal_period_dvd
     rw [is_periodic_pt, is_fixed_pt, iterate_mul]
     exact is_periodic_pt_minimal_period _ _

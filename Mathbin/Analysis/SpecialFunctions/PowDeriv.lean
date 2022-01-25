@@ -183,7 +183,7 @@ theorem has_strict_fderiv_at_rpow_of_pos (p : ℝ × ℝ) (hp : 0 < p.1) :
   refine' HasStrictFderivAt.congr_of_eventually_eq _ this.symm
   convert ((has_strict_fderiv_at_fst.log hp.ne').mul has_strict_fderiv_at_snd).exp
   rw [rpow_sub_one hp.ne', ← rpow_def_of_pos hp, smul_add, smul_smul, mul_div_comm, div_eq_mul_inv, smul_smul,
-    smul_smul, mul_assocₓ, add_commₓ]
+    smul_smul, mul_assoc, add_commₓ]
 
 /-- `(x, y) ↦ x ^ y` is strictly differentiable at `p : ℝ × ℝ` such that `p.fst < 0`. -/
 theorem has_strict_fderiv_at_rpow_of_neg (p : ℝ × ℝ) (hp : p.1 < 0) :
@@ -199,7 +199,7 @@ theorem has_strict_fderiv_at_rpow_of_neg (p : ℝ × ℝ) (hp : p.1 < 0) :
     ((has_strict_fderiv_at_fst.log hp.ne).mul has_strict_fderiv_at_snd).exp.mul
       (has_strict_fderiv_at_snd.mul_const _).cos using
     1
-  simp_rw [rpow_sub_one hp.ne, smul_add, ← add_assocₓ, smul_smul, ← add_smul, ← mul_assocₓ, mul_commₓ (cos _), ←
+  simp_rw [rpow_sub_one hp.ne, smul_add, ← add_assocₓ, smul_smul, ← add_smul, ← mul_assoc, mul_comm (cos _), ←
     rpow_def_of_neg hp]
   rw [div_eq_mul_inv, add_commₓ]
   congr 2 <;> ring
@@ -221,7 +221,7 @@ theorem _root_.has_strict_deriv_at.rpow {f g : ℝ → ℝ} {f' g' : ℝ} (hf : 
     (hg : HasStrictDerivAt g g' x) (h : 0 < f x) :
     HasStrictDerivAt (fun x => f x ^ g x) (f' * g x * f x ^ (g x - 1) + g' * f x ^ g x * log (f x)) x := by
   convert (has_strict_fderiv_at_rpow_of_pos ((fun x => (f x, g x)) x) h).comp_has_strict_deriv_at _ (hf.prod hg) using 1
-  simp [mul_assocₓ, mul_commₓ, mul_left_commₓ]
+  simp [mul_assoc, mul_comm, mul_left_commₓ]
 
 theorem has_strict_deriv_at_rpow_const_of_ne {x : ℝ} (hx : x ≠ 0) (p : ℝ) :
     HasStrictDerivAt (fun x => x ^ p) (p * x ^ (p - 1)) x := by
@@ -484,7 +484,7 @@ theorem tendsto_one_plus_div_rpow_exp (t : ℝ) : tendsto (fun x : ℝ => (1 + t
   refine' (eventually_ge_of_tendsto_gt h₁ h₂).mono fun x hx => _
   have hx' : 0 < 1 + t / x := by
     linarith
-  simp [mul_commₓ x, exp_mul, exp_log hx']
+  simp [mul_comm x, exp_mul, exp_log hx']
 
 /-- The function `(1 + t/x) ^ x` tends to `exp t` at `+∞` for naturals `x`. -/
 theorem tendsto_one_plus_div_pow_exp (t : ℝ) : tendsto (fun x : ℕ => (1 + t / (x : ℝ)) ^ x) at_top (𝓝 (Real.exp t)) :=

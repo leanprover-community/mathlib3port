@@ -23,7 +23,7 @@ proves Noether's first and second isomorphism theorems.
   isomorphism between `H/(H ∩ N)` and `(HN)/N` given a subgroup `H` and a normal subgroup `N` of a
   group `G`.
 * `quotient_group.quotient_quotient_equiv_quotient`: Noether's third isomorphism theorem,
-  the canonical isomorphism between `(G / M) / (M / N)` and `G / N`, where `N ≤ M`.
+  the canonical isomorphism between `(G / N) / (M / N)` and `G / M`, where `N ≤ M`.
 
 ## Tags
 
@@ -46,7 +46,7 @@ protected def Con : Con G where
   mul' := fun a b c d hab : a⁻¹ * b ∈ N hcd : c⁻¹ * d ∈ N =>
     calc
       (a * c)⁻¹ * (b * d) = c⁻¹ * (a⁻¹ * b) * c⁻¹⁻¹ * (c⁻¹ * d) := by
-        simp only [mul_inv_rev, mul_assocₓ, inv_mul_cancel_leftₓ]
+        simp only [mul_inv_rev, mul_assoc, inv_mul_cancel_leftₓ]
       _ ∈ N := N.mul_mem (nN.conj_mem _ hab _) hcd
       
 
@@ -60,7 +60,7 @@ def mk' : G →* G ⧸ N :=
   MonoidHom.mk' QuotientGroup.mk fun _ _ => rfl
 
 @[simp, to_additive]
-theorem coe_mk' : (mk' N : G → G ⧸ N) = coeₓ :=
+theorem coe_mk' : (mk' N : G → G ⧸ N) = coe :=
   rfl
 
 @[simp, to_additive]
@@ -96,7 +96,7 @@ omit nN
 @[to_additive QuotientAddGroup.addCommGroup]
 instance {G : Type _} [CommGroupₓ G] (N : Subgroup G) : CommGroupₓ (G ⧸ N) :=
   { @QuotientGroup.Quotient.group _ _ N N.normal_of_comm with
-    mul_comm := fun a b => Quotientₓ.induction_on₂' a b fun a b => congr_argₓ mk (mul_commₓ a b) }
+    mul_comm := fun a b => Quotientₓ.induction_on₂' a b fun a b => congr_argₓ mk (mul_comm a b) }
 
 include nN
 
@@ -331,7 +331,7 @@ noncomputable def quotient_inf_equiv_prod_normal_quotient (H N : Subgroup G) [N.
       use h, hh
       apply quotient.eq.mpr
       change h⁻¹ * (h * n) ∈ N
-      rwa [← mul_assocₓ, inv_mul_selfₓ, one_mulₓ]
+      rwa [← mul_assoc, inv_mul_selfₓ, one_mulₓ]
   (equiv_quotient_of_eq
         (by
           simp [comap_comap, ← comap_ker])).trans

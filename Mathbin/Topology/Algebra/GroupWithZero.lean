@@ -68,14 +68,14 @@ end DivConst
 
 /-- A type with `0` and `has_inv` such that `λ x, x⁻¹` is continuous at all nonzero points. Any
 normed (semi)field has this property. -/
-class HasContinuousInv₀ (G₀ : Type _) [HasZero G₀] [HasInv G₀] [TopologicalSpace G₀] where
+class HasContinuousInv₀ (G₀ : Type _) [Zero G₀] [HasInv G₀] [TopologicalSpace G₀] where
   continuous_at_inv₀ : ∀ ⦃x : G₀⦄, x ≠ 0 → ContinuousAt HasInv.inv x
 
 export HasContinuousInv₀ (continuous_at_inv₀)
 
 section Inv₀
 
-variable [HasZero G₀] [HasInv G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] {l : Filter α} {f : α → G₀} {s : Set α}
+variable [Zero G₀] [HasInv G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] {l : Filter α} {f : α → G₀} {s : Set α}
   {a : α}
 
 /-!

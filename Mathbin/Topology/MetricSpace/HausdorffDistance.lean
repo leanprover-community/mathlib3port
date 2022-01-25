@@ -994,7 +994,7 @@ theorem self_subset_cthickening {δ : ℝ} (E : Set α) : E ⊆ cthickening δ E
 theorem cthickening_eq_Inter_cthickening' {δ : ℝ} (s : Set ℝ) (hsδ : s ⊆ Ioi δ)
     (hs : ∀ ε, δ < ε → (s ∩ Ioc δ ε).Nonempty) (E : Set α) : cthickening δ E = ⋂ ε ∈ s, cthickening ε E := by
   apply subset.antisymm
-  · exact subset_bInter fun _ hε => cthickening_mono (le_of_ltₓ (hsδ hε)) E
+  · exact subset_Inter₂ fun _ hε => cthickening_mono (le_of_ltₓ (hsδ hε)) E
     
   · unfold thickening cthickening
     intro x hx
@@ -1015,16 +1015,13 @@ theorem cthickening_eq_Inter_cthickening {δ : ℝ} (E : Set α) :
 
 theorem cthickening_eq_Inter_thickening' {δ : ℝ} (δ_nn : 0 ≤ δ) (s : Set ℝ) (hsδ : s ⊆ Ioi δ)
     (hs : ∀ ε, δ < ε → (s ∩ Ioc δ ε).Nonempty) (E : Set α) : cthickening δ E = ⋂ ε ∈ s, thickening ε E := by
-  apply subset.antisymm
-  · apply subset_bInter
-    intro ε hε
-    rcases hs ε (mem_Ioi.mp (hsδ hε)) with ⟨ε', ⟨hsε', hε'⟩⟩
+  refine' (subset_Inter₂ $ fun ε hε => _).antisymm _
+  · obtain ⟨ε', hsε', hε'⟩ := hs ε (hsδ hε)
     have ss := cthickening_subset_thickening' (lt_of_le_of_ltₓ δ_nn hε'.1) hε'.1 E
     exact ss.trans (thickening_mono hε'.2 E)
     
   · rw [cthickening_eq_Inter_cthickening' s hsδ hs E]
-    apply bInter_mono
-    exact fun ε hε => thickening_subset_cthickening ε E
+    exact Inter₂_mono fun ε hε => thickening_subset_cthickening ε E
     
 
 theorem cthickening_eq_Inter_thickening {δ : ℝ} (δ_nn : 0 ≤ δ) (E : Set α) :
@@ -1044,7 +1041,7 @@ theorem closure_eq_Inter_cthickening' (E : Set α) (s : Set ℝ) (hs : ∀ ε, 0
   obtain ⟨δ, hδs, δ_nonpos⟩ := not_subset.mp hs₀
   rw [Set.mem_Ioi, not_ltₓ] at δ_nonpos
   apply subset.antisymm
-  · exact subset_bInter fun ε _ => closure_subset_cthickening ε E
+  · exact subset_Inter₂ fun ε _ => closure_subset_cthickening ε E
     
   · rw [← cthickening_of_nonpos δ_nonpos E]
     exact bInter_subset_of_mem hδs
@@ -1099,7 +1096,7 @@ theorem _root_.is_compact.cthickening_eq_bUnion_closed_ball {α : Type _} [Pseud
   rcases eq_empty_or_nonempty E with (rfl | hne)
   · simp only [cthickening_empty, Union_false, Union_empty]
     
-  refine' subset.antisymm (fun x hx => _) (bUnion_subset fun x hx => closed_ball_subset_cthickening hx _)
+  refine' subset.antisymm (fun x hx => _) (Union₂_subset $ fun x hx => closed_ball_subset_cthickening hx _)
   obtain ⟨y, yE, hy⟩ : ∃ y ∈ E, Emetric.infEdist x E = edist x y := hE.exists_inf_edist_eq_edist hne _
   have D1 : edist x y ≤ Ennreal.ofReal δ := (le_of_eqₓ hy.symm).trans hx
   have D2 : dist x y ≤ δ := by

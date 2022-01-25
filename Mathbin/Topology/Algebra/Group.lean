@@ -402,7 +402,7 @@ theorem TopologicalGroup.of_nhds_aux {G : Type _} [Groupₓ G] [TopologicalSpace
   rw [continuous_iff_continuous_at]
   rintro x₀
   have key : (fun x => (x₀ * x)⁻¹) = (fun x => x₀⁻¹ * x) ∘ (fun x => x₀ * x * x₀⁻¹) ∘ fun x => x⁻¹ := by
-    ext <;> simp [mul_assocₓ]
+    ext <;> simp [mul_assoc]
   calc map (fun x => x⁻¹) (𝓝 x₀) = map (fun x => x⁻¹) ((map fun x => x₀ * x) $ 𝓝 1) := by
       rw [hleft]_ = map (fun x => (x₀ * x)⁻¹) (𝓝 1) := by
       rw [Filter.map_map]_ = map (((fun x => x₀⁻¹ * x) ∘ fun x => x₀ * x * x₀⁻¹) ∘ fun x => x⁻¹) (𝓝 1) := by
@@ -425,7 +425,7 @@ theorem TopologicalGroup.of_nhds_one' {G : Type u} [Groupₓ G] [TopologicalSpac
   rw
     [show (fun x => x₀ * x * x₀⁻¹) = (fun x => x₀ * x) ∘ fun x => x * x₀⁻¹ by
       ext
-      simp [mul_assocₓ],
+      simp [mul_assoc],
     ← Filter.map_map, ← hright, hleft (x₀⁻¹), Filter.map_map]
   convert map_id
   ext
@@ -444,7 +444,7 @@ theorem TopologicalGroup.of_nhds_one {G : Type u} [Groupₓ G] [TopologicalSpace
           (fun x => x₀ * y₀ * x) ∘ uncurry (· * ·) ∘ Prod.map (fun x => y₀⁻¹ * x * y₀) id :=
         by
         ext
-        simp [uncurry, Prod.map, mul_assocₓ]
+        simp [uncurry, Prod.map, mul_assoc]
       specialize hconj (y₀⁻¹)
       rw [inv_invₓ] at hconj
       calc map (fun p : G × G => p.1 * p.2) (𝓝 (x₀, y₀)) = map (fun p : G × G => p.1 * p.2) (𝓝 x₀ ×ᶠ 𝓝 y₀) := by
@@ -484,16 +484,16 @@ instance QuotientGroup.Quotient.topologicalSpace {G : Type _} [Groupₓ G] [Topo
 open QuotientGroup
 
 @[to_additive]
-theorem QuotientGroup.is_open_map_coe : IsOpenMap (coeₓ : G → G ⧸ N) := by
+theorem QuotientGroup.is_open_map_coe : IsOpenMap (coe : G → G ⧸ N) := by
   intro s s_op
-  change IsOpen ((coeₓ : G → G ⧸ N) ⁻¹' (coeₓ '' s))
+  change IsOpen ((coe : G → G ⧸ N) ⁻¹' (coe '' s))
   rw [QuotientGroup.preimage_image_coe N s]
   exact is_open_Union fun n => (continuous_mul_right _).is_open_preimage s s_op
 
 @[to_additive]
 instance topological_group_quotient [N.normal] : TopologicalGroup (G ⧸ N) where
   continuous_mul := by
-    have cont : Continuous ((coeₓ : G → G ⧸ N) ∘ fun p : G × G => p.fst * p.snd) :=
+    have cont : Continuous ((coe : G → G ⧸ N) ∘ fun p : G × G => p.fst * p.snd) :=
       continuous_quot_mk.comp continuous_mul
     have quot : QuotientMap fun p : G × G => ((p.1 : G ⧸ N), (p.2 : G ⧸ N)) := by
       apply IsOpenMap.to_quotient_map
@@ -505,7 +505,7 @@ instance topological_group_quotient [N.normal] : TopologicalGroup (G ⧸ N) wher
         
     exact (QuotientMap.continuous_iff Quot).2 cont
   continuous_inv := by
-    have : Continuous ((coeₓ : G → G ⧸ N) ∘ fun a : G => a⁻¹) := continuous_quot_mk.comp continuous_inv
+    have : Continuous ((coe : G → G ⧸ N) ∘ fun a : G => a⁻¹) := continuous_quot_mk.comp continuous_inv
     convert continuous_quotient_lift _ this
 
 end QuotientTopologicalGroup
@@ -677,7 +677,7 @@ theorem compact_open_separated_mul {K U : Set G} (hK : IsCompact K) (hU : IsOpen
   have : (z : G)⁻¹ * x * y ∈ W z := (hV z).2.2 (mul_mem_mul h2z (hy z h1z))
   rw [mem_preimage] at this
   convert this using 1
-  simp only [mul_assocₓ, mul_inv_cancel_left]
+  simp only [mul_assoc, mul_inv_cancel_left]
 
 /-- A compact set is covered by finitely many left multiplicative translates of a set
   with non-empty interior. -/
@@ -690,7 +690,7 @@ theorem compact_covered_by_mul_left_translates {K V : Set G} (hK : IsCompact K) 
     refine' fun g hg => mem_Union.2 ⟨g₀ * g⁻¹, _⟩
     refine' preimage_interior_subset_interior_preimage (continuous_const.mul continuous_id) _
     rwa [mem_preimage, inv_mul_cancel_right]
-  exact ⟨t, subset.trans ht $ bUnion_mono $ fun g hg => interior_subset⟩
+  exact ⟨t, subset.trans ht $ Union₂_mono $ fun g hg => interior_subset⟩
 
 /-- Every locally compact separable topological group is σ-compact.
   Note: this is not true if we drop the topological group hypothesis. -/
@@ -744,14 +744,14 @@ theorem nhds_mul (x y : G) : 𝓝 (x * y) = 𝓝 x * 𝓝 y :=
         refine' ⟨(fun a => a * x⁻¹) ⁻¹' V, (fun a => a * y⁻¹) ⁻¹' V, ⟨V, V1, subset.refl _⟩, ⟨V, V1, subset.refl _⟩, _⟩
         rintro a ⟨v, w, v_mem, w_mem, rfl⟩
         apply ts
-        simpa [mul_commₓ, mul_assocₓ, mul_left_commₓ] using h (v * x⁻¹) v_mem (w * y⁻¹) w_mem
+        simpa [mul_comm, mul_assoc, mul_left_commₓ] using h (v * x⁻¹) v_mem (w * y⁻¹) w_mem
         
       · rintro ⟨a, c, ⟨b, hb, ba⟩, ⟨d, hd, dc⟩, ac⟩
         refine' ⟨b ∩ d, inter_mem hb hd, fun v => _⟩
         simp only [preimage_subset_iff, mul_inv_rev, mem_preimage] at *
         rintro ⟨vb, vd⟩
         refine' ac ⟨v * y⁻¹, y, _, _, _⟩
-        · rw [← mul_assocₓ _ _ _] at vb
+        · rw [← mul_assoc _ _ _] at vb
           exact ba _ vb
           
         · apply dc y

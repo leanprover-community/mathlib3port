@@ -37,7 +37,7 @@ noncomputable section
 
 local notation "SL(" n ", " R ")" => special_linear_group (Finₓ n) R
 
-local prefix:1024 "↑ₘ" => @coeₓ _ (Matrix (Finₓ 2) (Finₓ 2) ℤ) _
+local prefix:1024 "↑ₘ" => @coe _ (Matrix (Finₓ 2) (Finₓ 2) ℤ) _
 
 open_locale UpperHalfPlane ComplexConjugate
 
@@ -93,7 +93,7 @@ theorem bottom_row_coprime {R : Type _} [CommRingₓ R] (g : SL(2, R)) :
 /-- Every pair `![c, d]` of coprime integers is the "bottom_row" of some element `g=[[*,*],[c,d]]`
 of `SL(2,ℤ)`. -/
 theorem bottom_row_surj {R : Type _} [CommRingₓ R] :
-    Set.SurjOn (fun g : SL(2, R) => @coeₓ _ (Matrix (Finₓ 2) (Finₓ 2) R) _ g 1) Set.Univ
+    Set.SurjOn (fun g : SL(2, R) => @coe _ (Matrix (Finₓ 2) (Finₓ 2) R) _ g 1) Set.Univ
       { cd | IsCoprime (cd 0) (cd 1) } :=
   by
   rintro cd ⟨b₀, a, gcd_eqn⟩
@@ -131,7 +131,7 @@ theorem tendsto_norm_sq_coprime_pair (z : ℍ) :
     dsimp only [LinearMap.coe_proj, real_smul, LinearMap.coe_smul_right, LinearMap.add_apply]
     rw [mul_oneₓ]
   have :
-    (fun p : Finₓ 2 → ℤ => norm_sq ((p 0 : ℂ) * ↑z + ↑p 1)) = norm_sq ∘ f ∘ fun p : Finₓ 2 → ℤ => (coeₓ : ℤ → ℝ) ∘ p :=
+    (fun p : Finₓ 2 → ℤ => norm_sq ((p 0 : ℂ) * ↑z + ↑p 1)) = norm_sq ∘ f ∘ fun p : Finₓ 2 → ℤ => (coe : ℤ → ℝ) ∘ p :=
     by
     ext1
     rw [f_def]
@@ -159,7 +159,7 @@ theorem tendsto_norm_sq_coprime_pair (z : ℍ) :
       simp only [of_real_im, of_real_re, mul_im, zero_addₓ, mul_zero]
       
   have h₁ := (LinearEquiv.closed_embedding_of_injective hf).tendsto_cocompact
-  have h₂ : tendsto (fun p : Finₓ 2 → ℤ => (coeₓ : ℤ → ℝ) ∘ p) cofinite (cocompact _) := by
+  have h₂ : tendsto (fun p : Finₓ 2 → ℤ => (coe : ℤ → ℝ) ∘ p) cofinite (cocompact _) := by
     convert tendsto.pi_map_Coprod fun i => Int.tendsto_coe_cofinite
     · rw [Coprod_cofinite]
       
@@ -213,9 +213,9 @@ theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) 
     have : ∀ c : ℝ, Continuous fun x : ℝ => c := fun c => continuous_const
     exact ⟨⟨continuous_id, @this (-1 : ℤ)⟩, ⟨this (cd 0), this (cd 1)⟩⟩
   refine' Filter.Tendsto.of_tendsto_comp _ (comap_cocompact hmB)
-  let f₁ : SL(2, ℤ) → Matrix (Finₓ 2) (Finₓ 2) ℝ := fun g => Matrix.map (↑g : Matrix _ _ ℤ) (coeₓ : ℤ → ℝ)
+  let f₁ : SL(2, ℤ) → Matrix (Finₓ 2) (Finₓ 2) ℝ := fun g => Matrix.map (↑g : Matrix _ _ ℤ) (coe : ℤ → ℝ)
   have cocompact_ℝ_to_cofinite_ℤ_matrix :
-    tendsto (fun m : Matrix (Finₓ 2) (Finₓ 2) ℤ => Matrix.map m (coeₓ : ℤ → ℝ)) cofinite (cocompact _) := by
+    tendsto (fun m : Matrix (Finₓ 2) (Finₓ 2) ℤ => Matrix.map m (coe : ℤ → ℝ)) cofinite (cocompact _) := by
     simpa only [Coprod_cofinite, Coprod_cocompact] using
       tendsto.pi_map_Coprod fun i : Finₓ 2 => tendsto.pi_map_Coprod fun j : Finₓ 2 => Int.tendsto_coe_cofinite
   have hf₁ : tendsto f₁ cofinite (cocompact _) :=
@@ -246,7 +246,7 @@ theorem smul_eq_lc_row0_add {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) 
   by
   have nonZ1 : (p 0 : ℂ) ^ 2 + p 1 ^ 2 ≠ 0 := by
     exact_mod_cast hp.sq_add_sq_ne_zero
-  have : (coeₓ : ℤ → ℝ) ∘ p ≠ 0 := fun h => hp.ne_zero ((@Int.cast_injective ℝ _ _ _).compLeft h)
+  have : (coe : ℤ → ℝ) ∘ p ≠ 0 := fun h => hp.ne_zero ((@Int.cast_injective ℝ _ _ _).compLeft h)
   have nonZ2 : (p 0 : ℂ) * z + p 1 ≠ 0 := by
     simpa using linear_ne_zero _ z this
   field_simp [nonZ1, nonZ2, denom_ne_zero, -UpperHalfPlane.denom, -denom_apply]

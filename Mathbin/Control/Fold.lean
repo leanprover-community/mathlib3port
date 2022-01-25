@@ -162,7 +162,7 @@ section Defs
 
 variable {α β : Type u} {t : Type u → Type u} [Traversable t]
 
-def fold_map {α ω} [HasOne ω] [Mul ω] (f : α → ω) : t α → ω :=
+def fold_map {α ω} [One ω] [Mul ω] (f : α → ω) : t α → ω :=
   traverse (const.mk' ∘ f)
 
 def foldl (f : α → β → α) (x : α) (xs : t β) : α :=

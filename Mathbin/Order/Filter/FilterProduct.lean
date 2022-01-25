@@ -60,7 +60,7 @@ theorem const_div [DivisionRing β] (x y : β) : (↑(x / y) : β*) = ↑x / ↑
 theorem coe_lt [Preorderₓ β] {f g : α → β} : (f : β*) < g ↔ ∀* x, f x < g x := by
   simp only [lt_iff_le_not_leₓ, eventually_and, coe_le, eventually_not, eventually_le]
 
-theorem coe_pos [Preorderₓ β] [HasZero β] {f : α → β} : 0 < (f : β*) ↔ ∀* x, 0 < f x :=
+theorem coe_pos [Preorderₓ β] [Zero β] {f : α → β} : 0 < (f : β*) ↔ ∀* x, 0 < f x :=
   coe_lt
 
 theorem const_lt [Preorderₓ β] {x y : β} : (↑x : β*) < ↑y ↔ x < y :=

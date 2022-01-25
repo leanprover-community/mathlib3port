@@ -45,7 +45,7 @@ variable {ι : Type _}
 structure prepartition (I : box ι) where
   boxes : Finset (box ι)
   le_of_mem' : ∀, ∀ J ∈ boxes, ∀, J ≤ I
-  PairwiseDisjoint : Set.Pairwise (↑boxes) (Disjoint on (coeₓ : box ι → Set (ι → ℝ)))
+  PairwiseDisjoint : Set.Pairwise (↑boxes) (Disjoint on (coe : box ι → Set (ι → ℝ)))
 
 namespace Prepartition
 
@@ -223,7 +223,7 @@ theorem subset_Union (h : J ∈ π) : ↑J ⊆ π.Union :=
   subset_bUnion_of_mem h
 
 theorem Union_subset : π.Union ⊆ I :=
-  bUnion_subset π.le_of_mem'
+  Union₂_subset π.le_of_mem'
 
 @[mono]
 theorem Union_mono (h : π₁ ≤ π₂) : π₁.Union ⊆ π₂.Union := fun x hx =>
@@ -539,7 +539,7 @@ theorem filter_true : (π.filter fun _ => True) = π :=
 theorem Union_filter_not (π : prepartition I) (p : box ι → Prop) :
     (π.filter fun J => ¬p J).Union = π.Union \ (π.filter p).Union := by
   simp only [prepartition.Union]
-  convert (@Set.bUnion_diff_bUnion_eq _ (box ι) π.boxes (π.filter p).boxes coeₓ _).symm
+  convert (@Set.bUnion_diff_bUnion_eq _ (box ι) π.boxes (π.filter p).boxes coe _).symm
   · ext J x
     simp (config := { contextual := true })
     
@@ -667,7 +667,8 @@ end IsPartition
 
 theorem Union_bUnion_partition (h : ∀, ∀ J ∈ π, ∀, (πi J).IsPartition) : (π.bUnion πi).Union = π.Union :=
   (Union_bUnion _ _).trans $
-    Union_congr id surjective_id $ fun J => Union_congr id surjective_id $ fun hJ => (h J hJ).Union_eq
+    Union_congr_of_surjective id surjective_id $ fun J =>
+      Union_congr_of_surjective id surjective_id $ fun hJ => (h J hJ).Union_eq
 
 theorem is_partition_disj_union_of_eq_diff (h : π₂.Union = I \ π₁.Union) :
     is_partition (π₁.disj_union π₂ (h.symm ▸ disjoint_diff)) :=

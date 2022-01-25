@@ -100,7 +100,7 @@ def inverse_obj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R) where
     ext x y z
     dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, LinearMap.compr₂_apply, Function.comp_app,
       ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp, monoidal_category.associator_hom_apply]
-    simp only [Algebra.lmul'_apply, mul_assocₓ]
+    simp only [Algebra.lmul'_apply, mul_assoc]
 
 /-- Converting a bundled algebra to a monoid object in `Module R`.
 -/

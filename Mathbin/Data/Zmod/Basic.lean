@@ -45,13 +45,13 @@ instance (n : ℕ) : CommSemigroupₓ (Finₓ (n + 1)) :=
         (calc
           a * b % (n + 1) * c ≡ a * b * c [MOD n + 1] := (Nat.mod_modeq _ _).mul_right _
           _ ≡ a * (b * c) [MOD n + 1] := by
-            rw [mul_assocₓ]
+            rw [mul_assoc]
           _ ≡ a * (b * c % (n + 1)) [MOD n + 1] := (Nat.mod_modeq _ _).symm.mul_left _
           ),
     mul_comm := fun ⟨a, _⟩ ⟨b, _⟩ =>
       Finₓ.eq_of_veq
         (show a * b % (n + 1) = b * a % (n + 1) by
-          rw [mul_commₓ]) }
+          rw [mul_comm]) }
 
 private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Finₓ (n + 1), a * (b + c) = a * b + a * c :=
   fun ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩ =>
@@ -68,7 +68,7 @@ instance (n : ℕ) : CommRingₓ (Finₓ (n + 1)) :=
   { Finₓ.hasOne, Finₓ.addCommGroup n, Finₓ.commSemigroup n with one_mul := Finₓ.one_mul, mul_one := Finₓ.mul_one,
     left_distrib := left_distrib_aux n,
     right_distrib := fun a b c => by
-      rw [mul_commₓ, left_distrib_aux, mul_commₓ _ b, mul_commₓ] <;> rfl }
+      rw [mul_comm, left_distrib_aux, mul_comm _ b, mul_comm] <;> rfl }
 
 end Finₓ
 
@@ -115,7 +115,7 @@ See `zmod.val_min_abs` for a variant that takes values in the integers.
 -/
 def val : ∀ {n : ℕ}, Zmod n → ℕ
   | 0 => Int.natAbs
-  | n + 1 => (coeₓ : Finₓ (n + 1) → ℕ)
+  | n + 1 => (coe : Finₓ (n + 1) → ℕ)
 
 theorem val_lt {n : ℕ} [Fact (0 < n)] (a : Zmod n) : a.val < n := by
   cases' n
@@ -176,7 +176,7 @@ variable {n : ℕ} {R : Type _}
 
 section
 
-variable [HasZero R] [HasOne R] [Add R] [Neg R]
+variable [Zero R] [One R] [Add R] [Neg R]
 
 /-- Cast an integer modulo `n` to another semiring.
 This function is a morphism if the characteristic of `R` divides `n`.
@@ -192,7 +192,7 @@ instance (priority := 900) (n : ℕ) : CoeTₓ (Zmod n) R :=
 theorem cast_zero : ((0 : Zmod n) : R) = 0 := by
   cases n <;> rfl
 
-variable {S : Type _} [HasZero S] [HasOne S] [Add S] [Neg S]
+variable {S : Type _} [Zero S] [One S] [Add S] [Neg S]
 
 @[simp]
 theorem _root_.prod.fst_zmod_cast (a : Zmod n) : (a : R × S).fst = a := by
@@ -214,10 +214,10 @@ theorem nat_cast_zmod_val {n : ℕ} [Fact (0 < n)] (a : Zmod n) : (a.val : Zmod 
   · apply Finₓ.coe_coe_eq_self
     
 
-theorem nat_cast_right_inverse [Fact (0 < n)] : Function.RightInverse val (coeₓ : ℕ → Zmod n) :=
+theorem nat_cast_right_inverse [Fact (0 < n)] : Function.RightInverse val (coe : ℕ → Zmod n) :=
   nat_cast_zmod_val
 
-theorem nat_cast_zmod_surjective [Fact (0 < n)] : Function.Surjective (coeₓ : ℕ → Zmod n) :=
+theorem nat_cast_zmod_surjective [Fact (0 < n)] : Function.Surjective (coe : ℕ → Zmod n) :=
   nat_cast_right_inverse.Surjective
 
 /-- So-named because the outer coercion is `int.cast` into `zmod`. For `int.cast` into an arbitrary
@@ -229,10 +229,10 @@ theorem int_cast_zmod_cast (a : Zmod n) : ((a : ℤ) : Zmod n) = a := by
   · rw [coe_coe, Int.nat_cast_eq_coe_nat, Int.cast_coe_nat, Finₓ.coe_coe_eq_self]
     
 
-theorem int_cast_right_inverse : Function.RightInverse (coeₓ : Zmod n → ℤ) (coeₓ : ℤ → Zmod n) :=
+theorem int_cast_right_inverse : Function.RightInverse (coe : Zmod n → ℤ) (coe : ℤ → Zmod n) :=
   int_cast_zmod_cast
 
-theorem int_cast_surjective : Function.Surjective (coeₓ : ℤ → Zmod n) :=
+theorem int_cast_surjective : Function.Surjective (coe : ℤ → Zmod n) :=
   int_cast_right_inverse.Surjective
 
 @[norm_cast]
@@ -241,14 +241,14 @@ theorem cast_id : ∀ n i : Zmod n, ↑i = i
   | n + 1, i => nat_cast_zmod_val i
 
 @[simp]
-theorem cast_id' : (coeₓ : Zmod n → Zmod n) = id :=
+theorem cast_id' : (coe : Zmod n → Zmod n) = id :=
   funext (cast_id n)
 
 variable (R) [Ringₓ R]
 
 /-- The coercions are respectively `nat.cast` and `zmod.cast`. -/
 @[simp]
-theorem nat_cast_comp_val [Fact (0 < n)] : (coeₓ : ℕ → R) ∘ (val : Zmod n → ℕ) = coeₓ := by
+theorem nat_cast_comp_val [Fact (0 < n)] : (coe : ℕ → R) ∘ (val : Zmod n → ℕ) = coe := by
   cases' n
   · exfalso
     exact Nat.not_lt_zeroₓ 0 (Fact.out _)
@@ -257,7 +257,7 @@ theorem nat_cast_comp_val [Fact (0 < n)] : (coeₓ : ℕ → R) ∘ (val : Zmod 
 
 /-- The coercions are respectively `int.cast`, `zmod.cast`, and `zmod.cast`. -/
 @[simp]
-theorem int_cast_comp_cast : (coeₓ : ℤ → R) ∘ (coeₓ : Zmod n → ℤ) = coeₓ := by
+theorem int_cast_comp_cast : (coe : ℤ → R) ∘ (coe : Zmod n → ℤ) = coe := by
   cases n
   · exact congr_argₓ ((· ∘ ·) Int.cast) Zmod.cast_id'
     
@@ -333,7 +333,7 @@ theorem cast_mul (h : m ∣ n) (a b : Zmod n) : ((a * b : Zmod n) : R) = a * b :
 See also `zmod.lift` (in `data.zmod.quotient`) for a generalized version working in `add_group`s.
 -/
 def cast_hom (h : m ∣ n) (R : Type _) [Ringₓ R] [CharP R m] : Zmod n →+* R where
-  toFun := coeₓ
+  toFun := coe
   map_zero' := cast_zero
   map_one' := cast_one h
   map_add' := cast_add h
@@ -541,7 +541,7 @@ theorem mul_inv_eq_gcd {n : ℕ} (a : Zmod n) : a * a⁻¹ = Nat.gcdₓ a.val n 
         rw [nat_cast_self, zero_mul, add_zeroₓ]_ = ↑(↑a.val * Nat.gcdA (val a) k + k * Nat.gcdB (val a) k) := by
         push_cast
         rw [nat_cast_zmod_val]
-        rfl _ = Nat.gcdₓ a.val k := (congr_argₓ coeₓ (Nat.gcd_eq_gcd_ab a.val k)).symm
+        rfl _ = Nat.gcdₓ a.val k := (congr_argₓ coe (Nat.gcd_eq_gcd_ab a.val k)).symm
     
 
 @[simp]
@@ -564,7 +564,7 @@ theorem coe_mul_inv_eq_one {n : ℕ} (x : ℕ) (h : Nat.Coprime x n) : (x * x⁻
   a natural number `x` and a proof that `x` is coprime to `n`  -/
 def unit_of_coprime {n : ℕ} (x : ℕ) (h : Nat.Coprime x n) : (Zmod n)ˣ :=
   ⟨x, x⁻¹, coe_mul_inv_eq_one x h, by
-    rw [mul_commₓ, coe_mul_inv_eq_one x h]⟩
+    rw [mul_comm, coe_mul_inv_eq_one x h]⟩
 
 @[simp]
 theorem coe_unit_of_coprime {n : ℕ} (x : ℕ) (h : Nat.Coprime x n) : (unit_of_coprime x h : Zmod n) = x :=
@@ -584,11 +584,11 @@ theorem val_coe_unit_coprime {n : ℕ} (u : (Zmod n)ˣ) : Nat.Coprime (u : Zmod 
 
 @[simp]
 theorem inv_coe_unit {n : ℕ} (u : (Zmod n)ˣ) : (u : Zmod n)⁻¹ = (u⁻¹ : (Zmod n)ˣ) := by
-  have := congr_argₓ (coeₓ : ℕ → Zmod n) (val_coe_unit_coprime u)
+  have := congr_argₓ (coe : ℕ → Zmod n) (val_coe_unit_coprime u)
   rw [← mul_inv_eq_gcd, Nat.cast_one] at this
   let u' : (Zmod n)ˣ :=
     ⟨u, (u : Zmod n)⁻¹, this, by
-      rwa [mul_commₓ]⟩
+      rwa [mul_comm]⟩
   have h : u = u' := by
     apply Units.ext
     rfl
@@ -600,7 +600,7 @@ theorem mul_inv_of_unit {n : ℕ} (a : Zmod n) (h : IsUnit a) : a * a⁻¹ = 1 :
   rw [inv_coe_unit, u.mul_inv]
 
 theorem inv_mul_of_unit {n : ℕ} (a : Zmod n) (h : IsUnit a) : a⁻¹ * a = 1 := by
-  rw [mul_commₓ, mul_inv_of_unit a h]
+  rw [mul_comm, mul_inv_of_unit a h]
 
 /-- Equivalence between the units of `zmod n` and
 the subtype of terms `x : zmod n` for which `x.val` is comprime to `n` -/
@@ -939,7 +939,7 @@ instance subsingleton_ring_equiv [Semiringₓ R] : Subsingleton (Zmod n ≃+* R)
 theorem ring_hom_map_cast [Ringₓ R] (f : R →+* Zmod n) (k : Zmod n) : f k = k := by
   cases n <;> simp
 
-theorem ring_hom_right_inverse [Ringₓ R] (f : R →+* Zmod n) : Function.RightInverse (coeₓ : Zmod n → R) f :=
+theorem ring_hom_right_inverse [Ringₓ R] (f : R →+* Zmod n) : Function.RightInverse (coe : Zmod n → R) f :=
   ring_hom_map_cast f
 
 theorem RingHomSurjective [Ringₓ R] (f : R →+* Zmod n) : Function.Surjective f :=
@@ -967,7 +967,7 @@ def lift : { f : ℤ →+ A // f n = 0 } ≃ (Zmod n →+ A) :=
         · intro h
           refine' h (AddSubgroup.mem_zmultiples _)
           ).trans $
-    (Int.castAddHom (Zmod n)).liftOfRightInverse coeₓ int_cast_zmod_cast
+    (Int.castAddHom (Zmod n)).liftOfRightInverse coe int_cast_zmod_cast
 
 variable (f : { f : ℤ →+ A // f n = 0 })
 
@@ -979,7 +979,7 @@ theorem lift_cast_add_hom (x : ℤ) : lift n f (Int.castAddHom (Zmod n) x) = f x
   AddMonoidHom.lift_of_right_inverse_comp_apply _ _ _ _ _
 
 @[simp]
-theorem lift_comp_coe : Zmod.lift n f ∘ coeₓ = f :=
+theorem lift_comp_coe : Zmod.lift n f ∘ coe = f :=
   funext $ lift_coe _ _
 
 @[simp]

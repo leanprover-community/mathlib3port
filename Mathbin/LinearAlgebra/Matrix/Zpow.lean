@@ -160,7 +160,7 @@ theorem zpow_add_one {A : M} (h : IsUnit A.det) : ∀ n : ℤ, A ^ (n + 1) = A ^
 theorem zpow_sub_one {A : M} (h : IsUnit A.det) (n : ℤ) : A ^ (n - 1) = A ^ n * A⁻¹ :=
   calc
     A ^ (n - 1) = A ^ (n - 1) * A * A⁻¹ := by
-      rw [mul_assocₓ, mul_eq_mul A, mul_nonsing_inv _ h, mul_oneₓ]
+      rw [mul_assoc, mul_eq_mul A, mul_nonsing_inv _ h, mul_oneₓ]
     _ = A ^ n * A⁻¹ := by
       rw [← zpow_add_one h, sub_add_cancel]
     
@@ -169,9 +169,9 @@ theorem zpow_add {A : M} (ha : IsUnit A.det) (m n : ℤ) : A ^ (m + n) = A ^ m *
   induction' n using Int.induction_on with n ihn n ihn
   case hz =>
     simp
-  · simp only [← add_assocₓ, zpow_add_one ha, ihn, mul_assocₓ]
+  · simp only [← add_assocₓ, zpow_add_one ha, ihn, mul_assoc]
     
-  · rw [zpow_sub_one ha, ← mul_assocₓ, ← ihn, ← zpow_sub_one ha, add_sub_assoc]
+  · rw [zpow_sub_one ha, ← mul_assoc, ← ihn, ← zpow_sub_one ha, add_sub_assoc]
     
 
 theorem zpow_add_of_nonpos {A : M} {m n : ℤ} (hm : m ≤ 0) (hn : n ≤ 0) : A ^ (m + n) = A ^ m * A ^ n := by
@@ -204,7 +204,7 @@ theorem SemiconjBy.zpow_right {A X Y : M} (hx : IsUnit X.det) (hy : IsUnit Y.det
       exact hy.pow n.succ
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, nonsing_inv_apply _ hx', nonsing_inv_apply _ hy', SemiconjBy]
     refine' (is_regular_of_is_left_regular_det hy'.is_regular.left).left _
-    rw [← mul_assocₓ, ← (h.pow_right n.succ).Eq, mul_assocₓ, mul_eq_mul (X ^ _), mul_smul, mul_adjugate, mul_eq_mul,
+    rw [← mul_assoc, ← (h.pow_right n.succ).Eq, mul_assoc, mul_eq_mul (X ^ _), mul_smul, mul_adjugate, mul_eq_mul,
       mul_eq_mul, mul_eq_mul, ← Matrix.mul_assoc, mul_smul (Y ^ _) (↑hy'.unit⁻¹ : R), mul_adjugate, smul_smul,
       smul_smul, hx'.coe_inv_mul, hy'.coe_inv_mul, one_smul, Matrix.mul_one, Matrix.one_mul]
 
@@ -273,7 +273,7 @@ theorem zpow_mul (A : M) (h : IsUnit A.det) : ∀ m n : ℤ, A ^ (m * n) = (A ^ 
     exact h.pow _
 
 theorem zpow_mul' (A : M) (h : IsUnit A.det) (m n : ℤ) : A ^ (m * n) = (A ^ n) ^ m := by
-  rw [mul_commₓ, zpow_mul _ h]
+  rw [mul_comm, zpow_mul _ h]
 
 @[simp, norm_cast]
 theorem units.coe_inv'' (u : (M)ˣ) : ((u⁻¹ : (M)ˣ) : M) = u⁻¹ := by

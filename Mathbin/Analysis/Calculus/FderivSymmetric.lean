@@ -120,7 +120,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
       calc
         ∥h • v + (t * h) • w∥ ≤ ∥h • v∥ + ∥(t * h) • w∥ := norm_add_le _ _
         _ = h * ∥v∥ + t * (h * ∥w∥) := by
-          simp only [norm_smul, Real.norm_eq_abs, hpos.le, abs_of_nonneg, abs_mul, ht.left, mul_assocₓ]
+          simp only [norm_smul, Real.norm_eq_abs, hpos.le, abs_of_nonneg, abs_mul, ht.left, mul_assoc]
         _ ≤ h * ∥v∥ + 1 * (h * ∥w∥) :=
           add_le_add (le_reflₓ _) (mul_le_mul_of_nonneg_right ht.2.le (mul_nonneg hpos.le (norm_nonneg _)))
         _ = h * (∥v∥ + ∥w∥) := by
@@ -145,7 +145,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
         apply mul_le_mul_of_nonneg_left _ εpos.le
         apply (norm_add_le _ _).trans
         refine' add_le_add (le_reflₓ _) _
-        simp only [norm_smul, Real.norm_eq_abs, abs_mul, abs_of_nonneg, ht.1, hpos.le, mul_assocₓ]
+        simp only [norm_smul, Real.norm_eq_abs, abs_mul, abs_of_nonneg, ht.1, hpos.le, mul_assoc]
         exact mul_le_of_le_one_left (mul_nonneg hpos.le (norm_nonneg _)) ht.2.le _ = ε * ((∥v∥ + ∥w∥) * ∥w∥) * h ^ 2 :=
         by
         simp only [norm_smul, Real.norm_eq_abs, abs_mul, abs_of_nonneg, hpos.le]
@@ -160,7 +160,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
       bit0_eq_zero, zero_pow']
     abel
     
-  · simp only [Real.norm_eq_abs, abs_mul, add_nonneg (norm_nonneg v) (norm_nonneg w), abs_of_nonneg, mul_assocₓ,
+  · simp only [Real.norm_eq_abs, abs_mul, add_nonneg (norm_nonneg v) (norm_nonneg w), abs_of_nonneg, mul_assoc,
       pow_bit0_abs, norm_nonneg, abs_pow]
     
 
@@ -298,7 +298,7 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
     ContinuousLinearMap.add_apply, Pi.smul_apply, ContinuousLinearMap.coe_smul', C] at this
   rw [← sub_eq_zero] at this
   abel  at this
-  simp only [one_zsmul, neg_smul, sub_eq_zero, mul_commₓ, ← sub_eq_add_neg] at this
+  simp only [one_zsmul, neg_smul, sub_eq_zero, mul_comm, ← sub_eq_add_neg] at this
   apply smul_right_injective F _ this
   simp [(tpos v).ne', (tpos w).ne']
 

@@ -48,7 +48,7 @@ theorem not_squarefree_zero [MonoidWithZeroₓ R] [Nontrivial R] : ¬Squarefree 
 @[simp]
 theorem Irreducible.squarefree [CommMonoidₓ R] {x : R} (h : Irreducible x) : Squarefree x := by
   rintro y ⟨z, hz⟩
-  rw [mul_assocₓ] at hz
+  rw [mul_assoc] at hz
   rcases h.is_unit_or_is_unit hz with (hu | hu)
   · exact hu
     

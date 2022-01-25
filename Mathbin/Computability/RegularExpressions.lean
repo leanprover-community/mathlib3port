@@ -46,10 +46,10 @@ instance : Add (RegularExpression α) :=
 instance : Mul (RegularExpression α) :=
   ⟨comp⟩
 
-instance : HasOne (RegularExpression α) :=
+instance : One (RegularExpression α) :=
   ⟨epsilon⟩
 
-instance : HasZero (RegularExpression α) :=
+instance : Zero (RegularExpression α) :=
   ⟨zero⟩
 
 attribute [matchPattern] Mul.mul

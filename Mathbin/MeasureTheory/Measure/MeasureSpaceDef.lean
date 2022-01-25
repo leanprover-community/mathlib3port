@@ -358,7 +358,11 @@ theorem ae_le_of_ae_lt {f g : α → ℝ≥0∞} (h : ∀ᵐ x ∂μ, f x < g x)
 @[simp]
 theorem ae_eq_empty : s =ᵐ[μ] (∅ : Set α) ↔ μ s = 0 :=
   eventually_eq_empty.trans $ by
-    simp [ae_iff]
+    simp only [ae_iff, not_not, set_of_mem_eq]
+
+@[simp]
+theorem ae_eq_univ : s =ᵐ[μ] (univ : Set α) ↔ μ (sᶜ) = 0 :=
+  eventually_eq_univ
 
 theorem ae_le_set : s ≤ᵐ[μ] t ↔ μ (s \ t) = 0 :=
   calc
@@ -387,7 +391,7 @@ theorem ae_eq_set_inter {s' t' : Set α} (h : s =ᵐ[μ] t) (h' : s' =ᵐ[μ] t'
   h.inter h'
 
 @[to_additive]
-theorem _root_.set.mul_indicator_ae_eq_one {M : Type _} [HasOne M] {f : α → M} {s : Set α}
+theorem _root_.set.mul_indicator_ae_eq_one {M : Type _} [One M] {f : α → M} {s : Set α}
     (h : s.mul_indicator f =ᵐ[μ] 1) : μ (s ∩ Function.MulSupport f) = 0 := by
   rw [Filter.EventuallyEq, ae_iff] at h
   convert h

@@ -86,7 +86,7 @@ theorem finite.exists_finset_coe {s : Set α} (hs : finite s) : ∃ s' : Finset 
 
 /-- Finite sets can be lifted to finsets. -/
 instance : CanLift (Set α) (Finset α) where
-  coe := coeₓ
+  coe := coe
   cond := finite
   prf := fun s hs => hs.exists_finset_coe
 
@@ -605,10 +605,6 @@ variable {s : Finset α}
 
 theorem finite_to_set (s : Finset α) : Set.Finite (↑s : Set α) :=
   Set.finite_mem_finset s
-
-@[simp]
-theorem coe_bUnion {f : α → Finset β} : ↑s.bUnion f = (⋃ x ∈ (↑s : Set α), ↑f x : Set β) := by
-  simp [Set.ext_iff]
 
 @[simp]
 theorem finite_to_set_to_finset {α : Type _} (s : Finset α) : (finite_to_set s).toFinset = s := by

@@ -216,7 +216,7 @@ theorem smul [NormedField 𝕜] [NormedSpace 𝕜 β] (hT : dominated_fin_meas_a
     dominated_fin_meas_additive μ (fun s => c • T s) (∥c∥ * C) := by
   refine' ⟨hT.1.smul c, fun s hs hμs => _⟩
   dsimp only
-  rw [norm_smul, mul_assocₓ]
+  rw [norm_smul, mul_assoc]
   exact mul_le_mul le_rfl (hT.2 s hs hμs) (norm_nonneg _) (norm_nonneg _)
 
 theorem of_measure_le {μ' : Measureₓ α} (h : μ ≤ μ') (hT : dominated_fin_meas_additive μ T C) (hC : 0 ≤ C) :
@@ -473,7 +473,7 @@ theorem set_to_simple_func_smul_real (T : Set α → E →L[ℝ] F) (h_add : fin
       Finset.sum_congr rfl $ fun b hb => by
         rw [ContinuousLinearMap.map_smul (T (f ⁻¹' {b})) c b]
     _ = c • set_to_simple_func T f := by
-      simp only [set_to_simple_func, smul_sum, smul_smul, mul_commₓ]
+      simp only [set_to_simple_func, smul_sum, smul_smul, mul_comm]
     
 
 theorem set_to_simple_func_smul {E} [MeasurableSpace E] [NormedGroup E] [NormedField 𝕜] [NormedSpace 𝕜 E]
@@ -488,7 +488,7 @@ theorem set_to_simple_func_smul {E} [MeasurableSpace E] [NormedGroup E] [NormedF
       Finset.sum_congr rfl $ fun b hb => by
         rw [h_smul]
     _ = c • set_to_simple_func T f := by
-      simp only [set_to_simple_func, smul_sum, smul_smul, mul_commₓ]
+      simp only [set_to_simple_func, smul_sum, smul_smul, mul_comm]
     
 
 section Order
@@ -571,7 +571,7 @@ theorem norm_set_to_simple_func_le_sum_mul_norm (T : Set α → F →L[ℝ] F') 
       · exact lt_of_le_of_neₓ (norm_nonneg _) (Ne.symm hb)
         
     _ ≤ C * ∑ x in f.range, (μ (f ⁻¹' {x})).toReal * ∥x∥ := by
-      simp_rw [mul_sum, ← mul_assocₓ]
+      simp_rw [mul_sum, ← mul_assoc]
     
 
 theorem norm_set_to_simple_func_le_sum_mul_norm_of_integrable (T : Set α → E →L[ℝ] F') {C : ℝ}
@@ -593,7 +593,7 @@ theorem norm_set_to_simple_func_le_sum_mul_norm_of_integrable (T : Set α → E 
       · exact lt_of_le_of_neₓ (norm_nonneg _) (Ne.symm hb)
         
     _ ≤ C * ∑ x in f.range, (μ (f ⁻¹' {x})).toReal * ∥x∥ := by
-      simp_rw [mul_sum, ← mul_assocₓ]
+      simp_rw [mul_sum, ← mul_assoc]
     
 
 theorem set_to_simple_func_indicator (T : Set α → F →L[ℝ] F') (hT_empty : T ∅ = 0) {m : MeasurableSpace α} {s : Set α}
@@ -676,7 +676,7 @@ theorem norm_eq_sum_mul [second_countable_topology G] [BorelSpace G] (f : α →
   rw [simple_func.lintegral_eq_lintegral, simple_func.map_lintegral, Ennreal.to_real_sum]
   · congr
     ext1 x
-    rw [Ennreal.to_real_mul, mul_commₓ, ← of_real_norm_eq_coe_nnnorm, Ennreal.to_real_of_real (norm_nonneg _)]
+    rw [Ennreal.to_real_mul, mul_comm, ← of_real_norm_eq_coe_nnnorm, Ennreal.to_real_of_real (norm_nonneg _)]
     
   · intro x hx
     by_cases' hx0 : x = 0

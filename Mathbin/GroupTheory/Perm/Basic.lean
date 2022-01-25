@@ -407,7 +407,7 @@ theorem swap_apply_apply (f : perm α) (x y : α) : swap (f x) (f y) = f * swap 
 -/
 @[simp]
 theorem swap_mul_self_mul (i j : α) (σ : perm α) : Equivₓ.swap i j * (Equivₓ.swap i j * σ) = σ := by
-  rw [← mul_assocₓ, swap_mul_self, one_mulₓ]
+  rw [← mul_assoc, swap_mul_self, one_mulₓ]
 
 /-- Right-multiplying a permutation with `swap i j` twice gives the original permutation.
 
@@ -415,7 +415,7 @@ theorem swap_mul_self_mul (i j : α) (σ : perm α) : Equivₓ.swap i j * (Equiv
 -/
 @[simp]
 theorem mul_swap_mul_self (i j : α) (σ : perm α) : σ * Equivₓ.swap i j * Equivₓ.swap i j = σ := by
-  rw [mul_assocₓ, swap_mul_self, mul_oneₓ]
+  rw [mul_assoc, swap_mul_self, mul_oneₓ]
 
 /-- A stronger version of `mul_right_injective` -/
 @[simp]

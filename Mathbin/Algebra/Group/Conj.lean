@@ -38,7 +38,7 @@ theorem IsConj.trans {a b c : α} : IsConj a b → IsConj b c → IsConj a c
 @[simp]
 theorem is_conj_iff_eq {α : Type _} [CommMonoidₓ α] {a b : α} : IsConj a b ↔ a = b :=
   ⟨fun ⟨c, hc⟩ => by
-    rw [SemiconjBy, mul_commₓ, ← Units.mul_inv_eq_iff_eq_mul, mul_assocₓ, c.mul_inv, mul_oneₓ] at hc
+    rw [SemiconjBy, mul_comm, ← Units.mul_inv_eq_iff_eq_mul, mul_assoc, c.mul_inv, mul_oneₓ] at hc
     exact hc, fun h => by
     rw [h]⟩
 
@@ -153,7 +153,7 @@ theorem forall_is_conj {p : ConjClasses α → Prop} : (∀ a, p a) ↔ ∀ a, p
 theorem mk_surjective : Function.Surjective (@ConjClasses.mk α _) :=
   forall_is_conj.2 fun a => ⟨a, rfl⟩
 
-instance : HasOne (ConjClasses α) :=
+instance : One (ConjClasses α) :=
   ⟨⟦1⟧⟩
 
 theorem one_eq_mk_one : (1 : ConjClasses α) = ConjClasses.mk 1 :=

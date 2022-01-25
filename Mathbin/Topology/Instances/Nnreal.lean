@@ -67,7 +67,7 @@ instance : second_countable_topology ℝ≥0 :=
 instance : OrderTopology ℝ≥0 :=
   @order_topology_of_ord_connected _ _ _ _ (Ici 0) _
 
-section coeₓ
+section coe
 
 variable {α : Type _}
 
@@ -76,7 +76,7 @@ open Filter Finset
 theorem continuous_of_real : Continuous Real.toNnreal :=
   continuous_subtype_mk _ $ continuous_id.max continuous_const
 
-theorem continuous_coe : Continuous (coeₓ : ℝ≥0 → ℝ) :=
+theorem continuous_coe : Continuous (coe : ℝ≥0 → ℝ) :=
   continuous_subtype_val
 
 @[simp, norm_cast]
@@ -89,10 +89,10 @@ theorem tendsto_coe' {f : Filter α} [ne_bot f] {m : α → ℝ≥0 } {x : ℝ} 
   ⟨fun h => ⟨ge_of_tendsto' h fun c => (m c).2, tendsto_coe.1 h⟩, fun ⟨hx, hm⟩ => tendsto_coe.2 hm⟩
 
 @[simp]
-theorem map_coe_at_top : map (coeₓ : ℝ≥0 → ℝ) at_top = at_top :=
+theorem map_coe_at_top : map (coe : ℝ≥0 → ℝ) at_top = at_top :=
   map_coe_Ici_at_top 0
 
-theorem comap_coe_at_top : comap (coeₓ : ℝ≥0 → ℝ) at_top = at_top :=
+theorem comap_coe_at_top : comap (coe : ℝ≥0 → ℝ) at_top = at_top :=
   (at_top_Ici_eq 0).symm
 
 @[simp, norm_cast]
@@ -168,7 +168,7 @@ theorem tsum_mul_right (f : α → ℝ≥0 ) (a : ℝ≥0 ) : (∑' x, f x * a) 
 
 theorem summable_comp_injective {β : Type _} {f : α → ℝ≥0 } (hf : Summable f) {i : β → α} (hi : Function.Injective i) :
     Summable (f ∘ i) :=
-  Nnreal.summable_coe.1 $ show Summable ((coeₓ ∘ f) ∘ i) from (Nnreal.summable_coe.2 hf).comp_injective hi
+  Nnreal.summable_coe.1 $ show Summable ((coe ∘ f) ∘ i) from (Nnreal.summable_coe.2 hf).comp_injective hi
 
 theorem summable_nat_add (f : ℕ → ℝ≥0 ) (hf : Summable f) (k : ℕ) : Summable fun i => f (i + k) :=
   summable_comp_injective hf $ add_left_injective k
@@ -190,7 +190,7 @@ theorem infi_real_pos_eq_infi_nnreal_pos [CompleteLattice α] {f : ℝ → α} :
   le_antisymmₓ (infi_le_infi2 $ fun r => ⟨r, infi_le_infi $ fun hr => le_rfl⟩)
     (le_infi $ fun r => le_infi $ fun hr => infi_le_of_le ⟨r, hr.le⟩ $ infi_le _ hr)
 
-end coeₓ
+end coe
 
 theorem tendsto_cofinite_zero_of_summable {α} {f : α → ℝ≥0 } (hf : Summable f) : tendsto f cofinite (𝓝 0) := by
   have h_f_coe : f = fun n => Real.toNnreal (f n : ℝ) := funext fun n => real.to_nnreal_coe.symm

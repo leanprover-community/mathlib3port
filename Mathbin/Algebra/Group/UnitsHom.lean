@@ -42,7 +42,7 @@ theorem map_id : map (MonoidHom.id M) = MonoidHom.id (M)ˣ := by
 /-- Coercion `Mˣ → M` as a monoid homomorphism. -/
 @[to_additive "Coercion `add_units M → M` as an add_monoid homomorphism."]
 def coe_hom : (M)ˣ →* M :=
-  ⟨coeₓ, coe_one, coe_mul⟩
+  ⟨coe, coe_one, coe_mul⟩
 
 variable {M}
 

@@ -57,7 +57,7 @@ def Ultrafilter.semigroup {M} [Semigroupₓ M] : Semigroupₓ (Ultrafilter M) :=
     mul_assoc := fun U V W =>
       Ultrafilter.coe_inj.mp $
         Filter.ext' $ fun p => by
-          simp only [Ultrafilter.eventually_mul, mul_assocₓ] }
+          simp only [Ultrafilter.eventually_mul, mul_assoc] }
 
 attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 
@@ -99,7 +99,7 @@ theorem FP.mul {M} [Semigroupₓ M] {a : Streamₓ M} {m : M} (hm : m ∈ FP a) 
   · cases' ih with n hn
     use n + 1
     intro m' hm'
-    rw [mul_assocₓ]
+    rw [mul_assoc]
     exact FP.cons _ _ (hn _ hm')
     
 

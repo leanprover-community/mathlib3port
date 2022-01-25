@@ -149,8 +149,8 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
         Real.mul_self_sqrt (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)),
         dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq _ (hps hp0),
         orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hcc₃', h', hcr p0 hp0,
-        dist_eq_norm_vsub V _ cc₃', vadd_vsub, norm_smul, ← dist_eq_norm_vsub V p, Real.norm_eq_abs, ← mul_assocₓ,
-        mul_commₓ _ |t₃|, ← mul_assocₓ, abs_mul_abs_self]
+        dist_eq_norm_vsub V _ cc₃', vadd_vsub, norm_smul, ← dist_eq_norm_vsub V p, Real.norm_eq_abs, ← mul_assoc,
+        mul_comm _ |t₃|, ← mul_assoc, abs_mul_abs_self]
       ring
     replace hcr₃ := hcr₃ p (Set.mem_insert _ _)
     rw [hpo, hcc₃'', hcr₃val, ← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
@@ -774,7 +774,7 @@ theorem eq_or_eq_reflection_of_dist_eq {n : ℕ} {s : simplex ℝ P n} {p p₁ p
     simp only [h₂', dist_comm p₂, add_sub_cancel', simplex.dist_circumcenter_eq_circumradius]
   rw [← hd₂, hp₁, hp₂, dist_eq_norm_vsub V _ s.circumcenter, dist_eq_norm_vsub V _ s.circumcenter, vadd_vsub, vadd_vsub,
     ← real_inner_self_eq_norm_mul_norm, ← real_inner_self_eq_norm_mul_norm, real_inner_smul_left, real_inner_smul_left,
-    real_inner_smul_right, real_inner_smul_right, ← mul_assocₓ, ← mul_assocₓ] at hd₁
+    real_inner_smul_right, real_inner_smul_right, ← mul_assoc, ← mul_assoc] at hd₁
   by_cases' hp : p = orthogonalProjection span_s p
   · rw [hp₁, hp₂, ← hp]
     simp only [true_orₓ, eq_self_iff_true, smul_zero, vsub_self]

@@ -349,7 +349,7 @@ def lift_aux (φ : MultilinearMap R s E) : (⨂[R] i, s i) →+ E :=
     (fun z₁ z₂ f => by
       rw [← add_smul])
     fun z f i r => by
-    simp [φ.map_smul, smul_smul, mul_commₓ]
+    simp [φ.map_smul, smul_smul, mul_comm]
 
 theorem lift_aux_tprod (φ : MultilinearMap R s E) (f : ∀ i, s i) : lift_aux φ (tprod R f) = φ f := by
   simp only [lift_aux, lift_add_hom, tprod, MultilinearMap.coe_mk, tprod_coeff, FreeAddMonoid.lift_eval_of, one_smul,

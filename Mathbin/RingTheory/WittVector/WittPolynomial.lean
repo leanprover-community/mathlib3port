@@ -198,7 +198,7 @@ theorem constant_coeff_X_in_terms_of_W [hp : Fact p.prime] [Invertible (p : R)] 
     constant_coeff (xInTermsOfW p R n) = 0 := by
   apply Nat.strong_induction_onₓ n <;> clear n
   intro n IH
-  rw [X_in_terms_of_W_eq, mul_commₓ, RingHom.map_mul, RingHom.map_sub, RingHom.map_sum, constant_coeff_C, sum_eq_zero]
+  rw [X_in_terms_of_W_eq, mul_comm, RingHom.map_mul, RingHom.map_sub, RingHom.map_sum, constant_coeff_C, sum_eq_zero]
   · simp only [constant_coeff_X, sub_zero, mul_zero]
     
   · intro m H
@@ -222,7 +222,7 @@ theorem X_in_terms_of_W_vars_aux (n : ℕ) : n ∈ (xInTermsOfW p ℚ n).vars �
   apply Nat.strong_induction_onₓ n
   clear n
   intro n ih
-  rw [X_in_terms_of_W_eq, mul_commₓ, vars_C_mul, vars_sub_of_disjoint, vars_X, range_succ, insert_eq]
+  rw [X_in_terms_of_W_eq, mul_comm, vars_C_mul, vars_sub_of_disjoint, vars_X, range_succ, insert_eq]
   swap 3
   · apply nonzero_of_invertible
     
@@ -259,14 +259,14 @@ end PPrime
 
 theorem X_in_terms_of_W_aux [Invertible (p : R)] (n : ℕ) :
     xInTermsOfW p R n * C (p ^ n : R) = X n - ∑ i in range n, C (p ^ i : R) * xInTermsOfW p R i ^ p ^ (n - i) := by
-  rw [X_in_terms_of_W_eq, mul_assocₓ, ← C_mul, ← mul_powₓ, inv_of_mul_self, one_pow, C_1, mul_oneₓ]
+  rw [X_in_terms_of_W_eq, mul_assoc, ← C_mul, ← mul_powₓ, inv_of_mul_self, one_pow, C_1, mul_oneₓ]
 
 @[simp]
 theorem bind₁_X_in_terms_of_W_witt_polynomial [Invertible (p : R)] (k : ℕ) : bind₁ (xInTermsOfW p R) (W_ R k) = X k :=
   by
   rw [witt_polynomial_eq_sum_C_mul_X_pow, AlgHom.map_sum]
   simp only [AlgHom.map_pow, C_pow, AlgHom.map_mul, alg_hom_C]
-  rw [sum_range_succ_comm, tsub_self, pow_zeroₓ, pow_oneₓ, bind₁_X_right, mul_commₓ, ← C_pow, X_in_terms_of_W_aux]
+  rw [sum_range_succ_comm, tsub_self, pow_zeroₓ, pow_oneₓ, bind₁_X_right, mul_comm, ← C_pow, X_in_terms_of_W_aux]
   simp only [C_pow, bind₁_X_right, sub_add_cancel]
 
 @[simp]

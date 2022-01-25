@@ -25,14 +25,14 @@ namespace Real
 It defaults to `-π / 2` on `(-∞, -1)` and to `π / 2` to `(1, ∞)`. -/
 @[pp_nodot]
 noncomputable def arcsin : ℝ → ℝ :=
-  coeₓ ∘ Icc_extend (neg_le_self zero_le_one) sin_order_iso.symm
+  coe ∘ Icc_extend (neg_le_self zero_le_one) sin_order_iso.symm
 
 theorem arcsin_mem_Icc (x : ℝ) : arcsin x ∈ Icc (-(π / 2)) (π / 2) :=
   Subtype.coe_prop _
 
 @[simp]
 theorem range_arcsin : range arcsin = Icc (-(π / 2)) (π / 2) := by
-  rw [arcsin, range_comp coeₓ]
+  rw [arcsin, range_comp coe]
   simp [Icc]
 
 theorem arcsin_le_pi_div_two (x : ℝ) : arcsin x ≤ π / 2 :=

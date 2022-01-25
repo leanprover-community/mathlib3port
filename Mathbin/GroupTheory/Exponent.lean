@@ -178,9 +178,9 @@ theorem _root_.nat.prime.exists_order_of_eq_pow_padic_val_nat_exponent {p : ℕ}
   refine' ⟨g ^ k, _⟩
   rw [ht]
   apply order_of_eq_prime_pow
-  · rwa [hk, mul_commₓ, ht, pow_succ'ₓ, ← mul_assocₓ, Nat.mul_div_cancelₓ _ hp.pos, pow_mulₓ] at hg
+  · rwa [hk, mul_comm, ht, pow_succ'ₓ, ← mul_assoc, Nat.mul_div_cancelₓ _ hp.pos, pow_mulₓ] at hg
     
-  · rw [← Nat.succ_eq_add_one, ← ht, ← pow_mulₓ, mul_commₓ, ← hk]
+  · rw [← Nat.succ_eq_add_one, ← ht, ← pow_mulₓ, mul_comm, ← hk]
     exact pow_exponent_eq_one g
     
 
@@ -278,7 +278,7 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
     rw [hpk', padicValNat.div_pow hpk, hk, Nat.sub_self]
     infer_instance
   rw [(Commute.all _ g).order_of_mul_eq_mul_order_of_of_coprime hcoprime, hpk', hg, ha, ← ht, ← hk, pow_addₓ, pow_addₓ,
-    pow_oneₓ, ← mul_assocₓ, ← mul_assocₓ, Nat.div_mul_cancelₓ, mul_assocₓ, lt_mul_iff_one_lt_right $ h t, ← pow_succ'ₓ]
+    pow_oneₓ, ← mul_assoc, ← mul_assoc, Nat.div_mul_cancelₓ, mul_assoc, lt_mul_iff_one_lt_right $ h t, ← pow_succ'ₓ]
   exact one_lt_pow hp.1.one_lt a.succ_ne_zero
   exact hpk
 

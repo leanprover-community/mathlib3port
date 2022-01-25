@@ -47,11 +47,11 @@ theorem coe_mul [Mul β] [HasContinuousMul β] (f g : C(α, β)) :
   rfl
 
 @[to_additive]
-instance [HasOne β] : HasOne C(α, β) :=
+instance [One β] : One C(α, β) :=
   ⟨const (1 : β)⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_one [HasOne β] : ((1 : C(α, β)) : α → β) = (1 : α → β) :=
+theorem coe_one [One β] : ((1 : C(α, β)) : α → β) = (1 : α → β) :=
   rfl
 
 @[simp, to_additive]
@@ -62,7 +62,7 @@ theorem mul_comp {α : Type _} {β : Type _} {γ : Type _} [TopologicalSpace α]
 
 @[simp, to_additive]
 theorem one_comp {α : Type _} {β : Type _} {γ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
-    [HasOne γ] (g : C(α, β)) : (1 : C(β, γ)).comp g = 1 := by
+    [One γ] (g : C(α, β)) : (1 : C(β, γ)).comp g = 1 := by
   ext
   simp
 
@@ -103,7 +103,7 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
     Semigroupₓ C(α, β) :=
   { ContinuousMap.hasMul with
     mul_assoc := fun a b c => by
-      ext <;> exact mul_assocₓ _ _ _ }
+      ext <;> exact mul_assoc _ _ _ }
 
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Monoidₓ β] [HasContinuousMul β] :
@@ -161,7 +161,7 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
     mul_one := fun a => by
       ext <;> exact mul_oneₓ _,
     mul_comm := fun a b => by
-      ext <;> exact mul_commₓ _ _ }
+      ext <;> exact mul_comm _ _ }
 
 open_locale BigOperators
 

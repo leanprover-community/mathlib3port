@@ -113,15 +113,15 @@ def conj [Groupₓ G] : G →* MulAut G where
   toFun := fun g =>
     { toFun := fun h => g * h * g⁻¹, invFun := fun h => g⁻¹ * h * g,
       left_inv := fun _ => by
-        simp [mul_assocₓ],
+        simp [mul_assoc],
       right_inv := fun _ => by
-        simp [mul_assocₓ],
+        simp [mul_assoc],
       map_mul' := by
-        simp [mul_assocₓ] }
+        simp [mul_assoc] }
   map_mul' := fun _ _ => by
-    ext <;> simp [mul_assocₓ]
+    ext <;> simp [mul_assoc]
   map_one' := by
-    ext <;> simp [mul_assocₓ]
+    ext <;> simp [mul_assoc]
 
 @[simp]
 theorem conj_apply [Groupₓ G] (g h : G) : conj g h = g * h * g⁻¹ :=

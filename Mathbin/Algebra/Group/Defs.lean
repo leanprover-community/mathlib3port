@@ -86,12 +86,12 @@ section Semigroupₓ
 variable {G : Type u} [Semigroupₓ G]
 
 @[no_rsimp, to_additive]
-theorem mul_assocₓ : ∀ a b c : G, a * b * c = a * (b * c) :=
+theorem mul_assoc : ∀ a b c : G, a * b * c = a * (b * c) :=
   Semigroupₓ.mul_assoc
 
 @[to_additive]
 instance Semigroupₓ.to_is_associative : IsAssociative G (· * ·) :=
-  ⟨mul_assocₓ⟩
+  ⟨mul_assoc⟩
 
 end Semigroupₓ
 
@@ -112,12 +112,12 @@ section CommSemigroupₓ
 variable {G : Type u} [CommSemigroupₓ G]
 
 @[no_rsimp, to_additive]
-theorem mul_commₓ : ∀ a b : G, a * b = b * a :=
+theorem mul_comm : ∀ a b : G, a * b = b * a :=
   CommSemigroupₓ.mul_comm
 
 @[to_additive]
 instance CommSemigroupₓ.to_is_commutative : IsCommutative G (· * ·) :=
-  ⟨mul_commₓ⟩
+  ⟨mul_comm⟩
 
 end CommSemigroupₓ
 
@@ -199,15 +199,15 @@ end RightCancelSemigroup
 
 /-- Typeclass for expressing that a type `M` with multiplication and a one satisfies
 `1 * a = a` and `a * 1 = a` for all `a : M`. -/
-@[ancestor HasOne Mul]
-class MulOneClass (M : Type u) extends HasOne M, Mul M where
+@[ancestor One Mul]
+class MulOneClass (M : Type u) extends One M, Mul M where
   one_mul : ∀ a : M, 1 * a = a
   mul_one : ∀ a : M, a * 1 = a
 
 /-- Typeclass for expressing that a type `M` with addition and a zero satisfies
 `0 + a = a` and `a + 0 = a` for all `a : M`. -/
-@[ancestor HasZero Add]
-class AddZeroClass (M : Type u) extends HasZero M, Add M where
+@[ancestor Zero Add]
+class AddZeroClass (M : Type u) extends Zero M, Add M where
   zero_add : ∀ a : M, 0 + a = a
   add_zero : ∀ a : M, a + 0 = a
 
@@ -247,13 +247,13 @@ variable {M : Type u}
 
 /-- The fundamental power operation in a monoid. `npow_rec n a = a*a*...*a` n times.
 Use instead `a ^ n`,  which has better definitional behavior. -/
-def npowRec [HasOne M] [Mul M] : ℕ → M → M
+def npowRec [One M] [Mul M] : ℕ → M → M
   | 0, a => 1
   | n + 1, a => a * npowRec n a
 
 /-- The fundamental scalar multiplication in an additive monoid. `nsmul_rec n a = a+a+...+a` n
 times. Use instead `n • a`, which has better definitional behavior. -/
-def nsmulRec [HasZero M] [Add M] : ℕ → M → M
+def nsmulRec [Zero M] [Add M] : ℕ → M → M
   | 0, a => 0
   | n + 1, a => a + nsmulRec n a
 
@@ -407,7 +407,7 @@ variable {M : Type u} [Monoidₓ M]
 
 @[to_additive]
 theorem left_inv_eq_right_invₓ {a b c : M} (hba : b * a = 1) (hac : a * c = 1) : b = c := by
-  rw [← one_mulₓ c, ← hba, mul_assocₓ, hac, mul_oneₓ b]
+  rw [← one_mulₓ c, ← hba, mul_assoc, hac, mul_oneₓ b]
 
 end Monoidₓ
 
@@ -472,19 +472,19 @@ instance (priority := 100) CancelCommMonoid.toCancelMonoid (M : Type u) [CancelC
   { ‹CancelCommMonoid M› with
     mul_right_cancel := fun a b c h =>
       mul_left_cancelₓ $ by
-        rw [mul_commₓ, h, mul_commₓ] }
+        rw [mul_comm, h, mul_comm] }
 
 end CancelMonoid
 
 /-- The fundamental power operation in a group. `zpow_rec n a = a*a*...*a` n times, for integer `n`.
 Use instead `a ^ n`,  which has better definitional behavior. -/
-def zpowRec {M : Type _} [HasOne M] [Mul M] [HasInv M] : ℤ → M → M
+def zpowRec {M : Type _} [One M] [Mul M] [HasInv M] : ℤ → M → M
   | Int.ofNat n, a => npowRec n a
   | -[1+ n], a => npowRec n.succ a⁻¹
 
 /-- The fundamental scalar multiplication in an additive group. `zsmul_rec n a = a+a+...+a` n
 times, for integer `n`. Use instead `n • a`, which has better definitional behavior. -/
-def zsmulRec {M : Type _} [HasZero M] [Add M] [Neg M] : ℤ → M → M
+def zsmulRec {M : Type _} [Zero M] [Add M] [Neg M] : ℤ → M → M
   | Int.ofNat n, a => nsmulRec n a
   | -[1+ n], a => -nsmulRec n.succ a
 
@@ -652,7 +652,7 @@ theorem inv_mul_selfₓ (a : G) : a⁻¹ * a = 1 :=
 
 @[simp, to_additive]
 theorem inv_mul_cancel_leftₓ (a b : G) : a⁻¹ * (a * b) = b := by
-  rw [← mul_assocₓ, mul_left_invₓ, one_mulₓ]
+  rw [← mul_assoc, mul_left_invₓ, one_mulₓ]
 
 @[simp, to_additive]
 theorem inv_eq_of_mul_eq_oneₓ (h : a * b = 1) : a⁻¹ = b :=
@@ -673,7 +673,7 @@ theorem mul_inv_selfₓ (a : G) : a * a⁻¹ = 1 :=
 
 @[simp, to_additive]
 theorem mul_inv_cancel_rightₓ (a b : G) : a * b * b⁻¹ = a := by
-  rw [mul_assocₓ, mul_right_invₓ, mul_oneₓ]
+  rw [mul_assoc, mul_right_invₓ, mul_oneₓ]
 
 @[to_additive]
 instance (priority := 100) Groupₓ.toCancelMonoid : CancelMonoid G :=

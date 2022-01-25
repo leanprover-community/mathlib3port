@@ -200,7 +200,7 @@ theorem exists_preimage_norm_le (surj : surjective f) : ∃ C > 0, ∀ y, ∃ x,
       
     · rw [iterate_succ']
       apply le_transₓ (hle _) _
-      rw [pow_succₓ, mul_assocₓ]
+      rw [pow_succₓ, mul_assoc]
       apply mul_le_mul_of_nonneg_left IH
       norm_num
       
@@ -228,7 +228,7 @@ theorem exists_preimage_norm_le (surj : surjective f) : ∃ C > 0, ∀ y, ∃ x,
       _ ≤ ∑' n, (1 / 2) ^ n * (C * ∥y∥) := tsum_le_tsum ule sNu (Summable.mul_right _ summable_geometric_two)
       _ = (∑' n, (1 / 2) ^ n) * (C * ∥y∥) := tsum_mul_right
       _ = 2 * C * ∥y∥ := by
-        rw [tsum_geometric_two, mul_assocₓ]
+        rw [tsum_geometric_two, mul_assoc]
       _ ≤ 2 * C * ∥y∥ + ∥y∥ := le_add_of_nonneg_right (norm_nonneg y)
       _ = (2 * C + 1) * ∥y∥ := by
         ring
@@ -417,7 +417,7 @@ theorem closed_complemented_range_of_is_compl_of_ker_eq_bot (f : E →L[𝕜] F)
     (hG : IsClosed (G : Set F)) (hker : f.ker = ⊥) : IsClosed (f.range : Set F) := by
   have : CompleteSpace G := hG.complete_space_coe
   let g := coprod_subtypeL_equiv_of_is_compl f h hker
-  rw [congr_argₓ coeₓ (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)]
+  rw [congr_argₓ coe (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)]
   apply g.to_homeomorph.is_closed_image.2
   exact is_closed_univ.prod is_closed_singleton
 

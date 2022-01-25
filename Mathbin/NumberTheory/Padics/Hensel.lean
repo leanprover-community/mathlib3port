@@ -390,7 +390,7 @@ private theorem bound : ∀ {ε}, ε > 0 → ∃ N : ℕ, ∀ {n}, n ≥ N → �
 
 private theorem bound'_sq : tendsto (fun n : ℕ => ∥F.derivative.eval a∥ ^ 2 * T ^ 2 ^ n) at_top (𝓝 0) := by
   rw [← mul_zero ∥F.derivative.eval a∥, sq]
-  simp only [mul_assocₓ]
+  simp only [mul_assoc]
   apply tendsto.mul
   · apply tendsto_const_nhds
     
@@ -465,7 +465,7 @@ private theorem soln_unique (z : ℤ_[p]) (hev : F.eval z = 0) (hnlt : ∥z - a�
         _ = F.derivative.eval soln * h + q * h ^ 2 := by
           rw [hq, eval_soln, zero_addₓ]
         _ = (F.derivative.eval soln + q * h) * h := by
-          rw [sq, right_distrib, mul_assocₓ]
+          rw [sq, right_distrib, mul_assoc]
         )
   have : h = 0 :=
     by_contradiction $ fun hne =>
@@ -505,7 +505,7 @@ private theorem a_soln_is_unique (ha : F.eval a = 0) (z' : ℤ_[p]) (hz' : F.eva
         _ = F.derivative.eval a * h + q * h ^ 2 := by
           rw [hq, ha, zero_addₓ]
         _ = (F.derivative.eval a + q * h) * h := by
-          rw [sq, right_distrib, mul_assocₓ]
+          rw [sq, right_distrib, mul_assoc]
         )
   have : h = 0 :=
     by_contradiction $ fun hne =>

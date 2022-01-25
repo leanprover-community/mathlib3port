@@ -34,7 +34,7 @@ variable {R L}
 
 @[simp]
 theorem lie_character_apply_lie (χ : lie_character R L) (x y : L) : χ ⁅x,y⁆ = 0 := by
-  rw [LieHom.map_lie, LieRing.of_associative_ring_bracket, mul_commₓ, sub_self]
+  rw [LieHom.map_lie, LieRing.of_associative_ring_bracket, mul_comm, sub_self]
 
 theorem lie_character_apply_of_mem_derived (χ : lie_character R L) {x : L} (h : x ∈ derived_series R L 1) : χ x = 0 :=
   by
@@ -60,7 +60,7 @@ def lie_character_equiv_linear_dual [IsLieAbelian L] : lie_character R L ≃ Mod
   invFun := fun ψ =>
     { ψ with
       map_lie' := fun x y => by
-        rw [LieModule.IsTrivial.trivial, LieRing.of_associative_ring_bracket, mul_commₓ, sub_self,
+        rw [LieModule.IsTrivial.trivial, LieRing.of_associative_ring_bracket, mul_comm, sub_self,
           LinearMap.to_fun_eq_coe, LinearMap.map_zero] }
   left_inv := fun χ => by
     ext

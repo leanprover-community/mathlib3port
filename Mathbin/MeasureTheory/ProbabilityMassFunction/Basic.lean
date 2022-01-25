@@ -7,8 +7,8 @@ import Mathbin.MeasureTheory.Measure.MeasureSpace
 This file is about probability mass functions or discrete probability measures:
 a function `α → ℝ≥0` such that the values have (infinite) sum `1`.
 
-This file features the monadic structure of `pmf`,
-other constructions of `pmf`s are found in `probability_mass_function/constructions.lean`
+Construction of monadic `pure` and `bind` is found in `probability_mass_function/monad.lean`,
+other constructions of `pmf`s are found in `probability_mass_function/constructions.lean`.
 
 Given `p : pmf α`, `pmf.to_outer_measure` constructs an `outer_measure` on `α`,
 by assigning each set the sum of the probabilities of each of its elements.
@@ -69,103 +69,6 @@ theorem coe_le_one (p : Pmf α) (a : α) : p a ≤ 1 :=
       intro b
       split_ifs <;> simp only [h, zero_le'])
     (has_sum_ite_eq a (p a)) (has_sum_coe_one p)
-
-section Pure
-
-/-- The pure `pmf` is the `pmf` where all the mass lies in one point.
-  The value of `pure a` is `1` at `a` and `0` elsewhere. -/
-def pure (a : α) : Pmf α :=
-  ⟨fun a' => if a' = a then 1 else 0, has_sum_ite_eq _ _⟩
-
-variable (a a' : α)
-
-@[simp]
-theorem pure_apply : pure a a' = if a' = a then 1 else 0 :=
-  rfl
-
-@[simp]
-theorem support_pure : (pure a).Support = {a} :=
-  Set.ext fun a' => by
-    simp [mem_support_iff]
-
-theorem mem_support_pure_iff : a' ∈ (pure a).Support ↔ a' = a := by
-  simp
-
-instance [Inhabited α] : Inhabited (Pmf α) :=
-  ⟨pure default⟩
-
-end Pure
-
-section Bind
-
-protected theorem bind.summable (p : Pmf α) (f : α → Pmf β) (b : β) : Summable fun a : α => p a * f a b := by
-  refine' Nnreal.summable_of_le (fun a => _) p.summable_coe
-  suffices p a * f a b ≤ p a * 1 by
-    simpa
-  exact mul_le_mul_of_nonneg_left ((f a).coe_le_one _) (p a).2
-
-/-- The monadic bind operation for `pmf`. -/
-def bind (p : Pmf α) (f : α → Pmf β) : Pmf β :=
-  ⟨fun b => ∑' a, p a * f a b, by
-    apply Ennreal.has_sum_coe.1
-    simp only [Ennreal.coe_tsum (bind.summable p f _)]
-    rw [ennreal.summable.has_sum_iff, Ennreal.tsum_comm]
-    simp [Ennreal.tsum_mul_left, (Ennreal.coe_tsum (f _).summable_coe).symm, (Ennreal.coe_tsum p.summable_coe).symm]⟩
-
-variable (p : Pmf α) (f : α → Pmf β)
-
-@[simp]
-theorem bind_apply (b : β) : p.bind f b = ∑' a, p a * f a b :=
-  rfl
-
-@[simp]
-theorem support_bind : (p.bind f).Support = { b | ∃ a ∈ p.support, b ∈ (f a).Support } :=
-  Set.ext fun b => by
-    simp [mem_support_iff, tsum_eq_zero_iff (bind.summable p f b), not_or_distrib]
-
-theorem mem_support_bind_iff (b : β) : b ∈ (p.bind f).Support ↔ ∃ a ∈ p.support, b ∈ (f a).Support := by
-  simp
-
-theorem coe_bind_apply (p : Pmf α) (f : α → Pmf β) (b : β) : (p.bind f b : ℝ≥0∞) = ∑' a, p a * f a b :=
-  Eq.trans (Ennreal.coe_tsum $ bind.summable p f b) $ by
-    simp
-
-@[simp]
-theorem pure_bind (a : α) (f : α → Pmf β) : (pure a).bind f = f a := by
-  have : ∀ b a', ite (a' = a) 1 0 * f a' b = ite (a' = a) (f a b) 0 := fun b a' => by
-    split_ifs <;> simp <;> subst h <;> simp
-  ext b <;> simp [this]
-
-@[simp]
-theorem bind_pureₓ (p : Pmf α) : p.bind pure = p := by
-  have : ∀ a a', p a * ite (a' = a) 1 0 = ite (a = a') (p a') 0 := fun a a' => by
-    split_ifs <;>
-      try
-          subst a <;>
-        try
-            subst a' <;>
-          simp_all
-  ext b <;> simp [this]
-
-@[simp]
-theorem bind_bind (p : Pmf α) (f : α → Pmf β) (g : β → Pmf γ) : (p.bind f).bind g = p.bind fun a => (f a).bind g := by
-  ext1 b
-  simp only [ennreal.coe_eq_coe.symm, coe_bind_apply, ennreal.tsum_mul_left.symm, ennreal.tsum_mul_right.symm]
-  rw [Ennreal.tsum_comm]
-  simp [mul_assocₓ, mul_left_commₓ, mul_commₓ]
-
-theorem bind_comm (p : Pmf α) (q : Pmf β) (f : α → β → Pmf γ) :
-    (p.bind fun a => q.bind (f a)) = q.bind fun b => p.bind fun a => f a b := by
-  ext1 b
-  simp only [ennreal.coe_eq_coe.symm, coe_bind_apply, ennreal.tsum_mul_left.symm, ennreal.tsum_mul_right.symm]
-  rw [Ennreal.tsum_comm]
-  simp [mul_assocₓ, mul_left_commₓ, mul_commₓ]
-
-end Bind
-
-instance : Monadₓ Pmf where
-  pure := fun A a => pure a
-  bind := fun A B pa pb => pa.bind pb
 
 section OuterMeasure
 

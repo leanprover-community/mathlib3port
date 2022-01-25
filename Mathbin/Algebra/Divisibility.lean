@@ -52,7 +52,7 @@ theorem dvd_refl (a : α) : a ∣ a :=
 theorem dvd_rfl {a : α} : a ∣ a :=
   dvd_refl a
 
-attribute [local simp] mul_assocₓ mul_commₓ mul_left_commₓ
+attribute [local simp] mul_assoc mul_comm mul_left_commₓ
 
 @[trans]
 theorem dvd_trans (h₁ : a ∣ b) (h₂ : b ∣ c) : a ∣ c :=
@@ -100,33 +100,33 @@ variable [CommMonoidₓ α] {a b c : α}
 theorem Dvd.intro_left (c : α) (h : c * a = b) : a ∣ b :=
   Dvd.intro _
     (by
-      rw [mul_commₓ] at h
+      rw [mul_comm] at h
       apply h)
 
 alias Dvd.intro_left ← dvd_of_mul_left_eq
 
 theorem exists_eq_mul_left_of_dvd (h : a ∣ b) : ∃ c, b = c * a :=
-  Dvd.elim h fun c => fun H1 : b = a * c => Exists.introₓ c (Eq.trans H1 (mul_commₓ a c))
+  Dvd.elim h fun c => fun H1 : b = a * c => Exists.introₓ c (Eq.trans H1 (mul_comm a c))
 
 theorem dvd_iff_exists_eq_mul_left : a ∣ b ↔ ∃ c, b = c * a :=
   ⟨exists_eq_mul_left_of_dvd, by
     rintro ⟨c, rfl⟩
-    exact ⟨c, mul_commₓ _ _⟩⟩
+    exact ⟨c, mul_comm _ _⟩⟩
 
 theorem Dvd.elim_left {P : Prop} (h₁ : a ∣ b) (h₂ : ∀ c, b = c * a → P) : P :=
   Exists.elim (exists_eq_mul_left_of_dvd h₁) fun c => fun h₃ : b = c * a => h₂ c h₃
 
 @[simp]
 theorem dvd_mul_left (a b : α) : a ∣ b * a :=
-  Dvd.intro b (mul_commₓ a b)
+  Dvd.intro b (mul_comm a b)
 
 theorem dvd_mul_of_dvd_right (h : a ∣ b) (c : α) : a ∣ c * b := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact h.mul_right _
 
 alias dvd_mul_of_dvd_right ← HasDvd.Dvd.mul_left
 
-attribute [local simp] mul_assocₓ mul_commₓ mul_left_commₓ
+attribute [local simp] mul_assoc mul_comm mul_left_commₓ
 
 theorem mul_dvd_mul : ∀ {a b c d : α}, a ∣ b → c ∣ d → a * c ∣ b * d
   | a, _, c, _, ⟨e, rfl⟩, ⟨f, rfl⟩ =>
@@ -173,7 +173,7 @@ end MonoidWithZeroₓ
  `a*b` divides `a*c` iff `b` divides `c`. -/
 theorem mul_dvd_mul_iff_left [CancelMonoidWithZero α] {a b c : α} (ha : a ≠ 0) : a * b ∣ a * c ↔ b ∣ c :=
   exists_congr $ fun d => by
-    rw [mul_assocₓ, mul_right_inj' ha]
+    rw [mul_assoc, mul_right_inj' ha]
 
 /-- Given two elements `a`, `b` of a commutative `cancel_monoid_with_zero` and a nonzero
   element `c`, `a*c` divides `b*c` iff `a` divides `b`. -/
@@ -204,16 +204,16 @@ theorem dvd_mul_right : a ∣ b * u ↔ a ∣ b :=
   Iff.intro
     (fun ⟨c, Eq⟩ =>
       ⟨c * ↑u⁻¹, by
-        rw [← mul_assocₓ, ← Eq, Units.mul_inv_cancel_right]⟩)
+        rw [← mul_assoc, ← Eq, Units.mul_inv_cancel_right]⟩)
     fun ⟨c, Eq⟩ => Eq.symm ▸ (dvd_mul_right _ _).mul_right _
 
 /-- In a monoid, an element `a` divides an element `b` iff all associates of `a` divide `b`. -/
 theorem mul_right_dvd : a * u ∣ b ↔ a ∣ b :=
-  Iff.intro (fun ⟨c, Eq⟩ => ⟨↑u * c, Eq.trans (mul_assocₓ _ _ _)⟩) fun h =>
+  Iff.intro (fun ⟨c, Eq⟩ => ⟨↑u * c, Eq.trans (mul_assoc _ _ _)⟩) fun h =>
     dvd_trans
       (Dvd.intro (↑u⁻¹)
         (by
-          rw [mul_assocₓ, u.mul_inv, mul_oneₓ]))
+          rw [mul_assoc, u.mul_inv, mul_oneₓ]))
       h
 
 end Monoidₓ
@@ -225,13 +225,13 @@ variable [CommMonoidₓ α] {a b : α} {u : (α)ˣ}
 /-- In a commutative monoid, an element `a` divides an element `b` iff `a` divides all left
     associates of `b`. -/
 theorem dvd_mul_left : a ∣ u * b ↔ a ∣ b := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   apply dvd_mul_right
 
 /-- In a commutative monoid, an element `a` divides an element `b` iff all
   left associates of `a` divide `b`.-/
 theorem mul_left_dvd : ↑u * a ∣ b ↔ a ∣ b := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   apply mul_right_dvd
 
 end CommMonoidₓ

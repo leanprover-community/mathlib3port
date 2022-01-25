@@ -74,6 +74,18 @@ theorem mem_upper_bounds : a ∈ UpperBounds s ↔ ∀, ∀ x ∈ s, ∀, x ≤ 
 theorem mem_lower_bounds : a ∈ LowerBounds s ↔ ∀, ∀ x ∈ s, ∀, a ≤ x :=
   Iff.rfl
 
+theorem bot_mem_lower_bounds [OrderBot α] (s : Set α) : ⊥ ∈ LowerBounds s := fun _ _ => bot_le
+
+theorem top_mem_upper_bounds [OrderTop α] (s : Set α) : ⊤ ∈ UpperBounds s := fun _ _ => le_top
+
+@[simp]
+theorem is_least_bot_iff [OrderBot α] : IsLeast s ⊥ ↔ ⊥ ∈ s :=
+  and_iff_left $ bot_mem_lower_bounds _
+
+@[simp]
+theorem is_greatest_top_iff [OrderTop α] : IsGreatest s ⊤ ↔ ⊤ ∈ s :=
+  and_iff_left $ top_mem_upper_bounds _
+
 /-- A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` such that `x`
 is not greater than or equal to `y`. This version only assumes `preorder` structure and uses
 `¬(y ≤ x)`. A version for linear orders is called `not_bdd_above_iff`. -/

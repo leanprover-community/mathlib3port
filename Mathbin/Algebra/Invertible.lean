@@ -56,7 +56,7 @@ universe u
 variable {α : Type u}
 
 /-- `invertible a` gives a two-sided multiplicative inverse of `a`. -/
-class Invertible [Mul α] [HasOne α] (a : α) : Type u where
+class Invertible [Mul α] [One α] (a : α) : Type u where
   invOf : α
   inv_of_mul_self : inv_of * a = 1
   mul_inv_of_self : a * inv_of = 1
@@ -64,28 +64,28 @@ class Invertible [Mul α] [HasOne α] (a : α) : Type u where
 notation:1034 "⅟" => Invertible.invOf
 
 @[simp]
-theorem inv_of_mul_self [Mul α] [HasOne α] (a : α) [Invertible a] : ⅟ a * a = 1 :=
+theorem inv_of_mul_self [Mul α] [One α] (a : α) [Invertible a] : ⅟ a * a = 1 :=
   Invertible.inv_of_mul_self
 
 @[simp]
-theorem mul_inv_of_self [Mul α] [HasOne α] (a : α) [Invertible a] : a * ⅟ a = 1 :=
+theorem mul_inv_of_self [Mul α] [One α] (a : α) [Invertible a] : a * ⅟ a = 1 :=
   Invertible.mul_inv_of_self
 
 @[simp]
 theorem inv_of_mul_self_assoc [Monoidₓ α] (a b : α) [Invertible a] : ⅟ a * (a * b) = b := by
-  rw [← mul_assocₓ, inv_of_mul_self, one_mulₓ]
+  rw [← mul_assoc, inv_of_mul_self, one_mulₓ]
 
 @[simp]
 theorem mul_inv_of_self_assoc [Monoidₓ α] (a b : α) [Invertible a] : a * (⅟ a * b) = b := by
-  rw [← mul_assocₓ, mul_inv_of_self, one_mulₓ]
+  rw [← mul_assoc, mul_inv_of_self, one_mulₓ]
 
 @[simp]
 theorem mul_inv_of_mul_self_cancel [Monoidₓ α] (a b : α) [Invertible b] : a * ⅟ b * b = a := by
-  simp [mul_assocₓ]
+  simp [mul_assoc]
 
 @[simp]
 theorem mul_mul_inv_of_self_cancel [Monoidₓ α] (a b : α) [Invertible b] : a * b * ⅟ b = a := by
-  simp [mul_assocₓ]
+  simp [mul_assoc]
 
 theorem inv_of_eq_right_inv [Monoidₓ α] {a b : α} [Invertible a] (hac : a * b = 1) : ⅟ a = b :=
   left_inv_eq_right_invₓ (inv_of_mul_self _) hac
@@ -181,7 +181,7 @@ theorem one_sub_inv_of_two [Ringₓ α] [Invertible (2 : α)] : 1 - (⅟ 2 : α)
     rw [mul_sub, mul_inv_of_self, mul_oneₓ, bit0, add_sub_cancel]
 
 /-- `a` is the inverse of `⅟a`. -/
-instance invertibleInvOf [HasOne α] [Mul α] {a : α} [Invertible a] : Invertible (⅟ a) :=
+instance invertibleInvOf [One α] [Mul α] {a : α} [Invertible a] : Invertible (⅟ a) :=
   ⟨a, mul_inv_of_self a, inv_of_mul_self a⟩
 
 @[simp]
@@ -191,36 +191,36 @@ theorem inv_of_inv_of [Monoidₓ α] {a : α} [Invertible a] [Invertible (⅟ a)
 /-- `⅟b * ⅟a` is the inverse of `a * b` -/
 def invertibleMul [Monoidₓ α] (a b : α) [Invertible a] [Invertible b] : Invertible (a * b) :=
   ⟨⅟ b * ⅟ a, by
-    simp [← mul_assocₓ], by
-    simp [← mul_assocₓ]⟩
+    simp [← mul_assoc], by
+    simp [← mul_assoc]⟩
 
 @[simp]
 theorem inv_of_mul [Monoidₓ α] (a b : α) [Invertible a] [Invertible b] [Invertible (a * b)] : ⅟ (a * b) = ⅟ b * ⅟ a :=
   inv_of_eq_right_inv
     (by
-      simp [← mul_assocₓ])
+      simp [← mul_assoc])
 
 theorem Commute.inv_of_right [Monoidₓ α] {a b : α} [Invertible b] (h : Commute a b) : Commute a (⅟ b) :=
   calc
     a * ⅟ b = ⅟ b * (b * a * ⅟ b) := by
-      simp [mul_assocₓ]
+      simp [mul_assoc]
     _ = ⅟ b * (a * b * ⅟ b) := by
       rw [h.eq]
     _ = ⅟ b * a := by
-      simp [mul_assocₓ]
+      simp [mul_assoc]
     
 
 theorem Commute.inv_of_left [Monoidₓ α] {a b : α} [Invertible b] (h : Commute b a) : Commute (⅟ b) a :=
   calc
     ⅟ b * a = ⅟ b * (a * b * ⅟ b) := by
-      simp [mul_assocₓ]
+      simp [mul_assoc]
     _ = ⅟ b * (b * a * ⅟ b) := by
       rw [h.eq]
     _ = a * ⅟ b := by
-      simp [mul_assocₓ]
+      simp [mul_assoc]
     
 
-theorem commute_inv_of {M : Type _} [HasOne M] [Mul M] (m : M) [Invertible m] : Commute m (⅟ m) :=
+theorem commute_inv_of {M : Type _} [One M] [Mul M] (m : M) [Invertible m] : Commute m (⅟ m) :=
   calc
     m * ⅟ m = 1 := mul_inv_of_self m
     _ = ⅟ m * m := (inv_of_mul_self m).symm

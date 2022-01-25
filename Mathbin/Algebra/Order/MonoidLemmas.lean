@@ -807,7 +807,7 @@ protected theorem inj [Mul α] [PartialOrderₓ α] {a b c : α} (ha : MulLeCanc
 protected theorem injective_left [CommSemigroupₓ α] [PartialOrderₓ α] {a : α} (ha : MulLeCancellable a) :
     injective (· * a) := fun b c h =>
   ha.injective $ by
-    rwa [mul_commₓ a, mul_commₓ a]
+    rwa [mul_comm a, mul_comm a]
 
 @[to_additive]
 protected theorem inj_left [CommSemigroupₓ α] [PartialOrderₓ α] {a b c : α} (hc : MulLeCancellable c) :
@@ -824,7 +824,7 @@ protected theorem mul_le_mul_iff_left [Mul α] [CovariantClass α α (· * ·) (
 @[to_additive]
 protected theorem mul_le_mul_iff_right [CommSemigroupₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b c : α}
     (ha : MulLeCancellable a) : b * a ≤ c * a ↔ b ≤ c := by
-  rw [mul_commₓ b, mul_commₓ c, ha.mul_le_mul_iff_left]
+  rw [mul_comm b, mul_comm c, ha.mul_le_mul_iff_left]
 
 @[to_additive]
 protected theorem le_mul_iff_one_le_right [MulOneClass α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
@@ -845,12 +845,12 @@ protected theorem mul_le_iff_le_one_right [MulOneClass α] [CovariantClass α α
 @[to_additive]
 protected theorem le_mul_iff_one_le_left [CommMonoidₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
     (ha : MulLeCancellable a) : a ≤ b * a ↔ 1 ≤ b := by
-  rw [mul_commₓ, ha.le_mul_iff_one_le_right]
+  rw [mul_comm, ha.le_mul_iff_one_le_right]
 
 @[to_additive]
 protected theorem mul_le_iff_le_one_left [CommMonoidₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
     (ha : MulLeCancellable a) : b * a ≤ a ↔ b ≤ 1 := by
-  rw [mul_commₓ, ha.mul_le_iff_le_one_right]
+  rw [mul_comm, ha.mul_le_iff_le_one_right]
 
 end MulLeCancellable
 

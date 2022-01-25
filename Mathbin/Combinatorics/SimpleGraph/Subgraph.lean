@@ -74,7 +74,7 @@ theorem adj_symm (G' : subgraph G) {u v : V} (h : G'.adj u v) : G'.adj v u :=
 
 /-- Coercion from `G' : subgraph G` to a `simple_graph ↥G'.verts`. -/
 @[simps]
-def coeₓ (G' : subgraph G) : SimpleGraph G'.verts where
+def coe (G' : subgraph G) : SimpleGraph G'.verts where
   Adj := fun v w => G'.adj v w
   symm := fun v w h => G'.symm h
   loopless := fun v h => loopless G v (G'.adj_sub h)

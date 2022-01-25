@@ -17,10 +17,10 @@ variable {α β : Type _} {γ : α → Type _}
 
 attribute [simp] nonempty_of_inhabited
 
-instance (priority := 20) HasZero.nonempty [HasZero α] : Nonempty α :=
+instance (priority := 20) Zero.nonempty [Zero α] : Nonempty α :=
   ⟨0⟩
 
-instance (priority := 20) HasOne.nonempty [HasOne α] : Nonempty α :=
+instance (priority := 20) One.nonempty [One α] : Nonempty α :=
   ⟨1⟩
 
 theorem exists_true_iff_nonempty {α : Sort _} : (∃ a : α, True) ↔ Nonempty α :=

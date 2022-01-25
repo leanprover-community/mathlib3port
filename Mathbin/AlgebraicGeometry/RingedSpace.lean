@@ -87,7 +87,7 @@ theorem is_unit_of_is_unit_germ (U : opens X) (f : X.presheaf.obj (op U)) (h : �
 `x` is a unit.
 -/
 def basic_open {U : opens X} (f : X.presheaf.obj (op U)) : opens X where
-  val := coeₓ '' { x : U | IsUnit (X.presheaf.germ x f) }
+  val := coe '' { x : U | IsUnit (X.presheaf.germ x f) }
   property := by
     rw [is_open_iff_forall_mem_open]
     rintro _ ⟨x, hx, rfl⟩

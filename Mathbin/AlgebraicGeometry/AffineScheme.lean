@@ -240,7 +240,7 @@ theorem is_affine_open.basic_open_is_affine {X : Scheme} {U : opens X.carrier} (
     exact Scheme.basic_open_subset _ _
   rw [Subtype.coe_mk, Scheme.comp_val_base, ← this, coe_comp, Set.range_comp]
   congr 1
-  refine' (congr_argₓ coeₓ $ Scheme.preimage_basic_open hU.from_Spec f).trans _
+  refine' (congr_argₓ coe $ Scheme.preimage_basic_open hU.from_Spec f).trans _
   refine' Eq.trans _ (PrimeSpectrum.localization_away_comap_range (Localization.Away f) f).symm
   congr 1
   have : (opens.map hU.from_Spec.val.base).obj U = ⊤ := by

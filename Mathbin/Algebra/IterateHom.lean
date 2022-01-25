@@ -148,7 +148,7 @@ theorem mul_left_iterate : (· * ·) a^[n] = (· * ·) (a ^ n) :=
         simp ) $
     fun n ihn =>
     funext $ fun x => by
-      simp [iterate_succ, ihn, pow_succ'ₓ, mul_assocₓ]
+      simp [iterate_succ, ihn, pow_succ'ₓ, mul_assoc]
 
 @[simp, to_additive]
 theorem mul_right_iterate : (· * a)^[n] = · * a ^ n := by
@@ -171,7 +171,7 @@ variable [Semigroupₓ G] {a b c : G}
 @[to_additive]
 theorem SemiconjBy.function_semiconj_mul_left (h : SemiconjBy a b c) :
     Function.Semiconj ((· * ·) a) ((· * ·) b) ((· * ·) c) := fun j => by
-  rw [← mul_assocₓ, h.eq, mul_assocₓ]
+  rw [← mul_assoc, h.eq, mul_assoc]
 
 @[to_additive]
 theorem Commute.function_commute_mul_left (h : Commute a b) : Function.Commute ((· * ·) a) ((· * ·) b) :=
@@ -180,7 +180,7 @@ theorem Commute.function_commute_mul_left (h : Commute a b) : Function.Commute (
 @[to_additive]
 theorem SemiconjBy.function_semiconj_mul_right_swap (h : SemiconjBy a b c) :
     Function.Semiconj (· * a) (· * c) (· * b) := fun j => by
-  simp_rw [mul_assocₓ, ← h.eq]
+  simp_rw [mul_assoc, ← h.eq]
 
 @[to_additive]
 theorem Commute.function_commute_mul_right (h : Commute a b) : Function.Commute (· * a) (· * b) :=

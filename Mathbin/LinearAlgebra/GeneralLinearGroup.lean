@@ -113,7 +113,7 @@ namespace SpecialLinearGroup
 variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 
 instance has_coe_to_general_linear_group : Coe (special_linear_group n R) (GL n R) :=
-  ⟨fun A => ⟨↑A, ↑A⁻¹, congr_argₓ coeₓ (mul_right_invₓ A), congr_argₓ coeₓ (mul_left_invₓ A)⟩⟩
+  ⟨fun A => ⟨↑A, ↑A⁻¹, congr_argₓ coe (mul_right_invₓ A), congr_argₓ coe (mul_left_invₓ A)⟩⟩
 
 end SpecialLinearGroup
 
@@ -179,11 +179,11 @@ def to_GL_pos : special_linear_group n R →* GL_pos n R where
 instance : Coe (special_linear_group n R) (GL_pos n R) :=
   ⟨to_GL_pos⟩
 
-theorem coe_eq_to_GL_pos : (coeₓ : special_linear_group n R → GL_pos n R) = to_GL_pos :=
+theorem coe_eq_to_GL_pos : (coe : special_linear_group n R → GL_pos n R) = to_GL_pos :=
   rfl
 
 theorem to_GL_pos_injective : Function.Injective (to_GL_pos : special_linear_group n R → GL_pos n R) :=
-  (show Function.Injective ((coeₓ : GL_pos n R → Matrix n n R) ∘ to_GL_pos) from Subtype.coe_injective).of_comp
+  (show Function.Injective ((coe : GL_pos n R → Matrix n n R) ∘ to_GL_pos) from Subtype.coe_injective).of_comp
 
 end SpecialLinearGroup
 

@@ -104,7 +104,7 @@ theorem int_prod_range_nonneg (m : ℤ) (n : ℕ) (hn : Even n) : 0 ≤ ∏ k in
   · simp
     
   rw [Nat.succ_eq_add_one, mul_addₓ, mul_oneₓ, bit0, ← add_assocₓ, Finset.prod_range_succ, Finset.prod_range_succ,
-    mul_assocₓ]
+    mul_assoc]
   refine' mul_nonneg ihn _
   generalize (1 + 1) * n = k
   cases' le_or_ltₓ m k with hmk hmk

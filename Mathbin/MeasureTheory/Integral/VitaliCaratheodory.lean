@@ -489,7 +489,7 @@ theorem exists_lt_lower_semicontinuous_integral_lt [sigma_finite μ] (f : α →
         ring
       _ = (∫ x : α, f x ∂μ) + ε := by
         congr 1
-        field_simp [δ, mul_commₓ]
+        field_simp [δ, mul_comm]
       
   show ∀ᵐ x : α ∂μ, g x < ⊤
   · filter_upwards [gp_lt_top]

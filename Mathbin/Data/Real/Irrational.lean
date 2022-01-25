@@ -20,7 +20,7 @@ open Rat Real multiplicity
 
 /-- A real number is irrational if it is not equal to any rational number. -/
 def Irrational (x : ℝ) :=
-  x ∉ Set.Range (coeₓ : ℚ → ℝ)
+  x ∉ Set.Range (coe : ℚ → ℝ)
 
 theorem irrational_iff_ne_rational (x : ℝ) : Irrational x ↔ ∀ a b : ℤ, x ≠ a / b := by
   simp only [Irrational, Rat.forall, cast_mk, not_exists, Set.mem_range, cast_coe_int, cast_div, eq_comm]
@@ -295,13 +295,13 @@ theorem of_mul_rat (h : Irrational (x * q)) : Irrational x :=
 
 theorem mul_rat (h : Irrational x) {q : ℚ} (hq : q ≠ 0) : Irrational (x * q) :=
   of_mul_rat (q⁻¹) $ by
-    rwa [mul_assocₓ, ← cast_mul, mul_inv_cancel hq, cast_one, mul_oneₓ]
+    rwa [mul_assoc, ← cast_mul, mul_inv_cancel hq, cast_one, mul_oneₓ]
 
 theorem of_rat_mul : Irrational (q * x) → Irrational x :=
-  mul_commₓ x q ▸ of_mul_rat q
+  mul_comm x q ▸ of_mul_rat q
 
 theorem rat_mul (h : Irrational x) {q : ℚ} (hq : q ≠ 0) : Irrational (q * x) :=
-  mul_commₓ x q ▸ h.mul_rat hq
+  mul_comm x q ▸ h.mul_rat hq
 
 theorem of_mul_int (m : ℤ) (h : Irrational (x * m)) : Irrational x :=
   of_mul_rat m $ by
@@ -317,7 +317,7 @@ theorem mul_int (h : Irrational x) {m : ℤ} (hm : m ≠ 0) : Irrational (x * m)
   rwa [Int.cast_ne_zero]
 
 theorem int_mul (h : Irrational x) {m : ℤ} (hm : m ≠ 0) : Irrational (m * x) :=
-  mul_commₓ x m ▸ h.mul_int hm
+  mul_comm x m ▸ h.mul_int hm
 
 theorem of_mul_nat (m : ℕ) (h : Irrational (x * m)) : Irrational x :=
   h.of_mul_int m
@@ -436,7 +436,7 @@ theorem one_lt_nat_degree_of_irrational_root (hx : Irrational x) (p_nonzero : p 
       simpa
     simpa using p_nonzero
     
-  · rw [mul_commₓ, ← eq_div_iff_mul_eq, eq_comm] at this
+  · rw [mul_comm, ← eq_div_iff_mul_eq, eq_comm] at this
     refine' hx ⟨-b / a, _⟩
     assumption_mod_cast
     assumption_mod_cast
@@ -517,7 +517,7 @@ theorem irrational_rat_mul_iff : Irrational (q * x) ↔ q ≠ 0 ∧ Irrational x
 
 @[simp]
 theorem irrational_mul_rat_iff : Irrational (x * q) ↔ q ≠ 0 ∧ Irrational x := by
-  rw [mul_commₓ, irrational_rat_mul_iff]
+  rw [mul_comm, irrational_rat_mul_iff]
 
 @[simp]
 theorem irrational_int_mul_iff : Irrational (m * x) ↔ m ≠ 0 ∧ Irrational x := by

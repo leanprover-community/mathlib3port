@@ -37,11 +37,11 @@ open DenseInducing UniformSpace Function
 
 variable (α : Type _) [Ringₓ α] [UniformSpace α]
 
-instance : HasOne (completion α) :=
+instance : One (completion α) :=
   ⟨(1 : α)⟩
 
 instance : Mul (completion α) :=
-  ⟨curry $ (dense_inducing_coe.Prod dense_inducing_coe).extend (coeₓ ∘ uncurry (· * ·))⟩
+  ⟨curry $ (dense_inducing_coe.Prod dense_inducing_coe).extend (coe ∘ uncurry (· * ·))⟩
 
 @[norm_cast]
 theorem coe_one : ((1 : α) : completion α) = 1 :=
@@ -84,7 +84,7 @@ instance : Ringₓ (completion α) :=
           (Continuous.mul continuous_fst
             (Continuous.mul (continuous_fst.comp continuous_snd) (continuous_snd.comp continuous_snd))))
         fun a b c => by
-        rw [← coe_mul, ← coe_mul, ← coe_mul, ← coe_mul, mul_assocₓ],
+        rw [← coe_mul, ← coe_mul, ← coe_mul, ← coe_mul, mul_assoc],
     left_distrib := fun a b c =>
       completion.induction_on₃ a b c
         (is_closed_eq
@@ -106,7 +106,7 @@ instance : Ringₓ (completion α) :=
 
 /-- The map from a uniform ring to its completion, as a ring homomorphism. -/
 def coe_ring_hom : α →+* completion α :=
-  ⟨coeₓ, coe_one α, fun a b => coe_mul a b, coe_zero, fun a b => coe_add a b⟩
+  ⟨coe, coe_one α, fun a b => coe_mul a b, coe_zero, fun a b => coe_add a b⟩
 
 theorem continuous_coe_ring_hom : Continuous (coe_ring_hom : α → completion α) :=
   continuous_coe α
@@ -151,7 +151,7 @@ instance : CommRingₓ (completion R) :=
     mul_comm := fun a b =>
       completion.induction_on₂ a b
         (is_closed_eq (continuous_fst.mul continuous_snd) (continuous_snd.mul continuous_fst)) fun a b => by
-        rw [← coe_mul, ← coe_mul, mul_commₓ] }
+        rw [← coe_mul, ← coe_mul, mul_comm] }
 
 end UniformSpace.Completion
 

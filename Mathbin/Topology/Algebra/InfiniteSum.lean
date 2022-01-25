@@ -112,28 +112,28 @@ theorem Function.Injective.summable_iff {g : γ → β} (hg : injective g) (hf :
   exists_congr $ fun _ => hg.has_sum_iff hf
 
 theorem has_sum_subtype_iff_of_support_subset {s : Set β} (hf : support f ⊆ s) :
-    HasSum (f ∘ coeₓ : s → α) a ↔ HasSum f a :=
+    HasSum (f ∘ coe : s → α) a ↔ HasSum f a :=
   Subtype.coe_injective.has_sum_iff $ by
     simpa using support_subset_iff'.1 hf
 
-theorem has_sum_subtype_iff_indicator {s : Set β} : HasSum (f ∘ coeₓ : s → α) a ↔ HasSum (s.indicator f) a := by
+theorem has_sum_subtype_iff_indicator {s : Set β} : HasSum (f ∘ coe : s → α) a ↔ HasSum (s.indicator f) a := by
   rw [← Set.indicator_range_comp, Subtype.range_coe, has_sum_subtype_iff_of_support_subset Set.support_indicator_subset]
 
 @[simp]
-theorem has_sum_subtype_support : HasSum (f ∘ coeₓ : support f → α) a ↔ HasSum f a :=
+theorem has_sum_subtype_support : HasSum (f ∘ coe : support f → α) a ↔ HasSum f a :=
   has_sum_subtype_iff_of_support_subset $ Set.Subset.refl _
 
 theorem has_sum_fintype [Fintype β] (f : β → α) : HasSum f (∑ b, f b) :=
   OrderTop.tendsto_at_top_nhds _
 
-protected theorem Finset.has_sum (s : Finset β) (f : β → α) : HasSum (f ∘ coeₓ : (↑s : Set β) → α) (∑ b in s, f b) := by
+protected theorem Finset.has_sum (s : Finset β) (f : β → α) : HasSum (f ∘ coe : (↑s : Set β) → α) (∑ b in s, f b) := by
   rw [← sum_attach]
   exact has_sum_fintype _
 
-protected theorem Finset.summable (s : Finset β) (f : β → α) : Summable (f ∘ coeₓ : (↑s : Set β) → α) :=
+protected theorem Finset.summable (s : Finset β) (f : β → α) : Summable (f ∘ coe : (↑s : Set β) → α) :=
   (s.has_sum f).Summable
 
-protected theorem Set.Finite.summable {s : Set β} (hs : s.finite) (f : β → α) : Summable (f ∘ coeₓ : s → α) := by
+protected theorem Set.Finite.summable {s : Set β} (hs : s.finite) (f : β → α) : Summable (f ∘ coe : s → α) := by
   convert hs.to_finset.summable f <;> simp only [hs.coe_to_finset]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (b «expr ∉ » s)
@@ -175,7 +175,7 @@ theorem Summable.prod_symm {f : β × γ → α} (hf : Summable f) : Summable fu
 
 theorem Equivₓ.has_sum_iff_of_support {g : γ → α} (e : support f ≃ support g) (he : ∀ x : support f, g (e x) = f x) :
     HasSum f a ↔ HasSum g a := by
-  have : (g ∘ coeₓ) ∘ e = f ∘ coeₓ := funext he
+  have : (g ∘ coe) ∘ e = f ∘ coe := funext he
   rw [← has_sum_subtype_support, ← this, e.has_sum_iff, has_sum_subtype_support]
 
 theorem has_sum_iff_has_sum_of_ne_zero_bij {g : γ → α} (i : support g → β) (hi : ∀ ⦃x y⦄, i x = i y → (x : γ) = y)
@@ -242,25 +242,25 @@ theorem summable_sum {f : γ → β → α} {s : Finset γ} (hf : ∀, ∀ i ∈
     Summable fun b => ∑ i in s, f i b :=
   (has_sum_sum $ fun i hi => (hf i hi).HasSum).Summable
 
-theorem HasSum.add_disjoint {s t : Set β} (hs : Disjoint s t) (ha : HasSum (f ∘ coeₓ : s → α) a)
-    (hb : HasSum (f ∘ coeₓ : t → α) b) : HasSum (f ∘ coeₓ : s ∪ t → α) (a + b) := by
+theorem HasSum.add_disjoint {s t : Set β} (hs : Disjoint s t) (ha : HasSum (f ∘ coe : s → α) a)
+    (hb : HasSum (f ∘ coe : t → α) b) : HasSum (f ∘ coe : s ∪ t → α) (a + b) := by
   rw [has_sum_subtype_iff_indicator] at *
   rw [Set.indicator_union_of_disjoint hs]
   exact ha.add hb
 
-theorem HasSum.add_is_compl {s t : Set β} (hs : IsCompl s t) (ha : HasSum (f ∘ coeₓ : s → α) a)
-    (hb : HasSum (f ∘ coeₓ : t → α) b) : HasSum f (a + b) := by
+theorem HasSum.add_is_compl {s t : Set β} (hs : IsCompl s t) (ha : HasSum (f ∘ coe : s → α) a)
+    (hb : HasSum (f ∘ coe : t → α) b) : HasSum f (a + b) := by
   simpa [← hs.compl_eq] using (has_sum_subtype_iff_indicator.1 ha).add (has_sum_subtype_iff_indicator.1 hb)
 
-theorem HasSum.add_compl {s : Set β} (ha : HasSum (f ∘ coeₓ : s → α) a) (hb : HasSum (f ∘ coeₓ : sᶜ → α) b) :
+theorem HasSum.add_compl {s : Set β} (ha : HasSum (f ∘ coe : s → α) a) (hb : HasSum (f ∘ coe : sᶜ → α) b) :
     HasSum f (a + b) :=
   ha.add_is_compl is_compl_compl hb
 
-theorem Summable.add_compl {s : Set β} (hs : Summable (f ∘ coeₓ : s → α)) (hsc : Summable (f ∘ coeₓ : sᶜ → α)) :
+theorem Summable.add_compl {s : Set β} (hs : Summable (f ∘ coe : s → α)) (hsc : Summable (f ∘ coe : sᶜ → α)) :
     Summable f :=
   (hs.has_sum.add_compl hsc.has_sum).Summable
 
-theorem HasSum.compl_add {s : Set β} (ha : HasSum (f ∘ coeₓ : sᶜ → α) a) (hb : HasSum (f ∘ coeₓ : s → α) b) :
+theorem HasSum.compl_add {s : Set β} (ha : HasSum (f ∘ coe : sᶜ → α) a) (hb : HasSum (f ∘ coe : s → α) b) :
     HasSum f (a + b) :=
   ha.add_is_compl is_compl_compl.symm hb
 
@@ -272,7 +272,7 @@ theorem HasSum.even_add_odd {f : ℕ → α} (he : HasSum (fun k => f (2 * k)) a
   refine' he.add_is_compl _ ho
   simpa [· ∘ ·] using Nat.is_compl_even_odd
 
-theorem Summable.compl_add {s : Set β} (hs : Summable (f ∘ coeₓ : sᶜ → α)) (hsc : Summable (f ∘ coeₓ : s → α)) :
+theorem Summable.compl_add {s : Set β} (hs : Summable (f ∘ coe : sᶜ → α)) (hsc : Summable (f ∘ coe : s → α)) :
     Summable f :=
   (hs.has_sum.compl_add hsc.has_sum).Summable
 
@@ -513,12 +513,12 @@ end Encodable
 
 variable [HasContinuousAdd α]
 
-theorem tsum_add_tsum_compl {s : Set β} (hs : Summable (f ∘ coeₓ : s → α)) (hsc : Summable (f ∘ coeₓ : sᶜ → α)) :
+theorem tsum_add_tsum_compl {s : Set β} (hs : Summable (f ∘ coe : s → α)) (hsc : Summable (f ∘ coe : sᶜ → α)) :
     ((∑' x : s, f x) + ∑' x : sᶜ, f x) = ∑' x, f x :=
   (hs.has_sum.add_compl hsc.has_sum).tsum_eq.symm
 
-theorem tsum_union_disjoint {s t : Set β} (hd : Disjoint s t) (hs : Summable (f ∘ coeₓ : s → α))
-    (ht : Summable (f ∘ coeₓ : t → α)) : (∑' x : s ∪ t, f x) = (∑' x : s, f x) + ∑' x : t, f x :=
+theorem tsum_union_disjoint {s t : Set β} (hd : Disjoint s t) (hs : Summable (f ∘ coe : s → α))
+    (ht : Summable (f ∘ coe : t → α)) : (∑' x : s ∪ t, f x) = (∑' x : s, f x) + ∑' x : t, f x :=
   (hs.has_sum.add_disjoint hd ht.has_sum).tsum_eq
 
 theorem tsum_even_add_odd {f : ℕ → α} (he : Summable fun k => f (2 * k)) (ho : Summable fun k => f (2 * k + 1)) :
@@ -598,21 +598,21 @@ theorem HasSum.update (hf : HasSum f a₁) (b : β) [DecidableEq β] (a : α) : 
 theorem Summable.update (hf : Summable f) (b : β) [DecidableEq β] (a : α) : Summable (update f b a) :=
   (hf.has_sum.update b a).Summable
 
-theorem HasSum.has_sum_compl_iff {s : Set β} (hf : HasSum (f ∘ coeₓ : s → α) a₁) :
-    HasSum (f ∘ coeₓ : sᶜ → α) a₂ ↔ HasSum f (a₁ + a₂) := by
+theorem HasSum.has_sum_compl_iff {s : Set β} (hf : HasSum (f ∘ coe : s → α) a₁) :
+    HasSum (f ∘ coe : sᶜ → α) a₂ ↔ HasSum f (a₁ + a₂) := by
   refine' ⟨fun h => hf.add_compl h, fun h => _⟩
   rw [has_sum_subtype_iff_indicator] at hf⊢
   rw [Set.indicator_compl]
   simpa only [add_sub_cancel'] using h.sub hf
 
-theorem HasSum.has_sum_iff_compl {s : Set β} (hf : HasSum (f ∘ coeₓ : s → α) a₁) :
-    HasSum f a₂ ↔ HasSum (f ∘ coeₓ : sᶜ → α) (a₂ - a₁) :=
+theorem HasSum.has_sum_iff_compl {s : Set β} (hf : HasSum (f ∘ coe : s → α) a₁) :
+    HasSum f a₂ ↔ HasSum (f ∘ coe : sᶜ → α) (a₂ - a₁) :=
   Iff.symm $
     hf.has_sum_compl_iff.trans $ by
       rw [add_sub_cancel'_right]
 
-theorem Summable.summable_compl_iff {s : Set β} (hf : Summable (f ∘ coeₓ : s → α)) :
-    Summable (f ∘ coeₓ : sᶜ → α) ↔ Summable f :=
+theorem Summable.summable_compl_iff {s : Set β} (hf : Summable (f ∘ coe : s → α)) :
+    Summable (f ∘ coe : sᶜ → α) ↔ Summable f :=
   ⟨fun ⟨a, ha⟩ => (hf.has_sum.has_sum_compl_iff.1 ha).Summable, fun ⟨a, ha⟩ =>
     (hf.has_sum.has_sum_iff_compl.1 ha).Summable⟩
 
@@ -628,7 +628,7 @@ protected theorem Finset.has_sum_iff_compl (s : Finset β) :
 protected theorem Finset.summable_compl_iff (s : Finset β) : (Summable fun x : { x // x ∉ s } => f x) ↔ Summable f :=
   (s.summable f).summable_compl_iff
 
-theorem Set.Finite.summable_compl_iff {s : Set β} (hs : s.finite) : Summable (f ∘ coeₓ : sᶜ → α) ↔ Summable f :=
+theorem Set.Finite.summable_compl_iff {s : Set β} (hs : s.finite) : Summable (f ∘ coe : sᶜ → α) ↔ Summable f :=
   (hs.summable f).summable_compl_iff
 
 theorem has_sum_ite_eq_extract [DecidableEq β] (hf : HasSum f a) (b : β) :
@@ -849,7 +849,7 @@ theorem le_has_sum_of_le_sum (hf : HasSum f a) (h : ∀ s : Finset β, a₂ ≤ 
 theorem has_sum_le_inj {g : γ → α} (i : β → γ) (hi : injective i) (hs : ∀ c _ : c ∉ Set.Range i, 0 ≤ g c)
     (h : ∀ b, f b ≤ g (i b)) (hf : HasSum f a₁) (hg : HasSum g a₂) : a₁ ≤ a₂ := by
   have : HasSum (fun c => (partial_inv i c).casesOn' 0 f) a₁ := by
-    refine' (has_sum_iff_has_sum_of_ne_zero_bij (i ∘ coeₓ) _ _ _).2 hf
+    refine' (has_sum_iff_has_sum_of_ne_zero_bij (i ∘ coe) _ _ _).2 hf
     · exact fun c₁ c₂ eq => hi Eq
       
     · intro c hc
@@ -1119,7 +1119,7 @@ theorem Summable.comp_injective {i : γ → β} (hf : Summable f) (hi : injectiv
   simpa only [Set.indicator_range_comp] using (hi.summable_iff _).2 (hf.indicator (Set.Range i))
   exact fun x hx => Set.indicator_of_not_mem hx _
 
-theorem Summable.subtype (hf : Summable f) (s : Set β) : Summable (f ∘ coeₓ : s → α) :=
+theorem Summable.subtype (hf : Summable f) (s : Set β) : Summable (f ∘ coe : s → α) :=
   hf.comp_injective Subtype.coe_injective
 
 theorem summable_subtype_and_compl {s : Set β} :

@@ -198,6 +198,11 @@ theorem eventually_filter_at_mem_sets (x : α) : ∀ᶠ a in v.filter_at x, a �
     implies_true_iff]
   exact ⟨1, zero_lt_one⟩
 
+theorem eventually_filter_at_measurable_set (x : α) : ∀ᶠ a in v.filter_at x, MeasurableSet a := by
+  filter_upwards [v.eventually_filter_at_mem_sets x]
+  intro a ha
+  exact v.measurable_set' _ _ ha
+
 theorem frequently_filter_at_iff {x : α} {P : Set α → Prop} :
     (∃ᶠ a in v.filter_at x, P a) ↔ ∀, ∀ ε > (0 : ℝ), ∀, ∃ a ∈ v.sets_at x, a ⊆ closed_ball x ε ∧ P a := by
   simp only [Filter.Frequently, eventually_filter_at_iff, not_exists, exists_prop, not_and, not_not, not_forall]

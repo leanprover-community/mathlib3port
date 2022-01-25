@@ -56,7 +56,7 @@ preserves multiplication when the target is commutative. -/
 theorem mul {α β} [Semigroupₓ α] [CommSemigroupₓ β] {f g : α → β} (hf : IsMulHom f) (hg : IsMulHom g) :
     IsMulHom fun a => f a * g a :=
   { map_mul := fun a b => by
-      simp only [hf.map_mul, hg.map_mul, mul_commₓ, mul_assocₓ, mul_left_commₓ] }
+      simp only [hf.map_mul, hg.map_mul, mul_comm, mul_assoc, mul_left_commₓ] }
 
 /-- The inverse of a map which preserves multiplication,
 preserves multiplication when the target is commutative. -/
@@ -324,7 +324,7 @@ def map' {f : M → N} (hf : IsMonoidHom f) : (M)ˣ →* (N)ˣ :=
 theorem coe_map' {f : M → N} (hf : IsMonoidHom f) (x : (M)ˣ) : ↑(map' hf : (M)ˣ → (N)ˣ) x = f x :=
   rfl
 
-theorem coe_is_monoid_hom : IsMonoidHom (coeₓ : (M)ˣ → M) :=
+theorem coe_is_monoid_hom : IsMonoidHom (coe : (M)ˣ → M) :=
   (coe_hom M).is_monoid_hom_coe
 
 end Units

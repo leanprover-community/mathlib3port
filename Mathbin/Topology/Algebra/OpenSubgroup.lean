@@ -82,7 +82,7 @@ theorem mem_coe_subgroup : g ∈ (U : Subgroup G) ↔ g ∈ U :=
   Iff.rfl
 
 @[to_additive]
-theorem coe_injective : injective (coeₓ : OpenSubgroup G → Set G) := by
+theorem coe_injective : injective (coe : OpenSubgroup G → Set G) := by
   rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨h⟩
   congr
 
@@ -155,7 +155,7 @@ end
 
 @[to_additive]
 instance : PartialOrderₓ (OpenSubgroup G) :=
-  { PartialOrderₓ.lift (coeₓ : OpenSubgroup G → Set G) coe_injective with le := fun U V => ∀ ⦃x⦄, x ∈ U → x ∈ V }
+  { PartialOrderₓ.lift (coe : OpenSubgroup G → Set G) coe_injective with le := fun U V => ∀ ⦃x⦄, x ∈ U → x ∈ V }
 
 @[to_additive]
 instance : SemilatticeInf (OpenSubgroup G) :=

@@ -43,7 +43,7 @@ protected def pass : WriterT ω m (α × (ω → ω)) → WriterT ω m α
   | ⟨cmd⟩ => ⟨uncurry (uncurry $ fun x f : ω → ω w => (x, f w)) <$> cmd⟩
 
 @[inline]
-protected def pure [HasOne ω] (a : α) : WriterT ω m α :=
+protected def pure [One ω] (a : α) : WriterT ω m α :=
   ⟨pure (a, 1)⟩
 
 @[inline]
@@ -53,7 +53,7 @@ protected def bind [Mul ω] (x : WriterT ω m α) (f : α → WriterT ω m β) :
     let x' ← (f x.1).run
     pure (x'.1, x.2 * x'.2)⟩
 
-instance [HasOne ω] [Mul ω] : Monadₓ (WriterT ω m) where
+instance [One ω] [Mul ω] : Monadₓ (WriterT ω m) where
   pure := fun α => WriterT.pure
   bind := fun α β => WriterT.bind
 
@@ -68,13 +68,13 @@ instance [Monoidₓ ω] [IsLawfulMonad m] : IsLawfulMonad (WriterT ω m) where
     ext <;> rfl
   bind_assoc := by
     intros
-    simp' [· >>= ·, WriterT.bind, mul_assocₓ] with functor_norm
+    simp' [· >>= ·, WriterT.bind, mul_assoc] with functor_norm
 
 @[inline]
-protected def lift [HasOne ω] (a : m α) : WriterT ω m α :=
+protected def lift [One ω] (a : m α) : WriterT ω m α :=
   ⟨flip Prod.mk 1 <$> a⟩
 
-instance m [Monadₓ m] [HasOne ω] : HasMonadLift m (WriterT ω m) :=
+instance m [Monadₓ m] [One ω] : HasMonadLift m (WriterT ω m) :=
   ⟨fun α => WriterT.lift⟩
 
 @[inline]
@@ -88,7 +88,7 @@ instance m m' [Monadₓ m] [Monadₓ m'] : MonadFunctorₓ m m' (WriterT ω m) (
 protected def adapt {ω' : Type u} {α : Type u} (f : ω → ω') : WriterT ω m α → WriterT ω' m α := fun x =>
   ⟨Prod.map id f <$> x.run⟩
 
-instance ε [HasOne ω] [Monadₓ m] [MonadExcept ε m] : MonadExcept ε (WriterT ω m) where
+instance ε [One ω] [Monadₓ m] [MonadExcept ε m] : MonadExcept ε (WriterT ω m) where
   throw := fun α => WriterT.lift ∘ throw
   catch := fun α x c => ⟨catch x.run fun e => (c e).run⟩
 

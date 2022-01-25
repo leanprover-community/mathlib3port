@@ -209,7 +209,7 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.prime) (n : ℕ) : φ (p ^ (n +
             
           · rintro h ⟨b, rfl⟩
             rw [pow_succₓ] at ha
-            exact h b (lt_of_mul_lt_mul_left ha (zero_le _)) (mul_commₓ _ _)
+            exact h b (lt_of_mul_lt_mul_left ha (zero_le _)) (mul_comm _ _)
             )
     _ = _ := by
       have h1 : Set.InjOn (· * p) (range (p ^ n)) := fun x _ y _ => (Nat.mul_left_inj hp.pos).1
@@ -219,7 +219,7 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.prime) (n : ℕ) : φ (p ^ (n +
         rw [pow_succ'ₓ]
         exact (mul_lt_mul_right hp.pos).2 h
       rw [card_sdiff h2, card_image_of_inj_on h1, card_range, card_range, ← one_mulₓ (p ^ n), pow_succₓ, ← tsub_mul,
-        one_mulₓ, mul_commₓ]
+        one_mulₓ, mul_comm]
     
 
 /-- When `p` is prime, then the totient of `p ^ n` is `p ^ (n - 1) * (p - 1)` -/
@@ -236,11 +236,11 @@ theorem totient_mul_of_prime_of_dvd {p n : ℕ} (hp : p.prime) (h : p ∣ n) : (
   · have hfin := multiplicity.finite_nat_iff.2 ⟨hp.ne_one, zero_lt_iff.2 hzero⟩
     have h0 : 0 < (multiplicity p n).get hfin := multiplicity.pos_of_dvd hfin h
     obtain ⟨m, hm, hndiv⟩ := multiplicity.exists_eq_pow_mul_and_not_dvd hfin
-    rw [hm, ← mul_assocₓ, ← pow_succₓ, Nat.totient_mul (coprime_comm.mp (hp.coprime_pow_of_not_dvd hndiv)),
-      Nat.totient_mul (coprime_comm.mp (hp.coprime_pow_of_not_dvd hndiv)), ← mul_assocₓ]
+    rw [hm, ← mul_assoc, ← pow_succₓ, Nat.totient_mul (coprime_comm.mp (hp.coprime_pow_of_not_dvd hndiv)),
+      Nat.totient_mul (coprime_comm.mp (hp.coprime_pow_of_not_dvd hndiv)), ← mul_assoc]
     congr
     rw [← succ_pred_eq_of_pos h0, totient_prime_pow_succ hp, totient_prime_pow_succ hp, succ_pred_eq_of_pos h0, ←
-      mul_assocₓ p, ← pow_succₓ, ← succ_pred_eq_of_pos h0, Nat.pred_succ]
+      mul_assoc p, ← pow_succₓ, ← succ_pred_eq_of_pos h0, Nat.pred_succ]
     
 
 theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.prime := by

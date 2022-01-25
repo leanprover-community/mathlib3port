@@ -52,7 +52,7 @@ variable {K}
 
 /-- extension of inversion to the completion of a field. -/
 def hatInv : hat K → hat K :=
-  dense_inducing_coe.extend fun x : K => (coeₓ (x⁻¹) : hat K)
+  dense_inducing_coe.extend fun x : K => (coe (x⁻¹) : hat K)
 
 theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : ContinuousAt hatInv x := by
   have : RegularSpace (hat K) := completion.regular_space K
@@ -82,7 +82,7 @@ instance Completion.hasInv : HasInv (hat K) :=
 
 variable [TopologicalDivisionRing K]
 
-theorem hat_inv_extends {x : K} (h : x ≠ 0) : hatInv (x : hat K) = coeₓ (x⁻¹ : K) :=
+theorem hat_inv_extends {x : K} (h : x ≠ 0) : hatInv (x : hat K) = coe (x⁻¹ : K) :=
   dense_inducing_coe.extend_eq_at ((continuous_coe K).ContinuousAt.comp (TopologicalDivisionRing.continuous_inv x h))
 
 variable [CompletableTopField K]
@@ -108,7 +108,7 @@ variable [UniformAddGroup K]
 theorem mul_hat_inv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 := by
   have : T1Space (hat K) := T2Space.t1_space
   let f := fun x : hat K => x * hatInv x
-  let c := (coeₓ : K → hat K)
+  let c := (coe : K → hat K)
   change f x = 1
   have cont : ContinuousAt f x := by
     let this' : TopologicalSpace (hat K × hat K) := Prod.topologicalSpace

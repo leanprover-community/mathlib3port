@@ -125,12 +125,12 @@ theorem sum_bernoulli' (n : ℕ) : (∑ k in range n, (n.choose k : ℚ) * berno
     by
     rw_mod_cast [sum_range_succ, bernoulli'_def, ← this, choose_succ_self_right]
     ring
-  simp_rw [mul_sum, ← mul_assocₓ]
+  simp_rw [mul_sum, ← mul_assoc]
   refine' sum_congr rfl fun k hk => _
   congr
   have : ((n - k : ℕ) : ℚ) + 1 ≠ 0 := by
     apply_mod_cast succ_ne_zero
-  field_simp [← cast_sub (mem_range.1 hk).le, mul_commₓ]
+  field_simp [← cast_sub (mem_range.1 hk).le, mul_comm]
   rw_mod_cast [tsub_add_eq_add_tsub (mem_range.1 hk).le, choose_mul_succ_eq]
 
 /-- The exponential generating function for the Bernoulli numbers `bernoulli' n`. -/
@@ -142,7 +142,7 @@ theorem bernoulli'_power_series_mul_exp_sub_one : bernoulli'PowerSeries A * (exp
   cases n
   · simp
     
-  rw [bernoulli'PowerSeries, coeff_mul, mul_commₓ X, sum_antidiagonal_succ']
+  rw [bernoulli'PowerSeries, coeff_mul, mul_comm X, sum_antidiagonal_succ']
   suffices (∑ p in antidiagonal n, bernoulli' p.1 / p.1! * ((p.2 + 1) * p.2!)⁻¹) = n !⁻¹ by
     simpa [RingHom.map_sum] using congr_argₓ (algebraMap ℚ A) this
   apply eq_inv_of_mul_left_eq_one
@@ -156,8 +156,8 @@ theorem bernoulli'_power_series_mul_exp_sub_one : bernoulli'PowerSeries A * (exp
   have : (j + 1 : ℚ) * j ! * i ! ≠ 0 := by
     simpa [factorial_ne_zero]
   have := factorial_mul_factorial_dvd_factorial_add i j
-  field_simp [mul_commₓ _ (bernoulli' i), mul_assocₓ, add_choose]
-  rw_mod_cast [mul_commₓ (j + 1), mul_div_assoc, ← mul_assocₓ]
+  field_simp [mul_comm _ (bernoulli' i), mul_assoc, add_choose]
+  rw_mod_cast [mul_comm (j + 1), mul_div_assoc, ← mul_assoc]
   rw [cast_mul, cast_mul, mul_div_mul_right, cast_dvd_char_zero, cast_mul]
   assumption'
 
@@ -176,7 +176,7 @@ theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoul
     simpa [bernoulli'PowerSeries] using bernoulli'_power_series_mul_exp_sub_one ℚ
   rw [sub_mul, h, mul_sub X, sub_right_inj, ← neg_sub, ← neg_mul_eq_mul_neg, neg_eq_iff_neg_eq]
   suffices eval_neg_hom (B * (exp ℚ - 1)) * exp ℚ = eval_neg_hom (X * exp ℚ) * exp ℚ by
-    simpa [mul_assocₓ, sub_mul, mul_commₓ (eval_neg_hom (exp ℚ)), exp_mul_exp_neg_eq_one, eq_comm]
+    simpa [mul_assoc, sub_mul, mul_comm (eval_neg_hom (exp ℚ)), exp_mul_exp_neg_eq_one, eq_comm]
   congr
 
 /-- The Bernoulli numbers are defined to be `bernoulli'` with a parity sign. -/
@@ -184,7 +184,7 @@ def bernoulli (n : ℕ) : ℚ :=
   -1 ^ n * bernoulli' n
 
 theorem bernoulli'_eq_bernoulli (n : ℕ) : bernoulli' n = -1 ^ n * bernoulli n := by
-  simp [bernoulli, ← mul_assocₓ, ← sq, ← pow_mulₓ, mul_commₓ n 2, pow_mulₓ]
+  simp [bernoulli, ← mul_assoc, ← sq, ← pow_mulₓ, mul_comm n 2, pow_mulₓ]
 
 @[simp]
 theorem bernoulli_zero : bernoulli 0 = 1 := by
@@ -280,8 +280,8 @@ theorem bernoulli_power_series_mul_exp_sub_one : bernoulliPowerSeries A * (exp A
   rw [mem_antidiagonal] at h
   have hj : (j.succ : ℚ) ≠ 0 := by
     exact_mod_cast succ_ne_zero j
-  field_simp [← h, mul_ne_zero hj (hfact j), hfact i, mul_commₓ _ (bernoulli i), mul_assocₓ]
-  rw_mod_cast [mul_commₓ (j + 1), mul_div_assoc, ← mul_assocₓ]
+  field_simp [← h, mul_ne_zero hj (hfact j), hfact i, mul_comm _ (bernoulli i), mul_assoc]
+  rw_mod_cast [mul_comm (j + 1), mul_div_assoc, ← mul_assoc]
   rw [cast_mul, cast_mul, mul_div_mul_right _ _ hj, add_choose, cast_dvd_char_zero]
   apply factorial_mul_factorial_dvd_factorial_add
 
@@ -308,8 +308,8 @@ theorem sum_range_pow (n p : ℕ) :
     simp only [f, exp_pow_eq_rescale_exp, rescale, one_div, coeff_mk, RingHom.coe_mk, coeff_exp, RingHom.id_apply,
       cast_mul, algebra_map_rat_rat]
     rw [choose_eq_factorial_div_factorial h.le, eq_comm, div_eq_iff (hne q.succ), succ_eq_add_one,
-      mul_assocₓ _ _ (↑q.succ !), mul_commₓ _ (↑q.succ !), ← mul_assocₓ, div_mul_eq_mul_div,
-      mul_commₓ (↑n ^ (q - m + 1)), ← mul_assocₓ _ _ (↑n ^ (q - m + 1)), ← one_div, mul_one_div, div_div_eq_div_mul,
+      mul_assoc _ _ (↑q.succ !), mul_comm _ (↑q.succ !), ← mul_assoc, div_mul_eq_mul_div, mul_comm (↑n ^ (q - m + 1)), ←
+      mul_assoc _ _ (↑n ^ (q - m + 1)), ← one_div, mul_one_div, div_div_eq_div_mul,
       tsub_add_eq_add_tsub (le_of_lt_succ h), cast_dvd, cast_mul]
     · ring
       
@@ -336,12 +336,12 @@ theorem sum_range_pow (n p : ℕ) :
       have h_const : C ℚ (constant_coeff ℚ (exp ℚ ^ n)) = 1 := by
         simp
       rw [← h_const, sub_const_eq_X_mul_shift]
-    rw [← mul_right_inj' hexp, mul_commₓ, ← exp_pow_sum, ← geom_sum_def, geom_sum_mul, h_r, ←
+    rw [← mul_right_inj' hexp, mul_comm, ← exp_pow_sum, ← geom_sum_def, geom_sum_mul, h_r, ←
       bernoulli_power_series_mul_exp_sub_one, bernoulliPowerSeries, mul_right_commₓ]
-    simp [h_cauchy, mul_commₓ]
+    simp [h_cauchy, mul_comm]
   rw [hps, sum_mul]
   refine' sum_congr rfl fun x hx => _
-  field_simp [mul_right_commₓ _ (↑p !), ← mul_assocₓ _ _ (↑p !), cast_add_one_ne_zero, hne]
+  field_simp [mul_right_commₓ _ (↑p !), ← mul_assoc _ _ (↑p !), cast_add_one_ne_zero, hne]
 
 /-- Alternate form of **Faulhaber's theorem**, relating the sum of p-th powers to the Bernoulli
 numbers: $$\sum_{k=1}^{n} k^p = \sum_{i=0}^p (-1)^iB_i\binom{p+1}{i}\frac{n^{p+1-i}}{p+1}.$$

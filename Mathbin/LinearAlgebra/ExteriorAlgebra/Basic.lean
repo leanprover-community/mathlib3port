@@ -256,13 +256,13 @@ theorem ι_mul_prod_list {n : ℕ} (f : Finₓ n → M) (i : Finₓ n) :
   induction' n with n hn
   · exact i.elim0
     
-  · rw [List.of_fn_succ, List.prod_cons, ← mul_assocₓ]
+  · rw [List.of_fn_succ, List.prod_cons, ← mul_assoc]
     by_cases' h : i = 0
     · rw [h, ι_sq_zero, zero_mul]
       
     · replace hn := congr_argₓ (· * · $ ι R $ f 0) (hn (fun i => f $ Finₓ.succ i) (i.pred h))
       simp only at hn
-      rw [Finₓ.succ_pred, ← mul_assocₓ, mul_zero] at hn
+      rw [Finₓ.succ_pred, ← mul_assoc, mul_zero] at hn
       refine' (eq_zero_iff_eq_zero_of_add_eq_zero _).mp hn
       rw [← add_mulₓ, ι_add_mul_swap, zero_mul]
       

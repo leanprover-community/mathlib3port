@@ -1,4 +1,5 @@
-import Mathbin.Data.Fintype.Basic
+import Mathbin.Algebra.BigOperators.Basic
+import Mathbin.Data.Nat.Interval
 import Mathbin.Order.Antichain
 
 /-!
@@ -23,7 +24,9 @@ the set family made of its `r`-sets.
 
 open Finset Nat
 
-variable {α : Type _}
+open_locale BigOperators
+
+variable {α : Type _} {ι : Sort _} {κ : ι → Sort _}
 
 namespace Set
 
@@ -44,8 +47,33 @@ theorem sized_union : (A ∪ B).Sized r ↔ A.sized r ∧ B.sized r :=
 
 alias sized_union ↔ _ Set.Sized.union
 
+@[simp]
+theorem sized_Union {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ i, (f i).Sized r := by
+  simp_rw [Set.Sized, Set.mem_Union, forall_exists_index]
+  exact forall_swap
+
+-- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
+@[simp]
+theorem sized_Union₂ {f : ∀ i, κ i → Set (Finset α)} : (⋃ (i) (j), f i j).Sized r ↔ ∀ i j, (f i j).Sized r := by
+  simp_rw [sized_Union]
+
 protected theorem sized.is_antichain (hA : A.sized r) : IsAntichain (· ⊆ ·) A := fun s hs t ht h hst =>
-  h $ eq_of_subset_of_card_le hst ((hA ht).trans (hA hs).symm).le
+  h $ Finset.eq_of_subset_of_card_le hst ((hA ht).trans (hA hs).symm).le
+
+protected theorem sized.subsingleton (hA : A.sized 0) : A.subsingleton :=
+  subsingleton_of_forall_eq ∅ $ fun s hs => card_eq_zero.1 $ hA hs
+
+theorem sized.subsingleton' [Fintype α] (hA : A.sized (Fintype.card α)) : A.subsingleton :=
+  subsingleton_of_forall_eq Finset.univ $ fun s hs => s.card_eq_iff_eq_univ.1 $ hA hs
+
+theorem sized.empty_mem_iff (hA : A.sized r) : ∅ ∈ A ↔ A = {∅} :=
+  hA.is_antichain.bot_mem_iff
+
+theorem sized.univ_mem_iff [Fintype α] (hA : A.sized r) : Finset.univ ∈ A ↔ A = {Finset.univ} :=
+  hA.is_antichain.top_mem_iff
+
+theorem sized_powerset_len (s : Finset α) (r : ℕ) : (powerset_len r s : Set (Finset α)).Sized r := fun t ht =>
+  (mem_powerset_len.1 ht).2
 
 end Set
 
@@ -98,10 +126,20 @@ theorem eq_of_mem_slice (h₁ : A ∈ 𝒜 # r₁) (h₂ : A ∈ 𝒜 # r₂) : 
 theorem ne_of_mem_slice (h₁ : A₁ ∈ 𝒜 # r₁) (h₂ : A₂ ∈ 𝒜 # r₂) : r₁ ≠ r₂ → A₁ ≠ A₂ :=
   mt $ fun h => (sized_slice h₁).symm.trans ((congr_argₓ card h).trans (sized_slice h₂))
 
-variable [DecidableEq α]
-
-theorem pairwise_disjoint_slice : (Set.Univ : Set ℕ).PairwiseDisjoint (slice 𝒜) := fun m _ n _ hmn =>
+theorem pairwise_disjoint_slice [DecidableEq α] : (Set.Univ : Set ℕ).PairwiseDisjoint (slice 𝒜) := fun m _ n _ hmn =>
   disjoint_filter.2 $ fun s hs hm hn => hmn $ hm.symm.trans hn
+
+variable [Fintype α] (𝒜)
+
+@[simp]
+theorem bUnion_slice [DecidableEq α] : (Iic $ Fintype.card α).bUnion 𝒜.slice = 𝒜 :=
+  subset.antisymm (bUnion_subset.2 $ fun r _ => slice_subset) $ fun s hs =>
+    mem_bUnion.2 ⟨s.card, mem_Iic.2 $ s.card_le_univ, mem_slice.2 $ ⟨hs, rfl⟩⟩
+
+@[simp]
+theorem sum_card_slice : (∑ r in Iic (Fintype.card α), (𝒜 # r).card) = 𝒜.card := by
+  rw [← card_bUnion (finset.pairwise_disjoint_slice.subset (Set.subset_univ _)), bUnion_slice]
+  exact Classical.decEq _
 
 end Slice
 

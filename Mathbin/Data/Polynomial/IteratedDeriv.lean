@@ -180,7 +180,7 @@ theorem coeff_iterated_deriv_as_prod_range :
         add_succ]_ = (f.coeff (m + k.succ) * ∏ i in range k, ↑(m + k.succ - i)) * ↑(m + 1) :=
       by
       push_cast _ = f.coeff (m + k.succ) * ∏ i in range k.succ, ↑(m + k.succ - i) := by
-      rw [prod_range_succ, add_tsub_assoc_of_le k.le_succ, succ_sub le_rfl, tsub_self, mul_assocₓ]
+      rw [prod_range_succ, add_tsub_assoc_of_le k.le_succ, succ_sub le_rfl, tsub_self, mul_assoc]
 
 theorem iterated_deriv_eq_zero_of_nat_degree_lt (h : f.nat_degree < n) : iterated_deriv f n = 0 := by
   ext m

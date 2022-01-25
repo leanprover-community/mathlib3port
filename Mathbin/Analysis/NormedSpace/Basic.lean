@@ -60,7 +60,7 @@ instance : NormedCommRing PUnit :=
 
 /-- A mixin class with the axiom `∥1∥ = 1`. Many `normed_ring`s and all `normed_field`s satisfy this
 axiom. -/
-class NormOneClass (α : Type _) [HasNorm α] [HasOne α] : Prop where
+class NormOneClass (α : Type _) [HasNorm α] [One α] : Prop where
   norm_one : ∥(1 : α)∥ = 1
 
 export NormOneClass (norm_one)
@@ -68,7 +68,7 @@ export NormOneClass (norm_one)
 attribute [simp] norm_one
 
 @[simp]
-theorem nnnorm_one [SemiNormedGroup α] [HasOne α] [NormOneClass α] : ∥(1 : α)∥₊ = 1 :=
+theorem nnnorm_one [SemiNormedGroup α] [One α] [NormOneClass α] : ∥(1 : α)∥₊ = 1 :=
   Nnreal.eq norm_one
 
 instance (priority := 100) SemiNormedCommRing.toCommRing [β : SemiNormedCommRing α] : CommRingₓ α :=
@@ -80,7 +80,7 @@ instance (priority := 100) NormedRing.toNormedGroup [β : NormedRing α] : Norme
 instance (priority := 100) SemiNormedRing.toSemiNormedGroup [β : SemiNormedRing α] : SemiNormedGroup α :=
   { β with }
 
-instance Prod.norm_one_class [NormedGroup α] [HasOne α] [NormOneClass α] [NormedGroup β] [HasOne β] [NormOneClass β] :
+instance Prod.norm_one_class [SemiNormedGroup α] [One α] [NormOneClass α] [SemiNormedGroup β] [One β] [NormOneClass β] :
     NormOneClass (α × β) :=
   ⟨by
     simp [Prod.norm_def]⟩
@@ -155,7 +155,7 @@ theorem mul_left_bound (x : α) : ∀ y : α, ∥AddMonoidHom.mulLeft x y∥ ≤
 
 /-- In a seminormed ring, the right-multiplication `add_monoid_hom` is bounded. -/
 theorem mul_right_bound (x : α) : ∀ y : α, ∥AddMonoidHom.mulRight x y∥ ≤ ∥x∥ * ∥y∥ := fun y => by
-  rw [mul_commₓ]
+  rw [mul_comm]
   convert norm_mul_le y x
 
 /-- Seminormed ring structure on the product of two seminormed rings, using the sup norm. -/
@@ -167,7 +167,7 @@ instance Prod.semiNormedRing [SemiNormedRing β] : SemiNormedRing (α × β) :=
         _ = max ∥x.1 * y.1∥ ∥x.2 * y.2∥ := rfl
         _ ≤ max (∥x.1∥ * ∥y.1∥) (∥x.2∥ * ∥y.2∥) := max_le_max (norm_mul_le x.1 y.1) (norm_mul_le x.2 y.2)
         _ = max (∥x.1∥ * ∥y.1∥) (∥y.2∥ * ∥x.2∥) := by
-          simp [mul_commₓ]
+          simp [mul_comm]
         _ ≤ max ∥x.1∥ ∥x.2∥ * max ∥y.2∥ ∥y.1∥ := by
           apply max_mul_mul_le_max_mul_max <;> simp [norm_nonneg]
         _ = max ∥x.1∥ ∥x.2∥ * max ∥y.1∥ ∥y.2∥ := by
@@ -183,9 +183,9 @@ def Matrix.semiNormedGroup {n m : Type _} [Fintype n] [Fintype m] : SemiNormedGr
 
 attribute [local instance] Matrix.semiNormedGroup
 
-theorem semi_norm_matrix_le_iff {n m : Type _} [Fintype n] [Fintype m] {r : ℝ} (hr : 0 ≤ r) {A : Matrix n m α} :
+theorem norm_matrix_le_iff {n m : Type _} [Fintype n] [Fintype m] {r : ℝ} (hr : 0 ≤ r) {A : Matrix n m α} :
     ∥A∥ ≤ r ↔ ∀ i j, ∥A i j∥ ≤ r := by
-  simp [pi_semi_norm_le_iff hr]
+  simp [pi_norm_le_iff hr]
 
 end SemiNormedRing
 
@@ -320,7 +320,7 @@ instance (priority := 100) : HasContinuousInv₀ α := by
     intro e he
     have e0 : e ≠ 0 := norm_pos_iff.1 (ε0.trans he)
     calc ∥e⁻¹ - r⁻¹∥ = ∥r - e∥ / ∥r∥ / ∥e∥ := by
-        field_simp [mul_commₓ]_ ≤ ∥r - e∥ / ∥r∥ / ε :=
+        field_simp [mul_comm]_ ≤ ∥r - e∥ / ∥r∥ / ε :=
         div_le_div_of_le_left (div_nonneg (norm_nonneg _) (norm_nonneg _)) ε0 he.le
   refine' squeeze_zero' (eventually_of_forall $ fun _ => norm_nonneg _) this _
   refine' (continuous_const.sub continuous_id).norm.div_const.div_const.tendsto' _ _ _
@@ -476,7 +476,7 @@ instance : NormedCommRing ℤ where
       simp only [norm, Int.cast_mul, abs_mul]
   dist_eq := fun m n => by
     simp only [Int.dist_eq, norm, Int.cast_sub]
-  mul_comm := mul_commₓ
+  mul_comm := mul_comm
 
 @[norm_cast]
 theorem Int.norm_cast_real (m : ℤ) : ∥(m : ℝ)∥ = ∥m∥ :=
@@ -587,7 +587,7 @@ theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ∥s • x∥ = ∥s�
     calc ∥s∥ * ∥x∥ = ∥s∥ * ∥s⁻¹ • s • x∥ := by
         rw [inv_smul_smul₀ h]_ ≤ ∥s∥ * (∥s⁻¹∥ * ∥s • x∥) :=
         mul_le_mul_of_nonneg_left (NormedSpace.norm_smul_le _ _) (norm_nonneg _)_ = ∥s • x∥ := by
-        rw [NormedField.norm_inv, ← mul_assocₓ, mul_inv_cancel (mt norm_eq_zero.1 h), one_mulₓ]
+        rw [NormedField.norm_inv, ← mul_assoc, mul_inv_cancel (mt norm_eq_zero.1 h), one_mulₓ]
     
 
 @[simp]
@@ -628,7 +628,7 @@ theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Closur
     
   · rintro c ⟨hc0, hc1⟩
     rw [Set.mem_preimage, mem_ball, dist_eq_norm, add_sub_cancel, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc0,
-      mul_commₓ, ← mul_oneₓ r]
+      mul_comm, ← mul_oneₓ r]
     rw [mem_closed_ball, dist_eq_norm] at hy
     apply mul_lt_mul' <;> assumption
     
@@ -716,7 +716,7 @@ instance Prod.normedSpace : NormedSpace α (E × F) :=
   { Prod.normedGroup, Prod.module with
     norm_smul_le := fun s x =>
       le_of_eqₓ $ by
-        simp [Prod.semi_norm_def, norm_smul, mul_max_of_nonneg] }
+        simp [Prod.norm_def, norm_smul, mul_max_of_nonneg] }
 
 /-- The product of finitely many normed spaces is a normed space, with the sup norm. -/
 instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (E i)] [∀ i, NormedSpace α (E i)] :
@@ -747,13 +747,13 @@ theorem rescale_to_shell_semi_normed {c : α} (hc : 1 < ∥c∥) {ε : ℝ} (εp
   · rwa [Ne.def, inv_eq_zero, ← Ne.def, ← norm_pos_iff]
     
   show ∥(c ^ (n + 1))⁻¹ • x∥ < ε
-  · rw [norm_smul, norm_inv, ← div_eq_inv_mul, div_lt_iff cnpos, mul_commₓ, norm_zpow]
+  · rw [norm_smul, norm_inv, ← div_eq_inv_mul, div_lt_iff cnpos, mul_comm, norm_zpow]
     exact (div_lt_iff εpos).1 hn.2
     
   show ε / ∥c∥ ≤ ∥(c ^ (n + 1))⁻¹ • x∥
-  · rw [div_le_iff cpos, norm_smul, norm_inv, norm_zpow, zpow_add₀ (ne_of_gtₓ cpos), zpow_one, mul_inv_rev₀, mul_commₓ,
-      ← mul_assocₓ, ← mul_assocₓ, mul_inv_cancel (ne_of_gtₓ cpos), one_mulₓ, ← div_eq_inv_mul,
-      le_div_iff (zpow_pos_of_pos cpos _), mul_commₓ]
+  · rw [div_le_iff cpos, norm_smul, norm_inv, norm_zpow, zpow_add₀ (ne_of_gtₓ cpos), zpow_one, mul_inv_rev₀, mul_comm, ←
+      mul_assoc, ← mul_assoc, mul_inv_cancel (ne_of_gtₓ cpos), one_mulₓ, ← div_eq_inv_mul,
+      le_div_iff (zpow_pos_of_pos cpos _), mul_comm]
     exact (le_div_iff εpos).1 hn.1
     
   show ∥(c ^ (n + 1))⁻¹∥⁻¹ ≤ ε⁻¹ * ∥c∥ * ∥x∥

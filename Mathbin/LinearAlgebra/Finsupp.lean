@@ -513,10 +513,10 @@ theorem total_equiv_map_domain (f : α ≃ α') (l : α →₀ R) :
   rw [equiv_map_domain_eq_map_domain, total_map_domain _ _ f.injective]
 
 /-- A version of `finsupp.range_total` which is useful for going in the other direction -/
-theorem span_eq_range_total (s : Set M) : span R s = (Finsupp.total s M R coeₓ).range := by
+theorem span_eq_range_total (s : Set M) : span R s = (Finsupp.total s M R coe).range := by
   rw [range_total, Subtype.range_coe_subtype, Set.set_of_mem_eq]
 
-theorem mem_span_iff_total (s : Set M) (x : M) : x ∈ span R s ↔ ∃ l : s →₀ R, Finsupp.total s M R coeₓ l = x :=
+theorem mem_span_iff_total (s : Set M) (x : M) : x ∈ span R s ↔ ∃ l : s →₀ R, Finsupp.total s M R coe l = x :=
   (SetLike.ext_iff.1 $ span_eq_range_total _ _) x
 
 theorem span_image_eq_map_total (s : Set α) :
@@ -766,7 +766,7 @@ end Sum
 
 section Sigma
 
-variable {η : Type _} [Fintype η] {ιs : η → Type _} [HasZero α]
+variable {η : Type _} [Fintype η] {ιs : η → Type _} [Zero α]
 
 variable (R)
 
@@ -837,12 +837,12 @@ def Span.repr (w : Set M) (x : span R w) : w →₀ R :=
   ((Finsupp.mem_span_iff_total _ _ _).mp x.2).some
 
 @[simp]
-theorem Span.finsupp_total_repr {w : Set M} (x : span R w) : Finsupp.total w M R coeₓ (Span.repr R w x) = x :=
+theorem Span.finsupp_total_repr {w : Set M} (x : span R w) : Finsupp.total w M R coe (Span.repr R w x) = x :=
   ((Finsupp.mem_span_iff_total _ _ _).mp x.2).some_spec
 
 end
 
-theorem Submodule.finsupp_sum_mem {ι β : Type _} [HasZero β] (S : Submodule R M) (f : ι →₀ β) (g : ι → β → M)
+theorem Submodule.finsupp_sum_mem {ι β : Type _} [Zero β] (S : Submodule R M) (f : ι →₀ β) (g : ι → β → M)
     (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) : f.sum g ∈ S :=
   S.to_add_submonoid.finsupp_sum_mem f g h
 

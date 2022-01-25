@@ -569,7 +569,7 @@ end RelIso
 
 /-- `subrel r p` is the inherited relation on a subset. -/
 def Subrel (r : α → α → Prop) (p : Set α) : p → p → Prop :=
-  (coeₓ : p → α) ⁻¹'o r
+  (coe : p → α) ⁻¹'o r
 
 @[simp]
 theorem subrel_val (r : α → α → Prop) (p : Set α) {a b} : Subrel r p a b ↔ r a.1 b.1 :=

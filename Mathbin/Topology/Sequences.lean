@@ -317,8 +317,7 @@ protected theorem IsSeqCompact.is_compact [is_countably_generated $ 𝓤 β] (hs
     simp_rw [ball_eq_of_symmetry Vsymm]
     exact ht
     
-  · apply bUnion_subset_bUnion
-    intro x x_in
+  · refine' Union₂_mono' fun x x_in => _
     exact ⟨i ⟨x, x_in⟩, Finset.mem_image_of_mem _ (Finset.mem_univ _), hi ⟨x, x_in⟩⟩
     
 

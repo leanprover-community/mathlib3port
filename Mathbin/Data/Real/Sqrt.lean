@@ -286,7 +286,7 @@ theorem sqrt_mul (hx : 0 ≤ x) (y : ℝ) : sqrt (x * y) = sqrt x * sqrt y := by
 
 @[simp]
 theorem sqrt_mul' x {y : ℝ} (hy : 0 ≤ y) : sqrt (x * y) = sqrt x * sqrt y := by
-  rw [mul_commₓ, sqrt_mul hy, mul_commₓ]
+  rw [mul_comm, sqrt_mul hy, mul_comm]
 
 @[simp]
 theorem sqrt_inv (x : ℝ) : sqrt (x⁻¹) = sqrt x⁻¹ := by

@@ -65,7 +65,7 @@ one indexed on the same type with each open set contained in the corresponding o
 theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, IsOpen (u a)) (uc : (⋃ i, u i) = univ) :
     ∃ v : ι → Set X, (∀ a, IsOpen (v a)) ∧ (⋃ i, v i) = univ ∧ LocallyFinite v ∧ ∀ a, v a ⊆ u a := by
   have :=
-    ParacompactSpace.locally_finite_refinement (range u) coeₓ (SetCoe.forall.2 $ forall_range_iff.2 uo)
+    ParacompactSpace.locally_finite_refinement (range u) coe (SetCoe.forall.2 $ forall_range_iff.2 uo)
       (by
         rwa [← sUnion_range, Subtype.range_coe])
   simp only [SetCoe.exists, Subtype.coe_mk, exists_range_iff', Union_eq_univ_iff, exists_prop] at this

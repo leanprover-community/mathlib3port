@@ -82,10 +82,10 @@ private irreducible_def neg {R : Type u} [Ringₓ R] : Polynomial R → Polynomi
 private irreducible_def mul : Polynomial R → Polynomial R → Polynomial R
   | ⟨a⟩, ⟨b⟩ => ⟨a * b⟩
 
-instance : HasZero (Polynomial R) :=
+instance : Zero (Polynomial R) :=
   ⟨⟨0⟩⟩
 
-instance : HasOne (Polynomial R) :=
+instance : One (Polynomial R) :=
   ⟨monomial_fun 0 (1 : R)⟩
 
 instance : Add (Polynomial R) :=
@@ -137,7 +137,7 @@ instance : Semiringₓ (Polynomial R) := by
         npow_zero' := fun x => rfl, npow_succ' := fun n x => rfl } <;>
     · repeat'
           rintro ⟨_⟩ <;>
-        simp [← zero_to_finsupp, ← one_to_finsupp, add_to_finsupp, mul_to_finsupp, mul_assocₓ, mul_addₓ, add_mulₓ,
+        simp [← zero_to_finsupp, ← one_to_finsupp, add_to_finsupp, mul_to_finsupp, mul_assoc, mul_addₓ, add_mulₓ,
             smul_to_finsupp, Nat.succ_eq_one_add] <;>
           abel
       
@@ -378,11 +378,11 @@ theorem X_pow_mul {n : ℕ} : X ^ n * p = p * X ^ n := by
   · simp
     
   · conv_lhs => rw [pow_succ'ₓ]
-    rw [mul_assocₓ, X_mul, ← mul_assocₓ, ih, mul_assocₓ, ← pow_succ'ₓ]
+    rw [mul_assoc, X_mul, ← mul_assoc, ih, mul_assoc, ← pow_succ'ₓ]
     
 
 theorem X_pow_mul_assoc {n : ℕ} : p * X ^ n * q = p * q * X ^ n := by
-  rw [mul_assocₓ, X_pow_mul, ← mul_assocₓ]
+  rw [mul_assoc, X_pow_mul, ← mul_assoc]
 
 theorem commute_X (p : Polynomial R) : Commute X p :=
   X_mul
@@ -399,7 +399,7 @@ theorem monomial_mul_X_pow (n : ℕ) (r : R) (k : ℕ) : monomial n r * X ^ k = 
   induction' k with k ih
   · simp
     
-  · simp [ih, pow_succ'ₓ, ← mul_assocₓ, add_assocₓ]
+  · simp [ih, pow_succ'ₓ, ← mul_assoc, add_assocₓ]
     
 
 @[simp]
@@ -478,7 +478,7 @@ theorem monomial_eq_C_mul_X : ∀ {n}, monomial n a = C a * X ^ n
       _ = C a * X ^ n * X := by
         rw [monomial_eq_C_mul_X]
       _ = C a * X ^ (n + 1) := by
-        simp only [pow_addₓ, mul_assocₓ, pow_oneₓ]
+        simp only [pow_addₓ, mul_assoc, pow_oneₓ]
       
 
 @[simp]
@@ -725,7 +725,7 @@ instance : CommSemiringₓ (Polynomial R) :=
   { Polynomial.semiring with
     mul_comm := by
       rintro ⟨⟩ ⟨⟩
-      simp [mul_to_finsupp, mul_commₓ] }
+      simp [mul_to_finsupp, mul_comm] }
 
 end CommSemiringₓ
 

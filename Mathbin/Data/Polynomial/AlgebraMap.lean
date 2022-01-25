@@ -385,7 +385,7 @@ theorem eval_mul_X_sub_C {p : Polynomial R} (r : R) : (p * (X - C r)).eval r = 0
   · simp
     
   rw [sum_range_succ']
-  conv_lhs => congr apply_congr skip rw [coeff_mul_X_sub_C, sub_mul, mul_assocₓ, ← pow_succₓ]
+  conv_lhs => congr apply_congr skip rw [coeff_mul_X_sub_C, sub_mul, mul_assoc, ← pow_succₓ]
   simp [sum_range_sub', coeff_monomial]
 
 theorem not_is_unit_X_sub_C [Nontrivial R] (r : R) : ¬IsUnit (X - C r) := fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ =>

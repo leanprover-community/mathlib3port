@@ -231,6 +231,12 @@ protected def Homeomorph.smulOfNeZero (c : G₀) (hc : c ≠ 0) : α ≃ₜ α :
 theorem is_open_map_smul₀ {c : G₀} (hc : c ≠ 0) : IsOpenMap fun x : α => c • x :=
   (Homeomorph.smulOfNeZero c hc).IsOpenMap
 
+theorem IsOpen.smul₀ {c : G₀} {s : Set α} (hs : IsOpen s) (hc : c ≠ 0) : IsOpen (c • s) :=
+  is_open_map_smul₀ hc s hs
+
+theorem interior_smul₀ {c : G₀} (hc : c ≠ 0) (s : Set α) : Interior (c • s) = c • Interior s :=
+  ((Homeomorph.smulOfNeZero c hc).image_interior s).symm
+
 /-- `smul` is a closed map in the second argument.
 
 The lemma that `smul` is a closed map in the first argument (for a normed space over a complete

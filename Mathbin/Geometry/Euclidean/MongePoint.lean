@@ -142,7 +142,7 @@ theorem monge_point_eq_affine_combination_of_points_with_circumcenter {n : ℕ} 
   · rw [if_pos (mem_univ _), sub_zero, add_zeroₓ, card_fin]
     have hn3 : (n + 2 + 1 : ℝ) ≠ 0 := by
       exact_mod_cast Nat.succ_ne_zero _
-    field_simp [hn1, hn3, mul_commₓ]
+    field_simp [hn1, hn3, mul_comm]
     
   · field_simp [hn1]
     ring

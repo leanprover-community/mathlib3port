@@ -70,9 +70,9 @@ inductive relation : prequotient F → prequotient F → Prop
   | mul_oneₓ : ∀ x, relation (mul x one) x
   | add_left_negₓ : ∀ x, relation (add (neg x) x) zero
   | add_commₓ : ∀ x y, relation (add x y) (add y x)
-  | mul_commₓ : ∀ x y, relation (mul x y) (mul y x)
+  | mul_comm : ∀ x y, relation (mul x y) (mul y x)
   | add_assocₓ : ∀ x y z, relation (add (add x y) z) (add x (add y z))
-  | mul_assocₓ : ∀ x y z, relation (mul (mul x y) z) (mul x (mul y z))
+  | mul_assoc : ∀ x y z, relation (mul (mul x y) z) (mul x (mul y z))
   | left_distrib : ∀ x y z, relation (mul x (add y z)) (add (mul x y) (mul x z))
   | right_distrib : ∀ x y z, relation (mul (add x y) z) (add (mul x z) (mul y z))
 
@@ -350,11 +350,11 @@ def desc_fun (s : cocone F) : colimit_type F → s.X := by
       
     · rw [add_commₓ]
       
-    · rw [mul_commₓ]
+    · rw [mul_comm]
       
     · rw [add_assocₓ]
       
-    · rw [mul_assocₓ]
+    · rw [mul_assoc]
       
     · rw [left_distrib]
       

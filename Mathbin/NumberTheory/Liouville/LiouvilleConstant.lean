@@ -105,10 +105,10 @@ theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) : (1 - 1 / m)⁻¹ * (1 / m 
     (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 2 * (1 / m ^ (n + 1)!) :=
       mul_mono_nonneg (one_div_nonneg.mpr (pow_nonneg (zero_le_two.trans hm) _)) (sub_one_div_inv_le_two hm)
     _ = 2 / m ^ (n + 1)! := mul_one_div 2 _
-    _ = 2 / m ^ (n ! * (n + 1)) := congr_argₓ ((· / ·) 2) (congr_argₓ (pow m) (mul_commₓ _ _))
+    _ = 2 / m ^ (n ! * (n + 1)) := congr_argₓ ((· / ·) 2) (congr_argₓ (pow m) (mul_comm _ _))
     _ ≤ 1 / m ^ (n ! * n) := by
       apply (div_le_div_iff _ _).mpr
-      conv_rhs => rw [one_mulₓ, mul_addₓ, pow_addₓ, mul_oneₓ, pow_mulₓ, mul_commₓ, ← pow_mulₓ]
+      conv_rhs => rw [one_mulₓ, mul_addₓ, pow_addₓ, mul_oneₓ, pow_mulₓ, mul_comm, ← pow_mulₓ]
       apply (mul_le_mul_right _).mpr
       any_goals {
       }
@@ -137,7 +137,7 @@ theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
         show k.succ * k ! - k ! = (k.succ - 1) * k ! by
           rw [tsub_mul, one_mulₓ],
         Nat.succ_sub_one, add_mulₓ, one_mulₓ, pow_addₓ]
-      simp [mul_assocₓ]
+      simp [mul_assoc]
       
     refine' mul_ne_zero_iff.mpr ⟨_, _⟩
     all_goals

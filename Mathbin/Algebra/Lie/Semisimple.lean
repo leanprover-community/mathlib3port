@@ -76,9 +76,7 @@ theorem center_eq_bot_of_semisimple [h : is_semisimple R L] : center R L = ⊥ :
 instance (priority := 100) is_semisimple_of_is_simple [h : is_simple R L] : is_semisimple R L := by
   rw [is_semisimple_iff_no_abelian_ideals]
   intro I hI
-  run_tac
-    tactic.unfreeze_local_instances
-  obtain ⟨⟨h₁⟩, h₂⟩ := h
+  obtain ⟨⟨h₁⟩, h₂⟩ := id h
   by_contra contra
   rw [h₁ I contra, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquivSelf] at hI
   exact h₂ hI

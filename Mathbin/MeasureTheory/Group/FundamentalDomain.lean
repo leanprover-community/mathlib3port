@@ -34,7 +34,7 @@ namespace MeasureTheory
 on a measurable space `α` with respect to a measure `α` if the sets `g +ᵥ s`, `g : G`, are pairwise
 a.e. disjoint and cover the whole space. -/
 @[protect_proj]
-structure is_add_fundamental_domain (G : Type _) {α : Type _} [HasZero G] [HasVadd G α] [MeasurableSpace α] (s : Set α)
+structure is_add_fundamental_domain (G : Type _) {α : Type _} [Zero G] [HasVadd G α] [MeasurableSpace α] (s : Set α)
   (μ : Measureₓ α := by
     run_tac
       volume_tac) :
@@ -48,7 +48,7 @@ structure is_add_fundamental_domain (G : Type _) {α : Type _} [HasZero G] [HasV
 space `α` with respect to a measure `α` if the sets `g • s`, `g : G`, are pairwise a.e. disjoint and
 cover the whole space. -/
 @[protect_proj, to_additive is_add_fundamental_domain]
-structure is_fundamental_domain (G : Type _) {α : Type _} [HasOne G] [HasScalar G α] [MeasurableSpace α] (s : Set α)
+structure is_fundamental_domain (G : Type _) {α : Type _} [One G] [HasScalar G α] [MeasurableSpace α] (s : Set α)
   (μ : Measureₓ α := by
     run_tac
       volume_tac) :
@@ -64,7 +64,7 @@ variable {G α E : Type _} [Groupₓ G] [MulAction G α] [MeasurableSpace α] [N
 /-- If for each `x : α`, exactly one of `g • x`, `g : G`, belongs to a measurable set `s`, then `s`
 is a fundamental domain for the action of `G` on `α`. -/
 @[to_additive
-      "/- If for each `x : α`, exactly one of `g +ᵥ x`, `g : G`, belongs to a measurable set\n`s`, then `s` is a fundamental domain for the additive action of `G` on `α`. -/"]
+      "If for each `x : α`, exactly one of `g +ᵥ x`, `g : G`, belongs to a measurable set\n`s`, then `s` is a fundamental domain for the additive action of `G` on `α`."]
 theorem mk' (h_meas : MeasurableSet s) (h_exists : ∀ x : α, ∃! g : G, g • x ∈ s) : is_fundamental_domain G s μ :=
   { MeasurableSet := h_meas, ae_covers := eventually_of_forall $ fun x => (h_exists x).exists,
     AeDisjoint := fun g hne => by

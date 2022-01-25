@@ -126,7 +126,7 @@ theorem circle_map_ne_center {c : ℂ} {R : ℝ} (hR : R ≠ 0) {θ : ℝ} : cir
   mt circle_map_eq_center_iff.1 hR
 
 theorem has_deriv_at_circle_map (c : ℂ) (R : ℝ) (θ : ℝ) : HasDerivAt (circleMap c R) (circleMap 0 R θ * I) θ := by
-  simpa only [mul_assocₓ, one_mulₓ, of_real_clm_apply, circleMap, of_real_one, zero_addₓ] using
+  simpa only [mul_assoc, one_mulₓ, of_real_clm_apply, circleMap, of_real_one, zero_addₓ] using
     ((of_real_clm.has_deriv_at.mul_const I).cexp_real.const_mul (R : ℂ)).const_add c
 
 theorem differentiable_circle_map (c : ℂ) (R : ℝ) : Differentiable ℝ (circleMap c R) := fun θ =>
@@ -332,7 +332,7 @@ theorem norm_two_pi_I_inv_smul_integral_le_of_norm_le_const {f : ℂ → E} {c :
     (hf : ∀, ∀ z ∈ sphere c R, ∀, ∥f z∥ ≤ C) : ∥(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), f z∥ ≤ R * C := by
   have : ∥(2 * π * I : ℂ)⁻¹∥ = (2 * π)⁻¹ := by
     simp [real.pi_pos.le]
-  rw [norm_smul, this, ← div_eq_inv_mul, div_le_iff Real.two_pi_pos, mul_commₓ (R * C), ← mul_assocₓ]
+  rw [norm_smul, this, ← div_eq_inv_mul, div_le_iff Real.two_pi_pos, mul_comm (R * C), ← mul_assoc]
   exact norm_integral_le_of_norm_le_const hR hf
 
 /-- If `f` is continuous on the circle `|z - c| = R`, `R > 0`, the `∥f z∥` is less than or equal to
@@ -359,7 +359,7 @@ theorem norm_integral_lt_of_norm_le_const_of_lt {f : ℂ → E} {c : ℂ} {R C :
       · exact (mul_lt_mul_left hR).2 hlt
         _ = 2 * π * R * C :=
       by
-      simp [mul_assocₓ]
+      simp [mul_assoc]
 
 @[simp]
 theorem integral_smul {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [SmulCommClass 𝕜 ℂ E] (a : 𝕜) (f : ℂ → E) (c : ℂ)
@@ -426,7 +426,7 @@ theorem integral_sub_zpow_of_ne {n : ℤ} (hn : n ≠ -1) (c w : ℂ) (R : ℝ) 
     convert ((has_deriv_at_zpow (n + 1) _ (hne.imp _ _)).comp z ((has_deriv_at_id z).sub_const w)).div_const _ using 1
     · have hn' : (n + 1 : ℂ) ≠ 0 := by
         rwa [Ne, ← eq_neg_iff_add_eq_zero, ← Int.cast_one, ← Int.cast_neg, Int.cast_inj]
-      simp [mul_assocₓ, mul_div_cancel_left _ hn']
+      simp [mul_assoc, mul_div_cancel_left _ hn']
       
     exacts[sub_ne_zero.2, neg_le_iff_add_nonneg.1]
   refine' integral_eq_zero_of_has_deriv_within_at' fun z hz => (hd z _).HasDerivWithinAt
@@ -467,7 +467,7 @@ theorem norm_cauchy_power_series_le (f : ℂ → E) (c : ℂ) (R : ℝ) (n : ℕ
       rcases eq_or_ne R 0 with (rfl | hR)
       · cases n <;> simp [Real.two_pi_pos]
         
-      · rw [mul_inv_cancel_left₀, mul_assocₓ, mul_commₓ (|R|⁻¹ ^ n)]
+      · rw [mul_inv_cancel_left₀, mul_assoc, mul_comm (|R|⁻¹ ^ n)]
         rwa [Ne.def, _root_.abs_eq_zero]
         
     
@@ -502,7 +502,7 @@ theorem has_sum_two_pi_I_cauchy_power_series_integral {f : ℂ → E} {c : ℂ} 
     have := hf.def.1
     measurability
     
-  · simp [norm_smul, abs_of_pos hR, mul_left_commₓ R, mul_inv_cancel_left₀ hR.ne', mul_commₓ ∥_∥]
+  · simp [norm_smul, abs_of_pos hR, mul_left_commₓ R, mul_inv_cancel_left₀ hR.ne', mul_comm ∥_∥]
     
   · exact eventually_of_forall fun _ _ => (summable_geometric_of_lt_1 hwR.1 hwR.2).mul_left _
     
@@ -564,7 +564,7 @@ theorem integral_sub_inv_of_mem_ball {c w : ℂ} {R : ℝ} (hw : w ∈ ball c R)
   have : (∮ z in C(c, R), ((w - c) / (z - c)) ^ 0 * (z - c)⁻¹) = 2 * π * I := by
     simp [hR.ne']
   refine' this ▸ has_sum_single _ fun n hn => _
-  simp only [div_eq_mul_inv, mul_powₓ, integral_const_mul, mul_assocₓ]
+  simp only [div_eq_mul_inv, mul_powₓ, integral_const_mul, mul_assoc]
   rw [(integral_congr hR.le fun z hz => _).trans (H n hn), mul_zero]
   rw [← pow_succ'ₓ, ← zpow_coe_nat, inv_zpow₀, ← zpow_neg₀, Int.coe_nat_succ, neg_add, sub_eq_add_neg _ (1 : ℤ)]
 

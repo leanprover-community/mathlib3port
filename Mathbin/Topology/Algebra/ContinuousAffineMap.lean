@@ -164,7 +164,7 @@ variable {S : Type _} [CommRingₓ S] [Module S V] [Module S W]
 
 variable [TopologicalSpace W] [TopologicalSpace S] [HasContinuousSmul S W]
 
-instance : HasZero (P →A[R] W) :=
+instance : Zero (P →A[R] W) :=
   ⟨ContinuousAffineMap.const R P 0⟩
 
 @[norm_cast, simp]

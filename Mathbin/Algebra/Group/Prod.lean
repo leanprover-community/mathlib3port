@@ -49,23 +49,23 @@ theorem mul_def [Mul M] [Mul N] (p q : M × N) : p * q = (p.1 * q.1, p.2 * q.2) 
   rfl
 
 @[to_additive]
-instance [HasOne M] [HasOne N] : HasOne (M × N) :=
+instance [One M] [One N] : One (M × N) :=
   ⟨(1, 1)⟩
 
 @[simp, to_additive]
-theorem fst_one [HasOne M] [HasOne N] : (1 : M × N).1 = 1 :=
+theorem fst_one [One M] [One N] : (1 : M × N).1 = 1 :=
   rfl
 
 @[simp, to_additive]
-theorem snd_one [HasOne M] [HasOne N] : (1 : M × N).2 = 1 :=
+theorem snd_one [One M] [One N] : (1 : M × N).2 = 1 :=
   rfl
 
 @[to_additive]
-theorem one_eq_mk [HasOne M] [HasOne N] : (1 : M × N) = (1, 1) :=
+theorem one_eq_mk [One M] [One N] : (1 : M × N) = (1, 1) :=
   rfl
 
 @[simp, to_additive]
-theorem mk_eq_one [HasOne M] [HasOne N] {x : M} {y : N} : (x, y) = 1 ↔ x = 1 ∧ y = 1 :=
+theorem mk_eq_one [One M] [One N] {x : M} {y : N} : (x, y) = 1 ↔ x = 1 ∧ y = 1 :=
   mk.inj_iff
 
 @[to_additive]
@@ -111,7 +111,7 @@ instance [MulZeroClass M] [MulZeroClass N] : MulZeroClass (M × N) :=
 
 @[to_additive]
 instance [Semigroupₓ M] [Semigroupₓ N] : Semigroupₓ (M × N) :=
-  { Prod.hasMul with mul_assoc := fun a b c => mk.inj_iff.mpr ⟨mul_assocₓ _ _ _, mul_assocₓ _ _ _⟩ }
+  { Prod.hasMul with mul_assoc := fun a b c => mk.inj_iff.mpr ⟨mul_assoc _ _ _, mul_assoc _ _ _⟩ }
 
 instance [SemigroupWithZero M] [SemigroupWithZero N] : SemigroupWithZero (M × N) :=
   { Prod.mulZeroClass, Prod.semigroup with }
@@ -142,7 +142,7 @@ instance [Groupₓ G] [Groupₓ H] : Groupₓ (G × H) :=
 
 @[to_additive]
 instance [CommSemigroupₓ G] [CommSemigroupₓ H] : CommSemigroupₓ (G × H) :=
-  { Prod.semigroup with mul_comm := fun a b => mk.inj_iff.mpr ⟨mul_commₓ _ _, mul_commₓ _ _⟩ }
+  { Prod.semigroup with mul_comm := fun a b => mk.inj_iff.mpr ⟨mul_comm _ _, mul_comm _ _⟩ }
 
 @[to_additive]
 instance [LeftCancelSemigroup G] [LeftCancelSemigroup H] : LeftCancelSemigroup (G × H) :=

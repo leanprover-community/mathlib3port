@@ -122,7 +122,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
         mul_oneₓ]_ ≤ (volume (I.face i : Set ℝⁿ)).toReal * (2 * ε * c * (I.upper i - I.lower i)) :=
       by
       refine' norm_integral_le_of_le_const (fun y hy => (this y hy).trans _) volume
-      rw [mul_assocₓ (2 * ε)]
+      rw [mul_assoc (2 * ε)]
       exact
         mul_le_mul_of_nonneg_left (I.diam_Icc_le_of_distortion_le i hc)
           (mul_nonneg zero_le_two h0.le)_ = 2 * ε * c * ∏ j, I.upper j - I.lower j :=

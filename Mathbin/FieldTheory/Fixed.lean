@@ -251,7 +251,7 @@ theorem linear_independent_to_linear_map (R : Type u) (A : Type v) (B : Type w) 
     [Algebra R A] [CommRingₓ B] [IsDomain B] [Algebra R B] :
     LinearIndependent B (AlgHom.toLinearMap : (A →ₐ[R] B) → A →ₗ[R] B) :=
   have : LinearIndependent B (LinearMap.ltoFun R A B ∘ AlgHom.toLinearMap) :=
-    ((linear_independent_monoid_hom A B).comp (coeₓ : (A →ₐ[R] B) → A →* B) fun f g hfg =>
+    ((linear_independent_monoid_hom A B).comp (coe : (A →ₐ[R] B) → A →* B) fun f g hfg =>
       AlgHom.ext $ MonoidHom.ext_iff.1 hfg :
       _)
   this.of_comp _

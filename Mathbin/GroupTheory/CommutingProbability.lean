@@ -1,5 +1,6 @@
-import Mathbin.Algebra.Group.Conj
+import Mathbin.GroupTheory.Abelianization
 import Mathbin.GroupTheory.GroupAction.ConjAct
+import Mathbin.GroupTheory.Index
 
 /-!
 # Commuting Probability
@@ -38,6 +39,8 @@ theorem comm_prob_le_one : commProb M ≤ 1 := by
   rw [← Nat.cast_pow, Nat.cast_le, sq, ← card_prod]
   apply set_fintype_card_le_univ
 
+variable {M}
+
 theorem comm_prob_eq_one_iff [h : Nonempty M] : commProb M = 1 ↔ Commutative (· * · : M → M → M) := by
   change (card { p : M × M | p.1 * p.2 = p.2 * p.1 } : ℚ) / _ = 1 ↔ _
   rw [div_eq_one_iff_eq, ← Nat.cast_pow, Nat.cast_inj, sq, ← card_prod, set_fintype_card_eq_univ_iff,
@@ -69,4 +72,38 @@ theorem card_comm_eq_card_conj_classes_mul_card :
 theorem comm_prob_def' : commProb G = card (ConjClasses G) / card G := by
   rw [commProb, card_comm_eq_card_conj_classes_mul_card, Nat.cast_mul, sq]
   exact mul_div_mul_right (card (ConjClasses G)) (card G) (nat.cast_ne_zero.mpr card_ne_zero)
+
+variable {G} (H : Subgroup G)
+
+theorem Subgroup.comm_prob_subgroup_le : commProb H ≤ commProb G * H.index ^ 2 := by
+  rw [comm_prob_def, comm_prob_def, div_le_iff, mul_assoc, ← mul_powₓ, ← Nat.cast_mul, H.index_mul_card, div_mul_cancel,
+    Nat.cast_le]
+  · apply card_le_of_injective _ _
+    exact fun p => ⟨⟨p.1.1, p.1.2⟩, subtype.ext_iff.mp p.2⟩
+    exact fun p q h => by
+      simpa only [Subtype.ext_iff, Prod.ext_iff] using h
+    
+  · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr card_ne_zero)
+    
+  · exact pow_pos (nat.cast_pos.mpr card_pos) 2
+    
+
+theorem Subgroup.comm_prob_quotient_le [H.normal] : commProb (G ⧸ H) ≤ commProb G * card H := by
+  rw [comm_prob_def', comm_prob_def', div_le_iff, mul_assoc, ← Nat.cast_mul, mul_comm (card H), ←
+    Subgroup.card_eq_card_quotient_mul_card_subgroup, div_mul_cancel, Nat.cast_le]
+  · exact
+      card_le_of_surjective (ConjClasses.map (QuotientGroup.mk' H))
+        (ConjClasses.map_surjective Quotientₓ.surjective_quotient_mk')
+    
+  · exact nat.cast_ne_zero.mpr card_ne_zero
+    
+  · exact nat.cast_pos.mpr card_pos
+    
+
+variable (G)
+
+theorem inv_card_commutator_le_comm_prob : (↑card (commutator G))⁻¹ ≤ commProb G :=
+  (inv_pos_le_iff_one_le_mul (nat.cast_pos.mpr card_pos)).mpr
+    (le_transₓ (ge_of_eq (comm_prob_eq_one_iff.mpr (Abelianization.commGroup G).mul_comm))
+      (commutator G).comm_prob_quotient_le)
 

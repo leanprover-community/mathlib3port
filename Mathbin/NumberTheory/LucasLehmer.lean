@@ -205,7 +205,7 @@ theorem mul_fst (x y : X q) : (x * y).1 = x.1 * y.1 + 3 * x.2 * y.2 :=
 theorem mul_snd (x y : X q) : (x * y).2 = x.1 * y.2 + x.2 * y.1 :=
   rfl
 
-instance : HasOne (X q) where
+instance : One (X q) where
   one := ⟨1, 0⟩
 
 @[simp]
@@ -407,8 +407,8 @@ theorem ω_pow_formula (p' : ℕ) (h : lucas_lehmer_residue (p' + 2) = 0) :
   have t : 2 ^ p' + 2 ^ p' = 2 ^ (p' + 1) := by
     ring_exp
   rw [mul_addₓ, ← pow_addₓ ω, t, ← mul_powₓ ω ωb (2 ^ p'), ω_mul_ωb, one_pow] at h
-  rw [mul_commₓ, coe_mul] at h
-  rw [mul_commₓ _ (k : X (q (p' + 2)))] at h
+  rw [mul_comm, coe_mul] at h
+  rw [mul_comm _ (k : X (q (p' + 2)))] at h
   replace h := eq_sub_of_add_eq h
   exact_mod_cast h
 

@@ -247,7 +247,7 @@ theorem zpow_injective {x : K} (h₀ : 0 < x) (h₁ : x ≠ 1) : Function.Inject
   rcases h₁.lt_or_lt with (H | H)
   · apply (zpow_strict_mono (one_lt_inv h₀ H)).Injective
     show x⁻¹ ^ m = x⁻¹ ^ n
-    rw [← zpow_neg_one, ← zpow_mul₀, ← zpow_mul₀, mul_commₓ _ m, mul_commₓ _ n, zpow_mul₀, zpow_mul₀, h]
+    rw [← zpow_neg_one, ← zpow_mul₀, ← zpow_mul₀, mul_comm _ m, mul_comm _ n, zpow_mul₀, zpow_mul₀, h]
     
   · exact (zpow_strict_mono H).Injective h
     

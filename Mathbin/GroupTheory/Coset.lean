@@ -94,15 +94,15 @@ variable [Semigroupₓ α]
 
 @[simp, to_additive left_add_coset_assoc]
 theorem left_coset_assoc (s : Set α) (a b : α) : a *l (b *l s) = a * b *l s := by
-  simp [LeftCoset, RightCoset, (image_comp _ _ _).symm, Function.comp, mul_assocₓ]
+  simp [LeftCoset, RightCoset, (image_comp _ _ _).symm, Function.comp, mul_assoc]
 
 @[simp, to_additive right_add_coset_assoc]
 theorem right_coset_assoc (s : Set α) (a b : α) : s *r a *r b = s *r (a * b) := by
-  simp [LeftCoset, RightCoset, (image_comp _ _ _).symm, Function.comp, mul_assocₓ]
+  simp [LeftCoset, RightCoset, (image_comp _ _ _).symm, Function.comp, mul_assoc]
 
 @[to_additive left_add_coset_right_add_coset]
 theorem left_coset_right_coset (s : Set α) (a b : α) : a *l s *r b = a *l (s *r b) := by
-  simp [LeftCoset, RightCoset, (image_comp _ _ _).symm, Function.comp, mul_assocₓ]
+  simp [LeftCoset, RightCoset, (image_comp _ _ _).symm, Function.comp, mul_assoc]
 
 end CosetSemigroup
 
@@ -217,7 +217,7 @@ theorem left_coset_eq_iff {x y : α} : LeftCoset x s = LeftCoset y s ↔ x⁻¹ 
     
   · intro h z
     rw [← mul_inv_cancel_rightₓ (x⁻¹) y]
-    rw [mul_assocₓ]
+    rw [mul_assoc]
     exact s.mul_mem_cancel_left h
     
 
@@ -233,7 +233,7 @@ theorem right_coset_eq_iff {x y : α} : RightCoset (↑s) x = RightCoset s y ↔
     
   · intro h z
     rw [← inv_mul_cancel_leftₓ y (x⁻¹)]
-    rw [← mul_assocₓ]
+    rw [← mul_assoc]
     exact s.mul_mem_cancel_right h
     
 
@@ -356,7 +356,7 @@ theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x : α | (x : α �
 
 @[to_additive]
 theorem preimage_image_coe (N : Subgroup α) (s : Set α) :
-    coeₓ ⁻¹' ((coeₓ : α → α ⧸ N) '' s) = ⋃ x : N, (fun y : α => y * x) ⁻¹' s := by
+    coe ⁻¹' ((coe : α → α ⧸ N) '' s) = ⋃ x : N, (fun y : α => y * x) ⁻¹' s := by
   ext x
   simp only [QuotientGroup.eq, SetLike.exists, exists_prop, Set.mem_preimage, Set.mem_Union, Set.mem_image,
     Subgroup.coe_mk, ← eq_inv_mul_iff_mul_eq]
@@ -426,11 +426,11 @@ def quotient_equiv_prod_of_le' (h_le : s ≤ t) (f : α ⧸ t → α) (hf : Func
       a.map' (fun g : α => ⟨f (Quotientₓ.mk' g)⁻¹ * g, Quotientₓ.exact' (hf g)⟩) fun b c h => by
         change (f b⁻¹ * b)⁻¹ * (f c⁻¹ * c) ∈ s
         have key : f b = f c := congr_argₓ f (Quotientₓ.sound' (h_le h))
-        rwa [key, mul_inv_rev, inv_invₓ, mul_assocₓ, mul_inv_cancel_left]⟩
+        rwa [key, mul_inv_rev, inv_invₓ, mul_assoc, mul_inv_cancel_left]⟩
   invFun := fun a =>
     a.2.map' (fun b => f a.1 * b) fun b c h => by
       change (f a.1 * b)⁻¹ * (f a.1 * c) ∈ s
-      rwa [mul_inv_rev, mul_assocₓ, inv_mul_cancel_leftₓ]
+      rwa [mul_inv_rev, mul_assoc, inv_mul_cancel_leftₓ]
   left_inv := by
     refine' Quotientₓ.ind' fun a => _
     simp_rw [Quotientₓ.map'_mk', id.def, t.coe_mk, mul_inv_cancel_left]
@@ -512,7 +512,7 @@ noncomputable def preimage_mk_equiv_subgroup_times_set (s : Subgroup α) (t : Se
     Quotientₓ.sound'
       (show (Quotientₓ.out' x * a)⁻¹ * Quotientₓ.out' x ∈ s from
         s.inv_mem_iff.1 $ by
-          rwa [mul_inv_rev, inv_invₓ, ← mul_assocₓ, inv_mul_selfₓ, one_mulₓ])
+          rwa [mul_inv_rev, inv_invₓ, ← mul_assoc, inv_mul_selfₓ, one_mulₓ])
   { toFun := fun ⟨a, ha⟩ =>
       ⟨⟨Quotientₓ.out' (Quotientₓ.mk' a)⁻¹ * a, @Quotientₓ.exact' _ (left_rel s) _ _ $ Quotientₓ.out_eq' _⟩,
         ⟨Quotientₓ.mk' a, ha⟩⟩,

@@ -68,7 +68,7 @@ theorem untrop_prod [AddCommMonoidₓ R] (s : Finset S) (f : S → Tropical R) :
   convert Multiset.untrop_prod _
   simp
 
-theorem List.trop_minimum [LinearOrderₓ R] (l : List R) : trop l.minimum = List.sum (l.map (trop ∘ coeₓ)) := by
+theorem List.trop_minimum [LinearOrderₓ R] (l : List R) : trop l.minimum = List.sum (l.map (trop ∘ coe)) := by
   induction' l with hd tl IH
   · simp
     

@@ -59,7 +59,7 @@ theorem continuous_inf_edist_Hausdorff_edist : Continuous fun p : α × closeds 
       add_le_add_left (add_le_add (le_max_leftₓ _ _) (le_max_rightₓ _ _))
         _ _ = inf_edist y t.val + 2 * edist (x, s) (y, t) :=
       by
-      rw [← mul_two, mul_commₓ]
+      rw [← mul_two, mul_comm]
 
 /-- Subsets of a given closed subset form a closed set -/
 theorem is_closed_subsets_of_is_closed (hs : IsClosed s) : IsClosed { t : closeds α | t.val ⊆ s } := by

@@ -384,7 +384,7 @@ def PseudoEmetricSpace.induced {α β} (f : α → β) (m : PseudoEmetricSpace �
 
 /-- Pseudoemetric space instance on subsets of pseudoemetric spaces -/
 instance {α : Type _} {p : α → Prop} [t : PseudoEmetricSpace α] : PseudoEmetricSpace (Subtype p) :=
-  t.induced coeₓ
+  t.induced coe
 
 /-- The extended psuedodistance on a subset of a pseudoemetric space is the restriction of
 the original pseudodistance, by definition -/
@@ -634,7 +634,7 @@ theorem totally_bounded_iff {s : Set α} :
   ⟨fun H ε ε0 => H _ (edist_mem_uniformity ε0), fun H r ru =>
     let ⟨ε, ε0, hε⟩ := mem_uniformity_edist.1 ru
     let ⟨t, ft, h⟩ := H ε ε0
-    ⟨t, ft, subset.trans h $ Union_subset_Union $ fun y => Union_subset_Union $ fun yt z => hε⟩⟩
+    ⟨t, ft, h.trans $ Union₂_mono $ fun y yt z => hε⟩⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem totally_bounded_iff' {s : Set α} :
@@ -642,7 +642,7 @@ theorem totally_bounded_iff' {s : Set α} :
   ⟨fun H ε ε0 => (totally_bounded_iff_subset.1 H) _ (edist_mem_uniformity ε0), fun H r ru =>
     let ⟨ε, ε0, hε⟩ := mem_uniformity_edist.1 ru
     let ⟨t, _, ft, h⟩ := H ε ε0
-    ⟨t, ft, subset.trans h $ Union_subset_Union $ fun y => Union_subset_Union $ fun yt z => hε⟩⟩
+    ⟨t, ft, h.trans $ Union₂_mono $ fun y yt z => hε⟩⟩
 
 section Compact
 
@@ -687,7 +687,7 @@ theorem subset_countable_closure_of_compact {s : Set α} (hs : IsCompact s) :
     ∃ (t : _)(_ : t ⊆ s), countable t ∧ s ⊆ Closure t := by
   refine' subset_countable_closure_of_almost_dense_set s fun ε hε => _
   rcases totally_bounded_iff'.1 hs.totally_bounded ε hε with ⟨t, hts, htf, hst⟩
-  exact ⟨t, htf.countable, subset.trans hst (bUnion_mono $ fun _ _ => ball_subset_closed_ball)⟩
+  exact ⟨t, htf.countable, subset.trans hst $ Union₂_mono $ fun _ _ => ball_subset_closed_ball⟩
 
 end Compact
 
@@ -936,7 +936,7 @@ def EmetricSpace.induced {γ β} (f : γ → β) (hf : Function.Injective f) (m 
 
 /-- Emetric space instance on subsets of emetric spaces -/
 instance {α : Type _} {p : α → Prop} [t : EmetricSpace α] : EmetricSpace (Subtype p) :=
-  t.induced coeₓ fun x y => Subtype.ext_iff_val.2
+  t.induced coe fun x y => Subtype.ext_iff_val.2
 
 /-- The product of two emetric spaces, with the max distance, is an extended
 metric spaces. We make sure that the uniform structure thus constructed is the one

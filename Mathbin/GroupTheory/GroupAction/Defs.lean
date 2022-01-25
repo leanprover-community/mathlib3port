@@ -184,7 +184,7 @@ add_decl_doc VaddCommClass.symm
 @[to_additive]
 instance smul_comm_class_self (M α : Type _) [CommMonoidₓ M] [MulAction M α] : SmulCommClass M M α :=
   ⟨fun a a' b => by
-    rw [← mul_smul, mul_commₓ, mul_smul]⟩
+    rw [← mul_smul, mul_comm, mul_smul]⟩
 
 /-- An instance of `is_scalar_tower M N α` states that the multiplicative
 action of `M` on `α` is determined by the multiplicative actions of `M` on `N`
@@ -198,7 +198,7 @@ theorem smul_assoc {M N} [HasScalar M N] [HasScalar N α] [HasScalar M α] [IsSc
   IsScalarTower.smul_assoc x y z
 
 instance Semigroupₓ.is_scalar_tower [Semigroupₓ α] : IsScalarTower α α α :=
-  ⟨mul_assocₓ⟩
+  ⟨mul_assoc⟩
 
 /-- A typeclass indicating that the right (aka `mul_opposite`) and left actions by `M` on `α` are
 equal, that is that `M` acts centrally on `α`. This can be thought of as a version of commutativity
@@ -364,7 +364,7 @@ This is promoted to a module by `semiring.to_module`. -/
 instance (priority := 910) Monoidₓ.toMulAction : MulAction M M where
   smul := · * ·
   one_smul := one_mulₓ
-  mul_smul := mul_assocₓ
+  mul_smul := mul_assoc
 
 /-- The regular action of a monoid on itself by left addition.
 
@@ -458,13 +458,13 @@ theorem mul_smul_one {M N} [Monoidₓ N] [HasScalar M N] [SmulCommClass M N N] (
 theorem IsScalarTower.of_smul_one_mul {M N} [Monoidₓ N] [HasScalar M N] (h : ∀ x : M y : N, x • (1 : N) * y = x • y) :
     IsScalarTower M N N :=
   ⟨fun x y z => by
-    rw [← h, smul_eq_mul, mul_assocₓ, h, smul_eq_mul]⟩
+    rw [← h, smul_eq_mul, mul_assoc, h, smul_eq_mul]⟩
 
 @[to_additive]
 theorem SmulCommClass.of_mul_smul_one {M N} [Monoidₓ N] [HasScalar M N] (H : ∀ x : M y : N, y * x • (1 : N) = x • y) :
     SmulCommClass M N N :=
   ⟨fun x y z => by
-    rw [← H x z, smul_eq_mul, ← H, smul_eq_mul, mul_assocₓ]⟩
+    rw [← H x z, smul_eq_mul, ← H, smul_eq_mul, mul_assoc]⟩
 
 end CompatibleScalar
 

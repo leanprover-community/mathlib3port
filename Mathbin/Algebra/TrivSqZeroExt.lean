@@ -46,11 +46,11 @@ section Basic
 variable {R : Type u} {M : Type v}
 
 /-- The canonical inclusion `R → triv_sq_zero_ext R M`. -/
-def inl [HasZero M] (r : R) : tsze R M :=
+def inl [Zero M] (r : R) : tsze R M :=
   (r, 0)
 
 /-- The canonical inclusion `M → triv_sq_zero_ext R M`. -/
-def inr [HasZero R] (m : M) : tsze R M :=
+def inr [Zero R] (m : M) : tsze R M :=
   (0, m)
 
 /-- The canonical projection `triv_sq_zero_ext R M → R`. -/
@@ -70,11 +70,11 @@ section
 variable (M)
 
 @[simp]
-theorem fst_inl [HasZero M] (r : R) : (inl r : tsze R M).fst = r :=
+theorem fst_inl [Zero M] (r : R) : (inl r : tsze R M).fst = r :=
   rfl
 
 @[simp]
-theorem snd_inl [HasZero M] (r : R) : (inl r : tsze R M).snd = 0 :=
+theorem snd_inl [Zero M] (r : R) : (inl r : tsze R M).snd = 0 :=
   rfl
 
 end
@@ -84,19 +84,19 @@ section
 variable (R)
 
 @[simp]
-theorem fst_inr [HasZero R] (m : M) : (inr m : tsze R M).fst = 0 :=
+theorem fst_inr [Zero R] (m : M) : (inr m : tsze R M).fst = 0 :=
   rfl
 
 @[simp]
-theorem snd_inr [HasZero R] (m : M) : (inr m : tsze R M).snd = m :=
+theorem snd_inr [Zero R] (m : M) : (inr m : tsze R M).snd = m :=
   rfl
 
 end
 
-theorem inl_injective [HasZero M] : Function.Injective (inl : R → tsze R M) :=
+theorem inl_injective [Zero M] : Function.Injective (inl : R → tsze R M) :=
   Function.LeftInverse.injective $ fst_inl _
 
-theorem inr_injective [HasZero R] : Function.Injective (inr : M → tsze R M) :=
+theorem inr_injective [Zero R] : Function.Injective (inr : M → tsze R M) :=
   Function.LeftInverse.injective $ snd_inr _
 
 end Basic
@@ -113,7 +113,7 @@ variable {T : Type _} {S : Type _} {R : Type u} {M : Type v}
 instance [Inhabited R] [Inhabited M] : Inhabited (tsze R M) :=
   Prod.inhabited
 
-instance [HasZero R] [HasZero M] : HasZero (tsze R M) :=
+instance [Zero R] [Zero M] : Zero (tsze R M) :=
   Prod.hasZero
 
 instance [Add R] [Add M] : Add (tsze R M) :=
@@ -169,11 +169,11 @@ instance [Semiringₓ S] [AddCommMonoidₓ R] [AddCommMonoidₓ M] [Module S R] 
   Prod.module
 
 @[simp]
-theorem fst_zero [HasZero R] [HasZero M] : (0 : tsze R M).fst = 0 :=
+theorem fst_zero [Zero R] [Zero M] : (0 : tsze R M).fst = 0 :=
   rfl
 
 @[simp]
-theorem snd_zero [HasZero R] [HasZero M] : (0 : tsze R M).snd = 0 :=
+theorem snd_zero [Zero R] [Zero M] : (0 : tsze R M).snd = 0 :=
   rfl
 
 @[simp]
@@ -205,7 +205,7 @@ section
 variable (M)
 
 @[simp]
-theorem inl_zero [HasZero R] [HasZero M] : (inl 0 : tsze R M) = 0 :=
+theorem inl_zero [Zero R] [Zero M] : (inl 0 : tsze R M) = 0 :=
   rfl
 
 @[simp]
@@ -228,7 +228,7 @@ section
 variable (R)
 
 @[simp]
-theorem inr_zero [HasZero R] [HasZero M] : (inr 0 : tsze R M) = 0 :=
+theorem inr_zero [Zero R] [Zero M] : (inr 0 : tsze R M) = 0 :=
   rfl
 
 @[simp]
@@ -240,7 +240,7 @@ theorem inr_neg [AddGroupₓ R] [Neg M] (m : M) : (inr (-m) : tsze R M) = -inr m
   ext neg_zero.symm rfl
 
 @[simp]
-theorem inr_smul [HasZero R] [HasZero S] [SmulWithZero S R] [HasScalar S M] (r : S) (m : M) :
+theorem inr_smul [Zero R] [Zero S] [SmulWithZero S R] [HasScalar S M] (r : S) (m : M) :
     (inr (r • m) : tsze R M) = r • inr m :=
   ext (smul_zero' _ _).symm rfl
 
@@ -285,18 +285,18 @@ section Mul
 
 variable {R : Type u} {M : Type v}
 
-instance [HasOne R] [HasZero M] : HasOne (tsze R M) :=
+instance [One R] [Zero M] : One (tsze R M) :=
   ⟨(1, 0)⟩
 
 instance [Mul R] [Add M] [HasScalar R M] : Mul (tsze R M) :=
   ⟨fun x y => (x.1 * y.1, x.1 • y.2 + y.1 • x.2)⟩
 
 @[simp]
-theorem fst_one [HasOne R] [HasZero M] : (1 : tsze R M).fst = 1 :=
+theorem fst_one [One R] [Zero M] : (1 : tsze R M).fst = 1 :=
   rfl
 
 @[simp]
-theorem snd_one [HasOne R] [HasZero M] : (1 : tsze R M).snd = 0 :=
+theorem snd_one [One R] [Zero M] : (1 : tsze R M).snd = 0 :=
   rfl
 
 @[simp]
@@ -313,7 +313,7 @@ section
 variable (M)
 
 @[simp]
-theorem inl_one [HasOne R] [HasZero M] : (inl 1 : tsze R M) = 1 :=
+theorem inl_one [One R] [Zero M] : (inl 1 : tsze R M) = 1 :=
   rfl
 
 @[simp]
@@ -386,14 +386,14 @@ instance [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : NonAssocSemiring (t
 instance [CommMonoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : Monoidₓ (tsze R M) :=
   { TrivSqZeroExt.mulOneClass with
     mul_assoc := fun x y z =>
-      ext (mul_assocₓ x.1 y.1 z.1) $
+      ext (mul_assoc x.1 y.1 z.1) $
         show (x.1 * y.1) • z.2 + z.1 • (x.1 • y.2 + y.1 • x.2) = x.1 • (y.1 • z.2 + z.1 • y.2) + (y.1 * z.1) • x.2 by
-          simp_rw [smul_add, ← mul_smul, add_assocₓ, mul_commₓ] }
+          simp_rw [smul_add, ← mul_smul, add_assocₓ, mul_comm] }
 
 instance [CommMonoidₓ R] [AddCommMonoidₓ M] [DistribMulAction R M] : CommMonoidₓ (tsze R M) :=
   { TrivSqZeroExt.monoid with
     mul_comm := fun x₁ x₂ =>
-      ext (mul_commₓ x₁.1 x₂.1) $ show x₁.1 • x₂.2 + x₂.1 • x₁.2 = x₂.1 • x₁.2 + x₁.1 • x₂.2 from add_commₓ _ _ }
+      ext (mul_comm x₁.1 x₂.1) $ show x₁.1 • x₂.2 + x₂.1 • x₁.2 = x₂.1 • x₁.2 + x₁.1 • x₂.2 from add_commₓ _ _ }
 
 instance [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] : CommSemiringₓ (tsze R M) :=
   { TrivSqZeroExt.commMonoid, TrivSqZeroExt.nonAssocSemiring with }
@@ -420,7 +420,7 @@ variable [CommSemiringₓ S] [CommSemiringₓ R] [AddCommMonoidₓ M]
 variable [Algebra S R] [Module S M] [Module R M] [IsScalarTower S R M]
 
 instance algebra' : Algebra S (tsze R M) :=
-  { (TrivSqZeroExt.inlHom R M).comp (algebraMap S R) with commutes' := fun r x => mul_commₓ _ _,
+  { (TrivSqZeroExt.inlHom R M).comp (algebraMap S R) with commutes' := fun r x => mul_comm _ _,
     smul_def' := fun r x =>
       ext (Algebra.smul_def _ _) $
         show r • x.2 = algebraMap S R r • x.2 + x.1 • 0 by

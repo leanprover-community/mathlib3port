@@ -157,7 +157,7 @@ theorem const_eval n x : const n x = n :=
 def zero : Poly α :=
   const 0
 
-instance : HasZero (Poly α) :=
+instance : Zero (Poly α) :=
   ⟨Poly.zero⟩
 
 @[simp]
@@ -168,7 +168,7 @@ theorem zero_eval x : (0 : Poly α) x = 0 :=
 def one : Poly α :=
   const 1
 
-instance : HasOne (Poly α) :=
+instance : One (Poly α) :=
   ⟨Poly.one⟩
 
 @[simp]
@@ -231,7 +231,7 @@ instance : CommRingₓ (Poly α) := by
     intros <;>
       try
           rfl <;>
-        refine' ext fun _ => _ <;> simp [sub_eq_add_neg, mul_addₓ, mul_left_commₓ, mul_commₓ, add_commₓ, add_assocₓ]
+        refine' ext fun _ => _ <;> simp [sub_eq_add_neg, mul_addₓ, mul_left_commₓ, mul_comm, add_commₓ, add_assocₓ]
 
 theorem induction {C : Poly α → Prop} (H1 : ∀ i, C (proj i)) (H2 : ∀ n, C (const n)) (H3 : ∀ f g, C f → C g → C (f - g))
     (H4 : ∀ f g, C f → C g → C (f * g)) (f : Poly α) : C f := by

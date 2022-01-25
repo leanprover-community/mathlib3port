@@ -64,7 +64,7 @@ instance : second_countable_topology ℝ≥0∞ :=
                     simp )
               )⟩⟩
 
-theorem embedding_coe : Embedding (coeₓ : ℝ≥0 → ℝ≥0∞) :=
+theorem embedding_coe : Embedding (coe : ℝ≥0 → ℝ≥0∞) :=
   ⟨⟨by
       refine' le_antisymmₓ _ _
       · rw [@OrderTopology.topology_eq_generate_intervals ℝ≥0∞ _, ← coinduced_le_iff_le_induced]
@@ -96,12 +96,12 @@ theorem is_open_Ico_zero : IsOpen (Ico 0 b) := by
   rw [Ennreal.Ico_eq_Iio]
   exact is_open_Iio
 
-theorem open_embedding_coe : OpenEmbedding (coeₓ : ℝ≥0 → ℝ≥0∞) :=
+theorem open_embedding_coe : OpenEmbedding (coe : ℝ≥0 → ℝ≥0∞) :=
   ⟨embedding_coe, by
     convert is_open_ne_top
     ext (x | _) <;> simp [none_eq_top, some_eq_coe]⟩
 
-theorem coe_range_mem_nhds : range (coeₓ : ℝ≥0 → ℝ≥0∞) ∈ 𝓝 (r : ℝ≥0∞) :=
+theorem coe_range_mem_nhds : range (coe : ℝ≥0 → ℝ≥0∞) ∈ 𝓝 (r : ℝ≥0∞) :=
   IsOpen.mem_nhds open_embedding_coe.open_range $ mem_range_self _
 
 @[norm_cast]
@@ -109,23 +109,23 @@ theorem tendsto_coe {f : Filter α} {m : α → ℝ≥0 } {a : ℝ≥0 } :
     tendsto (fun a => (m a : ℝ≥0∞)) f (𝓝 (↑a)) ↔ tendsto m f (𝓝 a) :=
   embedding_coe.tendsto_nhds_iff.symm
 
-theorem continuous_coe : Continuous (coeₓ : ℝ≥0 → ℝ≥0∞) :=
+theorem continuous_coe : Continuous (coe : ℝ≥0 → ℝ≥0∞) :=
   embedding_coe.Continuous
 
 theorem continuous_coe_iff {α} [TopologicalSpace α] {f : α → ℝ≥0 } :
     (Continuous fun a => (f a : ℝ≥0∞)) ↔ Continuous f :=
   embedding_coe.continuous_iff.symm
 
-theorem nhds_coe {r : ℝ≥0 } : 𝓝 (r : ℝ≥0∞) = (𝓝 r).map coeₓ :=
+theorem nhds_coe {r : ℝ≥0 } : 𝓝 (r : ℝ≥0∞) = (𝓝 r).map coe :=
   (open_embedding_coe.map_nhds_eq r).symm
 
 theorem tendsto_nhds_coe_iff {α : Type _} {l : Filter α} {x : ℝ≥0 } {f : ℝ≥0∞ → α} :
-    tendsto f (𝓝 (↑x)) l ↔ tendsto (f ∘ coeₓ : ℝ≥0 → α) (𝓝 x) l :=
+    tendsto f (𝓝 (↑x)) l ↔ tendsto (f ∘ coe : ℝ≥0 → α) (𝓝 x) l :=
   show _ ≤ _ ↔ _ ≤ _ by
     rw [nhds_coe, Filter.map_map]
 
 theorem continuous_at_coe_iff {α : Type _} [TopologicalSpace α] {x : ℝ≥0 } {f : ℝ≥0∞ → α} :
-    ContinuousAt f (↑x) ↔ ContinuousAt (f ∘ coeₓ : ℝ≥0 → α) x :=
+    ContinuousAt f (↑x) ↔ ContinuousAt (f ∘ coe : ℝ≥0 → α) x :=
   tendsto_nhds_coe_iff
 
 theorem nhds_coe_coe {r p : ℝ≥0 } : 𝓝 ((r : ℝ≥0∞), (p : ℝ≥0∞)) = (𝓝 (r, p)).map fun p : ℝ≥0 × ℝ≥0 => (p.1, p.2) :=
@@ -293,6 +293,57 @@ protected theorem tendsto_at_top_zero [hβ : Nonempty β] [SemilatticeSup β] {f
   · exact hβ
     
 
+theorem tendsto_sub {a b : ℝ≥0∞} (h : a ≠ ∞ ∨ b ≠ ∞) :
+    tendsto (fun p : ℝ≥0∞ × ℝ≥0∞ => p.1 - p.2) (𝓝 (a, b)) (𝓝 (a - b)) := by
+  cases a <;> cases b
+  · simp only [eq_self_iff_true, not_true, Ne.def, none_eq_top, or_selfₓ] at h
+    contradiction
+    
+  · simp only [some_eq_coe, WithTop.top_sub_coe, none_eq_top]
+    apply tendsto_nhds_top_iff_nnreal.2 fun n => _
+    rw [nhds_prod_eq, eventually_prod_iff]
+    refine'
+      ⟨fun z => (n + (b + 1) : ℝ≥0∞) < z,
+        Ioi_mem_nhds
+          (by
+            simp only [one_lt_top, add_lt_top, coe_lt_top, and_selfₓ]),
+        fun z => z < b + 1, Iio_mem_nhds (Ennreal.lt_add_right coe_ne_top one_ne_zero), fun x hx y hy => _⟩
+    dsimp
+    rw [lt_tsub_iff_right]
+    have : (n : ℝ≥0∞) + y + (b + 1) < x + (b + 1) :=
+      calc
+        (n : ℝ≥0∞) + y + (b + 1) = (n : ℝ≥0∞) + (b + 1) + y := by
+          abel
+        _ < x + (b + 1) := Ennreal.add_lt_add hx hy
+        
+    exact lt_of_add_lt_add_right this
+    
+  · simp only [some_eq_coe, WithTop.sub_top, none_eq_top]
+    suffices H : ∀ᶠ p : ℝ≥0∞ × ℝ≥0∞ in 𝓝 (a, ∞), 0 = p.1 - p.2
+    exact tendsto_const_nhds.congr' H
+    rw [nhds_prod_eq, eventually_prod_iff]
+    refine'
+      ⟨fun z => z < a + 1, Iio_mem_nhds (Ennreal.lt_add_right coe_ne_top one_ne_zero), fun z => (a : ℝ≥0∞) + 1 < z,
+        Ioi_mem_nhds
+          (by
+            simp only [one_lt_top, add_lt_top, coe_lt_top, and_selfₓ]),
+        fun x hx y hy => _⟩
+    rw [eq_comm]
+    simp only [tsub_eq_zero_iff_le, (LT.lt.trans hx hy).le]
+    
+  · simp only [some_eq_coe, nhds_coe_coe, tendsto_map'_iff, Function.comp, ← Ennreal.coe_sub, tendsto_coe]
+    exact
+      Continuous.tendsto
+        (by
+          continuity)
+        _
+    
+
+protected theorem tendsto.sub {f : Filter α} {ma : α → ℝ≥0∞} {mb : α → ℝ≥0∞} {a b : ℝ≥0∞} (hma : tendsto ma f (𝓝 a))
+    (hmb : tendsto mb f (𝓝 b)) (h : a ≠ ∞ ∨ b ≠ ∞) : tendsto (fun a => ma a - mb a) f (𝓝 (a - b)) :=
+  show tendsto ((fun p : ℝ≥0∞ × ℝ≥0∞ => p.1 - p.2) ∘ fun a => (ma a, mb a)) f (𝓝 (a - b)) from
+    tendsto.comp (Ennreal.tendsto_sub h) (hma.prod_mk_nhds hmb)
+
 protected theorem tendsto_mul (ha : a ≠ 0 ∨ b ≠ ⊤) (hb : b ≠ 0 ∨ a ≠ ⊤) :
     tendsto (fun p : ℝ≥0∞ × ℝ≥0∞ => p.1 * p.2) (𝓝 (a, b)) (𝓝 (a * b)) := by
   have ht : ∀ b : ℝ≥0∞, b ≠ 0 → tendsto (fun p : ℝ≥0∞ × ℝ≥0∞ => p.1 * p.2) (𝓝 ((⊤ : ℝ≥0∞), b)) (𝓝 ⊤) := by
@@ -311,7 +362,7 @@ protected theorem tendsto_mul (ha : a ≠ 0 ∨ b ≠ ⊤) (hb : b ≠ 0 ∨ a �
     
   cases b
   · simp [none_eq_top] at ha
-    simp [*, nhds_swap (a : ℝ≥0∞) ⊤, none_eq_top, some_eq_coe, top_mul, tendsto_map'_iff, · ∘ ·, mul_commₓ]
+    simp [*, nhds_swap (a : ℝ≥0∞) ⊤, none_eq_top, some_eq_coe, top_mul, tendsto_map'_iff, · ∘ ·, mul_comm]
     
   simp [some_eq_coe, nhds_coe_coe, tendsto_map'_iff, · ∘ ·]
   simp only [coe_mul.symm, tendsto_coe, tendsto_mul]
@@ -331,7 +382,7 @@ protected theorem tendsto.const_mul {f : Filter α} {m : α → ℝ≥0∞} {a b
 
 protected theorem tendsto.mul_const {f : Filter α} {m : α → ℝ≥0∞} {a b : ℝ≥0∞} (hm : tendsto m f (𝓝 a))
     (ha : a ≠ 0 ∨ b ≠ ⊤) : tendsto (fun x => m x * b) f (𝓝 (a * b)) := by
-  simpa only [mul_commₓ] using Ennreal.Tendsto.const_mul hm ha
+  simpa only [mul_comm] using Ennreal.Tendsto.const_mul hm ha
 
 theorem tendsto_finset_prod_of_ne_top {ι : Type _} {f : ι → α → ℝ≥0∞} {x : Filter α} {a : ι → ℝ≥0∞} (s : Finset ι)
     (h : ∀, ∀ i ∈ s, ∀, tendsto (f i) x (𝓝 (a i))) (h' : ∀, ∀ i ∈ s, ∀, a i ≠ ∞) :
@@ -413,7 +464,7 @@ theorem infi_mul_left {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {a : ℝ≥0∞
 
 theorem infi_mul_right' {ι} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} (h : a = ⊤ → (⨅ i, f i) = 0 → ∃ i, f i = 0)
     (h0 : a = 0 → Nonempty ι) : (⨅ i, f i * a) = (⨅ i, f i) * a := by
-  simpa only [mul_commₓ a] using infi_mul_left' h h0
+  simpa only [mul_comm a] using infi_mul_left' h h0
 
 theorem infi_mul_right {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {a : ℝ≥0∞} (h : a = ⊤ → (⨅ i, f i) = 0 → ∃ i, f i = 0) :
     (⨅ i, f i * a) = (⨅ i, f i) * a :=
@@ -531,7 +582,7 @@ theorem mul_supr {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : a * su
   rw [← Sup_range, mul_Sup, supr_range]
 
 theorem supr_mul {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : supr f * a = ⨆ i, f i * a := by
-  rw [mul_commₓ, mul_supr] <;> congr <;> funext <;> rw [mul_commₓ]
+  rw [mul_comm, mul_supr] <;> congr <;> funext <;> rw [mul_comm]
 
 theorem supr_div {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : supr f / a = ⨆ i, f i / a :=
   supr_mul
@@ -580,7 +631,7 @@ variable {f g : α → ℝ≥0∞}
 
 @[norm_cast]
 protected theorem has_sum_coe {f : α → ℝ≥0 } {r : ℝ≥0 } : HasSum (fun a => (f a : ℝ≥0∞)) (↑r) ↔ HasSum f r := by
-  have : (fun s : Finset α => ∑ a in s, ↑f a) = (coeₓ : ℝ≥0 → ℝ≥0∞) ∘ fun s : Finset α => ∑ a in s, f a :=
+  have : (fun s : Finset α => ∑ a in s, ↑f a) = (coe : ℝ≥0 → ℝ≥0∞) ∘ fun s : Finset α => ∑ a in s, f a :=
     funext $ fun s => Ennreal.coe_finset_sum.symm
   unfold HasSum <;> rw [this, tendsto_coe]
 
@@ -710,7 +761,7 @@ protected theorem tsum_mul_left : (∑' i, a * f i) = a * ∑' i, f i :=
     HasSum.tsum_eq this
 
 protected theorem tsum_mul_right : (∑' i, f i * a) = (∑' i, f i) * a := by
-  simp [mul_commₓ, Ennreal.tsum_mul_left]
+  simp [mul_comm, Ennreal.tsum_mul_left]
 
 @[simp]
 theorem tsum_supr_eq {α : Type _} (a : α) {f : α → ℝ≥0∞} : (∑' b : α, ⨆ h : a = b, f b) = f a :=
@@ -1084,8 +1135,7 @@ def metricSpaceEmetricBall (a : β) (r : ℝ≥0∞) : MetricSpace (ball a r) :=
 
 attribute [local instance] metricSpaceEmetricBall
 
-theorem nhds_eq_nhds_emetric_ball (a x : β) (r : ℝ≥0∞) (h : x ∈ ball a r) :
-    𝓝 x = map (coeₓ : ball a r → β) (𝓝 ⟨x, h⟩) :=
+theorem nhds_eq_nhds_emetric_ball (a x : β) (r : ℝ≥0∞) (h : x ∈ ball a r) : 𝓝 x = map (coe : ball a r → β) (𝓝 ⟨x, h⟩) :=
   (map_nhds_subtype_coe_eq _ $ IsOpen.mem_nhds Emetric.is_open_ball h).symm
 
 end
@@ -1182,7 +1232,7 @@ theorem continuous_edist : Continuous fun p : α × α => edist p.1 p.2 := by
       add_le_add_left (add_le_add (le_max_leftₓ _ _) (le_max_rightₓ _ _))
         _ _ = edist x' y' + 2 * edist (x, y) (x', y') :=
       by
-      rw [← mul_two, mul_commₓ]
+      rw [← mul_two, mul_comm]
 
 @[continuity]
 theorem Continuous.edist [TopologicalSpace β] {f g : β → α} (hf : Continuous f) (hg : Continuous g) :

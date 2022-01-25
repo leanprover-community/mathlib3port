@@ -90,12 +90,12 @@ theorem sum_bernoulli_poly (n : ℕ) :
   simp_rw [bernoulli_poly_def, Finset.smul_sum, Finset.range_eq_Ico, ← Finset.sum_Ico_Ico_comm,
     Finset.sum_Ico_eq_sum_range]
   simp only [cast_succ, add_tsub_cancel_left, tsub_zero, zero_addₓ, LinearMap.map_add]
-  simp_rw [Polynomial.smul_monomial, mul_commₓ (bernoulli _) _, smul_eq_mul, ← mul_assocₓ]
+  simp_rw [Polynomial.smul_monomial, mul_comm (bernoulli _) _, smul_eq_mul, ← mul_assoc]
   conv_lhs =>
     apply_congr skip conv =>
       apply_congr skip rw [← Nat.cast_mul,
         choose_mul ((le_tsub_iff_left $ mem_range_le H).1 $ mem_range_le H_1) (le.intro rfl), Nat.cast_mul,
-        add_commₓ x x_1, add_tsub_cancel_right, mul_assocₓ, mul_commₓ, ← smul_eq_mul, ←
+        add_commₓ x x_1, add_tsub_cancel_right, mul_assoc, mul_comm, ← smul_eq_mul, ←
         Polynomial.smul_monomial]rw [← sum_smul]
   rw [sum_range_succ_comm]
   simp only [add_right_eq_selfₓ, cast_succ, mul_oneₓ, cast_one, cast_add, add_tsub_cancel_left, choose_succ_self_right,
@@ -142,17 +142,17 @@ theorem exp_bernoulli_poly' (t : A) :
   rw [Units.coe_map, mul_left_commₓ, RingHom.to_monoid_hom_eq_coe, RingHom.coe_monoid_hom, ← RingHom.map_mul, hu,
     Units.coe_mk]
   change _ = t ^ n * algebraMap ℚ A (((n + 1) * n ! : ℕ) * (1 / n !))
-  rw [cast_mul, mul_assocₓ, mul_one_div_cancel (show (n ! : ℚ) ≠ 0 from cast_ne_zero.2 (factorial_ne_zero n)), mul_oneₓ,
-    mul_commₓ (t ^ n), ← Polynomial.aeval_monomial, cast_add, cast_one]
+  rw [cast_mul, mul_assoc, mul_one_div_cancel (show (n ! : ℚ) ≠ 0 from cast_ne_zero.2 (factorial_ne_zero n)), mul_oneₓ,
+    mul_comm (t ^ n), ← Polynomial.aeval_monomial, cast_add, cast_one]
   rw [← sum_bernoulli_poly, Finset.mul_sum, AlgHom.map_sum]
   apply Finset.sum_congr rfl
   intro i hi
   simp only [Nat.cast_choose ℚ (mem_range_le hi), coeff_mk, if_neg (mem_range_sub_ne_zero hi), one_div, AlgHom.map_smul,
     coeff_one, Units.coe_mk, coeff_exp, sub_zero, LinearMap.map_sub, Algebra.smul_mul_assoc, Algebra.smul_def,
-    mul_right_commₓ _ ((aeval t) _), ← mul_assocₓ, ← RingHom.map_mul, succ_eq_add_one]
+    mul_right_commₓ _ ((aeval t) _), ← mul_assoc, ← RingHom.map_mul, succ_eq_add_one]
   congr
   apply congr_argₓ
-  rw [mul_assocₓ, div_eq_mul_inv, ← mul_inv₀]
+  rw [mul_assoc, div_eq_mul_inv, ← mul_inv₀]
 
 end bernoulliPoly
 

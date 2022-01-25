@@ -35,10 +35,10 @@ Extension of Sup and Inf from a preorder `α` to `with_top α` and `with_bot α`
 open_locale Classical
 
 noncomputable instance {α : Type _} [Preorderₓ α] [HasSupₓ α] : HasSupₓ (WithTop α) :=
-  ⟨fun S => if ⊤ ∈ S then ⊤ else if BddAbove (coeₓ ⁻¹' S : Set α) then ↑Sup (coeₓ ⁻¹' S : Set α) else ⊤⟩
+  ⟨fun S => if ⊤ ∈ S then ⊤ else if BddAbove (coe ⁻¹' S : Set α) then ↑Sup (coe ⁻¹' S : Set α) else ⊤⟩
 
 noncomputable instance {α : Type _} [HasInfₓ α] : HasInfₓ (WithTop α) :=
-  ⟨fun S => if S ⊆ {⊤} then ⊤ else ↑Inf (coeₓ ⁻¹' S : Set α)⟩
+  ⟨fun S => if S ⊆ {⊤} then ⊤ else ↑Inf (coe ⁻¹' S : Set α)⟩
 
 noncomputable instance {α : Type _} [HasSupₓ α] : HasSupₓ (WithBot α) :=
   ⟨(@WithTop.hasInf (OrderDual α) _).inf⟩
@@ -1115,17 +1115,17 @@ variable [HasSupₓ α]
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
 noncomputable def subsetHasSup [Inhabited s] : HasSupₓ s where
-  sup := fun t => if ht : Sup (coeₓ '' t : Set α) ∈ s then ⟨Sup (coeₓ '' t : Set α), ht⟩ else default
+  sup := fun t => if ht : Sup (coe '' t : Set α) ∈ s then ⟨Sup (coe '' t : Set α), ht⟩ else default
 
 attribute [local instance] subsetHasSup
 
 @[simp]
 theorem subset_Sup_def [Inhabited s] :
-    @Sup s _ = fun t => if ht : Sup (coeₓ '' t : Set α) ∈ s then ⟨Sup (coeₓ '' t : Set α), ht⟩ else default :=
+    @Sup s _ = fun t => if ht : Sup (coe '' t : Set α) ∈ s then ⟨Sup (coe '' t : Set α), ht⟩ else default :=
   rfl
 
-theorem subset_Sup_of_within [Inhabited s] {t : Set s} (h : Sup (coeₓ '' t : Set α) ∈ s) :
-    Sup (coeₓ '' t : Set α) = (@Sup s _ t : α) := by
+theorem subset_Sup_of_within [Inhabited s] {t : Set s} (h : Sup (coe '' t : Set α) ∈ s) :
+    Sup (coe '' t : Set α) = (@Sup s _ t : α) := by
   simp [dif_pos h]
 
 end HasSupₓ
@@ -1138,17 +1138,17 @@ variable [HasInfₓ α]
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
 noncomputable def subsetHasInf [Inhabited s] : HasInfₓ s where
-  inf := fun t => if ht : Inf (coeₓ '' t : Set α) ∈ s then ⟨Inf (coeₓ '' t : Set α), ht⟩ else default
+  inf := fun t => if ht : Inf (coe '' t : Set α) ∈ s then ⟨Inf (coe '' t : Set α), ht⟩ else default
 
 attribute [local instance] subsetHasInf
 
 @[simp]
 theorem subset_Inf_def [Inhabited s] :
-    @Inf s _ = fun t => if ht : Inf (coeₓ '' t : Set α) ∈ s then ⟨Inf (coeₓ '' t : Set α), ht⟩ else default :=
+    @Inf s _ = fun t => if ht : Inf (coe '' t : Set α) ∈ s then ⟨Inf (coe '' t : Set α), ht⟩ else default :=
   rfl
 
-theorem subset_Inf_of_within [Inhabited s] {t : Set s} (h : Inf (coeₓ '' t : Set α) ∈ s) :
-    Inf (coeₓ '' t : Set α) = (@Inf s _ t : α) := by
+theorem subset_Inf_of_within [Inhabited s] {t : Set s} (h : Inf (coe '' t : Set α) ∈ s) :
+    Inf (coe '' t : Set α) = (@Inf s _ t : α) := by
   simp [dif_pos h]
 
 end HasInfₓ
@@ -1165,8 +1165,8 @@ the `Inf` of all its nonempty bounded-below subsets.
 See note [reducible non-instances]. -/
 @[reducible]
 noncomputable def subsetConditionallyCompleteLinearOrder [Inhabited s]
-    (h_Sup : ∀ {t : Set s} ht : t.nonempty h_bdd : BddAbove t, Sup (coeₓ '' t : Set α) ∈ s)
-    (h_Inf : ∀ {t : Set s} ht : t.nonempty h_bdd : BddBelow t, Inf (coeₓ '' t : Set α) ∈ s) :
+    (h_Sup : ∀ {t : Set s} ht : t.nonempty h_bdd : BddAbove t, Sup (coe '' t : Set α) ∈ s)
+    (h_Inf : ∀ {t : Set s} ht : t.nonempty h_bdd : BddBelow t, Inf (coe '' t : Set α) ∈ s) :
     ConditionallyCompleteLinearOrder s :=
   { subsetHasSup s, subsetHasInf s, DistribLattice.toLattice s, (inferInstance : LinearOrderₓ s) with
     le_cSup := by
@@ -1191,7 +1191,7 @@ section OrdConnected
 /-- The `Sup` function on a nonempty `ord_connected` set `s` in a conditionally complete linear
 order takes values within `s`, for all nonempty bounded-above subsets of `s`. -/
 theorem Sup_within_of_ord_connected {s : Set α} [hs : ord_connected s] ⦃t : Set s⦄ (ht : t.nonempty)
-    (h_bdd : BddAbove t) : Sup (coeₓ '' t : Set α) ∈ s := by
+    (h_bdd : BddAbove t) : Sup (coe '' t : Set α) ∈ s := by
   obtain ⟨c, hct⟩ : ∃ c, c ∈ t := ht
   obtain ⟨B, hB⟩ : ∃ B, B ∈ UpperBounds t := h_bdd
   refine' hs.out c.2 B.2 ⟨_, _⟩
@@ -1203,7 +1203,7 @@ theorem Sup_within_of_ord_connected {s : Set α} [hs : ord_connected s] ⦃t : S
 /-- The `Inf` function on a nonempty `ord_connected` set `s` in a conditionally complete linear
 order takes values within `s`, for all nonempty bounded-below subsets of `s`. -/
 theorem Inf_within_of_ord_connected {s : Set α} [hs : ord_connected s] ⦃t : Set s⦄ (ht : t.nonempty)
-    (h_bdd : BddBelow t) : Inf (coeₓ '' t : Set α) ∈ s := by
+    (h_bdd : BddBelow t) : Inf (coe '' t : Set α) ∈ s := by
   obtain ⟨c, hct⟩ : ∃ c, c ∈ t := ht
   obtain ⟨B, hB⟩ : ∃ B, B ∈ LowerBounds t := h_bdd
   refine' hs.out B.2 c.2 ⟨_, _⟩

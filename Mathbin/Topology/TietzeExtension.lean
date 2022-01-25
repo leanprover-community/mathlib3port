@@ -100,7 +100,7 @@ theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(
     induction' n with n ihn
     · simp [g0]
       
-    · rw [g_succ n, add_comp_continuous, ← dist_sub_right, add_sub_cancel', pow_succₓ, mul_assocₓ]
+    · rw [g_succ n, add_comp_continuous, ← dist_sub_right, add_sub_cancel', pow_succₓ, mul_assoc]
       refine'
         (hF_dist _).trans
           (mul_le_mul_of_nonneg_left _
@@ -338,9 +338,9 @@ theorem exists_extension_forall_mem_of_closed_embedding (f : C(X, ℝ)) {t : Set
     (hf : ∀ x, f x ∈ t) (hne : t.nonempty) (he : ClosedEmbedding e) : ∃ g : C(Y, ℝ), (∀ y, g y ∈ t) ∧ g ∘ e = f := by
   have h : ℝ ≃o Ioo (-1 : ℝ) 1 := orderIsoIooNegOneOne ℝ
   set F : X →ᵇ ℝ :=
-    { toFun := coeₓ ∘ h ∘ f, continuous_to_fun := continuous_subtype_coe.comp (h.continuous.comp f.continuous),
+    { toFun := coe ∘ h ∘ f, continuous_to_fun := continuous_subtype_coe.comp (h.continuous.comp f.continuous),
       bounded' := bounded_range_iff.1 ((bounded_Ioo (-1 : ℝ) 1).mono $ forall_range_iff.2 $ fun x => (h (f x)).2) }
-  set t' : Set ℝ := coeₓ ∘ h '' t
+  set t' : Set ℝ := coe ∘ h '' t
   have ht_sub : t' ⊆ Ioo (-1 : ℝ) 1 := image_subset_iff.2 fun x hx => (h x).2
   have : ord_connected t' := by
     constructor

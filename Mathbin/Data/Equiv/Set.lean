@@ -146,7 +146,7 @@ namespace Set
 /-- `univ α` is equivalent to `α`. -/
 @[simps apply symmApply]
 protected def univ α : @univ α ≃ α :=
-  ⟨coeₓ, fun a => ⟨a, trivialₓ⟩, fun ⟨a, _⟩ => rfl, fun a => rfl⟩
+  ⟨coe, fun a => ⟨a, trivialₓ⟩, fun ⟨a, _⟩ => rfl, fun a => rfl⟩
 
 /-- An empty set is equivalent to the `empty` type. -/
 protected def Empty α : (∅ : Set α) ≃ Empty :=
@@ -401,7 +401,7 @@ protected theorem image_symm_apply {α β} (f : α → β) (s : Set α) (H : inj
   simp [(Set.Image f s H).apply_symm_apply]
 
 theorem image_symm_preimage {α β} {f : α → β} (hf : injective f) (u s : Set α) :
-    (fun x => (Set.Image f s hf).symm x : f '' s → α) ⁻¹' u = coeₓ ⁻¹' (f '' u) := by
+    (fun x => (Set.Image f s hf).symm x : f '' s → α) ⁻¹' u = coe ⁻¹' (f '' u) := by
   ext ⟨b, a, has, rfl⟩
   have : ∀ h : ∃ a', a' ∈ s ∧ a' = a, Classical.some h = a := fun h => (Classical.some_spec h).2
   simp [Equivₓ.Set.image, Equivₓ.Set.imageOfInjOn, hf.eq_iff, this]
@@ -417,9 +417,9 @@ protected def sep {α : Type u} (s : Set α) (t : α → Prop) : ({ x ∈ s | t 
 
 /-- The set `𝒫 S := {x | x ⊆ S}` is equivalent to the type `set S`. -/
 protected def powerset {α} (S : Set α) : 𝒫 S ≃ Set S where
-  toFun := fun x : 𝒫 S => coeₓ ⁻¹' (x : Set α)
+  toFun := fun x : 𝒫 S => coe ⁻¹' (x : Set α)
   invFun := fun x : Set S =>
-    ⟨coeₓ '' x, by
+    ⟨coe '' x, by
       rintro _ ⟨a : S, _, rfl⟩ <;> exact a.2⟩
   left_inv := fun x => by
     ext y <;> exact ⟨fun ⟨⟨_, _⟩, h, rfl⟩ => h, fun h => ⟨⟨_, x.2 h⟩, h, rfl⟩⟩
@@ -491,7 +491,7 @@ theorem coe_of_injective_symm {α β} {f : α → β} (hf : injective f) :
   simp [apply_range_splitting f]
 
 @[simp]
-theorem self_comp_of_injective_symm {α β} {f : α → β} (hf : injective f) : f ∘ (of_injective f hf).symm = coeₓ :=
+theorem self_comp_of_injective_symm {α β} {f : α → β} (hf : injective f) : f ∘ (of_injective f hf).symm = coe :=
   funext fun x => apply_of_injective_symm hf x
 
 theorem of_left_inverse_eq_of_injective {α β : Type _} (f : α → β) (f_inv : Nonempty α → β → α)

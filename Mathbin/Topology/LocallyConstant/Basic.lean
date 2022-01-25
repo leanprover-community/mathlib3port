@@ -139,7 +139,7 @@ theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) :
   exact finite_of_is_compact_of_discrete _ (is_compact_range hf)
 
 @[to_additive]
-theorem one [HasOne Y] : IsLocallyConstant (1 : X → Y) :=
+theorem one [One Y] : IsLocallyConstant (1 : X → Y) :=
   const 1
 
 @[to_additive]

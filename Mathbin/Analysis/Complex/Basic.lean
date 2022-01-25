@@ -112,7 +112,7 @@ theorem continuous_re : Continuous re :=
   re_clm.Continuous
 
 @[simp]
-theorem re_clm_coe : (coeₓ re_clm : ℂ →ₗ[ℝ] ℝ) = re_lm :=
+theorem re_clm_coe : (coe re_clm : ℂ →ₗ[ℝ] ℝ) = re_lm :=
   rfl
 
 @[simp]
@@ -141,7 +141,7 @@ theorem continuous_im : Continuous im :=
   im_clm.Continuous
 
 @[simp]
-theorem im_clm_coe : (coeₓ im_clm : ℂ →ₗ[ℝ] ℝ) = im_lm :=
+theorem im_clm_coe : (coe im_clm : ℂ →ₗ[ℝ] ℝ) = im_lm :=
   rfl
 
 @[simp]
@@ -171,7 +171,7 @@ theorem restrict_scalars_one_smul_right (x : ℂ) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smulRight x : ℂ →L[ℂ] ℂ) = x • 1 := by
   ext1 z
   dsimp
-  apply mul_commₓ
+  apply mul_comm
 
 /-- The complex-conjugation function from `ℂ` to itself is an isometric linear equivalence. -/
 def conj_lie : ℂ ≃ₗᵢ[ℝ] ℂ :=
@@ -218,11 +218,11 @@ theorem conj_cle_norm : ∥(conj_cle : ℂ →L[ℝ] ℂ)∥ = 1 :=
 def of_real_li : ℝ →ₗᵢ[ℝ] ℂ :=
   ⟨of_real_am.toLinearMap, norm_real⟩
 
-theorem isometry_of_real : Isometry (coeₓ : ℝ → ℂ) :=
+theorem isometry_of_real : Isometry (coe : ℝ → ℂ) :=
   of_real_li.Isometry
 
 @[continuity]
-theorem continuous_of_real : Continuous (coeₓ : ℝ → ℂ) :=
+theorem continuous_of_real : Continuous (coe : ℝ → ℂ) :=
   of_real_li.Continuous
 
 /-- Continuous linear map version of the canonical embedding of `ℝ` in `ℂ`. -/

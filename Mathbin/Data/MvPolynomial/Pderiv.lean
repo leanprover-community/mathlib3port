@@ -61,7 +61,7 @@ def pderiv (i : σ) : MvPolynomial σ R →ₗ[R] MvPolynomial σ R where
     intro c x
     rw [sum_smul_index', smul_sum]
     · dsimp
-      simp_rw [← (monomial _).map_smul, smul_eq_mul, mul_assocₓ]
+      simp_rw [← (monomial _).map_smul, smul_eq_mul, mul_assoc]
       
     · intro s
       simp only [monomial_zero, zero_mul]
@@ -124,7 +124,7 @@ theorem pderiv_monomial_mul {i : σ} {s' : σ →₀ ℕ} :
   by
   simp only [monomial_sub_single_one_add, monomial_add_sub_single_one, pderiv_monomial, Pi.add_apply, monomial_mul,
     Nat.cast_add, coe_add]
-  rw [mul_addₓ, (monomial _).map_add, ← mul_assocₓ, mul_right_commₓ a _ a']
+  rw [mul_addₓ, (monomial _).map_add, ← mul_assoc, mul_right_commₓ a _ a']
 
 @[simp]
 theorem pderiv_mul {i : σ} {f g : MvPolynomial σ R} : pderiv i (f * g) = pderiv i f * g + f * pderiv i g := by

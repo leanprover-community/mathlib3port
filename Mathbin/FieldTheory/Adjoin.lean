@@ -48,10 +48,10 @@ theorem adjoin_le_iff {S : Set E} {T : IntermediateField F E} : adjoin F S ≤ T
     (@Subfield.closure_le E _ (Set.Range (algebraMap F E) ∪ S) T.to_subfield).mpr
       (Set.union_subset (IntermediateField.set_range_subset T) H)⟩
 
-theorem gc : GaloisConnection (adjoin F : Set E → IntermediateField F E) coeₓ := fun _ _ => adjoin_le_iff
+theorem gc : GaloisConnection (adjoin F : Set E → IntermediateField F E) coe := fun _ _ => adjoin_le_iff
 
 /-- Galois insertion between `adjoin` and `coe`. -/
-def gi : GaloisInsertion (adjoin F : Set E → IntermediateField F E) coeₓ where
+def gi : GaloisInsertion (adjoin F : Set E → IntermediateField F E) coe where
   choice := fun s hs => (adjoin F s).copy s $ le_antisymmₓ (gc.le_u_l s) hs
   gc := IntermediateField.gc
   le_l_u := fun S => (IntermediateField.gc (S : Set E) (adjoin F S)).1 $ le_reflₓ _
@@ -108,7 +108,7 @@ theorem inf_to_subfield (S T : IntermediateField F E) : (S⊓T).toSubfield = S.t
   rfl
 
 @[simp, norm_cast]
-theorem coe_Inf (S : Set (IntermediateField F E)) : (↑Inf S : Set E) = Inf (coeₓ '' S) :=
+theorem coe_Inf (S : Set (IntermediateField F E)) : (↑Inf S : Set E) = Inf (coe '' S) :=
   rfl
 
 @[simp]

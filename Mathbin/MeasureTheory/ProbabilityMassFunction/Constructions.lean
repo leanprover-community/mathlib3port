@@ -1,4 +1,4 @@
-import Mathbin.MeasureTheory.ProbabilityMassFunction.Basic
+import Mathbin.MeasureTheory.ProbabilityMassFunction.Monad
 
 /-!
 # Specific Constructions of Probability Mass Functions
@@ -15,9 +15,6 @@ from the corresponding object, with proportional weighting for each element of t
 
 `normalize` constructs a `pmf α` by normalizing a function `f : α → ℝ≥0` by its sum,
 and `filter` uses this to filter the support of a `pmf` and re-normalize the new distribution.
-
-`bind_on_support` generalizes `bind` to allow binding to a partial function,
-so that the second argument only needs to be defined on the support of the first argument.
 
 `bernoulli` represents the bernoulli distribution on `bool`
 
@@ -330,130 +327,6 @@ theorem mem_support_bernoulli_iff : b ∈ (bernoulli p h).Support ↔ cond b (p 
   simp
 
 end Bernoulli
-
-section BindOnSupport
-
-protected theorem bind_on_support.summable (p : Pmf α) (f : ∀, ∀ a ∈ p.support, ∀, Pmf β) (b : β) :
-    Summable fun a : α => p a * if h : p a = 0 then 0 else f a h b := by
-  refine' Nnreal.summable_of_le (fun a => _) p.summable_coe
-  split_ifs
-  · refine' (mul_zero (p a)).symm ▸ le_of_eqₓ h.symm
-    
-  · suffices p a * f a h b ≤ p a * 1 by
-      simpa
-    exact mul_le_mul_of_nonneg_left ((f a h).coe_le_one _) (p a).2
-    
-
-/-- Generalized version of `bind` allowing `f` to only be defined on the support of `p`.
-  `p.bind f` is equivalent to `p.bind_on_support (λ a _, f a)`, see `bind_on_support_eq_bind` -/
-def bind_on_support (p : Pmf α) (f : ∀, ∀ a ∈ p.support, ∀, Pmf β) : Pmf β :=
-  ⟨fun b => ∑' a, p a * if h : p a = 0 then 0 else f a h b,
-    Ennreal.has_sum_coe.1
-      (by
-        simp only [Ennreal.coe_tsum (bind_on_support.summable p f _)]
-        rw [ennreal.summable.has_sum_iff, Ennreal.tsum_comm]
-        simp only [Ennreal.coe_mul, Ennreal.coe_one, Ennreal.tsum_mul_left]
-        have : (∑' a : α, (p a : Ennreal)) = 1 := by
-          simp only [← Ennreal.coe_tsum p.summable_coe, Ennreal.coe_one, tsum_coe]
-        refine' trans (tsum_congr fun a => _) this
-        split_ifs with h
-        · simp [h]
-          
-        · simp [← Ennreal.coe_tsum (f a h).summable_coe, (f a h).tsum_coe]
-          )⟩
-
-variable {p : Pmf α} (f : ∀, ∀ a ∈ p.support, ∀, Pmf β)
-
-@[simp]
-theorem bind_on_support_apply (b : β) : p.bind_on_support f b = ∑' a, p a * if h : p a = 0 then 0 else f a h b :=
-  rfl
-
-@[simp]
-theorem support_bind_on_support :
-    (p.bind_on_support f).Support = { b | ∃ (a : α)(h : a ∈ p.support), b ∈ (f a h).Support } := by
-  refine' Set.ext fun b => _
-  simp only [tsum_eq_zero_iff (bind_on_support.summable p f b), not_or_distrib, mem_support_iff, bind_on_support_apply,
-    Ne.def, not_forall, mul_eq_zero]
-  exact
-    ⟨fun hb =>
-      let ⟨a, ⟨ha, ha'⟩⟩ := hb
-      ⟨a, ha, by
-        simpa [ha] using ha'⟩,
-      fun hb =>
-      let ⟨a, ha, ha'⟩ := hb
-      ⟨a,
-        ⟨ha, by
-          simpa [(mem_support_iff _ a).1 ha] using ha'⟩⟩⟩
-
-theorem mem_support_bind_on_support_iff (b : β) :
-    b ∈ (p.bind_on_support f).Support ↔ ∃ (a : α)(h : a ∈ p.support), b ∈ (f a h).Support := by
-  simp
-
-/-- `bind_on_support` reduces to `bind` if `f` doesn't depend on the additional hypothesis -/
-@[simp]
-theorem bind_on_support_eq_bind (p : Pmf α) (f : α → Pmf β) : (p.bind_on_support fun a _ => f a) = p.bind f := by
-  ext b
-  simp only [bind_on_support_apply fun a _ => f a, p.bind_apply f, dite_eq_ite, Nnreal.coe_eq, mul_ite, mul_zero]
-  refine' congr_argₓ _ (funext fun a => _)
-  split_ifs with h <;> simp [h]
-
-theorem coe_bind_on_support_apply (b : β) :
-    (p.bind_on_support f b : ℝ≥0∞) = ∑' a, p a * if h : p a = 0 then 0 else f a h b := by
-  simp only [bind_on_support_apply, Ennreal.coe_tsum (bind_on_support.summable p f b), dite_cast, Ennreal.coe_mul,
-    Ennreal.coe_zero]
-
-theorem bind_on_support_eq_zero_iff (b : β) : p.bind_on_support f b = 0 ↔ ∀ a ha : p a ≠ 0, f a ha b = 0 := by
-  simp only [bind_on_support_apply, tsum_eq_zero_iff (bind_on_support.summable p f b), mul_eq_zero, or_iff_not_imp_left]
-  exact ⟨fun h a ha => trans (dif_neg ha).symm (h a ha), fun h a ha => trans (dif_neg ha) (h a ha)⟩
-
-@[simp]
-theorem pure_bind_on_support (a : α) (f : ∀ a' : α ha : a' ∈ (pure a).Support, Pmf β) :
-    (pure a).bindOnSupport f = f a ((mem_support_pure_iff a a).mpr rfl) := by
-  refine' Pmf.ext fun b => _
-  simp only [Nnreal.coe_eq, bind_on_support_apply, pure_apply]
-  refine' trans (tsum_congr fun a' => _) (tsum_ite_eq a _)
-  by_cases' h : a' = a <;> simp [h]
-
-theorem bind_on_support_pure (p : Pmf α) : (p.bind_on_support fun a _ => pure a) = p := by
-  simp only [Pmf.bind_pure, Pmf.bind_on_support_eq_bind]
-
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:57:31: expecting tactic arg
-@[simp]
-theorem bind_on_support_bind_on_support (p : Pmf α) (f : ∀, ∀ a ∈ p.support, ∀, Pmf β)
-    (g : ∀, ∀ b ∈ (p.bind_on_support f).Support, ∀, Pmf γ) :
-    (p.bind_on_support f).bindOnSupport g =
-      p.bind_on_support fun a ha =>
-        (f a ha).bindOnSupport fun b hb => g b ((mem_support_bind_on_support_iff f b).mpr ⟨a, ha, hb⟩) :=
-  by
-  refine' Pmf.ext fun a => _
-  simp only [ennreal.coe_eq_coe.symm, coe_bind_on_support_apply, ← tsum_dite_right, ennreal.tsum_mul_left.symm,
-    ennreal.tsum_mul_right.symm]
-  simp only [Ennreal.tsum_eq_zero, Ennreal.coe_eq_coe, Ennreal.coe_eq_zero, Ennreal.coe_zero, dite_eq_left_iff,
-    mul_eq_zero]
-  refine' ennreal.tsum_comm.trans (tsum_congr fun a' => tsum_congr fun b => _)
-  split_ifs
-  any_goals {
-  }
-  · have := h_1 a'
-    simp [h] at this
-    contradiction
-    
-  · simp [h_2]
-    
-
-theorem bind_on_support_comm (p : Pmf α) (q : Pmf β) (f : ∀, ∀ a ∈ p.support, ∀, ∀ b ∈ q.support, ∀, Pmf γ) :
-    (p.bind_on_support fun a ha => q.bind_on_support (f a ha)) =
-      q.bind_on_support fun b hb => p.bind_on_support fun a ha => f a ha b hb :=
-  by
-  apply Pmf.ext
-  rintro c
-  simp only [ennreal.coe_eq_coe.symm, coe_bind_on_support_apply, ← tsum_dite_right, ennreal.tsum_mul_left.symm,
-    ennreal.tsum_mul_right.symm]
-  refine' trans Ennreal.tsum_comm (tsum_congr fun b => tsum_congr fun a => _)
-  split_ifs with h1 h2 h2 <;> ring
-
-end BindOnSupport
 
 end Pmf
 

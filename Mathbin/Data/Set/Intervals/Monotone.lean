@@ -75,7 +75,7 @@ irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃
       simp only [abs_neg, neg_div]
       
     · rintro x (hx : 0 ≤ x) y (hy : 0 ≤ y) hxy
-      simp [abs_of_nonneg, mul_addₓ, mul_commₓ x y, div_lt_div_iff, hx.trans_lt (lt_one_add _),
+      simp [abs_of_nonneg, mul_addₓ, mul_comm x y, div_lt_div_iff, hx.trans_lt (lt_one_add _),
         hy.trans_lt (lt_one_add _), *]
       
     

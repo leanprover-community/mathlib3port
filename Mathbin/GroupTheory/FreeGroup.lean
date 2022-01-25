@@ -10,18 +10,19 @@ functor from groups to types, see `algebra/category/Group/adjunctions`.
 
 ## Main definitions
 
-* `free_group`: the free group associated to a type `α` defined as the words over `a : α × bool `
+* `free_group`: the free group associated to a type `α` defined as the words over `a : α × bool`
   modulo the relation `a * x * x⁻¹ * b = a * b`.
-* `mk`: the canonical quotient map `list (α × bool) → free_group α`.
-* `of`: the canoical injection `α → free_group α`.
-* `lift f`: the canonical group homomorphism `free_group α →* G` given a group `G` and a
-  function `f : α → G`.
+* `free_group.mk`: the canonical quotient map `list (α × bool) → free_group α`.
+* `free_group.of`: the canoical injection `α → free_group α`.
+* `free_group.lift f`: the canonical group homomorphism `free_group α →* G`
+  given a group `G` and a function `f : α → G`.
 
 ## Main statements
 
-* `church_rosser`: The Church-Rosser theorem for word reduction (also known as Newman's diamond
-  lemma).
-* `free_group_unit_equiv_int`: The free group over the one-point type is isomorphic to the integers.
+* `free_group.church_rosser`: The Church-Rosser theorem for word reduction
+  (also known as Newman's diamond lemma).
+* `free_group.free_group_unit_equiv_int`: The free group over the one-point type
+  is isomorphic to the integers.
 * The free group construction is an instance of a monad.
 
 ## Implementation details
@@ -393,7 +394,7 @@ theorem quot_map_mk (β : Type v) (f : List (α × Bool) → List (β × Bool)) 
     Quot.map f H (mk L) = mk (f L) :=
   rfl
 
-instance : HasOne (FreeGroup α) :=
+instance : One (FreeGroup α) :=
   ⟨mk []⟩
 
 theorem one_eq_mk : (1 : FreeGroup α) = mk [] :=

@@ -90,7 +90,7 @@ theorem eval₂_bit1 : (bit1 p).eval₂ f x = bit1 (p.eval₂ f x) := by
 theorem eval₂_smul (g : R →+* S) (p : Polynomial R) (x : S) {s : R} : eval₂ g x (s • p) = g s * eval₂ g x p := by
   have A : p.nat_degree < p.nat_degree.succ := Nat.lt_succ_selfₓ _
   have B : (s • p).natDegree < p.nat_degree.succ := (nat_degree_smul_le _ _).trans_lt A
-  rw [eval₂_eq_sum, eval₂_eq_sum, sum_over_range' _ _ _ A, sum_over_range' _ _ _ B] <;> simp [mul_sum, mul_assocₓ]
+  rw [eval₂_eq_sum, eval₂_eq_sum, sum_over_range' _ _ _ A, sum_over_range' _ _ _ B] <;> simp [mul_sum, mul_assoc]
 
 @[simp]
 theorem eval₂_C_X : eval₂ C X p = p :=
@@ -328,7 +328,7 @@ theorem eval_C_mul : (C a * p).eval x = a * p.eval x := by
     simp only [mul_addₓ, eval_add, ph, qh]
     
   · intro n b
-    simp only [mul_assocₓ, C_mul_monomial, eval_monomial]
+    simp only [mul_assoc, C_mul_monomial, eval_monomial]
     
 
 /-- `polynomial.eval` as linear map -/
@@ -349,7 +349,7 @@ theorem eval_mul_X : (p * X).eval x = p.eval x * x := by
     simp only [add_mulₓ, eval_add, ph, qh]
     
   · intro n a
-    simp only [← monomial_one_one_eq_X, monomial_mul_monomial, eval_monomial, mul_oneₓ, pow_succ'ₓ, mul_assocₓ]
+    simp only [← monomial_one_one_eq_X, monomial_mul_monomial, eval_monomial, mul_oneₓ, pow_succ'ₓ, mul_assoc]
     
 
 @[simp]
@@ -357,7 +357,7 @@ theorem eval_mul_X_pow {k : ℕ} : (p * X ^ k).eval x = p.eval x * x ^ k := by
   induction' k with k ih
   · simp
     
-  · simp [pow_succ'ₓ, ← mul_assocₓ, ih]
+  · simp [pow_succ'ₓ, ← mul_assoc, ih]
     
 
 theorem eval_sum (p : Polynomial R) (f : ℕ → R → Polynomial R) (x : R) :
@@ -468,7 +468,7 @@ theorem mul_X_comp : (p * X).comp r = p.comp r * r := by
     simp only [hp, hq, add_mulₓ, add_comp]
     
   · intro n b
-    simp only [pow_succ'ₓ, mul_assocₓ, monomial_mul_X, monomial_comp]
+    simp only [pow_succ'ₓ, mul_assoc, monomial_mul_X, monomial_comp]
     
 
 @[simp]
@@ -484,7 +484,7 @@ theorem mul_X_pow_comp {k : ℕ} : (p * X ^ k).comp r = p.comp r * r ^ k := by
   induction' k with k ih
   · simp
     
-  · simp [ih, pow_succ'ₓ, ← mul_assocₓ, mul_X_comp]
+  · simp [ih, pow_succ'ₓ, ← mul_assoc, mul_X_comp]
     
 
 @[simp]
@@ -494,7 +494,7 @@ theorem C_mul_comp : (C a * p).comp r = C a * p.comp r := by
     simp [hp, hq, mul_addₓ]
     
   · intro n b
-    simp [mul_assocₓ]
+    simp [mul_assoc]
     
 
 @[simp]
@@ -524,7 +524,7 @@ theorem bit1_comp : comp (bit1 p : Polynomial R) q = bit1 (p.comp q) := by
 theorem comp_assoc {R : Type _} [CommSemiringₓ R] (φ ψ χ : Polynomial R) : (φ.comp ψ).comp χ = φ.comp (ψ.comp χ) := by
   apply Polynomial.induction_on φ <;>
     · intros
-      simp_all only [add_comp, mul_comp, C_comp, X_comp, pow_succ'ₓ, ← mul_assocₓ]
+      simp_all only [add_comp, mul_comp, C_comp, X_comp, pow_succ'ₓ, ← mul_assoc]
       
 
 end Comp
@@ -746,7 +746,7 @@ theorem map_comp (p q : Polynomial R) : map f (p.comp q) = (map f p).comp (map f
     (by
       simp (config := { contextual := true })only [map_add, add_comp, forall_const, implies_true_iff, eq_self_iff_true])
     (by
-      simp (config := { contextual := true })only [pow_succ'ₓ, ← mul_assocₓ, comp, forall_const, eval₂_mul_X,
+      simp (config := { contextual := true })only [pow_succ'ₓ, ← mul_assoc, comp, forall_const, eval₂_mul_X,
         implies_true_iff, eq_self_iff_true, map_X, map_mul])
 
 @[simp]

@@ -42,13 +42,13 @@ theorem of_bot : IsPGroup p (⊥ : Subgroup G) :=
   of_card (Subgroup.card_bot.trans (pow_zeroₓ p).symm)
 
 theorem iff_card [Fact p.prime] [Fintype G] : IsPGroup p G ↔ ∃ n : ℕ, card G = p ^ n := by
-  have hG : 0 < card G := card_pos_iff.mpr HasOne.nonempty
+  have hG : 0 < card G := card_pos_iff.mpr One.nonempty
   refine' ⟨fun h => _, fun ⟨n, hn⟩ => of_card hn⟩
   suffices ∀, ∀ q ∈ Nat.factors (card G), ∀, q = p by
     use (card G).factors.length
     rw [← List.prod_repeat, ← List.eq_repeat_of_mem this, Nat.prod_factors hG]
   intro q hq
-  obtain ⟨hq1, hq2⟩ := (Nat.mem_factors hG).mp hq
+  obtain ⟨hq1, hq2⟩ := (Nat.mem_factors hG.ne').mp hq
   have : Fact q.prime := ⟨hq1⟩
   obtain ⟨g, hg⟩ := Equivₓ.Perm.exists_prime_order_of_dvd_card q hq2
   obtain ⟨k, hk⟩ := (iff_order_of.mp h) g

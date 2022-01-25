@@ -57,7 +57,7 @@ theorem succ_pnat_coe (n : ℕ) : (succ_pnat n : ℕ) = succ n :=
   rfl
 
 theorem succ_pnat_inj {n m : ℕ} : succ_pnat n = succ_pnat m → n = m := fun h => by
-  let h' := congr_argₓ (coeₓ : ℕ+ → ℕ) h
+  let h' := congr_argₓ (coe : ℕ+ → ℕ) h
   exact Nat.succ.injₓ h'
 
 /-- Convert a natural number to a pnat. `n+1` is mapped to itself,
@@ -116,7 +116,7 @@ theorem Eq {m n : ℕ+} : (m : ℕ) = n → m = n :=
 theorem coe_inj {m n : ℕ+} : (m : ℕ) = n ↔ m = n :=
   SetCoe.ext_iff
 
-theorem coe_injective : Function.Injective (coeₓ : ℕ+ → ℕ) :=
+theorem coe_injective : Function.Injective (coe : ℕ+ → ℕ) :=
   Subtype.coe_injective
 
 @[simp]
@@ -127,7 +127,7 @@ instance : Add ℕ+ :=
   ⟨fun a b => ⟨(a + b : ℕ), add_pos a.pos b.pos⟩⟩
 
 instance : AddCommSemigroupₓ ℕ+ :=
-  coe_injective.AddCommSemigroup coeₓ fun _ _ => rfl
+  coe_injective.AddCommSemigroup coe fun _ _ => rfl
 
 @[simp]
 theorem add_coe (m n : ℕ+) : ((m + n : ℕ+) : ℕ) = m + n :=
@@ -135,14 +135,14 @@ theorem add_coe (m n : ℕ+) : ((m + n : ℕ+) : ℕ) = m + n :=
 
 /-- `pnat.coe` promoted to an `add_hom`, that is, a morphism which preserves addition. -/
 def coe_add_hom : AddHom ℕ+ ℕ where
-  toFun := coeₓ
+  toFun := coe
   map_add' := add_coe
 
 instance : AddLeftCancelSemigroup ℕ+ :=
-  coe_injective.AddLeftCancelSemigroup coeₓ fun _ _ => rfl
+  coe_injective.AddLeftCancelSemigroup coe fun _ _ => rfl
 
 instance : AddRightCancelSemigroup ℕ+ :=
-  coe_injective.AddRightCancelSemigroup coeₓ fun _ _ => rfl
+  coe_injective.AddRightCancelSemigroup coe fun _ _ => rfl
 
 @[simp]
 theorem ne_zero (n : ℕ+) : (n : ℕ) ≠ 0 :=
@@ -158,11 +158,11 @@ theorem coe_to_pnat' (n : ℕ+) : (n : ℕ).toPnat' = n :=
 instance : Mul ℕ+ :=
   ⟨fun m n => ⟨m.1 * n.1, mul_pos m.2 n.2⟩⟩
 
-instance : HasOne ℕ+ :=
+instance : One ℕ+ :=
   ⟨succ_pnat 0⟩
 
 instance : CommMonoidₓ ℕ+ :=
-  coe_injective.CommMonoid coeₓ rfl fun _ _ => rfl
+  coe_injective.CommMonoid coe rfl fun _ _ => rfl
 
 theorem lt_add_one_iff : ∀ {a b : ℕ+}, a < b + 1 ↔ a ≤ b := fun a b => Nat.lt_add_one_iff
 
@@ -221,12 +221,12 @@ theorem mul_coe (m n : ℕ+) : ((m * n : ℕ+) : ℕ) = m * n :=
 
 /-- `pnat.coe` promoted to a `monoid_hom`. -/
 def coe_monoid_hom : ℕ+ →* ℕ where
-  toFun := coeₓ
+  toFun := coe
   map_one' := one_coe
   map_mul' := mul_coe
 
 @[simp]
-theorem coe_coe_monoid_hom : (coe_monoid_hom : ℕ+ → ℕ) = coeₓ :=
+theorem coe_coe_monoid_hom : (coe_monoid_hom : ℕ+ → ℕ) = coe :=
   rfl
 
 @[simp]
@@ -247,7 +247,7 @@ theorem coe_bit1 (a : ℕ+) : ((bit1 a : ℕ+) : ℕ) = bit1 (a : ℕ) :=
 
 @[simp]
 theorem pow_coe (m : ℕ+) (n : ℕ) : ((m ^ n : ℕ+) : ℕ) = (m : ℕ) ^ n := by
-  induction' n with n ih <;> [rfl, rw [pow_succ'ₓ, pow_succₓ, mul_coe, mul_commₓ, ih]]
+  induction' n with n ih <;> [rfl, rw [pow_succ'ₓ, pow_succₓ, mul_coe, mul_comm, ih]]
 
 instance : OrderedCancelCommMonoid ℕ+ :=
   { Pnat.commMonoid, Pnat.linearOrder with
@@ -259,11 +259,11 @@ instance : OrderedCancelCommMonoid ℕ+ :=
       intro a b c h
       apply Nat.le_of_mul_le_mul_leftₓ h a.property,
     mul_left_cancel := fun a b c h => by
-      replace h := congr_argₓ (coeₓ : ℕ+ → ℕ) h
+      replace h := congr_argₓ (coe : ℕ+ → ℕ) h
       exact Eq ((Nat.mul_right_inj a.pos).mp h) }
 
 instance : Distrib ℕ+ :=
-  coe_injective.Distrib coeₓ (fun _ _ => rfl) fun _ _ => rfl
+  coe_injective.Distrib coe (fun _ _ => rfl) fun _ _ => rfl
 
 /-- Subtraction a - b is defined in the obvious way when
   a > b, and by a - b = 1 if a ≤ b.
@@ -286,7 +286,7 @@ theorem add_sub_of_lt {a b : ℕ+} : a < b → a + (b - a) = b := fun h =>
     exact add_tsub_cancel_of_le h.le
 
 instance : HasWellFounded ℕ+ :=
-  ⟨· < ·, measure_wf coeₓ⟩
+  ⟨· < ·, measure_wf coe⟩
 
 /-- Strong induction on `ℕ+`. -/
 def strong_induction_on {p : ℕ+ → Sort _} : ∀ n : ℕ+ h : ∀ k, (∀ m, m < k → p m) → p k, p n
@@ -401,11 +401,11 @@ theorem div_add_mod (m k : ℕ+) : (k * div m k + mod m k : ℕ) = m :=
   (add_commₓ _ _).trans (mod_add_div _ _)
 
 theorem mod_add_div' (m k : ℕ+) : (mod m k + div m k * k : ℕ) = m := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact mod_add_div _ _
 
 theorem div_add_mod' (m k : ℕ+) : (div m k * k + mod m k : ℕ) = m := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact div_add_mod _ _
 
 theorem mod_coe (m k : ℕ+) : (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) (k : ℕ) ((m : ℕ) % (k : ℕ)) := by
@@ -510,10 +510,10 @@ end Pnat
 section CanLift
 
 instance Nat.canLiftPnat : CanLift ℕ ℕ+ :=
-  ⟨coeₓ, fun n => 0 < n, fun n hn => ⟨Nat.toPnat' n, Pnat.to_pnat'_coe hn⟩⟩
+  ⟨coe, fun n => 0 < n, fun n hn => ⟨Nat.toPnat' n, Pnat.to_pnat'_coe hn⟩⟩
 
 instance Int.canLiftPnat : CanLift ℤ ℕ+ :=
-  ⟨coeₓ, fun n => 0 < n, fun n hn =>
+  ⟨coe, fun n => 0 < n, fun n hn =>
     ⟨Nat.toPnat' (Int.natAbs n), by
       rw [coe_coe, Nat.to_pnat'_coe, if_pos (Int.nat_abs_pos_of_ne_zero hn.ne'), Int.nat_abs_of_nonneg hn.le]⟩⟩
 

@@ -50,7 +50,7 @@ theorem nonunits_add {x y} (hx : x ∈ Nonunits R) (hy : y ∈ Nonunits R) : x +
     rcases this with ⟨s, hs⟩
     use u * s
     convert congr_argₓ (fun z => (u : R) * z) hs
-    rw [← mul_assocₓ]
+    rw [← mul_assoc]
     simp
   rw
     [show ↑u⁻¹ * y = 1 - ↑u⁻¹ * x by

@@ -349,7 +349,7 @@ theorem mul_le_max (a b : Cardinal) : a * b ≤ max (max a b) ω := by
     exact le_max_leftₓ _ _
     
   · by_cases' hb : ω ≤ b
-    · rw [mul_commₓ, mul_eq_max_of_omega_le_left hb ha0, max_commₓ]
+    · rw [mul_comm, mul_eq_max_of_omega_le_left hb ha0, max_commₓ]
       exact le_max_leftₓ _ _
       
     · exact le_max_of_le_right (le_of_ltₓ (mul_lt_omega (lt_of_not_geₓ ha) (lt_of_not_geₓ hb)))
@@ -360,14 +360,14 @@ theorem mul_eq_left {a b : Cardinal} (ha : ω ≤ a) (hb : b ≤ a) (hb' : b ≠
   rw [mul_eq_max_of_omega_le_left ha hb', max_eq_leftₓ hb]
 
 theorem mul_eq_right {a b : Cardinal} (hb : ω ≤ b) (ha : a ≤ b) (ha' : a ≠ 0) : a * b = b := by
-  rw [mul_commₓ, mul_eq_left hb ha ha']
+  rw [mul_comm, mul_eq_left hb ha ha']
 
 theorem le_mul_left {a b : Cardinal} (h : b ≠ 0) : a ≤ b * a := by
   convert mul_le_mul_right' (one_le_iff_ne_zero.mpr h) _
   rw [one_mulₓ]
 
 theorem le_mul_right {a b : Cardinal} (h : b ≠ 0) : a ≤ a * b := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact le_mul_left h
 
 theorem mul_eq_left_iff {a b : Cardinal} : a * b = a ↔ max ω b ≤ a ∧ b ≠ 0 ∨ b = 1 ∨ a = 0 := by
@@ -692,7 +692,7 @@ theorem mk_bounded_subset_le {α : Type u} (s : Set α) (c : Cardinal.{u}) :
     # { t : Set α // t ⊆ s ∧ # t ≤ c } ≤ max (# s) ω ^ c := by
   refine' le_transₓ _ (mk_bounded_set_le s c)
   refine' ⟨embedding.cod_restrict _ _ _⟩
-  use fun t => coeₓ ⁻¹' t.1
+  use fun t => coe ⁻¹' t.1
   · rintro ⟨t, ht1, ht2⟩ ⟨t', h1t', h2t'⟩ h
     apply Subtype.eq
     dsimp only  at h⊢

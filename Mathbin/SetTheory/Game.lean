@@ -68,13 +68,13 @@ theorem not_leₓ : ∀ {x y : Game}, ¬x ≤ y ↔ lt y x := by
   rintro ⟨x⟩ ⟨y⟩
   exact not_leₓ
 
-instance : HasZero Game :=
+instance : Zero Game :=
   ⟨⟦0⟧⟩
 
 instance : Inhabited Game :=
   ⟨0⟩
 
-instance : HasOne Game :=
+instance : One Game :=
   ⟨⟦1⟧⟩
 
 /-- The negation of `{L | R}` is `{-R | -L}`. -/

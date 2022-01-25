@@ -52,7 +52,7 @@ theorem quot_mk_eq_mk {p : Submodule R M} (x : M) : (Quot.mk _ x : M ⧸ p) = mk
 protected theorem Eq {x y : M} : (mk x : M ⧸ p) = mk y ↔ x - y ∈ p :=
   Quotientₓ.eq'
 
-instance : HasZero (M ⧸ p) :=
+instance : Zero (M ⧸ p) :=
   ⟨mk 0⟩
 
 instance : Inhabited (M ⧸ p) :=

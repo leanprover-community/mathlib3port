@@ -172,14 +172,14 @@ theorem right_inverse_eq (I J : FractionalIdeal R₁⁰ K) (h : I * J = 1) : J =
   apply le_antisymmₓ
   · apply fractional_ideal.mul_le.mpr _
     intro x hx y hy
-    rw [mul_commₓ]
+    rw [mul_comm]
     exact (FractionalIdeal.mem_div_iff_of_nonzero hI).mp hy x hx
     
   rw [← h]
   apply FractionalIdeal.mul_left_mono I
   apply (FractionalIdeal.le_div_iff_of_nonzero hI).mpr _
   intro y hy x hx
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact FractionalIdeal.mul_mem_mul hx hy
 
 theorem mul_inv_cancel_iff {I : FractionalIdeal R₁⁰ K} : I * I⁻¹ = 1 ↔ ∃ J, I * J = 1 :=
@@ -282,7 +282,7 @@ theorem FractionalIdeal.adjoin_integral_eq_one_of_is_unit [Algebra A K] [IsFract
   have mul_self : I * I = I := by
     apply FractionalIdeal.coe_to_submodule_injective
     simp
-  convert congr_argₓ (· * I⁻¹) mul_self <;> simp only [(mul_inv_cancel_iff_is_unit K).mpr hI, mul_assocₓ, mul_oneₓ]
+  convert congr_argₓ (· * I⁻¹) mul_self <;> simp only [(mul_inv_cancel_iff_is_unit K).mpr hI, mul_assoc, mul_oneₓ]
 
 namespace IsDedekindDomainInv
 
@@ -294,7 +294,7 @@ theorem mul_inv_eq_one {I : FractionalIdeal A⁰ K} (hI : I ≠ 0) : I * I⁻¹ 
   is_dedekind_domain_inv_iff.mp h I hI
 
 theorem inv_mul_eq_one {I : FractionalIdeal A⁰ K} (hI : I ≠ 0) : I⁻¹ * I = 1 :=
-  (mul_commₓ _ _).trans (h.mul_inv_eq_one hI)
+  (mul_comm _ _).trans (h.mul_inv_eq_one hI)
 
 protected theorem IsUnit {I : FractionalIdeal A⁰ K} (hI : I ≠ 0) : IsUnit I :=
   is_unit_of_mul_eq_one _ _ (h.mul_inv_eq_one hI)
@@ -330,9 +330,9 @@ theorem dimension_le_one : dimension_le_one A := by
     rw [eq_top_iff, ← coe_ideal_le_coe_ideal (FractionRing A), FractionalIdeal.coe_ideal_top]
     calc (1 : FractionalIdeal A⁰ (FractionRing A)) = _ * _ * _ := _ _ ≤ _ * _ :=
         mul_right_mono (P⁻¹ * M : FractionalIdeal A⁰ (FractionRing A)) this _ = M := _
-    · rw [mul_assocₓ, ← mul_assocₓ (↑P), h.mul_inv_eq_one P'_ne, one_mulₓ, h.inv_mul_eq_one M'_ne]
+    · rw [mul_assoc, ← mul_assoc (↑P), h.mul_inv_eq_one P'_ne, one_mulₓ, h.inv_mul_eq_one M'_ne]
       
-    · rw [← mul_assocₓ (↑P), h.mul_inv_eq_one P'_ne, one_mulₓ]
+    · rw [← mul_assoc (↑P), h.mul_inv_eq_one P'_ne, one_mulₓ]
       
     · infer_instance
       
@@ -343,7 +343,7 @@ theorem dimension_le_one : dimension_le_one A := by
   obtain ⟨y, hy, rfl⟩ := (mem_coe_ideal _).mp (le_one hx)
   obtain ⟨z, hzM, hzp⟩ := SetLike.exists_of_lt hM
   have zy_mem := FractionalIdeal.mul_mem_mul (mem_coe_ideal_of_mem A⁰ hzM) hx
-  rw [← RingHom.map_mul, ← mul_assocₓ, h.mul_inv_eq_one M'_ne, one_mulₓ] at zy_mem
+  rw [← RingHom.map_mul, ← mul_assoc, h.mul_inv_eq_one M'_ne, one_mulₓ] at zy_mem
   obtain ⟨zy, hzy, zy_eq⟩ := (mem_coe_ideal A⁰).mp zy_mem
   rw [IsFractionRing.injective A (FractionRing A) zy_eq] at hzy
   exact mem_coe_ideal_of_mem A⁰ (Or.resolve_left (hP.mem_or_mem hzy) hzp)
@@ -383,8 +383,6 @@ theorem exists_multiset_prod_cons_le_and_prod_not_le [IsDedekindDomain A] (hNF :
   obtain ⟨hP0, hZP0⟩ : P.as_ideal ≠ ⊥ ∧ ((Z.erase P).map PrimeSpectrum.asIdeal).Prod ≠ ⊥ := by
     rwa [Ne.def, ← Multiset.cons_erase hPZ', Multiset.prod_cons, Ideal.mul_eq_bot, not_or_distrib, ← this] at hprodZ
   have hPM' := (IsDedekindDomain.dimension_le_one _ hP0 P.is_prime).eq_of_le hM.ne_top hPM
-  run_tac
-    tactic.unfreeze_local_instances
   subst hPM'
   refine' ⟨Z.erase P, _, _⟩
   · convert hZI
@@ -424,14 +422,14 @@ theorem exists_not_mem_one_of_ne_bot [IsDedekindDomain A] (hNF : ¬IsField A) {I
     
   · rintro y₀ hy₀
     obtain ⟨y, h_Iy, rfl⟩ := (FractionalIdeal.mem_coe_ideal _).mp hy₀
-    rw [mul_commₓ, ← mul_assocₓ, ← RingHom.map_mul]
+    rw [mul_comm, ← mul_assoc, ← RingHom.map_mul]
     have h_yb : y * b ∈ J := by
       apply hle
       rw [Multiset.prod_cons]
       exact Submodule.smul_mem_smul h_Iy hbZ
     rw [Ideal.mem_span_singleton'] at h_yb
     rcases h_yb with ⟨c, hc⟩
-    rw [← hc, RingHom.map_mul, mul_assocₓ, mul_inv_cancel hnz_fa, mul_oneₓ]
+    rw [← hc, RingHom.map_mul, mul_assoc, mul_inv_cancel hnz_fa, mul_oneₓ]
     apply FractionalIdeal.coe_mem_one
     
   · refine' mt (FractionalIdeal.mem_one_iff _).mp _
@@ -502,7 +500,7 @@ theorem coe_ideal_mul_inv [h : IsDedekindDomain A] (I : Ideal A) (hI0 : I ≠ �
     swap
     · exact hJ0
       
-    simp only [mul_assocₓ, mul_commₓ b] at hx⊢
+    simp only [mul_assoc, mul_comm b] at hx⊢
     intro y hy
     exact hx _ (FractionalIdeal.mul_mem_mul hy hb)
   refine'
@@ -535,7 +533,7 @@ protected theorem mul_inv_cancel [IsDedekindDomain A] {I : FractionalIdeal A⁰ 
     exact ⟨span_singleton A⁰ (algebraMap _ _ a) * J⁻¹, h₂⟩
     
   subst hJ
-  rw [mul_assocₓ, mul_left_commₓ (J : FractionalIdeal A⁰ K), coe_ideal_mul_inv, mul_oneₓ,
+  rw [mul_assoc, mul_left_commₓ (J : FractionalIdeal A⁰ K), coe_ideal_mul_inv, mul_oneₓ,
     FractionalIdeal.span_singleton_mul_span_singleton, inv_mul_cancel, FractionalIdeal.span_singleton_one]
   · exact mt ((algebraMap A K).injective_iff.mp (IsFractionRing.injective A K) _) ha
     
@@ -547,14 +545,14 @@ theorem mul_right_le_iff [IsDedekindDomain A] {J : FractionalIdeal A⁰ K} (hJ :
   intro I I'
   constructor
   · intro h
-    convert mul_right_mono (J⁻¹) h <;> rw [mul_assocₓ, FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ]
+    convert mul_right_mono (J⁻¹) h <;> rw [mul_assoc, FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ]
     
   · exact fun h => mul_right_mono J h
     
 
 theorem mul_left_le_iff [IsDedekindDomain A] {J : FractionalIdeal A⁰ K} (hJ : J ≠ 0) {I I'} : J * I ≤ J * I' ↔ I ≤ I' :=
   by
-  convert FractionalIdeal.mul_right_le_iff hJ using 1 <;> simp only [mul_commₓ]
+  convert FractionalIdeal.mul_right_le_iff hJ using 1 <;> simp only [mul_comm]
 
 theorem mul_right_strict_mono [IsDedekindDomain A] {I : FractionalIdeal A⁰ K} (hI : I ≠ 0) : StrictMono (· * I) :=
   strict_mono_of_le_iff_le fun _ _ => (mul_right_le_iff hI).symm
@@ -570,12 +568,12 @@ protected theorem div_eq_mul_inv [IsDedekindDomain A] (I J : FractionalIdeal A�
   · rw [hJ, div_zero, inv_zero', mul_zero]
     
   refine' le_antisymmₓ ((mul_right_le_iff hJ).mp _) ((le_div_iff_mul_le hJ).mpr _)
-  · rw [mul_assocₓ, mul_commₓ (J⁻¹), FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ, mul_le]
+  · rw [mul_assoc, mul_comm (J⁻¹), FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ, mul_le]
     intro x hx y hy
     rw [mem_div_iff_of_nonzero hJ] at hx
     exact hx y hy
     
-  rw [mul_assocₓ, mul_commₓ (J⁻¹), FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ]
+  rw [mul_assoc, mul_comm (J⁻¹), FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ]
   exact le_reflₓ I
 
 end FractionalIdeal
@@ -625,7 +623,7 @@ theorem Ideal.dvd_iff_le {I J : Ideal A} : I ∣ J ↔ J ≤ I :=
     refine'
       coe_to_fractional_ideal_injective (le_reflₓ (nonZeroDivisors A))
         (show (J : FractionalIdeal A⁰ (FractionRing A)) = _ from _)
-    rw [FractionalIdeal.coe_ideal_mul, hH, ← mul_assocₓ, mul_inv_cancel hI', one_mulₓ]⟩
+    rw [FractionalIdeal.coe_ideal_mul, hH, ← mul_assoc, mul_inv_cancel hI', one_mulₓ]⟩
 
 theorem Ideal.dvd_not_unit_iff_lt {I J : Ideal A} : DvdNotUnit I J ↔ J < I :=
   ⟨fun ⟨hI, H, hunit, hmul⟩ =>
@@ -768,10 +766,10 @@ theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)
         ((algebraMap A L).injective_iff.mp _)
     refine' ⟨y * y', mul_ne_zero hy hy', fun x'' hx'' => _⟩
     rcases finset.mem_insert.mp hx'' with (rfl | hx'')
-    · rw [mul_smul, Algebra.smul_def, Algebra.smul_def, mul_commₓ _ x'', hx']
+    · rw [mul_smul, Algebra.smul_def, Algebra.smul_def, mul_comm _ x'', hx']
       exact is_integral_mul is_integral_algebra_map x'.2
       
-    · rw [mul_commₓ, mul_smul, Algebra.smul_def]
+    · rw [mul_comm, mul_smul, Algebra.smul_def]
       exact is_integral_mul is_integral_algebra_map (hs _ hx'')
       
     · rw [IsScalarTower.algebra_map_eq A K L]

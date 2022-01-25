@@ -130,7 +130,7 @@ end
 
 section Finsupp
 
-variable [HasZero β]
+variable [Zero β]
 
 /-- Map a total_function to one whose default value is zero so that it represents a finsupp. -/
 @[simp]

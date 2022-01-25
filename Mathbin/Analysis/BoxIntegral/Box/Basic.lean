@@ -148,7 +148,7 @@ theorem coe_subset_coe : (I : Set (ι → ℝ)) ⊆ J ↔ I ≤ J :=
 theorem le_iff_bounds : I ≤ J ↔ J.lower ≤ I.lower ∧ I.upper ≤ J.upper :=
   (le_tfae I J).out 0 3
 
-theorem injective_coe : injective (coeₓ : box ι → Set (ι → ℝ)) := by
+theorem injective_coe : injective (coe : box ι → Set (ι → ℝ)) := by
   rintro ⟨l₁, u₁, h₁⟩ ⟨l₂, u₂, h₂⟩ h
   simp only [subset.antisymm_iff, coe_subset_coe, le_iff_bounds] at h
   congr
@@ -166,7 +166,7 @@ theorem ne_of_disjoint_coe (h : Disjoint (I : Set (ι → ℝ)) J) : I ≠ J :=
   mt coe_inj.2 $ h.ne I.coe_ne_empty
 
 instance : PartialOrderₓ (box ι) :=
-  { PartialOrderₓ.lift (coeₓ : box ι → Set (ι → ℝ)) injective_coe with le := · ≤ · }
+  { PartialOrderₓ.lift (coe : box ι → Set (ι → ℝ)) injective_coe with le := · ≤ · }
 
 /-- Closed box corresponding to `I : box_integral.box ι`. -/
 protected def Icc : box ι ↪o Set (ι → ℝ) :=
@@ -224,7 +224,7 @@ In this section we define coercion from `with_bot (box ι)` to `set (ι → ℝ)
 
 
 instance with_bot_coe : CoeTₓ (WithBot (box ι)) (Set (ι → ℝ)) :=
-  ⟨fun o => o.elim ∅ coeₓ⟩
+  ⟨fun o => o.elim ∅ coe⟩
 
 @[simp, norm_cast]
 theorem coe_bot : ((⊥ : WithBot (box ι)) : Set (ι → ℝ)) = ∅ :=

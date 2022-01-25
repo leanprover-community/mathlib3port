@@ -265,7 +265,7 @@ theorem antiperiodic.nat_mul_eq_of_eq_zero [CommSemiringₓ α] [AddGroupₓ β]
     (n : ℕ) : f (n * c) = 0 := by
   rcases Nat.even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;>
     have hk : (k : α) * (2 * c) = 2 * k * c := by
-      rw [mul_left_commₓ, ← mul_assocₓ]
+      rw [mul_left_commₓ, ← mul_assoc]
   · simpa [hk, hi] using (h.nat_even_mul_periodic k).Eq
     
   · simpa [add_mulₓ, hk, hi] using (h.nat_odd_mul_antiperiodic k).Eq
@@ -275,7 +275,7 @@ theorem antiperiodic.int_mul_eq_of_eq_zero [CommRingₓ α] [AddGroupₓ β] (h 
     f (n * c) = 0 := by
   rcases Int.even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;>
     have hk : (k : α) * (2 * c) = 2 * k * c := by
-      rw [mul_left_commₓ, ← mul_assocₓ]
+      rw [mul_left_commₓ, ← mul_assoc]
   · simpa [hk, hi] using (h.int_even_mul_periodic k).Eq
     
   · simpa [add_mulₓ, hk, hi] using (h.int_odd_mul_antiperiodic k).Eq

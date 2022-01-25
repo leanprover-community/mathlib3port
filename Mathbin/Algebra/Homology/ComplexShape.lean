@@ -152,13 +152,13 @@ def down' {α : Type _} [AddRightCancelSemigroup α] (a : α) : ComplexShape α 
 /-- The `complex_shape` appropriate for cohomology, so `d : X i ⟶ X j` only when `j = i + 1`.
 -/
 @[simps]
-def up (α : Type _) [AddRightCancelSemigroup α] [HasOne α] : ComplexShape α :=
+def up (α : Type _) [AddRightCancelSemigroup α] [One α] : ComplexShape α :=
   up' 1
 
 /-- The `complex_shape` appropriate for homology, so `d : X i ⟶ X j` only when `i = j + 1`.
 -/
 @[simps]
-def down (α : Type _) [AddRightCancelSemigroup α] [HasOne α] : ComplexShape α :=
+def down (α : Type _) [AddRightCancelSemigroup α] [One α] : ComplexShape α :=
   down' 1
 
 end ComplexShape

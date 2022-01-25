@@ -213,7 +213,7 @@ theorem not_minimal {a b c : ℤ} (h : minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
       @Int.Prime.dvd_pow' _ 2 _
         (by
           norm_num : Nat.Prime 2)
-    rw [ht2, mul_assocₓ]
+    rw [ht2, mul_assoc]
     exact dvd_mul_right 2 (m * n)
   cases' hb2 with b' hb2'
   have hs : b' ^ 2 = m * (r * s) := by
@@ -228,7 +228,7 @@ theorem not_minimal {a b c : ℤ} (h : minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   have hrsz : r * s ≠ 0 := by
     by_contra hrsz
     revert hb20
-    rw [ht2, htt2, mul_assocₓ, @mul_assocₓ _ _ _ r s, hrsz]
+    rw [ht2, htt2, mul_assoc, @mul_assoc _ _ _ r s, hrsz]
     simp
   have h2b0 : b' ≠ 0 := by
     apply
@@ -251,7 +251,7 @@ theorem not_minimal {a b c : ℤ} (h : minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   replace hi : m = i ^ 2
   · apply Or.resolve_right hi hi'
     
-  rw [mul_commₓ] at hs
+  rw [mul_comm] at hs
   rw [Int.gcd_comm] at hcp
   obtain ⟨d, hd⟩ := Int.sq_of_gcd_eq_one hcp hs.symm
   have hd' : ¬r * s = -(d ^ 2) := by
@@ -277,7 +277,7 @@ theorem not_minimal {a b c : ℤ} (h : minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
           decide : 0 < 2),
       neg_zero, or_selfₓ] at hj
     apply left_ne_zero_of_mul hrsz hj
-  rw [mul_commₓ] at hd
+  rw [mul_comm] at hd
   rw [Int.gcd_comm] at htt4
   obtain ⟨k, hk⟩ := Int.sq_of_gcd_eq_one htt4 hd
   have hk0 : k ≠ 0 := by

@@ -80,7 +80,7 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
         pure (CC, ff)
   let CC_type ← instantiate_mvars CC_type
   let x_type ←
-    to_expr (pquote.1 (@coeSortₓ (%%ₓC) _ (@CategoryTheory.ConcreteCategory.hasCoeToSort (%%ₓC) (%%ₓS) (%%ₓCC)) (%%ₓX)))
+    to_expr (pquote.1 (@coeSort (%%ₓC) _ (@CategoryTheory.ConcreteCategory.hasCoeToSort (%%ₓC) (%%ₓS) (%%ₓCC)) (%%ₓX)))
   let x ← mk_local_def `x x_type
   let t' ←
     to_expr

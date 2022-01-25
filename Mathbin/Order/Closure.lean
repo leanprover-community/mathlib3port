@@ -397,7 +397,7 @@ end CompleteLattice
 
 section CoeToSet
 
-variable [SetLike α β] (l : LowerAdjoint (coeₓ : α → Set β))
+variable [SetLike α β] (l : LowerAdjoint (coe : α → Set β))
 
 theorem subset_closure (s : Set β) : s ⊆ l s :=
   l.le_closure s
@@ -431,7 +431,7 @@ theorem closure_union_closure (x y : α) : l (l x ∪ l y) = l (x ∪ y) :=
 
 @[simp]
 theorem closure_Union_closure {ι : Type u} (x : ι → α) : l (⋃ i, l (x i)) = l (⋃ i, x i) :=
-  SetLike.coe_injective (l.closure_supr_closure (coeₓ ∘ x))
+  SetLike.coe_injective (l.closure_supr_closure (coe ∘ x))
 
 @[simp]
 theorem closure_bUnion_closure (p : Set β → Prop) : l (⋃ (x) (H : p x), l x) = l (⋃ (x) (H : p x), x) :=
@@ -461,7 +461,7 @@ def GaloisConnection.closureOperator [PartialOrderₓ α] [Preorderₓ β] {l : 
   gc.lower_adjoint.closure_operator
 
 /-- The set of closed elements has a Galois insertion to the underlying type. -/
-def ClosureOperator.gi [PartialOrderₓ α] (c : ClosureOperator α) : GaloisInsertion c.to_closed coeₓ where
+def ClosureOperator.gi [PartialOrderₓ α] (c : ClosureOperator α) : GaloisInsertion c.to_closed coe where
   choice := fun x hx => ⟨x, hx.antisymm (c.le_closure x)⟩
   gc := fun x y => c.closure_le_closed_iff_le _ y.2
   le_l_u := fun x => c.le_closure _

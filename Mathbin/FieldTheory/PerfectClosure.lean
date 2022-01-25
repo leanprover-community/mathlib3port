@@ -181,7 +181,7 @@ instance : CommMonoidₓ (PerfectClosure K p) :=
         Quot.induction_on f $ fun ⟨n, y⟩ =>
           Quot.induction_on g $ fun ⟨s, z⟩ =>
             congr_argₓ (Quot.mk _) $ by
-              simp only [add_assocₓ, mul_assocₓ, RingHom.iterate_map_mul, ← iterate_add_apply, add_commₓ,
+              simp only [add_assocₓ, mul_assoc, RingHom.iterate_map_mul, ← iterate_add_apply, add_commₓ,
                 add_left_commₓ],
     one := mk K p (0, 1),
     one_mul := fun e =>
@@ -196,7 +196,7 @@ instance : CommMonoidₓ (PerfectClosure K p) :=
       Quot.induction_on e fun ⟨m, x⟩ =>
         Quot.induction_on f fun ⟨n, y⟩ =>
           congr_argₓ (Quot.mk _) $ by
-            simp only [add_commₓ, mul_commₓ] }
+            simp only [add_commₓ, mul_comm] }
 
 theorem one_def : (1 : PerfectClosure K p) = mk K p (0, 1) :=
   rfl
@@ -243,7 +243,7 @@ instance : Neg (PerfectClosure K p) :=
 theorem neg_mk (x : ℕ × K) : -mk K p x = mk K p (x.1, -x.2) :=
   rfl
 
-instance : HasZero (PerfectClosure K p) :=
+instance : Zero (PerfectClosure K p) :=
   ⟨mk K p (0, 0)⟩
 
 theorem zero_def : (0 : PerfectClosure K p) = mk K p (0, 0) :=

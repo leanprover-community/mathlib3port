@@ -18,7 +18,7 @@ inductive PosNum : Type
   | bit0 : PosNum → PosNum
   deriving has_reflect, DecidableEq
 
-instance : HasOne PosNum :=
+instance : One PosNum :=
   ⟨PosNum.one⟩
 
 instance : Inhabited PosNum :=
@@ -32,10 +32,10 @@ inductive Num : Type
   | Pos : PosNum → Num
   deriving has_reflect, DecidableEq
 
-instance : HasZero Num :=
+instance : Zero Num :=
   ⟨Num.zero⟩
 
-instance : HasOne Num :=
+instance : One Num :=
   ⟨Num.pos 1⟩
 
 instance : Inhabited Num :=
@@ -51,10 +51,10 @@ inductive Znum : Type
   | neg : PosNum → Znum
   deriving has_reflect, DecidableEq
 
-instance : HasZero Znum :=
+instance : Zero Znum :=
   ⟨Znum.zero⟩
 
-instance : HasOne Znum :=
+instance : One Znum :=
   ⟨Znum.pos 1⟩
 
 instance : Inhabited Znum :=
@@ -171,7 +171,7 @@ end PosNum
 
 section
 
-variable {α : Type _} [HasOne α] [Add α]
+variable {α : Type _} [One α] [Add α]
 
 /-- `cast_pos_num` casts a `pos_num` into any type which has `1` and `+`.
   -/
@@ -182,14 +182,14 @@ def castPosNum : PosNum → α
 
 /-- `cast_num` casts a `num` into any type which has `0`, `1` and `+`.
   -/
-def castNum [z : HasZero α] : Num → α
+def castNum [z : Zero α] : Num → α
   | 0 => 0
   | Num.pos p => castPosNum p
 
 instance (priority := 900) posNumCoe : CoeTₓ PosNum α :=
   ⟨castPosNum⟩
 
-instance (priority := 900) numNatCoe [z : HasZero α] : CoeTₓ Num α :=
+instance (priority := 900) numNatCoe [z : Zero α] : CoeTₓ Num α :=
   ⟨castNum⟩
 
 instance : HasRepr PosNum :=
@@ -627,7 +627,7 @@ end Znum
 
 section
 
-variable {α : Type _} [HasZero α] [HasOne α] [Add α] [Neg α]
+variable {α : Type _} [Zero α] [One α] [Add α] [Neg α]
 
 /-- `cast_znum` casts a `znum` into any type which has `0`, `1`, `+` and `neg`
   -/

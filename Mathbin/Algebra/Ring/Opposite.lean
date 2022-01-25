@@ -56,7 +56,7 @@ instance [Ringₓ α] : Ringₓ (αᵐᵒᵖ) :=
 instance [CommRingₓ α] : CommRingₓ (αᵐᵒᵖ) :=
   { MulOpposite.ring α, MulOpposite.commSemiring α with }
 
-instance [HasZero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors (αᵐᵒᵖ) where
+instance [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors (αᵐᵒᵖ) where
   eq_zero_or_eq_zero_of_mul_eq_zero := fun x y H : op (_ * _) = op (0 : α) =>
     Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero $ op_injective H) (fun hy => Or.inr $ unop_injective $ hy) fun hx =>
       Or.inl $ unop_injective $ hx

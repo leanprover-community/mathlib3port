@@ -70,7 +70,7 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 instance has_coe_to_matrix : Coe (special_linear_group n R) (Matrix n n R) :=
   ⟨fun A => A.val⟩
 
-local prefix:1024 "↑ₘ" => @coeₓ _ (Matrix n n R) _
+local prefix:1024 "↑ₘ" => @coe _ (Matrix n n R) _
 
 theorem ext_iff (A B : special_linear_group n R) : A = B ↔ ∀ i j, ↑ₘA i j = ↑ₘB i j :=
   Subtype.ext_iff.trans Matrix.ext_iff.symm
@@ -89,7 +89,7 @@ instance Mul : Mul (special_linear_group n R) :=
     ⟨A.1 ⬝ B.1, by
       erw [det_mul, A.2, B.2, one_mulₓ]⟩⟩
 
-instance HasOne : HasOne (special_linear_group n R) :=
+instance One : One (special_linear_group n R) :=
   ⟨⟨1, det_one⟩⟩
 
 instance : Inhabited (special_linear_group n R) :=
@@ -131,7 +131,7 @@ theorem row_ne_zero [Nontrivial R] (g : special_linear_group n R) (i : n) : ↑�
 end CoeLemmas
 
 instance : Monoidₓ (special_linear_group n R) :=
-  Function.Injective.monoid coeₓ Subtype.coe_injective coe_one coe_mul
+  Function.Injective.monoid coe Subtype.coe_injective coe_one coe_mul
 
 instance : Groupₓ (special_linear_group n R) :=
   { special_linear_group.monoid, special_linear_group.has_inv with

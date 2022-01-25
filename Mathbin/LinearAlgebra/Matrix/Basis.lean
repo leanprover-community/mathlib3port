@@ -83,7 +83,7 @@ theorem to_matrix_update [DecidableEq ι'] (x : M) :
 
 /-- The basis constructed by `units_smul` has vectors given by a diagonal matrix. -/
 @[simp]
-theorem to_matrix_units_smul [DecidableEq ι] (w : ι → (R)ˣ) : e.to_matrix (e.units_smul w) = diagonal (coeₓ ∘ w) := by
+theorem to_matrix_units_smul [DecidableEq ι] (w : ι → (R)ˣ) : e.to_matrix (e.units_smul w) = diagonal (coe ∘ w) := by
   ext i j
   by_cases' h : i = j
   · simp [h, to_matrix_apply, units_smul_apply, Units.smul_def]

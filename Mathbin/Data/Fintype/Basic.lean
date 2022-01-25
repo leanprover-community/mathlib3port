@@ -293,7 +293,7 @@ instance decidable_eq_embedding_fintype [DecidableEq β] [Fintype α] : Decidabl
   decidableOfIff ((a : α → β) = b) Function.Embedding.coe_injective.eq_iff
 
 @[to_additive]
-instance decidable_eq_one_hom_fintype [DecidableEq β] [Fintype α] [HasOne α] [HasOne β] : DecidableEq (OneHom α β) :=
+instance decidable_eq_one_hom_fintype [DecidableEq β] [Fintype α] [One α] [One β] : DecidableEq (OneHom α β) :=
   fun a b => decidableOfIff ((a : α → β) = b) (injective.eq_iff OneHom.coe_inj)
 
 @[to_additive]
@@ -1456,7 +1456,7 @@ theorem Fintype.card_subtype_le [Fintype α] (p : α → Prop) [DecidablePred p]
 
 theorem Fintype.card_subtype_lt [Fintype α] {p : α → Prop} [DecidablePred p] {x : α} (hx : ¬p x) :
     Fintype.card { x // p x } < Fintype.card α :=
-  Fintype.card_lt_of_injective_of_not_mem coeₓ Subtype.coe_injective $ by
+  Fintype.card_lt_of_injective_of_not_mem coe Subtype.coe_injective $ by
     rwa [Subtype.range_coe_subtype]
 
 theorem Fintype.card_subtype [Fintype α] (p : α → Prop) [DecidablePred p] :
@@ -1503,7 +1503,7 @@ instance Psigma.fintypePropProp {α : Prop} {β : α → Prop} [Decidable α] [�
   else ⟨∅, fun ⟨x, y⟩ => h ⟨x, y⟩⟩
 
 instance Set.fintype [Fintype α] : Fintype (Set α) :=
-  ⟨(@Finset.univ α _).Powerset.map ⟨coeₓ, coe_injective⟩, fun s => by
+  ⟨(@Finset.univ α _).Powerset.map ⟨coe, coe_injective⟩, fun s => by
     classical
     refine' mem_map.2 ⟨finset.univ.filter s, mem_powerset.2 (subset_univ _), _⟩
     apply (coe_filter _ _).trans
@@ -1647,7 +1647,7 @@ theorem mem_perms_of_list_of_mem {l : List α} {f : perm α} (h : ∀ x, f x ≠
   refine' or_iff_not_imp_left.2 fun hfl => ⟨f a, _, swap a (f a) * f, IH this, _⟩
   · exact mem_of_ne_of_mem hfa (h _ hfa')
     
-  · rw [← mul_assocₓ, mul_def (swap a (f a)) (swap a (f a)), swap_swap, ← perm.one_def, one_mulₓ]
+  · rw [← mul_assoc, mul_def (swap a (f a)) (swap a (f a)), swap_swap, ← perm.one_def, one_mulₓ]
     
 
 theorem mem_of_mem_perms_of_list : ∀ {l : List α} {f : perm α}, f ∈ permsOfList l → ∀ {x}, f x ≠ x → x ∈ l
@@ -1917,7 +1917,7 @@ instance [Nonempty α] : Infinite (Multiset α) := by
   exact of_injective (Multiset.repeat default) (Multiset.repeat_injective _)
 
 instance [Nonempty α] : Infinite (List α) :=
-  of_surjective (coeₓ : List α → Multiset α) (surjective_quot_mk _)
+  of_surjective (coe : List α → Multiset α) (surjective_quot_mk _)
 
 instance sum_of_left [Infinite α] : Infinite (Sum α β) :=
   of_injective Sum.inl Sum.inl_injective

@@ -149,7 +149,7 @@ theorem cons_equiv_eq_equiv_cons (α : Type u) (n : ℕ) (a : α) (s : Sym α n)
   rcases s with ⟨⟨l⟩, _⟩
   rfl
 
-instance : HasZero (Sym α 0) :=
+instance : Zero (Sym α 0) :=
   ⟨⟨0, rfl⟩⟩
 
 instance : HasEmptyc (Sym α 0) :=

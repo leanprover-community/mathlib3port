@@ -146,8 +146,6 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : opens X
     (hs : X.basic_open s = ∅) : s = 0 := by
   apply Top.Presheaf.section_ext X.sheaf U
   simp_rw [RingHom.map_zero]
-  run_tac
-    tactic.unfreeze_local_instances
   revert X U hX s
   refine' reduce_to_affine_global _ _ _ _
   · intro X U hx hX s hs x

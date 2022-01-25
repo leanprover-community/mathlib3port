@@ -31,7 +31,7 @@ namespace Option
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
-theorem coe_def : (coeₓ : α → Option α) = some :=
+theorem coe_def : (coe : α → Option α) = some :=
   rfl
 
 theorem some_ne_none (x : α) : some x ≠ none := fun h => Option.noConfusion h
@@ -486,7 +486,7 @@ theorem cases_on'_coe (x : β) (f : α → β) (a : α) : cases_on' (a : Option 
   rfl
 
 @[simp]
-theorem cases_on'_none_coe (f : Option α → β) (o : Option α) : cases_on' o (f none) (f ∘ coeₓ) = f o := by
+theorem cases_on'_none_coe (f : Option α → β) (o : Option α) : cases_on' o (f none) (f ∘ coe) = f o := by
   cases o <;> rfl
 
 @[simp]

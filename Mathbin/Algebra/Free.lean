@@ -375,7 +375,7 @@ given a semigroup `β`. -/
       "Lifts an additive magma homomorphism `α → β` to an additive semigroup homomorphism\n`add_magma.free_add_semigroup α → β` given an additive semigroup `β`."]
 def lift (hf : ∀ x y, f (x * y) = f x * f y) : FreeSemigroup α → β :=
   Quot.lift f $ by
-    rintro a b (⟨c, d, e⟩ | ⟨c, d, e, f⟩) <;> simp only [hf, mul_assocₓ]
+    rintro a b (⟨c, d, e⟩ | ⟨c, d, e, f⟩) <;> simp only [hf, mul_assoc]
 
 @[simp, to_additive]
 theorem lift_of {hf} (x : α) : lift f hf (of x) = f x :=
@@ -483,7 +483,7 @@ theorem lift_of_mul x y : lift f (of x * y) = f x * lift f y :=
 @[simp, to_additive]
 theorem lift_mul x y : lift f (x * y) = lift f x * lift f y :=
   FreeSemigroup.recOn x (fun p => rfl) fun p x ih1 ih2 => by
-    rw [mul_assocₓ, lift_of_mul, lift_of_mul, mul_assocₓ, ih2]
+    rw [mul_assoc, lift_of_mul, lift_of_mul, mul_assoc, ih2]
 
 @[to_additive]
 theorem lift_unique (f : FreeSemigroup α → β) (hf : ∀ x y, f (x * y) = f x * f y) : f = lift (f ∘ of) :=
@@ -594,7 +594,7 @@ theorem traverse_mul (x y : FreeSemigroup α) : traverse F (x * y) = (· * ·) <
         (· * ·) <$> pure <$> F x <*> traverse F ((hd, tl) * (y, L2) : FreeSemigroup α) =
           (· * ·) <$> ((· * ·) <$> pure <$> F x <*> traverse F (hd, tl)) <*> traverse F (y, L2)
         by
-        rw [ih] <;> simp' only [· ∘ ·, (mul_assocₓ _ _ _).symm] with functor_norm)
+        rw [ih] <;> simp' only [· ∘ ·, (mul_assoc _ _ _).symm] with functor_norm)
     x
 
 @[simp, to_additive]

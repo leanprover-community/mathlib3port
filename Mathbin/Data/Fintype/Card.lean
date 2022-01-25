@@ -136,7 +136,7 @@ is the product of `f (fin.last n)` plus the remaining product -/
 @[to_additive]
 theorem Finₓ.prod_univ_cast_succ [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) :
     (∏ i, f i) = (∏ i : Finₓ n, f i.cast_succ) * f (Finₓ.last n) := by
-  simpa [mul_commₓ] using Finₓ.prod_univ_succ_above f (Finₓ.last n)
+  simpa [mul_comm] using Finₓ.prod_univ_succ_above f (Finₓ.last n)
 
 @[to_additive sum_univ_one]
 theorem Finₓ.prod_univ_one [CommMonoidₓ β] (f : Finₓ 1 → β) : (∏ i, f i) = f 0 := by
@@ -243,7 +243,7 @@ theorem Equivₓ.prod_comp [Fintype α] [Fintype β] [CommMonoidₓ γ] (e : α 
 theorem Finₓ.prod_univ_eq_prod_range [CommMonoidₓ α] (f : ℕ → α) (n : ℕ) : (∏ i : Finₓ n, f i) = ∏ i in range n, f i :=
   calc
     (∏ i : Finₓ n, f i) = ∏ i : { x // x ∈ range n }, f i :=
-      ((Equivₓ.finEquivSubtype n).trans (Equivₓ.subtypeEquivRight fun _ => mem_range.symm)).prod_comp (f ∘ coeₓ)
+      ((Equivₓ.finEquivSubtype n).trans (Equivₓ.subtypeEquivRight fun _ => mem_range.symm)).prod_comp (f ∘ coe)
     _ = ∏ i in range n, f i := by
       rw [← attach_eq_univ, prod_attach]
     
@@ -381,7 +381,7 @@ theorem alternating_prod_eq_finset_prod {G : Type _} [CommGroupₓ G] :
       g * h⁻¹ * L.alternating_prod = g * h⁻¹ * ∏ i : Finₓ L.length, L.nth_le i i.2 ^ (-1 : ℤ) ^ (i : ℕ) :=
         congr_argₓ _ (alternating_prod_eq_finset_prod _)
       _ = ∏ i : Finₓ (L.length + 2), List.nthLe (g :: h :: L) i _ ^ (-1 : ℤ) ^ (i : ℕ) := by
-        rw [Finₓ.prod_univ_succ, Finₓ.prod_univ_succ, mul_assocₓ]
+        rw [Finₓ.prod_univ_succ, Finₓ.prod_univ_succ, mul_assoc]
         unfold_coes
         simp [Nat.succ_eq_add_one, pow_addₓ]
         rfl

@@ -119,7 +119,7 @@ such as `zero_hom_class`, `mul_hom_class`, `monoid_hom_class`, ....
 -/
 class FunLike (F : Sort _) (α : outParam (Sort _)) (β : outParam $ α → Sort _) where
   coe : F → ∀ a : α, β a
-  coe_injective' : Function.Injective coeₓ
+  coe_injective' : Function.Injective coe
 
 section Dependent
 

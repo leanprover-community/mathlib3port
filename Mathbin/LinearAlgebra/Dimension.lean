@@ -104,7 +104,7 @@ The definition is marked as protected to avoid conflicts with `_root_.rank`,
 the rank of a linear map.
 -/
 protected def Module.rank : Cardinal :=
-  Cardinal.sup.{v, v} fun ι : { s : Set V // LinearIndependent K (coeₓ : s → V) } => # ι.1
+  Cardinal.sup.{v, v} fun ι : { s : Set V // LinearIndependent K (coe : s → V) } => # ι.1
 
 end
 
@@ -327,7 +327,7 @@ theorem union_support_maximal_linear_independent_eq_range_basis {ι : Type w} (b
     · congr
       exact i.injective z
       
-  have i' : LinearIndependent R (coeₓ : range v' → M) := by
+  have i' : LinearIndependent R (coe : range v' → M) := by
     rw [linear_independent_subtype_range inj', linear_independent_iff]
     intro l z
     rw [Finsupp.total_option] at z
@@ -489,7 +489,7 @@ the cardinality of `ι` is bounded by the cardinality of `w`.
 theorem Basis.le_span'' {ι : Type _} [Fintype ι] (b : Basis ι R M) {w : Set M} [Fintype w] (s : span R w = ⊤) :
     Fintype.card ι ≤ Fintype.card w := by
   fapply card_le_of_surjective' R
-  · exact b.repr.to_linear_map.comp (Finsupp.total w M R coeₓ)
+  · exact b.repr.to_linear_map.comp (Finsupp.total w M R coe)
     
   · apply surjective.comp
     apply LinearEquiv.surjective
@@ -562,7 +562,7 @@ theorem linear_independent_le_span_aux' {ι : Type _} [Fintype ι] (v : ι → M
     exact fun i => Span.repr R w ⟨v i, s (mem_range_self i)⟩
     
   · intro f g h
-    apply_fun Finsupp.total w M R coeₓ  at h
+    apply_fun Finsupp.total w M R coe  at h
     simp only [Finsupp.total_total, Submodule.coe_mk, Span.finsupp_total_repr] at h
     rw [← sub_eq_zero, ← LinearMap.map_sub] at h
     exact sub_eq_zero.mp (linear_independent_iff.mp i _ h)
@@ -618,7 +618,7 @@ noncomputable def fintypeOfIsNoetherianLinearIndependent [IsNoetherian R M] {v :
 /-- A linearly-independent subset of a module over a ring satisfying the strong rank condition
 must be finite if the module is Noetherian. -/
 theorem finite_of_is_noetherian_linear_independent [IsNoetherian R M] {s : Set M}
-    (hi : LinearIndependent R (coeₓ : s → M)) : s.finite :=
+    (hi : LinearIndependent R (coe : s → M)) : s.finite :=
   ⟨fintypeOfIsNoetherianLinearIndependent hi⟩
 
 /-- An auxiliary lemma for `linear_independent_le_basis`:
@@ -1041,7 +1041,7 @@ theorem Basis.of_dim_eq_zero_apply {ι : Type _} [IsEmpty ι] (hV : Module.rank 
   rfl
 
 theorem le_dim_iff_exists_linear_independent {c : Cardinal} :
-    c ≤ Module.rank K V ↔ ∃ s : Set V, # s = c ∧ LinearIndependent K (coeₓ : s → V) := by
+    c ≤ Module.rank K V ↔ ∃ s : Set V, # s = c ∧ LinearIndependent K (coe : s → V) := by
   constructor
   · intro h
     let t := Basis.ofVectorSpace K V
@@ -1054,7 +1054,7 @@ theorem le_dim_iff_exists_linear_independent {c : Cardinal} :
     
 
 theorem le_dim_iff_exists_linear_independent_finset {n : ℕ} :
-    ↑n ≤ Module.rank K V ↔ ∃ s : Finset V, s.card = n ∧ LinearIndependent K (coeₓ : (s : Set V) → V) := by
+    ↑n ≤ Module.rank K V ↔ ∃ s : Finset V, s.card = n ∧ LinearIndependent K (coe : (s : Set V) → V) := by
   simp only [le_dim_iff_exists_linear_independent, Cardinal.mk_eq_nat_iff_finset]
   constructor
   · rintro ⟨s, ⟨t, rfl, rfl⟩, si⟩

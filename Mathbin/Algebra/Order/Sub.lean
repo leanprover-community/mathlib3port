@@ -71,7 +71,7 @@ theorem le_mul_tsub {R : Type _} [Distrib R] [Preorderₓ R] [Sub R] [HasOrdered
 
 theorem le_tsub_mul {R : Type _} [CommSemiringₓ R] [Preorderₓ R] [Sub R] [HasOrderedSub R]
     [CovariantClass R R (· * ·) (· ≤ ·)] {a b c : R} : a * c - b * c ≤ (a - b) * c := by
-  simpa only [mul_commₓ _ c] using le_mul_tsub
+  simpa only [mul_comm _ c] using le_mul_tsub
 
 end Add
 
@@ -786,7 +786,7 @@ namespace WithTop
 
 section
 
-variable [Sub α] [HasZero α]
+variable [Sub α] [Zero α]
 
 /-- If `α` has subtraction and `0`, we can extend the subtraction to `with_top α`. -/
 protected def sub : ∀ a b : WithTop α, WithTop α

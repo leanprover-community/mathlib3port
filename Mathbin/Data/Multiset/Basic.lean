@@ -56,7 +56,7 @@ instance SizeOf [SizeOf α] : SizeOf (Multiset α) :=
 protected def zero : Multiset α :=
   @nil α
 
-instance : HasZero (Multiset α) :=
+instance : Zero (Multiset α) :=
   ⟨Multiset.zero⟩
 
 instance : HasEmptyc (Multiset α) :=
@@ -478,7 +478,7 @@ protected theorem add_left_cancelₓ s {t u : Multiset α} (h : s + t = s + u) :
 instance : OrderedCancelAddCommMonoid (Multiset α) :=
   { @Multiset.partialOrder α with zero := 0, add := · + ·, add_comm := Multiset.add_comm,
     add_assoc := fun s₁ s₂ s₃ =>
-      Quotientₓ.induction_on₃ s₁ s₂ s₃ $ fun l₁ l₂ l₃ => congr_argₓ coeₓ $ append_assoc l₁ l₂ l₃,
+      Quotientₓ.induction_on₃ s₁ s₂ s₃ $ fun l₁ l₂ l₃ => congr_argₓ coe $ append_assoc l₁ l₂ l₃,
     zero_add := Multiset.zero_add,
     add_zero := fun s => by
       rw [Multiset.add_comm, Multiset.zero_add],
@@ -569,7 +569,7 @@ theorem card_singleton (a : α) : card ({a} : Multiset α) = 1 := by
   simp only [singleton_eq_cons, card_zero, eq_self_iff_true, zero_addₓ, card_cons]
 
 theorem card_eq_one {s : Multiset α} : card s = 1 ↔ ∃ a, s = {a} :=
-  ⟨Quot.induction_on s $ fun l h => (List.length_eq_one.1 h).imp $ fun a => congr_argₓ coeₓ, fun ⟨a, e⟩ => e.symm ▸ rfl⟩
+  ⟨Quot.induction_on s $ fun l h => (List.length_eq_one.1 h).imp $ fun a => congr_argₓ coe, fun ⟨a, e⟩ => e.symm ▸ rfl⟩
 
 theorem card_le_of_le {s t : Multiset α} (h : s ≤ t) : card s ≤ card t :=
   le_induction_on h $ fun l₁ l₂ => length_le_of_sublist
@@ -578,7 +578,7 @@ theorem card_le_of_le {s t : Multiset α} (h : s ≤ t) : card s ≤ card t :=
 theorem card_mono : Monotone (@card α) := fun a b => card_le_of_le
 
 theorem eq_of_le_of_card_le {s t : Multiset α} (h : s ≤ t) : card t ≤ card s → s = t :=
-  le_induction_on h $ fun l₁ l₂ s h₂ => congr_argₓ coeₓ $ eq_of_sublist_of_length_le s h₂
+  le_induction_on h $ fun l₁ l₂ s h₂ => congr_argₓ coe $ eq_of_sublist_of_length_le s h₂
 
 theorem card_lt_of_lt {s t : Multiset α} (h : s < t) : card s < card t :=
   lt_of_not_geₓ $ fun h₂ => ne_of_ltₓ h $ eq_of_le_of_card_le (le_of_ltₓ h) h₂
@@ -599,12 +599,12 @@ theorem card_pos_iff_exists_mem {s : Multiset α} : 0 < card s ↔ ∃ a, a ∈ 
   Quot.induction_on s $ fun l => length_pos_iff_exists_mem
 
 theorem card_eq_two {s : Multiset α} : s.card = 2 ↔ ∃ x y, s = {x, y} :=
-  ⟨Quot.induction_on s fun l h => (List.length_eq_two.mp h).imp fun a => Exists.impₓ fun b => congr_argₓ coeₓ,
+  ⟨Quot.induction_on s fun l h => (List.length_eq_two.mp h).imp fun a => Exists.impₓ fun b => congr_argₓ coe,
     fun ⟨a, b, e⟩ => e.symm ▸ rfl⟩
 
 theorem card_eq_three {s : Multiset α} : s.card = 3 ↔ ∃ x y z, s = {x, y, z} :=
   ⟨Quot.induction_on s fun l h =>
-      (List.length_eq_three.mp h).imp fun a => Exists.impₓ fun b => Exists.impₓ fun c => congr_argₓ coeₓ,
+      (List.length_eq_three.mp h).imp fun a => Exists.impₓ fun b => Exists.impₓ fun c => congr_argₓ coe,
     fun ⟨a, b, c, e⟩ => e.symm ▸ rfl⟩
 
 /-! ### Induction principles -/
@@ -696,7 +696,7 @@ theorem eq_of_mem_repeat {a b : α} {n} : b ∈ repeat a n → b = a :=
   eq_of_mem_repeat
 
 theorem eq_repeat' {a : α} {s : Multiset α} : s = repeat a s.card ↔ ∀, ∀ b ∈ s, ∀, b = a :=
-  Quot.induction_on s $ fun l => Iff.trans ⟨fun h => perm_repeat.1 $ Quotientₓ.exact h, congr_argₓ coeₓ⟩ eq_repeat'
+  Quot.induction_on s $ fun l => Iff.trans ⟨fun h => perm_repeat.1 $ Quotientₓ.exact h, congr_argₓ coe⟩ eq_repeat'
 
 theorem eq_repeat_of_mem {a : α} {s : Multiset α} : (∀, ∀ b ∈ s, ∀, b = a) → s = repeat a s.card :=
   eq_repeat'.2
@@ -754,15 +754,15 @@ theorem erase_zero (a : α) : (0 : Multiset α).erase a = 0 :=
 
 @[simp]
 theorem erase_cons_head (a : α) (s : Multiset α) : (a ::ₘ s).erase a = s :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ erase_cons_head a l
+  Quot.induction_on s $ fun l => congr_argₓ coe $ erase_cons_head a l
 
 @[simp]
 theorem erase_cons_tail {a b : α} (s : Multiset α) (h : b ≠ a) : (b ::ₘ s).erase a = b ::ₘ s.erase a :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ erase_cons_tail l h
+  Quot.induction_on s $ fun l => congr_argₓ coe $ erase_cons_tail l h
 
 @[simp]
 theorem erase_of_not_mem {a : α} {s : Multiset α} : a ∉ s → s.erase a = s :=
-  Quot.induction_on s $ fun l h => congr_argₓ coeₓ $ erase_of_not_mem h
+  Quot.induction_on s $ fun l h => congr_argₓ coe $ erase_of_not_mem h
 
 @[simp]
 theorem cons_erase {s : Multiset α} {a : α} : a ∈ s → a ::ₘ s.erase a = s :=
@@ -774,13 +774,13 @@ theorem le_cons_erase (s : Multiset α) (a : α) : s ≤ a ::ₘ s.erase a :=
     rw [erase_of_not_mem h] <;> apply le_cons_self
 
 theorem erase_add_left_pos {a : α} {s : Multiset α} t : a ∈ s → (s + t).erase a = s.erase a + t :=
-  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ h => congr_argₓ coeₓ $ erase_append_left l₂ h
+  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ h => congr_argₓ coe $ erase_append_left l₂ h
 
 theorem erase_add_right_pos {a : α} s {t : Multiset α} (h : a ∈ t) : (s + t).erase a = s + t.erase a := by
   rw [add_commₓ, erase_add_left_pos s h, add_commₓ]
 
 theorem erase_add_right_neg {a : α} {s : Multiset α} t : a ∉ s → (s + t).erase a = s + t.erase a :=
-  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ h => congr_argₓ coeₓ $ erase_append_right l₂ h
+  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ h => congr_argₓ coe $ erase_append_right l₂ h
 
 theorem erase_add_left_neg {a : α} s {t : Multiset α} (h : a ∉ t) : (s + t).erase a = s.erase a + t := by
   rw [add_commₓ, erase_add_right_neg s h, add_commₓ]
@@ -803,7 +803,7 @@ theorem mem_of_mem_erase {a b : α} {s : Multiset α} : a ∈ s.erase b → a �
   mem_of_subset (erase_subset _ _)
 
 theorem erase_comm (s : Multiset α) (a b : α) : (s.erase a).erase b = (s.erase b).erase a :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ l.erase_comm a b
+  Quot.induction_on s $ fun l => congr_argₓ coe $ l.erase_comm a b
 
 theorem erase_le_erase {s t : Multiset α} (a : α) (h : s ≤ t) : s.erase a ≤ t.erase a :=
   le_induction_on h $ fun l₁ l₂ h => (h.erase _).Subperm
@@ -854,7 +854,7 @@ def map (f : α → β) (s : Multiset α) : Multiset β :=
 theorem map_congr {f g : α → β} {s t : Multiset α} : s = t → (∀, ∀ x ∈ t, ∀, f x = g x) → map f s = map g t := by
   rintro rfl h
   induction s using Quot.induction_on
-  exact congr_argₓ coeₓ (map_congr h)
+  exact congr_argₓ coe (map_congr h)
 
 theorem map_hcongr {β' : Type _} {m : Multiset α} {f : α → β} {f' : α → β'} (h : β = β')
     (hf : ∀, ∀ a ∈ m, ∀, HEq (f a) (f' a)) : HEq (map f m) (map f' m) := by
@@ -893,7 +893,7 @@ theorem map_repeat (f : α → β) (a : α) (k : ℕ) : (repeat a k).map f = rep
 
 @[simp]
 theorem map_add (f : α → β) s t : map f (s + t) = map f s + map f t :=
-  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ => congr_argₓ coeₓ $ map_append _ _ _
+  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ => congr_argₓ coe $ map_append _ _ _
 
 /-- If each element of `s : multiset α` can be lifted to `β`, then `s` can be lifted to
 `multiset β`. -/
@@ -950,10 +950,10 @@ theorem mem_map_of_injective {f : α → β} (H : Function.Injective f) {a : α}
 
 @[simp]
 theorem map_map (g : β → γ) (f : α → β) (s : Multiset α) : map g (map f s) = map (g ∘ f) s :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ List.map_mapₓ _ _ _
+  Quot.induction_on s $ fun l => congr_argₓ coe $ List.map_mapₓ _ _ _
 
 theorem map_id (s : Multiset α) : map id s = s :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ map_id _
+  Quot.induction_on s $ fun l => congr_argₓ coe $ map_id _
 
 @[simp]
 theorem map_id' (s : Multiset α) : map (fun x => x) s = s :=
@@ -961,7 +961,7 @@ theorem map_id' (s : Multiset α) : map (fun x => x) s = s :=
 
 @[simp]
 theorem map_const (s : Multiset α) (b : β) : map (Function.const α b) s = repeat b s.card :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ map_const _ _
+  Quot.induction_on s $ fun l => congr_argₓ coe $ map_const _ _
 
 theorem eq_of_mem_map_const {b₁ b₂ : β} {l : List α} (h : b₁ ∈ map (Function.const α b₂) l) : b₁ = b₂ :=
   eq_of_mem_repeat $ by
@@ -1133,22 +1133,22 @@ theorem sizeof_lt_sizeof_of_mem [SizeOf α] {x : α} {s : Multiset α} (hx : x �
   rfl
 
 theorem pmap_eq_map (p : α → Prop) (f : α → β) (s : Multiset α) : ∀ H, @pmap _ _ p (fun a _ => f a) s H = map f s :=
-  Quot.induction_on s $ fun l H => congr_argₓ coeₓ $ pmap_eq_map p f l H
+  Quot.induction_on s $ fun l H => congr_argₓ coe $ pmap_eq_map p f l H
 
 theorem pmap_congr {p q : α → Prop} {f : ∀ a, p a → β} {g : ∀ a, q a → β} (s : Multiset α) {H₁ H₂}
     (h : ∀ a h₁ h₂, f a h₁ = g a h₂) : pmap f s H₁ = pmap g s H₂ :=
-  Quot.induction_on s (fun l H₁ H₂ => congr_argₓ coeₓ $ pmap_congr l h) H₁ H₂
+  Quot.induction_on s (fun l H₁ H₂ => congr_argₓ coe $ pmap_congr l h) H₁ H₂
 
 theorem map_pmap {p : α → Prop} (g : β → γ) (f : ∀ a, p a → β) s :
     ∀ H, map g (pmap f s H) = pmap (fun a h => g (f a h)) s H :=
-  Quot.induction_on s $ fun l H => congr_argₓ coeₓ $ map_pmap g f l H
+  Quot.induction_on s $ fun l H => congr_argₓ coe $ map_pmap g f l H
 
 theorem pmap_eq_map_attach {p : α → Prop} (f : ∀ a, p a → β) s :
     ∀ H, pmap f s H = s.attach.map fun x => f x.1 (H _ x.2) :=
-  Quot.induction_on s $ fun l H => congr_argₓ coeₓ $ pmap_eq_map_attach f l H
+  Quot.induction_on s $ fun l H => congr_argₓ coe $ pmap_eq_map_attach f l H
 
 theorem attach_map_val (s : Multiset α) : s.attach.map Subtype.val = s :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ attach_map_val l
+  Quot.induction_on s $ fun l => congr_argₓ coe $ attach_map_val l
 
 @[simp]
 theorem mem_attach (s : Multiset α) : ∀ x, x ∈ s.attach :=
@@ -1173,7 +1173,7 @@ theorem attach_zero : (0 : Multiset α).attach = 0 :=
 theorem attach_cons (a : α) (m : Multiset α) :
     (a ::ₘ m).attach = ⟨a, mem_cons_self a m⟩ ::ₘ (m.attach.map $ fun p => ⟨p.1, mem_cons_of_mem p.2⟩) :=
   Quotientₓ.induction_on m $ fun l =>
-    congr_argₓ coeₓ $
+    congr_argₓ coe $
       congr_argₓ (List.cons _) $ by
         rw [List.map_pmap] <;> exact List.pmap_congr _ fun a' h₁ h₂ => Subtype.eq rfl
 
@@ -1238,7 +1238,7 @@ protected theorem sub_zero (s : Multiset α) : s - 0 = s :=
 
 @[simp]
 theorem sub_cons (a : α) (s t : Multiset α) : s - a ::ₘ t = s.erase a - t :=
-  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ => congr_argₓ coeₓ $ diff_cons _ _ _
+  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ => congr_argₓ coe $ diff_cons _ _ _
 
 /-- This is a special case of `tsub_le_iff_right`, which should be used instead of this.
   This is needed to prove `has_ordered_sub (multiset α)`. -/
@@ -1305,7 +1305,7 @@ theorem mem_union : a ∈ s ∪ t ↔ a ∈ s ∨ a ∈ t :=
 theorem map_union [DecidableEq β] {f : α → β} (finj : Function.Injective f) {s t : Multiset α} :
     map f (s ∪ t) = map f s ∪ map f t :=
   Quotientₓ.induction_on₂ s t $ fun l₁ l₂ =>
-    congr_argₓ coeₓ
+    congr_argₓ coe
       (by
         rw [List.map_append f, List.map_diff finj])
 
@@ -1324,19 +1324,19 @@ instance : HasInter (Multiset α) :=
 
 @[simp]
 theorem inter_zero (s : Multiset α) : s ∩ 0 = 0 :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ l.bag_inter_nil
+  Quot.induction_on s $ fun l => congr_argₓ coe l.bag_inter_nil
 
 @[simp]
 theorem zero_inter (s : Multiset α) : 0 ∩ s = 0 :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ l.nil_bag_inter
+  Quot.induction_on s $ fun l => congr_argₓ coe l.nil_bag_inter
 
 @[simp]
 theorem cons_inter_of_pos {a} (s : Multiset α) {t} : a ∈ t → (a ::ₘ s) ∩ t = a ::ₘ s ∩ t.erase a :=
-  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ h => congr_argₓ coeₓ $ cons_bag_inter_of_pos _ h
+  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ h => congr_argₓ coe $ cons_bag_inter_of_pos _ h
 
 @[simp]
 theorem cons_inter_of_neg {a} (s : Multiset α) {t} : a ∉ t → (a ::ₘ s) ∩ t = s ∩ t :=
-  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ h => congr_argₓ coeₓ $ cons_bag_inter_of_neg _ h
+  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ h => congr_argₓ coe $ cons_bag_inter_of_neg _ h
 
 theorem inter_le_left (s t : Multiset α) : s ∩ t ≤ s :=
   Quotientₓ.induction_on₂ s t $ fun l₁ l₂ => (bag_inter_sublist_left _ _).Subperm
@@ -1487,11 +1487,11 @@ theorem filter_zero : filter p 0 = 0 :=
 
 theorem filter_congr {p q : α → Prop} [DecidablePred p] [DecidablePred q] {s : Multiset α} :
     (∀, ∀ x ∈ s, ∀, p x ↔ q x) → filter p s = filter q s :=
-  Quot.induction_on s $ fun l h => congr_argₓ coeₓ $ filter_congr' h
+  Quot.induction_on s $ fun l h => congr_argₓ coe $ filter_congr' h
 
 @[simp]
 theorem filter_add (s t : Multiset α) : filter p (s + t) = filter p s + filter p t :=
-  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ => congr_argₓ coeₓ $ filter_append _ _
+  Quotientₓ.induction_on₂ s t $ fun l₁ l₂ => congr_argₓ coe $ filter_append _ _
 
 @[simp]
 theorem filter_le (s : Multiset α) : filter p s ≤ s :=
@@ -1514,11 +1514,11 @@ variable {p}
 
 @[simp]
 theorem filter_cons_of_pos {a : α} s : p a → filter p (a ::ₘ s) = a ::ₘ filter p s :=
-  Quot.induction_on s $ fun l h => congr_argₓ coeₓ $ filter_cons_of_pos l h
+  Quot.induction_on s $ fun l h => congr_argₓ coe $ filter_cons_of_pos l h
 
 @[simp]
 theorem filter_cons_of_neg {a : α} s : ¬p a → filter p (a ::ₘ s) = filter p s :=
-  Quot.induction_on s $ fun l h => @congr_argₓ _ _ _ _ coeₓ $ filter_cons_of_neg l h
+  Quot.induction_on s $ fun l h => @congr_argₓ _ _ _ _ coe $ filter_cons_of_neg l h
 
 @[simp]
 theorem mem_filter {a : α} {s} : a ∈ filter p s ↔ a ∈ s ∧ p a :=
@@ -1535,12 +1535,12 @@ theorem mem_filter_of_mem {a : α} {l} (m : a ∈ l) (h : p a) : a ∈ filter p 
 
 theorem filter_eq_self {s} : filter p s = s ↔ ∀, ∀ a ∈ s, ∀, p a :=
   Quot.induction_on s $ fun l =>
-    Iff.trans ⟨fun h => eq_of_sublist_of_length_eq (filter_sublist _) (@congr_argₓ _ _ _ _ card h), congr_argₓ coeₓ⟩
+    Iff.trans ⟨fun h => eq_of_sublist_of_length_eq (filter_sublist _) (@congr_argₓ _ _ _ _ card h), congr_argₓ coe⟩
       filter_eq_self
 
 theorem filter_eq_nil {s} : filter p s = 0 ↔ ∀, ∀ a ∈ s, ∀, ¬p a :=
   Quot.induction_on s $ fun l =>
-    Iff.trans ⟨fun h => eq_nil_of_length_eq_zero (@congr_argₓ _ _ _ _ card h), congr_argₓ coeₓ⟩ filter_eq_nil
+    Iff.trans ⟨fun h => eq_nil_of_length_eq_zero (@congr_argₓ _ _ _ _ card h), congr_argₓ coe⟩ filter_eq_nil
 
 theorem le_filter {s t} : s ≤ filter p t ↔ s ≤ t ∧ ∀, ∀ a ∈ s, ∀, p a :=
   ⟨fun h => ⟨le_transₓ h (filter_le _ _), fun a m => of_mem_filter (mem_of_le h m)⟩, fun ⟨h, al⟩ =>
@@ -1609,7 +1609,7 @@ theorem filter_inter [DecidableEq α] (s t : Multiset α) : filter p (s ∩ t) =
 
 @[simp]
 theorem filter_filter q [DecidablePred q] (s : Multiset α) : filter p (filter q s) = filter (fun a => p a ∧ q a) s :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ filter_filter p q l
+  Quot.induction_on s $ fun l => congr_argₓ coe $ filter_filter p q l
 
 theorem filter_add_filter q [DecidablePred q] (s : Multiset α) :
     filter p s + filter q s = filter (fun a => p a ∨ q a) s + filter (fun a => p a ∧ q a) s :=
@@ -1644,42 +1644,42 @@ theorem filter_map_zero (f : α → Option β) : filter_map f 0 = 0 :=
 @[simp]
 theorem filter_map_cons_none {f : α → Option β} (a : α) (s : Multiset α) (h : f a = none) :
     filter_map f (a ::ₘ s) = filter_map f s :=
-  Quot.induction_on s $ fun l => @congr_argₓ _ _ _ _ coeₓ $ filter_map_cons_none a l h
+  Quot.induction_on s $ fun l => @congr_argₓ _ _ _ _ coe $ filter_map_cons_none a l h
 
 @[simp]
 theorem filter_map_cons_some (f : α → Option β) (a : α) (s : Multiset α) {b : β} (h : f a = some b) :
     filter_map f (a ::ₘ s) = b ::ₘ filter_map f s :=
-  Quot.induction_on s $ fun l => @congr_argₓ _ _ _ _ coeₓ $ filter_map_cons_some f a l h
+  Quot.induction_on s $ fun l => @congr_argₓ _ _ _ _ coe $ filter_map_cons_some f a l h
 
 theorem filter_map_eq_map (f : α → β) : filter_map (some ∘ f) = map f :=
-  funext $ fun s => Quot.induction_on s $ fun l => @congr_argₓ _ _ _ _ coeₓ $ congr_funₓ (filter_map_eq_map f) l
+  funext $ fun s => Quot.induction_on s $ fun l => @congr_argₓ _ _ _ _ coe $ congr_funₓ (filter_map_eq_map f) l
 
 theorem filter_map_eq_filter : filter_map (Option.guard p) = filter p :=
-  funext $ fun s => Quot.induction_on s $ fun l => @congr_argₓ _ _ _ _ coeₓ $ congr_funₓ (filter_map_eq_filter p) l
+  funext $ fun s => Quot.induction_on s $ fun l => @congr_argₓ _ _ _ _ coe $ congr_funₓ (filter_map_eq_filter p) l
 
 theorem filter_map_filter_map (f : α → Option β) (g : β → Option γ) (s : Multiset α) :
     filter_map g (filter_map f s) = filter_map (fun x => (f x).bind g) s :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ filter_map_filter_map f g l
+  Quot.induction_on s $ fun l => congr_argₓ coe $ filter_map_filter_map f g l
 
 theorem map_filter_map (f : α → Option β) (g : β → γ) (s : Multiset α) :
     map g (filter_map f s) = filter_map (fun x => (f x).map g) s :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ map_filter_map f g l
+  Quot.induction_on s $ fun l => congr_argₓ coe $ map_filter_map f g l
 
 theorem filter_map_map (f : α → β) (g : β → Option γ) (s : Multiset α) :
     filter_map g (map f s) = filter_map (g ∘ f) s :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ filter_map_map f g l
+  Quot.induction_on s $ fun l => congr_argₓ coe $ filter_map_map f g l
 
 theorem filter_filter_map (f : α → Option β) (p : β → Prop) [DecidablePred p] (s : Multiset α) :
     filter p (filter_map f s) = filter_map (fun x => (f x).filter p) s :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ filter_filter_map f p l
+  Quot.induction_on s $ fun l => congr_argₓ coe $ filter_filter_map f p l
 
 theorem filter_map_filter (f : α → Option β) (s : Multiset α) :
     filter_map f (filter p s) = filter_map (fun x => if p x then f x else none) s :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ filter_map_filter p f l
+  Quot.induction_on s $ fun l => congr_argₓ coe $ filter_map_filter p f l
 
 @[simp]
 theorem filter_map_some (s : Multiset α) : filter_map some s = s :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ filter_map_some l
+  Quot.induction_on s $ fun l => congr_argₓ coe $ filter_map_some l
 
 @[simp]
 theorem mem_filter_map (f : α → Option β) (s : Multiset α) {b : β} : b ∈ filter_map f s ↔ ∃ a, a ∈ s ∧ f a = some b :=
@@ -1687,7 +1687,7 @@ theorem mem_filter_map (f : α → Option β) (s : Multiset α) {b : β} : b ∈
 
 theorem map_filter_map_of_inv (f : α → Option β) (g : β → α) (H : ∀ x : α, (f x).map g = some x) (s : Multiset α) :
     map g (filter_map f s) = s :=
-  Quot.induction_on s $ fun l => congr_argₓ coeₓ $ map_filter_map_of_inv f g H l
+  Quot.induction_on s $ fun l => congr_argₓ coe $ map_filter_map_of_inv f g H l
 
 theorem filter_map_le_filter_map (f : α → Option β) {s t : Multiset α} (h : s ≤ t) : filter_map f s ≤ filter_map f t :=
   le_induction_on h $ fun l₁ l₂ h => (h.filter_map _).Subperm
@@ -2371,7 +2371,7 @@ variable (α)
 
 /-- The equivalence between lists and multisets of a subsingleton type. -/
 def subsingleton_equiv [Subsingleton α] : List α ≃ Multiset α where
-  toFun := coeₓ
+  toFun := coe
   invFun := Quot.lift id $ fun a b : List α h : a ~ b => List.ext_le h.length_eq $ fun n h₁ h₂ => Subsingleton.elimₓ _ _
   left_inv := fun l => rfl
   right_inv := fun m => Quot.induction_on m $ fun l => rfl
@@ -2379,7 +2379,7 @@ def subsingleton_equiv [Subsingleton α] : List α ≃ Multiset α where
 variable {α}
 
 @[simp]
-theorem coe_subsingleton_equiv [Subsingleton α] : (subsingleton_equiv α : List α → Multiset α) = coeₓ :=
+theorem coe_subsingleton_equiv [Subsingleton α] : (subsingleton_equiv α : List α → Multiset α) = coe :=
   rfl
 
 end Multiset

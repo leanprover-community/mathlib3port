@@ -1,5 +1,5 @@
 import Mathbin.Dynamics.FixedPoints.Basic
-import Mathbin.Order.Hom.Lattice
+import Mathbin.Order.Hom.Order
 
 /-!
 # Fixed point construction on complete lattices
@@ -224,14 +224,14 @@ instance : SemilatticeInf (fixed_points f) :=
 instance : CompleteSemilatticeSup (fixed_points f) :=
   { Subtype.partialOrder _ with
     sup := fun s =>
-      f.next_fixed (Sup (coeₓ '' s)) (f.le_map_Sup_subset_fixed_points (coeₓ '' s) fun z ⟨x, hx⟩ => hx.2 ▸ x.2),
+      f.next_fixed (Sup (coe '' s)) (f.le_map_Sup_subset_fixed_points (coe '' s) fun z ⟨x, hx⟩ => hx.2 ▸ x.2),
     le_Sup := fun s x hx => Subtype.coe_le_coe.1 $ le_transₓ (le_Sup $ Set.mem_image_of_mem _ hx) (f.le_next_fixed _),
     Sup_le := fun s x hx => f.next_fixed_le _ $ Sup_le $ Set.ball_image_iff.2 hx }
 
 instance : CompleteSemilatticeInf (fixed_points f) :=
   { Subtype.partialOrder _ with
     inf := fun s =>
-      f.prev_fixed (Inf (coeₓ '' s)) (f.map_Inf_subset_fixed_points_le (coeₓ '' s) fun z ⟨x, hx⟩ => hx.2 ▸ x.2),
+      f.prev_fixed (Inf (coe '' s)) (f.map_Inf_subset_fixed_points_le (coe '' s) fun z ⟨x, hx⟩ => hx.2 ▸ x.2),
     le_Inf := fun s x hx => f.le_prev_fixed _ $ le_Inf $ Set.ball_image_iff.2 hx,
     Inf_le := fun s x hx => Subtype.coe_le_coe.1 $ le_transₓ (f.prev_fixed_le _) (Inf_le $ Set.mem_image_of_mem _ hx) }
 

@@ -51,11 +51,11 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, is_r
       let F : Polynomial ℂ := C (f.eval z₀) + C (g.eval z₀) * (X - C z₀) ^ n
       let z' := (-f.eval z₀ * (g.eval z₀).abs * δ ^ n / ((f.eval z₀).abs * g.eval z₀)) ^ (n⁻¹ : ℂ) + z₀
       have hF₁ : F.eval z' = f.eval z₀ - f.eval z₀ * (g.eval z₀).abs * δ ^ n / (f.eval z₀).abs := by
-        simp only [F, cpow_nat_inv_pow _ hn0, div_eq_mul_inv, eval_pow, mul_assocₓ, mul_commₓ (g.eval z₀),
+        simp only [F, cpow_nat_inv_pow _ hn0, div_eq_mul_inv, eval_pow, mul_assoc, mul_comm (g.eval z₀),
             mul_left_commₓ (g.eval z₀), mul_left_commₓ (g.eval z₀⁻¹), mul_inv₀, inv_mul_cancel hg0, eval_C, eval_add,
             eval_neg, sub_eq_add_neg, eval_mul, eval_X, add_neg_cancel_rightₓ, neg_mul_eq_neg_mul_symm, mul_oneₓ,
             div_eq_mul_inv] <;>
-          simp only [mul_commₓ, mul_left_commₓ, mul_assocₓ]
+          simp only [mul_comm, mul_left_commₓ, mul_assoc]
       have hδs : (g.eval z₀).abs * δ ^ n / (f.eval z₀).abs < 1 :=
         (div_lt_one hf0').2 $
           (lt_div_iff' hg0').1 $
@@ -74,7 +74,7 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, is_r
               exact
                 congr_argₓ Complex.abs
                   (by
-                    simp [mul_addₓ, add_mulₓ, mul_assocₓ, div_eq_mul_inv, sub_eq_add_neg])
+                    simp [mul_addₓ, add_mulₓ, mul_assoc, div_eq_mul_inv, sub_eq_add_neg])
           _ = _ := by
             rw [Complex.abs_of_nonneg (sub_nonneg.2 (le_of_ltₓ hδs)), mul_sub,
               mul_div_cancel' _ (Ne.symm (ne_of_ltₓ hf0')), mul_oneₓ]
@@ -82,7 +82,7 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, is_r
       have hef0 : abs (eval z₀ g) * (eval z₀ f).abs ≠ 0 :=
         mul_ne_zero (mt Complex.abs_eq_zero.1 hg0) (mt Complex.abs_eq_zero.1 hf0)
       have hz'z₀ : abs (z' - z₀) = δ := by
-        simp [z', mul_assocₓ, mul_left_commₓ _ (_ ^ n), mul_commₓ _ (_ ^ n), mul_commₓ (eval z₀ f).abs,
+        simp [z', mul_assoc, mul_left_commₓ _ (_ ^ n), mul_comm _ (_ ^ n), mul_comm (eval z₀ f).abs,
           _root_.mul_div_cancel _ hef0, of_real_mul, neg_mul_eq_neg_mul_symm, neg_div,
           IsAbsoluteValue.abv_pow Complex.abs, Complex.abs_of_nonneg (le_of_ltₓ hδ0),
           Real.pow_nat_rpow_nat_inv (le_of_ltₓ hδ0) hn0]

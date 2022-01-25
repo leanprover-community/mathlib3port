@@ -204,7 +204,7 @@ theorem Real.exp_eq_exp_ℝ_ℝ : Real.exp = exp ℝ ℝ := by
     re_clm_apply, re_clm.map_tsum (exp_series_summable' (x : ℂ))]
   refine' tsum_congr fun n => _
   rw [re_clm.map_smul, ← Complex.of_real_pow, re_clm_apply, re_to_complex, Complex.of_real_re, smul_eq_mul, one_div,
-    mul_commₓ, div_eq_mul_inv]
+    mul_comm, div_eq_mul_inv]
 
 end Real
 

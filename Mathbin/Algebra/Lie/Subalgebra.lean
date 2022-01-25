@@ -38,7 +38,7 @@ structure LieSubalgebra extends Submodule R L where
 attribute [nolint doc_blame] LieSubalgebra.toSubmodule
 
 /-- The zero algebra is a subalgebra of any Lie algebra. -/
-instance : HasZero (LieSubalgebra R L) :=
+instance : Zero (LieSubalgebra R L) :=
   ⟨{ (0 : Submodule R L) with
       lie_mem' := fun x y hx hy => by
         rw [(Submodule.mem_bot R).1 hx, zero_lie]
@@ -114,6 +114,10 @@ theorem add_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (x + y : L) ∈ L' :
 theorem sub_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (x - y : L) ∈ L' :=
   (L' : Submodule R L).sub_mem hx hy
 
+@[simp]
+theorem neg_mem_iff {x : L} : -x ∈ L' ↔ x ∈ L' :=
+  L'.to_submodule.neg_mem_iff
+
 theorem lie_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (⁅x,y⁆ : L) ∈ L' :=
   L'.lie_mem' hx hy
 
@@ -164,7 +168,7 @@ theorem coe_to_submodule_mk (p : Submodule R L) h :
   cases p
   rfl
 
-theorem coe_injective : Function.Injective (coeₓ : LieSubalgebra R L → Set L) := by
+theorem coe_injective : Function.Injective (coe : LieSubalgebra R L → Set L) := by
   rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ h
   congr
 
@@ -172,7 +176,7 @@ theorem coe_injective : Function.Injective (coeₓ : LieSubalgebra R L → Set L
 theorem coe_set_eq (L₁' L₂' : LieSubalgebra R L) : (L₁' : Set L) = L₂' ↔ L₁' = L₂' :=
   coe_injective.eq_iff
 
-theorem to_submodule_injective : Function.Injective (coeₓ : LieSubalgebra R L → Submodule R L) := fun L₁' L₂' h => by
+theorem to_submodule_injective : Function.Injective (coe : LieSubalgebra R L → Submodule R L) := fun L₁' L₂' h => by
   rw [SetLike.ext'_iff] at h
   rw [← coe_set_eq]
   exact h
@@ -233,7 +237,7 @@ def incl : L' →ₗ⁅R⁆ L :=
       rfl }
 
 @[simp]
-theorem coe_incl : ⇑L'.incl = coeₓ :=
+theorem coe_incl : ⇑L'.incl = coe :=
   rfl
 
 /-- The embedding of a Lie subalgebra into the ambient space as a morphism of Lie modules. -/
@@ -243,7 +247,7 @@ def incl' : L' →ₗ⁅R,L'⁆ L :=
       simp only [coe_bracket_of_module, LinearMap.to_fun_eq_coe, Submodule.subtype_apply, coe_bracket] }
 
 @[simp]
-theorem coe_incl' : ⇑L'.incl' = coeₓ :=
+theorem coe_incl' : ⇑L'.incl' = coe :=
   rfl
 
 end LieSubalgebra
@@ -355,7 +359,7 @@ section LatticeStructure
 open Set
 
 instance : PartialOrderₓ (LieSubalgebra R L) :=
-  { PartialOrderₓ.lift (coeₓ : LieSubalgebra R L → Set L) coe_injective with le := fun N N' => ∀ ⦃x⦄, x ∈ N → x ∈ N' }
+  { PartialOrderₓ.lift (coe : LieSubalgebra R L → Set L) coe_injective with le := fun N N' => ∀ ⦃x⦄, x ∈ N → x ∈ N' }
 
 theorem le_def : K ≤ K' ↔ (K : Set L) ⊆ K' :=
   Iff.rfl
@@ -489,7 +493,7 @@ variable (R L)
 theorem well_founded_of_noetherian [IsNoetherian R L] :
     WellFounded (· > · : LieSubalgebra R L → LieSubalgebra R L → Prop) :=
   let f : (· > · : LieSubalgebra R L → LieSubalgebra R L → Prop) →r (· > · : Submodule R L → Submodule R L → Prop) :=
-    { toFun := coeₓ, map_rel' := fun N N' h => h }
+    { toFun := coe, map_rel' := fun N N' h => h }
   RelHomClass.well_founded f (is_noetherian_iff_well_founded.mp inferInstance)
 
 variable {R L K K' f}
@@ -599,7 +603,7 @@ theorem coe_lie_span_submodule_eq_iff {p : Submodule R L} :
 variable (R L)
 
 /-- `lie_span` forms a Galois insertion with the coercion from `lie_subalgebra` to `set`. -/
-protected def gi : GaloisInsertion (lie_span R L : Set L → LieSubalgebra R L) coeₓ where
+protected def gi : GaloisInsertion (lie_span R L : Set L → LieSubalgebra R L) coe where
   choice := fun s _ => lie_span R L s
   gc := fun s t => lie_span_le
   le_l_u := fun s => subset_lie_span

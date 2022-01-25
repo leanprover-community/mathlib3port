@@ -74,7 +74,7 @@ theorem coe_derivation : ⇑(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I
   rfl
 
 theorem coe_derivation_injective :
-    Function.Injective (coeₓ : LeftInvariantDerivation I G → Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) := fun X Y h => by
+    Function.Injective (coe : LeftInvariantDerivation I G → Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) := fun X Y h => by
   cases X
   cases Y
   congr
@@ -108,7 +108,7 @@ theorem map_smul : X (r • f) = r • X f :=
 theorem leibniz : X (f * f') = f • X f' + f' • X f :=
   X.leibniz' _ _
 
-instance : HasZero (LeftInvariantDerivation I G) :=
+instance : Zero (LeftInvariantDerivation I G) :=
   ⟨⟨0, fun g => by
       simp only [LinearMap.map_zero, Derivation.coe_zero]⟩⟩
 

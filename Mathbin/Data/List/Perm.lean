@@ -467,7 +467,7 @@ theorem perm.prod_eq' [Monoidₓ α] {l₁ l₂ : List α} (h : l₁ ~ l₂) (hc
   h.foldl_eq'
     ((forall_of_forall_of_pairwise (fun x y h z => (h z).symm) fun x hx z => rfl) $
       hc.imp $ fun x y h z => by
-        simp only [mul_assocₓ, h])
+        simp only [mul_assoc, h])
     _
 
 variable [CommMonoidₓ α]
@@ -1226,11 +1226,11 @@ theorem length_permutations_aux :
   intro t ts is IH1 IH2
   have IH2 : length (permutations_aux is nil) + 1 = is.length ! := by
     simpa using IH2
-  simp [-add_commₓ, Nat.factorial, Nat.add_succ, mul_commₓ] at IH1
+  simp [-add_commₓ, Nat.factorial, Nat.add_succ, mul_comm] at IH1
   rw [permutations_aux_cons,
     length_foldr_permutations_aux2' _ _ _ _ _ fun l m => (perm_of_mem_permutations m).length_eq, permutations, length,
-    length, IH2, Nat.succ_add, Nat.factorial_succ, mul_commₓ (Nat.succ _), ← IH1, add_commₓ (_ * _), add_assocₓ,
-    Nat.mul_succ, mul_commₓ]
+    length, IH2, Nat.succ_add, Nat.factorial_succ, mul_comm (Nat.succ _), ← IH1, add_commₓ (_ * _), add_assocₓ,
+    Nat.mul_succ, mul_comm]
 
 theorem length_permutations (l : List α) : length (permutations l) = (length l)! :=
   length_permutations_aux l []

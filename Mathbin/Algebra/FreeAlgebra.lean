@@ -77,11 +77,11 @@ def Add : Add (pre R X) :=
   ⟨add⟩
 
 /-- Zero in `pre R X` defined as the image of `0` from `R`. Note: Used for notation only. -/
-def HasZero : HasZero (pre R X) :=
+def Zero : Zero (pre R X) :=
   ⟨of_scalar 0⟩
 
 /-- One in `pre R X` defined as the image of `1` from `R`. Note: Used for notation only. -/
-def HasOne : HasOne (pre R X) :=
+def One : One (pre R X) :=
   ⟨of_scalar 1⟩
 
 /-- Scalar multiplication defined as multiplication by the image of elements from `R`.
@@ -111,7 +111,7 @@ inductive rel : pre R X → pre R X → Prop
   | add_assocₓ {a b c : pre R X} : rel (a + b + c) (a + (b + c))
   | add_commₓ {a b : pre R X} : rel (a + b) (b + a)
   | zero_addₓ {a : pre R X} : rel (0 + a) a
-  | mul_assocₓ {a b c : pre R X} : rel (a * b * c) (a * (b * c))
+  | mul_assoc {a b c : pre R X} : rel (a * b * c) (a * (b * c))
   | one_mulₓ {a : pre R X} : rel (1 * a) a
   | mul_oneₓ {a : pre R X} : rel (a * 1) a
   | left_distrib {a b c : pre R X} : rel (a * (b + c)) (a * b + a * c)
@@ -228,7 +228,7 @@ private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A where
         simp
         
       · change _ * _ * _ = _ * (_ * _)
-        rw [mul_assocₓ]
+        rw [mul_assoc]
         
       · change algebraMap _ _ _ * lift_fun R X f _ = lift_fun R X f _
         simp

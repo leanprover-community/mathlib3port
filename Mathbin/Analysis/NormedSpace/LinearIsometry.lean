@@ -511,6 +511,11 @@ include σ₁₃ σ₂₁
 theorem coeTransₓ (e₁ : E ≃ₛₗᵢ[σ₁₂] E₂) (e₂ : E₂ ≃ₛₗᵢ[σ₂₃] E₃) : ⇑e₁.trans e₂ = e₂ ∘ e₁ :=
   rfl
 
+@[simp]
+theorem to_linear_equiv_trans (e' : E₂ ≃ₛₗᵢ[σ₂₃] E₃) :
+    (e.trans e').toLinearEquiv = e.to_linear_equiv.trans e'.to_linear_equiv :=
+  rfl
+
 omit σ₁₃ σ₂₁ σ₃₁ σ₃₂
 
 @[simp]
@@ -686,6 +691,12 @@ include σ₂₁
 noncomputable def of_surjective (f : F →ₛₗᵢ[σ₁₂] E₂) (hfr : Function.Surjective f) : F ≃ₛₗᵢ[σ₁₂] E₂ :=
   { LinearEquiv.ofBijective f.to_linear_map f.injective hfr with norm_map' := f.norm_map }
 
+@[simp]
+theorem coe_of_surjective (f : F →ₛₗᵢ[σ₁₂] E₂) (hfr : Function.Surjective f) :
+    ⇑LinearIsometryEquiv.ofSurjective f hfr = f := by
+  ext
+  rfl
+
 omit σ₂₁
 
 variable (R)
@@ -715,7 +726,7 @@ noncomputable def prod_assoc [Module R E₂] [Module R E₃] : (E × E₂) × E�
       simp ,
     norm_map' := by
       rintro ⟨⟨e, f⟩, g⟩
-      simp only [LinearEquiv.coe_mk, Equivₓ.prod_assoc_apply, Prod.semi_norm_def, max_assocₓ] }
+      simp only [LinearEquiv.coe_mk, Equivₓ.prod_assoc_apply, Prod.norm_def, max_assocₓ] }
 
 @[simp]
 theorem coe_prod_assoc [Module R E₂] [Module R E₃] :

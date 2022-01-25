@@ -230,8 +230,8 @@ unsafe def match_fin_coe_fn (a : expr) : expr → Option match_fin_result
 /-- Match a fin expression to a `match_fin_result`, for easier pattern matching in the
 evaluator. -/
 unsafe def match_fin : expr → Option match_fin_result
-  | quote.1 (@HasZero.zero _ (@Finₓ.hasZero (%%ₓn))) => some (zero n)
-  | quote.1 (@HasOne.one _ (@Finₓ.hasOne (%%ₓn))) => some (one n)
+  | quote.1 (@Zero.zero _ (@Finₓ.hasZero (%%ₓn))) => some (zero n)
+  | quote.1 (@One.one _ (@Finₓ.hasOne (%%ₓn))) => some (one n)
   | quote.1 (@Add.add (Finₓ (%%ₓn)) _ (%%ₓa) (%%ₓb)) => some (add n a b)
   | quote.1 (@Mul.mul (Finₓ (%%ₓn)) _ (%%ₓa) (%%ₓb)) => some (mul n a b)
   | quote.1 (@_root_.bit0 (Finₓ (%%ₓn)) _ (%%ₓa)) => some (bit0 n a)
@@ -422,11 +422,11 @@ unsafe def mk_fin_numeral (n m : expr) : expr → Option (expr × expr)
     match match_numeral a with
     | zero =>
       some
-        (expr.app (quote.1 (@HasZero.zero (Finₓ (%%ₓn)))) (quote.1 (@Finₓ.hasZero (%%ₓm))),
+        (expr.app (quote.1 (@Zero.zero (Finₓ (%%ₓn)))) (quote.1 (@Finₓ.hasZero (%%ₓm))),
           expr.app (quote.1 normalize_fin.zero) m)
     | one =>
       some
-        (expr.app (quote.1 (@HasOne.one (Finₓ (%%ₓn)))) (quote.1 (@Finₓ.hasOne (%%ₓm))),
+        (expr.app (quote.1 (@One.one (Finₓ (%%ₓn)))) (quote.1 (@Finₓ.hasOne (%%ₓm))),
           expr.app (quote.1 normalize_fin.one) m)
     | bit0 a => do
       let (a', p) ← mk_fin_numeral a

@@ -59,7 +59,7 @@ theorem map_prod_mul_eq (hν : is_mul_left_invariant ν) :
   simp_rw [map_apply (measurable_fst.prod_mk (measurable_fst.mul measurable_snd)) (hs.prod ht),
     prod_apply ((measurable_fst.prod_mk (measurable_fst.mul measurable_snd)) (hs.prod ht)), preimage_preimage]
   conv_lhs => congr skip ext rw [mk_preimage_prod_right_fn_eq_if ((· * ·) x), measure_if]
-  simp_rw [hν _ ht, lintegral_indicator _ hs, set_lintegral_const, mul_commₓ]
+  simp_rw [hν _ ht, lintegral_indicator _ hs, set_lintegral_const, mul_comm]
 
 /-- The function we are mapping along is `SR` in [Halmos, §59],
   where `S` is the map in `map_prod_mul_eq` and `R` is `prod.swap`. -/

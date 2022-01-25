@@ -49,8 +49,8 @@ namespace Expr
 /-- Given an expr `α` representing a type with numeral structure,
 `of_nat α n` creates the `α`-valued numeral expression corresponding to `n`. -/
 protected unsafe def of_nat (α : expr) : ℕ → tactic expr :=
-  Nat.binaryRec (tactic.mk_mapp `` HasZero.zero [some α, none]) fun b n tac =>
-    if n = 0 then mk_mapp `` HasOne.one [some α, none]
+  Nat.binaryRec (tactic.mk_mapp `` Zero.zero [some α, none]) fun b n tac =>
+    if n = 0 then mk_mapp `` One.one [some α, none]
     else do
       let e ← tac
       tactic.mk_app (cond b `` bit1 `` bit0) [e]
@@ -771,11 +771,11 @@ unsafe def mk_app (c : instance_cache) (n : Name) (l : List expr) : tactic (inst
 
 /-- `c.of_nat n` creates the `c.α`-valued numeral expression corresponding to `n`. -/
 protected unsafe def of_nat (c : instance_cache) (n : ℕ) : tactic (instance_cache × expr) :=
-  if n = 0 then c.mk_app `` HasZero.zero []
+  if n = 0 then c.mk_app `` Zero.zero []
   else do
     let (c, ai) ← c.get `` Add
-    let (c, oi) ← c.get `` HasOne
-    let (c, one) ← c.mk_app `` HasOne.one []
+    let (c, oi) ← c.get `` One
+    let (c, one) ← c.mk_app `` One.one []
     return
         (c,
           n.binary_rec one $ fun b n e =>

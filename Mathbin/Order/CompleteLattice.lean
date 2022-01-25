@@ -999,7 +999,7 @@ theorem inf_eq_infi (x y : α) : x⊓y = ⨅ b : Bool, cond b x y :=
   @sup_eq_supr (OrderDual α) _ _ _
 
 theorem is_glb_binfi {s : Set β} {f : β → α} : IsGlb (f '' s) (⨅ x ∈ s, f x) := by
-  simpa only [range_comp, Subtype.range_coe, infi_subtype'] using @is_glb_infi α s _ (f ∘ coeₓ)
+  simpa only [range_comp, Subtype.range_coe, infi_subtype'] using @is_glb_infi α s _ (f ∘ coe)
 
 theorem supr_subtype {p : ι → Prop} {f : Subtype p → α} : (⨆ x, f x) = ⨆ (i) (h : p i), f ⟨i, h⟩ :=
   @infi_subtype (OrderDual α) _ _ _ _
@@ -1011,7 +1011,7 @@ theorem supr_subtype'' {ι} (s : Set ι) (f : ι → α) : (⨆ i : s, f i) = �
   supr_subtype
 
 theorem is_lub_bsupr {s : Set β} {f : β → α} : IsLub (f '' s) (⨆ x ∈ s, f x) := by
-  simpa only [range_comp, Subtype.range_coe, supr_subtype'] using @is_lub_supr α s _ (f ∘ coeₓ)
+  simpa only [range_comp, Subtype.range_coe, supr_subtype'] using @is_lub_supr α s _ (f ∘ coe)
 
 theorem infi_sigma {p : β → Type _} {f : Sigma p → α} : (⨅ x, f x) = ⨅ (i) (h : p i), f ⟨i, h⟩ :=
   eq_of_forall_le_iff $ fun c => by
@@ -1303,7 +1303,7 @@ def independent {ι : Sort _} {α : Type _} [CompleteLattice α] (t : ι → α)
   ∀ i : ι, Disjoint (t i) (⨆ (j) (_ : j ≠ i), t j)
 
 theorem set_independent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
-    set_independent s ↔ independent (coeₓ : s → α) := by
+    set_independent s ↔ independent (coe : s → α) := by
   simp_rw [independent, set_independent, SetCoe.forall, Sup_eq_supr]
   refine' forall₂_congrₓ fun a ha => _
   congr 2

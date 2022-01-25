@@ -22,8 +22,8 @@ section
 
 /-- Typeclass for expressing that a type `M₀` with multiplication and a zero satisfies
 `0 * a = 0` and `a * 0 = 0` for all `a : M₀`. -/
-@[protect_proj, ancestor Mul HasZero]
-class MulZeroClass (M₀ : Type _) extends Mul M₀, HasZero M₀ where
+@[protect_proj, ancestor Mul Zero]
+class MulZeroClass (M₀ : Type _) extends Mul M₀, Zero M₀ where
   zero_mul : ∀ a : M₀, 0 * a = 0
   mul_zero : ∀ a : M₀, a * 0 = 0
 
@@ -43,7 +43,7 @@ end MulZeroClass
 
 /-- Predicate typeclass for expressing that `a * b = 0` implies `a = 0` or `b = 0`
 for all `a` and `b` of type `G₀`. -/
-class NoZeroDivisors (M₀ : Type _) [Mul M₀] [HasZero M₀] : Prop where
+class NoZeroDivisors (M₀ : Type _) [Mul M₀] [Zero M₀] : Prop where
   eq_zero_or_eq_zero_of_mul_eq_zero : ∀ {a b : M₀}, a * b = 0 → a = 0 ∨ b = 0
 
 export NoZeroDivisors (eq_zero_or_eq_zero_of_mul_eq_zero)

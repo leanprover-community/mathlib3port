@@ -26,7 +26,7 @@ variable {α : Type _}
 
 section
 
-variable [HasZero α] [HasOne α] [Add α]
+variable [Zero α] [One α] [Add α]
 
 /-- Canonical homomorphism from `ℕ` to a type `α` with `0`, `1` and `+`. -/
 protected def cast : ℕ → α
@@ -86,18 +86,18 @@ theorem cast_ite (P : Prop) [Decidable P] (m n : ℕ) : ((ite P m n : ℕ) : α)
 end
 
 @[simp, norm_cast]
-theorem cast_one [AddZeroClass α] [HasOne α] : ((1 : ℕ) : α) = 1 :=
+theorem cast_one [AddZeroClass α] [One α] : ((1 : ℕ) : α) = 1 :=
   zero_addₓ _
 
 @[simp, norm_cast]
-theorem cast_add [AddMonoidₓ α] [HasOne α] m : ∀ n, ((m + n : ℕ) : α) = m + n
+theorem cast_add [AddMonoidₓ α] [One α] m : ∀ n, ((m + n : ℕ) : α) = m + n
   | 0 => (add_zeroₓ _).symm
   | n + 1 =>
     show ((m + n : ℕ) : α) + 1 = m + (n + 1) by
       rw [cast_add n, add_assocₓ]
 
 @[simp]
-theorem bin_cast_eq [AddMonoidₓ α] [HasOne α] (n : ℕ) : (Nat.binCast n : α) = ((n : ℕ) : α) := by
+theorem bin_cast_eq [AddMonoidₓ α] [One α] (n : ℕ) : (Nat.binCast n : α) = ((n : ℕ) : α) := by
   rw [Nat.binCast]
   apply binary_rec _ _ n
   · rw [binary_rec_zero, cast_zero]
@@ -111,32 +111,32 @@ theorem bin_cast_eq [AddMonoidₓ α] [HasOne α] (n : ℕ) : (Nat.binCast n : �
     
 
 /-- `coe : ℕ → α` as an `add_monoid_hom`. -/
-def cast_add_monoid_hom (α : Type _) [AddMonoidₓ α] [HasOne α] : ℕ →+ α where
-  toFun := coeₓ
+def cast_add_monoid_hom (α : Type _) [AddMonoidₓ α] [One α] : ℕ →+ α where
+  toFun := coe
   map_add' := cast_add
   map_zero' := cast_zero
 
 @[simp]
-theorem coe_cast_add_monoid_hom [AddMonoidₓ α] [HasOne α] : (cast_add_monoid_hom α : ℕ → α) = coeₓ :=
+theorem coe_cast_add_monoid_hom [AddMonoidₓ α] [One α] : (cast_add_monoid_hom α : ℕ → α) = coe :=
   rfl
 
 @[simp, norm_cast]
-theorem cast_bit0 [AddMonoidₓ α] [HasOne α] (n : ℕ) : ((bit0 n : ℕ) : α) = bit0 n :=
+theorem cast_bit0 [AddMonoidₓ α] [One α] (n : ℕ) : ((bit0 n : ℕ) : α) = bit0 n :=
   cast_add _ _
 
 @[simp, norm_cast]
-theorem cast_bit1 [AddMonoidₓ α] [HasOne α] (n : ℕ) : ((bit1 n : ℕ) : α) = bit1 n := by
+theorem cast_bit1 [AddMonoidₓ α] [One α] (n : ℕ) : ((bit1 n : ℕ) : α) = bit1 n := by
   rw [bit1, cast_add_one, cast_bit0] <;> rfl
 
-theorem cast_two {α : Type _} [AddZeroClass α] [HasOne α] : ((2 : ℕ) : α) = 2 := by
+theorem cast_two {α : Type _} [AddZeroClass α] [One α] : ((2 : ℕ) : α) = 2 := by
   rw [cast_add_one, cast_one, bit0]
 
 @[simp, norm_cast]
-theorem cast_pred [AddGroupₓ α] [HasOne α] : ∀ {n}, 0 < n → ((n - 1 : ℕ) : α) = n - 1
+theorem cast_pred [AddGroupₓ α] [One α] : ∀ {n}, 0 < n → ((n - 1 : ℕ) : α) = n - 1
   | n + 1, h => (add_sub_cancel (n : α) 1).symm
 
 @[simp, norm_cast]
-theorem cast_sub [AddGroupₓ α] [HasOne α] {m n} (h : m ≤ n) : ((n - m : ℕ) : α) = n - m :=
+theorem cast_sub [AddGroupₓ α] [One α] {m n} (h : m ≤ n) : ((n - m : ℕ) : α) = n - m :=
   eq_sub_of_add_eq $ by
     rw [← cast_add, tsub_add_cancel_of_le h]
 
@@ -160,10 +160,10 @@ theorem cast_dvd {α : Type _} [Field α] {m n : ℕ} (n_dvd : n ∣ m) (n_nonze
 
 /-- `coe : ℕ → α` as a `ring_hom` -/
 def cast_ring_hom (α : Type _) [NonAssocSemiring α] : ℕ →+* α :=
-  { cast_add_monoid_hom α with toFun := coeₓ, map_one' := cast_one, map_mul' := cast_mul }
+  { cast_add_monoid_hom α with toFun := coe, map_one' := cast_one, map_mul' := cast_mul }
 
 @[simp]
-theorem coe_cast_ring_hom [NonAssocSemiring α] : (cast_ring_hom α : ℕ → α) = coeₓ :=
+theorem coe_cast_ring_hom [NonAssocSemiring α] : (cast_ring_hom α : ℕ → α) = coe :=
   rfl
 
 theorem cast_commute [NonAssocSemiring α] (n : ℕ) (x : α) : Commute (↑n) x :=
@@ -185,13 +185,13 @@ theorem cast_nonneg : ∀ n : ℕ, 0 ≤ (n : α)
   | n + 1 => add_nonneg (cast_nonneg n) zero_le_one
 
 @[mono]
-theorem mono_cast : Monotone (coeₓ : ℕ → α) := fun m n h => by
+theorem mono_cast : Monotone (coe : ℕ → α) := fun m n h => by
   let ⟨k, hk⟩ := le_iff_exists_add.1 h
   simp [hk]
 
 variable [Nontrivial α]
 
-theorem strict_mono_cast : StrictMono (coeₓ : ℕ → α) := fun m n h =>
+theorem strict_mono_cast : StrictMono (coe : ℕ → α) := fun m n h =>
   Nat.le_induction (lt_add_of_pos_right _ zero_lt_one) (fun n _ h => lt_add_of_lt_of_pos h zero_lt_one) _ h
 
 @[simp, norm_cast]
@@ -281,7 +281,7 @@ end Nat
 
 namespace Prod
 
-variable {α : Type _} {β : Type _} [HasZero α] [HasOne α] [Add α] [HasZero β] [HasOne β] [Add β]
+variable {α : Type _} {β : Type _} [Zero α] [One α] [Add α] [Zero β] [One β] [Add β]
 
 @[simp]
 theorem fst_nat_cast (n : ℕ) : (n : α × β).fst = n := by
@@ -295,7 +295,7 @@ end Prod
 
 section AddMonoidHomClass
 
-variable {A B F : Type _} [AddMonoidₓ A] [AddMonoidₓ B] [HasOne B]
+variable {A B F : Type _} [AddMonoidₓ A] [AddMonoidₓ B] [One B]
 
 theorem ext_nat' [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1 = g 1) : f = g :=
   FunLike.ext f g $ by
@@ -308,7 +308,7 @@ theorem ext_nat' [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1 = g 1) : f = g :
 theorem AddMonoidHom.ext_nat : ∀ {f g : ℕ →+ A}, ∀ h : f 1 = g 1, f = g :=
   ext_nat'
 
-variable [HasOne A]
+variable [One A]
 
 theorem eq_nat_cast' [AddMonoidHomClass F ℕ A] (f : F) (h1 : f 1 = 1) : ∀ n : ℕ, f n = n
   | 0 => by
@@ -365,7 +365,7 @@ theorem Nat.cast_id (n : ℕ) : ↑n = n :=
   (eq_nat_cast (RingHom.id ℕ) n).symm
 
 @[simp]
-theorem Nat.cast_with_bot : ∀ n : ℕ, @coeₓ ℕ (WithBot ℕ) (@coeToLift _ _ Nat.castCoe) n = n
+theorem Nat.cast_with_bot : ∀ n : ℕ, @coe ℕ (WithBot ℕ) (@coeToLift _ _ Nat.castCoe) n = n
   | 0 => rfl
   | n + 1 => by
     rw [WithBot.coe_add, Nat.cast_add, Nat.cast_with_bot n] <;> rfl
@@ -377,7 +377,7 @@ namespace WithTop
 
 variable {α : Type _}
 
-variable [HasZero α] [HasOne α] [Add α]
+variable [Zero α] [One α] [Add α]
 
 @[simp, norm_cast]
 theorem coe_nat : ∀ n : ℕ, ((n : α) : WithTop α) = n
@@ -425,13 +425,13 @@ namespace Pi
 
 variable {α β : Type _}
 
-theorem nat_apply [HasZero β] [HasOne β] [Add β] : ∀ n : ℕ a : α, (n : α → β) a = n
+theorem nat_apply [Zero β] [One β] [Add β] : ∀ n : ℕ a : α, (n : α → β) a = n
   | 0, a => rfl
   | n + 1, a => by
     rw [Nat.cast_succ, Nat.cast_succ, add_apply, nat_apply, one_apply]
 
 @[simp]
-theorem coe_nat [HasZero β] [HasOne β] [Add β] (n : ℕ) : (n : α → β) = fun _ => n := by
+theorem coe_nat [Zero β] [One β] [Add β] (n : ℕ) : (n : α → β) = fun _ => n := by
   ext
   rw [Pi.nat_apply]
 

@@ -78,7 +78,7 @@ theorem discr_zero_of_not_linear_independent [IsDomain A] {b : ι → B} (hli : 
     ext i
     have : ∀ j, (trace A B) (b i * b j) * g j = (trace A B) (g j • b j * b i) := by
       intro j
-      simp [mul_commₓ]
+      simp [mul_comm]
     simp only [mul_vec, dot_product, trace_matrix, Pi.zero_apply, trace_form_apply, fun j => this j, ←
       LinearMap.map_sum, ← sum_mul, hg, zero_mul, LinearMap.map_zero]
   by_contra h
@@ -91,14 +91,14 @@ variable {A}
 `algebra.discr A ((P.map (algebra_map A B)).vec_mul b)`. -/
 theorem discr_of_matrix_vec_mul [DecidableEq ι] (b : ι → B) (P : Matrix ι ι A) :
     discr A ((P.map (algebraMap A B)).vecMul b) = P.det ^ 2 * discr A b := by
-  rw [discr_def, trace_matrix_of_matrix_vec_mul, det_mul, det_mul, det_transpose, mul_commₓ, ← mul_assocₓ, discr_def,
+  rw [discr_def, trace_matrix_of_matrix_vec_mul, det_mul, det_mul, det_transpose, mul_comm, ← mul_assoc, discr_def,
     pow_two]
 
 /-- Relation between `algebra.discr A ι b` and
 `algebra.discr A ((P.map (algebra_map A B)).mul_vec b)`. -/
 theorem discr_of_matrix_mul_vec [DecidableEq ι] (b : ι → B) (P : Matrix ι ι A) :
     discr A ((P.map (algebraMap A B)).mulVec b) = P.det ^ 2 * discr A b := by
-  rw [discr_def, trace_matrix_of_matrix_mul_vec, det_mul, det_mul, det_transpose, mul_commₓ, ← mul_assocₓ, discr_def,
+  rw [discr_def, trace_matrix_of_matrix_mul_vec, det_mul, det_mul, det_transpose, mul_comm, ← mul_assoc, discr_def,
     pow_two]
 
 end Basic

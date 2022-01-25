@@ -50,19 +50,19 @@ show that `v = ↑q`.
 variable (v : K) (n : ℕ)
 
 theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
-    ∃ conts : pair ℚ, (of v).continuantsAux n = (conts.map coeₓ : pair K) :=
+    ∃ conts : pair ℚ, (of v).continuantsAux n = (conts.map coe : pair K) :=
   Nat.strong_induction_onₓ n
     (by
       clear n
       let g := of v
       intro n IH
       rcases n with (_ | _ | n)
-      · suffices ∃ gp : pair ℚ, pair.mk (1 : K) 0 = gp.map coeₓ by
+      · suffices ∃ gp : pair ℚ, pair.mk (1 : K) 0 = gp.map coe by
           simpa [continuants_aux]
         use pair.mk 1 0
         simp
         
-      · suffices ∃ conts : pair ℚ, pair.mk g.h 1 = conts.map coeₓ by
+      · suffices ∃ conts : pair ℚ, pair.mk g.h 1 = conts.map coe by
           simpa [continuants_aux]
         use pair.mk ⌊v⌋ 1
         simp
@@ -85,7 +85,7 @@ theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
           
         )
 
-theorem exists_gcf_pair_rat_eq_nth_conts : ∃ conts : pair ℚ, (of v).continuants n = (conts.map coeₓ : pair K) := by
+theorem exists_gcf_pair_rat_eq_nth_conts : ∃ conts : pair ℚ, (of v).continuants n = (conts.map coe : pair K) := by
   rw [nth_cont_eq_succ_nth_cont_aux]
   exact exists_gcf_pair_rat_eq_of_nth_conts_aux v $ n + 1
 
@@ -150,11 +150,11 @@ include v_eq_q
 
 namespace IntFractPair
 
-theorem coe_of_rat_eq : ((int_fract_pair.of q).mapFr coeₓ : int_fract_pair K) = int_fract_pair.of v := by
+theorem coe_of_rat_eq : ((int_fract_pair.of q).mapFr coe : int_fract_pair K) = int_fract_pair.of v := by
   simp [int_fract_pair.of, v_eq_q]
 
 theorem coe_stream_nth_rat_eq :
-    ((int_fract_pair.stream q n).map (mapFr coeₓ) : Option $ int_fract_pair K) = int_fract_pair.stream v n := by
+    ((int_fract_pair.stream q n).map (mapFr coe) : Option $ int_fract_pair K) = int_fract_pair.stream v n := by
   induction' n with n IH
   case nat.zero =>
     simp [int_fract_pair.stream, coe_of_rat_eq v_eq_q]
@@ -180,7 +180,7 @@ theorem coe_stream_nth_rat_eq :
         
 
 theorem coe_stream_rat_eq :
-    ((int_fract_pair.stream q).map (Option.map (mapFr coeₓ)) : Streamₓ $ Option $ int_fract_pair K) =
+    ((int_fract_pair.stream q).map (Option.map (mapFr coe)) : Streamₓ $ Option $ int_fract_pair K) =
       int_fract_pair.stream v :=
   by
   funext n
@@ -196,20 +196,20 @@ theorem coe_of_h_rat_eq : (↑((of q).h : ℚ) : K) = (of v).h := by
   rw [← int_fract_pair.coe_of_rat_eq v_eq_q]
   simp
 
-theorem coe_of_s_nth_rat_eq : (((of q).s.nth n).map (pair.map coeₓ) : Option $ pair K) = (of v).s.nth n := by
+theorem coe_of_s_nth_rat_eq : (((of q).s.nth n).map (pair.map coe) : Option $ pair K) = (of v).s.nth n := by
   simp only [of, int_fract_pair.seq1, Seqₓₓ.map_nth, Seqₓₓ.nth_tail]
   simp only [Seqₓₓ.nth]
   rw [← int_fract_pair.coe_stream_rat_eq v_eq_q]
   rcases succ_nth_stream_eq : int_fract_pair.stream q (n + 1) with (_ | ⟨_, _⟩) <;>
     simp [Streamₓ.map, Streamₓ.nth, succ_nth_stream_eq]
 
-theorem coe_of_s_rat_eq : ((of q).s.map (pair.map coeₓ) : Seqₓₓ $ pair K) = (of v).s := by
+theorem coe_of_s_rat_eq : ((of q).s.map (pair.map coe) : Seqₓₓ $ pair K) = (of v).s := by
   ext n
   rw [← coe_of_s_nth_rat_eq v_eq_q]
   rfl
 
 /-- Given `(v : K), (q : ℚ), and v = q`, we have that `gcf.of q = gcf.of v` -/
-theorem coe_of_rat_eq : (⟨(of q).h, (of q).s.map (pair.map coeₓ)⟩ : GeneralizedContinuedFraction K) = of v := by
+theorem coe_of_rat_eq : (⟨(of q).h, (of q).s.map (pair.map coe)⟩ : GeneralizedContinuedFraction K) = of v := by
   cases' gcf_v_eq : of v with h s
   subst v
   obtain rfl : ↑⌊↑q⌋ = h := by

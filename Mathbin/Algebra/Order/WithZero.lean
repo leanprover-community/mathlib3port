@@ -49,7 +49,7 @@ variable [LinearOrderedCommMonoidWithZero α]
 /-- Pullback a `linear_ordered_comm_monoid_with_zero` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [HasZero β] [HasOne β] [Mul β] (f : β → α)
+def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [Zero β] [One β] [Mul β] (f : β → α)
     (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) :
     LinearOrderedCommMonoidWithZero β :=
   { LinearOrderₓ.lift f hf, hf.ordered_comm_monoid f one mul, hf.comm_monoid_with_zero f zero one mul with
@@ -146,7 +146,7 @@ theorem mul_inv_lt_of_lt_mul₀ (h : x < y * z) : x * z⁻¹ < y := by
   simpa only [inv_inv₀] using mul_inv_le_of_le_mul (inv_ne_zero hz) h
 
 theorem inv_mul_lt_of_lt_mul₀ (h : x < y * z) : y⁻¹ * x < z := by
-  rw [mul_commₓ] at *
+  rw [mul_comm] at *
   exact mul_inv_lt_of_lt_mul₀ h
 
 theorem mul_lt_right₀ (c : α) (h : a < b) (hc : c ≠ 0) : a * c < b * c := by

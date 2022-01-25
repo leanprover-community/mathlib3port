@@ -209,7 +209,7 @@ theorem ext {s₁ s₂ : Finset α} : (∀ a, a ∈ s₁ ↔ a ∈ s₂) → s�
 theorem coe_inj {s₁ s₂ : Finset α} : (s₁ : Set α) = s₂ ↔ s₁ = s₂ :=
   Set.ext_iff.trans ext_iff.symm
 
-theorem coe_injective {α} : injective (coeₓ : Finset α → Set α) := fun s t => coe_inj.1
+theorem coe_injective {α} : injective (coe : Finset α → Set α) := fun s t => coe_inj.1
 
 /-! ### type coercion -/
 
@@ -226,7 +226,7 @@ instance pi_finset_coe.can_lift' (ι α : Type _) [ne : Nonempty α] (s : Finset
   pi_finset_coe.can_lift ι (fun _ => α) s
 
 instance finset_coe.can_lift (s : Finset α) : CanLift α s where
-  coe := coeₓ
+  coe := coe
   cond := fun a => a ∈ s
   prf := fun a ha => ⟨⟨a, ha⟩, rfl⟩
 
@@ -292,10 +292,10 @@ instance : PartialOrderₓ (Finset α) where
 
 /-- Coercion to `set α` as an `order_embedding`. -/
 def coe_emb : Finset α ↪o Set α :=
-  ⟨⟨coeₓ, coe_injective⟩, fun s t => coe_subset⟩
+  ⟨⟨coe, coe_injective⟩, fun s t => coe_subset⟩
 
 @[simp]
-theorem coe_coe_emb : ⇑(coe_emb : Finset α ↪o Set α) = coeₓ :=
+theorem coe_coe_emb : ⇑(coe_emb : Finset α ↪o Set α) = coe :=
   rfl
 
 theorem subset.antisymm_iff {s₁ s₂ : Finset α} : s₁ = s₂ ↔ s₁ ⊆ s₂ ∧ s₂ ⊆ s₁ :=
@@ -2106,18 +2106,21 @@ theorem to_finset_cons {a : α} {l : List α} : to_finset (a :: l) = insert a (t
     by_cases' h : a ∈ l <;> simp [Finset.insert_val', Multiset.erase_dup_cons, h]
 
 theorem to_finset_surj_on : Set.SurjOn to_finset { l : List α | l.nodup } Set.Univ := by
-  rintro s -
-  cases' s with t hl
-  induction' t using Quot.ind with l
-  refine' ⟨l, hl, (to_finset_eq hl).symm⟩
+  rintro ⟨⟨l⟩, hl⟩ _
+  exact ⟨l, hl, (to_finset_eq hl).symm⟩
 
-theorem to_finset_surjective : surjective (to_finset : List α → Finset α) := by
-  intro s
-  rcases to_finset_surj_on (Set.mem_univ s) with ⟨l, -, hls⟩
-  exact ⟨l, hls⟩
+theorem to_finset_surjective : surjective (to_finset : List α → Finset α) := fun s =>
+  let ⟨l, _, hls⟩ := to_finset_surj_on (Set.mem_univ s)
+  ⟨l, hls⟩
 
 theorem to_finset_eq_iff_perm_erase_dup {l l' : List α} : l.to_finset = l'.to_finset ↔ l.erase_dup ~ l'.erase_dup := by
   simp [Finset.ext_iff, perm_ext (nodup_erase_dup _) (nodup_erase_dup _)]
+
+theorem to_finset.ext_iff {a b : List α} : a.to_finset = b.to_finset ↔ ∀ x, x ∈ a ↔ x ∈ b := by
+  simp only [Finset.ext_iff, mem_to_finset]
+
+theorem to_finset.ext {a b : List α} : (∀ x, x ∈ a ↔ x ∈ b) → a.to_finset = b.to_finset :=
+  to_finset.ext_iff.mpr
 
 theorem to_finset_eq_of_perm (l l' : List α) (h : l ~ l') : l.to_finset = l'.to_finset :=
   to_finset_eq_iff_perm_erase_dup.mpr h.erase_dup
@@ -2518,7 +2521,7 @@ theorem attach_image_val [DecidableEq α] {s : Finset α} : s.attach.image Subty
     rw [image_val, attach_val, Multiset.attach_map_val, erase_dup_eq_self]
 
 @[simp]
-theorem attach_image_coe [DecidableEq α] {s : Finset α} : s.attach.image coeₓ = s :=
+theorem attach_image_coe [DecidableEq α] {s : Finset α} : s.attach.image coe = s :=
   Finset.attach_image_val
 
 @[simp]
@@ -2608,7 +2611,7 @@ theorem subset_image_iff {f : α → β} {s : Finset β} {t : Set α} :
     exact Set.image_subset f hs
     
   intro h
-  let this' : CanLift β t := ⟨f ∘ coeₓ, fun y => y ∈ f '' t, fun y ⟨x, hxt, hy⟩ => ⟨⟨x, hxt⟩, hy⟩⟩
+  let this' : CanLift β t := ⟨f ∘ coe, fun y => y ∈ f '' t, fun y ⟨x, hxt, hy⟩ => ⟨⟨x, hxt⟩, hy⟩⟩
   lift s to Finset t using h
   refine' ⟨s.map (embedding.subtype _), map_subtype_subset _, _⟩
   ext y
@@ -2702,6 +2705,10 @@ theorem bUnion_empty : Finset.bUnion ∅ t = ∅ :=
 @[simp]
 theorem mem_bUnion {b : β} : b ∈ s.bUnion t ↔ ∃ a ∈ s, b ∈ t a := by
   simp only [mem_def, bUnion_val, mem_erase_dup, mem_bind, exists_prop]
+
+@[simp]
+theorem coe_bUnion : (s.bUnion t : Set β) = ⋃ x ∈ (s : Set α), t x := by
+  simp only [Set.ext_iff, mem_bUnion, Set.mem_Union, iff_selfₓ, mem_coe, implies_true_iff]
 
 @[simp]
 theorem bUnion_insert [DecidableEq α] {a : α} : (insert a s).bUnion t = t a ∪ s.bUnion t :=

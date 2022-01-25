@@ -343,6 +343,13 @@ theorem rn_deriv_with_density (ν : Measureₓ α) [sigma_finite ν] {f : α →
     rw [zero_addₓ]
   (eq_rn_deriv hf mutually_singular.zero_left this).symm
 
+/-- The Radon-Nikodym derivative of the restriction of a measure to a measurable set is the
+indicator function of this set. -/
+theorem rn_deriv_restrict (ν : Measureₓ α) [sigma_finite ν] {s : Set α} (hs : MeasurableSet s) :
+    (ν.restrict s).rnDeriv ν =ᵐ[ν] s.indicator 1 := by
+  rw [← with_density_indicator_one hs]
+  exact rn_deriv_with_density _ (measurable_one.indicator hs)
+
 open VectorMeasure SignedMeasure
 
 /-- If two finite measures `μ` and `ν` are not mutually singular, there exists some `ε > 0` and
@@ -395,7 +402,7 @@ theorem exists_positive_of_not_mutually_singular (μ ν : Measureₓ α) [is_fin
         rw [_root_.inv_pos]
         exact hb
       have h' : 1 / (↑n + 1) * νA < c := by
-        rw [← Nnreal.coe_lt_coe, ← mul_lt_mul_right hb₁, Nnreal.coe_mul, mul_assocₓ, ← Nnreal.coe_inv, ← Nnreal.coe_mul,
+        rw [← Nnreal.coe_lt_coe, ← mul_lt_mul_right hb₁, Nnreal.coe_mul, mul_assoc, ← Nnreal.coe_inv, ← Nnreal.coe_mul,
           _root_.mul_inv_cancel, ← Nnreal.coe_mul, mul_oneₓ, Nnreal.coe_inv]
         · convert hn
           simp

@@ -278,11 +278,11 @@ instance fixed_field.algebra : Algebra K (fixed_field (fixing_subgroup K)) where
   map_add' := fun _ _ => rfl
   map_one' := rfl
   map_mul' := fun _ _ => rfl
-  commutes' := fun _ _ => mul_commₓ _ _
+  commutes' := fun _ _ => mul_comm _ _
   smul_def' := fun _ _ => rfl
 
 instance fixed_field.is_scalar_tower : IsScalarTower K (fixed_field (fixing_subgroup K)) E :=
-  ⟨fun _ _ _ => mul_assocₓ _ _ _⟩
+  ⟨fun _ _ _ => mul_assoc _ _ _⟩
 
 end IntermediateField
 
@@ -371,7 +371,7 @@ theorem of_card_aut_eq_finrank [FiniteDimensional F E] (h : Fintype.card (E ≃�
     IntermediateField.finrank_fixed_field_eq_card]
   apply Fintype.card_congr
   exact
-    { toFun := fun g => ⟨g, Subgroup.mem_top g⟩, invFun := coeₓ, left_inv := fun g => rfl,
+    { toFun := fun g => ⟨g, Subgroup.mem_top g⟩, invFun := coe, left_inv := fun g => rfl,
       right_inv := fun _ => by
         ext
         rfl }

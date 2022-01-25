@@ -48,13 +48,13 @@ def crossProduct : (Finₓ 3 → R) →ₗ[R] (Finₓ 3 → R) →ₗ[R] Finₓ 
     simp [vec3_add (_ : R), add_commₓ, add_assocₓ, add_left_commₓ, add_mulₓ, sub_eq_add_neg]
     
   · intros
-    simp [smul_vec3 (_ : R) (_ : R), mul_commₓ, mul_assocₓ, mul_left_commₓ, mul_addₓ, sub_eq_add_neg]
+    simp [smul_vec3 (_ : R) (_ : R), mul_comm, mul_assoc, mul_left_commₓ, mul_addₓ, sub_eq_add_neg]
     
   · intros
     simp [vec3_add (_ : R), add_commₓ, add_assocₓ, add_left_commₓ, mul_addₓ, sub_eq_add_neg]
     
   · intros
-    simp [smul_vec3 (_ : R) (_ : R), mul_commₓ, mul_assocₓ, mul_left_commₓ, mul_addₓ, sub_eq_add_neg]
+    simp [smul_vec3 (_ : R) (_ : R), mul_comm, mul_assoc, mul_left_commₓ, mul_addₓ, sub_eq_add_neg]
     
 
 localized [Matrix] infixl:74 " ×₃ " => crossProduct
@@ -69,7 +69,7 @@ section ProductsProperties
 
 @[simp]
 theorem cross_anticomm (v w : Finₓ 3 → R) : -(v ×₃ w) = w ×₃ v := by
-  simp [cross_apply, mul_commₓ]
+  simp [cross_apply, mul_comm]
 
 alias cross_anticomm ← neg_cross
 
@@ -79,12 +79,12 @@ theorem cross_anticomm' (v w : Finₓ 3 → R) : v ×₃ w + w ×₃ v = 0 := by
 
 @[simp]
 theorem cross_self (v : Finₓ 3 → R) : v ×₃ v = 0 := by
-  simp [cross_apply, mul_commₓ]
+  simp [cross_apply, mul_comm]
 
 /-- The cross product of two vectors is perpendicular to the first vector. -/
 @[simp]
 theorem dot_self_cross (v w : Finₓ 3 → R) : v ⬝ᵥ v ×₃ w = 0 := by
-  simp [cross_apply, vec3_dot_product, mul_sub, mul_assocₓ, mul_left_commₓ]
+  simp [cross_apply, vec3_dot_product, mul_sub, mul_assoc, mul_left_commₓ]
 
 /-- The cross product of two vectors is perpendicular to the second vector. -/
 @[simp]

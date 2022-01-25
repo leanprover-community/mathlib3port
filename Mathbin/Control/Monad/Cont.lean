@@ -167,18 +167,18 @@ instance [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (OptionTₓ m) 
     ext
     rfl
 
-def WriterT.mkLabelₓ {α β ω} [HasOne ω] : label (α × ω) m β → label α (WriterT ω m) β
+def WriterT.mkLabelₓ {α β ω} [One ω] : label (α × ω) m β → label α (WriterT ω m) β
   | ⟨f⟩ => ⟨fun a => monad_lift $ f (a, 1)⟩
 
-theorem WriterT.goto_mk_label {α β ω : Type _} [HasOne ω] (x : label (α × ω) m β) (i : α) :
+theorem WriterT.goto_mk_label {α β ω : Type _} [One ω] (x : label (α × ω) m β) (i : α) :
     goto (WriterT.mkLabelₓ x) i = monad_lift (goto x (i, 1)) := by
   cases x <;> rfl
 
-def WriterT.callCc [MonadCont m] {α β ω : Type _} [HasOne ω] (f : label α (WriterT ω m) β → WriterT ω m α) :
+def WriterT.callCc [MonadCont m] {α β ω : Type _} [One ω] (f : label α (WriterT ω m) β → WriterT ω m α) :
     WriterT ω m α :=
   ⟨call_cc (WriterT.run ∘ f ∘ WriterT.mkLabelₓ : label (α × ω) m β → m (α × ω))⟩
 
-instance ω [Monadₓ m] [HasOne ω] [MonadCont m] : MonadCont (WriterT ω m) where
+instance ω [Monadₓ m] [One ω] [MonadCont m] : MonadCont (WriterT ω m) where
   callCc := fun α β => WriterT.callCc
 
 def StateTₓ.mkLabelₓ {α β σ : Type u} : label (α × σ) m (β × σ) → label α (StateTₓ σ m) β

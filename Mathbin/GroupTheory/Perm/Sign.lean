@@ -204,7 +204,7 @@ def swap_factors_aux :
           have : f y ≠ y ∧ y ≠ x := ne_and_ne_of_swap_mul_apply_ne_self hy
           List.mem_of_ne_of_memₓ this.2 (h this.1)
       ⟨swap x (f x) :: m.1, by
-        rw [List.prod_cons, m.2.1, ← mul_assocₓ, mul_def (swap x (f x)), swap_swap, ← one_def, one_mulₓ], fun g hg =>
+        rw [List.prod_cons, m.2.1, ← mul_assoc, mul_def (swap x (f x)), swap_swap, ← one_def, one_mulₓ], fun g hg =>
         ((List.mem_cons_iff _ _ _).1 hg).elim (fun h => ⟨x, f x, hfx, h⟩) (m.2.2 _)⟩
 
 /-- `swap_factors` represents a permutation as a product of a list of transpositions.
@@ -258,8 +258,8 @@ theorem is_conj_swap {w x y z : α} (hwx : w ≠ x) (hyz : y ≠ z) : IsConj (sw
   is_conj_iff.2
     (have h : ∀ {y z : α}, y ≠ z → w ≠ z → swap w y * swap x z * swap w x * (swap w y * swap x z)⁻¹ = swap y z :=
       fun y z hyz hwz => by
-      rw [mul_inv_rev, swap_inv, swap_inv, mul_assocₓ (swap w y), mul_assocₓ (swap w y), ← mul_assocₓ _ (swap x z),
-        swap_mul_swap_mul_swap hwx hwz, ← mul_assocₓ, swap_mul_swap_mul_swap hwz.symm hyz.symm]
+      rw [mul_inv_rev, swap_inv, swap_inv, mul_assoc (swap w y), mul_assoc (swap w y), ← mul_assoc _ (swap x z),
+        swap_mul_swap_mul_swap hwx hwz, ← mul_assoc, swap_mul_swap_mul_swap hwz.symm hyz.symm]
     if hwz : w = z then
       have hwy : w ≠ y := by
         cc

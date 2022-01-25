@@ -71,7 +71,7 @@ theorem smul_def (x : M) (f : C^∞⟮I,M;𝕜⟯⟨x⟩) (k : 𝕜) : f • k =
 
 instance (x : M) : IsScalarTower 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜 where
   smul_assoc := fun k f h => by
-    simp only [smul_def, Algebra.id.smul_eq_mul, SmoothMap.coe_smul, Pi.smul_apply, mul_assocₓ]
+    simp only [smul_def, Algebra.id.smul_eq_mul, SmoothMap.coe_smul, Pi.smul_apply, mul_assoc]
 
 end PointedSmoothMap
 

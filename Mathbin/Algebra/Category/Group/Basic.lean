@@ -64,7 +64,7 @@ theorem coe_of (R : Type u) [Groupₓ R] : (Groupₓₓ.of R : Type u) = R :=
   rfl
 
 @[to_additive]
-instance : HasOne Groupₓₓ :=
+instance : One Groupₓₓ :=
   ⟨Groupₓₓ.of PUnit⟩
 
 @[to_additive]
@@ -144,7 +144,7 @@ theorem coe_of (R : Type u) [CommGroupₓ R] : (CommGroupₓₓ.of R : Type u) =
   rfl
 
 @[to_additive]
-instance : HasOne CommGroupₓₓ :=
+instance : One CommGroupₓₓ :=
   ⟨CommGroupₓₓ.of PUnit⟩
 
 @[to_additive]

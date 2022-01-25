@@ -148,7 +148,7 @@ theorem mem_top (x : E) : x ∈ (⊤ : ConvexCone 𝕜 E) :=
   mem_univ x
 
 instance : CompleteLattice (ConvexCone 𝕜 E) :=
-  { PartialOrderₓ.lift (coeₓ : ConvexCone 𝕜 E → Set E) fun a b => ext' with le := · ≤ ·, lt := · < ·, bot := ⊥,
+  { PartialOrderₓ.lift (coe : ConvexCone 𝕜 E → Set E) fun a b => ext' with le := · ≤ ·, lt := · < ·, bot := ⊥,
     bot_le := fun S x => False.elim, top := ⊤, le_top := fun S x hx => mem_top 𝕜 x, inf := ·⊓·, inf := HasInfₓ.inf,
     sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x }, sup := fun s => Inf { T | ∀, ∀ S ∈ s, ∀, S ≤ T },
     le_sup_left := fun a b => fun x hx => mem_Inf.2 $ fun s hs => hs.1 hx,
@@ -517,7 +517,7 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x) (dense : �
           one_smul, sub_eq_add_neg, neg_smul, neg_negₓ]
       replace := le_c (r⁻¹ • ⟨x, hx⟩) this
       rwa [← mul_le_mul_left (neg_pos.2 hr), ← neg_mul_eq_neg_mul, ← neg_mul_eq_neg_mul, neg_le_neg_iff, f.map_smul,
-        smul_eq_mul, ← mul_assocₓ, mul_inv_cancel hr.ne, one_mulₓ] at this
+        smul_eq_mul, ← mul_assoc, mul_inv_cancel hr.ne, one_mulₓ] at this
       
     · subst r
       simp only [zero_smul, add_zeroₓ] at hzs⊢
@@ -527,7 +527,7 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x) (dense : �
     · have : r⁻¹ • x + y ∈ s := by
         rwa [← s.smul_mem_iff hr, smul_add, smul_smul, mul_inv_cancel hr.ne', one_smul]
       replace := c_le (r⁻¹ • ⟨x, hx⟩) this
-      rwa [← mul_le_mul_left hr, f.map_smul, smul_eq_mul, ← mul_assocₓ, mul_inv_cancel hr.ne', one_mulₓ] at this
+      rwa [← mul_le_mul_left hr, f.map_smul, smul_eq_mul, ← mul_assoc, mul_inv_cancel hr.ne', one_mulₓ] at this
       
     
 

@@ -24,7 +24,7 @@ noncomputable section
 universe u
 
 /-- A `laurent_series` is implemented as a `hahn_series` with value group `ℤ`. -/
-abbrev LaurentSeries (R : Type _) [HasZero R] :=
+abbrev LaurentSeries (R : Type _) [Zero R] :=
   HahnSeries ℤ R
 
 variable {R : Type u}
@@ -99,7 +99,7 @@ theorem single_order_mul_power_series_part (x : LaurentSeries R) :
 theorem of_power_series_power_series_part (x : LaurentSeries R) :
     of_power_series ℤ R x.power_series_part = single (-x.order) 1 * x := by
   refine' Eq.trans _ (congr rfl x.single_order_mul_power_series_part)
-  rw [← mul_assocₓ, single_mul_single, neg_add_selfₓ, mul_oneₓ, ← C_apply, C_one, one_mulₓ, coe_power_series]
+  rw [← mul_assoc, single_mul_single, neg_add_selfₓ, mul_oneₓ, ← C_apply, C_one, one_mulₓ, coe_power_series]
 
 end Semiringₓ
 
@@ -136,7 +136,7 @@ instance of_power_series_localization [CommRingₓ R] :
       
     · refine' ⟨⟨power_series_part z, PowerSeries.x ^ Int.natAbs z.order, ⟨_, rfl⟩⟩, _⟩
       simp only [coe_algebra_map, of_power_series_power_series_part]
-      rw [mul_commₓ _ z]
+      rw [mul_comm _ z]
       refine' congr rfl _
       rw [Subtype.coe_mk, of_power_series_X_pow, Int.nat_cast_eq_coe_nat, Int.of_nat_nat_abs_of_nonpos]
       exact le_of_not_geₓ h

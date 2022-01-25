@@ -548,12 +548,12 @@ variable {X : Type u} [MetricSpace X]
 
 theorem GH_dist_le_nonempty_compacts_dist (p q : nonempty_compacts X) : dist p.to_GH_space q.to_GH_space ≤ dist p q :=
   by
-  have ha : Isometry (coeₓ : p.val → X) := isometry_subtype_coe
-  have hb : Isometry (coeₓ : q.val → X) := isometry_subtype_coe
+  have ha : Isometry (coe : p.val → X) := isometry_subtype_coe
+  have hb : Isometry (coe : q.val → X) := isometry_subtype_coe
   have A : dist p q = Hausdorff_dist p.val q.val := rfl
-  have I : p.val = range (coeₓ : p.val → X) := by
+  have I : p.val = range (coe : p.val → X) := by
     simp
-  have J : q.val = range (coeₓ : q.val → X) := by
+  have J : q.val = range (coe : q.val → X) := by
     simp
   rw [I, J] at A
   rw [A]
@@ -762,7 +762,7 @@ instance : second_countable_topology GH_space := by
           
       calc |dist x y - dist (Ψ x) (Ψ y)| = ε * ε⁻¹ * |dist x y - dist (Ψ x) (Ψ y)| := by
           rw [mul_inv_cancel (ne_of_gtₓ εpos), one_mulₓ]_ = ε * (|ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)|) := by
-          rw [abs_of_nonneg (le_of_ltₓ (inv_pos.2 εpos)), mul_assocₓ]_ ≤ ε * 1 :=
+          rw [abs_of_nonneg (le_of_ltₓ (inv_pos.2 εpos)), mul_assoc]_ ≤ ε * 1 :=
           mul_le_mul_of_nonneg_left I (le_of_ltₓ εpos)_ = ε := mul_oneₓ _
       
   calc dist p q = GH_dist p.rep q.rep := dist_GH_dist p q _ ≤ ε + ε / 2 + ε := main _ = δ := by
@@ -914,7 +914,7 @@ theorem TotallyBounded {t : Set GH_space} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
           
       calc |dist x y - dist (Ψ x) (Ψ y)| = ε * ε⁻¹ * |dist x y - dist (Ψ x) (Ψ y)| := by
           rw [mul_inv_cancel (ne_of_gtₓ εpos), one_mulₓ]_ = ε * (|ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)|) := by
-          rw [abs_of_nonneg (le_of_ltₓ (inv_pos.2 εpos)), mul_assocₓ]_ ≤ ε * 1 :=
+          rw [abs_of_nonneg (le_of_ltₓ (inv_pos.2 εpos)), mul_assoc]_ ≤ ε * 1 :=
           mul_le_mul_of_nonneg_left I (le_of_ltₓ εpos)_ = ε := mul_oneₓ _
       
   calc dist p q = GH_dist p.rep q.rep := dist_GH_dist p q _ ≤ ε + ε / 2 + ε := main _ = δ / 2 := by
@@ -984,7 +984,7 @@ instance : CompleteSpace GH_space := by
   let Z0 := Metric.InductiveLimit I
   let Z := UniformSpace.Completion Z0
   let Φ := to_inductive_limit I
-  let coeZ := (coeₓ : Z0 → Z)
+  let coeZ := (coe : Z0 → Z)
   let X2 := fun n => range (coeZ ∘ Φ n ∘ (Y n).embed)
   have isom : ∀ n, Isometry (coeZ ∘ Φ n ∘ (Y n).embed) := by
     intro n

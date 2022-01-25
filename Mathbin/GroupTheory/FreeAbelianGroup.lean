@@ -395,7 +395,7 @@ instance : Semigroupₓ (FreeAbelianGroup α) where
           iterate 3 
             rw [lift.of]
           congr 1
-          exact mul_assocₓ _ _ _
+          exact mul_assoc _ _ _
           
         · intro L1 ih
           iterate 3 
@@ -447,7 +447,7 @@ variable (α)
 instance : Ringₓ (FreeAbelianGroup α) :=
   { FreeAbelianGroup.addCommGroup α, FreeAbelianGroup.semigroup α with one := FreeAbelianGroup.of 1,
     mul_one := fun x => by
-      unfold Mul.mul Semigroupₓ.mul HasOne.one
+      unfold Mul.mul Semigroupₓ.mul One.one
       rw [lift.of]
       refine' FreeAbelianGroup.induction_on x rfl _ _ _
       · intro L
@@ -462,7 +462,7 @@ instance : Ringₓ (FreeAbelianGroup α) :=
         rw [(lift _).map_add, ih1, ih2]
         ,
     one_mul := fun x => by
-      unfold Mul.mul Semigroupₓ.mul HasOne.one
+      unfold Mul.mul Semigroupₓ.mul One.one
       refine' FreeAbelianGroup.induction_on x rfl _ _ _
       · intro L
         rw [lift.of, lift.of]
@@ -580,7 +580,7 @@ instance [CommMonoidₓ α] : CommRingₓ (FreeAbelianGroup α) :=
           iterate 4 
             rw [lift.of]
           congr 1
-          exact mul_commₓ _ _
+          exact mul_comm _ _
           
         · intro t ih
           rw [mul_neg_eq_neg_mul_symm, ih, neg_mul_eq_neg_mul]

@@ -24,7 +24,7 @@ def nonZeroDivisors (R : Type _) [MonoidWithZeroₓ R] : Submonoid R where
     rwa [mul_oneₓ] at hz
   mul_mem' := fun x₁ x₂ hx₁ hx₂ z hz =>
     have : z * x₁ * x₂ = 0 := by
-      rwa [mul_assocₓ]
+      rwa [mul_assoc]
     hx₁ z $ hx₂ (z * x₁) this
 
 localized [nonZeroDivisors] notation:9000 R "⁰" => nonZeroDivisors R
@@ -44,7 +44,7 @@ theorem mul_right_coe_non_zero_divisors_eq_zero_iff {x : M} {c : M⁰} : x * c =
   mul_right_mem_non_zero_divisors_eq_zero_iff c.prop
 
 theorem mul_left_mem_non_zero_divisors_eq_zero_iff {r x : M₁} (hr : r ∈ M₁⁰) : r * x = 0 ↔ x = 0 := by
-  rw [mul_commₓ, mul_right_mem_non_zero_divisors_eq_zero_iff hr]
+  rw [mul_comm, mul_right_mem_non_zero_divisors_eq_zero_iff hr]
 
 @[simp]
 theorem mul_left_coe_non_zero_divisors_eq_zero_iff {c : M₁⁰} {x : M₁} : (c : M₁) * x = 0 ↔ x = 0 :=
@@ -59,7 +59,7 @@ theorem mul_cancel_right_coe_non_zero_divisor {x y : R} {c : R⁰} : x * c = y *
 
 @[simp]
 theorem mul_cancel_left_mem_non_zero_divisor {x y r : R'} (hr : r ∈ R'⁰) : r * x = r * y ↔ x = y := by
-  simp_rw [mul_commₓ r, mul_cancel_right_mem_non_zero_divisor hr]
+  simp_rw [mul_comm r, mul_cancel_right_mem_non_zero_divisor hr]
 
 theorem mul_cancel_left_coe_non_zero_divisor {x y : R'} {c : R'⁰} : (c : R') * x = c * y ↔ x = y :=
   mul_cancel_left_mem_non_zero_divisor c.prop
@@ -74,15 +74,15 @@ theorem mul_mem_non_zero_divisors {a b : M₁} : a * b ∈ M₁⁰ ↔ a ∈ M�
   constructor
   · intro h
     constructor <;> intro x h' <;> apply h
-    · rw [← mul_assocₓ, h', zero_mul]
+    · rw [← mul_assoc, h', zero_mul]
       
-    · rw [mul_commₓ a b, ← mul_assocₓ, h', zero_mul]
+    · rw [mul_comm a b, ← mul_assoc, h', zero_mul]
       
     
   · rintro ⟨ha, hb⟩ x hx
     apply ha
     apply hb
-    rw [mul_assocₓ, hx]
+    rw [mul_assoc, hx]
     
 
 theorem is_unit_of_mem_non_zero_divisors {G₀ : Type _} [GroupWithZeroₓ G₀] {x : G₀} (hx : x ∈ nonZeroDivisors G₀) :

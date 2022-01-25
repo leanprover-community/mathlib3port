@@ -30,7 +30,7 @@ variable {F : Type u → Type u} [Applicativeₓ F] [IsCommApplicative F]
 variable {α' β' : Type u} (f : α' → F β')
 
 def traverse : Multiset α' → F (Multiset β') :=
-  Quotientₓ.lift (Functor.map coeₓ ∘ Traversable.traverse f)
+  Quotientₓ.lift (Functor.map coe ∘ Traversable.traverse f)
     (by
       introv p
       unfold Function.comp
@@ -39,7 +39,7 @@ def traverse : Multiset α' → F (Multiset β') :=
         rfl
       case perm.cons =>
         have :
-          Multiset.cons <$> f p_x <*> coeₓ <$> traverse f p_l₁ = Multiset.cons <$> f p_x <*> coeₓ <$> traverse f p_l₂ :=
+          Multiset.cons <$> f p_x <*> coe <$> traverse f p_l₁ = Multiset.cons <$> f p_x <*> coe <$> traverse f p_l₂ :=
           by
           rw [p_ih]
         simpa with functor_norm
@@ -85,7 +85,7 @@ theorem lift_coe {α β : Type _} (x : List α) (f : List α → β) (h : ∀ a 
   Quotientₓ.lift_mk _ _ _
 
 @[simp]
-theorem map_comp_coe {α β} (h : α → β) : Functor.map h ∘ coeₓ = (coeₓ ∘ Functor.map h : List α → Multiset β) := by
+theorem map_comp_coe {α β} (h : α → β) : Functor.map h ∘ coe = (coe ∘ Functor.map h : List α → Multiset β) := by
   funext <;> simp [Functor.map]
 
 theorem id_traverse {α : Type _} (x : Multiset α) : traverse id.mk x = x :=

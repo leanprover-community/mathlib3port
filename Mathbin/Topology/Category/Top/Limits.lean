@@ -609,7 +609,7 @@ theorem fst_iso_of_right_embedding_range_subset {X Y S : Top} (f : X ⟶ S) {g :
     (H : Set.Range f ⊆ Set.Range g) : is_iso (pullback.fst : pullback f g ⟶ X) := by
   let this : (pullback f g : Top) ≃ₜ X :=
     (Homeomorph.ofEmbedding _ (fst_embedding_of_right_embedding f hg)).trans
-      { toFun := coeₓ,
+      { toFun := coe,
         invFun := fun x =>
           ⟨x, by
             rw [pullback_fst_range]
@@ -623,7 +623,7 @@ theorem snd_iso_of_left_embedding_range_subset {X Y S : Top} {f : X ⟶ S} (hf :
     (H : Set.Range g ⊆ Set.Range f) : is_iso (pullback.snd : pullback f g ⟶ Y) := by
   let this : (pullback f g : Top) ≃ₜ Y :=
     (Homeomorph.ofEmbedding _ (snd_embedding_of_left_embedding hf g)).trans
-      { toFun := coeₓ,
+      { toFun := coe,
         invFun := fun x =>
           ⟨x, by
             rw [pullback_snd_range]
@@ -948,13 +948,11 @@ To specialize: given a locally finite connected graph, take `Jᵒᵖ` to be `ℕ
 Elements of `F.sections` can be read off as infinite rays in the graph. -/
 theorem nonempty_sections_of_fintype_inverse_system {J : Type u} [Preorderₓ J] [IsDirected J (· ≤ ·)] (F : Jᵒᵖ ⥤ Type v)
     [∀ j : Jᵒᵖ, Fintype (F.obj j)] [∀ j : Jᵒᵖ, Nonempty (F.obj j)] : F.sections.nonempty := by
-  run_tac
-    tactic.unfreeze_local_instances
-  by_cases' h : Nonempty J
-  · apply nonempty_sections_of_fintype_cofiltered_system
+  cases' is_empty_or_nonempty J
+  · have : IsEmpty (Jᵒᵖ) := ⟨fun j => isEmptyElim j.unop⟩
+    exact ⟨isEmptyElim, isEmptyElim⟩
     
-  · rw [not_nonempty_iff_imp_false] at h
-    exact ⟨fun j => False.elim (h j.unop), fun j => False.elim (h j.unop)⟩
+  · exact nonempty_sections_of_fintype_cofiltered_system _
     
 
 end FintypeKonig

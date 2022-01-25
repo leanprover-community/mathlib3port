@@ -152,7 +152,7 @@ end Fintype
 theorem MeasurableSet.bInter {f : β → Set α} {s : Set β} (hs : countable s) (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) :
     MeasurableSet (⋂ b ∈ s, f b) :=
   MeasurableSet.compl_iff.1 $ by
-    rw [compl_bInter]
+    rw [compl_Inter₂]
     exact MeasurableSet.bUnion hs fun b hb => (h b hb).Compl
 
 theorem Set.Finite.measurable_set_bInter {f : β → Set α} {s : Set β} (hs : finite s)

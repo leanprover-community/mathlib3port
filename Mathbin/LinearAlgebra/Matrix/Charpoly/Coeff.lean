@@ -172,7 +172,7 @@ theorem mat_poly_equiv_eval (M : Matrix n n (Polynomial R)) (r : R) (i j : n) :
       Algebra.smul_mul_assoc]
     have h : ∀ x : ℕ, (fun e : ℕ a : R => r ^ e * a) x 0 = 0 := by
       simp
-    simp only [Polynomial.sum, mat_poly_equiv_coeff_apply, mul_commₓ]
+    simp only [Polynomial.sum, mat_poly_equiv_coeff_apply, mul_comm]
     apply (Finset.sum_subset (support_subset_support_mat_poly_equiv _ _ _) _).symm
     intro n hn h'n
     rw [not_mem_support_iff] at h'n

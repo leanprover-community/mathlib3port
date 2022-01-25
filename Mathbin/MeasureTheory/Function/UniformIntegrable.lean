@@ -49,7 +49,7 @@ theorem mem_not_convergent_seq_iff {x : α} :
   rfl
 
 theorem not_convergent_seq_antitone : Antitone (not_convergent_seq f g i) := fun j k hjk =>
-  bUnion_subset_bUnion fun l hl => ⟨l, le_transₓ hjk hl, subset.refl _⟩
+  Union₂_mono' $ fun l hl => ⟨l, le_transₓ hjk hl, subset.rfl⟩
 
 theorem measure_inter_not_convergent_seq_eq_zero (hfg : ∀ᵐ x ∂μ, x ∈ s → tendsto (fun n => f n x) at_top (𝓝 (g x)))
     (i : ℕ) : μ (s ∩ ⋂ j, not_convergent_seq f g i j) = 0 := by

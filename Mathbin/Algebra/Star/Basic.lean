@@ -89,7 +89,7 @@ attribute [simp] star_mul
 /-- In a commutative ring, make `simp` prefer leaving the order unchanged. -/
 @[simp]
 theorem star_mul' [CommMonoidₓ R] [StarMonoid R] (x y : R) : star (x * y) = star x * star y :=
-  (star_mul x y).trans (mul_commₓ _ _)
+  (star_mul x y).trans (mul_comm _ _)
 
 /-- `star` as an `mul_equiv` from `R` to `Rᵐᵒᵖ` -/
 @[simps apply]
@@ -146,7 +146,7 @@ See note [reducible non-instances].
 def starMonoidOfComm {R : Type _} [CommMonoidₓ R] : StarMonoid R where
   star := id
   star_involutive := fun x => rfl
-  star_mul := mul_commₓ
+  star_mul := mul_comm
 
 section
 

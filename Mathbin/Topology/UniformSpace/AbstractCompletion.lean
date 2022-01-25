@@ -54,8 +54,8 @@ structure AbstractCompletion (α : Type u) [UniformSpace α] where
   uniformStruct : UniformSpace space
   complete : CompleteSpace space
   separation : SeparatedSpace space
-  UniformInducing : UniformInducing coeₓ
-  dense : DenseRange coeₓ
+  UniformInducing : UniformInducing coe
+  dense : DenseRange coe
 
 attribute [local instance] AbstractCompletion.uniformStruct AbstractCompletion.complete AbstractCompletion.separation
 

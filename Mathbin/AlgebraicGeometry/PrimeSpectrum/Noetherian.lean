@@ -19,7 +19,7 @@ variable {A : Type u} [CommRingₓ A] [IsDomain A] [IsNoetherianRing A]
 /-- In a noetherian ring, every ideal contains a product of prime ideals
 ([samuel, § 3.3, Lemma 3])-/
 theorem exists_prime_spectrum_prod_le (I : Ideal R) :
-    ∃ Z : Multiset (PrimeSpectrum R), Multiset.prod (Z.map (coeₓ : Subtype _ → Ideal R)) ≤ I := by
+    ∃ Z : Multiset (PrimeSpectrum R), Multiset.prod (Z.map (coe : Subtype _ → Ideal R)) ≤ I := by
   refine' IsNoetherian.induction (fun M : Ideal R hgt => _) I
   by_cases' h_prM : M.is_prime
   · use {⟨M, h_prM⟩}
@@ -53,7 +53,7 @@ theorem exists_prime_spectrum_prod_le (I : Ideal R) :
   product or prime ideals ([samuel, § 3.3, Lemma 3]) -/
 theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) {I : Ideal A} (h_nzI : I ≠ ⊥) :
     ∃ Z : Multiset (PrimeSpectrum A),
-      Multiset.prod (Z.map (coeₓ : Subtype _ → Ideal A)) ≤ I ∧ Multiset.prod (Z.map (coeₓ : Subtype _ → Ideal A)) ≠ ⊥ :=
+      Multiset.prod (Z.map (coe : Subtype _ → Ideal A)) ≤ I ∧ Multiset.prod (Z.map (coe : Subtype _ → Ideal A)) ≠ ⊥ :=
   by
   revert h_nzI
   refine' IsNoetherian.induction (fun M : Ideal A hgt => _) I

@@ -758,7 +758,7 @@ theorem has_integral_of_bRiemann_eq_ff_of_forall_is_o (hl : l.bRiemann = ff) (B 
   refine' (dist_sum_sum_le_of_le _ H₂).trans ((sum_le_sum_of_subset_of_nonneg (filter_subset _ _) _).trans _)
   · exact fun _ _ _ => mul_nonneg ε'0.le (hB0 _)
     
-  · rw [← mul_sum, B.sum_partition_boxes le_rfl hπp, mul_commₓ]
+  · rw [← mul_sum, B.sum_partition_boxes le_rfl hπp, mul_comm]
     exact hεI.le
     
 

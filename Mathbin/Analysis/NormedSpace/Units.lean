@@ -125,7 +125,7 @@ theorem inverse_one_sub_nth_order (n : ℕ) :
     simp
   rw [← one_mulₓ (↑Units.oneSub t ht⁻¹), h, add_mulₓ]
   congr
-  · rw [mul_assocₓ, (Units.oneSub t ht).mul_inv]
+  · rw [mul_assoc, (Units.oneSub t ht).mul_inv]
     simp
     
   · simp only [Units.coe_one_sub]
@@ -149,7 +149,7 @@ theorem inverse_add_nth_order (x : (R)ˣ) (n : ℕ) :
   have h := congr_argₓ (fun a : R => a * ↑x⁻¹) h1
   dsimp  at h
   convert h
-  rw [add_mulₓ, mul_assocₓ]
+  rw [add_mulₓ, mul_assoc]
   simp [h2.symm]
 
 theorem inverse_one_sub_norm : is_O (fun t => inverse ((1 : R) - t)) (fun t => (1 : ℝ)) (𝓝 (0 : R)) := by
@@ -229,7 +229,7 @@ theorem inverse_add_norm_diff_nth_order (x : (R)ˣ) (n : ℕ) :
 /-- The function `λ t, inverse (x + t) - x⁻¹` is `O(t)` as `t → 0`. -/
 theorem inverse_add_norm_diff_first_order (x : (R)ˣ) :
     is_O (fun t => inverse (↑x + t) - ↑x⁻¹) (fun t => ∥t∥) (𝓝 (0 : R)) := by
-  convert inverse_add_norm_diff_nth_order x 1 <;> simp
+  simpa using inverse_add_norm_diff_nth_order x 1
 
 /-- The function
 `λ t, inverse (x + t) - x⁻¹ + x⁻¹ * t * x⁻¹`
@@ -243,17 +243,13 @@ theorem inverse_add_norm_diff_second_order (x : (R)ˣ) :
 
 /-- The function `inverse` is continuous at each unit of `R`. -/
 theorem inverse_continuous_at (x : (R)ˣ) : ContinuousAt inverse (x : R) := by
-  have h_is_o : is_o (fun t : R => ∥inverse (↑x + t) - ↑x⁻¹∥) (fun t : R => (1 : ℝ)) (𝓝 0) := by
-    refine' is_o_norm_left.mpr ((inverse_add_norm_diff_first_order x).trans_is_o _)
-    exact is_o_norm_left.mpr (is_o_id_const one_ne_zero)
+  have h_is_o : is_o (fun t : R => inverse (↑x + t) - ↑x⁻¹) (fun _ => 1 : R → ℝ) (𝓝 0) :=
+    (inverse_add_norm_diff_first_order x).trans_is_o (is_o_id_const (@one_ne_zero ℝ _ _)).norm_left
   have h_lim : tendsto (fun y : R => y - x) (𝓝 x) (𝓝 0) := by
     refine' tendsto_zero_iff_norm_tendsto_zero.mpr _
     exact tendsto_iff_norm_tendsto_zero.mp tendsto_id
-  simp only [ContinuousAt]
-  rw [tendsto_iff_norm_tendsto_zero, inverse_unit]
-  convert h_is_o.tendsto_0.comp h_lim
-  ext
-  simp
+  rw [ContinuousAt, tendsto_iff_norm_tendsto_zero, inverse_unit]
+  simpa [· ∘ ·] using h_is_o.norm_left.tendsto_div_nhds_zero.comp h_lim
 
 end NormedRing
 
@@ -263,14 +259,14 @@ open MulOpposite Filter NormedRing
 
 /-- In a normed ring, the coercion from `Rˣ` (equipped with the induced topology from the
 embedding in `R × R`) to `R` is an open map. -/
-theorem is_open_map_coe : IsOpenMap (coeₓ : (R)ˣ → R) := by
+theorem is_open_map_coe : IsOpenMap (coe : (R)ˣ → R) := by
   rw [is_open_map_iff_nhds_le]
   intro x s
   rw [mem_map, mem_nhds_induced]
   rintro ⟨t, ht, hts⟩
   obtain ⟨u, hu, v, hv, huvt⟩ : ∃ u : Set R, u ∈ 𝓝 (↑x) ∧ ∃ v : Set (Rᵐᵒᵖ), v ∈ 𝓝 (op (↑x⁻¹)) ∧ u ×ˢ v ⊆ t := by
     simpa [embedProduct, mem_nhds_prod_iff] using ht
-  have : u ∩ op ∘ Ring.inverse ⁻¹' v ∩ Set.Range (coeₓ : (R)ˣ → R) ∈ 𝓝 (↑x) := by
+  have : u ∩ op ∘ Ring.inverse ⁻¹' v ∩ Set.Range (coe : (R)ˣ → R) ∈ 𝓝 (↑x) := by
     refine' inter_mem (inter_mem hu _) (Units.nhds x)
     refine' (continuous_op.continuous_at.comp (inverse_continuous_at x)).preimage_mem_nhds _
     simpa using hv
@@ -283,7 +279,7 @@ theorem is_open_map_coe : IsOpenMap (coeₓ : (R)ˣ → R) := by
 
 /-- In a normed ring, the coercion from `Rˣ` (equipped with the induced topology from the
 embedding in `R × R`) to `R` is an open embedding. -/
-theorem open_embedding_coe : OpenEmbedding (coeₓ : (R)ˣ → R) :=
+theorem open_embedding_coe : OpenEmbedding (coe : (R)ˣ → R) :=
   open_embedding_of_continuous_injective_open continuous_coe ext is_open_map_coe
 
 end Units

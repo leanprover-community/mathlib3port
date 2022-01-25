@@ -311,10 +311,10 @@ theorem mem_closure_union_iff {M : Type _} [CommMonoidₓ M] {s t : Set M} {x : 
           Or.cases_on (HL1 hd $ List.mem_cons_selfₓ _ _)
             (fun hs =>
               ⟨hd * y, (closure.is_submonoid _).mul_mem (subset_closure hs) hy, z, hz, by
-                rw [mul_assocₓ, List.prod_cons, ← hyzx] <;> rfl⟩)
+                rw [mul_assoc, List.prod_cons, ← hyzx] <;> rfl⟩)
             fun ht =>
             ⟨y, hy, z * hd, (closure.is_submonoid _).mul_mem hz (subset_closure ht), by
-              rw [← mul_assocₓ, List.prod_cons, ← hyzx, mul_commₓ hd] <;> rfl⟩)
+              rw [← mul_assoc, List.prod_cons, ← hyzx, mul_comm hd] <;> rfl⟩)
         HL1,
     fun ⟨y, hy, z, hz, hyzx⟩ =>
     hyzx ▸

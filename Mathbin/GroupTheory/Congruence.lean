@@ -279,7 +279,7 @@ instance Mul : Mul c.quotient :=
 
 /-- The kernel of the quotient map induced by a congruence relation `c` equals `c`. -/
 @[simp, to_additive "The kernel of the quotient map induced by an additive congruence relation\n`c` equals `c`."]
-theorem mul_ker_mk_eq : (mul_ker (coeₓ : M → c.quotient) fun x y => rfl) = c :=
+theorem mul_ker_mk_eq : (mul_ker (coe : M → c.quotient) fun x y => rfl) = c :=
   ext $ fun x y => Quotientₓ.eq'
 
 variable {c}
@@ -537,12 +537,12 @@ open _Root_.Quotient
       "Given an additive congruence relation `c` on a type `M` with an addition,\nthe order-preserving bijection between the set of additive congruence relations containing `c` and\nthe additive congruence relations on the quotient of `M` by `c`."]
 def correspondence : { d // c ≤ d } ≃o Con c.quotient where
   toFun := fun d =>
-    d.1.mapOfSurjective coeₓ _
+    d.1.mapOfSurjective coe _
         (by
           rw [mul_ker_mk_eq] <;> exact d.2) $
       @exists_rep _ c.to_setoid
   invFun := fun d =>
-    ⟨comap (coeₓ : M → c.quotient) (fun x y => rfl) d, fun _ _ h =>
+    ⟨comap (coe : M → c.quotient) (fun x y => rfl) d, fun _ _ h =>
       show d _ _ by
         rw [c.eq.2 h] <;> exact d.refl _⟩
   left_inv := fun d =>
@@ -553,7 +553,7 @@ def correspondence : { d // c ≤ d } ≃o Con c.quotient where
           d.1.trans (d.1.symm $ d.2 $ c.eq.1 hx) $ d.1.trans H $ d.2 $ c.eq.1 hy,
           fun h => ⟨_, _, rfl, rfl, h⟩⟩
   right_inv := fun d =>
-    let Hm : (mul_ker (coeₓ : M → c.quotient) fun x y => rfl) ≤ comap (coeₓ : M → c.quotient) (fun x y => rfl) d :=
+    let Hm : (mul_ker (coe : M → c.quotient) fun x y => rfl) ≤ comap (coe : M → c.quotient) (fun x y => rfl) d :=
       fun x y h =>
       show d _ _ by
         rw [mul_ker_mk_eq] at h <;> exact c.eq.2 h ▸ d.refl _
@@ -583,8 +583,8 @@ variable {M} [MulOneClass M] [MulOneClass N] [MulOneClass P] (c : Con M)
 instance MulOneClass : MulOneClass c.quotient where
   one := ((1 : M) : c.quotient)
   mul := · * ·
-  mul_one := fun x => Quotientₓ.induction_on' x $ fun _ => congr_argₓ coeₓ $ mul_oneₓ _
-  one_mul := fun x => Quotientₓ.induction_on' x $ fun _ => congr_argₓ coeₓ $ one_mulₓ _
+  mul_one := fun x => Quotientₓ.induction_on' x $ fun _ => congr_argₓ coe $ mul_oneₓ _
+  one_mul := fun x => Quotientₓ.induction_on' x $ fun _ => congr_argₓ coe $ one_mulₓ _
 
 variable {c}
 
@@ -658,7 +658,7 @@ variable (c)
 /-- The natural homomorphism from a monoid to its quotient by a congruence relation. -/
 @[to_additive "The natural homomorphism from an `add_monoid` to its quotient by an additive\ncongruence relation."]
 def mk' : M →* c.quotient :=
-  ⟨coeₓ, rfl, fun _ _ => rfl⟩
+  ⟨coe, rfl, fun _ _ => rfl⟩
 
 variable (x y : M)
 
@@ -679,7 +679,7 @@ theorem mk'_surjective : surjective c.mk' :=
   Quotientₓ.surjective_quotient_mk'
 
 @[simp, to_additive]
-theorem coe_mk' : (c.mk' : M → c.quotient) = coeₓ :=
+theorem coe_mk' : (c.mk' : M → c.quotient) = coe :=
   rfl
 
 /-- The elements related to `x ∈ M`, `M` a monoid, by the kernel of a monoid homomorphism are
@@ -854,7 +854,7 @@ noncomputable def quotient_ker_equiv_range (f : M →* P) : (ker f).Quotient ≃
   simps]
 def quotient_ker_equiv_of_right_inverse (f : M →* P) (g : P → M) (hf : Function.RightInverse g f) :
     (ker f).Quotient ≃* P :=
-  { ker_lift f with toFun := ker_lift f, invFun := coeₓ ∘ g,
+  { ker_lift f with toFun := ker_lift f, invFun := coe ∘ g,
     left_inv := fun x =>
       ker_lift_injective _
         (by
@@ -898,7 +898,7 @@ protected theorem pow {M : Type _} [Monoidₓ M] (c : Con M) : ∀ n : ℕ {w x}
     simpa [pow_succₓ] using c.mul h (pow n h)
 
 @[to_additive]
-instance {M : Type _} [MulOneClass M] (c : Con M) : HasOne c.quotient where
+instance {M : Type _} [MulOneClass M] (c : Con M) : One c.quotient where
   one := ((1 : M) : c.quotient)
 
 instance _root_.add_con.quotient.has_nsmul {M : Type _} [AddMonoidₓ M] (c : AddCon M) : HasScalar ℕ c.quotient where

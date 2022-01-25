@@ -42,7 +42,7 @@ open_locale Matrix
 
 /-- `to_matrix` returns a matrix containing ones and zeros. `f.to_matrix i j` is `1` if
   `f i = some j` and `0` otherwise -/
-def to_matrix [DecidableEq n] [HasZero α] [HasOne α] (f : m ≃. n) : Matrix m n α
+def to_matrix [DecidableEq n] [Zero α] [One α] (f : m ≃. n) : Matrix m n α
   | i, j => if j ∈ f i then 1 else 0
 
 theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiringₓ α] (f : l ≃. m) (M : Matrix m n α) i j :
@@ -54,12 +54,12 @@ theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiringₓ α] (f : l ≃
   · rw [Finset.sum_eq_single fi] <;> simp (config := { contextual := true })[h, eq_comm]
     
 
-theorem to_matrix_symm [DecidableEq m] [DecidableEq n] [HasZero α] [HasOne α] (f : m ≃. n) :
+theorem to_matrix_symm [DecidableEq m] [DecidableEq n] [Zero α] [One α] (f : m ≃. n) :
     (f.symm.to_matrix : Matrix n m α) = (f.to_matrix)ᵀ := by
   ext <;> simp only [transpose, mem_iff_mem f, to_matrix] <;> congr
 
 @[simp]
-theorem to_matrix_refl [DecidableEq n] [HasZero α] [HasOne α] : ((Pequiv.refl n).toMatrix : Matrix n n α) = 1 := by
+theorem to_matrix_refl [DecidableEq n] [Zero α] [One α] : ((Pequiv.refl n).toMatrix : Matrix n n α) = 1 := by
   ext <;> simp [to_matrix, one_apply] <;> congr
 
 theorem matrix_mul_apply [Fintype m] [Semiringₓ α] [DecidableEq n] (M : Matrix l m α) (f : m ≃. n) i j :
@@ -91,7 +91,7 @@ theorem to_matrix_trans [Fintype m] [DecidableEq m] [DecidableEq n] [Semiringₓ
   cases f i <;> simp
 
 @[simp]
-theorem to_matrix_bot [DecidableEq n] [HasZero α] [HasOne α] : ((⊥ : Pequiv m n).toMatrix : Matrix m n α) = 0 :=
+theorem to_matrix_bot [DecidableEq n] [Zero α] [One α] : ((⊥ : Pequiv m n).toMatrix : Matrix m n α) = 0 :=
   rfl
 
 theorem to_matrix_injective [DecidableEq n] [MonoidWithZeroₓ α] [Nontrivial α] :
@@ -141,7 +141,7 @@ theorem single_mul_single_right [Fintype n] [Fintype k] [DecidableEq n] [Decidab
   rw [← Matrix.mul_assoc, single_mul_single]
 
 /-- We can also define permutation matrices by permuting the rows of the identity matrix. -/
-theorem equiv_to_pequiv_to_matrix [DecidableEq n] [HasZero α] [HasOne α] (σ : Equivₓ n n) (i j : n) :
+theorem equiv_to_pequiv_to_matrix [DecidableEq n] [Zero α] [One α] (σ : Equivₓ n n) (i j : n) :
     σ.to_pequiv.to_matrix i j = (1 : Matrix n n α) (σ i) j :=
   if_congr Option.some_inj rfl rfl
 

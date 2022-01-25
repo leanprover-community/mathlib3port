@@ -27,7 +27,7 @@ theorem T_complex_cos (θ : ℂ) : ∀ n, (T ℂ n).eval (cos θ) = cos (n * θ)
     have aux : sin θ * sin θ = 1 - cos θ * cos θ := by
       rw [← sin_sq_add_cos_sq θ]
       ring
-    simp only [Nat.cast_add, Nat.cast_one, add_mulₓ, cos_add, one_mulₓ, sin_add, mul_assocₓ, aux]
+    simp only [Nat.cast_add, Nat.cast_one, add_mulₓ, cos_add, one_mulₓ, sin_add, mul_assoc, aux]
     ring
 
 /-- `cos (n * θ)` is equal to the `n`-th Chebyshev polynomial of the first kind evaluated
@@ -42,8 +42,8 @@ theorem U_complex_cos (θ : ℂ) (n : ℕ) : (U ℂ n).eval (cos θ) * sin θ = 
   · simp only [U_zero, Nat.cast_zero, eval_one, mul_oneₓ, zero_addₓ, one_mulₓ]
     
   · rw [U_eq_X_mul_U_add_T]
-    simp only [eval_add, eval_mul, eval_X, T_complex_cos, add_mulₓ, mul_assocₓ, hd, one_mulₓ]
-    conv_rhs => rw [sin_add, mul_commₓ]
+    simp only [eval_add, eval_mul, eval_X, T_complex_cos, add_mulₓ, mul_assoc, hd, one_mulₓ]
+    conv_rhs => rw [sin_add, mul_comm]
     push_cast
     simp only [add_mulₓ, one_mulₓ]
     

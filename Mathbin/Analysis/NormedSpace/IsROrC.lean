@@ -23,7 +23,7 @@ This file exists mainly to avoid importing `is_R_or_C` in the main normed space 
 
 open Metric
 
-@[simp]
+@[simp, is_R_or_C_simps]
 theorem IsROrC.norm_coe_norm {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E] {z : E} : ∥(∥z∥ : 𝕜)∥ = ∥z∥ := by
   unfold_coes
   simp only [norm_algebra_map_eq, RingHom.to_fun_eq_coe, norm_norm]
@@ -41,7 +41,7 @@ theorem norm_smul_inv_norm {x : E} (hx : x ≠ 0) : ∥(∥x∥⁻¹ : 𝕜) •
 theorem norm_smul_inv_norm' {r : ℝ} (r_nonneg : 0 ≤ r) {x : E} (hx : x ≠ 0) : ∥(r * ∥x∥⁻¹ : 𝕜) • x∥ = r := by
   have : ∥x∥ ≠ 0 := by
     simp [hx]
-  field_simp [norm_smul, IsROrC.norm_of_real, IsROrC.norm_eq_abs, r_nonneg]
+  field_simp [norm_smul, IsROrC.norm_eq_abs, r_nonneg] with is_R_or_C_simps
 
 theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜)
     (h : ∀, ∀ z ∈ sphere (0 : E) r, ∀, ∥f z∥ ≤ c) (z : E) : ∥f z∥ ≤ c / r * ∥z∥ := by
@@ -57,10 +57,10 @@ theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f :
   have r_ne_zero : (r : 𝕜) ≠ 0 := (algebraMap ℝ 𝕜).map_ne_zero.mpr r_pos.ne.symm
   have eq : f z = ∥z∥ / r * f z₁ := by
     rw [hz₁, LinearMap.map_smul, smul_eq_mul]
-    rw [← mul_assocₓ, ← mul_assocₓ, div_mul_cancel _ r_ne_zero, mul_inv_cancel, one_mulₓ]
+    rw [← mul_assoc, ← mul_assoc, div_mul_cancel _ r_ne_zero, mul_inv_cancel, one_mulₓ]
     simp only [z_zero, IsROrC.of_real_eq_zero, norm_eq_zero, Ne.def, not_false_iff]
   rw [Eq, NormedField.norm_mul, NormedField.norm_div, IsROrC.norm_coe_norm, IsROrC.norm_of_nonneg r_pos.le,
-    div_mul_eq_mul_div, div_mul_eq_mul_div, mul_commₓ]
+    div_mul_eq_mul_div, div_mul_eq_mul_div, mul_comm]
   apply div_le_div _ _ r_pos rfl.ge
   · exact mul_nonneg ((norm_nonneg _).trans norm_f_z₁) (norm_nonneg z)
     

@@ -211,7 +211,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = of_real (f b - f a) := by
     calc
       Icc a' b ⊆ Ioc a b := fun x hx => ⟨aa'.trans_le hx.1, hx.2⟩
       _ ⊆ ⋃ i, s i := hs
-      _ ⊆ ⋃ i, Ioo (g i).1 (g i).2 := Union_subset_Union fun i => (hg i).1
+      _ ⊆ ⋃ i, Ioo (g i).1 (g i).2 := Union_mono fun i => (hg i).1
       
   calc of_real (f b - f a) = of_real (f b - f a' + (f a' - f a)) := by
       rw [sub_add_sub_cancel]_ ≤ of_real (f b - f a') + of_real (f a' - f a) :=
@@ -266,7 +266,7 @@ theorem outer_trim : f.outer.trim = f.outer := by
             simpa using h₂⟩
   simp at hg
   apply infi_le_of_le (Union g) _
-  apply infi_le_of_le (subset.trans ht $ Union_subset_Union fun i => (hg i).1) _
+  apply infi_le_of_le (ht.trans $ Union_mono fun i => (hg i).1) _
   apply infi_le_of_le (MeasurableSet.Union fun i => (hg i).2.1) _
   exact le_transₓ (f.outer.Union _) (Ennreal.tsum_le_tsum $ fun i => (hg i).2.2)
 

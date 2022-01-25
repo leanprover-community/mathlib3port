@@ -41,7 +41,7 @@ protected def Semigroupₓ [Semigroupₓ M₂] (f : M₁ → M₂) (hf : injecti
   { ‹Mul M₁› with
     mul_assoc := fun x y z =>
       hf $ by
-        erw [mul, mul, mul, mul, mul_assocₓ] }
+        erw [mul, mul, mul, mul, mul_assoc] }
 
 /-- A type endowed with `*` is a commutative semigroup,
 if it admits an injective map that preserves `*` to a commutative semigroup.
@@ -54,7 +54,7 @@ protected def CommSemigroupₓ [CommSemigroupₓ M₂] (f : M₁ → M₂) (hf :
   { hf.semigroup f mul with
     mul_comm := fun x y =>
       hf $ by
-        erw [mul, mul, mul_commₓ] }
+        erw [mul, mul, mul_comm] }
 
 /-- A type endowed with `*` is a left cancel semigroup,
 if it admits an injective map that preserves `*` to a left cancel semigroup.
@@ -84,7 +84,7 @@ protected def RightCancelSemigroup [RightCancelSemigroup M₂] (f : M₁ → M�
         (mul_left_injₓ (f y)).1 $ by
           erw [← mul, ← mul, H] <;> rfl }
 
-variable [HasOne M₁]
+variable [One M₁]
 
 /-- A type endowed with `1` and `*` is a mul_one_class,
 if it admits an injective map that preserves `1` and `*` to a mul_one_class.
@@ -94,7 +94,7 @@ See note [reducible non-instances]. -/
       "A type endowed with `0` and `+` is an add_zero_class,\nif it admits an injective map that preserves `0` and `+` to an add_zero_class."]
 protected def MulOneClass [MulOneClass M₂] (f : M₁ → M₂) (hf : injective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) : MulOneClass M₁ :=
-  { ‹HasOne M₁›, ‹Mul M₁› with
+  { ‹One M₁›, ‹Mul M₁› with
     one_mul := fun x =>
       hf $ by
         erw [mul, one, one_mulₓ],
@@ -275,7 +275,7 @@ protected def Semigroupₓ [Semigroupₓ M₁] (f : M₁ → M₂) (hf : surject
   { ‹Mul M₂› with
     mul_assoc :=
       hf.forall₃.2 $ fun x y z => by
-        simp only [← mul, mul_assocₓ] }
+        simp only [← mul, mul_assoc] }
 
 /-- A type endowed with `*` is a commutative semigroup,
 if it admits a surjective map that preserves `*` from a commutative semigroup.
@@ -288,9 +288,9 @@ protected def CommSemigroupₓ [CommSemigroupₓ M₁] (f : M₁ → M₂) (hf :
   { hf.semigroup f mul with
     mul_comm :=
       hf.forall₂.2 $ fun x y => by
-        erw [← mul, ← mul, mul_commₓ] }
+        erw [← mul, ← mul, mul_comm] }
 
-variable [HasOne M₂]
+variable [One M₂]
 
 /-- A type endowed with `1` and `*` is a mul_one_class,
 if it admits a surjective map that preserves `1` and `*` from a mul_one_class.
@@ -300,7 +300,7 @@ See note [reducible non-instances]. -/
       "A type endowed with `0` and `+` is an add_zero_class,\nif it admits a surjective map that preserves `0` and `+` to an add_zero_class."]
 protected def MulOneClass [MulOneClass M₁] (f : M₁ → M₂) (hf : surjective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) : MulOneClass M₂ :=
-  { ‹HasOne M₂›, ‹Mul M₂› with
+  { ‹One M₂›, ‹Mul M₂› with
     one_mul :=
       hf.forall.2 $ fun x => by
         erw [← one, ← mul, one_mulₓ],

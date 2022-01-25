@@ -116,7 +116,7 @@ theorem transvection_mul_apply_same (b : n) (c : R) (M : Matrix n n R) :
 @[simp]
 theorem mul_transvection_apply_same (a : n) (c : R) (M : Matrix n n R) :
     (M ⬝ transvection i j c) a j = M a j + c * M a i := by
-  simp [transvection, Matrix.mul_add, mul_commₓ]
+  simp [transvection, Matrix.mul_add, mul_comm]
 
 @[simp]
 theorem transvection_mul_apply_of_ne (a b : n) (ha : a ≠ i) (c : R) (M : Matrix n n R) :

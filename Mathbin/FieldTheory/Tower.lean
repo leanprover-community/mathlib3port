@@ -96,7 +96,7 @@ theorem finrank_linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [Add
   let b := Basis.ofVectorSpace F V
   let c := Basis.ofVectorSpace F W
   rw [LinearEquiv.finrank_eq (LinearMap.toMatrix b c), Matrix.finrank_matrix, finrank_eq_card_basis b,
-    finrank_eq_card_basis c, mul_commₓ]
+    finrank_eq_card_basis c, mul_comm]
 
 instance linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K] [FiniteDimensional F K]
     [AddCommGroupₓ V] [Module F V] [FiniteDimensional F V] : FiniteDimensional K (V →ₗ[F] K) :=
@@ -109,7 +109,7 @@ theorem finrank_linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Fi
     calc
       finrank F K * finrank K (V →ₗ[F] K) = finrank F (V →ₗ[F] K) := finrank_mul_finrank _ _ _
       _ = finrank F V * finrank F K := finrank_linear_map F V K
-      _ = finrank F K * finrank F V := mul_commₓ _ _
+      _ = finrank F K * finrank F V := mul_comm _ _
       
 
 end FiniteDimensional

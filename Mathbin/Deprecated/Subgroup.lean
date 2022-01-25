@@ -209,22 +209,22 @@ theorem center_normal : IsNormalSubgroup (center G) :=
   { one_mem := by
       simp [center],
     mul_mem := fun a b ha hb g => by
-      rw [← mul_assocₓ, mem_center.2 ha g, mul_assocₓ, mem_center.2 hb g, ← mul_assocₓ],
+      rw [← mul_assoc, mem_center.2 ha g, mul_assoc, mem_center.2 hb g, ← mul_assoc],
     inv_mem := fun a ha g =>
       calc
         g * a⁻¹ = a⁻¹ * (g * a) * a⁻¹ := by
           simp [ha g]
         _ = a⁻¹ * g := by
-          rw [← mul_assocₓ, mul_assocₓ] <;> simp
+          rw [← mul_assoc, mul_assoc] <;> simp
         ,
     Normal := fun n ha g h =>
       calc
         h * (g * n * g⁻¹) = h * n := by
-          simp [ha g, mul_assocₓ]
+          simp [ha g, mul_assoc]
         _ = g * g⁻¹ * n * h := by
           rw [ha h] <;> simp
         _ = g * n * g⁻¹ * h := by
-          rw [mul_assocₓ g, ha (g⁻¹), ← mul_assocₓ]
+          rw [mul_assoc g, ha (g⁻¹), ← mul_assoc]
          }
 
 /-- The underlying set of the normalizer of a subset `S : set G` of a group `G`. That is,
@@ -239,9 +239,9 @@ theorem normalizer_is_subgroup (s : Set G) : IsSubgroup (normalizer s) :=
   { one_mem := by
       simp [normalizer],
     mul_mem := fun a b ha : ∀ n, n ∈ s ↔ a * n * a⁻¹ ∈ s hb : ∀ n, n ∈ s ↔ b * n * b⁻¹ ∈ s n => by
-      rw [mul_inv_rev, ← mul_assocₓ, mul_assocₓ a, mul_assocₓ a, ← ha, ← hb],
+      rw [mul_inv_rev, ← mul_assoc, mul_assoc a, mul_assoc a, ← ha, ← hb],
     inv_mem := fun a ha : ∀ n, n ∈ s ↔ a * n * a⁻¹ ∈ s n => by
-      rw [ha (a⁻¹ * n * a⁻¹⁻¹)] <;> simp [mul_assocₓ] }
+      rw [ha (a⁻¹ * n * a⁻¹⁻¹)] <;> simp [mul_assoc] }
 
 @[to_additive subset_add_normalizer]
 theorem subset_normalizer {s : Set G} (hs : IsSubgroup s) : s ⊆ normalizer s := fun g hg n => by
@@ -512,11 +512,11 @@ theorem mem_closure_union_iff {G : Type _} [CommGroupₓ G] {s t : Set G} {x : G
   constructor
   · rintro ⟨_, ⟨ys, hys, yt, hyt, rfl⟩, _, ⟨zs, hzs, zt, hzt, rfl⟩, rfl⟩
     refine' ⟨_, ⟨_, hys, _, hzs, rfl⟩, _, ⟨_, hyt, _, hzt, rfl⟩, _⟩
-    rw [mul_assocₓ, mul_assocₓ, mul_left_commₓ zs]
+    rw [mul_assoc, mul_assoc, mul_left_commₓ zs]
     
   · rintro ⟨_, ⟨ys, hys, zs, hzs, rfl⟩, _, ⟨yt, hyt, zt, hzt, rfl⟩, rfl⟩
     refine' ⟨_, ⟨ys, hys, yt, hyt, rfl⟩, _, ⟨zs, hzs, zt, hzt, rfl⟩, _⟩
-    rw [mul_assocₓ, mul_assocₓ, mul_left_commₓ yt]
+    rw [mul_assoc, mul_assoc, mul_left_commₓ yt]
     
 
 end Groupₓ
@@ -546,7 +546,7 @@ theorem conjugates_of_subset {t : Set G} (ht : IsNormalSubgroup t) {a : G} (h : 
   rwa [← w]
 
 theorem conjugates_of_set_subset' {s t : Set G} (ht : IsNormalSubgroup t) (h : s ⊆ t) : conjugates_of_set s ⊆ t :=
-  Set.bUnion_subset fun x H => conjugates_of_subset ht (h H)
+  Set.Union₂_subset fun x H => conjugates_of_subset ht (h H)
 
 /-- The normal closure of a set s is the subgroup closure of all the conjugates of
 elements of s. It is the smallest normal subgroup containing s. -/

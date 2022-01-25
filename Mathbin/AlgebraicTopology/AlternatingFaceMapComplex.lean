@@ -94,7 +94,7 @@ theorem d_squared (n : ℕ) : obj_d X (n + 1) ≫ obj_d X n = 0 := by
     have ineq : jj ≤ i := by
       rw [← Finₓ.coe_fin_le]
       simpa using hij
-    rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Finₓ.cast_succ_cast_lt, mul_commₓ]
+    rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Finₓ.cast_succ_cast_lt, mul_comm]
     
   · rintro ⟨i, j⟩ ⟨i', j'⟩ hij hij' h
     rw [Prod.mk.inj_iffₓ]

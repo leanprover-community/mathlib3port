@@ -63,19 +63,19 @@ instance [HasRepr α] : HasRepr (pair α) :=
 def map {β : Type _} (f : α → β) (gp : pair α) : pair β :=
   ⟨f gp.a, f gp.b⟩
 
-section coeₓ
+section coe
 
 variable {β : Type _} [Coe α β]
 
 /-- Coerce a pair by elementwise coercion. -/
 instance has_coe_to_generalized_continued_fraction_pair : Coe (pair α) (pair β) :=
-  ⟨map coeₓ⟩
+  ⟨map coe⟩
 
 @[simp, norm_cast]
 theorem coe_to_generalized_continued_fraction_pair {a b : α} : (↑pair.mk a b : pair β) = pair.mk (a : β) (b : β) :=
   rfl
 
-end coeₓ
+end coe
 
 end GeneralizedContinuedFraction.Pair
 
@@ -135,7 +135,7 @@ instance terminated_at_decidable (g : GeneralizedContinuedFraction α) (n : ℕ)
 def terminates (g : GeneralizedContinuedFraction α) : Prop :=
   g.s.terminates
 
-section coeₓ
+section coe
 
 /-! Interlude: define some expected coercions. -/
 
@@ -145,15 +145,15 @@ variable {β : Type _} [Coe α β]
 /-- Coerce a gcf by elementwise coercion. -/
 instance has_coe_to_generalized_continued_fraction :
     Coe (GeneralizedContinuedFraction α) (GeneralizedContinuedFraction β) :=
-  ⟨fun g => ⟨(g.h : β), (g.s.map coeₓ : Seqₓₓ $ pair β)⟩⟩
+  ⟨fun g => ⟨(g.h : β), (g.s.map coe : Seqₓₓ $ pair β)⟩⟩
 
 @[simp, norm_cast]
 theorem coe_to_generalized_continued_fraction {g : GeneralizedContinuedFraction α} :
     (↑(g : GeneralizedContinuedFraction α) : GeneralizedContinuedFraction β) =
-      ⟨(g.h : β), (g.s.map coeₓ : Seqₓₓ $ pair β)⟩ :=
+      ⟨(g.h : β), (g.s.map coe : Seqₓₓ $ pair β)⟩ :=
   rfl
 
-end coeₓ
+end coe
 
 end GeneralizedContinuedFraction
 
@@ -171,7 +171,7 @@ equal to one.
                                       b₃ + ...
 
 -/
-def GeneralizedContinuedFraction.IsSimpleContinuedFraction (g : GeneralizedContinuedFraction α) [HasOne α] : Prop :=
+def GeneralizedContinuedFraction.IsSimpleContinuedFraction (g : GeneralizedContinuedFraction α) [One α] : Prop :=
   ∀ n : ℕ aₙ : α, g.partial_numerators.nth n = some aₙ → aₙ = 1
 
 variable (α)
@@ -193,14 +193,14 @@ For convenience, one often writes `[h; b₀, b₁, b₂,...]`.
 It is encoded as the subtype of gcfs that satisfy
 `generalized_continued_fraction.is_simple_continued_fraction`.
  -/
-def SimpleContinuedFraction [HasOne α] :=
+def SimpleContinuedFraction [One α] :=
   { g : GeneralizedContinuedFraction α // g.is_simple_continued_fraction }
 
 variable {α}
 
 namespace SimpleContinuedFraction
 
-variable [HasOne α]
+variable [One α]
 
 /-- Constructs a simple continued fraction without fractional part. -/
 def of_integer (a : α) : SimpleContinuedFraction α :=
@@ -225,7 +225,7 @@ end SimpleContinuedFraction
 /-- A simple continued fraction is a *(regular) continued fraction* ((r)cf) if all partial denominators
 `bᵢ` are positive, i.e. `0 < bᵢ`.
 -/
-def SimpleContinuedFraction.IsContinuedFraction [HasOne α] [HasZero α] [LT α] (s : SimpleContinuedFraction α) : Prop :=
+def SimpleContinuedFraction.IsContinuedFraction [One α] [Zero α] [LT α] (s : SimpleContinuedFraction α) : Prop :=
   ∀ n : ℕ bₙ : α, (↑s : GeneralizedContinuedFraction α).partialDenominators.nth n = some bₙ → 0 < bₙ
 
 variable (α)
@@ -234,7 +234,7 @@ variable (α)
 denominators are all positive. It is the subtype of scfs that satisfy
 `simple_continued_fraction.is_continued_fraction`.
  -/
-def ContinuedFraction [HasOne α] [HasZero α] [LT α] :=
+def ContinuedFraction [One α] [Zero α] [LT α] :=
   { s : SimpleContinuedFraction α // s.is_continued_fraction }
 
 variable {α}
@@ -244,7 +244,7 @@ variable {α}
 
 namespace ContinuedFraction
 
-variable [HasOne α] [HasZero α] [LT α]
+variable [One α] [Zero α] [LT α]
 
 /-- Constructs a continued fraction without fractional part. -/
 def of_integer (a : α) : ContinuedFraction α :=

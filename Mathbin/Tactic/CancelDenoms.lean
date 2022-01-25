@@ -29,15 +29,15 @@ namespace CancelFactors
 theorem mul_subst {α} [CommRingₓ α] {n1 n2 k e1 e2 t1 t2 : α} (h1 : n1 * e1 = t1) (h2 : n2 * e2 = t2)
     (h3 : n1 * n2 = k) : k * (e1 * e2) = t1 * t2 := by
   have h3 : n1 * n2 = k := h3
-  rw [← h3, mul_commₓ n1, mul_assocₓ n2, ← mul_assocₓ n1, h1, ← mul_assocₓ n2, mul_commₓ n2, mul_assocₓ, h2]
+  rw [← h3, mul_comm n1, mul_assoc n2, ← mul_assoc n1, h1, ← mul_assoc n2, mul_comm n2, mul_assoc, h2]
 
 theorem div_subst {α} [Field α] {n1 n2 k e1 e2 t1 : α} (h1 : n1 * e1 = t1) (h2 : n2 / e2 = 1) (h3 : n1 * n2 = k) :
     k * (e1 / e2) = t1 := by
-  rw [← h3, mul_assocₓ, mul_div_comm, h2, ← mul_assocₓ, h1, mul_commₓ, one_mulₓ]
+  rw [← h3, mul_assoc, mul_div_comm, h2, ← mul_assoc, h1, mul_comm, one_mulₓ]
 
 theorem cancel_factors_eq_div {α} [Field α] {n e e' : α} (h : n * e = e') (h2 : n ≠ 0) : e = e' / n :=
   eq_div_of_mul_eq h2 $ by
-    rwa [mul_commₓ] at h
+    rwa [mul_comm] at h
 
 theorem add_subst {α} [Ringₓ α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) : n * (e1 + e2) = t1 + t2 :=
   by
@@ -52,26 +52,26 @@ theorem neg_subst {α} [Ringₓ α] {n e t : α} (h1 : n * e = t) : n * -e = -t 
 
 theorem cancel_factors_lt {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
     (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a < b) = (1 / gcd * (bd * a') < 1 / gcd * (ad * b')) := by
-  rw [mul_lt_mul_left, ← ha, ← hb, ← mul_assocₓ, ← mul_assocₓ, mul_commₓ bd, mul_lt_mul_left]
+  rw [mul_lt_mul_left, ← ha, ← hb, ← mul_assoc, ← mul_assoc, mul_comm bd, mul_lt_mul_left]
   exact mul_pos had hbd
   exact one_div_pos.2 hgcd
 
 theorem cancel_factors_le {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
     (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a ≤ b) = (1 / gcd * (bd * a') ≤ 1 / gcd * (ad * b')) := by
-  rw [mul_le_mul_left, ← ha, ← hb, ← mul_assocₓ, ← mul_assocₓ, mul_commₓ bd, mul_le_mul_left]
+  rw [mul_le_mul_left, ← ha, ← hb, ← mul_assoc, ← mul_assoc, mul_comm bd, mul_le_mul_left]
   exact mul_pos had hbd
   exact one_div_pos.2 hgcd
 
 theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
     (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a = b) = (1 / gcd * (bd * a') = 1 / gcd * (ad * b')) := by
-  rw [← ha, ← hb, ← mul_assocₓ bd, ← mul_assocₓ ad, mul_commₓ bd]
+  rw [← ha, ← hb, ← mul_assoc bd, ← mul_assoc ad, mul_comm bd]
   ext
   constructor
   · rintro rfl
     rfl
     
   · intro h
-    simp only [← mul_assocₓ] at h
+    simp only [← mul_assoc] at h
     refine' mul_left_cancel₀ (mul_ne_zero _ _) h
     apply mul_ne_zero
     apply div_ne_zero
@@ -255,7 +255,7 @@ unsafe def tactic.interactive.cancel_denoms (l : parse location) : tactic Unit :
   let locs ← l.get_locals
   tactic.replace_at cancel_denominators_in_type locs l.include_goal >>= guardb <|>
       fail "failed to cancel any denominators"
-  tactic.interactive.norm_num [simp_arg_type.symm_expr (pquote.1 mul_assocₓ)] l
+  tactic.interactive.norm_num [simp_arg_type.symm_expr (pquote.1 mul_assoc)] l
 
 add_tactic_doc
   { Name := "cancel_denoms", category := DocCategory.tactic, declNames := [`tactic.interactive.cancel_denoms],

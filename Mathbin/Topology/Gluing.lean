@@ -292,10 +292,10 @@ structure mk_core where
   t : ∀ i j, (opens.to_Top _).obj (V i j) ⟶ (opens.to_Top _).obj (V j i)
   V_id : ∀ i, V i i = ⊤
   t_id : ∀ i, ⇑t i i = id
-  t_inter : ∀ ⦃i j⦄ k x : V i j, ↑x ∈ V i k → @coeₓ (V j i) (U j) _ (t i j x) ∈ V j k
+  t_inter : ∀ ⦃i j⦄ k x : V i j, ↑x ∈ V i k → @coe (V j i) (U j) _ (t i j x) ∈ V j k
   cocycle :
     ∀ i j k x : V i j h : ↑x ∈ V i k,
-      @coeₓ (V k j) (U k) _ (t j k ⟨↑t i j x, t_inter k x h⟩) = @coeₓ (V k i) (U k) _ (t i k ⟨x, h⟩)
+      @coe (V k j) (U k) _ (t j k ⟨↑t i j x, t_inter k x h⟩) = @coe (V k i) (U k) _ (t i k ⟨x, h⟩)
 
 theorem mk_core.t_inv (h : mk_core) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i) x) = x := by
   have := h.cocycle j i j x _
@@ -355,7 +355,7 @@ def mk' (h : mk_core.{u}) : Top.GlueData where
     ext1 ⟨⟨⟨x, hx⟩, ⟨x', hx'⟩⟩, rfl : x = x'⟩
     simp only [Top.comp_app, ContinuousMap.coe_mk, Prod.mk.inj_iffₓ, Top.id_app, Subtype.mk_eq_mk, Subtype.coe_mk]
     rw [← subtype.coe_injective.eq_iff, Subtype.val_eq_coe, Subtype.coe_mk, and_selfₓ]
-    convert congr_argₓ coeₓ (h.t_inv k i ⟨x, hx'⟩) using 3
+    convert congr_argₓ coe (h.t_inv k i ⟨x, hx'⟩) using 3
     ext
     exact h.cocycle i j k ⟨x, hx⟩ hx'
 

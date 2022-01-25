@@ -95,7 +95,7 @@ theorem mk_eq_mk {a h a' h'} : @mk α p a h = @mk α p a' h' ↔ a = a' :=
 theorem coe_eq_iff {a : { a // p a }} {b : α} : ↑a = b ↔ ∃ h, a = ⟨b, h⟩ :=
   ⟨fun h => h ▸ ⟨a.2, (coe_eta _ _).symm⟩, fun ⟨hb, ha⟩ => ha.symm ▸ rfl⟩
 
-theorem coe_injective : injective (coeₓ : Subtype p → α) := fun a b => Subtype.ext
+theorem coe_injective : injective (coe : Subtype p → α) := fun a b => Subtype.ext
 
 theorem val_injective : injective (@val _ p) :=
   coe_injective
@@ -107,7 +107,7 @@ def restrict {α} {β : α → Type _} (f : ∀ x, β x) (p : α → Prop) (x : 
 theorem restrict_apply {α} {β : α → Type _} (f : ∀ x, β x) (p : α → Prop) (x : Subtype p) : restrict f p x = f x.1 := by
   rfl
 
-theorem restrict_def {α β} (f : α → β) (p : α → Prop) : restrict f p = f ∘ coeₓ := by
+theorem restrict_def {α β} (f : α → β) (p : α → Prop) : restrict f p = f ∘ coe := by
   rfl
 
 theorem restrict_injective {α β} {f : α → β} (p : α → Prop) (h : injective f) : injective (restrict f p) :=

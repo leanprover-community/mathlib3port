@@ -40,7 +40,7 @@ variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 section Constructions
 
 instance {p : α → Prop} [t : TopologicalSpace α] : TopologicalSpace (Subtype p) :=
-  induced coeₓ t
+  induced coe t
 
 instance {r : α → α → Prop} [t : TopologicalSpace α] : TopologicalSpace (Quot r) :=
   coinduced (Quot.mk r) t
@@ -77,7 +77,7 @@ theorem DenseRange.quotient [Setoidₓ α] [TopologicalSpace α] {f : β → α}
   (surjective_quotient_mk α).DenseRange.comp hf continuous_coinduced_rng
 
 instance {p : α → Prop} [TopologicalSpace α] [DiscreteTopology α] : DiscreteTopology (Subtype p) :=
-  ⟨bot_unique $ fun s hs => ⟨coeₓ '' s, is_open_discrete _, Set.preimage_image_eq _ Subtype.coe_injective⟩⟩
+  ⟨bot_unique $ fun s hs => ⟨coe '' s, is_open_discrete _, Set.preimage_image_eq _ Subtype.coe_injective⟩⟩
 
 instance Sum.discrete_topology [TopologicalSpace α] [TopologicalSpace β] [hα : DiscreteTopology α]
     [hβ : DiscreteTopology β] : DiscreteTopology (Sum α β) :=
@@ -95,11 +95,11 @@ section Topα
 variable [TopologicalSpace α]
 
 theorem mem_nhds_subtype (s : Set α) (a : { x // x ∈ s }) (t : Set { x // x ∈ s }) :
-    t ∈ 𝓝 a ↔ ∃ u ∈ 𝓝 (a : α), coeₓ ⁻¹' u ⊆ t :=
-  mem_nhds_induced coeₓ a t
+    t ∈ 𝓝 a ↔ ∃ u ∈ 𝓝 (a : α), coe ⁻¹' u ⊆ t :=
+  mem_nhds_induced coe a t
 
-theorem nhds_subtype (s : Set α) (a : { x // x ∈ s }) : 𝓝 a = comap coeₓ (𝓝 (a : α)) :=
-  nhds_induced coeₓ a
+theorem nhds_subtype (s : Set α) (a : { x // x ∈ s }) : 𝓝 a = comap coe (𝓝 (a : α)) :=
+  nhds_induced coe a
 
 end Topα
 
@@ -620,10 +620,10 @@ section Subtype
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {p : α → Prop}
 
-theorem embedding_subtype_coe : Embedding (coeₓ : Subtype p → α) :=
+theorem embedding_subtype_coe : Embedding (coe : Subtype p → α) :=
   ⟨⟨rfl⟩, Subtype.coe_injective⟩
 
-theorem closed_embedding_subtype_coe (h : IsClosed { a | p a }) : ClosedEmbedding (coeₓ : Subtype p → α) :=
+theorem closed_embedding_subtype_coe (h : IsClosed { a | p a }) : ClosedEmbedding (coe : Subtype p → α) :=
   ⟨embedding_subtype_coe, by
     rwa [Subtype.range_coe_subtype]⟩
 
@@ -631,24 +631,24 @@ theorem closed_embedding_subtype_coe (h : IsClosed { a | p a }) : ClosedEmbeddin
 theorem continuous_subtype_val : Continuous (@Subtype.val α p) :=
   continuous_induced_dom
 
-theorem continuous_subtype_coe : Continuous (coeₓ : Subtype p → α) :=
+theorem continuous_subtype_coe : Continuous (coe : Subtype p → α) :=
   continuous_subtype_val
 
 theorem Continuous.subtype_coe {f : β → Subtype p} (hf : Continuous f) : Continuous fun x => (f x : α) :=
   continuous_subtype_coe.comp hf
 
-theorem IsOpen.open_embedding_subtype_coe {s : Set α} (hs : IsOpen s) : OpenEmbedding (coeₓ : s → α) :=
-  { induced := rfl, inj := Subtype.coe_injective, open_range := (Subtype.range_coe : range coeₓ = s).symm ▸ hs }
+theorem IsOpen.open_embedding_subtype_coe {s : Set α} (hs : IsOpen s) : OpenEmbedding (coe : s → α) :=
+  { induced := rfl, inj := Subtype.coe_injective, open_range := (Subtype.range_coe : range coe = s).symm ▸ hs }
 
-theorem IsOpen.is_open_map_subtype_coe {s : Set α} (hs : IsOpen s) : IsOpenMap (coeₓ : s → α) :=
+theorem IsOpen.is_open_map_subtype_coe {s : Set α} (hs : IsOpen s) : IsOpenMap (coe : s → α) :=
   hs.open_embedding_subtype_coe.is_open_map
 
 theorem IsOpenMap.restrict {f : α → β} (hf : IsOpenMap f) {s : Set α} (hs : IsOpen s) : IsOpenMap (s.restrict f) :=
   hf.comp hs.is_open_map_subtype_coe
 
 theorem IsClosed.closed_embedding_subtype_coe {s : Set α} (hs : IsClosed s) :
-    ClosedEmbedding (coeₓ : { x // x ∈ s } → α) :=
-  { induced := rfl, inj := Subtype.coe_injective, closed_range := (Subtype.range_coe : range coeₓ = s).symm ▸ hs }
+    ClosedEmbedding (coe : { x // x ∈ s } → α) :=
+  { induced := rfl, inj := Subtype.coe_injective, closed_range := (Subtype.range_coe : range coe = s).symm ▸ hs }
 
 @[continuity]
 theorem continuous_subtype_mk {f : β → α} (hp : ∀ x, p (f x)) (h : Continuous f) :
@@ -658,15 +658,15 @@ theorem continuous_subtype_mk {f : β → α} (hp : ∀ x, p (f x)) (h : Continu
 theorem continuous_inclusion {s t : Set α} (h : s ⊆ t) : Continuous (inclusion h) :=
   continuous_subtype_mk _ continuous_subtype_coe
 
-theorem continuous_at_subtype_coe {p : α → Prop} {a : Subtype p} : ContinuousAt (coeₓ : Subtype p → α) a :=
+theorem continuous_at_subtype_coe {p : α → Prop} {a : Subtype p} : ContinuousAt (coe : Subtype p → α) a :=
   continuous_iff_continuous_at.mp continuous_subtype_coe _
 
 theorem map_nhds_subtype_coe_eq {a : α} (ha : p a) (h : { a | p a } ∈ 𝓝 a) :
-    map (coeₓ : Subtype p → α) (𝓝 ⟨a, ha⟩) = 𝓝 a :=
+    map (coe : Subtype p → α) (𝓝 ⟨a, ha⟩) = 𝓝 a :=
   map_nhds_induced_of_mem $ by
     simpa only [Subtype.coe_mk, Subtype.range_coe] using h
 
-theorem nhds_subtype_eq_comap {a : α} {h : p a} : 𝓝 (⟨a, h⟩ : Subtype p) = comap coeₓ (𝓝 a) :=
+theorem nhds_subtype_eq_comap {a : α} {h : p a} : 𝓝 (⟨a, h⟩ : Subtype p) = comap coe (𝓝 a) :=
   nhds_induced _ _
 
 theorem tendsto_subtype_rng {β : Type _} {p : α → Prop} {b : Filter β} {f : β → Subtype p} :
@@ -681,7 +681,7 @@ theorem continuous_subtype_nhds_cover {ι : Sort _} {f : α → β} {c : ι → 
     let ⟨i, (c_sets : { x | c i x } ∈ 𝓝 x)⟩ := c_cover x
     let x' : Subtype (c i) := ⟨x, mem_of_mem_nhds c_sets⟩
     calc
-      map f (𝓝 x) = map f (map coeₓ (𝓝 x')) := congr_argₓ (map f) (map_nhds_subtype_coe_eq _ $ c_sets).symm
+      map f (𝓝 x) = map f (map coe (𝓝 x')) := congr_argₓ (map f) (map_nhds_subtype_coe_eq _ $ c_sets).symm
       _ = map (fun x : Subtype (c i) => f x) (𝓝 x') := rfl
       _ ≤ 𝓝 (f x) := continuous_iff_continuous_at.mp (f_cont i) x'
       
@@ -690,11 +690,11 @@ theorem continuous_subtype_is_closed_cover {ι : Sort _} {f : α → β} (c : ι
     (h_lf : LocallyFinite fun i => { x | c i x }) (h_is_closed : ∀ i, IsClosed { x | c i x })
     (h_cover : ∀ x, ∃ i, c i x) (f_cont : ∀ i, Continuous fun x : Subtype (c i) => f x) : Continuous f :=
   continuous_iff_is_closed.mpr $ fun s hs => by
-    have : ∀ i, IsClosed ((coeₓ : { x | c i x } → α) '' (f ∘ coeₓ ⁻¹' s)) := fun i =>
+    have : ∀ i, IsClosed ((coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s)) := fun i =>
       (closed_embedding_subtype_coe (h_is_closed _)).IsClosedMap _ (hs.preimage (f_cont i))
-    have : IsClosed (⋃ i, (coeₓ : { x | c i x } → α) '' (f ∘ coeₓ ⁻¹' s)) :=
+    have : IsClosed (⋃ i, (coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s)) :=
       LocallyFinite.is_closed_Union (h_lf.subset $ fun i x ⟨⟨x', hx'⟩, _, HEq⟩ => HEq ▸ hx') this
-    have : f ⁻¹' s = ⋃ i, (coeₓ : { x | c i x } → α) '' (f ∘ coeₓ ⁻¹' s) := by
+    have : f ⁻¹' s = ⋃ i, (coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s) := by
       apply Set.ext
       have : ∀ x : α, f x ∈ s ↔ ∃ i : ι, c i x ∧ f x ∈ s := fun x =>
         ⟨fun hx =>
@@ -705,7 +705,7 @@ theorem continuous_subtype_is_closed_cover {ι : Sort _} {f : α → β} (c : ι
     rwa [this]
 
 theorem closure_subtype {x : { a // p a }} {s : Set { a // p a }} :
-    x ∈ Closure s ↔ (x : α) ∈ Closure ((coeₓ : _ → α) '' s) :=
+    x ∈ Closure s ↔ (x : α) ∈ Closure ((coe : _ → α) '' s) :=
   closure_induced
 
 end Subtype

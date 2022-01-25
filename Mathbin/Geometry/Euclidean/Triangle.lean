@@ -99,8 +99,8 @@ theorem norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi {x y : V} (h : angl
   by_cases' hxy : x = y
   · rw [hxy]
     
-  · rw [← norm_neg (y - x), neg_sub, mul_commₓ, mul_commₓ ∥y∥, div_eq_mul_inv, div_eq_mul_inv, mul_inv_rev₀,
-      mul_inv_rev₀, ← mul_assocₓ, ← mul_assocₓ] at h
+  · rw [← norm_neg (y - x), neg_sub, mul_comm, mul_comm ∥y∥, div_eq_mul_inv, div_eq_mul_inv, mul_inv_rev₀, mul_inv_rev₀,
+      ← mul_assoc, ← mul_assoc] at h
     replace h := mul_right_cancel₀ (inv_ne_zero fun hz => hxy (eq_of_sub_eq_zero (norm_eq_zero.1 hz))) h
     rw [inner_sub_right, inner_sub_right, real_inner_comm x y, real_inner_self_eq_norm_mul_norm,
       real_inner_self_eq_norm_mul_norm, mul_sub_right_distrib, mul_sub_right_distrib, mul_self_mul_inv,
@@ -114,7 +114,7 @@ theorem norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi {x y : V} (h : angl
         rw [hy0, norm_zero, h]
         
       · rw [inv_sub_inv (fun hz => hx0 (norm_eq_zero.1 hz)) fun hz => hy0 (norm_eq_zero.1 hz), ← neg_sub, ←
-          mul_div_assoc, mul_commₓ, mul_div_assoc, ← mul_neg_one] at h
+          mul_div_assoc, mul_comm, mul_div_assoc, ← mul_neg_one] at h
         symm
         by_contra hyx
         replace h := (mul_left_cancel₀ (sub_ne_zero_of_ne hyx) h).symm
@@ -201,7 +201,7 @@ theorem sin_angle_sub_add_angle_sub_rev_eq_sin_angle {x y : V} (hx : x ≠ 0) (h
       by
       ring
     rw [right_distrib, right_distrib, right_distrib, right_distrib, H1, sin_angle_mul_norm_mul_norm, norm_sub_rev x y,
-      H2, sin_angle_mul_norm_mul_norm, norm_sub_rev y x, mul_assocₓ (Real.sin (angle x y)), sin_angle_mul_norm_mul_norm,
+      H2, sin_angle_mul_norm_mul_norm, norm_sub_rev y x, mul_assoc (Real.sin (angle x y)), sin_angle_mul_norm_mul_norm,
       inner_sub_left, inner_sub_left, inner_sub_right, inner_sub_right, inner_sub_right, inner_sub_right,
       real_inner_comm x y, H3, H4, real_inner_self_eq_norm_mul_norm, real_inner_self_eq_norm_mul_norm,
       real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two]

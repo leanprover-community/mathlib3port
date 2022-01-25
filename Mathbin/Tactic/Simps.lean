@@ -135,7 +135,7 @@ unsafe def notation_class_attr : user_attribute Unit (Bool × Option Name) where
   parser := Prod.mk <$> Option.isNone <$> «expr ?» (tk "*") <*> «expr ?» ident
 
 attribute [notation_class]
-  HasZero HasOne Add Mul HasInv Neg Sub Div HasDvd Mod LE LT Append HasAndthen HasUnion HasInter HasSdiff HasEquivₓ HasSubset HasSsubset HasEmptyc HasInsert HasSingleton HasSep HasMem Pow
+  Zero One Add Mul HasInv Neg Sub Div HasDvd Mod LE LT Append HasAndthen HasUnion HasInter HasSdiff HasEquivₓ HasSubset HasSsubset HasEmptyc HasInsert HasSingleton HasSep HasMem Pow
 
 attribute [notation_class* coeSort] CoeSort
 

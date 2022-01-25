@@ -256,7 +256,7 @@ theorem lift_inj {a b : Cardinal} : lift a = lift b ↔ a = b :=
 theorem lift_lt {a b : Cardinal} : lift a < lift b ↔ a < b :=
   lift_order_embedding.lt_iff_lt
 
-instance : HasZero Cardinal.{u} :=
+instance : Zero Cardinal.{u} :=
   ⟨# Pempty⟩
 
 instance : Inhabited Cardinal.{u} :=
@@ -286,7 +286,7 @@ theorem mk_ne_zero_iff {α : Type u} : # α ≠ 0 ↔ Nonempty α :=
 theorem mk_ne_zero (α : Type u) [Nonempty α] : # α ≠ 0 :=
   mk_ne_zero_iff.2 ‹_›
 
-instance : HasOne Cardinal.{u} :=
+instance : One Cardinal.{u} :=
   ⟨⟦PUnit⟧⟩
 
 instance : Nontrivial Cardinal.{u} :=
@@ -342,7 +342,7 @@ theorem mk_prod (α : Type u) (β : Type v) : # (α × β) = lift.{v, u} (# α) 
 protected theorem add_commₓ (a b : Cardinal.{u}) : a + b = b + a :=
   induction_on₂ a b $ fun α β => mk_congr (Equivₓ.sumComm α β)
 
-protected theorem mul_commₓ (a b : Cardinal.{u}) : a * b = b * a :=
+protected theorem mul_comm (a b : Cardinal.{u}) : a * b = b * a :=
   induction_on₂ a b $ fun α β => mk_congr (Equivₓ.prodComm α β)
 
 protected theorem zero_addₓ (a : Cardinal.{u}) : 0 + a = a :=
@@ -450,7 +450,7 @@ theorem mul_power {a b c : Cardinal} : (a * b^c) = (a^c) * (b^c) :=
   induction_on₃ a b c $ fun α β γ => (Equivₓ.arrowProdEquivProdArrow α β γ).cardinal_eq
 
 theorem power_mul {a b c : Cardinal} : (a^b * c) = ((a^b)^c) := by
-  rw [mul_commₓ b c] <;> exact induction_on₃ a b c $ fun α β γ => mk_congr (Equivₓ.curry γ β α)
+  rw [mul_comm b c] <;> exact induction_on₃ a b c $ fun α β γ => mk_congr (Equivₓ.curry γ β α)
 
 @[simp]
 theorem pow_cast_right (κ : Cardinal.{u}) (n : ℕ) : (κ^(↑n : Cardinal.{u})) = κ ^ℕ n :=
@@ -908,7 +908,7 @@ instance : CharZero Cardinal :=
 theorem nat_cast_inj {m n : ℕ} : (m : Cardinal) = n ↔ m = n :=
   Nat.cast_inj
 
-theorem nat_cast_injective : injective (coeₓ : ℕ → Cardinal) :=
+theorem nat_cast_injective : injective (coe : ℕ → Cardinal) :=
   Nat.cast_injective
 
 @[simp, norm_cast]
@@ -942,7 +942,7 @@ theorem one_le_iff_ne_zero {c : Cardinal} : 1 ≤ c ↔ c ≠ 0 := by
 
 theorem nat_lt_omega (n : ℕ) : (n : Cardinal.{u}) < ω :=
   succ_le.1 $ by
-    rw [← nat_succ, ← lift_mk_fin, omega, lift_mk_le.{0, 0, u}] <;> exact ⟨⟨coeₓ, fun a b => Finₓ.ext⟩⟩
+    rw [← nat_succ, ← lift_mk_fin, omega, lift_mk_le.{0, 0, u}] <;> exact ⟨⟨coe, fun a b => Finₓ.ext⟩⟩
 
 @[simp]
 theorem one_lt_omega : 1 < ω := by
@@ -976,7 +976,7 @@ theorem lt_omega_iff_finite {α} {S : Set α} : # S < ω ↔ finite S :=
   lt_omega_iff_fintype.trans finite_def.symm
 
 instance can_lift_cardinal_nat : CanLift Cardinal ℕ :=
-  ⟨coeₓ, fun x => x < ω, fun x hx =>
+  ⟨coe, fun x => x < ω, fun x hx =>
     let ⟨n, hn⟩ := lt_omega.mp hx
     ⟨n, hn.symm⟩⟩
 
@@ -1113,7 +1113,7 @@ theorem to_nat_cast (n : ℕ) : Cardinal.toNat n = n := by
   exact (Classical.some_spec (lt_omega.1 (nat_lt_omega n))).symm
 
 /-- `to_nat` has a right-inverse: coercion. -/
-theorem to_nat_right_inverse : Function.RightInverse (coeₓ : ℕ → Cardinal) to_nat :=
+theorem to_nat_right_inverse : Function.RightInverse (coe : ℕ → Cardinal) to_nat :=
   to_nat_cast
 
 theorem to_nat_surjective : surjective to_nat :=
@@ -1138,7 +1138,7 @@ theorem one_to_nat : to_nat 1 = 1 := by
 theorem to_nat_eq_one {c : Cardinal} : to_nat c = 1 ↔ c = 1 :=
   ⟨fun h =>
     (cast_to_nat_of_lt_omega (lt_of_not_geₓ (one_ne_zero ∘ h.symm.trans ∘ to_nat_apply_of_omega_le))).symm.trans
-      ((congr_argₓ coeₓ h).trans Nat.cast_one),
+      ((congr_argₓ coe h).trans Nat.cast_one),
     fun h => (congr_argₓ to_nat h).trans one_to_nat⟩
 
 theorem to_nat_eq_one_iff_unique {α : Type _} : (# α).toNat = 1 ↔ Subsingleton α ∧ Nonempty α :=

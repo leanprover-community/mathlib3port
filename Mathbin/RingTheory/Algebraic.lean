@@ -168,7 +168,7 @@ theorem IsIntegralClosure.exists_smul_eq_mul {L : Type _} [Field L] [Algebra R S
   refine' ⟨IsIntegralClosure.mk' S (c : L) c.2, d, d_ne, IsIntegralClosure.algebra_map_injective S R L _⟩
   simp only [Algebra.smul_def, RingHom.map_mul, IsIntegralClosure.algebra_map_mk', ← hx, ←
     IsScalarTower.algebra_map_apply]
-  rw [← mul_assocₓ _ (_ / _), mul_div_cancel' (algebraMap S L a), mul_commₓ]
+  rw [← mul_assoc _ (_ / _), mul_div_cancel' (algebraMap S L a), mul_comm]
   exact mt ((RingHom.injective_iff _).mp (IsIntegralClosure.algebra_map_injective S R L) _) hb
 
 section Field
@@ -177,7 +177,7 @@ variable {K L : Type _} [Field K] [Field L] [Algebra K L] (A : Subalgebra K L)
 
 theorem inv_eq_of_aeval_div_X_ne_zero {x : L} {p : Polynomial K} (aeval_ne : aeval x (div_X p) ≠ 0) :
     x⁻¹ = aeval x (div_X p) / (aeval x p - algebraMap _ _ (p.coeff 0)) := by
-  rw [inv_eq_iff, inv_div, div_eq_iff, sub_eq_iff_eq_add, mul_commₓ]
+  rw [inv_eq_iff, inv_div, div_eq_iff, sub_eq_iff_eq_add, mul_comm]
   conv_lhs => rw [← div_X_mul_X_add p]
   rw [AlgHom.map_add, AlgHom.map_mul, aeval_X, aeval_C]
   exact aeval_ne
@@ -275,7 +275,7 @@ noncomputable instance Polynomial.algebraPi : Algebra (Polynomial R') (S' → T'
     map_add' := fun f g =>
       funext $ fun z => by
         simp ,
-    commutes' := fun p f => funext $ fun z => mul_commₓ _ _,
+    commutes' := fun p f => funext $ fun z => mul_comm _ _,
     smul_def' := fun p f =>
       funext $ fun z => by
         simp [Algebra.algebra_map_eq_smul_one] }

@@ -73,7 +73,7 @@ unsafe def rearr_comp (e : expr) : tactic expr :=
 
 /-- If `e` is of the form `((n : ℕ) : ℤ)`, `is_nat_int_coe e` returns `n : ℕ`. -/
 unsafe def is_nat_int_coe : expr → Option expr
-  | quote.1 (@coeₓ ℕ ℤ (%%ₓ_) (%%ₓn)) => some n
+  | quote.1 (@coe ℕ ℤ (%%ₓ_) (%%ₓn)) => some n
   | _ => none
 
 /-- If `e : ℕ`, returns a proof of `0 ≤ (e : ℤ)`. -/

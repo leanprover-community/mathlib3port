@@ -77,7 +77,7 @@ theorem mul_is_left_regular_iff (b : R) (ha : IsLeftRegular a) : IsLeftRegular (
 element, then `b` is right-regular. -/
 theorem IsRightRegular.of_mul (ab : IsRightRegular (b * a)) : IsRightRegular b := by
   refine' fun x y xy => ab (_ : x * (b * a) = y * (b * a))
-  rw [← mul_assocₓ, ← mul_assocₓ]
+  rw [← mul_assoc, ← mul_assoc]
   exact congr_funₓ (congr_argₓ Mul.mul xy) a
 
 /-- An element is right-regular if and only if multiplying it on the right with a right-regular
@@ -193,7 +193,7 @@ theorem is_regular_mul_iff : IsRegular (a * b) ↔ IsRegular a ∧ IsRegular b :
   refine'
     ⟨fun ab =>
       ⟨ab, by
-        rwa [mul_commₓ]⟩,
+        rwa [mul_comm]⟩,
       fun rab => rab.1⟩
 
 end CommSemigroupₓ
@@ -258,7 +258,7 @@ def mulRightEmbedding {G : Type _} [RightCancelSemigroup G] (g : G) : G ↪ G wh
 theorem mul_left_embedding_eq_mul_right_embedding {G : Type _} [CancelCommMonoid G] (g : G) :
     mulLeftEmbedding g = mulRightEmbedding g := by
   ext
-  exact mul_commₓ _ _
+  exact mul_comm _ _
 
 /-- Elements of a left cancel semigroup are left regular. -/
 theorem is_left_regular_of_left_cancel_semigroup [LeftCancelSemigroup R] (g : R) : IsLeftRegular g :=

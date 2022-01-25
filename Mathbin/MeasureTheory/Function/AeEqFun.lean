@@ -377,19 +377,19 @@ instance [Inhabited β] : Inhabited (α →ₘ[μ] β) :=
   ⟨const α default⟩
 
 @[to_additive]
-instance [HasOne β] : HasOne (α →ₘ[μ] β) :=
+instance [One β] : One (α →ₘ[μ] β) :=
   ⟨const α 1⟩
 
 @[to_additive]
-theorem one_def [HasOne β] : (1 : α →ₘ[μ] β) = mk (fun a : α => 1) ae_measurable_const :=
+theorem one_def [One β] : (1 : α →ₘ[μ] β) = mk (fun a : α => 1) ae_measurable_const :=
   rfl
 
 @[to_additive]
-theorem coe_fn_one [HasOne β] : ⇑(1 : α →ₘ[μ] β) =ᵐ[μ] 1 :=
+theorem coe_fn_one [One β] : ⇑(1 : α →ₘ[μ] β) =ᵐ[μ] 1 :=
   coe_fn_const _ _
 
 @[simp, to_additive]
-theorem one_to_germ [HasOne β] : (1 : α →ₘ[μ] β).toGerm = 1 :=
+theorem one_to_germ [One β] : (1 : α →ₘ[μ] β).toGerm = 1 :=
   rfl
 
 section Monoidₓ
@@ -528,7 +528,7 @@ theorem lintegral_mono {f g : α →ₘ[μ] ℝ≥0∞} : f ≤ g → lintegral 
 
 section PosPart
 
-variable [TopologicalSpace γ] [LinearOrderₓ γ] [OrderClosedTopology γ] [second_countable_topology γ] [HasZero γ]
+variable [TopologicalSpace γ] [LinearOrderₓ γ] [OrderClosedTopology γ] [second_countable_topology γ] [Zero γ]
   [OpensMeasurableSpace γ]
 
 /-- Positive part of an `ae_eq_fun`. -/

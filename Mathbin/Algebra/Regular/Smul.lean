@@ -131,7 +131,7 @@ end Monoidₓ
 
 section MonoidWithZeroₓ
 
-variable [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] [HasZero M] [MulActionWithZero R M] [MulActionWithZero R S]
+variable [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] [Zero M] [MulActionWithZero R M] [MulActionWithZero R S]
   [MulActionWithZero S M] [IsScalarTower R S M]
 
 /-- The element `0` is `M`-regular if and only if `M` is trivial. -/
@@ -186,7 +186,7 @@ theorem mul_iff : IsSmulRegular M (a * b) ↔ IsSmulRegular M a ∧ IsSmulRegula
   exact
     ⟨fun ab =>
       ⟨ab, by
-        rwa [mul_commₓ]⟩,
+        rwa [mul_comm]⟩,
       fun rab => rab.1⟩
 
 end CommMonoidₓ
@@ -205,7 +205,7 @@ theorem is_smul_regular_of_group [MulAction G R] (g : G) : IsSmulRegular R g := 
 
 end Groupₓ
 
-variable [MonoidWithZeroₓ R] [HasZero M] [MulActionWithZero R M]
+variable [MonoidWithZeroₓ R] [Zero M] [MulActionWithZero R M]
 
 /-- Any element in `Rˣ` is `M`-regular. -/
 theorem Units.is_smul_regular (a : (R)ˣ) : IsSmulRegular M (a : R) :=

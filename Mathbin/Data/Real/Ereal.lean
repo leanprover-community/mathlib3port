@@ -96,7 +96,7 @@ def _root_.ennreal.to_ereal : ℝ≥0∞ → Ereal
 instance has_coe_ennreal : Coe ℝ≥0∞ Ereal :=
   ⟨Ennreal.toEreal⟩
 
-instance : HasZero Ereal :=
+instance : Zero Ereal :=
   ⟨(0 : ℝ)⟩
 
 instance : Inhabited Ereal :=
@@ -118,7 +118,7 @@ protected def rec {C : Ereal → Sort _} (h_bot : C ⊥) (h_real : ∀ a : ℝ, 
 
 
 instance : CanLift Ereal ℝ where
-  coe := coeₓ
+  coe := coe
   cond := fun r => r ≠ ⊤ ∧ r ≠ ⊥
   prf := fun x hx => by
     induction x using Ereal.rec

@@ -57,7 +57,7 @@ theorem two_le_central_binom (n : ℕ) (n_pos : 0 < n) : 2 ≤ central_binom n :
 -/
 theorem succ_mul_central_binom_succ (n : ℕ) : (n + 1) * central_binom (n + 1) = 2 * (2 * n + 1) * central_binom n :=
   calc
-    (n + 1) * (2 * (n + 1)).choose (n + 1) = (2 * n + 2).choose (n + 1) * (n + 1) := mul_commₓ _ _
+    (n + 1) * (2 * (n + 1)).choose (n + 1) = (2 * n + 2).choose (n + 1) * (n + 1) := mul_comm _ _
     _ = (2 * n + 1).choose n * (2 * n + 2) := by
       rw [choose_succ_right_eq, choose_mul_succ_eq]
     _ = 2 * ((2 * n + 1).choose n * (n + 1)) := by
@@ -67,7 +67,7 @@ theorem succ_mul_central_binom_succ (n : ℕ) : (n + 1) * central_binom (n + 1) 
     _ = 2 * ((2 * n).choose n * (2 * n + 1)) := by
       rw [choose_mul_succ_eq]
     _ = 2 * (2 * n + 1) * (2 * n).choose n := by
-      rw [mul_assocₓ, mul_commₓ (2 * n + 1)]
+      rw [mul_assoc, mul_comm (2 * n + 1)]
     
 
 /-- An exponential lower bound on the central binomial coefficient.
@@ -87,7 +87,7 @@ theorem four_pow_lt_mul_central_binom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * 
       (mul_lt_mul_left zero_lt_four).mpr
         (IH n n.lt_succ_self (Nat.le_of_lt_succₓ hn))_ ≤ 2 * (2 * n + 1) * central_binom n :=
       by
-      rw [← mul_assocₓ]
+      rw [← mul_assoc]
       linarith _ = (n + 1) * central_binom (n + 1) := (succ_mul_central_binom_succ n).symm
 
 /-- An exponential lower bound on the central binomial coefficient.
@@ -106,7 +106,7 @@ theorem four_pow_le_two_mul_self_mul_central_binom : ∀ n : ℕ n_pos : 0 < n, 
     calc
       4 ^ n ≤ n * central_binom n := (four_pow_lt_mul_central_binom _ le_add_self).le
       _ ≤ 2 * n * central_binom n := by
-        rw [mul_assocₓ]
+        rw [mul_assoc]
         refine' le_mul_of_pos_left zero_lt_two
       
 

@@ -45,14 +45,14 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
     dsimp [t]
     rw [choose_succ_succ, Nat.cast_add, mul_addₓ]
     congr 1
-    · rw [pow_succₓ x, succ_sub_succ, mul_assocₓ, mul_assocₓ, mul_assocₓ]
+    · rw [pow_succₓ x, succ_sub_succ, mul_assoc, mul_assoc, mul_assoc]
       
-    · rw [← mul_assocₓ y, ← mul_assocₓ y, (h.symm.pow_right i.succ).Eq]
+    · rw [← mul_assoc y, ← mul_assoc y, (h.symm.pow_right i.succ).Eq]
       by_cases' h_eq : i = n
       · rw [h_eq, choose_succ_self, Nat.cast_zero, mul_zero, mul_zero]
         
       · rw [succ_sub (lt_of_le_of_neₓ h_le h_eq)]
-        rw [pow_succₓ y, mul_assocₓ, mul_assocₓ, mul_assocₓ, mul_assocₓ]
+        rw [pow_succₓ y, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
         
       
   induction' n with n ih

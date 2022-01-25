@@ -15,7 +15,7 @@ namespace SetLike
 set_like objects. If we add those instances, we should remove this one. -/
 @[nolint dangerous_instance, instance]
 noncomputable instance (priority := 100) {A B : Type _} [Fintype B] [SetLike A B] : Fintype A :=
-  Fintype.ofInjective coeₓ SetLike.coe_injective
+  Fintype.ofInjective coe SetLike.coe_injective
 
 end SetLike
 

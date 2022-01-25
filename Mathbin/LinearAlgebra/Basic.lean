@@ -73,7 +73,7 @@ variable {V : Type _} {V₂ : Type _}
 
 namespace Finsupp
 
-theorem smul_sum {α : Type _} {β : Type _} {R : Type _} {M : Type _} [HasZero β] [Monoidₓ R] [AddCommMonoidₓ M]
+theorem smul_sum {α : Type _} {β : Type _} {R : Type _} {M : Type _} [Zero β] [Monoidₓ R] [AddCommMonoidₓ M]
     [DistribMulAction R M] {v : α →₀ β} {c : R} {h : α → β → M} : c • v.sum h = v.sum fun a b => c • h a b :=
   Finset.smul_sum
 
@@ -956,7 +956,7 @@ theorem span_induction' {p : span R s → Prop} (Hs : ∀ x h : x ∈ s, p ⟨x,
         fun r x hx => Exists.elim hx $ fun hx' hx => ⟨smul_mem _ _ hx', H2 r _ hx⟩
 
 @[simp]
-theorem span_span_coe_preimage : span R ((coeₓ : span R s → M) ⁻¹' s) = ⊤ := by
+theorem span_span_coe_preimage : span R ((coe : span R s → M) ⁻¹' s) = ⊤ := by
   refine' eq_top_iff.2 fun x hx => span_induction' (fun x hx => _) _ _ (fun r x hx => _) x
   · exact subset_span hx
     
@@ -994,7 +994,7 @@ section
 variable (R M)
 
 /-- `span` forms a Galois insertion with the coercion from submodule to set. -/
-protected def gi : GaloisInsertion (@span R M _ _ _) coeₓ where
+protected def gi : GaloisInsertion (@span R M _ _ _) coe where
   choice := fun s _ => span R s
   gc := fun s t => span_le
   le_l_u := fun s => subset_span
@@ -1077,7 +1077,7 @@ theorem coe_supr_of_chain (a : ℕ →o Submodule R M) : (↑⨆ k, a k : Set M)
 
 /-- We can regard `coe_supr_of_chain` as the statement that `coe : (submodule R M) → set M` is
 Scott continuous for the ω-complete partial order induced by the complete lattice structures. -/
-theorem coe_scott_continuous : OmegaCompletePartialOrder.Continuous' (coeₓ : Submodule R M → Set M) :=
+theorem coe_scott_continuous : OmegaCompletePartialOrder.Continuous' (coe : Submodule R M → Set M) :=
   ⟨SetLike.coe_mono, coe_supr_of_chain⟩
 
 @[simp]
@@ -1574,7 +1574,7 @@ theorem ext_on_range {v : ι → M} {f g : M →ₛₗ[σ₁₂] M₂} (hv : spa
 
 section Finsupp
 
-variable {γ : Type _} [HasZero γ]
+variable {γ : Type _} [Zero γ]
 
 @[simp]
 theorem map_finsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : ι →₀ γ} {g : ι → γ → M} : f (t.sum g) = t.sum fun i d => f (g i d) :=
@@ -1597,7 +1597,7 @@ variable {γ : ι → Type _} [DecidableEq ι]
 
 section Sum
 
-variable [∀ i, HasZero (γ i)] [∀ i x : γ i, Decidable (x ≠ 0)]
+variable [∀ i, Zero (γ i)] [∀ i x : γ i, Decidable (x ≠ 0)]
 
 @[simp]
 theorem map_dfinsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀ i, γ i} {g : ∀ i, γ i → M} :
@@ -1984,7 +1984,7 @@ theorem span_singleton_sup_ker_eq_top (f : V →ₗ[K] K) {x : V} (hx : f x ≠ 
     Submodule.mem_sup.2
       ⟨(f y * f x⁻¹) • x, Submodule.mem_span_singleton.2 ⟨f y * f x⁻¹, rfl⟩,
         ⟨y - (f y * f x⁻¹) • x, by
-          rw [LinearMap.mem_ker, f.map_sub, f.map_smul, smul_eq_mul, mul_assocₓ, inv_mul_cancel hx, mul_oneₓ, sub_self],
+          rw [LinearMap.mem_ker, f.map_sub, f.map_smul, smul_eq_mul, mul_assoc, inv_mul_cancel hx, mul_oneₓ, sub_self],
           by
           simp only [add_sub_cancel'_right]⟩⟩
 
@@ -2201,7 +2201,7 @@ variable [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
 include σ₂₁
 
 /-- Between two zero modules, the zero map is an equivalence. -/
-instance : HasZero (M ≃ₛₗ[σ₁₂] M₂) :=
+instance : Zero (M ≃ₛₗ[σ₁₂] M₂) :=
   ⟨{ (0 : M →ₛₗ[σ₁₂] M₂) with toFun := 0, invFun := 0, right_inv := fun x => Subsingleton.elimₓ _ _,
       left_inv := fun x => Subsingleton.elimₓ _ _ }⟩
 
@@ -2294,7 +2294,7 @@ variable [Semiringₓ R] [Semiringₓ R₂]
 
 variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
 
-variable [Module R M] [Module R₂ M₂] [HasZero γ]
+variable [Module R M] [Module R₂ M₂] [Zero γ]
 
 variable {τ₁₂ : R →+* R₂} {τ₂₁ : R₂ →+* R}
 
@@ -2329,7 +2329,7 @@ variable {γ : ι → Type _} [DecidableEq ι]
 include τ₂₁
 
 @[simp]
-theorem map_dfinsupp_sum [∀ i, HasZero (γ i)] [∀ i x : γ i, Decidable (x ≠ 0)] (f : M ≃ₛₗ[τ₁₂] M₂) (t : Π₀ i, γ i)
+theorem map_dfinsupp_sum [∀ i, Zero (γ i)] [∀ i x : γ i, Decidable (x ≠ 0)] (f : M ≃ₛₗ[τ₁₂] M₂) (t : Π₀ i, γ i)
     (g : ∀ i, γ i → M) : f (t.sum g) = t.sum fun i d => f (g i d) :=
   f.map_sum _
 

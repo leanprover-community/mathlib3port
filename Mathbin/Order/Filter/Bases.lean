@@ -695,7 +695,7 @@ theorem has_countable_basis.is_countably_generated {f : Filter α} {p : ι → P
 theorem antitone_seq_of_seq (s : ℕ → Set α) : ∃ t : ℕ → Set α, Antitone t ∧ (⨅ i, 𝓟 $ s i) = ⨅ i, 𝓟 (t i) := by
   use fun n => ⋂ m ≤ n, s m
   constructor
-  · exact fun i j hij => bInter_mono' (Iic_subset_Iic.2 hij) fun n hn => subset.refl _
+  · exact fun i j hij => bInter_mono (Iic_subset_Iic.2 hij) fun n hn => subset.refl _
     
   apply le_antisymmₓ <;> rw [le_infi_iff] <;> intro i
   · rw [le_principal_iff]

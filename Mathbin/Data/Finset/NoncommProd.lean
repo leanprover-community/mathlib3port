@@ -136,7 +136,7 @@ theorem noncomm_prod_cons' (s : Multiset α) (a : α) (comm : ∀, ∀ x ∈ a :
   induction' s with hd tl IH
   · simp
     
-  · rw [List.prod_cons, mul_assocₓ, ← IH, ← mul_assocₓ, ← mul_assocₓ]
+  · rw [List.prod_cons, mul_assoc, ← IH, ← mul_assoc, ← mul_assoc]
     · congr 1
       apply comm <;> simp
       

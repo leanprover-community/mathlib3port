@@ -57,7 +57,7 @@ theorem dvd_choose_of_middling_prime (p : ℕ) (is_prime : Nat.Prime p) (m : ℕ
   have expanded : choose (2 * m + 1) (m + 1) * (m + 1)! * (2 * m + 1 - (m + 1))! = (2 * m + 1)! :=
     @choose_mul_factorial_mul_factorial (2 * m + 1) (m + 1) m_size
   have p_div_big_fact : p ∣ (2 * m + 1)! := (prime.dvd_factorial is_prime).mpr p_small
-  rw [← expanded, mul_assocₓ] at p_div_big_fact
+  rw [← expanded, mul_assoc] at p_div_big_fact
   obtain p_div_choose | p_div_facts : p ∣ choose (2 * m + 1) (m + 1) ∨ p ∣ _ ! * _ ! :=
     (prime.dvd_mul is_prime).1 p_div_big_fact
   · exact p_div_choose

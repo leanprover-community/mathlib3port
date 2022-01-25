@@ -17,6 +17,9 @@ which matches the action of `mul_action_set`.
 
 These are all available in the `pointwise` locale.
 
+Additionally, it provides `add_submonoid.has_mul`, which is available globally to match
+`submodule.has_mul`.
+
 ## Implementation notes
 
 Most of the lemmas in this file are direct copies of lemmas from `algebra/pointwise.lean`.
@@ -27,7 +30,9 @@ on `set`s.
 -/
 
 
-variable {α : Type _} {M : Type _} {G : Type _} {A : Type _} [Monoidₓ M] [AddMonoidₓ A]
+variable {α : Type _} {G : Type _} {M : Type _} {R : Type _} {A : Type _}
+
+variable [Monoidₓ M] [AddMonoidₓ A]
 
 namespace Submonoid
 
@@ -309,6 +314,95 @@ theorem le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubmonoid A} 
 end GroupWithZeroₓ
 
 open_locale Pointwise
+
+end AddSubmonoid
+
+/-! ### Elementwise multiplication of two additive submonoids
+
+These definitions are a cut-down versions of the ones around `submodule.has_mul`, as that API is
+usually more useful. -/
+
+
+namespace AddSubmonoid
+
+variable [NonUnitalNonAssocSemiring R]
+
+/-- Multiplication of additive submonoids of a semiring R. The additive submonoid `S * T` is the
+smallest R-submodule of `R` containing the elements `s * t` for `s ∈ S` and `t ∈ T`. -/
+instance : Mul (AddSubmonoid R) :=
+  ⟨fun M N => ⨆ s : M, N.map $ AddMonoidHom.mul s.1⟩
+
+theorem mul_mem_mul {M N : AddSubmonoid R} {m n : R} (hm : m ∈ M) (hn : n ∈ N) : m * n ∈ M * N :=
+  (le_supr _ ⟨m, hm⟩ : _ ≤ M * N) ⟨n, hn, rfl⟩
+
+theorem mul_le {M N P : AddSubmonoid R} : M * N ≤ P ↔ ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, m * n ∈ P :=
+  ⟨fun H m hm n hn => H $ mul_mem_mul hm hn, fun H =>
+    supr_le $ fun ⟨m, hm⟩ => map_le_iff_le_comap.2 $ fun n hn => H m hm n hn⟩
+
+@[elab_as_eliminator]
+protected theorem mul_induction_on {M N : AddSubmonoid R} {C : R → Prop} {r : R} (hr : r ∈ M * N)
+    (hm : ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, C (m * n)) (ha : ∀ x y, C x → C y → C (x + y)) : C r :=
+  (@mul_le _ _ _ _
+        ⟨C, by
+          simpa only [zero_mul] using hm _ (zero_mem _) _ (zero_mem _), ha⟩).2
+    hm hr
+
+open_locale Pointwise
+
+variable (R)
+
+theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S * T) := by
+  apply le_antisymmₓ
+  · rw [mul_le]
+    intro a ha b hb
+    apply closure_induction ha
+    work_on_goal 0
+      intros
+      apply closure_induction hb
+      work_on_goal 0
+        intros
+        exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
+    all_goals
+      intros
+      simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm, smul_mul_assoc]
+      try
+        apply add_mem _ _ _
+      try
+        apply smul_mem _ _ _
+    assumption'
+    
+  · rw [closure_le]
+    rintro _ ⟨a, b, ha, hb, rfl⟩
+    exact mul_mem_mul (subset_closure ha) (subset_closure hb)
+    
+
+variable {R}
+
+@[simp]
+theorem mul_bot (S : AddSubmonoid R) : S * ⊥ = ⊥ :=
+  eq_bot_iff.2 $
+    mul_le.2 $ fun m hm n hn => by
+      rw [AddSubmonoid.mem_bot] at hn⊢ <;> rw [hn, mul_zero]
+
+@[simp]
+theorem bot_mul (S : AddSubmonoid R) : ⊥ * S = ⊥ :=
+  eq_bot_iff.2 $
+    mul_le.2 $ fun m hm n hn => by
+      rw [AddSubmonoid.mem_bot] at hm⊢ <;> rw [hm, zero_mul]
+
+@[mono]
+theorem mul_le_mul {M N P Q : AddSubmonoid R} (hmp : M ≤ P) (hnq : N ≤ Q) : M * N ≤ P * Q :=
+  mul_le.2 $ fun m hm n hn => mul_mem_mul (hmp hm) (hnq hn)
+
+theorem mul_le_mul_left {M N P : AddSubmonoid R} (h : M ≤ N) : M * P ≤ N * P :=
+  mul_le_mul h (le_reflₓ P)
+
+theorem mul_le_mul_right {M N P : AddSubmonoid R} (h : N ≤ P) : M * N ≤ M * P :=
+  mul_le_mul (le_reflₓ M) h
+
+theorem mul_subset_mul {M N : AddSubmonoid R} : (↑M : Set R) * (↑N : Set R) ⊆ (↑(M * N) : Set R) := by
+  rintro _ ⟨i, j, hi, hj, rfl⟩
+  exact mul_mem_mul hi hj
 
 end AddSubmonoid
 

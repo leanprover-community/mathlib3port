@@ -119,7 +119,7 @@ class Semiringₓ (α : Type u) extends NonUnitalSemiring α, NonAssocSemiring �
 
 section InjectiveSurjectiveMaps
 
-variable [HasZero β] [Add β] [Mul β]
+variable [Zero β] [Add β] [Mul β]
 
 /-- Pullback a `non_unital_non_assoc_semiring` instance along an injective function.
 See note [reducible non-instances]. -/
@@ -139,7 +139,7 @@ protected def Function.Injective.nonUnitalSemiring {α : Type u} [NonUnitalSemir
 /-- Pullback a `non_assoc_semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.nonAssocSemiring {α : Type u} [NonAssocSemiring α] [HasOne β] (f : β → α)
+protected def Function.Injective.nonAssocSemiring {α : Type u} [NonAssocSemiring α] [One β] (f : β → α)
     (hf : injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) : NonAssocSemiring β :=
   { hf.non_unital_non_assoc_semiring f zero add mul, hf.mul_one_class f one mul with }
@@ -147,7 +147,7 @@ protected def Function.Injective.nonAssocSemiring {α : Type u} [NonAssocSemirin
 /-- Pullback a `semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.semiring {α : Type u} [Semiringₓ α] [HasOne β] (f : β → α) (hf : injective f)
+protected def Function.Injective.semiring {α : Type u} [Semiringₓ α] [One β] (f : β → α) (hf : injective f)
     (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) :
     Semiringₓ β :=
   { hf.monoid_with_zero f zero one mul, hf.add_comm_monoid f zero add, hf.distrib f add mul with }
@@ -170,7 +170,7 @@ protected def Function.Surjective.nonUnitalSemiring {α : Type u} [NonUnitalSemi
 /-- Pushforward a `non_assoc_semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.nonAssocSemiring {α : Type u} [NonAssocSemiring α] [HasOne β] (f : α → β)
+protected def Function.Surjective.nonAssocSemiring {α : Type u} [NonAssocSemiring α] [One β] (f : α → β)
     (hf : surjective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) : NonAssocSemiring β :=
   { hf.non_unital_non_assoc_semiring f zero add mul, hf.mul_one_class f one mul with }
@@ -178,7 +178,7 @@ protected def Function.Surjective.nonAssocSemiring {α : Type u} [NonAssocSemiri
 /-- Pushforward a `semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.semiring {α : Type u} [Semiringₓ α] [HasOne β] (f : α → β) (hf : surjective f)
+protected def Function.Surjective.semiring {α : Type u} [Semiringₓ α] [One β] (f : α → β) (hf : surjective f)
     (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) :
     Semiringₓ β :=
   { hf.monoid_with_zero f zero one mul, hf.add_comm_monoid f zero add, hf.distrib f add mul with }
@@ -367,7 +367,7 @@ end RingHomClass
 
 namespace RingHom
 
-section coeₓ
+section coe
 
 /-!
 Throughout this section, some `semiring` arguments are specified with `{}` instead of `[]`.
@@ -437,7 +437,7 @@ theorem to_add_monoid_hom_eq_coe (f : α →+* β) : f.to_add_monoid_hom = f :=
 theorem coe_add_monoid_hom_mk (f : α → β) h₁ h₂ h₃ h₄ : ((⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) : α →+ β) = ⟨f, h₃, h₄⟩ :=
   rfl
 
-end coeₓ
+end coe
 
 variable [rα : NonAssocSemiring α] [rβ : NonAssocSemiring β]
 
@@ -467,10 +467,10 @@ theorem ext_iff {f g : α →+* β} : f = g ↔ ∀ x, f x = g x :=
 theorem mk_coe (f : α →+* β) h₁ h₂ h₃ h₄ : RingHom.mk f h₁ h₂ h₃ h₄ = f :=
   ext $ fun _ => rfl
 
-theorem coe_add_monoid_hom_injective : Function.Injective (coeₓ : (α →+* β) → α →+ β) := fun f g h =>
+theorem coe_add_monoid_hom_injective : Function.Injective (coe : (α →+* β) → α →+ β) := fun f g h =>
   ext fun x => AddMonoidHom.congr_fun h x
 
-theorem coe_monoid_hom_injective : Function.Injective (coeₓ : (α →+* β) → α →* β) := fun f g h =>
+theorem coe_monoid_hom_injective : Function.Injective (coe : (α →+* β) → α →* β) := fun f g h =>
   ext fun x => MonoidHom.congr_fun h x
 
 /-- Ring homomorphisms map zero to zero. -/
@@ -664,7 +664,7 @@ variable [CommSemiringₓ α] [CommSemiringₓ β] {a b c : α}
 /-- Pullback a `semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.commSemiring [HasZero γ] [HasOne γ] [Add γ] [Mul γ] (f : γ → α) (hf : injective f)
+protected def Function.Injective.commSemiring [Zero γ] [One γ] [Add γ] [Mul γ] (f : γ → α) (hf : injective f)
     (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) :
     CommSemiringₓ γ :=
   { hf.semiring f zero one add mul, hf.comm_semigroup f mul with }
@@ -672,13 +672,13 @@ protected def Function.Injective.commSemiring [HasZero γ] [HasOne γ] [Add γ] 
 /-- Pushforward a `semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.commSemiring [HasZero γ] [HasOne γ] [Add γ] [Mul γ] (f : α → γ) (hf : surjective f)
+protected def Function.Surjective.commSemiring [Zero γ] [One γ] [Add γ] [Mul γ] (f : α → γ) (hf : surjective f)
     (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) :
     CommSemiringₓ γ :=
   { hf.semiring f zero one add mul, hf.comm_semigroup f mul with }
 
 theorem add_mul_self_eq (a b : α) : (a + b) * (a + b) = a * a + 2 * a * b + b * b := by
-  simp only [two_mul, add_mulₓ, mul_addₓ, add_assocₓ, mul_commₓ b]
+  simp only [two_mul, add_mulₓ, mul_addₓ, add_assocₓ, mul_comm b]
 
 theorem HasDvd.Dvd.linear_comb {d x y : α} (hdx : d ∣ x) (hdy : d ∣ y) (a b : α) : d ∣ a * x + b * y :=
   dvd_add (hdx.mul_left a) (hdy.mul_left b)
@@ -701,7 +701,7 @@ variable [NonUnitalNonAssocRing α]
 /-- Pullback a `non_unital_non_assoc_ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.nonUnitalNonAssocRing [HasZero β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
+protected def Function.Injective.nonUnitalNonAssocRing [Zero β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
     (hf : injective f) (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
     (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) : NonUnitalNonAssocRing β :=
   { hf.add_comm_group f zero add neg sub, hf.mul_zero_class f zero mul, hf.distrib f add mul with }
@@ -709,7 +709,7 @@ protected def Function.Injective.nonUnitalNonAssocRing [HasZero β] [Add β] [Mu
 /-- Pushforward a `non_unital_non_assoc_ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.nonUnitalNonAssocRing [HasZero β] [Add β] [Mul β] [Neg β] [Sub β] (f : α → β)
+protected def Function.Surjective.nonUnitalNonAssocRing [Zero β] [Add β] [Mul β] [Neg β] [Sub β] (f : α → β)
     (hf : surjective f) (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
     (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) : NonUnitalNonAssocRing β :=
   { hf.add_comm_group f zero add neg sub, hf.mul_zero_class f zero mul, hf.distrib f add mul with }
@@ -743,17 +743,17 @@ instance (priority := 200) Ringₓ.toSemiring : Semiringₓ α :=
 /-- Pullback a `ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.ring [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
-    (hf : injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) : Ringₓ β :=
+protected def Function.Injective.ring [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α) (hf : injective f)
+    (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
+    (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) : Ringₓ β :=
   { hf.add_comm_group f zero add neg sub, hf.monoid f one mul, hf.distrib f add mul with }
 
 /-- Pushforward a `ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.ring [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β] [Sub β] (f : α → β)
-    (hf : surjective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) : Ringₓ β :=
+protected def Function.Surjective.ring [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] (f : α → β) (hf : surjective f)
+    (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
+    (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) : Ringₓ β :=
   { hf.add_comm_group f zero add neg sub, hf.monoid f one mul, hf.distrib f add mul with }
 
 theorem neg_mul_eq_neg_mul (a b : α) : -(a * b) = -a * b :=
@@ -1035,7 +1035,7 @@ variable [CommRingₓ α] {a b c : α}
 /-- Pullback a `comm_ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.commRing [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
+protected def Function.Injective.commRing [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
     (hf : injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
     CommRingₓ β :=
@@ -1044,17 +1044,17 @@ protected def Function.Injective.commRing [HasZero β] [HasOne β] [Add β] [Mul
 /-- Pushforward a `comm_ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.commRing [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β] [Sub β] (f : α → β)
+protected def Function.Surjective.commRing [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] (f : α → β)
     (hf : surjective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
     CommRingₓ β :=
   { hf.ring f zero one add mul neg sub, hf.comm_semigroup f mul with }
 
-attribute [local simp] add_assocₓ add_commₓ add_left_commₓ mul_commₓ
+attribute [local simp] add_assocₓ add_commₓ add_left_commₓ mul_comm
 
 /-- Representation of a difference of two squares in a commutative ring as a product. -/
 theorem mul_self_sub_mul_self (a b : α) : a * a - b * b = (a + b) * (a - b) := by
-  rw [add_mulₓ, mul_sub, mul_sub, mul_commₓ a b, sub_add_sub_cancel]
+  rw [add_mulₓ, mul_sub, mul_sub, mul_comm a b, sub_add_sub_cancel]
 
 theorem mul_self_sub_one (a : α) : a * a - 1 = (a + 1) * (a - 1) := by
   rw [← mul_self_sub_mul_self, mul_oneₓ]
@@ -1067,7 +1067,7 @@ theorem Vieta_formula_quadratic {b c x : α} (h : x * x - b * x + c = 0) :
     ∃ y : α, y * y - b * y + c = 0 ∧ x + y = b ∧ x * y = c := by
   have : c = -(x * x - b * x) := (neg_eq_of_add_eq_zeroₓ h).symm
   have : c = x * (b - x) := by
-    subst this <;> simp [mul_sub, mul_commₓ]
+    subst this <;> simp [mul_sub, mul_comm]
   refine'
     ⟨b - x, _, by
       simp , by
@@ -1180,8 +1180,7 @@ def AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero [CommRingₓ β] (f : β →+ α)
       intro x y
       have hxy := h (x + y)
       rw [mul_addₓ, add_mulₓ, add_mulₓ, f.map_add, f.map_add, f.map_add, f.map_add, h x, h y, add_mulₓ, mul_addₓ,
-        mul_addₓ, ← sub_eq_zero, add_commₓ, ← sub_sub, ← sub_sub, ← sub_sub, mul_commₓ y x, mul_commₓ (f y) (f x)] at
-        hxy
+        mul_addₓ, ← sub_eq_zero, add_commₓ, ← sub_sub, ← sub_sub, ← sub_sub, mul_comm y x, mul_comm (f y) (f x)] at hxy
       simp only [add_assocₓ, add_sub_assoc, add_sub_cancel'_right] at hxy
       rw [sub_sub, ← two_mul, ← add_sub_assoc, ← two_mul, ← mul_sub, mul_eq_zero, sub_eq_zero, or_iff_not_imp_left] at
         hxy

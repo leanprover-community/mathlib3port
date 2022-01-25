@@ -578,35 +578,35 @@ theorem preimage_const_mul_Icc (a b : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹
 
 @[simp]
 theorem preimage_const_mul_Iio_of_neg (a : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Iio a = Ioi (a / c) := by
-  simpa only [mul_commₓ] using preimage_mul_const_Iio_of_neg a h
+  simpa only [mul_comm] using preimage_mul_const_Iio_of_neg a h
 
 @[simp]
 theorem preimage_const_mul_Ioi_of_neg (a : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Ioi a = Iio (a / c) := by
-  simpa only [mul_commₓ] using preimage_mul_const_Ioi_of_neg a h
+  simpa only [mul_comm] using preimage_mul_const_Ioi_of_neg a h
 
 @[simp]
 theorem preimage_const_mul_Iic_of_neg (a : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Iic a = Ici (a / c) := by
-  simpa only [mul_commₓ] using preimage_mul_const_Iic_of_neg a h
+  simpa only [mul_comm] using preimage_mul_const_Iic_of_neg a h
 
 @[simp]
 theorem preimage_const_mul_Ici_of_neg (a : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Ici a = Iic (a / c) := by
-  simpa only [mul_commₓ] using preimage_mul_const_Ici_of_neg a h
+  simpa only [mul_comm] using preimage_mul_const_Ici_of_neg a h
 
 @[simp]
 theorem preimage_const_mul_Ioo_of_neg (a b : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Ioo a b = Ioo (b / c) (a / c) := by
-  simpa only [mul_commₓ] using preimage_mul_const_Ioo_of_neg a b h
+  simpa only [mul_comm] using preimage_mul_const_Ioo_of_neg a b h
 
 @[simp]
 theorem preimage_const_mul_Ioc_of_neg (a b : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Ioc a b = Ico (b / c) (a / c) := by
-  simpa only [mul_commₓ] using preimage_mul_const_Ioc_of_neg a b h
+  simpa only [mul_comm] using preimage_mul_const_Ioc_of_neg a b h
 
 @[simp]
 theorem preimage_const_mul_Ico_of_neg (a b : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Ico a b = Ioc (b / c) (a / c) := by
-  simpa only [mul_commₓ] using preimage_mul_const_Ico_of_neg a b h
+  simpa only [mul_comm] using preimage_mul_const_Ico_of_neg a b h
 
 @[simp]
 theorem preimage_const_mul_Icc_of_neg (a b : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Icc a b = Icc (b / c) (a / c) := by
-  simpa only [mul_commₓ] using preimage_mul_const_Icc_of_neg a b h
+  simpa only [mul_comm] using preimage_mul_const_Icc_of_neg a b h
 
 theorem image_mul_right_Icc' (a b : k) {c : k} (h : 0 < c) : (fun x => x * c) '' Icc a b = Icc (a * c) (b * c) :=
   ((Units.mk0 c h.ne').mul_right.image_eq_preimage _).trans
@@ -622,10 +622,10 @@ theorem image_mul_right_Icc {a b c : k} (hab : a ≤ b) (hc : 0 ≤ c) :
   exact image_mul_right_Icc' a b ‹0 < c›
 
 theorem image_mul_left_Icc' {a : k} (h : 0 < a) (b c : k) : (· * ·) a '' Icc b c = Icc (a * b) (a * c) := by
-  convert image_mul_right_Icc' b c h using 1 <;> simp only [mul_commₓ _ a]
+  convert image_mul_right_Icc' b c h using 1 <;> simp only [mul_comm _ a]
 
 theorem image_mul_left_Icc {a b c : k} (ha : 0 ≤ a) (hbc : b ≤ c) : (· * ·) a '' Icc b c = Icc (a * b) (a * c) := by
-  convert image_mul_right_Icc hbc ha using 1 <;> simp only [mul_commₓ _ a]
+  convert image_mul_right_Icc hbc ha using 1 <;> simp only [mul_comm _ a]
 
 theorem image_mul_right_Ioo (a b : k) {c : k} (h : 0 < c) : (fun x => x * c) '' Ioo a b = Ioo (a * c) (b * c) :=
   ((Units.mk0 c h.ne').mul_right.image_eq_preimage _).trans
@@ -633,7 +633,7 @@ theorem image_mul_right_Ioo (a b : k) {c : k} (h : 0 < c) : (fun x => x * c) '' 
       simp [h, division_def])
 
 theorem image_mul_left_Ioo {a : k} (h : 0 < a) (b c : k) : (· * ·) a '' Ioo b c = Ioo (a * b) (a * c) := by
-  convert image_mul_right_Ioo b c h using 1 <;> simp only [mul_commₓ _ a]
+  convert image_mul_right_Ioo b c h using 1 <;> simp only [mul_comm _ a]
 
 /-- The image under `inv` of `Ioo 0 a` is `Ioi a⁻¹`. -/
 theorem image_inv_Ioo_0_left {a : k} (ha : 0 < a) : HasInv.inv '' Ioo 0 a = Ioi (a⁻¹) := by

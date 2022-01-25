@@ -344,7 +344,7 @@ instance Mul : Mul H :=
 
 /-- A subgroup of a group inherits a 1. -/
 @[to_additive "An `add_subgroup` of an `add_group` inherits a zero."]
-instance HasOne : HasOne H :=
+instance One : One H :=
   H.to_submonoid.has_one
 
 /-- A subgroup of a group inherits an inverse. -/
@@ -401,10 +401,10 @@ instance to_linear_ordered_comm_group {G : Type _} [LinearOrderedCommGroup G] (H
 /-- The natural group hom from a subgroup of group `G` to `G`. -/
 @[to_additive "The natural group hom from an `add_subgroup` of `add_group` `G` to `G`."]
 def Subtype : H →* G :=
-  ⟨coeₓ, rfl, fun _ _ => rfl⟩
+  ⟨coe, rfl, fun _ _ => rfl⟩
 
 @[simp, to_additive]
-theorem coeSubtype : ⇑H.subtype = coeₓ :=
+theorem coeSubtype : ⇑H.subtype = coe :=
   rfl
 
 @[simp, norm_cast, to_additive coe_smul]
@@ -416,11 +416,11 @@ theorem coe_zpow (x : H) (n : ℤ) : ((x ^ n : H) : G) = x ^ n :=
   coeSubtype H ▸ MonoidHom.map_zpow _ _ _
 
 @[simp, norm_cast, to_additive]
-theorem coe_list_prod (l : List H) : (l.prod : G) = (l.map coeₓ).Prod :=
+theorem coe_list_prod (l : List H) : (l.prod : G) = (l.map coe).Prod :=
   H.to_submonoid.coe_list_prod l
 
 @[simp, norm_cast, to_additive]
-theorem coe_multiset_prod {G} [CommGroupₓ G] (H : Subgroup G) (m : Multiset H) : (m.prod : G) = (m.map coeₓ).Prod :=
+theorem coe_multiset_prod {G} [CommGroupₓ G] (H : Subgroup G) (m : Multiset H) : (m.prod : G) = (m.map coe).Prod :=
   H.to_submonoid.coe_multiset_prod m
 
 @[simp, norm_cast, to_additive]
@@ -524,7 +524,7 @@ theorem eq_top_of_card_eq [Fintype H] [Fintype G] (h : Fintype.card H = Fintype.
 
 @[to_additive]
 theorem eq_top_of_le_card [Fintype H] [Fintype G] (h : Fintype.card G ≤ Fintype.card H) : H = ⊤ :=
-  eq_top_of_card_eq H (le_antisymmₓ (Fintype.card_le_of_injective coeₓ Subtype.coe_injective) h)
+  eq_top_of_card_eq H (le_antisymmₓ (Fintype.card_le_of_injective coe Subtype.coe_injective) h)
 
 @[to_additive]
 theorem eq_bot_of_card_le [Fintype H] (h : Fintype.card H ≤ 1) : H = ⊥ :=
@@ -727,7 +727,7 @@ theorem closure_induction' (k : Set G) {p : closure k → Prop} (Hk : ∀ x h : 
         fun x hx => Exists.elim hx $ fun hx' hx => ⟨inv_mem _ hx', Hinv _ hx⟩
 
 @[simp, to_additive]
-theorem closure_closure_coe_preimage {k : Set G} : closure ((coeₓ : closure k → G) ⁻¹' k) = ⊤ := by
+theorem closure_closure_coe_preimage {k : Set G} : closure ((coe : closure k → G) ⁻¹' k) = ⊤ := by
   refine' eq_top_iff.2 fun x hx => closure_induction' (fun x => _) _ _ (fun g₁ g₂ hg₁ hg₂ => _) (fun g hg => _) x
   · intro g hg
     exact subset_closure hg
@@ -743,7 +743,7 @@ variable (G)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
 @[to_additive "`closure` forms a Galois insertion with the coercion to set."]
-protected def gi : GaloisInsertion (@closure G _) coeₓ where
+protected def gi : GaloisInsertion (@closure G _) coe where
   choice := fun s _ => closure s
   gc := fun s t => @closure_le _ _ t s
   le_l_u := fun s => subset_closure
@@ -1139,7 +1139,7 @@ variable {H K : Subgroup G}
 @[to_additive]
 instance (priority := 100) normal_of_comm {G : Type _} [CommGroupₓ G] (H : Subgroup G) : H.normal :=
   ⟨by
-    simp [mul_commₓ, mul_left_commₓ]⟩
+    simp [mul_comm, mul_left_commₓ]⟩
 
 namespace Normal
 
@@ -1271,10 +1271,10 @@ def normalizer : Subgroup G where
     simp
   mul_mem' := fun a b ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H hb : ∀ n, n ∈ H ↔ b * n * b⁻¹ ∈ H n => by
     rw [hb, ha]
-    simp [mul_assocₓ]
+    simp [mul_assoc]
   inv_mem' := fun a ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H n => by
     rw [ha (a⁻¹ * n * a⁻¹⁻¹)]
-    simp [mul_assocₓ]
+    simp [mul_assoc]
 
 /-- The `set_normalizer` of `S` is the subgroup of `G` whose elements satisfy `g*S*g⁻¹=S` -/
 @[to_additive "The `set_normalizer` of `S` is the subgroup of `G` whose elements satisfy\n`g+S-g=S`."]
@@ -1284,10 +1284,10 @@ def set_normalizer (S : Set G) : Subgroup G where
     simp
   mul_mem' := fun a b ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S hb : ∀ n, n ∈ S ↔ b * n * b⁻¹ ∈ S n => by
     rw [hb, ha]
-    simp [mul_assocₓ]
+    simp [mul_assoc]
   inv_mem' := fun a ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S n => by
     rw [ha (a⁻¹ * n * a⁻¹⁻¹)]
-    simp [mul_assocₓ]
+    simp [mul_assoc]
 
 theorem mem_normalizer_fintype {S : Set G} [Fintype S] {x : G} (h : ∀ n, n ∈ S → x * n * x⁻¹ ∈ S) :
     x ∈ Subgroup.setNormalizer S := by
@@ -1325,12 +1325,16 @@ theorem normalizer_eq_top : H.normalizer = ⊤ ↔ H.normal :=
       ⟨fun hb => h.conj_mem b hb a, fun hb => by
         rwa [h.mem_comm_iff, inv_mul_cancel_leftₓ] at hb⟩⟩
 
+@[to_additive]
+theorem center_le_normalizer : center G ≤ H.normalizer := fun x hx y => by
+  simp [← mem_center_iff.mp hx y, mul_assoc]
+
 open_locale Classical
 
 @[to_additive]
 theorem le_normalizer_of_normal [hK : (H.comap K.subtype).Normal] (HK : H ≤ K) : K ≤ H.normalizer := fun x hx y =>
   ⟨fun yH => hK.conj_mem ⟨y, HK yH⟩ yH ⟨x, hx⟩, fun yH => by
-    simpa [mem_comap, mul_assocₓ] using hK.conj_mem ⟨x * y * x⁻¹, HK yH⟩ yH ⟨x⁻¹, K.inv_mem hx⟩⟩
+    simpa [mem_comap, mul_assoc] using hK.conj_mem ⟨x * y * x⁻¹, HK yH⟩ yH ⟨x⁻¹, K.inv_mem hx⟩⟩
 
 variable {N : Type _} [Groupₓ N]
 
@@ -1354,7 +1358,7 @@ theorem le_normalizer_map (f : G →* N) : H.normalizer.map f ≤ (H.map f).norm
   · rintro ⟨y, hyH, hy⟩
     use x⁻¹ * y * x
     rw [hx]
-    simp [hy, hyH, mul_assocₓ]
+    simp [hy, hyH, mul_assoc]
     
 
 variable (H)
@@ -1407,7 +1411,7 @@ theorem conjugates_subset_normal {N : Subgroup G} [tn : N.normal] {a : G} (h : a
   exact tn.conj_mem a h c
 
 theorem conjugates_of_set_subset {s : Set G} {N : Subgroup G} [N.normal] (h : s ⊆ N) : conjugates_of_set s ⊆ N :=
-  Set.bUnion_subset fun x H => conjugates_subset_normal (h H)
+  Set.Union₂_subset fun x H => conjugates_subset_normal (h H)
 
 /-- The set of conjugates of `s` is closed under conjugation. -/
 theorem conj_mem_conjugates_of_set {x c : G} : x ∈ conjugates_of_set s → c * x * c⁻¹ ∈ conjugates_of_set s := fun H =>
@@ -1508,7 +1512,7 @@ theorem normal_core_le (H : Subgroup G) : H.normal_core ≤ H := fun a h => by
 
 instance normal_core_normal (H : Subgroup G) : H.normal_core.normal :=
   ⟨fun a h b c => by
-    rw [mul_assocₓ, mul_assocₓ, ← mul_inv_rev, ← mul_assocₓ, ← mul_assocₓ] <;> exact h (c * b)⟩
+    rw [mul_assoc, mul_assoc, ← mul_inv_rev, ← mul_assoc, ← mul_assoc] <;> exact h (c * b)⟩
 
 theorem normal_le_normal_core {H : Subgroup G} {N : Subgroup G} [hN : N.normal] : N ≤ H.normal_core ↔ N ≤ H :=
   ⟨ge_transₓ H.normal_core_le, fun h_le n hn g => h_le (hN.conj_mem n hn g)⟩
@@ -2150,7 +2154,7 @@ end AddSubgroup
 
 theorem Int.mem_zmultiples_iff {a b : ℤ} : b ∈ AddSubgroup.zmultiples a ↔ a ∣ b :=
   exists_congr fun k => by
-    rw [mul_commₓ, eq_comm, ← smul_eq_mul]
+    rw [mul_comm, eq_comm, ← smul_eq_mul]
 
 theorem of_mul_image_zpowers_eq_zmultiples_of_mul {x : G} :
     Additive.ofMul '' (Subgroup.zpowers x : Set G) = AddSubgroup.zmultiples (Additive.ofMul x) := by
@@ -2235,10 +2239,10 @@ theorem mem_sup : x ∈ s⊔t ↔ ∃ y ∈ s, ∃ z ∈ t, y * z = x :=
     · rintro _ _ ⟨y₁, hy₁, z₁, hz₁, rfl⟩ ⟨y₂, hy₂, z₂, hz₂, rfl⟩
       exact
         ⟨_, mul_mem _ hy₁ hy₂, _, mul_mem _ hz₁ hz₂, by
-          simp [mul_assocₓ] <;> cc⟩
+          simp [mul_assoc] <;> cc⟩
       
     · rintro _ ⟨y, hy, z, hz, rfl⟩
-      exact ⟨_, inv_mem _ hy, _, inv_mem _ hz, mul_commₓ z y ▸ (mul_inv_rev z y).symm⟩
+      exact ⟨_, inv_mem _ hy, _, inv_mem _ hz, mul_comm z y ▸ (mul_inv_rev z y).symm⟩
       ,
     by
     rintro ⟨y, hy, z, hz, rfl⟩ <;> exact mul_mem_sup hy hz⟩
@@ -2335,10 +2339,10 @@ private def mul_normal_aux (H N : Subgroup G) [hN : N.normal] : Subgroup G where
           simpa using hN.conj_mem _ hn (h'⁻¹))
         hn',
       by
-      simp [← ha, ← hb, mul_assocₓ]⟩
+      simp [← ha, ← hb, mul_assoc]⟩
   inv_mem' := fun x ⟨h, n, hh, hn, hx⟩ =>
     ⟨h⁻¹, h * n⁻¹ * h⁻¹, H.inv_mem hh, hN.conj_mem _ (N.inv_mem hn) h, by
-      rw [mul_assocₓ h, inv_mul_cancel_leftₓ, ← hx, mul_inv_rev]⟩
+      rw [mul_assoc h, inv_mul_cancel_leftₓ, ← hx, mul_inv_rev]⟩
 
 /-- The carrier of `H ⊔ N` is just `↑H * ↑N` (pointwise set product) when `N` is normal. -/
 @[to_additive "The carrier of `H ⊔ N` is just `↑H + ↑N` (pointwise set addition)\nwhen `N` is normal."]
@@ -2359,7 +2363,7 @@ private def normal_mul_aux (N H : Subgroup G) [hN : N.normal] : Subgroup G where
       rw [mul_oneₓ]⟩
   mul_mem' := fun a b ⟨n, h, hn, hh, ha⟩ ⟨n', h', hn', hh', hb⟩ =>
     ⟨n * (h * n' * h⁻¹), h * h', N.mul_mem hn (hN.conj_mem _ hn' _), H.mul_mem hh hh', by
-      simp [← ha, ← hb, mul_assocₓ]⟩
+      simp [← ha, ← hb, mul_assoc]⟩
   inv_mem' := fun x ⟨n, h, hn, hh, hx⟩ =>
     ⟨h⁻¹ * n⁻¹ * h, h⁻¹, by
       simpa using hN.conj_mem _ (N.inv_mem hn) (h⁻¹), H.inv_mem hh, by
@@ -2468,7 +2472,7 @@ theorem subgroup_of_sup (A A' B : Subgroup G) (hA : A ≤ B) (hA' : A' ≤ B) :
 theorem subgroup_normal.mem_comm {H K : Subgroup G} (hK : H ≤ K) [hN : (H.subgroup_of K).Normal] {a b : G} (hb : b ∈ K)
     (h : a * b ∈ H) : b * a ∈ H := by
   have := (normal_subgroup_of_iff hK).mp hN (a * b) b h hb
-  rwa [mul_assocₓ, mul_assocₓ, mul_right_invₓ, mul_oneₓ] at this
+  rwa [mul_assoc, mul_assoc, mul_right_invₓ, mul_oneₓ] at this
 
 end SubgroupNormal
 
@@ -2491,8 +2495,8 @@ theorem normal_closure_eq_top_of {N : Subgroup G} [hn : N.normal] {g g' : G} {hg
       rwa [inv_invₓ] at h
       
     simp only [MonoidHom.cod_restrict_apply, MulEquiv.coe_to_monoid_hom, MulAut.conj_apply, coe_mk,
-      MonoidHom.restrict_apply, Subtype.mk_eq_mk, ← mul_assocₓ, mul_inv_selfₓ, one_mulₓ]
-    rw [mul_assocₓ, mul_inv_selfₓ, mul_oneₓ]
+      MonoidHom.restrict_apply, Subtype.mk_eq_mk, ← mul_assoc, mul_inv_selfₓ, one_mulₓ]
+    rw [mul_assoc, mul_inv_selfₓ, mul_oneₓ]
   have ht' := map_mono (eq_top_iff.1 ht)
   rw [← MonoidHom.range_eq_map, MonoidHom.range_top_of_surjective _ hs] at ht'
   refine' eq_top_iff.2 (le_transₓ ht' (map_le_iff_le_comap.2 (normal_closure_le_normal _)))

@@ -17,7 +17,7 @@ lift, tactic
 class CanLift (α β : Sort _) where
   coe : β → α
   cond : α → Prop
-  prf : ∀ x : α, cond x → ∃ y : β, coeₓ y = x
+  prf : ∀ x : α, cond x → ∃ y : β, coe y = x
 
 open Tactic
 
@@ -38,7 +38,7 @@ unsafe def can_lift_attr : user_attribute (List Name) where
       dependencies := [`instance] }
 
 instance : CanLift ℤ ℕ :=
-  ⟨coeₓ, fun n => 0 ≤ n, fun n hn => ⟨n.nat_abs, Int.nat_abs_of_nonneg hn⟩⟩
+  ⟨coe, fun n => 0 ≤ n, fun n hn => ⟨n.nat_abs, Int.nat_abs_of_nonneg hn⟩⟩
 
 /-- Enable automatic handling of pi types in `can_lift`. -/
 instance Pi.canLift (ι : Type _) (α : ∀ i : ι, Type _) (β : ∀ i : ι, Type _) [∀ i : ι, CanLift (α i) (β i)] :

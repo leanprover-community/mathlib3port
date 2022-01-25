@@ -128,7 +128,7 @@ theorem le_div_iff (hc : 0 < c) : a ≤ b / c ↔ a * c ≤ b :=
       ⟩
 
 theorem le_div_iff' (hc : 0 < c) : a ≤ b / c ↔ c * a ≤ b := by
-  rw [mul_commₓ, le_div_iff hc]
+  rw [mul_comm, le_div_iff hc]
 
 theorem div_le_iff (hb : 0 < b) : a / b ≤ c ↔ a ≤ c * b :=
   ⟨fun h =>
@@ -147,32 +147,32 @@ theorem div_le_iff (hb : 0 < b) : a / b ≤ c ↔ a ≤ c * b :=
       ⟩
 
 theorem div_le_iff' (hb : 0 < b) : a / b ≤ c ↔ a ≤ b * c := by
-  rw [mul_commₓ, div_le_iff hb]
+  rw [mul_comm, div_le_iff hb]
 
 theorem lt_div_iff (hc : 0 < c) : a < b / c ↔ a * c < b :=
   lt_iff_lt_of_le_iff_le $ div_le_iff hc
 
 theorem lt_div_iff' (hc : 0 < c) : a < b / c ↔ c * a < b := by
-  rw [mul_commₓ, lt_div_iff hc]
+  rw [mul_comm, lt_div_iff hc]
 
 theorem div_lt_iff (hc : 0 < c) : b / c < a ↔ b < a * c :=
   lt_iff_lt_of_le_iff_le (le_div_iff hc)
 
 theorem div_lt_iff' (hc : 0 < c) : b / c < a ↔ b < c * a := by
-  rw [mul_commₓ, div_lt_iff hc]
+  rw [mul_comm, div_lt_iff hc]
 
 theorem inv_mul_le_iff (h : 0 < b) : b⁻¹ * a ≤ c ↔ a ≤ b * c := by
-  rw [inv_eq_one_div, mul_commₓ, ← div_eq_mul_one_div]
+  rw [inv_eq_one_div, mul_comm, ← div_eq_mul_one_div]
   exact div_le_iff' h
 
 theorem inv_mul_le_iff' (h : 0 < b) : b⁻¹ * a ≤ c ↔ a ≤ c * b := by
-  rw [inv_mul_le_iff h, mul_commₓ]
+  rw [inv_mul_le_iff h, mul_comm]
 
 theorem mul_inv_le_iff (h : 0 < b) : a * b⁻¹ ≤ c ↔ a ≤ b * c := by
-  rw [mul_commₓ, inv_mul_le_iff h]
+  rw [mul_comm, inv_mul_le_iff h]
 
 theorem mul_inv_le_iff' (h : 0 < b) : a * b⁻¹ ≤ c ↔ a ≤ c * b := by
-  rw [mul_commₓ, inv_mul_le_iff' h]
+  rw [mul_comm, inv_mul_le_iff' h]
 
 theorem div_self_le_one (a : α) : a / a ≤ 1 :=
   if h : a = 0 then by
@@ -181,17 +181,17 @@ theorem div_self_le_one (a : α) : a / a ≤ 1 :=
     simp [h]
 
 theorem inv_mul_lt_iff (h : 0 < b) : b⁻¹ * a < c ↔ a < b * c := by
-  rw [inv_eq_one_div, mul_commₓ, ← div_eq_mul_one_div]
+  rw [inv_eq_one_div, mul_comm, ← div_eq_mul_one_div]
   exact div_lt_iff' h
 
 theorem inv_mul_lt_iff' (h : 0 < b) : b⁻¹ * a < c ↔ a < c * b := by
-  rw [inv_mul_lt_iff h, mul_commₓ]
+  rw [inv_mul_lt_iff h, mul_comm]
 
 theorem mul_inv_lt_iff (h : 0 < b) : a * b⁻¹ < c ↔ a < b * c := by
-  rw [mul_commₓ, inv_mul_lt_iff h]
+  rw [mul_comm, inv_mul_lt_iff h]
 
 theorem mul_inv_lt_iff' (h : 0 < b) : a * b⁻¹ < c ↔ a < c * b := by
-  rw [mul_commₓ, inv_mul_lt_iff' h]
+  rw [mul_comm, inv_mul_lt_iff' h]
 
 theorem inv_pos_le_iff_one_le_mul (ha : 0 < a) : a⁻¹ ≤ b ↔ 1 ≤ b * a := by
   rw [inv_eq_one_div]
@@ -218,25 +218,25 @@ theorem div_le_iff_of_neg (hc : c < 0) : b / c ≤ a ↔ a * c ≤ b :=
       ⟩
 
 theorem div_le_iff_of_neg' (hc : c < 0) : b / c ≤ a ↔ c * a ≤ b := by
-  rw [mul_commₓ, div_le_iff_of_neg hc]
+  rw [mul_comm, div_le_iff_of_neg hc]
 
 theorem le_div_iff_of_neg (hc : c < 0) : a ≤ b / c ↔ b ≤ a * c := by
   rw [← neg_negₓ c, mul_neg_eq_neg_mul_symm, div_neg, le_neg, div_le_iff (neg_pos.2 hc), neg_mul_eq_neg_mul_symm]
 
 theorem le_div_iff_of_neg' (hc : c < 0) : a ≤ b / c ↔ b ≤ c * a := by
-  rw [mul_commₓ, le_div_iff_of_neg hc]
+  rw [mul_comm, le_div_iff_of_neg hc]
 
 theorem div_lt_iff_of_neg (hc : c < 0) : b / c < a ↔ a * c < b :=
   lt_iff_lt_of_le_iff_le $ le_div_iff_of_neg hc
 
 theorem div_lt_iff_of_neg' (hc : c < 0) : b / c < a ↔ c * a < b := by
-  rw [mul_commₓ, div_lt_iff_of_neg hc]
+  rw [mul_comm, div_lt_iff_of_neg hc]
 
 theorem lt_div_iff_of_neg (hc : c < 0) : a < b / c ↔ b < a * c :=
   lt_iff_lt_of_le_iff_le $ div_le_iff_of_neg hc
 
 theorem lt_div_iff_of_neg' (hc : c < 0) : a < b / c ↔ b < c * a := by
-  rw [mul_commₓ, lt_div_iff_of_neg hc]
+  rw [mul_comm, lt_div_iff_of_neg hc]
 
 /-- One direction of `div_le_iff` where `b` is allowed to be `0` (but `c` must be nonnegative) -/
 theorem div_le_of_nonneg_of_le_mul (hb : 0 ≤ b) (hc : 0 ≤ c) (h : a ≤ c * b) : a / b ≤ c := by
@@ -638,7 +638,7 @@ theorem sub_one_div_inv_le_two (a2 : 2 ≤ a) : (1 - 1 / a)⁻¹ ≤ 2 := by
 /-- Pullback a `linear_ordered_field` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedField {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β] [Sub β] [HasInv β]
+def Function.Injective.linearOrderedField {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasInv β]
     [Div β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
@@ -646,18 +646,18 @@ def Function.Injective.linearOrderedField {β : Type _} [HasZero β] [HasOne β]
   { hf.linear_ordered_ring f zero one add mul neg sub, hf.field f zero one add mul neg sub inv div with }
 
 theorem mul_sub_mul_div_mul_neg_iff (hc : c ≠ 0) (hd : d ≠ 0) : (a * d - b * c) / (c * d) < 0 ↔ a / c < b / d := by
-  rw [mul_commₓ b c, ← div_sub_div _ _ hc hd, sub_lt_zero]
+  rw [mul_comm b c, ← div_sub_div _ _ hc hd, sub_lt_zero]
 
 alias mul_sub_mul_div_mul_neg_iff ↔ div_lt_div_of_mul_sub_mul_div_neg mul_sub_mul_div_mul_neg
 
 theorem mul_sub_mul_div_mul_nonpos_iff (hc : c ≠ 0) (hd : d ≠ 0) : (a * d - b * c) / (c * d) ≤ 0 ↔ a / c ≤ b / d := by
-  rw [mul_commₓ b c, ← div_sub_div _ _ hc hd, sub_nonpos]
+  rw [mul_comm b c, ← div_sub_div _ _ hc hd, sub_nonpos]
 
 alias mul_sub_mul_div_mul_nonpos_iff ↔ div_le_div_of_mul_sub_mul_div_nonpos mul_sub_mul_div_mul_nonpos
 
 theorem mul_le_mul_of_mul_div_le (h : a * (b / c) ≤ d) (hc : 0 < c) : b * a ≤ d * c := by
   rw [← mul_div_assoc] at h
-  rwa [mul_commₓ b, ← div_le_iff hc]
+  rwa [mul_comm b, ← div_le_iff hc]
 
 theorem div_mul_le_div_mul_of_div_le_div (h : a / b ≤ c / d) (he : 0 ≤ e) : a / (b * e) ≤ c / (d * e) := by
   rw [div_mul_eq_div_mul_one_div, div_mul_eq_div_mul_one_div]
@@ -752,7 +752,7 @@ theorem IsLub.mul_left {s : Set α} (ha : 0 ≤ a) (hs : IsLub s b) : IsLub ((fu
     
 
 theorem IsLub.mul_right {s : Set α} (ha : 0 ≤ a) (hs : IsLub s b) : IsLub ((fun b => b * a) '' s) (b * a) := by
-  simpa [mul_commₓ] using hs.mul_left ha
+  simpa [mul_comm] using hs.mul_left ha
 
 theorem IsGlb.mul_left {s : Set α} (ha : 0 ≤ a) (hs : IsGlb s b) : IsGlb ((fun b => a * b) '' s) (a * b) := by
   rcases lt_or_eq_of_leₓ ha with (ha | rfl)
@@ -764,7 +764,7 @@ theorem IsGlb.mul_left {s : Set α} (ha : 0 ≤ a) (hs : IsGlb s b) : IsGlb ((fu
     
 
 theorem IsGlb.mul_right {s : Set α} (ha : 0 ≤ a) (hs : IsGlb s b) : IsGlb ((fun b => b * a) '' s) (b * a) := by
-  simpa [mul_commₓ] using hs.mul_left ha
+  simpa [mul_comm] using hs.mul_left ha
 
 end LinearOrderedField
 

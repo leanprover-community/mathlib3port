@@ -96,7 +96,7 @@ theorem content_X_mul {p : Polynomial R} : content (X * p) = content p := by
     cases a
     · simp [coeff_X_mul_zero, Nat.succ_ne_zero]
       
-    rw [mul_commₓ, coeff_mul_X]
+    rw [mul_comm, coeff_mul_X]
     constructor
     · intro h
       use a
@@ -110,7 +110,7 @@ theorem content_X_mul {p : Polynomial R} : content (X * p) = content p := by
   simp only [Finset.map_val, Function.comp_app, Function.Embedding.coe_fn_mk, Multiset.map_map]
   refine' congr (congr rfl _) rfl
   ext a
-  rw [mul_commₓ]
+  rw [mul_comm]
   simp [coeff_mul_X]
 
 @[simp]
@@ -270,7 +270,7 @@ theorem is_unit_prim_part_C (r : R) : IsUnit (C r).primPart := by
   apply mul_left_cancel₀ h0
   conv_rhs => rw [← content_C, ← (C r).eq_C_content_mul_prim_part]
   simp only [Units.coe_mk, normalize_apply, RingHom.map_mul]
-  rw [mul_assocₓ, ← RingHom.map_mul, Units.mul_inv, C_1, mul_oneₓ]
+  rw [mul_assoc, ← RingHom.map_mul, Units.mul_inv, C_1, mul_oneₓ]
 
 theorem prim_part_dvd (p : Polynomial R) : p.prim_part ∣ p :=
   Dvd.intro_left (C p.content) p.eq_C_content_mul_prim_part.symm
@@ -298,7 +298,7 @@ theorem content_mul_aux {p q : Polynomial R} :
   rw [gcd_comm (content _) _, gcd_comm (content _) _]
   apply gcd_content_eq_of_dvd_sub
   rw [← self_sub_C_mul_X_pow, ← self_sub_C_mul_X_pow, sub_mul, sub_sub, add_commₓ, sub_add, sub_sub_cancel,
-    leading_coeff_mul, RingHom.map_mul, mul_assocₓ, mul_assocₓ]
+    leading_coeff_mul, RingHom.map_mul, mul_assoc, mul_assoc]
   apply dvd_sub (Dvd.intro _ rfl) (Dvd.intro _ rfl)
 
 @[simp]
@@ -330,14 +330,14 @@ theorem content_mul {p q : Polynomial R} : (p * q).content = p.content * q.conte
     degree_eq_nat_degree p.prim_part_ne_zero, ← degree_eq_nat_degree q.prim_part_ne_zero] at heq
   rw [p.eq_C_content_mul_prim_part, q.eq_C_content_mul_prim_part]
   suffices h : (q.prim_part * p.prim_part).content = 1
-  · rw [mul_assocₓ, content_C_mul, content_C_mul, mul_commₓ p.prim_part, mul_assocₓ, content_C_mul, content_C_mul, h,
+  · rw [mul_assoc, content_C_mul, content_C_mul, mul_comm p.prim_part, mul_assoc, content_C_mul, content_C_mul, h,
       mul_oneₓ, content_prim_part, content_prim_part, mul_oneₓ, mul_oneₓ]
     
   rw [← normalize_content, normalize_eq_one, is_unit_iff_dvd_one, content_eq_gcd_leading_coeff_content_erase_lead,
     leading_coeff_mul, gcd_comm]
   apply (gcd_mul_dvd_mul_gcd _ _ _).trans
   rw [content_mul_aux, ih, content_prim_part, mul_oneₓ, gcd_comm, ← content_eq_gcd_leading_coeff_content_erase_lead,
-    content_prim_part, one_mulₓ, mul_commₓ q.prim_part, content_mul_aux, ih, content_prim_part, mul_oneₓ, gcd_comm, ←
+    content_prim_part, one_mulₓ, mul_comm q.prim_part, content_mul_aux, ih, content_prim_part, mul_oneₓ, gcd_comm, ←
     content_eq_gcd_leading_coeff_content_erase_lead, content_prim_part]
   · rw [← HEq, degree_mul, WithBot.add_lt_add_iff_right]
     · apply degree_erase_lt p.prim_part_ne_zero
@@ -346,7 +346,7 @@ theorem content_mul {p q : Polynomial R} : (p * q).content = p.content * q.conte
       apply q.prim_part_ne_zero
       
     
-  · rw [mul_commₓ, ← HEq, degree_mul, WithBot.add_lt_add_iff_left]
+  · rw [mul_comm, ← HEq, degree_mul, WithBot.add_lt_add_iff_left]
     · apply degree_erase_lt q.prim_part_ne_zero
       
     · rw [Ne.def, degree_eq_bot]
@@ -419,7 +419,7 @@ theorem exists_primitive_lcm_of_is_primitive {p q : Polynomial R} (hp : p.is_pri
   rw [sub_add_cancel, ← rprim.dvd_prim_part_iff_dvd (mul_ne_zero hC0 s0)] at h
   rcases is_unit_prim_part_C r.leading_coeff with ⟨u, hu⟩
   apply h.trans (Associated.symm ⟨u, _⟩).Dvd
-  rw [prim_part_mul (mul_ne_zero hC0 s0), hu, mul_commₓ]
+  rw [prim_part_mul (mul_ne_zero hC0 s0), hu, mul_comm]
 
 theorem dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part {p q : Polynomial R} (hq : q ≠ 0) :
     p ∣ q ↔ p.content ∣ q.content ∧ p.prim_part ∣ q.prim_part := by

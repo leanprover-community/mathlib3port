@@ -13,6 +13,18 @@ open Filter Asymptotics
 
 open_locale TopologicalSpace
 
+section NormedField
+
+/-- If `f : 𝕜 → E` is bounded in a punctured neighborhood of `a`, then `f(x) = o((x - a)⁻¹)` as
+`x → a`, `x ≠ a`. -/
+theorem Filter.IsBoundedUnder.is_o_sub_self_inv {𝕜 E : Type _} [NormedField 𝕜] [HasNorm E] {a : 𝕜} {f : 𝕜 → E}
+    (h : is_bounded_under (· ≤ ·) (𝓝[≠] a) (norm ∘ f)) : is_o f (fun x => (x - a)⁻¹) (𝓝[≠] a) := by
+  refine' (h.is_O_const (@one_ne_zero ℝ _ _)).trans_is_o (is_o_const_left.2 $ Or.inr _)
+  simp only [· ∘ ·, NormedField.norm_inv]
+  exact (tendsto_norm_sub_self_punctured_nhds a).inv_tendsto_zero
+
+end NormedField
+
 section LinearOrderedField
 
 variable {𝕜 : Type _} [LinearOrderedField 𝕜]

@@ -320,7 +320,7 @@ def linear_hom : (P₁ ≃ᵃ[k] P₁) →* V₁ ≃ₗ[k] V₁ where
 This is the affine version of `linear_map.general_linear_group.general_linear_equiv`. -/
 @[simps]
 def equiv_units_affine_map : (P₁ ≃ᵃ[k] P₁) ≃* (P₁ →ᵃ[k] P₁)ˣ where
-  toFun := fun e => ⟨e, e.symm, congr_argₓ coeₓ e.symm_trans_self, congr_argₓ coeₓ e.self_trans_symm⟩
+  toFun := fun e => ⟨e, e.symm, congr_argₓ coe e.symm_trans_self, congr_argₓ coe e.self_trans_symm⟩
   invFun := fun u =>
     { toFun := (u : P₁ →ᵃ[k] P₁), invFun := (↑u⁻¹ : P₁ →ᵃ[k] P₁), left_inv := AffineMap.congr_fun u.inv_mul,
       right_inv := AffineMap.congr_fun u.mul_inv,
@@ -389,7 +389,7 @@ theorem coe_homothety_units_mul_hom_apply_symm (p : P) (t : (R)ˣ) :
 
 @[simp]
 theorem coe_homothety_units_mul_hom_eq_homothety_hom_coe (p : P) :
-    (coeₓ : (P ≃ᵃ[R] P) → P →ᵃ[R] P) ∘ homothety_units_mul_hom p = AffineMap.homothetyHom p ∘ (coeₓ : (R)ˣ → R) :=
+    (coe : (P ≃ᵃ[R] P) → P →ᵃ[R] P) ∘ homothety_units_mul_hom p = AffineMap.homothetyHom p ∘ (coe : (R)ˣ → R) :=
   funext $ fun _ => rfl
 
 end Homothety

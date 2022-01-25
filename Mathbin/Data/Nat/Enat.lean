@@ -57,13 +57,13 @@ However, `coe` is noncomputable so `some` is preferable when computability is a 
 def some : ℕ → Enat :=
   Part.some
 
-instance : HasZero Enat :=
+instance : Zero Enat :=
   ⟨some 0⟩
 
 instance : Inhabited Enat :=
   ⟨0⟩
 
-instance : HasOne Enat :=
+instance : One Enat :=
   ⟨some 1⟩
 
 instance : Add Enat :=
@@ -198,10 +198,10 @@ instance decidable_le (x y : Enat) [Decidable x.dom] [Decidable y.dom] : Decidab
 
 /-- The coercion `ℕ → enat` preserves `0` and addition. -/
 def coe_hom : ℕ →+ Enat :=
-  ⟨coeₓ, Nat.cast_zero, Nat.cast_add⟩
+  ⟨coe, Nat.cast_zero, Nat.cast_add⟩
 
 @[simp]
-theorem coe_coe_hom : ⇑coe_hom = coeₓ :=
+theorem coe_coe_hom : ⇑coe_hom = coe :=
   rfl
 
 instance : PartialOrderₓ Enat where
@@ -519,7 +519,7 @@ noncomputable def with_top_equiv : Enat ≃ WithTop ℕ where
   toFun := fun x => to_with_top x
   invFun := fun x =>
     match x with
-    | Option.some n => coeₓ n
+    | Option.some n => coe n
     | none => ⊤
   left_inv := fun x => by
     apply Enat.cases_on x <;> intros <;> simp <;> rfl

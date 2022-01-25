@@ -391,7 +391,7 @@ theorem mem_map_C_iff {I : Ideal R} {f : Polynomial R} :
     rw [← sum_monomial_eq f]
     refine' (I.map C : Ideal (Polynomial R)).sum_mem fun n hn => _
     simp [monomial_eq_C_mul_X]
-    rw [mul_commₓ]
+    rw [mul_comm]
     exact (I.map C : Ideal (Polynomial R)).mul_mem_left _ (mem_map_of_mem _ (hf n))
     
 
@@ -523,7 +523,7 @@ theorem polynomial_not_is_field : ¬IsField (Polynomial R) := by
       rw [hp0, mul_zero, degree_zero, degree_one] at hp
       contradiction
       
-    · have : p.degree < (X * p).degree := mul_commₓ p X ▸ degree_lt_degree_mul_X hp0
+    · have : p.degree < (X * p).degree := mul_comm p X ▸ degree_lt_degree_mul_X hp0
       rw [congr_argₓ degree hp, degree_one, Nat.WithBot.lt_zero_iff, degree_eq_bot] at this
       exact hp0 this
       
@@ -540,7 +540,7 @@ theorem eq_zero_of_constant_mem_of_maximal (hR : IsField R) (I : Ideal (Polynomi
   refine' Classical.by_contradiction fun hx0 => hI.ne_top ((eq_top_iff_one I).2 _)
   obtain ⟨y, hy⟩ := hR.mul_inv_cancel hx0
   convert I.smul_mem (C y) hx
-  rw [smul_eq_mul, ← C.map_mul, mul_commₓ y x, hy, RingHom.map_one]
+  rw [smul_eq_mul, ← C.map_mul, mul_comm y x, hy, RingHom.map_one]
 
 /-- Transport an ideal of `R[X]` to an `R`-submodule of `R[X]`. -/
 def of_polynomial (I : Ideal (Polynomial R)) : Submodule R (Polynomial R) where
@@ -805,7 +805,7 @@ theorem sup_aeval_range_eq_top_of_coprime (f : M →ₗ[R] M) {p q : Polynomial 
     LinearMap.mem_range.2
       ⟨aeval f q' v, by
         simp only [LinearMap.mul_apply, aeval_mul]⟩
-  simpa only [mul_commₓ p p', mul_commₓ q q', aeval_one, aeval_add] using
+  simpa only [mul_comm p p', mul_comm q q', aeval_one, aeval_add] using
     congr_argₓ (fun p : Polynomial R => aeval f p v) hpq'
 
 theorem sup_ker_aeval_le_ker_aeval_mul {f : M →ₗ[R] M} {p q : Polynomial R} :
@@ -813,7 +813,7 @@ theorem sup_ker_aeval_le_ker_aeval_mul {f : M →ₗ[R] M} {p q : Polynomial R} 
   intro v hv
   rcases Submodule.mem_sup.1 hv with ⟨x, hx, y, hy, hxy⟩
   have h_eval_x : aeval f (p * q) x = 0 := by
-    rw [mul_commₓ, aeval_mul, LinearMap.mul_apply, LinearMap.mem_ker.1 hx, LinearMap.map_zero]
+    rw [mul_comm, aeval_mul, LinearMap.mul_apply, LinearMap.mem_ker.1 hx, LinearMap.map_zero]
   have h_eval_y : aeval f (p * q) y = 0 := by
     rw [aeval_mul, LinearMap.mul_apply, LinearMap.mem_ker.1 hy, LinearMap.map_zero]
   rw [LinearMap.mem_ker, ← hxy, LinearMap.map_add, h_eval_x, h_eval_y, add_zeroₓ]
@@ -827,21 +827,21 @@ theorem sup_ker_aeval_eq_ker_aeval_mul_of_coprime (f : M →ₗ[R] M) {p q : Pol
   have h_eval₂_qpp' :=
     calc
       aeval f (q * (p * p')) v = aeval f (p' * (p * q)) v := by
-        rw [mul_commₓ, mul_assocₓ, mul_commₓ, mul_assocₓ, mul_commₓ q p]
+        rw [mul_comm, mul_assoc, mul_comm, mul_assoc, mul_comm q p]
       _ = 0 := by
         rw [aeval_mul, LinearMap.mul_apply, LinearMap.mem_ker.1 hv, LinearMap.map_zero]
       
   have h_eval₂_pqq' :=
     calc
       aeval f (p * (q * q')) v = aeval f (q' * (p * q)) v := by
-        rw [← mul_assocₓ, mul_commₓ]
+        rw [← mul_assoc, mul_comm]
       _ = 0 := by
         rw [aeval_mul, LinearMap.mul_apply, LinearMap.mem_ker.1 hv, LinearMap.map_zero]
       
   rw [aeval_mul] at h_eval₂_qpp' h_eval₂_pqq'
   refine'
     ⟨aeval f (q * q') v, LinearMap.mem_ker.1 h_eval₂_pqq', aeval f (p * p') v, LinearMap.mem_ker.1 h_eval₂_qpp', _⟩
-  rw [add_commₓ, mul_commₓ p p', mul_commₓ q q']
+  rw [add_commₓ, mul_comm p p', mul_comm q q']
   simpa using congr_argₓ (fun p : Polynomial R => aeval f p v) hpq'
 
 end Polynomial

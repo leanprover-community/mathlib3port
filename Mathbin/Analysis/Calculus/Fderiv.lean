@@ -2096,7 +2096,7 @@ theorem HasStrictFderivAt.mul (hc : HasStrictFderivAt c c' x) (hd : HasStrictFde
     HasStrictFderivAt (fun y => c y * d y) (c x • d' + d x • c') x := by
   convert hc.mul' hd
   ext z
-  apply mul_commₓ
+  apply mul_comm
 
 theorem HasFderivWithinAt.mul' (ha : HasFderivWithinAt a a' s x) (hb : HasFderivWithinAt b b' s x) :
     HasFderivWithinAt (fun y => a y * b y) (a x • b' + a'.smul_right (b x)) s x :=
@@ -2106,7 +2106,7 @@ theorem HasFderivWithinAt.mul (hc : HasFderivWithinAt c c' s x) (hd : HasFderivW
     HasFderivWithinAt (fun y => c y * d y) (c x • d' + d x • c') s x := by
   convert hc.mul' hd
   ext z
-  apply mul_commₓ
+  apply mul_comm
 
 theorem HasFderivAt.mul' (ha : HasFderivAt a a' x) (hb : HasFderivAt b b' x) :
     HasFderivAt (fun y => a y * b y) (a x • b' + a'.smul_right (b x)) x :=
@@ -2116,7 +2116,7 @@ theorem HasFderivAt.mul (hc : HasFderivAt c c' x) (hd : HasFderivAt d d' x) :
     HasFderivAt (fun y => c y * d y) (c x • d' + d x • c') x := by
   convert hc.mul' hd
   ext z
-  apply mul_commₓ
+  apply mul_comm
 
 theorem DifferentiableWithinAt.mul (ha : DifferentiableWithinAt 𝕜 a s x) (hb : DifferentiableWithinAt 𝕜 b s x) :
     DifferentiableWithinAt 𝕜 (fun y => a y * b y) s x :=
@@ -2160,7 +2160,7 @@ theorem HasStrictFderivAt.mul_const (hc : HasStrictFderivAt c c' x) (d : 𝔸') 
     HasStrictFderivAt (fun y => c y * d) (d • c') x := by
   convert hc.mul_const' d
   ext z
-  apply mul_commₓ
+  apply mul_comm
 
 theorem HasFderivWithinAt.mul_const' (ha : HasFderivWithinAt a a' s x) (b : 𝔸) :
     HasFderivWithinAt (fun y => a y * b) (a'.smul_right b) s x :=
@@ -2170,7 +2170,7 @@ theorem HasFderivWithinAt.mul_const (hc : HasFderivWithinAt c c' s x) (d : 𝔸'
     HasFderivWithinAt (fun y => c y * d) (d • c') s x := by
   convert hc.mul_const' d
   ext z
-  apply mul_commₓ
+  apply mul_comm
 
 theorem HasFderivAt.mul_const' (ha : HasFderivAt a a' x) (b : 𝔸) : HasFderivAt (fun y => a y * b) (a'.smul_right b) x :=
   ((ContinuousLinearMap.lmul 𝕜 𝔸).flip b).HasFderivAt.comp x ha
@@ -2178,7 +2178,7 @@ theorem HasFderivAt.mul_const' (ha : HasFderivAt a a' x) (b : 𝔸) : HasFderivA
 theorem HasFderivAt.mul_const (hc : HasFderivAt c c' x) (d : 𝔸') : HasFderivAt (fun y => c y * d) (d • c') x := by
   convert hc.mul_const' d
   ext z
-  apply mul_commₓ
+  apply mul_comm
 
 theorem DifferentiableWithinAt.mul_const (ha : DifferentiableWithinAt 𝕜 a s x) (b : 𝔸) :
     DifferentiableWithinAt 𝕜 (fun y => a y * b) s x :=

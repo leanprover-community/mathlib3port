@@ -79,7 +79,7 @@ to normalize terms.
 @[protect_proj]
 class SetLike (A : Type _) (B : outParam $ Type _) where
   coe : A → Set B
-  coe_injective' : Function.Injective coeₓ
+  coe_injective' : Function.Injective coe
 
 namespace SetLike
 
@@ -111,7 +111,7 @@ protected theorem exists {q : p → Prop} : (∃ x, q x) ↔ ∃ x ∈ p, q ⟨x
 protected theorem forall {q : p → Prop} : (∀ x, q x) ↔ ∀, ∀ x ∈ p, ∀, q ⟨x, ‹_›⟩ :=
   SetCoe.forall
 
-theorem coe_injective : Function.Injective (coeₓ : A → Set B) := fun x y h => SetLike.coe_injective' h
+theorem coe_injective : Function.Injective (coe : A → Set B) := fun x y h => SetLike.coe_injective' h
 
 @[simp, norm_cast]
 theorem coe_set_eq : (p : Set B) = q ↔ p = q :=
@@ -152,7 +152,7 @@ protected theorem eta (x : p) (hx : (x : B) ∈ p) : (⟨x, hx⟩ : p) = x :=
 
 @[nolint dangerous_instance]
 instance (priority := 100) : PartialOrderₓ A :=
-  { PartialOrderₓ.lift (coeₓ : A → Set B) coe_injective with le := fun H K => ∀ ⦃x⦄, x ∈ H → x ∈ K }
+  { PartialOrderₓ.lift (coe : A → Set B) coe_injective with le := fun H K => ∀ ⦃x⦄, x ∈ H → x ∈ K }
 
 theorem le_def {S T : A} : S ≤ T ↔ ∀ ⦃x : B⦄, x ∈ S → x ∈ T :=
   Iff.rfl
@@ -162,14 +162,14 @@ theorem coe_subset_coe {S T : A} : (S : Set B) ⊆ T ↔ S ≤ T :=
   Iff.rfl
 
 @[mono]
-theorem coe_mono : Monotone (coeₓ : A → Set B) := fun a b => coe_subset_coe.mpr
+theorem coe_mono : Monotone (coe : A → Set B) := fun a b => coe_subset_coe.mpr
 
 @[simp, norm_cast]
 theorem coe_ssubset_coe {S T : A} : (S : Set B) ⊂ T ↔ S < T :=
   Iff.rfl
 
 @[mono]
-theorem coe_strict_mono : StrictMono (coeₓ : A → Set B) := fun a b => coe_ssubset_coe.mpr
+theorem coe_strict_mono : StrictMono (coe : A → Set B) := fun a b => coe_ssubset_coe.mpr
 
 theorem not_le_iff_exists : ¬p ≤ q ↔ ∃ x ∈ p, x ∉ q :=
   Set.not_subset

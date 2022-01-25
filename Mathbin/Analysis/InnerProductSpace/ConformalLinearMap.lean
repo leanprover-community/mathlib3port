@@ -19,7 +19,7 @@ theorem is_conformal_map_iff (f' : E →L[ℝ] F) :
   constructor
   · rintro ⟨c₁, hc₁, li, h⟩
     refine' ⟨c₁ * c₁, mul_self_pos.2 hc₁, fun u v => _⟩
-    simp only [h, Pi.smul_apply, inner_map_map, real_inner_smul_left, real_inner_smul_right, mul_assocₓ]
+    simp only [h, Pi.smul_apply, inner_map_map, real_inner_smul_left, real_inner_smul_right, mul_assoc]
     
   · rintro ⟨c₁, hc₁, huv⟩
     let c := Real.sqrt (c₁⁻¹)
@@ -31,7 +31,7 @@ theorem is_conformal_map_iff (f' : E →L[ℝ] F) :
       ext <;> simp_rw [minor, Pi.smul_apply] <;> rw [smul_smul, inv_mul_cancel hc, one_smul]
     refine' ⟨c⁻¹, inv_ne_zero hc, f₁.to_linear_map.isometry_of_inner fun u v => _, minor'⟩
     simp_rw [to_linear_map_eq_coe, ContinuousLinearMap.coe_coe, minor, Pi.smul_apply]
-    rw [real_inner_smul_left, real_inner_smul_right, huv u v, ← mul_assocₓ, ← mul_assocₓ,
+    rw [real_inner_smul_left, real_inner_smul_right, huv u v, ← mul_assoc, ← mul_assoc,
       Real.mul_self_sqrt $ le_of_ltₓ $ inv_pos.mpr hc₁, inv_mul_cancel $ ne_of_gtₓ hc₁, one_mulₓ]
     
 

@@ -174,7 +174,7 @@ theorem integral_fun_mul_eq_integral [is_finite_measure ℙ] {X : α → E} [has
             Ennreal.ofReal (f x * (pdf X ℙ μ x).toReal) = Ennreal.ofReal (pdf X ℙ μ x).toReal * Ennreal.ofReal (f x) :=
           by
           intro x
-          rw [mul_commₓ, Ennreal.of_real_mul Ennreal.to_real_nonneg]
+          rw [mul_comm, Ennreal.of_real_mul Ennreal.to_real_nonneg]
         simp_rw [this]
         exact lintegral_congr_ae (Filter.EventuallyEq.mul of_real_to_real_ae_eq (ae_eq_refl _))
         
@@ -184,7 +184,7 @@ theorem integral_fun_mul_eq_integral [is_finite_measure ℙ] {X : α → E} [has
               Ennreal.ofReal (pdf X ℙ μ x).toReal * Ennreal.ofReal (-f x) :=
           by
           intro x
-          rw [neg_mul_eq_neg_mul, mul_commₓ, Ennreal.of_real_mul Ennreal.to_real_nonneg]
+          rw [neg_mul_eq_neg_mul, mul_comm, Ennreal.of_real_mul Ennreal.to_real_nonneg]
         simp_rw [this]
         exact lintegral_congr_ae (Filter.EventuallyEq.mul of_real_to_real_ae_eq (ae_eq_refl _))
         
@@ -194,7 +194,7 @@ theorem integral_fun_mul_eq_integral [is_finite_measure ℙ] {X : α → E} [has
         lintegral_with_density_eq_lintegral_mul _ (measurable_pdf _ _ _) hf.nnnorm.coe_nnreal_ennreal]
       have : (fun x => (pdf X ℙ μ * fun x => ↑∥f x∥₊) x) =ᵐ[μ] fun x => ∥f x * (pdf X ℙ μ x).toReal∥₊ := by
         simp_rw [← smul_eq_mul, nnnorm_smul, Ennreal.coe_mul]
-        rw [smul_eq_mul, mul_commₓ]
+        rw [smul_eq_mul, mul_comm]
         refine' Filter.EventuallyEq.mul (ae_eq_refl _) (ae_eq_trans of_real_to_real_ae_eq.symm _)
         convert ae_eq_refl _
         ext1 x
@@ -396,7 +396,7 @@ theorem integral_eq (hnt : volume s ≠ ⊤) (huX : is_uniform X s ℙ) : (∫ x
       
   simp_rw [this, ← s.indicator_mul_right fun x => x, integral_indicator hms]
   change (∫ x in s, x * volume s⁻¹.toReal • 1 ∂volume) = _
-  rw [integral_mul_right, mul_commₓ, Algebra.id.smul_eq_mul, mul_oneₓ]
+  rw [integral_mul_right, mul_comm, Algebra.id.smul_eq_mul, mul_oneₓ]
 
 end IsUniform
 

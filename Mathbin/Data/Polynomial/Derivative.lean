@@ -37,8 +37,8 @@ def derivative : Polynomial R →ₗ[R] Polynomial R where
   map_smul' := fun a p => by
     dsimp <;>
       rw [sum_smul_index] <;>
-        simp only [mul_sum, ← C_mul', mul_assocₓ, coeff_C_mul, RingHom.map_mul, forall_const, zero_mul,
-          RingHom.map_zero, Sum]
+        simp only [mul_sum, ← C_mul', mul_assoc, coeff_C_mul, RingHom.map_mul, forall_const, zero_mul, RingHom.map_zero,
+          Sum]
 
 theorem derivative_apply (p : Polynomial R) : derivative p = p.sum fun n a => C (a * n) * X ^ (n - 1) :=
   rfl
@@ -209,7 +209,7 @@ theorem derivative_mul {f g : Polynomial R} : derivative (f * g) = derivative f 
               simp only [Nat.succ_sub_succ, pow_zeroₓ] <;>
                 cases m <;>
                   simp only [Nat.cast_zero, C_0, Nat.succ_sub_succ, zero_mul, mul_zero, Nat.add_succ, tsub_zero,
-                    pow_zeroₓ, pow_addₓ, one_mulₓ, pow_succₓ, mul_commₓ, mul_left_commₓ]
+                    pow_zeroₓ, pow_addₓ, one_mulₓ, pow_succₓ, mul_comm, mul_left_commₓ]
     _ = derivative f * g + f * derivative g := by
       conv => rhs congr·rw [← sum_C_mul_X_eq g]·rw [← sum_C_mul_X_eq f]
       simp only [Sum, sum_add_distrib, Finset.mul_sum, Finset.sum_mul, derivative_apply]
@@ -221,7 +221,7 @@ theorem derivative_pow_succ (p : Polynomial R) (n : ℕ) : (p ^ (n + 1)).derivat
         rw [pow_oneₓ, Nat.cast_zero, zero_addₓ, one_mulₓ, pow_zeroₓ, one_mulₓ]) $
     fun n ih => by
     rw [pow_succ'ₓ, derivative_mul, ih, mul_right_commₓ, ← add_mulₓ, add_mulₓ (n.succ : Polynomial R), one_mulₓ,
-      pow_succ'ₓ, mul_assocₓ, n.cast_succ]
+      pow_succ'ₓ, mul_assoc, n.cast_succ]
 
 theorem derivative_pow (p : Polynomial R) (n : ℕ) : (p ^ n).derivative = n * p ^ (n - 1) * p.derivative :=
   Nat.casesOn n
@@ -238,8 +238,8 @@ theorem derivative_comp (p q : Polynomial R) : (p.comp q).derivative = q.derivat
   · intro n r
     simp only [derivative_pow, derivative_mul, monomial_comp, derivative_monomial, derivative_C, zero_mul,
       C_eq_nat_cast, zero_addₓ, RingHom.map_mul]
-    rw [mul_commₓ (derivative q)]
-    simp only [mul_assocₓ]
+    rw [mul_comm (derivative q)]
+    simp only [mul_assoc]
     
 
 @[simp]
@@ -272,7 +272,7 @@ theorem derivative_eval₂_C (p q : Polynomial R) : (p.eval₂ C q).derivative =
     (fun p₁ p₂ ih₁ ih₂ => by
       rw [eval₂_add, derivative_add, ih₁, ih₂, derivative_add, eval₂_add, add_mulₓ])
     fun n r ih => by
-    rw [pow_succ'ₓ, ← mul_assocₓ, eval₂_mul, eval₂_X, derivative_mul, ih, @derivative_mul _ _ _ X, derivative_X,
+    rw [pow_succ'ₓ, ← mul_assoc, eval₂_mul, eval₂_X, derivative_mul, ih, @derivative_mul _ _ _ X, derivative_X,
       mul_oneₓ, eval₂_add, @eval₂_mul _ _ _ _ X, eval₂_X, add_mulₓ, mul_right_commₓ]
 
 theorem derivative_prod {s : Multiset ι} {f : ι → Polynomial R} :
@@ -285,12 +285,12 @@ theorem derivative_prod {s : Multiset ι} {f : ι → Polynomial R} :
         simp )
       fun i s h => _
   rw [Multiset.map_cons, Multiset.prod_cons, derivative_mul, Multiset.map_cons _ i s, Multiset.sum_cons,
-    Multiset.erase_cons_head, mul_commₓ (f i).derivative]
+    Multiset.erase_cons_head, mul_comm (f i).derivative]
   congr
   rw [h, ← AddMonoidHom.coe_mul_left, (AddMonoidHom.mulLeft (f i)).map_multiset_sum _, AddMonoidHom.coe_mul_left]
   simp only [Function.comp_app, Multiset.map_map]
   refine' congr_argₓ _ (Multiset.map_congr rfl fun j hj => _)
-  rw [← mul_assocₓ, ← Multiset.prod_cons, ← Multiset.map_cons]
+  rw [← mul_assoc, ← Multiset.prod_cons, ← Multiset.map_cons]
   by_cases' hij : i = j
   · simp [hij, ← Multiset.prod_cons, ← Multiset.map_cons, Multiset.cons_erase hj]
     

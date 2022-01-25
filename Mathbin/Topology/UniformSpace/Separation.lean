@@ -276,7 +276,7 @@ theorem is_separated_iff_induced {s : Set α} : IsSeparated s ↔ SeparatedSpace
     exact id_rel_sub_separation_relation α rfl
     
   · rintro ⟨x, y⟩ ⟨⟨x_in, y_in⟩, hS⟩
-    have A : (⟨⟨x, x_in⟩, ⟨y, y_in⟩⟩ : ↥s × ↥s) ∈ Prod.map (coeₓ : s → α) (coeₓ : s → α) ⁻¹' 𝓢 α := hS
+    have A : (⟨⟨x, x_in⟩, ⟨y, y_in⟩⟩ : ↥s × ↥s) ∈ Prod.map (coe : s → α) (coe : s → α) ⁻¹' 𝓢 α := hS
     simpa using h.subset A
     
 

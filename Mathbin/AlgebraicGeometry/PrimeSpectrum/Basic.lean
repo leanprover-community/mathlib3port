@@ -176,7 +176,7 @@ theorem gc_set :
     @GaloisConnection (Set R) (OrderDual (Set (PrimeSpectrum R))) _ _ (fun s => zero_locus s) fun t =>
       vanishing_ideal t :=
   by
-  have ideal_gc : GaloisConnection Ideal.span coeₓ := (Submodule.gi R R).gc
+  have ideal_gc : GaloisConnection Ideal.span coe := (Submodule.gi R R).gc
   simpa [zero_locus_span, Function.comp] using ideal_gc.compose (gc R)
 
 theorem subset_zero_locus_iff_subset_vanishing_ideal (t : Set (PrimeSpectrum R)) (s : Set R) :

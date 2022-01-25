@@ -92,11 +92,11 @@ theorem mod_add_div (a b : R) : a % b + b * (a / b) = a :=
   (add_commₓ _ _).trans (div_add_mod _ _)
 
 theorem mod_add_div' (m k : R) : m % k + m / k * k = m := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact mod_add_div _ _
 
 theorem div_add_mod' (m k : R) : m / k * k + m % k = m := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact div_add_mod _ _
 
 theorem mod_eq_sub_mul_div {R : Type _} [EuclideanDomain R] (a b : R) : a % b = a - b * (a / b) :=
@@ -110,7 +110,7 @@ theorem mod_lt : ∀ a {b : R}, b ≠ 0 → a % b ≺ b :=
   EuclideanDomain.remainder_lt
 
 theorem mul_right_not_lt {a : R} b (h : a ≠ 0) : ¬a * b ≺ b := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact mul_left_not_lt b h
 
 theorem mul_div_cancel_left {a : R} b (a0 : a ≠ 0) : a * b / a = b :=
@@ -122,7 +122,7 @@ theorem mul_div_cancel_left {a : R} b (a0 : a ≠ 0) : a * b / a = b :=
         exact this (mod_lt _ a0)
 
 theorem mul_div_cancel a {b : R} (b0 : b ≠ 0) : a * b / b = a := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact mul_div_cancel_left a b0
 
 @[simp]
@@ -210,7 +210,7 @@ theorem div_dvd_of_dvd {p q : R} (hpq : q ∣ p) : p / q ∣ p := by
     exact dvd_zero _
     
   use q
-  rw [mul_commₓ, ← EuclideanDomain.mul_div_assoc _ hpq, mul_commₓ, EuclideanDomain.mul_div_cancel _ hq]
+  rw [mul_comm, ← EuclideanDomain.mul_div_assoc _ hpq, mul_comm, EuclideanDomain.mul_div_cancel _ hq]
 
 section
 
@@ -375,8 +375,8 @@ theorem xgcd_aux_P (a b : R) {r r' : R} :
     rw [xgcd_aux_rec h]
     refine' IH _ p
     unfold P  at p p'⊢
-    rw [mul_sub, mul_sub, add_sub, sub_add_eq_add_sub, ← p', sub_sub, mul_commₓ _ s, ← mul_assocₓ, mul_commₓ _ t, ←
-      mul_assocₓ, ← add_mulₓ, ← p, mod_eq_sub_mul_div]
+    rw [mul_sub, mul_sub, add_sub, sub_add_eq_add_sub, ← p', sub_sub, mul_comm _ s, ← mul_assoc, mul_comm _ t, ←
+      mul_assoc, ← add_mulₓ, ← p, mod_eq_sub_mul_div]
 
 /-- An explicit version of **Bézout's lemma** for Euclidean domains. -/
 theorem gcd_eq_gcd_ab (a b : R) : (gcd a b : R) = a * gcd_a a b + b * gcd_b a b := by
@@ -417,7 +417,7 @@ theorem dvd_lcm_left (x y : R) : x ∣ lcm x y :=
     ⟨z,
       Eq.symm $
         eq_div_of_mul_eq_left hxy $ by
-          rw [mul_right_commₓ, mul_assocₓ, ← hz]⟩
+          rw [mul_right_commₓ, mul_assoc, ← hz]⟩
 
 theorem dvd_lcm_right (x y : R) : y ∣ lcm x y :=
   Classical.by_cases
@@ -429,7 +429,7 @@ theorem dvd_lcm_right (x y : R) : y ∣ lcm x y :=
     ⟨z,
       Eq.symm $
         eq_div_of_mul_eq_right hxy $ by
-          rw [← mul_assocₓ, mul_right_commₓ, ← hz]⟩
+          rw [← mul_assoc, mul_right_commₓ, ← hz]⟩
 
 theorem lcm_dvd {x y z : R} (hxz : x ∣ z) (hyz : y ∣ z) : lcm x y ∣ z := by
   rw [lcm]
@@ -445,14 +445,14 @@ theorem lcm_dvd {x y z : R} (hxz : x ∣ z) (hyz : y ∣ z) : lcm x y ∣ z := b
     generalize gcd x y = g  at hxy hs hp⊢
     subst hs
     rw [mul_left_commₓ, mul_div_cancel_left _ hxy, ← mul_left_inj' hxy, hp]
-    rw [← mul_assocₓ]
+    rw [← mul_assoc]
     simp only [mul_right_commₓ]
   rw [gcd_eq_gcd_ab, mul_addₓ]
   apply dvd_add
   · rw [mul_left_commₓ]
     exact mul_dvd_mul_left _ (hyz.mul_right _)
     
-  · rw [mul_left_commₓ, mul_commₓ]
+  · rw [mul_left_commₓ, mul_comm]
     exact mul_dvd_mul_left _ (hxz.mul_right _)
     
 
@@ -503,7 +503,7 @@ theorem gcd_mul_lcm (x y : R) : gcd x y * lcm x y = x * y := by
   rcases gcd_dvd x y with ⟨⟨r, hr⟩, ⟨s, hs⟩⟩
   generalize gcd x y = g  at h hr⊢
   subst hr
-  rw [mul_assocₓ, mul_div_cancel_left _ h]
+  rw [mul_assoc, mul_div_cancel_left _ h]
 
 end Lcm
 
@@ -514,7 +514,7 @@ theorem mul_div_mul_cancel {a b c : R} (ha : a ≠ 0) (hcb : c ∣ b) : a * b / 
   · simp [hc]
     
   refine' eq_div_of_mul_eq_right hc (mul_left_cancel₀ ha _)
-  rw [← mul_assocₓ, ← mul_div_assoc _ (mul_dvd_mul_left a hcb), mul_div_cancel_left _ (mul_ne_zero ha hc)]
+  rw [← mul_assoc, ← mul_div_assoc _ (mul_dvd_mul_left a hcb), mul_div_cancel_left _ (mul_ne_zero ha hc)]
 
 end Div
 

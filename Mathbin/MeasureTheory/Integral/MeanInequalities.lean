@@ -70,7 +70,7 @@ def fun_mul_inv_snorm (f : α → ℝ≥0∞) (p : ℝ) (μ : Measureₓ α) : �
 
 theorem fun_eq_fun_mul_inv_snorm_mul_snorm {p : ℝ} (f : α → ℝ≥0∞) (hf_nonzero : (∫⁻ a, f a ^ p ∂μ) ≠ 0)
     (hf_top : (∫⁻ a, f a ^ p ∂μ) ≠ ⊤) {a : α} : f a = fun_mul_inv_snorm f p μ a * (∫⁻ c, f c ^ p ∂μ) ^ (1 / p) := by
-  simp [fun_mul_inv_snorm, mul_assocₓ, inv_mul_cancel, hf_nonzero, hf_top]
+  simp [fun_mul_inv_snorm, mul_assoc, inv_mul_cancel, hf_nonzero, hf_top]
 
 theorem fun_mul_inv_snorm_rpow {p : ℝ} (hp0 : 0 < p) {f : α → ℝ≥0∞} {a : α} :
     fun_mul_inv_snorm f p μ a ^ p = f a ^ p * (∫⁻ c, f c ^ p ∂μ)⁻¹ := by
@@ -153,14 +153,14 @@ theorem lintegral_mul_le_Lp_mul_Lq (μ : Measureₓ α) {p q : ℝ} (hpq : p.is_
     
   by_cases' hg_zero : (∫⁻ a, g a ^ q ∂μ) = 0
   · refine' le_transₓ (le_of_eqₓ _) (zero_le _)
-    rw [mul_commₓ]
+    rw [mul_comm]
     exact lintegral_mul_eq_zero_of_lintegral_rpow_eq_zero hpq.symm.pos hg hg_zero
     
   by_cases' hf_top : (∫⁻ a, f a ^ p ∂μ) = ⊤
   · exact lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top hpq.pos hpq.symm.nonneg hf_top hg_zero
     
   by_cases' hg_top : (∫⁻ a, g a ^ q ∂μ) = ⊤
-  · rw [mul_commₓ, mul_commₓ ((∫⁻ a : α, f a ^ p ∂μ) ^ (1 / p))]
+  · rw [mul_comm, mul_comm ((∫⁻ a : α, f a ^ p ∂μ) ^ (1 / p))]
     exact lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top hpq.symm.pos hpq.nonneg hg_top hf_zero
     
   exact Ennreal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top hpq hf hg hf_top hg_top hf_zero hg_zero
@@ -181,11 +181,11 @@ theorem lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top {p : ℝ} {f g : α �
               simp [zero_lt_one])
             hp0_lt
       have h_rw : (1 / 2) ^ p * (2 : ℝ≥0∞) ^ (p - 1) = 1 / 2 := by
-        rw [sub_eq_add_neg, Ennreal.rpow_add _ _ Ennreal.two_ne_zero Ennreal.coe_ne_top, ← mul_assocₓ, ←
+        rw [sub_eq_add_neg, Ennreal.rpow_add _ _ Ennreal.two_ne_zero Ennreal.coe_ne_top, ← mul_assoc, ←
           Ennreal.mul_rpow_of_nonneg _ _ hp0, one_div, Ennreal.inv_mul_cancel Ennreal.two_ne_zero Ennreal.coe_ne_top,
           Ennreal.one_rpow, one_mulₓ, Ennreal.rpow_neg_one]
       rw [← Ennreal.mul_le_mul_left (ne_of_ltₓ h_zero_lt_half_rpow).symm _]
-      · rw [mul_addₓ, ← mul_assocₓ, ← mul_assocₓ, h_rw, ← Ennreal.mul_rpow_of_nonneg _ _ hp0, mul_addₓ]
+      · rw [mul_addₓ, ← mul_assoc, ← mul_assoc, h_rw, ← Ennreal.mul_rpow_of_nonneg _ _ hp0, mul_addₓ]
         refine' Ennreal.rpow_arith_mean_le_arith_mean2_rpow (1 / 2 : ℝ≥0∞) (1 / 2 : ℝ≥0∞) (f a) (g a) _ hp1
         rw [Ennreal.div_add_div_same, one_add_one_eq_two, Ennreal.div_self Ennreal.two_ne_zero Ennreal.coe_ne_top]
         
@@ -252,11 +252,11 @@ theorem lintegral_Lp_mul_le_Lq_mul_Lr {α} [MeasurableSpace α] {p q r : ℝ} (h
         ← Ennreal.rpow_mul, ← Ennreal.rpow_mul]
       have hpp2 : p * p2 = q := by
         symm
-        rw [mul_commₓ, ← div_eq_iff hp0_ne]
+        rw [mul_comm, ← div_eq_iff hp0_ne]
       have hpq2 : p * q2 = r := by
         rw [← inv_inv₀ r, ← one_div, ← one_div, h_one_div_r]
         field_simp [q2, Real.conjugateExponent, p2, hp0_ne, hq0_ne]
-      simp_rw [div_mul_div, mul_oneₓ, mul_commₓ p2, mul_commₓ q2, hpp2, hpq2]
+      simp_rw [div_mul_div, mul_oneₓ, mul_comm p2, mul_comm q2, hpp2, hpq2]
 
 theorem lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow {p q : ℝ} (hpq : p.is_conjugate_exponent q)
     {f g : α → ℝ≥0∞} (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) (hf_top : (∫⁻ a, f a ^ p ∂μ) ≠ ⊤) :
@@ -332,7 +332,7 @@ private theorem lintegral_Lp_add_le_aux {p q : ℝ} (hpq : p.is_conjugate_expone
     simp [h_add_zero, h_add_top, hpq.nonneg, hp_not_nonpos, -Pi.add_apply]
   suffices h :
     1 ≤ (∫⁻ a : α, (f + g) a ^ p ∂μ) ^ -(1 / p) * ((∫⁻ a : α, f a ^ p ∂μ) ^ (1 / p) + (∫⁻ a : α, g a ^ p ∂μ) ^ (1 / p))
-  · rwa [← mul_le_mul_left h0_rpow htop_rpow, ← mul_assocₓ, ← rpow_add _ _ h_add_zero h_add_top, ← sub_eq_add_neg,
+  · rwa [← mul_le_mul_left h0_rpow htop_rpow, ← mul_assoc, ← rpow_add _ _ h_add_zero h_add_top, ← sub_eq_add_neg,
       _root_.sub_self, rpow_zero, one_mulₓ, mul_oneₓ] at h
     
   have h :
@@ -343,9 +343,9 @@ private theorem lintegral_Lp_add_le_aux {p q : ℝ} (hpq : p.is_conjugate_expone
     nth_rw 1[← hpq.inv_add_inv_conj]
     ring
   simp_rw [h_one_div_q, sub_eq_add_neg 1 (1 / p), Ennreal.rpow_add _ _ h_add_zero h_add_top, rpow_one]  at h
-  nth_rw 1[mul_commₓ]  at h
+  nth_rw 1[mul_comm]  at h
   nth_rw 0[← one_mulₓ (∫⁻ a : α, (f + g) a ^ p ∂μ)]  at h
-  rwa [← mul_assocₓ, Ennreal.mul_le_mul_right h_add_zero h_add_top, mul_commₓ] at h
+  rwa [← mul_assoc, Ennreal.mul_le_mul_right h_add_zero h_add_top, mul_comm] at h
 
 /-- Minkowski's inequality for functions `α → ℝ≥0∞`: the `ℒp` seminorm of the sum of two
 functions is bounded by the sum of their `ℒp` seminorms. -/

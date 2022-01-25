@@ -53,11 +53,11 @@ theorem is_symm_transpose_add_self [AddCommSemigroupₓ α] (A : Matrix n n α) 
   add_commₓ _ _
 
 @[simp]
-theorem is_symm_zero [HasZero α] : (0 : Matrix n n α).IsSymm :=
+theorem is_symm_zero [Zero α] : (0 : Matrix n n α).IsSymm :=
   transpose_zero
 
 @[simp]
-theorem is_symm_one [DecidableEq n] [HasZero α] [HasOne α] : (1 : Matrix n n α).IsSymm :=
+theorem is_symm_one [DecidableEq n] [Zero α] [One α] : (1 : Matrix n n α).IsSymm :=
   transpose_one
 
 @[simp]
@@ -94,7 +94,7 @@ theorem is_symm.minor {A : Matrix n n α} (h : A.is_symm) (f : m → n) : (A.min
 
 /-- The diagonal matrix `diagonal v` is symmetric. -/
 @[simp]
-theorem is_symm_diagonal [DecidableEq n] [HasZero α] (v : n → α) : (diagonal v).IsSymm :=
+theorem is_symm_diagonal [DecidableEq n] [Zero α] (v : n → α) : (diagonal v).IsSymm :=
   diagonal_transpose _
 
 /-- A block matrix `A.from_blocks B C D` is symmetric,

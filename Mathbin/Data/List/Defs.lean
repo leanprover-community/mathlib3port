@@ -151,23 +151,23 @@ def scanr (f : α → β → β) (b : β) (l : List α) : List β :=
 /-- Product of a list.
 
      prod [a, b, c] = ((1 * a) * b) * c -/
-def Prod [Mul α] [HasOne α] : List α → α :=
+def Prod [Mul α] [One α] : List α → α :=
   foldl (· * ·) 1
 
 /-- Sum of a list.
 
      sum [a, b, c] = ((0 + a) + b) + c -/
-def Sum [Add α] [HasZero α] : List α → α :=
+def Sum [Add α] [Zero α] : List α → α :=
   foldl (· + ·) 0
 
 /-- The alternating sum of a list. -/
-def alternating_sum {G : Type _} [HasZero G] [Add G] [Neg G] : List G → G
+def alternating_sum {G : Type _} [Zero G] [Add G] [Neg G] : List G → G
   | [] => 0
   | g :: [] => g
   | g :: h :: t => g + -h + alternating_sum t
 
 /-- The alternating product of a list. -/
-def alternating_prod {G : Type _} [HasOne G] [Mul G] [HasInv G] : List G → G
+def alternating_prod {G : Type _} [One G] [Mul G] [HasInv G] : List G → G
   | [] => 1
   | g :: [] => g
   | g :: h :: t => g * h⁻¹ * alternating_prod t

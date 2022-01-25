@@ -161,7 +161,7 @@ theorem lower_semicontinuous_const : LowerSemicontinuous fun x : α => z := fun 
 
 section
 
-variable [HasZero β]
+variable [Zero β]
 
 theorem IsOpen.lower_semicontinuous_indicator (hs : IsOpen s) (hy : 0 ≤ y) :
     LowerSemicontinuous (indicator s fun x => y) := by
@@ -588,7 +588,7 @@ theorem upper_semicontinuous_const : UpperSemicontinuous fun x : α => z := fun 
 
 section
 
-variable [HasZero β]
+variable [Zero β]
 
 theorem IsOpen.upper_semicontinuous_indicator (hs : IsOpen s) (hy : y ≤ 0) :
     UpperSemicontinuous (indicator s fun x => y) :=

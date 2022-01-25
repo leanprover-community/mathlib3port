@@ -110,6 +110,10 @@ on a specific set. -/
 def ApproximatesLinearOn (f : E → F) (f' : E →L[𝕜] F) (s : Set E) (c : ℝ≥0 ) : Prop :=
   ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, ∥f x - f y - f' (x - y)∥ ≤ c * ∥x - y∥
 
+@[simp]
+theorem approximates_linear_on_empty (f : E → F) (f' : E →L[𝕜] F) (c : ℝ≥0 ) : ApproximatesLinearOn f f' ∅ c := by
+  simp [ApproximatesLinearOn]
+
 namespace ApproximatesLinearOn
 
 variable [cs : CompleteSpace E] {f : E → F}
@@ -127,6 +131,17 @@ theorem mono_num (hc : c ≤ c') (hf : ApproximatesLinearOn f f' s c) : Approxim
 
 theorem mono_set (hst : s ⊆ t) (hf : ApproximatesLinearOn f f' t c) : ApproximatesLinearOn f f' s c := fun x hx y hy =>
   hf x (hst hx) y (hst hy)
+
+theorem approximates_linear_on_iff_lipschitz_on_with {f : E → F} {f' : E →L[𝕜] F} {s : Set E} {c : ℝ≥0 } :
+    ApproximatesLinearOn f f' s c ↔ LipschitzOnWith c (f - f') s := by
+  have : ∀ x y, f x - f y - f' (x - y) = (f - f') x - (f - f') y := by
+    intro x y
+    simp only [map_sub, Pi.sub_apply]
+    abel
+  simp only [this, lipschitz_on_with_iff_norm_sub_le, ApproximatesLinearOn]
+
+alias approximates_linear_on_iff_lipschitz_on_with ↔
+  ApproximatesLinearOn.lipschitz_on_with LipschitzOnWith.approximates_linear_on
 
 theorem lipschitz_sub (hf : ApproximatesLinearOn f f' s c) : LipschitzWith c fun x : s => f x - f' x := by
   refine' LipschitzWith.of_dist_le_mul fun x y => _
@@ -348,6 +363,26 @@ protected theorem inj_on (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c)
     inj_on f s :=
   inj_on_iff_injective.2 $ hf.injective hc
 
+protected theorem surjective [CompleteSpace E] (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) univ c)
+    (hc : Subsingleton E ∨ c < N⁻¹) : surjective f := by
+  cases' hc with hE hc
+  · have : Subsingleton F := (Equivₓ.subsingleton_congr f'.to_linear_equiv.to_equiv).1 hE
+    exact surjective_to_subsingleton _
+    
+  · apply forall_of_forall_mem_closed_ball (fun y : F => ∃ a, f a = y) (f 0) _
+    have hc' : (0 : ℝ) < N⁻¹ - c := by
+      rw [sub_pos]
+      exact hc
+    let p : ℝ → Prop := fun R => closed_ball (f 0) R ⊆ Set.Range f
+    have hp : ∀ᶠ r : ℝ in at_top, p ((N⁻¹ - c) * r) := by
+      have hr : ∀ᶠ r : ℝ in at_top, 0 ≤ r := eventually_ge_at_top 0
+      refine' hr.mono fun r hr => subset.trans _ (image_subset_range f (closed_ball 0 r))
+      refine' hf.surj_on_closed_ball_of_nonlinear_right_inverse f'.to_nonlinear_right_inverse hr _
+      exact subset_univ _
+    refine' ((tendsto_id.const_mul_at_top hc').Frequently hp.frequently).mono _
+    exact fun R h y hy => h hy
+    
+
 /-- A map approximating a linear equivalence on a set defines a local equivalence on this set.
 Should not be used outside of this file, because it is superseded by `to_local_homeomorph` below.
 
@@ -362,6 +397,29 @@ theorem inverse_continuous_on (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F)
   apply continuous_on_iff_continuous_restrict.2
   refine' ((hf.antilipschitz hc).to_right_inv_on' _ (hf.to_local_equiv hc).right_inv').Continuous
   exact fun x hx => (hf.to_local_equiv hc).map_target hx
+
+/-- The inverse function is approximated linearly on `f '' s` by `f'.symm`. -/
+theorem to_inv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹) :
+    ApproximatesLinearOn (hf.to_local_equiv hc).symm (f'.symm : F →L[𝕜] E) (f '' s) (N * (N⁻¹ - c)⁻¹ * c) := by
+  intro x hx y hy
+  set A := hf.to_local_equiv hc with hA
+  have Af : ∀ z, A z = f z := fun z => rfl
+  rcases(mem_image _ _ _).1 hx with ⟨x', x's, rfl⟩
+  rcases(mem_image _ _ _).1 hy with ⟨y', y's, rfl⟩
+  rw [← Af x', ← Af y', A.left_inv x's, A.left_inv y's]
+  calc ∥x' - y' - f'.symm (A x' - A y')∥ ≤ N * ∥f' (x' - y' - f'.symm (A x' - A y'))∥ :=
+      (f' : E →L[𝕜] F).bound_of_antilipschitz f'.antilipschitz _ _ = N * ∥A y' - A x' - f' (y' - x')∥ := by
+      congr 2
+      simp only [ContinuousLinearEquiv.apply_symm_apply, ContinuousLinearEquiv.map_sub]
+      abel _ ≤ N * (c * ∥y' - x'∥) :=
+      mul_le_mul_of_nonneg_left (hf _ y's _ x's)
+        (Nnreal.coe_nonneg _)_ ≤ N * (c * (((N⁻¹ - c)⁻¹ : ℝ≥0 ) * ∥A y' - A x'∥)) :=
+      by
+      apply_rules [mul_le_mul_of_nonneg_left, Nnreal.coe_nonneg]
+      rw [← dist_eq_norm, ← dist_eq_norm]
+      exact (hf.antilipschitz hc).le_mul_dist ⟨y', y's⟩ ⟨x', x's⟩_ = (N * (N⁻¹ - c)⁻¹ * c : ℝ≥0 ) * ∥A x' - A y'∥ := by
+      simp only [norm_sub_rev, Nonneg.coe_mul]
+      ring
 
 include cs
 
@@ -381,6 +439,36 @@ def to_local_homeomorph (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) 
         rwa [f'.to_linear_equiv.to_equiv.subsingleton_congr] at hc)
   continuous_to_fun := hf.continuous_on
   continuous_inv_fun := hf.inverse_continuous_on hc
+
+/-- A function `f` that approximates a linear equivalence on the whole space is a homeomorphism. -/
+def to_homeomorph (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) univ c) (hc : Subsingleton E ∨ c < N⁻¹) : E ≃ₜ F := by
+  refine' (hf.to_local_homeomorph _ _ hc is_open_univ).toHomeomorphOfSourceEqUnivTargetEqUniv rfl _
+  change f '' univ = univ
+  rw [image_univ, range_iff_surjective]
+  exact hf.surjective hc
+
+omit cs
+
+/-- In a real vector space, a function `f` that approximates a linear equivalence on a subset `s`
+can be extended to a homeomorphism of the whole space. -/
+theorem exists_homeomorph_extension {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {F : Type _} [NormedGroup F]
+    [NormedSpace ℝ F] [FiniteDimensional ℝ F] {s : Set E} {f : E → F} {f' : E ≃L[ℝ] F} {c : ℝ≥0 }
+    (hf : ApproximatesLinearOn f (f' : E →L[ℝ] F) s c)
+    (hc : Subsingleton E ∨ lipschitzExtensionConstant F * c < ∥(f'.symm : F →L[ℝ] E)∥₊⁻¹) : ∃ g : E ≃ₜ F, eq_on f g s :=
+  by
+  obtain ⟨u, hu, uf⟩ : ∃ u : E → F, LipschitzWith (lipschitzExtensionConstant F * c) u ∧ eq_on (f - f') u s :=
+    hf.lipschitz_on_with.extend_finite_dimension
+  let g : E → F := fun x => f' x + u x
+  have fg : eq_on f g s := fun x hx => by
+    simp_rw [g, ← uf hx, Pi.sub_apply, add_sub_cancel'_right]
+  have hg : ApproximatesLinearOn g (f' : E →L[ℝ] F) univ (lipschitzExtensionConstant F * c) := by
+    apply LipschitzOnWith.approximates_linear_on
+    rw [lipschitz_on_univ]
+    convert hu
+    ext x
+    simp only [add_sub_cancel', ContinuousLinearEquiv.coe_coe, Pi.sub_apply]
+  have : FiniteDimensional ℝ E := f'.symm.to_linear_equiv.finite_dimensional
+  exact ⟨hg.to_homeomorph g hc, fg⟩
 
 end
 

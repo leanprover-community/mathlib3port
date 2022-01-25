@@ -248,11 +248,11 @@ theorem exists_multiset_of_splits {f : Polynomial K} :
         hfs.resolve_left hpf0 hp
           (by
             simp )
-      rw [Multiset.map_cons, Multiset.prod_cons, leading_coeff_mul, C_mul, mul_assocₓ,
-        mul_left_commₓ (C f.leading_coeff), ← hs, ← mul_assocₓ, mul_left_inj' hf0]
+      rw [Multiset.map_cons, Multiset.prod_cons, leading_coeff_mul, C_mul, mul_assoc,
+        mul_left_commₓ (C f.leading_coeff), ← hs, ← mul_assoc, mul_left_inj' hf0]
       conv_lhs => rw [eq_X_add_C_of_degree_eq_one hp1]
-      simp only [mul_addₓ, coe_norm_unit_of_ne_zero hp.ne_zero, mul_commₓ p, coeff_neg, C_neg, sub_eq_add_neg, neg_negₓ,
-        coeff_C_mul, (mul_assocₓ _ _ _).symm, C_mul.symm,
+      simp only [mul_addₓ, coe_norm_unit_of_ne_zero hp.ne_zero, mul_comm p, coeff_neg, C_neg, sub_eq_add_neg, neg_negₓ,
+        coeff_C_mul, (mul_assoc _ _ _).symm, C_mul.symm,
         mul_inv_cancel (show p.leading_coeff ≠ 0 from mt leading_coeff_eq_zero.1 hp.ne_zero), one_mulₓ]⟩
 
 /-- Pick a root of a polynomial that splits. -/
@@ -355,7 +355,7 @@ theorem splits_of_exists_multiset {f : Polynomial K} {s : Multiset L}
                 ⟨(Units.map C.toMonoidHom : (L)ˣ →* (Polynomial L)ˣ)
                     (Units.mk0 (f.map i).leadingCoeff (mt leading_coeff_eq_zero.1 (map_ne_zero hf0))),
                   by
-                  conv_rhs => rw [hs, ← leading_coeff_map i, mul_commₓ] <;> rfl⟩
+                  conv_rhs => rw [hs, ← leading_coeff_map i, mul_comm] <;> rfl⟩
               _ ~ᵤ _ :=
                 (UniqueFactorizationMonoid.normalized_factors_prod
                     (by
@@ -464,7 +464,7 @@ private theorem C_leading_coeff_mul_prod_multiset_X_sub_C_of_field {p : Polynomi
       C p.leading_coeff * (Multiset.map (fun a : K => X - C a) p.roots).Prod =
           p * C (p.leading_coeff⁻¹ * p.leading_coeff) :=
         by
-        rw [hprod, mul_commₓ, mul_assocₓ, ← C_mul]_ = p * C 1 := by
+        rw [hprod, mul_comm, mul_assoc, ← C_mul]_ = p * C 1 := by
         field_simp _ = p := by
         simp only [mul_oneₓ, RingHom.map_one]
     

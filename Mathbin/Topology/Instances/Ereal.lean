@@ -73,7 +73,7 @@ instance : second_countable_topology Ereal :=
 /-! ### Real coercion -/
 
 
-theorem embedding_coe : Embedding (coeₓ : ℝ → Ereal) :=
+theorem embedding_coe : Embedding (coe : ℝ → Ereal) :=
   ⟨⟨by
       refine' le_antisymmₓ _ _
       · rw [@OrderTopology.topology_eq_generate_intervals Ereal _, ← coinduced_le_iff_le_induced]
@@ -113,7 +113,7 @@ theorem embedding_coe : Embedding (coeₓ : ℝ → Ereal) :=
     fun a b => by
     simp only [imp_self, Ereal.coe_eq_coe_iff]⟩
 
-theorem open_embedding_coe : OpenEmbedding (coeₓ : ℝ → Ereal) :=
+theorem open_embedding_coe : OpenEmbedding (coe : ℝ → Ereal) :=
   ⟨embedding_coe, by
     convert @is_open_Ioo Ereal _ _ _ ⊥ ⊤
     ext x
@@ -130,13 +130,13 @@ theorem tendsto_coe {α : Type _} {f : Filter α} {m : α → ℝ} {a : ℝ} :
     tendsto (fun a => (m a : Ereal)) f (𝓝 (↑a)) ↔ tendsto m f (𝓝 a) :=
   embedding_coe.tendsto_nhds_iff.symm
 
-theorem _root_.continuous_coe_real_ereal : Continuous (coeₓ : ℝ → Ereal) :=
+theorem _root_.continuous_coe_real_ereal : Continuous (coe : ℝ → Ereal) :=
   embedding_coe.Continuous
 
 theorem continuous_coe_iff {f : α → ℝ} : (Continuous fun a => (f a : Ereal)) ↔ Continuous f :=
   embedding_coe.continuous_iff.symm
 
-theorem nhds_coe {r : ℝ} : 𝓝 (r : Ereal) = (𝓝 r).map coeₓ :=
+theorem nhds_coe {r : ℝ} : 𝓝 (r : Ereal) = (𝓝 r).map coe :=
   (open_embedding_coe.map_nhds_eq r).symm
 
 theorem nhds_coe_coe {r p : ℝ} : 𝓝 ((r : Ereal), (p : Ereal)) = (𝓝 (r, p)).map fun p : ℝ × ℝ => (p.1, p.2) :=
@@ -165,7 +165,7 @@ def ne_bot_top_homeomorph_real : ({⊥, ⊤} : Set Ereal).Compl ≃ₜ ℝ :=
 /-! ### ennreal coercion -/
 
 
-theorem embedding_coe_ennreal : Embedding (coeₓ : ℝ≥0∞ → Ereal) :=
+theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → Ereal) :=
   ⟨⟨by
       refine' le_antisymmₓ _ _
       · rw [@OrderTopology.topology_eq_generate_intervals Ereal _, ← coinduced_le_iff_le_induced]
@@ -226,7 +226,7 @@ theorem tendsto_coe_ennreal {α : Type _} {f : Filter α} {m : α → ℝ≥0∞
     tendsto (fun a => (m a : Ereal)) f (𝓝 (↑a)) ↔ tendsto m f (𝓝 a) :=
   embedding_coe_ennreal.tendsto_nhds_iff.symm
 
-theorem _root_.continuous_coe_ennreal_ereal : Continuous (coeₓ : ℝ≥0∞ → Ereal) :=
+theorem _root_.continuous_coe_ennreal_ereal : Continuous (coe : ℝ≥0∞ → Ereal) :=
   embedding_coe_ennreal.Continuous
 
 theorem continuous_coe_ennreal_iff {f : α → ℝ≥0∞} : (Continuous fun a => (f a : Ereal)) ↔ Continuous f :=

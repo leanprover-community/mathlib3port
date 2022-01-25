@@ -163,7 +163,7 @@ variable {S}
 theorem trace_form_apply (x y : S) : trace_form R S x y = trace R S (x * y) :=
   rfl
 
-theorem trace_form_is_symm : (trace_form R S).IsSymm := fun x y => congr_argₓ (trace R S) (mul_commₓ _ _)
+theorem trace_form_is_symm : (trace_form R S).IsSymm := fun x y => congr_argₓ (trace R S) (mul_comm _ _)
 
 theorem trace_form_to_matrix [DecidableEq ι] i j : BilinForm.toMatrix b (trace_form R S) i j = trace R S (b i * b j) :=
   by
@@ -186,24 +186,22 @@ variable {F : Type _} [Field F]
 
 variable [Algebra K S] [Algebra K F]
 
-/-- Given `pb : power_basis K S`, then the trace of `pb.gen` is
-`-((minpoly K pb.gen).map (algebra_map K F)).next_coeff`. -/
+/-- Given `pb : power_basis K S`, the trace of `pb.gen` is `-(minpoly K pb.gen).next_coeff`. -/
 theorem PowerBasis.trace_gen_eq_next_coeff_minpoly [Nontrivial S] (pb : PowerBasis K S) :
-    algebraMap K F (trace K S pb.gen) = -((minpoly K pb.gen).map (algebraMap K F)).nextCoeff := by
+    Algebra.trace K S pb.gen = -(minpoly K pb.gen).nextCoeff := by
   have d_pos : 0 < pb.dim := PowerBasis.dim_pos pb
   have d_pos' : 0 < (minpoly K pb.gen).natDegree := by
     simpa
   have : Nonempty (Finₓ pb.dim) := ⟨⟨0, d_pos⟩⟩
-  rw [trace_eq_matrix_trace pb.basis, trace_eq_neg_charpoly_coeff, charpoly_left_mul_matrix, RingHom.map_neg, ←
-    pb.nat_degree_minpoly, Fintype.card_fin, ← next_coeff_of_pos_nat_degree _ d_pos', ←
-    next_coeff_map (algebraMap K F).Injective]
+  rw [trace_eq_matrix_trace pb.basis, trace_eq_neg_charpoly_coeff, charpoly_left_mul_matrix, ← pb.nat_degree_minpoly,
+    Fintype.card_fin, ← next_coeff_of_pos_nat_degree _ d_pos']
 
 /-- Given `pb : power_basis K S`, then the trace of `pb.gen` is
 `((minpoly K pb.gen).map (algebra_map K F)).roots.sum`. -/
 theorem PowerBasis.trace_gen_eq_sum_roots [Nontrivial S] (pb : PowerBasis K S)
     (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
     algebraMap K F (trace K S pb.gen) = ((minpoly K pb.gen).map (algebraMap K F)).roots.Sum := by
-  rw [PowerBasis.trace_gen_eq_next_coeff_minpoly,
+  rw [PowerBasis.trace_gen_eq_next_coeff_minpoly, RingHom.map_neg, ← next_coeff_map (algebraMap K F).Injective,
     sum_roots_eq_next_coeff_of_monic_of_split (monic_map _ (minpoly.monic (PowerBasis.is_integral_gen _)))
       ((splits_id_iff_splits _).2 hf),
     neg_negₓ]
@@ -429,10 +427,10 @@ theorem trace_matrix_of_matrix_vec_mul [Fintype κ] (b : κ → B) (P : Matrix �
   rw [Matrix.mul_apply, sum_mul]
   congr
   ext y
-  rw [map_apply, trace_form_apply, mul_commₓ (b y), ← smul_def]
+  rw [map_apply, trace_form_apply, mul_comm (b y), ← smul_def]
   simp only [id.smul_eq_mul, RingHom.id_apply, map_apply, transpose_apply, LinearMap.map_smulₛₗ, trace_form_apply,
     Algebra.smul_mul_assoc]
-  rw [mul_commₓ (b x), ← smul_def]
+  rw [mul_comm (b x), ← smul_def]
   ring_nf
   simp
 
@@ -453,11 +451,11 @@ theorem trace_matrix_of_basis_mul_vec (b : Basis ι A B) (z : B) :
   rw [← col_apply ((trace_matrix A b).mulVec (b.equiv_fun z)) i Unit.star, col_mul_vec, Matrix.mul_apply,
     trace_matrix_def]
   simp only [col_apply, trace_form_apply]
-  conv_lhs => congr skip ext rw [mul_commₓ _ (b.equiv_fun z _), ← smul_eq_mul, ← LinearMap.map_smul]
+  conv_lhs => congr skip ext rw [mul_comm _ (b.equiv_fun z _), ← smul_eq_mul, ← LinearMap.map_smul]
   rw [← LinearMap.map_sum]
   congr
   conv_lhs => congr skip ext rw [← mul_smul_comm]
-  rw [← Finset.mul_sum, mul_commₓ z]
+  rw [← Finset.mul_sum, mul_comm z]
   congr
   rw [b.sum_equiv_fun]
 

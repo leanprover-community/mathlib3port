@@ -59,7 +59,7 @@ instance : HasToString ℚ :=
   ⟨Rat.repr⟩
 
 unsafe instance : has_to_format ℚ :=
-  ⟨coeₓ ∘ Rat.repr⟩
+  ⟨coe ∘ Rat.repr⟩
 
 instance : Encodable ℚ :=
   Encodable.ofEquiv (Σ n : ℤ, { d : ℕ // 0 < d ∧ n.nat_abs.coprime d })
@@ -70,10 +70,10 @@ instance : Encodable ℚ :=
 def of_int (n : ℤ) : ℚ :=
   ⟨n, 1, Nat.one_posₓ, Nat.coprime_one_rightₓ _⟩
 
-instance : HasZero ℚ :=
+instance : Zero ℚ :=
   ⟨of_int 0⟩
 
-instance : HasOne ℚ :=
+instance : One ℚ :=
   ⟨of_int 1⟩
 
 instance : Inhabited ℚ :=
@@ -208,7 +208,7 @@ theorem mk_eq : ∀ {a b c d : ℤ} hb : b ≠ 0 hd : d ≠ 0, a /. b = c /. d �
       refine' Int.coe_nat_ne_zero.2 (ne_of_gtₓ _)
       apply mul_pos <;> apply Nat.gcd_pos_of_pos_rightₓ <;> assumption
     apply mul_right_cancel₀ m0
-    simpa [mul_commₓ, mul_left_commₓ] using congr (congr_argₓ (· * ·) ha.symm) (congr_argₓ coeₓ hb)
+    simpa [mul_comm, mul_left_commₓ] using congr (congr_argₓ (· * ·) ha.symm) (congr_argₓ coe hb)
     
   · suffices ∀ a c, a * d = c * b → a / a.gcd b = c / c.gcd d ∧ b / a.gcd b = d / c.gcd d by
       cases'
@@ -221,15 +221,15 @@ theorem mk_eq : ∀ {a b c d : ℤ} hb : b ≠ 0 hd : d ≠ 0, a /. b = c /. d �
       conv in a => rw [← Int.sign_mul_nat_abs a]
       conv in c => rw [← Int.sign_mul_nat_abs c]
       rw [Int.mul_div_assoc, Int.mul_div_assoc]
-      exact ⟨congr (congr_argₓ (· * ·) hs) (congr_argₓ coeₓ h₁), h₂⟩
+      exact ⟨congr (congr_argₓ (· * ·) hs) (congr_argₓ coe h₁), h₂⟩
       all_goals
         exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_leftₓ _ _)
     intro a c h
     suffices bd : b / a.gcd b = d / c.gcd d
     · refine' ⟨_, bd⟩
       apply Nat.eq_of_mul_eq_mul_leftₓ hb
-      rw [← Nat.mul_div_assocₓ _ (Nat.gcd_dvd_leftₓ _ _), mul_commₓ, Nat.mul_div_assocₓ _ (Nat.gcd_dvd_rightₓ _ _), bd,
-        ← Nat.mul_div_assocₓ _ (Nat.gcd_dvd_rightₓ _ _), h, mul_commₓ, Nat.mul_div_assocₓ _ (Nat.gcd_dvd_leftₓ _ _)]
+      rw [← Nat.mul_div_assocₓ _ (Nat.gcd_dvd_leftₓ _ _), mul_comm, Nat.mul_div_assocₓ _ (Nat.gcd_dvd_rightₓ _ _), bd, ←
+        Nat.mul_div_assocₓ _ (Nat.gcd_dvd_rightₓ _ _), h, mul_comm, Nat.mul_div_assocₓ _ (Nat.gcd_dvd_leftₓ _ _)]
       
     suffices ∀ {a c : ℕ}, ∀ b > 0, ∀, ∀ d > 0, ∀, a * d = c * b → b / a.gcd b ≤ d / c.gcd d by
       exact le_antisymmₓ (this _ hb _ hd h) (this _ hd _ hb h.symm)
@@ -244,8 +244,8 @@ theorem mk_eq : ∀ {a b c d : ℤ} hb : b ≠ 0 hd : d ≠ 0, a /. b = c /. d �
     refine' ⟨c / c.gcd d, _⟩
     rw [← Nat.mul_div_assocₓ _ (Nat.gcd_dvd_leftₓ _ _), ← Nat.mul_div_assocₓ _ (Nat.gcd_dvd_rightₓ _ _)]
     apply congr_argₓ (· / c.gcd d)
-    rw [mul_commₓ, ← Nat.mul_div_assocₓ _ (Nat.gcd_dvd_leftₓ _ _), mul_commₓ, h,
-      Nat.mul_div_assocₓ _ (Nat.gcd_dvd_rightₓ _ _), mul_commₓ]
+    rw [mul_comm, ← Nat.mul_div_assocₓ _ (Nat.gcd_dvd_leftₓ _ _), mul_comm, h,
+      Nat.mul_div_assocₓ _ (Nat.gcd_dvd_rightₓ _ _), mul_comm]
     
 
 @[simp]
@@ -255,7 +255,7 @@ theorem div_mk_div_cancel_left {a b c : ℤ} (c0 : c ≠ 0) : a * c /. (b * c) =
     simp
     
   apply (mk_eq (mul_ne_zero b0 c0) b0).2
-  simp [mul_commₓ, mul_assocₓ]
+  simp [mul_comm, mul_assoc]
 
 @[simp]
 theorem num_denom : ∀ {a : ℚ}, a.num /. a.denom = a
@@ -336,9 +336,9 @@ theorem add_def {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) : a /. b + c /. d 
   · apply mul_ne_zero d₁0 d₂0
     
   calc (n₁ * d₂ + n₂ * d₁) * (b * d) = n₁ * b * d₂ * d + n₂ * d * (d₁ * b) := by
-      simp [mul_addₓ, mul_commₓ, mul_left_commₓ]_ = a * d₁ * d₂ * d + c * d₂ * (d₁ * b) := by
+      simp [mul_addₓ, mul_comm, mul_left_commₓ]_ = a * d₁ * d₂ * d + c * d₂ * (d₁ * b) := by
       rw [h₁, h₂]_ = (a * d + c * b) * (d₁ * d₂) := by
-      simp [mul_addₓ, mul_commₓ, mul_left_commₓ]
+      simp [mul_addₓ, mul_comm, mul_left_commₓ]
 
 /-- Negation of rational numbers. Use `-r` instead. -/
 protected def neg (r : ℚ) : ℚ :=
@@ -457,7 +457,7 @@ protected theorem add_assocₓ : a + b + c = a + (b + c) :=
   num_denom_cases_on' a $ fun n₁ d₁ h₁ =>
     num_denom_cases_on' b $ fun n₂ d₂ h₂ =>
       num_denom_cases_on' c $ fun n₃ d₃ h₃ => by
-        simp [h₁, h₂, h₃, mul_ne_zero, mul_addₓ, mul_commₓ, mul_left_commₓ, add_left_commₓ, add_assocₓ]
+        simp [h₁, h₂, h₃, mul_ne_zero, mul_addₓ, mul_comm, mul_left_commₓ, add_left_commₓ, add_assocₓ]
 
 protected theorem add_left_negₓ : -a + a = 0 :=
   num_denom_cases_on' a $ fun n d h => by
@@ -494,16 +494,16 @@ protected theorem one_mulₓ : 1 * a = a :=
     rw [← mk_one_one]
     simp [h, -mk_one_one]
 
-protected theorem mul_commₓ : a * b = b * a :=
+protected theorem mul_comm : a * b = b * a :=
   num_denom_cases_on' a $ fun n₁ d₁ h₁ =>
     num_denom_cases_on' b $ fun n₂ d₂ h₂ => by
-      simp [h₁, h₂, mul_commₓ]
+      simp [h₁, h₂, mul_comm]
 
-protected theorem mul_assocₓ : a * b * c = a * (b * c) :=
+protected theorem mul_assoc : a * b * c = a * (b * c) :=
   num_denom_cases_on' a $ fun n₁ d₁ h₁ =>
     num_denom_cases_on' b $ fun n₂ d₂ h₂ =>
       num_denom_cases_on' c $ fun n₃ d₃ h₃ => by
-        simp [h₁, h₂, h₃, mul_ne_zero, mul_commₓ, mul_left_commₓ]
+        simp [h₁, h₂, h₃, mul_ne_zero, mul_comm, mul_left_commₓ]
 
 protected theorem add_mulₓ : (a + b) * c = a * c + b * c :=
   num_denom_cases_on' a $ fun n₁ d₁ h₁ =>
@@ -511,7 +511,7 @@ protected theorem add_mulₓ : (a + b) * c = a * c + b * c :=
       num_denom_cases_on' c $ fun n₃ d₃ h₃ => by
         simp [h₁, h₂, h₃, mul_ne_zero] <;>
           refine' (div_mk_div_cancel_left (Int.coe_nat_ne_zero.2 h₃)).symm.trans _ <;>
-            simp [mul_addₓ, mul_commₓ, mul_assocₓ, mul_left_commₓ]
+            simp [mul_addₓ, mul_comm, mul_assoc, mul_left_commₓ]
 
 protected theorem mul_addₓ : a * (b + c) = a * b + a * c := by
   rw [Rat.mul_comm, Rat.add_mul, Rat.mul_comm, Rat.mul_comm c a]
@@ -529,7 +529,7 @@ protected theorem mul_inv_cancel : a ≠ 0 → a * a⁻¹ = 1 :=
         (by
           intro e <;> subst e <;> simp )
         a0
-    simpa [h, n0, mul_commₓ] using @div_mk_div_cancel_left 1 1 _ n0
+    simpa [h, n0, mul_comm] using @div_mk_div_cancel_left 1 1 _ n0
 
 protected theorem inv_mul_cancel (h : a ≠ 0) : a⁻¹ * a = 1 :=
   Eq.trans (Rat.mul_comm _ _) (Rat.mul_inv_cancel _ h)
@@ -790,7 +790,7 @@ theorem mul_self_denom (q : ℚ) : (q * q).denom = q.denom * q.denom := by
 theorem add_num_denom (q r : ℚ) : q + r = (q.num * r.denom + q.denom * r.num : ℤ) /. (↑q.denom * ↑r.denom : ℤ) := by
   have hqd : (q.denom : ℤ) ≠ 0 := Int.coe_nat_ne_zero_iff_pos.2 q.3
   have hrd : (r.denom : ℤ) ≠ 0 := Int.coe_nat_ne_zero_iff_pos.2 r.3
-  conv_lhs => rw [← @num_denom q, ← @num_denom r, Rat.add_def hqd hrd] <;> simp [mul_commₓ]
+  conv_lhs => rw [← @num_denom q, ← @num_denom r, Rat.add_def hqd hrd] <;> simp [mul_comm]
 
 section Casts
 
@@ -799,7 +799,7 @@ protected theorem add_mk (a b c : ℤ) : (a + b) /. c = a /. c + b /. c :=
     simp [h]
   else by
     rw [add_def h h, mk_eq h (mul_ne_zero h h)]
-    simp [add_mulₓ, mul_assocₓ]
+    simp [add_mulₓ, mul_assoc]
 
 theorem coe_int_eq_mk : ∀ z : ℤ, ↑z = z /. 1
   | (n : ℕ) =>
@@ -852,7 +852,7 @@ theorem denom_eq_one_iff (r : ℚ) : r.denom = 1 ↔ ↑r.num = r :=
   ⟨Rat.coe_int_num_of_denom_eq_one, fun h => h ▸ Rat.coe_int_denom r.num⟩
 
 instance : CanLift ℚ ℤ :=
-  ⟨coeₓ, fun q => q.denom = 1, fun q hq => ⟨q.num, coe_int_num_of_denom_eq_one hq⟩⟩
+  ⟨coe, fun q => q.denom = 1, fun q hq => ⟨q.num, coe_int_num_of_denom_eq_one hq⟩⟩
 
 theorem coe_nat_eq_mk (n : ℕ) : ↑n = n /. 1 := by
   rw [← Int.cast_coe_nat, coe_int_eq_mk]
@@ -888,7 +888,7 @@ theorem mul_denom_eq_num {q : ℚ} : q * q.denom = q.num := by
     ne_of_gtₓ
       (by
         exact_mod_cast q.pos)
-  rw [Rat.mul_def this one_ne_zero, mul_commₓ (q.denom : ℤ) 1, div_mk_div_cancel_left this]
+  rw [Rat.mul_def this one_ne_zero, mul_comm (q.denom : ℤ) 1, div_mk_div_cancel_left this]
 
 theorem denom_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).denom = 1 ↔ n ∣ m := by
   replace hn : (n : ℚ) ≠ 0
@@ -898,10 +898,10 @@ theorem denom_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).d
   · intro h
     lift (m : ℚ) / n to ℤ using h with k hk
     use k
-    rwa [eq_div_iff_mul_eq hn, ← Int.cast_mul, mul_commₓ, eq_comm, coe_int_inj] at hk
+    rwa [eq_div_iff_mul_eq hn, ← Int.cast_mul, mul_comm, eq_comm, coe_int_inj] at hk
     
   · rintro ⟨d, rfl⟩
-    rw [Int.cast_mul, mul_commₓ, mul_div_cancel _ hn, Rat.coe_int_denom]
+    rw [Int.cast_mul, mul_comm, mul_div_cancel _ hn, Rat.coe_int_denom]
     
 
 theorem num_div_eq_of_coprime {a b : ℤ} (hb0 : 0 < b) (h : Nat.Coprime a.nat_abs b.nat_abs) : (a / b : ℚ).num = a := by
@@ -941,11 +941,11 @@ theorem coe_nat_div_self (n : ℕ) : ((n / n : ℕ) : ℚ) = n / n :=
 
 theorem coe_int_div (a b : ℤ) (h : b ∣ a) : ((a / b : ℤ) : ℚ) = a / b := by
   rcases h with ⟨c, rfl⟩
-  simp only [mul_commₓ b, Int.mul_div_assoc c (dvd_refl b), Int.cast_mul, mul_div_assoc, coe_int_div_self]
+  simp only [mul_comm b, Int.mul_div_assoc c (dvd_refl b), Int.cast_mul, mul_div_assoc, coe_int_div_self]
 
 theorem coe_nat_div (a b : ℕ) (h : b ∣ a) : ((a / b : ℕ) : ℚ) = a / b := by
   rcases h with ⟨c, rfl⟩
-  simp only [mul_commₓ b, Nat.mul_div_assocₓ c (dvd_refl b), Nat.cast_mul, mul_div_assoc, coe_nat_div_self]
+  simp only [mul_comm b, Nat.mul_div_assocₓ c (dvd_refl b), Nat.cast_mul, mul_div_assoc, coe_nat_div_self]
 
 theorem inv_coe_int_num {a : ℤ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 := by
   rw [Rat.inv_def', Rat.coe_int_num, Rat.coe_int_denom, Nat.cast_one, ← Int.cast_one]

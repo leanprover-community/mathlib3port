@@ -135,7 +135,7 @@ theorem convex_independent_set_iff_inter_convex_hull_subset {s : Set E} :
     
   · intro hc t x h
     rw [← subtype.coe_injective.mem_set_image]
-    exact hc (t.image coeₓ) (Subtype.coe_image_subset s t) ⟨x.prop, h⟩
+    exact hc (t.image coe) (Subtype.coe_image_subset s t) ⟨x.prop, h⟩
     
 
 /-- If a set is convex independent, a point in the set is not in the convex hull of the other

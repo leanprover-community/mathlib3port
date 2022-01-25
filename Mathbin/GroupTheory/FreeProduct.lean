@@ -167,7 +167,7 @@ instance : Groupₓ (FreeProduct G) :=
         rw [← of.map_mul, mul_left_invₓ, of.map_one]
         
       · intro x y hx hy
-        rw [MonoidHom.map_mul, MulOpposite.unop_mul, mul_assocₓ, ← mul_assocₓ _ x y, hx, one_mulₓ, hy]
+        rw [MonoidHom.map_mul, MulOpposite.unop_mul, mul_assoc, ← mul_assoc _ x y, hx, one_mulₓ, hy]
          }
 
 end Groupₓ
@@ -314,7 +314,7 @@ instance summand_action i : MulAction (M i) (word M) where
     apply (equiv_pair i).symm_apply_eq.mpr
     ext <;> rfl
   mul_smul := fun m m' w => by
-    simp only [mul_assocₓ, ← equiv_pair_symm, Equivₓ.apply_symm_apply]
+    simp only [mul_assoc, ← equiv_pair_symm, Equivₓ.apply_symm_apply]
 
 instance : MulAction (FreeProduct M) (word M) :=
   MulAction.ofEndHom (lift fun i => MulAction.toEndHom)
@@ -343,10 +343,10 @@ theorem prod_smul m : ∀ w : word M, Prod (m • w) = m * Prod w := by
     rw [one_smul, one_mulₓ]
     
   · intros
-    rw [of_smul_def, prod_rcons, of.map_mul, mul_assocₓ, ← prod_rcons, ← equiv_pair_symm, Equivₓ.symm_apply_apply]
+    rw [of_smul_def, prod_rcons, of.map_mul, mul_assoc, ← prod_rcons, ← equiv_pair_symm, Equivₓ.symm_apply_apply]
     
   · intro x y hx hy w
-    rw [mul_smul, hx, hy, mul_assocₓ]
+    rw [mul_smul, hx, hy, mul_assoc]
     
 
 /-- Each element of the free product corresponds to a unique reduced word. -/

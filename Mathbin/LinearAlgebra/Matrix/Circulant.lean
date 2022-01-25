@@ -86,7 +86,7 @@ theorem circulant_neg [Neg α] [Sub n] (v : n → α) : circulant (-v) = -circul
   ext $ fun _ _ => rfl
 
 @[simp]
-theorem circulant_zero α n [HasZero α] [Sub n] : circulant 0 = (0 : Matrix n n α) :=
+theorem circulant_zero α n [Zero α] [Sub n] : circulant 0 = (0 : Matrix n n α) :=
   ext $ fun _ _ => rfl
 
 theorem circulant_add [Add α] [Sub n] (v w : n → α) : circulant (v + w) = circulant v + circulant w :=
@@ -115,7 +115,7 @@ theorem fin.circulant_mul [Semiringₓ α] :
 theorem circulant_mul_comm [CommSemigroupₓ α] [AddCommMonoidₓ α] [Fintype n] [AddCommGroupₓ n] (v w : n → α) :
     circulant v ⬝ circulant w = circulant w ⬝ circulant v := by
   ext i j
-  simp only [mul_apply, circulant, mul_commₓ]
+  simp only [mul_apply, circulant, mul_comm]
   refine' Fintype.sum_equiv ((Equivₓ.subLeft i).trans (Equivₓ.addRight j)) _ _ _
   intro x
   congr 2
@@ -136,7 +136,7 @@ theorem circulant_smul [Sub n] [HasScalar R α] (k : R) (v : n → α) : circula
   ext <;> simp
 
 @[simp]
-theorem circulant_single_one α n [HasZero α] [HasOne α] [DecidableEq n] [AddGroupₓ n] :
+theorem circulant_single_one α n [Zero α] [One α] [DecidableEq n] [AddGroupₓ n] :
     circulant (Pi.single 0 1 : n → α) = (1 : Matrix n n α) := by
   ext i j
   simp [one_apply, Pi.single_apply, sub_eq_zero]
@@ -149,7 +149,7 @@ theorem circulant_single n [Semiringₓ α] [DecidableEq n] [AddGroupₓ n] [Fin
 
 /-- Note we use `↑i = 0` instead of `i = 0` as `fin 0` has no `0`.
 This means that we cannot state this with `pi.single` as we did with `matrix.circulant_single`. -/
-theorem fin.circulant_ite α [HasZero α] [HasOne α] : ∀ n, circulant (fun i => ite (↑i = 0) 1 0 : Finₓ n → α) = 1
+theorem fin.circulant_ite α [Zero α] [One α] : ∀ n, circulant (fun i => ite (↑i = 0) 1 0 : Finₓ n → α) = 1
   | 0 => by
     decide
   | n + 1 => by

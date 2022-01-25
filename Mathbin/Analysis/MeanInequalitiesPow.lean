@@ -150,7 +150,7 @@ theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0 ) (hp1 : 1 ≤ p) : a ^ p 
   have h_mul : (a + b) ^ p * (a ^ p / (a + b) ^ p + b ^ p / (a + b) ^ p) ≤ (a + b) ^ p := by
     nth_rw 3[← mul_oneₓ ((a + b) ^ p)]
     exact (mul_le_mul_left hab_0').mpr h
-  rwa [div_eq_mul_inv, div_eq_mul_inv, mul_addₓ, mul_commₓ (a ^ p), mul_commₓ (b ^ p), ← mul_assocₓ, ← mul_assocₓ,
+  rwa [div_eq_mul_inv, div_eq_mul_inv, mul_addₓ, mul_comm (a ^ p), mul_comm (b ^ p), ← mul_assoc, ← mul_assoc,
     mul_inv_cancel hab_0, one_mulₓ, one_mulₓ] at h_mul
 
 theorem rpow_add_rpow_le_add {p : ℝ} (a b : ℝ≥0 ) (hp1 : 1 ≤ p) : (a ^ p + b ^ p) ^ (1 / p) ≤ a + b := by
@@ -164,11 +164,11 @@ theorem rpow_add_rpow_le_add {p : ℝ} (a b : ℝ≥0 ) (hp1 : 1 ≤ p) : (a ^ p
 theorem rpow_add_rpow_le {p q : ℝ} (a b : ℝ≥0 ) (hp_pos : 0 < p) (hpq : p ≤ q) :
     (a ^ q + b ^ q) ^ (1 / q) ≤ (a ^ p + b ^ p) ^ (1 / p) := by
   have h_rpow : ∀ a : ℝ≥0 , a ^ q = (a ^ p) ^ (q / p) := fun a => by
-    rw [← Nnreal.rpow_mul, div_eq_inv_mul, ← mul_assocₓ, _root_.mul_inv_cancel hp_pos.ne.symm, one_mulₓ]
+    rw [← Nnreal.rpow_mul, div_eq_inv_mul, ← mul_assoc, _root_.mul_inv_cancel hp_pos.ne.symm, one_mulₓ]
   have h_rpow_add_rpow_le_add : ((a ^ p) ^ (q / p) + (b ^ p) ^ (q / p)) ^ (1 / (q / p)) ≤ a ^ p + b ^ p := by
     refine' rpow_add_rpow_le_add (a ^ p) (b ^ p) _
     rwa [one_le_div hp_pos]
-  rw [h_rpow a, h_rpow b, Nnreal.le_rpow_one_div_iff hp_pos, ← Nnreal.rpow_mul, mul_commₓ, mul_one_div]
+  rw [h_rpow a, h_rpow b, Nnreal.le_rpow_one_div_iff hp_pos, ← Nnreal.rpow_mul, mul_comm, mul_one_div]
   rwa [one_div_div] at h_rpow_add_rpow_le_add
 
 theorem rpow_add_le_add_rpow {p : ℝ} (a b : ℝ≥0 ) (hp_pos : 0 < p) (hp1 : p ≤ 1) : (a + b) ^ p ≤ a ^ p + b ^ p := by
@@ -267,11 +267,11 @@ theorem rpow_add_rpow_le_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : (a ^
 theorem rpow_add_rpow_le {p q : ℝ} (a b : ℝ≥0∞) (hp_pos : 0 < p) (hpq : p ≤ q) :
     (a ^ q + b ^ q) ^ (1 / q) ≤ (a ^ p + b ^ p) ^ (1 / p) := by
   have h_rpow : ∀ a : ℝ≥0∞, a ^ q = (a ^ p) ^ (q / p) := fun a => by
-    rw [← Ennreal.rpow_mul, div_eq_inv_mul, ← mul_assocₓ, _root_.mul_inv_cancel hp_pos.ne.symm, one_mulₓ]
+    rw [← Ennreal.rpow_mul, div_eq_inv_mul, ← mul_assoc, _root_.mul_inv_cancel hp_pos.ne.symm, one_mulₓ]
   have h_rpow_add_rpow_le_add : ((a ^ p) ^ (q / p) + (b ^ p) ^ (q / p)) ^ (1 / (q / p)) ≤ a ^ p + b ^ p := by
     refine' rpow_add_rpow_le_add (a ^ p) (b ^ p) _
     rwa [one_le_div hp_pos]
-  rw [h_rpow a, h_rpow b, Ennreal.le_rpow_one_div_iff hp_pos, ← Ennreal.rpow_mul, mul_commₓ, mul_one_div]
+  rw [h_rpow a, h_rpow b, Ennreal.le_rpow_one_div_iff hp_pos, ← Ennreal.rpow_mul, mul_comm, mul_one_div]
   rwa [one_div_div] at h_rpow_add_rpow_le_add
 
 theorem rpow_add_le_add_rpow {p : ℝ} (a b : ℝ≥0∞) (hp_pos : 0 < p) (hp1 : p ≤ 1) : (a + b) ^ p ≤ a ^ p + b ^ p := by

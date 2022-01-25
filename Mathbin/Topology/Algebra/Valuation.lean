@@ -58,8 +58,8 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : (Γ₀ R)ˣ => Valued.v.lt
         use γx⁻¹ * γ
         rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
         change v (x * y) < γ
-        rw [Valuation.map_mul, Hx, mul_commₓ]
-        rw [Units.coe_mul, mul_commₓ] at vy_lt
+        rw [Valuation.map_mul, Hx, mul_comm]
+        rw [Units.coe_mul, mul_comm] at vy_lt
         simpa using mul_inv_lt_of_lt_mul₀ vy_lt
         ,
     rightMul := by
@@ -75,7 +75,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : (Γ₀ R)ˣ => Valued.v.lt
         rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
         change v (y * x) < γ
         rw [Valuation.map_mul, Hx]
-        rw [Units.coe_mul, mul_commₓ] at vy_lt
+        rw [Units.coe_mul, mul_comm] at vy_lt
         simpa using mul_inv_lt_of_lt_mul₀ vy_lt
          }
 

@@ -31,12 +31,12 @@ variable {α β ι M N : Type _}
 
 namespace Set
 
-section HasOne
+section One
 
-variable [HasOne M] [HasOne N] {s t : Set α} {f g : α → M} {a : α}
+variable [One M] [One N] {s t : Set α} {f g : α → M} {a : α}
 
 /-- `indicator s f a` is `f a` if `a ∈ s`, `0` otherwise.  -/
-def indicator {M} [HasZero M] (s : Set α) (f : α → M) : α → M := fun x => if x ∈ s then f x else 0
+def indicator {M} [Zero M] (s : Set α) (f : α → M) : α → M := fun x => if x ∈ s then f x else 0
 
 /-- `mul_indicator s f a` is `f a` if `a ∈ s`, `1` otherwise.  -/
 @[to_additive]
@@ -224,7 +224,7 @@ theorem mul_indicator_rel_mul_indicator {r : M → M → Prop} (h1 : r 1 1) (ha 
   split_ifs with has has
   exacts[ha has, h1]
 
-end HasOne
+end One
 
 section Monoidₓ
 
@@ -382,7 +382,7 @@ function such as `pow`, which maps a second argument of `1` to
 function, the `finset` may be replaced by a possibly larger `finset`
 without changing the value of the sum. -/
 @[to_additive]
-theorem prod_mul_indicator_subset_of_eq_one [HasOne N] (f : α → N) (g : α → N → M) {s t : Finset α} (h : s ⊆ t)
+theorem prod_mul_indicator_subset_of_eq_one [One N] (f : α → N) (g : α → N → M) {s t : Finset α} (h : s ⊆ t)
     (hg : ∀ a, g a 1 = 1) : (∏ i in s, g i (f i)) = ∏ i in t, g i (mul_indicator (↑s) f i) := by
   rw [← Finset.prod_subset h _]
   · apply Finset.prod_congr rfl
@@ -498,7 +498,7 @@ end MonoidWithZeroₓ
 
 section Order
 
-variable [HasOne M] [Preorderₓ M] {s t : Set α} {f g : α → M} {a : α} {y : M}
+variable [One M] [Preorderₓ M] {s t : Set α} {f g : α → M} {a : α} {y : M}
 
 @[to_additive]
 theorem mul_indicator_apply_le' (hfg : a ∈ s → f a ≤ y) (hg : a ∉ s → 1 ≤ y) : mul_indicator s f a ≤ y :=
@@ -555,7 +555,7 @@ theorem mul_indicator_le_self' (hf : ∀ x _ : x ∉ s, 1 ≤ f x) : mul_indicat
   mul_indicator_le' (fun _ _ => le_reflₓ _) hf
 
 @[to_additive]
-theorem mul_indicator_Union_apply {ι M} [CompleteLattice M] [HasOne M] (h1 : (⊥ : M) = 1) (s : ι → Set α) (f : α → M)
+theorem mul_indicator_Union_apply {ι M} [CompleteLattice M] [One M] (h1 : (⊥ : M) = 1) (s : ι → Set α) (f : α → M)
     (x : α) : mul_indicator (⋃ i, s i) f x = ⨆ i, mul_indicator (s i) f x := by
   by_cases' hx : x ∈ ⋃ i, s i
   · rw [mul_indicator_of_mem hx]
@@ -590,7 +590,7 @@ theorem mul_indicator_le {s : Set α} {f g : α → M} (hfg : ∀, ∀ a ∈ s, 
 
 end CanonicallyOrderedMonoid
 
-theorem indicator_le_indicator_nonneg {β} [LinearOrderₓ β] [HasZero β] (s : Set α) (f : α → β) :
+theorem indicator_le_indicator_nonneg {β} [LinearOrderₓ β] [Zero β] (s : Set α) (f : α → β) :
     s.indicator f ≤ { x | 0 ≤ f x }.indicator f := by
   intro x
   simp_rw [indicator_apply]
@@ -604,7 +604,7 @@ theorem indicator_le_indicator_nonneg {β} [LinearOrderₓ β] [HasZero β] (s :
   · exact le_rfl
     
 
-theorem indicator_nonpos_le_indicator {β} [LinearOrderₓ β] [HasZero β] (s : Set α) (f : α → β) :
+theorem indicator_nonpos_le_indicator {β} [LinearOrderₓ β] [Zero β] (s : Set α) (f : α → β) :
     { x | f x ≤ 0 }.indicator f ≤ s.indicator f :=
   @indicator_le_indicator_nonneg α (OrderDual β) _ _ s f
 

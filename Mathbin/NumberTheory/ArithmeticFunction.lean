@@ -53,16 +53,16 @@ variable (R : Type _)
 /-- An arithmetic function is a function from `ℕ` that maps 0 to 0. In the literature, they are
   often instead defined as functions from `ℕ+`. Multiplication on `arithmetic_functions` is by
   Dirichlet convolution. -/
-def arithmetic_function [HasZero R] :=
-  ZeroHom ℕ R deriving HasZero, Inhabited
+def arithmetic_function [Zero R] :=
+  ZeroHom ℕ R deriving Zero, Inhabited
 
 variable {R}
 
 namespace ArithmeticFunction
 
-section HasZero
+section Zero
 
-variable [HasZero R]
+variable [Zero R]
 
 instance : CoeFun (arithmetic_function R) fun _ => ℕ → R :=
   ZeroHom.hasCoeToFun
@@ -89,11 +89,11 @@ theorem ext ⦃f g : arithmetic_function R⦄ (h : ∀ x, f x = g x) : f = g :=
 theorem ext_iff {f g : arithmetic_function R} : f = g ↔ ∀ x, f x = g x :=
   ZeroHom.ext_iff
 
-section HasOne
+section One
 
-variable [HasOne R]
+variable [One R]
 
-instance : HasOne (arithmetic_function R) :=
+instance : One (arithmetic_function R) :=
   ⟨⟨fun x => ite (x = 1) 1 0, rfl⟩⟩
 
 @[simp]
@@ -104,11 +104,11 @@ theorem one_one : (1 : arithmetic_function R) 1 = 1 :=
 theorem one_apply_ne {x : ℕ} (h : x ≠ 1) : (1 : arithmetic_function R) x = 0 :=
   if_neg h
 
-end HasOne
+end One
 
-end HasZero
+end Zero
 
-instance nat_coe [HasZero R] [HasOne R] [Add R] : Coe (arithmetic_function ℕ) (arithmetic_function R) :=
+instance nat_coe [Zero R] [One R] [Add R] : Coe (arithmetic_function ℕ) (arithmetic_function R) :=
   ⟨fun f =>
     ⟨↑(f : ℕ → ℕ), by
       trans ↑f 0
@@ -120,11 +120,11 @@ theorem nat_coe_nat (f : arithmetic_function ℕ) : (↑f : arithmetic_function 
   ext $ fun _ => cast_id _
 
 @[simp]
-theorem nat_coe_apply [HasZero R] [HasOne R] [Add R] {f : arithmetic_function ℕ} {x : ℕ} :
+theorem nat_coe_apply [Zero R] [One R] [Add R] {f : arithmetic_function ℕ} {x : ℕ} :
     (f : arithmetic_function R) x = f x :=
   rfl
 
-instance int_coe [HasZero R] [HasOne R] [Add R] [Neg R] : Coe (arithmetic_function ℤ) (arithmetic_function R) :=
+instance int_coe [Zero R] [One R] [Add R] [Neg R] : Coe (arithmetic_function ℤ) (arithmetic_function R) :=
   ⟨fun f =>
     ⟨↑(f : ℕ → ℤ), by
       trans ↑f 0
@@ -136,12 +136,12 @@ theorem int_coe_int (f : arithmetic_function ℤ) : (↑f : arithmetic_function 
   ext $ fun _ => Int.cast_id _
 
 @[simp]
-theorem int_coe_apply [HasZero R] [HasOne R] [Add R] [Neg R] {f : arithmetic_function ℤ} {x : ℕ} :
+theorem int_coe_apply [Zero R] [One R] [Add R] [Neg R] {f : arithmetic_function ℤ} {x : ℕ} :
     (f : arithmetic_function R) x = f x :=
   rfl
 
 @[simp]
-theorem coe_coe [HasZero R] [HasOne R] [Add R] [Neg R] {f : arithmetic_function ℕ} :
+theorem coe_coe [Zero R] [One R] [Add R] [Neg R] {f : arithmetic_function ℕ} :
     ((f : arithmetic_function ℤ) : arithmetic_function R) = f := by
   ext
   simp
@@ -181,7 +181,7 @@ instance [AddCommGroupₓ R] : AddCommGroupₓ (arithmetic_function R) :=
 
 section HasScalar
 
-variable {M : Type _} [HasZero R] [AddCommMonoidₓ M] [HasScalar R M]
+variable {M : Type _} [Zero R] [AddCommMonoidₓ M] [HasScalar R M]
 
 /-- The Dirichlet convolution of two arithmetic functions `f` and `g` is another arithmetic function
   such that `(f * g) n` is the sum of `f x * g y` over all `(x,y)` such that `x * y = n`. -/
@@ -222,12 +222,12 @@ theorem mul_smul' (f g : arithmetic_function R) (h : arithmetic_function M) : (f
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H
     simp only [Finset.mem_sigma, mem_divisors_antidiagonal] at H⊢
     rcases H with ⟨⟨rfl, n0⟩, rfl, i0⟩
-    refine' ⟨⟨(mul_assocₓ _ _ _).symm, n0⟩, rfl, _⟩
+    refine' ⟨⟨(mul_assoc _ _ _).symm, n0⟩, rfl, _⟩
     rw [mul_ne_zero_iff] at *
     exact ⟨i0.2, n0.2⟩
     
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H
-    simp only [mul_assocₓ]
+    simp only [mul_assoc]
     
   · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩ ⟨⟨i, j⟩, ⟨k, l⟩⟩ H₁ H₂
     simp only [Finset.mem_sigma, mem_divisors_antidiagonal, and_imp, Prod.mk.inj_iffₓ, add_commₓ, heq_iff_eq] at H₁ H₂⊢
@@ -238,7 +238,7 @@ theorem mul_smul' (f g : arithmetic_function R) (h : arithmetic_function M) : (f
     refine' ⟨⟨(i * k, l), (i, k)⟩, _, _⟩
     · simp only [Finset.mem_sigma, mem_divisors_antidiagonal] at H⊢
       rcases H with ⟨⟨rfl, n0⟩, rfl, j0⟩
-      refine' ⟨⟨mul_assocₓ _ _ _, n0⟩, rfl, _⟩
+      refine' ⟨⟨mul_assoc _ _ _, n0⟩, rfl, _⟩
       rw [mul_ne_zero_iff] at *
       exact ⟨n0.1, j0.1⟩
       
@@ -318,7 +318,7 @@ instance [CommSemiringₓ R] : CommSemiringₓ (arithmetic_function R) :=
     mul_comm := fun f g => by
       ext
       rw [mul_apply, ← map_swap_divisors_antidiagonal, sum_map]
-      simp [mul_commₓ] }
+      simp [mul_comm] }
 
 instance [CommRingₓ R] : CommRingₓ (arithmetic_function R) :=
   { arithmetic_function.add_comm_group, arithmetic_function.comm_semiring with }
@@ -387,7 +387,7 @@ theorem coe_zeta_mul_apply [Semiringₓ R] {f : arithmetic_function R} {x : ℕ}
     · intro a ha
       rcases mem_divisors.1 ha with ⟨⟨b, rfl⟩, ne0⟩
       use (b, a)
-      simp [ne0, mul_commₓ]
+      simp [ne0, mul_comm]
       
     
 
@@ -423,7 +423,7 @@ theorem coe_zeta_smul_apply {M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Mo
     · intro a ha
       rcases mem_divisors.1 ha with ⟨⟨b, rfl⟩, ne0⟩
       use (b, a)
-      simp [ne0, mul_commₓ]
+      simp [ne0, mul_comm]
       
     
 
@@ -472,7 +472,7 @@ theorem pmul_apply [MulZeroClass R] {f g : arithmetic_function R} {x : ℕ} : f.
 
 theorem pmul_comm [CommMonoidWithZero R] (f g : arithmetic_function R) : f.pmul g = g.pmul f := by
   ext
-  simp [mul_commₓ]
+  simp [mul_comm]
 
 variable [Semiringₓ R]
 
@@ -589,18 +589,18 @@ theorem mul [CommSemiringₓ R] {f g : arithmetic_function R} (hf : f.is_multipl
           
         
       · trans Nat.gcdₓ (a1 * a2) (a2 * b2)
-        · rw [mul_commₓ, Nat.gcd_mul_leftₓ, cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one, mul_oneₓ]
+        · rw [mul_comm, Nat.gcd_mul_leftₓ, cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one, mul_oneₓ]
           
         · rw [← hcd.1.1, ← hcd.2.1] at cop
-          rw [← hcd.1.1, h.2, mul_commₓ, Nat.gcd_mul_leftₓ, cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one,
+          rw [← hcd.1.1, h.2, mul_comm, Nat.gcd_mul_leftₓ, cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one,
             mul_oneₓ]
           
         
       · trans Nat.gcdₓ (b1 * b2) (a1 * b1)
-        · rw [mul_commₓ, Nat.gcd_mul_rightₓ, cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, one_mulₓ]
+        · rw [mul_comm, Nat.gcd_mul_rightₓ, cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, one_mulₓ]
           
         · rw [← hcd.1.1, ← hcd.2.1] at cop
-          rw [← hcd.2.1, h.1, mul_commₓ c1 d1, Nat.gcd_mul_leftₓ,
+          rw [← hcd.2.1, h.1, mul_comm c1 d1, Nat.gcd_mul_leftₓ,
             cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, mul_oneₓ]
           
         
@@ -622,7 +622,7 @@ theorem mul [CommSemiringₓ R] {f g : arithmetic_function R} (hf : f.is_multipl
       · rw [Nat.mul_eq_zero, Decidable.not_or_iff_and_not] at h
         simp [h.2.1, h.2.2]
         
-      rw [mul_commₓ n m, h.1]
+      rw [mul_comm n m, h.1]
       ⟩
 
 theorem pmul [CommSemiringₓ R] {f g : arithmetic_function R} (hf : f.is_multiplicative) (hg : g.is_multiplicative) :
@@ -870,7 +870,7 @@ theorem coe_moebius_mul_coe_zeta [CommRingₓ R] : (μ * ζ : arithmetic_functio
 
 @[simp]
 theorem coe_zeta_mul_coe_moebius [CommRingₓ R] : (ζ * μ : arithmetic_function R) = 1 := by
-  rw [mul_commₓ, coe_moebius_mul_coe_zeta]
+  rw [mul_comm, coe_moebius_mul_coe_zeta]
 
 @[simp]
 theorem moebius_mul_coe_zeta : (μ * ζ : arithmetic_function ℤ) = 1 := by

@@ -96,7 +96,7 @@ theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = X ^ n
     simp only [dickson_one, pow_oneₓ]
   | n + 2 => by
     simp only [dickson_add_two, C_0, zero_mul, sub_zero]
-    rw [dickson_two_zero, pow_addₓ X (n + 1) 1, mul_commₓ, pow_oneₓ]
+    rw [dickson_two_zero, pow_addₓ X (n + 1) 1, mul_comm, pow_oneₓ]
 
 section Dickson
 
@@ -122,7 +122,7 @@ theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) : ∀ n, (dickson
     simp only [eval_X, dickson_one, pow_oneₓ]
   | n + 2 => by
     simp only [eval_sub, eval_mul, dickson_one_one_eval_add_inv, eval_X, dickson_add_two, C_1, eval_one]
-    conv_lhs => simp only [pow_succₓ, add_mulₓ, mul_addₓ, h, ← mul_assocₓ, mul_commₓ y x, one_mulₓ]
+    conv_lhs => simp only [pow_succₓ, add_mulₓ, mul_addₓ, h, ← mul_assoc, mul_comm y x, one_mulₓ]
     ring_exp
 
 variable (R)
@@ -133,18 +133,18 @@ theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
     simp only [chebyshev.T_zero, mul_oneₓ, one_comp, dickson_zero]
     norm_num
   | 1 => by
-    rw [dickson_one, chebyshev.T_one, X_comp, ← mul_assocₓ, ← C_1, ← C_bit0, ← C_mul, mul_inv_of_self, C_1, one_mulₓ]
+    rw [dickson_one, chebyshev.T_one, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, mul_inv_of_self, C_1, one_mulₓ]
   | n + 2 => by
     simp only [dickson_add_two, chebyshev.T_add_two, dickson_one_one_eq_chebyshev_T (n + 1),
       dickson_one_one_eq_chebyshev_T n, sub_comp, mul_comp, add_comp, X_comp, bit0_comp, one_comp]
-    simp only [← C_1, ← C_bit0, ← mul_assocₓ, ← C_mul, mul_inv_of_self]
+    simp only [← C_1, ← C_bit0, ← mul_assoc, ← C_mul, mul_inv_of_self]
     rw [C_1, one_mulₓ]
     ring
 
 theorem chebyshev_T_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
     chebyshev.T R n = C (⅟ 2) * (dickson 1 1 n).comp (2 * X) := by
   rw [dickson_one_one_eq_chebyshev_T]
-  simp only [comp_assoc, mul_comp, C_comp, X_comp, ← mul_assocₓ, ← C_1, ← C_bit0, ← C_mul]
+  simp only [comp_assoc, mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul]
   rw [inv_of_mul_self, C_1, one_mulₓ, one_mulₓ, comp_X]
 
 /-- The `(m * n)`-th Dickson polynomial of the first kind is the composition of the `m`-th and
@@ -162,11 +162,11 @@ theorem dickson_one_one_mul (m n : ℕ) : dickson 1 (1 : R) (m * n) = (dickson 1
   apply eval₂_congr rfl rfl
   rw [comp_assoc]
   apply eval₂_congr rfl _ rfl
-  rw [mul_comp, C_comp, X_comp, ← mul_assocₓ, ← C_1, ← C_bit0, ← C_mul, inv_of_mul_self, C_1, one_mulₓ]
+  rw [mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, inv_of_mul_self, C_1, one_mulₓ]
 
 theorem dickson_one_one_comp_comm (m n : ℕ) :
     (dickson 1 (1 : R) m).comp (dickson 1 1 n) = (dickson 1 1 n).comp (dickson 1 1 m) := by
-  rw [← dickson_one_one_mul, mul_commₓ, dickson_one_one_mul]
+  rw [← dickson_one_one_mul, mul_comm, dickson_one_one_mul]
 
 theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.prime] : dickson 1 (1 : Zmod p) p = X ^ p := by
   obtain ⟨K, _, _, H⟩ : ∃ (K : Type)(_ : Field K), ∃ _ : CharP K p, Infinite K := by

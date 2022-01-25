@@ -19,7 +19,7 @@ of sublists of `l` (using `sublists_aux`), as multisets. -/
 def powerset_aux (l : List α) : List (Multiset α) :=
   0 :: sublists_aux l fun x y => x :: y
 
-theorem powerset_aux_eq_map_coe {l : List α} : powerset_aux l = (sublists l).map coeₓ := by
+theorem powerset_aux_eq_map_coe {l : List α} : powerset_aux l = (sublists l).map coe := by
   simp [powerset_aux, sublists] <;>
     rw [←
         show (@sublists_aux₁ α (Multiset α) l fun x => [↑x]) = sublists_aux l fun x => List.cons (↑x) from
@@ -35,7 +35,7 @@ theorem mem_powerset_aux {l : List α} {s} : s ∈ powerset_aux l ↔ s ≤ ↑l
 /-- Helper function for the powerset of a multiset. Given a list `l`, returns a list
 of sublists of `l` (using `sublists'`), as multisets. -/
 def powerset_aux' (l : List α) : List (Multiset α) :=
-  (sublists' l).map coeₓ
+  (sublists' l).map coe
 
 theorem powerset_aux_perm_powerset_aux' {l : List α} : powerset_aux l ~ powerset_aux' l := by
   rw [powerset_aux_eq_map_coe] <;> exact (sublists_perm_sublists' _).map _
@@ -73,11 +73,11 @@ theorem powerset_aux_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : powerset_aux
 def powerset (s : Multiset α) : Multiset (Multiset α) :=
   Quot.liftOn s (fun l => (powerset_aux l : Multiset (Multiset α))) fun l₁ l₂ h => Quot.sound (powerset_aux_perm h)
 
-theorem powerset_coe (l : List α) : @powerset α l = ((sublists l).map coeₓ : List (Multiset α)) :=
-  congr_argₓ coeₓ powerset_aux_eq_map_coe
+theorem powerset_coe (l : List α) : @powerset α l = ((sublists l).map coe : List (Multiset α)) :=
+  congr_argₓ coe powerset_aux_eq_map_coe
 
 @[simp]
-theorem powerset_coe' (l : List α) : @powerset α l = ((sublists' l).map coeₓ : List (Multiset α)) :=
+theorem powerset_coe' (l : List α) : @powerset α l = ((sublists' l).map coe : List (Multiset α)) :=
   Quot.sound powerset_aux_perm_powerset_aux'
 
 @[simp]
@@ -97,7 +97,7 @@ theorem mem_powerset {s t : Multiset α} : s ∈ powerset t ↔ s ≤ t :=
 theorem map_single_le_powerset (s : Multiset α) : s.map singleton ≤ powerset s :=
   Quotientₓ.induction_on s $ fun l => by
     simp only [powerset_coe, quot_mk_to_coe, coe_le, coe_map]
-    show l.map (coeₓ ∘ List.ret) <+~ (sublists l).map coeₓ
+    show l.map (coe ∘ List.ret) <+~ (sublists l).map coe
     rw [← List.map_mapₓ]
     exact ((map_ret_sublist_sublists _).map _).Subperm
 
@@ -149,9 +149,9 @@ theorem revzip_powerset_aux_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : revzi
 /-- Helper function for `powerset_len`. Given a list `l`, `powerset_len_aux n l` is the list
 of sublists of length `n`, as multisets. -/
 def powerset_len_aux (n : ℕ) (l : List α) : List (Multiset α) :=
-  sublists_len_aux n l coeₓ []
+  sublists_len_aux n l coe []
 
-theorem powerset_len_aux_eq_map_coe {n} {l : List α} : powerset_len_aux n l = (sublists_len n l).map coeₓ := by
+theorem powerset_len_aux_eq_map_coe {n} {l : List α} : powerset_len_aux n l = (sublists_len n l).map coe := by
   rw [powerset_len_aux, sublists_len_aux_eq, append_nil]
 
 @[simp]
@@ -208,8 +208,8 @@ def powerset_len (n : ℕ) (s : Multiset α) : Multiset (Multiset α) :=
 theorem powerset_len_coe' n (l : List α) : @powerset_len α n l = powerset_len_aux n l :=
   rfl
 
-theorem powerset_len_coe n (l : List α) : @powerset_len α n l = ((sublists_len n l).map coeₓ : List (Multiset α)) :=
-  congr_argₓ coeₓ powerset_len_aux_eq_map_coe
+theorem powerset_len_coe n (l : List α) : @powerset_len α n l = ((sublists_len n l).map coe : List (Multiset α)) :=
+  congr_argₓ coe powerset_len_aux_eq_map_coe
 
 @[simp]
 theorem powerset_len_zero_left (s : Multiset α) : powerset_len 0 s = {0} :=

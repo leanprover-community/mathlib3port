@@ -140,8 +140,8 @@ def coprod (f : ContinuousMonoidHom A E) (g : ContinuousMonoidHom B E) : Continu
 @[to_additive]
 instance : CommGroupₓ (ContinuousMonoidHom A E) where
   mul := fun f g => (mul E).comp (f.prod g)
-  mul_comm := fun f g => ext fun x => mul_commₓ (f x) (g x)
-  mul_assoc := fun f g h => ext fun x => mul_assocₓ (f x) (g x) (h x)
+  mul_comm := fun f g => ext fun x => mul_comm (f x) (g x)
+  mul_assoc := fun f g h => ext fun x => mul_assoc (f x) (g x) (h x)
   one := one A E
   one_mul := fun f => ext fun x => one_mulₓ (f x)
   mul_one := fun f => ext fun x => mul_oneₓ (f x)

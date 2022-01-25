@@ -309,7 +309,7 @@ theorem maximum_concat (a : α) (l : List α) : maximum (l ++ [a]) = max (maximu
     rfl
     exact bot_le
     
-  change (coeₓ : α → WithBot α) with some
+  change (coe : α → WithBot α) with some
   rw [max_commₓ]
   simp [max_def]
 

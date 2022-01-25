@@ -107,9 +107,9 @@ variable (A : ι → Type _)
 
 section One
 
-variable [HasZero ι] [GradedMonoid.GhasOne A] [∀ i, AddCommMonoidₓ (A i)]
+variable [Zero ι] [GradedMonoid.GhasOne A] [∀ i, AddCommMonoidₓ (A i)]
 
-instance : HasOne (⨁ i, A i) where
+instance : One (⨁ i, A i) where
   one := DirectSum.of (fun i => A i) 0 GradedMonoid.GhasOne.one
 
 end One
@@ -169,7 +169,7 @@ private theorem one_mulₓ (x : ⨁ i, A i) : 1 * x = x := by
   suffices MulHom A 1 = AddMonoidHom.id (⨁ i, A i) from AddMonoidHom.congr_fun this x
   apply add_hom_ext
   intro i xi
-  unfold HasOne.one
+  unfold One.one
   rw [mul_hom_of_of]
   exact of_eq_of_graded_monoid_eq (one_mulₓ $ GradedMonoid.mk i xi)
 
@@ -177,23 +177,23 @@ private theorem mul_oneₓ (x : ⨁ i, A i) : x * 1 = x := by
   suffices (MulHom A).flip 1 = AddMonoidHom.id (⨁ i, A i) from AddMonoidHom.congr_fun this x
   apply add_hom_ext
   intro i xi
-  unfold HasOne.one
+  unfold One.one
   rw [flip_apply, mul_hom_of_of]
   exact of_eq_of_graded_monoid_eq (mul_oneₓ $ GradedMonoid.mk i xi)
 
-private theorem mul_assocₓ (a b c : ⨁ i, A i) : a * b * c = a * (b * c) := by
+private theorem mul_assoc (a b c : ⨁ i, A i) : a * b * c = a * (b * c) := by
   suffices
     (MulHom A).compHom.comp (MulHom A) = (AddMonoidHom.compHom flip_hom $ (MulHom A).flip.compHom.comp (MulHom A)).flip
     from AddMonoidHom.congr_fun (AddMonoidHom.congr_fun (AddMonoidHom.congr_fun this a) b) c
   ext ai ax bi bx ci cx : 6
   dsimp only [coe_comp, Function.comp_app, comp_hom_apply_apply, flip_apply, flip_hom_apply]
   rw [mul_hom_of_of, mul_hom_of_of, mul_hom_of_of, mul_hom_of_of]
-  exact of_eq_of_graded_monoid_eq (mul_assocₓ (GradedMonoid.mk ai ax) ⟨bi, bx⟩ ⟨ci, cx⟩)
+  exact of_eq_of_graded_monoid_eq (mul_assoc (GradedMonoid.mk ai ax) ⟨bi, bx⟩ ⟨ci, cx⟩)
 
 /-- The `semiring` structure derived from `gsemiring A`. -/
 instance Semiringₓ : Semiringₓ (⨁ i, A i) :=
   { DirectSum.nonUnitalNonAssocSemiring _ with one := 1, mul := · * ·, zero := 0, add := · + ·, one_mul := one_mulₓ A,
-    mul_one := mul_oneₓ A, mul_assoc := mul_assocₓ A }
+    mul_one := mul_oneₓ A, mul_assoc := mul_assoc A }
 
 theorem of_pow {i} (a : A i) (n : ℕ) : of _ i a ^ n = of _ (n • i) (GradedMonoid.Gmonoid.gnpow _ a) := by
   induction' n with n
@@ -238,7 +238,7 @@ section CommSemiringₓ
 
 variable [∀ i, AddCommMonoidₓ (A i)] [AddCommMonoidₓ ι] [gcomm_semiring A]
 
-private theorem mul_commₓ (a b : ⨁ i, A i) : a * b = b * a := by
+private theorem mul_comm (a b : ⨁ i, A i) : a * b = b * a := by
   suffices MulHom A = (MulHom A).flip from AddMonoidHom.congr_fun (AddMonoidHom.congr_fun this a) b
   apply add_hom_ext
   intro ai ax
@@ -249,7 +249,7 @@ private theorem mul_commₓ (a b : ⨁ i, A i) : a * b = b * a := by
 
 /-- The `comm_semiring` structure derived from `gcomm_semiring A`. -/
 instance CommSemiringₓ : CommSemiringₓ (⨁ i, A i) :=
-  { DirectSum.semiring _ with one := 1, mul := · * ·, zero := 0, add := · + ·, mul_comm := mul_commₓ A }
+  { DirectSum.semiring _ with one := 1, mul := · * ·, zero := 0, add := · + ·, mul_comm := mul_comm A }
 
 end CommSemiringₓ
 
@@ -285,7 +285,7 @@ section GradeZero
 
 section One
 
-variable [HasZero ι] [GradedMonoid.GhasOne A] [∀ i, AddCommMonoidₓ (A i)]
+variable [Zero ι] [GradedMonoid.GhasOne A] [∀ i, AddCommMonoidₓ (A i)]
 
 @[simp]
 theorem of_zero_one : of _ 0 (1 : A 0) = 1 :=

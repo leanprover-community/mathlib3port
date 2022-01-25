@@ -87,7 +87,7 @@ def encode_multiset (s : Multiset α) : ℕ :=
 
 /-- Explicit decoding function for `multiset α` -/
 def decode_multiset (n : ℕ) : Option (Multiset α) :=
-  coeₓ <$> decode (List α) n
+  coe <$> decode (List α) n
 
 /-- If `α` is encodable, then so is `multiset α`. -/
 instance Multiset : Encodable (Multiset α) :=

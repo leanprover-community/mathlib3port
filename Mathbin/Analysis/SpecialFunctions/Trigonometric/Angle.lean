@@ -34,7 +34,7 @@ def coe_hom : ℝ →+ angle :=
   QuotientAddGroup.mk' _
 
 @[simp]
-theorem coe_coe_hom : (coe_hom : ℝ → angle) = coeₓ :=
+theorem coe_coe_hom : (coe_hom : ℝ → angle) = coe :=
   rfl
 
 @[simp]
@@ -96,21 +96,21 @@ theorem cos_eq_iff_eq_or_eq_neg {θ ψ : ℝ} : cos θ = cos ψ ↔ (θ : angle)
     rcases Hcos with (⟨n, hn⟩ | ⟨n, hn⟩)
     · right
       rw [eq_div_iff_mul_eq (@two_ne_zero ℝ _ _), ← sub_eq_iff_eq_add] at hn
-      rw [← hn, coe_sub, eq_neg_iff_add_eq_zero, sub_add_cancel, mul_assocₓ, coe_int_mul_eq_zsmul, mul_commₓ,
-        coe_two_pi, zsmul_zero]
+      rw [← hn, coe_sub, eq_neg_iff_add_eq_zero, sub_add_cancel, mul_assoc, coe_int_mul_eq_zsmul, mul_comm, coe_two_pi,
+        zsmul_zero]
       
     · left
       rw [eq_div_iff_mul_eq (@two_ne_zero ℝ _ _), eq_sub_iff_add_eq] at hn
-      rw [← hn, coe_add, mul_assocₓ, coe_int_mul_eq_zsmul, mul_commₓ, coe_two_pi, zsmul_zero, zero_addₓ]
+      rw [← hn, coe_add, mul_assoc, coe_int_mul_eq_zsmul, mul_comm, coe_two_pi, zsmul_zero, zero_addₓ]
       
     infer_instance
     
   · rw [angle_eq_iff_two_pi_dvd_sub, ← coe_neg, angle_eq_iff_two_pi_dvd_sub]
     rintro (⟨k, H⟩ | ⟨k, H⟩)
-    rw [← sub_eq_zero, cos_sub_cos, H, mul_assocₓ 2 π k, mul_div_cancel_left _ (@two_ne_zero ℝ _ _), mul_commₓ π _,
+    rw [← sub_eq_zero, cos_sub_cos, H, mul_assoc 2 π k, mul_div_cancel_left _ (@two_ne_zero ℝ _ _), mul_comm π _,
       sin_int_mul_pi, mul_zero]
-    rw [← sub_eq_zero, cos_sub_cos, ← sub_neg_eq_add, H, mul_assocₓ 2 π k, mul_div_cancel_left _ (@two_ne_zero ℝ _ _),
-      mul_commₓ π _, sin_int_mul_pi, mul_zero, zero_mul]
+    rw [← sub_eq_zero, cos_sub_cos, ← sub_neg_eq_add, H, mul_assoc 2 π k, mul_div_cancel_left _ (@two_ne_zero ℝ _ _),
+      mul_comm π _, sin_int_mul_pi, mul_zero, zero_mul]
     
 
 theorem sin_eq_iff_eq_or_add_eq_pi {θ ψ : ℝ} : sin θ = sin ψ ↔ (θ : angle) = ψ ∨ (θ : angle) + ψ = π := by
@@ -129,11 +129,11 @@ theorem sin_eq_iff_eq_or_add_eq_pi {θ ψ : ℝ} : sin θ = sin ψ ↔ (θ : ang
     
   · rw [angle_eq_iff_two_pi_dvd_sub, ← eq_sub_iff_add_eq, ← coe_sub, angle_eq_iff_two_pi_dvd_sub]
     rintro (⟨k, H⟩ | ⟨k, H⟩)
-    rw [← sub_eq_zero, sin_sub_sin, H, mul_assocₓ 2 π k, mul_div_cancel_left _ (@two_ne_zero ℝ _ _), mul_commₓ π _,
+    rw [← sub_eq_zero, sin_sub_sin, H, mul_assoc 2 π k, mul_div_cancel_left _ (@two_ne_zero ℝ _ _), mul_comm π _,
       sin_int_mul_pi, mul_zero, zero_mul]
     have H' : θ + ψ = 2 * k * π + π := by
-      rwa [← sub_add, sub_add_eq_add_sub, sub_eq_iff_eq_add, mul_assocₓ, mul_commₓ π _, ← mul_assocₓ] at H
-    rw [← sub_eq_zero, sin_sub_sin, H', add_div, mul_assocₓ 2 _ π, mul_div_cancel_left _ (@two_ne_zero ℝ _ _),
+      rwa [← sub_add, sub_add_eq_add_sub, sub_eq_iff_eq_add, mul_assoc, mul_comm π _, ← mul_assoc] at H
+    rw [← sub_eq_zero, sin_sub_sin, H', add_div, mul_assoc 2 _ π, mul_div_cancel_left _ (@two_ne_zero ℝ _ _),
       cos_add_pi_div_two, sin_int_mul_pi, neg_zero, mul_zero]
     
 
@@ -147,7 +147,7 @@ theorem cos_sin_inj {θ ψ : ℝ} (Hcos : cos θ = cos ψ) (Hsin : sin θ = sin 
   rw [eq_neg_iff_add_eq_zero, hs] at hc
   cases' Quotientₓ.exact' hc with n hn
   change n • _ = _ at hn
-  rw [← neg_one_mul, add_zeroₓ, ← sub_eq_zero, zsmul_eq_mul, ← mul_assocₓ, ← sub_mul, mul_eq_zero,
+  rw [← neg_one_mul, add_zeroₓ, ← sub_eq_zero, zsmul_eq_mul, ← mul_assoc, ← sub_mul, mul_eq_zero,
     eq_false_intro (ne_of_gtₓ pi_pos), or_falseₓ, sub_neg_eq_add, ← Int.cast_zero, ← Int.cast_one, ← Int.cast_bit0, ←
     Int.cast_mul, ← Int.cast_add, Int.cast_inj] at hn
   have : (n * 2 + 1) % (2 : ℤ) = 0 % (2 : ℤ) := congr_argₓ (· % (2 : ℤ)) hn

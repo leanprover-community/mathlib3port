@@ -507,13 +507,13 @@ is the result `smul_eq_zero`: a scalar multiple is `0` iff either argument is `0
 
 It is a generalization of the `no_zero_divisors` class to heterogeneous multiplication.
 -/
-class NoZeroSmulDivisors (R M : Type _) [HasZero R] [HasZero M] [HasScalar R M] : Prop where
+class NoZeroSmulDivisors (R M : Type _) [Zero R] [Zero M] [HasScalar R M] : Prop where
   eq_zero_or_eq_zero_of_smul_eq_zero : ∀ {c : R} {x : M}, c • x = 0 → c = 0 ∨ x = 0
 
 export NoZeroSmulDivisors (eq_zero_or_eq_zero_of_smul_eq_zero)
 
 /-- Pullback a `no_zero_smul_divisors` instance along an injective function. -/
-theorem Function.Injective.no_zero_smul_divisors {R M N : Type _} [HasZero R] [HasZero M] [HasZero N] [HasScalar R M]
+theorem Function.Injective.no_zero_smul_divisors {R M N : Type _} [Zero R] [Zero M] [Zero N] [HasScalar R M]
     [HasScalar R N] [NoZeroSmulDivisors R N] (f : M → N) (hf : Function.Injective f) (h0 : f 0 = 0)
     (hs : ∀ c : R x : M, f (c • x) = c • f x) : NoZeroSmulDivisors R M :=
   ⟨fun c m h =>
@@ -563,7 +563,7 @@ variable (R M)
 
 /-- If `M` is an `R`-module with one and `M` has characteristic zero, then `R` has characteristic
 zero as well. Usually `M` is an `R`-algebra. -/
-theorem CharZero.of_module [HasOne M] [CharZero M] : CharZero R := by
+theorem CharZero.of_module [One M] [CharZero M] : CharZero R := by
   refine' ⟨fun m n h => @Nat.cast_injective M _ _ _ _ _ _⟩
   rw [← nsmul_one, ← nsmul_one, nsmul_eq_smul_cast R m (1 : M), nsmul_eq_smul_cast R n (1 : M), h]
 

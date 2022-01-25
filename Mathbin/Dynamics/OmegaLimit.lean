@@ -63,12 +63,7 @@ theorem omega_limit_def : ω f ϕ s = ⋂ u ∈ f, Closure (image2 ϕ u s) :=
 
 theorem omega_limit_subset_of_tendsto {m : τ → τ} {f₁ f₂ : Filter τ} (hf : tendsto m f₁ f₂) :
     ω f₁ (fun t x => ϕ (m t) x) s ⊆ ω f₂ ϕ s := by
-  apply Inter_subset_Inter2
-  intro u
-  use m ⁻¹' u
-  apply Inter_subset_Inter2
-  intro hu
-  use tendsto_def.mp hf _ hu
+  refine' Inter₂_mono' fun u hu => ⟨m ⁻¹' u, tendsto_def.mp hf _ hu, _⟩
   rw [← image2_image_left]
   exact closure_mono (image2_subset (image_preimage_subset _ _) subset.rfl)
 
@@ -76,7 +71,7 @@ theorem omega_limit_mono_left {f₁ f₂ : Filter τ} (hf : f₁ ≤ f₂) : ω 
   omega_limit_subset_of_tendsto ϕ s (tendsto_id' hf)
 
 theorem omega_limit_mono_right {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) : ω f ϕ s₁ ⊆ ω f ϕ s₂ :=
-  bInter_mono $ fun u hu => closure_mono (image2_subset subset.rfl hs)
+  Inter₂_mono $ fun u hu => closure_mono (image2_subset subset.rfl hs)
 
 theorem is_closed_omega_limit : IsClosed (ω f ϕ s) :=
   is_closed_Inter $ fun u => is_closed_Inter $ fun hu => is_closed_closure
@@ -186,9 +181,8 @@ theorem omega_limit_eq_Inter : ω f ϕ s = ⋂ u : ↥f.sets, Closure (image2 ϕ
   bInter_eq_Inter _ _
 
 theorem omega_limit_eq_bInter_inter {v : Set τ} (hv : v ∈ f) : ω f ϕ s = ⋂ u ∈ f, Closure (image2 ϕ (u ∩ v) s) :=
-  subset.antisymm (Inter_subset_Inter2 fun u => ⟨u ∩ v, Inter_subset_Inter2 fun hu => ⟨inter_mem hu hv, subset.rfl⟩⟩)
-    (Inter_subset_Inter fun u =>
-      Inter_subset_Inter fun hu => closure_mono (image2_subset (inter_subset_left _ _) subset.rfl))
+  subset.antisymm (Inter₂_mono' $ fun u hu => ⟨u ∩ v, inter_mem hu hv, subset.rfl⟩)
+    (Inter₂_mono $ fun u hu => closure_mono $ image2_subset (inter_subset_left _ _) subset.rfl)
 
 theorem omega_limit_eq_Inter_inter {v : Set τ} (hv : v ∈ f) : ω f ϕ s = ⋂ u : ↥f.sets, Closure (image2 ϕ (u ∩ v) s) :=
   by

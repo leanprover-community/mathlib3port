@@ -726,7 +726,7 @@ theorem le_translation_number_of_add_int_le {x : ℝ} {m : ℤ} (h : x + m ≤ f
   ge_of_tendsto' (f.tendsto_translation_number' x) $ fun n =>
     (le_div_iff (n.cast_add_one_pos : (0 : ℝ) < _)).mpr $
       le_sub_iff_add_le'.2 $ by
-        simp only [coe_pow, mul_commₓ (m : ℝ), ← Nat.cast_add_one, f.le_iterate_of_add_int_le_map h]
+        simp only [coe_pow, mul_comm (m : ℝ), ← Nat.cast_add_one, f.le_iterate_of_add_int_le_map h]
 
 theorem le_translation_number_of_add_nat_le {x : ℝ} {m : ℕ} (h : x + m ≤ f x) : ↑m ≤ τ f :=
   @le_translation_number_of_add_int_le f x m h
@@ -776,7 +776,7 @@ a rational rotation number. -/
 theorem translation_number_of_map_pow_eq_add_int {x : ℝ} {n : ℕ} {m : ℤ} (h : (f ^ n) x = x + m) (hn : 0 < n) :
     τ f = m / n := by
   have := (f ^ n).translation_number_of_eq_add_int h
-  rwa [translation_number_pow, mul_commₓ, ← eq_div_iff] at this
+  rwa [translation_number_pow, mul_comm, ← eq_div_iff] at this
   exact Nat.cast_ne_zero.2 (ne_of_gtₓ hn)
 
 /-- If a predicate depends only on `f x - x` and holds for all `0 ≤ x ≤ 1`,
@@ -824,7 +824,7 @@ theorem continuous_pow (hf : Continuous f) (n : ℕ) : Continuous (⇑(f ^ n : C
 
 theorem translation_number_eq_rat_iff (hf : Continuous f) {m : ℤ} {n : ℕ} (hn : 0 < n) :
     τ f = m / n ↔ ∃ x, (f ^ n) x = x + m := by
-  rw [eq_div_iff, mul_commₓ, ← translation_number_pow] <;> [skip, exact ne_of_gtₓ (Nat.cast_pos.2 hn)]
+  rw [eq_div_iff, mul_comm, ← translation_number_pow] <;> [skip, exact ne_of_gtₓ (Nat.cast_pos.2 hn)]
   exact (f ^ n).translation_number_eq_int_iff (f.continuous_pow hf n)
 
 /-- Consider two actions `f₁ f₂ : G →* circle_deg1_lift` of a group on the real line by lifts of

@@ -397,7 +397,7 @@ theorem RingHom.is_integral_of_is_integral_mul_unit (x y : S) (r : R) (hr : f r 
   obtain ⟨p, ⟨p_monic, hp⟩⟩ := hx
   refine' ⟨scaleRoots p r, ⟨(monic_scale_roots_iff r).2 p_monic, _⟩⟩
   convert scale_roots_eval₂_eq_zero f hp
-  rw [mul_commₓ x y, ← mul_assocₓ, hr, one_mulₓ]
+  rw [mul_comm x y, ← mul_assoc, hr, one_mulₓ]
 
 theorem is_integral_of_is_integral_mul_unit {x y : A} {r : R} (hr : algebraMap R A r * y = 1)
     (hx : IsIntegral R (x * y)) : IsIntegral R x :=
@@ -458,7 +458,7 @@ theorem normalize_scale_roots_coeff_mul_leading_coeff_pow (i : ℕ) (hp : 1 ≤ 
     
   · rw [h₂, leading_coeff, ← pow_succₓ, tsub_add_cancel_of_le hp]
     
-  · rw [mul_assocₓ, ← pow_addₓ, tsub_add_cancel_of_le]
+  · rw [mul_assoc, ← pow_addₓ, tsub_add_cancel_of_le]
     apply Nat.le_pred_of_lt
     rw [lt_iff_le_and_ne]
     exact ⟨le_nat_degree_of_ne_zero h₁, h₂⟩
@@ -474,7 +474,7 @@ theorem leading_coeff_smul_normalize_scale_roots (p : Polynomial R) :
     
   · simp [*]
     
-  · rw [Algebra.id.smul_eq_mul, mul_commₓ, mul_assocₓ, ← pow_succ'ₓ, tsub_right_comm, tsub_add_cancel_of_le]
+  · rw [Algebra.id.smul_eq_mul, mul_comm, mul_assoc, ← pow_succ'ₓ, tsub_right_comm, tsub_add_cancel_of_le]
     rw [Nat.succ_le_iff]
     exact tsub_pos_of_lt (lt_of_le_of_neₓ (le_nat_degree_of_ne_zero h₁) h₂)
     
@@ -502,7 +502,7 @@ theorem normalize_scale_roots_eval₂_leading_coeff_mul (h : 1 ≤ p.nat_degree)
   · rw [nat_degree_eq_of_degree_eq (normalize_scale_roots_degree p)]
     
   intro n hn
-  rw [mul_powₓ, ← mul_assocₓ, ← f.map_pow, ← f.map_mul, normalize_scale_roots_coeff_mul_leading_coeff_pow _ _ h,
+  rw [mul_powₓ, ← mul_assoc, ← f.map_pow, ← f.map_mul, normalize_scale_roots_coeff_mul_leading_coeff_pow _ _ h,
     f.map_mul, f.map_pow]
   ring
 
@@ -813,7 +813,7 @@ theorem is_integral_quotient_map_iff {I : Ideal S} :
 /-- If the integral extension `R → S` is injective, and `S` is a field, then `R` is also a field. -/
 theorem is_field_of_is_integral_of_is_field {R S : Type _} [CommRingₓ R] [Nontrivial R] [CommRingₓ S] [IsDomain S]
     [Algebra R S] (H : IsIntegral R S) (hRS : Function.Injective (algebraMap R S)) (hS : IsField S) : IsField R := by
-  refine' ⟨⟨0, 1, zero_ne_one⟩, mul_commₓ, fun a ha => _⟩
+  refine' ⟨⟨0, 1, zero_ne_one⟩, mul_comm, fun a ha => _⟩
   obtain ⟨a_inv, ha_inv⟩ := hS.mul_inv_cancel fun h => ha (hRS (trans h (RingHom.map_zero _).symm))
   obtain ⟨p, p_monic, hp⟩ := H a_inv
   use -∑ i : ℕ in Finset.range p.nat_degree, p.coeff i * a ^ (p.nat_degree - i - 1)
@@ -824,23 +824,23 @@ theorem is_field_of_is_integral_of_is_field {R S : Type _} [CommRingₓ R] [Nont
     rw [eval₂_eq_sum_range] at hp
     rw [RingHom.map_sum, Finset.sum_mul]
     refine' (Finset.sum_congr rfl fun i hi => _).trans hp
-    rw [RingHom.map_mul, mul_assocₓ]
+    rw [RingHom.map_mul, mul_assoc]
     congr
     have : a_inv ^ p.nat_degree = a_inv ^ (p.nat_degree - i) * a_inv ^ i := by
       rw [← pow_addₓ a_inv, tsub_add_cancel_of_le (Nat.le_of_lt_succₓ (finset.mem_range.mp hi))]
-    rw [RingHom.map_pow, this, ← mul_assocₓ, ← mul_powₓ, ha_inv, one_pow, one_mulₓ]
+    rw [RingHom.map_pow, this, ← mul_assoc, ← mul_powₓ, ha_inv, one_pow, one_mulₓ]
   rw [Finset.sum_range_succ_comm, p_monic.coeff_nat_degree, one_mulₓ, tsub_self, pow_zeroₓ, add_eq_zero_iff_eq_neg,
     eq_comm] at hq
-  rw [mul_commₓ, ← neg_mul_eq_neg_mul, Finset.sum_mul]
+  rw [mul_comm, ← neg_mul_eq_neg_mul, Finset.sum_mul]
   convert hq using 2
   refine' Finset.sum_congr rfl fun i hi => _
   have : 1 ≤ p.nat_degree - i := le_tsub_of_add_le_left (finset.mem_range.mp hi)
-  rw [mul_assocₓ, ← pow_succ'ₓ, tsub_add_cancel_of_le this]
+  rw [mul_assoc, ← pow_succ'ₓ, tsub_add_cancel_of_le this]
 
 theorem is_field_of_is_integral_of_is_field' {R S : Type _} [CommRingₓ R] [CommRingₓ S] [IsDomain S] [Algebra R S]
     (H : Algebra.IsIntegral R S) (hR : IsField R) : IsField S := by
   let this' := hR.to_field R
-  refine' ⟨⟨0, 1, zero_ne_one⟩, mul_commₓ, fun x hx => _⟩
+  refine' ⟨⟨0, 1, zero_ne_one⟩, mul_comm, fun x hx => _⟩
   let A := Algebra.adjoin R ({x} : Set S)
   have : IsNoetherian R A := is_noetherian_of_fg_of_noetherian A.to_submodule (fg_adjoin_singleton_of_integral x (H x))
   have : Module.Finite R A := Module.IsNoetherian.finite R A

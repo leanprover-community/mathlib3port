@@ -297,12 +297,12 @@ See also the tactics `expr.of_nat`, `expr.of_int`, `expr.of_rat`.
 `has_zero`, `has_one`, `has_add`: expressions of the type `has_zero %%type`, etc.
  -/
 unsafe def nat.mk_numeral (type has_zero has_one has_add : expr) : ℕ → expr :=
-  let z : expr := quote.1 (@HasZero.zero.{0} (%%ₓtype) (%%ₓHasZero))
-  let o : expr := quote.1 (@HasOne.one.{0} (%%ₓtype) (%%ₓHasOne))
+  let z : expr := quote.1 (@Zero.zero.{0} (%%ₓtype) (%%ₓZero))
+  let o : expr := quote.1 (@One.one.{0} (%%ₓtype) (%%ₓOne))
   Nat.binaryRec z fun b n e =>
     if n = 0 then o
     else
-      if b then quote.1 (@bit1.{0} (%%ₓtype) (%%ₓHasOne) (%%ₓAdd) (%%ₓe))
+      if b then quote.1 (@bit1.{0} (%%ₓtype) (%%ₓOne) (%%ₓAdd) (%%ₓe))
       else quote.1 (@bit0.{0} (%%ₓtype) (%%ₓAdd) (%%ₓe))
 
 /-- `int.mk_numeral z` embeds `z` as a numeral expression inside a type with 0, 1, +, and -.
@@ -310,9 +310,9 @@ unsafe def nat.mk_numeral (type has_zero has_one has_add : expr) : ℕ → expr 
 `has_zero`, `has_one`, `has_add`, `has_neg`: expressions of the type `has_zero %%type`, etc.
  -/
 unsafe def int.mk_numeral (type has_zero has_one has_add has_neg : expr) : ℤ → expr
-  | Int.ofNat n => n.mk_numeral type HasZero HasOne Add
+  | Int.ofNat n => n.mk_numeral type Zero One Add
   | -[1+ n] =>
-    let ne := (n + 1).mk_numeral type HasZero HasOne Add
+    let ne := (n + 1).mk_numeral type Zero One Add
     quote.1 (@Neg.neg.{0} (%%ₓtype) (%%ₓNeg) (%%ₓNe))
 
 /-- `nat.to_pexpr n` creates a `pexpr` that will evaluate to `n`.
@@ -330,8 +330,8 @@ namespace Expr
 `has_one.one`, `bit0`, `bit1`, `has_zero.zero`, `nat.zero`, and `nat.succ`.
 -/
 protected unsafe def to_nat : expr → Option ℕ
-  | quote.1 HasZero.zero => some 0
-  | quote.1 HasOne.one => some 1
+  | quote.1 Zero.zero => some 0
+  | quote.1 One.one => some 1
   | quote.1 (bit0 (%%ₓe)) => bit0 <$> e.to_nat
   | quote.1 (bit1 (%%ₓe)) => bit1 <$> e.to_nat
   | quote.1 (Nat.succ (%%ₓe)) => (· + 1) <$> e.to_nat
@@ -345,7 +345,7 @@ protected unsafe def to_int : expr → Option ℤ
   | quote.1 (Neg.neg (%%ₓe)) => do
     let n ← e.to_nat
     some (-n)
-  | e => coeₓ <$> e.to_nat
+  | e => coe <$> e.to_nat
 
 /-- Turns an expression into a list, assuming it is only built up from `list.nil` and `list.cons`.
 -/
@@ -358,8 +358,8 @@ protected unsafe def to_list {α} (f : expr → Option α) : expr → Option (Li
 ignoring differences in type and type class arguments.
 -/
 unsafe def is_num_eq : expr → expr → Bool
-  | quote.1 (@HasZero.zero _ _), quote.1 (@HasZero.zero _ _) => tt
-  | quote.1 (@HasOne.one _ _), quote.1 (@HasOne.one _ _) => tt
+  | quote.1 (@Zero.zero _ _), quote.1 (@Zero.zero _ _) => tt
+  | quote.1 (@One.one _ _), quote.1 (@One.one _ _) => tt
   | quote.1 (bit0 (%%ₓa)), quote.1 (bit0 (%%ₓb)) => a.is_num_eq b
   | quote.1 (bit1 (%%ₓa)), quote.1 (bit1 (%%ₓb)) => a.is_num_eq b
   | quote.1 (-%%ₓa), quote.1 (-%%ₓb) => a.is_num_eq b

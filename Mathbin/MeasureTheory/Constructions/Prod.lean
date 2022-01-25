@@ -367,7 +367,7 @@ theorem prod_prod (s : Set α) (t : Set β) : μ.prod ν (s ×ˢ t) = μ s * ν 
         by
         simp_rw [prod_apply hSTm, mk_preimage_prod_right_eq_if, measure_if,
           lintegral_indicator _ (measurable_set_to_measurable _ _), lintegral_const, restrict_apply_univ,
-          mul_commₓ]_ = μ s * ν t :=
+          mul_comm]_ = μ s * ν t :=
         by
         rw [measure_to_measurable, measure_to_measurable]
     
@@ -379,7 +379,7 @@ theorem prod_prod (s : Set α) (t : Set β) : μ.prod ν (s ×ˢ t) = μ s * ν 
     set s' : Set α := { x | ν t ≤ f x }
     have hss' : s ⊆ s' := fun x hx => measure_mono fun y hy => hST $ mk_mem_prod hx hy
     calc μ s * ν t ≤ μ s' * ν t := mul_le_mul_right' (measure_mono hss') _ _ = ∫⁻ x in s', ν t ∂μ := by
-        rw [set_lintegral_const, mul_commₓ]_ ≤ ∫⁻ x in s', f x ∂μ :=
+        rw [set_lintegral_const, mul_comm]_ ≤ ∫⁻ x in s', f x ∂μ :=
         set_lintegral_mono measurable_const hfm fun x => id _ ≤ ∫⁻ x, f x ∂μ :=
         lintegral_mono' restrict_le_self le_rfl _ = μ.prod ν ST := (prod_apply hSTm).symm _ = μ.prod ν (s ×ˢ t) :=
         measure_to_measurable _
@@ -474,7 +474,7 @@ theorem prod_eq {μν : Measureₓ (α × β)} (h : ∀ s t, MeasurableSet s →
 theorem prod_swap : map Prod.swap (μ.prod ν) = ν.prod μ := by
   refine' (prod_eq _).symm
   intro s t hs ht
-  simp_rw [map_apply measurable_swap (hs.prod ht), preimage_swap_prod, prod_prod, mul_commₓ]
+  simp_rw [map_apply measurable_swap (hs.prod ht), preimage_swap_prod, prod_prod, mul_comm]
 
 theorem prod_apply_symm {s : Set (α × β)} (hs : MeasurableSet s) : μ.prod ν s = ∫⁻ y, μ ((fun x => (x, y)) ⁻¹' s) ∂ν :=
   by
@@ -489,7 +489,7 @@ theorem prod_assoc_prod [sigma_finite τ] : map MeasurableEquiv.prodAssoc ((μ.p
   rintro s hs _ ⟨t, u, ht, hu, rfl⟩
   rw [mem_set_of_eq] at hs ht hu
   simp_rw [map_apply (MeasurableEquiv.measurable _) (hs.prod (ht.prod hu)), MeasurableEquiv.prodAssoc,
-    MeasurableEquiv.coe_mk, Equivₓ.prod_assoc_preimage, prod_prod, mul_assocₓ]
+    MeasurableEquiv.coe_mk, Equivₓ.prod_assoc_preimage, prod_prod, mul_assoc]
 
 /-! ### The product of specific measures -/
 
@@ -583,7 +583,7 @@ theorem skew_product [sigma_finite μb] [sigma_finite μd] {f : α → β} (hf :
     split_ifs
     exacts[(map_apply hgm.of_uncurry_left ht).symm, measure_empty]
   simp only [preimage_preimage]
-  rw [lintegral_congr_ae this, lintegral_indicator _ (hf.1 hs), set_lintegral_const, hf.measure_preimage hs, mul_commₓ]
+  rw [lintegral_congr_ae this, lintegral_indicator _ (hf.1 hs), set_lintegral_const, hf.measure_preimage hs, mul_comm]
 
 /-- If `f : α → β` sends the measure `μa` to `μb` and `g : γ → δ` sends the measure `μc` to `μd`,
 then `prod.map f g` sends `μa.prod μc` to `μb.prod μd`. -/

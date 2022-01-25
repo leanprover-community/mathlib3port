@@ -80,7 +80,7 @@ noncomputable def subtype.order_iso_of_nat : ℕ ≃o s :=
 variable {s}
 
 @[simp]
-theorem coe_order_embedding_of_set : ⇑order_embedding_of_set s = coeₓ ∘ subtype.of_nat s :=
+theorem coe_order_embedding_of_set : ⇑order_embedding_of_set s = coe ∘ subtype.of_nat s :=
   rfl
 
 theorem order_embedding_of_set_apply {n : ℕ} : order_embedding_of_set s n = subtype.of_nat s n :=

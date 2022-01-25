@@ -507,7 +507,7 @@ theorem is_linear_map_smul {R M : Type _} [CommSemiringₓ R] [AddCommMonoidₓ 
     IsLinearMap R fun z : M => c • z := by
   refine' IsLinearMap.mk (smul_add c) _
   intro _ _
-  simp only [smul_smul, mul_commₓ]
+  simp only [smul_smul, mul_comm]
 
 theorem is_linear_map_smul' {R M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (a : M) :
     IsLinearMap R fun c : R => c • a :=
@@ -617,7 +617,7 @@ variable [Module R₁ N₁] [Module R₂ N₂] [Module R₃ N₃]
 variable {σ₁₂ : R₁ →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R₁ →+* R₃} [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
 /-- The constant 0 map is linear. -/
-instance : HasZero (M →ₛₗ[σ₁₂] M₂) :=
+instance : Zero (M →ₛₗ[σ₁₂] M₂) :=
   ⟨{ toFun := 0,
       map_add' := by
         simp ,
@@ -840,7 +840,7 @@ section Endomorphisms
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommGroupₓ N₁] [Module R M] [Module R N₁]
 
-instance : HasOne (Module.End R M) :=
+instance : One (Module.End R M) :=
   ⟨LinearMap.id⟩
 
 instance : Mul (Module.End R M) :=

@@ -269,6 +269,29 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_nth_roots [DecidableEq B] [IsDomain B]
     exact is_root_cyclotomic n.pos hζ
     
 
+theorem adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic [DecidableEq B] [IsDomain B] (ζ : B)
+    (hζ : IsPrimitiveRoot ζ n) :
+    adjoin A ((map (algebraMap A B) (cyclotomic n A)).roots.toFinset : Set B) = adjoin A {ζ} := by
+  refine' le_antisymmₓ (adjoin_le fun x hx => _) (adjoin_mono fun x hx => _)
+  · suffices hx : x ^ ↑n = 1
+    obtain ⟨i, hin, rfl⟩ := hζ.eq_pow_of_pow_eq_one hx n.pos
+    exact SetLike.mem_coe.2 (Subalgebra.pow_mem _ (subset_adjoin $ mem_singleton ζ) _)
+    rw [is_root_of_unity_iff n.pos]
+    refine' ⟨n, Nat.mem_divisors_self n n.ne_zero, _⟩
+    rwa [Finset.mem_coe, Multiset.mem_to_finset, map_cyclotomic, mem_roots $ cyclotomic_ne_zero n B] at hx
+    
+  · simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq] at hx
+    simpa only [hx, Multiset.mem_to_finset, Finset.mem_coe, map_cyclotomic, mem_roots (cyclotomic_ne_zero n B)] using
+      is_root_cyclotomic n.pos hζ
+    
+
+theorem adjoin_primitive_root_eq_top [IsDomain B] [h : IsCyclotomicExtension {n} A B] (ζ : B)
+    (hζ : IsPrimitiveRoot ζ n) : adjoin A ({ζ} : Set B) = ⊤ := by
+  classical
+  rw [← adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic n ζ hζ]
+  rw [adjoin_roots_cyclotomic_eq_adjoin_nth_roots n hζ]
+  exact ((iff_adjoin_eq_top {n} A B).mp h).2
+
 end
 
 section Field
@@ -434,6 +457,59 @@ instance IsCyclotomicExtension [NeZero ((n : ℕ) : A)] : IsCyclotomicExtension 
       
     · exact Subalgebra.mul_mem _ hy hz
       
+
+instance [NeZero ((n : ℕ) : A)] : IsFractionRing (CyclotomicRing n A K) (CyclotomicField n K) where
+  map_units := fun ⟨x, hx⟩ => by
+    rw [is_unit_iff_ne_zero]
+    apply RingHom.map_ne_zero_of_mem_non_zero_divisors
+    apply adjoin_algebra_injective
+    exact hx
+  surj := fun x => by
+    let this' : NeZero ((n : ℕ) : K) := NeZero.nat_of_injective (IsFractionRing.injective A K)
+    refine'
+      Algebra.adjoin_induction
+        (((IsCyclotomicExtension.iff_singleton n K _).1 (CyclotomicField.is_cyclotomic_extension n K)).2 x)
+        (fun y hy => _) (fun k => _) _ _
+    · exact
+        ⟨⟨⟨y, subset_adjoin hy⟩, 1⟩, by
+          simpa⟩
+      
+    · have : IsLocalization (nonZeroDivisors A) K := inferInstance
+      replace := this.surj
+      obtain ⟨⟨z, w⟩, hw⟩ := this k
+      refine'
+        ⟨⟨algebraMap A _ z, algebraMap A _ w, RingHom.map_mem_non_zero_divisors _ (algebra_base_injective n A K) w.2⟩,
+          _⟩
+      let this' : IsScalarTower A K (CyclotomicField n K) := IsScalarTower.of_algebra_map_eq (congr_funₓ rfl)
+      rw [SetLike.coe_mk, ← IsScalarTower.algebra_map_apply, ← IsScalarTower.algebra_map_apply,
+        @IsScalarTower.algebra_map_apply A K _ _ _ _ _ (_root_.cyclotomic_field.algebra n K) _ _ w, ← RingHom.map_mul,
+        hw, ← IsScalarTower.algebra_map_apply]
+      
+    · rintro y z ⟨a, ha⟩ ⟨b, hb⟩
+      refine' ⟨⟨a.1 * b.2 + b.1 * a.2, a.2 * b.2, mul_mem_non_zero_divisors.2 ⟨a.2.2, b.2.2⟩⟩, _⟩
+      rw [SetLike.coe_mk, RingHom.map_mul, add_mulₓ, ← mul_assoc, ha, mul_comm ((algebraMap _ _) (↑a.2)), ← mul_assoc,
+        hb]
+      simp
+      
+    · rintro y z ⟨a, ha⟩ ⟨b, hb⟩
+      refine' ⟨⟨a.1 * b.1, a.2 * b.2, mul_mem_non_zero_divisors.2 ⟨a.2.2, b.2.2⟩⟩, _⟩
+      rw [SetLike.coe_mk, RingHom.map_mul, mul_comm ((algebraMap _ _) (↑a.2)), mul_assoc, ← mul_assoc z, hb, ←
+        mul_comm ((algebraMap _ _) (↑a.2)), ← mul_assoc, ha]
+      simp
+      
+  eq_iff_exists := fun x y =>
+    ⟨fun h =>
+      ⟨1, by
+        rw [adjoin_algebra_injective n A K h]⟩,
+      fun ⟨c, hc⟩ => by
+      rw [mul_right_cancel₀ (nonZeroDivisors.ne_zero c.prop) hc]⟩
+
+theorem eq_adjoin_primitive_root {μ : CyclotomicField n K} (h : IsPrimitiveRoot μ n) :
+    CyclotomicRing n A K = adjoin A ({μ} : Set (CyclotomicField n K)) := by
+  let this' := Classical.propDecidable
+  rw [← IsCyclotomicExtension.adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic n μ h,
+    IsCyclotomicExtension.adjoin_roots_cyclotomic_eq_adjoin_nth_roots n h]
+  simp [CyclotomicRing]
 
 end CyclotomicRing
 

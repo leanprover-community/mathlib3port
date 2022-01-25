@@ -32,11 +32,11 @@ theorem mem_erase_dup {a : α} {s : Multiset α} : a ∈ erase_dup s ↔ a ∈ s
 
 @[simp]
 theorem erase_dup_cons_of_mem {a : α} {s : Multiset α} : a ∈ s → erase_dup (a ::ₘ s) = erase_dup s :=
-  Quot.induction_on s $ fun l m => @congr_argₓ _ _ _ _ coeₓ $ erase_dup_cons_of_mem m
+  Quot.induction_on s $ fun l m => @congr_argₓ _ _ _ _ coe $ erase_dup_cons_of_mem m
 
 @[simp]
 theorem erase_dup_cons_of_not_mem {a : α} {s : Multiset α} : a ∉ s → erase_dup (a ::ₘ s) = a ::ₘ erase_dup s :=
-  Quot.induction_on s $ fun l m => congr_argₓ coeₓ $ erase_dup_cons_of_not_mem m
+  Quot.induction_on s $ fun l m => congr_argₓ coe $ erase_dup_cons_of_not_mem m
 
 theorem erase_dup_le (s : Multiset α) : erase_dup s ≤ s :=
   Quot.induction_on s $ fun l => (erase_dup_sublist _).Subperm
@@ -59,7 +59,7 @@ theorem nodup_erase_dup (s : Multiset α) : nodup (erase_dup s) :=
   Quot.induction_on s nodup_erase_dup
 
 theorem erase_dup_eq_self {s : Multiset α} : erase_dup s = s ↔ nodup s :=
-  ⟨fun e => e ▸ nodup_erase_dup s, Quot.induction_on s $ fun l h => congr_argₓ coeₓ h.erase_dup⟩
+  ⟨fun e => e ▸ nodup_erase_dup s, Quot.induction_on s $ fun l h => congr_argₓ coe h.erase_dup⟩
 
 alias erase_dup_eq_self ↔ _ Multiset.Nodup.erase_dup
 

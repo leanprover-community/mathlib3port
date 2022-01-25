@@ -30,7 +30,7 @@ theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.C
             (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 $ Nat.gcd_dvd_rightₓ m n) _),
     fun H =>
     ⟨Nat.gcdA m n, Nat.gcdB m n, by
-      rw [mul_commₓ _ (m : ℤ), mul_commₓ _ (n : ℤ), ← Nat.gcd_eq_gcd_ab, show _ = _ from H, Int.coe_nat_one]⟩⟩
+      rw [mul_comm _ (m : ℤ), mul_comm _ (n : ℤ), ← Nat.gcd_eq_gcd_ab, show _ = _ from H, Int.coe_nat_one]⟩⟩
 
 theorem IsCoprime.prod_left : (∀, ∀ i ∈ t, ∀, IsCoprime (s i) x) → IsCoprime (∏ i in t, s i) x :=
   (Finset.induction_on t fun _ => is_coprime_one_left) $ fun b t hbt ih H => by

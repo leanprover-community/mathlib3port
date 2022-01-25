@@ -95,7 +95,7 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) :
       by
       congr
       ext i j
-      rw [Finₓ.succ_above_zero, Finₓ.cons_succ, Finₓ.coe_succ, mul_commₓ]
+      rw [Finₓ.succ_above_zero, Finₓ.cons_succ, Finₓ.coe_succ, mul_comm]
       exact
         (geom_sum₂_mul (v i.succ) (v 0)
             (j + 1 :

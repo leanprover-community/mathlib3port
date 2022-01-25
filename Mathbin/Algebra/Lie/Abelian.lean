@@ -28,16 +28,16 @@ lie algebra, abelian, commutative, center
 universe u v w w₁ w₂
 
 /-- A Lie (ring) module is trivial iff all brackets vanish. -/
-class LieModule.IsTrivial (L : Type v) (M : Type w) [HasBracket L M] [HasZero M] : Prop where
+class LieModule.IsTrivial (L : Type v) (M : Type w) [HasBracket L M] [Zero M] : Prop where
   trivial : ∀ x : L m : M, ⁅x,m⁆ = 0
 
 @[simp]
-theorem trivial_lie_zero (L : Type v) (M : Type w) [HasBracket L M] [HasZero M] [LieModule.IsTrivial L M] (x : L)
-    (m : M) : ⁅x,m⁆ = 0 :=
+theorem trivial_lie_zero (L : Type v) (M : Type w) [HasBracket L M] [Zero M] [LieModule.IsTrivial L M] (x : L) (m : M) :
+    ⁅x,m⁆ = 0 :=
   LieModule.IsTrivial.trivial x m
 
 /-- A Lie algebra is Abelian iff it is trivial as a Lie module over itself. -/
-abbrev IsLieAbelian (L : Type v) [HasBracket L L] [HasZero L] : Prop :=
+abbrev IsLieAbelian (L : Type v) [HasBracket L L] [Zero L] : Prop :=
   LieModule.IsTrivial L L
 
 instance LieIdeal.is_lie_abelian_of_trivial (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]

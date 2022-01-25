@@ -293,7 +293,7 @@ instance Nontrivial [Nontrivial A] : Nontrivial S :=
 
 instance no_zero_smul_divisors_bot [NoZeroSmulDivisors R A] : NoZeroSmulDivisors R S :=
   ⟨fun c x h =>
-    have : c = 0 ∨ (x : A) = 0 := eq_zero_or_eq_zero_of_smul_eq_zero (congr_argₓ coeₓ h)
+    have : c = 0 ∨ (x : A) = 0 := eq_zero_or_eq_zero_of_smul_eq_zero (congr_argₓ coe h)
     this.imp_right (@Subtype.ext_iff _ _ x 0).mpr⟩
 
 @[simp, norm_cast]
@@ -350,10 +350,10 @@ theorem coe_eq_one {x : S} : (x : A) = 1 ↔ x = 1 :=
 
 /-- Embedding of a subalgebra into the algebra. -/
 def val : S →ₐ[R] A := by
-  refine_struct { toFun := (coeₓ : S → A) } <;> intros <;> rfl
+  refine_struct { toFun := (coe : S → A) } <;> intros <;> rfl
 
 @[simp]
-theorem coe_val : (S.val : S → A) = coeₓ :=
+theorem coe_val : (S.val : S → A) = coe :=
   rfl
 
 theorem val_apply (x : S) : S.val x = (x : A) :=
@@ -582,13 +582,13 @@ def adjoin (s : Set A) : Subalgebra R A :=
 
 variable {R}
 
-protected theorem gc : GaloisConnection (adjoin R : Set A → Subalgebra R A) coeₓ := fun s S =>
+protected theorem gc : GaloisConnection (adjoin R : Set A → Subalgebra R A) coe := fun s S =>
   ⟨fun H => le_transₓ (le_transₓ (Set.subset_union_right _ _) Subsemiring.subset_closure) H, fun H =>
     show Subsemiring.closure (Set.Range (algebraMap R A) ∪ s) ≤ S.to_subsemiring from
       Subsemiring.closure_le.2 $ Set.union_subset S.range_subset H⟩
 
 /-- Galois insertion between `adjoin` and `coe`. -/
-protected def gi : GaloisInsertion (adjoin R : Set A → Subalgebra R A) coeₓ where
+protected def gi : GaloisInsertion (adjoin R : Set A → Subalgebra R A) coe where
   choice := fun s hs => (adjoin R s).copy s $ le_antisymmₓ (Algebra.gc.le_u_l s) hs
   gc := Algebra.gc
   le_l_u := fun S => (Algebra.gc (S : Set A) (adjoin R S)).1 $ le_reflₓ _

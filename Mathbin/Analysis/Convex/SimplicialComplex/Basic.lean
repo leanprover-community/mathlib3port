@@ -50,7 +50,7 @@ Note that the textbook meaning of "glue nicely" is given in
 structure simplicial_complex where
   Faces : Set (Finset E)
   not_empty_mem : ∅ ∉ faces
-  indep : ∀ {s}, s ∈ faces → AffineIndependent 𝕜 (coeₓ : (s : Set E) → E)
+  indep : ∀ {s}, s ∈ faces → AffineIndependent 𝕜 (coe : (s : Set E) → E)
   down_closed : ∀ {s t}, s ∈ faces → t ⊆ s → t ≠ ∅ → t ∈ faces
   inter_subset_convex_hull :
     ∀ {s t}, s ∈ faces → t ∈ faces → convexHull 𝕜 (↑s) ∩ convexHull 𝕜 (↑t) ⊆ convexHull 𝕜 (s ∩ t : Set E)
@@ -104,7 +104,7 @@ theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.faces) (ht : t ∈
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (s t «expr ∈ » faces)
 /-- Construct a simplicial complex by removing the empty face for you. -/
 @[simps]
-def of_erase (faces : Set (Finset E)) (indep : ∀, ∀ s ∈ faces, ∀, AffineIndependent 𝕜 (coeₓ : (s : Set E) → E))
+def of_erase (faces : Set (Finset E)) (indep : ∀, ∀ s ∈ faces, ∀, AffineIndependent 𝕜 (coe : (s : Set E) → E))
     (down_closed : ∀, ∀ s ∈ faces, ∀, ∀ t _ : t ⊆ s, t ∈ faces)
     (inter_subset_convex_hull :
       ∀ s t _ : s ∈ faces _ : t ∈ faces, convexHull 𝕜 (↑s) ∩ convexHull 𝕜 (↑t) ⊆ convexHull 𝕜 (s ∩ t : Set E)) :
@@ -140,7 +140,7 @@ theorem vertices_eq : K.vertices = ⋃ k ∈ K.faces, (k : Set E) := by
   exact K.down_closed hs (Finset.singleton_subset_iff.2 $ mem_coe.1 hx) (singleton_ne_empty _)
 
 theorem vertices_subset_space : K.vertices ⊆ K.space :=
-  vertices_eq.Subset.trans $ Set.bUnion_mono $ fun x hx => subset_convex_hull 𝕜 x
+  vertices_eq.Subset.trans $ Union₂_mono $ fun x hx => subset_convex_hull 𝕜 x
 
 theorem vertex_mem_convex_hull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) : x ∈ convexHull 𝕜 (s : Set E) ↔ x ∈ s := by
   refine' ⟨fun h => _, fun h => subset_convex_hull _ _ h⟩

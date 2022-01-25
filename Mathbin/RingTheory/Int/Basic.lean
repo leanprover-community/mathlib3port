@@ -172,7 +172,7 @@ theorem gcd_eq_one_iff_coprime {a b : ℤ} : Int.gcdₓ a b = 1 ↔ IsCoprime a 
     obtain ⟨ua, hua, ha⟩ := exists_unit_of_abs a
     obtain ⟨ub, hub, hb⟩ := exists_unit_of_abs b
     use Nat.gcdA (Int.natAbs a) (Int.natAbs b) * ua, Nat.gcdB (Int.natAbs a) (Int.natAbs b) * ub
-    rw [mul_assocₓ, ← ha, mul_assocₓ, ← hb, mul_commₓ, mul_commₓ _ (Int.natAbs b : ℤ), ← Nat.gcd_eq_gcd_ab, ←
+    rw [mul_assoc, ← ha, mul_assoc, ← hb, mul_comm, mul_comm _ (Int.natAbs b : ℤ), ← Nat.gcd_eq_gcd_ab, ←
       gcd_eq_nat_abs, hg, Int.coe_nat_one]
     
   · rintro ⟨r, s, h⟩
@@ -362,7 +362,7 @@ theorem eq_pow_of_mul_eq_pow_bit1_right {a b c : ℤ} (hab : IsCoprime a b) {k :
     ∃ d, b = d ^ bit1 k :=
   eq_pow_of_mul_eq_pow_bit1_left hab.symm
     (by
-      rwa [mul_commₓ] at h)
+      rwa [mul_comm] at h)
 
 theorem eq_pow_of_mul_eq_pow_bit1 {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ} (h : a * b = c ^ bit1 k) :
     (∃ d, a = d ^ bit1 k) ∧ ∃ e, b = e ^ bit1 k :=

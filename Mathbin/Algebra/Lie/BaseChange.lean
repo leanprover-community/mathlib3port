@@ -73,7 +73,7 @@ private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x,x⁆ = 0 := by
       · simp only [LinearMap.map_zero, add_zeroₓ, LinearMap.zero_apply]
         
       · intro a₂ l₂
-        simp only [← lie_skew l₂ l₁, mul_commₓ a₁ a₂, TensorProduct.tmul_neg, bracket'_tmul, add_right_negₓ]
+        simp only [← lie_skew l₂ l₁, mul_comm a₁ a₂, TensorProduct.tmul_neg, bracket'_tmul, add_right_negₓ]
         
       · intro y₁ y₂ hy₁ hy₂
         simp only [hy₁, hy₂, add_add_add_commₓ, add_zeroₓ, LinearMap.add_apply, LinearMap.map_add]
@@ -99,7 +99,7 @@ private theorem bracket_leibniz_lie (x y z : A ⊗[R] L) : ⁅x,⁅y,z⁆⁆ = �
         
       · intro a₃ l₃
         simp only [bracket'_tmul]
-        rw [mul_left_commₓ a₂ a₁ a₃, mul_assocₓ, leibniz_lie, TensorProduct.tmul_add]
+        rw [mul_left_commₓ a₂ a₁ a₃, mul_assoc, leibniz_lie, TensorProduct.tmul_add]
         
       · intro u₁ u₂ h₁ h₂
         simp only [add_add_add_commₓ, h₁, h₂, LinearMap.map_add]

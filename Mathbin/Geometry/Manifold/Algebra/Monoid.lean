@@ -122,13 +122,13 @@ theorem R_apply : (𝑹 I g) h = h * g :=
 theorem L_mul {G : Type _} [Semigroupₓ G] [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G] (g h : G) :
     𝑳 I (g * h) = (𝑳 I g).comp (𝑳 I h) := by
   ext
-  simp only [TimesContMdiffMap.comp_apply, L_apply, mul_assocₓ]
+  simp only [TimesContMdiffMap.comp_apply, L_apply, mul_assoc]
 
 @[simp]
 theorem R_mul {G : Type _} [Semigroupₓ G] [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G] (g h : G) :
     𝑹 I (g * h) = (𝑹 I h).comp (𝑹 I g) := by
   ext
-  simp only [TimesContMdiffMap.comp_apply, R_apply, mul_assocₓ]
+  simp only [TimesContMdiffMap.comp_apply, R_apply, mul_assoc]
 
 section
 
@@ -184,7 +184,7 @@ structure SmoothMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCo
   smooth_to_fun : Smooth I I' to_fun
 
 @[to_additive]
-instance : HasOne (SmoothMonoidMorphism I I' G G') :=
+instance : One (SmoothMonoidMorphism I I' G G') :=
   ⟨{ smooth_to_fun := smooth_const, toMonoidHom := 1 }⟩
 
 @[to_additive]

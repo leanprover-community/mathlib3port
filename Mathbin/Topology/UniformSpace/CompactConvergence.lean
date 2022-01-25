@@ -210,10 +210,10 @@ theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : 
   let C : t → Set α := fun i => K ∩ Closure (U ((i : K) : α))
   have hC : K ⊆ ⋃ i, C i := by
     rw [← K.inter_Union, subset_inter_iff]
-    refine' ⟨rfl.subset, ht.trans _⟩
+    refine' ⟨subset.rfl, ht.trans _⟩
     simp only [SetCoe.forall, Subtype.coe_mk, Union_subset_iff]
     exact fun x hx₁ hx₂ =>
-      subset_subset_Union (⟨_, hx₂⟩ : t)
+      subset_Union_of_subset (⟨_, hx₂⟩ : t)
         (by
           simp [subset_closure])
   have hfC : ∀ i : t, C i ⊆ f ⁻¹' ball (f ((i : K) : α)) W := by

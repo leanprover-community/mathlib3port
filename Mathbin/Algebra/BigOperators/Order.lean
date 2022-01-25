@@ -228,7 +228,7 @@ theorem card_le_mul_card_image_of_maps_to {f : α → β} {s : Finset α} {t : F
     s.card = ∑ a in t, (s.filter fun x => f x = a).card := card_eq_sum_card_fiberwise Hf
     _ ≤ ∑ _ in t, n := sum_le_sum hn
     _ = _ := by
-      simp [mul_commₓ]
+      simp [mul_comm]
     
 
 theorem card_le_mul_card_image {f : α → β} (s : Finset α) (n : ℕ)
@@ -239,7 +239,7 @@ theorem mul_card_image_le_card_of_maps_to {f : α → β} {s : Finset α} {t : F
     (n : ℕ) (hn : ∀, ∀ a ∈ t, ∀, n ≤ (s.filter fun x => f x = a).card) : n * t.card ≤ s.card :=
   calc
     n * t.card = ∑ _ in t, n := by
-      simp [mul_commₓ]
+      simp [mul_comm]
     _ ≤ ∑ a in t, (s.filter fun x => f x = a).card := sum_le_sum hn
     _ = s.card := by
       rw [← card_eq_sum_card_fiberwise Hf]

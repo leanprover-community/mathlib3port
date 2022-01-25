@@ -59,7 +59,7 @@ instance (priority := 100) DivisionRing.toGroupWithZero : GroupWithZeroₓ K :=
 
 attribute [field_simps] inv_eq_one_div
 
-attribute [local simp] division_def mul_commₓ mul_assocₓ mul_left_commₓ mul_inv_cancel inv_mul_cancel
+attribute [local simp] division_def mul_comm mul_assoc mul_left_commₓ mul_inv_cancel inv_mul_cancel
 
 theorem one_div_neg_one_eq_neg_one : (1 : K) / -1 = -1 :=
   have : -1 * -1 = (1 : K) := by
@@ -156,12 +156,12 @@ theorem inv_neg : (-a)⁻¹ = -a⁻¹ := by
 
 theorem one_div_mul_add_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : b ≠ 0) :
     1 / a * (a + b) * (1 / b) = 1 / a + 1 / b := by
-  rw [left_distrib (1 / a), one_div_mul_cancel ha, right_distrib, one_mulₓ, mul_assocₓ, mul_one_div_cancel hb, mul_oneₓ,
+  rw [left_distrib (1 / a), one_div_mul_cancel ha, right_distrib, one_mulₓ, mul_assoc, mul_one_div_cancel hb, mul_oneₓ,
     add_commₓ]
 
 theorem one_div_mul_sub_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : b ≠ 0) :
     1 / a * (b - a) * (1 / b) = 1 / a - 1 / b := by
-  rw [mul_sub_left_distrib (1 / a), one_div_mul_cancel ha, mul_sub_right_distrib, one_mulₓ, mul_assocₓ,
+  rw [mul_sub_left_distrib (1 / a), one_div_mul_cancel ha, mul_sub_right_distrib, one_mulₓ, mul_assoc,
     mul_one_div_cancel hb, mul_oneₓ]
 
 theorem add_div_eq_mul_add_div (a b : K) {c : K} (hc : c ≠ 0) : a + b / c = (a * c + b) / c :=
@@ -193,7 +193,7 @@ instance (priority := 100) Field.toDivisionRing : DivisionRing K :=
 instance (priority := 100) Field.toCommGroupWithZero : CommGroupWithZero K :=
   { (_ : GroupWithZeroₓ K), ‹Field K› with }
 
-attribute [local simp] mul_assocₓ mul_commₓ mul_left_commₓ
+attribute [local simp] mul_assoc mul_comm mul_left_commₓ
 
 theorem div_add_div (a : K) {b : K} (c : K) {d : K} (hb : b ≠ 0) (hd : d ≠ 0) :
     a / b + c / d = (a * d + b * c) / (b * d) := by
@@ -206,7 +206,7 @@ theorem one_div_add_one_div {a b : K} (ha : a ≠ 0) (hb : b ≠ 0) : 1 / a + 1 
 theorem div_sub_div (a : K) {b : K} (c : K) {d : K} (hb : b ≠ 0) (hd : d ≠ 0) :
     a / b - c / d = (a * d - b * c) / (b * d) := by
   simp only [sub_eq_add_neg]
-  rw [neg_eq_neg_one_mul, ← mul_div_assoc, div_add_div _ _ hb hd, ← mul_assocₓ, mul_commₓ b, mul_assocₓ, ←
+  rw [neg_eq_neg_one_mul, ← mul_div_assoc, div_add_div _ _ hb hd, ← mul_assoc, mul_comm b, mul_assoc, ←
     neg_eq_neg_one_mul]
 
 theorem inv_add_inv {a b : K} (ha : a ≠ 0) (hb : b ≠ 0) : a⁻¹ + b⁻¹ = (a + b) / (a * b) := by
@@ -275,7 +275,7 @@ theorem uniq_inv_of_is_field (R : Type u) [Ringₓ R] (hf : IsField R) : ∀ x :
   · intro y z hxy hxz
     calc y = y * (x * z) := by
         rw [hxz, mul_oneₓ]_ = x * y * z := by
-        rw [← mul_assocₓ, hf.mul_comm y x]_ = z := by
+        rw [← mul_assoc, hf.mul_comm y x]_ = z := by
         rw [hxy, one_mulₓ]
     
 
@@ -339,8 +339,8 @@ end NoncomputableDefs
 /-- Pullback a `division_ring` along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.divisionRing [DivisionRing K] {K'} [HasZero K'] [Mul K'] [Add K'] [Neg K'] [Sub K']
-    [HasOne K'] [HasInv K'] [Div K'] (f : K' → K) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [Mul K'] [Add K'] [Neg K'] [Sub K']
+    [One K'] [HasInv K'] [Div K'] (f : K' → K) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
     DivisionRing K' :=
@@ -349,8 +349,8 @@ protected def Function.Injective.divisionRing [DivisionRing K] {K'} [HasZero K']
 /-- Pullback a `field` along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.field [Field K] {K'} [HasZero K'] [Mul K'] [Add K'] [Neg K'] [Sub K'] [HasOne K']
-    [HasInv K'] [Div K'] (f : K' → K) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'] [Neg K'] [Sub K'] [One K'] [HasInv K']
+    [Div K'] (f : K' → K) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : Field K' :=
   { hf.comm_group_with_zero f zero one mul inv div, hf.comm_ring f zero one add mul neg sub with }

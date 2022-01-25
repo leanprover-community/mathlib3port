@@ -44,7 +44,7 @@ namespace SingleObj
 variable (α : Type u)
 
 /-- One and `flip (*)` become `id` and `comp` for morphisms of the single object category. -/
-instance category_struct [HasOne α] [Mul α] : category_struct (single_obj α) where
+instance category_struct [One α] [Mul α] : category_struct (single_obj α) where
   Hom := fun _ _ => α
   comp := fun _ _ _ x y => y * x
   id := fun _ => 1
@@ -53,7 +53,7 @@ instance category_struct [HasOne α] [Mul α] : category_struct (single_obj α) 
 instance category [Monoidₓ α] : category (single_obj α) where
   comp_id' := fun _ _ => one_mulₓ
   id_comp' := fun _ _ => mul_oneₓ
-  assoc' := fun _ _ _ _ x y z => (mul_assocₓ z y x).symm
+  assoc' := fun _ _ _ _ x y z => (mul_assoc z y x).symm
 
 theorem id_as_one [Monoidₓ α] (x : single_obj α) : 𝟙 x = 1 :=
   rfl
@@ -123,7 +123,7 @@ def difference_functor {C G} [category C] [Groupₓ G] (f : C → G) : C ⥤ sin
     rw [single_obj.id_as_one, mul_right_invₓ]
   map_comp' := by
     intros
-    rw [single_obj.comp_as_mul, ← mul_assocₓ, mul_left_injₓ, mul_assocₓ, inv_mul_selfₓ, mul_oneₓ]
+    rw [single_obj.comp_as_mul, ← mul_assoc, mul_left_injₓ, mul_assoc, inv_mul_selfₓ, mul_oneₓ]
 
 end SingleObj
 

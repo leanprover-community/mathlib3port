@@ -201,7 +201,7 @@ theorem normalize : PythagoreanTriple (x / Int.gcdₓ x y) (y / Int.gcdₓ x y) 
     norm_cast
     rwa [pos_iff_ne_zero] at k0
   rw [Int.gcd_mul_right, h2, Int.nat_abs_of_nat, one_mulₓ] at h⊢
-  rw [mul_commₓ x0, mul_commₓ y0, mul_iff k hk] at h
+  rw [mul_comm x0, mul_comm y0, mul_iff k hk] at h
   rwa [Int.mul_div_cancel _ hk, Int.mul_div_cancel _ hk, Int.mul_div_cancel_left _ hk]
 
 theorem is_classified_of_is_primitive_classified (hp : h.is_primitive_classified) : h.is_classified := by
@@ -289,7 +289,7 @@ def circleEquivGen (hk : ∀ x : K, 1 + x ^ 2 ≠ 0) : K ≃ { p : K × K // p.1
     have h3 : (2 : K) ≠ 0 := by
       convert hk 1
       rw [one_pow 2, h2]
-    field_simp [hk x, h2, add_assocₓ, add_commₓ, add_sub_cancel'_right, mul_commₓ]
+    field_simp [hk x, h2, add_assocₓ, add_commₓ, add_sub_cancel'_right, mul_comm]
   right_inv := fun ⟨⟨x, y⟩, hxy, hy⟩ => by
     change x ^ 2 + y ^ 2 = 1 at hxy
     have h2 : y + 1 ≠ 0 := by
@@ -685,7 +685,7 @@ theorem coprime_classification' {x y z : ℤ} (h : PythagoreanTriple x y z) (h_c
       
     exfalso
     rcases h_even with ⟨rfl, -⟩
-    rw [mul_assocₓ, Int.mul_mod_right] at h_parity
+    rw [mul_assoc, Int.mul_mod_right] at h_parity
     exact zero_ne_one h_parity
     
   · use -m, -n
@@ -717,7 +717,7 @@ theorem coprime_classification' {x y z : ℤ} (h : PythagoreanTriple x y z) (h_c
       
     exfalso
     rcases h_even with ⟨rfl, -⟩
-    rw [mul_assocₓ, Int.mul_mod_right] at h_parity
+    rw [mul_assoc, Int.mul_mod_right] at h_parity
     exact zero_ne_one h_parity
     
 

@@ -136,6 +136,13 @@ theorem convex_on_const (c : β) (hs : Convex 𝕜 s) : ConvexOn 𝕜 s fun x : 
 theorem concave_on_const (c : β) (hs : Convex 𝕜 s) : ConcaveOn 𝕜 s fun x : E => c :=
   @convex_on_const _ _ (OrderDual β) _ _ _ _ _ _ c hs
 
+theorem convex_on_of_convex_epigraph (h : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 }) : ConvexOn 𝕜 s f :=
+  ⟨fun x y hx hy a b ha hb hab => (@h (x, f x) (y, f y) ⟨hx, le_rfl⟩ ⟨hy, le_rfl⟩ a b ha hb hab).1,
+    fun x y hx hy a b ha hb hab => (@h (x, f x) (y, f y) ⟨hx, le_rfl⟩ ⟨hy, le_rfl⟩ a b ha hb hab).2⟩
+
+theorem concave_on_of_convex_hypograph (h : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 }) : ConcaveOn 𝕜 s f :=
+  @convex_on_of_convex_epigraph 𝕜 E (OrderDual β) _ _ _ _ _ _ _ h
+
 end Module
 
 section OrderedSmul
@@ -164,9 +171,7 @@ theorem ConcaveOn.convex_hypograph (hf : ConcaveOn 𝕜 s f) : Convex 𝕜 { p :
   hf.dual.convex_epigraph
 
 theorem convex_on_iff_convex_epigraph : ConvexOn 𝕜 s f ↔ Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } :=
-  ⟨ConvexOn.convex_epigraph, fun h =>
-    ⟨fun x y hx hy a b ha hb hab => (@h (x, f x) (y, f y) ⟨hx, le_rfl⟩ ⟨hy, le_rfl⟩ a b ha hb hab).1,
-      fun x y hx hy a b ha hb hab => (@h (x, f x) (y, f y) ⟨hx, le_rfl⟩ ⟨hy, le_rfl⟩ a b ha hb hab).2⟩⟩
+  ⟨ConvexOn.convex_epigraph, convex_on_of_convex_epigraph⟩
 
 theorem concave_on_iff_convex_hypograph : ConcaveOn 𝕜 s f ↔ Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 } :=
   @convex_on_iff_convex_epigraph 𝕜 E (OrderDual β) _ _ _ _ _ _ _ f
@@ -262,19 +267,7 @@ theorem LinearMap.concave_on (f : E →ₗ[𝕜] β) {s : Set E} (hs : Convex �
     rw [f.map_add, f.map_smul, f.map_smul]⟩
 
 theorem StrictConvexOn.convex_on {s : Set E} {f : E → β} (hf : StrictConvexOn 𝕜 s f) : ConvexOn 𝕜 s f :=
-  ⟨hf.1, fun x y hx hy a b ha hb hab => by
-    obtain rfl | hxy := eq_or_ne x y
-    · rw [Convex.combo_self hab, Convex.combo_self hab]
-      
-    obtain rfl | ha' := ha.eq_or_lt
-    · rw [zero_addₓ] at hab
-      rw [hab, zero_smul, zero_smul, one_smul, one_smul, zero_addₓ, zero_addₓ]
-      
-    obtain rfl | hb' := hb.eq_or_lt
-    · rw [add_zeroₓ] at hab
-      rw [hab, zero_smul, zero_smul, one_smul, one_smul, add_zeroₓ, add_zeroₓ]
-      
-    exact (hf.2 hx hy hxy ha' hb' hab).le⟩
+  convex_on_iff_pairwise_pos.mpr ⟨hf.1, fun x hx y hy hxy a b ha hb hab => (hf.2 hx hy hxy ha hb hab).le⟩
 
 theorem StrictConcaveOn.concave_on {s : Set E} {f : E → β} (hf : StrictConcaveOn 𝕜 s f) : ConcaveOn 𝕜 s f :=
   hf.dual.convex_on
@@ -419,12 +412,19 @@ theorem ConvexOn.convex_lt (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x �
 theorem ConcaveOn.convex_gt (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 { x ∈ s | r < f x } :=
   hf.dual.convex_lt r
 
-theorem ConvexOn.convex_strict_epigraph (hf : ConvexOn 𝕜 s f) : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 < p.2 } := by
-  rw [convex_iff_forall_pos]
-  rintro ⟨x, r⟩ ⟨y, t⟩ ⟨hx, hr⟩ ⟨hy, ht⟩ a b ha hb hab
-  refine' ⟨hf.1 hx hy ha.le hb.le hab, _⟩
-  calc f (a • x + b • y) ≤ a • f x + b • f y := hf.2 hx hy ha.le hb.le hab _ < a • r + b • t :=
-      add_lt_add (smul_lt_smul_of_pos hr ha) (smul_lt_smul_of_pos ht hb)
+theorem ConvexOn.open_segment_subset_strict_epigraph (hf : ConvexOn 𝕜 s f) (p q : E × β) (hp : p.1 ∈ s ∧ f p.1 < p.2)
+    (hq : q.1 ∈ s ∧ f q.1 ≤ q.2) : OpenSegment 𝕜 p q ⊆ { p : E × β | p.1 ∈ s ∧ f p.1 < p.2 } := by
+  rintro _ ⟨a, b, ha, hb, hab, rfl⟩
+  refine' ⟨hf.1 hp.1 hq.1 ha.le hb.le hab, _⟩
+  calc f (a • p.1 + b • q.1) ≤ a • f p.1 + b • f q.1 := hf.2 hp.1 hq.1 ha.le hb.le hab _ < a • p.2 + b • q.2 :=
+      add_lt_add_of_lt_of_le (smul_lt_smul_of_pos hp.2 ha) (smul_le_smul_of_nonneg hq.2 hb.le)
+
+theorem ConcaveOn.open_segment_subset_strict_hypograph (hf : ConcaveOn 𝕜 s f) (p q : E × β) (hp : p.1 ∈ s ∧ p.2 < f p.1)
+    (hq : q.1 ∈ s ∧ q.2 ≤ f q.1) : OpenSegment 𝕜 p q ⊆ { p : E × β | p.1 ∈ s ∧ p.2 < f p.1 } :=
+  hf.dual.open_segment_subset_strict_epigraph p q hp hq
+
+theorem ConvexOn.convex_strict_epigraph (hf : ConvexOn 𝕜 s f) : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 < p.2 } :=
+  convex_iff_open_segment_subset.mpr $ fun p q hp hq => hf.open_segment_subset_strict_epigraph p q hp ⟨hq.1, hq.2.le⟩
 
 theorem ConcaveOn.convex_strict_hypograph (hf : ConcaveOn 𝕜 s f) : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 < f p.1 } :=
   hf.dual.convex_strict_epigraph

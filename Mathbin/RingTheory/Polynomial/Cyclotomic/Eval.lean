@@ -157,7 +157,7 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [CommRingₓ R] {n : ℕ}
   apply_fun eval 1  at this
   rw [eval_geom_sum, one_geom_sum, eval_prod, eq_comm, ← Finset.prod_sdiff $ range_pow_padic_val_nat_subset_divisors' p,
     Finset.prod_image] at this
-  simp_rw [eval_one_cyclotomic_prime_pow, Finset.prod_const, Finset.card_range, mul_commₓ]  at this
+  simp_rw [eval_one_cyclotomic_prime_pow, Finset.prod_const, Finset.card_range, mul_comm]  at this
   rw [← Finset.prod_sdiff $ show {n} ⊆ _ from _] at this
   any_goals {
   }
@@ -168,7 +168,7 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [CommRingₓ R] {n : ℕ}
     
   rw [← Int.nat_abs_of_nat p, Int.nat_abs_dvd_iff_dvd] at hpe
   obtain ⟨t, ht⟩ := hpe
-  rw [Finset.prod_singleton, ht, mul_left_commₓ, mul_commₓ, ← mul_assocₓ, mul_assocₓ] at this
+  rw [Finset.prod_singleton, ht, mul_left_commₓ, mul_comm, ← mul_assoc, mul_assoc] at this
   simp only [Int.nat_cast_eq_coe_nat] at *
   have : (p ^ padicValNat p n * p : ℤ) ∣ n := ⟨_, this⟩
   simp only [← pow_succ'ₓ, ← Int.nat_abs_dvd_iff_dvd, Int.nat_abs_of_nat, Int.nat_abs_pow] at this

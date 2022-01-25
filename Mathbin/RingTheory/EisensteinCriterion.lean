@@ -121,7 +121,7 @@ theorem irreducible_of_eisenstein_criterion {f : Polynomial R} {P : Ideal R} (hP
         Or.inr
           (is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit
             (by
-              simpa only [mul_commₓ] using hu)
+              simpa only [mul_comm] using hu)
             hpmqn.2)
       ⟩
 

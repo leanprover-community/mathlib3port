@@ -325,7 +325,7 @@ def val : S →ₐ[K] L :=
   S.to_subalgebra.val
 
 @[simp]
-theorem coe_val : ⇑S.val = coeₓ :=
+theorem coe_val : ⇑S.val = coe :=
   rfl
 
 @[simp]

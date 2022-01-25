@@ -241,7 +241,7 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
       intro γ'
       use γ⁻¹ * γ'
       rintro a b ha hb
-      rw [hb, mul_commₓ]
+      rw [hb, mul_comm]
       rw [Units.coe_mul] at ha
       simpa using inv_mul_lt_of_lt_mul₀ ha
     rw [continuous_iff_continuous_at]
@@ -265,7 +265,7 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
       have : (fun p : Γ₀ × Γ₀ => p.fst * p.snd) = (fun p : Γ₀ × Γ₀ => p.fst * p.snd) ∘ fun p : Γ₀ × Γ₀ => (p.2, p.1) :=
         by
         ext
-        rw [mul_commₓ]
+        rw [mul_comm]
       rw [this]
       apply ContinuousAt.comp _ continuous_swap.continuous_at
       exact common x hx

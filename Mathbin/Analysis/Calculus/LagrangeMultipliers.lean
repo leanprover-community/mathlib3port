@@ -60,7 +60,7 @@ theorem IsLocalExtrOn.exists_linear_map_of_has_strict_fderiv_at (hextr : IsLocal
   simp only [LinearMap.coprod_equiv_apply, LinearEquiv.refl_apply, LinearMap.ring_lmap_equiv_self_symm_apply,
     LinearMap.comp_apply, ContinuousLinearMap.coe_coe, ContinuousLinearMap.prod_apply, LinearEquiv.trans_apply,
     LinearEquiv.prod_apply, LinearMap.coprod_apply, LinearMap.smul_right_apply, LinearMap.one_apply, smul_eq_mul,
-    mul_commₓ]
+    mul_comm]
 
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`
 at `x₀`, and both `f : E → ℝ` and `φ` are strictly differentiable at `x₀`, then there exist
@@ -80,7 +80,7 @@ theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at_1d {f : E → �
       simpa only [mul_oneₓ, Algebra.id.smul_eq_mul] using Λ.map_smul (f' x) 1
     have H₂ : f' x * Λ 1 + Λ₀ * φ' x = 0 := by
       simpa only [Algebra.id.smul_eq_mul, H₁] using hfΛ x
-    simpa [mul_commₓ] using H₂
+    simpa [mul_comm] using H₂
     
 
 /-- Lagrange multipliers theorem, 1d version. Let `f : ι → E → ℝ` be a finite family of functions.
@@ -106,7 +106,7 @@ theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at {ι : Type _} [
   · simpa only [Ne.def, Prod.ext_iff, LinearEquiv.map_eq_zero_iff, Prod.fst_zero] using h0
     
   · ext x
-    simpa [mul_commₓ] using hsum x
+    simpa [mul_comm] using hsum x
     
 
 /-- Lagrange multipliers theorem. Let `f : ι → E → ℝ` be a finite family of functions.

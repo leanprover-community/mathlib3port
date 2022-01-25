@@ -151,19 +151,19 @@ theorem le_index_mul (K₀ : positive_compacts G) (K : compacts G) {V : Set G} (
     index K.1 V ≤ index K.1 K₀.1 * index K₀.1 V := by
   rcases index_elim K.2 K₀.2.2 with ⟨s, h1s, h2s⟩
   rcases index_elim K₀.2.1 hV with ⟨t, h1t, h2t⟩
-  rw [← h2s, ← h2t, mul_commₓ]
+  rw [← h2s, ← h2t, mul_comm]
   refine' le_transₓ _ Finset.mul_card_le
   apply Nat.Inf_le
   refine' ⟨_, _, rfl⟩
   rw [mem_set_of_eq]
   refine' subset.trans h1s _
-  apply bUnion_subset
+  apply Union₂_subset
   intro g₁ hg₁
   rw [preimage_subset_iff]
   intro g₂ hg₂
   have := h1t hg₂
   rcases this with ⟨_, ⟨g₃, rfl⟩, A, ⟨hg₃, rfl⟩, h2V⟩
-  rw [mem_preimage, ← mul_assocₓ] at h2V
+  rw [mem_preimage, ← mul_assoc] at h2V
   exact mem_bUnion (Finset.mul_mem_mul hg₃ hg₁) h2V
 
 @[to_additive add_index_pos]
@@ -273,7 +273,7 @@ theorem mul_left_index_le {K : Set G} (hK : IsCompact K) {V : Set G} (hV : (Inte
     simp only [exists_prop, mem_Union, Finset.mem_map, Equivₓ.coe_mul_right, exists_exists_and_eq_and, mem_preimage,
       Equivₓ.to_embedding_apply]
     refine' ⟨_, hg₂, _⟩
-    simp only [mul_assocₓ, hg₁, inv_mul_cancel_leftₓ]
+    simp only [mul_assoc, hg₁, inv_mul_cancel_leftₓ]
     
 
 @[to_additive is_left_invariant_add_index]
@@ -621,7 +621,7 @@ def haar_measure (K₀ : positive_compacts G) : Measureₓ G :=
 theorem haar_measure_apply {K₀ : positive_compacts G} {s : Set G} (hs : MeasurableSet s) :
     haar_measure K₀ s = (haar_content K₀).OuterMeasure s / (haar_content K₀).OuterMeasure K₀.1 := by
   change (haar_content K₀).OuterMeasure K₀.val⁻¹ * (haar_content K₀).Measure s = _
-  simp only [hs, div_eq_mul_inv, mul_commₓ, content.measure_apply]
+  simp only [hs, div_eq_mul_inv, mul_comm, content.measure_apply]
 
 @[to_additive]
 theorem is_mul_left_invariant_haar_measure (K₀ : positive_compacts G) : is_mul_left_invariant (haar_measure K₀) := by
@@ -714,11 +714,20 @@ theorem is_haar_measure_eq_smul_is_haar_measure [LocallyCompactSpace G] [second_
     
   · calc μ = μ K.1 • haar_measure K :=
         haar_measure_unique (is_mul_left_invariant_haar μ) K _ = (μ K.1 / ν K.1) • ν K.1 • haar_measure K := by
-        rw [smul_smul, div_eq_mul_inv, mul_assocₓ, Ennreal.inv_mul_cancel νpos.ne' νlt.ne,
+        rw [smul_smul, div_eq_mul_inv, mul_assoc, Ennreal.inv_mul_cancel νpos.ne' νlt.ne,
           mul_oneₓ]_ = (μ K.1 / ν K.1) • ν :=
         by
         rw [← haar_measure_unique (is_mul_left_invariant_haar ν) K]
     
+
+@[to_additive]
+instance (priority := 90) regular_of_is_haar_measure [LocallyCompactSpace G] [second_countable_topology G]
+    (μ : Measureₓ G) [is_haar_measure μ] : regular μ := by
+  have K : positive_compacts G := Classical.choice (TopologicalSpace.nonempty_positive_compacts G)
+  obtain ⟨c, c0, ctop, hμ⟩ : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ μ = c • haar_measure K :=
+    is_haar_measure_eq_smul_is_haar_measure μ _
+  rw [hμ]
+  exact regular.smul ctop
 
 /-- Any Haar measure is invariant under inversion in a commutative group. -/
 @[to_additive]

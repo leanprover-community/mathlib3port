@@ -82,24 +82,24 @@ end HomologicalComplex
 /-- An `α`-indexed chain complex is a `homological_complex`
 in which `d i j ≠ 0` only if `j + 1 = i`.
 -/
-abbrev ChainComplex (α : Type _) [AddRightCancelSemigroup α] [HasOne α] : Type _ :=
+abbrev ChainComplex (α : Type _) [AddRightCancelSemigroup α] [One α] : Type _ :=
   HomologicalComplex V (ComplexShape.down α)
 
 /-- An `α`-indexed cochain complex is a `homological_complex`
 in which `d i j ≠ 0` only if `i + 1 = j`.
 -/
-abbrev CochainComplex (α : Type _) [AddRightCancelSemigroup α] [HasOne α] : Type _ :=
+abbrev CochainComplex (α : Type _) [AddRightCancelSemigroup α] [One α] : Type _ :=
   HomologicalComplex V (ComplexShape.up α)
 
 namespace ChainComplex
 
 @[simp]
-theorem prev (α : Type _) [AddRightCancelSemigroup α] [HasOne α] (i : α) :
+theorem prev (α : Type _) [AddRightCancelSemigroup α] [One α] (i : α) :
     (ComplexShape.down α).prev i = some ⟨i + 1, rfl⟩ :=
   Option.choice_eq _
 
 @[simp]
-theorem next (α : Type _) [AddGroupₓ α] [HasOne α] (i : α) :
+theorem next (α : Type _) [AddGroupₓ α] [One α] (i : α) :
     (ComplexShape.down α).next i = some ⟨i - 1, sub_add_cancel i 1⟩ :=
   Option.choice_eq _
 
@@ -118,12 +118,12 @@ end ChainComplex
 namespace CochainComplex
 
 @[simp]
-theorem prev (α : Type _) [AddGroupₓ α] [HasOne α] (i : α) :
+theorem prev (α : Type _) [AddGroupₓ α] [One α] (i : α) :
     (ComplexShape.up α).prev i = some ⟨i - 1, sub_add_cancel i 1⟩ :=
   Option.choice_eq _
 
 @[simp]
-theorem next (α : Type _) [AddRightCancelSemigroup α] [HasOne α] (i : α) :
+theorem next (α : Type _) [AddRightCancelSemigroup α] [One α] (i : α) :
     (ComplexShape.up α).next i = some ⟨i + 1, rfl⟩ :=
   Option.choice_eq _
 
@@ -570,7 +570,7 @@ namespace ChainComplex
 
 section Of
 
-variable {V} {α : Type _} [AddRightCancelSemigroup α] [HasOne α] [DecidableEq α]
+variable {V} {α : Type _} [AddRightCancelSemigroup α] [One α] [DecidableEq α]
 
 /-- Construct an `α`-indexed chain complex from a dependently-typed differential.
 -/
@@ -610,7 +610,7 @@ end Of
 
 section OfHom
 
-variable {V} {α : Type _} [AddRightCancelSemigroup α] [HasOne α] [DecidableEq α]
+variable {V} {α : Type _} [AddRightCancelSemigroup α] [One α] [DecidableEq α]
 
 variable (X : α → V) (d_X : ∀ n, X (n + 1) ⟶ X n) (sq_X : ∀ n, d_X (n + 1) ≫ d_X n = 0) (Y : α → V)
   (d_Y : ∀ n, Y (n + 1) ⟶ Y n) (sq_Y : ∀ n, d_Y (n + 1) ≫ d_Y n = 0)
@@ -789,7 +789,7 @@ namespace CochainComplex
 
 section Of
 
-variable {V} {α : Type _} [AddRightCancelSemigroup α] [HasOne α] [DecidableEq α]
+variable {V} {α : Type _} [AddRightCancelSemigroup α] [One α] [DecidableEq α]
 
 /-- Construct an `α`-indexed cochain complex from a dependently-typed differential.
 -/
@@ -832,7 +832,7 @@ end Of
 
 section OfHom
 
-variable {V} {α : Type _} [AddRightCancelSemigroup α] [HasOne α] [DecidableEq α]
+variable {V} {α : Type _} [AddRightCancelSemigroup α] [One α] [DecidableEq α]
 
 variable (X : α → V) (d_X : ∀ n, X n ⟶ X (n + 1)) (sq_X : ∀ n, d_X n ≫ d_X (n + 1) = 0) (Y : α → V)
   (d_Y : ∀ n, Y n ⟶ Y (n + 1)) (sq_Y : ∀ n, d_Y n ≫ d_Y (n + 1) = 0)

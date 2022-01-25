@@ -239,7 +239,7 @@ theorem is_jacobson_localization [H : is_jacobson R] : is_jacobson S := by
       by_cases' y ∈ J
       · exact J.smul_mem x h
         
-      · exact mul_commₓ y x ▸ J.smul_mem y ((mem_Inf.1 hx) ⟨hJ.left, ⟨hJ.right, h⟩⟩)
+      · exact mul_comm y x ▸ J.smul_mem y ((mem_Inf.1 hx) ⟨hJ.left, ⟨hJ.right, h⟩⟩)
         
     rw [hP] at hxy
     cases' hP'.mem_or_mem hxy with hxy hxy
@@ -324,7 +324,7 @@ theorem is_integral_is_localization_polynomial_quotient (P : Ideal (Polynomial R
     · convert Subring.add_mem _ h1 h2
       rw [RingHom.map_add, RingHom.map_add]
       
-    · rw [pow_succₓ X n, mul_commₓ X, ← mul_assocₓ, RingHom.map_mul, RingHom.map_mul]
+    · rw [pow_succₓ X n, mul_comm X, ← mul_assoc, RingHom.map_mul, RingHom.map_mul]
       exact Subring.mul_mem _ hr (Subring.subset_closure (Set.mem_image_of_mem _ (Or.inl rfl)))
       
     

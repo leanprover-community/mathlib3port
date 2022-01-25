@@ -244,7 +244,7 @@ theorem exists_open_singleton_of_fintype [T0Space α] [f : Fintype α] [ha : Non
 instance Subtype.t0_space [T0Space α] {p : α → Prop} : T0Space (Subtype p) :=
   ⟨fun x y hxy =>
     let ⟨U, hU, hxyU⟩ := T0Space.t0 (x : α) y ((not_congr Subtype.ext_iff_val).1 hxy)
-    ⟨(coeₓ : Subtype p → α) ⁻¹' U, is_open_induced hU, hxyU⟩⟩
+    ⟨(coe : Subtype p → α) ⁻¹' U, is_open_induced hU, hxyU⟩⟩
 
 theorem t0_space_iff_or_not_mem_closure (α : Type u) [TopologicalSpace α] :
     T0Space α ↔ ∀ a b : α, a ≠ b → a ∉ Closure ({b} : Set α) ∨ b ∉ Closure ({a} : Set α) := by
@@ -508,7 +508,7 @@ theorem singleton_mem_nhds_within_of_mem_discrete {s : Set α} [DiscreteTopology
     {x} ∈ 𝓝[s] x := by
   have : ({⟨x, hx⟩} : Set s) ∈ 𝓝 (⟨x, hx⟩ : s) := by
     simp [nhds_discrete]
-  simpa only [nhds_within_eq_map_subtype_coe hx, image_singleton] using @image_mem_map _ _ _ (coeₓ : s → α) _ this
+  simpa only [nhds_within_eq_map_subtype_coe hx, image_singleton] using @image_mem_map _ _ _ (coe : s → α) _ this
 
 /-- The neighbourhoods filter of `x` within `s`, under the discrete topology, is equal to
 the pure `x` filter (which is the principal filter at the singleton `{x}`.) -/
@@ -547,7 +547,7 @@ theorem TopologicalSpace.subset_trans {X : Type _} [tX : TopologicalSpace X] {s 
     (Subtype.topologicalSpace : TopologicalSpace t) =
       (Subtype.topologicalSpace : TopologicalSpace s).induced (Set.inclusion ts) :=
   by
-  change tX.induced ((coeₓ : s → X) ∘ Set.inclusion ts) = TopologicalSpace.induced (Set.inclusion ts) (tX.induced _)
+  change tX.induced ((coe : s → X) ∘ Set.inclusion ts) = TopologicalSpace.induced (Set.inclusion ts) (tX.induced _)
   rw [← induced_compose]
 
 /-- This lemma characterizes discrete topological spaces as those whose singletons are
@@ -1110,7 +1110,7 @@ instance Subtype.regular_space [RegularSpace α] {p : α → Prop} : RegularSpac
     intro s a hs ha
     rcases is_closed_induced_iff.1 hs with ⟨s, hs', rfl⟩
     rcases RegularSpace.regular hs' ha with ⟨t, ht, hst, hat⟩
-    refine' ⟨coeₓ ⁻¹' t, is_open_induced ht, preimage_mono hst, _⟩
+    refine' ⟨coe ⁻¹' t, is_open_induced ht, preimage_mono hst, _⟩
     rw [nhdsWithin, nhds_induced, ← comap_principal, ← comap_inf, ← nhdsWithin, hat, comap_bot]⟩
 
 variable (α)
@@ -1442,32 +1442,32 @@ theorem loc_compact_Haus_tot_disc_of_zero_dim [TotallyDisconnectedSpace H] :
   rintro x U memU hU
   obtain ⟨s, comp, xs, sU⟩ := exists_compact_subset hU memU
   obtain ⟨t, h, ht, xt⟩ := mem_interior.1 xs
-  let u : Set s := (coeₓ : s → H) ⁻¹' Interior s
+  let u : Set s := (coe : s → H) ⁻¹' Interior s
   have u_open_in_s : IsOpen u := is_open_interior.preimage continuous_subtype_coe
   let X : s := ⟨x, h xt⟩
   have Xu : X ∈ u := xs
   have : CompactSpace s := is_compact_iff_compact_space.1 comp
   obtain ⟨V : Set s, clopen_in_s, Vx, V_sub⟩ := compact_exists_clopen_in_open u_open_in_s Xu
-  have V_clopen : IsClopen ((coeₓ : s → H) '' V) := by
+  have V_clopen : IsClopen ((coe : s → H) '' V) := by
     refine' ⟨_, comp.is_closed.closed_embedding_subtype_coe.closed_iff_image_closed.1 clopen_in_s.2⟩
-    let v : Set u := (coeₓ : u → s) ⁻¹' V
-    have : (coeₓ : u → H) = (coeₓ : s → H) ∘ (coeₓ : u → s) := rfl
-    have f0 : Embedding (coeₓ : u → H) := embedding_subtype_coe.comp embedding_subtype_coe
-    have f1 : OpenEmbedding (coeₓ : u → H) := by
+    let v : Set u := (coe : u → s) ⁻¹' V
+    have : (coe : u → H) = (coe : s → H) ∘ (coe : u → s) := rfl
+    have f0 : Embedding (coe : u → H) := embedding_subtype_coe.comp embedding_subtype_coe
+    have f1 : OpenEmbedding (coe : u → H) := by
       refine' ⟨f0, _⟩
-      · have : Set.Range (coeₓ : u → H) = Interior s := by
+      · have : Set.Range (coe : u → H) = Interior s := by
           rw [this, Set.range_comp, Subtype.range_coe, Subtype.image_preimage_coe]
           apply Set.inter_eq_self_of_subset_left interior_subset
         rw [this]
         apply is_open_interior
         
     have f2 : IsOpen v := clopen_in_s.1.Preimage continuous_subtype_coe
-    have f3 : (coeₓ : s → H) '' V = (coeₓ : u → H) '' v := by
-      rw [this, image_comp coeₓ coeₓ, Subtype.image_preimage_coe, inter_eq_self_of_subset_left V_sub]
+    have f3 : (coe : s → H) '' V = (coe : u → H) '' v := by
+      rw [this, image_comp coe coe, Subtype.image_preimage_coe, inter_eq_self_of_subset_left V_sub]
     rw [f3]
     apply f1.is_open_map v f2
   refine'
-    ⟨coeₓ '' V, V_clopen, by
+    ⟨coe '' V, V_clopen, by
       simp [Vx, h xt], _⟩
   trans s
   · simp
@@ -1493,7 +1493,7 @@ instance ConnectedComponents.t2 [T2Space α] [CompactSpace α] : T2Space (Connec
   rw [connected_component_eq_Inter_clopen b, disjoint_iff_inter_eq_empty] at h
   obtain ⟨U, V, hU, ha, hb, rfl⟩ :
     ∃ (U : Set α)(V : Set (ConnectedComponents α)),
-      IsClopen U ∧ ConnectedComponent a ∩ U = ∅ ∧ ConnectedComponent b ⊆ U ∧ coeₓ ⁻¹' V = U :=
+      IsClopen U ∧ ConnectedComponent a ∩ U = ∅ ∧ ConnectedComponent b ⊆ U ∧ coe ⁻¹' V = U :=
     by
     cases' is_closed_connected_component.is_compact.elim_finite_subfamily_closed _ _ h with fin_a ha
     swap
@@ -1502,7 +1502,7 @@ instance ConnectedComponents.t2 [T2Space α] [CompactSpace α] : T2Space (Connec
     set U : Set α := ⋂ (i : { Z // IsClopen Z ∧ b ∈ Z }) (H : i ∈ fin_a), i
     have hU : IsClopen U := is_clopen_bInter fun i j => i.2.1
     exact
-      ⟨U, coeₓ '' U, hU, ha, subset_bInter fun Z _ => Z.2.1.connected_component_subset Z.2.2,
+      ⟨U, coe '' U, hU, ha, subset_Inter₂ fun Z _ => Z.2.1.connected_component_subset Z.2.2,
         (connected_components_preimage_image U).symm ▸ hU.bUnion_connected_component_eq⟩
   rw [connected_components.quotient_map_coe.is_clopen_preimage] at hU
   refine' ⟨Vᶜ, V, hU.compl.is_open, hU.is_open, _, hb mem_connected_component, compl_inter_self _⟩

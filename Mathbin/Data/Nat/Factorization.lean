@@ -135,11 +135,11 @@ theorem factorization_mul_support_of_coprime {a b : ℕ} (hab : coprime a b) :
   rw [factorization_mul_of_coprime hab]
   exact support_add_eq (factorization_disjoint_of_coprime hab)
 
-theorem factorization_mul_support_of_pos {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
+theorem factorization_mul_support {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
     (a * b).factorization.Support = a.factorization.support ∪ b.factorization.support := by
   ext q
   simp only [Finset.mem_union, factor_iff_mem_factorization]
-  rw [mem_factors_mul_of_pos ha.bot_lt hb.bot_lt]
+  rw [mem_factors_mul ha hb]
 
 /-- For any multiplicative function `f` with `f 1 = 1` and any `n > 0`,
 we can evaluate `f n` by evaluating `f` at `p ^ k` over the factorization of `n` -/

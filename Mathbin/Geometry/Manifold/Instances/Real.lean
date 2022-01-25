@@ -44,7 +44,7 @@ attribute [local instance] fact_one_le_two_real
 /-- The half-space in `ℝ^n`, used to model manifolds with boundary. We only define it when
 `1 ≤ n`, as the definition only makes sense in this case.
 -/
-def EuclideanHalfSpace (n : ℕ) [HasZero (Finₓ n)] : Type :=
+def EuclideanHalfSpace (n : ℕ) [Zero (Finₓ n)] : Type :=
   { x : EuclideanSpace ℝ (Finₓ n) // 0 ≤ x 0 }
 
 /-- The quadrant in `ℝ^n`, used to model manifolds with corners, made of all vectors with nonnegative
@@ -59,20 +59,19 @@ attribute [local reducible] EuclideanHalfSpace EuclideanQuadrant
 
 variable {n : ℕ}
 
-instance [HasZero (Finₓ n)] : TopologicalSpace (EuclideanHalfSpace n) := by
+instance [Zero (Finₓ n)] : TopologicalSpace (EuclideanHalfSpace n) := by
   infer_instance
 
 instance : TopologicalSpace (EuclideanQuadrant n) := by
   infer_instance
 
-instance [HasZero (Finₓ n)] : Inhabited (EuclideanHalfSpace n) :=
+instance [Zero (Finₓ n)] : Inhabited (EuclideanHalfSpace n) :=
   ⟨⟨0, le_reflₓ _⟩⟩
 
 instance : Inhabited (EuclideanQuadrant n) :=
   ⟨⟨0, fun i => le_reflₓ _⟩⟩
 
-theorem range_half_space (n : ℕ) [HasZero (Finₓ n)] : (range fun x : EuclideanHalfSpace n => x.val) = { y | 0 ≤ y 0 } :=
-  by
+theorem range_half_space (n : ℕ) [Zero (Finₓ n)] : (range fun x : EuclideanHalfSpace n => x.val) = { y | 0 ≤ y 0 } := by
   simp
 
 theorem range_quadrant (n : ℕ) : (range fun x : EuclideanQuadrant n => x.val) = { y | ∀ i : Finₓ n, 0 ≤ y i } := by
@@ -84,7 +83,7 @@ end
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
 -/
-def modelWithCornersEuclideanHalfSpace (n : ℕ) [HasZero (Finₓ n)] :
+def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Finₓ n)] :
     ModelWithCorners ℝ (EuclideanSpace ℝ (Finₓ n)) (EuclideanHalfSpace n) where
   toFun := Subtype.val
   invFun := fun x =>

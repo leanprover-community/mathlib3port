@@ -111,7 +111,7 @@ theorem decode_encode_num : ∀ n, decode_num (encode_num n) = n := by
 theorem decode_encode_nat : ∀ n, decode_nat (encode_nat n) = n := by
   intro n
   conv_rhs => rw [← Num.to_of_nat n]
-  exact congr_argₓ coeₓ (decode_encode_num (↑n))
+  exact congr_argₓ coe (decode_encode_num (↑n))
 
 /-- A binary encoding of ℕ in bool. -/
 def encoding_nat_bool : encoding ℕ where

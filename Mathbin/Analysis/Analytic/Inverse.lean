@@ -495,8 +495,8 @@ theorem radius_right_inv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1) (p 
                 ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
                   r ^ c.length * ∏ j, ∥p.right_inv i (c.blocks_fun j)∥ :=
       by
-      simp_rw [mul_assocₓ C, ← mul_sum, ← mul_assocₓ, mul_commₓ _ ∥↑i.symm∥, mul_assocₓ, ← mul_sum, ← mul_assocₓ,
-        mul_commₓ _ C, mul_assocₓ, ← mul_sum]
+      simp_rw [mul_assoc C, ← mul_sum, ← mul_assoc, mul_comm _ ∥↑i.symm∥, mul_assoc, ← mul_sum, ← mul_assoc,
+        mul_comm _ C, mul_assoc, ← mul_sum]
       ring
     _ ≤ I * a + I * C * ∑ k in Ico 2 (n + 1), (r * ∑ j in Ico 1 n, a ^ j * ∥p.right_inv i j∥) ^ k := by
       apply_rules [add_le_add, le_reflₓ, mul_le_mul_of_nonneg_left, norm_nonneg, hC, mul_nonneg]
@@ -542,7 +542,7 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
         calc
           r * S n ≤ r * ((I + 1) * a) := mul_le_mul_of_nonneg_left hn rpos.le
           _ ≤ 1 / 2 := by
-            rwa [← mul_assocₓ]
+            rwa [← mul_assoc]
           
       calc S (n + 1) ≤ I * a + I * C * ∑ k in Ico 2 (n + 1), (r * S n) ^ k :=
           radius_right_inv_pos_of_radius_pos_aux2 In p i rpos.le apos.le Cpos.le
@@ -587,7 +587,7 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
     
   · have one_le_n : 1 ≤ n := bot_lt_iff_ne_bot.2 hn
     calc ∥p.right_inv i n∥ * ↑a' ^ n = a ^ n * ∥p.right_inv i n∥ :=
-        mul_commₓ _ _ _ ≤ ∑ k in Ico 1 (n + 1), a ^ k * ∥p.right_inv i k∥ :=
+        mul_comm _ _ _ ≤ ∑ k in Ico 1 (n + 1), a ^ k * ∥p.right_inv i k∥ :=
         have : ∀, ∀ k ∈ Ico 1 (n + 1), ∀, 0 ≤ a ^ k * ∥p.right_inv i k∥ := fun k hk =>
           mul_nonneg (pow_nonneg apos.le _) (norm_nonneg _)
         single_le_sum this

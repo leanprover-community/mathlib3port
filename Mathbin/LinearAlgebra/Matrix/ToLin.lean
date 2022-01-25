@@ -557,7 +557,7 @@ variable [Fintype n]
 
 theorem smul_left_mul_matrix x ik jk :
     left_mul_matrix (b.smul c) x ik jk = left_mul_matrix b (left_mul_matrix c x ik.2 jk.2) ik.1 jk.1 := by
-  simp only [left_mul_matrix_apply, LinearMap.to_matrix_apply, mul_commₓ, Basis.smul_apply, Basis.smul_repr,
+  simp only [left_mul_matrix_apply, LinearMap.to_matrix_apply, mul_comm, Basis.smul_apply, Basis.smul_repr,
     Finsupp.smul_apply, Algebra.lmul_apply, id.smul_eq_mul, LinearEquiv.map_smul, mul_smul_comm]
 
 theorem smul_left_mul_matrix_algebra_map (x : S) :
@@ -602,7 +602,7 @@ theorem finrank_linear_map :
   let hbV := Basis.ofVectorSpace K V
   let hbW := Basis.ofVectorSpace K W
   rw [LinearEquiv.finrank_eq (LinearMap.toMatrix hbV hbW), Matrix.finrank_matrix,
-    FiniteDimensional.finrank_eq_card_basis hbV, FiniteDimensional.finrank_eq_card_basis hbW, mul_commₓ]
+    FiniteDimensional.finrank_eq_card_basis hbV, FiniteDimensional.finrank_eq_card_basis hbW, mul_comm]
 
 end FiniteDimensional
 

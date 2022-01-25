@@ -135,7 +135,7 @@ def RayVector :=
 
 /-- The setoid of the `same_ray` relation for the subtype of nonzero vectors. -/
 def RayVector.sameRaySetoid [Nontrivial R] : Setoidₓ (RayVector M) :=
-  (sameRaySetoid R M).comap coeₓ
+  (sameRaySetoid R M).comap coe
 
 attribute [local instance] RayVector.sameRaySetoid
 
@@ -371,6 +371,17 @@ variable {R}
 protected theorem neg_negₓ [Nontrivial R] (x : Module.Ray R M) : - -x = x :=
   Quotientₓ.ind (fun a => congr_argₓ Quotientₓ.mk $ RayVector.neg_neg _) x
 
+variable (R M)
+
+/-- Negating a ray is involutive. -/
+theorem neg_involutive [Nontrivial R] : Function.Involutive fun x : Module.Ray R M => -x := fun x =>
+  Module.Ray.neg_neg x
+
+variable {R M}
+
+protected theorem eq_neg_iff_eq_neg [Nontrivial R] (x y : Module.Ray R M) : x = -y ↔ y = -x := by
+  rw [← Module.Ray.neg_neg x, (neg_involutive R M).Injective.eq_iff, Module.Ray.neg_neg x, eq_comm]
+
 /-- A ray does not equal its own negation. -/
 theorem ne_neg_self [Nontrivial R] [NoZeroSmulDivisors R M] (x : Module.Ray R M) : x ≠ -x := by
   intro h
@@ -405,7 +416,7 @@ theorem map_orientation_eq_det_inv_smul [Nontrivial R] [IsDomain R] (e : Basis �
   induction' x using Module.Ray.ind with g hg
   rw [Orientation.map_apply, smul_ray_of_ne_zero, ray_eq_iff, Units.smul_def,
     (g.comp_linear_map (↑f.symm)).eq_smul_basis_det e, g.eq_smul_basis_det e, AlternatingMap.comp_linear_map_apply,
-    AlternatingMap.smul_apply, Basis.det_comp, Basis.det_self, mul_oneₓ, smul_eq_mul, mul_commₓ, mul_smul,
+    AlternatingMap.smul_apply, Basis.det_comp, Basis.det_self, mul_oneₓ, smul_eq_mul, mul_comm, mul_smul,
     LinearEquiv.coe_inv_det]
 
 /-- The orientation given by a basis derived using `units_smul`, in terms of the product of those

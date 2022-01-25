@@ -30,7 +30,7 @@ def lmul : A →ₐ[R] End R A :=
   { show A →ₗ[R] A →ₗ[R] A from
       LinearMap.mk₂ R (· * ·) (fun x y z => add_mulₓ x y z)
         (fun c x y => by
-          rw [smul_def, smul_def, mul_assocₓ _ x y])
+          rw [smul_def, smul_def, mul_assoc _ x y])
         (fun x y z => mul_addₓ x y z) fun c x y => by
         rw [smul_def, smul_def, left_comm] with
     map_one' := by
@@ -39,7 +39,7 @@ def lmul : A →ₐ[R] End R A :=
     map_mul' := by
       intro a b
       ext c
-      exact mul_assocₓ a b c,
+      exact mul_assoc a b c,
     map_zero' := by
       ext a
       exact zero_mul a,
@@ -79,7 +79,7 @@ def lmul_left_right (vw : A × A) : A →ₗ[R] A :=
 
 theorem commute_lmul_left_right (a b : A) : Commute (lmul_left R a) (lmul_right R b) := by
   ext c
-  exact (mul_assocₓ a c b).symm
+  exact (mul_assoc a c b).symm
 
 /-- The multiplication map on an algebra, as an `R`-linear map from `A ⊗[R] A` to `A`. -/
 def lmul' : A ⊗[R] A →ₗ[R] A :=
@@ -111,7 +111,7 @@ theorem lmul_left_one : lmul_left R (1 : A) = LinearMap.id := by
 @[simp]
 theorem lmul_left_mul (a b : A) : lmul_left R (a * b) = (lmul_left R a).comp (lmul_left R b) := by
   ext
-  simp only [lmul_left_apply, LinearMap.comp_apply, mul_assocₓ]
+  simp only [lmul_left_apply, LinearMap.comp_apply, mul_assoc]
 
 @[simp]
 theorem lmul_right_one : lmul_right R (1 : A) = LinearMap.id := by
@@ -121,7 +121,7 @@ theorem lmul_right_one : lmul_right R (1 : A) = LinearMap.id := by
 @[simp]
 theorem lmul_right_mul (a b : A) : lmul_right R (a * b) = (lmul_right R b).comp (lmul_right R a) := by
   ext
-  simp only [lmul_right_apply, LinearMap.comp_apply, mul_assocₓ]
+  simp only [lmul_right_apply, LinearMap.comp_apply, mul_assoc]
 
 @[simp]
 theorem lmul_left_zero_eq_zero : lmul_left R (0 : A) = 0 :=

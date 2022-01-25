@@ -81,7 +81,7 @@ theorem norm_le (a : S) {y : ℤ} (hy : ∀ k, abv (bS.repr a k) ≤ y) :
   simp only [Algebra.norm_apply, AlgHom.map_sum, AlgHom.map_smul, LinearEquiv.map_sum, LinearEquiv.map_smul,
     Algebra.to_matrix_lmul_eq, norm_bound, smul_mul_assoc, ← mul_powₓ]
   convert Matrix.det_sum_smul_le Finset.univ _ hy using 3
-  · rw [Finset.card_univ, smul_mul_assoc, mul_commₓ]
+  · rw [Finset.card_univ, smul_mul_assoc, mul_comm]
     
   · intro i j k
     apply Finset.le_max'
@@ -100,7 +100,7 @@ theorem norm_lt {T : Type _} [LinearOrderedCommRing T] (a : S) {y : T} (hy : ∀
     intro k
     exact Finset.le_max' _ _ (finset.mem_image.mpr ⟨k, Finset.mem_univ _, rfl⟩)
   have : (y' : T) < y := by
-    rw [y'_def, ← Finset.max'_image (show Monotone (coeₓ : ℤ → T) from fun x y h => int.cast_le.mpr h)]
+    rw [y'_def, ← Finset.max'_image (show Monotone (coe : ℤ → T) from fun x y h => int.cast_le.mpr h)]
     apply (Finset.max'_lt_iff _ (him.image _)).mpr
     simp only [Finset.mem_image, exists_prop]
     rintro _ ⟨x, ⟨k, -, rfl⟩, rfl⟩
@@ -270,7 +270,7 @@ theorem exists_mem_finset_approx' (h : Algebra.IsAlgebraic R L) (a : S) {b : S} 
     lt_of_le_of_ltₓ (le_of_eqₓ _)
       (mul_lt_mul hqr (le_reflₓ _) (abv.pos ((Algebra.norm_ne_zero_iff_of_basis bS).mpr hb)) (abv.nonneg _))
   rw [← abv.map_mul, ← MonoidHom.map_mul, ← abv.map_mul, ← MonoidHom.map_mul, ← Algebra.smul_def, smul_sub b', sub_mul,
-    smul_comm, h, mul_commₓ b a', Algebra.smul_mul_assoc r a' b, Algebra.smul_mul_assoc b' q b]
+    smul_comm, h, mul_comm b a', Algebra.smul_mul_assoc r a' b, Algebra.smul_mul_assoc b' q b]
 
 end Real
 
@@ -311,7 +311,7 @@ theorem exists_mk0_eq_mk0 [IsDedekindDomain S] [IsFractionRing S L] (h : Algebra
     swap
     · exact mt ideal.span_singleton_eq_bot.mp b_ne_zero
       
-    rw [Subtype.coe_mk, Ideal.dvd_iff_le, ← hJ, mul_commₓ]
+    rw [Subtype.coe_mk, Ideal.dvd_iff_le, ← hJ, mul_comm]
     apply Ideal.mul_mono le_rfl
     rw [Ideal.span_le, Set.singleton_subset_iff]
     exact b_mem

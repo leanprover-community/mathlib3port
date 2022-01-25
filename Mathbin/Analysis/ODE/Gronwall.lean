@@ -56,7 +56,7 @@ theorem has_deriv_at_gronwall_bound (δ K ε x : ℝ) :
       (((has_deriv_at_id x).const_mul K).exp.const_mul δ).add
         ((((has_deriv_at_id x).const_mul K).exp.sub_const 1).const_mul (ε / K)) using
       1
-    simp only [id, mul_addₓ, (mul_assocₓ _ _ _).symm, mul_commₓ _ K, mul_div_cancel' _ hK]
+    simp only [id, mul_addₓ, (mul_assoc _ _ _).symm, mul_comm _ K, mul_div_cancel' _ hK]
     ring
     
 

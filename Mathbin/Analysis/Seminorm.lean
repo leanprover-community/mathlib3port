@@ -66,7 +66,7 @@ open NormedField Set
 
 open_locale Pointwise TopologicalSpace Nnreal
 
-variable {R 𝕜 E ι : Type _}
+variable {R 𝕜 E F G ι : Type _}
 
 section SemiNormedRing
 
@@ -277,11 +277,15 @@ instance : CoeFun (Seminorm 𝕜 E) fun _ => E → ℝ :=
 theorem ext {p q : Seminorm 𝕜 E} (h : ∀ x, (p : E → ℝ) x = q x) : p = q :=
   FunLike.ext p q h
 
-instance : HasZero (Seminorm 𝕜 E) :=
+instance : Zero (Seminorm 𝕜 E) :=
   ⟨{ toFun := 0, smul' := fun _ _ => (mul_zero _).symm, triangle' := fun _ _ => Eq.ge (zero_addₓ _) }⟩
 
 @[simp]
 theorem coe_zero : ⇑(0 : Seminorm 𝕜 E) = 0 :=
+  rfl
+
+@[simp]
+theorem zero_apply (x : E) : (0 : Seminorm 𝕜 E) x = 0 :=
   rfl
 
 instance : Inhabited (Seminorm 𝕜 E) :=
@@ -405,9 +409,57 @@ end SmulWithZero
 
 end AddMonoidₓ
 
+section Module
+
+variable [AddCommGroupₓ E] [AddCommGroupₓ F] [AddCommGroupₓ G]
+
+variable [Module 𝕜 E] [Module 𝕜 F] [Module 𝕜 G]
+
+variable [HasScalar R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ]
+
+/-- Composition of a seminorm with a linear map is a seminorm. -/
+def comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : Seminorm 𝕜 E where
+  toFun := fun x => p (f x)
+  smul' := fun _ _ => (congr_argₓ p (f.map_smul _ _)).trans (p.smul _ _)
+  triangle' := fun _ _ => Eq.trans_le (congr_argₓ p (f.map_add _ _)) (p.triangle _ _)
+
+theorem coe_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : ⇑p.comp f = p ∘ f :=
+  rfl
+
+@[simp]
+theorem comp_apply (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (x : E) : (p.comp f) x = p (f x) :=
+  rfl
+
+@[simp]
+theorem comp_id (p : Seminorm 𝕜 E) : p.comp LinearMap.id = p :=
+  ext $ fun _ => rfl
+
+@[simp]
+theorem comp_zero (p : Seminorm 𝕜 F) : p.comp (0 : E →ₗ[𝕜] F) = 0 :=
+  ext $ fun _ => Seminorm.zero _
+
+@[simp]
+theorem zero_comp (f : E →ₗ[𝕜] F) : (0 : Seminorm 𝕜 F).comp f = 0 :=
+  ext $ fun _ => rfl
+
+theorem comp_comp (p : Seminorm 𝕜 G) (g : F →ₗ[𝕜] G) (f : E →ₗ[𝕜] F) : p.comp (g.comp f) = (p.comp g).comp f :=
+  ext $ fun _ => rfl
+
+theorem add_comp (p q : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : (p + q).comp f = p.comp f + q.comp f :=
+  ext $ fun _ => rfl
+
+theorem comp_triangle (p : Seminorm 𝕜 F) (f g : E →ₗ[𝕜] F) : p.comp (f + g) ≤ p.comp f + p.comp g := fun _ =>
+  p.triangle _ _
+
+theorem smul_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (c : R) : (c • p).comp f = c • p.comp f :=
+  ext $ fun _ => rfl
+
+theorem comp_mono {p : Seminorm 𝕜 F} {q : Seminorm 𝕜 F} (f : E →ₗ[𝕜] F) (hp : p ≤ q) : p.comp f ≤ q.comp f := fun _ =>
+  hp _
+
 section NormOneClass
 
-variable [NormOneClass 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] (p : Seminorm 𝕜 E) (x y : E) (r : ℝ)
+variable [NormOneClass 𝕜] (p : Seminorm 𝕜 E) (x y : E) (r : ℝ)
 
 @[simp]
 protected theorem neg : p (-x) = p x :=
@@ -462,8 +514,29 @@ theorem finset_sup_apply (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) :
 
 end NormOneClass
 
+end Module
+
+end SemiNormedRing
+
+section SemiNormedCommRing
+
+variable [SemiNormedCommRing 𝕜] [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F]
+
+theorem comp_smul (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (c : 𝕜) : p.comp (c • f) = ∥c∥₊ • p.comp f :=
+  ext $ fun _ => by
+    rw [comp_apply, smul_apply, LinearMap.smul_apply, p.smul, Nnreal.smul_def, coe_nnnorm, smul_eq_mul, comp_apply]
+
+theorem comp_smul_apply (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (c : 𝕜) (x : E) : p.comp (c • f) x = ∥c∥ * p (f x) :=
+  p.smul _ _
+
+end SemiNormedCommRing
+
 /-! ### Seminorm ball -/
 
+
+section SemiNormedRing
+
+variable [SemiNormedRing 𝕜]
 
 section AddCommGroupₓ
 
@@ -510,7 +583,17 @@ end HasScalar
 
 section Module
 
-variable [NormOneClass 𝕜] [Module 𝕜 E] (p : Seminorm 𝕜 E)
+variable [Module 𝕜 E]
+
+variable [AddCommGroupₓ F] [Module 𝕜 F]
+
+theorem ball_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (x : E) (r : ℝ) : (p.comp f).Ball x r = f ⁻¹' p.ball (f x) r := by
+  ext
+  simp_rw [ball, mem_preimage, comp_apply, Set.mem_set_of_eq, map_sub]
+
+section NormOneClass
+
+variable [NormOneClass 𝕜] (p : Seminorm 𝕜 E)
 
 @[simp]
 theorem ball_bot {r : ℝ} (x : E) (hr : 0 < r) : ball (⊥ : Seminorm 𝕜 E) x r = Set.Univ :=
@@ -533,6 +616,8 @@ theorem ball_finset_sup (p : ι → Seminorm 𝕜 E) (s : Finset ι) (e : E) {r 
     ball (s.sup p) e r = s.inf fun i => ball (p i) e r := by
   rw [Finset.inf_eq_infi]
   exact ball_finset_sup_eq_Inter _ _ _ hr
+
+end NormOneClass
 
 end Module
 
@@ -721,7 +806,7 @@ theorem gauge_lt_one_eq (absorbs : Absorbent ℝ s) : { x | gauge s x < 1 } = �
 theorem gauge_lt_one_subset_self (hs : Convex ℝ s) (h₀ : (0 : E) ∈ s) (absorbs : Absorbent ℝ s) :
     { x | gauge s x < 1 } ⊆ s := by
   rw [gauge_lt_one_eq Absorbs]
-  apply Set.bUnion_subset
+  apply Set.Union₂_subset
   rintro r hr _ ⟨y, hy, rfl⟩
   exact hs.smul_mem_of_zero_mem h₀ hy (Ioo_subset_Icc_self hr)
 

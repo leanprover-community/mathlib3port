@@ -254,11 +254,11 @@ theorem coe_mul [Mul M] (f g : α → M) : ↑(f * g) = (f * g : germ l M) :=
   rfl
 
 @[to_additive]
-instance [HasOne M] : HasOne (germ l M) :=
+instance [One M] : One (germ l M) :=
   ⟨↑(1 : M)⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_one [HasOne M] : ↑(1 : α → M) = (1 : germ l M) :=
+theorem coe_one [One M] : ↑(1 : α → M) = (1 : germ l M) :=
   rfl
 
 @[to_additive]
@@ -266,14 +266,14 @@ instance [Semigroupₓ M] : Semigroupₓ (germ l M) where
   mul := · * ·
   mul_assoc := by
     rintro ⟨f⟩ ⟨g⟩ ⟨h⟩
-    simp only [mul_assocₓ, quot_mk_eq_coe, ← coe_mul]
+    simp only [mul_assoc, quot_mk_eq_coe, ← coe_mul]
 
 @[to_additive]
 instance [CommSemigroupₓ M] : CommSemigroupₓ (germ l M) :=
   { germ.semigroup with mul := · * ·,
     mul_comm := by
       rintro ⟨f⟩ ⟨g⟩
-      simp only [mul_commₓ, quot_mk_eq_coe, ← coe_mul] }
+      simp only [mul_comm, quot_mk_eq_coe, ← coe_mul] }
 
 @[to_additive AddLeftCancelSemigroup]
 instance [LeftCancelSemigroup M] : LeftCancelSemigroup (germ l M) :=
@@ -302,13 +302,13 @@ instance [Monoidₓ M] : Monoidₓ (germ l M) :=
 /-- coercion from functions to germs as a monoid homomorphism. -/
 @[to_additive]
 def coe_mul_hom [Monoidₓ M] (l : Filter α) : (α → M) →* germ l M :=
-  ⟨coeₓ, rfl, fun f g => rfl⟩
+  ⟨coe, rfl, fun f g => rfl⟩
 
 /-- coercion from functions to germs as an additive monoid homomorphism. -/
 add_decl_doc coe_add_hom
 
 @[simp, to_additive]
-theorem coe_coe_mul_hom [Monoidₓ M] : (coe_mul_hom l : (α → M) → germ l M) = coeₓ :=
+theorem coe_coe_mul_hom [Monoidₓ M] : (coe_mul_hom l : (α → M) → germ l M) = coe :=
   rfl
 
 @[to_additive]
@@ -388,10 +388,10 @@ instance [Semiringₓ R] : Semiringₓ (germ l R) :=
 
 /-- Coercion `(α → R) → germ l R` as a `ring_hom`. -/
 def coe_ring_hom [Semiringₓ R] (l : Filter α) : (α → R) →+* germ l R :=
-  { (coe_mul_hom l : _ →* germ l R), (coe_add_hom l : _ →+ germ l R) with toFun := coeₓ }
+  { (coe_mul_hom l : _ →* germ l R), (coe_add_hom l : _ →+ germ l R) with toFun := coe }
 
 @[simp]
-theorem coe_coe_ring_hom [Semiringₓ R] : (coe_ring_hom l : (α → R) → germ l R) = coeₓ :=
+theorem coe_coe_ring_hom [Semiringₓ R] : (coe_ring_hom l : (α → R) → germ l R) = coe :=
   rfl
 
 instance [Ringₓ R] : Ringₓ (germ l R) :=

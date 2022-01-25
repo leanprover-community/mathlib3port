@@ -606,7 +606,7 @@ theorem well_def {R : Type _} [Rack R] {G : Type _} [Groupₓ G] (f : R →◃ Q
   | _, _, congr_inv ha => by
     simp [to_envel_group.map_aux, well_def ha]
   | _, _, assoc a b c => by
-    apply mul_assocₓ
+    apply mul_assoc
   | _, _, one_mulₓ a => by
     simp [to_envel_group.map_aux]
   | _, _, mul_oneₓ a => by

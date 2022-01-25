@@ -130,7 +130,7 @@ theorem mul_left_apply_same (b : n) (M : Matrix n n α) : (std_basis_matrix i j 
 
 @[simp]
 theorem mul_right_apply_same (a : n) (M : Matrix n n α) : (M ⬝ std_basis_matrix i j c) a j = M a i * c := by
-  simp [mul_apply, std_basis_matrix, mul_commₓ]
+  simp [mul_apply, std_basis_matrix, mul_comm]
 
 @[simp]
 theorem mul_left_apply_of_ne (a b : n) (h : a ≠ i) (M : Matrix n n α) : (std_basis_matrix i j c ⬝ M) a b = 0 := by

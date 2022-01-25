@@ -334,7 +334,7 @@ instance : RegularSpace (completion α) :=
 instance : CoeTₓ α (completion α) :=
   ⟨Quotientₓ.mk ∘ pure_cauchy⟩
 
-protected theorem coe_eq : (coeₓ : α → completion α) = Quotientₓ.mk ∘ pure_cauchy :=
+protected theorem coe_eq : (coe : α → completion α) = Quotientₓ.mk ∘ pure_cauchy :=
   rfl
 
 theorem comap_coe_eq_uniformity : ((𝓤 _).comap fun p : α × α => ((p.1 : completion α), (p.2 : completion α))) = 𝓤 α :=
@@ -348,19 +348,19 @@ theorem comap_coe_eq_uniformity : ((𝓤 _).comap fun p : α × α => ((p.1 : co
   change Filter.comap _ (Filter.comap _ (𝓤 $ Quotientₓ $ separation_setoid $ Cauchyₓ α)) = 𝓤 α
   rw [comap_quotient_eq_uniformity, uniform_embedding_pure_cauchy.comap_uniformity]
 
-theorem uniform_inducing_coe : UniformInducing (coeₓ : α → completion α) :=
+theorem uniform_inducing_coe : UniformInducing (coe : α → completion α) :=
   ⟨comap_coe_eq_uniformity α⟩
 
 variable {α}
 
-theorem dense_range_coe : DenseRange (coeₓ : α → completion α) :=
+theorem dense_range_coe : DenseRange (coe : α → completion α) :=
   dense_range_pure_cauchy.Quotient
 
 variable (α)
 
 def cpkg {α : Type _} [UniformSpace α] : AbstractCompletion α where
   Space := completion α
-  coe := coeₓ
+  coe := coe
   uniformStruct := by
     infer_instance
   complete := by
@@ -378,21 +378,21 @@ attribute [local instance] AbstractCompletion.uniformStruct AbstractCompletion.c
 theorem nonempty_completion_iff : Nonempty (completion α) ↔ Nonempty α :=
   cpkg.dense.nonempty_iff.symm
 
-theorem uniform_continuous_coe : UniformContinuous (coeₓ : α → completion α) :=
+theorem uniform_continuous_coe : UniformContinuous (coe : α → completion α) :=
   cpkg.uniform_continuous_coe
 
-theorem continuous_coe : Continuous (coeₓ : α → completion α) :=
+theorem continuous_coe : Continuous (coe : α → completion α) :=
   cpkg.continuous_coe
 
-theorem uniform_embedding_coe [SeparatedSpace α] : UniformEmbedding (coeₓ : α → completion α) :=
+theorem uniform_embedding_coe [SeparatedSpace α] : UniformEmbedding (coe : α → completion α) :=
   { comap_uniformity := comap_coe_eq_uniformity α, inj := separated_pure_cauchy_injective }
 
-theorem coe_injective [SeparatedSpace α] : Function.Injective (coeₓ : α → completion α) :=
+theorem coe_injective [SeparatedSpace α] : Function.Injective (coe : α → completion α) :=
   UniformEmbedding.inj (uniform_embedding_coe _)
 
 variable {α}
 
-theorem dense_inducing_coe : DenseInducing (coeₓ : α → completion α) :=
+theorem dense_inducing_coe : DenseInducing (coe : α → completion α) :=
   { (uniform_inducing_coe α).Inducing with dense := dense_range_coe }
 
 open TopologicalSpace
@@ -400,7 +400,7 @@ open TopologicalSpace
 instance separable_space_completion [separable_space α] : separable_space (completion α) :=
   completion.dense_inducing_coe.SeparableSpace
 
-theorem dense_embedding_coe [SeparatedSpace α] : DenseEmbedding (coeₓ : α → completion α) :=
+theorem dense_embedding_coe [SeparatedSpace α] : DenseEmbedding (coe : α → completion α) :=
   { dense_inducing_coe with inj := separated_pure_cauchy_injective }
 
 theorem dense_range_coe₂ : DenseRange fun x : α × β => ((x.1 : completion α), (x.2 : completion β)) :=
@@ -465,7 +465,7 @@ theorem extension_unique (hf : UniformContinuous f) {g : completion α → β} (
   cpkg.extend_unique hf hg h
 
 @[simp]
-theorem extension_comp_coe {f : completion α → β} (hf : UniformContinuous f) : completion.extension (f ∘ coeₓ) = f :=
+theorem extension_comp_coe {f : completion α → β} (hf : UniformContinuous f) : completion.extension (f ∘ coe) = f :=
   cpkg.extend_comp_coe hf
 
 end Extension
@@ -511,11 +511,11 @@ section SeparationQuotientCompletion
 
 def completion_separation_quotient_equiv (α : Type u) [UniformSpace α] :
     completion (separation_quotient α) ≃ completion α := by
-  refine' ⟨completion.extension (separation_quotient.lift (coeₓ : α → completion α)), completion.map Quotientₓ.mk, _, _⟩
+  refine' ⟨completion.extension (separation_quotient.lift (coe : α → completion α)), completion.map Quotientₓ.mk, _, _⟩
   · intro a
     refine' induction_on a (is_closed_eq (continuous_map.comp continuous_extension) continuous_id) _
     rintro ⟨a⟩
-    show completion.map Quotientₓ.mk (completion.extension (separation_quotient.lift coeₓ) (↑⟦a⟧)) = ↑⟦a⟧
+    show completion.map Quotientₓ.mk (completion.extension (separation_quotient.lift coe) (↑⟦a⟧)) = ↑⟦a⟧
     rw [extension_coe (separation_quotient.uniform_continuous_lift _),
         separation_quotient.lift_mk (uniform_continuous_coe α), completion.map_coe uniform_continuous_quotient_mk] <;>
       infer_instance

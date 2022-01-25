@@ -144,7 +144,7 @@ instance category_Free : category (Free R C) where
   assoc' := fun W X Y Z f g h => by
     dsimp
     simp only [sum_sum_index, sum_single_index, single_zero, single_add, eq_self_iff_true, forall_true_iff,
-      forall_3_true_iff, add_mulₓ, mul_addₓ, category.assoc, mul_assocₓ, zero_mul, mul_zero, sum_zero, sum_add]
+      forall_3_true_iff, add_mulₓ, mul_addₓ, category.assoc, mul_assoc, zero_mul, mul_zero, sum_zero, sum_add]
 
 namespace Free
 
@@ -178,7 +178,7 @@ instance : linear R (Free R C) where
   homModule := fun X Y => Finsupp.module (X ⟶ Y) R
   smul_comp' := fun X Y Z r f g => by
     dsimp
-    rw [Finsupp.sum_smul_index] <;> simp [Finsupp.smul_sum, mul_assocₓ]
+    rw [Finsupp.sum_smul_index] <;> simp [Finsupp.smul_sum, mul_assoc]
   comp_smul' := fun X Y Z f r g => by
     dsimp
     simp_rw [Finsupp.smul_sum]
@@ -253,7 +253,7 @@ def lift (F : C ⥤ D) : Free R C ⥤ D where
         
       · intro g' s
         erw [single_comp_single]
-        simp [mul_commₓ r s, mul_smul]
+        simp [mul_comm r s, mul_smul]
         
       
 

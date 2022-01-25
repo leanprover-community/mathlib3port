@@ -502,8 +502,6 @@ instance [hp : Fact (1 ≤ p)] : NormedGroup (lp E p) :=
   NormedGroup.ofCore _
     { norm_eq_zero_iff := norm_eq_zero_iff,
       triangle := fun f g => by
-        run_tac
-          tactic.unfreeze_local_instances
         rcases p.dichotomy with (rfl | hp')
         · cases is_empty_or_nonempty α <;> skip
           · simp [lp.eq_zero' f]
@@ -781,7 +779,7 @@ open Filter
 open_locale TopologicalSpace uniformity
 
 /-- The coercion from `lp E p` to `Π i, E i` is uniformly continuous. -/
-theorem uniform_continuous_coe [_i : Fact (1 ≤ p)] : UniformContinuous (coeₓ : lp E p → ∀ i, E i) := by
+theorem uniform_continuous_coe [_i : Fact (1 ≤ p)] : UniformContinuous (coe : lp E p → ∀ i, E i) := by
   have hp : p ≠ 0 := (ennreal.zero_lt_one.trans_le _i.elim).ne'
   rw [uniform_continuous_pi]
   intro i
@@ -828,8 +826,6 @@ theorem norm_le_of_tendsto {C : ℝ} {F : ι → lp E p} (hCF : ∀ᶠ k in l, �
     (hf : tendsto (id fun i => F i : ι → ∀ a, E a) l (𝓝 f)) : ∥f∥ ≤ C := by
   obtain ⟨i, hi⟩ := hCF.exists
   have hC : 0 ≤ C := (norm_nonneg _).trans hi
-  run_tac
-    tactic.unfreeze_local_instances
   rcases eq_top_or_lt_top p with (rfl | hp)
   · apply norm_le_of_forall_le hC
     exact norm_apply_le_of_tendsto hCF hf
@@ -845,8 +841,6 @@ theorem mem_ℓp_of_tendsto {F : ι → lp E p} (hF : Metric.Bounded (Set.Range 
     (hf : tendsto (id fun i => F i : ι → ∀ a, E a) l (𝓝 f)) : Memℓp f p := by
   obtain ⟨C, hC, hCF'⟩ := hF.exists_pos_norm_le
   have hCF : ∀ k, ∥F k∥ ≤ C := fun k => hCF' _ ⟨k, rfl⟩
-  run_tac
-    tactic.unfreeze_local_instances
   rcases eq_top_or_lt_top p with (rfl | hp)
   · apply mem_ℓp_infty
     use C

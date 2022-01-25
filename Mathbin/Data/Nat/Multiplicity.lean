@@ -51,7 +51,7 @@ theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (
     multiplicity m n = ↑(Ico 1 $ (multiplicity m n).get (finite_nat_iff.2 ⟨hm, hn⟩) + 1).card := by
       simp
     _ = ↑((Finset.ico 1 b).filter fun i => m ^ i ∣ n).card :=
-      congr_argₓ coeₓ $
+      congr_argₓ coe $
         congr_argₓ card $
           Finset.ext $ fun i => by
             rw [mem_filter, mem_Ico, mem_Ico, lt_succ_iff, ← @Enat.coe_le_coe i, Enat.coe_get, ←
@@ -105,7 +105,7 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.prime) :
         rw [sum_add_distrib, sum_boole]
         simp
       _ = (∑ i in Ico 1 b, (n + 1) / p ^ i : ℕ) :=
-        congr_argₓ coeₓ $ Finset.sum_congr rfl $ fun _ _ => (succ_div _ _).symm
+        congr_argₓ coe $ Finset.sum_congr rfl $ fun _ _ => (succ_div _ _).symm
       
 
 /-- The multiplicity of `p` in `(p * (n + 1))!` is one more than the sum
@@ -177,7 +177,7 @@ theorem multiplicity_choose {p n k b : ℕ} (hp : p.prime) (hkn : k ≤ n) (hnb 
     multiplicity p (choose n k) + multiplicity p (k ! * (n - k)!) =
       ((Finset.ico 1 b).filter fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i).card + multiplicity p (k ! * (n - k)!) :=
     by
-    rw [← hp.multiplicity_mul, ← mul_assocₓ, choose_mul_factorial_mul_factorial hkn, hp.multiplicity_factorial hnb,
+    rw [← hp.multiplicity_mul, ← mul_assoc, choose_mul_factorial_mul_factorial hkn, hp.multiplicity_factorial hnb,
       hp.multiplicity_mul, hp.multiplicity_factorial ((log_le_log_of_le hkn).trans_lt hnb),
       hp.multiplicity_factorial (lt_of_le_of_ltₓ (log_le_log_of_le tsub_le_self) hnb), multiplicity_choose_aux hp hkn]
     simp [add_commₓ]

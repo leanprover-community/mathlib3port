@@ -87,7 +87,7 @@ instance Inhabited [Inhabited K] : Inhabited (int_fract_pair K) :=
 def mapFr {β : Type _} (f : K → β) (gp : int_fract_pair K) : int_fract_pair β :=
   ⟨gp.b, f gp.fr⟩
 
-section coeₓ
+section coe
 
 /-! Interlude: define some expected coercions. -/
 
@@ -96,14 +96,14 @@ variable {β : Type _} [Coe K β]
 
 /-- Coerce a pair by coercing the fractional component. -/
 instance has_coe_to_int_fract_pair : Coe (int_fract_pair K) (int_fract_pair β) :=
-  ⟨mapFr coeₓ⟩
+  ⟨mapFr coe⟩
 
 @[simp, norm_cast]
 theorem coe_to_int_fract_pair {b : ℤ} {fr : K} :
     (↑int_fract_pair.mk b fr : int_fract_pair β) = int_fract_pair.mk b (↑fr : β) :=
   rfl
 
-end coeₓ
+end coe
 
 variable [LinearOrderedField K] [FloorRing K]
 

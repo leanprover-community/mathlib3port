@@ -116,7 +116,7 @@ theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
   convert this using 1
   · congr 1
     funext k
-    rw [mul_commₓ _ (n : ℝ), mul_commₓ _ (n : ℝ), ← mul_assocₓ, ← mul_assocₓ]
+    rw [mul_comm _ (n : ℝ), mul_comm _ (n : ℝ), ← mul_assoc, ← mul_assoc]
     congr 1
     field_simp [h]
     ring
@@ -265,8 +265,7 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) :
             mul_nonneg (mul_nonneg pow_minus_two_nonneg (sq_nonneg _)) bernstein_nonneg)
           w₁ _ = 2 * ∥f∥ * δ ^ (-2 : ℤ) * ∑ k : Finₓ (n + 1), (x - (k)/ₙ) ^ 2 * bernstein n k x :=
         by
-        conv_rhs =>
-          rw [mul_assocₓ, Finset.mul_sum]simp only [← mul_assocₓ]_ = 2 * ∥f∥ * δ ^ (-2 : ℤ) * x * (1 - x) / n :=
+        conv_rhs => rw [mul_assoc, Finset.mul_sum]simp only [← mul_assoc]_ = 2 * ∥f∥ * δ ^ (-2 : ℤ) * x * (1 - x) / n :=
         by
         rw [variance npos]
         ring _ ≤ 2 * ∥f∥ * δ ^ (-2 : ℤ) / n :=

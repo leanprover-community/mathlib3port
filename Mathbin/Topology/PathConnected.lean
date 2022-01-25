@@ -214,7 +214,7 @@ theorem refl_extend {X : Type _} [TopologicalSpace X] {a : X} : (Path.refl a).ex
 
 /-- The path obtained from a map defined on `ℝ` by restriction to the unit interval. -/
 def of_line {f : ℝ → X} (hf : ContinuousOn f I) (h₀ : f 0 = x) (h₁ : f 1 = y) : Path x y where
-  toFun := f ∘ coeₓ
+  toFun := f ∘ coe
   continuous_to_fun := hf.comp_continuous continuous_subtype_coe Subtype.prop
   source' := h₀
   target' := h₁
@@ -228,7 +228,7 @@ attribute [local simp] Iic_def
 path on `[0, 1/2]` and the second one on `[1/2, 1]`. -/
 @[trans]
 def trans (γ : Path x y) (γ' : Path y z) : Path x z where
-  toFun := (fun t : ℝ => if t ≤ 1 / 2 then γ.extend (2 * t) else γ'.extend (2 * t - 1)) ∘ coeₓ
+  toFun := (fun t : ℝ => if t ≤ 1 / 2 then γ.extend (2 * t) else γ'.extend (2 * t - 1)) ∘ coe
   continuous_to_fun := by
     refine'
       (Continuous.if_le _ _ continuous_id continuous_const
@@ -897,7 +897,7 @@ theorem IsPathConnected.union {U V : Set X} (hU : IsPathConnected U) (hV : IsPat
 /-- If a set `W` is path-connected, then it is also path-connected when seen as a set in a smaller
 ambient type `U` (when `U` contains `W`). -/
 theorem IsPathConnected.preimage_coe {U W : Set X} (hW : IsPathConnected W) (hWU : W ⊆ U) :
-    IsPathConnected ((coeₓ : U → X) ⁻¹' W) := by
+    IsPathConnected ((coe : U → X) ⁻¹' W) := by
   rcases hW with ⟨x, x_in, hx⟩
   use ⟨x, hWU x_in⟩, by
     simp [x_in]
@@ -1154,14 +1154,14 @@ theorem loc_path_connected_of_is_open [LocPathConnectedSpace X] {U : Set X} (h :
     rw [nhds_subtype_eq_comap]
     constructor
     intro V
-    rw [(has_basis.comap (coeₓ : U → X) (path_connected_subset_basis h x_in)).mem_iff]
+    rw [(has_basis.comap (coe : U → X) (path_connected_subset_basis h x_in)).mem_iff]
     constructor
     · rintro ⟨W, ⟨W_in, hW, hWU⟩, hWV⟩
-      exact ⟨coeₓ ⁻¹' W, ⟨⟨preimage_mem_comap W_in, hW.preimage_coe hWU⟩, hWV⟩⟩
+      exact ⟨coe ⁻¹' W, ⟨⟨preimage_mem_comap W_in, hW.preimage_coe hWU⟩, hWV⟩⟩
       
     · rintro ⟨W, ⟨W_in, hW⟩, hWV⟩
       refine'
-        ⟨coeₓ '' W,
+        ⟨coe '' W,
           ⟨Filter.image_coe_mem_of_mem_comap (IsOpen.mem_nhds h x_in) W_in, hW.image continuous_subtype_coe,
             Subtype.coe_image_subset U W⟩,
           _⟩

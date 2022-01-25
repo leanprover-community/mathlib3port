@@ -85,7 +85,7 @@ theorem inv_of_eq [Invertible A.det] [Invertible A] : ⅟ A = ⅟ A.det • A.ad
 def det_invertible_of_left_inverse (h : B ⬝ A = 1) : Invertible A.det where
   invOf := B.det
   mul_inv_of_self := by
-    rw [mul_commₓ, ← det_mul, h, det_one]
+    rw [mul_comm, ← det_mul, h, det_one]
   inv_of_mul_self := by
     rw [← det_mul, h, det_one]
 
@@ -95,7 +95,7 @@ def det_invertible_of_right_inverse (h : A ⬝ B = 1) : Invertible A.det where
   mul_inv_of_self := by
     rw [← det_mul, h, det_one]
   inv_of_mul_self := by
-    rw [mul_commₓ, ← det_mul, h, det_one]
+    rw [mul_comm, ← det_mul, h, det_one]
 
 /-- If `A` has a constructive inverse, produce one for `A.det`. -/
 def det_invertible_of_invertible [Invertible A] : Invertible A.det :=

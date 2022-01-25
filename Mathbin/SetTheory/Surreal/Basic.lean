@@ -263,10 +263,10 @@ open Pgame
 def mk (x : Pgame) (h : x.numeric) : Surreal :=
   Quotientₓ.mk ⟨x, h⟩
 
-instance : HasZero Surreal where
+instance : Zero Surreal where
   zero := ⟦⟨0, numeric_zero⟩⟧
 
-instance : HasOne Surreal where
+instance : One Surreal where
   one := ⟦⟨1, numeric_one⟩⟧
 
 instance : Inhabited Surreal :=

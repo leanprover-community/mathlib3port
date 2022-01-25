@@ -1,7 +1,8 @@
+import Mathbin.Analysis.Complex.Circle
+import Mathbin.Analysis.InnerProductSpace.L2Space
 import Mathbin.MeasureTheory.Function.ContinuousMapDense
 import Mathbin.MeasureTheory.Function.L2Space
 import Mathbin.MeasureTheory.Measure.Haar
-import Mathbin.Analysis.Complex.Circle
 import Mathbin.Topology.MetricSpace.EmetricParacompact
 import Mathbin.Topology.ContinuousFunction.StoneWeierstrass
 
@@ -9,7 +10,7 @@ import Mathbin.Topology.ContinuousFunction.StoneWeierstrass
 
 # Fourier analysis on the circle
 
-This file contains basic technical results for a development of Fourier series.
+This file contains basic results on Fourier series.
 
 ## Main definitions
 
@@ -20,6 +21,8 @@ This file contains basic technical results for a development of Fourier series.
 * for `n : ℤ` and `p : ℝ≥0∞`, `fourier_Lp p n` is an abbreviation for the monomial `fourier n`
   considered as an element of the Lᵖ-space `Lp ℂ p haar_circle`, via the embedding
   `continuous_map.to_Lp`
+* `fourier_series` is the canonical isometric isomorphism from `Lp ℂ 2 haar_circle` to `ℓ²(ℤ, ℂ)`
+  induced by taking Fourier series
 
 ## Main statements
 
@@ -36,22 +39,17 @@ by continuous functions.
 The theorem `orthonormal_fourier` states that the monomials `fourier_Lp 2 n` form an orthonormal
 set (in the L² space of the circle).
 
-By definition, a Hilbert basis for an inner product space is an orthonormal set whose span is
-dense.  Thus, the last two results together establish that the functions `fourier_Lp 2 n` form a
-Hilbert basis for L².
+The last two results together provide that the functions `fourier_Lp 2 n` form a Hilbert basis for
+L²; this is named as `fourier_series`.
 
-## TODO
-
-Once mathlib has general theory showing that a Hilbert basis of an inner product space induces a
-unitary equivalence with L², the results in this file will give Fourier series applications such
-as Parseval's formula.
-
+Parseval's identity, `tsum_sq_fourier_series_repr`, is a direct consequence of the construction of
+this Hilbert basis.
 -/
 
 
 noncomputable section
 
-open_locale Ennreal ComplexConjugate
+open_locale Ennreal ComplexConjugate Classical
 
 open TopologicalSpace ContinuousMap MeasureTheory MeasureTheory.Measure Algebra Submodule Set
 
@@ -87,7 +85,7 @@ end haarCircle
 /-! ### Monomials on the circle -/
 
 
-section fourier
+section Monomials
 
 /-- The family of monomials `λ z, z ^ n`, parametrized by `n : ℤ` and considered as bundled
 continuous maps from `circle` to `ℂ`. -/
@@ -175,6 +173,9 @@ the `Lp` space of functions on `circle` taking values in `ℂ`. -/
 abbrev fourierLp (p : ℝ≥0∞) [Fact (1 ≤ p)] (n : ℤ) : Lp ℂ p haarCircle :=
   to_Lp p haarCircle ℂ (fourier n)
 
+theorem coe_fn_fourier_Lp (p : ℝ≥0∞) [Fact (1 ≤ p)] (n : ℤ) : ⇑fourierLp p n =ᵐ[haarCircle] fourier n :=
+  coe_fn_to_Lp haarCircle (fourier n)
+
 /-- For each `1 ≤ p < ∞`, the linear span of the monomials `z ^ n` is dense in
 `Lp ℂ p haar_circle`. -/
 theorem span_fourier_Lp_closure_eq_top {p : ℝ≥0∞} [Fact (1 ≤ p)] (hp : p ≠ ∞) :
@@ -207,6 +208,60 @@ theorem orthonormal_fourier : Orthonormal ℂ (fourierLp 2) := by
     rw [add_commₓ]
     exact sub_ne_zero.mpr (Ne.symm h)
   exact integral_zero_of_mul_left_eq_neg (is_mul_left_invariant_haar_measure _) (fourier_add_half_inv_index hij)
+
+end Monomials
+
+section fourier
+
+/-- We define `fourier_series` to be a `ℤ`-indexed Hilbert basis for `Lp ℂ 2 haar_circle`, which by
+definition is an isometric isomorphism from `Lp ℂ 2 haar_circle` to `ℓ²(ℤ, ℂ)`. -/
+def fourierSeries : HilbertBasis ℤ ℂ (Lp ℂ 2 haarCircle) :=
+  HilbertBasis.mk orthonormal_fourier
+    (span_fourier_Lp_closure_eq_top
+      (by
+        norm_num))
+
+/-- The elements of the Hilbert basis `fourier_series` for `Lp ℂ 2 haar_circle` are the functions
+`fourier_Lp 2`, the monomials `λ z, z ^ n` on the circle considered as elements of `L2`. -/
+@[simp]
+theorem coe_fourier_series : ⇑fourierSeries = fourierLp 2 :=
+  HilbertBasis.coe_mk _ _
+
+/-- Under the isometric isomorphism `fourier_series` from `Lp ℂ 2 haar_circle` to `ℓ²(ℤ, ℂ)`, the
+`i`-th coefficient is the integral over the circle of `λ t, t ^ (-i) * f t`. -/
+theorem fourier_series_repr (f : Lp ℂ 2 haarCircle) (i : ℤ) :
+    fourierSeries.repr f i = ∫ t : circle, t ^ -i * f t ∂haarCircle := by
+  trans ∫ t : circle, conj ((fourierLp 2 i : circle → ℂ) t) * f t ∂haarCircle
+  · simp [fourier_series.repr_apply_apply f i, MeasureTheory.L2.inner_def]
+    
+  apply integral_congr_ae
+  filter_upwards [coe_fn_fourier_Lp 2 i]
+  intro t ht
+  rw [ht, ← fourier_neg]
+  simp [-fourier_neg]
+
+/-- The Fourier series of an `L2` function `f` sums to `f`, in the `L2` topology on the circle. -/
+theorem has_sum_fourier_series (f : Lp ℂ 2 haarCircle) : HasSum (fun i => fourierSeries.repr f i • fourierLp 2 i) f :=
+  by
+  simpa using HilbertBasis.has_sum_repr fourierSeries f
+
+/-- **Parseval's identity**: the sum of the squared norms of the Fourier coefficients equals the
+`L2` norm of the function. -/
+theorem tsum_sq_fourier_series_repr (f : Lp ℂ 2 haarCircle) :
+    (∑' i : ℤ, ∥fourierSeries.repr f i∥ ^ 2) = ∫ t : circle, ∥f t∥ ^ 2 ∂haarCircle := by
+  have H₁ : ∥fourier_series.repr f∥ ^ 2 = ∑' i, ∥fourier_series.repr f i∥ ^ 2 := by
+    exact_mod_cast lp.norm_rpow_eq_tsum _ (fourier_series.repr f)
+    norm_num
+  have H₂ : ∥fourier_series.repr f∥ ^ 2 = ∥f∥ ^ 2 := by
+    simp
+  have H₃ := congr_argₓ IsROrC.re (@L2.inner_def circle ℂ ℂ _ _ _ _ _ _ _ f f)
+  rw [← integral_re] at H₃
+  · simp only [← norm_sq_eq_inner] at H₃
+    rw [← H₁, H₂]
+    exact H₃
+    
+  · exact L2.integrable_inner f f
+    
 
 end fourier
 

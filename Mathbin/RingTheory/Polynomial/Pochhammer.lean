@@ -89,7 +89,7 @@ theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n + 1) = pochhammer S n 
   · simp
     
   · conv_lhs =>
-      rw [pochhammer_succ_left, ih, mul_comp, ← mul_assocₓ, ← pochhammer_succ_left, add_comp, X_comp, nat_cast_comp,
+      rw [pochhammer_succ_left, ih, mul_comp, ← mul_assoc, ← pochhammer_succ_left, add_comp, X_comp, nat_cast_comp,
         add_assocₓ, add_commₓ (1 : Polynomial ℕ)]
     rfl
     
@@ -102,7 +102,7 @@ theorem pochhammer_mul (n m : ℕ) : pochhammer S n * (pochhammer S m).comp (X +
   induction' m with m ih
   · simp
     
-  · rw [pochhammer_succ_right, Polynomial.mul_X_add_nat_cast_comp, ← mul_assocₓ, ih, Nat.succ_eq_add_one, ← add_assocₓ,
+  · rw [pochhammer_succ_right, Polynomial.mul_X_add_nat_cast_comp, ← mul_assoc, ih, Nat.succ_eq_add_one, ← add_assocₓ,
       pochhammer_succ_right, Nat.cast_add, add_assocₓ]
     
 
@@ -113,7 +113,7 @@ theorem pochhammer_nat_eq_asc_factorial (n : ℕ) : ∀ k, (pochhammer ℕ k).ev
     rw [pochhammer_succ_right, eval_mul, pochhammer_nat_eq_asc_factorial t]
     suffices n.asc_factorial t * (n + 1 + t) = n.asc_factorial (t + 1) by
       simpa
-    rw [Nat.asc_factorial_succ, add_right_commₓ, mul_commₓ]
+    rw [Nat.asc_factorial_succ, add_right_commₓ, mul_comm]
 
 theorem pochhammer_nat_eq_desc_factorial (a b : ℕ) : (pochhammer ℕ b).eval a = (a + b - 1).descFactorial b := by
   cases b

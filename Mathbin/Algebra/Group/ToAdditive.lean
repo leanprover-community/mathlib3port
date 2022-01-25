@@ -530,7 +530,7 @@ add_tactic_doc
 
 end ToAdditive
 
-attribute [to_additive] Mul HasOne HasInv Div
+attribute [to_additive] Mul One HasInv Div
 
 attribute [to_additive Empty] Empty
 

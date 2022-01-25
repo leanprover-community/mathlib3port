@@ -34,7 +34,7 @@ noncomputable section
 /-- The composition of Frobenius and Verschiebung is multiplication by `p`. -/
 theorem frobenius_verschiebung (x : 𝕎 R) : frobenius (verschiebung x) = x * p := by
   ghost_calc x
-  ghost_simp [mul_commₓ]
+  ghost_simp [mul_comm]
 
 /-- Verschiebung is the same as multiplication by `p` on the ring of Witt vectors of `zmod p`. -/
 theorem verschiebung_zmod (x : 𝕎 (Zmod p)) : verschiebung x = x * p := by
@@ -68,7 +68,7 @@ theorem coeff_p_pow_eq_zero [CharP R p] {i j : ℕ} (hj : j ≠ i) : (p ^ i : �
 /-- The “projection formula” for Frobenius and Verschiebung. -/
 theorem verschiebung_mul_frobenius (x y : 𝕎 R) : verschiebung (x * frobenius y) = verschiebung x * y := by
   ghost_calc x y
-  rintro ⟨⟩ <;> ghost_simp [mul_assocₓ]
+  rintro ⟨⟩ <;> ghost_simp [mul_assoc]
 
 theorem mul_char_p_coeff_zero [CharP R p] (x : 𝕎 R) : (x * p).coeff 0 = 0 := by
   rw [← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_zero, zero_pow]
@@ -126,13 +126,13 @@ theorem iterate_verschiebung_mul (x y : 𝕎 R) (i j : ℕ) :
     
   · rw [verschiebung_frobenius_comm.iterate_iterate] <;> infer_instance
     
-  · rw [mul_commₓ]
+  · rw [mul_comm]
     
   · rw [iterate_verschiebung_mul_left]
     
   · rw [iterate_add_apply]
     
-  · rw [mul_commₓ]
+  · rw [mul_comm]
     
 
 theorem iterate_frobenius_coeff (x : 𝕎 R) (i k : ℕ) : ((frobenius^[i]) x).coeff k = x.coeff k ^ p ^ i := by

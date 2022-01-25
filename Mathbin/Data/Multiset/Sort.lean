@@ -25,7 +25,7 @@ def sort (s : Multiset α) : List α :=
       (sorted_merge_sort r _)
 
 @[simp]
-theorem coeSortₓ (l : List α) : sort r l = merge_sort r l :=
+theorem coeSort (l : List α) : sort r l = merge_sort r l :=
   rfl
 
 @[simp]

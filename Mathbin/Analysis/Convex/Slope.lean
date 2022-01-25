@@ -37,7 +37,7 @@ theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx
         rw [div_eq_iff] <;> [ring, linarith])
   rw [hy] at key
   replace key := mul_le_mul_of_nonneg_left key hxz.le
-  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_commₓ (z - x) _]  at key⊢
+  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _]  at key⊢
   rw [div_le_div_right]
   · linarith
     
@@ -75,7 +75,7 @@ theorem StrictConvexOn.slope_strict_mono_adjacent (hf : StrictConvexOn 𝕜 s f)
         rw [div_eq_iff] <;> [ring, linarith])
   rw [hy] at key
   replace key := mul_lt_mul_of_pos_left key hxz
-  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_commₓ (z - x) _]  at key⊢
+  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _]  at key⊢
   rw [div_lt_div_right]
   · linarith
     
@@ -118,7 +118,7 @@ theorem convex_on_of_slope_mono_adjacent (hs : Convex 𝕜 s)
         simp_rw [div_eq_iff hxz.ne', y, ← hab]
         ring
       rwa [sub_mul, sub_mul, sub_le_iff_le_add', ← add_sub_assoc, le_sub_iff_add_le, ← mul_addₓ, sub_add_sub_cancel, ←
-        le_div_iff hxz, add_div, mul_div_assoc, mul_div_assoc, mul_commₓ (f x), mul_commₓ (f z), ha, hb] at this)
+        le_div_iff hxz, add_div, mul_div_assoc, mul_div_assoc, mul_comm (f x), mul_comm (f z), ha, hb] at this)
 
 /-- If for any three points `x < y < z`, the slope of the secant line of `f : 𝕜 → 𝕜` on `[x, y]` is
 greater than the slope of the secant line of `f` on `[x, z]`, then `f` is concave. -/
@@ -158,7 +158,7 @@ theorem strict_convex_on_of_slope_strict_mono_adjacent (hs : Convex 𝕜 s)
         simp_rw [div_eq_iff hxz.ne', y, ← hab]
         ring
       rwa [sub_mul, sub_mul, sub_lt_iff_lt_add', ← add_sub_assoc, lt_sub_iff_add_lt, ← mul_addₓ, sub_add_sub_cancel, ←
-        lt_div_iff hxz, add_div, mul_div_assoc, mul_div_assoc, mul_commₓ (f x), mul_commₓ (f z), ha, hb] at this)
+        lt_div_iff hxz, add_div, mul_div_assoc, mul_div_assoc, mul_comm (f x), mul_comm (f z), ha, hb] at this)
 
 /-- If for any three points `x < y < z`, the slope of the secant line of `f : 𝕜 → 𝕜` on `[x, y]` is
 strictly greater than the slope of the secant line of `f` on `[x, z]`, then `f` is strictly concave.

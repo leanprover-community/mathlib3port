@@ -339,7 +339,7 @@ theorem continuous_on_mul {α : Type _} [ConditionallyCompleteLinearOrder α] [M
     [OrderTopology α] [OpensMeasurableSpace α] {μ : Measureₓ α} {a b : α} {f g : α → ℝ}
     (hf : IntervalIntegrable f μ a b) (hg : ContinuousOn g (interval a b)) :
     IntervalIntegrable (fun x => g x * f x) μ a b := by
-  simpa [mul_commₓ] using hf.mul_continuous_on hg
+  simpa [mul_comm] using hf.mul_continuous_on hg
 
 end IntervalIntegrable
 
@@ -560,7 +560,7 @@ theorem integral_const_mul {𝕜 : Type _} [IsROrC 𝕜] (r : 𝕜) (f : α → 
 @[simp]
 theorem integral_mul_const {𝕜 : Type _} [IsROrC 𝕜] (r : 𝕜) (f : α → 𝕜) :
     (∫ x in a..b, f x * r ∂μ) = (∫ x in a..b, f x ∂μ) * r := by
-  simpa only [mul_commₓ r] using integral_const_mul r f
+  simpa only [mul_comm r] using integral_const_mul r f
 
 @[simp]
 theorem integral_div {𝕜 : Type _} [IsROrC 𝕜] (r : 𝕜) (f : α → 𝕜) :
@@ -608,7 +608,7 @@ theorem smul_integral_comp_mul_right c : (c • ∫ x in a..b, f (x * c)) = ∫ 
 
 @[simp]
 theorem integral_comp_mul_left (hc : c ≠ 0) : (∫ x in a..b, f (c * x)) = c⁻¹ • ∫ x in c * a..c * b, f x := by
-  simpa only [mul_commₓ c] using integral_comp_mul_right f hc
+  simpa only [mul_comm c] using integral_comp_mul_right f hc
 
 @[simp]
 theorem smul_integral_comp_mul_left c : (c • ∫ x in a..b, f (c * x)) = ∫ x in c * a..c * b, f x := by
@@ -2207,7 +2207,7 @@ theorem integral_mul_deriv_eq_deriv_mul {u v u' v' : ℝ → ℝ} (hu : ∀, ∀
   rw [← integral_deriv_mul_eq_sub hu hv hu' hv', ← integral_sub]
   · exact
       integral_congr fun x hx => by
-        simp only [mul_commₓ, add_sub_cancel']
+        simp only [mul_comm, add_sub_cancel']
     
   · exact
       (hu'.mul_continuous_on (HasDerivAt.continuous_on hv)).add (hv'.continuous_on_mul (HasDerivAt.continuous_on hu))
@@ -2342,7 +2342,7 @@ theorem integral_comp_mul_deriv'' {f f' g : ℝ → ℝ}
     (hf' : ContinuousOn f' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)")
     (hg : ContinuousOn g (f '' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)")) :
     (∫ x in a..b, (g ∘ f) x * f' x) = ∫ u in f a..f b, g u := by
-  simpa [mul_commₓ] using integral_comp_smul_deriv'' hf hff' hf' hg
+  simpa [mul_comm] using integral_comp_smul_deriv'' hf hff' hf' hg
 
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 /-- Change of variables. If `f` is has continuous derivative `f'` on `[a, b]`,
@@ -2355,7 +2355,7 @@ theorem integral_comp_mul_deriv' {f f' g : ℝ → ℝ} (h : ∀, ∀ x ∈ inte
     (h' : ContinuousOn f' (interval a b))
     (hg : ContinuousOn g (f '' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)")) :
     (∫ x in a..b, (g ∘ f) x * f' x) = ∫ x in f a..f b, g x := by
-  simpa [mul_commₓ] using integral_comp_smul_deriv' h h' hg
+  simpa [mul_comm] using integral_comp_smul_deriv' h h' hg
 
 /-- Change of variables, most common version. If `f` is has continuous derivative `f'` on `[a, b]`,
 and `g` is continuous, then we can substitute `u = f x` to get
@@ -2378,12 +2378,12 @@ theorem integral_deriv_comp_mul_deriv' {f f' g g' : ℝ → ℝ}
     (hgg' : ∀, ∀ x ∈ Ioo (min (f a) (f b)) (max (f a) (f b)), ∀, HasDerivWithinAt g (g' x) (Ioi x) x)
     (hg' : ContinuousOn g' (f '' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)")) :
     (∫ x in a..b, (g' ∘ f) x * f' x) = (g ∘ f) b - (g ∘ f) a := by
-  simpa [mul_commₓ] using integral_deriv_comp_smul_deriv' hf hff' hf' hg hgg' hg'
+  simpa [mul_comm] using integral_deriv_comp_smul_deriv' hf hff' hf' hg hgg' hg'
 
 theorem integral_deriv_comp_mul_deriv {f f' g g' : ℝ → ℝ} (hf : ∀, ∀ x ∈ interval a b, ∀, HasDerivAt f (f' x) x)
     (hg : ∀, ∀ x ∈ interval a b, ∀, HasDerivAt g (g' (f x)) (f x)) (hf' : ContinuousOn f' (interval a b))
     (hg' : Continuous g') : (∫ x in a..b, (g' ∘ f) x * f' x) = (g ∘ f) b - (g ∘ f) a := by
-  simpa [mul_commₓ] using integral_deriv_comp_smul_deriv hf hg hf' hg'
+  simpa [mul_comm] using integral_deriv_comp_smul_deriv hf hg hf' hg'
 
 end Mul
 

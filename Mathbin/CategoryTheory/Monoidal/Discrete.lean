@@ -35,7 +35,7 @@ instance discrete.monoidal : monoidal_category (discrete M) where
         rw [eq_of_hom f, eq_of_hom g])
   leftUnitor := fun X => eq_to_iso (one_mulₓ X)
   rightUnitor := fun X => eq_to_iso (mul_oneₓ X)
-  associator := fun X Y Z => eq_to_iso (mul_assocₓ _ _ _)
+  associator := fun X Y Z => eq_to_iso (mul_assoc _ _ _)
 
 variable {M} {N : Type u} [Monoidₓ N]
 

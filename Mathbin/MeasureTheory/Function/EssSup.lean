@@ -140,7 +140,7 @@ theorem ae_lt_of_ess_sup_lt {f : α → β} {x : β} (hf : essSup f μ < x) : �
 theorem ae_lt_of_lt_ess_inf {f : α → β} {x : β} (hf : x < essInf f μ) : ∀ᵐ y ∂μ, x < f y :=
   @ae_lt_of_ess_sup_lt α (OrderDual β) _ _ _ _ _ hf
 
-theorem ess_sup_indicator_eq_ess_sup_restrict [HasZero β] {s : Set α} {f : α → β} (hf : 0 ≤ᵐ[μ.restrict s] f)
+theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α → β} (hf : 0 ≤ᵐ[μ.restrict s] f)
     (hs : MeasurableSet s) (hs_not_null : μ s ≠ 0) : essSup (s.indicator f) μ = essSup f (μ.restrict s) := by
   refine'
     le_antisymmₓ _

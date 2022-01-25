@@ -105,7 +105,7 @@ theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : card (pi m t) =
     (by
       simp )
     (by
-      simp (config := { contextual := true })[mul_commₓ])
+      simp (config := { contextual := true })[mul_comm])
 
 theorem nodup_pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} : nodup s → (∀, ∀ a ∈ s, ∀, nodup (t a)) → nodup (pi s t) :=
   Multiset.induction_on s (fun _ _ => nodup_singleton _)

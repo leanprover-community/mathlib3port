@@ -31,7 +31,7 @@ theorem radius_eq_liminf : p.radius = liminf at_top fun n => 1 / (nnnorm (p n) ^
     conv_lhs =>
       rw [one_div, Ennreal.le_inv_iff_mul_le, ← Ennreal.coe_mul, Ennreal.coe_le_one_iff, one_div, ← Nnreal.rpow_one r, ←
         mul_inv_cancel this.ne', Nnreal.rpow_mul, ← Nnreal.mul_rpow, ← Nnreal.one_rpow (n⁻¹),
-        Nnreal.rpow_le_rpow_iff (inv_pos.2 this), mul_commₓ, Nnreal.rpow_nat_cast]
+        Nnreal.rpow_le_rpow_iff (inv_pos.2 this), mul_comm, Nnreal.rpow_nat_cast]
   apply le_antisymmₓ <;> refine' Ennreal.le_of_forall_nnreal_lt fun r hr => _
   · rcases((tfae_exists_lt_is_o_pow (fun n => ∥p n∥ * r ^ n) 1).out 1 7).1 (p.is_o_of_lt_radius hr) with ⟨a, ha, H⟩
     refine'

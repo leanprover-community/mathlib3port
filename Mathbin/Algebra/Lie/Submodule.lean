@@ -52,7 +52,7 @@ instance : SetLike (LieSubmodule R L M) M where
     cases N <;> cases O <;> congr
 
 /-- The zero module is a Lie submodule of any Lie module. -/
-instance : HasZero (LieSubmodule R L M) :=
+instance : Zero (LieSubmodule R L M) :=
   ⟨{ (0 : Submodule R M) with
       lie_mem := fun x m h => by
         rw [(Submodule.mem_bot R).1 h]
@@ -63,6 +63,10 @@ instance : Inhabited (LieSubmodule R L M) :=
 
 instance coe_submodule : Coe (LieSubmodule R L M) (Submodule R M) :=
   ⟨to_submodule⟩
+
+@[simp]
+theorem to_submodule_eq_coe : N.to_submodule = N :=
+  rfl
 
 @[norm_cast]
 theorem coe_to_submodule : ((N : Submodule R M) : Set M) = N :=
@@ -86,6 +90,10 @@ theorem mem_coe {x : M} : x ∈ (N : Set M) ↔ x ∈ N :=
 @[simp]
 theorem zero_mem : (0 : M) ∈ N :=
   (N : Submodule R M).zero_mem
+
+@[simp]
+theorem mk_eq_zero {x} (h : x ∈ N) : (⟨x, h⟩ : N) = 0 ↔ x = 0 :=
+  Subtype.ext_iff_val
 
 @[simp]
 theorem coe_to_set_mk (S : Set M) h₁ h₂ h₃ h₄ : ((⟨S, h₁, h₂, h₃, h₄⟩ : LieSubmodule R L M) : Set M) = S :=
@@ -294,7 +302,7 @@ section LatticeStructure
 
 open Set
 
-theorem coe_injective : Function.Injective (coeₓ : LieSubmodule R L M → Set M) :=
+theorem coe_injective : Function.Injective (coe : LieSubmodule R L M → Set M) :=
   SetLike.coe_injective
 
 @[simp, norm_cast]
@@ -443,7 +451,7 @@ variable (R L M)
 theorem well_founded_of_noetherian [IsNoetherian R M] :
     WellFounded (· > · : LieSubmodule R L M → LieSubmodule R L M → Prop) :=
   let f : (· > · : LieSubmodule R L M → LieSubmodule R L M → Prop) →r (· > · : Submodule R M → Submodule R M → Prop) :=
-    { toFun := coeₓ, map_rel' := fun N N' h => h }
+    { toFun := coe, map_rel' := fun N N' h => h }
   RelHomClass.well_founded f (is_noetherian_iff_well_founded.mp inferInstance)
 
 @[simp]
@@ -478,6 +486,10 @@ section InclusionMaps
 /-- The inclusion of a Lie submodule into its ambient space is a morphism of Lie modules. -/
 def incl : N →ₗ⁅R,L⁆ M :=
   { Submodule.subtype (N : Submodule R M) with map_lie' := fun x m => rfl }
+
+@[simp]
+theorem incl_coe : (N.incl : N →ₗ[R] M) = (N : Submodule R M).Subtype :=
+  rfl
 
 @[simp]
 theorem incl_apply (m : N) : N.incl m = m :=
@@ -559,7 +571,7 @@ theorem coe_lie_span_submodule_eq_iff {p : Submodule R M} :
 variable (R L M)
 
 /-- `lie_span` forms a Galois insertion with the coercion from `lie_submodule` to `set`. -/
-protected def gi : GaloisInsertion (lie_span R L : Set M → LieSubmodule R L M) coeₓ where
+protected def gi : GaloisInsertion (lie_span R L : Set M → LieSubmodule R L M) coe where
   choice := fun s _ => lie_span R L s
   gc := fun s t => lie_span_le
   le_l_u := fun s => subset_lie_span
@@ -630,6 +642,10 @@ def comap : LieSubmodule R L M :=
       suffices ⁅x,f m⁆ ∈ N' by
         simp [this]
       apply N'.lie_mem h }
+
+@[simp]
+theorem coe_submodule_comap : (N'.comap f : Submodule R M) = (N' : Submodule R M').comap (f : M →ₗ[R] M') :=
+  rfl
 
 variable {f N N₂ N'}
 
@@ -1014,6 +1030,14 @@ variable (f : M →ₗ⁅R,L⁆ N)
 def ker : LieSubmodule R L M :=
   LieSubmodule.comap f ⊥
 
+@[simp]
+theorem ker_coe_submodule : (f.ker : Submodule R M) = (f : M →ₗ[R] N).ker :=
+  rfl
+
+theorem ker_eq_bot : f.ker = ⊥ ↔ Function.Injective f := by
+  rw [← LieSubmodule.coe_to_submodule_eq_iff, ker_coe_submodule, LieSubmodule.bot_coe_submodule, LinearMap.ker_eq_bot,
+    coe_to_linear_map]
+
 variable {f}
 
 @[simp]
@@ -1056,6 +1080,30 @@ theorem map_top : LieSubmodule.map f ⊤ = f.range := by
   simp [LieSubmodule.mem_map]
 
 end LieModuleHom
+
+namespace LieSubmodule
+
+variable {R : Type u} {L : Type v} {M : Type w}
+
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
+
+variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
+
+variable (N : LieSubmodule R L M)
+
+@[simp]
+theorem ker_incl : N.incl.ker = ⊥ := by
+  simp [← LieSubmodule.coe_to_submodule_eq_iff]
+
+@[simp]
+theorem range_incl : N.incl.range = N := by
+  simp [← LieSubmodule.coe_to_submodule_eq_iff]
+
+@[simp]
+theorem comap_incl_self : comap N.incl N = ⊤ := by
+  simp [← LieSubmodule.coe_to_submodule_eq_iff]
+
+end LieSubmodule
 
 section TopEquivSelf
 

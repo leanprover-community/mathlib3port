@@ -63,7 +63,7 @@ theorem Equivₓ.coe_eq_to_embedding : ↑f = f.to_embedding :=
 set. -/
 @[simps]
 def Equivₓ.asEmbedding {p : β → Prop} (e : α ≃ Subtype p) : α ↪ β :=
-  ⟨coeₓ ∘ e, Subtype.coe_injective.comp e.injective⟩
+  ⟨coe ∘ e, Subtype.coe_injective.comp e.injective⟩
 
 @[simp]
 theorem Equivₓ.as_embedding_range {α β : Sort _} {p : β → Prop} (e : α ≃ Subtype p) :
@@ -174,12 +174,12 @@ protected def some {α} : α ↪ Option α :=
 /-- Embedding into `option α` using `coe`. Usually the correct synctatical form for `simp`. -/
 @[simps (config := { fullyApplied := ff })]
 def coeOption {α} : α ↪ Option α :=
-  ⟨coeₓ, Option.some_injective α⟩
+  ⟨coe, Option.some_injective α⟩
 
 /-- Embedding into `with_top α`. -/
 @[simps]
 def coe_with_top {α} : α ↪ WithTop α :=
-  { embedding.some with toFun := coeₓ }
+  { embedding.some with toFun := coe }
 
 /-- Given an embedding `f : α ↪ β` and a point outside of `set.range f`, construct an embedding
 `option α ↪ β`. -/
@@ -189,10 +189,10 @@ def option_elim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.Range f) : Optio
 
 /-- Embedding of a `subtype`. -/
 def Subtype {α} (p : α → Prop) : Subtype p ↪ α :=
-  ⟨coeₓ, fun _ _ => Subtype.ext_val⟩
+  ⟨coe, fun _ _ => Subtype.ext_val⟩
 
 @[simp]
-theorem coeSubtype {α} (p : α → Prop) : ⇑Subtype p = coeₓ :=
+theorem coeSubtype {α} (p : α → Prop) : ⇑Subtype p = coe :=
   rfl
 
 /-- Choosing an element `b : β` gives an embedding of `punit` into `β`. -/

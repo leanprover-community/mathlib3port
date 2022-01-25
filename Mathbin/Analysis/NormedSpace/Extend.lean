@@ -50,7 +50,7 @@ noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜
     intro c x
     simp only [fc, A]
     rw [A c x]
-    rw [smul_smul, mul_commₓ I (c : 𝕜), ← smul_smul, A, mul_sub]
+    rw [smul_smul, mul_comm I (c : 𝕜), ← smul_smul, A, mul_sub]
     ring
   have smul_I : ∀ x : F, fc ((I : 𝕜) • x) = (I : 𝕜) * fc x := by
     intro x
@@ -58,12 +58,12 @@ noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜
     cases' @I_mul_I_ax 𝕜 _ with h h
     · simp [h]
       
-    rw [mul_sub, ← mul_assocₓ, smul_smul, h]
+    rw [mul_sub, ← mul_assoc, smul_smul, h]
     simp only [neg_mul_eq_neg_mul_symm, LinearMap.map_neg, one_mulₓ, one_smul, mul_neg_eq_neg_mul_symm, of_real_neg,
       neg_smul, sub_neg_eq_add, add_commₓ]
   have smul_𝕜 : ∀ c : 𝕜 x : F, fc (c • x) = c • fc x := by
     intro c x
-    rw [← re_add_im c, add_smul, add_smul, add, smul_ℝ, ← smul_smul, smul_ℝ, smul_I, ← mul_assocₓ]
+    rw [← re_add_im c, add_smul, add_smul, add, smul_ℝ, ← smul_smul, smul_ℝ, smul_I, ← mul_assoc]
     rfl
   exact { toFun := fc, map_add' := add, map_smul' := smul_𝕜 }
 

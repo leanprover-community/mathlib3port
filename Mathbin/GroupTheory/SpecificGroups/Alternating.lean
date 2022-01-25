@@ -103,8 +103,8 @@ theorem is_conj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : perm α) (τ
       have hd : Disjoint (swap a b) σ := by
         rw [disjoint_iff_disjoint_support, support_swap ab, Finset.disjoint_insert_left, Finset.disjoint_singleton_left]
         exact ⟨Finset.mem_compl.1 ha, Finset.mem_compl.1 hb⟩
-      rw [mul_assocₓ π _ σ, hd.commute.eq, coe_inv, coe_mk]
-      simp [mul_assocₓ]
+      rw [mul_assoc π _ σ, hd.commute.eq, coe_inv, coe_mk]
+      simp [mul_assoc]
       
     
 
@@ -138,7 +138,7 @@ theorem closure_three_cycles_eq_alternating : closure { σ : perm α | is_three_
     obtain ⟨a, l, rfl⟩ := l.exists_of_length_succ hn
     rw [List.length_cons, Nat.succ_inj'] at hn
     obtain ⟨b, l, rfl⟩ := l.exists_of_length_succ hn
-    rw [List.prod_cons, List.prod_cons, ← mul_assocₓ]
+    rw [List.prod_cons, List.prod_cons, ← mul_assoc]
     rw [List.length_cons, Nat.succ_inj'] at hn
     exact
       mul_mem _
@@ -168,8 +168,8 @@ theorem is_three_cycle.alternating_normal_closure (h5 : 5 ≤ Fintype.card α) {
 theorem is_three_cycle_sq_of_three_mem_cycle_type_five {g : perm (Finₓ 5)} (h : 3 ∈ cycle_type g) :
     is_three_cycle (g * g) := by
   obtain ⟨c, g', rfl, hd, hc, h3⟩ := mem_cycle_type_iff.1 h
-  simp only [mul_assocₓ]
-  rw [hd.commute.eq, ← mul_assocₓ g']
+  simp only [mul_assoc]
+  rw [hd.commute.eq, ← mul_assoc g']
   suffices hg' : orderOf g' ∣ 2
   · rw [← pow_two, order_of_dvd_iff_pow_eq_one.1 hg', one_mulₓ]
     exact (card_support_eq_three_iff.1 h3).is_three_cycle_sq

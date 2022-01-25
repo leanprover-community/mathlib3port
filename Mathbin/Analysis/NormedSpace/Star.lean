@@ -137,35 +137,15 @@ theorem norm_star_mul_self' {x : E} : ∥x⋆ * x∥ = ∥x⋆∥ * ∥x∥ := b
 
 @[simp]
 theorem norm_one [Nontrivial E] : ∥(1 : E)∥ = 1 := by
-  cases'
-    mul_eq_mul_right_iff.mp
-      (calc
-        1 * ∥(1 : E)∥ = ∥(1 : E)∥ := one_mulₓ _
-        _ = ∥(1 : E)⋆ * 1∥ := by
-          rw [mul_oneₓ, star_one]
-        _ = ∥(1 : E)∥ * ∥(1 : E)∥ := norm_star_mul_self
-        ) with
-    h
-  · exact h.symm
-    
-  · exfalso
-    exact one_ne_zero (norm_eq_zero.mp h)
-    
+  have : 0 < ∥(1 : E)∥ := norm_pos_iff.mpr one_ne_zero
+  rw [← mul_left_inj' this.ne', ← norm_star_mul_self, mul_oneₓ, star_one, one_mulₓ]
 
 instance (priority := 100) [Nontrivial E] : NormOneClass E :=
   ⟨norm_one⟩
 
 theorem norm_coe_unitary [Nontrivial E] (U : unitary E) : ∥(U : E)∥ = 1 := by
-  have :=
-    calc
-      ∥(U : E)∥ ^ 2 = ∥(U : E)∥ * ∥(U : E)∥ := pow_two _
-      _ = ∥(U⋆ * U : E)∥ := cstar_ring.norm_star_mul_self.symm
-      _ = ∥(1 : E)∥ := by
-        rw [unitary.coe_star_mul_self]
-      _ = 1 := CstarRing.norm_one
-      
-  refine' (sq_eq_sq (norm_nonneg _) zero_le_one).mp _
-  rw [one_pow 2, this]
+  rw [← sq_eq_sq (norm_nonneg _) zero_le_one, one_pow 2, sq, ← CstarRing.norm_star_mul_self, unitary.coe_star_mul_self,
+    CstarRing.norm_one]
 
 @[simp]
 theorem norm_of_mem_unitary [Nontrivial E] {U : E} (hU : U ∈ unitary E) : ∥U∥ = 1 :=
@@ -173,22 +153,16 @@ theorem norm_of_mem_unitary [Nontrivial E] {U : E} (hU : U ∈ unitary E) : ∥U
 
 @[simp]
 theorem norm_coe_unitary_mul (U : unitary E) (A : E) : ∥(U : E) * A∥ = ∥A∥ := by
-  by_cases' h_nontriv : ∃ x y : E, x ≠ y
-  · have : Nontrivial E := ⟨h_nontriv⟩
-    refine' le_antisymmₓ _ _
-    · calc _ ≤ ∥(U : E)∥ * ∥A∥ := norm_mul_le _ _ _ = ∥A∥ := by
-          rw [norm_coe_unitary, one_mulₓ]
-      
-    · calc ∥A∥ = ∥(U : E)⋆ * U * A∥ := by
-          nth_rw_lhs 0[← one_mulₓ A]
-          rw [← unitary.coe_star_mul_self U, mul_assocₓ]_ ≤ ∥(U : E)⋆∥ * ∥(U : E) * A∥ := by
-          rw [mul_assocₓ]
-          exact norm_mul_le _ _ _ = ∥(U : E) * A∥ := by
-          simp only [one_mulₓ, norm_coe_unitary, norm_star]
-      
+  nontriviality E
+  refine' le_antisymmₓ _ _
+  · calc _ ≤ ∥(U : E)∥ * ∥A∥ := norm_mul_le _ _ _ = ∥A∥ := by
+        rw [norm_coe_unitary, one_mulₓ]
     
-  · push_neg  at h_nontriv
-    rw [h_nontriv (U * A)]
+  · calc _ = ∥(U : E)⋆ * U * A∥ := by
+        rw [unitary.coe_star_mul_self U, one_mulₓ]_ ≤ ∥(U : E)⋆∥ * ∥(U : E) * A∥ := by
+        rw [mul_assoc]
+        exact norm_mul_le _ _ _ = ∥(U : E) * A∥ := by
+        rw [norm_star, norm_coe_unitary, one_mulₓ]
     
 
 @[simp]
@@ -201,11 +175,11 @@ theorem norm_mem_unitary_mul {U : E} (A : E) (hU : U ∈ unitary E) : ∥U * A�
 @[simp]
 theorem norm_mul_coe_unitary (A : E) (U : unitary E) : ∥A * U∥ = ∥A∥ :=
   calc
-    _ = ∥star (star (U : E) * star A)∥ := by
+    _ = ∥((U : E)⋆ * A⋆)⋆∥ := by
       simp only [star_star, star_mul]
-    _ = ∥star (U : E) * star A∥ := by
+    _ = ∥(U : E)⋆ * A⋆∥ := by
       rw [norm_star]
-    _ = ∥star A∥ := norm_mem_unitary_mul (star A) (unitary.star_mem U.prop)
+    _ = ∥A⋆∥ := norm_mem_unitary_mul (star A) (unitary.star_mem U.prop)
     _ = ∥A∥ := norm_star
     
 

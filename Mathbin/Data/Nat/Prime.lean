@@ -133,7 +133,7 @@ theorem prime_def_le_sqrt {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ m, 2 ≤ m →
         cases' le_totalₓ m k with mk km
         · exact this mk m2 e
           
-        · rw [mul_commₓ] at e
+        · rw [mul_comm] at e
           refine' this km (lt_of_mul_lt_mul_right _ (zero_le m)) e
           rwa [one_mulₓ, ← e]
           ⟩
@@ -393,7 +393,7 @@ theorem min_fac_le_div {n : ℕ} (pos : 0 < n) (np : ¬Prime n) : min_fac n ≤ 
         (by
           decide)
         ⟨min_fac n, by
-          rwa [mul_commₓ]⟩
+          rwa [mul_comm]⟩
 
 /-- The square of the smallest prime factor of a composite number `n` is at most `n`.
 -/
@@ -704,14 +704,14 @@ theorem prime.mul_eq_prime_sq_iff {x y p : ℕ} (hp : p.prime) (hx : x ≠ 1) (h
     cases' case with a ha
     have hap : a ∣ p :=
       ⟨y, by
-        rwa [ha, sq, mul_assocₓ, Nat.mul_right_inj hp.pos, eq_comm] at h⟩
+        rwa [ha, sq, mul_assoc, Nat.mul_right_inj hp.pos, eq_comm] at h⟩
     exact
       ((Nat.dvd_prime hp).1 hap).elim
         (fun _ => by
           clear_aux_decl <;> simp_all (config := { contextual := true })[sq, Nat.mul_right_inj hp.pos])
         fun _ => by
         clear_aux_decl <;>
-          simp_all (config := { contextual := true })[sq, mul_commₓ, mul_assocₓ, Nat.mul_right_inj hp.pos,
+          simp_all (config := { contextual := true })[sq, mul_comm, mul_assoc, Nat.mul_right_inj hp.pos,
             Nat.mul_right_eq_self_iff hp.pos],
     fun ⟨h₁, h₂⟩ => h₁.symm ▸ h₂.symm ▸ (sq _).symm⟩
 
@@ -762,7 +762,7 @@ theorem dvd_prime_pow {p : ℕ} (pp : Prime p) {m i : ℕ} : i ∣ p ^ m ↔ ∃
       apply dvd_mul_right
       
     · refine' ⟨k, le_of_succ_le_succ h, _⟩
-      rwa [mul_commₓ, pow_succ'ₓ, Nat.mul_left_inj pp.pos] at e
+      rwa [mul_comm, pow_succ'ₓ, Nat.mul_left_inj pp.pos] at e
       
     
   · constructor <;> intro d
@@ -818,9 +818,9 @@ theorem dvd_of_mem_factors {n p : ℕ} (h : p ∈ n.factors) : p ∣ n := by
   · rwa [← mem_factors_iff_dvd hn (prime_of_mem_factors h)]
     
 
-theorem mem_factors {n p} (hn : 0 < n) : p ∈ factors n ↔ Prime p ∧ p ∣ n :=
-  ⟨fun h => ⟨prime_of_mem_factors h, (mem_factors_iff_dvd hn $ prime_of_mem_factors h).mp h⟩, fun ⟨hprime, hdvd⟩ =>
-    (mem_factors_iff_dvd hn hprime).mpr hdvd⟩
+theorem mem_factors {n p} (hn : n ≠ 0) : p ∈ factors n ↔ Prime p ∧ p ∣ n :=
+  ⟨fun h => ⟨prime_of_mem_factors h, (mem_factors_iff_dvd hn.bot_lt $ prime_of_mem_factors h).mp h⟩,
+    fun ⟨hprime, hdvd⟩ => (mem_factors_iff_dvd hn.bot_lt hprime).mpr hdvd⟩
 
 /-- **Fundamental theorem of arithmetic**-/
 theorem factors_unique {n : ℕ} {l : List ℕ} (h₁ : Prod l = n) (h₂ : ∀, ∀ p ∈ l, ∀, Prime p) : l ~ factors n := by
@@ -902,7 +902,7 @@ theorem factors_count_pow {n k p : ℕ} : count p (n ^ k).factors = k * count p 
   · simp [zero_pow (succ_pos k), count_nil, factors_zero, mul_zero]
     
   rw [pow_succₓ n k, perm_iff_count.mp (perm_factors_mul_of_pos hn (pow_pos hn k)) p]
-  rw [List.count_append, IH, add_commₓ, mul_commₓ, ← mul_succ (count p n.factors) k, mul_commₓ]
+  rw [List.count_append, IH, add_commₓ, mul_comm, ← mul_succ (count p n.factors) k, mul_comm]
 
 theorem dvd_of_factors_subperm {a b : ℕ} (ha : a ≠ 0) (h : a.factors <+~ b.factors) : a ∣ b := by
   rcases b.eq_zero_or_pos with (rfl | hb)
@@ -1218,20 +1218,34 @@ end Nat
 
 namespace Nat
 
-/-- The only prime divisor of positive prime power `p^k` is `p` itself -/
-theorem prime_pow_prime_divisor {p k : ℕ} (hk : 0 < k) (hp : Prime p) : (p ^ k).factors.toFinset = {p} := by
-  rw [hp.factors_pow, List.to_finset_repeat_of_ne_zero hk.ne']
-
-theorem mem_factors_mul_of_pos {a b : ℕ} (ha : 0 < a) (hb : 0 < b) (p : ℕ) :
+theorem mem_factors_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) {p : ℕ} :
     p ∈ (a * b).factors ↔ p ∈ a.factors ∨ p ∈ b.factors := by
-  rw [mem_factors (mul_pos ha hb), mem_factors ha, mem_factors hb, ← and_or_distrib_left]
+  rw [mem_factors (mul_ne_zero ha hb), mem_factors ha, mem_factors hb, ← and_or_distrib_left]
   simpa only [And.congr_right_iff] using prime.dvd_mul
 
-/-- If `a`,`b` are positive the prime divisors of `(a * b)` are the union of those of `a` and `b` -/
-theorem factors_mul_of_pos {a b : ℕ} (ha : 0 < a) (hb : 0 < b) :
-    (a * b).factors.toFinset = a.factors.to_finset ∪ b.factors.to_finset := by
-  ext p
-  simp only [Finset.mem_union, List.mem_to_finset, mem_factors_mul_of_pos ha hb p]
+/-- If `a`, `b` are positive, the prime divisors of `a * b` are the union of those of `a` and `b` -/
+theorem factors_mul_to_finset {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
+    (a * b).factors.toFinset = a.factors.to_finset ∪ b.factors.to_finset :=
+  (List.toFinset.ext $ fun x => (mem_factors_mul ha hb).trans List.mem_union.symm).trans $ List.to_finset_union _ _
+
+theorem pow_succ_factors_to_finset (n k : ℕ) : (n ^ (k + 1)).factors.toFinset = n.factors.to_finset := by
+  rcases eq_or_ne n 0 with (rfl | hn)
+  · simp
+    
+  induction' k with k ih
+  · simp
+    
+  rw [pow_succₓ, factors_mul_to_finset hn (pow_ne_zero _ hn), ih, Finset.union_idempotent]
+
+theorem pow_factors_to_finset (n : ℕ) {k : ℕ} (hk : k ≠ 0) : (n ^ k).factors.toFinset = n.factors.to_finset := by
+  cases k
+  · simpa using hk
+    
+  rw [pow_succ_factors_to_finset]
+
+/-- The only prime divisor of positive prime power `p^k` is `p` itself -/
+theorem prime_pow_prime_divisor {p k : ℕ} (hk : k ≠ 0) (hp : Prime p) : (p ^ k).factors.toFinset = {p} := by
+  simp [pow_factors_to_finset p hk, factors_prime hp]
 
 /-- The sets of factors of coprime `a` and `b` are disjoint -/
 theorem coprime_factors_disjoint {a b : ℕ} (hab : a.coprime b) : List.Disjoint a.factors b.factors := by
@@ -1240,7 +1254,7 @@ theorem coprime_factors_disjoint {a b : ℕ} (hab : a.coprime b) : List.Disjoint
   rw [← eq_one_of_dvd_coprimes hab (dvd_of_mem_factors hqa) (dvd_of_mem_factors hqb)]
   exact prime_of_mem_factors hqa
 
-theorem factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) (p : ℕ) :
+theorem mem_factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) (p : ℕ) :
     p ∈ (a * b).factors ↔ p ∈ a.factors ∪ b.factors := by
   rcases a.eq_zero_or_pos with (rfl | ha)
   · simp [(coprime_zero_left _).mp hab]
@@ -1248,11 +1262,15 @@ theorem factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) (p : ℕ) :
   rcases b.eq_zero_or_pos with (rfl | hb)
   · simp [(coprime_zero_right _).mp hab]
     
-  rw [mem_factors_mul_of_pos ha hb p, List.mem_union]
+  rw [mem_factors_mul ha.ne' hb.ne', List.mem_union]
+
+theorem factors_mul_to_finset_of_coprime {a b : ℕ} (hab : coprime a b) :
+    (a * b).factors.toFinset = a.factors.to_finset ∪ b.factors.to_finset :=
+  (List.toFinset.ext $ mem_factors_mul_of_coprime hab).trans $ List.to_finset_union _ _
 
 open List
 
-/-- For `b > 0`, the power of `p` in `a * b` is at least that in `a` -/
+/-- For `0 < b`, the power of `p` in `a * b` is at least that in `a` -/
 theorem le_factors_count_mul_left {p a b : ℕ} (hb : 0 < b) : List.count p a.factors ≤ List.count p (a * b).factors := by
   rcases a.eq_zero_or_pos with (rfl | ha)
   · simp
@@ -1264,7 +1282,7 @@ theorem le_factors_count_mul_left {p a b : ℕ} (hb : 0 < b) : List.count p a.fa
 /-- For `a > 0`, the power of `p` in `a * b` is at least that in `b` -/
 theorem le_factors_count_mul_right {p a b : ℕ} (ha : 0 < a) : List.count p b.factors ≤ List.count p (a * b).factors :=
   by
-  rw [mul_commₓ]
+  rw [mul_comm]
   apply le_factors_count_mul_left ha
 
 /-- If `p` is a prime factor of `a` then `p` is also a prime factor of `a * b` for any `b > 0` -/
@@ -1274,7 +1292,7 @@ theorem mem_factors_mul_left {p a b : ℕ} (hpa : p ∈ a.factors) (hb : 0 < b) 
 
 /-- If `p` is a prime factor of `b` then `p` is also a prime factor of `a * b` for any `a > 0` -/
 theorem mem_factors_mul_right {p a b : ℕ} (hpb : p ∈ b.factors) (ha : 0 < a) : p ∈ (a * b).factors := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact mem_factors_mul_left hpb ha
 
 /-- If `p` is a prime factor of `a` then the power of `p` in `a` is the same that in `a * b`,
@@ -1288,7 +1306,7 @@ theorem factors_count_eq_of_coprime_left {p a b : ℕ} (hab : coprime a b) (hpa 
 for any `a` coprime to `b`. -/
 theorem factors_count_eq_of_coprime_right {p a b : ℕ} (hab : coprime a b) (hpb : p ∈ b.factors) :
     List.count p (a * b).factors = List.count p b.factors := by
-  rw [mul_commₓ]
+  rw [mul_comm]
   exact factors_count_eq_of_coprime_left (coprime_comm.mp hab) hpb
 
 end Nat

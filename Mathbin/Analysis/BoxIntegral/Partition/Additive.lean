@@ -79,7 +79,7 @@ theorem sum_partition_boxes (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) {π 
   f.sum_partition_boxes' I hI π h
 
 @[simps (config := { fullyApplied := ff })]
-instance : HasZero (ι →ᵇᵃ[I₀] M) :=
+instance : Zero (ι →ᵇᵃ[I₀] M) :=
   ⟨⟨0, fun I hI π hπ => sum_const_zero⟩⟩
 
 instance : Inhabited (ι →ᵇᵃ[I₀] M) :=

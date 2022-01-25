@@ -149,7 +149,7 @@ theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : (X ^ n - 1 : Poly
   obtain ⟨c, hc⟩ := key σ
   obtain ⟨d, hd⟩ := key τ
   rw [σ.mul_apply, τ.mul_apply, hc, τ.map_mul, τ.commutes, hd, σ.map_mul, σ.commutes, hc]
-  rw [mul_assocₓ, mul_assocₓ, mul_right_inj' hb', mul_commₓ]
+  rw [mul_assoc, mul_assoc, mul_right_inj' hb', mul_comm]
 
 theorem splits_X_pow_sub_one_of_X_pow_sub_C {F : Type _} [Field F] {E : Type _} [Field E] (i : F →+* E) (n : ℕ) {a : F}
     (ha : a ≠ 0) (h : (X ^ n - C a).Splits i) : (X ^ n - 1).Splits i := by
@@ -176,14 +176,14 @@ theorem splits_X_pow_sub_one_of_X_pow_sub_C {F : Type _} [Field F] {E : Type _} 
     rw [← C_mul, ← i.map_mul, inv_mul_cancel ha, i.map_one, C_1]
   have key1 : (X ^ n - 1).map i = C (i (a⁻¹)) * ((X ^ n - C a).map i).comp (C b * X) := by
     rw [Polynomial.map_sub, Polynomial.map_sub, Polynomial.map_pow, map_X, map_C, Polynomial.map_one, sub_comp,
-      pow_comp, X_comp, C_comp, mul_powₓ, ← C_pow, hb, mul_sub, ← mul_assocₓ, C_mul_C, one_mulₓ]
+      pow_comp, X_comp, C_comp, mul_powₓ, ← C_pow, hb, mul_sub, ← mul_assoc, C_mul_C, one_mulₓ]
   have key2 :
     ((fun q : Polynomial E => q.comp (C b * X)) ∘ fun c : E => X - C c) = fun c : E => C b * (X - C (c / b)) := by
     ext1 c
     change (X - C c).comp (C b * X) = C b * (X - C (c / b))
     rw [sub_comp, X_comp, C_comp, mul_sub, ← C_mul, mul_div_cancel' c hb']
   rw [key1, hs, prod_comp, Multiset.map_map, key2, Multiset.prod_map_mul, Multiset.map_const, Multiset.prod_repeat, hs',
-    ← C_pow, hb, ← mul_assocₓ, C_mul_C, one_mulₓ]
+    ← C_pow, hb, ← mul_assoc, C_mul_C, one_mulₓ]
   all_goals
     exact Field.to_nontrivial F
 

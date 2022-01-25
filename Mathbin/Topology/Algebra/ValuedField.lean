@@ -49,7 +49,7 @@ theorem Valuation.inversion_estimate {x y : K} {γ : (Γ₀)ˣ} (y_ne : y ≠ 0)
     rw [h, v.map_zero] at key
     exact v.zero_iff.1 key.symm
   have decomp : x⁻¹ - y⁻¹ = x⁻¹ * (y - x) * y⁻¹ := by
-    rw [mul_sub_left_distrib, sub_mul, mul_assocₓ, show y * y⁻¹ = 1 from mul_inv_cancel y_ne,
+    rw [mul_sub_left_distrib, sub_mul, mul_assoc, show y * y⁻¹ = 1 from mul_inv_cancel y_ne,
       show x⁻¹ * x = 1 from inv_mul_cancel x_ne, mul_oneₓ, one_mulₓ]
   calc v (x⁻¹ - y⁻¹) = v (x⁻¹ * (y - x) * y⁻¹) := by
       rw [decomp]_ = v (x⁻¹) * (v $ y - x) * v (y⁻¹) := by
@@ -57,7 +57,7 @@ theorem Valuation.inversion_estimate {x y : K} {γ : (Γ₀)ˣ} (y_ne : y ≠ 0)
         rw [Valuation.map_mul]_ = v x⁻¹ * (v $ y - x) * v y⁻¹ :=
       by
       rw [v.map_inv, v.map_inv]_ = (v $ y - x) * (v y * v y)⁻¹ := by
-      rw [mul_assocₓ, mul_commₓ, key, mul_assocₓ, mul_inv_rev₀]_ = (v $ y - x) * (v y * v y)⁻¹ :=
+      rw [mul_assoc, mul_comm, key, mul_assoc, mul_inv_rev₀]_ = (v $ y - x) * (v y * v y)⁻¹ :=
       rfl _ = (v $ x - y) * (v y * v y)⁻¹ := by
       rw [Valuation.map_sub_swap]_ < γ := hyp1'
 
@@ -181,7 +181,7 @@ instance (priority := 100) Valued.completable : CompletableTopField K :=
         · refine' lt_of_lt_of_leₓ H₁ _
           rw [Units.min_coe]
           apply min_le_min _ x_in₀
-          rw [mul_assocₓ]
+          rw [mul_assoc]
           have : ((γ₀ * γ₀ : (Γ₀ K)ˣ) : Γ₀ K) ≤ v x * v x :=
             calc
               ↑γ₀ * ↑γ₀ ≤ ↑γ₀ * v x := mul_le_mul_left' x_in₀ (↑γ₀)
@@ -202,7 +202,7 @@ noncomputable def Valued.extension : hat K → Γ₀ K :=
 theorem Valued.continuous_extension : Continuous (Valued.extension : hat K → Γ₀ K) := by
   refine' completion.dense_inducing_coe.continuous_extend _
   intro x₀
-  by_cases' h : x₀ = coeₓ 0
+  by_cases' h : x₀ = coe 0
   · refine' ⟨0, _⟩
     erw [h, ← completion.dense_inducing_coe.to_inducing.nhds_eq_comap] <;>
       try
@@ -246,15 +246,15 @@ theorem Valued.continuous_extension : Continuous (Valued.extension : hat K → �
     have nhds_right : (fun x => x * x₀) '' V' ∈ 𝓝 x₀ := by
       have l : Function.LeftInverse (fun x : hat K => x * x₀⁻¹) fun x : hat K => x * x₀ := by
         intro x
-        simp only [mul_assocₓ, mul_inv_cancel h, mul_oneₓ]
+        simp only [mul_assoc, mul_inv_cancel h, mul_oneₓ]
       have r : Function.RightInverse (fun x : hat K => x * x₀⁻¹) fun x : hat K => x * x₀ := by
         intro x
-        simp only [mul_assocₓ, inv_mul_cancel h, mul_oneₓ]
+        simp only [mul_assoc, inv_mul_cancel h, mul_oneₓ]
       have c : Continuous fun x : hat K => x * x₀⁻¹ := continuous_id.mul continuous_const
       rw [image_eq_preimage_of_inverse l r]
       rw [← mul_inv_cancel h] at V'_in
       exact c.continuous_at V'_in
-    have : ∃ z₀ : K, ∃ y₀ ∈ V', coeₓ z₀ = y₀ * x₀ ∧ z₀ ≠ 0 := by
+    have : ∃ z₀ : K, ∃ y₀ ∈ V', coe z₀ = y₀ * x₀ ∧ z₀ ≠ 0 := by
       rcases completion.dense_range_coe.mem_nhds nhds_right with ⟨z₀, y₀, y₀_in, H : y₀ * x₀ = z₀⟩
       refine' ⟨z₀, y₀, y₀_in, ⟨H.symm, _⟩⟩
       rintro rfl
@@ -268,15 +268,15 @@ theorem Valued.continuous_extension : Continuous (Valued.extension : hat K → �
     intro x x_in
     rcases mem_preimage.1 x_in with ⟨y, y_in, hy⟩
     clear x_in
-    change y * x₀ = coeₓ x at hy
+    change y * x₀ = coe x at hy
     have : v (x * z₀⁻¹) = 1 := by
       apply hV
       have : ((z₀⁻¹ : K) : hat K) = z₀⁻¹ := RingHom.map_inv (completion.coe_ring_hom : K →+* hat K) z₀
-      rw [completion.coe_mul, this, ← hy, hz₀, mul_inv₀, mul_commₓ (y₀⁻¹), ← mul_assocₓ, mul_assocₓ y, mul_inv_cancel h,
+      rw [completion.coe_mul, this, ← hy, hz₀, mul_inv₀, mul_comm (y₀⁻¹), ← mul_assoc, mul_assoc y, mul_inv_cancel h,
         mul_oneₓ]
       solve_by_elim
     calc v x = v (x * z₀⁻¹ * z₀) := by
-        rw [mul_assocₓ, inv_mul_cancel z₀_ne, mul_oneₓ]_ = v (x * z₀⁻¹) * v z₀ := Valuation.map_mul _ _ _ _ = v z₀ := by
+        rw [mul_assoc, inv_mul_cancel z₀_ne, mul_oneₓ]_ = v (x * z₀⁻¹) * v z₀ := Valuation.map_mul _ _ _ _ = v z₀ := by
         rw [this, one_mulₓ]
     
 

@@ -80,7 +80,7 @@ theorem adjoin_induction' {p : adjoin R s → Prop} (Hs : ∀ x h : x ∈ s, p �
         Exists.elim hx $ fun hx' hx => Exists.elim hy $ fun hy' hy => ⟨Subalgebra.mul_mem _ hx' hy', Hmul _ _ hx hy⟩
 
 @[simp]
-theorem adjoin_adjoin_coe_preimage {s : Set A} : adjoin R ((coeₓ : adjoin R s → A) ⁻¹' s) = ⊤ := by
+theorem adjoin_adjoin_coe_preimage {s : Set A} : adjoin R ((coe : adjoin R s → A) ⁻¹' s) = ⊤ := by
   refine' eq_top_iff.2 fun x => adjoin_induction' (fun a ha => _) (fun r => _) (fun _ _ => _) (fun _ _ => _) x
   · exact subset_adjoin ha
     
@@ -92,7 +92,7 @@ theorem adjoin_adjoin_coe_preimage {s : Set A} : adjoin R ((coeₓ : adjoin R s 
     
 
 theorem adjoin_union (s t : Set A) : adjoin R (s ∪ t) = adjoin R s⊔adjoin R t :=
-  (Algebra.gc : GaloisConnection _ (coeₓ : Subalgebra R A → Set A)).l_sup
+  (Algebra.gc : GaloisConnection _ (coe : Subalgebra R A → Set A)).l_sup
 
 variable (R A)
 
@@ -241,7 +241,7 @@ theorem pow_smul_mem_adjoin_smul (r : R) (s : Set A) {x : A} (hx : x ∈ adjoin 
   intro a ha
   have : n ≥ n₁ a := le_transₓ (Finset.le_sup ha) hn
   dsimp only
-  rw [← tsub_add_cancel_of_le this, pow_addₓ, ← smul_smul, smul_smul _ (l a), mul_commₓ, ← smul_smul, adjoin_eq_span]
+  rw [← tsub_add_cancel_of_le this, pow_addₓ, ← smul_smul, smul_smul _ (l a), mul_comm, ← smul_smul, adjoin_eq_span]
   refine' Submodule.smul_mem _ _ _
   exact Submodule.smul_mem _ _ (Submodule.subset_span (n₂ a))
 

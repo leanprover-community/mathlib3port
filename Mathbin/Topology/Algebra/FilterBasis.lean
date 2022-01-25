@@ -177,7 +177,7 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
       rintro z ⟨w, wW, rfl⟩
       exact
         ⟨t * w, hW (mul_mem_mul tW wW), by
-          simp [mul_assocₓ]⟩
+          simp [mul_assoc]⟩
       
     
 

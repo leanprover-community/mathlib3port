@@ -167,11 +167,11 @@ theorem div_def (x y : ℤ[i]) : x / y = ⟨round ((x * conj y).re / norm y : �
     simp [Rat.of_int_eq_mk, Rat.mk_eq_div, div_eq_mul_inv]
 
 theorem to_complex_div_re (x y : ℤ[i]) : ((x / y : ℤ[i]) : ℂ).re = round (x / y : ℂ).re := by
-  rw [div_def, ← @Rat.round_cast ℝ _ _] <;> simp [-Rat.round_cast, mul_assocₓ, div_eq_mul_inv, mul_addₓ, add_mulₓ]
+  rw [div_def, ← @Rat.round_cast ℝ _ _] <;> simp [-Rat.round_cast, mul_assoc, div_eq_mul_inv, mul_addₓ, add_mulₓ]
 
 theorem to_complex_div_im (x y : ℤ[i]) : ((x / y : ℤ[i]) : ℂ).im = round (x / y : ℂ).im := by
   rw [div_def, ← @Rat.round_cast ℝ _ _, ← @Rat.round_cast ℝ _ _] <;>
-    simp [-Rat.round_cast, mul_assocₓ, div_eq_mul_inv, mul_addₓ, add_mulₓ]
+    simp [-Rat.round_cast, mul_assoc, div_eq_mul_inv, mul_addₓ, add_mulₓ]
 
 theorem norm_sq_le_norm_sq_of_re_le_of_im_le {x y : ℂ} (hre : |x.re| ≤ |y.re|) (him : |x.im| ≤ |y.im|) :
     x.norm_sq ≤ y.norm_sq := by

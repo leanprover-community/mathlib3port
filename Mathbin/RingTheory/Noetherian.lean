@@ -162,7 +162,7 @@ theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type _} [CommR
     rw [mem_smul_span_singleton] at hy
     rcases hy with ⟨d, hdi, rfl⟩
     change _ • _ ∈ I • span R s
-    rw [mul_smul, ← hyz, smul_add, smul_smul, mul_commₓ, mul_smul]
+    rw [mul_smul, ← hyz, smul_add, smul_smul, mul_comm, mul_smul]
     exact add_mem _ (smul_mem _ _ hci) (smul_mem _ _ hz)
     
 
@@ -638,22 +638,22 @@ variable {R M P : Type _} {N : Type w} [Ringₓ R] [AddCommGroupₓ M] [Module R
   [AddCommGroupₓ P] [Module R P]
 
 theorem finite_of_linear_independent [Nontrivial R] [IsNoetherian R M] {s : Set M}
-    (hs : LinearIndependent R (coeₓ : s → M)) : s.finite := by
+    (hs : LinearIndependent R (coe : s → M)) : s.finite := by
   refine'
     Classical.by_contradiction fun hf =>
       (RelEmbedding.well_founded_iff_no_descending_seq.1 (well_founded_submodule_gt R M)).elim' _
   have f : ℕ ↪ s := @Infinite.natEmbedding s ⟨fun f => hf ⟨f⟩⟩
-  have : ∀ n, coeₓ ∘ f '' { m | m ≤ n } ⊆ s := by
+  have : ∀ n, coe ∘ f '' { m | m ≤ n } ⊆ s := by
     rintro n x ⟨y, hy₁, hy₂⟩
     subst hy₂
     exact (f y).2
-  have : ∀ a b : ℕ, a ≤ b ↔ span R (coeₓ ∘ f '' { m | m ≤ a }) ≤ span R (coeₓ ∘ f '' { m | m ≤ b }) := by
+  have : ∀ a b : ℕ, a ≤ b ↔ span R (coe ∘ f '' { m | m ≤ a }) ≤ span R (coe ∘ f '' { m | m ≤ b }) := by
     intro a b
     rw [span_le_span_iff hs (this a) (this b), Set.image_subset_image_iff (subtype.coe_injective.comp f.injective),
       Set.subset_def]
     exact ⟨fun hab x hxa : x ≤ a => le_transₓ hxa hab, fun hx => hx a (le_reflₓ a)⟩
   exact
-    ⟨⟨fun n => span R (coeₓ ∘ f '' { m | m ≤ n }), fun x y => by
+    ⟨⟨fun n => span R (coe ∘ f '' { m | m ≤ n }), fun x y => by
         simp (config := { contextual := true })[le_antisymm_iffₓ, (this _ _).symm]⟩,
       by
       dsimp [Gt] <;> simp only [lt_iff_le_not_leₓ, (this _ _).symm] <;> tauto⟩

@@ -213,7 +213,7 @@ theorem exp_series_radius_eq_top : (expSeries 𝕂 𝔸).radius = ∞ := by
   filter_upwards [eventually_cofinite_ne 0]
   intro n hn
   rw [norm_mul, norm_norm (expSeries 𝕂 𝔸 n), expSeries, norm_smul, norm_div, norm_one, norm_pow, Nnreal.norm_eq,
-    norm_eq_abs, abs_cast_nat, mul_commₓ, ← mul_assocₓ, ← mul_div_assoc, mul_oneₓ]
+    norm_eq_abs, abs_cast_nat, mul_comm, ← mul_assoc, ← mul_div_assoc, mul_oneₓ]
   have : ∥ContinuousMultilinearMap.mkPiAlgebraFin 𝕂 n 𝔸∥ ≤ 1 :=
     norm_mk_pi_algebra_fin_le_of_pos (Nat.pos_of_ne_zeroₓ hn)
   exact mul_le_of_le_one_right (div_nonneg (pow_nonneg r.coe_nonneg n) n !.cast_nonneg) this

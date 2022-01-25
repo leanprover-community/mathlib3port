@@ -79,24 +79,24 @@ attribute [simp] i_mul_i j_mul_j i_mul_j j_mul_i
 
 @[simp]
 theorem i_mul_k : q.i * q.k = c₁ • q.j := by
-  rw [← i_mul_j, ← mul_assocₓ, i_mul_i, smul_mul_assoc, one_mulₓ]
+  rw [← i_mul_j, ← mul_assoc, i_mul_i, smul_mul_assoc, one_mulₓ]
 
 @[simp]
 theorem k_mul_i : q.k * q.i = -c₁ • q.j := by
-  rw [← i_mul_j, mul_assocₓ, j_mul_i, mul_neg_eq_neg_mul_symm, i_mul_k, neg_smul]
+  rw [← i_mul_j, mul_assoc, j_mul_i, mul_neg_eq_neg_mul_symm, i_mul_k, neg_smul]
 
 @[simp]
 theorem k_mul_j : q.k * q.j = c₂ • q.i := by
-  rw [← i_mul_j, mul_assocₓ, j_mul_j, mul_smul_comm, mul_oneₓ]
+  rw [← i_mul_j, mul_assoc, j_mul_j, mul_smul_comm, mul_oneₓ]
 
 @[simp]
 theorem j_mul_k : q.j * q.k = -c₂ • q.i := by
-  rw [← i_mul_j, ← mul_assocₓ, j_mul_i, neg_mul_eq_neg_mul_symm, k_mul_j, neg_smul]
+  rw [← i_mul_j, ← mul_assoc, j_mul_i, neg_mul_eq_neg_mul_symm, k_mul_j, neg_smul]
 
 @[simp]
 theorem k_mul_k : q.k * q.k = -((c₁ * c₂) • 1) := by
-  rw [← i_mul_j, mul_assocₓ, ← mul_assocₓ q.j _ _, j_mul_i, ← i_mul_j, ← mul_assocₓ, mul_neg_eq_neg_mul_symm, ←
-    mul_assocₓ, i_mul_i, smul_mul_assoc, one_mulₓ, neg_mul_eq_neg_mul_symm, smul_mul_assoc, j_mul_j, smul_smul]
+  rw [← i_mul_j, mul_assoc, ← mul_assoc q.j _ _, j_mul_i, ← i_mul_j, ← mul_assoc, mul_neg_eq_neg_mul_symm, ← mul_assoc,
+    i_mul_i, smul_mul_assoc, one_mulₓ, neg_mul_eq_neg_mul_symm, smul_mul_assoc, j_mul_j, smul_smul]
 
 /-- Intermediate result used to define `quaternion_algebra.basis.lift_hom`. -/
 def lift (x : ℍ[R,c₁,c₂]) : A :=
@@ -119,10 +119,10 @@ theorem lift_mul (x y : ℍ[R,c₁,c₂]) : q.lift (x * y) = q.lift x * q.lift y
     smul_smul]
   simp only [i_mul_i, j_mul_j, i_mul_j, j_mul_i, i_mul_k, k_mul_i, k_mul_j, j_mul_k, k_mul_k]
   simp only [smul_smul, smul_neg, sub_eq_add_neg, add_smul, ← add_assocₓ, mul_neg_eq_neg_mul_symm, neg_smul]
-  simp only [mul_right_commₓ _ _ (c₁ * c₂), mul_commₓ _ (c₁ * c₂)]
-  simp only [mul_commₓ _ c₁, mul_right_commₓ _ _ c₁]
-  simp only [mul_commₓ _ c₂, mul_right_commₓ _ _ c₂]
-  simp only [← mul_commₓ c₁ c₂, ← mul_assocₓ]
+  simp only [mul_right_commₓ _ _ (c₁ * c₂), mul_comm _ (c₁ * c₂)]
+  simp only [mul_comm _ c₁, mul_right_commₓ _ _ c₁]
+  simp only [mul_comm _ c₂, mul_right_commₓ _ _ c₂]
+  simp only [← mul_comm c₁ c₂, ← mul_assoc]
   simp [sub_eq_add_neg, add_smul, ← add_assocₓ]
   abel
 

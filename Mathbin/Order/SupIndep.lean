@@ -91,7 +91,7 @@ end DistribLattice
 end Finset
 
 theorem CompleteLattice.independent_iff_sup_indep [CompleteLattice α] {s : Finset ι} {f : ι → α} :
-    CompleteLattice.Independent (f ∘ (coeₓ : s → ι)) ↔ s.sup_indep f := by
+    CompleteLattice.Independent (f ∘ (coe : s → ι)) ↔ s.sup_indep f := by
   classical
   rw [Finset.sup_indep_iff_disjoint_erase]
   refine' subtype.forall.trans (forall₂_congrₓ $ fun a b => _)

@@ -353,7 +353,7 @@ theorem ext {P : Prop} (a b : Plift P) : a = b := by
 
 end Plift
 
-attribute [ext] HasZero
+attribute [ext] Zero
 
 @[ext]
 theorem Unit.ext {x y : Unit} : x = y := by

@@ -66,12 +66,12 @@ theorem kronecker_map_map (f : α → β → γ) (g : γ → γ') (A : Matrix l 
   ext $ fun i j => rfl
 
 @[simp]
-theorem kronecker_map_zero_left [HasZero α] [HasZero γ] (f : α → β → γ) (hf : ∀ b, f 0 b = 0) (B : Matrix n p β) :
+theorem kronecker_map_zero_left [Zero α] [Zero γ] (f : α → β → γ) (hf : ∀ b, f 0 b = 0) (B : Matrix n p β) :
     kronecker_map f (0 : Matrix l m α) B = 0 :=
   ext $ fun i j => hf _
 
 @[simp]
-theorem kronecker_map_zero_right [HasZero β] [HasZero γ] (f : α → β → γ) (hf : ∀ a, f a 0 = 0) (A : Matrix l m α) :
+theorem kronecker_map_zero_right [Zero β] [Zero γ] (f : α → β → γ) (hf : ∀ a, f a 0 = 0) (A : Matrix l m α) :
     kronecker_map f A (0 : Matrix n p β) = 0 :=
   ext $ fun i j => hf _
 
@@ -95,15 +95,15 @@ theorem kronecker_map_smul_right [HasScalar R β] [HasScalar R γ] (f : α → �
     kronecker_map f A (r • B) = r • kronecker_map f A B :=
   ext $ fun i j => hf _ _
 
-theorem kronecker_map_diagonal_diagonal [HasZero α] [HasZero β] [HasZero γ] [DecidableEq m] [DecidableEq n]
-    (f : α → β → γ) (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (a : m → α) (b : n → β) :
+theorem kronecker_map_diagonal_diagonal [Zero α] [Zero β] [Zero γ] [DecidableEq m] [DecidableEq n] (f : α → β → γ)
+    (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (a : m → α) (b : n → β) :
     kronecker_map f (diagonal a) (diagonal b) = diagonal fun mn => f (a mn.1) (b mn.2) := by
   ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
   simp [diagonal, apply_ite f, ite_and, ite_apply, apply_ite (f (a i₁)), hf₁, hf₂]
 
 @[simp]
-theorem kronecker_map_one_one [HasZero α] [HasZero β] [HasZero γ] [HasOne α] [HasOne β] [HasOne γ] [DecidableEq m]
-    [DecidableEq n] (f : α → β → γ) (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (hf₃ : f 1 1 = 1) :
+theorem kronecker_map_one_one [Zero α] [Zero β] [Zero γ] [One α] [One β] [One γ] [DecidableEq m] [DecidableEq n]
+    (f : α → β → γ) (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (hf₃ : f 1 1 = 1) :
     kronecker_map f (1 : Matrix m m α) (1 : Matrix n n β) = 1 :=
   (kronecker_map_diagonal_diagonal _ hf₁ hf₂ _ _).trans $ by
     simp only [hf₃, diagonal_one]
@@ -233,7 +233,7 @@ theorem mul_kronecker_mul [Fintype m] [Fintype m'] [CommSemiringₓ α] (A : Mat
 @[simp]
 theorem kronecker_assoc [Semigroupₓ α] (A : Matrix l m α) (B : Matrix n p α) (C : Matrix q r α) :
     reindex (Equivₓ.prodAssoc l n q) (Equivₓ.prodAssoc m p r) (A ⊗ₖ B ⊗ₖ C) = A ⊗ₖ (B ⊗ₖ C) :=
-  kronecker_map_assoc₁ _ _ _ _ A B C mul_assocₓ
+  kronecker_map_assoc₁ _ _ _ _ A B C mul_assoc
 
 end Kronecker
 

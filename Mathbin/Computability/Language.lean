@@ -27,11 +27,11 @@ namespace Language
 attribute [local reducible] Language
 
 /-- Zero language has no elements. -/
-instance : HasZero (Language α) :=
+instance : Zero (Language α) :=
   ⟨(∅ : Set _)⟩
 
 /-- `1 : language α` contains only one element `[]`. -/
-instance : HasOne (Language α) :=
+instance : One (Language α) :=
   ⟨{[]}⟩
 
 instance : Inhabited (Language α) :=
@@ -201,7 +201,7 @@ theorem star_mul_le_right_of_mul_le_right (l m : Language α) : l * m ≤ m → 
   induction' n with n ih
   · simp
     
-  rw [pow_succ'ₓ, mul_assocₓ (l ^ n) l m]
+  rw [pow_succ'ₓ, mul_assoc (l ^ n) l m]
   exact le_transₓ (le_mul_congr (le_reflₓ _) h) ih
 
 theorem star_mul_le_left_of_mul_le_left (l m : Language α) : m * l ≤ m → m * l.star ≤ m := by
@@ -212,7 +212,7 @@ theorem star_mul_le_left_of_mul_le_left (l m : Language α) : m * l ≤ m → m 
   induction' n with n ih
   · simp
     
-  rw [pow_succₓ, ← mul_assocₓ m l (l ^ n)]
+  rw [pow_succₓ, ← mul_assoc m l (l ^ n)]
   exact le_transₓ (le_mul_congr h (le_reflₓ _)) ih
 
 end Language

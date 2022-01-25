@@ -37,10 +37,10 @@ theorem mk_eq {f g} : mk f = mk g ↔ f ≈ g :=
 def of_rat (x : β) : Cauchy :=
   mk (const abv x)
 
-instance : HasZero Cauchy :=
+instance : Zero Cauchy :=
   ⟨of_rat 0⟩
 
-instance : HasOne Cauchy :=
+instance : One Cauchy :=
   ⟨of_rat 1⟩
 
 instance : Inhabited Cauchy :=
@@ -80,7 +80,7 @@ instance : Mul Cauchy :=
   ⟨fun x y =>
     (Quotientₓ.liftOn₂ x y fun f g => mk (f * g)) $ fun f₁ g₁ f₂ g₂ hf hg =>
       Quotientₓ.sound $ by
-        simpa [· ≈ ·, Setoidₓ.R, mul_addₓ, mul_commₓ, add_assocₓ, sub_eq_add_neg] using
+        simpa [· ≈ ·, Setoidₓ.R, mul_addₓ, mul_comm, add_assocₓ, sub_eq_add_neg] using
           add_lim_zero (mul_lim_zero_right g₁ hf) (mul_lim_zero_right f₂ hg)⟩
 
 @[simp]
@@ -121,7 +121,7 @@ instance : CommRingₓ Cauchy := by
         intros <;> rfl <;>
       · repeat'
           refine' fun a => Quotientₓ.induction_on a fun _ => _
-        simp [zero_def, one_def, mul_left_commₓ, mul_commₓ, mul_addₓ, add_commₓ, add_left_commₓ, sub_eq_add_neg]
+        simp [zero_def, one_def, mul_left_commₓ, mul_comm, mul_addₓ, add_commₓ, add_left_commₓ, sub_eq_add_neg]
         
 
 theorem of_rat_sub (x y : β) : of_rat (x - y) = of_rat x - of_rat y :=
@@ -151,8 +151,8 @@ noncomputable instance : HasInv Cauchy :=
         have If : mk (inv f hf) * mk f = 1 := mk_eq.2 (inv_mul_cancel hf)
         have Ig : mk (inv g hg) * mk g = 1 := mk_eq.2 (inv_mul_cancel hg)
         rw [mk_eq.2 fg, ← Ig] at If
-        rw [mul_commₓ] at Ig
-        rw [← mul_oneₓ (mk (inv f hf)), ← Ig, ← mul_assocₓ, If, mul_assocₓ, Ig, mul_oneₓ]
+        rw [mul_comm] at Ig
+        rw [← mul_oneₓ (mk (inv f hf)), ← Ig, ← mul_assoc, If, mul_assoc, Ig, mul_oneₓ]
         ⟩
 
 @[simp]
@@ -185,7 +185,7 @@ See note [reducible non-instances]. -/
 noncomputable def Field : Field Cauchy :=
   { Cauchy.comm_ring with inv := HasInv.inv,
     mul_inv_cancel := fun x x0 => by
-      rw [mul_commₓ, CauSeq.Completion.inv_mul_cancel x0],
+      rw [mul_comm, CauSeq.Completion.inv_mul_cancel x0],
     exists_pair_ne := ⟨0, 1, zero_ne_one⟩, inv_zero }
 
 attribute [local instance] Field
@@ -290,7 +290,7 @@ theorem lim_inv {f : CauSeq β abv} (hf : ¬lim_zero f) : lim (inv f hf) = lim f
   lim_eq_of_equiv_const $
     show lim_zero (inv f hf - const abv (lim f⁻¹)) from
       have h₁ : ∀ g f : CauSeq β abv hf : ¬lim_zero f, lim_zero (g - f * inv f hf * g) := fun g f hf => by
-        rw [← one_mulₓ g, ← mul_assocₓ, ← sub_mul, mul_oneₓ, mul_commₓ, mul_commₓ f] <;>
+        rw [← one_mulₓ g, ← mul_assoc, ← sub_mul, mul_oneₓ, mul_comm, mul_comm f] <;>
           exact mul_lim_zero_right _ (Setoidₓ.symm (CauSeq.inv_mul_cancel _))
       have h₂ :
         lim_zero (inv f hf - const abv (lim f⁻¹) - (const abv (lim f) - f) * (inv f hf * const abv (lim f⁻¹))) := by
@@ -303,9 +303,9 @@ theorem lim_inv {f : CauSeq β abv} (hf : ¬lim_zero f) : lim (inv f hf) = lim f
               from
               sub_lim_zero
                 (by
-                  rw [← mul_assocₓ, mul_right_commₓ, const_inv hl] <;> exact h₁ _ _ _)
+                  rw [← mul_assoc, mul_right_commₓ, const_inv hl] <;> exact h₁ _ _ _)
                 (by
-                  rw [← mul_assocₓ] <;> exact h₁ _ _ _)
+                  rw [← mul_assoc] <;> exact h₁ _ _ _)
       (lim_zero_congr h₂).mpr $ mul_lim_zero_left _ (Setoidₓ.symm (equiv_lim f))
 
 end

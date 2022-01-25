@@ -98,7 +98,7 @@ instance : Sub ℤ_[p] :=
       exact le_transₓ (padicNormE.nonarchimedean _ _) (max_le_iff.2 ⟨hx, hy⟩)⟩⟩
 
 /-- Zero on ℤ_p is inherited from ℚ_p. -/
-instance : HasZero ℤ_[p] :=
+instance : Zero ℤ_[p] :=
   ⟨⟨0, by
       norm_num⟩⟩
 
@@ -106,7 +106,7 @@ instance : Inhabited ℤ_[p] :=
   ⟨0⟩
 
 /-- One on ℤ_p is inherited from ℚ_p. -/
-instance : HasOne ℤ_[p] :=
+instance : One ℤ_[p] :=
   ⟨⟨1, by
       norm_num⟩⟩
 
@@ -167,7 +167,7 @@ instance : Ringₓ ℤ_[p] := by
 
 /-- The coercion from ℤ[p] to ℚ[p] as a ring homomorphism. -/
 def coe.ring_hom : ℤ_[p] →+* ℚ_[p] where
-  toFun := (coeₓ : ℤ_[p] → ℚ_[p])
+  toFun := (coe : ℤ_[p] → ℚ_[p])
   map_zero' := rfl
   map_one' := rfl
   map_mul' := coe_mul
@@ -248,7 +248,7 @@ instance : HasNorm ℤ_[p] :=
 
 variable {p}
 
-protected theorem mul_commₓ : ∀ z1 z2 : ℤ_[p], z1 * z2 = z2 * z1
+protected theorem mul_comm : ∀ z1 z2 : ℤ_[p], z1 * z2 = z2 * z1
   | ⟨q1, h1⟩, ⟨q2, h2⟩ =>
     show (⟨q1 * q2, _⟩ : ℤ_[p]) = ⟨q2 * q1, _⟩ by
       simp [_root_.mul_comm]
@@ -497,7 +497,7 @@ theorem mul_inv : ∀ {z : ℤ_[p]}, ∥z∥ = 1 → z * z.inv = 1
     simp [mul_inv_cancel hk]
 
 theorem inv_mul {z : ℤ_[p]} (hz : ∥z∥ = 1) : z.inv * z = 1 := by
-  rw [mul_commₓ, mul_inv hz]
+  rw [mul_comm, mul_inv hz]
 
 theorem is_unit_iff {z : ℤ_[p]} : IsUnit z ↔ ∥z∥ = 1 :=
   ⟨fun h => by
@@ -555,7 +555,7 @@ theorem unit_coeff_spec {x : ℤ_[p]} (hx : x ≠ 0) : x = (unit_coeff hx : ℤ_
   apply Subtype.coe_injective
   push_cast
   have repr : (x : ℚ_[p]) = unit_coeff hx * p ^ x.valuation := by
-    rw [unit_coeff_coe, mul_assocₓ, ← zpow_add₀]
+    rw [unit_coeff_coe, mul_assoc, ← zpow_add₀]
     · simp
       
     · exact_mod_cast hp_prime.1.ne_zero
@@ -670,7 +670,7 @@ instance : DiscreteValuationRing ℤ_[p] :=
   DiscreteValuationRing.of_has_unit_mul_pow_irreducible_factorization
     ⟨p, irreducible_p, fun x hx =>
       ⟨x.valuation.nat_abs, unit_coeff hx, by
-        rw [mul_commₓ, ← unit_coeff_spec hx]⟩⟩
+        rw [mul_comm, ← unit_coeff_spec hx]⟩⟩
 
 theorem ideal_eq_span_pow_p {s : Ideal ℤ_[p]} (hs : s ≠ ⊥) : ∃ n : ℕ, s = Ideal.span {p ^ n} :=
   DiscreteValuationRing.ideal_eq_span_pow_irreducible hs irreducible_p

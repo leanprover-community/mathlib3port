@@ -404,7 +404,7 @@ theorem preimage_const_mul_interval (ha : a ≠ 0) (b c : k) :
     (fun x => a * x) ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" =
       "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" :=
   by
-  simp only [← preimage_mul_const_interval ha, mul_commₓ]
+  simp only [← preimage_mul_const_interval ha, mul_comm]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
@@ -445,7 +445,7 @@ theorem image_const_mul_interval (a b c : k) :
     (fun x => a * x) '' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" =
       "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" :=
   by
-  simpa only [mul_commₓ] using image_mul_const_interval a b c
+  simpa only [mul_comm] using image_mul_const_interval a b c
 
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)

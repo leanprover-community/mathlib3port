@@ -35,11 +35,11 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
           decide)).1 $
     calc
       2 * 2 * m = (x - y) ^ 2 + (x + y) ^ 2 := by
-        rw [mul_assocₓ, h] <;> ring
+        rw [mul_assoc, h] <;> ring
       _ = (2 * ((x - y) / 2)) ^ 2 + (2 * ((x + y) / 2)) ^ 2 := by
         rw [Int.mul_div_cancel' hxsuby, Int.mul_div_cancel' hxaddy]
       _ = 2 * 2 * (((x - y) / 2) ^ 2 + ((x + y) / 2) ^ 2) := by
-        simp [mul_addₓ, pow_succₓ, mul_commₓ, mul_assocₓ, mul_left_commₓ]
+        simp [mul_addₓ, pow_succₓ, mul_comm, mul_assoc, mul_left_commₓ]
       
 
 theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.prime] :
@@ -60,7 +60,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.prime] :
           rw [← hk] <;> exact add_nonneg (add_nonneg (sq_nonneg _) (sq_nonneg _)) zero_le_one)
         (Int.coe_nat_pos.2 hp.1.Pos)
     ⟨a.val_min_abs, b.val_min_abs, k.nat_abs, by
-      rw [hk, Int.nat_abs_of_nonneg hk0, mul_commₓ],
+      rw [hk, Int.nat_abs_of_nonneg hk0, mul_comm],
       lt_of_mul_lt_mul_left
         (calc
           p * k.nat_abs = a.val_min_abs.nat_abs ^ 2 + b.val_min_abs.nat_abs ^ 2 + 1 := by
@@ -106,7 +106,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
     decide
   let f : Finₓ 4 → ℤ := Vector.nth (a::ᵥb::ᵥc::ᵥd::ᵥVector.nil)
   let ⟨i, hσ⟩ :=
-    this (coeₓ ∘ f)
+    this (coe ∘ f)
       (by
         rw [← @zero_mul (Zmod 2) _ m, ← show ((2 : ℤ) : Zmod 2) = 0 from rfl, ← Int.cast_mul, ← h] <;>
           simp only [Int.cast_add, Int.cast_pow] <;> rfl)
@@ -163,7 +163,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : _root_.fact p.prime] :
           ⟨lt_transₓ hkm hmp, hk0,
             sum_four_squares_of_two_mul_sum_four_squares
               (show a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 2 * (k * p) by
-                rw [habcd, hk, Int.coe_nat_mul, mul_assocₓ]
+                rw [habcd, hk, Int.coe_nat_mul, mul_assoc]
                 simp )⟩)
     fun hm2 : m % 2 = 1 =>
     if hm1 : m = 1 then
@@ -198,7 +198,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : _root_.fact p.prime] :
                 exact add_pos_of_nonneg_of_pos (Int.coe_nat_nonneg _) zero_lt_one)
           _ = m ^ 2 := by
             conv_rhs => rw [← Nat.mod_add_divₓ m 2]
-            simp [-Nat.mod_add_divₓ, mul_addₓ, add_mulₓ, bit0, bit1, mul_commₓ, mul_assocₓ, mul_left_commₓ, pow_addₓ,
+            simp [-Nat.mod_add_divₓ, mul_addₓ, add_mulₓ, bit0, bit1, mul_comm, mul_assoc, mul_left_commₓ, pow_addₓ,
               add_commₓ, add_left_commₓ]
           
       have hwxyzabcd :

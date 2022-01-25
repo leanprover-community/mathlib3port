@@ -100,7 +100,7 @@ theorem volume_apply (I : box ι) : (volume : Measureₓ (ι → ℝ)).toBoxAddi
 
 theorem volume_face_mul {n} (i : Finₓ (n + 1)) (I : box (Finₓ (n + 1))) :
     (∏ j, (I.face i).upper j - (I.face i).lower j) * (I.upper i - I.lower i) = ∏ j, I.upper j - I.lower j := by
-  simp only [face_lower, face_upper, · ∘ ·, Finₓ.prod_univ_succ_above _ i, mul_commₓ]
+  simp only [face_lower, face_upper, · ∘ ·, Finₓ.prod_univ_succ_above _ i, mul_comm]
 
 end Box
 

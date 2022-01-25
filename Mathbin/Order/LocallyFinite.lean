@@ -589,7 +589,7 @@ namespace WithTop
 
 variable (α) [PartialOrderₓ α] [OrderTop α] [LocallyFiniteOrder α]
 
-attribute [local matchPattern] coeₓ
+attribute [local matchPattern] coe
 
 attribute [local simp] Option.mem_iff
 

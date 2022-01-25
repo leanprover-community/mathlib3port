@@ -36,7 +36,7 @@ we would need, and some sheafification would be needed for here and there.
 -/
 
 
-universe v u
+universe w v u
 
 namespace CategoryTheory
 
@@ -430,13 +430,13 @@ namespace CategoryTheory.CoverDense
 
 open CategoryTheory
 
-variable {C : Type u} [small_category C] {D : Type u} [small_category D]
+variable {C D : Type u} [category.{v} C] [category.{v} D]
 
 variable {G : C ⥤ D} [full G] [faithful G]
 
 variable {J : grothendieck_topology C} {K : grothendieck_topology D}
 
-variable {A : Type v} [category.{u} A] [limits.has_limits A]
+variable {A : Type w} [category.{max u v} A] [limits.has_limits A]
 
 variable (Hd : cover_dense K G) (Hp : cover_preserving J K G) (Hl : cover_lifting J K G)
 
@@ -448,7 +448,7 @@ it induces an equivalence of category of sheaves valued in a complete category.
 @[simps Functor inverse]
 noncomputable def Sheaf_equiv_of_cover_preserving_cover_lifting : Sheaf J A ≌ Sheaf K A := by
   symm
-  let α := sites.pullback_copullback_adjunction A Hp Hl Hd.compatible_preserving
+  let α := sites.pullback_copullback_adjunction.{w, v, u} A Hp Hl Hd.compatible_preserving
   have : ∀ X : Sheaf J A, is_iso (α.counit.app X) := by
     intro ℱ
     apply reflects_isomorphisms.reflects (Sheaf_to_presheaf J A) with { instances := ff }

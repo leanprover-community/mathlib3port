@@ -418,7 +418,7 @@ theorem MeasureTheory.IntegrableOn.mul_continuous_on_of_subset (hf : integrable_
   have : ∀ᵐ x ∂μ.restrict s, ∥f x * g x∥ ≤ C * ∥f x∥ := by
     filter_upwards [ae_restrict_mem hs]
     intro x hx
-    rw [Real.norm_eq_abs, abs_mul, mul_commₓ, Real.norm_eq_abs]
+    rw [Real.norm_eq_abs, abs_mul, mul_comm, Real.norm_eq_abs]
     apply mul_le_mul_of_nonneg_right (hC x (hst hx)) (abs_nonneg _)
   exact mem_ℒp.of_le_mul hf (hf.ae_measurable.mul ((hg.mono hst).AeMeasurable hs)) this
 
@@ -428,7 +428,7 @@ theorem MeasureTheory.IntegrableOn.mul_continuous_on [T2Space α] (hf : integrab
 
 theorem MeasureTheory.IntegrableOn.continuous_on_mul_of_subset (hf : integrable_on f s μ) (hg : ContinuousOn g t)
     (hs : MeasurableSet s) (ht : IsCompact t) (hst : s ⊆ t) : integrable_on (fun x => g x * f x) s μ := by
-  simpa [mul_commₓ] using hf.mul_continuous_on_of_subset hg hs ht hst
+  simpa [mul_comm] using hf.mul_continuous_on_of_subset hg hs ht hst
 
 theorem MeasureTheory.IntegrableOn.continuous_on_mul [T2Space α] (hf : integrable_on f s μ) (hg : ContinuousOn g s)
     (hs : IsCompact s) : integrable_on (fun x => g x * f x) s μ :=

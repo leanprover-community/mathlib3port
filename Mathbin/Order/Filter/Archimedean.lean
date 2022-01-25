@@ -16,25 +16,24 @@ variable {α R : Type _}
 open Filter Set
 
 @[simp]
-theorem Nat.comap_coe_at_top [OrderedSemiring R] [Nontrivial R] [Archimedean R] :
-    comap (coeₓ : ℕ → R) at_top = at_top :=
+theorem Nat.comap_coe_at_top [OrderedSemiring R] [Nontrivial R] [Archimedean R] : comap (coe : ℕ → R) at_top = at_top :=
   comap_embedding_at_top (fun _ _ => Nat.cast_le) exists_nat_ge
 
 theorem tendsto_coe_nat_at_top_iff [OrderedSemiring R] [Nontrivial R] [Archimedean R] {f : α → ℕ} {l : Filter α} :
     tendsto (fun n => (f n : R)) l at_top ↔ tendsto f l at_top :=
   tendsto_at_top_embedding (fun a₁ a₂ => Nat.cast_le) exists_nat_ge
 
-theorem tendsto_coe_nat_at_top_at_top [OrderedSemiring R] [Archimedean R] : tendsto (coeₓ : ℕ → R) at_top at_top :=
+theorem tendsto_coe_nat_at_top_at_top [OrderedSemiring R] [Archimedean R] : tendsto (coe : ℕ → R) at_top at_top :=
   Nat.mono_cast.tendsto_at_top_at_top exists_nat_ge
 
 @[simp]
-theorem Int.comap_coe_at_top [OrderedRing R] [Nontrivial R] [Archimedean R] : comap (coeₓ : ℤ → R) at_top = at_top :=
+theorem Int.comap_coe_at_top [OrderedRing R] [Nontrivial R] [Archimedean R] : comap (coe : ℤ → R) at_top = at_top :=
   (comap_embedding_at_top fun _ _ => Int.cast_le) $ fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
     ⟨n, hn⟩
 
 @[simp]
-theorem Int.comap_coe_at_bot [OrderedRing R] [Nontrivial R] [Archimedean R] : comap (coeₓ : ℤ → R) at_bot = at_bot :=
+theorem Int.comap_coe_at_bot [OrderedRing R] [Nontrivial R] [Archimedean R] : comap (coe : ℤ → R) at_bot = at_bot :=
   (comap_embedding_at_bot fun _ _ => Int.cast_le) $ fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by
@@ -48,20 +47,20 @@ theorem tendsto_coe_int_at_bot_iff [OrderedRing R] [Nontrivial R] [Archimedean R
     tendsto (fun n => (f n : R)) l at_bot ↔ tendsto f l at_bot := by
   rw [← tendsto_comap_iff, Int.comap_coe_at_bot]
 
-theorem tendsto_coe_int_at_top_at_top [OrderedRing R] [Archimedean R] : tendsto (coeₓ : ℤ → R) at_top at_top :=
+theorem tendsto_coe_int_at_top_at_top [OrderedRing R] [Archimedean R] : tendsto (coe : ℤ → R) at_top at_top :=
   Int.cast_mono.tendsto_at_top_at_top $ fun b =>
     let ⟨n, hn⟩ := exists_nat_ge b
     ⟨n, hn⟩
 
 @[simp]
-theorem Rat.comap_coe_at_top [LinearOrderedField R] [Archimedean R] : comap (coeₓ : ℚ → R) at_top = at_top :=
+theorem Rat.comap_coe_at_top [LinearOrderedField R] [Archimedean R] : comap (coe : ℚ → R) at_top = at_top :=
   (comap_embedding_at_top fun _ _ => Rat.cast_le) $ fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
     ⟨n, by
       simpa⟩
 
 @[simp]
-theorem Rat.comap_coe_at_bot [LinearOrderedField R] [Archimedean R] : comap (coeₓ : ℚ → R) at_bot = at_bot :=
+theorem Rat.comap_coe_at_bot [LinearOrderedField R] [Archimedean R] : comap (coe : ℚ → R) at_bot = at_bot :=
   (comap_embedding_at_bot fun _ _ => Rat.cast_le) $ fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by
@@ -122,7 +121,7 @@ theorem Filter.Tendsto.const_mul_at_top' (hr : 0 < r) (hf : tendsto f l at_top) 
       rw [one_mulₓ]
       exact le_max_leftₓ _ _ _ ≤ r * n * max b 0 :=
       mul_le_mul_of_nonneg_right hn (le_max_rightₓ _ _)_ = r * (n * max b 0) := by
-      rw [mul_assocₓ]_ ≤ r * f x := mul_le_mul_of_nonneg_left hx (le_of_ltₓ hr)
+      rw [mul_assoc]_ ≤ r * f x := mul_le_mul_of_nonneg_left hx (le_of_ltₓ hr)
 
 /-- If a function tends to infinity along a filter, then this function multiplied by a positive
 constant (on the right) also tends to infinity. The archimedean assumption is convenient to get a
@@ -140,5 +139,5 @@ theorem Filter.Tendsto.at_top_mul_const' (hr : 0 < r) (hf : tendsto f l at_top) 
       rw [mul_oneₓ]
       exact le_max_leftₓ _ _ _ ≤ max b 0 * (n * r) :=
       mul_le_mul_of_nonneg_left hn' (le_max_rightₓ _ _)_ = max b 0 * n * r := by
-      rw [mul_assocₓ]_ ≤ f x * r := mul_le_mul_of_nonneg_right hx (le_of_ltₓ hr)
+      rw [mul_assoc]_ ≤ f x * r := mul_le_mul_of_nonneg_right hx (le_of_ltₓ hr)
 

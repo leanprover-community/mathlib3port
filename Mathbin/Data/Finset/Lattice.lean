@@ -190,7 +190,7 @@ theorem comp_sup_eq_sup_comp_of_is_total [IsTotal α (· ≤ ·)] {γ : Type} [S
 theorem sup_coe {P : α → Prop} {Pbot : P ⊥} {Psup : ∀ ⦃x y⦄, P x → P y → P (x⊔y)} (t : Finset β)
     (f : β → { x : α // P x }) :
     (@sup _ _ (Subtype.semilatticeSup Psup) (Subtype.orderBot Pbot) t f : α) = t.sup fun x => f x := by
-  rw [comp_sup_eq_sup_comp coeₓ] <;> intros <;> rfl
+  rw [comp_sup_eq_sup_comp coe] <;> intros <;> rfl
 
 @[simp]
 theorem sup_to_finset {α β} [DecidableEq β] (s : Finset α) (f : α → Multiset β) :
@@ -440,7 +440,7 @@ section Sup'
 
 variable [SemilatticeSup α]
 
-theorem sup_of_mem {s : Finset β} (f : β → α) {b : β} (h : b ∈ s) : ∃ a : α, s.sup (coeₓ ∘ f : β → WithBot α) = ↑a :=
+theorem sup_of_mem {s : Finset β} (f : β → α) {b : β} (h : b ∈ s) : ∃ a : α, s.sup (coe ∘ f : β → WithBot α) = ↑a :=
   Exists.impₓ (fun a => Exists.fst) (@le_sup (WithBot α) _ _ _ _ _ _ h (f b) rfl)
 
 /-- Given nonempty finset `s` then `s.sup' H f` is the supremum of its image under `f` in (possibly
@@ -454,7 +454,7 @@ def sup' (s : Finset β) (H : s.nonempty) (f : β → α) : α :=
 variable {s : Finset β} (H : s.nonempty) (f : β → α)
 
 @[simp]
-theorem coe_sup' : ((s.sup' H f : α) : WithBot α) = s.sup (coeₓ ∘ f) := by
+theorem coe_sup' : ((s.sup' H f : α) : WithBot α) = s.sup (coe ∘ f) := by
   rw [sup', ← WithBot.some_eq_coe, Option.some_getₓ]
 
 @[simp]
@@ -527,7 +527,7 @@ theorem comp_sup'_eq_sup'_comp [SemilatticeSup γ] {s : Finset β} (H : s.nonemp
     
   · cases f₂
     rfl
-    exact congr_argₓ coeₓ (g_sup f₁ f₂)
+    exact congr_argₓ coe (g_sup f₁ f₂)
     
 
 theorem sup'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p a₂ → p (a₁⊔a₂)) (hs : ∀, ∀ b ∈ s, ∀, p (f b)) :
@@ -573,7 +573,7 @@ section Inf'
 
 variable [SemilatticeInf α]
 
-theorem inf_of_mem {s : Finset β} (f : β → α) {b : β} (h : b ∈ s) : ∃ a : α, s.inf (coeₓ ∘ f : β → WithTop α) = ↑a :=
+theorem inf_of_mem {s : Finset β} (f : β → α) {b : β} (h : b ∈ s) : ∃ a : α, s.inf (coe ∘ f : β → WithTop α) = ↑a :=
   @sup_of_mem (OrderDual α) _ _ _ f _ h
 
 /-- Given nonempty finset `s` then `s.inf' H f` is the infimum of its image under `f` in (possibly
@@ -585,7 +585,7 @@ def inf' (s : Finset β) (H : s.nonempty) (f : β → α) : α :=
 variable {s : Finset β} (H : s.nonempty) (f : β → α)
 
 @[simp]
-theorem coe_inf' : ((s.inf' H f : α) : WithTop α) = s.inf (coeₓ ∘ f) :=
+theorem coe_inf' : ((s.inf' H f : α) : WithTop α) = s.inf (coe ∘ f) :=
   @coe_sup' (OrderDual α) _ _ _ H f
 
 @[simp]
@@ -669,8 +669,7 @@ theorem exists_mem_eq_sup [IsTotal α (· ≤ ·)] (s : Finset β) (h : s.nonemp
     ∃ b, b ∈ s ∧ s.sup f = f b :=
   sup'_eq_sup h f ▸ exists_mem_eq_sup' h f
 
-theorem coe_sup_of_nonempty {s : Finset β} (h : s.nonempty) (f : β → α) : (↑s.sup f : WithBot α) = s.sup (coeₓ ∘ f) :=
-  by
+theorem coe_sup_of_nonempty {s : Finset β} (h : s.nonempty) (f : β → α) : (↑s.sup f : WithBot α) = s.sup (coe ∘ f) := by
   simp only [← sup'_eq_sup h, coe_sup' h]
 
 end Sup

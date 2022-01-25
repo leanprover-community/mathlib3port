@@ -34,7 +34,7 @@ noncomputable instance [Monoidₓ M] : Groupₓ (IsUnit.submonoid M) :=
 noncomputable instance [CommMonoidₓ M] : CommGroupₓ (IsUnit.submonoid M) :=
   { show Groupₓ (IsUnit.submonoid M) by
       infer_instance with
-    mul_comm := fun a b => mul_commₓ a b }
+    mul_comm := fun a b => mul_comm a b }
 
 @[to_additive]
 theorem is_unit.submonoid.coe_inv [Monoidₓ M] (x : IsUnit.submonoid M) : ↑x⁻¹ = (↑x.prop.unit⁻¹ : M) :=
@@ -51,13 +51,13 @@ def left_inv : Submonoid M where
   one_mem' := ⟨1, mul_oneₓ 1⟩
   mul_mem' := fun a b ⟨a', ha⟩ ⟨b', hb⟩ =>
     ⟨b' * a', by
-      rw [coe_mul, ← mul_assocₓ, mul_assocₓ a, hb, mul_oneₓ, ha]⟩
+      rw [coe_mul, ← mul_assoc, mul_assoc a, hb, mul_oneₓ, ha]⟩
 
 @[to_additive]
 theorem left_inv_left_inv_le : S.left_inv.left_inv ≤ S := by
   rintro x ⟨⟨y, z, h₁⟩, h₂ : x * y = 1⟩
   convert z.prop
-  rw [← mul_oneₓ x, ← h₁, ← mul_assocₓ, h₂, one_mulₓ]
+  rw [← mul_oneₓ x, ← h₁, ← mul_assoc, h₂, one_mulₓ]
 
 @[to_additive]
 theorem unit_mem_left_inv (x : (M)ˣ) (hx : (x : M) ∈ S) : ((x⁻¹ : _) : M) ∈ S.left_inv :=
@@ -95,10 +95,10 @@ variable [CommMonoidₓ M] (S : Submonoid M)
 
 @[simp, to_additive]
 theorem from_left_inv_mul (x : S.left_inv) : (S.from_left_inv x : M) * x = 1 := by
-  rw [mul_commₓ, mul_from_left_inv]
+  rw [mul_comm, mul_from_left_inv]
 
 @[to_additive]
-theorem left_inv_le_is_unit : S.left_inv ≤ IsUnit.submonoid M := fun x ⟨y, hx⟩ => ⟨⟨x, y, hx, mul_commₓ x y ▸ hx⟩, rfl⟩
+theorem left_inv_le_is_unit : S.left_inv ≤ IsUnit.submonoid M := fun x ⟨y, hx⟩ => ⟨⟨x, y, hx, mul_comm x y ▸ hx⟩, rfl⟩
 
 @[to_additive]
 theorem from_left_inv_eq_iff (a : S.left_inv) (b : M) : (S.from_left_inv a : M) = b ↔ (a : M) * b = 1 := by
@@ -112,7 +112,7 @@ noncomputable def from_comm_left_inv : S.left_inv →* S where
   map_one' := S.from_left_inv_one
   map_mul' := fun x y =>
     Subtype.ext $ by
-      rw [from_left_inv_eq_iff, mul_commₓ x, Submonoid.coe_mul, Submonoid.coe_mul, mul_assocₓ, ← mul_assocₓ (x : M),
+      rw [from_left_inv_eq_iff, mul_comm x, Submonoid.coe_mul, Submonoid.coe_mul, mul_assoc, ← mul_assoc (x : M),
         mul_from_left_inv, one_mulₓ, mul_from_left_inv]
 
 variable (hS : S ≤ IsUnit.submonoid M)

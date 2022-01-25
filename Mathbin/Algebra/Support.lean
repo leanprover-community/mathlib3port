@@ -20,12 +20,12 @@ namespace Function
 
 variable {α β A B M N P R S G M₀ G₀ : Type _} {ι : Sort _}
 
-section HasOne
+section One
 
-variable [HasOne M] [HasOne N] [HasOne P]
+variable [One M] [One N] [One P]
 
 /-- `support` of a function is the set of points `x` such that `f x ≠ 0`. -/
-def support [HasZero A] (f : α → A) : Set α :=
+def support [Zero A] (f : α → A) : Set α :=
   { x | f x ≠ 0 }
 
 /-- `mul_support` of a function is the set of points `x` such that `f x ≠ 1`. -/
@@ -162,7 +162,7 @@ theorem mul_support_along_fiber_finite_of_finite (f : α × β → M) (a : α) (
     (mul_support fun b => f (a, b)).Finite :=
   (h.image Prod.snd).Subset (mul_support_along_fiber_subset f a)
 
-end HasOne
+end One
 
 @[to_additive]
 theorem mul_support_mul [Monoidₓ M] (f g : α → M) : (mul_support fun x => f x * g x) ⊆ mul_support f ∪ mul_support g :=
@@ -247,24 +247,22 @@ theorem support_prod [CommMonoidWithZero A] [NoZeroDivisors A] [Nontrivial A] (s
   Set.ext $ fun x => by
     simp only [support, Ne.def, Finset.prod_eq_zero_iff, mem_set_of_eq, Set.mem_Inter, not_exists]
 
-theorem mul_support_one_add [HasOne R] [AddLeftCancelMonoid R] (f : α → R) :
-    (mul_support fun x => 1 + f x) = support f :=
+theorem mul_support_one_add [One R] [AddLeftCancelMonoid R] (f : α → R) : (mul_support fun x => 1 + f x) = support f :=
   Set.ext $ fun x => not_congr add_right_eq_selfₓ
 
-theorem mul_support_one_add' [HasOne R] [AddLeftCancelMonoid R] (f : α → R) : mul_support (1 + f) = support f :=
+theorem mul_support_one_add' [One R] [AddLeftCancelMonoid R] (f : α → R) : mul_support (1 + f) = support f :=
   mul_support_one_add f
 
-theorem mul_support_add_one [HasOne R] [AddRightCancelMonoid R] (f : α → R) :
-    (mul_support fun x => f x + 1) = support f :=
+theorem mul_support_add_one [One R] [AddRightCancelMonoid R] (f : α → R) : (mul_support fun x => f x + 1) = support f :=
   Set.ext $ fun x => not_congr add_left_eq_self
 
-theorem mul_support_add_one' [HasOne R] [AddRightCancelMonoid R] (f : α → R) : mul_support (f + 1) = support f :=
+theorem mul_support_add_one' [One R] [AddRightCancelMonoid R] (f : α → R) : mul_support (f + 1) = support f :=
   mul_support_add_one f
 
-theorem mul_support_one_sub' [HasOne R] [AddGroupₓ R] (f : α → R) : mul_support (1 - f) = support f := by
+theorem mul_support_one_sub' [One R] [AddGroupₓ R] (f : α → R) : mul_support (1 - f) = support f := by
   rw [sub_eq_add_neg, mul_support_one_add', support_neg']
 
-theorem mul_support_one_sub [HasOne R] [AddGroupₓ R] (f : α → R) : (mul_support fun x => 1 - f x) = support f :=
+theorem mul_support_one_sub [One R] [AddGroupₓ R] (f : α → R) : (mul_support fun x => 1 - f x) = support f :=
   mul_support_one_sub' f
 
 end Function
@@ -273,7 +271,7 @@ namespace Set
 
 open Function
 
-variable {α β M : Type _} [HasOne M] {f : α → M}
+variable {α β M : Type _} [One M] {f : α → M}
 
 @[to_additive]
 theorem image_inter_mul_support_eq {s : Set β} {g : β → α} : g '' s ∩ mul_support f = g '' (s ∩ mul_support (f ∘ g)) :=
@@ -284,7 +282,7 @@ end Set
 
 namespace Pi
 
-variable {A : Type _} {B : Type _} [DecidableEq A] [HasZero B] {a : A} {b : B}
+variable {A : Type _} {B : Type _} [DecidableEq A] [Zero B] {a : A} {b : B}
 
 theorem support_single_zero : Function.Support (Pi.single a (0 : B)) = ∅ := by
   simp

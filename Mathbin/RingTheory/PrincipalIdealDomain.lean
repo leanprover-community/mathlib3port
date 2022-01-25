@@ -103,7 +103,7 @@ variable [CommRingₓ R] [Module R M]
 theorem mem_iff_generator_dvd (S : Ideal R) [S.is_principal] {x : R} : x ∈ S ↔ generator S ∣ x :=
   (mem_iff_eq_smul_generator S).trans
     (exists_congr fun a => by
-      simp only [mul_commₓ, smul_eq_mul])
+      simp only [mul_comm, smul_eq_mul])
 
 theorem prime_generator_of_is_prime (S : Ideal R) [Submodule.IsPrincipal S] [is_prime : S.is_prime] (ne_bot : S ≠ ⊥) :
     Prime (generator S) :=
@@ -317,7 +317,7 @@ theorem span_gcd (x y : R) : span ({gcd x y} : Set R) = span ({x, y} : Set R) :=
     
 
 theorem gcd_dvd_iff_exists (a b : R) {z} : gcd a b ∣ z ↔ ∃ x y, z = a * x + b * y := by
-  simp_rw [mul_commₓ a, mul_commₓ b, @eq_comm _ z, ← mem_span_pair, ← span_gcd, Ideal.mem_span_singleton]
+  simp_rw [mul_comm a, mul_comm b, @eq_comm _ z, ← mem_span_pair, ← span_gcd, Ideal.mem_span_singleton]
 
 /-- **Bézout's lemma** -/
 theorem exists_gcd_eq_mul_add_mul (a b : R) : ∃ x y, gcd a b = a * x + b * y := by

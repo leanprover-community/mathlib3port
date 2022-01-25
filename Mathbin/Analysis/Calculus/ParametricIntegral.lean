@@ -81,7 +81,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     have : ∀ᵐ a ∂μ, ∥F x₀ a - F x a∥ ≤ ε * b a := by
       simp only [norm_sub_rev (F x₀ _)]
       refine' h_lipsch.mono fun a ha => (ha x x_in).trans _
-      rw [mul_commₓ ε]
+      rw [mul_comm ε]
       rw [mem_ball, dist_eq_norm] at x_in
       exact mul_le_mul_of_nonneg_left x_in.le (b_nonneg _)
     exact integrable_of_norm_sub_le (hF_meas x x_in) hF_int (integrable.const_mul bound_integrable.norm ε) this

@@ -34,7 +34,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     Ennreal.pow_le_pow_of_le_one (Ennreal.inv_le_one.2 ennreal.one_lt_two.le) h
   have h2pow : ∀ n : ℕ, 2 * (2⁻¹ : ℝ≥0∞) ^ (n + 1) = 2⁻¹ ^ n := by
     intro n
-    simp [pow_succₓ, ← mul_assocₓ, Ennreal.mul_inv_cancel]
+    simp [pow_succₓ, ← mul_assoc, Ennreal.mul_inv_cancel]
   refine' ⟨fun ι s ho hcov => _⟩
   simp only [Union_eq_univ_iff] at hcov
   let this' : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
@@ -70,7 +70,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       have : 0 < ε / 3 := Ennreal.div_pos_iff.2 ⟨ε0.lt.ne', Ennreal.coe_ne_top⟩
       rcases Ennreal.exists_inv_two_pow_lt this.ne' with ⟨n, hn⟩
       refine' ⟨n, subset.trans (ball_subset_ball _) hε⟩
-      simpa only [div_eq_mul_inv, mul_commₓ] using (Ennreal.mul_lt_of_lt_div hn).le
+      simpa only [div_eq_mul_inv, mul_comm] using (Ennreal.mul_lt_of_lt_div hn).le
     by_contra h
     push_neg  at h
     apply h n (ind x)

@@ -753,7 +753,7 @@ theorem monic.irreducible_of_irreducible_map (f : Polynomial R) (h_mon : monic f
     dsimp [monic]  at h_mon
     rw [h_mon] at q
     have au : IsUnit a.leading_coeff := is_unit_of_mul_eq_one _ _ q
-    rw [mul_commₓ] at q
+    rw [mul_comm] at q
     have bu : IsUnit b.leading_coeff := is_unit_of_mul_eq_one _ _ q
     clear q h_mon
     have h' := congr_argₓ (map φ) h

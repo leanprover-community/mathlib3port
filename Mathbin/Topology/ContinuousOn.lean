@@ -260,7 +260,7 @@ theorem tendsto_nhds_within_of_tendsto_nhds {f : α → β} {a : α} {s : Set α
   h.mono_left inf_le_left
 
 theorem principal_subtype {α : Type _} (s : Set α) (t : Set { x // x ∈ s }) :
-    𝓟 t = comap coeₓ (𝓟 ((coeₓ : s → α) '' t)) := by
+    𝓟 t = comap coe (𝓟 ((coe : s → α) '' t)) := by
   rw [comap_principal, Set.preimage_image_eq _ Subtype.coe_injective]
 
 theorem nhds_within_ne_bot_of_mem {s : Set α} {x : α} (hx : x ∈ s) : ne_bot (𝓝[s] x) :=
@@ -325,20 +325,20 @@ theorem eventually_nhds_within_of_eventually_nhds {α : Type _} [TopologicalSpac
 
 
 theorem mem_nhds_within_subtype {s : Set α} {a : { x // x ∈ s }} {t u : Set { x // x ∈ s }} :
-    t ∈ 𝓝[u] a ↔ t ∈ comap (coeₓ : s → α) (𝓝[coeₓ '' u] a) := by
+    t ∈ 𝓝[u] a ↔ t ∈ comap (coe : s → α) (𝓝[coe '' u] a) := by
   rw [nhdsWithin, nhds_subtype, principal_subtype, ← comap_inf, ← nhdsWithin]
 
 theorem nhds_within_subtype (s : Set α) (a : { x // x ∈ s }) (t : Set { x // x ∈ s }) :
-    𝓝[t] a = comap (coeₓ : s → α) (𝓝[coeₓ '' t] a) :=
+    𝓝[t] a = comap (coe : s → α) (𝓝[coe '' t] a) :=
   Filter.ext $ fun u => mem_nhds_within_subtype
 
-theorem nhds_within_eq_map_subtype_coe {s : Set α} {a : α} (h : a ∈ s) : 𝓝[s] a = map (coeₓ : s → α) (𝓝 ⟨a, h⟩) := by
+theorem nhds_within_eq_map_subtype_coe {s : Set α} {a : α} (h : a ∈ s) : 𝓝[s] a = map (coe : s → α) (𝓝 ⟨a, h⟩) := by
   simpa only [Subtype.range_coe] using (embedding_subtype_coe.map_nhds_eq ⟨a, h⟩).symm
 
-theorem mem_nhds_subtype_iff_nhds_within {s : Set α} {a : s} {t : Set s} : t ∈ 𝓝 a ↔ coeₓ '' t ∈ 𝓝[s] (a : α) := by
+theorem mem_nhds_subtype_iff_nhds_within {s : Set α} {a : s} {t : Set s} : t ∈ 𝓝 a ↔ coe '' t ∈ 𝓝[s] (a : α) := by
   rw [nhds_within_eq_map_subtype_coe a.coe_prop, mem_map, preimage_image_eq _ Subtype.coe_injective, Subtype.coe_eta]
 
-theorem preimage_coe_mem_nhds_subtype {s t : Set α} {a : s} : coeₓ ⁻¹' t ∈ 𝓝 a ↔ t ∈ 𝓝[s] ↑a := by
+theorem preimage_coe_mem_nhds_subtype {s t : Set α} {a : s} : coe ⁻¹' t ∈ 𝓝 a ↔ t ∈ 𝓝[s] ↑a := by
   simp only [mem_nhds_subtype_iff_nhds_within, Subtype.image_preimage_coe, inter_mem_iff, self_mem_nhds_within,
     and_trueₓ]
 
@@ -749,7 +749,7 @@ theorem continuous_on_open_of_generate_from {β : Type _} {s : Set α} {T : Set 
     rw [this]
     exact hu.inter hv
     
-  · rw [preimage_sUnion, inter_bUnion]
+  · rw [preimage_sUnion, inter_Union₂]
     exact is_open_bUnion hU'
     
   · exact hs

@@ -187,7 +187,7 @@ end DirectSum
 
 section HomogeneousElement
 
-theorem SetLike.is_homogeneous_zero_submodule [HasZero ι] [Semiringₓ S] [AddCommMonoidₓ R] [Module S R]
+theorem SetLike.is_homogeneous_zero_submodule [Zero ι] [Semiringₓ S] [AddCommMonoidₓ R] [Module S R]
     (A : ι → Submodule S R) : SetLike.IsHomogeneous A (0 : R) :=
   ⟨0, Submodule.zero_mem _⟩
 

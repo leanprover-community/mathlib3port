@@ -84,12 +84,11 @@ unsafe def ifind {key value} [Inhabited value] (m : rb_map key value) (k : key) 
 
 /-- `zfind m key` returns the value corresponding to `key` in `m`, if it exists.
 Otherwise it returns 0. -/
-unsafe def zfind {key value} [HasZero value] (m : rb_map key value) (k : key) : value :=
+unsafe def zfind {key value} [Zero value] (m : rb_map key value) (k : key) : value :=
   (m.find k).getOrElse 0
 
 /-- Returns the pointwise sum of `m1` and `m2`, treating nonexistent values as 0. -/
-unsafe def add {key value} [Add value] [HasZero value] [DecidableEq value] (m1 m2 : rb_map key value) :
-    rb_map key value :=
+unsafe def add {key value} [Add value] [Zero value] [DecidableEq value] (m1 m2 : rb_map key value) : rb_map key value :=
   m1.fold m2 fun n v m =>
     let nv := v + m2.zfind n
     if nv = 0 then m.erase n else m.insert n nv

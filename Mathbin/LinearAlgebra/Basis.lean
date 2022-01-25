@@ -364,6 +364,11 @@ theorem coe_reindex_repr : ((b.reindex e).repr x : ι' → R) = b.repr x ∘ e.s
 theorem reindex_repr (i' : ι') : (b.reindex e).repr x i' = b.repr x (e.symm i') := by
   rw [coe_reindex_repr]
 
+@[simp]
+theorem reindex_refl : b.reindex (Equivₓ.refl ι) = b :=
+  eq_of_apply_eq $ fun i => by
+    simp
+
 /-- `simp` normal form version of `range_reindex` -/
 @[simp]
 theorem range_reindex' : Set.Range (b ∘ e.symm) = Set.Range b := by
@@ -380,8 +385,8 @@ def reindex_range : Basis (range b) R M :=
     let this' : Subsingleton R := not_nontrivial_iff_subsingleton.mp h <;>
       exact Basis.of_repr (Module.subsingletonEquiv R M (range b))
 
-theorem finsupp.single_apply_left {α β γ : Type _} [HasZero γ] {f : α → β} (hf : Function.Injective f) (x z : α)
-    (y : γ) : Finsupp.single (f x) y (f z) = Finsupp.single x y z := by
+theorem finsupp.single_apply_left {α β γ : Type _} [Zero γ] {f : α → β} (hf : Function.Injective f) (x z : α) (y : γ) :
+    Finsupp.single (f x) y (f z) = Finsupp.single x y z := by
   simp [Finsupp.single_apply, hf.eq_iff]
 
 theorem reindex_range_self (i : ι) (h := Set.mem_range_self i) : b.reindex_range ⟨b i, h⟩ = b i := by
@@ -662,7 +667,7 @@ protected theorem smul_eq_zero [NoZeroDivisors R] (b : Basis ι R M) {c : R} {x 
   @smul_eq_zero _ _ _ _ _ b.no_zero_smul_divisors _ _
 
 theorem _root_.eq_bot_of_rank_eq_zero [NoZeroDivisors R] (b : Basis ι R M) (N : Submodule R M)
-    (rank_eq : ∀ {m : ℕ} v : Finₓ m → N, LinearIndependent R (coeₓ ∘ v : Finₓ m → M) → m = 0) : N = ⊥ := by
+    (rank_eq : ∀ {m : ℕ} v : Finₓ m → N, LinearIndependent R (coe ∘ v : Finₓ m → M) → m = 0) : N = ⊥ := by
   rw [Submodule.eq_bot_iff]
   intro x hx
   contrapose! rank_eq with x_ne
@@ -872,7 +877,7 @@ theorem sum_repr_mul_repr {ι'} [Fintype ι'] (b' : Basis ι' R M) (x : M) (i : 
   conv_rhs => rw [← b'.sum_repr x]
   simp_rw [LinearEquiv.map_sum, LinearEquiv.map_smul, Finset.sum_apply']
   refine' Finset.sum_congr rfl fun j _ => _
-  rw [Finsupp.smul_apply, smul_eq_mul, mul_commₓ]
+  rw [Finsupp.smul_apply, smul_eq_mul, mul_comm]
 
 end Basis
 
@@ -973,7 +978,7 @@ protected noncomputable def span : Basis ι R (span R (range v)) :=
   Basis.mk (linear_independent_span hli) $ by
     rw [eq_top_iff]
     intro x _
-    have h₁ : ((coeₓ : span R (range v) → M) '' Set.Range fun i => Subtype.mk (v i) _) = range v := by
+    have h₁ : ((coe : span R (range v) → M) '' Set.Range fun i => Subtype.mk (v i) _) = range v := by
       rw [← Set.range_comp]
       rfl
     have h₂ : map (Submodule.subtype _) (span R (Set.Range fun i => Subtype.mk (v i) _)) = span R (range v) := by
@@ -1053,7 +1058,7 @@ noncomputable def mk_fin_cons {n : ℕ} {N : Submodule R M} (y : M) (b : Basis (
 @[simp]
 theorem coe_mk_fin_cons {n : ℕ} {N : Submodule R M} (y : M) (b : Basis (Finₓ n) R N)
     (hli : ∀ c : R, ∀ x ∈ N, ∀, c • y + x = 0 → c = 0) (hsp : ∀ z : M, ∃ c : R, z + c • y ∈ N) :
-    (mk_fin_cons y b hli hsp : Finₓ (n + 1) → M) = Finₓ.cons y (coeₓ ∘ b) :=
+    (mk_fin_cons y b hli hsp : Finₓ (n + 1) → M) = Finₓ.cons y (coe ∘ b) :=
   coe_mk _ _
 
 /-- Let `b` be a basis for a submodule `N ≤ O`. If `y ∈ O` is linear independent of `N`
@@ -1063,7 +1068,7 @@ noncomputable def mk_fin_cons_of_le {n : ℕ} {N O : Submodule R M} (y : M) (yO 
     (hNO : N ≤ O) (hli : ∀ c : R, ∀ x ∈ N, ∀, c • y + x = 0 → c = 0) (hsp : ∀, ∀ z ∈ O, ∀, ∃ c : R, z + c • y ∈ N) :
     Basis (Finₓ (n + 1)) R O :=
   mk_fin_cons ⟨y, yO⟩ (b.map (Submodule.comapSubtypeEquivOfLe hNO).symm)
-    (fun c x hc hx => hli c x (Submodule.mem_comap.mp hc) (congr_argₓ coeₓ hx)) fun z => hsp z z.2
+    (fun c x hc hx => hli c x (Submodule.mem_comap.mp hc) (congr_argₓ coe hx)) fun z => hsp z z.2
 
 @[simp]
 theorem coe_mk_fin_cons_of_le {n : ℕ} {N O : Submodule R M} (y : M) (yO : y ∈ O) (b : Basis (Finₓ n) R N) (hNO : N ≤ O)
@@ -1090,7 +1095,7 @@ def Submodule.inductionOnRankAux (b : Basis ι R M) (P : Submodule R M → Sort 
       ∀ N : Submodule R M,
         (∀, ∀ N' ≤ N, ∀, ∀ x ∈ N, ∀, (∀ c : R, ∀ y ∈ N', ∀, c • x + y = (0 : M) → c = 0) → P N') → P N)
     (n : ℕ) (N : Submodule R M)
-    (rank_le : ∀ {m : ℕ} v : Finₓ m → N, LinearIndependent R (coeₓ ∘ v : Finₓ m → M) → m ≤ n) : P N := by
+    (rank_le : ∀ {m : ℕ} v : Finₓ m → N, LinearIndependent R (coe ∘ v : Finₓ m → M) → m ≤ n) : P N := by
   have : DecidableEq M := Classical.decEq M
   have Pbot : P ⊥ := by
     apply ih
@@ -1134,20 +1139,20 @@ namespace Basis
 section ExistsBasis
 
 /-- If `s` is a linear independent set of vectors, we can extend it to a basis. -/
-noncomputable def extend (hs : LinearIndependent K (coeₓ : s → V)) : Basis _ K V :=
+noncomputable def extend (hs : LinearIndependent K (coe : s → V)) : Basis _ K V :=
   Basis.mk (@LinearIndependent.restrict_of_comp_subtype _ _ _ id _ _ _ _ (hs.linear_independent_extend _))
     (eq_top_iff.mpr $
       SetLike.coe_subset_coe.mp $ by
         simpa using hs.subset_span_extend (subset_univ s))
 
-theorem extend_apply_self (hs : LinearIndependent K (coeₓ : s → V)) (x : hs.extend _) : Basis.extend hs x = x :=
+theorem extend_apply_self (hs : LinearIndependent K (coe : s → V)) (x : hs.extend _) : Basis.extend hs x = x :=
   Basis.mk_apply _ _ _
 
 @[simp]
-theorem coe_extend (hs : LinearIndependent K (coeₓ : s → V)) : ⇑Basis.extend hs = coeₓ :=
+theorem coe_extend (hs : LinearIndependent K (coe : s → V)) : ⇑Basis.extend hs = coe :=
   funext (extend_apply_self hs)
 
-theorem range_extend (hs : LinearIndependent K (coeₓ : s → V)) : range (Basis.extend hs) = hs.extend (subset_univ _) :=
+theorem range_extend (hs : LinearIndependent K (coe : s → V)) : range (Basis.extend hs) = hs.extend (subset_univ _) :=
   by
   rw [coe_extend, Subtype.range_coe_subtype, set_of_mem_eq]
 
@@ -1163,7 +1168,7 @@ noncomputable def sum_extend (hs : LinearIndependent K v) : Basis (Sum ι _) K V
         _ ≃ b := Equivₓ.Set.sumDiffSubset (hs.to_subtype_range.subset_extend _)
         
 
-theorem subset_extend {s : Set V} (hs : LinearIndependent K (coeₓ : s → V)) : s ⊆ hs.extend (Set.subset_univ _) :=
+theorem subset_extend {s : Set V} (hs : LinearIndependent K (coe : s → V)) : s ⊆ hs.extend (Set.subset_univ _) :=
   hs.subset_extend _
 
 section
@@ -1182,10 +1187,10 @@ theorem of_vector_space_apply_self (x : of_vector_space_index K V) : of_vector_s
   Basis.mk_apply _ _ _
 
 @[simp]
-theorem coe_of_vector_space : ⇑of_vector_space K V = coeₓ :=
+theorem coe_of_vector_space : ⇑of_vector_space K V = coe :=
   funext fun x => of_vector_space_apply_self K V x
 
-theorem of_vector_space_index.linear_independent : LinearIndependent K (coeₓ : of_vector_space_index K V → V) := by
+theorem of_vector_space_index.linear_independent : LinearIndependent K (coe : of_vector_space_index K V → V) := by
   convert (of_vector_space K V).LinearIndependent
   ext x
   rw [of_vector_space_apply_self]

@@ -113,7 +113,7 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ) (hw : ∀, ∀ i ∈
     
   · simp only [not_exists, not_and, Ne.def, not_not] at A
     have := convex_on_exp.map_sum_le hw hw' fun i _ => Set.mem_univ $ log (z i)
-    simp only [exp_sum, · ∘ ·, smul_eq_mul, mul_commₓ (w _) (log _)] at this
+    simp only [exp_sum, · ∘ ·, smul_eq_mul, mul_comm (w _) (log _)] at this
     convert this using 1 <;> [apply prod_congr rfl, apply sum_congr rfl] <;> intro i hi
     · cases' eq_or_lt_of_le (hz i hi) with hz hz
       · simp [A i hi hz.symm]
@@ -164,7 +164,7 @@ theorem geom_mean_le_arith_mean2_weighted (w₁ w₂ p₁ p₂ : ℝ≥0 ) :
 theorem geom_mean_le_arith_mean3_weighted (w₁ w₂ w₃ p₁ p₂ p₃ : ℝ≥0 ) :
     w₁ + w₂ + w₃ = 1 → p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) * p₃ ^ (w₃ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ + w₃ * p₃ := by
   simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
-    Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ← add_assocₓ, mul_assocₓ] using
+    Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ← add_assocₓ, mul_assoc] using
     geom_mean_le_arith_mean_weighted univ
       («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
       («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
@@ -178,7 +178,7 @@ theorem geom_mean_le_arith_mean4_weighted (w₁ w₂ w₃ w₄ p₁ p₂ p₃ p�
       p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) * p₃ ^ (w₃ : ℝ) * p₄ ^ (w₄ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ + w₃ * p₃ + w₄ * p₄ :=
   by
   simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
-    Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ← add_assocₓ, mul_assocₓ] using
+    Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ← add_assocₓ, mul_assoc] using
     geom_mean_le_arith_mean_weighted univ
       («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
       («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
@@ -325,10 +325,10 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.is_conju
   by_cases' hG_zero : (∑ i in s, g i ^ q) = 0
   · calc (∑ i in s, f i * g i) = ∑ i in s, g i * f i := by
         congr with i
-        rw [mul_commₓ]_ ≤ (∑ i in s, g i ^ q) ^ (1 / q) * (∑ i in s, f i ^ p) ^ (1 / p) :=
+        rw [mul_comm]_ ≤ (∑ i in s, g i ^ q) ^ (1 / q) * (∑ i in s, f i ^ p) ^ (1 / p) :=
         inner_le_Lp_mul_Lp_of_norm_eq_zero s g f hpq.symm
           hG_zero _ = (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) :=
-        mul_commₓ _ _
+        mul_comm _ _
     
   let f' := fun i => f i / (∑ i in s, f i ^ p) ^ (1 / p)
   let g' := fun i => g i / (∑ i in s, g i ^ q) ^ (1 / q)

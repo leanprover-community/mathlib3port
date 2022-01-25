@@ -49,12 +49,12 @@ section Atoms
 
 section IsAtom
 
-variable [PartialOrderₓ α] [OrderBot α] {a b x : α}
-
 /-- An atom of an `order_bot` is an element with no other element between it and `⊥`,
   which is not `⊥`. -/
-def IsAtom (a : α) : Prop :=
+def IsAtom [Preorderₓ α] [OrderBot α] (a : α) : Prop :=
   a ≠ ⊥ ∧ ∀ b, b < a → b = ⊥
+
+variable [PartialOrderₓ α] [OrderBot α] {a b x : α}
 
 theorem eq_bot_or_eq_of_le_atom (ha : IsAtom a) (hab : b ≤ a) : b = ⊥ ∨ b = a :=
   hab.lt_or_eq.imp_left (ha.2 b)
@@ -76,12 +76,12 @@ end IsAtom
 
 section IsCoatom
 
-variable [PartialOrderₓ α] [OrderTop α] {a b x : α}
-
 /-- A coatom of an `order_top` is an element with no other element between it and `⊤`,
   which is not `⊤`. -/
-def IsCoatom (a : α) : Prop :=
+def IsCoatom [Preorderₓ α] [OrderTop α] (a : α) : Prop :=
   a ≠ ⊤ ∧ ∀ b, a < b → b = ⊤
+
+variable [PartialOrderₓ α] [OrderTop α] {a b x : α}
 
 theorem eq_top_or_eq_of_coatom_le (ha : IsCoatom a) (hab : a ≤ b) : b = ⊤ ∨ b = a :=
   hab.lt_or_eq.imp (ha.2 b) eq_comm.2
@@ -201,7 +201,7 @@ theorem is_atomic_iff_forall_is_atomic_Iic [OrderBot α] : IsAtomic α ↔ ∀ x
   ⟨@IsAtomic.Set.Iic.is_atomic _ _ _, fun h =>
     ⟨fun x =>
       ((@eq_bot_or_exists_atom_le _ _ _ (h x)) (⊤ : Set.Iic x)).imp Subtype.mk_eq_mk.1
-        (exists_imp_exists' coeₓ fun ⟨a, ha⟩ => And.imp_left IsAtom.of_is_atom_coe_Iic)⟩⟩
+        (exists_imp_exists' coe fun ⟨a, ha⟩ => And.imp_left IsAtom.of_is_atom_coe_Iic)⟩⟩
 
 theorem is_coatomic_iff_forall_is_coatomic_Ici [OrderTop α] : IsCoatomic α ↔ ∀ x : α, IsCoatomic (Set.Ici x) :=
   is_atomic_dual_iff_is_coatomic.symm.trans $
