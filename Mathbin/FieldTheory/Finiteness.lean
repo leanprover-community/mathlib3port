@@ -66,7 +66,8 @@ noncomputable def finset_basis_index [IsNoetherian K V] : Finset V :=
   (finite_basis_index (Basis.ofVectorSpace K V)).toFinset
 
 @[simp]
-theorem coe_finset_basis_index [IsNoetherian K V] : (↑finset_basis_index K V : Set V) = Basis.OfVectorSpaceIndex K V :=
+theorem coe_finset_basis_index [IsNoetherian K V] :
+    (↑(finset_basis_index K V) : Set V) = Basis.OfVectorSpaceIndex K V :=
   Set.Finite.coe_to_finset _
 
 @[simp]

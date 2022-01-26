@@ -20,7 +20,7 @@ theorem is_unit_iff_forall_dvd [CommMonoidₓ α] {x : α} : IsUnit x ↔ ∀ y,
   is_unit_iff_dvd_one.trans ⟨fun h y => h.trans (one_dvd _), fun h => h _⟩
 
 theorem is_unit_of_dvd_unit {α} [CommMonoidₓ α] {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x :=
-  is_unit_iff_dvd_one.2 $ xy.trans $ is_unit_iff_dvd_one.1 hu
+  is_unit_iff_dvd_one.2 <| xy.trans <| is_unit_iff_dvd_one.1 hu
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∣ » 1)
 theorem is_unit_of_dvd_one [CommMonoidₓ α] : ∀ a _ : a ∣ 1, IsUnit (a : α)
@@ -44,7 +44,7 @@ theorem dvd_and_not_dvd_iff [CancelCommMonoidWithZero α] {x y : α} : x ∣ y �
       hdu
         (is_unit_of_dvd_one _
           ⟨e,
-            mul_left_cancel₀ hx0 $ by
+            mul_left_cancel₀ hx0 <| by
               conv => lhs rw [he, hdx] <;> simp [mul_assoc]⟩)⟩⟩
 
 theorem pow_dvd_pow_iff [CancelCommMonoidWithZero α] {x : α} {n m : ℕ} (h0 : x ≠ 0) (h1 : ¬IsUnit x) :
@@ -187,7 +187,7 @@ theorem irreducible_or_factor {α} [Monoidₓ α] (x : α) (h : ¬IsUnit x) :
   have := Classical.dec
   refine' or_iff_not_imp_right.2 fun H => _
   simp [h, irreducible_iff] at H⊢
-  refine' fun a b h => Classical.by_contradiction $ fun o => _
+  refine' fun a b h => Classical.by_contradiction fun o => _
   simp [not_or_distrib] at o
   exact H _ o.1 _ o.2 h.symm
 
@@ -200,7 +200,7 @@ protected theorem Prime.irreducible [CancelCommMonoidWithZero α] {p : α} (hp :
             ⟨x,
               mul_right_cancel₀
                   (show a ≠ 0 from fun h => by
-                    simp_all [Prime]) $
+                    simp_all [Prime]) <|
                 by
                 conv => lhs rw [hx] <;> simp [mul_comm, mul_assoc, mul_left_commₓ]⟩))
       fun ⟨x, hx⟩ =>
@@ -209,7 +209,7 @@ protected theorem Prime.irreducible [CancelCommMonoidWithZero α] {p : α} (hp :
           ⟨x,
             mul_right_cancel₀
                 (show b ≠ 0 from fun h => by
-                  simp_all [Prime]) $
+                  simp_all [Prime]) <|
               by
               conv => lhs rw [hx] <;> simp [mul_comm, mul_assoc, mul_left_commₓ]⟩)⟩
 
@@ -300,7 +300,7 @@ theorem associated_one_of_mul_eq_one [CommMonoidₓ α] {a : α} (b : α) (hab :
 
 theorem associated_one_of_associated_mul_one [CommMonoidₓ α] {a b : α} : a * b ~ᵤ 1 → a ~ᵤ 1
   | ⟨u, h⟩ =>
-    associated_one_of_mul_eq_one (b * u) $ by
+    associated_one_of_mul_eq_one (b * u) <| by
       simpa [mul_assoc] using h
 
 theorem associated_mul_unit_left {β : Type _} [Monoidₓ β] (a u : β) (hu : IsUnit u) : Associated (a * u) a :=
@@ -530,8 +530,8 @@ variable [CommMonoidₓ α]
 
 instance : Mul (Associates α) :=
   ⟨fun a' b' =>
-    (Quotientₓ.liftOn₂ a' b' fun a b => ⟦a * b⟧) $ fun a₁ a₂ b₁ b₂ ⟨c₁, h₁⟩ ⟨c₂, h₂⟩ =>
-      Quotientₓ.sound $
+    (Quotientₓ.liftOn₂ a' b' fun a b => ⟦a * b⟧) fun a₁ a₂ b₁ b₂ ⟨c₁, h₁⟩ ⟨c₂, h₂⟩ =>
+      Quotientₓ.sound <|
         ⟨c₁ * c₂, by
           simp [h₁.symm, h₂.symm, mul_assoc, mul_comm, mul_left_commₓ]⟩⟩
 
@@ -542,19 +542,19 @@ instance : CommMonoidₓ (Associates α) where
   one := 1
   mul := · * ·
   mul_one := fun a' =>
-    Quotientₓ.induction_on a' $ fun a =>
+    (Quotientₓ.induction_on a') fun a =>
       show ⟦a * 1⟧ = ⟦a⟧ by
         simp
   one_mul := fun a' =>
-    Quotientₓ.induction_on a' $ fun a =>
+    (Quotientₓ.induction_on a') fun a =>
       show ⟦1 * a⟧ = ⟦a⟧ by
         simp
   mul_assoc := fun a' b' c' =>
-    Quotientₓ.induction_on₃ a' b' c' $ fun a b c =>
+    (Quotientₓ.induction_on₃ a' b' c') fun a b c =>
       show ⟦a * b * c⟧ = ⟦a * (b * c)⟧ by
         rw [mul_assoc]
   mul_comm := fun a' b' =>
-    Quotientₓ.induction_on₂ a' b' $ fun a b =>
+    (Quotientₓ.induction_on₂ a' b') fun a b =>
       show ⟦a * b⟧ = ⟦b * a⟧ by
         rw [mul_comm]
 
@@ -590,11 +590,11 @@ theorem dvd_eq_le : (· ∣ · : Associates α → Associates α → Prop) = (·
 
 theorem mul_eq_one_iff {x y : Associates α} : x * y = 1 ↔ x = 1 ∧ y = 1 :=
   Iff.intro
-    (Quotientₓ.induction_on₂ x y $ fun a b h =>
+    ((Quotientₓ.induction_on₂ x y) fun a b h =>
       have : a * b ~ᵤ 1 := Quotientₓ.exact h
-      ⟨Quotientₓ.sound $ associated_one_of_associated_mul_one this,
-        Quotientₓ.sound $
-          associated_one_of_associated_mul_one $ by
+      ⟨Quotientₓ.sound <| associated_one_of_associated_mul_one this,
+        Quotientₓ.sound <|
+          associated_one_of_associated_mul_one <| by
             rwa [mul_comm] at this⟩)
     (by
       simp (config := { contextual := true }))
@@ -659,7 +659,7 @@ variable [CommMonoidWithZero α]
 
 @[simp]
 theorem mk_eq_zero {a : α} : Associates.mk a = 0 ↔ a = 0 :=
-  ⟨fun h => (associated_zero_iff_eq_zero a).1 $ Quotientₓ.exact h, fun h => h.symm ▸ rfl⟩
+  ⟨fun h => (associated_zero_iff_eq_zero a).1 <| Quotientₓ.exact h, fun h => h.symm ▸ rfl⟩
 
 theorem mk_ne_zero {a : α} : Associates.mk a ≠ 0 ↔ a ≠ 0 :=
   not_congr mk_eq_zero
@@ -693,7 +693,7 @@ theorem exists_non_zero_rep {a : Associates α} : a ≠ 0 → ∃ a0 : α, a0 �
 
 theorem dvd_of_mk_le_mk {a b : α} : Associates.mk a ≤ Associates.mk b → a ∣ b
   | ⟨c', hc'⟩ =>
-    (Quotientₓ.induction_on c' $ fun c hc =>
+    ((Quotientₓ.induction_on c') fun c hc =>
         let ⟨d, hd⟩ := (Quotientₓ.exact hc).symm
         ⟨↑d * c,
           calc
@@ -795,11 +795,11 @@ instance : PartialOrderₓ (Associates α) :=
   { Associates.preorder with
     le_antisymm := fun a' b' =>
       Quotientₓ.induction_on₂ a' b' fun a b hab hba =>
-        Quot.sound $ associated_of_dvd_dvd (dvd_of_mk_le_mk hab) (dvd_of_mk_le_mk hba) }
+        Quot.sound <| associated_of_dvd_dvd (dvd_of_mk_le_mk hab) (dvd_of_mk_le_mk hba) }
 
 instance : NoZeroDivisors (Associates α) :=
   ⟨fun x y =>
-    Quotientₓ.induction_on₂ x y $ fun a b h =>
+    (Quotientₓ.induction_on₂ x y) fun a b h =>
       have : a * b = 0 := (associated_zero_iff_eq_zero _).1 (Quotientₓ.exact h)
       have : a = 0 ∨ b = 0 := mul_eq_zero.1 this
       this.imp (fun h => h.symm ▸ rfl) fun h => h.symm ▸ rfl⟩
@@ -822,7 +822,7 @@ theorem eq_of_mul_eq_mul_right : ∀ a b c : Associates α, b ≠ 0 → a * b = 
 theorem le_of_mul_le_mul_left (a b c : Associates α) (ha : a ≠ 0) : a * b ≤ a * c → b ≤ c
   | ⟨d, hd⟩ =>
     ⟨d,
-      eq_of_mul_eq_mul_left a _ _ ha $ by
+      eq_of_mul_eq_mul_left a _ _ ha <| by
         rwa [← mul_assoc]⟩
 
 theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p → m = 1 ∨ m = p
@@ -830,7 +830,7 @@ theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p 
     match h m d dvd_rfl with
     | Or.inl h =>
       (Classical.by_cases fun this : m = 0 => by
-          simp [this]) $
+          simp [this])
         fun this : m ≠ 0 => by
         have : m * d ≤ m * 1 := by
           simpa using h
@@ -839,11 +839,11 @@ theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p 
         simp [this]
     | Or.inr h =>
       (Classical.by_cases fun this : d = 0 => by
-          simp [this] at hp0 <;> contradiction) $
+          simp [this] at hp0 <;> contradiction)
         fun this : d ≠ 0 =>
         have : d * m ≤ d * 1 := by
           simpa [mul_comm] using h
-        Or.inl $ bot_unique $ Associates.le_of_mul_le_mul_left d m 1 ‹d ≠ 0› this
+        Or.inl <| bot_unique <| Associates.le_of_mul_le_mul_left d m 1 ‹d ≠ 0› this
 
 instance : CancelCommMonoidWithZero (Associates α) :=
   { (inferInstance : CommMonoidWithZero (Associates α)) with mul_left_cancel_of_ne_zero := eq_of_mul_eq_mul_left,

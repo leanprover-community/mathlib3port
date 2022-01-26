@@ -54,7 +54,7 @@ where `ᵒ` denotes the interior.
 
 noncomputable section
 
-open Set HasInv Function TopologicalSpace MeasurableSpace
+open Set Inv Function TopologicalSpace MeasurableSpace
 
 open_locale Nnreal Classical Ennreal Pointwise TopologicalSpace
 
@@ -77,7 +77,7 @@ namespace Haar
   It is defined to be 0 if no finite number of translates cover `K`. -/
 @[to_additive add_index "additive version of `measure_theory.measure.haar.index`"]
 def index (K V : Set G) : ℕ :=
-  Inf $ Finset.card '' { t : Finset G | K ⊆ ⋃ g ∈ t, (fun h => g * h) ⁻¹' V }
+  Inf <| Finset.card '' { t : Finset G | K ⊆ ⋃ g ∈ t, (fun h => g * h) ⁻¹' V }
 
 @[to_additive add_index_empty]
 theorem index_empty {V : Set G} : index ∅ V = 0 := by
@@ -109,7 +109,7 @@ theorem prehaar_nonneg (K₀ : positive_compacts G) {U : Set G} (K : compacts G)
   For all `U`, we can show that `prehaar K₀ U ∈ haar_product K₀`. -/
 @[to_additive "additive version of `measure_theory.measure.haar.haar_product`"]
 def haar_product (K₀ : Set G) : Set (compacts G → ℝ) :=
-  pi univ fun K => Icc 0 $ index K.1 K₀
+  pi univ fun K => Icc 0 <| index K.1 K₀
 
 @[simp, to_additive]
 theorem mem_prehaar_empty {K₀ : Set G} {f : compacts G → ℝ} :
@@ -123,7 +123,7 @@ theorem mem_prehaar_empty {K₀ : Set G} {f : compacts G → ℝ} :
   on compact sets is defined to be an element in the closure of this intersection. -/
 @[to_additive "additive version of `measure_theory.measure.haar.cl_prehaar`"]
 def cl_prehaar (K₀ : Set G) (V : open_nhds_of (1 : G)) : Set (compacts G → ℝ) :=
-  Closure $ prehaar K₀ '' { U : Set G | U ⊆ V.1 ∧ IsOpen U ∧ (1 : G) ∈ U }
+  Closure <| prehaar K₀ '' { U : Set G | U ⊆ V.1 ∧ IsOpen U ∧ (1 : G) ∈ U }
 
 variable [TopologicalGroup G]
 
@@ -239,15 +239,15 @@ theorem index_union_eq (K₁ K₂ : compacts G) {V : Set G} (hV : (Interior V).N
     exact h2g₀
   refine'
     le_transₓ
-      (add_le_add (this K₁.1 $ subset.trans (subset_union_left _ _) h1s)
-        (this K₂.1 $ subset.trans (subset_union_right _ _) h1s))
+      (add_le_add (this K₁.1 <| subset.trans (subset_union_left _ _) h1s)
+        (this K₂.1 <| subset.trans (subset_union_right _ _) h1s))
       _
   rw [← Finset.card_union_eq, Finset.filter_union_right]
   exact s.card_filter_le _
   apply finset.disjoint_filter.mpr
   rintro g₁ h1g₁ ⟨g₂, h1g₂, h2g₂⟩ ⟨g₃, h1g₃, h2g₃⟩
   simp only [mem_preimage] at h1g₃ h1g₂
-  apply @h (g₁⁻¹)
+  apply @h g₁⁻¹
   constructor <;> simp only [Set.mem_inv, Set.mem_mul, exists_exists_and_eq_and, exists_and_distrib_left]
   · refine' ⟨_, h2g₂, (g₁ * g₂)⁻¹, _, _⟩
     simp only [inv_invₓ, h1g₂]
@@ -265,7 +265,7 @@ theorem mul_left_index_le {K : Set G} (hK : IsCompact K) {V : Set G} (hV : (Inte
   rw [← h2s]
   apply Nat.Inf_le
   rw [mem_image]
-  refine' ⟨s.map (Equivₓ.mulRight (g⁻¹)).toEmbedding, _, Finset.card_map _⟩
+  refine' ⟨s.map (Equivₓ.mulRight g⁻¹).toEmbedding, _, Finset.card_map _⟩
   · simp only [mem_set_of_eq]
     refine' subset.trans (image_subset _ h1s) _
     rintro _ ⟨g₁, ⟨_, ⟨g₂, rfl⟩, ⟨_, ⟨hg₂, rfl⟩, hg₁⟩⟩, rfl⟩
@@ -280,7 +280,7 @@ theorem mul_left_index_le {K : Set G} (hK : IsCompact K) {V : Set G} (hV : (Inte
 theorem is_left_invariant_index {K : Set G} (hK : IsCompact K) (g : G) {V : Set G} (hV : (Interior V).Nonempty) :
     index ((fun h => g * h) '' K) V = index K V := by
   refine' le_antisymmₓ (mul_left_index_le hK hV g) _
-  convert mul_left_index_le (hK.image $ continuous_mul_left g) hV (g⁻¹)
+  convert mul_left_index_le (hK.image <| continuous_mul_left g) hV g⁻¹
   rw [image_image]
   symm
   convert image_id' _
@@ -343,7 +343,7 @@ theorem prehaar_sup_eq {K₀ : positive_compacts G} {U : Set G} {K₁ K₂ : com
 
 @[to_additive]
 theorem is_left_invariant_prehaar {K₀ : positive_compacts G} {U : Set G} (hU : (Interior U).Nonempty) (g : G)
-    (K : compacts G) : prehaar K₀.1 U (K.map _ $ continuous_mul_left g) = prehaar K₀.1 U K := by
+    (K : compacts G) : prehaar K₀.1 U (K.map _ <| continuous_mul_left g) = prehaar K₀.1 U K := by
   simp only [prehaar, compacts.map_val, is_left_invariant_index K.2 _ hU]
 
 /-!
@@ -537,8 +537,8 @@ theorem chaar_sup_eq [T2Space G] {K₀ : positive_compacts G} {K₁ K₂ : compa
 
 @[to_additive is_left_invariant_add_chaar]
 theorem is_left_invariant_chaar {K₀ : positive_compacts G} (g : G) (K : compacts G) :
-    chaar K₀ (K.map _ $ continuous_mul_left g) = chaar K₀ K := by
-  let eval : (compacts G → ℝ) → ℝ := fun f => f (K.map _ $ continuous_mul_left g) - f K
+    chaar K₀ (K.map _ <| continuous_mul_left g) = chaar K₀ K := by
+  let eval : (compacts G → ℝ) → ℝ := fun f => f (K.map _ <| continuous_mul_left g) - f K
   have : Continuous eval := (continuous_apply (K.map _ _)).sub (continuous_apply K)
   rw [← sub_eq_zero]
   show chaar K₀ ∈ eval ⁻¹' {(0 : ℝ)}
@@ -586,7 +586,7 @@ theorem haar_content_self {K₀ : positive_compacts G} : haar_content K₀ ⟨K�
 /-- The variant of `is_left_invariant_chaar` for `haar_content` -/
 @[to_additive]
 theorem is_left_invariant_haar_content {K₀ : positive_compacts G} (g : G) (K : compacts G) :
-    haar_content K₀ (K.map _ $ continuous_mul_left g) = haar_content K₀ K := by
+    haar_content K₀ (K.map _ <| continuous_mul_left g) = haar_content K₀ K := by
   simpa only [Ennreal.coe_eq_coe, ← Nnreal.coe_eq, haar_content_apply] using is_left_invariant_chaar g K
 
 @[to_additive]
@@ -615,12 +615,12 @@ variable [TopologicalSpace G] [T2Space G] [TopologicalGroup G] [MeasurableSpace 
 @[to_additive
       "The Haar measure on the locally compact additive group `G`,\nscaled so that `add_haar_measure K₀ K₀ = 1`."]
 def haar_measure (K₀ : positive_compacts G) : Measureₓ G :=
-  (haar_content K₀).OuterMeasure K₀.1⁻¹ • (haar_content K₀).Measure
+  ((haar_content K₀).OuterMeasure K₀.1)⁻¹ • (haar_content K₀).Measure
 
 @[to_additive]
 theorem haar_measure_apply {K₀ : positive_compacts G} {s : Set G} (hs : MeasurableSet s) :
     haar_measure K₀ s = (haar_content K₀).OuterMeasure s / (haar_content K₀).OuterMeasure K₀.1 := by
-  change (haar_content K₀).OuterMeasure K₀.val⁻¹ * (haar_content K₀).Measure s = _
+  change ((haar_content K₀).OuterMeasure K₀.val)⁻¹ * (haar_content K₀).Measure s = _
   simp only [hs, div_eq_mul_inv, mul_comm, content.measure_apply]
 
 @[to_additive]
@@ -671,7 +671,7 @@ instance is_haar_measure_haar_measure (K₀ : positive_compacts G) : is_haar_mea
 /-- `haar` is some choice of a Haar measure, on a locally compact group. -/
 @[reducible, to_additive "`add_haar` is some choice of a Haar measure, on a locally compact\nadditive group."]
 def haar [LocallyCompactSpace G] : Measureₓ G :=
-  haar_measure $ Classical.choice (TopologicalSpace.nonempty_positive_compacts G)
+  haar_measure <| Classical.choice (TopologicalSpace.nonempty_positive_compacts G)
 
 section Unique
 
@@ -733,12 +733,11 @@ instance (priority := 90) regular_of_is_haar_measure [LocallyCompactSpace G] [se
 @[to_additive]
 theorem map_haar_inv {G : Type _} [CommGroupₓ G] [TopologicalSpace G] [TopologicalGroup G] [T2Space G]
     [MeasurableSpace G] [BorelSpace G] [LocallyCompactSpace G] [second_countable_topology G] (μ : Measureₓ G)
-    [is_haar_measure μ] : measure.map HasInv.inv μ = μ := by
-  have : is_haar_measure (measure.map HasInv.inv μ) :=
-    is_haar_measure_map μ (MulEquiv.inv G) continuous_inv continuous_inv
-  obtain ⟨c, cpos, clt, hc⟩ : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ measure.map HasInv.inv μ = c • μ :=
+    [is_haar_measure μ] : measure.map Inv.inv μ = μ := by
+  have : is_haar_measure (measure.map Inv.inv μ) := is_haar_measure_map μ (MulEquiv.inv G) continuous_inv continuous_inv
+  obtain ⟨c, cpos, clt, hc⟩ : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ measure.map Inv.inv μ = c • μ :=
     is_haar_measure_eq_smul_is_haar_measure _ _
-  have : map HasInv.inv (map HasInv.inv μ) = c ^ 2 • μ := by
+  have : map Inv.inv (map Inv.inv μ) = c ^ 2 • μ := by
     simp only [hc, smul_smul, pow_two, LinearMap.map_smul]
   have μeq : μ = c ^ 2 • μ := by
     rw [map_map continuous_inv.measurable continuous_inv.measurable] at this
@@ -758,9 +757,9 @@ theorem map_haar_inv {G : Type _} [CommGroupₓ G] [TopologicalSpace G] [Topolog
 @[simp, to_additive]
 theorem haar_preimage_inv {G : Type _} [CommGroupₓ G] [TopologicalSpace G] [TopologicalGroup G] [T2Space G]
     [MeasurableSpace G] [BorelSpace G] [LocallyCompactSpace G] [second_countable_topology G] (μ : Measureₓ G)
-    [is_haar_measure μ] (s : Set G) : μ (s⁻¹) = μ s :=
+    [is_haar_measure μ] (s : Set G) : μ s⁻¹ = μ s :=
   calc
-    μ (s⁻¹) = measure.map HasInv.inv μ s := ((Homeomorph.inv G).toMeasurableEquiv.map_apply s).symm
+    μ s⁻¹ = measure.map Inv.inv μ s := ((Homeomorph.inv G).toMeasurableEquiv.map_apply s).symm
     _ = μ s := by
       rw [map_haar_inv]
     

@@ -205,7 +205,7 @@ theorem le_pi {m : ∀ i, outer_measure (α i)} {n : outer_measure (∀ i, α i)
     refine' (h _ hs).trans_eq (pi_premeasure_pi hs)
     
   · intro h s hs
-    refine' le_transₓ (n.mono $ subset_pi_eval_image univ s) (h _ _)
+    refine' le_transₓ (n.mono <| subset_pi_eval_image univ s) (h _ _)
     simp [univ_pi_nonempty_iff, hs]
     
 
@@ -337,7 +337,7 @@ def finite_spanning_sets_in.pi {C : ∀ i, Set (Set (α i))} (hμ : ∀ i, (μ i
       measure.pi μ (pi univ fun i => (hμ i).Set (e n i)) ≤
           measure.pi μ (pi univ fun i => to_measurable (μ i) ((hμ i).Set (e n i))) :=
         measure_mono
-          (pi_mono $ fun i hi => subset_to_measurable _ _)_ = ∏ i, μ i (to_measurable (μ i) ((hμ i).Set (e n i))) :=
+          (pi_mono fun i hi => subset_to_measurable _ _)_ = ∏ i, μ i (to_measurable (μ i) ((hμ i).Set (e n i))) :=
         pi_pi_aux μ _ fun i => measurable_set_to_measurable _ _ _ = ∏ i, μ i ((hμ i).Set (e n i)) := by
         simp only [measure_to_measurable]_ < ∞ := Ennreal.prod_lt_top fun i hi => ((hμ i).Finite _).Ne
     
@@ -374,7 +374,7 @@ theorem pi_eq {μ' : Measureₓ (∀ i, α i)}
 variable (μ)
 
 theorem pi'_eq_pi [Encodable ι] : pi' μ = measure.pi μ :=
-  Eq.symm $ pi_eq $ fun s hs => pi'_pi μ s
+  Eq.symm <| pi_eq fun s hs => pi'_pi μ s
 
 @[simp]
 theorem pi_pi (s : ∀ i, Set (α i)) : measure.pi μ (pi univ s) = ∏ i, μ i (s i) := by
@@ -423,20 +423,20 @@ theorem tendsto_eval_ae_ae {i : ι} : tendsto (eval i) (measure.pi μ).ae (μ i)
   pi_eval_preimage_null μ hs
 
 theorem ae_pi_le_pi : (measure.pi μ).ae ≤ Filter.pi fun i => (μ i).ae :=
-  le_infi $ fun i => tendsto_eval_ae_ae.le_comap
+  le_infi fun i => tendsto_eval_ae_ae.le_comap
 
 theorem ae_eq_pi {β : ι → Type _} {f f' : ∀ i, α i → β i} (h : ∀ i, f i =ᵐ[μ i] f' i) :
     (fun x : ∀ i, α i i => f i (x i)) =ᵐ[measure.pi μ] fun x i => f' i (x i) :=
-  (eventually_all.2 fun i => tendsto_eval_ae_ae.Eventually (h i)).mono $ fun x hx => funext hx
+  (eventually_all.2 fun i => tendsto_eval_ae_ae.Eventually (h i)).mono fun x hx => funext hx
 
 theorem ae_le_pi {β : ι → Type _} [∀ i, Preorderₓ (β i)] {f f' : ∀ i, α i → β i} (h : ∀ i, f i ≤ᵐ[μ i] f' i) :
     (fun x : ∀ i, α i i => f i (x i)) ≤ᵐ[measure.pi μ] fun x i => f' i (x i) :=
-  (eventually_all.2 fun i => tendsto_eval_ae_ae.Eventually (h i)).mono $ fun x hx => hx
+  (eventually_all.2 fun i => tendsto_eval_ae_ae.Eventually (h i)).mono fun x hx => hx
 
 theorem ae_le_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀, ∀ i ∈ I, ∀, s i ≤ᵐ[μ i] t i) :
     Set.Pi I s ≤ᵐ[measure.pi μ] Set.Pi I t :=
-  ((eventually_all_finite (finite.of_fintype I)).2 fun i hi => tendsto_eval_ae_ae.Eventually (h i hi)).mono $
-    fun x hst hx i hi => hst i hi $ hx i hi
+  ((eventually_all_finite (finite.of_fintype I)).2 fun i hi => tendsto_eval_ae_ae.Eventually (h i hi)).mono
+    fun x hst hx i hi => hst i hi <| hx i hi
 
 theorem ae_eq_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀, ∀ i ∈ I, ∀, s i =ᵐ[μ i] t i) :
     Set.Pi I s =ᵐ[measure.pi μ] Set.Pi I t :=
@@ -448,11 +448,11 @@ variable {μ} [∀ i, PartialOrderₓ (α i)] [∀ i, has_no_atoms (μ i)]
 
 theorem pi_Iio_ae_eq_pi_Iic {s : Set ι} {f : ∀ i, α i} :
     (pi s fun i => Iio (f i)) =ᵐ[measure.pi μ] pi s fun i => Iic (f i) :=
-  ae_eq_set_pi $ fun i hi => Iio_ae_eq_Iic
+  ae_eq_set_pi fun i hi => Iio_ae_eq_Iic
 
 theorem pi_Ioi_ae_eq_pi_Ici {s : Set ι} {f : ∀ i, α i} :
     (pi s fun i => Ioi (f i)) =ᵐ[measure.pi μ] pi s fun i => Ici (f i) :=
-  ae_eq_set_pi $ fun i hi => Ioi_ae_eq_Ici
+  ae_eq_set_pi fun i hi => Ioi_ae_eq_Ici
 
 theorem univ_pi_Iio_ae_eq_Iic {f : ∀ i, α i} : (pi univ fun i => Iio (f i)) =ᵐ[measure.pi μ] Iic f := by
   rw [← pi_univ_Iic]
@@ -464,11 +464,11 @@ theorem univ_pi_Ioi_ae_eq_Ici {f : ∀ i, α i} : (pi univ fun i => Ioi (f i)) =
 
 theorem pi_Ioo_ae_eq_pi_Icc {s : Set ι} {f g : ∀ i, α i} :
     (pi s fun i => Ioo (f i) (g i)) =ᵐ[measure.pi μ] pi s fun i => Icc (f i) (g i) :=
-  ae_eq_set_pi $ fun i hi => Ioo_ae_eq_Icc
+  ae_eq_set_pi fun i hi => Ioo_ae_eq_Icc
 
 theorem pi_Ioo_ae_eq_pi_Ioc {s : Set ι} {f g : ∀ i, α i} :
     (pi s fun i => Ioo (f i) (g i)) =ᵐ[measure.pi μ] pi s fun i => Ioc (f i) (g i) :=
-  ae_eq_set_pi $ fun i hi => Ioo_ae_eq_Ioc
+  ae_eq_set_pi fun i hi => Ioo_ae_eq_Ioc
 
 theorem univ_pi_Ioo_ae_eq_Icc {f g : ∀ i, α i} : (pi univ fun i => Ioo (f i) (g i)) =ᵐ[measure.pi μ] Icc f g := by
   rw [← pi_univ_Icc]
@@ -476,7 +476,7 @@ theorem univ_pi_Ioo_ae_eq_Icc {f g : ∀ i, α i} : (pi univ fun i => Ioo (f i) 
 
 theorem pi_Ioc_ae_eq_pi_Icc {s : Set ι} {f g : ∀ i, α i} :
     (pi s fun i => Ioc (f i) (g i)) =ᵐ[measure.pi μ] pi s fun i => Icc (f i) (g i) :=
-  ae_eq_set_pi $ fun i hi => Ioc_ae_eq_Icc
+  ae_eq_set_pi fun i hi => Ioc_ae_eq_Icc
 
 theorem univ_pi_Ioc_ae_eq_Icc {f g : ∀ i, α i} : (pi univ fun i => Ioc (f i) (g i)) =ᵐ[measure.pi μ] Icc f g := by
   rw [← pi_univ_Icc]
@@ -484,7 +484,7 @@ theorem univ_pi_Ioc_ae_eq_Icc {f g : ∀ i, α i} : (pi univ fun i => Ioc (f i) 
 
 theorem pi_Ico_ae_eq_pi_Icc {s : Set ι} {f g : ∀ i, α i} :
     (pi s fun i => Ico (f i) (g i)) =ᵐ[measure.pi μ] pi s fun i => Icc (f i) (g i) :=
-  ae_eq_set_pi $ fun i hi => Ico_ae_eq_Icc
+  ae_eq_set_pi fun i hi => Ico_ae_eq_Icc
 
 theorem univ_pi_Ico_ae_eq_Icc {f g : ∀ i, α i} : (pi univ fun i => Ico (f i) (g i)) =ᵐ[measure.pi μ] Icc f g := by
   rw [← pi_univ_Icc]
@@ -498,7 +498,7 @@ theorem pi_has_no_atoms (i : ι) [has_no_atoms (μ i)] : has_no_atoms (measure.p
   ⟨fun x => flip measure_mono_null (pi_hyperplane μ i (x i)) (singleton_subset_iff.2 rfl)⟩
 
 instance [h : Nonempty ι] [∀ i, has_no_atoms (μ i)] : has_no_atoms (measure.pi μ) :=
-  h.elim $ fun i => pi_has_no_atoms i
+  h.elim fun i => pi_has_no_atoms i
 
 instance [∀ i, TopologicalSpace (α i)] [∀ i, is_locally_finite_measure (μ i)] :
     is_locally_finite_measure (measure.pi μ) := by
@@ -598,7 +598,7 @@ theorem volume_preserving_fun_unique (α : Type u) (β : Type v) [Unique α] [me
 
 theorem measure_preserving_pi_fin_two {α : Finₓ 2 → Type u} {m : ∀ i, MeasurableSpace (α i)} (μ : ∀ i, Measureₓ (α i))
     [∀ i, sigma_finite (μ i)] : measure_preserving (MeasurableEquiv.piFinTwo α) (measure.pi μ) ((μ 0).Prod (μ 1)) := by
-  refine' ⟨MeasurableEquiv.measurable _, (measure.prod_eq $ fun s t hs ht => _).symm⟩
+  refine' ⟨MeasurableEquiv.measurable _, (measure.prod_eq fun s t hs ht => _).symm⟩
   rw [MeasurableEquiv.map_apply, MeasurableEquiv.pi_fin_two_apply, Finₓ.preimage_apply_01_prod, measure.pi_pi,
     Finₓ.prod_univ_two]
   rfl

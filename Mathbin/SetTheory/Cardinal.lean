@@ -88,7 +88,7 @@ def mk : Type u → Cardinal :=
 localized [Cardinal] notation "#" => Cardinal.mk
 
 instance can_lift_cardinal_Type : CanLift Cardinal.{u} (Type u) :=
-  ⟨mk, fun c => True, fun c _ => Quot.induction_on c $ fun α => ⟨α, rfl⟩⟩
+  ⟨mk, fun c => True, fun c _ => (Quot.induction_on c) fun α => ⟨α, rfl⟩⟩
 
 @[elab_as_eliminator]
 theorem induction_on {p : Cardinal → Prop} (c : Cardinal) (h : ∀ α, p (# α)) : p c :=
@@ -117,7 +117,7 @@ theorem mk_out (c : Cardinal) : # c.out = c :=
 
 /-- The representative of the cardinal of a type is equivalent ot the original type. -/
 noncomputable def out_mk_equiv {α : Type v} : (# α).out ≃ α :=
-  Nonempty.some $
+  Nonempty.some <|
     Cardinal.eq.mp
       (by
         simp )
@@ -138,25 +138,25 @@ theorem map_mk (f : Type u → Type v) (hf : ∀ α β, α ≃ β → f α ≃ f
 /-- Lift a binary operation `Type* → Type* → Type*` to a binary operation on `cardinal`s. -/
 def map₂ (f : Type u → Type v → Type w) (hf : ∀ α β γ δ, α ≃ β → γ ≃ δ → f α γ ≃ f β δ) :
     Cardinal.{u} → Cardinal.{v} → Cardinal.{w} :=
-  Quotientₓ.map₂ f $ fun α β ⟨e₁⟩ γ δ ⟨e₂⟩ => ⟨hf α β γ δ e₁ e₂⟩
+  (Quotientₓ.map₂ f) fun α β ⟨e₁⟩ γ δ ⟨e₂⟩ => ⟨hf α β γ δ e₁ e₂⟩
 
 /-- The universe lift operation on cardinals. You can specify the universes explicitly with
   `lift.{u v} : cardinal.{v} → cardinal.{max v u}` -/
 def lift (c : Cardinal.{v}) : Cardinal.{max v u} :=
-  map Ulift (fun α β e => Equivₓ.ulift.trans $ e.trans Equivₓ.ulift.symm) c
+  map Ulift (fun α β e => Equivₓ.ulift.trans <| e.trans Equivₓ.ulift.symm) c
 
 @[simp]
 theorem mk_ulift α : # (Ulift.{v, u} α) = lift.{v} (# α) :=
   rfl
 
 theorem lift_umax : lift.{max u v, u} = lift.{v, u} :=
-  funext $ fun a => induction_on a $ fun α => (Equivₓ.ulift.trans Equivₓ.ulift.symm).cardinal_eq
+  funext fun a => (induction_on a) fun α => (Equivₓ.ulift.trans Equivₓ.ulift.symm).cardinal_eq
 
 theorem lift_umax' : lift.{max v u, u} = lift.{v, u} :=
   lift_umax
 
 theorem lift_id' (a : Cardinal.{max u v}) : lift.{u} a = a :=
-  induction_on a $ fun α => mk_congr Equivₓ.ulift
+  (induction_on a) fun α => mk_congr Equivₓ.ulift
 
 @[simp]
 theorem lift_id (a : Cardinal) : lift.{u, u} a = a :=
@@ -168,13 +168,13 @@ theorem lift_uzero (a : Cardinal.{u}) : lift.{0} a = a :=
 
 @[simp]
 theorem lift_lift (a : Cardinal) : lift.{w} (lift.{v} a) = lift.{max v w} a :=
-  induction_on a $ fun α => (Equivₓ.ulift.trans $ Equivₓ.ulift.trans Equivₓ.ulift.symm).cardinal_eq
+  (induction_on a) fun α => (Equivₓ.ulift.trans <| Equivₓ.ulift.trans Equivₓ.ulift.symm).cardinal_eq
 
 /-- We define the order on cardinal numbers by `#α ≤ #β` if and only if
   there exists an embedding (injective function) from α to β. -/
 instance : LE Cardinal.{u} :=
   ⟨fun q₁ q₂ =>
-    (Quotientₓ.liftOn₂ q₁ q₂ fun α β => Nonempty $ α ↪ β) $ fun α β γ δ ⟨e₁⟩ ⟨e₂⟩ =>
+    (Quotientₓ.liftOn₂ q₁ q₂ fun α β => Nonempty <| α ↪ β) fun α β γ δ ⟨e₁⟩ ⟨e₂⟩ =>
       propext ⟨fun ⟨e⟩ => ⟨e.congr e₁ e₂⟩, fun ⟨e⟩ => ⟨e.congr e₁.symm e₂.symm⟩⟩⟩
 
 theorem le_def (α β : Type u) : # α ≤ # β ↔ Nonempty (α ↪ β) :=
@@ -190,7 +190,7 @@ theorem mk_le_of_surjective {α β : Type u} {f : α → β} (hf : surjective f)
   ⟨embedding.of_surjective f hf⟩
 
 theorem le_mk_iff_exists_set {c : Cardinal} {α : Type u} : c ≤ # α ↔ ∃ p : Set α, # p = c :=
-  ⟨induction_on c $ fun β ⟨⟨f, hf⟩⟩ => ⟨Set.Range f, (Equivₓ.ofInjective f hf).cardinal_eq.symm⟩, fun ⟨p, e⟩ =>
+  ⟨(induction_on c) fun β ⟨⟨f, hf⟩⟩ => ⟨Set.Range f, (Equivₓ.ofInjective f hf).cardinal_eq.symm⟩, fun ⟨p, e⟩ =>
     e ▸ ⟨⟨Subtype.val, fun a b => Subtype.eq⟩⟩⟩
 
 theorem out_embedding {c c' : Cardinal} : c ≤ c' ↔ Nonempty (c.out ↪ c'.out) := by
@@ -224,8 +224,8 @@ theorem lift_mk_le' {α : Type u} {β : Type v} : lift.{v} (# α) ≤ lift.{u} (
 
 theorem lift_mk_eq {α : Type u} {β : Type v} : lift.{max v w} (# α) = lift.{max u w} (# β) ↔ Nonempty (α ≃ β) :=
   Quotientₓ.eq.trans
-    ⟨fun ⟨f⟩ => ⟨Equivₓ.ulift.symm.trans $ f.trans Equivₓ.ulift⟩, fun ⟨f⟩ =>
-      ⟨Equivₓ.ulift.trans $ f.trans Equivₓ.ulift.symm⟩⟩
+    ⟨fun ⟨f⟩ => ⟨Equivₓ.ulift.symm.trans <| f.trans Equivₓ.ulift⟩, fun ⟨f⟩ =>
+      ⟨Equivₓ.ulift.trans <| f.trans Equivₓ.ulift.symm⟩⟩
 
 /-- A variant of `cardinal.lift_mk_eq` with specialized universes.
 Because Lean often can not realize it should use this specialization itself,
@@ -236,7 +236,7 @@ theorem lift_mk_eq' {α : Type u} {β : Type v} : lift.{v} (# α) = lift.{u} (# 
 
 @[simp]
 theorem lift_le {a b : Cardinal} : lift a ≤ lift b ↔ a ≤ b :=
-  induction_on₂ a b $ fun α β => by
+  (induction_on₂ a b) fun α β => by
     rw [← lift_umax]
     exact lift_mk_le
 
@@ -299,7 +299,7 @@ theorem le_one_iff_subsingleton {α : Type u} : # α ≤ 1 ↔ Subsingleton α :
   ⟨fun ⟨f⟩ => ⟨fun a b => f.injective (Subsingleton.elimₓ _ _)⟩, fun ⟨h⟩ => ⟨⟨fun a => PUnit.unit, fun a b _ => h _ _⟩⟩⟩
 
 instance : Add Cardinal.{u} :=
-  ⟨map₂ Sum $ fun α β γ δ => Equivₓ.sumCongr⟩
+  ⟨(map₂ Sum) fun α β γ δ => Equivₓ.sumCongr⟩
 
 theorem add_def (α β : Type u) : # α + # β = # (Sum α β) :=
   rfl
@@ -330,7 +330,7 @@ theorem mk_fintype (α : Type u) [Fintype α] : # α = Fintype.card α := by
     
 
 instance : Mul Cardinal.{u} :=
-  ⟨map₂ Prod $ fun α β γ δ => Equivₓ.prodCongr⟩
+  ⟨(map₂ Prod) fun α β γ δ => Equivₓ.prodCongr⟩
 
 theorem mul_def (α β : Type u) : # α * # β = # (α × β) :=
   rfl
@@ -340,22 +340,22 @@ theorem mk_prod (α : Type u) (β : Type v) : # (α × β) = lift.{v, u} (# α) 
   mk_congr (Equivₓ.ulift.symm.prodCongr Equivₓ.ulift.symm)
 
 protected theorem add_commₓ (a b : Cardinal.{u}) : a + b = b + a :=
-  induction_on₂ a b $ fun α β => mk_congr (Equivₓ.sumComm α β)
+  (induction_on₂ a b) fun α β => mk_congr (Equivₓ.sumComm α β)
 
 protected theorem mul_comm (a b : Cardinal.{u}) : a * b = b * a :=
-  induction_on₂ a b $ fun α β => mk_congr (Equivₓ.prodComm α β)
+  (induction_on₂ a b) fun α β => mk_congr (Equivₓ.prodComm α β)
 
 protected theorem zero_addₓ (a : Cardinal.{u}) : 0 + a = a :=
-  induction_on a $ fun α => mk_congr (Equivₓ.emptySum Pempty α)
+  (induction_on a) fun α => mk_congr (Equivₓ.emptySum Pempty α)
 
 protected theorem zero_mul (a : Cardinal.{u}) : 0 * a = 0 :=
-  induction_on a $ fun α => mk_congr (Equivₓ.pemptyProd α)
+  (induction_on a) fun α => mk_congr (Equivₓ.pemptyProd α)
 
 protected theorem one_mulₓ (a : Cardinal.{u}) : 1 * a = a :=
-  induction_on a $ fun α => mk_congr (Equivₓ.punitProd α)
+  (induction_on a) fun α => mk_congr (Equivₓ.punitProd α)
 
 protected theorem left_distrib (a b c : Cardinal.{u}) : a * (b + c) = a * b + a * c :=
-  induction_on₃ a b c $ fun α β γ => mk_congr (Equivₓ.prodSumDistrib α β γ)
+  (induction_on₃ a b c) fun α β γ => mk_congr (Equivₓ.prodSumDistrib α β γ)
 
 protected theorem eq_zero_or_eq_zero_of_mul_eq_zero {a b : Cardinal.{u}} : a * b = 0 → a = 0 ∨ b = 0 := by
   induction' a using Cardinal.induction_on with α
@@ -382,18 +382,18 @@ theorem mk_arrow (α : Type u) (β : Type v) : # (α → β) = (lift.{u} (# β)^
 
 @[simp]
 theorem lift_power a b : lift (a^b) = (lift a^lift b) :=
-  induction_on₂ a b $ fun α β => mk_congr (Equivₓ.ulift.trans (Equivₓ.ulift.arrowCongr Equivₓ.ulift).symm)
+  (induction_on₂ a b) fun α β => mk_congr (Equivₓ.ulift.trans (Equivₓ.ulift.arrowCongr Equivₓ.ulift).symm)
 
 @[simp]
 theorem power_zero {a : Cardinal} : (a^0) = 1 :=
-  induction_on a $ fun α => (Equivₓ.pemptyArrowEquivPunit α).cardinal_eq
+  (induction_on a) fun α => (Equivₓ.pemptyArrowEquivPunit α).cardinal_eq
 
 @[simp]
 theorem power_one {a : Cardinal} : (a^1) = a :=
-  induction_on a $ fun α => (Equivₓ.punitArrowEquiv α).cardinal_eq
+  (induction_on a) fun α => (Equivₓ.punitArrowEquiv α).cardinal_eq
 
 theorem power_add {a b c : Cardinal} : (a^b + c) = (a^b) * (a^c) :=
-  induction_on₃ a b c $ fun α β γ => (Equivₓ.sumArrowEquivProdArrow β γ α).cardinal_eq
+  (induction_on₃ a b c) fun α β γ => (Equivₓ.sumArrowEquivProdArrow β γ α).cardinal_eq
 
 instance : CommSemiringₓ Cardinal.{u} where
   zero := 0
@@ -403,7 +403,7 @@ instance : CommSemiringₓ Cardinal.{u} where
   zero_add := Cardinal.zero_add
   add_zero := fun a => by
     rw [Cardinal.add_comm a 0, Cardinal.zero_add a]
-  add_assoc := fun a b c => induction_on₃ a b c $ fun α β γ => mk_congr (Equivₓ.sumAssoc α β γ)
+  add_assoc := fun a b c => (induction_on₃ a b c) fun α β γ => mk_congr (Equivₓ.sumAssoc α β γ)
   add_comm := Cardinal.add_comm
   zero_mul := Cardinal.zero_mul
   mul_zero := fun a => by
@@ -411,7 +411,7 @@ instance : CommSemiringₓ Cardinal.{u} where
   one_mul := Cardinal.one_mul
   mul_one := fun a => by
     rw [Cardinal.mul_comm a 1, Cardinal.one_mul a]
-  mul_assoc := fun a b c => induction_on₃ a b c $ fun α β γ => mk_congr (Equivₓ.prodAssoc α β γ)
+  mul_assoc := fun a b c => (induction_on₃ a b c) fun α β γ => mk_congr (Equivₓ.prodAssoc α β γ)
   mul_comm := Cardinal.mul_comm
   left_distrib := Cardinal.left_distrib
   right_distrib := fun a b c => by
@@ -423,7 +423,7 @@ instance : CommSemiringₓ Cardinal.{u} where
 
 @[simp]
 theorem one_power {a : Cardinal} : (1^a) = 1 :=
-  induction_on a $ fun α => (Equivₓ.arrowPunitEquivPunit α).cardinal_eq
+  (induction_on a) fun α => (Equivₓ.arrowPunitEquivPunit α).cardinal_eq
 
 @[simp]
 theorem mk_bool : # Bool = 2 := by
@@ -435,22 +435,22 @@ theorem mk_Prop : # Prop = 2 := by
 
 @[simp]
 theorem zero_power {a : Cardinal} : a ≠ 0 → (0^a) = 0 :=
-  induction_on a $ fun α heq =>
-    mk_eq_zero_iff.2 $
-      is_empty_pi.2 $
+  (induction_on a) fun α heq =>
+    mk_eq_zero_iff.2 <|
+      is_empty_pi.2 <|
         let ⟨a⟩ := mk_ne_zero_iff.1 HEq
         ⟨a, Pempty.is_empty⟩
 
 theorem power_ne_zero {a : Cardinal} b : a ≠ 0 → (a^b) ≠ 0 :=
-  induction_on₂ a b $ fun α β h =>
+  (induction_on₂ a b) fun α β h =>
     let ⟨a⟩ := mk_ne_zero_iff.1 h
     mk_ne_zero_iff.2 ⟨fun _ => a⟩
 
 theorem mul_power {a b c : Cardinal} : (a * b^c) = (a^c) * (b^c) :=
-  induction_on₃ a b c $ fun α β γ => (Equivₓ.arrowProdEquivProdArrow α β γ).cardinal_eq
+  (induction_on₃ a b c) fun α β γ => (Equivₓ.arrowProdEquivProdArrow α β γ).cardinal_eq
 
 theorem power_mul {a b c : Cardinal} : (a^b * c) = ((a^b)^c) := by
-  rw [mul_comm b c] <;> exact induction_on₃ a b c $ fun α β γ => mk_congr (Equivₓ.curry γ β α)
+  rw [mul_comm b c] <;> exact (induction_on₃ a b c) fun α β γ => mk_congr (Equivₓ.curry γ β α)
 
 @[simp]
 theorem pow_cast_right (κ : Cardinal.{u}) (n : ℕ) : (κ^(↑n : Cardinal.{u})) = κ ^ℕ n :=
@@ -462,11 +462,11 @@ theorem lift_one : lift 1 = 1 :=
 
 @[simp]
 theorem lift_add a b : lift (a + b) = lift a + lift b :=
-  induction_on₂ a b $ fun α β => mk_congr (Equivₓ.ulift.trans (Equivₓ.sumCongr Equivₓ.ulift Equivₓ.ulift).symm)
+  (induction_on₂ a b) fun α β => mk_congr (Equivₓ.ulift.trans (Equivₓ.sumCongr Equivₓ.ulift Equivₓ.ulift).symm)
 
 @[simp]
 theorem lift_mul a b : lift (a * b) = lift a * lift b :=
-  induction_on₂ a b $ fun α β => mk_congr (Equivₓ.ulift.trans (Equivₓ.prodCongr Equivₓ.ulift Equivₓ.ulift).symm)
+  (induction_on₂ a b) fun α β => mk_congr (Equivₓ.ulift.trans (Equivₓ.prodCongr Equivₓ.ulift Equivₓ.ulift).symm)
 
 @[simp]
 theorem lift_bit0 (a : Cardinal) : lift (bit0 a) = bit0 (lift a) :=
@@ -500,9 +500,9 @@ protected theorem add_le_add_left a {b c : Cardinal} : b ≤ c → a + b ≤ a +
   Cardinal.add_le_add (le_reflₓ _)
 
 protected theorem le_iff_exists_add {a b : Cardinal} : a ≤ b ↔ ∃ c, b = a + c :=
-  ⟨induction_on₂ a b $ fun α β ⟨⟨f, hf⟩⟩ =>
+  ⟨(induction_on₂ a b) fun α β ⟨⟨f, hf⟩⟩ =>
       have : Sum α (range fᶜ : Set β) ≃ β :=
-        (Equivₓ.sumCongr (Equivₓ.ofInjective f hf) (Equivₓ.refl _)).trans $ Equivₓ.Set.sumCompl (range f)
+        (Equivₓ.sumCongr (Equivₓ.ofInjective f hf) (Equivₓ.refl _)).trans <| Equivₓ.Set.sumCompl (range f)
       ⟨# (↥range fᶜ), mk_congr this.symm⟩,
     fun ⟨c, e⟩ => add_zeroₓ a ▸ e.symm ▸ Cardinal.add_le_add_left _ (Cardinal.zero_le _)⟩
 
@@ -563,14 +563,14 @@ theorem power_le_max_power_one {a b c : Cardinal} (h : b ≤ c) : (a^b) ≤ max 
   exact le_transₓ (power_le_power_left ha h) (le_max_leftₓ _ _)
 
 theorem power_le_power_right {a b c : Cardinal} : a ≤ b → (a^c) ≤ (b^c) :=
-  induction_on₃ a b c $ fun α β γ ⟨e⟩ => ⟨embedding.arrow_congr_right e⟩
+  (induction_on₃ a b c) fun α β γ ⟨e⟩ => ⟨embedding.arrow_congr_right e⟩
 
 end OrderProperties
 
 /-- The minimum cardinal in a family of cardinals (the existence
   of which is provided by `injective_min`). -/
 noncomputable def min {ι} (I : Nonempty ι) (f : ι → Cardinal) : Cardinal :=
-  f $ Classical.some $ @embedding.min_injective _ (fun i => (f i).out) I
+  f <| Classical.some <| @embedding.min_injective _ (fun i => (f i).out) I
 
 theorem min_eq {ι} I (f : ι → Cardinal) : ∃ i, min I f = f i :=
   ⟨_, rfl⟩
@@ -588,14 +588,14 @@ theorem le_minₓ {ι I} {f : ι → Cardinal} {a} : a ≤ min I f ↔ ∀ i, a 
 
 protected theorem wf : @WellFounded Cardinal.{u} (· < ·) :=
   ⟨fun a =>
-    Classical.by_contradiction $ fun h =>
+    Classical.by_contradiction fun h =>
       let ι := { c : Cardinal // ¬Acc (· < ·) c }
       let f : ι → Cardinal := Subtype.val
       let ⟨⟨c, hc⟩, hi⟩ := @min_eq ι ⟨⟨_, h⟩⟩ f
       hc
         (Acc.intro _ fun j ⟨_, h'⟩ =>
-          Classical.by_contradiction $ fun hj =>
-            h' $ by
+          Classical.by_contradiction fun hj =>
+            h' <| by
               have := min_le f ⟨j, hj⟩ <;> rwa [hi] at this)⟩
 
 instance has_wf : @HasWellFounded Cardinal.{u} :=
@@ -643,17 +643,17 @@ theorem le_sum {ι} (f : ι → Cardinal) i : f i ≤ Sum f := by
   rw [← Quotientₓ.out_eq (f i)] <;>
     exact
       ⟨⟨fun a => ⟨i, a⟩, fun a b h =>
-          eq_of_heq $ by
+          eq_of_heq <| by
             injection h⟩⟩
 
 @[simp]
 theorem mk_sigma {ι} (f : ι → Type _) : # (Σ i, f i) = Sum fun i => # (f i) :=
-  mk_congr $ Equivₓ.sigmaCongrRight $ fun i => out_mk_equiv.symm
+  mk_congr <| Equivₓ.sigmaCongrRight fun i => out_mk_equiv.symm
 
 @[simp]
 theorem sum_const (ι : Type u) (a : Cardinal.{v}) : (Sum fun i : ι => a) = lift.{v} (# ι) * lift.{u} a :=
-  induction_on a $ fun α =>
-    mk_congr $
+  (induction_on a) fun α =>
+    mk_congr <|
       calc
         (Σ i : ι, Quotientₓ.out (# α)) ≃ ι × Quotientₓ.out (# α) := Equivₓ.sigmaEquivProd _ _
         _ ≃ Ulift ι × Ulift α := Equivₓ.ulift.symm.prodCongr (out_mk_equiv.trans Equivₓ.ulift.symm)
@@ -663,8 +663,8 @@ theorem sum_const' (ι : Type u) (a : Cardinal.{u}) : (Sum fun _ : ι => a) = # 
   simp
 
 theorem sum_le_sum {ι} (f g : ι → Cardinal) (H : ∀ i, f i ≤ g i) : Sum f ≤ Sum g :=
-  ⟨(embedding.refl _).sigma_map $ fun i =>
-      Classical.choice $ by
+  ⟨(embedding.refl _).sigma_map fun i =>
+      Classical.choice <| by
         have := H i <;> rwa [← Quot.out_eq (f i), ← Quot.out_eq (g i)] at this⟩
 
 /-- The indexed supremum of cardinals is the smallest cardinal above
@@ -680,10 +680,10 @@ theorem sup_le {ι} {f : ι → Cardinal} {a} : sup f ≤ a ↔ ∀ i, f i ≤ a
     dsimp [sup] <;> change a with (⟨a, h⟩ : Subtype _).1 <;> apply min_le⟩
 
 theorem sup_le_sup {ι} (f g : ι → Cardinal) (H : ∀ i, f i ≤ g i) : sup f ≤ sup g :=
-  sup_le.2 $ fun i => le_transₓ (H i) (le_sup _ _)
+  sup_le.2 fun i => le_transₓ (H i) (le_sup _ _)
 
 theorem sup_le_sum {ι} (f : ι → Cardinal) : sup f ≤ Sum f :=
-  sup_le.2 $ le_sum _
+  sup_le.2 <| le_sum _
 
 theorem sum_le_sup {ι : Type u} (f : ι → Cardinal.{u}) : Sum f ≤ # ι * sup.{u, u} f := by
   rw [← sum_const'] <;> exact sum_le_sum _ _ (le_sup _)
@@ -699,18 +699,18 @@ def Prod {ι : Type u} (f : ι → Cardinal) : Cardinal :=
 
 @[simp]
 theorem mk_pi {ι : Type u} (α : ι → Type v) : # (∀ i, α i) = Prod fun i => # (α i) :=
-  mk_congr $ Equivₓ.piCongrRight $ fun i => out_mk_equiv.symm
+  mk_congr <| Equivₓ.piCongrRight fun i => out_mk_equiv.symm
 
 @[simp]
 theorem prod_const (ι : Type u) (a : Cardinal.{v}) : (Prod fun i : ι => a) = (lift.{u} a^lift.{v} (# ι)) :=
-  induction_on a $ fun α => mk_congr $ Equivₓ.piCongr Equivₓ.ulift.symm $ fun i => out_mk_equiv.trans Equivₓ.ulift.symm
+  (induction_on a) fun α => mk_congr <| (Equivₓ.piCongr Equivₓ.ulift.symm) fun i => out_mk_equiv.trans Equivₓ.ulift.symm
 
 theorem prod_const' (ι : Type u) (a : Cardinal.{u}) : (Prod fun _ : ι => a) = (a^# ι) :=
-  induction_on a $ fun α => (mk_pi _).symm
+  (induction_on a) fun α => (mk_pi _).symm
 
 theorem prod_le_prod {ι} (f g : ι → Cardinal) (H : ∀ i, f i ≤ g i) : Prod f ≤ Prod g :=
-  ⟨embedding.Pi_congr_right $ fun i =>
-      Classical.choice $ by
+  ⟨embedding.Pi_congr_right fun i =>
+      Classical.choice <| by
         have := H i <;> rwa [← mk_out (f i), ← mk_out (g i)] at this⟩
 
 @[simp]
@@ -725,49 +725,49 @@ theorem prod_ne_zero {ι} (f : ι → Cardinal) : Prod f ≠ 0 ↔ ∀ i, f i �
 theorem lift_prod {ι : Type u} (c : ι → Cardinal.{v}) : lift.{w} (Prod c) = Prod fun i => lift.{w} (c i) := by
   lift c to ι → Type v using fun _ => trivialₓ
   simp only [← mk_pi, ← mk_ulift]
-  exact mk_congr (equiv.ulift.trans $ Equivₓ.piCongrRight $ fun i => equiv.ulift.symm)
+  exact mk_congr (equiv.ulift.trans <| Equivₓ.piCongrRight fun i => equiv.ulift.symm)
 
 @[simp]
 theorem lift_min {ι I} (f : ι → Cardinal) : lift (min I f) = min I (lift ∘ f) :=
-  le_antisymmₓ (le_minₓ.2 $ fun a => lift_le.2 $ min_le _ a) $ by
+  le_antisymmₓ (le_minₓ.2 fun a => lift_le.2 <| min_le _ a) <| by
     let ⟨i, e⟩ := min_eq I (lift ∘ f)
     rw [e] <;>
       exact
         lift_le.2
-          (le_minₓ.2 $ fun j =>
-            lift_le.1 $ by
+          (le_minₓ.2 fun j =>
+            lift_le.1 <| by
               have := min_le (lift ∘ f) j <;> rwa [e] at this)
 
 theorem lift_down {a : Cardinal.{u}} {b : Cardinal.{max u v}} : b ≤ lift a → ∃ a', lift a' = b :=
-  induction_on₂ a b $ fun α β => by
+  (induction_on₂ a b) fun α β => by
     rw [← lift_id (# β), ← lift_umax, ← lift_umax.{u, v}, lift_mk_le] <;>
       exact fun ⟨f⟩ =>
         ⟨# (Set.Range f),
-          Eq.symm $
+          Eq.symm <|
             lift_mk_eq.2
-              ⟨embedding.equiv_of_surjective (embedding.cod_restrict _ f Set.mem_range_self) $ fun ⟨a, ⟨b, e⟩⟩ =>
+              ⟨(embedding.equiv_of_surjective (embedding.cod_restrict _ f Set.mem_range_self)) fun ⟨a, ⟨b, e⟩⟩ =>
                   ⟨b, Subtype.eq e⟩⟩⟩
 
 theorem le_lift_iff {a : Cardinal.{u}} {b : Cardinal.{max u v}} : b ≤ lift a ↔ ∃ a', lift a' = b ∧ a' ≤ a :=
   ⟨fun h =>
     let ⟨a', e⟩ := lift_down h
-    ⟨a', e, lift_le.1 $ e.symm ▸ h⟩,
+    ⟨a', e, lift_le.1 <| e.symm ▸ h⟩,
     fun ⟨a', e, h⟩ => e ▸ lift_le.2 h⟩
 
 theorem lt_lift_iff {a : Cardinal.{u}} {b : Cardinal.{max u v}} : b < lift a ↔ ∃ a', lift a' = b ∧ a' < a :=
   ⟨fun h =>
     let ⟨a', e⟩ := lift_down (le_of_ltₓ h)
-    ⟨a', e, lift_lt.1 $ e.symm ▸ h⟩,
+    ⟨a', e, lift_lt.1 <| e.symm ▸ h⟩,
     fun ⟨a', e, h⟩ => e ▸ lift_lt.2 h⟩
 
 @[simp]
 theorem lift_succ a : lift (succ a) = succ (lift a) :=
   le_antisymmₓ
-    (le_of_not_gtₓ $ fun h => by
+    (le_of_not_gtₓ fun h => by
       rcases lt_lift_iff.1 h with ⟨b, e, h⟩
       rw [lt_succ, ← lift_le, e] at h
       exact not_lt_of_le h (lt_succ_self _))
-    (succ_le.2 $ lift_lt.2 $ lt_succ_self _)
+    (succ_le.2 <| lift_lt.2 <| lt_succ_self _)
 
 @[simp]
 theorem lift_max {a : Cardinal.{u}} {b : Cardinal.{v}} :
@@ -780,7 +780,7 @@ theorem lift_max {a : Cardinal.{u}} {b : Cardinal.{v}} :
 
 protected theorem le_sup_iff {ι : Type v} {f : ι → Cardinal.{max v w}} {c : Cardinal} :
     c ≤ sup f ↔ ∀ b, (∀ i, f i ≤ b) → c ≤ b :=
-  ⟨fun h b hb => le_transₓ h (sup_le.mpr hb), fun h => h _ $ fun i => le_sup f i⟩
+  ⟨fun h b hb => le_transₓ h (sup_le.mpr hb), fun h => (h _) fun i => le_sup f i⟩
 
 /-- The lift of a supremum is the supremum of the lifts. -/
 theorem lift_sup {ι : Type v} (f : ι → Cardinal.{max v w}) :
@@ -878,7 +878,7 @@ theorem nat_eq_lift_iff {n : ℕ} {a : Cardinal.{u}} : (n : Cardinal) = lift.{v}
 theorem lift_mk_fin (n : ℕ) : lift (# (Finₓ n)) = n := by
   simp
 
-theorem mk_finset {α : Type u} {s : Finset α} : # s = ↑Finset.card s := by
+theorem mk_finset {α : Type u} {s : Finset α} : # s = ↑(Finset.card s) := by
   simp
 
 theorem card_le_of_finset {α} (s : Finset α) : (s.card : Cardinal) ≤ # α := by
@@ -888,7 +888,7 @@ theorem card_le_of_finset {α} (s : Finset α) : (s.card : Cardinal) ≤ # α :=
   rw [Cardinal.mk_fintype, Fintype.card_coe]
 
 @[simp, norm_cast]
-theorem nat_cast_pow {m n : ℕ} : (↑pow m n : Cardinal) = (m^n) := by
+theorem nat_cast_pow {m n : ℕ} : (↑(pow m n) : Cardinal) = (m^n) := by
   induction n <;> simp [pow_succ'ₓ, power_add, *]
 
 @[simp, norm_cast]
@@ -903,7 +903,7 @@ theorem nat_cast_lt {m n : ℕ} : (m : Cardinal) < n ↔ m < n := by
   simp [lt_iff_le_not_leₓ, -not_leₓ]
 
 instance : CharZero Cardinal :=
-  ⟨StrictMono.injective $ fun m n => nat_cast_lt.2⟩
+  ⟨StrictMono.injective fun m n => nat_cast_lt.2⟩
 
 theorem nat_cast_inj {m n : ℕ} : (m : Cardinal) = n ↔ m = n :=
   Nat.cast_inj
@@ -913,17 +913,17 @@ theorem nat_cast_injective : injective (coe : ℕ → Cardinal) :=
 
 @[simp, norm_cast]
 theorem nat_succ (n : ℕ) : (n.succ : Cardinal) = succ n :=
-  le_antisymmₓ (add_one_le_succ _) (succ_le.2 $ nat_cast_lt.2 $ Nat.lt_succ_selfₓ _)
+  le_antisymmₓ (add_one_le_succ _) (succ_le.2 <| nat_cast_lt.2 <| Nat.lt_succ_selfₓ _)
 
 @[simp]
 theorem succ_zero : succ 0 = 1 := by
   norm_cast
 
 theorem card_le_of {α : Type u} {n : ℕ} (H : ∀ s : Finset α, s.card ≤ n) : # α ≤ n := by
-  refine' lt_succ.1 (lt_of_not_geₓ $ fun hn => _)
+  refine' lt_succ.1 (lt_of_not_geₓ fun hn => _)
   rw [← Cardinal.nat_succ, ← Cardinal.lift_mk_fin n.succ] at hn
   cases' hn with f
-  refine' not_lt_of_le (H $ finset.univ.map f) _
+  refine' not_lt_of_le (H <| finset.univ.map f) _
   rw [Finset.card_map, ← Fintype.card, Fintype.card_ulift, Fintype.card_fin]
   exact n.lt_succ_self
 
@@ -941,7 +941,7 @@ theorem one_le_iff_ne_zero {c : Cardinal} : 1 ≤ c ↔ c ≠ 0 := by
   rw [one_le_iff_pos, pos_iff_ne_zero]
 
 theorem nat_lt_omega (n : ℕ) : (n : Cardinal.{u}) < ω :=
-  succ_le.1 $ by
+  succ_le.1 <| by
     rw [← nat_succ, ← lift_mk_fin, omega, lift_mk_le.{0, 0, u}] <;> exact ⟨⟨coe, fun a b => Finₓ.ext⟩⟩
 
 @[simp]
@@ -961,7 +961,7 @@ theorem lt_omega {c : Cardinal.{u}} : c < ω ↔ ∃ n : ℕ, c = n :=
 
 theorem omega_le {c : Cardinal.{u}} : ω ≤ c ↔ ∀ n : ℕ, (n : Cardinal) ≤ c :=
   ⟨fun h n => le_transₓ (le_of_ltₓ (nat_lt_omega _)) h, fun h =>
-    le_of_not_ltₓ $ fun hn => by
+    le_of_not_ltₓ fun hn => by
       rcases lt_omega.1 hn with ⟨n, rfl⟩
       exact not_le_of_lt (Nat.lt_succ_selfₓ _) (nat_cast_le.1 (h (n + 1)))⟩
 
@@ -1056,7 +1056,7 @@ theorem mk_le_omega [Encodable α] : # α ≤ ω :=
 theorem denumerable_iff {α : Type u} : Nonempty (Denumerable α) ↔ # α = ω :=
   ⟨fun ⟨h⟩ => mk_congr ((@Denumerable.eqv α h).trans Equivₓ.ulift.symm), fun h => by
     cases' Quotientₓ.exact h with f
-    exact ⟨Denumerable.mk' $ f.trans Equivₓ.ulift⟩⟩
+    exact ⟨Denumerable.mk' <| f.trans Equivₓ.ulift⟩⟩
 
 @[simp]
 theorem mk_denumerable (α : Type u) [Denumerable α] : # α = ω :=
@@ -1249,7 +1249,7 @@ theorem mk_pnat : # ℕ+ = ω :=
 theorem two_le_iff : (2 : Cardinal) ≤ # α ↔ ∃ x y : α, x ≠ y := by
   constructor
   · rintro ⟨f⟩
-    refine' ⟨f $ Sum.inl ⟨⟩, f $ Sum.inr ⟨⟩, _⟩
+    refine' ⟨f <| Sum.inl ⟨⟩, f <| Sum.inr ⟨⟩, _⟩
     intro h
     cases f.2 h
     
@@ -1274,9 +1274,9 @@ theorem two_le_iff' (x : α) : (2 : Cardinal) ≤ # α ↔ ∃ y : α, x ≠ y :
 
 /-- **König's theorem** -/
 theorem sum_lt_prod {ι} (f g : ι → Cardinal) (H : ∀ i, f i < g i) : Sum f < Prod g :=
-  lt_of_not_geₓ $ fun ⟨F⟩ => by
+  lt_of_not_geₓ fun ⟨F⟩ => by
     have : Inhabited (∀ i : ι, (g i).out) := by
-      refine' ⟨fun i => Classical.choice $ mk_ne_zero_iff.1 _⟩
+      refine' ⟨fun i => Classical.choice <| mk_ne_zero_iff.1 _⟩
       rw [mk_out]
       exact (H i).ne_bot
     let G := inv_fun F
@@ -1321,7 +1321,7 @@ theorem mk_plift_false : # (Plift False) = 0 :=
 
 @[simp]
 theorem mk_vector (α : Type u) (n : ℕ) : # (Vector α n) = # α ^ℕ n :=
-  (mk_congr (Equivₓ.vectorEquivFin α n)).trans $ by
+  (mk_congr (Equivₓ.vectorEquivFin α n)).trans <| by
     simp
 
 theorem mk_list_eq_sum_pow (α : Type u) : # (List α) = Sum fun n : ℕ => # α ^ℕ n :=

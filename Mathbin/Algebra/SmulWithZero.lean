@@ -80,10 +80,10 @@ protected def Function.Injective.smulWithZero (f : ZeroHom M' M) (hf : Function.
     (smul : ∀ a : R b, f (a • b) = a • f b) : SmulWithZero R M' where
   smul := · • ·
   zero_smul := fun a =>
-    hf $ by
+    hf <| by
       simp [smul]
   smul_zero := fun a =>
-    hf $ by
+    hf <| by
       simp [smul]
 
 /-- Pushforward a `smul_with_zero` structure along a surjective zero-preserving homomorphism.
@@ -154,7 +154,7 @@ protected def Function.Surjective.mulActionWithZero (f : ZeroHom M M') (hf : Fun
 variable (M)
 
 /-- Compose a `mul_action_with_zero` with a `monoid_with_zero_hom`, with action `f r' • m` -/
-def MulActionWithZero.compHom (f : MonoidWithZeroHom R' R) : MulActionWithZero R' M :=
+def MulActionWithZero.compHom (f : R' →*₀ R) : MulActionWithZero R' M :=
   { SmulWithZero.compHom M f.to_zero_hom with smul := (· • ·) ∘ f,
     mul_smul := fun r s m => by
       simp [mul_smul],
@@ -166,6 +166,6 @@ end MonoidWithZeroₓ
 /-- Scalar multiplication as a monoid homomorphism with zero. -/
 @[simps]
 def smulMonoidWithZeroHom {α β : Type _} [MonoidWithZeroₓ α] [MulZeroOneClass β] [MulActionWithZero α β]
-    [IsScalarTower α β β] [SmulCommClass α β β] : MonoidWithZeroHom (α × β) β :=
+    [IsScalarTower α β β] [SmulCommClass α β β] : α × β →*₀ β :=
   { smulMonoidHom with map_zero' := smul_zero' _ _ }
 

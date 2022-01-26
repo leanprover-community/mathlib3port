@@ -42,15 +42,15 @@ unsafe def get_ees : eqelim (List ee) :=
 
 /-- Update the list of equality constraints. -/
 unsafe def set_eqs (eqs : List term) : eqelim Unit :=
-  modifyₓ $ fun s => { s with eqs }
+  modifyₓ fun s => { s with eqs }
 
 /-- Update the list of inequality constraints. -/
 unsafe def set_les (les : List term) : eqelim Unit :=
-  modifyₓ $ fun s => { s with les }
+  modifyₓ fun s => { s with les }
 
 /-- Update the sequence of equality elimiation steps. -/
 unsafe def set_ees (es : List ee) : eqelim Unit :=
-  modifyₓ $ fun s => { s with ees := es }
+  modifyₓ fun s => { s with ees := es }
 
 /-- Add a new step to the sequence of equality elimination steps. -/
 unsafe def add_ee (e : ee) : eqelim Unit := do
@@ -90,7 +90,7 @@ def gcd : List Int → Nat
 
 /-- GCD of all coefficients in a term. -/
 unsafe def get_gcd (t : term) : eqelim Int :=
-  pure (↑gcd t.snd)
+  pure ↑(gcd t.snd)
 
 /-- Divide a term by an integer if the integer divides
     the constant component of the term. It is assumed that

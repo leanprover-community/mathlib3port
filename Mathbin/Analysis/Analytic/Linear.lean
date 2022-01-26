@@ -33,14 +33,14 @@ theorem fpower_series_apply_add_two (f : E →L[𝕜] F) (x : E) (n : ℕ) : f.f
 
 @[simp]
 theorem fpower_series_radius (f : E →L[𝕜] F) (x : E) : (f.fpower_series x).radius = ∞ :=
-  (f.fpower_series x).radius_eq_top_of_forall_image_add_eq_zero 2 $ fun n => rfl
+  ((f.fpower_series x).radius_eq_top_of_forall_image_add_eq_zero 2) fun n => rfl
 
 protected theorem HasFpowerSeriesOnBall (f : E →L[𝕜] F) (x : E) : HasFpowerSeriesOnBall f (f.fpower_series x) x ∞ :=
   { r_le := by
       simp ,
     r_pos := Ennreal.coe_lt_top,
     HasSum := fun y _ =>
-      (has_sum_nat_add_iff' 2).1 $ by
+      (has_sum_nat_add_iff' 2).1 <| by
         simp [Finset.sum_range_succ, ← sub_sub, has_sum_zero] }
 
 protected theorem HasFpowerSeriesAt (f : E →L[𝕜] F) (x : E) : HasFpowerSeriesAt f (f.fpower_series x) x :=
@@ -54,8 +54,8 @@ protected theorem AnalyticAt (f : E →L[𝕜] F) (x : E) : AnalyticAt 𝕜 f x 
 multilinear series expansion of `uncurry f`. It is given by
 `f.uncurry_bilinear ![(x, y), (x', y')] = f x y'`. -/
 def uncurry_bilinear (f : E →L[𝕜] F →L[𝕜] G) : E × F[×2]→L[𝕜] G :=
-  @ContinuousLinearMap.uncurryLeft 𝕜 1 (fun _ => E × F) G _ _ _ _ _ $
-    (↑(continuousMultilinearCurryFin1 𝕜 (E × F) G).symm : (E × F →L[𝕜] G) →L[𝕜] _).comp $
+  @ContinuousLinearMap.uncurryLeft 𝕜 1 (fun _ => E × F) G _ _ _ _ _ <|
+    (↑(continuousMultilinearCurryFin1 𝕜 (E × F) G).symm : (E × F →L[𝕜] G) →L[𝕜] _).comp <|
       f.bilinear_comp (fst _ _ _) (snd _ _ _)
 
 @[simp]
@@ -73,7 +73,7 @@ def fpower_series_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) : Form
 
 @[simp]
 theorem fpower_series_bilinear_radius (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) : (f.fpower_series_bilinear x).radius = ∞ :=
-  (f.fpower_series_bilinear x).radius_eq_top_of_forall_image_add_eq_zero 3 $ fun n => rfl
+  ((f.fpower_series_bilinear x).radius_eq_top_of_forall_image_add_eq_zero 3) fun n => rfl
 
 protected theorem has_fpower_series_on_ball_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     HasFpowerSeriesOnBall (fun x : E × F => f x.1 x.2) (f.fpower_series_bilinear x) x ∞ :=
@@ -81,7 +81,7 @@ protected theorem has_fpower_series_on_ball_bilinear (f : E →L[𝕜] F →L[�
       simp ,
     r_pos := Ennreal.coe_lt_top,
     HasSum := fun y _ =>
-      (has_sum_nat_add_iff' 3).1 $ by
+      (has_sum_nat_add_iff' 3).1 <| by
         simp only [Finset.sum_range_succ, Finset.sum_range_one, Prod.fst_add, Prod.snd_add, f.map_add₂]
         dsimp
         simp only [add_commₓ, sub_self, has_sum_zero] }

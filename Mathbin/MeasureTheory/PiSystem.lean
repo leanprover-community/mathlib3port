@@ -276,7 +276,7 @@ namespace DynkinSystem
 @[ext]
 theorem ext : ∀ {d₁ d₂ : dynkin_system α}, (∀ s : Set α, d₁.has s ↔ d₂.has s) → d₁ = d₂
   | ⟨s₁, _, _, _⟩, ⟨s₂, _, _, _⟩, h => by
-    have : s₁ = s₂ := funext $ fun x => propext $ h x
+    have : s₁ = s₂ := funext fun x => propext <| h x
     subst this
 
 variable (d : dynkin_system α)
@@ -311,7 +311,7 @@ theorem le_def {α} {a b : dynkin_system α} : a ≤ b ↔ a.has ≤ b.has :=
 instance : PartialOrderₓ (dynkin_system α) :=
   { dynkin_system.has_le with le_refl := fun a b => le_reflₓ _,
     le_trans := fun a b c hab hbc => le_def.mpr (le_transₓ hab hbc),
-    le_antisymm := fun a b h₁ h₂ => ext $ fun s => ⟨h₁ s, h₂ s⟩ }
+    le_antisymm := fun a b h₁ h₂ => ext fun s => ⟨h₁ s, h₂ s⟩ }
 
 /-- Every measurable space (σ-algebra) forms a Dynkin system -/
 def of_measurable_space (m : MeasurableSpace α) : dynkin_system α where
@@ -360,11 +360,11 @@ def to_measurable_space (h_inter : ∀ s₁ s₂, d.has s₁ → d.has s₂ → 
     rw [← Union_disjointed]
     exact
       d.has_Union (disjoint_disjointed _) fun n =>
-        disjointedRecₓ (fun t i h => h_inter _ _ h $ d.has_compl $ hf i) (hf n)
+        disjointedRecₓ (fun t i h => h_inter _ _ h <| d.has_compl <| hf i) (hf n)
 
 theorem of_measurable_space_to_measurable_space (h_inter : ∀ s₁ s₂, d.has s₁ → d.has s₂ → d.has (s₁ ∩ s₂)) :
     of_measurable_space (d.to_measurable_space h_inter) = d :=
-  ext $ fun s => Iff.rfl
+  ext fun s => Iff.rfl
 
 /-- If `s` is in a Dynkin system `d`, we can form the new Dynkin system `{s ∩ t | t ∈ d}`. -/
 def restrict_on {s : Set α} (h : d.has s) : dynkin_system α where
@@ -373,10 +373,10 @@ def restrict_on {s : Set α} (h : d.has s) : dynkin_system α where
     simp [d.has_empty]
   HasCompl := fun t hts => by
     have : tᶜ ∩ s = (t ∩ s)ᶜ \ sᶜ :=
-      Set.ext $ fun x => by
+      Set.ext fun x => by
         by_cases' x ∈ s <;> simp [h]
     rw [this]
-    exact d.has_diff (d.has_compl hts) (d.has_compl h) (compl_subset_compl.mpr $ inter_subset_right _ _)
+    exact d.has_diff (d.has_compl hts) (d.has_compl h) (compl_subset_compl.mpr <| inter_subset_right _ _)
   has_Union_nat := fun f hd hf => by
     rw [inter_comm, inter_Union]
     apply d.has_Union_nat
@@ -395,13 +395,13 @@ theorem generate_has_subset_generate_measurable {C : Set (Set α)} {s : Set α} 
 theorem generate_inter {s : Set (Set α)} (hs : IsPiSystem s) {t₁ t₂ : Set α} (ht₁ : (generate s).Has t₁)
     (ht₂ : (generate s).Has t₂) : (generate s).Has (t₁ ∩ t₂) :=
   have : generate s ≤ (generate s).restrictOn ht₂ :=
-    generate_le _ $ fun s₁ hs₁ =>
+    (generate_le _) fun s₁ hs₁ =>
       have : (generate s).Has s₁ := generate_has.basic s₁ hs₁
       have : generate s ≤ (generate s).restrictOn this :=
-        generate_le _ $ fun s₂ hs₂ =>
+        (generate_le _) fun s₂ hs₂ =>
           show (generate s).Has (s₂ ∩ s₁) from
             (s₂ ∩ s₁).eq_empty_or_nonempty.elim (fun h => h.symm ▸ generate_has.empty) fun h =>
-              generate_has.basic _ $ hs _ hs₂ _ hs₁ h
+              generate_has.basic _ <| hs _ hs₂ _ hs₁ h
       have : (generate s).Has (t₂ ∩ s₁) := this _ ht₂
       show (generate s).Has (s₁ ∩ t₂) by
         rwa [inter_comm]
@@ -416,10 +416,10 @@ theorem generate_inter {s : Set (Set α)} (hs : IsPiSystem s) {t₁ t₂ : Set �
 -/
 theorem generate_from_eq {s : Set (Set α)} (hs : IsPiSystem s) :
     generate_from s = (generate s).toMeasurableSpace fun t₁ t₂ => generate_inter hs :=
-  le_antisymmₓ (generate_from_le $ fun t ht => generate_has.basic t ht)
-    (of_measurable_space_le_of_measurable_space_iff.mp $ by
+  le_antisymmₓ (generate_from_le fun t ht => generate_has.basic t ht)
+    (of_measurable_space_le_of_measurable_space_iff.mp <| by
       rw [of_measurable_space_to_measurable_space]
-      exact generate_le _ $ fun t ht => measurable_set_generate_from ht)
+      exact (generate_le _) fun t ht => measurable_set_generate_from ht)
 
 end DynkinSystem
 
@@ -436,11 +436,11 @@ theorem induction_on_inter {C : Set α → Prop} {s : Set (Set α)} [m : Measura
     rwa [Eq] at ht
   this.rec_on h_basic h_empty
     (fun t ht =>
-      h_compl t $ by
+      h_compl t <| by
         rw [Eq]
         exact ht)
     fun f hf ht =>
-    h_union f hf $ fun i => by
+    (h_union f hf) fun i => by
       rw [Eq]
       exact ht _
 

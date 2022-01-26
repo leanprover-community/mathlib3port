@@ -379,7 +379,7 @@ def structured_arrow_op_equivalence (F : C ⥤ D) (d : D) : structured_arrow d F
             (by
               tidy)).op)
       fun X Y f =>
-      Quiver.Hom.unop_inj $ by
+      Quiver.Hom.unop_inj <| by
         ext
         dsimp
         simp )
@@ -405,7 +405,7 @@ def costructured_arrow_op_equivalence (F : C ⥤ D) (d : D) : costructured_arrow
             (by
               tidy)).op)
       fun X Y f =>
-      Quiver.Hom.unop_inj $ by
+      Quiver.Hom.unop_inj <| by
         ext
         dsimp
         simp )

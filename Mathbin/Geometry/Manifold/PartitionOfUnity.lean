@@ -167,8 +167,8 @@ namespace BumpCovering
 theorem smooth_to_partition_of_unity {E : Type uE} [NormedGroup E] [NormedSpace ℝ E] {H : Type uH} [TopologicalSpace H]
     {I : ModelWithCorners ℝ E H} {M : Type uM} [TopologicalSpace M] [ChartedSpace H M] {s : Set M}
     (f : BumpCovering ι M s) (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) (i : ι) : Smooth I 𝓘(ℝ) (f.to_partition_of_unity i) :=
-  (hf i).mul $
-    (smooth_finprod_cond fun j _ => smooth_const.sub (hf j)) $ by
+  (hf i).mul <|
+    (smooth_finprod_cond fun j _ => smooth_const.sub (hf j)) <| by
       simp only [mul_support_one_sub]
       exact f.locally_finite
 
@@ -219,7 +219,7 @@ being subordinate to an open covering of `M`, because we make no assumption abou
 depends on `x`.
 -/
 def is_subordinate {s : Set M} (f : SmoothBumpCovering ι I M s) (U : M → Set M) :=
-  ∀ i, Closure (support $ f i) ⊆ U (f.c i)
+  ∀ i, Closure (support <| f i) ⊆ U (f.c i)
 
 theorem is_subordinate.support_subset {fs : SmoothBumpCovering ι I M s} {U : M → Set M} (h : fs.is_subordinate U)
     (i : ι) : support (fs i) ⊆ U (fs.c i) :=
@@ -245,8 +245,8 @@ theorem exists_is_subordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s
   refine' ⟨ι, ⟨c, fun i => (f i).updateR (r i) (hrR i), hcs, _, fun x hx => _⟩, fun i => _⟩
   · simpa only [SmoothBumpFunction.support_update_r]
     
-  · refine' (mem_Union.1 $ hsV hx).imp fun i hi => _
-    exact ((f i).updateR _ _).eventually_eq_one_of_dist_lt ((f i).support_subset_source $ hVf _ hi) (hr i hi).2
+  · refine' (mem_Union.1 <| hsV hx).imp fun i hi => _
+    exact ((f i).updateR _ _).eventually_eq_one_of_dist_lt ((f i).support_subset_source <| hVf _ hi) (hr i hi).2
     
   · simpa only [coe_mk, SmoothBumpFunction.support_update_r] using hfU i
     
@@ -260,7 +260,7 @@ protected theorem point_finite (x : M) : { i | fs i x ≠ 0 }.Finite :=
   fs.locally_finite.point_finite x
 
 theorem mem_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) : x ∈ (chart_at H (fs.c i)).Source :=
-  (fs i).support_subset_source $ by
+  (fs i).support_subset_source <| by
     simp [h]
 
 theorem mem_ext_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) : x ∈ (extChartAt I (fs.c i)).Source := by
@@ -277,7 +277,7 @@ theorem eventually_eq_one (x : M) (hx : x ∈ s) : fs (fs.ind x hx) =ᶠ[𝓝 x]
 theorem apply_ind (x : M) (hx : x ∈ s) : fs (fs.ind x hx) x = 1 :=
   (fs.eventually_eq_one x hx).eq_of_nhds
 
-theorem mem_support_ind (x : M) (hx : x ∈ s) : x ∈ support (fs $ fs.ind x hx) := by
+theorem mem_support_ind (x : M) (hx : x ∈ s) : x ∈ support (fs <| fs.ind x hx) := by
   simp [fs.apply_ind x hx]
 
 theorem mem_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (chart_at H (fs.c (fs.ind x hx))).Source :=
@@ -288,7 +288,7 @@ theorem mem_ext_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (extChartAt I
 
 /-- The index type of a `smooth_bump_covering` of a compact manifold is finite. -/
 protected def Fintype [CompactSpace M] : Fintype ι :=
-  fs.locally_finite.fintype_of_compact $ fun i => (fs i).nonempty_support
+  fs.locally_finite.fintype_of_compact fun i => (fs i).nonempty_support
 
 variable [T2Space M]
 
@@ -368,7 +368,7 @@ namespace SmoothPartitionOfUnity
 /-- A `smooth_partition_of_unity` that consists of a single function, uniformly equal to one,
 defined as an example for `inhabited` instance. -/
 def single (i : ι) (s : Set M) : SmoothPartitionOfUnity ι I M s :=
-  (BumpCovering.single i s).toSmoothPartitionOfUnity $ fun j => by
+  (BumpCovering.single i s).toSmoothPartitionOfUnity fun j => by
     rcases eq_or_ne j i with (rfl | h)
     · simp only [smooth_one, ContinuousMap.coe_one, BumpCovering.coe_single, Pi.single_eq_same]
       

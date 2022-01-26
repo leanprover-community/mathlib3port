@@ -76,7 +76,7 @@ def beck_algebra_cofork : cofork (free_coequalizer.top_map X) (free_coequalizer.
 free algebras.
 -/
 def beck_algebra_coequalizer : is_colimit (beck_algebra_cofork X) :=
-  cofork.is_colimit.mk' _ $ fun s => by
+  (cofork.is_colimit.mk' _) fun s => by
     have h₁ : (T : C ⥤ C).map X.a ≫ s.π.f = T.μ.app X.A ≫ s.π.f := congr_argₓ monad.algebra.hom.f s.condition
     have h₂ : (T : C ⥤ C).map s.π.f ≫ s.X.a = T.μ.app X.A ≫ s.π.f := s.π.h
     refine' ⟨⟨T.η.app _ ≫ s.π.f, _⟩, _, _⟩

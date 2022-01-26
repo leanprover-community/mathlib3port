@@ -35,9 +35,9 @@ In fact this bracket is fully `A`-bilinear but without a significant upgrade to 
 support in the tensor product library, it is far easier to bootstrap like this, starting with the
 definition below. -/
 private def bracket' : A ⊗[R] L →ₗ[R] A ⊗[R] L →ₗ[R] A ⊗[R] L :=
-  TensorProduct.curry $
+  TensorProduct.curry <|
     TensorProduct.map (Algebra.lmul' R) (LieModule.toModuleHom R L L : L ⊗[R] L →ₗ[R] L) ∘ₗ
-      ↑TensorProduct.tensorTensorTensorComm R A L A L
+      ↑(TensorProduct.tensorTensorTensorComm R A L A L)
 
 @[simp]
 private theorem bracket'_tmul (s t : A) (x y : L) : bracket' R A L (s ⊗ₜ[R] x) (t ⊗ₜ[R] y) = (s * t) ⊗ₜ ⁅x,y⁆ := by

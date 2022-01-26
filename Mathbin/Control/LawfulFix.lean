@@ -42,7 +42,7 @@ open Part Nat Nat.Upto
 
 namespace Fix
 
-variable (f : (∀ a, Part $ β a) →o ∀ a, Part $ β a)
+variable (f : (∀ a, Part <| β a) →o ∀ a, Part <| β a)
 
 theorem approx_mono' {i : ℕ} : fix.approx f i ≤ fix.approx f (succ i) := by
   induction i
@@ -112,7 +112,7 @@ theorem exists_fix_le_approx (x : α) : ∃ i, Part.fix f x ≤ approx f i x := 
 include f
 
 /-- The series of approximations of `fix f` (see `approx`) as a `chain` -/
-def approx_chain : chain (∀ a, Part $ β a) :=
+def approx_chain : chain (∀ a, Part <| β a) :=
   ⟨approx f, approx_mono f⟩
 
 theorem le_f_of_mem_approx {x} (hx : x ∈ approx_chain f) : x ≤ f x := by
@@ -131,7 +131,7 @@ open Fix
 
 variable {α}
 
-variable (f : (∀ a, Part $ β a) →o ∀ a, Part $ β a)
+variable (f : (∀ a, Part <| β a) →o ∀ a, Part <| β a)
 
 open OmegaCompletePartialOrder
 
@@ -160,7 +160,7 @@ theorem fix_eq_ωSup : Part.fix f = ωSup (approx_chain f) := by
     apply approx_le_fix f
     
 
-theorem fix_le {X : ∀ a, Part $ β a} (hX : f X ≤ X) : Part.fix f ≤ X := by
+theorem fix_le {X : ∀ a, Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ X := by
   rw [fix_eq_ωSup f]
   apply ωSup_le _ _ _
   simp only [fix.approx_chain, OrderHom.coe_fun_mk]
@@ -199,7 +199,7 @@ namespace Part
 @[simps]
 def to_unit_mono (f : Part α →o Part α) : (Unit → Part α) →o Unit → Part α where
   toFun := fun x u => f (x u)
-  monotone' := fun x y h : x ≤ y u => f.monotone $ h u
+  monotone' := fun x y h : x ≤ y u => f.monotone <| h u
 
 theorem to_unit_cont (f : Part α →o Part α) (hc : continuous f) : continuous (to_unit_mono f)
   | c => by
@@ -230,27 +230,27 @@ variable (α β γ)
 
 /-- `sigma.curry` as a monotone function. -/
 @[simps]
-def monotone_curry [∀ x y, Preorderₓ $ γ x y] : (∀ x : Σ a, β a, γ x.1 x.2) →o ∀ a b : β a, γ a b where
+def monotone_curry [∀ x y, Preorderₓ <| γ x y] : (∀ x : Σ a, β a, γ x.1 x.2) →o ∀ a b : β a, γ a b where
   toFun := curry
   monotone' := fun x y h a b => h ⟨a, b⟩
 
 /-- `sigma.uncurry` as a monotone function. -/
 @[simps]
-def monotone_uncurry [∀ x y, Preorderₓ $ γ x y] : (∀ a b : β a, γ a b) →o ∀ x : Σ a, β a, γ x.1 x.2 where
+def monotone_uncurry [∀ x y, Preorderₓ <| γ x y] : (∀ a b : β a, γ a b) →o ∀ x : Σ a, β a, γ x.1 x.2 where
   toFun := uncurry
   monotone' := fun x y h a => h a.1 a.2
 
-variable [∀ x y, OmegaCompletePartialOrder $ γ x y]
+variable [∀ x y, OmegaCompletePartialOrder <| γ x y]
 
 open OmegaCompletePartialOrder.Chain
 
-theorem continuous_curry : continuous $ monotone_curry α β γ := fun c => by
+theorem continuous_curry : continuous <| monotone_curry α β γ := fun c => by
   ext x y
   dsimp [curry, ωSup]
   rw [map_comp, map_comp]
   rfl
 
-theorem continuous_uncurry : continuous $ monotone_uncurry α β γ := fun c => by
+theorem continuous_uncurry : continuous <| monotone_uncurry α β γ := fun c => by
   ext x y
   dsimp [uncurry, ωSup]
   rw [map_comp, map_comp]
@@ -260,10 +260,10 @@ end Monotone
 
 open HasFix
 
-instance [HasFix $ ∀ x : Sigma β, γ x.1 x.2] : HasFix (∀ x y : β x, γ x y) :=
-  ⟨fun f => curry (fix $ uncurry ∘ f ∘ curry)⟩
+instance [HasFix <| ∀ x : Sigma β, γ x.1 x.2] : HasFix (∀ x y : β x, γ x y) :=
+  ⟨fun f => curry (fix <| uncurry ∘ f ∘ curry)⟩
 
-variable [∀ x y, OmegaCompletePartialOrder $ γ x y]
+variable [∀ x y, OmegaCompletePartialOrder <| γ x y]
 
 section Curry
 
@@ -271,12 +271,12 @@ variable {f : (∀ x y : β x, γ x y) →o ∀ x y : β x, γ x y}
 
 variable (hc : continuous f)
 
-theorem uncurry_curry_continuous : continuous $ (monotone_uncurry α β γ).comp $ f.comp $ monotone_curry α β γ :=
+theorem uncurry_curry_continuous : continuous <| (monotone_uncurry α β γ).comp <| f.comp <| monotone_curry α β γ :=
   continuous_comp _ _ (continuous_comp _ _ (continuous_curry _ _ _) hc) (continuous_uncurry _ _ _)
 
 end Curry
 
-instance pi.lawful_fix' [LawfulFix $ ∀ x : Sigma β, γ x.1 x.2] : LawfulFix (∀ x y, γ x y) where
+instance pi.lawful_fix' [LawfulFix <| ∀ x : Sigma β, γ x.1 x.2] : LawfulFix (∀ x y, γ x y) where
   fix_eq := fun f hc => by
     dsimp [fix]
     conv => lhs erw [LawfulFix.fix_eq (uncurry_curry_continuous hc)]

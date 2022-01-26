@@ -141,7 +141,7 @@ def algebra_map_inv : TensorAlgebra R M →ₐ[R] R :=
 
 variable (M)
 
-theorem algebra_map_left_inverse : Function.LeftInverse algebra_map_inv (algebraMap R $ TensorAlgebra R M) := fun x =>
+theorem algebra_map_left_inverse : Function.LeftInverse algebra_map_inv (algebraMap R <| TensorAlgebra R M) := fun x =>
   by
   simp [algebra_map_inv]
 

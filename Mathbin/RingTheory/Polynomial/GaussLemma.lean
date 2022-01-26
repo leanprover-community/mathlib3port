@@ -112,7 +112,7 @@ theorem is_primitive.irreducible_iff_irreducible_map_fraction_map {p : Polynomia
       content_mul, ← content_mul, ← content_mul, h1]
   rw [← RingHom.map_mul, eq_comm, (integer_normalization R⁰ a).eq_C_content_mul_prim_part,
     (integer_normalization R⁰ b).eq_C_content_mul_prim_part, mul_assoc, mul_comm _ (C _ * _), ← mul_assoc, ← mul_assoc,
-    ← RingHom.map_mul, ← hu, RingHom.map_mul, mul_assoc, mul_assoc, ← mul_assoc (C (↑u))] at h1
+    ← RingHom.map_mul, ← hu, RingHom.map_mul, mul_assoc, mul_assoc, ← mul_assoc (C ↑u)] at h1
   have h0 : a ≠ 0 ∧ b ≠ 0 := by
     classical
     rw [Ne.def, Ne.def, ← Decidable.not_or_iff_and_not, ← mul_eq_zero, ← hab]

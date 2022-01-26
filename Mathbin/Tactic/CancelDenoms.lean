@@ -36,7 +36,7 @@ theorem div_subst {α} [Field α] {n1 n2 k e1 e2 t1 : α} (h1 : n1 * e1 = t1) (h
   rw [← h3, mul_assoc, mul_div_comm, h2, ← mul_assoc, h1, mul_comm, one_mulₓ]
 
 theorem cancel_factors_eq_div {α} [Field α] {n e e' : α} (h : n * e = e') (h2 : n ≠ 0) : e = e' / n :=
-  eq_div_of_mul_eq h2 $ by
+  eq_div_of_mul_eq h2 <| by
     rwa [mul_comm] at h
 
 theorem add_subst {α} [Ringₓ α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) : n * (e1 + e2) = t1 + t2 :=
@@ -205,7 +205,7 @@ It produces an expression `h'` of the form `lhs' R rhs'` and a proof that `h = h
 Numeric denominators have been canceled in `lhs'` and `rhs'`.
 -/
 unsafe def cancel_denominators_in_type (h : expr) : tactic (expr × expr) := do
-  let some (lhs, rhs, lem) ← return $ find_comp_lemma h | fail "cannot kill factors"
+  let some (lhs, rhs, lem) ← return <| find_comp_lemma h | fail "cannot kill factors"
   let (al, lhs_p) ← derive lhs
   let (ar, rhs_p) ← derive rhs
   let gcd := al.gcd ar

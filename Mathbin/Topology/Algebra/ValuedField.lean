@@ -52,13 +52,13 @@ theorem Valuation.inversion_estimate {x y : K} {γ : (Γ₀)ˣ} (y_ne : y ≠ 0)
     rw [mul_sub_left_distrib, sub_mul, mul_assoc, show y * y⁻¹ = 1 from mul_inv_cancel y_ne,
       show x⁻¹ * x = 1 from inv_mul_cancel x_ne, mul_oneₓ, one_mulₓ]
   calc v (x⁻¹ - y⁻¹) = v (x⁻¹ * (y - x) * y⁻¹) := by
-      rw [decomp]_ = v (x⁻¹) * (v $ y - x) * v (y⁻¹) := by
+      rw [decomp]_ = v x⁻¹ * (v <| y - x) * v y⁻¹ := by
       repeat'
-        rw [Valuation.map_mul]_ = v x⁻¹ * (v $ y - x) * v y⁻¹ :=
+        rw [Valuation.map_mul]_ = (v x)⁻¹ * (v <| y - x) * (v y)⁻¹ :=
       by
-      rw [v.map_inv, v.map_inv]_ = (v $ y - x) * (v y * v y)⁻¹ := by
-      rw [mul_assoc, mul_comm, key, mul_assoc, mul_inv_rev₀]_ = (v $ y - x) * (v y * v y)⁻¹ :=
-      rfl _ = (v $ x - y) * (v y * v y)⁻¹ := by
+      rw [v.map_inv, v.map_inv]_ = (v <| y - x) * (v y * v y)⁻¹ := by
+      rw [mul_assoc, mul_comm, key, mul_assoc, mul_inv_rev₀]_ = (v <| y - x) * (v y * v y)⁻¹ :=
+      rfl _ = (v <| x - y) * (v y * v y)⁻¹ := by
       rw [Valuation.map_sub_swap]_ < γ := hyp1'
 
 end InversionEstimate
@@ -76,7 +76,7 @@ instance (priority := 100) Valued.topological_division_ring [Valued K] : Topolog
       clear s_in
       rw [mem_map, Valued.mem_nhds]
       change ∃ γ : (Valued.Γ₀ K)ˣ, { y : K | v (y - x) < γ } ⊆ { x : K | x⁻¹ ∈ s }
-      have vx_ne := (Valuation.ne_zero_iff $ v).mpr x_ne
+      have vx_ne := (Valuation.ne_zero_iff <| v).mpr x_ne
       let γ' := Units.mk0 _ vx_ne
       use min (γ * (γ' * γ')) γ'
       intro y y_in
@@ -91,7 +91,7 @@ instance (priority := 100) ValuedRing.separated [Valued K] : SeparatedSpace K :=
   intro x x_ne
   refine' ⟨{ k | v k < v x }, _, fun h => lt_irreflₓ _ h⟩
   rw [Valued.mem_nhds]
-  have vx_ne := (Valuation.ne_zero_iff $ v).mpr x_ne
+  have vx_ne := (Valuation.ne_zero_iff <| v).mpr x_ne
   let γ' := Units.mk0 _ vx_ne
   exact
     ⟨γ', fun y hy => by
@@ -184,7 +184,7 @@ instance (priority := 100) Valued.completable : CompletableTopField K :=
           rw [mul_assoc]
           have : ((γ₀ * γ₀ : (Γ₀ K)ˣ) : Γ₀ K) ≤ v x * v x :=
             calc
-              ↑γ₀ * ↑γ₀ ≤ ↑γ₀ * v x := mul_le_mul_left' x_in₀ (↑γ₀)
+              ↑γ₀ * ↑γ₀ ≤ ↑γ₀ * v x := mul_le_mul_left' x_in₀ ↑γ₀
               _ ≤ _ := mul_le_mul_right' x_in₀ (v x)
               
           rw [Units.coe_mul]
@@ -231,7 +231,7 @@ theorem Valued.continuous_extension : Continuous (Valued.extension : hat K → �
         convert TopologicalDivisionRing.continuous_inv (1 : hat K) zero_ne_one.symm
         exact inv_one.symm
       rcases tendsto_prod_self_iff.mp this V V_in with ⟨U, U_in, hU⟩
-      let hatKstar := ({0}ᶜ : Set $ hat K)
+      let hatKstar := ({0}ᶜ : Set <| hat K)
       have : hatKstar ∈ 𝓝 (1 : hat K) := compl_singleton_mem_nhds zero_ne_one.symm
       use U ∩ hatKstar, Filter.inter_mem U_in this
       constructor
@@ -272,7 +272,7 @@ theorem Valued.continuous_extension : Continuous (Valued.extension : hat K → �
     have : v (x * z₀⁻¹) = 1 := by
       apply hV
       have : ((z₀⁻¹ : K) : hat K) = z₀⁻¹ := RingHom.map_inv (completion.coe_ring_hom : K →+* hat K) z₀
-      rw [completion.coe_mul, this, ← hy, hz₀, mul_inv₀, mul_comm (y₀⁻¹), ← mul_assoc, mul_assoc y, mul_inv_cancel h,
+      rw [completion.coe_mul, this, ← hy, hz₀, mul_inv₀, mul_comm y₀⁻¹, ← mul_assoc, mul_assoc y, mul_inv_cancel h,
         mul_oneₓ]
       solve_by_elim
     calc v x = v (x * z₀⁻¹ * z₀) := by
@@ -312,8 +312,8 @@ noncomputable def Valued.extensionValuation : Valuation (hat K) (Γ₀ K) where
     apply completion.induction_on₂ x y
     · have cont : Continuous (Valued.extension : hat K → Γ₀ K) := Valued.continuous_extension
       exact
-        (is_closed_le (cont.comp continuous_add) $ cont.comp continuous_fst).union
-          (is_closed_le (cont.comp continuous_add) $ cont.comp continuous_snd)
+        (is_closed_le (cont.comp continuous_add) <| cont.comp continuous_fst).union
+          (is_closed_le (cont.comp continuous_add) <| cont.comp continuous_snd)
       
     · intro x y
       dsimp

@@ -124,7 +124,7 @@ def reinsert_aux {n} (data : BucketArray α β n) (a : α) (b : β a) : BucketAr
   data.modify hash_fn a fun l => ⟨a, b⟩ :: l
 
 theorem mk_as_list (n : ℕ+) : BucketArray.asList (mkArray n [] : BucketArray α β n) = [] :=
-  List.eq_nil_iff_forall_not_memₓ.mpr $ fun x m =>
+  List.eq_nil_iff_forall_not_memₓ.mpr fun x m =>
     let ⟨i, h⟩ := (BucketArray.mem_as_list _).1 m
     h
 
@@ -231,7 +231,7 @@ theorem mk_valid (n : ℕ+) : @valid n (mkArray n []) 0 :=
 
 theorem valid.find_aux_iff {n} {bkts : BucketArray α β n} {sz : Nat} (v : valid bkts sz) {a : α} {b : β a} :
     find_aux a (bkts.read hash_fn a) = some b ↔ Sigma.mk a b ∈ bkts.as_list :=
-  (find_aux_iff (v.nodup _)).trans $ by
+  (find_aux_iff (v.nodup _)).trans <| by
     rw [bkts.mem_as_list] <;> exact ⟨fun h => ⟨_, h⟩, fun ⟨i, h⟩ => (v.idx h).symm ▸ h⟩
 
 theorem valid.contains_aux_iff {n} {bkts : BucketArray α β n} {sz : Nat} (v : valid bkts sz) (a : α) :
@@ -498,7 +498,7 @@ theorem insert_lemma (hash_fn : α → Nat) {n n'} {bkts : BucketArray α β n} 
       by
       simpa [List.nodup_append, not_or_distrib, and_comm, And.left_comm] using nd with
     ⟨nd1, nd2, nm1, nm2, dj⟩
-  have v' := v.insert _ _ c.2 fun Hc => nm2 $ (v.contains_aux_iff _ c.1).1 Hc
+  have v' := v.insert _ _ c.2 fun Hc => nm2 <| (v.contains_aux_iff _ c.1).1 Hc
   apply IH _ _ v'
   suffices
     ∀ ⦃a : α⦄ b : β a, Sigma.mk a b ∈ l → ∀ b' : β a, Sigma.mk a b' ∈ (reinsert_aux hash_fn t c.1 c.2).asList → False by
@@ -559,9 +559,9 @@ theorem mem_insert :
       · subst a'
         suffices b = b' ∨ Sigma.mk a b' ∈ u ∨ Sigma.mk a b' ∈ w ↔ b = b' by
           simpa [eq_comm, Or.left_comm]
-        refine' or_iff_left_of_imp (Not.elim $ not_or_distrib.2 _)
+        refine' or_iff_left_of_imp (Not.elim <| not_or_distrib.2 _)
         rcases veq with (⟨rfl, Hnc⟩ | ⟨b'', rfl⟩)
-        · have na := (not_iff_not_of_iff $ v.contains_aux_iff _ _).1 Hnc
+        · have na := (not_iff_not_of_iff <| v.contains_aux_iff _ _).1 Hnc
           simp [hl, not_or_distrib] at na
           simp [na]
           
@@ -584,7 +584,7 @@ theorem mem_insert :
       let bkts' := bkts.modify hash_fn a fun l => ⟨a, b⟩ :: l
       have mi : Sigma.mk a' b' ∈ bkts'.as_list ↔ if a = a' then HEq b b' else Sigma.mk a' b' ∈ bkts.as_list :=
         let ⟨u, w, hl, hfl⟩ := append_of_modify [] [] [⟨a, b⟩] _ rfl rfl
-        lem bkts' _ u w hl hfl $ Or.inl ⟨rfl, Hc⟩
+        lem bkts' _ u w hl hfl <| Or.inl ⟨rfl, Hc⟩
       simp [insert, @dif_neg (contains_aux a bkt) _ Hc]
       by_cases' h : size' ≤ n
       · simpa [show size' ≤ n from h] using mi
@@ -611,14 +611,14 @@ theorem mem_insert :
       
 
 theorem find_insert_eq (m : HashMap α β) (a : α) (b : β a) : (m.insert a b).find a = some b :=
-  (find_iff (m.insert a b) a b).2 $
-    (mem_insert m a b a b).2 $ by
+  (find_iff (m.insert a b) a b).2 <|
+    (mem_insert m a b a b).2 <| by
       rw [if_pos rfl]
 
 theorem find_insert_ne (m : HashMap α β) (a a' : α) (b : β a) (h : a ≠ a') : (m.insert a b).find a' = m.find a' :=
-  Option.eq_of_eq_some $ fun b' =>
+  Option.eq_of_eq_some fun b' =>
     let t := mem_insert m a b a' b'
-    (find_iff _ _ _).trans $
+    (find_iff _ _ _).trans <|
       Iff.trans
         (by
           rwa [if_neg h] at t)
@@ -691,8 +691,8 @@ theorem find_erase_eq (m : HashMap α β) (a : α) : (m.erase a).find a = none :
   exact absurd rfl ((mem_erase m a a b).1 ((find_iff (m.erase a) a b).1 h)).left
 
 theorem find_erase_ne (m : HashMap α β) (a a' : α) (h : a ≠ a') : (m.erase a).find a' = m.find a' :=
-  Option.eq_of_eq_some $ fun b' =>
-    (find_iff _ _ _).trans $ (mem_erase m a a' b').trans $ (and_iff_right h).trans (find_iff _ _ _).symm
+  Option.eq_of_eq_some fun b' =>
+    (find_iff _ _ _).trans <| (mem_erase m a a' b').trans <| (and_iff_right h).trans (find_iff _ _ _).symm
 
 theorem find_erase (m : HashMap α β) (a' a : α) : (m.erase a).find a' = if a = a' then none else m.find a' :=
   if h : a = a' then by
@@ -727,7 +727,7 @@ private unsafe def format_key_data (a : α) (b : β a) (first : Bool) : format :
   (if first then to_fmt "" else to_fmt "," ++ line) ++ to_fmt a ++ space ++ to_fmt "←" ++ space ++ to_fmt b
 
 private unsafe def to_format (m : HashMap α β) : format :=
-  Groupₓ $
+  Groupₓ <|
     to_fmt "⟨" ++ nest 1 (fst (fold m (to_fmt "", tt) fun p a b => (fst p ++ format_key_data a b (snd p), ff))) ++
       to_fmt "⟩"
 

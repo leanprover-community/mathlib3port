@@ -212,6 +212,7 @@ import Mathbin.Algebra.Order.EuclideanAbsoluteValue
 import Mathbin.Algebra.Order.Field
 import Mathbin.Algebra.Order.Floor
 import Mathbin.Algebra.Order.Group
+import Mathbin.Algebra.Order.Hom.Monoid
 import Mathbin.Algebra.Order.Invertible
 import Mathbin.Algebra.Order.LatticeGroup
 import Mathbin.Algebra.Order.Module
@@ -856,6 +857,7 @@ import Mathbin.Data.Finset.Basic
 import Mathbin.Data.Finset.Card
 import Mathbin.Data.Finset.Default
 import Mathbin.Data.Finset.Fin
+import Mathbin.Data.Finset.Finsupp
 import Mathbin.Data.Finset.Fold
 import Mathbin.Data.Finset.Functor
 import Mathbin.Data.Finset.Interval
@@ -880,6 +882,7 @@ import Mathbin.Data.Finset.Sym
 import Mathbin.Data.Finsupp.Antidiagonal
 import Mathbin.Data.Finsupp.Basic
 import Mathbin.Data.Finsupp.Default
+import Mathbin.Data.Finsupp.Indicator
 import Mathbin.Data.Finsupp.Multiset
 import Mathbin.Data.Finsupp.Order
 import Mathbin.Data.Finsupp.Pointwise
@@ -893,7 +896,9 @@ import Mathbin.Data.Fintype.Order
 import Mathbin.Data.Fintype.Small
 import Mathbin.Data.Fintype.Sort
 import Mathbin.Data.Fp.Basic
-import Mathbin.Data.FunLike
+import Mathbin.Data.FunLike.Basic
+import Mathbin.Data.FunLike.Embedding
+import Mathbin.Data.FunLike.Equiv
 import Mathbin.Data.HashMap
 import Mathbin.Data.Holor
 import Mathbin.Data.Int.AbsoluteValue
@@ -1607,6 +1612,7 @@ import Mathbin.Order.Filter.Ultrafilter
 import Mathbin.Order.FixedPoints
 import Mathbin.Order.GaloisConnection
 import Mathbin.Order.Hom.Basic
+import Mathbin.Order.Hom.Lattice
 import Mathbin.Order.Hom.Order
 import Mathbin.Order.Ideal
 import Mathbin.Order.Imp
@@ -1946,6 +1952,7 @@ import Mathbin.Topology.Algebra.Module.Multilinear
 import Mathbin.Topology.Algebra.Module.WeakDual
 import Mathbin.Topology.Algebra.Monoid
 import Mathbin.Topology.Algebra.MulAction
+import Mathbin.Topology.Algebra.MulAction2
 import Mathbin.Topology.Algebra.Nonarchimedean.AdicTopology
 import Mathbin.Topology.Algebra.Nonarchimedean.Bases
 import Mathbin.Topology.Algebra.Nonarchimedean.Basic

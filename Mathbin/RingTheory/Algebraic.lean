@@ -264,20 +264,20 @@ variable [CommSemiringₓ R'] [CommSemiringₓ S'] [CommSemiringₓ T'] [Algebra
 noncomputable instance Polynomial.algebraPi : Algebra (Polynomial R') (S' → T') :=
   { Polynomial.hasScalarPi' R' S' T' with toFun := fun p z => algebraMap S' T' (aeval z p),
     map_one' :=
-      funext $ fun z => by
+      funext fun z => by
         simp ,
     map_mul' := fun f g =>
-      funext $ fun z => by
+      funext fun z => by
         simp ,
     map_zero' :=
-      funext $ fun z => by
+      funext fun z => by
         simp ,
     map_add' := fun f g =>
-      funext $ fun z => by
+      funext fun z => by
         simp ,
-    commutes' := fun p f => funext $ fun z => mul_comm _ _,
+    commutes' := fun p f => funext fun z => mul_comm _ _,
     smul_def' := fun p f =>
-      funext $ fun z => by
+      funext fun z => by
         simp [Algebra.algebra_map_eq_smul_one] }
 
 @[simp]

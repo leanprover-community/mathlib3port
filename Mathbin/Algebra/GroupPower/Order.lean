@@ -82,7 +82,7 @@ variable [Monoidₓ M] [LinearOrderₓ M] [CovariantClass M M (· * ·) (· ≤ 
 
 @[to_additive nsmul_nonneg_iff]
 theorem one_le_pow_iff {x : M} {n : ℕ} (hn : n ≠ 0) : 1 ≤ x ^ n ↔ 1 ≤ x :=
-  ⟨le_imp_le_of_lt_imp_ltₓ $ fun h => pow_lt_one' h hn, fun h => one_le_pow_of_one_le' h n⟩
+  ⟨le_imp_le_of_lt_imp_ltₓ fun h => pow_lt_one' h hn, fun h => one_le_pow_of_one_le' h n⟩
 
 @[to_additive nsmul_nonpos_iff]
 theorem pow_le_one_iff {x : M} {n : ℕ} (hn : n ≠ 0) : x ^ n ≤ 1 ↔ x ≤ 1 :=
@@ -119,7 +119,7 @@ namespace CanonicallyOrderedCommSemiring
 variable [CanonicallyOrderedCommSemiring R]
 
 theorem pow_pos {a : R} (H : 0 < a) (n : ℕ) : 0 < a ^ n :=
-  pos_iff_ne_zero.2 $ pow_ne_zero _ H.ne'
+  pos_iff_ne_zero.2 <| pow_ne_zero _ H.ne'
 
 end CanonicallyOrderedCommSemiring
 
@@ -193,7 +193,7 @@ theorem one_le_pow_of_one_le (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
     simpa only [mul_oneₓ] using mul_le_mul H (one_le_pow_of_one_le n) zero_le_one (le_transₓ zero_le_one H)
 
 theorem pow_mono (h : 1 ≤ a) : Monotone fun n : ℕ => a ^ n :=
-  monotone_nat_of_le_succ $ fun n => by
+  monotone_nat_of_le_succ fun n => by
     rw [pow_succₓ]
     exact le_mul_of_one_le_left (pow_nonneg (zero_le_one.trans h) _) h
 
@@ -202,7 +202,7 @@ theorem pow_le_pow (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
 
 theorem strict_mono_pow (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
   have : 0 < a := zero_le_one.trans_lt h
-  strict_mono_nat_of_lt_succ $ fun n => by
+  strict_mono_nat_of_lt_succ fun n => by
     simpa only [one_mulₓ, pow_succₓ] using mul_lt_mul h (le_reflₓ (a ^ n)) (pow_pos this _) this.le
 
 theorem pow_lt_pow (h : 1 < a) (h2 : n < m) : a ^ n < a ^ m :=
@@ -212,7 +212,7 @@ theorem pow_lt_pow_iff (h : 1 < a) : a ^ n < a ^ m ↔ n < m :=
   (strict_mono_pow h).lt_iff_lt
 
 theorem strict_anti_pow (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti fun n : ℕ => a ^ n :=
-  strict_anti_nat_of_succ_lt $ fun n => by
+  strict_anti_nat_of_succ_lt fun n => by
     simpa only [pow_succₓ, one_mulₓ] using mul_lt_mul h₁ le_rfl (pow_pos h₀ n) zero_le_one
 
 theorem pow_lt_pow_iff_of_lt_one (h₀ : 0 < a) (h₁ : a < 1) : a ^ m < a ^ n ↔ n < m :=
@@ -297,10 +297,10 @@ theorem pow_left_inj {x y : R} {n : ℕ} (Hxpos : 0 ≤ x) (Hypos : 0 ≤ y) (Hn
   (@strict_mono_on_pow R _ _ Hnpos).InjOn.eq_iff Hxpos Hypos
 
 theorem lt_of_pow_lt_pow {a b : R} (n : ℕ) (hb : 0 ≤ b) (h : a ^ n < b ^ n) : a < b :=
-  lt_of_not_geₓ $ fun hn => not_lt_of_geₓ (pow_le_pow_of_le_left hb hn _) h
+  lt_of_not_geₓ fun hn => not_lt_of_geₓ (pow_le_pow_of_le_left hb hn _) h
 
 theorem le_of_pow_le_pow {a b : R} (n : ℕ) (hb : 0 ≤ b) (hn : 0 < n) (h : a ^ n ≤ b ^ n) : a ≤ b :=
-  le_of_not_ltₓ $ fun h1 => not_le_of_lt (pow_lt_pow_of_lt_left h1 hb hn) h
+  le_of_not_ltₓ fun h1 => not_le_of_lt (pow_lt_pow_of_lt_left h1 hb hn) h
 
 @[simp]
 theorem sq_eq_sq {a b : R} (ha : 0 ≤ a) (hb : 0 ≤ b) : a ^ 2 = b ^ 2 ↔ a = b :=
@@ -314,10 +314,10 @@ section LinearOrderedRing
 
 variable [LinearOrderedRing R]
 
-theorem pow_abs (a : R) (n : ℕ) : |a| ^ n = |a ^ n| :=
+theorem pow_abs (a : R) (n : ℕ) : abs a ^ n = abs (a ^ n) :=
   ((absHom.toMonoidHom : R →* R).map_pow a n).symm
 
-theorem abs_neg_one_pow (n : ℕ) : |(-1 : R) ^ n| = 1 := by
+theorem abs_neg_one_pow (n : ℕ) : abs ((-1 : R) ^ n) = 1 := by
   rw [← pow_abs, abs_neg, abs_one, one_pow]
 
 theorem pow_bit0_nonneg (a : R) (n : ℕ) : 0 ≤ a ^ bit0 n := by
@@ -339,45 +339,45 @@ alias sq_pos_of_ne_zero ← pow_two_pos_of_ne_zero
 
 variable {x y : R}
 
-theorem sq_abs (x : R) : |x| ^ 2 = x ^ 2 := by
+theorem sq_abs (x : R) : abs x ^ 2 = x ^ 2 := by
   simpa only [sq] using abs_mul_abs_self x
 
-theorem abs_sq (x : R) : |x ^ 2| = x ^ 2 := by
+theorem abs_sq (x : R) : abs (x ^ 2) = x ^ 2 := by
   simpa only [sq] using abs_mul_self x
 
-theorem sq_lt_sq (h : |x| < y) : x ^ 2 < y ^ 2 := by
+theorem sq_lt_sq (h : abs x < y) : x ^ 2 < y ^ 2 := by
   simpa only [sq_abs] using pow_lt_pow_of_lt_left h (abs_nonneg x) (1 : ℕ).succ_pos
 
 theorem sq_lt_sq' (h1 : -y < x) (h2 : x < y) : x ^ 2 < y ^ 2 :=
   sq_lt_sq (abs_lt.mpr ⟨h1, h2⟩)
 
-theorem sq_le_sq (h : |x| ≤ |y|) : x ^ 2 ≤ y ^ 2 := by
+theorem sq_le_sq (h : abs x ≤ abs y) : x ^ 2 ≤ y ^ 2 := by
   simpa only [sq_abs] using pow_le_pow_of_le_left (abs_nonneg x) h 2
 
 theorem sq_le_sq' (h1 : -y ≤ x) (h2 : x ≤ y) : x ^ 2 ≤ y ^ 2 :=
   sq_le_sq (le_transₓ (abs_le.mpr ⟨h1, h2⟩) (le_abs_self _))
 
-theorem abs_lt_abs_of_sq_lt_sq (h : x ^ 2 < y ^ 2) : |x| < |y| :=
-  lt_of_pow_lt_pow 2 (abs_nonneg y) $ by
+theorem abs_lt_abs_of_sq_lt_sq (h : x ^ 2 < y ^ 2) : abs x < abs y :=
+  lt_of_pow_lt_pow 2 (abs_nonneg y) <| by
     rwa [← sq_abs x, ← sq_abs y] at h
 
-theorem abs_lt_of_sq_lt_sq (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : |x| < y := by
+theorem abs_lt_of_sq_lt_sq (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : abs x < y := by
   rw [← abs_of_nonneg hy]
   exact abs_lt_abs_of_sq_lt_sq h
 
 theorem abs_lt_of_sq_lt_sq' (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : -y < x ∧ x < y :=
-  abs_lt.mp $ abs_lt_of_sq_lt_sq h hy
+  abs_lt.mp <| abs_lt_of_sq_lt_sq h hy
 
-theorem abs_le_abs_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) : |x| ≤ |y| :=
-  le_of_pow_le_pow 2 (abs_nonneg y) (1 : ℕ).succ_pos $ by
+theorem abs_le_abs_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) : abs x ≤ abs y :=
+  le_of_pow_le_pow 2 (abs_nonneg y) (1 : ℕ).succ_pos <| by
     rwa [← sq_abs x, ← sq_abs y] at h
 
-theorem abs_le_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : |x| ≤ y := by
+theorem abs_le_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : abs x ≤ y := by
   rw [← abs_of_nonneg hy]
   exact abs_le_abs_of_sq_le_sq h
 
 theorem abs_le_of_sq_le_sq' (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : -y ≤ x ∧ x ≤ y :=
-  abs_le.mp $ abs_le_of_sq_le_sq h hy
+  abs_le.mp <| abs_le_of_sq_le_sq h hy
 
 end LinearOrderedRing
 

@@ -15,7 +15,7 @@ open_locale TopologicalSpace Filter Interval
 variable {α 𝕜 : Type _} [MeasurableSpace α] [LinearOrderₓ α] [TopologicalSpace α] [OrderTopology α]
   [OpensMeasurableSpace α] {μ : Measureₓ α} [IsROrC 𝕜] {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedSpace 𝕜 E]
   [CompleteSpace E] [second_countable_topology E] [MeasurableSpace E] [BorelSpace E] {H : Type _} [NormedGroup H]
-  [NormedSpace 𝕜 H] [second_countable_topology $ H →L[𝕜] E] {a b : α} {bound : α → ℝ} {ε : ℝ}
+  [NormedSpace 𝕜 H] [second_countable_topology <| H →L[𝕜] E] {a b : α} {bound : α → ℝ} {ε : ℝ}
 
 namespace intervalIntegral
 
@@ -26,7 +26,7 @@ for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → α → E} {F' : α → H →L[𝕜] E} {x₀ : H} (ε_pos : 0 < ε)
     (hF_meas : ∀ᶠ x in 𝓝 x₀, AeMeasurable (F x) (μ.restrict (Ι a b))) (hF_int : IntervalIntegrable (F x₀) μ a b)
     (hF'_meas : AeMeasurable F' (μ.restrict (Ι a b)))
-    (h_lip : ∀ᵐ t ∂μ, t ∈ Ι a b → LipschitzOnWith (Real.nnabs $ bound t) (fun x => F x t) (ball x₀ ε))
+    (h_lip : ∀ᵐ t ∂μ, t ∈ Ι a b → LipschitzOnWith (Real.nnabs <| bound t) (fun x => F x t) (ball x₀ ε))
     (bound_integrable : IntervalIntegrable bound μ a b)
     (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → HasFderivAt (fun x => F x t) (F' t) x₀) :
     IntervalIntegrable F' μ a b ∧ HasFderivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' t ∂μ) x₀ := by
@@ -60,7 +60,7 @@ ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F' : α → E} {x₀ : 𝕜} (ε_pos : 0 < ε)
     (hF_meas : ∀ᶠ x in 𝓝 x₀, AeMeasurable (F x) (μ.restrict (Ι a b))) (hF_int : IntervalIntegrable (F x₀) μ a b)
     (hF'_meas : AeMeasurable F' (μ.restrict (Ι a b)))
-    (h_lipsch : ∀ᵐ t ∂μ, t ∈ Ι a b → LipschitzOnWith (Real.nnabs $ bound t) (fun x => F x t) (ball x₀ ε))
+    (h_lipsch : ∀ᵐ t ∂μ, t ∈ Ι a b → LipschitzOnWith (Real.nnabs <| bound t) (fun x => F x t) (ball x₀ ε))
     (bound_integrable : IntervalIntegrable (bound : α → ℝ) μ a b)
     (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → HasDerivAt (fun x => F x t) (F' t) x₀) :
     IntervalIntegrable F' μ a b ∧ HasDerivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' t ∂μ) x₀ := by

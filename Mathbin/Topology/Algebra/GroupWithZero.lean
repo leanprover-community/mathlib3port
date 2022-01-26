@@ -68,15 +68,14 @@ end DivConst
 
 /-- A type with `0` and `has_inv` such that `λ x, x⁻¹` is continuous at all nonzero points. Any
 normed (semi)field has this property. -/
-class HasContinuousInv₀ (G₀ : Type _) [Zero G₀] [HasInv G₀] [TopologicalSpace G₀] where
-  continuous_at_inv₀ : ∀ ⦃x : G₀⦄, x ≠ 0 → ContinuousAt HasInv.inv x
+class HasContinuousInv₀ (G₀ : Type _) [Zero G₀] [Inv G₀] [TopologicalSpace G₀] where
+  continuous_at_inv₀ : ∀ ⦃x : G₀⦄, x ≠ 0 → ContinuousAt Inv.inv x
 
 export HasContinuousInv₀ (continuous_at_inv₀)
 
 section Inv₀
 
-variable [Zero G₀] [HasInv G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] {l : Filter α} {f : α → G₀} {s : Set α}
-  {a : α}
+variable [Zero G₀] [Inv G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] {l : Filter α} {f : α → G₀} {s : Set α} {a : α}
 
 /-!
 ### Continuity of `λ x, x⁻¹` at a non-zero point
@@ -87,32 +86,32 @@ is continuous at all nonzero points. In this section we prove dot-style `*.inv'`
 -/
 
 
-theorem tendsto_inv₀ {x : G₀} (hx : x ≠ 0) : tendsto HasInv.inv (𝓝 x) (𝓝 (x⁻¹)) :=
+theorem tendsto_inv₀ {x : G₀} (hx : x ≠ 0) : tendsto Inv.inv (𝓝 x) (𝓝 x⁻¹) :=
   continuous_at_inv₀ hx
 
-theorem continuous_on_inv₀ : ContinuousOn (HasInv.inv : G₀ → G₀) ({0}ᶜ) := fun x hx =>
+theorem continuous_on_inv₀ : ContinuousOn (Inv.inv : G₀ → G₀) ({0}ᶜ) := fun x hx =>
   (continuous_at_inv₀ hx).ContinuousWithinAt
 
 /-- If a function converges to a nonzero value, its inverse converges to the inverse of this value.
 We use the name `tendsto.inv₀` as `tendsto.inv` is already used in multiplicative topological
 groups. -/
-theorem Filter.Tendsto.inv₀ {a : G₀} (hf : tendsto f l (𝓝 a)) (ha : a ≠ 0) : tendsto (fun x => f x⁻¹) l (𝓝 (a⁻¹)) :=
+theorem Filter.Tendsto.inv₀ {a : G₀} (hf : tendsto f l (𝓝 a)) (ha : a ≠ 0) : tendsto (fun x => (f x)⁻¹) l (𝓝 a⁻¹) :=
   (tendsto_inv₀ ha).comp hf
 
 variable [TopologicalSpace α]
 
 theorem ContinuousWithinAt.inv₀ (hf : ContinuousWithinAt f s a) (ha : f a ≠ 0) :
-    ContinuousWithinAt (fun x => f x⁻¹) s a :=
+    ContinuousWithinAt (fun x => (f x)⁻¹) s a :=
   hf.inv₀ ha
 
-theorem ContinuousAt.inv₀ (hf : ContinuousAt f a) (ha : f a ≠ 0) : ContinuousAt (fun x => f x⁻¹) a :=
+theorem ContinuousAt.inv₀ (hf : ContinuousAt f a) (ha : f a ≠ 0) : ContinuousAt (fun x => (f x)⁻¹) a :=
   hf.inv₀ ha
 
 @[continuity]
-theorem Continuous.inv₀ (hf : Continuous f) (h0 : ∀ x, f x ≠ 0) : Continuous fun x => f x⁻¹ :=
-  continuous_iff_continuous_at.2 $ fun x => (hf.tendsto x).inv₀ (h0 x)
+theorem Continuous.inv₀ (hf : Continuous f) (h0 : ∀ x, f x ≠ 0) : Continuous fun x => (f x)⁻¹ :=
+  continuous_iff_continuous_at.2 fun x => (hf.tendsto x).inv₀ (h0 x)
 
-theorem ContinuousOn.inv₀ (hf : ContinuousOn f s) (h0 : ∀, ∀ x ∈ s, ∀, f x ≠ 0) : ContinuousOn (fun x => f x⁻¹) s :=
+theorem ContinuousOn.inv₀ (hf : ContinuousOn f s) (h0 : ∀, ∀ x ∈ s, ∀, f x ≠ 0) : ContinuousOn (fun x => (f x)⁻¹) s :=
   fun x hx => (hf x hx).inv₀ (h0 x hx)
 
 end Inv₀
@@ -152,7 +151,7 @@ theorem Continuous.div (hf : Continuous f) (hg : Continuous g) (h₀ : ∀ x, g 
   simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ h₀)
 
 theorem continuous_on_div : ContinuousOn (fun p : G₀ × G₀ => p.1 / p.2) { p | p.2 ≠ 0 } :=
-  continuous_on_fst.div continuous_on_snd $ fun _ => id
+  (continuous_on_fst.div continuous_on_snd) fun _ => id
 
 /-- The function `f x / g x` is discontinuous when `g x = 0`.
 However, under appropriate conditions, `h x (f x / g x)` is still continuous.
@@ -177,7 +176,7 @@ theorem ContinuousAt.comp_div_cases {f g : α → G₀} (h : α → G₀ → β)
 theorem Continuous.comp_div_cases {f g : α → G₀} (h : α → G₀ → β) (hf : Continuous f) (hg : Continuous g)
     (hh : ∀ a, g a ≠ 0 → ContinuousAt (↿h) (a, f a / g a)) (h2h : ∀ a, g a = 0 → tendsto (↿h) (𝓝 a ×ᶠ ⊤) (𝓝 (h a 0))) :
     Continuous fun x => h x (f x / g x) :=
-  continuous_iff_continuous_at.mpr $ fun a => hf.continuous_at.comp_div_cases _ hg.continuous_at (hh a) (h2h a)
+  continuous_iff_continuous_at.mpr fun a => hf.continuous_at.comp_div_cases _ hg.continuous_at (hh a) (h2h a)
 
 end Div
 
@@ -204,7 +203,7 @@ theorem coe_mul_left₀ (c : α) (hc : c ≠ 0) : ⇑Homeomorph.mulLeft₀ c hc 
   rfl
 
 @[simp]
-theorem mul_left₀_symm_apply (c : α) (hc : c ≠ 0) : ((Homeomorph.mulLeft₀ c hc).symm : α → α) = (· * ·) (c⁻¹) :=
+theorem mul_left₀_symm_apply (c : α) (hc : c ≠ 0) : ((Homeomorph.mulLeft₀ c hc).symm : α → α) = (· * ·) c⁻¹ :=
   rfl
 
 @[simp]
@@ -251,7 +250,7 @@ theorem ContinuousOn.zpow (hf : ContinuousOn f s) (m : ℤ) (h : ∀, ∀ a ∈ 
 
 @[continuity]
 theorem Continuous.zpow (hf : Continuous f) (m : ℤ) (h0 : ∀ a, f a ≠ 0 ∨ 0 ≤ m) : Continuous fun x => f x ^ m :=
-  continuous_iff_continuous_at.2 $ fun x => (hf.tendsto x).zpow m (h0 x)
+  continuous_iff_continuous_at.2 fun x => (hf.tendsto x).zpow m (h0 x)
 
 end Zpow
 

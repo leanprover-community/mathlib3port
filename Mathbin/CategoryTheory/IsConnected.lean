@@ -186,7 +186,7 @@ instance is_preconnected_op [is_preconnected J] : is_preconnected (Jᵒᵖ) wher
   iso_constant := fun α F X =>
     ⟨nat_iso.of_components
         (fun Y =>
-          (Nonempty.some $ is_preconnected.iso_constant (F.right_op ⋙ (discrete.opposite α).Functor) (unop X)).app
+          (Nonempty.some <| is_preconnected.iso_constant (F.right_op ⋙ (discrete.opposite α).Functor) (unop X)).app
             (unop Y))
         fun Y Z f => Subsingleton.elimₓ _ _⟩
 
@@ -231,7 +231,7 @@ def zigzag.setoid (J : Type u₂) [category.{v₁} J] : Setoidₓ J where
 `F j₂` as long as `F` is a functor.
 -/
 theorem zigzag_obj_of_zigzag (F : J ⥤ K) {j₁ j₂ : J} (h : zigzag j₁ j₂) : zigzag (F.obj j₁) (F.obj j₂) :=
-  h.lift _ $ fun j k => Or.imp (Nonempty.map fun f => F.map f) (Nonempty.map fun f => F.map f)
+  (h.lift _) fun j k => Or.imp (Nonempty.map fun f => F.map f) (Nonempty.map fun f => F.map f)
 
 theorem zag_of_zag_obj (F : J ⥤ K) [full F] {j₁ j₂ : J} (h : zag (F.obj j₁) (F.obj j₂)) : zag j₁ j₂ :=
   Or.imp (Nonempty.map F.preimage) (Nonempty.map F.preimage) h

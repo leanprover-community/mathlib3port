@@ -75,7 +75,7 @@ theorem to_multilinear_map_inj :
 
 @[ext]
 theorem ext {f f' : ContinuousMultilinearMap R M₁ M₂} (H : ∀ x, f x = f' x) : f = f' :=
-  to_multilinear_map_inj $ MultilinearMap.ext H
+  to_multilinear_map_inj <| MultilinearMap.ext H
 
 @[simp]
 theorem map_add (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) : f (update m i (x + y)) = f (update m i x) + f (update m i y) :=
@@ -153,7 +153,7 @@ continuous multilinear map taking values in the space of functions `Π i, M' i`.
 def pi {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoidₓ (M' i)] [∀ i, TopologicalSpace (M' i)]
     [∀ i, Module R (M' i)] (f : ∀ i, ContinuousMultilinearMap R M₁ (M' i)) :
     ContinuousMultilinearMap R M₁ (∀ i, M' i) where
-  cont := continuous_pi $ fun i => (f i).coe_continuous
+  cont := continuous_pi fun i => (f i).coe_continuous
   toMultilinearMap := MultilinearMap.pi fun i => (f i).toMultilinearMap
 
 @[simp]
@@ -172,11 +172,11 @@ then `g (f₁ m₁, ..., fₙ mₙ)` is again a continuous multilinear map, that
 def comp_continuous_linear_map (g : ContinuousMultilinearMap R M₁' M₄) (f : ∀ i : ι, M₁ i →L[R] M₁' i) :
     ContinuousMultilinearMap R M₁ M₄ :=
   { g.to_multilinear_map.comp_linear_map fun i => (f i).toLinearMap with
-    cont := g.cont.comp $ continuous_pi $ fun j => (f j).cont.comp $ continuous_apply _ }
+    cont := g.cont.comp <| continuous_pi fun j => (f j).cont.comp <| continuous_apply _ }
 
 @[simp]
 theorem comp_continuous_linear_map_apply (g : ContinuousMultilinearMap R M₁' M₄) (f : ∀ i : ι, M₁ i →L[R] M₁' i)
-    (m : ∀ i, M₁ i) : g.comp_continuous_linear_map f m = g fun i => f i $ m i :=
+    (m : ∀ i, M₁ i) : g.comp_continuous_linear_map f m = g fun i => f i <| m i :=
   rfl
 
 /-- Composing a continuous multilinear map with a continuous linear map gives again a
@@ -335,19 +335,19 @@ theorem to_multilinear_map_smul (c : R') (f : ContinuousMultilinearMap A M₁ M�
 instance {R''} [CommSemiringₓ R''] [HasScalar R' R''] [Algebra R'' A] [Module R'' M₂] [IsScalarTower R'' A M₂]
     [IsScalarTower R' R'' M₂] [TopologicalSpace R''] [HasContinuousSmul R'' M₂] :
     IsScalarTower R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
-  ⟨fun c₁ c₂ f => ext $ fun x => smul_assoc _ _ _⟩
+  ⟨fun c₁ c₂ f => ext fun x => smul_assoc _ _ _⟩
 
 variable [HasContinuousAdd M₂]
 
 /-- The space of continuous multilinear maps over an algebra over `R` is a module over `R`, for the
 pointwise addition and scalar multiplication. -/
 instance : Module R' (ContinuousMultilinearMap A M₁ M₂) where
-  one_smul := fun f => ext $ fun x => one_smul _ _
-  mul_smul := fun c₁ c₂ f => ext $ fun x => mul_smul _ _ _
-  smul_zero := fun r => ext $ fun x => smul_zero _
-  smul_add := fun r f₁ f₂ => ext $ fun x => smul_add _ _ _
-  add_smul := fun r₁ r₂ f => ext $ fun x => add_smul _ _ _
-  zero_smul := fun f => ext $ fun x => zero_smul _ _
+  one_smul := fun f => ext fun x => one_smul _ _
+  mul_smul := fun c₁ c₂ f => ext fun x => mul_smul _ _ _
+  smul_zero := fun r => ext fun x => smul_zero _
+  smul_add := fun r f₁ f₂ => ext fun x => smul_add _ _ _
+  add_smul := fun r₁ r₂ f => ext fun x => add_smul _ _ _
+  zero_smul := fun f => ext fun x => zero_smul _ _
 
 /-- Linear map version of the map `to_multilinear_map` associating to a continuous multilinear map
 the corresponding multilinear map. -/

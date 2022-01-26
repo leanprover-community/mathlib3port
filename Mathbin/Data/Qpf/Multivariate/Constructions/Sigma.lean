@@ -32,14 +32,14 @@ instance Sigma.inhabited {α} [Inhabited A] [Inhabited (F default α)] : Inhabit
 instance Pi.inhabited {α} [∀ a, Inhabited (F a α)] : Inhabited (pi F α) :=
   ⟨fun a => default⟩
 
-variable [∀ α, Mvfunctor $ F α]
+variable [∀ α, Mvfunctor <| F α]
 
 namespace Sigma
 
 instance : Mvfunctor (Sigma F) where
   map := fun α β f ⟨a, x⟩ => ⟨a, f <$$> x⟩
 
-variable [∀ α, Mvqpf $ F α]
+variable [∀ α, Mvqpf <| F α]
 
 /-- polynomial functor representation of a dependent sum -/
 protected def P : Mvpfunctor n :=
@@ -72,7 +72,7 @@ namespace Pi
 instance : Mvfunctor (pi F) where
   map := fun α β f x a => f <$$> x a
 
-variable [∀ α, Mvqpf $ F α]
+variable [∀ α, Mvqpf <| F α]
 
 /-- polynomial functor representation of a dependent product -/
 protected def P : Mvpfunctor n :=

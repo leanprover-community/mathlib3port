@@ -100,7 +100,7 @@ instance has_coe_to_int_fract_pair : Coe (int_fract_pair K) (int_fract_pair β) 
 
 @[simp, norm_cast]
 theorem coe_to_int_fract_pair {b : ℤ} {fr : K} :
-    (↑int_fract_pair.mk b fr : int_fract_pair β) = int_fract_pair.mk b (↑fr : β) :=
+    (↑(int_fract_pair.mk b fr) : int_fract_pair β) = int_fract_pair.mk b (↑fr : β) :=
   rfl
 
 end coe
@@ -125,11 +125,11 @@ For example, let `(v : ℚ) := 3.4`. The process goes as follows:
 - `stream v 2 = some ⟨⌊0.5⁻¹⌋, 0.5⁻¹ - ⌊0.5⁻¹⌋⟩ = some ⟨⌊2⌋, 2 - ⌊2⌋⟩ = some ⟨2, 0⟩`
 - `stream v n = none`, for `n ≥ 3`
 -/
-protected def Streamₓ (v : K) : Streamₓ $ Option (int_fract_pair K)
+protected def Streamₓ (v : K) : Streamₓ <| Option (int_fract_pair K)
   | 0 => some (int_fract_pair.of v)
   | n + 1 => do
     let ap_n ← Streamₓ n
-    if ap_n.fr = 0 then none else int_fract_pair.of (ap_n.fr⁻¹)
+    if ap_n.fr = 0 then none else int_fract_pair.of ap_n.fr⁻¹
 
 /-- Shows that `int_fract_pair.stream` has the sequence property, that is once we return `none` at
 position `n`, we also return `none` at `n + 1`.
@@ -146,7 +146,7 @@ This is just an intermediate representation and users should not (need to) direc
 it. The setup of rewriting/simplification lemmas that make the definitions easy to use is done in
 `algebra.continued_fractions.computation.translations`.
 -/
-protected def Seq1 (v : K) : Seq1 $ int_fract_pair K :=
+protected def Seq1 (v : K) : Seq1 <| int_fract_pair K :=
   ⟨int_fract_pair.of v, Seqₓₓ.tail ⟨int_fract_pair.stream v, @stream_is_seq _ _ _ v⟩⟩
 
 end IntFractPair

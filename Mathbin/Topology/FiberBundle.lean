@@ -218,7 +218,7 @@ theorem proj_symm_apply' {b : B} {x : F} (hx : b ∈ e.base_set) : proj (e.to_lo
 
 theorem proj_surj_on_base_set [Nonempty F] : Set.SurjOn proj e.source e.base_set := fun b hb =>
   let ⟨y⟩ := ‹Nonempty F›
-  ⟨e.to_local_equiv.symm (b, y), e.to_local_equiv.map_target $ e.mem_target.2 hb, e.proj_symm_apply' hb⟩
+  ⟨e.to_local_equiv.symm (b, y), e.to_local_equiv.map_target <| e.mem_target.2 hb, e.proj_symm_apply' hb⟩
 
 theorem apply_symm_apply {x : B × F} (hx : x ∈ e.target) : e (e.to_local_equiv.symm x) = x :=
   e.to_local_equiv.right_inv hx
@@ -384,15 +384,15 @@ theorem IsTrivialTopologicalFiberBundle.is_topological_fiber_bundle (h : IsTrivi
 theorem IsTopologicalFiberBundle.map_proj_nhds (h : IsTopologicalFiberBundle F proj) (x : Z) :
     map proj (𝓝 x) = 𝓝 (proj x) :=
   let ⟨e, ex⟩ := h (proj x)
-  e.map_proj_nhds $ e.mem_source.2 ex
+  e.map_proj_nhds <| e.mem_source.2 ex
 
 /-- The projection from a topological fiber bundle to its base is continuous. -/
 theorem IsTopologicalFiberBundle.continuous_proj (h : IsTopologicalFiberBundle F proj) : Continuous proj :=
-  continuous_iff_continuous_at.2 $ fun x => (h.map_proj_nhds _).le
+  continuous_iff_continuous_at.2 fun x => (h.map_proj_nhds _).le
 
 /-- The projection from a topological fiber bundle to its base is an open map. -/
 theorem IsTopologicalFiberBundle.is_open_map_proj (h : IsTopologicalFiberBundle F proj) : IsOpenMap proj :=
-  IsOpenMap.of_nhds_le $ fun x => (h.map_proj_nhds x).Ge
+  IsOpenMap.of_nhds_le fun x => (h.map_proj_nhds x).Ge
 
 /-- The projection from a topological fiber bundle with a nonempty fiber to its base is a surjective
 map. -/
@@ -458,7 +458,7 @@ theorem trans_fiber_homeomorph_apply {F' : Type _} [TopologicalSpace F'] (e : tr
 /-- Coordinate transformation in the fiber induced by a pair of bundle trivializations. See also
 `trivialization.coord_change_homeomorph` for a version bundled as `F ≃ₜ F`. -/
 def coord_change (e₁ e₂ : trivialization F proj) (b : B) (x : F) : F :=
-  (e₂ $ e₁.to_local_homeomorph.symm (b, x)).2
+  (e₂ <| e₁.to_local_homeomorph.symm (b, x)).2
 
 theorem mk_coord_change (e₁ e₂ : trivialization F proj) {b : B} (h₁ : b ∈ e₁.base_set) (h₂ : b ∈ e₂.base_set) (x : F) :
     (b, e₁.coord_change e₂ b x) = e₂ (e₁.to_local_homeomorph.symm (b, x)) := by
@@ -478,7 +478,7 @@ theorem coord_change_same_apply (e : trivialization F proj) {b : B} (h : b ∈ e
   rw [coord_change, e.apply_symm_apply' h]
 
 theorem coord_change_same (e : trivialization F proj) {b : B} (h : b ∈ e.base_set) : e.coord_change e b = id :=
-  funext $ e.coord_change_same_apply h
+  funext <| e.coord_change_same_apply h
 
 theorem coord_change_coord_change (e₁ e₂ e₃ : trivialization F proj) {b : B} (h₁ : b ∈ e₁.base_set)
     (h₂ : b ∈ e₂.base_set) (x : F) : e₂.coord_change e₃ b (e₁.coord_change e₂ b x) = e₁.coord_change e₃ b x := by
@@ -551,12 +551,12 @@ noncomputable def TopologicalFiberBundle.Trivialization.comap (e : trivializatio
     ext <;> simp [*]
   right_inv' := fun p hp : f p.1 ∈ e.base_set => by
     simp [*, e.apply_symm_apply']
-  open_source := e.open_base_set.preimage (hf.comp $ continuous_fst.comp continuous_subtype_coe)
+  open_source := e.open_base_set.preimage (hf.comp <| continuous_fst.comp continuous_subtype_coe)
   open_target := e.open_base_set.preimage (hf.comp continuous_fst)
   continuous_to_fun :=
-    (continuous_fst.comp continuous_subtype_coe).ContinuousOn.Prod $
-      continuous_snd.comp_continuous_on $
-        e.continuous_to_fun.comp (continuous_snd.comp continuous_subtype_coe).ContinuousOn $ by
+    (continuous_fst.comp continuous_subtype_coe).ContinuousOn.Prod <|
+      continuous_snd.comp_continuous_on <|
+        e.continuous_to_fun.comp (continuous_snd.comp continuous_subtype_coe).ContinuousOn <| by
           rintro ⟨⟨b, x⟩, hbx : f b = proj x⟩ (hb : f b ∈ e.base_set)
           rw [hbx] at hb
           exact e.mem_source.2 hb
@@ -623,7 +623,7 @@ the base sets of `e` and `e'` intersect `frontier s` on the same set and `e p = 
 `set.ite s e.base_set e'.base_set` that is equal to `e` on `proj ⁻¹ s` and is equal to `e'`
 otherwise. -/
 noncomputable def piecewise (e e' : trivialization F proj) (s : Set B)
-    (Hs : e.base_set ∩ Frontier s = e'.base_set ∩ Frontier s) (Heq : eq_on e e' $ proj ⁻¹' (e.base_set ∩ Frontier s)) :
+    (Hs : e.base_set ∩ Frontier s = e'.base_set ∩ Frontier s) (Heq : eq_on e e' <| proj ⁻¹' (e.base_set ∩ Frontier s)) :
     trivialization F proj where
   toLocalHomeomorph :=
     e.to_local_homeomorph.piecewise e'.to_local_homeomorph (proj ⁻¹' s) (s ×ˢ (univ : Set F))
@@ -649,10 +649,10 @@ such that `proj p ≤ a` and is equal to `e'` otherwise. -/
 noncomputable def piecewise_le_of_eq [LinearOrderₓ B] [OrderTopology B] (e e' : trivialization F proj) (a : B)
     (He : a ∈ e.base_set) (He' : a ∈ e'.base_set) (Heq : ∀ p, proj p = a → e p = e' p) : trivialization F proj :=
   e.piecewise e' (Iic a)
-    (Set.ext $ fun x =>
-      And.congr_left_iff.2 $ fun hx => by
+    (Set.ext fun x =>
+      And.congr_left_iff.2 fun hx => by
         simp [He, He', mem_singleton_iff.1 (frontier_Iic_subset _ hx)])
-    fun p hp => Heq p $ frontier_Iic_subset _ hp.2
+    fun p hp => Heq p <| frontier_Iic_subset _ hp.2
 
 /-- Given two bundle trivializations `e`, `e'` of a topological fiber bundle `proj : Z → B` over a
 linearly ordered base `B` and a point `a ∈ e.base_set ∩ e'.base_set`, `e.piecewise_le e' a He He'`
@@ -662,7 +662,7 @@ points `p` such that `proj p ≤ a` and is equal to `((e' p).1, h (e' p).2)` oth
 `h (e' p).2 = (e p).2` whenever `e p = a`. -/
 noncomputable def piecewise_le [LinearOrderₓ B] [OrderTopology B] (e e' : trivialization F proj) (a : B)
     (He : a ∈ e.base_set) (He' : a ∈ e'.base_set) : trivialization F proj :=
-  e.piecewise_le_of_eq (e'.trans_fiber_homeomorph (e'.coord_change_homeomorph e He' He)) a He He' $ by
+  e.piecewise_le_of_eq (e'.trans_fiber_homeomorph (e'.coord_change_homeomorph e He' He)) a He He' <| by
     rintro p rfl
     ext1
     · simp [e.coe_fst', e'.coe_fst', *]
@@ -727,7 +727,7 @@ theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset [Con
     rcases h c with ⟨ec, hc⟩
     obtain ⟨c', hc', hc'e⟩ : ∃ c' ∈ Ico a c, Ioc c' c ⊆ ec.base_set :=
       (mem_nhds_within_Iic_iff_exists_mem_Ico_Ioc_subset hlt).1
-        (mem_nhds_within_of_mem_nhds $ IsOpen.mem_nhds ec.open_base_set hc)
+        (mem_nhds_within_of_mem_nhds <| IsOpen.mem_nhds ec.open_base_set hc)
     obtain ⟨d, ⟨hdab, ead, had⟩, hd⟩ : ∃ d ∈ s, d ∈ Ioc c' c := hsc.exists_between hc'.2
     refine' ⟨ead.piecewise_le ec d (had ⟨hdab.1, le_rfl⟩) (hc'e hd), subset_ite.2 _⟩
     refine' ⟨fun x hx => had ⟨hx.1.1, hx.2⟩, fun x hx => hc'e ⟨hd.1.trans (not_leₓ.1 hx.2), hx.1.2⟩⟩
@@ -739,7 +739,7 @@ theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset [Con
     exact ((hsc.1 ⟨⟨hc.1.trans hdcb.1.le, hdcb.2⟩, hd⟩).not_lt hdcb.1).elim
   obtain ⟨d, hdcb, hd⟩ : ∃ d ∈ Ioc c b, Ico c d ⊆ ec.base_set :=
     (mem_nhds_within_Ici_iff_exists_mem_Ioc_Ico_subset hlt).1
-      (mem_nhds_within_of_mem_nhds $ IsOpen.mem_nhds ec.open_base_set (hec ⟨hc.1, le_rfl⟩))
+      (mem_nhds_within_of_mem_nhds <| IsOpen.mem_nhds ec.open_base_set (hec ⟨hc.1, le_rfl⟩))
   have had : Ico a d ⊆ ec.base_set := subset.trans Ico_subset_Icc_union_Ico (union_subset hec hd)
   by_cases' he : Disjoint (Iio d) (Ioi c)
   · rcases h d with ⟨ed, hed⟩
@@ -955,7 +955,7 @@ variable (ι)
 /-- Topological structure on the total space of a topological bundle created from core, designed so
 that all the local trivialization are continuous. -/
 instance to_topological_space : TopologicalSpace (Bundle.TotalSpace Z.fiber) :=
-  TopologicalSpace.generateFrom $
+  TopologicalSpace.generateFrom <|
     ⋃ (i : ι) (s : Set (B × F)) (s_open : IsOpen s),
       {(Z.local_triv_as_local_equiv i).Source ∩ Z.local_triv_as_local_equiv i ⁻¹' s}
 

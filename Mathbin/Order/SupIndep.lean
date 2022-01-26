@@ -44,19 +44,19 @@ theorem sup_indep_singleton (i : ι) (f : ι → α) : ({i} : Finset ι).SupInde
   exact disjoint_bot_right
 
 theorem sup_indep.pairwise_disjoint (hs : s.sup_indep f) : (s : Set ι).PairwiseDisjoint f := fun a ha b hb hab =>
-  sup_singleton.subst $ hs (singleton_subset_iff.2 hb) ha $ not_mem_singleton.2 hab
+  sup_singleton.subst <| hs (singleton_subset_iff.2 hb) ha <| not_mem_singleton.2 hab
 
 /-- The RHS looks like the definition of `complete_lattice.independent`. -/
 theorem sup_indep_iff_disjoint_erase [DecidableEq ι] :
     s.sup_indep f ↔ ∀, ∀ i ∈ s, ∀, Disjoint (f i) ((s.erase i).sup f) :=
   ⟨fun hs i hi => hs (erase_subset _ _) hi (not_mem_erase _ _), fun hs t ht i hi hit =>
-    (hs i hi).mono_right (sup_mono $ fun j hj => mem_erase.2 ⟨ne_of_mem_of_not_mem hj hit, ht hj⟩)⟩
+    (hs i hi).mono_right (sup_mono fun j hj => mem_erase.2 ⟨ne_of_mem_of_not_mem hj hit, ht hj⟩)⟩
 
 theorem sup_indep.attach (hs : s.sup_indep f) : s.attach.sup_indep (f ∘ Subtype.val) := by
   intro t ht i _ hi
   classical
   rw [← Finset.sup_image]
-  refine' hs (image_subset_iff.2 $ fun j : { x // x ∈ s } _ => j.2) i.2 fun hi' => hi _
+  refine' hs (image_subset_iff.2 fun j : { x // x ∈ s } _ => j.2) i.2 fun hi' => hi _
   rw [mem_image] at hi'
   obtain ⟨j, hj, hji⟩ := hi'
   rwa [Subtype.ext hji] at hj
@@ -69,7 +69,7 @@ variable [DistribLattice α] [OrderBot α] {s : Finset ι} {f : ι → α}
 
 theorem sup_indep_iff_pairwise_disjoint : s.sup_indep f ↔ (s : Set ι).PairwiseDisjoint f :=
   ⟨sup_indep.pairwise_disjoint, fun hs t ht i hi hit =>
-    disjoint_sup_right.2 $ fun j hj => hs hi (ht hj) (ne_of_mem_of_not_mem hj hit).symm⟩
+    disjoint_sup_right.2 fun j hj => hs hi (ht hj) (ne_of_mem_of_not_mem hj hit).symm⟩
 
 alias sup_indep_iff_pairwise_disjoint ↔ Finset.SupIndep.pairwise_disjoint Set.PairwiseDisjoint.sup_indep
 
@@ -94,7 +94,7 @@ theorem CompleteLattice.independent_iff_sup_indep [CompleteLattice α] {s : Fins
     CompleteLattice.Independent (f ∘ (coe : s → ι)) ↔ s.sup_indep f := by
   classical
   rw [Finset.sup_indep_iff_disjoint_erase]
-  refine' subtype.forall.trans (forall₂_congrₓ $ fun a b => _)
+  refine' subtype.forall.trans (forall₂_congrₓ fun a b => _)
   rw [Finset.sup_eq_supr]
   congr 2
   refine' supr_subtype.trans _

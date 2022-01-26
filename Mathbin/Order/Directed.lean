@@ -61,7 +61,7 @@ theorem Directed.mono {s : α → α → Prop} {ι} {f : ι → α} (H : ∀ a b
 
 theorem Directed.mono_comp {ι} {rb : β → β → Prop} {g : α → β} {f : ι → α} (hg : ∀ ⦃x y⦄, x ≼ y → rb (g x) (g y))
     (hf : Directed r f) : Directed rb (g ∘ f) :=
-  directed_comp.2 $ hf.mono hg
+  directed_comp.2 <| hf.mono hg
 
 /-- A monotone function on a sup-semilattice is directed. -/
 theorem directed_of_sup [SemilatticeSup α] {f : α → β} {r : β → β → Prop} (H : ∀ ⦃i j⦄, i ≤ j → r (f i) (f j)) :

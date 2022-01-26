@@ -79,7 +79,7 @@ theorem mem_support_bind_iff (b : β) : b ∈ (p.bind f).Support ↔ ∃ a ∈ p
   simp
 
 theorem coe_bind_apply (p : Pmf α) (f : α → Pmf β) (b : β) : (p.bind f b : ℝ≥0∞) = ∑' a, p a * f a b :=
-  Eq.trans (Ennreal.coe_tsum $ bind.summable p f b) $ by
+  Eq.trans (Ennreal.coe_tsum <| bind.summable p f b) <| by
     simp
 
 @[simp]

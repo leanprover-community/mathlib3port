@@ -57,7 +57,7 @@ theorem comp_right {a b c : C} (g : b ⟶ c) : ∀ f₁ f₂ : a ⟶ b h : comp_
 
 /-- Hom-sets of the quotient category. -/
 def hom (s t : Quotientₓ r) :=
-  Quot $ @comp_closure C _ r s.as t.as
+  Quot <| @comp_closure C _ r s.as t.as
 
 instance (a : Quotientₓ r) : Inhabited (hom r a a) :=
   ⟨Quot.mk _ (𝟙 a.as)⟩
@@ -65,8 +65,8 @@ instance (a : Quotientₓ r) : Inhabited (hom r a a) :=
 /-- Composition in the quotient category. -/
 def comp ⦃a b c : Quotientₓ r⦄ : hom r a b → hom r b c → hom r a c := fun hf hg =>
   Quot.liftOn hf
-    (fun f => Quot.liftOn hg (fun g => Quot.mk _ (f ≫ g)) fun g₁ g₂ h => Quot.sound $ comp_left r f g₁ g₂ h)
-    fun f₁ f₂ h => Quot.induction_on hg $ fun g => Quot.sound $ comp_right r g f₁ f₂ h
+    (fun f => Quot.liftOn hg (fun g => Quot.mk _ (f ≫ g)) fun g₁ g₂ h => Quot.sound <| comp_left r f g₁ g₂ h)
+    fun f₁ f₂ h => (Quot.induction_on hg) fun g => Quot.sound <| comp_right r g f₁ f₂ h
 
 @[simp]
 theorem comp_mk {a b c : Quotientₓ r} (f : a.as ⟶ b.as) (g : b.as ⟶ c.as) :

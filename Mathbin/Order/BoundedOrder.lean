@@ -100,7 +100,7 @@ theorem eq_top_iff : a = ⊤ ↔ ⊤ ≤ a :=
   top_le_iff.symm
 
 theorem eq_top_mono (h : a ≤ b) (h₂ : a = ⊤) : b = ⊤ :=
-  top_unique $ h₂ ▸ h
+  top_unique <| h₂ ▸ h
 
 theorem lt_top_iff_ne_top : a < ⊤ ↔ a ≠ ⊤ :=
   le_top.lt_iff_ne
@@ -145,7 +145,7 @@ theorem OrderTop.ext_top {α} {hA : PartialOrderₓ α} (A : OrderTop α) {hB : 
       ⊤ :
         α) =
       ⊤ :=
-  top_unique $ by
+  top_unique <| by
     rw [← H] <;> apply le_top
 
 theorem OrderTop.ext {α} [PartialOrderₓ α] {A B : OrderTop α} : A = B := by
@@ -190,7 +190,7 @@ theorem eq_bot_iff : a = ⊥ ↔ a ≤ ⊥ :=
   le_bot_iff.symm
 
 theorem eq_bot_mono (h : a ≤ b) (h₂ : b = ⊥) : a = ⊥ :=
-  bot_unique $ h₂ ▸ h
+  bot_unique <| h₂ ▸ h
 
 theorem bot_lt_iff_ne_bot : ⊥ < a ↔ a ≠ ⊥ :=
   bot_le.lt_iff_ne.trans ne_comm
@@ -235,7 +235,7 @@ theorem OrderBot.ext_bot {α} {hA : PartialOrderₓ α} (A : OrderBot α) {hB : 
       ⊥ :
         α) =
       ⊥ :=
-  bot_unique $ by
+  bot_unique <| by
     rw [← H] <;> apply bot_le
 
 theorem OrderBot.ext {α} [PartialOrderₓ α] {A B : OrderBot α} : A = B := by
@@ -344,7 +344,7 @@ instance Prop.distribLattice : DistribLattice Prop where
   inf_le_left := @And.left
   inf_le_right := @And.right
   le_inf := fun a b c Hab Hac Ha => And.intro (Hab Ha) (Hac Ha)
-  le_sup_inf := fun a b c H => or_iff_not_imp_left.2 $ fun Ha => ⟨H.1.resolve_left Ha, H.2.resolve_left Ha⟩
+  le_sup_inf := fun a b c H => or_iff_not_imp_left.2 fun Ha => ⟨H.1.resolve_left Ha, H.2.resolve_left Ha⟩
 
 /-- Propositions form a bounded order. -/
 instance Prop.boundedOrder : BoundedOrder Prop where
@@ -435,7 +435,7 @@ theorem eq_top_of_bot_eq_top (hα : (⊥ : α) = ⊤) (x : α) : x = (⊤ : α) 
   eq_top_mono bot_le hα
 
 theorem subsingleton_of_top_le_bot (h : (⊤ : α) ≤ (⊥ : α)) : Subsingleton α :=
-  ⟨fun a b => le_antisymmₓ (le_transₓ le_top $ le_transₓ h bot_le) (le_transₓ le_top $ le_transₓ h bot_le)⟩
+  ⟨fun a b => le_antisymmₓ (le_transₓ le_top <| le_transₓ h bot_le) (le_transₓ le_top <| le_transₓ h bot_le)⟩
 
 theorem subsingleton_of_bot_eq_top (hα : (⊥ : α) = (⊤ : α)) : Subsingleton α :=
   subsingleton_of_top_le_bot (ge_of_eq hα)
@@ -531,7 +531,7 @@ theorem bot_lt_coe [LT α] (a : α) : (⊥ : WithBot α) < a :=
 instance : CanLift (WithBot α) α where
   coe := coe
   cond := fun r => r ≠ ⊥
-  prf := fun x hx => ⟨Option.getₓ $ Option.ne_none_iff_is_some.1 hx, Option.some_getₓ _⟩
+  prf := fun x hx => ⟨Option.getₓ <| Option.ne_none_iff_is_some.1 hx, Option.some_getₓ _⟩
 
 instance [Preorderₓ α] : Preorderₓ (WithBot α) where
   le := · ≤ ·
@@ -589,29 +589,29 @@ theorem get_or_else_bot_le_iff [LE α] [OrderBot α] {a : WithBot α} {b : α} :
   cases a <;> simp [none_eq_bot, some_eq_coe]
 
 instance decidable_le [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithBot α) (· ≤ ·)
-  | none, x => is_true $ fun a h => Option.noConfusion h
+  | none, x => is_true fun a h => Option.noConfusion h
   | some x, some y =>
     if h : x ≤ y then is_true (some_le_some.2 h)
     else
-      is_false $ by
+      is_false <| by
         simp [*]
   | some x, none =>
-    is_false $ fun h => by
+    is_false fun h => by
       rcases h x rfl with ⟨y, ⟨_⟩, _⟩
 
 instance decidable_lt [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithBot α) (· < ·)
   | none, some x =>
-    is_true $ by
+    is_true <| by
       exists x, rfl <;> rintro _ ⟨⟩
   | some x, some y =>
     if h : x < y then
-      is_true $ by
+      is_true <| by
         simp [*]
     else
-      is_false $ by
+      is_false <| by
         simp [*]
   | x, none =>
-    is_false $ by
+    is_false <| by
       rintro ⟨a, ⟨⟨⟩⟩⟩
 
 instance [PartialOrderₓ α] [IsTotal α (· ≤ ·)] : IsTotal (WithBot α) (· ≤ ·) where
@@ -822,7 +822,7 @@ theorem not_none_lt [LT α] (a : Option α) : ¬@LT.lt (WithTop α) _ none a := 
 instance : CanLift (WithTop α) α where
   coe := coe
   cond := fun r => r ≠ ⊤
-  prf := fun x hx => ⟨Option.getₓ $ Option.ne_none_iff_is_some.1 hx, Option.some_getₓ _⟩
+  prf := fun x hx => ⟨Option.getₓ <| Option.ne_none_iff_is_some.1 hx, Option.some_getₓ _⟩
 
 instance [Preorderₓ α] : Preorderₓ (WithTop α) where
   le := fun o₁ o₂ : Option α => ∀, ∀ a ∈ o₂, ∀, ∃ b ∈ o₁, b ≤ a
@@ -1280,7 +1280,7 @@ theorem inf_eq_bot_iff_le_compl [DistribLattice α] [BoundedOrder α] {a b c : �
         simp [h, inf_le_right]
       ,
     fun h =>
-    bot_unique $
+    bot_unique <|
       calc
         a⊓b ≤ b⊓c := by
           rw [inf_comm]
@@ -1368,10 +1368,10 @@ theorem right_le_iff (h : IsCompl x y) : y ≤ z ↔ ⊤ ≤ z⊔x :=
   h.symm.left_le_iff
 
 protected theorem Antitone {x' y'} (h : IsCompl x y) (h' : IsCompl x' y') (hx : x ≤ x') : y' ≤ y :=
-  h'.right_le_iff.2 $ le_transₓ h.symm.top_le_sup (sup_le_sup_left hx _)
+  h'.right_le_iff.2 <| le_transₓ h.symm.top_le_sup (sup_le_sup_left hx _)
 
 theorem right_unique (hxy : IsCompl x y) (hxz : IsCompl x z) : y = z :=
-  le_antisymmₓ (hxz.antitone hxy $ le_reflₓ x) (hxy.antitone hxz $ le_reflₓ x)
+  le_antisymmₓ (hxz.antitone hxy <| le_reflₓ x) (hxy.antitone hxz <| le_reflₓ x)
 
 theorem left_unique (hxz : IsCompl x z) (hyz : IsCompl y z) : x = y :=
   hxz.symm.right_unique hyz.symm

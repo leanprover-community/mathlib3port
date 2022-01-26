@@ -31,7 +31,7 @@ def normal_mono (hf : mono f) : normal_mono f where
     is_kernel.iso_kernel _ _ (kernel_is_limit _)
         (LinearEquiv.toModuleIso'
           ((Submodule.quotEquivOfEqBot _ (ker_eq_bot_of_mono _)).symm ≪≫ₗ
-            (LinearMap.quotKerEquivRange f ≪≫ₗ LinearEquiv.ofEq _ _ (Submodule.ker_mkq _).symm))) $
+            (LinearMap.quotKerEquivRange f ≪≫ₗ LinearEquiv.ofEq _ _ (Submodule.ker_mkq _).symm))) <|
       by
       ext
       rfl
@@ -45,7 +45,7 @@ def normal_epi (hf : epi f) : normal_epi f where
     is_cokernel.cokernel_iso _ _ (cokernel_is_colimit _)
         (LinearEquiv.toModuleIso'
           (Submodule.quotEquivOfEq _ _ (Submodule.range_subtype _) ≪≫ₗ LinearMap.quotKerEquivRange f ≪≫ₗ
-            LinearEquiv.ofTop _ (range_eq_top_of_epi _))) $
+            LinearEquiv.ofTop _ (range_eq_top_of_epi _))) <|
       by
       ext
       rfl
@@ -71,7 +71,7 @@ theorem exact_iff : exact f g ↔ f.range = g.ker := by
   rw [abelian.exact_iff' f g (kernel_is_limit _) (cokernel_is_colimit _)]
   exact
     ⟨fun h => le_antisymmₓ (range_le_ker_iff.2 h.1) (ker_le_range_iff.2 h.2), fun h =>
-      ⟨range_le_ker_iff.1 $ le_of_eqₓ h, ker_le_range_iff.1 $ le_of_eqₓ h.symm⟩⟩
+      ⟨range_le_ker_iff.1 <| le_of_eqₓ h, ker_le_range_iff.1 <| le_of_eqₓ h.symm⟩⟩
 
 end ModuleCat
 

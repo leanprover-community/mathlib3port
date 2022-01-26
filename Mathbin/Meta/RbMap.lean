@@ -29,7 +29,7 @@ where the check `P` is monadic. -/
 unsafe def mfilter {m} [Monadₓ m] {key} (s : rb_set key) (P : key → m Bool) : m (rb_set key) :=
   s.fold (pure s) fun a m => do
     let x ← m
-    mcond (P a) (pure x) (pure $ x.erase a)
+    mcond (P a) (pure x) (pure <| x.erase a)
 
 /-- `union s t` returns an rb_set containing every element that appears in either `s` or `t`. -/
 unsafe def union {key} (s t : rb_set key) : rb_set key :=
@@ -55,7 +55,7 @@ It does so by folding over `s2`. If `s1` is significantly smaller than `s2`,
 it may be worth it to reverse the fold.
 -/
 unsafe def sdiff {α} (s1 s2 : rb_set α) : rb_set α :=
-  s2.fold s1 $ fun v s => s.erase v
+  (s2.fold s1) fun v s => s.erase v
 
 /-- `insert_list s l` inserts each element of `l` into `s`.
 -/
@@ -121,7 +121,7 @@ variable {key : Type} {data : Type} [has_to_tactic_format key] [has_to_tactic_fo
 private unsafe def pp_key_data (k : key) (d : data) (first : Bool) : tactic format := do
   let fk ← tactic.pp k
   let fd ← tactic.pp d
-  return $ (if first then to_fmt "" else to_fmt "," ++ line) ++ fk ++ space ++ to_fmt "←" ++ space ++ fd
+  return <| (if first then to_fmt "" else to_fmt "," ++ line) ++ fk ++ space ++ to_fmt "←" ++ space ++ fd
 
 unsafe instance : has_to_tactic_format (rb_map key data) :=
   ⟨fun m => do
@@ -130,7 +130,7 @@ unsafe instance : has_to_tactic_format (rb_map key data) :=
           let p ← p
           let pkd ← pp_key_data k d (snd p)
           return (fst p ++ pkd, ff)
-    return $ group $ to_fmt "⟨" ++ nest 1 fmt ++ to_fmt "⟩"⟩
+    return <| group <| to_fmt "⟨" ++ nest 1 fmt ++ to_fmt "⟩"⟩
 
 end
 
@@ -176,14 +176,14 @@ where the check `P` is monadic. -/
 unsafe def mfilter {m} [Monadₓ m] (P : Name → m Bool) (s : name_set) : m name_set :=
   s.fold (pure s) fun a m => do
     let x ← m
-    mcond (P a) (pure x) (pure $ x.erase a)
+    mcond (P a) (pure x) (pure <| x.erase a)
 
 /-- `mmap f s` maps the monadic function `f` over values in `s`. -/
 unsafe def mmap {m} [Monadₓ m] (f : Name → m Name) (s : name_set) : m name_set :=
   s.fold (pure mk_name_set) fun a m => do
     let x ← m
     let b ← f a
-    pure $ x.insert b
+    pure <| x.insert b
 
 /-- `insert_list s l` inserts every element of `l` into `s`. -/
 unsafe def insert_list (s : name_set) (l : List Name) : name_set :=
@@ -218,7 +218,7 @@ namespace ExprSet
 contain bogus names.
 -/
 unsafe def local_set_to_name_set (lcs : expr_set) : name_set :=
-  lcs.fold mk_name_set $ fun h ns => ns.insert h.local_uniq_name
+  (lcs.fold mk_name_set) fun h ns => ns.insert h.local_uniq_name
 
 end ExprSet
 

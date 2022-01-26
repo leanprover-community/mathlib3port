@@ -75,7 +75,7 @@ theorem mk_factors_iff {X Y Z : C} (f : Y ⟶ X) [mono f] (g : Z ⟶ X) :
   Iff.rfl
 
 theorem factors_iff {X Y : C} (P : subobject Y) (f : X ⟶ Y) : P.factors f ↔ (representative.obj P).Factors f :=
-  Quot.induction_on P $ fun a => mono_over.factors_congr _ (representative_iso _).symm
+  (Quot.induction_on P) fun a => mono_over.factors_congr _ (representative_iso _).symm
 
 theorem factors_self {X : C} (P : subobject X) : P.factors P.arrow :=
   (factors_iff _ _).mpr

@@ -142,7 +142,7 @@ theorem Pi.default_apply {β : ∀ a : α, Sort v} [∀ a, Inhabited (β a)] (a 
   rfl
 
 instance Pi.unique {β : ∀ a : α, Sort v} [∀ a, Unique (β a)] : Unique (∀ a, β a) :=
-  { Pi.inhabited α with uniq := fun f => funext $ fun x => Unique.eq_default _ }
+  { Pi.inhabited α with uniq := fun f => funext fun x => Unique.eq_default _ }
 
 /-- There is a unique function on an empty domain. -/
 instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : ∀ a : α, Sort v) : Unique (∀ a, β a) where
@@ -164,7 +164,7 @@ protected def surjective.unique (hf : surjective f) [Unique α] : Unique β wher
 /-- If the codomain of an injective function is a subsingleton, then the domain
 is a subsingleton as well. -/
 protected theorem injective.subsingleton (hf : injective f) [Subsingleton β] : Subsingleton α :=
-  ⟨fun x y => hf $ Subsingleton.elimₓ _ _⟩
+  ⟨fun x y => hf <| Subsingleton.elimₓ _ _⟩
 
 /-- If `α` is inhabited and admits an injective map to a subsingleton type, then `α` is `unique`. -/
 protected def injective.unique [Inhabited α] [Subsingleton β] (hf : injective f) : Unique α :=
@@ -176,7 +176,7 @@ namespace Option
 
 /-- `option α` is a `subsingleton` if and only if `α` is empty. -/
 theorem subsingleton_iff_is_empty {α} : Subsingleton (Option α) ↔ IsEmpty α :=
-  ⟨fun h => ⟨fun x => Option.noConfusion $ @Subsingleton.elimₓ _ h x none⟩, fun h =>
+  ⟨fun h => ⟨fun x => Option.noConfusion <| @Subsingleton.elimₓ _ h x none⟩, fun h =>
     ⟨fun x y => Option.casesOn x (Option.casesOn y rfl fun x => h.elim x) fun x => h.elim x⟩⟩
 
 instance {α} [IsEmpty α] : Unique (Option α) :=

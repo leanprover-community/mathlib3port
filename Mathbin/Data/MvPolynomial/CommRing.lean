@@ -151,9 +151,9 @@ functions out of the type `σ`, -/
 def hom_equiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S) where
   toFun := fun f => ⇑f ∘ X
   invFun := fun f => eval₂_hom (Int.castRingHom S) f
-  left_inv := fun f => RingHom.ext $ eval₂_hom_X _ _
+  left_inv := fun f => RingHom.ext <| eval₂_hom_X _ _
   right_inv := fun f =>
-    funext $ fun x => by
+    funext fun x => by
       simp only [coe_eval₂_hom, Function.comp_app, eval₂_X]
 
 end Eval₂

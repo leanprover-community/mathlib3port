@@ -436,7 +436,7 @@ def inter_union_pullback_cone :
       congr)
 
 @[simp]
-theorem inter_union_pullback_cone_X : (inter_union_pullback_cone F U V).x = F.1.obj (op $ U ∪ V) :=
+theorem inter_union_pullback_cone_X : (inter_union_pullback_cone F U V).x = F.1.obj (op <| U ∪ V) :=
   rfl
 
 @[simp]
@@ -480,7 +480,7 @@ def inter_union_pullback_cone_lift : s.X ⟶ F.1.obj (op (U ∪ V)) := by
     rcases j with ((_ | _) | (_ | _)) <;>
       rcases g with ⟨⟩ <;>
         dsimp <;> simp only [category.id_comp, s.condition, CategoryTheory.Functor.map_id, category.comp_id]
-  · rw [← cancel_mono (F.1.map (eq_to_hom $ inf_comm : U ∩ V ⟶ _).op), category.assoc, category.assoc]
+  · rw [← cancel_mono (F.1.map (eq_to_hom <| inf_comm : U ∩ V ⟶ _).op), category.assoc, category.assoc]
     erw [← F.1.map_comp, ← F.1.map_comp]
     convert s.condition.symm
     
@@ -490,12 +490,13 @@ def inter_union_pullback_cone_lift : s.X ⟶ F.1.obj (op (U ∪ V)) := by
 theorem inter_union_pullback_cone_lift_left :
     inter_union_pullback_cone_lift F U V s ≫ F.1.map (hom_of_le le_sup_left).op = s.fst := by
   erw [category.assoc, ← F.1.map_comp]
-  exact (F.1.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _ (op $ pairwise.single walking_pair.left)
+  exact (F.1.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _ (op <| pairwise.single walking_pair.left)
 
 theorem inter_union_pullback_cone_lift_right :
     inter_union_pullback_cone_lift F U V s ≫ F.1.map (hom_of_le le_sup_right).op = s.snd := by
   erw [category.assoc, ← F.1.map_comp]
-  exact (F.1.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _ (op $ pairwise.single walking_pair.right)
+  exact
+    (F.1.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _ (op <| pairwise.single walking_pair.right)
 
 /-- For a sheaf `F`, `F(U ∪ V)` is the pullback of `F(U) ⟶ F(U ∩ V)` and `F(V) ⟶ F(U ∩ V)`. -/
 def is_limit_pullback_cone : is_limit (inter_union_pullback_cone F U V) := by

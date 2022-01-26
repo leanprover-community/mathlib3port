@@ -39,7 +39,7 @@ attribute [local instance] QuotientGroup.leftRel
 instance : CommGroupₓ (Abelianization G) :=
   { QuotientGroup.Quotient.group _ with
     mul_comm := fun x y =>
-      Quotientₓ.induction_on₂' x y $ fun a b => by
+      (Quotientₓ.induction_on₂' x y) fun a b => by
         apply Quotientₓ.sound
         apply Subgroup.subset_normal_closure
         use b⁻¹
@@ -76,10 +76,10 @@ theorem commutator_subset_ker : commutator G ≤ f.ker := by
 /-- If `f : G → A` is a group homomorphism to an abelian group, then `lift f` is the unique map from
   the abelianization of a `G` to `A` that factors through `f`. -/
 def lift : (G →* A) ≃ (Abelianization G →* A) where
-  toFun := fun f => QuotientGroup.lift _ f fun x h => f.mem_ker.2 $ commutator_subset_ker _ h
+  toFun := fun f => QuotientGroup.lift _ f fun x h => f.mem_ker.2 <| commutator_subset_ker _ h
   invFun := fun F => F.comp of
-  left_inv := fun f => MonoidHom.ext $ fun x => rfl
-  right_inv := fun F => MonoidHom.ext $ fun x => QuotientGroup.induction_on x $ fun z => rfl
+  left_inv := fun f => MonoidHom.ext fun x => rfl
+  right_inv := fun F => MonoidHom.ext fun x => (QuotientGroup.induction_on x) fun z => rfl
 
 @[simp]
 theorem lift.of (x : G) : lift f (of x) = f x :=
@@ -91,7 +91,7 @@ theorem lift.unique (φ : Abelianization G →* A) (hφ : ∀ x : G, φ (of x) =
 
 @[simp]
 theorem lift_of : lift of = MonoidHom.id (Abelianization G) :=
-  lift.apply_symm_apply $ MonoidHom.id _
+  lift.apply_symm_apply <| MonoidHom.id _
 
 end lift
 
@@ -100,7 +100,7 @@ variable {A : Type v} [Monoidₓ A]
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem hom_ext (φ ψ : Abelianization G →* A) (h : φ.comp of = ψ.comp of) : φ = ψ :=
-  MonoidHom.ext $ fun x => QuotientGroup.induction_on x $ MonoidHom.congr_fun h
+  MonoidHom.ext fun x => QuotientGroup.induction_on x <| MonoidHom.congr_fun h
 
 section Map
 
@@ -165,4 +165,13 @@ theorem abelianization_congr_trans {I : Type v} [Groupₓ I] (e₂ : H ≃* I) :
   MulEquiv.to_monoid_hom_injective (Abelianization.hom_ext _ _ rfl)
 
 end AbelianizationCongr
+
+/-- An Abelian group is equivalent to its own abelianization. -/
+@[simps]
+def Abelianization.equivOfComm {H : Type _} [CommGroupₓ H] : H ≃* Abelianization H :=
+  { Abelianization.of with toFun := Abelianization.of, invFun := Abelianization.lift (MonoidHom.id H),
+    left_inv := fun a => rfl,
+    right_inv := by
+      rintro ⟨a⟩
+      rfl }
 

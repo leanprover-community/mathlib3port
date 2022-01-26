@@ -68,7 +68,7 @@ theorem mul_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : c * 
     le_antisymmₓ _
       (by
         simp )
-  rw [← mul_le_mul_iff_left (c⁻¹), ← mul_assoc, inv_mul_selfₓ, one_mulₓ]
+  rw [← mul_le_mul_iff_left c⁻¹, ← mul_assoc, inv_mul_selfₓ, one_mulₓ]
   exact
     sup_le
       (by
@@ -83,7 +83,7 @@ theorem mul_inf [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : c * 
       (by
         simp )
       _
-  rw [← mul_le_mul_iff_left (c⁻¹), ← mul_assoc, inv_mul_selfₓ, one_mulₓ]
+  rw [← mul_le_mul_iff_left c⁻¹, ← mul_assoc, inv_mul_selfₓ, one_mulₓ]
   exact
     le_inf
       (by
@@ -114,13 +114,13 @@ theorem inv_sup_eq_inv_inf_inv [CovariantClass α α (· * ·) (· ≤ ·)] (a b
 
 @[to_additive]
 theorem inv_inf_eq_sup_inv [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊓b)⁻¹ = a⁻¹⊔b⁻¹ := by
-  rw [← inv_invₓ (a⁻¹⊔b⁻¹), inv_sup_eq_inv_inf_inv (a⁻¹) (b⁻¹), inv_invₓ, inv_invₓ]
+  rw [← inv_invₓ (a⁻¹⊔b⁻¹), inv_sup_eq_inv_inf_inv a⁻¹ b⁻¹, inv_invₓ, inv_invₓ]
 
 @[to_additive]
 theorem inf_mul_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊓b) * (a⊔b) = a * b :=
   calc
     (a⊓b) * (a⊔b) = (a⊓b) * (a * b * (b⁻¹⊔a⁻¹)) := by
-      rw [mul_sup (b⁻¹) (a⁻¹) (a * b)]
+      rw [mul_sup b⁻¹ a⁻¹ (a * b)]
       simp
     _ = (a⊓b) * (a * b * (a⊓b)⁻¹) := by
       rw [inv_inf_eq_sup_inv, sup_comm]
@@ -167,11 +167,11 @@ theorem neg_eq_inv_inf_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α)
   rw [m_neg_part_def, ← inv_inj, inv_sup_eq_inv_inf_inv, inv_invₓ, inv_invₓ, one_inv]
 
 @[to_additive le_abs]
-theorem le_mabs (a : α) : a ≤ |a| :=
+theorem le_mabs (a : α) : a ≤ abs a :=
   le_sup_left
 
 @[to_additive]
-theorem inv_le_abs (a : α) : a⁻¹ ≤ |a| :=
+theorem inv_le_abs (a : α) : a⁻¹ ≤ abs a :=
   le_sup_right
 
 @[to_additive pos_nonneg]
@@ -219,11 +219,11 @@ theorem inv_le_neg (a : α) : a⁻¹ ≤ a⁻ :=
   le_sup_left
 
 @[to_additive]
-theorem neg_eq_pos_inv (a : α) : a⁻ = (a⁻¹)⁺ :=
+theorem neg_eq_pos_inv (a : α) : a⁻ = a⁻¹⁺ :=
   rfl
 
 @[to_additive]
-theorem pos_eq_neg_inv (a : α) : a⁺ = (a⁻¹)⁻ := by
+theorem pos_eq_neg_inv (a : α) : a⁺ = a⁻¹⁻ := by
   simp [neg_eq_pos_inv]
 
 @[to_additive]
@@ -233,7 +233,7 @@ theorem mul_inf_eq_mul_inf_mul [CovariantClass α α (· * ·) (· ≤ ·)] (a b
       (by
         simp )
       _
-  rw [← mul_le_mul_iff_left (c⁻¹), ← mul_assoc, inv_mul_selfₓ, one_mulₓ, le_inf_iff]
+  rw [← mul_le_mul_iff_left c⁻¹, ← mul_assoc, inv_mul_selfₓ, one_mulₓ, le_inf_iff]
   simp
 
 @[simp, to_additive]
@@ -245,7 +245,7 @@ theorem pos_div_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : a⁺
 
 @[to_additive]
 theorem pos_inf_neg_eq_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : a⁺⊓a⁻ = 1 := by
-  rw [← mul_right_injₓ (a⁻⁻¹), mul_inf_eq_mul_inf_mul, mul_oneₓ, mul_left_invₓ, mul_comm, ← div_eq_mul_inv, pos_div_neg,
+  rw [← mul_right_injₓ (a⁻)⁻¹, mul_inf_eq_mul_inf_mul, mul_oneₓ, mul_left_invₓ, mul_comm, ← div_eq_mul_inv, pos_div_neg,
     neg_eq_inv_inf_one, inv_invₓ]
 
 @[to_additive]
@@ -269,7 +269,7 @@ theorem inf_eq_div_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
     _ = a * ((a / b)⁻¹⊓1) := by
       rw [div_eq_mul_inv]
       nth_rw 0[← inv_invₓ b]
-      rw [← mul_inv, mul_comm (b⁻¹), ← div_eq_mul_inv]
+      rw [← mul_inv, mul_comm b⁻¹, ← div_eq_mul_inv]
     _ = a * ((a / b)⁻¹⊓1⁻¹) := by
       rw [one_inv]
     _ = a / (a / b⊔1) := by
@@ -291,7 +291,7 @@ theorem m_le_iff_pos_le_neg_ge [CovariantClass α α (· * ·) (· ≤ ·)] (a b
     
 
 @[to_additive neg_abs]
-theorem m_neg_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a|⁻ = 1 := by
+theorem m_neg_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : abs a⁻ = 1 := by
   refine' le_antisymmₓ _ _
   · rw [← pos_inf_neg_eq_one a]
     apply le_inf
@@ -305,26 +305,26 @@ theorem m_neg_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a|⁻
     
 
 @[to_additive pos_abs]
-theorem m_pos_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a|⁺ = |a| := by
-  nth_rw 1[← pos_div_neg |a|]
+theorem m_pos_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : abs a⁺ = abs a := by
+  nth_rw 1[← pos_div_neg (abs a)]
   rw [div_eq_mul_inv]
   symm
   rw [mul_right_eq_self, inv_eq_one]
   exact m_neg_abs a
 
 @[to_additive abs_nonneg]
-theorem one_le_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : 1 ≤ |a| := by
+theorem one_le_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : 1 ≤ abs a := by
   rw [← m_pos_abs]
   exact one_le_pos _
 
 @[to_additive]
-theorem pos_mul_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a| = a⁺ * a⁻ := by
+theorem pos_mul_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : abs a = a⁺ * a⁻ := by
   refine' le_antisymmₓ _ _
   · refine' sup_le _ _
     · nth_rw 0[← mul_oneₓ a]
       exact mul_le_mul' (m_le_pos a) (one_le_neg a)
       
-    · nth_rw 0[← one_mulₓ (a⁻¹)]
+    · nth_rw 0[← one_mulₓ a⁻¹]
       exact mul_le_mul' (one_le_pos a) (inv_le_neg a)
       
     
@@ -338,7 +338,7 @@ theorem pos_mul_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a| 
     
 
 @[to_additive]
-theorem sup_div_inf_eq_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊔b) / (a⊓b) = |b / a| := by
+theorem sup_div_inf_eq_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊔b) / (a⊓b) = abs (b / a) := by
   rw [sup_eq_mul_pos_div, inf_comm, inf_eq_div_pos_div, div_eq_mul_inv]
   nth_rw 1[div_eq_mul_inv]
   rw [mul_inv_rev, inv_invₓ, mul_comm, ← mul_assoc, inv_mul_cancel_right, pos_eq_neg_inv (a / b)]
@@ -346,12 +346,12 @@ theorem sup_div_inf_eq_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b
   rw [mul_inv_rev, ← div_eq_mul_inv, inv_invₓ, ← pos_mul_neg]
 
 @[to_additive two_sup_eq_add_add_abs_sub]
-theorem sup_sq_eq_mul_mul_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊔b) ^ 2 = a * b * |b / a| := by
+theorem sup_sq_eq_mul_mul_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊔b) ^ 2 = a * b * abs (b / a) := by
   rw [← inf_mul_sup a b, ← sup_div_inf_eq_abs_div, div_eq_mul_inv, ← mul_assoc, mul_comm, mul_assoc, ← pow_two,
     inv_mul_cancel_leftₓ]
 
 @[to_additive two_inf_eq_add_sub_abs_sub]
-theorem inf_sq_eq_mul_div_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊓b) ^ 2 = a * b / |b / a| := by
+theorem inf_sq_eq_mul_div_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊓b) ^ 2 = a * b / abs (b / a) := by
   rw [← inf_mul_sup a b, ← sup_div_inf_eq_abs_div, div_eq_mul_inv, div_eq_mul_inv, mul_inv_rev, inv_invₓ, mul_assoc,
     mul_inv_cancel_comm_assoc, ← pow_two]
 
@@ -384,9 +384,9 @@ def lattice_ordered_comm_group_to_distrib_lattice (α : Type u) [s : Lattice α]
 
 @[to_additive]
 theorem abs_div_sup_mul_abs_div_inf [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) :
-    |(a⊔c) / (b⊔c)| * |(a⊓c) / (b⊓c)| = |a / b| := by
+    abs ((a⊔c) / (b⊔c)) * abs ((a⊓c) / (b⊓c)) = abs (a / b) := by
   let this' : DistribLattice α := lattice_ordered_comm_group_to_distrib_lattice α
-  calc |(a⊔c) / (b⊔c)| * |(a⊓c) / (b⊓c)| = (b⊔c⊔(a⊔c)) / ((b⊔c)⊓(a⊔c)) * |(a⊓c) / (b⊓c)| := by
+  calc abs ((a⊔c) / (b⊔c)) * abs ((a⊓c) / (b⊓c)) = (b⊔c⊔(a⊔c)) / ((b⊔c)⊓(a⊔c)) * abs ((a⊓c) / (b⊓c)) := by
       rw [sup_div_inf_eq_abs_div]_ = (b⊔c⊔(a⊔c)) / ((b⊔c)⊓(a⊔c)) * ((b⊓c⊔a⊓c) / (b⊓c⊓(a⊓c))) := by
       rw [sup_div_inf_eq_abs_div (b⊓c) (a⊓c)]_ = (b⊔a⊔c) / (b⊓a⊔c) * (((b⊔a)⊓c) / (b⊓a⊓c)) := by
       rw [← sup_inf_right, ← inf_sup_right, sup_assoc]
@@ -396,7 +396,7 @@ theorem abs_div_sup_mul_abs_div_inf [CovariantClass α α (· * ·) (· ≤ ·)]
       rw [inf_right_idem, inf_assoc]_ = (b⊔a⊔c) * ((b⊔a)⊓c) / ((b⊓a⊔c) * (b⊓a⊓c)) := by
       rw [div_mul_comm]_ = (b⊔a) * c / ((b⊓a) * c) := by
       rw [mul_comm, inf_mul_sup, mul_comm (b⊓a⊔c), inf_mul_sup]_ = (b⊔a) / (b⊓a) := by
-      rw [div_eq_mul_inv, mul_inv_rev, mul_assoc, mul_inv_cancel_left, ← div_eq_mul_inv]_ = |a / b| := by
+      rw [div_eq_mul_inv, mul_inv_rev, mul_assoc, mul_inv_cancel_left, ← div_eq_mul_inv]_ = abs (a / b) := by
       rw [sup_div_inf_eq_abs_div]
 
 /-- Let `α` be a lattice ordered commutative group and let `a` be a positive element in `α`. Then `a` is
@@ -431,7 +431,7 @@ theorem neg_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) (h :
   neg_eq_one_iff.mpr h
 
 @[to_additive abs_of_nonneg]
-theorem mabs_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) (h : 1 ≤ a) : |a| = a := by
+theorem mabs_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) (h : 1 ≤ a) : abs a = a := by
   unfold HasAbs.abs
   rw [sup_eq_mul_pos_div, div_eq_mul_inv, inv_invₓ, ← pow_two, inv_mul_eq_iff_eq_mul, ← pow_two, pos_of_one_le]
   rw [pow_two]
@@ -440,11 +440,12 @@ theorem mabs_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) (h 
 /-- The unary operation of taking the absolute value is idempotent.
 -/
 @[simp, to_additive abs_abs]
-theorem m_abs_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : ||a|| = |a| :=
+theorem m_abs_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : abs (abs a) = abs a :=
   mabs_of_one_le _ (one_le_abs _)
 
 @[to_additive abs_sup_sub_sup_le_abs]
-theorem mabs_sup_div_sup_le_mabs [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : |(a⊔c) / (b⊔c)| ≤ |a / b| := by
+theorem mabs_sup_div_sup_le_mabs [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : abs ((a⊔c) / (b⊔c)) ≤ abs (a / b) :=
+  by
   apply le_of_mul_le_of_one_le_left
   · rw [abs_div_sup_mul_abs_div_inf]
     
@@ -452,7 +453,8 @@ theorem mabs_sup_div_sup_le_mabs [CovariantClass α α (· * ·) (· ≤ ·)] (a
     
 
 @[to_additive abs_inf_sub_inf_le_abs]
-theorem mabs_inf_div_inf_le_mabs [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : |(a⊓c) / (b⊓c)| ≤ |a / b| := by
+theorem mabs_inf_div_inf_le_mabs [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : abs ((a⊓c) / (b⊓c)) ≤ abs (a / b) :=
+  by
   apply le_of_mul_le_of_one_le_right
   · rw [abs_div_sup_mul_abs_div_inf]
     
@@ -461,13 +463,13 @@ theorem mabs_inf_div_inf_le_mabs [CovariantClass α α (· * ·) (· ≤ ·)] (a
 
 @[to_additive Birkhoff_inequalities]
 theorem m_Birkhoff_inequalities [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) :
-    |(a⊔c) / (b⊔c)|⊔|(a⊓c) / (b⊓c)| ≤ |a / b| :=
+    abs ((a⊔c) / (b⊔c))⊔abs ((a⊓c) / (b⊓c)) ≤ abs (a / b) :=
   sup_le (mabs_sup_div_sup_le_mabs a b c) (mabs_inf_div_inf_le_mabs a b c)
 
 /-- The absolute value satisfies the triangle inequality.
 -/
 @[to_additive abs_add_le]
-theorem mabs_mul_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : |a * b| ≤ |a| * |b| := by
+theorem mabs_mul_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : abs (a * b) ≤ abs a * abs b := by
   apply sup_le
   · exact mul_le_mul' (le_mabs a) (le_mabs b)
     
@@ -476,12 +478,12 @@ theorem mabs_mul_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : |a
     
 
 @[to_additive]
-theorem abs_inv_comm (a b : α) : |a / b| = |b / a| := by
+theorem abs_inv_comm (a b : α) : abs (a / b) = abs (b / a) := by
   unfold HasAbs.abs
   rw [inv_div' a b, ← inv_invₓ (a / b), inv_div', sup_comm]
 
 @[to_additive]
-theorem abs_abs_div_abs_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : ||a| / |b|| ≤ |a / b| := by
+theorem abs_abs_div_abs_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : abs (abs a / abs b) ≤ abs (a / b) := by
   unfold HasAbs.abs
   rw [sup_le_iff]
   constructor

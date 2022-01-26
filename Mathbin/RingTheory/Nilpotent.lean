@@ -148,7 +148,7 @@ theorem nilradical_le_prime (J : Ideal R) [H : J.is_prime] : nilradical R ≤ J 
 
 @[simp]
 theorem nilradical_eq_zero (R : Type _) [CommSemiringₓ R] [IsReduced R] : nilradical R = 0 :=
-  Ideal.ext $ fun _ => is_nilpotent_iff_eq_zero
+  Ideal.ext fun _ => is_nilpotent_iff_eq_zero
 
 end CommSemiringₓ
 

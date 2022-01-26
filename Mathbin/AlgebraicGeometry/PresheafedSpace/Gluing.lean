@@ -428,7 +428,7 @@ Vᵢⱼ ⟶ Uᵢ
  Uⱼ ⟶ X
 -/
 def V_pullback_cone_is_limit (i j : D.J) : is_limit (𝖣.vPullbackCone i j) :=
-  pullback_cone.is_limit_aux' _ $ fun s => by
+  (pullback_cone.is_limit_aux' _) fun s => by
     refine' ⟨_, _, _, _⟩
     · refine' PresheafedSpace.is_open_immersion.lift (D.f i j) s.fst _
       erw [← D.to_Top_glue_data.preimage_range j i]

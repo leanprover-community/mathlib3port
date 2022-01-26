@@ -299,7 +299,7 @@ protected def Quotientₓ (x₀ x₁ : X) :=
 attribute [local instance] homotopic.setoid
 
 instance : Inhabited (homotopic.quotient () ()) :=
-  ⟨Quotientₓ.mk $ Path.refl ()⟩
+  ⟨Quotientₓ.mk <| Path.refl ()⟩
 
 /-- The composition of path homotopy classes. This is `path.trans` descended to the quotient. -/
 def quotient.comp (P₀ : Path.Homotopic.Quotient x₀ x₁) (P₁ : Path.Homotopic.Quotient x₁ x₂) :

@@ -63,7 +63,7 @@ unsafe def unify_heterogeneous : unification_step := fun equ lhs_type rhs_type l
       let t ← to_expr (pquote.1 (@Eq (%%ₓlhs_type) (%%ₓlhs) (%%ₓrhs)))
       let equ' ← note equ.local_pp_name t p
       clear equ
-      pure $ simplified [equ'.local_pp_name]) <|>
+      pure <| simplified [equ'.local_pp_name]) <|>
     pure not_simplified
 
 /-- For `equ : t = u`, if `t` and `u` are defeq, we delete `equ`.
@@ -72,7 +72,7 @@ unsafe def unify_defeq : unification_step := fun equ lhs_type _ _ _ lhs_whnf rhs
   (do
       is_def_eq lhs_whnf rhs_whnf
       clear equ
-      pure $ simplified []) <|>
+      pure <| simplified []) <|>
     pure not_simplified
 
 /-- For `equ : x = t` or `equ : t = x`, where `x` is a local constant, we
@@ -82,12 +82,12 @@ unsafe def unify_var : unification_step := fun equ type _ lhs rhs lhs_whnf rhs_w
   (do
       let lhs_is_local := lhs_whnf.is_local_constant
       let rhs_is_local := rhs_whnf.is_local_constant
-      guardₓ $ lhs_is_local ∨ rhs_is_local
+      guardₓ <| lhs_is_local ∨ rhs_is_local
       let t := if lhs_is_local then (const `eq [u]) type lhs_whnf rhs else (const `eq [u]) type lhs rhs_whnf
       change_core t (some equ)
       let equ ← get_local equ.local_pp_name
       subst_core equ
-      pure $ simplified []) <|>
+      pure <| simplified []) <|>
     pure not_simplified
 
 private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (offset := some 1) :
@@ -98,7 +98,7 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
           let (lhs, rhs) ← match_eq H
           let constructor_left ← get_app_fn_const_whnf lhs semireducible ff
           let constructor_right ← get_app_fn_const_whnf rhs semireducible ff
-          let inj_name ← resolve_constant $ constructor_left ++ "inj_arrow"
+          let inj_name ← resolve_constant <| constructor_left ++ "inj_arrow"
           pure (lhs, rhs, constructor_left, constructor_right, inj_name)) <|>
         fail
           ("injection tactic failed, argument must be an equality proof where lhs and rhs " ++
@@ -113,7 +113,7 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
       eapply proof
       let (next, ns) ← intron_with num_equations ns base offset
       let next ←
-        next.mfilter $ fun h => do
+        next.mfilter fun h => do
             let quote.1 True ← infer_type h | pure tt
             clear h >> pure ff <|> pure tt
       pure (some next, ns)
@@ -134,11 +134,11 @@ same datatype `I`:
 unsafe def unify_constructor_headed : unification_step := fun equ _ _ _ _ _ _ _ =>
   (do
       let (next, _) ← injection_with' equ [] `_ none
-      try $ clear equ
-      pure $
+      try <| clear equ
+      pure <|
           match next with
           | none => goal_solved
-          | some next => simplified $ next.map expr.local_pp_name) <|>
+          | some next => simplified <| next.map expr.local_pp_name) <|>
     pure not_simplified
 
 /-- For `type = I x₁ ... xₙ`, where `I` is an inductive type, `get_sizeof type`
@@ -147,7 +147,7 @@ such constant exists.
 -/
 unsafe def get_sizeof (type : expr) : tactic pexpr := do
   let n ← get_app_fn_const_whnf type semireducible ff
-  resolve_name $ n ++ `sizeof
+  resolve_name <| n ++ `sizeof
 
 theorem add_add_one_ne (n m : ℕ) : n + (m + 1) ≠ n := by
   apply ne_of_gtₓ
@@ -269,7 +269,7 @@ unsafe def unify_equations : List Name → tactic Bool
   | h :: hs => do
     let res ← unify_equation_once h
     match res with
-      | simplified hs' => unify_equations $ hs' ++ hs
+      | simplified hs' => unify_equations <| hs' ++ hs
       | not_simplified => unify_equations hs
       | goal_solved => pure tt
 

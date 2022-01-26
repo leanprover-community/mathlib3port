@@ -34,7 +34,7 @@ theorem mem_prod {r : R} {s : S} : (⟨r, s⟩ : R × S) ∈ Prod I J ↔ r ∈ 
 
 @[simp]
 theorem prod_top_top : Prod (⊤ : Ideal R) (⊤ : Ideal S) = ⊤ :=
-  Ideal.ext $ by
+  Ideal.ext <| by
     simp
 
 /-- Every ideal of the product ring is of the form `I × J`, where `I` and `J` can be explicitly
@@ -170,7 +170,7 @@ variable (R S)
     of `R` and the prime ideals of `S`. -/
 noncomputable def prime_ideals_equiv :
     { K : Ideal (R × S) // K.is_prime } ≃ Sum { I : Ideal R // I.is_prime } { J : Ideal S // J.is_prime } :=
-  Equivₓ.symm $
+  Equivₓ.symm <|
     Equivₓ.ofBijective prime_ideals_equiv_impl
       (by
         constructor

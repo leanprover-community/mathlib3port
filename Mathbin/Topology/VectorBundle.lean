@@ -364,7 +364,7 @@ variable (ι)
 /-- Topological structure on the total space of a topological bundle created from core, designed so
 that all the local trivialization are continuous. -/
 instance to_topological_space : TopologicalSpace (total_space Z.fiber) :=
-  TopologicalFiberBundleCore.toTopologicalSpace ι (↑Z)
+  TopologicalFiberBundleCore.toTopologicalSpace ι ↑Z
 
 variable {ι} (b : B) (a : F)
 

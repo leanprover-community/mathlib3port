@@ -96,12 +96,17 @@ protected theorem Monotone (f : F) : Monotone (f : α → β) := fun _ _ => map_
 
 protected theorem mono (f : F) : Monotone (f : α → β) := fun _ _ => map_rel f
 
+instance : CoeTₓ F (α →o β) :=
+  ⟨fun f => { toFun := f, monotone' := OrderHomClass.mono _ }⟩
+
 end OrderHomClass
 
 namespace OrderHom
 
 variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] [Preorderₓ δ]
 
+/-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
+directly. -/
 instance : CoeFun (α →o β) fun _ => α → β :=
   ⟨OrderHom.toFun⟩
 
@@ -167,13 +172,13 @@ theorem mk_le_mk {f g : α → β} {hf hg} : mk f hf ≤ mk g hg ↔ f ≤ g :=
 
 @[mono]
 theorem apply_mono {f g : α →o β} {x y : α} (h₁ : f ≤ g) (h₂ : x ≤ y) : f x ≤ g y :=
-  (h₁ x).trans $ g.mono h₂
+  (h₁ x).trans <| g.mono h₂
 
 /-- Curry/uncurry as an order isomorphism between `α × β →o γ` and `α →o β →o γ`. -/
 def curry : (α × β →o γ) ≃o (α →o β →o γ) where
   toFun := fun f =>
     ⟨fun x => ⟨Function.curry f x, fun y₁ y₂ h => f.mono ⟨le_rfl, h⟩⟩, fun x₁ x₂ h y => f.mono ⟨h, le_rfl⟩⟩
-  invFun := fun f => ⟨Function.uncurry fun x => f x, fun x y h => (f.mono h.1 x.2).trans $ (f y.1).mono h.2⟩
+  invFun := fun f => ⟨Function.uncurry fun x => f x, fun x y h => (f.mono h.1 x.2).trans <| (f y.1).mono h.2⟩
   left_inv := fun f => by
     ext ⟨x, y⟩
     rfl
@@ -198,7 +203,7 @@ def comp (g : β →o γ) (f : α →o β) : α →o γ :=
 
 @[mono]
 theorem comp_mono ⦃g₁ g₂ : β →o γ⦄ (hg : g₁ ≤ g₂) ⦃f₁ f₂ : α →o β⦄ (hf : f₁ ≤ f₂) : g₁.comp f₁ ≤ g₂.comp f₂ := fun x =>
-  (hg _).trans (g₂.mono $ hf _)
+  (hg _).trans (g₂.mono <| hf _)
 
 /-- The composition of two bundled monotone functions, a fully bundled version. -/
 @[simps (config := { fullyApplied := ff })]
@@ -720,12 +725,12 @@ protected noncomputable def StrictMono.orderIso {α β} [LinearOrderₓ α] [Pre
 /-- A strictly monotone surjective function from a linear order is an order isomorphism. -/
 noncomputable def StrictMono.orderIsoOfSurjective {α β} [LinearOrderₓ α] [Preorderₓ β] (f : α → β)
     (h_mono : StrictMono f) (h_surj : Function.Surjective f) : α ≃o β :=
-  (h_mono.order_iso f).trans $ (OrderIso.setCongr _ _ h_surj.range_eq).trans OrderIso.Set.univ
+  (h_mono.order_iso f).trans <| (OrderIso.setCongr _ _ h_surj.range_eq).trans OrderIso.Set.univ
 
 /-- A strictly monotone function with a right inverse is an order isomorphism. -/
 def StrictMono.orderIsoOfRightInverse {α β} [LinearOrderₓ α] [Preorderₓ β] (f : α → β) (h_mono : StrictMono f)
     (g : β → α) (hg : Function.RightInverse g f) : α ≃o β :=
-  { OrderEmbedding.ofStrictMono f h_mono with toFun := f, invFun := g, left_inv := fun x => h_mono.injective $ hg _,
+  { OrderEmbedding.ofStrictMono f h_mono with toFun := f, invFun := g, left_inv := fun x => h_mono.injective <| hg _,
     right_inv := hg }
 
 /-- An order isomorphism is also an order isomorphism between dual orders. -/

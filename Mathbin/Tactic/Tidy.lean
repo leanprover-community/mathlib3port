@@ -25,7 +25,7 @@ unsafe def ext1_wrapper : tactic Stringₓ := do
   let ng ← num_goals
   ext1 [] { NewGoals := new_goals.all }
   let ng' ← num_goals
-  return $ if ng' > ng then "tactic.ext1 [] {new_goals := tactic.new_goals.all}" else "ext1"
+  return <| if ng' > ng then "tactic.ext1 [] {new_goals := tactic.new_goals.all}" else "ext1"
 
 -- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 -- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
@@ -36,11 +36,12 @@ unsafe def ext1_wrapper : tactic Stringₓ := do
 -- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 -- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 unsafe def default_tactics : List (tactic Stringₓ) :=
-  [reflexivity >> pure "refl", sorry >> pure "exact dec_trivial", propositional_goal >> assumption >> pure "assumption",
-    intros1 >>= fun ns => pure ("intros " ++ (" ".intercalate $ ns.map $ fun e => e.to_string)), auto_cases,
+  [reflexivity >> pure "refl", sorry >> pure "exact dec_trivial",
+    (propositional_goal >> assumption) >> pure "assumption",
+    intros1 >>= fun ns => pure ("intros " ++ (" ".intercalate <| ns.map fun e => e.to_string)), auto_cases,
     sorry >> pure "apply_auto_param", sorry >> pure "dsimp at *", sorry >> pure "simp at *", ext1_wrapper,
     fsplit >> pure "fsplit", injections_and_clear >> pure "injections_and_clear",
-    propositional_goal >> sorry >> pure "solve_by_elim", sorry >> pure "norm_cast", sorry >> pure "unfold_coes",
+    (propositional_goal >> sorry) >> pure "solve_by_elim", sorry >> pure "norm_cast", sorry >> pure "unfold_coes",
     sorry >> pure "unfold_aux", tidy.run_tactics]
 
 unsafe structure cfg where
@@ -53,7 +54,7 @@ initialize
 
 unsafe def core (cfg : cfg := {  }) : tactic (List Stringₓ) := do
   let results ← chain cfg.tactics
-  when cfg.trace_result $ trace (cfg.trace_result_prefix ++ ", ".intercalate results)
+  when cfg.trace_result <| trace (cfg.trace_result_prefix ++ ", ".intercalate results)
   return results
 
 end Tidy
@@ -82,7 +83,7 @@ can report a usable tactic script.)
 
 Tactics can also be added to the list by tagging them (locally) with the
 `[tidy]` attribute. -/
-unsafe def tidy (trace : parse $ optionalₓ (tk "?")) (cfg : tidy.cfg := {  }) :=
+unsafe def tidy (trace : parse <| optionalₓ (tk "?")) (cfg : tidy.cfg := {  }) :=
   tactic.tidy { cfg with trace_result := trace.is_some }
 
 end Interactive

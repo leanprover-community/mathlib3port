@@ -24,7 +24,7 @@ def exp_local_homeomorph : LocalHomeomorph ℂ ℂ :=
       Target := { z : ℂ | 0 < z.re } ∪ { z : ℂ | z.im ≠ 0 },
       map_source' := by
         rintro ⟨x, y⟩ ⟨h₁ : -π < y, h₂ : y < π⟩
-        refine' (not_or_of_imp $ fun hz => _).symm
+        refine' (not_or_of_imp fun hz => _).symm
         obtain rfl : y = 0 := by
           rw [exp_im] at hz
           simpa [(Real.exp_pos _).ne', Real.sin_eq_zero_iff_of_lt_of_lt h₁ h₂] using hz
@@ -36,16 +36,16 @@ def exp_local_homeomorph : LocalHomeomorph ℂ ℂ :=
         h.imp (fun h => le_of_ltₓ h) id,
       left_inv' := fun x hx => log_exp hx.1 (le_of_ltₓ hx.2),
       right_inv' := fun x hx =>
-        exp_log $ by
+        exp_log <| by
           rintro rfl
           simpa [lt_irreflₓ] using hx }
     continuous_exp.ContinuousOn is_open_map_exp (is_open_Ioo.Preimage continuous_im)
 
-theorem has_strict_deriv_at_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStrictDerivAt log (x⁻¹) x :=
+theorem has_strict_deriv_at_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStrictDerivAt log x⁻¹ x :=
   have h0 : x ≠ 0 := by
     rintro rfl
     simpa [lt_irreflₓ] using h
-  exp_local_homeomorph.has_strict_deriv_at_symm h h0 $ by
+  exp_local_homeomorph.has_strict_deriv_at_symm h h0 <| by
     simpa [exp_log h0] using has_strict_deriv_at_exp (log x)
 
 theorem has_strict_fderiv_at_log_real {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) :
@@ -53,7 +53,7 @@ theorem has_strict_fderiv_at_log_real {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) :
   (has_strict_deriv_at_log h).complex_to_real_fderiv
 
 theorem times_cont_diff_at_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) {n : WithTop ℕ} : TimesContDiffAt ℂ n log x :=
-  exp_local_homeomorph.times_cont_diff_at_symm_deriv (exp_ne_zero $ log x) h (has_deriv_at_exp _)
+  exp_local_homeomorph.times_cont_diff_at_symm_deriv (exp_ne_zero <| log x) h (has_deriv_at_exp _)
     times_cont_diff_exp.TimesContDiffAt
 
 end Complex
@@ -67,7 +67,7 @@ open_locale TopologicalSpace
 variable {α : Type _} [TopologicalSpace α] {E : Type _} [NormedGroup E] [NormedSpace ℂ E]
 
 theorem HasStrictFderivAt.clog {f : E → ℂ} {f' : E →L[ℂ] ℂ} {x : E} (h₁ : HasStrictFderivAt f f' x)
-    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasStrictFderivAt (fun t => log (f t)) (f x⁻¹ • f') x :=
+    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasStrictFderivAt (fun t => log (f t)) ((f x)⁻¹ • f') x :=
   (has_strict_deriv_at_log h₂).comp_has_strict_fderiv_at x h₁
 
 theorem HasStrictDerivAt.clog {f : ℂ → ℂ} {f' x : ℂ} (h₁ : HasStrictDerivAt f f' x) (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) :
@@ -80,7 +80,7 @@ theorem HasStrictDerivAt.clog_real {f : ℝ → ℂ} {x : ℝ} {f' : ℂ} (h₁ 
   simpa only [div_eq_inv_mul] using (has_strict_fderiv_at_log_real h₂).comp_has_strict_deriv_at x h₁
 
 theorem HasFderivAt.clog {f : E → ℂ} {f' : E →L[ℂ] ℂ} {x : E} (h₁ : HasFderivAt f f' x)
-    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasFderivAt (fun t => log (f t)) (f x⁻¹ • f') x :=
+    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasFderivAt (fun t => log (f t)) ((f x)⁻¹ • f') x :=
   (has_strict_deriv_at_log h₂).HasDerivAt.comp_has_fderiv_at x h₁
 
 theorem HasDerivAt.clog {f : ℂ → ℂ} {f' x : ℂ} (h₁ : HasDerivAt f f' x) (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) :
@@ -97,7 +97,7 @@ theorem DifferentiableAt.clog {f : E → ℂ} {x : E} (h₁ : DifferentiableAt �
   (h₁.has_fderiv_at.clog h₂).DifferentiableAt
 
 theorem HasFderivWithinAt.clog {f : E → ℂ} {f' : E →L[ℂ] ℂ} {s : Set E} {x : E} (h₁ : HasFderivWithinAt f f' s x)
-    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasFderivWithinAt (fun t => log (f t)) (f x⁻¹ • f') s x :=
+    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasFderivWithinAt (fun t => log (f t)) ((f x)⁻¹ • f') s x :=
   (has_strict_deriv_at_log h₂).HasDerivAt.comp_has_fderiv_within_at x h₁
 
 theorem HasDerivWithinAt.clog {f : ℂ → ℂ} {f' x : ℂ} {s : Set ℂ} (h₁ : HasDerivWithinAt f f' s x)

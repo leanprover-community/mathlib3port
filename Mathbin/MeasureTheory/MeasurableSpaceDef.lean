@@ -131,7 +131,7 @@ theorem MeasurableSet.Union_Prop {p : Prop} {f : p → Set α} (hf : ∀ b, Meas
   by_cases' p <;> simp [h, hf, MeasurableSet.empty]
 
 theorem MeasurableSet.Inter [Encodable β] {f : β → Set α} (h : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋂ b, f b) :=
-  MeasurableSet.compl_iff.1 $ by
+  MeasurableSet.compl_iff.1 <| by
     rw [compl_Inter]
     exact MeasurableSet.Union fun b => (h b).Compl
 
@@ -151,7 +151,7 @@ end Fintype
 
 theorem MeasurableSet.bInter {f : β → Set α} {s : Set β} (hs : countable s) (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) :
     MeasurableSet (⋂ b ∈ s, f b) :=
-  MeasurableSet.compl_iff.1 $ by
+  MeasurableSet.compl_iff.1 <| by
     rw [compl_Inter₂]
     exact MeasurableSet.bUnion hs fun b hb => (h b hb).Compl
 
@@ -210,7 +210,7 @@ theorem MeasurableSet.cond {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h�
 
 @[simp]
 theorem MeasurableSet.disjointed {f : ℕ → Set α} (h : ∀ i, MeasurableSet (f i)) n : MeasurableSet (disjointed f n) :=
-  disjointedRecₓ (fun t i ht => MeasurableSet.diff ht $ h _) (h n)
+  disjointedRecₓ (fun t i ht => MeasurableSet.diff ht <| h _) (h n)
 
 @[simp]
 theorem MeasurableSet.const (p : Prop) : MeasurableSet { a : α | p } := by
@@ -226,7 +226,7 @@ end
 theorem MeasurableSpace.ext :
     ∀ {m₁ m₂ : MeasurableSpace α}, (∀ s : Set α, m₁.measurable_set' s ↔ m₂.measurable_set' s) → m₁ = m₂
   | ⟨s₁, _, _, _⟩, ⟨s₂, _, _, _⟩, h => by
-    have : s₁ = s₂ := funext $ fun x => propext $ h x
+    have : s₁ = s₂ := funext fun x => propext <| h x
     subst this
 
 @[ext]
@@ -267,7 +267,7 @@ theorem Set.Subsingleton.measurable_set {s : Set α} (hs : s.subsingleton) : Mea
   hs.induction_on MeasurableSet.empty measurable_set_singleton
 
 theorem Set.Finite.measurable_set {s : Set α} (hs : finite s) : MeasurableSet s :=
-  finite.induction_on hs MeasurableSet.empty $ fun a s ha hsf hsm => hsm.insert _
+  (finite.induction_on hs MeasurableSet.empty) fun a s ha hsf hsm => hsm.insert _
 
 protected theorem Finset.measurable_set (s : Finset α) : MeasurableSet (↑s : Set α) :=
   s.finite_to_set.measurable_set
@@ -291,7 +291,7 @@ theorem le_def {α} {a b : MeasurableSpace α} : a ≤ b ↔ a.measurable_set' �
 instance : PartialOrderₓ (MeasurableSpace α) :=
   { MeasurableSpace.hasLe with le_refl := fun a b => le_reflₓ _,
     le_trans := fun a b c hab hbc => le_def.mpr (le_transₓ hab hbc),
-    le_antisymm := fun a b h₁ h₂ => MeasurableSpace.ext $ fun s => ⟨h₁ s, h₂ s⟩ }
+    le_antisymm := fun a b h₁ h₂ => MeasurableSpace.ext fun s => ⟨h₁ s, h₂ s⟩ }
 
 /-- The smallest σ-algebra containing a collection `s` of basic sets -/
 inductive generate_measurable (s : Set (Set α)) : Set α → Prop
@@ -317,11 +317,11 @@ theorem generate_from_le {s : Set (Set α)} {m : MeasurableSpace α} (h : ∀, �
 
 theorem generate_from_le_iff {s : Set (Set α)} (m : MeasurableSpace α) :
     generate_from s ≤ m ↔ s ⊆ { t | m.measurable_set' t } :=
-  Iff.intro (fun h u hu => h _ $ measurable_set_generate_from hu) fun h => generate_from_le h
+  Iff.intro (fun h u hu => h _ <| measurable_set_generate_from hu) fun h => generate_from_le h
 
 @[simp]
 theorem generate_from_measurable_set [MeasurableSpace α] : generate_from { s : Set α | MeasurableSet s } = ‹_› :=
-  le_antisymmₓ (generate_from_le $ fun _ => id) $ fun s => measurable_set_generate_from
+  (le_antisymmₓ (generate_from_le fun _ => id)) fun s => measurable_set_generate_from
 
 /-- If `g` is a collection of subsets of `α` such that the `σ`-algebra generated from `g` contains
 the same sets as `g`, then `g` was already a `σ`-algebra. -/
@@ -334,7 +334,7 @@ protected def mk_of_closure (g : Set (Set α)) (hg : { t | (generate_from g).Mea
 
 theorem mk_of_closure_sets {s : Set (Set α)} {hs : { t | (generate_from s).MeasurableSet' t } = s} :
     MeasurableSpace.mkOfClosure s hs = generate_from s :=
-  MeasurableSpace.ext $ fun t =>
+  MeasurableSpace.ext fun t =>
     show t ∈ s ↔ _ by
       conv_lhs => rw [← hs]
       rfl
@@ -344,7 +344,7 @@ theorem mk_of_closure_sets {s : Set (Set α)} {hs : { t | (generate_from s).Meas
 def gi_generate_from : GaloisInsertion (@generate_from α) fun m => { t | @MeasurableSet α m t } where
   gc := fun s => generate_from_le_iff
   le_l_u := fun m s => measurable_set_generate_from
-  choice := fun g hg => MeasurableSpace.mkOfClosure g $ le_antisymmₓ hg $ (generate_from_le_iff _).1 le_rfl
+  choice := fun g hg => MeasurableSpace.mkOfClosure g <| le_antisymmₓ hg <| (generate_from_le_iff _).1 le_rfl
   choice_eq := fun g hg => mk_of_closure_sets
 
 instance : CompleteLattice (MeasurableSpace α) :=
@@ -362,17 +362,17 @@ theorem measurable_set_bot_iff {s : Set α} : @MeasurableSet α ⊥ s ↔ s = �
         Classical.by_cases
           (fun h : ∃ i, f i = univ =>
             let ⟨i, hi⟩ := h
-            Or.inr $ eq_univ_of_univ_subset $ hi ▸ le_supr f i)
+            Or.inr <| eq_univ_of_univ_subset <| hi ▸ le_supr f i)
           fun h : ¬∃ i, f i = univ =>
-          Or.inl $
-            eq_empty_of_subset_empty $
-              Union_subset $ fun i =>
+          Or.inl <|
+            eq_empty_of_subset_empty <|
+              Union_subset fun i =>
                 (hf i).elim
                   (by
                     simp (config := { contextual := true }))
-                  fun hi => False.elim $ h ⟨i, hi⟩ }
+                  fun hi => False.elim <| h ⟨i, hi⟩ }
   have : b = ⊥ :=
-    bot_unique $ fun s hs =>
+    bot_unique fun s hs =>
       hs.elim (fun s => s.symm ▸ @measurable_set_empty _ ⊥) fun s => s.symm ▸ @MeasurableSet.univ _ ⊥
   this ▸ Iff.rfl
 
@@ -402,7 +402,7 @@ theorem measurable_set_sup {m₁ m₂ : MeasurableSpace α} {s : Set α} :
 
 theorem measurable_set_Sup {ms : Set (MeasurableSpace α)} {s : Set α} :
     @MeasurableSet _ (Sup ms) s ↔ generate_measurable { s : Set α | ∃ m ∈ ms, @MeasurableSet _ m s } s := by
-  change @measurable_set' _ (generate_from $ ⋃₀_) _ ↔ _
+  change @measurable_set' _ (generate_from <| ⋃₀_) _ ↔ _
   simp [generate_from, ← set_of_exists]
 
 theorem measurable_set_supr {ι} {m : ι → MeasurableSpace α} {s : Set α} :

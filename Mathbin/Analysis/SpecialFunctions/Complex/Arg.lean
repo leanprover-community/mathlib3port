@@ -34,7 +34,7 @@ theorem sin_arg (x : ℂ) : Real.sin (arg x) = x.im / x.abs := by
 
 theorem cos_arg {x : ℂ} (hx : x ≠ 0) : Real.cos (arg x) = x.re / x.abs := by
   have habs : 0 < abs x := abs_pos.2 hx
-  have him : |im x / abs x| ≤ 1 := by
+  have him : abs (im x / abs x) ≤ 1 := by
     rw [_root_.abs_div, abs_abs]
     exact div_le_one_of_le x.abs_im_le_abs x.abs_nonneg
   rw [abs_le] at him
@@ -60,7 +60,7 @@ theorem cos_arg {x : ℂ} (hx : x ≠ 0) : Real.cos (arg x) = x.re / x.abs := by
     
 
 @[simp]
-theorem abs_mul_exp_arg_mul_I (x : ℂ) : ↑abs x * exp (arg x * I) = x := by
+theorem abs_mul_exp_arg_mul_I (x : ℂ) : ↑(abs x) * exp (arg x * I) = x := by
   rcases eq_or_ne x 0 with (rfl | hx)
   · simp
     
@@ -75,7 +75,7 @@ theorem abs_mul_cos_add_sin_mul_I (x : ℂ) : (abs x * (cos (arg x) + sin (arg x
 @[simp]
 theorem range_exp_mul_I : (range fun x : ℝ => exp (x * I)) = Metric.Sphere 0 1 := by
   simp only [Metric.Sphere, dist_eq, sub_zero]
-  refine' (range_subset_iff.2 $ fun x => _).antisymm fun z hz : abs z = 1 => _
+  refine' (range_subset_iff.2 fun x => _).antisymm fun z hz : abs z = 1 => _
   · exact abs_exp_of_real_mul_I _
     
   · refine' ⟨arg z, _⟩
@@ -273,7 +273,7 @@ theorem arg_of_im_nonneg_of_ne_zero {z : ℂ} (h₁ : 0 ≤ z.im) (h₂ : z ≠ 
   rw [← cos_arg h₂, Real.arccos_cos (arg_nonneg_iff.2 h₁) (arg_le_pi _)]
 
 theorem arg_of_im_pos {z : ℂ} (hz : 0 < z.im) : arg z = Real.arccos (z.re / abs z) :=
-  arg_of_im_nonneg_of_ne_zero hz.le fun h => hz.ne' $ h.symm ▸ rfl
+  arg_of_im_nonneg_of_ne_zero hz.le fun h => hz.ne' <| h.symm ▸ rfl
 
 theorem arg_of_im_neg {z : ℂ} (hz : z.im < 0) : arg z = -Real.arccos (z.re / abs z) := by
   have h₀ : z ≠ 0 := mt (congr_argₓ im) hz.ne
@@ -303,7 +303,7 @@ theorem arg_conj (x : ℂ) : arg (conj x) = if arg x = π then π else -arg x :=
   · simp [hr, hr.le, hr.le.not_lt]
     
 
-theorem arg_inv (x : ℂ) : arg (x⁻¹) = if arg x = π then π else -arg x := by
+theorem arg_inv (x : ℂ) : arg x⁻¹ = if arg x = π then π else -arg x := by
   rw [← arg_conj, inv_def, mul_comm]
   by_cases' hx : x = 0
   · simp [hx]
@@ -319,7 +319,7 @@ theorem arg_conj_coe_angle (x : ℂ) : (arg (conj x) : Real.Angle) = -arg x := b
   by_cases' h : arg x = π <;> simp [arg_conj, h]
 
 @[simp]
-theorem arg_inv_coe_angle (x : ℂ) : (arg (x⁻¹) : Real.Angle) = -arg x := by
+theorem arg_inv_coe_angle (x : ℂ) : (arg x⁻¹ : Real.Angle) = -arg x := by
   by_cases' h : arg x = π <;> simp [arg_inv, h]
 
 theorem arg_neg_eq_arg_sub_pi_of_im_pos {x : ℂ} (hi : 0 < x.im) : arg (-x) = arg x - π := by
@@ -391,7 +391,7 @@ section Continuity
 variable {x z : ℂ}
 
 theorem arg_eq_nhds_of_re_pos (hx : 0 < x.re) : arg =ᶠ[𝓝 x] fun x => Real.arcsin (x.im / x.abs) :=
-  ((continuous_re.Tendsto _).Eventually (lt_mem_nhds hx)).mono $ fun y hy => arg_of_re_nonneg hy.le
+  ((continuous_re.Tendsto _).Eventually (lt_mem_nhds hx)).mono fun y hy => arg_of_re_nonneg hy.le
 
 theorem arg_eq_nhds_of_re_neg_of_im_pos (hx_re : x.re < 0) (hx_im : 0 < x.im) :
     arg =ᶠ[𝓝 x] fun x => Real.arcsin ((-x).im / x.abs) + π := by
@@ -408,10 +408,10 @@ theorem arg_eq_nhds_of_re_neg_of_im_neg (hx_re : x.re < 0) (hx_im : x.im < 0) :
   exact IsOpen.and (is_open_lt continuous_re continuous_zero) (is_open_lt continuous_im continuous_zero)
 
 theorem arg_eq_nhds_of_im_pos (hz : 0 < im z) : arg =ᶠ[𝓝 z] fun x => Real.arccos (x.re / abs x) :=
-  ((continuous_im.Tendsto _).Eventually (lt_mem_nhds hz)).mono $ fun x => arg_of_im_pos
+  ((continuous_im.Tendsto _).Eventually (lt_mem_nhds hz)).mono fun x => arg_of_im_pos
 
 theorem arg_eq_nhds_of_im_neg (hz : im z < 0) : arg =ᶠ[𝓝 z] fun x => -Real.arccos (x.re / abs x) :=
-  ((continuous_im.Tendsto _).Eventually (gt_mem_nhds hz)).mono $ fun x => arg_of_im_neg
+  ((continuous_im.Tendsto _).Eventually (gt_mem_nhds hz)).mono fun x => arg_of_im_neg
 
 theorem continuous_at_arg (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousAt arg x := by
   have h₀ : abs x ≠ 0 := by
@@ -428,13 +428,13 @@ theorem continuous_at_arg (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousAt arg x := 
     (real.continuous_arccos.continuous_at.comp (continuous_re.continuous_at.div continuous_abs.continuous_at h₀)).congr
       (arg_eq_nhds_of_im_pos hx_im).symm]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
     tendsto arg (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 (-π)) := by
   suffices H : tendsto (fun x : ℂ => Real.arcsin ((-x).im / x.abs) - π) (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 (-π))
   · refine' H.congr' _
     have : ∀ᶠ x : ℂ in 𝓝 z, x.re < 0 := continuous_re.tendsto z (gt_mem_nhds hre)
-    filter_upwards [self_mem_nhds_within, mem_nhds_within_of_mem_nhds this]
-    intro w him hre
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     rw [arg, if_neg hre.not_le, if_neg him.not_le]
     
   convert
@@ -448,12 +448,12 @@ theorem tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.r
     simpa using hre.ne
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem continuous_within_at_arg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
     ContinuousWithinAt arg { z : ℂ | 0 ≤ z.im } z := by
   have : arg =ᶠ[𝓝[{ z : ℂ | 0 ≤ z.im }] z] fun x => Real.arcsin ((-x).im / x.abs) + π := by
     have : ∀ᶠ x : ℂ in 𝓝 z, x.re < 0 := continuous_re.tendsto z (gt_mem_nhds hre)
-    filter_upwards [self_mem_nhds_within, mem_nhds_within_of_mem_nhds this]
-    intro w him hre
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     rw [arg, if_neg hre.not_le, if_pos him]
   refine' ContinuousWithinAt.congr_of_eventually_eq _ this _
   · refine'

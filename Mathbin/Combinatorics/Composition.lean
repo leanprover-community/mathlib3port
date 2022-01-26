@@ -208,8 +208,8 @@ theorem monotone_size_up_to : Monotone c.size_up_to :=
 a virtual point at the right of the last block, to make for a nice equiv with
 `composition_as_set n`. -/
 def boundary : Finₓ (c.length + 1) ↪o Finₓ (n + 1) :=
-  (OrderEmbedding.ofStrictMono fun i => ⟨c.size_up_to i, Nat.lt_succ_of_leₓ (c.size_up_to_le i)⟩) $
-    Finₓ.strict_mono_iff_lt_succ.2 $ fun i hi => c.size_up_to_strict_mono $ lt_of_add_lt_add_right hi
+  (OrderEmbedding.ofStrictMono fun i => ⟨c.size_up_to i, Nat.lt_succ_of_leₓ (c.size_up_to_le i)⟩) <|
+    Finₓ.strict_mono_iff_lt_succ.2 fun i hi => c.size_up_to_strict_mono <| lt_of_add_lt_add_right hi
 
 @[simp]
 theorem boundary_zero : c.boundary 0 = 0 := by
@@ -248,8 +248,8 @@ theorem order_emb_of_fin_boundaries : c.boundaries.order_emb_of_fin c.card_bound
 /-- Embedding the `i`-th block of a composition (identified with `fin (c.blocks_fun i)`) into
 `fin n` at the relevant position. -/
 def embedding (i : Finₓ c.length) : Finₓ (c.blocks_fun i) ↪o Finₓ n :=
-  (Finₓ.natAdd $ c.size_up_to i).trans $
-    Finₓ.castLe $
+  (Finₓ.natAdd <| c.size_up_to i).trans <|
+    Finₓ.castLe <|
       calc
         c.size_up_to i + c.blocks_fun i = c.size_up_to (i + 1) := (c.size_up_to_succ _).symm
         _ ≤ c.size_up_to c.length := monotone_sum_take _ i.2

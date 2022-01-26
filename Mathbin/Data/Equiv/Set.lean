@@ -30,7 +30,7 @@ theorem range_eq_univ {α : Type _} {β : Type _} (e : α ≃ β) : Set.Range e 
   Set.eq_univ_of_forall e.surjective
 
 protected theorem image_eq_preimage {α β} (e : α ≃ β) (s : Set α) : e '' s = e.symm ⁻¹' s :=
-  Set.ext $ fun x => Set.mem_image_iff_of_inverse e.left_inv e.right_inv
+  Set.ext fun x => Set.mem_image_iff_of_inverse e.left_inv e.right_inv
 
 theorem _root_.set.mem_image_equiv {α β} {S : Set α} {f : α ≃ β} {x : β} : x ∈ f '' S ↔ f.symm x ∈ S :=
   Set.ext_iff.mp (f.image_eq_preimage S) x
@@ -182,7 +182,7 @@ theorem union_apply_left {α} {s t : Set α} [DecidablePred fun x => x ∈ s] (H
 
 theorem union_apply_right {α} {s t : Set α} [DecidablePred fun x => x ∈ s] (H : s ∩ t ⊆ ∅) {a : (s ∪ t : Set α)}
     (ha : ↑a ∈ t) : Equivₓ.Set.union H a = Sum.inr ⟨a, ha⟩ :=
-  dif_neg $ fun h => H ⟨h, ha⟩
+  dif_neg fun h => H ⟨h, ha⟩
 
 @[simp]
 theorem union_symm_apply_left {α} {s t : Set α} [DecidablePred fun x => x ∈ s] (H : s ∩ t ⊆ ∅) (a : s) :
@@ -332,7 +332,7 @@ protected def union_sum_inter {α : Type u} (s t : Set α) [DecidablePred (· �
     Sum (s ∪ t : Set α) (s ∩ t : Set α) ≃ Sum (s ∪ t \ s : Set α) (s ∩ t : Set α) := by
       rw [union_diff_self]
     _ ≃ Sum (Sum s (t \ s : Set α)) (s ∩ t : Set α) :=
-      sum_congr (Set.Union $ subset_empty_iff.2 (inter_diff_self _ _)) (Equivₓ.refl _)
+      sum_congr (Set.Union <| subset_empty_iff.2 (inter_diff_self _ _)) (Equivₓ.refl _)
     _ ≃ Sum s (Sum (t \ s : Set α) (s ∩ t : Set α)) := sum_assoc _ _ _
     _ ≃ Sum s (t \ s ∪ s ∩ t : Set α) :=
       sum_congr (Equivₓ.refl _)
@@ -351,8 +351,8 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
     (e₀ : s ≃ t) : { e : α ≃ β // ∀ x : s, e x = e₀ x } ≃ ((sᶜ : Set α) ≃ (tᶜ : Set β)) where
   toFun := fun e =>
     subtype_equiv e fun a =>
-      not_congr $
-        Iff.symm $
+      not_congr <|
+        Iff.symm <|
           maps_to.mem_iff (maps_to_iff_exists_map_subtype.2 ⟨e₀, e.2⟩)
             (surj_on.maps_to_compl (surj_on_iff_exists_map_subtype.2 ⟨t, e₀, subset.refl t, e₀.surjective, e.2⟩)
               e.1.Injective)
@@ -375,7 +375,7 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
         trans_apply, sum_congr_apply, Subtype.coe_mk]
       
   right_inv := fun e =>
-    Equivₓ.ext $ fun x => by
+    Equivₓ.ext fun x => by
       simp only [Sum.map_inr, subtype_equiv_apply, set.sum_compl_apply_inr, Function.comp_app, sum_congr_apply,
         Equivₓ.coe_trans, Subtype.coe_eta, Subtype.coe_mk, set.sum_compl_symm_apply_compl]
 
@@ -460,7 +460,7 @@ def of_left_inverse {α β : Sort _} (f : α → β) (f_inv : Nonempty α → β
   toFun := fun a => ⟨f a, a, rfl⟩
   invFun := fun b => f_inv (nonempty_of_exists b.2) b
   left_inv := fun a => hf ⟨a⟩ a
-  right_inv := fun ⟨b, a, ha⟩ => Subtype.eq $ show f (f_inv ⟨a⟩ b) = b from Eq.trans (congr_argₓ f $ ha ▸ hf _ a) ha
+  right_inv := fun ⟨b, a, ha⟩ => Subtype.eq <| show f (f_inv ⟨a⟩ b) = b from Eq.trans (congr_argₓ f <| ha ▸ hf _ a) ha
 
 /-- If `f : α → β` has a left-inverse, then `α` is computably equivalent to the range of `f`.
 
@@ -476,7 +476,7 @@ noncomputable def of_injective {α β} (f : α → β) (hf : injective f) : α �
 
 theorem apply_of_injective_symm {α β} {f : α → β} (hf : injective f) (b : Set.Range f) :
     f ((of_injective f hf).symm b) = b :=
-  Subtype.ext_iff.1 $ (of_injective f hf).apply_symm_apply b
+  Subtype.ext_iff.1 <| (of_injective f hf).apply_symm_apply b
 
 @[simp]
 theorem of_injective_symm_apply {α β} {f : α → β} (hf : injective f) (a : α) :

@@ -24,7 +24,7 @@ theorem set_of_liouville_eq_Inter_Union :
 theorem is_Gδ_set_of_liouville : IsGδ { x | Liouville x } := by
   rw [set_of_liouville_eq_Inter_Union]
   refine' is_Gδ_Inter fun n => IsOpen.is_Gδ _
-  refine' is_open_Union fun a => is_open_Union $ fun b => is_open_Union $ fun hb => _
+  refine' is_open_Union fun a => is_open_Union fun b => is_open_Union fun hb => _
   exact is_open_ball.inter is_closed_singleton.is_open_compl
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (a b)
@@ -33,10 +33,10 @@ theorem set_of_liouville_eq_irrational_inter_Inter_Union :
   refine' subset.antisymm _ _
   · refine' subset_inter (fun x hx => hx.irrational) _
     rw [set_of_liouville_eq_Inter_Union]
-    exact Inter_mono fun n => Union₂_mono $ fun a b => Union_mono $ fun hb => diff_subset _ _
+    exact Inter_mono fun n => Union₂_mono fun a b => Union_mono fun hb => diff_subset _ _
     
   · simp only [inter_Inter, inter_Union, set_of_liouville_eq_Inter_Union]
-    refine' Inter_mono fun n => Union₂_mono $ fun a b => Union_mono $ fun hb => _
+    refine' Inter_mono fun n => Union₂_mono fun a b => Union_mono fun hb => _
     rw [inter_comm]
     refine' diff_subset_diff subset.rfl (singleton_subset_iff.2 ⟨a / b, _⟩)
     norm_cast
@@ -49,7 +49,7 @@ theorem eventually_residual_liouville : ∀ᶠ x in residual ℝ, Liouville x :=
   refine' eventually_residual.2 ⟨_, _, rat.dense_embedding_coe_real.dense.mono _, subset.rfl⟩
   · exact
       is_Gδ_Inter fun n =>
-        IsOpen.is_Gδ $ is_open_Union $ fun a => is_open_Union $ fun b => is_open_Union $ fun hb => is_open_ball
+        IsOpen.is_Gδ <| is_open_Union fun a => is_open_Union fun b => is_open_Union fun hb => is_open_ball
     
   · rintro _ ⟨r, rfl⟩
     simp only [mem_Inter, mem_Union]

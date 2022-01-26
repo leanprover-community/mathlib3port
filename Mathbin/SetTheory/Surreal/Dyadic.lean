@@ -186,7 +186,7 @@ theorem dyadic_aux {m₁ m₂ : ℤ} {y₁ y₂ : ℕ} (h₂ : m₁ * 2 ^ y₁ =
 /-- The additive monoid morphism `dyadic_map` sends ⟦⟨m, 2^n⟩⟧ to m • half ^ n. -/
 def dyadic_map : Localization.Away (2 : ℤ) →+ Surreal where
   toFun := fun x =>
-    (Localization.liftOn x fun x y => x • pow_half (Submonoid.log y)) $ by
+    (Localization.liftOn x fun x y => x • pow_half (Submonoid.log y)) <| by
       intro m₁ m₂ n₁ n₂ h₁
       obtain ⟨⟨n₃, y₃, hn₃⟩, h₂⟩ := localization.r_iff_exists.mp h₁
       simp only [Subtype.coe_mk, mul_eq_mul_right_iff] at h₂
@@ -206,7 +206,7 @@ def dyadic_map : Localization.Away (2 : ℤ) →+ Surreal where
         
   map_zero' := Localization.lift_on_zero _ _
   map_add' := fun x y =>
-    Localization.induction_on₂ x y $ by
+    Localization.induction_on₂ x y <| by
       rintro ⟨a, ⟨b, ⟨b', rfl⟩⟩⟩ ⟨c, ⟨d, ⟨d', rfl⟩⟩⟩
       have h₂ : 1 < (2 : ℤ).natAbs := one_lt_two
       have hpow₂ := Submonoid.log_pow_int_eq_self h₂

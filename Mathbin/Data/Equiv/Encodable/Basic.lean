@@ -47,7 +47,7 @@ universe u
 
 theorem encode_injective [Encodable α] : Function.Injective (@encode α _)
   | x, y, e =>
-    Option.some.injₓ $ by
+    Option.some.injₓ <| by
       rw [← encodek, e, encodek]
 
 @[simp]
@@ -148,7 +148,7 @@ theorem mem_decode₂' [Encodable α] {n : ℕ} {a : α} : a ∈ decode₂ α n 
   simp [decode₂] <;> exact ⟨fun ⟨_, h₁, rfl, h₂⟩ => ⟨h₁, h₂⟩, fun ⟨h₁, h₂⟩ => ⟨_, h₁, rfl, h₂⟩⟩
 
 theorem mem_decode₂ [Encodable α] {n : ℕ} {a : α} : a ∈ decode₂ α n ↔ encode a = n :=
-  mem_decode₂'.trans (and_iff_right_of_imp $ fun e => e ▸ encodek _)
+  mem_decode₂'.trans (and_iff_right_of_imp fun e => e ▸ encodek _)
 
 theorem decode₂_eq_some [Encodable α] {n : ℕ} {a : α} : decode₂ α n = some a ↔ encode a = n :=
   mem_decode₂
@@ -165,7 +165,7 @@ theorem decode₂_ne_none_iff [Encodable α] {n : ℕ} : decode₂ α n ≠ none
 theorem decode₂_is_partial_inv [Encodable α] : is_partial_inv encode (decode₂ α) := fun a n => mem_decode₂
 
 theorem decode₂_inj [Encodable α] {n : ℕ} {a₁ a₂ : α} (h₁ : a₁ ∈ decode₂ α n) (h₂ : a₂ ∈ decode₂ α n) : a₁ = a₂ :=
-  encode_injective $ (mem_decode₂.1 h₁).trans (mem_decode₂.1 h₂).symm
+  encode_injective <| (mem_decode₂.1 h₁).trans (mem_decode₂.1 h₂).symm
 
 theorem encodek₂ [Encodable α] (a : α) : decode₂ α (encode a) = some a :=
   mem_decode₂.2 rfl
@@ -204,8 +204,8 @@ variable [Encodable α] [Encodable β]
 
 /-- Explicit encoding function for the sum of two encodable types. -/
 def encode_sum : Sum α β → ℕ
-  | Sum.inl a => bit0 $ encode a
-  | Sum.inr b => bit1 $ encode b
+  | Sum.inl a => bit0 <| encode a
+  | Sum.inr b => bit1 <| encode b
 
 /-- Explicit decoding function for the sum of two encodable types. -/
 def decode_sum (n : ℕ) : Option (Sum α β) :=
@@ -277,7 +277,7 @@ def encode_sigma : Sigma γ → ℕ
 /-- Explicit decoding function for `sigma γ` -/
 def decode_sigma (n : ℕ) : Option (Sigma γ) :=
   let (n₁, n₂) := unpair n
-  (decode α n₁).bind $ fun a => (decode (γ a) n₂).map $ Sigma.mk a
+  (decode α n₁).bind fun a => (decode (γ a) n₂).map <| Sigma.mk a
 
 instance Sigma : Encodable (Sigma γ) :=
   ⟨encode_sigma, decode_sigma, fun ⟨a, b⟩ => by
@@ -285,7 +285,7 @@ instance Sigma : Encodable (Sigma γ) :=
 
 @[simp]
 theorem decode_sigma_val (n : ℕ) :
-    decode (Sigma γ) n = (decode α n.unpair.1).bind fun a => (decode (γ a) n.unpair.2).map $ Sigma.mk a :=
+    decode (Sigma γ) n = (decode α n.unpair.1).bind fun a => (decode (γ a) n.unpair.2).map <| Sigma.mk a :=
   show decode_sigma._match_1 _ = _ by
     cases n.unpair <;> rfl
 
@@ -305,7 +305,7 @@ instance Prod : Encodable (α × β) :=
 
 @[simp]
 theorem decode_prod_val (n : ℕ) :
-    decode (α × β) n = (decode α n.unpair.1).bind fun a => (decode β n.unpair.2).map $ Prod.mk a :=
+    decode (α × β) n = (decode α n.unpair.1).bind fun a => (decode β n.unpair.2).map <| Prod.mk a :=
   show (decode (Sigma fun _ => β) n).map (Equivₓ.sigmaEquivProd α β) = _ by
     simp <;> cases decode α n.unpair.1 <;> simp <;> cases decode β n.unpair.2 <;> rfl
 
@@ -331,7 +331,7 @@ include decP
 
 /-- Explicit decoding function for a decidable subtype of an encodable type -/
 def decode_subtype (v : ℕ) : Option { a : α // P a } :=
-  (decode α v).bind $ fun a => if h : P a then some ⟨a, h⟩ else none
+  (decode α v).bind fun a => if h : P a then some ⟨a, h⟩ else none
 
 /-- A decidable subtype of an encodable type is encodable. -/
 instance Subtype : Encodable { a : α // P a } :=
@@ -515,7 +515,7 @@ theorem rel_sequence {r : β → β → Prop} {f : α → β} (hf : Directed r f
 variable [Preorderₓ β] {f : α → β} (hf : Directed (· ≤ ·) f)
 
 theorem sequence_mono : Monotone (f ∘ hf.sequence f) :=
-  monotone_nat_of_le_succ $ hf.sequence_mono_nat
+  monotone_nat_of_le_succ <| hf.sequence_mono_nat
 
 theorem le_sequence (a : α) : f a ≤ f (hf.sequence f (encode a + 1)) :=
   hf.rel_sequence a

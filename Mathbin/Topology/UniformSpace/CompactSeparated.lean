@@ -97,7 +97,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     by_contra H
     have : ne_bot (F⊓𝓟 (Vᶜ)) := ⟨H⟩
     obtain ⟨⟨x, y⟩, hxy⟩ : ∃ p : γ × γ, ClusterPt p (F⊓𝓟 (Vᶜ)) := cluster_point_of_compact _
-    have clV : ClusterPt (x, y) (𝓟 $ Vᶜ) := hxy.of_inf_right
+    have clV : ClusterPt (x, y) (𝓟 <| Vᶜ) := hxy.of_inf_right
     have : (x, y) ∉ Interior V := by
       have : (x, y) ∈ Closure (Vᶜ) := by
         rwa [mem_closure_iff_cluster_pt]
@@ -144,12 +144,12 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       rintro ⟨u, v⟩ ⟨⟨u_in, v_in⟩, w, huw, hwv⟩
       have uw_in : (u, w) ∈ U₁ ×ˢ U₁ :=
         Set.mem_prod.2
-          ((huw.resolve_right fun h => h.1 $ Or.inl u_in).resolve_right fun h => by
+          ((huw.resolve_right fun h => h.1 <| Or.inl u_in).resolve_right fun h => by
             have : u ∈ U₁ ∩ U₂ := ⟨VU₁ u_in, h.1⟩
             rwa [hU₁₂] at this)
       have wv_in : (w, v) ∈ U₂ ×ˢ U₂ :=
         Set.mem_prod.2
-          ((hwv.resolve_right fun h => h.2 $ Or.inr v_in).resolve_left fun h => by
+          ((hwv.resolve_right fun h => h.2 <| Or.inr v_in).resolve_left fun h => by
             have : v ∈ U₁ ∩ U₂ := ⟨h.2, VU₂ v_in⟩
             rwa [hU₁₂] at this)
       have : w ∈ U₁ ∩ U₂ := ⟨uw_in.2, wv_in.1⟩
@@ -220,7 +220,7 @@ theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β
     (h : ContinuousOn (↿f) (U ×ˢ (univ : Set β))) : TendstoUniformly f (f x) (𝓝 x) := by
   rcases LocallyCompactSpace.local_compact_nhds _ _ hxU with ⟨K, hxK, hKU, hK⟩
   have : UniformContinuousOn (↿f) (K ×ˢ (univ : Set β)) := by
-    refine' IsCompact.uniform_continuous_on_of_continuous' (hK.prod compact_univ) _ (h.mono $ prod_mono hKU subset.rfl)
+    refine' IsCompact.uniform_continuous_on_of_continuous' (hK.prod compact_univ) _ (h.mono <| prod_mono hKU subset.rfl)
     exact (hU.mono hKU).Prod (is_separated_of_separated_space _)
   exact this.tendsto_uniformly hxK
 
@@ -228,5 +228,5 @@ theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β
 locally compact and `β` is compact and separated. -/
 theorem Continuous.tendsto_uniformly [SeparatedSpace α] [LocallyCompactSpace α] [CompactSpace β] [SeparatedSpace β]
     [UniformSpace γ] (f : α → β → γ) (h : Continuous (↿f)) (x : α) : TendstoUniformly f (f x) (𝓝 x) :=
-  h.continuous_on.tendsto_uniformly univ_mem $ is_separated_of_separated_space _
+  h.continuous_on.tendsto_uniformly univ_mem <| is_separated_of_separated_space _
 

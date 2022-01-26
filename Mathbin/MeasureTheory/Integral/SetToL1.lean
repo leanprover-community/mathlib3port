@@ -160,8 +160,8 @@ theorem map_Union_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0) 
     convert Finset.supr_insert a s S
     
   · exact
-      ((measure_bUnion_finset_le _ _).trans_lt $
-          Ennreal.sum_lt_top $ fun i hi => hps i $ Finset.mem_insert_of_mem hi).Ne
+      ((measure_bUnion_finset_le _ _).trans_lt <|
+          Ennreal.sum_lt_top fun i hi => hps i <| Finset.mem_insert_of_mem hi).Ne
     
   · simp_rw [Set.inter_Union]
     refine' Union_eq_empty.mpr fun i => Union_eq_empty.mpr fun hi => _
@@ -308,13 +308,13 @@ theorem map_set_to_simple_func (T : Set α → F →L[ℝ] F') (h_add : fin_meas
     rw [mem_filter] at hx
     rw [hx.2, ContinuousLinearMap.map_zero]
     
-  have h_left_eq : T (map g f ⁻¹' {g (f a)}) (g (f a)) = T (f ⁻¹' ↑f.range.filter fun b => g b = g (f a)) (g (f a)) :=
+  have h_left_eq : T (map g f ⁻¹' {g (f a)}) (g (f a)) = T (f ⁻¹' ↑(f.range.filter fun b => g b = g (f a))) (g (f a)) :=
     by
     congr
     rw [map_preimage_singleton]
   rw [h_left_eq]
   have h_left_eq' :
-    T (f ⁻¹' ↑Filter (fun b : G => g b = g (f a)) f.range) (g (f a)) =
+    T (f ⁻¹' ↑(Filter (fun b : G => g b = g (f a)) f.range)) (g (f a)) =
       T (⋃ y ∈ Filter (fun b : G => g b = g (f a)) f.range, f ⁻¹' {y}) (g (f a)) :=
     by
     congr
@@ -435,7 +435,7 @@ theorem set_to_simple_func_add (T : Set α → E →L[ℝ] F) (h_add : fin_meas_
       rw [add_eq_map₂, map_set_to_simple_func T h_add hp_pair]
       simp
     _ = ∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.fst + T (pair f g ⁻¹' {x}) x.snd :=
-      Finset.sum_congr rfl $ fun a ha => ContinuousLinearMap.map_add _ _ _
+      (Finset.sum_congr rfl) fun a ha => ContinuousLinearMap.map_add _ _ _
     _ = (∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.fst) + ∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.snd :=
       by
       rw [Finset.sum_add_distrib]
@@ -470,7 +470,7 @@ theorem set_to_simple_func_smul_real (T : Set α → E →L[ℝ] F) (h_add : fin
       rw [smul_eq_map c f, map_set_to_simple_func T h_add hf]
       rw [smul_zero]
     _ = ∑ x in f.range, c • T (f ⁻¹' {x}) x :=
-      Finset.sum_congr rfl $ fun b hb => by
+      (Finset.sum_congr rfl) fun b hb => by
         rw [ContinuousLinearMap.map_smul (T (f ⁻¹' {b})) c b]
     _ = c • set_to_simple_func T f := by
       simp only [set_to_simple_func, smul_sum, smul_smul, mul_comm]
@@ -485,7 +485,7 @@ theorem set_to_simple_func_smul {E} [MeasurableSpace E] [NormedGroup E] [NormedF
       rw [smul_eq_map c f, map_set_to_simple_func T h_add hf]
       rw [smul_zero]
     _ = ∑ x in f.range, c • T (f ⁻¹' {x}) x :=
-      Finset.sum_congr rfl $ fun b hb => by
+      (Finset.sum_congr rfl) fun b hb => by
         rw [h_smul]
     _ = c • set_to_simple_func T f := by
       simp only [set_to_simple_func, smul_sum, smul_smul, mul_comm]
@@ -1192,7 +1192,7 @@ theorem set_to_L1_lipschitz (hT : dominated_fin_meas_additive μ T C) : Lipschit
 
 /-- If `fs i → f` in `L1`, then `set_to_L1 hT (fs i) → set_to_L1 hT f`. -/
 theorem tendsto_set_to_L1 (hT : dominated_fin_meas_additive μ T C) (f : α →₁[μ] E) {ι} (fs : ι → α →₁[μ] E)
-    {l : Filter ι} (hfs : tendsto fs l (𝓝 f)) : tendsto (fun i => set_to_L1 hT (fs i)) l (𝓝 $ set_to_L1 hT f) :=
+    {l : Filter ι} (hfs : tendsto fs l (𝓝 f)) : tendsto (fun i => set_to_L1 hT (fs i)) l (𝓝 <| set_to_L1 hT f) :=
   ((set_to_L1 hT).Continuous.Tendsto _).comp hfs
 
 end SetToL1
@@ -1422,6 +1422,7 @@ theorem set_to_fun_mono_left {T T' : Set α → E →L[ℝ] G''} {C C' : ℝ} (h
     set_to_fun μ T hT f ≤ set_to_fun μ T' hT' f :=
   set_to_fun_mono_left' hT hT' (fun s _ _ x => hTT' s x) f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem set_to_fun_nonneg {T : Set α → G' →L[ℝ] G''} {C : ℝ} (hT : dominated_fin_meas_additive μ T C)
     (hT_nonneg : ∀ s, MeasurableSet s → μ s < ∞ → ∀ x, 0 ≤ x → 0 ≤ T s x) {f : α → G'} (hf : 0 ≤ᵐ[μ] f) :
     0 ≤ set_to_fun μ T hT f := by
@@ -1431,8 +1432,7 @@ theorem set_to_fun_nonneg {T : Set α → G' →L[ℝ] G''} {C : ℝ} (hT : domi
     rw [← Lp.coe_fn_le]
     have h0 := Lp.coe_fn_zero G' 1 μ
     have h := integrable.coe_fn_to_L1 hfi
-    filter_upwards [h0, h, hf]
-    intro a h0a ha hfa
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     rw [h0a, ha]
     exact hfa
     
@@ -1576,7 +1576,7 @@ theorem set_to_fun_congr_smul_measure (c : ℝ≥0∞) (hc_ne_top : c ≠ ∞) (
     rw [set_to_fun_zero_left' _ h, set_to_fun_measure_zero]
     simp [hc0]
     
-  refine' set_to_fun_congr_measure (c⁻¹) c _ hc_ne_top (le_of_eqₓ _) le_rfl hT hT_smul f
+  refine' set_to_fun_congr_measure c⁻¹ c _ hc_ne_top (le_of_eqₓ _) le_rfl hT hT_smul f
   · simp [hc0]
     
   · rw [smul_smul, Ennreal.inv_mul_cancel hc0 hc_ne_top, one_smul]
@@ -1611,7 +1611,7 @@ theorem norm_set_to_fun_le' (hT : dominated_fin_meas_additive μ T C) (hf : inte
 theorem tendsto_set_to_fun_of_dominated_convergence (hT : dominated_fin_meas_additive μ T C) {fs : ℕ → α → E}
     {f : α → E} (bound : α → ℝ) (fs_measurable : ∀ n, AeMeasurable (fs n) μ) (bound_integrable : integrable bound μ)
     (h_bound : ∀ n, ∀ᵐ a ∂μ, ∥fs n a∥ ≤ bound a) (h_lim : ∀ᵐ a ∂μ, tendsto (fun n => fs n a) at_top (𝓝 (f a))) :
-    tendsto (fun n => set_to_fun μ T hT (fs n)) at_top (𝓝 $ set_to_fun μ T hT f) := by
+    tendsto (fun n => set_to_fun μ T hT (fs n)) at_top (𝓝 <| set_to_fun μ T hT f) := by
   have f_measurable : AeMeasurable f μ := ae_measurable_of_tendsto_metric_ae fs_measurable h_lim
   have fs_int : ∀ n, integrable (fs n) μ := fun n => bound_integrable.mono' (fs_measurable n) (h_bound _)
   have f_int : integrable f μ :=
@@ -1626,7 +1626,7 @@ theorem tendsto_set_to_fun_of_dominated_convergence (hT : dominated_fin_meas_add
   refine' L1.tendsto_set_to_L1 hT _ _ _
   rw [tendsto_iff_norm_tendsto_zero]
   have lintegral_norm_tendsto_zero :
-    tendsto (fun n => Ennreal.toReal $ ∫⁻ a, Ennreal.ofReal ∥fs n a - f a∥ ∂μ) at_top (𝓝 0) :=
+    tendsto (fun n => Ennreal.toReal <| ∫⁻ a, Ennreal.ofReal ∥fs n a - f a∥ ∂μ) at_top (𝓝 0) :=
     (tendsto_to_real zero_ne_top).comp
       (tendsto_lintegral_norm_of_dominated_convergence fs_measurable bound_integrable.has_finite_integral h_bound h_lim)
   convert lintegral_norm_tendsto_zero
@@ -1639,12 +1639,13 @@ theorem tendsto_set_to_fun_of_dominated_convergence (hT : dominated_fin_meas_add
   dsimp only
   rw [hx, of_real_norm_eq_coe_nnnorm, Pi.sub_apply]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- Lebesgue dominated convergence theorem for filters with a countable basis -/
 theorem tendsto_set_to_fun_filter_of_dominated_convergence (hT : dominated_fin_meas_additive μ T C) {ι}
     {l : _root_.filter ι} [l.is_countably_generated] {fs : ι → α → E} {f : α → E} (bound : α → ℝ)
     (hfs_meas : ∀ᶠ n in l, AeMeasurable (fs n) μ) (h_bound : ∀ᶠ n in l, ∀ᵐ a ∂μ, ∥fs n a∥ ≤ bound a)
     (bound_integrable : integrable bound μ) (h_lim : ∀ᵐ a ∂μ, tendsto (fun n => fs n a) l (𝓝 (f a))) :
-    tendsto (fun n => set_to_fun μ T hT (fs n)) l (𝓝 $ set_to_fun μ T hT f) := by
+    tendsto (fun n => set_to_fun μ T hT (fs n)) l (𝓝 <| set_to_fun μ T hT f) := by
   rw [tendsto_iff_seq_tendsto]
   intro x xl
   have hxl : ∀, ∀ s ∈ l, ∀, ∃ a, ∀, ∀ b ≥ a, ∀, x b ∈ s := by
@@ -1677,8 +1678,8 @@ theorem continuous_set_to_fun_of_dominated (hT : dominated_fin_meas_additive μ 
     (bound_integrable : integrable bound μ) (h_cont : ∀ᵐ a ∂μ, Continuous fun x => fs x a) :
     Continuous fun x => set_to_fun μ T hT (fs x) :=
   continuous_iff_continuous_at.mpr fun x₀ =>
-    continuous_at_set_to_fun_of_dominated hT (eventually_of_forall hfs_meas) (eventually_of_forall h_bound) ‹_› $
-      h_cont.mono $ fun _ => Continuous.continuous_at
+    continuous_at_set_to_fun_of_dominated hT (eventually_of_forall hfs_meas) (eventually_of_forall h_bound) ‹_› <|
+      h_cont.mono fun _ => Continuous.continuous_at
 
 end Function
 

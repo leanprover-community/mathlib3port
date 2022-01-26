@@ -149,13 +149,13 @@ variable [LinearOrderedAddCommGroup β] [OrderTopology β]
 
 /-- The pointwise absolute value of a continuous function as a continuous function. -/
 def abs (f : C(α, β)) : C(α, β) where
-  toFun := fun x => |f x|
+  toFun := fun x => abs (f x)
 
 instance (priority := 100) : HasAbs C(α, β) :=
   ⟨fun f => abs f⟩
 
 @[simp]
-theorem abs_apply (f : C(α, β)) (x : α) : |f| x = |f x| :=
+theorem abs_apply (f : C(α, β)) (x : α) : (abs f) x = abs (f x) :=
   rfl
 
 end
@@ -359,7 +359,7 @@ theorem lift_cover_coe {i : ι} (x : S i) : lift_cover S φ hφ hS x = φ i x :=
 
 @[simp]
 theorem lift_cover_restrict {i : ι} : (lift_cover S φ hφ hS).restrict (S i) = φ i :=
-  ext $ lift_cover_coe
+  ext <| lift_cover_coe
 
 omit hφ hS
 
@@ -389,7 +389,7 @@ theorem lift_cover_coe' {s : Set α} {hs : s ∈ A} (x : s) : lift_cover' A F hF
 
 @[simp]
 theorem lift_cover_restrict' {s : Set α} {hs : s ∈ A} : (lift_cover' A F hF hA).restrict s = F s hs :=
-  ext $ lift_cover_coe'
+  ext <| lift_cover_coe'
 
 end Gluing
 

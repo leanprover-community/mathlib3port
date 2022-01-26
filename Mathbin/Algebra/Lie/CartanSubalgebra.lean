@@ -62,7 +62,7 @@ ideal. -/
 theorem le_normalizer_of_ideal {N : LieSubalgebra R L} (h : ∀ x y : L, x ∈ N → y ∈ H → ⁅x,y⁆ ∈ H) : N ≤ H.normalizer :=
   fun x hx y => h x y hx
 
-theorem normalizer_eq_self_iff : H.normalizer = H ↔ (LieModule.maxTrivSubmodule R H $ L ⧸ H.to_lie_submodule) = ⊥ := by
+theorem normalizer_eq_self_iff : H.normalizer = H ↔ (LieModule.maxTrivSubmodule R H <| L ⧸ H.to_lie_submodule) = ⊥ := by
   rw [LieSubmodule.eq_bot_iff]
   refine' ⟨fun h => _, fun h => le_antisymmₓ (fun x hx => _) H.le_normalizer⟩
   · rintro ⟨x⟩ hx

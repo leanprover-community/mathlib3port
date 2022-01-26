@@ -123,13 +123,13 @@ def of_map_split_add [Fintype ι] (f : box ι → M) (I₀ : WithTop (box ι))
     refine' Finset.sum_congr rfl fun J' hJ' => _
     by_cases' h : a.2 ∈ Ioo (J'.lower a.1) (J'.upper a.1)
     · rw [sum_split_boxes]
-      exact hf _ ((WithTop.coe_le_coe.2 $ le_of_mem _ hJ').trans hI) h
+      exact hf _ ((WithTop.coe_le_coe.2 <| le_of_mem _ hJ').trans hI) h
       
     · rw [split_of_not_mem_Ioo h, top_boxes, Finset.sum_singleton]
       
     
   intro I hI π hπ
-  have Hle : ∀, ∀ J ∈ π, ∀, ↑J ≤ I₀ := fun J hJ => (WithTop.coe_le_coe.2 $ π.le_of_mem hJ).trans hI
+  have Hle : ∀, ∀ J ∈ π, ∀, ↑J ≤ I₀ := fun J hJ => (WithTop.coe_le_coe.2 <| π.le_of_mem hJ).trans hI
   rcases hπ.exists_split_many_le with ⟨s, hs⟩
   rw [← hf _ hI, ← inf_of_le_right hs, inf_split_many, bUnion_boxes, sum_bUnion_boxes]
   exact Finset.sum_congr rfl fun J hJ => (hf _ (Hle _ hJ) _).symm
@@ -159,7 +159,7 @@ theorem sum_boxes_congr [Fintype ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I
       rw [h₁, h₂]_ = ∑ J in π₂.boxes, ∑ J' in (split_many J s).boxes, f J' :=
       sum_bUnion_boxes _ _ _ _ = ∑ J in π₂.boxes, f J :=
       Finset.sum_congr rfl fun J hJ => f.sum_partition_boxes _ (is_partition_split_many _ _)
-  exacts[(WithTop.coe_le_coe.2 $ π₁.le_of_mem hJ).trans hI, (WithTop.coe_le_coe.2 $ π₂.le_of_mem hJ).trans hI]
+  exacts[(WithTop.coe_le_coe.2 <| π₁.le_of_mem hJ).trans hI, (WithTop.coe_le_coe.2 <| π₂.le_of_mem hJ).trans hI]
 
 section ToSmul
 

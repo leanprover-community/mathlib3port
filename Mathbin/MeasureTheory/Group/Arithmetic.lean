@@ -290,8 +290,8 @@ class HasMeasurableNeg (G : Type _) [Neg G] [MeasurableSpace G] : Prop where
 
 /-- We say that a type `has_measurable_inv` if `x ↦ x⁻¹` is a measurable function. -/
 @[to_additive]
-class HasMeasurableInv (G : Type _) [HasInv G] [MeasurableSpace G] : Prop where
-  measurable_inv : Measurable (HasInv.inv : G → G)
+class HasMeasurableInv (G : Type _) [Inv G] [MeasurableSpace G] : Prop where
+  measurable_inv : Measurable (Inv.inv : G → G)
 
 export HasMeasurableInv (measurable_inv)
 
@@ -305,55 +305,55 @@ instance (priority := 100) has_measurable_div_of_mul_inv (G : Type _) [Measurabl
     ext1
     apply div_eq_mul_inv
   measurable_div_const := fun c => by
-    convert measurable_id.mul_const (c⁻¹)
+    convert measurable_id.mul_const c⁻¹
     ext1
     apply div_eq_mul_inv
 
 section Inv
 
-variable {G α : Type _} [HasInv G] [MeasurableSpace G] [HasMeasurableInv G] {m : MeasurableSpace α} {f : α → G}
+variable {G α : Type _} [Inv G] [MeasurableSpace G] [HasMeasurableInv G] {m : MeasurableSpace α} {f : α → G}
   {μ : Measureₓ α}
 
 include m
 
 @[measurability, to_additive]
-theorem Measurable.inv (hf : Measurable f) : Measurable fun x => f x⁻¹ :=
+theorem Measurable.inv (hf : Measurable f) : Measurable fun x => (f x)⁻¹ :=
   measurable_inv.comp hf
 
 @[measurability, to_additive]
-theorem AeMeasurable.inv (hf : AeMeasurable f μ) : AeMeasurable (fun x => f x⁻¹) μ :=
+theorem AeMeasurable.inv (hf : AeMeasurable f μ) : AeMeasurable (fun x => (f x)⁻¹) μ :=
   measurable_inv.comp_ae_measurable hf
 
 attribute [measurability] Measurable.neg AeMeasurable.neg
 
 @[simp, to_additive]
 theorem measurable_inv_iff {G : Type _} [Groupₓ G] [MeasurableSpace G] [HasMeasurableInv G] {f : α → G} :
-    (Measurable fun x => f x⁻¹) ↔ Measurable f :=
+    (Measurable fun x => (f x)⁻¹) ↔ Measurable f :=
   ⟨fun h => by
     simpa only [inv_invₓ] using h.inv, fun h => h.inv⟩
 
 @[simp, to_additive]
 theorem ae_measurable_inv_iff {G : Type _} [Groupₓ G] [MeasurableSpace G] [HasMeasurableInv G] {f : α → G} :
-    AeMeasurable (fun x => f x⁻¹) μ ↔ AeMeasurable f μ :=
+    AeMeasurable (fun x => (f x)⁻¹) μ ↔ AeMeasurable f μ :=
   ⟨fun h => by
     simpa only [inv_invₓ] using h.inv, fun h => h.inv⟩
 
 @[simp]
 theorem measurable_inv_iff₀ {G₀ : Type _} [GroupWithZeroₓ G₀] [MeasurableSpace G₀] [HasMeasurableInv G₀] {f : α → G₀} :
-    (Measurable fun x => f x⁻¹) ↔ Measurable f :=
+    (Measurable fun x => (f x)⁻¹) ↔ Measurable f :=
   ⟨fun h => by
     simpa only [inv_inv₀] using h.inv, fun h => h.inv⟩
 
 @[simp]
 theorem ae_measurable_inv_iff₀ {G₀ : Type _} [GroupWithZeroₓ G₀] [MeasurableSpace G₀] [HasMeasurableInv G₀]
-    {f : α → G₀} : AeMeasurable (fun x => f x⁻¹) μ ↔ AeMeasurable f μ :=
+    {f : α → G₀} : AeMeasurable (fun x => (f x)⁻¹) μ ↔ AeMeasurable f μ :=
   ⟨fun h => by
     simpa only [inv_inv₀] using h.inv, fun h => h.inv⟩
 
 omit m
 
 @[to_additive]
-theorem MeasurableSet.inv {s : Set G} (hs : MeasurableSet s) : MeasurableSet (s⁻¹) :=
+theorem MeasurableSet.inv {s : Set G} (hs : MeasurableSet s) : MeasurableSet s⁻¹ :=
   measurable_inv hs
 
 end Inv
@@ -501,12 +501,12 @@ variable {G : Type _} [Groupₓ G] [MeasurableSpace G] [MulAction G β] [HasMeas
 @[to_additive]
 theorem measurable_const_smul_iff (c : G) : (Measurable fun x => c • f x) ↔ Measurable f :=
   ⟨fun h => by
-    simpa only [inv_smul_smul] using h.const_smul' (c⁻¹), fun h => h.const_smul c⟩
+    simpa only [inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
 
 @[to_additive]
 theorem ae_measurable_const_smul_iff (c : G) : AeMeasurable (fun x => c • f x) μ ↔ AeMeasurable f μ :=
   ⟨fun h => by
-    simpa only [inv_smul_smul] using h.const_smul' (c⁻¹), fun h => h.const_smul c⟩
+    simpa only [inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
 
 @[to_additive]
 instance : MeasurableSpace (M)ˣ :=
@@ -660,7 +660,7 @@ theorem Finset.measurable_prod (s : Finset ι) (hf : ∀, ∀ i ∈ s, ∀, Meas
 @[measurability, to_additive]
 theorem Finset.ae_measurable_prod' (s : Finset ι) (hf : ∀, ∀ i ∈ s, ∀, AeMeasurable (f i) μ) :
     AeMeasurable (∏ i in s, f i) μ :=
-  Multiset.ae_measurable_prod' _ $ fun g hg =>
+  (Multiset.ae_measurable_prod' _) fun g hg =>
     let ⟨i, hi, hg⟩ := Multiset.mem_map.1 hg
     hg ▸ hf _ hi
 

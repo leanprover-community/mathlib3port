@@ -73,7 +73,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
       ⟨y, ⟨hyab, hyf⟩, hy⟩
     refine' mem_of_superset (f.diff_mem_iff.2 ⟨hcf, hyf⟩) (subset.trans _ hxU)
     rw [diff_subset_iff]
-    exact subset.trans Icc_subset_Icc_union_Ioc (union_subset_union subset.rfl $ Ioc_subset_Ioc_left hy.1.le)
+    exact subset.trans Icc_subset_Icc_union_Ioc (union_subset_union subset.rfl <| Ioc_subset_Ioc_left hy.1.le)
   cases' hc.2.eq_or_lt with heq hlt
   · rw [← HEq]
     exact hcs.2
@@ -94,7 +94,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
 
 instance {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
     [∀ i, CompactIccSpace (α i)] : CompactIccSpace (∀ i, α i) :=
-  ⟨fun a b => pi_univ_Icc a b ▸ is_compact_univ_pi $ fun i => is_compact_Icc⟩
+  ⟨fun a b => (pi_univ_Icc a b ▸ is_compact_univ_pi) fun i => is_compact_Icc⟩
 
 instance Pi.compact_Icc_space' {α β : Type _} [Preorderₓ β] [TopologicalSpace β] [CompactIccSpace β] :
     CompactIccSpace (α → β) :=
@@ -222,8 +222,8 @@ variable [DenselyOrdered α] [ConditionallyCompleteLinearOrder β] [OrderTopolog
 
 open_locale Interval
 
-theorem ContinuousOn.image_Icc (hab : a ≤ b) (h : ContinuousOn f $ Icc a b) :
-    f '' Icc a b = Icc (Inf $ f '' Icc a b) (Sup $ f '' Icc a b) :=
+theorem ContinuousOn.image_Icc (hab : a ≤ b) (h : ContinuousOn f <| Icc a b) :
+    f '' Icc a b = Icc (Inf <| f '' Icc a b) (Sup <| f '' Icc a b) :=
   eq_Icc_of_connected_compact ⟨(nonempty_Icc.2 hab).Image f, is_preconnected_Icc.Image f h⟩
     (is_compact_Icc.image_of_continuous_on h)
 
@@ -232,7 +232,7 @@ theorem ContinuousOn.image_Icc (hab : a ≤ b) (h : ContinuousOn f $ Icc a b) :
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 theorem ContinuousOn.image_interval_eq_Icc
-    (h : ContinuousOn f $ "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :
+    (h : ContinuousOn f <| "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :
     f '' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" =
       Icc (Inf (f '' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)"))
         (Sup (f '' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)")) :=
@@ -249,7 +249,7 @@ theorem ContinuousOn.image_interval_eq_Icc
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 theorem ContinuousOn.image_interval
-    (h : ContinuousOn f $ "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :
+    (h : ContinuousOn f <| "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :
     f '' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" =
       "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" :=
   by

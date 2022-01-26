@@ -50,7 +50,7 @@ def MulSemiringAction.toRingHom [MulSemiringAction M R] (x : M) : R →+* R :=
 
 theorem to_ring_hom_injective [MulSemiringAction M R] [HasFaithfulScalar M R] :
     Function.Injective (MulSemiringAction.toRingHom M R) := fun m₁ m₂ h =>
-  eq_of_smul_eq_smul $ fun r => RingHom.ext_iff.1 h r
+  eq_of_smul_eq_smul fun r => RingHom.ext_iff.1 h r
 
 /-- Each element of the group defines a semiring isomorphism. -/
 @[simps]
@@ -110,12 +110,12 @@ class IsInvariantSubring : Prop where
 
 instance IsInvariantSubring.toMulSemiringAction [IsInvariantSubring M S] : MulSemiringAction M S where
   smul := fun m x => ⟨m • x, IsInvariantSubring.smul_mem m x.2⟩
-  one_smul := fun s => Subtype.eq $ one_smul M s
-  mul_smul := fun m₁ m₂ s => Subtype.eq $ mul_smul m₁ m₂ s
-  smul_add := fun m s₁ s₂ => Subtype.eq $ smul_add m s₁ s₂
-  smul_zero := fun m => Subtype.eq $ smul_zero m
-  smul_one := fun m => Subtype.eq $ smul_one m
-  smul_mul := fun m s₁ s₂ => Subtype.eq $ smul_mul' m s₁ s₂
+  one_smul := fun s => Subtype.eq <| one_smul M s
+  mul_smul := fun m₁ m₂ s => Subtype.eq <| mul_smul m₁ m₂ s
+  smul_add := fun m s₁ s₂ => Subtype.eq <| smul_add m s₁ s₂
+  smul_zero := fun m => Subtype.eq <| smul_zero m
+  smul_one := fun m => Subtype.eq <| smul_one m
+  smul_mul := fun m s₁ s₂ => Subtype.eq <| smul_mul' m s₁ s₂
 
 end Ringₓ
 

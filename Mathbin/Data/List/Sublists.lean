@@ -197,11 +197,11 @@ theorem length_sublists (l : List α) : length (sublists l) = 2 ^ length l := by
   simp only [sublists_eq_sublists', length_map, length_sublists', length_reverse]
 
 theorem map_ret_sublist_sublists (l : List α) : map List.ret l <+ sublists l :=
-  reverse_rec_on l (nil_sublist _) $ fun l a IH => by
+  (reverse_rec_on l (nil_sublist _)) fun l a IH => by
     simp only [map, map_append, sublists_concat] <;>
       exact
-        ((append_sublist_append_left _).2 $
-              singleton_sublist.2 $
+        ((append_sublist_append_left _).2 <|
+              singleton_sublist.2 <|
                 mem_map.2
                   ⟨[], mem_sublists.2 (nil_sublist _), by
                     rfl⟩).trans

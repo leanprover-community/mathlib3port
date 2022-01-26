@@ -170,7 +170,7 @@ protected def rayOfNeZero [Nontrivial R] (v : M) (h : v ≠ 0) : Module.Ray R M 
 /-- An induction principle for `module.ray`, used as `induction x using module.ray.ind`. -/
 theorem Module.Ray.ind [Nontrivial R] {C : Module.Ray R M → Prop} (h : ∀ v hv : v ≠ 0, C (rayOfNeZero R v hv))
     (x : Module.Ray R M) : C x :=
-  Quotientₓ.ind (Subtype.rec $ h) x
+  Quotientₓ.ind (Subtype.rec <| h) x
 
 /-- The rays given by two nonzero vectors are equal if and only if those vectors
 satisfy `same_ray`. -/
@@ -189,11 +189,11 @@ theorem ray_pos_smul [Nontrivial R] {v : M} (h : v ≠ 0) {r : R} (hr : 0 < r) (
 
 /-- An equivalence between modules implies an equivalence between ray vectors. -/
 def RayVector.mapLinearEquiv (e : M ≃ₗ[R] N) : RayVector M ≃ RayVector N :=
-  Equivₓ.subtypeEquiv e.to_equiv $ fun _ => e.map_ne_zero_iff.symm
+  (Equivₓ.subtypeEquiv e.to_equiv) fun _ => e.map_ne_zero_iff.symm
 
 /-- An equivalence between modules implies an equivalence between rays. -/
 def Module.Ray.map [Nontrivial R] (e : M ≃ₗ[R] N) : Module.Ray R M ≃ Module.Ray R N :=
-  Quotientₓ.congr (RayVector.mapLinearEquiv e) $ fun ⟨a, ha⟩ ⟨b, hb⟩ => (same_ray_map_iff _).symm
+  (Quotientₓ.congr (RayVector.mapLinearEquiv e)) fun ⟨a, ha⟩ ⟨b, hb⟩ => (same_ray_map_iff _).symm
 
 @[simp]
 theorem Module.Ray.map_apply [Nontrivial R] (e : M ≃ₗ[R] N) (v : M) (hv : v ≠ 0) :
@@ -201,8 +201,8 @@ theorem Module.Ray.map_apply [Nontrivial R] (e : M ≃ₗ[R] N) (v : M) (hv : v 
   rfl
 
 @[simp]
-theorem Module.Ray.map_refl [Nontrivial R] : (Module.Ray.map $ LinearEquiv.refl R M) = Equivₓ.refl _ :=
-  Equivₓ.ext $ Module.Ray.ind R $ fun _ _ => rfl
+theorem Module.Ray.map_refl [Nontrivial R] : (Module.Ray.map <| LinearEquiv.refl R M) = Equivₓ.refl _ :=
+  Equivₓ.ext <| (Module.Ray.ind R) fun _ _ => rfl
 
 @[simp]
 theorem Module.Ray.map_symm [Nontrivial R] (e : M ≃ₗ[R] N) : (Module.Ray.map e).symm = Module.Ray.map e.symm :=
@@ -210,7 +210,7 @@ theorem Module.Ray.map_symm [Nontrivial R] (e : M ≃ₗ[R] N) : (Module.Ray.map
 
 /-- An equivalence between modules implies an equivalence between orientations. -/
 def Orientation.map [Nontrivial R] (e : M ≃ₗ[R] N) : Orientation R M ι ≃ Orientation R N ι :=
-  Module.Ray.map $ AlternatingMap.domLcongr R R ι R e
+  Module.Ray.map <| AlternatingMap.domLcongr R R ι R e
 
 @[simp]
 theorem Orientation.map_apply [Nontrivial R] (e : M ≃ₗ[R] N) (v : AlternatingMap R M R ι) (hv : v ≠ 0) :
@@ -219,7 +219,7 @@ theorem Orientation.map_apply [Nontrivial R] (e : M ≃ₗ[R] N) (v : Alternatin
   rfl
 
 @[simp]
-theorem Orientation.map_refl [Nontrivial R] : (Orientation.map ι $ LinearEquiv.refl R M) = Equivₓ.refl _ := by
+theorem Orientation.map_refl [Nontrivial R] : (Orientation.map ι <| LinearEquiv.refl R M) = Equivₓ.refl _ := by
   rw [Orientation.map, AlternatingMap.dom_lcongr_refl, Module.Ray.map_refl]
 
 @[simp]
@@ -233,16 +233,16 @@ variable {G : Type _} [Groupₓ G] [Nontrivial R] [DistribMulAction G M] [SmulCo
 /-- Any invertible action preserves the non-zeroness of ray vectors. This is primarily of interest
 when `G = Rˣ` -/
 instance : MulAction G (RayVector M) where
-  smul := fun r => Subtype.map ((· • ·) r) $ fun a => (smul_ne_zero_iff_ne _).2
-  mul_smul := fun a b m => Subtype.ext $ mul_smul a b _
-  one_smul := fun m => Subtype.ext $ one_smul _ _
+  smul := fun r => (Subtype.map ((· • ·) r)) fun a => (smul_ne_zero_iff_ne _).2
+  mul_smul := fun a b m => Subtype.ext <| mul_smul a b _
+  one_smul := fun m => Subtype.ext <| one_smul _ _
 
 /-- Any invertible action preserves the non-zeroness of rays. This is primarily of interest when
 `G = Rˣ` -/
 instance : MulAction G (Module.Ray R M) where
   smul := fun r => Quotientₓ.map ((· • ·) r) fun a b => SameRay.smul _
-  mul_smul := fun a b => Quotientₓ.ind $ fun m => congr_argₓ Quotientₓ.mk $ mul_smul a b _
-  one_smul := Quotientₓ.ind $ fun m => congr_argₓ Quotientₓ.mk $ one_smul _ _
+  mul_smul := fun a b => Quotientₓ.ind fun m => congr_argₓ Quotientₓ.mk <| mul_smul a b _
+  one_smul := Quotientₓ.ind fun m => congr_argₓ Quotientₓ.mk <| one_smul _ _
 
 /-- The action via `linear_equiv.apply_distrib_mul_action` corresponds to `module.ray.map`. -/
 @[simp]
@@ -369,7 +369,7 @@ variable {R}
 /-- Negating a ray twice produces the original ray. -/
 @[simp]
 protected theorem neg_negₓ [Nontrivial R] (x : Module.Ray R M) : - -x = x :=
-  Quotientₓ.ind (fun a => congr_argₓ Quotientₓ.mk $ RayVector.neg_neg _) x
+  Quotientₓ.ind (fun a => congr_argₓ Quotientₓ.mk <| RayVector.neg_neg _) x
 
 variable (R M)
 
@@ -415,7 +415,7 @@ theorem map_orientation_eq_det_inv_smul [Nontrivial R] [IsDomain R] (e : Basis �
     (f : M ≃ₗ[R] M) : Orientation.map ι f x = f.det⁻¹ • x := by
   induction' x using Module.Ray.ind with g hg
   rw [Orientation.map_apply, smul_ray_of_ne_zero, ray_eq_iff, Units.smul_def,
-    (g.comp_linear_map (↑f.symm)).eq_smul_basis_det e, g.eq_smul_basis_det e, AlternatingMap.comp_linear_map_apply,
+    (g.comp_linear_map ↑f.symm).eq_smul_basis_det e, g.eq_smul_basis_det e, AlternatingMap.comp_linear_map_apply,
     AlternatingMap.smul_apply, Basis.det_comp, Basis.det_self, mul_oneₓ, smul_eq_mul, mul_comm, mul_smul,
     LinearEquiv.coe_inv_det]
 
@@ -451,7 +451,7 @@ theorem units_inv_smul (u : (R)ˣ) (v : Module.Ray R M) : u⁻¹ • v = u • v
   induction' v using Module.Ray.ind with v hv
   rw [smul_ray_of_ne_zero, smul_ray_of_ne_zero, ray_eq_iff]
   have : ∀ {u : (R)ˣ}, 0 < (u : R) → SameRay R (u⁻¹ • v) (u • v) := fun u h =>
-    ((SameRay.refl v).pos_smul_left $ units.inv_pos.mpr h).pos_smul_right h
+    ((SameRay.refl v).pos_smul_left <| units.inv_pos.mpr h).pos_smul_right h
   cases lt_or_lt_iff_ne.2 u.ne_zero
   · rw [← Units.neg_neg u, Units.neg_inv, (-u).neg_smul, Units.neg_smul]
     refine' (this _).neg
@@ -620,7 +620,7 @@ theorem same_ray_iff_mem_orbit (v₁ v₂ : M) : SameRay R v₁ v₂ ↔ v₁ �
 
 /-- `same_ray_setoid` equals `mul_action.orbit_rel` for the `units.pos_subgroup`. -/
 theorem same_ray_setoid_eq_orbit_rel : sameRaySetoid R M = MulAction.orbitRel (Units.posSubgroup R) M :=
-  Setoidₓ.ext' $ same_ray_iff_mem_orbit R
+  Setoidₓ.ext' <| same_ray_iff_mem_orbit R
 
 variable {R}
 

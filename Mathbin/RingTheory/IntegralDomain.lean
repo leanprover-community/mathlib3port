@@ -31,10 +31,10 @@ section CancelMonoidWithZero
 variable {M : Type _} [CancelMonoidWithZero M] [Fintype M]
 
 theorem mul_right_bijective_of_fintype₀ {a : M} (ha : a ≠ 0) : bijective fun b => a * b :=
-  Fintype.injective_iff_bijective.1 $ mul_right_injective₀ ha
+  Fintype.injective_iff_bijective.1 <| mul_right_injective₀ ha
 
 theorem mul_left_bijective_of_fintype₀ {a : M} (ha : a ≠ 0) : bijective fun b => b * a :=
-  Fintype.injective_iff_bijective.1 $ mul_left_injective₀ ha
+  Fintype.injective_iff_bijective.1 <| mul_left_injective₀ ha
 
 /-- Every finite nontrivial cancel_monoid_with_zero is a group_with_zero. -/
 def groupWithZeroOfFintype (M : Type _) [CancelMonoidWithZero M] [DecidableEq M] [Fintype M] [Nontrivial M] :
@@ -42,10 +42,10 @@ def groupWithZeroOfFintype (M : Type _) [CancelMonoidWithZero M] [DecidableEq M]
   { ‹Nontrivial M›, ‹CancelMonoidWithZero M› with
     inv := fun a => if h : a = 0 then 0 else Fintype.bijInv (mul_right_bijective_of_fintype₀ h) 1,
     mul_inv_cancel := fun a ha => by
-      simp [HasInv.inv, dif_neg ha]
+      simp [Inv.inv, dif_neg ha]
       exact Fintype.right_inverse_bij_inv _ _,
     inv_zero := by
-      simp [HasInv.inv, dif_pos rfl] }
+      simp [Inv.inv, dif_pos rfl] }
 
 end CancelMonoidWithZero
 
@@ -92,7 +92,7 @@ theorem is_cyclic_of_subgroup_is_domain (f : G →* R) (hf : injective f) : IsCy
 To support `ℤˣ` and other infinite monoids with finite groups of units, this requires only
 `fintype Rˣ` rather than deducing it from `fintype R`. -/
 instance [Fintype (R)ˣ] : IsCyclic (R)ˣ :=
-  is_cyclic_of_subgroup_is_domain (Units.coeHom R) $ Units.ext
+  is_cyclic_of_subgroup_is_domain (Units.coeHom R) <| Units.ext
 
 /-- Every finite integral domain is a field. -/
 def fieldOfIsDomain [DecidableEq R] [Fintype R] : Field R :=
@@ -114,7 +114,7 @@ instance subgroup_units_cyclic : IsCyclic S := by
 end
 
 theorem card_fiber_eq_of_mem_range {H : Type _} [Groupₓ H] [DecidableEq H] (f : G →* H) {x y : H} (hx : x ∈ Set.Range f)
-    (hy : y ∈ Set.Range f) : (univ.filter $ fun g => f g = x).card = (univ.filter $ fun g => f g = y).card := by
+    (hy : y ∈ Set.Range f) : (univ.filter fun g => f g = x).card = (univ.filter fun g => f g = y).card := by
   rcases hx with ⟨x, rfl⟩
   rcases hy with ⟨y, rfl⟩
   refine' card_congr (fun g _ => g * x⁻¹ * y) _ _ fun g hg => ⟨g * y⁻¹ * x, _⟩
@@ -162,7 +162,7 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
     
   show (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = 0
   calc (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = ∑ n in range (orderOf x), x ^ n :=
-      Eq.symm $
+      Eq.symm <|
         sum_bij (fun n _ => x ^ n)
           (by
             simp only [mem_univ, forall_true_iff])

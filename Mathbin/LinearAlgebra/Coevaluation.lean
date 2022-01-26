@@ -36,7 +36,7 @@ variable (V : Type v) [AddCommGroupₓ V] [Module K V] [FiniteDimensional K V]
   vector space `V`. -/
 def coevaluation : K →ₗ[K] V ⊗[K] Module.Dual K V :=
   let bV := Basis.ofVectorSpace K V
-  (Basis.singleton Unit K).constr K $ fun _ => ∑ i : Basis.OfVectorSpaceIndex K V, bV i ⊗ₜ[K] bV.coord i
+  ((Basis.singleton Unit K).constr K) fun _ => ∑ i : Basis.OfVectorSpaceIndex K V, bV i ⊗ₜ[K] bV.coord i
 
 theorem coevaluation_apply_one :
     (coevaluation K V) (1 : K) =

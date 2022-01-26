@@ -101,7 +101,7 @@ theorem of_fn_nth (v : Vector α n) : of_fn (nth v) = v := by
 
 /-- The natural equivalence between length-`n` vectors and functions from `fin n`. -/
 def _root_.equiv.vector_equiv_fin (α : Type _) (n : ℕ) : Vector α n ≃ (Finₓ n → α) :=
-  ⟨Vector.nth, Vector.ofFn, Vector.of_fn_nth, fun f => funext $ Vector.nth_of_fn f⟩
+  ⟨Vector.nth, Vector.ofFn, Vector.of_fn_nth, fun f => funext <| Vector.nth_of_fn f⟩
 
 theorem nth_tail (x : Vector α n) i : x.tail.nth i = x.nth ⟨i.1 + 1, lt_tsub_iff_right.mp i.2⟩ := by
   rcases x with ⟨_ | _, h⟩ <;> rfl
@@ -127,7 +127,7 @@ theorem singleton_tail (v : Vector α 1) : v.tail = Vector.nil := by
 
 @[simp]
 theorem tail_of_fn {n : ℕ} (f : Finₓ n.succ → α) : tail (of_fn f) = of_fn fun i => f i.succ :=
-  (of_fn_nth _).symm.trans $ by
+  (of_fn_nth _).symm.trans <| by
     congr
     funext i
     cases i
@@ -455,7 +455,7 @@ theorem remove_nth_val {i : Finₓ n} : ∀ {v : Vector α n}, (remove_nth i v).
   | ⟨l, hl⟩ => rfl
 
 theorem remove_nth_insert_nth {v : Vector α n} {i : Finₓ (n + 1)} : remove_nth i (insert_nth a i v) = v :=
-  Subtype.eq $ List.remove_nth_insert_nth i.1 v.1
+  Subtype.eq <| List.remove_nth_insert_nth i.1 v.1
 
 theorem remove_nth_insert_nth' {v : Vector α (n + 1)} :
     ∀ {i : Finₓ (n + 1)} {j : Finₓ (n + 2)},
@@ -540,7 +540,7 @@ theorem prod_update_nth [Monoidₓ α] (v : Vector α n) (i : Finₓ n) (a : α)
 
 @[to_additive]
 theorem prod_update_nth' [CommGroupₓ α] (v : Vector α n) (i : Finₓ n) (a : α) :
-    (v.update_nth i a).toList.Prod = v.to_list.prod * v.nth i⁻¹ * a := by
+    (v.update_nth i a).toList.Prod = v.to_list.prod * (v.nth i)⁻¹ * a := by
   refine' (List.prod_update_nth' v.to_list i a).trans _
   have : ↑i < v.to_list.length := lt_of_lt_of_leₓ i.2 (le_of_eqₓ v.2.symm)
   simp [this, nth_eq_nth_le, mul_assoc]
@@ -572,7 +572,7 @@ protected def traverse {α β : Type u} (f : α → F β) : Vector α n → F (V
   | ⟨v, Hv⟩ =>
     cast
         (by
-          rw [Hv]) $
+          rw [Hv]) <|
       traverse_aux f v
 
 section

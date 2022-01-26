@@ -53,7 +53,7 @@ theorem prod_eq_prod_Ico_succ_bot {a b : ℕ} (hab : a < b) (f : ℕ → β) :
 @[to_additive]
 theorem prod_Ico_consecutive (f : ℕ → β) {m n k : ℕ} (hmn : m ≤ n) (hnk : n ≤ k) :
     ((∏ i in Ico m n, f i) * ∏ i in Ico n k, f i) = ∏ i in Ico m k, f i :=
-  Ico_union_Ico_eq_Ico hmn hnk ▸ Eq.symm $ prod_union $ Ico_disjoint_Ico_consecutive m n k
+  Ico_union_Ico_eq_Ico hmn hnk ▸ Eq.symm <| prod_union <| Ico_disjoint_Ico_consecutive m n k
 
 @[to_additive]
 theorem prod_range_mul_prod_Ico (f : ℕ → β) {m n : ℕ} (h : m ≤ n) :
@@ -63,7 +63,7 @@ theorem prod_range_mul_prod_Ico (f : ℕ → β) {m n : ℕ} (h : m ≤ n) :
 @[to_additive]
 theorem prod_Ico_eq_mul_inv {δ : Type _} [CommGroupₓ δ] (f : ℕ → δ) {m n : ℕ} (h : m ≤ n) :
     (∏ k in Ico m n, f k) = (∏ k in range n, f k) * (∏ k in range m, f k)⁻¹ :=
-  eq_mul_inv_iff_mul_eq.2 $ by
+  eq_mul_inv_iff_mul_eq.2 <| by
     rw [mul_comm] <;> exact prod_range_mul_prod_Ico f h
 
 theorem sum_Ico_eq_sub {δ : Type _} [AddCommGroupₓ δ] (f : ℕ → δ) {m n : ℕ} (h : m ≤ n) :
@@ -130,7 +130,7 @@ theorem sum_range_reflect {δ : Type _} [AddCommMonoidₓ δ] (f : ℕ → δ) (
 theorem prod_Ico_id_eq_factorial : ∀ n : ℕ, (∏ x in Ico 1 (n + 1), x) = n !
   | 0 => rfl
   | n + 1 => by
-    rw [prod_Ico_succ_top $ Nat.succ_le_succₓ $ zero_le n, Nat.factorial_succ, prod_Ico_id_eq_factorial n,
+    rw [prod_Ico_succ_top <| Nat.succ_le_succₓ <| zero_le n, Nat.factorial_succ, prod_Ico_id_eq_factorial n,
       Nat.succ_eq_add_one, mul_comm]
 
 @[simp]
@@ -147,7 +147,8 @@ theorem sum_range_id_mul_two (n : ℕ) : (∑ i in range n, i) * 2 = n * (n - 1)
     (∑ i in range n, i) * 2 = (∑ i in range n, i) + ∑ i in range n, n - 1 - i := by
       rw [sum_range_reflect (fun i => i) n, mul_two]
     _ = ∑ i in range n, i + (n - 1 - i) := sum_add_distrib.symm
-    _ = ∑ i in range n, n - 1 := sum_congr rfl $ fun i hi => add_tsub_cancel_of_le $ Nat.le_pred_of_lt $ mem_range.1 hi
+    _ = ∑ i in range n, n - 1 :=
+      (sum_congr rfl) fun i hi => add_tsub_cancel_of_le <| Nat.le_pred_of_lt <| mem_range.1 hi
     _ = n * (n - 1) := by
       rw [sum_const, card_range, Nat.nsmul_eq_mul]
     

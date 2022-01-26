@@ -110,7 +110,7 @@ protected theorem AeMeasurable (f : α →ₘ[μ] β) : AeMeasurable f μ :=
   f.measurable.ae_measurable
 
 @[simp]
-theorem quot_mk_eq_mk (f : α → β) hf : (Quot.mk (@Setoidₓ.R _ $ μ.ae_eq_setoid β) ⟨f, hf⟩ : α →ₘ[μ] β) = mk f hf :=
+theorem quot_mk_eq_mk (f : α → β) hf : (Quot.mk (@Setoidₓ.R _ <| μ.ae_eq_setoid β) ⟨f, hf⟩ : α →ₘ[μ] β) = mk f hf :=
   rfl
 
 @[simp]
@@ -139,27 +139,27 @@ theorem coe_fn_mk (f : α → β) hf : (mk f hf : α →ₘ[μ] β) =ᵐ[μ] f :
 
 @[elab_as_eliminator]
 theorem induction_on (f : α →ₘ[μ] β) {p : (α →ₘ[μ] β) → Prop} (H : ∀ f hf, p (mk f hf)) : p f :=
-  Quotientₓ.induction_on' f $ Subtype.forall.2 H
+  Quotientₓ.induction_on' f <| Subtype.forall.2 H
 
 @[elab_as_eliminator]
 theorem induction_on₂ {α' β' : Type _} [MeasurableSpace α'] [MeasurableSpace β'] {μ' : Measureₓ α'} (f : α →ₘ[μ] β)
     (f' : α' →ₘ[μ'] β') {p : (α →ₘ[μ] β) → (α' →ₘ[μ'] β') → Prop} (H : ∀ f hf f' hf', p (mk f hf) (mk f' hf')) :
     p f f' :=
-  induction_on f $ fun f hf => induction_on f' $ H f hf
+  (induction_on f) fun f hf => induction_on f' <| H f hf
 
 @[elab_as_eliminator]
 theorem induction_on₃ {α' β' : Type _} [MeasurableSpace α'] [MeasurableSpace β'] {μ' : Measureₓ α'} {α'' β'' : Type _}
     [MeasurableSpace α''] [MeasurableSpace β''] {μ'' : Measureₓ α''} (f : α →ₘ[μ] β) (f' : α' →ₘ[μ'] β')
     (f'' : α'' →ₘ[μ''] β'') {p : (α →ₘ[μ] β) → (α' →ₘ[μ'] β') → (α'' →ₘ[μ''] β'') → Prop}
     (H : ∀ f hf f' hf' f'' hf'', p (mk f hf) (mk f' hf') (mk f'' hf'')) : p f f' f'' :=
-  induction_on f $ fun f hf => induction_on₂ f' f'' $ H f hf
+  (induction_on f) fun f hf => induction_on₂ f' f'' <| H f hf
 
 /-- Given a measurable function `g : β → γ`, and an almost everywhere equal function `[f] : α →ₘ β`,
     return the equivalence class of `g ∘ f`, i.e., the almost everywhere equal function
     `[g ∘ f] : α →ₘ γ`. -/
 def comp (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) : α →ₘ[μ] γ :=
-  (Quotientₓ.liftOn' f fun f => mk (g ∘ (f : α → β)) (hg.comp_ae_measurable f.2)) $ fun f f' H =>
-    mk_eq_mk.2 $ H.fun_comp g
+  (Quotientₓ.liftOn' f fun f => mk (g ∘ (f : α → β)) (hg.comp_ae_measurable f.2)) fun f f' H =>
+    mk_eq_mk.2 <| H.fun_comp g
 
 @[simp]
 theorem comp_mk (g : β → γ) (hg : Measurable g) (f : α → β) hf :
@@ -176,8 +176,8 @@ theorem coe_fn_comp (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) :
 
 /-- The class of `x ↦ (f x, g x)`. -/
 def pair (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) : α →ₘ[μ] β × γ :=
-  (Quotientₓ.liftOn₂' f g fun f g => mk (fun x => (f.1 x, g.1 x)) (f.2.prod_mk g.2)) $ fun f g f' g' Hf Hg =>
-    mk_eq_mk.2 $ Hf.prod_mk Hg
+  (Quotientₓ.liftOn₂' f g fun f g => mk (fun x => (f.1 x, g.1 x)) (f.2.prod_mk g.2)) fun f g f' g' Hf Hg =>
+    mk_eq_mk.2 <| Hf.prod_mk Hg
 
 @[simp]
 theorem pair_mk_mk (f : α → β) hf (g : α → γ) hg :
@@ -227,7 +227,7 @@ theorem coe_fn_comp₂ {γ δ : Type _} [MeasurableSpace γ] [MeasurableSpace δ
 /-- Interpret `f : α →ₘ[μ] β` as a germ at `μ.ae` forgetting that `f` is almost everywhere
     measurable. -/
 def to_germ (f : α →ₘ[μ] β) : germ μ.ae β :=
-  (Quotientₓ.liftOn' f fun f => ((f : α → β) : germ μ.ae β)) $ fun f g H => germ.coe_eq.2 H
+  (Quotientₓ.liftOn' f fun f => ((f : α → β) : germ μ.ae β)) fun f g H => germ.coe_eq.2 H
 
 @[simp]
 theorem mk_to_germ (f : α → β) hf : (mk f hf : α →ₘ[μ] β).toGerm = f :=
@@ -237,17 +237,17 @@ theorem to_germ_eq (f : α →ₘ[μ] β) : f.to_germ = (f : α → β) := by
   rw [← mk_to_germ, mk_coe_fn]
 
 theorem to_germ_injective : injective (to_germ : (α →ₘ[μ] β) → germ μ.ae β) := fun f g H =>
-  ext $
-    germ.coe_eq.1 $ by
+  ext <|
+    germ.coe_eq.1 <| by
       rwa [← to_germ_eq, ← to_germ_eq]
 
 theorem comp_to_germ (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) : (comp g hg f).toGerm = f.to_germ.map g :=
-  induction_on f $ fun f hf => by
+  (induction_on f) fun f hf => by
     simp
 
 theorem comp₂_to_germ (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β) (f₂ : α →ₘ[μ] γ) :
     (comp₂ g hg f₁ f₂).toGerm = f₁.to_germ.map₂ g f₂.to_germ :=
-  induction_on₂ f₁ f₂ $ fun f₁ hf₁ f₂ hf₂ => by
+  (induction_on₂ f₁ f₂) fun f₁ hf₁ f₂ hf₂ => by
     simp
 
 /-- Given a predicate `p` and an equivalence class `[f]`, return true if `p` holds of `f a`
@@ -296,24 +296,24 @@ instance : HasSup (α →ₘ[μ] β) where
 theorem coe_fn_sup (f g : α →ₘ[μ] β) : ⇑(f⊔g) =ᵐ[μ] fun x => f x⊔g x :=
   coe_fn_comp₂ _ _ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 protected theorem le_sup_left (f g : α →ₘ[μ] β) : f ≤ f⊔g := by
   rw [← coe_fn_le]
-  filter_upwards [coe_fn_sup f g]
-  intro a ha
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [ha]
   exact le_sup_left
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 protected theorem le_sup_right (f g : α →ₘ[μ] β) : g ≤ f⊔g := by
   rw [← coe_fn_le]
-  filter_upwards [coe_fn_sup f g]
-  intro a ha
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [ha]
   exact le_sup_right
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 protected theorem sup_le (f g f' : α →ₘ[μ] β) (hf : f ≤ f') (hg : g ≤ f') : f⊔g ≤ f' := by
   rw [← coe_fn_le] at hf hg⊢
-  filter_upwards [hf, hg, coe_fn_sup f g]
-  intro a haf hag ha_sup
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [ha_sup]
   exact sup_le haf hag
 
@@ -329,24 +329,24 @@ instance : HasInf (α →ₘ[μ] β) where
 theorem coe_fn_inf (f g : α →ₘ[μ] β) : ⇑(f⊓g) =ᵐ[μ] fun x => f x⊓g x :=
   coe_fn_comp₂ _ _ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 protected theorem inf_le_left (f g : α →ₘ[μ] β) : f⊓g ≤ f := by
   rw [← coe_fn_le]
-  filter_upwards [coe_fn_inf f g]
-  intro a ha
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [ha]
   exact inf_le_left
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 protected theorem inf_le_right (f g : α →ₘ[μ] β) : f⊓g ≤ g := by
   rw [← coe_fn_le]
-  filter_upwards [coe_fn_inf f g]
-  intro a ha
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [ha]
   exact inf_le_right
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 protected theorem le_inf (f' f g : α →ₘ[μ] β) (hf : f' ≤ f) (hg : f' ≤ g) : f' ≤ f⊓g := by
   rw [← coe_fn_le] at hf hg⊢
-  filter_upwards [hf, hg, coe_fn_inf f g]
-  intro a haf hag ha_inf
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [ha_inf]
   exact le_inf haf hag
 
@@ -428,11 +428,11 @@ section Groupₓ
 variable [TopologicalSpace γ] [BorelSpace γ] [Groupₓ γ] [TopologicalGroup γ]
 
 @[to_additive]
-instance : HasInv (α →ₘ[μ] γ) :=
-  ⟨comp HasInv.inv measurable_inv⟩
+instance : Inv (α →ₘ[μ] γ) :=
+  ⟨comp Inv.inv measurable_inv⟩
 
 @[simp, to_additive]
-theorem inv_mk (f : α → γ) hf : (mk f hf : α →ₘ[μ] γ)⁻¹ = mk (f⁻¹) hf.inv :=
+theorem inv_mk (f : α → γ) hf : (mk f hf : α →ₘ[μ] γ)⁻¹ = mk f⁻¹ hf.inv :=
   rfl
 
 @[to_additive]
@@ -517,14 +517,14 @@ theorem lintegral_zero : lintegral (0 : α →ₘ[μ] ℝ≥0∞) = 0 :=
 
 @[simp]
 theorem lintegral_eq_zero_iff {f : α →ₘ[μ] ℝ≥0∞} : lintegral f = 0 ↔ f = 0 :=
-  induction_on f $ fun f hf => (lintegral_eq_zero_iff' hf).trans mk_eq_mk.symm
+  (induction_on f) fun f hf => (lintegral_eq_zero_iff' hf).trans mk_eq_mk.symm
 
 theorem lintegral_add (f g : α →ₘ[μ] ℝ≥0∞) : lintegral (f + g) = lintegral f + lintegral g :=
-  induction_on₂ f g $ fun f hf g hg => by
+  (induction_on₂ f g) fun f hf g hg => by
     simp [lintegral_add' hf hg]
 
 theorem lintegral_mono {f g : α →ₘ[μ] ℝ≥0∞} : f ≤ g → lintegral f ≤ lintegral g :=
-  induction_on₂ f g $ fun f hf g hg hfg => lintegral_mono_ae hfg
+  (induction_on₂ f g) fun f hf g hg hfg => lintegral_mono_ae hfg
 
 section PosPart
 

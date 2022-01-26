@@ -161,7 +161,7 @@ instance of_power_series_localization [CommRingₓ R] :
 instance {K : Type u} [Field K] : IsFractionRing (PowerSeries K) (LaurentSeries K) :=
   IsLocalization.of_le (Submonoid.powers (PowerSeries.x : PowerSeries K)) _
     (powers_le_non_zero_divisors_of_no_zero_divisors PowerSeries.X_ne_zero) fun f hf =>
-    is_unit_of_mem_non_zero_divisors $ RingHom.map_mem_non_zero_divisors _ HahnSeries.of_power_series_injective hf
+    is_unit_of_mem_non_zero_divisors <| RingHom.map_mem_non_zero_divisors _ HahnSeries.of_power_series_injective hf
 
 end LaurentSeries
 

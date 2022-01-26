@@ -162,7 +162,8 @@ theorem geom_sum₂_self {α : Type _} [CommRingₓ α] (x : α) (n : ℕ) : geo
     (∑ i in Finset.range n, x ^ i * x ^ (n - 1 - i)) = ∑ i in Finset.range n, x ^ (i + (n - 1 - i)) := by
       simp_rw [← pow_addₓ]
     _ = ∑ i in Finset.range n, x ^ (n - 1) :=
-      Finset.sum_congr rfl fun i hi => congr_argₓ _ $ add_tsub_cancel_of_le $ Nat.le_pred_of_lt $ Finset.mem_range.1 hi
+      Finset.sum_congr rfl fun i hi =>
+        congr_argₓ _ <| add_tsub_cancel_of_le <| Nat.le_pred_of_lt <| Finset.mem_range.1 hi
     _ = (Finset.range n).card • x ^ (n - 1) := Finset.sum_const _
     _ = n * x ^ (n - 1) := by
       rw [Finset.card_range, nsmul_eq_mul]
@@ -202,7 +203,7 @@ theorem geom_sum_mul [Ringₓ α] (x : α) (n : ℕ) : geomSum x n * (x - 1) = x
   exact this
 
 theorem mul_geom_sum [Ringₓ α] (x : α) (n : ℕ) : (x - 1) * geomSum x n = x ^ n - 1 :=
-  op_injective $ by
+  op_injective <| by
     simpa using geom_sum_mul (op x) n
 
 theorem geom_sum_mul_neg [Ringₓ α] (x : α) (n : ℕ) : geomSum x n * (1 - x) = 1 - x ^ n := by
@@ -211,7 +212,7 @@ theorem geom_sum_mul_neg [Ringₓ α] (x : α) (n : ℕ) : geomSum x n * (1 - x)
   exact this
 
 theorem mul_neg_geom_sum [Ringₓ α] (x : α) (n : ℕ) : (1 - x) * geomSum x n = 1 - x ^ n :=
-  op_injective $ by
+  op_injective <| by
     simpa using geom_sum_mul_neg (op x) n
 
 protected theorem Commute.geom_sum₂ [DivisionRing α] {x y : α} (h' : Commute x y) (h : x ≠ y) (n : ℕ) :
@@ -306,7 +307,7 @@ theorem geom_sum_Ico' [DivisionRing α] {x : α} (hx : x ≠ 1) {m n : ℕ} (hmn
   convert neg_div_neg_eq (x ^ m - x ^ n) (1 - x) <;> abel
 
 theorem geom_sum_inv [DivisionRing α] {x : α} (hx1 : x ≠ 1) (hx0 : x ≠ 0) (n : ℕ) :
-    geomSum (x⁻¹) n = (x - 1)⁻¹ * (x - x⁻¹ ^ n * x) := by
+    geomSum x⁻¹ n = (x - 1)⁻¹ * (x - x⁻¹ ^ n * x) := by
   have h₁ : x⁻¹ ≠ 1 := by
     rwa [inv_eq_one_div, Ne.def, div_eq_iff_mul_eq hx0, one_mulₓ]
   have h₂ : x⁻¹ - 1 ≠ 0 := mt sub_eq_zero.1 h₁
@@ -340,14 +341,14 @@ theorem Nat.pred_mul_geom_sum_le (a b n : ℕ) : ((b - 1) * ∑ i in range n.suc
       by
       rw [tsub_mul, mul_comm, sum_mul, one_mulₓ, sum_range_succ', sum_range_succ, pow_zeroₓ, Nat.div_oneₓ]
     _ ≤ (∑ i in range n, a / b ^ i) + a * b - ((∑ i in range n, a / b ^ i) + a / b ^ n) := by
-      refine' tsub_le_tsub_right (add_le_add_right (sum_le_sum $ fun i _ => _) _) _
+      refine' tsub_le_tsub_right (add_le_add_right (sum_le_sum fun i _ => _) _) _
       rw [pow_succ'ₓ, ← Nat.div_div_eq_div_mulₓ]
       exact Nat.div_mul_le_selfₓ _ _
     _ = a * b - a / b ^ n := add_tsub_add_eq_tsub_left _ _ _
     
 
 theorem Nat.geom_sum_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) : (∑ i in range n, a / b ^ i) ≤ a * b / (b - 1) := by
-  refine' (Nat.le_div_iff_mul_leₓ _ _ $ tsub_pos_of_lt hb).2 _
+  refine' (Nat.le_div_iff_mul_leₓ _ _ <| tsub_pos_of_lt hb).2 _
   cases n
   · rw [sum_range_zero, zero_mul]
     exact Nat.zero_leₓ _

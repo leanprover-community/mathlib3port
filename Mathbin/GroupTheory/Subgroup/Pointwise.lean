@@ -58,7 +58,7 @@ theorem mem_smul_pointwise_iff_exists (m : G) (a : α) (S : Subgroup G) : m ∈ 
 
 instance pointwise_central_scalar [MulDistribMulAction (αᵐᵒᵖ) G] [IsCentralScalar α G] :
     IsCentralScalar α (Subgroup G) :=
-  ⟨fun a S => (congr_argₓ fun f => S.map f) $ MonoidHom.ext $ op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_argₓ fun f => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ
 
@@ -159,7 +159,7 @@ theorem mem_smul_pointwise_iff_exists (m : A) (a : α) (S : AddSubgroup A) : m �
 
 instance pointwise_central_scalar [DistribMulAction (αᵐᵒᵖ) A] [IsCentralScalar α A] :
     IsCentralScalar α (AddSubgroup A) :=
-  ⟨fun a S => (congr_argₓ fun f => S.map f) $ AddMonoidHom.ext $ op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_argₓ fun f => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ
 

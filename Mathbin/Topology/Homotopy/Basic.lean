@@ -81,7 +81,7 @@ theorem coe_fn_injective : @Function.Injective (homotopy f₀ f₁) (I × X → 
 
 @[ext]
 theorem ext {F G : homotopy f₀ f₁} (h : ∀ x, F x = G x) : F = G :=
-  coe_fn_injective $ funext h
+  coe_fn_injective <| funext h
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
@@ -303,7 +303,7 @@ theorem coe_fn_injective : @Function.Injective (homotopy_with f₀ f₁ P) (I ×
 
 @[ext]
 theorem ext {F G : homotopy_with f₀ f₁ P} (h : ∀ x, F x = G x) : F = G :=
-  coe_fn_injective $ funext h
+  coe_fn_injective <| funext h
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
@@ -380,7 +380,7 @@ def symm {f₀ f₁ : C(X, Y)} (F : homotopy_with f₀ f₁ P) : homotopy_with f
 
 @[simp]
 theorem symm_symm {f₀ f₁ : C(X, Y)} (F : homotopy_with f₀ f₁ P) : F.symm.symm = F :=
-  ext $ homotopy.congr_fun $ homotopy.symm_symm _
+  ext <| homotopy.congr_fun <| homotopy.symm_symm _
 
 /-- Given `homotopy_with f₀ f₁ P` and `homotopy_with f₁ f₂ P`, we can define a `homotopy_with f₀ f₂ P`
 by putting the first homotopy on `[0, 1/2]` and the second on `[1/2, 1]`.
@@ -404,7 +404,7 @@ theorem trans_apply {f₀ f₁ f₂ : C(X, Y)} (F : homotopy_with f₀ f₁ P) (
 
 theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : homotopy_with f₀ f₁ P) (G : homotopy_with f₁ f₂ P) :
     (F.trans G).symm = G.symm.trans F.symm :=
-  ext $ homotopy.congr_fun $ homotopy.symm_trans _ _
+  ext <| homotopy.congr_fun <| homotopy.symm_trans _ _
 
 /-- Casting a `homotopy_with f₀ f₁ P` to a `homotopy_with g₀ g₁ P` where `f₀ = g₀` and `f₁ = g₁`.
 -/
@@ -504,7 +504,7 @@ theorem trans_apply (F : homotopy_rel f₀ f₁ S) (G : homotopy_rel f₁ f₂ S
   homotopy.trans_apply _ _ _
 
 theorem symm_trans (F : homotopy_rel f₀ f₁ S) (G : homotopy_rel f₁ f₂ S) : (F.trans G).symm = G.symm.trans F.symm :=
-  homotopy_with.ext $ homotopy.congr_fun $ homotopy.symm_trans _ _
+  homotopy_with.ext <| homotopy.congr_fun <| homotopy.symm_trans _ _
 
 /-- Casting a `homotopy_rel f₀ f₁ S` to a `homotopy_rel g₀ g₁ S` where `f₀ = g₀` and `f₁ = g₁`.
 -/

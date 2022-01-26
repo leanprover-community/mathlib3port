@@ -23,19 +23,19 @@ namespace ModuleCat
 variable {R : Type u} [Ringₓ R] {X Y : ModuleCat.{v} R} (f : X ⟶ Y)
 
 theorem ker_eq_bot_of_mono [mono f] : f.ker = ⊥ :=
-  LinearMap.ker_eq_bot_of_cancel $ fun u v => (@cancel_mono _ _ _ _ _ f _ (↟u) (↟v)).1
+  LinearMap.ker_eq_bot_of_cancel fun u v => (@cancel_mono _ _ _ _ _ f _ (↟u) (↟v)).1
 
 theorem range_eq_top_of_epi [epi f] : f.range = ⊤ :=
-  LinearMap.range_eq_top_of_cancel $ fun u v => (@cancel_epi _ _ _ _ _ f _ (↟u) (↟v)).1
+  LinearMap.range_eq_top_of_cancel fun u v => (@cancel_epi _ _ _ _ _ f _ (↟u) (↟v)).1
 
 theorem mono_iff_ker_eq_bot : mono f ↔ f.ker = ⊥ :=
-  ⟨fun hf => ker_eq_bot_of_mono _, fun hf => concrete_category.mono_of_injective _ $ LinearMap.ker_eq_bot.1 hf⟩
+  ⟨fun hf => ker_eq_bot_of_mono _, fun hf => concrete_category.mono_of_injective _ <| LinearMap.ker_eq_bot.1 hf⟩
 
 theorem mono_iff_injective : mono f ↔ Function.Injective f := by
   rw [mono_iff_ker_eq_bot, LinearMap.ker_eq_bot]
 
 theorem epi_iff_range_eq_top : epi f ↔ f.range = ⊤ :=
-  ⟨fun hf => range_eq_top_of_epi _, fun hf => concrete_category.epi_of_surjective _ $ LinearMap.range_eq_top.1 hf⟩
+  ⟨fun hf => range_eq_top_of_epi _, fun hf => concrete_category.epi_of_surjective _ <| LinearMap.range_eq_top.1 hf⟩
 
 theorem epi_iff_surjective : epi f ↔ Function.Surjective f := by
   rw [epi_iff_range_eq_top, LinearMap.range_eq_top]
@@ -44,7 +44,7 @@ instance mono_as_hom'_subtype (U : Submodule R X) : mono (↾U.subtype) :=
   (mono_iff_ker_eq_bot _).mpr (Submodule.ker_subtype U)
 
 instance epi_as_hom''_mkq (U : Submodule R X) : epi (↿U.mkq) :=
-  (epi_iff_range_eq_top _).mpr $ Submodule.range_mkq _
+  (epi_iff_range_eq_top _).mpr <| Submodule.range_mkq _
 
 end ModuleCat
 

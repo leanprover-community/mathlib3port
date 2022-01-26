@@ -53,13 +53,13 @@ instance decidable_forall_mem {p : α → Prop} [DecidablePred p] : ∀ o : Opti
     is_true
       (by
         simp [false_implies_iff])
-  | some a => if h : p a then is_true $ fun o e => some_inj.1 e ▸ h else is_false $ mt (fun H => H _ rfl) h
+  | some a => if h : p a then is_true fun o e => some_inj.1 e ▸ h else is_false <| mt (fun H => H _ rfl) h
 
 instance decidable_exists_mem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∃ a ∈ o, p a)
   | none =>
     is_false fun ⟨a, ⟨h, _⟩⟩ => by
       cases h
-  | some a => if h : p a then is_true $ ⟨_, rfl, h⟩ else is_false $ fun ⟨_, ⟨rfl, hn⟩⟩ => h hn
+  | some a => if h : p a then is_true <| ⟨_, rfl, h⟩ else is_false fun ⟨_, ⟨rfl, hn⟩⟩ => h hn
 
 /-- Inhabited `get` function. Returns `a` if the input is `some a`, otherwise returns `default`. -/
 @[reducible]

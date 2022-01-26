@@ -145,7 +145,7 @@ theorem mem_compact_convergence_nhd_filter (Y : Set C(α, β)) :
 the same as the compact-open topology. This definition is thus an auxiliary convenience definition
 and is unlikely to be of direct use. -/
 def compact_convergence_topology : TopologicalSpace C(α, β) :=
-  TopologicalSpace.mkOfNhds $ fun f => (compact_convergence_filter_basis f).filter
+  TopologicalSpace.mkOfNhds fun f => (compact_convergence_filter_basis f).filter
 
 theorem nhds_compact_convergence :
     @nhds _ compact_convergence_topology f = (compact_convergence_filter_basis f).filter := by

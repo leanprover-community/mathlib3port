@@ -66,7 +66,7 @@ instance is_iso_as_limit_cone_lift : is_iso ((limit_cone_is_limit X.diagram).lif
 induced by lifting `X.as_limit_cone`.
 -/
 def iso_as_limit_cone_lift : X ≅ (limit_cone X.diagram).x :=
-  as_iso $ (limit_cone_is_limit _).lift X.as_limit_cone
+  as_iso <| (limit_cone_is_limit _).lift X.as_limit_cone
 
 /-- The isomorphism of cones `X.as_limit_cone` and `Profinite.limit_cone X.diagram`.
 The underlying isomorphism is defeq to `X.iso_as_limit_cone_lift`.

@@ -73,11 +73,11 @@ variable (p : α ⟹ repeat n Prop) (r : α ⊗ α ⟹ repeat n Prop)
 
 /-- adapt `mvfunctor.liftp` to accept predicates as arrows -/
 def liftp' : F α → Prop :=
-  Mvfunctor.Liftp $ fun i x => of_repeat $ p i x
+  Mvfunctor.Liftp fun i x => of_repeat <| p i x
 
 /-- adapt `mvfunctor.liftp` to accept relations as arrows -/
 def liftr' : F α → F α → Prop :=
-  Mvfunctor.Liftr $ fun i x y => of_repeat $ r i $ Typevec.Prod.mk _ x y
+  Mvfunctor.Liftr fun i x y => of_repeat <| r i <| Typevec.Prod.mk _ x y
 
 variable [IsLawfulMvfunctor F]
 
@@ -90,7 +90,7 @@ theorem id_map'ₓ (x : F α) : (fun i a => a) <$$> x = x :=
   id_map x
 
 theorem map_map (g : α ⟹ β) (h : β ⟹ γ) (x : F α) : h <$$> g <$$> x = (h ⊚ g) <$$> x :=
-  Eq.symm $ comp_map _ _ _
+  Eq.symm <| comp_map _ _ _
 
 section Liftp'
 

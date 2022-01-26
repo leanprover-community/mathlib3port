@@ -29,7 +29,7 @@ def AntilipschitzWith [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ�
 
 theorem AntilipschitzWith.edist_lt_top [PseudoEmetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0 } {f : α → β}
     (h : AntilipschitzWith K f) (x y : α) : edist x y < ⊤ :=
-  (h x y).trans_lt $ Ennreal.mul_lt_top Ennreal.coe_ne_top (edist_ne_top _ _)
+  (h x y).trans_lt <| Ennreal.mul_lt_top Ennreal.coe_ne_top (edist_ne_top _ _)
 
 theorem AntilipschitzWith.edist_ne_top [PseudoEmetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0 } {f : α → β}
     (h : AntilipschitzWith K f) (x y : α) : edist x y ≠ ⊤ :=
@@ -86,7 +86,7 @@ theorem mul_le_edist (hf : AntilipschitzWith K f) (x y : α) : (K⁻¹ * edist x
   exact Ennreal.div_le_of_le_mul' (hf x y)
 
 theorem ediam_preimage_le (hf : AntilipschitzWith K f) (s : Set β) : diam (f ⁻¹' s) ≤ K * diam s :=
-  diam_le $ fun x hx y hy => (hf x y).trans $ mul_le_mul_left' (edist_le_diam_of_mem hx hy) K
+  diam_le fun x hx y hy => (hf x y).trans <| mul_le_mul_left' (edist_le_diam_of_mem hx hy) K
 
 theorem le_mul_ediam_image (hf : AntilipschitzWith K f) (s : Set α) : diam s ≤ K * diam (f '' s) :=
   (diam_mono (subset_preimage_image _ _)).trans (hf.ediam_preimage_le (f '' s))
@@ -159,7 +159,7 @@ theorem of_subsingleton [Subsingleton α] {K : ℝ≥0 } : AntilipschitzWith K f
 /-- If `f : α → β` is `0`-antilipschitz, then `α` is a `subsingleton`. -/
 protected theorem Subsingleton {α β} [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : AntilipschitzWith 0 f) :
     Subsingleton α :=
-  ⟨fun x y => edist_le_zero.1 $ (h x y).trans_eq $ zero_mul _⟩
+  ⟨fun x y => edist_le_zero.1 <| (h x y).trans_eq <| zero_mul _⟩
 
 end AntilipschitzWith
 
@@ -169,8 +169,8 @@ open Metric
 
 variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0 } {f : α → β}
 
-theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded s) : Bounded (f ⁻¹' s) :=
-  Exists.introₓ (K * diam s) $ fun x hx y hy =>
+theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : bounded s) : bounded (f ⁻¹' s) :=
+  (Exists.introₓ (K * diam s)) fun x hx y hy =>
     calc
       dist x y ≤ K * dist (f x) (f y) := hf.le_mul_dist x y
       _ ≤ K * diam s := mul_le_mul_of_nonneg_left (dist_le_diam_of_mem hs hx hy) K.2
@@ -182,7 +182,7 @@ protected theorem ProperSpace {α : Type _} [MetricSpace α] {K : ℝ≥0 } {f :
   apply proper_space_of_compact_closed_ball_of_le 0 fun x₀ r hr => _
   let K := f ⁻¹' closed_ball x₀ r
   have A : IsClosed K := is_closed_ball.preimage f_cont
-  have B : Bounded K := hK.bounded_preimage bounded_closed_ball
+  have B : bounded K := hK.bounded_preimage bounded_closed_ball
   have : IsCompact K := compact_iff_closed_bounded.2 ⟨A, B⟩
   convert this.image f_cont
   exact (hf.image_preimage _).symm

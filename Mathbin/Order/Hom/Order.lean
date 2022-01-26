@@ -72,7 +72,7 @@ theorem infi_apply {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) (x
 
 @[simp, norm_cast]
 theorem coe_infi {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) : ((⨅ i, f i : α →o β) : α → β) = ⨅ i, f i :=
-  funext $ fun x => (infi_apply f x).trans (@_root_.infi_apply _ _ _ _ (fun i => f i) _).symm
+  funext fun x => (infi_apply f x).trans (@_root_.infi_apply _ _ _ _ (fun i => f i) _).symm
 
 instance [CompleteLattice β] : HasSupₓ (α →o β) where
   sup := fun s => ⟨fun x => ⨆ f ∈ s, (f : _) x, fun x y h => bsupr_le_bsupr fun f _ => f.mono h⟩
@@ -86,7 +86,7 @@ theorem supr_apply {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) (x
 
 @[simp, norm_cast]
 theorem coe_supr {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) : ((⨆ i, f i : α →o β) : α → β) = ⨆ i, f i :=
-  funext $ fun x => (supr_apply f x).trans (@_root_.supr_apply _ _ _ _ (fun i => f i) _).symm
+  funext fun x => (supr_apply f x).trans (@_root_.supr_apply _ _ _ _ (fun i => f i) _).symm
 
 instance [CompleteLattice β] : CompleteLattice (α →o β) :=
   { (_ : Lattice (α →o β)), OrderHom.orderTop, OrderHom.orderBot with sup := Sup,

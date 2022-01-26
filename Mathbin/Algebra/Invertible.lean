@@ -145,7 +145,7 @@ noncomputable def IsUnit.invertible [Monoidₓ α] {a : α} (h : IsUnit a) : Inv
 
 @[simp]
 theorem nonempty_invertible_iff_is_unit [Monoidₓ α] (a : α) : Nonempty (Invertible a) ↔ IsUnit a :=
-  ⟨Nonempty.ndrec $ @is_unit_of_invertible _ _ _, IsUnit.nonempty_invertible⟩
+  ⟨Nonempty.ndrec <| @is_unit_of_invertible _ _ _, IsUnit.nonempty_invertible⟩
 
 /-- Each element of a group is invertible. -/
 def invertibleOfGroup [Groupₓ α] (a : α) : Invertible a :=
@@ -177,7 +177,7 @@ theorem inv_of_neg [Ringₓ α] (a : α) [Invertible a] [Invertible (-a)] : ⅟ 
 
 @[simp]
 theorem one_sub_inv_of_two [Ringₓ α] [Invertible (2 : α)] : 1 - (⅟ 2 : α) = ⅟ 2 :=
-  (is_unit_of_invertible (2 : α)).mul_right_inj.1 $ by
+  (is_unit_of_invertible (2 : α)).mul_right_inj.1 <| by
     rw [mul_sub, mul_inv_of_self, mul_oneₓ, bit0, add_sub_cancel]
 
 /-- `a` is the inverse of `⅟a`. -/
@@ -236,7 +236,7 @@ theorem Ringₓ.inverse_invertible (x : α) [Invertible x] : Ring.inverse x = �
   Ring.inverse_unit (unitOfInvertible _)
 
 theorem nonzero_of_invertible (a : α) [Nontrivial α] [Invertible a] : a ≠ 0 := fun ha =>
-  zero_ne_one $
+  zero_ne_one <|
     calc
       0 = ⅟ a * a := by
         simp [ha]
@@ -290,7 +290,7 @@ theorem inv_of_div (a b : α) [Invertible a] [Invertible b] [Invertible (a / b)]
       simp [← mul_div_assoc])
 
 /-- `a` is the inverse of `a⁻¹` -/
-def invertibleInv {a : α} [Invertible a] : Invertible (a⁻¹) :=
+def invertibleInv {a : α} [Invertible a] : Invertible a⁻¹ :=
   ⟨a, by
     simp , by
     simp ⟩

@@ -21,15 +21,15 @@ namespace Complex
   has a root -/
 theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, is_root f z :=
   let ⟨z₀, hz₀⟩ := f.exists_forall_norm_le
-  Exists.introₓ z₀ $
-    Classical.by_contradiction $ fun hf0 =>
+  Exists.introₓ z₀ <|
+    Classical.by_contradiction fun hf0 =>
       have hfX : f - C (f.eval z₀) ≠ 0 := mt sub_eq_zero.1 fun h => not_le_of_gtₓ hf (h.symm ▸ degree_C_le)
       let n := root_multiplicity z₀ (f - C (f.eval z₀))
       let g := (f - C (f.eval z₀)) /ₘ (X - C z₀) ^ n
       have hg0 : g.eval z₀ ≠ 0 := eval_div_by_monic_pow_root_multiplicity_ne_zero _ hfX
       have hg : g * (X - C z₀) ^ n = f - C (f.eval z₀) := div_by_monic_mul_pow_root_multiplicity_eq _ _
       have hn0 : 0 < n :=
-        Nat.pos_of_ne_zeroₓ $ fun hn0 => by
+        Nat.pos_of_ne_zeroₓ fun hn0 => by
           simpa [g, hn0] using hg0
       let ⟨δ', hδ'₁, hδ'₂⟩ := continuous_iff.1 (Polynomial.continuous g) z₀ (g.eval z₀).abs (Complex.abs_pos.2 hg0)
       let δ := min (min (δ' / 2) 1) ((f.eval z₀).abs / (g.eval z₀).abs / 2)
@@ -52,13 +52,13 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, is_r
       let z' := (-f.eval z₀ * (g.eval z₀).abs * δ ^ n / ((f.eval z₀).abs * g.eval z₀)) ^ (n⁻¹ : ℂ) + z₀
       have hF₁ : F.eval z' = f.eval z₀ - f.eval z₀ * (g.eval z₀).abs * δ ^ n / (f.eval z₀).abs := by
         simp only [F, cpow_nat_inv_pow _ hn0, div_eq_mul_inv, eval_pow, mul_assoc, mul_comm (g.eval z₀),
-            mul_left_commₓ (g.eval z₀), mul_left_commₓ (g.eval z₀⁻¹), mul_inv₀, inv_mul_cancel hg0, eval_C, eval_add,
+            mul_left_commₓ (g.eval z₀), mul_left_commₓ (g.eval z₀)⁻¹, mul_inv₀, inv_mul_cancel hg0, eval_C, eval_add,
             eval_neg, sub_eq_add_neg, eval_mul, eval_X, add_neg_cancel_rightₓ, neg_mul_eq_neg_mul_symm, mul_oneₓ,
             div_eq_mul_inv] <;>
           simp only [mul_comm, mul_left_commₓ, mul_assoc]
       have hδs : (g.eval z₀).abs * δ ^ n / (f.eval z₀).abs < 1 :=
-        (div_lt_one hf0').2 $
-          (lt_div_iff' hg0').1 $
+        (div_lt_one hf0').2 <|
+          (lt_div_iff' hg0').1 <|
             calc
               δ ^ n ≤ δ ^ 1 := pow_le_pow_of_le_one (le_of_ltₓ hδ0) hδ1 hn0
               _ = δ := pow_oneₓ _
@@ -96,7 +96,7 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, is_r
             rw [hz'z₀]
           _ < _ := (mul_lt_mul_right (pow_pos hδ0 _)).2 (hδ _ hz'z₀)
           
-      lt_irreflₓ (f.eval z₀).abs $
+      lt_irreflₓ (f.eval z₀).abs <|
         calc
           (f.eval z₀).abs ≤ (f.eval z').abs := hz₀ _
           _ = (F.eval z' + (f.eval z' - F.eval z')).abs := by
@@ -111,7 +111,7 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, is_r
           
 
 instance IsAlgClosed : IsAlgClosed ℂ :=
-  IsAlgClosed.of_exists_root _ $ fun p _ hp => Complex.exists_root $ degree_pos_of_irreducible hp
+  (IsAlgClosed.of_exists_root _) fun p _ hp => Complex.exists_root <| degree_pos_of_irreducible hp
 
 end Complex
 

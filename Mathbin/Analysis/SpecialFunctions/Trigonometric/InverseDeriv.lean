@@ -79,12 +79,12 @@ theorem has_deriv_within_at_arcsin_Iic {x : ℝ} (h : x ≠ 1) : HasDerivWithinA
   · exact (has_deriv_at_arcsin h' h).HasDerivWithinAt
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem differentiable_within_at_arcsin_Ici {x : ℝ} : DifferentiableWithinAt ℝ arcsin (Ici x) x ↔ x ≠ -1 := by
   refine' ⟨_, fun h => (has_deriv_within_at_arcsin_Ici h).DifferentiableWithinAt⟩
   rintro h rfl
   have : sin ∘ arcsin =ᶠ[𝓝[≥] (-1 : ℝ)] id := by
-    filter_upwards [Icc_mem_nhds_within_Ici ⟨le_rfl, neg_lt_self (@zero_lt_one ℝ _ _)⟩]
-    exact fun x => sin_arcsin'
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   have :=
     h.has_deriv_within_at.sin.congr_of_eventually_eq this.symm
       (by
@@ -122,10 +122,10 @@ theorem times_cont_diff_on_arcsin {n : WithTop ℕ} : TimesContDiffOn ℝ n arcs
 
 theorem times_cont_diff_at_arcsin_iff {x : ℝ} {n : WithTop ℕ} : TimesContDiffAt ℝ n arcsin x ↔ n = 0 ∨ x ≠ -1 ∧ x ≠ 1 :=
   ⟨fun h =>
-    or_iff_not_imp_left.2 $ fun hn =>
-      differentiable_at_arcsin.1 $ h.differentiable_at $ WithTop.one_le_iff_pos.2 (pos_iff_ne_zero.2 hn),
+    or_iff_not_imp_left.2 fun hn =>
+      differentiable_at_arcsin.1 <| h.differentiable_at <| WithTop.one_le_iff_pos.2 (pos_iff_ne_zero.2 hn),
     fun h =>
-    (h.elim fun hn => hn.symm ▸ (times_cont_diff_zero.2 continuous_arcsin).TimesContDiffAt) $ fun hx =>
+    (h.elim fun hn => hn.symm ▸ (times_cont_diff_zero.2 continuous_arcsin).TimesContDiffAt) fun hx =>
       times_cont_diff_at_arcsin hx.1 hx.2⟩
 
 end Arcsin
@@ -161,8 +161,8 @@ theorem differentiable_at_arccos {x : ℝ} : DifferentiableAt ℝ arccos x ↔ x
 
 @[simp]
 theorem deriv_arccos : deriv arccos = fun x => -(1 / sqrt (1 - x ^ 2)) :=
-  funext $ fun x =>
-    (deriv_const_sub _).trans $ by
+  funext fun x =>
+    (deriv_const_sub _).trans <| by
       simp only [deriv_arcsin]
 
 theorem differentiable_on_arccos : DifferentiableOn ℝ arccos ({-1, 1}ᶜ) :=

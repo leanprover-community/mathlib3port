@@ -101,7 +101,7 @@ would be `ring_hom_inv_pair e e`. Indeed, this declaration is not currently used
 See note [reducible non-instances].
 -/
 @[reducible]
-theorem of_ring_equiv (e : R₁ ≃+* R₂) : RingHomInvPair (↑e : R₁ →+* R₂) (↑e.symm) :=
+theorem of_ring_equiv (e : R₁ ≃+* R₂) : RingHomInvPair (↑e : R₁ →+* R₂) ↑e.symm :=
   ⟨e.symm_to_ring_hom_comp_to_ring_hom, e.symm.symm_to_ring_hom_comp_to_ring_hom⟩
 
 /-- Swap the direction of a `ring_hom_inv_pair`. This is not an instance as it would loop, and better

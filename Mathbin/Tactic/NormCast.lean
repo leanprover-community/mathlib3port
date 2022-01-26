@@ -52,7 +52,7 @@ initialize
 /-- Output a trace message if `trace.norm_cast` is enabled.
 -/
 unsafe def trace_norm_cast {α} [has_to_tactic_format α] (msg : Stringₓ) (a : α) : tactic Unit :=
-  when_tracing `norm_cast $ do
+  when_tracing `norm_cast <| do
     let a ← pp a
     trace ("[norm_cast] " ++ msg ++ a : format)
 
@@ -113,7 +113,7 @@ unsafe def count_coes : expr → tactic ℕ
   | app (quote.1 (coeFn (%%ₓe))) x => (· + ·) <$> count_coes x <*> (· + 1) <$> count_coes e
   | expr.lam n bi t e => do
     let l ← mk_local' n bi t
-    count_coes $ e.instantiate_var l
+    count_coes <| e.instantiate_var l
   | e => do
     let as ← e.get_simp_args
     List.sum <$> as.mmap count_coes
@@ -121,7 +121,7 @@ unsafe def count_coes : expr → tactic ℕ
 /-- Count how many coercions are inside the expression, excluding the top ones. -/
 private unsafe def count_internal_coes (e : expr) : tactic ℕ := do
   let ncoes ← count_coes e
-  pure $ ncoes - count_head_coes e
+  pure <| ncoes - count_head_coes e
 
 /-- Classifies a declaration of type `ty` as a `norm_cast` rule.
 -/
@@ -133,7 +133,7 @@ unsafe def classify_type (ty : expr) : tactic label := do
       | quote.1 ((%%ₓlhs) ↔ %%ₓrhs) => pure (lhs, rhs)
       | _ => fail "norm_cast: lemma must be = or ↔"
   let lhs_coes ← count_coes lhs
-  when (lhs_coes = 0) $ fail "norm_cast: badly shaped lemma, lhs must contain at least one coe"
+  when (lhs_coes = 0) <| fail "norm_cast: badly shaped lemma, lhs must contain at least one coe"
   let lhs_head_coes := count_head_coes lhs
   let lhs_internal_coes ← count_internal_coes lhs
   let rhs_head_coes := count_head_coes rhs
@@ -141,7 +141,7 @@ unsafe def classify_type (ty : expr) : tactic label := do
   if lhs_head_coes = 0 then return elim
     else
       if lhs_head_coes = 1 then do
-        when (rhs_head_coes ≠ 0) $ fail "norm_cast: badly shaped lemma, rhs can't start with coe"
+        when (rhs_head_coes ≠ 0) <| fail "norm_cast: badly shaped lemma, rhs can't start with coe"
         if rhs_internal_coes = 0 then return squash else return move
       else
         if rhs_head_coes < lhs_head_coes then do
@@ -245,13 +245,13 @@ unsafe def norm_cast_attr : user_attribute norm_cast_cache (Option label) where
     some fun decl prio persistent => do
       let param ← get_label_param norm_cast_attr decl
       match param with
-        | some l => when (l ≠ elim) $ simp_attr.push_cast decl () tt
+        | some l => when (l ≠ elim) <| simp_attr.push_cast decl () tt
         | none => do
           let e ← mk_const decl
           let ty ← infer_type e
           let l ← classify_type ty
           norm_cast_attr.set decl l persistent prio
-  before_unset := some $ fun _ _ => tactic.skip
+  before_unset := some fun _ _ => tactic.skip
   cache_cfg := { mk_cache := mk_cache norm_cast_attr, dependencies := [] }
 
 /-- Classify a declaration as a `norm_cast` rule. -/
@@ -303,7 +303,7 @@ open Tactic Expr
 unsafe def prove_eq_using (s : simp_lemmas) (a b : expr) : tactic expr := do
   let (a', a_a', _) ← simplify s [] a { failIfUnchanged := ff }
   let (b', b_b', _) ← simplify s [] b { failIfUnchanged := ff }
-  on_exception (trace_norm_cast "failed: " (to_expr (pquote.1 ((%%ₓa') = %%ₓb')) >>= pp)) $ is_def_eq a' b' reducible
+  on_exception (trace_norm_cast "failed: " (to_expr (pquote.1 ((%%ₓa') = %%ₓb')) >>= pp)) <| is_def_eq a' b' reducible
   let b'_b ← mk_eq_symm b_b'
   mk_eq_trans a_a' b'_b
 
@@ -324,7 +324,7 @@ unsafe def splitting_procedure : expr → tactic (expr × expr)
     (do
         let quote.1 (@coe (%%ₓα) (%%ₓδ) (%%ₓcoe1) (%%ₓxx)) ← return x
         let quote.1 (@coe (%%ₓβ) (%%ₓγ) (%%ₓcoe2) (%%ₓyy)) ← return y
-        success_if_fail $ is_def_eq α β
+        success_if_fail <| is_def_eq α β
         is_def_eq δ γ
         (do
               let coe3 ← mk_app `has_lift_t [α, β] >>= mk_instance_fast
@@ -414,7 +414,7 @@ Returns a pair of the new expression and proof that they are equal.
 -/
 unsafe def numeral_to_coe (e : expr) : tactic (expr × expr) := do
   let α ← infer_type e
-  success_if_fail $ is_def_eq α (quote.1 ℕ)
+  success_if_fail <| is_def_eq α (quote.1 ℕ)
   let n ← e.to_nat
   let h1 ← mk_app `has_lift_t [quote.1 ℕ, α] >>= mk_instance_fast
   let new_e : expr := reflect n
@@ -440,7 +440,7 @@ private unsafe def simplify_top_down' {α} (a : α) (pre : α → expr → tacti
   ext_simplify_core a cfg simp_lemmas.mk (fun _ => failed)
     (fun a _ _ _ e => do
       let (new_a, new_e, pr) ← pre a e
-      guardₓ ¬new_e =ₐ e
+      guardₓ ¬expr.alpha_eqv new_e e
       return (new_a, new_e, some pr, ff))
     (fun _ _ _ _ _ => failed) `eq e
 
@@ -461,7 +461,7 @@ unsafe def derive (e : expr) : tactic (expr × expr) := do
   let ((), e4, pr4) ← simplify_top_down' () (fun _ e => Prod.mk () <$> coe_to_numeral e) e3 cfg
   trace_norm_cast "after coe_to_numeral: " e4
   let new_e := e4
-  guardₓ ¬new_e =ₐ e
+  guardₓ ¬expr.alpha_eqv new_e e
   let pr ← mk_eq_trans pr1 pr2
   let pr ← mk_eq_trans pr pr3
   let pr ← mk_eq_trans pr pr4
@@ -499,20 +499,20 @@ unsafe def aux_mod_cast (e : expr) (include_goal : Bool := tt) : tactic expr :=
 /-- `exact_mod_cast e` runs `norm_cast` on the goal and `e`, and tries to use `e` to close the
 goal. -/
 unsafe def exact_mod_cast (e : expr) : tactic Unit :=
-  decorate_error "exact_mod_cast failed:" $ do
+  decorate_error "exact_mod_cast failed:" <| do
     let new_e ← aux_mod_cast e
     exact new_e
 
 /-- `apply_mod_cast e` runs `norm_cast` on the goal and `e`, and tries to apply `e`. -/
 unsafe def apply_mod_cast (e : expr) : tactic (List (Name × expr)) :=
-  decorate_error "apply_mod_cast failed:" $ do
+  decorate_error "apply_mod_cast failed:" <| do
     let new_e ← aux_mod_cast e
     apply new_e
 
 /-- `assumption_mod_cast` runs `norm_cast` on the goal. For each local hypothesis `h`, it also
 normalizes `h` and tries to use that to close the goal. -/
 unsafe def assumption_mod_cast : tactic Unit :=
-  decorate_error "assumption_mod_cast failed:" $ do
+  decorate_error "assumption_mod_cast failed:" <| do
     let cfg : simp_config := { failIfUnchanged := ff, canonizeInstances := ff, canonizeProofs := ff, proj := ff }
     replace_at derive [] tt
     let ctx ← local_context
@@ -530,14 +530,14 @@ As opposed to simp, norm_cast can be used without necessarily closing the goal.
 unsafe def norm_cast (loc : parse location) : tactic Unit := do
   let ns ← loc.get_locals
   let tt ← replace_at derive ns loc.include_goal | fail "norm_cast failed to simplify"
-  when loc.include_goal $ try tactic.reflexivity
-  when loc.include_goal $ try tactic.triv
-  when ¬ns.empty $ try tactic.contradiction
+  when loc.include_goal <| try tactic.reflexivity
+  when loc.include_goal <| try tactic.triv
+  when ¬ns.empty <| try tactic.contradiction
 
 /-- Rewrite with the given rules and normalize casts between steps.
 -/
 unsafe def rw_mod_cast (rs : parse rw_rules) (loc : parse location) : tactic Unit :=
-  decorate_error "rw_mod_cast failed:" $ do
+  decorate_error "rw_mod_cast failed:" <| do
     let cfg_norm : simp_config := {  }
     let cfg_rw : rewrite_cfg := {  }
     let ns ← loc.get_locals
@@ -572,7 +572,7 @@ unsafe def exact_mod_cast (e : parse texpr) : tactic Unit := do
 -/
 unsafe def apply_mod_cast (e : parse texpr) : tactic Unit := do
   let e ← i_to_expr_for_apply e
-  concat_tags $ tactic.apply_mod_cast e
+  concat_tags <| tactic.apply_mod_cast e
 
 /-- Normalize the goal and every expression in the local context, then close the goal with assumption.
 -/
@@ -594,12 +594,12 @@ unsafe def norm_cast : conv Unit :=
 end Conv.Interactive
 
 @[norm_cast]
-theorem ite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a b : α} : ↑ite c a b = ite c (↑a : β) (↑b : β) := by
+theorem ite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a b : α} : ↑(ite c a b) = ite c (↑a : β) (↑b : β) := by
   by_cases' h : c <;> simp [h]
 
 @[norm_cast]
 theorem dite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a : c → α} {b : ¬c → α} :
-    ↑dite c a b = dite c (fun h => (↑a h : β)) fun h => (↑b h : β) := by
+    ↑(dite c a b) = dite c (fun h => (↑(a h) : β)) fun h => (↑(b h) : β) := by
   by_cases' h : c <;> simp [h]
 
 add_hint_tactic norm_cast  at *

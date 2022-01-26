@@ -123,7 +123,7 @@ theorem midpoint_eq_iff' {x y z : P} : midpoint R x y = z ↔ Equivₓ.pointRefl
 /-- `midpoint` does not depend on the ring `R`. -/
 theorem midpoint_unique (R' : Type _) [Ringₓ R'] [Invertible (2 : R')] [Module R' V] (x y : P) :
     midpoint R x y = midpoint R' x y :=
-  (midpoint_eq_iff' R).2 $ (midpoint_eq_iff' R').1 rfl
+  (midpoint_eq_iff' R).2 <| (midpoint_eq_iff' R').1 rfl
 
 @[simp]
 theorem midpoint_self (x : P) : midpoint R x x = x :=
@@ -139,7 +139,7 @@ theorem midpoint_add_self (x y : V) : midpoint R x y + midpoint R x y = x + y :=
     
 
 theorem midpoint_zero_add (x y : V) : midpoint R 0 (x + y) = midpoint R x y :=
-  (midpoint_eq_midpoint_iff_vsub_eq_vsub R).2 $ by
+  (midpoint_eq_midpoint_iff_vsub_eq_vsub R).2 <| by
     simp [sub_add_eq_sub_sub_swap]
 
 theorem midpoint_eq_smul_add (x y : V) : midpoint R x y = (⅟ 2 : R) • (x + y) := by

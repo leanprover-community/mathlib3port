@@ -57,7 +57,7 @@ derivatives for `x > 0`. The `n`-th derivative is of the form `P_aux n (x) exp(-
 where `P_aux n` is computed inductively. -/
 noncomputable def P_aux : ℕ → Polynomial ℝ
   | 0 => 1
-  | n + 1 => X ^ 2 * (P_aux n).derivative + (1 - C (↑(2 * n)) * X) * P_aux n
+  | n + 1 => X ^ 2 * (P_aux n).derivative + (1 - C ↑(2 * n) * X) * P_aux n
 
 /-- Formula for the `n`-th derivative of `exp_neg_inv_glue`, as an auxiliary function `f_aux`. -/
 def f_aux (n : ℕ) (x : ℝ) : ℝ :=
@@ -93,13 +93,13 @@ theorem f_aux_deriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
   field_simp [hx, P_aux]
   cases n <;> simp [Nat.succ_eq_add_one, A, -mul_eq_mul_right_iff] <;> ring_exp
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- For positive values, the derivative of the `n`-th auxiliary function `f_aux n`
 is the `n+1`-th auxiliary function. -/
 theorem f_aux_deriv_pos (n : ℕ) (x : ℝ) (hx : 0 < x) :
     HasDerivAt (f_aux n) ((P_aux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1))) x := by
   apply (f_aux_deriv n x (ne_of_gtₓ hx)).congr_of_eventually_eq
-  filter_upwards [lt_mem_nhds hx]
-  intro y hy
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   simp [f_aux, hy.not_le]
 
 /-- To get differentiability at `0` of the auxiliary functions, we need to know that their limit
@@ -144,6 +144,7 @@ theorem f_aux_deriv_zero (n : ℕ) : HasDerivAt (f_aux n) 0 0 := by
       
   simpa using A.union B
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- At every point, the auxiliary function `f_aux n` has a derivative which is
 equal to `f_aux (n+1)`. -/
 theorem f_aux_has_deriv_at (n : ℕ) (x : ℝ) : HasDerivAt (f_aux n) (f_aux (n + 1) x) x := by
@@ -152,8 +153,7 @@ theorem f_aux_has_deriv_at (n : ℕ) (x : ℝ) : HasDerivAt (f_aux n) (f_aux (n 
       simp [f_aux, le_of_ltₓ hx]
     rw [this]
     apply (has_deriv_at_const x (0 : ℝ)).congr_of_eventually_eq
-    filter_upwards [gt_mem_nhds hx]
-    intro y hy
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     simp [f_aux, hy.le]
     
   · have : f_aux (n + 1) 0 = 0 := by
@@ -218,31 +218,31 @@ open expNegInvGlue
 
 theorem pos_denom x : 0 < expNegInvGlue x + expNegInvGlue (1 - x) :=
   ((@zero_lt_one ℝ _ _).lt_or_lt x).elim (fun hx => add_pos_of_pos_of_nonneg (pos_of_pos hx) (nonneg _)) fun hx =>
-    add_pos_of_nonneg_of_pos (nonneg _) (pos_of_pos $ sub_pos.2 hx)
+    add_pos_of_nonneg_of_pos (nonneg _) (pos_of_pos <| sub_pos.2 hx)
 
 theorem one_of_one_le (h : 1 ≤ x) : smooth_transition x = 1 :=
-  (div_eq_one_iff_eq $ (pos_denom x).ne').2 $ by
+  (div_eq_one_iff_eq <| (pos_denom x).ne').2 <| by
     rw [zero_of_nonpos (sub_nonpos.2 h), add_zeroₓ]
 
 theorem zero_of_nonpos (h : x ≤ 0) : smooth_transition x = 0 := by
   rw [smooth_transition, zero_of_nonpos h, zero_div]
 
 theorem le_one (x : ℝ) : smooth_transition x ≤ 1 :=
-  (div_le_one (pos_denom x)).2 $ le_add_of_nonneg_right (nonneg _)
+  (div_le_one (pos_denom x)).2 <| le_add_of_nonneg_right (nonneg _)
 
 theorem nonneg (x : ℝ) : 0 ≤ smooth_transition x :=
   div_nonneg (expNegInvGlue.nonneg _) (pos_denom x).le
 
 theorem lt_one_of_lt_one (h : x < 1) : smooth_transition x < 1 :=
-  (div_lt_one $ pos_denom x).2 $ lt_add_of_pos_right _ $ pos_of_pos $ sub_pos.2 h
+  (div_lt_one <| pos_denom x).2 <| lt_add_of_pos_right _ <| pos_of_pos <| sub_pos.2 h
 
 theorem pos_of_pos (h : 0 < x) : 0 < smooth_transition x :=
   div_pos (expNegInvGlue.pos_of_pos h) (pos_denom x)
 
 protected theorem TimesContDiff {n} : TimesContDiff ℝ n smooth_transition :=
-  expNegInvGlue.times_cont_diff.div
-      (expNegInvGlue.times_cont_diff.add $
-        expNegInvGlue.times_cont_diff.comp $ times_cont_diff_const.sub times_cont_diff_id) $
+  (expNegInvGlue.times_cont_diff.div
+      (expNegInvGlue.times_cont_diff.add <|
+        expNegInvGlue.times_cont_diff.comp <| times_cont_diff_const.sub times_cont_diff_id))
     fun x => (pos_denom x).ne'
 
 protected theorem TimesContDiffAt {x n} : TimesContDiffAt ℝ n smooth_transition x :=
@@ -291,7 +291,7 @@ open real (smoothTransition)
 open Real.smoothTransition Metric
 
 theorem one_of_mem_closed_ball (hx : x ∈ closed_ball c f.r) : f x = 1 :=
-  one_of_one_le $ (one_le_div (sub_pos.2 f.r_lt_R)).2 $ sub_le_sub_left hx _
+  one_of_one_le <| (one_le_div (sub_pos.2 f.r_lt_R)).2 <| sub_le_sub_left hx _
 
 theorem nonneg : 0 ≤ f x :=
   nonneg _
@@ -300,13 +300,13 @@ theorem le_one : f x ≤ 1 :=
   le_one _
 
 theorem pos_of_mem_ball (hx : x ∈ ball c f.R) : 0 < f x :=
-  pos_of_pos $ div_pos (sub_pos.2 hx) (sub_pos.2 f.r_lt_R)
+  pos_of_pos <| div_pos (sub_pos.2 hx) (sub_pos.2 f.r_lt_R)
 
 theorem lt_one_of_lt_dist (h : f.r < dist x c) : f x < 1 :=
-  lt_one_of_lt_one $ (div_lt_one (sub_pos.2 f.r_lt_R)).2 $ sub_lt_sub_left h _
+  lt_one_of_lt_one <| (div_lt_one (sub_pos.2 f.r_lt_R)).2 <| sub_lt_sub_left h _
 
 theorem zero_of_le_dist (hx : f.R ≤ dist x c) : f x = 0 :=
-  zero_of_nonpos $ div_nonpos_of_nonpos_of_nonneg (sub_nonpos.2 hx) (sub_nonneg.2 f.r_lt_R.le)
+  zero_of_nonpos <| div_nonpos_of_nonpos_of_nonneg (sub_nonpos.2 hx) (sub_nonneg.2 f.r_lt_R.le)
 
 theorem support_eq : support (f : E → ℝ) = Metric.Ball c f.R := by
   ext x
@@ -319,7 +319,7 @@ theorem support_eq : support (f : E → ℝ) = Metric.Ball c f.R := by
     
 
 theorem eventually_eq_one_of_mem_ball (h : x ∈ ball c f.r) : f =ᶠ[𝓝 x] 1 :=
-  ((is_open_lt (continuous_id.dist continuous_const) continuous_const).eventually_mem h).mono $ fun z hz =>
+  ((is_open_lt (continuous_id.dist continuous_const) continuous_const).eventually_mem h).mono fun z hz =>
     f.one_of_mem_closed_ball (le_of_ltₓ hz)
 
 theorem eventually_eq_one : f =ᶠ[𝓝 c] 1 :=
@@ -333,12 +333,12 @@ protected theorem TimesContDiffAt {n} : TimesContDiffAt ℝ n f x := by
     
   · exact
       real.smooth_transition.times_cont_diff_at.comp x
-        (TimesContDiffAt.div_const $
-          times_cont_diff_at_const.sub $ times_cont_diff_at_id.dist times_cont_diff_at_const hx)
+        (TimesContDiffAt.div_const <|
+          times_cont_diff_at_const.sub <| times_cont_diff_at_id.dist times_cont_diff_at_const hx)
     
 
 protected theorem TimesContDiff {n} : TimesContDiff ℝ n f :=
-  times_cont_diff_iff_times_cont_diff_at.2 $ fun y => f.times_cont_diff_at
+  times_cont_diff_iff_times_cont_diff_at.2 fun y => f.times_cont_diff_at
 
 protected theorem TimesContDiffWithinAt {s n} : TimesContDiffWithinAt ℝ n f s x :=
   f.times_cont_diff_at.times_cont_diff_within_at
@@ -411,7 +411,7 @@ theorem eventually_eq_one_of_mem_ball (h : x ∈ Euclidean.Ball c f.r) : f =ᶠ[
   toEuclidean.ContinuousAt (f.to_times_cont_diff_bump_of_inner.eventually_eq_one_of_mem_ball h)
 
 theorem eventually_eq_one : f =ᶠ[𝓝 c] 1 :=
-  f.eventually_eq_one_of_mem_ball $ Euclidean.mem_ball_self f.r_pos
+  f.eventually_eq_one_of_mem_ball <| Euclidean.mem_ball_self f.r_pos
 
 protected theorem TimesContDiff {n} : TimesContDiff ℝ n f :=
   f.to_times_cont_diff_bump_of_inner.times_cont_diff.comp (toEuclidean : E ≃L[ℝ] _).TimesContDiff
@@ -450,7 +450,7 @@ theorem exists_times_cont_diff_bump_function_of_mem_nhds [NormedGroup E] [Normed
     {x : E} {s : Set E} (hs : s ∈ 𝓝 x) :
     ∃ f : E → ℝ,
       f =ᶠ[𝓝 x] 1 ∧
-        (∀ y, f y ∈ Icc (0 : ℝ) 1) ∧ TimesContDiff ℝ ⊤ f ∧ IsCompact (Closure $ support f) ∧ Closure (support f) ⊆ s :=
+        (∀ y, f y ∈ Icc (0 : ℝ) 1) ∧ TimesContDiff ℝ ⊤ f ∧ IsCompact (Closure <| support f) ∧ Closure (support f) ⊆ s :=
   let ⟨f, hf⟩ := TimesContDiffBump.exists_closure_support_subset hs
   ⟨f, f.eventually_eq_one, fun y => ⟨f.nonneg, f.le_one⟩, f.times_cont_diff, f.compact_closure_support, hf⟩
 

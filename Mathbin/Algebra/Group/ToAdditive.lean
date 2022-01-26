@@ -49,7 +49,7 @@ unsafe def aux_attr : user_attribute (name_map Name) Name where
             | Name.mk_string s pre => if s = "_to_additive" then pre else n'
             | _ => n'
           let param ← aux_attr.get_param_untyped n'
-          pure $ dict.insert n param.app_arg.const_name)
+          pure <| dict.insert n param.app_arg.const_name)
         mk_name_map,
       []⟩
 
@@ -64,7 +64,7 @@ This helps the heuristic of `@[to_additive]` by also transforming definitions if
 fixed type occurs as one of these arguments.
 -/
 @[user_attribute]
-unsafe def ignore_args_attr : user_attribute (name_map $ List ℕ) (List ℕ) where
+unsafe def ignore_args_attr : user_attribute (name_map <| List ℕ) (List ℕ) where
   Name := `to_additive_ignore_args
   descr := "Auxiliary attribute for `to_additive` stating that certain arguments are not additivized."
   cache_cfg :=
@@ -72,7 +72,7 @@ unsafe def ignore_args_attr : user_attribute (name_map $ List ℕ) (List ℕ) wh
       ns.mfoldl
         (fun dict n => do
           let param ← ignore_args_attr.get_param_untyped n
-          return $ dict.insert n (param.to_list expr.to_nat).iget)
+          return <| dict.insert n (param.to_list expr.to_nat).iget)
         mk_name_map,
       []⟩
   parser := «expr *» lean.parser.small_nat
@@ -107,7 +107,7 @@ unsafe def relevant_arg_attr : user_attribute (name_map ℕ) ℕ where
       ns.mfoldl
         (fun dict n => do
           let param ← relevant_arg_attr.get_param_untyped n
-          return $ dict.insert n $ param.to_nat.iget.pred)
+          return <| dict.insert n <| param.to_nat.iget.pred)
         mk_name_map,
       []⟩
   parser := lean.parser.small_nat
@@ -122,7 +122,7 @@ Example: `@[to_additive_reorder 1 4]` swaps the first two arguments and the argu
 positions 4 and 5.
 -/
 @[user_attribute]
-unsafe def reorder_attr : user_attribute (name_map $ List ℕ) (List ℕ) where
+unsafe def reorder_attr : user_attribute (name_map <| List ℕ) (List ℕ) where
   Name := `to_additive_reorder
   descr := "Auxiliary attribute for `to_additive` that stores arguments that need to be reordered."
   cache_cfg :=
@@ -130,7 +130,7 @@ unsafe def reorder_attr : user_attribute (name_map $ List ℕ) (List ℕ) where
       ns.mfoldl
         (fun dict n => do
           let param ← reorder_attr.get_param_untyped n
-          return $ dict.insert n (param.to_list expr.to_nat).iget)
+          return <| dict.insert n (param.to_list expr.to_nat).iget)
         mk_name_map,
       []⟩
   parser := do
@@ -148,14 +148,14 @@ unsafe def first_multiplicative_arg (nm : Name) : tactic ℕ := do
   let d ← get_decl nm
   let (es, _) := d.type.pi_binders
   let l ←
-    es.mmap_with_index $ fun n bi => do
+    es.mmap_with_index fun n bi => do
         let tgt := bi.type.pi_codomain
         let n_bi := bi.type.pi_binders.fst.length
         let tt ← has_attribute' `to_additive tgt.get_app_fn.const_name | return none
-        let n2 := tgt.get_app_args.head.get_app_fn.match_var.map $ fun m => n + n_bi - m
-        return $ n2
+        let n2 := tgt.get_app_args.head.get_app_fn.match_var.map fun m => n + n_bi - m
+        return <| n2
   let l := l.reduce_option
-  return $ if l = [] then 1 else l.foldr min l.head
+  return <| if l = [] then 1 else l.foldr min l.head
 
 /-- A command that can be used to have future uses of `to_additive` change the `src` namespace
 to the `tgt` namespace.
@@ -168,7 +168,7 @@ run_cmd to_additive.map_namespace `quotient_group `quotient_add_group
 Later uses of `to_additive` on declarations in the `quotient_group` namespace will be created
 in the `quotient_add_group` namespaces.
 -/
-unsafe def map_namespace (src tgt : Name) : command := do
+unsafe def map_namespace (src tgt : Name) : Tactic Unit := do
   let n := src.mk_string "_to_additive"
   let decl := declaration.thm n [] (quote.1 Unit) (pure (reflect ()))
   add_decl decl
@@ -228,7 +228,7 @@ unsafe def tr : Bool → List Stringₓ → List Stringₓ
 
 /-- Autogenerate target name for `to_additive`. -/
 unsafe def guess_name : Stringₓ → Stringₓ :=
-  Stringₓ.mapTokens ''' $ fun s => Stringₓ.intercalate (Stringₓ.singleton '_') $ tr ff (s.split_on '_')
+  (Stringₓ.mapTokens ''') fun s => Stringₓ.intercalate (Stringₓ.singleton '_') <| tr ff (s.split_on '_')
 
 /-- Return the provided target name or autogenerate one if one was not provided. -/
 unsafe def target_name (src tgt : Name) (dict : name_map Name) (allow_auto_name : Bool) : tactic Name :=
@@ -243,7 +243,7 @@ unsafe def target_name (src tgt : Name) (dict : name_map Name) (allow_auto_name 
                     "name, you may remove the explicit " ++
                   tgt_auto ++
                 " argument.")
-        pure $ Name.mk_string (if tgt = Name.anonymous then tgt_auto else tgt.to_string) (pre.map_prefix dict.find)
+        pure <| Name.mk_string (if tgt = Name.anonymous then tgt_auto else tgt.to_string) (pre.map_prefix dict.find)
       | _ => fail ("to_additive: can't transport " ++ src.to_string)) >>=
     fun res =>
     if res = src ∧ tgt ≠ src then
@@ -268,22 +268,22 @@ unsafe def parser : lean.parser value_type := do
       | none => pure none
   return ⟨bang, ques, tgt.get_or_else Name.anonymous, doc, ff⟩
 
-private unsafe def proceed_fields_aux (src tgt : Name) (prio : ℕ) (f : Name → tactic (List Stringₓ)) : command := do
+private unsafe def proceed_fields_aux (src tgt : Name) (prio : ℕ) (f : Name → tactic (List Stringₓ)) : Tactic Unit := do
   let src_fields ← f src
   let tgt_fields ← f tgt
   guardₓ (src_fields.length = tgt_fields.length) <|> fail ("Failed to map fields of " ++ src.to_string)
-  (src_fields.zip tgt_fields).mmap' $ fun names =>
+  (src_fields.zip tgt_fields).mmap' fun names =>
       guardₓ (names.fst = names.snd) <|> aux_attr (src.append names.fst) (tgt.append names.snd) tt prio
 
 /-- Add the `aux_attr` attribute to the structure fields of `src`
 so that future uses of `to_additive` will map them to the corresponding `tgt` fields. -/
-unsafe def proceed_fields (env : environment) (src tgt : Name) (prio : ℕ) : command :=
+unsafe def proceed_fields (env : environment) (src tgt : Name) (prio : ℕ) : Tactic Unit :=
   let aux := proceed_fields_aux src tgt prio
   do
-  ((aux fun n => pure $ List.map Name.toString $ (env.structure_fields n).getOrElse []) >>
+  ((aux fun n => pure <| List.map Name.toString <| (env.structure_fields n).getOrElse []) >>
         aux fun n => (List.map fun x : Name => "to_" ++ x.to_string) <$> get_tagged_ancestors n) >>
       aux fun n =>
-        (env.constructors_of n).mmap $ fun cs =>
+        (env.constructors_of n).mmap fun cs =>
           match cs with
           | Name.mk_string s pre => (guardₓ (pre = n) <|> fail "Bad constructor name") >> pure s
           | _ => fail "Bad constructor name"
@@ -499,7 +499,7 @@ protected unsafe def attr : user_attribute Unit value_type where
   descr := "Transport multiplicative to additive"
   parser := parser
   after_set :=
-    some $ fun src prio persistent => do
+    some fun src prio persistent => do
       guardₓ persistent <|> fail "`to_additive` can't be used as a local attribute"
       let env ← get_env
       let val ← attr.get_param src
@@ -511,7 +511,7 @@ protected unsafe def attr : user_attribute Unit value_type where
       aux_attr src tgt tt
       let dict := dict.insert src tgt
       let first_mult_arg ← first_multiplicative_arg src
-      when (first_mult_arg ≠ 1) $ relevant_arg_attr src first_mult_arg tt
+      when (first_mult_arg ≠ 1) <| relevant_arg_attr src first_mult_arg tt
       if env.contains tgt then proceed_fields env src tgt prio
         else do
           transform_decl_with_prefix_dict dict val.replace_all val.trace relevant ignore reorder src tgt
@@ -519,7 +519,7 @@ protected unsafe def attr : user_attribute Unit value_type where
                 `no_rsimp, `continuity, `ext, `ematch, `measurability, `alias, `_ext_core, `_ext_lemma_core, `nolint]
           mwhen (has_attribute' `simps src) (trace "Apply the simps attribute after the to_additive attribute")
           mwhen (has_attribute' `mono src)
-              (trace $ "to_additive does not work with mono, apply the mono attribute to both" ++ "versions after")
+              (trace <| "to_additive does not work with mono, apply the mono attribute to both" ++ "versions after")
           match val.doc with
             | some doc => add_doc_string tgt doc
             | none => skip
@@ -530,7 +530,7 @@ add_tactic_doc
 
 end ToAdditive
 
-attribute [to_additive] Mul One HasInv Div
+attribute [to_additive] Mul One Inv Div
 
 attribute [to_additive Empty] Empty
 

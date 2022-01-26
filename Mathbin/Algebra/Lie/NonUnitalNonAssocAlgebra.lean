@@ -64,7 +64,7 @@ def to_non_unital_alg_hom (f : L →ₗ⁅R⁆ L₂) : NonUnitalAlgHom R L L₂ 
   { f with toFun := f, map_zero' := f.map_zero, map_mul' := f.map_lie }
 
 theorem to_non_unital_alg_hom_injective : Function.Injective (to_non_unital_alg_hom : _ → NonUnitalAlgHom R L L₂) :=
-  fun f g h => ext $ NonUnitalAlgHom.congr_fun h
+  fun f g h => ext <| NonUnitalAlgHom.congr_fun h
 
 end LieHom
 

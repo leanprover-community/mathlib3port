@@ -42,7 +42,7 @@ instance : T0Space X.carrier := by
       h'
 
 instance : QuasiSober X.carrier := by
-  apply quasi_sober_of_open_cover (Set.Range fun x => Set.Range $ (X.affine_cover.map x).1.base) with
+  apply quasi_sober_of_open_cover (Set.Range fun x => Set.Range <| (X.affine_cover.map x).1.base) with
     { instances := ff }
   · rintro ⟨_, i, rfl⟩
     exact (X.affine_cover.is_open i).base_open.open_range
@@ -94,29 +94,29 @@ theorem is_reduced_of_open_immersion {X Y : Scheme} (f : X ⟶ Y) [H : is_open_i
     exact (Set.preimage_image_eq _ H.base_open.inj).symm
   rw [this]
   exact
-    is_reduced_of_injective (inv $ f.1.c.app (op $ H.base_open.is_open_map.functor.obj U))
-      (as_iso $ f.1.c.app (op $ H.base_open.is_open_map.functor.obj U) :
+    is_reduced_of_injective (inv <| f.1.c.app (op <| H.base_open.is_open_map.functor.obj U))
+      (as_iso <| f.1.c.app (op <| H.base_open.is_open_map.functor.obj U) :
               Y.presheaf.obj _ ≅ _).symm.commRingIsoToRingEquiv.Injective
 
-instance {R : CommRingₓₓ} [H : _root_.is_reduced R] : IsReduced (Scheme.Spec.obj $ op R) := by
+instance {R : CommRingₓₓ} [H : _root_.is_reduced R] : IsReduced (Scheme.Spec.obj <| op R) := by
   apply is_reduced_of_stalk_is_reduced with { instances := ff }
   intro x
   dsimp
-  have : _root_.is_reduced (CommRingₓₓ.of $ Localization.AtPrime (PrimeSpectrum.asIdeal x)) := by
+  have : _root_.is_reduced (CommRingₓₓ.of <| Localization.AtPrime (PrimeSpectrum.asIdeal x)) := by
     dsimp
     infer_instance
   exact
     is_reduced_of_injective (structure_sheaf.stalk_iso R x).Hom
       (structure_sheaf.stalk_iso R x).commRingIsoToRingEquiv.Injective
 
-theorem affine_is_reduced_iff (R : CommRingₓₓ) : IsReduced (Scheme.Spec.obj $ op R) ↔ _root_.is_reduced R := by
+theorem affine_is_reduced_iff (R : CommRingₓₓ) : IsReduced (Scheme.Spec.obj <| op R) ↔ _root_.is_reduced R := by
   refine' ⟨_, fun h => inferInstance⟩
   intro h
   skip
-  have : _root_.is_reduced (LocallyRingedSpace.Γ.obj (op $ Spec.to_LocallyRingedSpace.obj $ op R)) := by
-    change _root_.is_reduced ((Scheme.Spec.obj $ op R).Presheaf.obj $ op ⊤)
+  have : _root_.is_reduced (LocallyRingedSpace.Γ.obj (op <| Spec.to_LocallyRingedSpace.obj <| op R)) := by
+    change _root_.is_reduced ((Scheme.Spec.obj <| op R).Presheaf.obj <| op ⊤)
     infer_instance
-  exact is_reduced_of_injective (to_Spec_Γ R) (as_iso $ to_Spec_Γ R).commRingIsoToRingEquiv.Injective
+  exact is_reduced_of_injective (to_Spec_Γ R) (as_iso <| to_Spec_Γ R).commRingIsoToRingEquiv.Injective
 
 /-- To show that a statement `P` holds for all open subsets of all schemes, it suffices to show that
 1. In any scheme `X`, if `P` holds for an open cover of `U`, then `P` holds for `U`.
@@ -130,7 +130,7 @@ theorem reduce_to_affine_global (P : ∀ X : Scheme U : opens X.carrier, Prop)
       ∀ {X Y} f : X ⟶ Y [hf : is_open_immersion f],
         ∃ (U : Set X.carrier)(V : Set Y.carrier)(hU : U = ⊤)(hV : V = Set.Range f.1.base),
           P X ⟨U, hU.symm ▸ is_open_univ⟩ → P Y ⟨V, hV.symm ▸ hf.base_open.open_range⟩)
-    (h₃ : ∀ R : CommRingₓₓ, P (Scheme.Spec.obj $ op R) ⊤) : ∀ X : Scheme U : opens X.carrier, P X U := by
+    (h₃ : ∀ R : CommRingₓₓ, P (Scheme.Spec.obj <| op R) ⊤) : ∀ X : Scheme U : opens X.carrier, P X U := by
   intro X U
   apply h₁
   intro x
@@ -174,7 +174,7 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : opens X
       simp [opens.map]
       
     · erw [← PresheafedSpace.stalk_map_germ_apply f.1 ⟨_, _⟩ ⟨x, _⟩] at H
-      apply_fun inv $ PresheafedSpace.stalk_map f.val x  at H
+      apply_fun inv <| PresheafedSpace.stalk_map f.val x  at H
       erw [CategoryTheory.IsIso.hom_inv_id_apply, map_zero] at H
       exact H
       
@@ -189,7 +189,7 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : opens X
     
 
 @[simp]
-theorem basic_open_eq_bot_iff {X : Scheme} [IsReduced X] {U : opens X.carrier} (s : X.presheaf.obj $ op U) :
+theorem basic_open_eq_bot_iff {X : Scheme} [IsReduced X] {U : opens X.carrier} (s : X.presheaf.obj <| op U) :
     X.basic_open s = ⊥ ↔ s = 0 := by
   refine' ⟨eq_zero_of_basic_open_empty s, _⟩
   rintro rfl
@@ -298,11 +298,11 @@ theorem is_integral_of_open_immersion {X Y : Scheme} (f : X ⟶ Y) [H : is_open_
     infer_instance
     refine' ⟨⟨_, _, hU.some.prop, rfl⟩⟩
   exact
-    (as_iso $ f.1.c.app (op $ H.base_open.is_open_map.functor.obj U) :
+    (as_iso <| f.1.c.app (op <| H.base_open.is_open_map.functor.obj U) :
               Y.presheaf.obj _ ≅ _).symm.commRingIsoToRingEquiv.IsDomain
       _
 
-instance {R : CommRingₓₓ} [H : IsDomain R] : IsIntegral (Scheme.Spec.obj $ op R) := by
+instance {R : CommRingₓₓ} [H : IsDomain R] : IsIntegral (Scheme.Spec.obj <| op R) := by
   apply is_integral_of_is_irreducible_is_reduced with { instances := ff }
   · infer_instance
     
@@ -310,8 +310,9 @@ instance {R : CommRingₓₓ} [H : IsDomain R] : IsIntegral (Scheme.Spec.obj $ o
     infer_instance
     
 
-theorem affine_is_integral_iff (R : CommRingₓₓ) : IsIntegral (Scheme.Spec.obj $ op R) ↔ IsDomain R :=
-  ⟨fun h => RingEquiv.is_domain ((Scheme.Spec.obj $ op R).Presheaf.obj _) (as_iso $ to_Spec_Γ R).commRingIsoToRingEquiv,
+theorem affine_is_integral_iff (R : CommRingₓₓ) : IsIntegral (Scheme.Spec.obj <| op R) ↔ IsDomain R :=
+  ⟨fun h =>
+    RingEquiv.is_domain ((Scheme.Spec.obj <| op R).Presheaf.obj _) (as_iso <| to_Spec_Γ R).commRingIsoToRingEquiv,
     fun h => inferInstance⟩
 
 theorem map_injective_of_is_integral [IsIntegral X] {U V : opens X.carrier} (i : U ⟶ V) [H : Nonempty U] :

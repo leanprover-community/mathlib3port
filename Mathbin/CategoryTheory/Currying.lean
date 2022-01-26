@@ -117,8 +117,8 @@ def currying : C ⥤ D ⥤ E ≌ C × D ⥤ E :=
 @[simps]
 def flip_iso_curry_swap_uncurry (F : C ⥤ D ⥤ E) : F.flip ≅ curry.obj (Prod.swap _ _ ⋙ uncurry.obj F) :=
   (nat_iso.of_components fun d =>
-      (nat_iso.of_components fun c => eq_to_iso rfl) $ by
-        tidy) $
+      (nat_iso.of_components fun c => eq_to_iso rfl) <| by
+        tidy) <|
     by
     tidy
 

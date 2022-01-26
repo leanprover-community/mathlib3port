@@ -59,9 +59,9 @@ theorem argmin_singleton {f : α → β} {a : α} : argmin f [a] = a :=
 @[simp]
 theorem foldl_argmax₂_eq_none {f : α → β} {l : List α} {o : Option α} :
     l.foldl (argmax₂ f) o = none ↔ l = [] ∧ o = none :=
-  List.reverseRecOn l
+  (List.reverseRecOn l
       (by
-        simp ) $
+        simp ))
     fun tl hd => by
     simp [argmax₂] <;>
       cases foldl (argmax₂ f) o tl <;>
@@ -72,7 +72,7 @@ theorem foldl_argmax₂_eq_none {f : α → β} {l : List α} {o : Option α} :
 
 private theorem le_of_foldl_argmax₂ {f : α → β} {l} :
     ∀ {a m : α} {o : Option α}, a ∈ l → m ∈ foldl (argmax₂ f) o l → f a ≤ f m :=
-  List.reverseRecOn l (fun _ _ _ h => absurd h $ not_mem_nil _)
+  List.reverseRecOn l (fun _ _ _ h => absurd h <| not_mem_nil _)
     (by
       intro tl _ ih _ _ _ h ho
       rw [foldl_append, foldl_cons, foldl_nil, argmax₂] at ho
@@ -107,7 +107,7 @@ private theorem foldl_argmax₂_mem (f : α → β) l : ∀ a m : α, m ∈ fold
           · simp only [mem_cons_iff, mem_append, mem_singleton, Option.mem_def]
             tauto
             
-          · apply fun hm => Or.inr (list.mem_append.mpr $ Or.inl _)
+          · apply fun hm => Or.inr (list.mem_append.mpr <| Or.inl _)
             exact option.mem_some_iff.mp hm ▸ H
             
           
@@ -148,7 +148,7 @@ theorem argmin_concat (f : α → β) (a : α) (l : List α) :
 
 theorem argmax_cons (f : α → β) (a : α) (l : List α) :
     argmax f (a :: l) = Option.casesOn (argmax f l) (some a) fun c => if f c ≤ f a then some a else some c :=
-  List.reverseRecOn l rfl $ fun hd tl ih => by
+  (List.reverseRecOn l rfl) fun hd tl ih => by
     rw [← cons_append, argmax_concat, ih, argmax_concat]
     cases' h : argmax f hd with m
     · simp [h]
@@ -295,7 +295,7 @@ theorem minimum_le_of_mem {a m : α} {l : List α} : a ∈ l → (minimum l : Wi
 
 theorem le_maximum_of_mem' {a : α} {l : List α} (ha : a ∈ l) : (a : WithBot α) ≤ maximum l :=
   Option.casesOn (maximum l) (fun _ h => absurd ha ((h rfl).symm ▸ not_mem_nil _))
-    (fun m hm _ => WithBot.coe_le_coe.2 $ hm _ rfl) (fun m => @le_maximum_of_mem _ _ _ m _ ha)
+    (fun m hm _ => WithBot.coe_le_coe.2 <| hm _ rfl) (fun m => @le_maximum_of_mem _ _ _ m _ ha)
     (@maximum_eq_none _ _ l).1
 
 theorem le_minimum_of_mem' {a : α} {l : List α} (ha : a ∈ l) : minimum l ≤ (a : WithTop α) :=

@@ -70,7 +70,7 @@ theorem colimit_inv_aux_eq_of_rel (x y : Σ j, F.obj j) (h : types.filtered_coli
 
 /-- Taking inverses in the colimit. See also `colimit_inv_aux`. -/
 @[to_additive "Negation in the colimit. See also `colimit_neg_aux`."]
-instance colimit_has_inv : HasInv G where
+instance colimit_has_inv : Inv G where
   inv := fun x => by
     refine' Quot.lift (colimit_inv_aux F) _ x
     intro x y h
@@ -79,7 +79,7 @@ instance colimit_has_inv : HasInv G where
     exact h
 
 @[simp, to_additive]
-theorem colimit_inv_mk_eq (x : Σ j, F.obj j) : G.mk x⁻¹ = G.mk ⟨x.1, x.2⁻¹⟩ :=
+theorem colimit_inv_mk_eq (x : Σ j, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2⁻¹⟩ :=
   rfl
 
 @[to_additive]
@@ -111,11 +111,11 @@ def colimit_cocone : cocone F where
 def colimit_cocone_is_colimit : is_colimit colimit_cocone where
   desc := fun t => Mon.FilteredColimits.colimitDesc (F ⋙ forget₂ Groupₓₓ Mon) ((forget₂ Groupₓₓ Mon).mapCocone t)
   fac' := fun t j =>
-    MonoidHom.coe_inj $ (types.colimit_cocone_is_colimit (F ⋙ forget Groupₓₓ)).fac ((forget Groupₓₓ).mapCocone t) j
+    MonoidHom.coe_inj <| (types.colimit_cocone_is_colimit (F ⋙ forget Groupₓₓ)).fac ((forget Groupₓₓ).mapCocone t) j
   uniq' := fun t m h =>
-    MonoidHom.coe_inj $
+    MonoidHom.coe_inj <|
       (types.colimit_cocone_is_colimit (F ⋙ forget Groupₓₓ)).uniq ((forget Groupₓₓ).mapCocone t) m fun j =>
-        funext $ fun x => MonoidHom.congr_fun (h j) x
+        funext fun x => MonoidHom.congr_fun (h j) x
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
 instance forget₂_Mon_preserves_filtered_colimits : preserves_filtered_colimits (forget₂ Groupₓₓ Mon.{v}) where
@@ -168,12 +168,12 @@ def colimit_cocone_is_colimit : is_colimit colimit_cocone where
     (Groupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ.{v})).desc
       ((forget₂ CommGroupₓₓ Groupₓₓ.{v}).mapCocone t)
   fac' := fun t j =>
-    MonoidHom.coe_inj $
+    MonoidHom.coe_inj <|
       (types.colimit_cocone_is_colimit (F ⋙ forget CommGroupₓₓ)).fac ((forget CommGroupₓₓ).mapCocone t) j
   uniq' := fun t m h =>
-    MonoidHom.coe_inj $
+    MonoidHom.coe_inj <|
       (types.colimit_cocone_is_colimit (F ⋙ forget CommGroupₓₓ)).uniq ((forget CommGroupₓₓ).mapCocone t) m fun j =>
-        funext $ fun x => MonoidHom.congr_fun (h j) x
+        funext fun x => MonoidHom.congr_fun (h j) x
 
 @[to_additive forget₂_AddGroup_preserves_filtered_colimits]
 instance forget₂_Group_preserves_filtered_colimits : preserves_filtered_colimits (forget₂ CommGroupₓₓ Groupₓₓ.{v}) where

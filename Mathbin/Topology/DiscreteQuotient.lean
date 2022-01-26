@@ -129,7 +129,7 @@ theorem proj_is_locally_constant : IsLocallyConstant S.proj := by
   simp [fiber_eq, (S.clopen x).1]
 
 theorem proj_continuous : Continuous S.proj :=
-  IsLocallyConstant.continuous $ proj_is_locally_constant _
+  IsLocallyConstant.continuous <| proj_is_locally_constant _
 
 theorem fiber_closed (A : Set S) : IsClosed (S.proj ⁻¹' A) :=
   IsClosed.preimage S.proj_continuous ⟨trivialₓ⟩
@@ -280,7 +280,7 @@ theorem le_comap_comp {Z : Type _} [TopologicalSpace Z] {g : Z → Y} {cont' : C
   tauto
 
 theorem le_comap_trans {C : DiscreteQuotient X} : le_comap cont A B → B ≤ C → le_comap cont A C := fun h1 h2 =>
-  le_transₓ h1 $ comap_mono _ h2
+  le_transₓ h1 <| comap_mono _ h2
 
 /-- Map a discrete quotient along a continuous map. -/
 def map (cond : le_comap cont A B) : A → B :=

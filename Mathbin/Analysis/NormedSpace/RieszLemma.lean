@@ -29,7 +29,7 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
   let d := Metric.infDist x F
   have hFn : (F : Set E).Nonempty := ⟨_, F.zero_mem⟩
   have hdp : 0 < d := lt_of_le_of_neₓ Metric.inf_dist_nonneg fun heq => hx ((hFc.mem_iff_inf_dist_zero hFn).2 HEq.symm)
-  let r' := max r (2⁻¹)
+  let r' := max r 2⁻¹
   have hr' : r' < 1 := by
     simp [r', hr]
     norm_num
@@ -37,7 +37,7 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
     lt_of_lt_of_leₓ
       (by
         norm_num)
-      (le_max_rightₓ r (2⁻¹))
+      (le_max_rightₓ r 2⁻¹)
   have hdlt : d < d / r' := (lt_div_iff hlt).mpr ((mul_lt_iff_lt_one_right hdp).2 hr')
   obtain ⟨y₀, hy₀F, hxy₀⟩ : ∃ y ∈ F, dist x y < d / r' := (Metric.inf_dist_lt_iff hFn).mp hdlt
   have x_ne_y₀ : x - y₀ ∉ F := by

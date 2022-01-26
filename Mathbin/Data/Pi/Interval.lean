@@ -19,7 +19,7 @@ variable {ι : Type _} {α : ι → Type _} [DecidableEq ι] [Fintype ι] [∀ i
 namespace Pi
 
 instance : LocallyFiniteOrder (∀ i, α i) :=
-  LocallyFiniteOrder.ofIcc _ (fun a b => pi_finset $ fun i => Icc (a i) (b i)) fun a b x => by
+  LocallyFiniteOrder.ofIcc _ (fun a b => pi_finset fun i => Icc (a i) (b i)) fun a b x => by
     simp_rw [mem_pi_finset, mem_Icc]
     exact forall_and_distrib
 

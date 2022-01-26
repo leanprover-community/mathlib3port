@@ -66,16 +66,16 @@ instance ring_of_integers_algebra [Algebra K L] : Algebra (𝓞 K) (𝓞 L) :=
   RingHom.toAlgebra
     { toFun := fun k => ⟨algebraMap K L k, IsIntegral.algebra_map k.2⟩,
       map_zero' :=
-        Subtype.ext $ by
+        Subtype.ext <| by
           simp only [Subtype.coe_mk, Subalgebra.coe_zero, map_zero],
       map_one' :=
-        Subtype.ext $ by
+        Subtype.ext <| by
           simp only [Subtype.coe_mk, Subalgebra.coe_one, map_one],
       map_add' := fun x y =>
-        Subtype.ext $ by
+        Subtype.ext <| by
           simp only [map_add, Subalgebra.coe_add, Subtype.coe_mk],
       map_mul' := fun x y =>
-        Subtype.ext $ by
+        Subtype.ext <| by
           simp only [Subalgebra.coe_mul, map_mul, Subtype.coe_mk] }
 
 namespace RingOfIntegers

@@ -107,24 +107,24 @@ unsafe def gives_lower_bound (n e : expr) : tactic expr := do
 /-- Combine two upper bounds. -/
 unsafe def combine_upper_bounds : Option expr → Option expr → tactic (Option expr)
   | none, none => return none
-  | some prf, none => return $ some prf
-  | none, some prf => return $ some prf
+  | some prf, none => return <| some prf
+  | none, some prf => return <| some prf
   | some prf₁, some prf₂ => do
     Option.some <$> to_expr (pquote.1 (lt_minₓ (%%ₓprf₁) (%%ₓprf₂)))
 
 /-- Combine two lower bounds. -/
 unsafe def combine_lower_bounds : Option expr → Option expr → tactic (Option expr)
-  | none, none => return $ none
-  | some prf, none => return $ some prf
-  | none, some prf => return $ some prf
+  | none, none => return <| none
+  | some prf, none => return <| some prf
+  | none, some prf => return <| some prf
   | some prf₁, some prf₂ => do
     Option.some <$> to_expr (pquote.1 (max_leₓ (%%ₓprf₂) (%%ₓprf₁)))
 
 /-- Inspect a given expression, using it to update a set of upper and lower bounds on `n`. -/
 unsafe def update_bounds (n : expr) (bounds : Option expr × Option expr) (e : expr) :
     tactic (Option expr × Option expr) := do
-  let nlb ← try_core $ gives_lower_bound n e
-  let nub ← try_core $ gives_upper_bound n e
+  let nlb ← try_core <| gives_lower_bound n e
+  let nub ← try_core <| gives_upper_bound n e
   let clb ← combine_lower_bounds bounds.1 nlb
   let cub ← combine_upper_bounds bounds.2 nub
   return (clb, cub)

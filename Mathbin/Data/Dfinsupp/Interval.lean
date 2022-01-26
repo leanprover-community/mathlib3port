@@ -22,14 +22,14 @@ variable [DecidableEq ι] [∀ i, Zero (α i)] {s : Finset ι} {f : Π₀ i, α 
 /-- Finitely supported product of finsets. -/
 def Dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
   (s.pi t).map
-    ⟨fun f => Dfinsupp.mk s $ fun i => f i i.2, by
+    ⟨fun f => (Dfinsupp.mk s) fun i => f i i.2, by
       refine' (mk_injective _).comp fun f g h => _
       ext i hi
       convert congr_funₓ h ⟨i, hi⟩⟩
 
 @[simp]
 theorem card_dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : (s.dfinsupp t).card = ∏ i in s, (t i).card :=
-  (card_map _).trans $ card_pi _ _
+  (card_map _).trans <| card_pi _ _
 
 variable [∀ i, DecidableEq (α i)]
 
@@ -43,7 +43,7 @@ theorem mem_dfinsupp_iff : f ∈ s.dfinsupp t ↔ f.support ⊆ s ∧ ∀, ∀ i
   · refine' fun h => ⟨fun i _ => f i, mem_pi.2 h.2, _⟩
     ext i
     dsimp
-    exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 $ fun H => hi $ h.1 H).symm
+    exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 fun H => hi <| h.1 H).symm
     
 
 /-- When `t` is supported on `s`, `f ∈ s.dfinsupp t` precisely means that `f` is pointwise in `t`.
@@ -53,9 +53,9 @@ theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finset (α i)} (ht : t.
     f ∈ s.dfinsupp t ↔ ∀ i, f i ∈ t i := by
   refine'
     mem_dfinsupp_iff.trans
-      (forall_and_distrib.symm.trans $
-        forall_congrₓ $ fun i =>
-          ⟨fun h => _, fun h => ⟨fun hi => ht $ mem_support_iff.2 $ fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
+      (forall_and_distrib.symm.trans <|
+        forall_congrₓ fun i =>
+          ⟨fun h => _, fun h => ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
   · by_cases' hi : i ∈ s
     · exact h.2 hi
       
@@ -130,7 +130,7 @@ def pi (f : Π₀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
 
 @[simp]
 theorem mem_pi {f : Π₀ i, Finset (α i)} {g : Π₀ i, α i} : g ∈ f.pi ↔ ∀ i, g i ∈ f i :=
-  mem_dfinsupp_iff_of_support_subset $ subset.refl _
+  mem_dfinsupp_iff_of_support_subset <| subset.refl _
 
 @[simp]
 theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.prod fun i => (f i).card := by
@@ -146,8 +146,8 @@ section LocallyFinite
 variable [∀ i, PartialOrderₓ (α i)] [∀ i, Zero (α i)] [∀ i, LocallyFiniteOrder (α i)]
 
 instance : LocallyFiniteOrder (Π₀ i, α i) :=
-  LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp $ f.range_Icc g) fun f g x => by
-    refine' (mem_dfinsupp_iff_of_support_subset $ support_range_Icc_subset).trans _
+  LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp <| f.range_Icc g) fun f g x => by
+    refine' (mem_dfinsupp_iff_of_support_subset <| support_range_Icc_subset).trans _
     simp_rw [mem_range_Icc_apply_iff, forall_and_distrib]
     rfl
 

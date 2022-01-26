@@ -55,7 +55,7 @@ theorem specializes_iff_forall_closed {x y : α} : x ⤳ y ↔ ∀ Z : Set α h 
     exact (specializes_iff_closure_subset.mp h).trans
     
   · intro h
-    exact h _ is_closed_closure (subset_closure $ Set.mem_singleton x)
+    exact h _ is_closed_closure (subset_closure <| Set.mem_singleton x)
     
 
 theorem specializes_iff_forall_open {x y : α} : x ⤳ y ↔ ∀ U : Set α h : IsOpen U, y ∈ U → x ∈ U := by
@@ -152,7 +152,7 @@ theorem IsGenericPoint.mem_closed_set_iff {Z : Set α} (hZ : IsClosed Z) : x ∈
 theorem IsGenericPoint.image {f : α → β} (hf : Continuous f) : IsGenericPoint (f x) (Closure (f '' S)) := by
   rw [is_generic_point_def, ← is_generic_point_def.mp h]
   apply le_antisymmₓ
-  · exact closure_mono (set.singleton_subset_iff.mpr ⟨_, subset_closure $ Set.mem_singleton x, rfl⟩)
+  · exact closure_mono (set.singleton_subset_iff.mpr ⟨_, subset_closure <| Set.mem_singleton x, rfl⟩)
     
   · convert is_closed_closure.closure_subset_iff.mpr (image_closure_subset_closure_image hf)
     rw [Set.image_singleton]
@@ -170,7 +170,7 @@ theorem is_generic_point_iff_forall_closed {x : α} {S : Set α} (hS : IsClosed 
     apply le_antisymmₓ
     · rwa [Set.le_eq_subset, hS.closure_subset_iff, Set.singleton_subset_iff]
       
-    · exact h _ is_closed_closure (subset_closure $ Set.mem_singleton x)
+    · exact h _ is_closed_closure (subset_closure <| Set.mem_singleton x)
       
     
 
@@ -223,7 +223,7 @@ noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
     { s : Set α | IsIrreducible s ∧ IsClosed s } ≃o α where
   toFun := fun s => s.prop.1.genericPoint
   invFun := fun x => ⟨Closure ({x} : Set α), is_irreducible_singleton.closure, is_closed_closure⟩
-  left_inv := fun s => Subtype.eq $ Eq.trans s.prop.1.generic_point_spec $ closure_eq_iff_is_closed.mpr s.2.2
+  left_inv := fun s => Subtype.eq <| Eq.trans s.prop.1.generic_point_spec <| closure_eq_iff_is_closed.mpr s.2.2
   right_inv := fun x =>
     is_irreducible_singleton.closure.generic_point_spec.Eq
       (by

@@ -19,7 +19,7 @@ add_tactic_doc
 setup_tactic_parser
 
 private unsafe def add_tactic_hint (n : Name) (t : expr) : tactic Unit := do
-  add_decl $ declaration.defn n [] (quote.1 (tactic Stringₓ)) t ReducibilityHints.opaque ff
+  add_decl <| declaration.defn n [] (quote.1 (tactic Stringₓ)) t ReducibilityHints.opaque ff
   hint_tactic_attribute n () tt
 
 /-- `add_hint_tactic t` runs the tactic `t` whenever `hint` is invoked.
@@ -32,7 +32,7 @@ unsafe def add_hint_tactic (_ : parse (tk "add_hint_tactic")) : parser Unit := d
   let s ← eval_expr Stringₓ e
   let t := "`[" ++ s ++ "]"
   let (t, _) ← with_input parser.pexpr t
-  of_tactic $ do
+  of_tactic <| do
       let h := s <.> "_hint"
       let t ←
         to_expr
@@ -78,7 +78,7 @@ and for each such tactic, the number of remaining goals afterwards.
 -/
 unsafe def hint : tactic (List (Stringₓ × ℕ)) := do
   let names ← attribute.get_instances `hint_tactic
-  focus1 $ try_all_sorted (names.reverse.map name_to_tactic)
+  focus1 <| try_all_sorted (names.reverse.map name_to_tactic)
 
 namespace Interactive
 

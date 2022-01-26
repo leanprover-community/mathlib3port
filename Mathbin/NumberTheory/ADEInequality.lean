@@ -94,7 +94,7 @@ of the elements of `pqr`, as rational number.
 
 The intended argument is a multiset `{p,q,r}` of cardinality `3`. -/
 def sum_inv (pqr : Multiset ℕ+) : ℚ :=
-  Multiset.sum $ pqr.map $ fun x => x⁻¹
+  Multiset.sum <| pqr.map fun x => x⁻¹
 
 theorem sum_inv_pqr (p q r : ℕ+) : sum_inv {p, q, r} = p⁻¹ + q⁻¹ + r⁻¹ := by
   simp only [sum_inv, coe_coe, add_zeroₓ, insert_eq_cons, add_assocₓ, map_cons, sum_cons, map_singleton, sum_singleton]
@@ -108,16 +108,16 @@ theorem admissible_A' (q r : ℕ+) : admissible (A' q r) :=
   Or.inl ⟨q, r, rfl⟩
 
 theorem admissible_D' (n : ℕ+) : admissible (D' n) :=
-  Or.inr $ Or.inl ⟨n, rfl⟩
+  Or.inr <| Or.inl ⟨n, rfl⟩
 
 theorem admissible_E'3 : admissible (E' 3) :=
-  Or.inr $ Or.inr $ Or.inl rfl
+  Or.inr <| Or.inr <| Or.inl rfl
 
 theorem admissible_E'4 : admissible (E' 4) :=
-  Or.inr $ Or.inr $ Or.inr $ Or.inl rfl
+  Or.inr <| Or.inr <| Or.inr <| Or.inl rfl
 
 theorem admissible_E'5 : admissible (E' 5) :=
-  Or.inr $ Or.inr $ Or.inr $ Or.inr rfl
+  Or.inr <| Or.inr <| Or.inr <| Or.inr rfl
 
 theorem admissible_E6 : admissible E6 :=
   admissible_E'3

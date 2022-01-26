@@ -64,7 +64,7 @@ theorem integral_normalization_coeff_ne_nat_degree {f : Polynomial R} {i : ℕ} 
 
 theorem monic_integral_normalization {f : Polynomial R} (hf : f ≠ 0) : monic (integral_normalization f) :=
   monic_of_degree_le f.nat_degree
-    (Finset.sup_le $ fun i h => WithBot.coe_le_coe.2 $ le_nat_degree_of_mem_supp i $ integral_normalization_support h)
+    (Finset.sup_le fun i h => WithBot.coe_le_coe.2 <| le_nat_degree_of_mem_supp i <| integral_normalization_support h)
     (integral_normalization_coeff_nat_degree hf)
 
 end Semiringₓ

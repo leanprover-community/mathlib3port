@@ -42,8 +42,6 @@ class HasPosPart (α : Type _) where
 class HasNegPart (α : Type _) where
   neg : α → α
 
-notation "|" a "|" => abs a
-
 postfix:1000 "⁺" => HasPosPart.pos
 
 postfix:1000 "⁻" => HasNegPart.neg

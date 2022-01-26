@@ -179,7 +179,7 @@ theorem mk_le_mk_of_comm {B A₁ A₂ : C} {f₁ : A₁ ⟶ B} {f₂ : A₂ ⟶ 
 
 @[simp]
 theorem mk_arrow (P : subobject X) : mk P.arrow = P :=
-  Quotientₓ.induction_on' P $ fun Q => by
+  (Quotientₓ.induction_on' P) fun Q => by
     obtain ⟨e⟩ := @Quotientₓ.mk_out' _ (is_isomorphic_setoid _) Q
     refine' Quotientₓ.sound' ⟨mono_over.iso_mk _ _ ≪≫ e⟩ <;> tidy
 
@@ -188,26 +188,26 @@ theorem le_of_comm {B : C} {X Y : subobject B} (f : (X : C) ⟶ (Y : C)) (w : f 
 
 theorem le_mk_of_comm {B A : C} {X : subobject B} {f : A ⟶ B} [mono f] (g : (X : C) ⟶ A) (w : g ≫ f = X.arrow) :
     X ≤ mk f :=
-  le_of_comm (g ≫ (underlying_iso f).inv) $ by
+  le_of_comm (g ≫ (underlying_iso f).inv) <| by
     simp [w]
 
 theorem mk_le_of_comm {B A : C} {X : subobject B} {f : A ⟶ B} [mono f] (g : A ⟶ (X : C)) (w : g ≫ X.arrow = f) :
     mk f ≤ X :=
-  le_of_comm ((underlying_iso f).Hom ≫ g) $ by
+  le_of_comm ((underlying_iso f).Hom ≫ g) <| by
     simp [w]
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
 @[ext]
 theorem eq_of_comm {B : C} {X Y : subobject B} (f : (X : C) ≅ (Y : C)) (w : f.hom ≫ Y.arrow = X.arrow) : X = Y :=
-  le_antisymmₓ (le_of_comm f.hom w) $ le_of_comm f.inv $ f.inv_comp_eq.2 w.symm
+  le_antisymmₓ (le_of_comm f.hom w) <| le_of_comm f.inv <| f.inv_comp_eq.2 w.symm
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
 @[ext]
 theorem eq_mk_of_comm {B A : C} {X : subobject B} (f : A ⟶ B) [mono f] (i : (X : C) ≅ A) (w : i.hom ≫ f = X.arrow) :
     X = mk f :=
-  eq_of_comm (i.trans (underlying_iso f).symm) $ by
+  eq_of_comm (i.trans (underlying_iso f).symm) <| by
     simp [w]
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
@@ -215,8 +215,8 @@ theorem eq_mk_of_comm {B A : C} {X : subobject B} (f : A ⟶ B) [mono f] (i : (X
 @[ext]
 theorem mk_eq_of_comm {B A : C} {X : subobject B} (f : A ⟶ B) [mono f] (i : A ≅ (X : C)) (w : i.hom ≫ X.arrow = f) :
     mk f = X :=
-  Eq.symm $
-    eq_mk_of_comm _ i.symm $ by
+  Eq.symm <|
+    eq_mk_of_comm _ i.symm <| by
       rw [iso.symm_hom, iso.inv_comp_eq, w]
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
@@ -224,12 +224,12 @@ theorem mk_eq_of_comm {B A : C} {X : subobject B} (f : A ⟶ B) [mono f] (i : A 
 @[ext]
 theorem mk_eq_mk_of_comm {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [mono f] [mono g] (i : A₁ ≅ A₂) (w : i.hom ≫ g = f) :
     mk f = mk g :=
-  eq_mk_of_comm _ ((underlying_iso f).trans i) $ by
+  eq_mk_of_comm _ ((underlying_iso f).trans i) <| by
     simp [w]
 
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 def of_le {B : C} (X Y : subobject B) (h : X ≤ Y) : (X : C) ⟶ (Y : C) :=
-  underlying.map $ h.hom
+  underlying.map <| h.hom
 
 @[simp, reassoc]
 theorem of_le_arrow {B : C} {X Y : subobject B} (h : X ≤ Y) : of_le X Y h ≫ Y.arrow = X.arrow :=

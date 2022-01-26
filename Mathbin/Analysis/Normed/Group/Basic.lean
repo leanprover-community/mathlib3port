@@ -121,10 +121,10 @@ theorem PUnit.norm_eq_zero (r : PUnit) : ∥r∥ = 0 :=
   rfl
 
 noncomputable instance : NormedGroup ℝ where
-  norm := fun x => |x|
+  norm := fun x => abs x
   dist_eq := fun x y => rfl
 
-theorem Real.norm_eq_abs (r : ℝ) : ∥r∥ = |r| :=
+theorem Real.norm_eq_abs (r : ℝ) : ∥r∥ = abs r :=
   rfl
 
 section SemiNormedGroup
@@ -143,7 +143,7 @@ theorem dist_zero_right (g : E) : dist g 0 = ∥g∥ := by
 
 @[simp]
 theorem dist_zero_left : dist (0 : E) = norm :=
-  funext $ fun g => by
+  funext fun g => by
     rw [dist_comm, dist_zero_right]
 
 theorem tendsto_norm_cocompact_at_top [ProperSpace E] : tendsto norm (cocompact E) at_top := by
@@ -197,7 +197,7 @@ theorem dist_sub_sub_le_of_le {g₁ g₂ h₁ h₂ : E} {d₁ d₂ : ℝ} (H₁ 
     dist (g₁ - g₂) (h₁ - h₂) ≤ d₁ + d₂ :=
   le_transₓ (dist_sub_sub_le g₁ g₂ h₁ h₂) (add_le_add H₁ H₂)
 
-theorem abs_dist_sub_le_dist_add_add (g₁ g₂ h₁ h₂ : E) : |dist g₁ h₁ - dist g₂ h₂| ≤ dist (g₁ + g₂) (h₁ + h₂) := by
+theorem abs_dist_sub_le_dist_add_add (g₁ g₂ h₁ h₂ : E) : abs (dist g₁ h₁ - dist g₂ h₂) ≤ dist (g₁ + g₂) (h₁ + h₂) := by
   simpa only [dist_add_left, dist_add_right, dist_comm h₂] using abs_dist_sub_le (g₁ + g₂) (h₁ + h₂) (h₁ + g₂)
 
 @[simp]
@@ -239,7 +239,7 @@ theorem dist_le_norm_add_norm (g h : E) : dist g h ≤ ∥g∥ + ∥h∥ := by
   rw [dist_eq_norm]
   apply norm_sub_le
 
-theorem abs_norm_sub_norm_le (g h : E) : |∥g∥ - ∥h∥| ≤ ∥g - h∥ := by
+theorem abs_norm_sub_norm_le (g h : E) : abs (∥g∥ - ∥h∥) ≤ ∥g - h∥ := by
   simpa [dist_eq_norm] using abs_dist_sub_le g h 0
 
 theorem norm_sub_norm_le (g h : E) : ∥g∥ - ∥h∥ ≤ ∥g - h∥ :=
@@ -267,7 +267,7 @@ theorem norm_le_add_norm_add (u v : E) : ∥u∥ ≤ ∥u + v∥ + ∥v∥ :=
     
 
 theorem ball_zero_eq (ε : ℝ) : ball (0 : E) ε = { x | ∥x∥ < ε } :=
-  Set.ext $ fun a => by
+  Set.ext fun a => by
     simp
 
 theorem mem_ball_iff_norm {g h : E} {r : ℝ} : h ∈ ball g r ↔ ∥h - g∥ < r := by
@@ -324,7 +324,7 @@ theorem norm_lt_of_mem_ball {g h : E} {r : ℝ} (H : h ∈ ball g r) : ∥h∥ <
 theorem norm_lt_norm_add_const_of_dist_lt {a b : E} {c : ℝ} (h : dist a b < c) : ∥a∥ < ∥b∥ + c :=
   norm_lt_of_mem_ball h
 
-theorem bounded_iff_forall_norm_le {s : Set E} : Bounded s ↔ ∃ C, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ C := by
+theorem bounded_iff_forall_norm_le {s : Set E} : bounded s ↔ ∃ C, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ C := by
   simpa only [Set.subset_def, mem_closed_ball_iff_norm, sub_zero] using bounded_iff_subset_ball (0 : E)
 
 @[simp]
@@ -384,7 +384,7 @@ namespace Isometric
 
 /-- Addition `y ↦ y + x` as an `isometry`. -/
 protected def add_right (x : E) : E ≃ᵢ E :=
-  { Equivₓ.addRight x with isometry_to_fun := isometry_emetric_iff_metric.2 $ fun y z => dist_add_right _ _ _ }
+  { Equivₓ.addRight x with isometry_to_fun := isometry_emetric_iff_metric.2 fun y z => dist_add_right _ _ _ }
 
 @[simp]
 theorem add_right_to_equiv (x : E) : (Isometric.addRight x).toEquiv = Equivₓ.addRight x :=
@@ -399,11 +399,11 @@ theorem add_right_apply (x y : E) : (Isometric.addRight x : E → E) y = y + x :
 
 @[simp]
 theorem add_right_symm (x : E) : (Isometric.addRight x).symm = Isometric.addRight (-x) :=
-  ext $ fun y => rfl
+  ext fun y => rfl
 
 /-- Addition `y ↦ x + y` as an `isometry`. -/
 protected def add_left (x : E) : E ≃ᵢ E where
-  isometry_to_fun := isometry_emetric_iff_metric.2 $ fun y z => dist_add_left _ _ _
+  isometry_to_fun := isometry_emetric_iff_metric.2 fun y z => dist_add_left _ _ _
   toEquiv := Equivₓ.addLeft x
 
 @[simp]
@@ -416,13 +416,13 @@ theorem coe_add_left (x : E) : ⇑Isometric.addLeft x = (· + ·) x :=
 
 @[simp]
 theorem add_left_symm (x : E) : (Isometric.addLeft x).symm = Isometric.addLeft (-x) :=
-  ext $ fun y => rfl
+  ext fun y => rfl
 
 variable (E)
 
 /-- Negation `x ↦ -x` as an `isometry`. -/
 protected def neg : E ≃ᵢ E where
-  isometry_to_fun := isometry_emetric_iff_metric.2 $ fun x y => dist_neg_neg _ _
+  isometry_to_fun := isometry_emetric_iff_metric.2 fun x y => dist_neg_neg _ _
   toEquiv := Equivₓ.neg E
 
 variable {E}
@@ -443,7 +443,7 @@ end Isometric
 
 theorem NormedGroup.tendsto_nhds_zero {f : α → E} {l : Filter α} :
     tendsto f l (𝓝 0) ↔ ∀, ∀ ε > 0, ∀, ∀ᶠ x in l, ∥f x∥ < ε :=
-  Metric.tendsto_nhds.trans $ by
+  Metric.tendsto_nhds.trans <| by
     simp only [dist_zero_right]
 
 theorem NormedGroup.tendsto_nhds_nhds {f : E → F} {x : E} {y : F} :
@@ -466,7 +466,7 @@ for all `x`, one has `∥f x∥ ≤ C * ∥x∥`. The analogous condition for a 
 (semi)normed spaces is in `normed_space.operator_norm`. -/
 theorem AddMonoidHom.lipschitz_of_bound (f : E →+ F) (C : ℝ) (h : ∀ x, ∥f x∥ ≤ C * ∥x∥) :
     LipschitzWith (Real.toNnreal C) f :=
-  LipschitzWith.of_dist_le' $ fun x y => by
+  LipschitzWith.of_dist_le' fun x y => by
     simpa only [dist_eq_norm, f.map_sub] using h (x - y)
 
 theorem lipschitz_on_with_iff_norm_sub_le {f : E → F} {C : ℝ≥0 } {s : Set E} :
@@ -479,7 +479,7 @@ theorem LipschitzOnWith.norm_sub_le {f : E → F} {C : ℝ≥0 } {s : Set E} (h 
 
 theorem LipschitzOnWith.norm_sub_le_of_le {f : E → F} {C : ℝ≥0 } {s : Set E} (h : LipschitzOnWith C f s) {x y : E}
     (x_in : x ∈ s) (y_in : y ∈ s) {d : ℝ} (hd : ∥x - y∥ ≤ d) : ∥f x - f y∥ ≤ C * d :=
-  (h.norm_sub_le x_in y_in).trans $ mul_le_mul_of_nonneg_left hd C.2
+  (h.norm_sub_le x_in y_in).trans <| mul_le_mul_of_nonneg_left hd C.2
 
 theorem lipschitz_with_iff_norm_sub_le {f : E → F} {C : ℝ≥0 } : LipschitzWith C f ↔ ∀ x y, ∥f x - f y∥ ≤ C * ∥x - y∥ :=
   by
@@ -489,7 +489,7 @@ alias lipschitz_with_iff_norm_sub_le ↔ LipschitzWith.norm_sub_le _
 
 theorem LipschitzWith.norm_sub_le_of_le {f : E → F} {C : ℝ≥0 } (h : LipschitzWith C f) {x y : E} {d : ℝ}
     (hd : ∥x - y∥ ≤ d) : ∥f x - f y∥ ≤ C * d :=
-  (h.norm_sub_le x y).trans $ mul_le_mul_of_nonneg_left hd C.2
+  (h.norm_sub_le x y).trans <| mul_le_mul_of_nonneg_left hd C.2
 
 /-- A homomorphism `f` of seminormed groups is continuous, if there exists a constant `C` such that
 for all `x`, one has `∥f x∥ ≤ C * ∥x∥`.
@@ -499,7 +499,7 @@ theorem AddMonoidHom.continuous_of_bound (f : E →+ F) (C : ℝ) (h : ∀ x, �
 
 theorem IsCompact.exists_bound_of_continuous_on [TopologicalSpace α] {s : Set α} (hs : IsCompact s) {f : α → E}
     (hf : ContinuousOn f s) : ∃ C, ∀, ∀ x ∈ s, ∀, ∥f x∥ ≤ C := by
-  have : Bounded (f '' s) := (hs.image_of_continuous_on hf).Bounded
+  have : bounded (f '' s) := (hs.image_of_continuous_on hf).Bounded
   rcases bounded_iff_forall_norm_le.1 this with ⟨C, hC⟩
   exact ⟨C, fun x hx => hC _ (Set.mem_image_of_mem _ hx)⟩
 
@@ -526,8 +526,8 @@ theorem controlled_sum_of_mem_closure {s : AddSubgroup E} {g : E} (hg : g ∈ Cl
   set z : ℕ → E := fun n => u (n + n₀)
   have lim_z : tendsto z at_top (𝓝 g) := lim_u.comp (tendsto_add_at_top_nat n₀)
   have mem_𝓤 : ∀ n, { p : E × E | ∥p.1 - p.2∥ < b (n + 1) } ∈ 𝓤 E := fun n => by
-    simpa [← dist_eq_norm] using Metric.dist_mem_uniformity (b_pos $ n + 1)
-  obtain ⟨φ : ℕ → ℕ, φ_extr : StrictMono φ, hφ : ∀ n, ∥z (φ $ n + 1) - z (φ n)∥ < b (n + 1)⟩ :=
+    simpa [← dist_eq_norm] using Metric.dist_mem_uniformity (b_pos <| n + 1)
+  obtain ⟨φ : ℕ → ℕ, φ_extr : StrictMono φ, hφ : ∀ n, ∥z (φ <| n + 1) - z (φ n)∥ < b (n + 1)⟩ :=
     lim_z.cauchy_seq.subseq_mem mem_𝓤
   set w : ℕ → E := z ∘ φ
   have hw : tendsto w at_top (𝓝 g) := lim_z.comp φ_extr.tendsto_at_top
@@ -546,7 +546,7 @@ theorem controlled_sum_of_mem_closure {s : AddSubgroup E} {g : E} (hg : g ∈ Cl
     apply hφ
     
 
-theorem controlled_sum_of_mem_closure_range {j : E →+ F} {h : F} (Hh : h ∈ (Closure $ (j.range : Set F))) {b : ℕ → ℝ}
+theorem controlled_sum_of_mem_closure_range {j : E →+ F} {h : F} (Hh : h ∈ (Closure <| (j.range : Set F))) {b : ℕ → ℝ}
     (b_pos : ∀ n, 0 < b n) :
     ∃ g : ℕ → E,
       tendsto (fun n => ∑ i in range (n + 1), j (g i)) at_top (𝓝 h) ∧
@@ -582,21 +582,21 @@ theorem norm_to_nnreal {a : E} : ∥a∥.toNnreal = ∥a∥₊ :=
   @Real.to_nnreal_coe ∥a∥₊
 
 theorem nndist_eq_nnnorm (a b : E) : nndist a b = ∥a - b∥₊ :=
-  Nnreal.eq $ dist_eq_norm _ _
+  Nnreal.eq <| dist_eq_norm _ _
 
 @[simp]
 theorem nnnorm_zero : ∥(0 : E)∥₊ = 0 :=
   Nnreal.eq norm_zero
 
 theorem nnnorm_add_le (g h : E) : ∥g + h∥₊ ≤ ∥g∥₊ + ∥h∥₊ :=
-  Nnreal.coe_le_coe.1 $ norm_add_le g h
+  Nnreal.coe_le_coe.1 <| norm_add_le g h
 
 @[simp]
 theorem nnnorm_neg (g : E) : ∥-g∥₊ = ∥g∥₊ :=
-  Nnreal.eq $ norm_neg g
+  Nnreal.eq <| norm_neg g
 
 theorem nndist_nnnorm_nnnorm_le (g h : E) : nndist ∥g∥₊ ∥h∥₊ ≤ ∥g - h∥₊ :=
-  Nnreal.coe_le_coe.1 $ dist_norm_norm_le g h
+  Nnreal.coe_le_coe.1 <| dist_norm_norm_le g h
 
 theorem of_real_norm_eq_coe_nnnorm (x : E) : Ennreal.ofReal ∥x∥ = (∥x∥₊ : ℝ≥0∞) :=
   Ennreal.of_real_eq_coe_nnreal _
@@ -611,7 +611,7 @@ theorem mem_emetric_ball_zero_iff {x : E} {r : ℝ≥0∞} : x ∈ Emetric.Ball 
   rw [Emetric.mem_ball, edist_eq_coe_nnnorm]
 
 theorem nndist_add_add_le (g₁ g₂ h₁ h₂ : E) : nndist (g₁ + g₂) (h₁ + h₂) ≤ nndist g₁ h₁ + nndist g₂ h₂ :=
-  Nnreal.coe_le_coe.1 $ dist_add_add_le g₁ g₂ h₁ h₂
+  Nnreal.coe_le_coe.1 <| dist_add_add_le g₁ g₂ h₁ h₂
 
 theorem edist_add_add_le (g₁ g₂ h₁ h₂ : E) : edist (g₁ + g₂) (h₁ + h₂) ≤ edist g₁ h₁ + edist g₂ h₂ := by
   simp only [edist_nndist]
@@ -652,18 +652,18 @@ namespace AntilipschitzWith
 variable [PseudoEmetricSpace α] {K Kf Kg : ℝ≥0 } {f g : α → E}
 
 theorem add_lipschitz_with (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg g) (hK : Kg < Kf⁻¹) :
-    AntilipschitzWith ((Kf⁻¹ - Kg)⁻¹) fun x => f x + g x := by
+    AntilipschitzWith (Kf⁻¹ - Kg)⁻¹ fun x => f x + g x := by
   let this' : PseudoMetricSpace α := PseudoEmetricSpace.toPseudoMetricSpace hf.edist_ne_top
   refine' AntilipschitzWith.of_le_mul_dist fun x y => _
   rw [Nnreal.coe_inv, ← div_eq_inv_mul]
-  rw [le_div_iff (Nnreal.coe_pos.2 $ tsub_pos_iff_lt.2 hK)]
+  rw [le_div_iff (Nnreal.coe_pos.2 <| tsub_pos_iff_lt.2 hK)]
   rw [mul_comm, Nnreal.coe_sub hK.le, sub_mul]
   calc ↑Kf⁻¹ * dist x y - Kg * dist x y ≤ dist (f x) (f y) - dist (g x) (g y) :=
       sub_le_sub (hf.mul_le_dist x y) (hg.dist_le_mul x y)_ ≤ _ :=
       le_transₓ (le_abs_self _) (abs_dist_sub_le_dist_add_add _ _ _ _)
 
 theorem add_sub_lipschitz_with (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg (g - f)) (hK : Kg < Kf⁻¹) :
-    AntilipschitzWith ((Kf⁻¹ - Kg)⁻¹) g := by
+    AntilipschitzWith (Kf⁻¹ - Kg)⁻¹ g := by
   simpa only [Pi.sub_apply, add_sub_cancel'_right] using hf.add_lipschitz_with hg hK
 
 end AntilipschitzWith
@@ -741,9 +741,9 @@ noncomputable instance Pi.semiNormedGroup {π : ι → Type _} [Fintype ι] [∀
     SemiNormedGroup (∀ i, π i) where
   norm := fun f => ((Finset.sup Finset.univ fun b => ∥f b∥₊ : ℝ≥0 ) : ℝ)
   dist_eq := fun x y =>
-    congr_argₓ (coe : ℝ≥0 → ℝ) $
-      congr_argₓ (Finset.sup Finset.univ) $
-        funext $ fun a => show nndist (x a) (y a) = ∥x a - y a∥₊ from nndist_eq_nnnorm _ _
+    congr_argₓ (coe : ℝ≥0 → ℝ) <|
+      congr_argₓ (Finset.sup Finset.univ) <|
+        funext fun a => show nndist (x a) (y a) = ∥x a - y a∥₊ from nndist_eq_nnnorm _ _
 
 /-- The seminorm of an element in a product space is `≤ r` if and only if the norm of each
 component is. -/
@@ -767,7 +767,7 @@ theorem pi_norm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥
 
 @[simp]
 theorem pi_nnnorm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥₊ = ∥a∥₊ :=
-  Nnreal.eq $ pi_norm_const a
+  Nnreal.eq <| pi_norm_const a
 
 theorem tendsto_iff_norm_tendsto_zero {f : α → E} {a : Filter α} {b : E} :
     tendsto f a (𝓝 b) ↔ tendsto (fun e => ∥f e - b∥) a (𝓝 0) := by
@@ -1015,10 +1015,10 @@ noncomputable instance Pi.normedGroup {π : ι → Type _} [Fintype ι] [∀ i, 
   { Pi.semiNormedGroup with }
 
 theorem tendsto_norm_sub_self_punctured_nhds (a : E) : tendsto (fun x => ∥x - a∥) (𝓝[≠] a) (𝓝[>] 0) :=
-  (tendsto_norm_sub_self a).inf $ tendsto_principal_principal.2 $ fun x hx => norm_pos_iff.2 $ sub_ne_zero.2 hx
+  (tendsto_norm_sub_self a).inf <| tendsto_principal_principal.2 fun x hx => norm_pos_iff.2 <| sub_ne_zero.2 hx
 
 theorem tendsto_norm_nhds_within_zero : tendsto (norm : E → ℝ) (𝓝[≠] 0) (𝓝[>] 0) :=
-  tendsto_norm_zero.inf $ tendsto_principal_principal.2 $ fun x => norm_pos_iff.2
+  tendsto_norm_zero.inf <| tendsto_principal_principal.2 fun x => norm_pos_iff.2
 
 end NormedGroup
 

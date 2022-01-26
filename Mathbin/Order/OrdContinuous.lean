@@ -60,13 +60,13 @@ theorem mono (hf : LeftOrdContinuous f) : Monotone f := fun a₁ a₂ h =>
   have : IsGreatest {a₁, a₂} a₂ :=
     ⟨Or.inr rfl, by
       simp [*]⟩
-  (hf.map_is_greatest this).2 $ mem_image_of_mem _ (Or.inl rfl)
+  (hf.map_is_greatest this).2 <| mem_image_of_mem _ (Or.inl rfl)
 
 theorem comp (hg : LeftOrdContinuous g) (hf : LeftOrdContinuous f) : LeftOrdContinuous (g ∘ f) := fun s x h => by
   simpa only [image_image] using hg (hf h)
 
 protected theorem iterate {f : α → α} (hf : LeftOrdContinuous f) (n : ℕ) : LeftOrdContinuous (f^[n]) :=
-  Nat.recOn n (LeftOrdContinuous.id α) $ fun n ihn => ihn.comp hf
+  (Nat.recOn n (LeftOrdContinuous.id α)) fun n ihn => ihn.comp hf
 
 end Preorderₓ
 
@@ -75,7 +75,7 @@ section SemilatticeSup
 variable [SemilatticeSup α] [SemilatticeSup β] {f : α → β}
 
 theorem map_sup (hf : LeftOrdContinuous f) (x y : α) : f (x⊔y) = f x⊔f y :=
-  (hf is_lub_pair).unique $ by
+  (hf is_lub_pair).unique <| by
     simp only [image_pair, is_lub_pair]
 
 theorem le_iff (hf : LeftOrdContinuous f) (h : injective f) {x y} : f x ≤ f y ↔ x ≤ y := by
@@ -103,7 +103,7 @@ section CompleteLattice
 variable [CompleteLattice α] [CompleteLattice β] {f : α → β}
 
 theorem map_Sup' (hf : LeftOrdContinuous f) (s : Set α) : f (Sup s) = Sup (f '' s) :=
-  (hf $ is_lub_Sup s).Sup_eq.symm
+  (hf <| is_lub_Sup s).Sup_eq.symm
 
 theorem map_Sup (hf : LeftOrdContinuous f) (s : Set α) : f (Sup s) = ⨆ x ∈ s, f x := by
   rw [hf.map_Sup', Sup_image]
@@ -119,7 +119,7 @@ variable [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β] [No
 
 theorem map_cSup (hf : LeftOrdContinuous f) {s : Set α} (sne : s.nonempty) (sbdd : BddAbove s) :
     f (Sup s) = Sup (f '' s) :=
-  ((hf $ is_lub_cSup sne sbdd).cSup_eq $ sne.image f).symm
+  ((hf <| is_lub_cSup sne sbdd).cSup_eq <| sne.image f).symm
 
 theorem map_csupr (hf : LeftOrdContinuous f) {g : ι → α} (hg : BddAbove (range g)) : f (⨆ i, g i) = ⨆ i, f (g i) := by
   simp only [supr, hf.map_cSup (range_nonempty _) hg, ← range_comp]
@@ -221,7 +221,7 @@ variable [Preorderₓ α] [Preorderₓ β] (e : α ≃o β) {s : Set α} {x : α
 
 protected theorem LeftOrdContinuous : LeftOrdContinuous e := fun s x hx =>
   ⟨Monotone.mem_upper_bounds_image (fun x y => e.map_rel_iff.2) hx.1, fun y hy =>
-    e.rel_symm_apply.1 $ (is_lub_le_iff hx).2 $ fun x' hx' => e.rel_symm_apply.2 $ hy $ mem_image_of_mem _ hx'⟩
+    e.rel_symm_apply.1 <| (is_lub_le_iff hx).2 fun x' hx' => e.rel_symm_apply.2 <| hy <| mem_image_of_mem _ hx'⟩
 
 protected theorem RightOrdContinuous : RightOrdContinuous e :=
   OrderIso.left_ord_continuous e.dual

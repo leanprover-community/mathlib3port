@@ -40,7 +40,7 @@ protected def Semigroupₓ [Semigroupₓ M₂] (f : M₁ → M₂) (hf : injecti
     Semigroupₓ M₁ :=
   { ‹Mul M₁› with
     mul_assoc := fun x y z =>
-      hf $ by
+      hf <| by
         erw [mul, mul, mul, mul, mul_assoc] }
 
 /-- A type endowed with `*` is a commutative semigroup,
@@ -53,7 +53,7 @@ protected def CommSemigroupₓ [CommSemigroupₓ M₂] (f : M₁ → M₂) (hf :
     CommSemigroupₓ M₁ :=
   { hf.semigroup f mul with
     mul_comm := fun x y =>
-      hf $ by
+      hf <| by
         erw [mul, mul, mul_comm] }
 
 /-- A type endowed with `*` is a left cancel semigroup,
@@ -66,8 +66,8 @@ protected def LeftCancelSemigroup [LeftCancelSemigroup M₂] (f : M₁ → M₂)
     (mul : ∀ x y, f (x * y) = f x * f y) : LeftCancelSemigroup M₁ :=
   { hf.semigroup f mul with mul := · * ·,
     mul_left_cancel := fun x y z H =>
-      hf $
-        (mul_right_injₓ (f x)).1 $ by
+      hf <|
+        (mul_right_injₓ (f x)).1 <| by
           erw [← mul, ← mul, H] <;> rfl }
 
 /-- A type endowed with `*` is a right cancel semigroup,
@@ -80,8 +80,8 @@ protected def RightCancelSemigroup [RightCancelSemigroup M₂] (f : M₁ → M�
     (mul : ∀ x y, f (x * y) = f x * f y) : RightCancelSemigroup M₁ :=
   { hf.semigroup f mul with mul := · * ·,
     mul_right_cancel := fun x y z H =>
-      hf $
-        (mul_left_injₓ (f y)).1 $ by
+      hf <|
+        (mul_left_injₓ (f y)).1 <| by
           erw [← mul, ← mul, H] <;> rfl }
 
 variable [One M₁]
@@ -96,10 +96,10 @@ protected def MulOneClass [MulOneClass M₂] (f : M₁ → M₂) (hf : injective
     (mul : ∀ x y, f (x * y) = f x * f y) : MulOneClass M₁ :=
   { ‹One M₁›, ‹Mul M₁› with
     one_mul := fun x =>
-      hf $ by
+      hf <| by
         erw [mul, one, one_mulₓ],
     mul_one := fun x =>
-      hf $ by
+      hf <| by
         erw [mul, one, mul_oneₓ] }
 
 /-- A type endowed with `1` and `*` is a monoid,
@@ -123,10 +123,10 @@ protected def monoid_pow [Pow M₁ ℕ] [Monoidₓ M₂] (f : M₁ → M₂) (hf
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : Monoidₓ M₁ :=
   { hf.monoid f one mul with npow := fun n x => x ^ n,
     npow_zero' := fun x =>
-      hf $ by
+      hf <| by
         erw [npow, one, pow_zeroₓ],
     npow_succ' := fun n x =>
-      hf $ by
+      hf <| by
         erw [npow, pow_succₓ, mul, npow] }
 
 /-- A type endowed with `1` and `*` is a left cancel monoid,
@@ -179,7 +179,7 @@ protected def CancelCommMonoid [CancelCommMonoid M₂] (f : M₁ → M₂) (hf :
     (mul : ∀ x y, f (x * y) = f x * f y) : CancelCommMonoid M₁ :=
   { hf.left_cancel_semigroup f mul, hf.comm_monoid f one mul with }
 
-variable [HasInv M₁] [Div M₁]
+variable [Inv M₁] [Div M₁]
 
 /-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a `div_inv_monoid`
 if it admits an injective map that preserves `1`, `*`, `⁻¹`, and `/` to a `div_inv_monoid`.
@@ -188,11 +188,11 @@ See note [reducible non-instances]. -/
   to_additive SubNegMonoidₓ
       "A type endowed with `0`, `+`, unary `-`, and binary `-` is a `sub_neg_monoid`\nif it admits an injective map that preserves `0`, `+`, unary `-`, and binary `-` to\na `sub_neg_monoid`."]
 protected def DivInvMonoidₓ [DivInvMonoidₓ M₂] (f : M₁ → M₂) (hf : injective f) (one : f 1 = 1)
-    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
+    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
     DivInvMonoidₓ M₁ :=
-  { hf.monoid f one mul, ‹HasInv M₁›, ‹Div M₁› with
+  { hf.monoid f one mul, ‹Inv M₁›, ‹Div M₁› with
     div_eq_mul_inv := fun x y =>
-      hf $ by
+      hf <| by
         erw [div, mul, inv, div_eq_mul_inv] }
 
 /-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a `div_inv_monoid`
@@ -203,18 +203,18 @@ See note [reducible non-instances]. -/
   to_additive sub_neg_monoid_smul
       "A type endowed with `0`, `+`, unary `-`, and binary `-` is a `sub_neg_monoid`\nif it admits an injective map that preserves `0`, `+`, unary `-`, and binary `-` to\na `sub_neg_monoid`.\nThis version takes custom `nsmul` and `zsmul` as `[has_scalar ℕ M₁]` and\n`[has_scalar ℤ M₁]` arguments."]
 protected def div_inv_monoid_pow [Pow M₁ ℕ] [Pow M₁ ℤ] [DivInvMonoidₓ M₂] (f : M₁ → M₂) (hf : injective f)
-    (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹)
+    (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
     (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : DivInvMonoidₓ M₁ :=
   { hf.monoid_pow f one mul npow, hf.div_inv_monoid f one mul inv div with zpow := fun n x => x ^ n,
     zpow_zero' := fun x =>
-      hf $ by
+      hf <| by
         erw [zpow, zpow_zero, one],
     zpow_succ' := fun n x =>
-      hf $ by
+      hf <| by
         erw [zpow, mul, zpow_of_nat, pow_succₓ, zpow, zpow_of_nat],
     zpow_neg' := fun n x =>
-      hf $ by
+      hf <| by
         erw [zpow, zpow_neg_succ_of_nat, inv, zpow, zpow_coe_nat] }
 
 /-- A type endowed with `1`, `*` and `⁻¹` is a group,
@@ -224,10 +224,10 @@ See note [reducible non-instances]. -/
   to_additive
       "A type endowed with `0` and `+` is an additive group,\nif it admits an injective map that preserves `0` and `+` to an additive group."]
 protected def Groupₓ [Groupₓ M₂] (f : M₁ → M₂) (hf : injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : Groupₓ M₁ :=
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : Groupₓ M₁ :=
   { hf.div_inv_monoid f one mul inv div with
     mul_left_inv := fun x =>
-      hf $ by
+      hf <| by
         erw [mul, inv, mul_left_invₓ, one] }
 
 /-- A type endowed with `1`, `*` and `⁻¹` is a group,
@@ -238,7 +238,7 @@ See note [reducible non-instances]. -/
   to_additive add_group_smul
       "A type endowed with `0` and `+` is an additive group,\nif it admits an injective map that preserves `0` and `+` to an additive group.\nThis version takes custom `nsmul` and `zsmul` as `[has_scalar ℕ M₁]` and\n`[has_scalar ℤ M₁]` arguments."]
 protected def group_pow [Pow M₁ ℕ] [Pow M₁ ℤ] [Groupₓ M₂] (f : M₁ → M₂) (hf : injective f) (one : f 1 = 1)
-    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
+    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
     (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : Groupₓ M₁ :=
   { hf.div_inv_monoid_pow f one mul inv div npow zpow, hf.group f one mul inv div with }
 
@@ -249,7 +249,7 @@ See note [reducible non-instances]. -/
   to_additive
       "A type endowed with `0` and `+` is an additive commutative group,\nif it admits an injective map that preserves `0` and `+` to an additive commutative group."]
 protected def CommGroupₓ [CommGroupₓ M₂] (f : M₁ → M₂) (hf : injective f) (one : f 1 = 1)
-    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
+    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
     CommGroupₓ M₁ :=
   { hf.comm_monoid f one mul, hf.group f one mul inv div with }
 
@@ -274,7 +274,7 @@ protected def Semigroupₓ [Semigroupₓ M₁] (f : M₁ → M₂) (hf : surject
     Semigroupₓ M₂ :=
   { ‹Mul M₂› with
     mul_assoc :=
-      hf.forall₃.2 $ fun x y z => by
+      hf.forall₃.2 fun x y z => by
         simp only [← mul, mul_assoc] }
 
 /-- A type endowed with `*` is a commutative semigroup,
@@ -287,7 +287,7 @@ protected def CommSemigroupₓ [CommSemigroupₓ M₁] (f : M₁ → M₂) (hf :
     (mul : ∀ x y, f (x * y) = f x * f y) : CommSemigroupₓ M₂ :=
   { hf.semigroup f mul with
     mul_comm :=
-      hf.forall₂.2 $ fun x y => by
+      hf.forall₂.2 fun x y => by
         erw [← mul, ← mul, mul_comm] }
 
 variable [One M₂]
@@ -302,10 +302,10 @@ protected def MulOneClass [MulOneClass M₁] (f : M₁ → M₂) (hf : surjectiv
     (mul : ∀ x y, f (x * y) = f x * f y) : MulOneClass M₂ :=
   { ‹One M₂›, ‹Mul M₂› with
     one_mul :=
-      hf.forall.2 $ fun x => by
+      hf.forall.2 fun x => by
         erw [← one, ← mul, one_mulₓ],
     mul_one :=
-      hf.forall.2 $ fun x => by
+      hf.forall.2 fun x => by
         erw [← one, ← mul, mul_oneₓ] }
 
 /-- A type endowed with `1` and `*` is a monoid,
@@ -329,10 +329,10 @@ protected def monoid_pow [Pow M₂ ℕ] [Monoidₓ M₁] (f : M₁ → M₂) (hf
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : Monoidₓ M₂ :=
   { hf.monoid f one mul with npow := fun n x => x ^ n,
     npow_zero' :=
-      hf.forall.2 $ fun x => by
+      hf.forall.2 fun x => by
         erw [← npow, pow_zeroₓ, ← one],
     npow_succ' := fun n =>
-      hf.forall.2 $ fun x => by
+      hf.forall.2 fun x => by
         erw [← npow, pow_succₓ, ← npow, ← mul] }
 
 /-- A type endowed with `1` and `*` is a commutative monoid,
@@ -345,7 +345,7 @@ protected def CommMonoidₓ [CommMonoidₓ M₁] (f : M₁ → M₂) (hf : surje
     (mul : ∀ x y, f (x * y) = f x * f y) : CommMonoidₓ M₂ :=
   { hf.comm_semigroup f mul, hf.monoid f one mul with }
 
-variable [HasInv M₂] [Div M₂]
+variable [Inv M₂] [Div M₂]
 
 /-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a `div_inv_monoid`,
 if it admits a surjective map that preserves `1`, `*`, `⁻¹`, and `/` from a `div_inv_monoid`
@@ -354,11 +354,11 @@ See note [reducible non-instances]. -/
   to_additive SubNegMonoidₓ
       "A type endowed with `0`, `+`, and `-` (unary and binary) is an additive group,\nif it admits a surjective map that preserves `0`, `+`, and `-` from a `sub_neg_monoid`"]
 protected def DivInvMonoidₓ [DivInvMonoidₓ M₁] (f : M₁ → M₂) (hf : surjective f) (one : f 1 = 1)
-    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
+    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
     DivInvMonoidₓ M₂ :=
-  { hf.monoid f one mul, ‹Div M₂›, ‹HasInv M₂› with
+  { hf.monoid f one mul, ‹Div M₂›, ‹Inv M₂› with
     div_eq_mul_inv :=
-      hf.forall₂.2 $ fun x y => by
+      hf.forall₂.2 fun x y => by
         erw [← inv, ← mul, ← div, div_eq_mul_inv] }
 
 /-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a `div_inv_monoid`
@@ -369,18 +369,18 @@ See note [reducible non-instances]. -/
   to_additive sub_neg_monoid_smul
       "A type endowed with `0`, `+`, unary `-`, and binary `-` is a `sub_neg_monoid`\nif it admits a surjective map that preserves `0`, `+`, unary `-`, and binary `-` to\na `sub_neg_monoid`.\nThis version takes custom `nsmul` and `zsmul` as `[has_scalar ℕ M₂]` and\n`[has_scalar ℤ M₂]` arguments."]
 protected def div_inv_monoid_pow [Pow M₂ ℕ] [Pow M₂ ℤ] [DivInvMonoidₓ M₁] (f : M₁ → M₂) (hf : surjective f)
-    (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹)
+    (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
     (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : DivInvMonoidₓ M₂ :=
   { hf.monoid_pow f one mul npow, hf.div_inv_monoid f one mul inv div with zpow := fun n x => x ^ n,
     zpow_zero' :=
-      hf.forall.2 $ fun x => by
+      hf.forall.2 fun x => by
         erw [← zpow, zpow_zero, ← one],
     zpow_succ' := fun n =>
-      hf.forall.2 $ fun x => by
+      hf.forall.2 fun x => by
         erw [← zpow, ← zpow, zpow_of_nat, zpow_of_nat, pow_succₓ, ← mul],
     zpow_neg' := fun n =>
-      hf.forall.2 $ fun x => by
+      hf.forall.2 fun x => by
         erw [← zpow, ← zpow, zpow_neg_succ_of_nat, zpow_coe_nat, inv] }
 
 /-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a group,
@@ -390,10 +390,10 @@ See note [reducible non-instances]. -/
   to_additive
       "A type endowed with `0`, `+`, and unary `-` is an additive group,\nif it admits a surjective map that preserves `0`, `+`, and `-` from an additive group."]
 protected def Groupₓ [Groupₓ M₁] (f : M₁ → M₂) (hf : surjective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : Groupₓ M₂ :=
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : Groupₓ M₂ :=
   { hf.div_inv_monoid f one mul inv div with
     mul_left_inv :=
-      hf.forall.2 $ fun x => by
+      hf.forall.2 fun x => by
         erw [← inv, ← mul, mul_left_invₓ, one] <;> rfl }
 
 /-- A type endowed with `1`, `*` and `⁻¹` is a group,
@@ -404,7 +404,7 @@ See note [reducible non-instances]. -/
   to_additive add_group_smul
       "A type endowed with `0` and `+` is an additive group,\nif it admits a surjective map that preserves `0` and `+` to an additive group.\nThis version takes custom `nsmul` and `zsmul` as `[has_scalar ℕ M₂]` and\n`[has_scalar ℤ M₂]` arguments."]
 protected def group_pow [Pow M₂ ℕ] [Pow M₂ ℤ] [Groupₓ M₁] (f : M₁ → M₂) (hf : surjective f) (one : f 1 = 1)
-    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
+    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
     (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : Groupₓ M₂ :=
   { hf.div_inv_monoid_pow f one mul inv div npow zpow, hf.group f one mul inv div with }
 
@@ -415,7 +415,7 @@ See note [reducible non-instances]. -/
   to_additive
       "A type endowed with `0` and `+` is an additive commutative group,\nif it admits a surjective map that preserves `0` and `+` to an additive commutative group."]
 protected def CommGroupₓ [CommGroupₓ M₁] (f : M₁ → M₂) (hf : surjective f) (one : f 1 = 1)
-    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
+    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
     CommGroupₓ M₂ :=
   { hf.comm_monoid f one mul, hf.group f one mul inv div with }
 

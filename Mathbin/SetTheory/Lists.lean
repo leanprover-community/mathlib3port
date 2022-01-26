@@ -333,17 +333,17 @@ section Decidable
 
 @[simp]
 def equiv.decidable_meas :
-    (Psum (Σ' l₁ : Lists α, Lists α) $ Psum (Σ' l₁ : Lists' α tt, Lists' α tt) (Σ' a : Lists α, Lists' α tt)) → ℕ
+    (Psum (Σ' l₁ : Lists α, Lists α) <| Psum (Σ' l₁ : Lists' α tt, Lists' α tt) (Σ' a : Lists α, Lists' α tt)) → ℕ
   | Psum.inl ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
-  | Psum.inr $ Psum.inl ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
-  | Psum.inr $ Psum.inr ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
+  | Psum.inr <| Psum.inl ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
+  | Psum.inr <| Psum.inr ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
 
 open WellFoundedTactics
 
 theorem sizeof_pos {b} (l : Lists' α b) : 0 < sizeof l := by
   cases l <;>
     run_tac
-      unfold_sizeof; trivial_nat_lt
+      andthen unfold_sizeof trivial_nat_lt
 
 theorem lt_sizeof_cons' {b} (a : Lists' α b) l : sizeof (⟨b, a⟩ : Lists α) < sizeof (Lists'.cons' a l) := by
   run_tac
@@ -354,17 +354,17 @@ mutual
   @[instance]
   def equiv.decidable [DecidableEq α] : ∀ l₁ l₂ : Lists α, Decidable (l₁ ~ l₂)
     | ⟨ff, l₁⟩, ⟨ff, l₂⟩ =>
-      decidableOfIff' (l₁ = l₂) $ by
+      decidableOfIff' (l₁ = l₂) <| by
         cases l₁ <;>
           refine'
             equiv_atom.trans
               (by
                 simp [atom])
     | ⟨ff, l₁⟩, ⟨tt, l₂⟩ =>
-      is_false $ by
+      is_false <| by
         rintro ⟨⟩
     | ⟨tt, l₁⟩, ⟨ff, l₂⟩ =>
-      is_false $ by
+      is_false <| by
         rintro ⟨⟩
     | ⟨tt, l₁⟩, ⟨tt, l₂⟩ => by
       have :=
@@ -395,7 +395,7 @@ mutual
   @[instance]
   def mem.decidable [DecidableEq α] : ∀ a : Lists α l : Lists' α tt, Decidable (a ∈ l)
     | a, Lists'.nil =>
-      is_false $ by
+      is_false <| by
         rintro ⟨_, ⟨⟩, _⟩
     | a, Lists'.cons' b l₂ => by
       have :=
@@ -426,7 +426,7 @@ theorem mem_of_subset {a} {l₁ l₂ : Lists' α tt} (s : l₁ ⊆ l₂) : a ∈
   | ⟨a', m, e⟩ => (mem_equiv_left e).2 (mem_of_subset' s m)
 
 theorem subset.trans {l₁ l₂ l₃ : Lists' α tt} (h₁ : l₁ ⊆ l₂) (h₂ : l₂ ⊆ l₃) : l₁ ⊆ l₃ :=
-  subset_def.2 $ fun a₁ m₁ => mem_of_subset h₂ $ mem_of_subset' h₁ m₁
+  subset_def.2 fun a₁ m₁ => mem_of_subset h₂ <| mem_of_subset' h₁ m₁
 
 end Lists'
 

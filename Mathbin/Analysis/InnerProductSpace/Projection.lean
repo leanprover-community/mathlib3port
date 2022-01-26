@@ -66,7 +66,7 @@ theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.nonempty) (h�
   let δ := ⨅ w : K, ∥u - w∥
   let this' : Nonempty K := ne.to_subtype
   have zero_le_δ : 0 ≤ δ := le_cinfi fun _ => norm_nonneg _
-  have δ_le : ∀ w : K, δ ≤ ∥u - w∥ := cinfi_le ⟨0, Set.forall_range_iff.2 $ fun _ => norm_nonneg _⟩
+  have δ_le : ∀ w : K, δ ≤ ∥u - w∥ := cinfi_le ⟨0, Set.forall_range_iff.2 fun _ => norm_nonneg _⟩
   have δ_le' : ∀, ∀ w ∈ K, ∀, δ ≤ ∥u - w∥ := fun w hw => δ_le ⟨w, hw⟩
   have exists_seq : ∃ w : ℕ → K, ∀ n, ∥u - w n∥ < δ + 1 / (n + 1) := by
     have hδ : ∀ n : ℕ, δ < δ + 1 / (n + 1) := fun n => lt_add_of_le_of_pos (le_reflₓ _) Nat.one_div_pos_of_nat
@@ -136,10 +136,10 @@ theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.nonempty) (h�
       exact norm_nonneg _
     have eq₂ : ∥a∥ * ∥a∥ ≤ (δ + div) * (δ + div) :=
       mul_self_le_mul_self (norm_nonneg _)
-        (le_transₓ (le_of_ltₓ $ hw q) (add_le_add_left (Nat.one_div_le_one_div hq) _))
+        (le_transₓ (le_of_ltₓ <| hw q) (add_le_add_left (Nat.one_div_le_one_div hq) _))
     have eq₂' : ∥b∥ * ∥b∥ ≤ (δ + div) * (δ + div) :=
       mul_self_le_mul_self (norm_nonneg _)
-        (le_transₓ (le_of_ltₓ $ hw p) (add_le_add_left (Nat.one_div_le_one_div hp) _))
+        (le_transₓ (le_of_ltₓ <| hw p) (add_le_add_left (Nat.one_div_le_one_div hp) _))
     rw [dist_eq_norm]
     apply nonneg_le_nonneg_of_sq_le_sq
     · exact sqrt_nonneg _
@@ -538,7 +538,7 @@ theorem orthogonal_projection_eq_self_iff {v : E} : (orthogonalProjection K v : 
 theorem LinearIsometry.map_orthogonal_projection {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E']
     (f : E →ₗᵢ[𝕜] E') (p : Submodule 𝕜 E) [CompleteSpace p] (x : E) :
     f (orthogonalProjection p x) = orthogonalProjection (p.map f.to_linear_map) (f x) := by
-  refine' (eq_orthogonal_projection_of_mem_of_inner_eq_zero (Submodule.apply_coe_mem_map _ _) $ fun y hy => _).symm
+  refine' ((eq_orthogonal_projection_of_mem_of_inner_eq_zero (Submodule.apply_coe_mem_map _ _)) fun y hy => _).symm
   rcases hy with ⟨x', hx', rfl : f x' = y⟩
   rw [f.coe_to_linear_map, ← f.map_sub, f.inner_map_map, orthogonal_projection_inner_eq_zero x x' hx']
 
@@ -567,7 +567,7 @@ variable (𝕜)
 
 theorem smul_orthogonal_projection_singleton {v : E} (w : E) :
     (∥v∥ ^ 2 : 𝕜) • (orthogonalProjection (𝕜∙v) w : E) = ⟪v, w⟫ • v := by
-  suffices ↑orthogonalProjection (𝕜∙v) ((∥v∥ ^ 2 : 𝕜) • w) = ⟪v, w⟫ • v by
+  suffices ↑(orthogonalProjection (𝕜∙v) ((∥v∥ ^ 2 : 𝕜) • w)) = ⟪v, w⟫ • v by
     simpa using this
   apply eq_orthogonal_projection_of_mem_of_inner_eq_zero
   · rw [Submodule.mem_span_singleton]
@@ -593,7 +593,7 @@ theorem orthogonal_projection_singleton {v : E} (w : E) : (orthogonalProjection 
       
     
   have hv' : ∥v∥ ≠ 0 := ne_of_gtₓ (norm_pos_iff.mpr hv)
-  have key : ((∥v∥ ^ 2 : 𝕜)⁻¹ * ∥v∥ ^ 2) • ↑orthogonalProjection (𝕜∙v) w = ((∥v∥ ^ 2 : 𝕜)⁻¹ * ⟪v, w⟫) • v := by
+  have key : ((∥v∥ ^ 2 : 𝕜)⁻¹ * ∥v∥ ^ 2) • ↑(orthogonalProjection (𝕜∙v) w) = ((∥v∥ ^ 2 : 𝕜)⁻¹ * ⟪v, w⟫) • v := by
     simp [mul_smul, smul_orthogonal_projection_singleton 𝕜 w]
   convert key <;> field_simp [hv']
 
@@ -639,7 +639,7 @@ def reflection : E ≃ₗᵢ[𝕜] E :=
 variable {K}
 
 /-- The result of reflecting. -/
-theorem reflection_apply (p : E) : reflection K p = bit0 (↑orthogonalProjection K p) - p :=
+theorem reflection_apply (p : E) : reflection K p = bit0 ↑(orthogonalProjection K p) - p :=
   rfl
 
 /-- Reflection is its own inverse. -/
@@ -649,7 +649,7 @@ theorem reflection_symm : (reflection K).symm = reflection K :=
 
 /-- Reflection is its own inverse. -/
 @[simp]
-theorem reflection_inv : reflection K⁻¹ = reflection K :=
+theorem reflection_inv : (reflection K)⁻¹ = reflection K :=
   rfl
 
 variable (K)
@@ -666,7 +666,7 @@ theorem reflection_involutive : Function.Involutive (reflection K) :=
 /-- Reflection is involutive. -/
 @[simp]
 theorem reflection_trans_reflection : (reflection K).trans (reflection K) = LinearIsometryEquiv.refl 𝕜 E :=
-  LinearIsometryEquiv.ext $ reflection_involutive K
+  LinearIsometryEquiv.ext <| reflection_involutive K
 
 /-- Reflection is involutive. -/
 @[simp]
@@ -694,7 +694,7 @@ theorem reflection_map_apply {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerPr
 theorem reflection_map {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E ≃ₗᵢ[𝕜] E')
     (K : Submodule 𝕜 E) [CompleteSpace K] :
     reflection (K.map (f.to_linear_equiv : E →ₗ[𝕜] E')) = f.symm.trans ((reflection K).trans f) :=
-  LinearIsometryEquiv.ext $ reflection_map_apply f K
+  LinearIsometryEquiv.ext <| reflection_map_apply f K
 
 /-- Reflection through the trivial subspace {0} is just negation. -/
 @[simp]
@@ -867,7 +867,7 @@ theorem id_eq_sum_orthogonal_projection_self_orthogonal_complement [CompleteSpac
 
 /-- The orthogonal projection is self-adjoint. -/
 theorem inner_orthogonal_projection_left_eq_right [CompleteSpace E] [CompleteSpace K] (u v : E) :
-    ⟪↑orthogonalProjection K u, v⟫ = ⟪u, orthogonalProjection K v⟫ := by
+    ⟪↑(orthogonalProjection K u), v⟫ = ⟪u, orthogonalProjection K v⟫ := by
   nth_rw 0[eq_sum_orthogonal_projection_self_orthogonal_complement K v]
   nth_rw 1[eq_sum_orthogonal_projection_self_orthogonal_complement K u]
   rw [inner_add_left, inner_add_right,
@@ -922,7 +922,7 @@ attribute [local instance] fact_finite_dimensional_of_finrank_eq_succ
 span of a nonzero vector is one less than the dimension of the space. -/
 theorem finrank_orthogonal_span_singleton {n : ℕ} [_i : Fact (finrank 𝕜 E = n + 1)] {v : E} (hv : v ≠ 0) :
     finrank 𝕜 (𝕜∙v)ᗮ = n :=
-  Submodule.finrank_add_finrank_orthogonal' $ by
+  Submodule.finrank_add_finrank_orthogonal' <| by
     simp [finrank_span_singleton hv, _i.elim, add_commₓ]
 
 /-- An element `φ` of the orthogonal group of `F` can be factored as a product of reflections, and
@@ -1021,7 +1021,7 @@ variable {ι : Type _}
 they provide an internal direct sum decomposition of `E`) if and only if their span has trivial
 orthogonal complement. -/
 theorem OrthogonalFamily.submodule_is_internal_iff_of_is_complete [DecidableEq ι] {V : ι → Submodule 𝕜 E}
-    (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) (hc : IsComplete (↑supr V : Set E)) :
+    (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) (hc : IsComplete (↑(supr V) : Set E)) :
     DirectSum.SubmoduleIsInternal V ↔ (supr V)ᗮ = ⊥ := by
   have : CompleteSpace (↥supr V) := hc.complete_space_coe
   simp only [DirectSum.submodule_is_internal_iff_independent_and_supr_eq_top, hV.independent, true_andₓ,
@@ -1194,7 +1194,7 @@ inner product space `E`.  This should not be accessed directly, but only via the
 irreducible_def DirectSum.SubmoduleIsInternal.sigmaOrthonormalBasisIndexEquiv :
   (Σ i, OrthonormalBasisIndex 𝕜 (V i)) ≃ Finₓ n :=
   let b := hV.collected_basis fun i => orthonormalBasis 𝕜 (V i)
-  Fintype.equivFinOfCardEq $ (FiniteDimensional.finrank_eq_card_basis b).symm.trans hn
+  Fintype.equivFinOfCardEq <| (FiniteDimensional.finrank_eq_card_basis b).symm.trans hn
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. -/

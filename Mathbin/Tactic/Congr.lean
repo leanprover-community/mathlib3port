@@ -63,11 +63,11 @@ the depth of recursive applications.
 -/
 unsafe def congr' : Option ℕ → tactic Unit
   | o =>
-    focus1 $
-      (assumption <|>
+    focus1 <|
+      assumption <|>
         reflexivity transparency.none <|>
           by_proof_irrel <|>
-            guardₓ (o ≠ some 0) >> congr_core' >> all_goals' (try (congr' (Nat.pred <$> o))) <|> reflexivity)
+            (guardₓ (o ≠ some 0) >> congr_core') >> all_goals' (try (congr' (Nat.pred <$> o))) <|> reflexivity
 
 namespace Interactive
 
@@ -127,7 +127,7 @@ unsafe def rcongr : parse («expr *» rcases_patt_parse_hi) → tactic Unit
           (tactic.congr' none >>
             (done <|> do
               let s ← target
-              guardₓ $ ¬s =ₐ t)) |
+              guardₓ <| ¬expr.alpha_eqv s t)) |
       skip
     done <|> rcongr (qs.lhoare ps)
 
@@ -192,7 +192,7 @@ unsafe def convert (sym : parse (with_desc "←" («expr ?» (tk "<-")))) (r : p
   set_goals [v]
   try (tactic.congr' n)
   let gs' ← get_goals
-  set_goals $ gs' ++ gs
+  set_goals <| gs' ++ gs
 
 add_tactic_doc
   { Name := "convert", category := DocCategory.tactic, declNames := [`tactic.interactive.convert],
@@ -226,7 +226,7 @@ end
 ```
 -/
 unsafe def ac_change (r : parse texpr) (n : parse («expr ?» (tk "using" *> small_nat))) : tactic Unit :=
-  convert_to r n; try ac_refl
+  andthen (convert_to r n) (try ac_refl)
 
 add_tactic_doc
   { Name := "convert_to", category := DocCategory.tactic,

@@ -38,7 +38,7 @@ theorem inv_gold : φ⁻¹ = -ψ := by
     ne_of_gtₓ
       (add_pos
           (by
-            norm_num) $
+            norm_num) <|
         real.sqrt_pos.mpr
           (by
             norm_num))
@@ -92,7 +92,7 @@ theorem gold_conj_sq : ψ ^ 2 = ψ + 1 := by
 theorem gold_pos : 0 < φ :=
   mul_pos
       (by
-        apply add_pos <;> norm_num) $
+        apply add_pos <;> norm_num) <|
     inv_pos.2 zero_lt_two
 
 theorem gold_ne_zero : φ ≠ 0 :=
@@ -209,8 +209,8 @@ theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n
     
   · ring_nf
     exact
-      (@fibRec ℝ _).solSpace.sub_mem (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5⁻¹) geom_gold_is_sol_fib_rec)
-        (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5⁻¹) geom_gold_conj_is_sol_fib_rec)
+      (@fibRec ℝ _).solSpace.sub_mem (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5)⁻¹ geom_gold_is_sol_fib_rec)
+        (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5)⁻¹ geom_gold_conj_is_sol_fib_rec)
     
 
 /-- Binet's formula as a dependent equality. -/

@@ -126,7 +126,7 @@ variable [T2Space M] {v : vector_measure α M} {f : ℕ → Set α}
 theorem has_sum_of_disjoint_Union [Encodable β] {f : β → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
     (hf₂ : Pairwise (Disjoint on f)) : HasSum (fun i => v (f i)) (v (⋃ i, f i)) := by
   set g := fun i : ℕ => ⋃ (b : β) (H : b ∈ Encodable.decode₂ β i), f b with hg
-  have hg₁ : ∀ i, MeasurableSet (g i) := fun _ => MeasurableSet.Union fun b => MeasurableSet.Union_Prop $ fun _ => hf₁ b
+  have hg₁ : ∀ i, MeasurableSet (g i) := fun _ => MeasurableSet.Union fun b => MeasurableSet.Union_Prop fun _ => hf₁ b
   have hg₂ : Pairwise (Disjoint on g) := Encodable.Union_decode₂_disjoint_on hf₂
   have := v.of_disjoint_Union_nat hg₁ hg₂
   rw [hg, Encodable.Union_decode₂] at this
@@ -293,7 +293,7 @@ def neg (v : vector_measure α M) : vector_measure α M where
     simp
   not_measurable' := fun _ hi => by
     simp [v.not_measurable hi]
-  m_Union' := fun f hf₁ hf₂ => HasSum.neg $ v.m_Union hf₁ hf₂
+  m_Union' := fun f hf₁ hf₂ => HasSum.neg <| v.m_Union hf₁ hf₂
 
 instance : Neg (vector_measure α M) :=
   ⟨neg⟩
@@ -650,7 +650,7 @@ def restrict (v : vector_measure α M) (i : Set α) : vector_measure α M :=
       not_measurable' := fun i hi => if_neg hi,
       m_Union' := by
         intro f hf₁ hf₂
-        convert v.m_Union (fun n => (hf₁ n).inter hi) (hf₂.mono $ fun i j => Disjoint.mono inf_le_left inf_le_left)
+        convert v.m_Union (fun n => (hf₁ n).inter hi) (hf₂.mono fun i j => Disjoint.mono inf_le_left inf_le_left)
         · ext n
           rw [if_pos (hf₁ n)]
           
@@ -1068,7 +1068,7 @@ theorem refl (v : vector_measure α M) : v ≪ᵥ v :=
   Eq rfl
 
 @[trans]
-theorem trans {u : vector_measure α L} (huv : u ≪ᵥ v) (hvw : v ≪ᵥ w) : u ≪ᵥ w := fun _ hs => huv $ hvw hs
+theorem trans {u : vector_measure α L} (huv : u ≪ᵥ v) (hvw : v ≪ᵥ w) : u ≪ᵥ w := fun _ hs => huv <| hvw hs
 
 theorem zero (v : vector_measure α N) : (0 : vector_measure α M) ≪ᵥ v := fun s _ => vector_measure.zero_apply s
 
@@ -1331,7 +1331,7 @@ theorem to_measure_of_zero_le_apply (hi : 0 ≤[i] s) (hi₁ : MeasurableSet i) 
 /-- Given a signed measure `s` and a negative measurable set `i`, `to_measure_of_le_zero`
 provides the measure, mapping measurable sets `j` to `-s (i ∩ j)`. -/
 def to_measure_of_le_zero (s : signed_measure α) (i : Set α) (hi₁ : MeasurableSet i) (hi₂ : s ≤[i] 0) : Measureₓ α :=
-  to_measure_of_zero_le (-s) i hi₁ $ @neg_zero (vector_measure α ℝ) _ ▸ neg_le_neg _ _ hi₁ hi₂
+  to_measure_of_zero_le (-s) i hi₁ <| @neg_zero (vector_measure α ℝ) _ ▸ neg_le_neg _ _ hi₁ hi₂
 
 theorem to_measure_of_le_zero_apply (hi : s ≤[i] 0) (hi₁ : MeasurableSet i) (hj₁ : MeasurableSet j) :
     s.to_measure_of_le_zero i hi₁ hi j =

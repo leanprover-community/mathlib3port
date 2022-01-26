@@ -19,56 +19,56 @@ variable {f : I → Type v}
 
 variable (x y : ∀ i, f i) (i : I)
 
-instance Distrib [∀ i, Distrib $ f i] : Distrib (∀ i : I, f i) := by
+instance Distrib [∀ i, Distrib <| f i] : Distrib (∀ i : I, f i) := by
   refine_struct { add := · + ·, mul := · * ·, .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance NonUnitalNonAssocSemiring [∀ i, NonUnitalNonAssocSemiring $ f i] : NonUnitalNonAssocSemiring (∀ i : I, f i) :=
+instance NonUnitalNonAssocSemiring [∀ i, NonUnitalNonAssocSemiring <| f i] : NonUnitalNonAssocSemiring (∀ i : I, f i) :=
   by
   refine_struct { zero := (0 : ∀ i, f i), add := · + ·, mul := · * ·, .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance NonUnitalSemiring [∀ i, NonUnitalSemiring $ f i] : NonUnitalSemiring (∀ i : I, f i) := by
+instance NonUnitalSemiring [∀ i, NonUnitalSemiring <| f i] : NonUnitalSemiring (∀ i : I, f i) := by
   refine_struct { zero := (0 : ∀ i, f i), add := · + ·, mul := · * ·, .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance NonAssocSemiring [∀ i, NonAssocSemiring $ f i] : NonAssocSemiring (∀ i : I, f i) := by
+instance NonAssocSemiring [∀ i, NonAssocSemiring <| f i] : NonAssocSemiring (∀ i : I, f i) := by
   refine_struct { zero := (0 : ∀ i, f i), one := 1, add := · + ·, mul := · * ·, .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance Semiringₓ [∀ i, Semiringₓ $ f i] : Semiringₓ (∀ i : I, f i) := by
+instance Semiringₓ [∀ i, Semiringₓ <| f i] : Semiringₓ (∀ i : I, f i) := by
   refine_struct
       { zero := (0 : ∀ i, f i), one := 1, add := · + ·, mul := · * ·, nsmul := AddMonoidₓ.nsmul,
         npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance CommSemiringₓ [∀ i, CommSemiringₓ $ f i] : CommSemiringₓ (∀ i : I, f i) := by
+instance CommSemiringₓ [∀ i, CommSemiringₓ <| f i] : CommSemiringₓ (∀ i : I, f i) := by
   refine_struct
       { zero := (0 : ∀ i, f i), one := 1, add := · + ·, mul := · * ·, nsmul := AddMonoidₓ.nsmul,
         npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance NonUnitalNonAssocRing [∀ i, NonUnitalNonAssocRing $ f i] : NonUnitalNonAssocRing (∀ i : I, f i) := by
+instance NonUnitalNonAssocRing [∀ i, NonUnitalNonAssocRing <| f i] : NonUnitalNonAssocRing (∀ i : I, f i) := by
   refine_struct
       { zero := (0 : ∀ i, f i), add := · + ·, mul := · * ·, neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
         zsmul := SubNegMonoidₓ.zsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance Ringₓ [∀ i, Ringₓ $ f i] : Ringₓ (∀ i : I, f i) := by
+instance Ringₓ [∀ i, Ringₓ <| f i] : Ringₓ (∀ i : I, f i) := by
   refine_struct
       { zero := (0 : ∀ i, f i), one := 1, add := · + ·, mul := · * ·, neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
         zsmul := SubNegMonoidₓ.zsmul, npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance CommRingₓ [∀ i, CommRingₓ $ f i] : CommRingₓ (∀ i : I, f i) := by
+instance CommRingₓ [∀ i, CommRingₓ <| f i] : CommRingₓ (∀ i : I, f i) := by
   refine_struct
       { zero := (0 : ∀ i, f i), one := 1, add := · + ·, mul := · * ·, neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
         zsmul := SubNegMonoidₓ.zsmul, npow := Monoidₓ.npow } <;>
@@ -81,10 +81,10 @@ instance CommRingₓ [∀ i, CommRingₓ $ f i] : CommRingₓ (∀ i : I, f i) :
 protected def RingHom {γ : Type w} [∀ i, NonAssocSemiring (f i)] [NonAssocSemiring γ] (g : ∀ i, γ →+* f i) :
     γ →+* ∀ i, f i where
   toFun := fun x b => g b x
-  map_add' := fun x y => funext $ fun z => (g z).map_add x y
-  map_mul' := fun x y => funext $ fun z => (g z).map_mul x y
-  map_one' := funext $ fun z => (g z).map_one
-  map_zero' := funext $ fun z => (g z).map_zero
+  map_add' := fun x y => funext fun z => (g z).map_add x y
+  map_mul' := fun x y => funext fun z => (g z).map_mul x y
+  map_one' := funext fun z => (g z).map_one
+  map_zero' := funext fun z => (g z).map_zero
 
 theorem ring_hom_injective {γ : Type w} [Nonempty I] [∀ i, NonAssocSemiring (f i)] [NonAssocSemiring γ]
     (g : ∀ i, γ →+* f i) (hg : ∀ i, Function.Injective (g i)) : Function.Injective (Pi.ringHom g) := fun x y h =>

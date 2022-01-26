@@ -660,10 +660,10 @@ theorem nat_cast_zero {α} [Semiringₓ α] : ↑(0 : ℕ) = (0 : α) :=
 theorem nat_cast_one {α} [Semiringₓ α] : ↑(1 : ℕ) = (1 : α) :=
   Nat.cast_one
 
-theorem nat_cast_bit0 {α} [Semiringₓ α] (a : ℕ) (a' : α) (h : ↑a = a') : ↑bit0 a = bit0 a' :=
+theorem nat_cast_bit0 {α} [Semiringₓ α] (a : ℕ) (a' : α) (h : ↑a = a') : ↑(bit0 a) = bit0 a' :=
   h ▸ Nat.cast_bit0 _
 
-theorem nat_cast_bit1 {α} [Semiringₓ α] (a : ℕ) (a' : α) (h : ↑a = a') : ↑bit1 a = bit1 a' :=
+theorem nat_cast_bit1 {α} [Semiringₓ α] (a : ℕ) (a' : α) (h : ↑a = a') : ↑(bit1 a) = bit1 a' :=
   h ▸ Nat.cast_bit1 _
 
 theorem int_cast_zero {α} [Ringₓ α] : ↑(0 : ℤ) = (0 : α) :=
@@ -672,16 +672,16 @@ theorem int_cast_zero {α} [Ringₓ α] : ↑(0 : ℤ) = (0 : α) :=
 theorem int_cast_one {α} [Ringₓ α] : ↑(1 : ℤ) = (1 : α) :=
   Int.cast_one
 
-theorem int_cast_bit0 {α} [Ringₓ α] (a : ℤ) (a' : α) (h : ↑a = a') : ↑bit0 a = bit0 a' :=
+theorem int_cast_bit0 {α} [Ringₓ α] (a : ℤ) (a' : α) (h : ↑a = a') : ↑(bit0 a) = bit0 a' :=
   h ▸ Int.cast_bit0 _
 
-theorem int_cast_bit1 {α} [Ringₓ α] (a : ℤ) (a' : α) (h : ↑a = a') : ↑bit1 a = bit1 a' :=
+theorem int_cast_bit1 {α} [Ringₓ α] (a : ℤ) (a' : α) (h : ↑a = a') : ↑(bit1 a) = bit1 a' :=
   h ▸ Int.cast_bit1 _
 
-theorem rat_cast_bit0 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : ↑a = a') : ↑bit0 a = bit0 a' :=
+theorem rat_cast_bit0 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : ↑a = a') : ↑(bit0 a) = bit0 a' :=
   h ▸ Rat.cast_bit0 _
 
-theorem rat_cast_bit1 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : ↑a = a') : ↑bit1 a = bit1 a' :=
+theorem rat_cast_bit1 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : ↑a = a') : ↑(bit1 a) = bit1 a' :=
   h ▸ Rat.cast_bit1 _
 
 /-- Given `a' : α` a natural numeral, returns `(a : ℕ, ⊢ ↑a = a')`.
@@ -870,7 +870,7 @@ unsafe def prove_clear_denom : instance_cache → expr → expr → ℚ → ℕ 
 
 theorem clear_denom_add {α} [DivisionRing α] (a a' b b' c c' d : α) (h₀ : d ≠ 0) (ha : a * d = a') (hb : b * d = b')
     (hc : c * d = c') (h : a' + b' = c') : a + b = c :=
-  mul_right_cancel₀ h₀ $ by
+  mul_right_cancel₀ h₀ <| by
     rwa [add_mulₓ, ha, hb, hc]
 
 /-- Given `a`,`b`,`c` nonnegative rational numerals, returns `⊢ a + b = c`. -/
@@ -957,8 +957,8 @@ unsafe def prove_clear_denom_simple (c : instance_cache) (a : expr) (na : ℚ) :
 
 theorem clear_denom_mul {α} [Field α] (a a' b b' c c' d₁ d₂ d : α) (ha : d₁ ≠ 0 ∧ a * d₁ = a')
     (hb : d₂ ≠ 0 ∧ b * d₂ = b') (hc : c * d = c') (hd : d₁ * d₂ = d) (h : a' * b' = c') : a * b = c :=
-  mul_right_cancel₀ ha.1 $
-    mul_right_cancel₀ hb.1 $ by
+  mul_right_cancel₀ ha.1 <|
+    mul_right_cancel₀ hb.1 <| by
       rw [mul_assoc c, hd, hc, ← h, ← ha.2, ← hb.2, ← mul_assoc, mul_right_commₓ a]
 
 /-- Given `a`,`b` nonnegative rational numerals, returns `(c, ⊢ a * b = c)`. -/
@@ -1070,7 +1070,7 @@ theorem div_eq {α} [DivisionRing α] (a b b' c : α) (hb : b⁻¹ = b') (h : a 
 /-- Given `a`,`b` rational numerals, returns `(c, ⊢ a / b = c)`. -/
 unsafe def prove_div (ic : instance_cache) (a b : expr) (na nb : ℚ) : tactic (instance_cache × expr × expr) := do
   let (ic, b', pb) ← prove_inv ic b nb
-  let (ic, c, p) ← prove_mul_rat ic a b' na (nb⁻¹)
+  let (ic, c, p) ← prove_mul_rat ic a b' na nb⁻¹
   let (ic, p) ← ic.mk_app `` div_eq [a, b, b', c, pb, p]
   return (ic, c, p)
 
@@ -1114,7 +1114,7 @@ theorem sub_nat_pos (a b c : ℕ) (h : b + c = a) : a - b = c :=
   h ▸ add_tsub_cancel_left _ _
 
 theorem sub_nat_neg (a b c : ℕ) (h : a + c = b) : a - b = 0 :=
-  tsub_eq_zero_iff_le.mpr $ h ▸ Nat.le_add_rightₓ _ _
+  tsub_eq_zero_iff_le.mpr <| h ▸ Nat.le_add_rightₓ _ _
 
 /-- Given `a : nat`,`b : nat` natural numerals, returns `(c, ⊢ a - b = c)`. -/
 unsafe def prove_sub_nat (ic : instance_cache) (a b : expr) : tactic (expr × expr) := do
@@ -1153,7 +1153,7 @@ unsafe def eval_field : expr → tactic (expr × expr)
   | quote.1 (@Sub.sub (%%ₓα) (%%ₓinst) (%%ₓa) (%%ₓb)) => do
     let c ← mk_instance_cache α
     if α = quote.1 Nat then prove_sub_nat c a b else Prod.snd <$> prove_sub c a b
-  | quote.1 (HasInv.inv (%%ₓe)) => do
+  | quote.1 (Inv.inv (%%ₓe)) => do
     let n ← e.to_rat
     let c ← infer_type e >>= mk_instance_cache
     Prod.snd <$> prove_inv c e n
@@ -1264,7 +1264,7 @@ unsafe def false_intro (p : expr) : tactic (expr × expr) :=
   Prod.mk (quote.1 False) <$> mk_app `` eq_false_intro [p]
 
 theorem not_refl_false_intro {α} (a : α) : (a ≠ a) = False :=
-  eq_false_intro $ not_not_intro rfl
+  eq_false_intro <| not_not_intro rfl
 
 /-- Evaluates the inequality operations `=`,`<`,`>`,`≤`,`≥`,`≠` on numerals. -/
 unsafe def eval_ineq : expr → tactic (expr × expr)
@@ -1385,12 +1385,12 @@ unsafe def prove_div_mod (ic : instance_cache) : expr → expr → Bool → tact
           else failed
 
 theorem dvd_eq_nat (a b c : ℕ) p (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
-  (propext $ by
+  (propext <| by
         rw [← h₁, Nat.dvd_iff_mod_eq_zeroₓ]).trans
     h₂
 
 theorem dvd_eq_int (a b c : ℤ) p (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
-  (propext $ by
+  (propext <| by
         rw [← h₁, Int.dvd_iff_mod_eq_zero]).trans
     h₂
 
@@ -1595,7 +1595,7 @@ unsafe def derive' (step : expr → tactic (expr × expr)) : expr → tactic (ex
       ext_simplify_core () {  } simp_lemmas.mk (fun _ => failed) (fun _ _ _ _ _ => failed)
           (fun _ _ _ _ e => do
             let (new_e, pr) ← step e
-            guardₓ ¬new_e =ₐ e
+            guardₓ ¬expr.alpha_eqv new_e e
             return ((), new_e, some pr, tt))
           `eq e
     return (e', pr)
@@ -1614,17 +1614,17 @@ the basic builtin set of simplifications. -/
 unsafe def tactic.norm_num1 (step : expr → tactic (expr × expr)) (loc : Interactive.Loc) : tactic Unit := do
   let ns ← loc.get_locals
   let success ← tactic.replace_at (norm_num.derive' step) ns loc.include_goal
-  when loc.include_goal $ try tactic.triv
-  when ¬ns.empty $ try tactic.contradiction
-  Monadₓ.unlessb success $ (done <|> fail "norm_num failed to simplify")
+  when loc.include_goal <| try tactic.triv
+  when ¬ns.empty <| try tactic.contradiction
+  Monadₓ.unlessb success <| done <|> fail "norm_num failed to simplify"
 
 /-- Normalize numerical expressions. It uses the provided `step` tactic to simplify the expression;
 use `get_step` to get the default `norm_num` set and `derive.step` for the basic builtin set of
 simplifications. -/
 unsafe def tactic.norm_num (step : expr → tactic (expr × expr)) (hs : List simp_arg_type) (l : Interactive.Loc) :
     tactic Unit :=
-  repeat1 $
-    orelse' (tactic.norm_num1 step l) $
+  repeat1 <|
+    orelse' (tactic.norm_num1 step l) <|
       interactive.simp_core {  } (tactic.norm_num1 step (Interactive.Loc.ns [none])) ff
           (simp_arg_type.except `` one_div :: hs) [] l >>
         skip
@@ -1715,8 +1715,8 @@ and can prove goals of the form `A = B`, `A ≠ B`, `A < B` and `A ≤ B`,
 where `A` and `B` are numerical expressions.
 It also has a relatively simple primality prover. -/
 unsafe def norm_num (hs : parse simp_arg_list) : conv Unit :=
-  repeat1 $
-    orelse' norm_num1 $
+  repeat1 <|
+    orelse' norm_num1 <|
       conv.interactive.simp ff (simp_arg_type.except `` one_div :: hs) []
         { discharger := tactic.interactive.norm_num1 (loc.ns [none]) }
 

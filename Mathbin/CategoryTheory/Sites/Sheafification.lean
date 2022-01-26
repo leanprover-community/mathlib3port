@@ -48,7 +48,7 @@ instance {X} (P : Cᵒᵖ ⥤ D) (S : J.cover X) : CoeFun (meq P S) fun x => ∀
 
 @[ext]
 theorem ext {X} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x y : meq P S) (h : ∀ I : S.arrow, x I = y I) : x = y :=
-  Subtype.ext $ funext $ h
+  Subtype.ext <| funext <| h
 
 theorem condition {X} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : meq P S) (I : S.relation) :
     P.map I.g₁.op (x ((S.index P).fstTo I)) = P.map I.g₂.op (x ((S.index P).sndTo I)) :=
@@ -419,7 +419,7 @@ def to_sheafify (P : Cᵒᵖ ⥤ D) : P ⟶ J.sheafify P :=
 
 /-- The canonical map on sheafifications induced by a morphism. -/
 def sheafify_map {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.sheafify P ⟶ J.sheafify Q :=
-  J.plus_map $ J.plus_map η
+  J.plus_map <| J.plus_map η
 
 @[simp]
 theorem sheafify_map_id (P : Cᵒᵖ ⥤ D) : J.sheafify_map (𝟙 P) = 𝟙 (J.sheafify P) := by
@@ -536,8 +536,8 @@ variable (D)
 def presheaf_to_Sheaf : (Cᵒᵖ ⥤ D) ⥤ Sheaf J D where
   obj := fun P => ⟨J.sheafify P, J.sheafify_is_sheaf P⟩
   map := fun P Q η => ⟨J.sheafify_map η⟩
-  map_id' := fun P => Sheaf.hom.ext _ _ $ J.sheafify_map_id _
-  map_comp' := fun P Q R f g => Sheaf.hom.ext _ _ $ J.sheafify_map_comp _ _
+  map_id' := fun P => Sheaf.hom.ext _ _ <| J.sheafify_map_id _
+  map_comp' := fun P Q R f g => Sheaf.hom.ext _ _ <| J.sheafify_map_comp _ _
 
 /-- The sheafification functor is left adjoint to the forgetful functor. -/
 @[simps unit_app counit_app_val]
@@ -545,7 +545,7 @@ def sheafification_adjunction : presheaf_to_Sheaf J D ⊣ Sheaf_to_presheaf J D 
   adjunction.mk_of_hom_equiv
     { homEquiv := fun P Q =>
         { toFun := fun e => J.to_sheafify P ≫ e.val, invFun := fun e => ⟨J.sheafify_lift e Q.2⟩,
-          left_inv := fun e => Sheaf.hom.ext _ _ $ (J.sheafify_lift_unique _ _ _ rfl).symm,
+          left_inv := fun e => Sheaf.hom.ext _ _ <| (J.sheafify_lift_unique _ _ _ rfl).symm,
           right_inv := fun e => J.to_sheafify_sheafify_lift _ _ },
       hom_equiv_naturality_left_symm' := by
         intro P Q R η γ

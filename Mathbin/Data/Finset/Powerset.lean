@@ -39,7 +39,8 @@ theorem powerset_empty : Finset.powerset (∅ : Finset α) = {∅} :=
 
 @[simp]
 theorem powerset_mono {s t : Finset α} : powerset s ⊆ powerset t ↔ s ⊆ t :=
-  ⟨fun h => mem_powerset.1 $ h $ mem_powerset_self _, fun st u h => mem_powerset.2 $ subset.trans (mem_powerset.1 h) st⟩
+  ⟨fun h => mem_powerset.1 <| h <| mem_powerset_self _, fun st u h =>
+    mem_powerset.2 <| subset.trans (mem_powerset.1 h) st⟩
 
 /-- **Number of Subsets of a Set** -/
 @[simp]
@@ -159,7 +160,7 @@ theorem mem_powerset_len {n} {s t : Finset α} : s ∈ powerset_len n t ↔ s �
 
 @[simp]
 theorem powerset_len_mono {n} {s t : Finset α} (h : s ⊆ t) : powerset_len n s ⊆ powerset_len n t := fun u h' =>
-  mem_powerset_len.2 $ And.imp (fun h₂ => subset.trans h₂ h) id (mem_powerset_len.1 h')
+  mem_powerset_len.2 <| And.imp (fun h₂ => subset.trans h₂ h) id (mem_powerset_len.1 h')
 
 /-- **Formula for the Number of Combinations** -/
 @[simp]

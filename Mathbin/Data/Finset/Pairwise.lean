@@ -34,7 +34,7 @@ variable [Lattice α] [OrderBot α]
 `set.pairwise_disjoint.bUnion`. -/
 theorem pairwise_disjoint.bUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f : ι → α}
     (hs : s.pairwise_disjoint fun i' : ι' => (g i').sup f) (hg : ∀, ∀ i ∈ s, ∀, (g i : Set ι).PairwiseDisjoint f) :
-    (⋃ i ∈ s, ↑g i).PairwiseDisjoint f := by
+    (⋃ i ∈ s, ↑(g i)).PairwiseDisjoint f := by
   rintro a ha b hb hab
   simp_rw [Set.mem_Union]  at ha hb
   obtain ⟨c, hc, ha⟩ := ha

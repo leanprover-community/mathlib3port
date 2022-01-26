@@ -98,7 +98,7 @@ protected unsafe def expr.eval_rat : expr → Option ℚ
   | quote.1 ((%%ₓa) * %%ₓb) => (· * ·) <$> a.eval_rat <*> b.eval_rat
   | quote.1 ((%%ₓa) / %%ₓb) => (· / ·) <$> a.eval_rat <*> b.eval_rat
   | quote.1 (-%%ₓa) => Neg.neg <$> a.eval_rat
-  | quote.1 ((%%ₓa)⁻¹) => HasInv.inv <$> a.eval_rat
+  | quote.1 (%%ₓa)⁻¹ => Inv.inv <$> a.eval_rat
   | _ => none
 
 /-- `expr.of_rat α q` embeds `q` as a numeral expression inside the type `α`.

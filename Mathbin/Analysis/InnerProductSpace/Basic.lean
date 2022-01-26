@@ -1156,12 +1156,12 @@ end
 /-- Polarization identity: The real inner product, in terms of the norm. -/
 theorem real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two (x y : F) :
     ⟪x, y⟫_ℝ = (∥x + y∥ * ∥x + y∥ - ∥x∥ * ∥x∥ - ∥y∥ * ∥y∥) / 2 :=
-  re_to_real.symm.trans $ re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two x y
+  re_to_real.symm.trans <| re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two x y
 
 /-- Polarization identity: The real inner product, in terms of the norm. -/
 theorem real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two (x y : F) :
     ⟪x, y⟫_ℝ = (∥x∥ * ∥x∥ + ∥y∥ * ∥y∥ - ∥x - y∥ * ∥x - y∥) / 2 :=
-  re_to_real.symm.trans $ re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two x y
+  re_to_real.symm.trans <| re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two x y
 
 /-- Pythagorean theorem, if-and-only-if vector inner product form. -/
 theorem norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero (x y : F) :
@@ -1362,7 +1362,7 @@ theorem abs_inner_eq_norm_iff (x y : E) (hx0 : x ≠ 0) (hy0 : y ≠ 0) :
       rwa [IsROrC.abs_div, abs_of_real, _root_.abs_mul, abs_norm_eq_norm, abs_norm_eq_norm, div_eq_one_iff_eq hxy0] at h
       
   rw [h₁, abs_inner_div_norm_mul_norm_eq_one_iff x y]
-  have : x ≠ 0 := fun h => hx0' $ norm_eq_zero.mpr h
+  have : x ≠ 0 := fun h => hx0' <| norm_eq_zero.mpr h
   simp [this]
 
 /-- The inner product of two vectors, divided by the product of their
@@ -1702,7 +1702,7 @@ theorem OrthogonalFamily.inner_right_dfinsupp (l : ⨁ i, G i) (i : ι) (v : G i
   calc
     ⟪V i v, l.sum fun j => V j⟫ = l.sum fun j => fun w => ⟪V i v, V j w⟫ := Dfinsupp.inner_sum (fun j => V j) l (V i v)
     _ = l.sum fun j => fun w => ite (i = j) ⟪V i v, V j w⟫ 0 :=
-      congr_argₓ l.sum $ funext $ fun j => funext $ hV.eq_ite v
+      congr_argₓ l.sum <| funext fun j => funext <| hV.eq_ite v
     _ = ⟪v, l i⟫ := by
       simp only [Dfinsupp.sum, Submodule.coe_inner, Finset.sum_ite_eq, ite_eq_left_iff, Dfinsupp.mem_support_to_fun]
       split_ifs with h h
@@ -1719,7 +1719,7 @@ theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : 
   classical <;>
     calc ⟪V i v, ∑ j : ι, V j (l j)⟫ = ∑ j : ι, ⟪V i v, V j (l j)⟫ := by
         rw [inner_sum]_ = ∑ j, ite (i = j) ⟪V i v, V j (l j)⟫ 0 :=
-        congr_argₓ (Finset.sum Finset.univ) $ funext $ fun j => hV.eq_ite v (l j)_ = ⟪v, l i⟫ := by
+        congr_argₓ (Finset.sum Finset.univ) <| funext fun j => hV.eq_ite v (l j)_ = ⟪v, l i⟫ := by
         simp
 
 theorem OrthogonalFamily.inner_sum (l₁ l₂ : ∀ i, G i) (s : Finset ι) :
@@ -1945,7 +1945,7 @@ theorem ContinuousOn.inner (hf : ContinuousOn f s) (hg : ContinuousOn g s) : Con
   fun x hx => (hf x hx).inner (hg x hx)
 
 theorem Continuous.inner (hf : Continuous f) (hg : Continuous g) : Continuous fun t => ⟪f t, g t⟫ :=
-  continuous_iff_continuous_at.2 $ fun x => hf.continuous_at.inner hg.continuous_at
+  continuous_iff_continuous_at.2 fun x => hf.continuous_at.inner hg.continuous_at
 
 end Continuous
 
@@ -1959,7 +1959,7 @@ theorem ContinuousLinearMap.re_apply_inner_self_apply (T : E →L[𝕜] E) (x : 
   rfl
 
 theorem ContinuousLinearMap.re_apply_inner_self_continuous (T : E →L[𝕜] E) : Continuous T.re_apply_inner_self :=
-  re_clm.Continuous.comp $ T.continuous.inner continuous_id
+  re_clm.Continuous.comp <| T.continuous.inner continuous_id
 
 theorem ContinuousLinearMap.re_apply_inner_self_smul (T : E →L[𝕜] E) (x : E) {c : 𝕜} :
     T.re_apply_inner_self (c • x) = ∥c∥ ^ 2 * T.re_apply_inner_self x := by
@@ -2023,7 +2023,7 @@ theorem mem_orthogonal_singleton_of_inner_right (u : E) {v : E} (hv : ⟪u, v⟫
 
 /-- A vector orthogonal to `u` lies in `(𝕜 ∙ u)ᗮ`. -/
 theorem mem_orthogonal_singleton_of_inner_left (u : E) {v : E} (hv : ⟪v, u⟫ = 0) : v ∈ (𝕜∙u)ᗮ :=
-  mem_orthogonal_singleton_of_inner_right u $ inner_eq_zero_sym.2 hv
+  mem_orthogonal_singleton_of_inner_right u <| inner_eq_zero_sym.2 hv
 
 variable (K)
 
@@ -2066,7 +2066,7 @@ variable (𝕜 E)
 /-- `submodule.orthogonal` gives a `galois_connection` between
 `submodule 𝕜 E` and its `order_dual`. -/
 theorem Submodule.orthogonal_gc :
-    @GaloisConnection (Submodule 𝕜 E) (OrderDual $ Submodule 𝕜 E) _ _ Submodule.orthogonal Submodule.orthogonal :=
+    @GaloisConnection (Submodule 𝕜 E) (OrderDual <| Submodule 𝕜 E) _ _ Submodule.orthogonal Submodule.orthogonal :=
   fun K₁ K₂ =>
   ⟨fun h v hv u hu => Submodule.inner_left_of_mem_orthogonal hv (h hu), fun h v hv u hu =>
     Submodule.inner_left_of_mem_orthogonal hv (h hu)⟩
@@ -2098,7 +2098,7 @@ theorem Submodule.infi_orthogonal {ι : Type _} (K : ι → Submodule 𝕜 E) : 
   (Submodule.orthogonal_gc 𝕜 E).l_supr.symm
 
 /-- The inf of a set of orthogonal subspaces equals the subspace orthogonal to the sup. -/
-theorem Submodule.Inf_orthogonal (s : Set $ Submodule 𝕜 E) : (⨅ K ∈ s, Kᗮ) = (Sup s)ᗮ :=
+theorem Submodule.Inf_orthogonal (s : Set <| Submodule 𝕜 E) : (⨅ K ∈ s, Kᗮ) = (Sup s)ᗮ :=
   (Submodule.orthogonal_gc 𝕜 E).l_Sup.symm
 
 @[simp]

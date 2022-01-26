@@ -82,11 +82,11 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
     simp only [this]
     exact
       tendsto.comp continuous_norm.continuous_at
-        ((tendsto.comp (f_cont' v v_in) tendsto_snd).sub $ tendsto.comp (f_cont' u u_in) tendsto_fst)
+        ((tendsto.comp (f_cont' v v_in) tendsto_snd).sub <| tendsto.comp (f_cont' u u_in) tendsto_fst)
     
   · apply tendsto_nhds_within_of_tendsto_nhds
     rw [nhds_prod_eq]
-    exact tendsto_const_nhds.mul (tendsto.comp continuous_norm.continuous_at $ tendsto_snd.sub tendsto_fst)
+    exact tendsto_const_nhds.mul (tendsto.comp continuous_norm.continuous_at <| tendsto_snd.sub tendsto_fst)
     
 
 /-- If a function is differentiable on the right of a point `a : ℝ`, continuous at `a`, and
@@ -94,13 +94,13 @@ its derivative also converges at `a`, then `f` is differentiable on the right at
 theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ} {f : ℝ → E}
     (f_diff : DifferentiableOn ℝ f s) (f_lim : ContinuousWithinAt f s a) (hs : s ∈ 𝓝[>] a)
     (f_lim' : tendsto (fun x => deriv f x) (𝓝[>] a) (𝓝 e)) : HasDerivWithinAt f e (Ici a) a := by
-  obtain ⟨b, ab, sab⟩ : ∃ b ∈ Ioi a, Ioc a b ⊆ s := mem_nhds_within_Ioi_iff_exists_Ioc_subset.1 hs
+  obtain ⟨b, ab : a < b, sab : Ioc a b ⊆ s⟩ := mem_nhds_within_Ioi_iff_exists_Ioc_subset.1 hs
   let t := Ioo a b
   have ts : t ⊆ s := subset.trans Ioo_subset_Ioc_self sab
   have t_diff : DifferentiableOn ℝ f t := f_diff.mono ts
   have t_conv : Convex ℝ t := convex_Ioo a b
   have t_open : IsOpen t := is_open_Ioo
-  have t_closure : Closure t = Icc a b := closure_Ioo ab
+  have t_closure : Closure t = Icc a b := closure_Ioo ab.ne
   have t_cont : ∀, ∀ y ∈ Closure t, ∀, ContinuousWithinAt f t y := by
     rw [t_closure]
     intro y hy
@@ -131,7 +131,7 @@ theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e :
   have t_diff : DifferentiableOn ℝ f t := f_diff.mono ts
   have t_conv : Convex ℝ t := convex_Ioo b a
   have t_open : IsOpen t := is_open_Ioo
-  have t_closure : Closure t = Icc b a := closure_Ioo ba
+  have t_closure : Closure t = Icc b a := closure_Ioo (ne_of_ltₓ ba)
   have t_cont : ∀, ∀ y ∈ Closure t, ∀, ContinuousWithinAt f t y := by
     rw [t_closure]
     intro y hy

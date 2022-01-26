@@ -196,31 +196,31 @@ theorem iterated_deriv_mul :
     
   calc
     (p * q).iteratedDeriv n.succ =
-        (∑ k : ℕ in range n.succ, C (↑n.choose k) * p.iterated_deriv (n - k) * q.iterated_deriv k).derivative :=
+        (∑ k : ℕ in range n.succ, C ↑(n.choose k) * p.iterated_deriv (n - k) * q.iterated_deriv k).derivative :=
       by
       rw [iterated_deriv_succ,
         IH]_ =
-        (∑ k : ℕ in range n.succ, C (↑n.choose k) * p.iterated_deriv (n - k + 1) * q.iterated_deriv k) +
-          ∑ k : ℕ in range n.succ, C (↑n.choose k) * p.iterated_deriv (n - k) * q.iterated_deriv (k + 1) :=
+        (∑ k : ℕ in range n.succ, C ↑(n.choose k) * p.iterated_deriv (n - k + 1) * q.iterated_deriv k) +
+          ∑ k : ℕ in range n.succ, C ↑(n.choose k) * p.iterated_deriv (n - k) * q.iterated_deriv (k + 1) :=
       by
       simp_rw [derivative_sum, derivative_mul, derivative_C, zero_mul, zero_addₓ, iterated_deriv_succ,
         sum_add_distrib]_ =
-        (∑ k : ℕ in range n.succ, C (↑n.choose k.succ) * p.iterated_deriv (n - k) * q.iterated_deriv (k + 1)) +
-            C (↑1) * p.iterated_deriv n.succ * q.iterated_deriv 0 +
-          ∑ k : ℕ in range n.succ, C (↑n.choose k) * p.iterated_deriv (n - k) * q.iterated_deriv (k + 1) :=
+        (∑ k : ℕ in range n.succ, C ↑(n.choose k.succ) * p.iterated_deriv (n - k) * q.iterated_deriv (k + 1)) +
+            C ↑1 * p.iterated_deriv n.succ * q.iterated_deriv 0 +
+          ∑ k : ℕ in range n.succ, C ↑(n.choose k) * p.iterated_deriv (n - k) * q.iterated_deriv (k + 1) :=
       _ _ =
-        ((∑ k : ℕ in range n.succ, C (↑n.choose k) * p.iterated_deriv (n - k) * q.iterated_deriv (k + 1)) +
-            ∑ k : ℕ in range n.succ, C (↑n.choose k.succ) * p.iterated_deriv (n - k) * q.iterated_deriv (k + 1)) +
-          C (↑1) * p.iterated_deriv n.succ * q.iterated_deriv 0 :=
+        ((∑ k : ℕ in range n.succ, C ↑(n.choose k) * p.iterated_deriv (n - k) * q.iterated_deriv (k + 1)) +
+            ∑ k : ℕ in range n.succ, C ↑(n.choose k.succ) * p.iterated_deriv (n - k) * q.iterated_deriv (k + 1)) +
+          C ↑1 * p.iterated_deriv n.succ * q.iterated_deriv 0 :=
       by
       ring _ =
         (∑ i : ℕ in range n.succ,
-            C (↑(n + 1).choose (i + 1)) * p.iterated_deriv (n + 1 - (i + 1)) * q.iterated_deriv (i + 1)) +
-          C (↑1) * p.iterated_deriv n.succ * q.iterated_deriv 0 :=
+            C ↑((n + 1).choose (i + 1)) * p.iterated_deriv (n + 1 - (i + 1)) * q.iterated_deriv (i + 1)) +
+          C ↑1 * p.iterated_deriv n.succ * q.iterated_deriv 0 :=
       by
       simp_rw [choose_succ_succ, succ_sub_succ, cast_add, C.map_add, add_mulₓ,
         sum_add_distrib]_ =
-        ∑ k : ℕ in range n.succ.succ, C (↑n.succ.choose k) * p.iterated_deriv (n.succ - k) * q.iterated_deriv k :=
+        ∑ k : ℕ in range n.succ.succ, C ↑(n.succ.choose k) * p.iterated_deriv (n.succ - k) * q.iterated_deriv k :=
       by
       rw [sum_range_succ' _ n.succ, choose_zero_right, tsub_zero]
   congr

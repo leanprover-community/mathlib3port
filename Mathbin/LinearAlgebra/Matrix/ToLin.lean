@@ -314,7 +314,7 @@ theorem LinearMap.to_matrix_apply (f : M₁ →ₗ[R] M₂) (i : m) (j : n) :
 
 theorem LinearMap.to_matrix_transpose_apply (f : M₁ →ₗ[R] M₂) (j : n) :
     (LinearMap.toMatrix v₁ v₂ f)ᵀ j = v₂.repr (f (v₁ j)) :=
-  funext $ fun i => f.to_matrix_apply _ _ i j
+  funext fun i => f.to_matrix_apply _ _ i j
 
 theorem LinearMap.to_matrix_apply' (f : M₁ →ₗ[R] M₂) (i : m) (j : n) :
     LinearMap.toMatrix v₁ v₂ f i j = v₂.repr (f (v₁ j)) i :=
@@ -441,7 +441,7 @@ theorem LinearMap.to_matrix_alg_equiv_apply (f : M₁ →ₗ[R] M₁) (i j : n) 
 
 theorem LinearMap.to_matrix_alg_equiv_transpose_apply (f : M₁ →ₗ[R] M₁) (j : n) :
     (LinearMap.toMatrixAlgEquiv v₁ f)ᵀ j = v₁.repr (f (v₁ j)) :=
-  funext $ fun i => f.to_matrix_apply _ _ i j
+  funext fun i => f.to_matrix_apply _ _ i j
 
 theorem LinearMap.to_matrix_alg_equiv_apply' (f : M₁ →ₗ[R] M₁) (i j : n) :
     LinearMap.toMatrixAlgEquiv v₁ f i j = v₁.repr (f (v₁ j)) i :=

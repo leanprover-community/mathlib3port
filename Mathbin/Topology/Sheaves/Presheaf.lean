@@ -195,7 +195,7 @@ def pullback_obj_obj_of_image_open {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : Y.preshe
         fapply costructured_arrow.hom_mk
         change op (unop _) ⟶ op (⟨_, H⟩ : opens _)
         refine' (hom_of_le _).op
-        exact (Set.image_subset f s.X.hom.unop.le).trans (set.image_preimage.l_u_le (↑unop s.X.left))
+        exact (Set.image_subset f s.X.hom.unop.le).trans (set.image_preimage.l_u_le ↑(unop s.X.left))
         simp }
   exact is_colimit.cocone_point_unique_up_to_iso (colimit.is_colimit _) (colimit_of_diagram_terminal hx _)
 
@@ -260,7 +260,7 @@ def pushforward {X Y : Top.{v}} (f : X ⟶ Y) : X.presheaf C ⥤ Y.presheaf C wh
 
 @[simp]
 theorem pushforward_map_app' {X Y : Top.{v}} (f : X ⟶ Y) {ℱ 𝒢 : X.presheaf C} (α : ℱ ⟶ 𝒢) {U : opens Yᵒᵖ} :
-    ((pushforward C f).map α).app U = α.app (op $ (opens.map f).obj U.unop) :=
+    ((pushforward C f).map α).app U = α.app (op <| (opens.map f).obj U.unop) :=
   rfl
 
 theorem id_pushforward {X : Top.{v}} : pushforward C (𝟙 X) = 𝟭 (X.presheaf C) := by

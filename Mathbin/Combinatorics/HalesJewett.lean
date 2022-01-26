@@ -176,13 +176,13 @@ private theorem exists_mono_in_high_dimension' :
       ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : line α ι, l.is_mono C :=
   Fintype.induction_empty_option
     (fun α α' e =>
-      forall_imp $ fun κ =>
-        forall_imp $ fun _ =>
-          Exists.impₓ $ fun ι =>
-            Exists.impₓ $ fun _ h C =>
+      forall_imp fun κ =>
+        forall_imp fun _ =>
+          Exists.impₓ fun ι =>
+            Exists.impₓ fun _ h C =>
               let ⟨l, c, lc⟩ := h fun v => C (e ∘ v)
               ⟨l.map e, c,
-                e.forall_congr_left.mp $ fun x => by
+                e.forall_congr_left.mp fun x => by
                   rw [← lc x, line.map_apply]⟩)
     (by
       intros κ _
@@ -280,7 +280,7 @@ theorem exists_mono_homothetic_copy {M κ} [AddCommMonoidₓ M] (S : Finset M) [
     ∃ a > 0, ∃ (b : M)(c : κ), ∀, ∀ s ∈ S, ∀, C (a • s + b) = c := by
   obtain ⟨ι, _inst, hι⟩ := line.exists_mono_in_high_dimension S κ
   skip
-  specialize hι fun v => C $ ∑ i, v i
+  specialize hι fun v => C <| ∑ i, v i
   obtain ⟨l, c, hl⟩ := hι
   set s : Finset ι := { i ∈ Finset.univ | l.idx_fun i = none } with hs
   refine' ⟨s.card, finset.card_pos.mpr ⟨l.proper.some, _⟩, ∑ i in sᶜ, ((l.idx_fun i).map coe).getOrElse 0, c, _⟩

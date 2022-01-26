@@ -20,17 +20,17 @@ variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
-theorem _root_.is_smul_regular.pi {α : Type _} [∀ i, HasScalar α $ f i] {k : α} (hk : ∀ i, IsSmulRegular (f i) k) :
-    IsSmulRegular (∀ i, f i) k := fun _ _ h => funext $ fun i => hk i (congr_funₓ h i : _)
+theorem _root_.is_smul_regular.pi {α : Type _} [∀ i, HasScalar α <| f i] {k : α} (hk : ∀ i, IsSmulRegular (f i) k) :
+    IsSmulRegular (∀ i, f i) k := fun _ _ h => funext fun i => hk i (congr_funₓ h i : _)
 
 instance SmulWithZero α [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α (f i)] : SmulWithZero α (∀ i, f i) :=
-  { Pi.hasScalar with smul_zero := fun _ => funext $ fun _ => smul_zero' (f _) _,
-    zero_smul := fun _ => funext $ fun _ => zero_smul _ _ }
+  { Pi.hasScalar with smul_zero := fun _ => funext fun _ => smul_zero' (f _) _,
+    zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 
 instance smul_with_zero' {g : I → Type _} [∀ i, Zero (g i)] [∀ i, Zero (f i)] [∀ i, SmulWithZero (g i) (f i)] :
     SmulWithZero (∀ i, g i) (∀ i, f i) :=
-  { Pi.hasScalar' with smul_zero := fun _ => funext $ fun _ => smul_zero' (f _) _,
-    zero_smul := fun _ => funext $ fun _ => zero_smul _ _ }
+  { Pi.hasScalar' with smul_zero := fun _ => funext fun _ => smul_zero' (f _) _,
+    zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 
 instance MulActionWithZero α [MonoidWithZeroₓ α] [∀ i, Zero (f i)] [∀ i, MulActionWithZero α (f i)] :
     MulActionWithZero α (∀ i, f i) :=
@@ -42,10 +42,10 @@ instance mul_action_with_zero' {g : I → Type _} [∀ i, MonoidWithZeroₓ (g i
 
 variable (I f)
 
-instance Module α {r : Semiringₓ α} {m : ∀ i, AddCommMonoidₓ $ f i} [∀ i, Module α $ f i] :
+instance Module α {r : Semiringₓ α} {m : ∀ i, AddCommMonoidₓ <| f i} [∀ i, Module α <| f i] :
     @Module α (∀ i : I, f i) r (@Pi.addCommMonoid I f m) :=
-  { Pi.distribMulAction _ with add_smul := fun c f g => funext $ fun i => add_smul _ _ _,
-    zero_smul := fun f => funext $ fun i => zero_smul α _ }
+  { Pi.distribMulAction _ with add_smul := fun c f g => funext fun i => add_smul _ _ _,
+    zero_smul := fun f => funext fun i => zero_smul α _ }
 
 variable {I f}
 
@@ -60,8 +60,8 @@ instance module' {g : I → Type _} {r : ∀ i, Semiringₓ (f i)} {m : ∀ i, A
     ext1
     apply zero_smul
 
-instance α {r : Semiringₓ α} {m : ∀ i, AddCommMonoidₓ $ f i} [∀ i, Module α $ f i] [∀ i, NoZeroSmulDivisors α $ f i] :
-    NoZeroSmulDivisors α (∀ i : I, f i) :=
+instance α {r : Semiringₓ α} {m : ∀ i, AddCommMonoidₓ <| f i} [∀ i, Module α <| f i]
+    [∀ i, NoZeroSmulDivisors α <| f i] : NoZeroSmulDivisors α (∀ i : I, f i) :=
   ⟨fun c x h => or_iff_not_imp_left.mpr fun hc => funext fun i => (smul_eq_zero.mp (congr_funₓ h i)).resolve_left hc⟩
 
 end Pi

@@ -35,7 +35,7 @@ class Module.Free : Prop where
 theorem Module.free_def [Small.{w} M] : Module.Free R M ↔ ∃ I : Type w, Nonempty (Basis I R M) :=
   ⟨fun h =>
     ⟨Shrink (Set.Range h.exists_basis.some.2), ⟨(Basis.reindexRange h.exists_basis.some.2).reindex (equivShrink _)⟩⟩,
-    fun h => ⟨(nonempty_sigmaₓ.2 h).map $ fun ⟨i, b⟩ => ⟨Set.Range b, b.reindex_range⟩⟩⟩
+    fun h => ⟨(nonempty_sigmaₓ.2 h).map fun ⟨i, b⟩ => ⟨Set.Range b, b.reindex_range⟩⟩⟩
 
 theorem Module.free_iff_set : Module.Free R M ↔ ∃ S : Set M, Nonempty (Basis S R M) :=
   ⟨fun h => ⟨Set.Range h.exists_basis.some.2, ⟨Basis.reindexRange h.exists_basis.some.2⟩⟩, fun ⟨S, hS⟩ =>
@@ -90,16 +90,16 @@ instance (priority := 100) NoZeroSmulDivisors [NoZeroDivisors R] : NoZeroSmulDiv
 /-- The product of finitely many free modules is free. -/
 instance pi {ι : Type _} [Fintype ι] {M : ι → Type _} [∀ i : ι, AddCommGroupₓ (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (∀ i, M i) :=
-  of_basis $ Pi.basis $ fun i => choose_basis R (M i)
+  of_basis <| Pi.basis fun i => choose_basis R (M i)
 
 /-- The module of finite matrices is free. -/
 instance Matrix {n : Type _} [Fintype n] {m : Type _} [Fintype m] : Module.Free R (Matrix n m R) :=
-  of_basis $ Matrix.stdBasis R n m
+  of_basis <| Matrix.stdBasis R n m
 
 variable {R M N}
 
 theorem of_equiv (e : M ≃ₗ[R] N) : Module.Free R N :=
-  of_basis $ (choose_basis R M).map e
+  of_basis <| (choose_basis R M).map e
 
 /-- A variation of `of_equiv`: the assumption `module.free R P` here is explicit rather than an
 instance. -/
@@ -113,20 +113,20 @@ instance {ι : Type v} : Module.Free R (ι →₀ R) :=
   of_basis (Basis.of_repr (LinearEquiv.refl _ _))
 
 instance {ι : Type v} [Fintype ι] : Module.Free R (ι → R) :=
-  of_equiv (Basis.of_repr $ LinearEquiv.refl _ _).equivFun
+  of_equiv (Basis.of_repr <| LinearEquiv.refl _ _).equivFun
 
 instance Prod [Module.Free R N] : Module.Free R (M × N) :=
-  of_basis $ (choose_basis R M).Prod (choose_basis R N)
+  of_basis <| (choose_basis R M).Prod (choose_basis R N)
 
 instance self : Module.Free R R :=
-  of_basis $ Basis.singleton Unit R
+  of_basis <| Basis.singleton Unit R
 
 instance (priority := 100) of_subsingleton [Subsingleton N] : Module.Free R N :=
   of_basis (Basis.empty N : Basis Pempty R N)
 
 instance Dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
-  of_basis $ Dfinsupp.basis $ fun i => choose_basis R (M i)
+  of_basis <| Dfinsupp.basis fun i => choose_basis R (M i)
 
 instance DirectSum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (⨁ i, M i) :=

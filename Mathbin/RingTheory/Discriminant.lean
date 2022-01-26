@@ -309,7 +309,7 @@ theorem discr_mul_is_integral_mem_adjoin [IsDomain R] [IsSeparable K L] [IsInteg
     refine' Subalgebra.pow_mem _ (subset_adjoin (Set.mem_singleton _)) _
   intro i
   rw [← H, ← mul_vec_smul] at cramer
-  replace cramer := congr_argₓ (mul_vec (trace_matrix K B.basis⁻¹)) cramer
+  replace cramer := congr_argₓ (mul_vec (trace_matrix K B.basis)⁻¹) cramer
   rw [mul_vec_mul_vec, nonsing_inv_mul _ hinv, mul_vec_mul_vec, nonsing_inv_mul _ hinv, one_mul_vec, one_mul_vec] at
     cramer
   rw [← congr_funₓ cramer i, cramer_apply, det_apply]
@@ -317,13 +317,14 @@ theorem discr_mul_is_integral_mem_adjoin [IsDomain R] [IsSeparable K L] [IsInteg
   by_cases' hji : j = i
   · simp only [update_column_apply, hji, eq_self_iff_true, PowerBasis.coe_basis]
     exact
-      mem_bot.2 (IsIntegrallyClosed.is_integral_iff.1 $ is_integral_trace $ is_integral_mul hz $ IsIntegral.pow hint _)
+      mem_bot.2
+        (IsIntegrallyClosed.is_integral_iff.1 <| is_integral_trace <| is_integral_mul hz <| IsIntegral.pow hint _)
     
   · simp only [update_column_apply, hji, PowerBasis.coe_basis]
     exact
       mem_bot.2
-        (IsIntegrallyClosed.is_integral_iff.1 $
-          is_integral_trace $ is_integral_mul (IsIntegral.pow hint _) (IsIntegral.pow hint _))
+        (IsIntegrallyClosed.is_integral_iff.1 <|
+          is_integral_trace <| is_integral_mul (IsIntegral.pow hint _) (IsIntegral.pow hint _))
     
 
 end Integral

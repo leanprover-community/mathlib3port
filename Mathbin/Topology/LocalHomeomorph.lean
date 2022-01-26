@@ -196,13 +196,13 @@ theorem eventually_right_inverse' (e : LocalHomeomorph α β) {x} (hx : x ∈ e.
   e.eventually_right_inverse (e.map_source hx)
 
 theorem eventually_ne_nhds_within (e : LocalHomeomorph α β) {x} (hx : x ∈ e.source) : ∀ᶠ x' in 𝓝[≠] x, e x' ≠ e x :=
-  eventually_nhds_within_iff.2 $
-    (e.eventually_left_inverse hx).mono $ fun x' hx' =>
-      mt $ fun h => by
+  eventually_nhds_within_iff.2 <|
+    (e.eventually_left_inverse hx).mono fun x' hx' =>
+      mt fun h => by
         rw [mem_singleton_iff, ← e.left_inv hx, ← h, hx']
 
 theorem nhds_within_source_inter {x} (hx : x ∈ e.source) (s : Set α) : 𝓝[e.source ∩ s] x = 𝓝[s] x :=
-  nhds_within_inter_of_mem (mem_nhds_within_of_mem_nhds $ IsOpen.mem_nhds e.open_source hx)
+  nhds_within_inter_of_mem (mem_nhds_within_of_mem_nhds <| IsOpen.mem_nhds e.open_source hx)
 
 theorem nhds_within_target_inter {x} (hx : x ∈ e.target) (s : Set β) : 𝓝[e.target ∩ s] x = 𝓝[s] x :=
   e.symm.nhds_within_source_inter hx s
@@ -252,7 +252,7 @@ theorem symm_target : e.symm.target = e.source :=
 
 @[simp, mfld_simps]
 theorem symm_symm : e.symm.symm = e :=
-  eq_of_local_equiv_eq $ by
+  eq_of_local_equiv_eq <| by
     simp
 
 /-- A local homeomorphism is continuous at any point of its source -/
@@ -267,10 +267,10 @@ theorem tendsto_symm {x} (hx : x ∈ e.source) : tendsto e.symm (𝓝 (e x)) (�
   simpa only [ContinuousAt, e.left_inv hx] using e.continuous_at_symm (e.map_source hx)
 
 theorem map_nhds_eq {x} (hx : x ∈ e.source) : map e (𝓝 x) = 𝓝 (e x) :=
-  le_antisymmₓ (e.continuous_at hx) $ le_map_of_right_inverse (e.eventually_right_inverse' hx) (e.tendsto_symm hx)
+  le_antisymmₓ (e.continuous_at hx) <| le_map_of_right_inverse (e.eventually_right_inverse' hx) (e.tendsto_symm hx)
 
 theorem symm_map_nhds_eq {x} (hx : x ∈ e.source) : map e.symm (𝓝 (e x)) = 𝓝 x :=
-  (e.symm.map_nhds_eq $ e.map_source hx).trans $ by
+  (e.symm.map_nhds_eq <| e.map_source hx).trans <| by
     rw [e.left_inv hx]
 
 theorem image_mem_nhds {x} (hx : x ∈ e.source) {s : Set α} (hs : s ∈ 𝓝 x) : e '' s ∈ 𝓝 (e x) :=
@@ -281,7 +281,7 @@ theorem map_nhds_within_eq (e : LocalHomeomorph α β) {x} (hx : x ∈ e.source)
   calc
     map e (𝓝[s] x) = map e (𝓝[e.source ∩ s] x) := congr_argₓ (map e) (e.nhds_within_source_inter hx _).symm
     _ = 𝓝[e '' (e.source ∩ s)] e x :=
-      (e.left_inv_on.mono $ inter_subset_left _ _).map_nhds_within_eq (e.left_inv hx)
+      (e.left_inv_on.mono <| inter_subset_left _ _).map_nhds_within_eq (e.left_inv hx)
         (e.continuous_at_symm (e.map_source hx)).ContinuousWithinAt (e.continuous_at hx).ContinuousWithinAt
     
 
@@ -618,25 +618,25 @@ theorem inv_image_trans_target : e'.symm '' (e.trans e').Target = e'.source ∩ 
   image_trans_source e'.symm e.symm
 
 theorem trans_assoc (e'' : LocalHomeomorph γ δ) : (e.trans e').trans e'' = e.trans (e'.trans e'') :=
-  eq_of_local_equiv_eq $ LocalEquiv.trans_assoc e.to_local_equiv e'.to_local_equiv e''.to_local_equiv
+  eq_of_local_equiv_eq <| LocalEquiv.trans_assoc e.to_local_equiv e'.to_local_equiv e''.to_local_equiv
 
 @[simp, mfld_simps]
 theorem trans_refl : e.trans (LocalHomeomorph.refl β) = e :=
-  eq_of_local_equiv_eq $ LocalEquiv.trans_refl e.to_local_equiv
+  eq_of_local_equiv_eq <| LocalEquiv.trans_refl e.to_local_equiv
 
 @[simp, mfld_simps]
 theorem refl_trans : (LocalHomeomorph.refl α).trans e = e :=
-  eq_of_local_equiv_eq $ LocalEquiv.refl_trans e.to_local_equiv
+  eq_of_local_equiv_eq <| LocalEquiv.refl_trans e.to_local_equiv
 
 theorem trans_of_set {s : Set β} (hs : IsOpen s) : e.trans (of_set s hs) = e.restr (e ⁻¹' s) :=
-  (LocalHomeomorph.ext _ _ (fun x => rfl) fun x => rfl) $ by
+  (LocalHomeomorph.ext _ _ (fun x => rfl) fun x => rfl) <| by
     simp [LocalEquiv.trans_source, (e.preimage_interior _).symm, hs.interior_eq]
 
 theorem trans_of_set' {s : Set β} (hs : IsOpen s) : e.trans (of_set s hs) = e.restr (e.source ∩ e ⁻¹' s) := by
   rw [trans_of_set, restr_source_inter]
 
 theorem of_set_trans {s : Set α} (hs : IsOpen s) : (of_set s hs).trans e = e.restr s :=
-  (LocalHomeomorph.ext _ _ (fun x => rfl) fun x => rfl) $ by
+  (LocalHomeomorph.ext _ _ (fun x => rfl) fun x => rfl) <| by
     simp [LocalEquiv.trans_source, hs.interior_eq, inter_comm]
 
 theorem of_set_trans' {s : Set α} (hs : IsOpen s) : (of_set s hs).trans e = e.restr (e.source ∩ s) := by
@@ -649,7 +649,7 @@ theorem of_set_trans_of_set {s : Set α} (hs : IsOpen s) {s' : Set α} (hs' : Is
   ext <;> simp [hs'.interior_eq]
 
 theorem restr_trans (s : Set α) : (e.restr s).trans e' = (e.trans e').restr s :=
-  eq_of_local_equiv_eq $ LocalEquiv.restr_trans e.to_local_equiv e'.to_local_equiv (Interior s)
+  eq_of_local_equiv_eq <| LocalEquiv.restr_trans e.to_local_equiv e'.to_local_equiv (Interior s)
 
 /-- `eq_on_source e e'` means that `e` and `e'` have the same source, and coincide there. They
 should really be considered the same local equiv. -/
@@ -710,7 +710,7 @@ theorem trans_symm_self : e.symm.trans e ≈ LocalHomeomorph.ofSet e.target e.op
 
 theorem eq_of_eq_on_source_univ {e e' : LocalHomeomorph α β} (h : e ≈ e') (s : e.source = univ) (t : e.target = univ) :
     e = e' :=
-  eq_of_local_equiv_eq $ LocalEquiv.eq_of_eq_on_source_univ _ _ h s t
+  eq_of_local_equiv_eq <| LocalEquiv.eq_of_eq_on_source_univ _ _ h s t
 
 section Prod
 
@@ -731,7 +731,7 @@ theorem prod_symm (e : LocalHomeomorph α β) (e' : LocalHomeomorph γ δ) : (e.
 theorem prod_trans {η : Type _} {ε : Type _} [TopologicalSpace η] [TopologicalSpace ε] (e : LocalHomeomorph α β)
     (f : LocalHomeomorph β γ) (e' : LocalHomeomorph δ η) (f' : LocalHomeomorph η ε) :
     (e.prod e').trans (f.prod f') = (e.trans f).Prod (e'.trans f') :=
-  LocalHomeomorph.eq_of_local_equiv_eq $ by
+  LocalHomeomorph.eq_of_local_equiv_eq <| by
     dsimp only [trans_to_local_equiv, prod_to_local_equiv] <;> apply LocalEquiv.prod_trans
 
 end Prod
@@ -752,7 +752,7 @@ def piecewise (e e' : LocalHomeomorph α β) (s : Set α) (t : Set β) [∀ x, D
     (Heq : eq_on e e' (e.source ∩ Frontier s)) : LocalHomeomorph α β where
   toLocalEquiv := e.to_local_equiv.piecewise e'.to_local_equiv s t H H'
   open_source := e.open_source.ite e'.open_source Hs
-  open_target := e.open_target.ite e'.open_target $ H.frontier.inter_eq_of_inter_eq_of_eq_on H'.frontier Hs Heq
+  open_target := e.open_target.ite e'.open_target <| H.frontier.inter_eq_of_inter_eq_of_eq_on H'.frontier Hs Heq
   continuous_to_fun := continuous_on_piecewise_ite e.continuous_on e'.continuous_on Hs Heq
   continuous_inv_fun :=
     continuous_on_piecewise_ite e.continuous_on_symm e'.continuous_on_symm
@@ -791,12 +791,12 @@ variable {ι : Type _} [Fintype ι] {Xi Yi : ι → Type _} [∀ i, TopologicalS
 @[simps toLocalEquiv]
 def pi : LocalHomeomorph (∀ i, Xi i) (∀ i, Yi i) where
   toLocalEquiv := LocalEquiv.pi fun i => (ei i).toLocalEquiv
-  open_source := is_open_set_pi finite_univ $ fun i hi => (ei i).open_source
-  open_target := is_open_set_pi finite_univ $ fun i hi => (ei i).open_target
+  open_source := (is_open_set_pi finite_univ) fun i hi => (ei i).open_source
+  open_target := (is_open_set_pi finite_univ) fun i hi => (ei i).open_target
   continuous_to_fun :=
-    continuous_on_pi.2 $ fun i => (ei i).ContinuousOn.comp (continuous_apply _).ContinuousOn fun f hf => hf i trivialₓ
+    continuous_on_pi.2 fun i => (ei i).ContinuousOn.comp (continuous_apply _).ContinuousOn fun f hf => hf i trivialₓ
   continuous_inv_fun :=
-    continuous_on_pi.2 $ fun i =>
+    continuous_on_pi.2 fun i =>
       (ei i).continuous_on_symm.comp (continuous_apply _).ContinuousOn fun f hf => hf i trivialₓ
 
 end Pi
@@ -858,7 +858,7 @@ theorem continuous_at_iff_continuous_at_comp_left {f : γ → α} {x : γ} (h : 
 on the left is continuous on the corresponding set. -/
 theorem continuous_on_iff_continuous_on_comp_left {f : γ → α} {s : Set γ} (h : s ⊆ f ⁻¹' e.source) :
     ContinuousOn f s ↔ ContinuousOn (e ∘ f) s :=
-  forall₂_congrₓ $ fun x hx =>
+  forall₂_congrₓ fun x hx =>
     e.continuous_within_at_iff_continuous_within_at_comp_left (h hx) (mem_of_superset self_mem_nhds_within h)
 
 end Continuity
@@ -867,10 +867,10 @@ end Continuity
 def to_homeomorph_source_target : e.source ≃ₜ e.target where
   toFun := e.maps_to.restrict _ _ _
   invFun := e.symm_maps_to.restrict _ _ _
-  left_inv := fun x => Subtype.eq $ e.left_inv x.2
-  right_inv := fun x => Subtype.eq $ e.right_inv x.2
-  continuous_to_fun := continuous_subtype_mk _ $ continuous_on_iff_continuous_restrict.1 e.continuous_on
-  continuous_inv_fun := continuous_subtype_mk _ $ continuous_on_iff_continuous_restrict.1 e.symm.continuous_on
+  left_inv := fun x => Subtype.eq <| e.left_inv x.2
+  right_inv := fun x => Subtype.eq <| e.right_inv x.2
+  continuous_to_fun := continuous_subtype_mk _ <| continuous_on_iff_continuous_restrict.1 e.continuous_on
+  continuous_inv_fun := continuous_subtype_mk _ <| continuous_on_iff_continuous_restrict.1 e.symm.continuous_on
 
 theorem second_countable_topology_source [second_countable_topology β] (e : LocalHomeomorph α β) :
     second_countable_topology e.source :=
@@ -883,11 +883,11 @@ def to_homeomorph_of_source_eq_univ_target_eq_univ (h : e.source = (univ : Set �
   toFun := e
   invFun := e.symm
   left_inv := fun x =>
-    e.left_inv $ by
+    e.left_inv <| by
       rw [h]
       exact mem_univ _
   right_inv := fun x =>
-    e.right_inv $ by
+    e.right_inv <| by
       rw [h']
       exact mem_univ _
   continuous_to_fun := by
@@ -938,7 +938,7 @@ theorem symm_to_local_homeomorph : e.symm.to_local_homeomorph = e.to_local_homeo
 @[simp, mfld_simps]
 theorem trans_to_local_homeomorph :
     (e.trans e').toLocalHomeomorph = e.to_local_homeomorph.trans e'.to_local_homeomorph :=
-  LocalHomeomorph.eq_of_local_equiv_eq $ Equivₓ.trans_to_local_equiv _ _
+  LocalHomeomorph.eq_of_local_equiv_eq <| Equivₓ.trans_to_local_equiv _ _
 
 end Homeomorph
 

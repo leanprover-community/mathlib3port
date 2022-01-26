@@ -89,7 +89,7 @@ theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p 
 theorem abs_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) : (f : C(X, ℝ)).abs ∈ A.topological_closure := by
   let M := ∥f∥
   let f' := attach_bound (f : C(X, ℝ))
-  let abs : C(Set.Icc (-∥f∥) ∥f∥, ℝ) := { toFun := fun x : Set.Icc (-∥f∥) ∥f∥ => |(x : ℝ)| }
+  let abs : C(Set.Icc (-∥f∥) ∥f∥, ℝ) := { toFun := fun x : Set.Icc (-∥f∥) ∥f∥ => abs (x : ℝ) }
   change abs.comp f' ∈ A.topological_closure
   apply comp_attach_bound_mem_closure
 

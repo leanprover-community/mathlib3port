@@ -166,11 +166,11 @@ theorem comp_assoc {I : Type u → Type t} [Applicativeₓ I] [IsLawfulApplicati
 
 @[simp]
 theorem comp_id (η : ApplicativeTransformation F G) : η.comp id_transformation = η :=
-  ext $ fun α x => rfl
+  ext fun α x => rfl
 
 @[simp]
 theorem id_comp (η : ApplicativeTransformation F G) : id_transformation.comp η = η :=
-  ext $ fun α x => rfl
+  ext fun α x => rfl
 
 end ApplicativeTransformation
 

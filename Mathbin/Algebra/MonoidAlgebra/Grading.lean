@@ -168,7 +168,7 @@ theorem to_grades_single (i : ι) (r : R) :
 
 @[simp]
 theorem to_grades_by_coe {i : ι} (x : grade_by R f i) :
-    to_grades_by f (↑x) = DirectSum.of (fun i => grade_by R f i) i x := by
+    to_grades_by f ↑x = DirectSum.of (fun i => grade_by R f i) i x := by
   obtain ⟨x, hx⟩ := x
   revert hx
   refine' Finsupp.induction x _ _
@@ -192,7 +192,7 @@ theorem to_grades_by_coe {i : ι} (x : grade_by R f i) :
     
 
 @[simp]
-theorem to_grades_coe {i : ι} (x : grade R i) : to_grades (↑x) = DirectSum.of (fun i => grade R i) i x := by
+theorem to_grades_coe {i : ι} (x : grade R i) : to_grades ↑x = DirectSum.of (fun i => grade R i) i x := by
   apply to_grades_by_coe
 
 /-- The canonical recombination of grades. -/

@@ -78,7 +78,7 @@ def objects : Cat.{v, u} ⥤ Type u where
 def equiv_of_iso {C D : Cat} (γ : C ≅ D) : C ≌ D where
   Functor := γ.hom
   inverse := γ.inv
-  unitIso := eq_to_iso $ Eq.symm γ.hom_inv_id
+  unitIso := eq_to_iso <| Eq.symm γ.hom_inv_id
   counitIso := eq_to_iso γ.inv_hom_id
 
 end Cat

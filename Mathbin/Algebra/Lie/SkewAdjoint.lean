@@ -58,20 +58,20 @@ variable {N : Type w} [AddCommGroupₓ N] [Module R N] (e : N ≃ₗ[R] M)
 /-- An equivalence of modules with bilinear forms gives equivalence of Lie algebras of skew-adjoint
 endomorphisms. -/
 def skewAdjointLieSubalgebraEquiv :
-    skewAdjointLieSubalgebra (B.comp (↑e : N →ₗ[R] M) (↑e)) ≃ₗ⁅R⁆ skewAdjointLieSubalgebra B := by
+    skewAdjointLieSubalgebra (B.comp (↑e : N →ₗ[R] M) ↑e) ≃ₗ⁅R⁆ skewAdjointLieSubalgebra B := by
   apply LieEquiv.ofSubalgebras _ _ e.lie_conj
   ext f
   simp only [LieSubalgebra.mem_coe, Submodule.mem_map_equiv, LieSubalgebra.mem_map_submodule, coe_coe]
   exact (BilinForm.is_pair_self_adjoint_equiv (-B) B e f).symm
 
 @[simp]
-theorem skew_adjoint_lie_subalgebra_equiv_apply (f : skewAdjointLieSubalgebra (B.comp (↑e) (↑e))) :
-    ↑skewAdjointLieSubalgebraEquiv B e f = e.lie_conj f := by
+theorem skew_adjoint_lie_subalgebra_equiv_apply (f : skewAdjointLieSubalgebra (B.comp ↑e ↑e)) :
+    ↑(skewAdjointLieSubalgebraEquiv B e f) = e.lie_conj f := by
   simp [skewAdjointLieSubalgebraEquiv]
 
 @[simp]
 theorem skew_adjoint_lie_subalgebra_equiv_symm_apply (f : skewAdjointLieSubalgebra B) :
-    ↑(skewAdjointLieSubalgebraEquiv B e).symm f = e.symm.lie_conj f := by
+    ↑((skewAdjointLieSubalgebraEquiv B e).symm f) = e.symm.lie_conj f := by
   simp [skewAdjointLieSubalgebraEquiv]
 
 end SkewAdjointEndomorphisms
@@ -121,7 +121,7 @@ def skewAdjointMatricesLieSubalgebraEquiv (P : Matrix n n R) (h : Invertible P) 
       simp [Matrix.IsSkewAdjoint, J.is_adjoint_pair_equiv _ _ P (is_unit_of_invertible P)])
 
 theorem skew_adjoint_matrices_lie_subalgebra_equiv_apply (P : Matrix n n R) (h : Invertible P)
-    (A : skewAdjointMatricesLieSubalgebra J) : ↑skewAdjointMatricesLieSubalgebraEquiv J P h A = P⁻¹ ⬝ ↑A ⬝ P := by
+    (A : skewAdjointMatricesLieSubalgebra J) : ↑(skewAdjointMatricesLieSubalgebraEquiv J P h A) = P⁻¹ ⬝ ↑A ⬝ P := by
   simp [skewAdjointMatricesLieSubalgebraEquiv]
 
 /-- An equivalence of matrix algebras commuting with the transpose endomorphisms restricts to an

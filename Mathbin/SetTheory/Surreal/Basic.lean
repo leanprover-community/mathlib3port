@@ -284,7 +284,7 @@ def lift₂ {α} (f : ∀ x y, numeric x → numeric y → α)
         x₁.equiv x₂ → y₁.equiv y₂ → f x₁ y₁ ox₁ oy₁ = f x₂ y₂ ox₂ oy₂) :
     Surreal → Surreal → α :=
   lift (fun x ox => lift (fun y oy => f x y ox oy) fun y₁ y₂ oy₁ oy₂ h => H _ _ _ _ (equiv_refl _) h)
-    fun x₁ x₂ ox₁ ox₂ h => funext $ Quotientₓ.ind $ fun ⟨y, oy⟩ => H _ _ _ _ h (equiv_refl _)
+    fun x₁ x₂ ox₁ ox₂ h => funext <| Quotientₓ.ind fun ⟨y, oy⟩ => H _ _ _ _ h (equiv_refl _)
 
 /-- The relation `x ≤ y` on surreals. -/
 def le : Surreal → Surreal → Prop :=

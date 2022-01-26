@@ -360,13 +360,13 @@ theorem inf_coe : (↑(N⊓N') : Set M) = N ∩ N' :=
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubmodule R L M)) :
-    (↑Inf S : Submodule R M) =
+    (↑(Inf S) : Submodule R M) =
       Inf
         "././Mathport/Syntax/Translate/Basic.lean:825:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
   rfl
 
 @[simp]
-theorem Inf_coe (S : Set (LieSubmodule R L M)) : (↑Inf S : Set M) = ⋂ s ∈ S, (s : Set M) := by
+theorem Inf_coe (S : Set (LieSubmodule R L M)) : (↑(Inf S) : Set M) = ⋂ s ∈ S, (s : Set M) := by
   rw [← LieSubmodule.coe_to_submodule, Inf_coe_to_submodule, Submodule.Inf_coe]
   ext m
   simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp_distrib]
@@ -444,7 +444,7 @@ theorem subsingleton_of_bot : Subsingleton (LieSubmodule R L (↥(⊥ : LieSubmo
 instance : IsModularLattice (LieSubmodule R L M) where
   sup_inf_le_assoc_of_le := fun N₁ N₂ N₃ => by
     simp only [← coe_submodule_le_coe_submodule, sup_coe_to_submodule, inf_coe_to_submodule]
-    exact IsModularLattice.sup_inf_le_assoc_of_le (↑N₂)
+    exact IsModularLattice.sup_inf_le_assoc_of_le ↑N₂
 
 variable (R L M)
 
@@ -459,12 +459,12 @@ theorem subsingleton_iff : Subsingleton (LieSubmodule R L M) ↔ Subsingleton M 
   have h : Subsingleton (LieSubmodule R L M) ↔ Subsingleton (Submodule R M) := by
     rw [← subsingleton_iff_bot_eq_top, ← subsingleton_iff_bot_eq_top, ← coe_to_submodule_eq_iff, top_coe_submodule,
       bot_coe_submodule]
-  h.trans $ Submodule.subsingleton_iff R
+  h.trans <| Submodule.subsingleton_iff R
 
 @[simp]
 theorem nontrivial_iff : Nontrivial (LieSubmodule R L M) ↔ Nontrivial M :=
   not_iff_not.mp
-    ((not_nontrivial_iff_subsingleton.trans $ subsingleton_iff R L M).trans not_nontrivial_iff_subsingleton.symm)
+    ((not_nontrivial_iff_subsingleton.trans <| subsingleton_iff R L M).trans not_nontrivial_iff_subsingleton.symm)
 
 instance [Nontrivial M] : Nontrivial (LieSubmodule R L M) :=
   (nontrivial_iff R L M).mpr ‹_›
@@ -583,7 +583,7 @@ theorem span_empty : lie_span R L (∅ : Set M) = ⊥ :=
 
 @[simp]
 theorem span_univ : lie_span R L (Set.Univ : Set M) = ⊤ :=
-  eq_top_iff.2 $ SetLike.le_def.2 $ subset_lie_span
+  eq_top_iff.2 <| SetLike.le_def.2 <| subset_lie_span
 
 theorem lie_span_eq_bot_iff : lie_span R L s = ⊥ ↔ ∀, ∀ m ∈ s, ∀, m = (0 : M) := by
   rw [_root_.eq_bot_iff, lie_span_le, bot_coe, subset_singleton_iff]
@@ -685,7 +685,7 @@ Note that unlike `lie_submodule.map`, we must take the `lie_span` of the image. 
 this is because although `f` makes `L'` into a Lie module over `L`, in general the `L` submodules of
 `L'` are not the same as the ideals of `L'`. -/
 def map : LieIdeal R L' :=
-  LieSubmodule.lieSpan R L' $ (I : Submodule R L).map (f : L →ₗ[R] L')
+  LieSubmodule.lieSpan R L' <| (I : Submodule R L).map (f : L →ₗ[R] L')
 
 /-- A morphism of Lie algebras `f : L → L'` pulls back Lie ideals of `L'` to Lie ideals of `L`.
 
@@ -699,7 +699,7 @@ def comap : LieIdeal R L :=
       apply J.lie_mem h }
 
 @[simp]
-theorem map_coe_submodule (h : ↑map f I = f '' I) :
+theorem map_coe_submodule (h : ↑(map f I) = f '' I) :
     (map f I : Submodule R L') = (I : Submodule R L).map (f : L →ₗ[R] L') := by
   rw [SetLike.ext'_iff, LieSubmodule.coe_to_submodule, h, Submodule.map_coe]
   rfl
@@ -967,7 +967,7 @@ theorem map_comap_eq (h : f.is_ideal_morphism) : map f (comap f J) = f.ideal_ran
     
 
 @[simp]
-theorem comap_map_eq (h : ↑map f I = f '' I) : comap f (map f I) = I⊔f.ker := by
+theorem comap_map_eq (h : ↑(map f I) = f '' I) : comap f (map f I) = I⊔f.ker := by
   rw [← LieSubmodule.coe_to_submodule_eq_iff, comap_coe_submodule, I.map_coe_submodule f h,
     LieSubmodule.sup_coe_to_submodule, f.ker_coe_submodule, Submodule.comap_map_eq]
 

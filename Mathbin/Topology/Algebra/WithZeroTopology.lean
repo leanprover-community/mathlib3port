@@ -57,9 +57,9 @@ theorem directed_lt : Directed (· ≥ ·) fun γ₀ : (Γ₀)ˣ => principal { 
   intro γ₁ γ₂
   use LinearOrderₓ.min γ₁ γ₂ <;> dsimp only
   constructor <;> rw [ge_iff_le, principal_mono] <;> intro x x_in
-  · calc x < ↑LinearOrderₓ.min γ₁ γ₂ := x_in _ ≤ γ₁ := min_le_leftₓ γ₁ γ₂
+  · calc x < ↑(LinearOrderₓ.min γ₁ γ₂) := x_in _ ≤ γ₁ := min_le_leftₓ γ₁ γ₂
     
-  · calc x < ↑LinearOrderₓ.min γ₁ γ₂ := x_in _ ≤ γ₂ := min_le_rightₓ γ₁ γ₂
+  · calc x < ↑(LinearOrderₓ.min γ₁ γ₂) := x_in _ ≤ γ₂ := min_le_rightₓ γ₁ γ₂
     
 
 /-- At all points of a linearly ordered commutative group with a zero element adjoined,
@@ -236,7 +236,7 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
       suffices tendsto (fun p : Γ₀ × Γ₀ => p.fst * p.snd) ((𝓝 0).Prod (𝓝 γ)) (𝓝 0) by
         simpa [ContinuousAt, nhds_prod_eq]
       suffices ∀ γ' : (Γ₀)ˣ, ∃ γ'' : (Γ₀)ˣ, ∀ a b : Γ₀, a < γ'' → b = y → a * b < γ' by
-        rw [(has_basis_nhds_zero.prod $ has_basis_nhds_units γ).tendsto_iff has_basis_nhds_zero]
+        rw [(has_basis_nhds_zero.prod <| has_basis_nhds_units γ).tendsto_iff has_basis_nhds_zero]
         simpa
       intro γ'
       use γ⁻¹ * γ'
@@ -274,7 +274,7 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
       rw [nhds_prod_eq]
       rw
         [((has_basis_nhds_of_ne_zero hx).Prod (has_basis_nhds_of_ne_zero hy)).tendsto_iff
-          (has_basis_nhds_of_ne_zero $ mul_ne_zero hx hy)]
+          (has_basis_nhds_of_ne_zero <| mul_ne_zero hx hy)]
       suffices ∀ a b : Γ₀, a = x → b = y → a * b = x * y by
         simpa
       rintro a b rfl rfl

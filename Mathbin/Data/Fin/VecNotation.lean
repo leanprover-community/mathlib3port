@@ -135,7 +135,7 @@ theorem cons_head_tail (u : Finₓ m.succ → α) : vec_cons (vec_head u) (vec_t
 
 @[simp]
 theorem range_cons (x : α) (u : Finₓ n → α) : Set.Range (vec_cons x u) = {x} ∪ Set.Range u :=
-  Set.ext $ fun y => by
+  Set.ext fun y => by
     simp [Finₓ.exists_fin_succ, eq_comm]
 
 @[simp]
@@ -144,13 +144,13 @@ theorem range_empty (u : Finₓ 0 → α) : Set.Range u = ∅ :=
 
 @[simp]
 theorem vec_cons_const (a : α) : (vec_cons a fun k : Finₓ n => a) = fun _ => a :=
-  funext $ Finₓ.forall_fin_succ.2 ⟨rfl, cons_val_succ _ _⟩
+  funext <| Finₓ.forall_fin_succ.2 ⟨rfl, cons_val_succ _ _⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
 theorem vec_single_eq_const (a : α) :
     «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»" = fun _ => a :=
-  funext $ Unique.forall_iff.2 rfl
+  funext <| Unique.forall_iff.2 rfl
 
 /-- `![a, b, ...] 1` is equal to `b`.
 

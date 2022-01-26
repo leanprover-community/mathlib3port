@@ -90,7 +90,7 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
             @coeFn (@Quiver.Hom (%%ₓC) (%%ₓH) (%%ₓX) (%%ₓY)) _
               (@CategoryTheory.ConcreteCategory.hasCoeToFun (%%ₓC) (%%ₓS) (%%ₓCC) (%%ₓX) (%%ₓY)) (%%ₓg) (%%ₓx)))
   let c' := h.mk_app vs
-  let (_, pr) ← solve_aux t' (rewrite_target c'; reflexivity)
+  let (_, pr) ← solve_aux t' (andthen (rewrite_target c') reflexivity)
   let [w, _, _] ← pure CC_type.get_app_fn.univ_levels
   let n ←
     match w with
@@ -124,7 +124,7 @@ unsafe def elementwise_lemma (n : Name) (n' : Name := n.append_suffix "_apply") 
   let c := @expr.const tt n d.univ_levels
   let (t'', pr', l') ← prove_elementwise c
   let params := l'.to_list ++ d.univ_params
-  add_decl $ declaration.thm n' params t'' (pure pr')
+  add_decl <| declaration.thm n' params t'' (pure pr')
   copy_attribute `simp n n'
 
 /-- The `elementwise` attribute can be applied to a lemma
@@ -161,7 +161,7 @@ unsafe def elementwise_attr : user_attribute Unit (Option Name) where
   after_set :=
     some fun n _ _ => do
       let some n' ← elementwise_attr.get_param n | elementwise_lemma n (n.append_suffix "_apply")
-      elementwise_lemma n $ n.get_prefix ++ n'
+      elementwise_lemma n <| n.get_prefix ++ n'
 
 add_tactic_doc
   { Name := "elementwise", category := DocCategory.attr, declNames := [`tactic.elementwise_attr],

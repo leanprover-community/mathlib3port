@@ -52,7 +52,7 @@ theorem is_integrally_closed_iff : IsIntegrallyClosed R ↔ ∀ {x : K}, IsInteg
 
 /-- `R` is integrally closed iff it is the integral closure of itself in its field of fractions. -/
 theorem is_integrally_closed_iff_is_integral_closure : IsIntegrallyClosed R ↔ IsIntegralClosure R R K :=
-  (is_integrally_closed_iff K).trans $ by
+  (is_integrally_closed_iff K).trans <| by
     let e : K ≃ₐ[R] FractionRing R := IsLocalization.algEquiv R⁰ _ _
     constructor
     · intro cl

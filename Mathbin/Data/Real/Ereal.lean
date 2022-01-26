@@ -379,7 +379,7 @@ def ne_top_bot_equiv_real : ({⊥, ⊤} : Set Ereal).Compl ≃ ℝ where
     ⟨x, by
       simp ⟩
   left_inv := fun ⟨x, hx⟩ =>
-    Subtype.eq $ by
+    Subtype.eq <| by
       lift x to ℝ
       · simp
         
@@ -707,11 +707,13 @@ theorem bot_mul_bot : (⊥ : Ereal) * ⊥ = ⊥ :=
 
 @[simp]
 theorem bot_mul_coe (x : ℝ) (h : x ≠ 0) : (⊥ : Ereal) * x = ⊥ :=
-  WithTop.coe_mul.symm.trans $ WithBot.coe_eq_coe.mpr $ WithBot.bot_mul $ Function.Injective.ne (@Option.some.injₓ _) h
+  WithTop.coe_mul.symm.trans <|
+    WithBot.coe_eq_coe.mpr <| WithBot.bot_mul <| Function.Injective.ne (@Option.some.injₓ _) h
 
 @[simp]
 theorem coe_mul_bot (x : ℝ) (h : x ≠ 0) : (x : Ereal) * ⊥ = ⊥ :=
-  WithTop.coe_mul.symm.trans $ WithBot.coe_eq_coe.mpr $ WithBot.mul_bot $ Function.Injective.ne (@Option.some.injₓ _) h
+  WithTop.coe_mul.symm.trans <|
+    WithBot.coe_eq_coe.mpr <| WithBot.mul_bot <| Function.Injective.ne (@Option.some.injₓ _) h
 
 @[simp]
 theorem to_real_one : to_real 1 = 1 :=

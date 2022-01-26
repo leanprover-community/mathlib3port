@@ -182,12 +182,12 @@ theorem image_swap_prod : Prod.swap '' (t ×ˢ s) = s ×ˢ t := by
 
 theorem prod_image_image_eq {m₁ : α → γ} {m₂ : β → δ} :
     m₁ '' s ×ˢ m₂ '' t = image (fun p : α × β => (m₁ p.1, m₂ p.2)) (s ×ˢ t) :=
-  ext $ by
+  ext <| by
     simp [-exists_and_distrib_right, exists_and_distrib_right.symm, And.left_comm, And.assoc, And.comm]
 
 theorem prod_range_range_eq {m₁ : α → γ} {m₂ : β → δ} :
     range m₁ ×ˢ range m₂ = range fun p : α × β => (m₁ p.1, m₂ p.2) :=
-  ext $ by
+  ext <| by
     simp [range]
 
 @[simp]
@@ -195,11 +195,11 @@ theorem range_prod_map {m₁ : α → γ} {m₂ : β → δ} : range (Prod.map m
   prod_range_range_eq.symm
 
 theorem prod_range_univ_eq {m₁ : α → γ} : range m₁ ×ˢ (univ : Set β) = range fun p : α × β => (m₁ p.1, p.2) :=
-  ext $ by
+  ext <| by
     simp [range]
 
 theorem prod_univ_range_eq {m₂ : β → δ} : (univ : Set α) ×ˢ range m₂ = range fun p : α × β => (p.1, m₂ p.2) :=
-  ext $ by
+  ext <| by
     simp [range]
 
 theorem range_pair_subset (f : α → β) (g : α → γ) : (range fun x => (f x, g x)) ⊆ range f ×ˢ range g := by
@@ -230,7 +230,7 @@ theorem prod_subset_preimage_fst (s : Set α) (t : Set β) : s ×ˢ t ⊆ Prod.f
   image_subset_iff.1 (fst_image_prod_subset s t)
 
 theorem fst_image_prod (s : Set β) {t : Set α} (ht : t.nonempty) : Prod.fst '' (s ×ˢ t) = s :=
-  (fst_image_prod_subset _ _).antisymm $ fun y hy =>
+  (fst_image_prod_subset _ _).antisymm fun y hy =>
     let ⟨x, hx⟩ := ht
     ⟨(y, x), ⟨hy, hx⟩, rfl⟩
 
@@ -242,7 +242,7 @@ theorem prod_subset_preimage_snd (s : Set α) (t : Set β) : s ×ˢ t ⊆ Prod.s
   image_subset_iff.1 (snd_image_prod_subset s t)
 
 theorem snd_image_prod {s : Set α} (hs : s.nonempty) (t : Set β) : Prod.snd '' (s ×ˢ t) = t :=
-  (snd_image_prod_subset _ _).antisymm $ fun y y_in =>
+  (snd_image_prod_subset _ _).antisymm fun y y_in =>
     let ⟨x, x_in⟩ := hs
     ⟨(x, y), ⟨x_in, y_in⟩, rfl⟩
 
@@ -272,7 +272,7 @@ theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t 
 
 @[simp]
 theorem image_prod (f : α → β → γ) : (fun x : α × β => f x.1 x.2) '' (s ×ˢ t) = image2 f s t :=
-  Set.ext $ fun a =>
+  Set.ext fun a =>
     ⟨by
       rintro ⟨_, _, rfl⟩
       exact ⟨_, _, (mem_prod.mp ‹_›).1, (mem_prod.mp ‹_›).2, rfl⟩, by
@@ -334,16 +334,16 @@ theorem empty_pi (s : ∀ i, Set (α i)) : pi ∅ s = univ := by
 
 @[simp]
 theorem pi_univ (s : Set ι) : (pi s fun i => (univ : Set (α i))) = univ :=
-  eq_univ_of_forall $ fun f i hi => mem_univ _
+  eq_univ_of_forall fun f i hi => mem_univ _
 
-theorem pi_mono (h : ∀, ∀ i ∈ s, ∀, t₁ i ⊆ t₂ i) : pi s t₁ ⊆ pi s t₂ := fun x hx i hi => h i hi $ hx i hi
+theorem pi_mono (h : ∀, ∀ i ∈ s, ∀, t₁ i ⊆ t₂ i) : pi s t₁ ⊆ pi s t₂ := fun x hx i hi => h i hi <| hx i hi
 
 theorem pi_inter_distrib : (s.pi fun i => t i ∩ t₁ i) = s.pi t ∩ s.pi t₁ :=
-  ext $ fun x => by
+  ext fun x => by
     simp only [forall_and_distrib, mem_pi, mem_inter_eq]
 
 theorem pi_congr (h : s₁ = s₂) (h' : ∀, ∀ i ∈ s₁, ∀, t₁ i = t₂ i) : s₁.pi t₁ = s₂.pi t₂ :=
-  h ▸ (ext $ fun x => forall₂_congrₓ $ fun i hi => h' i hi ▸ Iff.rfl)
+  h ▸ ext fun x => forall₂_congrₓ fun i hi => h' i hi ▸ Iff.rfl
 
 theorem pi_eq_empty (hs : i ∈ s) (ht : t i = ∅) : s.pi t = ∅ := by
   ext f
@@ -382,7 +382,7 @@ theorem univ_pi_eq_empty_iff : pi univ t = ∅ ↔ ∃ i, t i = ∅ := by
 
 @[simp]
 theorem univ_pi_empty [h : Nonempty ι] : pi univ (fun i => ∅ : ∀ i, Set (α i)) = ∅ :=
-  univ_pi_eq_empty_iff.2 $ h.elim $ fun x => ⟨x, rfl⟩
+  univ_pi_eq_empty_iff.2 <| h.elim fun x => ⟨x, rfl⟩
 
 @[simp]
 theorem range_dcomp (f : ∀ i, α i → β i) :
@@ -392,7 +392,7 @@ theorem range_dcomp (f : ∀ i, α i → β i) :
     exact ⟨x i, rfl⟩
     
   · choose y hy using hx
-    exact ⟨fun i => y i trivialₓ, funext $ fun i => hy i trivialₓ⟩
+    exact ⟨fun i => y i trivialₓ, funext fun i => hy i trivialₓ⟩
     
 
 @[simp]
@@ -430,7 +430,7 @@ theorem pi_inter_compl (s : Set ι) : pi s t ∩ pi (sᶜ) t = pi univ t := by
 
 theorem pi_update_of_not_mem [DecidableEq ι] (hi : i ∉ s) (f : ∀ j, α j) (a : α i) (t : ∀ j, α j → Set (β j)) :
     (s.pi fun j => t j (update f i a j)) = s.pi fun j => t j (f j) :=
-  pi_congr rfl $ fun j hj => by
+  (pi_congr rfl) fun j hj => by
     rw [update_noteq]
     exact fun h => hi (h ▸ hj)
 

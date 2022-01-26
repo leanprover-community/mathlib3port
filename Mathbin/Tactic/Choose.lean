@@ -23,7 +23,7 @@ unsafe def mk_sometimes (u : level) (α nonemp p : expr) : List expr → expr ×
     let (val, spec) ← mk_sometimes ctxt (val, spec)
     let t ← infer_type e
     let b ← is_prop t
-    pure $
+    pure <|
         if b then
           let val' := expr.bind_lambda val e
           (expr.const `` Function.sometimes [level.zero, u] t α nonemp val',
@@ -64,7 +64,7 @@ unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tact
                       set_goals [m]
                       ctxt.mmap' fun e => do
                           let b ← is_proof e
-                          Monadₓ.unlessb b $ (mk_app `` Nonempty.intro [e] >>= note_anon none) $> ()
+                          Monadₓ.unlessb b <| (mk_app `` Nonempty.intro [e] >>= note_anon none) $> ()
                       unfreeze_local_instances >> apply_instance
                       instantiate_mvars m)
             pure (some (Option.guard (fun _ => nonemp.is_none) Ne), nonemp)
@@ -111,7 +111,7 @@ unsafe def choose (nondep : Bool) : expr → List Name → optParam (Option (Opt
     return ()
   | h, n :: ns, ne_fail₁ => do
     let (v, ne_fail₂) ← get_unused_name >>= choose1 nondep h n
-    choose v ns $
+    choose v ns <|
         match ne_fail₁, ne_fail₂ with
         | none, _ => ne_fail₂
         | some none, _ => some none
@@ -170,7 +170,7 @@ unsafe def choose (nondep : parse («expr ?» (tk "!"))) (first : parse ident) (
       | none => get_local `this
       | some e => tactic.i_to_expr_strict e
   tactic.choose nondep.is_some tgt (first :: names)
-  try (interactive.simp none none tt [simp_arg_type.expr (pquote.1 exists_prop)] [] (loc.ns $ some <$> names))
+  try (interactive.simp none none tt [simp_arg_type.expr (pquote.1 exists_prop)] [] (loc.ns <| some <$> names))
   try (tactic.clear tgt)
 
 add_tactic_doc

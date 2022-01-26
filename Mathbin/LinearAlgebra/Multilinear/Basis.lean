@@ -50,5 +50,5 @@ dependently-typed version would still be true, but the proof would need a depend
 version of `dom_dom_congr`. -/
 theorem Basis.ext_multilinear [DecidableEq ι] [Fintype ι] {f g : MultilinearMap R (fun i : ι => M₂) M₃} {ι₁ : Type _}
     (e : Basis ι₁ R M₂) (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g :=
-  (dom_dom_congr_eq_iff (Fintype.equivFin ι) f g).mp $ Basis.ext_multilinear_fin (fun i => e) fun i => h (i ∘ _)
+  (dom_dom_congr_eq_iff (Fintype.equivFin ι) f g).mp <| Basis.ext_multilinear_fin (fun i => e) fun i => h (i ∘ _)
 

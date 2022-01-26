@@ -45,7 +45,7 @@ def map (f : m r → m r) (x : ContT r m α) : ContT r m α :=
 theorem run_cont_t_map_cont_t (f : m r → m r) (x : ContT r m α) : run (map f x) = f ∘ run x :=
   rfl
 
-def with_cont_t (f : (β → m r) → α → m r) (x : ContT r m α) : ContT r m β := fun g => x $ f g
+def with_cont_t (f : (β → m r) → α → m r) (x : ContT r m α) : ContT r m β := fun g => x <| f g
 
 theorem run_with_cont_t (f : (β → m r) → α → m r) (x : ContT r m α) : run (with_cont_t f x) = run x ∘ f :=
   rfl
@@ -56,7 +56,7 @@ protected theorem ext {x y : ContT r m α} (h : ∀ f, x.run f = y.run f) : x = 
 
 instance : Monadₓ (ContT r m) where
   pure := fun α x f => f x
-  bind := fun α β x f g => x $ fun i => f i g
+  bind := fun α β x f g => x fun i => f i g
 
 instance : IsLawfulMonad (ContT r m) where
   id_map := by
@@ -104,14 +104,14 @@ end ContT
 variable {m : Type u → Type v} [Monadₓ m]
 
 def ExceptTₓ.mkLabel {α β ε} : label (Except.{u, u} ε α) m β → label α (ExceptTₓ ε m) β
-  | ⟨f⟩ => ⟨fun a => monad_lift $ f (Except.ok a)⟩
+  | ⟨f⟩ => ⟨fun a => monad_lift <| f (Except.ok a)⟩
 
 theorem ExceptTₓ.goto_mk_label {α β ε : Type _} (x : label (Except.{u, u} ε α) m β) (i : α) :
     goto (ExceptTₓ.mkLabel x) i = ⟨Except.ok <$> goto x (Except.ok i)⟩ := by
   cases x <;> rfl
 
 def ExceptTₓ.callCc {ε} [MonadCont m] {α β : Type _} (f : label α (ExceptTₓ ε m) β → ExceptTₓ ε m α) : ExceptTₓ ε m α :=
-  ExceptTₓ.mk (call_cc $ fun x : label _ m β => ExceptTₓ.run $ f (ExceptTₓ.mkLabel x) : m (Except ε α))
+  ExceptTₓ.mk (call_cc fun x : label _ m β => ExceptTₓ.run <| f (ExceptTₓ.mkLabel x) : m (Except ε α))
 
 instance {ε} [MonadCont m] : MonadCont (ExceptTₓ ε m) where
   callCc := fun α β => ExceptTₓ.callCc
@@ -136,14 +136,14 @@ instance {ε} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ExceptT�
     rfl
 
 def OptionTₓ.mkLabel {α β} : label (Option.{u} α) m β → label α (OptionTₓ m) β
-  | ⟨f⟩ => ⟨fun a => monad_lift $ f (some a)⟩
+  | ⟨f⟩ => ⟨fun a => monad_lift <| f (some a)⟩
 
 theorem OptionTₓ.goto_mk_label {α β : Type _} (x : label (Option.{u} α) m β) (i : α) :
     goto (OptionTₓ.mkLabel x) i = ⟨some <$> goto x (some i)⟩ := by
   cases x <;> rfl
 
 def OptionTₓ.callCc [MonadCont m] {α β : Type _} (f : label α (OptionTₓ m) β → OptionTₓ m α) : OptionTₓ m α :=
-  OptionTₓ.mk (call_cc $ fun x : label _ m β => OptionTₓ.run $ f (OptionTₓ.mkLabel x) : m (Option α))
+  OptionTₓ.mk (call_cc fun x : label _ m β => OptionTₓ.run <| f (OptionTₓ.mkLabel x) : m (Option α))
 
 instance [MonadCont m] : MonadCont (OptionTₓ m) where
   callCc := fun α β => OptionTₓ.callCc
@@ -168,7 +168,7 @@ instance [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (OptionTₓ m) 
     rfl
 
 def WriterT.mkLabelₓ {α β ω} [One ω] : label (α × ω) m β → label α (WriterT ω m) β
-  | ⟨f⟩ => ⟨fun a => monad_lift $ f (a, 1)⟩
+  | ⟨f⟩ => ⟨fun a => monad_lift <| f (a, 1)⟩
 
 theorem WriterT.goto_mk_label {α β ω : Type _} [One ω] (x : label (α × ω) m β) (i : α) :
     goto (WriterT.mkLabelₓ x) i = monad_lift (goto x (i, 1)) := by
@@ -189,7 +189,7 @@ theorem StateTₓ.goto_mk_label {α β σ : Type u} (x : label (α × σ) m (β 
   cases x <;> rfl
 
 def StateTₓ.callCc {σ} [MonadCont m] {α β : Type _} (f : label α (StateTₓ σ m) β → StateTₓ σ m α) : StateTₓ σ m α :=
-  ⟨fun r => call_cc fun f' => (f $ StateTₓ.mkLabelₓ f').run r⟩
+  ⟨fun r => call_cc fun f' => (f <| StateTₓ.mkLabelₓ f').run r⟩
 
 instance {σ} [MonadCont m] : MonadCont (StateTₓ σ m) where
   callCc := fun α β => StateTₓ.callCc
@@ -221,7 +221,7 @@ theorem ReaderTₓ.goto_mk_label {α ρ β} (x : label α m β) (i : α) :
   cases x <;> rfl
 
 def ReaderTₓ.callCc {ε} [MonadCont m] {α β : Type _} (f : label α (ReaderTₓ ε m) β → ReaderTₓ ε m α) : ReaderTₓ ε m α :=
-  ⟨fun r => call_cc fun f' => (f $ ReaderTₓ.mkLabelₓ _ f').run r⟩
+  ⟨fun r => call_cc fun f' => (f <| ReaderTₓ.mkLabelₓ _ f').run r⟩
 
 instance {ρ} [MonadCont m] : MonadCont (ReaderTₓ ρ m) where
   callCc := fun α β => ReaderTₓ.callCc
@@ -247,8 +247,8 @@ instance {ρ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ReaderT�
 their underlying monad -/
 def ContT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ r₁ : Type u₀} {α₂ r₂ : Type u₁}
     (F : m₁ r₁ ≃ m₂ r₂) (G : α₁ ≃ α₂) : ContT r₁ m₁ α₁ ≃ ContT r₂ m₂ α₂ where
-  toFun := fun f r => F $ f $ fun x => F.symm $ r $ G x
-  invFun := fun f r => F.symm $ f $ fun x => F $ r $ G.symm x
+  toFun := fun f r => F <| f fun x => F.symm <| r <| G x
+  invFun := fun f r => F.symm <| f fun x => F <| r <| G.symm x
   left_inv := fun f => by
     funext r <;> simp
   right_inv := fun f => by

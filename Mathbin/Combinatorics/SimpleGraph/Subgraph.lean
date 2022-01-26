@@ -301,21 +301,21 @@ theorem edge_set_top : (⊤ : subgraph G).EdgeSet = G.edge_set :=
 
 @[simp]
 theorem edge_set_bot : (⊥ : subgraph G).EdgeSet = ∅ :=
-  Set.ext $
+  Set.ext <|
     Sym2.ind
       (by
         simp )
 
 @[simp]
 theorem edge_set_inf {H₁ H₂ : subgraph G} : (H₁⊓H₂).EdgeSet = H₁.edge_set ∩ H₂.edge_set :=
-  Set.ext $
+  Set.ext <|
     Sym2.ind
       (by
         simp )
 
 @[simp]
 theorem edge_set_sup {H₁ H₂ : subgraph G} : (H₁⊔H₂).EdgeSet = H₁.edge_set ∪ H₂.edge_set :=
-  Set.ext $
+  Set.ext <|
     Sym2.ind
       (by
         simp )

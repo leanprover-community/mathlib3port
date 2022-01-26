@@ -29,7 +29,7 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ}
     rcases eventually_iff_exists_mem.mp h_local_min with ⟨U, U_in_nhds_within, fy_ge_fa⟩
     rw [nhds_within_Icc_eq_nhds_within_Ici a_lt_b, mem_nhds_within_Ici_iff_exists_Icc_subset] at U_in_nhds_within
     rcases U_in_nhds_within with ⟨ε, ε_in_Ioi, Ioc_in_U⟩
-    exact ⟨ε, mem_Ioi.mp ε_in_Ioi, fun y y_in_Ioc => fy_ge_fa y $ Ioc_in_U y_in_Ioc⟩
+    exact ⟨ε, mem_Ioi.mp ε_in_Ioi, fun y y_in_Ioc => fy_ge_fa y <| Ioc_in_U y_in_Ioc⟩
   have a_lt_x : a < x :=
     lt_of_le_of_neₓ h_ax fun H => by
       subst H <;> exact lt_irreflₓ (f a) fx_lt_fa

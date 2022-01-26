@@ -29,11 +29,11 @@ theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
     intro x hx
     simpa using (hf x hx).sub ((has_deriv_within_at_id x _).const_mul m)
   obtain ⟨c, cmem, hc⟩ : ∃ c ∈ Icc a b, IsMinOn g (Icc a b) c
-  exact is_compact_Icc.exists_forall_le (nonempty_Icc.2 $ hab) fun x hx => (hg x hx).ContinuousWithinAt
+  exact is_compact_Icc.exists_forall_le (nonempty_Icc.2 <| hab) fun x hx => (hg x hx).ContinuousWithinAt
   have cmem' : c ∈ Ioo a b := by
     cases' eq_or_lt_of_le cmem.1 with hac hac
     · subst c
-      refine' absurd (sub_nonneg.1 $ nonneg_of_mul_nonneg_left _ (sub_pos.2 hab')) (not_le_of_lt hma)
+      refine' absurd (sub_nonneg.1 <| nonneg_of_mul_nonneg_left _ (sub_pos.2 hab')) (not_le_of_lt hma)
       have : b - a ∈ PosTangentConeAt (Icc a b) a :=
         mem_pos_tangent_cone_at_of_segment_subset (segment_eq_Icc hab ▸ subset.refl _)
       simpa [-sub_nonneg, -ContinuousLinearMap.map_sub] using
@@ -41,7 +41,7 @@ theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
       
     cases' eq_or_lt_of_le cmem.2 with hbc hbc
     · subst c
-      refine' absurd (sub_nonpos.1 $ nonpos_of_mul_nonneg_right _ (sub_lt_zero.2 hab')) (not_le_of_lt hmb)
+      refine' absurd (sub_nonpos.1 <| nonpos_of_mul_nonneg_right _ (sub_lt_zero.2 hab')) (not_le_of_lt hmb)
       have : a - b ∈ PosTangentConeAt (Icc a b) b :=
         mem_pos_tangent_cone_at_of_segment_subset
           (by
@@ -78,12 +78,12 @@ theorem convex_image_has_deriv_at {s : Set ℝ} (hs : Convex ℝ s) (hf : ∀, �
     
   cases' le_totalₓ a b with hab hab
   · have : Icc a b ⊆ s := hs.ord_connected.out ha hb
-    rcases exists_has_deriv_within_at_eq_of_gt_of_lt hab (fun x hx => (hf x $ this hx).HasDerivWithinAt) hma hmb with
+    rcases exists_has_deriv_within_at_eq_of_gt_of_lt hab (fun x hx => (hf x <| this hx).HasDerivWithinAt) hma hmb with
       ⟨c, cmem, hc⟩
     exact ⟨c, this cmem, hc⟩
     
   · have : Icc b a ⊆ s := hs.ord_connected.out hb ha
-    rcases exists_has_deriv_within_at_eq_of_lt_of_gt hab (fun x hx => (hf x $ this hx).HasDerivWithinAt) hmb hma with
+    rcases exists_has_deriv_within_at_eq_of_lt_of_gt hab (fun x hx => (hf x <| this hx).HasDerivWithinAt) hmb hma with
       ⟨c, cmem, hc⟩
     exact ⟨c, this cmem, hc⟩
     

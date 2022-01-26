@@ -1,6 +1,6 @@
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Data.Equiv.Set
-import Mathbin.Data.FunLike
+import Mathbin.Data.FunLike.Basic
 import Mathbin.Logic.Embedding
 import Mathbin.Order.RelClasses
 
@@ -50,8 +50,8 @@ satisfy `r a b → s (f a) (f b)`.
 The relations `r` and `s` are `out_param`s since figuring them out from a goal is a higher-order
 matching problem that Lean usually can't do unaided.
 -/
-class RelHomClass (F : Type _) {α β : outParam $ Type _} (r : outParam $ α → α → Prop)
-  (s : outParam $ β → β → Prop) extends FunLike F α fun _ => β where
+class RelHomClass (F : Type _) {α β : outParam <| Type _} (r : outParam <| α → α → Prop)
+  (s : outParam <| β → β → Prop) extends FunLike F α fun _ => β where
   map_rel : ∀ f : F {a b}, r a b → s (f a) (f b)
 
 export RelHomClass (map_rel)
@@ -64,7 +64,7 @@ variable {F : Type _}
 
 theorem map_inf [SemilatticeInf α] [LinearOrderₓ β] [RelHomClass F (· < · : β → β → Prop) (· < · : α → α → Prop)]
     (a : F) (m n : β) : a (m⊓n) = a m⊓a n :=
-  (StrictMono.monotone $ fun x y => map_rel a).map_inf m n
+  (StrictMono.monotone fun x y => map_rel a).map_inf m n
 
 theorem map_sup [SemilatticeSup α] [LinearOrderₓ β] [RelHomClass F (· > · : β → β → Prop) (· > · : α → α → Prop)]
     (a : F) (m n : β) : a (m⊔n) = a m⊔a n :=
@@ -292,7 +292,7 @@ protected theorem IsIrrefl (f : r ↪r s) [IsIrrefl β s] : IsIrrefl α r :=
   ⟨fun a => mt f.map_rel_iff.2 (irrefl (f a))⟩
 
 protected theorem IsRefl (f : r ↪r s) [IsRefl β s] : IsRefl α r :=
-  ⟨fun a => f.map_rel_iff.1 $ refl _⟩
+  ⟨fun a => f.map_rel_iff.1 <| refl _⟩
 
 protected theorem IsSymm (f : r ↪r s) [IsSymm β s] : IsSymm α r :=
   ⟨fun a b => imp_imp_imp f.map_rel_iff.2 f.map_rel_iff.1 symm⟩
@@ -542,8 +542,8 @@ instance : Groupₓ (r ≃r r) where
   mul := fun f₁ f₂ => f₂.trans f₁
   inv := RelIso.symm
   mul_assoc := fun f₁ f₂ f₃ => rfl
-  one_mul := fun f => ext $ fun _ => rfl
-  mul_one := fun f => ext $ fun _ => rfl
+  one_mul := fun f => ext fun _ => rfl
+  mul_one := fun f => ext fun _ => rfl
   mul_left_inv := fun f => ext f.symm_apply_apply
 
 @[simp]
@@ -558,11 +558,11 @@ theorem mul_apply (e₁ e₂ : r ≃r r) (x : α) : (e₁ * e₂) x = e₁ (e₂
   rfl
 
 @[simp]
-theorem inv_apply_self (e : r ≃r r) x : (e⁻¹) (e x) = x :=
+theorem inv_apply_self (e : r ≃r r) x : e⁻¹ (e x) = x :=
   e.symm_apply_apply x
 
 @[simp]
-theorem apply_inv_self (e : r ≃r r) x : e ((e⁻¹) x) = x :=
+theorem apply_inv_self (e : r ≃r r) x : e (e⁻¹ x) = x :=
   e.apply_symm_apply x
 
 end RelIso

@@ -153,7 +153,7 @@ instance : TopologicalSpace (Alexandroff X) where
       refine' ⟨_, this⟩
       rintro ⟨s, hsS : s ∈ S, hs : ∞ ∈ s⟩
       refine' compact_of_is_closed_subset ((ho s hsS).1 hs) this.is_closed_compl _
-      exact compl_subset_compl.mpr (preimage_mono $ subset_sUnion_of_mem hsS)
+      exact compl_subset_compl.mpr (preimage_mono <| subset_sUnion_of_mem hsS)
     rw [preimage_sUnion]
     exact is_open_bUnion fun s hs => (ho s hs).2
 
@@ -216,7 +216,7 @@ theorem is_closed_infty : IsClosed ({∞} : Set (Alexandroff X)) := by
   rw [← compl_range_coe, is_closed_compl_iff]
   exact is_open_range_coe
 
-theorem nhds_coe_eq (x : X) : 𝓝 (↑x) = map (coe : X → Alexandroff X) (𝓝 x) :=
+theorem nhds_coe_eq (x : X) : 𝓝 ↑x = map (coe : X → Alexandroff X) (𝓝 x) :=
   (open_embedding_coe.map_nhds_eq x).symm
 
 theorem nhds_within_coe_image (s : Set X) (x : X) : 𝓝[coe '' s] (x : Alexandroff X) = map coe (𝓝[s] x) :=
@@ -279,17 +279,17 @@ theorem tendsto_nhds_infty' {α : Type _} {f : Alexandroff X → α} {l : Filter
 
 theorem tendsto_nhds_infty {α : Type _} {f : Alexandroff X → α} {l : Filter α} :
     tendsto f (𝓝 ∞) l ↔ ∀, ∀ s ∈ l, ∀, f ∞ ∈ s ∧ ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ maps_to (f ∘ coe) (tᶜ) s :=
-  tendsto_nhds_infty'.trans $ by
+  tendsto_nhds_infty'.trans <| by
     simp only [tendsto_pure_left, has_basis_coclosed_compact.tendsto_left_iff, forall_and_distrib, and_assoc,
       exists_prop]
 
 theorem continuous_at_infty' {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} :
     ContinuousAt f ∞ ↔ tendsto (f ∘ coe) (coclosed_compact X) (𝓝 (f ∞)) :=
-  tendsto_nhds_infty'.trans $ and_iff_right (tendsto_pure_nhds _ _)
+  tendsto_nhds_infty'.trans <| and_iff_right (tendsto_pure_nhds _ _)
 
 theorem continuous_at_infty {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} :
     ContinuousAt f ∞ ↔ ∀, ∀ s ∈ 𝓝 (f ∞), ∀, ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ maps_to (f ∘ coe) (tᶜ) s :=
-  continuous_at_infty'.trans $ by
+  continuous_at_infty'.trans <| by
     simp only [has_basis_coclosed_compact.tendsto_left_iff, exists_prop, and_assoc]
 
 theorem continuous_at_coe {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} {x : X} :

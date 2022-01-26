@@ -71,14 +71,14 @@ theorem adjoin_algebra_map' {R : Type u} {S : Type v} {A : Type w} [CommSemiring
     [Algebra R S] [Algebra S A] (s : Set S) :
     adjoin R (algebraMap S (RestrictScalars R S A) '' s) =
       (adjoin R s).map ((Algebra.ofId S (RestrictScalars R S A)).restrictScalars R) :=
-  le_antisymmₓ (adjoin_le $ Set.image_subset_iff.2 $ fun y hy => ⟨y, subset_adjoin hy, rfl⟩)
-    (Subalgebra.map_le.2 $ adjoin_le $ fun y hy => subset_adjoin ⟨y, hy, rfl⟩)
+  le_antisymmₓ (adjoin_le <| Set.image_subset_iff.2 fun y hy => ⟨y, subset_adjoin hy, rfl⟩)
+    (Subalgebra.map_le.2 <| adjoin_le fun y hy => subset_adjoin ⟨y, hy, rfl⟩)
 
 theorem adjoin_algebra_map (R : Type u) (S : Type v) (A : Type w) [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A]
     [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A] (s : Set S) :
     adjoin R (algebraMap S A '' s) = Subalgebra.map (adjoin R s) (IsScalarTower.toAlgHom R S A) :=
-  le_antisymmₓ (adjoin_le $ Set.image_subset_iff.2 $ fun y hy => ⟨y, subset_adjoin hy, rfl⟩)
-    (Subalgebra.map_le.2 $ adjoin_le $ fun y hy => subset_adjoin ⟨y, hy, rfl⟩)
+  le_antisymmₓ (adjoin_le <| Set.image_subset_iff.2 fun y hy => ⟨y, subset_adjoin hy, rfl⟩)
+    (Subalgebra.map_le.2 <| adjoin_le fun y hy => subset_adjoin ⟨y, hy, rfl⟩)
 
 theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiringₓ C] [CommSemiringₓ D] [CommSemiringₓ E] [Algebra C D]
     [Algebra C E] [Algebra D E] [IsScalarTower C D E] (S : Set E) :
@@ -173,7 +173,7 @@ theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁
   · have h1 : (∑ i in (s.image Prod.fst).product (s.image Prod.snd), g i • b i.1 • c i.2) = 0 := by
       rw [← hsg]
       exact
-        (Finset.sum_subset Finset.subset_product $ fun p _ hp =>
+        ((Finset.sum_subset Finset.subset_product) fun p _ hp =>
             show g p • b p.1 • c p.2 = 0 by
               rw [hg p hp, zero_smul]).symm
     rw [Finset.sum_product_right] at h1
@@ -252,16 +252,16 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
   choose f hf
   let s : Finset B := (Finset.product (x ∪ y * y) y).Image (Function.uncurry f)
   have hsx : ∀, ∀ xi ∈ x, ∀, ∀ yj ∈ y, ∀, f xi yj ∈ s := fun xi hxi yj hyj =>
-    show Function.uncurry f (xi, yj) ∈ s from mem_image_of_mem _ $ mem_product.2 ⟨mem_union_left _ hxi, hyj⟩
+    show Function.uncurry f (xi, yj) ∈ s from mem_image_of_mem _ <| mem_product.2 ⟨mem_union_left _ hxi, hyj⟩
   have hsy : ∀ yi yj yk _ : yi ∈ y _ : yj ∈ y _ : yk ∈ y, f (yi * yj) yk ∈ s := fun yi hyi yj hyj yk hyk =>
     show Function.uncurry f (yi * yj, yk) ∈ s from
-      mem_image_of_mem _ $ mem_product.2 ⟨mem_union_right _ $ Finset.mul_mem_mul hyi hyj, hyk⟩
+      mem_image_of_mem _ <| mem_product.2 ⟨mem_union_right _ <| Finset.mul_mem_mul hyi hyj, hyk⟩
   have hxy : ∀, ∀ xi ∈ x, ∀, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=
     fun xi hxi =>
     hf xi ▸
       sum_mem _ fun yj hyj =>
         smul_mem (span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C))
-          ⟨f xi yj, Algebra.subset_adjoin $ hsx xi hxi yj hyj⟩ (subset_span $ mem_insert_of_mem hyj)
+          ⟨f xi yj, Algebra.subset_adjoin <| hsx xi hxi yj hyj⟩ (subset_span <| mem_insert_of_mem hyj)
   have hyy :
     span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) *
         span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) ≤
@@ -281,17 +281,17 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
     · rw [← hf (yi * yj)]
       exact
         SetLike.mem_coe.2
-          (sum_mem _ $ fun yk hyk =>
-            smul_mem (span (Algebra.adjoin A (↑s : Set B)) (insert 1 (↑y) : Set C))
-              ⟨f (yi * yj) yk, Algebra.subset_adjoin $ hsy yi hyi yj hyj yk hyk⟩
-              (subset_span $ Set.mem_insert_of_mem _ hyk : yk ∈ _))
+          ((sum_mem _) fun yk hyk =>
+            smul_mem (span (Algebra.adjoin A (↑s : Set B)) (insert 1 ↑y : Set C))
+              ⟨f (yi * yj) yk, Algebra.subset_adjoin <| hsy yi hyi yj hyj yk hyk⟩
+              (subset_span <| Set.mem_insert_of_mem _ hyk : yk ∈ _))
       
   refine' ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fg_adjoin_finset _, insert 1 y, _⟩
   refine' restrict_scalars_injective A _ _ _
   rw [restrict_scalars_top, eq_top_iff, ← Algebra.top_to_submodule, ← hx, Algebra.adjoin_eq_span, span_le]
   refine' fun r hr =>
-    Submonoid.closure_induction hr (fun c hc => hxy c hc) (subset_span $ mem_insert_self _ _) fun p q hp hq =>
-      hyy $ Submodule.mul_mem_mul hp hq
+    Submonoid.closure_induction hr (fun c hc => hxy c hc) (subset_span <| mem_insert_self _ _) fun p q hp hq =>
+      hyy <| Submodule.mul_mem_mul hp hq
 
 end Semiringₓ
 
@@ -309,8 +309,8 @@ References: Atiyah--Macdonald Proposition 7.8; Stacks 00IS; Altman--Kleiman 16.1
 theorem fg_of_fg_of_fg [IsNoetherianRing A] (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg)
     (hBCi : Function.Injective (algebraMap B C)) : (⊤ : Subalgebra A B).Fg :=
   let ⟨B₀, hAB₀, hB₀C⟩ := exists_subalgebra_of_fg A B C hAC hBC
-  Algebra.fg_trans' (B₀.fg_top.2 hAB₀) $
-    Subalgebra.fg_of_submodule_fg $
+  Algebra.fg_trans' (B₀.fg_top.2 hAB₀) <|
+    Subalgebra.fg_of_submodule_fg <|
       have : IsNoetherianRing B₀ := is_noetherian_ring_of_fg hAB₀
       have : IsNoetherian B₀ C := is_noetherian_of_fg_of_noetherian' hB₀C
       fg_of_injective (IsScalarTower.toAlgHom B₀ B C).toLinearMap hBCi

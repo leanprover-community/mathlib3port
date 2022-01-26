@@ -131,7 +131,7 @@ theorem comap_eq_of_scalar_tower_quotient [Algebra R S] [Algebra (R ⧸ p) (S �
 
 /-- If `P` lies over `p`, then `R / p` has a canonical map to `S / P`. -/
 def quotient.algebra_quotient_of_le_comap (h : p ≤ comap f P) : Algebra (R ⧸ p) (S ⧸ P) :=
-  RingHom.toAlgebra $ quotient_map _ f h
+  RingHom.toAlgebra <| quotient_map _ f h
 
 /-- `R / p` has a canonical map to `S / pS`. -/
 instance quotient.algebra_quotient_map_quotient : Algebra (R ⧸ p) (S ⧸ map f p) :=
@@ -148,7 +148,7 @@ theorem quotient.mk_smul_mk_quotient_map_quotient (x : R) (y : S) :
   rfl
 
 instance quotient.tower_quotient_map_quotient [Algebra R S] : IsScalarTower R (R ⧸ p) (S ⧸ map (algebraMap R S) p) :=
-  IsScalarTower.of_algebra_map_eq $ fun x => by
+  IsScalarTower.of_algebra_map_eq fun x => by
     rw [quotient.algebra_map_eq, quotient.algebra_map_quotient_map_quotient, quotient.mk_algebra_map]
 
 end CommRingₓ
@@ -211,7 +211,7 @@ theorem is_maximal_of_is_integral_of_is_maximal_comap [Algebra R S] (hRS : Algeb
     [I.is_prime] (hI : is_maximal (I.comap (algebraMap R S))) : is_maximal I :=
   ⟨⟨mt comap_eq_top_iff.mpr hI.1.1, fun J I_lt_J =>
       let ⟨I_le_J, x, hxJ, hxI⟩ := SetLike.lt_iff_le_and_exists.mp I_lt_J
-      comap_eq_top_iff.1 $ hI.1.2 _ (comap_lt_comap_of_integral_mem_sdiff I_le_J ⟨hxJ, hxI⟩ (hRS x))⟩⟩
+      comap_eq_top_iff.1 <| hI.1.2 _ (comap_lt_comap_of_integral_mem_sdiff I_le_J ⟨hxJ, hxI⟩ (hRS x))⟩⟩
 
 theorem is_maximal_of_is_integral_of_is_maximal_comap' (f : R →+* S) (hf : f.is_integral) (I : Ideal S)
     [hI' : I.is_prime] (hI : is_maximal (I.comap f)) : is_maximal I :=

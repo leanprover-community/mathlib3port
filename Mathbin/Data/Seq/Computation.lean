@@ -376,7 +376,7 @@ def length : ℕ :=
 
 /-- `get s` returns the result of a terminating computation -/
 def get : α :=
-  Option.getₓ (Nat.find_specₓ $ (terminates_def _).1 h)
+  Option.getₓ (Nat.find_specₓ <| (terminates_def _).1 h)
 
 theorem get_mem : get s ∈ s :=
   Exists.introₓ (length s) (Option.eq_some_of_is_some _).symm
@@ -389,13 +389,13 @@ theorem mem_of_get_eq {a} : get s = a → a ∈ s := by
 
 @[simp]
 theorem get_think : get (think s) = get s :=
-  get_eq_of_mem _ $
+  get_eq_of_mem _ <|
     let ⟨n, h⟩ := get_mem s
     ⟨n + 1, h⟩
 
 @[simp]
 theorem get_thinkN n : get (thinkN s n) = get s :=
-  get_eq_of_mem _ $ (thinkN_mem _).2 (get_mem _)
+  get_eq_of_mem _ <| (thinkN_mem _).2 (get_mem _)
 
 theorem get_promises : s ~> get s := fun a => get_eq_of_mem _
 
@@ -447,7 +447,7 @@ theorem get_ret (a : α) : get (return a) = a :=
 @[simp]
 theorem length_ret (a : α) : length (return a) = 0 :=
   let h := Computation.ret_terminates a
-  Nat.eq_zero_of_le_zeroₓ $ Nat.find_min'ₓ ((terminates_def (return a)).1 h) rfl
+  Nat.eq_zero_of_le_zeroₓ <| Nat.find_min'ₓ ((terminates_def (return a)).1 h) rfl
 
 theorem results_ret (a : α) : results (return a) a 0 :=
   ⟨_, length_ret _⟩
@@ -540,14 +540,14 @@ def map (f : α → β) : Computation α → Computation β
 
 def bind.G : Sum β (Computation β) → Sum β (Sum (Computation α) (Computation β))
   | Sum.inl b => Sum.inl b
-  | Sum.inr cb' => Sum.inr $ Sum.inr cb'
+  | Sum.inr cb' => Sum.inr <| Sum.inr cb'
 
 def bind.F (f : α → Computation β) : Sum (Computation α) (Computation β) → Sum β (Sum (Computation α) (Computation β))
   | Sum.inl ca =>
     match destruct ca with
-    | Sum.inl a => bind.G $ destruct (f a)
-    | Sum.inr ca' => Sum.inr $ Sum.inl ca'
-  | Sum.inr cb => bind.G $ destruct cb
+    | Sum.inl a => bind.G <| destruct (f a)
+    | Sum.inr ca' => Sum.inr <| Sum.inl ca'
+  | Sum.inr cb => bind.G <| destruct cb
 
 /-- Compose two computations into a monadic `bind` operation. -/
 def bind (c : Computation α) (f : α → Computation β) : Computation β :=
@@ -609,7 +609,7 @@ theorem ret_bind a (f : α → Computation β) : bind (return a) f = f a := by
 
 @[simp]
 theorem think_bind c (f : α → Computation β) : bind (think c) f = think (bind c f) :=
-  destruct_eq_think $ by
+  destruct_eq_think <| by
     simp [bind, bind.F]
 
 @[simp]
@@ -686,7 +686,7 @@ theorem get_bind (s : Computation α) (f : α → Computation β) [terminates s]
 @[simp]
 theorem length_bind (s : Computation α) (f : α → Computation β) [T1 : terminates s] [T2 : terminates (f (get s))] :
     length (bind s f) = length (f (get s)) + length s :=
-  (results_of_terminates _).len_unique $ results_bind (results_of_terminates _) (results_of_terminates _)
+  (results_of_terminates _).len_unique <| results_bind (results_of_terminates _) (results_of_terminates _)
 
 theorem of_results_bind {s : Computation α} {f : α → Computation β} {b k} :
     results (bind s f) b k → ∃ a m n, results s a m ∧ results (f a) b n ∧ k = n + m := by
@@ -779,17 +779,17 @@ instance : Alternativeₓ Computation :=
 
 @[simp]
 theorem ret_orelse (a : α) (c₂ : Computation α) : (return a <|> c₂) = return a :=
-  destruct_eq_ret $ by
+  destruct_eq_ret <| by
     unfold HasOrelse.orelse <;> simp [orelse]
 
 @[simp]
 theorem orelse_ret (c₁ : Computation α) (a : α) : (think c₁ <|> return a) = return a :=
-  destruct_eq_ret $ by
+  destruct_eq_ret <| by
     unfold HasOrelse.orelse <;> simp [orelse]
 
 @[simp]
 theorem orelse_think (c₁ c₂ : Computation α) : (think c₁ <|> think c₂) = think (c₁ <|> c₂) :=
-  destruct_eq_think $ by
+  destruct_eq_think <| by
     unfold HasOrelse.orelse <;> simp [orelse]
 
 @[simp]
@@ -839,7 +839,7 @@ theorem promises_congr {c₁ c₂ : Computation α} (h : c₁ ~ c₂) a : c₁ ~
   forall_congrₓ fun a' => imp_congr (h a') Iff.rfl
 
 theorem get_equiv {c₁ c₂ : Computation α} (h : c₁ ~ c₂) [terminates c₁] [terminates c₂] : get c₁ = get c₂ :=
-  get_eq_of_mem _ $ (h _).2 $ get_mem _
+  get_eq_of_mem _ <| (h _).2 <| get_mem _
 
 theorem think_equiv (s : Computation α) : think s ~ s := fun a => ⟨of_think_mem, think_mem⟩
 
@@ -993,8 +993,8 @@ theorem lift_rel_return (R : α → β → Prop) (a : α) (b : β) : lift_rel R 
 @[simp]
 theorem lift_rel_think_left (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
     lift_rel R (think ca) cb ↔ lift_rel R ca cb :=
-  and_congr (forall_congrₓ $ fun b => imp_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
-    (forall_congrₓ $ fun b => imp_congr Iff.rfl $ exists_congr $ fun b => and_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
+  and_congr (forall_congrₓ fun b => imp_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
+    (forall_congrₓ fun b => imp_congr Iff.rfl <| exists_congr fun b => and_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
 
 @[simp]
 theorem lift_rel_think_right (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
@@ -1007,8 +1007,8 @@ theorem lift_rel_mem_cases {R : α → β → Prop} {ca cb} (Ha : ∀, ∀ a ∈
 
 theorem lift_rel_congr {R : α → β → Prop} {ca ca' : Computation α} {cb cb' : Computation β} (ha : ca ~ ca')
     (hb : cb ~ cb') : lift_rel R ca cb ↔ lift_rel R ca' cb' :=
-  and_congr (forall_congrₓ $ fun a => imp_congr (ha _) $ exists_congr $ fun b => and_congr (hb _) Iff.rfl)
-    (forall_congrₓ $ fun b => imp_congr (hb _) $ exists_congr $ fun a => and_congr (ha _) Iff.rfl)
+  and_congr (forall_congrₓ fun a => imp_congr (ha _) <| exists_congr fun b => and_congr (hb _) Iff.rfl)
+    (forall_congrₓ fun b => imp_congr (hb _) <| exists_congr fun a => and_congr (ha _) Iff.rfl)
 
 theorem lift_rel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α} {s2 : Computation β} {f1 : α → γ}
     {f2 : β → δ} (h1 : lift_rel R s1 s2) (h2 : ∀ {a b}, R a b → S (f1 a) (f2 b)) : lift_rel S (map f1 s1) (map f2 s2) :=
@@ -1066,8 +1066,8 @@ theorem lift_rel_rec.lem {R : α → β → Prop} (C : Computation α → Comput
 theorem lift_rel_rec {R : α → β → Prop} (C : Computation α → Computation β → Prop)
     (H : ∀ {ca cb}, C ca cb → lift_rel_aux R C (destruct ca) (destruct cb)) ca cb (Hc : C ca cb) : lift_rel R ca cb :=
   lift_rel_mem_cases (lift_rel_rec.lem C (@H) ca cb Hc) fun b hb =>
-    (lift_rel.swap _ _ _).2 $
-      lift_rel_rec.lem (swap C) (fun cb ca h => cast (lift_rel_aux.swap _ _ _ _).symm $ H h) cb ca Hc b hb
+    (lift_rel.swap _ _ _).2 <|
+      lift_rel_rec.lem (swap C) (fun cb ca h => cast (lift_rel_aux.swap _ _ _ _).symm <| H h) cb ca Hc b hb
 
 end Computation
 

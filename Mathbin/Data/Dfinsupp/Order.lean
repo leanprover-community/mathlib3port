@@ -47,7 +47,7 @@ theorem le_def {f g : Π₀ i, α i} : f ≤ g ↔ ∀ i, f i ≤ g i :=
 def order_embedding_to_fun : (Π₀ i, α i) ↪o ∀ i, α i where
   toFun := fun f => f
   inj' := fun f g h =>
-    Dfinsupp.ext $ fun i => by
+    Dfinsupp.ext fun i => by
       dsimp  at h
       rw [h]
   map_rel_iff' := fun a b => (@le_def _ _ _ _ a b).symm
@@ -70,7 +70,7 @@ theorem coe_fn_mono : Monotone (coeFn : (Π₀ i, α i) → ∀ i, α i) := fun 
 end Preorderₓ
 
 instance [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Π₀ i, α i) :=
-  { Dfinsupp.preorder α with le_antisymm := fun f g hfg hgf => ext $ fun i => (hfg i).antisymm (hgf i) }
+  { Dfinsupp.preorder α with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
   { Dfinsupp.partialOrder α with inf := zip_with (fun _ => ·⊓·) fun _ => inf_idem,
@@ -125,7 +125,7 @@ instance (α : ι → Type _) [∀ i, OrderedCancelAddCommMonoid (α i)] : Order
       rw [add_apply, add_apply] at H
       exact le_of_add_le_add_left H,
     add_left_cancel := fun f g h H =>
-      ext $ fun i => by
+      ext fun i => by
         refine' add_left_cancelₓ _
         exact f i
         rw [← add_apply, ← add_apply, H] }
@@ -164,7 +164,7 @@ theorem le_iff' (hf : f.support ⊆ s) : f ≤ g ↔ ∀, ∀ i ∈ s, ∀, f i 
     if H : s ∈ f.support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
 
 theorem le_iff : f ≤ g ↔ ∀, ∀ i ∈ f.support, ∀, f i ≤ g i :=
-  le_iff' $ subset.refl _
+  le_iff' <| subset.refl _
 
 variable (α)
 
@@ -175,7 +175,7 @@ variable {α}
 
 @[simp]
 theorem single_le_iff {i : ι} {a : α i} : single i a ≤ f ↔ a ≤ f i :=
-  (le_iff' support_single_subset).trans $ by
+  (le_iff' support_single_subset).trans <| by
     simp
 
 end Le
@@ -201,7 +201,7 @@ variable (α)
 
 instance : HasOrderedSub (Π₀ i, α i) :=
   ⟨fun n m k =>
-    forall_congrₓ $ fun i => by
+    forall_congrₓ fun i => by
       rw [add_apply, tsub_apply]
       exact tsub_le_iff_right⟩
 
@@ -211,7 +211,7 @@ instance : CanonicallyOrderedAddMonoid (Π₀ i, α i) :=
       refine' ⟨fun h => ⟨g - f, _⟩, _⟩
       · ext i
         rw [add_apply, tsub_apply]
-        exact (add_tsub_cancel_of_le $ h i).symm
+        exact (add_tsub_cancel_of_le <| h i).symm
         
       · rintro ⟨g, rfl⟩ i
         rw [add_apply]

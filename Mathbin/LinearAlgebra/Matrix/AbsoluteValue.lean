@@ -49,7 +49,7 @@ theorem det_le {A : Matrix n n R} {abv : AbsoluteValue R S} {x : S} (hx : ∀ i 
 theorem det_sum_le {ι : Type _} (s : Finset ι) {A : ι → Matrix n n R} {abv : AbsoluteValue R S} {x : S}
     (hx : ∀ k i j, abv (A k i j) ≤ x) :
     abv (det (∑ k in s, A k)) ≤ Nat.factorial (Fintype.card n) • (Finset.card s • x) ^ Fintype.card n :=
-  det_le $ fun i j =>
+  det_le fun i j =>
     calc
       abv ((∑ k in s, A k) i j) = abv (∑ k in s, A k i j) := by
         simp only [sum_apply]

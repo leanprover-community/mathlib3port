@@ -75,7 +75,7 @@ theorem coe_injective : @Function.Injective (NonUnitalAlgHom R A B) (A → B) co
 
 @[ext]
 theorem ext {f g : NonUnitalAlgHom R A B} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 
 theorem ext_iff {f g : NonUnitalAlgHom R A B} : f = g ↔ ∀ x, f x = g x :=
   ⟨by

@@ -59,11 +59,10 @@ theorem tendsto_left_lim (x : ℝ) : tendsto f (𝓝[<] x) (𝓝 (f.left_lim x))
   rw [left_lim]
   exact f.mono.tendsto_nhds_within_Iio x
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem left_lim_le {x y : ℝ} (h : x ≤ y) : f.left_lim x ≤ f y := by
   apply le_of_tendsto (f.tendsto_left_lim x)
-  filter_upwards [self_mem_nhds_within]
-  intro z hz
-  exact (f.mono (le_of_ltₓ hz)).trans (f.mono h)
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
 
 theorem le_left_lim {x y : ℝ} (h : x < y) : f x ≤ f.left_lim y := by
   apply ge_of_tendsto (f.tendsto_left_lim y)
@@ -87,7 +86,8 @@ protected def id : StieltjesFunction where
 
 @[simp]
 theorem id_left_lim (x : ℝ) : StieltjesFunction.id.leftLim x = x :=
-  tendsto_nhds_unique (StieltjesFunction.id.tendsto_left_lim x) $ continuous_at_id.Tendsto.mono_left nhds_within_le_nhds
+  tendsto_nhds_unique (StieltjesFunction.id.tendsto_left_lim x) <|
+    continuous_at_id.Tendsto.mono_left nhds_within_le_nhds
 
 instance : Inhabited StieltjesFunction :=
   ⟨StieltjesFunction.id⟩
@@ -103,16 +103,16 @@ def length (s : Set ℝ) : ℝ≥0∞ :=
 
 @[simp]
 theorem length_empty : f.length ∅ = 0 :=
-  nonpos_iff_eq_zero.1 $
-    infi_le_of_le 0 $
-      infi_le_of_le 0 $ by
+  nonpos_iff_eq_zero.1 <|
+    infi_le_of_le 0 <|
+      infi_le_of_le 0 <| by
         simp
 
 @[simp]
 theorem length_Ioc (a b : ℝ) : f.length (Ioc a b) = of_real (f b - f a) := by
   refine'
-    le_antisymmₓ (infi_le_of_le a $ binfi_le b (subset.refl _))
-      (le_infi $ fun a' => le_infi $ fun b' => le_infi $ fun h => Ennreal.coe_le_coe.2 _)
+    le_antisymmₓ (infi_le_of_le a <| binfi_le b (subset.refl _))
+      (le_infi fun a' => le_infi fun b' => le_infi fun h => Ennreal.coe_le_coe.2 _)
   cases' le_or_ltₓ b a with ab ab
   · rw [Real.to_nnreal_of_nonpos (sub_nonpos.2 (f.mono ab))]
     apply zero_le
@@ -121,7 +121,7 @@ theorem length_Ioc (a b : ℝ) : f.length (Ioc a b) = of_real (f b - f a) := by
   exact Real.to_nnreal_le_to_nnreal (sub_le_sub (f.mono h₁) (f.mono h₂))
 
 theorem length_mono {s₁ s₂ : Set ℝ} (h : s₁ ⊆ s₂) : f.length s₁ ≤ f.length s₂ :=
-  infi_le_infi $ fun a => infi_le_infi $ fun b => infi_le_infi2 $ fun h' => ⟨subset.trans h h', le_reflₓ _⟩
+  infi_le_infi fun a => infi_le_infi fun b => infi_le_infi2 fun h' => ⟨subset.trans h h', le_reflₓ _⟩
 
 open MeasureTheory
 
@@ -182,7 +182,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = of_real (f b - f a) := by
       (by
         rw [← f.length_Ioc]
         apply outer_le_length)
-      (le_binfi $ fun s hs => Ennreal.le_of_forall_pos_le_add $ fun ε εpos h => _)
+      (le_binfi fun s hs => Ennreal.le_of_forall_pos_le_add fun ε εpos h => _)
   let δ := ε / 2
   have δpos : 0 < (δ : ℝ≥0∞) := by
     simpa using εpos.ne'
@@ -230,7 +230,7 @@ theorem measurable_set_Ioi {c : ℝ} : f.outer.caratheodory.measurable_set' (Ioi
   apply outer_measure.of_function_caratheodory fun t => _
   refine' le_infi fun a => le_infi fun b => le_infi fun h => _
   refine'
-    le_transₓ (add_le_add (f.length_mono $ inter_subset_inter_left _ h) (f.length_mono $ diff_subset_diff_left h)) _
+    le_transₓ (add_le_add (f.length_mono <| inter_subset_inter_left _ h) (f.length_mono <| diff_subset_diff_left h)) _
   cases' le_totalₓ a c with hac hac <;> cases' le_totalₓ b c with hbc hbc
   · simp only [Ioc_inter_Ioi, f.length_Ioc, hac, sup_eq_max, hbc, le_reflₓ, Ioc_eq_empty, max_eq_rightₓ, min_eq_leftₓ,
       Ioc_diff_Ioi, f.length_empty, zero_addₓ, not_ltₓ]
@@ -248,7 +248,7 @@ theorem measurable_set_Ioi {c : ℝ} : f.outer.caratheodory.measurable_set' (Ioi
 theorem outer_trim : f.outer.trim = f.outer := by
   refine' le_antisymmₓ (fun s => _) (outer_measure.le_trim _)
   rw [outer_measure.trim_eq_infi]
-  refine' le_infi fun t => le_infi $ fun ht => Ennreal.le_of_forall_pos_le_add $ fun ε ε0 h => _
+  refine' le_infi fun t => le_infi fun ht => Ennreal.le_of_forall_pos_le_add fun ε ε0 h => _
   rcases Ennreal.exists_pos_sum_of_encodable (Ennreal.coe_pos.2 ε0).ne' ℕ with ⟨ε', ε'0, hε⟩
   refine' le_transₓ _ (add_le_add_left (le_of_ltₓ hε) _)
   rw [← Ennreal.tsum_add]
@@ -262,13 +262,13 @@ theorem outer_trim : f.outer.trim = f.outer := by
       rw [← f.outer_Ioc] at h₂
       exact
         ⟨_, h₁, measurable_set_Ioc,
-          le_of_ltₓ $ by
+          le_of_ltₓ <| by
             simpa using h₂⟩
   simp at hg
   apply infi_le_of_le (Union g) _
-  apply infi_le_of_le (ht.trans $ Union_mono fun i => (hg i).1) _
+  apply infi_le_of_le (ht.trans <| Union_mono fun i => (hg i).1) _
   apply infi_le_of_le (MeasurableSet.Union fun i => (hg i).2.1) _
-  exact le_transₓ (f.outer.Union _) (Ennreal.tsum_le_tsum $ fun i => (hg i).2.2)
+  exact le_transₓ (f.outer.Union _) (Ennreal.tsum_le_tsum fun i => (hg i).2.2)
 
 theorem borel_le_measurable : borel ℝ ≤ f.outer.caratheodory := by
   rw [borel_eq_generate_from_Ioi]
@@ -282,7 +282,7 @@ theorem borel_le_measurable : borel ℝ ≤ f.outer.caratheodory := by
 interval `(a, b]`. -/
 protected irreducible_def Measureₓ : Measureₓ ℝ :=
   { toOuterMeasure := f.outer,
-    m_Union := fun s hs => f.outer.Union_eq_of_caratheodory $ fun i => f.borel_le_measurable _ (hs i),
+    m_Union := fun s hs => f.outer.Union_eq_of_caratheodory fun i => f.borel_le_measurable _ (hs i),
     trimmed := f.outer_trim }
 
 @[simp]

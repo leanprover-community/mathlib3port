@@ -114,7 +114,7 @@ theorem chain.directed_on [IsRefl α r] {c} (H : chain c) : DirectedOn (· ≺ �
 theorem chain_insert {c : Set α} {a : α} (hc : chain c) (ha : ∀, ∀ b ∈ c, ∀, b ≠ a → a ≺ b ∨ b ≺ a) :
     chain (insert a c) :=
   forall_insert_of_forall (fun x hx => forall_insert_of_forall (hc hx) fun hneq => (ha x hx hneq).symm)
-    (forall_insert_of_forall (fun x hx hneq => ha x hx $ fun h' => hneq h'.symm) fun h => (h rfl).rec _)
+    (forall_insert_of_forall (fun x hx hneq => (ha x hx) fun h' => hneq h'.symm) fun h => (h rfl).rec _)
 
 /-- `super_chain c₁ c₂` means that `c₂` is a chain that strictly includes `c₁`. -/
 def super_chain (c₁ c₂ : Set α) : Prop :=
@@ -157,11 +157,11 @@ inductive chain_closure : Set (Set α)
   | union : ∀ {s}, (∀, ∀ a ∈ s, ∀, chain_closure a) → chain_closure (⋃₀s)
 
 theorem chain_closure_empty : ∅ ∈ chain_closure := by
-  have : chain_closure (⋃₀∅) := chain_closure.union $ fun a h => h.rec _
+  have : chain_closure (⋃₀∅) := chain_closure.union fun a h => h.rec _
   simp at this <;> assumption
 
 theorem chain_closure_closure : ⋃₀chain_closure ∈ chain_closure :=
-  chain_closure.union $ fun s hs => hs
+  chain_closure.union fun s hs => hs
 
 variable {c c₁ c₂ c₃ : Set α}
 
@@ -180,7 +180,7 @@ private theorem chain_closure_succ_total_aux (hc₁ : c₁ ∈ chain_closure) (h
     · exact Or.inr (subset.trans ih succ_increasing)
       
   case union s hs ih =>
-    refine' or_iff_not_imp_right.2 $ fun hn => sUnion_subset $ fun a ha => _
+    refine' or_iff_not_imp_right.2 fun hn => sUnion_subset fun a ha => _
     apply (ih a ha).resolve_right
     apply mt (fun h => _) hn
     exact subset.trans h (subset_sUnion_of_mem ha)
@@ -189,16 +189,16 @@ private theorem chain_closure_succ_total (hc₁ : c₁ ∈ chain_closure) (hc₂
     c₂ = c₁ ∨ succ_chain c₁ ⊆ c₂ := by
   induction hc₂ generalizing c₁ hc₁ h
   case succ c₂ hc₂ ih =>
-    have h₁ : c₁ ⊆ c₂ ∨ @succ_chain α r c₂ ⊆ c₁ := chain_closure_succ_total_aux hc₁ hc₂ $ fun c₁ => ih
+    have h₁ : c₁ ⊆ c₂ ∨ @succ_chain α r c₂ ⊆ c₁ := (chain_closure_succ_total_aux hc₁ hc₂) fun c₁ => ih
     cases' h₁ with h₁ h₁
     · have h₂ := ih hc₁ h₁
       cases' h₂ with h₂ h₂
-      · exact Or.inr $ h₂ ▸ subset.refl _
+      · exact Or.inr <| h₂ ▸ subset.refl _
         
-      · exact Or.inr $ subset.trans h₂ succ_increasing
+      · exact Or.inr <| subset.trans h₂ succ_increasing
         
       
-    · exact Or.inl $ subset.antisymm h₁ h
+    · exact Or.inl <| subset.antisymm h₁ h
       
   case union s hs ih =>
     apply Or.imp_left fun h' => subset.antisymm h' h
@@ -209,17 +209,17 @@ private theorem chain_closure_succ_total (hc₁ : c₁ ∈ chain_closure) (hc₂
     cases' h with h h
     · have h' := ih c₃ hc₃ hc₁ h
       cases' h' with h' h'
-      · exact h₁ $ h' ▸ subset.refl _
+      · exact h₁ <| h' ▸ subset.refl _
         
-      · exact h₂ $ subset.trans h' $ subset_sUnion_of_mem hc₃
+      · exact h₂ <| subset.trans h' <| subset_sUnion_of_mem hc₃
         
       
-    · exact h₁ $ subset.trans succ_increasing h
+    · exact h₁ <| subset.trans succ_increasing h
       
 
 theorem chain_closure_total (hc₁ : c₁ ∈ chain_closure) (hc₂ : c₂ ∈ chain_closure) : c₁ ⊆ c₂ ∨ c₂ ⊆ c₁ :=
-  Or.imp_rightₓ succ_increasing.trans $
-    chain_closure_succ_total_aux hc₁ hc₂ $ fun c₃ hc₃ => chain_closure_succ_total hc₃ hc₂
+  Or.imp_rightₓ succ_increasing.trans <|
+    (chain_closure_succ_total_aux hc₁ hc₂) fun c₃ hc₃ => chain_closure_succ_total hc₃ hc₂
 
 theorem chain_closure_succ_fixpoint (hc₁ : c₁ ∈ chain_closure) (hc₂ : c₂ ∈ chain_closure) (h_eq : succ_chain c₂ = c₂) :
     c₁ ⊆ c₂ := by
@@ -227,13 +227,13 @@ theorem chain_closure_succ_fixpoint (hc₁ : c₁ ∈ chain_closure) (hc₂ : c�
   case succ c₁ hc₁ h =>
     exact Or.elim (chain_closure_succ_total hc₁ hc₂ h) (fun h => h ▸ h_eq.symm ▸ subset.refl c₂) id
   case union s hs ih =>
-    exact sUnion_subset $ fun c₁ hc₁ => ih c₁ hc₁
+    exact sUnion_subset fun c₁ hc₁ => ih c₁ hc₁
 
 theorem chain_closure_succ_fixpoint_iff (hc : c ∈ chain_closure) : succ_chain c = c ↔ c = ⋃₀chain_closure :=
   ⟨fun h => (subset_sUnion_of_mem hc).antisymm (chain_closure_succ_fixpoint chain_closure_closure hc h), fun h =>
     subset.antisymm
       (calc
-        succ_chain c ⊆ ⋃₀{ c : Set α | c ∈ chain_closure } := subset_sUnion_of_mem $ chain_closure.succ hc
+        succ_chain c ⊆ ⋃₀{ c : Set α | c ∈ chain_closure } := subset_sUnion_of_mem <| chain_closure.succ hc
         _ = c := h.symm
         )
       succ_increasing⟩
@@ -263,7 +263,7 @@ def max_chain :=
 There exists a maximal totally ordered subset of `α`.
 Note that we do not require `α` to be partially ordered by `r`. -/
 theorem max_chain_spec : is_max_chain max_chain :=
-  Classical.by_contradiction $ fun h => by
+  Classical.by_contradiction fun h => by
     obtain ⟨h₁, H⟩ := super_of_not_max (chain_chain_closure chain_closure_closure) h
     obtain ⟨h₂, h₃⟩ := ssubset_iff_subset_ne.1 H
     exact h₃ ((chain_closure_succ_fixpoint_iff chain_closure_closure).mpr rfl).symm
@@ -273,13 +273,13 @@ theorem max_chain_spec : is_max_chain max_chain :=
 If every chain has an upper bound, then there exists a maximal element. -/
 theorem exists_maximal_of_chains_bounded (h : ∀ c, chain c → ∃ ub, ∀, ∀ a ∈ c, ∀, a ≺ ub)
     (trans : ∀ {a b c}, a ≺ b → b ≺ c → a ≺ c) : ∃ m, ∀ a, m ≺ a → a ≺ m :=
-  have : ∃ ub, ∀, ∀ a ∈ max_chain, ∀, a ≺ ub := h _ $ max_chain_spec.left
+  have : ∃ ub, ∀, ∀ a ∈ max_chain, ∀, a ≺ ub := h _ <| max_chain_spec.left
   let ⟨ub, (hub : ∀, ∀ a ∈ max_chain, ∀, a ≺ ub)⟩ := this
   ⟨ub, fun a ha =>
-    have : chain (insert a max_chain) := chain_insert max_chain_spec.left $ fun b hb _ => Or.inr $ trans (hub b hb) ha
+    have : chain (insert a max_chain) := (chain_insert max_chain_spec.left) fun b hb _ => Or.inr <| trans (hub b hb) ha
     have : a ∈ max_chain :=
-      Classical.by_contradiction $ fun h : a ∉ max_chain =>
-        max_chain_spec.right $ ⟨insert a max_chain, this, ssubset_insert h⟩
+      Classical.by_contradiction fun h : a ∉ max_chain =>
+        max_chain_spec.right <| ⟨insert a max_chain, this, ssubset_insert h⟩
     hub a this⟩
 
 /-- A variant of Zorn's lemma. If every nonempty chain of a nonempty type has an upper bound, then
@@ -330,7 +330,7 @@ theorem zorn_nonempty_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : S
     @zorn_partial_order { m // m ∈ s ∧ x ≤ m } _ fun c hc =>
       c.eq_empty_or_nonempty.elim (fun hce => hce.symm ▸ ⟨⟨x, hxs, le_reflₓ _⟩, fun _ => False.elim⟩) fun ⟨m, hmc⟩ =>
         let ⟨ub, hubs, hub⟩ :=
-          ih (Subtype.val '' c) (image_subset_iff.2 $ fun z hzc => z.2.1)
+          ih (Subtype.val '' c) (image_subset_iff.2 fun z hzc => z.2.1)
             (by
               rintro _ ⟨p, hpc, rfl⟩ _ ⟨q, hqc, rfl⟩ hpq <;>
                 exact
@@ -340,8 +340,8 @@ theorem zorn_nonempty_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : S
                         rintro rfl <;> rfl)
                       hpq))
             m.1 (mem_image_of_mem _ hmc)
-        ⟨⟨ub, hubs, le_transₓ m.2.2 $ hub m.1 $ mem_image_of_mem _ hmc⟩, fun a hac => hub a.1 ⟨a, hac, rfl⟩⟩
-  ⟨m, hms, hxm, fun z hzs hmz => congr_argₓ Subtype.val $ h ⟨z, hzs, le_transₓ hxm hmz⟩ hmz⟩
+        ⟨⟨ub, hubs, le_transₓ m.2.2 <| hub m.1 <| mem_image_of_mem _ hmc⟩, fun a hac => hub a.1 ⟨a, hac, rfl⟩⟩
+  ⟨m, hms, hxm, fun z hzs hmz => congr_argₓ Subtype.val <| h ⟨z, hzs, le_transₓ hxm hmz⟩ hmz⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_subset {α : Type u} (S : Set (Set α))
@@ -357,7 +357,7 @@ theorem zorn_subset_nonempty {α : Type u} (S : Set (Set α))
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_superset {α : Type u} (S : Set (Set α))
     (h : ∀ c _ : c ⊆ S, chain (· ⊆ ·) c → ∃ lb ∈ S, ∀, ∀ s ∈ c, ∀, lb ⊆ s) : ∃ m ∈ S, ∀, ∀ a ∈ S, ∀, a ⊆ m → a = m :=
-  @zorn_partial_order₀ (OrderDual (Set α)) _ S $ fun c cS hc => h c cS hc.symm
+  (@zorn_partial_order₀ (OrderDual (Set α)) _ S) fun c cS hc => h c cS hc.symm
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_superset_nonempty {α : Type u} (S : Set (Set α))
@@ -390,7 +390,7 @@ theorem chain.total {α : Type u} [Preorderₓ α] {c : Set α} (H : chain (· �
 
 theorem chain.image {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) (f : α → β) (h : ∀ x y, r x y → s (f x) (f y))
     {c : Set α} (hrc : chain r c) : chain s (f '' c) := fun x ⟨a, ha₁, ha₂⟩ y ⟨b, hb₁, hb₂⟩ =>
-  ha₂ ▸ hb₂ ▸ fun hxy => (hrc ha₁ hb₁ $ ne_of_apply_ne f hxy).elim (Or.inl ∘ h _ _) (Or.inr ∘ h _ _)
+  ha₂ ▸ hb₂ ▸ fun hxy => (hrc ha₁ hb₁ <| ne_of_apply_ne f hxy).elim (Or.inl ∘ h _ _) (Or.inr ∘ h _ _)
 
 end Zorn
 

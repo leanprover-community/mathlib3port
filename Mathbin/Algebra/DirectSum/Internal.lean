@@ -139,17 +139,17 @@ instance gcomm_semiring [AddCommMonoidₓ ι] [CommSemiringₓ S] [CommSemiring�
 instance galgebra [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R] (A : ι → Submodule S R)
     [h : SetLike.GradedMonoid A] : DirectSum.Galgebra S fun i => A i where
   toFun := by
-    refine' ((Algebra.linearMap S R).codRestrict (A 0) $ fun r => _).toAddMonoidHom
+    refine' (((Algebra.linearMap S R).codRestrict (A 0)) fun r => _).toAddMonoidHom
     exact submodule.one_le.mpr SetLike.HasGradedOne.one_mem (Submodule.algebra_map_mem _)
-  map_one := Subtype.ext $ (algebraMap S R).map_one
-  map_mul := fun x y => Sigma.subtype_ext (add_zeroₓ 0).symm $ (algebraMap S R).map_mul _ _
-  commutes := fun r ⟨i, xi⟩ => Sigma.subtype_ext ((zero_addₓ i).trans (add_zeroₓ i).symm) $ Algebra.commutes _ _
-  smul_def := fun r ⟨i, xi⟩ => Sigma.subtype_ext (zero_addₓ i).symm $ Algebra.smul_def _ _
+  map_one := Subtype.ext <| (algebraMap S R).map_one
+  map_mul := fun x y => Sigma.subtype_ext (add_zeroₓ 0).symm <| (algebraMap S R).map_mul _ _
+  commutes := fun r ⟨i, xi⟩ => Sigma.subtype_ext ((zero_addₓ i).trans (add_zeroₓ i).symm) <| Algebra.commutes _ _
+  smul_def := fun r ⟨i, xi⟩ => Sigma.subtype_ext (zero_addₓ i).symm <| Algebra.smul_def _ _
 
 @[simp]
 theorem set_like.coe_galgebra_to_fun [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R]
     (A : ι → Submodule S R) [h : SetLike.GradedMonoid A] (s : S) :
-    ↑@DirectSum.Galgebra.toFun _ S (fun i => A i) _ _ _ _ _ _ _ s = (algebraMap S R s : R) :=
+    ↑(@DirectSum.Galgebra.toFun _ S (fun i => A i) _ _ _ _ _ _ _ s) = (algebraMap S R s : R) :=
   rfl
 
 /-- A direct sum of powers of a submodule of an algebra has a multiplicative structure. -/

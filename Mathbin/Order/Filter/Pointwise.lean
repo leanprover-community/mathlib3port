@@ -149,13 +149,13 @@ protected theorem map_mul {f₁ f₂ : Filter α} : map m (f₁ * f₂) = map m 
 @[to_additive]
 protected theorem map_one : map φ (1 : Filter α) = 1 :=
   le_antisymmₓ
-    (le_principal_iff.2 $
+    (le_principal_iff.2 <|
       mem_map_iff_exists_image.2
         ⟨(1 : Set α), by
           simp , by
           intro x
           simp [φ.map_one]⟩)
-    (le_map $ fun s hs => by
+    (le_map fun s hs => by
       simp only [mem_one]
       exact ⟨(1 : α), (mem_one s).1 hs, φ.map_one⟩)
 

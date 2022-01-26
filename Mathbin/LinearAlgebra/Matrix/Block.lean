@@ -77,7 +77,7 @@ theorem equiv_block_det (M : Matrix m m R) {p q : m → Prop} [DecidablePred p] 
   convert Matrix.det_reindex_self (Equivₓ.subtypeEquivRight e) (to_square_block_prop M q)
 
 theorem to_square_block_det'' (M : Matrix m m R) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
-    (to_square_block M b k).det = (to_square_block' M (fun i => ↑b i) (↑k)).det := by
+    (to_square_block M b k).det = (to_square_block' M (fun i => ↑(b i)) ↑k).det := by
   rw [to_square_block_def', to_square_block_def]
   apply equiv_block_det
   intro x
@@ -162,12 +162,12 @@ theorem det_of_block_triangular_matrix (M : Matrix m m R) (b : m → ℕ) (h : b
     · rw [mul_comm]
       apply congr (congr_argₓ Mul.mul _)
       · let m' := { a // ¬b a = n }
-        let b' := fun i : m' => b (↑i)
+        let b' := fun i : m' => b ↑i
         have h' : block_triangular_matrix (M.to_square_block_prop fun i : m => ¬b i = n) b' := by
           intro i j
-          apply h (↑i) (↑j)
+          apply h ↑i ↑j
         have hni : ∀ i : { a // ¬b a = n }, b' i < n := fun i =>
-          (Ne.le_iff_lt i.property).mp (nat.lt_succ_iff.mp (hn (↑i)))
+          (Ne.le_iff_lt i.property).mp (nat.lt_succ_iff.mp (hn ↑i))
         have h1 := hi (M.to_square_block_prop fun i : m => ¬b i = n) b' h' hni
         rw [← Finₓ.prod_univ_eq_prod_range] at h1⊢
         convert h1
@@ -179,7 +179,7 @@ theorem det_of_block_triangular_matrix (M : Matrix m m R) (b : m → ℕ) (h : b
             rw [hbi]
             exact ne_of_ltₓ (Finₓ.is_lt k)
           Equivₓ.subtypeSubtypeEquivSubtype hc
-        exact Matrix.det_reindex_self he fun i j : { a // b' a = ↑k } => M (↑i) (↑j)
+        exact Matrix.det_reindex_self he fun i j : { a // b' a = ↑k } => M ↑i ↑j
         
       · rw [det_to_square_block' M b n]
         have hh : ∀ a, b a = n ↔ ¬(fun i : m => ¬b i = n) a := by
@@ -228,7 +228,7 @@ theorem det_of_block_triangular_matrix'' (M : Matrix m m R) (b : m → ℕ) (h :
 
 theorem det_of_block_triangular_matrix' (M : Matrix m m R) {n : ℕ} (b : m → Finₓ n) (h : block_triangular_matrix' M b) :
     M.det = ∏ k : Finₓ n, (to_square_block M b k).det := by
-  let b2 : m → ℕ := fun i => ↑b i
+  let b2 : m → ℕ := fun i => ↑(b i)
   simp_rw [to_square_block_det'']
   rw [Finₓ.prod_univ_eq_prod_range (fun k : ℕ => (M.to_square_block' b2 k).det) n]
   apply det_of_block_triangular_matrix

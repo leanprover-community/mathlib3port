@@ -377,13 +377,13 @@ def restrict_top_iso (X : PresheafedSpace C) : X.restrict (opens.open_embedding 
   Hom := X.of_restrict _
   inv := X.to_restrict_top
   hom_inv_id' :=
-    ext _ _ (concrete_category.hom_ext _ _ $ fun ⟨x, _⟩ => rfl) $ by
+    ext _ _ ((concrete_category.hom_ext _ _) fun ⟨x, _⟩ => rfl) <| by
       erw [comp_c]
       rw [X.of_restrict_top_c]
       ext
       simp
   inv_hom_id' :=
-    ext _ _ rfl $ by
+    ext _ _ rfl <| by
       erw [comp_c]
       rw [X.of_restrict_top_c]
       ext

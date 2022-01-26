@@ -43,7 +43,7 @@ theorem mkpair_unpair (n : ℕ) : mkpair (unpair n).1 (unpair n).2 = n := by
     
   · have hl : n - s * s - s ≤ s :=
       tsub_le_iff_left.mpr
-        (tsub_le_iff_left.mpr $ by
+        (tsub_le_iff_left.mpr <| by
           rw [← add_assocₓ] <;> apply sqrt_le_add)
     simp [mkpair, hl.not_lt, add_assocₓ, add_tsub_cancel_of_le (le_of_not_gtₓ h), sm]
     

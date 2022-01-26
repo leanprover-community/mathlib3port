@@ -60,7 +60,7 @@ theorem card_comm_eq_card_conj_classes_mul_card :
     _ = ∑ g, card { h // g * h = h * g } := card_sigma _
     _ = ∑ g, card (MulAction.FixedBy (ConjAct G) G g) :=
       sum_equiv ConjAct.toConjAct.toEquiv _ _ fun g =>
-        card_congr' $ congr_argₓ _ $ funext $ fun h => mul_inv_eq_iff_eq_mul.symm.to_eq
+        card_congr' <| congr_argₓ _ <| funext fun h => mul_inv_eq_iff_eq_mul.symm.to_eq
     _ = card (Quotientₓ (MulAction.orbitRel (ConjAct G) G)) * card G :=
       MulAction.sum_card_fixed_by_eq_card_orbits_mul_card_group (ConjAct G) G
     _ = card (Quotientₓ (IsConj.setoid G)) * card G := by
@@ -102,7 +102,7 @@ theorem Subgroup.comm_prob_quotient_le [H.normal] : commProb (G ⧸ H) ≤ commP
 
 variable (G)
 
-theorem inv_card_commutator_le_comm_prob : (↑card (commutator G))⁻¹ ≤ commProb G :=
+theorem inv_card_commutator_le_comm_prob : (↑(card (commutator G)))⁻¹ ≤ commProb G :=
   (inv_pos_le_iff_one_le_mul (nat.cast_pos.mpr card_pos)).mpr
     (le_transₓ (ge_of_eq (comm_prob_eq_one_iff.mpr (Abelianization.commGroup G).mul_comm))
       (commutator G).comm_prob_quotient_le)

@@ -52,7 +52,7 @@ theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) : ↑F 
   · intro a s h1 h2 h3
     suffices a ∩ ⋂₀↑s ∈ S by
       simpa
-    exact cond.inter_mem (h3 (Finset.mem_insert_self a s)) (h2 $ fun x hx => h3 $ Finset.mem_insert_of_mem hx)
+    exact cond.inter_mem (h3 (Finset.mem_insert_self a s)) (h2 fun x hx => h3 <| Finset.mem_insert_of_mem hx)
     
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure (insert A S))

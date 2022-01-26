@@ -69,6 +69,7 @@ section AnyFieldCommAlgebra
 
 variable {𝕂 𝔸 : Type _} [NondiscreteNormedField 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The exponential map in a commutative Banach-algebra `𝔸` over a normed field `𝕂` of
 characteristic zero has Fréchet-derivative `exp 𝕂 𝔸 x • 1 : 𝔸 →L[𝕂] 𝔸` at any point `x` in the
 disk of convergence. -/
@@ -84,8 +85,7 @@ theorem has_fderiv_at_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸} (hx : x ∈ Eme
     rw [← has_fderiv_at_iff_is_o_nhds_zero]
     exact has_fderiv_at_exp_zero_of_radius_pos hpos
   have : ∀ᶠ h in 𝓝 (0 : 𝔸), h ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius := Emetric.ball_mem_nhds _ hpos
-  filter_upwards [this]
-  intro h hh
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [exp_add_of_mem_ball hx hh, exp_zero, zero_addₓ, ContinuousLinearMap.id_apply, smul_eq_mul]
   ring
 

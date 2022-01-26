@@ -214,7 +214,7 @@ theorem arrows_ext : ∀ {R S : sieve X}, R.arrows = S.arrows → R = S
 
 @[ext]
 protected theorem ext {R S : sieve X} (h : ∀ ⦃Y⦄ f : Y ⟶ X, R f ↔ S f) : R = S :=
-  arrows_ext $ funext $ fun x => funext $ fun f => propext $ h f
+  arrows_ext <| funext fun x => funext fun f => propext <| h f
 
 protected theorem ext_iff {R S : sieve X} : R = S ↔ ∀ ⦃Y⦄ f : Y ⟶ X, R f ↔ S f :=
   ⟨fun h Y f => h ▸ Iff.rfl, sieve.ext⟩
@@ -345,7 +345,7 @@ theorem generate_sieve (S : sieve X) : generate S = S :=
 /-- If the identity arrow is in a sieve, the sieve is maximal. -/
 theorem id_mem_iff_eq_top : S (𝟙 X) ↔ S = ⊤ :=
   ⟨fun h =>
-    top_unique $ fun Y f _ => by
+    top_unique fun Y f _ => by
       simpa using downward_closed _ h f,
     fun h => h.symm ▸ trivialₓ⟩
 

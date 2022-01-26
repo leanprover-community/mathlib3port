@@ -329,23 +329,23 @@ theorem zero_lt {x : Pgame} :
 
 /-- Given a right-player-wins game, provide a response to any move by left. -/
 noncomputable def right_response {x : Pgame} (h : x ≤ 0) (i : x.left_moves) : (x.move_left i).RightMoves :=
-  Classical.some $ (le_zero.1 h) i
+  Classical.some <| (le_zero.1 h) i
 
 /-- Show that the response for right provided by `right_response`
     preserves the right-player-wins condition. -/
 theorem right_response_spec {x : Pgame} (h : x ≤ 0) (i : x.left_moves) :
     (x.move_left i).moveRight (right_response h i) ≤ 0 :=
-  Classical.some_spec $ (le_zero.1 h) i
+  Classical.some_spec <| (le_zero.1 h) i
 
 /-- Given a left-player-wins game, provide a response to any move by right. -/
 noncomputable def left_response {x : Pgame} (h : 0 ≤ x) (j : x.right_moves) : (x.move_right j).LeftMoves :=
-  Classical.some $ (zero_le.1 h) j
+  Classical.some <| (zero_le.1 h) j
 
 /-- Show that the response for left provided by `left_response`
     preserves the left-player-wins condition. -/
 theorem left_response_spec {x : Pgame} (h : 0 ≤ x) (j : x.right_moves) :
     0 ≤ (x.move_right j).moveLeft (left_response h j) :=
-  Classical.some_spec $ (zero_le.1 h) j
+  Classical.some_spec <| (zero_le.1 h) j
 
 theorem lt_of_le_mk {xl xr xL xR y i} : (⟨xl, xr, xL, xR⟩ : Pgame) ≤ y → xL i < y := by
   cases y
@@ -463,13 +463,13 @@ theorem le_congr {x₁ y₁ x₂ y₂} : (x₁ ≈ x₂) → (y₁ ≈ y₂) →
   | ⟨x12, x21⟩, ⟨y12, y21⟩ => ⟨fun h => le_transₓ x21 (le_transₓ h y12), fun h => le_transₓ x12 (le_transₓ h y21)⟩
 
 theorem lt_congr {x₁ y₁ x₂ y₂} (hx : x₁ ≈ x₂) (hy : y₁ ≈ y₂) : x₁ < y₁ ↔ x₂ < y₂ :=
-  not_leₓ.symm.trans $ (not_congr (le_congr hy hx)).trans not_leₓ
+  not_leₓ.symm.trans <| (not_congr (le_congr hy hx)).trans not_leₓ
 
 theorem equiv_congr_left {y₁ y₂} : (y₁ ≈ y₂) ↔ ∀ x₁, (x₁ ≈ y₁) ↔ (x₁ ≈ y₂) :=
-  ⟨fun h x₁ => ⟨fun h' => equiv_trans h' h, fun h' => equiv_trans h' (equiv_symm h)⟩, fun h => (h y₁).1 $ equiv_refl _⟩
+  ⟨fun h x₁ => ⟨fun h' => equiv_trans h' h, fun h' => equiv_trans h' (equiv_symm h)⟩, fun h => (h y₁).1 <| equiv_refl _⟩
 
 theorem equiv_congr_right {x₁ x₂} : (x₁ ≈ x₂) ↔ ∀ y₁, (x₁ ≈ y₁) ↔ (x₂ ≈ y₁) :=
-  ⟨fun h y₁ => ⟨fun h' => equiv_trans (equiv_symm h) h', fun h' => equiv_trans h h'⟩, fun h => (h x₂).2 $ equiv_refl _⟩
+  ⟨fun h y₁ => ⟨fun h' => equiv_trans (equiv_symm h) h', fun h' => equiv_trans h h'⟩, fun h => (h x₂).2 <| equiv_refl _⟩
 
 theorem equiv_of_mk_equiv {x y : Pgame} (L : x.left_moves ≃ y.left_moves) (R : x.right_moves ≃ y.right_moves)
     (hl : ∀ i : x.left_moves, x.move_left i ≈ y.move_left (L i))

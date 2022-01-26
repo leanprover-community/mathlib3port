@@ -98,7 +98,7 @@ unsafe def congr : expr_lens → expr → tactic expr
   | entire, e_eq => pure e_eq
   | app_fun l f, x_eq => do
     let fx_eq ←
-      try_core $ do
+      try_core <| do
           mk_congr_arg f x_eq <|> mk_congr_arg_using_dsimp f x_eq [`has_coe_to_fun.F]
     match fx_eq with
       | some fx_eq => l.congr fx_eq
@@ -126,7 +126,7 @@ private unsafe def app_map_aux {α} (F : expr_lens → expr → tactic (List α)
     Option (expr_lens × expr) → tactic (List α)
   | some (l, e) =>
     List.join <$>
-        Monadₓ.sequence [F l e, app_map_aux $ l.zoom [ExprLens.Dir.F] e, app_map_aux $ l.zoom [ExprLens.Dir.A] e] <|>
+        Monadₓ.sequence [F l e, app_map_aux <| l.zoom [ExprLens.Dir.F] e, app_map_aux <| l.zoom [ExprLens.Dir.A] e] <|>
       pure []
   | none => pure []
 

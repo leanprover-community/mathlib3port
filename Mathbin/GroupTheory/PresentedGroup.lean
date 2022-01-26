@@ -50,7 +50,7 @@ theorem closure_rels_subset_ker : Subgroup.normalClosure rels ≤ MonoidHom.ker 
   Subgroup.normal_closure_le_normal fun x w => (MonoidHom.mem_ker _).2 (h x w)
 
 theorem to_group_eq_one_of_mem_closure : ∀, ∀ x ∈ Subgroup.normalClosure rels, ∀, F x = 1 := fun x w =>
-  (MonoidHom.mem_ker _).1 $ closure_rels_subset_ker h w
+  (MonoidHom.mem_ker _).1 <| closure_rels_subset_ker h w
 
 /-- The extension of a map `f : α → G` that satisfies the given relations to a group homomorphism
 from `presented_group rels → G`. -/

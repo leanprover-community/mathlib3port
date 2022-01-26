@@ -110,7 +110,7 @@ theorem add_tsub_le_left : a + b - a ≤ b :=
   tsub_le_iff_left.mpr le_rfl
 
 theorem tsub_le_tsub_right (h : a ≤ b) (c : α) : a - c ≤ b - c :=
-  tsub_le_iff_left.mpr $ h.trans le_add_tsub
+  tsub_le_iff_left.mpr <| h.trans le_add_tsub
 
 theorem tsub_le_iff_tsub_le : a - b ≤ c ↔ a - c ≤ b := by
   rw [tsub_le_iff_left, tsub_le_iff_right]
@@ -124,10 +124,10 @@ section Cov
 variable [CovariantClass α α (· + ·) (· ≤ ·)]
 
 theorem tsub_le_tsub_left (h : a ≤ b) (c : α) : c - b ≤ c - a :=
-  tsub_le_iff_left.mpr $ le_add_tsub.trans $ add_le_add_right h _
+  tsub_le_iff_left.mpr <| le_add_tsub.trans <| add_le_add_right h _
 
 theorem tsub_le_tsub (hab : a ≤ b) (hcd : c ≤ d) : a - d ≤ b - c :=
-  (tsub_le_tsub_right hab _).trans $ tsub_le_tsub_left hcd _
+  (tsub_le_tsub_right hab _).trans <| tsub_le_tsub_left hcd _
 
 /-- See `add_tsub_assoc_of_le` for the equality. -/
 theorem add_tsub_le_assoc : a + b - c ≤ a + (b - c) := by
@@ -151,7 +151,7 @@ theorem tsub_tsub_tsub_le_tsub : c - a - (c - b) ≤ b - a := by
   exact le_tsub_add.trans (add_le_add_left le_add_tsub _)
 
 theorem tsub_tsub_le_tsub_add {a b c : α} : a - (b - c) ≤ a - b + c :=
-  tsub_le_iff_right.2 $
+  tsub_le_iff_right.2 <|
     calc
       a ≤ a - b + b := le_tsub_add
       _ ≤ a - b + (c + (b - c)) := add_le_add_left le_add_tsub _
@@ -173,10 +173,10 @@ protected theorem le_add_tsub (hb : AddLeCancellable b) : a ≤ a + b - b := by
   exact hb.le_add_tsub_swap
 
 protected theorem le_tsub_of_add_le_left (ha : AddLeCancellable a) (h : a + b ≤ c) : b ≤ c - a :=
-  ha $ h.trans le_add_tsub
+  ha <| h.trans le_add_tsub
 
 protected theorem le_tsub_of_add_le_right (hb : AddLeCancellable b) (h : a + b ≤ c) : a ≤ c - b :=
-  hb.le_tsub_of_add_le_left $ by
+  hb.le_tsub_of_add_le_left <| by
     rwa [add_commₓ]
 
 end AddLeCancellable
@@ -234,7 +234,7 @@ section Cov
 variable [CovariantClass α α (· + ·) (· ≤ ·)]
 
 theorem tsub_add_eq_tsub_tsub (a b c : α) : a - (b + c) = a - b - c := by
-  refine' le_antisymmₓ (tsub_le_iff_left.mpr _) (tsub_le_iff_left.mpr $ tsub_le_iff_left.mpr _)
+  refine' le_antisymmₓ (tsub_le_iff_left.mpr _) (tsub_le_iff_left.mpr <| tsub_le_iff_left.mpr _)
   · rw [add_assocₓ]
     refine' le_transₓ le_add_tsub (add_le_add_left le_add_tsub _)
     
@@ -257,7 +257,7 @@ end Cov
 namespace AddLeCancellable
 
 protected theorem tsub_eq_of_eq_add (hb : AddLeCancellable b) (h : a = c + b) : a - b = c :=
-  le_antisymmₓ (tsub_le_iff_right.mpr h.le) $ by
+  le_antisymmₓ (tsub_le_iff_right.mpr h.le) <| by
     rw [h]
     exact hb.le_add_tsub
 
@@ -265,17 +265,17 @@ protected theorem eq_tsub_of_add_eq (hc : AddLeCancellable c) (h : a + c = b) : 
   (hc.tsub_eq_of_eq_add h.symm).symm
 
 protected theorem tsub_eq_of_eq_add_rev (hb : AddLeCancellable b) (h : a = b + c) : a - b = c :=
-  hb.tsub_eq_of_eq_add $ by
+  hb.tsub_eq_of_eq_add <| by
     rw [add_commₓ, h]
 
 @[simp]
 protected theorem add_tsub_cancel_right (hb : AddLeCancellable b) : a + b - b = a :=
-  hb.tsub_eq_of_eq_add $ by
+  hb.tsub_eq_of_eq_add <| by
     rw [add_commₓ]
 
 @[simp]
 protected theorem add_tsub_cancel_left (ha : AddLeCancellable a) : a + b - a = b :=
-  ha.tsub_eq_of_eq_add $ add_commₓ a b
+  ha.tsub_eq_of_eq_add <| add_commₓ a b
 
 protected theorem lt_add_of_tsub_lt_left (hb : AddLeCancellable b) (h : a - b < c) : a < b + c := by
   rw [lt_iff_le_and_ne, ← tsub_le_iff_left]
@@ -404,10 +404,10 @@ theorem tsub_add_cancel_iff_le : b - a + a = b ↔ a ≤ b := by
   exact add_tsub_cancel_iff_le
 
 theorem add_le_of_le_tsub_right_of_le (h : b ≤ c) (h2 : a ≤ c - b) : a + b ≤ c :=
-  (add_le_add_right h2 b).trans_eq $ tsub_add_cancel_of_le h
+  (add_le_add_right h2 b).trans_eq <| tsub_add_cancel_of_le h
 
 theorem add_le_of_le_tsub_left_of_le (h : a ≤ c) (h2 : b ≤ c - a) : a + b ≤ c :=
-  (add_le_add_left h2 a).trans_eq $ add_tsub_cancel_of_le h
+  (add_le_add_left h2 a).trans_eq <| add_tsub_cancel_of_le h
 
 theorem tsub_le_tsub_iff_right (h : c ≤ b) : a - c ≤ b - c ↔ a ≤ b := by
   rw [tsub_le_iff_right, tsub_add_cancel_of_le h]
@@ -436,15 +436,15 @@ theorem tsub_self (a : α) : a - a = 0 :=
 
 @[simp]
 theorem tsub_le_self : a - b ≤ a :=
-  tsub_le_iff_left.mpr $ le_add_left le_rfl
+  tsub_le_iff_left.mpr <| le_add_left le_rfl
 
 @[simp]
 theorem tsub_zero (a : α) : a - 0 = a :=
-  le_antisymmₓ tsub_le_self $ le_add_tsub.trans_eq $ zero_addₓ _
+  le_antisymmₓ tsub_le_self <| le_add_tsub.trans_eq <| zero_addₓ _
 
 @[simp]
 theorem zero_tsub (a : α) : 0 - a = 0 :=
-  tsub_eq_zero_iff_le.mpr $ zero_le a
+  tsub_eq_zero_iff_le.mpr <| zero_le a
 
 theorem tsub_self_add (a b : α) : a - (a + b) = 0 := by
   rw [tsub_eq_zero_iff_le]
@@ -582,7 +582,7 @@ protected theorem tsub_lt_tsub_iff_left_of_le_of_le [ContravariantClass α α (�
 
 @[simp]
 protected theorem add_tsub_tsub_cancel (hac : AddLeCancellable (a - c)) (h : c ≤ a) : a + b - (a - c) = b + c :=
-  (hac.tsub_eq_iff_eq_add_of_le $ tsub_le_self.trans le_self_add).mpr $ by
+  (hac.tsub_eq_iff_eq_add_of_le <| tsub_le_self.trans le_self_add).mpr <| by
     rw [add_assocₓ, add_tsub_cancel_of_le h, add_commₓ]
 
 protected theorem tsub_tsub_cancel_of_le (hba : AddLeCancellable (b - a)) (h : a ≤ b) : b - (b - a) = a := by
@@ -732,7 +732,7 @@ protected theorem tsub_lt_self_iff (ha : AddLeCancellable a) (hb : AddLeCancella
 /-- See `lt_tsub_iff_left_of_le_of_le` for a weaker statement in a partial order. -/
 protected theorem tsub_lt_tsub_iff_left_of_le (ha : AddLeCancellable a) (hb : AddLeCancellable b) (h : b ≤ a) :
     a - b < a - c ↔ c < b :=
-  lt_iff_lt_of_le_iff_le $ ha.tsub_le_tsub_iff_left hb h
+  lt_iff_lt_of_le_iff_le <| ha.tsub_le_tsub_iff_left hb h
 
 end AddLeCancellable
 

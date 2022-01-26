@@ -177,7 +177,7 @@ unsafe def tactic.interactive.push_neg : parse location → tactic Unit
       match l with
       | some h => do
         push_neg_at_hyp h
-        try $
+        try <|
             interactive.simp_core { eta := ff } failed tt [simp_arg_type.expr (pquote.1 PushNeg.not_eq)] []
               (Interactive.Loc.ns [some h])
       | none => do
@@ -207,13 +207,14 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
 * `contrapose h with new_h` uses the name `new_h` for the introduced hypothesis
 -/
 unsafe def tactic.interactive.contrapose (push : parse (tk "!")?) : parse (name_with_opt)? → tactic Unit
-  | some (h, h') => get_local h >>= revert >> tactic.interactive.contrapose none >> intro (h'.get_or_else h) >> skip
+  | some (h, h') =>
+    (((get_local h >>= revert) >> tactic.interactive.contrapose none) >> intro (h'.get_or_else h)) >> skip
   | none => do
     let quote.1 ((%%ₓP) → %%ₓQ) ← target | fail "The goal is not an implication, and you didn't specify an assumption"
     let cp ←
       mk_mapp `` imp_of_not_imp_not [P, Q] <|> fail "contrapose only applies to nondependent arrows between props"
     apply cp
-    when push.is_some $ try (tactic.interactive.push_neg (loc.ns [none]))
+    when push.is_some <| try (tactic.interactive.push_neg (loc.ns [none]))
 
 add_tactic_doc
   { Name := "contrapose", category := DocCategory.tactic, declNames := [`tactic.interactive.contrapose],

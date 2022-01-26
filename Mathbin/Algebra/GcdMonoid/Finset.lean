@@ -76,9 +76,9 @@ theorem normalize_lcm : normalize (s.lcm f) = s.lcm f := by
   simp [lcm_def]
 
 theorem lcm_union [DecidableEq β] : (s₁ ∪ s₂).lcm f = GcdMonoid.lcm (s₁.lcm f) (s₂.lcm f) :=
-  Finset.induction_on s₁
+  (Finset.induction_on s₁
       (by
-        rw [empty_union, lcm_empty, lcm_one_left, normalize_lcm]) $
+        rw [empty_union, lcm_empty, lcm_one_left, normalize_lcm]))
     fun a s has ih => by
     rw [insert_union, lcm_insert, lcm_insert, ih, lcm_assoc]
 
@@ -90,7 +90,7 @@ theorem lcm_mono_fun {g : β → α} (h : ∀, ∀ b ∈ s, ∀, f b ∣ g b) : 
   lcm_dvd fun b hb => (h b hb).trans (dvd_lcm hb)
 
 theorem lcm_mono (h : s₁ ⊆ s₂) : s₁.lcm f ∣ s₂.lcm f :=
-  lcm_dvd $ fun b hb => dvd_lcm (h hb)
+  lcm_dvd fun b hb => dvd_lcm (h hb)
 
 theorem lcm_eq_zero_iff [Nontrivial α] : s.lcm f = 0 ↔ 0 ∈ f '' s := by
   simp only [Multiset.mem_map, lcm_def, Multiset.lcm_eq_zero_iff, Set.mem_image, mem_coe, ← Finset.mem_def]
@@ -142,9 +142,9 @@ theorem normalize_gcd : normalize (s.gcd f) = s.gcd f := by
   simp [gcd_def]
 
 theorem gcd_union [DecidableEq β] : (s₁ ∪ s₂).gcd f = GcdMonoid.gcd (s₁.gcd f) (s₂.gcd f) :=
-  Finset.induction_on s₁
+  (Finset.induction_on s₁
       (by
-        rw [empty_union, gcd_empty, gcd_zero_left, normalize_gcd]) $
+        rw [empty_union, gcd_empty, gcd_zero_left, normalize_gcd]))
     fun a s has ih => by
     rw [insert_union, gcd_insert, gcd_insert, ih, gcd_assoc]
 
@@ -156,7 +156,7 @@ theorem gcd_mono_fun {g : β → α} (h : ∀, ∀ b ∈ s, ∀, f b ∣ g b) : 
   dvd_gcd fun b hb => (gcd_dvd hb).trans (h b hb)
 
 theorem gcd_mono (h : s₁ ⊆ s₂) : s₂.gcd f ∣ s₁.gcd f :=
-  dvd_gcd $ fun b hb => gcd_dvd (h hb)
+  dvd_gcd fun b hb => gcd_dvd (h hb)
 
 theorem gcd_image {g : γ → β} (s : Finset γ) [DecidableEq β] [IsIdempotent α GcdMonoid.gcd] :
     (s.image g).gcd f = s.gcd (f ∘ g) := by

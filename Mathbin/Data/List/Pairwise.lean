@@ -67,7 +67,7 @@ theorem pairwise.and {S : α → α → Prop} {l : List α} :
 
 theorem pairwise.imp₂ {S : α → α → Prop} {T : α → α → Prop} (H : ∀ a b, R a b → S a b → T a b) {l : List α}
     (hR : Pairwise R l) (hS : Pairwise S l) : Pairwise T l :=
-  (pairwise.and.2 ⟨hR, hS⟩).imp $ fun a b => And.ndrec (H a b)
+  (pairwise.and.2 ⟨hR, hS⟩).imp fun a b => And.ndrec (H a b)
 
 theorem pairwise.iff_of_mem {S : α → α → Prop} {l : List α} (H : ∀ {a b}, a ∈ l → b ∈ l → (R a b ↔ S a b)) :
     Pairwise R l ↔ Pairwise S l :=
@@ -141,9 +141,9 @@ theorem pairwise_map (f : β → α) : ∀ {l : List β}, Pairwise R (map f l) �
     simp only [map, pairwise.nil]
   | b :: l => by
     have : (∀ a b', b' ∈ l → f b' = a → R (f b) a) ↔ ∀ b' : β, b' ∈ l → R (f b) (f b') :=
-      forall_swap.trans $
-        forall_congrₓ $ fun a =>
-          forall_swap.trans $ by
+      forall_swap.trans <|
+        forall_congrₓ fun a =>
+          forall_swap.trans <| by
             simp only [forall_eq']
     simp only [map, pairwise_cons, mem_map, exists_imp_distrib, and_imp, this, pairwise_map]
 
@@ -153,7 +153,7 @@ theorem pairwise_of_pairwise_map {S : β → β → Prop} (f : α → β) (H : �
 
 theorem pairwise_map_of_pairwise {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, R a b → S (f a) (f b)) {l : List α}
     (p : Pairwise R l) : Pairwise S (map f l) :=
-  (pairwise_map f).2 $ p.imp H
+  (pairwise_map f).2 <| p.imp H
 
 theorem pairwise_filter_map (f : β → Option α) {l : List β} :
     Pairwise R (filter_map f l) ↔ Pairwise (fun a a' : β => ∀, ∀ b ∈ f a, ∀, ∀ b' ∈ f a', ∀, R b b') l := by
@@ -176,7 +176,7 @@ theorem pairwise_filter_map (f : β → Option α) {l : List β} :
 theorem pairwise_filter_map_of_pairwise {S : β → β → Prop} (f : α → Option β)
     (H : ∀ a a' : α, R a a' → ∀, ∀ b ∈ f a, ∀, ∀ b' ∈ f a', ∀, S b b') {l : List α} (p : Pairwise R l) :
     Pairwise S (filter_map f l) :=
-  (pairwise_filter_map _).2 $ p.imp H
+  (pairwise_filter_map _).2 <| p.imp H
 
 theorem pairwise_filter (p : α → Prop) [DecidablePred p] {l : List α} :
     Pairwise R (filter p l) ↔ Pairwise (fun x y => p x → p y → R x y) l := by
@@ -317,7 +317,7 @@ theorem pairwise_sublists' {R} : ∀ {l : List α}, Pairwise R l → Pairwise (l
     cases' l₁ with b l₁
     · constructor
       
-    exact lex.rel (H₁ _ $ sl₁.subset $ mem_cons_self _ _)
+    exact lex.rel (H₁ _ <| sl₁.subset <| mem_cons_self _ _)
 
 theorem pairwise_sublists {R} {l : List α} (H : Pairwise R l) :
     Pairwise (fun l₁ l₂ => lex R (reverse l₁) (reverse l₂)) (sublists l) := by
@@ -359,7 +359,7 @@ theorem pw_filter_map (f : β → α) : ∀ l : List β, pw_filter R (map f l) =
       rw [map, pw_filter_cons_of_pos h, pw_filter_cons_of_pos h', pw_filter_map, map]
     else by
       have h' : ¬∀ b : β, b ∈ pw_filter (fun x y : β => R (f x) (f y)) xs → R (f x) (f b) := fun hh =>
-        h $ fun a ha => by
+        h fun a ha => by
           rw [pw_filter_map, mem_map] at ha
           rcases ha with ⟨b, hb₀, hb₁⟩
           subst a

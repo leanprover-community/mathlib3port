@@ -146,13 +146,13 @@ instance : Field (selfAdjoint R) :=
     exists_pair_ne := ⟨0, 1, Subtype.ne_of_val_ne zero_ne_one⟩,
     mul_inv_cancel := fun x hx => by
       ext
-      exact mul_inv_cancel fun H => hx $ Subtype.eq H,
+      exact mul_inv_cancel fun H => hx <| Subtype.eq H,
     inv_zero := by
       ext
       exact inv_zero }
 
 @[simp, norm_cast]
-theorem coe_inv (x : selfAdjoint R) : (coe : selfAdjoint R → R) (x⁻¹) = (x : R)⁻¹ :=
+theorem coe_inv (x : selfAdjoint R) : (coe : selfAdjoint R → R) x⁻¹ = (x : R)⁻¹ :=
   rfl
 
 end Field

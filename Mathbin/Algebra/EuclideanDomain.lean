@@ -114,9 +114,9 @@ theorem mul_right_not_lt {a : R} b (h : a ≠ 0) : ¬a * b ≺ b := by
   exact mul_left_not_lt b h
 
 theorem mul_div_cancel_left {a : R} b (a0 : a ≠ 0) : a * b / a = b :=
-  Eq.symm $
-    eq_of_sub_eq_zero $
-      Classical.by_contradiction $ fun h => by
+  Eq.symm <|
+    eq_of_sub_eq_zero <|
+      Classical.by_contradiction fun h => by
         have := mul_left_not_lt a h
         rw [mul_sub, sub_eq_iff_eq_add'.2 (div_add_mod (a * b) a).symm] at this
         exact this (mod_lt _ a0)
@@ -367,10 +367,10 @@ private def P (a b : R) : R × R × R → Prop
 
 theorem xgcd_aux_P (a b : R) {r r' : R} :
     ∀ {s t s' t'}, P a b (r, s, t) → P a b (r', s', t') → P a b (xgcd_aux r s t r' s' t') :=
-  gcd.induction r r'
+  (gcd.induction r r'
       (by
         intros
-        simpa only [xgcd_zero_left]) $
+        simpa only [xgcd_zero_left]))
     fun x y h IH s t s' t' p p' => by
     rw [xgcd_aux_rec h]
     refine' IH _ p
@@ -392,8 +392,8 @@ instance (priority := 70) (R : Type _) [e : EuclideanDomain R] : IsDomain R :=
   have := Classical.decEq R
   { e with
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h =>
-      or_iff_not_and_not.2 $ fun h0 =>
-        h0.1 $ by
+      or_iff_not_and_not.2 fun h0 =>
+        h0.1 <| by
           rw [← mul_div_cancel a h0.2, h, zero_div] }
 
 end Gcd
@@ -415,8 +415,8 @@ theorem dvd_lcm_left (x y : R) : x ∣ lcm x y :=
     fun hxy =>
     let ⟨z, hz⟩ := (gcd_dvd x y).2
     ⟨z,
-      Eq.symm $
-        eq_div_of_mul_eq_left hxy $ by
+      Eq.symm <|
+        eq_div_of_mul_eq_left hxy <| by
           rw [mul_right_commₓ, mul_assoc, ← hz]⟩
 
 theorem dvd_lcm_right (x y : R) : y ∣ lcm x y :=
@@ -427,8 +427,8 @@ theorem dvd_lcm_right (x y : R) : y ∣ lcm x y :=
     fun hxy =>
     let ⟨z, hz⟩ := (gcd_dvd x y).1
     ⟨z,
-      Eq.symm $
-        eq_div_of_mul_eq_right hxy $ by
+      Eq.symm <|
+        eq_div_of_mul_eq_right hxy <| by
           rw [← mul_assoc, mul_right_commₓ, ← hz]⟩
 
 theorem lcm_dvd {x y z : R} (hxz : x ∣ z) (hyz : y ∣ z) : lcm x y ∣ z := by
@@ -526,11 +526,11 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
     quotient_mul_add_remainder_eq := fun a b => Int.div_add_mod _ _, R := fun a b => a.nat_abs < b.nat_abs,
     r_well_founded := measure_wf fun a => Int.natAbs a,
     remainder_lt := fun a b b0 =>
-      Int.coe_nat_lt.1 $ by
+      Int.coe_nat_lt.1 <| by
         rw [Int.nat_abs_of_nonneg (Int.mod_nonneg _ b0), ← Int.abs_eq_nat_abs]
         exact Int.mod_lt _ b0,
     mul_left_not_lt := fun a b b0 =>
-      not_lt_of_geₓ $ by
+      not_lt_of_geₓ <| by
         rw [← mul_oneₓ a.nat_abs, Int.nat_abs_mul]
         exact mul_le_mul_of_nonneg_left (Int.nat_abs_pos_of_ne_zero b0) (Nat.zero_leₓ _) }
 
@@ -542,8 +542,7 @@ instance (priority := 100) Field.toEuclideanDomain {K : Type u} [Field K] : Eucl
       by_cases' b = 0 <;> simp [h, mul_div_cancel'],
     R := fun a b => a = 0 ∧ b ≠ 0,
     r_well_founded :=
-      WellFounded.intro $ fun a =>
-        Acc.intro _ $ fun b ⟨hb, hna⟩ => Acc.intro _ $ fun c ⟨hc, hnb⟩ => False.elim $ hnb hb,
+      WellFounded.intro fun a => (Acc.intro _) fun b ⟨hb, hna⟩ => (Acc.intro _) fun c ⟨hc, hnb⟩ => False.elim <| hnb hb,
     remainder_lt := fun a b hnb => by
       simp [hnb],
     mul_left_not_lt := fun a b hnb ⟨hab, hna⟩ => Or.cases_on (mul_eq_zero.1 hab) hna hnb }

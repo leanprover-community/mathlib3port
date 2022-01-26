@@ -45,7 +45,7 @@ def stalk_map {X Y : PresheafedSpace C} (α : X ⟶ Y) (x : X) : Y.stalk (α.bas
 
 @[simp, elementwise, reassoc]
 theorem stalk_map_germ {X Y : PresheafedSpace C} (α : X ⟶ Y) (U : opens Y.carrier) (x : (opens.map α.base).obj U) :
-    Y.presheaf.germ ⟨α.base x, x.2⟩ ≫ stalk_map α (↑x) = α.c.app (op U) ≫ X.presheaf.germ x := by
+    Y.presheaf.germ ⟨α.base x, x.2⟩ ≫ stalk_map α ↑x = α.c.app (op U) ≫ X.presheaf.germ x := by
   rw [stalk_map, stalk_functor_map_germ_assoc, stalk_pushforward_germ]
 
 section Restrict
@@ -134,7 +134,7 @@ theorem congr {X Y : PresheafedSpace C} (α β : X ⟶ Y) (h₁ : α = β) (x x'
           (show Y.stalk (α.base x) = Y.stalk (β.base x') by
             rw [h₁, h₂]) ≫
         stalk_map β x' :=
-  stalk_hom_ext _ $ fun U hx => by
+  (stalk_hom_ext _) fun U hx => by
     subst h₁
     subst h₂
     simp

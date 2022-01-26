@@ -177,9 +177,9 @@ theorem with_densityᵥ_to_real {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ
 
 theorem with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part {f : α → ℝ} (hfi : integrable f μ) :
     μ.with_densityᵥ f =
-      @to_signed_measure α _ (μ.with_density fun x => Ennreal.ofReal $ f x)
+      @to_signed_measure α _ (μ.with_density fun x => Ennreal.ofReal <| f x)
           (is_finite_measure_with_density_of_real hfi.2) -
-        @to_signed_measure α _ (μ.with_density fun x => Ennreal.ofReal $ -f x)
+        @to_signed_measure α _ (μ.with_density fun x => Ennreal.ofReal <| -f x)
           (is_finite_measure_with_density_of_real hfi.neg.2) :=
   by
   ext i hi

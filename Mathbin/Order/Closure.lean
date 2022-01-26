@@ -159,7 +159,7 @@ theorem closure_is_closed (x : α) : c x ∈ c.closed :=
 
 /-- The set of closed elements for `c` is exactly its range. -/
 theorem closed_eq_range_close : c.closed = Set.Range c :=
-  Set.ext $ fun x =>
+  Set.ext fun x =>
     ⟨fun h => ⟨x, h⟩, by
       rintro ⟨y, rfl⟩
       apply c.idempotent⟩

@@ -139,7 +139,7 @@ instance nonempty_compacts.to_nonempty {p : nonempty_compacts α} : Nonempty p.v
 
 /-- Associate to a nonempty compact subset the corresponding closed subset -/
 def nonempty_compacts.to_closeds [T2Space α] : nonempty_compacts α → closeds α :=
-  Set.inclusion $ fun s hs => hs.2.IsClosed
+  Set.inclusion fun s hs => hs.2.IsClosed
 
 end NonemptyCompacts
 
@@ -149,7 +149,7 @@ variable (α)
 
 /-- In a nonempty locally compact space, there exists a compact set with nonempty interior. -/
 instance nonempty_positive_compacts [LocallyCompactSpace α] [h : Nonempty α] : Nonempty (positive_compacts α) :=
-  let ⟨K, hK⟩ := exists_compact_subset is_open_univ $ mem_univ h.some
+  let ⟨K, hK⟩ := exists_compact_subset is_open_univ <| mem_univ h.some
   ⟨⟨K, hK.1, ⟨_, hK.2.1⟩⟩⟩
 
 end PositiveCompacts

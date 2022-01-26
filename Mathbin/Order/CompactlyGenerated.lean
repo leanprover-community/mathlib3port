@@ -305,7 +305,7 @@ theorem inf_Sup_eq_supr_inf_sup_finset : a⊓Sup s = ⨆ (t : Finset α) (H : �
       rw [le_inf_iff] at hcinf
       rcases hc s hcinf.2 with ⟨t, ht1, ht2⟩
       exact (le_inf hcinf.1 ht2).trans (le_bsupr t ht1))
-    (supr_le $ fun t => supr_le $ fun h => inf_le_inf_left _ ((Finset.sup_id_eq_Sup t).symm ▸ Sup_le_Sup h))
+    (supr_le fun t => supr_le fun h => inf_le_inf_left _ ((Finset.sup_id_eq_Sup t).symm ▸ Sup_le_Sup h))
 
 theorem CompleteLattice.set_independent_iff_finite {s : Set α} :
     CompleteLattice.SetIndependent s ↔ ∀ t : Finset α, ↑t ⊆ s → CompleteLattice.SetIndependent (↑t : Set α) :=
@@ -331,7 +331,7 @@ theorem CompleteLattice.set_independent_Union_of_directed {η : Type _} {s : η 
     intro t ht
     obtain ⟨I, fi, hI⟩ := Set.finite_subset_Union t.finite_to_set ht
     obtain ⟨i, hi⟩ := hs.finset_le fi.to_finset
-    exact (h i).mono (Set.Subset.trans hI $ Set.Union₂_subset $ fun j hj => hi j (fi.mem_to_finset.2 hj))
+    exact (h i).mono (Set.Subset.trans hI <| Set.Union₂_subset fun j hj => hi j (fi.mem_to_finset.2 hj))
     
   · rintro a ⟨_, ⟨i, _⟩, _⟩
     exfalso
@@ -365,7 +365,7 @@ theorem Iic_coatomic_of_compact_element {k : α} (h : is_compact_element k) : Is
       
     right
     rcases Zorn.zorn_nonempty_partial_order₀ (Set.Iio k) _ b (lt_of_le_of_neₓ hbk htriv) with ⟨a, a₀, ba, h⟩
-    · refine' ⟨⟨a, le_of_ltₓ a₀⟩, ⟨ne_of_ltₓ a₀, fun c hck => by_contradiction $ fun c₀ => _⟩, ba⟩
+    · refine' ⟨⟨a, le_of_ltₓ a₀⟩, ⟨ne_of_ltₓ a₀, fun c hck => by_contradiction fun c₀ => _⟩, ba⟩
       cases h c.1 (lt_of_le_of_neₓ c.2 fun con => c₀ (Subtype.ext con)) hck.le
       exact lt_irreflₓ _ hck
       
@@ -415,7 +415,7 @@ instance (priority := 100) is_atomistic_of_is_complemented [IsComplemented α] :
   ⟨fun b =>
     ⟨{ a | IsAtom a ∧ a ≤ b }, by
       symm
-      have hle : Sup { a : α | IsAtom a ∧ a ≤ b } ≤ b := Sup_le $ fun _ => And.right
+      have hle : Sup { a : α | IsAtom a ∧ a ≤ b } ≤ b := Sup_le fun _ => And.right
       apply (lt_or_eq_of_leₓ hle).resolve_left fun con => _
       obtain ⟨c, hc⟩ := exists_is_compl (⟨Sup { a : α | IsAtom a ∧ a ≤ b }, hle⟩ : Set.Iic b)
       obtain rfl | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le c

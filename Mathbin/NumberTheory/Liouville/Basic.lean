@@ -22,7 +22,7 @@ Liouville numbers.
 In the implementation, the condition `x ≠ a/b` replaces the traditional equivalent `0 < |x - a/b|`.
 -/
 def Liouville (x : ℝ) :=
-  ∀ n : ℕ, ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ n
+  ∀ n : ℕ, ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ abs (x - a / b) < 1 / b ^ n
 
 namespace Liouville
 
@@ -34,18 +34,18 @@ theorem Irrational {x : ℝ} (h : Liouville x) : Irrational x := by
   have qR0 : (0 : ℝ) < q := int.cast_pos.mpr (zero_lt_one.trans q1)
   have b0 : (b : ℝ) ≠ 0 := ne_of_gtₓ (nat.cast_pos.mpr bN0)
   have bq0 : (0 : ℝ) < b * q := mul_pos (nat.cast_pos.mpr bN0) qR0
-  replace a1 : |a * q - b * p| * q ^ (b + 1) < b * q
+  replace a1 : abs (a * q - b * p) * q ^ (b + 1) < b * q
   · rwa [div_sub_div _ _ b0 (ne_of_gtₓ qR0), abs_div, div_lt_div_iff (abs_pos.mpr (ne_of_gtₓ bq0)) (pow_pos qR0 _),
       abs_of_pos bq0, one_mulₓ, ← Int.cast_pow, ← Int.cast_mul, ← Int.cast_coe_nat, ← Int.cast_mul, ← Int.cast_mul, ←
       Int.cast_sub, ← Int.cast_abs, ← Int.cast_mul, Int.cast_lt] at a1
     
   replace a0 : ¬a * q - ↑b * p = 0
-  · rwa [Ne.def, div_eq_div_iff b0 (ne_of_gtₓ qR0), mul_comm (↑p), ← sub_eq_zero, ← Int.cast_coe_nat, ← Int.cast_mul, ←
+  · rwa [Ne.def, div_eq_div_iff b0 (ne_of_gtₓ qR0), mul_comm ↑p, ← sub_eq_zero, ← Int.cast_coe_nat, ← Int.cast_mul, ←
       Int.cast_mul, ← Int.cast_sub, Int.cast_eq_zero] at a0
     
   lift q to ℕ using (zero_lt_one.trans q1).le
-  have ap : 0 < |a * ↑q - ↑b * p| := abs_pos.mpr a0
-  lift |a * ↑q - ↑b * p| to ℕ using abs_nonneg (a * ↑q - ↑b * p)
+  have ap : 0 < abs (a * ↑q - ↑b * p) := abs_pos.mpr a0
+  lift abs (a * ↑q - ↑b * p) to ℕ using abs_nonneg (a * ↑q - ↑b * p)
   rw [← Int.coe_nat_mul, ← Int.coe_nat_pow, ← Int.coe_nat_mul, Int.coe_nat_lt] at a1
   exact not_le.mpr a1 (Nat.mul_lt_mul_pow_succ (int.coe_nat_pos.mp ap) (int.coe_nat_lt.mp q1)).le
 
@@ -88,7 +88,7 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type _} [MetricSpace R] {d : N → �
 
 theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : Polynomial ℤ} (f0 : f ≠ 0)
     (fa : eval α (map (algebraMap ℤ ℝ) f) = 0) :
-    ∃ A : ℝ, 0 < A ∧ ∀ a : ℤ, ∀ b : ℕ, (1 : ℝ) ≤ (b + 1) ^ f.nat_degree * (|α - a / (b + 1)| * A) := by
+    ∃ A : ℝ, 0 < A ∧ ∀ a : ℤ, ∀ b : ℕ, (1 : ℝ) ≤ (b + 1) ^ f.nat_degree * (abs (α - a / (b + 1)) * A) := by
   set fR : Polynomial ℝ := map (algebraMap ℤ ℝ) f
   obtain fR0 : fR ≠ 0 := fun fR0 =>
     (map_injective (algebraMap ℤ ℝ) fun _ _ A => int.cast_inj.mp A).Ne f0 (fR0.trans (Polynomial.map_zero _).symm)
@@ -98,11 +98,11 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
     @exists_closed_ball_inter_eq_singleton_of_discrete _ _ _ discrete_of_t1_of_finite _ ar
   obtain ⟨xm, -, hM⟩ :
     ∃ (xm : ℝ)(H : xm ∈ Icc (α - ζ) (α + ζ)),
-      ∀ y : ℝ, y ∈ Icc (α - ζ) (α + ζ) → |fR.derivative.eval y| ≤ |fR.derivative.eval xm| :=
+      ∀ y : ℝ, y ∈ Icc (α - ζ) (α + ζ) → abs (fR.derivative.eval y) ≤ abs (fR.derivative.eval xm) :=
     IsCompact.exists_forall_ge is_compact_Icc ⟨α, (sub_lt_self α z0).le, (lt_add_of_pos_right α z0).le⟩
       (continuous_abs.comp fR.derivative.continuous_aeval).ContinuousOn
   refine'
-    @exists_one_le_pow_mul_dist ℤ ℕ ℝ _ _ _ (fun y => fR.eval y) α ζ |fR.derivative.eval xm| _ z0 (fun y hy => _)
+    @exists_one_le_pow_mul_dist ℤ ℕ ℝ _ _ _ (fun y => fR.eval y) α ζ (abs (fR.derivative.eval xm)) _ z0 (fun y hy => _)
       fun z a hq => _
   · exact fun a => one_le_pow_of_one_le ((le_add_iff_nonneg_left 1).mpr a.cast_nonneg) _
     
@@ -116,7 +116,7 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
         (convex_Icc _ _) hy (mem_Icc_iff_abs_le.mp _)
     exact @mem_closed_ball_self ℝ _ α ζ (le_of_ltₓ z0)
     
-  · show 1 ≤ (a + 1 : ℝ) ^ f.nat_degree * |eval α fR - eval (z / (a + 1)) fR|
+  · show 1 ≤ (a + 1 : ℝ) ^ f.nat_degree * abs (eval α fR - eval (z / (a + 1)) fR)
     rw [fa, zero_sub, abs_neg]
     refine' one_le_pow_mul_abs_eval_div (Int.coe_nat_succ_pos a) fun hy => _
     refine' (irrational_iff_ne_rational α).mp ha z (a + 1) (mem_singleton_iff.mp _).symm
@@ -131,19 +131,19 @@ theorem Transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
   replace ef0 : (f.map (algebraMap ℤ ℝ)).eval x = 0
   · rwa [aeval_def, ← eval_map] at ef0
     
-  obtain ⟨A, hA, h⟩ : ∃ A : ℝ, 0 < A ∧ ∀ a : ℤ b : ℕ, (1 : ℝ) ≤ b.succ ^ f.nat_degree * (|x - a / b.succ| * A) :=
+  obtain ⟨A, hA, h⟩ : ∃ A : ℝ, 0 < A ∧ ∀ a : ℤ b : ℕ, (1 : ℝ) ≤ b.succ ^ f.nat_degree * (abs (x - a / b.succ) * A) :=
     exists_pos_real_of_irrational_root lx.irrational f0 ef0
   rcases pow_unbounded_of_one_lt A (lt_add_one 1) with ⟨r, hn⟩
-  obtain ⟨a, b, b1, -, a1⟩ : ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ (r + f.nat_degree) :=
+  obtain ⟨a, b, b1, -, a1⟩ : ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ abs (x - a / b) < 1 / b ^ (r + f.nat_degree) :=
     lx (r + f.nat_degree)
   have b0 : (0 : ℝ) < b :=
     zero_lt_one.trans
       (by
         rw [← Int.cast_one]
         exact int.cast_lt.mpr b1)
-  refine' lt_irreflₓ ((b : ℝ) ^ f.nat_degree * |x - ↑a / ↑b|) _
+  refine' lt_irreflₓ ((b : ℝ) ^ f.nat_degree * abs (x - ↑a / ↑b)) _
   rw [lt_div_iff' (pow_pos b0 _), pow_addₓ, mul_assoc] at a1
-  refine' (_ : (b : ℝ) ^ f.nat_degree * |x - a / b| < 1 / A).trans_le _
+  refine' (_ : (b : ℝ) ^ f.nat_degree * abs (x - a / b) < 1 / A).trans_le _
   · refine' (lt_div_iff' hA).mpr _
     refine' lt_of_le_of_ltₓ _ a1
     refine' mul_le_mul_of_nonneg_right _ (mul_nonneg (pow_nonneg b0.le _) (abs_nonneg _))

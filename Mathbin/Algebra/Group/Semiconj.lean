@@ -70,7 +70,7 @@ theorem one_right (a : M) : SemiconjBy a 1 1 := by
 /-- One semiconjugates any element to itself. -/
 @[simp, to_additive]
 theorem one_left (x : M) : SemiconjBy 1 x x :=
-  Eq.symm $ one_right x
+  Eq.symm <| one_right x
 
 /-- The relation “there exists an element that semiconjugates `a` to `b`” on a monoid (or, more
 generally, on ` mul_one_class` type) is reflexive. -/
@@ -86,7 +86,7 @@ variable {M : Type u} [Monoidₓ M]
 
 /-- If `a` semiconjugates a unit `x` to a unit `y`, then it semiconjugates `x⁻¹` to `y⁻¹`. -/
 @[to_additive]
-theorem units_inv_right {a : M} {x y : (M)ˣ} (h : SemiconjBy a x y) : SemiconjBy a (↑x⁻¹) (↑y⁻¹) :=
+theorem units_inv_right {a : M} {x y : (M)ˣ} (h : SemiconjBy a x y) : SemiconjBy a ↑x⁻¹ ↑y⁻¹ :=
   calc
     a * ↑x⁻¹ = ↑y⁻¹ * (y * a) * ↑x⁻¹ := by
       rw [Units.inv_mul_cancel_left]
@@ -95,7 +95,7 @@ theorem units_inv_right {a : M} {x y : (M)ˣ} (h : SemiconjBy a x y) : SemiconjB
     
 
 @[simp, to_additive]
-theorem units_inv_right_iff {a : M} {x y : (M)ˣ} : SemiconjBy a (↑x⁻¹) (↑y⁻¹) ↔ SemiconjBy a x y :=
+theorem units_inv_right_iff {a : M} {x y : (M)ˣ} : SemiconjBy a ↑x⁻¹ ↑y⁻¹ ↔ SemiconjBy a x y :=
   ⟨units_inv_right, units_inv_right⟩
 
 /-- If a unit `a` semiconjugates `x` to `y`, then `a⁻¹` semiconjugates `y` to `x`. -/
@@ -141,27 +141,27 @@ section Groupₓ
 variable {G : Type u} [Groupₓ G] {a x y : G}
 
 @[simp, to_additive]
-theorem inv_right_iff : SemiconjBy a (x⁻¹) (y⁻¹) ↔ SemiconjBy a x y :=
+theorem inv_right_iff : SemiconjBy a x⁻¹ y⁻¹ ↔ SemiconjBy a x y :=
   @units_inv_right_iff G _ a ⟨x, x⁻¹, mul_inv_selfₓ x, inv_mul_selfₓ x⟩ ⟨y, y⁻¹, mul_inv_selfₓ y, inv_mul_selfₓ y⟩
 
 @[to_additive]
-theorem inv_right : SemiconjBy a x y → SemiconjBy a (x⁻¹) (y⁻¹) :=
+theorem inv_right : SemiconjBy a x y → SemiconjBy a x⁻¹ y⁻¹ :=
   inv_right_iff.2
 
 @[simp, to_additive]
-theorem inv_symm_left_iff : SemiconjBy (a⁻¹) y x ↔ SemiconjBy a x y :=
+theorem inv_symm_left_iff : SemiconjBy a⁻¹ y x ↔ SemiconjBy a x y :=
   @units_inv_symm_left_iff G _ ⟨a, a⁻¹, mul_inv_selfₓ a, inv_mul_selfₓ a⟩ _ _
 
 @[to_additive]
-theorem inv_symm_left : SemiconjBy a x y → SemiconjBy (a⁻¹) y x :=
+theorem inv_symm_left : SemiconjBy a x y → SemiconjBy a⁻¹ y x :=
   inv_symm_left_iff.2
 
 @[to_additive]
-theorem inv_inv_symm (h : SemiconjBy a x y) : SemiconjBy (a⁻¹) (y⁻¹) (x⁻¹) :=
+theorem inv_inv_symm (h : SemiconjBy a x y) : SemiconjBy a⁻¹ y⁻¹ x⁻¹ :=
   h.inv_right.inv_symm_left
 
 @[to_additive]
-theorem inv_inv_symm_iff : SemiconjBy (a⁻¹) (y⁻¹) (x⁻¹) ↔ SemiconjBy a x y :=
+theorem inv_inv_symm_iff : SemiconjBy a⁻¹ y⁻¹ x⁻¹ ↔ SemiconjBy a x y :=
   inv_right_iff.trans inv_symm_left_iff
 
 /-- `a` semiconjugates `x` to `a * x * a⁻¹`. -/

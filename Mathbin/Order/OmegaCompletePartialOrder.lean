@@ -196,11 +196,11 @@ theorem ωSup_total {c : chain α} {x : α} (h : ∀ i, c i ≤ x ∨ x ≤ c i)
       simp only [not_forall] at this⊢ <;> assumption
     let ⟨i, hx⟩ := this
     have : x ≤ c i := (h i).resolve_left hx
-    Or.inr $ le_ωSup_of_le _ this
+    Or.inr <| le_ωSup_of_le _ this
 
 @[mono]
 theorem ωSup_le_ωSup_of_le {c₀ c₁ : chain α} (h : c₀ ≤ c₁) : ωSup c₀ ≤ ωSup c₁ :=
-  ωSup_le _ _ $ fun i => Exists.rec_on (h i) $ fun j h => le_transₓ h (le_ωSup _ _)
+  (ωSup_le _ _) fun i => (Exists.rec_on (h i)) fun j h => le_transₓ h (le_ωSup _ _)
 
 theorem ωSup_le_iff (c : chain α) (x : α) : ωSup c ≤ x ↔ ∀ i, c i ≤ x := by
   constructor <;> intros
@@ -269,7 +269,7 @@ theorem id_continuous' : continuous' (@id α) :=
   continuous_id.of_bundled' _
 
 theorem continuous_const (x : β) : continuous (OrderHom.const α x) := fun c =>
-  eq_of_forall_ge_iff $ fun z => by
+  eq_of_forall_ge_iff fun z => by
     simp [ωSup_le_iff]
 
 theorem const_continuous' (x : β) : continuous' (Function.const α x) :=
@@ -372,14 +372,14 @@ open OmegaCompletePartialOrder OmegaCompletePartialOrder.Chain
 instance [∀ a, OmegaCompletePartialOrder (β a)] : OmegaCompletePartialOrder (∀ a, β a) where
   ωSup := fun c a => ωSup (c.map (Pi.evalOrderHom a))
   ωSup_le := fun c f hf a =>
-    ωSup_le _ _ $ by
+    ωSup_le _ _ <| by
       rintro i
       apply hf
-  le_ωSup := fun c i x => le_ωSup_of_le _ $ le_reflₓ _
+  le_ωSup := fun c i x => le_ωSup_of_le _ <| le_reflₓ _
 
 namespace OmegaCompletePartialOrder
 
-variable [∀ x, OmegaCompletePartialOrder $ β x]
+variable [∀ x, OmegaCompletePartialOrder <| β x]
 
 variable [OmegaCompletePartialOrder γ]
 
@@ -415,7 +415,7 @@ protected def ωSup (c : chain (α × β)) : α × β :=
 @[simps ωSup_fst ωSup_snd]
 instance : OmegaCompletePartialOrder (α × β) where
   ωSup := Prod.ωSup
-  ωSup_le := fun c ⟨x, x'⟩ h => ⟨ωSup_le _ _ $ fun i => (h i).1, ωSup_le _ _ $ fun i => (h i).2⟩
+  ωSup_le := fun c ⟨x, x'⟩ h => ⟨(ωSup_le _ _) fun i => (h i).1, (ωSup_le _ _) fun i => (h i).2⟩
   le_ωSup := fun c i => ⟨le_ωSup (c.map OrderHom.fst) i, le_ωSup (c.map OrderHom.snd) i⟩
 
 end Prod
@@ -464,7 +464,7 @@ theorem inf_continuous' [IsTotal β (· ≤ ·)] {f g : α → β} (hf : continu
     continuous' (f⊓g) :=
   ⟨_, inf_continuous _ _ hf.snd hg.snd⟩
 
-theorem Sup_continuous (s : Set $ α →o β) (hs : ∀, ∀ f ∈ s, ∀, continuous f) : continuous (Sup s) := by
+theorem Sup_continuous (s : Set <| α →o β) (hs : ∀, ∀ f ∈ s, ∀, continuous f) : continuous (Sup s) := by
   intro c
   apply eq_of_forall_ge_iff
   intro z
@@ -473,7 +473,7 @@ theorem Sup_continuous (s : Set $ α →o β) (hs : ∀, ∀ f ∈ s, ∀, conti
   exact ⟨fun H n f hf => H f hf n, fun H f hf n => H n f hf⟩
 
 theorem supr_continuous {ι : Sort _} {f : ι → α →o β} (h : ∀ i, continuous (f i)) : continuous (⨆ i, f i) :=
-  Sup_continuous _ $ Set.forall_range_iff.2 h
+  Sup_continuous _ <| Set.forall_range_iff.2 h
 
 theorem Sup_continuous' (s : Set (α → β)) (hc : ∀, ∀ f ∈ s, ∀, continuous' f) : continuous' (Sup s) := by
   lift s to Set (α →o β) using fun f hf => (hc f hf).to_monotone
@@ -516,7 +516,7 @@ namespace OrderHom
 @[simps]
 protected def ωSup (c : chain (α →o β)) : α →o β where
   toFun := fun a => ωSup (c.map (OrderHom.apply a))
-  monotone' := fun x y h => ωSup_le_ωSup_of_le (chain.map_le_map _ $ fun a => a.monotone h)
+  monotone' := fun x y h => ωSup_le_ωSup_of_le ((chain.map_le_map _) fun a => a.monotone h)
 
 @[simps ωSup_coe]
 instance OmegaCompletePartialOrder : OmegaCompletePartialOrder (α →o β) :=
@@ -545,7 +545,7 @@ instance : Coe (α →𝒄 β) (α →o β) where
   coe := continuous_hom.to_order_hom
 
 instance : PartialOrderₓ (α →𝒄 β) :=
-  (PartialOrderₓ.lift fun f => f.to_order_hom.to_fun) $ by
+  (PartialOrderₓ.lift fun f => f.to_order_hom.to_fun) <| by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ h <;> congr <;> exact h
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
@@ -648,14 +648,14 @@ def id : α →𝒄 α :=
 /-- The composition of continuous functions. -/
 @[simps]
 def comp (f : β →𝒄 γ) (g : α →𝒄 β) : α →𝒄 γ :=
-  of_mono (OrderHom.comp (↑f) (↑g)) (continuous_comp _ _ g.cont f.cont)
+  of_mono (OrderHom.comp ↑f ↑g) (continuous_comp _ _ g.cont f.cont)
 
 @[ext]
 protected theorem ext (f g : α →𝒄 β) (h : ∀ x, f x = g x) : f = g := by
   cases f <;> cases g <;> congr <;> ext <;> apply h
 
 protected theorem coe_inj (f g : α →𝒄 β) (h : (f : α → β) = g) : f = g :=
-  continuous_hom.ext _ _ $ _root_.congr_fun h
+  continuous_hom.ext _ _ <| _root_.congr_fun h
 
 @[simp]
 theorem comp_id (f : β →𝒄 γ) : f.comp id = f := by
@@ -736,7 +736,7 @@ theorem forall_forall_merge' (c₀ : chain (α →𝒄 β)) (c₁ : chain α) (z
 of the functions in the `ω`-chain. -/
 @[simps]
 protected def ωSup (c : chain (α →𝒄 β)) : α →𝒄 β :=
-  continuous_hom.of_mono (ωSup $ c.map to_mono)
+  continuous_hom.of_mono (ωSup <| c.map to_mono)
     (by
       intro c'
       apply eq_of_forall_ge_iff
@@ -753,7 +753,7 @@ theorem ωSup_def (c : chain (α →𝒄 β)) (x : α) : ωSup c x = continuous_
   rfl
 
 theorem ωSup_ωSup (c₀ : chain (α →𝒄 β)) (c₁ : chain α) :
-    ωSup c₀ (ωSup c₁) = ωSup (continuous_hom.prod.apply.comp $ c₀.zip c₁) := by
+    ωSup c₀ (ωSup c₁) = ωSup (continuous_hom.prod.apply.comp <| c₀.zip c₁) := by
   apply eq_of_forall_ge_iff
   intro z
   simp only [ωSup_le_iff, (c₀ _).Continuous, chain.map_coe, to_mono_coe, coe_apply,
@@ -772,21 +772,21 @@ def flip {α : Type _} (f : α → β →𝒄 γ) : β →𝒄 α → γ where
 /-- `part.bind` as a continuous function. -/
 @[simps (config := { rhsMd := reducible })]
 noncomputable def bind {β γ : Type v} (f : α →𝒄 Part β) (g : α →𝒄 β → Part γ) : α →𝒄 Part γ :=
-  of_mono (OrderHom.bind (↑f) (↑g)) $ fun c => by
+  (of_mono (OrderHom.bind ↑f ↑g)) fun c => by
     rw [OrderHom.bind, ← OrderHom.bind, ωSup_bind, ← f.continuous, ← g.continuous]
     rfl
 
 /-- `part.map` as a continuous function. -/
 @[simps (config := { rhsMd := reducible })]
 noncomputable def map {β γ : Type v} (f : β → γ) (g : α →𝒄 Part β) : α →𝒄 Part γ :=
-  of_fun (fun x => f <$> g x) (bind g (const (pure ∘ f))) $ by
+  of_fun (fun x => f <$> g x) (bind g (const (pure ∘ f))) <| by
     ext <;>
       simp only [map_eq_bind_pure_comp, bind_apply, OrderHom.bind_coe, const_apply, OrderHom.const_coe_coe, coe_apply]
 
 /-- `part.seq` as a continuous function. -/
 @[simps (config := { rhsMd := reducible })]
 noncomputable def seq {β γ : Type v} (f : α →𝒄 Part (β → γ)) (g : α →𝒄 Part β) : α →𝒄 Part γ :=
-  of_fun (fun x => f x <*> g x) (bind f $ flip $ _root_.flip map g)
+  of_fun (fun x => f x <*> g x) (bind f <| flip <| _root_.flip map g)
     (by
       ext <;>
         simp only [seq_eq_bind_mapₓ, flip, Part.bind_eq_bind, map_apply, Part.mem_bind_iff, bind_apply,

@@ -219,7 +219,7 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
           trans 2 * (n + 1) <;> nlinarith only [h2i]
         refine' Ideal.mul_mem_left _ _ (Ideal.pow_le_pow aux _)
         rw [pow_mul']
-        refine' Ideal.pow_mem_pow ((Ideal.neg_mem_iff _).2 $ Ideal.mul_mem_right _ _ ih) _
+        refine' Ideal.pow_mem_pow ((Ideal.neg_mem_iff _).2 <| Ideal.mul_mem_right _ _ ih) _
         
     have aux : ∀ m n, m ≤ n → c m ≡ c n [SMOD (I ^ m • ⊤ : Ideal R)] := by
       intro m n hmn

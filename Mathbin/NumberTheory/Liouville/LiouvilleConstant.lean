@@ -67,7 +67,7 @@ theorem liouville_number_tail_pos {m : ℝ} (hm : 1 < m) (k : ℕ) : 0 < liouvil
     (0 : ℝ) = ∑' i : ℕ, 0 := tsum_zero.symm
     _ < liouville_number_tail m k :=
       tsum_lt_tsum_of_nonneg (fun _ => rfl.le) (fun i => one_div_nonneg.mpr (pow_nonneg (zero_le_one.trans hm.le) _))
-          (one_div_pos.mpr (pow_pos (zero_lt_one.trans hm) (0 + (k + 1))!)) $
+          (one_div_pos.mpr (pow_pos (zero_lt_one.trans hm) (0 + (k + 1))!)) <|
         summable_one_div_pow_of_le hm fun i => trans le_self_add (Nat.self_le_factorial _)
     
 
@@ -83,7 +83,7 @@ theorem liouville_number_eq_initial_terms_add_tail {m : ℝ} (hm : 1 < m) (k : �
 theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
     (∑' i : ℕ, 1 / m ^ (i + (n + 1))!) < (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) :=
   have m0 : 0 < m := zero_lt_one.trans m1
-  have mi : |1 / m| < 1 := (le_of_eqₓ (abs_of_pos (one_div_pos.mpr m0))).trans_lt ((div_lt_one m0).mpr m1)
+  have mi : abs (1 / m) < 1 := (le_of_eqₓ (abs_of_pos (one_div_pos.mpr m0))).trans_lt ((div_lt_one m0).mpr m1)
   calc
     (∑' i, 1 / m ^ (i + (n + 1))!) < ∑' i, 1 / m ^ (i + (n + 1)!) :=
       tsum_lt_tsum_of_nonneg (fun b => one_div_nonneg.mpr (pow_nonneg m0.le _))

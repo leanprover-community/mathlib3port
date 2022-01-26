@@ -55,12 +55,12 @@ instance is_equivalence.mono_map {F : C ⥤ D} [is_right_adjoint F] {X Y : C} {f
 
 theorem faithful_reflects_epi (F : C ⥤ D) [faithful F] {X Y : C} {f : X ⟶ Y} (hf : epi (F.map f)) : epi f :=
   ⟨fun Z g h H =>
-    F.map_injective $ by
+    F.map_injective <| by
       rw [← cancel_epi (F.map f), ← F.map_comp, ← F.map_comp, H]⟩
 
 theorem faithful_reflects_mono (F : C ⥤ D) [faithful F] {X Y : C} {f : X ⟶ Y} (hf : mono (F.map f)) : mono f :=
   ⟨fun Z g h H =>
-    F.map_injective $ by
+    F.map_injective <| by
       rw [← cancel_mono (F.map f), ← F.map_comp, ← F.map_comp, H]⟩
 
 end
@@ -149,18 +149,18 @@ instance (priority := 100) split_epi.epi {X Y : C} (f : X ⟶ Y) [split_epi f] :
     simpa using w
 
 /-- Every split mono whose retraction is mono is an iso. -/
-theorem is_iso.of_mono_retraction {X Y : C} {f : X ⟶ Y} [split_mono f] [mono $ retraction f] : is_iso f :=
+theorem is_iso.of_mono_retraction {X Y : C} {f : X ⟶ Y} [split_mono f] [mono <| retraction f] : is_iso f :=
   ⟨⟨retraction f,
       ⟨by
         simp ,
-        (cancel_mono_id $ retraction f).mp
+        (cancel_mono_id <| retraction f).mp
           (by
             simp )⟩⟩⟩
 
 /-- Every split epi whose section is epi is an iso. -/
-theorem is_iso.of_epi_section {X Y : C} {f : X ⟶ Y} [split_epi f] [epi $ section_ f] : is_iso f :=
+theorem is_iso.of_epi_section {X Y : C} {f : X ⟶ Y} [split_epi f] [epi <| section_ f] : is_iso f :=
   ⟨⟨section_ f,
-      ⟨(cancel_epi_id $ section_ f).mp
+      ⟨(cancel_epi_id <| section_ f).mp
           (by
             simp ),
         by

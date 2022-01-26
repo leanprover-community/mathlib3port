@@ -51,7 +51,7 @@ def to_linear_equiv' (P : Matrix n n R) (h : Invertible P) : (n → R) ≃ₗ[R]
 
 @[simp]
 theorem to_linear_equiv'_apply (P : Matrix n n R) (h : Invertible P) :
-    (↑P.to_linear_equiv' h : Module.End R (n → R)) = P.to_lin' :=
+    (↑(P.to_linear_equiv' h) : Module.End R (n → R)) = P.to_lin' :=
   rfl
 
 @[simp]
@@ -75,7 +75,7 @@ See `matrix.to_linear_equiv'` for this result on `n → R`.
 @[simps apply]
 noncomputable def to_linear_equiv [DecidableEq n] (A : Matrix n n R) (hA : IsUnit A.det) : M ≃ₗ[R] M := by
   refine'
-      { to_lin b b A with toFun := to_lin b b A, invFun := to_lin b b (A⁻¹), left_inv := fun x => _,
+      { to_lin b b A with toFun := to_lin b b A, invFun := to_lin b b A⁻¹, left_inv := fun x => _,
         right_inv := fun x => _ } <;>
     rw [← LinearMap.comp_apply] <;>
       simp only [← Matrix.to_lin_mul b b b, Matrix.nonsing_inv_mul _ hA, Matrix.mul_nonsing_inv _ hA, to_lin_one,
@@ -108,7 +108,7 @@ theorem exists_mul_vec_eq_zero_iff_aux {K : Type _} [DecidableEq n] [Field K] {M
     have : Function.Injective M.to_lin' := by
       simpa only [← LinearMap.ker_eq_bot, ker_to_lin'_eq_bot_iff, not_imp_not] using h
     have : M ⬝ LinearMap.toMatrix' ((LinearEquiv.ofInjectiveEndo M.to_lin' this).symm : (n → K) →ₗ[K] n → K) = 1 := by
-      refine' matrix.to_lin'.injective (LinearMap.ext $ fun v => _)
+      refine' matrix.to_lin'.injective (LinearMap.ext fun v => _)
       rw [Matrix.to_lin'_mul, Matrix.to_lin'_one, Matrix.to_lin'_to_matrix', LinearMap.comp_apply]
       exact (LinearEquiv.ofInjectiveEndo M.to_lin' this).apply_symm_apply v
     exact Matrix.det_ne_zero_of_right_inverse this
@@ -122,7 +122,7 @@ theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [C
   rw [← RingHom.map_det, IsFractionRing.to_map_eq_zero_iff] at this
   refine' Iff.trans _ this
   constructor <;> rintro ⟨v, hv, mul_eq⟩
-  · refine' ⟨fun i => algebraMap _ _ (v i), mt (fun h => funext $ fun i => _) hv, _⟩
+  · refine' ⟨fun i => algebraMap _ _ (v i), mt (fun h => funext fun i => _) hv, _⟩
     · exact is_fraction_ring.to_map_eq_zero_iff.mp (congr_funₓ h i)
       
     · ext i
@@ -134,7 +134,7 @@ theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [C
     obtain ⟨⟨b, hb⟩, ba_eq⟩ :=
       IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors A) (finset.univ.image v)
     choose f hf using ba_eq
-    refine' ⟨fun i => f _ (finset.mem_image.mpr ⟨i, Finset.mem_univ i, rfl⟩), mt (fun h => funext $ fun i => _) hv, _⟩
+    refine' ⟨fun i => f _ (finset.mem_image.mpr ⟨i, Finset.mem_univ i, rfl⟩), mt (fun h => funext fun i => _) hv, _⟩
     · have := congr_argₓ (algebraMap A K) (congr_funₓ h i)
       rw [hf, Subtype.coe_mk, Pi.zero_apply, RingHom.map_zero, Algebra.smul_def, mul_eq_zero,
         IsFractionRing.to_map_eq_zero_iff] at this
@@ -174,7 +174,7 @@ theorem nondegenerate_iff_det_ne_zero {A : Type _} [DecidableEq n] [CommRingₓ 
     simpa only [dot_product_mul_vec, hMv, zero_dot_product] using hwMv
     
   · intro h v hv
-    refine' not_imp_not.mp (h v) (funext $ fun i => _)
+    refine' not_imp_not.mp (h v) (funext fun i => _)
     simpa only [dot_product_mul_vec, dot_product_single, mul_oneₓ] using hv (Pi.single i 1)
     
 

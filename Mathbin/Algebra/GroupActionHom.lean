@@ -113,12 +113,12 @@ theorem comp_apply (g : Y →[M'] Z) (f : X →[M'] Y) (x : X) : g.comp f x = g 
 
 @[simp]
 theorem id_comp (f : X →[M'] Y) : (MulActionHom.id M').comp f = f :=
-  ext $ fun x => by
+  ext fun x => by
     rw [comp_apply, id_apply]
 
 @[simp]
 theorem comp_id (f : X →[M'] Y) : f.comp (MulActionHom.id M') = f :=
-  ext $ fun x => by
+  ext fun x => by
     rw [comp_apply, id_apply]
 
 variable {A B}
@@ -273,12 +273,12 @@ theorem comp_apply (g : B →+[M] C) (f : A →+[M] B) (x : A) : g.comp f x = g 
 
 @[simp]
 theorem id_comp (f : A →+[M] B) : (DistribMulActionHom.id M).comp f = f :=
-  ext $ fun x => by
+  ext fun x => by
     rw [comp_apply, id_apply]
 
 @[simp]
 theorem comp_id (f : A →+[M] B) : f.comp (DistribMulActionHom.id M) = f :=
-  ext $ fun x => by
+  ext fun x => by
     rw [comp_apply, id_apply]
 
 /-- The inverse of a bijective `distrib_mul_action_hom` is a `distrib_mul_action_hom`. -/
@@ -395,12 +395,12 @@ theorem comp_apply (g : S →+*[M] T) (f : R →+*[M] S) (x : R) : g.comp f x = 
 
 @[simp]
 theorem id_comp (f : R →+*[M] S) : (MulSemiringActionHom.id M).comp f = f :=
-  ext $ fun x => by
+  ext fun x => by
     rw [comp_apply, id_apply]
 
 @[simp]
 theorem comp_id (f : R →+*[M] S) : f.comp (MulSemiringActionHom.id M) = f :=
-  ext $ fun x => by
+  ext fun x => by
     rw [comp_apply, id_apply]
 
 end MulSemiringActionHom

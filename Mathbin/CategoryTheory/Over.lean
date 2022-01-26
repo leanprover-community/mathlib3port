@@ -126,7 +126,7 @@ theorem forget_map {U V : over X} {f : U ⟶ V} : (forget X).map f = f.left :=
 See https://stacks.math.columbia.edu/tag/001G.
 -/
 def map {Y : T} (f : X ⟶ Y) : over X ⥤ over Y :=
-  comma.map_right _ $ discrete.nat_trans fun _ => f
+  comma.map_right _ <| discrete.nat_trans fun _ => f
 
 section
 
@@ -272,7 +272,7 @@ variable {D : Type u₂} [category.{v₂} D]
 /-- A functor `F : T ⥤ D` induces a functor `over X ⥤ over (F.obj X)` in the obvious way. -/
 @[simps]
 def post (F : T ⥤ D) : over X ⥤ over (F.obj X) where
-  obj := fun Y => mk $ F.map Y.hom
+  obj := fun Y => mk <| F.map Y.hom
   map := fun Y₁ Y₂ f =>
     { left := F.map f.left,
       w' := by
@@ -365,7 +365,7 @@ theorem forget_map {U V : under X} {f : U ⟶ V} : (forget X).map f = f.right :=
 
 /-- A morphism `X ⟶ Y` induces a functor `under Y ⥤ under X` in the obvious way. -/
 def map {Y : T} (f : X ⟶ Y) : under Y ⥤ under X :=
-  comma.map_left _ $ discrete.nat_trans fun _ => f
+  comma.map_left _ <| discrete.nat_trans fun _ => f
 
 section
 
@@ -420,7 +420,7 @@ variable {D : Type u₂} [category.{v₂} D]
 /-- A functor `F : T ⥤ D` induces a functor `under X ⥤ under (F.obj X)` in the obvious way. -/
 @[simps]
 def post {X : T} (F : T ⥤ D) : under X ⥤ under (F.obj X) where
-  obj := fun Y => mk $ F.map Y.hom
+  obj := fun Y => mk <| F.map Y.hom
   map := fun Y₁ Y₂ f =>
     { right := F.map f.right,
       w' := by

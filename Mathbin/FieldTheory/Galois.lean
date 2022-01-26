@@ -393,7 +393,7 @@ variable {F} {E} {p : Polynomial F}
 theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.is_splitting_field F E]
     (hp : p.separable) (K : IntermediateField F E) {x : E} (hx : x ∈ (p.map (algebraMap F E)).roots) :
     Fintype.card
-        ((↑«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»" :
+        ((↑(«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") :
             IntermediateField F E) →ₐ[F]
           E) =
       Fintype.card (K →ₐ[F] E) *
@@ -408,7 +408,7 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.i
     rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← Polynomial.eval_map]
     exact (Polynomial.mem_roots (Polynomial.map_ne_zero h1)).mp hx
   let key_equiv :
-    ((↑«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»" :
+    ((↑(«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") :
           IntermediateField F E) →ₐ[F]
         E) ≃
       Σ f : K →ₐ[F] E,
@@ -448,12 +448,12 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.i
 theorem of_separable_splitting_field [sp : p.is_splitting_field F E] (hp : p.separable) : IsGalois F E := by
   have hFE : FiniteDimensional F E := Polynomial.IsSplittingField.finite_dimensional E p
   let s := (p.map (algebraMap F E)).roots.toFinset
-  have adjoin_root : IntermediateField.adjoin F (↑s) = ⊤ := by
+  have adjoin_root : IntermediateField.adjoin F ↑s = ⊤ := by
     apply IntermediateField.to_subalgebra_injective
     rw [IntermediateField.top_to_subalgebra, ← top_le_iff, ← sp.adjoin_roots]
     apply IntermediateField.algebra_adjoin_le_adjoin
   let P : IntermediateField F E → Prop := fun K => Fintype.card (K →ₐ[F] E) = finrank F K
-  suffices P (IntermediateField.adjoin F (↑s)) by
+  suffices P (IntermediateField.adjoin F ↑s) by
     rw [AdjoinRoot] at this
     apply of_card_aut_eq_finrank
     rw [← Eq.trans this (LinearEquiv.finrank_eq intermediate_field.top_equiv.to_linear_equiv)]

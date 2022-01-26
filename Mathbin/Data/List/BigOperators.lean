@@ -50,7 +50,7 @@ theorem prod_join {l : List (List M)} : l.join.prod = (l.map List.prod).Prod := 
 
 @[to_additive]
 theorem prod_eq_foldr : l.prod = foldr (· * ·) 1 l :=
-  List.recOn l rfl $ fun a l ihl => by
+  (List.recOn l rfl) fun a l ihl => by
     rw [prod_cons, foldr_cons, ihl]
 
 @[to_additive]
@@ -66,7 +66,7 @@ theorem prod_hom (l : List M) (f : M →* N) : (l.map f).Prod = f l.prod := by
 
 @[to_additive]
 theorem prod_hom₂ (l : List ι) (f : M → N → P) (hf : ∀ a b c d, f (a * b) (c * d) = f a c * f b d) (hf' : f 1 1 = 1)
-    (f₁ : ι → M) (f₂ : ι → N) : (l.map $ fun i => f (f₁ i) (f₂ i)).Prod = f (l.map f₁).Prod (l.map f₂).Prod := by
+    (f₁ : ι → M) (f₂ : ι → N) : (l.map fun i => f (f₁ i) (f₂ i)).Prod = f (l.map f₁).Prod (l.map f₂).Prod := by
   simp only [Prod, foldl_map]
   convert l.foldl_hom₂ (fun a b => f a b) _ _ _ _ _ fun a b i => _
   · exact hf'.symm
@@ -195,7 +195,7 @@ theorem prod_reverse_noncomm : ∀ L : List G, L.reverse.prod = (L.map fun x => 
 
 /-- Counterpart to `list.prod_take_succ` when we have an inverse operation -/
 @[simp, to_additive "Counterpart to `list.sum_take_succ` when we have an negation operation"]
-theorem prod_drop_succ : ∀ L : List G i : ℕ p, (L.drop (i + 1)).Prod = L.nth_le i p⁻¹ * (L.drop i).Prod
+theorem prod_drop_succ : ∀ L : List G i : ℕ p, (L.drop (i + 1)).Prod = (L.nth_le i p)⁻¹ * (L.drop i).Prod
   | [], i, p => False.elim (Nat.not_lt_zeroₓ _ p)
   | x :: xs, 0, p => by
     simp
@@ -218,7 +218,7 @@ theorem prod_inv : ∀ L : List G, L.prod⁻¹ = (L.map fun x => x⁻¹).Prod
 /-- Alternative version of `list.prod_update_nth` when the list is over a group -/
 @[to_additive "Alternative version of `list.sum_update_nth` when the list is over a group"]
 theorem prod_update_nth' (L : List G) (n : ℕ) (a : G) :
-    (L.update_nth n a).Prod = L.prod * if hn : n < L.length then L.nth_le n hn⁻¹ * a else 1 := by
+    (L.update_nth n a).Prod = L.prod * if hn : n < L.length then (L.nth_le n hn)⁻¹ * a else 1 := by
   refine' (prod_update_nth L n a).trans _
   split_ifs with hn hn
   · rw [mul_comm _ a, mul_assoc a, prod_drop_succ L n hn, mul_comm _ (drop n L).Prod, ← mul_assoc (take n L).Prod,
@@ -361,7 +361,7 @@ theorem exists_lt_of_sum_lt [LinearOrderedCancelAddCommMonoid M] {l : List ι} (
   · exact ⟨x, mem_cons_self _ _, h'⟩
     
   simp at h
-  obtain ⟨y, h1y, h2y⟩ := l_ih (lt_of_add_lt_add_left (h.trans_le $ add_le_add_right h' _))
+  obtain ⟨y, h1y, h2y⟩ := l_ih (lt_of_add_lt_add_left (h.trans_le <| add_le_add_right h' _))
   exact ⟨y, mem_cons_of_mem x h1y, h2y⟩
 
 theorem exists_le_of_sum_le [LinearOrderedCancelAddCommMonoid M] {l : List ι} (hl : l ≠ []) (f g : ι → M)
@@ -375,7 +375,7 @@ theorem exists_le_of_sum_le [LinearOrderedCancelAddCommMonoid M] {l : List ι} (
   obtain ⟨y, h1y, h2y⟩ := exists_lt_of_sum_lt f g _
   exact ⟨y, mem_cons_of_mem x h1y, le_of_ltₓ h2y⟩
   simp at h
-  exact lt_of_add_lt_add_left (h.trans_lt $ add_lt_add_right h' _)
+  exact lt_of_add_lt_add_left (h.trans_lt <| add_lt_add_right h' _)
 
 /-- The product of a list of positive natural numbers is positive,
 and likewise for any nontrivial ordered semiring. -/
@@ -384,7 +384,7 @@ theorem prod_pos [OrderedSemiring R] [Nontrivial R] (l : List R) (h : ∀, ∀ a
   · simp
     
   · rw [prod_cons]
-    exact mul_pos (h _ $ mem_cons_self _ _) (ih $ fun a ha => h a $ mem_cons_of_mem _ ha)
+    exact mul_pos (h _ <| mem_cons_self _ _) (ih fun a ha => h a <| mem_cons_of_mem _ ha)
     
 
 /-!
@@ -436,11 +436,11 @@ end Alternating
 
 theorem sum_map_mul_left [Semiringₓ R] (L : List ι) (f : ι → R) (r : R) :
     (L.map fun b => r * f b).Sum = r * (L.map f).Sum :=
-  sum_map_hom L f $ AddMonoidHom.mulLeft r
+  sum_map_hom L f <| AddMonoidHom.mulLeft r
 
 theorem sum_map_mul_right [Semiringₓ R] (L : List ι) (f : ι → R) (r : R) :
     (L.map fun b => f b * r).Sum = (L.map f).Sum * r :=
-  sum_map_hom L f $ AddMonoidHom.mulRight r
+  sum_map_hom L f <| AddMonoidHom.mulRight r
 
 end List
 

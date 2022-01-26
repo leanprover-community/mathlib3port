@@ -137,7 +137,7 @@ theorem eval₂_to_finsupp_eq_lift_nc {f : R →+* S} {x : S} {p : AddMonoidAlge
   simp only [eval₂_eq_sum, Sum, sum_to_finsupp, support, coeff]
   rfl
 
-theorem eval₂_mul_noncomm (hf : ∀ k, Commute (f $ q.coeff k) x) : eval₂ f x (p * q) = eval₂ f x p * eval₂ f x q := by
+theorem eval₂_mul_noncomm (hf : ∀ k, Commute (f <| q.coeff k) x) : eval₂ f x (p * q) = eval₂ f x p * eval₂ f x q := by
   rcases p with ⟨⟩
   rcases q with ⟨⟩
   simp only [coeff] at hf
@@ -147,7 +147,7 @@ theorem eval₂_mul_noncomm (hf : ∀ k, Commute (f $ q.coeff k) x) : eval₂ f 
 @[simp]
 theorem eval₂_mul_X : eval₂ f x (p * X) = eval₂ f x p * x := by
   refine'
-    trans (eval₂_mul_noncomm _ _ $ fun k => _)
+    trans ((eval₂_mul_noncomm _ _) fun k => _)
       (by
         rw [eval₂_X])
   rcases em (k = 1) with (rfl | hk)
@@ -169,7 +169,7 @@ theorem eval₂_mul_C' (h : Commute (f a) x) : eval₂ f x (p * C a) = eval₂ f
   · simp only [coeff_C_ne_zero hk, RingHom.map_zero, Commute.zero_left]
     
 
-theorem eval₂_list_prod_noncomm (ps : List (Polynomial R)) (hf : ∀, ∀ p ∈ ps, ∀ k, Commute (f $ coeff p k) x) :
+theorem eval₂_list_prod_noncomm (ps : List (Polynomial R)) (hf : ∀, ∀ p ∈ ps, ∀ k, Commute (f <| coeff p k) x) :
     eval₂ f x ps.prod = (ps.map (Polynomial.eval₂ f x)).Prod := by
   induction' ps using List.reverseRecOn with ps p ihp
   · simp
@@ -183,7 +183,7 @@ def eval₂_ring_hom' (f : R →+* S) (x : S) (hf : ∀ a, Commute (f a) x) : Po
   toFun := eval₂ f x
   map_add' := fun _ _ => eval₂_add _ _
   map_zero' := eval₂_zero _ _
-  map_mul' := fun p q => eval₂_mul_noncomm f x fun k => hf $ coeff q k
+  map_mul' := fun p q => eval₂_mul_noncomm f x fun k => hf <| coeff q k
   map_one' := eval₂_one _ _
 
 end
@@ -203,7 +203,7 @@ variable (f : R →+* S) (x : S)
 
 @[simp]
 theorem eval₂_mul : (p * q).eval₂ f x = p.eval₂ f x * q.eval₂ f x :=
-  eval₂_mul_noncomm _ _ $ fun k => Commute.all _ _
+  (eval₂_mul_noncomm _ _) fun k => Commute.all _ _
 
 theorem eval₂_mul_eq_zero_of_left (q : Polynomial R) (hp : p.eval₂ f x = 0) : (p * q).eval₂ f x = 0 := by
   rw [eval₂_mul f x]
@@ -387,7 +387,7 @@ theorem coeff_zero_eq_eval_zero (p : Polynomial R) : coeff p 0 = p.eval 0 :=
     coeff p 0 = coeff p 0 * 0 ^ 0 := by
       simp
     _ = p.eval 0 :=
-      Eq.symm $
+      Eq.symm <|
         Finset.sum_eq_single _
           (fun b _ hb => by
             simp [zero_pow (Nat.pos_of_ne_zeroₓ hb)])
@@ -626,8 +626,8 @@ theorem eval₂_eq_eval_map {x : S} : p.eval₂ f x = (p.map f).eval x := by
     
 
 theorem map_injective (hf : Function.Injective f) : Function.Injective (map f) := fun p q h =>
-  ext $ fun m =>
-    hf $ by
+  ext fun m =>
+    hf <| by
       rw [← coeff_map f, ← coeff_map f, h]
 
 theorem map_surjective (hf : Function.Surjective f) : Function.Surjective (map f) := fun p =>
@@ -670,7 +670,7 @@ theorem map_monic_ne_zero (hp : p.monic) [Nontrivial S] : p.map f ≠ 0 := fun h
 
 theorem degree_map_eq_of_leading_coeff_ne_zero (f : R →+* S) (hf : f (leading_coeff p) ≠ 0) :
     degree (p.map f) = degree p :=
-  le_antisymmₓ (degree_map_le f _) $ by
+  le_antisymmₓ (degree_map_le f _) <| by
     have hp0 : p ≠ 0 := leading_coeff_ne_zero.mp fun hp0 => hf (trans (congr_argₓ _ hp0) f.map_zero)
     rw [degree_eq_nat_degree hp0]
     refine' le_degree_of_ne_zero _
@@ -690,15 +690,15 @@ variable (f)
 
 @[simp]
 theorem map_ring_hom_id : map_ring_hom (RingHom.id R) = RingHom.id (Polynomial R) :=
-  RingHom.ext $ fun x => map_id
+  RingHom.ext fun x => map_id
 
 @[simp]
 theorem map_ring_hom_comp [Semiringₓ T] (f : S →+* T) (g : R →+* S) :
     (map_ring_hom f).comp (map_ring_hom g) = map_ring_hom (f.comp g) :=
-  RingHom.ext $ Polynomial.map_map g f
+  RingHom.ext <| Polynomial.map_map g f
 
-theorem map_list_prod (L : List (Polynomial R)) : L.prod.map f = (L.map $ map f).Prod :=
-  Eq.symm $ List.prod_hom _ (map_ring_hom f).toMonoidHom
+theorem map_list_prod (L : List (Polynomial R)) : L.prod.map f = (L.map <| map f).Prod :=
+  Eq.symm <| List.prod_hom _ (map_ring_hom f).toMonoidHom
 
 @[simp]
 protected theorem map_pow (n : ℕ) : (p ^ n).map f = p.map f ^ n :=
@@ -889,8 +889,8 @@ section Map
 
 variable [CommSemiringₓ R] [CommSemiringₓ S] (f : R →+* S)
 
-theorem map_multiset_prod (m : Multiset (Polynomial R)) : m.prod.map f = (m.map $ map f).Prod :=
-  Eq.symm $ Multiset.prod_hom _ (map_ring_hom f).toMonoidHom
+theorem map_multiset_prod (m : Multiset (Polynomial R)) : m.prod.map f = (m.map <| map f).Prod :=
+  Eq.symm <| Multiset.prod_hom _ (map_ring_hom f).toMonoidHom
 
 theorem map_prod {ι : Type _} (g : ι → Polynomial R) (s : Finset ι) : (∏ i in s, g i).map f = ∏ i in s, (g i).map f :=
   (map_ring_hom f).map_prod _ _
@@ -938,7 +938,7 @@ theorem map_neg {S} [Ringₓ S] (f : R →+* S) : (-p).map f = -p.map f :=
   (map_ring_hom f).map_neg p
 
 @[simp]
-theorem map_int_cast {S} [Ringₓ S] (f : R →+* S) (n : ℤ) : map f (↑n) = ↑n :=
+theorem map_int_cast {S} [Ringₓ S] (f : R →+* S) (n : ℤ) : map f ↑n = ↑n :=
   (map_ring_hom f).map_int_cast n
 
 @[simp]

@@ -74,7 +74,7 @@ theorem inr_eq_smul_eps [MulZeroOneClass R] (r : R) : inr r = (r • ε : (R)[ε
 /-- For two algebra morphisms out of `R[ε]` to agree, it suffices for them to agree on `ε`. -/
 @[ext]
 theorem alg_hom_ext {A} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] ⦃f g : (R)[ε] →ₐ[R] A⦄ (h : f ε = g ε) : f = g :=
-  alg_hom_ext' $ LinearMap.ext_ring $ h
+  alg_hom_ext' <| LinearMap.ext_ring <| h
 
 variable {A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
@@ -86,7 +86,7 @@ This isomorphism is named to match the very similar `complex.lift`. -/
 def lift : { e : A // e * e = 0 } ≃ ((R)[ε] →ₐ[R] A) :=
   Equivₓ.trans
     (show { e : A // e * e = 0 } ≃ { f : R →ₗ[R] A // ∀ x y, f x * f y = 0 } from
-      (LinearMap.ringLmapEquivSelf R ℕ A).symm.toEquiv.subtypeEquiv $ fun a => by
+      (LinearMap.ringLmapEquivSelf R ℕ A).symm.toEquiv.subtypeEquiv fun a => by
         dsimp
         simp_rw [smul_mul_smul]
         refine'
@@ -96,11 +96,11 @@ def lift : { e : A // e * e = 0 } ≃ ((R)[ε] →ₐ[R] A) :=
 
 @[simp]
 theorem lift_apply_eps (e : { e : A // e * e = 0 }) : lift e (ε : (R)[ε]) = e :=
-  (TrivSqZeroExt.lift_aux_apply_inr _ _ _).trans $ one_smul _ _
+  (TrivSqZeroExt.lift_aux_apply_inr _ _ _).trans <| one_smul _ _
 
 @[simp]
 theorem lift_eps : lift ⟨ε, eps_mul_eps⟩ = AlgHom.id R (R)[ε] :=
-  alg_hom_ext $ lift_apply_eps _
+  alg_hom_ext <| lift_apply_eps _
 
 end DualNumber
 

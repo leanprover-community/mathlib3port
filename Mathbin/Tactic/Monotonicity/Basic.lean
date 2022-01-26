@@ -117,13 +117,13 @@ unsafe instance : has_to_format mono_selection :=
     | mono_selection.both => "both"⟩
 
 unsafe def side : lean.parser mono_selection :=
-  with_desc "expecting 'left', 'right' or 'both' (default)" $ do
+  with_desc "expecting 'left', 'right' or 'both' (default)" <| do
     let some n ← optionalₓ ident | pure mono_selection.both
-    if n = `left then pure $ mono_selection.left
+    if n = `left then pure <| mono_selection.left
       else
-        if n = `right then pure $ mono_selection.right
+        if n = `right then pure <| mono_selection.right
         else
-          if n = `both then pure $ mono_selection.both
+          if n = `both then pure <| mono_selection.both
           else fail f! "invalid argument: {n}, expecting 'left', 'right' or 'both' (default)"
 
 open Function
@@ -137,16 +137,16 @@ unsafe def monotonicity.attr : user_attribute (native.rb_lmap mono_key Name) (Op
       mk_cache := fun ls => do
         let ps ← ls.mmap monotonicity.attr.get_param
         let ps := ps.filter_map Prod.fst
-        pure $ (ps.zip ls).foldl (flip $ uncurry fun k n m => m.insert k n) (native.rb_lmap.mk mono_key _) }
+        pure <| (ps.zip ls).foldl (flip <| uncurry fun k n m => m.insert k n) (native.rb_lmap.mk mono_key _) }
   after_set :=
-    some $ fun n prio p => do
+    some fun n prio p => do
       let (none, v) ← monotonicity.attr.get_param n | pure ()
       let k ← monotonicity.check n
       monotonicity.attr.set n (some k, v) p
   Parser := Prod.mk none <$> side
 
 unsafe def filter_instances (e : mono_selection) (ns : List Name) : tactic (List Name) :=
-  ns.mfilter $ fun n => do
+  ns.mfilter fun n => do
     let d ← user_attribute.get_param_untyped monotonicity.attr n
     let (_, d) ← to_expr (pquote.1 (id (%%ₓd))) >>= eval_expr (Option mono_key × mono_selection)
     return (e = d : Bool)

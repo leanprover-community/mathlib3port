@@ -60,7 +60,7 @@ variable (A : Type _) [CommRingₓ A] [Algebra ℚ A]
 the $n$-th Bernoulli number $B_n$ is defined recursively via
 $$B_n = 1 - \sum_{k < n} \binom{n}{k}\frac{B_k}{n+1-k}$$ -/
 def bernoulli' : ℕ → ℚ :=
-  WellFounded.fix lt_wf $ fun n bernoulli' => 1 - ∑ k : Finₓ n, n.choose k / (n - k + 1) * bernoulli' k k.2
+  (WellFounded.fix lt_wf) fun n bernoulli' => 1 - ∑ k : Finₓ n, n.choose k / (n - k + 1) * bernoulli' k k.2
 
 theorem bernoulli'_def' (n : ℕ) : bernoulli' n = 1 - ∑ k : Finₓ n, n.choose k / (n - k + 1) * bernoulli' k :=
   WellFounded.fix_eq _ _ _
@@ -120,8 +120,8 @@ theorem sum_bernoulli' (n : ℕ) : (∑ k in range n, (n.choose k : ℚ) * berno
   · simp
     
   suffices
-    ((n + 1 : ℚ) * ∑ k in range n, ↑n.choose k / (n - k + 1) * bernoulli' k) =
-      ∑ x in range n, ↑n.succ.choose x * bernoulli' x
+    ((n + 1 : ℚ) * ∑ k in range n, ↑(n.choose k) / (n - k + 1) * bernoulli' k) =
+      ∑ x in range n, ↑(n.succ.choose x) * bernoulli' x
     by
     rw_mod_cast [sum_range_succ, bernoulli'_def, ← this, choose_succ_self_right]
     ring
@@ -135,7 +135,7 @@ theorem sum_bernoulli' (n : ℕ) : (∑ k in range n, (n.choose k : ℚ) * berno
 
 /-- The exponential generating function for the Bernoulli numbers `bernoulli' n`. -/
 def bernoulli'PowerSeries :=
-  mk $ fun n => algebraMap ℚ A (bernoulli' n / n !)
+  mk fun n => algebraMap ℚ A (bernoulli' n / n !)
 
 theorem bernoulli'_power_series_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A - 1) = X * exp A := by
   ext n
@@ -212,7 +212,7 @@ theorem sum_bernoulli (n : ℕ) : (∑ k in range n, (n.choose k : ℚ) * bernou
   cases n
   · simp
     
-  suffices (∑ i in range n, ↑(n + 2).choose (i + 2) * bernoulli (i + 2)) = n / 2 by
+  suffices (∑ i in range n, ↑((n + 2).choose (i + 2)) * bernoulli (i + 2)) = n / 2 by
     simp only [this, sum_range_succ', cast_succ, bernoulli_one, bernoulli_zero, choose_one_right, mul_oneₓ,
       choose_zero_right, cast_zero, if_false, zero_addₓ, succ_succ_ne_one]
     ring
@@ -253,7 +253,7 @@ theorem bernoulli_spec' (n : ℕ) :
 
 /-- The exponential generating function for the Bernoulli numbers `bernoulli n`. -/
 def bernoulliPowerSeries :=
-  mk $ fun n => algebraMap ℚ A (bernoulli n / n !)
+  mk fun n => algebraMap ℚ A (bernoulli n / n !)
 
 theorem bernoulli_power_series_mul_exp_sub_one : bernoulliPowerSeries A * (exp A - 1) = X := by
   ext n
@@ -308,7 +308,7 @@ theorem sum_range_pow (n p : ℕ) :
     simp only [f, exp_pow_eq_rescale_exp, rescale, one_div, coeff_mk, RingHom.coe_mk, coeff_exp, RingHom.id_apply,
       cast_mul, algebra_map_rat_rat]
     rw [choose_eq_factorial_div_factorial h.le, eq_comm, div_eq_iff (hne q.succ), succ_eq_add_one,
-      mul_assoc _ _ (↑q.succ !), mul_comm _ (↑q.succ !), ← mul_assoc, div_mul_eq_mul_div, mul_comm (↑n ^ (q - m + 1)), ←
+      mul_assoc _ _ ↑q.succ !, mul_comm _ ↑q.succ !, ← mul_assoc, div_mul_eq_mul_div, mul_comm (↑n ^ (q - m + 1)), ←
       mul_assoc _ _ (↑n ^ (q - m + 1)), ← one_div, mul_one_div, div_div_eq_div_mul,
       tsub_add_eq_add_tsub (le_of_lt_succ h), cast_dvd, cast_mul]
     · ring
@@ -322,7 +322,7 @@ theorem sum_range_pow (n p : ℕ) :
       (∑ i in range (p + 1), bernoulli i * (p + 1).choose i * n ^ (p + 1 - i) / (p + 1)!) * p ! :=
     by
     suffices
-      (mk fun p => ∑ k in range n, ↑k ^ p * algebraMap ℚ ℚ (p !⁻¹)) =
+      (mk fun p => ∑ k in range n, ↑k ^ p * algebraMap ℚ ℚ p !⁻¹) =
         mk fun p => ∑ i in range (p + 1), bernoulli i * (p + 1).choose i * n ^ (p + 1 - i) / (p + 1)!
       by
       rw [← div_eq_iff (hne p), div_eq_mul_inv, sum_mul]
@@ -341,7 +341,7 @@ theorem sum_range_pow (n p : ℕ) :
     simp [h_cauchy, mul_comm]
   rw [hps, sum_mul]
   refine' sum_congr rfl fun x hx => _
-  field_simp [mul_right_commₓ _ (↑p !), ← mul_assoc _ _ (↑p !), cast_add_one_ne_zero, hne]
+  field_simp [mul_right_commₓ _ ↑p !, ← mul_assoc _ _ ↑p !, cast_add_one_ne_zero, hne]
 
 /-- Alternate form of **Faulhaber's theorem**, relating the sum of p-th powers to the Bernoulli
 numbers: $$\sum_{k=1}^{n} k^p = \sum_{i=0}^p (-1)^iB_i\binom{p+1}{i}\frac{n^{p+1-i}}{p+1}.$$

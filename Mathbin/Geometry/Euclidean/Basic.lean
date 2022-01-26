@@ -239,7 +239,7 @@ theorem angle_add_angle_eq_pi_of_angle_eq_pi {x y : V} (z : V) (h : angle x y = 
 /-- Two vectors have inner product 0 if and only if the angle between
 them is π/2. -/
 theorem inner_eq_zero_iff_angle_eq_pi_div_two (x y : V) : ⟪x, y⟫ = 0 ↔ angle x y = π / 2 :=
-  Iff.symm $ by
+  Iff.symm <| by
     simp (config := { contextual := true })[angle, or_imp_distrib]
 
 /-- If the angle between two vectors is π, the inner product equals the negative product
@@ -283,7 +283,7 @@ theorem norm_add_eq_add_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : �
 
 /-- If the angle between two vectors is 0, the norm of their difference equals
 the absolute value of the difference of their norms. -/
-theorem norm_sub_eq_abs_sub_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ∥x - y∥ = |∥x∥ - ∥y∥| := by
+theorem norm_sub_eq_abs_sub_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ∥x - y∥ = abs (∥x∥ - ∥y∥) := by
   rw [← sq_eq_sq (norm_nonneg (x - y)) (abs_nonneg (∥x∥ - ∥y∥)), norm_sub_pow_two_real,
     inner_eq_mul_norm_of_angle_eq_zero h, sq_abs (∥x∥ - ∥y∥)]
   ring
@@ -315,7 +315,7 @@ theorem norm_add_eq_add_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y 
 /-- The norm of the difference of two non-zero vectors equals the absolute value
 of the difference of their norms if and only the angle between the two vectors is 0. -/
 theorem norm_sub_eq_abs_sub_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-    ∥x - y∥ = |∥x∥ - ∥y∥| ↔ angle x y = 0 := by
+    ∥x - y∥ = abs (∥x∥ - ∥y∥) ↔ angle x y = 0 := by
   refine' ⟨fun h => _, norm_sub_eq_abs_sub_norm_of_angle_eq_zero⟩
   rw [← inner_eq_mul_norm_iff_angle_eq_zero hx hy]
   have h1 : ∥x - y∥ ^ 2 = (∥x∥ - ∥y∥) ^ 2 := by
@@ -442,7 +442,7 @@ theorem left_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) 
 
 /-- If ∠ABC = π then dist C B ≠ 0. -/
 theorem right_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : dist p3 p2 ≠ 0 :=
-  left_dist_ne_zero_of_angle_eq_pi $ (angle_comm _ _ _).trans h
+  left_dist_ne_zero_of_angle_eq_pi <| (angle_comm _ _ _).trans h
 
 /-- If ∠ABC = π, then (dist A C) = (dist A B) + (dist B C). -/
 theorem dist_eq_add_dist_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : dist p1 p3 = dist p1 p2 + dist p3 p2 := by
@@ -459,13 +459,13 @@ theorem dist_eq_add_dist_iff_angle_eq_pi {p1 p2 p3 : P} (hp1p2 : p1 ≠ p2) (hp3
 
 /-- If ∠ABC = 0, then (dist A C) = abs ((dist A B) - (dist B C)). -/
 theorem dist_eq_abs_sub_dist_of_angle_eq_zero {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = 0) :
-    dist p1 p3 = |dist p1 p2 - dist p3 p2| := by
+    dist p1 p3 = abs (dist p1 p2 - dist p3 p2) := by
   rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, ← vsub_sub_vsub_cancel_right]
   exact norm_sub_eq_abs_sub_norm_of_angle_eq_zero h
 
 /-- If A ≠ B and C ≠ B then ∠ABC = 0 if and only if (dist A C) = abs ((dist A B) - (dist B C)). -/
 theorem dist_eq_abs_sub_dist_iff_angle_eq_zero {p1 p2 p3 : P} (hp1p2 : p1 ≠ p2) (hp3p2 : p3 ≠ p2) :
-    dist p1 p3 = |dist p1 p2 - dist p3 p2| ↔ ∠ p1 p2 p3 = 0 := by
+    dist p1 p3 = abs (dist p1 p2 - dist p3 p2) ↔ ∠ p1 p2 p3 = 0 := by
   rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, ← vsub_sub_vsub_cancel_right]
   exact
     norm_sub_eq_abs_sub_norm_iff_angle_eq_zero (fun he => hp1p2 (vsub_eq_zero_iff_eq.1 he)) fun he =>
@@ -667,7 +667,7 @@ definition is only intended for use in setting up the bundled version
 `orthogonal_projection` and should not be used once that is
 defined. -/
 def orthogonalProjectionFn (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] (p : P) : P :=
-  Classical.some $
+  Classical.some <|
     inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›) (mk'_nonempty p s.directionᗮ)
       (by
         rw [direction_mk' p s.directionᗮ]
@@ -680,7 +680,7 @@ setting up the bundled version and should not be used once that is
 defined. -/
 theorem inter_eq_singleton_orthogonal_projection_fn {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
     (p : P) : (s : Set P) ∩ mk' p s.directionᗮ = {orthogonalProjectionFn s p} :=
-  Classical.some_spec $
+  Classical.some_spec <|
     inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›) (mk'_nonempty p s.directionᗮ)
       (by
         rw [direction_mk' p s.directionᗮ]
@@ -760,12 +760,12 @@ theorem inter_eq_singleton_orthogonal_projection {s : AffineSubspace ℝ P} [Non
 
 /-- The `orthogonal_projection` lies in the given subspace. -/
 theorem orthogonal_projection_mem {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction] (p : P) :
-    ↑orthogonalProjection s p ∈ s :=
+    ↑(orthogonalProjection s p) ∈ s :=
   (orthogonalProjection s p).2
 
 /-- The `orthogonal_projection` lies in the orthogonal subspace. -/
 theorem orthogonal_projection_mem_orthogonal (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] (p : P) :
-    ↑orthogonalProjection s p ∈ mk' p s.directionᗮ :=
+    ↑(orthogonalProjection s p) ∈ mk' p s.directionᗮ :=
   orthogonal_projection_fn_mem_orthogonal p
 
 /-- Subtracting a point in the given subspace from the
@@ -784,7 +784,7 @@ theorem vsub_orthogonal_projection_mem_direction {s : AffineSubspace ℝ P} [Non
 /-- A point equals its orthogonal projection if and only if it lies in
 the subspace. -/
 theorem orthogonal_projection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction] {p : P} :
-    ↑orthogonalProjection s p = p ↔ p ∈ s := by
+    ↑(orthogonalProjection s p) = p ↔ p ∈ s := by
   constructor
   · exact fun h => h ▸ orthogonal_projection_mem p
     
@@ -902,7 +902,7 @@ theorem dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd {s : AffineSubspace �
     _ = ∥p1 -ᵥ p2∥ * ∥p1 -ᵥ p2∥ + ∥(r1 - r2) • v∥ * ∥(r1 - r2) • v∥ :=
       norm_add_sq_eq_norm_sq_add_norm_sq_real
         (Submodule.inner_right_of_mem_orthogonal (vsub_mem_direction hp1 hp2) (Submodule.smul_mem _ _ hv))
-    _ = ∥(p1 -ᵥ p2 : V)∥ * ∥(p1 -ᵥ p2 : V)∥ + |r1 - r2| * |r1 - r2| * ∥v∥ * ∥v∥ := by
+    _ = ∥(p1 -ᵥ p2 : V)∥ * ∥(p1 -ᵥ p2 : V)∥ + abs (r1 - r2) * abs (r1 - r2) * ∥v∥ * ∥v∥ := by
       rw [norm_smul, Real.norm_eq_abs]
       ring
     _ = dist p1 p2 * dist p1 p2 + (r1 - r2) * (r1 - r2) * (∥v∥ * ∥v∥) := by
@@ -916,25 +916,25 @@ more generally to cover operations such as reflection in a point.  The
 definition here, of reflection in an affine subspace, is a more
 general sense of the word that includes both those common cases. -/
 def reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] : P ≃ᵃⁱ[ℝ] P :=
-  AffineIsometryEquiv.mk' (fun p => ↑orthogonalProjection s p -ᵥ p +ᵥ orthogonalProjection s p)
-    (_root_.reflection s.direction) (↑Classical.arbitrary s)
+  AffineIsometryEquiv.mk' (fun p => ↑(orthogonalProjection s p) -ᵥ p +ᵥ orthogonalProjection s p)
+    (_root_.reflection s.direction) (↑(Classical.arbitrary s))
     (by
       intro p
-      let v := p -ᵥ ↑Classical.arbitrary s
+      let v := p -ᵥ ↑(Classical.arbitrary s)
       let a : V := _root_.orthogonal_projection s.direction v
-      let b : P := ↑Classical.arbitrary s
+      let b : P := ↑(Classical.arbitrary s)
       have key : a +ᵥ b -ᵥ (v +ᵥ b) +ᵥ (a +ᵥ b) = a + a - v +ᵥ (b -ᵥ b +ᵥ b) := by
         rw [← add_vadd, vsub_vadd_eq_vsub_sub, vsub_vadd, vadd_vsub]
         congr 1
         abel
-      have : p = v +ᵥ ↑Classical.arbitrary s := (vsub_vadd p (↑Classical.arbitrary s)).symm
+      have : p = v +ᵥ ↑(Classical.arbitrary s) := (vsub_vadd p ↑(Classical.arbitrary s)).symm
       simpa only [coe_vadd, reflection_apply, AffineMap.map_vadd, orthogonal_projection_linear,
         orthogonal_projection_mem_subspace_eq_self, vadd_vsub, ContinuousLinearMap.coe_coe,
         ContinuousLinearEquiv.coe_coe, this] using key)
 
 /-- The result of reflecting. -/
 theorem reflection_apply (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] (p : P) :
-    reflection s p = ↑orthogonalProjection s p -ᵥ p +ᵥ orthogonalProjection s p :=
+    reflection s p = ↑(orthogonalProjection s p) -ᵥ p +ᵥ orthogonalProjection s p :=
   rfl
 
 theorem eq_reflection_of_eq_subspace {s s' : AffineSubspace ℝ P} [Nonempty s] [Nonempty s'] [CompleteSpace s.direction]
@@ -976,7 +976,7 @@ theorem reflection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s] [Complete
   rw [← orthogonal_projection_eq_self_iff, reflection_apply]
   constructor
   · intro h
-    rw [← @vsub_eq_zero_iff_eq V, vadd_vsub_assoc, ← two_smul ℝ (↑orthogonalProjection s p -ᵥ p), smul_eq_zero] at h
+    rw [← @vsub_eq_zero_iff_eq V, vadd_vsub_assoc, ← two_smul ℝ (↑(orthogonalProjection s p) -ᵥ p), smul_eq_zero] at h
     norm_num  at h
     exact h
     
@@ -1023,7 +1023,7 @@ subspace containing both the point and the subspace reflected in. -/
 theorem reflection_mem_of_le_of_mem {s₁ s₂ : AffineSubspace ℝ P} [Nonempty s₁] [CompleteSpace s₁.direction]
     (hle : s₁ ≤ s₂) {p : P} (hp : p ∈ s₂) : reflection s₁ p ∈ s₂ := by
   rw [reflection_apply]
-  have ho : ↑orthogonalProjection s₁ p ∈ s₂ := hle (orthogonal_projection_mem p)
+  have ho : ↑(orthogonalProjection s₁ p) ∈ s₂ := hle (orthogonal_projection_mem p)
   exact vadd_mem_of_mem_direction (vsub_mem_direction ho hp) ho
 
 /-- Reflecting an orthogonal vector plus a point in the subspace

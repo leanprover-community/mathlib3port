@@ -48,8 +48,8 @@ private unsafe def fin_cases_at_aux : ∀ with_list : List expr e : expr, tactic
         match with_list.nth 0 with
           | some h => tactic.interactive.conv (some sn) none (to_rhs >> conv.interactive.change (to_pexpr h))
           | _ =>
-            try $
-              tactic.interactive.conv (some sn) none $
+            try <|
+              tactic.interactive.conv (some sn) none <|
                 to_rhs >>
                   conv.interactive.norm_num
                     [simp_arg_type.expr (pquote.1 max_def), simp_arg_type.expr (pquote.1 min_def)]
@@ -68,7 +68,7 @@ These should be defeq to and in the same order as the terms in the enumeration o
 -/
 unsafe def fin_cases_at (nm : Option Name) : ∀ with_list : Option pexpr e : expr, tactic Unit
   | with_list, e => do
-    let ty ← try_core $ guard_mem_fin e
+    let ty ← try_core <| guard_mem_fin e
     match ty with
       | none => do
         let ty ← infer_type e
@@ -140,7 +140,7 @@ produces three goals with hypotheses
 -/
 unsafe def fin_cases : parse hyp → parse (tk "with" *> texpr)? → parse (tk "using" *> ident)? → tactic Unit
   | none, none, nm =>
-    focus1 $ do
+    focus1 <| do
       let ctx ← local_context
       ctx.mfirst (fin_cases_at nm none) <|>
           fail
@@ -149,7 +149,7 @@ unsafe def fin_cases : parse hyp → parse (tk "with" *> texpr)? → parse (tk "
   | none, some _, _ => fail "Specify a single hypothesis when using a `with` argument."
   | some n, with_list, nm => do
     let h ← get_local n
-    focus1 $ fin_cases_at nm with_list h
+    focus1 <| fin_cases_at nm with_list h
 
 end Interactive
 

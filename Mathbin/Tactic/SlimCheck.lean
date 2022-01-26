@@ -128,18 +128,18 @@ and the proposition that they test. -/
 unsafe def summarize_instance : expr → tactic instance_tree
   | lam n bi d b => do
     let v ← mk_local' n bi d
-    summarize_instance $ b.instantiate_var v
+    summarize_instance <| b.instantiate_var v
   | e@(app f x) => do
     let quote.1 (testable (%%ₓp)) ← infer_type e
     let xs ← e.get_app_args.mmap_filter (try_core ∘ summarize_instance)
-    pure $ instance_tree.node e.get_app_fn.const_name p xs
+    pure <| instance_tree.node e.get_app_fn.const_name p xs
   | e => do
     failed
 
 /-- format a `instance_tree` -/
 unsafe def instance_tree.to_format : instance_tree → tactic format
   | instance_tree.node n p xs => do
-    let xs ← format.join <$> (xs.mmap $ fun t => flip format.indent 2 <$> instance_tree.to_format t)
+    let xs ← format.join <$> xs.mmap fun t => flip format.indent 2 <$> instance_tree.to_format t
     let ys ← f!"testable ({← p})"
     f!"+ {(← n)} :{(← format.indent ys 2)}
         {← xs}"
@@ -200,7 +200,7 @@ Options:
 * `set_option trace.slim_check.success true`: print the tested samples that satisfy a property
 -/
 unsafe def slim_check (cfg : slim_check_cfg := {  }) : tactic Unit := do
-  let tgt ← retrieve $ tactic.revert_all >> target
+  let tgt ← retrieve <| tactic.revert_all >> target
   let tgt' := tactic.add_decorations tgt
   let cfg :=
     { cfg with traceDiscarded := cfg.trace_discarded || is_trace_enabled_for `slim_check.discarded,
@@ -230,7 +230,7 @@ unsafe def slim_check (cfg : slim_check_cfg := {  }) : tactic Unit := do
       (← do
         dbg_trace "[testable decoration]
             {← tgt'}")
-  when_tracing `slim_check.instance $ do
+  when_tracing `slim_check.instance <| do
       let inst ← summarize_instance inst >>= pp
       ← do
           dbg_trace "

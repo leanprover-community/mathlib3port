@@ -131,6 +131,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       ac_rfl
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc))
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- If `f : ℝⁿ⁺¹ → E` is differentiable on a closed rectangular box `I` with derivative `f'`, then
 the partial derivative `λ x, f' x (pi.single i 1)` is Henstock-Kurzweil integrable with integral
 equal to the difference of integrals of `f` over the faces `x i = I.upper i` and `x i = I.lower i`.
@@ -154,7 +155,7 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
     exacts[Hs x hxs, (Hd x ⟨hx, hxs⟩).ContinuousWithinAt]
   set fI : ℝ → box (Finₓ n) → E := fun y J =>
     integral.{0, u, u} J ⊥ (fun x => f (i.insert_nth y x)) box_additive_map.volume
-  set fb : Icc (I.lower i) (I.upper i) → Finₓ n →ᵇᵃ[↑I.face i] E := fun x =>
+  set fb : Icc (I.lower i) (I.upper i) → Finₓ n →ᵇᵃ[↑(I.face i)] E := fun x =>
     (integrable_of_continuous_on ⊥ (box.continuous_on_face_Icc Hc x.2) volume).toBoxAdditive
   set F : Finₓ (n + 1) →ᵇᵃ[I] E := box_additive_map.upper_sub_lower I i fI fb fun x hx J => rfl
   change has_integral I ⊥ (fun x => f' x (Pi.single i 1)) _ (F I)
@@ -174,16 +175,15 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
       · exact Ioc_mem_nhds_within_Ioi ⟨le_rfl, one_half_pos⟩
         
       · rcases((nhds_within_has_basis nhds_basis_closed_ball _).tendsto_iff nhds_basis_closed_ball).1 (Hs x hx.2) _
-            (half_pos $ half_pos ε0) with
+            (half_pos <| half_pos ε0) with
           ⟨δ₁, δ₁0, hδ₁⟩
-        filter_upwards [Ioc_mem_nhds_within_Ioi ⟨le_rfl, δ₁0⟩]
-        rintro δ hδ y₁ hy₁ y₂ hy₂
+        "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
         have : closed_ball x δ ∩ I.Icc ⊆ closed_ball x δ₁ ∩ I.Icc :=
           inter_subset_inter_left _ (closed_ball_subset_closed_ball hδ.2)
         rw [← dist_eq_norm]
         calc dist (f y₁) (f y₂) ≤ dist (f y₁) (f x) + dist (f y₂) (f x) :=
             dist_triangle_right _ _ _ _ ≤ ε / 2 / 2 + ε / 2 / 2 :=
-            add_le_add (hδ₁ _ $ this hy₁) (hδ₁ _ $ this hy₂)_ = ε / 2 := add_halves _
+            add_le_add (hδ₁ _ <| this hy₁) (hδ₁ _ <| this hy₂)_ = ε / 2 := add_halves _
         
       · have : ContinuousWithinAt (fun δ => (2 * δ) ^ (n + 1) * ∥f' x (Pi.single i 1)∥) (Ioi (0 : ℝ)) 0 :=
           ((continuous_within_at_id.const_mul _).pow _).mul_const _
@@ -198,7 +198,7 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
       ∀,
         ∀ x ∈ Icc (J.lower i) (J.upper i),
           ∀, integrable.{0, u, u} (J.face i) ⊥ (fun y => f (i.insert_nth x y)) box_additive_map.volume :=
-      fun x hx => integrable_of_continuous_on _ (box.continuous_on_face_Icc (Hc.mono $ box.le_iff_Icc.1 hJI) hx) volume
+      fun x hx => integrable_of_continuous_on _ (box.continuous_on_face_Icc (Hc.mono <| box.le_iff_Icc.1 hJI) hx) volume
     have hJδ' : J.Icc ⊆ closed_ball x δ ∩ I.Icc := subset_inter hJδ (box.le_iff_Icc.1 hJI)
     have Hmaps :
       ∀, ∀ z ∈ Icc (J.lower i) (J.upper i), ∀, maps_to (i.insert_nth z) (J.face i).Icc (closed_ball x δ ∩ I.Icc) :=
@@ -208,20 +208,20 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
     rw [← integral_sub (Hi _ Hu) (Hi _ Hl)]
     refine' (norm_sub_le _ _).trans (add_le_add _ _)
     · simp_rw [box_additive_map.volume_apply, norm_smul, Real.norm_eq_abs, abs_prod]
-      refine' (mul_le_mul_of_nonneg_right _ $ norm_nonneg _).trans hδ
-      have : ∀ j, |J.upper j - J.lower j| ≤ 2 * δ := by
+      refine' (mul_le_mul_of_nonneg_right _ <| norm_nonneg _).trans hδ
+      have : ∀ j, abs (J.upper j - J.lower j) ≤ 2 * δ := by
         intro j
         calc dist (J.upper j) (J.lower j) ≤ dist J.upper J.lower :=
             dist_le_pi_dist _ _ _ _ ≤ dist J.upper x + dist J.lower x := dist_triangle_right _ _ _ _ ≤ δ + δ :=
             add_le_add (hJδ J.upper_mem_Icc) (hJδ J.lower_mem_Icc)_ = 2 * δ := (two_mul δ).symm
-      calc (∏ j, |J.upper j - J.lower j|) ≤ ∏ j : Finₓ (n + 1), 2 * δ :=
+      calc (∏ j, abs (J.upper j - J.lower j)) ≤ ∏ j : Finₓ (n + 1), 2 * δ :=
           prod_le_prod (fun _ _ => abs_nonneg _) fun j hj => this j _ = (2 * δ) ^ (n + 1) := by
           simp
       
     · refine' (norm_integral_le_of_le_const (fun y hy => hdfδ _ (Hmaps _ Hu hy) _ (Hmaps _ Hl hy)) _).trans _
       refine' (mul_le_mul_of_nonneg_right _ (half_pos ε0).le).trans_eq (one_mulₓ _)
       rw [box.coe_eq_pi, Real.volume_pi_Ioc_to_real (box.lower_le_upper _)]
-      refine' prod_le_one (fun _ _ => sub_nonneg.2 $ box.lower_le_upper _ _) fun j hj => _
+      refine' prod_le_one (fun _ _ => sub_nonneg.2 <| box.lower_le_upper _ _) fun j hj => _
       calc
         J.upper (i.succ_above j) - J.lower (i.succ_above j) ≤
             dist (J.upper (i.succ_above j)) (J.lower (i.succ_above j)) :=
@@ -238,7 +238,7 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
     refine' ⟨δ, δ0, fun J hle hJδ hxJ hJc => _⟩
     simp only [box_additive_map.volume_apply, box.volume_apply, dist_eq_norm]
     refine'
-      (norm_volume_sub_integral_face_upper_sub_lower_smul_le _ (Hc.mono $ box.le_iff_Icc.1 hle) hxJ ε'0
+      (norm_volume_sub_integral_face_upper_sub_lower_smul_le _ (Hc.mono <| box.le_iff_Icc.1 hle) hxJ ε'0
             (fun y hy => Hδ _) (hJc rfl)).trans
         _
     · exact ⟨hJδ hy, box.le_iff_Icc.1 hle hy⟩

@@ -76,11 +76,11 @@ theorem one_apply (m : M) : (1 : MulAut M) m = m :=
   rfl
 
 @[simp]
-theorem apply_inv_self (e : MulAut M) (m : M) : e ((e⁻¹) m) = m :=
+theorem apply_inv_self (e : MulAut M) (m : M) : e (e⁻¹ m) = m :=
   MulEquiv.apply_symm_apply _ _
 
 @[simp]
-theorem inv_apply_self (e : MulAut M) (m : M) : (e⁻¹) (e m) = m :=
+theorem inv_apply_self (e : MulAut M) (m : M) : e⁻¹ (e m) = m :=
   MulEquiv.apply_symm_apply _ _
 
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
@@ -91,7 +91,7 @@ def to_perm : MulAut M →* Equivₓ.Perm M := by
 
 This generalizes `function.End.apply_mul_action`. -/
 instance apply_mul_distrib_mul_action {M} [Monoidₓ M] : MulDistribMulAction (MulAut M) M where
-  smul := · $ ·
+  smul := · <| ·
   one_smul := fun _ => rfl
   mul_smul := fun _ _ _ => rfl
   smul_one := MulEquiv.map_one
@@ -132,7 +132,7 @@ theorem conj_symm_apply [Groupₓ G] (g h : G) : (conj g).symm h = g⁻¹ * h * 
   rfl
 
 @[simp]
-theorem conj_inv_apply [Groupₓ G] (g h : G) : (conj g⁻¹) h = g⁻¹ * h * g :=
+theorem conj_inv_apply [Groupₓ G] (g h : G) : (conj g)⁻¹ h = g⁻¹ * h * g :=
   rfl
 
 end MulAut
@@ -185,11 +185,11 @@ theorem one_apply (a : A) : (1 : AddAut A) a = a :=
   rfl
 
 @[simp]
-theorem apply_inv_self (e : AddAut A) (a : A) : (e⁻¹) (e a) = a :=
+theorem apply_inv_self (e : AddAut A) (a : A) : e⁻¹ (e a) = a :=
   AddEquiv.apply_symm_apply _ _
 
 @[simp]
-theorem inv_apply_self (e : AddAut A) (a : A) : e ((e⁻¹) a) = a :=
+theorem inv_apply_self (e : AddAut A) (a : A) : e (e⁻¹ a) = a :=
   AddEquiv.apply_symm_apply _ _
 
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
@@ -200,7 +200,7 @@ def to_perm : AddAut A →* Equivₓ.Perm A := by
 
 This generalizes `function.End.apply_mul_action`. -/
 instance apply_distrib_mul_action {A} [AddMonoidₓ A] : DistribMulAction (AddAut A) A where
-  smul := · $ ·
+  smul := · <| ·
   smul_zero := AddEquiv.map_zero
   smul_add := AddEquiv.map_add
   one_smul := fun _ => rfl

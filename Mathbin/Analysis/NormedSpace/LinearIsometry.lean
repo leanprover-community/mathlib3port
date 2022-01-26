@@ -73,7 +73,7 @@ theorem coe_injective : @injective (E →ₛₗᵢ[σ₁₂] E₂) (E → E₂) 
 
 @[ext]
 theorem ext {f g : E →ₛₗᵢ[σ₁₂] E₂} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 
 protected theorem congr_argₓ {f : E →ₛₗᵢ[σ₁₂] E₂} : ∀ {x x' : E}, x = x' → f x = f x'
   | _, _, rfl => rfl
@@ -111,7 +111,7 @@ theorem norm_map (x : E) : ∥f x∥ = ∥x∥ :=
 
 @[simp]
 theorem nnnorm_map (x : E) : nnnorm (f x) = nnnorm x :=
-  Nnreal.eq $ f.norm_map x
+  Nnreal.eq <| f.norm_map x
 
 protected theorem Isometry : Isometry f :=
   f.to_linear_map.to_add_monoid_hom.isometry_of_norm f.norm_map
@@ -126,7 +126,7 @@ theorem is_complete_map_iff [RingHomSurjective σ₁₂] {p : Submodule R E} :
 
 instance complete_space_map [RingHomSurjective σ₁₂] (p : Submodule R E) [CompleteSpace p] :
     CompleteSpace (p.map f.to_linear_map) :=
-  (f.is_complete_map_iff.2 $ complete_space_coe_iff_is_complete.1 ‹_›).complete_space_coe
+  (f.is_complete_map_iff.2 <| complete_space_coe_iff_is_complete.1 ‹_›).complete_space_coe
 
 @[simp]
 theorem dist_map (x y : E) : dist (f x) (f y) = dist x y :=
@@ -221,11 +221,11 @@ omit σ₁₃
 
 @[simp]
 theorem id_comp : (id : E₂ →ₗᵢ[R₂] E₂).comp f = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 @[simp]
 theorem comp_id : f.comp id = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 include σ₁₃ σ₂₄ σ₁₄
 
@@ -351,7 +351,7 @@ theorem coe_to_linear_equiv (e : E ≃ₛₗᵢ[σ₁₂] E₂) : ⇑e.to_linear
 
 @[ext]
 theorem ext {e e' : E ≃ₛₗᵢ[σ₁₂] E₂} (h : ∀ x, e x = e' x) : e = e' :=
-  to_linear_equiv_injective $ LinearEquiv.ext h
+  to_linear_equiv_injective <| LinearEquiv.ext h
 
 protected theorem congr_argₓ {f : E ≃ₛₗᵢ[σ₁₂] E₂} : ∀ {x x' : E}, x = x' → f x = f x'
   | _, _, rfl => rfl
@@ -363,7 +363,7 @@ protected theorem congr_funₓ {f g : E ≃ₛₗᵢ[σ₁₂] E₂} (h : f = g)
 `∀ x, ∥e x∥ ≤ ∥x∥` and `∀ y, ∥e.symm y∥ ≤ ∥y∥`. -/
 def of_bounds (e : E ≃ₛₗ[σ₁₂] E₂) (h₁ : ∀ x, ∥e x∥ ≤ ∥x∥) (h₂ : ∀ y, ∥e.symm y∥ ≤ ∥y∥) : E ≃ₛₗᵢ[σ₁₂] E₂ :=
   ⟨e, fun x =>
-    le_antisymmₓ (h₁ x) $ by
+    le_antisymmₓ (h₁ x) <| by
       simpa only [e.symm_apply_apply] using h₂ (e x)⟩
 
 @[simp]
@@ -469,7 +469,8 @@ theorem coe_refl : ⇑refl R E = id :=
 
 /-- The inverse `linear_isometry_equiv`. -/
 def symm : E₂ ≃ₛₗᵢ[σ₂₁] E :=
-  ⟨e.to_linear_equiv.symm, fun x => (e.norm_map _).symm.trans $ congr_argₓ norm $ e.to_linear_equiv.apply_symm_apply x⟩
+  ⟨e.to_linear_equiv.symm, fun x =>
+    (e.norm_map _).symm.trans <| congr_argₓ norm <| e.to_linear_equiv.apply_symm_apply x⟩
 
 @[simp]
 theorem apply_symm_apply (x : E₂) : e (e.symm x) = x :=
@@ -485,7 +486,7 @@ theorem map_eq_zero_iff {x : E} : e x = 0 ↔ x = 0 :=
 
 @[simp]
 theorem symm_symm : e.symm.symm = e :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 @[simp]
 theorem to_linear_equiv_symm : e.to_linear_equiv.symm = e.symm.to_linear_equiv :=
@@ -520,11 +521,11 @@ omit σ₁₃ σ₂₁ σ₃₁ σ₃₂
 
 @[simp]
 theorem trans_refl : e.trans (refl R₂ E₂) = e :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 @[simp]
 theorem refl_trans : (refl R E).trans e = e :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 @[simp]
 theorem self_trans_symm : e.trans e.symm = refl R E :=
@@ -743,14 +744,14 @@ end LinearIsometryEquiv
 /-- Two linear isometries are equal if they are equal on basis vectors. -/
 theorem Basis.ext_linear_isometry {ι : Type _} (b : Basis ι R E) {f₁ f₂ : E →ₛₗᵢ[σ₁₂] E₂}
     (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ :=
-  LinearIsometry.to_linear_map_injective $ b.ext h
+  LinearIsometry.to_linear_map_injective <| b.ext h
 
 include σ₂₁
 
 /-- Two linear isometric equivalences are equal if they are equal on basis vectors. -/
 theorem Basis.ext_linear_isometry_equiv {ι : Type _} (b : Basis ι R E) {f₁ f₂ : E ≃ₛₗᵢ[σ₁₂] E₂}
     (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ :=
-  LinearIsometryEquiv.to_linear_equiv_injective $ b.ext' h
+  LinearIsometryEquiv.to_linear_equiv_injective <| b.ext' h
 
 omit σ₂₁
 

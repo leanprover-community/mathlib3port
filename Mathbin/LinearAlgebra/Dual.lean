@@ -106,7 +106,7 @@ variable (b : Basis ι R M)
 /-- The linear map from a vector space equipped with basis to its dual vector space,
 taking basis elements to corresponding dual basis elements. -/
 def to_dual : M →ₗ[R] Module.Dual R M :=
-  b.constr ℕ $ fun v => b.constr ℕ $ fun w => if w = v then (1 : R) else 0
+  (b.constr ℕ) fun v => (b.constr ℕ) fun w => if w = v then (1 : R) else 0
 
 theorem to_dual_apply (i j : ι) : b.to_dual (b i) (b j) = if i = j then 1 else 0 := by
   erw [constr_basis b, constr_basis b]
@@ -438,7 +438,7 @@ theorem dual_restrict_apply (W : Submodule R M) (φ : Module.Dual R M) (x : W) :
 /-- The `dual_annihilator` of a submodule `W` is the set of linear maps `φ` such
   that `φ w = 0` for all `w ∈ W`. -/
 def dual_annihilator {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (W : Submodule R M) :
-    Submodule R $ Module.Dual R M :=
+    Submodule R <| Module.Dual R M :=
   W.dual_restrict.ker
 
 @[simp]
@@ -522,7 +522,7 @@ theorem dual_lift_injective : Function.Injective W.dual_lift :=
   dual of that subspace. -/
 noncomputable def quot_annihilator_equiv (W : Subspace K V) :
     (Module.Dual K V ⧸ W.dual_annihilator) ≃ₗ[K] Module.Dual K W :=
-  (quot_equiv_of_eq _ _ W.dual_restrict_ker_eq_dual_annihilator).symm.trans $
+  (quot_equiv_of_eq _ _ W.dual_restrict_ker_eq_dual_annihilator).symm.trans <|
     W.dual_restrict.quot_ker_equiv_of_surjective dual_restrict_surjective
 
 /-- The natural isomorphism forom the dual of a subspace `W` to `W.dual_lift.range`. -/
@@ -556,7 +556,7 @@ theorem dual_finrank_eq : finrank K (Module.Dual K V) = finrank K V :=
 /-- The quotient by the dual is isomorphic to its dual annihilator.  -/
 noncomputable def quot_dual_equiv_annihilator (W : Subspace K V) :
     (Module.Dual K V ⧸ W.dual_lift.range) ≃ₗ[K] W.dual_annihilator :=
-  linear_equiv.quot_equiv_of_quot_equiv $ LinearEquiv.trans W.quot_annihilator_equiv W.dual_equiv_dual
+  linear_equiv.quot_equiv_of_quot_equiv <| LinearEquiv.trans W.quot_annihilator_equiv W.dual_equiv_dual
 
 /-- The quotient by a subspace is isomorphic to its dual annihilator. -/
 noncomputable def quot_equiv_annihilator (W : Subspace K V) : (V ⧸ W) ≃ₗ[K] W.dual_annihilator := by

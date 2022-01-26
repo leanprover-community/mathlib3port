@@ -57,7 +57,7 @@ theorem _root_.module.finite.of_basis {R : Type _} {M : Type _} {ι : Type _} [C
 
 instance _root_.module.finite.matrix {ι₁ : Type _} [Fintype ι₁] {ι₂ : Type _} [Fintype ι₂] :
     Module.Finite R (Matrix ι₁ ι₂ R) :=
-  Module.Finite.of_basis $ Pi.basis $ fun i => Pi.basisFun R _
+  Module.Finite.of_basis <| Pi.basis fun i => Pi.basisFun R _
 
 instance [Nontrivial R] [Module.Finite R M] [Module.Finite R N] : Module.Finite R (M →ₗ[R] N) := by
   classical

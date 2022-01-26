@@ -172,13 +172,13 @@ end MonoidWithZeroₓ
 /-- Given two elements `b`, `c` of a `cancel_monoid_with_zero` and a nonzero element `a`,
  `a*b` divides `a*c` iff `b` divides `c`. -/
 theorem mul_dvd_mul_iff_left [CancelMonoidWithZero α] {a b c : α} (ha : a ≠ 0) : a * b ∣ a * c ↔ b ∣ c :=
-  exists_congr $ fun d => by
+  exists_congr fun d => by
     rw [mul_assoc, mul_right_inj' ha]
 
 /-- Given two elements `a`, `b` of a commutative `cancel_monoid_with_zero` and a nonzero
   element `c`, `a*c` divides `b*c` iff `a` divides `b`. -/
 theorem mul_dvd_mul_iff_right [CancelCommMonoidWithZero α] {a b c : α} (hc : c ≠ 0) : a * c ∣ b * c ↔ a ∣ b :=
-  exists_congr $ fun d => by
+  exists_congr fun d => by
     rw [mul_right_commₓ, mul_left_inj' hc]
 
 /-!

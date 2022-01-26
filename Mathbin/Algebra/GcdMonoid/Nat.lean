@@ -28,7 +28,7 @@ theorem coprime_of_div_gcd (s : Finset ℕ) {x : ℕ} (hx : x ∈ s) (hnz : x �
     rwa [Nat.dvd_div_iff] at hdvd
     apply gcd_dvd hb
     
-  have : s.gcd id ≠ 0 := (not_iff_not.mpr gcd_eq_zero_iff).mpr fun h => hnz $ h x hx
+  have : s.gcd id ≠ 0 := (not_iff_not.mpr gcd_eq_zero_iff).mpr fun h => hnz <| h x hx
   apply @pow_succ_padic_val_nat_not_dvd p _ _ this.bot_lt
   apply dvd_gcd
   intro b hb

@@ -418,7 +418,7 @@ theorem equalizer_ext (t : pullback_cone f g) {W : C} {k l : W ⟶ t.X} (h₀ : 
 
 theorem is_limit.hom_ext {t : pullback_cone f g} (ht : is_limit t) {W : C} {k l : W ⟶ t.X} (h₀ : k ≫ fst t = l ≫ fst t)
     (h₁ : k ≫ snd t = l ≫ snd t) : k = l :=
-  ht.hom_ext $ equalizer_ext _ h₀ h₁
+  ht.hom_ext <| equalizer_ext _ h₀ h₁
 
 theorem mono_snd_of_is_pullback_of_mono {t : pullback_cone f g} (ht : is_limit t) [mono f] : mono t.snd :=
   ⟨fun W h k i =>
@@ -438,7 +438,7 @@ theorem mono_fst_of_is_pullback_of_mono {t : pullback_cone f g} (ht : is_limit t
     -/
 def is_limit.lift' {t : pullback_cone f g} (ht : is_limit t) {W : C} (h : W ⟶ X) (k : W ⟶ Y) (w : h ≫ f = k ≫ g) :
     { l : W ⟶ t.X // l ≫ fst t = h ∧ l ≫ snd t = k } :=
-  ⟨ht.lift $ pullback_cone.mk _ _ w, ht.fac _ _, ht.fac _ _⟩
+  ⟨ht.lift <| pullback_cone.mk _ _ w, ht.fac _ _, ht.fac _ _⟩
 
 /-- This is a more convenient formulation to show that a `pullback_cone` constructed using
 `pullback_cone.mk` is a limit cone.
@@ -453,7 +453,7 @@ def is_limit.mk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (eq : fst ≫ f = snd �
 /-- The flip of a pullback square is a pullback square. -/
 def flip_is_limit {W : C} {h : W ⟶ X} {k : W ⟶ Y} {comm : h ≫ f = k ≫ g} (t : is_limit (mk _ _ comm.symm)) :
     is_limit (mk _ _ comm) :=
-  is_limit_aux' _ $ fun s => by
+  (is_limit_aux' _) fun s => by
     refine'
       ⟨(is_limit.lift' t _ _ s.condition.symm).1, (is_limit.lift' t _ _ _).2.2, (is_limit.lift' t _ _ _).2.1,
         fun m m₁ m₂ => t.hom_ext _⟩
@@ -490,11 +490,11 @@ def is_limit_of_factors (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ Z) [mono h] (x : 
     is_limit
       (pullback_cone.mk _ _
         (show s.fst ≫ x = s.snd ≫ y from
-          (cancel_mono h).1 $ by
+          (cancel_mono h).1 <| by
             simp only [category.assoc, hxh, hyh, s.condition])) :=
-  pullback_cone.is_limit_aux' _ $ fun t =>
+  (pullback_cone.is_limit_aux' _) fun t =>
     ⟨hs.lift
-        (pullback_cone.mk t.fst t.snd $ by
+        (pullback_cone.mk t.fst t.snd <| by
           rw [← hxh, ← hyh, reassoc_of t.condition]),
       ⟨hs.fac _ walking_cospan.left, hs.fac _ walking_cospan.right, fun r hr hr' => by
         apply pullback_cone.is_limit.hom_ext hs <;>
@@ -610,14 +610,14 @@ theorem coequalizer_ext (t : pushout_cocone f g) {W : C} {k l : t.X ⟶ W} (h₀
 
 theorem is_colimit.hom_ext {t : pushout_cocone f g} (ht : is_colimit t) {W : C} {k l : t.X ⟶ W}
     (h₀ : inl t ≫ k = inl t ≫ l) (h₁ : inr t ≫ k = inr t ≫ l) : k = l :=
-  ht.hom_ext $ coequalizer_ext _ h₀ h₁
+  ht.hom_ext <| coequalizer_ext _ h₀ h₁
 
 /-- If `t` is a colimit pushout cocone over `f` and `g` and `h : Y ⟶ W` and `k : Z ⟶ W` are
     morphisms satisfying `f ≫ h = g ≫ k`, then we have a factorization `l : t.X ⟶ W` such that
     `inl t ≫ l = h` and `inr t ≫ l = k`. -/
 def is_colimit.desc' {t : pushout_cocone f g} (ht : is_colimit t) {W : C} (h : Y ⟶ W) (k : Z ⟶ W) (w : f ≫ h = g ≫ k) :
     { l : t.X ⟶ W // inl t ≫ l = h ∧ inr t ≫ l = k } :=
-  ⟨ht.desc $ pushout_cocone.mk _ _ w, ht.fac _ _, ht.fac _ _⟩
+  ⟨ht.desc <| pushout_cocone.mk _ _ w, ht.fac _ _, ht.fac _ _⟩
 
 theorem epi_inr_of_is_pushout_of_epi {t : pushout_cocone f g} (ht : is_colimit t) [epi f] : epi t.inr :=
   ⟨fun W h k i =>
@@ -645,7 +645,7 @@ def is_colimit.mk {W : C} {inl : Y ⟶ W} {inr : Z ⟶ W} (eq : f ≫ inl = g �
 /-- The flip of a pushout square is a pushout square. -/
 def flip_is_colimit {W : C} {h : Y ⟶ W} {k : Z ⟶ W} {comm : f ≫ h = g ≫ k} (t : is_colimit (mk _ _ comm.symm)) :
     is_colimit (mk _ _ comm) :=
-  is_colimit_aux' _ $ fun s => by
+  (is_colimit_aux' _) fun s => by
     refine'
       ⟨(is_colimit.desc' t _ _ s.condition.symm).1, (is_colimit.desc' t _ _ _).2.2, (is_colimit.desc' t _ _ _).2.1,
         fun m m₁ m₂ => t.hom_ext _⟩
@@ -682,11 +682,11 @@ def is_colimit_of_factors (f : X ⟶ Y) (g : X ⟶ Z) (h : X ⟶ W) [epi h] (x :
     is_colimit
       (pushout_cocone.mk _ _
         (show x ≫ s.inl = y ≫ s.inr from
-          (cancel_epi h).1 $ by
+          (cancel_epi h).1 <| by
             rw [reassoc_of hhx, reassoc_of hhy, s.condition])) :=
-  pushout_cocone.is_colimit_aux' _ $ fun t =>
+  (pushout_cocone.is_colimit_aux' _) fun t =>
     ⟨hs.desc
-        (pushout_cocone.mk t.inl t.inr $ by
+        (pushout_cocone.mk t.inl t.inr <| by
           rw [← hhx, ← hhy, category.assoc, category.assoc, t.condition]),
       ⟨hs.fac _ walking_span.left, hs.fac _ walking_span.right, fun r hr hr' => by
         apply pushout_cocone.is_colimit.hom_ext hs <;>
@@ -752,7 +752,7 @@ def pullback_cone.iso_mk {F : walking_cospan ⥤ C} (t : cone F) :
     (cones.postcompose (diagram_iso_cospan.{v} _).Hom).obj t ≅
       pullback_cone.mk (t.π.app walking_cospan.left) (t.π.app walking_cospan.right)
         ((t.π.naturality inl).symm.trans (t.π.naturality inr : _)) :=
-  cones.ext (iso.refl _) $ by
+  cones.ext (iso.refl _) <| by
     rintro (_ | (_ | _)) <;>
       · dsimp
         simp
@@ -772,7 +772,7 @@ def pushout_cocone.iso_mk {F : walking_span ⥤ C} (t : cocone F) :
     (cocones.precompose (diagram_iso_span.{v} _).inv).obj t ≅
       pushout_cocone.mk (t.ι.app walking_span.left) (t.ι.app walking_span.right)
         ((t.ι.naturality fst).trans (t.ι.naturality snd).symm) :=
-  cocones.ext (iso.refl _) $ by
+  cocones.ext (iso.refl _) <| by
     rintro (_ | (_ | _)) <;>
       · dsimp
         simp
@@ -906,7 +906,7 @@ abbrev pushout.map {W X Y Z S T : C} (f₁ : S ⟶ W) (f₂ : S ⟶ X) [has_push
 @[ext]
 theorem pullback.hom_ext {X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z} [has_pullback f g] {W : C} {k l : W ⟶ pullback f g}
     (h₀ : k ≫ pullback.fst = l ≫ pullback.fst) (h₁ : k ≫ pullback.snd = l ≫ pullback.snd) : k = l :=
-  limit.hom_ext $ pullback_cone.equalizer_ext _ h₀ h₁
+  limit.hom_ext <| pullback_cone.equalizer_ext _ h₀ h₁
 
 /-- The pullback cone built from the pullback projections is a pullback. -/
 def pullback_is_pullback {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [has_pullback f g] :
@@ -944,7 +944,7 @@ instance mono_pullback_to_prod {C : Type _} [category C] {X Y Z : C} (f : X ⟶ 
 @[ext]
 theorem pushout.hom_ext {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} [has_pushout f g] {W : C} {k l : pushout f g ⟶ W}
     (h₀ : pushout.inl ≫ k = pushout.inl ≫ l) (h₁ : pushout.inr ≫ k = pushout.inr ≫ l) : k = l :=
-  colimit.hom_ext $ pushout_cocone.coequalizer_ext _ h₀ h₁
+  colimit.hom_ext <| pushout_cocone.coequalizer_ext _ h₀ h₁
 
 /-- The pushout cocone built from the pushout coprojections is a pushout. -/
 def pushout_is_pushout {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) [has_pushout f g] :
@@ -992,7 +992,7 @@ isomorphism `pullback f₁ g₁ ≅ pullback f₂ g₂` -/
 @[simps Hom]
 def pullback.congr_hom {X Y Z : C} {f₁ f₂ : X ⟶ Z} {g₁ g₂ : Y ⟶ Z} (h₁ : f₁ = f₂) (h₂ : g₁ = g₂) [has_pullback f₁ g₁]
     [has_pullback f₂ g₂] : pullback f₁ g₁ ≅ pullback f₂ g₂ :=
-  as_iso $
+  as_iso <|
     pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _)
       (by
         simp [h₁])
@@ -1036,7 +1036,7 @@ isomorphism `pushout f₁ g₁ ≅ pullback f₂ g₂` -/
 @[simps Hom]
 def pushout.congr_hom {X Y Z : C} {f₁ f₂ : X ⟶ Y} {g₁ g₂ : X ⟶ Z} (h₁ : f₁ = f₂) (h₂ : g₁ = g₂) [has_pushout f₁ g₁]
     [has_pushout f₂ g₂] : pushout f₁ g₁ ≅ pushout f₂ g₂ :=
-  as_iso $
+  as_iso <|
     pushout.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _)
       (by
         simp [h₁])
@@ -1227,7 +1227,7 @@ variable (f : X ⟶ Z) (g : Y ⟶ Z) [is_iso f]
 
 /-- If `f : X ⟶ Z` is iso, then `X ×[Z] Y ≅ Y`. This is the explicit limit cone. -/
 def pullback_cone_of_left_iso : pullback_cone f g :=
-  pullback_cone.mk (g ≫ inv f) (𝟙 _) $ by
+  pullback_cone.mk (g ≫ inv f) (𝟙 _) <| by
     simp
 
 @[simp]
@@ -1303,7 +1303,7 @@ variable (f : X ⟶ Z) (g : Y ⟶ Z) [is_iso g]
 
 /-- If `g : Y ⟶ Z` is iso, then `X ×[Z] Y ≅ X`. This is the explicit limit cone. -/
 def pullback_cone_of_right_iso : pullback_cone f g :=
-  pullback_cone.mk (𝟙 _) (f ≫ inv g) $ by
+  pullback_cone.mk (𝟙 _) (f ≫ inv g) <| by
     simp
 
 @[simp]
@@ -1387,7 +1387,7 @@ variable (f : X ⟶ Y) (g : X ⟶ Z) [is_iso f]
 
 /-- If `f : X ⟶ Y` is iso, then `Y ⨿[X] Z ≅ Z`. This is the explicit colimit cocone. -/
 def pushout_cocone_of_left_iso : pushout_cocone f g :=
-  pushout_cocone.mk (inv f ≫ g) (𝟙 _) $ by
+  pushout_cocone.mk (inv f ≫ g) (𝟙 _) <| by
     simp
 
 @[simp]
@@ -1463,7 +1463,7 @@ variable (f : X ⟶ Y) (g : X ⟶ Z) [is_iso g]
 
 /-- If `f : X ⟶ Z` is iso, then `Y ⨿[X] Z ≅ Y`. This is the explicit colimit cocone. -/
 def pushout_cocone_of_right_iso : pushout_cocone f g :=
-  pushout_cocone.mk (𝟙 _) (inv g ≫ f) $ by
+  pushout_cocone.mk (𝟙 _) (inv g ≫ f) <| by
     simp
 
 @[simp]

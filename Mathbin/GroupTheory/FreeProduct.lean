@@ -79,11 +79,11 @@ variable {M}
 
 /-- The inclusion of a summand into the free product. -/
 def of {i : ι} : M i →* FreeProduct M where
-  toFun := fun x => Con.mk' _ (FreeMonoid.of $ Sigma.mk i x)
+  toFun := fun x => Con.mk' _ (FreeMonoid.of <| Sigma.mk i x)
   map_one' := (Con.eq _).mpr (ConGen.Rel.of _ _ (FreeProduct.Rel.of_one i))
-  map_mul' := fun x y => Eq.symm $ (Con.eq _).mpr (ConGen.Rel.of _ _ (FreeProduct.Rel.of_mul x y))
+  map_mul' := fun x y => Eq.symm <| (Con.eq _).mpr (ConGen.Rel.of _ _ (FreeProduct.Rel.of_mul x y))
 
-theorem of_apply {i} (m : M i) : of m = Con.mk' _ (FreeMonoid.of $ Sigma.mk i m) :=
+theorem of_apply {i} (m : M i) : of m = Con.mk' _ (FreeMonoid.of <| Sigma.mk i m) :=
   rfl
 
 variable {N : Type _} [Monoidₓ N]
@@ -91,8 +91,8 @@ variable {N : Type _} [Monoidₓ N]
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem ext_hom (f g : FreeProduct M →* N) (h : ∀ i, f.comp (of : M i →* _) = g.comp of) : f = g :=
-  (MonoidHom.cancel_right Con.mk'_surjective).mp $
-    FreeMonoid.hom_eq $ fun ⟨i, x⟩ => by
+  (MonoidHom.cancel_right Con.mk'_surjective).mp <|
+    FreeMonoid.hom_eq fun ⟨i, x⟩ => by
       rw [MonoidHom.comp_apply, MonoidHom.comp_apply, ← of_apply, ← MonoidHom.comp_apply, ← MonoidHom.comp_apply, h]
 
 /-- A map out of the free product corresponds to a family of maps out of the summands. This is the
@@ -100,7 +100,7 @@ universal property of the free product, charaterizing it as a categorical coprod
 @[simps symmApply]
 def lift : (∀ i, M i →* N) ≃ (FreeProduct M →* N) where
   toFun := fun fi =>
-    Con.lift _ (FreeMonoid.lift $ fun p : Σ i, M i => fi p.fst p.snd) $
+    Con.lift _ (FreeMonoid.lift fun p : Σ i, M i => fi p.fst p.snd) <|
       Con.con_gen_le
         (by
           simp_rw [Con.rel_eq_coe, Con.ker_rel]
@@ -136,7 +136,7 @@ theorem induction_on {C : FreeProduct M → Prop} (m : FreeProduct M) (h_one : C
   simp [MonoidHom.codMrestrict]
 
 theorem of_left_inverse [DecidableEq ι] (i : ι) :
-    Function.LeftInverse (lift $ Function.update 1 i (MonoidHom.id (M i))) of := fun x => by
+    Function.LeftInverse (lift <| Function.update 1 i (MonoidHom.id (M i))) of := fun x => by
   simp only [lift_of, Function.update_same, MonoidHom.id_apply]
 
 theorem of_injective (i : ι) : Function.Injective (⇑(of : M i →* _)) := by
@@ -147,7 +147,7 @@ section Groupₓ
 
 variable (G : ι → Type _) [∀ i, Groupₓ (G i)]
 
-instance : HasInv (FreeProduct G) where
+instance : Inv (FreeProduct G) where
   inv := MulOpposite.unop ∘ lift fun i => (of : G i →* _).op.comp (MulEquiv.inv' (G i)).toMonoidHom
 
 theorem inv_def (x : FreeProduct G) :
@@ -163,7 +163,7 @@ instance : Groupₓ (FreeProduct G) :=
       · rw [MonoidHom.map_one, MulOpposite.unop_one, one_mulₓ]
         
       · intro i m
-        change of (m⁻¹) * of m = 1
+        change of m⁻¹ * of m = 1
         rw [← of.map_mul, mul_left_invₓ, of.map_one]
         
       · intro x y hx hy
@@ -185,7 +185,7 @@ instance : Inhabited (word M) :=
 
 /-- A reduced word determines an element of the free product, given by multiplication. -/
 def Prod (w : word M) : FreeProduct M :=
-  List.prod (w.to_list.map $ fun l => of l.snd)
+  List.prod (w.to_list.map fun l => of l.snd)
 
 @[simp]
 theorem prod_nil : Prod (Empty : word M) = 1 :=
@@ -197,7 +197,7 @@ def fst_idx (w : word M) : Option ι :=
   w.to_list.head'.map Sigma.fst
 
 theorem fst_idx_ne_iff {w : word M} {i} : fst_idx w ≠ some i ↔ ∀, ∀ l ∈ w.to_list.head', ∀, i ≠ Sigma.fst l :=
-  not_iff_not.mp $ by
+  not_iff_not.mp <| by
     simp [fst_idx]
 
 variable (M)
@@ -305,7 +305,7 @@ theorem equiv_pair_symm i (p : pair M i) : (equiv_pair i).symm p = rcons p :=
   rfl
 
 theorem equiv_pair_eq_of_fst_idx_ne {i} {w : word M} (h : fst_idx w ≠ some i) : equiv_pair i w = ⟨1, w, h⟩ :=
-  (equiv_pair i).apply_eq_iff_eq_symm_apply.mpr $ Eq.symm (dif_pos rfl)
+  (equiv_pair i).apply_eq_iff_eq_symm_apply.mpr <| Eq.symm (dif_pos rfl)
 
 instance summand_action i : MulAction (M i) (word M) where
   smul := fun m w => rcons { equiv_pair i w with head := m * (equiv_pair i w).head }

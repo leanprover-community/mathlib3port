@@ -127,12 +127,11 @@ def OrderIso.smulLeftDual {c : k} (hc : c < 0) : M ≃o OrderDual M where
 variable {M} [OrderedAddCommGroup N] [Module k N] [OrderedSmul k N]
 
 instance Prod.ordered_smul : OrderedSmul k (M × N) :=
-  OrderedSmul.mk' $ fun v u : M × N c : k h hc =>
-    ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
+  OrderedSmul.mk' fun v u : M × N c : k h hc => ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
 
 instance Pi.ordered_smul {ι : Type _} {M : ι → Type _} [∀ i, OrderedAddCommGroup (M i)] [∀ i, MulActionWithZero k (M i)]
     [∀ i, OrderedSmul k (M i)] : OrderedSmul k (∀ i : ι, M i) := by
-  refine' OrderedSmul.mk' $ fun v u c h hc i => _
+  refine' OrderedSmul.mk' fun v u c h hc i => _
   change c • v i ≤ c • u i
   exact smul_le_smul_of_nonneg (h.le i) hc.le
 

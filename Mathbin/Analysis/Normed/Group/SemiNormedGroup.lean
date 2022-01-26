@@ -152,7 +152,7 @@ theorem coe_comp {M N K : SemiNormedGroup₁} (f : M ⟶ N) (g : N ⟶ K) : (f �
 
 @[simp]
 theorem coe_comp' {M N K : SemiNormedGroup₁} (f : M ⟶ N) (g : N ⟶ K) :
-    (f ≫ g : NormedGroupHom M K) = (↑g : NormedGroupHom N K).comp (↑f) :=
+    (f ≫ g : NormedGroupHom M K) = (↑g : NormedGroupHom N K).comp ↑f :=
   rfl
 
 instance : Zero SemiNormedGroup₁ :=

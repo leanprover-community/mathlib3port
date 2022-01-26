@@ -191,7 +191,7 @@ theorem Complex.isometry_euclidean_symm_apply (x : EuclideanSpace ℝ (Finₓ 2)
     
 
 theorem Complex.isometry_euclidean_proj_eq_self (z : ℂ) :
-    ↑Complex.isometryEuclidean z 0 + ↑Complex.isometryEuclidean z 1 * (I : ℂ) = z := by
+    ↑(Complex.isometryEuclidean z 0) + ↑(Complex.isometryEuclidean z 1) * (I : ℂ) = z := by
   rw [← Complex.isometry_euclidean_symm_apply (Complex.isometryEuclidean z),
     complex.isometry_euclidean.symm_apply_apply z]
 

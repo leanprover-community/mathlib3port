@@ -16,7 +16,7 @@ open Polynomial Nat Filter
 
 /-- For any positive `k : ℕ` there are infinitely many primes `p` such that `p ≡ 1 [MOD k]`. -/
 theorem exists_prime_ge_modeq_one (k n : ℕ) (hpos : 0 < k) : ∃ p : ℕ, Nat.Prime p ∧ n ≤ p ∧ p ≡ 1 [MOD k] := by
-  have hli : tendsto (abs ∘ fun a : ℕ => |(a : ℚ)|) at_top at_top := by
+  have hli : tendsto (abs ∘ fun a : ℕ => abs (a : ℚ)) at_top at_top := by
     simp only [· ∘ ·, abs_cast]
     exact nat.strict_mono_cast.monotone.tendsto_at_top_at_top exists_nat_ge
   have hcff : Int.castRingHom ℚ (cyclotomic k ℤ).leadingCoeff ≠ 0 := by
@@ -27,11 +27,11 @@ theorem exists_prime_ge_modeq_one (k n : ℕ) (hpos : 0 < k) : ∃ p : ℕ, Nat.
       (tendsto_abv_eval₂_at_top (Int.castRingHom ℚ) abs (cyclotomic k ℤ) (degree_cyclotomic_pos k ℤ hpos) hcff hli) 2
   let b := a * (k * n.factorial)
   have hgt : 1 < (eval (↑(a * (k * n.factorial))) (cyclotomic k ℤ)).natAbs := by
-    suffices hgtabs : 1 < |eval (↑b) (cyclotomic k ℤ)|
+    suffices hgtabs : 1 < abs (eval (↑b) (cyclotomic k ℤ))
     · rw [Int.abs_eq_nat_abs] at hgtabs
       exact_mod_cast hgtabs
       
-    suffices hgtrat : 1 < |eval (↑b) (cyclotomic k ℚ)|
+    suffices hgtrat : 1 < abs (eval (↑b) (cyclotomic k ℚ))
     · rw [← map_cyclotomic_int k ℚ, ← Int.cast_coe_nat, ← Int.coe_cast_ring_hom, eval_map, eval₂_hom,
         Int.coe_cast_ring_hom] at hgtrat
       assumption_mod_cast

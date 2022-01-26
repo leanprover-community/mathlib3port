@@ -55,7 +55,7 @@ private unsafe def nth_rule (rs : List (expr × Bool)) (i : ℕ) : expr × Bool 
 /-- Convert a rule into the string of Lean code used to refer to this rule. -/
 private unsafe def pp_rule (r : expr × Bool) : tactic Stringₓ := do
   let pp ← pp r.1
-  return $ (if r.2 then "←" else "") ++ toString pp
+  return <| (if r.2 then "←" else "") ++ toString pp
 
 private unsafe def how.to_rewrite (rs : List (expr × Bool)) : how → Option (expr × Bool)
   | h => nth_rule rs h.rule_index
@@ -63,14 +63,14 @@ private unsafe def how.to_rewrite (rs : List (expr × Bool)) : how → Option (e
 /-- Explain a single rewrite using `nth_rewrite`. -/
 private unsafe def explain_using_location (rs : List (expr × Bool)) (s : side) : how → tactic (Option Stringₓ)
   | h => do
-    let rule ← pp_rule $ nth_rule rs h.rule_index
-    return $ some ("nth_rewrite_" ++ s.to_xhs ++ " " ++ toString h.location ++ " " ++ rule)
+    let rule ← pp_rule <| nth_rule rs h.rule_index
+    return <| some ("nth_rewrite_" ++ s.to_xhs ++ " " ++ toString h.location ++ " " ++ rule)
 
 /-- Explain a list of rewrites using `nth_rewrite`. -/
 private unsafe def using_location.explain_rewrites (rs : List (expr × Bool)) (s : side) (steps : List how) :
     tactic Stringₓ := do
-  let rules ← steps.mmap $ fun h : how => Option.toList <$> explain_using_location rs s h
-  return $ Stringₓ.intercalate ",\n  " rules.join
+  let rules ← steps.mmap fun h : how => Option.toList <$> explain_using_location rs s h
+  return <| Stringₓ.intercalate ",\n  " rules.join
 
 namespace UsingConv
 
@@ -99,16 +99,16 @@ inductive splice_result
 open SpliceResult
 
 private unsafe def pack_splice_result (s : ExprLens.Dir) : splice_result → dir_pair (Option app_addr) → splice_result
-  | new addr, c => new $ app_addr.node $ c.set s (some addr)
+  | new addr, c => new <| app_addr.node <| c.set s (some addr)
   | sr, _ => sr
 
 private unsafe def splice_in_aux (new_rws : List ℕ) : Option app_addr → List ExprLens.Dir → splice_result
-  | some $ node _, [] => contained
-  | some $ node c, s :: rest => pack_splice_result s (splice_in_aux (c.get s) rest) c
-  | some $ rw _, _ :: _ => obstructed
-  | some $ rw rws, [] => new $ rw (rws ++ new_rws)
-  | none, [] => new $ rw new_rws
-  | none, l => splice_in_aux (some $ node ⟨none, none⟩) l
+  | some <| node _, [] => contained
+  | some <| node c, s :: rest => pack_splice_result s (splice_in_aux (c.get s) rest) c
+  | some <| rw _, _ :: _ => obstructed
+  | some <| rw rws, [] => new <| rw (rws ++ new_rws)
+  | none, [] => new <| rw new_rws
+  | none, l => splice_in_aux (some <| node ⟨none, none⟩) l
 
 open ExprLens
 
@@ -129,8 +129,8 @@ private unsafe def splice_in (a : Option app_addr) (rws : List ℕ) (s : List Ex
 
 /-- Construct a single `erw` tactic for the given rules. -/
 private unsafe def build_rw_tactic (rs : List (expr × Bool)) (hs : List ℕ) : tactic Stringₓ := do
-  let rws ← (hs.map $ nth_rule rs).mmap pp_rule
-  return $ "erw [" ++ Stringₓ.intercalate ", " rws ++ "]"
+  let rws ← (hs.map <| nth_rule rs).mmap pp_rule
+  return <| "erw [" ++ Stringₓ.intercalate ", " rws ++ "]"
 
 private unsafe def explain_tree_aux (rs : List (expr × Bool)) : app_addr → tactic (Option (List Stringₓ))
   | app_addr.rw rws => (fun a => some [a]) <$> build_rw_tactic rs rws
@@ -143,7 +143,7 @@ private unsafe def explain_tree_aux (rs : List (expr × Bool)) : app_addr → ta
       match arg with
         | none => pure none
         | some arg => explain_tree_aux arg
-    return $
+    return <|
         match (sf, sa) with
         | (none, none) => none
         | (some sf, none) => ["congr"].append sf
@@ -162,7 +162,7 @@ private unsafe def explanation_lines (rs : List (expr × Bool)) (s : side) :
   | none, [] => return []
   | some tree, [] => do
     let tacs ← explain_tree rs tree
-    return $ if tacs.length = 0 then [] else ["conv_" ++ s.to_xhs ++ " { " ++ Stringₓ.intercalate ", " tacs ++ " }"]
+    return <| if tacs.length = 0 then [] else ["conv_" ++ s.to_xhs ++ " { " ++ Stringₓ.intercalate ", " tacs ++ " }"]
   | tree, h :: rest => do
     let (new_tree, rest_if_fail) ←
       match h.addr with
@@ -176,7 +176,7 @@ private unsafe def explanation_lines (rs : List (expr × Bool)) (s : side) :
       | _ => do
         let line ← explanation_lines tree []
         let lines ← explanation_lines none rest_if_fail
-        return $ line ++ lines
+        return <| line ++ lines
 
 /-- Explain a list of rewrites using `conv_x` tactics. -/
 unsafe def explain_rewrites (rs : List (expr × Bool)) (s : side) (hows : List how) : tactic Stringₓ :=
@@ -186,21 +186,21 @@ end UsingConv
 
 private unsafe def explain_rewrites_concisely (steps : List (expr × Bool)) (needs_refl : Bool) : tactic Stringₓ := do
   let rules ← Stringₓ.intercalate ", " <$> steps.mmap pp_rule
-  return $ "erw [" ++ rules ++ "]" ++ if needs_refl then ", refl" else ""
+  return <| "erw [" ++ rules ++ "]" ++ if needs_refl then ", refl" else ""
 
 /-- Fails if we can't just use rewrite.
 Otherwise, returns 'tt' if we need a `refl` at the end.
 -/
 private unsafe def check_if_simple_rewrite_succeeds (rewrites : List (expr × Bool)) (goal : expr) : tactic Bool :=
-  lock_tactic_state $ do
+  lock_tactic_state <| do
     let m ← mk_meta_var goal
     set_goals [m]
-    rewrites.mmap' $ fun q => rewrite_target q.1 { symm := q.2, md := semireducible }
+    rewrites.mmap' fun q => rewrite_target q.1 { symm := q.2, md := semireducible }
     reflexivity reducible >> return ff <|> reflexivity >> return tt
 
 /-- Construct a list of rewrites from a proof unit. -/
 unsafe def proof_unit.rewrites (u : proof_unit) (rs : List (expr × Bool)) : List (expr × Bool) :=
-  u.steps.filter_map $ how.to_rewrite rs
+  u.steps.filter_map <| how.to_rewrite rs
 
 /-- Construct an explanation string from a proof unit. -/
 unsafe def proof_unit.explain (u : proof_unit) (rs : List (expr × Bool)) (explain_using_conv : Bool) : tactic Stringₓ :=
@@ -215,16 +215,16 @@ private unsafe def explain_proof_full (rs : List (expr × Bool)) (explain_using_
       if rest.length = 0 ∨ u.side = side.L then pure []
         else do
           let n ← (infer_type u.proof >>= fun e => Prod.snd <$> (match_eq e <|> match_iff e)) >>= pp
-          pure $ ["transitivity " ++ toString n]
+          pure <| ["transitivity " ++ toString n]
     let unit_expl ← u.explain rs explain_using_conv
     let rest_expl ← explain_proof_full rest
-    let expls := (head ++ [unit_expl, rest_expl]).filter $ fun t => ¬t.length = 0
-    return $ Stringₓ.intercalate ",\n  " expls
+    let expls := (head ++ [unit_expl, rest_expl]).filter fun t => ¬t.length = 0
+    return <| Stringₓ.intercalate ",\n  " expls
 
 private unsafe def explain_proof_concisely (rules : List (expr × Bool)) (proof : expr) (l : List proof_unit) :
     tactic Stringₓ := do
   let rws : List (expr × Bool) :=
-    List.join $
+    List.join <|
       l.map fun u => do
         let (r, s) ← u.rewrites rules
         return (r, if u.side = side.L then s else ¬s)
@@ -241,7 +241,7 @@ unsafe def explain_search_result (cfg : config) (rules : List (expr × Bool)) (p
   else do
     let explanation ←
       explain_proof_concisely rules proof units <|> explain_proof_full rules cfg.explain_using_conv units
-    trace $ "Try this: " ++ explanation
+    trace <| "Try this: " ++ explanation
 
 end Tactic.RewriteSearch
 

@@ -58,7 +58,7 @@ theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn := by
 
 @[ext]
 theorem ext {f g : P →A[R] Q} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 
 theorem ext_iff {f g : P →A[R] Q} : f = g ↔ ∀ x, f x = g x :=
   ⟨by
@@ -134,7 +134,7 @@ theorem coe_const (q : Q) : (const R P q : P → Q) = Function.const P q :=
   rfl
 
 noncomputable instance : Inhabited (P →A[R] Q) :=
-  ⟨const R P $
+  ⟨const R P <|
       Nonempty.some
         (by
           infer_instance : Nonempty Q)⟩

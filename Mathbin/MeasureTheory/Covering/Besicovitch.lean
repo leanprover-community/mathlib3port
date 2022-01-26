@@ -549,7 +549,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measureₓ α) [is_finit
   have A : s = ⋃ i : Finₓ N, s ∩ v i := by
     refine' subset.antisymm _ (Union_subset fun i => inter_subset_left _ _)
     intro x hx
-    obtain ⟨i, y, hxy, h'⟩ : ∃ (i : Finₓ N)(i_1 : ↥s)(i : i_1 ∈ u i), x ∈ ball (↑i_1) (r (↑i_1)) := by
+    obtain ⟨i, y, hxy, h'⟩ : ∃ (i : Finₓ N)(i_1 : ↥s)(i : i_1 ∈ u i), x ∈ ball (↑i_1) (r ↑i_1) := by
       have : x ∈ range a.c := by
         simpa only [Subtype.range_coe_subtype, set_of_mem_eq]
       simpa only [mem_Union] using hu' this
@@ -604,7 +604,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measureₓ α) [is_finit
     intro y hy
     simp only [Subtype.coe_prop, mem_preimage]
     
-  · suffices H : μ (o \ ⋃ x ∈ w, closed_ball (↑x) (r (↑x))) ≤ N / (N + 1) * μ s
+  · suffices H : μ (o \ ⋃ x ∈ w, closed_ball (↑x) (r ↑x)) ≤ N / (N + 1) * μ s
     · rw [Finset.set_bUnion_finset_image]
       exact le_transₓ (measure_mono (diff_subset_diff so (subset.refl _))) H
       
@@ -616,7 +616,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measureₓ α) [is_finit
       
     calc μ o = 1 / (N + 1) * μ s + N / (N + 1) * μ s := by
         rw [μo, ← add_mulₓ, Ennreal.div_add_div_same, add_commₓ, Ennreal.div_self, one_mulₓ] <;>
-          simp _ ≤ μ ((⋃ x ∈ w, closed_ball (↑x) (r (↑x))) ∩ o) + N / (N + 1) * μ s :=
+          simp _ ≤ μ ((⋃ x ∈ w, closed_ball (↑x) (r ↑x)) ∩ o) + N / (N + 1) * μ s :=
         by
         refine' add_le_add _ le_rfl
         rw [div_eq_mul_inv, one_mulₓ, mul_comm, ← div_eq_mul_inv]
@@ -1120,6 +1120,7 @@ protected def VitaliFamily (μ : Measureₓ α) [sigma_finite μ] : VitaliFamily
       exists_disjoint_closed_ball_covering_ae μ g s A (fun _ => 1) fun _ _ => zero_lt_one
     exact ⟨t, fun x => closed_ball x (r x), ts, tdisj, fun x xt => (tg x xt).1.2, μt⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The main feature of the Besicovitch Vitali family is that its filter at a point `x` corresponds
 to convergence along closed balls. We record one of the two implications here, which will enable us
 to deduce specific statements on differentiation of measures in this context from the general
@@ -1132,8 +1133,7 @@ theorem tendsto_filter_at (μ : Measureₓ α) [sigma_finite μ] (x : α) :
     ∃ (ε : ℝ)(H : ε > 0), ∀ a : Set α, a ∈ (Besicovitch.vitaliFamily μ).SetsAt x → a ⊆ closed_ball x ε → a ∈ s :=
     (VitaliFamily.mem_filter_at_iff _).1 hs
   have : Ioc (0 : ℝ) ε ∈ 𝓝[>] (0 : ℝ) := Ioc_mem_nhds_within_Ioi ⟨le_rfl, εpos⟩
-  filter_upwards [this]
-  intro r hr
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   apply hε
   · exact mem_image_of_mem _ hr.1
     
@@ -1142,15 +1142,16 @@ theorem tendsto_filter_at (μ : Measureₓ α) [sigma_finite μ] (x : α) :
 
 variable [MetricSpace β] [MeasurableSpace β] [BorelSpace β] [SigmaCompactSpace β] [HasBesicovitchCovering β]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- In a space with the Besicovitch covering property, the ratio of the measure of balls converges
 almost surely to to the Radon-Nikodym derivative. -/
 theorem ae_tendsto_rn_deriv (ρ μ : Measureₓ β) [is_locally_finite_measure μ] [is_locally_finite_measure ρ] :
     ∀ᵐ x ∂μ, tendsto (fun r => ρ (closed_ball x r) / μ (closed_ball x r)) (𝓝[>] 0) (𝓝 (ρ.rn_deriv μ x)) := by
   have : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
-  filter_upwards [VitaliFamily.ae_tendsto_rn_deriv (Besicovitch.vitaliFamily μ) ρ]
-  intro x hx
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   exact hx.comp (tendsto_filter_at μ x)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- Given a measurable set `s`, then `μ (s ∩ closed_ball x r) / μ (closed_ball x r)` converges when
 `r` tends to `0`, for almost every `x`. The limit is `1` for `x ∈ s` and `0` for `x ∉ s`.
 This shows that almost every point of `s` is a Lebesgue density point for `s`.
@@ -1164,6 +1165,7 @@ theorem ae_tendsto_measure_inter_div_of_measurable_set (μ : Measureₓ β) [is_
   intro x hx
   exact hx.comp (tendsto_filter_at μ x)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Given an arbitrary set `s`, then `μ (s ∩ closed_ball x r) / μ (closed_ball x r)` converges
 to `1` when `r` tends to `0`, for almost every `x` in `s`.
 This shows that almost every point of `s` is a Lebesgue density point for `s`.
@@ -1172,9 +1174,7 @@ A stronger version holds for measurable sets, see `ae_tendsto_measure_inter_div_
 theorem ae_tendsto_measure_inter_div (μ : Measureₓ β) [is_locally_finite_measure μ] (s : Set β) :
     ∀ᵐ x ∂μ.restrict s, tendsto (fun r => μ (s ∩ closed_ball x r) / μ (closed_ball x r)) (𝓝[>] 0) (𝓝 1) := by
   have : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
-  filter_upwards [VitaliFamily.ae_tendsto_measure_inter_div (Besicovitch.vitaliFamily μ)]
-  intro x hx
-  exact hx.comp (tendsto_filter_at μ x)
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
 
 end Besicovitch
 

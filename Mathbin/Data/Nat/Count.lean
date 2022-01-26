@@ -54,11 +54,11 @@ theorem count_succ (n : ℕ) : count p (n + 1) = count p n + if p n then 1 else 
 
 @[mono]
 theorem count_monotone : Monotone (count p) :=
-  monotone_nat_of_le_succ $ fun n => by
+  monotone_nat_of_le_succ fun n => by
     by_cases' h : p n <;> simp [count_succ, h]
 
 theorem count_add (a b : ℕ) : count p (a + b) = count p a + count (fun k => p (a + k)) b := by
-  have : Disjoint ((range a).filter p) (((range b).map $ addLeftEmbedding a).filter p) := by
+  have : Disjoint ((range a).filter p) (((range b).map <| addLeftEmbedding a).filter p) := by
     intro x hx
     simp_rw [inf_eq_inter, mem_inter, mem_filter, mem_map, mem_range]  at hx
     obtain ⟨⟨hx, _⟩, ⟨c, _, rfl⟩, _⟩ := hx
@@ -101,7 +101,7 @@ theorem lt_of_count_lt_count {a b : ℕ} (h : count p a < count p b) : a < b :=
   (count_monotone p).reflect_lt h
 
 theorem count_strict_mono {m n : ℕ} (hm : p m) (hmn : m < n) : count p m < count p n :=
-  (count_lt_count_succ_iff.2 hm).trans_le $ count_monotone _ (Nat.succ_le_iff.2 hmn)
+  (count_lt_count_succ_iff.2 hm).trans_le <| count_monotone _ (Nat.succ_le_iff.2 hmn)
 
 theorem count_injective {m n : ℕ} (hm : p m) (hn : p n) (heq : count p m = count p n) : m = n := by
   by_contra

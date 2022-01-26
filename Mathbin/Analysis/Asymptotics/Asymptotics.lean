@@ -123,7 +123,7 @@ theorem is_o.def {f : α → E} {g : α → F} {l : Filter α} (h : is_o f g l) 
   is_o_iff.1 h hc
 
 theorem is_o.def' {f : α → E} {g : α → F} {l : Filter α} (h : is_o f g l) {c : ℝ} (hc : 0 < c) : is_O_with c f g l :=
-  is_O_with_iff.2 $ is_o_iff.1 h hc
+  is_O_with_iff.2 <| is_o_iff.1 h hc
 
 end Defs
 
@@ -143,15 +143,15 @@ theorem is_O.is_O_with {f : α → E} {g : α → F} {l : Filter α} : is_O f g 
   is_O_iff_is_O_with.1
 
 theorem is_O_with.weaken (h : is_O_with c f g' l) (hc : c ≤ c') : is_O_with c' f g' l :=
-  is_O_with.of_bound $
-    mem_of_superset h.bound $ fun x hx =>
+  is_O_with.of_bound <|
+    (mem_of_superset h.bound) fun x hx =>
       calc
         ∥f x∥ ≤ c * ∥g' x∥ := hx
         _ ≤ _ := mul_le_mul_of_nonneg_right hc (norm_nonneg _)
         
 
 theorem is_O_with.exists_pos (h : is_O_with c f g' l) : ∃ (c' : _)(H : 0 < c'), is_O_with c' f g' l :=
-  ⟨max c 1, lt_of_lt_of_leₓ zero_lt_one (le_max_rightₓ c 1), h.weaken $ le_max_leftₓ c 1⟩
+  ⟨max c 1, lt_of_lt_of_leₓ zero_lt_one (le_max_rightₓ c 1), h.weaken <| le_max_leftₓ c 1⟩
 
 theorem is_O.exists_pos (h : is_O f g' l) : ∃ (c : _)(H : 0 < c), is_O_with c f g' l :=
   let ⟨c, hc⟩ := h.is_O_with
@@ -171,7 +171,7 @@ theorem is_O_iff_eventually_is_O_with : is_O f g' l ↔ ∀ᶠ c in at_top, is_O
 
 /-- `f = O(g)` if and only if `∀ᶠ x in l, ∥f x∥ ≤ c * ∥g x∥` for all sufficiently large `c`. -/
 theorem is_O_iff_eventually : is_O f g' l ↔ ∀ᶠ c in at_top, ∀ᶠ x in l, ∥f x∥ ≤ c * ∥g' x∥ :=
-  is_O_iff_eventually_is_O_with.trans $ by
+  is_O_iff_eventually_is_O_with.trans <| by
     simp only [is_O_with]
 
 /-! ### Subsingleton -/
@@ -179,7 +179,7 @@ theorem is_O_iff_eventually : is_O f g' l ↔ ∀ᶠ c in at_top, ∀ᶠ x in l,
 
 @[nontriviality]
 theorem is_o_of_subsingleton [Subsingleton E'] : is_o f' g' l :=
-  is_o.of_bound $ fun c hc => by
+  is_o.of_bound fun c hc => by
     simp [Subsingleton.elimₓ (f' _) 0, mul_nonneg hc.le]
 
 @[nontriviality]
@@ -189,13 +189,13 @@ theorem is_O_of_subsingleton [Subsingleton E'] : is_O f' g' l :=
 /-! ### Congruence -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_O_with_congr {c₁ c₂} {f₁ f₂ : α → E} {g₁ g₂ : α → F} {l : Filter α} (hc : c₁ = c₂) (hf : f₁ =ᶠ[l] f₂)
     (hg : g₁ =ᶠ[l] g₂) : is_O_with c₁ f₁ g₁ l ↔ is_O_with c₂ f₂ g₂ l := by
   unfold is_O_with
   subst c₂
   apply Filter.eventually_congr
-  filter_upwards [hf, hg]
-  intro x e₁ e₂
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [e₁, e₂]
 
 theorem is_O_with.congr' {c₁ c₂} {f₁ f₂ : α → E} {g₁ g₂ : α → F} {l : Filter α} (hc : c₁ = c₂) (hf : f₁ =ᶠ[l] f₂)
@@ -258,15 +258,15 @@ theorem is_o.congr_right {g₁ g₂ : α → E} {l : Filter α} (hg : ∀ x, g�
 
 theorem is_O_with.comp_tendsto (hcfg : is_O_with c f g l) {k : β → α} {l' : Filter β} (hk : tendsto k l' l) :
     is_O_with c (f ∘ k) (g ∘ k) l' :=
-  is_O_with.of_bound $ hk hcfg.bound
+  is_O_with.of_bound <| hk hcfg.bound
 
 theorem is_O.comp_tendsto (hfg : is_O f g l) {k : β → α} {l' : Filter β} (hk : tendsto k l' l) :
     is_O (f ∘ k) (g ∘ k) l' :=
-  is_O_iff_is_O_with.2 $ hfg.is_O_with.imp fun c h => h.comp_tendsto hk
+  is_O_iff_is_O_with.2 <| hfg.is_O_with.imp fun c h => h.comp_tendsto hk
 
 theorem is_o.comp_tendsto (hfg : is_o f g l) {k : β → α} {l' : Filter β} (hk : tendsto k l' l) :
     is_o (f ∘ k) (g ∘ k) l' :=
-  is_o.of_is_O_with $ fun c cpos => (hfg.forall_is_O_with cpos).comp_tendsto hk
+  is_o.of_is_O_with fun c cpos => (hfg.forall_is_O_with cpos).comp_tendsto hk
 
 @[simp]
 theorem is_O_with_map {k : β → α} {l : Filter β} : is_O_with c f g (map k l) ↔ is_O_with c (f ∘ k) (g ∘ k) l := by
@@ -282,19 +282,19 @@ theorem is_o_map {k : β → α} {l : Filter β} : is_o f g (map k l) ↔ is_o (
   simp only [is_o, is_O_with_map]
 
 theorem is_O_with.mono (h : is_O_with c f g l') (hl : l ≤ l') : is_O_with c f g l :=
-  is_O_with.of_bound $ hl h.bound
+  is_O_with.of_bound <| hl h.bound
 
 theorem is_O.mono (h : is_O f g l') (hl : l ≤ l') : is_O f g l :=
-  is_O_iff_is_O_with.2 $ h.is_O_with.imp fun c h => h.mono hl
+  is_O_iff_is_O_with.2 <| h.is_O_with.imp fun c h => h.mono hl
 
 theorem is_o.mono (h : is_o f g l') (hl : l ≤ l') : is_o f g l :=
-  is_o.of_is_O_with $ fun c cpos => (h.forall_is_O_with cpos).mono hl
+  is_o.of_is_O_with fun c cpos => (h.forall_is_O_with cpos).mono hl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_O_with.trans (hfg : is_O_with c f g l) (hgk : is_O_with c' g k l) (hc : 0 ≤ c) : is_O_with (c * c') f k l :=
   by
   unfold is_O_with  at *
-  filter_upwards [hfg, hgk]
-  intro x hx hx'
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   calc ∥f x∥ ≤ c * ∥g x∥ := hx _ ≤ c * (c' * ∥k x∥) := mul_le_mul_of_nonneg_left hx' hc _ = c * c' * ∥k x∥ :=
       (mul_assoc _ _ _).symm
 
@@ -334,10 +334,10 @@ section
 variable (l)
 
 theorem is_O_with_of_le' (hfg : ∀ x, ∥f x∥ ≤ c * ∥g x∥) : is_O_with c f g l :=
-  is_O_with.of_bound $ univ_mem' hfg
+  is_O_with.of_bound <| univ_mem' hfg
 
 theorem is_O_with_of_le (hfg : ∀ x, ∥f x∥ ≤ ∥g x∥) : is_O_with 1 f g l :=
-  is_O_with_of_le' l $ fun x => by
+  (is_O_with_of_le' l) fun x => by
     rw [one_mulₓ]
     exact hfg x
 
@@ -350,13 +350,13 @@ theorem is_O_of_le (hfg : ∀ x, ∥f x∥ ≤ ∥g x∥) : is_O f g l :=
 end
 
 theorem is_O_with_refl (f : α → E) (l : Filter α) : is_O_with 1 f f l :=
-  is_O_with_of_le l $ fun _ => le_reflₓ _
+  (is_O_with_of_le l) fun _ => le_reflₓ _
 
 theorem is_O_refl (f : α → E) (l : Filter α) : is_O f f l :=
   (is_O_with_refl f l).IsO
 
 theorem is_O_with.trans_le (hfg : is_O_with c f g l) (hgk : ∀ x, ∥g x∥ ≤ ∥k x∥) (hc : 0 ≤ c) : is_O_with c f k l :=
-  (hfg.trans (is_O_with_of_le l hgk) hc).congr_const $ mul_oneₓ c
+  (hfg.trans (is_O_with_of_le l hgk) hc).congr_const <| mul_oneₓ c
 
 theorem is_O.trans_le (hfg : is_O f g' l) (hgk : ∀ x, ∥g' x∥ ≤ ∥k x∥) : is_O f k l :=
   hfg.trans (is_O_of_le l hgk)
@@ -370,7 +370,7 @@ variable (c f g)
 
 @[simp]
 theorem is_O_with_bot : is_O_with c f g ⊥ :=
-  is_O_with.of_bound $ trivialₓ
+  is_O_with.of_bound <| trivialₓ
 
 @[simp]
 theorem is_O_bot : is_O f g ⊥ :=
@@ -378,15 +378,15 @@ theorem is_O_bot : is_O f g ⊥ :=
 
 @[simp]
 theorem is_o_bot : is_o f g ⊥ :=
-  is_o.of_is_O_with $ fun c _ => is_O_with_bot c f g
+  is_o.of_is_O_with fun c _ => is_O_with_bot c f g
 
 end Bot
 
 theorem is_O_with.join (h : is_O_with c f g l) (h' : is_O_with c f g l') : is_O_with c f g (l⊔l') :=
-  is_O_with.of_bound $ mem_sup.2 ⟨h.bound, h'.bound⟩
+  is_O_with.of_bound <| mem_sup.2 ⟨h.bound, h'.bound⟩
 
 theorem is_O_with.join' (h : is_O_with c f g' l) (h' : is_O_with c' f g' l') : is_O_with (max c c') f g' (l⊔l') :=
-  is_O_with.of_bound $ mem_sup.2 ⟨(h.weaken $ le_max_leftₓ c c').bound, (h'.weaken $ le_max_rightₓ c c').bound⟩
+  is_O_with.of_bound <| mem_sup.2 ⟨(h.weaken <| le_max_leftₓ c c').bound, (h'.weaken <| le_max_rightₓ c c').bound⟩
 
 theorem is_O.join (h : is_O f g' l) (h' : is_O f g' l') : is_O f g' (l⊔l') :=
   let ⟨c, hc⟩ := h.is_O_with
@@ -394,7 +394,7 @@ theorem is_O.join (h : is_O f g' l) (h' : is_O f g' l') : is_O f g' (l⊔l') :=
   (hc.join' hc').IsO
 
 theorem is_o.join (h : is_o f g l) (h' : is_o f g l') : is_o f g (l⊔l') :=
-  is_o.of_is_O_with $ fun c cpos => (h.forall_is_O_with cpos).join (h'.forall_is_O_with cpos)
+  is_o.of_is_O_with fun c cpos => (h.forall_is_O_with cpos).join (h'.forall_is_O_with cpos)
 
 /-! ### Simplification : norm -/
 
@@ -501,10 +501,10 @@ alias is_o_neg_left ↔ Asymptotics.IsOₓ.of_neg_right Asymptotics.IsOₓ.neg_l
 
 
 theorem is_O_with_fst_prod : is_O_with 1 f' (fun x => (f' x, g' x)) l :=
-  is_O_with_of_le l $ fun x => le_max_leftₓ _ _
+  (is_O_with_of_le l) fun x => le_max_leftₓ _ _
 
 theorem is_O_with_snd_prod : is_O_with 1 g' (fun x => (f' x, g' x)) l :=
-  is_O_with_of_le l $ fun x => le_max_rightₓ _ _
+  (is_O_with_of_le l) fun x => le_max_rightₓ _ _
 
 theorem is_O_fst_prod : is_O f' (fun x => (f' x, g' x)) l :=
   is_O_with_fst_prod.IsO
@@ -530,7 +530,7 @@ theorem is_O.prod_rightl (h : is_O f g' l) : is_O f (fun x => (g' x, k' x)) l :=
   (hc.prod_rightl k' cnonneg).IsO
 
 theorem is_o.prod_rightl (h : is_o f g' l) : is_o f (fun x => (g' x, k' x)) l :=
-  is_o.of_is_O_with $ fun c cpos => (h.forall_is_O_with cpos).prod_rightl k' (le_of_ltₓ cpos)
+  is_o.of_is_O_with fun c cpos => (h.forall_is_O_with cpos).prod_rightl k' (le_of_ltₓ cpos)
 
 theorem is_O_with.prod_rightr (h : is_O_with c f g' l) (hc : 0 ≤ c) : is_O_with c f (fun x => (f' x, g' x)) l :=
   (h.trans is_O_with_snd_prod hc).congr_const (mul_oneₓ c)
@@ -540,23 +540,25 @@ theorem is_O.prod_rightr (h : is_O f g' l) : is_O f (fun x => (f' x, g' x)) l :=
   (hc.prod_rightr f' cnonneg).IsO
 
 theorem is_o.prod_rightr (h : is_o f g' l) : is_o f (fun x => (f' x, g' x)) l :=
-  is_o.of_is_O_with $ fun c cpos => (h.forall_is_O_with cpos).prod_rightr f' (le_of_ltₓ cpos)
+  is_o.of_is_O_with fun c cpos => (h.forall_is_O_with cpos).prod_rightr f' (le_of_ltₓ cpos)
 
 end
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_O_with.prod_left_same (hf : is_O_with c f' k' l) (hg : is_O_with c g' k' l) :
     is_O_with c (fun x => (f' x, g' x)) k' l := by
-  rw [is_O_with_iff] at * <;> filter_upwards [hf, hg] fun x => max_leₓ
+  rw [is_O_with_iff] at * <;>
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
 
 theorem is_O_with.prod_left (hf : is_O_with c f' k' l) (hg : is_O_with c' g' k' l) :
     is_O_with (max c c') (fun x => (f' x, g' x)) k' l :=
-  (hf.weaken $ le_max_leftₓ c c').prod_left_same (hg.weaken $ le_max_rightₓ c c')
+  (hf.weaken <| le_max_leftₓ c c').prod_left_same (hg.weaken <| le_max_rightₓ c c')
 
 theorem is_O_with.prod_left_fst (h : is_O_with c (fun x => (f' x, g' x)) k' l) : is_O_with c f' k' l :=
-  (is_O_with_fst_prod.trans h zero_le_one).congr_const $ one_mulₓ c
+  (is_O_with_fst_prod.trans h zero_le_one).congr_const <| one_mulₓ c
 
 theorem is_O_with.prod_left_snd (h : is_O_with c (fun x => (f' x, g' x)) k' l) : is_O_with c g' k' l :=
-  (is_O_with_snd_prod.trans h zero_le_one).congr_const $ one_mulₓ c
+  (is_O_with_snd_prod.trans h zero_le_one).congr_const <| one_mulₓ c
 
 theorem is_O_with_prod_left : is_O_with c (fun x => (f' x, g' x)) k' l ↔ is_O_with c f' k' l ∧ is_O_with c g' k' l :=
   ⟨fun h => ⟨h.prod_left_fst, h.prod_left_snd⟩, fun h => h.1.prod_left_same h.2⟩
@@ -577,7 +579,7 @@ theorem is_O_prod_left : is_O (fun x => (f' x, g' x)) k' l ↔ is_O f' k' l ∧ 
   ⟨fun h => ⟨h.prod_left_fst, h.prod_left_snd⟩, fun h => h.1.prodLeft h.2⟩
 
 theorem is_o.prod_left (hf : is_o f' k' l) (hg : is_o g' k' l) : is_o (fun x => (f' x, g' x)) k' l :=
-  is_o.of_is_O_with $ fun c hc => (hf.forall_is_O_with hc).prod_left_same (hg.forall_is_O_with hc)
+  is_o.of_is_O_with fun c hc => (hf.forall_is_O_with hc).prod_left_same (hg.forall_is_O_with hc)
 
 theorem is_o.prod_left_fst (h : is_o (fun x => (f' x, g' x)) k' l) : is_o f' k' l :=
   is_O_fst_prod.trans_is_o h
@@ -590,8 +592,8 @@ theorem is_o_prod_left : is_o (fun x => (f' x, g' x)) k' l ↔ is_o f' k' l ∧ 
   ⟨fun h => ⟨h.prod_left_fst, h.prod_left_snd⟩, fun h => h.1.prodLeft h.2⟩
 
 theorem is_O_with.eq_zero_imp (h : is_O_with c f' g' l) : ∀ᶠ x in l, g' x = 0 → f' x = 0 :=
-  eventually.mono h.bound $ fun x hx hg =>
-    norm_le_zero_iff.1 $ by
+  (eventually.mono h.bound) fun x hx hg =>
+    norm_le_zero_iff.1 <| by
       simpa [hg] using hx
 
 theorem is_O.eq_zero_imp (h : is_O f' g' l) : ∀ᶠ x in l, g' x = 0 → f' x = 0 :=
@@ -605,14 +607,11 @@ section add_sub
 
 variable {c₁ c₂ : ℝ} {f₁ f₂ : α → E'}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_O_with.add (h₁ : is_O_with c₁ f₁ g l) (h₂ : is_O_with c₂ f₂ g l) :
     is_O_with (c₁ + c₂) (fun x => f₁ x + f₂ x) g l := by
   rw [is_O_with] at * <;>
-    filter_upwards [h₁, h₂] fun x hx₁ hx₂ =>
-      calc
-        ∥f₁ x + f₂ x∥ ≤ c₁ * ∥g x∥ + c₂ * ∥g x∥ := norm_add_le_of_le hx₁ hx₂
-        _ = (c₁ + c₂) * ∥g x∥ := (add_mulₓ _ _ _).symm
-        
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
 
 theorem is_O.add (h₁ : is_O f₁ g l) (h₂ : is_O f₂ g l) : is_O (fun x => f₁ x + f₂ x) g l :=
   let ⟨c₁, hc₁⟩ := h₁.is_O_with
@@ -620,12 +619,12 @@ theorem is_O.add (h₁ : is_O f₁ g l) (h₂ : is_O f₂ g l) : is_O (fun x => 
   (hc₁.add hc₂).IsO
 
 theorem is_o.add (h₁ : is_o f₁ g l) (h₂ : is_o f₂ g l) : is_o (fun x => f₁ x + f₂ x) g l :=
-  is_o.of_is_O_with $ fun c cpos =>
-    ((h₁.forall_is_O_with $ half_pos cpos).add (h₂.forall_is_O_with $ half_pos cpos)).congr_const (add_halves c)
+  is_o.of_is_O_with fun c cpos =>
+    ((h₁.forall_is_O_with <| half_pos cpos).add (h₂.forall_is_O_with <| half_pos cpos)).congr_const (add_halves c)
 
 theorem is_o.add_add {g₁ g₂ : α → F'} (h₁ : is_o f₁ g₁ l) (h₂ : is_o f₂ g₂ l) :
     is_o (fun x => f₁ x + f₂ x) (fun x => ∥g₁ x∥ + ∥g₂ x∥) l := by
-  refine' (h₁.trans_le $ fun x => _).add (h₂.trans_le _) <;> simp [Real.norm_eq_abs, abs_of_nonneg, add_nonneg]
+  refine' (h₁.trans_le fun x => _).add (h₂.trans_le _) <;> simp [Real.norm_eq_abs, abs_of_nonneg, add_nonneg]
 
 theorem is_O.add_is_o (h₁ : is_O f₁ g l) (h₂ : is_o f₂ g l) : is_O (fun x => f₁ x + f₂ x) g l :=
   h₁.add h₂.is_O
@@ -639,7 +638,7 @@ theorem is_O_with.add_is_o (h₁ : is_O_with c₁ f₁ g l) (h₂ : is_o f₂ g 
 
 theorem is_o.add_is_O_with (h₁ : is_o f₁ g l) (h₂ : is_O_with c₁ f₂ g l) (hc : c₁ < c₂) :
     is_O_with c₂ (fun x => f₁ x + f₂ x) g l :=
-  (h₂.add_is_o h₁ hc).congr_left $ fun _ => add_commₓ _ _
+  (h₂.add_is_o h₁ hc).congr_left fun _ => add_commₓ _ _
 
 theorem is_O_with.sub (h₁ : is_O_with c₁ f₁ g l) (h₂ : is_O_with c₂ f₂ g l) :
     is_O_with (c₁ + c₂) (fun x => f₁ x - f₂ x) g l := by
@@ -665,13 +664,13 @@ section IsOOAsRel
 variable {f₁ f₂ f₃ : α → E'}
 
 theorem is_O_with.symm (h : is_O_with c (fun x => f₁ x - f₂ x) g l) : is_O_with c (fun x => f₂ x - f₁ x) g l :=
-  h.neg_left.congr_left $ fun x => neg_sub _ _
+  h.neg_left.congr_left fun x => neg_sub _ _
 
 theorem is_O_with_comm : is_O_with c (fun x => f₁ x - f₂ x) g l ↔ is_O_with c (fun x => f₂ x - f₁ x) g l :=
   ⟨is_O_with.symm, is_O_with.symm⟩
 
 theorem is_O.symm (h : is_O (fun x => f₁ x - f₂ x) g l) : is_O (fun x => f₂ x - f₁ x) g l :=
-  h.neg_left.congr_left $ fun x => neg_sub _ _
+  h.neg_left.congr_left fun x => neg_sub _ _
 
 theorem is_O_comm : is_O (fun x => f₁ x - f₂ x) g l ↔ is_O (fun x => f₂ x - f₁ x) g l :=
   ⟨is_O.symm, is_O.symm⟩
@@ -684,15 +683,15 @@ theorem is_o_comm : is_o (fun x => f₁ x - f₂ x) g l ↔ is_o (fun x => f₂ 
 
 theorem is_O_with.triangle (h₁ : is_O_with c (fun x => f₁ x - f₂ x) g l)
     (h₂ : is_O_with c' (fun x => f₂ x - f₃ x) g l) : is_O_with (c + c') (fun x => f₁ x - f₃ x) g l :=
-  (h₁.add h₂).congr_left $ fun x => sub_add_sub_cancel _ _ _
+  (h₁.add h₂).congr_left fun x => sub_add_sub_cancel _ _ _
 
 theorem is_O.triangle (h₁ : is_O (fun x => f₁ x - f₂ x) g l) (h₂ : is_O (fun x => f₂ x - f₃ x) g l) :
     is_O (fun x => f₁ x - f₃ x) g l :=
-  (h₁.add h₂).congr_left $ fun x => sub_add_sub_cancel _ _ _
+  (h₁.add h₂).congr_left fun x => sub_add_sub_cancel _ _ _
 
 theorem is_o.triangle (h₁ : is_o (fun x => f₁ x - f₂ x) g l) (h₂ : is_o (fun x => f₂ x - f₃ x) g l) :
     is_o (fun x => f₁ x - f₃ x) g l :=
-  (h₁.add h₂).congr_left $ fun x => sub_add_sub_cancel _ _ _
+  (h₁.add h₂).congr_left fun x => sub_add_sub_cancel _ _ _
 
 theorem is_O.congr_of_sub (h : is_O (fun x => f₁ x - f₂ x) g l) : is_O f₁ g l ↔ is_O f₂ g l :=
   ⟨fun h' => (h'.sub h).congr_left fun x => sub_sub_cancel _ _, fun h' =>
@@ -712,28 +711,28 @@ section ZeroConst
 variable (g g' l)
 
 theorem is_o_zero : is_o (fun x => (0 : E')) g' l :=
-  is_o.of_bound $ fun c hc =>
-    univ_mem' $ fun x => by
-      simpa using mul_nonneg hc.le (norm_nonneg $ g' x)
+  is_o.of_bound fun c hc =>
+    univ_mem' fun x => by
+      simpa using mul_nonneg hc.le (norm_nonneg <| g' x)
 
 theorem is_O_with_zero (hc : 0 ≤ c) : is_O_with c (fun x => (0 : E')) g' l :=
-  is_O_with.of_bound $
-    univ_mem' $ fun x => by
-      simpa using mul_nonneg hc (norm_nonneg $ g' x)
+  is_O_with.of_bound <|
+    univ_mem' fun x => by
+      simpa using mul_nonneg hc (norm_nonneg <| g' x)
 
 theorem is_O_with_zero' : is_O_with 0 (fun x => (0 : E')) g l :=
-  is_O_with.of_bound $
-    univ_mem' $ fun x => by
+  is_O_with.of_bound <|
+    univ_mem' fun x => by
       simp
 
 theorem is_O_zero : is_O (fun x => (0 : E')) g l :=
   is_O_iff_is_O_with.2 ⟨0, is_O_with_zero' _ _⟩
 
 theorem is_O_refl_left : is_O (fun x => f' x - f' x) g' l :=
-  (is_O_zero g' l).congr_left $ fun x => (sub_self _).symm
+  (is_O_zero g' l).congr_left fun x => (sub_self _).symm
 
 theorem is_o_refl_left : is_o (fun x => f' x - f' x) g' l :=
-  (is_o_zero g' l).congr_left $ fun x => (sub_self _).symm
+  (is_o_zero g' l).congr_left fun x => (sub_self _).symm
 
 variable {g g' l}
 
@@ -750,7 +749,7 @@ theorem is_O_zero_right_iff : is_O f' (fun x => (0 : F')) l ↔ ∀ᶠ x in l, f
 
 @[simp]
 theorem is_o_zero_right_iff : is_o f' (fun x => (0 : F')) l ↔ ∀ᶠ x in l, f' x = 0 :=
-  ⟨fun h => is_O_zero_right_iff.1 h.is_O, fun h => is_o.of_is_O_with $ fun c hc => is_O_with_zero_right_iff.2 h⟩
+  ⟨fun h => is_O_zero_right_iff.1 h.is_O, fun h => is_o.of_is_O_with fun c hc => is_O_with_zero_right_iff.2 h⟩
 
 theorem is_O_with_const_const (c : E) {c' : F'} (hc' : c' ≠ 0) (l : Filter α) :
     is_O_with (∥c∥ / ∥c'∥) (fun x : α => c) (fun x => c') l := by
@@ -782,7 +781,7 @@ theorem is_o_top : is_o f' g' ⊤ ↔ ∀ x, f' x = 0 := by
     ((continuous_id.mul continuous_const).tendsto' _ _ (zero_mul _)).mono_left inf_le_left
   exact
     le_of_tendsto_of_tendsto tendsto_const_nhds this
-      (eventually_nhds_within_iff.2 $ eventually_of_forall $ fun c hc => h hc x)
+      (eventually_nhds_within_iff.2 <| eventually_of_forall fun c hc => h hc x)
 
 @[simp]
 theorem is_O_with_principal {s : Set α} : is_O_with c f g (𝓟 s) ↔ ∀, ∀ x ∈ s, ∀, ∥f x∥ ≤ c * ∥g x∥ := by
@@ -806,7 +805,7 @@ section
 variable (𝕜)
 
 theorem is_o_const_iff_is_o_one {c : F'} (hc : c ≠ 0) : is_o f (fun x => c) l ↔ is_o f (fun x => (1 : 𝕜)) l :=
-  ⟨fun h => h.trans_is_O $ is_O_const_one c l, fun h => h.trans_is_O $ is_O_const_const _ hc _⟩
+  ⟨fun h => h.trans_is_O <| is_O_const_one c l, fun h => h.trans_is_O <| is_O_const_const _ hc _⟩
 
 end
 
@@ -847,12 +846,12 @@ theorem is_O_one_of_tendsto {y : E'} (h : tendsto f' l (𝓝 y)) : is_O f' (fun 
   is_O_const_of_tendsto h one_ne_zero
 
 theorem is_O.trans_tendsto_nhds (hfg : is_O f g' l) {y : F'} (hg : tendsto g' l (𝓝 y)) : is_O f (fun x => (1 : 𝕜)) l :=
-  hfg.trans $ is_O_one_of_tendsto 𝕜 hg
+  hfg.trans <| is_O_one_of_tendsto 𝕜 hg
 
 end
 
 theorem is_O.trans_tendsto (hfg : is_O f' g' l) (hg : tendsto g' l (𝓝 0)) : tendsto f' l (𝓝 0) :=
-  (is_o_one_iff ℝ).1 $ hfg.trans_is_o $ (is_o_one_iff ℝ).2 hg
+  (is_o_one_iff ℝ).1 <| hfg.trans_is_o <| (is_o_one_iff ℝ).2 hg
 
 theorem is_o.trans_tendsto (hfg : is_o f' g' l) (hg : tendsto g' l (𝓝 0)) : tendsto f' l (𝓝 0) :=
   hfg.is_O.trans_tendsto hg
@@ -861,7 +860,7 @@ theorem is_o.trans_tendsto (hfg : is_o f' g' l) (hg : tendsto g' l (𝓝 0)) : t
 
 
 theorem is_O_with_const_mul_self (c : R) (f : α → R) (l : Filter α) : is_O_with ∥c∥ (fun x => c * f x) f l :=
-  is_O_with_of_le' _ $ fun x => norm_mul_le _ _
+  (is_O_with_of_le' _) fun x => norm_mul_le _ _
 
 theorem is_O_const_mul_self (c : R) (f : α → R) (l : Filter α) : is_O (fun x => c * f x) f l :=
   (is_O_with_const_mul_self c f l).IsO
@@ -876,11 +875,11 @@ theorem is_O.const_mul_left {f : α → R} (h : is_O f g l) (c' : R) : is_O (fun
 
 theorem is_O_with_self_const_mul' (u : (R)ˣ) (f : α → R) (l : Filter α) :
     is_O_with ∥(↑u⁻¹ : R)∥ f (fun x => ↑u * f x) l :=
-  (is_O_with_const_mul_self (↑u⁻¹) _ l).congr_left $ fun x => u.inv_mul_cancel_left (f x)
+  (is_O_with_const_mul_self ↑u⁻¹ _ l).congr_left fun x => u.inv_mul_cancel_left (f x)
 
 theorem is_O_with_self_const_mul (c : 𝕜) (hc : c ≠ 0) (f : α → 𝕜) (l : Filter α) :
-    is_O_with (∥c∥⁻¹) f (fun x => c * f x) l :=
-  (is_O_with_self_const_mul' (Units.mk0 c hc) f l).congr_const $ NormedField.norm_inv c
+    is_O_with ∥c∥⁻¹ f (fun x => c * f x) l :=
+  (is_O_with_self_const_mul' (Units.mk0 c hc) f l).congr_const <| NormedField.norm_inv c
 
 theorem is_O_self_const_mul' {c : R} (hc : IsUnit c) (f : α → R) (l : Filter α) : is_O f (fun x => c * f x) l :=
   let ⟨u, hu⟩ := hc
@@ -893,7 +892,7 @@ theorem is_O_const_mul_left_iff' {f : α → R} {c : R} (hc : IsUnit c) : is_O (
   ⟨(is_O_self_const_mul' hc f l).trans, fun h => h.const_mul_left c⟩
 
 theorem is_O_const_mul_left_iff {f : α → 𝕜} {c : 𝕜} (hc : c ≠ 0) : is_O (fun x => c * f x) g l ↔ is_O f g l :=
-  is_O_const_mul_left_iff' $ IsUnit.mk0 c hc
+  is_O_const_mul_left_iff' <| IsUnit.mk0 c hc
 
 theorem is_o.const_mul_left {f : α → R} (h : is_o f g l) (c : R) : is_o (fun x => c * f x) g l :=
   (is_O_const_mul_self c f l).trans_is_o h
@@ -902,7 +901,7 @@ theorem is_o_const_mul_left_iff' {f : α → R} {c : R} (hc : IsUnit c) : is_o (
   ⟨(is_O_self_const_mul' hc f l).trans_is_o, fun h => h.const_mul_left c⟩
 
 theorem is_o_const_mul_left_iff {f : α → 𝕜} {c : 𝕜} (hc : c ≠ 0) : is_o (fun x => c * f x) g l ↔ is_o f g l :=
-  is_o_const_mul_left_iff' $ IsUnit.mk0 c hc
+  is_o_const_mul_left_iff' <| IsUnit.mk0 c hc
 
 theorem is_O_with.of_const_mul_right {g : α → R} {c : R} (hc' : 0 ≤ c') (h : is_O_with c' f (fun x => c * g x) l) :
     is_O_with (c' * ∥c∥) f g l :=
@@ -924,13 +923,13 @@ theorem is_O.const_mul_right' {g : α → R} {c : R} (hc : IsUnit c) (h : is_O f
   h.trans (is_O_self_const_mul' hc g l)
 
 theorem is_O.const_mul_right {g : α → 𝕜} {c : 𝕜} (hc : c ≠ 0) (h : is_O f g l) : is_O f (fun x => c * g x) l :=
-  h.const_mul_right' $ IsUnit.mk0 c hc
+  h.const_mul_right' <| IsUnit.mk0 c hc
 
 theorem is_O_const_mul_right_iff' {g : α → R} {c : R} (hc : IsUnit c) : is_O f (fun x => c * g x) l ↔ is_O f g l :=
   ⟨fun h => h.of_const_mul_right, fun h => h.const_mul_right' hc⟩
 
 theorem is_O_const_mul_right_iff {g : α → 𝕜} {c : 𝕜} (hc : c ≠ 0) : is_O f (fun x => c * g x) l ↔ is_O f g l :=
-  is_O_const_mul_right_iff' $ IsUnit.mk0 c hc
+  is_O_const_mul_right_iff' <| IsUnit.mk0 c hc
 
 theorem is_o.of_const_mul_right {g : α → R} {c : R} (h : is_o f (fun x => c * g x) l) : is_o f g l :=
   h.trans_is_O (is_O_const_mul_self c g l)
@@ -939,22 +938,22 @@ theorem is_o.const_mul_right' {g : α → R} {c : R} (hc : IsUnit c) (h : is_o f
   h.trans_is_O (is_O_self_const_mul' hc g l)
 
 theorem is_o.const_mul_right {g : α → 𝕜} {c : 𝕜} (hc : c ≠ 0) (h : is_o f g l) : is_o f (fun x => c * g x) l :=
-  h.const_mul_right' $ IsUnit.mk0 c hc
+  h.const_mul_right' <| IsUnit.mk0 c hc
 
 theorem is_o_const_mul_right_iff' {g : α → R} {c : R} (hc : IsUnit c) : is_o f (fun x => c * g x) l ↔ is_o f g l :=
   ⟨fun h => h.of_const_mul_right, fun h => h.const_mul_right' hc⟩
 
 theorem is_o_const_mul_right_iff {g : α → 𝕜} {c : 𝕜} (hc : c ≠ 0) : is_o f (fun x => c * g x) l ↔ is_o f g l :=
-  is_o_const_mul_right_iff' $ IsUnit.mk0 c hc
+  is_o_const_mul_right_iff' <| IsUnit.mk0 c hc
 
 /-! ### Multiplication -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_O_with.mul {f₁ f₂ : α → R} {g₁ g₂ : α → 𝕜} {c₁ c₂ : ℝ} (h₁ : is_O_with c₁ f₁ g₁ l)
     (h₂ : is_O_with c₂ f₂ g₂ l) : is_O_with (c₁ * c₂) (fun x => f₁ x * f₂ x) (fun x => g₁ x * g₂ x) l := by
   unfold is_O_with  at *
-  filter_upwards [h₁, h₂]
-  intro x hx₁ hx₂
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   apply le_transₓ (norm_mul_le _ _)
   convert mul_le_mul hx₁ hx₂ (norm_nonneg _) (le_transₓ (norm_nonneg _) hx₁) using 1
   rw [NormedField.norm_mul]
@@ -1017,24 +1016,24 @@ theorem is_o.pow {f : α → R} {g : α → 𝕜} (h : is_o f g l) {n : ℕ} (hn
 
 
 theorem is_O_with.inv_rev {f : α → 𝕜} {g : α → 𝕜'} (h : is_O_with c f g l) (h₀ : ∀ᶠ x in l, f x ≠ 0) :
-    is_O_with c (fun x => g x⁻¹) (fun x => f x⁻¹) l := by
-  refine' is_O_with.of_bound (h.bound.mp (h₀.mono $ fun x h₀ hle => _))
+    is_O_with c (fun x => (g x)⁻¹) (fun x => (f x)⁻¹) l := by
+  refine' is_O_with.of_bound (h.bound.mp (h₀.mono fun x h₀ hle => _))
   cases' le_or_ltₓ c 0 with hc hc
-  · refine' (h₀ $ norm_le_zero_iff.1 _).elim
-    exact hle.trans (mul_nonpos_of_nonpos_of_nonneg hc $ norm_nonneg _)
+  · refine' (h₀ <| norm_le_zero_iff.1 _).elim
+    exact hle.trans (mul_nonpos_of_nonpos_of_nonneg hc <| norm_nonneg _)
     
   · replace hle := inv_le_inv_of_le (norm_pos_iff.2 h₀) hle
     simpa only [NormedField.norm_inv, mul_inv₀, ← div_eq_inv_mul, div_le_iff hc] using hle
     
 
 theorem is_O.inv_rev {f : α → 𝕜} {g : α → 𝕜'} (h : is_O f g l) (h₀ : ∀ᶠ x in l, f x ≠ 0) :
-    is_O (fun x => g x⁻¹) (fun x => f x⁻¹) l :=
+    is_O (fun x => (g x)⁻¹) (fun x => (f x)⁻¹) l :=
   let ⟨c, hc⟩ := h.is_O_with
   (hc.inv_rev h₀).IsO
 
 theorem is_o.inv_rev {f : α → 𝕜} {g : α → 𝕜'} (h : is_o f g l) (h₀ : ∀ᶠ x in l, f x ≠ 0) :
-    is_o (fun x => g x⁻¹) (fun x => f x⁻¹) l :=
-  is_o.of_is_O_with $ fun c hc => (h.def' hc).inv_rev h₀
+    is_o (fun x => (g x)⁻¹) (fun x => (f x)⁻¹) l :=
+  is_o.of_is_O_with fun c hc => (h.def' hc).inv_rev h₀
 
 /-! ### Scalar multiplication -/
 
@@ -1161,15 +1160,15 @@ theorem is_o.tendsto_div_nhds_zero {f g : α → 𝕜} {l : Filter α} (h : is_o
   (is_o_one_iff 𝕜).mp (eq₁.trans_is_O eq₂)
 
 theorem is_o.tendsto_inv_smul_nhds_zero [NormedSpace 𝕜 E'] {f : α → E'} {g : α → 𝕜} {l : Filter α} (h : is_o f g l) :
-    tendsto (fun x => g x⁻¹ • f x) l (𝓝 0) := by
+    tendsto (fun x => (g x)⁻¹ • f x) l (𝓝 0) := by
   simpa only [div_eq_inv_mul, ← NormedField.norm_inv, ← norm_smul, ← tendsto_zero_iff_norm_tendsto_zero] using
     h.norm_norm.tendsto_div_nhds_zero
 
 theorem is_o_iff_tendsto' {f g : α → 𝕜} {l : Filter α} (hgf : ∀ᶠ x in l, g x = 0 → f x = 0) :
     is_o f g l ↔ tendsto (fun x => f x / g x) l (𝓝 0) :=
-  Iff.intro is_o.tendsto_div_nhds_zero $ fun h =>
-    (((is_o_one_iff _).mpr h).mul_is_O (is_O_refl g l)).congr' (hgf.mono $ fun x => div_mul_cancel_of_imp)
-      (eventually_of_forall $ fun x => one_mulₓ _)
+  (Iff.intro is_o.tendsto_div_nhds_zero) fun h =>
+    (((is_o_one_iff _).mpr h).mul_is_O (is_O_refl g l)).congr' (hgf.mono fun x => div_mul_cancel_of_imp)
+      (eventually_of_forall fun x => one_mulₓ _)
 
 theorem is_o_iff_tendsto {f g : α → 𝕜} {l : Filter α} (hgf : ∀ x, g x = 0 → f x = 0) :
     is_o f g l ↔ tendsto (fun x => f x / g x) l (𝓝 0) :=
@@ -1184,12 +1183,12 @@ theorem is_o_const_left_of_ne {c : E'} (hc : c ≠ 0) : is_o (fun x => c) g l �
   · refine' (at_top_basis' 1).tendsto_right_iff.2 fun C hC => _
     replace hC : 0 < C := zero_lt_one.trans_le hC
     replace h : is_o (fun _ => 1 : α → ℝ) g l := (is_O_const_const _ hc _).trans_is_o h
-    refine' (h.def $ inv_pos.2 hC).mono fun x hx => _
+    refine' (h.def <| inv_pos.2 hC).mono fun x hx => _
     rwa [norm_one, ← div_eq_inv_mul, one_le_div hC] at hx
     
   · suffices : is_o (fun _ => 1 : α → ℝ) g l
     exact (is_O_const_const c (@one_ne_zero ℝ _ _) _).trans_is_o this
-    refine' is_o_iff.2 fun ε ε0 => (tendsto_at_top.1 h (ε⁻¹)).mono fun x hx => _
+    refine' is_o_iff.2 fun ε ε0 => (tendsto_at_top.1 h ε⁻¹).mono fun x hx => _
     rwa [norm_one, ← inv_inv₀ ε, ← div_eq_inv_mul, one_le_div (inv_pos.2 ε0)]
     
 
@@ -1215,7 +1214,7 @@ variable {u v : α → 𝕜}
 
 theorem is_O_with.eventually_mul_div_cancel (h : is_O_with c u v l) : u / v * v =ᶠ[l] u :=
   eventually.mono h.bound fun y hy =>
-    div_mul_cancel_of_imp $ fun hv => by
+    div_mul_cancel_of_imp fun hv => by
       simpa [hv] using hy
 
 /-- If `u = O(v)` along `l`, then `(u / v) * v = u` eventually at `l`. -/
@@ -1241,7 +1240,7 @@ variable {u v : α → 𝕜}
     `is_O_with_iff_exists_eq_mul`. -/
 theorem is_O_with_of_eq_mul (φ : α → 𝕜) (hφ : ∀ᶠ x in l, ∥φ x∥ ≤ c) (h : u =ᶠ[l] φ * v) : is_O_with c u v l := by
   unfold is_O_with
-  refine' h.symm.rw (fun x a => ∥a∥ ≤ c * ∥v x∥) (hφ.mono $ fun x hx => _)
+  refine' h.symm.rw (fun x a => ∥a∥ ≤ c * ∥v x∥) (hφ.mono fun x hx => _)
   simp only [NormedField.norm_mul, Pi.mul_apply]
   exact mul_le_mul_of_nonneg_right hx (norm_nonneg _)
 
@@ -1282,7 +1281,7 @@ theorem is_o_iff_exists_eq_mul : is_o u v l ↔ ∃ (φ : α → 𝕜)(hφ : ten
   · unfold is_o
     rintro ⟨φ, hφ, huvφ⟩ c hpos
     rw [NormedGroup.tendsto_nhds_zero] at hφ
-    exact is_O_with_of_eq_mul _ ((hφ c hpos).mono $ fun x => le_of_ltₓ) huvφ
+    exact is_O_with_of_eq_mul _ ((hφ c hpos).mono fun x => le_of_ltₓ) huvφ
     
 
 alias is_o_iff_exists_eq_mul ↔ Asymptotics.IsOₓ.exists_eq_mul _
@@ -1319,7 +1318,7 @@ theorem is_O_iff_div_is_bounded_under {α : Type _} {l : Filter α} {f g : α �
 
 theorem is_O_of_div_tendsto_nhds {α : Type _} {l : Filter α} {f g : α → 𝕜} (hgf : ∀ᶠ x in l, g x = 0 → f x = 0) (c : 𝕜)
     (H : Filter.Tendsto (f / g) l (𝓝 c)) : is_O f g l :=
-  (is_O_iff_div_is_bounded_under hgf).2 $ is_bounded_under_of_tendsto H
+  (is_O_iff_div_is_bounded_under hgf).2 <| is_bounded_under_of_tendsto H
 
 theorem is_o.tendsto_zero_of_tendsto {α E 𝕜 : Type _} [NormedGroup E] [NormedField 𝕜] {u : α → E} {v : α → 𝕜}
     {l : Filter α} {y : 𝕜} (huv : is_o u v l) (hv : tendsto v l (𝓝 y)) : tendsto u l (𝓝 0) := by
@@ -1350,8 +1349,8 @@ theorem is_o_norm_pow_id {n : ℕ} (h : 1 < n) : is_o (fun x : E' => ∥x∥ ^ n
 
 theorem is_O_with.right_le_sub_of_lt_1 {f₁ f₂ : α → E'} (h : is_O_with c f₁ f₂ l) (hc : c < 1) :
     is_O_with (1 / (1 - c)) f₂ (fun x => f₂ x - f₁ x) l :=
-  is_O_with.of_bound $
-    mem_of_superset h.bound $ fun x hx => by
+  is_O_with.of_bound <|
+    (mem_of_superset h.bound) fun x hx => by
       simp only [mem_set_of_eq] at hx⊢
       rw [mul_comm, one_div, ← div_eq_mul_inv, le_div_iff, mul_sub, mul_oneₓ, mul_comm]
       · exact le_transₓ (sub_le_sub_left hx _) (norm_sub_norm_le _ _)
@@ -1393,7 +1392,7 @@ theorem is_O_cofinite_iff (h : ∀ x, g' x = 0 → f' x = 0) : is_O f' g' cofini
 
 theorem bound_of_is_O_nat_at_top {f : ℕ → E} {g' : ℕ → E'} (h : is_O f g' at_top) :
     ∃ C > 0, ∀ ⦃x⦄, g' x ≠ 0 → ∥f x∥ ≤ C * ∥g' x∥ :=
-  bound_of_is_O_cofinite $ by
+  bound_of_is_O_cofinite <| by
     rwa [Nat.cofinite_eq_at_top]
 
 theorem is_O_nat_at_top_iff {f : ℕ → E'} {g : ℕ → F'} (h : ∀ x, g x = 0 → f x = 0) :
@@ -1401,7 +1400,7 @@ theorem is_O_nat_at_top_iff {f : ℕ → E'} {g : ℕ → F'} (h : ∀ x, g x = 
   rw [← Nat.cofinite_eq_at_top, is_O_cofinite_iff h]
 
 theorem is_O_one_nat_at_top_iff {f : ℕ → E'} : is_O f (fun n => 1 : ℕ → ℝ) at_top ↔ ∃ C, ∀ n, ∥f n∥ ≤ C :=
-  Iff.trans (is_O_nat_at_top_iff fun n h => (one_ne_zero h).elim) $ by
+  Iff.trans (is_O_nat_at_top_iff fun n h => (one_ne_zero h).elim) <| by
     simp only [norm_one, mul_oneₓ]
 
 theorem is_O_with_pi {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedGroup (E' i)] {f : α → ∀ i, E' i} {C : ℝ}
@@ -1432,7 +1431,7 @@ theorem summable_of_is_O {ι E} [NormedGroup E] [CompleteSpace E] {f : ι → E}
 
 theorem summable_of_is_O_nat {E} [NormedGroup E] [CompleteSpace E] {f : ℕ → E} {g : ℕ → ℝ} (hg : Summable g)
     (h : is_O f g at_top) : Summable f :=
-  summable_of_is_O hg $ Nat.cofinite_eq_at_top.symm ▸ h
+  summable_of_is_O hg <| Nat.cofinite_eq_at_top.symm ▸ h
 
 namespace LocalHomeomorph
 
@@ -1444,13 +1443,13 @@ variable {E : Type _} [HasNorm E] {F : Type _} [HasNorm F]
 theorem is_O_with_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.target) {f : β → E} {g : β → F} {C : ℝ} :
     is_O_with C f g (𝓝 b) ↔ is_O_with C (f ∘ e) (g ∘ e) (𝓝 (e.symm b)) :=
   ⟨fun h =>
-    h.comp_tendsto $ by
+    h.comp_tendsto <| by
       convert e.continuous_at (e.map_target hb)
       exact (e.right_inv hb).symm,
     fun h =>
     (h.comp_tendsto (e.continuous_at_symm hb)).congr' rfl
-      ((e.eventually_right_inverse hb).mono $ fun x hx => congr_argₓ f hx)
-      ((e.eventually_right_inverse hb).mono $ fun x hx => congr_argₓ g hx)⟩
+      ((e.eventually_right_inverse hb).mono fun x hx => congr_argₓ f hx)
+      ((e.eventually_right_inverse hb).mono fun x hx => congr_argₓ g hx)⟩
 
 /-- Transfer `is_O` over a `local_homeomorph`. -/
 theorem is_O_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.target) {f : β → E} {g : β → F} :

@@ -114,7 +114,7 @@ theorem obj_up_obj_down {C} (A : ulift_hom C) : ulift_hom.obj_up A.obj_down = A 
   rfl
 
 instance : category.{max v₂ v₁} (ulift_hom.{v₂} C) where
-  Hom := fun A B => Ulift.{v₂} $ A.obj_down ⟶ B.obj_down
+  Hom := fun A B => Ulift.{v₂} <| A.obj_down ⟶ B.obj_down
   id := fun A => ⟨𝟙 _⟩
   comp := fun A B C f g => ⟨f.down ≫ g.down⟩
 
@@ -166,7 +166,7 @@ def as_small.{w, v, u} (C : Type u) [category.{v} C] :=
   Ulift.{max w v} C
 
 instance : small_category (as_small.{w₁} C) where
-  Hom := fun X Y => Ulift.{max w₁ u₁} $ X.down ⟶ Y.down
+  Hom := fun X Y => Ulift.{max w₁ u₁} <| X.down ⟶ Y.down
   id := fun X => ⟨𝟙 _⟩
   comp := fun X Y Z f g => ⟨f.down ≫ g.down⟩
 
@@ -194,7 +194,7 @@ def as_small.equiv : C ≌ as_small C where
   counitIso :=
     nat_iso.of_components
       (fun X =>
-        eq_to_iso $ by
+        eq_to_iso <| by
           ext
           rfl)
       (by

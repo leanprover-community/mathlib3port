@@ -144,7 +144,7 @@ theorem incl_desc_inv_app (i : I) (X : C i) : (incl_desc F i).inv.app X = 𝟙 (
 `desc F`.
 -/
 def desc_uniq (q : (Σ i, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) : q ≅ desc F :=
-  (nat_iso.of_components fun ⟨i, X⟩ => (h i).app X) $ by
+  (nat_iso.of_components fun ⟨i, X⟩ => (h i).app X) <| by
     rintro ⟨i, X⟩ ⟨_, _⟩ ⟨_, _, Y, f⟩
     apply (h i).Hom.naturality f
 
@@ -204,7 +204,7 @@ variable {I} {K : Type w₃}
 /-- The functor `sigma.map` applied to a composition is a composition of functors. -/
 @[simps]
 def map_comp (f : K → J) (g : J → I) : map (C ∘ g) f ⋙ (map C g : _) ≅ map C (g ∘ f) :=
-  desc_uniq _ _ $ fun k => (iso_whisker_right (incl_comp_map (C ∘ g) f k) (map C g : _) : _) ≪≫ incl_comp_map _ _ _
+  (desc_uniq _ _) fun k => (iso_whisker_right (incl_comp_map (C ∘ g) f k) (map C g : _) : _) ≪≫ incl_comp_map _ _ _
 
 end
 

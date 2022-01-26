@@ -89,13 +89,13 @@ theorem part_of_vertex_ne_of_adj {v w : V} (h : G.adj v w) : P.part_of_vertex v 
 /-- Create a coloring using the parts themselves as the colors.
 Each vertex is colored by the part it's contained in. -/
 def to_coloring : G.coloring P.parts :=
-  (coloring.mk fun v => ⟨P.part_of_vertex v, P.part_of_vertex_mem v⟩) $ fun _ _ hvw => by
+  (coloring.mk fun v => ⟨P.part_of_vertex v, P.part_of_vertex_mem v⟩) fun _ _ hvw => by
     rw [Ne.def, Subtype.mk_eq_mk]
     exact P.part_of_vertex_ne_of_adj hvw
 
 /-- Like `simple_graph.partition.to_coloring` but uses `set V` as the coloring type. -/
 def to_coloring' : G.coloring (Set V) :=
-  coloring.mk P.part_of_vertex $ fun _ _ hvw => P.part_of_vertex_ne_of_adj hvw
+  (coloring.mk P.part_of_vertex) fun _ _ hvw => P.part_of_vertex_ne_of_adj hvw
 
 theorem to_colorable [Fintype P.parts] : G.colorable (Fintype.card P.parts) :=
   P.to_coloring.to_colorable
@@ -121,7 +121,7 @@ theorem partitionable_iff_colorable {n : ℕ} : G.partitionable n ↔ G.colorabl
   · rintro ⟨P, hf, h⟩
     have : Fintype P.parts := hf.fintype
     rw [Set.Finite.card_to_finset] at h
-    apply P.to_colorable.of_le h
+    apply P.to_colorable.mono h
     
   · rintro ⟨C⟩
     refine' ⟨C.to_partition, C.color_classes_finite_of_fintype, le_transₓ _ (Fintype.card_fin n).le⟩

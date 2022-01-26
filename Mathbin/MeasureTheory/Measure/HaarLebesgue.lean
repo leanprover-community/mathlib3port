@@ -99,7 +99,7 @@ namespace Measureₓ
 zero. This auxiliary lemma proves this assuming additionally that the set is bounded. -/
 theorem add_haar_eq_zero_of_disjoint_translates_aux {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
     [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measureₓ E) [is_add_haar_measure μ] {s : Set E} (u : ℕ → E)
-    (sb : Bounded s) (hu : Bounded (range u)) (hs : Pairwise (Disjoint on fun n => {u n} + s)) (h's : MeasurableSet s) :
+    (sb : bounded s) (hu : bounded (range u)) (hs : Pairwise (Disjoint on fun n => {u n} + s)) (h's : MeasurableSet s) :
     μ s = 0 := by
   by_contra h
   apply lt_irreflₓ ∞
@@ -117,7 +117,7 @@ theorem add_haar_eq_zero_of_disjoint_translates_aux {E : Type _} [NormedGroup E]
 zero. -/
 theorem add_haar_eq_zero_of_disjoint_translates {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
     [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measureₓ E) [is_add_haar_measure μ] {s : Set E} (u : ℕ → E)
-    (hu : Bounded (range u)) (hs : Pairwise (Disjoint on fun n => {u n} + s)) (h's : MeasurableSet s) : μ s = 0 := by
+    (hu : bounded (range u)) (hs : Pairwise (Disjoint on fun n => {u n} + s)) (h's : MeasurableSet s) : μ s = 0 := by
   suffices H : ∀ R, μ (s ∩ closed_ball 0 R) = 0
   · apply le_antisymmₓ _ (zero_le _)
     have : s ⊆ ⋃ n : ℕ, s ∩ closed_ball 0 n := by
@@ -144,7 +144,7 @@ theorem add_haar_submodule {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [Mea
     ⟨1 / 2, by
       norm_num, by
       norm_num⟩
-  have A : Bounded (range fun n : ℕ => c ^ n • x) :=
+  have A : bounded (range fun n : ℕ => c ^ n • x) :=
     have : tendsto (fun n : ℕ => c ^ n • x) at_top (𝓝 ((0 : ℝ) • x)) :=
       (tendsto_pow_at_top_nhds_0_of_lt_1 cpos.le cone).smul_const x
     bounded_range_of_tendsto _ this
@@ -158,7 +158,7 @@ theorem add_haar_submodule {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [Mea
   have H : c ^ n - c ^ m ≠ 0 := by
     simpa only [sub_eq_zero, Ne.def] using (strict_anti_pow cpos cone).Injective.Ne hmn.symm
   have : x ∈ s := by
-    convert s.smul_mem ((c ^ n - c ^ m)⁻¹) A
+    convert s.smul_mem (c ^ n - c ^ m)⁻¹ A
     rw [smul_smul, inv_mul_cancel H, one_smul]
   exact hx this
 
@@ -173,14 +173,14 @@ linear equiv maps Haar measure to Haar measure.
 
 
 theorem map_linear_map_add_haar_pi_eq_smul_add_haar {ι : Type _} [Fintype ι] {f : (ι → ℝ) →ₗ[ℝ] ι → ℝ} (hf : f.det ≠ 0)
-    (μ : Measureₓ (ι → ℝ)) [is_add_haar_measure μ] : measure.map f μ = Ennreal.ofReal (abs (f.det⁻¹)) • μ := by
+    (μ : Measureₓ (ι → ℝ)) [is_add_haar_measure μ] : measure.map f μ = Ennreal.ofReal (abs f.det⁻¹) • μ := by
   have := add_haar_measure_unique (is_add_left_invariant_add_haar μ) (pi_Icc01 ι)
   rw [this]
   simp [add_haar_measure_eq_volume_pi, Real.map_linear_map_volume_pi_eq_smul_volume_pi hf, smul_smul, mul_comm]
 
 theorem map_linear_map_add_haar_eq_smul_add_haar {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
     [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measureₓ E) [is_add_haar_measure μ] {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) :
-    measure.map f μ = Ennreal.ofReal (abs (f.det⁻¹)) • μ := by
+    measure.map f μ = Ennreal.ofReal (abs f.det⁻¹) • μ := by
   let ι := Finₓ (finrank ℝ E)
   have : FiniteDimensional ℝ (ι → ℝ) := by
     infer_instance
@@ -212,11 +212,11 @@ equal to `μ s` times the absolute value of the inverse of the determinant of `f
 @[simp]
 theorem add_haar_preimage_linear_map {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E]
     [FiniteDimensional ℝ E] (μ : Measureₓ E) [is_add_haar_measure μ] {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) (s : Set E) :
-    μ (f ⁻¹' s) = Ennreal.ofReal (abs (f.det⁻¹)) * μ s :=
+    μ (f ⁻¹' s) = Ennreal.ofReal (abs f.det⁻¹) * μ s :=
   calc
     μ (f ⁻¹' s) = measure.map f μ s :=
       ((f.equiv_of_det_ne_zero hf).toContinuousLinearEquiv.toHomeomorph.toMeasurableEquiv.map_apply s).symm
-    _ = Ennreal.ofReal (abs (f.det⁻¹)) * μ s := by
+    _ = Ennreal.ofReal (abs f.det⁻¹) * μ s := by
       rw [map_linear_map_add_haar_eq_smul_add_haar μ hf]
       rfl
     
@@ -227,7 +227,7 @@ equal to `μ s` times the absolute value of the inverse of the determinant of `f
 theorem add_haar_preimage_continuous_linear_map {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
     [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measureₓ E) [is_add_haar_measure μ] {f : E →L[ℝ] E}
     (hf : LinearMap.det (f : E →ₗ[ℝ] E) ≠ 0) (s : Set E) :
-    μ (f ⁻¹' s) = Ennreal.ofReal (abs (LinearMap.det (f : E →ₗ[ℝ] E)⁻¹)) * μ s :=
+    μ (f ⁻¹' s) = Ennreal.ofReal (abs (LinearMap.det (f : E →ₗ[ℝ] E))⁻¹) * μ s :=
   add_haar_preimage_linear_map μ hf s
 
 /-- The preimage of a set `s` under a linear equiv `f` has measure
@@ -293,7 +293,7 @@ variable {E : Type _} [NormedGroup E] [MeasurableSpace E] [NormedSpace ℝ E] [F
   (μ : Measureₓ E) [is_add_haar_measure μ]
 
 theorem map_add_haar_smul {r : ℝ} (hr : r ≠ 0) :
-    measure.map ((· • ·) r) μ = Ennreal.ofReal (abs ((r ^ finrank ℝ E)⁻¹)) • μ := by
+    measure.map ((· • ·) r) μ = Ennreal.ofReal (abs (r ^ finrank ℝ E)⁻¹) • μ := by
   let f : E →ₗ[ℝ] E := r • 1
   change measure.map f μ = _
   have hf : f.det ≠ 0 := by
@@ -304,11 +304,11 @@ theorem map_add_haar_smul {r : ℝ} (hr : r ≠ 0) :
 
 @[simp]
 theorem add_haar_preimage_smul {r : ℝ} (hr : r ≠ 0) (s : Set E) :
-    μ ((· • ·) r ⁻¹' s) = Ennreal.ofReal (abs ((r ^ finrank ℝ E)⁻¹)) * μ s :=
+    μ ((· • ·) r ⁻¹' s) = Ennreal.ofReal (abs (r ^ finrank ℝ E)⁻¹) * μ s :=
   calc
     μ ((· • ·) r ⁻¹' s) = measure.map ((· • ·) r) μ s :=
       ((Homeomorph.smul (is_unit_iff_ne_zero.2 hr).Unit).toMeasurableEquiv.map_apply s).symm
-    _ = Ennreal.ofReal (abs ((r ^ finrank ℝ E)⁻¹)) * μ s := by
+    _ = Ennreal.ofReal (abs (r ^ finrank ℝ E)⁻¹) * μ s := by
       rw [map_add_haar_smul μ hr]
       rfl
     

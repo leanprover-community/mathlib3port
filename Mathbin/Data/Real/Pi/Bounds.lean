@@ -135,7 +135,7 @@ unsafe def pi_lower_bound (l : List ℚ) : tactic Unit := do
   l.mmap' fun r => do
       let a := r.num.to_nat
       let b := r.denom
-      () <$ tactic.apply (quote.1 (@sqrt_two_add_series_step_up (%%ₓreflect a) (%%ₓreflect b)));
+      andthen (() <$ tactic.apply (quote.1 (@sqrt_two_add_series_step_up (%%ₓreflect a) (%%ₓreflect b))))
           [tactic.skip, sorry, sorry, sorry]
   sorry
   sorry
@@ -177,11 +177,11 @@ sequence of rational numbers `sqrt 2 < r 1 < r 2 < ... < r n < 2` satisfying the
 `sqrt (2 + r i) ≥ r(i+1)`, where `r 0 = 0` and `sqrt (2 - r n) ≥ (a - 1/4^n) / 2^(n+1)`. -/
 unsafe def pi_upper_bound (l : List ℚ) : tactic Unit := do
   let n := l.length
-  () <$ tactic.apply (quote.1 (@pi_upper_bound_start (%%ₓreflect n))); [pure (), sorry]
+  andthen (() <$ tactic.apply (quote.1 (@pi_upper_bound_start (%%ₓreflect n)))) [pure (), sorry]
   l.mmap' fun r => do
       let a := r.num.to_nat
       let b := r.denom
-      () <$ tactic.apply (quote.1 (@sqrt_two_add_series_step_down (%%ₓreflect a) (%%ₓreflect b)));
+      andthen (() <$ tactic.apply (quote.1 (@sqrt_two_add_series_step_down (%%ₓreflect a) (%%ₓreflect b))))
           [pure (), sorry, sorry, sorry]
   sorry
   sorry

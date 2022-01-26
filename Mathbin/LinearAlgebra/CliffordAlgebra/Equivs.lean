@@ -104,7 +104,7 @@ theorem involute_eq_id : (involute : CliffordAlgebra (0 : QuadraticForm R Unit) 
 /-- The clifford algebra over a 0-dimensional vector space is isomorphic to its scalars. -/
 protected def Equivₓ : CliffordAlgebra (0 : QuadraticForm R Unit) ≃ₐ[R] R :=
   AlgEquiv.ofAlgHom
-    (CliffordAlgebra.lift (0 : QuadraticForm R Unit) $
+    (CliffordAlgebra.lift (0 : QuadraticForm R Unit) <|
       ⟨0, fun m : Unit => (zero_mul (0 : R)).trans (algebraMap R _).map_zero.symm⟩)
     (Algebra.ofId R _)
     (by
@@ -197,7 +197,7 @@ TODO: prove this is true for all `clifford_algebra`s over a 1-dimensional vector
 instance : CommRingₓ (CliffordAlgebra Q) :=
   { CliffordAlgebra.ring _ with
     mul_comm := fun x y =>
-      CliffordAlgebraComplex.equiv.Injective $ by
+      CliffordAlgebraComplex.equiv.Injective <| by
         rw [AlgEquiv.map_mul, mul_comm, AlgEquiv.map_mul] }
 
 /-- `reverse` is a no-op over `clifford_algebra_complex.Q`. -/
@@ -219,7 +219,7 @@ theorem reverse_eq_id : (reverse : CliffordAlgebra Q →ₗ[ℝ] _) = LinearMap.
 /-- `complex.conj` is analogous to `clifford_algebra.involute`. -/
 @[simp]
 theorem of_complex_conj (c : ℂ) : of_complex (conj c) = (of_complex c).involute :=
-  CliffordAlgebraComplex.equiv.Injective $ by
+  CliffordAlgebraComplex.equiv.Injective <| by
     rw [equiv_apply, equiv_apply, to_complex_involute, to_complex_of_complex, to_complex_of_complex]
 
 attribute [protected] Q
@@ -346,7 +346,7 @@ protected def Equivₓ : CliffordAlgebra (Q c₁ c₂) ≃ₐ[R] ℍ[R,c₁,c₂
 `involute ∘ reverse = reverse ∘ involute`). -/
 @[simp]
 theorem of_quaternion_conj (q : ℍ[R,c₁,c₂]) : of_quaternion q.conj = (of_quaternion q).reverse.involute :=
-  CliffordAlgebraQuaternion.equiv.Injective $ by
+  CliffordAlgebraQuaternion.equiv.Injective <| by
     rw [equiv_apply, equiv_apply, to_quaternion_involute_reverse, to_quaternion_of_quaternion,
       to_quaternion_of_quaternion]
 

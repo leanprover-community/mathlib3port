@@ -48,7 +48,7 @@ section Ext
 variable {M N : Matrix m n α}
 
 theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
-  ⟨fun h => funext $ fun i => funext $ h i, fun h => by
+  ⟨fun h => funext fun i => funext <| h i, fun h => by
     simp [h]⟩
 
 @[ext]
@@ -179,19 +179,19 @@ theorem map_zero [Zero α] [Zero β] (f : α → β) (h : f 0 = 0) : (0 : Matrix
 
 theorem map_add [Add α] [Add β] (f : α → β) (hf : ∀ a₁ a₂, f (a₁ + a₂) = f a₁ + f a₂) (M N : Matrix m n α) :
     (M + N).map f = M.map f + N.map f :=
-  ext $ fun _ _ => hf _ _
+  ext fun _ _ => hf _ _
 
 theorem map_sub [Sub α] [Sub β] (f : α → β) (hf : ∀ a₁ a₂, f (a₁ - a₂) = f a₁ - f a₂) (M N : Matrix m n α) :
     (M - N).map f = M.map f - N.map f :=
-  ext $ fun _ _ => hf _ _
+  ext fun _ _ => hf _ _
 
 theorem map_smul [HasScalar R α] [HasScalar R β] (f : α → β) (r : R) (hf : ∀ a, f (r • a) = r • f a)
     (M : Matrix m n α) : (r • M).map f = r • M.map f :=
-  ext $ fun _ _ => hf _
+  ext fun _ _ => hf _
 
 theorem _root_.is_smul_regular.matrix [HasScalar R S] {k : R} (hk : IsSmulRegular S k) :
     IsSmulRegular (Matrix m n S) k :=
-  IsSmulRegular.pi $ fun _ => IsSmulRegular.pi $ fun _ => hk
+  IsSmulRegular.pi fun _ => IsSmulRegular.pi fun _ => hk
 
 theorem _root_.is_left_regular.matrix [Mul α] {k : α} (hk : IsLeftRegular k) : IsSmulRegular (Matrix m n α) k :=
   hk.is_smul_regular.matrix
@@ -240,7 +240,7 @@ theorem diagonal_apply_ne' [Zero α] {d : n → α} {i j : n} (h : j ≠ i) : (d
   diagonal_apply_ne h.symm
 
 theorem diagonal_injective [Zero α] : Function.Injective (diagonal : (n → α) → Matrix n n α) := fun d₁ d₂ h =>
-  funext $ fun i => by
+  funext fun i => by
     simpa using matrix.ext_iff.mpr h i i
 
 @[simp]
@@ -797,7 +797,7 @@ theorem algebra_map_matrix_apply {r : R} {i j : n} :
   split_ifs with h <;> simp [h, Matrix.one_apply_ne]
 
 theorem algebra_map_eq_diagonal (r : R) : algebraMap R (Matrix n n α) r = diagonal (algebraMap R (n → α) r) :=
-  Matrix.ext $ fun i j => algebra_map_matrix_apply
+  Matrix.ext fun i j => algebra_map_matrix_apply
 
 @[simp]
 theorem algebra_map_eq_smul (r : R) : algebraMap R (Matrix n n R) r = r • (1 : Matrix n n R) :=
@@ -838,8 +838,8 @@ coefficients. This is `matrix.map` as an `equiv`. -/
 def map_matrix (f : α ≃ β) : Matrix m n α ≃ Matrix m n β where
   toFun := fun M => M.map f
   invFun := fun M => M.map f.symm
-  left_inv := fun M => Matrix.ext $ fun _ _ => f.symm_apply_apply _
-  right_inv := fun M => Matrix.ext $ fun _ _ => f.apply_symm_apply _
+  left_inv := fun M => Matrix.ext fun _ _ => f.symm_apply_apply _
+  right_inv := fun M => Matrix.ext fun _ _ => f.apply_symm_apply _
 
 @[simp]
 theorem map_matrix_refl : (Equivₓ.refl α).mapMatrix = Equivₓ.refl (Matrix m n α) :=
@@ -1472,22 +1472,22 @@ theorem minor_apply (A : Matrix m n α) (r_reindex : l → m) (c_reindex : o →
 
 @[simp]
 theorem minor_id_id (A : Matrix m n α) : A.minor id id = A :=
-  ext $ fun _ _ => rfl
+  ext fun _ _ => rfl
 
 @[simp]
 theorem minor_minor {l₂ o₂ : Type _} (A : Matrix m n α) (r₁ : l → m) (c₁ : o → n) (r₂ : l₂ → l) (c₂ : o₂ → o) :
     (A.minor r₁ c₁).minor r₂ c₂ = A.minor (r₁ ∘ r₂) (c₁ ∘ c₂) :=
-  ext $ fun _ _ => rfl
+  ext fun _ _ => rfl
 
 @[simp]
 theorem transpose_minor (A : Matrix m n α) (r_reindex : l → m) (c_reindex : o → n) :
     (A.minor r_reindex c_reindex)ᵀ = (A)ᵀ.minor c_reindex r_reindex :=
-  ext $ fun _ _ => rfl
+  ext fun _ _ => rfl
 
 @[simp]
 theorem conj_transpose_minor [HasStar α] (A : Matrix m n α) (r_reindex : l → m) (c_reindex : o → n) :
     (A.minor r_reindex c_reindex)ᴴ = (A)ᴴ.minor c_reindex r_reindex :=
-  ext $ fun _ _ => rfl
+  ext fun _ _ => rfl
 
 theorem minor_add [Add α] (A B : Matrix m n α) :
     ((A + B).minor : (l → m) → (o → n) → Matrix l o α) = A.minor + B.minor :=
@@ -1516,7 +1516,7 @@ theorem minor_map (f : α → β) (e₁ : l → m) (e₂ : o → n) (A : Matrix 
   injective, then the resulting matrix is again diagonal. -/
 theorem minor_diagonal [Zero α] [DecidableEq m] [DecidableEq l] (d : m → α) (e : l → m) (he : Function.Injective e) :
     (diagonal d).minor e e = diagonal (d ∘ e) :=
-  ext $ fun i j => by
+  ext fun i j => by
     rw [minor_apply]
     by_cases' h : i = j
     · rw [h, diagonal_apply_eq, diagonal_apply_eq]
@@ -1531,7 +1531,7 @@ theorem minor_one [Zero α] [One α] [DecidableEq m] [DecidableEq l] (e : l → 
 theorem minor_mul [Fintype n] [Fintype o] [Semiringₓ α] {p q : Type _} (M : Matrix m n α) (N : Matrix n p α)
     (e₁ : l → m) (e₂ : o → n) (e₃ : q → p) (he₂ : Function.Bijective e₂) :
     (M ⬝ N).minor e₁ e₃ = M.minor e₁ e₂ ⬝ N.minor e₂ e₃ :=
-  ext $ fun _ _ => (he₂.sum_comp _).symm
+  ext fun _ _ => (he₂.sum_comp _).symm
 
 /-! `simp` lemmas for `matrix.minor`s interaction with `matrix.diagonal`, `1`, and `matrix.mul` for
 when the mappings are bundled. -/
@@ -1603,7 +1603,7 @@ theorem reindex_symm (eₘ : m ≃ l) (eₙ : n ≃ o) : (reindex eₘ eₙ).sym
 @[simp]
 theorem reindex_trans {l₂ o₂ : Type _} (eₘ : m ≃ l) (eₙ : n ≃ o) (eₘ₂ : l ≃ l₂) (eₙ₂ : o ≃ o₂) :
     (reindex eₘ eₙ).trans (reindex eₘ₂ eₙ₂) = (reindex (eₘ.trans eₘ₂) (eₙ.trans eₙ₂) : Matrix m n α ≃ _) :=
-  Equivₓ.ext $ fun A => (A.minor_minor eₘ.symm eₙ.symm eₘ₂.symm eₙ₂.symm : _)
+  Equivₓ.ext fun A => (A.minor_minor eₘ.symm eₙ.symm eₘ₂.symm eₙ₂.symm : _)
 
 theorem transpose_reindex (eₘ : m ≃ l) (eₙ : n ≃ o) (M : Matrix m n α) : (reindex eₘ eₙ M)ᵀ = reindex eₙ eₘ (M)ᵀ :=
   rfl
@@ -1833,7 +1833,7 @@ theorem update_row_eq_self [DecidableEq m] (A : Matrix m n α) {i : m} : A.updat
 
 @[simp]
 theorem update_column_eq_self [DecidableEq n] (A : Matrix m n α) {i : n} : (A.update_column i fun j => A j i) = A :=
-  funext $ fun j => Function.update_eq_self i (A j)
+  funext fun j => Function.update_eq_self i (A j)
 
 end Update
 

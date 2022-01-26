@@ -109,7 +109,7 @@ theorem Finset.center_mass_subset {t' : Finset ι} (ht : t ⊆ t') (h : ∀, ∀
   rw [h i hit' hit, zero_smul, smul_zero]
 
 theorem Finset.center_mass_filter_ne_zero : (t.filter fun i => w i ≠ 0).centerMass w z = t.center_mass w z :=
-  Finset.center_mass_subset z (filter_subset _ _) $ fun i hit hit' => by
+  (Finset.center_mass_subset z (filter_subset _ _)) fun i hit hit' => by
     simpa only [hit, mem_filter, true_andₓ, Ne.def, not_not] using hit'
 
 variable {z}
@@ -123,7 +123,7 @@ theorem Convex.center_mass_mem (hs : Convex R s) :
     
   intro h₀ hpos hmem
   have zi : z i ∈ s := hmem _ (mem_insert_self _ _)
-  have hs₀ : ∀, ∀ j ∈ t, ∀, 0 ≤ w j := fun j hj => h₀ j $ mem_insert_of_mem hj
+  have hs₀ : ∀, ∀ j ∈ t, ∀, 0 ≤ w j := fun j hj => h₀ j <| mem_insert_of_mem hj
   rw [sum_insert hi] at hpos
   by_cases' hsum_t : (∑ j in t, w j) = 0
   · have ws : ∀, ∀ j ∈ t, ∀, w j = 0 := (sum_eq_zero_iff_of_nonneg hs₀).1 hsum_t
@@ -176,7 +176,7 @@ theorem convex_iff_sum_mem :
 
 theorem Finset.center_mass_mem_convex_hull (t : Finset ι) {w : ι → R} (hw₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i)
     (hws : 0 < ∑ i in t, w i) {z : ι → E} (hz : ∀, ∀ i ∈ t, ∀, z i ∈ s) : t.center_mass w z ∈ convexHull R s :=
-  (convex_convex_hull R s).center_mass_mem hw₀ hws fun i hi => subset_convex_hull R s $ hz i hi
+  (convex_convex_hull R s).center_mass_mem hw₀ hws fun i hi => subset_convex_hull R s <| hz i hi
 
 /-- A refinement of `finset.center_mass_mem_convex_hull` when the indexed family is a `finset` of
 the space. -/
@@ -295,7 +295,7 @@ theorem convex_hull_eq (s : Set E) :
     
 
 theorem Finset.convex_hull_eq (s : Finset E) :
-    convexHull R (↑s) =
+    convexHull R ↑s =
       { x : E | ∃ (w : E → R)(hw₀ : ∀, ∀ y ∈ s, ∀, 0 ≤ w y)(hw₁ : (∑ y in s, w y) = 1), s.center_mass w id = x } :=
   by
   refine' subset.antisymm (convex_hull_min _ _) _
@@ -332,7 +332,7 @@ theorem Set.Finite.convex_hull_eq {s : Set E} (hs : finite s) :
 
 /-- A weak version of Carathéodory's theorem. -/
 theorem convex_hull_eq_union_convex_hull_finite_subsets (s : Set E) :
-    convexHull R s = ⋃ (t : Finset E) (w : ↑t ⊆ s), convexHull R (↑t) := by
+    convexHull R s = ⋃ (t : Finset E) (w : ↑t ⊆ s), convexHull R ↑t := by
   refine' subset.antisymm _ _
   · rw [convex_hull_eq]
     rintro x ⟨ι, t, w, z, hw₀, hw₁, hz, rfl⟩
@@ -354,8 +354,8 @@ theorem convex_hull_eq_union_convex_hull_finite_subsets (s : Set E) :
 theorem convex_hull_prod (s : Set E) (t : Set F) : convexHull R (s ×ˢ t) = convexHull R s ×ˢ convexHull R t := by
   refine' Set.Subset.antisymm _ _
   · exact
-      convex_hull_min (Set.prod_mono (subset_convex_hull _ _) $ subset_convex_hull _ _)
-        ((convex_convex_hull _ _).Prod $ convex_convex_hull _ _)
+      convex_hull_min (Set.prod_mono (subset_convex_hull _ _) <| subset_convex_hull _ _)
+        ((convex_convex_hull _ _).Prod <| convex_convex_hull _ _)
     
   rintro ⟨x, y⟩ ⟨hx, hy⟩
   rw [convex_hull_eq] at hx hy⊢
@@ -406,7 +406,7 @@ variable (ι) [Fintype ι] {f : ι → R}
 
 /-- `std_simplex 𝕜 ι` is the convex hull of the canonical basis in `ι → 𝕜`. -/
 theorem convex_hull_basis_eq_std_simplex :
-    convexHull R (range $ fun i j : ι => if i = j then (1 : R) else 0) = StdSimplex R ι := by
+    convexHull R (range fun i j : ι => if i = j then (1 : R) else 0) = StdSimplex R ι := by
   refine' subset.antisymm (convex_hull_min _ (convex_std_simplex R ι)) _
   · rintro _ ⟨i, rfl⟩
     exact ite_eq_mem_std_simplex R i

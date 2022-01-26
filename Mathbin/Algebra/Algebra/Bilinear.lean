@@ -155,7 +155,7 @@ theorem pow_lmul_left (a : A) (n : ℕ) : lmul_left R a ^ n = lmul_left R (a ^ n
 
 @[simp]
 theorem pow_lmul_right (a : A) (n : ℕ) : lmul_right R a ^ n = lmul_right R (a ^ n) :=
-  LinearMap.coe_injective $ ((lmul_right R a).coe_pow n).symm ▸ mul_right_iterate a n
+  LinearMap.coe_injective <| ((lmul_right R a).coe_pow n).symm ▸ mul_right_iterate a n
 
 end
 

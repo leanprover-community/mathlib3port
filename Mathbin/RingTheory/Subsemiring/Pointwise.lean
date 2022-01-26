@@ -29,8 +29,8 @@ variable [Monoidₓ M] [Semiringₓ R] [MulSemiringAction M R]
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwise_mul_action : MulAction M (Subsemiring R) where
   smul := fun a S => S.map (MulSemiringAction.toRingHom _ _ a)
-  one_smul := fun S => (congr_argₓ (fun f => S.map f) (RingHom.ext $ one_smul M)).trans S.map_id
-  mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (RingHom.ext $ mul_smul _ _)).trans (S.map_map _ _).symm
+  one_smul := fun S => (congr_argₓ (fun f => S.map f) (RingHom.ext <| one_smul M)).trans S.map_id
+  mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (RingHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] Subsemiring.pointwiseMulAction
 
@@ -55,7 +55,7 @@ theorem mem_smul_pointwise_iff_exists (m : M) (r : R) (S : Subsemiring R) : r �
 
 instance pointwise_central_scalar [MulSemiringAction (Mᵐᵒᵖ) R] [IsCentralScalar M R] :
     IsCentralScalar M (Subsemiring R) :=
-  ⟨fun a S => (congr_argₓ fun f => S.map f) $ RingHom.ext $ op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_argₓ fun f => S.map f) <| RingHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ
 

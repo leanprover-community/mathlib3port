@@ -346,11 +346,11 @@ theorem untrop_one [Zero R] : untrop (1 : Tropical R) = 0 :=
 instance [Zero R] : Nontrivial (Tropical (WithTop R)) :=
   ⟨⟨0, 1, trop_injective.Ne WithTop.top_ne_coe⟩⟩
 
-instance [Neg R] : HasInv (Tropical R) :=
+instance [Neg R] : Inv (Tropical R) :=
   ⟨fun x => trop (-untrop x)⟩
 
 @[simp]
-theorem untrop_inv [Neg R] (x : Tropical R) : untrop (x⁻¹) = -untrop x :=
+theorem untrop_inv [Neg R] (x : Tropical R) : untrop x⁻¹ = -untrop x :=
   rfl
 
 instance [Sub R] : Div (Tropical R) :=
@@ -368,7 +368,7 @@ instance [AddCommSemigroupₓ R] : CommSemigroupₓ (Tropical R) :=
   { Tropical.semigroup with mul_comm := fun _ _ => untrop_injective (add_commₓ _ _) }
 
 instance {α : Type _} [HasScalar α R] : Pow (Tropical R) α where
-  pow := fun x n => trop $ n • untrop x
+  pow := fun x n => trop <| n • untrop x
 
 @[simp]
 theorem untrop_pow {α : Type _} [HasScalar α R] (x : Tropical R) (n : α) : untrop (x ^ n) = n • untrop x :=
@@ -381,13 +381,13 @@ theorem trop_smul {α : Type _} [HasScalar α R] (x : R) (n : α) : trop (n • 
 instance [AddZeroClass R] : MulOneClass (Tropical R) where
   one := 1
   mul := · * ·
-  one_mul := fun _ => untrop_injective $ zero_addₓ _
-  mul_one := fun _ => untrop_injective $ add_zeroₓ _
+  one_mul := fun _ => untrop_injective <| zero_addₓ _
+  mul_one := fun _ => untrop_injective <| add_zeroₓ _
 
 instance [AddMonoidₓ R] : Monoidₓ (Tropical R) :=
   { Tropical.mulOneClass, Tropical.semigroup with npow := fun n x => x ^ n,
-    npow_zero' := fun _ => untrop_injective $ zero_smul _ _,
-    npow_succ' := fun _ _ => untrop_injective $ succ_nsmul _ _ }
+    npow_zero' := fun _ => untrop_injective <| zero_smul _ _,
+    npow_succ' := fun _ _ => untrop_injective <| succ_nsmul _ _ }
 
 @[simp]
 theorem trop_nsmul [AddMonoidₓ R] (x : R) (n : ℕ) : trop (n • x) = trop x ^ n :=
@@ -397,10 +397,10 @@ instance [AddCommMonoidₓ R] : CommMonoidₓ (Tropical R) :=
   { Tropical.monoid, Tropical.commSemigroup with }
 
 instance [AddGroupₓ R] : Groupₓ (Tropical R) :=
-  { Tropical.monoid with inv := HasInv.inv, mul_left_inv := fun _ => untrop_injective $ add_left_negₓ _,
-    zpow := fun n x => trop $ n • untrop x, zpow_zero' := fun _ => untrop_injective $ zero_zsmul _,
-    zpow_succ' := fun _ _ => untrop_injective $ AddGroupₓ.zsmul_succ' _ _,
-    zpow_neg' := fun _ _ => untrop_injective $ AddGroupₓ.zsmul_neg' _ _ }
+  { Tropical.monoid with inv := Inv.inv, mul_left_inv := fun _ => untrop_injective <| add_left_negₓ _,
+    zpow := fun n x => trop <| n • untrop x, zpow_zero' := fun _ => untrop_injective <| zero_zsmul _,
+    zpow_succ' := fun _ _ => untrop_injective <| AddGroupₓ.zsmul_succ' _ _,
+    zpow_neg' := fun _ _ => untrop_injective <| AddGroupₓ.zsmul_neg' _ _ }
 
 instance [AddCommGroupₓ R] : CommGroupₓ (Tropical R) :=
   { Tropical.group with mul_comm := fun _ _ => untrop_injective (add_commₓ _ _) }

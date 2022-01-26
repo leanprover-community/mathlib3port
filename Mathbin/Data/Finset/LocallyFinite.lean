@@ -62,7 +62,7 @@ alias Ioc_eq_empty_iff ↔ _ Finset.Ioc_eq_empty
 
 @[simp]
 theorem Ioo_eq_empty (h : ¬a < b) : Ioo a b = ∅ :=
-  eq_empty_iff_forall_not_mem.2 $ fun x hx => h ((mem_Ioo.1 hx).1.trans (mem_Ioo.1 hx).2)
+  eq_empty_iff_forall_not_mem.2 fun x hx => h ((mem_Ioo.1 hx).1.trans (mem_Ioo.1 hx).2)
 
 @[simp]
 theorem Icc_eq_empty_of_lt (h : b < a) : Icc a b = ∅ :=
@@ -150,7 +150,7 @@ theorem Ico_filter_le_of_left_le {a b c : α} [DecidablePred ((· ≤ ·) c)] (h
 /-- A set with upper and lower bounds in a locally finite order is a fintype -/
 def _root_.set.fintype_of_mem_bounds {a b} {s : Set α} [DecidablePred (· ∈ s)] (ha : a ∈ LowerBounds s)
     (hb : b ∈ UpperBounds s) : Fintype s :=
-  Set.fintypeSubset (Set.Icc a b) $ fun x hx => ⟨ha hx, hb hx⟩
+  (Set.fintypeSubset (Set.Icc a b)) fun x hx => ⟨ha hx, hb hx⟩
 
 theorem _root_.bdd_below.finite_of_bdd_above {s : Set α} (h₀ : BddBelow s) (h₁ : BddAbove s) : s.finite := by
   let ⟨a, ha⟩ := h₀
@@ -237,7 +237,7 @@ theorem Ico_inter_Ico_consecutive (a b c : α) : Ico a b ∩ Ico b c = ∅ := by
   exact hx.1.2.not_le hx.2.1
 
 theorem Ico_disjoint_Ico_consecutive (a b c : α) : Disjoint (Ico a b) (Ico b c) :=
-  le_of_eqₓ $ Ico_inter_Ico_consecutive a b c
+  le_of_eqₓ <| Ico_inter_Ico_consecutive a b c
 
 end DecidableEq
 
@@ -340,7 +340,7 @@ section OrderTop
 variable [Preorderₓ α] [OrderTop α] [LocallyFiniteOrder α]
 
 theorem _root_.bdd_below.finite {s : Set α} (hs : BddBelow s) : s.finite :=
-  hs.finite_of_bdd_above $ OrderTop.bdd_above s
+  hs.finite_of_bdd_above <| OrderTop.bdd_above s
 
 end OrderTop
 

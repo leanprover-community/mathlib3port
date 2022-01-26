@@ -61,7 +61,7 @@ theorem mul {α β} [Semigroupₓ α] [CommSemigroupₓ β] {f g : α → β} (h
 /-- The inverse of a map which preserves multiplication,
 preserves multiplication when the target is commutative. -/
 @[to_additive]
-theorem inv {α β} [Mul α] [CommGroupₓ β] {f : α → β} (hf : IsMulHom f) : IsMulHom fun a => f a⁻¹ :=
+theorem inv {α β} [Mul α] [CommGroupₓ β] {f : α → β} (hf : IsMulHom f) : IsMulHom fun a => (f a)⁻¹ :=
   { map_mul := fun a b => (hf.map_mul a b).symm ▸ mul_inv _ _ }
 
 end IsMulHom
@@ -129,7 +129,7 @@ theorem map_mul x y : f (x * y) = f x * f y :=
 /-- The inverse of a map which preserves multiplication,
 preserves multiplication when the target is commutative. -/
 @[to_additive]
-theorem inv {α β} [MulOneClass α] [CommGroupₓ β] {f : α → β} (hf : IsMonoidHom f) : IsMonoidHom fun a => f a⁻¹ :=
+theorem inv {α β} [MulOneClass α] [CommGroupₓ β] {f : α → β} (hf : IsMonoidHom f) : IsMonoidHom fun a => (f a)⁻¹ :=
   { map_one := hf.map_one.symm ▸ one_inv, map_mul := fun a b => (hf.map_mul a b).symm ▸ mul_inv _ _ }
 
 end IsMonoidHom
@@ -138,7 +138,7 @@ end IsMonoidHom
 @[to_additive]
 theorem IsMulHom.to_is_monoid_hom [MulOneClass α] [Groupₓ β] {f : α → β} (hf : IsMulHom f) : IsMonoidHom f :=
   { map_one :=
-      mul_right_eq_self.1 $ by
+      mul_right_eq_self.1 <| by
         rw [← hf.map_mul, one_mulₓ],
     map_mul := hf.map_mul }
 
@@ -216,8 +216,8 @@ theorem map_one : f 1 = 1 :=
 
 /-- A group homomorphism sends inverses to inverses. -/
 @[to_additive]
-theorem map_inv (hf : IsGroupHom f) (a : α) : f (a⁻¹) = f a⁻¹ :=
-  eq_inv_of_mul_eq_one $ by
+theorem map_inv (hf : IsGroupHom f) (a : α) : f a⁻¹ = (f a)⁻¹ :=
+  eq_inv_of_mul_eq_one <| by
     rw [← hf.map_mul, inv_mul_selfₓ, hf.map_one]
 
 /-- The identity is a group homomorphism. -/
@@ -246,7 +246,7 @@ theorem mul {α β} [Groupₓ α] [CommGroupₓ β] {f g : α → β} (hf : IsGr
 
 /-- The inverse of a group homomorphism is a group homomorphism if the target is commutative. -/
 @[to_additive]
-theorem inv {α β} [Groupₓ α] [CommGroupₓ β] {f : α → β} (hf : IsGroupHom f) : IsGroupHom fun a => f a⁻¹ :=
+theorem inv {α β} [Groupₓ α] [CommGroupₓ β] {f : α → β} (hf : IsGroupHom f) : IsGroupHom fun a => (f a)⁻¹ :=
   { map_mul := hf.to_is_mul_hom.inv.map_mul }
 
 end IsGroupHom
@@ -286,7 +286,7 @@ end RingHom
 
 /-- Inversion is a group homomorphism if the group is commutative. -/
 @[to_additive Neg.is_add_group_hom "Negation is an `add_group` homomorphism if the `add_group` is commutative."]
-theorem Inv.is_group_hom [CommGroupₓ α] : IsGroupHom (HasInv.inv : α → α) :=
+theorem Inv.is_group_hom [CommGroupₓ α] : IsGroupHom (Inv.inv : α → α) :=
   { map_mul := mul_inv }
 
 namespace IsAddGroupHom
@@ -321,7 +321,7 @@ def map' {f : M → N} (hf : IsMonoidHom f) : (M)ˣ →* (N)ˣ :=
   map (MonoidHom.of hf)
 
 @[simp]
-theorem coe_map' {f : M → N} (hf : IsMonoidHom f) (x : (M)ˣ) : ↑(map' hf : (M)ˣ → (N)ˣ) x = f x :=
+theorem coe_map' {f : M → N} (hf : IsMonoidHom f) (x : (M)ˣ) : ↑((map' hf : (M)ˣ → (N)ˣ) x) = f x :=
   rfl
 
 theorem coe_is_monoid_hom : IsMonoidHom (coe : (M)ˣ → M) :=

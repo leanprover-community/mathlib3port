@@ -94,7 +94,7 @@ theorem sum_bernoulli_poly (n : ℕ) :
   conv_lhs =>
     apply_congr skip conv =>
       apply_congr skip rw [← Nat.cast_mul,
-        choose_mul ((le_tsub_iff_left $ mem_range_le H).1 $ mem_range_le H_1) (le.intro rfl), Nat.cast_mul,
+        choose_mul ((le_tsub_iff_left <| mem_range_le H).1 <| mem_range_le H_1) (le.intro rfl), Nat.cast_mul,
         add_commₓ x x_1, add_tsub_cancel_right, mul_assoc, mul_comm, ← smul_eq_mul, ←
         Polynomial.smul_monomial]rw [← sum_smul]
   rw [sum_range_succ_comm]

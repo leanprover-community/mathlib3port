@@ -143,7 +143,7 @@ theorem zero_le_padic_val_rat_of_nat (p n : ℕ) : 0 ≤ padicValRat p n := by
 /-- `padic_val_rat` coincides with `padic_val_nat`.
 -/
 @[simp, norm_cast]
-theorem padic_val_rat_of_nat (p n : ℕ) : ↑padicValNat p n = padicValRat p n := by
+theorem padic_val_rat_of_nat (p n : ℕ) : ↑(padicValNat p n) = padicValRat p n := by
   unfold padicValNat
   rw [Int.to_nat_of_nonneg (zero_le_padic_val_rat_of_nat p n)]
 
@@ -205,11 +205,11 @@ protected theorem defn {q : ℚ} {n d : ℤ} (hqz : q ≠ 0) (qdf : q = n /. d) 
     padicValRat p q =
       (multiplicity (p : ℤ) n).get
           (finite_int_iff.2
-            ⟨Ne.symm $ ne_of_ltₓ p_prime.1.one_lt, fun hn => by
+            ⟨Ne.symm <| ne_of_ltₓ p_prime.1.one_lt, fun hn => by
               simp_all ⟩) -
         (multiplicity (p : ℤ) d).get
           (finite_int_iff.2
-            ⟨Ne.symm $ ne_of_ltₓ p_prime.1.one_lt, fun hd => by
+            ⟨Ne.symm <| ne_of_ltₓ p_prime.1.one_lt, fun hd => by
               simp_all ⟩) :=
   by
   have hn : n ≠ 0 := Rat.mk_num_ne_zero_of_ne_zero hqz qdf
@@ -240,7 +240,7 @@ protected theorem pow {q : ℚ} (hq : q ≠ 0) {k : ℕ} : padicValRat p (q ^ k)
 
 /-- A rewrite lemma for `padic_val_rat p (q⁻¹)` with condition `q ≠ 0`.
 -/
-protected theorem inv {q : ℚ} (hq : q ≠ 0) : padicValRat p (q⁻¹) = -padicValRat p q := by
+protected theorem inv {q : ℚ} (hq : q ≠ 0) : padicValRat p q⁻¹ = -padicValRat p q := by
   rw [eq_neg_iff_add_eq_zero, ← padicValRat.mul p (inv_ne_zero hq) hq, inv_mul_cancel hq, padicValRat.one]
 
 /-- A rewrite lemma for `padic_val_rat p (q / r)` with conditions `q ≠ 0`, `r ≠ 0`.
@@ -434,7 +434,7 @@ theorem pow_succ_padic_val_nat_not_dvd {p n : ℕ} [hp : Fact (Nat.Prime p)] (hn
 
 theorem padic_val_nat_primes {p q : ℕ} [p_prime : Fact p.prime] [q_prime : Fact q.prime] (neq : p ≠ q) :
     padicValNat p q = 0 :=
-  @padic_val_nat_of_not_dvd p p_prime q $ (not_congr (Iff.symm (prime_dvd_prime_iff_eq p_prime.1 q_prime.1))).mp neq
+  @padic_val_nat_of_not_dvd p p_prime q <| (not_congr (Iff.symm (prime_dvd_prime_iff_eq p_prime.1 q_prime.1))).mp neq
 
 protected theorem padicValNat.div' {p : ℕ} [p_prime : Fact p.prime] :
     ∀ {m : ℕ} cpm : coprime p m {b : ℕ} dvd : m ∣ b, padicValNat p (b / m) = padicValNat p b
@@ -540,7 +540,7 @@ theorem range_pow_padic_val_nat_subset_divisors {n : ℕ} (p : ℕ) [Fact p.prim
   obtain ⟨k, hk, rfl⟩ := ht
   rw [Nat.mem_divisors]
   exact
-    ⟨(pow_dvd_pow p $ by
+    ⟨(pow_dvd_pow p <| by
             linarith).trans
         pow_padic_val_nat_dvd,
       hn⟩
@@ -555,14 +555,14 @@ theorem range_pow_padic_val_nat_subset_divisors' {n : ℕ} (p : ℕ) [h : Fact p
   obtain ⟨k, hk, rfl⟩ := ht
   rw [Finset.mem_sdiff, Nat.mem_divisors]
   refine'
-    ⟨⟨(pow_dvd_pow p $ by
+    ⟨⟨(pow_dvd_pow p <| by
               linarith).trans
           pow_padic_val_nat_dvd,
         hn⟩,
       _⟩
   rw [Finset.mem_singleton]
   nth_rw 1[← one_pow (k + 1)]
-  exact (Nat.pow_lt_pow_of_lt_left h.1.one_lt $ Nat.succ_posₓ k).ne'
+  exact (Nat.pow_lt_pow_of_lt_left h.1.one_lt <| Nat.succ_posₓ k).ne'
 
 end padicValNat
 
@@ -624,7 +624,7 @@ See also `padic_norm.padic_norm_p` for a version that assumes `1 < p`.
 -/
 @[simp]
 theorem padic_norm_p_of_prime (p : ℕ) [Fact p.prime] : padicNorm p p = 1 / p :=
-  padic_norm_p $ Nat.Prime.one_lt (Fact.out _)
+  padic_norm_p <| Nat.Prime.one_lt (Fact.out _)
 
 /-- The p-adic norm of `q` is `1` if `q` is prime and not equal to `p`. -/
 theorem padic_norm_of_prime_of_ne {p q : ℕ} [p_prime : Fact p.prime] [q_prime : Fact q.prime] (neq : p ≠ q) :
@@ -649,7 +649,7 @@ theorem padic_norm_p_lt_one {p : ℕ} (hp : 1 < p) : padicNorm p p < 1 := by
 See also `padic_norm.padic_norm_p_lt_one` for a version assuming `1 < p`.
 -/
 theorem padic_norm_p_lt_one_of_prime (p : ℕ) [Fact p.prime] : padicNorm p p < 1 :=
-  padic_norm_p_lt_one $ Nat.Prime.one_lt (Fact.out _)
+  padic_norm_p_lt_one <| Nat.Prime.one_lt (Fact.out _)
 
 /-- `padic_norm p q` takes discrete values `p ^ -z` for `z : ℤ`.
 -/
@@ -716,7 +716,7 @@ protected theorem div (q r : ℚ) : padicNorm p (q / r) = padicNorm p q / padicN
 
 /-- The p-adic norm of an integer is at most 1.
 -/
-protected theorem of_int (z : ℤ) : padicNorm p (↑z) ≤ 1 :=
+protected theorem of_int (z : ℤ) : padicNorm p ↑z ≤ 1 :=
   if hz : z = 0 then by
     simp [hz, zero_le_one]
   else by

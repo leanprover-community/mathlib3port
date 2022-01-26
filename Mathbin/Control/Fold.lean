@@ -111,7 +111,7 @@ def foldl.get (x : foldl α) : α → α :=
   unop x
 
 def foldl.of_free_monoid (f : β → α → β) (xs : FreeMonoid α) : Monoidₓ.Foldl β :=
-  op $ flip (List.foldlₓ f) xs
+  op <| flip (List.foldlₓ f) xs
 
 @[reducible]
 def foldr (α : Type u) : Type u :=
@@ -128,7 +128,7 @@ def foldr.of_free_monoid (f : α → β → β) (xs : FreeMonoid α) : Monoidₓ
 
 @[reducible]
 def mfoldl (m : Type u → Type u) [Monadₓ m] (α : Type u) : Type u :=
-  MulOpposite $ End $ Kleisli.mk m α
+  MulOpposite <| End <| Kleisli.mk m α
 
 def mfoldl.mk (f : α → m α) : mfoldl m α :=
   op f
@@ -137,11 +137,11 @@ def mfoldl.get (x : mfoldl m α) : α → m α :=
   unop x
 
 def mfoldl.of_free_monoid (f : β → α → m β) (xs : FreeMonoid α) : Monoidₓ.Mfoldl m β :=
-  op $ flip (List.mfoldl f) xs
+  op <| flip (List.mfoldl f) xs
 
 @[reducible]
 def mfoldr (m : Type u → Type u) [Monadₓ m] (α : Type u) : Type u :=
-  End $ Kleisli.mk m α
+  End <| Kleisli.mk m α
 
 def mfoldr.mk (f : α → m α) : mfoldr m α :=
   f
@@ -191,7 +191,7 @@ def to_list : t α → List α :=
   List.reverse ∘ foldl (flip List.cons) []
 
 def length (xs : t α) : ℕ :=
-  down $ foldl (fun l _ => up $ l.down + 1) (up 0) xs
+  down <| foldl (fun l _ => up <| l.down + 1) (up 0) xs
 
 variable {m : Type u → Type u} [Monadₓ m]
 
@@ -327,7 +327,7 @@ theorem mfoldr.of_free_monoid_comp_free_mk {m} [Monadₓ m] [IsLawfulMonad m] (f
   simp only [· ∘ ·, mfoldr.of_free_monoid, mfoldr.mk, flip, fold_mfoldr_cons]
 
 theorem to_list_spec (xs : t α) : to_list xs = (fold_map free.mk xs : FreeMonoid _) :=
-  Eq.symm $
+  Eq.symm <|
     calc
       fold_map free.mk xs = (fold_map free.mk xs).reverse.reverse := by
         simp only [List.reverse_reverse]
@@ -336,7 +336,7 @@ theorem to_list_spec (xs : t α) : to_list xs = (fold_map free.mk xs : FreeMonoi
       _ = (unop (foldl.of_free_monoid (flip cons) (fold_map free.mk xs)) []).reverse := by
         simp only [flip, List.foldr_reverse, foldl.of_free_monoid, unop_op]
       _ = to_list xs := by
-        have : IsMonoidHom (foldl.of_free_monoid (flip $ @cons α)) := by
+        have : IsMonoidHom (foldl.of_free_monoid (flip <| @cons α)) := by
           apply fold_foldl
         rw [fold_map_hom_free this]
         simp only [to_list, foldl, List.reverse_inj, foldl.get, foldl.of_free_monoid_comp_free_mk]

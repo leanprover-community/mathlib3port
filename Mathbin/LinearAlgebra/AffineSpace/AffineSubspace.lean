@@ -89,7 +89,7 @@ theorem vector_span_singleton (p : P) : vectorSpan k ({p} : Set P) = ⊥ := by
   simp [vector_span_def]
 
 /-- The `s -ᵥ s` lies within the `vector_span k s`. -/
-theorem vsub_set_subset_vector_span (s : Set P) : s -ᵥ s ⊆ ↑vectorSpan k s :=
+theorem vsub_set_subset_vector_span (s : Set P) : s -ᵥ s ⊆ ↑(vectorSpan k s) :=
   Submodule.subset_span
 
 /-- Each pairwise difference is in the `vector_span`. -/
@@ -513,7 +513,7 @@ instance : CompleteLattice (AffineSubspace k P) :=
     bot_le := fun _ _ => False.elim, sup := fun s => affineSpan k (⋃ s' ∈ s, (s' : Set P)),
     inf := fun s =>
       mk (⋂ s' ∈ s, (s' : Set P)) fun c p1 p2 p3 hp1 hp2 hp3 =>
-        Set.mem_Inter₂.2 $ fun s2 hs2 => by
+        Set.mem_Inter₂.2 fun s2 hs2 => by
           rw [Set.mem_Inter₂] at *
           exact s2.smul_vsub_vadd_mem c (hp1 s2 hs2) (hp2 s2 hs2) (hp3 s2 hs2),
     le_Sup := fun _ _ h => Set.Subset.trans (Set.subset_bUnion_of_mem h) (subset_span_points k _),
@@ -566,8 +566,7 @@ variable (k V)
 /-- The affine span is the `Inf` of subspaces containing the given
 points. -/
 theorem affine_span_eq_Inf (s : Set P) : affineSpan k s = Inf { s' | s ⊆ s' } :=
-  le_antisymmₓ (span_points_subset_coe_of_subset_coe $ Set.subset_Inter₂ $ fun _ => id)
-    (Inf_le (subset_span_points k _))
+  le_antisymmₓ (span_points_subset_coe_of_subset_coe <| Set.subset_Inter₂ fun _ => id) (Inf_le (subset_span_points k _))
 
 variable (P)
 
@@ -587,7 +586,7 @@ theorem span_empty : affineSpan k (∅ : Set P) = ⊥ :=
 /-- The span of `univ` is `⊤`. -/
 @[simp]
 theorem span_univ : affineSpan k (Set.Univ : Set P) = ⊤ :=
-  eq_top_iff.2 $ subset_span_points k _
+  eq_top_iff.2 <| subset_span_points k _
 
 variable {k V P}
 
@@ -1156,18 +1155,18 @@ theorem mem_map {f : P₁ →ᵃ[k] P₂} {x : P₂} {s : AffineSubspace k P₁}
 
 @[simp]
 theorem map_bot : (⊥ : AffineSubspace k P₁).map f = ⊥ :=
-  coe_injective $ image_empty f
+  coe_injective <| image_empty f
 
 omit V₂
 
 @[simp]
 theorem map_id (s : AffineSubspace k P₁) : s.map (AffineMap.id k P₁) = s :=
-  coe_injective $ image_id _
+  coe_injective <| image_id _
 
 include V₂ V₃
 
 theorem map_map (s : AffineSubspace k P₁) (f : P₁ →ᵃ[k] P₂) (g : P₂ →ᵃ[k] P₃) : (s.map f).map g = s.map (g.comp f) :=
-  coe_injective $ image_image _ _ _
+  coe_injective <| image_image _ _ _
 
 omit V₃
 

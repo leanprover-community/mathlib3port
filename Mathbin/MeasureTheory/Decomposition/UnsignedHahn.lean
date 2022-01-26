@@ -36,8 +36,8 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
   let γ : ℝ := Sup c
   have hμ : ∀ s, μ s ≠ ∞ := measure_ne_top μ
   have hν : ∀ s, ν s ≠ ∞ := measure_ne_top ν
-  have to_nnreal_μ : ∀ s, ((μ s).toNnreal : ℝ≥0∞) = μ s := fun s => Ennreal.coe_to_nnreal $ hμ _
-  have to_nnreal_ν : ∀ s, ((ν s).toNnreal : ℝ≥0∞) = ν s := fun s => Ennreal.coe_to_nnreal $ hν _
+  have to_nnreal_μ : ∀ s, ((μ s).toNnreal : ℝ≥0∞) = μ s := fun s => Ennreal.coe_to_nnreal <| hμ _
+  have to_nnreal_ν : ∀ s, ((ν s).toNnreal : ℝ≥0∞) = ν s := fun s => Ennreal.coe_to_nnreal <| hν _
   have d_empty : d ∅ = 0 := by
     change _ - _ = _
     rw [measure_empty, measure_empty, sub_self]
@@ -53,7 +53,7 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
     by
     intro s hs hm
     refine' tendsto.sub _ _ <;>
-      refine' Nnreal.tendsto_coe.2 $ (Ennreal.tendsto_to_nnreal _).comp $ tendsto_measure_Union hs hm
+      refine' Nnreal.tendsto_coe.2 <| (Ennreal.tendsto_to_nnreal _).comp <| tendsto_measure_Union hs hm
     exact hμ _
     exact hν _
   have d_Inter :
@@ -62,12 +62,12 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
     by
     intro s hs hm
     refine' tendsto.sub _ _ <;>
-      refine' Nnreal.tendsto_coe.2 $ (Ennreal.tendsto_to_nnreal $ _).comp $ tendsto_measure_Inter hs hm _
+      refine' Nnreal.tendsto_coe.2 <| (Ennreal.tendsto_to_nnreal <| _).comp <| tendsto_measure_Inter hs hm _
     exacts[hμ _, ⟨0, hμ _⟩, hν _, ⟨0, hν _⟩]
   have bdd_c : BddAbove c := by
     use (μ univ).toNnreal
     rintro r ⟨s, hs, rfl⟩
-    refine' le_transₓ (sub_le_self _ $ Nnreal.coe_nonneg _) _
+    refine' le_transₓ (sub_le_self _ <| Nnreal.coe_nonneg _) _
     rw [Nnreal.coe_le_coe, ← Ennreal.coe_le_coe, to_nnreal_μ, to_nnreal_μ]
     exact measure_mono (subset_univ _)
   have c_nonempty : c.nonempty := nonempty.image _ ⟨_, MeasurableSet.empty⟩
@@ -90,7 +90,7 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
     intro a b c d hab hcd
     dsimp only [f]
     rw [Finset.inf_eq_infi, Finset.inf_eq_infi]
-    exact bInter_subset_bInter_left (Finset.Ico_subset_Ico hab $ Nat.succ_le_succₓ hcd)
+    exact bInter_subset_bInter_left (Finset.Ico_subset_Ico hab <| Nat.succ_le_succₓ hcd)
   have f_succ : ∀ n m, n ≤ m → f n (m + 1) = f n m ∩ e (m + 1) := by
     intro n m hnm
     have : n ≤ m + 1 := le_of_ltₓ (Nat.succ_le_succₓ hnm)
@@ -115,14 +115,14 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
             simp only [pow_addₓ, pow_oneₓ, le_sub_iff_add_le]
             linarith _ = γ - (1 / 2) ^ (n + 1) + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ n) := by
             simp only [sub_eq_add_neg] <;> ac_rfl _ ≤ d (e (n + 1)) + d (f m n) :=
-            add_le_add (le_of_ltₓ $ he₂ _) ih _ ≤ d (e (n + 1)) + d (f m n \ e (n + 1)) + d (f m (n + 1)) := by
+            add_le_add (le_of_ltₓ <| he₂ _) ih _ ≤ d (e (n + 1)) + d (f m n \ e (n + 1)) + d (f m (n + 1)) := by
             rw [f_succ _ _ hmn, d_split (f m n) (e (n + 1)) (hf _ _) (he₁ _),
               add_assocₓ]_ = d (e (n + 1) ∪ f m n) + d (f m (n + 1)) :=
             by
             rw [d_split (e (n + 1) ∪ f m n) (e (n + 1)), union_diff_left, union_inter_cancel_left]
             ac_rfl
             exact (he₁ _).union (hf _ _)
-            exact he₁ _ _ ≤ γ + d (f m (n + 1)) := add_le_add_right (d_le_γ _ $ (he₁ _).union (hf _ _)) _
+            exact he₁ _ _ ≤ γ + d (f m (n + 1)) := add_le_add_right (d_le_γ _ <| (he₁ _).union (hf _ _)) _
       exact (add_le_add_iff_left γ).1 this
       
   let s := ⋃ m, ⋂ n, f m n
@@ -131,15 +131,15 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
       suffices tendsto (fun m : ℕ => γ - 2 * (1 / 2) ^ m) at_top (𝓝 (γ - 2 * 0)) by
         simpa
       exact
-        tendsto_const_nhds.sub $
-          tendsto_const_nhds.mul $
-            tendsto_pow_at_top_nhds_0_of_lt_1 (le_of_ltₓ $ half_pos $ zero_lt_one) (half_lt_self zero_lt_one)
+        tendsto_const_nhds.sub <|
+          tendsto_const_nhds.mul <|
+            tendsto_pow_at_top_nhds_0_of_lt_1 (le_of_ltₓ <| half_pos <| zero_lt_one) (half_lt_self zero_lt_one)
     have hd : tendsto (fun m => d (⋂ n, f m n)) at_top (𝓝 (d (⋃ m, ⋂ n, f m n))) := by
       refine' d_Union _ _ _
       · intro n
         exact MeasurableSet.Inter fun m => hf _ _
         
-      · exact fun n m hnm => subset_Inter fun i => subset.trans (Inter_subset (f n) i) $ f_subset_f hnm $ le_reflₓ _
+      · exact fun n m hnm => subset_Inter fun i => subset.trans (Inter_subset (f n) i) <| f_subset_f hnm <| le_reflₓ _
         
     refine' le_of_tendsto_of_tendsto' hγ hd fun m => _
     have : tendsto (fun n => d (f m n)) at_top (𝓝 (d (⋂ n, f m n))) := by
@@ -153,12 +153,12 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
     refine' ge_of_tendsto this (eventually_at_top.2 ⟨m, fun n hmn => _⟩)
     change γ - 2 * (1 / 2) ^ m ≤ d (f m n)
     refine' le_transₓ _ (le_d_f _ _ hmn)
-    exact le_add_of_le_of_nonneg (le_reflₓ _) (pow_nonneg (le_of_ltₓ $ half_pos $ zero_lt_one) _)
+    exact le_add_of_le_of_nonneg (le_reflₓ _) (pow_nonneg (le_of_ltₓ <| half_pos <| zero_lt_one) _)
   have hs : MeasurableSet s := MeasurableSet.Union fun n => MeasurableSet.Inter fun m => hf _ _
   refine' ⟨s, hs, _, _⟩
   · intro t ht hts
     have : 0 ≤ d t :=
-      (add_le_add_iff_left γ).1 $
+      (add_le_add_iff_left γ).1 <|
         calc
           γ + 0 ≤ d s := by
             rw [add_zeroₓ] <;> exact γ_le_d_s
@@ -171,7 +171,7 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
     
   · intro t ht hts
     have : d t ≤ 0 :=
-      (add_le_add_iff_left γ).1 $
+      (add_le_add_iff_left γ).1 <|
         calc
           γ + d t ≤ d s + d t := add_le_add γ_le_d_s (le_reflₓ _)
           _ = d (s ∪ t) := by

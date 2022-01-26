@@ -154,7 +154,7 @@ the unbundled `direct_limit` of modules.
 In `direct_limit_is_colimit` we show that it is a colimit cocone. -/
 @[simps]
 def direct_limit_cocone : cocone (direct_limit_diagram G f) where
-  x := ModuleCat.of R $ direct_limit G f
+  x := ModuleCat.of R <| direct_limit G f
   ι :=
     { app := Module.DirectLimit.of R ι G f,
       naturality' := fun i j hij => by
@@ -167,7 +167,7 @@ in the sense of `category_theory`. -/
 @[simps]
 def direct_limit_is_colimit [Nonempty ι] [IsDirected ι (· ≤ ·)] : is_colimit (direct_limit_cocone G f) where
   desc := fun s =>
-    direct_limit.lift R ι G f s.ι.app $ fun i j h x => by
+    (direct_limit.lift R ι G f s.ι.app) fun i j h x => by
       rw [← s.w (hom_of_le h)]
       rfl
   fac' := fun s i => by

@@ -148,9 +148,9 @@ theorem comp_tail {α : Type _} {β : Type _} (g : α → β) (q : Finₓ n.succ
 
 theorem le_cons [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i : Finₓ n, α i.succ} :
     q ≤ cons x p ↔ q 0 ≤ x ∧ tail q ≤ p :=
-  forall_fin_succ.trans $
-    and_congr Iff.rfl $
-      forall_congrₓ $ fun j => by
+  forall_fin_succ.trans <|
+    and_congr Iff.rfl <|
+      forall_congrₓ fun j => by
         simp [tail]
 
 theorem cons_le [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i : Finₓ n, α i.succ} :
@@ -385,7 +385,7 @@ def succ_above_cases {α : Finₓ (n + 1) → Sort u} (i : Finₓ (n + 1)) (x : 
   if hj : j = i then Eq.ndrec x hj.symm
   else
     if hlt : j < i then Eq.recOnₓ (succ_above_cast_lt hlt) (p _)
-    else Eq.recOnₓ (succ_above_pred $ (Ne.lt_or_lt hj).resolve_left hlt) (p _)
+    else Eq.recOnₓ (succ_above_pred <| (Ne.lt_or_lt hj).resolve_left hlt) (p _)
 
 theorem forall_iff_succ_above {p : Finₓ (n + 1) → Prop} (i : Finₓ (n + 1)) :
     (∀ j, p j) ↔ p i ∧ ∀ j, p (i.succ_above j) :=
@@ -421,7 +421,7 @@ theorem succ_above_cases_eq_insert_nth : @succ_above_cases.{u + 1} = @insert_nth
 
 @[simp]
 theorem insert_nth_comp_succ_above (i : Finₓ (n + 1)) (x : β) (p : Finₓ n → β) : insert_nth i x p ∘ i.succ_above = p :=
-  funext $ insert_nth_apply_succ_above i x p
+  funext <| insert_nth_apply_succ_above i x p
 
 theorem insert_nth_eq_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succ_above j)} {q : ∀ j, α j} :
     i.insert_nth x p = q ↔ q i = x ∧ p = fun j => q (i.succ_above j) := by
@@ -432,11 +432,11 @@ theorem eq_insert_nth_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succ
   eq_comm.trans insert_nth_eq_iff
 
 theorem insert_nth_apply_below {i j : Finₓ (n + 1)} (h : j < i) (x : α i) (p : ∀ k, α (i.succ_above k)) :
-    i.insert_nth x p j = Eq.recOnₓ (succ_above_cast_lt h) (p $ j.cast_lt _) := by
+    i.insert_nth x p j = Eq.recOnₓ (succ_above_cast_lt h) (p <| j.cast_lt _) := by
   rw [insert_nth, succ_above_cases, dif_neg h.ne, dif_pos h]
 
 theorem insert_nth_apply_above {i j : Finₓ (n + 1)} (h : i < j) (x : α i) (p : ∀ k, α (i.succ_above k)) :
-    i.insert_nth x p j = Eq.recOnₓ (succ_above_pred h) (p $ j.pred _) := by
+    i.insert_nth x p j = Eq.recOnₓ (succ_above_pred h) (p <| j.pred _) := by
   rw [insert_nth, succ_above_cases, dif_neg h.ne', dif_neg h.not_lt]
 
 theorem insert_nth_zero (x : α 0) (p : ∀ j : Finₓ n, α (succ_above 0 j)) :
@@ -474,12 +474,12 @@ theorem insert_nth_last' (x : β) (p : Finₓ n → β) : @insert_nth _ (fun _ =
 
 @[simp]
 theorem insert_nth_zero_right [∀ j, Zero (α j)] (i : Finₓ (n + 1)) (x : α i) : i.insert_nth x 0 = Pi.single i x :=
-  insert_nth_eq_iff.2 $ by
+  insert_nth_eq_iff.2 <| by
     simp [succ_above_ne, Pi.zero_def]
 
 theorem insert_nth_binop (op : ∀ j, α j → α j → α j) (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succ_above j)) :
     (i.insert_nth (op i x y) fun j => op _ (p j) (q j)) = fun j => op j (i.insert_nth x p j) (i.insert_nth y q j) :=
-  insert_nth_eq_iff.2 $ by
+  insert_nth_eq_iff.2 <| by
     simp
 
 @[simp]
@@ -527,12 +527,12 @@ theorem insert_nth_mem_Icc {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.suc
 
 theorem preimage_insert_nth_Icc_of_mem {i : Finₓ (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j} (hx : x ∈ Icc (q₁ i) (q₂ i)) :
     i.insert_nth x ⁻¹' Icc q₁ q₂ = Icc (fun j => q₁ (i.succ_above j)) fun j => q₂ (i.succ_above j) :=
-  Set.ext $ fun p => by
+  Set.ext fun p => by
     simp only [mem_preimage, insert_nth_mem_Icc, hx, true_andₓ]
 
 theorem preimage_insert_nth_Icc_of_not_mem {i : Finₓ (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j}
     (hx : x ∉ Icc (q₁ i) (q₂ i)) : i.insert_nth x ⁻¹' Icc q₁ q₂ = ∅ :=
-  Set.ext $ fun p => by
+  Set.ext fun p => by
     simp only [mem_preimage, insert_nth_mem_Icc, hx, false_andₓ, mem_empty_eq]
 
 end InsertNth
@@ -663,7 +663,7 @@ theorem find_eq_some_iff {p : Finₓ n → Prop} [DecidablePred p] {i : Finₓ n
 
 theorem mem_find_of_unique {p : Finₓ n → Prop} [DecidablePred p] (h : ∀ i j, p i → p j → i = j) {i : Finₓ n}
     (hi : p i) : i ∈ Finₓ.find p :=
-  mem_find_iff.2 ⟨hi, fun j hj => le_of_eqₓ $ h i j hi hj⟩
+  mem_find_iff.2 ⟨hi, fun j hj => le_of_eqₓ <| h i j hi hj⟩
 
 end Find
 

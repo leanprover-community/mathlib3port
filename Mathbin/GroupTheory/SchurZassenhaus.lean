@@ -40,12 +40,12 @@ instance : MulAction G (left_transversals (H : Set G)) where
   mul_smul := fun g g' T => Subtype.ext (left_coset_assoc (↑T) g g').symm
 
 theorem smul_symm_apply_eq_mul_symm_apply_inv_smul (g : G) (α : left_transversals (H : Set G)) (q : G ⧸ H) :
-    ↑(Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp (g • α).2)).symm q =
+    ↑((Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp (g • α).2)).symm q) =
       g * (Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)).symm (g⁻¹ • q : G ⧸ H) :=
   by
   let w := Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)
   let y := Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp (g • α).2)
-  change ↑y.symm q = ↑(⟨_, mem_left_coset g (Subtype.mem _)⟩ : (g • α).1)
+  change ↑(y.symm q) = ↑(⟨_, mem_left_coset g (Subtype.mem _)⟩ : (g • α).1)
   refine' subtype.ext_iff.mp (y.symm_apply_eq.mpr _)
   change q = g • w (w.symm (g⁻¹ • q : G ⧸ H))
   rw [Equivₓ.apply_symm_apply, ← mul_smul, mul_inv_selfₓ, one_smul]
@@ -60,7 +60,7 @@ noncomputable def diff [hH : normal H] : H :=
   let α' := (Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)).symm
   let β' := (Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp β.2)).symm
   ∏ q : G ⧸ H,
-    ⟨α' q * β' q⁻¹, hH.mem_comm (Quotientₓ.exact' ((β'.symm_apply_apply q).trans (α'.symm_apply_apply q).symm))⟩
+    ⟨α' q * (β' q)⁻¹, hH.mem_comm (Quotientₓ.exact' ((β'.symm_apply_apply q).trans (α'.symm_apply_apply q).symm))⟩
 
 @[to_additive]
 theorem diff_mul_diff [normal H] : diff α β * diff β γ = diff α γ :=
@@ -75,7 +75,7 @@ theorem diff_self [normal H] : diff α α = 1 :=
   mul_right_eq_self.mp (diff_mul_diff α α α)
 
 @[to_additive]
-theorem diff_inv [normal H] : diff α β⁻¹ = diff β α :=
+theorem diff_inv [normal H] : (diff α β)⁻¹ = diff β α :=
   inv_eq_of_mul_eq_oneₓ ((diff_mul_diff α β α).trans (diff_self α))
 
 theorem smul_diff_smul [hH : normal H] (g : G) :
@@ -140,10 +140,10 @@ theorem exists_smul_eq [H.normal] (α β : H.quotient_diff) (hH : Nat.Coprime (F
   Quotientₓ.induction_on α
     (Quotientₓ.induction_on β fun β α =>
       exists_imp_exists (fun n => Quotientₓ.sound)
-        ⟨(powCoprime hH).symm (diff α β⁻¹), by
+        ⟨(powCoprime hH).symm (diff α β)⁻¹, by
           change diff ((_ : H) • _) _ = 1
           rw [smul_diff]
-          change powCoprime hH ((powCoprime hH).symm (diff α β⁻¹)) * diff α β = 1
+          change powCoprime hH ((powCoprime hH).symm (diff α β)⁻¹) * diff α β = 1
           rw [Equivₓ.apply_symm_apply, inv_mul_selfₓ]⟩)
 
 theorem smul_left_injective [H.normal] (α : H.quotient_diff) (hH : Nat.Coprime (Fintype.card H) H.index) :

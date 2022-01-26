@@ -63,15 +63,15 @@ theorem TimesContDiff.inner (hf : TimesContDiff ℝ n f) (hg : TimesContDiff ℝ
   times_cont_diff_inner.comp (hf.prod hg)
 
 theorem HasFderivWithinAt.inner (hf : HasFderivWithinAt f f' s x) (hg : HasFderivWithinAt g g' s x) :
-    HasFderivWithinAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm (f x, g x)).comp $ f'.prod g') s x :=
+    HasFderivWithinAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm (f x, g x)).comp <| f'.prod g') s x :=
   (is_bounded_bilinear_map_inner.HasFderivAt (f x, g x)).comp_has_fderiv_within_at x (hf.prod hg)
 
 theorem HasStrictFderivAt.inner (hf : HasStrictFderivAt f f' x) (hg : HasStrictFderivAt g g' x) :
-    HasStrictFderivAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm (f x, g x)).comp $ f'.prod g') x :=
+    HasStrictFderivAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm (f x, g x)).comp <| f'.prod g') x :=
   (is_bounded_bilinear_map_inner.HasStrictFderivAt (f x, g x)).comp x (hf.prod hg)
 
 theorem HasFderivAt.inner (hf : HasFderivAt f f' x) (hg : HasFderivAt g g' x) :
-    HasFderivAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm (f x, g x)).comp $ f'.prod g') x :=
+    HasFderivAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm (f x, g x)).comp <| f'.prod g') x :=
   (is_bounded_bilinear_map_inner.HasFderivAt (f x, g x)).comp x (hf.prod hg)
 
 theorem HasDerivWithinAt.inner {f g : ℝ → E} {f' g' : E} {s : Set ℝ} {x : ℝ} (hf : HasDerivWithinAt f f' s x)
@@ -152,11 +152,11 @@ theorem TimesContDiffOn.dist (hf : TimesContDiffOn ℝ n f s) (hg : TimesContDif
   (hf x hx).dist (hg x hx) (hne x hx)
 
 theorem TimesContDiff.norm (hf : TimesContDiff ℝ n f) (h0 : ∀ x, f x ≠ 0) : TimesContDiff ℝ n fun y => ∥f y∥ :=
-  times_cont_diff_iff_times_cont_diff_at.2 $ fun x => hf.times_cont_diff_at.norm (h0 x)
+  times_cont_diff_iff_times_cont_diff_at.2 fun x => hf.times_cont_diff_at.norm (h0 x)
 
 theorem TimesContDiff.dist (hf : TimesContDiff ℝ n f) (hg : TimesContDiff ℝ n g) (hne : ∀ x, f x ≠ g x) :
     TimesContDiff ℝ n fun y => dist (f y) (g y) :=
-  times_cont_diff_iff_times_cont_diff_at.2 $ fun x => hf.times_cont_diff_at.dist hg.times_cont_diff_at (hne x)
+  times_cont_diff_iff_times_cont_diff_at.2 fun x => hf.times_cont_diff_at.dist hg.times_cont_diff_at (hne x)
 
 omit 𝕜
 

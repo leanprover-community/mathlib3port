@@ -19,43 +19,43 @@ variable {G : Type _} [Groupₓ G] [Preorderₓ G] [CovariantClass G G (· * ·)
   [CovariantClass G G (swap (· * ·)) (· ≤ ·)] {s : Set G} {a : G}
 
 @[simp, to_additive]
-theorem bdd_above_inv : BddAbove (s⁻¹) ↔ BddBelow s :=
+theorem bdd_above_inv : BddAbove s⁻¹ ↔ BddBelow s :=
   (OrderIso.inv G).bdd_above_preimage
 
 @[simp, to_additive]
-theorem bdd_below_inv : BddBelow (s⁻¹) ↔ BddAbove s :=
+theorem bdd_below_inv : BddBelow s⁻¹ ↔ BddAbove s :=
   (OrderIso.inv G).bdd_below_preimage
 
 @[to_additive]
-theorem BddAbove.inv (h : BddAbove s) : BddBelow (s⁻¹) :=
+theorem BddAbove.inv (h : BddAbove s) : BddBelow s⁻¹ :=
   bdd_below_inv.2 h
 
 @[to_additive]
-theorem BddBelow.inv (h : BddBelow s) : BddAbove (s⁻¹) :=
+theorem BddBelow.inv (h : BddBelow s) : BddAbove s⁻¹ :=
   bdd_above_inv.2 h
 
 @[simp, to_additive]
-theorem is_lub_inv : IsLub (s⁻¹) a ↔ IsGlb s (a⁻¹) :=
+theorem is_lub_inv : IsLub s⁻¹ a ↔ IsGlb s a⁻¹ :=
   (OrderIso.inv G).is_lub_preimage
 
 @[to_additive]
-theorem is_lub_inv' : IsLub (s⁻¹) (a⁻¹) ↔ IsGlb s a :=
+theorem is_lub_inv' : IsLub s⁻¹ a⁻¹ ↔ IsGlb s a :=
   (OrderIso.inv G).is_lub_preimage'
 
 @[to_additive]
-theorem IsGlb.inv (h : IsGlb s a) : IsLub (s⁻¹) (a⁻¹) :=
+theorem IsGlb.inv (h : IsGlb s a) : IsLub s⁻¹ a⁻¹ :=
   is_lub_inv'.2 h
 
 @[simp, to_additive]
-theorem is_glb_inv : IsGlb (s⁻¹) a ↔ IsLub s (a⁻¹) :=
+theorem is_glb_inv : IsGlb s⁻¹ a ↔ IsLub s a⁻¹ :=
   (OrderIso.inv G).is_glb_preimage
 
 @[to_additive]
-theorem is_glb_inv' : IsGlb (s⁻¹) (a⁻¹) ↔ IsLub s a :=
+theorem is_glb_inv' : IsGlb s⁻¹ a⁻¹ ↔ IsLub s a :=
   (OrderIso.inv G).is_glb_preimage'
 
 @[to_additive]
-theorem IsLub.inv (h : IsLub s a) : IsGlb (s⁻¹) (a⁻¹) :=
+theorem IsLub.inv (h : IsLub s a) : IsGlb s⁻¹ a⁻¹ :=
   is_glb_inv'.2 h
 
 end inv_neg
@@ -68,11 +68,11 @@ variable {M : Type _} [Mul M] [Preorderₓ M] [CovariantClass M M (· * ·) (· 
 @[to_additive]
 theorem mul_mem_upper_bounds_mul {s t : Set M} {a b : M} (ha : a ∈ UpperBounds s) (hb : b ∈ UpperBounds t) :
     a * b ∈ UpperBounds (s * t) :=
-  forall_image2_iff.2 $ fun x hx y hy => mul_le_mul' (ha hx) (hb hy)
+  forall_image2_iff.2 fun x hx y hy => mul_le_mul' (ha hx) (hb hy)
 
 @[to_additive]
 theorem subset_upper_bounds_mul (s t : Set M) : UpperBounds s * UpperBounds t ⊆ UpperBounds (s * t) :=
-  image2_subset_iff.2 $ fun x hx y hy => mul_mem_upper_bounds_mul hx hy
+  image2_subset_iff.2 fun x hx y hy => mul_mem_upper_bounds_mul hx hy
 
 @[to_additive]
 theorem mul_mem_lower_bounds_mul {s t : Set M} {a b : M} (ha : a ∈ LowerBounds s) (hb : b ∈ LowerBounds t) :

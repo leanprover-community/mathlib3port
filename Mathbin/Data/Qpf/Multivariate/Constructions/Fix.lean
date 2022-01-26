@@ -294,7 +294,7 @@ theorem fix.ind {α : Typevec n} (p : fix F α → Prop)
   cases i
   · apply ih
     
-  · triv
+  · trivial
     
 
 instance mvqpf_fix : Mvqpf (fix F) where
@@ -315,7 +315,7 @@ instance mvqpf_fix : Mvqpf (fix F) where
     apply Wequiv.refl
 
 /-- Dependent recursor for `fix F` -/
-def fix.drec {β : fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fix.mk $ (id ::: Sigma.fst) <$$> x))
+def fix.drec {β : fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fix.mk <| (id ::: Sigma.fst) <$$> x))
     (x : fix F α) : β x :=
   let y := @fix.rec _ F _ _ α (Sigma β) (fun i => ⟨_, g i⟩) x
   have : x = y.1 := by

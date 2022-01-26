@@ -65,21 +65,21 @@ that do not in fact produce metavariables with a simple `return` tactic.
 -/
 unsafe def mk_assumption_set (no_dflt : Bool) (hs : List simp_arg_type) (attr : List Name) :
     tactic (List (tactic expr) × tactic (List expr)) :=
-  lock_tactic_state $ do
+  lock_tactic_state <| do
     let (hs, gex, hex, all_hyps) ← decode_simp_arg_list hs
     let hs := hs.map fun h => i_to_expr_for_apply h
-    let l ← attr.mmap $ fun a => attribute.get_instances a
+    let l ← attr.mmap fun a => attribute.get_instances a
     let l := l.join
     let m := l.map fun h => mk_const h
     let hs ←
-      (hs ++ m).mfilter $ fun h => do
+      (hs ++ m).mfilter fun h => do
           let h ← h
-          return $ expr.const_name h ∉ gex
+          return <| expr.const_name h ∉ gex
     let hs := if no_dflt then hs else ([`rfl, `trivial, `congr_fun, `congr_arg].map fun n => mk_const n) ++ hs
     let locals : tactic (List expr) :=
       if ¬no_dflt ∨ all_hyps then do
         let ctx ← local_context
-        return $ ctx.filter fun h : expr => h.local_uniq_name ∉ hex
+        return <| ctx.filter fun h : expr => h.local_uniq_name ∉ hex
       else return []
     let hs ←
       hs.mmap fun h : tactic expr => do
@@ -211,7 +211,7 @@ See also the simpler tactic `apply_rules`, which does not perform backtracking.
 unsafe def solve_by_elim (opt : opt := {  }) : tactic Unit := do
   tactic.fail_if_no_goals
   let (lemmas, ctx_lemmas) ← opt.get_lemma_thunks
-  (if opt.backtrack_all_goals then id else focus1) $ do
+  (if opt.backtrack_all_goals then id else focus1) <| do
       let gs ← get_goals
       solve_by_elim_aux opt.to_basic_opt gs lemmas ctx_lemmas opt.max_depth <|>
           fail
@@ -288,7 +288,7 @@ optional arguments passed via a configuration argument as `solve_by_elim { ... }
     or filtering complete results
     (by testing for the absence of metavariables, and then the filtering condition).
 -/
-unsafe def solve_by_elim (all_goals : parse $ «expr ?» (tk "*")) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
+unsafe def solve_by_elim (all_goals : parse <| «expr ?» (tk "*")) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
     (attr_names : parse with_ident_list) (opt : solve_by_elim.opt := {  }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set no_dflt hs attr_names
   tactic.solve_by_elim

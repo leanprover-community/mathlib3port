@@ -41,7 +41,7 @@ instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableE
     | _, b₁, _, b₂, is_true (Eq.refl a) =>
       match b₁, b₂, h₂ a b₁ b₂ with
       | _, _, is_true (Eq.refl b) => is_true rfl
-      | b₁, b₂, is_false n => is_false fun h => Sigma.noConfusion h fun e₁ e₂ => n $ eq_of_heq e₂
+      | b₁, b₂, is_false n => is_false fun h => Sigma.noConfusion h fun e₁ e₂ => n <| eq_of_heq e₂
     | a₁, _, a₂, _, is_false n => is_false fun h => Sigma.noConfusion h fun e₁ e₂ => n e₁
 
 @[simp, nolint simp_nf]
@@ -125,7 +125,7 @@ def Sigma.uncurry {γ : ∀ a, β a → Type _} (f : ∀ x y : β x, γ x y) (x 
 @[simp]
 theorem Sigma.uncurry_curry {γ : ∀ a, β a → Type _} (f : ∀ x : Sigma β, γ x.1 x.2) :
     Sigma.uncurry (Sigma.curry f) = f :=
-  funext $ fun ⟨i, j⟩ => rfl
+  funext fun ⟨i, j⟩ => rfl
 
 @[simp]
 theorem Sigma.curry_uncurry {γ : ∀ a, β a → Type _} (f : ∀ x y : β x, γ x y) : Sigma.curry (Sigma.uncurry f) = f :=
@@ -169,12 +169,12 @@ instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableE
     | _, b₁, _, b₂, is_true (Eq.refl a) =>
       match b₁, b₂, h₂ a b₁ b₂ with
       | _, _, is_true (Eq.refl b) => is_true rfl
-      | b₁, b₂, is_false n => is_false fun h => Psigma.noConfusion h fun e₁ e₂ => n $ eq_of_heq e₂
+      | b₁, b₂, is_false n => is_false fun h => Psigma.noConfusion h fun e₁ e₂ => n <| eq_of_heq e₂
     | a₁, _, a₂, _, is_false n => is_false fun h => Psigma.noConfusion h fun e₁ e₂ => n e₁
 
 theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} :
     @Psigma.mk α β a₁ b₁ = @Psigma.mk α β a₂ b₂ ↔ a₁ = a₂ ∧ HEq b₁ b₂ :=
-  Iff.intro Psigma.mk.inj $ fun ⟨h₁, h₂⟩ =>
+  (Iff.intro Psigma.mk.inj) fun ⟨h₁, h₂⟩ =>
     match a₁, a₂, b₁, b₂, h₁, h₂ with
     | _, _, _, _, Eq.refl a, HEq.refl b => rfl
 

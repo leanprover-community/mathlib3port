@@ -153,15 +153,15 @@ instance [Sub α] : Sub (αᵐᵒᵖ) where
   sub := fun x y => op (unop x - unop y)
 
 instance [Neg α] : Neg (αᵐᵒᵖ) where
-  neg := fun x => op $ -unop x
+  neg := fun x => op <| -unop x
 
 @[to_additive]
 instance [Mul α] : Mul (αᵐᵒᵖ) where
   mul := fun x y => op (unop y * unop x)
 
 @[to_additive]
-instance [HasInv α] : HasInv (αᵐᵒᵖ) where
-  inv := fun x => op $ unop x⁻¹
+instance [Inv α] : Inv (αᵐᵒᵖ) where
+  inv := fun x => op <| (unop x)⁻¹
 
 @[to_additive]
 instance (R : Type _) [HasScalar R α] : HasScalar R (αᵐᵒᵖ) where
@@ -214,11 +214,11 @@ theorem unop_mul [Mul α] (x y : αᵐᵒᵖ) : unop (x * y) = unop y * unop x :
   rfl
 
 @[simp, to_additive]
-theorem op_inv [HasInv α] (x : α) : op (x⁻¹) = op x⁻¹ :=
+theorem op_inv [Inv α] (x : α) : op x⁻¹ = (op x)⁻¹ :=
   rfl
 
 @[simp, to_additive]
-theorem unop_inv [HasInv α] (x : αᵐᵒᵖ) : unop (x⁻¹) = unop x⁻¹ :=
+theorem unop_inv [Inv α] (x : αᵐᵒᵖ) : unop x⁻¹ = (unop x)⁻¹ :=
   rfl
 
 @[simp]
@@ -250,10 +250,10 @@ theorem op_eq_zero_iff [Zero α] (a : α) : op a = (0 : αᵐᵒᵖ) ↔ a = (0 
   op_injective.eq_iff' rfl
 
 theorem unop_ne_zero_iff [Zero α] (a : αᵐᵒᵖ) : a.unop ≠ (0 : α) ↔ a ≠ (0 : αᵐᵒᵖ) :=
-  not_congr $ unop_eq_zero_iff a
+  not_congr <| unop_eq_zero_iff a
 
 theorem op_ne_zero_iff [Zero α] (a : α) : op a ≠ (0 : αᵐᵒᵖ) ↔ a ≠ (0 : α) :=
-  not_congr $ op_eq_zero_iff a
+  not_congr <| op_eq_zero_iff a
 
 @[simp, to_additive]
 theorem unop_eq_one_iff [One α] (a : αᵐᵒᵖ) : a.unop = 1 ↔ a = 1 :=
@@ -297,15 +297,15 @@ theorem op_mul [Mul α] (a b : α) : op (a * b) = op a * op b :=
 theorem unop_mul [Mul α] (a b : αᵃᵒᵖ) : unop (a * b) = unop a * unop b :=
   rfl
 
-instance [HasInv α] : HasInv (αᵃᵒᵖ) where
-  inv := fun a => op (unop a⁻¹)
+instance [Inv α] : Inv (αᵃᵒᵖ) where
+  inv := fun a => op (unop a)⁻¹
 
 @[simp]
-theorem op_inv [HasInv α] (a : α) : op (a⁻¹) = op a⁻¹ :=
+theorem op_inv [Inv α] (a : α) : op a⁻¹ = (op a)⁻¹ :=
   rfl
 
 @[simp]
-theorem unop_inv [HasInv α] (a : αᵃᵒᵖ) : unop (a⁻¹) = unop a⁻¹ :=
+theorem unop_inv [Inv α] (a : αᵃᵒᵖ) : unop a⁻¹ = (unop a)⁻¹ :=
   rfl
 
 instance [Div α] : Div (αᵃᵒᵖ) where

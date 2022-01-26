@@ -33,7 +33,7 @@ theorem dot_product_std_basis_eq_mul [DecidableEq n] (v : n → R) (c : R) (i : 
   rw [dot_product, Finset.sum_eq_single i, LinearMap.std_basis_same]
   exact fun _ _ hb => by
     rw [LinearMap.std_basis_ne _ _ _ _ hb, mul_zero]
-  exact fun hi => False.elim (hi $ Finset.mem_univ _)
+  exact fun hi => False.elim (hi <| Finset.mem_univ _)
 
 @[simp]
 theorem dot_product_std_basis_one [DecidableEq n] (v : n → R) (i : n) :
@@ -49,7 +49,7 @@ theorem dot_product_eq_iff {v w : n → R} : (∀ u, dot_product v u = dot_produ
   ⟨fun h => dot_product_eq v w h, fun h _ => h ▸ rfl⟩
 
 theorem dot_product_eq_zero (v : n → R) (h : ∀ w, dot_product v w = 0) : v = 0 :=
-  dot_product_eq _ _ $ fun u => (h u).symm ▸ (zero_dot_product u).symm
+  (dot_product_eq _ _) fun u => (h u).symm ▸ (zero_dot_product u).symm
 
 theorem dot_product_eq_zero_iff {v : n → R} : (∀ w, dot_product v w = 0) ↔ v = 0 :=
   ⟨fun h => dot_product_eq_zero v h, fun h w => h.symm ▸ zero_dot_product w⟩

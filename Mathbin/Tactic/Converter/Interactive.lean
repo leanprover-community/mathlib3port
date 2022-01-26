@@ -120,7 +120,7 @@ unsafe def old_conv (c : old_conv.interactive.itactic) : tactic Unit := do
   replace_target new_t pr
 
 unsafe def find (p : parse lean.parser.pexpr) (c : old_conv.interactive.itactic) : tactic Unit :=
-  old_conv $ old_conv.interactive.find p c
+  old_conv <| old_conv.interactive.find p c
 
 -- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
 -- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»

@@ -98,7 +98,7 @@ composition with the `germ` morphisms.
 -/
 theorem stalk_hom_ext (F : X.presheaf C) {x} {Y : C} {f₁ f₂ : F.stalk x ⟶ Y}
     (ih : ∀ U : opens X hxU : x ∈ U, F.germ ⟨x, hxU⟩ ≫ f₁ = F.germ ⟨x, hxU⟩ ≫ f₂) : f₁ = f₂ :=
-  colimit.hom_ext $ fun U => by
+  colimit.hom_ext fun U => by
     induction U using Opposite.rec
     cases' U with U hxU
     exact ih U hxU
@@ -171,7 +171,7 @@ theorem stalk_pushforward_iso_of_open_embedding {f : X ⟶ Y} (hf : OpenEmbeddin
     · intro U
       refine' F.map_iso (eq_to_iso _)
       dsimp only [functor.op]
-      exact congr_argₓ op (Subtype.eq $ Set.preimage_image_eq (unop U).1.1 hf.inj)
+      exact congr_argₓ op (Subtype.eq <| Set.preimage_image_eq (unop U).1.1 hf.inj)
       
     · intro U V i
       erw [← F.map_comp, ← F.map_comp]
@@ -375,8 +375,8 @@ theorem section_ext (F : sheaf C X) (U : opens X) (s t : F.1.obj (op U)) (h : �
 theorem app_injective_of_stalk_functor_map_injective {F : sheaf C X} {G : presheaf C X} (f : F.1 ⟶ G) (U : opens X)
     (h : ∀ x : U, Function.Injective ((stalk_functor C x.val).map f)) : Function.Injective (f.app (op U)) :=
   fun s t hst =>
-  section_ext F _ _ _ $ fun x =>
-    h x $ by
+  (section_ext F _ _ _) fun x =>
+    h x <| by
       rw [stalk_functor_map_germ_apply, stalk_functor_map_germ_apply, hst]
 
 theorem app_injective_iff_stalk_functor_map_injective {F : sheaf C X} {G : presheaf C X} (f : F.1 ⟶ G) :

@@ -164,7 +164,7 @@ theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n := by
     simpa using hn.ne'
     
   · have := Fact.mk hn
-    apply (Nat.le_of_dvdₓ hn $ order_of_dvd_of_pow_eq_one $ @r_one_pow_n n).lt_or_eq.resolve_left
+    apply (Nat.le_of_dvdₓ hn <| order_of_dvd_of_pow_eq_one <| @r_one_pow_n n).lt_or_eq.resolve_left
     intro h
     have h1 : (r 1 : DihedralGroup n) ^ orderOf (r 1) = 1 := pow_order_of_eq_one _
     rw [r_one_pow] at h1

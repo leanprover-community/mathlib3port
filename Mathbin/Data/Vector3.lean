@@ -67,10 +67,10 @@ def head (v : Vector3 α (succ n)) : α :=
 def tail (v : Vector3 α (succ n)) : Vector3 α n := fun i => v (fs i)
 
 theorem eq_nil (v : Vector3 α 0) : v = [] :=
-  funext $ fun i => nomatch i
+  funext fun i => nomatch i
 
 theorem cons_head_tail (v : Vector3 α (succ n)) : head v :: tail v = v :=
-  funext $ fun i => Fin2.cases' rfl (fun _ => rfl) i
+  funext fun i => Fin2.cases' rfl (fun _ => rfl) i
 
 /-- Eliminator for an empty vector. -/
 def nil_elim {C : Vector3 α 0 → Sort u} (H : C []) (v : Vector3 α 0) : C v := by
@@ -102,7 +102,7 @@ theorem rec_on_cons {C H0 Hs n a v} :
 
 /-- Append two vectors -/
 def append (v : Vector3 α m) (w : Vector3 α n) : Vector3 α (n + m) :=
-  Nat.recOn m (fun _ => w) (fun m IH v => v.cons_elim $ fun a t => @Fin2.cases' (n + m) (fun _ => α) a (IH t)) v
+  Nat.recOn m (fun _ => w) (fun m IH v => v.cons_elim fun a t => @Fin2.cases' (n + m) (fun _ => α) a (IH t)) v
 
 local infixl:65 " +-+ " => Vector3.append
 
@@ -140,7 +140,7 @@ theorem insert_fz (a : α) (v : Vector3 α n) : insert a v fz = a :: v := by
 @[simp]
 theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) :
     insert a (b :: v) (fs i) = b :: insert a v i :=
-  funext $ fun j => by
+  funext fun j => by
     refine' j.cases' _ fun j => _ <;> simp [insert, insert_perm]
     refine' Fin2.cases' _ _ (insert_perm i j) <;> simp [insert_perm]
 
@@ -235,7 +235,7 @@ theorem vector_allp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp
     
 
 theorem VectorAllp.imp {p q : α → Prop} (h : ∀ x, p x → q x) {v : Vector3 α n} (al : VectorAllp p v) : VectorAllp q v :=
-  (vector_allp_iff_forall _ _).2 fun i => h _ $ (vector_allp_iff_forall _ _).1 al _
+  (vector_allp_iff_forall _ _).2 fun i => h _ <| (vector_allp_iff_forall _ _).1 al _
 
 end Vector3
 

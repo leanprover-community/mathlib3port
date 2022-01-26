@@ -132,7 +132,7 @@ theorem nth_mem_of_infinite_aux (hp : (SetOf p).Infinite) (n : ℕ) :
   · ext i
     simp
     
-  refine' (hp.diff $ (Set.finite_lt_nat _).bUnion _).Nonempty
+  refine' (hp.diff <| (Set.finite_lt_nat _).bUnion _).Nonempty
   exact fun k h => Set.finite_le_nat _
 
 theorem nth_mem_of_infinite (hp : (SetOf p).Infinite) (n : ℕ) : p (nth p n) :=
@@ -219,7 +219,7 @@ theorem filter_range_nth_eq_insert_of_infinite (hp : (SetOf p).Infinite) (k : �
   constructor
   · rintro ⟨ha, hpa⟩
     rw [nth] at ha
-    refine' or_iff_not_imp_left.mpr fun hne => ⟨(le_of_not_ltₓ $ fun h => _).lt_of_ne hne, hpa⟩
+    refine' or_iff_not_imp_left.mpr fun hne => ⟨(le_of_not_ltₓ fun h => _).lt_of_ne hne, hpa⟩
     exact ha.not_le (Nat.Inf_le ⟨hpa, fun b hb => (nth_monotone p hp (le_of_lt_succ hb)).trans_lt h⟩)
     
   · rintro (rfl | ⟨ha, hpa⟩)
@@ -309,7 +309,7 @@ theorem count_le_iff_le_nth (hp : (SetOf p).Infinite) {a b : ℕ} : count p a �
   count_nth_gc p hp _ _
 
 theorem lt_nth_iff_count_lt (hp : (SetOf p).Infinite) {a b : ℕ} : a < count p b ↔ nth p a < b :=
-  lt_iff_lt_of_le_iff_le $ count_le_iff_le_nth p hp
+  lt_iff_lt_of_le_iff_le <| count_le_iff_le_nth p hp
 
 theorem nth_lt_of_lt_count (n k : ℕ) (h : k < count p n) : nth p k < n := by
   obtain hp | hp := em (SetOf p).Finite
@@ -335,9 +335,9 @@ theorem nth_zero_of_nth_zero (h₀ : ¬p 0) {a b : ℕ} (hab : a ≤ b) (ha : nt
   cases ha
   · exact (h₀ ha.1).elim
     
-  · refine' Or.inr (Set.eq_empty_of_subset_empty $ fun x hx => _)
+  · refine' Or.inr (Set.eq_empty_of_subset_empty fun x hx => _)
     rw [← ha]
-    exact ⟨hx.1, fun k hk => hx.2 k $ hk.trans_le hab⟩
+    exact ⟨hx.1, fun k hk => hx.2 k <| hk.trans_le hab⟩
     
 
 /-- When `p` is true infinitely often, `nth` agrees with `nat.subtype.order_iso_of_nat`. -/
@@ -350,7 +350,7 @@ theorem nth_eq_order_iso_of_nat [DecidablePred p] (i : Infinite (SetOf p)) (n : 
   · simp only [Nat.Subtype.succ, Set.mem_set_of_eq, Subtype.coe_mk, Subtype.val_eq_coe]
     rw [subtype.order_iso_of_nat_apply] at hk
     set b := nth p k.succ - nth p k - 1 with hb
-    replace hb : p (↑subtype.of_nat (SetOf p) k + b + 1)
+    replace hb : p (↑(subtype.of_nat (SetOf p) k) + b + 1)
     · rw [hb, ← hk, tsub_right_comm]
       have hn11 : nth p k.succ - 1 + 1 = nth p k.succ := by
         rw [tsub_add_cancel_iff_le]
@@ -364,7 +364,7 @@ theorem nth_eq_order_iso_of_nat [DecidablePred p] (i : Infinite (SetOf p)) (n : 
         exact lt_add_one k
         
       
-    have H : ∃ n : ℕ, p (↑subtype.of_nat (SetOf p) k + n + 1) := ⟨b, hb⟩
+    have H : ∃ n : ℕ, p (↑(subtype.of_nat (SetOf p) k) + n + 1) := ⟨b, hb⟩
     set t := Nat.findₓ H with ht
     obtain ⟨hp, hmin⟩ := (Nat.find_eq_iff _).mp ht
     rw [← ht, ← hk] at hp hmin⊢

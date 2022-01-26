@@ -22,7 +22,7 @@ namespace Prime
 variable [CommMonoidWithZero α] {p : α} (hp : Prime p)
 
 theorem exists_mem_multiset_dvd {s : Multiset α} : p ∣ s.prod → ∃ a ∈ s, p ∣ a :=
-  (Multiset.induction_on s fun h => (hp.not_dvd_one h).elim) $ fun a s ih h =>
+  (Multiset.induction_on s fun h => (hp.not_dvd_one h).elim) fun a s ih h =>
     have : p ∣ a * s.prod := by
       simpa using h
     match hp.dvd_or_dvd this with
@@ -69,9 +69,9 @@ section CommMonoidₓ
 variable [CommMonoidₓ α]
 
 theorem prod_mk {p : Multiset α} : (p.map Associates.mk).Prod = Associates.mk p.prod :=
-  Multiset.induction_on p
+  (Multiset.induction_on p
       (by
-        simp <;> rfl) $
+        simp <;> rfl))
     fun a s ih => by
     simp [ih] <;> rfl
 
@@ -104,7 +104,7 @@ variable [CancelCommMonoidWithZero α]
 
 theorem exists_mem_multiset_le_of_prime {s : Multiset (Associates α)} {p : Associates α} (hp : Prime p) :
     p ≤ s.prod → ∃ a ∈ s, p ≤ a :=
-  (Multiset.induction_on s fun ⟨d, Eq⟩ => (hp.ne_one (mul_eq_one_iff.1 Eq.symm).1).elim) $ fun a s ih h =>
+  (Multiset.induction_on s fun ⟨d, Eq⟩ => (hp.ne_one (mul_eq_one_iff.1 Eq.symm).1).elim) fun a s ih h =>
     have : p ≤ a * s.prod := by
       simpa using h
     match prime.le_or_le hp this with

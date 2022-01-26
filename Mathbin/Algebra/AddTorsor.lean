@@ -38,18 +38,12 @@ multiplicative group actions).
 -/
 
 
-/-- Type class for the `-ᵥ` notation. -/
-class HasVsub (G : outParam (Type _)) (P : Type _) where
-  vsub : P → P → G
-
-infixl:65 " -ᵥ " => HasVsub.vsub
-
 /-- An `add_torsor G P` gives a structure to the nonempty type `P`,
 acted on by an `add_group G` with a transitive and free action given
 by the `+ᵥ` operation and a corresponding subtraction given by the
 `-ᵥ` operation. In the case of a vector space, it is an affine
 space. -/
-class AddTorsor (G : outParam (Type _)) (P : Type _) [outParam $ AddGroupₓ G] extends AddAction G P, HasVsub G P where
+class AddTorsor (G : outParam (Type _)) (P : Type _) [outParam <| AddGroupₓ G] extends AddAction G P, HasVsub G P where
   [Nonempty : Nonempty P]
   vsub_vadd' : ∀ p1 p2 : P, (p1 -ᵥ p2 : G) +ᵥ p2 = p1
   vadd_vsub' : ∀ g : G p : P, g +ᵥ p -ᵥ p = g
@@ -159,61 +153,11 @@ theorem vadd_eq_vadd_iff_neg_add_eq_vsub {v₁ v₂ : G} {p₁ p₂ : P} : v₁ 
 
 namespace Set
 
-instance HasVsub : HasVsub (Set G) (Set P) :=
-  ⟨Set.Image2 (· -ᵥ ·)⟩
-
-section Vsub
-
-variable (s t : Set P)
-
-@[simp]
-theorem vsub_empty : s -ᵥ ∅ = ∅ :=
-  Set.image2_empty_right
-
-@[simp]
-theorem empty_vsub : ∅ -ᵥ s = ∅ :=
-  Set.image2_empty_left
-
-@[simp]
-theorem singleton_vsub (p : P) : {p} -ᵥ s = (· -ᵥ ·) p '' s :=
-  image2_singleton_left
-
-@[simp]
-theorem vsub_singleton (p : P) : s -ᵥ {p} = (· -ᵥ p) '' s :=
-  image2_singleton_right
+open_locale Pointwise
 
 @[simp]
 theorem singleton_vsub_self (p : P) : ({p} : Set P) -ᵥ {p} = {(0 : G)} := by
-  simp
-
-variable {s t}
-
-/-- `vsub` of a finite set is finite. -/
-theorem finite.vsub (hs : finite s) (ht : finite t) : finite (s -ᵥ t) :=
-  hs.image2 _ ht
-
-/-- Each pairwise difference is in the `vsub` set. -/
-theorem vsub_mem_vsub {ps pt : P} (hs : ps ∈ s) (ht : pt ∈ t) : ps -ᵥ pt ∈ s -ᵥ t :=
-  mem_image2_of_mem hs ht
-
-@[simp]
-theorem mem_vsub {s t : Set P} (g : G) : g ∈ s -ᵥ t ↔ ∃ x y : P, x ∈ s ∧ y ∈ t ∧ x -ᵥ y = g :=
-  mem_image2
-
-/-- `s -ᵥ t` is monotone in both arguments. -/
-@[mono]
-theorem vsub_subset_vsub {s' t' : Set P} (hs : s ⊆ s') (ht : t ⊆ t') : s -ᵥ t ⊆ s' -ᵥ t' :=
-  image2_subset hs ht
-
-theorem vsub_self_mono (h : s ⊆ t) : s -ᵥ s ⊆ t -ᵥ t :=
-  vsub_subset_vsub h h
-
-theorem vsub_subset_iff {u : Set G} : s -ᵥ t ⊆ u ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, x -ᵥ y ∈ u :=
-  image2_subset_iff
-
-end Vsub
-
-open_locale Pointwise
+  rw [Set.singleton_vsub_singleton, vsub_self]
 
 instance AddAction : AddAction (Set G) (Set P) :=
   { show HasVadd (Set G) (Set P) by
@@ -224,19 +168,6 @@ instance AddAction : AddAction (Set G) (Set P) :=
       apply image2_assoc
       intros
       apply add_vadd }
-
-variable {s s' : Set G} {t t' : Set P}
-
-@[mono]
-theorem vadd_subset_vadd (hs : s ⊆ s') (ht : t ⊆ t') : s +ᵥ t ⊆ s' +ᵥ t' :=
-  image2_subset hs ht
-
-@[simp]
-theorem set_vadd_singleton (s : Set G) (p : P) : s +ᵥ {p} = (· +ᵥ p) '' s :=
-  image2_singleton_right
-
-theorem finite.vadd (hs : finite s) (ht : finite t) : finite (s +ᵥ t) :=
-  hs.image2 _ ht
 
 end Set
 
@@ -360,12 +291,12 @@ open AddAction AddTorsor
 /-- A product of `add_torsor`s is an `add_torsor`. -/
 instance [T : ∀ i, AddTorsor (fg i) (fp i)] : AddTorsor (∀ i, fg i) (∀ i, fp i) where
   vadd := fun g p => fun i => g i +ᵥ p i
-  zero_vadd := fun p => funext $ fun i => zero_vadd (fg i) (p i)
-  add_vadd := fun g₁ g₂ p => funext $ fun i => add_vadd (g₁ i) (g₂ i) (p i)
+  zero_vadd := fun p => funext fun i => zero_vadd (fg i) (p i)
+  add_vadd := fun g₁ g₂ p => funext fun i => add_vadd (g₁ i) (g₂ i) (p i)
   vsub := fun p₁ p₂ => fun i => p₁ i -ᵥ p₂ i
   Nonempty := ⟨fun i => Classical.choice (T i).Nonempty⟩
-  vsub_vadd' := fun p₁ p₂ => funext $ fun i => vsub_vadd (p₁ i) (p₂ i)
-  vadd_vsub' := fun g p => funext $ fun i => vadd_vsub (g i) (p i)
+  vsub_vadd' := fun p₁ p₂ => funext fun i => vsub_vadd (p₁ i) (p₂ i)
+  vadd_vsub' := fun g p => funext fun i => vadd_vsub (g i) (p i)
 
 end Pi
 
@@ -426,13 +357,13 @@ variable (G)
 
 @[simp]
 theorem const_vadd_zero : const_vadd P (0 : G) = 1 :=
-  ext $ zero_vadd G
+  ext <| zero_vadd G
 
 variable {G}
 
 @[simp]
 theorem const_vadd_add (v₁ v₂ : G) : const_vadd P (v₁ + v₂) = const_vadd P v₁ * const_vadd P v₂ :=
-  ext $ add_vadd v₁ v₂
+  ext <| add_vadd v₁ v₂
 
 /-- `equiv.const_vadd` as a homomorphism from `multiplicative G` to `equiv.perm P` -/
 def const_vadd_hom : Multiplicative G →* Equivₓ.Perm P where
@@ -453,7 +384,7 @@ theorem point_reflection_apply (x y : P) : point_reflection x y = x -ᵥ y +ᵥ 
 
 @[simp]
 theorem point_reflection_symm (x : P) : (point_reflection x).symm = point_reflection x :=
-  ext $ by
+  ext <| by
     simp [point_reflection]
 
 @[simp]
@@ -461,7 +392,7 @@ theorem point_reflection_self (x : P) : point_reflection x x = x :=
   vsub_vadd _ _
 
 theorem point_reflection_involutive (x : P) : involutive (point_reflection x : P → P) := fun y =>
-  (Equivₓ.apply_eq_iff_eq_symm_apply _).2 $ by
+  (Equivₓ.apply_eq_iff_eq_symm_apply _).2 <| by
     rw [point_reflection_symm]
 
 /-- `x` is the only fixed point of `point_reflection x`. This lemma requires

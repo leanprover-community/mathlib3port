@@ -109,7 +109,7 @@ theorem adic_module_basis : I.ring_filter_basis.submodules_basis fun n : ℕ => 
   { inter := fun i j =>
       ⟨max i j,
         le_inf_iff.mpr
-          ⟨smul_mono_left $ pow_le_pow (le_max_leftₓ i j), smul_mono_left $ pow_le_pow (le_max_rightₓ i j)⟩⟩,
+          ⟨smul_mono_left <| pow_le_pow (le_max_leftₓ i j), smul_mono_left <| pow_le_pow (le_max_rightₓ i j)⟩⟩,
     smul := fun m i =>
       ⟨(I ^ i • ⊤ : Ideal R), ⟨i, rfl⟩, fun a a_in => by
         replace a_in : a ∈ I ^ i := by

@@ -78,7 +78,7 @@ open order_dual (ofDual toDual)
 
 /-- The galois insertion between sets and opens, but ordered by reverse inclusion. -/
 def gi : GaloisInsertion (to_dual ∘ @Interior α _ ∘ of_dual) (to_dual ∘ Subtype.val ∘ of_dual) where
-  choice := fun s hs => ⟨s, interior_eq_iff_open.mp $ le_antisymmₓ interior_subset hs⟩
+  choice := fun s hs => ⟨s, interior_eq_iff_open.mp <| le_antisymmₓ interior_subset hs⟩
   gc := gc.dual
   le_l_u := fun _ => interior_subset
   choice_eq := fun s hs => le_antisymmₓ interior_subset hs
@@ -142,11 +142,11 @@ theorem empty_eq : (∅ : opens α) = ⊥ :=
   rfl
 
 @[simp]
-theorem Sup_s {Us : Set (opens α)} : ↑Sup Us = ⋃₀((coe : _ → Set α) '' Us) := by
+theorem Sup_s {Us : Set (opens α)} : ↑(Sup Us) = ⋃₀((coe : _ → Set α) '' Us) := by
   rw [(@gc α _).l_Sup, Set.sUnion_image]
   rfl
 
-theorem supr_def {ι} (s : ι → opens α) : (⨆ i, s i) = ⟨⋃ i, s i, is_open_Union $ fun i => (s i).2⟩ := by
+theorem supr_def {ι} (s : ι → opens α) : (⨆ i, s i) = ⟨⋃ i, s i, is_open_Union fun i => (s i).2⟩ := by
   ext
   simp only [supr, opens.Sup_s, sUnion_image, bUnion_range]
   rfl
@@ -240,7 +240,7 @@ theorem comap_mono (f : C(α, β)) {V W : opens β} (hVW : V ⊆ W) : comap f V 
   (comap f).Monotone hVW
 
 @[simp]
-theorem coe_comap (f : C(α, β)) (U : opens β) : ↑comap f U = f ⁻¹' U :=
+theorem coe_comap (f : C(α, β)) (U : opens β) : ↑(comap f U) = f ⁻¹' U :=
   rfl
 
 @[simp]

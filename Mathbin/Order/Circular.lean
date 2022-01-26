@@ -370,19 +370,19 @@ def PartialOrderₓ.toCircularPartialOrder (α : Type _) [PartialOrderₓ α] : 
         
       · exact Or.inl (hab.antisymm hba)
         
-      · exact Or.inr (Or.inl $ hbc.antisymm hcb)
+      · exact Or.inr (Or.inl <| hbc.antisymm hcb)
         
-      · exact Or.inr (Or.inl $ hbc.antisymm hcb)
+      · exact Or.inr (Or.inl <| hbc.antisymm hcb)
         
-      · exact Or.inr (Or.inr $ hca.antisymm hac)
+      · exact Or.inr (Or.inr <| hca.antisymm hac)
         
-      · exact Or.inr (Or.inl $ hbc.antisymm hcb)
-        
-      · exact Or.inl (hab.antisymm hba)
+      · exact Or.inr (Or.inl <| hbc.antisymm hcb)
         
       · exact Or.inl (hab.antisymm hba)
         
-      · exact Or.inr (Or.inr $ hca.antisymm hac)
+      · exact Or.inl (hab.antisymm hba)
+        
+      · exact Or.inr (Or.inr <| hca.antisymm hac)
          }
 
 /-- The circular order obtained from "looping around" a linear order.
@@ -396,17 +396,17 @@ def LinearOrderₓ.toCircularOrder (α : Type _) [LinearOrderₓ α] : CircularO
         
       · exact Or.inl (Or.inl ⟨hab, hbc⟩)
         
-      · exact Or.inl (Or.inr $ Or.inr ⟨hca, hab⟩)
+      · exact Or.inl (Or.inr <| Or.inr ⟨hca, hab⟩)
         
-      · exact Or.inr (Or.inr $ Or.inr ⟨hac, hcb⟩)
+      · exact Or.inr (Or.inr <| Or.inr ⟨hac, hcb⟩)
         
-      · exact Or.inl (Or.inr $ Or.inl ⟨hbc, hca⟩)
+      · exact Or.inl (Or.inr <| Or.inl ⟨hbc, hca⟩)
         
-      · exact Or.inr (Or.inr $ Or.inl ⟨hba, hac⟩)
+      · exact Or.inr (Or.inr <| Or.inl ⟨hba, hac⟩)
         
       · exact Or.inr (Or.inl ⟨hcb, hba⟩)
         
-      · exact Or.inr (Or.inr $ Or.inl ⟨hba, hac⟩)
+      · exact Or.inr (Or.inr <| Or.inl ⟨hba, hac⟩)
          }
 
 /-! ### Dual constructions -/

@@ -54,11 +54,11 @@ theorem coe_add (x y : ℝ) : ↑(x + y) = (x + y : ℝ*) :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_bit0 (x : ℝ) : ↑bit0 x = (bit0 x : ℝ*) :=
+theorem coe_bit0 (x : ℝ) : ↑(bit0 x) = (bit0 x : ℝ*) :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_bit1 (x : ℝ) : ↑bit1 x = (bit1 x : ℝ*) :=
+theorem coe_bit1 (x : ℝ) : ↑(bit1 x) = (bit1 x : ℝ*) :=
   rfl
 
 @[simp, norm_cast]
@@ -86,7 +86,7 @@ theorem coe_le_coe {x y : ℝ} : (x : ℝ*) ≤ y ↔ x ≤ y :=
   germ.const_le_iff
 
 @[simp, norm_cast]
-theorem coe_abs (x : ℝ) : ((|x| : ℝ) : ℝ*) = |x| := by
+theorem coe_abs (x : ℝ) : ((abs x : ℝ) : ℝ*) = abs x := by
   convert const_abs x
   apply linear_order.to_lattice_eq_filter_germ_lattice
 
@@ -104,7 +104,7 @@ noncomputable def of_seq (f : ℕ → ℝ) : ℝ* :=
 
 /-- A sample infinitesimal hyperreal-/
 noncomputable def epsilon : ℝ* :=
-  of_seq $ fun n => n⁻¹
+  of_seq fun n => n⁻¹
 
 /-- A sample infinite hyperreal-/
 noncomputable def omega : ℝ* :=
@@ -197,7 +197,7 @@ def Infinite (x : ℝ*) :=
 
 
 private theorem is_st_unique' (x : ℝ*) (r s : ℝ) (hr : is_st x r) (hs : is_st x s) (hrs : r < s) : False := by
-  have hrs' := half_pos $ sub_pos_of_lt hrs
+  have hrs' := half_pos <| sub_pos_of_lt hrs
   have hr' := (hr _ hrs').2
   have hs' := (hs _ hrs').1
   have h : s - (s - r) / 2 = r + (s - r) / 2 := by
@@ -216,26 +216,26 @@ theorem is_st_unique {x : ℝ*} {r s : ℝ} (hr : is_st x r) (hs : is_st x s) : 
     
 
 theorem not_infinite_of_exists_st {x : ℝ*} : (∃ r : ℝ, is_st x r) → ¬Infinite x := fun he hi =>
-  Exists.dcases_on he $ fun r hr =>
-    hi.elim (fun hip => not_lt_of_lt (hr 2 zero_lt_two).2 (hip $ r + 2)) fun hin =>
-      not_lt_of_lt (hr 2 zero_lt_two).1 (hin $ r - 2)
+  (Exists.dcases_on he) fun r hr =>
+    hi.elim (fun hip => not_lt_of_lt (hr 2 zero_lt_two).2 (hip <| r + 2)) fun hin =>
+      not_lt_of_lt (hr 2 zero_lt_two).1 (hin <| r - 2)
 
 theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : is_st x (Sup { y : ℝ | (y : ℝ*) < x }) :=
   let S : Set ℝ := { y : ℝ | (y : ℝ*) < x }
   let R : _ := Sup S
   have hnile := not_forall.mp (not_or_distrib.mp hni).1
   have hnige := not_forall.mp (not_or_distrib.mp hni).2
-  Exists.dcases_on hnile $
-    Exists.dcases_on hnige $ fun r₁ hr₁ r₂ hr₂ =>
-      have HR₁ : S.nonempty := ⟨r₁ - 1, lt_of_lt_of_leₓ (coe_lt_coe.2 $ sub_one_lt _) (not_ltₓ.mp hr₁)⟩
+  Exists.dcases_on hnile <|
+    (Exists.dcases_on hnige) fun r₁ hr₁ r₂ hr₂ =>
+      have HR₁ : S.nonempty := ⟨r₁ - 1, lt_of_lt_of_leₓ (coe_lt_coe.2 <| sub_one_lt _) (not_ltₓ.mp hr₁)⟩
       have HR₂ : BddAbove S := ⟨r₂, fun y hy => le_of_ltₓ (coe_lt_coe.1 (lt_of_lt_of_leₓ hy (not_ltₓ.mp hr₂)))⟩
       fun δ hδ =>
-      ⟨lt_of_not_ge' $ fun c =>
-          have hc : ∀, ∀ y ∈ S, ∀, y ≤ R - δ := fun y hy => coe_le_coe.1 $ le_of_ltₓ $ lt_of_lt_of_leₓ hy c
-          not_lt_of_le (cSup_le HR₁ hc) $ sub_lt_self R hδ,
-        lt_of_not_ge' $ fun c =>
+      ⟨lt_of_not_ge' fun c =>
+          have hc : ∀, ∀ y ∈ S, ∀, y ≤ R - δ := fun y hy => coe_le_coe.1 <| le_of_ltₓ <| lt_of_lt_of_leₓ hy c
+          not_lt_of_le (cSup_le HR₁ hc) <| sub_lt_self R hδ,
+        lt_of_not_ge' fun c =>
           have hc : ↑(R + δ / 2) < x := lt_of_lt_of_leₓ (add_lt_add_left (coe_lt_coe.2 (half_lt_self hδ)) R) c
-          not_lt_of_le (le_cSup HR₂ hc) $ (lt_add_iff_pos_right _).mpr $ half_pos hδ⟩
+          not_lt_of_le (le_cSup HR₂ hc) <| (lt_add_iff_pos_right _).mpr <| half_pos hδ⟩
 
 theorem exists_st_of_not_infinite {x : ℝ*} (hni : ¬Infinite x) : ∃ r : ℝ, is_st x r :=
   ⟨Sup { y : ℝ | (y : ℝ*) < x }, is_st_Sup hni⟩
@@ -298,7 +298,7 @@ theorem is_st_st {x : ℝ*} (hx : st x ≠ 0) : is_st x (st x) := by
     
 
 theorem is_st_st' {x : ℝ*} (hx : ¬Infinite x) : is_st x (st x) :=
-  is_st_st_of_exists_st $ exists_st_of_not_infinite hx
+  is_st_st_of_exists_st <| exists_st_of_not_infinite hx
 
 theorem is_st_refl_real (r : ℝ) : is_st r r := fun δ hδ =>
   ⟨sub_lt_self _ (coe_lt_coe.2 hδ), lt_add_of_pos_right _ (coe_lt_coe.2 hδ)⟩
@@ -322,7 +322,7 @@ theorem is_st_trans_real {r s t : ℝ} : is_st r s → is_st s t → is_st r t :
 theorem is_st_inj_real {r₁ r₂ s : ℝ} (h1 : is_st r₁ s) (h2 : is_st r₂ s) : r₁ = r₂ :=
   Eq.trans (eq_of_is_st_real h1) (eq_of_is_st_real h2).symm
 
-theorem is_st_iff_abs_sub_lt_delta {x : ℝ*} {r : ℝ} : is_st x r ↔ ∀ δ : ℝ, 0 < δ → |x - r| < δ := by
+theorem is_st_iff_abs_sub_lt_delta {x : ℝ*} {r : ℝ} : is_st x r ↔ ∀ δ : ℝ, 0 < δ → abs (x - r) < δ := by
   simp only [abs_sub_lt_iff, sub_lt_iff_lt_add, is_st, and_comm, add_commₓ]
 
 theorem is_st_add {x y : ℝ*} {r s : ℝ} : is_st x r → is_st y s → is_st (x + y) (r + s) := fun hxr hys d hd =>
@@ -463,10 +463,10 @@ theorem infinite_pos_iff_infinite_of_nonneg {x : ℝ*} (hp : 0 ≤ x) : infinite
 theorem infinite_neg_iff_infinite_of_neg {x : ℝ*} (hn : x < 0) : infinite_neg x ↔ Infinite x := by
   rw [infinite_neg_iff_infinite_and_neg] <;> exact ⟨fun hI => hI.1, fun hI => ⟨hI, hn⟩⟩
 
-theorem infinite_pos_abs_iff_infinite_abs {x : ℝ*} : infinite_pos |x| ↔ Infinite |x| :=
+theorem infinite_pos_abs_iff_infinite_abs {x : ℝ*} : infinite_pos (abs x) ↔ Infinite (abs x) :=
   infinite_pos_iff_infinite_of_nonneg (abs_nonneg _)
 
-theorem infinite_iff_infinite_pos_abs {x : ℝ*} : Infinite x ↔ infinite_pos |x| :=
+theorem infinite_iff_infinite_pos_abs {x : ℝ*} : Infinite x ↔ infinite_pos (abs x) :=
   ⟨fun hi d =>
     Or.cases_on hi
       (fun hip => by
@@ -495,13 +495,13 @@ theorem infinite_iff_infinite_pos_abs {x : ℝ*} : Infinite x ↔ infinite_pos |
             rwa [abs_of_pos h] at hipa)
       ⟩
 
-theorem infinite_iff_infinite_abs {x : ℝ*} : Infinite x ↔ Infinite |x| := by
+theorem infinite_iff_infinite_abs {x : ℝ*} : Infinite x ↔ Infinite (abs x) := by
   rw [← infinite_pos_iff_infinite_of_nonneg (abs_nonneg _), infinite_iff_infinite_pos_abs]
 
-theorem infinite_iff_abs_lt_abs {x : ℝ*} : Infinite x ↔ ∀ r : ℝ, (|r| : ℝ*) < |x| :=
-  ⟨fun hI r => coe_abs r ▸ infinite_iff_infinite_pos_abs.mp hI |r|, fun hR =>
-    Or.cases_on (max_choice x (-x)) (fun h => Or.inl $ fun r => lt_of_le_of_ltₓ (le_abs_self _) (h ▸ hR r)) fun h =>
-      Or.inr $ fun r => neg_lt_neg_iff.mp $ lt_of_le_of_ltₓ (neg_le_abs_self _) (h ▸ hR r)⟩
+theorem infinite_iff_abs_lt_abs {x : ℝ*} : Infinite x ↔ ∀ r : ℝ, (abs r : ℝ*) < abs x :=
+  ⟨fun hI r => coe_abs r ▸ infinite_iff_infinite_pos_abs.mp hI (abs r), fun hR =>
+    Or.cases_on (max_choice x (-x)) (fun h => Or.inl fun r => lt_of_le_of_ltₓ (le_abs_self _) (h ▸ hR r)) fun h =>
+      Or.inr fun r => neg_lt_neg_iff.mp <| lt_of_le_of_ltₓ (neg_le_abs_self _) (h ▸ hR r)⟩
 
 theorem infinite_pos_add_not_infinite_neg {x y : ℝ*} : infinite_pos x → ¬infinite_neg y → infinite_pos (x + y) := by
   intro hip hnin r
@@ -536,23 +536,23 @@ theorem infinite_neg_add_not_infinite {x y : ℝ*} : infinite_neg x → ¬Infini
 
 theorem infinite_pos_of_tendsto_top {f : ℕ → ℝ} (hf : tendsto f at_top at_top) : infinite_pos (of_seq f) := fun r =>
   have hf' := tendsto_at_top_at_top.mp hf
-  Exists.cases_on (hf' (r + 1)) $ fun i hi =>
+  (Exists.cases_on (hf' (r + 1))) fun i hi =>
     have hi' : ∀ a : ℕ, f a < r + 1 → a < i := fun a => by
       rw [← not_leₓ, ← not_leₓ] <;> exact not_imp_not.mpr (hi a)
     have hS : { a : ℕ | r < f a }ᶜ ⊆ { a : ℕ | a ≤ i } := by
       simp only [Set.compl_set_of, not_ltₓ] <;>
         exact fun a har => le_of_ltₓ (hi' a (lt_of_le_of_ltₓ har (lt_add_one _)))
-    germ.coe_lt.2 $ mem_hyperfilter_of_finite_compl $ (Set.finite_le_nat _).Subset hS
+    germ.coe_lt.2 <| mem_hyperfilter_of_finite_compl <| (Set.finite_le_nat _).Subset hS
 
 theorem infinite_neg_of_tendsto_bot {f : ℕ → ℝ} (hf : tendsto f at_top at_bot) : infinite_neg (of_seq f) := fun r =>
   have hf' := tendsto_at_top_at_bot.mp hf
-  Exists.cases_on (hf' (r - 1)) $ fun i hi =>
+  (Exists.cases_on (hf' (r - 1))) fun i hi =>
     have hi' : ∀ a : ℕ, r - 1 < f a → a < i := fun a => by
       rw [← not_leₓ, ← not_leₓ] <;> exact not_imp_not.mpr (hi a)
     have hS : { a : ℕ | f a < r }ᶜ ⊆ { a : ℕ | a ≤ i } := by
       simp only [Set.compl_set_of, not_ltₓ] <;>
         exact fun a har => le_of_ltₓ (hi' a (lt_of_lt_of_leₓ (sub_one_lt _) har))
-    germ.coe_lt.2 $ mem_hyperfilter_of_finite_compl $ (Set.finite_le_nat _).Subset hS
+    germ.coe_lt.2 <| mem_hyperfilter_of_finite_compl <| (Set.finite_le_nat _).Subset hS
 
 theorem not_infinite_neg {x : ℝ*} : ¬Infinite x → ¬Infinite (-x) :=
   not_imp_not.mpr infinite_iff_infinite_neg.mpr
@@ -560,12 +560,12 @@ theorem not_infinite_neg {x : ℝ*} : ¬Infinite x → ¬Infinite (-x) :=
 theorem not_infinite_add {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : ¬Infinite (x + y) :=
   have hx' := exists_st_of_not_infinite hx
   have hy' := exists_st_of_not_infinite hy
-  Exists.cases_on hx' $ Exists.cases_on hy' $ fun r hr s hs => not_infinite_of_exists_st $ ⟨s + r, is_st_add hs hr⟩
+  Exists.cases_on hx' <| (Exists.cases_on hy') fun r hr s hs => not_infinite_of_exists_st <| ⟨s + r, is_st_add hs hr⟩
 
 theorem not_infinite_iff_exist_lt_gt {x : ℝ*} : ¬Infinite x ↔ ∃ r s : ℝ, (r : ℝ*) < x ∧ x < s :=
   ⟨fun hni =>
-    Exists.dcases_on (not_forall.mp (not_or_distrib.mp hni).1) $
-      Exists.dcases_on (not_forall.mp (not_or_distrib.mp hni).2) $ fun r hr s hs => by
+    Exists.dcases_on (not_forall.mp (not_or_distrib.mp hni).1) <|
+      (Exists.dcases_on (not_forall.mp (not_or_distrib.mp hni).2)) fun r hr s hs => by
         rw [not_ltₓ] at hr hs <;>
           exact
             ⟨r - 1, s + 1,
@@ -577,15 +577,15 @@ theorem not_infinite_iff_exist_lt_gt {x : ℝ*} : ¬Infinite x ↔ ∃ r s : ℝ
                   (by
                     norm_num)⟩⟩,
     fun hrs =>
-    Exists.dcases_on hrs $ fun r hr =>
-      Exists.dcases_on hr $ fun s hs =>
+    (Exists.dcases_on hrs) fun r hr =>
+      (Exists.dcases_on hr) fun s hs =>
         not_or_distrib.mpr ⟨not_forall.mpr ⟨s, lt_asymmₓ hs.2⟩, not_forall.mpr ⟨r, lt_asymmₓ hs.1⟩⟩⟩
 
 theorem not_infinite_real (r : ℝ) : ¬Infinite r := by
-  rw [not_infinite_iff_exist_lt_gt] <;> exact ⟨r - 1, r + 1, coe_lt_coe.2 $ sub_one_lt r, coe_lt_coe.2 $ lt_add_one r⟩
+  rw [not_infinite_iff_exist_lt_gt] <;> exact ⟨r - 1, r + 1, coe_lt_coe.2 <| sub_one_lt r, coe_lt_coe.2 <| lt_add_one r⟩
 
 theorem not_real_of_infinite {x : ℝ*} : Infinite x → ∀ r : ℝ, x ≠ r := fun hi r hr =>
-  not_infinite_real r $ @Eq.subst _ Infinite _ _ hr hi
+  not_infinite_real r <| @Eq.subst _ Infinite _ _ hr hi
 
 /-!
 ### Facts about `st` that require some infinite machinery
@@ -597,32 +597,34 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : is_st x r) (hys : is_
   have hxr' := is_st_iff_abs_sub_lt_delta.mp hxr
   have hys' := is_st_iff_abs_sub_lt_delta.mp hys
   have h :=
-    not_infinite_iff_exist_lt_gt.mp $ not_imp_not.mpr infinite_iff_infinite_abs.mpr $ not_infinite_of_exists_st ⟨r, hxr⟩
-  Exists.cases_on h $ fun u h' =>
-    Exists.cases_on h' $ fun t ⟨hu, ht⟩ =>
-      is_st_iff_abs_sub_lt_delta.mpr $ fun d hd =>
+    not_infinite_iff_exist_lt_gt.mp <|
+      not_imp_not.mpr infinite_iff_infinite_abs.mpr <| not_infinite_of_exists_st ⟨r, hxr⟩
+  (Exists.cases_on h) fun u h' =>
+    (Exists.cases_on h') fun t ⟨hu, ht⟩ =>
+      is_st_iff_abs_sub_lt_delta.mpr fun d hd =>
         calc
-          |x * y - r * s| = |x * (y - s) + (x - r) * s| := by
+          abs (x * y - r * s) = abs (x * (y - s) + (x - r) * s) := by
             rw [mul_sub, sub_mul, add_sub, sub_add_cancel]
-          _ ≤ |x * (y - s)| + |(x - r) * s| := abs_add _ _
-          _ ≤ |x| * |y - s| + |x - r| * |s| := by
+          _ ≤ abs (x * (y - s)) + abs ((x - r) * s) := abs_add _ _
+          _ ≤ abs x * abs (y - s) + abs (x - r) * abs s := by
             simp only [abs_mul]
-          _ ≤ |x| * (d / t / 2 : ℝ) + (d / |s| / 2 : ℝ) * |s| :=
+          _ ≤ abs x * (d / t / 2 : ℝ) + (d / abs s / 2 : ℝ) * abs s :=
             add_le_add
               (mul_le_mul_of_nonneg_left
-                  (le_of_ltₓ $ hys' _ $ half_pos $ div_pos hd $ coe_pos.1 $ lt_of_le_of_ltₓ (abs_nonneg x) ht) $
+                  (le_of_ltₓ <| hys' _ <| half_pos <| div_pos hd <| coe_pos.1 <| lt_of_le_of_ltₓ (abs_nonneg x) ht) <|
                 abs_nonneg _)
-              (mul_le_mul_of_nonneg_right (le_of_ltₓ $ hxr' _ $ half_pos $ div_pos hd $ abs_pos.2 hs) $ abs_nonneg _)
-          _ = (d / 2 * (|x| / t) + d / 2 : ℝ*) := by
+              (mul_le_mul_of_nonneg_right (le_of_ltₓ <| hxr' _ <| half_pos <| div_pos hd <| abs_pos.2 hs) <|
+                abs_nonneg _)
+          _ = (d / 2 * (abs x / t) + d / 2 : ℝ*) := by
             push_cast [-Filter.Germ.const_div]
-            have : (|s| : ℝ*) ≠ 0 := by
+            have : (abs s : ℝ*) ≠ 0 := by
               simpa
             have : (2 : ℝ*) ≠ 0 := two_ne_zero
             field_simp [*, add_mulₓ, mul_addₓ, mul_assoc, mul_comm, mul_left_commₓ]
           _ < (d / 2 * 1 + d / 2 : ℝ*) :=
             add_lt_add_right
-              (mul_lt_mul_of_pos_left ((div_lt_one $ lt_of_le_of_ltₓ (abs_nonneg x) ht).mpr ht) $
-                half_pos $ coe_pos.2 hd)
+              (mul_lt_mul_of_pos_left ((div_lt_one <| lt_of_le_of_ltₓ (abs_nonneg x) ht).mpr ht) <|
+                half_pos <| coe_pos.2 hd)
               _
           _ = (d : ℝ*) := by
             rw [mul_oneₓ, add_halves]
@@ -630,9 +632,10 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : is_st x r) (hys : is_
 
 theorem is_st_mul {x y : ℝ*} {r s : ℝ} (hxr : is_st x r) (hys : is_st y s) : is_st (x * y) (r * s) :=
   have h :=
-    not_infinite_iff_exist_lt_gt.mp $ not_imp_not.mpr infinite_iff_infinite_abs.mpr $ not_infinite_of_exists_st ⟨r, hxr⟩
-  Exists.cases_on h $ fun u h' =>
-    Exists.cases_on h' $ fun t ⟨hu, ht⟩ => by
+    not_infinite_iff_exist_lt_gt.mp <|
+      not_imp_not.mpr infinite_iff_infinite_abs.mpr <| not_infinite_of_exists_st ⟨r, hxr⟩
+  (Exists.cases_on h) fun u h' =>
+    (Exists.cases_on h') fun t ⟨hu, ht⟩ => by
       by_cases' hs : s = 0
       · apply is_st_iff_abs_sub_lt_delta.mpr
         intro d hd
@@ -648,7 +651,7 @@ theorem is_st_mul {x y : ℝ*} {r s : ℝ} (hxr : is_st x r) (hys : is_st y s) :
 theorem not_infinite_mul {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : ¬Infinite (x * y) :=
   have hx' := exists_st_of_not_infinite hx
   have hy' := exists_st_of_not_infinite hy
-  Exists.cases_on hx' $ Exists.cases_on hy' $ fun r hr s hs => not_infinite_of_exists_st $ ⟨s * r, is_st_mul hs hr⟩
+  Exists.cases_on hx' <| (Exists.cases_on hy') fun r hr s hs => not_infinite_of_exists_st <| ⟨s * r, is_st_mul hs hr⟩
 
 theorem st_add {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : st (x + y) = st x + st y :=
   have hx' := is_st_st' hx
@@ -686,14 +689,14 @@ theorem lt_neg_of_pos_of_infinitesimal {x : ℝ*} : infinitesimal x → ∀ r : 
   ((infinitesimal_def.mp hi) r hr).1
 
 theorem gt_of_neg_of_infinitesimal {x : ℝ*} : infinitesimal x → ∀ r : ℝ, r < 0 → ↑r < x := fun hi r hr => by
-  convert ((infinitesimal_def.mp hi) (-r) (neg_pos.mpr hr)).1 <;> exact (neg_negₓ (↑r)).symm
+  convert ((infinitesimal_def.mp hi) (-r) (neg_pos.mpr hr)).1 <;> exact (neg_negₓ ↑r).symm
 
-theorem abs_lt_real_iff_infinitesimal {x : ℝ*} : infinitesimal x ↔ ∀ r : ℝ, r ≠ 0 → |x| < |r| :=
+theorem abs_lt_real_iff_infinitesimal {x : ℝ*} : infinitesimal x ↔ ∀ r : ℝ, r ≠ 0 → abs x < abs r :=
   ⟨fun hi r hr =>
     abs_lt.mpr
       (by
-        rw [← coe_abs] <;> exact infinitesimal_def.mp hi |r| (abs_pos.2 hr)),
-    fun hR => infinitesimal_def.mpr $ fun r hr => abs_lt.mp $ (abs_of_pos $ coe_pos.2 hr) ▸ hR r $ ne_of_gtₓ hr⟩
+        rw [← coe_abs] <;> exact infinitesimal_def.mp hi (abs r) (abs_pos.2 hr)),
+    fun hR => infinitesimal_def.mpr fun r hr => abs_lt.mp <| (abs_of_pos <| coe_pos.2 hr) ▸ hR r <| ne_of_gtₓ hr⟩
 
 theorem infinitesimal_zero : infinitesimal 0 :=
   is_st_refl_real 0
@@ -726,7 +729,7 @@ theorem infinitesimal_epsilon : infinitesimal ε :=
   infinitesimal_of_tendsto_zero tendsto_inverse_at_top_nhds_0_nat
 
 theorem not_real_of_infinitesimal_ne_zero (x : ℝ*) : infinitesimal x → x ≠ 0 → ∀ r : ℝ, x ≠ r := fun hi hx r hr =>
-  hx $ hr.trans $ coe_eq_zero.2 $ is_st_unique (hr.symm ▸ is_st_refl_real r : is_st x r) hi
+  hx <| hr.trans <| coe_eq_zero.2 <| is_st_unique (hr.symm ▸ is_st_refl_real r : is_st x r) hi
 
 theorem infinitesimal_sub_is_st {x : ℝ*} {r : ℝ} (hxr : is_st x r) : infinitesimal (x - r) :=
   show is_st (x - r) 0 by
@@ -734,50 +737,50 @@ theorem infinitesimal_sub_is_st {x : ℝ*} {r : ℝ} (hxr : is_st x r) : infinit
     exact is_st_add hxr (is_st_refl_real (-r))
 
 theorem infinitesimal_sub_st {x : ℝ*} (hx : ¬Infinite x) : infinitesimal (x - st x) :=
-  infinitesimal_sub_is_st $ is_st_st' hx
+  infinitesimal_sub_is_st <| is_st_st' hx
 
-theorem infinite_pos_iff_infinitesimal_inv_pos {x : ℝ*} : infinite_pos x ↔ infinitesimal (x⁻¹) ∧ 0 < x⁻¹ :=
+theorem infinite_pos_iff_infinitesimal_inv_pos {x : ℝ*} : infinite_pos x ↔ infinitesimal x⁻¹ ∧ 0 < x⁻¹ :=
   ⟨fun hip =>
-    ⟨infinitesimal_def.mpr $ fun r hr =>
+    ⟨infinitesimal_def.mpr fun r hr =>
         ⟨lt_transₓ (coe_lt_coe.2 (neg_neg_of_pos hr)) (inv_pos.2 (hip 0)),
           (inv_lt (coe_lt_coe.2 hr) (hip 0)).mp
             (by
-              convert hip (r⁻¹))⟩,
-      inv_pos.2 $ hip 0⟩,
+              convert hip r⁻¹)⟩,
+      inv_pos.2 <| hip 0⟩,
     fun ⟨hi, hp⟩ r =>
-    (@Classical.by_cases (r = 0) (↑r < x) fun h => Eq.substr h (inv_pos.mp hp)) $ fun h =>
+    (@Classical.by_cases (r = 0) (↑r < x) fun h => Eq.substr h (inv_pos.mp hp)) fun h =>
       lt_of_le_of_ltₓ (coe_le_coe.2 (le_abs_self r))
         ((inv_lt_inv (inv_pos.mp hp) (coe_lt_coe.2 (abs_pos.2 h))).mp
-          ((infinitesimal_def.mp hi) (|r|⁻¹) (inv_pos.2 (abs_pos.2 h))).2)⟩
+          ((infinitesimal_def.mp hi) (abs r)⁻¹ (inv_pos.2 (abs_pos.2 h))).2)⟩
 
-theorem infinite_neg_iff_infinitesimal_inv_neg {x : ℝ*} : infinite_neg x ↔ infinitesimal (x⁻¹) ∧ x⁻¹ < 0 :=
+theorem infinite_neg_iff_infinitesimal_inv_neg {x : ℝ*} : infinite_neg x ↔ infinitesimal x⁻¹ ∧ x⁻¹ < 0 :=
   ⟨fun hin => by
     have hin' := infinite_pos_iff_infinitesimal_inv_pos.mp (infinite_pos_neg_of_infinite_neg hin)
     rwa [infinitesimal_neg_iff, ← neg_pos, neg_inv], fun hin => by
     rwa [← neg_pos, infinitesimal_neg_iff, neg_inv, ← infinite_pos_iff_infinitesimal_inv_pos, ←
       infinite_neg_iff_infinite_pos_neg] at hin⟩
 
-theorem infinitesimal_inv_of_infinite {x : ℝ*} : Infinite x → infinitesimal (x⁻¹) := fun hi =>
+theorem infinitesimal_inv_of_infinite {x : ℝ*} : Infinite x → infinitesimal x⁻¹ := fun hi =>
   Or.cases_on hi (fun hip => (infinite_pos_iff_infinitesimal_inv_pos.mp hip).1) fun hin =>
     (infinite_neg_iff_infinitesimal_inv_neg.mp hin).1
 
-theorem infinite_of_infinitesimal_inv {x : ℝ*} (h0 : x ≠ 0) (hi : infinitesimal (x⁻¹)) : Infinite x := by
+theorem infinite_of_infinitesimal_inv {x : ℝ*} (h0 : x ≠ 0) (hi : infinitesimal x⁻¹) : Infinite x := by
   cases' lt_or_gt_of_neₓ h0 with hn hp
   · exact Or.inr (infinite_neg_iff_infinitesimal_inv_neg.mpr ⟨hi, inv_lt_zero.mpr hn⟩)
     
   · exact Or.inl (infinite_pos_iff_infinitesimal_inv_pos.mpr ⟨hi, inv_pos.mpr hp⟩)
     
 
-theorem infinite_iff_infinitesimal_inv {x : ℝ*} (h0 : x ≠ 0) : Infinite x ↔ infinitesimal (x⁻¹) :=
+theorem infinite_iff_infinitesimal_inv {x : ℝ*} (h0 : x ≠ 0) : Infinite x ↔ infinitesimal x⁻¹ :=
   ⟨infinitesimal_inv_of_infinite, infinite_of_infinitesimal_inv h0⟩
 
-theorem infinitesimal_pos_iff_infinite_pos_inv {x : ℝ*} : infinite_pos (x⁻¹) ↔ infinitesimal x ∧ 0 < x := by
+theorem infinitesimal_pos_iff_infinite_pos_inv {x : ℝ*} : infinite_pos x⁻¹ ↔ infinitesimal x ∧ 0 < x := by
   convert infinite_pos_iff_infinitesimal_inv_pos <;> simp only [inv_inv₀]
 
-theorem infinitesimal_neg_iff_infinite_neg_inv {x : ℝ*} : infinite_neg (x⁻¹) ↔ infinitesimal x ∧ x < 0 := by
+theorem infinitesimal_neg_iff_infinite_neg_inv {x : ℝ*} : infinite_neg x⁻¹ ↔ infinitesimal x ∧ x < 0 := by
   convert infinite_neg_iff_infinitesimal_inv_neg <;> simp only [inv_inv₀]
 
-theorem infinitesimal_iff_infinite_inv {x : ℝ*} (h : x ≠ 0) : infinitesimal x ↔ Infinite (x⁻¹) := by
+theorem infinitesimal_iff_infinite_inv {x : ℝ*} (h : x ≠ 0) : infinitesimal x ↔ Infinite x⁻¹ := by
   convert (infinite_iff_infinitesimal_inv (inv_ne_zero h)).symm <;> simp only [inv_inv₀]
 
 /-!
@@ -790,15 +793,15 @@ theorem is_st_of_tendsto {f : ℕ → ℝ} {r : ℝ} (hf : tendsto f at_top (�
   rw [← zero_addₓ r, ← sub_add_cancel f fun n => r] <;>
     exact is_st_add (infinitesimal_of_tendsto_zero hg) (is_st_refl_real r)
 
-theorem is_st_inv {x : ℝ*} {r : ℝ} (hi : ¬infinitesimal x) : is_st x r → is_st (x⁻¹) (r⁻¹) := fun hxr =>
+theorem is_st_inv {x : ℝ*} {r : ℝ} (hi : ¬infinitesimal x) : is_st x r → is_st x⁻¹ r⁻¹ := fun hxr =>
   have h : x ≠ 0 := fun h => hi (h.symm ▸ infinitesimal_zero)
-  have H := exists_st_of_not_infinite $ not_imp_not.mpr (infinitesimal_iff_infinite_inv h).mpr hi
-  Exists.cases_on H $ fun s hs =>
+  have H := exists_st_of_not_infinite <| not_imp_not.mpr (infinitesimal_iff_infinite_inv h).mpr hi
+  (Exists.cases_on H) fun s hs =>
     have H' : is_st 1 (r * s) := mul_inv_cancel h ▸ is_st_mul hxr hs
     have H'' : s = r⁻¹ := one_div r ▸ eq_one_div_of_mul_eq_one (eq_of_is_st_real H').symm
     H'' ▸ hs
 
-theorem st_inv (x : ℝ*) : st (x⁻¹) = st x⁻¹ := by
+theorem st_inv (x : ℝ*) : st x⁻¹ = (st x)⁻¹ := by
   by_cases' h0 : x = 0
   rw [h0, inv_zero, ← coe_zero, st_id_real, inv_zero]
   by_cases' h1 : infinitesimal x
@@ -824,7 +827,7 @@ theorem infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos {x y : ℝ*} :
     not_forall.mp
       (by
         rw [infinitesimal_def] at hy₁ <;> exact hy₁)
-  Exists.dcases_on hy₁' $ fun r₁ hy₁'' => by
+  (Exists.dcases_on hy₁') fun r₁ hy₁'' => by
     have hyr := by
       rw [not_imp, ← abs_lt, not_ltₓ, abs_of_pos hy₂] at hy₁'' <;> exact hy₁''
     rw [← div_mul_cancel r (ne_of_gtₓ hyr.1), coe_mul] <;>

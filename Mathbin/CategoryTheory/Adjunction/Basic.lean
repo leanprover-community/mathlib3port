@@ -351,8 +351,8 @@ See https://stacks.math.columbia.edu/tag/0DV0.
 -/
 def comp (adj₁ : F ⊣ G) (adj₂ : H ⊣ I) : F ⋙ H ⊣ I ⋙ G where
   homEquiv := fun X Z => Equivₓ.trans (adj₂.hom_equiv _ _) (adj₁.hom_equiv _ _)
-  Unit := adj₁.unit ≫ (whisker_left F $ whisker_right adj₂.unit G) ≫ (functor.associator _ _ _).inv
-  counit := (functor.associator _ _ _).Hom ≫ (whisker_left I $ whisker_right adj₁.counit H) ≫ adj₂.counit
+  Unit := adj₁.unit ≫ (whisker_left F <| whisker_right adj₂.unit G) ≫ (functor.associator _ _ _).inv
+  counit := (functor.associator _ _ _).Hom ≫ (whisker_left I <| whisker_right adj₁.counit H) ≫ adj₂.counit
 
 /-- If `F` and `G` are left adjoints then `F ⋙ G` is a left adjoint too. -/
 instance left_adjoint_of_comp {E : Type u₃} [ℰ : category.{v₃} E] (F : C ⥤ D) (G : D ⥤ E) [Fl : is_left_adjoint F]

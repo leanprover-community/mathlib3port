@@ -602,7 +602,7 @@ theorem of_digits_zmodeq' (b b' : ℤ) (k : ℕ) (h : b ≡ b' [ZMOD k]) (L : Li
     
 
 theorem of_digits_zmodeq (b : ℤ) (k : ℕ) (L : List ℕ) : of_digits b L ≡ of_digits (b % k) L [ZMOD k] :=
-  of_digits_zmodeq' b (b % k) k (b.mod_modeq (↑k)).symm L
+  of_digits_zmodeq' b (b % k) k (b.mod_modeq ↑k).symm L
 
 theorem of_digits_zmod (b : ℤ) (k : ℕ) (L : List ℕ) : of_digits b L % k = of_digits (b % k) L % k :=
   of_digits_zmodeq b k L

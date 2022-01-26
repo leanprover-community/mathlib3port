@@ -103,7 +103,7 @@ theorem initial_of_final_op (F : C ⥤ D) [final F.op] : initial F :=
 theorem final_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : final R :=
   { out := fun c =>
       let u : structured_arrow c R := structured_arrow.mk (adj.unit.app c)
-      @zigzag_is_connected _ _ ⟨u⟩ $ fun f g =>
+      (@zigzag_is_connected _ _ ⟨u⟩) fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
             (show zag f u from
@@ -122,7 +122,7 @@ theorem final_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : final 
 theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : initial L :=
   { out := fun d =>
       let u : costructured_arrow L d := costructured_arrow.mk (adj.counit.app d)
-      @zigzag_is_connected _ _ ⟨u⟩ $ fun f g =>
+      (@zigzag_is_connected _ _ ⟨u⟩) fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
             (show zag f u from

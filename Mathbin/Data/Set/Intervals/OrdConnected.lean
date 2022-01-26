@@ -67,10 +67,10 @@ theorem ord_connected_dual {s : Set α} : ord_connected (OrderDual.ofDual ⁻¹'
     simpa only [ord_connected_def] using h.dual, fun h => h.dual⟩
 
 theorem ord_connected_sInter {S : Set (Set α)} (hS : ∀, ∀ s ∈ S, ∀, ord_connected s) : ord_connected (⋂₀S) :=
-  ⟨fun x hx y hy => subset_sInter $ fun s hs => (hS s hs).out (hx s hs) (hy s hs)⟩
+  ⟨fun x hx y hy => subset_sInter fun s hs => (hS s hs).out (hx s hs) (hy s hs)⟩
 
 theorem ord_connected_Inter {ι : Sort _} {s : ι → Set α} (hs : ∀ i, ord_connected (s i)) : ord_connected (⋂ i, s i) :=
-  ord_connected_sInter $ forall_range_iff.2 hs
+  ord_connected_sInter <| forall_range_iff.2 hs
 
 instance ord_connected_Inter' {ι : Sort _} {s : ι → Set α} [∀ i, ord_connected (s i)] : ord_connected (⋂ i, s i) :=
   ord_connected_Inter ‹_›
@@ -78,7 +78,7 @@ instance ord_connected_Inter' {ι : Sort _} {s : ι → Set α} [∀ i, ord_conn
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i hi)
 theorem ord_connected_bInter {ι : Sort _} {p : ι → Prop} {s : ∀ i : ι hi : p i, Set α}
     (hs : ∀ i hi, ord_connected (s i hi)) : ord_connected (⋂ (i) (hi), s i hi) :=
-  ord_connected_Inter $ fun i => ord_connected_Inter $ hs i
+  ord_connected_Inter fun i => ord_connected_Inter <| hs i
 
 theorem ord_connected_pi {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] {s : Set ι} {t : ∀ i, Set (α i)}
     (h : ∀, ∀ i ∈ s, ∀, ord_connected (t i)) : ord_connected (s.pi t) :=
@@ -86,7 +86,7 @@ theorem ord_connected_pi {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ 
 
 instance ord_connected_pi' {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] {s : Set ι} {t : ∀ i, Set (α i)}
     [h : ∀ i, ord_connected (t i)] : ord_connected (s.pi t) :=
-  ord_connected_pi $ fun i hi => h i
+  ord_connected_pi fun i hi => h i
 
 @[instance]
 theorem ord_connected_Ici {a : α} : ord_connected (Ici a) :=
@@ -157,11 +157,11 @@ theorem ord_connected.interval_subset (hs : ord_connected s) ⦃x⦄ (hx : x ∈
 
 theorem ord_connected_iff_interval_subset : ord_connected s ↔ ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, interval x y ⊆ s :=
   ⟨fun h => h.interval_subset, fun h =>
-    ord_connected_iff.2 $ fun x hx y hy hxy => by
+    ord_connected_iff.2 fun x hx y hy hxy => by
       simpa only [interval_of_le hxy] using h hx hy⟩
 
 theorem ord_connected_iff_interval_subset_left (hx : x ∈ s) : ord_connected s ↔ ∀ ⦃y⦄, y ∈ s → interval x y ⊆ s := by
-  refine' ⟨fun hs => hs.interval_subset hx, fun hs => ord_connected_iff_interval_subset.2 $ fun y hy z hz => _⟩
+  refine' ⟨fun hs => hs.interval_subset hx, fun hs => ord_connected_iff_interval_subset.2 fun y hy z hz => _⟩
   suffices h : interval y x ∪ interval x z ⊆ s
   · exact interval_subset_interval_union_interval.trans h
     

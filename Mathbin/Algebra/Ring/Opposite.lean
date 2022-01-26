@@ -14,14 +14,14 @@ namespace MulOpposite
 
 instance [Distrib α] : Distrib (αᵐᵒᵖ) :=
   { MulOpposite.hasAdd α, MulOpposite.hasMul α with
-    left_distrib := fun x y z => unop_injective $ add_mulₓ (unop y) (unop z) (unop x),
-    right_distrib := fun x y z => unop_injective $ mul_addₓ (unop z) (unop x) (unop y) }
+    left_distrib := fun x y z => unop_injective <| add_mulₓ (unop y) (unop z) (unop x),
+    right_distrib := fun x y z => unop_injective <| mul_addₓ (unop z) (unop x) (unop y) }
 
 instance [MulZeroClass α] : MulZeroClass (αᵐᵒᵖ) where
   zero := 0
   mul := · * ·
-  zero_mul := fun x => unop_injective $ mul_zero $ unop x
-  mul_zero := fun x => unop_injective $ zero_mul $ unop x
+  zero_mul := fun x => unop_injective <| mul_zero <| unop x
+  mul_zero := fun x => unop_injective <| zero_mul <| unop x
 
 instance [MulZeroOneClass α] : MulZeroOneClass (αᵐᵒᵖ) :=
   { MulOpposite.mulZeroClass α, MulOpposite.mulOneClass α with }
@@ -58,15 +58,15 @@ instance [CommRingₓ α] : CommRingₓ (αᵐᵒᵖ) :=
 
 instance [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors (αᵐᵒᵖ) where
   eq_zero_or_eq_zero_of_mul_eq_zero := fun x y H : op (_ * _) = op (0 : α) =>
-    Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero $ op_injective H) (fun hy => Or.inr $ unop_injective $ hy) fun hx =>
-      Or.inl $ unop_injective $ hx
+    Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero <| op_injective H) (fun hy => Or.inr <| unop_injective <| hy)
+      fun hx => Or.inl <| unop_injective <| hx
 
 instance [Ringₓ α] [IsDomain α] : IsDomain (αᵐᵒᵖ) :=
   { MulOpposite.no_zero_divisors α, MulOpposite.ring α, MulOpposite.nontrivial α with }
 
 instance [GroupWithZeroₓ α] : GroupWithZeroₓ (αᵐᵒᵖ) :=
   { MulOpposite.monoidWithZero α, MulOpposite.divInvMonoid α, MulOpposite.nontrivial α with
-    mul_inv_cancel := fun x hx => unop_injective $ inv_mul_cancel $ unop_injective.Ne hx,
+    mul_inv_cancel := fun x hx => unop_injective <| inv_mul_cancel <| unop_injective.Ne hx,
     inv_zero := unop_injective inv_zero }
 
 end MulOpposite
@@ -78,7 +78,7 @@ a ring homomorphism to `Sᵐᵒᵖ`. -/
 @[simps (config := { fullyApplied := ff })]
 def RingHom.toOpposite {R S : Type _} [Semiringₓ R] [Semiringₓ S] (f : R →+* S) (hf : ∀ x y, Commute (f x) (f y)) :
     R →+* Sᵐᵒᵖ :=
-  { ((op_add_equiv : S ≃+ Sᵐᵒᵖ).toAddMonoidHom.comp (↑f) : R →+ Sᵐᵒᵖ), f.to_monoid_hom.to_opposite hf with
+  { ((op_add_equiv : S ≃+ Sᵐᵒᵖ).toAddMonoidHom.comp ↑f : R →+ Sᵐᵒᵖ), f.to_monoid_hom.to_opposite hf with
     toFun := MulOpposite.op ∘ f }
 
 /-- A monoid homomorphism `f : R →* S` such that `f x` commutes with `f y` for all `x, y` defines

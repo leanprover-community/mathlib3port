@@ -63,7 +63,7 @@ theorem charpoly_sub_diagonal_degree_lt : (M.charpoly - ∏ i : n, X - C (M i i)
   apply Submodule.sum_mem (degree_lt R (Fintype.card n - 1))
   intro c hc
   rw [← C_eq_int_cast, C_mul']
-  apply Submodule.smul_mem (degree_lt R (Fintype.card n - 1)) (↑↑Equivₓ.Perm.sign c)
+  apply Submodule.smul_mem (degree_lt R (Fintype.card n - 1)) ↑↑(Equivₓ.Perm.sign c)
   rw [mem_degree_lt]
   apply lt_of_le_of_ltₓ degree_le_nat_degree _
   rw [WithBot.coe_lt_coe]

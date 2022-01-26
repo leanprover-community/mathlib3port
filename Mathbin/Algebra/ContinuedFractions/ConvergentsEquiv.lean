@@ -66,7 +66,7 @@ variable {K : Type _} {n : ℕ}
 
 namespace GeneralizedContinuedFraction
 
-variable {g : GeneralizedContinuedFraction K} {s : Seqₓₓ $ pair K}
+variable {g : GeneralizedContinuedFraction K} {s : Seqₓₓ <| pair K}
 
 section Squash
 
@@ -86,7 +86,7 @@ combines `⟨aₙ, bₙ⟩` and `⟨aₙ₊₁, bₙ₊₁⟩` at position `n` t
 `squash_seq s 0 = [(a₀, bₒ + a₁ / b₁), (a₁, b₁),...]`.
 If `s.terminated_at (n + 1)`, then `squash_seq s n = s`.
 -/
-def squash_seq (s : Seqₓₓ $ pair K) (n : ℕ) : Seqₓₓ (pair K) :=
+def squash_seq (s : Seqₓₓ <| pair K) (n : ℕ) : Seqₓₓ (pair K) :=
   match Prod.mk (s.nth n) (s.nth (n + 1)) with
   | ⟨some gp_n, some gp_succ_n⟩ =>
     Seqₓₓ.nats.zipWith (fun n' gp => if n' = n then ⟨gp_n.a, gp_n.b + gp_succ_n.a / gp_succ_n.b⟩ else gp) s
@@ -151,7 +151,7 @@ theorem squash_seq_succ_n_tail_eq_squash_seq_tail_n : (squash_seq s (n + 1)).tai
 corresponding squashed sequence at the squashed position. -/
 theorem succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq :
     convergents'_aux s (n + 2) = convergents'_aux (squash_seq s n) (n + 1) := by
-  cases' s_succ_nth_eq : s.nth $ n + 1 with gp_succ_n
+  cases' s_succ_nth_eq : s.nth <| n + 1 with gp_succ_n
   case option.none =>
     rw [squash_seq_eq_self_of_terminated s_succ_nth_eq, convergents'_aux_stable_step_of_terminated s_succ_nth_eq]
   case option.some =>
@@ -295,7 +295,7 @@ theorem succ_nth_convergent_eq_squash_gcf_nth_convergent [Field K]
           (b * (pb * pA + pa * ppA) + a * pA) / (b * (pb * pB + pa * ppB) + a * pB)
         by
         obtain ⟨eq1, eq2, eq3, eq4⟩ : pA' = pA ∧ pB' = pB ∧ ppA' = ppA ∧ ppB' = ppB := by
-          simp [*, (continuants_aux_eq_continuants_aux_squash_gcf_of_le $ le_reflₓ $ n' + 1).symm,
+          simp [*, (continuants_aux_eq_continuants_aux_squash_gcf_of_le <| le_reflₓ <| n' + 1).symm,
             (continuants_aux_eq_continuants_aux_squash_gcf_of_le n'.le_succ).symm]
         symm
         simpa only [eq1, eq2, eq3, eq4, mul_div_cancel _ b_ne_zero]
@@ -346,10 +346,10 @@ theorem convergents_eq_convergents' [LinearOrderedField K]
             rwa [this]
           refine' ⟨(s_pos (Nat.Lt.step m_lt_n) mth_s_eq).left, _⟩
           refine' add_pos (s_pos (Nat.Lt.step m_lt_n) mth_s_eq).right _
-          have : 0 < gp_succ_m.a ∧ 0 < gp_succ_m.b := s_pos (lt_add_one $ m + 1) s_succ_mth_eq
+          have : 0 < gp_succ_m.a ∧ 0 < gp_succ_m.b := s_pos (lt_add_one <| m + 1) s_succ_mth_eq
           exact div_pos this.left this.right
           
-        · refine' s_pos (Nat.Lt.step $ Nat.Lt.step succ_m_lt_n) _
+        · refine' s_pos (Nat.Lt.step <| Nat.Lt.step succ_m_lt_n) _
           exact Eq.trans (squash_gcf_nth_of_lt succ_m_lt_n).symm s_mth_eq'
           
       have : ∀ ⦃b⦄, g.partial_denominators.nth n = some b → b ≠ 0 := by
@@ -375,7 +375,7 @@ theorem convergents_eq_convergents' [LinearOrderedField K] {c : ContinuedFractio
   intro gp m m_lt_n s_nth_eq
   exact
     ⟨zero_lt_one.trans_le ((c : SimpleContinuedFraction K).property m gp.a (part_num_eq_s_a s_nth_eq)).symm.le,
-      c.property m gp.b $ part_denom_eq_s_b s_nth_eq⟩
+      c.property m gp.b <| part_denom_eq_s_b s_nth_eq⟩
 
 end ContinuedFraction
 

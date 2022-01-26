@@ -223,8 +223,8 @@ theorem eventually_residual {p : α → Prop} :
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
 theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _)(_ : t ⊆ s), IsGδ t ∧ Dense t :=
-  (@eventually_residual α _ _ fun x => x ∈ s).trans $
-    exists_congr $ fun t => by
+  (@eventually_residual α _ _ fun x => x ∈ s).trans <|
+    exists_congr fun t => by
       rw [exists_prop, and_comm (t ⊆ s), subset_def, and_assoc]
 
 theorem dense_of_mem_residual {s : Set α} (hs : s ∈ residual α) : Dense s :=
@@ -293,7 +293,7 @@ theorem dense_Union_interior_of_closed [Encodable β] {f : β → Set α} (hc : 
 /-- One of the most useful consequences of Baire theorem: if a countable union of closed sets
 covers the space, then one of the sets has nonempty interior. -/
 theorem nonempty_interior_of_Union_of_closed [Nonempty α] [Encodable β] {f : β → Set α} (hc : ∀ s, IsClosed (f s))
-    (hU : (⋃ s, f s) = univ) : ∃ s, (Interior $ f s).Nonempty := by
+    (hU : (⋃ s, f s) = univ) : ∃ s, (Interior <| f s).Nonempty := by
   by_contra h
   simp only [not_exists, not_nonempty_iff_eq_empty] at h
   have :=

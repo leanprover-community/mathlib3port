@@ -45,11 +45,11 @@ theorem div_down [Div α] : (x / y).down = x.down / y.down :=
   rfl
 
 @[to_additive]
-instance HasInv [HasInv α] : HasInv (Ulift α) :=
+instance Inv [Inv α] : Inv (Ulift α) :=
   ⟨fun f => ⟨f.down⁻¹⟩⟩
 
 @[simp, to_additive]
-theorem inv_down [HasInv α] : x⁻¹.down = x.down⁻¹ :=
+theorem inv_down [Inv α] : x⁻¹.down = x.down⁻¹ :=
   rfl
 
 /-- The multiplicative equivalence between `ulift α` and `α`.
@@ -60,15 +60,15 @@ def _root_.mul_equiv.ulift [Mul α] : Ulift α ≃* α :=
 
 @[to_additive]
 instance Semigroupₓ [Semigroupₓ α] : Semigroupₓ (Ulift α) :=
-  MulEquiv.ulift.Injective.Semigroup _ $ fun x y => rfl
+  (MulEquiv.ulift.Injective.Semigroup _) fun x y => rfl
 
 @[to_additive]
 instance CommSemigroupₓ [CommSemigroupₓ α] : CommSemigroupₓ (Ulift α) :=
-  Equivₓ.ulift.Injective.CommSemigroup _ $ fun x y => rfl
+  (Equivₓ.ulift.Injective.CommSemigroup _) fun x y => rfl
 
 @[to_additive]
 instance MulOneClass [MulOneClass α] : MulOneClass (Ulift α) :=
-  Equivₓ.ulift.Injective.MulOneClass _ rfl $ fun x y => rfl
+  (Equivₓ.ulift.Injective.MulOneClass _ rfl) fun x y => rfl
 
 @[to_additive HasVadd]
 instance HasScalar {β : Type _} [HasScalar α β] : HasScalar α (Ulift β) :=

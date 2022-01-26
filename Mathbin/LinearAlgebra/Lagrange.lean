@@ -30,7 +30,7 @@ open Polynomial
 
 /-- Lagrange basis polynomials that evaluate to 1 at `x` and 0 at other elements of `s`. -/
 def basis (x : F) : Polynomial F :=
-  ∏ y in s.erase x, C ((x - y)⁻¹) * (X - C y)
+  ∏ y in s.erase x, C (x - y)⁻¹ * (X - C y)
 
 @[simp]
 theorem basis_empty (x : F) : basis ∅ x = 1 :=
@@ -72,7 +72,7 @@ theorem nat_degree_basis (x : F) (hx : x ∈ s) : (basis s x).natDegree = s.card
     
   · intro y s hys ih hx
     rw [Finset.mem_insert, not_or_distrib] at hx
-    have h1 : C ((x - y)⁻¹) ≠ C 0 := fun h => hx.1 (eq_of_sub_eq_zero $ inv_eq_zero.1 $ C_inj.1 h)
+    have h1 : C (x - y)⁻¹ ≠ C 0 := fun h => hx.1 (eq_of_sub_eq_zero <| inv_eq_zero.1 <| C_inj.1 h)
     have h2 : X ^ 1 - C y ≠ 0 := by
       convert X_pow_sub_C_ne_zero zero_lt_one y
     rw [C_0] at h1
@@ -126,8 +126,8 @@ theorem degree_interpolate_lt : (interpolate s f).degree < s.card :=
     rw [interpolate_empty, degree_zero]
     exact WithBot.bot_lt_coe _
   else
-    (degree_sum_le _ _).trans_lt $
-      (Finset.sup_lt_iff $ WithBot.bot_lt_coe s.card).2 $ fun b _ =>
+    (degree_sum_le _ _).trans_lt <|
+      (Finset.sup_lt_iff <| WithBot.bot_lt_coe s.card).2 fun b _ =>
         calc
           (C (f b) * basis s b).degree ≤ (C (f b)).degree + (basis s b).degree := degree_mul_le _ _
           _ ≤ 0 + (basis s b).degree := add_le_add_right degree_C_le _
@@ -135,7 +135,7 @@ theorem degree_interpolate_lt : (interpolate s f).degree < s.card :=
           _ ≤ (basis s b).natDegree := degree_le_nat_degree
           _ = (s.card - 1 : ℕ) := by
             rw [nat_degree_basis s b b.2]
-          _ < s.card := WithBot.coe_lt_coe.2 (Nat.pred_ltₓ $ mt Finset.card_eq_zero.1 H)
+          _ < s.card := WithBot.coe_lt_coe.2 (Nat.pred_ltₓ <| mt Finset.card_eq_zero.1 H)
           
 
 /-- Linear version of `interpolate`. -/
@@ -170,38 +170,38 @@ theorem interpolate_smul (c : F) f : interpolate s (c • f) = c • interpolate
 
 theorem eq_zero_of_eval_eq_zero {f : Polynomial F'} (hf1 : f.degree < s'.card) (hf2 : ∀, ∀ x ∈ s', ∀, f.eval x = 0) :
     f = 0 :=
-  by_contradiction $ fun hf3 =>
-    not_le_of_lt hf1 $
+  by_contradiction fun hf3 =>
+    not_le_of_lt hf1 <|
       calc
         (s'.card : WithBot ℕ) ≤ f.roots.to_finset.card :=
-          WithBot.coe_le_coe.2 $
-            Finset.card_le_of_subset $ fun x hx => Multiset.mem_to_finset.mpr $ (mem_roots hf3).2 $ hf2 x hx
-        _ ≤ f.roots.card := WithBot.coe_le_coe.2 $ f.roots.to_finset_card_le
+          WithBot.coe_le_coe.2 <|
+            Finset.card_le_of_subset fun x hx => Multiset.mem_to_finset.mpr <| (mem_roots hf3).2 <| hf2 x hx
+        _ ≤ f.roots.card := WithBot.coe_le_coe.2 <| f.roots.to_finset_card_le
         _ ≤ f.degree := card_roots hf3
         
 
 theorem eq_of_eval_eq {f g : Polynomial F'} (hf : f.degree < s'.card) (hg : g.degree < s'.card)
     (hfg : ∀, ∀ x ∈ s', ∀, f.eval x = g.eval x) : f = g :=
-  eq_of_sub_eq_zero $
-    eq_zero_of_eval_eq_zero s' (lt_of_le_of_ltₓ (degree_sub_le f g) $ max_ltₓ hf hg) fun x hx => by
+  eq_of_sub_eq_zero <|
+    eq_zero_of_eval_eq_zero s' (lt_of_le_of_ltₓ (degree_sub_le f g) <| max_ltₓ hf hg) fun x hx => by
       rw [eval_sub, hfg x hx, sub_self]
 
 theorem eq_interpolate (f : Polynomial F) (hf : f.degree < s.card) : (interpolate s fun x => f.eval x) = f :=
-  eq_of_eval_eq s (degree_interpolate_lt s _) hf $ fun x hx => eval_interpolate s _ x hx
+  (eq_of_eval_eq s (degree_interpolate_lt s _) hf) fun x hx => eval_interpolate s _ x hx
 
 /-- Lagrange interpolation induces isomorphism between functions from `s` and polynomials
 of degree less than `s.card`. -/
 def fun_equiv_degree_lt : degree_lt F s.card ≃ₗ[F] s → F where
   toFun := fun f x => f.1.eval x
-  map_add' := fun f g => funext $ fun x => eval_add
+  map_add' := fun f g => funext fun x => eval_add
   map_smul' := fun c f =>
-    funext $ fun x => by
+    funext fun x => by
       change eval (↑x) (c • f).val = (c • fun x : s => eval (↑x) f.val) x
       rw [Pi.smul_apply, smul_eq_mul, ← @eval_C F c _ x, ← eval_mul, eval_C, C_mul']
       rfl
-  invFun := fun f => ⟨interpolate s f, mem_degree_lt.2 $ degree_interpolate_lt s f⟩
-  left_inv := fun f => Subtype.eq $ eq_interpolate s f $ mem_degree_lt.1 f.2
-  right_inv := fun f => funext $ fun ⟨x, hx⟩ => eval_interpolate s f x hx
+  invFun := fun f => ⟨interpolate s f, mem_degree_lt.2 <| degree_interpolate_lt s f⟩
+  left_inv := fun f => Subtype.eq <| eq_interpolate s f <| mem_degree_lt.1 f.2
+  right_inv := fun f => funext fun ⟨x, hx⟩ => eval_interpolate s f x hx
 
 end Lagrange
 

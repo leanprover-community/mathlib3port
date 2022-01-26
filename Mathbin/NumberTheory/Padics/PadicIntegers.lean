@@ -192,7 +192,7 @@ def inv : ℤ_[p] → ℤ_[p]
 
 instance : CharZero ℤ_[p] where
   cast_injective := fun m n h =>
-    Nat.cast_injective $
+    Nat.cast_injective <|
       show (m : ℚ_[p]) = n by
         rw [Subtype.ext_iff] at h
         norm_cast  at h
@@ -212,7 +212,7 @@ converges to a `p`-adic integer.
 -/
 def of_int_seq (seq : ℕ → ℤ) (h : IsCauSeq (padicNorm p) fun n => seq n) : ℤ_[p] :=
   ⟨⟦⟨_, h⟩⟧,
-    show ↑PadicSeq.norm _ ≤ (1 : ℝ) by
+    show ↑(PadicSeq.norm _) ≤ (1 : ℝ) by
       rw [PadicSeq.norm]
       split_ifs with hne <;> norm_cast
       · exact zero_le_one
@@ -329,14 +329,14 @@ theorem norm_add_eq_max_of_ne : ∀ {q r : ℤ_[p]}, ∥q∥ ≠ ∥r∥ → ∥
   | ⟨_, _⟩, ⟨_, _⟩ => padicNormE.add_eq_max_of_ne
 
 theorem norm_eq_of_norm_add_lt_right {z1 z2 : ℤ_[p]} (h : ∥z1 + z2∥ < ∥z2∥) : ∥z1∥ = ∥z2∥ :=
-  by_contradiction $ fun hne =>
+  by_contradiction fun hne =>
     not_lt_of_geₓ
       (by
         rw [norm_add_eq_max_of_ne hne] <;> apply le_max_rightₓ)
       h
 
 theorem norm_eq_of_norm_add_lt_left {z1 z2 : ℤ_[p]} (h : ∥z1 + z2∥ < ∥z1∥) : ∥z1∥ = ∥z2∥ :=
-  by_contradiction $ fun hne =>
+  by_contradiction fun hne =>
     not_lt_of_geₓ
       (by
         rw [norm_add_eq_max_of_ne hne] <;> apply le_max_leftₓ)
@@ -385,7 +385,7 @@ variable (p : ℕ) [hp_prime : Fact p.prime]
 include hp_prime
 
 theorem exists_pow_neg_lt {ε : ℝ} (hε : 0 < ε) : ∃ k : ℕ, ↑p ^ -((k : ℕ) : ℤ) < ε := by
-  obtain ⟨k, hk⟩ := exists_nat_gt (ε⁻¹)
+  obtain ⟨k, hk⟩ := exists_nat_gt ε⁻¹
   use k
   rw [← inv_lt_inv hε (_root_.zpow_pos_of_pos _ _)]
   · rw [zpow_neg₀, inv_inv₀, zpow_coe_nat]
@@ -531,7 +531,7 @@ theorem mk_units_eq {u : ℚ_[p]} (h : ∥u∥ = 1) : ((mk_units h : ℤ_[p]) : 
 
 @[simp]
 theorem norm_units (u : (ℤ_[p])ˣ) : ∥(u : ℤ_[p])∥ = 1 :=
-  is_unit_iff.mp $ by
+  is_unit_iff.mp <| by
     simp
 
 /-- `unit_coeff hx` is the unit `u` in the unique representation `x = u * p ^ n`.
@@ -636,12 +636,12 @@ section Dvr
 
 
 instance : LocalRing ℤ_[p] :=
-  local_of_nonunits_ideal zero_ne_one $ by
+  local_of_nonunits_ideal zero_ne_one <| by
     simp only [mem_nonunits] <;> exact fun x h y => norm_lt_one_add h
 
 theorem p_nonnunit : (p : ℤ_[p]) ∈ Nonunits ℤ_[p] := by
   have : (p : ℝ)⁻¹ < 1 :=
-    inv_lt_one $ by
+    inv_lt_one <| by
       exact_mod_cast hp_prime.1.one_lt
   simp [this]
 

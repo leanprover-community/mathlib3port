@@ -135,7 +135,7 @@ theorem range_inl : range (inl R M M₂) = ker (snd R M M₂) := by
     
 
 theorem ker_snd : ker (snd R M M₂) = range (inl R M M₂) :=
-  Eq.symm $ range_inl R M M₂
+  Eq.symm <| range_inl R M M₂
 
 theorem range_inr : range (inr R M M₂) = ker (fst R M M₂) := by
   ext x
@@ -149,7 +149,7 @@ theorem range_inr : range (inr R M M₂) = ker (fst R M M₂) := by
     
 
 theorem ker_fst : ker (fst R M M₂) = range (inr R M M₂) :=
-  Eq.symm $ range_inr R M M₂
+  Eq.symm <| range_inr R M M₂
 
 end
 
@@ -201,7 +201,7 @@ theorem coprod_inl_inr : coprod (inl R M M₂) (inr R M M₂) = LinearMap.id := 
 
 theorem comp_coprod (f : M₃ →ₗ[R] M₄) (g₁ : M →ₗ[R] M₃) (g₂ : M₂ →ₗ[R] M₃) :
     f.comp (g₁.coprod g₂) = (f.comp g₁).coprod (f.comp g₂) :=
-  ext $ fun x => f.map_add (g₁ x.1) (g₂ x.2)
+  ext fun x => f.map_add (g₁ x.1) (g₂ x.2)
 
 theorem fst_eq_coprod : fst R M M₂ = coprod LinearMap.id 0 := by
   ext <;> simp
@@ -217,7 +217,7 @@ theorem coprod_comp_prod (f : M₂ →ₗ[R] M₄) (g : M₃ →ₗ[R] M₄) (f'
 @[simp]
 theorem coprod_map_prod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) (S : Submodule R M) (S' : Submodule R M₂) :
     (Submodule.prod S S').map (LinearMap.coprod f g) = S.map f⊔S'.map g :=
-  SetLike.coe_injective $ by
+  SetLike.coe_injective <| by
     simp only [LinearMap.coprod_apply, Submodule.coe_sup, Submodule.map_coe]
     rw [← Set.image2_add, Set.image2_image_left, Set.image2_image_right]
     exact Set.image_prod fun m m₂ => f m + g m₂
@@ -266,7 +266,7 @@ theorem prod_map_apply (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) x : f.pr
 
 theorem prod_map_comap_prod (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) (S : Submodule R M₂) (S' : Submodule R M₄) :
     (Submodule.prod S S').comap (LinearMap.prodMap f g) = (S.comap f).Prod (S'.comap g) :=
-  SetLike.coe_injective $ Set.preimage_prod_map_prod f g _ _
+  SetLike.coe_injective <| Set.preimage_prod_map_prod f g _ _
 
 theorem ker_prod_map (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) : (LinearMap.prodMap f g).ker = Submodule.prod f.ker g.ker := by
   dsimp only [ker]
@@ -303,7 +303,7 @@ variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMo
   [Module R M₂] [Module R M₃] [Module R M₄]
 
 theorem range_coprod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) : (f.coprod g).range = f.range⊔g.range :=
-  Submodule.ext $ fun x => by
+  Submodule.ext fun x => by
     simp [mem_sup]
 
 theorem is_compl_range_inl_inr : IsCompl (inl R M M₂).range (inr R M M₂).range := by
@@ -342,11 +342,11 @@ theorem map_coprod_prod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) (p : Su
 
 theorem comap_prod_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) (p : Submodule R M₂) (q : Submodule R M₃) :
     comap (Prod f g) (p.prod q) = comap f p⊓comap g q :=
-  Submodule.ext $ fun x => Iff.rfl
+  Submodule.ext fun x => Iff.rfl
 
 theorem prod_eq_inf_comap (p : Submodule R M) (q : Submodule R M₂) :
     p.prod q = p.comap (LinearMap.fst R M M₂)⊓q.comap (LinearMap.snd R M M₂) :=
-  Submodule.ext $ fun x => Iff.rfl
+  Submodule.ext fun x => Iff.rfl
 
 theorem prod_eq_sup_map (p : Submodule R M) (q : Submodule R M₂) :
     p.prod q = p.map (LinearMap.inl R M M₂)⊔q.map (LinearMap.inr R M M₂) := by
@@ -397,7 +397,7 @@ variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
 variable [Module R M] [Module R M₂]
 
 theorem sup_eq_range (p q : Submodule R M) : p⊔q = (p.subtype.coprod q.subtype).range :=
-  Submodule.ext $ fun x => by
+  Submodule.ext fun x => by
     simp [Submodule.mem_sup, SetLike.exists]
 
 variable (p : Submodule R M) (q : Submodule R M₂)

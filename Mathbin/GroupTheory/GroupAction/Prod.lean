@@ -57,14 +57,14 @@ instance [HasScalar (Mᵐᵒᵖ) α] [HasScalar (Mᵐᵒᵖ) β] [IsCentralScala
 instance has_faithful_scalar_left [HasFaithfulScalar M α] [Nonempty β] : HasFaithfulScalar M (α × β) :=
   ⟨fun x y h =>
     let ⟨b⟩ := ‹Nonempty β›
-    eq_of_smul_eq_smul $ fun a : α => by
+    eq_of_smul_eq_smul fun a : α => by
       injection h (a, b)⟩
 
 @[to_additive has_faithful_vadd_right]
 instance has_faithful_scalar_right [Nonempty α] [HasFaithfulScalar M β] : HasFaithfulScalar M (α × β) :=
   ⟨fun x y h =>
     let ⟨a⟩ := ‹Nonempty α›
-    eq_of_smul_eq_smul $ fun b : β => by
+    eq_of_smul_eq_smul fun b : β => by
       injection h (a, b)⟩
 
 end

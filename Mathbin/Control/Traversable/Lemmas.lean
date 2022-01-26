@@ -61,7 +61,7 @@ theorem pure_transformation_apply {α} (x : id α) : pure_transformation F x = p
 variable {F G} (x : t β)
 
 theorem map_eq_traverse_id : map f = @traverse t _ _ _ _ _ (id.mk ∘ f) :=
-  funext $ fun y => (traverse_eq_map_id f y).symm
+  funext fun y => (traverse_eq_map_id f y).symm
 
 theorem map_traverse (x : t α) : map f <$> traverse g x = traverse (map f ∘ g) x := by
   rw [@map_eq_traverse_id t _ _ _ _ f]

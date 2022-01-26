@@ -80,7 +80,7 @@ def decode_pos_num : List Bool → PosNum
   | _ => PosNum.one
 
 /-- A decoding function from `list bool` to the binary numbers. -/
-def decode_num : List Bool → Num := fun l => ite (l = []) Num.zero $ decode_pos_num l
+def decode_num : List Bool → Num := fun l => ite (l = []) Num.zero <| decode_pos_num l
 
 /-- A decoding function from `list bool` to ℕ. -/
 def decode_nat : List Bool → Nat := fun l => decode_num l
@@ -111,7 +111,7 @@ theorem decode_encode_num : ∀ n, decode_num (encode_num n) = n := by
 theorem decode_encode_nat : ∀ n, decode_nat (encode_nat n) = n := by
   intro n
   conv_rhs => rw [← Num.to_of_nat n]
-  exact congr_argₓ coe (decode_encode_num (↑n))
+  exact congr_argₓ coe (decode_encode_num ↑n)
 
 /-- A binary encoding of ℕ in bool. -/
 def encoding_nat_bool : encoding ℕ where
@@ -130,7 +130,7 @@ def encoding_nat_Γ' : encoding ℕ where
   encode := fun x => List.map inclusion_bool_Γ' (encode_nat x)
   decode := fun x => some (decode_nat (List.map section_Γ'_bool x))
   decode_encode := fun x =>
-    congr_argₓ _ $ by
+    congr_argₓ _ <| by
       rw [List.map_mapₓ, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
 
 /-- A binary fin_encoding of ℕ in Γ'. -/

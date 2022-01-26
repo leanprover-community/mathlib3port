@@ -41,7 +41,7 @@ theorem arcsin_le_pi_div_two (x : ℝ) : arcsin x ≤ π / 2 :=
 theorem neg_pi_div_two_le_arcsin (x : ℝ) : -(π / 2) ≤ arcsin x :=
   (arcsin_mem_Icc x).1
 
-theorem arcsin_proj_Icc (x : ℝ) : arcsin (proj_Icc (-1) 1 (neg_le_self $ @zero_le_one ℝ _) x) = arcsin x := by
+theorem arcsin_proj_Icc (x : ℝ) : arcsin (proj_Icc (-1) 1 (neg_le_self <| @zero_le_one ℝ _) x) = arcsin x := by
   rw [arcsin, Function.comp_app, Icc_extend_coe, Function.comp_app, Icc_extend]
 
 theorem sin_arcsin' {x : ℝ} (hx : x ∈ Icc (-1 : ℝ) 1) : sin (arcsin x) = x := by
@@ -52,17 +52,17 @@ theorem sin_arcsin {x : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) : sin (arcsin 
   sin_arcsin' ⟨hx₁, hx₂⟩
 
 theorem arcsin_sin' {x : ℝ} (hx : x ∈ Icc (-(π / 2)) (π / 2)) : arcsin (sin x) = x :=
-  inj_on_sin (arcsin_mem_Icc _) hx $ by
+  inj_on_sin (arcsin_mem_Icc _) hx <| by
     rw [sin_arcsin (neg_one_le_sin _) (sin_le_one _)]
 
 theorem arcsin_sin {x : ℝ} (hx₁ : -(π / 2) ≤ x) (hx₂ : x ≤ π / 2) : arcsin (sin x) = x :=
   arcsin_sin' ⟨hx₁, hx₂⟩
 
 theorem strict_mono_on_arcsin : StrictMonoOn arcsin (Icc (-1) 1) :=
-  (Subtype.strict_mono_coe _).comp_strict_mono_on $ sin_order_iso.symm.StrictMono.strict_mono_on_Icc_extend _
+  (Subtype.strict_mono_coe _).comp_strict_mono_on <| sin_order_iso.symm.StrictMono.strict_mono_on_Icc_extend _
 
 theorem monotone_arcsin : Monotone arcsin :=
-  (Subtype.mono_coe _).comp $ sin_order_iso.symm.Monotone.iccExtend _
+  (Subtype.mono_coe _).comp <| sin_order_iso.symm.Monotone.iccExtend _
 
 theorem inj_on_arcsin : inj_on arcsin (Icc (-1) 1) :=
   strict_mono_on_arcsin.InjOn
@@ -87,7 +87,7 @@ theorem arcsin_zero : arcsin 0 = 0 :=
 
 @[simp]
 theorem arcsin_one : arcsin 1 = π / 2 :=
-  arcsin_eq_of_sin_eq sin_pi_div_two $ right_mem_Icc.2 (neg_le_self pi_div_two_pos.le)
+  arcsin_eq_of_sin_eq sin_pi_div_two <| right_mem_Icc.2 (neg_le_self pi_div_two_pos.le)
 
 theorem arcsin_of_one_le {x : ℝ} (hx : 1 ≤ x) : arcsin x = π / 2 := by
   rw [← arcsin_proj_Icc, proj_Icc_of_right_le _ hx, Subtype.coe_mk, arcsin_one]
@@ -95,7 +95,7 @@ theorem arcsin_of_one_le {x : ℝ} (hx : 1 ≤ x) : arcsin x = π / 2 := by
 theorem arcsin_neg_one : arcsin (-1) = -(π / 2) :=
   arcsin_eq_of_sin_eq
       (by
-        rw [sin_neg, sin_pi_div_two]) $
+        rw [sin_neg, sin_pi_div_two]) <|
     left_mem_Icc.2 (neg_le_self pi_div_two_pos.le)
 
 theorem arcsin_of_le_neg_one {x : ℝ} (hx : x ≤ -1) : arcsin x = -(π / 2) := by
@@ -138,29 +138,29 @@ theorem le_arcsin_iff_sin_le' {x y : ℝ} (hx : x ∈ Ioc (-(π / 2)) (π / 2)) 
 
 theorem arcsin_lt_iff_lt_sin {x y : ℝ} (hx : x ∈ Icc (-1 : ℝ) 1) (hy : y ∈ Icc (-(π / 2)) (π / 2)) :
     arcsin x < y ↔ x < sin y :=
-  not_leₓ.symm.trans $ (not_congr $ le_arcsin_iff_sin_le hy hx).trans not_leₓ
+  not_leₓ.symm.trans <| (not_congr <| le_arcsin_iff_sin_le hy hx).trans not_leₓ
 
 theorem arcsin_lt_iff_lt_sin' {x y : ℝ} (hy : y ∈ Ioc (-(π / 2)) (π / 2)) : arcsin x < y ↔ x < sin y :=
-  not_leₓ.symm.trans $ (not_congr $ le_arcsin_iff_sin_le' hy).trans not_leₓ
+  not_leₓ.symm.trans <| (not_congr <| le_arcsin_iff_sin_le' hy).trans not_leₓ
 
 theorem lt_arcsin_iff_sin_lt {x y : ℝ} (hx : x ∈ Icc (-(π / 2)) (π / 2)) (hy : y ∈ Icc (-1 : ℝ) 1) :
     x < arcsin y ↔ sin x < y :=
-  not_leₓ.symm.trans $ (not_congr $ arcsin_le_iff_le_sin hy hx).trans not_leₓ
+  not_leₓ.symm.trans <| (not_congr <| arcsin_le_iff_le_sin hy hx).trans not_leₓ
 
 theorem lt_arcsin_iff_sin_lt' {x y : ℝ} (hx : x ∈ Ico (-(π / 2)) (π / 2)) : x < arcsin y ↔ sin x < y :=
-  not_leₓ.symm.trans $ (not_congr $ arcsin_le_iff_le_sin' hx).trans not_leₓ
+  not_leₓ.symm.trans <| (not_congr <| arcsin_le_iff_le_sin' hx).trans not_leₓ
 
 theorem arcsin_eq_iff_eq_sin {x y : ℝ} (hy : y ∈ Ioo (-(π / 2)) (π / 2)) : arcsin x = y ↔ x = sin y := by
   simp only [le_antisymm_iffₓ, arcsin_le_iff_le_sin' (mem_Ico_of_Ioo hy), le_arcsin_iff_sin_le' (mem_Ioc_of_Ioo hy)]
 
 @[simp]
 theorem arcsin_nonneg {x : ℝ} : 0 ≤ arcsin x ↔ 0 ≤ x :=
-  (le_arcsin_iff_sin_le' ⟨neg_lt_zero.2 pi_div_two_pos, pi_div_two_pos.le⟩).trans $ by
+  (le_arcsin_iff_sin_le' ⟨neg_lt_zero.2 pi_div_two_pos, pi_div_two_pos.le⟩).trans <| by
     rw [sin_zero]
 
 @[simp]
 theorem arcsin_nonpos {x : ℝ} : arcsin x ≤ 0 ↔ x ≤ 0 :=
-  neg_nonneg.symm.trans $ arcsin_neg x ▸ arcsin_nonneg.trans neg_nonneg
+  neg_nonneg.symm.trans <| arcsin_neg x ▸ arcsin_nonneg.trans neg_nonneg
 
 @[simp]
 theorem arcsin_eq_zero_iff {x : ℝ} : arcsin x = 0 ↔ x = 0 := by
@@ -180,17 +180,17 @@ theorem arcsin_lt_zero {x : ℝ} : arcsin x < 0 ↔ x < 0 :=
 
 @[simp]
 theorem arcsin_lt_pi_div_two {x : ℝ} : arcsin x < π / 2 ↔ x < 1 :=
-  (arcsin_lt_iff_lt_sin' (right_mem_Ioc.2 $ neg_lt_self pi_div_two_pos)).trans $ by
+  (arcsin_lt_iff_lt_sin' (right_mem_Ioc.2 <| neg_lt_self pi_div_two_pos)).trans <| by
     rw [sin_pi_div_two]
 
 @[simp]
 theorem neg_pi_div_two_lt_arcsin {x : ℝ} : -(π / 2) < arcsin x ↔ -1 < x :=
-  (lt_arcsin_iff_sin_lt' $ left_mem_Ico.2 $ neg_lt_self pi_div_two_pos).trans $ by
+  (lt_arcsin_iff_sin_lt' <| left_mem_Ico.2 <| neg_lt_self pi_div_two_pos).trans <| by
     rw [sin_neg, sin_pi_div_two]
 
 @[simp]
 theorem arcsin_eq_pi_div_two {x : ℝ} : arcsin x = π / 2 ↔ 1 ≤ x :=
-  ⟨fun h => not_ltₓ.1 $ fun h' => (arcsin_lt_pi_div_two.2 h').Ne h, arcsin_of_one_le⟩
+  ⟨fun h => not_ltₓ.1 fun h' => (arcsin_lt_pi_div_two.2 h').Ne h, arcsin_of_one_le⟩
 
 @[simp]
 theorem pi_div_two_eq_arcsin {x} : π / 2 = arcsin x ↔ 1 ≤ x :=
@@ -202,7 +202,7 @@ theorem pi_div_two_le_arcsin {x} : π / 2 ≤ arcsin x ↔ 1 ≤ x :=
 
 @[simp]
 theorem arcsin_eq_neg_pi_div_two {x : ℝ} : arcsin x = -(π / 2) ↔ x ≤ -1 :=
-  ⟨fun h => not_ltₓ.1 $ fun h' => (neg_pi_div_two_lt_arcsin.2 h').ne' h, arcsin_of_le_neg_one⟩
+  ⟨fun h => not_ltₓ.1 fun h' => (neg_pi_div_two_lt_arcsin.2 h').ne' h, arcsin_of_le_neg_one⟩
 
 @[simp]
 theorem neg_pi_div_two_eq_arcsin {x} : -(π / 2) = arcsin x ↔ x ≤ -1 :=

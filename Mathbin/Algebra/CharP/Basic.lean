@@ -64,17 +64,18 @@ theorem CharP.exists [NonAssocSemiring R] : ∃ p, CharP R p := by
           ⟨fun x =>
             ⟨fun H1 =>
               Nat.dvd_of_mod_eq_zeroₓ
-                (by_contradiction $ fun H2 =>
+                (by_contradiction fun H2 =>
                   Nat.find_minₓ (not_forall.1 H)
-                    (Nat.mod_ltₓ x $ Nat.pos_of_ne_zeroₓ $ not_of_not_imp $ Nat.find_specₓ (not_forall.1 H))
+                    (Nat.mod_ltₓ x <| Nat.pos_of_ne_zeroₓ <| not_of_not_imp <| Nat.find_specₓ (not_forall.1 H))
                     (not_imp_of_and_not
                       ⟨by
                         rwa [← Nat.mod_add_divₓ x (Nat.findₓ (not_forall.1 H)), Nat.cast_add, Nat.cast_mul,
-                          of_not_not (not_not_of_not_imp $ Nat.find_specₓ (not_forall.1 H)), zero_mul, add_zeroₓ] at H1,
+                          of_not_not (not_not_of_not_imp <| Nat.find_specₓ (not_forall.1 H)), zero_mul, add_zeroₓ] at
+                          H1,
                         H2⟩)),
               fun H1 => by
               rw [← Nat.mul_div_cancel'ₓ H1, Nat.cast_mul,
-                of_not_not (not_not_of_not_imp $ Nat.find_specₓ (not_forall.1 H)), zero_mul]⟩⟩⟩
+                of_not_not (not_not_of_not_imp <| Nat.find_specₓ (not_forall.1 H)), zero_mul]⟩⟩⟩
 
 theorem CharP.exists_unique [NonAssocSemiring R] : ∃! p, CharP R p :=
   let ⟨c, H⟩ := CharP.exists R
@@ -326,7 +327,7 @@ section
 variable [Ringₓ R]
 
 theorem char_p_to_char_zero [CharP R 0] : CharZero R :=
-  char_zero_of_inj_zero $ fun n h0 => eq_zero_of_zero_dvd ((cast_eq_zero_iff R 0 n).mp h0)
+  char_zero_of_inj_zero fun n h0 => eq_zero_of_zero_dvd ((cast_eq_zero_iff R 0 n).mp h0)
 
 theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
   calc
@@ -410,7 +411,7 @@ section CharOne
 variable {R} [NonAssocSemiring R]
 
 instance (priority := 100) [CharP R 1] : Subsingleton R :=
-  Subsingleton.intro $
+  Subsingleton.intro <|
     suffices ∀ r : R, r = 0 from fun a b =>
       show a = b by
         rw [this a, this b]
@@ -437,7 +438,7 @@ theorem ring_char_ne_one [Nontrivial R] : ringChar R ≠ 1 := by
 
 theorem nontrivial_of_char_ne_one {v : ℕ} (hv : v ≠ 1) [hr : CharP R v] : Nontrivial R :=
   ⟨⟨(1 : ℕ), 0, fun h =>
-      hv $ by
+      hv <| by
         rwa [CharP.cast_eq_zero_iff _ v, Nat.dvd_one] at h <;> assumption⟩⟩
 
 end CharOne

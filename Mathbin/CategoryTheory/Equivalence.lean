@@ -218,16 +218,16 @@ theorem adjointify_η_ε (X : C) : F.map ((adjointify_η η ε).Hom.app X) ≫ �
   rw [this]
   clear this
   rw [← assoc _ _ (F.map _)]
-  have := ε.hom.naturality (ε.inv.app $ F.obj X)
+  have := ε.hom.naturality (ε.inv.app <| F.obj X)
   dsimp  at this
   rw [this]
   clear this
-  have := (ε.app $ F.obj X).hom_inv_id
+  have := (ε.app <| F.obj X).hom_inv_id
   dsimp  at this
   rw [this]
   clear this
   rw [id_comp]
-  have := (F.map_iso $ η.app X).hom_inv_id
+  have := (F.map_iso <| η.app X).hom_inv_id
   dsimp  at this
   rw [this]
 
@@ -545,7 +545,7 @@ See https://stacks.math.columbia.edu/tag/02C3.
 instance (priority := 100) full_of_equivalence (F : C ⥤ D) [is_equivalence F] : full F where
   Preimage := fun X Y f => F.as_equivalence.unit.app X ≫ F.inv.map f ≫ F.as_equivalence.unit_inv.app Y
   witness' := fun X Y f =>
-    F.inv.map_injective $ by
+    F.inv.map_injective <| by
       simpa only [is_equivalence.inv_fun_map, assoc, iso.inv_hom_id_app_assoc, iso.inv_hom_id_app] using comp_id _
 
 @[simps]
@@ -564,7 +564,7 @@ See https://stacks.math.columbia.edu/tag/02C3.
 -/
 noncomputable def of_fully_faithfully_ess_surj (F : C ⥤ D) [full F] [faithful F] [ess_surj F] : is_equivalence F :=
   is_equivalence.mk (equivalence_inverse F)
-    (nat_iso.of_components (fun X => (preimage_iso $ F.obj_obj_preimage_iso $ F.obj X).symm) fun X Y f => by
+    (nat_iso.of_components (fun X => (preimage_iso <| F.obj_obj_preimage_iso <| F.obj X).symm) fun X Y f => by
       apply F.map_injective
       run_tac
         obviously)

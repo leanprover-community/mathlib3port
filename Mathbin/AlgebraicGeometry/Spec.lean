@@ -83,13 +83,13 @@ def Spec.SheafedSpace_map {R S : CommRingₓₓ.{u}} (f : R ⟶ S) : Spec.Sheafe
   base := Spec.Top_map f
   c :=
     { app := fun U => comap f (unop U) ((TopologicalSpace.Opens.map (Spec.Top_map f)).obj (unop U)) fun p => id,
-      naturality' := fun U V i => RingHom.ext $ fun s => Subtype.eq $ funext $ fun p => rfl }
+      naturality' := fun U V i => RingHom.ext fun s => Subtype.eq <| funext fun p => rfl }
 
 @[simp]
 theorem Spec.SheafedSpace_map_id {R : CommRingₓₓ} : Spec.SheafedSpace_map (𝟙 R) = 𝟙 (Spec.SheafedSpace_obj R) :=
-  PresheafedSpace.ext _ _ (Spec.Top_map_id R) $
-    nat_trans.ext _ _ $
-      funext $ fun U => by
+  PresheafedSpace.ext _ _ (Spec.Top_map_id R) <|
+    nat_trans.ext _ _ <|
+      funext fun U => by
         dsimp
         erw [PresheafedSpace.id_c_app, comap_id]
         swap
@@ -99,9 +99,9 @@ theorem Spec.SheafedSpace_map_id {R : CommRingₓₓ} : Spec.SheafedSpace_map (�
 
 theorem Spec.SheafedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) :
     Spec.SheafedSpace_map (f ≫ g) = Spec.SheafedSpace_map g ≫ Spec.SheafedSpace_map f :=
-  PresheafedSpace.ext _ _ (Spec.Top_map_comp f g) $
-    nat_trans.ext _ _ $
-      funext $ fun U => by
+  PresheafedSpace.ext _ _ (Spec.Top_map_comp f g) <|
+    nat_trans.ext _ _ <|
+      funext fun U => by
         dsimp
         rw [CategoryTheory.Functor.map_id]
         rw [category.comp_id]
@@ -171,7 +171,7 @@ def Spec.LocallyRingedSpace_obj (R : CommRingₓₓ) : LocallyRingedSpace :=
       @RingEquiv.local_ring _
         (show LocalRing (Localization.AtPrime _) by
           infer_instance)
-        _ (iso.CommRing_iso_to_ring_equiv $ stalk_iso R x).symm }
+        _ (iso.CommRing_iso_to_ring_equiv <| stalk_iso R x).symm }
 
 @[elementwise]
 theorem stalk_map_to_stalk {R S : CommRingₓₓ} (f : R ⟶ S) (p : PrimeSpectrum S) :
@@ -192,9 +192,9 @@ theorem local_ring_hom_comp_stalk_iso {R S : CommRingₓₓ} (f : R ⟶ S) (p : 
           (CommRingₓₓ.of (Localization.AtPrime p.as_ideal)) _
           (Localization.localRingHom (PrimeSpectrum.comap f p).asIdeal p.as_ideal f rfl) (stalk_iso S p).inv =
       PresheafedSpace.stalk_map (Spec.SheafedSpace_map f) p :=
-  (stalk_iso R (PrimeSpectrum.comap f p)).eq_inv_comp.mp $
-    (stalk_iso S p).comp_inv_eq.mpr $
-      Localization.local_ring_hom_unique _ _ _ _ $ fun x => by
+  (stalk_iso R (PrimeSpectrum.comap f p)).eq_inv_comp.mp <|
+    (stalk_iso S p).comp_inv_eq.mpr <|
+      (Localization.local_ring_hom_unique _ _ _ _) fun x => by
         rw [stalk_iso_hom, stalk_iso_inv, comp_apply, comp_apply, localization_to_stalk_of, stalk_map_to_stalk_apply,
           stalk_to_fiber_ring_hom_to_stalk]
 
@@ -203,8 +203,8 @@ theorem local_ring_hom_comp_stalk_iso {R S : CommRingₓₓ} (f : R ⟶ S) (p : 
 @[simps]
 def Spec.LocallyRingedSpace_map {R S : CommRingₓₓ} (f : R ⟶ S) :
     Spec.LocallyRingedSpace_obj S ⟶ Spec.LocallyRingedSpace_obj R :=
-  Subtype.mk (Spec.SheafedSpace_map f) $ fun p =>
-    IsLocalRingHom.mk $ fun a ha => by
+  (Subtype.mk (Spec.SheafedSpace_map f)) fun p =>
+    IsLocalRingHom.mk fun a ha => by
       rw [← local_ring_hom_comp_stalk_iso_apply] at ha
       replace ha := (stalk_iso S p).Hom.is_unit_map ha
       rw [coe_inv_hom_id] at ha
@@ -215,13 +215,13 @@ def Spec.LocallyRingedSpace_map {R S : CommRingₓₓ} (f : R ⟶ S) :
 @[simp]
 theorem Spec.LocallyRingedSpace_map_id (R : CommRingₓₓ) :
     Spec.LocallyRingedSpace_map (𝟙 R) = 𝟙 (Spec.LocallyRingedSpace_obj R) :=
-  Subtype.ext $ by
+  Subtype.ext <| by
     rw [Spec.LocallyRingedSpace_map_coe, Spec.SheafedSpace_map_id]
     rfl
 
 theorem Spec.LocallyRingedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) :
     Spec.LocallyRingedSpace_map (f ≫ g) = Spec.LocallyRingedSpace_map g ≫ Spec.LocallyRingedSpace_map f :=
-  Subtype.ext $ by
+  Subtype.ext <| by
     rw [Spec.LocallyRingedSpace_map_coe, Spec.SheafedSpace_map_comp]
     rfl
 
@@ -258,7 +258,7 @@ theorem Spec_Γ_naturality {R S : CommRingₓₓ} (f : R ⟶ S) :
 /-- The counit (`Spec_Γ_identity.inv.op`) of the adjunction `Γ ⊣ Spec` is an isomorphism. -/
 @[simps hom_app inv_app]
 def Spec_Γ_identity : Spec.to_LocallyRingedSpace.rightOp ⋙ Γ ≅ 𝟭 _ :=
-  iso.symm $ nat_iso.of_components (fun R => as_iso (to_Spec_Γ R) : _) fun _ _ => Spec_Γ_naturality
+  iso.symm <| nat_iso.of_components (fun R => as_iso (to_Spec_Γ R) : _) fun _ _ => Spec_Γ_naturality
 
 end SpecΓ
 

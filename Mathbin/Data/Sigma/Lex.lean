@@ -65,13 +65,13 @@ theorem lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a
     
 
 theorem lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ i, α i} (h : lex r₁ s a b) : lex r₂ s a b :=
-  h.mono hr $ fun _ _ _ => id
+  (h.mono hr) fun _ _ _ => id
 
 theorem lex.mono_right (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ i, α i} (h : lex r s₁ a b) : lex r s₂ a b :=
   h.mono (fun _ _ => id) hs
 
 instance [∀ i, IsRefl (α i) (s i)] : IsRefl _ (lex r s) :=
-  ⟨fun ⟨i, a⟩ => lex.right _ _ $ refl _⟩
+  ⟨fun ⟨i, a⟩ => lex.right _ _ <| refl _⟩
 
 instance [IsIrrefl ι r] [∀ i, IsIrrefl (α i) (s i)] : IsIrrefl _ (lex r s) :=
   ⟨by
@@ -112,7 +112,7 @@ instance [IsAsymm ι r] [∀ i, IsAntisymm (α i) (s i)] : IsAntisymm _ (lex r s
       
     · exact (irrefl _ hji).elim
       
-    · exact ext rfl (heq_of_eq $ antisymm hab hba)
+    · exact ext rfl (heq_of_eq <| antisymm hab hba)
       ⟩
 
 instance [IsTrichotomous ι r] [∀ i, IsTotal (α i) (s i)] : IsTotal _ (lex r s) :=
@@ -141,10 +141,10 @@ instance [IsTrichotomous ι r] [∀ i, IsTrichotomous (α i) (s i)] : IsTrichoto
         
       · exact Or.inr (Or.inl rfl)
         
-      · exact Or.inr (Or.inr $ lex.right _ _ hba)
+      · exact Or.inr (Or.inr <| lex.right _ _ hba)
         
       
-    · exact Or.inr (Or.inr $ lex.left _ _ hji)
+    · exact Or.inr (Or.inr <| lex.left _ _ hji)
       ⟩
 
 end Sigma
@@ -188,7 +188,7 @@ theorem lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → �
 
 theorem lex.mono_left {r₁ r₂ : ι → ι → Prop} {s : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ' i, α i}
     (h : lex r₁ s a b) : lex r₂ s a b :=
-  h.mono hr $ fun _ _ _ => id
+  (h.mono hr) fun _ _ _ => id
 
 theorem lex.mono_right {r : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop} (hs : ∀ i a b, s₁ i a b → s₂ i a b)
     {a b : Σ' i, α i} (h : lex r s₁ a b) : lex r s₂ a b :=

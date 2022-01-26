@@ -48,12 +48,12 @@ divides `n`. This set is expressed by filtering `Ico 1 b` where `b` is any bound
 theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (hb : log m n < b) :
     multiplicity m n = ↑((Finset.ico 1 b).filter fun i => m ^ i ∣ n).card :=
   calc
-    multiplicity m n = ↑(Ico 1 $ (multiplicity m n).get (finite_nat_iff.2 ⟨hm, hn⟩) + 1).card := by
+    multiplicity m n = ↑(Ico 1 <| (multiplicity m n).get (finite_nat_iff.2 ⟨hm, hn⟩) + 1).card := by
       simp
     _ = ↑((Finset.ico 1 b).filter fun i => m ^ i ∣ n).card :=
-      congr_argₓ coe $
-        congr_argₓ card $
-          Finset.ext $ fun i => by
+      congr_argₓ coe <|
+        congr_argₓ card <|
+          Finset.ext fun i => by
             rw [mem_filter, mem_Ico, mem_Ico, lt_succ_iff, ← @Enat.coe_le_coe i, Enat.coe_get, ←
               pow_dvd_iff_le_multiplicity, And.right_comm]
             refine' (and_iff_left_of_imp fun h => _).symm
@@ -64,7 +64,7 @@ theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (
                 
               
             exact
-              ((pow_le_iff_le_log (succ_lt_succ $ Nat.pos_of_ne_zeroₓ $ succ_ne_succ.1 hm) hn).1 $
+              ((pow_le_iff_le_log (succ_lt_succ <| Nat.pos_of_ne_zeroₓ <| succ_ne_succ.1 hm) hn).1 <|
                     le_of_dvd hn h.2).trans_lt
                 hb
     
@@ -75,10 +75,10 @@ theorem multiplicity_one {p : ℕ} (hp : p.prime) : multiplicity p 1 = 0 :=
   multiplicity.one_right (prime_iff.mp hp).not_unit
 
 theorem multiplicity_mul {p m n : ℕ} (hp : p.prime) : multiplicity p (m * n) = multiplicity p m + multiplicity p n :=
-  multiplicity.mul $ prime_iff.mp hp
+  multiplicity.mul <| prime_iff.mp hp
 
 theorem multiplicity_pow {p m n : ℕ} (hp : p.prime) : multiplicity p (m ^ n) = n • multiplicity p m :=
-  multiplicity.pow $ prime_iff.mp hp
+  multiplicity.pow <| prime_iff.mp hp
 
 theorem multiplicity_self {p : ℕ} (hp : p.prime) : multiplicity p p = 1 :=
   multiplicity_self (prime_iff.mp hp).not_unit hp.ne_zero
@@ -99,13 +99,13 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.prime) :
       multiplicity p (n + 1)! = multiplicity p n ! + multiplicity p (n + 1) := by
         rw [factorial_succ, hp.multiplicity_mul, add_commₓ]
       _ = (∑ i in Ico 1 b, n / p ^ i : ℕ) + ((Finset.ico 1 b).filter fun i => p ^ i ∣ n + 1).card := by
-        rw [multiplicity_factorial ((log_le_log_of_le $ le_succ _).trans_lt hb), ←
+        rw [multiplicity_factorial ((log_le_log_of_le <| le_succ _).trans_lt hb), ←
           multiplicity_eq_card_pow_dvd hp.ne_one (succ_pos _) hb]
       _ = (∑ i in Ico 1 b, n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0 : ℕ) := by
         rw [sum_add_distrib, sum_boole]
         simp
       _ = (∑ i in Ico 1 b, (n + 1) / p ^ i : ℕ) :=
-        congr_argₓ coe $ Finset.sum_congr rfl $ fun _ _ => (succ_div _ _).symm
+        congr_argₓ coe <| (Finset.sum_congr rfl) fun _ _ => (succ_div _ _).symm
       
 
 /-- The multiplicity of `p` in `(p * (n + 1))!` is one more than the sum
@@ -182,7 +182,7 @@ theorem multiplicity_choose {p n k b : ℕ} (hp : p.prime) (hkn : k ≤ n) (hnb 
       hp.multiplicity_factorial (lt_of_le_of_ltₓ (log_le_log_of_le tsub_le_self) hnb), multiplicity_choose_aux hp hkn]
     simp [add_commₓ]
   (Enat.add_right_cancel_iff
-        (Enat.ne_top_iff_dom.2 $
+        (Enat.ne_top_iff_dom.2 <|
           finite_nat_iff.2 ⟨ne_of_gtₓ hp.one_lt, mul_pos (factorial_pos k) (factorial_pos (n - k))⟩)).1
     h₁
 
@@ -207,7 +207,7 @@ theorem multiplicity_le_multiplicity_choose_add {p : ℕ} (hp : p.prime) (n k : 
           ((Ico 1 (log p n).succ).filter fun i => p ^ i ∣ n).card ≤
               (((Ico 1 (log p n).succ).filter fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i) ∪
                   (Ico 1 (log p n).succ).filter fun i => p ^ i ∣ k).card :=
-            card_le_of_subset $ fun i => by
+            card_le_of_subset fun i => by
               have := @le_mod_add_mod_of_dvd_add_of_not_dvd k (n - k) (p ^ i)
               simp (config := { contextual := true })[add_tsub_cancel_of_le (le_of_not_gtₓ hkn)] at *
               tauto _ ≤

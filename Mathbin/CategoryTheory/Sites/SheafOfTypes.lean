@@ -673,7 +673,7 @@ def is_sheaf (P : Cᵒᵖ ⥤ Type w) : Prop :=
 
 theorem is_sheaf.is_sheaf_for {P : Cᵒᵖ ⥤ Type w} (hp : is_sheaf J P) (R : presieve X) (hr : generate R ∈ J X) :
     is_sheaf_for P R :=
-  (is_sheaf_for_iff_generate R).2 $ hp _ hr
+  (is_sheaf_for_iff_generate R).2 <| hp _ hr
 
 theorem is_sheaf_of_le (P : Cᵒᵖ ⥤ Type w) {J₁ J₂ : grothendieck_topology C} : J₁ ≤ J₂ → is_sheaf J₂ P → is_sheaf J₁ P :=
   fun h t X S hS => t S (h _ hS)
@@ -917,9 +917,9 @@ instance : category (SheafOfTypes J) where
   Hom := hom
   id := fun X => ⟨𝟙 _⟩
   comp := fun X Y Z f g => ⟨f.val ≫ g.val⟩
-  id_comp' := fun X Y f => hom.ext _ _ $ id_comp _
-  comp_id' := fun X Y f => hom.ext _ _ $ comp_id _
-  assoc' := fun X Y Z W f g h => hom.ext _ _ $ assoc _ _ _
+  id_comp' := fun X Y f => hom.ext _ _ <| id_comp _
+  comp_id' := fun X Y f => hom.ext _ _ <| comp_id _
+  assoc' := fun X Y Z W f g h => hom.ext _ _ <| assoc _ _ _
 
 instance (X : SheafOfTypes J) : Inhabited (hom X X) :=
   ⟨𝟙 X⟩

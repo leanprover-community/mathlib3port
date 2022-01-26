@@ -22,11 +22,11 @@ def map (f : M →* N) : (M)ˣ →* (N)ˣ :=
     fun x y => ext (f.map_mul x y)
 
 @[simp, to_additive]
-theorem coe_map (f : M →* N) (x : (M)ˣ) : ↑map f x = f x :=
+theorem coe_map (f : M →* N) (x : (M)ˣ) : ↑(map f x) = f x :=
   rfl
 
 @[simp, to_additive]
-theorem coe_map_inv (f : M →* N) (u : (M)ˣ) : ↑map f u⁻¹ = f (↑u⁻¹) :=
+theorem coe_map_inv (f : M →* N) (u : (M)ˣ) : ↑(map f u)⁻¹ = f ↑u⁻¹ :=
   rfl
 
 @[simp, to_additive]
@@ -54,23 +54,25 @@ theorem coe_hom_apply (x : (M)ˣ) : coe_hom M x = ↑x :=
 this map is a monoid homomorphism too. -/
 @[to_additive
       "If a map `g : M → add_units N` agrees with a homomorphism `f : M →+ N`, then this map\nis an add_monoid homomorphism too."]
-def lift_right (f : M →* N) (g : M → (N)ˣ) (h : ∀ x, ↑g x = f x) : M →* (N)ˣ where
+def lift_right (f : M →* N) (g : M → (N)ˣ) (h : ∀ x, ↑(g x) = f x) : M →* (N)ˣ where
   toFun := g
-  map_one' := Units.ext $ (h 1).symm ▸ f.map_one
+  map_one' := Units.ext <| (h 1).symm ▸ f.map_one
   map_mul' := fun x y =>
-    Units.ext $ by
+    Units.ext <| by
       simp only [h, coe_mul, f.map_mul]
 
 @[simp, to_additive]
-theorem coe_lift_right {f : M →* N} {g : M → (N)ˣ} (h : ∀ x, ↑g x = f x) x : (lift_right f g h x : N) = f x :=
+theorem coe_lift_right {f : M →* N} {g : M → (N)ˣ} (h : ∀ x, ↑(g x) = f x) x : (lift_right f g h x : N) = f x :=
   h x
 
 @[simp, to_additive]
-theorem mul_lift_right_inv {f : M →* N} {g : M → (N)ˣ} (h : ∀ x, ↑g x = f x) x : f x * ↑lift_right f g h x⁻¹ = 1 := by
+theorem mul_lift_right_inv {f : M →* N} {g : M → (N)ˣ} (h : ∀ x, ↑(g x) = f x) x : f x * ↑(lift_right f g h x)⁻¹ = 1 :=
+  by
   rw [Units.mul_inv_eq_iff_eq_mul, one_mulₓ, coe_lift_right]
 
 @[simp, to_additive]
-theorem lift_right_inv_mul {f : M →* N} {g : M → (N)ˣ} (h : ∀ x, ↑g x = f x) x : ↑lift_right f g h x⁻¹ * f x = 1 := by
+theorem lift_right_inv_mul {f : M →* N} {g : M → (N)ˣ} (h : ∀ x, ↑(g x) = f x) x : ↑(lift_right f g h x)⁻¹ * f x = 1 :=
+  by
   rw [Units.inv_mul_eq_iff_eq_mul, mul_oneₓ, coe_lift_right]
 
 end Units
@@ -84,7 +86,7 @@ and `f.to_hom_units` is the corresponding monoid homomorphism from `G` to `Mˣ`.
       "If `f` is a homomorphism from an additive group `G` to an additive monoid `M`,\nthen its image lies in the `add_units` of `M`,\nand `f.to_hom_units` is the corresponding homomorphism from `G` to `add_units M`."]
 def to_hom_units {G M : Type _} [Groupₓ G] [Monoidₓ M] (f : G →* M) : G →* (M)ˣ where
   toFun := fun g =>
-    ⟨f g, f (g⁻¹), by
+    ⟨f g, f g⁻¹, by
       rw [← f.map_mul, mul_inv_selfₓ, f.map_one], by
       rw [← f.map_mul, inv_mul_selfₓ, f.map_one]⟩
   map_one' := Units.ext f.map_one
@@ -109,7 +111,7 @@ to `f : M →* Nˣ`. See also `units.lift_right` for a computable version. -/
 @[to_additive
       "If a homomorphism `f : M →+ N` sends each element to an `is_add_unit`, then it can be\nlifted to `f : M →+ add_units N`. See also `add_units.lift_right` for a computable version."]
 noncomputable def IsUnit.liftRight [Monoidₓ M] [Monoidₓ N] (f : M →* N) (hf : ∀ x, IsUnit (f x)) : M →* (N)ˣ :=
-  (Units.liftRight f fun x => Classical.some (hf x)) $ fun x => Classical.some_spec (hf x)
+  (Units.liftRight f fun x => Classical.some (hf x)) fun x => Classical.some_spec (hf x)
 
 @[to_additive]
 theorem IsUnit.coe_lift_right [Monoidₓ M] [Monoidₓ N] (f : M →* N) (hf : ∀ x, IsUnit (f x)) x :
@@ -118,13 +120,13 @@ theorem IsUnit.coe_lift_right [Monoidₓ M] [Monoidₓ N] (f : M →* N) (hf : �
 
 @[simp, to_additive]
 theorem IsUnit.mul_lift_right_inv [Monoidₓ M] [Monoidₓ N] (f : M →* N) (h : ∀ x, IsUnit (f x)) x :
-    f x * ↑IsUnit.liftRight f h x⁻¹ = 1 :=
-  Units.mul_lift_right_inv (fun y => Classical.some_spec $ h y) x
+    f x * ↑(IsUnit.liftRight f h x)⁻¹ = 1 :=
+  Units.mul_lift_right_inv (fun y => Classical.some_spec <| h y) x
 
 @[simp, to_additive]
 theorem IsUnit.lift_right_inv_mul [Monoidₓ M] [Monoidₓ N] (f : M →* N) (h : ∀ x, IsUnit (f x)) x :
-    ↑IsUnit.liftRight f h x⁻¹ * f x = 1 :=
-  Units.lift_right_inv_mul (fun y => Classical.some_spec $ h y) x
+    ↑(IsUnit.liftRight f h x)⁻¹ * f x = 1 :=
+  Units.lift_right_inv_mul (fun y => Classical.some_spec <| h y) x
 
 end IsUnit
 

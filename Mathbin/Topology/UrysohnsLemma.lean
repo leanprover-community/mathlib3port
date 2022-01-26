@@ -125,7 +125,7 @@ noncomputable def approx : ℕ → CU X → X → ℝ
 
 theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.C) : c.approx n x = 0 := by
   induction' n with n ihn generalizing c
-  · exact indicator_of_not_mem (fun hU => hU $ c.subset hx) _
+  · exact indicator_of_not_mem (fun hU => hU <| c.subset hx) _
     
   · simp only [approx]
     rw [ihn, ihn, midpoint_self]
@@ -138,7 +138,7 @@ theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.appro
     
   · simp only [approx]
     rw [ihn, ihn, midpoint_self]
-    exacts[hx, fun hU => hx $ c.left_U_subset hU]
+    exacts[hx, fun hU => hx <| c.left_U_subset hU]
     
 
 theorem approx_nonneg (c : CU X) (n : ℕ) (x : X) : 0 ≤ c.approx n x := by
@@ -157,7 +157,7 @@ theorem approx_le_one (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ 1 := by
     refine' Iff.mpr (div_le_one zero_lt_two) (add_le_add _ _) <;> apply ihn
     
 
-theorem bdd_above_range_approx (c : CU X) (x : X) : BddAbove (range $ fun n => c.approx n x) :=
+theorem bdd_above_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.approx n x) :=
   ⟨1, fun y ⟨n, hn⟩ => hn ▸ c.approx_le_one n x⟩
 
 theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.C) (n₁ n₂ : ℕ) (x : X) :
@@ -188,7 +188,7 @@ theorem approx_le_succ (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ c.approx 
     
 
 theorem approx_mono (c : CU X) (x : X) : Monotone fun n => c.approx n x :=
-  monotone_nat_of_le_succ $ fun n => c.approx_le_succ n x
+  monotone_nat_of_le_succ fun n => c.approx_le_succ n x
 
 /-- A continuous function `f : X → ℝ` such that
 
@@ -198,7 +198,7 @@ theorem approx_mono (c : CU X) (x : X) : Monotone fun n => c.approx n x :=
 protected noncomputable def limₓ (c : CU X) (x : X) : ℝ :=
   ⨆ n, c.approx n x
 
-theorem tendsto_approx_at_top (c : CU X) (x : X) : tendsto (fun n => c.approx n x) at_top (𝓝 $ c.lim x) :=
+theorem tendsto_approx_at_top (c : CU X) (x : X) : tendsto (fun n => c.approx n x) at_top (𝓝 <| c.lim x) :=
   tendsto_at_top_csupr (c.approx_mono x) ⟨1, fun x ⟨n, hn⟩ => hn ▸ c.approx_le_one _ _⟩
 
 theorem lim_of_mem_C (c : CU X) (x : X) (h : x ∈ c.C) : c.lim x = 0 := by
@@ -219,18 +219,20 @@ theorem lim_nonneg (c : CU X) (x : X) : 0 ≤ c.lim x :=
   (c.approx_nonneg 0 x).trans (c.approx_le_lim x 0)
 
 theorem lim_le_one (c : CU X) (x : X) : c.lim x ≤ 1 :=
-  csupr_le $ fun n => c.approx_le_one _ _
+  csupr_le fun n => c.approx_le_one _ _
 
 theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ Icc (0 : ℝ) 1 :=
   ⟨c.lim_nonneg x, c.lim_le_one x⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Continuity of `urysohns.CU.lim`. See module docstring for a sketch of the proofs. -/
 theorem continuous_lim (c : CU X) : Continuous c.lim := by
   obtain ⟨h0, h1234, h1⟩ : 0 < (2⁻¹ : ℝ) ∧ (2⁻¹ : ℝ) < 3 / 4 ∧ (3 / 4 : ℝ) < 1 := by
     norm_num
   refine'
     continuous_iff_continuous_at.2 fun x =>
-      (Metric.nhds_basis_closed_ball_pow (h0.trans h1234) h1).tendsto_right_iff.2 $ fun n _ => _
+      (Metric.nhds_basis_closed_ball_pow (h0.trans h1234) h1).tendsto_right_iff.2 fun n _ => _
   simp only [Metric.mem_closed_ball]
   induction' n with n ihn generalizing c
   · refine' eventually_of_forall fun y => _
@@ -238,8 +240,7 @@ theorem continuous_lim (c : CU X) : Continuous c.lim := by
     exact Real.dist_le_of_mem_Icc_01 (c.lim_mem_Icc _) (c.lim_mem_Icc _)
     
   · by_cases' hxl : x ∈ c.left.U
-    · filter_upwards [IsOpen.mem_nhds c.left.open_U hxl, ihn c.left]
-      intro y hyl hyd
+    · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
       rw [pow_succₓ, c.lim_eq_midpoint, c.lim_eq_midpoint, c.right.lim_of_mem_C _ (c.left_U_subset_right_C hyl),
         c.right.lim_of_mem_C _ (c.left_U_subset_right_C hxl)]
       refine' (dist_midpoint_midpoint_le _ _ _ _).trans _
@@ -248,8 +249,7 @@ theorem continuous_lim (c : CU X) : Continuous c.lim := by
       
     · replace hxl : x ∈ c.left.right.Cᶜ
       exact compl_subset_compl.2 c.left.right.subset hxl
-      filter_upwards [IsOpen.mem_nhds (is_open_compl_iff.2 c.left.right.closed_C) hxl, ihn c.left.right, ihn c.right]
-      intro y hyl hydl hydr
+      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
       replace hxl : x ∉ c.left.left.U
       exact compl_subset_compl.2 c.left.left_U_subset_right_C hxl
       replace hyl : y ∉ c.left.left.U

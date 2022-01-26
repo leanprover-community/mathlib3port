@@ -73,10 +73,10 @@ protected def Function.Injective.distrib {S} [Mul R] [Add R] [Distrib S] (f : R 
   mul := · * ·
   add := · + ·
   left_distrib := fun x y z =>
-    hf $ by
+    hf <| by
       simp only [*, left_distrib]
   right_distrib := fun x y z =>
-    hf $ by
+    hf <| by
       simp only [*, right_distrib]
 
 /-- Pushforward a `distrib` instance along a surjective function.
@@ -87,10 +87,10 @@ protected def Function.Surjective.distrib {S} [Distrib R] [Add S] [Mul S] (f : R
   mul := · * ·
   add := · + ·
   left_distrib :=
-    hf.forall₃.2 $ fun x y z => by
+    hf.forall₃.2 fun x y z => by
       simp only [← add, ← mul, left_distrib]
   right_distrib :=
-    hf.forall₃.2 $ fun x y z => by
+    hf.forall₃.2 fun x y z => by
       simp only [← add, ← mul, right_distrib]
 
 /-!
@@ -323,13 +323,12 @@ end AddMonoidHom
 
 This extends from both `monoid_hom` and `monoid_with_zero_hom` in order to put the fields in a
 sensible order, even though `monoid_with_zero_hom` already extends `monoid_hom`. -/
-structure RingHom (α : Type _) (β : Type _) [NonAssocSemiring α] [NonAssocSemiring β] extends MonoidHom α β,
-  AddMonoidHom α β, MonoidWithZeroHom α β
+structure RingHom (α : Type _) (β : Type _) [NonAssocSemiring α] [NonAssocSemiring β] extends α →* β, α →+ β, α →*₀ β
 
 infixr:25 " →+* " => RingHom
 
-/-- Reinterpret a ring homomorphism `f : R →+* S` as a `monoid_with_zero_hom R S`.
-The `simp`-normal form is `(f : monoid_with_zero_hom R S)`. -/
+/-- Reinterpret a ring homomorphism `f : R →+* S` as a monoid with zero homomorphism `R →*₀ S`.
+The `simp`-normal form is `(f : R →*₀ S)`. -/
 add_decl_doc RingHom.toMonoidWithZeroHom
 
 /-- Reinterpret a ring homomorphism `f : R →+* S` as a monoid homomorphism `R →* S`.
@@ -465,7 +464,7 @@ theorem ext_iff {f g : α →+* β} : f = g ↔ ∀ x, f x = g x :=
 
 @[simp]
 theorem mk_coe (f : α →+* β) h₁ h₂ h₃ h₄ : RingHom.mk f h₁ h₂ h₃ h₄ = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 
 theorem coe_add_monoid_hom_injective : Function.Injective (coe : (α →+* β) → α →+ β) := fun f g h =>
   ext fun x => AddMonoidHom.congr_fun h x
@@ -589,11 +588,11 @@ omit rγ
 
 @[simp]
 theorem comp_id (f : α →+* β) : f.comp (id α) = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 @[simp]
 theorem id_comp (f : α →+* β) : (id β).comp f = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 omit rβ
 
@@ -621,12 +620,12 @@ theorem coe_mul (f g : α →+* α) : ⇑(f * g) = f ∘ g :=
 include rβ rγ
 
 theorem cancel_right {g₁ g₂ : β →+* γ} {f : α →+* β} (hf : surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => RingHom.ext $ hf.forall.2 (ext_iff.1 h), fun h => h ▸ rfl⟩
+  ⟨fun h => RingHom.ext <| hf.forall.2 (ext_iff.1 h), fun h => h ▸ rfl⟩
 
 theorem cancel_left {g : β →+* γ} {f₁ f₂ : α →+* β} (hg : injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h =>
-    RingHom.ext $ fun x =>
-      hg $ by
+    RingHom.ext fun x =>
+      hg <| by
         rw [← comp_apply, h, comp_apply],
     fun h => h ▸ rfl⟩
 
@@ -729,11 +728,11 @@ variable [Ringₓ α] {a b c d e : α}
 instance (priority := 100) Ringₓ.toNonUnitalNonAssocRing : NonUnitalNonAssocRing α :=
   { ‹Ringₓ α› with
     zero_mul := fun a =>
-      add_left_cancelₓ $
+      add_left_cancelₓ <|
         show 0 * a + 0 * a = 0 * a + 0 by
           rw [← add_mulₓ, zero_addₓ, add_zeroₓ],
     mul_zero := fun a =>
-      add_left_cancelₓ $
+      add_left_cancelₓ <|
         show a * 0 + a * 0 = a * 0 + 0 by
           rw [← mul_addₓ, add_zeroₓ, add_zeroₓ] }
 
@@ -864,19 +863,19 @@ protected theorem neg_inv (u : (α)ˣ) : (-u)⁻¹ = -u⁻¹ :=
 /-- An element of a ring's unit group equals the additive inverse of its additive inverse. -/
 @[simp]
 protected theorem neg_negₓ (u : (α)ˣ) : - -u = u :=
-  Units.ext $ neg_negₓ _
+  Units.ext <| neg_negₓ _
 
 /-- Multiplication of elements of a ring's unit group commutes with mapping the first
     argument to its additive inverse. -/
 @[simp]
 protected theorem neg_mul (u₁ u₂ : (α)ˣ) : -u₁ * u₂ = -(u₁ * u₂) :=
-  Units.ext $ neg_mul_eq_neg_mul_symm _ _
+  Units.ext <| neg_mul_eq_neg_mul_symm _ _
 
 /-- Multiplication of elements of a ring's unit group commutes with mapping the second argument
     to its additive inverse. -/
 @[simp]
 protected theorem mul_neg (u₁ u₂ : (α)ˣ) : u₁ * -u₂ = -(u₁ * u₂) :=
-  Units.ext $ (neg_mul_eq_mul_neg _ _).symm
+  Units.ext <| (neg_mul_eq_mul_neg _ _).symm
 
 /-- Multiplication of the additive inverses of two elements of a ring's unit group equals
     multiplication of the two original elements. -/
@@ -898,7 +897,7 @@ theorem IsUnit.neg_iff [Ringₓ α] (a : α) : IsUnit (-a) ↔ IsUnit a :=
   ⟨fun h => neg_negₓ a ▸ h.neg, IsUnit.neg⟩
 
 theorem IsUnit.sub_iff [Ringₓ α] {x y : α} : IsUnit (x - y) ↔ IsUnit (y - x) :=
-  (IsUnit.neg_iff _).symm.trans $ neg_sub x y ▸ Iff.rfl
+  (IsUnit.neg_iff _).symm.trans <| neg_sub x y ▸ Iff.rfl
 
 namespace RingHom
 

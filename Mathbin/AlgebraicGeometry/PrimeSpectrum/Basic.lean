@@ -72,7 +72,7 @@ instance is_prime (x : PrimeSpectrum R) : x.as_ideal.is_prime :=
 /-- The prime spectrum of the zero ring is empty.
 -/
 theorem PUnit (x : PrimeSpectrum PUnit) : False :=
-  x.1.ne_top_iff_one.1 x.2.1 $ Subsingleton.elimₓ (0 : PUnit) 1 ▸ x.1.zero_mem
+  x.1.ne_top_iff_one.1 x.2.1 <| Subsingleton.elimₓ (0 : PUnit) 1 ▸ x.1.zero_mem
 
 section
 
@@ -193,7 +193,7 @@ theorem le_vanishing_ideal_zero_locus (I : Ideal R) : I ≤ vanishing_ideal (zer
 
 @[simp]
 theorem vanishing_ideal_zero_locus_eq_radical (I : Ideal R) : vanishing_ideal (zero_locus (I : Set R)) = I.radical :=
-  Ideal.ext $ fun f => by
+  Ideal.ext fun f => by
     rw [mem_vanishing_ideal, Ideal.radical_eq_Inf, Submodule.mem_Inf]
     exact ⟨fun h x hx => h ⟨x, hx.2⟩ hx.1, fun h x hx => h x.1 ⟨hx, x.2⟩⟩
 
@@ -297,7 +297,7 @@ theorem vanishing_ideal_Union {ι : Sort _} (t : ι → Set (PrimeSpectrum R)) :
   (gc R).u_infi
 
 theorem zero_locus_inf (I J : Ideal R) : zero_locus ((I⊓J : Ideal R) : Set R) = zero_locus I ∪ zero_locus J :=
-  Set.ext $ fun x => by
+  Set.ext fun x => by
     simpa using x.2.inf_le
 
 theorem union_zero_locus (s s' : Set R) :
@@ -306,11 +306,11 @@ theorem union_zero_locus (s s' : Set R) :
   simp
 
 theorem zero_locus_mul (I J : Ideal R) : zero_locus ((I * J : Ideal R) : Set R) = zero_locus I ∪ zero_locus J :=
-  Set.ext $ fun x => by
+  Set.ext fun x => by
     simpa using x.2.mul_le
 
 theorem zero_locus_singleton_mul (f g : R) : zero_locus ({f * g} : Set R) = zero_locus {f} ∪ zero_locus {g} :=
-  Set.ext $ fun x => by
+  Set.ext fun x => by
     simpa using x.2.mul_mem_iff_mem_or_mem
 
 @[simp]
@@ -319,7 +319,7 @@ theorem zero_locus_pow (I : Ideal R) {n : ℕ} (hn : 0 < n) : zero_locus ((I ^ n
 
 @[simp]
 theorem zero_locus_singleton_pow (f : R) (n : ℕ) (hn : 0 < n) : zero_locus ({f ^ n} : Set R) = zero_locus {f} :=
-  Set.ext $ fun x => by
+  Set.ext fun x => by
     simpa using x.2.pow_mem_iff_mem n hn
 
 theorem sup_vanishing_ideal_le (t t' : Set (PrimeSpectrum R)) :
@@ -378,10 +378,10 @@ theorem is_closed_singleton_iff_is_maximal (x : PrimeSpectrum R) :
     rw [eq_comm, Set.eq_singleton_iff_unique_mem] at hs
     refine'
       ⟨⟨x.2.1, fun I hI =>
-          not_not.1 (mt (Ideal.exists_le_maximal I) $ not_exists.2 fun J => not_and.2 $ fun hJ hIJ => _)⟩⟩
+          not_not.1 (mt (Ideal.exists_le_maximal I) <| not_exists.2 fun J => not_and.2 fun hJ hIJ => _)⟩⟩
     exact
       ne_of_ltₓ (lt_of_lt_of_leₓ hI hIJ)
-        (symm $ congr_argₓ PrimeSpectrum.asIdeal (hs.2 ⟨J, hJ.is_prime⟩ fun r hr => hIJ (le_of_ltₓ hI $ hs.1 hr)))
+        (symm <| congr_argₓ PrimeSpectrum.asIdeal (hs.2 ⟨J, hJ.is_prime⟩ fun r hr => hIJ (le_of_ltₓ hI <| hs.1 hr)))
     
   · refine' ⟨x.as_ideal.1, _⟩
     rw [eq_comm, Set.eq_singleton_iff_unique_mem]
@@ -411,12 +411,13 @@ theorem t1_space_iff_is_field [IsDomain R] : T1Space (PrimeSpectrum R) ↔ IsFie
     exact
       not_not.1
         (mt
-          (Ringₓ.ne_bot_of_is_maximal_of_not_is_field $ (is_closed_singleton_iff_is_maximal _).1 (T1Space.t1 ⟨⊥, hbot⟩))
+          (Ringₓ.ne_bot_of_is_maximal_of_not_is_field <|
+            (is_closed_singleton_iff_is_maximal _).1 (T1Space.t1 ⟨⊥, hbot⟩))
           (not_not.2 rfl))
     
   · refine' ⟨fun x => (is_closed_singleton_iff_is_maximal x).2 _⟩
     by_cases' hx : x.as_ideal = ⊥
-    · exact hx.symm ▸ @Ideal.bot_is_maximal R (@Field.toDivisionRing _ $ IsField.toField R h)
+    · exact hx.symm ▸ @Ideal.bot_is_maximal R (@Field.toDivisionRing _ <| IsField.toField R h)
       
     · exact absurd h (Ringₓ.not_is_field_iff_exists_prime.2 ⟨x.as_ideal, ⟨hx, x.2⟩⟩)
       
@@ -536,7 +537,8 @@ theorem comap_singleton_is_closed_of_surjective (f : R →+* S) (hf : Function.S
 theorem comap_singleton_is_closed_of_is_integral (f : R →+* S) (hf : f.is_integral) (x : PrimeSpectrum S)
     (hx : IsClosed ({x} : Set (PrimeSpectrum S))) : IsClosed ({comap f x} : Set (PrimeSpectrum R)) :=
   (is_closed_singleton_iff_is_maximal _).2
-    (Ideal.is_maximal_comap_of_is_integral_of_is_maximal' f hf x.as_ideal $ (is_closed_singleton_iff_is_maximal x).1 hx)
+    (Ideal.is_maximal_comap_of_is_integral_of_is_maximal' f hf x.as_ideal <|
+      (is_closed_singleton_iff_is_maximal x).1 hx)
 
 variable (S)
 
@@ -592,7 +594,7 @@ section BasicOpen
 /-- `basic_open r` is the open subset containing all prime ideals not containing `r`. -/
 def basic_open (r : R) : TopologicalSpace.Opens (PrimeSpectrum R) where
   val := { x | r ∉ x.as_ideal }
-  property := ⟨{r}, Set.ext $ fun x => Set.singleton_subset_iff.trans $ not_not.symm⟩
+  property := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| not_not.symm⟩
 
 @[simp]
 theorem mem_basic_open (f : R) (x : PrimeSpectrum R) : x ∈ basic_open f ↔ f ∉ x.as_ideal :=
@@ -603,17 +605,17 @@ theorem is_open_basic_open {a : R} : IsOpen (basic_open a : Set (PrimeSpectrum R
 
 @[simp]
 theorem basic_open_eq_zero_locus_compl (r : R) : (basic_open r : Set (PrimeSpectrum R)) = zero_locus {r}ᶜ :=
-  Set.ext $ fun x => by
+  Set.ext fun x => by
     simpa only [Set.mem_compl_eq, mem_zero_locus, Set.singleton_subset_iff]
 
 @[simp]
 theorem basic_open_one : basic_open (1 : R) = ⊤ :=
-  TopologicalSpace.Opens.ext $ by
+  TopologicalSpace.Opens.ext <| by
     simp
 
 @[simp]
 theorem basic_open_zero : basic_open (0 : R) = ⊥ :=
-  TopologicalSpace.Opens.ext $ by
+  TopologicalSpace.Opens.ext <| by
     simp
 
 theorem basic_open_le_basic_open_iff (f g : R) : basic_open f ≤ basic_open g ↔ f ∈ (Ideal.span ({g} : Set R)).radical :=
@@ -622,7 +624,7 @@ theorem basic_open_le_basic_open_iff (f g : R) : basic_open f ≤ basic_open g �
     Set.compl_subset_compl, zero_locus_subset_zero_locus_singleton_iff]
 
 theorem basic_open_mul (f g : R) : basic_open (f * g) = basic_open f⊓basic_open g :=
-  TopologicalSpace.Opens.ext $ by
+  TopologicalSpace.Opens.ext <| by
     simp [zero_locus_singleton_mul]
 
 theorem basic_open_mul_le_left (f g : R) : basic_open (f * g) ≤ basic_open f := by
@@ -635,7 +637,7 @@ theorem basic_open_mul_le_right (f g : R) : basic_open (f * g) ≤ basic_open g 
 
 @[simp]
 theorem basic_open_pow (f : R) (n : ℕ) (hn : 0 < n) : basic_open (f ^ n) = basic_open f :=
-  TopologicalSpace.Opens.ext $ by
+  TopologicalSpace.Opens.ext <| by
     simpa using zero_locus_singleton_pow f n hn
 
 theorem is_topological_basis_basic_opens :
@@ -658,7 +660,7 @@ theorem is_basis_basic_opens : TopologicalSpace.Opens.IsBasis (Set.Range (@basic
   rw [← Set.range_comp]
 
 theorem is_compact_basic_open (f : R) : IsCompact (basic_open f : Set (PrimeSpectrum R)) :=
-  is_compact_of_finite_subfamily_closed $ fun ι Z hZc hZ => by
+  is_compact_of_finite_subfamily_closed fun ι Z hZc hZ => by
     let I : ι → Ideal R := fun i => vanishing_ideal (Z i)
     have hI : ∀ i, Z i = zero_locus (I i) := fun i => by
       simpa only [zero_locus_vanishing_ideal_eq_closure] using (hZc i).closure_eq.symm

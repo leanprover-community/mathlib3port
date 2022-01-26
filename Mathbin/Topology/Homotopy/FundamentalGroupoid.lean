@@ -132,7 +132,7 @@ def refl_trans_symm (p : Path x₀ x₁) : homotopy (Path.refl x₀) (p.trans p.
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from the constant path based at `x₁` to
   `p.symm.trans p`. -/
 def refl_symm_trans (p : Path x₀ x₁) : homotopy (Path.refl x₁) (p.symm.trans p) :=
-  (refl_trans_symm p.symm).cast rfl $ congr_argₓ _ Path.symm_symm
+  (refl_trans_symm p.symm).cast rfl <| congr_argₓ _ Path.symm_symm
 
 end
 
@@ -328,7 +328,7 @@ def fundamental_groupoid_functor : Top ⥤ CategoryTheory.Groupoidₓ where
   map := fun X Y f =>
     { obj := f, map := fun x y p => p.map_fn f, map_id' := fun X => rfl,
       map_comp' := fun x y z p q =>
-        Quotientₓ.induction_on₂ p q $ fun a b => by
+        (Quotientₓ.induction_on₂ p q) fun a b => by
           simp [comp_eq, ← Path.Homotopic.map_lift, ← Path.Homotopic.comp_lift] }
   map_id' := by
     intro X

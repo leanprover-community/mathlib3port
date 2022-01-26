@@ -64,7 +64,7 @@ def cone_of_preserves_is_limit [preserves_limit (F ⋙ snd L R) R] {c₁ : cone 
   lift := fun s =>
     { left := t₁.lift ((fst L R).mapCone s), right := t₂.lift ((snd L R).mapCone s),
       w' :=
-        (is_limit_of_preserves R t₂).hom_ext $ fun j => by
+        (is_limit_of_preserves R t₂).hom_ext fun j => by
           rw [cone_of_preserves_X_hom, assoc, assoc, (is_limit_of_preserves R t₂).fac, limit_auxiliary_cone_π_app, ←
             L.map_comp_assoc, t₁.fac, R.map_cone_π_app, ← R.map_comp, t₂.fac]
           exact (s.π.app j).w }
@@ -103,7 +103,7 @@ def cocone_of_preserves_is_colimit [preserves_colimit (F ⋙ fst L R) L] {c₁ :
   desc := fun s =>
     { left := t₁.desc ((fst L R).mapCocone s), right := t₂.desc ((snd L R).mapCocone s),
       w' :=
-        (is_colimit_of_preserves L t₁).hom_ext $ fun j => by
+        (is_colimit_of_preserves L t₁).hom_ext fun j => by
           rw [cocone_of_preserves_X_hom, (is_colimit_of_preserves L t₁).fac_assoc, colimit_auxiliary_cocone_ι_app,
             assoc, ← R.map_comp, t₂.fac, L.map_cocone_ι_app, ← L.map_comp_assoc, t₁.fac]
           exact (s.ι.app j).w }
@@ -178,10 +178,10 @@ instance has_limits [has_limits A] [preserves_limits G] : has_limits (structured
   ⟨inferInstance⟩
 
 noncomputable instance creates_limit [i : preserves_limit (F ⋙ proj X G) G] : creates_limit F (proj X G) :=
-  creates_limit_of_reflects_iso $ fun c t =>
+  creates_limit_of_reflects_iso fun c t =>
     { liftedCone := @comma.cone_of_preserves _ _ _ _ _ i punit_cone t,
       makesLimit := comma.cone_of_preserves_is_limit _ punit_cone_is_limit _,
-      validLift := cones.ext (iso.refl _) $ fun j => (id_comp _).symm }
+      validLift := (cones.ext (iso.refl _)) fun j => (id_comp _).symm }
 
 noncomputable instance creates_limits_of_shape [preserves_limits_of_shape J G] : creates_limits_of_shape J (proj X G) :=
   {  }
@@ -206,10 +206,10 @@ instance has_colimits [has_colimits A] [preserves_colimits G] : has_colimits (co
   ⟨inferInstance⟩
 
 noncomputable instance creates_colimit [i : preserves_colimit (F ⋙ proj G X) G] : creates_colimit F (proj G X) :=
-  creates_colimit_of_reflects_iso $ fun c t =>
+  creates_colimit_of_reflects_iso fun c t =>
     { liftedCocone := @comma.cocone_of_preserves _ _ _ _ _ i t punit_cocone,
       makesColimit := comma.cocone_of_preserves_is_colimit _ _ punit_cocone_is_colimit,
-      validLift := cocones.ext (iso.refl _) $ fun j => comp_id _ }
+      validLift := (cocones.ext (iso.refl _)) fun j => comp_id _ }
 
 noncomputable instance creates_colimits_of_shape [preserves_colimits_of_shape J G] :
     creates_colimits_of_shape J (proj G X) :=

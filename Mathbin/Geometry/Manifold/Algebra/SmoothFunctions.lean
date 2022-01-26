@@ -85,7 +85,7 @@ instance CommMonoidₓ {G : Type _} [CommMonoidₓ G] [TopologicalSpace G] [Char
 @[to_additive]
 instance Groupₓ {G : Type _} [Groupₓ G] [TopologicalSpace G] [ChartedSpace H' G] [LieGroup I' G] :
     Groupₓ C^∞⟮I, N; I', G⟯ :=
-  { SmoothMap.monoid with inv := fun f => ⟨fun x => f x⁻¹, f.smooth.inv⟩,
+  { SmoothMap.monoid with inv := fun f => ⟨fun x => (f x)⁻¹, f.smooth.inv⟩,
     mul_left_inv := fun a => by
       ext <;> exact mul_left_invₓ _,
     div := fun f g => ⟨f / g, f.smooth.div g.smooth⟩,
@@ -176,7 +176,7 @@ theorem smul_comp {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] (r : 𝕜) (
   rfl
 
 instance Module {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : Module 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
-  Module.ofCore $
+  Module.ofCore <|
     { smul := · • ·,
       smul_add := fun c f g => by
         ext x <;> exact smul_add c (f x) (g x),

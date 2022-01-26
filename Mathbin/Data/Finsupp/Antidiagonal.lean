@@ -86,7 +86,7 @@ theorem mem_Iic_finset {m n : α →₀ ℕ} : m ∈ Iic_finset n ↔ m ≤ n :=
   simp [Iic_finset, le_iff_exists_add, eq_comm]
 
 @[simp]
-theorem coe_Iic_finset (n : α →₀ ℕ) : ↑Iic_finset n = Set.Iic n := by
+theorem coe_Iic_finset (n : α →₀ ℕ) : ↑(Iic_finset n) = Set.Iic n := by
   ext
   simp
 
@@ -100,7 +100,7 @@ theorem finite_le_nat (n : α →₀ ℕ) : Set.Finite { m | m ≤ n } := by
 The set of `m : α →₀ ℕ` that are coordinatewise less than or equal to `n`,
 but not equal to `n` everywhere, is a finite set. -/
 theorem finite_lt_nat (n : α →₀ ℕ) : Set.Finite { m | m < n } :=
-  (finite_le_nat n).Subset $ fun m => le_of_ltₓ
+  (finite_le_nat n).Subset fun m => le_of_ltₓ
 
 end Finsupp
 

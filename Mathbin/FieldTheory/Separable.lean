@@ -91,8 +91,8 @@ theorem separable.is_coprime {f g : Polynomial R} (h : (f * g).Separable) : IsCo
   exact IsCoprime.of_mul_right_right (IsCoprime.of_add_mul_left_right this)
 
 theorem separable.of_pow' {f : Polynomial R} : ∀ {n : ℕ} h : (f ^ n).Separable, IsUnit f ∨ f.separable ∧ n = 1 ∨ n = 0
-  | 0 => fun h => Or.inr $ Or.inr rfl
-  | 1 => fun h => Or.inr $ Or.inl ⟨pow_oneₓ f ▸ h, rfl⟩
+  | 0 => fun h => Or.inr <| Or.inr rfl
+  | 1 => fun h => Or.inr <| Or.inl ⟨pow_oneₓ f ▸ h, rfl⟩
   | n + 2 => fun h => by
     rw [pow_succₓ, pow_succₓ] at h
     exact Or.inl (is_coprime_self.1 h.is_coprime.of_mul_right_left)
@@ -160,9 +160,9 @@ theorem expand_one (f : Polynomial R) : expand R 1 f = f :=
     rw [AlgHom.map_mul, expand_C, AlgHom.map_pow, expand_X, pow_oneₓ]
 
 theorem expand_pow (f : Polynomial R) : expand R (p ^ q) f = (expand R p^[q]) f :=
-  Nat.recOn q
+  (Nat.recOn q
       (by
-        rw [pow_zeroₓ, expand_one, Function.iterate_zero, id]) $
+        rw [pow_zeroₓ, expand_one, Function.iterate_zero, id]))
     fun n ih => by
     rw [Function.iterate_succ_apply', pow_succₓ, expand_mul, ih]
 
@@ -205,7 +205,7 @@ theorem coeff_expand_mul' {p : ℕ} (hp : 0 < p) (f : Polynomial R) (n : ℕ) : 
 
 theorem expand_inj {p : ℕ} (hp : 0 < p) {f g : Polynomial R} : expand R p f = expand R p g ↔ f = g :=
   ⟨fun H =>
-    ext $ fun n => by
+    ext fun n => by
       rw [← coeff_expand_mul hp, H, coeff_expand_mul hp],
     congr_argₓ _⟩
 
@@ -224,7 +224,7 @@ theorem nat_degree_expand (p : ℕ) (f : Polynomial R) : (expand R p f).natDegre
     
   have hf1 : expand R p f ≠ 0 := mt (expand_eq_zero hp).1 hf
   rw [← WithBot.coe_eq_coe, ← degree_eq_nat_degree hf1]
-  refine' le_antisymmₓ ((degree_le_iff_coeff_zero _ _).2 $ fun n hn => _) _
+  refine' le_antisymmₓ ((degree_le_iff_coeff_zero _ _).2 fun n hn => _) _
   · rw [coeff_expand hp]
     split_ifs with hpn
     · rw [coeff_eq_zero_of_nat_degree_lt]
@@ -376,12 +376,12 @@ theorem separable.mul {f g : Polynomial R} (hf : f.separable) (hg : g.separable)
 theorem separable_prod' {ι : Sort _} {f : ι → Polynomial R} {s : Finset ι} :
     (∀, ∀ x ∈ s, ∀, ∀, ∀ y ∈ s, ∀, x ≠ y → IsCoprime (f x) (f y)) →
       (∀, ∀ x ∈ s, ∀, (f x).Separable) → (∏ x in s, f x).Separable :=
-  (Finset.induction_on s fun _ _ => separable_one) $ fun a s has ih h1 h2 => by
+  (Finset.induction_on s fun _ _ => separable_one) fun a s has ih h1 h2 => by
     simp_rw [Finset.forall_mem_insert, forall_and_distrib]  at h1 h2
     rw [prod_insert has]
     exact
       h2.1.mul (ih h1.2.2 h2.2)
-        (IsCoprime.prod_right $ fun i his => h1.1.2 i his $ Ne.symm $ ne_of_mem_of_not_mem his has)
+        (IsCoprime.prod_right fun i his => h1.1.2 i his <| Ne.symm <| ne_of_mem_of_not_mem his has)
 
 theorem separable_prod {ι : Sort _} [Fintype ι] {f : ι → Polynomial R} (h1 : Pairwise (IsCoprime on f))
     (h2 : ∀ x, (f x).Separable) : (∏ x, f x).Separable :=
@@ -413,11 +413,11 @@ theorem separable_X_pow_sub_C_unit {n : ℕ} (u : (R)ˣ) (hn : IsUnit (n : R)) :
     
   apply (separable_def' (X ^ n - C (u : R))).2
   obtain ⟨n', hn'⟩ := hn.exists_left_inv
-  refine' ⟨-C (↑u⁻¹), C (↑u⁻¹) * C n' * X, _⟩
+  refine' ⟨-C ↑u⁻¹, C ↑u⁻¹ * C n' * X, _⟩
   rw [derivative_sub, derivative_C, sub_zero, derivative_pow X n, derivative_X, mul_oneₓ]
   calc
-    -C (↑u⁻¹) * (X ^ n - C (↑u)) + C (↑u⁻¹) * C n' * X * (↑n * X ^ (n - 1)) =
-        C (↑u⁻¹ * ↑u) - C (↑u⁻¹) * X ^ n + C (↑u⁻¹) * C (n' * ↑n) * (X * X ^ (n - 1)) :=
+    -C ↑u⁻¹ * (X ^ n - C ↑u) + C ↑u⁻¹ * C n' * X * (↑n * X ^ (n - 1)) =
+        C (↑u⁻¹ * ↑u) - C ↑u⁻¹ * X ^ n + C ↑u⁻¹ * C (n' * ↑n) * (X * X ^ (n - 1)) :=
       by
       simp only [C.map_mul, C_eq_nat_cast]
       ring _ = 1 := by
@@ -438,8 +438,8 @@ section IsDomain
 
 variable (R : Type u) [CommRingₓ R] [IsDomain R]
 
-theorem is_local_ring_hom_expand {p : ℕ} (hp : 0 < p) : IsLocalRingHom (↑expand R p : Polynomial R →+* Polynomial R) :=
-  by
+theorem is_local_ring_hom_expand {p : ℕ} (hp : 0 < p) :
+    IsLocalRingHom (↑(expand R p) : Polynomial R →+* Polynomial R) := by
   refine' ⟨fun f hf1 => _⟩
   rw [← coe_fn_coe_base] at hf1
   have hf2 := eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit hf1)
@@ -457,10 +457,10 @@ theorem of_irreducible_expand {p : ℕ} (hp : p ≠ 0) {f : Polynomial R} (hf : 
 theorem of_irreducible_expand_pow {p : ℕ} (hp : p ≠ 0) {f : Polynomial R} {n : ℕ} :
     Irreducible (expand R (p ^ n) f) → Irreducible f :=
   (Nat.recOn n fun hf => by
-      rwa [pow_zeroₓ, expand_one] at hf) $
+      rwa [pow_zeroₓ, expand_one] at hf)
     fun n ih hf =>
-    ih $
-      of_irreducible_expand hp $ by
+    ih <|
+      of_irreducible_expand hp <| by
         rw [pow_succₓ] at hf
         rwa [expand_expand]
 
@@ -478,13 +478,13 @@ section Field
 variable {F : Type u} [Field F] {K : Type v} [Field K]
 
 theorem separable_iff_derivative_ne_zero {f : Polynomial F} (hf : Irreducible f) : f.separable ↔ f.derivative ≠ 0 :=
-  ⟨fun h1 h2 => hf.not_unit $ is_coprime_zero_right.1 $ h2 ▸ h1, fun h =>
-    EuclideanDomain.is_coprime_of_dvd (mt And.right h) $ fun g hg1 hg2 ⟨p, hg3⟩ hg4 =>
+  ⟨fun h1 h2 => hf.not_unit <| is_coprime_zero_right.1 <| h2 ▸ h1, fun h =>
+    (EuclideanDomain.is_coprime_of_dvd (mt And.right h)) fun g hg1 hg2 ⟨p, hg3⟩ hg4 =>
       let ⟨u, hu⟩ := (hf.is_unit_or_is_unit hg3).resolve_left hg1
       have : f ∣ f.derivative := by
         conv_lhs => rw [hg3, ← hu]
         rwa [Units.mul_right_dvd]
-      not_lt_of_le (nat_degree_le_of_dvd this h) $ nat_degree_derivative_lt h⟩
+      not_lt_of_le (nat_degree_le_of_dvd this h) <| nat_degree_derivative_lt h⟩
 
 theorem separable_map (f : F →+* K) {p : Polynomial F} : (p.map f).Separable ↔ p.separable := by
   simp_rw [separable_def, derivative_map, is_coprime_map]
@@ -496,13 +496,13 @@ theorem separable_prod_X_sub_C_iff' {ι : Sort _} {f : ι → F} {s : Finset ι}
     exact
       separable_prod'
         (fun x hx y hy hxy =>
-          @pairwise_coprime_X_sub _ _ { x // x ∈ s } (fun x => f x) (fun x y hxy => Subtype.eq $ H x.1 x.2 y.1 y.2 hxy)
+          @pairwise_coprime_X_sub _ _ { x // x ∈ s } (fun x => f x) (fun x y hxy => Subtype.eq <| H x.1 x.2 y.1 y.2 hxy)
             _ _ hxy)
         fun _ _ => separable_X_sub_C⟩
 
 theorem separable_prod_X_sub_C_iff {ι : Sort _} [Fintype ι] {f : ι → F} :
     (∏ i, X - C (f i)).Separable ↔ Function.Injective f :=
-  separable_prod_X_sub_C_iff'.trans $ by
+  separable_prod_X_sub_C_iff'.trans <| by
     simp_rw [mem_univ, true_implies_iff, Function.Injective]
 
 section CharP
@@ -517,7 +517,7 @@ theorem separable_or {f : Polynomial F} (hf : Irreducible f) :
     rcases p.eq_zero_or_pos with (rfl | hp)
     · have := CharP.char_p_to_char_zero F
       have := nat_degree_eq_zero_of_derivative_eq_zero H
-      have := (nat_degree_pos_iff_degree_pos.mpr $ degree_pos_of_irreducible hf).ne'
+      have := (nat_degree_pos_iff_degree_pos.mpr <| degree_pos_of_irreducible hf).ne'
       contradiction
       
     have := is_local_ring_hom_expand F hp
@@ -525,11 +525,11 @@ theorem separable_or {f : Polynomial F} (hf : Irreducible f) :
       Or.inr
         ⟨by
           rw [separable_iff_derivative_ne_zero hf, not_not, H], contract p f,
-          of_irreducible_map (↑expand F p)
+          of_irreducible_map (↑(expand F p))
             (by
               rwa [← expand_contract p H hp.ne'] at hf),
           expand_contract p H hp.ne'⟩
-  else Or.inl $ (separable_iff_derivative_ne_zero hf).2 H
+  else Or.inl <| (separable_iff_derivative_ne_zero hf).2 H
 
 theorem exists_separable_of_irreducible {f : Polynomial F} (hf : Irreducible f) (hp : p ≠ 0) :
     ∃ (n : ℕ)(g : Polynomial F), g.separable ∧ expand F (p ^ n) g = f := by
@@ -721,7 +721,7 @@ theorem is_separable_tower_top_of_is_separable [IsSeparable F E] : IsSeparable K
     (IsSeparable.separable F x).map.of_dvd (minpoly.dvd_map_of_is_scalar_tower _ _ _)⟩
 
 theorem is_separable_tower_bot_of_is_separable [h : IsSeparable F E] : IsSeparable F K :=
-  is_separable_iff.2 $ fun x => by
+  is_separable_iff.2 fun x => by
     refine' (is_separable_iff.1 h (algebraMap K E x)).imp is_integral_tower_bot_of_is_integral_field fun hs => _
     obtain ⟨q, hq⟩ :=
       minpoly.dvd F x

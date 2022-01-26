@@ -75,10 +75,10 @@ theorem sym2_singleton (a : α) : ({a} : Finset α).Sym2 = {Sym2.diag a} := by
 
 @[simp]
 theorem diag_mem_sym2_iff : Sym2.diag a ∈ s.sym2 ↔ a ∈ s :=
-  mk_mem_sym2_iff.trans $ and_selfₓ _
+  mk_mem_sym2_iff.trans <| and_selfₓ _
 
 @[simp]
-theorem sym2_mono (h : s ⊆ t) : s.sym2 ⊆ t.sym2 := fun m he => mem_sym2_iff.2 $ fun a ha => h $ mem_sym2_iff.1 he _ ha
+theorem sym2_mono (h : s ⊆ t) : s.sym2 ⊆ t.sym2 := fun m he => mem_sym2_iff.2 fun a ha => h <| mem_sym2_iff.1 he _ ha
 
 theorem image_diag_union_image_off_diag : s.diag.image Quotientₓ.mk ∪ s.off_diag.image Quotientₓ.mk = s.sym2 := by
   rw [← image_union, diag_union_off_diag]
@@ -94,14 +94,14 @@ variable {n : ℕ} {m : Sym α n}
 with elements in `s`. -/
 protected def Sym (s : Finset α) : ∀ n, Finset (Sym α n)
   | 0 => {∅}
-  | n + 1 => s.sup $ fun a => (Sym n).Image $ _root_.sym.cons a
+  | n + 1 => s.sup fun a => (Sym n).Image <| _root_.sym.cons a
 
 @[simp]
 theorem sym_zero : s.sym 0 = {∅} :=
   rfl
 
 @[simp]
-theorem sym_succ : s.sym (n + 1) = s.sup fun a => (s.sym n).Image $ Sym.cons a :=
+theorem sym_succ : s.sym (n + 1) = s.sup fun a => (s.sym n).Image <| Sym.cons a :=
   rfl
 
 @[simp]
@@ -123,7 +123,7 @@ theorem mem_sym_iff : m ∈ s.sym n ↔ ∀, ∀ a ∈ m, ∀, a ∈ s := by
       
     
   · obtain ⟨a, m, rfl⟩ := m.exists_eq_cons_of_succ
-    exact ⟨a, h _ $ Sym.mem_cons_self _ _, mem_image_of_mem _ $ ih.2 $ fun b hb => h _ $ Sym.mem_cons_of_mem hb⟩
+    exact ⟨a, h _ <| Sym.mem_cons_self _ _, mem_image_of_mem _ <| ih.2 fun b hb => h _ <| Sym.mem_cons_of_mem hb⟩
     
 
 @[simp]
@@ -131,7 +131,7 @@ theorem sym_empty (n : ℕ) : (∅ : Finset α).Sym (n + 1) = ∅ :=
   rfl
 
 theorem repeat_mem_sym (ha : a ∈ s) (n : ℕ) : Sym.repeat a n ∈ s.sym n :=
-  mem_sym_iff.2 $ fun b hb => by
+  mem_sym_iff.2 fun b hb => by
     rwa [(Sym.mem_repeat.1 hb).2]
 
 protected theorem nonempty.sym (h : s.nonempty) (n : ℕ) : (s.sym n).Nonempty :=
@@ -142,7 +142,7 @@ protected theorem nonempty.sym (h : s.nonempty) (n : ℕ) : (s.sym n).Nonempty :
 theorem sym_singleton (a : α) (n : ℕ) : ({a} : Finset α).Sym n = {Sym.repeat a n} :=
   eq_singleton_iff_nonempty_unique_mem.2
     ⟨(singleton_nonempty _).Sym n, fun s hs =>
-      Sym.eq_repeat_iff.2 $ fun b hb => eq_of_mem_singleton $ mem_sym_iff.1 hs _ hb⟩
+      Sym.eq_repeat_iff.2 fun b hb => eq_of_mem_singleton <| mem_sym_iff.1 hs _ hb⟩
 
 theorem eq_empty_of_sym_eq_empty (h : s.sym n = ∅) : s = ∅ := by
   rw [← not_nonempty_iff_eq_empty] at h⊢
@@ -168,11 +168,11 @@ attribute [protected] Finset.Nonempty.sym2
 
 @[simp]
 theorem sym_univ [Fintype α] (n : ℕ) : (univ : Finset α).Sym n = univ :=
-  eq_univ_iff_forall.2 $ fun s => mem_sym_iff.2 $ fun a _ => mem_univ _
+  eq_univ_iff_forall.2 fun s => mem_sym_iff.2 fun a _ => mem_univ _
 
 @[simp]
 theorem sym_mono (h : s ⊆ t) (n : ℕ) : s.sym n ⊆ t.sym n := fun m hm =>
-  mem_sym_iff.2 $ fun a ha => h $ mem_sym_iff.1 hm _ ha
+  mem_sym_iff.2 fun a ha => h <| mem_sym_iff.1 hm _ ha
 
 @[simp]
 theorem sym_inter (s t : Finset α) (n : ℕ) : (s ∩ t).Sym n = s.sym n ∩ t.sym n := by

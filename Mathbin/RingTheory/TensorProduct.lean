@@ -77,7 +77,7 @@ Given a linear map `M ⊗[R] N →[A] P`, compose it with the canonical
 bilinear map `M →[A] N →[R] M ⊗[R] N` to form a bilinear map `M →[A] N →[R] P`. -/
 @[simps]
 def curry (f : M ⊗[R] N →ₗ[A] P) : M →ₗ[A] N →ₗ[R] P :=
-  { curry (f.restrict_scalars R) with map_smul' := fun c x => LinearMap.ext $ fun y => f.map_smul c (x ⊗ₜ y) }
+  { curry (f.restrict_scalars R) with map_smul' := fun c x => LinearMap.ext fun y => f.map_smul c (x ⊗ₜ y) }
 
 theorem restrict_scalars_curry (f : M ⊗[R] N →ₗ[A] P) : RestrictScalars R (curry f) = curry (f.restrict_scalars R) :=
   rfl
@@ -88,10 +88,10 @@ a better `ext` lemma than `tensor_product.algebra_tensor_module.ext` below.
 See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem curry_injective : Function.Injective (curry : (M ⊗ N →ₗ[A] P) → M →ₗ[A] N →ₗ[R] P) := fun x y h =>
-  LinearMap.restrict_scalars_injective R $ curry_injective $ (congr_argₓ (LinearMap.restrictScalars R) h : _)
+  LinearMap.restrict_scalars_injective R <| curry_injective <| (congr_argₓ (LinearMap.restrictScalars R) h : _)
 
 theorem ext {g h : M ⊗[R] N →ₗ[A] P} (H : ∀ x y, g (x ⊗ₜ y) = h (x ⊗ₜ y)) : g = h :=
-  curry_injective $ LinearMap.ext₂ H
+  curry_injective <| LinearMap.ext₂ H
 
 end Semiringₓ
 
@@ -118,8 +118,8 @@ def lift (f : M →ₗ[A] N →ₗ[R] P) : M ⊗[R] N →ₗ[A] P :=
         ∀ x : M ⊗[R] N,
           (lift (f.restrict_scalars R)).comp (lsmul R _ c) x = (lsmul R _ c).comp (lift (f.restrict_scalars R)) x
         from
-        ext_iff.1 $
-          TensorProduct.ext' $ fun x y => by
+        ext_iff.1 <|
+          TensorProduct.ext' fun x y => by
             simp only [comp_apply, Algebra.lsmul_coe, smul_tmul', lift.tmul, coe_restrict_scalars_eq_coe, f.map_smul,
               smul_apply] }
 
@@ -138,10 +138,10 @@ the given bilinear map `M →[A] N →[R] P`. -/
 def uncurry : (M →ₗ[A] N →ₗ[R] P) →ₗ[A] M ⊗[R] N →ₗ[A] P where
   toFun := lift
   map_add' := fun f g =>
-    ext $ fun x y => by
+    ext fun x y => by
       simp only [lift_tmul, add_apply]
   map_smul' := fun c f =>
-    ext $ fun x y => by
+    ext fun x y => by
       simp only [lift_tmul, smul_apply, RingHom.id_apply]
 
 /-- Heterobasic version of `tensor_product.lcurry`:
@@ -160,9 +160,8 @@ A linear equivalence constructing a linear map `M ⊗[R] N →[A] P` given a
 bilinear map `M →[A] N →[R] P` with the property that its composition with the
 canonical bilinear map `M →[A] N →[R] M ⊗[R] N` is the given bilinear map `M →[A] N →[R] P`. -/
 def lift.equiv : (M →ₗ[A] N →ₗ[R] P) ≃ₗ[A] M ⊗[R] N →ₗ[A] P :=
-  LinearEquiv.ofLinear (uncurry R A M N P) (lcurry R A M N P)
-    (LinearMap.ext $ fun f => ext $ fun x y => lift_tmul _ x y)
-    (LinearMap.ext $ fun f => LinearMap.ext $ fun x => LinearMap.ext $ fun y => lift_tmul f x y)
+  LinearEquiv.ofLinear (uncurry R A M N P) (lcurry R A M N P) (LinearMap.ext fun f => ext fun x y => lift_tmul _ x y)
+    (LinearMap.ext fun f => LinearMap.ext fun x => LinearMap.ext fun y => lift_tmul f x y)
 
 variable (R A M N P)
 
@@ -180,9 +179,9 @@ attribute [local ext] TensorProduct.ext
 Linear equivalence between `(M ⊗[A] N) ⊗[R] P` and `M ⊗[A] (N ⊗[R] P)`. -/
 def assoc : (M ⊗[A] P) ⊗[R] N ≃ₗ[A] M ⊗[A] P ⊗[R] N :=
   LinearEquiv.ofLinear
-    (lift $ TensorProduct.uncurry A _ _ _ $ comp (lcurry R A _ _ _) $ TensorProduct.mk A M (P ⊗[R] N))
-    (TensorProduct.uncurry A _ _ _ $
-      comp (uncurry R A _ _ _) $ by
+    (lift <| TensorProduct.uncurry A _ _ _ <| comp (lcurry R A _ _ _) <| TensorProduct.mk A M (P ⊗[R] N))
+    (TensorProduct.uncurry A _ _ _ <|
+      comp (uncurry R A _ _ _) <| by
         apply TensorProduct.curry
         exact mk R A _ _)
     (by
@@ -323,19 +322,19 @@ The multiplication map on `A ⊗[R] B`,
 as an `R`-bilinear map.
 -/
 def mul : A ⊗[R] B →ₗ[R] A ⊗[R] B →ₗ[R] A ⊗[R] B :=
-  TensorProduct.lift $
+  TensorProduct.lift <|
     LinearMap.mk₂ R mul_aux
       (fun x₁ x₂ y =>
-        TensorProduct.ext' $ fun x' y' => by
+        TensorProduct.ext' fun x' y' => by
           simp only [mul_aux_apply, LinearMap.add_apply, add_mulₓ, add_tmul])
       (fun c x y =>
-        TensorProduct.ext' $ fun x' y' => by
+        TensorProduct.ext' fun x' y' => by
           simp only [mul_aux_apply, LinearMap.smul_apply, smul_tmul', smul_mul_assoc])
       (fun x y₁ y₂ =>
-        TensorProduct.ext' $ fun x' y' => by
+        TensorProduct.ext' fun x' y' => by
           simp only [mul_aux_apply, LinearMap.add_apply, add_mulₓ, tmul_add])
       fun c x y =>
-      TensorProduct.ext' $ fun x' y' => by
+      TensorProduct.ext' fun x' y' => by
         simp only [mul_aux_apply, LinearMap.smul_apply, smul_tmul, smul_tmul', smul_mul_assoc]
 
 @[simp]
@@ -756,7 +755,7 @@ theorem comm_tmul (a : A) (b : B) : (TensorProduct.comm R A B : A ⊗[R] B → B
   simp [TensorProduct.comm]
 
 theorem adjoin_tmul_eq_top : adjoin R { t : A ⊗[R] B | ∃ a b, a ⊗ₜ[R] b = t } = ⊤ :=
-  top_le_iff.mp $ (top_le_iff.mpr $ span_tmul_eq_top R A B).trans (span_le_adjoin R _)
+  top_le_iff.mp <| (top_le_iff.mpr <| span_tmul_eq_top R A B).trans (span_le_adjoin R _)
 
 end
 
@@ -791,12 +790,12 @@ theorem map_tmul (f : A →ₐ[R] B) (g : C →ₐ[R] D) (a : A) (c : C) : map f
 
 @[simp]
 theorem map_comp_include_left (f : A →ₐ[R] B) (g : C →ₐ[R] D) : (map f g).comp include_left = include_left.comp f :=
-  AlgHom.ext $ by
+  AlgHom.ext <| by
     simp
 
 @[simp]
 theorem map_comp_include_right (f : A →ₐ[R] B) (g : C →ₐ[R] D) : (map f g).comp include_right = include_right.comp g :=
-  AlgHom.ext $ by
+  AlgHom.ext <| by
     simp
 
 theorem map_range (f : A →ₐ[R] B) (g : C →ₐ[R] D) :
@@ -816,9 +815,9 @@ from isomorphisms between the tensor factors.
 -/
 def congr (f : A ≃ₐ[R] B) (g : C ≃ₐ[R] D) : A ⊗[R] C ≃ₐ[R] B ⊗[R] D :=
   AlgEquiv.ofAlgHom (map f g) (map f.symm g.symm)
-    (ext $ fun b d => by
+    (ext fun b d => by
       simp )
-    (ext $ fun a c => by
+    (ext fun a c => by
       simp )
 
 @[simp]
@@ -863,11 +862,11 @@ theorem lmul'_apply_tmul (a b : S) : lmul' R (a ⊗ₜ[R] b) = a * b :=
 
 @[simp]
 theorem lmul'_comp_include_left : (lmul' R : _ →ₐ[R] S).comp include_left = AlgHom.id R S :=
-  AlgHom.ext $ fun _ => (lmul'_apply_tmul _ _).trans (_root_.mul_one _)
+  AlgHom.ext fun _ => (lmul'_apply_tmul _ _).trans (_root_.mul_one _)
 
 @[simp]
 theorem lmul'_comp_include_right : (lmul' R : _ →ₐ[R] S).comp include_right = AlgHom.id R S :=
-  AlgHom.ext $ fun _ => (lmul'_apply_tmul _ _).trans (_root_.one_mul _)
+  AlgHom.ext fun _ => (lmul'_apply_tmul _ _).trans (_root_.one_mul _)
 
 /-- If `S` is commutative, for a pair of morphisms `f : A →ₐ[R] S`, `g : B →ₐ[R] S`,
 We obtain a map `A ⊗[R] B →ₐ[R] S` that commutes with `f`, `g` via `a ⊗ b ↦ f(a) * g(b)`.
@@ -885,7 +884,7 @@ theorem product_map_left_apply (a : A) : product_map f g (include_left a) = f a 
 
 @[simp]
 theorem product_map_left : (product_map f g).comp include_left = f :=
-  AlgHom.ext $ by
+  AlgHom.ext <| by
     simp
 
 theorem product_map_right_apply (b : B) : product_map f g (include_right b) = g b := by
@@ -893,7 +892,7 @@ theorem product_map_right_apply (b : B) : product_map f g (include_right b) = g 
 
 @[simp]
 theorem product_map_right : (product_map f g).comp include_right = g :=
-  AlgHom.ext $ by
+  AlgHom.ext <| by
     simp
 
 theorem product_map_range : (product_map f g).range = f.range⊔g.range := by

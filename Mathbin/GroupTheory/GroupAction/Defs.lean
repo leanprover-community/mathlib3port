@@ -321,9 +321,9 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.mulAction [HasScalar M β] (f : β → α) (hf : injective f)
     (smul : ∀ c : M x, f (c • x) = c • f x) : MulAction M β where
   smul := · • ·
-  one_smul := fun x => hf $ (smul _ _).trans $ one_smul _ (f x)
+  one_smul := fun x => hf <| (smul _ _).trans <| one_smul _ (f x)
   mul_smul := fun c₁ c₂ x =>
-    hf $ by
+    hf <| by
       simp only [smul, mul_smul]
 
 /-- Pushforward a multiplicative action along a surjective map respecting `•`.
@@ -350,7 +350,7 @@ def Function.Surjective.mulActionLeft {R S M : Type _} [Monoidₓ R] [MulAction 
   one_smul := fun b => by
     rw [← f.map_one, hsmul, one_smul]
   mul_smul :=
-    hf.forall₂.mpr $ fun a b x => by
+    hf.forall₂.mpr fun a b x => by
       simp only [← f.map_mul, hsmul, mul_smul]
 
 section
@@ -492,10 +492,10 @@ protected def Function.Injective.distribMulAction [AddMonoidₓ B] [HasScalar M 
     (smul : ∀ c : M x, f (c • x) = c • f x) : DistribMulAction M B :=
   { hf.mul_action f smul with smul := · • ·,
     smul_add := fun c x y =>
-      hf $ by
+      hf <| by
         simp only [smul, f.map_add, smul_add],
     smul_zero := fun c =>
-      hf $ by
+      hf <| by
         simp only [smul, f.map_zero, smul_zero] }
 
 /-- Pushforward a distributive multiplicative action along a surjective additive monoid
@@ -522,10 +522,10 @@ def Function.Surjective.distribMulActionLeft {R S M : Type _} [Monoidₓ R] [Add
     DistribMulAction S M :=
   { hf.mul_action_left f hsmul with smul := · • ·,
     smul_zero :=
-      hf.forall.mpr $ fun c => by
+      hf.forall.mpr fun c => by
         rw [hsmul, smul_zero],
     smul_add :=
-      hf.forall.mpr $ fun c x y => by
+      hf.forall.mpr fun c x y => by
         simp only [hsmul, smul_add] }
 
 variable (A)
@@ -550,8 +550,8 @@ variable (M)
 @[simps]
 def DistribMulAction.toAddMonoidEnd : M →* AddMonoidₓ.End A where
   toFun := DistribMulAction.toAddMonoidHom A
-  map_one' := AddMonoidHom.ext $ one_smul M
-  map_mul' := fun x y => AddMonoidHom.ext $ mul_smul x y
+  map_one' := AddMonoidHom.ext <| one_smul M
+  map_mul' := fun x y => AddMonoidHom.ext <| mul_smul x y
 
 end
 
@@ -561,7 +561,7 @@ variable [Monoidₓ M] [AddGroupₓ A] [DistribMulAction M A]
 
 @[simp]
 theorem smul_neg (r : M) (x : A) : r • -x = -(r • x) :=
-  eq_neg_of_add_eq_zero $ by
+  eq_neg_of_add_eq_zero <| by
     rw [← smul_add, neg_add_selfₓ, smul_zero]
 
 theorem smul_sub (r : M) (x y : A) : r • (x - y) = r • x - r • y := by
@@ -592,10 +592,10 @@ protected def Function.Injective.mulDistribMulAction [Monoidₓ B] [HasScalar M 
     (smul : ∀ c : M x, f (c • x) = c • f x) : MulDistribMulAction M B :=
   { hf.mul_action f smul with smul := · • ·,
     smul_mul := fun c x y =>
-      hf $ by
+      hf <| by
         simp only [smul, f.map_mul, smul_mul'],
     smul_one := fun c =>
-      hf $ by
+      hf <| by
         simp only [smul, f.map_one, smul_one] }
 
 /-- Pushforward a multiplicative distributive multiplicative action along a surjective monoid
@@ -639,8 +639,8 @@ variable (M A)
 @[simps]
 def MulDistribMulAction.toMonoidEnd : M →* Monoidₓ.End A where
   toFun := MulDistribMulAction.toMonoidHom A
-  map_one' := MonoidHom.ext $ one_smul M
-  map_mul' := fun x y => MonoidHom.ext $ mul_smul x y
+  map_one' := MonoidHom.ext <| one_smul M
+  map_mul' := fun x y => MonoidHom.ext <| mul_smul x y
 
 end
 
@@ -691,7 +691,7 @@ This is generalized to bundled endomorphisms by:
 * `alg_equiv.apply_mul_semiring_action`
 -/
 instance Function.End.applyMulAction : MulAction (Function.End α) α where
-  smul := · $ ·
+  smul := · <| ·
   one_smul := fun _ => rfl
   mul_smul := fun _ _ _ => rfl
 
@@ -707,7 +707,7 @@ instance Function.End.apply_has_faithful_scalar : HasFaithfulScalar (Function.En
 
 This generalizes `function.End.apply_mul_action`. -/
 instance AddMonoidₓ.End.applyDistribMulAction [AddMonoidₓ α] : DistribMulAction (AddMonoidₓ.End α) α where
-  smul := · $ ·
+  smul := · <| ·
   smul_zero := AddMonoidHom.map_zero
   smul_add := AddMonoidHom.map_add
   one_smul := fun _ => rfl
@@ -738,7 +738,7 @@ def MulAction.ofEndHom [Monoidₓ M] (f : M →* Function.End α) : MulAction M 
 
 /-- The tautological additive action by `additive (function.End α)` on `α`. -/
 instance AddAction.functionEnd : AddAction (Additive (Function.End α)) α where
-  vadd := · $ ·
+  vadd := · <| ·
   zero_vadd := fun _ => rfl
   add_vadd := fun _ _ _ => rfl
 

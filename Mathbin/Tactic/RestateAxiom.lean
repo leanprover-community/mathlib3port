@@ -20,7 +20,7 @@ unsafe def restate_axiom (d : declaration) (new_name : Name) : tactic Unit := do
   let new_decl :=
     if prop then declaration.thm new_name levels new_type (task.pure value)
     else declaration.defn new_name levels new_type value reducibility trusted
-  updateex_env $ fun env => env.add new_decl
+  updateex_env fun env => env.add new_decl
 
 private unsafe def name_lemma (old : Name) (new : Option Name := none) : tactic Name :=
   match new with
@@ -60,7 +60,7 @@ example (z : A) : z.x = 1 := by rw A.f
 ```
 -/
 @[user_command]
-unsafe def restate_axiom_cmd (_ : parse $ tk "restate_axiom") : lean.parser Unit := do
+unsafe def restate_axiom_cmd (_ : parse <| tk "restate_axiom") : lean.parser Unit := do
   let from_lemma ← ident
   let new_name ← optionalₓ ident
   let from_lemma_fully_qualified ← resolve_constant from_lemma

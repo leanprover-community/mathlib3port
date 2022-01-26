@@ -27,7 +27,7 @@ theorem cos_eq_zero_iff {θ : ℂ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (2 * k + 1
     ring
   rw [cos, h, ← exp_pi_mul_I, exp_eq_exp_iff_exists_int, mul_right_commₓ]
   refine' exists_congr fun x => _
-  refine' (iff_of_eq $ congr_argₓ _ _).trans (mul_right_inj' $ mul_ne_zero two_ne_zero' I_ne_zero)
+  refine' (iff_of_eq <| congr_argₓ _ _).trans (mul_right_inj' <| mul_ne_zero two_ne_zero' I_ne_zero)
   ring
 
 theorem cos_ne_zero_iff {θ : ℂ} : cos θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (2 * k + 1) * π / 2 := by
@@ -141,7 +141,7 @@ theorem tan_eq {z : ℂ}
 open_locale TopologicalSpace
 
 theorem continuous_on_tan : ContinuousOn tan { x | cos x ≠ 0 } :=
-  continuous_on_sin.div continuous_on_cos $ fun x => id
+  (continuous_on_sin.div continuous_on_cos) fun x => id
 
 @[continuity]
 theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=

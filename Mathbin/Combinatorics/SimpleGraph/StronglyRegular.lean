@@ -64,7 +64,7 @@ theorem is_SRG_with.top : (⊤ : SimpleGraph V).IsSRGWith (Fintype.card V) (Fint
       rw [card_common_neighbors_top]
       exact h,
     of_not_adj := fun v w h h' =>
-      False.elim $ by
+      False.elim <| by
         simpa using h }
 
 theorem is_SRG_with.card_neighbor_finset_union_eq {v w : V} (h : G.is_SRG_with n k ℓ μ) :
@@ -93,14 +93,14 @@ theorem is_SRG_with.card_neighbor_finset_union_of_adj {v w : V} (h : G.is_SRG_wi
 
 theorem compl_neighbor_finset_sdiff_inter_eq {v w : V} :
     G.neighbor_finset vᶜ \ {v} ∩ (G.neighbor_finset wᶜ \ {w}) =
-      G.neighbor_finset vᶜ ∩ G.neighbor_finset wᶜ \ ({w} ∪ {v}) :=
+      (G.neighbor_finset vᶜ ∩ G.neighbor_finset wᶜ) \ ({w} ∪ {v}) :=
   by
   ext
   rw [← not_iff_not]
   simp [imp_iff_not_or, or_assoc, or_comm, Or.left_comm]
 
 theorem sdiff_compl_neighbor_finset_inter_eq {v w : V} (h : G.adj v w) :
-    G.neighbor_finset vᶜ ∩ G.neighbor_finset wᶜ \ ({w} ∪ {v}) = G.neighbor_finset vᶜ ∩ G.neighbor_finset wᶜ := by
+    (G.neighbor_finset vᶜ ∩ G.neighbor_finset wᶜ) \ ({w} ∪ {v}) = G.neighbor_finset vᶜ ∩ G.neighbor_finset wᶜ := by
   ext
   simp only [and_imp, mem_union, mem_sdiff, mem_compl, and_iff_left_iff_imp, mem_neighbor_finset, mem_inter,
     mem_singleton]

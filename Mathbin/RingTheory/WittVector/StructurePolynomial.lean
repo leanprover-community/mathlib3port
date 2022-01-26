@@ -219,7 +219,7 @@ theorem C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum (Φ : MvPolynomial id
     (IH :
       ∀ m : ℕ,
         m < n → map (Int.castRingHom ℚ) (wittStructureInt p Φ m) = wittStructureRat p (map (Int.castRingHom ℚ) Φ) m) :
-    C (↑(p ^ n)) ∣
+    C ↑(p ^ n) ∣
       bind₁ (fun b : idx => rename (fun i => (b, i)) (wittPolynomial p ℤ n)) Φ -
         ∑ i in range n, C (↑p ^ i) * wittStructureInt p Φ i ^ p ^ (n - i) :=
   by

@@ -159,7 +159,7 @@ open Top.Presheaf
 /-- The functions satisfying a local predicate satisfy the sheaf condition.
 -/
 theorem is_sheaf (P : local_predicate T) : (subpresheaf_to_Types P.to_prelocal_predicate).IsSheaf :=
-  presheaf.is_sheaf_of_is_sheaf_unique_gluing_types _ $ fun ι U sf sf_comp => by
+  (presheaf.is_sheaf_of_is_sheaf_unique_gluing_types _) fun ι U sf sf_comp => by
     let sf' : ∀ i : ι, (presheaf_to_Types X T).obj (op (U i)) := fun i => (sf i).val
     have sf'_comp : (presheaf_to_Types X T).IsCompatible U sf' := fun i j => congr_argₓ Subtype.val (sf_comp i j)
     obtain ⟨gl, gl_spec, gl_uniq⟩ := (sheaf_to_Types X T).exists_unique_gluing U sf' sf'_comp

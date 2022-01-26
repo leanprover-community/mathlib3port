@@ -74,16 +74,16 @@ theorem monovary_self (f : ι → α) : Monovary f f := fun i j => le_of_ltₓ
 theorem monovary_on_self (f : ι → α) (s : Set ι) : MonovaryOn f f s := fun i j _ _ => le_of_ltₓ
 
 theorem Subsingleton.monovary [Subsingleton ι] (f : ι → α) (g : ι → β) : Monovary f g := fun i j h =>
-  (ne_of_apply_ne _ h.ne $ Subsingleton.elimₓ _ _).elim
+  (ne_of_apply_ne _ h.ne <| Subsingleton.elimₓ _ _).elim
 
 theorem Subsingleton.antivary [Subsingleton ι] (f : ι → α) (g : ι → β) : Antivary f g := fun i j h =>
-  (ne_of_apply_ne _ h.ne $ Subsingleton.elimₓ _ _).elim
+  (ne_of_apply_ne _ h.ne <| Subsingleton.elimₓ _ _).elim
 
 theorem Subsingleton.monovary_on [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) : MonovaryOn f g s :=
-  fun i j _ _ h => (ne_of_apply_ne _ h.ne $ Subsingleton.elimₓ _ _).elim
+  fun i j _ _ h => (ne_of_apply_ne _ h.ne <| Subsingleton.elimₓ _ _).elim
 
 theorem Subsingleton.antivary_on [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) : AntivaryOn f g s :=
-  fun i j _ _ h => (ne_of_apply_ne _ h.ne $ Subsingleton.elimₓ _ _).elim
+  fun i j _ _ h => (ne_of_apply_ne _ h.ne <| Subsingleton.elimₓ _ _).elim
 
 theorem monovary_on_const_left (g : ι → β) (a : α) (s : Set ι) : MonovaryOn (const ι a) g s := fun i j _ _ _ => le_rfl
 
@@ -188,16 +188,16 @@ section LinearOrderₓ
 variable [Preorderₓ α] [LinearOrderₓ β] {f : ι → α} {g : ι → β} {s : Set ι}
 
 protected theorem Monovary.symm (h : Monovary f g) : Monovary g f := fun i j hf =>
-  le_of_not_ltₓ $ fun hg => hf.not_le $ h hg
+  le_of_not_ltₓ fun hg => hf.not_le <| h hg
 
 protected theorem Antivary.symm (h : Antivary f g) : Antivary g f := fun i j hf =>
-  le_of_not_ltₓ $ fun hg => hf.not_le $ h hg
+  le_of_not_ltₓ fun hg => hf.not_le <| h hg
 
 protected theorem MonovaryOn.symm (h : MonovaryOn f g s) : MonovaryOn g f s := fun i hi j hj hf =>
-  le_of_not_ltₓ $ fun hg => hf.not_le $ h hj hi hg
+  le_of_not_ltₓ fun hg => hf.not_le <| h hj hi hg
 
 protected theorem AntivaryOn.symm (h : AntivaryOn f g s) : AntivaryOn g f s := fun i hi j hj hf =>
-  le_of_not_ltₓ $ fun hg => hf.not_le $ h hi hj hg
+  le_of_not_ltₓ fun hg => hf.not_le <| h hi hj hg
 
 end LinearOrderₓ
 

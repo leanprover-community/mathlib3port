@@ -75,7 +75,7 @@ def GradedAlgebra.ofAlgHom [SetLike.GradedMonoid 𝒜] (decompose : A →ₐ[R] 
     suffices : decompose.comp (DirectSum.submoduleCoeAlgHom 𝒜) = AlgHom.id _ _
     exact AlgHom.congr_fun this
     ext i x : 2
-    exact (decompose.congr_arg $ DirectSum.submodule_coe_alg_hom_of _ _ _).trans (left_inv i x)
+    exact (decompose.congr_arg <| DirectSum.submodule_coe_alg_hom_of _ _ _).trans (left_inv i x)
 
 variable [GradedAlgebra 𝒜]
 
@@ -97,7 +97,7 @@ theorem GradedAlgebra.decompose_symm_of {i : ι} (x : 𝒜 i) : (GradedAlgebra.d
 
 /-- The projection maps of graded algebra-/
 def GradedAlgebra.proj (𝒜 : ι → Submodule R A) [GradedAlgebra 𝒜] (i : ι) : A →ₗ[R] A :=
-  (𝒜 i).Subtype.comp $ (Dfinsupp.lapply i).comp $ (GradedAlgebra.decompose 𝒜).toAlgHom.toLinearMap
+  (𝒜 i).Subtype.comp <| (Dfinsupp.lapply i).comp <| (GradedAlgebra.decompose 𝒜).toAlgHom.toLinearMap
 
 @[simp]
 theorem GradedAlgebra.proj_apply (i : ι) (r : A) :

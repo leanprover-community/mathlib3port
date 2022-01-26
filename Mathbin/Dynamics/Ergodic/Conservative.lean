@@ -87,15 +87,15 @@ theorem frequently_measure_inter_ne_zero (hf : conservative f μ) (hs : Measurab
   have hT : MeasurableSet T :=
     hs.inter (MeasurableSet.bUnion (countable_encodable _) fun _ _ => hf.measurable.iterate _ hs)
   have hμT : μ T = 0 := by
-    convert (measure_bUnion_null_iff $ countable_encodable _).2 hN
+    convert (measure_bUnion_null_iff <| countable_encodable _).2 hN
     rw [← inter_Union₂]
     rfl
-  have : μ (s ∩ f^[n] ⁻¹' s \ T) ≠ 0 := by
+  have : μ ((s ∩ f^[n] ⁻¹' s) \ T) ≠ 0 := by
     rwa [measure_diff_null hμT]
   rcases hf.exists_mem_image_mem ((hs.inter (hf.measurable.iterate n hs)).diff hT) this with
     ⟨x, ⟨⟨hxs, hxn⟩, hxT⟩, m, hm0, ⟨hxms, hxm⟩, hxx⟩
   refine' hxT ⟨hxs, mem_Union₂.2 ⟨n + m, _, _⟩⟩
-  · exact add_le_add hn (Nat.one_le_of_lt $ pos_iff_ne_zero.2 hm0)
+  · exact add_le_add hn (Nat.one_le_of_lt <| pos_iff_ne_zero.2 hm0)
     
   · rwa [Set.mem_preimage, ← iterate_add_apply] at hxm
     
@@ -120,6 +120,7 @@ theorem measure_mem_forall_ge_image_not_mem_eq_zero (hf : conservative f μ) (hs
   rcases nonempty_of_measure_ne_zero hm with ⟨x, ⟨hxs, hxn⟩, hxm, -⟩
   exact hxn m hmn.lt.le hxm
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- Poincaré recurrence theorem: given a conservative map `f` and a measurable set `s`,
 almost every point `x ∈ s` returns back to `s` infinitely many times. -/
 theorem ae_mem_imp_frequently_image_mem (hf : conservative f μ) (hs : MeasurableSet s) :
@@ -131,7 +132,7 @@ theorem ae_mem_imp_frequently_image_mem (hf : conservative f μ) (hs : Measurabl
 
 theorem inter_frequently_image_mem_ae_eq (hf : conservative f μ) (hs : MeasurableSet s) :
     (s ∩ { x | ∃ᶠ n in at_top, (f^[n]) x ∈ s } : Set α) =ᵐ[μ] s :=
-  inter_eventually_eq_left.2 $ hf.ae_mem_imp_frequently_image_mem hs
+  inter_eventually_eq_left.2 <| hf.ae_mem_imp_frequently_image_mem hs
 
 theorem measure_inter_frequently_image_mem_eq (hf : conservative f μ) (hs : MeasurableSet s) :
     μ (s ∩ { x | ∃ᶠ n in at_top, (f^[n]) x ∈ s }) = μ s :=
@@ -152,7 +153,7 @@ theorem ae_forall_image_mem_imp_frequently_image_mem (hf : conservative f μ) (h
 `μ.ae`-frequently we have `x ∈ s` and `s` returns to `s` under infinitely many iterations of `f`. -/
 theorem frequently_ae_mem_and_frequently_image_mem (hf : conservative f μ) (hs : MeasurableSet s) (h0 : μ s ≠ 0) :
     ∃ᵐ x ∂μ, x ∈ s ∧ ∃ᶠ n in at_top, (f^[n]) x ∈ s :=
-  ((frequently_ae_mem_iff.2 h0).and_eventually (hf.ae_mem_imp_frequently_image_mem hs)).mono $ fun x hx =>
+  ((frequently_ae_mem_iff.2 h0).and_eventually (hf.ae_mem_imp_frequently_image_mem hs)).mono fun x hx =>
     ⟨hx.1, hx.2 hx.1⟩
 
 /-- Poincaré recurrence theorem. Let `f : α → α` be a conservative dynamical system on a topological
@@ -162,7 +163,7 @@ theorem ae_frequently_mem_of_mem_nhds [TopologicalSpace α] [second_countable_to
     {f : α → α} {μ : Measureₓ α} (h : conservative f μ) : ∀ᵐ x ∂μ, ∀, ∀ s ∈ 𝓝 x, ∀, ∃ᶠ n in at_top, (f^[n]) x ∈ s := by
   have : ∀, ∀ s ∈ countable_basis α, ∀, ∀ᵐ x ∂μ, x ∈ s → ∃ᶠ n in at_top, (f^[n]) x ∈ s := fun s hs =>
     h.ae_mem_imp_frequently_image_mem (is_open_of_mem_countable_basis hs).MeasurableSet
-  refine' ((ae_ball_iff $ countable_countable_basis α).2 this).mono fun x hx s hs => _
+  refine' ((ae_ball_iff <| countable_countable_basis α).2 this).mono fun x hx s hs => _
   rcases(is_basis_countable_basis α).mem_nhds_iff.1 hs with ⟨o, hoS, hxo, hos⟩
   exact (hx o hoS hxo).mono fun n hn => hos hn
 

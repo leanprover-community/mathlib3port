@@ -62,12 +62,12 @@ open IsNoetherian
 theorem trans [FiniteDimensional F K] [FiniteDimensional K A] : FiniteDimensional F A :=
   let b := Basis.ofVectorSpace F K
   let c := Basis.ofVectorSpace K A
-  of_fintype_basis $ b.smul c
+  of_fintype_basis <| b.smul c
 
 theorem right [hf : FiniteDimensional F A] : FiniteDimensional K A :=
   let ⟨⟨b, hb⟩⟩ := hf
   ⟨⟨b,
-      Submodule.restrict_scalars_injective F _ _ $ by
+      Submodule.restrict_scalars_injective F _ _ <| by
         rw [Submodule.restrict_scalars_top, eq_top_iff, ← hb, Submodule.span_le]
         exact Submodule.subset_span⟩⟩
 
@@ -105,7 +105,7 @@ instance linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] 
 theorem finrank_linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K]
     [FiniteDimensional F K] [AddCommGroupₓ V] [Module F V] [FiniteDimensional F V] :
     finrank K (V →ₗ[F] K) = finrank F V :=
-  (Nat.mul_right_inj $ show 0 < finrank F K from finrank_pos).1 $
+  (Nat.mul_right_inj <| show 0 < finrank F K from finrank_pos).1 <|
     calc
       finrank F K * finrank K (V →ₗ[F] K) = finrank F (V →ₗ[F] K) := finrank_mul_finrank _ _ _
       _ = finrank F V * finrank F K := finrank_linear_map F V K

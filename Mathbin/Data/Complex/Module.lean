@@ -118,7 +118,7 @@ section
 open_locale ComplexOrder
 
 protected theorem OrderedSmul : OrderedSmul ℝ ℂ :=
-  OrderedSmul.mk' $ fun a b r hab hr =>
+  OrderedSmul.mk' fun a b r hab hr =>
     ⟨by
       simp [hr, hab.1.le], by
       simp [hab.2]⟩
@@ -163,9 +163,9 @@ theorem coe_basis_one_I_repr (z : ℂ) :
 @[simp]
 theorem coe_basis_one_I :
     ⇑basis_one_I = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»" :=
-  funext $ fun i =>
-    Basis.apply_eq_iff.mpr $
-      Finsupp.ext $ fun j => by
+  funext fun i =>
+    Basis.apply_eq_iff.mpr <|
+      Finsupp.ext fun j => by
         fin_cases i <;>
           fin_cases j <;>
             simp only [coe_basis_one_I_repr, Finsupp.single_eq_same, Finsupp.single_eq_of_ne, Matrix.cons_val_zero,
@@ -208,7 +208,7 @@ instance (priority := 100) FiniteDimensional.complex_to_real (E : Type _) [AddCo
   FiniteDimensional.trans ℝ ℂ E
 
 theorem dim_real_of_complex (E : Type _) [AddCommGroupₓ E] [Module ℂ E] : Module.rank ℝ E = 2 * Module.rank ℂ E :=
-  Cardinal.lift_inj.1 $ by
+  Cardinal.lift_inj.1 <| by
     rw [← dim_mul_dim' ℝ ℂ E, Complex.dim_real_complex]
     simp [bit0]
 
@@ -316,16 +316,16 @@ def lift : { I' : A // I' * I' = -1 } ≃ (ℂ →ₐ[ℝ] A) where
   invFun := fun F =>
     ⟨F I, by
       rw [← F.map_mul, I_mul_I, AlgHom.map_neg, AlgHom.map_one]⟩
-  left_inv := fun I' => Subtype.ext $ lift_aux_apply_I I' I'.prop
-  right_inv := fun F => alg_hom_ext $ lift_aux_apply_I _ _
+  left_inv := fun I' => Subtype.ext <| lift_aux_apply_I I' I'.prop
+  right_inv := fun F => alg_hom_ext <| lift_aux_apply_I _ _
 
 @[simp]
 theorem lift_aux_I : lift_aux I I_mul_I = AlgHom.id ℝ ℂ :=
-  alg_hom_ext $ lift_aux_apply_I _ _
+  alg_hom_ext <| lift_aux_apply_I _ _
 
 @[simp]
 theorem lift_aux_neg_I : lift_aux (-I) ((neg_mul_neg _ _).trans I_mul_I) = conj_ae :=
-  alg_hom_ext $ (lift_aux_apply_I _ _).trans conj_I.symm
+  alg_hom_ext <| (lift_aux_apply_I _ _).trans conj_I.symm
 
 end lift
 

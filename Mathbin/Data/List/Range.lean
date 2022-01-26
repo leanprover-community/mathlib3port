@@ -34,12 +34,12 @@ theorem range'_eq_nil {s n : ℕ} : range' s n = [] ↔ n = 0 := by
 
 @[simp]
 theorem mem_range' {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧ m < s + n
-  | s, 0 => (false_iffₓ _).2 $ fun ⟨H1, H2⟩ => not_le_of_lt H2 H1
+  | s, 0 => (false_iffₓ _).2 fun ⟨H1, H2⟩ => not_le_of_lt H2 H1
   | s, succ n =>
     have : m = s → m < s + n + 1 := fun e => e ▸ lt_succ_of_le (Nat.le_add_rightₓ _ _)
     have l : m = s ∨ s + 1 ≤ m ↔ s ≤ m := by
       simpa only [eq_comm] using (@Decidable.le_iff_eq_or_lt _ _ _ s m).symm
-    (mem_cons_iff _ _ _).trans $ by
+    (mem_cons_iff _ _ _).trans <| by
       simp only [mem_range', or_and_distrib_left, or_iff_right_of_imp this, l, add_right_commₓ] <;> rfl
 
 theorem map_add_range' a : ∀ s n : ℕ, map ((· + ·) a) (range' s n) = range' (a + s) n
@@ -81,19 +81,19 @@ theorem range'_sublist_right {s m n : ℕ} : range' s m <+ range' s n ↔ m ≤ 
 
 theorem range'_subset_right {s m n : ℕ} : range' s m ⊆ range' s n ↔ m ≤ n :=
   ⟨fun h =>
-    le_of_not_ltₓ $ fun hn =>
-      lt_irreflₓ (s + n) $ (mem_range'.1 $ h $ mem_range'.2 ⟨Nat.le_add_rightₓ _ _, Nat.add_lt_add_leftₓ hn s⟩).2,
+    le_of_not_ltₓ fun hn =>
+      lt_irreflₓ (s + n) <| (mem_range'.1 <| h <| mem_range'.2 ⟨Nat.le_add_rightₓ _ _, Nat.add_lt_add_leftₓ hn s⟩).2,
     fun h => (range'_sublist_right.2 h).Subset⟩
 
 theorem nth_range' : ∀ s {m n : ℕ}, m < n → nth (range' s n) m = some (s + m)
   | s, 0, n + 1, _ => rfl
   | s, m + 1, n + 1, h =>
-    (nth_range' (s + 1) (lt_of_add_lt_add_right h)).trans $ by
+    (nth_range' (s + 1) (lt_of_add_lt_add_right h)).trans <| by
       rw [add_right_commₓ] <;> rfl
 
 @[simp]
 theorem nth_le_range' {n m} i (H : i < (range' n m).length) : nth_le (range' n m) i H = n + i :=
-  Option.some.injₓ $ by
+  Option.some.injₓ <| by
     rw [← nth_le_nth _,
       nth_range' _
         (by
@@ -108,7 +108,7 @@ theorem range_core_range' : ∀ s n : ℕ, range_core s (range' s n) = range' 0 
     rw [show n + (s + 1) = n + 1 + s from add_right_commₓ n s 1] <;> exact range_core_range' s (n + 1)
 
 theorem range_eq_range' (n : ℕ) : range n = range' 0 n :=
-  (range_core_range' n 0).trans $ by
+  (range_core_range' n 0).trans <| by
     rw [zero_addₓ]
 
 theorem range_succ_eq_map (n : ℕ) : range (n + 1) = 0 :: map succ (range n) := by
@@ -143,7 +143,7 @@ theorem mem_range {m n : ℕ} : m ∈ range n ↔ m < n := by
 
 @[simp]
 theorem not_mem_range_self {n : ℕ} : n ∉ range n :=
-  mt mem_range.1 $ lt_irreflₓ _
+  mt mem_range.1 <| lt_irreflₓ _
 
 @[simp]
 theorem self_mem_range_succ (n : ℕ) : n ∈ range (n + 1) := by
@@ -267,7 +267,7 @@ theorem unzip_enum_from_eq_prod (l : List α) {n : ℕ} : (l.enum_from n).unzip 
 
 @[simp]
 theorem nth_le_range {n} i (H : i < (range n).length) : nth_le (range n) i H = i :=
-  Option.some.injₓ $ by
+  Option.some.injₓ <| by
     rw [← nth_le_nth _,
       nth_range
         (by
@@ -295,7 +295,7 @@ theorem of_fn_eq_map {α n} {f : Finₓ n → α} : of_fn f = (fin_range n).map 
   rw [← of_fn_id, map_of_fn, Function.right_id]
 
 theorem nodup_of_fn {α n} {f : Finₓ n → α} (hf : Function.Injective f) : nodup (of_fn f) := by
-  rw [of_fn_eq_pmap] <;> exact nodup_pmap (fun _ _ _ _ H => Finₓ.veq_of_eq $ hf H) (nodup_range n)
+  rw [of_fn_eq_pmap] <;> exact nodup_pmap (fun _ _ _ _ H => Finₓ.veq_of_eq <| hf H) (nodup_range n)
 
 end List
 

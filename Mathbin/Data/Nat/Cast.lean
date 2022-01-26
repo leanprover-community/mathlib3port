@@ -137,14 +137,14 @@ theorem cast_pred [AddGroupₓ α] [One α] : ∀ {n}, 0 < n → ((n - 1 : ℕ) 
 
 @[simp, norm_cast]
 theorem cast_sub [AddGroupₓ α] [One α] {m n} (h : m ≤ n) : ((n - m : ℕ) : α) = n - m :=
-  eq_sub_of_add_eq $ by
+  eq_sub_of_add_eq <| by
     rw [← cast_add, tsub_add_cancel_of_le h]
 
 @[simp, norm_cast]
 theorem cast_mul [NonAssocSemiring α] m : ∀ n, ((m * n : ℕ) : α) = m * n
   | 0 => (mul_zero _).symm
   | n + 1 =>
-    (cast_add _ _).trans $
+    (cast_add _ _).trans <|
       show ((m * n : ℕ) : α) + m = m * (n + 1) by
         rw [cast_mul n, left_distrib, mul_oneₓ]
 
@@ -167,7 +167,7 @@ theorem coe_cast_ring_hom [NonAssocSemiring α] : (cast_ring_hom α : ℕ → α
   rfl
 
 theorem cast_commute [NonAssocSemiring α] (n : ℕ) (x : α) : Commute (↑n) x :=
-  Nat.recOn n (Commute.zero_left x) $ fun n ihn => ihn.add_left $ Commute.one_left x
+  (Nat.recOn n (Commute.zero_left x)) fun n ihn => ihn.add_left <| Commute.one_left x
 
 theorem cast_comm [NonAssocSemiring α] (n : ℕ) (x : α) : (n : α) * x = x * n :=
   (cast_commute n x).Eq
@@ -228,15 +228,15 @@ theorem cast_le_one {n : ℕ} : (n : α) ≤ 1 ↔ n ≤ 1 := by
 end
 
 @[simp, norm_cast]
-theorem cast_min [LinearOrderedSemiring α] {a b : ℕ} : (↑min a b : α) = min a b :=
+theorem cast_min [LinearOrderedSemiring α] {a b : ℕ} : (↑(min a b) : α) = min a b :=
   (@mono_cast α _).map_min
 
 @[simp, norm_cast]
-theorem cast_max [LinearOrderedSemiring α] {a b : ℕ} : (↑max a b : α) = max a b :=
+theorem cast_max [LinearOrderedSemiring α] {a b : ℕ} : (↑(max a b) : α) = max a b :=
   (@mono_cast α _).map_max
 
 @[simp, norm_cast]
-theorem abs_cast [LinearOrderedRing α] (a : ℕ) : |(a : α)| = a :=
+theorem abs_cast [LinearOrderedRing α] (a : ℕ) : abs (a : α) = a :=
   abs_of_nonneg (cast_nonneg a)
 
 theorem coe_nat_dvd [Semiringₓ α] {m n : ℕ} (h : m ∣ n) : (m : α) ∣ (n : α) :=
@@ -259,7 +259,7 @@ theorem cast_div_le {m n : ℕ} : ((m / n : ℕ) : α) ≤ m / n := by
     
 
 theorem inv_pos_of_nat {n : ℕ} : 0 < ((n : α) + 1)⁻¹ :=
-  inv_pos.2 $ add_pos_of_nonneg_of_pos n.cast_nonneg zero_lt_one
+  inv_pos.2 <| add_pos_of_nonneg_of_pos n.cast_nonneg zero_lt_one
 
 theorem one_div_pos_of_nat {n : ℕ} : 0 < 1 / ((n : α) + 1) := by
   rw [one_div]
@@ -298,7 +298,7 @@ section AddMonoidHomClass
 variable {A B F : Type _} [AddMonoidₓ A] [AddMonoidₓ B] [One B]
 
 theorem ext_nat' [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1 = g 1) : f = g :=
-  FunLike.ext f g $ by
+  FunLike.ext f g <| by
     apply Nat.rec
     · simp only [Nat.nat_zero_eq_zero, map_zero]
       
@@ -337,7 +337,7 @@ theorem ext_nat'' [MonoidWithZeroHomClass F ℕ A] (f g : F) (h_pos : ∀ {n : �
   exact h_pos n.succ_pos
 
 @[ext]
-theorem MonoidWithZeroHom.ext_nat : ∀ {f g : MonoidWithZeroHom ℕ A}, (∀ {n : ℕ}, 0 < n → f n = g n) → f = g :=
+theorem MonoidWithZeroHom.ext_nat : ∀ {f g : ℕ →*₀ A}, (∀ {n : ℕ}, 0 < n → f n = g n) → f = g :=
   ext_nat''
 
 end MonoidWithZeroHomClass
@@ -348,14 +348,14 @@ variable {R S F : Type _} [NonAssocSemiring R] [NonAssocSemiring S]
 
 @[simp]
 theorem eq_nat_cast [RingHomClass F ℕ R] (f : F) : ∀ n, f n = n :=
-  eq_nat_cast' f $ map_one f
+  eq_nat_cast' f <| map_one f
 
 @[simp]
 theorem map_nat_cast [RingHomClass F R S] (f : F) : ∀ n : ℕ, f (n : R) = n :=
-  map_nat_cast' f $ map_one f
+  map_nat_cast' f <| map_one f
 
 theorem ext_nat [RingHomClass F ℕ R] (f g : F) : f = g :=
-  ext_nat' f g $ by
+  ext_nat' f g <| by
     simp only [map_one]
 
 end RingHomClass

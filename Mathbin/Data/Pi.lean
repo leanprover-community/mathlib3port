@@ -30,15 +30,15 @@ namespace Pi
 
 
 @[to_additive]
-instance One [∀ i, One $ f i] : One (∀ i : I, f i) :=
+instance One [∀ i, One <| f i] : One (∀ i : I, f i) :=
   ⟨fun _ => 1⟩
 
 @[simp, to_additive]
-theorem one_apply [∀ i, One $ f i] : (1 : ∀ i, f i) i = 1 :=
+theorem one_apply [∀ i, One <| f i] : (1 : ∀ i, f i) i = 1 :=
   rfl
 
 @[to_additive]
-theorem one_def [∀ i, One $ f i] : (1 : ∀ i, f i) = fun i => 1 :=
+theorem one_def [∀ i, One <| f i] : (1 : ∀ i, f i) = fun i => 1 :=
   rfl
 
 @[simp, to_additive]
@@ -54,15 +54,15 @@ theorem comp_one [One β] (x : β → γ) : x ∘ 1 = const α (x 1) :=
   rfl
 
 @[to_additive]
-instance Mul [∀ i, Mul $ f i] : Mul (∀ i : I, f i) :=
+instance Mul [∀ i, Mul <| f i] : Mul (∀ i : I, f i) :=
   ⟨fun f g i => f i * g i⟩
 
 @[simp, to_additive]
-theorem mul_apply [∀ i, Mul $ f i] : (x * y) i = x i * y i :=
+theorem mul_apply [∀ i, Mul <| f i] : (x * y) i = x i * y i :=
   rfl
 
 @[to_additive]
-theorem mul_def [∀ i, Mul $ f i] : x * y = fun i => x i * y i :=
+theorem mul_def [∀ i, Mul <| f i] : x * y = fun i => x i * y i :=
   rfl
 
 @[simp, to_additive]
@@ -74,43 +74,43 @@ theorem mul_comp [Mul γ] (x y : β → γ) (z : α → β) : (x * y) ∘ z = x 
   rfl
 
 @[simp]
-theorem bit0_apply [∀ i, Add $ f i] : (bit0 x) i = bit0 (x i) :=
+theorem bit0_apply [∀ i, Add <| f i] : (bit0 x) i = bit0 (x i) :=
   rfl
 
 @[simp]
-theorem bit1_apply [∀ i, Add $ f i] [∀ i, One $ f i] : (bit1 x) i = bit1 (x i) :=
+theorem bit1_apply [∀ i, Add <| f i] [∀ i, One <| f i] : (bit1 x) i = bit1 (x i) :=
   rfl
 
 @[to_additive]
-instance HasInv [∀ i, HasInv $ f i] : HasInv (∀ i : I, f i) :=
-  ⟨fun f i => f i⁻¹⟩
+instance Inv [∀ i, Inv <| f i] : Inv (∀ i : I, f i) :=
+  ⟨fun f i => (f i)⁻¹⟩
 
 @[simp, to_additive]
-theorem inv_apply [∀ i, HasInv $ f i] : (x⁻¹) i = x i⁻¹ :=
+theorem inv_apply [∀ i, Inv <| f i] : x⁻¹ i = (x i)⁻¹ :=
   rfl
 
 @[to_additive]
-theorem inv_def [∀ i, HasInv $ f i] : x⁻¹ = fun i => x i⁻¹ :=
+theorem inv_def [∀ i, Inv <| f i] : x⁻¹ = fun i => (x i)⁻¹ :=
   rfl
 
 @[to_additive]
-theorem const_inv [HasInv β] (a : β) : const α a⁻¹ = const α (a⁻¹) :=
+theorem const_inv [Inv β] (a : β) : (const α a)⁻¹ = const α a⁻¹ :=
   rfl
 
 @[to_additive]
-theorem inv_comp [HasInv γ] (x : β → γ) (y : α → β) : x⁻¹ ∘ y = (x ∘ y)⁻¹ :=
+theorem inv_comp [Inv γ] (x : β → γ) (y : α → β) : x⁻¹ ∘ y = (x ∘ y)⁻¹ :=
   rfl
 
 @[to_additive]
-instance Div [∀ i, Div $ f i] : Div (∀ i : I, f i) :=
+instance Div [∀ i, Div <| f i] : Div (∀ i : I, f i) :=
   ⟨fun f g i => f i / g i⟩
 
 @[simp, to_additive]
-theorem div_apply [∀ i, Div $ f i] : (x / y) i = x i / y i :=
+theorem div_apply [∀ i, Div <| f i] : (x / y) i = x i / y i :=
   rfl
 
 @[to_additive]
-theorem div_def [∀ i, Div $ f i] : x / y = fun i => x i / y i :=
+theorem div_def [∀ i, Div <| f i] : x / y = fun i => x i / y i :=
   rfl
 
 @[to_additive]
@@ -171,12 +171,12 @@ theorem apply_single₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 0 0
 
 theorem single_op {g : I → Type _} [∀ i, Zero (g i)] (op : ∀ i, f i → g i) (h : ∀ i, op i 0 = 0) (i : I) (x : f i) :
     single i (op i x) = fun j => op j (single i x j) :=
-  Eq.symm $ funext $ apply_single op h i x
+  Eq.symm <| funext <| apply_single op h i x
 
 theorem single_op₂ {g₁ g₂ : I → Type _} [∀ i, Zero (g₁ i)] [∀ i, Zero (g₂ i)] (op : ∀ i, g₁ i → g₂ i → f i)
     (h : ∀ i, op i 0 0 = 0) (i : I) (x₁ : g₁ i) (x₂ : g₂ i) :
     single i (op i x₁ x₂) = fun j => op j (single i x₁ j) (single i x₂ j) :=
-  Eq.symm $ funext $ apply_single₂ op h i x₁ x₂
+  Eq.symm <| funext <| apply_single₂ op h i x₁ x₂
 
 variable (f)
 
@@ -197,35 +197,35 @@ section Extend
 
 @[to_additive]
 theorem extend_one [One γ] (f : α → β) : Function.extendₓ f (1 : α → γ) (1 : β → γ) = 1 :=
-  funext $ fun _ => by
+  funext fun _ => by
     apply if_t_t _ _
 
 @[to_additive]
 theorem extend_mul [Mul γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ : β → γ) :
     Function.extendₓ f (g₁ * g₂) (e₁ * e₂) = Function.extendₓ f g₁ e₁ * Function.extendₓ f g₂ e₂ :=
-  funext $ fun _ => by
+  funext fun _ => by
     convert (apply_dite2 (· * ·) _ _ _ _ _).symm
 
 @[to_additive]
-theorem extend_inv [HasInv γ] (f : α → β) (g : α → γ) (e : β → γ) :
-    Function.extendₓ f (g⁻¹) (e⁻¹) = Function.extendₓ f g e⁻¹ :=
-  funext $ fun _ => by
-    convert (apply_dite HasInv.inv _ _ _).symm
+theorem extend_inv [Inv γ] (f : α → β) (g : α → γ) (e : β → γ) :
+    Function.extendₓ f g⁻¹ e⁻¹ = (Function.extendₓ f g e)⁻¹ :=
+  funext fun _ => by
+    convert (apply_dite Inv.inv _ _ _).symm
 
 @[to_additive]
 theorem extend_div [Div γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ : β → γ) :
     Function.extendₓ f (g₁ / g₂) (e₁ / e₂) = Function.extendₓ f g₁ e₁ / Function.extendₓ f g₂ e₂ :=
-  funext $ fun _ => by
+  funext fun _ => by
     convert (apply_dite2 (· / ·) _ _ _ _ _).symm
 
 end Extend
 
 theorem surjective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, surjective (F i)) :
     surjective fun x : ∀ i, f i => fun i => F i (x i) := fun y =>
-  ⟨fun i => (hF i (y i)).some, funext $ fun i => (hF i (y i)).some_spec⟩
+  ⟨fun i => (hF i (y i)).some, funext fun i => (hF i (y i)).some_spec⟩
 
 theorem injective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, injective (F i)) :
-    injective fun x : ∀ i, f i => fun i => F i (x i) := fun x y h => funext $ fun i => hF i $ (congr_funₓ h i : _)
+    injective fun x : ∀ i, f i => fun i => F i (x i) := fun x y h => funext fun i => hF i <| (congr_funₓ h i : _)
 
 theorem bijective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, bijective (F i)) :
     bijective fun x : ∀ i, f i => fun i => F i (x i) :=
@@ -235,6 +235,6 @@ end Function
 
 theorem Subsingleton.pi_single_eq {α : Type _} [DecidableEq I] [Subsingleton I] [Zero α] (i : I) (x : α) :
     Pi.single i x = fun _ => x :=
-  funext $ fun j => by
+  funext fun j => by
     rw [Subsingleton.elimₓ j i, Pi.single_eq_same]
 

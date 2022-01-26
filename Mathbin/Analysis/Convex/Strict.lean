@@ -40,13 +40,13 @@ variable (𝕜) [HasScalar 𝕜 E] [HasScalar 𝕜 F] (s : Set E)
 /-- A set is strictly convex if the open segment between any two distinct points lies is in its
 interior. This basically means "convex and not flat on the boundary". -/
 def StrictConvex : Prop :=
-  s.pairwise $ fun x y => ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • x + b • y ∈ Interior s
+  s.pairwise fun x y => ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • x + b • y ∈ Interior s
 
 variable {𝕜 s} {x y : E}
 
 theorem strict_convex_iff_open_segment_subset :
     StrictConvex 𝕜 s ↔ s.pairwise fun x y => OpenSegment 𝕜 x y ⊆ Interior s :=
-  forall₅_congr $ fun x hx y hy hxy => (open_segment_subset_iff 𝕜).symm
+  forall₅_congr fun x hx y hy hxy => (open_segment_subset_iff 𝕜).symm
 
 theorem StrictConvex.open_segment_subset (hs : StrictConvex 𝕜 s) (hx : x ∈ s) (hy : y ∈ s) (h : x ≠ y) :
     OpenSegment 𝕜 x y ⊆ Interior s :=
@@ -87,7 +87,7 @@ section Module
 variable [Module 𝕜 E] [Module 𝕜 F] {s : Set E}
 
 protected theorem StrictConvex.convex (hs : StrictConvex 𝕜 s) : Convex 𝕜 s :=
-  convex_iff_pairwise_pos.2 $ fun x hx y hy hxy a b ha hb hab => interior_subset $ hs hx hy hxy ha hb hab
+  convex_iff_pairwise_pos.2 fun x hx y hy hxy a b ha hb hab => interior_subset <| hs hx hy hxy ha hb hab
 
 /-- An open convex set is strictly convex. -/
 protected theorem Convex.strict_convex (h : IsOpen s) (hs : Convex 𝕜 s) : StrictConvex 𝕜 s :=
@@ -146,7 +146,7 @@ theorem strict_convex_Ici (r : β) : StrictConvex 𝕜 (Ici r) :=
   @strict_convex_Iic 𝕜 (OrderDual β) _ _ _ _ _ _ r
 
 theorem strict_convex_Icc (r s : β) : StrictConvex 𝕜 (Icc r s) :=
-  (strict_convex_Ici r).inter $ strict_convex_Iic s
+  (strict_convex_Ici r).inter <| strict_convex_Iic s
 
 theorem strict_convex_Iio (r : β) : StrictConvex 𝕜 (Iio r) :=
   (convex_Iio r).StrictConvex is_open_Iio
@@ -155,13 +155,13 @@ theorem strict_convex_Ioi (r : β) : StrictConvex 𝕜 (Ioi r) :=
   (convex_Ioi r).StrictConvex is_open_Ioi
 
 theorem strict_convex_Ioo (r s : β) : StrictConvex 𝕜 (Ioo r s) :=
-  (strict_convex_Ioi r).inter $ strict_convex_Iio s
+  (strict_convex_Ioi r).inter <| strict_convex_Iio s
 
 theorem strict_convex_Ico (r s : β) : StrictConvex 𝕜 (Ico r s) :=
-  (strict_convex_Ici r).inter $ strict_convex_Iio s
+  (strict_convex_Ici r).inter <| strict_convex_Iio s
 
 theorem strict_convex_Ioc (r s : β) : StrictConvex 𝕜 (Ioc r s) :=
-  (strict_convex_Ioi r).inter $ strict_convex_Iic s
+  (strict_convex_Ioi r).inter <| strict_convex_Iic s
 
 theorem strict_convex_interval (r s : β) : StrictConvex 𝕜 (interval r s) :=
   strict_convex_Icc _ _
@@ -214,16 +214,16 @@ theorem StrictConvex.add [HasContinuousAdd E] {t : Set E} (hs : StrictConvex �
       exact interior_mono (add_subset_add (singleton_subset_iff.2 hv) (subset.refl _)) this
     rw [singleton_add]
     exact
-      (is_open_map_add_left _).image_interior_subset _ (mem_image_of_mem _ $ ht hw hy (ne_of_apply_ne _ h) ha hb hab)
+      (is_open_map_add_left _).image_interior_subset _ (mem_image_of_mem _ <| ht hw hy (ne_of_apply_ne _ h) ha hb hab)
     
   obtain rfl | hwy := eq_or_ne w y
   · rw [Convex.combo_self hab]
     suffices a • v + b • x + w ∈ Interior (s + {w}) by
       exact interior_mono (add_subset_add (subset.refl _) (singleton_subset_iff.2 hw)) this
     rw [add_singleton]
-    exact (is_open_map_add_right _).image_interior_subset _ (mem_image_of_mem _ $ hs hv hx hvx ha hb hab)
+    exact (is_open_map_add_right _).image_interior_subset _ (mem_image_of_mem _ <| hs hv hx hvx ha hb hab)
     
-  exact subset_interior_add (add_mem_add (hs hv hx hvx ha hb hab) $ ht hw hy hwy ha hb hab)
+  exact subset_interior_add (add_mem_add (hs hv hx hvx ha hb hab) <| ht hw hy hwy ha hb hab)
 
 end AddCommGroupₓ
 
@@ -270,14 +270,14 @@ theorem StrictConvex.eq_of_open_segment_subset_frontier [Nontrivial 𝕜] [Dense
   by_contra hxy
   exact
     (h ⟨a, 1 - a, ha₀, sub_pos_of_lt ha₁, add_sub_cancel'_right _ _, rfl⟩).2
-      (hs hx hy hxy ha₀ (sub_pos_of_lt ha₁) $ add_sub_cancel'_right _ _)
+      (hs hx hy hxy ha₀ (sub_pos_of_lt ha₁) <| add_sub_cancel'_right _ _)
 
 theorem StrictConvex.add_smul_mem (hs : StrictConvex 𝕜 s) (hx : x ∈ s) (hxy : x + y ∈ s) (hy : y ≠ 0) {t : 𝕜}
     (ht₀ : 0 < t) (ht₁ : t < 1) : x + t • y ∈ Interior s := by
   have h : x + t • y = (1 - t) • x + t • (x + y) := by
     rw [smul_add, ← add_assocₓ, ← add_smul, sub_add_cancel, one_smul]
   rw [h]
-  refine' hs hx hxy (fun h => hy $ add_left_cancelₓ _) (sub_pos_of_lt ht₁) ht₀ (sub_add_cancel _ _)
+  refine' hs hx hxy (fun h => hy <| add_left_cancelₓ _) (sub_pos_of_lt ht₁) ht₀ (sub_add_cancel _ _)
   exact x
   rw [← h, add_zeroₓ]
 
@@ -348,7 +348,7 @@ theorem strict_convex_iff_div :
     StrictConvex 𝕜 s ↔
       s.pairwise fun x y => ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → (a / (a + b)) • x + (b / (a + b)) • y ∈ Interior s :=
   ⟨fun h x hx y hy hxy a b ha hb => by
-    apply h hx hy hxy (div_pos ha $ add_pos ha hb) (div_pos hb $ add_pos ha hb)
+    apply h hx hy hxy (div_pos ha <| add_pos ha hb) (div_pos hb <| add_pos ha hb)
     rw [← add_div]
     exact div_self (add_pos ha hb).ne', fun h x hx y hy hxy a b ha hb hab => by
     convert h hx hy hxy ha hb <;> rw [hab, div_one]⟩
@@ -356,7 +356,7 @@ theorem strict_convex_iff_div :
 theorem StrictConvex.mem_smul_of_zero_mem (hs : StrictConvex 𝕜 s) (zero_mem : (0 : E) ∈ s) (hx : x ∈ s) (hx₀ : x ≠ 0)
     {t : 𝕜} (ht : 1 < t) : x ∈ t • Interior s := by
   rw [mem_smul_set_iff_inv_smul_mem₀ (zero_lt_one.trans ht).ne']
-  exact hs.smul_mem_of_zero_mem zero_mem hx hx₀ (inv_pos.2 $ zero_lt_one.trans ht) (inv_lt_one ht)
+  exact hs.smul_mem_of_zero_mem zero_mem hx hx₀ (inv_pos.2 <| zero_lt_one.trans ht) (inv_lt_one ht)
 
 end AddCommGroupₓ
 
@@ -381,12 +381,12 @@ theorem strict_convex_iff_convex [LinearOrderedField 𝕜] [TopologicalSpace �
   obtain h | h := hxy.lt_or_lt
   · refine' (open_segment_subset_Ioo h).trans _
     rw [← interior_Icc]
-    exact interior_mono (Icc_subset_segment.trans $ hs.segment_subset hx hy)
+    exact interior_mono (Icc_subset_segment.trans <| hs.segment_subset hx hy)
     
   · rw [open_segment_symm]
     refine' (open_segment_subset_Ioo h).trans _
     rw [← interior_Icc]
-    exact interior_mono (Icc_subset_segment.trans $ hs.segment_subset hy hx)
+    exact interior_mono (Icc_subset_segment.trans <| hs.segment_subset hy hx)
     
 
 theorem strict_convex_iff_ord_connected [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] {s : Set 𝕜} :

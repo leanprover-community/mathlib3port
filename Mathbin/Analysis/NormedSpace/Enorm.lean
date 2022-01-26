@@ -52,7 +52,7 @@ theorem coe_fn_injective : Function.Injective (coeFn : Enorm 𝕜 V → V → �
 
 @[ext]
 theorem ext {e₁ e₂ : Enorm 𝕜 V} (h : ∀ x, e₁ x = e₂ x) : e₁ = e₂ :=
-  coe_fn_injective $ funext h
+  coe_fn_injective <| funext h
 
 theorem ext_iff {e₁ e₂ : Enorm 𝕜 V} : e₁ = e₂ ↔ ∀ x, e₁ x = e₂ x :=
   ⟨fun h x => h ▸ rfl, ext⟩
@@ -63,12 +63,12 @@ theorem coe_inj {e₁ e₂ : Enorm 𝕜 V} : (e₁ : V → ℝ≥0∞) = e₂ �
 
 @[simp]
 theorem map_smul (c : 𝕜) (x : V) : e (c • x) = nnnorm c * e x :=
-  le_antisymmₓ (e.map_smul_le' c x) $ by
+  le_antisymmₓ (e.map_smul_le' c x) <| by
     by_cases' hc : c = 0
     · simp [hc]
       
     calc (nnnorm c : ℝ≥0∞) * e x = nnnorm c * e (c⁻¹ • c • x) := by
-        rw [inv_smul_smul₀ hc]_ ≤ nnnorm c * (nnnorm (c⁻¹) * e (c • x)) := _ _ = e (c • x) := _
+        rw [inv_smul_smul₀ hc]_ ≤ nnnorm c * (nnnorm c⁻¹ * e (c • x)) := _ _ = e (c • x) := _
     · exact Ennreal.mul_le_mul (le_reflₓ _) (e.map_smul_le' _ _)
       
     · rw [← mul_assoc, NormedField.nnnorm_inv, Ennreal.coe_inv, Ennreal.mul_inv_cancel _ Ennreal.coe_ne_top,
@@ -113,7 +113,7 @@ instance : PartialOrderₓ (Enorm 𝕜 V) where
   le := fun e₁ e₂ => ∀ x, e₁ x ≤ e₂ x
   le_refl := fun e x => le_reflₓ _
   le_trans := fun e₁ e₂ e₃ h₁₂ h₂₃ x => le_transₓ (h₁₂ x) (h₂₃ x)
-  le_antisymm := fun e₁ e₂ h₁₂ h₂₁ => ext $ fun x => le_antisymmₓ (h₁₂ x) (h₂₁ x)
+  le_antisymm := fun e₁ e₂ h₁₂ h₂₁ => ext fun x => le_antisymmₓ (h₁₂ x) (h₂₁ x)
 
 /-- The `enorm` sending each non-zero vector to infinity. -/
 noncomputable instance : HasTop (Enorm 𝕜 V) :=
@@ -157,10 +157,10 @@ noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
     sup := fun e₁ e₂ =>
       { toFun := fun x => max (e₁ x) (e₂ x), eq_zero' := fun x h => e₁.eq_zero_iff.1 (Ennreal.max_eq_zero_iff.1 h).1,
         map_add_le' := fun x y =>
-          max_leₓ (le_transₓ (e₁.map_add_le _ _) $ add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _))
-            (le_transₓ (e₂.map_add_le _ _) $ add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _)),
+          max_leₓ (le_transₓ (e₁.map_add_le _ _) <| add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _))
+            (le_transₓ (e₂.map_add_le _ _) <| add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _)),
         map_smul_le' := fun c x =>
-          le_of_eqₓ $ by
+          le_of_eqₓ <| by
             simp only [map_smul, Ennreal.mul_max] },
     le_sup_left := fun e₁ e₂ x => le_max_leftₓ _ _, le_sup_right := fun e₁ e₂ x => le_max_rightₓ _ _,
     sup_le := fun e₁ e₂ e₃ h₁ h₂ x => max_leₓ (h₁ x) (h₂ x) }
@@ -225,7 +225,7 @@ theorem finite_norm_eq (x : e.finite_subspace) : ∥x∥ = (e x).toReal :=
 /-- Normed space instance on `e.finite_subspace`. -/
 instance : NormedSpace 𝕜 e.finite_subspace where
   norm_smul_le := fun c x =>
-    le_of_eqₓ $ by
+    le_of_eqₓ <| by
       simp [finite_norm_eq, Ennreal.to_real_mul]
 
 end Enorm

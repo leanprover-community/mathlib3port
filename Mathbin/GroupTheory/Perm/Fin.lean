@@ -14,7 +14,7 @@ open Equivₓ
 `fin (n + 1)` and permuting the remaining with a `perm (fin n)`.
 The fixed `fin (n + 1)` is swapped with `0`. -/
 def Equivₓ.Perm.decomposeFin {n : ℕ} : perm (Finₓ n.succ) ≃ Finₓ n.succ × perm (Finₓ n) :=
-  ((Equivₓ.permCongr $ finSuccEquiv n).trans Equivₓ.Perm.decomposeOption).trans
+  ((Equivₓ.permCongr <| finSuccEquiv n).trans Equivₓ.Perm.decomposeOption).trans
     (Equivₓ.prodCongr (finSuccEquiv n).symm (Equivₓ.refl _))
 
 @[simp]
@@ -62,8 +62,8 @@ theorem Equivₓ.Perm.decomposeFin.symm_sign {n : ℕ} (p : Finₓ (n + 1)) (e :
 /-- The set of all permutations of `fin (n + 1)` can be constructed by augmenting the set of
 permutations of `fin n` by each element of `fin (n + 1)` in turn. -/
 theorem Finset.univ_perm_fin_succ {n : ℕ} :
-    @Finset.univ (perm $ Finₓ n.succ) _ =
-      (Finset.univ : Finset $ Finₓ n.succ × perm (Finₓ n)).map Equivₓ.Perm.decomposeFin.symm.toEmbedding :=
+    @Finset.univ (perm <| Finₓ n.succ) _ =
+      (Finset.univ : Finset <| Finₓ n.succ × perm (Finₓ n)).map Equivₓ.Perm.decomposeFin.symm.toEmbedding :=
   (Finset.univ_map_equiv_to_embedding _).symm
 
 section CycleRange

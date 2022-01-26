@@ -67,7 +67,7 @@ private theorem preimage_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : 
 
 /-- C(α, -) is a functor. -/
 theorem continuous_comp : Continuous (ContinuousMap.comp g : C(α, β) → C(α, γ)) :=
-  continuous_generated_from $ fun m ⟨s, hs, u, hu, hm⟩ => by
+  continuous_generated_from fun m ⟨s, hs, u, hu, hm⟩ => by
     rw [hm, preimage_gen g hs hu] <;> exact ContinuousMap.is_open_gen hs (hu.preimage g.2)
 
 end Functorial
@@ -84,7 +84,7 @@ variable {α β}
 
 /-- The evaluation map `C(α, β) × α → β` is continuous if `α` is locally compact. -/
 theorem continuous_ev [LocallyCompactSpace α] : Continuous (ev α β) :=
-  continuous_iff_continuous_at.mpr $ fun ⟨f, x⟩ n hn =>
+  continuous_iff_continuous_at.mpr fun ⟨f, x⟩ n hn =>
     let ⟨v, vn, vo, fxv⟩ := mem_nhds_iff.mp hn
     have : v ∈ 𝓝 (f x) := IsOpen.mem_nhds vo fxv
     let ⟨s, hs, sv, sc⟩ := LocallyCompactSpace.local_compact_nhds x (f ⁻¹' v) (f.continuous.tendsto x this)
@@ -223,7 +223,7 @@ theorem image_coev {y : β} (s : Set α) : coev α β y '' s = ({y} : Set β) ×
   tidy
 
 theorem continuous_coev : Continuous (coev α β) :=
-  continuous_generated_from $ by
+  continuous_generated_from <| by
     rintro _ ⟨s, sc, u, uo, rfl⟩
     rw [is_open_iff_forall_mem_open]
     intro y hy
@@ -282,7 +282,7 @@ theorem continuous_uncurry_of_continuous [LocallyCompactSpace β] (f : C(α, C(�
   have hf : (Function.uncurry fun x y => f x y) = ev β γ ∘ Prod.map f id := by
     ext
     rfl
-  hf ▸ Continuous.comp continuous_ev $ Continuous.prod_map f.2 id.2
+  hf ▸ Continuous.comp continuous_ev <| Continuous.prod_map f.2 id.2
 
 /-- The uncurried form of a continuous map `α → C(β, γ)` as a continuous map `α × β → γ` (if `β` is
     locally compact). If `α` is also locally compact, then this is a homeomorphism between the two

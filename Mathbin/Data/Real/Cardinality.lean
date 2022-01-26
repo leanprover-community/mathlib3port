@@ -143,10 +143,10 @@ theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g 
       
     
   rw [cantor_function_succ f (le_of_ltₓ h1) h3, cantor_function_succ g (le_of_ltₓ h1) h3]
-  rw [hn 0 $ zero_lt_succ n]
+  rw [hn 0 <| zero_lt_succ n]
   apply add_lt_add_left
   rw [mul_lt_mul_left h1]
-  exact ih (fun k hk => hn _ $ succ_lt_succ hk) fn gn
+  exact ih (fun k hk => hn _ <| succ_lt_succ hk) fn gn
 
 /-- `cantor_function c` is injective if `0 < c < 1/2`. -/
 theorem cantor_function_injective (h1 : 0 < c) (h2 : c < 1 / 2) : Function.Injective (cantor_function c) := by
@@ -249,7 +249,7 @@ theorem mk_Ioo_real {a b : ℝ} (h : a < b) : # (Ioo a b) = 𝔠 := by
   refine' le_transₓ _ h1
   rw [image_sub_const_Ioo, sub_self]
   replace h := sub_pos_of_lt h
-  have h2 : # (HasInv.inv '' Ioo 0 (b - a)) ≤ # (Ioo 0 (b - a)) := mk_image_le
+  have h2 : # (Inv.inv '' Ioo 0 (b - a)) ≤ # (Ioo 0 (b - a)) := mk_image_le
   refine' le_transₓ _ h2
   rw [image_inv_Ioo_0_left h, mk_Ioi_real]
 

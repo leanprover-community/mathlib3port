@@ -30,7 +30,7 @@ theorem quotient_mk_comp_C_injective (I : Ideal (MvPolynomial σ K)) (hI : I ≠
   refine' (RingHom.injective_iff _).2 fun x hx => _
   rw [RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem] at hx
   refine' Classical.by_contradiction fun hx0 => absurd (I.eq_top_iff_one.2 _) hI
-  have := I.mul_mem_left (MvPolynomial.c (x⁻¹)) hx
+  have := I.mul_mem_left (MvPolynomial.c x⁻¹) hx
   rwa [← mv_polynomial.C.map_mul, inv_mul_cancel hx0, MvPolynomial.C_1] at this
 
 end MvPolynomial

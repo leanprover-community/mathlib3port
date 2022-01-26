@@ -29,7 +29,7 @@ local notation "M" => Matrix n' n' R
 noncomputable instance : DivInvMonoidₓ M :=
   { show Monoidₓ M by
       infer_instance,
-    show HasInv M by
+    show Inv M by
       infer_instance with }
 
 section NatPow
@@ -56,10 +56,10 @@ theorem pow_inv_comm' (A : M) (m n : ℕ) : A⁻¹ ^ m ⬝ A ^ n = A ^ n ⬝ A�
     
   rcases nonsing_inv_cancel_or_zero A with (⟨h, h'⟩ | h)
   · calc A⁻¹ ^ (m + 1) ⬝ A ^ (n + 1) = A⁻¹ ^ m ⬝ (A⁻¹ ⬝ A) ⬝ A ^ n := by
-        simp only [pow_succ'ₓ (A⁻¹), pow_succₓ A, mul_eq_mul, Matrix.mul_assoc]_ = A ^ n ⬝ A⁻¹ ^ m := by
+        simp only [pow_succ'ₓ A⁻¹, pow_succₓ A, mul_eq_mul, Matrix.mul_assoc]_ = A ^ n ⬝ A⁻¹ ^ m := by
         simp only [h, Matrix.mul_one, Matrix.one_mul, IH m]_ = A ^ n ⬝ (A ⬝ A⁻¹) ⬝ A⁻¹ ^ m := by
         simp only [h', Matrix.mul_one, Matrix.one_mul]_ = A ^ (n + 1) ⬝ A⁻¹ ^ (m + 1) := by
-        simp only [pow_succ'ₓ A, pow_succₓ (A⁻¹), mul_eq_mul, Matrix.mul_assoc]
+        simp only [pow_succ'ₓ A, pow_succₓ A⁻¹, mul_eq_mul, Matrix.mul_assoc]
     
   · simp [h]
     
@@ -300,7 +300,7 @@ theorem Commute.mul_zpow {A B : M} (h : Commute A B) : ∀ i : ℤ, (A * B) ^ i 
   | (n : ℕ) => by
     simp [h.mul_pow n, -mul_eq_mul]
   | -[1+ n] => by
-    rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, mul_eq_mul (_⁻¹), ← mul_inv_rev, ← mul_eq_mul,
+    rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, mul_eq_mul _⁻¹, ← mul_inv_rev, ← mul_eq_mul,
       h.mul_pow n.succ, (h.pow_pow _ _).Eq]
 
 theorem zpow_bit0' (A : M) (n : ℤ) : A ^ bit0 n = (A * A) ^ n :=

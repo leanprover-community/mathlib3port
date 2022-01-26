@@ -85,7 +85,7 @@ theorem eq_on_source : eq_on f (f.to_times_cont_diff_bump ∘ extChartAt I c) (c
 
 theorem eventually_eq_of_mem_source (hx : x ∈ (chart_at H c).Source) :
     f =ᶠ[𝓝 x] f.to_times_cont_diff_bump ∘ extChartAt I c :=
-  f.eq_on_source.eventually_eq_of_mem $ IsOpen.mem_nhds (chart_at H c).open_source hx
+  f.eq_on_source.eventually_eq_of_mem <| IsOpen.mem_nhds (chart_at H c).open_source hx
 
 theorem one_of_dist_le (hs : x ∈ (chart_at H c).Source) (hd : eudist (extChartAt I c x) (extChartAt I c c) ≤ f.r) :
     f x = 1 := by
@@ -139,6 +139,7 @@ theorem nonneg : 0 ≤ f x :=
 theorem le_one : f x ≤ 1 :=
   f.mem_Icc.2
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem eventually_eq_one_of_dist_lt (hs : x ∈ (chart_at H c).Source)
     (hd : eudist (extChartAt I c x) (extChartAt I c c) < f.r) : f =ᶠ[𝓝 x] 1 := by
   filter_upwards [IsOpen.mem_nhds (ext_chart_preimage_open_of_open I c is_open_ball) ⟨hs, hd⟩]
@@ -146,7 +147,7 @@ theorem eventually_eq_one_of_dist_lt (hs : x ∈ (chart_at H c).Source)
   exact f.one_of_dist_le hzs hzd.le
 
 theorem eventually_eq_one : f =ᶠ[𝓝 c] 1 :=
-  f.eventually_eq_one_of_dist_lt (mem_chart_source _ _) $ by
+  f.eventually_eq_one_of_dist_lt (mem_chart_source _ _) <| by
     rw [Euclidean.dist, dist_self]
     exact f.r_pos
 
@@ -155,7 +156,7 @@ theorem eq_one : f c = 1 :=
   f.eventually_eq_one.eq_of_nhds
 
 theorem support_mem_nhds : support f ∈ 𝓝 c :=
-  f.eventually_eq_one.mono $ fun x hx => by
+  f.eventually_eq_one.mono fun x hx => by
     rw [hx]
     exact one_ne_zero
 
@@ -170,7 +171,7 @@ theorem nonempty_support : (support f).Nonempty :=
 
 theorem compact_symm_image_closed_ball :
     IsCompact ((extChartAt I c).symm '' (closed_ball (extChartAt I c c) f.R ∩ range I)) :=
-  (Euclidean.is_compact_closed_ball.inter_right I.closed_range).image_of_continuous_on $
+  (Euclidean.is_compact_closed_ball.inter_right I.closed_range).image_of_continuous_on <|
     (ext_chart_at_continuous_on_symm _ _).mono f.closed_ball_subset
 
 /-- Given a smooth bump function `f : smooth_bump_function I c`, the closed ball of radius `f.R` is
@@ -187,7 +188,7 @@ theorem nhds_within_range_basis :
   · rintro R ⟨hR0, hsub⟩
     exact ⟨⟨⟨⟨R / 2, R, half_pos hR0, half_lt_self hR0⟩⟩, hsub⟩, trivialₓ, subset.rfl⟩
     
-  · exact fun f _ => inter_mem (mem_nhds_within_of_mem_nhds $ closed_ball_mem_nhds f.R_pos) self_mem_nhds_within
+  · exact fun f _ => inter_mem (mem_nhds_within_of_mem_nhds <| closed_ball_mem_nhds f.R_pos) self_mem_nhds_within
     
 
 theorem closed_image_of_closed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ support f) : IsClosed (extChartAt I c '' s) :=
@@ -236,7 +237,8 @@ theorem closure_support_subset_symm_image_closed_ball :
     Closure (support f) ⊆ (extChartAt I c).symm '' (closed_ball (extChartAt I c c) f.R ∩ range I) := by
   rw [support_eq_symm_image]
   exact
-    closure_minimal (image_subset _ $ inter_subset_inter_left _ ball_subset_closed_ball) f.closed_symm_image_closed_ball
+    closure_minimal (image_subset _ <| inter_subset_inter_left _ ball_subset_closed_ball)
+      f.closed_symm_image_closed_ball
 
 theorem closure_support_subset_ext_chart_at_source : Closure (support f) ⊆ (extChartAt I c).Source :=
   calc
@@ -249,7 +251,7 @@ theorem closure_support_subset_ext_chart_at_source : Closure (support f) ⊆ (ex
 theorem closure_support_subset_chart_at_source : Closure (support f) ⊆ (chart_at H c).Source := by
   simpa only [ext_chart_at_source] using f.closure_support_subset_ext_chart_at_source
 
-theorem compact_closure_support : IsCompact (Closure $ support f) :=
+theorem compact_closure_support : IsCompact (Closure <| support f) :=
   compact_of_is_closed_subset f.compact_symm_image_closed_ball is_closed_closure
     f.closure_support_subset_symm_image_closed_ball
 
@@ -259,7 +261,7 @@ variable (I c)
 In other words, each of these closures is a neighborhood of `c` and each neighborhood of `c`
 includes `closure (support f)` for some `f : smooth_bump_function I c`. -/
 theorem nhds_basis_closure_support :
-    (𝓝 c).HasBasis (fun f : SmoothBumpFunction I c => True) fun f => Closure $ support f := by
+    (𝓝 c).HasBasis (fun f : SmoothBumpFunction I c => True) fun f => Closure <| support f := by
   have :
     (𝓝 c).HasBasis (fun f : SmoothBumpFunction I c => True) fun f =>
       (extChartAt I c).symm '' (closed_ball (extChartAt I c c) f.R ∩ range I) :=
@@ -289,7 +291,7 @@ protected theorem Smooth : Smooth I 𝓘(ℝ) f := by
   have : x ∈ (chart_at H c).Source := f.closure_support_subset_chart_at_source hx
   refine'
     TimesContMdiffAt.congr_of_eventually_eq _
-      (f.eq_on_source.eventually_eq_of_mem $ IsOpen.mem_nhds (chart_at _ _).open_source this)
+      (f.eq_on_source.eventually_eq_of_mem <| IsOpen.mem_nhds (chart_at _ _).open_source this)
   exact f.to_times_cont_diff_bump.times_cont_diff_at.times_cont_mdiff_at.comp _ (times_cont_mdiff_at_ext_chart_at' this)
 
 protected theorem SmoothAt {x} : SmoothAt I 𝓘(ℝ) f x :=
@@ -306,7 +308,7 @@ theorem smooth_smul {G} [NormedGroup G] [NormedSpace ℝ G] {g : M → G}
   have : x ∈ (chart_at H c).Source
   calc x ∈ Closure (support fun x => f x • g x) := hx _ ⊆ Closure (support f) :=
       closure_mono (support_smul_subset_left _ _)_ ⊆ (chart_at _ c).Source := f.closure_support_subset_chart_at_source
-  exact f.smooth_at.smul ((hg _ this).TimesContMdiffAt $ IsOpen.mem_nhds (chart_at _ _).open_source this)
+  exact f.smooth_at.smul ((hg _ this).TimesContMdiffAt <| IsOpen.mem_nhds (chart_at _ _).open_source this)
 
 end SmoothBumpFunction
 

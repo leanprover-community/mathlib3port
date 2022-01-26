@@ -45,15 +45,15 @@ theorem right_total.rel_forall (h : right_total R) : ((R⇒Implies)⇒Implies) (
   fun p q Hrel H b => Exists.elim (h b) fun a Rab => Hrel Rab (H _)
 
 theorem left_total.rel_exists (h : left_total R) : ((R⇒Implies)⇒Implies) (fun p => ∃ i, p i) fun q => ∃ i, q i :=
-  fun p q Hrel ⟨a, pa⟩ => (h a).imp $ fun b Rab => Hrel Rab pa
+  fun p q Hrel ⟨a, pa⟩ => (h a).imp fun b Rab => Hrel Rab pa
 
 theorem bi_total.rel_forall (h : bi_total R) : ((R⇒Iff)⇒Iff) (fun p => ∀ i, p i) fun q => ∀ i, q i := fun p q Hrel =>
   ⟨fun H b => Exists.elim (h.right b) fun a Rab => (Hrel Rab).mp (H _), fun H a =>
     Exists.elim (h.left a) fun b Rab => (Hrel Rab).mpr (H _)⟩
 
 theorem bi_total.rel_exists (h : bi_total R) : ((R⇒Iff)⇒Iff) (fun p => ∃ i, p i) fun q => ∃ i, q i := fun p q Hrel =>
-  ⟨fun ⟨a, pa⟩ => (h.left a).imp $ fun b Rab => (Hrel Rab).1 pa, fun ⟨b, qb⟩ =>
-    (h.right b).imp $ fun a Rab => (Hrel Rab).2 qb⟩
+  ⟨fun ⟨a, pa⟩ => (h.left a).imp fun b Rab => (Hrel Rab).1 pa, fun ⟨b, qb⟩ =>
+    (h.right b).imp fun a Rab => (Hrel Rab).2 qb⟩
 
 theorem left_unique_of_rel_eq {eq' : β → β → Prop} (he : (R⇒R⇒Iff) Eq eq') : left_unique R :=
   fun a b c ac : R a c bc : R b c => (he ac bc).mpr ((he bc bc).mp rfl)

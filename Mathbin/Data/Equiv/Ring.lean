@@ -92,7 +92,7 @@ theorem coe_mk e e' h₁ h₂ h₃ h₄ : ⇑(⟨e, e', h₁, h₂, h₃, h₄�
 
 @[simp]
 theorem mk_coe (e : R ≃+* S) e' h₁ h₂ h₃ h₄ : (⟨e, e', h₁, h₂, h₃, h₄⟩ : R ≃+* S) = e :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 
 protected theorem congr_argₓ {f : R ≃+* S} : ∀ {x x' : R}, x = x' → f x = f x'
   | _, _, rfl => rfl
@@ -131,7 +131,7 @@ def ring_equiv_of_unique_of_unique {M N} [Unique M] [Unique N] [Add M] [Mul M] [
 
 instance {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : Unique (M ≃+* N) where
   default := ring_equiv_of_unique_of_unique
-  uniq := fun _ => ext $ fun x => Subsingleton.elimₓ _ _
+  uniq := fun _ => ext fun x => Subsingleton.elimₓ _ _
 
 variable (R)
 
@@ -174,14 +174,14 @@ theorem inv_fun_eq_symm (f : R ≃+* S) : f.inv_fun = f.symm :=
 
 @[simp]
 theorem symm_symm (e : R ≃+* S) : e.symm.symm = e :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 theorem symm_bijective : Function.Bijective (RingEquiv.symm : R ≃+* S → S ≃+* R) :=
   Equivₓ.bijective ⟨RingEquiv.symm, RingEquiv.symm, symm_symm, symm_symm⟩
 
 @[simp]
 theorem mk_coe' (e : R ≃+* S) f h₁ h₂ h₃ h₄ : (RingEquiv.mk f (⇑e) h₁ h₂ h₃ h₄ : S ≃+* R) = e.symm :=
-  symm_bijective.Injective $ ext $ fun x => rfl
+  symm_bijective.Injective <| ext fun x => rfl
 
 @[simp]
 theorem symm_mk (f : R → S) g h₁ h₂ h₃ h₄ :
@@ -352,7 +352,7 @@ theorem coe_to_ring_hom (f : R ≃+* S) : ⇑(f : R →+* S) = f :=
 
 theorem coe_ring_hom_inj_iff {R S : Type _} [NonAssocSemiring R] [NonAssocSemiring S] (f g : R ≃+* S) :
     f = g ↔ (f : R →+* S) = g :=
-  ⟨congr_argₓ _, fun h => ext $ RingHom.ext_iff.mp h⟩
+  ⟨congr_argₓ _, fun h => ext <| RingHom.ext_iff.mp h⟩
 
 /-- Reinterpret a ring equivalence as a monoid homomorphism. -/
 abbrev to_monoid_hom (e : R ≃+* S) : R →* S :=
@@ -463,7 +463,7 @@ section DivisionRing
 
 variable {K K' : Type _} [DivisionRing K] [DivisionRing K'] (g : K ≃+* K') (x y : K)
 
-theorem map_inv : g (x⁻¹) = g x⁻¹ :=
+theorem map_inv : g x⁻¹ = (g x)⁻¹ :=
   g.to_ring_hom.map_inv x
 
 theorem map_div : g (x / y) = g x / g y :=

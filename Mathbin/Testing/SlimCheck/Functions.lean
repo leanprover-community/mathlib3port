@@ -77,7 +77,7 @@ Creates a string for a given `finmap` and output, `x₀ ↦ y₀, .. xₙ ↦ y�
 for each of the entries. The brackets are provided by the calling function.
 -/
 def repr_aux [HasRepr α] [HasRepr β] (m : List (Σ _ : α, β)) : Stringₓ :=
-  Stringₓ.join $ List.qsort (fun x y => x < y) (m.map $ fun x => s!"{(reprₓ $ Sigma.fst x)} ↦ {reprₓ $ Sigma.snd x}, ")
+  Stringₓ.join <| List.qsort (fun x y => x < y) (m.map fun x => s!"{(reprₓ <| Sigma.fst x)} ↦ {reprₓ <| Sigma.snd x}, ")
 
 /-- Produce a string for a given `total_function`.
 The output is of the form `[x₀ ↦ f x₀, .. xₙ ↦ f xₙ, _ ↦ y]`.
@@ -108,7 +108,7 @@ variable [DecidableEq α]
 /-- Shrink a total function by shrinking the lists that represent it. -/
 protected def shrink : shrink_fn (total_function α β)
   | ⟨m, x⟩ =>
-    (sampleable.shrink (m, x)).map $ fun ⟨⟨m', x'⟩, h⟩ =>
+    (sampleable.shrink (m, x)).map fun ⟨⟨m', x'⟩, h⟩ =>
       ⟨⟨List.eraseDupkeys m', x'⟩,
         lt_of_le_of_ltₓ
           (by
@@ -122,8 +122,8 @@ instance pi.sampleable_ext : sampleable_ext (α → β) where
   interp := total_function.apply
   sample := do
     let xs ← (sampleable.sample (List (α × β)) : gen (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up $ sample β : gen (Ulift.{max u v} β))
-    pure $ total_function.with_default (list.to_finmap' xs) x
+    let ⟨x⟩ ← (Uliftable.up <| sample β : gen (Ulift.{max u v} β))
+    pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := total_function.shrink
 
 end
@@ -142,7 +142,7 @@ variable [DecidableEq α] [DecidableEq β]
 /-- The support of a zero default `total_function`. -/
 @[simp]
 def zero_default_supp : total_function α β → Finset α
-  | with_default A y => List.toFinset $ (A.erase_dupkeys.filter fun ab => Sigma.snd ab ≠ 0).map Sigma.fst
+  | with_default A y => List.toFinset <| (A.erase_dupkeys.filter fun ab => Sigma.snd ab ≠ 0).map Sigma.fst
 
 /-- Create a finitely supported function from a total function by taking the default value to
 zero. -/
@@ -181,8 +181,8 @@ instance finsupp.sampleable_ext [HasRepr α] [HasRepr β] : sampleable_ext (α �
   interp := total_function.apply_finsupp
   sample := do
     let xs ← (sampleable.sample (List (α × β)) : gen (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up $ sample β : gen (Ulift.{max u v} β))
-    pure $ total_function.with_default (list.to_finmap' xs) x
+    let ⟨x⟩ ← (Uliftable.up <| sample β : gen (Ulift.{max u v} β))
+    pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := total_function.shrink
 
 instance dfinsupp.sampleable_ext [HasRepr α] [HasRepr β] : sampleable_ext (Π₀ a : α, β) where
@@ -190,8 +190,8 @@ instance dfinsupp.sampleable_ext [HasRepr α] [HasRepr β] : sampleable_ext (Π�
   interp := Finsupp.toDfinsupp ∘ total_function.apply_finsupp
   sample := do
     let xs ← (sampleable.sample (List (α × β)) : gen (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up $ sample β : gen (Ulift.{max u v} β))
-    pure $ total_function.with_default (list.to_finmap' xs) x
+    let ⟨x⟩ ← (Uliftable.up <| sample β : gen (Ulift.{max u v} β))
+    pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := total_function.shrink
 
 end Finsupp
@@ -410,7 +410,7 @@ def slice_sizes : ℕ → LazyList ℕ+
         div_lt_self h
           (by
             decide)
-      LazyList.cons ⟨_, h⟩ (slice_sizes $ n / 2)
+      LazyList.cons ⟨_, h⟩ (slice_sizes <| n / 2)
     else LazyList.nil
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (xs ys)
@@ -425,7 +425,7 @@ protected def shrink_perm {α : Type} [DecidableEq α] [SizeOf α] :
   | xs => do
     let k := xs.1.length
     let n ← slice_sizes k
-    let i ← LazyList.ofList $ List.finRange $ k / n
+    let i ← LazyList.ofList <| List.finRange <| k / n
     have : ↑i * ↑n < xs.1.length :=
         Nat.lt_of_div_lt_div
           (lt_of_le_of_ltₓ
@@ -474,7 +474,7 @@ protected def mk (xs ys : List α) (h : xs ~ ys) (h' : ys.nodup) : injective_fun
 protected theorem injective [DecidableEq α] (f : injective_function α) : injective (apply f) := by
   cases' f with xs hperm hnodup
   generalize h₀ : map Sigma.fst xs = xs₀
-  generalize h₁ : xs.map (@id ((Σ _ : α, α) → α) $ @Sigma.snd α fun _ : α => α) = xs₁
+  generalize h₁ : xs.map (@id ((Σ _ : α, α) → α) <| @Sigma.snd α fun _ : α => α) = xs₁
   dsimp [id]  at h₁
   have hxs : xs = total_function.list.to_finmap' (xs₀.zip xs₁) := by
     rw [← h₀, ← h₁, list.to_finmap']
@@ -498,13 +498,13 @@ instance pi_injective.sampleable_ext : sampleable_ext { f : ℤ → ℤ // Funct
   ProxyRepr := injective_function ℤ
   interp := fun f => ⟨apply f, f.injective⟩
   sample :=
-    gen.sized $ fun sz => do
+    gen.sized fun sz => do
       let xs' := Int.range (-(2 * sz + 2)) (2 * sz + 2)
       let ys ← gen.permutation_of xs'
       have Hinj : injective fun r : ℕ => -(2 * sz + 2 : ℤ) + ↑r := fun x y h =>
           Int.coe_nat_inj (add_right_injective _ h)
         let r : injective_function ℤ :=
-          injective_function.mk.{0} xs' ys.1 ys.2 (ys.2.nodup_iff.1 $ nodup_map Hinj (nodup_range _))
+          injective_function.mk.{0} xs' ys.1 ys.2 (ys.2.nodup_iff.1 <| nodup_map Hinj (nodup_range _))
         pure r
   shrink := @injective_function.shrink ℤ _ _
 
@@ -513,17 +513,17 @@ end InjectiveFunction
 open Function
 
 instance injective.testable (f : α → β)
-    [I : testable (named_binder "x" $ ∀ x : α, named_binder "y" $ ∀ y : α, named_binder "H" $ f x = f y → x = y)] :
+    [I : testable (named_binder "x" <| ∀ x : α, named_binder "y" <| ∀ y : α, named_binder "H" <| f x = f y → x = y)] :
     testable (injective f) :=
   I
 
 instance monotone.testable [Preorderₓ α] [Preorderₓ β] (f : α → β)
-    [I : testable (named_binder "x" $ ∀ x : α, named_binder "y" $ ∀ y : α, named_binder "H" $ x ≤ y → f x ≤ f y)] :
+    [I : testable (named_binder "x" <| ∀ x : α, named_binder "y" <| ∀ y : α, named_binder "H" <| x ≤ y → f x ≤ f y)] :
     testable (Monotone f) :=
   I
 
 instance antitone.testable [Preorderₓ α] [Preorderₓ β] (f : α → β)
-    [I : testable (named_binder "x" $ ∀ x : α, named_binder "y" $ ∀ y : α, named_binder "H" $ x ≤ y → f y ≤ f x)] :
+    [I : testable (named_binder "x" <| ∀ x : α, named_binder "y" <| ∀ y : α, named_binder "H" <| x ≤ y → f y ≤ f x)] :
     testable (Antitone f) :=
   I
 

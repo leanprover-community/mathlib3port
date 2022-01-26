@@ -126,14 +126,14 @@ def gmul_hom {i j} : A i →+ A j →+ A (i + j) where
   toFun := fun a =>
     { toFun := fun b => GradedMonoid.GhasMul.mul a b, map_zero' := gnon_unital_non_assoc_semiring.mul_zero _,
       map_add' := gnon_unital_non_assoc_semiring.mul_add _ }
-  map_zero' := AddMonoidHom.ext $ fun a => gnon_unital_non_assoc_semiring.zero_mul a
-  map_add' := fun a₁ a₂ => AddMonoidHom.ext $ fun b => gnon_unital_non_assoc_semiring.add_mul _ _ _
+  map_zero' := AddMonoidHom.ext fun a => gnon_unital_non_assoc_semiring.zero_mul a
+  map_add' := fun a₁ a₂ => AddMonoidHom.ext fun b => gnon_unital_non_assoc_semiring.add_mul _ _ _
 
 /-- The multiplication from the `has_mul` instance, as a bundled homomorphism. -/
 def MulHom : (⨁ i, A i) →+ (⨁ i, A i) →+ ⨁ i, A i :=
-  DirectSum.toAddMonoid $ fun i =>
-    AddMonoidHom.flip $
-      DirectSum.toAddMonoid $ fun j => AddMonoidHom.flip $ (DirectSum.of A _).compHom.comp $ gmul_hom A
+  DirectSum.toAddMonoid fun i =>
+    AddMonoidHom.flip <|
+      DirectSum.toAddMonoid fun j => AddMonoidHom.flip <| (DirectSum.of A _).compHom.comp <| gmul_hom A
 
 instance : NonUnitalNonAssocSemiring (⨁ i, A i) :=
   { DirectSum.addCommMonoid _ _ with mul := fun a b => MulHom A a b, zero := 0, add := · + ·,
@@ -171,7 +171,7 @@ private theorem one_mulₓ (x : ⨁ i, A i) : 1 * x = x := by
   intro i xi
   unfold One.one
   rw [mul_hom_of_of]
-  exact of_eq_of_graded_monoid_eq (one_mulₓ $ GradedMonoid.mk i xi)
+  exact of_eq_of_graded_monoid_eq (one_mulₓ <| GradedMonoid.mk i xi)
 
 private theorem mul_oneₓ (x : ⨁ i, A i) : x * 1 = x := by
   suffices (MulHom A).flip 1 = AddMonoidHom.id (⨁ i, A i) from AddMonoidHom.congr_fun this x
@@ -179,11 +179,11 @@ private theorem mul_oneₓ (x : ⨁ i, A i) : x * 1 = x := by
   intro i xi
   unfold One.one
   rw [flip_apply, mul_hom_of_of]
-  exact of_eq_of_graded_monoid_eq (mul_oneₓ $ GradedMonoid.mk i xi)
+  exact of_eq_of_graded_monoid_eq (mul_oneₓ <| GradedMonoid.mk i xi)
 
 private theorem mul_assoc (a b c : ⨁ i, A i) : a * b * c = a * (b * c) := by
   suffices
-    (MulHom A).compHom.comp (MulHom A) = (AddMonoidHom.compHom flip_hom $ (MulHom A).flip.compHom.comp (MulHom A)).flip
+    (MulHom A).compHom.comp (MulHom A) = (AddMonoidHom.compHom flip_hom <| (MulHom A).flip.compHom.comp (MulHom A)).flip
     from AddMonoidHom.congr_fun (AddMonoidHom.congr_fun (AddMonoidHom.congr_fun this a) b) c
   ext ai ax bi bx ci cx : 6
   dsimp only [coe_comp, Function.comp_app, comp_hom_apply_apply, flip_apply, flip_hom_apply]
@@ -197,14 +197,14 @@ instance Semiringₓ : Semiringₓ (⨁ i, A i) :=
 
 theorem of_pow {i} (a : A i) (n : ℕ) : of _ i a ^ n = of _ (n • i) (GradedMonoid.Gmonoid.gnpow _ a) := by
   induction' n with n
-  · exact of_eq_of_graded_monoid_eq (pow_zeroₓ $ GradedMonoid.mk _ a).symm
+  · exact of_eq_of_graded_monoid_eq (pow_zeroₓ <| GradedMonoid.mk _ a).symm
     
   · rw [pow_succₓ, n_ih, of_mul_of]
     exact of_eq_of_graded_monoid_eq (pow_succₓ (GradedMonoid.mk _ a) n).symm
     
 
 theorem of_list_dprod {α} (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a)) :
-    of A _ (l.dprod fι fA) = (l.map $ fun a => of A (fι a) (fA a)).Prod := by
+    of A _ (l.dprod fι fA) = (l.map fun a => of A (fι a) (fA a)).Prod := by
   induction l
   · simp only [List.map_nil, List.prod_nil, List.dprod_nil]
     rfl
@@ -214,7 +214,7 @@ theorem of_list_dprod {α} (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a
     
 
 theorem list_prod_of_fn_of_eq_dprod (n : ℕ) (fι : Finₓ n → ι) (fA : ∀ a, A (fι a)) :
-    (List.ofFnₓ $ fun a => of A (fι a) (fA a)).Prod = of A _ ((List.finRange n).dprod fι fA) := by
+    (List.ofFnₓ fun a => of A (fι a) (fA a)).Prod = of A _ ((List.finRange n).dprod fι fA) := by
   rw [List.of_fn_eq_map, of_list_dprod]
 
 open_locale BigOperators
@@ -385,11 +385,11 @@ See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem ring_hom_ext' ⦃F G : (⨁ i, A i) →+* R⦄ (h : ∀ i, (↑F : _ →+ R).comp (of A i) = (↑G : _ →+ R).comp (of A i)) :
     F = G :=
-  RingHom.coe_add_monoid_hom_injective $ DirectSum.add_hom_ext' h
+  RingHom.coe_add_monoid_hom_injective <| DirectSum.add_hom_ext' h
 
 /-- Two `ring_hom`s out of a direct sum are equal if they agree on the generators. -/
 theorem ring_hom_ext ⦃f g : (⨁ i, A i) →+* R⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=
-  ring_hom_ext' $ fun i => AddMonoidHom.ext $ h i
+  ring_hom_ext' fun i => AddMonoidHom.ext <| h i
 
 /-- A family of `add_monoid_hom`s preserving `direct_sum.ghas_one.one` and `direct_sum.ghas_mul.mul`
 describes a `ring_hom`s on `⨁ i, A i`. This is a stronger version of `direct_sum.to_monoid`.

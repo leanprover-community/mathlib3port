@@ -45,9 +45,9 @@ variable [Monoidₓ α] [DistribMulAction α M] [SmulCommClass α R M]
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwise_distrib_mul_action : DistribMulAction α (Submodule R M) where
   smul := fun a S => S.map (DistribMulAction.toLinearMap _ _ a)
-  one_smul := fun S => (congr_argₓ (fun f => S.map f) (LinearMap.ext $ one_smul α)).trans S.map_id
+  one_smul := fun S => (congr_argₓ (fun f => S.map f) (LinearMap.ext <| one_smul α)).trans S.map_id
   mul_smul := fun a₁ a₂ S =>
-    (congr_argₓ (fun f : M →ₗ[R] M => S.map f) (LinearMap.ext $ mul_smul _ _)).trans (S.map_comp _ _)
+    (congr_argₓ (fun f : M →ₗ[R] M => S.map f) (LinearMap.ext <| mul_smul _ _)).trans (S.map_comp _ _)
   smul_zero := fun a => map_bot _
   smul_add := fun a S₁ S₂ => map_sup _ _ _
 
@@ -73,7 +73,7 @@ theorem smul_mem_pointwise_smul (m : M) (a : α) (S : Submodule R M) : m ∈ S �
 
 instance pointwise_central_scalar [DistribMulAction (αᵐᵒᵖ) M] [SmulCommClass (αᵐᵒᵖ) R M] [IsCentralScalar α M] :
     IsCentralScalar α (Submodule R M) :=
-  ⟨fun a S => (congr_argₓ fun f => S.map f) $ LinearMap.ext $ op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_argₓ fun f => S.map f) <| LinearMap.ext <| op_smul_eq_smul _⟩
 
 @[simp]
 theorem smul_le_self_of_tower {α : Type _} [Semiringₓ α] [Module α R] [Module α M] [SmulCommClass α R M]
@@ -95,7 +95,7 @@ This is a stronger version of `submodule.pointwise_distrib_mul_action`. Note tha
 not hold so this cannot be stated as a `module`. -/
 protected def pointwise_mul_action_with_zero : MulActionWithZero α (Submodule R M) :=
   { Submodule.pointwiseDistribMulAction with
-    zero_smul := fun S => (congr_argₓ (fun f : M →ₗ[R] M => S.map f) (LinearMap.ext $ zero_smul α)).trans S.map_zero }
+    zero_smul := fun S => (congr_argₓ (fun f : M →ₗ[R] M => S.map f) (LinearMap.ext <| zero_smul α)).trans S.map_zero }
 
 localized [Pointwise] attribute [instance] Submodule.pointwiseMulActionWithZero
 

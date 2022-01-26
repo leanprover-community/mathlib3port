@@ -29,7 +29,7 @@ by dec_trivial!
 ```
 -/
 unsafe def tactic.interactive.dec_trivial (revert_deps : parse («expr ?» (tk "!"))) : tactic Unit :=
-  if revert_deps.is_some then revert_target_deps; tactic.exact_dec_trivial else tactic.exact_dec_trivial
+  if revert_deps.is_some then andthen revert_target_deps tactic.exact_dec_trivial else tactic.exact_dec_trivial
 
 add_tactic_doc
   { Name := "dec_trivial", category := DocCategory.tactic, declNames := [`tactic.interactive.dec_trivial],

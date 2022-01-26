@@ -74,7 +74,7 @@ section FoldrWithIndex
 
 /-- Specification of `foldr_with_index_aux`. -/
 def foldr_with_index_aux_spec (f : ℕ → α → β → β) (start : ℕ) (b : β) (as : List α) : β :=
-  foldr (uncurry f) b $ enum_from start as
+  foldr (uncurry f) b <| enum_from start as
 
 theorem foldr_with_index_aux_spec_cons (f : ℕ → α → β → β) start b a as :
     foldr_with_index_aux_spec f start b (a :: as) = f start a (foldr_with_index_aux_spec f (start + 1) b as) :=
@@ -106,7 +106,7 @@ section FoldlWithIndex
 
 /-- Specification of `foldl_with_index_aux`. -/
 def foldl_with_index_aux_spec (f : ℕ → α → β → α) (start : ℕ) (a : α) (bs : List β) : α :=
-  foldl (fun a p : ℕ × β => f p.fst a p.snd) a $ enum_from start bs
+  foldl (fun a p : ℕ × β => f p.fst a p.snd) a <| enum_from start bs
 
 theorem foldl_with_index_aux_spec_cons (f : ℕ → α → β → α) start a b bs :
     foldl_with_index_aux_spec f start a (b :: bs) = foldl_with_index_aux_spec f (start + 1) (f start a b) bs :=
@@ -146,7 +146,7 @@ variable {m : Type u → Type v} [Applicativeₓ m]
 
 /-- Specification of `mmap_with_index_aux`. -/
 def mmap_with_index_aux_spec {α β} (f : ℕ → α → m β) (start : ℕ) (as : List α) : m (List β) :=
-  List.traverseₓₓ (uncurry f) $ enum_from start as
+  List.traverseₓₓ (uncurry f) <| enum_from start as
 
 theorem mmap_with_index_aux_spec_cons {α β} (f : ℕ → α → m β) (start : ℕ) (a : α) (as : List α) :
     mmap_with_index_aux_spec f start (a :: as) =

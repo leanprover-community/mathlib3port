@@ -63,7 +63,7 @@ instance Pi.topologicalSpace {β : α → Type v} [t₂ : ∀ a, TopologicalSpac
 instance Ulift.topologicalSpace [t : TopologicalSpace α] : TopologicalSpace (Ulift.{v, u} α) :=
   t.induced Ulift.down
 
-theorem Quotientₓ.preimage_mem_nhds [TopologicalSpace α] [s : Setoidₓ α] {V : Set $ Quotientₓ s} {a : α}
+theorem Quotientₓ.preimage_mem_nhds [TopologicalSpace α] [s : Setoidₓ α] {V : Set <| Quotientₓ s} {a : α}
     (hs : V ∈ 𝓝 (Quotientₓ.mk a)) : Quotientₓ.mk ⁻¹' V ∈ 𝓝 a :=
   preimage_nhds_coinduced hs
 
@@ -77,7 +77,7 @@ theorem DenseRange.quotient [Setoidₓ α] [TopologicalSpace α] {f : β → α}
   (surjective_quotient_mk α).DenseRange.comp hf continuous_coinduced_rng
 
 instance {p : α → Prop} [TopologicalSpace α] [DiscreteTopology α] : DiscreteTopology (Subtype p) :=
-  ⟨bot_unique $ fun s hs => ⟨coe '' s, is_open_discrete _, Set.preimage_image_eq _ Subtype.coe_injective⟩⟩
+  ⟨bot_unique fun s hs => ⟨coe '' s, is_open_discrete _, Set.preimage_image_eq _ Subtype.coe_injective⟩⟩
 
 instance Sum.discrete_topology [TopologicalSpace α] [TopologicalSpace β] [hα : DiscreteTopology α]
     [hβ : DiscreteTopology β] : DiscreteTopology (Sum α β) :=
@@ -285,7 +285,7 @@ theorem Filter.HasBasis.prod_nhds' {ιa ιb : Type _} {pa : ιa → Prop} {pb : 
   exact ha.prod_nhds hb
 
 instance [DiscreteTopology α] [DiscreteTopology β] : DiscreteTopology (α × β) :=
-  ⟨eq_of_nhds_eq_nhds $ fun ⟨a, b⟩ => by
+  ⟨eq_of_nhds_eq_nhds fun ⟨a, b⟩ => by
       rw [nhds_prod_eq, nhds_discrete α, nhds_discrete β, nhds_bot, Filter.prod_pure_pure]⟩
 
 theorem prod_mem_nhds_iff {s : Set α} {t : Set β} {a : α} {b : β} : s ×ˢ t ∈ 𝓝 (a, b) ↔ s ∈ 𝓝 a ∧ t ∈ 𝓝 b := by
@@ -326,44 +326,44 @@ theorem prod_generate_from_generate_from_eq {α β : Type _} {s : Set (Set α)} 
       generate_from { g | ∃ u ∈ s, ∃ v ∈ t, g = u ×ˢ v } :=
   let G := generate_from { g | ∃ u ∈ s, ∃ v ∈ t, g = u ×ˢ v }
   le_antisymmₓ
-    (le_generate_from $ fun g ⟨u, hu, v, hv, g_eq⟩ =>
+    (le_generate_from fun g ⟨u, hu, v, hv, g_eq⟩ =>
       g_eq.symm ▸
         @IsOpen.prod _ _ (generate_from s) (generate_from t) _ _ (generate_open.basic _ hu) (generate_open.basic _ hv))
     (le_inf
-      (coinduced_le_iff_le_induced.mp $
-        le_generate_from $ fun u hu =>
+      (coinduced_le_iff_le_induced.mp <|
+        le_generate_from fun u hu =>
           have : (⋃ v ∈ t, u ×ˢ v) = Prod.fst ⁻¹' u :=
             calc
               (⋃ v ∈ t, u ×ˢ v) = u ×ˢ (univ : Set β) :=
-                Set.ext $ fun ⟨a, b⟩ => by
+                Set.ext fun ⟨a, b⟩ => by
                   rw [← ht] <;> simp (config := { contextual := true })[And.left_comm]
               _ = Prod.fst ⁻¹' u := Set.prod_univ
               
           show G.is_open (Prod.fst ⁻¹' u) from
-            this ▸ @is_open_Union _ _ G _ $ fun v =>
-              @is_open_Union _ _ G _ $ fun hv => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩)
-      (coinduced_le_iff_le_induced.mp $
-        le_generate_from $ fun v hv =>
+            (this ▸ @is_open_Union _ _ G _) fun v =>
+              (@is_open_Union _ _ G _) fun hv => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩)
+      (coinduced_le_iff_le_induced.mp <|
+        le_generate_from fun v hv =>
           have : (⋃ u ∈ s, u ×ˢ v) = Prod.snd ⁻¹' v :=
             calc
               (⋃ u ∈ s, u ×ˢ v) = (univ : Set α) ×ˢ v :=
-                Set.ext $ fun ⟨a, b⟩ => by
+                Set.ext fun ⟨a, b⟩ => by
                   rw [← hs] <;> by_cases' b ∈ v <;> simp (config := { contextual := true })[h]
               _ = Prod.snd ⁻¹' v := Set.univ_prod
               
           show G.is_open (Prod.snd ⁻¹' v) from
-            this ▸ @is_open_Union _ _ G _ $ fun u =>
-              @is_open_Union _ _ G _ $ fun hu => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩))
+            (this ▸ @is_open_Union _ _ G _) fun u =>
+              (@is_open_Union _ _ G _) fun hu => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩))
 
 theorem prod_eq_generate_from :
     Prod.topologicalSpace = generate_from { g | ∃ (s : Set α)(t : Set β), IsOpen s ∧ IsOpen t ∧ g = s ×ˢ t } :=
-  le_antisymmₓ (le_generate_from $ fun g ⟨s, t, hs, ht, g_eq⟩ => g_eq.symm ▸ hs.prod ht)
+  le_antisymmₓ (le_generate_from fun g ⟨s, t, hs, ht, g_eq⟩ => g_eq.symm ▸ hs.prod ht)
     (le_inf
-      (ball_image_of_ball $ fun t ht =>
+      (ball_image_of_ball fun t ht =>
         generate_open.basic _
           ⟨t, univ, by
             simpa [Set.prod_eq] using ht⟩)
-      (ball_image_of_ball $ fun t ht =>
+      (ball_image_of_ball fun t ht =>
         generate_open.basic _
           ⟨univ, t, by
             simpa [Set.prod_eq] using ht⟩))
@@ -389,7 +389,7 @@ theorem prod_induced_induced {α γ : Type _} (f : α → β) (g : γ → δ) :
 
 theorem continuous_uncurry_of_discrete_topology_left [DiscreteTopology α] {f : α → β → γ} (h : ∀ a, Continuous (f a)) :
     Continuous (Function.uncurry f) :=
-  continuous_iff_continuous_at.2 $ fun ⟨a, b⟩ => by
+  continuous_iff_continuous_at.2 fun ⟨a, b⟩ => by
     simp only [ContinuousAt, nhds_prod_eq, nhds_discrete α, pure_prod, tendsto_map'_iff, · ∘ ·, Function.uncurry,
       (h a).Tendsto]
 
@@ -411,11 +411,11 @@ theorem map_fst_nhds_within (x : α × β) : map Prod.fst (𝓝[Prod.snd ⁻¹' 
 
 @[simp]
 theorem map_fst_nhds (x : α × β) : map Prod.fst (𝓝 x) = 𝓝 x.1 :=
-  le_antisymmₓ continuous_at_fst $ (map_fst_nhds_within x).symm.trans_le (map_mono inf_le_left)
+  le_antisymmₓ continuous_at_fst <| (map_fst_nhds_within x).symm.trans_le (map_mono inf_le_left)
 
 /-- The first projection in a product of topological spaces sends open sets to open sets. -/
 theorem is_open_map_fst : IsOpenMap (@Prod.fst α β) :=
-  is_open_map_iff_nhds_le.2 $ fun x => (map_fst_nhds x).Ge
+  is_open_map_iff_nhds_le.2 fun x => (map_fst_nhds x).Ge
 
 /-- `prod.snd` maps neighborhood of `x : α × β` within the section `prod.fst ⁻¹' {x.1}`
 to `𝓝 x.2`. -/
@@ -429,11 +429,11 @@ theorem map_snd_nhds_within (x : α × β) : map Prod.snd (𝓝[Prod.fst ⁻¹' 
 
 @[simp]
 theorem map_snd_nhds (x : α × β) : map Prod.snd (𝓝 x) = 𝓝 x.2 :=
-  le_antisymmₓ continuous_at_snd $ (map_snd_nhds_within x).symm.trans_le (map_mono inf_le_left)
+  le_antisymmₓ continuous_at_snd <| (map_snd_nhds_within x).symm.trans_le (map_mono inf_le_left)
 
 /-- The second projection in a product of topological spaces sends open sets to open sets. -/
 theorem is_open_map_snd : IsOpenMap (@Prod.snd α β) :=
-  is_open_map_iff_nhds_le.2 $ fun x => (map_snd_nhds x).Ge
+  is_open_map_iff_nhds_le.2 fun x => (map_snd_nhds x).Ge
 
 /-- A product set is open in a product space if and only if each factor is open, or one of them is
 empty -/
@@ -461,13 +461,13 @@ theorem is_open_prod_iff' {s : Set α} {t : Set β} : IsOpen (s ×ˢ t) ↔ IsOp
     
 
 theorem closure_prod_eq {s : Set α} {t : Set β} : Closure (s ×ˢ t) = Closure s ×ˢ Closure t :=
-  Set.ext $ fun ⟨a, b⟩ => by
+  Set.ext fun ⟨a, b⟩ => by
     have : (𝓝 a ×ᶠ 𝓝 b)⊓𝓟 (s ×ˢ t) = 𝓝 a⊓𝓟 s ×ᶠ 𝓝 b⊓𝓟 t := by
       rw [← prod_inf_prod, prod_principal_principal]
     simp [closure_eq_cluster_pts, ClusterPt, nhds_prod_eq, this] <;> exact prod_ne_bot
 
 theorem interior_prod_eq (s : Set α) (t : Set β) : Interior (s ×ˢ t) = Interior s ×ˢ Interior t :=
-  Set.ext $ fun ⟨a, b⟩ => by
+  Set.ext fun ⟨a, b⟩ => by
     simp only [mem_interior_iff_mem_nhds, mem_prod, prod_mem_nhds_iff]
 
 theorem frontier_prod_eq (s : Set α) (t : Set β) :
@@ -488,10 +488,10 @@ theorem map_mem_closure2 {s : Set α} {t : Set β} {u : Set γ} {f : α → β �
   have : (a, b) ∈ Closure (s ×ˢ t) := by
     rw [closure_prod_eq] <;> exact ⟨ha, hb⟩
   show (fun p : α × β => f p.1 p.2) (a, b) ∈ Closure u from
-    map_mem_closure hf this $ fun ⟨a, b⟩ ⟨ha, hb⟩ => hu a b ha hb
+    (map_mem_closure hf this) fun ⟨a, b⟩ ⟨ha, hb⟩ => hu a b ha hb
 
 theorem IsClosed.prod {s₁ : Set α} {s₂ : Set β} (h₁ : IsClosed s₁) (h₂ : IsClosed s₂) : IsClosed (s₁ ×ˢ s₂) :=
-  closure_eq_iff_is_closed.mp $ by
+  closure_eq_iff_is_closed.mp <| by
     simp only [h₁.closure_eq, h₂.closure_eq, closure_prod_eq]
 
 /-- The product of two dense sets is a dense set. -/
@@ -601,11 +601,11 @@ theorem embedding_inr : Embedding (@inr α β) :=
     inj := fun _ _ => inr.inj_iff.mp }
 
 theorem is_open_range_inl : IsOpen (range (inl : α → Sum α β)) :=
-  is_open_sum_iff.2 $ by
+  is_open_sum_iff.2 <| by
     simp
 
 theorem is_open_range_inr : IsOpen (range (inr : β → Sum α β)) :=
-  is_open_sum_iff.2 $ by
+  is_open_sum_iff.2 <| by
     simp
 
 theorem open_embedding_inl : OpenEmbedding (inl : α → Sum α β) :=
@@ -663,7 +663,7 @@ theorem continuous_at_subtype_coe {p : α → Prop} {a : Subtype p} : Continuous
 
 theorem map_nhds_subtype_coe_eq {a : α} (ha : p a) (h : { a | p a } ∈ 𝓝 a) :
     map (coe : Subtype p → α) (𝓝 ⟨a, ha⟩) = 𝓝 a :=
-  map_nhds_induced_of_mem $ by
+  map_nhds_induced_of_mem <| by
     simpa only [Subtype.coe_mk, Subtype.range_coe] using h
 
 theorem nhds_subtype_eq_comap {a : α} {h : p a} : 𝓝 (⟨a, h⟩ : Subtype p) = comap coe (𝓝 a) :=
@@ -677,11 +677,11 @@ theorem tendsto_subtype_rng {β : Type _} {p : α → Prop} {b : Filter β} {f :
 theorem continuous_subtype_nhds_cover {ι : Sort _} {f : α → β} {c : ι → α → Prop}
     (c_cover : ∀ x : α, ∃ i, { x | c i x } ∈ 𝓝 x) (f_cont : ∀ i, Continuous fun x : Subtype (c i) => f x) :
     Continuous f :=
-  continuous_iff_continuous_at.mpr $ fun x =>
+  continuous_iff_continuous_at.mpr fun x =>
     let ⟨i, (c_sets : { x | c i x } ∈ 𝓝 x)⟩ := c_cover x
     let x' : Subtype (c i) := ⟨x, mem_of_mem_nhds c_sets⟩
     calc
-      map f (𝓝 x) = map f (map coe (𝓝 x')) := congr_argₓ (map f) (map_nhds_subtype_coe_eq _ $ c_sets).symm
+      map f (𝓝 x) = map f (map coe (𝓝 x')) := congr_argₓ (map f) (map_nhds_subtype_coe_eq _ <| c_sets).symm
       _ = map (fun x : Subtype (c i) => f x) (𝓝 x') := rfl
       _ ≤ 𝓝 (f x) := continuous_iff_continuous_at.mp (f_cont i) x'
       
@@ -689,11 +689,11 @@ theorem continuous_subtype_nhds_cover {ι : Sort _} {f : α → β} {c : ι → 
 theorem continuous_subtype_is_closed_cover {ι : Sort _} {f : α → β} (c : ι → α → Prop)
     (h_lf : LocallyFinite fun i => { x | c i x }) (h_is_closed : ∀ i, IsClosed { x | c i x })
     (h_cover : ∀ x, ∃ i, c i x) (f_cont : ∀ i, Continuous fun x : Subtype (c i) => f x) : Continuous f :=
-  continuous_iff_is_closed.mpr $ fun s hs => by
+  continuous_iff_is_closed.mpr fun s hs => by
     have : ∀ i, IsClosed ((coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s)) := fun i =>
       (closed_embedding_subtype_coe (h_is_closed _)).IsClosedMap _ (hs.preimage (f_cont i))
     have : IsClosed (⋃ i, (coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s)) :=
-      LocallyFinite.is_closed_Union (h_lf.subset $ fun i x ⟨⟨x', hx'⟩, _, HEq⟩ => HEq ▸ hx') this
+      LocallyFinite.is_closed_Union (h_lf.subset fun i x ⟨⟨x', hx'⟩, _, HEq⟩ => HEq ▸ hx') this
     have : f ⁻¹' s = ⋃ i, (coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s) := by
       apply Set.ext
       have : ∀ x : α, f x ∈ s ↔ ∃ i : ι, c i x ∧ f x ∈ s := fun x =>
@@ -751,7 +751,7 @@ variable {ι : Type _} {π : ι → Type _}
 @[continuity]
 theorem continuous_pi [TopologicalSpace α] [∀ i, TopologicalSpace (π i)] {f : α → ∀ i : ι, π i}
     (h : ∀ i, Continuous fun a => f a i) : Continuous f :=
-  continuous_infi_rng $ fun i => continuous_induced_rng $ h i
+  continuous_infi_rng fun i => continuous_induced_rng <| h i
 
 @[continuity]
 theorem continuous_apply [∀ i, TopologicalSpace (π i)] (i : ι) : Continuous fun p : ∀ i, π i => p i :=
@@ -767,7 +767,7 @@ theorem continuous_at_apply [∀ i, TopologicalSpace (π i)] (i : ι) (x : ∀ i
   (continuous_apply i).ContinuousAt
 
 theorem Filter.Tendsto.apply [∀ i, TopologicalSpace (π i)] {l : Filter α} {f : α → ∀ i, π i} {x : ∀ i, π i}
-    (h : tendsto f l (𝓝 x)) (i : ι) : tendsto (fun a => f a i) l (𝓝 $ x i) :=
+    (h : tendsto f l (𝓝 x)) (i : ι) : tendsto (fun a => f a i) l (𝓝 <| x i) :=
   (continuous_at_apply i _).Tendsto.comp h
 
 theorem continuous_pi_iff [TopologicalSpace α] [∀ i, TopologicalSpace (π i)] {f : α → ∀ i, π i} :
@@ -791,8 +791,8 @@ theorem continuous_at_pi [∀ i, TopologicalSpace (π i)] [TopologicalSpace α] 
 
 theorem Filter.Tendsto.update [∀ i, TopologicalSpace (π i)] [DecidableEq ι] {l : Filter α} {f : α → ∀ i, π i}
     {x : ∀ i, π i} (hf : tendsto f l (𝓝 x)) (i : ι) {g : α → π i} {xi : π i} (hg : tendsto g l (𝓝 xi)) :
-    tendsto (fun a => Function.update (f a) i (g a)) l (𝓝 $ Function.update x i xi) :=
-  tendsto_pi_nhds.2 $ fun j => by
+    tendsto (fun a => Function.update (f a) i (g a)) l (𝓝 <| Function.update x i xi) :=
+  tendsto_pi_nhds.2 fun j => by
     rcases em (j = i) with (rfl | hj) <;> simp [*, hf.apply]
 
 theorem ContinuousAt.update [∀ i, TopologicalSpace (π i)] [TopologicalSpace α] [DecidableEq ι] {f : α → ∀ i, π i}
@@ -802,7 +802,7 @@ theorem ContinuousAt.update [∀ i, TopologicalSpace (π i)] [TopologicalSpace �
 
 theorem Continuous.update [∀ i, TopologicalSpace (π i)] [TopologicalSpace α] [DecidableEq ι] {f : α → ∀ i, π i}
     (hf : Continuous f) (i : ι) {g : α → π i} (hg : Continuous g) : Continuous fun a => Function.update (f a) i (g a) :=
-  continuous_iff_continuous_at.2 $ fun x => hf.continuous_at.update i hg.continuous_at
+  continuous_iff_continuous_at.2 fun x => hf.continuous_at.update i hg.continuous_at
 
 /-- `function.update f i x` is continuous in `(f, x)`. -/
 @[continuity]
@@ -813,7 +813,7 @@ theorem continuous_update [∀ i, TopologicalSpace (π i)] [DecidableEq ι] (i :
 theorem Filter.Tendsto.fin_insert_nth {n} {π : Finₓ (n + 1) → Type _} [∀ i, TopologicalSpace (π i)] (i : Finₓ (n + 1))
     {f : α → π i} {l : Filter α} {x : π i} (hf : tendsto f l (𝓝 x)) {g : α → ∀ j : Finₓ n, π (i.succ_above j)}
     {y : ∀ j, π (i.succ_above j)} (hg : tendsto g l (𝓝 y)) :
-    tendsto (fun a => i.insert_nth (f a) (g a)) l (𝓝 $ i.insert_nth x y) :=
+    tendsto (fun a => i.insert_nth (f a) (g a)) l (𝓝 <| i.insert_nth x y) :=
   tendsto_pi_nhds.2 fun j =>
     Finₓ.succAboveCases i
       (by
@@ -830,15 +830,15 @@ theorem ContinuousAt.fin_insert_nth {n} {π : Finₓ (n + 1) → Type _} [∀ i,
 theorem Continuous.fin_insert_nth {n} {π : Finₓ (n + 1) → Type _} [∀ i, TopologicalSpace (π i)] [TopologicalSpace α]
     (i : Finₓ (n + 1)) {f : α → π i} (hf : Continuous f) {g : α → ∀ j : Finₓ n, π (i.succ_above j)}
     (hg : Continuous g) : Continuous fun a => i.insert_nth (f a) (g a) :=
-  continuous_iff_continuous_at.2 $ fun a => hf.continuous_at.fin_insert_nth i hg.continuous_at
+  continuous_iff_continuous_at.2 fun a => hf.continuous_at.fin_insert_nth i hg.continuous_at
 
 theorem is_open_set_pi [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)} (hi : finite i)
     (hs : ∀, ∀ a ∈ i, ∀, IsOpen (s a)) : IsOpen (pi i s) := by
-  rw [pi_def] <;> exact is_open_bInter hi $ fun a ha => (hs _ ha).Preimage (continuous_apply _)
+  rw [pi_def] <;> exact (is_open_bInter hi) fun a ha => (hs _ ha).Preimage (continuous_apply _)
 
 theorem is_closed_set_pi [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)}
     (hs : ∀, ∀ a ∈ i, ∀, IsClosed (s a)) : IsClosed (pi i s) := by
-  rw [pi_def] <;> exact is_closed_Inter $ fun a => is_closed_Inter $ fun ha => (hs _ ha).Preimage (continuous_apply _)
+  rw [pi_def] <;> exact is_closed_Inter fun a => is_closed_Inter fun ha => (hs _ ha).Preimage (continuous_apply _)
 
 theorem mem_nhds_of_pi_mem_nhds {ι : Type _} {α : ι → Type _} [∀ i : ι, TopologicalSpace (α i)] {I : Set ι}
     {s : ∀ i, Set (α i)} (a : ∀ i, α i) (hs : I.pi s ∈ 𝓝 a) {i : ι} (hi : i ∈ I) : s i ∈ 𝓝 (a i) := by
@@ -864,15 +864,15 @@ theorem exists_finset_piecewise_mem_of_mem_nhds [DecidableEq ι] [∀ i, Topolog
     {x : ∀ a, π a} (hs : s ∈ 𝓝 x) (y : ∀ a, π a) : ∃ I : Finset ι, I.piecewise x y ∈ s := by
   simp only [nhds_pi, Filter.mem_pi'] at hs
   rcases hs with ⟨I, t, htx, hts⟩
-  refine' ⟨I, hts $ fun i hi => _⟩
+  refine' ⟨I, hts fun i hi => _⟩
   simpa [Finset.mem_coe.1 hi] using mem_of_mem_nhds (htx i)
 
 theorem pi_eq_generate_from [∀ a, TopologicalSpace (π a)] :
     Pi.topologicalSpace =
       generate_from { g | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀, ∀ a ∈ i, ∀, IsOpen (s a)) ∧ g = pi (↑i) s } :=
-  le_antisymmₓ (le_generate_from $ fun g ⟨s, i, hi, Eq⟩ => Eq.symm ▸ is_open_set_pi (Finset.finite_to_set _) hi)
-    (le_infi $ fun a s ⟨t, ht, s_eq⟩ =>
-      generate_open.basic _ $
+  le_antisymmₓ (le_generate_from fun g ⟨s, i, hi, Eq⟩ => Eq.symm ▸ is_open_set_pi (Finset.finite_to_set _) hi)
+    (le_infi fun a s ⟨t, ht, s_eq⟩ =>
+      generate_open.basic _ <|
         ⟨Function.update (fun a => univ) a t, {a}, by
           simpa using ht,
           s_eq ▸ by
@@ -1037,7 +1037,7 @@ theorem continuous_sigma [TopologicalSpace β] {f : Sigma σ → β} (h : ∀ i,
 @[continuity]
 theorem continuous_sigma_map {κ : Type _} {τ : κ → Type _} [∀ k, TopologicalSpace (τ k)] {f₁ : ι → κ}
     {f₂ : ∀ i, σ i → τ (f₁ i)} (hf : ∀ i, Continuous (f₂ i)) : Continuous (Sigma.map f₁ f₂) :=
-  continuous_sigma $ fun i => show Continuous fun a => Sigma.mk (f₁ i) (f₂ i a) from continuous_sigma_mk.comp (hf i)
+  continuous_sigma fun i => show Continuous fun a => Sigma.mk (f₁ i) (f₂ i a) from continuous_sigma_mk.comp (hf i)
 
 theorem is_open_map_sigma [TopologicalSpace β] {f : Sigma σ → β} (h : ∀ i, IsOpenMap fun a => f ⟨i, a⟩) : IsOpenMap f :=
   by
@@ -1111,6 +1111,6 @@ theorem mem_closure_of_continuous2 [TopologicalSpace α] [TopologicalSpace β] [
   have : (a, b) ∈ Closure (s ×ˢ t) := by
     simp [closure_prod_eq, ha, hb]
   show f (a, b).1 (a, b).2 ∈ Closure u from
-    @mem_closure_of_continuous (α × β) _ _ _ (fun p : α × β => f p.1 p.2) (a, b) _ u hf this $ fun ⟨p₁, p₂⟩ ⟨h₁, h₂⟩ =>
+    (@mem_closure_of_continuous (α × β) _ _ _ (fun p : α × β => f p.1 p.2) (a, b) _ u hf this) fun ⟨p₁, p₂⟩ ⟨h₁, h₂⟩ =>
       h p₁ h₁ p₂ h₂
 

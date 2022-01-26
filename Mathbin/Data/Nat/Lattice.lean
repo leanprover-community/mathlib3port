@@ -31,7 +31,7 @@ theorem Sup_def {s : Set ℕ} (h : ∃ n, ∀, ∀ a ∈ s, ∀, a ≤ n) : Sup 
   dif_pos _
 
 theorem _root_.set.infinite.nat.Sup_eq_zero {s : Set ℕ} (h : s.infinite) : Sup s = 0 :=
-  dif_neg $ fun ⟨n, hn⟩ =>
+  dif_neg fun ⟨n, hn⟩ =>
     let ⟨k, hks, hk⟩ := h.exists_nat_lt n
     (hn k hks).not_lt hk
 
@@ -94,7 +94,7 @@ theorem Inf_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ, k
     
   · rintro ⟨H, H'⟩
     rw [Inf_def (⟨_, H⟩ : s.nonempty), find_eq_iff]
-    exact ⟨H, fun n hnk hns => H' $ hs n k (lt_succ_iff.mp hnk) hns⟩
+    exact ⟨H, fun n hnk hns => H' <| hs n k (lt_succ_iff.mp hnk) hns⟩
     
 
 /-- This instance is necessary, otherwise the lattice operations would be derived via
@@ -128,7 +128,7 @@ theorem Inf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ Inf { m | p m }) : Inf 
     · exact (h.subset hp).elim
       
     rw [tsub_add_cancel_of_le hn]
-    exact Inf_mem (nonempty_of_pos_Inf $ n.zero_le.trans_lt hnp)
+    exact Inf_mem (nonempty_of_pos_Inf <| n.zero_le.trans_lt hnp)
     
   · have hp : ∃ n, n ∈ { m | p m } := ⟨_, hm⟩
     rw [Nat.Inf_def ⟨m, hm⟩, Nat.Inf_def hp]
@@ -143,7 +143,7 @@ theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < Inf { m | p m }) : Inf { 
   obtain ⟨m, hm⟩ := nonempty_of_pos_Inf h
   refine'
     le_cInf ⟨m + n, _⟩ fun b hb =>
-      le_of_not_ltₓ $ fun hbn => ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
+      le_of_not_ltₓ fun hbn => ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
   · dsimp
     rwa [add_tsub_cancel_right]
     

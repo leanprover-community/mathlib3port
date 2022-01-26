@@ -94,7 +94,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
       { use_symmetry := False, use_exfalso := False, lemma_thunks := some (pure Eq :: equiv_congr_lemmas),
         ctx_thunk := pure [], max_depth := cfg.max_depth, pre_apply := tactic.intros >> skip, backtrack_all_goals := tt,
         discharger :=
-          sorry >> sorry >> (sorry <|> sorry) <|>
+          (sorry >> sorry) >> (sorry <|> sorry) <|>
             trace_if_enabled `equiv_rw_type "Failed, no congruence lemma applied!" >> failed,
         accept := fun goals =>
           lock_tactic_state do
@@ -117,7 +117,7 @@ unsafe def equiv_rw_type (eqv : expr) (ty : expr) (cfg : equiv_rw_cfg) : tactic 
       trace f! "Attempting to rewrite the type `{ty_pp }` using `{eqv_pp } : {eqv_ty_pp}`."
   let quote.1 (_ ≃ _) ← infer_type eqv | fail f! "{eqv} must be an `equiv`"
   let equiv_ty ← to_expr (pquote.1 ((%%ₓty) ≃ _))
-  let new_eqv ← Prod.snd <$> (solve_aux equiv_ty $ equiv_rw_type_core eqv cfg)
+  let new_eqv ← Prod.snd <$> (solve_aux equiv_ty <| equiv_rw_type_core eqv cfg)
   let new_eqv ← instantiate_mvars new_eqv
   kdepends_on new_eqv eqv >>= guardb <|> do
       let eqv_pp ← pp eqv
@@ -195,7 +195,7 @@ a goal `⊢ unique α` into `⊢ unique β`.
 The maximum search depth for rewriting in subexpressions is controlled by
 `equiv_rw e {max_depth := n}`.
 -/
-unsafe def equiv_rw (e : parse texpr) (loc : parse $ (tk "at" *> ident)?) (cfg : equiv_rw_cfg := {  }) : itactic := do
+unsafe def equiv_rw (e : parse texpr) (loc : parse <| (tk "at" *> ident)?) (cfg : equiv_rw_cfg := {  }) : itactic := do
   let e ← to_expr e
   match loc with
     | some hyp => equiv_rw_hyp hyp e cfg

@@ -34,7 +34,7 @@ theorem monic.as_sum {p : Polynomial R} (hp : p.monic) :
   exact congr_argₓ C hp
 
 theorem ne_zero_of_monic_of_zero_ne_one (hp : monic p) (h : (0 : R) ≠ 1) : p ≠ 0 :=
-  mt (congr_argₓ leading_coeff) $ by
+  mt (congr_argₓ leading_coeff) <| by
     rw [monic.def.1 hp, leading_coeff_zero] <;> cc
 
 theorem ne_zero_of_ne_zero_of_monic (hp : p ≠ 0) (hq : monic q) : q ≠ 0 := by
@@ -441,7 +441,7 @@ theorem is_unit_leading_coeff_mul_right_eq_zero_iff (h : IsUnit p.leading_coeff)
     p * q = 0 ↔ q = 0 := by
   constructor
   · intro hp
-    rw [← smul_eq_zero_iff_eq (h.unit⁻¹)] at hp
+    rw [← smul_eq_zero_iff_eq h.unit⁻¹] at hp
     have : h.unit⁻¹ • (p * q) = h.unit⁻¹ • p * q := by
       ext
       simp only [Units.smul_def, coeff_smul, coeff_mul, smul_eq_mul, mul_sum]
@@ -458,7 +458,7 @@ theorem is_unit_leading_coeff_mul_left_eq_zero_iff (h : IsUnit p.leading_coeff) 
     q * p = 0 ↔ q = 0 := by
   constructor
   · intro hp
-    replace hp := congr_argₓ (· * C (↑h.unit⁻¹)) hp
+    replace hp := congr_argₓ (· * C ↑h.unit⁻¹) hp
     simp only [zero_mul] at hp
     rwa [mul_assoc, monic.mul_left_eq_zero_iff] at hp
     nontriviality

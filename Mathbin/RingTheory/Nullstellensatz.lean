@@ -40,13 +40,13 @@ theorem mem_zero_locus_iff {I : Ideal (MvPolynomial σ k)} {x : σ → k} :
   Iff.rfl
 
 theorem zero_locus_anti_mono {I J : Ideal (MvPolynomial σ k)} (h : I ≤ J) : zero_locus J ≤ zero_locus I :=
-  fun x hx p hp => hx p $ h hp
+  fun x hx p hp => hx p <| h hp
 
 theorem zero_locus_bot : zero_locus (⊥ : Ideal (MvPolynomial σ k)) = ⊤ :=
   eq_top_iff.2 fun x hx p hp => trans (congr_argₓ (eval x) (mem_bot.1 hp)) (eval x).map_zero
 
 theorem zero_locus_top : zero_locus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
-  eq_bot_iff.2 $ fun x hx => one_ne_zero ((eval x).map_one ▸ hx 1 Submodule.mem_top : (1 : k) = 0)
+  eq_bot_iff.2 fun x hx => one_ne_zero ((eval x).map_one ▸ hx 1 Submodule.mem_top : (1 : k) = 0)
 
 /-- Ideal of polynomials with common zeroes at all elements of a set -/
 def vanishing_ideal (V : Set (σ → k)) : Ideal (MvPolynomial σ k) where
@@ -63,7 +63,7 @@ theorem mem_vanishing_ideal_iff {V : Set (σ → k)} {p : MvPolynomial σ k} :
   Iff.rfl
 
 theorem vanishing_ideal_anti_mono {A B : Set (σ → k)} (h : A ≤ B) : vanishing_ideal B ≤ vanishing_ideal A :=
-  fun p hp x hx => hp x $ h hx
+  fun p hp x hx => hp x <| h hx
 
 theorem vanishing_ideal_empty : vanishing_ideal (∅ : Set (σ → k)) = ⊤ :=
   le_antisymmₓ le_top fun p hp x hx => absurd hx (Set.not_mem_empty x)
@@ -127,7 +127,7 @@ theorem vanishing_ideal_point_to_point (V : Set (σ → k)) :
       hx.2 ▸ fun x' hx' => (Set.mem_singleton_iff.1 hx').symm ▸ hp x hx.1
 
 theorem point_to_point_zero_locus_le (I : Ideal (MvPolynomial σ k)) :
-    point_to_point '' MvPolynomial.ZeroLocus I ≤ PrimeSpectrum.ZeroLocus (↑I) := fun J hJ =>
+    point_to_point '' MvPolynomial.ZeroLocus I ≤ PrimeSpectrum.ZeroLocus ↑I := fun J hJ =>
   let ⟨x, hx⟩ := hJ
   (le_transₓ (le_vanishing_ideal_zero_locus I) (hx.2 ▸ vanishing_ideal_anti_mono (Set.singleton_subset_iff.2 hx.1)) :
     I ≤ J.as_ideal)

@@ -55,16 +55,16 @@ theorem Ultrafilter.eventually_mul {M} [Mul M] (U V : Ultrafilter M) (p : M → 
 def Ultrafilter.semigroup {M} [Semigroupₓ M] : Semigroupₓ (Ultrafilter M) :=
   { Ultrafilter.hasMul with
     mul_assoc := fun U V W =>
-      Ultrafilter.coe_inj.mp $
-        Filter.ext' $ fun p => by
+      Ultrafilter.coe_inj.mp <|
+        Filter.ext' fun p => by
           simp only [Ultrafilter.eventually_mul, mul_assoc] }
 
 attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 
 @[to_additive]
 theorem Ultrafilter.continuous_mul_left {M} [Semigroupₓ M] (V : Ultrafilter M) : Continuous (· * V) :=
-  TopologicalSpace.IsTopologicalBasis.continuous ultrafilter_basis_is_basis _ $
-    Set.forall_range_iff.mpr $ fun s => ultrafilter_is_open_basic { m : M | ∀ᶠ m' in V, m * m' ∈ s }
+  TopologicalSpace.IsTopologicalBasis.continuous ultrafilter_basis_is_basis _ <|
+    Set.forall_range_iff.mpr fun s => ultrafilter_is_open_basic { m : M | ∀ᶠ m' in V, m * m' ∈ s }
 
 namespace Hindman
 
@@ -120,7 +120,7 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroupₓ M] (a : Streamₓ 
       exact FP.tail _
       
     · intro n
-      exact ⟨pure _, mem_pure.mpr $ FP.head _⟩
+      exact ⟨pure _, mem_pure.mpr <| FP.head _⟩
       
     · exact (ultrafilter_is_closed_basic _).IsCompact
       
@@ -128,7 +128,7 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroupₓ M] (a : Streamₓ 
       apply ultrafilter_is_closed_basic
       
     
-  · exact IsClosed.is_compact (is_closed_Inter $ fun i => ultrafilter_is_closed_basic _)
+  · exact IsClosed.is_compact (is_closed_Inter fun i => ultrafilter_is_closed_basic _)
     
   · intro U hU V hV
     rw [Set.mem_Inter] at *
@@ -148,13 +148,13 @@ theorem exists_FP_of_large {M} [Semigroupₓ M] (U : Ultrafilter M) (U_idem : U 
     ∃ a, FP a ⊆ s₀ := by
   have exists_elem : ∀ {s : Set M} hs : s ∈ U, (s ∩ { m | ∀ᶠ m' in U, m * m' ∈ s }).Nonempty := fun s hs =>
     Ultrafilter.nonempty_of_mem
-      (inter_mem hs $ by
+      (inter_mem hs <| by
         rw [← U_idem] at hs
         exact hs)
   let elem : { s // s ∈ U } → M := fun p => (exists_elem p.property).some
   let succ : { s // s ∈ U } → { s // s ∈ U } := fun p =>
     ⟨p.val ∩ { m | elem p * m ∈ p.val },
-      inter_mem p.2 $ show _ from Set.inter_subset_right _ _ (exists_elem p.2).some_mem⟩
+      inter_mem p.2 <| show _ from Set.inter_subset_right _ _ (exists_elem p.2).some_mem⟩
   use Streamₓ.corec elem succ (Subtype.mk s₀ sU)
   suffices ∀ a : Streamₓ M, ∀ m ∈ FP a, ∀, ∀ p, a = Streamₓ.corec elem succ p → m ∈ p.val by
     intro m hm
@@ -235,9 +235,9 @@ theorem FP.finset_prod {M} [CommMonoidₓ M] (a : Streamₓ M) (s : Finset ℕ) 
     
   · apply FP.cons
     rw [Streamₓ.tail_eq_drop, Streamₓ.drop_drop, add_commₓ]
-    refine' Set.mem_of_subset_of_mem _ (ih _ (Finset.erase_ssubset $ s.min'_mem hs) h)
+    refine' Set.mem_of_subset_of_mem _ (ih _ (Finset.erase_ssubset <| s.min'_mem hs) h)
     have : s.min' hs + 1 ≤ (s.erase (s.min' hs)).min' h :=
-      Nat.succ_le_of_ltₓ (Finset.min'_lt_of_mem_erase_min' _ _ $ Finset.min'_mem _ _)
+      Nat.succ_le_of_ltₓ (Finset.min'_lt_of_mem_erase_min' _ _ <| Finset.min'_mem _ _)
     cases' le_iff_exists_add.mp this with d hd
     rw [hd, add_commₓ, ← Streamₓ.drop_drop]
     apply FP_drop_subset_FP

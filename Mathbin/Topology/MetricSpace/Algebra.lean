@@ -79,8 +79,8 @@ instance Real.has_lipschitz_add : HasLipschitzAdd ℝ where
       convert le_transₓ (abs_add (p.1 - q.1) (p.2 - q.2)) _ using 2
       · abel
         
-      have := le_max_leftₓ |p.1 - q.1| |p.2 - q.2|
-      have := le_max_rightₓ |p.1 - q.1| |p.2 - q.2|
+      have := le_max_leftₓ (abs (p.1 - q.1)) (abs (p.2 - q.2))
+      have := le_max_rightₓ (abs (p.1 - q.1)) (abs (p.2 - q.2))
       linarith⟩
 
 instance Nnreal.has_lipschitz_add : HasLipschitzAdd ℝ≥0 where

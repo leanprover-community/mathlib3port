@@ -335,12 +335,12 @@ theorem eq_monge_point_of_forall_mem_monge_plane {n : ℕ} {s : simplex ℝ P (n
 /-- An altitude of a simplex is the line that passes through a vertex
 and is orthogonal to the opposite face. -/
 def altitude {n : ℕ} (s : simplex ℝ P (n + 1)) (i : Finₓ (n + 2)) : AffineSubspace ℝ P :=
-  mk' (s.points i) (affineSpan ℝ (s.points '' ↑univ.erase i)).directionᗮ⊓affineSpan ℝ (Set.Range s.points)
+  mk' (s.points i) (affineSpan ℝ (s.points '' ↑(univ.erase i))).directionᗮ⊓affineSpan ℝ (Set.Range s.points)
 
 /-- The definition of an altitude. -/
 theorem altitude_def {n : ℕ} (s : simplex ℝ P (n + 1)) (i : Finₓ (n + 2)) :
     s.altitude i =
-      mk' (s.points i) (affineSpan ℝ (s.points '' ↑univ.erase i)).directionᗮ⊓affineSpan ℝ (Set.Range s.points) :=
+      mk' (s.points i) (affineSpan ℝ (s.points '' ↑(univ.erase i))).directionᗮ⊓affineSpan ℝ (Set.Range s.points) :=
   rfl
 
 /-- A vertex lies in the corresponding altitude. -/
@@ -349,7 +349,7 @@ theorem mem_altitude {n : ℕ} (s : simplex ℝ P (n + 1)) (i : Finₓ (n + 2)) 
 
 /-- The direction of an altitude. -/
 theorem direction_altitude {n : ℕ} (s : simplex ℝ P (n + 1)) (i : Finₓ (n + 2)) :
-    (s.altitude i).direction = (vectorSpan ℝ (s.points '' ↑Finset.univ.erase i))ᗮ⊓vectorSpan ℝ (Set.Range s.points) :=
+    (s.altitude i).direction = (vectorSpan ℝ (s.points '' ↑(Finset.univ.erase i)))ᗮ⊓vectorSpan ℝ (Set.Range s.points) :=
   by
   rw [altitude_def, direction_inf_of_mem (self_mem_mk' (s.points i) _) (mem_affine_span ℝ (Set.mem_range_self _)),
     direction_mk', direction_affine_span, direction_affine_span]
@@ -357,10 +357,10 @@ theorem direction_altitude {n : ℕ} (s : simplex ℝ P (n + 1)) (i : Finₓ (n 
 /-- The vector span of the opposite face lies in the direction
 orthogonal to an altitude. -/
 theorem vector_span_le_altitude_direction_orthogonal {n : ℕ} (s : simplex ℝ P (n + 1)) (i : Finₓ (n + 2)) :
-    vectorSpan ℝ (s.points '' ↑Finset.univ.erase i) ≤ (s.altitude i).directionᗮ := by
+    vectorSpan ℝ (s.points '' ↑(Finset.univ.erase i)) ≤ (s.altitude i).directionᗮ := by
   rw [direction_altitude]
   exact
-    le_transₓ (vectorSpan ℝ (s.points '' ↑finset.univ.erase i)).le_orthogonal_orthogonal
+    le_transₓ (vectorSpan ℝ (s.points '' ↑(finset.univ.erase i))).le_orthogonal_orthogonal
       (Submodule.orthogonal_le inf_le_left)
 
 open FiniteDimensional
@@ -377,7 +377,7 @@ theorem finrank_direction_altitude {n : ℕ} (s : simplex ℝ P (n + 1)) (i : Fi
     finrank ℝ (s.altitude i).direction = 1 := by
   rw [direction_altitude]
   have h :=
-    Submodule.finrank_add_inf_finrank_orthogonal (vector_span_mono ℝ (Set.image_subset_range s.points (↑univ.erase i)))
+    Submodule.finrank_add_inf_finrank_orthogonal (vector_span_mono ℝ (Set.image_subset_range s.points ↑(univ.erase i)))
   have hc : card (univ.erase i) = n + 1 := by
     rw [card_erase_of_mem (mem_univ _)]
     simp
@@ -391,7 +391,7 @@ theorem affine_span_insert_singleton_eq_altitude_iff {n : ℕ} (s : simplex ℝ 
     affineSpan ℝ {p, s.points i} = s.altitude i ↔
       p ≠ s.points i ∧
         p ∈ affineSpan ℝ (Set.Range s.points) ∧
-          p -ᵥ s.points i ∈ (affineSpan ℝ (s.points '' ↑Finset.univ.erase i)).directionᗮ :=
+          p -ᵥ s.points i ∈ (affineSpan ℝ (s.points '' ↑(Finset.univ.erase i))).directionᗮ :=
   by
   rw [eq_iff_direction_eq_of_mem (mem_affine_span ℝ (Set.mem_insert_of_mem _ (Set.mem_singleton _))) (s.mem_altitude _),
     ← vsub_right_mem_direction_iff_mem (mem_affine_span ℝ (Set.mem_range_self i)) p, direction_affine_span,

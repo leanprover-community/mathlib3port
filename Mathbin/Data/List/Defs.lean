@@ -167,7 +167,7 @@ def alternating_sum {G : Type _} [Zero G] [Add G] [Neg G] : List G → G
   | g :: h :: t => g + -h + alternating_sum t
 
 /-- The alternating product of a list. -/
-def alternating_prod {G : Type _} [One G] [Mul G] [HasInv G] : List G → G
+def alternating_prod {G : Type _} [One G] [Mul G] [Inv G] : List G → G
   | [] => 1
   | g :: [] => g
   | g :: h :: t => g * h⁻¹ * alternating_prod t
@@ -180,8 +180,8 @@ def partition_map (f : α → Sum β γ) : List α → List β × List γ
   | [] => ([], [])
   | x :: xs =>
     match f x with
-    | Sum.inr r => Prod.map id (cons r) $ partition_map xs
-    | Sum.inl l => Prod.map (cons l) id $ partition_map xs
+    | Sum.inr r => Prod.map id (cons r) <| partition_map xs
+    | Sum.inl l => Prod.map (cons l) id <| partition_map xs
 
 /-- `find p l` is the first element of `l` satisfying `p`, or `none` if no such
   element exists. -/
@@ -192,7 +192,7 @@ def find (p : α → Prop) [DecidablePred p] : List α → Option α
 /-- `mfind tac l` returns the first element of `l` on which `tac` succeeds, and
 fails otherwise. -/
 def mfind {α} {m : Type u → Type v} [Monadₓ m] [Alternativeₓ m] (tac : α → m PUnit) : List α → m α :=
-  List.mfirstₓ $ fun a => tac a $> a
+  List.mfirstₓ fun a => tac a $> a
 
 /-- `mbfind' p l` returns the first element `a` of `l` for which `p a` returns
 true. `mbfind'` short-circuits, so `p` is not necessarily run on every `a` in
@@ -445,7 +445,7 @@ def transpose : List (List α) → List (List α)
   `L₁`, whose second element comes from `L₂`, and so on. -/
 def sections : List (List α) → List (List α)
   | [] => [[]]
-  | l :: L => bind (sections L) $ fun s => map (fun a => a :: s) l
+  | l :: L => (bind (sections L)) fun s => map (fun a => a :: s) l
 
 section Permutations
 
@@ -522,7 +522,7 @@ but are equal up to permutation, as shown by `list.permutations_perm_permutation
 @[simp]
 def permutations' : List α → List (List α)
   | [] => [[]]
-  | t :: ts => (permutations' ts).bind $ permutations'_aux t
+  | t :: ts => (permutations' ts).bind <| permutations'_aux t
 
 end Permutations
 
@@ -553,13 +553,13 @@ def revzip (l : List α) : List (α × α) :=
 
      product [1, 2] [5, 6] = [(1, 5), (1, 6), (2, 5), (2, 6)] -/
 def product (l₁ : List α) (l₂ : List β) : List (α × β) :=
-  l₁.bind $ fun a => l₂.map $ Prod.mk a
+  l₁.bind fun a => l₂.map <| Prod.mk a
 
 /-- `sigma l₁ l₂` is the list of dependent pairs `(a, b)` where `a ∈ l₁` and `b ∈ l₂ a`.
 
      sigma [1, 2] (λ_, [(5 : ℕ), 6]) = [(1, 5), (1, 6), (2, 5), (2, 6)] -/
 protected def Sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (σ a)) : List (Σ a, σ a) :=
-  l₁.bind $ fun a => (l₂ a).map $ Sigma.mk a
+  l₁.bind fun a => (l₂ a).map <| Sigma.mk a
 
 /-- Auxliary definition used to define `of_fn`.
 
@@ -723,7 +723,7 @@ def choose_x : ∀ l : List α, ∀ hp : ∃ a, a ∈ l ∧ p a, { a // a ∈ l 
   | l :: ls, hp =>
     if pl : p l then ⟨l, ⟨Or.inl rfl, pl⟩⟩
     else
-      let ⟨a, ⟨a_mem_ls, pa⟩⟩ := choose_x ls (hp.imp fun b ⟨o, h₂⟩ => ⟨o.resolve_left fun e => pl $ e ▸ h₂, h₂⟩)
+      let ⟨a, ⟨a_mem_ls, pa⟩⟩ := choose_x ls (hp.imp fun b ⟨o, h₂⟩ => ⟨o.resolve_left fun e => pl <| e ▸ h₂, h₂⟩)
       ⟨a, ⟨Or.inr a_mem_ls, pa⟩⟩
 
 /-- Given a decidable predicate `p` and a proof of existence of `a ∈ l` such that `p a`,
@@ -740,7 +740,7 @@ def mmap_filter {m : Type → Type v} [Monadₓ m] {α β} (f : α → m (Option
   | h :: t => do
     let b ← f h
     let t' ← t.mmap_filter
-    return $
+    return <|
         match b with
         | none => t'
         | some x => x :: t'
@@ -758,7 +758,7 @@ def mmap_upper_triangle {m} [Monadₓ m] {α β : Type u} (f : α → α → m �
     let v ← f h h
     let l ← t.mmap (f h)
     let t ← t.mmap_upper_triangle
-    return $ v :: l ++ t
+    return <| v :: l ++ t
 
 /-- `mmap'_diag f l` calls `f` on all elements in the upper triangular part of `l × l`.
 That is, for each `e ∈ l`, it will run `f e e` and then `f e e'`
@@ -769,7 +769,7 @@ Example: suppose `l = [1, 2, 3]`. `mmap'_diag f l` will evaluate, in this order,
 -/
 def mmap'_diag {m} [Monadₓ m] {α} (f : α → α → m Unit) : List α → m Unit
   | [] => return ()
-  | h :: t => f h h >> t.mmap' (f h) >> t.mmap'_diag
+  | h :: t => (f h h >> t.mmap' (f h)) >> t.mmap'_diag
 
 protected def traverse {F : Type u → Type v} [Applicativeₓ F] {α β : Type _} (f : α → F β) : List α → F (List β)
   | [] => pure []
@@ -1056,7 +1056,7 @@ Example: if `f : ℕ → list ℕ → β`, `list.map_with_complement f [1, 2, 3]
 `[f 1 [2, 3], f 2 [1, 3], f 3 [1, 2]]`.
 -/
 def map_with_complement {α β} (f : α → List α → β) : List α → List β :=
-  map_with_prefix_suffix $ fun pref a suff => f a (pref ++ suff)
+  map_with_prefix_suffix fun pref a suff => f a (pref ++ suff)
 
 end List
 

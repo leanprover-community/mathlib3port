@@ -43,7 +43,7 @@ def least_of_bdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
     | _, ⟨n, rfl⟩, Hn => ⟨n, Hn⟩
   ⟨b + (Nat.findₓ EX : ℤ), Nat.find_specₓ EX, fun z h =>
     match z, le.dest (Hb _ h), h with
-    | _, ⟨n, rfl⟩, h => add_le_add_left (Int.coe_nat_le.2 $ Nat.find_min'ₓ _ h) _⟩
+    | _, ⟨n, rfl⟩, h => add_le_add_left (Int.coe_nat_le.2 <| Nat.find_min'ₓ _ h) _⟩
 
 /-- If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded below and nonempty,
 then this set has the least element. This lemma uses classical logic to avoid assumption
@@ -74,8 +74,8 @@ def greatest_of_bdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z :
       rw [neg_negₓ] <;> exact Helt⟩
   let ⟨lb, Plb, al⟩ := least_of_bdd (-b) Hbdd' Hinh'
   ⟨-lb, Plb, fun z h =>
-    le_neg.1 $
-      al _ $ by
+    le_neg.1 <|
+      al _ <| by
         rwa [neg_negₓ]⟩
 
 /-- If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded above and nonempty,

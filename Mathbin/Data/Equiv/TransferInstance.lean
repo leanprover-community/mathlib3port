@@ -59,11 +59,11 @@ theorem div_def [Div β] (x y : α) : @Div.div _ (Equivₓ.hasDiv e) x y = e.sym
 
 /-- Transfer `has_inv` across an `equiv` -/
 @[to_additive "Transfer `has_neg` across an `equiv`"]
-protected def HasInv [HasInv β] : HasInv α :=
-  ⟨fun x => e.symm (e x⁻¹)⟩
+protected def Inv [Inv β] : Inv α :=
+  ⟨fun x => e.symm (e x)⁻¹⟩
 
 @[to_additive]
-theorem inv_def [HasInv β] (x : α) : @HasInv.inv _ (Equivₓ.hasInv e) x = e.symm (e x⁻¹) :=
+theorem inv_def [Inv β] (x : α) : @Inv.inv _ (Equivₓ.hasInv e) x = e.symm (e x)⁻¹ :=
   rfl
 
 /-- Transfer `has_scalar` across an `equiv` -/

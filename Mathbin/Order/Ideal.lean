@@ -242,7 +242,7 @@ theorem coe_top : ((⊤ : ideal P) : Set P) = Set.Univ :=
   rfl
 
 theorem is_proper_of_ne_top (ne_top : I ≠ ⊤) : is_proper I :=
-  ⟨fun h => ne_top $ ext h⟩
+  ⟨fun h => ne_top <| ext h⟩
 
 theorem is_proper.ne_top (hI : is_proper I) : I ≠ ⊤ := by
   intro h
@@ -282,7 +282,7 @@ theorem top_of_top_mem (hI : ⊤ ∈ I) : I = ⊤ := by
   ext
   exact iff_of_true (I.mem_of_le le_top hI) trivialₓ
 
-theorem is_proper.top_not_mem (hI : is_proper I) : ⊤ ∉ I := fun h => hI.ne_top $ top_of_top_mem h
+theorem is_proper.top_not_mem (hI : is_proper I) : ⊤ ∉ I := fun h => hI.ne_top <| top_of_top_mem h
 
 end OrderTop
 
@@ -349,7 +349,7 @@ instance : Lattice (ideal P) :=
       cases I.nonempty
       exact ⟨w, ‹_›, j, ‹_›, le_sup_right⟩,
     sup_le := fun I J K hIK hJK a ⟨i, hi, j, hj, ha⟩ =>
-      K.mem_of_le ha $ sup_mem i (mem_of_mem_of_le hi hIK) j (mem_of_mem_of_le hj hJK),
+      K.mem_of_le ha <| sup_mem i (mem_of_mem_of_le hi hIK) j (mem_of_mem_of_le hj hJK),
     inf := ·⊓·, inf_le_left := fun I J => Set.inter_subset_left I J,
     inf_le_right := fun I J => Set.inter_subset_right I J, le_inf := fun I J K => Set.subset_inter }
 
@@ -362,8 +362,8 @@ theorem mem_sup : x ∈ I⊔J ↔ ∃ i ∈ I, ∃ j ∈ J, x ≤ i⊔j :=
   Iff.rfl
 
 theorem lt_sup_principal_of_not_mem (hx : x ∉ I) : I < I⊔principal x :=
-  le_sup_left.lt_of_ne $ fun h =>
-    hx $ by
+  le_sup_left.lt_of_ne fun h =>
+    hx <| by
       simpa only [left_eq_sup, principal_le_iff] using h
 
 end SemilatticeSupDirected
@@ -419,7 +419,7 @@ theorem mem_Inf : x ∈ Inf s ↔ ∀, ∀ I ∈ s, ∀, x ∈ I := by
   simp
 
 @[simp]
-theorem coe_Inf : ↑Inf s = ⋂ I ∈ s, (I : Set P) :=
+theorem coe_Inf : ↑(Inf s) = ⋂ I ∈ s, (I : Set P) :=
   rfl
 
 theorem Inf_le (hI : I ∈ s) : Inf s ≤ I := fun _ hx =>
@@ -495,13 +495,13 @@ variable (D : cofinal P) (x : P)
 
 /-- A (noncomputable) element of a cofinal set lying above a given element. -/
 noncomputable def above : P :=
-  Classical.some $ D.mem_gt x
+  Classical.some <| D.mem_gt x
 
 theorem above_mem : D.above x ∈ D :=
-  Exists.elim (Classical.some_spec $ D.mem_gt x) $ fun a _ => a
+  (Exists.elim (Classical.some_spec <| D.mem_gt x)) fun a _ => a
 
 theorem le_above : x ≤ D.above x :=
-  Exists.elim (Classical.some_spec $ D.mem_gt x) $ fun _ b => b
+  (Exists.elim (Classical.some_spec <| D.mem_gt x)) fun _ b => b
 
 end Cofinal
 
@@ -543,8 +543,8 @@ def ideal_of_cofinals : ideal P where
   Carrier := { x : P | ∃ n, x ≤ sequence_of_cofinals p 𝒟 n }
   Nonempty := ⟨p, 0, le_rfl⟩
   Directed := fun x ⟨n, hn⟩ y ⟨m, hm⟩ =>
-    ⟨_, ⟨max n m, le_rfl⟩, le_transₓ hn $ sequence_of_cofinals.monotone p 𝒟 (le_max_leftₓ _ _),
-      le_transₓ hm $ sequence_of_cofinals.monotone p 𝒟 (le_max_rightₓ _ _)⟩
+    ⟨_, ⟨max n m, le_rfl⟩, le_transₓ hn <| sequence_of_cofinals.monotone p 𝒟 (le_max_leftₓ _ _),
+      le_transₓ hm <| sequence_of_cofinals.monotone p 𝒟 (le_max_rightₓ _ _)⟩
   mem_of_le := fun x y hxy ⟨n, hn⟩ => ⟨n, le_transₓ hxy hn⟩
 
 theorem mem_ideal_of_cofinals : p ∈ ideal_of_cofinals p 𝒟 :=

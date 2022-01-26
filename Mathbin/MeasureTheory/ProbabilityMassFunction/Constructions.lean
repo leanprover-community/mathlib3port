@@ -67,7 +67,7 @@ section Seq
 
 /-- The monadic sequencing operation for `pmf`. -/
 def seq (q : Pmf (α → β)) (p : Pmf α) : Pmf β :=
-  q.bind fun m => p.bind $ fun a => pure (m a)
+  q.bind fun m => p.bind fun a => pure (m a)
 
 variable (q : Pmf (α → β)) (p : Pmf α) (b : β)
 
@@ -166,7 +166,7 @@ theorem mem_support_of_multiset_iff (a : α) : a ∈ (of_multiset s hs).Support 
   simp
 
 theorem of_multiset_apply_of_not_mem {a : α} (ha : a ∉ s) : of_multiset s hs a = 0 :=
-  div_eq_zero_iff.2 (Or.inl $ Nat.cast_eq_zero.2 $ Multiset.count_eq_zero_of_not_mem ha)
+  div_eq_zero_iff.2 (Or.inl <| Nat.cast_eq_zero.2 <| Multiset.count_eq_zero_of_not_mem ha)
 
 end OfMultiset
 
@@ -179,13 +179,13 @@ def uniform_of_finset (s : Finset α) (hs : s.nonempty) : Pmf α :=
   of_finset (fun a => if a ∈ s then (s.card : ℝ≥0 )⁻¹ else 0) s
     (Exists.rec_on hs fun x hx =>
       calc
-        (∑ a : α in s, ite (a ∈ s) ((s.card : ℝ≥0 )⁻¹) 0) = ∑ a : α in s, (s.card : ℝ≥0 )⁻¹ :=
+        (∑ a : α in s, ite (a ∈ s) (s.card : ℝ≥0 )⁻¹ 0) = ∑ a : α in s, (s.card : ℝ≥0 )⁻¹ :=
           Finset.sum_congr rfl fun x hx => by
             simp [hx]
         _ = s.card • (s.card : ℝ≥0 )⁻¹ := Finset.sum_const _
         _ = (s.card : ℝ≥0 ) * (s.card : ℝ≥0 )⁻¹ := by
           rw [nsmul_eq_mul]
-        _ = 1 := div_self (Nat.cast_ne_zero.2 $ Finset.card_ne_zero_of_mem hx)
+        _ = 1 := div_self (Nat.cast_ne_zero.2 <| Finset.card_ne_zero_of_mem hx)
         )
     fun x hx => by
     simp only [hx, if_false]
@@ -223,7 +223,7 @@ def uniform_of_fintype (α : Type _) [Fintype α] [Nonempty α] : Pmf α :=
 variable [Fintype α] [Nonempty α]
 
 @[simp]
-theorem uniform_of_fintype_apply (a : α) : uniform_of_fintype α a = Fintype.card α⁻¹ := by
+theorem uniform_of_fintype_apply (a : α) : uniform_of_fintype α a = (Fintype.card α)⁻¹ := by
   simpa only [uniform_of_fintype, Finset.mem_univ, if_true, uniform_of_finset_apply]
 
 variable (α)
@@ -248,7 +248,7 @@ section normalize
 def normalize (f : α → ℝ≥0 ) (hf0 : tsum f ≠ 0) : Pmf α :=
   ⟨fun a => f a * (∑' x, f x)⁻¹,
     mul_inv_cancel hf0 ▸
-      HasSum.mul_right ((∑' x, f x)⁻¹) (not_not.mp (mt tsum_eq_zero_of_not_summable hf0 : ¬¬Summable f)).HasSum⟩
+      HasSum.mul_right (∑' x, f x)⁻¹ (not_not.mp (mt tsum_eq_zero_of_not_summable hf0 : ¬¬Summable f)).HasSum⟩
 
 variable {f : α → ℝ≥0 } (hf0 : tsum f ≠ 0)
 
@@ -271,7 +271,7 @@ section Filter
 
 /-- Create new `pmf` by filtering on a set with non-zero measure and normalizing -/
 def Filter (p : Pmf α) (s : Set α) (h : ∃ a ∈ s, a ∈ p.support) : Pmf α :=
-  Pmf.normalize (s.indicator p) $ Nnreal.tsum_indicator_ne_zero p.2.Summable h
+  Pmf.normalize (s.indicator p) <| Nnreal.tsum_indicator_ne_zero p.2.Summable h
 
 variable {p : Pmf α} {s : Set α} (h : ∃ a ∈ s, a ∈ p.support)
 
@@ -304,7 +304,7 @@ section Bernoulli
 /-- A `pmf` which assigns probability `p` to `tt` and `1 - p` to `ff`. -/
 def bernoulli (p : ℝ≥0 ) (h : p ≤ 1) : Pmf Bool :=
   of_fintype (fun b => cond b p (1 - p))
-    (Nnreal.eq $ by
+    (Nnreal.eq <| by
       simp [h])
 
 variable {p : ℝ≥0 } (h : p ≤ 1) (b : Bool)

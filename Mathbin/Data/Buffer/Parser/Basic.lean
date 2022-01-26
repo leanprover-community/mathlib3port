@@ -78,7 +78,7 @@ class prog : Prop where
 /-- A `parser a` is defined to be `bounded` if it produces a
 `fail` `parse_result` when it is parsing outside the provided `char_buffer`.
 -/
-class Bounded : Prop where
+class bounded : Prop where
   ex' : ∀ {cb : CharBuffer} {n : ℕ}, cb.size ≤ n → ∃ (n' : ℕ)(err : Dlist Stringₓ), p cb n = fail n' err
 
 theorem bounded.exists (p : Parser α) [p.bounded] {cb : CharBuffer} {n : ℕ} (h : cb.size ≤ n) :
@@ -1253,7 +1253,7 @@ theorem done_of_unbounded (h : ¬p.bounded) : ∃ (cb : CharBuffer)(n n' : ℕ)(
   · simp [hp]
     
 
-theorem pure : ¬Bounded (pure a) := by
+theorem pure : ¬bounded (pure a) := by
   intro
   have : (pure a : Parser α) Buffer.nil 0 = done 0 a := by
     simp [pure_eq_done]
@@ -1284,8 +1284,8 @@ instance failure : @Parser.Bounded α failure :=
   ⟨by
     simp ⟩
 
-theorem guard_iff {p : Prop} [Decidable p] : Bounded (guardₓ p) ↔ ¬p := by
-  simpa [guardₓ, apply_ite Bounded, pure, failure] using fun _ => bounded.failure
+theorem guard_iff {p : Prop} [Decidable p] : bounded (guardₓ p) ↔ ¬p := by
+  simpa [guardₓ, apply_ite bounded, pure, failure] using fun _ => bounded.failure
 
 instance orelse [p.bounded] [q.bounded] : (p <|> q).Bounded := by
   constructor
@@ -1323,21 +1323,21 @@ instance decorate_error [p.bounded] : (@decorate_error α msg p).Bounded :=
 theorem decorate_error_iff : (@Parser.decorateError α msg p).Bounded ↔ p.bounded :=
   decorate_errors_iff
 
-instance any_char : Bounded any_char :=
+instance any_char : bounded any_char :=
   ⟨fun cb n hn => by
     simp [any_char, hn]⟩
 
-instance sat {p : Charₓ → Prop} [DecidablePred p] : Bounded (sat p) :=
+instance sat {p : Charₓ → Prop} [DecidablePred p] : bounded (sat p) :=
   ⟨fun cb n hn => by
     simp [sat, hn]⟩
 
-theorem eps : ¬Bounded eps :=
+theorem eps : ¬bounded eps :=
   pure
 
-instance ch {c : Charₓ} : Bounded (ch c) :=
+instance ch {c : Charₓ} : bounded (ch c) :=
   bounded.decorate_error
 
-theorem char_buf_iff {cb' : CharBuffer} : Bounded (char_buf cb') ↔ cb' ≠ Buffer.nil := by
+theorem char_buf_iff {cb' : CharBuffer} : bounded (char_buf cb') ↔ cb' ≠ Buffer.nil := by
   have : cb' ≠ Buffer.nil ↔ cb'.to_list ≠ [] :=
     not_iff_not_of_iff
       ⟨fun h => by
@@ -1406,7 +1406,7 @@ theorem foldr_core {f : α → β → β} : (foldr_core f p b reps).Bounded := b
   obtain ⟨np, errp, hp⟩ := bounded.exists p hn
   simpa [foldr_core_succ_eq_fail, hp] using he cb n np errp
 
-theorem foldr {f : α → β → β} : Bounded (foldr f p b) := by
+theorem foldr {f : α → β → β} : bounded (foldr f p b) := by
   constructor
   intro cb n hn
   have : (Parser.foldrCore f p b (cb.size - n + 1)).Bounded := foldr_core he
@@ -1422,7 +1422,7 @@ theorem foldl_core {f : β → α → β} : (foldl_core f b p reps).Bounded := b
   obtain ⟨np, errp, hp⟩ := bounded.exists p hn
   simpa [foldl_core_succ_eq_fail, hp] using he cb n np errp
 
-theorem foldl {f : β → α → β} : Bounded (foldl f b p) := by
+theorem foldl {f : β → α → β} : bounded (foldl f b p) := by
   constructor
   intro cb n hn
   have : (Parser.foldlCore f b p (cb.size - n + 1)).Bounded := foldl_core he
@@ -1453,11 +1453,11 @@ instance many1 [p.bounded] : p.many1.bounded :=
 instance many_char1 {p : Parser Charₓ} [p.bounded] : p.many_char1.bounded :=
   bounded.map
 
-instance sep_by1 {sep : Parser Unit} [p.bounded] : Bounded (sep_by1 sep p) :=
+instance sep_by1 {sep : Parser Unit} [p.bounded] : bounded (sep_by1 sep p) :=
   bounded.seq
 
 theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.bounded → (F p).Bounded) :
-    ∀ max_depth : ℕ, Bounded (fix_core F max_depth)
+    ∀ max_depth : ℕ, bounded (fix_core F max_depth)
   | 0 => bounded.failure
   | max_depth + 1 => hF _ (fix_core _)
 
@@ -1467,7 +1467,7 @@ instance digit : digit.Bounded :=
 instance Nat : Nat.Bounded :=
   bounded.decorate_error
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.bounded → (F p).Bounded) : Bounded (fix F) := by
+theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.bounded → (F p).Bounded) : bounded (fix F) := by
   constructor
   intro cb n hn
   have : (Parser.fixCore F (cb.size - n + 1)).Bounded := fix_core hF _

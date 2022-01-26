@@ -93,7 +93,7 @@ instance IsStrictTotalOrder (r : α → α → Prop) [IsStrictTotalOrder' α r] 
 
 instance DecidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r] : DecidableRel (lex r)
   | l₁, [] =>
-    is_false $ fun h => by
+    is_false fun h => by
       cases h
   | [], b :: l₂ => is_true lex.nil
   | a :: l₁, b :: l₂ => by

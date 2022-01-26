@@ -34,7 +34,7 @@ instance : Fintype (Derangements α) := by
 
 theorem card_derangements_invariant {α β : Type _} [Fintype α] [DecidableEq α] [Fintype β] [DecidableEq β]
     (h : card α = card β) : card (Derangements α) = card (Derangements β) :=
-  Fintype.card_congr (Equivₓ.derangementsCongr $ equiv_of_card_eq h)
+  Fintype.card_congr (Equivₓ.derangementsCongr <| equiv_of_card_eq h)
 
 theorem card_derangements_fin_add_two (n : ℕ) :
     card (Derangements (Finₓ (n + 2))) =

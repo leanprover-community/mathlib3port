@@ -67,8 +67,8 @@ theorem IsAtom.of_is_atom_coe_Iic {a : Set.Iic x} (ha : IsAtom a) : IsAtom (a : 
 
 @[simp]
 theorem bot_covers_iff : ⊥ ⋖ a ↔ IsAtom a :=
-  ⟨fun h => ⟨h.lt.ne', fun b hba => not_not.1 $ fun hb => h.2 (Ne.bot_lt hb) hba⟩, fun h =>
-    ⟨h.1.bot_lt, fun b hb hba => hb.ne' $ h.2 _ hba⟩⟩
+  ⟨fun h => ⟨h.lt.ne', fun b hba => not_not.1 fun hb => h.2 (Ne.bot_lt hb) hba⟩, fun h =>
+    ⟨h.1.bot_lt, fun b hb hba => hb.ne' <| h.2 _ hba⟩⟩
 
 alias bot_covers_iff ↔ Covers.is_atom IsAtom.bot_covers
 
@@ -94,8 +94,8 @@ theorem IsCoatom.of_is_coatom_coe_Ici {a : Set.Ici x} (ha : IsCoatom a) : IsCoat
 
 @[simp]
 theorem covers_top_iff : a ⋖ ⊤ ↔ IsCoatom a :=
-  ⟨fun h => ⟨h.ne, fun b hab => not_not.1 $ fun hb => h.2 hab $ Ne.lt_top hb⟩, fun h =>
-    ⟨h.1.lt_top, fun b hab hb => hb.ne $ h.2 _ hab⟩⟩
+  ⟨fun h => ⟨h.ne, fun b hab => not_not.1 fun hb => h.2 hab <| Ne.lt_top hb⟩, fun h =>
+    ⟨h.1.lt_top, fun b hab hb => hb.ne <| h.2 _ hab⟩⟩
 
 alias covers_top_iff ↔ Covers.is_coatom IsCoatom.covers_top
 
@@ -204,8 +204,8 @@ theorem is_atomic_iff_forall_is_atomic_Iic [OrderBot α] : IsAtomic α ↔ ∀ x
         (exists_imp_exists' coe fun ⟨a, ha⟩ => And.imp_left IsAtom.of_is_atom_coe_Iic)⟩⟩
 
 theorem is_coatomic_iff_forall_is_coatomic_Ici [OrderTop α] : IsCoatomic α ↔ ∀ x : α, IsCoatomic (Set.Ici x) :=
-  is_atomic_dual_iff_is_coatomic.symm.trans $
-    is_atomic_iff_forall_is_atomic_Iic.trans $ forall_congrₓ fun x => is_coatomic_dual_iff_is_atomic.symm.trans Iff.rfl
+  is_atomic_dual_iff_is_coatomic.symm.trans <|
+    is_atomic_iff_forall_is_atomic_Iic.trans <| forall_congrₓ fun x => is_coatomic_dual_iff_is_atomic.symm.trans Iff.rfl
 
 end Atomic
 
@@ -583,14 +583,14 @@ theorem is_simple_order_iff_is_coatom_bot [PartialOrderₓ α] [BoundedOrder α]
 namespace Set
 
 theorem is_simple_order_Iic_iff_is_atom [PartialOrderₓ α] [BoundedOrder α] {a : α} : IsSimpleOrder (Iic a) ↔ IsAtom a :=
-  is_simple_order_iff_is_atom_top.trans $
+  is_simple_order_iff_is_atom_top.trans <|
     and_congr (not_congr Subtype.mk_eq_mk)
       ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_ltₓ ab⟩ ab), fun h ⟨b, hab⟩ hbotb =>
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
 
 theorem is_simple_order_Ici_iff_is_coatom [PartialOrderₓ α] [BoundedOrder α] {a : α} :
     IsSimpleOrder (Ici a) ↔ IsCoatom a :=
-  is_simple_order_iff_is_coatom_bot.trans $
+  is_simple_order_iff_is_coatom_bot.trans <|
     and_congr (not_congr Subtype.mk_eq_mk)
       ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_ltₓ ab⟩ ab), fun h ⟨b, hab⟩ hbotb =>
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
@@ -663,7 +663,7 @@ variable {a b : α} (hc : IsCompl a b)
 include hc
 
 theorem is_atom_iff_is_coatom : IsAtom a ↔ IsCoatom b :=
-  Set.is_simple_order_Iic_iff_is_atom.symm.trans $
+  Set.is_simple_order_Iic_iff_is_atom.symm.trans <|
     hc.Iic_order_iso_Ici.is_simple_order_iff.trans Set.is_simple_order_Ici_iff_is_coatom
 
 theorem is_coatom_iff_is_atom : IsCoatom a ↔ IsAtom b :=

@@ -44,14 +44,14 @@ def evaluation_jointly_reflects_limits {F : J ⥤ K ⥤ C} (c : cone F)
   lift := fun s =>
     { app := fun k => (t k).lift ⟨s.X.obj k, whisker_right s.π ((evaluation K C).obj k)⟩,
       naturality' := fun X Y f =>
-        (t Y).hom_ext $ fun j => by
+        (t Y).hom_ext fun j => by
           rw [assoc, (t Y).fac _ j]
           simpa using ((t X).fac_assoc ⟨s.X.obj X, whisker_right s.π ((evaluation K C).obj X)⟩ j _).symm }
-  fac' := fun s j => nat_trans.ext _ _ $ funext $ fun k => (t k).fac _ j
+  fac' := fun s j => nat_trans.ext _ _ <| funext fun k => (t k).fac _ j
   uniq' := fun s m w =>
-    nat_trans.ext _ _ $
-      funext $ fun x =>
-        (t x).hom_ext $ fun j =>
+    nat_trans.ext _ _ <|
+      funext fun x =>
+        (t x).hom_ext fun j =>
           (congr_app (w j) x).trans ((t x).fac ⟨s.X.obj _, whisker_right s.π ((evaluation K C).obj _)⟩ j).symm
 
 /-- Given a functor `F` and a collection of limit cones for each diagram `X ↦ F X k`, we can stitch
@@ -72,7 +72,7 @@ def combine_cones (F : J ⥤ K ⥤ C) (c : ∀ k : K, limit_cone (F.flip.obj k))
           simp }
   π :=
     { app := fun j => { app := fun k => (c k).Cone.π.app j },
-      naturality' := fun j₁ j₂ g => nat_trans.ext _ _ $ funext $ fun k => (c k).Cone.π.naturality g }
+      naturality' := fun j₁ j₂ g => nat_trans.ext _ _ <| funext fun k => (c k).Cone.π.naturality g }
 
 /-- The stitched together cones each project down to the original given cones (up to iso). -/
 def evaluate_combined_cones (F : J ⥤ K ⥤ C) (c : ∀ k : K, limit_cone (F.flip.obj k)) (k : K) :
@@ -94,17 +94,17 @@ def evaluation_jointly_reflects_colimits {F : J ⥤ K ⥤ C} (c : cocone F)
   desc := fun s =>
     { app := fun k => (t k).desc ⟨s.X.obj k, whisker_right s.ι ((evaluation K C).obj k)⟩,
       naturality' := fun X Y f =>
-        (t X).hom_ext $ fun j => by
+        (t X).hom_ext fun j => by
           rw [(t X).fac_assoc _ j]
           erw [← (c.ι.app j).naturality_assoc f]
           erw [(t Y).fac ⟨s.X.obj _, whisker_right s.ι _⟩ j]
           dsimp
           simp }
-  fac' := fun s j => nat_trans.ext _ _ $ funext $ fun k => (t k).fac _ j
+  fac' := fun s j => nat_trans.ext _ _ <| funext fun k => (t k).fac _ j
   uniq' := fun s m w =>
-    nat_trans.ext _ _ $
-      funext $ fun x =>
-        (t x).hom_ext $ fun j =>
+    nat_trans.ext _ _ <|
+      funext fun x =>
+        (t x).hom_ext fun j =>
           (congr_app (w j) x).trans ((t x).fac ⟨s.X.obj _, whisker_right s.ι ((evaluation K C).obj _)⟩ j).symm
 
 /-- Given a functor `F` and a collection of colimit cocones for each diagram `X ↦ F X k`, we can stitch
@@ -125,7 +125,7 @@ def combine_cocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, colimit_cocone (F.flip.o
           simp }
   ι :=
     { app := fun j => { app := fun k => (c k).Cocone.ι.app j },
-      naturality' := fun j₁ j₂ g => nat_trans.ext _ _ $ funext $ fun k => (c k).Cocone.ι.naturality g }
+      naturality' := fun j₁ j₂ g => nat_trans.ext _ _ <| funext fun k => (c k).Cocone.ι.naturality g }
 
 /-- The stitched together cocones each project down to the original given cocones (up to iso). -/
 def evaluate_combined_cocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, colimit_cocone (F.flip.obj k)) (k : K) :
@@ -159,7 +159,7 @@ instance functor_category_has_colimits_of_size [has_colimits_of_size.{v₁, u₁
 instance evaluation_preserves_limits_of_shape [has_limits_of_shape J C] (k : K) :
     preserves_limits_of_shape J ((evaluation K C).obj k) where
   PreservesLimit := fun F =>
-    preserves_limit_of_preserves_limit_cone (combined_is_limit _ _) $
+    preserves_limit_of_preserves_limit_cone (combined_is_limit _ _) <|
       is_limit.of_iso_limit (limit.is_limit _) (evaluate_combined_cones F _ k).symm
 
 /-- If `F : J ⥤ K ⥤ C` is a functor into a functor category which has a limit,
@@ -210,7 +210,7 @@ theorem limit_obj_ext {H : J ⥤ K ⥤ C} [has_limits_of_shape J C] {k : K} {W :
 instance evaluation_preserves_colimits_of_shape [has_colimits_of_shape J C] (k : K) :
     preserves_colimits_of_shape J ((evaluation K C).obj k) where
   PreservesColimit := fun F =>
-    preserves_colimit_of_preserves_colimit_cocone (combined_is_colimit _ _) $
+    preserves_colimit_of_preserves_colimit_cocone (combined_is_colimit _ _) <|
       is_colimit.of_iso_colimit (colimit.is_colimit _) (evaluate_combined_cocones F _ k).symm
 
 /-- If `F : J ⥤ K ⥤ C` is a functor into a functor category which has a colimit,
@@ -318,14 +318,14 @@ open CategoryTheory.prod
 the individual limits on objects. -/
 @[simps]
 def limit_iso_flip_comp_lim [has_limits_of_shape J C] (F : J ⥤ K ⥤ C) : limit F ≅ F.flip ⋙ lim :=
-  nat_iso.of_components (limit_obj_iso_limit_comp_evaluation F) $ by
+  nat_iso.of_components (limit_obj_iso_limit_comp_evaluation F) <| by
     tidy
 
 /-- A variant of `limit_iso_flip_comp_lim` where the arguemnts of `F` are flipped. -/
 @[simps]
 def limit_flip_iso_comp_lim [has_limits_of_shape J C] (F : K ⥤ J ⥤ C) : limit F.flip ≅ F ⋙ lim :=
   (nat_iso.of_components fun k =>
-      limit_obj_iso_limit_comp_evaluation F.flip k ≪≫ has_limit.iso_of_nat_iso (flip_comp_evaluation _ _)) $
+      limit_obj_iso_limit_comp_evaluation F.flip k ≪≫ has_limit.iso_of_nat_iso (flip_comp_evaluation _ _)) <|
     by
     tidy
 
@@ -341,14 +341,14 @@ def limit_iso_swap_comp_lim [has_limits_of_shape J C] (G : J ⥤ K ⥤ C) :
 the individual colimits on objects. -/
 @[simps]
 def colimit_iso_flip_comp_colim [has_colimits_of_shape J C] (F : J ⥤ K ⥤ C) : colimit F ≅ F.flip ⋙ colim :=
-  nat_iso.of_components (colimit_obj_iso_colimit_comp_evaluation F) $ by
+  nat_iso.of_components (colimit_obj_iso_colimit_comp_evaluation F) <| by
     tidy
 
 /-- A variant of `colimit_iso_flip_comp_colim` where the arguemnts of `F` are flipped. -/
 @[simps]
 def colimit_flip_iso_comp_colim [has_colimits_of_shape J C] (F : K ⥤ J ⥤ C) : colimit F.flip ≅ F ⋙ colim :=
   (nat_iso.of_components fun k =>
-      colimit_obj_iso_colimit_comp_evaluation _ _ ≪≫ has_colimit.iso_of_nat_iso (flip_comp_evaluation _ _)) $
+      colimit_obj_iso_colimit_comp_evaluation _ _ ≪≫ has_colimit.iso_of_nat_iso (flip_comp_evaluation _ _)) <|
     by
     tidy
 

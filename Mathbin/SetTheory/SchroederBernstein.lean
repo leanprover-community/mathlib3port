@@ -45,7 +45,7 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
   set F : Set α →o Set α :=
     { toFun := fun s => (g '' (f '' s)ᶜ)ᶜ,
       monotone' := fun s t hst =>
-        compl_subset_compl.mpr $ image_subset _ $ compl_subset_compl.mpr $ image_subset _ hst }
+        compl_subset_compl.mpr <| image_subset _ <| compl_subset_compl.mpr <| image_subset _ hst }
   set s : Set α := F.lfp
   have hs : (g '' (f '' s)ᶜ)ᶜ = s := F.map_lfp
   have hns : g '' (f '' s)ᶜ = sᶜ :=
@@ -106,7 +106,7 @@ theorem min_injective (I : Nonempty ι) : ∃ i, Nonempty (∀ j, β i ↪ β j)
           subset_sUnion_of_mem⟩
   let ⟨i, e⟩ :=
     show ∃ i, ∀ y, ∃ x ∈ s, (x : ∀ i, β i) i = y from
-      Classical.by_contradiction $ fun h =>
+      Classical.by_contradiction fun h =>
         have h : ∀ i, ∃ y, ∀, ∀ x ∈ s, ∀, (x : ∀ i, β i) i ≠ y := by
           simpa only [not_exists, not_forall] using h
         let ⟨f, hf⟩ := Classical.axiom_of_choice h

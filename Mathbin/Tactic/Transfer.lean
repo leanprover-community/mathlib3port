@@ -45,7 +45,7 @@ private unsafe def get_lift_fun : expr → tactic (List rel_data × expr)
   | e =>
     (do
         guardb (is_constant_of (get_app_fn e) `` Relator.LiftFun)
-        let [α, β, γ, δ, R, S] ← return $ get_app_args e
+        let [α, β, γ, δ, R, S] ← return <| get_app_args e
         let (ps, r) ← get_lift_fun S
         return (rel_data.mk α β R :: ps, r)) <|>
       return ([], e)
@@ -61,14 +61,14 @@ private unsafe def analyse_rule (u' : List Name) (pr : expr) : tactic rule_data 
   let (params, app (app r f) g) ← mk_local_pis t
   let (arg_rels, R) ← get_lift_fun r
   let args ←
-    (enum arg_rels).mmap $ fun ⟨n, a⟩ => Prod.mk <$> mk_local_def (mkSimpleName ("a_" ++ reprₓ n)) a.in_type <*> pure a
-  let a_vars ← return $ Prod.fst <$> args
+    (enum arg_rels).mmap fun ⟨n, a⟩ => Prod.mk <$> mk_local_def (mkSimpleName ("a_" ++ reprₓ n)) a.in_type <*> pure a
+  let a_vars ← return <| Prod.fst <$> args
   let p ← head_beta (app_of_list f a_vars)
-  let p_data ← return $ mark_occurences (app R p) params
-  let p_vars ← return $ List.map Prod.fst (p_data.filter fun x => ↑x.2)
-  let u ← return $ collect_univ_params (app R p) ∩ u'
+  let p_data ← return <| mark_occurences (app R p) params
+  let p_vars ← return <| List.map Prod.fst (p_data.filter fun x => ↑x.2)
+  let u ← return <| collect_univ_params (app R p) ∩ u'
   let pat ← mk_pattern (level.param <$> u) (p_vars ++ a_vars) (app R p) (level.param <$> u) (p_vars ++ a_vars)
-  return $ rule_data.mk pr (u'.remove_all u) p_data u args pat g
+  return <| rule_data.mk pr (u'.remove_all u) p_data u args pat g
 
 unsafe def analyse_decls : List Name → tactic (List rule_data) :=
   mmap fun n => do
@@ -102,8 +102,8 @@ private unsafe def param_substitutions (ctxt : List expr) :
           else do
             let mv ← mk_meta_var ty
             return (app_of_list mv ctxt', [mv])
-    let sb ← return $ instantiate_local n e
-    let ps ← return $ Prod.map sb ((· <$> ·) sb) <$> ps
+    let sb ← return <| instantiate_local n e
+    let ps ← return <| Prod.map sb ((· <$> ·) sb) <$> ps
     let (ms, vs) ← param_substitutions ps
     return ((n, e) :: ms, m ++ vs)
   | _ => return ([], [])
@@ -114,9 +114,9 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
       first
             (rds.map fun rd => do
               let (l, m) ← match_pattern rd.pat e semireducible
-              let level_map ← rd.uparams.mmap $ fun l => Prod.mk l <$> mk_meta_univ
-              let inst_univ ← return $ fun e => instantiate_univ_params e (level_map ++ zip rd.uargs l)
-              let (ps, args) ← return $ split_params_args (rd.params.map (Prod.map inst_univ id)) m
+              let level_map ← rd.uparams.mmap fun l => Prod.mk l <$> mk_meta_univ
+              let inst_univ ← return fun e => instantiate_univ_params e (level_map ++ zip rd.uargs l)
+              let (ps, args) ← return <| split_params_args (rd.params.map (Prod.map inst_univ id)) m
               let (ps, ms) ← param_substitutions ctxt ps
               return (instantiate_locals ps ∘ inst_univ, ps, args, ms, rd)) <|>
           do
@@ -133,14 +133,14 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
                     return ((a, b), (R, [a, b, R]))) >>=
                   return ∘ Prod.map unzip unzip ∘ unzip
             let rds' ← R_vars.mmap (analyse_rule [])
-            let a ← return $ i e
+            let a ← return <| i e
             let a' ← head_beta (app_of_list a a_vars)
             let (b, pr, ms) ← compute_transfer (rds ++ rds') (ctxt ++ a_vars) (app r a')
             let b' ← head_eta (lambdas b_vars b)
             return (b', [a, b', lambdas (List.join bnds) pr], ms)) >>=
           return ∘ Prod.map id unzip ∘ unzip
     let b ← head_beta (app_of_list (i rd.output) bs)
-    let pr ← return $ app_of_list (i rd.pr) (Prod.snd <$> ps ++ List.join hs)
+    let pr ← return <| app_of_list (i rd.pr) (Prod.snd <$> ps ++ List.join hs)
     return (b, pr, ms ++ mss.join)
 
 end Transfer

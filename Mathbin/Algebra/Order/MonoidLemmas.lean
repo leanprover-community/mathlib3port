@@ -643,7 +643,7 @@ variable [CovariantClass α α (· * ·) (· ≤ ·)]
 
 @[to_additive add_pos_of_pos_of_nonneg]
 theorem one_lt_mul_of_lt_of_le' (ha : 1 < a) (hb : 1 ≤ b) : 1 < a * b :=
-  lt_of_lt_of_leₓ ha $ le_mul_of_one_le_right' hb
+  lt_of_lt_of_leₓ ha <| le_mul_of_one_le_right' hb
 
 @[to_additive add_pos]
 theorem one_lt_mul' (ha : 1 < a) (hb : 1 < b) : 1 < a * b :=
@@ -651,7 +651,7 @@ theorem one_lt_mul' (ha : 1 < a) (hb : 1 < b) : 1 < a * b :=
 
 @[to_additive]
 theorem lt_mul_of_lt_of_one_le' (hbc : b < c) (ha : 1 ≤ a) : b < c * a :=
-  hbc.trans_le $ le_mul_of_one_le_right' ha
+  hbc.trans_le <| le_mul_of_one_le_right' ha
 
 @[to_additive]
 theorem lt_mul_of_lt_of_one_lt' (hbc : b < c) (ha : 1 < a) : b < c * a :=
@@ -681,11 +681,11 @@ variable [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
 
 @[to_additive add_pos_of_nonneg_of_pos]
 theorem one_lt_mul_of_le_of_lt' (ha : 1 ≤ a) (hb : 1 < b) : 1 < a * b :=
-  lt_of_lt_of_leₓ hb $ le_mul_of_one_le_left' ha
+  lt_of_lt_of_leₓ hb <| le_mul_of_one_le_left' ha
 
 @[to_additive]
 theorem lt_mul_of_one_le_of_lt (ha : 1 ≤ a) (hbc : b < c) : b < a * c :=
-  hbc.trans_le $ le_mul_of_one_le_left' ha
+  hbc.trans_le <| le_mul_of_one_le_left' ha
 
 @[to_additive]
 theorem lt_mul_of_one_lt_of_lt (ha : 1 < a) (hbc : b < c) : b < a * c :=
@@ -806,7 +806,7 @@ protected theorem inj [Mul α] [PartialOrderₓ α] {a b c : α} (ha : MulLeCanc
 @[to_additive]
 protected theorem injective_left [CommSemigroupₓ α] [PartialOrderₓ α] {a : α} (ha : MulLeCancellable a) :
     injective (· * a) := fun b c h =>
-  ha.injective $ by
+  ha.injective <| by
     rwa [mul_comm a, mul_comm a]
 
 @[to_additive]

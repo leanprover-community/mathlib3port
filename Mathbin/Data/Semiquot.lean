@@ -135,17 +135,17 @@ theorem pure_inj {a b : α} : (pure a : Semiquot α) = pure b ↔ a = b :=
 
 instance : IsLawfulMonad Semiquot where
   pure_bind := fun α β x f =>
-    ext.2 $ by
+    ext.2 <| by
       simp
   bind_assoc := fun α β γ s f g =>
-    ext.2 $ by
+    ext.2 <| by
       simp <;>
         exact fun c => ⟨fun ⟨b, ⟨a, as, bf⟩, cg⟩ => ⟨a, as, b, bf, cg⟩, fun ⟨a, as, b, bf, cg⟩ => ⟨b, ⟨a, as, bf⟩, cg⟩⟩
   id_map := fun α q =>
-    ext.2 $ by
+    ext.2 <| by
       simp
   bind_pure_comp_eq_map := fun α β f s =>
-    ext.2 $ by
+    ext.2 <| by
       simp [eq_comm]
 
 instance : LE (Semiquot α) :=
@@ -179,7 +179,7 @@ theorem get_mem {q : Semiquot α} p : get q p ∈ q := by
   unfold get <;> rw [lift_on_of_mem q _ _ a h] <;> exact h
 
 theorem eq_pure {q : Semiquot α} p : q = pure (get q p) :=
-  ext.2 $ fun a => by
+  ext.2 fun a => by
     simp <;> exact ⟨fun h => p _ h _ (get_mem _), fun e => e.symm ▸ get_mem _⟩
 
 @[simp]
@@ -196,8 +196,8 @@ theorem is_pure.mono {s t : Semiquot α} (st : s ≤ t) (h : is_pure t) : is_pur
 
 theorem is_pure.min {s t : Semiquot α} (h : is_pure t) : s ≤ t ↔ s = t :=
   ⟨fun st =>
-    le_antisymmₓ st $ by
-      rw [eq_pure h, eq_pure (h.mono st)] <;> simp <;> exact h _ (get_mem _) _ (st $ get_mem _),
+    le_antisymmₓ st <| by
+      rw [eq_pure h, eq_pure (h.mono st)] <;> simp <;> exact h _ (get_mem _) _ (st <| get_mem _),
     le_of_eqₓ⟩
 
 theorem is_pure_of_subsingleton [Subsingleton α] (q : Semiquot α) : is_pure q
@@ -205,7 +205,7 @@ theorem is_pure_of_subsingleton [Subsingleton α] (q : Semiquot α) : is_pure q
 
 /-- `univ : semiquot α` represents an unspecified element of `univ : set α`. -/
 def univ [Inhabited α] : Semiquot α :=
-  mk $ Set.mem_univ default
+  mk <| Set.mem_univ default
 
 instance [Inhabited α] : Inhabited (Semiquot α) :=
   ⟨univ⟩
@@ -216,7 +216,7 @@ theorem mem_univ [Inhabited α] : ∀ a, a ∈ @univ α _ :=
 
 @[congr]
 theorem univ_unique (I J : Inhabited α) : @univ _ I = @univ _ J :=
-  ext.2 $ by
+  ext.2 <| by
     simp
 
 @[simp]

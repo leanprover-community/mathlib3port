@@ -96,7 +96,7 @@ variable [CommRingₓ R]
 by setting all coefficients after `x` to be 0.
 -/
 def out (x : TruncatedWittVector p n R) : 𝕎 R :=
-  WittVector.mk p $ fun i => if h : i < n then x.coeff ⟨i, h⟩ else 0
+  (WittVector.mk p) fun i => if h : i < n then x.coeff ⟨i, h⟩ else 0
 
 @[simp]
 theorem coeff_out (x : TruncatedWittVector p n R) (i : Finₓ n) : x.out.coeff i = x.coeff i := by
@@ -106,7 +106,7 @@ theorem out_injective : injective (@out p n R _) := by
   intro x y h
   ext i
   rw [WittVector.ext_iff] at h
-  simpa only [coeff_out] using h (↑i)
+  simpa only [coeff_out] using h ↑i
 
 end TruncatedWittVector
 
@@ -120,7 +120,7 @@ section
 which has the same base `p` as `x`.
 This function is bundled into a ring homomorphism in `witt_vector.truncate` -/
 def truncate_fun (x : 𝕎 R) : TruncatedWittVector p n R :=
-  TruncatedWittVector.mk p $ fun i => x.coeff i
+  (TruncatedWittVector.mk p) fun i => x.coeff i
 
 end
 
@@ -382,7 +382,7 @@ variable (n)
 defining the `k`th entry to be the final entry of `fₖ s`.
 -/
 def lift_fun (s : S) : 𝕎 R :=
-  WittVector.mk p $ fun k => TruncatedWittVector.coeff (Finₓ.last k) (f (k + 1) s)
+  (WittVector.mk p) fun k => TruncatedWittVector.coeff (Finₓ.last k) (f (k + 1) s)
 
 variable {f}
 
@@ -446,10 +446,10 @@ def lift_equiv :
   left_inv := by
     rintro ⟨f, hf⟩
     simp only [truncate_comp_lift]
-  right_inv := fun g => lift_unique _ _ $ fun _ => rfl
+  right_inv := fun g => (lift_unique _ _) fun _ => rfl
 
 theorem hom_ext (g₁ g₂ : S →+* 𝕎 R) (h : ∀ k, (truncate k).comp g₁ = (truncate k).comp g₂) : g₁ = g₂ :=
-  lift_equiv.symm.Injective $ Subtype.ext $ funext h
+  lift_equiv.symm.Injective <| Subtype.ext <| funext h
 
 end lift
 

@@ -94,7 +94,7 @@ instance : faithful (incl : C ⥤ _) :=
 def map {D : Type _} [category D] (F : C ⥤ D) : with_terminal C ⥤ with_terminal D where
   obj := fun X =>
     match X with
-    | of x => of $ F.obj x
+    | of x => of <| F.obj x
     | star => star
   map := fun X Y f =>
     match X, Y, f with
@@ -247,7 +247,7 @@ instance : faithful (incl : C ⥤ _) :=
 def map {D : Type _} [category D] (F : C ⥤ D) : with_initial C ⥤ with_initial D where
   obj := fun X =>
     match X with
-    | of x => of $ F.obj x
+    | of x => of <| F.obj x
     | star => star
   map := fun X Y f =>
     match X, Y, f with

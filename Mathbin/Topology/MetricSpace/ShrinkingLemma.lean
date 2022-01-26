@@ -35,7 +35,7 @@ theorem exists_subset_Union_ball_radius_lt {r : ι → ℝ} (hs : IsClosed s)
   rcases exists_subset_Union_closed_subset hs (fun i => @is_open_ball _ _ (c i) (r i)) uf us with ⟨v, hsv, hvc, hcv⟩
   have := fun i => exists_lt_subset_ball (hvc i) (hcv i)
   choose r' hlt hsub
-  exact ⟨r', hsv.trans $ Union_mono $ hsub, hlt⟩
+  exact ⟨r', hsv.trans <| Union_mono <| hsub, hlt⟩
 
 /-- Shrinking lemma for coverings by open balls in a proper metric space. A point-finite open cover
 of a proper metric space by open balls can be shrunk to a new cover by open balls so that each of
@@ -54,7 +54,7 @@ theorem exists_subset_Union_ball_radius_pos_lt {r : ι → ℝ} (hr : ∀ i, 0 <
   rcases exists_subset_Union_closed_subset hs (fun i => @is_open_ball _ _ (c i) (r i)) uf us with ⟨v, hsv, hvc, hcv⟩
   have := fun i => exists_pos_lt_subset_ball (hr i) (hvc i) (hcv i)
   choose r' hlt hsub
-  exact ⟨r', hsv.trans $ Union_mono hsub, hlt⟩
+  exact ⟨r', hsv.trans <| Union_mono hsub, hlt⟩
 
 /-- Shrinking lemma for coverings by open balls in a proper metric space. A point-finite open cover
 of a proper metric space by nonempty open balls can be shrunk to a new cover by nonempty open balls

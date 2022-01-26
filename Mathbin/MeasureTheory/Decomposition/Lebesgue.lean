@@ -108,7 +108,7 @@ instance have_lebesgue_decomposition_smul (μ ν : Measureₓ α) [have_lebesgue
       
 
 @[measurability]
-theorem measurable_rn_deriv (μ ν : Measureₓ α) : Measurable $ μ.rn_deriv ν := by
+theorem measurable_rn_deriv (μ ν : Measureₓ α) : Measurable <| μ.rn_deriv ν := by
   by_cases' h : have_lebesgue_decomposition μ ν
   · exact (have_lebesgue_decomposition_spec μ ν).1
     
@@ -145,23 +145,23 @@ theorem with_density_rn_deriv_le (μ ν : Measureₓ α) : ν.with_density (μ.r
     
 
 instance [is_finite_measure μ] : is_finite_measure (μ.singular_part ν) :=
-  is_finite_measure_of_le μ $ singular_part_le μ ν
+  is_finite_measure_of_le μ <| singular_part_le μ ν
 
 instance [sigma_finite μ] : sigma_finite (μ.singular_part ν) :=
-  sigma_finite_of_le μ $ singular_part_le μ ν
+  sigma_finite_of_le μ <| singular_part_le μ ν
 
 instance [TopologicalSpace α] [is_locally_finite_measure μ] : is_locally_finite_measure (μ.singular_part ν) :=
-  is_locally_finite_measure_of_le $ singular_part_le μ ν
+  is_locally_finite_measure_of_le <| singular_part_le μ ν
 
-instance [is_finite_measure μ] : is_finite_measure (ν.with_density $ μ.rn_deriv ν) :=
-  is_finite_measure_of_le μ $ with_density_rn_deriv_le μ ν
+instance [is_finite_measure μ] : is_finite_measure (ν.with_density <| μ.rn_deriv ν) :=
+  is_finite_measure_of_le μ <| with_density_rn_deriv_le μ ν
 
-instance [sigma_finite μ] : sigma_finite (ν.with_density $ μ.rn_deriv ν) :=
-  sigma_finite_of_le μ $ with_density_rn_deriv_le μ ν
+instance [sigma_finite μ] : sigma_finite (ν.with_density <| μ.rn_deriv ν) :=
+  sigma_finite_of_le μ <| with_density_rn_deriv_le μ ν
 
 instance [TopologicalSpace α] [is_locally_finite_measure μ] :
-    is_locally_finite_measure (ν.with_density $ μ.rn_deriv ν) :=
-  is_locally_finite_measure_of_le $ with_density_rn_deriv_le μ ν
+    is_locally_finite_measure (ν.with_density <| μ.rn_deriv ν) :=
+  is_locally_finite_measure_of_le <| with_density_rn_deriv_le μ ν
 
 theorem lintegral_rn_deriv_lt_top_of_measure_ne_top {μ : Measureₓ α} (ν : Measureₓ α) {s : Set α} (hs : μ s ≠ ∞) :
     (∫⁻ x in s, μ.rn_deriv ν x ∂ν) < ∞ := by
@@ -187,13 +187,12 @@ theorem lintegral_rn_deriv_lt_top (μ ν : Measureₓ α) [is_finite_measure μ]
   rw [← set_lintegral_univ]
   exact lintegral_rn_deriv_lt_top_of_measure_ne_top _ (measure_lt_top _ _).Ne
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The Radon-Nikodym derivative of a sigma-finite measure `μ` with respect to another
 measure `ν` is `ν`-almost everywhere finite. -/
 theorem rn_deriv_lt_top (μ ν : Measureₓ α) [sigma_finite μ] : ∀ᵐ x ∂ν, μ.rn_deriv ν x < ∞ := by
   suffices ∀ n, ∀ᵐ x ∂ν, x ∈ spanning_sets μ n → μ.rn_deriv ν x < ∞ by
-    filter_upwards [ae_all_iff.2 this]
-    intro x hx
-    exact hx _ (mem_spanning_sets_index _ _)
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   intro n
   rw [← ae_restrict_iff' (measurable_spanning_sets _ _)]
   apply ae_lt_top (measurable_rn_deriv _ _)
@@ -699,7 +698,7 @@ theorem have_lebesgue_decomposition_of_finite_measure [is_finite_measure μ] [is
 attribute [local instance] have_lebesgue_decomposition_of_finite_measure
 
 instance {S : μ.finite_spanning_sets_in { s : Set α | MeasurableSet s }} (n : ℕ) :
-    is_finite_measure (μ.restrict $ S.set n) :=
+    is_finite_measure (μ.restrict <| S.set n) :=
   ⟨by
     rw [restrict_apply MeasurableSet.univ, univ_inter]
     exact S.finite _⟩

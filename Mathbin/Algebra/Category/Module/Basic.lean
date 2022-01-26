@@ -125,14 +125,14 @@ instance : has_zero_object (ModuleCat.{v} R) where
   uniqueTo := fun X =>
     { default := (0 : PUnit →ₗ[R] X),
       uniq := fun _ =>
-        LinearMap.ext $ fun x => by
+        LinearMap.ext fun x => by
           have h : x = 0 := by
             decide
           simp only [h, LinearMap.map_zero] }
   uniqueFrom := fun X =>
     { default := (0 : X →ₗ[R] PUnit),
       uniq := fun _ =>
-        LinearMap.ext $ fun x => by
+        LinearMap.ext fun x => by
           decide }
 
 variable {R} {M N U : ModuleCat.{v} R}
@@ -197,10 +197,10 @@ def LinearEquiv.toModuleIso' {M N : ModuleCat.{v} R} (i : M ≃ₗ[R] N) : M ≅
   Hom := i
   inv := i.symm
   hom_inv_id' :=
-    LinearMap.ext $ fun x => by
+    LinearMap.ext fun x => by
       simp
   inv_hom_id' :=
-    LinearMap.ext $ fun x => by
+    LinearMap.ext fun x => by
       simp
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
@@ -213,10 +213,10 @@ def LinearEquiv.toModuleIso'Left {X₁ : ModuleCat.{v} R} {g₂ : AddCommGroup�
   Hom := (e : X₁ →ₗ[R] X₂)
   inv := (e.symm : X₂ →ₗ[R] X₁)
   hom_inv_id' :=
-    LinearMap.ext $ fun x => by
+    LinearMap.ext fun x => by
       simp
   inv_hom_id' :=
-    LinearMap.ext $ fun x => by
+    LinearMap.ext fun x => by
       simp
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
@@ -229,10 +229,10 @@ def LinearEquiv.toModuleIso'Right {g₁ : AddCommGroupₓ X₁} {m₁ : Module R
   Hom := (e : X₁ →ₗ[R] X₂)
   inv := (e.symm : X₂ →ₗ[R] X₁)
   hom_inv_id' :=
-    LinearMap.ext $ fun x => by
+    LinearMap.ext fun x => by
       simp
   inv_hom_id' :=
-    LinearMap.ext $ fun x => by
+    LinearMap.ext fun x => by
       simp
 
 namespace CategoryTheory.Iso

@@ -122,11 +122,11 @@ private def W_type' {α : Type _} (β : α → Type _) [∀ a : α, Fintype (β 
 variable {α : Type _} {β : α → Type _} [∀ a : α, Fintype (β a)] [∀ a : α, Encodable (β a)]
 
 private def encodable_zero : Encodable (W_type' β 0) :=
-  let f : W_type' β 0 → Empty := fun ⟨x, h⟩ => False.elim $ not_lt_of_geₓ h (WType.depth_pos _)
+  let f : W_type' β 0 → Empty := fun ⟨x, h⟩ => False.elim <| not_lt_of_geₓ h (WType.depth_pos _)
   let finv : Empty → W_type' β 0 := by
     intro x
     cases x
-  have : ∀ x, finv (f x) = x := fun ⟨x, h⟩ => False.elim $ not_lt_of_geₓ h (WType.depth_pos _)
+  have : ∀ x, finv (f x) = x := fun ⟨x, h⟩ => False.elim <| not_lt_of_geₓ h (WType.depth_pos _)
   Encodable.ofLeftInverse f finv this
 
 private def f (n : ℕ) : W_type' β (n + 1) → Σ a : α, β a → W_type' β n

@@ -30,10 +30,10 @@ def topological_space_units : TopologicalSpace (R)ˣ :=
  Another good candidate is the subspace topology of $R \times R$,
  with the units embedded via $u \mapsto (u, u^{-1})$.
  These topologies are not (propositionally) equal in general. -/
-class induced_units [t : TopologicalSpace $ (R)ˣ] : Prop where
+class induced_units [t : TopologicalSpace <| (R)ˣ] : Prop where
   top_eq : t = induced (coe : (R)ˣ → R) ‹_›
 
-variable [TopologicalSpace $ (R)ˣ]
+variable [TopologicalSpace <| (R)ˣ]
 
 theorem units_topology_eq [induced_units R] : ‹TopologicalSpace (R)ˣ› = induced (coe : (R)ˣ → R) ‹_› :=
   induced_units.top_eq

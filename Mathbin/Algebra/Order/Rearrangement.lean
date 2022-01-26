@@ -57,35 +57,35 @@ theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s) (hσ 
     · obtain rfl | hax := eq_or_ne x a
       · contradiction
         
-      · exact mem_of_mem_insert_of_ne (hσ $ fun h => hax $ h.symm.trans h₁) hax
+      · exact mem_of_mem_insert_of_ne (hσ fun h => hax <| h.symm.trans h₁) hax
         
       
-    · exact (hx $ σ.injective h₂.symm).elim
+    · exact (hx <| σ.injective h₂.symm).elim
       
     · exact mem_of_mem_insert_of_ne (hσ hx) (ne_of_apply_ne _ h₂)
       
-  specialize hind (hfg.subset $ subset_insert _ _) hτs
+  specialize hind (hfg.subset <| subset_insert _ _) hτs
   simp_rw [sum_insert has]
   refine' le_transₓ _ (add_le_add_left hind _)
   obtain hσa | hσa := eq_or_ne a (σ a)
   · rw [← hσa, swap_self, trans_refl] at hτ
     rw [← hσa, hτ]
     
-  have h1s : (σ⁻¹) a ∈ s := by
+  have h1s : σ⁻¹ a ∈ s := by
     rw [Ne.def, ← inv_eq_iff_eq] at hσa
-    refine' mem_of_mem_insert_of_ne (hσ $ fun h => hσa _) hσa
+    refine' mem_of_mem_insert_of_ne (hσ fun h => hσa _) hσa
     rwa [apply_inv_self, eq_comm] at h
   simp only [← s.sum_erase_add _ h1s, add_commₓ]
   rw [← add_assocₓ, ← add_assocₓ]
-  refine' add_le_add _ (sum_congr rfl $ fun x hx => _).le
+  refine' add_le_add _ ((sum_congr rfl) fun x hx => _).le
   · simp only [hτ, swap_apply_left, Function.comp_app, Equivₓ.coe_trans, apply_inv_self]
-    suffices 0 ≤ (f a - f ((σ⁻¹) a)) • (g a - g (σ a)) by
+    suffices 0 ≤ (f a - f (σ⁻¹ a)) • (g a - g (σ a)) by
       rw [← sub_nonneg]
       convert this
       simp only [smul_sub, sub_smul]
       abel
     refine' smul_nonneg (sub_nonneg_of_le _) (sub_nonneg_of_le _)
-    · specialize hamax ((σ⁻¹) a) h1s
+    · specialize hamax (σ⁻¹ a) h1s
       rw [Prod.Lex.le_iff] at hamax
       cases hamax
       · exact hfg (mem_insert_of_mem h1s) (mem_insert_self _ _) hamax
@@ -93,7 +93,7 @@ theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s) (hσ 
       · exact hamax.2
         
       
-    · specialize hamax (σ a) (mem_of_mem_insert_of_ne (hσ $ σ.injective.ne hσa.symm) hσa.symm)
+    · specialize hamax (σ a) (mem_of_mem_insert_of_ne (hσ <| σ.injective.ne hσa.symm) hσa.symm)
       rw [Prod.Lex.le_iff] at hamax
       cases hamax
       · exact hamax.le
@@ -116,7 +116,7 @@ theorem MonovaryOn.sum_comp_perm_smul_le_sum_smul (hfg : MonovaryOn f g s) (hσ 
     (∑ i in s, f (σ i) • g i) ≤ ∑ i in s, f i • g i := by
   convert
     hfg.sum_smul_comp_perm_le_sum_smul
-      (show { x | (σ⁻¹) x ≠ x } ⊆ s by
+      (show { x | σ⁻¹ x ≠ x } ⊆ s by
         simp only [set_support_inv_eq, hσ]) using
     1
   exact σ.sum_comp' s (fun i j => f i • g j) hσ
@@ -138,22 +138,22 @@ variable [Fintype ι]
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is maximized when
 `f` and `g` vary together. Stated by permuting the entries of `g`.  -/
 theorem Monovary.sum_smul_comp_perm_le_sum_smul (hfg : Monovary f g) : (∑ i, f i • g (σ i)) ≤ ∑ i, f i • g i :=
-  (hfg.monovary_on _).sum_smul_comp_perm_le_sum_smul $ fun i _ => mem_univ _
+  (hfg.monovary_on _).sum_smul_comp_perm_le_sum_smul fun i _ => mem_univ _
 
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is maximized when
 `f` and `g` vary together. Stated by permuting the entries of `f`. -/
 theorem Monovary.sum_comp_perm_smul_le_sum_smul (hfg : Monovary f g) : (∑ i, f (σ i) • g i) ≤ ∑ i, f i • g i :=
-  (hfg.monovary_on _).sum_comp_perm_smul_le_sum_smul $ fun i _ => mem_univ _
+  (hfg.monovary_on _).sum_comp_perm_smul_le_sum_smul fun i _ => mem_univ _
 
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is minimized when
 `f` and `g` antivary together. Stated by permuting the entries of `g`.-/
 theorem Antivary.sum_smul_le_sum_smul_comp_perm (hfg : Antivary f g) : (∑ i, f i • g i) ≤ ∑ i, f i • g (σ i) :=
-  (hfg.antivary_on _).sum_smul_le_sum_smul_comp_perm $ fun i _ => mem_univ _
+  (hfg.antivary_on _).sum_smul_le_sum_smul_comp_perm fun i _ => mem_univ _
 
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is minimized when
 `f` and `g` antivary together. Stated by permuting the entries of `f`. -/
 theorem Antivary.sum_smul_le_sum_comp_perm_smul (hfg : Antivary f g) : (∑ i, f i • g i) ≤ ∑ i, f (σ i) • g i :=
-  (hfg.antivary_on _).sum_smul_le_sum_comp_perm_smul $ fun i _ => mem_univ _
+  (hfg.antivary_on _).sum_smul_le_sum_comp_perm_smul fun i _ => mem_univ _
 
 end Smul
 

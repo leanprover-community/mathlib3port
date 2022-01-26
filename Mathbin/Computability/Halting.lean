@@ -23,9 +23,9 @@ theorem merge' {f g} (hf : Nat.Partrec f) (hg : Nat.Partrec g) :
   obtain ⟨cg, rfl⟩ := code.exists_code.1 hg
   have : Nat.Partrec fun n => Nat.rfindOpt fun k => cf.evaln k n <|> cg.evaln k n :=
     Partrec.nat_iff.1
-      (Partrec.rfind_opt $
-        primrec.option_orelse.to_comp.comp (code.evaln_prim.to_comp.comp $ (snd.pair (const cf)).pair fst)
-          (code.evaln_prim.to_comp.comp $ (snd.pair (const cg)).pair fst))
+      (Partrec.rfind_opt <|
+        primrec.option_orelse.to_comp.comp (code.evaln_prim.to_comp.comp <| (snd.pair (const cf)).pair fst)
+          (code.evaln_prim.to_comp.comp <| (snd.pair (const cg)).pair fst))
   refine' ⟨_, this, fun n => _⟩
   suffices
   refine' ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩
@@ -123,16 +123,16 @@ theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computabl
   let ⟨cf, ef⟩ := exists_code.1 hf
   let ⟨cg, eg⟩ := exists_code.1 hg
   ((eval_part.comp (Computable.cond hc (const cf) (const cg)) Computable.id).bind
-        ((@Computable.decode σ _).comp snd).ofOption.to₂).of_eq $
+        ((@Computable.decode σ _).comp snd).ofOption.to₂).of_eq
     fun a => by
     cases c a <;> simp [ef, eg, encodek]
 
 theorem sum_cases {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ →. σ} (hf : Computable f) (hg : Partrec₂ g)
     (hh : Partrec₂ h) : @Partrec _ σ _ _ fun a => Sum.casesOn (f a) (g a) (h a) :=
-  option_some_iff.1 $
+  option_some_iff.1 <|
     (cond (sum_cases hf (const tt).to₂ (const ff).to₂)
           (sum_cases_left hf (option_some_iff.2 hg).to₂ (const Option.none).to₂)
-          (sum_cases_right hf (const Option.none).to₂ (option_some_iff.2 hh).to₂)).of_eq $
+          (sum_cases_right hf (const Option.none).to₂ (option_some_iff.2 hh).to₂)).of_eq
       fun a => by
       cases f a <;> simp only [Bool.cond_tt, Bool.cond_ff]
 
@@ -151,8 +151,8 @@ theorem RePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : RePred p) (
   (funext fun a => propext (H a) : p = q) ▸ hp
 
 theorem Partrec.dom_re {α β} [Primcodable α] [Primcodable β] {f : α →. β} (h : Partrec f) : RePred fun a => (f a).Dom :=
-  (h.map (Computable.const ()).to₂).of_eq $ fun n =>
-    Part.ext $ fun _ => by
+  (h.map (Computable.const ()).to₂).of_eq fun n =>
+    Part.ext fun _ => by
       simp [Part.dom_iff_mem]
 
 theorem ComputablePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : ComputablePred p) (H : ∀ a, p a ↔ q a) :
@@ -170,7 +170,7 @@ open nat.partrec (code)
 open Nat.Partrec.Code Computable
 
 theorem computable_iff {p : α → Prop} : ComputablePred p ↔ ∃ f : α → Bool, Computable f ∧ p = fun a => f a :=
-  ⟨fun ⟨D, h⟩ => ⟨_, h, funext $ fun a => propext (to_bool_iff _).symm⟩, by
+  ⟨fun ⟨D, h⟩ => ⟨_, h, funext fun a => propext (to_bool_iff _).symm⟩, by
     rintro ⟨f, h, rfl⟩ <;>
       exact
         ⟨by
@@ -189,7 +189,7 @@ protected theorem Not {p : α → Prop} (hp : ComputablePred p) : ComputablePred
 theorem to_re {p : α → Prop} (hp : ComputablePred p) : RePred p := by
   obtain ⟨f, hf, rfl⟩ := computable_iff.1 hp
   unfold RePred
-  refine' (Partrec.cond hf (Decidable.Partrec.const' (Part.some ())) Partrec.none).of_eq fun n => Part.ext $ fun a => _
+  refine' (Partrec.cond hf (Decidable.Partrec.const' (Part.some ())) Partrec.none).of_eq fun n => Part.ext fun a => _
   cases a
   cases f n <;> simp
 
@@ -216,12 +216,12 @@ theorem rice₂ (C : Set code) (H : ∀ cf cg, eval cf = eval cg → (cf ∈ C �
     exact
       have hC : ∀ f, f ∈ C ↔ eval f ∈ eval '' C := fun f => ⟨Set.mem_image_of_mem _, fun ⟨g, hg, e⟩ => (H _ _ e).1 hg⟩
       ⟨fun h =>
-        or_iff_not_imp_left.2 $ fun C0 =>
-          Set.eq_univ_of_forall $ fun cg =>
+        or_iff_not_imp_left.2 fun C0 =>
+          Set.eq_univ_of_forall fun cg =>
             let ⟨cf, fC⟩ := Set.ne_empty_iff_nonempty.1 C0
-            (hC _).2 $
-              rice (eval '' C) (h.of_eq hC) (Partrec.nat_iff.1 $ eval_part.comp (const cf) Computable.id)
-                (Partrec.nat_iff.1 $ eval_part.comp (const cg) Computable.id) ((hC _).1 fC),
+            (hC _).2 <|
+              rice (eval '' C) (h.of_eq hC) (Partrec.nat_iff.1 <| eval_part.comp (const cf) Computable.id)
+                (Partrec.nat_iff.1 <| eval_part.comp (const cg) Computable.id) ((hC _).1 fC),
         fun h => by
         obtain rfl | rfl := h <;>
           simp [ComputablePred, Set.mem_empty_eq] <;>
@@ -255,7 +255,7 @@ theorem computable_iff_re_compl_re' {p : α → Prop} : ComputablePred p ↔ ReP
   classical <;> exact computable_iff_re_compl_re
 
 theorem halting_problem_not_re n : ¬RePred fun c => ¬(eval c n).Dom
-  | h => halting_problem _ $ computable_iff_re_compl_re'.2 ⟨halting_problem_re _, h⟩
+  | h => halting_problem _ <| computable_iff_re_compl_re'.2 ⟨halting_problem_re _, h⟩
 
 end ComputablePred
 
@@ -301,14 +301,14 @@ theorem head {n : ℕ} : @partrec' n.succ (@head ℕ n) :=
   prim Nat.Primrec'.head
 
 theorem tail {n f} (hf : @partrec' n f) : @partrec' n.succ fun v => f v.tail :=
-  (hf.comp _ fun i => @prim _ _ $ Nat.Primrec'.nth i.succ).of_eq $ fun v => by
+  (hf.comp _ fun i => @prim _ _ <| Nat.Primrec'.nth i.succ).of_eq fun v => by
     simp <;> rw [← of_fn_nth v.tail] <;> congr <;> funext i <;> simp
 
 protected theorem bind {n f g} (hf : @partrec' n f) (hg : @partrec' (n + 1) g) :
     @partrec' n fun v => (f v).bind fun a => g (a::ᵥv) :=
   (@comp n (n + 1) g (fun i => Finₓ.cases f (fun i v => some (v.nth i)) i) hg fun i => by
         refine' Finₓ.cases _ (fun i => _) i <;> simp [*]
-        exact prim (Nat.Primrec'.nth _)).of_eq $
+        exact prim (Nat.Primrec'.nth _)).of_eq
     fun v => by
     simp [m_of_fn, Part.bind_assoc, pure]
 
@@ -321,7 +321,7 @@ protected theorem map {n f} {g : Vector ℕ (n + 1) → ℕ} (hf : @partrec' n f
 def vec {n m} (f : Vector ℕ n → Vector ℕ m) :=
   ∀ i, partrec' fun v => (f v).nth i
 
-theorem vec.prim {n m f} (hf : @Nat.Primrec'.Vec n m f) : vec f := fun i => prim $ hf i
+theorem vec.prim {n m f} (hf : @Nat.Primrec'.Vec n m f) : vec f := fun i => prim <| hf i
 
 protected theorem nil {n} : @vec n 0 fun _ => nil := fun i => i.elim0
 
@@ -338,7 +338,7 @@ theorem idv {n} : @vec n n id :=
   vec.prim Nat.Primrec'.idv
 
 theorem comp' {n m f g} (hf : @partrec' m f) (hg : @vec n m g) : partrec' fun v => f (g v) :=
-  (hf.comp _ hg).of_eq $ fun v => by
+  (hf.comp _ hg).of_eq fun v => by
     simp
 
 theorem comp₁ {n} (f : ℕ →. ℕ) {g : Vector ℕ n → ℕ} (hf : @partrec' 1 fun v => f v.head) (hg : @partrec' n g) :
@@ -347,12 +347,12 @@ theorem comp₁ {n} (f : ℕ →. ℕ) {g : Vector ℕ n → ℕ} (hf : @partrec
 
 theorem rfind_opt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @partrec' (n + 1) f) :
     @partrec' n fun v => Nat.rfindOpt fun a => of_nat (Option ℕ) (f (a::ᵥv)) :=
-  ((rfind $
+  ((rfind <|
             (of_prim (Primrec.nat_sub.comp (Primrec.const 1) Primrec.vector_head)).comp₁ (fun n => Part.some (1 - n))
               hf).bind
-        ((prim Nat.Primrec'.pred).comp₁ Nat.pred hf)).of_eq $
+        ((prim Nat.Primrec'.pred).comp₁ Nat.pred hf)).of_eq
     fun v =>
-    Part.ext $ fun b => by
+    Part.ext fun b => by
       simp only [Nat.rfindOpt, exists_prop, tsub_eq_zero_iff_le, Pfun.coe_val, Part.mem_bind_iff, Part.mem_some_iff,
         Option.mem_def, Part.mem_coe]
       refine' exists_congr fun a => (and_congr (iff_of_eq _) Iff.rfl).trans (and_congr_right fun h => _)
@@ -382,11 +382,11 @@ theorem of_part : ∀ {n f}, Partrec f → @partrec' n f :=
   fun f hf => by
   obtain ⟨c, rfl⟩ := exists_code.1 hf
   simpa [eval_eq_rfind_opt] using
-    rfind_opt $
-      of_prim $
-        Primrec.encode_iff.2 $
-          evaln_prim.comp $
-            (primrec.vector_head.pair (Primrec.const c)).pair $ primrec.vector_head.comp Primrec.vector_tail
+    rfind_opt <|
+      of_prim <|
+        Primrec.encode_iff.2 <|
+          evaln_prim.comp <|
+            (primrec.vector_head.pair (Primrec.const c)).pair <| primrec.vector_head.comp Primrec.vector_tail
 
 theorem part_iff {n f} : @partrec' n f ↔ Partrec f :=
   ⟨to_part, of_part⟩
@@ -394,20 +394,20 @@ theorem part_iff {n f} : @partrec' n f ↔ Partrec f :=
 theorem part_iff₁ {f : ℕ →. ℕ} : (@partrec' 1 fun v => f v.head) ↔ Partrec f :=
   part_iff.trans
     ⟨fun h =>
-      (h.comp $ (Primrec.vector_of_fn $ fun i => Primrec.id).to_comp).of_eq fun v => by
+      (h.comp <| (Primrec.vector_of_fn fun i => Primrec.id).to_comp).of_eq fun v => by
         simp only [id.def, head_of_fn],
       fun h => h.comp vector_head⟩
 
 theorem part_iff₂ {f : ℕ → ℕ →. ℕ} : (@partrec' 2 fun v => f v.head v.tail.head) ↔ Partrec₂ f :=
   part_iff.trans
     ⟨fun h =>
-      (h.comp $ vector_cons.comp fst $ vector_cons.comp snd (const nil)).of_eq fun v => by
+      (h.comp <| vector_cons.comp fst <| vector_cons.comp snd (const nil)).of_eq fun v => by
         simp only [cons_head, cons_tail],
       fun h => h.comp vector_head (vector_head.comp vector_tail)⟩
 
 theorem vec_iff {m n f} : @vec m n f ↔ Computable f :=
   ⟨fun h => by
-    simpa only [of_fn_nth] using vector_of_fn fun i => to_part (h i), fun h i => of_part $ vector_nth.comp h (const i)⟩
+    simpa only [of_fn_nth] using vector_of_fn fun i => to_part (h i), fun h i => of_part <| vector_nth.comp h (const i)⟩
 
 end Nat.Partrec'
 

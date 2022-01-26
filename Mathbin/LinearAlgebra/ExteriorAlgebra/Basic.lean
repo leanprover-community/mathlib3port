@@ -115,11 +115,11 @@ def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = 0 } ≃ (ExteriorAlgebra R 
 
 @[simp]
 theorem ι_comp_lift (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) : (lift R ⟨f, cond⟩).toLinearMap.comp (ι R) = f :=
-  Subtype.mk_eq_mk.mp $ (lift R).symm_apply_apply ⟨f, cond⟩
+  Subtype.mk_eq_mk.mp <| (lift R).symm_apply_apply ⟨f, cond⟩
 
 @[simp]
 theorem lift_ι_apply (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) x : lift R ⟨f, cond⟩ (ι R x) = f x :=
-  (LinearMap.ext_iff.mp $ ι_comp_lift R f cond) x
+  (LinearMap.ext_iff.mp <| ι_comp_lift R f cond) x
 
 @[simp]
 theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) (g : ExteriorAlgebra R M →ₐ[R] A) :
@@ -154,7 +154,7 @@ theorem induction {C : ExteriorAlgebra R M → Prop} (h_grade0 : ∀ r, C (algeb
   let s : Subalgebra R (ExteriorAlgebra R M) :=
     { Carrier := C, mul_mem' := h_mul, add_mem' := h_add, algebra_map_mem' := h_grade0 }
   let of : { f : M →ₗ[R] s // ∀ m, f m * f m = 0 } :=
-    ⟨(ι R).codRestrict s.to_submodule h_grade1, fun m => Subtype.eq $ ι_sq_zero m⟩
+    ⟨(ι R).codRestrict s.to_submodule h_grade1, fun m => Subtype.eq <| ι_sq_zero m⟩
   have of_id : AlgHom.id R (ExteriorAlgebra R M) = s.val.comp (lift R of) := by
     ext
     simp [of]
@@ -169,8 +169,8 @@ def algebra_map_inv : ExteriorAlgebra R M →ₐ[R] R :=
 
 variable (M)
 
-theorem algebra_map_left_inverse : Function.LeftInverse algebra_map_inv (algebraMap R $ ExteriorAlgebra R M) := fun x =>
-  by
+theorem algebra_map_left_inverse : Function.LeftInverse algebra_map_inv (algebraMap R <| ExteriorAlgebra R M) :=
+  fun x => by
   simp [algebra_map_inv]
 
 @[simp]
@@ -252,7 +252,7 @@ theorem ι_add_mul_swap (x y : M) : ι R x * ι R y + ι R y * ι R x = 0 :=
     
 
 theorem ι_mul_prod_list {n : ℕ} (f : Finₓ n → M) (i : Finₓ n) :
-    (ι R $ f i) * (List.ofFnₓ $ fun i => ι R $ f i).Prod = 0 := by
+    (ι R <| f i) * (List.ofFnₓ fun i => ι R <| f i).Prod = 0 := by
   induction' n with n hn
   · exact i.elim0
     
@@ -260,7 +260,7 @@ theorem ι_mul_prod_list {n : ℕ} (f : Finₓ n → M) (i : Finₓ n) :
     by_cases' h : i = 0
     · rw [h, ι_sq_zero, zero_mul]
       
-    · replace hn := congr_argₓ (· * · $ ι R $ f 0) (hn (fun i => f $ Finₓ.succ i) (i.pred h))
+    · replace hn := congr_argₓ (· * · <| ι R <| f 0) (hn (fun i => f <| Finₓ.succ i) (i.pred h))
       simp only at hn
       rw [Finₓ.succ_pred, ← mul_assoc, mul_zero] at hn
       refine' (eq_zero_iff_eq_zero_of_add_eq_zero _).mp hn
@@ -291,7 +291,7 @@ def ι_multi (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Finₓ n) :=
           
         · convert mul_zero _
           refine'
-            hn (fun i => f $ Finₓ.succ i) (x.pred hx) (y.pred (ne_of_ltₓ $ lt_of_le_of_ltₓ x.zero_le h).symm)
+            hn (fun i => f <| Finₓ.succ i) (x.pred hx) (y.pred (ne_of_ltₓ <| lt_of_le_of_ltₓ x.zero_le h).symm)
               (fin.pred_lt_pred_iff.mpr h) _
           simp only [Finₓ.succ_pred]
           exact hfxy
@@ -301,7 +301,7 @@ def ι_multi (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Finₓ n) :=
 
 variable {R}
 
-theorem ι_multi_apply {n : ℕ} (v : Finₓ n → M) : ι_multi R n v = (List.ofFnₓ $ fun i => ι R (v i)).Prod :=
+theorem ι_multi_apply {n : ℕ} (v : Finₓ n → M) : ι_multi R n v = (List.ofFnₓ fun i => ι R (v i)).Prod :=
   rfl
 
 end ExteriorAlgebra

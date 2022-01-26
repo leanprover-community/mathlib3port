@@ -78,7 +78,7 @@ instance : Nonempty I :=
   ⟨0⟩
 
 theorem mul_mem (x y : I) : (x : ℝ) * y ∈ I :=
-  ⟨mul_nonneg x.2.1 y.2.1, (mul_le_mul x.2.2 y.2.2 y.2.1 zero_le_one).trans_eq $ one_mulₓ 1⟩
+  ⟨mul_nonneg x.2.1 y.2.1, (mul_le_mul x.2.2 y.2.2 y.2.1 zero_le_one).trans_eq <| one_mulₓ 1⟩
 
 instance : Mul I :=
   ⟨fun x y => ⟨x * y, mul_mem x y⟩⟩
@@ -88,10 +88,10 @@ theorem coe_mul {x y : I} : ((x * y : I) : ℝ) = x * y :=
   rfl
 
 theorem mul_le_left {x y : I} : x * y ≤ x :=
-  Subtype.coe_le_coe.mp $ (mul_le_mul_of_nonneg_left y.2.2 x.2.1).trans_eq $ mul_oneₓ x
+  Subtype.coe_le_coe.mp <| (mul_le_mul_of_nonneg_left y.2.2 x.2.1).trans_eq <| mul_oneₓ x
 
 theorem mul_le_right {x y : I} : x * y ≤ y :=
-  Subtype.coe_le_coe.mp $ (mul_le_mul_of_nonneg_right x.2.2 y.2.1).trans_eq $ one_mulₓ y
+  Subtype.coe_le_coe.mp <| (mul_le_mul_of_nonneg_right x.2.2 y.2.1).trans_eq <| one_mulₓ y
 
 /-- Unit interval central symmetry. -/
 def symm : I → I := fun t => ⟨1 - t.val, mem_iff_one_sub_mem.mp t.property⟩
@@ -100,17 +100,17 @@ localized [UnitInterval] notation "σ" => UnitInterval.symm
 
 @[simp]
 theorem symm_zero : σ 0 = 1 :=
-  Subtype.ext $ by
+  Subtype.ext <| by
     simp [symm]
 
 @[simp]
 theorem symm_one : σ 1 = 0 :=
-  Subtype.ext $ by
+  Subtype.ext <| by
     simp [symm]
 
 @[simp]
 theorem symm_symm (x : I) : σ (σ x) = x :=
-  Subtype.ext $ by
+  Subtype.ext <| by
     simp [symm]
 
 @[simp]

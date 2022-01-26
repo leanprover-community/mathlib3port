@@ -113,11 +113,11 @@ theorem map_map {α'' β''} (f' : α' → α'') (g' : β' → β'') (f : α → 
 @[simp]
 theorem map_comp_map {α'' β''} (f' : α' → α'') (g' : β' → β'') (f : α → α') (g : β → β') :
     Sum.map f' g' ∘ Sum.map f g = Sum.map (f' ∘ f) (g' ∘ g) :=
-  funext $ map_map f' g' f g
+  funext <| map_map f' g' f g
 
 @[simp]
 theorem map_id_id α β : Sum.map (@id α) (@id β) = id :=
-  funext $ fun x => Sum.recOn x (fun _ => rfl) fun _ => rfl
+  funext fun x => Sum.recOn x (fun _ => rfl) fun _ => rfl
 
 theorem inl.inj_iff {a b} : (inl a : Sum α β) = inl b ↔ a = b :=
   ⟨inl.inj, congr_argₓ _⟩
@@ -152,15 +152,15 @@ theorem elim_comp_inr {α β γ : Sort _} (f : α → γ) (g : β → γ) : Sum.
 
 @[simp]
 theorem elim_inl_inr {α β : Sort _} : @Sum.elim α β _ inl inr = id :=
-  funext $ fun x => Sum.casesOn x (fun _ => rfl) fun _ => rfl
+  funext fun x => Sum.casesOn x (fun _ => rfl) fun _ => rfl
 
 theorem comp_elim {α β γ δ : Sort _} (f : γ → δ) (g : α → γ) (h : β → γ) :
     f ∘ Sum.elim g h = Sum.elim (f ∘ g) (f ∘ h) :=
-  funext $ fun x => Sum.casesOn x (fun _ => rfl) fun _ => rfl
+  funext fun x => Sum.casesOn x (fun _ => rfl) fun _ => rfl
 
 @[simp]
 theorem elim_comp_inl_inr {α β γ : Sort _} (f : Sum α β → γ) : Sum.elim (f ∘ inl) (f ∘ inr) = f :=
-  funext $ fun x => Sum.casesOn x (fun _ => rfl) fun _ => rfl
+  funext fun x => Sum.casesOn x (fun _ => rfl) fun _ => rfl
 
 open function (update update_eq_iff update_comp_eq_of_injective update_comp_eq_of_forall_ne)
 
@@ -193,7 +193,7 @@ theorem update_inl_apply_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum
 @[simp]
 theorem update_inl_comp_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {x : γ} :
     update f (inl i) x ∘ inr = f ∘ inr :=
-  update_comp_eq_of_forall_ne _ _ $ fun _ => inr_ne_inl
+  (update_comp_eq_of_forall_ne _ _) fun _ => inr_ne_inl
 
 @[simp]
 theorem update_inl_apply_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {j : β} {x : γ} :
@@ -203,7 +203,7 @@ theorem update_inl_apply_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i
 @[simp]
 theorem update_inr_comp_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : β} {x : γ} :
     update f (inr i) x ∘ inl = f ∘ inl :=
-  update_comp_eq_of_forall_ne _ _ $ fun _ => inl_ne_inr
+  (update_comp_eq_of_forall_ne _ _) fun _ => inl_ne_inr
 
 @[simp]
 theorem update_inr_apply_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {j : β} {x : γ} :
@@ -232,7 +232,7 @@ theorem swap_swap (x : Sum α β) : swap (swap x) = x := by
 
 @[simp]
 theorem swap_swap_eq : swap ∘ swap = @id (Sum α β) :=
-  funext $ swap_swap
+  funext <| swap_swap
 
 @[simp]
 theorem swap_left_inverse : Function.LeftInverse (@swap α β) swap :=
@@ -287,7 +287,7 @@ theorem lift_rel.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ 
   exacts[lift_rel.inl (hr _ _ ‹_›), lift_rel.inr (hs _ _ ‹_›)]
 
 theorem lift_rel.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : lift_rel r₁ s x y) : lift_rel r₂ s x y :=
-  h.mono hr $ fun _ _ => id
+  (h.mono hr) fun _ _ => id
 
 theorem lift_rel.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : lift_rel r s₁ x y) : lift_rel r s₂ x y :=
   h.mono (fun _ _ => id) hs
@@ -350,7 +350,7 @@ theorem lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b �
   exacts[lex.inl (hr _ _ ‹_›), lex.inr (hs _ _ ‹_›), lex.sep _ _]
 
 theorem lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : lex r₁ s x y) : lex r₂ s x y :=
-  h.mono hr $ fun _ _ => id
+  (h.mono hr) fun _ _ => id
 
 theorem lex.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : lex r s₁ x y) : lex r s₂ x y :=
   h.mono (fun _ _ => id) hs
@@ -386,14 +386,14 @@ open Sum
 
 theorem injective.sum_elim {f : α → γ} {g : β → γ} (hf : injective f) (hg : injective g) (hfg : ∀ a b, f a ≠ g b) :
     injective (Sum.elim f g)
-  | inl x, inl y, h => congr_argₓ inl $ hf h
+  | inl x, inl y, h => congr_argₓ inl <| hf h
   | inl x, inr y, h => (hfg x y h).elim
   | inr x, inl y, h => (hfg y x h.symm).elim
-  | inr x, inr y, h => congr_argₓ inr $ hg h
+  | inr x, inr y, h => congr_argₓ inr <| hg h
 
 theorem injective.sum_map {f : α → β} {g : α' → β'} (hf : injective f) (hg : injective g) : injective (Sum.map f g)
-  | inl x, inl y, h => congr_argₓ inl $ hf $ inl.inj h
-  | inr x, inr y, h => congr_argₓ inr $ hg $ inr.inj h
+  | inl x, inl y, h => congr_argₓ inl <| hf <| inl.inj h
+  | inr x, inr y, h => congr_argₓ inr <| hg <| inr.inj h
 
 theorem surjective.sum_map {f : α → β} {g : α' → β'} (hf : surjective f) (hg : surjective g) : surjective (Sum.map f g)
   | inl y =>

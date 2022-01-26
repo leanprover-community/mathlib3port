@@ -61,7 +61,7 @@ the generated instance for `β` has names `as`, `bs`, ... This can be used to
 create instances for 'containers' such as lists or sets.
 -/
 def make_listlike_instance (α : Sort u) [HasVariableNames α] {β : Sort v} : HasVariableNames β :=
-  ⟨(names α).map $ fun n => n.append_suffix "s", by
+  ⟨(names α).map fun n => n.append_suffix "s", by
     simp [names_nonempty]⟩
 
 /-- `@make_inheriting_instance α _ β` creates an instance `has_variable_names β`

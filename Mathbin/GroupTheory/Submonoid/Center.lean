@@ -64,7 +64,7 @@ theorem neg_mem_center [Ringₓ M] {a : M} (ha : a ∈ Set.Center M) : -a ∈ Se
 
 @[to_additive subset_add_center_add_units]
 theorem subset_center_units [Monoidₓ M] : (coe : (M)ˣ → M) ⁻¹' center M ⊆ Set.Center (M)ˣ := fun a ha b =>
-  Units.ext $ ha _
+  Units.ext <| ha _
 
 theorem center_units_subset [GroupWithZeroₓ M] : Set.Center (M)ˣ ⊆ (coe : (M)ˣ → M) ⁻¹' center M := fun a ha b => by
   obtain rfl | hb := eq_or_ne b 0
@@ -102,7 +102,7 @@ variable (M)
 
 @[simp, to_additive add_center_eq_univ]
 theorem center_eq_univ [CommSemigroupₓ M] : center M = Set.Univ :=
-  subset.antisymm (subset_univ _) $ fun x _ y => mul_comm y x
+  (subset.antisymm (subset_univ _)) fun x _ y => mul_comm y x
 
 end Set
 
@@ -120,7 +120,7 @@ def center : Submonoid M where
   mul_mem' := fun a b => Set.mul_mem_center
 
 @[to_additive]
-theorem coe_center : ↑center M = Set.Center M :=
+theorem coe_center : ↑(center M) = Set.Center M :=
   rfl
 
 variable {M}
@@ -134,7 +134,7 @@ instance decidable_mem_center [DecidableEq M] [Fintype M] : DecidablePred (· �
 
 /-- The center of a monoid is commutative. -/
 instance : CommMonoidₓ (center M) :=
-  { (center M).toMonoid with mul_comm := fun a b => Subtype.ext $ b.prop _ }
+  { (center M).toMonoid with mul_comm := fun a b => Subtype.ext <| b.prop _ }
 
 end
 

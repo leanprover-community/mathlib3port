@@ -37,7 +37,8 @@ variable {P Q : C}
     top and a monomorphism at the bottom has a lift. -/
 class strong_epi (f : P ⟶ Q) : Prop where
   Epi : epi f
-  HasLift : ∀ {X Y : C} {u : P ⟶ X} {v : Q ⟶ Y} {z : X ⟶ Y} [mono z] h : u ≫ z = f ≫ v, arrow.has_lift $ arrow.hom_mk' h
+  HasLift :
+    ∀ {X Y : C} {u : P ⟶ X} {v : Q ⟶ Y} {z : X ⟶ Y} [mono z] h : u ≫ z = f ≫ v, arrow.has_lift <| arrow.hom_mk' h
 
 attribute [instance] strong_epi.has_lift
 
@@ -94,8 +95,8 @@ end
 
 /-- A strong epimorphism that is a monomorphism is an isomorphism. -/
 theorem is_iso_of_mono_of_strong_epi (f : P ⟶ Q) [mono f] [strong_epi f] : is_iso f :=
-  ⟨⟨arrow.lift $
-        arrow.hom_mk' $
+  ⟨⟨arrow.lift <|
+        arrow.hom_mk' <|
           show 𝟙 P ≫ f = f ≫ 𝟙 Q by
             simp ,
       by

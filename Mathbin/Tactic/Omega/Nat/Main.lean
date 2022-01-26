@@ -112,7 +112,7 @@ unsafe def to_exprterm : expr → tactic exprterm
     (do
         let m ← eval_expr' Nat x
         return (exprterm.cst m)) <|>
-      return $ exprterm.exp 1 x
+      (return <| exprterm.exp 1 x)
 
 /-- Reification to imtermediate shadow syntax that retains exprs -/
 unsafe def to_exprform : expr → tactic exprform
@@ -136,7 +136,7 @@ unsafe def to_exprform : expr → tactic exprform
     let q ← to_exprform qx
     return (exprform.and p q)
   | quote.1 (_ → %%ₓpx) => to_exprform px
-  | x => trace "Cannot reify expr : " >> trace x >> failed
+  | x => (trace "Cannot reify expr : " >> trace x) >> failed
 
 /-- List of all unreified exprs -/
 unsafe def exprterm.exprs : exprterm → List expr
@@ -256,5 +256,5 @@ open Omega.Nat
 
 /-- The core omega tactic for natural numbers. -/
 unsafe def omega_nat (is_manual : Bool) : tactic Unit :=
-  (desugar; if is_manual then skip else preprocess); prove >>= apply >> skip
+  andthen (andthen desugar (if is_manual then skip else preprocess)) ((prove >>= apply) >> skip)
 

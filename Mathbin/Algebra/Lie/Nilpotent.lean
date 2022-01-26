@@ -112,7 +112,7 @@ namespace LieModule
 
 variable (R L M)
 
-theorem antitone_lower_central_series : Antitone $ lower_central_series R L M := by
+theorem antitone_lower_central_series : Antitone <| lower_central_series R L M := by
   intro l k
   induction' k with k ih generalizing l <;> intro h
   · exact (le_zero_iff.mp h).symm ▸ le_reflₓ _
@@ -363,6 +363,9 @@ theorem LieAlgebra.nilpotent_of_nilpotent_quotient {I : LieIdeal R L} (h₁ : I 
   use k
   simp [← LieSubmodule.coe_to_submodule_eq_iff, coe_lower_central_series_ideal_quot_eq, hk]
 
+theorem LieAlgebra.non_trivial_center_of_is_nilpotent [Nontrivial L] [IsNilpotent R L] : Nontrivial <| center R L :=
+  LieModule.nontrivial_max_triv_of_is_nilpotent R L L
+
 theorem LieIdeal.map_lower_central_series_le (k : ℕ) {f : L →ₗ⁅R⁆ L'} :
     LieIdeal.map f (lower_central_series R L L k) ≤ lower_central_series R L' L' k := by
   induction' k with k ih
@@ -428,14 +431,14 @@ theorem LieAlgebra.ad_nilpotent_of_nilpotent {a : A} (h : IsNilpotent a) : IsNil
 variable {R}
 
 theorem LieSubalgebra.is_nilpotent_ad_of_is_nilpotent_ad {L : Type v} [LieRing L] [LieAlgebra R L]
-    (K : LieSubalgebra R L) {x : K} (h : IsNilpotent (LieAlgebra.ad R L (↑x))) : IsNilpotent (LieAlgebra.ad R K x) := by
+    (K : LieSubalgebra R L) {x : K} (h : IsNilpotent (LieAlgebra.ad R L ↑x)) : IsNilpotent (LieAlgebra.ad R K x) := by
   obtain ⟨n, hn⟩ := h
   use n
   exact LinearMap.submodule_pow_eq_zero_of_pow_eq_zero (K.ad_comp_incl_eq x) hn
 
 theorem LieAlgebra.is_nilpotent_ad_of_is_nilpotent {L : LieSubalgebra R A} {x : L} (h : IsNilpotent (x : A)) :
     IsNilpotent (LieAlgebra.ad R L x) :=
-  L.is_nilpotent_ad_of_is_nilpotent_ad $ LieAlgebra.ad_nilpotent_of_nilpotent R h
+  L.is_nilpotent_ad_of_is_nilpotent_ad <| LieAlgebra.ad_nilpotent_of_nilpotent R h
 
 end OfAssociative
 

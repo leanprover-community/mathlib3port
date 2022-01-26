@@ -364,17 +364,17 @@ protected theorem LinearIndependent.eventually {ι} [Fintype ι] {f : ι → E} 
     ∀ᶠ g in 𝓝 f, LinearIndependent 𝕜 g := by
   simp only [Fintype.linear_independent_iff'] at hf⊢
   rcases LinearMap.exists_antilipschitz_with _ hf with ⟨K, K0, hK⟩
-  have : tendsto (fun g : ι → E => ∑ i, ∥g i - f i∥) (𝓝 f) (𝓝 $ ∑ i, ∥f i - f i∥) :=
-    tendsto_finset_sum _ fun i hi => tendsto.norm $ ((continuous_apply i).Tendsto _).sub tendsto_const_nhds
+  have : tendsto (fun g : ι → E => ∑ i, ∥g i - f i∥) (𝓝 f) (𝓝 <| ∑ i, ∥f i - f i∥) :=
+    tendsto_finset_sum _ fun i hi => tendsto.norm <| ((continuous_apply i).Tendsto _).sub tendsto_const_nhds
   simp only [sub_self, norm_zero, Finset.sum_const_zero] at this
-  refine' (this.eventually (gt_mem_nhds $ inv_pos.2 K0)).mono fun g hg => _
+  refine' (this.eventually (gt_mem_nhds <| inv_pos.2 K0)).mono fun g hg => _
   replace hg : (∑ i, nnnorm (g i - f i)) < K⁻¹
   · rw [← Nnreal.coe_lt_coe]
     push_cast
     exact hg
     
   rw [LinearMap.ker_eq_bot]
-  refine' (hK.add_sub_lipschitz_with (LipschitzWith.of_dist_le_mul $ fun v u => _) hg).Injective
+  refine' (hK.add_sub_lipschitz_with (LipschitzWith.of_dist_le_mul fun v u => _) hg).Injective
   simp only [dist_eq_norm, LinearMap.lsum_apply, Pi.sub_apply, LinearMap.sum_apply, LinearMap.comp_apply,
     LinearMap.proj_apply, LinearMap.smul_right_apply, LinearMap.id_apply, ← Finset.sum_sub_distrib, ← smul_sub, ←
     sub_smul, Nnreal.coe_sum, coe_nnnorm, Finset.sum_mul]
@@ -383,7 +383,7 @@ protected theorem LinearIndependent.eventually {ι} [Fintype ι] {f : ι → E} 
   exact mul_le_mul_of_nonneg_left (norm_le_pi_norm (v - u) i) (norm_nonneg _)
 
 theorem is_open_set_of_linear_independent {ι : Type _} [Fintype ι] : IsOpen { f : ι → E | LinearIndependent 𝕜 f } :=
-  is_open_iff_mem_nhds.2 $ fun f => LinearIndependent.eventually
+  is_open_iff_mem_nhds.2 fun f => LinearIndependent.eventually
 
 theorem is_open_set_of_nat_le_rank (n : ℕ) : IsOpen { f : E →L[𝕜] F | ↑n ≤ rank (f : E →ₗ[𝕜] F) } := by
   simp only [le_rank_iff_exists_linear_independent_finset, set_of_exists, ← exists_prop]
@@ -461,8 +461,8 @@ theorem Basis.op_norm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) :
   apply u.op_norm_le_bound (mul_nonneg (le_of_ltₓ C_pos) hM)
   intro e
   calc ∥u e∥ = ∥u (∑ i, v.equiv_fun e i • v i)∥ := by
-      rw [v.sum_equiv_fun]_ = ∥∑ i, v.equiv_fun e i • (u $ v i)∥ := by
-      simp [u.map_sum, LinearMap.map_smul]_ ≤ ∑ i, ∥v.equiv_fun e i • (u $ v i)∥ :=
+      rw [v.sum_equiv_fun]_ = ∥∑ i, v.equiv_fun e i • (u <| v i)∥ := by
+      simp [u.map_sum, LinearMap.map_smul]_ ≤ ∑ i, ∥v.equiv_fun e i • (u <| v i)∥ :=
       norm_sum_le _ _ _ = ∑ i, ∥v.equiv_fun e i∥ * ∥u (v i)∥ := by
       simp only [norm_smul]_ ≤ ∑ i, ∥v.equiv_fun e i∥ * M :=
       Finset.sum_le_sum fun i hi => mul_le_mul_of_nonneg_left (hu i) (norm_nonneg _)_ = (∑ i, ∥v.equiv_fun e i∥) * M :=
@@ -483,7 +483,7 @@ instance [FiniteDimensional 𝕜 E] [second_countable_topology F] : second_count
     v.op_norm_le
   have h_2C : 0 < 2 * C := mul_pos zero_lt_two C_pos
   have hε2C : 0 < ε / (2 * C) := div_pos ε_pos h_2C
-  have : ∀ φ : E →L[𝕜] F, ∃ n : Finₓ d → ℕ, ∥φ - (v.constrL $ u ∘ n)∥ ≤ ε / 2 := by
+  have : ∀ φ : E →L[𝕜] F, ∃ n : Finₓ d → ℕ, ∥φ - (v.constrL <| u ∘ n)∥ ≤ ε / 2 := by
     intro φ
     have : ∀ i, ∃ n, ∥φ (v i) - u n∥ ≤ ε / (2 * C) := by
       simp only [norm_sub_rev]
@@ -496,7 +496,7 @@ instance [FiniteDimensional 𝕜 E] [second_countable_topology F] : second_count
       exact ⟨n, le_of_ltₓ hn⟩
     choose n hn using this
     use n
-    replace hn : ∀ i : Finₓ d, ∥(φ - (v.constrL $ u ∘ n)) (v i)∥ ≤ ε / (2 * C)
+    replace hn : ∀ i : Finₓ d, ∥(φ - (v.constrL <| u ∘ n)) (v i)∥ ≤ ε / (2 * C)
     · simp [hn]
       
     have : C * (ε / (2 * C)) = ε / 2 := by
@@ -504,7 +504,7 @@ instance [FiniteDimensional 𝕜 E] [second_countable_topology F] : second_count
     specialize hC (le_of_ltₓ hε2C) hn
     rwa [this] at hC
   choose n hn using this
-  set Φ := fun φ : E →L[𝕜] F => v.constrL $ u ∘ n φ
+  set Φ := fun φ : E →L[𝕜] F => v.constrL <| u ∘ n φ
   change ∀ z, dist z (Φ z) ≤ ε / 2 at hn
   use n
   intro x y hxy
@@ -622,7 +622,7 @@ theorem LinearEquiv.closed_embedding_of_injective {f : E →ₗ[𝕜] F} (hf : f
 theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensional 𝕜 F] (f : E →L[𝕜] F)
     (hf : f.range = ⊤) : ∃ g : F →L[𝕜] E, f.comp g = ContinuousLinearMap.id 𝕜 F :=
   let ⟨g, hg⟩ := (f : E →ₗ[𝕜] F).exists_right_inverse_of_surjective hf
-  ⟨g.to_continuous_linear_map, ContinuousLinearMap.ext $ LinearMap.ext_iff.1 hg⟩
+  ⟨g.to_continuous_linear_map, ContinuousLinearMap.ext <| LinearMap.ext_iff.1 hg⟩
 
 theorem closed_embedding_smul_left {c : E} (hc : c ≠ 0) : ClosedEmbedding fun x : 𝕜 => x • c :=
   LinearEquiv.closed_embedding_of_injective (LinearEquiv.ker_to_span_singleton 𝕜 E hc)
@@ -664,7 +664,7 @@ theorem exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [NormedGroup E] 
   rcases Metric.exists_mem_closure_inf_dist_eq_dist (nonempty_compl.2 hs) x with ⟨y, hys, hyd⟩
   rw [closure_compl] at hys
   refine'
-    ⟨y, ⟨Metric.closed_ball_inf_dist_compl_subset_closure hx hs $ Metric.mem_closed_ball.2 $ ge_of_eq _, hys⟩, hyd⟩
+    ⟨y, ⟨Metric.closed_ball_inf_dist_compl_subset_closure hx hs <| Metric.mem_closed_ball.2 <| ge_of_eq _, hys⟩, hyd⟩
   rwa [dist_comm]
 
 /-- In a finite dimensional vector space over `ℝ`, the series `∑ x, ∥f x∥` is unconditionally
@@ -677,8 +677,8 @@ theorem summable_norm_iff {α E : Type _} [NormedGroup E] [NormedSpace ℝ E] [F
     obtain v := fin_basis ℝ E
     set e := v.equiv_funL
     have : Summable fun x => ∥e (f x)∥ := this (e.summable.2 hf)
-    refine' summable_of_norm_bounded _ (this.mul_left (↑nnnorm (e.symm : (Finₓ (finrank ℝ E) → ℝ) →L[ℝ] E))) fun i => _
-    simpa using (e.symm : (Finₓ (finrank ℝ E) → ℝ) →L[ℝ] E).le_op_norm (e $ f i)
+    refine' summable_of_norm_bounded _ (this.mul_left ↑(nnnorm (e.symm : (Finₓ (finrank ℝ E) → ℝ) →L[ℝ] E))) fun i => _
+    simpa using (e.symm : (Finₓ (finrank ℝ E) → ℝ) →L[ℝ] E).le_op_norm (e <| f i)
   clear! E
   intro N g hg
   have : ∀ i, Summable fun x => ∥g x i∥ := fun i => (Pi.summable.1 hg i).abs

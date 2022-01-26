@@ -106,7 +106,7 @@ instance [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σ i, α i) :=
   { Sigma.preorder with
     le_antisymm := by
       rintro _ _ ⟨i, a, b, hab⟩ ⟨_, _, _, hba⟩
-      exact ext rfl (heq_of_eq $ hab.antisymm hba) }
+      exact ext rfl (heq_of_eq <| hab.antisymm hba) }
 
 /-! ### Lexicographical order on `sigma` -/
 
@@ -126,7 +126,7 @@ instance LT [LT ι] [∀ i, LT (α i)] : LT (Σₗ i, α i) :=
 /-- The lexicographical preorder on a sigma type. -/
 instance Preorderₓ [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ (Σₗ i, α i) :=
   { lex.has_le, lex.has_lt with le_refl := fun ⟨i, a⟩ => lex.right a a le_rfl,
-    le_trans := fun _ _ _ => trans_of (Lex (· < ·) $ fun _ => · ≤ ·),
+    le_trans := fun _ _ _ => trans_of ((Lex (· < ·)) fun _ => · ≤ ·),
     lt_iff_le_not_le := by
       refine' fun a b => ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_ltₓ, _⟩, _⟩
       · rintro (⟨j, i, b, a, hji⟩ | ⟨i, b, a, hba⟩) <;> obtain ⟨_, _, _, _, hij⟩ | ⟨_, _, _, hab⟩ := hab
@@ -142,17 +142,17 @@ instance Preorderₓ [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ 
       · rintro ⟨⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩, hba⟩
         · exact lex.left _ _ hij
           
-        · exact lex.right _ _ (hab.lt_of_not_le $ fun h => hba $ lex.right _ _ h)
+        · exact lex.right _ _ (hab.lt_of_not_le fun h => hba <| lex.right _ _ h)
           
          }
 
 /-- The lexicographical partial order on a sigma type. -/
 instance PartialOrderₓ [Preorderₓ ι] [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σₗ i, α i) :=
-  { lex.preorder with le_antisymm := fun _ _ => antisymm_of (Lex (· < ·) $ fun _ => · ≤ ·) }
+  { lex.preorder with le_antisymm := fun _ _ => antisymm_of ((Lex (· < ·)) fun _ => · ≤ ·) }
 
 /-- The lexicographical linear order on a sigma type. -/
 instance LinearOrderₓ [LinearOrderₓ ι] [∀ i, LinearOrderₓ (α i)] : LinearOrderₓ (Σₗ i, α i) :=
-  { lex.partial_order with le_total := total_of (Lex (· < ·) $ fun _ => · ≤ ·), DecidableEq := Sigma.decidableEq,
+  { lex.partial_order with le_total := total_of ((Lex (· < ·)) fun _ => · ≤ ·), DecidableEq := Sigma.decidableEq,
     decidableLe := lex.decidable _ _ }
 
 /-- The lexicographical linear order on a sigma type. -/

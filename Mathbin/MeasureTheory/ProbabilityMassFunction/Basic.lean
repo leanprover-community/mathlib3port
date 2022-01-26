@@ -40,7 +40,7 @@ instance : CoeFun (Pmf α) fun p => α → ℝ≥0 :=
 
 @[ext]
 protected theorem ext : ∀ {p q : Pmf α}, (∀ a, p a = q a) → p = q
-  | ⟨f, hf⟩, ⟨g, hg⟩, Eq => Subtype.eq $ funext Eq
+  | ⟨f, hf⟩, ⟨g, hg⟩, Eq => Subtype.eq <| funext Eq
 
 theorem has_sum_coe_one (p : Pmf α) : HasSum p 1 :=
   p.2
@@ -83,7 +83,7 @@ theorem to_outer_measure_apply (p : Pmf α) (s : Set α) :
     p.to_outer_measure s = ∑' x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
   tsum_congr fun x => smul_dirac_apply (p x) x s
 
-theorem to_outer_measure_apply' (p : Pmf α) (s : Set α) : p.to_outer_measure s = ↑∑' x : α, s.indicator p x := by
+theorem to_outer_measure_apply' (p : Pmf α) (s : Set α) : p.to_outer_measure s = ↑(∑' x : α, s.indicator p x) := by
   simp only [Ennreal.coe_tsum (Nnreal.indicator_summable (summable_coe p) s), Ennreal.coe_indicator,
     to_outer_measure_apply]
 
@@ -107,7 +107,7 @@ theorem to_outer_measure_apply_eq_zero_iff (p : Pmf α) (s : Set α) : p.to_oute
 
 @[simp]
 theorem to_outer_measure_caratheodory (p : Pmf α) : (to_outer_measure p).caratheodory = ⊤ := by
-  refine' eq_top_iff.2 $ le_transₓ (le_Inf $ fun x hx => _) (le_sum_caratheodory _)
+  refine' eq_top_iff.2 <| le_transₓ (le_Inf fun x hx => _) (le_sum_caratheodory _)
   obtain ⟨y, hy⟩ := hx
   exact ((le_of_eqₓ (dirac_caratheodory y).symm).trans (le_smul_caratheodory _ _)).trans (le_of_eqₓ hy)
 
@@ -135,7 +135,7 @@ theorem to_measure_apply (p : Pmf α) (s : Set α) (hs : MeasurableSet s) :
     p.to_measure s = ∑' x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
   (p.to_measure_apply_eq_to_outer_measure_apply s hs).trans (p.to_outer_measure_apply s)
 
-theorem to_measure_apply' (p : Pmf α) (s : Set α) (hs : MeasurableSet s) : p.to_measure s = ↑∑' x, s.indicator p x :=
+theorem to_measure_apply' (p : Pmf α) (s : Set α) (hs : MeasurableSet s) : p.to_measure s = ↑(∑' x, s.indicator p x) :=
   (p.to_measure_apply_eq_to_outer_measure_apply s hs).trans (p.to_outer_measure_apply' s)
 
 @[simp]

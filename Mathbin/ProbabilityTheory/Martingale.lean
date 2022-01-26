@@ -86,13 +86,12 @@ theorem condexp_ae_eq (hf : martingale f ℱ μ) {i j : ι} (hij : i ≤ j) : μ
 theorem integrable (hf : martingale f ℱ μ) (i : ι) : integrable (f i) μ :=
   integrable_condexp.congr (hf.condexp_ae_eq (le_reflₓ i))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem set_integral_eq (hf : martingale f ℱ μ) {i j : ι} (hij : i ≤ j) {s : Set α} (hs : measurable_set[ℱ i] s) :
     (∫ x in s, f i x ∂μ) = ∫ x in s, f j x ∂μ := by
   rw [← @set_integral_condexp _ _ _ _ _ _ _ _ (ℱ i) m0 _ (ℱ.le i) _ _ _ (hf.integrable j) hs]
   refine' set_integral_congr_ae (ℱ.le i s hs) _
-  filter_upwards [hf.2 i j hij]
-  intro _ heq _
-  exact HEq.symm
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
 
 theorem add (hf : martingale f ℱ μ) (hg : martingale g ℱ μ) : martingale (f + g) ℱ μ := by
   refine' ⟨hf.adapted.add hg.adapted, fun i j hij => _⟩
@@ -143,14 +142,14 @@ theorem integrable [LE E] (hf : supermartingale f ℱ μ) (i : ι) : integrable 
 theorem condexp_ae_le [LE E] (hf : supermartingale f ℱ μ) {i j : ι} (hij : i ≤ j) : μ[f j|ℱ i,ℱ.le i] ≤ᵐ[μ] f i :=
   hf.2.1 i j hij
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem set_integral_le {f : ι → α → ℝ} (hf : supermartingale f ℱ μ) {i j : ι} (hij : i ≤ j) {s : Set α}
     (hs : measurable_set[ℱ i] s) : (∫ x in s, f j x ∂μ) ≤ ∫ x in s, f i x ∂μ := by
   rw [← set_integral_condexp (ℱ.le i) (hf.integrable j) hs]
   refine' set_integral_mono_ae integrable_condexp.integrable_on (hf.integrable i).IntegrableOn _
-  filter_upwards [hf.2.1 i j hij]
-  intro _ heq
-  exact HEq
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem add [Preorderₓ E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : supermartingale f ℱ μ)
     (hg : supermartingale g ℱ μ) : supermartingale (f + g) ℱ μ := by
   refine' ⟨hf.1.add hg.1, fun i j hij => _, fun i => (hf.2.2 i).add (hg.2.2 i)⟩
@@ -163,12 +162,12 @@ theorem add_martingale [Preorderₓ E] [CovariantClass E E (· + ·) (· ≤ ·)
     (hg : martingale g ℱ μ) : supermartingale (f + g) ℱ μ :=
   hf.add hg.supermartingale
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem neg [Preorderₓ E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : supermartingale f ℱ μ) : submartingale (-f) ℱ μ :=
   by
   refine' ⟨hf.1.neg, fun i j hij => _, fun i => (hf.2.2 i).neg⟩
   refine' eventually_le.trans _ (condexp_neg (f j)).symm.le
-  filter_upwards [hf.2.1 i j hij]
-  intro _ hle
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   simpa
 
 end Supermartingale
@@ -190,6 +189,7 @@ theorem integrable [LE E] (hf : submartingale f ℱ μ) (i : ι) : integrable (f
 theorem ae_le_condexp [LE E] (hf : submartingale f ℱ μ) {i j : ι} (hij : i ≤ j) : f i ≤ᵐ[μ] μ[f j|ℱ i,ℱ.le i] :=
   hf.2.1 i j hij
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem add [Preorderₓ E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : submartingale f ℱ μ) (hg : submartingale g ℱ μ) :
     submartingale (f + g) ℱ μ := by
   refine' ⟨hf.1.add hg.1, fun i j hij => _, fun i => (hf.2.2 i).add (hg.2.2 i)⟩
@@ -202,11 +202,11 @@ theorem add_martingale [Preorderₓ E] [CovariantClass E E (· + ·) (· ≤ ·)
     (hg : martingale g ℱ μ) : submartingale (f + g) ℱ μ :=
   hf.add hg.submartingale
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem neg [Preorderₓ E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : submartingale f ℱ μ) : supermartingale (-f) ℱ μ :=
   by
   refine' ⟨hf.1.neg, fun i j hij => (condexp_neg (f j)).le.trans _, fun i => (hf.2.2 i).neg⟩
-  filter_upwards [hf.2.1 i j hij]
-  intro _ hle
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   simpa
 
 theorem set_integral_le {f : ι → α → ℝ} (hf : submartingale f ℱ μ) {i j : ι} (hij : i ≤ j) {s : Set α}
@@ -241,12 +241,12 @@ section
 variable {F : Type _} [MeasurableSpace F] [NormedLatticeAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
   [BorelSpace F] [second_countable_topology F] [OrderedSmul ℝ F]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem smul_nonneg {f : ι → α → F} {c : ℝ} (hc : 0 ≤ c) (hf : supermartingale f ℱ μ) : supermartingale (c • f) ℱ μ :=
   by
   refine' ⟨hf.1.smul c, fun i j hij => _, fun i => (hf.2.2 i).smul c⟩
   refine' (condexp_smul c (f j)).le.trans _
-  filter_upwards [hf.2.1 i j hij]
-  intro _ hle
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   simp
   exact smul_le_smul_of_nonneg hle hc
 
@@ -255,7 +255,7 @@ theorem smul_nonpos {f : ι → α → F} {c : ℝ} (hc : c ≤ 0) (hf : superma
     (by
       ext i x
       simp : - -c • f = -(-c • f))]
-  exact (hf.smul_nonneg $ neg_nonneg.2 hc).neg
+  exact (hf.smul_nonneg <| neg_nonneg.2 hc).neg
 
 end
 
@@ -280,7 +280,7 @@ theorem smul_nonpos {f : ι → α → F} {c : ℝ} (hc : c ≤ 0) (hf : submart
     (by
       ext i x
       simp : - -c • f = -(-c • f))]
-  exact (hf.smul_nonneg $ neg_nonneg.2 hc).neg
+  exact (hf.smul_nonneg <| neg_nonneg.2 hc).neg
 
 end
 

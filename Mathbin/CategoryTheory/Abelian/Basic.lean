@@ -204,7 +204,7 @@ protected abbrev image.ι : images.image f ⟶ Q :=
 
 /-- There is a canonical epimorphism `p : P ⟶ image f` for every `f`. -/
 protected abbrev factor_thru_image : P ⟶ images.image f :=
-  kernel.lift (cokernel.π f) f $ cokernel.condition f
+  kernel.lift (cokernel.π f) f <| cokernel.condition f
 
 /-- `f` factors through its image via the canonical morphism `p`. -/
 @[simp, reassoc]
@@ -221,13 +221,13 @@ section
 variable {f}
 
 theorem image_ι_comp_eq_zero {R : C} {g : Q ⟶ R} (h : f ≫ g = 0) : images.image.ι f ≫ g = 0 :=
-  zero_of_epi_comp (images.factor_thru_image f) $ by
+  zero_of_epi_comp (images.factor_thru_image f) <| by
     simp [h]
 
 end
 
 instance mono_factor_thru_image [mono f] : mono (images.factor_thru_image f) :=
-  mono_of_mono_fac $ image.fac f
+  mono_of_mono_fac <| image.fac f
 
 instance is_iso_factor_thru_image [mono f] : is_iso (images.factor_thru_image f) :=
   is_iso_of_mono_of_epi _
@@ -256,7 +256,7 @@ protected abbrev coimage.π : P ⟶ coimages.coimage f :=
 
 /-- There is a canonical monomorphism `i : coimage f ⟶ Q`. -/
 protected abbrev factor_thru_coimage : coimages.coimage f ⟶ Q :=
-  cokernel.desc (kernel.ι f) f $ kernel.condition f
+  cokernel.desc (kernel.ι f) f <| kernel.condition f
 
 /-- `f` factors through its coimage via the canonical morphism `p`. -/
 protected theorem coimage.fac : coimage.π f ≫ coimages.factor_thru_coimage f = f :=
@@ -272,13 +272,13 @@ section
 variable {f}
 
 theorem comp_coimage_π_eq_zero {R : C} {g : Q ⟶ R} (h : f ≫ g = 0) : f ≫ coimages.coimage.π g = 0 :=
-  zero_of_comp_mono (coimages.factor_thru_coimage g) $ by
+  zero_of_comp_mono (coimages.factor_thru_coimage g) <| by
     simp [h]
 
 end
 
 instance epi_factor_thru_coimage [epi f] : epi (coimages.factor_thru_coimage f) :=
-  epi_of_epi_fac $ coimage.fac f
+  epi_of_epi_fac <| coimage.fac f
 
 instance is_iso_factor_thru_coimage [epi f] : is_iso (coimages.factor_thru_coimage f) :=
   is_iso_of_mono_of_epi _
@@ -301,7 +301,7 @@ section HasStrongEpiMonoFactorisations
 
 /-- An abelian category has strong epi-mono factorisations. -/
 instance (priority := 100) : has_strong_epi_mono_factorisations C :=
-  has_strong_epi_mono_factorisations.mk $ fun X Y f => images.image_strong_epi_mono_factorisation f
+  has_strong_epi_mono_factorisations.mk fun X Y f => images.image_strong_epi_mono_factorisation f
 
 example : has_images C := by
   infer_instance
@@ -403,7 +403,7 @@ abbrev pullback_to_biproduct : pullback f g ⟶ X ⊞ Y :=
     this may be that it induces an equalizer fork on the maps induced by `(f, 0)` and
     `(0, g)`. -/
 abbrev pullback_to_biproduct_fork : kernel_fork (biprod.desc f (-g)) :=
-  kernel_fork.of_ι (pullback_to_biproduct f g) $ by
+  kernel_fork.of_ι (pullback_to_biproduct f g) <| by
     rw [biprod.lift_desc, comp_neg, pullback.condition, add_right_negₓ]
 
 /-- The canonical map `pullback f g ⟶ X ⊞ Y` is a kernel of the map induced by
@@ -411,8 +411,8 @@ abbrev pullback_to_biproduct_fork : kernel_fork (biprod.desc f (-g)) :=
 def is_limit_pullback_to_biproduct : is_limit (pullback_to_biproduct_fork f g) :=
   fork.is_limit.mk _
     (fun s =>
-      pullback.lift (fork.ι s ≫ biprod.fst) (fork.ι s ≫ biprod.snd) $
-        sub_eq_zero.1 $ by
+      pullback.lift (fork.ι s ≫ biprod.fst) (fork.ι s ≫ biprod.snd) <|
+        sub_eq_zero.1 <| by
           rw [category.assoc, category.assoc, ← comp_sub, sub_eq_add_neg, ← comp_neg, ← biprod.desc_eq,
             kernel_fork.condition s])
     (fun s => by
@@ -437,7 +437,7 @@ abbrev biproduct_to_pushout : Y ⊞ Z ⟶ pushout f g :=
 /-- The canonical map `Y ⊞ Z ⟶ pushout f g` induces a cokernel cofork on the map
     `X ⟶ Y ⊞ Z` induced by `f` and `-g`. -/
 abbrev biproduct_to_pushout_cofork : cokernel_cofork (biprod.lift f (-g)) :=
-  cokernel_cofork.of_π (biproduct_to_pushout f g) $ by
+  cokernel_cofork.of_π (biproduct_to_pushout f g) <| by
     rw [biprod.lift_desc, neg_comp, pushout.condition, add_right_negₓ]
 
 /-- The cofork induced by the canonical map `Y ⊞ Z ⟶ pushout f g` is in fact a colimit cokernel
@@ -445,8 +445,8 @@ abbrev biproduct_to_pushout_cofork : cokernel_cofork (biprod.lift f (-g)) :=
 def is_colimit_biproduct_to_pushout : is_colimit (biproduct_to_pushout_cofork f g) :=
   cofork.is_colimit.mk _
     (fun s =>
-      pushout.desc (biprod.inl ≫ cofork.π s) (biprod.inr ≫ cofork.π s) $
-        sub_eq_zero.1 $ by
+      pushout.desc (biprod.inl ≫ cofork.π s) (biprod.inr ≫ cofork.π s) <|
+        sub_eq_zero.1 <| by
           rw [← category.assoc, ← category.assoc, ← sub_comp, sub_eq_add_neg, ← neg_comp, ← biprod.lift_eq,
             cofork.condition s, zero_comp])
     (fun s => by
@@ -463,7 +463,7 @@ variable [limits.has_pullbacks C] {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
 /-- In an abelian category, the pullback of an epimorphism is an epimorphism.
     Proof from [aluffi2016, IX.2.3], cf. [borceux-vol2, 1.7.6] -/
 instance epi_pullback_of_epi_f [epi f] : epi (pullback.snd : pullback f g ⟶ Y) :=
-  epi_of_cancel_zero _ $ fun R e h => by
+  (epi_of_cancel_zero _) fun R e h => by
     let u := biprod.desc (0 : X ⟶ R) e
     have hu : pullback_to_biproduct_is_kernel.pullback_to_biproduct f g ≫ u = 0 := by
       simpa
@@ -487,7 +487,7 @@ instance epi_pullback_of_epi_f [epi f] : epi (pullback.snd : pullback f g ⟶ Y)
 
 /-- In an abelian category, the pullback of an epimorphism is an epimorphism. -/
 instance epi_pullback_of_epi_g [epi g] : epi (pullback.fst : pullback f g ⟶ X) :=
-  epi_of_cancel_zero _ $ fun R e h => by
+  (epi_of_cancel_zero _) fun R e h => by
     let u := biprod.desc e (0 : Y ⟶ R)
     have hu : pullback_to_biproduct_is_kernel.pullback_to_biproduct f g ≫ u = 0 := by
       simpa
@@ -537,7 +537,7 @@ section MonoPushout
 variable [limits.has_pushouts C] {W X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z)
 
 instance mono_pushout_of_mono_f [mono f] : mono (pushout.inr : Z ⟶ pushout f g) :=
-  mono_of_cancel_zero _ $ fun R e h => by
+  (mono_of_cancel_zero _) fun R e h => by
     let u := biprod.lift (0 : R ⟶ Y) e
     have hu : u ≫ biproduct_to_pushout_is_cokernel.biproduct_to_pushout f g = 0 := by
       simpa
@@ -560,7 +560,7 @@ instance mono_pushout_of_mono_f [mono f] : mono (pushout.inr : Z ⟶ pushout f g
         rw [category.assoc]_ = 0 := zero_comp
 
 instance mono_pushout_of_mono_g [mono g] : mono (pushout.inl : Y ⟶ pushout f g) :=
-  mono_of_cancel_zero _ $ fun R e h => by
+  (mono_of_cancel_zero _) fun R e h => by
     let u := biprod.lift e (0 : R ⟶ Z)
     have hu : u ≫ biproduct_to_pushout_is_cokernel.biproduct_to_pushout f g = 0 := by
       simpa

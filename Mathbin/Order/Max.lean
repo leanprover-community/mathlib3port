@@ -79,12 +79,12 @@ variable [Preorderₓ α] {a b : α}
 @[simp]
 theorem not_is_bot [NoMinOrder α] (a : α) : ¬IsBot a := fun h =>
   let ⟨b, hb⟩ := exists_lt a
-  hb.not_le $ h b
+  hb.not_le <| h b
 
 @[simp]
 theorem not_is_top [NoMaxOrder α] (a : α) : ¬IsTop a := fun h =>
   let ⟨b, hb⟩ := exists_gt a
-  hb.not_le $ h b
+  hb.not_le <| h b
 
 end Preorderₓ
 

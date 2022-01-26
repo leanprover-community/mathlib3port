@@ -103,8 +103,8 @@ theorem first_obj_iso_pi_opens_π (f : Σ V, { f : V ⟶ U // R f }) :
 /-- The second object in the sites diagram is isomorphic to the second object in the spaces diagram.
 -/
 def second_obj_iso_pi_inters : presheaf.second_obj R F ≅ pi_inters F (covering_of_presieve U R) :=
-  has_limit.iso_of_nat_iso $
-    discrete.nat_iso $ fun i => F.map_iso (eq_to_iso (complete_lattice.pullback_eq_inf _ _).symm).op
+  has_limit.iso_of_nat_iso <|
+    discrete.nat_iso fun i => F.map_iso (eq_to_iso (complete_lattice.pullback_eq_inf _ _).symm).op
 
 /-- The isomorphism `second_obj_iso_pi_inters` is compatible with canonical projections out of the
 product. Here, we have to insert an `eq_to_hom` arrow to pass from
@@ -164,7 +164,7 @@ theorem first_obj_iso_comp_right_res_eq :
 def diagram_nat_iso :
     parallel_pair (presheaf.first_map R F) (presheaf.second_map R F) ≅ diagram F (covering_of_presieve U R) :=
   (nat_iso.of_components fun i =>
-      walking_parallel_pair.cases_on i (first_obj_iso_pi_opens F U R) (second_obj_iso_pi_inters F U R)) $
+      walking_parallel_pair.cases_on i (first_obj_iso_pi_opens F U R) (second_obj_iso_pi_inters F U R)) <|
     by
     intro i j f
     cases i
@@ -424,7 +424,7 @@ def Sheaf_spaces_equiv_sheaf_sites : Sheaf (Opens.grothendieckTopology X) C ≌ 
           ext1
           simp , by
           ext1
-          simp ⟩) $
+          simp ⟩) <|
       by
       intros
       ext1
@@ -436,7 +436,7 @@ def Sheaf_spaces_equiv_sheaf_sites : Sheaf (Opens.grothendieckTopology X) C ≌ 
           ext
           simp , by
           ext
-          simp ⟩) $
+          simp ⟩) <|
       by
       intros
       ext

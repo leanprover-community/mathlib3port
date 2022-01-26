@@ -59,7 +59,7 @@ inductive M.path : P.last.M → Fin2 n → Type u
 
 instance M.path.inhabited (x : P.last.M) {i} [Inhabited (P.drop.B x.head i)] : Inhabited (M.path P x i) :=
   ⟨M.path.root _ (Pfunctor.M.head x) (Pfunctor.M.children x)
-      (Pfunctor.M.casesOn' x $ by
+      (Pfunctor.M.casesOn' x <| by
         intros <;> simp [Pfunctor.M.dest_mk] <;> ext <;> rw [Pfunctor.M.children_mk] <;> rfl)
       _ default⟩
 
@@ -137,7 +137,7 @@ def M.dest' {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last
 
 /-- Destructor for M-types -/
 def M.dest {α : Typevec n} (x : P.M α) : P.obj (α ::: P.M α) :=
-  M.dest' P (Sigma.eta $ Pfunctor.M.dest x.fst).symm x.snd
+  M.dest' P (Sigma.eta <| Pfunctor.M.dest x.fst).symm x.snd
 
 /-- Constructor for M-types -/
 def M.mk {α : Typevec n} : P.obj (α.append1 (P.M α)) → P.M α :=

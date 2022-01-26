@@ -304,16 +304,16 @@ theorem of_fraction_ring_div (p q : FractionRing (Polynomial K)) :
 protected irreducible_def inv : Ratfunc K → Ratfunc K
   | ⟨p⟩ => ⟨p⁻¹⟩
 
-instance : HasInv (Ratfunc K) :=
+instance : Inv (Ratfunc K) :=
   ⟨Ratfunc.inv⟩
 
-theorem of_fraction_ring_inv (p : FractionRing (Polynomial K)) : of_fraction_ring (p⁻¹) = of_fraction_ring p⁻¹ := by
-  unfold HasInv.inv Ratfunc.inv
+theorem of_fraction_ring_inv (p : FractionRing (Polynomial K)) : of_fraction_ring p⁻¹ = (of_fraction_ring p)⁻¹ := by
+  unfold Inv.inv Ratfunc.inv
 
 theorem mul_inv_cancel : ∀ {p : Ratfunc K} hp : p ≠ 0, p * p⁻¹ = 1
   | ⟨p⟩, h => by
     have : p ≠ 0 := fun hp =>
-      h $ by
+      h <| by
         rw [hp, of_fraction_ring_zero]
     simpa only [← of_fraction_ring_inv, ← of_fraction_ring_mul, ← of_fraction_ring_one] using _root_.mul_inv_cancel this
 
@@ -370,7 +370,7 @@ instance : Inhabited (Ratfunc K) :=
 
 instance [IsDomain K] : Nontrivial (Ratfunc K) :=
   ⟨⟨0, 1,
-      mt (congr_argₓ to_fraction_ring) $ by
+      mt (congr_argₓ to_fraction_ring) <| by
         simpa only [← of_fraction_ring_zero, ← of_fraction_ring_one] using zero_ne_one⟩⟩
 
 /-- `ratfunc K` is isomorphic to the field of fractions of `polynomial K`, as rings.
@@ -467,7 +467,7 @@ instance : CommRingₓ (Ratfunc K) where
 include hdomain
 
 instance : Field (Ratfunc K) :=
-  { Ratfunc.commRing K, Ratfunc.nontrivial K with inv := HasInv.inv,
+  { Ratfunc.commRing K, Ratfunc.nontrivial K with inv := Inv.inv,
     inv_zero := by
       run_tac
         frac_tac,
@@ -498,7 +498,7 @@ instance (R : Type _) [CommSemiringₓ R] [Algebra R (Polynomial K)] : Algebra R
     simp only [mk_one', RingHom.map_zero, of_fraction_ring_zero]
   smul := · • ·
   smul_def' := fun c x =>
-    x.induction_on' $ fun p q hq => by
+    x.induction_on' fun p q hq => by
       simp_rw [mk_one', ← mk_smul, mk_def_of_ne (c • p) hq, mk_def_of_ne p hq, ← of_fraction_ring_mul,
         IsLocalization.mul_mk'_eq_mk'_of_mul, Algebra.smul_def]
   commutes' := fun c x => mul_comm _ _
@@ -589,8 +589,8 @@ theorem of_fraction_ring_mk' (x : Polynomial K) (y : (Polynomial K)⁰) :
 @[simp]
 theorem of_fraction_ring_eq :
     (of_fraction_ring : FractionRing (Polynomial K) → Ratfunc K) = IsLocalization.algEquiv (Polynomial K)⁰ _ _ :=
-  funext $ fun x =>
-    Localization.induction_on x $ fun x => by
+  funext fun x =>
+    (Localization.induction_on x) fun x => by
       simp only [IsLocalization.alg_equiv_apply, IsLocalization.ring_equiv_of_ring_equiv_apply, RingEquiv.to_fun_eq_coe,
         Localization.mk_eq_mk'_apply, IsLocalization.map_mk', of_fraction_ring_mk', RingEquiv.coe_to_ring_hom,
         RingEquiv.refl_apply, SetLike.eta]
@@ -598,8 +598,8 @@ theorem of_fraction_ring_eq :
 @[simp]
 theorem to_fraction_ring_eq :
     (to_fraction_ring : Ratfunc K → FractionRing (Polynomial K)) = IsLocalization.algEquiv (Polynomial K)⁰ _ _ :=
-  funext $ fun ⟨x⟩ =>
-    Localization.induction_on x $ fun x => by
+  funext fun ⟨x⟩ =>
+    (Localization.induction_on x) fun x => by
       simp only [Localization.mk_eq_mk'_apply, of_fraction_ring_mk', IsLocalization.alg_equiv_apply,
         RingEquiv.to_fun_eq_coe, IsLocalization.ring_equiv_of_ring_equiv_apply, IsLocalization.map_mk',
         RingEquiv.coe_to_ring_hom, RingEquiv.refl_apply, SetLike.eta]
@@ -633,7 +633,7 @@ def num_denom (x : Ratfunc K) : Polynomial K × Polynomial K :=
       if q = 0 then ⟨0, 1⟩
       else
         let r := gcd p q
-        ⟨Polynomial.c ((q / r).leadingCoeff⁻¹) * (p / r), Polynomial.c ((q / r).leadingCoeff⁻¹) * (q / r)⟩)
+        ⟨Polynomial.c (q / r).leadingCoeff⁻¹ * (p / r), Polynomial.c (q / r).leadingCoeff⁻¹ * (q / r)⟩)
     (by
       intro p q a hq ha
       rw [if_neg hq, if_neg (mul_ne_zero ha hq)]
@@ -643,11 +643,11 @@ def num_denom (x : Ratfunc K) : Polynomial K × Polynomial K :=
       simp only [Prod.ext_iff, gcd_mul_left, normalize_apply, Polynomial.coe_norm_unit, mul_assoc,
         CommGroupWithZero.coe_norm_unit _ ha']
       have hdeg : (gcd p q).degree ≤ q.degree := degree_gcd_le_right _ hq
-      have hdeg' : (Polynomial.c (a.leading_coeff⁻¹) * gcd p q).degree ≤ q.degree := by
+      have hdeg' : (Polynomial.c a.leading_coeff⁻¹ * gcd p q).degree ≤ q.degree := by
         rw [Polynomial.degree_mul, Polynomial.degree_C hainv, zero_addₓ]
         exact hdeg
-      have hdivp : Polynomial.c (a.leading_coeff⁻¹) * gcd p q ∣ p := (C_mul_dvd hainv).mpr (gcd_dvd_left p q)
-      have hdivq : Polynomial.c (a.leading_coeff⁻¹) * gcd p q ∣ q := (C_mul_dvd hainv).mpr (gcd_dvd_right p q)
+      have hdivp : Polynomial.c a.leading_coeff⁻¹ * gcd p q ∣ p := (C_mul_dvd hainv).mpr (gcd_dvd_left p q)
+      have hdivq : Polynomial.c a.leading_coeff⁻¹ * gcd p q ∣ q := (C_mul_dvd hainv).mpr (gcd_dvd_right p q)
       rw [EuclideanDomain.mul_div_mul_cancel ha hdivp, EuclideanDomain.mul_div_mul_cancel ha hdivq,
         leading_coeff_div hdeg, leading_coeff_div hdeg', Polynomial.leading_coeff_mul, Polynomial.leading_coeff_C,
         div_C_mul, div_C_mul, ← mul_assoc, ← Polynomial.C_mul, ← mul_assoc, ← Polynomial.C_mul]
@@ -658,8 +658,8 @@ def num_denom (x : Ratfunc K) : Polynomial K × Polynomial K :=
 @[simp]
 theorem num_denom_div (p : Polynomial K) {q : Polynomial K} (hq : q ≠ 0) :
     num_denom (algebraMap _ _ p / algebraMap _ _ q) =
-      (Polynomial.c ((q / gcd p q).leadingCoeff⁻¹) * (p / gcd p q),
-        Polynomial.c ((q / gcd p q).leadingCoeff⁻¹) * (q / gcd p q)) :=
+      (Polynomial.c (q / gcd p q).leadingCoeff⁻¹ * (p / gcd p q),
+        Polynomial.c (q / gcd p q).leadingCoeff⁻¹ * (q / gcd p q)) :=
   by
   rw [num_denom, lift_on'_div, if_neg hq]
   intro p
@@ -673,7 +673,7 @@ def Num (x : Ratfunc K) : Polynomial K :=
 
 @[simp]
 theorem num_div (p : Polynomial K) {q : Polynomial K} (hq : q ≠ 0) :
-    Num (algebraMap _ _ p / algebraMap _ _ q) = Polynomial.c ((q / gcd p q).leadingCoeff⁻¹) * (p / gcd p q) := by
+    Num (algebraMap _ _ p / algebraMap _ _ q) = Polynomial.c (q / gcd p q).leadingCoeff⁻¹ * (p / gcd p q) := by
   rw [Num, num_denom_div _ hq]
 
 @[simp]
@@ -704,7 +704,7 @@ def denom (x : Ratfunc K) : Polynomial K :=
 
 @[simp]
 theorem denom_div (p : Polynomial K) {q : Polynomial K} (hq : q ≠ 0) :
-    denom (algebraMap _ _ p / algebraMap _ _ q) = Polynomial.c ((q / gcd p q).leadingCoeff⁻¹) * (q / gcd p q) := by
+    denom (algebraMap _ _ p / algebraMap _ _ q) = Polynomial.c (q / gcd p q).leadingCoeff⁻¹ * (q / gcd p q) := by
   rw [denom, num_denom_div _ hq]
 
 theorem monic_denom (x : Ratfunc K) : (denom x).Monic :=
@@ -769,13 +769,13 @@ theorem num_mul_eq_mul_denom_iff {x : Ratfunc K} {p q : Polynomial K} (hq : q �
     x.num * q = p * x.denom ↔ x = algebraMap _ _ p / algebraMap _ _ q := by
   rw [← (algebra_map_injective K).eq_iff, eq_div_iff (algebra_map_ne_zero hq)]
   conv_rhs => rw [← num_div_denom x]
-  rw [RingHom.map_mul, RingHom.map_mul, div_eq_mul_inv, mul_assoc, mul_comm (HasInv.inv _), ← mul_assoc, ←
-    div_eq_mul_inv, div_eq_iff]
+  rw [RingHom.map_mul, RingHom.map_mul, div_eq_mul_inv, mul_assoc, mul_comm (Inv.inv _), ← mul_assoc, ← div_eq_mul_inv,
+    div_eq_iff]
   exact algebra_map_ne_zero (denom_ne_zero x)
 
 theorem num_denom_add (x y : Ratfunc K) :
     (x + y).num * (x.denom * y.denom) = (x.num * y.denom + x.denom * y.num) * (x + y).denom :=
-  (num_mul_eq_mul_denom_iff (mul_ne_zero (denom_ne_zero x) (denom_ne_zero y))).mpr $ by
+  (num_mul_eq_mul_denom_iff (mul_ne_zero (denom_ne_zero x) (denom_ne_zero y))).mpr <| by
     conv_lhs => rw [← num_div_denom x, ← num_div_denom y]
     rw [div_add_div, RingHom.map_mul, RingHom.map_add, RingHom.map_mul, RingHom.map_mul]
     · exact algebra_map_ne_zero (denom_ne_zero x)
@@ -784,7 +784,7 @@ theorem num_denom_add (x y : Ratfunc K) :
       
 
 theorem num_denom_mul (x y : Ratfunc K) : (x * y).num * (x.denom * y.denom) = x.num * y.num * (x * y).denom :=
-  (num_mul_eq_mul_denom_iff (mul_ne_zero (denom_ne_zero x) (denom_ne_zero y))).mpr $ by
+  (num_mul_eq_mul_denom_iff (mul_ne_zero (denom_ne_zero x) (denom_ne_zero y))).mpr <| by
     conv_lhs => rw [← num_div_denom x, ← num_div_denom y, div_mul_div, ← RingHom.map_mul, ← RingHom.map_mul]
 
 theorem num_dvd {x : Ratfunc K} {p : Polynomial K} (hp : p ≠ 0) :

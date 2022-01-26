@@ -57,7 +57,7 @@ def multifork_evaluation_cone (F : K ⥤ Sheaf J D) (E : cone (F ⋙ Sheaf_to_pr
   x := S.X
   π :=
     { app := fun k =>
-        (presheaf.is_limit_of_is_sheaf J (F.obj k).1 W (F.obj k).2).lift $
+        (presheaf.is_limit_of_is_sheaf J (F.obj k).1 W (F.obj k).2).lift <|
           multifork.of_ι _ S.X (fun i => S.ι i ≫ (E.π.app k).app (op i.Y))
             (by
               intro i
@@ -90,7 +90,7 @@ This is used below in `is_sheaf_of_is_limit` to show that the limit presheaf is 
 def is_limit_multifork_of_is_limit (F : K ⥤ Sheaf J D) (E : cone (F ⋙ Sheaf_to_presheaf J D)) (hE : is_limit E) (X : C)
     (W : J.cover X) : is_limit (W.multifork E.X) :=
   multifork.is_limit.mk _
-    (fun S => (is_limit_of_preserves ((evaluation (Cᵒᵖ) D).obj (op X)) hE).lift $ multifork_evaluation_cone F E X W S)
+    (fun S => (is_limit_of_preserves ((evaluation (Cᵒᵖ) D).obj (op X)) hE).lift <| multifork_evaluation_cone F E X W S)
     (by
       intro S i
       apply (is_limit_of_preserves ((evaluation (Cᵒᵖ) D).obj (op i.Y)) hE).hom_ext
@@ -129,11 +129,12 @@ theorem is_sheaf_of_is_limit (F : K ⥤ Sheaf J D) (E : cone (F ⋙ Sheaf_to_pre
   exact ⟨is_limit_multifork_of_is_limit _ _ hE _ _⟩
 
 instance (F : K ⥤ Sheaf J D) : creates_limit F (Sheaf_to_presheaf J D) :=
-  creates_limit_of_reflects_iso $ fun E hE =>
+  creates_limit_of_reflects_iso fun E hE =>
     { liftedCone :=
-        ⟨⟨E.X, is_sheaf_of_is_limit _ _ hE⟩, ⟨fun t => ⟨E.π.app _⟩, fun u v e => Sheaf.hom.ext _ _ $ E.π.naturality _⟩⟩,
+        ⟨⟨E.X, is_sheaf_of_is_limit _ _ hE⟩,
+          ⟨fun t => ⟨E.π.app _⟩, fun u v e => Sheaf.hom.ext _ _ <| E.π.naturality _⟩⟩,
       validLift :=
-        cones.ext (eq_to_iso rfl) $ fun j => by
+        (cones.ext (eq_to_iso rfl)) fun j => by
           dsimp
           simp ,
       makesLimit :=

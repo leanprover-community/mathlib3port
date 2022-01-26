@@ -52,7 +52,7 @@ inferred typeclass instance.
 -/
 unsafe def context.mk_app (c : context) (n inst : Name) (l : List expr) : tactic expr := do
   let m ← mk_instance ((expr.const inst [c.univ] : expr) c.α)
-  return $ c.app n m l
+  return <| c.app n m l
 
 /-- Add the letter "g" to the end of the name, e.g. turning `term` into `termg`.
 
@@ -112,14 +112,14 @@ unsafe def normal_expr.to_list : normal_expr → List (ℤ × expr)
 open NormalExpr
 
 unsafe def normal_expr.to_string (e : normal_expr) : Stringₓ :=
-  " + ".intercalate $ (to_list e).map $ fun ⟨n, e⟩ => toString n ++ " • (" ++ toString e ++ ")"
+  " + ".intercalate <| (to_list e).map fun ⟨n, e⟩ => toString n ++ " • (" ++ toString e ++ ")"
 
 unsafe def normal_expr.pp (e : normal_expr) : tactic format := do
   let l ←
     (to_list e).mmap fun ⟨n, e⟩ => do
         let pe ← pp e
         return (to_fmt n ++ " • (" ++ pe ++ ")")
-  return $ format.join $ l.intersperse (↑" + ")
+  return <| format.join <| l.intersperse ↑" + "
 
 unsafe instance : has_to_tactic_format normal_expr :=
   ⟨normal_expr.pp⟩
@@ -301,11 +301,11 @@ unsafe def eval (c : context) : expr → tactic (normal_expr × expr)
     return (e₂, p)
   | quote.1 (AddMonoidₓ.nsmul (%%ₓe₁) (%%ₓe₂)) => do
     let n ← if c.is_group then mk_app `` Int.ofNat [e₁] else return e₁
-    let (e', p) ← eval $ c.iapp `` smul [n, e₂]
+    let (e', p) ← eval <| c.iapp `` smul [n, e₂]
     return (e', c.iapp `` unfold_smul [e₁, e₂, e', p])
   | quote.1 (SubNegMonoidₓ.zsmul (%%ₓe₁) (%%ₓe₂)) => do
     guardb c.is_group
-    let (e', p) ← eval $ c.iapp `` smul [e₁, e₂]
+    let (e', p) ← eval <| c.iapp `` smul [e₁, e₂]
     return (e', c.app `` unfold_zsmul c.inst [e₁, e₂, e', p])
   | e@(quote.1 (@HasScalar.smul Nat _ AddMonoidₓ.hasScalarNat (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval ff e e₁ e₂
   | e@(quote.1 (@HasScalar.smul Int _ SubNegMonoidₓ.hasScalarInt (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval tt e e₁ e₂
@@ -347,7 +347,7 @@ unsafe def normalize (red : transparency) (mode := normalize_mode.term) (e : exp
                     let (e', prf, _) ← simplify lemmas [] e
                     return (e', prf))
                 e
-          guardₓ ¬new_e =ₐ e
+          guardₓ ¬expr.alpha_eqv new_e e
           return ((), new_e, some pr, ff))
         (fun _ _ _ _ _ => failed) `eq e
   return (e', pr)
@@ -378,7 +378,7 @@ unsafe def abel1 (red : parse (tk "!")?) : tactic Unit := do
   tactic.exact p
 
 unsafe def abel.mode : lean.parser abel.normalize_mode :=
-  with_desc "(raw|term)?" $ do
+  with_desc "(raw|term)?" <| do
     let mode ← (ident)?
     match mode with
       | none => return abel.normalize_mode.term
@@ -410,7 +410,7 @@ unsafe def abel (red : parse (tk "!")?) (SOP : parse abel.mode) (loc : parse loc
     let ns ← loc.get_locals
     let red := if red.is_some then semireducible else reducible
     let tt ← tactic.replace_at (normalize red SOP) ns loc.include_goal | fail "abel failed to simplify"
-    when loc.include_goal $ try tactic.reflexivity
+    when loc.include_goal <| try tactic.reflexivity
 
 add_tactic_doc
   { Name := "abel", category := DocCategory.tactic, declNames := [`tactic.interactive.abel],

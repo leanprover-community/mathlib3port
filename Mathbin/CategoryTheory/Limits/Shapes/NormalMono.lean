@@ -49,11 +49,11 @@ def equivalence_reflects_normal_mono {D : Type u₂} [category.{v₁} D] [has_ze
   z := F.obj_preimage hf.Z
   g := full.preimage (hf.g ≫ (F.obj_obj_preimage_iso hf.Z).inv)
   w :=
-    faithful.map_injective F $ by
+    faithful.map_injective F <| by
       simp [reassoc_of hf.w]
   IsLimit :=
-    reflects_limit.reflects $
-      is_limit.of_cone_equiv (cones.postcompose_equivalence (comp_nat_iso F : _)) $
+    reflects_limit.reflects <|
+      is_limit.of_cone_equiv (cones.postcompose_equivalence (comp_nat_iso F : _)) <|
         is_limit.of_iso_limit
           (is_limit.of_iso_limit
             (is_kernel.of_comp_iso _ _ (F.obj_obj_preimage_iso hf.Z)
@@ -133,11 +133,11 @@ def equivalence_reflects_normal_epi {D : Type u₂} [category.{v₁} D] [has_zer
   w := F.obj_preimage hf.W
   g := full.preimage ((F.obj_obj_preimage_iso hf.W).Hom ≫ hf.g)
   w :=
-    faithful.map_injective F $ by
+    faithful.map_injective F <| by
       simp [hf.w]
   IsColimit :=
-    reflects_colimit.reflects $
-      is_colimit.of_cocone_equiv (cocones.precompose_equivalence (comp_nat_iso F).symm) $
+    reflects_colimit.reflects <|
+      is_colimit.of_cocone_equiv (cocones.precompose_equivalence (comp_nat_iso F).symm) <|
         is_colimit.of_iso_colimit
           (is_colimit.of_iso_colimit
             (is_cokernel.of_iso_comp _ _ (F.obj_obj_preimage_iso hf.W).symm

@@ -280,7 +280,7 @@ instance inv_is_iso [is_iso f] : is_iso (inv f) :=
   is_iso.of_iso_inv (as_iso f)
 
 instance (priority := 900) comp_is_iso [is_iso f] [is_iso h] : is_iso (f ≫ h) :=
-  is_iso.of_iso $ as_iso f ≪≫ as_iso h
+  is_iso.of_iso <| as_iso f ≪≫ as_iso h
 
 @[simp]
 theorem inv_id : inv (𝟙 X) = 𝟙 X := by
@@ -424,10 +424,10 @@ theorem map_iso_trans (F : C ⥤ D) {X Y Z : C} (i : X ≅ Y) (j : Y ≅ Z) :
 
 @[simp]
 theorem map_iso_refl (F : C ⥤ D) (X : C) : F.map_iso (iso.refl X) = iso.refl (F.obj X) :=
-  iso.ext $ F.map_id X
+  iso.ext <| F.map_id X
 
 instance map_is_iso (F : C ⥤ D) (f : X ⟶ Y) [is_iso f] : is_iso (F.map f) :=
-  is_iso.of_iso $ F.map_iso (as_iso f)
+  is_iso.of_iso <| F.map_iso (as_iso f)
 
 @[simp]
 theorem map_inv (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [is_iso f] : F.map (inv f) = inv (F.map f) := by

@@ -91,7 +91,7 @@ variable (R)
 @[simps]
 def free : Type u ⥤ AlgebraCat.{u} R where
   obj := fun S => { Carrier := FreeAlgebra R S, isRing := Algebra.semiringToRing R }
-  map := fun S T f => FreeAlgebra.lift _ $ FreeAlgebra.ι _ ∘ f
+  map := fun S T f => FreeAlgebra.lift _ <| FreeAlgebra.ι _ ∘ f
   map_id' := by
     intro X
     ext1

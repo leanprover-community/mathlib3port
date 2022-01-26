@@ -45,7 +45,7 @@ namespace Caratheodory
 /-- If `x` is in the convex hull of some finset `t` whose elements are not affine-independent,
 then it is in the convex hull of a strict subset of `t`. -/
 theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndependent 𝕜 (coe : t → E)) {x : E}
-    (m : x ∈ convexHull 𝕜 (↑t : Set E)) : ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑t.erase y : Set E) := by
+    (m : x ∈ convexHull 𝕜 (↑t : Set E)) : ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑(t.erase y) : Set E) := by
   simp only [Finset.convex_hull_eq, mem_set_of_eq] at m⊢
   obtain ⟨f, fpos, fsum, rfl⟩ := m
   obtain ⟨g, gcombo, gsum, gpos⟩ := exists_nontrivial_relation_sum_zero_of_not_affine_ind h
@@ -110,7 +110,7 @@ noncomputable def min_card_finset_of_mem_convex_hull : Finset E :=
     (by
       simpa only [convex_hull_eq_union_convex_hull_finite_subsets s, exists_prop, mem_Union] using hx)
 
-theorem min_card_finset_of_mem_convex_hull_subseteq : ↑min_card_finset_of_mem_convex_hull hx ⊆ s :=
+theorem min_card_finset_of_mem_convex_hull_subseteq : ↑(min_card_finset_of_mem_convex_hull hx) ⊆ s :=
   (Function.argmin_on_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).1
 
 theorem mem_min_card_finset_of_mem_convex_hull : x ∈ convexHull 𝕜 (min_card_finset_of_mem_convex_hull hx : Set E) :=
@@ -148,7 +148,7 @@ variable {s : Set E}
 
 /-- **Carathéodory's convexity theorem** -/
 theorem convex_hull_eq_union :
-    convexHull 𝕜 s = ⋃ (t : Finset E) (hss : ↑t ⊆ s) (hai : AffineIndependent 𝕜 (coe : t → E)), convexHull 𝕜 (↑t) := by
+    convexHull 𝕜 s = ⋃ (t : Finset E) (hss : ↑t ⊆ s) (hai : AffineIndependent 𝕜 (coe : t → E)), convexHull 𝕜 ↑t := by
   apply Set.Subset.antisymm
   · intro x hx
     simp only [exists_prop, Set.mem_Union]
@@ -185,7 +185,7 @@ theorem eq_pos_convex_span_of_mem_convex_hull {x : E} (hx : x ∈ convexHull �
     
   · erw [Finset.sum_attach, Finset.sum_filter_ne_zero, hw₂]
     
-  · change (∑ i : t' in t'.attach, (fun e => w e • e) (↑i)) = x
+  · change (∑ i : t' in t'.attach, (fun e => w e • e) ↑i) = x
     erw [Finset.sum_attach, Finset.sum_filter_of_ne]
     · rw [t.center_mass_eq_of_sum_1 id hw₂] at hw₃
       exact hw₃

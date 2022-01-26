@@ -38,7 +38,7 @@ variable [TopologicalSpace α] [TopologicalSpace β]
 
 variable {i : α → β} (di : DenseInducing i)
 
-theorem nhds_eq_comap (di : DenseInducing i) : ∀ a : α, 𝓝 a = comap i (𝓝 $ i a) :=
+theorem nhds_eq_comap (di : DenseInducing i) : ∀ a : α, 𝓝 a = comap i (𝓝 <| i a) :=
   di.to_inducing.nhds_eq_comap
 
 protected theorem Continuous (di : DenseInducing i) : Continuous i :=
@@ -93,7 +93,7 @@ protected theorem nhds_within_ne_bot (di : DenseInducing i) (b : β) : ne_bot (�
   di.dense.nhds_within_ne_bot b
 
 theorem comap_nhds_ne_bot (di : DenseInducing i) (b : β) : ne_bot (comap i (𝓝 b)) :=
-  comap_ne_bot $ fun s hs =>
+  comap_ne_bot fun s hs =>
     let ⟨_, ⟨ha, a, rfl⟩⟩ := mem_closure_iff_nhds.1 (di.dense b) s hs
     ⟨a, ha⟩
 
@@ -112,7 +112,7 @@ theorem extend_eq_of_tendsto [T2Space γ] {b : β} {c : γ} {f : α → γ} (hf 
   hf.lim_eq
 
 theorem extend_eq_at [T2Space γ] {f : α → γ} {a : α} (hf : ContinuousAt f a) : di.extend f (i a) = f a :=
-  extend_eq_of_tendsto _ $ di.nhds_eq_comap a ▸ hf
+  extend_eq_of_tendsto _ <| di.nhds_eq_comap a ▸ hf
 
 theorem extend_eq_at' [T2Space γ] {f : α → γ} {a : α} (c : γ) (hf : tendsto f (𝓝 a) (𝓝 c)) : di.extend f (i a) = f a :=
   di.extend_eq_at (continuous_at_of_tendsto_nhds hf)
@@ -133,7 +133,7 @@ theorem extend_unique_at [T2Space γ] {b : β} {f : α → γ} {g : β → γ} (
     (hf : ∀ᶠ x in comap i (𝓝 b), g (i x) = f x) (hg : ContinuousAt g b) : di.extend f b = g b := by
   refine' di.extend_eq_of_tendsto fun s hs => mem_map.2 _
   suffices : ∀ᶠ x : α in comap i (𝓝 b), g (i x) ∈ s
-  exact hf.mp (this.mono $ fun x hgx hfx => hfx ▸ hgx)
+  exact hf.mp (this.mono fun x hgx hfx => hfx ▸ hgx)
   clear hf f
   refine' eventually_comap.2 ((hg.eventually hs).mono _)
   rintro _ hxs x rfl
@@ -141,16 +141,18 @@ theorem extend_unique_at [T2Space γ] {b : β} {f : α → γ} {g : β → γ} (
 
 theorem extend_unique [T2Space γ] {f : α → γ} {g : β → γ} (di : DenseInducing i) (hf : ∀ x, g (i x) = f x)
     (hg : Continuous g) : di.extend f = g :=
-  funext $ fun b => extend_unique_at di (eventually_of_forall hf) hg.continuous_at
+  funext fun b => extend_unique_at di (eventually_of_forall hf) hg.continuous_at
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem continuous_at_extend [RegularSpace γ] {b : β} {f : α → γ} (di : DenseInducing i)
-    (hf : ∀ᶠ x in 𝓝 b, ∃ c, tendsto f (comap i $ 𝓝 x) (𝓝 c)) : ContinuousAt (di.extend f) b := by
+    (hf : ∀ᶠ x in 𝓝 b, ∃ c, tendsto f (comap i <| 𝓝 x) (𝓝 c)) : ContinuousAt (di.extend f) b := by
   set φ := di.extend f
   have := di.comap_nhds_ne_bot
   suffices ∀, ∀ V' ∈ 𝓝 (φ b), ∀, IsClosed V' → φ ⁻¹' V' ∈ 𝓝 b by
     simpa [ContinuousAt, (closed_nhds_basis _).tendsto_right_iff]
   intro V' V'_in V'_closed
-  set V₁ := { x | tendsto f (comap i $ 𝓝 x) (𝓝 $ φ x) }
+  set V₁ := { x | tendsto f (comap i <| 𝓝 x) (𝓝 <| φ x) }
   have V₁_in : V₁ ∈ 𝓝 b := by
     filter_upwards [hf]
     rintro x ⟨c, hc⟩
@@ -161,7 +163,6 @@ theorem continuous_at_extend [RegularSpace γ] {b : β} {f : α → γ} (di : De
       ((nhds_basis_opens' b).comap i).tendsto_left_iff.mp (mem_of_mem_nhds V₁_in : b ∈ V₁) V' V'_in
   suffices ∀, ∀ x ∈ V₁ ∩ V₂, ∀, φ x ∈ V' by
     filter_upwards [inter_mem V₁_in V₂_in]
-    exact this
   rintro x ⟨x_in₁, x_in₂⟩
   have hV₂x : V₂ ∈ 𝓝 x := IsOpen.mem_nhds V₂_op x_in₂
   apply V'_closed.mem_of_tendsto x_in₁
@@ -170,13 +171,13 @@ theorem continuous_at_extend [RegularSpace γ] {b : β} {f : α → γ} (di : De
 
 theorem continuous_extend [RegularSpace γ] {f : α → γ} (di : DenseInducing i)
     (hf : ∀ b, ∃ c, tendsto f (comap i (𝓝 b)) (𝓝 c)) : Continuous (di.extend f) :=
-  continuous_iff_continuous_at.mpr $ fun b => di.continuous_at_extend $ univ_mem' hf
+  continuous_iff_continuous_at.mpr fun b => di.continuous_at_extend <| univ_mem' hf
 
 theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ Closure (range i))
     (H : ∀ a : α, ∀ s ∈ 𝓝 a, ∀, ∃ t ∈ 𝓝 (i a), ∀ b, i b ∈ t → b ∈ s) : DenseInducing i :=
   { induced :=
-      (induced_iff_nhds_eq i).2 $ fun a =>
-        le_antisymmₓ (tendsto_iff_comap.1 $ c.tendsto _)
+      (induced_iff_nhds_eq i).2 fun a =>
+        le_antisymmₓ (tendsto_iff_comap.1 <| c.tendsto _)
           (by
             simpa [Filter.le_def] using H a),
     dense }
@@ -220,11 +221,11 @@ protected theorem Prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseEmbed
 /-- The dense embedding of a subtype inside its closure. -/
 @[simps]
 def subtype_emb {α : Type _} (p : α → Prop) (e : α → β) (x : { x // p x }) : { x // x ∈ Closure (e '' { x | p x }) } :=
-  ⟨e x, subset_closure $ mem_image_of_mem e x.prop⟩
+  ⟨e x, subset_closure <| mem_image_of_mem e x.prop⟩
 
 protected theorem Subtype (p : α → Prop) : DenseEmbedding (subtype_emb p e) :=
   { dense :=
-      dense_iff_closure_eq.2 $ by
+      dense_iff_closure_eq.2 <| by
         ext ⟨x, hx⟩
         rw [image_eq_range] at hx
         simpa [closure_subtype, ← range_comp, · ∘ ·],
@@ -246,25 +247,25 @@ theorem is_closed_property [TopologicalSpace β] {e : α → β} {p : β → Pro
   have : univ ⊆ { b | p b } :=
     calc
       univ = Closure (range e) := he.closure_range.symm
-      _ ⊆ Closure { b | p b } := closure_mono $ range_subset_iff.mpr h
+      _ ⊆ Closure { b | p b } := closure_mono <| range_subset_iff.mpr h
       _ = _ := hp.closure_eq
       
   fun b => this trivialₓ
 
 theorem is_closed_property2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
-  have : ∀ q : β × β, p q.1 q.2 := is_closed_property (he.prod_map he) hp $ fun _ => h _ _
+  have : ∀ q : β × β, p q.1 q.2 := (is_closed_property (he.prod_map he) hp) fun _ => h _ _
   fun b₁ b₂ => this ⟨b₁, b₂⟩
 
 theorem is_closed_property3 [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 }) (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) :
     ∀ b₁ b₂ b₃, p b₁ b₂ b₃ :=
-  have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 := is_closed_property (he.prod_map $ he.prod_map he) hp $ fun _ => h _ _ _
+  have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 := (is_closed_property (he.prod_map <| he.prod_map he) hp) fun _ => h _ _ _
   fun b₁ b₂ b₃ => this ⟨b₁, b₂, b₃⟩
 
 @[elab_as_eliminator]
 theorem DenseRange.induction_on [TopologicalSpace β] {e : α → β} (he : DenseRange e) {p : β → Prop} (b₀ : β)
-    (hp : IsClosed { b | p b }) (ih : ∀ a : α, p $ e a) : p b₀ :=
+    (hp : IsClosed { b | p b }) (ih : ∀ a : α, p <| e a) : p b₀ :=
   is_closed_property he hp ih b₀
 
 @[elab_as_eliminator]
@@ -287,7 +288,7 @@ variable {f : α → β}
 /-- Two continuous functions to a t2-space that agree on the dense range of a function are equal. -/
 theorem DenseRange.equalizer (hfd : DenseRange f) {g h : β → γ} (hg : Continuous g) (hh : Continuous h)
     (H : g ∘ f = h ∘ f) : g = h :=
-  funext $ fun y => hfd.induction_on y (is_closed_eq hg hh) $ congr_funₓ H
+  funext fun y => hfd.induction_on y (is_closed_eq hg hh) <| congr_funₓ H
 
 end
 

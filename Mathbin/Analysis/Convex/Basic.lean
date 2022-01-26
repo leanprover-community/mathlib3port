@@ -59,12 +59,12 @@ def OpenSegment (x y : E) : Set E :=
 localized [Convex] notation "[" x " -[" 𝕜 "] " y "]" => Segment 𝕜 x y
 
 theorem segment_symm (x y : E) : [x -[𝕜] y] = [y -[𝕜] x] :=
-  Set.ext $ fun z =>
+  Set.ext fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, H⟩ => ⟨b, a, hb, ha, (add_commₓ _ _).trans hab, (add_commₓ _ _).trans H⟩,
       fun ⟨a, b, ha, hb, hab, H⟩ => ⟨b, a, hb, ha, (add_commₓ _ _).trans hab, (add_commₓ _ _).trans H⟩⟩
 
 theorem open_segment_symm (x y : E) : OpenSegment 𝕜 x y = OpenSegment 𝕜 y x :=
-  Set.ext $ fun z =>
+  Set.ext fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, H⟩ => ⟨b, a, hb, ha, (add_commₓ _ _).trans hab, (add_commₓ _ _).trans H⟩,
       fun ⟨a, b, ha, hb, hab, H⟩ => ⟨b, a, hb, ha, (add_commₓ _ _).trans hab, (add_commₓ _ _).trans H⟩⟩
 
@@ -101,7 +101,7 @@ section Module
 variable (𝕜) [Module 𝕜 E]
 
 theorem segment_same (x : E) : [x -[𝕜] x] = {x} :=
-  Set.ext $ fun z =>
+  Set.ext fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, hz⟩ => by
       simpa only [(add_smul _ _ _).symm, mem_singleton_iff, hab, one_smul, eq_comm] using hz, fun h =>
       mem_singleton_iff.1 h ▸ left_mem_segment 𝕜 z z⟩
@@ -157,7 +157,7 @@ variable [Nontrivial 𝕜] [DenselyOrdered 𝕜]
 
 @[simp]
 theorem open_segment_same (x : E) : OpenSegment 𝕜 x x = {x} :=
-  Set.ext $ fun z =>
+  Set.ext fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, hz⟩ => by
       simpa only [← add_smul, mem_singleton_iff, hab, one_smul, eq_comm] using hz, fun h : z = x => by
       obtain ⟨a, ha₀, ha₁⟩ := DenselyOrdered.dense (0 : 𝕜) 1 zero_lt_one
@@ -167,7 +167,7 @@ theorem open_segment_same (x : E) : OpenSegment 𝕜 x x = {x} :=
 end DenselyOrdered
 
 theorem segment_eq_image (x y : E) : [x -[𝕜] y] = (fun θ : 𝕜 => (1 - θ) • x + θ • y) '' Icc (0 : 𝕜) 1 :=
-  Set.ext $ fun z =>
+  Set.ext fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, hz⟩ =>
       ⟨b, ⟨hb, hab ▸ le_add_of_nonneg_left ha⟩,
         hab ▸
@@ -176,7 +176,7 @@ theorem segment_eq_image (x y : E) : [x -[𝕜] y] = (fun θ : 𝕜 => (1 - θ) 
       fun ⟨θ, ⟨hθ₀, hθ₁⟩, hz⟩ => ⟨1 - θ, θ, sub_nonneg.2 hθ₁, hθ₀, sub_add_cancel _ _, hz⟩⟩
 
 theorem open_segment_eq_image (x y : E) : OpenSegment 𝕜 x y = (fun θ : 𝕜 => (1 - θ) • x + θ • y) '' Ioo (0 : 𝕜) 1 :=
-  Set.ext $ fun z =>
+  Set.ext fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, hz⟩ =>
       ⟨b, ⟨hb, hab ▸ lt_add_of_pos_left _ ha⟩,
         hab ▸
@@ -236,18 +236,18 @@ theorem mem_open_segment_translate (a : E) {x b c : E} :
   simp only [add_sub_add_left_eq_sub, add_assocₓ, add_right_injₓ]
 
 theorem segment_translate_preimage (a b c : E) : (fun x => a + x) ⁻¹' [a + b -[𝕜] a + c] = [b -[𝕜] c] :=
-  Set.ext $ fun x => mem_segment_translate 𝕜 a
+  Set.ext fun x => mem_segment_translate 𝕜 a
 
 theorem open_segment_translate_preimage (a b c : E) :
     (fun x => a + x) ⁻¹' OpenSegment 𝕜 (a + b) (a + c) = OpenSegment 𝕜 b c :=
-  Set.ext $ fun x => mem_open_segment_translate 𝕜 a
+  Set.ext fun x => mem_open_segment_translate 𝕜 a
 
 theorem segment_translate_image (a b c : E) : (fun x => a + x) '' [b -[𝕜] c] = [a + b -[𝕜] a + c] :=
-  segment_translate_preimage 𝕜 a b c ▸ image_preimage_eq _ $ add_left_surjective a
+  segment_translate_preimage 𝕜 a b c ▸ image_preimage_eq _ <| add_left_surjective a
 
 theorem open_segment_translate_image (a b c : E) :
     (fun x => a + x) '' OpenSegment 𝕜 b c = OpenSegment 𝕜 (a + b) (a + c) :=
-  open_segment_translate_preimage 𝕜 a b c ▸ image_preimage_eq _ $ add_left_surjective a
+  open_segment_translate_preimage 𝕜 a b c ▸ image_preimage_eq _ <| add_left_surjective a
 
 end AddCommGroupₓ
 
@@ -414,7 +414,7 @@ theorem segment_eq_Icc {x y : 𝕜} (h : x ≤ y) : [x -[𝕜] y] = Icc x y :=
   (segment_subset_Icc h).antisymm Icc_subset_segment
 
 theorem Ioo_subset_open_segment {x y : 𝕜} : Ioo x y ⊆ OpenSegment 𝕜 x y := fun z hz =>
-  mem_open_segment_of_ne_left_right _ hz.1.Ne hz.2.ne' (Icc_subset_segment $ Ioo_subset_Icc_self hz)
+  mem_open_segment_of_ne_left_right _ hz.1.Ne hz.2.ne' (Icc_subset_segment <| Ioo_subset_Icc_self hz)
 
 @[simp]
 theorem open_segment_eq_Ioo {x y : 𝕜} (h : x < y) : OpenSegment 𝕜 x y = Ioo x y :=
@@ -524,7 +524,7 @@ def Convex : Prop :=
 variable {𝕜 s}
 
 theorem convex_iff_segment_subset : Convex 𝕜 s ↔ ∀ ⦃x y⦄, x ∈ s → y ∈ s → [x -[𝕜] y] ⊆ s :=
-  forall₄_congrₓ $ fun x y hx hy => (segment_subset_iff _).symm
+  forall₄_congrₓ fun x y hx hy => (segment_subset_iff _).symm
 
 theorem Convex.segment_subset (h : Convex 𝕜 s) {x y : E} (hx : x ∈ s) (hy : y ∈ s) : [x -[𝕜] y] ⊆ s :=
   convex_iff_segment_subset.1 h hx hy
@@ -554,7 +554,7 @@ theorem convex_sInter {S : Set (Set E)} (h : ∀, ∀ s ∈ S, ∀, Convex 𝕜 
   fun x y hx hy a b ha hb hab s hs => h s hs (hx s hs) (hy s hs) ha hb hab
 
 theorem convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i : ι, Convex 𝕜 (s i)) : Convex 𝕜 (⋂ i, s i) :=
-  sInter_range s ▸ convex_sInter $ forall_range_iff.2 h
+  sInter_range s ▸ convex_sInter <| forall_range_iff.2 h
 
 theorem Convex.prod {s : Set E} {t : Set F} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (s ×ˢ t) := by
   intro x y hx hy a b ha hb hab
@@ -586,12 +586,11 @@ section Module
 variable [Module 𝕜 E] [Module 𝕜 F] {s : Set E}
 
 theorem convex_iff_open_segment_subset : Convex 𝕜 s ↔ ∀ ⦃x y⦄, x ∈ s → y ∈ s → OpenSegment 𝕜 x y ⊆ s :=
-  convex_iff_segment_subset.trans $
-    forall₄_congrₓ $ fun x y hx hy => (open_segment_subset_iff_segment_subset hx hy).symm
+  convex_iff_segment_subset.trans <| forall₄_congrₓ fun x y hx hy => (open_segment_subset_iff_segment_subset hx hy).symm
 
 theorem convex_iff_forall_pos :
     Convex 𝕜 s ↔ ∀ ⦃x y⦄, x ∈ s → y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • x + b • y ∈ s :=
-  convex_iff_open_segment_subset.trans $ forall₄_congrₓ $ fun x y hx hy => open_segment_subset_iff 𝕜
+  convex_iff_open_segment_subset.trans <| forall₄_congrₓ fun x y hx hy => open_segment_subset_iff 𝕜
 
 theorem convex_iff_pairwise_pos :
     Convex 𝕜 s ↔ s.pairwise fun x y => ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • x + b • y ∈ s := by
@@ -618,7 +617,7 @@ theorem Convex.linear_image (hs : Convex 𝕜 s) (f : E →ₗ[𝕜] F) : Convex
       rw [f.map_add, f.map_smul, f.map_smul]⟩
 
 theorem Convex.is_linear_image (hs : Convex 𝕜 s) {f : E → F} (hf : IsLinearMap 𝕜 f) : Convex 𝕜 (f '' s) :=
-  hs.linear_image $ hf.mk' f
+  hs.linear_image <| hf.mk' f
 
 theorem Convex.linear_preimage {s : Set F} (hs : Convex 𝕜 s) (f : E →ₗ[𝕜] F) : Convex 𝕜 (f ⁻¹' s) := by
   intro x y hx hy a b ha hb hab
@@ -627,7 +626,7 @@ theorem Convex.linear_preimage {s : Set F} (hs : Convex 𝕜 s) (f : E →ₗ[�
 
 theorem Convex.is_linear_preimage {s : Set F} (hs : Convex 𝕜 s) {f : E → F} (hf : IsLinearMap 𝕜 f) :
     Convex 𝕜 (f ⁻¹' s) :=
-  hs.linear_preimage $ hf.mk' f
+  hs.linear_preimage <| hf.mk' f
 
 theorem Convex.add {t : Set E} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (s + t) := by
   rw [← add_image_prod]
@@ -664,7 +663,7 @@ theorem convex_Ici (r : β) : Convex 𝕜 (Ici r) :=
   @convex_Iic 𝕜 (OrderDual β) _ _ _ _ r
 
 theorem convex_Icc (r s : β) : Convex 𝕜 (Icc r s) :=
-  Ici_inter_Iic.subst ((convex_Ici r).inter $ convex_Iic s)
+  Ici_inter_Iic.subst ((convex_Ici r).inter <| convex_Iic s)
 
 theorem convex_halfspace_le {f : E → β} (h : IsLinearMap 𝕜 f) (r : β) : Convex 𝕜 { w | f w ≤ r } :=
   (convex_Iic r).is_linear_preimage h
@@ -697,13 +696,13 @@ theorem convex_Ioi (r : β) : Convex 𝕜 (Ioi r) :=
   @convex_Iio 𝕜 (OrderDual β) _ _ _ _ r
 
 theorem convex_Ioo (r s : β) : Convex 𝕜 (Ioo r s) :=
-  Ioi_inter_Iio.subst ((convex_Ioi r).inter $ convex_Iio s)
+  Ioi_inter_Iio.subst ((convex_Ioi r).inter <| convex_Iio s)
 
 theorem convex_Ico (r s : β) : Convex 𝕜 (Ico r s) :=
-  Ici_inter_Iio.subst ((convex_Ici r).inter $ convex_Iio s)
+  Ici_inter_Iio.subst ((convex_Ici r).inter <| convex_Iio s)
 
 theorem convex_Ioc (r s : β) : Convex 𝕜 (Ioc r s) :=
-  Ioi_inter_Iic.subst ((convex_Ioi r).inter $ convex_Iic s)
+  Ioi_inter_Iic.subst ((convex_Ioi r).inter <| convex_Iic s)
 
 theorem convex_halfspace_lt {f : E → β} (h : IsLinearMap 𝕜 f) (r : β) : Convex 𝕜 { w | f w < r } :=
   (convex_Iio r).is_linear_preimage h

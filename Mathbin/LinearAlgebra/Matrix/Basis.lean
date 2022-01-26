@@ -53,7 +53,7 @@ theorem to_matrix_apply : e.to_matrix v i j = e.repr (v j) i :=
   rfl
 
 theorem to_matrix_transpose_apply : (e.to_matrix v)ᵀ j = e.repr (v j) :=
-  funext $ fun _ => rfl
+  funext fun _ => rfl
 
 theorem to_matrix_eq_to_matrix_constr [Fintype ι] [DecidableEq ι] (v : ι → M) :
     e.to_matrix v = LinearMap.toMatrix e e (e.constr ℕ v) := by

@@ -61,11 +61,11 @@ theorem ext {I J : Ideal α} (h : ∀ x, x ∈ I ↔ x ∈ J) : I = J :=
   Submodule.ext h
 
 theorem eq_top_of_unit_mem (x y : α) (hx : x ∈ I) (h : y * x = 1) : I = ⊤ :=
-  eq_top_iff.2 $ fun z _ =>
+  eq_top_iff.2 fun z _ =>
     calc
       z = z * (y * x) := by
         simp [h]
-      _ = z * y * x := Eq.symm $ mul_assoc z y x
+      _ = z * y * x := Eq.symm <| mul_assoc z y x
       _ ∈ I := I.mul_mem_left _ hx
       
 
@@ -113,7 +113,7 @@ theorem span_eq : span (I : Set α) = I :=
 
 @[simp]
 theorem span_singleton_one : span ({1} : Set α) = ⊤ :=
-  (eq_top_iff_one _).2 $ subset_span $ mem_singleton _
+  (eq_top_iff_one _).2 <| subset_span <| mem_singleton _
 
 theorem mem_span_insert {s : Set α} {x y} : x ∈ span (insert y s) ↔ ∃ a, ∃ z ∈ span s, x = a * y + z :=
   Submodule.mem_span_insert
@@ -182,7 +182,7 @@ theorem not_is_prime_iff {I : Ideal α} : ¬I.is_prime ↔ I = ⊤ ∨ ∃ (x : 
     or_congr Iff.rfl ⟨fun ⟨x, y, hxy, hx, hy⟩ => ⟨x, hx, y, hy, hxy⟩, fun ⟨x, hx, y, hy, hxy⟩ => ⟨x, y, hxy, hx, hy⟩⟩
 
 theorem zero_ne_one_of_proper {I : Ideal α} (h : I ≠ ⊤) : (0 : α) ≠ 1 := fun hz =>
-  I.ne_top_iff_one.1 h $ hz ▸ I.zero_mem
+  I.ne_top_iff_one.1 h <| hz ▸ I.zero_mem
 
 theorem bot_prime {R : Type _} [Ringₓ R] [IsDomain R] : (⊥ : Ideal R).IsPrime :=
   ⟨fun h =>
@@ -206,14 +206,14 @@ theorem is_maximal.ne_top {I : Ideal α} (h : I.is_maximal) : I ≠ ⊤ :=
 
 theorem is_maximal_iff {I : Ideal α} :
     I.is_maximal ↔ (1 : α) ∉ I ∧ ∀ J : Ideal α x, I ≤ J → x ∉ I → x ∈ J → (1 : α) ∈ J :=
-  is_maximal_def.trans $
-    and_congr I.ne_top_iff_one $
-      forall_congrₓ $ fun J => by
+  is_maximal_def.trans <|
+    and_congr I.ne_top_iff_one <|
+      forall_congrₓ fun J => by
         rw [lt_iff_le_not_leₓ] <;>
           exact
-            ⟨fun H x h hx₁ hx₂ => J.eq_top_iff_one.1 $ H ⟨h, not_subset.2 ⟨_, hx₂, hx₁⟩⟩, fun H ⟨h₁, h₂⟩ =>
+            ⟨fun H x h hx₁ hx₂ => J.eq_top_iff_one.1 <| H ⟨h, not_subset.2 ⟨_, hx₂, hx₁⟩⟩, fun H ⟨h₁, h₂⟩ =>
               let ⟨x, xJ, xI⟩ := not_subset.1 h₂
-              J.eq_top_iff_one.2 $ H x h₁ xI xJ⟩
+              J.eq_top_iff_one.2 <| H x h₁ xI xJ⟩
 
 theorem is_maximal.eq_of_le {I J : Ideal α} (hI : I.is_maximal) (hJ : J ≠ ⊤) (IJ : I ≤ J) : I = J :=
   eq_iff_le_not_lt.2 ⟨IJ, fun h => hJ (hI.1.2 _ h)⟩
@@ -328,12 +328,12 @@ theorem mul_unit_mem_iff_mem {x y : α} (hy : IsUnit y) : x * y ∈ I ↔ x ∈ 
   mul_comm y x ▸ unit_mul_mem_iff_mem I hy
 
 theorem mem_span_singleton {x y : α} : x ∈ span ({y} : Set α) ↔ y ∣ x :=
-  mem_span_singleton'.trans $
-    exists_congr $ fun _ => by
+  mem_span_singleton'.trans <|
+    exists_congr fun _ => by
       rw [eq_comm, mul_comm]
 
 theorem span_singleton_le_span_singleton {x y : α} : span ({x} : Set α) ≤ span ({y} : Set α) ↔ y ∣ x :=
-  span_le.trans $ singleton_subset_iff.trans mem_span_singleton
+  span_le.trans <| singleton_subset_iff.trans mem_span_singleton
 
 theorem span_singleton_eq_span_singleton {α : Type u} [CommRingₓ α] [IsDomain α] {x y : α} :
     span ({x} : Set α) = span ({y} : Set α) ↔ Associated x y := by
@@ -360,8 +360,8 @@ theorem span_singleton_prime {p : α} (hp : p ≠ 0) : is_prime (span ({p} : Set
 
 theorem is_maximal.is_prime {I : Ideal α} (H : I.is_maximal) : I.is_prime :=
   ⟨H.1.1, fun x y hxy =>
-    or_iff_not_imp_left.2 $ fun hx => by
-      let J : Ideal α := Submodule.span α (insert x (↑I))
+    or_iff_not_imp_left.2 fun hx => by
+      let J : Ideal α := Submodule.span α (insert x ↑I)
       have IJ : I ≤ J := Set.Subset.trans (subset_insert _ _) subset_span
       have xJ : x ∈ J := Ideal.subset_span (Set.mem_insert x I)
       cases' is_maximal_iff.1 H with _ oJ
@@ -381,10 +381,10 @@ theorem span_singleton_lt_span_singleton [CommRingₓ β] [IsDomain β] {x y : �
 
 theorem factors_decreasing [CommRingₓ β] [IsDomain β] (b₁ b₂ : β) (h₁ : b₁ ≠ 0) (h₂ : ¬IsUnit b₂) :
     span ({b₁ * b₂} : Set β) < span {b₁} :=
-  lt_of_le_not_leₓ (Ideal.span_le.2 $ singleton_subset_iff.2 $ Ideal.mem_span_singleton.2 ⟨b₂, rfl⟩) $ fun h =>
-    h₂ $
-      is_unit_of_dvd_one _ $
-        (mul_dvd_mul_iff_left h₁).1 $ by
+  (lt_of_le_not_leₓ (Ideal.span_le.2 <| singleton_subset_iff.2 <| Ideal.mem_span_singleton.2 ⟨b₂, rfl⟩)) fun h =>
+    h₂ <|
+      is_unit_of_dvd_one _ <|
+        (mul_dvd_mul_iff_left h₁).1 <| by
           rwa [mul_oneₓ, ← Ideal.span_singleton_le_span_singleton]
 
 variable (b)
@@ -519,7 +519,7 @@ theorem eq_bot_or_top : I = ⊥ ∨ I = ⊤ := by
   by_cases' H : r = 0
   · simpa
     
-  simpa [H, h1] using I.mul_mem_left (r⁻¹) hr
+  simpa [H, h1] using I.mul_mem_left r⁻¹ hr
 
 theorem eq_bot_of_prime [h : I.is_prime] : I = ⊥ :=
   or_iff_not_imp_right.mp I.eq_bot_or_top h.1
@@ -642,7 +642,7 @@ theorem one_not_mem_nonunits [Monoidₓ α] : (1 : α) ∉ Nonunits α :=
   not_not_intro is_unit_one
 
 theorem coe_subset_nonunits [Semiringₓ α] {I : Ideal α} (h : I ≠ ⊤) : (I : Set α) ⊆ Nonunits α := fun x hx hu =>
-  h $ I.eq_top_of_is_unit_mem hx hu
+  h <| I.eq_top_of_is_unit_mem hx hu
 
 theorem exists_max_ideal_of_mem_nonunits [CommSemiringₓ α] (h : a ∈ Nonunits α) : ∃ I : Ideal α, I.is_maximal ∧ a ∈ I :=
   by

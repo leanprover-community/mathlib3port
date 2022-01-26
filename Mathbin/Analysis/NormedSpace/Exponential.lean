@@ -176,7 +176,7 @@ theorem exp_add_of_commute_of_mem_ball [CharZero 𝕂] {x y : 𝔸} (hxy : Commu
       (norm_exp_series_summable_of_mem_ball' y hy)]
   dsimp only
   conv_lhs => congr ext rw [hxy.add_pow' _, Finset.smul_sum]
-  refine' tsum_congr fun n => Finset.sum_congr rfl $ fun kl hkl => _
+  refine' tsum_congr fun n => (Finset.sum_congr rfl) fun kl hkl => _
   rw [nsmul_eq_smul_cast 𝕂, smul_smul, smul_mul_smul, ← finset.nat.mem_antidiagonal.mp hkl, Nat.cast_add_choose,
     finset.nat.mem_antidiagonal.mp hkl]
   congr 1
@@ -205,13 +205,13 @@ section AnyAlgebra
 
 variable (𝕂 𝔸 : Type _) [IsROrC 𝕂] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- In a normed algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ`, the series defining the exponential map
 has an infinite radius of convergence. -/
 theorem exp_series_radius_eq_top : (expSeries 𝕂 𝔸).radius = ∞ := by
   refine' (expSeries 𝕂 𝔸).radius_eq_top_of_summable_norm fun r => _
   refine' summable_of_norm_bounded_eventually _ (Real.summable_pow_div_factorial r) _
-  filter_upwards [eventually_cofinite_ne 0]
-  intro n hn
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [norm_mul, norm_norm (expSeries 𝕂 𝔸 n), expSeries, norm_smul, norm_div, norm_one, norm_pow, Nnreal.norm_eq,
     norm_eq_abs, abs_cast_nat, mul_comm, ← mul_assoc, ← mul_div_assoc, mul_oneₓ]
   have : ∥ContinuousMultilinearMap.mkPiAlgebraFin 𝕂 n 𝔸∥ ≤ 1 :=

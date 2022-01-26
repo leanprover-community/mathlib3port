@@ -59,7 +59,7 @@ def assoc_left : HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) → HolorIndex (ds₁ ++
 
 theorem take_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assoc_right.take = t.take.take
   | ⟨is, h⟩ =>
-    Subtype.eq $ by
+    Subtype.eq <| by
       simp [assoc_right, take, cast_type, List.take_take, Nat.le_add_rightₓ, min_eq_leftₓ]
 
 theorem drop_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assoc_right.drop.take = t.take.drop
@@ -168,7 +168,7 @@ theorem mul_left_distrib [Distrib α] (x : Holor α ds₁) (y : Holor α ds₂) 
 
 theorem mul_right_distrib [Distrib α] (x : Holor α ds₁) (y : Holor α ds₁) (z : Holor α ds₂) :
     (x + y) ⊗ z = x ⊗ z + y ⊗ z :=
-  funext $ fun t => add_mulₓ (x (HolorIndex.take t)) (y (HolorIndex.take t)) (z (HolorIndex.drop t))
+  funext fun t => add_mulₓ (x (HolorIndex.take t)) (y (HolorIndex.take t)) (z (HolorIndex.drop t))
 
 @[simp]
 theorem zero_mul {α : Type} [Ringₓ α] (x : Holor α ds₂) : (0 : Holor α ds₁) ⊗ x = 0 :=
@@ -202,8 +202,8 @@ theorem holor_index_cons_decomp (p : HolorIndex (d :: ds) → Prop) :
 
 /-- Two holors are equal if all their slices are equal. -/
 theorem slice_eq (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) (h : slice x = slice y) : x = y :=
-  funext $ fun t : HolorIndex (d :: ds) =>
-    holor_index_cons_decomp (fun t => x t = y t) t $ fun i is hiis =>
+  funext fun t : HolorIndex (d :: ds) =>
+    (holor_index_cons_decomp (fun t => x t = y t) t) fun i is hiis =>
       have hiisdds : forall₂ (· < ·) (i :: is) (d :: ds) := by
         rw [← hiis]
         exact t.2
@@ -218,7 +218,7 @@ theorem slice_eq (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) (h : slice x 
 
 theorem slice_unit_vec_mul [Ringₓ α] {i : ℕ} {j : ℕ} (hid : i < d) (x : Holor α ds) :
     slice (unit_vec d j ⊗ x) i hid = if i = j then x else 0 :=
-  funext $ fun t : HolorIndex ds =>
+  funext fun t : HolorIndex ds =>
     if h : i = j then by
       simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h]
     else by
@@ -252,7 +252,7 @@ theorem sum_unit_vec_mul_slice [Ringₓ α] (x : Holor α (d :: ds)) :
   ext i hid
   rw [← slice_sum]
   simp only [slice_unit_vec_mul hid]
-  rw [Finset.sum_eq_single (Subtype.mk i $ Finset.mem_range.2 hid)]
+  rw [Finset.sum_eq_single (Subtype.mk i <| Finset.mem_range.2 hid)]
   · simp
     
   · intro (b : { x // x ∈ Finset.range d })(hb : b ∈ (Finset.range d).attach)(hbi : b ≠ ⟨i, _⟩)

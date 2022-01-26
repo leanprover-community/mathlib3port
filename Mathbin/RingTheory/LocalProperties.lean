@@ -197,7 +197,7 @@ theorem is_reduced_of_localization_maximal : OfLocalizationMaximal fun R hR => I
   intro J hJ
   specialize h J hJ
   skip
-  exact (hx.map $ algebraMap R $ Localization.AtPrime J).eq_zero
+  exact (hx.map <| algebraMap R <| Localization.AtPrime J).eq_zero
 
 end Reduced
 
@@ -219,7 +219,7 @@ theorem localization_finite : RingHom.LocalizationPreserves @RingHom.Finite := b
   rintro x -
   obtain ⟨y, ⟨_, ⟨r, hr, rfl⟩⟩, rfl⟩ := IsLocalization.mk'_surjective (M.map (f : R →* S)) x
   rw [IsLocalization.mk'_eq_mul_mk'_one, mul_comm, Finset.coe_image]
-  have hy : y ∈ Submodule.span R (↑T) := by
+  have hy : y ∈ Submodule.span R ↑T := by
     rw [hT]
     trivial
   replace hy : algebraMap S S' y ∈ Submodule.map fₐ.to_linear_map (Submodule.span R T) := Submodule.mem_map_of_mem hy

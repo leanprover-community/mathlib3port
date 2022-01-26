@@ -113,7 +113,7 @@ noncomputable def basis_monomials : Basis ℕ R (Polynomial R) :=
 
 @[simp]
 theorem coe_basis_monomials : (basis_monomials R : ℕ → Polynomial R) = fun s => monomial s 1 :=
-  _root_.funext $ fun n => to_finsupp_iso_symm_single
+  _root_.funext fun n => to_finsupp_iso_symm_single
 
 end Polynomial
 

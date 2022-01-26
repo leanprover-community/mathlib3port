@@ -19,7 +19,7 @@ section NormedField
 `x → a`, `x ≠ a`. -/
 theorem Filter.IsBoundedUnder.is_o_sub_self_inv {𝕜 E : Type _} [NormedField 𝕜] [HasNorm E] {a : 𝕜} {f : 𝕜 → E}
     (h : is_bounded_under (· ≤ ·) (𝓝[≠] a) (norm ∘ f)) : is_o f (fun x => (x - a)⁻¹) (𝓝[≠] a) := by
-  refine' (h.is_O_const (@one_ne_zero ℝ _ _)).trans_is_o (is_o_const_left.2 $ Or.inr _)
+  refine' (h.is_O_const (@one_ne_zero ℝ _ _)).trans_is_o (is_o_const_left.2 <| Or.inr _)
   simp only [· ∘ ·, NormedField.norm_inv]
   exact (tendsto_norm_sub_self_punctured_nhds a).inv_tendsto_zero
 
@@ -42,7 +42,7 @@ theorem pow_div_pow_eventually_eq_at_bot {p q : ℕ} :
 theorem tendsto_zpow_at_top_at_top {n : ℤ} (hn : 0 < n) : tendsto (fun x : 𝕜 => x ^ n) at_top at_top := by
   lift n to ℕ using hn.le
   simp only [zpow_coe_nat]
-  exact tendsto_pow_at_top (nat.succ_le_iff.mpr $ int.coe_nat_pos.mp hn)
+  exact tendsto_pow_at_top (nat.succ_le_iff.mpr <| int.coe_nat_pos.mp hn)
 
 theorem tendsto_pow_div_pow_at_top_at_top {p q : ℕ} (hpq : q < p) :
     tendsto (fun x : 𝕜 => x ^ p / x ^ q) at_top at_top := by

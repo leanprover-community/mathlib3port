@@ -40,7 +40,7 @@ open Tactic
 to each declaration named in the list `to`. -/
 unsafe def tactic.copy_doc_string (fr : Name) (to : List Name) : tactic Unit := do
   let fr_ds ← doc_string fr
-  to.mmap' $ fun tgt => add_doc_string tgt fr_ds
+  to.mmap' fun tgt => add_doc_string tgt fr_ds
 
 open Lean Lean.Parser Interactive
 
@@ -53,7 +53,7 @@ unsafe def copy_doc_string_cmd (_ : parse (tk "copy_doc_string")) : parser Unit 
   tk "->"
   let to ← parser.many parser.ident
   let expr.const fr _ ← resolve_name fr
-  let to ← parser.of_tactic (to.mmap $ fun n => expr.const_name <$> resolve_name n)
+  let to ← parser.of_tactic (to.mmap fun n => expr.const_name <$> resolve_name n)
   tactic.copy_doc_string fr to
 
 /-! ### The `library_note` command -/
@@ -81,7 +81,7 @@ unsafe def mk_reflected_definition (decl_name : Name) {type} [reflected type] (b
 the `library_note` attribute. -/
 unsafe def tactic.add_library_note (note_name note : Stringₓ) : tactic Unit := do
   let decl_name := note_name.mk_hashed_name `library_note
-  add_decl $ mk_reflected_definition decl_name (note_name, note)
+  add_decl <| mk_reflected_definition decl_name (note_name, note)
   library_note_attr decl_name () tt none
 
 open Tactic
@@ -182,12 +182,12 @@ attribute. If `tde.decl_names` has exactly one entry `` `decl`` and
 if `tde.description` is the empty string, `add_tactic_doc` uses the doc
 string of `decl` as the description. -/
 unsafe def tactic.add_tactic_doc (tde : TacticDocEntry) : tactic Unit := do
-  when (tde.description = "" ∧ tde.inherit_description_from.is_none ∧ tde.decl_names.length ≠ 1) $
+  when (tde.description = "" ∧ tde.inherit_description_from.is_none ∧ tde.decl_names.length ≠ 1) <|
       fail
         "A tactic doc entry must either:\n 1. have a description written as a doc-string for the `add_tactic_doc` invocation, or\n 2. have a single declaration in the `decl_names` field, to inherit a description from, or\n 3. explicitly indicate the declaration to inherit the description from using\n    `inherit_description_from`."
   let tde ← if tde.description = "" then tde.update_description else return tde
   let decl_name := (tde.name ++ tde.category.to_string).mk_hashed_name `tactic_doc
-  add_decl $ mk_definition decl_name [] (quote.1 TacticDocEntry) (reflect tde)
+  add_decl <| mk_definition decl_name [] (quote.1 TacticDocEntry) (reflect tde)
   tactic_doc_entry_attr decl_name () tt none
 
 /-- A command used to add documentation for a tactic, command, hole command, or attribute.
@@ -231,7 +231,7 @@ messages.
 
 -/
 @[user_command]
-unsafe def add_tactic_doc_command (mi : interactive.decl_meta_info) (_ : parse $ tk "add_tactic_doc") : parser Unit :=
+unsafe def add_tactic_doc_command (mi : interactive.decl_meta_info) (_ : parse <| tk "add_tactic_doc") : parser Unit :=
   do
   let pe ← parser.pexpr
   let e ← eval_pexpr TacticDocEntry pe
@@ -430,7 +430,7 @@ add_decl_doc foo
 ```
 -/
 @[user_command]
-unsafe def add_decl_doc_command (mi : interactive.decl_meta_info) (_ : parse $ tk "add_decl_doc") : parser Unit := do
+unsafe def add_decl_doc_command (mi : interactive.decl_meta_info) (_ : parse <| tk "add_decl_doc") : parser Unit := do
   let n ← parser.ident
   let n ← resolve_constant n
   let some doc ← pure mi.doc_string | fail "add_decl_doc requires a doc string"

@@ -129,7 +129,7 @@ theorem cycle_type_conj {σ τ : perm α} : (τ * σ * τ⁻¹).cycleType = σ.c
   · intro σ τ hd hc hσ hτ π
     rw [← conj_mul, hd.cycle_type, disjoint.cycle_type, hσ, hτ]
     intro a
-    apply (hd ((π⁻¹) a)).imp _ _ <;>
+    apply (hd (π⁻¹ a)).imp _ _ <;>
       · intro h
         rw [perm.mul_apply, perm.mul_apply, h, apply_inv_self]
         
@@ -184,7 +184,7 @@ theorem two_dvd_card_support {σ : perm α} (hσ : σ ^ 2 = 1) : 2 ∣ σ.suppor
   (congr_argₓ (HasDvd.Dvd 2) σ.sum_cycle_type).mp
     (Multiset.dvd_sum fun n hn => by
       rw
-        [le_antisymmₓ (Nat.le_of_dvdₓ zero_lt_two $ (dvd_of_mem_cycle_type hn).trans $ order_of_dvd_of_pow_eq_one hσ)
+        [le_antisymmₓ (Nat.le_of_dvdₓ zero_lt_two <| (dvd_of_mem_cycle_type hn).trans <| order_of_dvd_of_pow_eq_one hσ)
           (two_le_of_mem_cycle_type hn)])
 
 theorem cycle_type_prime_order {σ : perm α} (hσ : (orderOf σ).Prime) :
@@ -322,7 +322,7 @@ theorem card_compl_support_modeq [DecidableEq α] {p n : ℕ} [hp : Fact p.prime
   obtain ⟨l, -, rfl⟩ := (Nat.dvd_prime_pow hp.out).mp ((congr_argₓ _ hm).mp (dvd_of_mem_cycle_type hk))
   exact
     dvd_pow_self _ fun h =>
-      (one_lt_of_mem_cycle_type hk).Ne $ by
+      (one_lt_of_mem_cycle_type hk).Ne <| by
         rw [h, pow_zeroₓ]
 
 theorem exists_fixed_point_of_prime {p n : ℕ} [hp : Fact p.prime] (hα : ¬p ∣ Fintype.card α) {σ : perm α}
@@ -397,7 +397,7 @@ def vector_equiv : Vector G n ≃ vectors_prod_eq_one G (n + 1) where
     ⟨v.to_list.prod⁻¹::ᵥv, by
       rw [mem_iff, Vector.to_list_cons, List.prod_cons, inv_mul_selfₓ]⟩
   invFun := fun v => v.1.tail
-  left_inv := fun v => v.tail_cons (v.to_list.prod⁻¹)
+  left_inv := fun v => v.tail_cons v.to_list.prod⁻¹
   right_inv := fun v =>
     Subtype.ext
       ((congr_arg2ₓ Vector.cons
@@ -484,7 +484,7 @@ theorem subgroup_eq_top_of_swap_mem [DecidableEq α] {H : Subgroup (perm α)} [d
   have : Fact (Fintype.card α).Prime := ⟨h0⟩
   obtain ⟨σ, hσ⟩ := exists_prime_order_of_dvd_card (Fintype.card α) h1
   have hσ1 : orderOf (σ : perm α) = Fintype.card α := (order_of_subgroup σ).trans hσ
-  have hσ2 : is_cycle (↑σ) := is_cycle_of_prime_order'' h0 hσ1
+  have hσ2 : is_cycle ↑σ := is_cycle_of_prime_order'' h0 hσ1
   have hσ3 : (σ : perm α).support = ⊤ :=
     Finset.eq_univ_of_card (σ : perm α).support ((order_of_is_cycle hσ2).symm.trans hσ1)
   have hσ4 : Subgroup.closure {↑σ, τ} = ⊤ := closure_prime_cycle_swap h0 hσ2 hσ3 h3
@@ -569,11 +569,11 @@ theorem sign (h : is_three_cycle σ) : sign σ = 1 := by
   rw [sign_of_cycle_type, h.cycle_type]
   rfl
 
-theorem inv {f : perm α} (h : is_three_cycle f) : is_three_cycle (f⁻¹) := by
+theorem inv {f : perm α} (h : is_three_cycle f) : is_three_cycle f⁻¹ := by
   rwa [is_three_cycle, cycle_type_inv]
 
 @[simp]
-theorem inv_iff {f : perm α} : is_three_cycle (f⁻¹) ↔ is_three_cycle f :=
+theorem inv_iff {f : perm α} : is_three_cycle f⁻¹ ↔ is_three_cycle f :=
   ⟨by
     rw [← inv_invₓ f]
     apply inv, inv⟩

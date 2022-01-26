@@ -46,8 +46,8 @@ instance [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (Sum α β) (lift_rel r s) :
 
 @[trans]
 theorem lift_rel.trans [IsTrans α r] [IsTrans β s] : ∀ {a b c}, lift_rel r s a b → lift_rel r s b c → lift_rel r s a c
-  | _, _, _, lift_rel.inl hab, lift_rel.inl hbc => lift_rel.inl $ trans hab hbc
-  | _, _, _, lift_rel.inr hab, lift_rel.inr hbc => lift_rel.inr $ trans hab hbc
+  | _, _, _, lift_rel.inl hab, lift_rel.inl hbc => lift_rel.inl <| trans hab hbc
+  | _, _, _, lift_rel.inr hab, lift_rel.inr hbc => lift_rel.inr <| trans hab hbc
 
 instance [IsTrans α r] [IsTrans β s] : IsTrans (Sum α β) (lift_rel r s) :=
   ⟨fun _ _ _ => lift_rel.trans _ _⟩
@@ -93,7 +93,7 @@ instance [IsTrichotomous α r] [IsTrichotomous β s] : IsTrichotomous (Sum α β
     match a, b with
     | inl a, inl b => (trichotomous_of r a b).imp3 lex.inl (congr_argₓ _) lex.inl
     | inl a, inr b => Or.inl (lex.sep _ _)
-    | inr a, inl b => Or.inr (Or.inr $ lex.sep _ _)
+    | inr a, inl b => Or.inr (Or.inr <| lex.sep _ _)
     | inr a, inr b => (trichotomous_of s a b).imp3 lex.inr (congr_argₓ _) lex.inr⟩
 
 instance [IsWellOrder α r] [IsWellOrder β s] : IsWellOrder (Sum α β) (Sum.Lex r s) where
@@ -165,9 +165,9 @@ instance : Preorderₓ (Sum α β) :=
           
         
       · rintro ⟨⟨a, b, hab⟩ | ⟨a, b, hab⟩, hba⟩
-        · exact lift_rel.inl (hab.lt_of_not_le $ fun h => hba $ lift_rel.inl h)
+        · exact lift_rel.inl (hab.lt_of_not_le fun h => hba <| lift_rel.inl h)
           
-        · exact lift_rel.inr (hab.lt_of_not_le $ fun h => hba $ lift_rel.inr h)
+        · exact lift_rel.inr (hab.lt_of_not_le fun h => hba <| lift_rel.inr h)
           
          }
 
@@ -364,9 +364,9 @@ instance Preorderₓ : Preorderₓ (α ⊕ₗ β) :=
           
         
       · rintro ⟨⟨a, b, hab⟩ | ⟨a, b, hab⟩ | ⟨a, b⟩, hba⟩
-        · exact lex.inl (hab.lt_of_not_le $ fun h => hba $ lex.inl h)
+        · exact lex.inl (hab.lt_of_not_le fun h => hba <| lex.inl h)
           
-        · exact lex.inr (hab.lt_of_not_le $ fun h => hba $ lex.inr h)
+        · exact lex.inr (hab.lt_of_not_le fun h => hba <| lex.inr h)
           
         · exact lex.sep _ _
           
@@ -454,12 +454,12 @@ instance no_min_order_of_nonempty [LT α] [LT β] [NoMinOrder α] [Nonempty α] 
     | inl a =>
       let ⟨b, h⟩ := exists_lt a
       ⟨toLex (inl b), inl_lt_inl_iff.2 h⟩
-    | inr a => ⟨toLex (inl $ Classical.arbitrary α), inl_lt_inr _ _⟩⟩
+    | inr a => ⟨toLex (inl <| Classical.arbitrary α), inl_lt_inr _ _⟩⟩
 
 instance no_max_order_of_nonempty [LT α] [LT β] [NoMaxOrder β] [Nonempty β] : NoMaxOrder (α ⊕ₗ β) :=
   ⟨fun a =>
     match a with
-    | inl a => ⟨toLex (inr $ Classical.arbitrary β), inl_lt_inr _ _⟩
+    | inl a => ⟨toLex (inr <| Classical.arbitrary β), inl_lt_inr _ _⟩
     | inr a =>
       let ⟨b, h⟩ := exists_gt a
       ⟨toLex (inr b), inr_lt_inr_iff.2 h⟩⟩
@@ -582,10 +582,10 @@ def sum_lex_assoc (α β γ : Type _) [LE α] [LE β] [LE γ] : (α ⊕ₗ β) �
     map_rel_iff' := fun a b =>
       ⟨fun h =>
         match a, b, h with
-        | inlₗ (inlₗ a), inlₗ (inlₗ b), lex.inl h => lex.inl $ lex.inl h
-        | inlₗ (inlₗ a), inlₗ (inrₗ b), lex.sep _ _ => lex.inl $ lex.sep _ _
+        | inlₗ (inlₗ a), inlₗ (inlₗ b), lex.inl h => lex.inl <| lex.inl h
+        | inlₗ (inlₗ a), inlₗ (inrₗ b), lex.sep _ _ => lex.inl <| lex.sep _ _
         | inlₗ (inlₗ a), inrₗ b, lex.sep _ _ => lex.sep _ _
-        | inlₗ (inrₗ a), inlₗ (inrₗ b), lex.inr (lex.inl h) => lex.inl $ lex.inr h
+        | inlₗ (inrₗ a), inlₗ (inrₗ b), lex.inr (lex.inl h) => lex.inl <| lex.inr h
         | inlₗ (inrₗ a), inrₗ b, lex.inr (lex.sep _ _) => lex.sep _ _
         | inrₗ a, inrₗ b, lex.inr (lex.inr h) => lex.inr h,
         fun h =>
@@ -593,20 +593,21 @@ def sum_lex_assoc (α β γ : Type _) [LE α] [LE β] [LE γ] : (α ⊕ₗ β) �
         | inlₗ (inlₗ a), inlₗ (inlₗ b), lex.inl (lex.inl h) => lex.inl h
         | inlₗ (inlₗ a), inlₗ (inrₗ b), lex.inl (lex.sep _ _) => lex.sep _ _
         | inlₗ (inlₗ a), inrₗ b, lex.sep _ _ => lex.sep _ _
-        | inlₗ (inrₗ a), inlₗ (inrₗ b), lex.inl (lex.inr h) => lex.inr $ lex.inl h
-        | inlₗ (inrₗ a), inrₗ b, lex.sep _ _ => lex.inr $ lex.sep _ _
-        | inrₗ a, inrₗ b, lex.inr h => lex.inr $ lex.inr h⟩ }
+        | inlₗ (inrₗ a), inlₗ (inrₗ b), lex.inl (lex.inr h) => lex.inr <| lex.inl h
+        | inlₗ (inrₗ a), inrₗ b, lex.sep _ _ => lex.inr <| lex.sep _ _
+        | inrₗ a, inrₗ b, lex.inr h => lex.inr <| lex.inr h⟩ }
 
 @[simp]
-theorem sum_lex_assoc_apply_inl_inl : sum_lex_assoc α β γ (toLex $ inl $ toLex $ inl a) = toLex (inl a) :=
+theorem sum_lex_assoc_apply_inl_inl : sum_lex_assoc α β γ (toLex <| inl <| toLex <| inl a) = toLex (inl a) :=
   rfl
 
 @[simp]
-theorem sum_lex_assoc_apply_inl_inr : sum_lex_assoc α β γ (toLex $ inl $ toLex $ inr b) = toLex (inr $ toLex $ inl b) :=
+theorem sum_lex_assoc_apply_inl_inr :
+    sum_lex_assoc α β γ (toLex <| inl <| toLex <| inr b) = toLex (inr <| toLex <| inl b) :=
   rfl
 
 @[simp]
-theorem sum_lex_assoc_apply_inr : sum_lex_assoc α β γ (toLex $ inr c) = toLex (inr $ toLex $ inr c) :=
+theorem sum_lex_assoc_apply_inr : sum_lex_assoc α β γ (toLex <| inr c) = toLex (inr <| toLex <| inr c) :=
   rfl
 
 @[simp]
@@ -627,14 +628,14 @@ def sum_lex_dual_antidistrib (α β : Type _) [LE α] [LE β] : OrderDual (α �
     map_rel_iff' := by
       rintro (a | a) (b | b)
       simp
-      · change toLex (inr $ to_dual a) ≤ toLex (inr $ to_dual b) ↔ to_dual (toLex $ inl a) ≤ to_dual (toLex $ inl b)
+      · change toLex (inr <| to_dual a) ≤ toLex (inr <| to_dual b) ↔ to_dual (toLex <| inl a) ≤ to_dual (toLex <| inl b)
         simp only [to_dual_le_to_dual, lex.inl_le_inl_iff, lex.inr_le_inr_iff]
         
       · exact iff_of_false lex.not_inr_le_inl lex.not_inr_le_inl
         
       · exact iff_of_true (lex.inl_le_inr _ _) (lex.inl_le_inr _ _)
         
-      · change toLex (inl $ to_dual a) ≤ toLex (inl $ to_dual b) ↔ to_dual (toLex $ inr a) ≤ to_dual (toLex $ inr b)
+      · change toLex (inl <| to_dual a) ≤ toLex (inl <| to_dual b) ↔ to_dual (toLex <| inr a) ≤ to_dual (toLex <| inr b)
         simp only [to_dual_le_to_dual, lex.inl_le_inl_iff, lex.inr_le_inr_iff]
          }
 

@@ -105,7 +105,7 @@ theorem is_complement_top_left : is_complement ⊤ S ↔ ∃ g : G, S = {g} := b
   · obtain ⟨a, ha⟩ := h.2 1
     exact ⟨a.2.1, a.2.2⟩
     
-  · have : (⟨⟨_, mem_top (a⁻¹)⟩, ⟨a, ha⟩⟩ : (⊤ : Set G) × S) = ⟨⟨_, mem_top (b⁻¹)⟩, ⟨b, hb⟩⟩ :=
+  · have : (⟨⟨_, mem_top a⁻¹⟩, ⟨a, ha⟩⟩ : (⊤ : Set G) × S) = ⟨⟨_, mem_top b⁻¹⟩, ⟨b, hb⟩⟩ :=
       h.1 ((inv_mul_selfₓ a).trans (inv_mul_selfₓ b).symm)
     exact subtype.ext_iff.mp (prod.ext_iff.mp this).2
     
@@ -119,7 +119,7 @@ theorem is_complement_top_right : is_complement S ⊤ ↔ ∃ g : G, S = {g} := 
   · obtain ⟨a, ha⟩ := h.2 1
     exact ⟨a.1.1, a.1.2⟩
     
-  · have : (⟨⟨a, ha⟩, ⟨_, mem_top (a⁻¹)⟩⟩ : S × (⊤ : Set G)) = ⟨⟨b, hb⟩, ⟨_, mem_top (b⁻¹)⟩⟩ :=
+  · have : (⟨⟨a, ha⟩, ⟨_, mem_top a⁻¹⟩⟩ : S × (⊤ : Set G)) = ⟨⟨b, hb⟩, ⟨_, mem_top b⁻¹⟩⟩ :=
       h.1 ((mul_inv_selfₓ a).trans (mul_inv_selfₓ b).symm)
     exact subtype.ext_iff.mp (prod.ext_iff.mp this).1
     

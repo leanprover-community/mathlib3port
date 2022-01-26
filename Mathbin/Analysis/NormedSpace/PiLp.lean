@@ -122,7 +122,7 @@ def pseudo_emetric_aux : PseudoEmetricSpace (PiLp p β) :=
       calc
         (∑ i : ι, edist (f i) (h i) ^ p) ^ (1 / p) ≤ (∑ i : ι, (edist (f i) (g i) + edist (g i) (h i)) ^ p) ^ (1 / p) :=
           by
-          apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 $ le_of_ltₓ Pos)
+          apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 <| le_of_ltₓ Pos)
           refine' Finset.sum_le_sum fun i hi => _
           exact Ennreal.rpow_le_rpow (edist_triangle _ _ _) (le_transₓ zero_le_one fact_one_le_p.out)
         _ ≤ (∑ i : ι, edist (f i) (g i) ^ p) ^ (1 / p) + (∑ i : ι, edist (g i) (h i) ^ p) ^ (1 / p) :=
@@ -154,7 +154,7 @@ theorem lipschitz_with_equiv : LipschitzWith 1 (PiLp.equiv p β) := by
   intro i
   calc edist (x i) (y i) = (edist (x i) (y i) ^ p) ^ (1 / p) := by
       simp [← Ennreal.rpow_mul, cancel, -one_div]_ ≤ (∑ i : ι, edist (x i) (y i) ^ p) ^ (1 / p) := by
-      apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 $ le_of_ltₓ Pos)
+      apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 <| le_of_ltₓ Pos)
       exact Finset.single_le_sum (fun i hi => (bot_le : (0 : ℝ≥0∞) ≤ _)) (Finset.mem_univ i)
 
 theorem antilipschitz_with_equiv : AntilipschitzWith ((Fintype.card ι : ℝ≥0 ) ^ (1 / p)) (PiLp.equiv p β) := by

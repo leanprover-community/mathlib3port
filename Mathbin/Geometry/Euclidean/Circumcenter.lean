@@ -68,7 +68,7 @@ different) `r` such that its `orthogonal_projection` has that distance
 from all the points in that set. -/
 theorem exists_dist_eq_iff_exists_dist_orthogonal_projection_eq {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] {ps : Set P} (hps : ps ⊆ s) (p : P) :
-    (∃ r, ∀, ∀ p1 ∈ ps, ∀, dist p1 p = r) ↔ ∃ r, ∀, ∀ p1 ∈ ps, ∀, dist p1 (↑orthogonalProjection s p) = r := by
+    (∃ r, ∀, ∀ p1 ∈ ps, ∀, dist p1 p = r) ↔ ∃ r, ∀, ∀ p1 ∈ ps, ∀, dist p1 ↑(orthogonalProjection s p) = r := by
   have h := dist_set_eq_iff_dist_orthogonal_projection_eq hps p
   simp_rw [Set.pairwise_eq_iff_exists_eq]  at h
   exact h
@@ -129,7 +129,7 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
   · rintro ⟨cc₃, cr₃⟩ ⟨hcc₃, hcr₃⟩
     simp only [Prod.fst, Prod.snd] at hcc₃ hcr₃
     obtain ⟨t₃, cc₃', hcc₃', hcc₃''⟩ :
-      ∃ (r : ℝ)(p0 : P)(hp0 : p0 ∈ s), cc₃ = r • (p -ᵥ ↑(orthogonalProjection s) p) +ᵥ p0 := by
+      ∃ (r : ℝ)(p0 : P)(hp0 : p0 ∈ s), cc₃ = r • (p -ᵥ ↑((orthogonalProjection s) p)) +ᵥ p0 := by
       rwa [mem_affine_span_insert_iff (orthogonal_projection_mem p)] at hcc₃
     have hcr₃' : ∃ r, ∀, ∀ p1 ∈ ps, ∀, dist p1 cc₃ = r := ⟨cr₃, fun p1 hp1 => hcr₃ p1 (Set.mem_insert_of_mem _ hp1)⟩
     rw [exists_dist_eq_iff_exists_dist_orthogonal_projection_eq hps cc₃, hcc₃'',
@@ -150,7 +150,7 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
         dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq _ (hps hp0),
         orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hcc₃', h', hcr p0 hp0,
         dist_eq_norm_vsub V _ cc₃', vadd_vsub, norm_smul, ← dist_eq_norm_vsub V p, Real.norm_eq_abs, ← mul_assoc,
-        mul_comm _ |t₃|, ← mul_assoc, abs_mul_abs_self]
+        mul_comm _ (abs t₃), ← mul_assoc, abs_mul_abs_self]
       ring
     replace hcr₃ := hcr₃ p (Set.mem_insert _ _)
     rw [hpo, hcc₃'', hcr₃val, ← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
@@ -363,7 +363,7 @@ simplex, the orthogonal projection of that point onto the subspace
 spanned by that simplex is its circumcenter.  -/
 theorem orthogonal_projection_eq_circumcenter_of_exists_dist_eq {n : ℕ} (s : simplex ℝ P n) {p : P}
     (hr : ∃ r, ∀ i, dist (s.points i) p = r) :
-    ↑orthogonalProjection (affineSpan ℝ (Set.Range s.points)) p = s.circumcenter := by
+    ↑(orthogonalProjection (affineSpan ℝ (Set.Range s.points)) p) = s.circumcenter := by
   change ∃ r : ℝ, ∀ i, (fun x => dist x p = r) (s.points i) at hr
   conv at hr => congr ext rw [← Set.forall_range_iff]
   rw [exists_dist_eq_iff_exists_dist_orthogonal_projection_eq (subset_affine_span ℝ _) p] at hr
@@ -375,14 +375,14 @@ the orthogonal projection of that point onto the subspace spanned by
 that simplex is its circumcenter.  -/
 theorem orthogonal_projection_eq_circumcenter_of_dist_eq {n : ℕ} (s : simplex ℝ P n) {p : P} {r : ℝ}
     (hr : ∀ i, dist (s.points i) p = r) :
-    ↑orthogonalProjection (affineSpan ℝ (Set.Range s.points)) p = s.circumcenter :=
+    ↑(orthogonalProjection (affineSpan ℝ (Set.Range s.points)) p) = s.circumcenter :=
   s.orthogonal_projection_eq_circumcenter_of_exists_dist_eq ⟨r, hr⟩
 
 /-- The orthogonal projection of the circumcenter onto a face is the
 circumcenter of that face. -/
 theorem orthogonal_projection_circumcenter {n : ℕ} (s : simplex ℝ P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ}
     (h : fs.card = m + 1) :
-    ↑orthogonalProjection (affineSpan ℝ (Set.Range (s.face h).points)) s.circumcenter = (s.face h).circumcenter :=
+    ↑(orthogonalProjection (affineSpan ℝ (Set.Range (s.face h).points)) s.circumcenter) = (s.face h).circumcenter :=
   have hr : ∃ r, ∀ i, dist ((s.face h).points i) s.circumcenter = r := by
     use s.circumradius
     simp [face_points]
@@ -532,7 +532,7 @@ theorem centroid_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s 
   by
   simp_rw [centroid_def, affine_combination_apply, weighted_vsub_of_point_apply, sum_points_with_circumcenter,
     centroid_weights_with_circumcenter, points_with_circumcenter_point, zero_smul, add_zeroₓ, centroid_weights,
-    Set.sum_indicator_subset_of_eq_zero (Function.const (Finₓ (n + 1)) ((card fs : ℝ)⁻¹))
+    Set.sum_indicator_subset_of_eq_zero (Function.const (Finₓ (n + 1)) (card fs : ℝ)⁻¹)
       (fun i wi => wi • (s.points i -ᵥ Classical.choice AddTorsor.nonempty)) fs.subset_univ fun i => zero_smul ℝ _,
     Set.indicator_apply]
   congr
@@ -604,8 +604,8 @@ theorem reflection_circumcenter_eq_affine_combination_of_points_with_circumcente
   have hc : card ({i₁, i₂} : Finset (Finₓ (n + 1))) = 2 := by
     simp [h]
   have h_faces :
-    ↑orthogonalProjection (affineSpan ℝ (s.points '' {i₁, i₂})) s.circumcenter =
-      ↑orthogonalProjection (affineSpan ℝ (Set.Range (s.face hc).points)) s.circumcenter :=
+    ↑(orthogonalProjection (affineSpan ℝ (s.points '' {i₁, i₂})) s.circumcenter) =
+      ↑(orthogonalProjection (affineSpan ℝ (Set.Range (s.face hc).points)) s.circumcenter) :=
     by
     apply eq_orthogonal_projection_of_eq_subspace
     simp
@@ -753,13 +753,13 @@ theorem eq_or_eq_reflection_of_dist_eq {n : ℕ} {s : simplex ℝ P n} {p p₁ p
   rw [← affine_span_insert_affine_span, mem_affine_span_insert_iff (orthogonal_projection_mem p)] at hp₁ hp₂
   obtain ⟨r₁, p₁o, hp₁o, hp₁⟩ := hp₁
   obtain ⟨r₂, p₂o, hp₂o, hp₂⟩ := hp₂
-  obtain rfl : ↑orthogonalProjection span_s p₁ = p₁o := by
+  obtain rfl : ↑(orthogonalProjection span_s p₁) = p₁o := by
     have := orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hp₁o
     rw [← hp₁] at this
     rw [this]
     rfl
   rw [h₁'] at hp₁
-  obtain rfl : ↑orthogonalProjection span_s p₂ = p₂o := by
+  obtain rfl : ↑(orthogonalProjection span_s p₂) = p₂o := by
     have := orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hp₂o
     rw [← hp₂] at this
     rw [this]

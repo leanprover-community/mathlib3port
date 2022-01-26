@@ -123,8 +123,8 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
   show F.total_degree < (q - 1) * Fintype.card σ
   calc F.total_degree ≤ ∑ i in s, (1 - f i ^ (q - 1)).totalDegree :=
       total_degree_finset_prod s _ _ ≤ ∑ i in s, (q - 1) * (f i).totalDegree :=
-      sum_le_sum $ fun i hi => _ _ = (q - 1) * ∑ i in s, (f i).totalDegree :=
-      mul_sum.symm _ < (q - 1) * Fintype.card σ := by
+      sum_le_sum fun i hi => _ _ = (q - 1) * ∑ i in s, (f i).totalDegree := mul_sum.symm _ < (q - 1) * Fintype.card σ :=
+      by
       rwa [mul_lt_mul_left hq]
   show (1 - f i ^ (q - 1)).totalDegree ≤ (q - 1) * (f i).totalDegree
   calc (1 - f i ^ (q - 1)).totalDegree ≤ max (1 : MvPolynomial σ K).totalDegree (f i ^ (q - 1)).totalDegree :=

@@ -122,7 +122,7 @@ or avoid mentioning a basis at all using `linear_map.det`.
 -/
 def det_aux : Trunc (Basis ι A M) → (M →ₗ[A] M) →* A :=
   Trunc.lift (fun b : Basis ι A M => det_monoid_hom.comp (to_matrix_alg_equiv b : (M →ₗ[A] M) →* Matrix ι ι A))
-    fun b c => MonoidHom.ext $ det_to_matrix_eq_det_to_matrix b c
+    fun b c => MonoidHom.ext <| det_to_matrix_eq_det_to_matrix b c
 
 /-- Unfold lemma for `det_aux`.
 
@@ -132,18 +132,18 @@ theorem det_aux_def (b : Basis ι A M) (f : M →ₗ[A] M) :
     LinearMap.detAux (Trunc.mk b) f = Matrix.det (LinearMap.toMatrix b b f) :=
   rfl
 
-theorem det_aux_def' {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (tb : Trunc $ Basis ι A M) (b' : Basis ι' A M)
+theorem det_aux_def' {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (tb : Trunc <| Basis ι A M) (b' : Basis ι' A M)
     (f : M →ₗ[A] M) : LinearMap.detAux tb f = Matrix.det (LinearMap.toMatrix b' b' f) := by
   apply Trunc.induction_on tb
   intro b
   rw [det_aux_def, det_to_matrix_eq_det_to_matrix b b']
 
 @[simp]
-theorem det_aux_id (b : Trunc $ Basis ι A M) : LinearMap.detAux b LinearMap.id = 1 :=
+theorem det_aux_id (b : Trunc <| Basis ι A M) : LinearMap.detAux b LinearMap.id = 1 :=
   (LinearMap.detAux b).map_one
 
 @[simp]
-theorem det_aux_comp (b : Trunc $ Basis ι A M) (f g : M →ₗ[A] M) :
+theorem det_aux_comp (b : Trunc <| Basis ι A M) (f g : M →ₗ[A] M) :
     LinearMap.detAux b (f.comp g) = LinearMap.detAux b f * LinearMap.detAux b g :=
   (LinearMap.detAux b).map_mul f g
 
@@ -313,7 +313,7 @@ theorem coe_inv_det (f : M ≃ₗ[R] M) : ↑f.det⁻¹ = LinearMap.det (f.symm 
 
 @[simp]
 theorem det_refl : (LinearEquiv.refl R M).det = 1 :=
-  Units.ext $ LinearMap.det_id
+  Units.ext <| LinearMap.det_id
 
 @[simp]
 theorem det_trans (f g : M ≃ₗ[R] M) : (f.trans g).det = g.det * f.det :=
@@ -364,17 +364,17 @@ def LinearEquiv.ofIsUnitDet {f : M →ₗ[R] M'} {v : Basis ι R M} {v' : Basis 
   toFun := f
   map_add' := f.map_add
   map_smul' := f.map_smul
-  invFun := to_lin v' v (to_matrix v v' f⁻¹)
+  invFun := to_lin v' v (to_matrix v v' f)⁻¹
   left_inv := fun x =>
     calc
-      to_lin v' v (to_matrix v v' f⁻¹) (f x) = to_lin v v (to_matrix v v' f⁻¹ ⬝ to_matrix v v' f) x := by
+      to_lin v' v (to_matrix v v' f)⁻¹ (f x) = to_lin v v ((to_matrix v v' f)⁻¹ ⬝ to_matrix v v' f) x := by
         rw [to_lin_mul v v' v, to_lin_to_matrix, LinearMap.comp_apply]
       _ = x := by
         simp [h]
       
   right_inv := fun x =>
     calc
-      f (to_lin v' v (to_matrix v v' f⁻¹) x) = to_lin v' v' (to_matrix v v' f ⬝ to_matrix v v' f⁻¹) x := by
+      f (to_lin v' v (to_matrix v v' f)⁻¹ x) = to_lin v' v' (to_matrix v v' f ⬝ (to_matrix v v' f)⁻¹) x := by
         rw [to_lin_mul v' v v', LinearMap.comp_apply, to_lin_to_matrix v v']
       _ = x := by
         simp [h]
@@ -460,7 +460,7 @@ theorem AlternatingMap.map_basis_eq_zero_iff (f : AlternatingMap R M R ι) : f e
     simpa [h] using f.eq_smul_basis_det e, fun h => h.symm ▸ AlternatingMap.zero_apply _⟩
 
 theorem AlternatingMap.map_basis_ne_zero_iff (f : AlternatingMap R M R ι) : f e ≠ 0 ↔ f ≠ 0 :=
-  not_congr $ f.map_basis_eq_zero_iff e
+  not_congr <| f.map_basis_eq_zero_iff e
 
 variable {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M]
 
@@ -482,7 +482,7 @@ theorem Basis.det_map (b : Basis ι R M) (f : M ≃ₗ[R] M') (v : ι → M') : 
   rw [Basis.det_apply, Basis.to_matrix_map, Basis.det_apply]
 
 theorem Basis.det_map' (b : Basis ι R M) (f : M ≃ₗ[R] M') : (b.map f).det = b.det.comp_linear_map f.symm :=
-  AlternatingMap.ext $ b.det_map f
+  AlternatingMap.ext <| b.det_map f
 
 @[simp]
 theorem Pi.basis_fun_det : (Pi.basisFun R ι).det = Matrix.detRowAlternating := by

@@ -69,7 +69,7 @@ theorem exists_primitive_element_of_fintype_top [Fintype E] :
         rw [hn, Units.coe_mk0]]
     exact
       pow_mem («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»")
-        (mem_adjoin_simple_self F (↑α)) n
+        (mem_adjoin_simple_self F ↑α) n
     
 
 -- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
@@ -185,7 +185,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] :
             (algebraMap F
               («expr ⟮ , ⟯» F
                 "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»"))).comp
-        (C (adjoin_simple.gen F γ) - C (↑c) * X))
+        (C (adjoin_simple.gen F γ) - C ↑c * X))
       (g.map
         (algebraMap F
           («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»")))
@@ -272,7 +272,7 @@ theorem exists_primitive_element :
     have ih :
       ∀ K : IntermediateField F E x : E,
         P K →
-          P (↑«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") :=
+          P ↑(«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") :=
       by
       intro K β hK
       cases' hK with α hK

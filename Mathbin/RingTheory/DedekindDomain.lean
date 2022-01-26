@@ -127,7 +127,7 @@ variable {R₁ : Type _} [CommRingₓ R₁] [IsDomain R₁] [Algebra R₁ K] [Is
 
 variable {I J : FractionalIdeal R₁⁰ K}
 
-noncomputable instance : HasInv (FractionalIdeal R₁⁰ K) :=
+noncomputable instance : Inv (FractionalIdeal R₁⁰ K) :=
   ⟨fun I => 1 / I⟩
 
 theorem inv_eq : I⁻¹ = 1 / I :=
@@ -167,7 +167,7 @@ theorem coe_ideal_le_self_mul_inv (I : Ideal R₁) : (I : FractionalIdeal R₁�
 theorem right_inverse_eq (I J : FractionalIdeal R₁⁰ K) (h : I * J = 1) : J = I⁻¹ := by
   have hI : I ≠ 0 := FractionalIdeal.ne_zero_of_mul_eq_one I J h
   suffices h' : I * (1 / I) = 1
-  · exact congr_argₓ Units.inv $ @Units.ext _ _ (Units.mkOfMulEqOne _ _ h) (Units.mkOfMulEqOne _ _ h') rfl
+  · exact congr_argₓ Units.inv <| @Units.ext _ _ (Units.mkOfMulEqOne _ _ h) (Units.mkOfMulEqOne _ _ h') rfl
     
   apply le_antisymmₓ
   · apply fractional_ideal.mul_le.mpr _
@@ -192,18 +192,18 @@ theorem mul_inv_cancel_iff_is_unit {I : FractionalIdeal R₁⁰ K} : I * I⁻¹ 
 variable {K' : Type _} [Field K'] [Algebra R₁ K'] [IsFractionRing R₁ K']
 
 @[simp]
-theorem map_inv (I : FractionalIdeal R₁⁰ K) (h : K ≃ₐ[R₁] K') : I⁻¹.map (h : K →ₐ[R₁] K') = I.map h⁻¹ := by
+theorem map_inv (I : FractionalIdeal R₁⁰ K) (h : K ≃ₐ[R₁] K') : I⁻¹.map (h : K →ₐ[R₁] K') = (I.map h)⁻¹ := by
   rw [inv_eq, FractionalIdeal.map_div, FractionalIdeal.map_one, inv_eq]
 
 open Submodule Submodule.IsPrincipal
 
 @[simp]
-theorem span_singleton_inv (x : K) : FractionalIdeal.spanSingleton R₁⁰ x⁻¹ = FractionalIdeal.spanSingleton _ (x⁻¹) :=
+theorem span_singleton_inv (x : K) : (FractionalIdeal.spanSingleton R₁⁰ x)⁻¹ = FractionalIdeal.spanSingleton _ x⁻¹ :=
   FractionalIdeal.one_div_span_singleton x
 
 theorem mul_generator_self_inv {R₁ : Type _} [CommRingₓ R₁] [Algebra R₁ K] [IsLocalization R₁⁰ K]
     (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I : Submodule R₁ K)] (h : I ≠ 0) :
-    I * FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K)⁻¹) = 1 := by
+    I * FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K))⁻¹ = 1 := by
   conv_lhs => congr rw [FractionalIdeal.eq_span_singleton_of_principal I]
   rw [FractionalIdeal.span_singleton_mul_span_singleton, mul_inv_cancel, FractionalIdeal.span_singleton_one]
   intro generator_I_eq_zero
@@ -213,7 +213,7 @@ theorem mul_generator_self_inv {R₁ : Type _} [CommRingₓ R₁] [Algebra R₁ 
 theorem invertible_of_principal (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I : Submodule R₁ K)] (h : I ≠ 0) :
     I * I⁻¹ = 1 :=
   FractionalIdeal.mul_div_self_cancel_iff.mpr
-    ⟨FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K)⁻¹), mul_generator_self_inv _ I h⟩
+    ⟨FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K))⁻¹, mul_generator_self_inv _ I h⟩
 
 theorem invertible_iff_generator_nonzero (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I : Submodule R₁ K)] :
     I * I⁻¹ = 1 ↔ generator (I : Submodule R₁ K) ≠ 0 := by
@@ -234,10 +234,10 @@ theorem invertible_iff_generator_nonzero (I : FractionalIdeal R₁⁰ K) [Submod
 theorem is_principal_inv (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I : Submodule R₁ K)] (h : I ≠ 0) :
     Submodule.IsPrincipal I⁻¹.1 := by
   rw [FractionalIdeal.val_eq_coe, FractionalIdeal.is_principal_iff]
-  use generator (I : Submodule R₁ K)⁻¹
-  have hI : I * FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K)⁻¹) = 1
+  use (generator (I : Submodule R₁ K))⁻¹
+  have hI : I * FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K))⁻¹ = 1
   apply mul_generator_self_inv _ I h
-  exact (right_inverse_eq _ I (FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K)⁻¹)) hI).symm
+  exact (right_inverse_eq _ I (FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K))⁻¹) hI).symm
 
 @[simp]
 theorem one_inv : (1⁻¹ : FractionalIdeal R₁⁰ K) = 1 :=
@@ -330,9 +330,9 @@ theorem dimension_le_one : dimension_le_one A := by
     rw [eq_top_iff, ← coe_ideal_le_coe_ideal (FractionRing A), FractionalIdeal.coe_ideal_top]
     calc (1 : FractionalIdeal A⁰ (FractionRing A)) = _ * _ * _ := _ _ ≤ _ * _ :=
         mul_right_mono (P⁻¹ * M : FractionalIdeal A⁰ (FractionRing A)) this _ = M := _
-    · rw [mul_assoc, ← mul_assoc (↑P), h.mul_inv_eq_one P'_ne, one_mulₓ, h.inv_mul_eq_one M'_ne]
+    · rw [mul_assoc, ← mul_assoc ↑P, h.mul_inv_eq_one P'_ne, one_mulₓ, h.inv_mul_eq_one M'_ne]
       
-    · rw [← mul_assoc (↑P), h.mul_inv_eq_one P'_ne, one_mulₓ]
+    · rw [← mul_assoc ↑P, h.mul_inv_eq_one P'_ne, one_mulₓ]
       
     · infer_instance
       
@@ -416,8 +416,8 @@ theorem exists_not_mem_one_of_ne_bot [IsDedekindDomain A] (hNF : ¬IsField A) {I
   obtain ⟨b, hbZ, hbJ⟩ := set_like.not_le_iff_exists.mp hnle
   have hnz_fa : algebraMap A K a ≠ 0 := mt ((RingHom.injective_iff _).mp (IsFractionRing.injective A K) a) ha0
   have hb0 : algebraMap A K b ≠ 0 :=
-    mt ((RingHom.injective_iff _).mp (IsFractionRing.injective A K) b) fun h => hbJ $ h.symm ▸ J.zero_mem
-  refine' ⟨algebraMap A K b * algebraMap A K a⁻¹, (mem_inv_iff _).mpr _, _⟩
+    mt ((RingHom.injective_iff _).mp (IsFractionRing.injective A K) b) fun h => hbJ <| h.symm ▸ J.zero_mem
+  refine' ⟨algebraMap A K b * (algebraMap A K a)⁻¹, (mem_inv_iff _).mpr _, _⟩
   · exact (FractionalIdeal.coe_to_fractional_ideal_ne_zero (le_reflₓ _)).mpr hM0.ne'
     
   · rintro y₀ hy₀
@@ -505,7 +505,7 @@ theorem coe_ideal_mul_inv [h : IsDedekindDomain A] (I : Ideal A) (hI0 : I ≠ �
     exact hx _ (FractionalIdeal.mul_mem_mul hy hb)
   refine'
     ⟨AlgHom.range (Polynomial.aeval x : Polynomial A →ₐ[A] K),
-      is_noetherian_submodule.mp (FractionalIdeal.is_noetherian (I⁻¹)) _ fun y hy => _,
+      is_noetherian_submodule.mp (FractionalIdeal.is_noetherian I⁻¹) _ fun y hy => _,
       ⟨Polynomial.x, Polynomial.aeval_X x⟩⟩
   obtain ⟨p, rfl⟩ := (AlgHom.mem_range _).mp hy
   rw [Polynomial.aeval_eq_sum_range]
@@ -526,7 +526,7 @@ This is also available as `_root_.mul_inv_cancel`, using the
 `comm_group_with_zero` instance defined below.
 -/
 protected theorem mul_inv_cancel [IsDedekindDomain A] {I : FractionalIdeal A⁰ K} (hne : I ≠ 0) : I * I⁻¹ = 1 := by
-  obtain ⟨a, J, ha, hJ⟩ : ∃ (a : A)(aI : Ideal A), a ≠ 0 ∧ I = span_singleton A⁰ (algebraMap _ _ a⁻¹) * aI :=
+  obtain ⟨a, J, ha, hJ⟩ : ∃ (a : A)(aI : Ideal A), a ≠ 0 ∧ I = span_singleton A⁰ (algebraMap _ _ a)⁻¹ * aI :=
     exists_eq_span_singleton_mul I
   suffices h₂ : I * (span_singleton A⁰ (algebraMap _ _ a) * J⁻¹) = 1
   · rw [mul_inv_cancel_iff]
@@ -545,7 +545,7 @@ theorem mul_right_le_iff [IsDedekindDomain A] {J : FractionalIdeal A⁰ K} (hJ :
   intro I I'
   constructor
   · intro h
-    convert mul_right_mono (J⁻¹) h <;> rw [mul_assoc, FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ]
+    convert mul_right_mono J⁻¹ h <;> rw [mul_assoc, FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ]
     
   · exact fun h => mul_right_mono J h
     
@@ -568,12 +568,12 @@ protected theorem div_eq_mul_inv [IsDedekindDomain A] (I J : FractionalIdeal A�
   · rw [hJ, div_zero, inv_zero', mul_zero]
     
   refine' le_antisymmₓ ((mul_right_le_iff hJ).mp _) ((le_div_iff_mul_le hJ).mpr _)
-  · rw [mul_assoc, mul_comm (J⁻¹), FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ, mul_le]
+  · rw [mul_assoc, mul_comm J⁻¹, FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ, mul_le]
     intro x hx y hy
     rw [mem_div_iff_of_nonzero hJ] at hx
     exact hx y hy
     
-  rw [mul_assoc, mul_comm (J⁻¹), FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ]
+  rw [mul_assoc, mul_comm J⁻¹, FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ]
   exact le_reflₓ I
 
 end FractionalIdeal
@@ -616,7 +616,7 @@ theorem Ideal.dvd_iff_le {I J : Ideal A} : I ∣ J ↔ J ≤ I :=
     have hI' : (I : FractionalIdeal A⁰ (FractionRing A)) ≠ 0 :=
       (FractionalIdeal.coe_to_fractional_ideal_ne_zero (le_reflₓ (nonZeroDivisors A))).mpr hI
     have : (I : FractionalIdeal A⁰ (FractionRing A))⁻¹ * J ≤ 1 :=
-      le_transₓ (FractionalIdeal.mul_left_mono ((↑I)⁻¹) ((coe_ideal_le_coe_ideal _).mpr h))
+      le_transₓ (FractionalIdeal.mul_left_mono (↑I)⁻¹ ((coe_ideal_le_coe_ideal _).mpr h))
         (le_of_eqₓ (inv_mul_cancel hI'))
     obtain ⟨H, hH⟩ := fractional_ideal.le_one_iff_exists_coe_ideal.mp this
     use H
@@ -715,7 +715,7 @@ variable [Algebra C L] [IsIntegralClosure C A L] [Algebra A C] [IsScalarTower A 
 theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι]
     (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     ((Algebra.linearMap C L).restrictScalars A).range ≤
-      Submodule.span A (Set.Range $ (trace_form K L).dualBasis (trace_form_nondegenerate K L) b) :=
+      Submodule.span A (Set.Range <| (trace_form K L).dualBasis (trace_form_nondegenerate K L) b) :=
   by
   let db := (trace_form K L).dualBasis (trace_form_nondegenerate K L) b
   rintro _ ⟨x, rfl⟩
@@ -741,7 +741,7 @@ theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type 
 theorem integral_closure_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι] (b : Basis ι K L)
     (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     (integralClosure A L).toSubmodule ≤
-      Submodule.span A (Set.Range $ (trace_form K L).dualBasis (trace_form_nondegenerate K L) b) :=
+      Submodule.span A (Set.Range <| (trace_form K L).dualBasis (trace_form_nondegenerate K L) b) :=
   by
   refine' le_transₓ _ (IsIntegralClosure.range_le_span_dual_basis (integralClosure A L) b hb_int)
   intro x hx
@@ -796,7 +796,7 @@ theorem FiniteDimensional.exists_is_basis_integral : ∃ (s : Finset L)(b : Basi
     ⟨s',
       bs'.map
         { Algebra.lmul _ _ (algebraMap A L y) with toFun := fun x => algebraMap A L y * x,
-          invFun := fun x => algebraMap A L y⁻¹ * x, left_inv := _, right_inv := _ },
+          invFun := fun x => (algebraMap A L y)⁻¹ * x, left_inv := _, right_inv := _ },
       _⟩
   · intro x
     simp only [inv_mul_cancel_left₀ hy']

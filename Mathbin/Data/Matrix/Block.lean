@@ -115,7 +115,7 @@ def to_block (M : Matrix m n α) (p : m → Prop) (q : n → Prop) : Matrix { a 
 
 @[simp]
 theorem to_block_apply (M : Matrix m n α) (p : m → Prop) (q : n → Prop) (i : { a // p a }) (j : { a // q a }) :
-    to_block M p q i j = M (↑i) (↑j) :=
+    to_block M p q i j = M ↑i ↑j :=
   rfl
 
 /-- Let `b` map rows and columns of a square matrix `M` to blocks. Then
@@ -126,7 +126,7 @@ def to_square_block (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (k : Fin�
 
 @[simp]
 theorem to_square_block_def (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
-    to_square_block M b k = fun i j => M (↑i) (↑j) :=
+    to_square_block M b k = fun i j => M ↑i ↑j :=
   rfl
 
 /-- Alternate version with `b : m → nat`. Let `b` map rows and columns of a square matrix `M` to
@@ -135,8 +135,7 @@ def to_square_block' (M : Matrix m m α) (b : m → Nat) (k : Nat) : Matrix { a 
   M.minor coe coe
 
 @[simp]
-theorem to_square_block_def' (M : Matrix m m α) (b : m → Nat) (k : Nat) :
-    to_square_block' M b k = fun i j => M (↑i) (↑j) :=
+theorem to_square_block_def' (M : Matrix m m α) (b : m → Nat) (k : Nat) : to_square_block' M b k = fun i j => M ↑i ↑j :=
   rfl
 
 /-- Let `p` pick out certain rows and columns of a square matrix `M`. Then
@@ -145,8 +144,7 @@ def to_square_block_prop (M : Matrix m m α) (p : m → Prop) : Matrix { a // p 
   M.minor coe coe
 
 @[simp]
-theorem to_square_block_prop_def (M : Matrix m m α) (p : m → Prop) :
-    to_square_block_prop M p = fun i j => M (↑i) (↑j) :=
+theorem to_square_block_prop_def (M : Matrix m m α) (p : m → Prop) : to_square_block_prop M p = fun i j => M ↑i ↑j :=
   rfl
 
 variable [Semiringₓ α]
@@ -313,7 +311,7 @@ theorem block_diagonal'_eq_block_diagonal (M : o → Matrix m n α) {k k'} i j :
 
 theorem block_diagonal'_minor_eq_block_diagonal (M : o → Matrix m n α) :
     (block_diagonal' M).minor (Prod.toSigma ∘ Prod.swap) (Prod.toSigma ∘ Prod.swap) = block_diagonal M :=
-  Matrix.ext $ fun ⟨k, i⟩ ⟨k', j⟩ => rfl
+  Matrix.ext fun ⟨k, i⟩ ⟨k', j⟩ => rfl
 
 theorem block_diagonal'_apply ik jk :
     block_diagonal' M ik jk = if h : ik.1 = jk.1 then M ik.1 ik.2 (cast (congr_argₓ n' h.symm) jk.2) else 0 := by

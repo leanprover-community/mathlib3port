@@ -195,7 +195,7 @@ theorem ext_iff : f = g ↔ ∀ x, f x = g x :=
 
 @[simp]
 theorem mk_coe (f : M →ₛₗ[σ] M₃) h₁ h₂ : (LinearMap.mk f h₁ h₂ : M →ₛₗ[σ] M₃) = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 
 variable (fₗ gₗ f g)
 
@@ -325,12 +325,12 @@ theorem map_sum {ι} {t : Finset ι} {g : ι → M} : f (∑ i in t, g i) = ∑ 
   f.to_add_monoid_hom.map_sum _ _
 
 theorem to_add_monoid_hom_injective : Function.Injective (to_add_monoid_hom : (M →ₛₗ[σ] M₃) → M →+ M₃) := fun f g h =>
-  ext $ AddMonoidHom.congr_fun h
+  ext <| AddMonoidHom.congr_fun h
 
 /-- If two `σ`-linear maps from `R` are equal on `1`, then they are equal. -/
 @[ext]
 theorem ext_ring {f g : R →ₛₗ[σ] M₃} (h : f 1 = g 1) : f = g :=
-  ext $ fun x => by
+  ext fun x => by
     rw [← mul_oneₓ x, ← smul_eq_mul, f.map_smulₛₗ, g.map_smulₛₗ, h]
 
 theorem ext_ring_iff {σ : R →+* R} {f g : R →ₛₗ[σ] M} : f = g ↔ f 1 = g 1 :=
@@ -389,11 +389,11 @@ omit σ₁₃
 
 @[simp]
 theorem comp_id : f.comp id = f :=
-  LinearMap.ext $ fun x => rfl
+  LinearMap.ext fun x => rfl
 
 @[simp]
 theorem id_comp : id.comp f = f :=
-  LinearMap.ext $ fun x => rfl
+  LinearMap.ext fun x => rfl
 
 end
 
@@ -630,7 +630,7 @@ theorem zero_apply (x : M) : (0 : M →ₛₗ[σ₁₂] M₂) x = 0 :=
 
 @[simp]
 theorem comp_zero (g : M₂ →ₛₗ[σ₂₃] M₃) : (g.comp (0 : M →ₛₗ[σ₁₂] M₂) : M →ₛₗ[σ₁₃] M₃) = 0 :=
-  ext $ fun c => by
+  ext fun c => by
     rw [comp_apply, zero_apply, zero_apply, g.map_zero]
 
 @[simp]
@@ -661,16 +661,16 @@ theorem add_comp (f : M →ₛₗ[σ₁₂] M₂) (g h : M₂ →ₛₗ[σ₂₃
   rfl
 
 theorem comp_add (f g : M →ₛₗ[σ₁₂] M₂) (h : M₂ →ₛₗ[σ₂₃] M₃) : (h.comp (f + g) : M →ₛₗ[σ₁₃] M₃) = h.comp f + h.comp g :=
-  ext $ fun _ => h.map_add _ _
+  ext fun _ => h.map_add _ _
 
 /-- The type of linear maps is an additive monoid. -/
 instance : AddCommMonoidₓ (M →ₛₗ[σ₁₂] M₂) where
   zero := 0
   add := · + ·
-  add_assoc := fun f g h => LinearMap.ext $ fun x => add_assocₓ _ _ _
-  zero_add := fun f => LinearMap.ext $ fun x => zero_addₓ _
-  add_zero := fun f => LinearMap.ext $ fun x => add_zeroₓ _
-  add_comm := fun f g => LinearMap.ext $ fun x => add_commₓ _ _
+  add_assoc := fun f g h => LinearMap.ext fun x => add_assocₓ _ _ _
+  zero_add := fun f => LinearMap.ext fun x => zero_addₓ _
+  add_zero := fun f => LinearMap.ext fun x => add_zeroₓ _
+  add_comm := fun f g => LinearMap.ext fun x => add_commₓ _ _
   nsmul := fun n f =>
     { toFun := fun x => n • f x,
       map_add' := fun x y => by
@@ -678,8 +678,8 @@ instance : AddCommMonoidₓ (M →ₛₗ[σ₁₂] M₂) where
       map_smul' := fun c x => by
         rw [f.map_smulₛₗ]
         simp [smul_comm n (σ₁₂ c) (f x)] }
-  nsmul_zero' := fun f => LinearMap.ext $ fun x => AddCommMonoidₓ.nsmul_zero' _
-  nsmul_succ' := fun n f => LinearMap.ext $ fun x => AddCommMonoidₓ.nsmul_succ' _ _
+  nsmul_zero' := fun f => LinearMap.ext fun x => AddCommMonoidₓ.nsmul_zero' _
+  nsmul_succ' := fun n f => LinearMap.ext fun x => AddCommMonoidₓ.nsmul_succ' _ _
 
 /-- The negation of a linear map is linear. -/
 instance : Neg (M →ₛₗ[σ₁₂] N₂) :=
@@ -702,7 +702,7 @@ theorem neg_comp (f : M →ₛₗ[σ₁₂] M₂) (g : M₂ →ₛₗ[σ₂₃] 
 
 @[simp]
 theorem comp_neg (f : M →ₛₗ[σ₁₂] N₂) (g : N₂ →ₛₗ[σ₂₃] N₃) : g.comp (-f) = -g.comp f :=
-  ext $ fun _ => g.map_neg _
+  ext fun _ => g.map_neg _
 
 omit σ₁₃
 
@@ -725,15 +725,15 @@ theorem sub_comp (f : M →ₛₗ[σ₁₂] M₂) (g h : M₂ →ₛₗ[σ₂₃
   rfl
 
 theorem comp_sub (f g : M →ₛₗ[σ₁₂] N₂) (h : N₂ →ₛₗ[σ₂₃] N₃) : h.comp (g - f) = h.comp g - h.comp f :=
-  ext $ fun _ => h.map_sub _ _
+  ext fun _ => h.map_sub _ _
 
 omit σ₁₃
 
 /-- The type of linear maps is an additive group. -/
 instance : AddCommGroupₓ (M →ₛₗ[σ₁₂] N₂) :=
   { LinearMap.addCommMonoid with zero := 0, add := · + ·, neg := Neg.neg, sub := Sub.sub,
-    sub_eq_add_neg := fun f g => LinearMap.ext $ fun m => sub_eq_add_neg _ _,
-    add_left_neg := fun f => LinearMap.ext $ fun m => add_left_negₓ _,
+    sub_eq_add_neg := fun f g => LinearMap.ext fun m => sub_eq_add_neg _ _,
+    add_left_neg := fun f => LinearMap.ext fun m => add_left_negₓ _,
     nsmul := fun n f =>
       { toFun := fun x => n • f x,
         map_add' := fun x y => by
@@ -746,9 +746,9 @@ instance : AddCommGroupₓ (M →ₛₗ[σ₁₂] N₂) :=
           rw [f.map_add, smul_add],
         map_smul' := fun c x => by
           rw [f.map_smulₛₗ, smul_comm n (σ₁₂ c) (f x)] },
-    zsmul_zero' := fun a => LinearMap.ext $ fun m => zero_smul _ _,
-    zsmul_succ' := fun n a => LinearMap.ext $ fun m => AddCommGroupₓ.zsmul_succ' n _,
-    zsmul_neg' := fun n a => LinearMap.ext $ fun m => AddCommGroupₓ.zsmul_neg' n _ }
+    zsmul_zero' := fun a => LinearMap.ext fun m => zero_smul _ _,
+    zsmul_succ' := fun n a => LinearMap.ext fun m => AddCommGroupₓ.zsmul_succ' n _,
+    zsmul_neg' := fun n a => LinearMap.ext fun m => AddCommGroupₓ.zsmul_neg' n _ }
 
 end Arithmetic
 
@@ -786,20 +786,20 @@ theorem coe_smul (a : S) (f : M →ₛₗ[σ₁₂] M₂) : ⇑(a • f) = a •
   rfl
 
 instance [SmulCommClass S T M₂] : SmulCommClass S T (M →ₛₗ[σ₁₂] M₂) :=
-  ⟨fun a b f => ext $ fun x => smul_comm _ _ _⟩
+  ⟨fun a b f => ext fun x => smul_comm _ _ _⟩
 
 instance [HasScalar S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →ₛₗ[σ₁₂] M₂) where
-  smul_assoc := fun _ _ _ => ext $ fun _ => smul_assoc _ _ _
+  smul_assoc := fun _ _ _ => ext fun _ => smul_assoc _ _ _
 
 instance [DistribMulAction (Sᵐᵒᵖ) M₂] [SmulCommClass R₂ (Sᵐᵒᵖ) M₂] [IsCentralScalar S M₂] :
     IsCentralScalar S (M →ₛₗ[σ₁₂] M₂) where
-  op_smul_eq_smul := fun a b => ext $ fun x => op_smul_eq_smul _ _
+  op_smul_eq_smul := fun a b => ext fun x => op_smul_eq_smul _ _
 
 instance : DistribMulAction S (M →ₛₗ[σ₁₂] M₂) where
-  one_smul := fun f => ext $ fun _ => one_smul _ _
-  mul_smul := fun c c' f => ext $ fun _ => mul_smul _ _ _
-  smul_add := fun c f g => ext $ fun x => smul_add _ _ _
-  smul_zero := fun c => ext $ fun x => smul_zero _
+  one_smul := fun f => ext fun _ => one_smul _ _
+  mul_smul := fun c c' f => ext fun _ => mul_smul _ _ _
+  smul_add := fun c f g => ext fun x => smul_add _ _ _
+  smul_zero := fun c => ext fun x => smul_zero _
 
 include σ₁₃
 
@@ -810,7 +810,7 @@ omit σ₁₃
 
 theorem comp_smul [Module R M₂] [Module R M₃] [SmulCommClass R S M₂] [DistribMulAction S M₃] [SmulCommClass R S M₃]
     [compatible_smul M₃ M₂ S R] (g : M₃ →ₗ[R] M₂) (a : S) (f : M →ₗ[R] M₃) : g.comp (a • f) = a • g.comp f :=
-  ext $ fun x => g.map_smul_of_tower _ _
+  ext fun x => g.map_smul_of_tower _ _
 
 end HasScalar
 
@@ -819,8 +819,8 @@ section Module
 variable [Semiringₓ S] [Module S M₂] [SmulCommClass R₂ S M₂]
 
 instance : Module S (M →ₛₗ[σ₁₂] M₂) where
-  add_smul := fun a b f => ext $ fun x => add_smul _ _ _
-  zero_smul := fun f => ext $ fun x => zero_smul _ _
+  add_smul := fun a b f => ext fun x => add_smul _ _ _
+  zero_smul := fun f => ext fun x => zero_smul _ _
 
 instance [NoZeroSmulDivisors S M₂] : NoZeroSmulDivisors S (M →ₛₗ[σ₁₂] M₂) :=
   coe_injective.NoZeroSmulDivisors _ rfl coe_smul
@@ -869,7 +869,7 @@ theorem coe_mul (f g : Module.End R M) : ⇑(f * g) = f ∘ g :=
 instance _root_.module.End.monoid : Monoidₓ (Module.End R M) where
   mul := · * ·
   one := (1 : M →ₗ[R] M)
-  mul_assoc := fun f g h => LinearMap.ext $ fun x => rfl
+  mul_assoc := fun f g h => LinearMap.ext fun x => rfl
   mul_one := comp_id
   one_mul := id_comp
 
@@ -905,7 +905,7 @@ end
 
 This generalizes `function.End.apply_mul_action`. -/
 instance apply_module : Module (Module.End R M) M where
-  smul := · $ ·
+  smul := · <| ·
   smul_zero := LinearMap.map_zero
   smul_add := LinearMap.map_add
   add_smul := LinearMap.add_apply
@@ -926,6 +926,10 @@ instance apply_smul_comm_class : SmulCommClass R (Module.End R M) M where
 
 instance apply_smul_comm_class' : SmulCommClass (Module.End R M) R M where
   smul_comm := LinearMap.map_smul
+
+instance apply_is_scalar_tower {R M : Type _} [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] :
+    IsScalarTower R (Module.End R M) M :=
+  ⟨fun t f m => rfl⟩
 
 end Endomorphisms
 
@@ -955,8 +959,8 @@ This is a stronger version of `distrib_mul_action.to_add_monoid_End`. -/
 @[simps]
 def to_module_End : S →* Module.End R M where
   toFun := to_linear_map R M
-  map_one' := LinearMap.ext $ one_smul _
-  map_mul' := fun a b => LinearMap.ext $ mul_smul _ _
+  map_one' := LinearMap.ext <| one_smul _
+  map_mul' := fun a b => LinearMap.ext <| mul_smul _ _
 
 end DistribMulAction
 
@@ -972,7 +976,7 @@ This is a stronger version of `distrib_mul_action.to_module_End`. -/
 @[simps]
 def to_module_End : S →+* Module.End R M :=
   { DistribMulAction.toModuleEnd R M with toFun := DistribMulAction.toLinearMap R M,
-    map_zero' := LinearMap.ext $ zero_smul _, map_add' := fun f g => LinearMap.ext $ add_smul _ _ }
+    map_zero' := LinearMap.ext <| zero_smul _, map_add' := fun f g => LinearMap.ext <| add_smul _ _ }
 
 end Module
 

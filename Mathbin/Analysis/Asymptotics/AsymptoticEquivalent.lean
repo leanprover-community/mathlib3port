@@ -119,8 +119,8 @@ theorem is_equivalent_const_iff_tendsto {c : β} (h : c ≠ 0) : u ~[l] const _ 
           simp
 
 theorem is_equivalent.tendsto_const {c : β} (hu : u ~[l] const _ c) : tendsto u l (𝓝 c) := by
-  rcases em $ c = 0 with ⟨rfl, h⟩
-  · exact (tendsto_congr' $ is_equivalent_zero_iff_eventually_zero.mp hu).mpr tendsto_const_nhds
+  rcases em <| c = 0 with ⟨rfl, h⟩
+  · exact (tendsto_congr' <| is_equivalent_zero_iff_eventually_zero.mp hu).mpr tendsto_const_nhds
     
   · exact (is_equivalent_const_iff_tendsto h).mp hu
     
@@ -181,7 +181,7 @@ theorem is_equivalent.exists_eq_mul (huv : u ~[l] v) : ∃ (φ : α → β)(hφ 
 theorem is_equivalent_of_tendsto_one (hz : ∀ᶠ x in l, v x = 0 → u x = 0) (huv : tendsto (u / v) l (𝓝 1)) : u ~[l] v :=
   by
   rw [is_equivalent_iff_exists_eq_mul]
-  refine' ⟨u / v, huv, hz.mono $ fun x hz' => (div_mul_cancel_of_imp hz').symm⟩
+  refine' ⟨u / v, huv, hz.mono fun x hz' => (div_mul_cancel_of_imp hz').symm⟩
 
 theorem is_equivalent_of_tendsto_one' (hz : ∀ x, v x = 0 → u x = 0) (huv : tendsto (u / v) l (𝓝 1)) : u ~[l] v :=
   is_equivalent_of_tendsto_one (eventually_of_forall hz) huv
@@ -192,7 +192,7 @@ theorem is_equivalent_iff_tendsto_one (hz : ∀ᶠ x in l, v x ≠ 0) : u ~[l] v
     have := hequiv.is_o.tendsto_div_nhds_zero
     simp only [Pi.sub_apply, sub_div] at this
     have key : tendsto (fun x => v x / v x) l (𝓝 1) :=
-      (tendsto_congr' $ hz.mono $ fun x hnz => @div_self _ _ (v x) hnz).mpr tendsto_const_nhds
+      (tendsto_congr' <| hz.mono fun x hnz => @div_self _ _ (v x) hnz).mpr tendsto_const_nhds
     convert this.add key
     · ext
       simp
@@ -200,7 +200,7 @@ theorem is_equivalent_iff_tendsto_one (hz : ∀ᶠ x in l, v x ≠ 0) : u ~[l] v
     · norm_num
       
     
-  · exact is_equivalent_of_tendsto_one (hz.mono $ fun x hnvz hz => (hnvz hz).elim)
+  · exact is_equivalent_of_tendsto_one (hz.mono fun x hnvz hz => (hnvz hz).elim)
     
 
 end NormedField
@@ -211,10 +211,10 @@ theorem is_equivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedGroup 
     {u v : α → E} {l : Filter α} (hab : a ~[l] b) (huv : u ~[l] v) : (fun x => a x • u x) ~[l] fun x => b x • v x := by
   rcases hab.exists_eq_mul with ⟨φ, hφ, habφ⟩
   have : ((fun x : α => a x • u x) - fun x : α => b x • v x) =ᶠ[l] fun x => b x • (φ x • u x - v x) := by
-    convert (habφ.comp₂ (· • ·) $ eventually_eq.refl _ u).sub (eventually_eq.refl _ fun x => b x • v x)
+    convert (habφ.comp₂ (· • ·) <| eventually_eq.refl _ u).sub (eventually_eq.refl _ fun x => b x • v x)
     ext
     rw [Pi.mul_apply, mul_comm, mul_smul, ← smul_sub]
-  refine' (is_o_congr this.symm $ eventually_eq.rfl).mp ((is_O_refl b l).smul_is_o _)
+  refine' (is_o_congr this.symm <| eventually_eq.rfl).mp ((is_O_refl b l).smul_is_o _)
   rcases huv.is_O.exists_pos with ⟨C, hC, hCuv⟩
   rw [is_equivalent] at *
   rw [is_o_iff] at *
@@ -231,10 +231,10 @@ theorem is_equivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedGroup 
     huv
       (show 0 < c / 2 by
         linarith)
-  refine' hφ.mp (huv.mp $ hCuv.mono $ fun x hCuvx huvx hφx => _)
+  refine' hφ.mp (huv.mp <| hCuv.mono fun x hCuvx huvx hφx => _)
   have key :=
     calc
-      ∥φ x - 1∥ * ∥u x∥ ≤ c / 2 / C * ∥u x∥ := mul_le_mul_of_nonneg_right hφx.le (norm_nonneg $ u x)
+      ∥φ x - 1∥ * ∥u x∥ ≤ c / 2 / C * ∥u x∥ := mul_le_mul_of_nonneg_right hφx.le (norm_nonneg <| u x)
       _ ≤ c / 2 / C * (C * ∥v x∥) :=
         mul_le_mul_of_nonneg_left hCuvx
           (div_pos
@@ -261,12 +261,12 @@ variable {α β : Type _} [NormedField β] {t u v w : α → β} {l : Filter α}
 theorem is_equivalent.mul (htu : t ~[l] u) (hvw : v ~[l] w) : t * v ~[l] u * w :=
   htu.smul hvw
 
-theorem is_equivalent.inv (huv : u ~[l] v) : (fun x => u x⁻¹) ~[l] fun x => v x⁻¹ := by
+theorem is_equivalent.inv (huv : u ~[l] v) : (fun x => (u x)⁻¹) ~[l] fun x => (v x)⁻¹ := by
   rw [is_equivalent_iff_exists_eq_mul] at *
   rcases huv with ⟨φ, hφ, h⟩
   rw [← inv_one]
   refine'
-    ⟨fun x => φ x⁻¹,
+    ⟨fun x => (φ x)⁻¹,
       tendsto.inv₀ hφ
         (by
           norm_num),
@@ -294,7 +294,7 @@ theorem is_equivalent.tendsto_at_top_iff [OrderTopology β] (huv : u ~[l] v) : t
 
 theorem is_equivalent.tendsto_at_bot [OrderTopology β] (huv : u ~[l] v) (hu : tendsto u l at_bot) :
     tendsto v l at_bot := by
-  convert tendsto_neg_at_top_at_bot.comp (huv.neg.tendsto_at_top $ tendsto_neg_at_bot_at_top.comp hu)
+  convert tendsto_neg_at_top_at_bot.comp (huv.neg.tendsto_at_top <| tendsto_neg_at_bot_at_top.comp hu)
   ext
   simp
 

@@ -184,7 +184,7 @@ theorem affine_independent_iff_indicator_eq_of_affine_combination_eq (p : ι →
       exact ha (s1 ∪ s2) (Set.indicator (↑s1) w1 - Set.indicator (↑s2) w2) hws HEq i hi
       
     · rw [← Finset.mem_coe, Finset.coe_union] at hi
-      simp [mt (Set.mem_union_left (↑s2)) hi, mt (Set.mem_union_right (↑s1)) hi]
+      simp [mt (Set.mem_union_left ↑s2) hi, mt (Set.mem_union_right ↑s1) hi]
       
     
   · intro ha s w hw hs i0 hi0
@@ -551,7 +551,7 @@ theorem affine_independent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) :
       
   have : Unique { x // x ≠ (0 : Finₓ 2) } := ⟨⟨i₁⟩, he'⟩
   have hz :
-    ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") (↑default) -ᵥ
+    ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") ↑default -ᵥ
         («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") 0 :
         V) ≠
       0 :=
@@ -597,7 +597,7 @@ instance [Inhabited P] : Inhabited (simplex k P 0) :=
   ⟨mk_of_point k default⟩
 
 instance Nonempty : Nonempty (simplex k P 0) :=
-  ⟨mk_of_point k $ AddTorsor.nonempty.some⟩
+  ⟨mk_of_point k <| AddTorsor.nonempty.some⟩
 
 variable {k V}
 

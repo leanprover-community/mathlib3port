@@ -47,7 +47,7 @@ theorem eventually_countable_ball {S : Set ι} (hS : countable S) {p : ∀ x : �
 
 theorem EventuallyLe.countable_Union [Encodable ι] {s t : ι → Set α} (h : ∀ i, s i ≤ᶠ[l] t i) :
     (⋃ i, s i) ≤ᶠ[l] ⋃ i, t i :=
-  (eventually_countable_forall.2 h).mono $ fun x hst hs => mem_Union.2 $ (mem_Union.1 hs).imp hst
+  (eventually_countable_forall.2 h).mono fun x hst hs => mem_Union.2 <| (mem_Union.1 hs).imp hst
 
 theorem EventuallyEq.countable_Union [Encodable ι] {s t : ι → Set α} (h : ∀ i, s i =ᶠ[l] t i) :
     (⋃ i, s i) =ᶠ[l] ⋃ i, t i :=
@@ -66,7 +66,7 @@ theorem EventuallyEq.countable_bUnion {S : Set ι} (hS : countable S) {s t : ∀
 
 theorem EventuallyLe.countable_Inter [Encodable ι] {s t : ι → Set α} (h : ∀ i, s i ≤ᶠ[l] t i) :
     (⋂ i, s i) ≤ᶠ[l] ⋂ i, t i :=
-  (eventually_countable_forall.2 h).mono $ fun x hst hs => mem_Inter.2 $ fun i => hst _ (mem_Inter.1 hs i)
+  (eventually_countable_forall.2 h).mono fun x hst hs => mem_Inter.2 fun i => hst _ (mem_Inter.1 hs i)
 
 theorem EventuallyEq.countable_Inter [Encodable ι] {s t : ι → Set α} (h : ∀ i, s i =ᶠ[l] t i) :
     (⋂ i, s i) =ᶠ[l] ⋂ i, t i :=
@@ -102,7 +102,7 @@ instance countable_Inter_filter_inf (l₁ l₂ : Filter α) [CountableInterFilte
   choose s hs t ht hst using hS
   replace hs : (⋂ i ∈ S, s i ‹_›) ∈ l₁ := (countable_bInter_mem hSc).2 hs
   replace ht : (⋂ i ∈ S, t i ‹_›) ∈ l₂ := (countable_bInter_mem hSc).2 ht
-  refine' mem_of_superset (inter_mem_inf hs ht) (subset_sInter $ fun i hi => _)
+  refine' mem_of_superset (inter_mem_inf hs ht) (subset_sInter fun i hi => _)
   rw [hst i hi]
   apply inter_subset_inter <;> exact Inter_subset_of_subset i (Inter_subset _ _)
 

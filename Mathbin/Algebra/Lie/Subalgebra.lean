@@ -273,7 +273,7 @@ def range : LieSubalgebra R L₂ :=
 
 @[simp]
 theorem range_coe : (f.range : Set L₂) = Set.Range f :=
-  LinearMap.range_coe (↑f)
+  LinearMap.range_coe ↑f
 
 @[simp]
 theorem mem_range (x : L₂) : x ∈ f.range ↔ ∃ y : L, f y = x :=
@@ -424,13 +424,13 @@ theorem inf_coe : (↑(K⊓K') : Set L) = K ∩ K' :=
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubalgebra R L)) :
-    (↑Inf S : Submodule R L) =
+    (↑(Inf S) : Submodule R L) =
       Inf
         "././Mathport/Syntax/Translate/Basic.lean:825:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
   rfl
 
 @[simp]
-theorem Inf_coe (S : Set (LieSubalgebra R L)) : (↑Inf S : Set L) = ⋂ s ∈ S, (s : Set L) := by
+theorem Inf_coe (S : Set (LieSubalgebra R L)) : (↑(Inf S) : Set L) = ⋂ s ∈ S, (s : Set L) := by
   rw [← coe_to_submodule, Inf_coe_to_submodule, Submodule.Inf_coe]
   ext x
   simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp_distrib]
@@ -615,7 +615,7 @@ theorem span_empty : lie_span R L (∅ : Set L) = ⊥ :=
 
 @[simp]
 theorem span_univ : lie_span R L (Set.Univ : Set L) = ⊤ :=
-  eq_top_iff.2 $ SetLike.le_def.2 $ subset_lie_span
+  eq_top_iff.2 <| SetLike.le_def.2 <| subset_lie_span
 
 variable {L}
 
@@ -639,14 +639,14 @@ variable [CommRingₓ R] [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieA
 
 /-- An injective Lie algebra morphism is an equivalence onto its range. -/
 noncomputable def of_injective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) : L₁ ≃ₗ⁅R⁆ f.range :=
-  { LinearEquiv.ofInjective (↑f) $ by
+  { LinearEquiv.ofInjective ↑f <| by
       rwa [LieHom.coe_to_linear_map] with
     map_lie' := fun x y => by
       apply SetCoe.ext
       simpa }
 
 @[simp]
-theorem of_injective_apply (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) (x : L₁) : ↑of_injective f h x = f x :=
+theorem of_injective_apply (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) (x : L₁) : ↑(of_injective f h x) = f x :=
   rfl
 
 variable (L₁' L₁'' : LieSubalgebra R L₁) (L₂' : LieSubalgebra R L₂)
@@ -663,7 +663,7 @@ def of_eq (h : (L₁' : Set L₁) = L₁'') : L₁' ≃ₗ⁅R⁆ L₁'' :=
       simp }
 
 @[simp]
-theorem of_eq_apply (L L' : LieSubalgebra R L₁) (h : (L : Set L₁) = L') (x : L) : (↑of_eq L L' h x : L₁) = x :=
+theorem of_eq_apply (L L' : LieSubalgebra R L₁) (h : (L : Set L₁) = L') (x : L) : (↑(of_eq L L' h x) : L₁) = x :=
   rfl
 
 variable (e : L₁ ≃ₗ⁅R⁆ L₂)
@@ -671,32 +671,32 @@ variable (e : L₁ ≃ₗ⁅R⁆ L₂)
 /-- An equivalence of Lie algebras restricts to an equivalence from any Lie subalgebra onto its
 image. -/
 def lie_subalgebra_map : L₁'' ≃ₗ⁅R⁆ (L₁''.map e : LieSubalgebra R L₂) :=
-  { LinearEquiv.submoduleMap (e : L₁ ≃ₗ[R] L₂) (↑L₁'') with
+  { LinearEquiv.submoduleMap (e : L₁ ≃ₗ[R] L₂) ↑L₁'' with
     map_lie' := fun x y => by
       apply SetCoe.ext
-      exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) (↑x) (↑y) }
+      exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) ↑x ↑y }
 
 @[simp]
-theorem lie_subalgebra_map_apply (x : L₁'') : ↑e.lie_subalgebra_map _ x = e x :=
+theorem lie_subalgebra_map_apply (x : L₁'') : ↑(e.lie_subalgebra_map _ x) = e x :=
   rfl
 
 /-- An equivalence of Lie algebras restricts to an equivalence from any Lie subalgebra onto its
 image. -/
-def of_subalgebras (h : L₁'.map (↑e) = L₂') : L₁' ≃ₗ⁅R⁆ L₂' :=
+def of_subalgebras (h : L₁'.map ↑e = L₂') : L₁' ≃ₗ⁅R⁆ L₂' :=
   { LinearEquiv.ofSubmodules (e : L₁ ≃ₗ[R] L₂) (↑L₁') (↑L₂')
       (by
         rw [← h]
         rfl) with
     map_lie' := fun x y => by
       apply SetCoe.ext
-      exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) (↑x) (↑y) }
+      exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) ↑x ↑y }
 
 @[simp]
-theorem of_subalgebras_apply (h : L₁'.map (↑e) = L₂') (x : L₁') : ↑e.of_subalgebras _ _ h x = e x :=
+theorem of_subalgebras_apply (h : L₁'.map ↑e = L₂') (x : L₁') : ↑(e.of_subalgebras _ _ h x) = e x :=
   rfl
 
 @[simp]
-theorem of_subalgebras_symm_apply (h : L₁'.map (↑e) = L₂') (x : L₂') : ↑(e.of_subalgebras _ _ h).symm x = e.symm x :=
+theorem of_subalgebras_symm_apply (h : L₁'.map ↑e = L₂') (x : L₂') : ↑((e.of_subalgebras _ _ h).symm x) = e.symm x :=
   rfl
 
 end LieEquiv

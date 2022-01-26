@@ -73,7 +73,7 @@ alias holder_on_with_one ↔ _ LipschitzOnWith.holder_on_with
 
 @[simp]
 theorem holder_with_one {C : ℝ≥0 } {f : X → Y} : HolderWith C 1 f ↔ LipschitzWith C f :=
-  holder_on_with_univ.symm.trans $ holder_on_with_one.trans lipschitz_on_univ
+  holder_on_with_univ.symm.trans <| holder_on_with_one.trans lipschitz_on_univ
 
 alias holder_with_one ↔ _ LipschitzWith.holder_with
 
@@ -104,7 +104,7 @@ theorem comp {Cg rg : ℝ≥0 } {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg 
 
 theorem comp_holder_with {Cg rg : ℝ≥0 } {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t) {Cf rf : ℝ≥0 } {f : X → Y}
     (hf : HolderWith Cf rf f) (ht : ∀ x, f x ∈ t) : HolderWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) :=
-  holder_on_with_univ.mp $ hg.comp (hf.holder_on_with univ) fun x _ => ht x
+  holder_on_with_univ.mp <| hg.comp (hf.holder_on_with univ) fun x _ => ht x
 
 /-- A Hölder continuous function is uniformly continuous -/
 protected theorem UniformContinuousOn (hf : HolderOnWith C r f s) (h0 : 0 < r) : UniformContinuousOn f s := by
@@ -122,7 +122,7 @@ protected theorem mono (hf : HolderOnWith C r f s) (ht : t ⊆ s) : HolderOnWith
 
 theorem ediam_image_le_of_le (hf : HolderOnWith C r f s) {d : ℝ≥0∞} (hd : Emetric.diam s ≤ d) :
     Emetric.diam (f '' s) ≤ C * d ^ (r : ℝ) :=
-  Emetric.diam_image_le_iff.2 $ fun x hx y hy => hf.edist_le_of_le hx hy $ (Emetric.edist_le_diam_of_mem hx hy).trans hd
+  Emetric.diam_image_le_iff.2 fun x hx y hy => hf.edist_le_of_le hx hy <| (Emetric.edist_le_diam_of_mem hx hy).trans hd
 
 theorem ediam_image_le (hf : HolderOnWith C r f s) : Emetric.diam (f '' s) ≤ C * Emetric.diam s ^ (r : ℝ) :=
   hf.ediam_image_le_of_le le_rfl
@@ -137,7 +137,7 @@ theorem ediam_image_le_of_subset_of_le (hf : HolderOnWith C r f s) (ht : t ⊆ s
 
 theorem ediam_image_inter_le_of_le (hf : HolderOnWith C r f s) {d : ℝ≥0∞} (hd : Emetric.diam t ≤ d) :
     Emetric.diam (f '' (t ∩ s)) ≤ C * d ^ (r : ℝ) :=
-  hf.ediam_image_le_of_subset_of_le (inter_subset_right _ _) $ (Emetric.diam_mono $ inter_subset_left _ _).trans hd
+  hf.ediam_image_le_of_subset_of_le (inter_subset_right _ _) <| (Emetric.diam_mono <| inter_subset_left _ _).trans hd
 
 theorem ediam_image_inter_le (hf : HolderOnWith C r f s) (t : Set X) :
     Emetric.diam (f '' (t ∩ s)) ≤ C * Emetric.diam t ^ (r : ℝ) :=
@@ -166,13 +166,13 @@ theorem comp_holder_on_with {Cg rg : ℝ≥0 } {g : Y → Z} (hg : HolderWith Cg
 
 /-- A Hölder continuous function is uniformly continuous -/
 protected theorem UniformContinuous (hf : HolderWith C r f) (h0 : 0 < r) : UniformContinuous f :=
-  uniform_continuous_on_univ.mp $ (hf.holder_on_with univ).UniformContinuousOn h0
+  uniform_continuous_on_univ.mp <| (hf.holder_on_with univ).UniformContinuousOn h0
 
 protected theorem Continuous (hf : HolderWith C r f) (h0 : 0 < r) : Continuous f :=
   (hf.uniform_continuous h0).Continuous
 
 theorem ediam_image_le (hf : HolderWith C r f) (s : Set X) : Emetric.diam (f '' s) ≤ C * Emetric.diam s ^ (r : ℝ) :=
-  Emetric.diam_image_le_iff.2 $ fun x hx y hy => hf.edist_le_of_le $ Emetric.edist_le_diam_of_mem hx hy
+  Emetric.diam_image_le_iff.2 fun x hx y hy => hf.edist_le_of_le <| Emetric.edist_le_diam_of_mem hx hy
 
 end HolderWith
 

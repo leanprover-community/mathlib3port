@@ -71,8 +71,8 @@ protected noncomputable def ConditionallyCompleteLinearOrderBot [ConditionallyCo
     (h : Sup ∅ ≤ a) : ConditionallyCompleteLinearOrderBot { x : α // a ≤ x } :=
   { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     cSup_empty :=
-      (Function.funext_iffₓ.1 (@subset_Sup_def α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans $
-        Subtype.eq $ by
+      (Function.funext_iffₓ.1 (@subset_Sup_def α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans <|
+        Subtype.eq <| by
           rw [bot_eq]
           cases' h.lt_or_eq with h2 h2
           · simp [h2.not_le]
@@ -184,7 +184,7 @@ instance LinearOrderedCommMonoidWithZero [LinearOrderedCommRing α] :
 def coe_ring_hom [OrderedSemiring α] : { x : α // 0 ≤ x } →+* α :=
   ⟨coe, Nonneg.coe_one, Nonneg.coe_mul, Nonneg.coe_zero, Nonneg.coe_add⟩
 
-instance HasInv [LinearOrderedField α] : HasInv { x : α // 0 ≤ x } where
+instance Inv [LinearOrderedField α] : Inv { x : α // 0 ≤ x } where
   inv := fun x => ⟨x⁻¹, inv_nonneg.mpr x.2⟩
 
 @[simp, norm_cast]

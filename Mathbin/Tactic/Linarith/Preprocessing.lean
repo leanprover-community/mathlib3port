@@ -159,12 +159,12 @@ To avoid adding the same nonnegativity facts many times, it is a global preproce
 unsafe def nat_to_int : global_preprocessor where
   Name := "move nats to ints"
   transform := fun l => do
-    let l ← lock_tactic_state $ l.mmap $ fun h => infer_type h >>= guardb ∘ is_nat_prop >> zify_proof [] h <|> return h
+    let l ← lock_tactic_state <| l.mmap fun h => (infer_type h >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|> return h
     let nonnegs ←
       l.mfoldl
           (fun es : expr_set h => do
             let (a, b) ← infer_type h >>= get_rel_sides
-            return $ (es.insert_list (get_nat_comps a)).insert_list (get_nat_comps b))
+            return <| (es.insert_list (get_nat_comps a)).insert_list (get_nat_comps b))
           mk_rb_set
     (· ++ ·) l <$> nonnegs.to_list.mmap mk_coe_nat_nonneg_prf
 
@@ -202,7 +202,7 @@ unsafe def cancel_denoms : preprocessor where
   transform := fun pf =>
     (do
         let some (_, lhs) ← parse_into_comp_and_expr <$> infer_type pf
-        guardb $ lhs.contains_constant (· = `has_div.div)
+        guardb <| lhs.contains_constant (· = `has_div.div)
         singleton <$> normalize_denominators_in_lhs pf lhs) <|>
       return [pf]
 
@@ -210,7 +210,7 @@ unsafe def cancel_denoms : preprocessor where
 and adds them to the set `m`.
 A pair `(a, tt)` is added to `m` when `a^2` appears in `e`, and `(a, ff)` is added to `m`
 when `a*a` appears in `e`.  -/
-unsafe def find_squares : rb_set (expr × Bool) → expr → tactic (rb_set $ expr ×ₗ Bool)
+unsafe def find_squares : rb_set (expr × Bool) → expr → tactic (rb_set <| expr ×ₗ Bool)
   | s, quote.1 ((%%ₓa) ^ 2) => do
     let s ← find_squares s a
     return (s.insert (a, tt))
@@ -234,10 +234,10 @@ unsafe def nlinarith_extras : global_preprocessor where
   transform := fun ls => do
     let s ← ls.mfoldr (fun h s' => infer_type h >>= find_squares s') mk_rb_set
     let new_es ←
-      s.mfold ([] : List expr) $ fun ⟨e, is_sq⟩ new_es =>
+      (s.mfold ([] : List expr)) fun ⟨e, is_sq⟩ new_es =>
           (do
               let p ← mk_app (if is_sq then `` sq_nonneg else `` mul_self_nonneg) [e]
-              return $ p :: new_es) <|>
+              return <| p :: new_es) <|>
             return new_es
     let new_es ← make_comp_with_zero.globalize.transform new_es
     linarith_trace "nlinarith preprocessing found squares"
@@ -246,9 +246,9 @@ unsafe def nlinarith_extras : global_preprocessor where
     let with_comps ←
       (new_es ++ ls).mmap fun e => do
           let tp ← infer_type e
-          return $ (parse_into_comp_and_expr tp).elim (ineq.lt, e) fun ⟨ine, _⟩ => (ine, e)
+          return <| (parse_into_comp_and_expr tp).elim (ineq.lt, e) fun ⟨ine, _⟩ => (ine, e)
     let products ←
-      with_comps.mmap_upper_triangle $ fun ⟨posa, a⟩ ⟨posb, b⟩ =>
+      with_comps.mmap_upper_triangle fun ⟨posa, a⟩ ⟨posb, b⟩ =>
           (some <$>
               match posa, posb with
               | ineq.eq, _ => mk_app `` zero_mul_eq [a, b]
@@ -263,7 +263,7 @@ unsafe def nlinarith_extras : global_preprocessor where
               | ineq.le, ineq.le => mk_app `` mul_nonneg_of_nonpos_of_nonpos [a, b]) <|>
             return none
     let products ← make_comp_with_zero.globalize.transform products.reduce_option
-    return $ new_es ++ ls ++ products
+    return <| new_es ++ ls ++ products
 
 /-- `remove_ne_aux` case splits on any proof `h : a ≠ b` in the input, turning it into `a < b ∨ a > b`.
 This produces `2^n` branches when there are `n` such hypotheses in the input.
@@ -273,13 +273,13 @@ unsafe def remove_ne_aux : List expr → tactic (List branch) := fun hs =>
       let e ←
         hs.mfind fun e : expr => do
             let e ← infer_type e
-            guardₓ $ e.is_ne.is_some
+            guardₓ <| e.is_ne.is_some
       let [(_, ng1), (_, ng2)] ← to_expr (pquote.1 (Or.elim (lt_or_gt_of_neₓ (%%ₓe)))) >>= apply
       let do_goal : expr → tactic (List branch) := fun g => do
           set_goals [g]
           let h ← intro1
-          let ls ← remove_ne_aux $ hs.remove_all [e]
-          return $ ls.map fun b : branch => (b.1, h :: b.2)
+          let ls ← remove_ne_aux <| hs.remove_all [e]
+          return <| ls.map fun b : branch => (b.1, h :: b.2)
         (· ++ ·) <$> do_goal ng1 <*> do_goal ng2) <|>
     do
     let g ← get_goal
@@ -306,7 +306,7 @@ so the size of the list may change.
 -/
 unsafe def preprocess (pps : List global_branching_preprocessor) (l : List expr) : tactic (List branch) := do
   let g ← get_goal
-  pps.mfoldl (fun ls pp => List.join <$> (ls.mmap $ fun b => set_goals [b.1] >> pp.process b.2)) [(g, l)]
+  pps.mfoldl (fun ls pp => List.join <$> ls.mmap fun b => set_goals [b.1] >> pp.process b.2) [(g, l)]
 
 end Linarith
 

@@ -106,21 +106,21 @@ variable (R)
 
 @[simp]
 theorem star_one [Monoidₓ R] [StarMonoid R] : star (1 : R) = 1 :=
-  op_injective $ (starMulEquiv : R ≃* Rᵐᵒᵖ).map_one.trans (op_one _).symm
+  op_injective <| (starMulEquiv : R ≃* Rᵐᵒᵖ).map_one.trans (op_one _).symm
 
 variable {R}
 
 @[simp]
 theorem star_pow [Monoidₓ R] [StarMonoid R] (x : R) (n : ℕ) : star (x ^ n) = star x ^ n :=
-  op_injective $ ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_pow x n).trans (op_pow (star x) n).symm
+  op_injective <| ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_pow x n).trans (op_pow (star x) n).symm
 
 @[simp]
-theorem star_inv [Groupₓ R] [StarMonoid R] (x : R) : star (x⁻¹) = star x⁻¹ :=
-  op_injective $ ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_inv x).trans (op_inv (star x)).symm
+theorem star_inv [Groupₓ R] [StarMonoid R] (x : R) : star x⁻¹ = (star x)⁻¹ :=
+  op_injective <| ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_inv x).trans (op_inv (star x)).symm
 
 @[simp]
 theorem star_zpow [Groupₓ R] [StarMonoid R] (x : R) (z : ℤ) : star (x ^ z) = star x ^ z :=
-  op_injective $ ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_zpow x z).trans (op_zpow (star x) z).symm
+  op_injective <| ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_zpow x z).trans (op_zpow (star x) z).symm
 
 /-- When multiplication is commutative, `star` preserves division. -/
 @[simp]
@@ -260,12 +260,12 @@ alias star_ring_end_self_apply ← Complex.conj_conj
 alias star_ring_end_self_apply ← IsROrC.conj_conj
 
 @[simp]
-theorem star_inv' [DivisionRing R] [StarRing R] (x : R) : star (x⁻¹) = star x⁻¹ :=
-  op_injective $ ((starRingEquiv : R ≃+* Rᵐᵒᵖ).toRingHom.map_inv x).trans (op_inv (star x)).symm
+theorem star_inv' [DivisionRing R] [StarRing R] (x : R) : star x⁻¹ = (star x)⁻¹ :=
+  op_injective <| ((starRingEquiv : R ≃+* Rᵐᵒᵖ).toRingHom.map_inv x).trans (op_inv (star x)).symm
 
 @[simp]
 theorem star_zpow₀ [DivisionRing R] [StarRing R] (x : R) (z : ℤ) : star (x ^ z) = star x ^ z :=
-  op_injective $ ((starRingEquiv : R ≃+* Rᵐᵒᵖ).toRingHom.map_zpow x z).trans (op_zpow (star x) z).symm
+  op_injective <| ((starRingEquiv : R ≃+* Rᵐᵒᵖ).toRingHom.map_zpow x z).trans (op_zpow (star x) z).symm
 
 /-- When multiplication is commutative, `star` preserves division. -/
 @[simp]
@@ -356,18 +356,18 @@ variable [Monoidₓ R] [StarMonoid R]
 
 instance : StarMonoid (R)ˣ where
   star := fun u =>
-    { val := star u, inv := star (↑u⁻¹),
-      val_inv := (star_mul _ _).symm.trans $ (congr_argₓ star u.inv_val).trans $ star_one _,
-      inv_val := (star_mul _ _).symm.trans $ (congr_argₓ star u.val_inv).trans $ star_one _ }
+    { val := star u, inv := star ↑u⁻¹,
+      val_inv := (star_mul _ _).symm.trans <| (congr_argₓ star u.inv_val).trans <| star_one _,
+      inv_val := (star_mul _ _).symm.trans <| (congr_argₓ star u.val_inv).trans <| star_one _ }
   star_involutive := fun u => Units.ext (star_involutive _)
   star_mul := fun u v => Units.ext (star_mul _ _)
 
 @[simp]
-theorem coe_star (u : (R)ˣ) : ↑star u = (star (↑u) : R) :=
+theorem coe_star (u : (R)ˣ) : ↑(star u) = (star ↑u : R) :=
   rfl
 
 @[simp]
-theorem coe_star_inv (u : (R)ˣ) : ↑star u⁻¹ = (star (↑u⁻¹) : R) :=
+theorem coe_star_inv (u : (R)ˣ) : ↑(star u)⁻¹ = (star ↑u⁻¹ : R) :=
   rfl
 
 instance {A : Type _} [HasStar A] [HasScalar R A] [StarModule R A] : StarModule (R)ˣ A :=

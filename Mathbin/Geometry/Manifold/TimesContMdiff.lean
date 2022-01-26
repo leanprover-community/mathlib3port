@@ -489,13 +489,13 @@ theorem TimesContMdiffWithinAt.continuous_within_at (hf : TimesContMdiffWithinAt
   hf.1
 
 theorem TimesContMdiffAt.continuous_at (hf : TimesContMdiffAt I I' n f x) : ContinuousAt f x :=
-  (continuous_within_at_univ _ _).1 $ TimesContMdiffWithinAt.continuous_within_at hf
+  (continuous_within_at_univ _ _).1 <| TimesContMdiffWithinAt.continuous_within_at hf
 
 theorem TimesContMdiffOn.continuous_on (hf : TimesContMdiffOn I I' n f s) : ContinuousOn f s := fun x hx =>
   (hf x hx).ContinuousWithinAt
 
 theorem TimesContMdiff.continuous (hf : TimesContMdiff I I' n f) : Continuous f :=
-  continuous_iff_continuous_at.2 $ fun x => (hf x).ContinuousAt
+  continuous_iff_continuous_at.2 fun x => (hf x).ContinuousAt
 
 /-! ### Deducing differentiability from smoothness -/
 
@@ -516,7 +516,7 @@ theorem TimesContMdiffWithinAt.mdifferentiable_within_at (hf : TimesContMdiffWit
 
 theorem TimesContMdiffAt.mdifferentiable_at (hf : TimesContMdiffAt I I' n f x) (hn : 1 ≤ n) :
     MdifferentiableAt I I' f x :=
-  mdifferentiable_within_at_univ.1 $ TimesContMdiffWithinAt.mdifferentiable_within_at hf hn
+  mdifferentiable_within_at_univ.1 <| TimesContMdiffWithinAt.mdifferentiable_within_at hf hn
 
 theorem TimesContMdiffOn.mdifferentiable_on (hf : TimesContMdiffOn I I' n f s) (hn : 1 ≤ n) :
     MdifferentiableOn I I' f s := fun x hx => (hf x hx).MdifferentiableWithinAt hn
@@ -759,6 +759,9 @@ section Composition
 variable {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H'']
   {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M'']
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The composition of `C^n` functions within domains at points is `C^n`. -/
 theorem TimesContMdiffWithinAt.comp {t : Set M'} {g : M' → M''} (x : M) (hg : TimesContMdiffWithinAt I' I'' n g t (f x))
     (hf : TimesContMdiffWithinAt I I' n f s x) (st : maps_to f s t) : TimesContMdiffWithinAt I I'' n (g ∘ f) s x := by
@@ -1007,7 +1010,7 @@ alias times_cont_mdiff_at_iff_times_cont_diff_at ↔
 
 theorem times_cont_mdiff_on_iff_times_cont_diff_on {f : E → E'} {s : Set E} :
     TimesContMdiffOn 𝓘(𝕜, E) 𝓘(𝕜, E') n f s ↔ TimesContDiffOn 𝕜 n f s :=
-  forall_congrₓ $ by
+  forall_congrₓ <| by
     simp [times_cont_mdiff_within_at_iff_times_cont_diff_within_at]
 
 alias times_cont_mdiff_on_iff_times_cont_diff_on ↔
@@ -1701,7 +1704,7 @@ within the product set at the product point. -/
 theorem TimesContMdiffWithinAt.prod_map' {p : M × N} (hf : TimesContMdiffWithinAt I I' n f s p.1)
     (hg : TimesContMdiffWithinAt J J' n g r p.2) :
     TimesContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.map f g) (s ×ˢ r) p :=
-  (hf.comp p times_cont_mdiff_within_at_fst (prod_subset_preimage_fst _ _)).prod_mk $
+  (hf.comp p times_cont_mdiff_within_at_fst (prod_subset_preimage_fst _ _)).prod_mk <|
     hg.comp p times_cont_mdiff_within_at_snd (prod_subset_preimage_snd _ _)
 
 theorem TimesContMdiffWithinAt.prod_map (hf : TimesContMdiffWithinAt I I' n f s x)
@@ -1722,7 +1725,7 @@ theorem TimesContMdiffAt.prod_map' {p : M × N} (hf : TimesContMdiffAt I I' n f 
 
 theorem TimesContMdiffOn.prod_map (hf : TimesContMdiffOn I I' n f s) (hg : TimesContMdiffOn J J' n g r) :
     TimesContMdiffOn (I.prod J) (I'.prod J') n (Prod.map f g) (s ×ˢ r) :=
-  (hf.comp times_cont_mdiff_on_fst (prod_subset_preimage_fst _ _)).prod_mk $
+  (hf.comp times_cont_mdiff_on_fst (prod_subset_preimage_fst _ _)).prod_mk <|
     hg.comp times_cont_mdiff_on_snd (prod_subset_preimage_snd _ _)
 
 theorem TimesContMdiff.prod_map (hf : TimesContMdiff I I' n f) (hg : TimesContMdiff J J' n g) :

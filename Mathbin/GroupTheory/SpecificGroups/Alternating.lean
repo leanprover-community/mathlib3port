@@ -122,7 +122,7 @@ open alternatingGroup
 
 @[simp]
 theorem closure_three_cycles_eq_alternating : closure { σ : perm α | is_three_cycle σ } = alternatingGroup α :=
-  (closure_eq_of_le _ fun σ hσ => mem_alternating_group.2 hσ.sign) $ fun σ hσ => by
+  (closure_eq_of_le _ fun σ hσ => mem_alternating_group.2 hσ.sign) fun σ hσ => by
     suffices hind :
       ∀ n : ℕ l : List (perm α) hl : ∀ g, g ∈ l → is_swap g hn : l.length = 2 * n,
         l.prod ∈ closure { σ : perm α | is_three_cycle σ }
@@ -211,7 +211,7 @@ theorem normal_closure_fin_rotate_five :
     normal_closure ({⟨finRotate 5, fin_rotate_bit1_mem_alternating_group⟩} : Set (alternatingGroup (Finₓ 5))) = ⊤ :=
   eq_top_iff.2
     (by
-      have h3 : is_three_cycle (Finₓ.cycleRange 2 * finRotate 5 * Finₓ.cycleRange 2⁻¹ * finRotate 5⁻¹) :=
+      have h3 : is_three_cycle (Finₓ.cycleRange 2 * finRotate 5 * (Finₓ.cycleRange 2)⁻¹ * (finRotate 5)⁻¹) :=
         card_support_eq_three_iff.1
           (by
             decide)

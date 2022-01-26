@@ -49,8 +49,7 @@ variable [T2Space M] [Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
 def embedding_pi_tangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯ where
   toFun := fun x i => (f i x • extChartAt I (f.c i) x, f i x)
   times_cont_mdiff_to_fun :=
-    times_cont_mdiff_pi_space.2 $ fun i =>
-      ((f i).smooth_smul times_cont_mdiff_on_ext_chart_at).prod_mk_space (f i).Smooth
+    times_cont_mdiff_pi_space.2 fun i => ((f i).smooth_smul times_cont_mdiff_on_ext_chart_at).prod_mk_space (f i).Smooth
 
 @[local simp]
 theorem embedding_pi_tangent_coe : ⇑f.embedding_pi_tangent = fun x i => (f i x • extChartAt I (f.c i) x, f i x) :=
@@ -103,7 +102,7 @@ theorem exists_immersion_euclidean (f : SmoothBumpCovering ι I M) :
     ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Finₓ n)),
       Smooth I (𝓡 n) e ∧ injective e ∧ ∀ x : M, injective (mfderiv I (𝓡 n) e x) :=
   by
-  set F := EuclideanSpace ℝ (Finₓ $ finrank ℝ (ι → E × ℝ))
+  set F := EuclideanSpace ℝ (Finₓ <| finrank ℝ (ι → E × ℝ))
   let this' : IsNoetherian ℝ (E × ℝ) := IsNoetherian.iff_fg.2 inferInstance
   let this' : FiniteDimensional ℝ (ι → E × ℝ) := IsNoetherian.iff_fg.1 inferInstance
   set eEF : (ι → E × ℝ) ≃L[ℝ] F := ContinuousLinearEquiv.ofFinrankEq finrank_euclidean_space_fin.symm

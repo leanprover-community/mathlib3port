@@ -24,7 +24,7 @@ structure and require the distance to be the same as results from the
 norm (which in fact implies the distance yields a pseudometric space, but
 bundling just the distance and using an instance for the pseudometric space
 results in type class problems). -/
-class SemiNormedAddTorsor (V : outParam $ Type _) (P : Type _) [outParam $ SemiNormedGroup V]
+class SemiNormedAddTorsor (V : outParam <| Type _) (P : Type _) [outParam <| SemiNormedGroup V]
   [PseudoMetricSpace P] extends AddTorsor V P where
   dist_eq_norm' : ∀ x y : P, dist x y = ∥(x -ᵥ y : V)∥
 
@@ -34,7 +34,7 @@ structure and require the distance to be the same as results from the
 norm (which in fact implies the distance yields a metric space, but
 bundling just the distance and using an instance for the metric space
 results in type class problems). -/
-class NormedAddTorsor (V : outParam $ Type _) (P : Type _) [outParam $ NormedGroup V] [MetricSpace P] extends
+class NormedAddTorsor (V : outParam <| Type _) (P : Type _) [outParam <| NormedGroup V] [MetricSpace P] extends
   AddTorsor V P where
   dist_eq_norm' : ∀ x y : P, dist x y = ∥(x -ᵥ y : V)∥
 
@@ -90,7 +90,7 @@ addition/subtraction of `x : P`. -/
 @[simps]
 def Isometric.vaddConst (x : P) : V ≃ᵢ P where
   toEquiv := Equivₓ.vaddConst x
-  isometry_to_fun := isometry_emetric_iff_metric.2 $ fun _ _ => dist_vadd_cancel_right _ _ _
+  isometry_to_fun := isometry_emetric_iff_metric.2 fun _ _ => dist_vadd_cancel_right _ _ _
 
 section
 
@@ -100,7 +100,7 @@ variable (P)
 @[simps]
 def Isometric.constVadd (x : V) : P ≃ᵢ P where
   toEquiv := Equivₓ.constVadd P x
-  isometry_to_fun := isometry_emetric_iff_metric.2 $ fun _ _ => dist_vadd_cancel_left _ _ _
+  isometry_to_fun := isometry_emetric_iff_metric.2 fun _ _ => dist_vadd_cancel_left _ _ _
 
 end
 
@@ -113,7 +113,7 @@ subtraction from `x : P`. -/
 @[simps]
 def Isometric.constVsub (x : P) : P ≃ᵢ V where
   toEquiv := Equivₓ.constVsub x
-  isometry_to_fun := isometry_emetric_iff_metric.2 $ fun y z => dist_vsub_cancel_left _ _ _
+  isometry_to_fun := isometry_emetric_iff_metric.2 fun y z => dist_vsub_cancel_left _ _ _
 
 @[simp]
 theorem dist_vsub_cancel_right (x y z : P) : dist (x -ᵥ z) (y -ᵥ z) = dist x y :=
@@ -250,12 +250,12 @@ variable {R : Type _} [Ringₓ R] [TopologicalSpace R] [Module R V] [HasContinuo
 
 theorem Filter.Tendsto.line_map {l : Filter α} {f₁ f₂ : α → P} {g : α → R} {p₁ p₂ : P} {c : R}
     (h₁ : tendsto f₁ l (𝓝 p₁)) (h₂ : tendsto f₂ l (𝓝 p₂)) (hg : tendsto g l (𝓝 c)) :
-    tendsto (fun x => AffineMap.lineMap (f₁ x) (f₂ x) (g x)) l (𝓝 $ AffineMap.lineMap p₁ p₂ c) :=
+    tendsto (fun x => AffineMap.lineMap (f₁ x) (f₂ x) (g x)) l (𝓝 <| AffineMap.lineMap p₁ p₂ c) :=
   (hg.smul (h₂.vsub h₁)).vadd h₁
 
 theorem Filter.Tendsto.midpoint [Invertible (2 : R)] {l : Filter α} {f₁ f₂ : α → P} {p₁ p₂ : P}
     (h₁ : tendsto f₁ l (𝓝 p₁)) (h₂ : tendsto f₂ l (𝓝 p₂)) :
-    tendsto (fun x => midpoint R (f₁ x) (f₂ x)) l (𝓝 $ midpoint R p₁ p₂) :=
+    tendsto (fun x => midpoint R (f₁ x) (f₂ x)) l (𝓝 <| midpoint R p₁ p₂) :=
   h₁.line_map h₂ tendsto_const_nhds
 
 end
@@ -324,12 +324,12 @@ def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = m
     P →ᵃ[ℝ] Q :=
   AffineMap.mk' f
     (↑((AddMonoidHom.ofMapMidpoint ℝ ℝ
-            ((AffineEquiv.vaddConst ℝ (f $ Classical.arbitrary P)).symm ∘
+            ((AffineEquiv.vaddConst ℝ (f <| Classical.arbitrary P)).symm ∘
               f ∘ AffineEquiv.vaddConst ℝ (Classical.arbitrary P))
             (by
               simp )
             fun x y => by
-            simp [h]).toRealLinearMap $
+            simp [h]).toRealLinearMap <|
         by
         apply_rules [Continuous.vadd, Continuous.vsub, continuous_const, hfc.comp, continuous_id]))
     (Classical.arbitrary P) fun p => by

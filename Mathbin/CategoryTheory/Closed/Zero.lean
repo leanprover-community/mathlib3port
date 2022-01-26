@@ -32,7 +32,7 @@ variable [has_finite_products C] [cartesian_closed C]
 then each homset has exactly one element.
 -/
 def unique_homset_of_initial_iso_terminal [has_initial C] (i : ⊥_ C ≅ ⊤_ C) (X Y : C) : Unique (X ⟶ Y) :=
-  Equivₓ.unique $
+  Equivₓ.unique <|
     calc
       (X ⟶ Y) ≃ (X ⨯ ⊤_ C ⟶ Y) := iso.hom_congr (prod.right_unitor _).symm (iso.refl _)
       _ ≃ (X ⨯ ⊥_ C ⟶ Y) := iso.hom_congr (prod.map_iso (iso.refl _) i.symm) (iso.refl _)

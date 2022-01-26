@@ -37,7 +37,7 @@ variable (K : Type _) [Field K] [UniformSpace K]
 local notation "hat" => completion
 
 instance (priority := 100) [SeparatedSpace K] : Nontrivial (hat K) :=
-  ⟨⟨0, 1, fun h => zero_ne_one $ (uniform_embedding_coe K).inj h⟩⟩
+  ⟨⟨0, 1, fun h => zero_ne_one <| (uniform_embedding_coe K).inj h⟩⟩
 
 /-- A topological field is completable if it is separated and the image under
 the mapping x ↦ x⁻¹ of every Cauchy filter (with respect to the additive uniform structure)
@@ -52,7 +52,7 @@ variable {K}
 
 /-- extension of inversion to the completion of a field. -/
 def hatInv : hat K → hat K :=
-  dense_inducing_coe.extend fun x : K => (coe (x⁻¹) : hat K)
+  dense_inducing_coe.extend fun x : K => (coe x⁻¹ : hat K)
 
 theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : ContinuousAt hatInv x := by
   have : RegularSpace (hat K) := completion.regular_space K
@@ -72,12 +72,12 @@ theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : C
     
   · have eq_bot : 𝓝 (0 : hat K)⊓𝓝 y = ⊥ := by
       by_contra h
-      exact y_ne (eq_of_nhds_ne_bot $ ne_bot_iff.mpr h).symm
+      exact y_ne (eq_of_nhds_ne_bot <| ne_bot_iff.mpr h).symm
     erw [dense_inducing_coe.nhds_eq_comap (0 : K), ← comap_inf, eq_bot]
     exact comap_bot
     
 
-instance Completion.hasInv : HasInv (hat K) :=
+instance Completion.hasInv : Inv (hat K) :=
   ⟨fun x => if x = 0 then 0 else hatInv x⟩
 
 variable [TopologicalDivisionRing K]
@@ -91,11 +91,11 @@ variable [CompletableTopField K]
 theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) := by
   by_cases' h : x = 0
   · rw [h, inv_zero]
-    dsimp [HasInv.inv]
+    dsimp [Inv.inv]
     norm_cast
     simp
     
-  · conv_lhs => dsimp [HasInv.inv]
+  · conv_lhs => dsimp [Inv.inv]
     rw [if_neg]
     · exact hat_inv_extends h
       
@@ -141,7 +141,7 @@ instance fieldCompletion : Field (hat K) :=
       infer_instance : CommRingₓ (hat K)) with
     exists_pair_ne := ⟨0, 1, fun h => zero_ne_one ((uniform_embedding_coe K).inj h)⟩,
     mul_inv_cancel := fun x x_ne => by
-      dsimp [HasInv.inv]
+      dsimp [Inv.inv]
       simp [if_neg x_ne, mul_hat_inv_cancel x_ne],
     inv_zero :=
       show ((0 : K) : hat K)⁻¹ = ((0 : K) : hat K) by
@@ -155,7 +155,7 @@ instance topological_division_ring_completion : TopologicalDivisionRing (hat K) 
         have : {(0 : hat K)}ᶜ ⊆ { y : hat K | hatInv y = y⁻¹ } := by
           intro y y_ne
           rw [mem_compl_singleton_iff] at y_ne
-          dsimp [HasInv.inv]
+          dsimp [Inv.inv]
           rw [if_neg y_ne]
         mem_of_superset (compl_singleton_mem_nhds x_ne) this
       exact ContinuousAt.congr (continuous_hat_inv x_ne) this }

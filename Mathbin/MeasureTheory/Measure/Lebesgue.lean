@@ -68,7 +68,7 @@ theorem volume_singleton {a : ℝ} : volume ({a} : Set ℝ) = 0 := by
 
 @[simp]
 theorem volume_univ : volume (univ : Set ℝ) = ∞ :=
-  Ennreal.eq_top_of_forall_nnreal_le $ fun r =>
+  Ennreal.eq_top_of_forall_nnreal_le fun r =>
     calc
       (r : ℝ≥0∞) = volume (Icc (0 : ℝ) r) := by
         simp
@@ -107,13 +107,13 @@ instance has_no_atoms_volume : has_no_atoms (volume : Measureₓ ℝ) :=
   ⟨fun x => volume_singleton⟩
 
 @[simp]
-theorem volume_interval {a b : ℝ} : volume (interval a b) = of_real |b - a| := by
+theorem volume_interval {a b : ℝ} : volume (interval a b) = of_real (abs (b - a)) := by
   rw [interval, volume_Icc, max_sub_min_eq_abs]
 
 @[simp]
 theorem volume_Ioi {a : ℝ} : volume (Ioi a) = ∞ :=
-  top_unique $
-    le_of_tendsto' Ennreal.tendsto_nat_nhds_top $ fun n =>
+  top_unique <|
+    (le_of_tendsto' Ennreal.tendsto_nat_nhds_top) fun n =>
       calc
         (n : ℝ≥0∞) = volume (Ioo a (a + n)) := by
           simp
@@ -126,8 +126,8 @@ theorem volume_Ici {a : ℝ} : volume (Ici a) = ∞ := by
 
 @[simp]
 theorem volume_Iio {a : ℝ} : volume (Iio a) = ∞ :=
-  top_unique $
-    le_of_tendsto' Ennreal.tendsto_nat_nhds_top $ fun n =>
+  top_unique <|
+    (le_of_tendsto' Ennreal.tendsto_nat_nhds_top) fun n =>
       calc
         (n : ℝ≥0∞) = volume (Ioo (a - n) a) := by
           simp
@@ -220,17 +220,16 @@ theorem volume_le_diam (s : Set ℝ) : volume s ≤ Emetric.diam s := by
 theorem volume_pi_le_prod_diam (s : Set (ι → ℝ)) : volume s ≤ ∏ i : ι, Emetric.diam (Function.eval i '' s) :=
   calc
     volume s ≤ volume (pi univ fun i => Closure (Function.eval i '' s)) :=
-      volume.mono $ subset.trans (subset_pi_eval_image univ s) $ pi_mono $ fun i hi => subset_closure
-    _ = ∏ i, volume (Closure $ Function.eval i '' s) := volume_pi_pi _
+      volume.mono <| subset.trans (subset_pi_eval_image univ s) <| pi_mono fun i hi => subset_closure
+    _ = ∏ i, volume (Closure <| Function.eval i '' s) := volume_pi_pi _
     _ ≤ ∏ i : ι, Emetric.diam (Function.eval i '' s) :=
-      Finset.prod_le_prod' $ fun i hi => (volume_le_diam _).trans_eq (Emetric.diam_closure _)
+      Finset.prod_le_prod' fun i hi => (volume_le_diam _).trans_eq (Emetric.diam_closure _)
     
 
 theorem volume_pi_le_diam_pow (s : Set (ι → ℝ)) : volume s ≤ Emetric.diam s ^ Fintype.card ι :=
   calc
     volume s ≤ ∏ i : ι, Emetric.diam (Function.eval i '' s) := volume_pi_le_prod_diam s
-    _ ≤ ∏ i : ι, (1 : ℝ≥0 ) * Emetric.diam s :=
-      Finset.prod_le_prod' $ fun i hi => (LipschitzWith.eval i).ediam_image_le s
+    _ ≤ ∏ i : ι, (1 : ℝ≥0 ) * Emetric.diam s := Finset.prod_le_prod' fun i hi => (LipschitzWith.eval i).ediam_image_le s
     _ = Emetric.diam s ^ Fintype.card ι := by
       simp only [Ennreal.coe_one, one_mulₓ, Finset.prod_const, Fintype.card]
     
@@ -241,8 +240,8 @@ theorem volume_pi_le_diam_pow (s : Set (ι → ℝ)) : volume s ≤ Emetric.diam
 
 
 theorem map_volume_add_left (a : ℝ) : measure.map ((· + ·) a) volume = volume :=
-  Eq.symm $
-    Real.measure_ext_Ioo_rat $ fun p q => by
+  Eq.symm <|
+    Real.measure_ext_Ioo_rat fun p q => by
       simp [measure.map_apply (measurable_const_add a) measurable_set_Ioo, sub_sub_sub_cancel_right]
 
 @[simp]
@@ -266,11 +265,11 @@ theorem volume_preimage_add_right (a : ℝ) (s : Set ℝ) : volume ((· + a) ⁻
       rw [map_volume_add_right]
     
 
-theorem smul_map_volume_mul_left {a : ℝ} (h : a ≠ 0) : Ennreal.ofReal |a| • measure.map ((· * ·) a) volume = volume :=
-  by
-  refine' (Real.measure_ext_Ioo_rat $ fun p q => _).symm
+theorem smul_map_volume_mul_left {a : ℝ} (h : a ≠ 0) :
+    Ennreal.ofReal (abs a) • measure.map ((· * ·) a) volume = volume := by
+  refine' (Real.measure_ext_Ioo_rat fun p q => _).symm
   cases' lt_or_gt_of_neₓ h with h h
-  · simp only [Real.volume_Ioo, measure.smul_apply, ← Ennreal.of_real_mul (le_of_ltₓ $ neg_pos.2 h),
+  · simp only [Real.volume_Ioo, measure.smul_apply, ← Ennreal.of_real_mul (le_of_ltₓ <| neg_pos.2 h),
       measure.map_apply (measurable_const_mul a) measurable_set_Ioo, neg_sub_neg, ← neg_mul_eq_neg_mul,
       preimage_const_mul_Ioo_of_neg _ _ h, abs_of_neg h, mul_sub, mul_div_cancel' _ (ne_of_ltₓ h)]
     
@@ -279,43 +278,45 @@ theorem smul_map_volume_mul_left {a : ℝ} (h : a ≠ 0) : Ennreal.ofReal |a| �
       mul_sub, mul_div_cancel' _ (ne_of_gtₓ h)]
     
 
-theorem map_volume_mul_left {a : ℝ} (h : a ≠ 0) : measure.map ((· * ·) a) volume = Ennreal.ofReal |a⁻¹| • volume := by
+theorem map_volume_mul_left {a : ℝ} (h : a ≠ 0) : measure.map ((· * ·) a) volume = Ennreal.ofReal (abs a⁻¹) • volume :=
+  by
   conv_rhs =>
     rw [← Real.smul_map_volume_mul_left h, smul_smul, ← Ennreal.of_real_mul (abs_nonneg _), ← abs_mul, inv_mul_cancel h,
       abs_one, Ennreal.of_real_one, one_smul]
 
 @[simp]
 theorem volume_preimage_mul_left {a : ℝ} (h : a ≠ 0) (s : Set ℝ) :
-    volume ((· * ·) a ⁻¹' s) = Ennreal.ofReal (abs (a⁻¹)) * volume s :=
+    volume ((· * ·) a ⁻¹' s) = Ennreal.ofReal (abs a⁻¹) * volume s :=
   calc
     volume ((· * ·) a ⁻¹' s) = measure.map ((· * ·) a) volume s :=
       ((Homeomorph.mulLeft₀ a h).toMeasurableEquiv.map_apply s).symm
-    _ = Ennreal.ofReal (abs (a⁻¹)) * volume s := by
+    _ = Ennreal.ofReal (abs a⁻¹) * volume s := by
       rw [map_volume_mul_left h]
       rfl
     
 
-theorem smul_map_volume_mul_right {a : ℝ} (h : a ≠ 0) : Ennreal.ofReal |a| • measure.map (· * a) volume = volume := by
+theorem smul_map_volume_mul_right {a : ℝ} (h : a ≠ 0) : Ennreal.ofReal (abs a) • measure.map (· * a) volume = volume :=
+  by
   simpa only [mul_comm] using Real.smul_map_volume_mul_left h
 
-theorem map_volume_mul_right {a : ℝ} (h : a ≠ 0) : measure.map (· * a) volume = Ennreal.ofReal |a⁻¹| • volume := by
+theorem map_volume_mul_right {a : ℝ} (h : a ≠ 0) : measure.map (· * a) volume = Ennreal.ofReal (abs a⁻¹) • volume := by
   simpa only [mul_comm] using Real.map_volume_mul_left h
 
 @[simp]
 theorem volume_preimage_mul_right {a : ℝ} (h : a ≠ 0) (s : Set ℝ) :
-    volume ((· * a) ⁻¹' s) = Ennreal.ofReal (abs (a⁻¹)) * volume s :=
+    volume ((· * a) ⁻¹' s) = Ennreal.ofReal (abs a⁻¹) * volume s :=
   calc
     volume ((· * a) ⁻¹' s) = measure.map (· * a) volume s :=
       ((Homeomorph.mulRight₀ a h).toMeasurableEquiv.map_apply s).symm
-    _ = Ennreal.ofReal (abs (a⁻¹)) * volume s := by
+    _ = Ennreal.ofReal (abs a⁻¹) * volume s := by
       rw [map_volume_mul_right h]
       rfl
     
 
 @[simp]
 theorem map_volume_neg : measure.map Neg.neg (volume : Measureₓ ℝ) = volume :=
-  Eq.symm $
-    Real.measure_ext_Ioo_rat $ fun p q => by
+  Eq.symm <|
+    Real.measure_ext_Ioo_rat fun p q => by
       simp
         [show measure.map Neg.neg volume (Ioo (p : ℝ) q) = _ from measure.map_apply measurable_neg measurable_set_Ioo]
 
@@ -417,7 +418,7 @@ theorem map_transvection_volume_pi [DecidableEq ι] (t : transvection_struct ι 
 /-- Any invertible matrix rescales Lebesgue measure through the absolute value of its
 determinant. -/
 theorem map_matrix_volume_pi_eq_smul_volume_pi [DecidableEq ι] {M : Matrix ι ι ℝ} (hM : det M ≠ 0) :
-    measure.map M.to_lin' volume = Ennreal.ofReal (abs (det M⁻¹)) • volume := by
+    measure.map M.to_lin' volume = Ennreal.ofReal (abs (det M)⁻¹) • volume := by
   apply diagonal_transvection_induction_of_det_ne_zero _ M hM (fun D hD => _) (fun t => _) fun A B hA hB IHA IHB => _
   · conv_rhs => rw [← smul_map_diagonal_volume_pi hD]
     rw [smul_smul, ← Ennreal.of_real_mul (abs_nonneg _), ← abs_mul, inv_mul_cancel hD, abs_one, Ennreal.of_real_one,
@@ -439,7 +440,7 @@ theorem map_matrix_volume_pi_eq_smul_volume_pi [DecidableEq ι] {M : Matrix ι �
 /-- Any invertible linear map rescales Lebesgue measure through the absolute value of its
 determinant. -/
 theorem map_linear_map_volume_pi_eq_smul_volume_pi {f : (ι → ℝ) →ₗ[ℝ] ι → ℝ} (hf : f.det ≠ 0) :
-    measure.map f volume = Ennreal.ofReal (abs (f.det⁻¹)) • volume := by
+    measure.map f volume = Ennreal.ofReal (abs f.det⁻¹) • volume := by
   classical
   let M := f.to_matrix'
   have A : f.det = det M := by
@@ -538,7 +539,7 @@ theorem volume_region_between_eq_integral' [sigma_finite μ] (f_int : integrable
     (hs : MeasurableSet s) (hfg : f ≤ᵐ[μ.restrict s] g) :
     μ.prod volume (RegionBetween f g s) = Ennreal.ofReal (∫ y in s, (g - f) y ∂μ) := by
   have h : g - f =ᵐ[μ.restrict s] fun x => Real.toNnreal (g x - f x) :=
-    hfg.mono fun x hx => (Real.coe_to_nnreal _ $ sub_nonneg.2 hx).symm
+    hfg.mono fun x hx => (Real.coe_to_nnreal _ <| sub_nonneg.2 hx).symm
   rw [volume_region_between_eq_lintegral f_int.ae_measurable g_int.ae_measurable hs, integral_congr_ae h,
     lintegral_congr_ae, lintegral_coe_eq_integral _ ((integrable_congr h).mp (g_int.sub f_int))]
   simpa only

@@ -135,10 +135,10 @@ instance Pi.completeBooleanAlgebra {ι : Type _} {π : ι → Type _} [∀ i, Co
 instance Prop.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
   { Prop.booleanAlgebra, Prop.completeLattice with
     infi_sup_le_sup_Inf := fun p s =>
-      Iff.mp $ by
+      Iff.mp <| by
         simp only [forall_or_distrib_left, CompleteLattice.infₓ, infi_Prop_eq, sup_Prop_eq],
     inf_Sup_le_supr_inf := fun p s =>
-      Iff.mp $ by
+      Iff.mp <| by
         simp only [CompleteLattice.supₓ, exists_and_distrib_left, inf_Prop_eq, supr_Prop_eq] }
 
 section CompleteBooleanAlgebra
@@ -146,8 +146,8 @@ section CompleteBooleanAlgebra
 variable [CompleteBooleanAlgebra α] {a b : α} {s : Set α} {f : ι → α}
 
 theorem compl_infi : infi fᶜ = ⨆ i, f iᶜ :=
-  le_antisymmₓ (compl_le_of_compl_le $ le_infi $ fun i => compl_le_of_compl_le $ le_supr (compl ∘ f) i)
-    (supr_le $ fun i => compl_le_compl $ infi_le _ _)
+  le_antisymmₓ (compl_le_of_compl_le <| le_infi fun i => compl_le_of_compl_le <| le_supr (compl ∘ f) i)
+    (supr_le fun i => compl_le_compl <| infi_le _ _)
 
 theorem compl_supr : supr fᶜ = ⨅ i, f iᶜ :=
   compl_injective

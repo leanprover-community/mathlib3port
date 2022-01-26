@@ -97,13 +97,13 @@ theorem to_Γ_Spec_map_basic_open_eq : X.to_Γ_Spec_map_basic_open r = X.to_Ring
   Subtype.eq (X.to_Γ_Spec_preim_basic_open_eq r)
 
 /-- The map from the global sections `Γ(X)` to the sections on the (preimage of) a basic open. -/
-abbrev to_to_Γ_Spec_map_basic_open : X.presheaf.obj (op ⊤) ⟶ X.presheaf.obj (op $ X.to_Γ_Spec_map_basic_open r) :=
+abbrev to_to_Γ_Spec_map_basic_open : X.presheaf.obj (op ⊤) ⟶ X.presheaf.obj (op <| X.to_Γ_Spec_map_basic_open r) :=
   X.presheaf.map (X.to_Γ_Spec_map_basic_open r).le_top.op
 
 /-- `r` is a unit as a section on the basic open defined by `r`. -/
 theorem is_unit_res_to_Γ_Spec_map_basic_open : IsUnit (X.to_to_Γ_Spec_map_basic_open r r) := by
   convert
-    (X.presheaf.map $ (eq_to_hom $ X.to_Γ_Spec_map_basic_open_eq r).op).is_unit_map
+    (X.presheaf.map <| (eq_to_hom <| X.to_Γ_Spec_map_basic_open_eq r).op).is_unit_map
       (X.to_RingedSpace.is_unit_res_basic_open r)
   rw [← comp_apply]
   erw [← functor.map_comp]
@@ -111,15 +111,16 @@ theorem is_unit_res_to_Γ_Spec_map_basic_open : IsUnit (X.to_to_Γ_Spec_map_basi
 
 /-- Define the sheaf hom on individual basic opens for the unit. -/
 def to_Γ_Spec_c_app :
-    (structure_sheaf $ Γ.obj $ op X).val.obj (op $ basic_open r) ⟶ X.presheaf.obj (op $ X.to_Γ_Spec_map_basic_open r) :=
+    (structure_sheaf <| Γ.obj <| op X).val.obj (op <| basic_open r) ⟶
+      X.presheaf.obj (op <| X.to_Γ_Spec_map_basic_open r) :=
   IsLocalization.Away.lift r (is_unit_res_to_Γ_Spec_map_basic_open _ r)
 
 /-- Characterization of the sheaf hom on basic opens,
     direction ← (next lemma) is used at various places, but → is not used in this file. -/
 theorem to_Γ_Spec_c_app_iff
     (f :
-      (structure_sheaf $ Γ.obj $ op X).val.obj (op $ basic_open r) ⟶
-        X.presheaf.obj (op $ X.to_Γ_Spec_map_basic_open r)) :
+      (structure_sheaf <| Γ.obj <| op X).val.obj (op <| basic_open r) ⟶
+        X.presheaf.obj (op <| X.to_Γ_Spec_map_basic_open r)) :
     to_open _ (basic_open r) ≫ f = X.to_to_Γ_Spec_map_basic_open r ↔ f = X.to_Γ_Spec_c_app r := by
   rw [← IsLocalization.Away.AwayMap.lift_comp r (X.is_unit_res_to_Γ_Spec_map_basic_open r)]
   swap 5
@@ -170,7 +171,7 @@ theorem to_stalk_stalk_map_to_Γ_Spec (x : X) :
   erw [←
     to_open_germ _ (basic_open (1 : Γ.obj (op X)))
       ⟨X.to_Γ_Spec_fun x, by
-        rw [basic_open_one] <;> triv⟩]
+        rw [basic_open_one] <;> trivial⟩]
   rw [← category.assoc, category.assoc (to_open _ _)]
   erw [stalk_functor_map_germ]
   rw [← category.assoc (to_open _ _), X.to_Γ_Spec_SheafedSpace_app_spec 1]
@@ -260,7 +261,7 @@ theorem left_triangle (X : LocallyRingedSpace) :
 
 /-- `Spec_Γ_identity` is iso so these are mutually two-sided inverses. -/
 theorem right_triangle (R : CommRingₓₓ) :
-    identity_to_Γ_Spec.app (Spec.to_LocallyRingedSpace.obj $ op R) ≫
+    identity_to_Γ_Spec.app (Spec.to_LocallyRingedSpace.obj <| op R) ≫
         Spec.to_LocallyRingedSpace.map (Spec_Γ_identity.inv.app R).op =
       𝟙 _ :=
   by
@@ -298,14 +299,14 @@ def adjunction : Scheme.Γ.rightOp ⊣ Scheme.Spec :=
     (nat_iso.of_components (fun X => iso.refl _) fun _ _ f => by
       simpa)
 
-theorem adjunction_hom_equiv_apply {X : Scheme} {R : CommRingₓₓᵒᵖ} (f : (op $ Scheme.Γ.obj $ op X) ⟶ R) :
+theorem adjunction_hom_equiv_apply {X : Scheme} {R : CommRingₓₓᵒᵖ} (f : (op <| Scheme.Γ.obj <| op X) ⟶ R) :
     Γ_Spec.adjunction.homEquiv X R f = LocallyRingedSpace_adjunction.homEquiv X.1 R f := by
   dsimp [adjunction, adjunction.restrict_fully_faithful]
   simp
 
 theorem adjunction_hom_equiv (X : Scheme) (R : CommRingₓₓᵒᵖ) :
     Γ_Spec.adjunction.homEquiv X R = LocallyRingedSpace_adjunction.homEquiv X.1 R :=
-  Equivₓ.ext $ fun f => adjunction_hom_equiv_apply f
+  Equivₓ.ext fun f => adjunction_hom_equiv_apply f
 
 theorem adjunction_hom_equiv_symm_apply {X : Scheme} {R : CommRingₓₓᵒᵖ} (f : X ⟶ Scheme.Spec.obj R) :
     (Γ_Spec.adjunction.homEquiv X R).symm f = (LocallyRingedSpace_adjunction.homEquiv X.1 R).symm f := by
@@ -337,7 +338,7 @@ instance is_iso_adjunction_counit : is_iso Γ_Spec.adjunction.counit := by
 
 theorem adjunction_unit_app_app_top (X : Scheme) :
     @Eq
-      ((Scheme.Spec.obj (op $ X.presheaf.obj (op ⊤))).Presheaf.obj (op ⊤) ⟶
+      ((Scheme.Spec.obj (op <| X.presheaf.obj (op ⊤))).Presheaf.obj (op ⊤) ⟶
         ((Γ_Spec.adjunction.Unit.app X).1.base _* X.presheaf).obj (op ⊤))
       ((Γ_Spec.adjunction.Unit.app X).val.c.app (op ⊤)) (Spec_Γ_identity.Hom.app (X.presheaf.obj (op ⊤))) :=
   by

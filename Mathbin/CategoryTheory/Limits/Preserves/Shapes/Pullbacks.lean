@@ -46,10 +46,10 @@ def is_limit_map_cone_pullback_cone_equiv :
           (by
             simp only [← G.map_comp, comm]) :
           pullback_cone (G.map f) (G.map g)) :=
-  (is_limit.whisker_equivalence_equiv walking_cospan_equiv.{v₂, v₁}).trans $
-    (is_limit.postcompose_hom_equiv (diagram_iso_cospan.{v₂} _) _).symm.trans $
-      is_limit.equiv_iso_limit $
-        cones.ext (iso.refl _) $ by
+  (is_limit.whisker_equivalence_equiv walking_cospan_equiv.{v₂, v₁}).trans <|
+    (is_limit.postcompose_hom_equiv (diagram_iso_cospan.{v₂} _) _).symm.trans <|
+      is_limit.equiv_iso_limit <|
+        cones.ext (iso.refl _) <| by
           rintro (_ | _ | _) <;> dsimp <;> simpa only [category.comp_id, category.id_comp, ← G.map_comp]
 
 /-- The property of preserving pullbacks expressed in terms of binary fans. -/
@@ -133,10 +133,10 @@ def is_colimit_map_cocone_pushout_cocone_equiv :
           (by
             simp only [← G.map_comp, comm]) :
           pushout_cocone (G.map f) (G.map g)) :=
-  (is_colimit.whisker_equivalence_equiv walking_span_equiv.{v₂, v₁}).trans $
-    (is_colimit.precompose_hom_equiv (diagram_iso_span.{v₂} _).symm _).symm.trans $
-      is_colimit.equiv_iso_colimit $
-        cocones.ext (iso.refl _) $ by
+  (is_colimit.whisker_equivalence_equiv walking_span_equiv.{v₂, v₁}).trans <|
+    (is_colimit.precompose_hom_equiv (diagram_iso_span.{v₂} _).symm _).symm.trans <|
+      is_colimit.equiv_iso_colimit <|
+        cocones.ext (iso.refl _) <| by
           rintro (_ | _ | _) <;> dsimp <;> simpa only [category.comp_id, category.id_comp, ← G.map_comp]
 
 /-- The property of preserving pushouts expressed in terms of binary cofans. -/

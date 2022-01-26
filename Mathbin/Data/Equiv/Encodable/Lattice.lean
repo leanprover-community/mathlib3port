@@ -51,7 +51,7 @@ end Encodable
 
 namespace Finset
 
-theorem nonempty_encodable {α} (t : Finset α) : Nonempty $ Encodable { i // i ∈ t } := by
+theorem nonempty_encodable {α} (t : Finset α) : Nonempty <| Encodable { i // i ∈ t } := by
   classical
   induction' t using Finset.induction with x t hx ih
   · refine' ⟨⟨fun _ => 0, fun _ => none, fun ⟨x, y⟩ => y.rec _⟩⟩

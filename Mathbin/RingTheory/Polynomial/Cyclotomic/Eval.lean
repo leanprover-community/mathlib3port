@@ -96,7 +96,7 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
         
       refine' (ih _ hi.1.2 (Nat.two_lt_of_ne _ hi.2 hk)).le
       rintro rfl
-      exact hn'.ne' $ zero_dvd_iff.mp hi.1.1
+      exact hn'.ne' <| zero_dvd_iff.mp hi.1.1
       
     
   · rw [eq_comm, geom_sum_eq_zero_iff_neg_one hn''] at h
@@ -155,10 +155,10 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [CommRingₓ R] {n : ℕ}
     simpa using And.intro hn'.ne' hn''.ne'
   have := prod_cyclotomic_eq_geom_sum hn' ℤ
   apply_fun eval 1  at this
-  rw [eval_geom_sum, one_geom_sum, eval_prod, eq_comm, ← Finset.prod_sdiff $ range_pow_padic_val_nat_subset_divisors' p,
-    Finset.prod_image] at this
+  rw [eval_geom_sum, one_geom_sum, eval_prod, eq_comm, ←
+    Finset.prod_sdiff <| range_pow_padic_val_nat_subset_divisors' p, Finset.prod_image] at this
   simp_rw [eval_one_cyclotomic_prime_pow, Finset.prod_const, Finset.card_range, mul_comm]  at this
-  rw [← Finset.prod_sdiff $ show {n} ⊆ _ from _] at this
+  rw [← Finset.prod_sdiff <| show {n} ⊆ _ from _] at this
   any_goals {
   }
   swap

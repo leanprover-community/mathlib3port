@@ -111,7 +111,7 @@ variable (ψ : (⨁ i, M i) →ₗ[R] N)
 
 /-- Every linear map from a direct sum agrees with the one obtained by applying
 the universal property to each of its components. -/
-theorem to_module.unique (f : ⨁ i, M i) : ψ f = to_module R ι N (fun i => ψ.comp $ lof R ι M i) f :=
+theorem to_module.unique (f : ⨁ i, M i) : ψ f = to_module R ι N (fun i => ψ.comp <| lof R ι M i) f :=
   to_add_monoid.unique ψ.to_add_monoid_hom f
 
 variable {ψ} {ψ' : (⨁ i, M i) →ₗ[R] N}
@@ -127,7 +127,7 @@ theorem linear_map_ext ⦃ψ ψ' : (⨁ i, M i) →ₗ[R] N⦄ (H : ∀ i, ψ.co
 into a larger subset of the direct summands, as a linear map.
 -/
 def lset_to_set (S T : Set ι) (H : S ⊆ T) : (⨁ i : S, M i) →ₗ[R] ⨁ i : T, M i :=
-  to_module R _ _ $ fun i => lof R T (fun i : Subtype T => M i) ⟨i, H i.prop⟩
+  (to_module R _ _) fun i => lof R T (fun i : Subtype T => M i) ⟨i, H i.prop⟩
 
 omit dec_ι
 
@@ -272,7 +272,7 @@ noncomputable def submodule_is_internal.collected_basis (h : submodule_is_intern
 
 @[simp]
 theorem submodule_is_internal.collected_basis_coe (h : submodule_is_internal A) {α : ι → Type _}
-    (v : ∀ i, Basis (α i) R (A i)) : ⇑h.collected_basis v = fun a : Σ i, α i => ↑v a.1 a.2 := by
+    (v : ∀ i, Basis (α i) R (A i)) : ⇑h.collected_basis v = fun a : Σ i, α i => ↑(v a.1 a.2) := by
   funext a
   simp only [submodule_is_internal.collected_basis, to_module, submodule_coe, AddEquiv.to_fun_eq_coe, Basis.coe_of_repr,
     Basis.repr_symm_apply, Dfinsupp.lsum_apply_apply, Dfinsupp.mapRange.linear_equiv_apply,
@@ -305,7 +305,7 @@ theorem submodule_is_internal.to_add_subgroup (A : ι → Submodule R M) :
 `complete_lattice.independent.dfinsupp_lsum_injective` for details. -/
 theorem submodule_is_internal_of_independent_of_supr_eq_top {A : ι → Submodule R M} (hi : CompleteLattice.Independent A)
     (hs : supr A = ⊤) : submodule_is_internal A :=
-  ⟨hi.dfinsupp_lsum_injective, LinearMap.range_eq_top.1 $ (Submodule.supr_eq_range_dfinsupp_lsum _).symm.trans hs⟩
+  ⟨hi.dfinsupp_lsum_injective, LinearMap.range_eq_top.1 <| (Submodule.supr_eq_range_dfinsupp_lsum _).symm.trans hs⟩
 
 /-- `iff` version of `direct_sum.submodule_is_internal_of_independent_of_supr_eq_top`,
 `direct_sum.submodule_is_internal.independent`, and `direct_sum.submodule_is_internal.supr_eq_top`.

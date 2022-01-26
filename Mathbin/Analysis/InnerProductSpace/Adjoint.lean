@@ -1,4 +1,5 @@
 import Mathbin.Analysis.InnerProductSpace.Dual
+import Mathbin.Analysis.InnerProductSpace.PiL2
 
 /-!
 # Adjoint of operators on Hilbert spaces
@@ -319,4 +320,22 @@ theorem is_adjoint_pair (A : E' →ₗ[ℝ] F') :
 end Real
 
 end LinearMap
+
+namespace Matrix
+
+variable {m n : Type _} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
+
+open_locale ComplexConjugate
+
+/-- The adjoint of the linear map associated to a matrix is the linear map associated to the
+conjugate transpose of that matrix. -/
+theorem conj_transpose_eq_adjoint (A : Matrix m n 𝕜) :
+    to_lin' A.conj_transpose = @LinearMap.adjoint _ (EuclideanSpace 𝕜 n) (EuclideanSpace 𝕜 m) _ _ _ _ _ (to_lin' A) :=
+  by
+  rw [@LinearMap.eq_adjoint_iff _ (EuclideanSpace 𝕜 m) (EuclideanSpace 𝕜 n)]
+  intro x y
+  convert dot_product_assoc (conj ∘ (id x : m → 𝕜)) y A using 1
+  simp [dot_product, mul_vec, RingHom.map_sum, ← star_ring_end_apply, mul_comm]
+
+end Matrix
 

@@ -142,7 +142,7 @@ theorem adjoin_X : Algebra.adjoin R ({X} : Set (Polynomial R)) = ⊤ := by
 
 @[ext]
 theorem alg_hom_ext {f g : Polynomial R →ₐ[R] A} (h : f X = g X) : f = g :=
-  AlgHom.ext_of_adjoin_eq_top adjoin_X $ fun p hp => (Set.mem_singleton_iff.1 hp).symm ▸ h
+  (AlgHom.ext_of_adjoin_eq_top adjoin_X) fun p hp => (Set.mem_singleton_iff.1 hp).symm ▸ h
 
 theorem aeval_def (p : Polynomial R) : aeval x p = eval₂ (algebraMap R A) x p :=
   rfl
@@ -199,12 +199,12 @@ theorem aeval_map {A : Type _} [CommSemiringₓ A] [Algebra R A] [Algebra A B] [
   rw [aeval_def, eval₂_map, ← IsScalarTower.algebra_map_eq, ← aeval_def]
 
 theorem aeval_alg_hom (f : A →ₐ[R] B) (x : A) : aeval (f x) = f.comp (aeval x) :=
-  alg_hom_ext $ by
+  alg_hom_ext <| by
     simp only [aeval_X, AlgHom.comp_apply]
 
 @[simp]
 theorem aeval_X_left : aeval (X : Polynomial R) = AlgHom.id R (Polynomial R) :=
-  alg_hom_ext $ aeval_X X
+  alg_hom_ext <| aeval_X X
 
 theorem eval_unique (φ : Polynomial R →ₐ[R] A) p : φ p = eval₂ (algebraMap R A) (φ X) p := by
   rw [← aeval_def, aeval_alg_hom, aeval_X_left, AlgHom.comp_id]
@@ -302,7 +302,7 @@ theorem aeval_tower_C (x : R) : aeval_tower g y (C x) = g x :=
 
 @[simp]
 theorem aeval_tower_comp_C : (aeval_tower g y : Polynomial R →+* A').comp C = g :=
-  RingHom.ext $ aeval_tower_C _ _
+  RingHom.ext <| aeval_tower_C _ _
 
 @[simp]
 theorem aeval_tower_algebra_map (x : R) : aeval_tower g y (algebraMap R (Polynomial R) x) = g x :=
@@ -317,7 +317,7 @@ theorem aeval_tower_to_alg_hom (x : R) : aeval_tower g y (IsScalarTower.toAlgHom
 
 @[simp]
 theorem aeval_tower_comp_to_alg_hom : (aeval_tower g y).comp (IsScalarTower.toAlgHom S R (Polynomial R)) = g :=
-  AlgHom.coe_ring_hom_injective $ aeval_tower_comp_algebra_map _ _
+  AlgHom.coe_ring_hom_injective <| aeval_tower_comp_algebra_map _ _
 
 @[simp]
 theorem aeval_tower_id : aeval_tower (AlgHom.id S S) = aeval := by
@@ -389,7 +389,7 @@ theorem eval_mul_X_sub_C {p : Polynomial R} (r : R) : (p * (X - C r)).eval r = 0
   simp [sum_range_sub', coeff_monomial]
 
 theorem not_is_unit_X_sub_C [Nontrivial R] (r : R) : ¬IsUnit (X - C r) := fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ =>
-  @zero_ne_one R _ _ $ by
+  @zero_ne_one R _ _ <| by
     erw [← eval_mul_X_sub_C, hgf, eval_one]
 
 end Ringₓ

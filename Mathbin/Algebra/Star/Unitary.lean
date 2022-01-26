@@ -68,7 +68,7 @@ instance : HasStar (unitary R) :=
   ⟨fun U => ⟨star U, star_mem U.prop⟩⟩
 
 @[simp, norm_cast]
-theorem coe_star {U : unitary R} : ↑star U = (star U : R) :=
+theorem coe_star {U : unitary R} : ↑(star U) = (star U : R) :=
   rfl
 
 theorem coe_star_mul_self (U : unitary R) : (star U : R) * U = 1 :=
@@ -79,11 +79,11 @@ theorem coe_mul_star_self (U : unitary R) : (U : R) * star U = 1 :=
 
 @[simp]
 theorem star_mul_self (U : unitary R) : star U * U = 1 :=
-  Subtype.ext $ coe_star_mul_self U
+  Subtype.ext <| coe_star_mul_self U
 
 @[simp]
 theorem mul_star_self (U : unitary R) : U * star U = 1 :=
-  Subtype.ext $ coe_mul_star_self U
+  Subtype.ext <| coe_mul_star_self U
 
 instance : Groupₓ (unitary R) :=
   { Submonoid.toMonoid _ with inv := star, mul_left_inv := star_mul_self }
@@ -104,7 +104,7 @@ instance : Inhabited (unitary R) :=
 theorem star_eq_inv (U : unitary R) : star U = U⁻¹ :=
   rfl
 
-theorem star_eq_inv' : (star : unitary R → unitary R) = HasInv.inv :=
+theorem star_eq_inv' : (star : unitary R → unitary R) = Inv.inv :=
   rfl
 
 /-- The unitary elements embed into the units. -/
@@ -115,7 +115,7 @@ def toUnits : unitary R →* (R)ˣ where
   map_mul' := fun x y => Units.ext rfl
 
 theorem to_units_injective : Function.Injective (toUnits : unitary R → (R)ˣ) := fun x y h =>
-  Subtype.ext $ Units.ext_iff.mp h
+  Subtype.ext <| Units.ext_iff.mp h
 
 end Monoidₓ
 
@@ -127,10 +127,10 @@ instance : CommGroupₓ (unitary R) :=
   { unitary.group, Submonoid.toCommMonoid _ with }
 
 theorem mem_iff_star_mul_self {U : R} : U ∈ unitary R ↔ star U * U = 1 :=
-  mem_iff.trans $ and_iff_left_of_imp $ fun h => mul_comm (star U) U ▸ h
+  mem_iff.trans <| and_iff_left_of_imp fun h => mul_comm (star U) U ▸ h
 
 theorem mem_iff_self_mul_star {U : R} : U ∈ unitary R ↔ U * star U = 1 :=
-  mem_iff.trans $ and_iff_right_of_imp $ fun h => mul_comm U (star U) ▸ h
+  mem_iff.trans <| and_iff_right_of_imp fun h => mul_comm U (star U) ▸ h
 
 end CommMonoidₓ
 

@@ -71,7 +71,7 @@ theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬exponent_exists G := by
 
 @[to_additive]
 theorem exponent_eq_zero_of_order_zero {g : G} (hg : orderOf g = 0) : exponent G = 0 :=
-  exponent_eq_zero_iff.mpr $ fun ⟨n, hn, hgn⟩ => order_of_eq_zero_iff'.mp hg n hn $ hgn g
+  exponent_eq_zero_iff.mpr fun ⟨n, hn, hgn⟩ => order_of_eq_zero_iff'.mp hg n hn <| hgn g
 
 @[to_additive exponent_nsmul_eq_zero]
 theorem pow_exponent_eq_one (g : G) : g ^ exponent G = 1 := by
@@ -126,7 +126,7 @@ theorem exp_eq_one_of_subsingleton [Subsingleton G] : exponent G = 1 := by
 
 @[to_additive add_order_dvd_exponent]
 theorem order_dvd_exponent (g : G) : orderOf g ∣ exponent G :=
-  order_of_dvd_of_pow_eq_one $ pow_exponent_eq_one g
+  order_of_dvd_of_pow_eq_one <| pow_exponent_eq_one g
 
 variable (G)
 
@@ -155,7 +155,7 @@ theorem lcm_order_of_dvd_exponent [Fintype G] : (Finset.univ : Finset G).lcm ord
 theorem _root_.nat.prime.exists_order_of_eq_pow_padic_val_nat_exponent {p : ℕ} (hp : p.prime) :
     ∃ g : G, orderOf g = p ^ padicValNat p (exponent G) := by
   have := Fact.mk hp
-  rcases(padicValNat p $ exponent G).eq_zero_or_pos with (h | h)
+  rcases(padicValNat p <| exponent G).eq_zero_or_pos with (h | h)
   · refine'
       ⟨1, by
         rw [h, pow_zeroₓ, order_of_one]⟩
@@ -170,7 +170,8 @@ theorem _root_.nat.prime.exists_order_of_eq_pow_padic_val_nat_exponent {p : ℕ}
       
     exact fun hd =>
       hp.one_lt.not_le
-        ((mul_le_iff_le_one_left he).mp $ Nat.le_of_dvdₓ he $ Nat.mul_dvd_of_dvd_div (dvd_of_one_le_padic_val_nat h) hd)
+        ((mul_le_iff_le_one_left he).mp <|
+          Nat.le_of_dvdₓ he <| Nat.mul_dvd_of_dvd_div (dvd_of_one_le_padic_val_nat h) hd)
   obtain ⟨k, hk : exponent G = p ^ _ * k⟩ := pow_padic_val_nat_dvd <;>
     try
       infer_instance
@@ -245,7 +246,7 @@ variable [CancelCommMonoid G]
 theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = ⨆ g : G, orderOf g := by
   rw [supr]
   rcases eq_or_ne (exponent G) 0 with (he | he)
-  · rw [he, Set.Infinite.Nat.Sup_eq_zero $ (exponent_eq_zero_iff_range_order_of_infinite h).1 he]
+  · rw [he, Set.Infinite.Nat.Sup_eq_zero <| (exponent_eq_zero_iff_range_order_of_infinite h).1 he]
     
   have hne : (Set.Range (orderOf : G → ℕ)).Nonempty := ⟨1, 1, order_of_one⟩
   have hfin : (Set.Range (orderOf : G → ℕ)).Finite := by
@@ -265,7 +266,7 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
   obtain ⟨g, hg⟩ := hp.1.exists_order_of_eq_pow_padic_val_nat_exponent G
   suffices orderOf t < orderOf (t ^ p ^ k * g) by
     rw [ht] at this
-    exact this.not_le (le_cSup hfin.bdd_above $ Set.mem_range_self _)
+    exact this.not_le (le_cSup hfin.bdd_above <| Set.mem_range_self _)
   have hpk : p ^ k ∣ orderOf t := pow_padic_val_nat_dvd
   have hpk' : orderOf (t ^ p ^ k) = orderOf t / p ^ k := by
     rw [order_of_pow' t (pow_ne_zero k hp.1.ne_zero), Nat.gcd_eq_rightₓ hpk]
@@ -274,11 +275,11 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
     rw [hg, Nat.coprime_pow_right_iff (pos_of_gt hpe), Nat.coprime_commₓ]
     apply Or.resolve_right (Nat.coprime_or_dvd_of_prime hp.1 _)
     nth_rw 0[← pow_oneₓ p]
-    convert pow_succ_padic_val_nat_not_dvd (h $ t ^ p ^ k)
+    convert pow_succ_padic_val_nat_not_dvd (h <| t ^ p ^ k)
     rw [hpk', padicValNat.div_pow hpk, hk, Nat.sub_self]
     infer_instance
   rw [(Commute.all _ g).order_of_mul_eq_mul_order_of_of_coprime hcoprime, hpk', hg, ha, ← ht, ← hk, pow_addₓ, pow_addₓ,
-    pow_oneₓ, ← mul_assoc, ← mul_assoc, Nat.div_mul_cancelₓ, mul_assoc, lt_mul_iff_one_lt_right $ h t, ← pow_succ'ₓ]
+    pow_oneₓ, ← mul_assoc, ← mul_assoc, Nat.div_mul_cancelₓ, mul_assoc, lt_mul_iff_one_lt_right <| h t, ← pow_succ'ₓ]
   exact one_lt_pow hp.1.one_lt a.succ_ne_zero
   exact hpk
 
@@ -289,7 +290,7 @@ theorem exponent_eq_supr_order_of' : exponent G = if ∃ g : G, orderOf g = 0 th
     exact exponent_eq_zero_of_order_zero hg
     
   · have := not_exists.mp h
-    exact exponent_eq_supr_order_of fun g => Ne.bot_lt $ this g
+    exact exponent_eq_supr_order_of fun g => Ne.bot_lt <| this g
     
 
 @[to_additive]

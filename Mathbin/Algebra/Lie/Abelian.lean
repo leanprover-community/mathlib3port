@@ -49,7 +49,7 @@ theorem Function.Injective.is_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : T
     [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂] {f : L₁ →ₗ⁅R⁆ L₂} (h₁ : Function.Injective f)
     (h₂ : IsLieAbelian L₂) : IsLieAbelian L₁ :=
   { trivial := fun x y =>
-      h₁ $
+      h₁ <|
         calc
           f ⁅x,y⁆ = ⁅f x,f y⁆ := LieHom.map_lie f x y
           _ = 0 := trivial_lie_zero _ _ _ _
@@ -158,7 +158,7 @@ variable {R L M N}
 def max_triv_hom (f : M →ₗ⁅R,L⁆ N) : max_triv_submodule R L M →ₗ⁅R,L⁆ max_triv_submodule R L N where
   toFun := fun m =>
     ⟨f m, fun x =>
-      (LieModuleHom.map_lie _ _ _).symm.trans $ (congr_argₓ f (m.property x)).trans (LieModuleHom.map_zero _)⟩
+      (LieModuleHom.map_lie _ _ _).symm.trans <| (congr_argₓ f (m.property x)).trans (LieModuleHom.map_zero _)⟩
   map_add' := fun m n => by
     simpa
   map_smul' := fun t m => by
@@ -182,7 +182,7 @@ def max_triv_equiv (e : M ≃ₗ⁅R,L⁆ N) : max_triv_submodule R L M ≃ₗ�
       simp }
 
 @[norm_cast, simp]
-theorem coe_max_triv_equiv_apply (e : M ≃ₗ⁅R,L⁆ N) (m : max_triv_submodule R L M) : (max_triv_equiv e m : N) = e (↑m) :=
+theorem coe_max_triv_equiv_apply (e : M ≃ₗ⁅R,L⁆ N) (m : max_triv_submodule R L M) : (max_triv_equiv e m : N) = e ↑m :=
   rfl
 
 @[simp]

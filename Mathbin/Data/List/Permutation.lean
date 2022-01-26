@@ -70,7 +70,7 @@ theorem permutations_aux2_append (t : α) (ts : List α) (r : List β) (ys : Lis
 
 /-- The `ts` argument to `permutations_aux2` can be folded into the `f` argument. -/
 theorem permutations_aux2_comp_append {t : α} {ts ys : List α} {r : List β} (f : List α → β) :
-    (permutations_aux2 t [] r ys $ fun x => f (x ++ ts)).2 = (permutations_aux2 t ts r ys f).2 := by
+    ((permutations_aux2 t [] r ys) fun x => f (x ++ ts)).2 = (permutations_aux2 t ts r ys f).2 := by
   induction ys generalizing f
   · simp
     

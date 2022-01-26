@@ -55,18 +55,18 @@ theorem IsOpen.exists_smul_mem [is_minimal M α] (x : α) {U : Set α} (hUo : Is
 @[to_additive]
 theorem IsOpen.Union_preimage_smul [is_minimal M α] {U : Set α} (hUo : IsOpen U) (hne : U.nonempty) :
     (⋃ c : M, (· • ·) c ⁻¹' U) = univ :=
-  Union_eq_univ_iff.2 $ fun x => hUo.exists_smul_mem M x hne
+  Union_eq_univ_iff.2 fun x => hUo.exists_smul_mem M x hne
 
 @[to_additive]
 theorem IsOpen.Union_smul [is_minimal G α] {U : Set α} (hUo : IsOpen U) (hne : U.nonempty) : (⋃ g : G, g • U) = univ :=
-  Union_eq_univ_iff.2 $ fun x =>
+  Union_eq_univ_iff.2 fun x =>
     let ⟨g, hg⟩ := hUo.exists_smul_mem G x hne
     ⟨g⁻¹, _, hg, inv_smul_smul _ _⟩
 
 @[to_additive]
 theorem IsCompact.exists_finite_cover_smul [TopologicalSpace G] [is_minimal G α] [HasContinuousSmul G α] {K U : Set α}
     (hK : IsCompact K) (hUo : IsOpen U) (hne : U.nonempty) : ∃ I : Finset G, K ⊆ ⋃ g ∈ I, g • U :=
-  (hK.elim_finite_subcover (fun g : G => g • U) fun g => hUo.smul _) $
+  (hK.elim_finite_subcover (fun g : G => g • U) fun g => hUo.smul _) <|
     calc
       K ⊆ univ := subset_univ K
       _ = ⋃ g : G, g • U := (hUo.Union_smul G hne).symm
@@ -76,13 +76,12 @@ theorem IsCompact.exists_finite_cover_smul [TopologicalSpace G] [is_minimal G α
 theorem dense_of_nonempty_smul_invariant [is_minimal M α] {s : Set α} (hne : s.nonempty) (hsmul : ∀ c : M, c • s ⊆ s) :
     Dense s :=
   let ⟨x, hx⟩ := hne
-  (MulAction.dense_orbit M x).mono (range_subset_iff.2 $ fun c => hsmul c $ ⟨x, hx, rfl⟩)
+  (MulAction.dense_orbit M x).mono (range_subset_iff.2 fun c => hsmul c <| ⟨x, hx, rfl⟩)
 
 @[to_additive]
 theorem eq_empty_or_univ_of_smul_invariant_closed [is_minimal M α] {s : Set α} (hs : IsClosed s)
     (hsmul : ∀ c : M, c • s ⊆ s) : s = ∅ ∨ s = univ :=
-  s.eq_empty_or_nonempty.imp_right $ fun hne =>
-    hs.closure_eq ▸ (dense_of_nonempty_smul_invariant M hne hsmul).closure_eq
+  s.eq_empty_or_nonempty.imp_right fun hne => hs.closure_eq ▸ (dense_of_nonempty_smul_invariant M hne hsmul).closure_eq
 
 @[to_additive]
 theorem is_minimal_iff_closed_smul_invariant [TopologicalSpace M] [HasContinuousSmul M α] :
@@ -91,6 +90,6 @@ theorem is_minimal_iff_closed_smul_invariant [TopologicalSpace M] [HasContinuous
   · intros h s
     exact eq_empty_or_univ_of_smul_invariant_closed M
     
-  refine' fun H => ⟨fun x => dense_iff_closure_eq.2 $ (H _ _ _).resolve_left _⟩
+  refine' fun H => ⟨fun x => dense_iff_closure_eq.2 <| (H _ _ _).resolve_left _⟩
   exacts[is_closed_closure, fun c => smul_closure_orbit_subset _ _, (orbit_nonempty _).closure.ne_empty]
 

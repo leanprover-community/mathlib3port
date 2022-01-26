@@ -163,6 +163,7 @@ section
 
 variable [Zero β]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem IsOpen.lower_semicontinuous_indicator (hs : IsOpen s) (hy : 0 ≤ y) :
     LowerSemicontinuous (indicator s fun x => y) := by
   intro x z hz
@@ -186,6 +187,7 @@ theorem IsOpen.lower_semicontinuous_within_at_indicator (hs : IsOpen s) (hy : 0 
     LowerSemicontinuousWithinAt (indicator s fun x => y) t x :=
   (hs.lower_semicontinuous_indicator hy).LowerSemicontinuousWithinAt t x
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem IsClosed.lower_semicontinuous_indicator (hs : IsClosed s) (hy : y ≤ 0) :
     LowerSemicontinuous (indicator s fun x => y) := by
   intro x z hz
@@ -247,13 +249,13 @@ variable {γ : Type _} [LinearOrderₓ γ] [TopologicalSpace γ] [OrderTopology 
 
 variable {δ : Type _} [LinearOrderₓ δ] [TopologicalSpace δ] [OrderTopology δ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem ContinuousAt.comp_lower_semicontinuous_within_at {g : γ → δ} {f : α → γ} (hg : ContinuousAt g (f x))
     (hf : LowerSemicontinuousWithinAt f s x) (gmon : Monotone g) : LowerSemicontinuousWithinAt (g ∘ f) s x := by
   intro y hy
   by_cases' h : ∃ l, l < f x
   · obtain ⟨z, zlt, hz⟩ : ∃ z < f x, Ioc z (f x) ⊆ g ⁻¹' Ioi y := exists_Ioc_subset_of_mem_nhds (hg (Ioi_mem_nhds hy)) h
-    filter_upwards [hf z zlt]
-    intro a ha
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     calc y < g (min (f x) (f a)) :=
         hz
           (by
@@ -302,6 +304,9 @@ section
 
 variable {ι : Type _} {γ : Type _} [LinearOrderedAddCommMonoid γ] [TopologicalSpace γ] [OrderTopology γ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The sum of two lower semicontinuous functions is lower semicontinuous. Formulated with an
 explicit continuity assumption on addition, for application to `ereal`. The unprimed version of
 the lemma uses `[has_continuous_add]`. -/
@@ -316,8 +321,7 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
   · obtain ⟨z₁, z₁lt, h₁⟩ : ∃ z₁ < f x, Ioc z₁ (f x) ⊆ u := exists_Ioc_subset_of_mem_nhds (u_open.mem_nhds xu) hx₁
     by_cases' hx₂ : ∃ l, l < g x
     · obtain ⟨z₂, z₂lt, h₂⟩ : ∃ z₂ < g x, Ioc z₂ (g x) ⊆ v := exists_Ioc_subset_of_mem_nhds (v_open.mem_nhds xv) hx₂
-      filter_upwards [hf z₁ z₁lt, hg z₂ z₂lt]
-      intro z h₁z h₂z
+      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
       have A1 : min (f z) (f x) ∈ u := by
         by_cases' H : f z ≤ f x
         · simp [H]
@@ -339,8 +343,7 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
           add_le_add (min_le_leftₓ _ _) (min_le_leftₓ _ _)
       
     · simp only [not_exists, not_ltₓ] at hx₂
-      filter_upwards [hf z₁ z₁lt]
-      intro z h₁z
+      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
       have A1 : min (f z) (f x) ∈ u := by
         by_cases' H : f z ≤ f x
         · simp [H]
@@ -356,8 +359,7 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
   · simp only [not_exists, not_ltₓ] at hx₁
     by_cases' hx₂ : ∃ l, l < g x
     · obtain ⟨z₂, z₂lt, h₂⟩ : ∃ z₂ < g x, Ioc z₂ (g x) ⊆ v := exists_Ioc_subset_of_mem_nhds (v_open.mem_nhds xv) hx₂
-      filter_upwards [hg z₂ z₂lt]
-      intro z h₂z
+      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
       have A2 : min (g z) (g x) ∈ v := by
         by_cases' H : g z ≤ g x
         · simp [H]
@@ -463,19 +465,18 @@ section
 
 variable {ι : Sort _} {δ : Type _} [CompleteLinearOrder δ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem lower_semicontinuous_within_at_supr {f : ι → α → δ} (h : ∀ i, LowerSemicontinuousWithinAt (f i) s x) :
     LowerSemicontinuousWithinAt (fun x' => ⨆ i, f i x') s x := by
   intro y hy
   rcases lt_supr_iff.1 hy with ⟨i, hi⟩
-  filter_upwards [h i y hi]
-  intro x' hx'
-  exact lt_supr_iff.2 ⟨i, hx'⟩
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i hi)
 theorem lower_semicontinuous_within_at_bsupr {p : ι → Prop} {f : ∀ i h : p i, α → δ}
     (h : ∀ i hi, LowerSemicontinuousWithinAt (f i hi) s x) :
     LowerSemicontinuousWithinAt (fun x' => ⨆ (i) (hi), f i hi x') s x :=
-  lower_semicontinuous_within_at_supr $ fun i => lower_semicontinuous_within_at_supr $ fun hi => h i hi
+  lower_semicontinuous_within_at_supr fun i => lower_semicontinuous_within_at_supr fun hi => h i hi
 
 theorem lower_semicontinuous_at_supr {f : ι → α → δ} (h : ∀ i, LowerSemicontinuousAt (f i) x) :
     LowerSemicontinuousAt (fun x' => ⨆ i, f i x') x := by
@@ -485,7 +486,7 @@ theorem lower_semicontinuous_at_supr {f : ι → α → δ} (h : ∀ i, LowerSem
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i hi)
 theorem lower_semicontinuous_at_bsupr {p : ι → Prop} {f : ∀ i h : p i, α → δ}
     (h : ∀ i hi, LowerSemicontinuousAt (f i hi) x) : LowerSemicontinuousAt (fun x' => ⨆ (i) (hi), f i hi x') x :=
-  lower_semicontinuous_at_supr $ fun i => lower_semicontinuous_at_supr $ fun hi => h i hi
+  lower_semicontinuous_at_supr fun i => lower_semicontinuous_at_supr fun hi => h i hi
 
 theorem lower_semicontinuous_on_supr {f : ι → α → δ} (h : ∀ i, LowerSemicontinuousOn (f i) s) :
     LowerSemicontinuousOn (fun x' => ⨆ i, f i x') s := fun x hx => lower_semicontinuous_within_at_supr fun i => h i x hx
@@ -493,7 +494,7 @@ theorem lower_semicontinuous_on_supr {f : ι → α → δ} (h : ∀ i, LowerSem
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i hi)
 theorem lower_semicontinuous_on_bsupr {p : ι → Prop} {f : ∀ i h : p i, α → δ}
     (h : ∀ i hi, LowerSemicontinuousOn (f i hi) s) : LowerSemicontinuousOn (fun x' => ⨆ (i) (hi), f i hi x') s :=
-  lower_semicontinuous_on_supr $ fun i => lower_semicontinuous_on_supr $ fun hi => h i hi
+  lower_semicontinuous_on_supr fun i => lower_semicontinuous_on_supr fun hi => h i hi
 
 theorem lower_semicontinuous_supr {f : ι → α → δ} (h : ∀ i, LowerSemicontinuous (f i)) :
     LowerSemicontinuous fun x' => ⨆ i, f i x' := fun x => lower_semicontinuous_at_supr fun i => h i x
@@ -501,7 +502,7 @@ theorem lower_semicontinuous_supr {f : ι → α → δ} (h : ∀ i, LowerSemico
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i hi)
 theorem lower_semicontinuous_bsupr {p : ι → Prop} {f : ∀ i h : p i, α → δ} (h : ∀ i hi, LowerSemicontinuous (f i hi)) :
     LowerSemicontinuous fun x' => ⨆ (i) (hi), f i hi x' :=
-  lower_semicontinuous_supr $ fun i => lower_semicontinuous_supr $ fun hi => h i hi
+  lower_semicontinuous_supr fun i => lower_semicontinuous_supr fun hi => h i hi
 
 end
 
@@ -797,7 +798,7 @@ theorem upper_semicontinuous_within_at_infi {f : ι → α → δ} (h : ∀ i, U
 theorem upper_semicontinuous_within_at_binfi {p : ι → Prop} {f : ∀ i h : p i, α → δ}
     (h : ∀ i hi, UpperSemicontinuousWithinAt (f i hi) s x) :
     UpperSemicontinuousWithinAt (fun x' => ⨅ (i) (hi), f i hi x') s x :=
-  upper_semicontinuous_within_at_infi $ fun i => upper_semicontinuous_within_at_infi $ fun hi => h i hi
+  upper_semicontinuous_within_at_infi fun i => upper_semicontinuous_within_at_infi fun hi => h i hi
 
 theorem upper_semicontinuous_at_infi {f : ι → α → δ} (h : ∀ i, UpperSemicontinuousAt (f i) x) :
     UpperSemicontinuousAt (fun x' => ⨅ i, f i x') x :=
@@ -806,7 +807,7 @@ theorem upper_semicontinuous_at_infi {f : ι → α → δ} (h : ∀ i, UpperSem
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i hi)
 theorem upper_semicontinuous_at_binfi {p : ι → Prop} {f : ∀ i h : p i, α → δ}
     (h : ∀ i hi, UpperSemicontinuousAt (f i hi) x) : UpperSemicontinuousAt (fun x' => ⨅ (i) (hi), f i hi x') x :=
-  upper_semicontinuous_at_infi $ fun i => upper_semicontinuous_at_infi $ fun hi => h i hi
+  upper_semicontinuous_at_infi fun i => upper_semicontinuous_at_infi fun hi => h i hi
 
 theorem upper_semicontinuous_on_infi {f : ι → α → δ} (h : ∀ i, UpperSemicontinuousOn (f i) s) :
     UpperSemicontinuousOn (fun x' => ⨅ i, f i x') s := fun x hx => upper_semicontinuous_within_at_infi fun i => h i x hx
@@ -814,7 +815,7 @@ theorem upper_semicontinuous_on_infi {f : ι → α → δ} (h : ∀ i, UpperSem
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i hi)
 theorem upper_semicontinuous_on_binfi {p : ι → Prop} {f : ∀ i h : p i, α → δ}
     (h : ∀ i hi, UpperSemicontinuousOn (f i hi) s) : UpperSemicontinuousOn (fun x' => ⨅ (i) (hi), f i hi x') s :=
-  upper_semicontinuous_on_infi $ fun i => upper_semicontinuous_on_infi $ fun hi => h i hi
+  upper_semicontinuous_on_infi fun i => upper_semicontinuous_on_infi fun hi => h i hi
 
 theorem upper_semicontinuous_infi {f : ι → α → δ} (h : ∀ i, UpperSemicontinuous (f i)) :
     UpperSemicontinuous fun x' => ⨅ i, f i x' := fun x => upper_semicontinuous_at_infi fun i => h i x
@@ -822,7 +823,7 @@ theorem upper_semicontinuous_infi {f : ι → α → δ} (h : ∀ i, UpperSemico
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i hi)
 theorem upper_semicontinuous_binfi {p : ι → Prop} {f : ∀ i h : p i, α → δ} (h : ∀ i hi, UpperSemicontinuous (f i hi)) :
     UpperSemicontinuous fun x' => ⨅ (i) (hi), f i hi x' :=
-  upper_semicontinuous_infi $ fun i => upper_semicontinuous_infi $ fun hi => h i hi
+  upper_semicontinuous_infi fun i => upper_semicontinuous_infi fun hi => h i hi
 
 end
 
@@ -830,6 +831,9 @@ section
 
 variable {γ : Type _} [LinearOrderₓ γ] [TopologicalSpace γ] [OrderTopology γ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem continuous_within_at_iff_lower_upper_semicontinuous_within_at {f : α → γ} :
     ContinuousWithinAt f s x ↔ LowerSemicontinuousWithinAt f s x ∧ UpperSemicontinuousWithinAt f s x := by
   refine' ⟨fun h => ⟨h.lower_semicontinuous_within_at, h.upper_semicontinuous_within_at⟩, _⟩
@@ -840,8 +844,7 @@ theorem continuous_within_at_iff_lower_upper_semicontinuous_within_at {f : α �
   · rcases exists_Ioc_subset_of_mem_nhds hv Hl with ⟨l, lfx, hl⟩
     by_cases' Hu : ∃ u, f x < u
     · rcases exists_Ico_subset_of_mem_nhds hv Hu with ⟨u, fxu, hu⟩
-      filter_upwards [h₁ l lfx, h₂ u fxu]
-      intro a lfa fau
+      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
       cases' le_or_gtₓ (f a) (f x) with h h
       · exact hl ⟨lfa, h⟩
         
@@ -849,16 +852,13 @@ theorem continuous_within_at_iff_lower_upper_semicontinuous_within_at {f : α �
         
       
     · simp only [not_exists, not_ltₓ] at Hu
-      filter_upwards [h₁ l lfx]
-      intro a lfa
-      exact hl ⟨lfa, Hu (f a)⟩
+      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
       
     
   · simp only [not_exists, not_ltₓ] at Hl
     by_cases' Hu : ∃ u, f x < u
     · rcases exists_Ico_subset_of_mem_nhds hv Hu with ⟨u, fxu, hu⟩
-      filter_upwards [h₂ u fxu]
-      intro a lfa
+      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
       apply hu
       exact ⟨Hl (f a), lfa⟩
       

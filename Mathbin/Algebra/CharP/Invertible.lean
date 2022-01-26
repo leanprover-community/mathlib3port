@@ -33,7 +33,7 @@ def invertibleOfCharPNotDvd {p : ℕ} [CharP K p] {t : ℕ} (not_dvd : ¬p ∣ t
   invertibleOfNonzero fun h => not_dvd ((CharP.cast_eq_zero_iff K p t).mp h)
 
 instance invertibleOfPos [CharZero K] (n : ℕ) [h : Fact (0 < n)] : Invertible (n : K) :=
-  invertibleOfNonzero $ by
+  invertibleOfNonzero <| by
     simpa [pos_iff_ne_zero] using h.out
 
 end Field

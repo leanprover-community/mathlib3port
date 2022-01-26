@@ -21,10 +21,10 @@ variable {ι : Type _} (α : ι → Type u) [U : ∀ i, UniformSpace (α i)]
 include U
 
 instance Pi.uniformSpace : UniformSpace (∀ i, α i) :=
-  UniformSpace.ofCoreEq (⨅ i, UniformSpace.comap (fun a : ∀ i, α i => a i) (U i)).toCore Pi.topologicalSpace $
+  UniformSpace.ofCoreEq (⨅ i, UniformSpace.comap (fun a : ∀ i, α i => a i) (U i)).toCore Pi.topologicalSpace <|
     Eq.symm to_topological_space_infi
 
-theorem Pi.uniformity : 𝓤 (∀ i, α i) = ⨅ i : ι, (Filter.comap fun a => (a.1 i, a.2 i)) $ 𝓤 (α i) :=
+theorem Pi.uniformity : 𝓤 (∀ i, α i) = ⨅ i : ι, (Filter.comap fun a => (a.1 i, a.2 i)) <| 𝓤 (α i) :=
   infi_uniformity
 
 variable {α}
@@ -51,7 +51,7 @@ instance Pi.complete [∀ i, CompleteSpace (α i)] : CompleteSpace (∀ i, α i)
     rwa [nhds_pi, le_pi]⟩
 
 instance Pi.separated [∀ i, SeparatedSpace (α i)] : SeparatedSpace (∀ i, α i) :=
-  separated_def.2 $ fun x y H => by
+  separated_def.2 fun x y H => by
     ext i
     apply eq_of_separated_of_uniform_continuous (Pi.uniform_continuous_proj α i)
     apply H

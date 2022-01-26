@@ -37,12 +37,12 @@ theorem coeff_div_X : (div_X p).coeff n = p.coeff (n + 1) := by
   rw [coeff_eq_zero_of_nat_degree_lt (Nat.lt_succ_of_leₓ h)]
 
 theorem div_X_mul_X_add (p : Polynomial R) : div_X p * X + C (p.coeff 0) = p :=
-  ext $ by
+  ext <| by
     rintro ⟨_ | _⟩ <;> simp [coeff_C, Nat.succ_ne_zero, coeff_mul_X]
 
 @[simp]
 theorem div_X_C (a : R) : div_X (C a) = 0 :=
-  ext $ fun n => by
+  ext fun n => by
     cases n <;> simp [div_X, coeff_C] <;> simp [coeff]
 
 theorem div_X_eq_zero_iff : div_X p = 0 ↔ p = C (p.coeff 0) :=
@@ -51,7 +51,7 @@ theorem div_X_eq_zero_iff : div_X p = 0 ↔ p = C (p.coeff 0) :=
     rw [h, div_X_C]⟩
 
 theorem div_X_add : div_X (p + q) = div_X p + div_X q :=
-  ext $ by
+  ext <| by
     simp
 
 theorem degree_div_X_lt (hp0 : p ≠ 0) : (div_X p).degree < p.degree := by
@@ -64,7 +64,7 @@ theorem degree_div_X_lt (hp0 : p ≠ 0) : (div_X p).degree < p.degree := by
           exact
             lt_of_le_of_neₓ bot_le
               (Ne.symm
-                (mt degree_eq_bot.1 $ by
+                (mt degree_eq_bot.1 <| by
                   simp [h']))
         else by
           have hXp0 : div_X p ≠ 0 := by
@@ -136,7 +136,7 @@ theorem degree_pos_induction_on {P : Polynomial R → Prop} (p : Polynomial R) (
     (fun p a _ _ ih h0 =>
       have : 0 < degree p :=
         lt_of_not_geₓ fun h =>
-          not_lt_of_geₓ degree_C_le $ by
+          not_lt_of_geₓ degree_C_le <| by
             rwa [eq_C_of_degree_le_zero h, ← C_add] at h0
       hadd this (ih this))
     (fun p _ ih h0' =>

@@ -44,7 +44,7 @@ theorem minimals_empty : Minimals r ∅ = ∅ :=
 
 @[simp]
 theorem maximals_singleton : Maximals r {a} = {a} :=
-  (maximals_subset _ _).antisymm $ singleton_subset_iff.2 $ ⟨rfl, fun b hb _ => hb.symm⟩
+  (maximals_subset _ _).antisymm <| singleton_subset_iff.2 <| ⟨rfl, fun b hb _ => hb.symm⟩
 
 @[simp]
 theorem minimals_singleton : Minimals r {a} = {a} :=
@@ -56,7 +56,7 @@ theorem maximals_swap : Maximals (swap r) s = Minimals r s :=
 theorem minimals_swap : Minimals (swap r) s = Maximals r s :=
   rfl
 
-theorem maximals_antichain : IsAntichain r (Maximals r s) := fun a ha b hb hab h => hab $ ha.2 hb.1 h
+theorem maximals_antichain : IsAntichain r (Maximals r s) := fun a ha b hb hab h => hab <| ha.2 hb.1 h
 
 theorem minimals_antichain : IsAntichain r (Minimals r s) :=
   (maximals_antichain _ _).swap
@@ -83,9 +83,9 @@ theorem minimals_mono (h : ∀ a b, r₁ a b → r₂ a b) : Minimals r₂ s ⊆
 theorem maximals_union : Maximals r (s ∪ t) ⊆ Maximals r s ∪ Maximals r t := by
   intro a ha
   obtain h | h := ha.1
-  · exact Or.inl ⟨h, fun b hb => ha.2 $ Or.inl hb⟩
+  · exact Or.inl ⟨h, fun b hb => ha.2 <| Or.inl hb⟩
     
-  · exact Or.inr ⟨h, fun b hb => ha.2 $ Or.inr hb⟩
+  · exact Or.inr ⟨h, fun b hb => ha.2 <| Or.inr hb⟩
     
 
 theorem minimals_union : Minimals r (s ∪ t) ⊆ Minimals r s ∪ Minimals r t :=
@@ -104,10 +104,10 @@ theorem inter_minimals_subset : s ∩ Minimals r t ⊆ Minimals r (s ∩ t) :=
   inter_maximals_subset
 
 theorem _root_.is_antichain.maximals_eq (h : IsAntichain r s) : Maximals r s = s :=
-  (maximals_subset _ _).antisymm $ fun a ha => ⟨ha, fun b => h.eq ha⟩
+  (maximals_subset _ _).antisymm fun a ha => ⟨ha, fun b => h.eq ha⟩
 
 theorem _root_.is_antichain.minimals_eq (h : IsAntichain r s) : Minimals r s = s :=
-  (minimals_subset _ _).antisymm $ fun a ha => ⟨ha, fun b => h.eq' ha⟩
+  (minimals_subset _ _).antisymm fun a ha => ⟨ha, fun b => h.eq' ha⟩
 
 @[simp]
 theorem maximals_idem : Maximals r (Maximals r s) = Maximals r s :=
@@ -142,8 +142,8 @@ theorem IsGreatest.mem_maximals (h : IsGreatest s a) : a ∈ Maximals (· ≤ ·
   ⟨h.1, fun b hb => (h.2 hb).antisymm'⟩
 
 theorem IsLeast.minimals_eq (h : IsLeast s a) : Minimals (· ≤ ·) s = {a} :=
-  eq_singleton_iff_unique_mem.2 ⟨h.mem_minimals, fun b hb => hb.2 h.1 $ h.2 hb.1⟩
+  eq_singleton_iff_unique_mem.2 ⟨h.mem_minimals, fun b hb => hb.2 h.1 <| h.2 hb.1⟩
 
 theorem IsGreatest.maximals_eq (h : IsGreatest s a) : Maximals (· ≤ ·) s = {a} :=
-  eq_singleton_iff_unique_mem.2 ⟨h.mem_maximals, fun b hb => hb.2 h.1 $ h.2 hb.1⟩
+  eq_singleton_iff_unique_mem.2 ⟨h.mem_maximals, fun b hb => hb.2 h.1 <| h.2 hb.1⟩
 

@@ -77,7 +77,7 @@ variable (N)
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there
 is a natural Lie algebra morphism from `L` to the linear endomorphism of the quotient `M/N`. -/
 def action_as_endo_map : L →ₗ⁅R⁆ Module.End R (M ⧸ N) :=
-  { LinearMap.comp (Submodule.mapqLinear (N : Submodule R M) (↑N)) lie_submodule_invariant with
+  { LinearMap.comp (Submodule.mapqLinear (N : Submodule R M) ↑N) lie_submodule_invariant with
     map_lie' := fun x y => by
       ext m
       change mk ⁅⁅x,y⁆,m⁆ = mk (⁅x,⁅y,m⁆⁆ - ⁅y,⁅x,m⁆⁆)
@@ -209,7 +209,7 @@ theorem map_mk'_eq_bot_le : map (mk' N) N' = ⊥ ↔ N' ≤ N := by
 See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem lie_module_hom_ext ⦃f g : M ⧸ N →ₗ⁅R,L⁆ M⦄ (h : f.comp (mk' N) = g.comp (mk' N)) : f = g :=
-  LieModuleHom.ext $ fun x => Quotientₓ.induction_on' x $ LieModuleHom.congr_fun h
+  LieModuleHom.ext fun x => Quotientₓ.induction_on' x <| LieModuleHom.congr_fun h
 
 end Quotientₓ
 

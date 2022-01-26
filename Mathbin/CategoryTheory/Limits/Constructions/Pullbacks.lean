@@ -26,17 +26,17 @@ theorem has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair {C : Type 
   let e := equalizer.ι (π₁ ≫ f) (π₂ ≫ g)
   has_limit.mk
     { Cone :=
-        pullback_cone.mk (e ≫ π₁) (e ≫ π₂) $ by
+        pullback_cone.mk (e ≫ π₁) (e ≫ π₂) <| by
           simp only [category.assoc, equalizer.condition],
       IsLimit :=
-        pullback_cone.is_limit.mk _
+        (pullback_cone.is_limit.mk _
             (fun s =>
-              equalizer.lift (prod.lift (s.π.app walking_cospan.left) (s.π.app walking_cospan.right)) $ by
+              equalizer.lift (prod.lift (s.π.app walking_cospan.left) (s.π.app walking_cospan.right)) <| by
                 rw [← category.assoc, limit.lift_π, ← category.assoc, limit.lift_π] <;> exact pullback_cone.condition _)
             (by
               simp )
             (by
-              simp ) $
+              simp ))
           fun s m h₁ h₂ => by
           ext
           · simpa using h₁
@@ -67,18 +67,18 @@ theorem has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair {C : T
   let c := coequalizer.π (f ≫ ι₁) (g ≫ ι₂)
   has_colimit.mk
     { Cocone :=
-        pushout_cocone.mk (ι₁ ≫ c) (ι₂ ≫ c) $ by
+        pushout_cocone.mk (ι₁ ≫ c) (ι₂ ≫ c) <| by
           rw [← category.assoc, ← category.assoc, coequalizer.condition],
       IsColimit :=
-        pushout_cocone.is_colimit.mk _
+        (pushout_cocone.is_colimit.mk _
             (fun s =>
-              coequalizer.desc (coprod.desc (s.ι.app walking_span.left) (s.ι.app walking_span.right)) $ by
+              coequalizer.desc (coprod.desc (s.ι.app walking_span.left) (s.ι.app walking_span.right)) <| by
                 rw [category.assoc, colimit.ι_desc, category.assoc, colimit.ι_desc] <;>
                   exact pushout_cocone.condition _)
             (by
               simp )
             (by
-              simp ) $
+              simp ))
           fun s m h₁ h₂ => by
           ext
           · simpa using h₁

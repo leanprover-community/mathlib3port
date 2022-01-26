@@ -62,7 +62,7 @@ theorem Even.strict_convex_on_pow {n : ℕ} (hn : Even n) (h : n ≠ 0) : Strict
   apply StrictMono.strict_convex_on_univ_of_deriv differentiable_pow
   rw [deriv_pow']
   replace h := Nat.pos_of_ne_zeroₓ h
-  exact StrictMono.const_mul (Odd.strict_mono_pow $ Nat.Even.sub_odd h hn $ Nat.odd_iff.2 rfl) (Nat.cast_pos.2 h)
+  exact StrictMono.const_mul (Odd.strict_mono_pow <| Nat.Even.sub_odd h hn <| Nat.odd_iff.2 rfl) (Nat.cast_pos.2 h)
 
 /-- `x^n`, `n : ℕ` is convex on `[0, +∞)` for all `n` -/
 theorem convex_on_pow (n : ℕ) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ n := by
@@ -80,8 +80,8 @@ theorem strict_convex_on_pow {n : ℕ} (hn : 2 ≤ n) : StrictConvexOn ℝ (Ici 
   apply StrictMonoOn.strict_convex_on_of_deriv (convex_Ici _) (continuous_on_pow _) differentiable_on_pow
   rw [deriv_pow', interior_Ici]
   exact fun x hx : 0 < x y hy hxy =>
-    mul_lt_mul_of_pos_left (pow_lt_pow_of_lt_left hxy hx.le $ Nat.sub_pos_of_ltₓ hn)
-      (Nat.cast_pos.2 $ zero_lt_two.trans_le hn)
+    mul_lt_mul_of_pos_left (pow_lt_pow_of_lt_left hxy hx.le <| Nat.sub_pos_of_ltₓ hn)
+      (Nat.cast_pos.2 <| zero_lt_two.trans_le hn)
 
 theorem Finset.prod_nonneg_of_card_nonpos_even {α β : Type _} [LinearOrderedCommRing β] {f : α → β}
     [DecidablePred fun x => f x ≤ 0] {s : Finset α} (h0 : Even (s.filter fun x => f x ≤ 0).card) : 0 ≤ ∏ x in s, f x :=
@@ -108,7 +108,7 @@ theorem int_prod_range_nonneg (m : ℤ) (n : ℕ) (hn : Even n) : 0 ≤ ∏ k in
   refine' mul_nonneg ihn _
   generalize (1 + 1) * n = k
   cases' le_or_ltₓ m k with hmk hmk
-  · have : m ≤ k + 1 := hmk.trans (lt_add_one (↑k)).le
+  · have : m ≤ k + 1 := hmk.trans (lt_add_one ↑k).le
     exact mul_nonneg_of_nonpos_of_nonpos (sub_nonpos_of_le hmk) (sub_nonpos_of_le this)
     
   · exact mul_nonneg (sub_nonneg_of_le hmk.le) (sub_nonneg_of_le hmk)
@@ -120,12 +120,12 @@ theorem int_prod_range_pos {m : ℤ} {n : ℕ} (hn : Even n) (hm : m ∉ Ico (0 
   rw [eq_comm, Finset.prod_eq_zero_iff] at h
   obtain ⟨a, ha, h⟩ := h
   rw [sub_eq_zero.1 h]
-  exact ⟨Int.coe_zero_le _, Int.coe_nat_lt.2 $ Finset.mem_range.1 ha⟩
+  exact ⟨Int.coe_zero_le _, Int.coe_nat_lt.2 <| Finset.mem_range.1 ha⟩
 
 /-- `x^m`, `m : ℤ` is convex on `(0, +∞)` for all `m` -/
 theorem convex_on_zpow (m : ℤ) : ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m := by
   have : ∀ n : ℤ, DifferentiableOn ℝ (fun x => x ^ n) (Ioi (0 : ℝ)) := fun n =>
-    differentiable_on_zpow _ _ (Or.inl $ lt_irreflₓ _)
+    differentiable_on_zpow _ _ (Or.inl <| lt_irreflₓ _)
   apply convex_on_of_deriv2_nonneg (convex_Ioi 0) <;>
     try
       simp only [interior_Ioi, deriv_zpow']
@@ -145,7 +145,7 @@ theorem convex_on_zpow (m : ℤ) : ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m := 
 /-- `x^m`, `m : ℤ` is convex on `(0, +∞)` for all `m` except `0` and `1`. -/
 theorem strict_convex_on_zpow {m : ℤ} (hm₀ : m ≠ 0) (hm₁ : m ≠ 1) : StrictConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m := by
   have : ∀ n : ℤ, DifferentiableOn ℝ (fun x => x ^ n) (Ioi (0 : ℝ)) := fun n =>
-    differentiable_on_zpow _ _ (Or.inl $ lt_irreflₓ _)
+    differentiable_on_zpow _ _ (Or.inl <| lt_irreflₓ _)
   apply strict_convex_on_of_deriv2_pos (convex_Ioi 0)
   · exact (this _).ContinuousOn
     
@@ -215,7 +215,7 @@ theorem strict_concave_on_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log := by
   rw [Function.iterate_succ, Function.iterate_one]
   change (deriv (deriv log)) x < 0
   rw [deriv_log', deriv_inv]
-  exact neg_neg_of_pos (inv_pos.2 $ sq_pos_of_ne_zero _ hx.ne')
+  exact neg_neg_of_pos (inv_pos.2 <| sq_pos_of_ne_zero _ hx.ne')
 
 theorem strict_concave_on_log_Iio : StrictConcaveOn ℝ (Iio 0) log := by
   have h₁ : Iio 0 ⊆ ({0} : Set ℝ)ᶜ := fun x hx : x < 0 hx' : x = 0 => hx.ne hx'
@@ -225,5 +225,5 @@ theorem strict_concave_on_log_Iio : StrictConcaveOn ℝ (Iio 0) log := by
   rw [Function.iterate_succ, Function.iterate_one]
   change (deriv (deriv log)) x < 0
   rw [deriv_log', deriv_inv]
-  exact neg_neg_of_pos (inv_pos.2 $ sq_pos_of_ne_zero _ hx.ne)
+  exact neg_neg_of_pos (inv_pos.2 <| sq_pos_of_ne_zero _ hx.ne)
 

@@ -52,7 +52,7 @@ variable (R : ∀ ⦃α⦄, F α → F α → Prop)
 def quot1 (α : Typevec n) :=
   Quot (@R α)
 
-instance quot1.inhabited {α : Typevec n} [Inhabited $ F α] : Inhabited (quot1 R α) :=
+instance quot1.inhabited {α : Typevec n} [Inhabited <| F α] : Inhabited (quot1 R α) :=
   ⟨Quot.mk _ default⟩
 
 variable [Mvfunctor F] [q : Mvqpf F]
@@ -61,7 +61,7 @@ variable (Hfunc : ∀ ⦃α β⦄ a b : F α f : α ⟹ β, R a b → R (f <$$> 
 
 /-- `map` of the `quot1` functor -/
 def quot1.map ⦃α β⦄ (f : α ⟹ β) : quot1.{u} R α → quot1.{u} R β :=
-  (Quot.lift fun x : F α => Quot.mk _ (f <$$> x : F β)) $ fun a b h => Quot.sound $ Hfunc a b _ h
+  (Quot.lift fun x : F α => Quot.mk _ (f <$$> x : F β)) fun a b h => Quot.sound <| Hfunc a b _ h
 
 /-- `mvfunctor` instance for `quot1` with well-behaved `R` -/
 def quot1.mvfunctor : Mvfunctor (quot1 R) where

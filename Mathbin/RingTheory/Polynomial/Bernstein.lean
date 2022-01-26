@@ -99,9 +99,10 @@ theorem derivative_succ_aux (n ν : ℕ) :
   by
   dsimp [bernsteinPolynomial]
   suffices
-    ↑(n + 1).choose (ν + 1) * ((↑ν + 1) * X ^ ν) * (1 - X) ^ (n - ν) -
-        ↑(n + 1).choose (ν + 1) * X ^ (ν + 1) * (↑(n - ν) * (1 - X) ^ (n - ν - 1)) =
-      (↑n + 1) * (↑n.choose ν * X ^ ν * (1 - X) ^ (n - ν) - ↑n.choose (ν + 1) * X ^ (ν + 1) * (1 - X) ^ (n - (ν + 1)))
+    ↑((n + 1).choose (ν + 1)) * ((↑ν + 1) * X ^ ν) * (1 - X) ^ (n - ν) -
+        ↑((n + 1).choose (ν + 1)) * X ^ (ν + 1) * (↑(n - ν) * (1 - X) ^ (n - ν - 1)) =
+      (↑n + 1) *
+        (↑(n.choose ν) * X ^ ν * (1 - X) ^ (n - ν) - ↑(n.choose (ν + 1)) * X ^ (ν + 1) * (1 - X) ^ (n - (ν + 1)))
     by
     simpa [Polynomial.derivative_pow, ← sub_eq_add_neg]
   conv_rhs => rw [mul_sub]
@@ -316,7 +317,7 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
   apply_fun fun p => p * X  at h
   have w :
     ∀ k : ℕ,
-      ↑k * Polynomial.x ^ (k - 1) * (1 - Polynomial.x) ^ (n - k) * ↑n.choose k * Polynomial.x =
+      ↑k * Polynomial.x ^ (k - 1) * (1 - Polynomial.x) ^ (n - k) * ↑(n.choose k) * Polynomial.x =
         k • bernsteinPolynomial R n k :=
     by
     rintro (_ | k)
@@ -349,7 +350,7 @@ theorem sum_mul_smul (n : ℕ) :
   apply_fun fun p => p * X ^ 2  at h
   have w :
     ∀ k : ℕ,
-      ↑k * (↑(k - 1) * Polynomial.x ^ (k - 1 - 1)) * (1 - Polynomial.x) ^ (n - k) * ↑n.choose k * Polynomial.x ^ 2 =
+      ↑k * (↑(k - 1) * Polynomial.x ^ (k - 1 - 1)) * (1 - Polynomial.x) ^ (n - k) * ↑(n.choose k) * Polynomial.x ^ 2 =
         (k * (k - 1)) • bernsteinPolynomial R n k :=
     by
     rintro (_ | k)

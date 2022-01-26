@@ -318,7 +318,7 @@ def is_uniform {m : MeasurableSpace α} (X : α → E) (support : Set E) (ℙ : 
     (μ : Measureₓ E := by
       run_tac
         volume_tac) :=
-  pdf X ℙ μ =ᵐ[μ] support.indicator (μ support⁻¹ • 1)
+  pdf X ℙ μ =ᵐ[μ] support.indicator ((μ support)⁻¹ • 1)
 
 namespace IsUniform
 
@@ -328,8 +328,8 @@ theorem has_pdf {m : MeasurableSpace α} {X : α → E} {ℙ : Measureₓ α} {�
     (by
       intro hpdf
       rw [is_uniform, hpdf] at hu
-      suffices μ (support ∩ Function.Support (μ support⁻¹ • 1)) = 0 by
-        have heq : Function.Support (μ support⁻¹ • (1 : E → ℝ≥0∞)) = Set.Univ := by
+      suffices μ (support ∩ Function.Support ((μ support)⁻¹ • 1)) = 0 by
+        have heq : Function.Support ((μ support)⁻¹ • (1 : E → ℝ≥0∞)) = Set.Univ := by
           ext x
           rw [Function.mem_support]
           simp [hnt]
@@ -339,7 +339,7 @@ theorem has_pdf {m : MeasurableSpace α} {X : α → E} {ℙ : Measureₓ α} {�
 
 theorem pdf_to_real_ae_eq {m : MeasurableSpace α} {X : α → E} {ℙ : Measureₓ α} {μ : Measureₓ E} {s : Set E}
     (hX : is_uniform X s ℙ μ) :
-    (fun x => (pdf X ℙ μ x).toReal) =ᵐ[μ] fun x => (s.indicator (μ s⁻¹ • (1 : E → ℝ≥0∞)) x).toReal :=
+    (fun x => (pdf X ℙ μ x).toReal) =ᵐ[μ] fun x => (s.indicator ((μ s)⁻¹ • (1 : E → ℝ≥0∞)) x).toReal :=
   Filter.EventuallyEq.fun_comp hX Ennreal.toReal
 
 variable [is_finite_measure ℙ] {X : α → ℝ}
@@ -362,7 +362,7 @@ theorem mul_pdf_integrable (hcs : IsCompact s) (huX : is_uniform X s ℙ) :
     
   refine' ⟨ae_measurable_id'.mul (measurable_pdf X ℙ).AeMeasurable.ennreal_to_real, _⟩
   refine' has_finite_integral_mul huX _
-  set ind := volume s⁻¹ • (1 : ℝ → ℝ≥0∞) with hind
+  set ind := (volume s)⁻¹ • (1 : ℝ → ℝ≥0∞) with hind
   have : ∀ x, ↑∥x∥₊ * s.indicator ind x = s.indicator (fun x => ∥x∥₊ * ind x) x := fun x =>
     (s.indicator_mul_right (fun x => ↑∥x∥₊) ind).symm
   simp only [this, lintegral_indicator _ hms, hind, mul_oneₓ, Algebra.id.smul_eq_mul, Pi.one_apply, Pi.smul_apply]
@@ -376,7 +376,7 @@ theorem mul_pdf_integrable (hcs : IsCompact s) (huX : is_uniform X s ℙ) :
 
 /-- A real uniform random variable `X` with support `s` has expectation
 `(λ s)⁻¹ * ∫ x in s, x ∂λ` where `λ` is the Lebesgue measure. -/
-theorem integral_eq (hnt : volume s ≠ ⊤) (huX : is_uniform X s ℙ) : (∫ x, X x ∂ℙ) = volume s⁻¹.toReal * ∫ x in s, x :=
+theorem integral_eq (hnt : volume s ≠ ⊤) (huX : is_uniform X s ℙ) : (∫ x, X x ∂ℙ) = (volume s)⁻¹.toReal * ∫ x in s, x :=
   by
   have := has_pdf hns hnt huX
   rw [← integral_mul_eq_integral]
@@ -386,7 +386,8 @@ theorem integral_eq (hnt : volume s ≠ ⊤) (huX : is_uniform X s ℙ) : (∫ x
   rw [integral_congr_ae (Filter.EventuallyEq.mul (ae_eq_refl _) (pdf_to_real_ae_eq huX))]
   have :
     ∀ x,
-      x * (s.indicator (volume s⁻¹ • (1 : ℝ → ℝ≥0∞)) x).toReal = x * s.indicator (volume s⁻¹.toReal • (1 : ℝ → ℝ)) x :=
+      x * (s.indicator ((volume s)⁻¹ • (1 : ℝ → ℝ≥0∞)) x).toReal =
+        x * s.indicator ((volume s)⁻¹.toReal • (1 : ℝ → ℝ)) x :=
     by
     refine' fun x => congr_argₓ ((· * ·) x) _
     by_cases' hx : x ∈ s
@@ -395,7 +396,7 @@ theorem integral_eq (hnt : volume s ≠ ⊤) (huX : is_uniform X s ℙ) : (∫ x
     · simp [Set.indicator_of_not_mem hx]
       
   simp_rw [this, ← s.indicator_mul_right fun x => x, integral_indicator hms]
-  change (∫ x in s, x * volume s⁻¹.toReal • 1 ∂volume) = _
+  change (∫ x in s, x * (volume s)⁻¹.toReal • 1 ∂volume) = _
   rw [integral_mul_right, mul_comm, Algebra.id.smul_eq_mul, mul_oneₓ]
 
 end IsUniform

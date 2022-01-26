@@ -77,8 +77,8 @@ def cod_restrict (α : Type _) {β : Type _} (bs : Set β) : { f : α ↪ β // 
 in which the second embedding cannot take values in the range of the first. -/
 def prod_embedding_disjoint_equiv_sigma_embedding_restricted {α β γ : Type _} :
     { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.Range f.1) (Set.Range f.2) } ≃ Σ f : α ↪ γ, β ↪ ↥Set.Range fᶜ :=
-  (subtype_prod_equiv_sigma_subtype $ fun a : α ↪ γ b : β ↪ _ => Disjoint (Set.Range a) (Set.Range b)).trans $
-    Equivₓ.sigmaCongrRight $ fun a =>
+  (subtype_prod_equiv_sigma_subtype fun a : α ↪ γ b : β ↪ _ => Disjoint (Set.Range a) (Set.Range b)).trans <|
+    Equivₓ.sigmaCongrRight fun a =>
       (subtype_equiv_prop
             (by
               ext f

@@ -69,14 +69,14 @@ theorem one_le : (1 : Submodule R A) ≤ P ↔ (1 : A) ∈ P := by
 /-- Multiplication of sub-R-modules of an R-algebra A. The submodule `M * N` is the
 smallest R-submodule of `A` containing the elements `m * n` for `m ∈ M` and `n ∈ N`. -/
 instance : Mul (Submodule R A) :=
-  ⟨fun M N => ⨆ s : M, N.map $ Algebra.lmul R A s.1⟩
+  ⟨fun M N => ⨆ s : M, N.map <| Algebra.lmul R A s.1⟩
 
 theorem mul_mem_mul (hm : m ∈ M) (hn : n ∈ N) : m * n ∈ M * N :=
   (le_supr _ ⟨m, hm⟩ : _ ≤ M * N) ⟨n, hn, rfl⟩
 
 theorem mul_le : M * N ≤ P ↔ ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, m * n ∈ P :=
-  ⟨fun H m hm n hn => H $ mul_mem_mul hm hn, fun H =>
-    supr_le $ fun ⟨m, hm⟩ => map_le_iff_le_comap.2 $ fun n hn => H m hm n hn⟩
+  ⟨fun H m hm n hn => H <| mul_mem_mul hm hn, fun H =>
+    supr_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
 
 theorem mul_to_add_submonoid : (M * N).toAddSubmonoid = M.to_add_submonoid * N.to_add_submonoid := by
   dsimp [Mul.mul]
@@ -132,25 +132,24 @@ variable (M N P Q)
 
 protected theorem mul_assoc : M * N * P = M * (N * P) :=
   le_antisymmₓ
-    (mul_le.2 $ fun mn hmn p hp =>
+    (mul_le.2 fun mn hmn p hp =>
       suffices M * N ≤ (M * (N * P)).comap (Algebra.lmulRight R p) from this hmn
-      mul_le.2 $ fun m hm n hn =>
+      mul_le.2 fun m hm n hn =>
         show m * n * p ∈ M * (N * P) from (mul_assoc m n p).symm ▸ mul_mem_mul hm (mul_mem_mul hn hp))
-    (mul_le.2 $ fun m hm np hnp =>
+    (mul_le.2 fun m hm np hnp =>
       suffices N * P ≤ (M * N * P).comap (Algebra.lmulLeft R m) from this hnp
-      mul_le.2 $ fun n hn p hp =>
-        show m * (n * p) ∈ M * N * P from mul_assoc m n p ▸ mul_mem_mul (mul_mem_mul hm hn) hp)
+      mul_le.2 fun n hn p hp => show m * (n * p) ∈ M * N * P from mul_assoc m n p ▸ mul_mem_mul (mul_mem_mul hm hn) hp)
 
 @[simp]
 theorem mul_bot : M * ⊥ = ⊥ :=
-  eq_bot_iff.2 $
-    mul_le.2 $ fun m hm n hn => by
+  eq_bot_iff.2 <|
+    mul_le.2 fun m hm n hn => by
       rw [Submodule.mem_bot] at hn⊢ <;> rw [hn, mul_zero]
 
 @[simp]
 theorem bot_mul : ⊥ * M = ⊥ :=
-  eq_bot_iff.2 $
-    mul_le.2 $ fun m hm n hn => by
+  eq_bot_iff.2 <|
+    mul_le.2 fun m hm n hn => by
       rw [Submodule.mem_bot] at hm⊢ <;> rw [hm, zero_mul]
 
 @[simp]
@@ -167,7 +166,7 @@ variable {M N P Q}
 
 @[mono]
 theorem mul_le_mul (hmp : M ≤ P) (hnq : N ≤ Q) : M * N ≤ P * Q :=
-  mul_le.2 $ fun m hm n hn => mul_mem_mul (hmp hm) (hnq hn)
+  mul_le.2 fun m hm n hn => mul_mem_mul (hmp hm) (hnq hn)
 
 theorem mul_le_mul_left (h : M ≤ N) : M * P ≤ N * P :=
   mul_le_mul h (le_reflₓ P)
@@ -179,14 +178,14 @@ variable (M N P)
 
 theorem mul_sup : M * (N⊔P) = M * N⊔M * P :=
   le_antisymmₓ
-    (mul_le.2 $ fun m hm np hnp =>
+    (mul_le.2 fun m hm np hnp =>
       let ⟨n, hn, p, hp, hnp⟩ := mem_sup.1 hnp
       mem_sup.2 ⟨_, mul_mem_mul hm hn, _, mul_mem_mul hm hp, hnp ▸ (mul_addₓ m n p).symm⟩)
     (sup_le (mul_le_mul_right le_sup_left) (mul_le_mul_right le_sup_right))
 
 theorem sup_mul : (M⊔N) * P = M * P⊔N * P :=
   le_antisymmₓ
-    (mul_le.2 $ fun mn hmn p hp =>
+    (mul_le.2 fun mn hmn p hp =>
       let ⟨m, hm, n, hn, hmn⟩ := mem_sup.1 hmn
       mem_sup.2 ⟨_, mul_mem_mul hm hp, _, mul_mem_mul hn hp, hmn ▸ (add_mulₓ m n p).symm⟩)
     (sup_le (mul_le_mul_left le_sup_left) (mul_le_mul_left le_sup_right))
@@ -319,8 +318,8 @@ theorem mul_mem_mul_rev (hm : m ∈ M) (hn : n ∈ N) : n * m ∈ M * N :=
 variable (M N)
 
 protected theorem mul_comm : M * N = N * M :=
-  le_antisymmₓ (mul_le.2 $ fun r hrm s hsn => mul_mem_mul_rev hsn hrm)
-    (mul_le.2 $ fun r hrn s hsm => mul_mem_mul_rev hsm hrn)
+  le_antisymmₓ (mul_le.2 fun r hrm s hsn => mul_mem_mul_rev hsn hrm)
+    (mul_le.2 fun r hrn s hsm => mul_mem_mul_rev hsm hrn)
 
 /-- Sub-R-modules of an R-algebra A form a semiring. -/
 instance : CommSemiringₓ (Submodule R A) :=

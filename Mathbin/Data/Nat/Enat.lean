@@ -188,12 +188,12 @@ theorem dom_of_le_coe {x : Enat} {y : ℕ} (h : x ≤ y) : x.dom := by
 instance decidable_le (x y : Enat) [Decidable x.dom] [Decidable y.dom] : Decidable (x ≤ y) :=
   if hx : x.dom then
     decidableOfDecidableOfIff
-        (show Decidable (∀ hy : (y : Enat).Dom, x.get hx ≤ (y : Enat).get hy) from forallPropDecidable _) $
+        (show Decidable (∀ hy : (y : Enat).Dom, x.get hx ≤ (y : Enat).get hy) from forallPropDecidable _) <|
       by
       dsimp [· ≤ ·]
       simp only [hx, exists_prop_of_true, forall_true_iff]
   else
-    if hy : y.dom then is_false $ fun h => hx $ dom_of_le_of_dom h hy
+    if hy : y.dom then is_false fun h => hx <| dom_of_le_of_dom h hy
     else is_true ⟨fun h => (hy h).elim, fun h => (hy h).elim⟩
 
 /-- The coercion `ℕ → enat` preserves `0` and addition. -/
@@ -283,7 +283,7 @@ instance OrderTop : OrderTop Enat where
   le_top := fun x => ⟨fun h => False.elim h, fun hy => False.elim hy⟩
 
 theorem dom_of_lt {x y : Enat} : x < y → x.dom :=
-  Enat.cases_on x not_top_lt $ fun _ _ => dom_coe _
+  (Enat.cases_on x not_top_lt) fun _ _ => dom_coe _
 
 theorem top_eq_none : (⊤ : Enat) = none :=
   rfl
@@ -291,7 +291,7 @@ theorem top_eq_none : (⊤ : Enat) = none :=
 @[simp]
 theorem coe_lt_top (x : ℕ) : (x : Enat) < ⊤ :=
   Ne.lt_top fun h =>
-    absurd (congr_argₓ dom h) $ by
+    absurd (congr_argₓ dom h) <| by
       simpa only [dom_coe] using true_ne_false
 
 @[simp]
@@ -305,7 +305,7 @@ theorem ne_top_iff_dom {x : Enat} : x ≠ ⊤ ↔ x.dom := by
   classical <;> exact not_iff_comm.1 part.eq_none_iff'.symm
 
 theorem ne_top_of_lt {x y : Enat} (h : x < y) : x ≠ ⊤ :=
-  ne_of_ltₓ $ lt_of_lt_of_leₓ h le_top
+  ne_of_ltₓ <| lt_of_lt_of_leₓ h le_top
 
 theorem eq_top_iff_forall_lt (x : Enat) : x = ⊤ ↔ ∀ n : ℕ, (n : Enat) < x := by
   constructor
@@ -323,9 +323,9 @@ theorem eq_top_iff_forall_le (x : Enat) : x = ⊤ ↔ ∀ n : ℕ, (n : Enat) �
     ⟨fun h n => (h n).le, fun h n => lt_of_lt_of_leₓ (coe_lt_coe.mpr n.lt_succ_self) (h (n + 1))⟩
 
 theorem pos_iff_one_le {x : Enat} : 0 < x ↔ 1 ≤ x :=
-  Enat.cases_on x
+  (Enat.cases_on x
       (by
-        simp only [iff_trueₓ, le_top, coe_lt_top, ← @Nat.cast_zero Enat]) $
+        simp only [iff_trueₓ, le_top, coe_lt_top, ← @Nat.cast_zero Enat]))
     fun n => by
     rw [← Nat.cast_zero, ← Nat.cast_one, Enat.coe_lt_coe, Enat.coe_le_coe]
     rfl
@@ -628,7 +628,7 @@ theorem find_le (n : ℕ) (h : P n) : find P ≤ n := by
 
 theorem find_eq_top_iff : find P = ⊤ ↔ ∀ n, ¬P n :=
   (eq_top_iff_forall_lt _).trans
-    ⟨fun h n => (lt_find_iff P n).mp (h n) _ le_rfl, fun h n => lt_find P n $ fun _ _ => h _⟩
+    ⟨fun h n => (lt_find_iff P n).mp (h n) _ le_rfl, fun h n => (lt_find P n) fun _ _ => h _⟩
 
 end Find
 

@@ -75,7 +75,7 @@ binder.
 unsafe def get_binder (do_whnf : Option (transparency × Bool)) (pi_or_lambda : Bool) (e : expr) :
     tactic (Option (Name × BinderInfo × expr × expr)) := do
   let e ← do_whnf.elim (pure e) fun p => whnf e p.1 p.2
-  pure $ if pi_or_lambda then match_pi e else match_lam e
+  pure <| if pi_or_lambda then match_pi e else match_lam e
 
 /-- `mk_binder_replacement local_or_meta b` creates an expression that can be used
 to replace the binder `b`. If `local_or_meta` is true, we create a fresh local
@@ -304,7 +304,7 @@ unsafe def open_pis_whnf_dep : expr → tactic (List (expr × Bool) × expr) := 
     | pi n bi t rest => do
       let c ← mk_local' n bi t
       let dep := rest.has_var
-      let (cs, rest) ← open_pis_whnf_dep $ rest.instantiate_var c
+      let (cs, rest) ← open_pis_whnf_dep <| rest.instantiate_var c
       pure ((c, dep) :: cs, rest)
     | _ => pure ([], e)
 
@@ -320,7 +320,7 @@ unsafe def open_n_pis_metas' : expr → ℕ → tactic (List (expr × Name × Bi
     let m ← mk_meta_var t
     let (ms, rest) ← open_n_pis_metas' (rest.instantiate_var m) n
     pure ((m, nam, bi) :: ms, rest)
-  | e, n + 1 => fail $ to_fmt "expected an expression starting with a Π, but got: " ++ to_fmt e
+  | e, n + 1 => fail <| to_fmt "expected an expression starting with a Π, but got: " ++ to_fmt e
 
 end Tactic
 

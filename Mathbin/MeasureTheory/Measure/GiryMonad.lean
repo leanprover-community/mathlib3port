@@ -42,13 +42,13 @@ instance : MeasurableSpace (Measureₓ α) :=
   ⨆ (s : Set α) (hs : MeasurableSet s), (borel ℝ≥0∞).comap fun μ => μ s
 
 theorem measurable_coe {s : Set α} (hs : MeasurableSet s) : Measurable fun μ : Measureₓ α => μ s :=
-  Measurable.of_comap_le $ le_supr_of_le s $ le_supr_of_le hs $ le_reflₓ _
+  Measurable.of_comap_le <| le_supr_of_le s <| le_supr_of_le hs <| le_reflₓ _
 
 theorem measurable_of_measurable_coe (f : β → Measureₓ α)
     (h : ∀ s : Set α hs : MeasurableSet s, Measurable fun b => f b s) : Measurable f :=
-  Measurable.of_le_map $
-    bsupr_le $ fun s hs =>
-      MeasurableSpace.comap_le_iff_le_map.2 $ by
+  Measurable.of_le_map <|
+    bsupr_le fun s hs =>
+      MeasurableSpace.comap_le_iff_le_map.2 <| by
         rw [MeasurableSpace.map_comp] <;> exact h s hs
 
 theorem measurable_measure {μ : α → Measureₓ β} :
@@ -56,13 +56,13 @@ theorem measurable_measure {μ : α → Measureₓ β} :
   ⟨fun hμ s hs => (measurable_coe hs).comp hμ, measurable_of_measurable_coe μ⟩
 
 theorem measurable_map (f : α → β) (hf : Measurable f) : Measurable fun μ : Measureₓ α => map f μ :=
-  measurable_of_measurable_coe _ $ fun s hs =>
+  (measurable_of_measurable_coe _) fun s hs =>
     suffices Measurable fun μ : Measureₓ α => μ (f ⁻¹' s) by
       simpa [map_apply, hs, hf]
     measurable_coe (hf hs)
 
 theorem measurable_dirac : Measurable (measure.dirac : α → Measureₓ α) :=
-  measurable_of_measurable_coe _ $ fun s hs => by
+  (measurable_of_measurable_coe _) fun s hs => by
     simp only [dirac_apply', hs]
     exact measurable_one.indicator hs
 
@@ -95,7 +95,7 @@ theorem join_zero : (0 : Measureₓ (Measureₓ α)).join = 0 := by
   simp [hs]
 
 theorem measurable_join : Measurable (join : Measureₓ (Measureₓ α) → Measureₓ α) :=
-  measurable_of_measurable_coe _ $ fun s hs => by
+  (measurable_of_measurable_coe _) fun s hs => by
     simp only [join_apply hs] <;> exact measurable_lintegral (measurable_coe hs)
 
 theorem lintegral_join {m : Measureₓ (Measureₓ α)} {f : α → ℝ≥0∞} (hf : Measurable f) :
@@ -186,7 +186,7 @@ theorem lintegral_bind {m : Measureₓ α} {μ : α → Measureₓ β} {f : β �
 
 theorem bind_bind {γ} [MeasurableSpace γ] {m : Measureₓ α} {f : α → Measureₓ β} {g : β → Measureₓ γ} (hf : Measurable f)
     (hg : Measurable g) : bind (bind m f) g = bind m fun a => bind (f a) g :=
-  measure.ext $ fun s hs => by
+  measure.ext fun s hs => by
     rw [bind_apply hs hg, bind_apply hs ((measurable_bind' hg).comp hf), lintegral_bind hf]
     · congr
       funext a
@@ -195,11 +195,11 @@ theorem bind_bind {γ} [MeasurableSpace γ] {m : Measureₓ α} {f : α → Meas
     exact (measurable_coe hs).comp hg
 
 theorem bind_dirac {f : α → Measureₓ β} (hf : Measurable f) (a : α) : bind (dirac a) f = f a :=
-  measure.ext $ fun s hs => by
+  measure.ext fun s hs => by
     rw [bind_apply hs hf, lintegral_dirac' a ((measurable_coe hs).comp hf)]
 
 theorem dirac_bind {m : Measureₓ α} : bind m dirac = m :=
-  measure.ext $ fun s hs => by
+  measure.ext fun s hs => by
     simp [bind_apply hs measurable_dirac, dirac_apply' _ hs, lintegral_indicator 1 hs]
 
 theorem join_eq_bind (μ : Measureₓ (Measureₓ α)) : join μ = bind μ id := by
@@ -207,7 +207,7 @@ theorem join_eq_bind (μ : Measureₓ (Measureₓ α)) : join μ = bind μ id :=
 
 theorem join_map_map {f : α → β} (hf : Measurable f) (μ : Measureₓ (Measureₓ α)) :
     join (map (map f) μ) = map f (join μ) :=
-  measure.ext $ fun s hs => by
+  measure.ext fun s hs => by
     rw [join_apply hs, map_apply hf hs, join_apply, lintegral_map (measurable_coe hs) (measurable_map f hf)]
     · congr
       funext ν

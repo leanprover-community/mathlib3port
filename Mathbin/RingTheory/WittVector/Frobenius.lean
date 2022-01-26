@@ -70,7 +70,7 @@ theorem bind₁_frobenius_poly_rat_witt_polynomial (n : ℕ) :
 /-- An auxiliary definition, to avoid an excessive amount of finiteness proofs
 for `multiplicity p n`. -/
 private def pnat_multiplicity (n : ℕ+) : ℕ :=
-  (multiplicity p n).get $ multiplicity.finite_nat_iff.mpr $ ⟨ne_of_gtₓ hp.1.one_lt, n.2⟩
+  (multiplicity p n).get <| multiplicity.finite_nat_iff.mpr <| ⟨ne_of_gtₓ hp.1.one_lt, n.2⟩
 
 local notation "v" => pnat_multiplicity
 
@@ -86,9 +86,9 @@ noncomputable def frobenius_poly_aux : ℕ → MvPolynomial ℕ ℤ
         ∑ j in range (p ^ (n - i)),
           (X i ^ p) ^ (p ^ (n - i) - (j + 1)) * frobenius_poly_aux i ^ (j + 1) *
             C
-              (↑((p ^ (n - i)).choose (j + 1) / p ^ (n - i - v p ⟨j + 1, Nat.succ_posₓ j⟩) *
+              ↑((p ^ (n - i)).choose (j + 1) / p ^ (n - i - v p ⟨j + 1, Nat.succ_posₓ j⟩) *
                   ↑p ^ (j - v p ⟨j + 1, Nat.succ_posₓ j⟩) :
-                  ℕ))
+                  ℕ)
 
 theorem frobenius_poly_aux_eq (n : ℕ) :
     frobenius_poly_aux p n =
@@ -97,16 +97,16 @@ theorem frobenius_poly_aux_eq (n : ℕ) :
           ∑ j in range (p ^ (n - i)),
             (X i ^ p) ^ (p ^ (n - i) - (j + 1)) * frobenius_poly_aux p i ^ (j + 1) *
               C
-                (↑((p ^ (n - i)).choose (j + 1) / p ^ (n - i - v p ⟨j + 1, Nat.succ_posₓ j⟩) *
+                ↑((p ^ (n - i)).choose (j + 1) / p ^ (n - i - v p ⟨j + 1, Nat.succ_posₓ j⟩) *
                     ↑p ^ (j - v p ⟨j + 1, Nat.succ_posₓ j⟩) :
-                    ℕ)) :=
+                    ℕ) :=
   by
   rw [frobenius_poly_aux, ← Finₓ.sum_univ_eq_sum_range]
 
 /-- The polynomials that give the coefficients of `frobenius x`,
 in terms of the coefficients of `x`. -/
 def frobenius_poly (n : ℕ) : MvPolynomial ℕ ℤ :=
-  X n ^ p + C (↑p) * frobenius_poly_aux p n
+  X n ^ p + C ↑p * frobenius_poly_aux p n
 
 /-- A key divisibility fact for the proof of `witt_vector.map_frobenius_poly`. -/
 theorem map_frobenius_poly.key₁ (n j : ℕ) (hj : j < p ^ n) :
@@ -161,7 +161,7 @@ theorem map_frobenius_poly (n : ℕ) :
     add_tsub_cancel_left, pow_zeroₓ, pow_oneₓ, pow_oneₓ, sub_mul, add_mulₓ, add_mulₓ, mul_right_commₓ,
     mul_right_commₓ (C (↑p ^ (n + 1))), ← C_mul, ← C_mul, pow_succₓ, mul_assoc (↑p) (↑p ^ n), h1, mul_oneₓ, C_1,
     one_mulₓ, add_commₓ _ (X n ^ p), add_assocₓ, ← add_sub, add_right_injₓ, frobenius_poly_aux_eq, RingHom.map_sub,
-    map_X, mul_sub, sub_eq_add_neg, add_commₓ _ (C (↑p) * X (n + 1)), ← add_sub, add_right_injₓ, neg_eq_iff_neg_eq,
+    map_X, mul_sub, sub_eq_add_neg, add_commₓ _ (C ↑p * X (n + 1)), ← add_sub, add_right_injₓ, neg_eq_iff_neg_eq,
     neg_sub]
   simp only [RingHom.map_sum, mul_sum, sum_mul, ← sum_sub_distrib]
   apply sum_congr rfl
@@ -177,7 +177,7 @@ theorem map_frobenius_poly (n : ℕ) :
   rw [mem_range] at hj
   rw [RingHom.map_mul, RingHom.map_mul, RingHom.map_pow, RingHom.map_pow, RingHom.map_pow, RingHom.map_pow,
     RingHom.map_pow, map_C, map_X, mul_powₓ]
-  rw [mul_comm (C (↑p) ^ i), mul_comm _ ((X i ^ p) ^ _), mul_comm (C (↑p) ^ (j + 1)), mul_comm (C (↑p))]
+  rw [mul_comm (C ↑p ^ i), mul_comm _ ((X i ^ p) ^ _), mul_comm (C ↑p ^ (j + 1)), mul_comm (C ↑p)]
   simp only [mul_assoc]
   apply congr_argₓ
   apply congr_argₓ
@@ -214,7 +214,7 @@ variable {p}
 /-- `frobenius_fun` is the function underlying the ring endomorphism
 `frobenius : 𝕎 R →+* frobenius 𝕎 R`. -/
 def frobenius_fun (x : 𝕎 R) : 𝕎 R :=
-  mk p $ fun n => MvPolynomial.aeval x.coeff (frobenius_poly p n)
+  (mk p) fun n => MvPolynomial.aeval x.coeff (frobenius_poly p n)
 
 theorem coeff_frobenius_fun (x : 𝕎 R) (n : ℕ) :
     coeff (frobenius_fun x) n = MvPolynomial.aeval x.coeff (frobenius_poly p n) := by

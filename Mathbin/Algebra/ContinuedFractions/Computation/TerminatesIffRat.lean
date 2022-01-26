@@ -67,14 +67,14 @@ theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
         use pair.mk ⌊v⌋ 1
         simp
         
-      · cases' IH (n + 1) $ lt_add_one (n + 1) with pred_conts pred_conts_eq
+      · cases' IH (n + 1) <| lt_add_one (n + 1) with pred_conts pred_conts_eq
         cases' s_ppred_nth_eq : g.s.nth n with gp_n
         · use pred_conts
           have : g.continuants_aux (n + 2) = g.continuants_aux (n + 1) :=
             continuants_aux_stable_of_terminated (n + 1).le_succ s_ppred_nth_eq
           simp only [this, pred_conts_eq]
           
-        · cases' IH n $ lt_of_le_of_ltₓ n.le_succ $ lt_add_one $ n + 1 with ppred_conts ppred_conts_eq
+        · cases' IH n <| lt_of_le_of_ltₓ n.le_succ <| lt_add_one <| n + 1 with ppred_conts ppred_conts_eq
           obtain ⟨a_eq_one, z, b_eq_z⟩ : gp_n.a = 1 ∧ ∃ z : ℤ, gp_n.b = (z : K)
           exact of_part_num_eq_one_and_exists_int_part_denom_eq s_ppred_nth_eq
           simp only [a_eq_one, b_eq_z, continuants_aux_recurrence s_ppred_nth_eq ppred_conts_eq pred_conts_eq]
@@ -87,7 +87,7 @@ theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
 
 theorem exists_gcf_pair_rat_eq_nth_conts : ∃ conts : pair ℚ, (of v).continuants n = (conts.map coe : pair K) := by
   rw [nth_cont_eq_succ_nth_cont_aux]
-  exact exists_gcf_pair_rat_eq_of_nth_conts_aux v $ n + 1
+  exact exists_gcf_pair_rat_eq_of_nth_conts_aux v <| n + 1
 
 theorem exists_rat_eq_nth_numerator : ∃ q : ℚ, (of v).numerators n = (q : K) := by
   rcases exists_gcf_pair_rat_eq_nth_conts v n with ⟨⟨a, _⟩, nth_cont_eq⟩
@@ -154,7 +154,7 @@ theorem coe_of_rat_eq : ((int_fract_pair.of q).mapFr coe : int_fract_pair K) = i
   simp [int_fract_pair.of, v_eq_q]
 
 theorem coe_stream_nth_rat_eq :
-    ((int_fract_pair.stream q n).map (mapFr coe) : Option $ int_fract_pair K) = int_fract_pair.stream v n := by
+    ((int_fract_pair.stream q n).map (mapFr coe) : Option <| int_fract_pair K) = int_fract_pair.stream v n := by
   induction' n with n IH
   case nat.zero =>
     simp [int_fract_pair.stream, coe_of_rat_eq v_eq_q]
@@ -168,7 +168,7 @@ theorem coe_stream_nth_rat_eq :
       cases' Decidable.em (fr = 0) with fr_zero fr_ne_zero
       · simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_zero]
         
-      · replace IH : some (int_fract_pair.mk b (↑fr)) = int_fract_pair.stream (↑q) n
+      · replace IH : some (int_fract_pair.mk b ↑fr) = int_fract_pair.stream (↑q) n
         · rwa [stream_q_nth_eq] at IH
           
         have : (fr : K)⁻¹ = ((fr⁻¹ : ℚ) : K) := by
@@ -180,7 +180,7 @@ theorem coe_stream_nth_rat_eq :
         
 
 theorem coe_stream_rat_eq :
-    ((int_fract_pair.stream q).map (Option.map (mapFr coe)) : Streamₓ $ Option $ int_fract_pair K) =
+    ((int_fract_pair.stream q).map (Option.map (mapFr coe)) : Streamₓ <| Option <| int_fract_pair K) =
       int_fract_pair.stream v :=
   by
   funext n
@@ -196,14 +196,14 @@ theorem coe_of_h_rat_eq : (↑((of q).h : ℚ) : K) = (of v).h := by
   rw [← int_fract_pair.coe_of_rat_eq v_eq_q]
   simp
 
-theorem coe_of_s_nth_rat_eq : (((of q).s.nth n).map (pair.map coe) : Option $ pair K) = (of v).s.nth n := by
+theorem coe_of_s_nth_rat_eq : (((of q).s.nth n).map (pair.map coe) : Option <| pair K) = (of v).s.nth n := by
   simp only [of, int_fract_pair.seq1, Seqₓₓ.map_nth, Seqₓₓ.nth_tail]
   simp only [Seqₓₓ.nth]
   rw [← int_fract_pair.coe_stream_rat_eq v_eq_q]
   rcases succ_nth_stream_eq : int_fract_pair.stream q (n + 1) with (_ | ⟨_, _⟩) <;>
     simp [Streamₓ.map, Streamₓ.nth, succ_nth_stream_eq]
 
-theorem coe_of_s_rat_eq : ((of q).s.map (pair.map coe) : Seqₓₓ $ pair K) = (of v).s := by
+theorem coe_of_s_rat_eq : ((of q).s.map (pair.map coe) : Seqₓₓ <| pair K) = (of v).s := by
   ext n
   rw [← coe_of_s_nth_rat_eq v_eq_q]
   rfl
@@ -248,7 +248,7 @@ variable {q : ℚ} {n : ℕ}
 /-- Shows that for any `q : ℚ` with `0 < q < 1`, the numerator of the fractional part of
 `int_fract_pair.of q⁻¹` is smaller than the numerator of `q`.
 -/
-theorem of_inv_fr_num_lt_num_of_pos (q_pos : 0 < q) : (int_fract_pair.of (q⁻¹)).fr.num < q.num :=
+theorem of_inv_fr_num_lt_num_of_pos (q_pos : 0 < q) : (int_fract_pair.of q⁻¹).fr.num < q.num :=
   Rat.fract_inv_num_lt_num_of_pos q_pos
 
 /-- Shows that the sequence of numerators of the fractional parts of the stream is strictly
@@ -257,14 +257,14 @@ theorem stream_succ_nth_fr_num_lt_nth_fr_num_rat {ifp_n ifp_succ_n : int_fract_p
     (stream_nth_eq : int_fract_pair.stream q n = some ifp_n)
     (stream_succ_nth_eq : int_fract_pair.stream q (n + 1) = some ifp_succ_n) : ifp_succ_n.fr.num < ifp_n.fr.num := by
   obtain ⟨ifp_n', stream_nth_eq', ifp_n_fract_ne_zero, int_fract_pair.of_eq_ifp_succ_n⟩ :
-    ∃ ifp_n', int_fract_pair.stream q n = some ifp_n' ∧ ifp_n'.fr ≠ 0 ∧ int_fract_pair.of (ifp_n'.fr⁻¹) = ifp_succ_n
+    ∃ ifp_n', int_fract_pair.stream q n = some ifp_n' ∧ ifp_n'.fr ≠ 0 ∧ int_fract_pair.of ifp_n'.fr⁻¹ = ifp_succ_n
   exact succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq
   have : ifp_n = ifp_n' := by
     injection Eq.trans stream_nth_eq.symm stream_nth_eq'
   cases this
   rw [← int_fract_pair.of_eq_ifp_succ_n]
   cases' nth_stream_fr_nonneg_lt_one stream_nth_eq with zero_le_ifp_n_fract ifp_n_fract_lt_one
-  have : 0 < ifp_n.fr := lt_of_le_of_neₓ zero_le_ifp_n_fract $ ifp_n_fract_ne_zero.symm
+  have : 0 < ifp_n.fr := lt_of_le_of_neₓ zero_le_ifp_n_fract <| ifp_n_fract_ne_zero.symm
   exact of_inv_fr_num_lt_num_of_pos this
 
 theorem stream_nth_fr_num_le_fr_num_sub_n_rat :

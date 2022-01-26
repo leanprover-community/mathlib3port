@@ -40,7 +40,7 @@ protected theorem forall {p : Option α → Prop} : (∀ x, p x) ↔ p none ∧ 
   ⟨fun h => ⟨h _, fun x => h _⟩, fun h x => Option.casesOn x h.1 h.2⟩
 
 protected theorem exists {p : Option α → Prop} : (∃ x, p x) ↔ p none ∨ ∃ x, p (some x) :=
-  ⟨fun ⟨x, hx⟩ => (Option.casesOn x Or.inl $ fun x hx => Or.inr ⟨x, hx⟩) hx, fun h =>
+  ⟨fun ⟨x, hx⟩ => ((Option.casesOn x Or.inl) fun x hx => Or.inr ⟨x, hx⟩) hx, fun h =>
     h.elim (fun h => ⟨_, h⟩) fun ⟨x, hx⟩ => ⟨_, hx⟩⟩
 
 @[simp]
@@ -77,7 +77,7 @@ theorem get_or_else_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some
   cases x <;> [contradiction, rw [get_or_else_some]]
 
 theorem mem_unique {o : Option α} {a b : α} (ha : a ∈ o) (hb : b ∈ o) : a = b :=
-  Option.some.injₓ $ ha.symm.trans hb
+  Option.some.injₓ <| ha.symm.trans hb
 
 theorem eq_of_mem_of_mem {a : α} {o1 o2 : Option α} (h1 : a ∈ o1) (h2 : a ∈ o2) : o1 = o2 :=
   h1.trans h2.symm
@@ -101,7 +101,7 @@ theorem ext : ∀ {o₁ o₂ : Option α}, (∀ a, a ∈ o₁ ↔ a ∈ o₂) �
 theorem eq_none_iff_forall_not_mem {o : Option α} : o = none ↔ ∀ a, a ∉ o :=
   ⟨fun e a h => by
     rw [e] at h <;> cases h, fun h =>
-    ext $ by
+    ext <| by
       simpa⟩
 
 @[simp]
@@ -414,19 +414,19 @@ theorem ne_none_iff_exists {o : Option α} : o ≠ none ↔ ∃ x : α, some x =
   cases o <;> simp
 
 theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = some x :=
-  ne_none_iff_exists.trans $ exists_congr $ fun _ => eq_comm
+  ne_none_iff_exists.trans <| exists_congr fun _ => eq_comm
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » none)
 theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx, hp⟩ =>
-    ⟨get $ ne_none_iff_is_some.1 hx, by
+    ⟨get <| ne_none_iff_is_some.1 hx, by
       rwa [some_get]⟩,
     fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » none)
 theorem ball_ne_none {p : Option α → Prop} : (∀ x _ : x ≠ none, p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x), fun h x hx => by
-    simpa only [some_get] using h (get $ ne_none_iff_is_some.1 hx)⟩
+    simpa only [some_get] using h (get <| ne_none_iff_is_some.1 hx)⟩
 
 theorem iget_mem [Inhabited α] : ∀ {o : Option α}, is_some o → o.iget ∈ o
   | some a, _ => rfl

@@ -95,7 +95,7 @@ section UnionIxx
 variable [LinearOrderₓ α] {s : Set α} {a : α} {f : ι → α}
 
 theorem IsGlb.bUnion_Ioi_eq (h : IsGlb s a) : (⋃ x ∈ s, Ioi x) = Ioi a := by
-  refine' (Union₂_subset $ fun x hx => _).antisymm fun x hx => _
+  refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ioi_subset_Ioi (h.1 hx)
     
   · rcases h.exists_between hx with ⟨y, hys, hay, hyx⟩

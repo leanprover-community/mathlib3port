@@ -110,7 +110,7 @@ theorem neg_div_self {a : K} (h : a ≠ 0) : -a / a = -1 := by
 
 @[field_simps]
 theorem div_add_div_same (a b c : K) : a / c + b / c = (a + b) / c := by
-  simpa only [div_eq_mul_inv] using (right_distrib a b (c⁻¹)).symm
+  simpa only [div_eq_mul_inv] using (right_distrib a b c⁻¹).symm
 
 theorem same_add_div {a b : K} (h : b ≠ 0) : (b + a) / b = 1 + a / b := by
   simpa only [← @div_self _ _ b h] using (div_add_div_same b a b).symm
@@ -165,7 +165,7 @@ theorem one_div_mul_sub_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : 
     mul_one_div_cancel hb, mul_oneₓ]
 
 theorem add_div_eq_mul_add_div (a b : K) {c : K} (hc : c ≠ 0) : a + b / c = (a * c + b) / c :=
-  (eq_div_iff_mul_eq hc).2 $ by
+  (eq_div_iff_mul_eq hc).2 <| by
     rw [right_distrib, div_mul_cancel _ hc]
 
 instance (priority := 100) DivisionRing.is_domain : IsDomain K :=
@@ -288,7 +288,7 @@ section
 variable {R : Type _} [Semiringₓ R] [DivisionRing K] (f : R →+* K)
 
 @[simp]
-theorem map_units_inv (u : (R)ˣ) : f (↑u⁻¹) = f (↑u)⁻¹ :=
+theorem map_units_inv (u : (R)ˣ) : f ↑u⁻¹ = (f ↑u)⁻¹ :=
   (f : R →* K).map_units_inv u
 
 end
@@ -307,14 +307,14 @@ theorem map_eq_zero : f x = 0 ↔ x = 0 :=
 
 variable (x y)
 
-theorem map_inv : g (x⁻¹) = g x⁻¹ :=
+theorem map_inv : g x⁻¹ = (g x)⁻¹ :=
   g.to_monoid_with_zero_hom.map_inv x
 
 theorem map_div : g (x / y) = g x / g y :=
   g.to_monoid_with_zero_hom.map_div x y
 
 protected theorem injective : Function.Injective f :=
-  f.injective_iff.2 $ fun x => f.map_eq_zero.1
+  f.injective_iff.2 fun x => f.map_eq_zero.1
 
 end
 
@@ -340,18 +340,18 @@ end NoncomputableDefs
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [Mul K'] [Add K'] [Neg K'] [Sub K']
-    [One K'] [HasInv K'] [Div K'] (f : K' → K) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [One K'] [Inv K'] [Div K'] (f : K' → K) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
-    (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
+    (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
     DivisionRing K' :=
   { hf.group_with_zero f zero one mul inv div, hf.ring f zero one add mul neg sub with }
 
 /-- Pullback a `field` along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'] [Neg K'] [Sub K'] [One K'] [HasInv K']
+protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'] [Neg K'] [Sub K'] [One K'] [Inv K']
     [Div K'] (f : K' → K) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
-    (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : Field K' :=
+    (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : Field K' :=
   { hf.comm_group_with_zero f zero one mul inv div, hf.comm_ring f zero one add mul neg sub with }
 

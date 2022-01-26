@@ -29,11 +29,11 @@ theorem val_disj_sum : (s.disj_sum t).1 = s.1.disjSum t.1 :=
 
 @[simp]
 theorem empty_disj_sum : (∅ : Finset α).disjSum t = t.map embedding.inr :=
-  val_inj.1 $ Multiset.zero_disj_sum _
+  val_inj.1 <| Multiset.zero_disj_sum _
 
 @[simp]
 theorem disj_sum_empty : s.disj_sum (∅ : Finset β) = s.map embedding.inl :=
-  val_inj.1 $ Multiset.disj_sum_zero _
+  val_inj.1 <| Multiset.disj_sum_zero _
 
 @[simp]
 theorem card_disj_sum : (s.disj_sum t).card = s.card + t.card :=
@@ -53,7 +53,7 @@ theorem inr_mem_disj_sum : inr b ∈ s.disj_sum t ↔ b ∈ t :=
   inr_mem_disj_sum
 
 theorem disj_sum_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁.disj_sum t₁ ⊆ s₂.disj_sum t₂ :=
-  val_le_iff.1 $ disj_sum_mono (val_le_iff.2 hs) (val_le_iff.2 ht)
+  val_le_iff.1 <| disj_sum_mono (val_le_iff.2 hs) (val_le_iff.2 ht)
 
 theorem disj_sum_mono_left (t : Finset β) : Monotone fun s : Finset α => s.disj_sum t := fun s₁ s₂ hs =>
   disj_sum_mono hs subset.rfl
@@ -63,11 +63,11 @@ theorem disj_sum_mono_right (s : Finset α) : Monotone (s.disj_sum : Finset β �
 
 theorem disj_sum_ssubset_disj_sum_of_ssubset_of_subset (hs : s₁ ⊂ s₂) (ht : t₁ ⊆ t₂) :
     s₁.disj_sum t₁ ⊂ s₂.disj_sum t₂ :=
-  val_lt_iff.1 $ disj_sum_lt_disj_sum_of_lt_of_le (val_lt_iff.2 hs) (val_le_iff.2 ht)
+  val_lt_iff.1 <| disj_sum_lt_disj_sum_of_lt_of_le (val_lt_iff.2 hs) (val_le_iff.2 ht)
 
 theorem disj_sum_ssubset_disj_sum_of_subset_of_ssubset (hs : s₁ ⊆ s₂) (ht : t₁ ⊂ t₂) :
     s₁.disj_sum t₁ ⊂ s₂.disj_sum t₂ :=
-  val_lt_iff.1 $ disj_sum_lt_disj_sum_of_le_of_lt (val_le_iff.2 hs) (val_lt_iff.2 ht)
+  val_lt_iff.1 <| disj_sum_lt_disj_sum_of_le_of_lt (val_le_iff.2 hs) (val_lt_iff.2 ht)
 
 theorem disj_sum_strict_mono_left (t : Finset β) : StrictMono fun s : Finset α => s.disj_sum t := fun s₁ s₂ hs =>
   disj_sum_ssubset_disj_sum_of_ssubset_of_subset hs subset.rfl

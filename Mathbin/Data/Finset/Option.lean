@@ -53,8 +53,8 @@ namespace Finset
 using `option.some` and then insert `option.none`. -/
 def insert_none : Finset α ↪o Finset (Option α) :=
   (OrderEmbedding.ofMapLeIff fun s =>
-      cons none (s.map embedding.some) $ by
-        simp ) $
+      cons none (s.map embedding.some) <| by
+        simp )
     fun s t => cons_subset_cons.trans map_subset_map
 
 @[simp]
@@ -63,7 +63,7 @@ theorem mem_insert_none {s : Finset α} : ∀ {o : Option α}, o ∈ s.insert_no
     iff_of_true (Multiset.mem_cons_self _ _) fun a h => by
       cases h
   | some a =>
-    Multiset.mem_cons.trans $ by
+    Multiset.mem_cons.trans <| by
       simp <;> rfl
 
 theorem some_mem_insert_none {s : Finset α} {a : α} : some a ∈ s.insert_none ↔ a ∈ s := by
@@ -97,7 +97,7 @@ theorem erase_none_image_some [DecidableEq (Option α)] (s : Finset α) : (s.ima
 
 @[simp]
 theorem coe_erase_none (s : Finset (Option α)) : (s.erase_none : Set α) = some ⁻¹' s :=
-  Set.ext $ fun x => mem_erase_none
+  Set.ext fun x => mem_erase_none
 
 @[simp]
 theorem erase_none_union [DecidableEq (Option α)] [DecidableEq α] (s t : Finset (Option α)) :

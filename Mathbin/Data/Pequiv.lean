@@ -246,7 +246,7 @@ theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = of_set { a | (f a).i
     
 
 theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = of_set { b | (f.symm b).isSome } :=
-  symm_injective $ by
+  symm_injective <| by
     simp [symm_trans_rev, self_trans_symm, -symm_symm]
 
 theorem trans_symm_eq_iff_forall_is_some {f : α ≃. β} : f.trans f.symm = Pequiv.refl α ↔ ∀ a, is_some (f a) := by
@@ -315,7 +315,7 @@ theorem single_trans_of_mem (a : α) {b : β} {c : γ} {f : β ≃. γ} (h : c �
   split_ifs <;> simp_all
 
 theorem trans_single_of_mem {a : α} {b : β} (c : γ) {f : α ≃. β} (h : b ∈ f a) : f.trans (single b c) = single a c :=
-  symm_injective $ single_trans_of_mem _ ((mem_iff_mem f).2 h)
+  symm_injective <| single_trans_of_mem _ ((mem_iff_mem f).2 h)
 
 @[simp]
 theorem single_trans_single (a : α) (b : β) (c : γ) : (single a b).trans (single b c) = single a c :=
@@ -336,7 +336,7 @@ theorem trans_single_of_eq_none {b : β} (c : γ) {f : δ ≃. β} (h : f.symm b
   split_ifs <;> simp_all
 
 theorem single_trans_of_eq_none (a : α) {b : β} {f : β ≃. δ} (h : f b = none) : (single a b).trans f = ⊥ :=
-  symm_injective $ trans_single_of_eq_none _ h
+  symm_injective <| trans_single_of_eq_none _ h
 
 theorem single_trans_single_of_ne {b₁ b₂ : β} (h : b₁ ≠ b₂) (a : α) (c : γ) : (single a b₁).trans (single b₂ c) = ⊥ :=
   single_trans_of_eq_none _ (single_apply_of_ne h.symm _)
@@ -354,7 +354,7 @@ instance : PartialOrderₓ (α ≃. β) where
       (by
         intro a
         cases' h : g a with b
-        · exact eq_none_iff_forall_not_mem.2 fun b hb => Option.not_mem_none b $ h ▸ fg a b hb
+        · exact eq_none_iff_forall_not_mem.2 fun b hb => Option.not_mem_none b <| h ▸ fg a b hb
           
         · exact gf _ _ h
           )

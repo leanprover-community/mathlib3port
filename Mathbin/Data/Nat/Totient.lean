@@ -112,8 +112,8 @@ theorem totient_mul {m n : ℕ} (h : m.coprime n) : φ (m * n) = φ m * φ n :=
     cases' Nat.mul_eq_zero.1 hmn0 with h h <;> simp only [totient_zero, mul_zero, zero_mul, h]
   else by
     have : Fact (0 < m * n) := ⟨Nat.pos_of_ne_zeroₓ hmn0⟩
-    have : Fact (0 < m) := ⟨Nat.pos_of_ne_zeroₓ $ left_ne_zero_of_mul hmn0⟩
-    have : Fact (0 < n) := ⟨Nat.pos_of_ne_zeroₓ $ right_ne_zero_of_mul hmn0⟩
+    have : Fact (0 < m) := ⟨Nat.pos_of_ne_zeroₓ <| left_ne_zero_of_mul hmn0⟩
+    have : Fact (0 < n) := ⟨Nat.pos_of_ne_zeroₓ <| right_ne_zero_of_mul hmn0⟩
     rw [← Zmod.card_units_eq_totient, ← Zmod.card_units_eq_totient, ← Zmod.card_units_eq_totient,
       Fintype.card_congr (Units.mapEquiv (Zmod.chineseRemainder h).toMulEquiv).toEquiv,
       Fintype.card_congr (@MulEquiv.prodUnits (Zmod m) (Zmod n) _ _).toEquiv, Fintype.card_prod]
@@ -125,11 +125,11 @@ theorem sum_totient (n : ℕ) : (∑ m in (range n.succ).filter (· ∣ n), φ m
     calc
       (∑ m in (range n.succ).filter (· ∣ n), φ m) =
           ∑ d in (range n.succ).filter (· ∣ n), ((range (n / d)).filter fun m => gcd (n / d) m = 1).card :=
-        Eq.symm $
+        Eq.symm <|
           sum_bij (fun d _ => n / d)
             (fun d hd =>
               mem_filter.2
-                ⟨mem_range.2 $ lt_succ_of_le $ Nat.div_le_selfₓ _ _, by
+                ⟨mem_range.2 <| lt_succ_of_le <| Nat.div_le_selfₓ _ _, by
                   conv => rhs rw [← Nat.mul_div_cancel'ₓ (mem_filter.1 hd).2] <;> simp ⟩)
             (fun _ _ => rfl)
             (fun a b ha hb h => by
@@ -146,18 +146,18 @@ theorem sum_totient (n : ℕ) : (∑ m in (range n.succ).filter (· ∣ n), φ m
                 rw [Nat.div_mul_cancelₓ hb.2]⟩
             have hnb0 : n / b ≠ 0 := fun h => by
               simpa [h, Ne.symm hn0] using Nat.div_mul_cancelₓ hbn
-            ⟨n / b, mem_filter.2 ⟨mem_range.2 $ lt_succ_of_le $ Nat.div_le_selfₓ _ _, hbn⟩, by
+            ⟨n / b, mem_filter.2 ⟨mem_range.2 <| lt_succ_of_le <| Nat.div_le_selfₓ _ _, hbn⟩, by
               rw [← Nat.mul_left_inj (Nat.pos_of_ne_zeroₓ hnb0), Nat.mul_div_cancel'ₓ hb.2, Nat.div_mul_cancelₓ hbn]⟩
       _ = ∑ d in (range n.succ).filter (· ∣ n), ((range n).filter fun m => gcd n m = d).card :=
         sum_congr rfl fun d hd =>
           have hd : d ∣ n := (mem_filter.1 hd).2
-          have hd0 : 0 < d := Nat.pos_of_ne_zeroₓ fun h => hn0 (eq_zero_of_zero_dvd $ h ▸ hd)
+          have hd0 : 0 < d := Nat.pos_of_ne_zeroₓ fun h => hn0 (eq_zero_of_zero_dvd <| h ▸ hd)
           card_congr (fun m hm => d * m)
             (fun m hm =>
               have hm : m < n / d ∧ gcd (n / d) m = 1 := by
                 simpa using hm
               mem_filter.2
-                ⟨mem_range.2 $ Nat.mul_div_cancel'ₓ hd ▸ (mul_lt_mul_left hd0).2 hm.1, by
+                ⟨mem_range.2 <| Nat.mul_div_cancel'ₓ hd ▸ (mul_lt_mul_left hd0).2 hm.1, by
                   rw [← Nat.mul_div_cancel'ₓ hd, gcd_mul_left, hm.2, mul_oneₓ]⟩)
             (fun a b ha hb h => (Nat.mul_right_inj hd0).1 h) fun b hb =>
             have hb : b < n ∧ gcd n b = d := by
@@ -256,7 +256,7 @@ theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.pr
     
   rw [totient_eq_card_coprime, range_eq_Ico, ← Ico_insert_succ_left hp.le, Finset.filter_insert,
     if_neg (Tactic.NormNum.nat_coprime_helper_zero_right p hp), ← Nat.card_Ico 1 p] at h
-  refine' p.prime_of_coprime hp fun n hn hnz => Finset.filter_card_eq h n $ finset.mem_Ico.mpr ⟨_, hn⟩
+  refine' p.prime_of_coprime hp fun n hn hnz => Finset.filter_card_eq h n <| finset.mem_Ico.mpr ⟨_, hn⟩
   rwa [succ_le_iff, pos_iff_ne_zero]
 
 theorem card_units_zmod_lt_sub_one {p : ℕ} (hp : 1 < p) [Fintype (Zmod p)ˣ] : Fintype.card (Zmod p)ˣ ≤ p - 1 := by

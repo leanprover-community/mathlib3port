@@ -145,7 +145,7 @@ theorem eq_on_adjoin {s : Set A} (h : Set.EqOn D1 D2 s) : Set.EqOn D1 D2 (adjoin
 /-- If adjoin of a set is the whole algebra, then any two derivations equal on this set are equal
 on the whole algebra. -/
 theorem ext_of_adjoin_eq_top (s : Set A) (hs : adjoin R s = ⊤) (h : Set.EqOn D1 D2 s) : D1 = D2 :=
-  ext $ fun a => eq_on_adjoin h $ hs.symm ▸ trivialₓ
+  ext fun a => eq_on_adjoin h <| hs.symm ▸ trivialₓ
 
 instance : Zero (Derivation R A M) :=
   ⟨{ toLinearMap := 0, map_one_eq_zero' := rfl,
@@ -221,7 +221,7 @@ instance (priority := 100) : DistribMulAction S (Derivation R A M) :=
   Function.Injective.distribMulAction coe_fn_add_monoid_hom coe_injective coe_smul
 
 instance [DistribMulAction (Sᵐᵒᵖ) M] [IsCentralScalar S M] : IsCentralScalar S (Derivation R A M) where
-  op_smul_eq_smul := fun _ _ => ext $ fun _ => op_smul_eq_smul _ _
+  op_smul_eq_smul := fun _ _ => ext fun _ => op_smul_eq_smul _ _
 
 end Scalar
 
@@ -277,7 +277,7 @@ rule. -/
 def mk' (D : A →ₗ[R] M) (h : ∀ a b, D (a * b) = a • D b + b • D a) : Derivation R A M where
   toLinearMap := D
   map_one_eq_zero' :=
-    add_right_eq_selfₓ.1 $ by
+    add_right_eq_selfₓ.1 <| by
       simpa only [one_smul, one_mulₓ] using (h 1 1).symm
   leibniz' := h
 
@@ -322,10 +322,10 @@ theorem leibniz_of_mul_eq_one {a b : A} (h : a * b = 1) : D a = -(a ^ 2) • D b
       rw [h, map_one_eq_zero, smul_zero]
 
 theorem leibniz_inv_of [Invertible a] : D (⅟ a) = -(⅟ a ^ 2) • D a :=
-  D.leibniz_of_mul_eq_one $ inv_of_mul_self a
+  D.leibniz_of_mul_eq_one <| inv_of_mul_self a
 
 theorem leibniz_inv {K : Type _} [Field K] [Module K M] [Algebra R K] (D : Derivation R K M) (a : K) :
-    D (a⁻¹) = -(a⁻¹ ^ 2) • D a := by
+    D a⁻¹ = -(a⁻¹ ^ 2) • D a := by
   rcases eq_or_ne a 0 with (rfl | ha)
   · simp
     
@@ -334,7 +334,7 @@ theorem leibniz_inv {K : Type _} [Field K] [Module K M] [Algebra R K] (D : Deriv
 
 instance : Neg (Derivation R A M) :=
   ⟨fun D =>
-    mk' (-D) $ fun a b => by
+    (mk' (-D)) fun a b => by
       simp only [LinearMap.neg_apply, smul_neg, neg_add_rev, leibniz, coe_fn_coe, add_commₓ]⟩
 
 @[simp]
@@ -350,7 +350,7 @@ theorem neg_apply : (-D) a = -D a :=
 
 instance : Sub (Derivation R A M) :=
   ⟨fun D1 D2 =>
-    mk' (D1 - D2 : A →ₗ[R] M) $ fun a b => by
+    (mk' (D1 - D2 : A →ₗ[R] M)) fun a b => by
       simp only [LinearMap.sub_apply, leibniz, coe_fn_coe, smul_sub, add_sub_comm]⟩
 
 @[simp]
@@ -379,7 +379,7 @@ variable (D : Derivation R A A) {D1 D2 : Derivation R A A} (r : R) (a b : A)
 /-- The commutator of derivations is again a derivation. -/
 instance : HasBracket (Derivation R A A) (Derivation R A A) :=
   ⟨fun D1 D2 =>
-    mk' ⁅(D1 : Module.End R A),(D2 : Module.End R A)⁆ $ fun a b => by
+    (mk' ⁅(D1 : Module.End R A),(D2 : Module.End R A)⁆) fun a b => by
       simp only [Ringₓ.lie_def, map_add, id.smul_eq_mul, LinearMap.mul_apply, leibniz, coe_fn_coe, LinearMap.sub_apply]
       ring⟩
 

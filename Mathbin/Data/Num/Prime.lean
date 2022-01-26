@@ -86,7 +86,7 @@ instance decidable_prime : DecidablePred PosNum.Prime
   | bit0 n =>
     decidableOfIff' (n = 1)
       (by
-        refine' nat.prime_def_min_fac.trans ((and_iff_right _).trans $ eq_comm.trans _)
+        refine' nat.prime_def_min_fac.trans ((and_iff_right _).trans <| eq_comm.trans _)
         · exact bit0_le_bit0.2 (to_nat_pos _)
           
         rw [← min_fac_to_nat, to_nat_inj]

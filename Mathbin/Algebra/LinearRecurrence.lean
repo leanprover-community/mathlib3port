@@ -142,7 +142,7 @@ def to_init : E.sol_space ≃ₗ[α] Finₓ E.order → α where
 
 /-- Two solutions are equal iff they are equal on `range E.order`. -/
 theorem sol_eq_of_eq_init (u v : ℕ → α) (hu : E.is_solution u) (hv : E.is_solution v) :
-    u = v ↔ Set.EqOn u v (↑range E.order) := by
+    u = v ↔ Set.EqOn u v ↑(range E.order) := by
   refine' Iff.intro (fun h x hx => h ▸ rfl) _
   intro h
   set u' : ↥E.sol_space := ⟨u, hu⟩

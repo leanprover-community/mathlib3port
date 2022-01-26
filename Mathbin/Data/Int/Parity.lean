@@ -58,7 +58,7 @@ theorem is_compl_even_odd : IsCompl { n : ℤ | Even n } { n | Odd n } := by
   simp [← Set.compl_set_of, is_compl_compl]
 
 theorem even_or_odd (n : ℤ) : Even n ∨ Odd n :=
-  Or.imp_rightₓ odd_iff_not_even.2 $ em $ Even n
+  Or.imp_rightₓ odd_iff_not_even.2 <| em <| Even n
 
 theorem even_or_odd' (n : ℤ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
   simpa only [exists_or_distrib, ← Odd, ← Even] using even_or_odd n
@@ -113,13 +113,13 @@ theorem even_add : Even (m + n) ↔ (Even m ↔ Even n) := by
     cases' mod_two_eq_zero_or_one n with h₂ h₂ <;> simp [even_iff, h₁, h₂, Int.add_mod] <;> norm_num
 
 theorem even.add_even (hm : Even m) (hn : Even n) : Even (m + n) :=
-  even_add.2 $ iff_of_true hm hn
+  even_add.2 <| iff_of_true hm hn
 
 theorem even_add' : Even (m + n) ↔ (Odd m ↔ Odd n) := by
   rw [even_add, even_iff_not_odd, even_iff_not_odd, not_iff_not]
 
 theorem odd.add_odd (hm : Odd m) (hn : Odd n) : Even (m + n) :=
-  even_add'.2 $ iff_of_true hm hn
+  even_add'.2 <| iff_of_true hm hn
 
 @[simp]
 theorem not_even_bit1 (n : ℤ) : ¬Even (bit1 n) := by
@@ -133,13 +133,13 @@ theorem even_sub : Even (m - n) ↔ (Even m ↔ Even n) := by
   simp' [sub_eq_add_neg] with parity_simps
 
 theorem even.sub_even (hm : Even m) (hn : Even n) : Even (m - n) :=
-  even_sub.2 $ iff_of_true hm hn
+  even_sub.2 <| iff_of_true hm hn
 
 theorem even_sub' : Even (m - n) ↔ (Odd m ↔ Odd n) := by
   rw [even_sub, even_iff_not_odd, even_iff_not_odd, not_iff_not]
 
 theorem odd.sub_odd (hm : Odd m) (hn : Odd n) : Even (m - n) :=
-  even_sub'.2 $ iff_of_true hm hn
+  even_sub'.2 <| iff_of_true hm hn
 
 @[parity_simps]
 theorem even_add_one : Even (n + 1) ↔ ¬Even n := by
@@ -154,10 +154,10 @@ theorem odd_mul : Odd (m * n) ↔ Odd m ∧ Odd n := by
   simp' [not_or_distrib] with parity_simps
 
 theorem even.mul_left (hm : Even m) (n : ℤ) : Even (m * n) :=
-  even_mul.mpr $ Or.inl hm
+  even_mul.mpr <| Or.inl hm
 
 theorem even.mul_right (m : ℤ) (hn : Even n) : Even (m * n) :=
-  even_mul.mpr $ Or.inr hn
+  even_mul.mpr <| Or.inr hn
 
 theorem odd.mul (hm : Odd m) (hn : Odd n) : Odd (m * n) :=
   odd_mul.mpr ⟨hm, hn⟩
@@ -174,20 +174,20 @@ theorem even_pow {n : ℕ} : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
   tauto
 
 theorem even_pow' {n : ℕ} (h : n ≠ 0) : Even (m ^ n) ↔ Even m :=
-  even_pow.trans $ and_iff_left h
+  even_pow.trans <| and_iff_left h
 
 @[parity_simps]
 theorem odd_add : Odd (m + n) ↔ (Odd m ↔ Even n) := by
   rw [odd_iff_not_even, even_add, not_iff, odd_iff_not_even]
 
 theorem odd.add_even (hm : Odd m) (hn : Even n) : Odd (m + n) :=
-  odd_add.2 $ iff_of_true hm hn
+  odd_add.2 <| iff_of_true hm hn
 
 theorem odd_add' : Odd (m + n) ↔ (Odd n ↔ Even m) := by
   rw [add_commₓ, odd_add]
 
 theorem even.add_odd (hm : Even m) (hn : Odd n) : Odd (m + n) :=
-  odd_add'.2 $ iff_of_true hn hm
+  odd_add'.2 <| iff_of_true hn hm
 
 theorem ne_of_odd_add (h : Odd (m + n)) : m ≠ n := fun hnot => by
   simpa [hnot] with parity_simps using h
@@ -197,13 +197,13 @@ theorem odd_sub : Odd (m - n) ↔ (Odd m ↔ Even n) := by
   rw [odd_iff_not_even, even_sub, not_iff, odd_iff_not_even]
 
 theorem odd.sub_even (hm : Odd m) (hn : Even n) : Odd (m - n) :=
-  odd_sub.2 $ iff_of_true hm hn
+  odd_sub.2 <| iff_of_true hm hn
 
 theorem odd_sub' : Odd (m - n) ↔ (Odd n ↔ Even m) := by
   rw [odd_iff_not_even, even_sub, not_iff, not_iff_comm, odd_iff_not_even]
 
 theorem even.sub_odd (hm : Even m) (hn : Odd n) : Odd (m - n) :=
-  odd_sub'.2 $ iff_of_true hn hm
+  odd_sub'.2 <| iff_of_true hn hm
 
 theorem even_mul_succ_self (n : ℤ) : Even (n * (n + 1)) := by
   rw [even_mul]

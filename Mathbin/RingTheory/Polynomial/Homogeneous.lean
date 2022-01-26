@@ -43,7 +43,7 @@ noncomputable def homogeneous_submodule [CommSemiringₓ R] (n : ℕ) : Submodul
     apply hc
     rw [h]
     exact smul_zero r
-  zero_mem' := fun d hd => False.elim (hd $ coeff_zero _)
+  zero_mem' := fun d hd => False.elim (hd <| coeff_zero _)
   add_mem' := fun a b ha hb c hc => by
     rw [coeff_add] at hc
     obtain h | h : coeff c a ≠ 0 ∨ coeff c b ≠ 0 := by
@@ -163,7 +163,7 @@ theorem Sum {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : �
   (homogeneous_submodule σ R n).sum_mem h
 
 theorem mul (hφ : is_homogeneous φ m) (hψ : is_homogeneous ψ n) : is_homogeneous (φ * ψ) (m + n) :=
-  homogeneous_submodule_mul m n $ Submodule.mul_mem_mul hφ hψ
+  homogeneous_submodule_mul m n <| Submodule.mul_mem_mul hφ hψ
 
 theorem Prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ι → ℕ)
     (h : ∀, ∀ i ∈ s, ∀, is_homogeneous (φ i) (n i)) : is_homogeneous (∏ i in s, φ i) (∑ i in s, n i) := by
@@ -222,7 +222,7 @@ open Finset
 See `sum_homogeneous_component` for the statement that `φ` is equal to the sum
 of all its homogeneous components. -/
 def homogeneous_component [CommSemiringₓ R] (n : ℕ) : MvPolynomial σ R →ₗ[R] MvPolynomial σ R :=
-  (Submodule.subtype _).comp $ Finsupp.restrictDom _ _ { d | (∑ i in d.support, d i) = n }
+  (Submodule.subtype _).comp <| Finsupp.restrictDom _ _ { d | (∑ i in d.support, d i) = n }
 
 section HomogeneousComponent
 

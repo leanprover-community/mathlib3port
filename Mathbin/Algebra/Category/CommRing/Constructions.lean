@@ -159,7 +159,7 @@ variable (A B : CommRingₓₓ.{u})
 /-- The product in `CommRing` is the cartesian product. This is the binary fan. -/
 @[simps x]
 def prod_fan : binary_fan A B :=
-  binary_fan.mk (CommRingₓₓ.ofHom $ RingHom.fst A B) (CommRingₓₓ.ofHom $ RingHom.snd A B)
+  binary_fan.mk (CommRingₓₓ.ofHom <| RingHom.fst A B) (CommRingₓₓ.ofHom <| RingHom.snd A B)
 
 /-- The product in `CommRing` is the cartesian product. -/
 def prod_fan_is_limit : is_limit (prod_fan A B) where

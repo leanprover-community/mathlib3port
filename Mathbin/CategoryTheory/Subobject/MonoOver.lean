@@ -267,11 +267,11 @@ variable (X)
 @[simps]
 def congr (e : C ≌ D) : mono_over X ≌ mono_over (e.functor.obj X) where
   Functor :=
-    lift (over.post e.functor) $ fun f => by
+    (lift (over.post e.functor)) fun f => by
       dsimp
       infer_instance
   inverse :=
-    (lift (over.post e.inverse) $ fun f => by
+    ((lift (over.post e.inverse)) fun f => by
         dsimp
         infer_instance) ⋙
       (map_iso (e.unit_iso.symm.app X)).Functor

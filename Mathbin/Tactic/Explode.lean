@@ -47,7 +47,7 @@ unsafe structure entry : Type where
 
 unsafe def pad_right (l : List Stringₓ) : List Stringₓ :=
   let n := l.foldl (fun r s : Stringₓ => max r s.length) 0
-  l.map $ fun s => Nat.iterate (fun s => s.push ' ') (n - s.length) s
+  l.map fun s => Nat.iterate (fun s => s.push ' ') (n - s.length) s
 
 unsafe structure entries : Type where mk' ::
   s : expr_map entry
@@ -79,15 +79,15 @@ unsafe def format_aux : List Stringₓ → List Stringₓ → List Stringₓ →
           | status.lam => " │" ++ margin ++ ""
         let p ← infer_type en.expr >>= pp
         let lhs := line ++ "│" ++ dep ++ "│ " ++ thm ++ margin ++ " "
-        return $ format.of_string lhs ++ (p.nest lhs.length).group ++ format.line
+        return <| format.of_string lhs ++ (p.nest lhs.length).group ++ format.line
     (· ++ fmt) <$> format_aux lines deps thms es
   | _, _, _, _ => return format.nil
 
 unsafe instance : has_to_tactic_format entries :=
   ⟨fun es : entries =>
-    let lines := pad_right $ es.l.map fun en => toString en.line
-    let deps := pad_right $ es.l.map fun en => Stringₓ.intercalate "," (en.deps.map toString)
-    let thms := pad_right $ es.l.map fun en => (entry.thm en).toString
+    let lines := pad_right <| es.l.map fun en => toString en.line
+    let deps := pad_right <| es.l.map fun en => Stringₓ.intercalate "," (en.deps.map toString)
+    let thms := pad_right <| es.l.map fun en => (entry.thm en).toString
     format_aux lines deps thms es.l⟩
 
 unsafe def append_dep (filter : expr → tactic Unit) (es : entries) (e : expr) (deps : List Nat) : tactic (List Nat) :=
@@ -99,7 +99,7 @@ unsafe def append_dep (filter : expr → tactic Unit) (es : entries) (e : expr) 
 
 unsafe def may_be_proof (e : expr) : tactic Bool := do
   let expr.sort u ← infer_type e >>= infer_type
-  return $ bnot u.nonzero
+  return <| bnot u.nonzero
 
 end Explode
 
@@ -115,13 +115,13 @@ mutual
           let en : entry := ⟨l, es.size, depth, status.sintro, thm.name n, []⟩
           do
           let es' ← explode.core b' si depth (es.add en)
-          return $ es'.add ⟨e, es'.size, depth, status.lam, thm.string "∀I", [es.size, es'.size - 1]⟩
+          return <| es'.add ⟨e, es'.size, depth, status.lam, thm.string "∀I", [es.size, es'.size - 1]⟩
         else do
           let en : entry := ⟨l, es.size, depth, status.intro, thm.name n, []⟩
           let es' ← explode.core b' si (depth + 1) (es.add en)
           let deps' ← explode.append_dep filter es' b'.erase_annotations []
           let deps' ← explode.append_dep filter es' l deps'
-          return $ es'.add ⟨e, es'.size, depth, status.lam, thm.string "∀I", deps'⟩
+          return <| es'.add ⟨e, es'.size, depth, status.lam, thm.string "∀I", deps'⟩
     | e@(elet n t a b), si, depth, es => explode.core (reduce_lets e) si depth es
     | e@(macro n l), si, depth, es => explode.core l.head si depth es
     | e, si, depth, es =>
@@ -218,7 +218,7 @@ brackets are only needed in order to delimit the scope of assumptions, and these
 have global scope anyway so detailed tracking is not necessary.)
 -/
 @[user_command]
-unsafe def explode_cmd (_ : parse $ tk "#explode") : parser Unit := do
+unsafe def explode_cmd (_ : parse <| tk "#explode") : parser Unit := do
   let n ← ident
   explode n
 

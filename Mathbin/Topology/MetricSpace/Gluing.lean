@@ -91,7 +91,7 @@ private theorem glue_dist_comm (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : ∀ x 
 variable [Nonempty Z]
 
 private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
-    (H : ∀ p q, |dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)| ≤ 2 * ε) :
+    (H : ∀ p q, abs (dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)) ≤ 2 * ε) :
     ∀ x y z, glue_dist Φ Ψ ε x z ≤ glue_dist Φ Ψ ε x y + glue_dist Φ Ψ ε y z
   | inl x, inl y, inl z => dist_triangle _ _ _
   | inr x, inr y, inr z => dist_triangle _ _ _
@@ -168,7 +168,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           ring
     linarith
   | inl x, inr y, inl z =>
-    le_of_forall_pos_le_add $ fun δ δpos => by
+    le_of_forall_pos_le_add fun δ δpos => by
       obtain ⟨p, hp⟩ : ∃ p, dist x (Φ p) + dist y (Ψ p) < (⨅ p, dist x (Φ p) + dist y (Ψ p)) + δ / 2
       exact
         exists_lt_of_cinfi_lt
@@ -191,7 +191,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           by
           linarith
   | inr x, inl y, inr z =>
-    le_of_forall_pos_le_add $ fun δ δpos => by
+    le_of_forall_pos_le_add fun δ δpos => by
       obtain ⟨p, hp⟩ : ∃ p, dist y (Φ p) + dist x (Ψ p) < (⨅ p, dist y (Φ p) + dist x (Ψ p)) + δ / 2
       exact
         exists_lt_of_cinfi_lt
@@ -240,7 +240,7 @@ private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
 glue the two spaces `X` and `Y` along the images of `Φ` and `Ψ`, so that `Φ p` and `Ψ p` are
 at distance `ε`. -/
 def glue_metric_approx (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (ε0 : 0 < ε)
-    (H : ∀ p q, |dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)| ≤ 2 * ε) : MetricSpace (Sum X Y) where
+    (H : ∀ p q, abs (dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)) ≤ 2 * ε) : MetricSpace (Sum X Y) where
   dist := glue_dist Φ Ψ ε
   dist_self := glue_dist_self Φ Ψ ε
   dist_comm := glue_dist_comm Φ Ψ ε
@@ -284,7 +284,7 @@ private theorem sum.dist_comm (x y : Sum X Y) : sum.dist x y = sum.dist y x := b
   cases x <;> cases y <;> simp only [sum.dist, dist_comm, add_commₓ, add_left_commₓ]
 
 theorem sum.one_dist_le {x : X} {y : Y} : 1 ≤ sum.dist (inl x) (inr y) :=
-  le_transₓ (le_add_of_nonneg_right dist_nonneg) $ add_le_add_right (le_add_of_nonneg_left dist_nonneg) _
+  le_transₓ (le_add_of_nonneg_right dist_nonneg) <| add_le_add_right (le_add_of_nonneg_left dist_nonneg) _
 
 theorem sum.one_dist_le' {x : X} {y : Y} : 1 ≤ sum.dist (inr y) (inl x) := by
   rw [sum.dist_comm] <;> exact sum.one_dist_le
@@ -337,11 +337,11 @@ theorem sum.dist_eq {x y : Sum X Y} : dist x y = sum.dist x y :=
 
 /-- The left injection of a space in a disjoint union in an isometry -/
 theorem isometry_on_inl : Isometry (Sum.inl : X → Sum X Y) :=
-  isometry_emetric_iff_metric.2 $ fun x y => rfl
+  isometry_emetric_iff_metric.2 fun x y => rfl
 
 /-- The right injection of a space in a disjoint union in an isometry -/
 theorem isometry_on_inr : Isometry (Sum.inr : Y → Sum X Y) :=
-  isometry_emetric_iff_metric.2 $ fun x y => rfl
+  isometry_emetric_iff_metric.2 fun x y => rfl
 
 end Sum
 
@@ -362,7 +362,7 @@ def glue_premetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (
   dist_self := glue_dist_self Φ Ψ 0
   dist_comm := glue_dist_comm Φ Ψ 0
   dist_triangle :=
-    glue_dist_triangle Φ Ψ 0 $ fun p q => by
+    (glue_dist_triangle Φ Ψ 0) fun p q => by
       rw [hΦ.dist_eq, hΨ.dist_eq] <;> simp
 
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a
@@ -394,10 +394,10 @@ theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : to_glue_l hΦ 
   exact glue_dist_glued_points Φ Ψ 0 x
 
 theorem to_glue_l_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (to_glue_l hΦ hΨ) :=
-  isometry_emetric_iff_metric.2 $ fun _ _ => rfl
+  isometry_emetric_iff_metric.2 fun _ _ => rfl
 
 theorem to_glue_r_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (to_glue_r hΦ hΨ) :=
-  isometry_emetric_iff_metric.2 $ fun _ _ => rfl
+  isometry_emetric_iff_metric.2 fun _ _ => rfl
 
 end Gluing
 
@@ -485,7 +485,7 @@ instance (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (inductive_li
 
 /-- The map `to_inductive_limit n` mapping `X n` to the inductive limit is an isometry. -/
 theorem to_inductive_limit_isometry (I : ∀ n, Isometry (f n)) (n : ℕ) : Isometry (to_inductive_limit I n) :=
-  isometry_emetric_iff_metric.2 $ fun x y => by
+  isometry_emetric_iff_metric.2 fun x y => by
     change inductive_limit_dist f ⟨n, x⟩ ⟨n, y⟩ = dist x y
     rw [inductive_limit_dist_eq_dist I ⟨n, x⟩ ⟨n, y⟩ n (le_reflₓ n) (le_reflₓ n), le_rec_on_self, le_rec_on_self]
 

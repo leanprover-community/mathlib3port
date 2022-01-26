@@ -76,7 +76,7 @@ theorem ConvexOn.exists_ge_of_center_mass (h : ConvexOn 𝕜 s f) (hw₀ : ∀, 
   suffices h : ∃ i ∈ t.filter fun i => w i ≠ 0, w i • f y ≤ w i • (f ∘ p) i
   · obtain ⟨i, hi, hfi⟩ := h
     rw [mem_filter] at hi
-    exact ⟨i, hi.1, (smul_le_smul_iff_of_pos $ (hw₀ i hi.1).lt_of_ne hi.2.symm).1 hfi⟩
+    exact ⟨i, hi.1, (smul_le_smul_iff_of_pos <| (hw₀ i hi.1).lt_of_ne hi.2.symm).1 hfi⟩
     
   have hw' : (0 : 𝕜) < ∑ i in filter (fun i => w i ≠ 0) t, w i := by
     rwa [sum_filter_ne_zero]

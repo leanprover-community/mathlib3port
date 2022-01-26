@@ -115,14 +115,14 @@ instance : LinearOrderedAddCommGroup Int := by
 theorem add_neg_one (i : ℤ) : i + -1 = i - 1 :=
   rfl
 
-theorem abs_eq_nat_abs : ∀ a : ℤ, |a| = nat_abs a
-  | (n : ℕ) => abs_of_nonneg $ coe_zero_le _
-  | -[1+ n] => abs_of_nonpos $ le_of_ltₓ $ neg_succ_lt_zero _
+theorem abs_eq_nat_abs : ∀ a : ℤ, abs a = nat_abs a
+  | (n : ℕ) => abs_of_nonneg <| coe_zero_le _
+  | -[1+ n] => abs_of_nonpos <| le_of_ltₓ <| neg_succ_lt_zero _
 
-theorem nat_abs_abs (a : ℤ) : nat_abs |a| = nat_abs a := by
+theorem nat_abs_abs (a : ℤ) : nat_abs (abs a) = nat_abs a := by
   rw [abs_eq_nat_abs] <;> rfl
 
-theorem sign_mul_abs (a : ℤ) : sign a * |a| = a := by
+theorem sign_mul_abs (a : ℤ) : sign a * abs a = a := by
   rw [abs_eq_nat_abs, sign_mul_nat_abs]
 
 @[simp]
@@ -214,7 +214,7 @@ theorem coe_nat_succ_pos (n : ℕ) : 0 < (n.succ : ℤ) :=
   Int.coe_nat_pos.2 (succ_pos n)
 
 @[simp, norm_cast]
-theorem coe_nat_abs (n : ℕ) : |(n : ℤ)| = n :=
+theorem coe_nat_abs (n : ℕ) : abs (n : ℤ) = n :=
   abs_of_nonneg (coe_nat_nonneg n)
 
 /-! ### succ and pred -/
@@ -292,7 +292,7 @@ theorem le_sub_one_iff {a b : ℤ} : a ≤ b - 1 ↔ a < b :=
   le_sub_iff_add_le
 
 @[simp]
-theorem eq_zero_iff_abs_lt_one {a : ℤ} : |a| < 1 ↔ a = 0 :=
+theorem eq_zero_iff_abs_lt_one {a : ℤ} : abs a < 1 ↔ a = 0 :=
   ⟨fun a0 =>
     let ⟨hn, hp⟩ := abs_lt.mp a0
     (le_of_lt_add_one hp).antisymm hn,
@@ -386,7 +386,7 @@ theorem neg_succ_of_nat_eq' (m : ℕ) : -[1+ m] = -m - 1 := by
   simp [neg_succ_of_nat_eq, sub_eq_neg_add]
 
 theorem nat_abs_ne_zero_of_ne_zero {z : ℤ} (hz : z ≠ 0) : z.nat_abs ≠ 0 := fun h =>
-  hz $ Int.eq_zero_of_nat_abs_eq_zero h
+  hz <| Int.eq_zero_of_nat_abs_eq_zero h
 
 @[simp]
 theorem nat_abs_eq_zero {a : ℤ} : a.nat_abs = 0 ↔ a = 0 :=
@@ -534,7 +534,7 @@ protected theorem div_nonneg {a b : ℤ} (Ha : 0 ≤ a) (Hb : 0 ≤ b) : 0 ≤ a
   | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => coe_zero_le _
 
 protected theorem div_nonpos {a b : ℤ} (Ha : 0 ≤ a) (Hb : b ≤ 0) : a / b ≤ 0 :=
-  nonpos_of_neg_nonneg $ by
+  nonpos_of_neg_nonneg <| by
     rw [← Int.div_neg] <;> exact Int.div_nonneg Ha (neg_nonneg_of_nonpos Hb)
 
 theorem div_neg' {a b : ℤ} (Ha : a < 0) (Hb : 0 < b) : a / b < 0 :=
@@ -551,19 +551,19 @@ protected theorem div_one : ∀ a : ℤ, a / 1 = a
 
 theorem div_eq_zero_of_lt {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < b) : a / b = 0 :=
   match a, b, eq_coe_of_zero_le H1, eq_succ_of_zero_lt (lt_of_le_of_ltₓ H1 H2), H2 with
-  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_argₓ of_nat $ Nat.div_eq_of_ltₓ $ lt_of_coe_nat_lt_coe_nat H2
+  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_argₓ of_nat <| Nat.div_eq_of_ltₓ <| lt_of_coe_nat_lt_coe_nat H2
 
-theorem div_eq_zero_of_lt_abs {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < |b|) : a / b = 0 :=
-  match b, |b|, abs_eq_nat_abs b, H2 with
+theorem div_eq_zero_of_lt_abs {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < abs b) : a / b = 0 :=
+  match b, abs b, abs_eq_nat_abs b, H2 with
   | (n : ℕ), _, rfl, H2 => div_eq_zero_of_lt H1 H2
   | -[1+ n], _, rfl, H2 =>
-    neg_injective $ by
+    neg_injective <| by
       rw [← Int.div_neg] <;> exact div_eq_zero_of_lt H1 H2
 
 protected theorem add_mul_div_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + b * c) / c = a / c + b :=
   have : ∀ {k n : ℕ} {a : ℤ}, (a + n * k.succ) / k.succ = a / k.succ + n := fun k n a =>
     match a with
-    | (m : ℕ) => congr_argₓ of_nat $ Nat.add_mul_div_rightₓ _ _ k.succ_pos
+    | (m : ℕ) => congr_argₓ of_nat <| Nat.add_mul_div_rightₓ _ _ k.succ_pos
     | -[1+ m] =>
       show ((n * k.succ : ℕ) - m.succ : ℤ) / k.succ = n - (m / k.succ + 1 : ℕ) by
         cases' lt_or_geₓ m (n * k.succ) with h h
@@ -572,7 +572,7 @@ protected theorem add_mul_div_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + b
           rw [mul_comm, Nat.mul_sub_divₓ]
           rwa [mul_comm]
           
-        · change (↑(n * Nat.succ k) - (m + 1) : ℤ) / ↑Nat.succ k = ↑n - ((m / Nat.succ k : ℕ) + 1)
+        · change (↑(n * Nat.succ k) - (m + 1) : ℤ) / ↑(Nat.succ k) = ↑n - ((m / Nat.succ k : ℕ) + 1)
           rw [← sub_sub, ← sub_sub, ← neg_sub (m : ℤ), ← neg_sub _ (n : ℤ), ← Int.coe_nat_subₓ h, ←
             Int.coe_nat_subₓ ((Nat.le_div_iff_mul_leₓ _ _ k.succ_pos).2 h), ← neg_succ_of_nat_coe', ←
             neg_succ_of_nat_coe']
@@ -586,11 +586,11 @@ protected theorem add_mul_div_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + b
     | _, ⟨k, rfl⟩, (n : ℕ) => this
     | _, ⟨k, rfl⟩, -[1+ n] =>
       show (a - n.succ * k.succ) / k.succ = a / k.succ - n.succ from
-        eq_sub_of_add_eq $ by
+        eq_sub_of_add_eq <| by
           rw [← this, sub_add_cancel]
   match lt_trichotomyₓ c 0 with
   | Or.inl hlt =>
-    neg_inj.1 $ by
+    neg_inj.1 <| by
       rw [← Int.div_neg, neg_add, ← Int.div_neg, ← neg_mul_neg] <;> apply this (neg_pos_of_neg hlt)
   | Or.inr (Or.inl HEq) => absurd HEq H
   | Or.inr (Or.inr hgt) => this hgt
@@ -645,7 +645,7 @@ theorem mod_neg : ∀ a b : ℤ, a % -b = a % b
   | -[1+ m], n => @congr_argₓ ℕ ℤ _ _ (fun i => sub_nat_nat i (Nat.succ (m % i))) (nat_abs_neg _)
 
 @[simp]
-theorem mod_abs (a b : ℤ) : a % |b| = a % b :=
+theorem mod_abs (a b : ℤ) : a % abs b = a % b :=
   abs_by_cases (fun i => a % i = a % b) rfl (mod_neg _ _)
 
 @[local simp]
@@ -654,30 +654,30 @@ theorem zero_mod (b : ℤ) : 0 % b = 0 :=
 
 @[local simp]
 theorem mod_zero : ∀ a : ℤ, a % 0 = a
-  | (m : ℕ) => congr_argₓ of_nat $ Nat.mod_zeroₓ _
-  | -[1+ m] => congr_argₓ neg_succ_of_nat $ Nat.mod_zeroₓ _
+  | (m : ℕ) => congr_argₓ of_nat <| Nat.mod_zeroₓ _
+  | -[1+ m] => congr_argₓ neg_succ_of_nat <| Nat.mod_zeroₓ _
 
 @[local simp]
 theorem mod_one : ∀ a : ℤ, a % 1 = 0
-  | (m : ℕ) => congr_argₓ of_nat $ Nat.mod_oneₓ _
+  | (m : ℕ) => congr_argₓ of_nat <| Nat.mod_oneₓ _
   | -[1+ m] =>
     show (1 - (m % 1).succ : ℤ) = 0 by
       rw [Nat.mod_oneₓ] <;> rfl
 
 theorem mod_eq_of_lt {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < b) : a % b = a :=
   match a, b, eq_coe_of_zero_le H1, eq_coe_of_zero_le (le_transₓ H1 (le_of_ltₓ H2)), H2 with
-  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_argₓ of_nat $ Nat.mod_eq_of_ltₓ (lt_of_coe_nat_lt_coe_nat H2)
+  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_argₓ of_nat <| Nat.mod_eq_of_ltₓ (lt_of_coe_nat_lt_coe_nat H2)
 
 theorem mod_nonneg : ∀ a : ℤ {b : ℤ}, b ≠ 0 → 0 ≤ a % b
   | (m : ℕ), n, H => coe_zero_le _
-  | -[1+ m], n, H => sub_nonneg_of_le $ coe_nat_le_coe_nat_of_le $ Nat.mod_ltₓ _ (nat_abs_pos_of_ne_zero H)
+  | -[1+ m], n, H => sub_nonneg_of_le <| coe_nat_le_coe_nat_of_le <| Nat.mod_ltₓ _ (nat_abs_pos_of_ne_zero H)
 
 theorem mod_lt_of_pos (a : ℤ) {b : ℤ} (H : 0 < b) : a % b < b :=
   match a, b, eq_succ_of_zero_lt H with
   | (m : ℕ), _, ⟨n, rfl⟩ => coe_nat_lt_coe_nat_of_lt (Nat.mod_ltₓ _ (Nat.succ_posₓ _))
-  | -[1+ m], _, ⟨n, rfl⟩ => sub_lt_self _ (coe_nat_lt_coe_nat_of_lt $ Nat.succ_posₓ _)
+  | -[1+ m], _, ⟨n, rfl⟩ => sub_lt_self _ (coe_nat_lt_coe_nat_of_lt <| Nat.succ_posₓ _)
 
-theorem mod_lt (a : ℤ) {b : ℤ} (H : b ≠ 0) : a % b < |b| := by
+theorem mod_lt (a : ℤ) {b : ℤ} (H : b ≠ 0) : a % b < abs b := by
   rw [← mod_abs] <;> exact mod_lt_of_pos _ (abs_pos.2 H)
 
 theorem mod_add_div_aux (m n : ℕ) : (n - (m % n + 1) - (n * (m / n) + n) : ℤ) = -[1+ m] := by
@@ -761,7 +761,7 @@ theorem mod_sub_cancel_right {m n k : ℤ} i : (m - i) % n = (k - i) % n ↔ m %
   mod_add_cancel_right _
 
 theorem mod_eq_mod_iff_mod_sub_eq_zero {m n k : ℤ} : m % n = k % n ↔ (m - k) % n = 0 :=
-  (mod_sub_cancel_right k).symm.trans $ by
+  (mod_sub_cancel_right k).symm.trans <| by
     simp
 
 @[simp]
@@ -817,7 +817,7 @@ theorem mul_div_mul_of_pos {a : ℤ} (b c : ℤ) (H : 0 < a) : a * b / (a * c) =
   | -[1+ n], 0 => by
     rw [Int.coe_nat_zero, mul_zero, Int.div_zero, Int.div_zero]
   | -[1+ n], k + 1 =>
-    congr_argₓ neg_succ_of_nat $
+    congr_argₓ neg_succ_of_nat <|
       show (m.succ * n + m) / (m.succ * k.succ) = n / k.succ by
         apply Nat.div_eq_of_lt_leₓ
         · refine' le_transₓ _ (Nat.le_add_rightₓ _ _)
@@ -843,8 +843,8 @@ theorem lt_div_add_one_mul_self (a : ℤ) {b : ℤ} (H : 0 < b) : a < (a / b + 1
   rw [add_mulₓ, one_mulₓ, mul_comm, ← sub_lt_iff_lt_add', ← mod_def]
   exact mod_lt_of_pos _ H
 
-theorem abs_div_le_abs : ∀ a b : ℤ, |a / b| ≤ |a| :=
-  suffices ∀ a : ℤ n : ℕ, |a / n| ≤ |a| from fun a b =>
+theorem abs_div_le_abs : ∀ a b : ℤ, abs (a / b) ≤ abs a :=
+  suffices ∀ a : ℤ n : ℕ, abs (a / n) ≤ abs a from fun a b =>
     match b, eq_coe_or_neg b with
     | _, ⟨n, Or.inl rfl⟩ => this _ _
     | _, ⟨n, Or.inr rfl⟩ => by
@@ -912,7 +912,7 @@ theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
       subst a
       exact ⟨k, Int.coe_nat_inj ae⟩,
     fun ⟨k, e⟩ =>
-    Dvd.intro k $ by
+    Dvd.intro k <| by
       rw [e, Int.coe_nat_mul]⟩
 
 theorem coe_nat_dvd_left {n : ℕ} {z : ℤ} : (↑n : ℤ) ∣ z ↔ n ∣ z.nat_abs := by
@@ -992,7 +992,7 @@ protected theorem div_eq_of_eq_mul_right {a b c : ℤ} (H1 : b ≠ 0) (H2 : a = 
   rw [H2, Int.mul_div_cancel_left _ H1]
 
 protected theorem eq_div_of_mul_eq_right {a b c : ℤ} (H1 : a ≠ 0) (H2 : a * b = c) : b = c / a :=
-  Eq.symm $ Int.div_eq_of_eq_mul_right H1 H2.symm
+  Eq.symm <| Int.div_eq_of_eq_mul_right H1 H2.symm
 
 protected theorem div_eq_iff_eq_mul_right {a b c : ℤ} (H : b ≠ 0) (H' : b ∣ a) : a / b = c ↔ a = b * c :=
   ⟨Int.eq_mul_of_div_eq_right H', Int.div_eq_of_eq_mul_right H⟩
@@ -1032,7 +1032,7 @@ theorem nat_abs_sign (z : ℤ) : z.sign.nat_abs = if z = 0 then 0 else 1 := by
 theorem nat_abs_sign_of_nonzero {z : ℤ} (hz : z ≠ 0) : z.sign.nat_abs = 1 := by
   rw [Int.nat_abs_sign, if_neg hz]
 
-theorem abs_sign_of_nonzero {z : ℤ} (hz : z ≠ 0) : |z.sign| = 1 := by
+theorem abs_sign_of_nonzero {z : ℤ} (hz : z ≠ 0) : abs z.sign = 1 := by
   rw [abs_eq_nat_abs, nat_abs_sign_of_nonzero hz, Int.coe_nat_one]
 
 theorem sign_coe_nat_of_nonzero {n : ℕ} (hn : n ≠ 0) : Int.sign n = 1 := by
@@ -1062,7 +1062,7 @@ theorem sign_mul : ∀ a b, sign (a * b) = sign a * sign b
   | -[1+ m], (n + 1 : ℕ) => rfl
   | -[1+ m], -[1+ n] => rfl
 
-protected theorem sign_eq_div_abs (a : ℤ) : sign a = a / |a| :=
+protected theorem sign_eq_div_abs (a : ℤ) : sign a = a / abs a :=
   if az : a = 0 then by
     simp [az]
   else (Int.div_eq_of_eq_mul_left (mt abs_eq_zero.1 az) (sign_mul_abs _).symm).symm
@@ -1080,12 +1080,12 @@ theorem sign_pow_bit1 (k : ℕ) : ∀ n : ℤ, n.sign ^ bit1 k = n.sign
 
 theorem le_of_dvd {a b : ℤ} (bpos : 0 < b) (H : a ∣ b) : a ≤ b :=
   match a, b, eq_succ_of_zero_lt bpos, H with
-  | (m : ℕ), _, ⟨n, rfl⟩, H => coe_nat_le_coe_nat_of_le $ Nat.le_of_dvdₓ n.succ_pos $ coe_nat_dvd.1 H
-  | -[1+ m], _, ⟨n, rfl⟩, _ => le_transₓ (le_of_ltₓ $ neg_succ_lt_zero _) (coe_zero_le _)
+  | (m : ℕ), _, ⟨n, rfl⟩, H => coe_nat_le_coe_nat_of_le <| Nat.le_of_dvdₓ n.succ_pos <| coe_nat_dvd.1 H
+  | -[1+ m], _, ⟨n, rfl⟩, _ => le_transₓ (le_of_ltₓ <| neg_succ_lt_zero _) (coe_zero_le _)
 
 theorem eq_one_of_dvd_one {a : ℤ} (H : 0 ≤ a) (H' : a ∣ 1) : a = 1 :=
   match a, eq_coe_of_zero_le H, H' with
-  | _, ⟨n, rfl⟩, H' => congr_argₓ coe $ Nat.eq_one_of_dvd_one $ coe_nat_dvd.1 H'
+  | _, ⟨n, rfl⟩, H' => congr_argₓ coe <| Nat.eq_one_of_dvd_one <| coe_nat_dvd.1 H'
 
 theorem eq_one_of_mul_eq_one_right {a b : ℤ} (H : 0 ≤ a) (H' : a * b = 1) : a = 1 :=
   eq_one_of_dvd_one H ⟨b, H'.symm⟩
@@ -1148,20 +1148,20 @@ theorem exists_lt_and_lt_iff_not_dvd (m : ℤ) {n : ℤ} (hn : 0 < n) : (∃ k, 
 
 
 protected theorem div_mul_le (a : ℤ) {b : ℤ} (H : b ≠ 0) : a / b * b ≤ a :=
-  le_of_sub_nonneg $ by
+  le_of_sub_nonneg <| by
     rw [mul_comm, ← mod_def] <;> apply mod_nonneg _ H
 
 protected theorem div_le_of_le_mul {a b c : ℤ} (H : 0 < c) (H' : a ≤ b * c) : a / c ≤ b :=
   le_of_mul_le_mul_right (le_transₓ (Int.div_mul_le _ (ne_of_gtₓ H)) H') H
 
 protected theorem mul_lt_of_lt_div {a b c : ℤ} (H : 0 < c) (H3 : a < b / c) : a * c < b :=
-  lt_of_not_geₓ $ mt (Int.div_le_of_le_mul H) (not_le_of_gtₓ H3)
+  lt_of_not_geₓ <| mt (Int.div_le_of_le_mul H) (not_le_of_gtₓ H3)
 
 protected theorem mul_le_of_le_div {a b c : ℤ} (H1 : 0 < c) (H2 : a ≤ b / c) : a * c ≤ b :=
   le_transₓ (Decidable.mul_le_mul_of_nonneg_right H2 (le_of_ltₓ H1)) (Int.div_mul_le _ (ne_of_gtₓ H1))
 
 protected theorem le_div_of_mul_le {a b c : ℤ} (H1 : 0 < c) (H2 : a * c ≤ b) : a ≤ b / c :=
-  le_of_lt_add_one $ lt_of_mul_lt_mul_right (lt_of_le_of_ltₓ H2 (lt_div_add_one_mul_self _ H1)) (le_of_ltₓ H1)
+  le_of_lt_add_one <| lt_of_mul_lt_mul_right (lt_of_le_of_ltₓ H2 (lt_div_add_one_mul_self _ H1)) (le_of_ltₓ H1)
 
 protected theorem le_div_iff_mul_le {a b c : ℤ} (H : 0 < c) : a ≤ b / c ↔ a * c ≤ b :=
   ⟨Int.mul_le_of_le_div H, Int.le_div_of_mul_le H⟩
@@ -1170,10 +1170,10 @@ protected theorem div_le_div {a b c : ℤ} (H : 0 < c) (H' : a ≤ b) : a / c �
   Int.le_div_of_mul_le H (le_transₓ (Int.div_mul_le _ (ne_of_gtₓ H)) H')
 
 protected theorem div_lt_of_lt_mul {a b c : ℤ} (H : 0 < c) (H' : a < b * c) : a / c < b :=
-  lt_of_not_geₓ $ mt (Int.mul_le_of_le_div H) (not_le_of_gtₓ H')
+  lt_of_not_geₓ <| mt (Int.mul_le_of_le_div H) (not_le_of_gtₓ H')
 
 protected theorem lt_mul_of_div_lt {a b c : ℤ} (H1 : 0 < c) (H2 : a / c < b) : a < b * c :=
-  lt_of_not_geₓ $ mt (Int.le_div_of_mul_le H1) (not_le_of_gtₓ H2)
+  lt_of_not_geₓ <| mt (Int.le_div_of_mul_le H1) (not_le_of_gtₓ H2)
 
 protected theorem div_lt_iff_lt_mul {a b c : ℤ} (H : 0 < c) : a / c < b ↔ a < b * c :=
   ⟨Int.lt_mul_of_div_lt H, Int.div_lt_of_lt_mul H⟩
@@ -1182,7 +1182,7 @@ protected theorem le_mul_of_div_le {a b c : ℤ} (H1 : 0 ≤ b) (H2 : b ∣ a) (
   rw [← Int.div_mul_cancel H2] <;> exact Decidable.mul_le_mul_of_nonneg_right H3 H1
 
 protected theorem lt_div_of_mul_lt {a b c : ℤ} (H1 : 0 ≤ b) (H2 : b ∣ c) (H3 : a * b < c) : a < c / b :=
-  lt_of_not_geₓ $ mt (Int.le_mul_of_div_le H1 H2) (not_le_of_gtₓ H3)
+  lt_of_not_geₓ <| mt (Int.le_mul_of_div_le H1 H2) (not_le_of_gtₓ H3)
 
 protected theorem lt_div_iff_mul_lt {a b : ℤ} (c : ℤ) (H : 0 < c) (H' : c ∣ b) : a < b / c ↔ a * c < b :=
   ⟨Int.mul_lt_of_lt_div H, Int.lt_div_of_mul_lt (le_of_ltₓ H) H'⟩
@@ -1194,7 +1194,7 @@ theorem div_pos_of_pos_of_dvd {a b : ℤ} (H1 : 0 < a) (H2 : 0 ≤ b) (H3 : b �
 
 theorem div_eq_div_of_mul_eq_mul {a b c d : ℤ} (H2 : d ∣ c) (H3 : b ≠ 0) (H4 : d ≠ 0) (H5 : a * d = b * c) :
     a / b = c / d :=
-  Int.div_eq_of_eq_mul_right H3 $ by
+  Int.div_eq_of_eq_mul_right H3 <| by
     rw [← Int.mul_div_assoc _ H2] <;> exact (Int.div_eq_of_eq_mul_left H4 H5.symm).symm
 
 theorem eq_mul_div_of_mul_eq_mul_of_dvd_left {a b c d : ℤ} (hb : b ≠ 0) (hbc : b ∣ c) (h : b * a = c * d) :
@@ -1275,7 +1275,7 @@ theorem to_nat_sub_of_le {a b : ℤ} (h : b ≤ a) : (to_nat (a - b) : ℤ) = a 
   Int.to_nat_of_nonneg (sub_nonneg_of_le h)
 
 @[simp]
-theorem to_nat_coe_nat (n : ℕ) : to_nat (↑n) = n :=
+theorem to_nat_coe_nat (n : ℕ) : to_nat ↑n = n :=
   rfl
 
 @[simp]
@@ -1311,7 +1311,7 @@ theorem to_nat_lt_to_nat {a b : ℤ} (hb : 0 < b) : to_nat a < to_nat b ↔ a < 
     exact hb⟩
 
 theorem lt_of_to_nat_lt {a b : ℤ} (h : to_nat a < to_nat b) : a < b :=
-  (to_nat_lt_to_nat $ lt_to_nat.1 $ lt_of_le_of_ltₓ (Nat.zero_leₓ _) h).1 h
+  (to_nat_lt_to_nat <| lt_to_nat.1 <| lt_of_le_of_ltₓ (Nat.zero_leₓ _) h).1 h
 
 theorem to_nat_add {a b : ℤ} (ha : 0 ≤ a) (hb : 0 ≤ b) : (a + b).toNat = a.to_nat + b.to_nat := by
   lift a to ℕ using ha
@@ -1369,9 +1369,9 @@ theorem to_nat_of_nonpos : ∀ {z : ℤ}, z ≤ 0 → z.to_nat = 0
 
 @[simp]
 theorem units_nat_abs (u : (ℤ)ˣ) : nat_abs u = 1 :=
-  Units.ext_iff.1 $
+  Units.ext_iff.1 <|
     Nat.units_eq_one
-      ⟨nat_abs u, nat_abs (↑u⁻¹), by
+      ⟨nat_abs u, nat_abs ↑u⁻¹, by
         rw [← nat_abs_mul, Units.mul_inv] <;> rfl, by
         rw [← nat_abs_mul, Units.inv_mul] <;> rfl⟩
 
@@ -1485,7 +1485,7 @@ theorem bit_val b n : bit b n = 2 * n + cond b 1 0 := by
   apply bit1_val
 
 theorem bit_decomp (n : ℤ) : bit (bodd n) (div2 n) = n :=
-  (bit_val _ _).trans $ (add_commₓ _ _).trans $ bodd_add_div2 _
+  (bit_val _ _).trans <| (add_commₓ _ _).trans <| bodd_add_div2 _
 
 /-- Defines a function from `ℤ` conditionally, if it is defined for odd and even integers separately
   using `bit`. -/
@@ -1529,7 +1529,7 @@ theorem div2_bit b n : div2 (bit b n) = n := by
     
 
 theorem bit0_ne_bit1 (m n : ℤ) : bit0 m ≠ bit1 n :=
-  mt (congr_argₓ bodd) $ by
+  mt (congr_argₓ bodd) <| by
     simp
 
 theorem bit1_ne_bit0 (m n : ℤ) : bit1 m ≠ bit0 n :=
@@ -1657,18 +1657,18 @@ theorem shiftl_add : ∀ m : ℤ n : ℕ k : ℤ, shiftl m (n + k) = shiftl (shi
   | (m : ℕ), n, -[1+ k] =>
     sub_nat_nat_elim n k.succ (fun n k i => shiftl (↑m) i = Nat.shiftr (Nat.shiftl m n) k)
       (fun i n =>
-        congr_argₓ coe $ by
+        congr_argₓ coe <| by
           rw [← Nat.shiftl_sub, add_tsub_cancel_left] <;> apply Nat.le_add_rightₓ)
       fun i n =>
-      congr_argₓ coe $ by
+      congr_argₓ coe <| by
         rw [add_assocₓ, Nat.shiftr_add, ← Nat.shiftl_sub, tsub_self] <;> rfl
   | -[1+ m], n, -[1+ k] =>
     sub_nat_nat_elim n k.succ (fun n k i => shiftl -[1+ m] i = -[1+ Nat.shiftr (Nat.shiftl' tt m n) k])
       (fun i n =>
-        congr_argₓ neg_succ_of_nat $ by
+        congr_argₓ neg_succ_of_nat <| by
           rw [← Nat.shiftl'_sub, add_tsub_cancel_left] <;> apply Nat.le_add_rightₓ)
       fun i n =>
-      congr_argₓ neg_succ_of_nat $ by
+      congr_argₓ neg_succ_of_nat <| by
         rw [add_assocₓ, Nat.shiftr_add, ← Nat.shiftl'_sub, tsub_self] <;> rfl
 
 theorem shiftl_sub (m : ℤ) (n : ℕ) (k : ℤ) : shiftl m (n - k) = shiftr (shiftl m n) k :=

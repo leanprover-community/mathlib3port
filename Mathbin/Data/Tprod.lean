@@ -120,7 +120,7 @@ theorem mk_elim (hnd : l.nodup) (h : ∀ i, i ∈ l) (v : tprod α l) : tprod.mk
 
 /-- Pi-types are equivalent to iterated products. -/
 def pi_equiv_tprod (hnd : l.nodup) (h : ∀ i, i ∈ l) : (∀ i, α i) ≃ tprod α l :=
-  ⟨tprod.mk l, tprod.elim' h, fun f => funext $ fun i => elim_mk l f (h i), mk_elim hnd h⟩
+  ⟨tprod.mk l, tprod.elim' h, fun f => funext fun i => elim_mk l f (h i), mk_elim hnd h⟩
 
 end Tprod
 

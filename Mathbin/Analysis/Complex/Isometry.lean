@@ -37,8 +37,8 @@ def rotation : circle →* ℂ ≃ₗᵢ[ℝ] ℂ where
       norm_map' := fun x =>
         show |a * x| = |x| by
           rw [Complex.abs_mul, abs_coe_circle, one_mulₓ] }
-  map_one' := LinearIsometryEquiv.ext $ one_smul _
-  map_mul' := fun _ _ => LinearIsometryEquiv.ext $ mul_smul _ _
+  map_one' := LinearIsometryEquiv.ext <| one_smul _
+  map_mul' := fun _ _ => LinearIsometryEquiv.ext <| mul_smul _ _
 
 @[simp]
 theorem rotation_apply (a : circle) (z : ℂ) : rotation a z = a * z :=
@@ -61,7 +61,7 @@ def rotationOf (e : ℂ ≃ₗᵢ[ℝ] ℂ) : circle :=
 
 @[simp]
 theorem rotation_of_rotation (a : circle) : rotationOf (rotation a) = a :=
-  Subtype.ext $ by
+  Subtype.ext <| by
     simp
 
 theorem rotation_injective : Function.Injective rotation :=
@@ -128,7 +128,7 @@ theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) : ∃ a : circle, f
       simpa using f.norm_map 1⟩
   use a
   have : (f.trans (rotation a).symm) 1 = 1 := by
-    simpa using rotation_apply (a⁻¹) (f 1)
+    simpa using rotation_apply a⁻¹ (f 1)
   refine' (linear_isometry_complex_aux this).imp (fun h₁ => _) fun h₂ => _
   · simpa using eq_mul_of_inv_mul_eq h₁
     

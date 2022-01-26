@@ -118,9 +118,9 @@ unsafe def unfold_cases_core (inner : interactive.itactic) : tactic Unit :=
       do
       let tgt ← target
       let e ← find_splitting_expr tgt
-      focus1 $ do
+      focus1 <| do
           cases e
-          all_goals $ (dsimp_target >> unfold_cases_core <|> skip)
+          all_goals <| dsimp_target >> unfold_cases_core <|> skip
           skip
 
 /-- Given a target of the form `⊢ f x₁ ... xₙ = y`, unfolds `f` using a delta reduction.
@@ -185,7 +185,7 @@ open UnfoldCases
   Further examples can be found in `test/unfold_cases.lean`.
 -/
 unsafe def unfold_cases (inner : itactic) : tactic Unit :=
-  focus1 $ do
+  focus1 <| do
     tactic.intros
     let tgt ← target
     unfold_tgt tgt

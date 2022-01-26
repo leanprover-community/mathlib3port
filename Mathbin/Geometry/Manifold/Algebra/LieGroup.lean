@@ -79,11 +79,11 @@ theorem topological_group_of_lie_group : TopologicalGroup G :=
 end
 
 @[to_additive]
-theorem Smooth.inv {f : M → G} (hf : Smooth I' I f) : Smooth I' I fun x => f x⁻¹ :=
+theorem Smooth.inv {f : M → G} (hf : Smooth I' I f) : Smooth I' I fun x => (f x)⁻¹ :=
   (smooth_inv I).comp hf
 
 @[to_additive]
-theorem SmoothOn.inv {f : M → G} {s : Set M} (hf : SmoothOn I' I f s) : SmoothOn I' I (fun x => f x⁻¹) s :=
+theorem SmoothOn.inv {f : M → G} {s : Set M} (hf : SmoothOn I' I f s) : SmoothOn I' I (fun x => (f x)⁻¹) s :=
   (smooth_inv I).comp_smooth_on hf
 
 @[to_additive]

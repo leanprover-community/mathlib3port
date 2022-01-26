@@ -75,7 +75,7 @@ theorem self_sub_C_mul_X_pow {R : Type _} [Ringₓ R] (f : Polynomial R) :
 
 theorem erase_lead_ne_zero (f0 : 2 ≤ f.support.card) : erase_lead f ≠ 0 := by
   rw [Ne.def, ← card_support_eq_zero, erase_lead_support]
-  exact (zero_lt_one.trans_le $ (tsub_le_tsub_right f0 1).trans Finset.pred_card_le_card_erase).Ne.symm
+  exact (zero_lt_one.trans_le <| (tsub_le_tsub_right f0 1).trans Finset.pred_card_le_card_erase).Ne.symm
 
 @[simp]
 theorem nat_degree_not_mem_erase_lead_support : f.nat_degree ∉ (erase_lead f).Support := by
@@ -87,7 +87,7 @@ theorem ne_nat_degree_of_mem_erase_lead_support {a : ℕ} (h : a ∈ (erase_lead
 
 theorem erase_lead_support_card_lt (h : f ≠ 0) : (erase_lead f).Support.card < f.support.card := by
   rw [erase_lead_support]
-  exact card_lt_card (erase_ssubset $ nat_degree_mem_support_of_nonzero h)
+  exact card_lt_card (erase_ssubset <| nat_degree_mem_support_of_nonzero h)
 
 theorem erase_lead_card_support {c : ℕ} (fc : f.support.card = c) : f.erase_lead.support.card = c - 1 := by
   by_cases' f0 : f = 0
@@ -138,8 +138,8 @@ theorem erase_lead_nat_degree_le : (erase_lead f).natDegree ≤ f.nat_degree :=
   nat_degree_le_nat_degree erase_lead_degree_le
 
 theorem erase_lead_nat_degree_lt (f0 : 2 ≤ f.support.card) : (erase_lead f).natDegree < f.nat_degree :=
-  lt_of_le_of_neₓ erase_lead_nat_degree_le $
-    ne_nat_degree_of_mem_erase_lead_support $ nat_degree_mem_support_of_nonzero $ erase_lead_ne_zero f0
+  lt_of_le_of_neₓ erase_lead_nat_degree_le <|
+    ne_nat_degree_of_mem_erase_lead_support <| nat_degree_mem_support_of_nonzero <| erase_lead_ne_zero f0
 
 theorem erase_lead_nat_degree_lt_or_erase_lead_eq_zero (f : Polynomial R) :
     (erase_lead f).natDegree < f.nat_degree ∨ f.erase_lead = 0 := by

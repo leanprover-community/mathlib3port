@@ -61,7 +61,7 @@ theorem exists_unique_zsmul_near_of_pos {a : α} (ha : 0 < a) (g : α) : ∃! k 
   have hm'' : g < (m + 1) • a := by
     contrapose! hm'
     exact ⟨m + 1, hm', lt_add_one _⟩
-  refine' ⟨m, ⟨hm, hm''⟩, fun n hn => (hm' n hn.1).antisymm $ Int.le_of_lt_add_oneₓ _⟩
+  refine' ⟨m, ⟨hm, hm''⟩, fun n hn => (hm' n hn.1).antisymm <| Int.le_of_lt_add_oneₓ _⟩
   rw [← zsmul_lt_zsmul_iff ha]
   exact lt_of_le_of_ltₓ hm hn.2
 
@@ -69,12 +69,12 @@ theorem exists_unique_zsmul_near_of_pos' {a : α} (ha : 0 < a) (g : α) : ∃! k
   simpa only [sub_nonneg, add_zsmul, one_zsmul, sub_lt_iff_lt_add'] using exists_unique_zsmul_near_of_pos ha g
 
 theorem exists_unique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, b + m • a ∈ Set.Ico c (c + a) :=
-  (Equivₓ.neg ℤ).Bijective.exists_unique_iff.2 $ by
+  (Equivₓ.neg ℤ).Bijective.exists_unique_iff.2 <| by
     simpa only [Equivₓ.neg_apply, mem_Ico, neg_zsmul, ← sub_eq_add_neg, le_sub_iff_add_le, zero_addₓ, add_commₓ c,
       sub_lt_iff_lt_add', add_assocₓ] using exists_unique_zsmul_near_of_pos' ha (b - c)
 
 theorem exists_unique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, b + m • a ∈ Set.Ioc c (c + a) :=
-  (Equivₓ.addRight (1 : ℤ)).Bijective.exists_unique_iff.2 $ by
+  (Equivₓ.addRight (1 : ℤ)).Bijective.exists_unique_iff.2 <| by
     simpa only [add_zsmul, sub_lt_iff_lt_add', le_sub_iff_add_le', ← add_assocₓ, And.comm, mem_Ioc,
       Equivₓ.coe_add_right, one_zsmul, add_le_add_iff_right] using exists_unique_zsmul_near_of_pos ha (c - b)
 
@@ -145,7 +145,7 @@ theorem exists_floor (x : α) : ∃ fl : ℤ, ∀ z : ℤ, z ≤ fl ↔ (z : α)
   have : ∃ ub : ℤ, (ub : α) ≤ x ∧ ∀ z : ℤ, (z : α) ≤ x → z ≤ ub :=
     Int.exists_greatest_of_bdd
       (let ⟨n, hn⟩ := exists_int_gt x
-      ⟨n, fun z h' => Int.cast_le.1 $ le_transₓ h' $ le_of_ltₓ hn⟩)
+      ⟨n, fun z h' => Int.cast_le.1 <| le_transₓ h' <| le_of_ltₓ hn⟩)
       (let ⟨n, hn⟩ := exists_int_lt x
       ⟨n, le_of_ltₓ hn⟩)
   refine' this.imp fun fl h z => _
@@ -165,12 +165,12 @@ theorem exists_mem_Ico_zpow [Archimedean α] {x : α} {y : α} (hx : 0 < x) (hy 
     ∃ n : ℤ, x ∈ Set.Ico (y ^ n) (y ^ (n + 1)) := by
   classical <;>
     exact
-      let ⟨N, hN⟩ := pow_unbounded_of_one_lt (x⁻¹) hy
+      let ⟨N, hN⟩ := pow_unbounded_of_one_lt x⁻¹ hy
       have he : ∃ m : ℤ, y ^ m ≤ x :=
         ⟨-N,
           le_of_ltₓ
             (by
-              rw [zpow_neg₀ y (↑N), zpow_coe_nat]
+              rw [zpow_neg₀ y ↑N, zpow_coe_nat]
               exact (inv_lt hx (lt_transₓ (inv_pos.2 hx) hN)).1 hN)⟩
       let ⟨M, hM⟩ := pow_unbounded_of_one_lt x hy
       have hb : ∃ b : ℤ, ∀ m, y ^ m ≤ x → m ≤ b :=
@@ -202,7 +202,7 @@ theorem exists_pow_lt_of_lt_one [Archimedean α] {x y : α} (hx : 0 < x) (hy : y
     linarith
     
   rw [not_leₓ] at y_pos
-  rcases pow_unbounded_of_one_lt (x⁻¹) (one_lt_inv y_pos hy) with ⟨q, hq⟩
+  rcases pow_unbounded_of_one_lt x⁻¹ (one_lt_inv y_pos hy) with ⟨q, hq⟩
   exact
     ⟨q, by
       rwa [inv_pow₀, inv_lt_inv hx (pow_pos y_pos _)] at hq⟩
@@ -246,7 +246,7 @@ instance : Archimedean ℕ :=
 instance : Archimedean ℤ :=
   ⟨fun n m m0 =>
     ⟨n.to_nat,
-      le_transₓ (Int.le_to_nat _) $ by
+      le_transₓ (Int.le_to_nat _) <| by
         simpa only [nsmul_eq_mul, Int.nat_cast_eq_coe_nat, zero_addₓ, mul_oneₓ] using
           mul_le_mul_of_nonneg_left (Int.add_one_le_iff.2 m0) (Int.coe_zero_le n.to_nat)⟩⟩
 
@@ -263,13 +263,13 @@ variable [LinearOrderedField α]
 theorem archimedean_iff_nat_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x < n :=
   ⟨@exists_nat_gt α _ _, fun H =>
     ⟨fun x y y0 =>
-      (H (x / y)).imp $ fun n h =>
-        le_of_ltₓ $ by
+      (H (x / y)).imp fun n h =>
+        le_of_ltₓ <| by
           rwa [div_lt_iff y0, ← nsmul_eq_mul] at h⟩⟩
 
 theorem archimedean_iff_nat_le : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x ≤ n :=
   archimedean_iff_nat_lt.trans
-    ⟨fun H x => (H x).imp $ fun _ => le_of_ltₓ, fun H x =>
+    ⟨fun H x => (H x).imp fun _ => le_of_ltₓ, fun H x =>
       let ⟨n, h⟩ := H x
       ⟨n + 1, lt_of_le_of_ltₓ h (Nat.cast_lt.2 (lt_add_one _))⟩⟩
 
@@ -280,15 +280,15 @@ theorem exists_rat_gt [Archimedean α] (x : α) : ∃ q : ℚ, x < q :=
 
 theorem archimedean_iff_rat_lt : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x < q :=
   ⟨@exists_rat_gt α _, fun H =>
-    archimedean_iff_nat_lt.2 $ fun x =>
+    archimedean_iff_nat_lt.2 fun x =>
       let ⟨q, h⟩ := H x
       ⟨⌈q⌉₊,
-        lt_of_lt_of_leₓ h $ by
+        lt_of_lt_of_leₓ h <| by
           simpa only [Rat.cast_coe_nat] using (@Rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
 
 theorem archimedean_iff_rat_le : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x ≤ q :=
   archimedean_iff_rat_lt.trans
-    ⟨fun H x => (H x).imp $ fun _ => le_of_ltₓ, fun H x =>
+    ⟨fun H x => (H x).imp fun _ => le_of_ltₓ, fun H x =>
       let ⟨n, h⟩ := H x
       ⟨n + 1, lt_of_le_of_ltₓ h (Rat.cast_lt.2 (lt_add_one _))⟩⟩
 
@@ -300,13 +300,13 @@ theorem exists_rat_lt (x : α) : ∃ q : ℚ, (q : α) < x :=
     rwa [Rat.cast_coe_int]⟩
 
 theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α) < y := by
-  cases' exists_nat_gt ((y - x)⁻¹) with n nh
+  cases' exists_nat_gt (y - x)⁻¹ with n nh
   cases' exists_floor (x * n) with z zh
   refine' ⟨(z + 1 : ℤ) / n, _⟩
   have n0' := (inv_pos.2 (sub_pos.2 h)).trans nh
   have n0 := Nat.cast_pos.1 n0'
   rw [Rat.cast_div_of_ne_zero, Rat.cast_coe_nat, Rat.cast_coe_int, div_lt_iff n0']
-  refine' ⟨(lt_div_iff n0').2 $ (lt_iff_lt_of_le_iff_le (zh _)).1 (lt_add_one _), _⟩
+  refine' ⟨(lt_div_iff n0').2 <| (lt_iff_lt_of_le_iff_le (zh _)).1 (lt_add_one _), _⟩
   rw [Int.cast_add, Int.cast_one]
   refine' lt_of_le_of_ltₓ (add_le_add_right ((zh _).1 (le_reflₓ _)) _) _
   rwa [← lt_sub_iff_add_lt', ← sub_mul, ← div_lt_iff' (sub_pos.2 h), one_div]
@@ -357,7 +357,7 @@ theorem round_one : round (1 : α) = 1 :=
     (by
       norm_num)
 
-theorem abs_sub_round (x : α) : |x - round x| ≤ 1 / 2 := by
+theorem abs_sub_round (x : α) : abs (x - round x) ≤ 1 / 2 := by
   rw [round, abs_sub_le_iff]
   have := floor_le (x + 1 / 2)
   have := lt_floor_add_one (x + 1 / 2)
@@ -380,7 +380,7 @@ theorem Rat.round_cast (x : ℚ) : round (x : α) = round x := by
   rw [round, round, ← this, Rat.floor_cast]
 
 @[simp, norm_cast]
-theorem Rat.cast_fract (x : ℚ) : (↑fract x : α) = fract x := by
+theorem Rat.cast_fract (x : ℚ) : (↑(fract x) : α) = fract x := by
   simp only [fract, Rat.cast_sub]
   simp
 
@@ -390,12 +390,12 @@ section
 
 variable [LinearOrderedField α] [Archimedean α]
 
-theorem exists_rat_near (x : α) {ε : α} (ε0 : 0 < ε) : ∃ q : ℚ, |x - q| < ε :=
-  let ⟨q, h₁, h₂⟩ := exists_rat_btwn $ lt_transₓ ((sub_lt_self_iff x).2 ε0) ((lt_add_iff_pos_left x).2 ε0)
+theorem exists_rat_near (x : α) {ε : α} (ε0 : 0 < ε) : ∃ q : ℚ, abs (x - q) < ε :=
+  let ⟨q, h₁, h₂⟩ := exists_rat_btwn <| lt_transₓ ((sub_lt_self_iff x).2 ε0) ((lt_add_iff_pos_left x).2 ε0)
   ⟨q, abs_sub_lt_iff.2 ⟨sub_lt.1 h₁, sub_lt_iff_lt_add.2 h₂⟩⟩
 
 instance : Archimedean ℚ :=
-  archimedean_iff_rat_le.2 $ fun q =>
+  archimedean_iff_rat_le.2 fun q =>
     ⟨q, by
       rw [Rat.cast_id]⟩
 

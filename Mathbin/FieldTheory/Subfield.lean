@@ -206,7 +206,7 @@ instance : Ringₓ s :=
 instance : Div s :=
   ⟨fun x y => ⟨x / y, s.div_mem x.2 y.2⟩⟩
 
-instance : HasInv s :=
+instance : Inv s :=
   ⟨fun x => ⟨x⁻¹, s.inv_mem x.2⟩⟩
 
 /-- A subfield inherits a field structure -/
@@ -313,7 +313,7 @@ variable (f : K →+* L)
 def comap (s : Subfield L) : Subfield K :=
   { s.to_subring.comap f with
     inv_mem' := fun x hx =>
-      show f (x⁻¹) ∈ s by
+      show f x⁻¹ ∈ s by
         rw [f.map_inv]
         exact s.inv_mem hx }
 
@@ -347,7 +347,7 @@ theorem mem_map {f : K →+* L} {s : Subfield K} {y : L} : y ∈ s.map f ↔ ∃
   Set.mem_image_iff_bex
 
 theorem map_map (g : L →+* M) (f : K →+* L) : (s.map f).map g = s.map (g.comp f) :=
-  SetLike.ext' $ Set.image_image _ _ _
+  SetLike.ext' <| Set.image_image _ _ _
 
 theorem map_le_iff_le_comap {f : K →+* L} {s : Subfield K} {t : Subfield L} : s.map f ≤ t ↔ s ≤ t.comap f :=
   Set.image_subset_iff
@@ -513,7 +513,7 @@ theorem closure_le {s : Set K} {t : Subfield K} : closure s ≤ t ↔ s ⊆ t :=
 /-- Subfield closure of a set is monotone in its argument: if `s ⊆ t`,
 then `closure s ≤ closure t`. -/
 theorem closure_mono ⦃s t : Set K⦄ (h : s ⊆ t) : closure s ≤ closure t :=
-  closure_le.2 $ Set.Subset.trans h subset_closure
+  closure_le.2 <| Set.Subset.trans h subset_closure
 
 theorem closure_eq_of_le {s : Set K} {t : Subfield K} (h₁ : s ⊆ t) (h₂ : t ≤ closure s) : closure s = t :=
   le_antisymmₓ (closure_le.2 h₁) h₂
@@ -523,7 +523,7 @@ of `s`, and is preserved under addition, negation, and multiplication, then `p` 
 elements of the closure of `s`. -/
 @[elab_as_eliminator]
 theorem closure_induction {s : Set K} {p : K → Prop} {x} (h : x ∈ closure s) (Hs : ∀, ∀ x ∈ s, ∀, p x) (H1 : p 1)
-    (Hadd : ∀ x y, p x → p y → p (x + y)) (Hneg : ∀ x, p x → p (-x)) (Hinv : ∀ x, p x → p (x⁻¹))
+    (Hadd : ∀ x y, p x → p y → p (x + y)) (Hneg : ∀ x, p x → p (-x)) (Hinv : ∀ x, p x → p x⁻¹)
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
   (@closure_le _ _ _ ⟨p, H1, Hmul, @add_neg_selfₓ K _ 1 ▸ Hadd _ _ H1 (Hneg _ H1), Hadd, Hneg, Hinv⟩).2 Hs h
 
@@ -584,7 +584,7 @@ theorem comap_top (f : K →+* L) : (⊤ : Subfield L).comap f = ⊤ :=
   typically not a subfield) -/
 theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (hS : Directed (· ≤ ·) S) {x : K} :
     (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i := by
-  refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 $ le_supr S i) hi⟩
+  refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supr S i) hi⟩
   suffices x ∈ closure (⋃ i, (S i : Set K)) → ∃ i, x ∈ S i by
     simpa only [closure_Union, closure_eq]
   refine' fun hx => closure_induction hx (fun x => set.mem_Union.mp) _ _ _ _ _
@@ -606,8 +606,8 @@ theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (h
     
 
 theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (hS : Directed (· ≤ ·) S) :
-    ((⨆ i, S i : Subfield K) : Set K) = ⋃ i, ↑S i :=
-  Set.ext $ fun x => by
+    ((⨆ i, S i : Subfield K) : Set K) = ⋃ i, ↑(S i) :=
+  Set.ext fun x => by
     simp [mem_supr_of_directed hS]
 
 theorem mem_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) {x : K} :
@@ -616,8 +616,8 @@ theorem mem_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.nonempty) (hS : D
   simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 
 theorem coe_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) :
-    (↑Sup S : Set K) = ⋃ s ∈ S, ↑s :=
-  Set.ext $ fun x => by
+    (↑(Sup S) : Set K) = ⋃ s ∈ S, ↑s :=
+  Set.ext fun x => by
     simp [mem_Sup_of_directed_on Sne hS]
 
 end Subfield
@@ -631,9 +631,9 @@ open Subfield
 /-- Restrict the codomain of a ring homomorphism to a subfield that includes the range. -/
 def cod_restrict_field (f : K →+* L) (s : Subfield L) (h : ∀ x, f x ∈ s) : K →+* s where
   toFun := fun x => ⟨f x, h x⟩
-  map_add' := fun x y => Subtype.eq $ f.map_add x y
+  map_add' := fun x y => Subtype.eq <| f.map_add x y
   map_zero' := Subtype.eq f.map_zero
-  map_mul' := fun x y => Subtype.eq $ f.map_mul x y
+  map_mul' := fun x y => Subtype.eq <| f.map_mul x y
   map_one' := Subtype.eq f.map_one
 
 /-- Restriction of a ring homomorphism to a subfield of the domain. -/
@@ -657,7 +657,7 @@ the equalizer of f and g as a subfield of R -/
 def eq_locus_field (f g : K →+* L) : Subfield K :=
   { (f : K →+* L).eqLocus g with
     inv_mem' := fun x hx : f x = g x =>
-      show f (x⁻¹) = g (x⁻¹) by
+      show f x⁻¹ = g x⁻¹ by
         rw [f.map_inv, g.map_inv, hx],
     Carrier := { x | f x = g x } }
 
@@ -666,21 +666,21 @@ theorem eq_on_field_closure {f g : K →+* L} {s : Set K} (h : Set.EqOn f g s) :
   show closure s ≤ f.eq_locus_field g from closure_le.2 h
 
 theorem eq_of_eq_on_subfield_top {f g : K →+* L} (h : Set.EqOn f g (⊤ : Subfield K)) : f = g :=
-  ext $ fun x => h trivialₓ
+  ext fun x => h trivialₓ
 
 theorem eq_of_eq_on_of_field_closure_eq_top {s : Set K} (hs : closure s = ⊤) {f g : K →+* L} (h : s.eq_on f g) :
     f = g :=
-  eq_of_eq_on_subfield_top $ hs ▸ eq_on_field_closure h
+  eq_of_eq_on_subfield_top <| hs ▸ eq_on_field_closure h
 
 theorem field_closure_preimage_le (f : K →+* L) (s : Set L) : closure (f ⁻¹' s) ≤ (closure s).comap f :=
-  closure_le.2 $ fun x hx => SetLike.mem_coe.2 $ mem_comap.2 $ subset_closure hx
+  closure_le.2 fun x hx => SetLike.mem_coe.2 <| mem_comap.2 <| subset_closure hx
 
 /-- The image under a ring homomorphism of the subfield generated by a set equals
 the subfield generated by the image of the set. -/
 theorem map_field_closure (f : K →+* L) (s : Set K) : (closure s).map f = closure (f '' s) :=
   le_antisymmₓ
-    (map_le_iff_le_comap.2 $ le_transₓ (closure_mono $ Set.subset_preimage_image _ _) (field_closure_preimage_le _ _))
-    (closure_le.2 $ Set.image_subset _ subset_closure)
+    (map_le_iff_le_comap.2 <| le_transₓ (closure_mono <| Set.subset_preimage_image _ _) (field_closure_preimage_le _ _))
+    (closure_le.2 <| Set.image_subset _ subset_closure)
 
 end RingHom
 
@@ -694,7 +694,7 @@ def inclusion {S T : Subfield K} (h : S ≤ T) : S →+* T :=
 
 @[simp]
 theorem field_range_subtype (s : Subfield K) : s.subtype.field_range = s :=
-  SetLike.ext' $ (coe_srange _).trans Subtype.range_coe
+  SetLike.ext' <| (coe_srange _).trans Subtype.range_coe
 
 end Subfield
 
@@ -705,7 +705,7 @@ variable {s t : Subfield K}
 /-- Makes the identity isomorphism from a proof two subfields of a multiplicative
     monoid are equal. -/
 def subfield_congr (h : s = t) : s ≃+* t :=
-  { Equivₓ.setCongr $ SetLike.ext'_iff.1 h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| SetLike.ext'_iff.1 h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
 end RingEquiv
 
@@ -714,7 +714,7 @@ namespace Subfield
 variable {s : Set K}
 
 theorem closure_preimage_le (f : K →+* L) (s : Set L) : closure (f ⁻¹' s) ≤ (closure s).comap f :=
-  closure_le.2 $ fun x hx => SetLike.mem_coe.2 $ mem_comap.2 $ subset_closure hx
+  closure_le.2 fun x hx => SetLike.mem_coe.2 <| mem_comap.2 <| subset_closure hx
 
 end Subfield
 

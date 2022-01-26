@@ -59,15 +59,15 @@ theorem Completion.norm_incl_eq {V : SemiNormedGroupₓ} {v : V} : ∥Completion
 
 theorem Completion.map_norm_noninc {V W : SemiNormedGroupₓ} {f : V ⟶ W} (hf : f.norm_noninc) :
     (Completion.map f).NormNoninc :=
-  NormedGroupHom.NormNoninc.norm_noninc_iff_norm_le_one.2 $
-    (NormedGroupHom.norm_completion f).le.trans $ NormedGroupHom.NormNoninc.norm_noninc_iff_norm_le_one.1 hf
+  NormedGroupHom.NormNoninc.norm_noninc_iff_norm_le_one.2 <|
+    (NormedGroupHom.norm_completion f).le.trans <| NormedGroupHom.NormNoninc.norm_noninc_iff_norm_le_one.1 hf
 
 /-- Given a normed group hom `V ⟶ W`, this defines the associated morphism
 from the completion of `V` to the completion of `W`.
 The difference from the definition obtained from the functoriality of completion is in that the
 map sending a morphism `f` to the associated morphism of completions is itself additive. -/
 def Completion.map_hom (V W : SemiNormedGroupₓ.{u}) : (V ⟶ W) →+ (Completion.obj V ⟶ Completion.obj W) :=
-  AddMonoidHom.mk' (CategoryTheory.Functor.map Completion) $ fun f g => f.completion_add g
+  (AddMonoidHom.mk' (CategoryTheory.Functor.map Completion)) fun f g => f.completion_add g
 
 @[simp]
 theorem Completion.map_zero (V W : SemiNormedGroupₓ) : Completion.map (0 : V ⟶ W) = 0 :=

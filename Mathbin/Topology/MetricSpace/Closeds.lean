@@ -133,9 +133,9 @@ instance closeds.complete_space [CompleteSpace α] : CompleteSpace (closeds α) 
   refine' tendsto_at_top.2 fun ε εpos => _
   have : tendsto (fun n => 2 * B n) at_top (𝓝 (2 * 0)) :=
     Ennreal.Tendsto.const_mul
-      (Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 $ by
+      (Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 <| by
         simp [Ennreal.one_lt_two])
-      (Or.inr $ by
+      (Or.inr <| by
         simp )
   rw [mul_zero] at this
   obtain ⟨N, hN⟩ : ∃ N, ∀, ∀ b ≥ N, ∀, ε > 2 * B b
@@ -198,17 +198,17 @@ instance nonempty_compacts.emetric_space : EmetricSpace (nonempty_compacts α) w
   edist_comm := fun s t => Hausdorff_edist_comm
   edist_triangle := fun s t u => Hausdorff_edist_triangle
   eq_of_edist_eq_zero := fun s t h =>
-    Subtype.eq $ by
+    Subtype.eq <| by
       have : Closure s.val = Closure t.val := Hausdorff_edist_zero_iff_closure_eq_closure.1 h
       rwa [s.property.2.IsClosed.closure_eq, t.property.2.IsClosed.closure_eq] at this
 
 /-- `nonempty_compacts.to_closeds` is a uniform embedding (as it is an isometry) -/
 theorem nonempty_compacts.to_closeds.uniform_embedding : UniformEmbedding (@nonempty_compacts.to_closeds α _ _) :=
-  Isometry.uniform_embedding $ fun x y => rfl
+  Isometry.uniform_embedding fun x y => rfl
 
 /-- The range of `nonempty_compacts.to_closeds` is closed in a complete space -/
 theorem nonempty_compacts.is_closed_in_closeds [CompleteSpace α] :
-    IsClosed (range $ @nonempty_compacts.to_closeds α _ _) := by
+    IsClosed (range <| @nonempty_compacts.to_closeds α _ _) := by
   have : range nonempty_compacts.to_closeds = { s : closeds α | s.val.nonempty ∧ IsCompact s.val } := range_inclusion _
   rw [this]
   refine' is_closed_of_closure_subset fun s hs => ⟨_, _⟩
@@ -237,7 +237,7 @@ theorem nonempty_compacts.is_closed_in_closeds [CompleteSpace α] :
 /-- In a complete space, the type of nonempty compact subsets is complete. This follows
 from the same statement for closed subsets -/
 instance nonempty_compacts.complete_space [CompleteSpace α] : CompleteSpace (nonempty_compacts α) :=
-  (complete_space_iff_is_complete_range nonempty_compacts.to_closeds.uniform_embedding.to_uniform_inducing).2 $
+  (complete_space_iff_is_complete_range nonempty_compacts.to_closeds.uniform_embedding.to_uniform_inducing).2 <|
     nonempty_compacts.is_closed_in_closeds.IsComplete
 
 /-- In a compact space, the type of nonempty compact subsets is compact. This follows from
@@ -321,7 +321,7 @@ variable {α : Type u} [MetricSpace α]
 /-- `nonempty_compacts α` inherits a metric space structure, as the Hausdorff
 edistance between two such sets is finite. -/
 instance nonempty_compacts.metric_space : MetricSpace (nonempty_compacts α) :=
-  EmetricSpace.toMetricSpace $ fun x y =>
+  EmetricSpace.toMetricSpace fun x y =>
     Hausdorff_edist_ne_top_of_nonempty_of_bounded x.2.1 y.2.1 x.2.2.Bounded y.2.2.Bounded
 
 /-- The distance on `nonempty_compacts α` is the Hausdorff distance, by construction -/
@@ -329,7 +329,7 @@ theorem nonempty_compacts.dist_eq {x y : nonempty_compacts α} : dist x y = Haus
   rfl
 
 theorem lipschitz_inf_dist_set (x : α) : LipschitzWith 1 fun s : nonempty_compacts α => inf_dist x s.val :=
-  LipschitzWith.of_le_add $ fun s t => by
+  LipschitzWith.of_le_add fun s t => by
     rw [dist_comm]
     exact inf_dist_le_inf_dist_add_Hausdorff_dist (edist_ne_top t s)
 

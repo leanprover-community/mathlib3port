@@ -55,8 +55,9 @@ open_locale TopologicalSpace Filter
 
 variable {α : Type _} [MeasurableSpace α] {μ : Measureₓ α} {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E]
   [NormedSpace ℝ E] [NormedSpace 𝕜 E] [CompleteSpace E] [second_countable_topology E] [MeasurableSpace E] [BorelSpace E]
-  {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H] [second_countable_topology $ H →L[𝕜] E]
+  {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H] [second_countable_topology <| H →L[𝕜] E]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming `F x₀` is
 integrable, `∥F x a - F x₀ a∥ ≤ bound a * ∥x - x₀∥` for `x` in a ball around `x₀` for ae `a` with
 integrable Lipschitz bound `bound` (with a ball radius independent of `a`), and `F x` is
@@ -71,11 +72,11 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
   have : OpensMeasurableSpace 𝕜 := ⟨le_rfl⟩
   have x₀_in : x₀ ∈ ball x₀ ε := mem_ball_self ε_pos
   have nneg : ∀ x, 0 ≤ ∥x - x₀∥⁻¹ := fun x => inv_nonneg.mpr (norm_nonneg _)
-  set b : α → ℝ := fun a => |bound a|
+  set b : α → ℝ := fun a => abs (bound a)
   have b_int : integrable b μ := bound_integrable.norm
   have b_nonneg : ∀ a, 0 ≤ b a := fun a => abs_nonneg _
   replace h_lipsch : ∀ᵐ a ∂μ, ∀, ∀ x ∈ ball x₀ ε, ∀, ∥F x a - F x₀ a∥ ≤ b a * ∥x - x₀∥
-  exact h_lipsch.mono fun a ha x hx => (ha x hx).trans $ mul_le_mul_of_nonneg_right (le_abs_self _) (norm_nonneg _)
+  exact h_lipsch.mono fun a ha x hx => (ha x hx).trans <| mul_le_mul_of_nonneg_right (le_abs_self _) (norm_nonneg _)
   have hF_int' : ∀, ∀ x ∈ ball x₀ ε, ∀, integrable (F x) μ := by
     intro x x_in
     have : ∀ᵐ a ∂μ, ∥F x₀ a - F x a∥ ≤ ε * b a := by
@@ -89,7 +90,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     have : ∀ᵐ a ∂μ, ∥F' a∥ ≤ b a := by
       apply (h_diff.and h_lipsch).mono
       rintro a ⟨ha_diff, ha_lip⟩
-      refine' ha_diff.le_of_lip' (b_nonneg a) (mem_of_superset (ball_mem_nhds _ ε_pos) $ ha_lip)
+      refine' ha_diff.le_of_lip' (b_nonneg a) (mem_of_superset (ball_mem_nhds _ ε_pos) <| ha_lip)
     b_int.mono' hF'_meas this
   refine' ⟨hF'_int, _⟩
   have h_ball : ball x₀ ε ∈ 𝓝 x₀ := ball_mem_nhds x₀ ε_pos
@@ -107,8 +108,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     show (∫ a : α, ∥x₀ - x₀∥⁻¹ • (F x₀ a - F x₀ a - (F' a) (x₀ - x₀)) ∂μ) = 0 by
       simp ]
   apply tendsto_integral_filter_of_dominated_convergence
-  · filter_upwards [h_ball]
-    intro x x_in
+  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     apply AeMeasurable.const_smul
     exact ((hF_meas _ x_in).sub (hF_meas _ x₀_in)).sub (hF'_meas.apply_continuous_linear_map _)
     
@@ -157,13 +157,13 @@ for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → α → E} {F' : α → H →L[𝕜] E} {x₀ : H} {bound : α → ℝ}
     {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeMeasurable (F x) μ) (hF_int : integrable (F x₀) μ)
     (hF'_meas : AeMeasurable F' μ)
-    (h_lip : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs $ bound a) (fun x => F x a) (ball x₀ ε))
+    (h_lip : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs <| bound a) (fun x => F x a) (ball x₀ ε))
     (bound_integrable : integrable (bound : α → ℝ) μ) (h_diff : ∀ᵐ a ∂μ, HasFderivAt (fun x => F x a) (F' a) x₀) :
     integrable F' μ ∧ HasFderivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' a ∂μ) x₀ := by
   obtain ⟨δ, δ_pos, hδ⟩ : ∃ δ > 0, ∀, ∀ x ∈ ball x₀ δ, ∀, AeMeasurable (F x) μ ∧ x ∈ ball x₀ ε
   exact eventually_nhds_iff_ball.mp (hF_meas.and (ball_mem_nhds x₀ ε_pos))
   choose hδ_meas hδε using hδ
-  replace h_lip : ∀ᵐ a : α ∂μ, ∀, ∀ x ∈ ball x₀ δ, ∀, ∥F x a - F x₀ a∥ ≤ |bound a| * ∥x - x₀∥
+  replace h_lip : ∀ᵐ a : α ∂μ, ∀, ∀ x ∈ ball x₀ δ, ∀, ∥F x a - F x₀ a∥ ≤ abs (bound a) * ∥x - x₀∥
   exact h_lip.mono fun a lip x hx => lip.norm_sub_le (hδε x hx) (mem_ball_self ε_pos)
   replace bound_integrable := bound_integrable.norm
   apply has_fderiv_at_integral_of_dominated_loc_of_lip' δ_pos <;> assumption
@@ -197,7 +197,7 @@ assuming `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball ar
 ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F' : α → E} {x₀ : 𝕜} {ε : ℝ} (ε_pos : 0 < ε)
     (hF_meas : ∀ᶠ x in 𝓝 x₀, AeMeasurable (F x) μ) (hF_int : integrable (F x₀) μ) (hF'_meas : AeMeasurable F' μ)
-    {bound : α → ℝ} (h_lipsch : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs $ bound a) (fun x => F x a) (ball x₀ ε))
+    {bound : α → ℝ} (h_lipsch : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs <| bound a) (fun x => F x a) (ball x₀ ε))
     (bound_integrable : integrable (bound : α → ℝ) μ) (h_diff : ∀ᵐ a ∂μ, HasDerivAt (fun x => F x a) (F' a) x₀) :
     integrable F' μ ∧ HasDerivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' a ∂μ) x₀ := by
   let this' : MeasurableSpace 𝕜 := borel 𝕜

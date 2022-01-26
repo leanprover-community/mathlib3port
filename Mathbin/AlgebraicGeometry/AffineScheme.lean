@@ -44,7 +44,7 @@ class is_affine (X : Scheme) : Prop where
 attribute [instance] is_affine.affine
 
 /-- The canonical isomorphism `X ≅ Spec Γ(X)` for an affine scheme. -/
-def Scheme.iso_Spec (X : Scheme) [is_affine X] : X ≅ Scheme.Spec.obj (op $ Scheme.Γ.obj $ op X) :=
+def Scheme.iso_Spec (X : Scheme) [is_affine X] : X ≅ Scheme.Spec.obj (op <| Scheme.Γ.obj <| op X) :=
   as_iso (Γ_Spec.adjunction.Unit.app X)
 
 theorem mem_AffineScheme (X : Scheme) : X ∈ AffineScheme ↔ is_affine X :=
@@ -125,7 +125,7 @@ theorem is_basis_affine_open (X : Scheme) : opens.is_basis { U : opens X.carrier
 
 /-- The open immersion `Spec 𝒪ₓ(U) ⟶ X` for an affine `U`. -/
 def is_affine_open.from_Spec {X : Scheme} {U : opens X.carrier} (hU : is_affine_open U) :
-    Scheme.Spec.obj (op $ X.presheaf.obj $ op U) ⟶ X := by
+    Scheme.Spec.obj (op <| X.presheaf.obj <| op U) ⟶ X := by
   have : is_affine (X.restrict U.open_embedding) := hU
   have : U.open_embedding.is_open_map.functor.obj ⊤ = U := by
     ext1
@@ -191,7 +191,7 @@ theorem Scheme.Spec_map_presheaf_map_eq_to_hom {X : Scheme} {U V : opens X.carri
   simpa
 
 theorem is_affine_open.Spec_Γ_identity_hom_app_from_Spec {X : Scheme} {U : opens X.carrier} (hU : is_affine_open U) :
-    Spec_Γ_identity.Hom.app (X.presheaf.obj $ op U) ≫ hU.from_Spec.1.c.app (op U) =
+    Spec_Γ_identity.Hom.app (X.presheaf.obj <| op U) ≫ hU.from_Spec.1.c.app (op U) =
       (Scheme.Spec.obj _).Presheaf.map (eq_to_hom hU.from_Spec_base_preimage).op :=
   by
   have : is_affine _ := hU
@@ -221,7 +221,7 @@ theorem is_affine_open.Spec_Γ_identity_hom_app_from_Spec {X : Scheme} {U : open
 @[elementwise]
 theorem is_affine_open.from_Spec_app_eq {X : Scheme} {U : opens X.carrier} (hU : is_affine_open U) :
     hU.from_Spec.1.c.app (op U) =
-      Spec_Γ_identity.inv.app (X.presheaf.obj $ op U) ≫
+      Spec_Γ_identity.inv.app (X.presheaf.obj <| op U) ≫
         (Scheme.Spec.obj _).Presheaf.map (eq_to_hom hU.from_Spec_base_preimage).op :=
   by
   rw [← hU.Spec_Γ_identity_hom_app_from_Spec, iso.inv_hom_id_app_assoc]
@@ -240,7 +240,7 @@ theorem is_affine_open.basic_open_is_affine {X : Scheme} {U : opens X.carrier} (
     exact Scheme.basic_open_subset _ _
   rw [Subtype.coe_mk, Scheme.comp_val_base, ← this, coe_comp, Set.range_comp]
   congr 1
-  refine' (congr_argₓ coe $ Scheme.preimage_basic_open hU.from_Spec f).trans _
+  refine' (congr_argₓ coe <| Scheme.preimage_basic_open hU.from_Spec f).trans _
   refine' Eq.trans _ (PrimeSpectrum.localization_away_comap_range (Localization.Away f) f).symm
   congr 1
   have : (opens.map hU.from_Spec.val.base).obj U = ⊤ := by
@@ -251,7 +251,7 @@ theorem is_affine_open.basic_open_is_affine {X : Scheme} {U : opens X.carrier} (
   refine' Eq.trans _ (basic_open_eq_of_affine f)
   have lm : ∀ s, (opens.map hU.from_Spec.val.base).obj U⊓s = s := fun s => this.symm ▸ top_inf_eq
   refine' Eq.trans _ (lm _)
-  refine' Eq.trans _ ((Scheme.Spec.obj $ op $ X.presheaf.obj $ op U).basic_open_res _ (eq_to_hom this).op)
+  refine' Eq.trans _ ((Scheme.Spec.obj <| op <| X.presheaf.obj <| op U).basic_open_res _ (eq_to_hom this).op)
   rw [← comp_apply]
   congr 2
   rw [iso.eq_inv_comp]

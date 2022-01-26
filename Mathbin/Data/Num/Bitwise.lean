@@ -353,8 +353,8 @@ def bits : Snum → ∀ n, Vector Bool n
   | p, n + 1 => head p::ᵥbits (tail p) n
 
 def cadd : Snum → Snum → Bool → Snum :=
-  (rec' fun a p c => czadd c a p) $ fun a p IH =>
-    (rec' fun b c => czadd c b (a :: p)) $ fun b q _ c => Bitvec.xor3 a b c :: IH q (Bitvec.carry a b c)
+  (rec' fun a p c => czadd c a p) fun a p IH =>
+    (rec' fun b c => czadd c b (a :: p)) fun b q _ c => Bitvec.xor3 a b c :: IH q (Bitvec.carry a b c)
 
 /-- Add two `snum`s. -/
 protected def add (a b : Snum) : Snum :=
@@ -372,7 +372,7 @@ instance : Sub Snum :=
 
 /-- Multiply two `snum`s. -/
 protected def mul (a : Snum) : Snum → Snum :=
-  (rec' fun b => cond b (-a) 0) $ fun b q IH => cond b (bit0 IH + a) (bit0 IH)
+  (rec' fun b => cond b (-a) 0) fun b q IH => cond b (bit0 IH + a) (bit0 IH)
 
 instance : Mul Snum :=
   ⟨Snum.mul⟩

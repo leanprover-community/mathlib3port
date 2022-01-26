@@ -58,7 +58,7 @@ This function can be used to compute the exact value approxmated by a continued 
 protected def comp_exact_value (pconts conts : pair K) (fr : K) : K :=
   if fr = 0 then conts.a / conts.b
   else
-    let exact_conts := next_continuants 1 (fr⁻¹) pconts conts
+    let exact_conts := next_continuants 1 fr⁻¹ pconts conts
     exact_conts.a / exact_conts.b
 
 variable [FloorRing K]
@@ -90,7 +90,7 @@ corresponds exactly to the one using the recurrence equation in `comp_exact_valu
 theorem comp_exact_value_correctness_of_stream_eq_some :
     ∀ {ifp_n : int_fract_pair K},
       int_fract_pair.stream v n = some ifp_n →
-        v = comp_exact_value ((of v).continuantsAux n) ((of v).continuantsAux $ n + 1) ifp_n.fr :=
+        v = comp_exact_value ((of v).continuantsAux n) ((of v).continuantsAux <| n + 1) ifp_n.fr :=
   by
   let g := of v
   induction' n with n IH
@@ -112,7 +112,7 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
     
   · intro ifp_succ_n succ_nth_stream_eq
     obtain ⟨ifp_n, nth_stream_eq, nth_fract_ne_zero, -⟩ :
-      ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of (ifp_n.fr⁻¹) = ifp_succ_n
+      ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of ifp_n.fr⁻¹ = ifp_succ_n
     exact int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq
     let conts := g.continuants_aux (n + 2)
     set pconts := g.continuants_aux (n + 1) with pconts_eq
@@ -138,7 +138,7 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
         conv_lhs => rw [this]
         assumption
       obtain ⟨ifp_n', nth_stream_eq', ifp_n_fract_ne_zero, ⟨refl⟩⟩ :
-        ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of (ifp_n.fr⁻¹) = ifp_succ_n
+        ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of ifp_n.fr⁻¹ = ifp_succ_n
       exact int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq
       have : ifp_n' = ifp_n := by
         injection Eq.trans nth_stream_eq'.symm nth_stream_eq

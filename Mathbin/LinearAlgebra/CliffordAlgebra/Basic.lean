@@ -116,12 +116,12 @@ variable {Q}
 @[simp]
 theorem ι_comp_lift (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = algebraMap _ _ (Q m)) :
     (lift Q ⟨f, cond⟩).toLinearMap.comp (ι Q) = f :=
-  Subtype.mk_eq_mk.mp $ (lift Q).symm_apply_apply ⟨f, cond⟩
+  Subtype.mk_eq_mk.mp <| (lift Q).symm_apply_apply ⟨f, cond⟩
 
 @[simp]
 theorem lift_ι_apply (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = algebraMap _ _ (Q m)) x :
     lift Q ⟨f, cond⟩ (ι Q x) = f x :=
-  (LinearMap.ext_iff.mp $ ι_comp_lift f cond) x
+  (LinearMap.ext_iff.mp <| ι_comp_lift f cond) x
 
 @[simp]
 theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m : M, f m * f m = algebraMap _ _ (Q m)) (g : CliffordAlgebra Q →ₐ[R] A) :
@@ -155,7 +155,7 @@ theorem induction {C : CliffordAlgebra Q → Prop} (h_grade0 : ∀ r, C (algebra
   let s : Subalgebra R (CliffordAlgebra Q) :=
     { Carrier := C, mul_mem' := h_mul, add_mem' := h_add, algebra_map_mem' := h_grade0 }
   let of : { f : M →ₗ[R] s // ∀ m, f m * f m = algebraMap _ _ (Q m) } :=
-    ⟨(ι Q).codRestrict s.to_submodule h_grade1, fun m => Subtype.eq $ ι_sq_scalar Q m⟩
+    ⟨(ι Q).codRestrict s.to_submodule h_grade1, fun m => Subtype.eq <| ι_sq_scalar Q m⟩
   have of_id : AlgHom.id R (CliffordAlgebra Q) = s.val.comp (lift Q of) := by
     ext
     simp [of]
@@ -171,13 +171,13 @@ def as_exterior : CliffordAlgebra (0 : QuadraticForm R M) ≃ₐ[R] ExteriorAlge
     (ExteriorAlgebra.lift R
       ⟨ι (0 : QuadraticForm R M), by
         simp only [forall_const, RingHom.map_zero, QuadraticForm.zero_apply, ι_sq_scalar]⟩)
-    (ExteriorAlgebra.hom_ext $
-      LinearMap.ext $ by
+    (ExteriorAlgebra.hom_ext <|
+      LinearMap.ext <| by
         simp only [AlgHom.comp_to_linear_map, LinearMap.coe_comp, Function.comp_app, AlgHom.to_linear_map_apply,
           ExteriorAlgebra.lift_ι_apply, CliffordAlgebra.lift_ι_apply, AlgHom.to_linear_map_id, LinearMap.id_comp,
           eq_self_iff_true, forall_const])
-    (CliffordAlgebra.hom_ext $
-      LinearMap.ext $ by
+    (CliffordAlgebra.hom_ext <|
+      LinearMap.ext <| by
         simp only [AlgHom.comp_to_linear_map, LinearMap.coe_comp, Function.comp_app, AlgHom.to_linear_map_apply,
           CliffordAlgebra.lift_ι_apply, ExteriorAlgebra.lift_ι_apply, AlgHom.to_linear_map_id, LinearMap.id_comp,
           eq_self_iff_true, forall_const])
@@ -209,7 +209,8 @@ variable (Q₁ : QuadraticForm R M₁) (Q₂ : QuadraticForm R M₂) (Q₃ : Qua
 
 See `clifford_algebra.equiv_of_isometry` for the case when `f` is a `quadratic_form.isometry`. -/
 def map (f : M₁ →ₗ[R] M₂) (hf : ∀ m, Q₂ (f m) = Q₁ m) : CliffordAlgebra Q₁ →ₐ[R] CliffordAlgebra Q₂ :=
-  CliffordAlgebra.lift Q₁ ⟨(CliffordAlgebra.ι Q₂).comp f, fun m => (ι_sq_scalar _ _).trans $ RingHom.congr_arg _ $ hf m⟩
+  CliffordAlgebra.lift Q₁
+    ⟨(CliffordAlgebra.ι Q₂).comp f, fun m => (ι_sq_scalar _ _).trans <| RingHom.congr_arg _ <| hf m⟩
 
 @[simp]
 theorem map_comp_ι (f : M₁ →ₗ[R] M₂) hf : (map Q₁ Q₂ f hf).toLinearMap.comp (ι Q₁) = (ι Q₂).comp f :=
@@ -226,7 +227,7 @@ theorem map_id : (map Q₁ Q₁ (LinearMap.id : M₁ →ₗ[R] M₁) fun m => rf
 
 @[simp]
 theorem map_comp_map (f : M₂ →ₗ[R] M₃) hf (g : M₁ →ₗ[R] M₂) hg :
-    (map Q₂ Q₃ f hf).comp (map Q₁ Q₂ g hg) = map Q₁ Q₃ (f.comp g) fun m => (hf _).trans $ hg m := by
+    (map Q₂ Q₃ f hf).comp (map Q₁ Q₂ g hg) = map Q₁ Q₃ (f.comp g) fun m => (hf _).trans <| hg m := by
   ext m
   dsimp only [LinearMap.comp_apply, AlgHom.comp_apply, AlgHom.to_linear_map_apply, AlgHom.id_apply]
   rw [map_apply_ι, map_apply_ι, map_apply_ι, LinearMap.comp_apply]
@@ -238,11 +239,11 @@ equivalent. -/
 @[simps apply]
 def equiv_of_isometry (e : Q₁.isometry Q₂) : CliffordAlgebra Q₁ ≃ₐ[R] CliffordAlgebra Q₂ :=
   AlgEquiv.ofAlgHom (map Q₁ Q₂ e e.map_app) (map Q₂ Q₁ e.symm e.symm.map_app)
-    ((map_comp_map _ _ _ _ _ _ _).trans $ by
+    ((map_comp_map _ _ _ _ _ _ _).trans <| by
       convert map_id _ using 2
       ext m
       exact e.to_linear_equiv.apply_symm_apply m)
-    ((map_comp_map _ _ _ _ _ _ _).trans $ by
+    ((map_comp_map _ _ _ _ _ _ _).trans <| by
       convert map_id _ using 2
       ext m
       exact e.to_linear_equiv.symm_apply_apply m)
@@ -258,7 +259,7 @@ theorem equiv_of_isometry_trans (e₁₂ : Q₁.isometry Q₂) (e₂₃ : Q₂.i
   exact AlgHom.congr_fun (map_comp_map Q₁ Q₂ Q₃ _ _ _ _) x
 
 @[simp]
-theorem equiv_of_isometry_refl : (equiv_of_isometry $ QuadraticForm.Isometry.refl Q₁) = AlgEquiv.refl := by
+theorem equiv_of_isometry_refl : (equiv_of_isometry <| QuadraticForm.Isometry.refl Q₁) = AlgEquiv.refl := by
   ext x
   exact AlgHom.congr_fun (map_id Q₁) x
 

@@ -262,7 +262,7 @@ theorem is_unit_prim_part_C (r : R) : IsUnit (C r).primPart := by
     
   unfold IsUnit
   refine'
-    ⟨⟨C (↑norm_unit r⁻¹), C (↑norm_unit r), by
+    ⟨⟨C ↑(norm_unit r)⁻¹, C ↑(norm_unit r), by
         rw [← RingHom.map_mul, Units.inv_mul, C_1], by
         rw [← RingHom.map_mul, Units.mul_inv, C_1]⟩,
       _⟩
@@ -433,7 +433,7 @@ theorem dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part {p q : Polynomia
     
 
 instance (priority := 100) NormalizedGcdMonoid : NormalizedGcdMonoid (Polynomial R) :=
-  normalizedGcdMonoidOfExistsLcm $ fun p q => by
+  normalizedGcdMonoidOfExistsLcm fun p q => by
     rcases exists_primitive_lcm_of_is_primitive p.is_primitive_prim_part q.is_primitive_prim_part with ⟨r, rprim, hr⟩
     refine' ⟨C (lcm p.content q.content) * r, fun s => _⟩
     by_cases' hs : s = 0

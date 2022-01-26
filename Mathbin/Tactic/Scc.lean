@@ -93,11 +93,11 @@ unsafe def to_tactic_format (cl : closure) : tactic format := do
   let m ← read_ref cl
   let l := m.to_list
   let fmt ←
-    l.mmap $ fun ⟨x, y⟩ =>
+    l.mmap fun ⟨x, y⟩ =>
         match y with
         | Sum.inl y => f!"{(← x)} ⇐ {← y}"
         | Sum.inr ⟨y, p⟩ => f!"({(← x)}, {(← y)}) : {← infer_type p}"
-  pure $ to_fmt fmt
+  pure <| to_fmt fmt
 
 unsafe instance : has_to_tactic_format closure :=
   ⟨to_tactic_format⟩
@@ -117,7 +117,7 @@ unsafe def root (cl : closure) : expr → tactic (ℕ × expr × expr)
       | some (Sum.inr (e₀, p₀)) => do
         let (n, e₁, p₁) ← root e₀
         let p ← mk_app `` Iff.trans [p₀, p₁]
-        modify_ref cl $ fun m => m.insert e (Sum.inr (e₁, p))
+        (modify_ref cl) fun m => m.insert e (Sum.inr (e₁, p))
         pure (n, e₁, p)
 
 /-- (Implementation of `merge`.) -/
@@ -125,7 +125,7 @@ unsafe def merge_intl (cl : closure) (p e₀ p₀ e₁ p₁ : expr) : tactic Uni
   let p₂ ← mk_app `` Iff.symm [p₀]
   let p ← mk_app `` Iff.trans [p₂, p]
   let p ← mk_app `` Iff.trans [p, p₁]
-  modify_ref cl $ fun m => m.insert e₀ $ Sum.inr (e₁, p)
+  (modify_ref cl) fun m => m.insert e₀ <| Sum.inr (e₁, p)
 
 /-- `merge cl p`, with `p` a proof of `e₀ ↔ e₁` for some `e₀` and `e₁`,
 merges the trees of `e₀` and `e₁` and keeps the root with the smallest preorder
@@ -146,7 +146,7 @@ unsafe def merge (cl : closure) (p : expr) : tactic Unit := do
 
 /-- Sequentially assign numbers to the nodes of the graph as they are being visited. -/
 unsafe def assign_preorder (cl : closure) (e : expr) : tactic Unit :=
-  modify_ref cl $ fun m => m.insert e (Sum.inl m.size)
+  (modify_ref cl) fun m => m.insert e (Sum.inl m.size)
 
 /-- `prove_eqv cl e₀ e₁` constructs a proof of equivalence of `e₀` and `e₁` if
 they are equivalent. -/
@@ -165,19 +165,19 @@ unsafe def prove_impl (cl : closure) (e₀ e₁ : expr) : tactic expr :=
 unsafe def is_eqv (cl : closure) (e₀ e₁ : expr) : tactic Bool := do
   let (_, r, p₀) ← root cl e₀
   let (_, r', p₁) ← root cl e₁
-  return $ r = r'
+  return <| r = r'
 
 end Closure
 
 /-- mutable graphs between local propositions that imply each other with the proof of implication -/
 @[reducible]
 unsafe def impl_graph :=
-  ref (expr_map (List $ expr × expr))
+  ref (expr_map (List <| expr × expr))
 
 /-- `with_impl_graph f` creates an empty `impl_graph` `g`, executes `f` on `g`, and then deletes
 `g`, returning the output of `f`. -/
 unsafe def with_impl_graph {α} : (impl_graph → tactic α) → tactic α :=
-  using_new_ref (expr_map.mk (List $ expr × expr))
+  using_new_ref (expr_map.mk (List <| expr × expr))
 
 namespace ImplGraph
 
@@ -193,7 +193,7 @@ unsafe def add_edge (g : impl_graph) : expr → tactic Unit
         let m ← read_ref g
         let xs := (m.find v₀).getOrElse []
         let xs' := (m.find v₁).getOrElse []
-        modify_ref g $ fun m => (m.insert v₀ ((v₁, p) :: xs)).insert v₁ xs'
+        (modify_ref g) fun m => (m.insert v₀ ((v₁, p) :: xs)).insert v₁ xs'
       | quote.1 ((%%ₓv₀) ↔ %%ₓv₁) => do
         let p₀ ← mk_mapp `` Iff.mp [none, none, p]
         let p₁ ← mk_mapp `` Iff.mpr [none, none, p]
@@ -205,9 +205,9 @@ section Scc
 
 open List
 
-parameter (g : expr_map (List $ expr × expr))
+parameter (g : expr_map (List <| expr × expr))
 
-parameter (visit : ref $ expr_map Bool)
+parameter (visit : ref <| expr_map Bool)
 
 parameter (cl : closure)
 
@@ -261,22 +261,22 @@ unsafe def dfs_at : List (expr × expr) → expr → tactic Unit
       | some ff => collapse vs v
       | none => do
         cl.assign_preorder v
-        modify_ref visit $ fun m => m.insert v ff
+        (modify_ref visit) fun m => m.insert v ff
         let ns ← g.find v
-        ns.mmap' $ fun ⟨w, e⟩ => dfs_at ((v, e) :: vs) w
-        modify_ref visit $ fun m => m.insert v tt
+        ns.mmap' fun ⟨w, e⟩ => dfs_at ((v, e) :: vs) w
+        (modify_ref visit) fun m => m.insert v tt
         pure ()
 
 end Scc
 
 /-- Use the local assumptions to create a set of equivalence classes. -/
 unsafe def mk_scc (cl : closure) : tactic (expr_map (List (expr × expr))) :=
-  with_impl_graph $ fun g =>
-    using_new_ref (expr_map.mk Bool) $ fun visit => do
+  with_impl_graph fun g =>
+    (using_new_ref (expr_map.mk Bool)) fun visit => do
       let ls ← local_context
-      ls.mmap' $ fun l => try (g.add_edge l)
+      ls.mmap' fun l => try (g.add_edge l)
       let m ← read_ref g
-      m.to_list.mmap $ fun ⟨v, _⟩ => impl_graph.dfs_at m visit cl [] v
+      m.to_list.mmap fun ⟨v, _⟩ => impl_graph.dfs_at m visit cl [] v
       pure m
 
 end ImplGraph
@@ -294,7 +294,7 @@ by scc
 ```
 -/
 unsafe def interactive.scc : tactic Unit :=
-  closure.with_new_closure $ fun cl => do
+  closure.with_new_closure fun cl => do
     impl_graph.mk_scc cl
     let quote.1 ((%%ₓp) ↔ %%ₓq) ← target
     cl.prove_eqv p q >>= exact
@@ -303,13 +303,13 @@ unsafe def interactive.scc : tactic Unit :=
 add assumptions for every equivalence that can be proven using the
 strongly connected components technique. Mostly useful for testing. -/
 unsafe def interactive.scc' : tactic Unit :=
-  closure.with_new_closure $ fun cl => do
+  closure.with_new_closure fun cl => do
     let m ← impl_graph.mk_scc cl
     let ls := m.to_list.map Prod.fst
     let ls' := Prod.mk <$> ls <*> ls
-    ls'.mmap' $ fun x => do
+    ls'.mmap' fun x => do
         let h ← get_unused_name `h
-        try $ closure.prove_eqv cl x.1 x.2 >>= note h none
+        try <| closure.prove_eqv cl x.1 x.2 >>= note h none
 
 /-- `scc` uses the available equivalences and implications to prove
 a goal of the form `p ↔ q`.

@@ -40,12 +40,12 @@ number `C` such that for infinitely many denominators `n` there exists a numerat
 A number is a Liouville number in the sense of `liouville` if it is `liouville_with` any real
 exponent. -/
 def LiouvilleWith (p x : ℝ) : Prop :=
-  ∃ C, ∃ᶠ n : ℕ in at_top, ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < C / n ^ p
+  ∃ C, ∃ᶠ n : ℕ in at_top, ∃ m : ℤ, x ≠ m / n ∧ abs (x - m / n) < C / n ^ p
 
 /-- For `p = 1` (hence, for any `p ≤ 1`), the condition `liouville_with p x` is trivial. -/
 theorem liouville_with_one (x : ℝ) : LiouvilleWith 1 x := by
   use 2
-  refine' ((eventually_gt_at_top 0).mono $ fun n hn => _).Frequently
+  refine' ((eventually_gt_at_top 0).mono fun n hn => _).Frequently
   have hn' : (0 : ℝ) < n := by
     simpa
   have : x < ↑(⌊x * ↑n⌋ + 1) / ↑n := by
@@ -64,9 +64,9 @@ variable {p q x y : ℝ} {r : ℚ} {m : ℤ} {n : ℕ}
 We also add `1 ≤ n` to the list of assumptions about the denominator. While it is equivalent to
 the original statement, the case `n = 0` breaks many arguments. -/
 theorem exists_pos (h : LiouvilleWith p x) :
-    ∃ (C : ℝ)(h₀ : 0 < C), ∃ᶠ n : ℕ in at_top, 1 ≤ n ∧ ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < C / n ^ p := by
+    ∃ (C : ℝ)(h₀ : 0 < C), ∃ᶠ n : ℕ in at_top, 1 ≤ n ∧ ∃ m : ℤ, x ≠ m / n ∧ abs (x - m / n) < C / n ^ p := by
   rcases h with ⟨C, hC⟩
-  refine' ⟨max C 1, zero_lt_one.trans_le $ le_max_rightₓ _ _, _⟩
+  refine' ⟨max C 1, zero_lt_one.trans_le <| le_max_rightₓ _ _, _⟩
   refine' ((eventually_ge_at_top 1).and_frequently hC).mono _
   rintro n ⟨hle, m, hne, hlt⟩
   refine' ⟨hle, m, hne, hlt.trans_le _⟩
@@ -77,13 +77,13 @@ theorem mono (h : LiouvilleWith p x) (hle : q ≤ p) : LiouvilleWith q x := by
   rcases h.exists_pos with ⟨C, hC₀, hC⟩
   refine' ⟨C, hC.mono _⟩
   rintro n ⟨hn, m, hne, hlt⟩
-  refine' ⟨m, hne, hlt.trans_le $ div_le_div_of_le_left hC₀.le _ _⟩
+  refine' ⟨m, hne, hlt.trans_le <| div_le_div_of_le_left hC₀.le _ _⟩
   exacts[rpow_pos_of_pos (Nat.cast_pos.2 hn) _, rpow_le_rpow_of_exponent_le (Nat.one_le_cast.2 hn) hle]
 
 /-- If `x` satisfies Liouville condition with exponent `p` and `q < p`, then `x`
 satisfies Liouville condition with exponent `q` and constant `1`. -/
 theorem frequently_lt_rpow_neg (h : LiouvilleWith p x) (hlt : q < p) :
-    ∃ᶠ n : ℕ in at_top, ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < n ^ -q := by
+    ∃ᶠ n : ℕ in at_top, ∃ m : ℤ, x ≠ m / n ∧ abs (x - m / n) < n ^ -q := by
   rcases h.exists_pos with ⟨C, hC₀, hC⟩
   have : ∀ᶠ n : ℕ in at_top, C < n ^ (p - q) := by
     simpa only [· ∘ ·, neg_sub, one_div] using
@@ -91,13 +91,13 @@ theorem frequently_lt_rpow_neg (h : LiouvilleWith p x) (hlt : q < p) :
   refine' (this.and_frequently hC).mono _
   rintro n ⟨hnC, hn, m, hne, hlt⟩
   replace hn : (0 : ℝ) < n := Nat.cast_pos.2 hn
-  refine' ⟨m, hne, hlt.trans $ (div_lt_iff $ rpow_pos_of_pos hn _).2 _⟩
+  refine' ⟨m, hne, hlt.trans <| (div_lt_iff <| rpow_pos_of_pos hn _).2 _⟩
   rwa [mul_comm, ← rpow_add hn, ← sub_eq_add_neg]
 
 /-- The product of a Liouville number and a nonzero rational number is again a Liouville number.  -/
 theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r) := by
   rcases h.exists_pos with ⟨C, hC₀, hC⟩
-  refine' ⟨r.denom ^ p * (|r| * C), (tendsto_id.nsmul_at_top r.pos).Frequently (hC.mono _)⟩
+  refine' ⟨r.denom ^ p * (abs r * C), (tendsto_id.nsmul_at_top r.pos).Frequently (hC.mono _)⟩
   rintro n ⟨hn, m, hne, hlt⟩
   have A : (↑(r.num * m) : ℝ) / ↑(r.denom • id n) = m / n * r := by
     simp [← div_mul_div, ← r.cast_def, mul_comm]
@@ -107,7 +107,7 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
     
   · rw [A, ← sub_mul, abs_mul]
     simp only [smul_eq_mul, id.def, Nat.cast_mul]
-    refine' (mul_lt_mul_of_pos_right hlt $ abs_pos.2 $ Rat.cast_ne_zero.2 hr).trans_le _
+    refine' (mul_lt_mul_of_pos_right hlt <| abs_pos.2 <| Rat.cast_ne_zero.2 hr).trans_le _
     rw [mul_rpow, mul_div_mul_left, mul_comm, mul_div_assoc]
     exacts[(rpow_pos_of_pos (Nat.cast_pos.2 r.pos) _).ne', Nat.cast_nonneg _, Nat.cast_nonneg _]
     
@@ -265,7 +265,7 @@ theorem ne_cast_int (h : LiouvilleWith p x) (hp : 1 < p) (m : ℤ) : x ≠ m := 
   rintro rfl
   rename' m => M
   rcases((eventually_gt_at_top 0).and_frequently (h.frequently_lt_rpow_neg hp)).exists with
-    ⟨n : ℕ, hn : 0 < n, m : ℤ, hne : (M : ℝ) ≠ m / n, hlt : |(M - m / n : ℝ)| < n ^ (-1 : ℝ)⟩
+    ⟨n : ℕ, hn : 0 < n, m : ℤ, hne : (M : ℝ) ≠ m / n, hlt : abs (M - m / n : ℝ) < n ^ (-1 : ℝ)⟩
   refine' hlt.not_le _
   have hn' : (0 : ℝ) < n := by
     simpa
@@ -295,11 +295,11 @@ variable {x : ℝ}
 /-- If `x` is a Liouville number, then for any `n`, for infinitely many denominators `b` there
 exists a numerator `a` such that `x ≠ a / b` and `|x - a / b| < 1 / b ^ n`. -/
 theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
-    ∃ᶠ b : ℕ in at_top, ∃ a : ℤ, x ≠ a / b ∧ |x - a / b| < 1 / b ^ n := by
+    ∃ᶠ b : ℕ in at_top, ∃ a : ℤ, x ≠ a / b ∧ abs (x - a / b) < 1 / b ^ n := by
   refine' not_not.1 fun H => _
   simp only [Liouville, not_forall, not_exists, not_frequently, not_and, not_ltₓ, eventually_at_top] at H
   rcases H with ⟨N, hN⟩
-  have : ∀, ∀ b > (1 : ℕ), ∀, ∀ᶠ m : ℕ in at_top, ∀ a : ℤ, (1 / b ^ m : ℝ) ≤ |x - a / b| := by
+  have : ∀, ∀ b > (1 : ℕ), ∀, ∀ᶠ m : ℕ in at_top, ∀ a : ℤ, (1 / b ^ m : ℝ) ≤ abs (x - a / b) := by
     intro b hb
     have hb0' : (b : ℚ) ≠ 0 := (zero_lt_one.trans (Nat.one_lt_cast.2 hb)).ne'
     replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb
@@ -309,7 +309,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
       exact tendsto_inv_at_top_zero.comp (tendsto_pow_at_top_at_top_of_one_lt hb)
     refine' (H.eventually (hx.irrational.eventually_forall_le_dist_cast_div b)).mono _
     exact fun m hm a => hm a
-  have : ∀ᶠ m : ℕ in at_top, ∀, ∀ b < N, ∀, 1 < b → ∀ a : ℤ, (1 / b ^ m : ℝ) ≤ |x - a / b| :=
+  have : ∀ᶠ m : ℕ in at_top, ∀, ∀ b < N, ∀, 1 < b → ∀ a : ℤ, (1 / b ^ m : ℝ) ≤ abs (x - a / b) :=
     (finite_lt_nat N).eventually_all.2 fun b hb => eventually_imp_distrib_left.2 (this b)
   rcases(this.and (eventually_ge_at_top n)).exists with ⟨m, hm, hnm⟩
   rcases hx m with ⟨a, b, hb, hne, hlt⟩

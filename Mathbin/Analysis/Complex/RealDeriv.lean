@@ -65,7 +65,7 @@ theorem TimesContDiffAt.real_of_complex {n : WithTop ℕ} (h : TimesContDiffAt �
 
 theorem TimesContDiff.real_of_complex {n : WithTop ℕ} (h : TimesContDiff ℂ n e) :
     TimesContDiff ℝ n fun x : ℝ => (e x).re :=
-  times_cont_diff_iff_times_cont_diff_at.2 $ fun x => h.times_cont_diff_at.real_of_complex
+  times_cont_diff_iff_times_cont_diff_at.2 fun x => h.times_cont_diff_at.real_of_complex
 
 variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E]
 

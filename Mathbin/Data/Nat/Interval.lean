@@ -190,7 +190,7 @@ theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((Ico a b).Image fun x => c
       exact zero_le _
       
     · rw [← succ_sub_succ c]
-      exact (tsub_le_tsub_iff_left (succ_le_succ $ hx.2.le.trans h)).2 hx.2
+      exact (tsub_le_tsub_iff_left (succ_le_succ <| hx.2.le.trans h)).2 hx.2
       
     
   · rintro ⟨hb, ha⟩
@@ -198,7 +198,7 @@ theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((Ico a b).Image fun x => c
     have hx : x ≤ c := (Nat.le_add_leftₓ _ _).trans ha
     refine' ⟨c - x, _, tsub_tsub_cancel_of_le hx⟩
     · rw [mem_Ico]
-      exact ⟨le_tsub_of_add_le_right ha, (tsub_lt_iff_left hx).2 $ succ_le_iff.1 $ tsub_le_iff_right.1 hb⟩
+      exact ⟨le_tsub_of_add_le_right ha, (tsub_lt_iff_left hx).2 <| succ_le_iff.1 <| tsub_le_iff_right.1 hb⟩
       
     
 
@@ -224,7 +224,7 @@ theorem mod_inj_on_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.ico n (n + a)) :
   · rfl
     
   · rw [add_mod_right] at hkl
-    refine' (hln $ ih hl _ hkl.symm).elim
+    refine' (hln <| ih hl _ hkl.symm).elim
     simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finset.coe_Ico, ha]
     
   · rw [add_mod_right] at hkl
@@ -279,7 +279,7 @@ open Multiset
 
 theorem multiset_Ico_map_mod (n a : ℕ) : (Multiset.ico n (n + a)).map (· % a) = range a := by
   convert congr_argₓ Finset.val (image_Ico_mod n a)
-  refine' ((nodup_map_iff_inj_on (Finset.ico _ _).Nodup).2 $ _).eraseDup.symm
+  refine' ((nodup_map_iff_inj_on (Finset.ico _ _).Nodup).2 <| _).eraseDup.symm
   exact mod_inj_on_Ico _ _
 
 end Multiset

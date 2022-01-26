@@ -41,7 +41,7 @@ def cech_nerve : simplicial_object C where
   obj := fun n => wide_pullback f.right (fun i : Ulift (Finₓ (n.unop.len + 1)) => f.left) fun i => f.hom
   map := fun m n g =>
     (wide_pullback.lift (wide_pullback.base _) fun i =>
-        (wide_pullback.π fun i => f.hom) $ Ulift.up $ g.unop.to_order_hom i.down) $
+        (wide_pullback.π fun i => f.hom) <| Ulift.up <| g.unop.to_order_hom i.down)
       fun j => by
       simp
   map_id' := fun x => by
@@ -64,7 +64,7 @@ def map_cech_nerve {f g : arrow C}
     [∀ n : ℕ, has_wide_pullback g.right (fun i : Ulift (Finₓ (n + 1)) => g.left) fun i => g.hom] (F : f ⟶ g) :
     f.cech_nerve ⟶ g.cech_nerve where
   app := fun n =>
-    (wide_pullback.lift (wide_pullback.base _ ≫ F.right) fun i => wide_pullback.π _ i ≫ F.left) $ fun j => by
+    (wide_pullback.lift (wide_pullback.base _ ≫ F.right) fun i => wide_pullback.π _ i ≫ F.left) fun j => by
       simp
   naturality' := fun x y f => by
     ext ⟨⟩
@@ -152,7 +152,7 @@ def equivalence_right_to_left (X : simplicial_object.augmented C) (F : arrow C) 
   right := G.right
   w' := by
     have := G.w
-    apply_fun fun e => e.app (Opposite.op $ SimplexCategory.mk 0)  at this
+    apply_fun fun e => e.app (Opposite.op <| SimplexCategory.mk 0)  at this
     simpa using this
 
 /-- A helper function used in defining the Čech adjunction. -/
@@ -261,7 +261,7 @@ def cech_conerve : cosimplicial_object C where
   obj := fun n => wide_pushout f.left (fun i : Ulift (Finₓ (n.len + 1)) => f.right) fun i => f.hom
   map := fun m n g =>
     (wide_pushout.desc (wide_pushout.head _) fun i =>
-        (wide_pushout.ι fun i => f.hom) $ Ulift.up $ g.to_order_hom i.down) $
+        (wide_pushout.ι fun i => f.hom) <| Ulift.up <| g.to_order_hom i.down)
       fun i => by
       rw [wide_pushout.arrow_ι fun i => f.hom]
   map_id' := fun x => by
@@ -284,7 +284,7 @@ def map_cech_conerve {f g : arrow C}
     [∀ n : ℕ, has_wide_pushout g.left (fun i : Ulift (Finₓ (n + 1)) => g.right) fun i => g.hom] (F : f ⟶ g) :
     f.cech_conerve ⟶ g.cech_conerve where
   app := fun n =>
-    (wide_pushout.desc (F.left ≫ wide_pushout.head _) fun i => F.right ≫ wide_pushout.ι _ i) $ fun i => by
+    (wide_pushout.desc (F.left ≫ wide_pushout.head _) fun i => F.right ≫ wide_pushout.ι _ i) fun i => by
       rw [← arrow.w_assoc F, wide_pushout.arrow_ι fun i => g.hom]
   naturality' := fun x y f => by
     ext

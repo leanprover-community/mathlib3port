@@ -17,7 +17,7 @@ section SemiNormedGroup
 
 variable {E : Type _} [SemiNormedGroup E]
 
-theorem bounded_iff_exists_norm_le {s : Set E} : Bounded s ↔ ∃ R, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ R := by
+theorem bounded_iff_exists_norm_le {s : Set E} : bounded s ↔ ∃ R, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ R := by
   simp [subset_def, bounded_iff_subset_ball (0 : E)]
 
 alias bounded_iff_exists_norm_le ↔ Metric.Bounded.exists_norm_le _
@@ -33,7 +33,7 @@ theorem Metric.Bounded.exists_pos_norm_le {s : Set E} (hs : Metric.Bounded s) : 
   intro x hx
   exact (hR₀ x hx).trans (le_max_leftₓ _ _)
 
-theorem Metric.Bounded.add {s t : Set E} (hs : Bounded s) (ht : Bounded t) : Bounded (s + t) := by
+theorem Metric.Bounded.add {s t : Set E} (hs : bounded s) (ht : bounded t) : bounded (s + t) := by
   obtain ⟨Rs, hRs⟩ : ∃ R : ℝ, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ R := hs.exists_norm_le
   obtain ⟨Rt, hRt⟩ : ∃ R : ℝ, ∀, ∀ x ∈ t, ∀, ∥x∥ ≤ R := ht.exists_norm_le
   refine' bounded_iff_exists_norm_le.2 ⟨Rs + Rt, _⟩

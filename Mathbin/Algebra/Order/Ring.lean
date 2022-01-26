@@ -253,10 +253,10 @@ theorem mul_neg_of_neg_of_pos (ha : a < 0) (hb : 0 < b) : a * b < 0 := by
   rwa [zero_mul] at h
 
 protected theorem Decidable.mul_self_lt_mul_self [@DecidableRel α (· ≤ ·)] (h1 : 0 ≤ a) (h2 : a < b) : a * a < b * b :=
-  Decidable.mul_lt_mul' h2.le h2 h1 $ h1.trans_lt h2
+  Decidable.mul_lt_mul' h2.le h2 h1 <| h1.trans_lt h2
 
 theorem mul_self_lt_mul_self (h1 : 0 ≤ a) (h2 : a < b) : a * a < b * b :=
-  mul_lt_mul' h2.le h2 h1 $ h1.trans_lt h2
+  mul_lt_mul' h2.le h2 h1 <| h1.trans_lt h2
 
 protected theorem Decidable.strict_mono_on_mul_self [@DecidableRel α (· ≤ ·)] :
     StrictMonoOn (fun x : α => x * x) (Set.Ici 0) := fun x hx y hy hxy => Decidable.mul_self_lt_mul_self hx hxy
@@ -265,14 +265,14 @@ theorem strict_mono_on_mul_self : StrictMonoOn (fun x : α => x * x) (Set.Ici 0)
   mul_self_lt_mul_self hx hxy
 
 protected theorem Decidable.mul_self_le_mul_self [@DecidableRel α (· ≤ ·)] (h1 : 0 ≤ a) (h2 : a ≤ b) : a * a ≤ b * b :=
-  Decidable.mul_le_mul h2 h2 h1 $ h1.trans h2
+  Decidable.mul_le_mul h2 h2 h1 <| h1.trans h2
 
 theorem mul_self_le_mul_self (h1 : 0 ≤ a) (h2 : a ≤ b) : a * a ≤ b * b :=
-  mul_le_mul h2 h2 h1 $ h1.trans h2
+  mul_le_mul h2 h2 h1 <| h1.trans h2
 
 protected theorem Decidable.mul_lt_mul'' [@DecidableRel α (· ≤ ·)] (h1 : a < c) (h2 : b < d) (h3 : 0 ≤ a) (h4 : 0 ≤ b) :
     a * b < c * d :=
-  h4.lt_or_eq_dec.elim (fun b0 => Decidable.mul_lt_mul h1 h2.le b0 $ h3.trans h1.le) fun b0 => by
+  h4.lt_or_eq_dec.elim (fun b0 => Decidable.mul_lt_mul h1 h2.le b0 <| h3.trans h1.le) fun b0 => by
     rw [← b0, mul_zero] <;> exact mul_pos (h3.trans_lt h1) (h4.trans_lt h2)
 
 theorem mul_lt_mul'' : a < c → b < d → 0 ≤ a → 0 ≤ b → a * b < c * d := by
@@ -400,7 +400,7 @@ theorem one_lt_mul_of_le_of_lt : 1 ≤ a → 1 < b → 1 < a * b := by
 protected theorem Decidable.one_lt_mul_of_lt_of_le [@DecidableRel α (· ≤ ·)] (ha : 1 < a) (hb : 1 ≤ b) : 1 < a * b := by
   nontriviality
   calc 1 = 1 * 1 := by
-      rw [one_mulₓ]_ < a * b := Decidable.mul_lt_mul ha hb zero_lt_one $ zero_le_one.trans ha.le
+      rw [one_mulₓ]_ < a * b := Decidable.mul_lt_mul ha hb zero_lt_one <| zero_le_one.trans ha.le
 
 theorem one_lt_mul_of_lt_of_le : 1 < a → 1 ≤ b → 1 < a * b := by
   classical <;> exact Decidable.one_lt_mul_of_lt_of_le
@@ -521,19 +521,19 @@ theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a * b
     mul_neg_of_neg_of_pos ha (nab ha.le)]
 
 theorem pos_of_mul_pos_left (h : 0 < a * b) (ha : 0 ≤ a) : 0 < b :=
-  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_right $ fun h => h.1.not_le ha).2
+  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_right fun h => h.1.not_le ha).2
 
 theorem pos_of_mul_pos_right (h : 0 < a * b) (hb : 0 ≤ b) : 0 < a :=
-  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_right $ fun h => h.2.not_le hb).1
+  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_right fun h => h.2.not_le hb).1
 
 theorem pos_iff_pos_of_mul_pos (hab : 0 < a * b) : 0 < a ↔ 0 < b :=
   ⟨pos_of_mul_pos_left hab ∘ le_of_ltₓ, pos_of_mul_pos_right hab ∘ le_of_ltₓ⟩
 
 theorem neg_of_mul_pos_left (h : 0 < a * b) (ha : a ≤ 0) : b < 0 :=
-  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_left $ fun h => h.1.not_le ha).2
+  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_left fun h => h.1.not_le ha).2
 
 theorem neg_of_mul_pos_right (h : 0 < a * b) (ha : b ≤ 0) : a < 0 :=
-  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_left $ fun h => h.2.not_le ha).1
+  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_left fun h => h.2.not_le ha).1
 
 theorem neg_iff_neg_of_mul_pos (hab : 0 < a * b) : a < 0 ↔ b < 0 :=
   ⟨neg_of_mul_pos_left hab ∘ le_of_ltₓ, neg_of_mul_pos_right hab ∘ le_of_ltₓ⟩
@@ -571,13 +571,12 @@ theorem mul_le_mul_right (h : 0 < c) : a * c ≤ b * c ↔ a ≤ b :=
 @[simp]
 theorem mul_lt_mul_left (h : 0 < c) : c * a < c * b ↔ a < b :=
   have := @LinearOrderₓ.decidableLe α _
-  ⟨lt_imp_lt_of_le_imp_le $ fun h' => Decidable.mul_le_mul_of_nonneg_left h' h.le, fun h' =>
-    mul_lt_mul_of_pos_left h' h⟩
+  ⟨lt_imp_lt_of_le_imp_le fun h' => Decidable.mul_le_mul_of_nonneg_left h' h.le, fun h' => mul_lt_mul_of_pos_left h' h⟩
 
 @[simp]
 theorem mul_lt_mul_right (h : 0 < c) : a * c < b * c ↔ a < b :=
   have := @LinearOrderₓ.decidableLe α _
-  ⟨lt_imp_lt_of_le_imp_le $ fun h' => Decidable.mul_le_mul_of_nonneg_right h' h.le, fun h' =>
+  ⟨lt_imp_lt_of_le_imp_le fun h' => Decidable.mul_le_mul_of_nonneg_right h' h.le, fun h' =>
     mul_lt_mul_of_pos_right h' h⟩
 
 @[simp]
@@ -703,14 +702,14 @@ theorem mul_le_iff_le_one_left (hb : 0 < b) : a * b ≤ b ↔ a ≤ 1 :=
     le_of_not_ltₓ (mt (lt_mul_iff_one_lt_left hb).1 h.not_lt)⟩
 
 theorem mul_lt_iff_lt_one_left (hb : 0 < b) : a * b < b ↔ a < 1 :=
-  lt_iff_lt_of_le_iff_le $ le_mul_iff_one_le_left hb
+  lt_iff_lt_of_le_iff_le <| le_mul_iff_one_le_left hb
 
 theorem mul_le_iff_le_one_right (hb : 0 < b) : b * a ≤ b ↔ a ≤ 1 :=
   ⟨fun h => le_of_not_ltₓ (mt (lt_mul_iff_one_lt_right hb).2 h.not_lt), fun h =>
     le_of_not_ltₓ (mt (lt_mul_iff_one_lt_right hb).1 h.not_lt)⟩
 
 theorem mul_lt_iff_lt_one_right (hb : 0 < b) : b * a < b ↔ a < 1 :=
-  lt_iff_lt_of_le_iff_le $ le_mul_iff_one_le_right hb
+  lt_iff_lt_of_le_iff_le <| le_mul_iff_one_le_right hb
 
 theorem nonpos_of_mul_nonneg_left (h : 0 ≤ a * b) (hb : b < 0) : a ≤ 0 :=
   le_of_not_gtₓ fun ha => absurd h (mul_neg_of_pos_of_neg ha hb).not_le
@@ -732,7 +731,8 @@ def Function.Injective.linearOrderedSemiring {β : Type _} [Zero β] [One β] [A
 
 @[simp]
 theorem Units.inv_pos {u : (α)ˣ} : (0 : α) < ↑u⁻¹ ↔ (0 : α) < u :=
-  have : ∀ {u : (α)ˣ}, (0 : α) < u → (0 : α) < ↑u⁻¹ := fun u h => (zero_lt_mul_left h).mp $ u.mul_inv.symm ▸ zero_lt_one
+  have : ∀ {u : (α)ˣ}, (0 : α) < u → (0 : α) < ↑u⁻¹ := fun u h =>
+    (zero_lt_mul_left h).mp <| u.mul_inv.symm ▸ zero_lt_one
   ⟨this, this⟩
 
 @[simp]
@@ -991,14 +991,14 @@ instance (priority := 100) LinearOrderedRing.is_domain : IsDomain α :=
         (mul_pos ha hb).Ne.symm] }
 
 @[simp]
-theorem abs_one : |(1 : α)| = 1 :=
+theorem abs_one : abs (1 : α) = 1 :=
   abs_of_pos zero_lt_one
 
 @[simp]
-theorem abs_two : |(2 : α)| = 2 :=
+theorem abs_two : abs (2 : α) = 2 :=
   abs_of_pos zero_lt_two
 
-theorem abs_mul (a b : α) : |a * b| = |a| * |b| := by
+theorem abs_mul (a b : α) : abs (a * b) = abs a * abs b := by
   have := @LinearOrderₓ.decidableLe α _
   rw [abs_eq (Decidable.mul_nonneg (abs_nonneg a) (abs_nonneg b))]
   cases' le_totalₓ a 0 with ha ha <;>
@@ -1007,15 +1007,15 @@ theorem abs_mul (a b : α) : |a * b| = |a| * |b| := by
         mul_neg_eq_neg_mul_symm, neg_negₓ, *]
 
 /-- `abs` as a `monoid_with_zero_hom`. -/
-def absHom : MonoidWithZeroHom α α :=
+def absHom : α →*₀ α :=
   ⟨abs, abs_zero, abs_one, abs_mul⟩
 
 @[simp]
-theorem abs_mul_abs_self (a : α) : |a| * |a| = a * a :=
+theorem abs_mul_abs_self (a : α) : abs a * abs a = a * a :=
   abs_by_cases (fun x => x * x = a * a) rfl (neg_mul_neg a a)
 
 @[simp]
-theorem abs_mul_self (a : α) : |a * a| = a * a := by
+theorem abs_mul_self (a : α) : abs (a * a) = a * a := by
   rw [abs_mul, abs_mul_abs_self]
 
 theorem mul_pos_iff : 0 < a * b ↔ 0 < a ∧ 0 < b ∨ a < 0 ∧ b < 0 :=
@@ -1069,17 +1069,17 @@ theorem lt_neg_self_iff : a < -a ↔ a < 0 :=
     
 
 @[simp]
-theorem abs_eq_self : |a| = a ↔ 0 ≤ a := by
+theorem abs_eq_self : abs a = a ↔ 0 ≤ a := by
   simp [abs_eq_max_neg]
 
 @[simp]
-theorem abs_eq_neg_self : |a| = -a ↔ a ≤ 0 := by
+theorem abs_eq_neg_self : abs a = -a ↔ a ≤ 0 := by
   simp [abs_eq_max_neg]
 
 /-- For an element `a` of a linear ordered ring, either `abs a = a` and `0 ≤ a`,
     or `abs a = -a` and `a < 0`.
     Use cases on this lemma to automate linarith in inequalities -/
-theorem abs_cases (a : α) : |a| = a ∧ 0 ≤ a ∨ |a| = -a ∧ a < 0 := by
+theorem abs_cases (a : α) : abs a = a ∧ 0 ≤ a ∨ abs a = -a ∧ a < 0 := by
   by_cases' 0 ≤ a
   · left
     exact ⟨abs_eq_self.mpr h, h⟩
@@ -1135,13 +1135,12 @@ theorem mul_self_inj {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : a * a = b * b �
 @[simp]
 theorem mul_le_mul_left_of_neg {a b c : α} (h : c < 0) : c * a ≤ c * b ↔ b ≤ a :=
   have := @LinearOrderₓ.decidableLe α _
-  ⟨le_imp_le_of_lt_imp_ltₓ $ fun h' => mul_lt_mul_of_neg_left h' h, fun h' =>
-    Decidable.mul_le_mul_of_nonpos_left h' h.le⟩
+  ⟨le_imp_le_of_lt_imp_ltₓ fun h' => mul_lt_mul_of_neg_left h' h, fun h' => Decidable.mul_le_mul_of_nonpos_left h' h.le⟩
 
 @[simp]
 theorem mul_le_mul_right_of_neg {a b c : α} (h : c < 0) : a * c ≤ b * c ↔ b ≤ a :=
   have := @LinearOrderₓ.decidableLe α _
-  ⟨le_imp_le_of_lt_imp_ltₓ $ fun h' => mul_lt_mul_of_neg_right h' h, fun h' =>
+  ⟨le_imp_le_of_lt_imp_ltₓ fun h' => mul_lt_mul_of_neg_right h' h, fun h' =>
     Decidable.mul_le_mul_of_nonpos_right h' h.le⟩
 
 @[simp]
@@ -1199,19 +1198,19 @@ theorem mul_self_add_mul_self_eq_zero {x y : α} : x * x + y * y = 0 ↔ x = 0 �
 theorem eq_zero_of_mul_self_add_mul_self_eq_zero (h : a * a + b * b = 0) : a = 0 :=
   (mul_self_add_mul_self_eq_zero.mp h).left
 
-theorem abs_eq_iff_mul_self_eq : |a| = |b| ↔ a * a = b * b := by
+theorem abs_eq_iff_mul_self_eq : abs a = abs b ↔ a * a = b * b := by
   rw [← abs_mul_abs_self, ← abs_mul_abs_self b]
   exact (mul_self_inj (abs_nonneg a) (abs_nonneg b)).symm
 
-theorem abs_lt_iff_mul_self_lt : |a| < |b| ↔ a * a < b * b := by
+theorem abs_lt_iff_mul_self_lt : abs a < abs b ↔ a * a < b * b := by
   rw [← abs_mul_abs_self, ← abs_mul_abs_self b]
   exact mul_self_lt_mul_self_iff (abs_nonneg a) (abs_nonneg b)
 
-theorem abs_le_iff_mul_self_le : |a| ≤ |b| ↔ a * a ≤ b * b := by
+theorem abs_le_iff_mul_self_le : abs a ≤ abs b ↔ a * a ≤ b * b := by
   rw [← abs_mul_abs_self, ← abs_mul_abs_self b]
   exact mul_self_le_mul_self_iff (abs_nonneg a) (abs_nonneg b)
 
-theorem abs_le_one_iff_mul_self_le_one : |a| ≤ 1 ↔ a * a ≤ 1 := by
+theorem abs_le_one_iff_mul_self_le_one : abs a ≤ 1 ↔ a * a ≤ 1 := by
   simpa only [abs_one, one_mulₓ] using @abs_le_iff_mul_self_le α _ a 1
 
 /-- Pullback a `linear_ordered_ring` under an injective map.
@@ -1253,7 +1252,7 @@ theorem max_mul_mul_le_max_mul_max (b c : α) (ha : 0 ≤ a) (hd : 0 ≤ d) : ma
     (by
       simpa [mul_comm, max_commₓ] using cd)
 
-theorem abs_sub_sq (a b : α) : |a - b| * |a - b| = a * a + b * b - (1 + 1) * a * b := by
+theorem abs_sub_sq (a b : α) : abs (a - b) * abs (a - b) = a * a + b * b - (1 + 1) * a * b := by
   rw [abs_mul_abs_self]
   simp only [mul_addₓ, add_commₓ, add_left_commₓ, mul_comm, sub_eq_add_neg, mul_oneₓ, mul_neg_eq_neg_mul_symm,
     neg_add_rev, neg_negₓ]
@@ -1265,23 +1264,23 @@ section
 variable [Ringₓ α] [LinearOrderₓ α] {a b : α}
 
 @[simp]
-theorem abs_dvd (a b : α) : |a| ∣ b ↔ a ∣ b := by
+theorem abs_dvd (a b : α) : abs a ∣ b ↔ a ∣ b := by
   cases' abs_choice a with h h <;> simp only [h, neg_dvd]
 
-theorem abs_dvd_self (a : α) : |a| ∣ a :=
+theorem abs_dvd_self (a : α) : abs a ∣ a :=
   (abs_dvd a a).mpr (dvd_refl a)
 
 @[simp]
-theorem dvd_abs (a b : α) : a ∣ |b| ↔ a ∣ b := by
+theorem dvd_abs (a b : α) : a ∣ abs b ↔ a ∣ b := by
   cases' abs_choice b with h h <;> simp only [h, dvd_neg]
 
-theorem self_dvd_abs (a : α) : a ∣ |a| :=
+theorem self_dvd_abs (a : α) : a ∣ abs a :=
   (dvd_abs a a).mpr (dvd_refl a)
 
-theorem abs_dvd_abs (a b : α) : |a| ∣ |b| ↔ a ∣ b :=
+theorem abs_dvd_abs (a b : α) : abs a ∣ abs b ↔ a ∣ b :=
   (abs_dvd _ _).trans (dvd_abs _ _)
 
-theorem even_abs {a : α} : Even |a| ↔ Even a :=
+theorem even_abs {a : α} : Even (abs a) ↔ Even a :=
   dvd_abs _ _
 
 theorem odd_abs {a : α} : Odd (abs a) ↔ Odd a := by
@@ -1457,11 +1456,11 @@ variable [Zero α] [Mul α]
 
 instance : MulZeroClass (WithTop α) where
   zero := 0
-  mul := fun m n => if m = 0 ∨ n = 0 then 0 else m.bind fun a => n.bind $ fun b => ↑(a * b)
-  zero_mul := fun a => if_pos $ Or.inl rfl
-  mul_zero := fun a => if_pos $ Or.inr rfl
+  mul := fun m n => if m = 0 ∨ n = 0 then 0 else m.bind fun a => n.bind fun b => ↑(a * b)
+  zero_mul := fun a => if_pos <| Or.inl rfl
+  mul_zero := fun a => if_pos <| Or.inr rfl
 
-theorem mul_def {a b : WithTop α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind $ fun b => ↑(a * b) :=
+theorem mul_def {a b : WithTop α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
   rfl
 
 @[simp]
@@ -1485,10 +1484,10 @@ variable [MulZeroClass α]
 @[norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithTop α) = a * b :=
   (Decidable.byCases fun this : a = 0 => by
-      simp [this]) $
+      simp [this])
     fun ha =>
     (Decidable.byCases fun this : b = 0 => by
-        simp [this]) $
+        simp [this])
       fun hb => by
       simp [*, mul_def]
       rfl
@@ -1620,7 +1619,7 @@ variable [Zero α] [Mul α]
 instance : MulZeroClass (WithBot α) :=
   WithTop.mulZeroClass
 
-theorem mul_def {a b : WithBot α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind $ fun b => ↑(a * b) :=
+theorem mul_def {a b : WithBot α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
   rfl
 
 @[simp]
@@ -1644,10 +1643,10 @@ variable [MulZeroClass α]
 @[norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithBot α) = a * b :=
   (Decidable.byCases fun this : a = 0 => by
-      simp [this]) $
+      simp [this])
     fun ha =>
     (Decidable.byCases fun this : b = 0 => by
-        simp [this]) $
+        simp [this])
       fun hb => by
       simp [*, mul_def]
       rfl

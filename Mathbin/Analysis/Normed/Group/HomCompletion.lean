@@ -62,11 +62,11 @@ def NormedGroupHom.completion (f : NormedGroupHom G H) : NormedGroupHom (complet
       intro y
       apply completion.induction_on y
       · exact
-          is_closed_le (continuous_norm.comp $ f.to_add_monoid_hom.continuous_completion f.continuous)
+          is_closed_le (continuous_norm.comp <| f.to_add_monoid_hom.continuous_completion f.continuous)
             (continuous_const.mul continuous_norm)
         
       · intro x
-        change ∥f.to_add_monoid_hom.completion _ (↑x)∥ ≤ ∥f∥ * ∥↑x∥
+        change ∥f.to_add_monoid_hom.completion _ ↑x∥ ≤ ∥f∥ * ∥↑x∥
         rw [f.to_add_monoid_hom.completion_coe f.continuous]
         simp only [completion.norm_coe]
         exact f.le_op_norm x
@@ -165,7 +165,7 @@ theorem NormedGroupHom.norm_completion (f : NormedGroupHom G H) : ∥f.completio
     
 
 theorem NormedGroupHom.ker_le_ker_completion (f : NormedGroupHom G H) :
-    (to_compl.comp $ incl f.ker).range ≤ f.completion.ker := by
+    (to_compl.comp <| incl f.ker).range ≤ f.completion.ker := by
   intro a h
   replace h : ∃ y : f.ker, to_compl (y : G) = a
   · simpa using h
@@ -176,7 +176,7 @@ theorem NormedGroupHom.ker_le_ker_completion (f : NormedGroupHom G H) :
   simp [NormedGroupHom.mem_ker, f.completion_coe g, g_in, completion.coe_zero]
 
 theorem NormedGroupHom.ker_completion {f : NormedGroupHom G H} {C : ℝ} (h : f.surjective_on_with f.range C) :
-    (f.completion.ker : Set $ completion G) = Closure (to_compl.comp $ incl f.ker).range := by
+    (f.completion.ker : Set <| completion G) = Closure (to_compl.comp <| incl f.ker).range := by
   rcases h.exists_pos with ⟨C', C'_pos, hC'⟩
   apply le_antisymmₓ
   · intro hatg hatg_in

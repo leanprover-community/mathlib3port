@@ -63,7 +63,7 @@ theorem mem_bot {x : M} : x ∈ (⊥ : Submodule R M) ↔ x = 0 :=
 end
 
 instance unique_bot : Unique (⊥ : Submodule R M) :=
-  ⟨inferInstance, fun x => Subtype.ext $ (mem_bot R).1 x.mem⟩
+  ⟨inferInstance, fun x => Subtype.ext <| (mem_bot R).1 x.mem⟩
 
 instance : OrderBot (Submodule R M) where
   bot := ⊥
@@ -198,10 +198,10 @@ instance : HasInf (Submodule R M) :=
 
 instance : CompleteLattice (Submodule R M) :=
   { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x },
-    le_sup_left := fun a b => le_Inf' $ fun x ⟨ha, hb⟩ => ha, le_sup_right := fun a b => le_Inf' $ fun x ⟨ha, hb⟩ => hb,
+    le_sup_left := fun a b => le_Inf' fun x ⟨ha, hb⟩ => ha, le_sup_right := fun a b => le_Inf' fun x ⟨ha, hb⟩ => hb,
     sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := ·⊓·, le_inf := fun a b c => Set.subset_inter,
     inf_le_left := fun a b => Set.inter_subset_left _ _, inf_le_right := fun a b => Set.inter_subset_right _ _,
-    sup := fun tt => Inf { t | ∀, ∀ t' ∈ tt, ∀, t' ≤ t }, le_Sup := fun s p hs => le_Inf' $ fun q hq => hq _ hs,
+    sup := fun tt => Inf { t | ∀, ∀ t' ∈ tt, ∀, t' ≤ t }, le_Sup := fun s p hs => le_Inf' fun q hq => hq _ hs,
     Sup_le := fun s p hs => Inf_le' hs, inf := Inf, le_Inf := fun s a => le_Inf', Inf_le := fun s a => Inf_le' }
 
 @[simp]
@@ -213,11 +213,11 @@ theorem mem_inf {p q : Submodule R M} {x : M} : x ∈ p⊓q ↔ x ∈ p ∧ x �
   Iff.rfl
 
 @[simp]
-theorem Inf_coe (P : Set (Submodule R M)) : (↑Inf P : Set M) = ⋂ p ∈ P, ↑p :=
+theorem Inf_coe (P : Set (Submodule R M)) : (↑(Inf P) : Set M) = ⋂ p ∈ P, ↑p :=
   rfl
 
 @[simp]
-theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) : (↑s.inf p : Set M) = ⋂ i ∈ s, ↑p i := by
+theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) : (↑(s.inf p) : Set M) = ⋂ i ∈ s, ↑(p i) := by
   let this' := Classical.decEq ι
   refine' s.induction_on _ fun i s hi ih => _
   · simp
@@ -227,7 +227,7 @@ theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) : (↑s.i
     
 
 @[simp]
-theorem infi_coe {ι} (p : ι → Submodule R M) : (↑⨅ i, p i : Set M) = ⋂ i, ↑p i := by
+theorem infi_coe {ι} (p : ι → Submodule R M) : (↑(⨅ i, p i) : Set M) = ⋂ i, ↑(p i) := by
   rw [infi, Inf_coe] <;> ext a <;> simp <;> exact ⟨fun h i => h _ i rfl, fun h i x e => e ▸ h _⟩
 
 @[simp]
@@ -259,11 +259,11 @@ open_locale BigOperators
 
 theorem sum_mem_supr {ι : Type _} [Fintype ι] {f : ι → M} {p : ι → Submodule R M} (h : ∀ i, f i ∈ p i) :
     (∑ i, f i) ∈ ⨆ i, p i :=
-  sum_mem _ $ fun i hi => mem_supr_of_mem i (h i)
+  (sum_mem _) fun i hi => mem_supr_of_mem i (h i)
 
 theorem sum_mem_bsupr {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → Submodule R M} (h : ∀, ∀ i ∈ s, ∀, f i ∈ p i) :
     (∑ i in s, f i) ∈ ⨆ i ∈ s, p i :=
-  sum_mem _ $ fun i hi => mem_supr_of_mem i $ mem_supr_of_mem hi (h i hi)
+  (sum_mem _) fun i hi => mem_supr_of_mem i <| mem_supr_of_mem hi (h i hi)
 
 /-! Note that `submodule.mem_supr` is provided in `linear_algebra/basic.lean`. -/
 
@@ -276,7 +276,7 @@ theorem disjoint_def {p p' : Submodule R M} : Disjoint p p' ↔ ∀, ∀ x ∈ p
     simp
 
 theorem disjoint_def' {p p' : Submodule R M} : Disjoint p p' ↔ ∀, ∀ x ∈ p, ∀, ∀ y ∈ p', ∀, x = y → x = (0 : M) :=
-  disjoint_def.trans ⟨fun h x hx y hy hxy => h x hx $ hxy.symm ▸ hy, fun h x hx hx' => h _ hx x hx' rfl⟩
+  disjoint_def.trans ⟨fun h x hx y hy hxy => h x hx <| hxy.symm ▸ hy, fun h x hx hx' => h _ hx x hx' rfl⟩
 
 theorem eq_zero_of_coe_mem_of_disjoint (hpq : Disjoint p q) {a : p} (ha : (a : M) ∈ q) : a = 0 := by
   exact_mod_cast disjoint_def.mp hpq a (coe_mem a) ha

@@ -41,7 +41,7 @@ theorem continuants_aux_stable_of_terminated (succ_n_le_m : n + 1 ≤ m) (termin
     exact Eq.trans this IH
     
 
-theorem convergents'_aux_stable_step_of_terminated {s : Seqₓₓ $ pair K} (terminated_at_n : s.terminated_at n) :
+theorem convergents'_aux_stable_step_of_terminated {s : Seqₓₓ <| pair K} (terminated_at_n : s.terminated_at n) :
     convergents'_aux s (n + 1) = convergents'_aux s n := by
   change s.nth n = none at terminated_at_n
   induction' n with n IH generalizing s
@@ -56,7 +56,7 @@ theorem convergents'_aux_stable_step_of_terminated {s : Seqₓₓ $ pair K} (ter
         simp only [Seqₓₓ.TerminatedAt, s.nth_tail, terminated_at_n]
       simp only [convergents'_aux, s_head_eq, IH this]
 
-theorem convergents'_aux_stable_of_terminated {s : Seqₓₓ $ pair K} (n_le_m : n ≤ m)
+theorem convergents'_aux_stable_of_terminated {s : Seqₓₓ <| pair K} (n_le_m : n ≤ m)
     (terminated_at_n : s.terminated_at n) : convergents'_aux s m = convergents'_aux s n := by
   induction' n_le_m with m n_le_m IH generalizing s
   · rfl

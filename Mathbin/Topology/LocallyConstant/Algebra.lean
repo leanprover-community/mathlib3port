@@ -27,15 +27,15 @@ theorem one_apply [One Y] (x : X) : (1 : LocallyConstant X Y) x = 1 :=
   rfl
 
 @[to_additive]
-instance [HasInv Y] : HasInv (LocallyConstant X Y) where
+instance [Inv Y] : Inv (LocallyConstant X Y) where
   inv := fun f => ⟨f⁻¹, f.is_locally_constant.inv⟩
 
 @[simp, to_additive]
-theorem coe_inv [HasInv Y] (f : LocallyConstant X Y) : ⇑f⁻¹ = f⁻¹ :=
+theorem coe_inv [Inv Y] (f : LocallyConstant X Y) : ⇑f⁻¹ = f⁻¹ :=
   rfl
 
 @[to_additive]
-theorem inv_apply [HasInv Y] (f : LocallyConstant X Y) (x : X) : (f⁻¹) x = f x⁻¹ :=
+theorem inv_apply [Inv Y] (f : LocallyConstant X Y) (x : X) : f⁻¹ x = (f x)⁻¹ :=
   rfl
 
 @[to_additive]
@@ -208,7 +208,7 @@ section Algebra
 variable [CommSemiringₓ R] [Semiringₓ Y] [Algebra R Y]
 
 instance : Algebra R (LocallyConstant X Y) where
-  toRingHom := const_ring_hom.comp $ algebraMap R Y
+  toRingHom := const_ring_hom.comp <| algebraMap R Y
   commutes' := by
     intros
     ext

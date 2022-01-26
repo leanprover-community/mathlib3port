@@ -292,12 +292,12 @@ def comp {C₁ C₂ C₃ : HomologicalComplex V c} {f₁ g₁ : C₁ ⟶ C₂} {
 /-- a variant of `homotopy.comp_right` useful for dealing with homotopy equivalences. -/
 @[simps]
 def comp_right_id {f : C ⟶ C} (h : Homotopy f (𝟙 C)) (g : C ⟶ D) : Homotopy (f ≫ g) g :=
-  (h.comp_right g).trans (of_eq $ category.id_comp _)
+  (h.comp_right g).trans (of_eq <| category.id_comp _)
 
 /-- a variant of `homotopy.comp_left` useful for dealing with homotopy equivalences. -/
 @[simps]
 def comp_left_id {f : D ⟶ D} (h : Homotopy f (𝟙 D)) (g : C ⟶ D) : Homotopy (g ≫ f) g :=
-  (h.comp_left g).trans (of_eq $ category.comp_id _)
+  (h.comp_left g).trans (of_eq <| category.comp_id _)
 
 /-!
 Null homotopic maps can be constructed using the formula `hd+dh`. We show that

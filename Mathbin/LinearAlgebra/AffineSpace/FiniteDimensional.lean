@@ -32,7 +32,7 @@ open AffineSubspace FiniteDimensional Module
 /-- The `vector_span` of a finite set is finite-dimensional. -/
 theorem finite_dimensional_vector_span_of_finite {s : Set P} (h : Set.Finite s) :
     FiniteDimensional k (vectorSpan k s) :=
-  span_of_finite k $ h.vsub h
+  span_of_finite k <| h.vsub h
 
 /-- The `vector_span` of a family indexed by a `fintype` is
 finite-dimensional. -/
@@ -85,7 +85,7 @@ variable {k}
 family has dimension one less than its cardinality. -/
 theorem AffineIndependent.finrank_vector_span_image_finset {p : ι → P} (hi : AffineIndependent k p) {s : Finset ι}
     {n : ℕ} (hc : Finset.card s = n + 1) : finrank k (vectorSpan k (s.image p : Set P)) = n := by
-  have hi' := hi.range.mono (Set.image_subset_range p (↑s))
+  have hi' := hi.range.mono (Set.image_subset_range p ↑s)
   have hc' : (s.image p).card = n + 1 := by
     rwa [s.card_image_of_injective hi.injective]
   have hn : (s.image p).Nonempty := by
@@ -115,7 +115,7 @@ theorem AffineIndependent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_a
     (hi : AffineIndependent k p) {s : Finset ι} {sm : Submodule k V} [FiniteDimensional k sm]
     (hle : vectorSpan k (s.image p : Set P) ≤ sm) (hc : Finset.card s = finrank k sm + 1) :
     vectorSpan k (s.image p : Set P) = sm :=
-  eq_of_le_of_finrank_eq hle $ hi.finrank_vector_span_image_finset hc
+  eq_of_le_of_finrank_eq hle <| hi.finrank_vector_span_image_finset hc
 
 /-- If the `vector_span` of a finite affinely independent
 family lies in a submodule with dimension one less than its
@@ -123,7 +123,7 @@ cardinality, it equals that submodule. -/
 theorem AffineIndependent.vector_span_eq_of_le_of_card_eq_finrank_add_one [Fintype ι] {p : ι → P}
     (hi : AffineIndependent k p) {sm : Submodule k V} [FiniteDimensional k sm] (hle : vectorSpan k (Set.Range p) ≤ sm)
     (hc : Fintype.card ι = finrank k sm + 1) : vectorSpan k (Set.Range p) = sm :=
-  eq_of_le_of_finrank_eq hle $ hi.finrank_vector_span hc
+  eq_of_le_of_finrank_eq hle <| hi.finrank_vector_span hc
 
 /-- If the `affine_span` of a finite subset of an affinely independent
 family lies in an affine subspace whose direction has dimension one
@@ -156,7 +156,7 @@ cardinality is one more than that of the finite-dimensional space is
 `⊤`. -/
 theorem AffineIndependent.vector_span_eq_top_of_card_eq_finrank_add_one [FiniteDimensional k V] [Fintype ι] {p : ι → P}
     (hi : AffineIndependent k p) (hc : Fintype.card ι = finrank k V + 1) : vectorSpan k (Set.Range p) = ⊤ :=
-  eq_top_of_finrank_eq $ hi.finrank_vector_span hc
+  eq_top_of_finrank_eq <| hi.finrank_vector_span hc
 
 /-- The `affine_span` of a finite affinely independent family is `⊤` iff the
 family's cardinality is one more than that of the finite-dimensional space. -/

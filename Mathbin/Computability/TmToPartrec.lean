@@ -112,7 +112,7 @@ def code.eval : code → List ℕ →. List ℕ
     pure (n.head :: ns)
   | code.comp f g => fun v => g.eval v >>= f.eval
   | code.case f g => fun v => v.head.elim (f.eval v.tail) fun y _ => g.eval (y :: v.tail)
-  | code.fix f => Pfun.fix $ fun v => (f.eval v).map $ fun v => if v.head = 0 then Sum.inl v.tail else Sum.inr v.tail
+  | code.fix f => Pfun.fix fun v => (f.eval v).map fun v => if v.head = 0 then Sum.inl v.tail else Sum.inr v.tail
 
 namespace Code
 
@@ -169,7 +169,7 @@ it calls `f (n :: v)` as the exit test and `n+1 :: v` as the next state. At the 
 `n+1 :: v` where `n` is the desired output, and `pred (n+1 :: v) = [n]` returns the result.
  -/
 def rfind (f : code) : code :=
-  comp pred $ comp (fix $ cons f $ cons succ tail) zero'
+  comp pred <| comp (fix <| cons f <| cons succ tail) zero'
 
 /-- `prec f g` implements the `prec` (primitive recursion) operation of partial recursive
 functions. `prec f g` evaluates as:
@@ -195,10 +195,10 @@ stripped by `fix`). After the `fix` is complete, the final state is `n :: 0 :: r
 `res` is the desired result, and the rest reduces this to `[res]`. -/
 def prec (f g : code) : code :=
   let G :=
-    cons tail $
-      cons succ $ cons (comp pred tail) $ cons (comp g $ cons id $ comp tail tail) $ comp tail $ comp tail tail
-  let F := case id $ comp (comp (comp tail tail) (fix G)) zero'
-  cons (comp F (cons head $ cons (comp f tail) tail)) nil
+    cons tail <|
+      cons succ <| cons (comp pred tail) <| cons (comp g <| cons id <| comp tail tail) <| comp tail <| comp tail tail
+  let F := case id <| comp (comp (comp tail tail) (fix G)) zero'
+  cons (comp F (cons head <| cons (comp f tail) tail)) nil
 
 attribute [-simp] Part.bind_eq_bind Part.map_eq_map Part.pure_eq_some
 
@@ -271,7 +271,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
             Pfun.fix
               (fun v : List ℕ => do
                 let x ← cg.eval (v.head :: v.tail.tail)
-                pure $
+                pure <|
                     if v.tail.head = 0 then
                       Sum.inl (v.head.succ :: v.tail.head.pred :: x.head :: v.tail.tail.tail : List ℕ)
                     else Sum.inr (v.head.succ :: v.tail.head.pred :: x.head :: v.tail.tail.tail))
@@ -283,7 +283,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
       simp only [List.headₓ, pure_bind, List.tail_cons]
     intro a b e
     induction' b with b IH generalizing a e
-    · refine' Pfun.mem_fix_iff.2 (Or.inl $ Part.eq_some_iff.1 _)
+    · refine' Pfun.mem_fix_iff.2 (Or.inl <| Part.eq_some_iff.1 _)
       simp only [hg, ← e, pure_bind, List.tail_cons]
       rfl
       
@@ -316,8 +316,9 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
           v' ∈
               Pfun.fix
                 (fun v =>
-                  (cf.eval v).bind $ fun y =>
-                    Part.some $ if y.head = 0 then Sum.inl (v.head.succ :: v.tail) else Sum.inr (v.head.succ :: v.tail))
+                  (cf.eval v).bind fun y =>
+                    Part.some <|
+                      if y.head = 0 then Sum.inl (v.head.succ :: v.tail) else Sum.inr (v.head.succ :: v.tail))
                 v₁ →
             ∀ n,
               v₁ = n :: v.val →
@@ -356,8 +357,8 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
         (n.succ :: v.1 : List ℕ) ∈
           Pfun.fix
             (fun v =>
-              (cf.eval v).bind $ fun y =>
-                Part.some $ if y.head = 0 then Sum.inl (v.head.succ :: v.tail) else Sum.inr (v.head.succ :: v.tail))
+              (cf.eval v).bind fun y =>
+                Part.some <| if y.head = 0 then Sum.inl (v.head.succ :: v.tail) else Sum.inr (v.head.succ :: v.tail))
             (n :: v.val) :=
         Pfun.mem_fix_iff.2
           (Or.inl
@@ -981,30 +982,30 @@ def unrev :=
 
 /-- Move elements from `k₁` to `k₂` while `p` holds, with the last element being left on `k₁`. -/
 def move_excl p k₁ k₂ q :=
-  Λ'.move p k₁ k₂ $ Λ'.push k₁ id q
+  Λ'.move p k₁ k₂ <| Λ'.push k₁ id q
 
 /-- Move elements from `k₁` to `k₂` without reversion, by performing a double move via the `rev`
 stack. -/
 def move₂ p k₁ k₂ q :=
-  move_excl p k₁ rev $ Λ'.move (fun _ => ff) rev k₂ q
+  move_excl p k₁ rev <| Λ'.move (fun _ => ff) rev k₂ q
 
 /-- Assuming `tr_list v` is on the front of stack `k`, remove it, and push `v.head` onto `main`.
 See the section documentation. -/
 def head (k : K') (q : Λ') : Λ' :=
-  Λ'.move nat_end k rev $
-    (Λ'.push rev fun _ => some Γ'.cons) $
-      Λ'.read $ fun s => (if s = some Γ'.Cons then id else Λ'.clear (fun x => x = Γ'.Cons) k) $ unrev q
+  Λ'.move nat_end k rev <|
+    (Λ'.push rev fun _ => some Γ'.cons) <|
+      Λ'.read fun s => (if s = some Γ'.Cons then id else Λ'.clear (fun x => x = Γ'.Cons) k) <| unrev q
 
 /-- The program that evaluates code `c` with continuation `k`. This expects an initial state where
 `tr_list v` is on `main`, `tr_cont_stack k` is on `stack`, and `aux` and `rev` are empty.
 See the section documentation for details. -/
 @[simp]
 def tr_normal : code → cont' → Λ'
-  | code.zero', k => (Λ'.push main fun _ => some Γ'.cons) $ Λ'.ret k
-  | code.succ, k => head main $ Λ'.succ $ Λ'.ret k
-  | code.tail, k => Λ'.clear nat_end main $ Λ'.ret k
+  | code.zero', k => (Λ'.push main fun _ => some Γ'.cons) <| Λ'.ret k
+  | code.succ, k => head main <| Λ'.succ <| Λ'.ret k
+  | code.tail, k => Λ'.clear nat_end main <| Λ'.ret k
   | code.cons f fs, k =>
-    (Λ'.push stack fun _ => some Γ'.Cons) $ Λ'.move (fun _ => ff) main rev $ Λ'.copy $ tr_normal f (cont'.cons₁ fs k)
+    (Λ'.push stack fun _ => some Γ'.Cons) <| Λ'.move (fun _ => ff) main rev <| Λ'.copy <| tr_normal f (cont'.cons₁ fs k)
   | code.comp f g, k => tr_normal g (cont'.comp f k)
   | code.case f g, k => Λ'.pred (tr_normal f k) (tr_normal g k)
   | code.fix f, k => tr_normal f (cont'.fix f k)
@@ -1013,35 +1014,34 @@ def tr_normal : code → cont' → Λ'
 @[simp]
 def tr : Λ' → stmt'
   | Λ'.move p k₁ k₂ q =>
-    pop' k₁ $ branch (fun s => s.elim tt p) (goto $ fun _ => q) (push' k₂ $ goto $ fun _ => Λ'.move p k₁ k₂ q)
-  | Λ'.push k f q =>
-    branch (fun s => (f s).isSome) ((push k fun s => (f s).iget) $ goto $ fun _ => q) (goto $ fun _ => q)
+    pop' k₁ <| branch (fun s => s.elim tt p) (goto fun _ => q) (push' k₂ <| goto fun _ => Λ'.move p k₁ k₂ q)
+  | Λ'.push k f q => branch (fun s => (f s).isSome) ((push k fun s => (f s).iget) <| goto fun _ => q) (goto fun _ => q)
   | Λ'.read q => goto q
-  | Λ'.clear p k q => pop' k $ branch (fun s => s.elim tt p) (goto $ fun _ => q) (goto $ fun _ => Λ'.clear p k q)
+  | Λ'.clear p k q => pop' k <| branch (fun s => s.elim tt p) (goto fun _ => q) (goto fun _ => Λ'.clear p k q)
   | Λ'.copy q =>
-    pop' rev $ branch Option.isSome (push' main $ push' stack $ goto $ fun _ => Λ'.copy q) (goto $ fun _ => q)
+    pop' rev <| branch Option.isSome (push' main <| push' stack <| goto fun _ => Λ'.copy q) (goto fun _ => q)
   | Λ'.succ q =>
-    pop' main $
-      branch (fun s => s = some Γ'.bit1) ((push rev fun _ => Γ'.bit0) $ goto $ fun _ => Λ'.succ q) $
+    pop' main <|
+      branch (fun s => s = some Γ'.bit1) ((push rev fun _ => Γ'.bit0) <| goto fun _ => Λ'.succ q) <|
         branch (fun s => s = some Γ'.cons)
-          ((push main fun _ => Γ'.cons) $ (push main fun _ => Γ'.bit1) $ goto $ fun _ => unrev q)
-          ((push main fun _ => Γ'.bit1) $ goto $ fun _ => unrev q)
+          ((push main fun _ => Γ'.cons) <| (push main fun _ => Γ'.bit1) <| goto fun _ => unrev q)
+          ((push main fun _ => Γ'.bit1) <| goto fun _ => unrev q)
   | Λ'.pred q₁ q₂ =>
-    pop' main $
-      branch (fun s => s = some Γ'.bit0) ((push rev fun _ => Γ'.bit1) $ goto $ fun _ => Λ'.pred q₁ q₂) $
-        branch (fun s => nat_end s.iget) (goto $ fun _ => q₁)
-          (peek' main $
-            branch (fun s => nat_end s.iget) (goto $ fun _ => unrev q₂)
-              ((push rev fun _ => Γ'.bit0) $ goto $ fun _ => unrev q₂))
+    pop' main <|
+      branch (fun s => s = some Γ'.bit0) ((push rev fun _ => Γ'.bit1) <| goto fun _ => Λ'.pred q₁ q₂) <|
+        branch (fun s => nat_end s.iget) (goto fun _ => q₁)
+          (peek' main <|
+            branch (fun s => nat_end s.iget) (goto fun _ => unrev q₂)
+              ((push rev fun _ => Γ'.bit0) <| goto fun _ => unrev q₂))
   | Λ'.ret (cont'.cons₁ fs k) =>
-    goto $ fun _ =>
-      move₂ (fun _ => ff) main aux $
-        move₂ (fun s => s = Γ'.Cons) stack main $ move₂ (fun _ => ff) aux stack $ tr_normal fs (cont'.cons₂ k)
-  | Λ'.ret (cont'.cons₂ k) => goto $ fun _ => head stack $ Λ'.ret k
-  | Λ'.ret (cont'.comp f k) => goto $ fun _ => tr_normal f k
+    goto fun _ =>
+      move₂ (fun _ => ff) main aux <|
+        move₂ (fun s => s = Γ'.Cons) stack main <| move₂ (fun _ => ff) aux stack <| tr_normal fs (cont'.cons₂ k)
+  | Λ'.ret (cont'.cons₂ k) => goto fun _ => head stack <| Λ'.ret k
+  | Λ'.ret (cont'.comp f k) => goto fun _ => tr_normal f k
   | Λ'.ret (cont'.fix f k) =>
-    pop' main $ goto $ fun s => cond (nat_end s.iget) (Λ'.ret k) $ Λ'.clear nat_end main $ tr_normal f (cont'.fix f k)
-  | Λ'.ret cont'.halt => (load fun _ => none) $ halt
+    pop' main <| goto fun s => cond (nat_end s.iget) (Λ'.ret k) <| Λ'.clear nat_end main <| tr_normal f (cont'.fix f k)
+  | Λ'.ret cont'.halt => (load fun _ => none) <| halt
 
 /-- Translating a `cont` continuation to a `cont'` continuation simply entails dropping all the
 data. This data is instead encoded in `tr_cont_stack` in the configuration. -/
@@ -1178,7 +1178,7 @@ If it is found, say `L = l₁ ++ a :: l₂` where `a` satisfies `p` but `l₁` d
 def split_at_pred {α} (p : α → Bool) : List α → List α × Option α × List α
   | [] => ([], none, [])
   | a :: as =>
-    cond (p a) ([], some a, as) $
+    cond (p a) ([], some a, as) <|
       let ⟨l₁, o, l₂⟩ := split_at_pred as
       ⟨a :: l₁, o, l₂⟩
 
@@ -1258,7 +1258,7 @@ theorem unrev_ok {q s} {S : K' → List Γ'} :
       ⟨some q, none, update (update S rev []) main (List.reverseCore (S rev) (S main))⟩ :=
   move_ok
       (by
-        decide) $
+        decide) <|
     split_at_pred_ff _
 
 theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁ ≠ rev ∧ k₂ ≠ rev ∧ k₁ ≠ k₂) (h₂ : S rev = [])
@@ -1545,7 +1545,7 @@ theorem tr_normal_respects c k v s :
     obtain ⟨c, h₁, h₂⟩ := IHf (cont.cons₁ fs v k) v none
     refine'
       ⟨c, h₁,
-        trans_gen.head rfl $
+        trans_gen.head rfl <|
           (move_ok
                 (by
                   decide)
@@ -1615,7 +1615,7 @@ theorem tr_ret_respects k v s :
     exact h₂
   case cons₂ ns k IH =>
     obtain ⟨c, h₁, h₂⟩ := IH (ns.head :: v) none
-    exact ⟨c, h₁, trans_gen.head rfl $ head_stack_ok.trans h₂⟩
+    exact ⟨c, h₁, trans_gen.head rfl <| head_stack_ok.trans h₂⟩
   case comp f k IH =>
     obtain ⟨s', h₁, h₂⟩ := tr_normal_respects f k v s
     exact ⟨_, h₁, trans_gen.head rfl h₂⟩
@@ -1640,7 +1640,7 @@ theorem tr_ret_respects k v s :
       exact h₂
       
     · obtain ⟨s', h₁, h₂⟩ := tr_normal_respects f (cont.fix f k) v.tail (some Γ'.cons)
-      refine' ⟨_, h₁, trans_gen.head rfl $ trans_gen.trans _ h₂⟩
+      refine' ⟨_, h₁, trans_gen.head rfl <| trans_gen.trans _ h₂⟩
       swap 3
       simp [tr_cont, this.1]
       convert clear_ok (split_at_pred_eq _ _ (tr_nat v.head).tail (some Γ'.cons) _ _ _) using 2
@@ -1683,13 +1683,13 @@ theorem tr_eval c v : eval (TM2.step tr) (init c v) = halt <$> code.eval c v := 
 
 /-- The set of machine states reachable via downward label jumps, discounting jumps via `ret`. -/
 def tr_stmts₁ : Λ' → Finset Λ'
-  | Q@(Λ'.move p k₁ k₂ q) => insert Q $ tr_stmts₁ q
-  | Q@(Λ'.push k f q) => insert Q $ tr_stmts₁ q
-  | Q@(Λ'.read q) => insert Q $ Finset.univ.bUnion $ fun s => tr_stmts₁ (q s)
-  | Q@(Λ'.clear p k q) => insert Q $ tr_stmts₁ q
-  | Q@(Λ'.copy q) => insert Q $ tr_stmts₁ q
-  | Q@(Λ'.succ q) => insert Q $ insert (unrev q) $ tr_stmts₁ q
-  | Q@(Λ'.pred q₁ q₂) => insert Q $ tr_stmts₁ q₁ ∪ insert (unrev q₂) (tr_stmts₁ q₂)
+  | Q@(Λ'.move p k₁ k₂ q) => insert Q <| tr_stmts₁ q
+  | Q@(Λ'.push k f q) => insert Q <| tr_stmts₁ q
+  | Q@(Λ'.read q) => insert Q <| Finset.univ.bUnion fun s => tr_stmts₁ (q s)
+  | Q@(Λ'.clear p k q) => insert Q <| tr_stmts₁ q
+  | Q@(Λ'.copy q) => insert Q <| tr_stmts₁ q
+  | Q@(Λ'.succ q) => insert Q <| insert (unrev q) <| tr_stmts₁ q
+  | Q@(Λ'.pred q₁ q₂) => insert Q <| tr_stmts₁ q₁ ∪ insert (unrev q₂) (tr_stmts₁ q₂)
   | Q@(Λ'.ret k) => {Q}
 
 theorem tr_stmts₁_trans {q q'} : q' ∈ tr_stmts₁ q → tr_stmts₁ q' ⊆ tr_stmts₁ q := by
@@ -1709,15 +1709,15 @@ theorem tr_stmts₁_trans {q q'} : q' ∈ tr_stmts₁ q → tr_stmts₁ q' ⊆ t
       
     · intro h x h'
       simp
-      exact Or.inr (Or.inr $ q_ih h h')
+      exact Or.inr (Or.inr <| q_ih h h')
       
     
   · refine' ⟨fun h x h' => _, fun h x h' => _, fun h x h' => _⟩ <;> simp
-    · exact Or.inr (Or.inr $ Or.inl $ q_ih_q₁ h h')
+    · exact Or.inr (Or.inr <| Or.inl <| q_ih_q₁ h h')
       
     · cases' Finset.mem_insert.1 h' with h' h' <;> simp [h', unrev]
       
-    · exact Or.inr (Or.inr $ Or.inr $ q_ih_q₂ h h')
+    · exact Or.inr (Or.inr <| Or.inr <| q_ih_q₂ h h')
       
     
 
@@ -1739,15 +1739,16 @@ def code_supp' : code → cont' → Finset Λ'
     tr_stmts₁ (tr_normal c k) ∪
       (code_supp' f (cont'.cons₁ fs k) ∪
         (tr_stmts₁
-            (move₂ (fun _ => ff) main aux $
-              move₂ (fun s => s = Γ'.Cons) stack main $ move₂ (fun _ => ff) aux stack $ tr_normal fs (cont'.cons₂ k)) ∪
-          (code_supp' fs (cont'.cons₂ k) ∪ tr_stmts₁ (head stack $ Λ'.ret k))))
+            (move₂ (fun _ => ff) main aux <|
+              move₂ (fun s => s = Γ'.Cons) stack main <|
+                move₂ (fun _ => ff) aux stack <| tr_normal fs (cont'.cons₂ k)) ∪
+          (code_supp' fs (cont'.cons₂ k) ∪ tr_stmts₁ (head stack <| Λ'.ret k))))
   | c@(code.comp f g), k =>
     tr_stmts₁ (tr_normal c k) ∪ (code_supp' g (cont'.comp f k) ∪ (tr_stmts₁ (tr_normal f k) ∪ code_supp' f k))
   | c@(code.case f g), k => tr_stmts₁ (tr_normal c k) ∪ (code_supp' f k ∪ code_supp' g k)
   | c@(code.fix f), k =>
     tr_stmts₁ (tr_normal c k) ∪
-      (code_supp' f (cont'.fix f k) ∪ (tr_stmts₁ (Λ'.clear nat_end main $ tr_normal f (cont'.fix f k)) ∪ {Λ'.ret k}))
+      (code_supp' f (cont'.fix f k) ∪ (tr_stmts₁ (Λ'.clear nat_end main <| tr_normal f (cont'.fix f k)) ∪ {Λ'.ret k}))
 
 @[simp]
 theorem code_supp'_self c k : tr_stmts₁ (tr_normal c k) ⊆ code_supp' c k := by
@@ -1761,10 +1762,10 @@ theorem code_supp'_self c k : tr_stmts₁ (tr_normal c k) ⊆ code_supp' c k := 
 def cont_supp : cont' → Finset Λ'
   | cont'.cons₁ fs k =>
     tr_stmts₁
-        (move₂ (fun _ => ff) main aux $
-          move₂ (fun s => s = Γ'.Cons) stack main $ move₂ (fun _ => ff) aux stack $ tr_normal fs (cont'.cons₂ k)) ∪
-      (code_supp' fs (cont'.cons₂ k) ∪ (tr_stmts₁ (head stack $ Λ'.ret k) ∪ cont_supp k))
-  | cont'.cons₂ k => tr_stmts₁ (head stack $ Λ'.ret k) ∪ cont_supp k
+        (move₂ (fun _ => ff) main aux <|
+          move₂ (fun s => s = Γ'.Cons) stack main <| move₂ (fun _ => ff) aux stack <| tr_normal fs (cont'.cons₂ k)) ∪
+      (code_supp' fs (cont'.cons₂ k) ∪ (tr_stmts₁ (head stack <| Λ'.ret k) ∪ cont_supp k))
+  | cont'.cons₂ k => tr_stmts₁ (head stack <| Λ'.ret k) ∪ cont_supp k
   | cont'.comp f k => code_supp' f k ∪ cont_supp k
   | cont'.fix f k => code_supp' (code.fix f) k ∪ cont_supp k
   | cont'.halt => ∅
@@ -1817,14 +1818,14 @@ theorem code_supp_fix f k :
 theorem cont_supp_cons₁ fs k :
     cont_supp (cont'.cons₁ fs k) =
       tr_stmts₁
-          (move₂ (fun _ => ff) main aux $
-            move₂ (fun s => s = Γ'.Cons) stack main $ move₂ (fun _ => ff) aux stack $ tr_normal fs (cont'.cons₂ k)) ∪
+          (move₂ (fun _ => ff) main aux <|
+            move₂ (fun s => s = Γ'.Cons) stack main <| move₂ (fun _ => ff) aux stack <| tr_normal fs (cont'.cons₂ k)) ∪
         code_supp fs (cont'.cons₂ k) :=
   by
   simp [code_supp, code_supp', cont_supp, Finset.union_assoc]
 
 @[simp]
-theorem cont_supp_cons₂ k : cont_supp (cont'.cons₂ k) = tr_stmts₁ (head stack $ Λ'.ret k) ∪ cont_supp k :=
+theorem cont_supp_cons₂ k : cont_supp (cont'.cons₂ k) = tr_stmts₁ (head stack <| Λ'.ret k) ∪ cont_supp k :=
   rfl
 
 @[simp]
@@ -1897,9 +1898,9 @@ theorem ret_supports {S k} (H₁ : cont_supp k ⊆ S) : TM2.supports_stmt S (tr 
     intro s
     dsimp only
     cases nat_end s.iget
-    · refine' H₁ (R _ $ L _ $ R _ $ R _ $ L _ W)
+    · refine' H₁ (R _ <| L _ <| R _ <| R _ <| L _ W)
       
-    · exact H₁ (R _ $ L _ $ R _ $ R _ $ R _ $ Finset.mem_singleton_self _)
+    · exact H₁ (R _ <| L _ <| R _ <| R _ <| R _ <| Finset.mem_singleton_self _)
       
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
@@ -1981,7 +1982,7 @@ theorem code_supp'_supports {S c k} (H : code_supp c k ⊆ S) : supports (code_s
     · rw [code_supp, cont_supp_cons₁] at H'
       exact Finset.union_subset_right (Finset.union_subset_right H'.2)
       
-    exact tr_stmts₁_supports (head_supports $ Finset.union_subset_right H) (Finset.union_subset_right h)
+    exact tr_stmts₁_supports (head_supports <| Finset.union_subset_right H) (Finset.union_subset_right h)
   case comp f g IHf IHg =>
     have H' := H
     rw [code_supp_comp] at H'
@@ -2007,7 +2008,7 @@ theorem code_supp'_supports {S c k} (H : code_supp c k ⊆ S) : supports (code_s
     · simp only [code_supp', code_supp, Finset.union_subset_iff, cont_supp, tr_stmts₁, Finset.insert_subset] at h H⊢
       exact ⟨h.1, ⟨H.1.1, h⟩, H.2⟩
       
-    exact supports_singleton.2 (ret_supports $ Finset.union_subset_right H)
+    exact supports_singleton.2 (ret_supports <| Finset.union_subset_right H)
 
 theorem cont_supp_supports {S k} (H : cont_supp k ⊆ S) : supports (cont_supp k) S := by
   induction k
@@ -2024,7 +2025,7 @@ theorem cont_supp_supports {S k} (H : cont_supp k ⊆ S) : supports (cont_supp k
   case cons₂ k IH =>
     have H' := H
     rw [cont_supp_cons₂] at H'
-    exact tr_stmts₁_supports' (head_supports $ Finset.union_subset_right H') H' IH
+    exact tr_stmts₁_supports' (head_supports <| Finset.union_subset_right H') H' IH
   case comp f k IH =>
     have H' := H
     rw [cont_supp_comp] at H'

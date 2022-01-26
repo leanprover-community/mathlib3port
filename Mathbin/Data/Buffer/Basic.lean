@@ -265,7 +265,7 @@ instance : IsLawfulTraversable Buffer :=
 /-- A convenience wrapper around `read` that just fails if the index is out of bounds.
 -/
 unsafe def read_t (b : Buffer α) (i : ℕ) : tactic α :=
-  if h : i < b.size then return $ b.read (Finₓ.mk i h) else tactic.fail "invalid buffer access"
+  if h : i < b.size then return <| b.read (Finₓ.mk i h) else tactic.fail "invalid buffer access"
 
 end Buffer
 

@@ -80,7 +80,7 @@ theorem cast_sub_nat_nat [AddGroupₓ α] [One α] m n : ((Int.subNatNat m n : �
   · simp [sub_nat_nat, e, tsub_eq_zero_iff_le.mp e]
     
   · rw [sub_nat_nat, cast_neg_succ_of_nat, ← Nat.cast_succ, ← e,
-      Nat.cast_sub $ _root_.le_of_lt $ Nat.lt_of_sub_eq_succₓ e, neg_sub]
+      Nat.cast_sub <| _root_.le_of_lt <| Nat.lt_of_sub_eq_succₓ e, neg_sub]
     
 
 @[simp, norm_cast]
@@ -94,8 +94,8 @@ theorem cast_add [AddGroupₓ α] [One α] : ∀ m n, ((m + n : ℤ) : α) = m +
   | (m : ℕ), -[1+ n] => by
     simpa only [sub_eq_add_neg] using cast_sub_nat_nat _ _
   | -[1+ m], (n : ℕ) =>
-    (cast_sub_nat_nat _ _).trans $
-      sub_eq_of_eq_add $
+    (cast_sub_nat_nat _ _).trans <|
+      sub_eq_of_eq_add <|
         show (n : α) = -(m + 1) + n + (m + 1) by
           rw [add_assocₓ, ← cast_succ, ← Nat.cast_add, add_commₓ, Nat.cast_add, cast_succ, neg_add_cancel_leftₓ]
   | -[1+ m], -[1+ n] =>
@@ -117,11 +117,11 @@ theorem cast_sub [AddGroupₓ α] [One α] m n : ((m - n : ℤ) : α) = m - n :=
 theorem cast_mul [Ringₓ α] : ∀ m n, ((m * n : ℤ) : α) = m * n
   | (m : ℕ), (n : ℕ) => Nat.cast_mul _ _
   | (m : ℕ), -[1+ n] =>
-    (cast_neg_of_nat _).trans $
+    (cast_neg_of_nat _).trans <|
       show (-(m * (n + 1) : ℕ) : α) = m * -(n + 1) by
         rw [Nat.cast_mul, Nat.cast_add_one, neg_mul_eq_mul_neg]
   | -[1+ m], (n : ℕ) =>
-    (cast_neg_of_nat _).trans $
+    (cast_neg_of_nat _).trans <|
       show (-((m + 1) * n : ℕ) : α) = -(m + 1) * n by
         rw [Nat.cast_mul, Nat.cast_add_one, neg_mul_eq_neg_mul]
   | -[1+ m], -[1+ n] =>
@@ -154,12 +154,12 @@ theorem commute_cast [Ringₓ α] (x : α) (m : ℤ) : Commute x m :=
   (m.cast_commute x).symm
 
 @[simp, norm_cast]
-theorem coe_nat_bit0 (n : ℕ) : (↑bit0 n : ℤ) = bit0 (↑n) := by
+theorem coe_nat_bit0 (n : ℕ) : (↑(bit0 n) : ℤ) = bit0 ↑n := by
   unfold bit0
   simp
 
 @[simp, norm_cast]
-theorem coe_nat_bit1 (n : ℕ) : (↑bit1 n : ℤ) = bit1 (↑n) := by
+theorem coe_nat_bit1 (n : ℕ) : (↑(bit1 n) : ℤ) = bit1 ↑n := by
   unfold bit1
   unfold bit0
   simp
@@ -199,7 +199,7 @@ theorem cast_le [OrderedRing α] [Nontrivial α] {m n : ℤ} : (m : α) ≤ n �
   rw [← sub_nonneg, ← cast_sub, cast_nonneg, sub_nonneg]
 
 theorem cast_strict_mono [OrderedRing α] [Nontrivial α] : StrictMono (coe : ℤ → α) :=
-  strict_mono_of_le_iff_le $ fun m n => cast_le.symm
+  strict_mono_of_le_iff_le fun m n => cast_le.symm
 
 @[simp, norm_cast]
 theorem cast_lt [OrderedRing α] [Nontrivial α] {m n : ℤ} : (m : α) < n ↔ m < n :=
@@ -218,18 +218,18 @@ theorem cast_lt_zero [OrderedRing α] [Nontrivial α] {n : ℤ} : (n : α) < 0 �
   rw [← cast_zero, cast_lt]
 
 @[simp, norm_cast]
-theorem cast_min [LinearOrderedRing α] {a b : ℤ} : (↑min a b : α) = min a b :=
+theorem cast_min [LinearOrderedRing α] {a b : ℤ} : (↑(min a b) : α) = min a b :=
   Monotone.map_min cast_mono
 
 @[simp, norm_cast]
-theorem cast_max [LinearOrderedRing α] {a b : ℤ} : (↑max a b : α) = max a b :=
+theorem cast_max [LinearOrderedRing α] {a b : ℤ} : (↑(max a b) : α) = max a b :=
   Monotone.map_max cast_mono
 
 @[simp, norm_cast]
-theorem cast_abs [LinearOrderedRing α] {q : ℤ} : ((|q| : ℤ) : α) = |q| := by
+theorem cast_abs [LinearOrderedRing α] {q : ℤ} : ((abs q : ℤ) : α) = abs q := by
   simp [abs_eq_max_neg]
 
-theorem cast_nat_abs {R : Type _} [LinearOrderedRing R] : ∀ n : ℤ, (n.nat_abs : R) = |n|
+theorem cast_nat_abs {R : Type _} [LinearOrderedRing R] : ∀ n : ℤ, (n.nat_abs : R) = abs n
   | (n : ℕ) => by
     simp only [Int.nat_abs_of_nat, Int.cast_coe_nat, Nat.abs_cast]
   | -[1+ n] => by
@@ -268,12 +268,12 @@ if `f 1 = g 1`. -/
 theorem ext_int [AddMonoidₓ A] {f g : ℤ →+ A} (h1 : f 1 = g 1) : f = g :=
   have : f.comp (Int.ofNatHom : ℕ →+ ℤ) = g.comp (Int.ofNatHom : ℕ →+ ℤ) := ext_nat' _ _ h1
   have : ∀ n : ℕ, f n = g n := ext_iff.1 this
-  ext $ fun n => Int.casesOn n this $ fun n => eq_on_neg (this $ n + 1)
+  ext fun n => (Int.casesOn n this) fun n => eq_on_neg (this <| n + 1)
 
 variable [AddGroupₓ A] [One A]
 
 theorem eq_int_cast_hom (f : ℤ →+ A) (h1 : f 1 = 1) : f = Int.castAddHom A :=
-  ext_int $ by
+  ext_int <| by
     simp [h1]
 
 theorem eq_int_cast (f : ℤ →+ A) (h1 : f 1 = 1) : ∀ n : ℤ, f n = n :=
@@ -289,7 +289,7 @@ open Multiplicative
 
 @[ext]
 theorem ext_mint {f g : Multiplicative ℤ →* M} (h1 : f (of_add 1) = g (of_add 1)) : f = g :=
-  MonoidHom.ext $ AddMonoidHom.ext_iff.mp $ @AddMonoidHom.ext_int _ _ f.to_additive g.to_additive h1
+  MonoidHom.ext <| AddMonoidHom.ext_iff.mp <| @AddMonoidHom.ext_int _ _ f.to_additive g.to_additive h1
 
 /-- If two `monoid_hom`s agree on `-1` and the naturals then they are equal. -/
 @[ext]
@@ -311,14 +311,13 @@ variable {M : Type _} [MonoidWithZeroₓ M]
 
 /-- If two `monoid_with_zero_hom`s agree on `-1` and the naturals then they are equal. -/
 @[ext]
-theorem ext_int {f g : MonoidWithZeroHom ℤ M} (h_neg_one : f (-1) = g (-1))
+theorem ext_int {f g : ℤ →*₀ M} (h_neg_one : f (-1) = g (-1))
     (h_nat : f.comp Int.ofNatHom.toMonoidWithZeroHom = g.comp Int.ofNatHom.toMonoidWithZeroHom) : f = g :=
-  to_monoid_hom_injective $ MonoidHom.ext_int h_neg_one $ MonoidHom.ext (congr_funₓ h_nat : _)
+  to_monoid_hom_injective <| MonoidHom.ext_int h_neg_one <| MonoidHom.ext (congr_funₓ h_nat : _)
 
 /-- If two `monoid_with_zero_hom`s agree on `-1` and the _positive_ naturals then they are equal. -/
-theorem ext_int' {φ₁ φ₂ : MonoidWithZeroHom ℤ M} (h_neg_one : φ₁ (-1) = φ₂ (-1))
-    (h_pos : ∀ n : ℕ, 0 < n → φ₁ n = φ₂ n) : φ₁ = φ₂ :=
-  ext_int h_neg_one $ ext_nat h_pos
+theorem ext_int' {φ₁ φ₂ : ℤ →*₀ M} (h_neg_one : φ₁ (-1) = φ₂ (-1)) (h_pos : ∀ n : ℕ, 0 < n → φ₁ n = φ₂ n) : φ₁ = φ₂ :=
+  ext_int h_neg_one <| ext_nat h_pos
 
 end MonoidWithZeroHom
 
@@ -338,7 +337,7 @@ theorem map_int_cast (f : α →+* β) (n : ℤ) : f n = n :=
   (f.comp (Int.castRingHom α)).eq_int_cast n
 
 theorem ext_int {R : Type _} [Semiringₓ R] (f g : ℤ →+* R) : f = g :=
-  coe_add_monoid_hom_injective $ AddMonoidHom.ext_int $ f.map_one.trans g.map_one.symm
+  coe_add_monoid_hom_injective <| AddMonoidHom.ext_int <| f.map_one.trans g.map_one.symm
 
 instance int.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℤ →+* R) :=
   ⟨RingHom.ext_int⟩

@@ -54,7 +54,7 @@ theorem supported_equiv_mv_polynomial_symm_C (s : Set σ) (x : R) :
 
 @[simp]
 theorem supported_equiv_mv_polynomial_symm_X (s : Set σ) (i : s) :
-    (↑(supported_equiv_mv_polynomial s).symm (X i : MvPolynomial s R) : MvPolynomial σ R) = X i := by
+    (↑((supported_equiv_mv_polynomial s).symm (X i : MvPolynomial s R)) : MvPolynomial σ R) = X i := by
   simp [supported_equiv_mv_polynomial]
 
 variable {s t : Set σ}
@@ -74,7 +74,7 @@ theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s := by
     
 
 theorem supported_eq_vars_subset : (supported R s : Set (MvPolynomial σ R)) = { p | ↑p.vars ⊆ s } :=
-  Set.ext $ fun _ => mem_supported
+  Set.ext fun _ => mem_supported
 
 @[simp]
 theorem mem_supported_vars (p : MvPolynomial σ R) : p ∈ supported R (↑p.vars : Set σ) := by

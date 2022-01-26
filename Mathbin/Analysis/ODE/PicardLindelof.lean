@@ -81,15 +81,15 @@ def t_dist : ℝ :=
   max (v.t_max - v.t₀) (v.t₀ - v.t_min)
 
 theorem t_dist_nonneg : 0 ≤ v.t_dist :=
-  le_max_iff.2 $ Or.inl $ sub_nonneg.2 v.t₀.2.2
+  le_max_iff.2 <| Or.inl <| sub_nonneg.2 v.t₀.2.2
 
 theorem dist_t₀_le (t : Icc v.t_min v.t_max) : dist t v.t₀ ≤ v.t_dist := by
   rw [Subtype.dist_eq, Real.dist_eq]
   cases' le_totalₓ t v.t₀ with ht ht
-  · rw [abs_of_nonpos (sub_nonpos.2 $ Subtype.coe_le_coe.2 ht), neg_sub]
+  · rw [abs_of_nonpos (sub_nonpos.2 <| Subtype.coe_le_coe.2 ht), neg_sub]
     exact (sub_le_sub_left t.2.1 _).trans (le_max_rightₓ _ _)
     
-  · rw [abs_of_nonneg (sub_nonneg.2 $ Subtype.coe_le_coe.2 ht)]
+  · rw [abs_of_nonneg (sub_nonneg.2 <| Subtype.coe_le_coe.2 ht)]
     exact (sub_le_sub_right t.2.2 _).trans (le_max_leftₓ _ _)
     
 
@@ -101,7 +101,7 @@ def proj : ℝ → Icc v.t_min v.t_max :=
 theorem proj_coe (t : Icc v.t_min v.t_max) : v.proj t = t :=
   proj_Icc_coe _ _
 
-theorem proj_of_mem {t : ℝ} (ht : t ∈ Icc v.t_min v.t_max) : ↑v.proj t = t := by
+theorem proj_of_mem {t : ℝ} (ht : t ∈ Icc v.t_min v.t_max) : ↑(v.proj t) = t := by
   simp only [proj, proj_Icc_of_mem _ ht, Subtype.coe_mk]
 
 @[continuity]
@@ -185,7 +185,7 @@ theorem continuous_v_comp : Continuous f.v_comp := by
   exact ⟨(v.proj x).2, f.mem_closed_ball _⟩
 
 theorem norm_v_comp_le (t : ℝ) : ∥f.v_comp t∥ ≤ v.C :=
-  v.norm_le (v.proj t).2 $ f.mem_closed_ball _
+  v.norm_le (v.proj t).2 <| f.mem_closed_ball _
 
 theorem dist_apply_le_dist (f₁ f₂ : fun_space v) (t : Icc v.t_min v.t_max) : dist (f₁ t) (f₂ t) ≤ dist f₁ f₂ :=
   @ContinuousMap.dist_apply_le_dist _ _ _ _ _ f₁.to_continuous_map f₂.to_continuous_map _
@@ -218,7 +218,7 @@ def next (f : fun_space v) : fun_space v where
   map_t₀' := by
     rw [integral_same, add_zeroₓ]
   lipschitz' :=
-    LipschitzWith.of_dist_le_mul $ fun t₁ t₂ => by
+    LipschitzWith.of_dist_le_mul fun t₁ t₂ => by
       rw [dist_add_left, dist_eq_norm,
         integral_interval_sub_left (f.interval_integrable_v_comp _ _) (f.interval_integrable_v_comp _ _)]
       exact norm_integral_le_of_norm_le_const fun t ht => f.norm_v_comp_le _
@@ -226,6 +226,7 @@ def next (f : fun_space v) : fun_space v where
 theorem next_apply (t : Icc v.t_min v.t_max) : f.next t = v.x₀ + ∫ τ : ℝ in v.t₀..t, f.v_comp τ :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem has_deriv_within_at_next (t : Icc v.t_min v.t_max) :
     HasDerivWithinAt (f.next ∘ v.proj) (v t (f t)) (Icc v.t_min v.t_max) t := by
   have : Fact ((t : ℝ) ∈ Icc v.t_min v.t_max) := ⟨t.2⟩
@@ -236,19 +237,18 @@ theorem has_deriv_within_at_next (t : Icc v.t_min v.t_max) :
       f.continuous_v_comp.continuous_within_at
   rw [v_comp_apply_coe] at this
   refine' this.congr_of_eventually_eq_of_mem _ t.coe_prop
-  filter_upwards [self_mem_nhds_within]
-  intro t' ht'
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [v.proj_of_mem ht']
 
 theorem dist_next_apply_le_of_le {f₁ f₂ : fun_space v} {n : ℕ} {d : ℝ}
-    (h : ∀ t, dist (f₁ t) (f₂ t) ≤ (v.L * |t - v.t₀|) ^ n / n ! * d) (t : Icc v.t_min v.t_max) :
-    dist (next f₁ t) (next f₂ t) ≤ (v.L * |t - v.t₀|) ^ (n + 1) / (n + 1)! * d := by
+    (h : ∀ t, dist (f₁ t) (f₂ t) ≤ (v.L * abs (t - v.t₀)) ^ n / n ! * d) (t : Icc v.t_min v.t_max) :
+    dist (next f₁ t) (next f₂ t) ≤ (v.L * abs (t - v.t₀)) ^ (n + 1) / (n + 1)! * d := by
   simp only [dist_eq_norm, next_apply, add_sub_add_left_eq_sub, ←
     intervalIntegral.integral_sub (interval_integrable_v_comp _ _ _) (interval_integrable_v_comp _ _ _),
     norm_integral_eq_norm_integral_Ioc] at *
   calc
     ∥∫ τ in Ι (v.t₀ : ℝ) t, f₁.v_comp τ - f₂.v_comp τ∥ ≤
-        ∫ τ in Ι (v.t₀ : ℝ) t, v.L * ((v.L * |τ - v.t₀|) ^ n / n ! * d) :=
+        ∫ τ in Ι (v.t₀ : ℝ) t, v.L * ((v.L * abs (τ - v.t₀)) ^ n / n ! * d) :=
       by
       refine' norm_integral_le_of_norm_le (Continuous.integrable_on_interval_oc _) _
       · continuity
@@ -258,15 +258,15 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : fun_space v} {n : ℕ} {d : ℝ}
           (v.lipschitz_on_with (v.proj τ).2).norm_sub_le_of_le (f₁.mem_closed_ball _) (f₂.mem_closed_ball _)
             ((h _).trans_eq _)
         rw [v.proj_of_mem]
-        exact interval_subset_Icc v.t₀.2 t.2 $ Ioc_subset_Icc_self hτ
-        _ = (v.L * |t - v.t₀|) ^ (n + 1) / (n + 1)! * d :=
+        exact interval_subset_Icc v.t₀.2 t.2 <| Ioc_subset_Icc_self hτ
+        _ = (v.L * abs (t - v.t₀)) ^ (n + 1) / (n + 1)! * d :=
       _
   simp_rw [mul_powₓ, div_eq_mul_inv, mul_assoc, MeasureTheory.integral_mul_left, MeasureTheory.integral_mul_right,
     integral_pow_abs_sub_interval_oc, div_eq_mul_inv, pow_succₓ (v.L : ℝ), Nat.factorial_succ, Nat.cast_mul,
     Nat.cast_succ, mul_inv₀, mul_assoc]
 
 theorem dist_iterate_next_apply_le (f₁ f₂ : fun_space v) (n : ℕ) (t : Icc v.t_min v.t_max) :
-    dist ((next^[n]) f₁ t) ((next^[n]) f₂ t) ≤ (v.L * |t - v.t₀|) ^ n / n ! * dist f₁ f₂ := by
+    dist ((next^[n]) f₁ t) ((next^[n]) f₂ t) ≤ (v.L * abs (t - v.t₀)) ^ n / n ! * dist f₁ f₂ := by
   induction' n with n ihn generalizing t
   · rw [pow_zeroₓ, Nat.factorial_zero, Nat.cast_one, div_one, one_mulₓ]
     exact dist_apply_le_dist f₁ f₂ t
@@ -279,7 +279,7 @@ theorem dist_iterate_next_le (f₁ f₂ : fun_space v) (n : ℕ) :
     dist ((next^[n]) f₁) ((next^[n]) f₂) ≤ (v.L * v.t_dist) ^ n / n ! * dist f₁ f₂ := by
   refine' dist_le_of_forall fun t => (dist_iterate_next_apply_le _ _ _ _).trans _
   have : 0 ≤ dist f₁ f₂ := dist_nonneg
-  have : |(t - v.t₀ : ℝ)| ≤ v.t_dist := v.dist_t₀_le t
+  have : abs (t - v.t₀ : ℝ) ≤ v.t_dist := v.dist_t₀_le t
   mono* <;> simp only [Nat.cast_nonneg, mul_nonneg, Nnreal.coe_nonneg, abs_nonneg, *]
 
 end FunSpace
@@ -330,7 +330,7 @@ theorem exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous [CompleteSp
     (Hnorm : ∀, ∀ t ∈ Icc t_min t_max, ∀, ∀ x ∈ closed_ball x₀ R, ∀, ∥v t x∥ ≤ C)
     (Hmul_le : C * max (t_max - t₀) (t₀ - t_min) ≤ R) :
     ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀, ∀ t ∈ Icc t_min t_max, ∀, HasDerivWithinAt f (v t (f t)) (Icc t_min t_max) t := by
-  lift C to ℝ≥0 using (norm_nonneg _).trans $ Hnorm t₀ ht₀ x₀ (mem_closed_ball_self hR)
+  lift C to ℝ≥0 using (norm_nonneg _).trans <| Hnorm t₀ ht₀ x₀ (mem_closed_ball_self hR)
   lift R to ℝ≥0 using hR
   lift t₀ to Icc t_min t_max using ht₀
   exact PicardLindelof.exists_solution ⟨v, t_min, t_max, t₀, x₀, C, R, L, Hlip, Hcont, Hnorm, Hmul_le⟩

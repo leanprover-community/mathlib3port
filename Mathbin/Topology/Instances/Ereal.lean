@@ -46,7 +46,7 @@ instance : second_countable_topology Ereal :=
         countable_Union fun a => (countable_singleton _).insert _, _⟩
     refine'
       le_antisymmₓ
-        (le_generate_from $ by
+        (le_generate_from <| by
           simp (config := { contextual := true })[or_imp_distrib, is_open_lt', is_open_gt'])
         _
     apply le_generate_from fun s h => _
@@ -127,7 +127,7 @@ theorem open_embedding_coe : OpenEmbedding (coe : ℝ → Ereal) :=
 
 @[norm_cast]
 theorem tendsto_coe {α : Type _} {f : Filter α} {m : α → ℝ} {a : ℝ} :
-    tendsto (fun a => (m a : Ereal)) f (𝓝 (↑a)) ↔ tendsto m f (𝓝 a) :=
+    tendsto (fun a => (m a : Ereal)) f (𝓝 ↑a) ↔ tendsto m f (𝓝 a) :=
   embedding_coe.tendsto_nhds_iff.symm
 
 theorem _root_.continuous_coe_real_ereal : Continuous (coe : ℝ → Ereal) :=
@@ -223,7 +223,7 @@ theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → Ereal) :=
 
 @[norm_cast]
 theorem tendsto_coe_ennreal {α : Type _} {f : Filter α} {m : α → ℝ≥0∞} {a : ℝ≥0∞} :
-    tendsto (fun a => (m a : Ereal)) f (𝓝 (↑a)) ↔ tendsto m f (𝓝 a) :=
+    tendsto (fun a => (m a : Ereal)) f (𝓝 ↑a) ↔ tendsto m f (𝓝 a) :=
   embedding_coe_ennreal.tendsto_nhds_iff.symm
 
 theorem _root_.continuous_coe_ennreal_ereal : Continuous (coe : ℝ≥0∞ → Ereal) :=
@@ -237,7 +237,7 @@ theorem continuous_coe_ennreal_iff {f : α → ℝ≥0∞} : (Continuous fun a =
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»())
 theorem nhds_top : 𝓝 (⊤ : Ereal) = ⨅ (a) (_ : a ≠ ⊤), 𝓟 (Ioi a) :=
-  nhds_top_order.trans $ by
+  nhds_top_order.trans <| by
     simp [lt_top_iff_ne_top, Ioi]
 
 theorem nhds_top' : 𝓝 (⊤ : Ereal) = ⨅ a : ℝ, 𝓟 (Ioi a) := by
@@ -276,7 +276,7 @@ theorem tendsto_nhds_top_iff_real {α : Type _} {m : α → Ereal} {f : Filter �
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»())
 theorem nhds_bot : 𝓝 (⊥ : Ereal) = ⨅ (a) (_ : a ≠ ⊥), 𝓟 (Iio a) :=
-  nhds_bot_order.trans $ by
+  nhds_bot_order.trans <| by
     simp [bot_lt_iff_ne_bot]
 
 theorem nhds_bot' : 𝓝 (⊥ : Ereal) = ⨅ a : ℝ, 𝓟 (Iio a) := by

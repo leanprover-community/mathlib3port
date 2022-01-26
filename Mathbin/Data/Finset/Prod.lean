@@ -43,7 +43,7 @@ theorem mem_product {p : α × β} : p ∈ s.product t ↔ p.1 ∈ s ∧ p.2 ∈
 
 @[simp, norm_cast]
 theorem coe_product (s : Finset α) (t : Finset β) : (s.product t : Set (α × β)) = (s : Set α) ×ˢ (t : Set β) :=
-  Set.ext $ fun x => Finset.mem_product
+  Set.ext fun x => Finset.mem_product
 
 theorem subset_product [DecidableEq α] [DecidableEq β] {s : Finset (α × β)} :
     s ⊆ (s.image Prod.fst).product (s.image Prod.snd) := fun p hp =>
@@ -59,14 +59,14 @@ theorem product_subset_product_right (ht : t ⊆ t') : s.product t ⊆ s.product
   product_subset_product (subset.refl _) ht
 
 theorem product_eq_bUnion [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
-    s.product t = s.bUnion fun a => t.image $ fun b => (a, b) :=
-  ext $ fun ⟨x, y⟩ => by
+    s.product t = s.bUnion fun a => t.image fun b => (a, b) :=
+  ext fun ⟨x, y⟩ => by
     simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iffₓ, And.left_comm,
       exists_and_distrib_left, exists_eq_right, exists_eq_left]
 
 theorem product_eq_bUnion_right [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
-    s.product t = t.bUnion fun b => s.image $ fun a => (a, b) :=
-  ext $ fun ⟨x, y⟩ => by
+    s.product t = t.bUnion fun b => s.image fun a => (a, b) :=
+  ext fun ⟨x, y⟩ => by
     simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iffₓ, And.left_comm,
       exists_and_distrib_left, exists_eq_right, exists_eq_left]
 

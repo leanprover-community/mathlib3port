@@ -100,7 +100,7 @@ theorem measure_diff_right (h : ae_disjoint μ s t) : μ (t \ s) = μ t :=
 set `u`. -/
 theorem exists_disjoint_diff (h : ae_disjoint μ s t) : ∃ u, MeasurableSet u ∧ μ u = 0 ∧ Disjoint (s \ u) t :=
   ⟨to_measurable μ (s ∩ t), measurable_set_to_measurable _ _, (measure_to_measurable _).trans h,
-    disjoint_diff.symm.mono_left fun x hx => ⟨hx.1, fun hxt => hx.2 $ subset_to_measurable _ _ ⟨hx.1, hxt⟩⟩⟩
+    disjoint_diff.symm.mono_left fun x hx => ⟨hx.1, fun hxt => hx.2 <| subset_to_measurable _ _ ⟨hx.1, hxt⟩⟩⟩
 
 theorem of_null_right (h : μ t = 0) : ae_disjoint μ s t :=
   measure_mono_null (inter_subset_right _ _) h

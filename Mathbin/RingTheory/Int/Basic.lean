@@ -84,20 +84,20 @@ instance : NormalizationMonoid ℤ where
     (units_eq_one_or u).elim (fun eq => Eq.symm ▸ if_pos zero_le_one) fun eq =>
       Eq.symm ▸
         if_neg
-          (not_le_of_gtₓ $
+          (not_le_of_gtₓ <|
             show (-1 : ℤ) < 0 by
               decide)
 
 theorem normalize_of_nonneg {z : ℤ} (h : 0 ≤ z) : normalize z = z :=
-  show z * ↑ite _ _ _ = z by
+  show z * ↑(ite _ _ _) = z by
     rw [if_pos h, Units.coe_one, mul_oneₓ]
 
 theorem normalize_of_neg {z : ℤ} (h : z < 0) : normalize z = -z :=
-  show z * ↑ite _ _ _ = -z by
+  show z * ↑(ite _ _ _) = -z by
     rw [if_neg (not_le_of_gtₓ h), Units.coe_neg, Units.coe_one, mul_neg_one]
 
 theorem normalize_coe_nat (n : ℕ) : normalize (n : ℤ) = n :=
-  normalize_of_nonneg (coe_nat_le_coe_nat_of_le $ Nat.zero_leₓ n)
+  normalize_of_nonneg (coe_nat_le_coe_nat_of_le <| Nat.zero_leₓ n)
 
 theorem coe_nat_abs_eq_normalize (z : ℤ) : (z.nat_abs : ℤ) = normalize z := by
   by_cases' 0 ≤ z
@@ -132,17 +132,17 @@ instance : GcdMonoid ℤ where
   gcd_mul_lcm := fun a b => by
     rw [← Int.coe_nat_mul, gcd_mul_lcm, coe_nat_abs_eq_normalize]
     exact normalize_associated (a * b)
-  lcm_zero_left := fun a => coe_nat_eq_zero.2 $ Nat.lcm_zero_leftₓ _
-  lcm_zero_right := fun a => coe_nat_eq_zero.2 $ Nat.lcm_zero_rightₓ _
+  lcm_zero_left := fun a => coe_nat_eq_zero.2 <| Nat.lcm_zero_leftₓ _
+  lcm_zero_right := fun a => coe_nat_eq_zero.2 <| Nat.lcm_zero_rightₓ _
 
 instance : NormalizedGcdMonoid ℤ :=
   { Int.normalizationMonoid, (inferInstance : GcdMonoid ℤ) with normalize_gcd := fun a b => normalize_coe_nat _,
     normalize_lcm := fun a b => normalize_coe_nat _ }
 
-theorem coe_gcd (i j : ℤ) : ↑Int.gcdₓ i j = GcdMonoid.gcd i j :=
+theorem coe_gcd (i j : ℤ) : ↑(Int.gcdₓ i j) = GcdMonoid.gcd i j :=
   rfl
 
-theorem coe_lcm (i j : ℤ) : ↑Int.lcm i j = GcdMonoid.lcm i j :=
+theorem coe_lcm (i j : ℤ) : ↑(Int.lcm i j) = GcdMonoid.lcm i j :=
   rfl
 
 theorem nat_abs_gcd (i j : ℤ) : nat_abs (GcdMonoid.gcd i j) = Int.gcdₓ i j :=
@@ -221,7 +221,7 @@ theorem Nat.prime_iff_prime_int {p : ℕ} : p.prime ↔ _root_.prime (p : ℤ) :
     fun hp =>
     Nat.prime_iff.2
       ⟨Int.coe_nat_ne_zero.1 hp.1,
-        mt Nat.is_unit_iff.1 $ fun h => by
+        (mt Nat.is_unit_iff.1) fun h => by
           simpa [h, not_prime_one] using hp,
         fun a b => by
         simpa only [Int.coe_nat_dvd, (Int.coe_nat_mul _ _).symm] using hp.2.2 a b⟩⟩
@@ -230,7 +230,7 @@ theorem Nat.prime_iff_prime_int {p : ℕ} : p.prime ↔ _root_.prime (p : ℤ) :
 def associatesIntEquivNat : Associates ℤ ≃ ℕ := by
   refine' ⟨fun z => z.out.nat_abs, fun n => Associates.mk n, _, _⟩
   · refine' fun a =>
-      Quotientₓ.induction_on' a $ fun a => Associates.mk_eq_mk_iff_associated.2 $ Associated.symm $ ⟨norm_unit a, _⟩
+      (Quotientₓ.induction_on' a) fun a => Associates.mk_eq_mk_iff_associated.2 <| Associated.symm <| ⟨norm_unit a, _⟩
     show normalize a = Int.natAbs (normalize a)
     rw [Int.coe_nat_abs_eq_normalize, normalize_idem]
     

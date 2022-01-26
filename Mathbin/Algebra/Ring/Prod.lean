@@ -96,14 +96,14 @@ theorem prod_apply x : f.prod g x = (f x, g x) :=
 
 @[simp]
 theorem fst_comp_prod : (fst S T).comp (f.prod g) = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 @[simp]
 theorem snd_comp_prod : (snd S T).comp (f.prod g) = g :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 theorem prod_unique (f : R →+* S × T) : ((fst S T).comp f).Prod ((snd S T).comp f) = f :=
-  ext $ fun x => by
+  ext fun x => by
     simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 
 end Prod
@@ -150,12 +150,12 @@ theorem coe_prod_comm_symm : ⇑(prod_comm : R × S ≃+* S × R).symm = Prod.sw
   rfl
 
 @[simp]
-theorem fst_comp_coe_prod_comm : (RingHom.fst S R).comp (↑(prod_comm : R × S ≃+* S × R)) = RingHom.snd R S :=
-  RingHom.ext $ fun _ => rfl
+theorem fst_comp_coe_prod_comm : (RingHom.fst S R).comp ↑(prod_comm : R × S ≃+* S × R) = RingHom.snd R S :=
+  RingHom.ext fun _ => rfl
 
 @[simp]
-theorem snd_comp_coe_prod_comm : (RingHom.snd S R).comp (↑(prod_comm : R × S ≃+* S × R)) = RingHom.fst R S :=
-  RingHom.ext $ fun _ => rfl
+theorem snd_comp_coe_prod_comm : (RingHom.snd S R).comp ↑(prod_comm : R × S ≃+* S × R) = RingHom.fst R S :=
+  RingHom.ext fun _ => rfl
 
 variable (R S) [Subsingleton S]
 

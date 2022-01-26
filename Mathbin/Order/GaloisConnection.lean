@@ -77,10 +77,10 @@ theorem le_u {a : α} {b : β} : l a ≤ b → a ≤ u b :=
   (gc _ _).mp
 
 theorem le_u_l a : a ≤ u (l a) :=
-  gc.le_u $ le_reflₓ _
+  gc.le_u <| le_reflₓ _
 
 theorem l_u_le a : l (u a) ≤ a :=
-  gc.l_le $ le_reflₓ _
+  gc.l_le <| le_reflₓ _
 
 theorem monotone_u : Monotone u := fun a b H => gc.le_u ((gc.l_u_le a).trans H)
 
@@ -88,7 +88,7 @@ theorem monotone_l : Monotone l :=
   gc.dual.monotone_u.dual
 
 theorem upper_bounds_l_image (s : Set α) : UpperBounds (l '' s) = u ⁻¹' UpperBounds s :=
-  Set.ext $ fun b => by
+  Set.ext fun b => by
     simp [UpperBounds, gc _ _]
 
 theorem lower_bounds_u_image (s : Set β) : LowerBounds (u '' s) = l ⁻¹' LowerBounds s :=
@@ -105,8 +105,8 @@ theorem bdd_below_u_image {s : Set β} : BddBelow (u '' s) ↔ BddBelow s :=
 
 theorem is_lub_l_image {s : Set α} {a : α} (h : IsLub s a) : IsLub (l '' s) (l a) :=
   ⟨gc.monotone_l.mem_upper_bounds_image h.left, fun b hb =>
-    gc.l_le $
-      h.right $ by
+    gc.l_le <|
+      h.right <| by
         rwa [gc.upper_bounds_l_image] at hb⟩
 
 theorem is_glb_u_image {s : Set β} {b : β} (h : IsGlb s b) : IsGlb (u '' s) (u b) :=
@@ -129,10 +129,10 @@ If `l` is a closure operator (`submodule.span`, `subgroup.closure`, ...) and `u`
 `set`, this reads as "if `U` is in the closure of `V` and `V` is in the closure of `W` then `U` is
 in the closure of `W`". -/
 theorem le_u_l_trans {x y z : α} (hxy : x ≤ u (l y)) (hyz : y ≤ u (l z)) : x ≤ u (l z) :=
-  hxy.trans (gc.monotone_u $ gc.l_le hyz)
+  hxy.trans (gc.monotone_u <| gc.l_le hyz)
 
 theorem l_u_le_trans {x y z : β} (hxy : l (u x) ≤ y) (hyz : l (u y) ≤ z) : l (u x) ≤ z :=
-  (gc.monotone_l $ gc.le_u hxy).trans hyz
+  (gc.monotone_l <| gc.le_u hxy).trans hyz
 
 end
 
@@ -149,7 +149,7 @@ theorem u_l_u_eq_u' : u ∘ l ∘ u = u :=
   funext gc.u_l_u_eq_u
 
 theorem u_unique {l' : α → β} {u' : β → α} (gc' : GaloisConnection l' u') (hl : ∀ a, l a = l' a) {b : β} : u b = u' b :=
-  le_antisymmₓ (gc'.le_u $ hl (u b) ▸ gc.l_u_le _) (gc.le_u $ (hl (u' b)).symm ▸ gc'.l_u_le _)
+  le_antisymmₓ (gc'.le_u <| hl (u b) ▸ gc.l_u_le _) (gc.le_u <| (hl (u' b)).symm ▸ gc'.l_u_le _)
 
 /-- If there exists a `b` such that `a = u a`, then `b = l a` is one such element. -/
 theorem exists_eq_u (a : α) : (∃ b : β, a = u b) ↔ a = u (l a) :=
@@ -161,7 +161,7 @@ theorem u_eq {z : α} {y : β} : u y = z ↔ ∀ x, x ≤ z ↔ l x ≤ y := by
     exact (gc x y).symm
     
   · intro H
-    exact ((H $ u y).mpr (gc.l_u_le y)).antisymm ((gc _ _).mp $ (H z).mp le_rfl)
+    exact ((H <| u y).mpr (gc.l_u_le y)).antisymm ((gc _ _).mp <| (H z).mp le_rfl)
     
 
 end PartialOrderₓ
@@ -179,7 +179,7 @@ theorem l_u_l_eq_l' : l ∘ u ∘ l = l :=
   funext gc.l_u_l_eq_l
 
 theorem l_unique {l' : α → β} {u' : β → α} (gc' : GaloisConnection l' u') (hu : ∀ b, u b = u' b) {a : α} : l a = l' a :=
-  le_antisymmₓ (gc.l_le $ (hu (l' a)).symm ▸ gc'.le_u_l _) (gc'.l_le $ hu (l a) ▸ gc.le_u_l _)
+  le_antisymmₓ (gc.l_le <| (hu (l' a)).symm ▸ gc'.le_u_l _) (gc'.l_le <| hu (l a) ▸ gc.le_u_l _)
 
 /-- If there exists an `a` such that `b = l a`, then `a = u b` is one such element. -/
 theorem exists_eq_l (b : β) : (∃ a : α, b = l a) ↔ b = l (u b) :=
@@ -191,7 +191,7 @@ theorem l_eq {x : α} {z : β} : l x = z ↔ ∀ y, z ≤ y ↔ x ≤ u y := by
     exact gc x y
     
   · intro H
-    exact ((gc _ _).mpr $ (H z).mp le_rfl).antisymm ((H $ l x).mpr (gc.le_u_l x))
+    exact ((gc _ _).mpr <| (H z).mp le_rfl).antisymm ((H <| l x).mpr (gc.le_u_l x))
     
 
 end PartialOrderₓ
@@ -203,7 +203,7 @@ variable [PartialOrderₓ α] [Preorderₓ β] [OrderTop α] [OrderTop β] {l : 
 include gc
 
 theorem u_top : u ⊤ = ⊤ :=
-  top_unique $ gc.le_u le_top
+  top_unique <| gc.le_u le_top
 
 end OrderTop
 
@@ -225,7 +225,7 @@ variable [SemilatticeSup α] [SemilatticeSup β] {l : α → β} {u : β → α}
 include gc
 
 theorem l_sup : l (a₁⊔a₂) = l a₁⊔l a₂ :=
-  (gc.is_lub_l_image is_lub_pair).unique $ by
+  (gc.is_lub_l_image is_lub_pair).unique <| by
     simp only [image_pair, is_lub_pair]
 
 end SemilatticeSup
@@ -248,8 +248,8 @@ variable [CompleteLattice α] [CompleteLattice β] {l : α → β} {u : β → �
 include gc
 
 theorem l_supr {f : ι → α} : l (supr f) = ⨆ i, l (f i) :=
-  Eq.symm $
-    IsLub.supr_eq $
+  Eq.symm <|
+    IsLub.supr_eq <|
       show IsLub (range (l ∘ f)) (l (supr f)) by
         rw [range_comp, ← Sup_range] <;> exact gc.is_lub_l_image (is_lub_Sup _)
 
@@ -285,7 +285,7 @@ protected theorem compose [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {l1
 protected theorem dfun {ι : Type u} {α : ι → Type v} {β : ι → Type w} [∀ i, Preorderₓ (α i)] [∀ i, Preorderₓ (β i)]
     (l : ∀ i, α i → β i) (u : ∀ i, β i → α i) (gc : ∀ i, GaloisConnection (l i) (u i)) :
     GaloisConnection (fun a : ∀ i, α i i => l i (a i)) fun b i => u i (b i) := fun a b =>
-  forall_congrₓ $ fun i => gc i (a i) (b i)
+  forall_congrₓ fun i => gc i (a i) (b i)
 
 end Constructions
 
@@ -356,7 +356,7 @@ def GaloisInsertion.monotoneIntro {α β : Type _} [Preorderₓ α] [Preorderₓ
     (hl : Monotone l) (hul : ∀ a, a ≤ u (l a)) (hlu : ∀ b, l (u b) = b) : GaloisInsertion l u where
   choice := fun x _ => l x
   gc := GaloisConnection.monotone_intro hu hl hul fun b => le_of_eqₓ (hlu b)
-  le_l_u := fun b => le_of_eqₓ $ (hlu b).symm
+  le_l_u := fun b => le_of_eqₓ <| (hlu b).symm
   choice_eq := fun _ _ => rfl
 
 /-- Makes a Galois insertion from an order-preserving bijection. -/
@@ -376,7 +376,7 @@ def GaloisConnection.toGaloisInsertion {α β : Type _} [Preorderₓ α] [Preord
 def GaloisConnection.liftOrderBot {α β : Type _} [Preorderₓ α] [OrderBot α] [PartialOrderₓ β] {l : α → β} {u : β → α}
     (gc : GaloisConnection l u) : OrderBot β where
   bot := l ⊥
-  bot_le := fun b => gc.l_le $ bot_le
+  bot_le := fun b => gc.l_le <| bot_le
 
 namespace GaloisInsertion
 
@@ -405,7 +405,7 @@ theorem l_supr_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion
     l (⨆ i, u (f i)) = ⨆ i, f i :=
   calc
     l (⨆ i : ι, u (f i)) = ⨆ i : ι, l (u (f i)) := gi.gc.l_supr
-    _ = ⨆ i : ι, f i := congr_argₓ _ $ funext $ fun i => gi.l_u_eq (f i)
+    _ = ⨆ i : ι, f i := congr_argₓ _ <| funext fun i => gi.l_u_eq (f i)
     
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i hi)
@@ -462,17 +462,17 @@ theorem u_le_u_iff [Preorderₓ α] [Preorderₓ β] (gi : GaloisInsertion l u) 
   ⟨fun h => (gi.le_l_u _).trans (gi.gc.l_le h), fun h => gi.gc.monotone_u h⟩
 
 theorem strict_mono_u [Preorderₓ α] [Preorderₓ β] (gi : GaloisInsertion l u) : StrictMono u :=
-  strict_mono_of_le_iff_le $ fun _ _ => gi.u_le_u_iff.symm
+  strict_mono_of_le_iff_le fun _ _ => gi.u_le_u_iff.symm
 
 theorem is_lub_of_u_image [Preorderₓ α] [Preorderₓ β] (gi : GaloisInsertion l u) {s : Set β} {a : α}
     (hs : IsLub (u '' s) a) : IsLub s (l a) :=
-  ⟨fun x hx => (gi.le_l_u x).trans $ gi.gc.monotone_l $ hs.1 $ mem_image_of_mem _ hx, fun x hx =>
-    gi.gc.l_le $ hs.2 $ gi.gc.monotone_u.mem_upper_bounds_image hx⟩
+  ⟨fun x hx => (gi.le_l_u x).trans <| gi.gc.monotone_l <| hs.1 <| mem_image_of_mem _ hx, fun x hx =>
+    gi.gc.l_le <| hs.2 <| gi.gc.monotone_u.mem_upper_bounds_image hx⟩
 
 theorem is_glb_of_u_image [Preorderₓ α] [Preorderₓ β] (gi : GaloisInsertion l u) {s : Set β} {a : α}
     (hs : IsGlb (u '' s) a) : IsGlb s (l a) :=
-  ⟨fun x hx => gi.gc.l_le $ hs.1 $ mem_image_of_mem _ hx, fun x hx =>
-    (gi.le_l_u x).trans $ gi.gc.monotone_l $ hs.2 $ gi.gc.monotone_u.mem_lower_bounds_image hx⟩
+  ⟨fun x hx => gi.gc.l_le <| hs.1 <| mem_image_of_mem _ hx, fun x hx =>
+    (gi.le_l_u x).trans <| gi.gc.monotone_l <| hs.2 <| gi.gc.monotone_u.mem_lower_bounds_image hx⟩
 
 section lift
 
@@ -481,16 +481,16 @@ variable [PartialOrderₓ β]
 /-- Lift the suprema along a Galois insertion -/
 def lift_semilattice_sup [SemilatticeSup α] (gi : GaloisInsertion l u) : SemilatticeSup β :=
   { ‹PartialOrderₓ β› with sup := fun a b => l (u a⊔u b),
-    le_sup_left := fun a b => (gi.le_l_u a).trans $ gi.gc.monotone_l $ le_sup_left,
-    le_sup_right := fun a b => (gi.le_l_u b).trans $ gi.gc.monotone_l $ le_sup_right,
-    sup_le := fun a b c hac hbc => gi.gc.l_le $ sup_le (gi.gc.monotone_u hac) (gi.gc.monotone_u hbc) }
+    le_sup_left := fun a b => (gi.le_l_u a).trans <| gi.gc.monotone_l <| le_sup_left,
+    le_sup_right := fun a b => (gi.le_l_u b).trans <| gi.gc.monotone_l <| le_sup_right,
+    sup_le := fun a b c hac hbc => gi.gc.l_le <| sup_le (gi.gc.monotone_u hac) (gi.gc.monotone_u hbc) }
 
 /-- Lift the infima along a Galois insertion -/
 def lift_semilattice_inf [SemilatticeInf α] (gi : GaloisInsertion l u) : SemilatticeInf β :=
   { ‹PartialOrderₓ β› with
     inf := fun a b =>
-      gi.choice (u a⊓u b) $
-        le_inf (gi.gc.monotone_u $ gi.gc.l_le $ inf_le_left) (gi.gc.monotone_u $ gi.gc.l_le $ inf_le_right),
+      gi.choice (u a⊓u b) <|
+        le_inf (gi.gc.monotone_u <| gi.gc.l_le <| inf_le_left) (gi.gc.monotone_u <| gi.gc.l_le <| inf_le_right),
     inf_le_left := by
       simp only [gi.choice_eq] <;> exact fun a b => gi.gc.l_le inf_le_left,
     inf_le_right := by
@@ -498,7 +498,7 @@ def lift_semilattice_inf [SemilatticeInf α] (gi : GaloisInsertion l u) : Semila
     le_inf := by
       simp only [gi.choice_eq] <;>
         exact fun a b c hac hbc =>
-          (gi.le_l_u a).trans $ gi.gc.monotone_l $ le_inf (gi.gc.monotone_u hac) (gi.gc.monotone_u hbc) }
+          (gi.le_l_u a).trans <| gi.gc.monotone_l <| le_inf (gi.gc.monotone_u hac) (gi.gc.monotone_u hbc) }
 
 /-- Lift the suprema and infima along a Galois insertion -/
 def lift_lattice [Lattice α] (gi : GaloisInsertion l u) : Lattice β :=
@@ -506,7 +506,7 @@ def lift_lattice [Lattice α] (gi : GaloisInsertion l u) : Lattice β :=
 
 /-- Lift the top along a Galois insertion -/
 def lift_order_top [Preorderₓ α] [OrderTop α] (gi : GaloisInsertion l u) : OrderTop β where
-  top := gi.choice ⊤ $ le_top
+  top := gi.choice ⊤ <| le_top
   le_top := by
     simp only [gi.choice_eq] <;> exact fun b => (gi.le_l_u b).trans (gi.gc.monotone_l le_top)
 
@@ -520,7 +520,8 @@ def lift_complete_lattice [CompleteLattice α] (gi : GaloisInsertion l u) : Comp
     Sup_le := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).2,
     le_Sup := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).1,
     inf := fun s =>
-      gi.choice (Inf (u '' s)) $ gi.gc.monotone_u.le_is_glb_image (gi.is_glb_of_u_image $ is_glb_Inf _) (is_glb_Inf _),
+      gi.choice (Inf (u '' s)) <|
+        gi.gc.monotone_u.le_is_glb_image (gi.is_glb_of_u_image <| is_glb_Inf _) (is_glb_Inf _),
     Inf_le := fun s => by
       rw [gi.choice_eq]
       exact (gi.is_glb_of_u_image (is_glb_Inf _)).1,
@@ -580,7 +581,7 @@ def GaloisConnection.toGaloisCoinsertion {α β : Type _} [Preorderₓ α] [Preo
 def GaloisConnection.liftOrderTop {α β : Type _} [PartialOrderₓ α] [Preorderₓ β] [OrderTop β] {l : α → β} {u : β → α}
     (gc : GaloisConnection l u) : OrderTop α where
   top := u ⊤
-  le_top := fun b => gc.le_u $ le_top
+  le_top := fun b => gc.le_u <| le_top
 
 namespace GaloisCoinsertion
 
@@ -663,8 +664,8 @@ def lift_semilattice_inf [SemilatticeInf β] (gi : GaloisCoinsertion l u) : Semi
 def lift_semilattice_sup [SemilatticeSup β] (gi : GaloisCoinsertion l u) : SemilatticeSup α :=
   { ‹PartialOrderₓ α›, @OrderDual.semilatticeSup _ gi.dual.lift_semilattice_inf with
     sup := fun a b =>
-      gi.choice (l a⊔l b) $
-        sup_le (gi.gc.monotone_l $ gi.gc.le_u $ le_sup_left) (gi.gc.monotone_l $ gi.gc.le_u $ le_sup_right) }
+      gi.choice (l a⊔l b) <|
+        sup_le (gi.gc.monotone_l <| gi.gc.le_u <| le_sup_left) (gi.gc.monotone_l <| gi.gc.le_u <| le_sup_right) }
 
 /-- Lift the suprema and infima along a Galois coinsertion -/
 def lift_lattice [Lattice β] (gi : GaloisCoinsertion l u) : Lattice α :=
@@ -672,7 +673,7 @@ def lift_lattice [Lattice β] (gi : GaloisCoinsertion l u) : Lattice α :=
 
 /-- Lift the bot along a Galois coinsertion -/
 def lift_order_bot [Preorderₓ β] [OrderBot β] (gi : GaloisCoinsertion l u) : OrderBot α :=
-  { @OrderDual.orderBot _ _ gi.dual.lift_order_top with bot := gi.choice ⊥ $ bot_le }
+  { @OrderDual.orderBot _ _ gi.dual.lift_order_top with bot := gi.choice ⊥ <| bot_le }
 
 /-- Lift the top, bottom, suprema, and infima along a Galois coinsertion -/
 def lift_bounded_order [Preorderₓ β] [BoundedOrder β] (gi : GaloisCoinsertion l u) : BoundedOrder α :=

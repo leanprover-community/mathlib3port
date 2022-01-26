@@ -73,19 +73,19 @@ theorem fst_mul_snd [MulOneClass M] [MulOneClass N] (p : M × N) : (p.fst, 1) * 
   ext (mul_oneₓ p.1) (one_mulₓ p.2)
 
 @[to_additive]
-instance [HasInv M] [HasInv N] : HasInv (M × N) :=
+instance [Inv M] [Inv N] : Inv (M × N) :=
   ⟨fun p => (p.1⁻¹, p.2⁻¹)⟩
 
 @[simp, to_additive]
-theorem fst_inv [HasInv G] [HasInv H] (p : G × H) : p⁻¹.1 = p.1⁻¹ :=
+theorem fst_inv [Inv G] [Inv H] (p : G × H) : p⁻¹.1 = p.1⁻¹ :=
   rfl
 
 @[simp, to_additive]
-theorem snd_inv [HasInv G] [HasInv H] (p : G × H) : p⁻¹.2 = p.2⁻¹ :=
+theorem snd_inv [Inv G] [Inv H] (p : G × H) : p⁻¹.2 = p.2⁻¹ :=
   rfl
 
 @[simp, to_additive]
-theorem inv_mk [HasInv G] [HasInv H] (a : G) (b : H) : (a, b)⁻¹ = (a⁻¹, b⁻¹) :=
+theorem inv_mk [Inv G] [Inv H] (a : G) (b : H) : (a, b)⁻¹ = (a⁻¹, b⁻¹) :=
   rfl
 
 @[to_additive]
@@ -106,8 +106,8 @@ theorem mk_sub_mk [AddGroupₓ A] [AddGroupₓ B] (x₁ x₂ : A) (y₁ y₂ : B
 
 instance [MulZeroClass M] [MulZeroClass N] : MulZeroClass (M × N) :=
   { Prod.hasZero, Prod.hasMul with
-    zero_mul := fun a => Prod.recOn a $ fun a b => mk.inj_iff.mpr ⟨zero_mul _, zero_mul _⟩,
-    mul_zero := fun a => Prod.recOn a $ fun a b => mk.inj_iff.mpr ⟨mul_zero _, mul_zero _⟩ }
+    zero_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨zero_mul _, zero_mul _⟩,
+    mul_zero := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨mul_zero _, mul_zero _⟩ }
 
 @[to_additive]
 instance [Semigroupₓ M] [Semigroupₓ N] : Semigroupₓ (M × N) :=
@@ -118,8 +118,8 @@ instance [SemigroupWithZero M] [SemigroupWithZero N] : SemigroupWithZero (M × N
 
 @[to_additive]
 instance [MulOneClass M] [MulOneClass N] : MulOneClass (M × N) :=
-  { Prod.hasMul, Prod.hasOne with one_mul := fun a => Prod.recOn a $ fun a b => mk.inj_iff.mpr ⟨one_mulₓ _, one_mulₓ _⟩,
-    mul_one := fun a => Prod.recOn a $ fun a b => mk.inj_iff.mpr ⟨mul_oneₓ _, mul_oneₓ _⟩ }
+  { Prod.hasMul, Prod.hasOne with one_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨one_mulₓ _, one_mulₓ _⟩,
+    mul_one := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨mul_oneₓ _, mul_oneₓ _⟩ }
 
 @[to_additive]
 instance [Monoidₓ M] [Monoidₓ N] : Monoidₓ (M × N) :=
@@ -268,15 +268,15 @@ theorem prod_apply (f : M →* N) (g : M →* P) x : f.prod g x = (f x, g x) :=
 
 @[simp, to_additive fst_comp_prod]
 theorem fst_comp_prod (f : M →* N) (g : M →* P) : (fst N P).comp (f.prod g) = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 @[simp, to_additive snd_comp_prod]
 theorem snd_comp_prod (f : M →* N) (g : M →* P) : (snd N P).comp (f.prod g) = g :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 @[simp, to_additive prod_unique]
 theorem prod_unique (f : M →* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
-  ext $ fun x => by
+  ext fun x => by
     simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 
 end Prod
@@ -321,26 +321,26 @@ theorem coprod_apply (p : M × N) : f.coprod g p = f p.1 * g p.2 :=
 
 @[simp, to_additive]
 theorem coprod_comp_inl : (f.coprod g).comp (inl M N) = f :=
-  ext $ fun x => by
+  ext fun x => by
     simp [coprod_apply]
 
 @[simp, to_additive]
 theorem coprod_comp_inr : (f.coprod g).comp (inr M N) = g :=
-  ext $ fun x => by
+  ext fun x => by
     simp [coprod_apply]
 
 @[simp, to_additive]
 theorem coprod_unique (f : M × N →* P) : (f.comp (inl M N)).coprod (f.comp (inr M N)) = f :=
-  ext $ fun x => by
+  ext fun x => by
     simp [coprod_apply, inl_apply, inr_apply, ← map_mul]
 
 @[simp, to_additive]
 theorem coprod_inl_inr {M N : Type _} [CommMonoidₓ M] [CommMonoidₓ N] : (inl M N).coprod (inr M N) = id (M × N) :=
-  coprod_unique (id $ M × N)
+  coprod_unique (id <| M × N)
 
 theorem comp_coprod {Q : Type _} [CommMonoidₓ Q] (h : P →* Q) (f : M →* P) (g : N →* P) :
     h.comp (f.coprod g) = (h.comp f).coprod (h.comp g) :=
-  ext $ fun x => by
+  ext fun x => by
     simp
 
 end Coprod
@@ -400,7 +400,7 @@ open MulOpposite
 /-- Canonical homomorphism of monoids from `αˣ` into `α × αᵐᵒᵖ`.
 Used mainly to define the natural topology of `αˣ`. -/
 def embedProduct (α : Type _) [Monoidₓ α] : (α)ˣ →* α × αᵐᵒᵖ where
-  toFun := fun x => ⟨x, op (↑x⁻¹)⟩
+  toFun := fun x => ⟨x, op ↑x⁻¹⟩
   map_one' := by
     simp only [one_inv, eq_self_iff_true, Units.coe_one, op_one, Prod.mk_eq_one, and_selfₓ]
   map_mul' := fun x y => by
@@ -428,7 +428,7 @@ def mulMonoidHom [CommMonoidₓ α] : α × α →* α :=
 
 /-- Multiplication as a multiplicative homomorphism with zero. -/
 @[simps]
-def mulMonoidWithZeroHom [CommMonoidWithZero α] : MonoidWithZeroHom (α × α) α :=
+def mulMonoidWithZeroHom [CommMonoidWithZero α] : α × α →*₀ α :=
   { mulMonoidHom with map_zero' := mul_zero _ }
 
 /-- Division as a monoid homomorphism. -/
@@ -440,7 +440,7 @@ def divMonoidHom [CommGroupₓ α] : α × α →* α where
 
 /-- Division as a multiplicative homomorphism with zero. -/
 @[simps]
-def divMonoidWithZeroHom [CommGroupWithZero α] : MonoidWithZeroHom (α × α) α where
+def divMonoidWithZeroHom [CommGroupWithZero α] : α × α →*₀ α where
   toFun := fun a => a.1 / a.2
   map_zero' := zero_div _
   map_one' := div_one _

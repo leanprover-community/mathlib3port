@@ -578,7 +578,7 @@ theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1]
   refine' Nat.Modeq.add_right _ _
   conv => congr skip skip rw [← one_mulₓ (k / 2 ^ n)]
   exact
-    (Nat.modeq_sub $
+    (Nat.modeq_sub <|
           pow_pos
             (by
               norm_num : 0 < 2)

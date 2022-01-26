@@ -80,7 +80,7 @@ def Zmod : ℕ → Type
 namespace Zmod
 
 instance Fintype : ∀ n : ℕ [Fact (0 < n)], Fintype (Zmod n)
-  | 0, h => False.elim $ Nat.not_lt_zeroₓ 0 h.1
+  | 0, h => False.elim <| Nat.not_lt_zeroₓ 0 h.1
   | n + 1, _ => Finₓ.fintype (n + 1)
 
 @[simp]
@@ -504,7 +504,7 @@ theorem val_mul {n : ℕ} (a b : Zmod n) : (a * b).val = a.val * b.val % n := by
 
 instance Nontrivial (n : ℕ) [Fact (1 < n)] : Nontrivial (Zmod n) :=
   ⟨⟨0, 1, fun h =>
-      zero_ne_one $
+      zero_ne_one <|
         calc
           0 = (0 : Zmod n).val := by
             rw [val_zero]
@@ -519,7 +519,7 @@ def inv : ∀ n : ℕ, Zmod n → Zmod n
   | 0, i => Int.sign i
   | n + 1, i => Nat.gcdA i.val (n + 1)
 
-instance (n : ℕ) : HasInv (Zmod n) :=
+instance (n : ℕ) : Inv (Zmod n) :=
   ⟨inv n⟩
 
 theorem inv_zero : ∀ n : ℕ, (0 : Zmod n)⁻¹ = 0
@@ -631,8 +631,8 @@ def chinese_remainder {m n : ℕ} (h : m.coprime n) : Zmod (m * n) ≃+* Zmod m 
         simp [inv_fun, to_fun, Function.LeftInverse, Function.RightInverse, RingHom.eq_int_cast, Prod.ext_iff]
     else by
       have : Fact (0 < m * n) := ⟨Nat.pos_of_ne_zeroₓ hmn0⟩
-      have : Fact (0 < m) := ⟨Nat.pos_of_ne_zeroₓ $ left_ne_zero_of_mul hmn0⟩
-      have : Fact (0 < n) := ⟨Nat.pos_of_ne_zeroₓ $ right_ne_zero_of_mul hmn0⟩
+      have : Fact (0 < m) := ⟨Nat.pos_of_ne_zeroₓ <| left_ne_zero_of_mul hmn0⟩
+      have : Fact (0 < n) := ⟨Nat.pos_of_ne_zeroₓ <| right_ne_zero_of_mul hmn0⟩
       have left_inv : Function.LeftInverse inv_fun to_fun := by
         intro x
         dsimp only [dvd_mul_left, dvd_mul_right, Zmod.cast_hom_apply, coe_coe, inv_fun, to_fun]
@@ -957,7 +957,7 @@ variable (n) {A : Type _} [AddGroupₓ A]
 /-- The map from `zmod n` induced by `f : ℤ →+ A` that maps `n` to `0`. -/
 @[simps]
 def lift : { f : ℤ →+ A // f n = 0 } ≃ (Zmod n →+ A) :=
-  (Equivₓ.subtypeEquivRight $ by
+  (Equivₓ.subtypeEquivRight <| by
         intro f
         rw [ker_int_cast_add_hom]
         constructor
@@ -966,7 +966,7 @@ def lift : { f : ℤ →+ A // f n = 0 } ≃ (Zmod n →+ A) :=
           
         · intro h
           refine' h (AddSubgroup.mem_zmultiples _)
-          ).trans $
+          ).trans <|
     (Int.castAddHom (Zmod n)).liftOfRightInverse coe int_cast_zmod_cast
 
 variable (f : { f : ℤ →+ A // f n = 0 })
@@ -980,11 +980,11 @@ theorem lift_cast_add_hom (x : ℤ) : lift n f (Int.castAddHom (Zmod n) x) = f x
 
 @[simp]
 theorem lift_comp_coe : Zmod.lift n f ∘ coe = f :=
-  funext $ lift_coe _ _
+  funext <| lift_coe _ _
 
 @[simp]
 theorem lift_comp_cast_add_hom : (Zmod.lift n f).comp (Int.castAddHom (Zmod n)) = f :=
-  AddMonoidHom.ext $ lift_cast_add_hom _ _
+  AddMonoidHom.ext <| lift_cast_add_hom _ _
 
 end lift
 

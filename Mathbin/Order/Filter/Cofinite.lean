@@ -29,7 +29,7 @@ def cofinite : Filter α where
   Sets := { s | finite (sᶜ) }
   univ_sets := by
     simp only [compl_univ, finite_empty, mem_set_of_eq]
-  sets_of_superset := fun s t hs : finite (sᶜ) st : s ⊆ t => hs.subset $ compl_subset_compl.2 st
+  sets_of_superset := fun s t hs : finite (sᶜ) st : s ⊆ t => hs.subset <| compl_subset_compl.2 st
   inter_sets := fun s t hs : finite (sᶜ) ht : finite (tᶜ) => by
     simp only [compl_inter, finite.union, ht, hs, mem_set_of_eq]
 
@@ -42,10 +42,10 @@ theorem eventually_cofinite {p : α → Prop} : (∀ᶠ x in cofinite, p x) ↔ 
   Iff.rfl
 
 theorem has_basis_cofinite : has_basis cofinite (fun s : Set α => s.finite) compl :=
-  ⟨fun s => ⟨fun h => ⟨sᶜ, h, (compl_compl s).Subset⟩, fun ⟨t, htf, hts⟩ => htf.subset $ compl_subset_comm.2 hts⟩⟩
+  ⟨fun s => ⟨fun h => ⟨sᶜ, h, (compl_compl s).Subset⟩, fun ⟨t, htf, hts⟩ => htf.subset <| compl_subset_comm.2 hts⟩⟩
 
 instance cofinite_ne_bot [Infinite α] : ne_bot (@cofinite α) :=
-  has_basis_cofinite.ne_bot_iff.2 $ fun s hs => hs.infinite_compl.nonempty
+  has_basis_cofinite.ne_bot_iff.2 fun s hs => hs.infinite_compl.nonempty
 
 theorem frequently_cofinite_iff_infinite {p : α → Prop} : (∃ᶠ x in cofinite, p x) ↔ Set.Infinite { x | p x } := by
   simp only [Filter.Frequently, Filter.Eventually, mem_cofinite, compl_set_of, not_not, Set.Infinite]
@@ -89,7 +89,7 @@ end Filter
 open Filter
 
 theorem Set.Finite.compl_mem_cofinite {s : Set α} (hs : s.finite) : sᶜ ∈ @cofinite α :=
-  mem_cofinite.2 $ (compl_compl s).symm ▸ hs
+  mem_cofinite.2 <| (compl_compl s).symm ▸ hs
 
 theorem Set.Finite.eventually_cofinite_nmem {s : Set α} (hs : s.finite) : ∀ᶠ x in cofinite, x ∉ s :=
   hs.compl_mem_cofinite
@@ -119,7 +119,7 @@ theorem Nat.cofinite_eq_at_top : @cofinite ℕ = at_top := by
     apply (finite_lt_nat N).Subset
     intro n hn
     change n < N
-    exact lt_of_not_geₓ fun hn' => hn $ hN n hn'
+    exact lt_of_not_geₓ fun hn' => hn <| hN n hn'
     
 
 theorem Nat.frequently_at_top_iff_infinite {p : ℕ → Prop} : (∃ᶠ n in at_top, p n) ↔ Set.Infinite { n | p n } := by

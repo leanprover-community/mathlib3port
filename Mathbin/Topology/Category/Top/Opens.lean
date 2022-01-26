@@ -115,7 +115,7 @@ theorem OpenEmbedding {X : Top.{u}} (U : opens X) : OpenEmbedding (inclusion U) 
 -/
 def inclusion_top_iso (X : Top.{u}) : (to_Top X).obj ⊤ ≅ X where
   hom := inclusion ⊤
-  inv := ⟨fun x => ⟨x, trivialₓ⟩, continuous_def.2 $ fun U ⟨S, hS, hSU⟩ => hSU ▸ hS⟩
+  inv := ⟨fun x => ⟨x, trivialₓ⟩, continuous_def.2 fun U ⟨S, hS, hSU⟩ => hSU ▸ hS⟩
 
 /-- `opens.map f` gives the functor from open sets in Y to open set in X,
     given by taking preimages under f. -/
@@ -278,8 +278,8 @@ def IsOpenMap.functor {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) : opens X ⥤
 def IsOpenMap.adjunction {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) :
     adjunction hf.functor (TopologicalSpace.Opens.map f) :=
   adjunction.mk_of_unit_counit
-    { Unit := { app := fun U => hom_of_le $ fun x hxU => ⟨x, hxU, rfl⟩ },
-      counit := { app := fun V => hom_of_le $ fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
+    { Unit := { app := fun U => hom_of_le fun x hxU => ⟨x, hxU, rfl⟩ },
+      counit := { app := fun V => hom_of_le fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
 
 instance IsOpenMap.functorFullOfMono {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) [H : mono f] : full hf.functor where
   Preimage := fun U V i =>

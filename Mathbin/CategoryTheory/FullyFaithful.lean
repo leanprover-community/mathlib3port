@@ -52,7 +52,7 @@ restate_axiom faithful.map_injective'
 
 namespace Functor
 
-theorem map_injective (F : C ⥤ D) [faithful F] {X Y : C} : Function.Injective $ @Functor.map _ _ _ _ F X Y :=
+theorem map_injective (F : C ⥤ D) [faithful F] {X Y : C} : Function.Injective <| @Functor.map _ _ _ _ F X Y :=
   faithful.map_injective F
 
 /-- The specified preimage of a morphism under a full functor. -/
@@ -165,7 +165,7 @@ variable (F F' : C ⥤ D) (G : D ⥤ E)
 instance faithful.comp [faithful F] [faithful G] : faithful (F ⋙ G) where
   map_injective' := fun _ _ _ _ p => F.map_injective (G.map_injective p)
 
-theorem faithful.of_comp [faithful $ F ⋙ G] : faithful F :=
+theorem faithful.of_comp [faithful <| F ⋙ G] : faithful F :=
   { map_injective' := fun X Y => (F ⋙ G).map_injective.of_comp }
 
 section
@@ -245,7 +245,7 @@ instance full.comp [full F] [full G] : full (F ⋙ G) where
   Preimage := fun _ _ f => F.preimage (G.preimage f)
 
 /-- If `F ⋙ G` is full and `G` is faithful, then `F` is full -/
-def full.of_comp_faithful [full $ F ⋙ G] [faithful G] : full F where
+def full.of_comp_faithful [full <| F ⋙ G] [faithful G] : full F where
   Preimage := fun X Y f => (F ⋙ G).Preimage (G.map f)
   witness' := fun X Y f => G.map_injective ((F ⋙ G).image_preimage _)
 

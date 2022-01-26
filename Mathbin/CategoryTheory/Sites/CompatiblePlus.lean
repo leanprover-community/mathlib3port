@@ -138,7 +138,7 @@ theorem plus_comp_iso_whisker_left {F G : D ⥤ E} (η : F ⟶ G) (P : Cᵒᵖ �
 def plus_functor_whisker_left_iso (P : Cᵒᵖ ⥤ D) [∀ F : D ⥤ E X : C, preserves_colimits_of_shape (J.cover Xᵒᵖ) F]
     [∀ F : D ⥤ E X : C W : J.cover X P : Cᵒᵖ ⥤ D, preserves_limit (W.index P).multicospan F] :
     (whiskering_left _ _ E).obj (J.plus_obj P) ≅ (whiskering_left _ _ _).obj P ⋙ J.plus_functor E :=
-  (nat_iso.of_components fun X => plus_comp_iso _ _ _) $ fun F G η => plus_comp_iso_whisker_left _ _ _
+  (nat_iso.of_components fun X => plus_comp_iso _ _ _) fun F G η => plus_comp_iso_whisker_left _ _ _
 
 @[simp, reassoc]
 theorem plus_comp_iso_whisker_right {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
@@ -166,7 +166,7 @@ theorem plus_comp_iso_whisker_right {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
 @[simps hom_app inv_app]
 def plus_functor_whisker_right_iso :
     J.plus_functor D ⋙ (whiskering_right _ _ _).obj F ≅ (whiskering_right _ _ _).obj F ⋙ J.plus_functor E :=
-  (nat_iso.of_components fun P => J.plus_comp_iso _ _) $ fun P Q η => plus_comp_iso_whisker_right _ _ _
+  (nat_iso.of_components fun P => J.plus_comp_iso _ _) fun P Q η => plus_comp_iso_whisker_right _ _ _
 
 @[simp, reassoc]
 theorem whisker_right_to_plus_comp_plus_comp_iso_hom :

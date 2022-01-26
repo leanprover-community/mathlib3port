@@ -188,7 +188,7 @@ theorem not_pos_pow_dvd : ∀ {p k : ℕ} hp : 1 < p hk : 1 < k, ¬p ^ k ∣ p
     have : k < succ p ^ k := lt_pow_self hp k
     have : k < 1 := by
       rwa [he] at this
-    have : k = 0 := Nat.eq_zero_of_le_zeroₓ $ le_of_lt_succ this
+    have : k = 0 := Nat.eq_zero_of_le_zeroₓ <| le_of_lt_succ this
     have : 1 < 1 := by
       rwa [this] at hk
     absurd this
@@ -232,7 +232,7 @@ theorem zero_shiftl n : shiftl 0 n = 0 :=
 theorem shiftr_eq_div_pow m : ∀ n, shiftr m n = m / 2 ^ n
   | 0 => (Nat.div_oneₓ _).symm
   | k + 1 =>
-    (congr_argₓ div2 (shiftr_eq_div_pow k)).trans $ by
+    (congr_argₓ div2 (shiftr_eq_div_pow k)).trans <| by
       rw [div2_val, Nat.div_div_eq_div_mulₓ, mul_comm] <;> rfl
 
 @[simp]
@@ -288,7 +288,7 @@ theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = 
   simp at this
   have : n = 0 :=
     Nat.eq_zero_of_le_zeroₓ
-      (le_of_not_gtₓ $ fun hn =>
+      (le_of_not_gtₓ fun hn =>
         ne_of_gtₓ
           (pow_lt_pow_of_lt_right
             (by
@@ -354,15 +354,15 @@ theorem size_eq_zero {n : ℕ} : size n = 0 ↔ n = 0 := by
 
 theorem size_pow {n : ℕ} : size (2 ^ n) = n + 1 :=
   le_antisymmₓ
-    (size_le.2 $
+    (size_le.2 <|
       pow_lt_pow_of_lt_right
         (by
           decide)
         (lt_succ_self _))
-    (lt_size.2 $ le_reflₓ _)
+    (lt_size.2 <| le_reflₓ _)
 
 theorem size_le_size {m n : ℕ} (h : m ≤ n) : size m ≤ size n :=
-  size_le.2 $ lt_of_le_of_ltₓ h (lt_size_self _)
+  size_le.2 <| lt_of_le_of_ltₓ h (lt_size_self _)
 
 end Nat
 

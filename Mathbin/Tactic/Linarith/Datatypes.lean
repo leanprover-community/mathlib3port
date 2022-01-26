@@ -26,7 +26,7 @@ unsafe def linarith_trace {α} [has_to_tactic_format α] (s : α) : tactic Unit 
 when the `trace.linarith` option is set to true.
 -/
 unsafe def linarith_trace_proofs (s : Stringₓ := "") (l : List expr) : tactic Unit :=
-  tactic.when_tracing `linarith $ do
+  tactic.when_tracing `linarith <| do
     tactic.trace s
     l.mmap tactic.infer_type >>= tactic.trace
 
@@ -62,7 +62,7 @@ unsafe def add : linexp → linexp → linexp
 
 /-- `l.scale c` scales the values in `l` by `c` without modifying the order or keys. -/
 def scale (c : ℤ) (l : linexp) : linexp :=
-  if c = 0 then [] else if c = 1 then l else l.map $ fun ⟨n, z⟩ => (n, z * c)
+  if c = 0 then [] else if c = 1 then l else l.map fun ⟨n, z⟩ => (n, z * c)
 
 /-- `l.get n` returns the value in `l` associated with key `n`, if it exists, and `none` otherwise.
 This function assumes that `l` is sorted in decreasing order of the first argument,
@@ -269,8 +269,8 @@ tracing the result if `trace.linarith` is on.
 unsafe def global_branching_preprocessor.process (pp : global_branching_preprocessor) (l : List expr) :
     tactic (List branch) := do
   let l ← pp.transform l
-  when (l.length > 1) $ linarith_trace f! "Preprocessing: {pp.name} has branched, with branches:"
-  l.mmap' $ fun l => tactic.set_goals [l.1] >> linarith_trace_proofs (toString f! "Preprocessing: {pp.name}") l.2
+  when (l.length > 1) <| linarith_trace f! "Preprocessing: {pp.name} has branched, with branches:"
+  l.mmap' fun l => tactic.set_goals [l.1] >> linarith_trace_proofs (toString f! "Preprocessing: {pp.name}") l.2
   return l
 
 unsafe instance preprocessor_to_gb_preprocessor : Coe preprocessor global_branching_preprocessor :=
@@ -353,7 +353,7 @@ If `c = 1`, `h'` is the same as `h` -- specifically, it does *not* change the ty
 -/
 unsafe def mk_single_comp_zero_pf (c : ℕ) (h : expr) : tactic (ineq × expr) := do
   let tp ← infer_type h
-  let some (iq, e) ← return $ parse_into_comp_and_expr tp
+  let some (iq, e) ← return <| parse_into_comp_and_expr tp
   if c = 0 then do
       let e' ← mk_app `` zero_mul [e]
       return (ineq.eq, e')

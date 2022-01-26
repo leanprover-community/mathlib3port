@@ -72,7 +72,7 @@ theorem succ_nth_stream_eq_none_iff :
     by_cases' h : fr = 0
     · simp [int_fract_pair.stream, h, stream_nth_eq]
       
-    · suffices ¬(int_fract_pair.of (fr⁻¹) : Option $ int_fract_pair K) = none by
+    · suffices ¬(int_fract_pair.of fr⁻¹ : Option <| int_fract_pair K) = none by
         simp [int_fract_pair.stream, h, stream_nth_eq, this]
       exact fun h => Option.noConfusion h
       
@@ -83,7 +83,7 @@ parts of a value in case of non-termination.
 theorem succ_nth_stream_eq_some_iff {ifp_succ_n : int_fract_pair K} :
     int_fract_pair.stream v (n + 1) = some ifp_succ_n ↔
       ∃ ifp_n : int_fract_pair K,
-        int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of (ifp_n.fr⁻¹) = ifp_succ_n :=
+        int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of ifp_n.fr⁻¹ = ifp_succ_n :=
   by
   constructor
   · intro stream_succ_nth_eq
@@ -101,7 +101,7 @@ theorem succ_nth_stream_eq_some_iff {ifp_succ_n : int_fract_pair K} :
     exists ifp_n
     have ifp_n_fr_ne_zero : ifp_n.fr ≠ 0 := nth_fr_ne_zero ifp_n stream_nth_eq
     cases' ifp_n with _ ifp_n_fr
-    suffices int_fract_pair.of (ifp_n_fr⁻¹) = ifp_succ_n by
+    suffices int_fract_pair.of ifp_n_fr⁻¹ = ifp_succ_n by
       simpa [stream_nth_eq, ifp_n_fr_ne_zero]
     simp only [int_fract_pair.stream, stream_nth_eq, ifp_n_fr_ne_zero, Option.some_bindₓ, if_false] at
       stream_succ_nth_eq
@@ -119,16 +119,16 @@ theorem exists_succ_nth_stream_of_fr_zero {ifp_succ_n : int_fract_pair K}
   cases' ifp_n with _ ifp_n_fr
   suffices ifp_n_fr⁻¹ = ⌊ifp_n_fr⁻¹⌋ by
     simpa [stream_nth_eq]
-  have : int_fract_pair.of (ifp_n_fr⁻¹) = ifp_succ_n := h_right_right
+  have : int_fract_pair.of ifp_n_fr⁻¹ = ifp_succ_n := h_right_right
   cases' ifp_succ_n with _ ifp_succ_n_fr
   change ifp_succ_n_fr = 0 at succ_nth_fr_eq_zero
-  have : Int.fract (ifp_n_fr⁻¹) = ifp_succ_n_fr := by
+  have : Int.fract ifp_n_fr⁻¹ = ifp_succ_n_fr := by
     injection this
-  have : Int.fract (ifp_n_fr⁻¹) = 0 := by
+  have : Int.fract ifp_n_fr⁻¹ = 0 := by
     rwa [succ_nth_fr_eq_zero] at this
-  calc ifp_n_fr⁻¹ = Int.fract (ifp_n_fr⁻¹) + ⌊ifp_n_fr⁻¹⌋ := by
-      rw [Int.fract_add_floor (ifp_n_fr⁻¹)]_ = ⌊ifp_n_fr⁻¹⌋ := by
-      simp [‹Int.fract (ifp_n_fr⁻¹) = 0›]
+  calc ifp_n_fr⁻¹ = Int.fract ifp_n_fr⁻¹ + ⌊ifp_n_fr⁻¹⌋ := by
+      rw [Int.fract_add_floor ifp_n_fr⁻¹]_ = ⌊ifp_n_fr⁻¹⌋ := by
+      simp [‹Int.fract ifp_n_fr⁻¹ = 0›]
 
 end IntFractPair
 
@@ -235,8 +235,8 @@ fractional parts of the stream of integer and fractional parts.
 -/
 theorem nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero {ifp_n : int_fract_pair K}
     (stream_nth_eq : int_fract_pair.stream v n = some ifp_n) (nth_fr_ne_zero : ifp_n.fr ≠ 0) :
-    (of v).s.nth n = some ⟨1, (int_fract_pair.of (ifp_n.fr⁻¹)).b⟩ :=
-  have : int_fract_pair.stream v (n + 1) = some (int_fract_pair.of (ifp_n.fr⁻¹)) := by
+    (of v).s.nth n = some ⟨1, (int_fract_pair.of ifp_n.fr⁻¹).b⟩ :=
+  have : int_fract_pair.stream v (n + 1) = some (int_fract_pair.of ifp_n.fr⁻¹) := by
     cases ifp_n
     simp [int_fract_pair.stream, stream_nth_eq, nth_fr_ne_zero]
     rfl

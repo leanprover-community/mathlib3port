@@ -191,7 +191,7 @@ theorem to_list_ne_nil (s : CompositionSeries X) : s.to_list ≠ [] := by
 theorem to_list_injective : Function.Injective (@CompositionSeries.toList X _ _) :=
   fun s₁ s₂ h : List.ofFnₓ s₁ = List.ofFnₓ s₂ => by
   have h₁ : s₁.length = s₂.length :=
-    Nat.succ_injective ((List.length_of_fn s₁).symm.trans $ (congr_argₓ List.length h).trans $ List.length_of_fn s₂)
+    Nat.succ_injective ((List.length_of_fn s₁).symm.trans <| (congr_argₓ List.length h).trans <| List.length_of_fn s₂)
   have h₂ : ∀ i : Finₓ s₁.length.succ, s₁ i = s₂ (Finₓ.cast (congr_argₓ Nat.succ h₁) i) := by
     intro i
     rw [← List.nth_le_of_fn s₁ i, ← List.nth_le_of_fn s₂]
@@ -258,7 +258,7 @@ theorem of_list_to_list' (s : CompositionSeries X) : of_list s.to_list s.to_list
 @[simp]
 theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' is_maximal l) : to_list (of_list l hl hc) = l := by
   refine' List.ext_le _ _
-  · rw [length_to_list, length_of_list, tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ $ List.length_pos_of_ne_nilₓ hl)]
+  · rw [length_to_list, length_of_list, tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ <| List.length_pos_of_ne_nilₓ hl)]
     
   · intro i hi hi'
     dsimp [of_list, to_list]
@@ -269,13 +269,13 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' is_maxima
 /-- Two `composition_series` are equal if they have the same elements. See also `ext_fun`. -/
 @[ext]
 theorem ext {s₁ s₂ : CompositionSeries X} (h : ∀ x, x ∈ s₁ ↔ x ∈ s₂) : s₁ = s₂ :=
-  to_list_injective $
+  to_list_injective <|
     List.eq_of_perm_of_sorted
       (by
         classical <;>
           exact
             List.perm_of_nodup_nodup_to_finset_eq s₁.to_list_nodup s₂.to_list_nodup
-              (Finset.ext $ by
+              (Finset.ext <| by
                 simp [*]))
       s₁.to_list_sorted s₂.to_list_sorted
 
@@ -313,7 +313,7 @@ theorem length_pos_of_mem_ne {s : CompositionSeries X} {x y : X} (hx : x ∈ s) 
     0 < s.length :=
   let ⟨i, hi⟩ := hx
   let ⟨j, hj⟩ := hy
-  have hij : i ≠ j := mt s.inj.2 $ fun h => hxy (hi ▸ hj ▸ h)
+  have hij : i ≠ j := (mt s.inj.2) fun h => hxy (hi ▸ hj ▸ h)
   hij.lt_or_lt.elim (fun hij => lt_of_le_of_ltₓ (zero_le i) (lt_of_lt_of_leₓ hij (Nat.le_of_lt_succₓ j.2))) fun hji =>
     lt_of_le_of_ltₓ (zero_le j) (lt_of_lt_of_leₓ hji (Nat.le_of_lt_succₓ i.2))
 

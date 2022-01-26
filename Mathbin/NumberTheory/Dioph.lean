@@ -75,7 +75,7 @@ theorem list_all_cons {α} (p : α → Prop) (x : α) : ∀ l : List α, ListAll
   | x :: l => Iff.rfl
 
 theorem list_all_iff_forall {α} (p : α → Prop) : ∀ l : List α, ListAll p l ↔ ∀, ∀ x ∈ l, ∀, p x
-  | [] => (iff_true_intro $ List.ball_nil _).symm
+  | [] => (iff_true_intro <| List.ball_nil _).symm
   | x :: l => by
     rw [List.ball_consₓ, ← list_all_iff_forall l] <;> simp
 
@@ -264,7 +264,7 @@ theorem sumsq_eq_zero x : ∀ l, sumsq l x = 0 ↔ ListAll (fun a : Poly α => a
           exact
             ⟨fun h : p x * p x + sumsq ps x = 0 =>
               have : p x = 0 :=
-                eq_zero_of_mul_self_eq_zero $
+                eq_zero_of_mul_self_eq_zero <|
                   le_antisymmₓ
                     (by
                       rw [← h] <;> have t := add_le_add_left (sumsq_nonneg x ps) (p x * p x) <;> rwa [add_zeroₓ] at t)
@@ -278,7 +278,7 @@ end
 
 /-- Map the index set of variables, replacing `x_i` with `x_(f i)`. -/
 def remap {α β} (f : α → β) (g : Poly α) : Poly β :=
-  ⟨fun v => g $ v ∘ f,
+  ⟨fun v => g <| v ∘ f,
     g.induction
       (fun i => by
         simp <;> apply IsPoly.proj)
@@ -317,7 +317,7 @@ def cons {α β} (a : β) (v : α → β) : Option α → β := by
 
 @[simp]
 theorem cons_head_tail {α β} (v : Option α → β) : v none :: v ∘ some = v :=
-  funext $ fun o => by
+  funext fun o => by
     cases o <;> rfl
 
 end Option
@@ -334,7 +334,7 @@ section
 variable {α β γ : Type u}
 
 theorem ext {S S' : Set (α → ℕ)} (d : Dioph S) (H : ∀ v, S v ↔ S' v) : Dioph S' :=
-  Eq.ndrec d $ show S = S' from Set.ext H
+  Eq.ndrec d <| show S = S' from Set.ext H
 
 theorem of_no_dummies (S : Set (α → ℕ)) (p : Poly α) (h : ∀ v : α → ℕ, S v ↔ p v = 0) : Dioph S :=
   ⟨Ulift Empty, p.remap inl, fun v =>
@@ -371,16 +371,16 @@ theorem inject_dummies_lem (f : β → γ) (g : γ → Option β) (inv : ∀ x, 
 theorem inject_dummies {S : Set (α → ℕ)} (f : β → γ) (g : γ → Option β) (inv : ∀ x, g (f x) = some x)
     (p : Poly (Sum α β)) (h : ∀ v : α → ℕ, S v ↔ ∃ t, p (v ⊗ t) = 0) :
     ∃ q : Poly (Sum α γ), ∀ v : α → ℕ, S v ↔ ∃ t, q (v ⊗ t) = 0 :=
-  ⟨p.remap (inl ⊗ inr ∘ f), fun v => (h v).trans $ inject_dummies_lem f g inv _ _⟩
+  ⟨p.remap (inl ⊗ inr ∘ f), fun v => (h v).trans <| inject_dummies_lem f g inv _ _⟩
 
 theorem reindex_dioph {S : Set (α → ℕ)} : ∀ d : Dioph S f : α → β, Dioph fun v => S (v ∘ f)
   | ⟨γ, p, pe⟩, f =>
     ⟨γ, p.remap (inl ∘ f ⊗ inr), fun v =>
-      (pe _).trans $
-        exists_congr $ fun t =>
+      (pe _).trans <|
+        exists_congr fun t =>
           suffices v ∘ f ⊗ t = (v ⊗ t) ∘ (inl ∘ f ⊗ inr) by
             simp [this]
-          funext $ fun s => by
+          funext fun s => by
             cases' s with a b <;> rfl⟩
 
 theorem dioph_list_all l (d : ListAll Dioph l) : Dioph fun v => ListAll (fun S : Set (α → ℕ) => S v) l := by
@@ -389,7 +389,7 @@ theorem dioph_list_all l (d : ListAll Dioph l) : Dioph fun v => ListAll (fun S :
       ∀ v, ListAll (fun S : Set _ => S v) l ↔ ∃ t, ListAll (fun p : Poly (Sum α β) => p (v ⊗ t) = 0) pl
     from
     let ⟨β, pl, h⟩ := this
-    ⟨β, Poly.sumsq pl, fun v => (h v).trans $ exists_congr $ fun t => (Poly.sumsq_eq_zero _ _).symm⟩
+    ⟨β, Poly.sumsq pl, fun v => (h v).trans <| exists_congr fun t => (Poly.sumsq_eq_zero _ _).symm⟩
   induction' l with S l IH
   exact
     ⟨Ulift Empty, [], fun v => by
@@ -406,7 +406,7 @@ theorem dioph_list_all l (d : ListAll Dioph l) : Dioph fun v => ListAll (fun S :
               ⟨m ⊗ n, by
                 rw
                     [show (v ⊗ m ⊗ n) ∘ (inl ⊗ inr ∘ inl) = v ⊗ m from
-                      funext $ fun s => by
+                      funext fun s => by
                         cases' s with a b <;> rfl] <;>
                   exact hm,
                 by
@@ -414,14 +414,14 @@ theorem dioph_list_all l (d : ListAll Dioph l) : Dioph fun v => ListAll (fun S :
                 dsimp [· ∘ ·]
                 rw
                     [show (fun x : Sum α γ => (v ⊗ m ⊗ n) ((inl ⊗ fun x : γ => inr (inr x)) x)) = v ⊗ n from
-                      funext $ fun s => by
+                      funext fun s => by
                         cases' s with a b <;> rfl] <;>
                   exact hq⟩,
               fun ⟨t, hl, hr⟩ =>
               ⟨⟨t ∘ inl, by
                   rwa
                     [show (v ⊗ t) ∘ (inl ⊗ inr ∘ inl) = v ⊗ t ∘ inl from
-                      funext $ fun s => by
+                      funext fun s => by
                         cases' s with a b <;> rfl] at
                     hl⟩,
                 ⟨t ∘ inr, by
@@ -429,7 +429,7 @@ theorem dioph_list_all l (d : ListAll Dioph l) : Dioph fun v => ListAll (fun S :
                   dsimp [· ∘ ·]  at hq
                   rwa
                     [show (fun x : Sum α γ => (v ⊗ t) ((inl ⊗ fun x : γ => inr (inr x)) x)) = v ⊗ t ∘ inr from
-                      funext $ fun s => by
+                      funext fun s => by
                         cases' s with a b <;> rfl] at
                     hq⟩⟩⟩⟩
 
@@ -442,7 +442,7 @@ theorem or_dioph {S S' : Set (α → ℕ)} : ∀ d : Dioph S d' : Dioph S', Diop
       refine'
         Iff.trans (or_congr ((pe v).trans _) ((qe v).trans _))
           (exists_or_distrib.symm.trans
-            (exists_congr $ fun t =>
+            (exists_congr fun t =>
               (@mul_eq_zero _ _ _ (p ((v ⊗ t) ∘ (inl ⊗ inr ∘ inl))) (q ((v ⊗ t) ∘ (inl ⊗ inr ∘ inr)))).symm))
       exact inject_dummies_lem _ (some ⊗ fun _ => none) (fun x => rfl) _ _
       exact inject_dummies_lem _ ((fun _ => none) ⊗ some) (fun x => rfl) _ _⟩
@@ -467,7 +467,7 @@ theorem ex_dioph {S : Set (Sum α β → ℕ)} : Dioph S → Dioph fun v => ∃ 
           simp <;>
             rw
                 [show (v ⊗ x ⊗ t) ∘ ((inl ⊗ inr ∘ inl) ⊗ inr ∘ inr) = (v ⊗ x) ⊗ t from
-                  funext $ fun s => by
+                  funext fun s => by
                     cases' s with a b <;>
                       try
                           cases a <;>
@@ -480,7 +480,7 @@ theorem ex_dioph {S : Set (Sum α β → ℕ)} : Dioph S → Dioph fun v => ∃ 
               simp at ht <;>
                 rwa
                   [show (v ⊗ t) ∘ ((inl ⊗ inr ∘ inl) ⊗ inr ∘ inr) = (v ⊗ t ∘ inl) ⊗ t ∘ inr from
-                    funext $ fun s => by
+                    funext fun s => by
                       cases' s with a b <;>
                         try
                             cases a <;>
@@ -496,7 +496,7 @@ theorem ex1_dioph {S : Set (Option α → ℕ)} : Dioph S → Dioph fun v => ∃
           simp <;>
             rw
                 [show (v ⊗ x :: t) ∘ (inr none :: inl ⊗ inr ∘ some) = x :: v ⊗ t from
-                  funext $ fun s => by
+                  funext fun s => by
                     cases' s with a b <;>
                       try
                           cases a <;>
@@ -509,7 +509,7 @@ theorem ex1_dioph {S : Set (Option α → ℕ)} : Dioph S → Dioph fun v => ∃
               simp at ht <;>
                 rwa
                   [show (v ⊗ t) ∘ (inr none :: inl ⊗ inr ∘ some) = t none :: v ⊗ t ∘ some from
-                    funext $ fun s => by
+                    funext fun s => by
                       cases' s with a b <;>
                         try
                             cases a <;>
@@ -517,10 +517,10 @@ theorem ex1_dioph {S : Set (Option α → ℕ)} : Dioph S → Dioph fun v => ∃
                   ht⟩⟩⟩⟩
 
 theorem dom_dioph {f : (α → ℕ) →. ℕ} (d : dioph_pfun f) : Dioph f.dom :=
-  cast (congr_argₓ Dioph $ Set.ext $ fun v => (Pfun.dom_iff_graph _ _).symm) (ex1_dioph d)
+  cast (congr_argₓ Dioph <| Set.ext fun v => (Pfun.dom_iff_graph _ _).symm) (ex1_dioph d)
 
 theorem dioph_fn_iff_pfun (f : (α → ℕ) → ℕ) : dioph_fn f = @dioph_pfun α f := by
-  refine' congr_argₓ Dioph (Set.ext $ fun v => _) <;> exact pfun.lift_graph.symm
+  refine' congr_argₓ Dioph (Set.ext fun v => _) <;> exact pfun.lift_graph.symm
 
 theorem abs_poly_dioph (p : Poly α) : dioph_fn fun v => (p v).natAbs := by
   refine' of_no_dummies _ ((p.remap some - Poly.proj none) * (p.remap some + Poly.proj none)) fun v => _ <;>
@@ -531,18 +531,18 @@ theorem proj_dioph (i : α) : dioph_fn fun v => v i :=
 
 theorem dioph_pfun_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f} (df : dioph_pfun f) :
     Dioph fun v : α → ℕ => ∃ h : f.dom v, S (f.fn v h :: v) :=
-  ext (ex1_dioph (and_dioph d df)) $ fun v =>
+  (ext (ex1_dioph (and_dioph d df))) fun v =>
     ⟨fun ⟨x, hS, (h : Exists _)⟩ => by
-      rw [show (x :: v) ∘ some = v from funext $ fun s => rfl] at h <;>
+      rw [show (x :: v) ∘ some = v from funext fun s => rfl] at h <;>
         cases' h with hf h <;> refine' ⟨hf, _⟩ <;> rw [Pfun.fn, h] <;> exact hS,
       fun ⟨x, hS⟩ =>
       ⟨f.fn v x, hS,
         show Exists _ by
-          rw [show (f.fn v x :: v) ∘ some = v from funext $ fun s => rfl] <;> exact ⟨x, rfl⟩⟩⟩
+          rw [show (f.fn v x :: v) ∘ some = v from funext fun s => rfl] <;> exact ⟨x, rfl⟩⟩⟩
 
 theorem dioph_fn_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f : (α → ℕ) → ℕ} (df : dioph_fn f) :
     Dioph fun v : α → ℕ => S (f v :: v) :=
-  ext (dioph_pfun_comp1 d (cast (dioph_fn_iff_pfun f) df)) $ fun v => ⟨fun ⟨_, h⟩ => h, fun h => ⟨trivialₓ, h⟩⟩
+  (ext (dioph_pfun_comp1 d (cast (dioph_fn_iff_pfun f) df))) fun v => ⟨fun ⟨_, h⟩ => h, fun h => ⟨trivialₓ, h⟩⟩
 
 end
 
@@ -556,18 +556,18 @@ open_locale Vector3
 
 theorem dioph_fn_vec_comp1 {n} {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) {f : Vector3 ℕ n → ℕ} (df : dioph_fn f) :
     Dioph fun v : Vector3 ℕ n => S (cons (f v) v) :=
-  ext (dioph_fn_comp1 (reindex_dioph d (none :: some)) df) $ fun v => by
+  (ext (dioph_fn_comp1 (reindex_dioph d (none :: some)) df)) fun v => by
     rw
       [show Option.cons (f v) v ∘ cons none some = f v :: v from
-        funext $ fun s => by
+        funext fun s => by
           cases' s with a b <;> rfl]
 
 theorem vec_ex1_dioph n {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) : Dioph fun v : Vector3 ℕ n => ∃ x, S (x :: v) :=
-  ext (ex1_dioph $ reindex_dioph d (none :: some)) $ fun v =>
-    exists_congr $ fun x => by
+  (ext (ex1_dioph <| reindex_dioph d (none :: some))) fun v =>
+    exists_congr fun x => by
       rw
         [show Option.cons x v ∘ cons none some = x :: v from
-          funext $ fun s => by
+          funext fun s => by
             cases' s with a b <;> rfl]
 
 theorem dioph_fn_vec {n} (f : Vector3 ℕ n → ℕ) : dioph_fn f ↔ Dioph fun v : Vector3 ℕ (succ n) => f (v ∘ fs) = v fz :=
@@ -581,28 +581,28 @@ theorem dioph_fn_compn {α : Type} :
     ∀ {n} {S : Set (Sum α (Fin2 n) → ℕ)} d : Dioph S {f : Vector3 ((α → ℕ) → ℕ) n} df : VectorAllp dioph_fn f,
       Dioph fun v : α → ℕ => S (v ⊗ fun i => f i v)
   | 0, S, d, f => fun df =>
-    ext (reindex_dioph d (id ⊗ Fin2.elim0)) $ fun v => by
-      refine' Eq.to_iff (congr_argₓ S $ funext $ fun s => _) <;>
+    (ext (reindex_dioph d (id ⊗ Fin2.elim0))) fun v => by
+      refine' Eq.to_iff (congr_argₓ S <| funext fun s => _) <;>
         · cases' s with a b
           rfl
           cases b
           
   | succ n, S, d, f =>
-    f.cons_elim $ fun f fl => by
+    f.cons_elim fun f fl => by
       simp <;>
         exact fun df dfl =>
           have : Dioph fun v => S (v ∘ inl ⊗ f (v ∘ inl) :: v ∘ inr) :=
-            ext (dioph_fn_comp1 (reindex_dioph d (some ∘ inl ⊗ none :: some ∘ inr)) (reindex_dioph_fn df inl)) $
+            (ext (dioph_fn_comp1 (reindex_dioph d (some ∘ inl ⊗ none :: some ∘ inr)) (reindex_dioph_fn df inl)))
               fun v => by
-              refine' Eq.to_iff (congr_argₓ S $ funext $ fun s => _) <;> cases' s with a b
+              refine' Eq.to_iff (congr_argₓ S <| funext fun s => _) <;> cases' s with a b
               rfl
               cases b <;> rfl
           have : Dioph fun v => S (v ⊗ f v :: fun i : Fin2 n => fl i v) :=
             @dioph_fn_compn n (fun v => S (v ∘ inl ⊗ f (v ∘ inl) :: v ∘ inr)) this _ dfl
-          ext this $ fun v => by
+          (ext this) fun v => by
             rw
               [show (cons (f v) fun i : Fin2 n => fl i v) = fun i : Fin2 (succ n) => (f :: fl) i v from
-                funext $ fun s => by
+                funext fun s => by
                   cases' s with a b <;> rfl]
 
 theorem dioph_comp {n} {S : Set (Vector3 ℕ n)} (d : Dioph S) (f : Vector3 ((α → ℕ) → ℕ) n)
@@ -611,11 +611,11 @@ theorem dioph_comp {n} {S : Set (Vector3 ℕ n)} (d : Dioph S) (f : Vector3 ((α
 
 theorem dioph_fn_comp {n} {f : Vector3 ℕ n → ℕ} (df : dioph_fn f) (g : Vector3 ((α → ℕ) → ℕ) n)
     (dg : VectorAllp dioph_fn g) : dioph_fn fun v => f fun i => g i v :=
-  dioph_comp ((dioph_fn_vec _).1 df) ((fun v => v none) :: fun i v => g i (v ∘ some)) $ by
+  dioph_comp ((dioph_fn_vec _).1 df) ((fun v => v none) :: fun i v => g i (v ∘ some)) <| by
     simp <;>
       exact
         ⟨proj_dioph none,
-          (vector_allp_iff_forall _ _).2 $ fun i => reindex_dioph_fn ((vector_allp_iff_forall _ _).1 dg _) _⟩
+          (vector_allp_iff_forall _ _).2 fun i => reindex_dioph_fn ((vector_allp_iff_forall _ _).1 dg _) _⟩
 
 localized [Dioph] notation:35 x " D∧ " y => Dioph.and_dioph x y
 
@@ -649,24 +649,24 @@ theorem dioph_fn_comp2 {h : ℕ → ℕ → ℕ} (d : dioph_fn fun v : Vector3 �
   dioph_fn_comp d [f, g] ⟨df, dg⟩
 
 theorem eq_dioph : Dioph fun v => f v = g v :=
-  dioph_comp2 df dg $
+  dioph_comp2 df dg <|
     of_no_dummies _ (Poly.proj (&0) - Poly.proj (&1)) fun v =>
       (Int.coe_nat_eq_coe_nat_iff _ _).symm.trans ⟨@sub_eq_zero_of_eq ℤ _ (v (&0)) (v (&1)), eq_of_sub_eq_zero⟩
 
 localized [Dioph] infixl:50 " D= " => Dioph.eq_dioph
 
 theorem add_dioph : dioph_fn fun v => f v + g v :=
-  dioph_fn_comp2 df dg $ abs_poly_dioph (Poly.proj (&0) + Poly.proj (&1))
+  dioph_fn_comp2 df dg <| abs_poly_dioph (Poly.proj (&0) + Poly.proj (&1))
 
 localized [Dioph] infixl:80 " D+ " => Dioph.add_dioph
 
 theorem mul_dioph : dioph_fn fun v => f v * g v :=
-  dioph_fn_comp2 df dg $ abs_poly_dioph (Poly.proj (&0) * Poly.proj (&1))
+  dioph_fn_comp2 df dg <| abs_poly_dioph (Poly.proj (&0) * Poly.proj (&1))
 
 localized [Dioph] infixl:90 " D* " => Dioph.mul_dioph
 
 theorem le_dioph : Dioph fun v => f v ≤ g v :=
-  dioph_comp2 df dg $ ext ((D∃) 2 $ D&1 D+ D&0 D= D&2) fun v => ⟨fun ⟨x, hx⟩ => le.intro hx, le.dest⟩
+  dioph_comp2 df dg <| ext ((D∃) 2 <| D&1 D+ D&0 D= D&2) fun v => ⟨fun ⟨x, hx⟩ => le.intro hx, le.dest⟩
 
 localized [Dioph] infixl:50 " D≤ " => Dioph.le_dioph
 
@@ -676,15 +676,15 @@ theorem lt_dioph : Dioph fun v => f v < g v :=
 localized [Dioph] infixl:50 " D< " => Dioph.lt_dioph
 
 theorem ne_dioph : Dioph fun v => f v ≠ g v :=
-  ext (df D< dg D∨ dg D< df) $ fun v => ne_iff_lt_or_gtₓ.symm
+  (ext (df D< dg D∨ dg D< df)) fun v => ne_iff_lt_or_gtₓ.symm
 
 localized [Dioph] infixl:50 " D≠ " => Dioph.ne_dioph
 
 theorem sub_dioph : dioph_fn fun v => f v - g v :=
-  dioph_fn_comp2 df dg $
-    (dioph_fn_vec _).2 $
-      ext (D&1 D= D&0 D+ D&2 D∨ D&1 D≤ D&2 D∧ D&0 D= D.0) $
-        (vector_all_iff_forall _).1 $ fun x y z =>
+  dioph_fn_comp2 df dg <|
+    (dioph_fn_vec _).2 <|
+      ext (D&1 D= D&0 D+ D&2 D∨ D&1 D≤ D&2 D∧ D&0 D= D.0) <|
+        (vector_all_iff_forall _).1 fun x y z =>
           show y = x + z ∨ y ≤ z ∧ x = 0 ↔ y - z = x from
             ⟨fun o => by
               rcases o with (ae | ⟨yz, x0⟩)
@@ -703,24 +703,24 @@ theorem sub_dioph : dioph_fn fun v => f v - g v :=
 localized [Dioph] infixl:80 " D- " => Dioph.sub_dioph
 
 theorem dvd_dioph : Dioph fun v => f v ∣ g v :=
-  dioph_comp ((D∃) 2 $ D&2 D= D&1 D* D&0) [f, g] ⟨df, dg⟩
+  dioph_comp ((D∃) 2 <| D&2 D= D&1 D* D&0) [f, g] ⟨df, dg⟩
 
 localized [Dioph] infixl:50 " D∣ " => Dioph.dvd_dioph
 
 theorem mod_dioph : dioph_fn fun v => f v % g v :=
   have : Dioph fun v : Vector3 ℕ 3 => (v (&2) = 0 ∨ v (&0) < v (&2)) ∧ ∃ x : ℕ, v (&0) + v (&2) * x = v (&1) :=
-    (D&2 D= D.0 D∨ D&0 D< D&2) D∧ (D∃) 3 $ D&1 D+ D&3 D* D&0 D= D&2
-  dioph_fn_comp2 df dg $
-    (dioph_fn_vec _).2 $
-      ext this $
-        (vector_all_iff_forall _).1 $ fun z x y =>
+    (D&2 D= D.0 D∨ D&0 D< D&2) D∧ (D∃) 3 <| D&1 D+ D&3 D* D&0 D= D&2
+  dioph_fn_comp2 df dg <|
+    (dioph_fn_vec _).2 <|
+      ext this <|
+        (vector_all_iff_forall _).1 fun z x y =>
           show ((y = 0 ∨ z < y) ∧ ∃ c, z + y * c = x) ↔ x % y = z from
             ⟨fun ⟨h, c, hc⟩ => by
               rw [← hc] <;> simp <;> cases' h with x0 hl
               rw [x0, mod_zero]
               exact mod_eq_of_lt hl, fun e => by
               rw [← e] <;>
-                exact ⟨or_iff_not_imp_left.2 $ fun h => mod_lt _ (Nat.pos_of_ne_zeroₓ h), x / y, mod_add_div _ _⟩⟩
+                exact ⟨or_iff_not_imp_left.2 fun h => mod_lt _ (Nat.pos_of_ne_zeroₓ h), x / y, mod_add_div _ _⟩⟩
 
 localized [Dioph] infixl:80 " D% " => Dioph.mod_dioph
 
@@ -733,10 +733,10 @@ theorem div_dioph : dioph_fn fun v => f v / g v :=
   have :
     Dioph fun v : Vector3 ℕ 3 => v (&2) = 0 ∧ v (&0) = 0 ∨ v (&0) * v (&2) ≤ v (&1) ∧ v (&1) < (v (&0) + 1) * v (&2) :=
     (D&2 D= D.0 D∧ D&0 D= D.0) D∨ D&0 D* D&2 D≤ D&1 D∧ D&1 D< (D&0 D+ D.1) D* D&2
-  dioph_fn_comp2 df dg $
-    (dioph_fn_vec _).2 $
-      ext this $
-        (vector_all_iff_forall _).1 $ fun z x y =>
+  dioph_fn_comp2 df dg <|
+    (dioph_fn_vec _).2 <|
+      ext this <|
+        (vector_all_iff_forall _).1 fun z x y =>
           show y = 0 ∧ z = 0 ∨ z * y ≤ x ∧ x < (z + 1) * y ↔ x / y = z by
             refine' Iff.trans _ eq_comm <;>
               exact
@@ -744,12 +744,12 @@ theorem div_dioph : dioph_fn fun v => f v / g v :=
                   (fun y0 => by
                     rw [y0, Nat.div_zeroₓ] <;>
                       exact
-                        ⟨fun o => (o.resolve_right $ fun ⟨_, h2⟩ => Nat.not_lt_zeroₓ _ h2).right, fun z0 =>
+                        ⟨fun o => (o.resolve_right fun ⟨_, h2⟩ => Nat.not_lt_zeroₓ _ h2).right, fun z0 =>
                           Or.inl ⟨rfl, z0⟩⟩)
                   fun ypos =>
-                  Iff.trans ⟨fun o => o.resolve_left $ fun ⟨h1, _⟩ => ne_of_gtₓ ypos h1, Or.inr⟩
-                    (le_antisymm_iff.trans $
-                        and_congr (Nat.le_div_iff_mul_leₓ _ _ ypos) $
+                  Iff.trans ⟨fun o => o.resolve_left fun ⟨h1, _⟩ => ne_of_gtₓ ypos h1, Or.inr⟩
+                    (le_antisymm_iff.trans <|
+                        and_congr (Nat.le_div_iff_mul_leₓ _ _ ypos) <|
                           Iff.trans ⟨lt_succ_of_le, le_of_lt_succ⟩ (div_lt_iff_lt_mul _ _ ypos)).symm
 
 localized [Dioph] infixl:80 " D/ " => Dioph.div_dioph
@@ -776,11 +776,11 @@ theorem pell_dioph : Dioph fun v : Vector3 ℕ 4 => ∃ h : 1 < v (&0), xn h (v 
     D.1 D< D&0 D∧
       D&1 D≤ D&3 D∧
         (D&2 D= D.1 D∧ D&3 D= D.0) D∨
-          (D∃) 4 $
-            (D∃) 5 $
-              (D∃) 6 $
-                (D∃) 7 $
-                  (D∃) 8 $
+          (D∃) 4 <|
+            (D∃) 5 <|
+              (D∃) 6 <|
+                (D∃) 7 <|
+                  (D∃) 8 <|
                     D&7 D* D&7 D- (D&5 D* D&5 D- D.1) D* D&8 D* D&8 D= D.1 D∧
                       D&4 D* D&4 D- (D&5 D* D&5 D- D.1) D* D&3 D* D&3 D= D.1 D∧
                         D&2 D* D&2 D- (D&0 D* D&0 D- D.1) D* D&1 D* D&1 D= D.1 D∧
@@ -788,13 +788,13 @@ theorem pell_dioph : Dioph fun v : Vector3 ℕ 4 => ∃ h : 1 < v (&0), xn h (v 
                             D≡ (D&0) (D.1) (D.4 D* D&8) D∧
                               D≡ (D&0) (D&5) (D&4) D∧
                                 D.0 D< D&3 D∧ D&8 D* D&8 D∣ D&3 D∧ D≡ (D&2) (D&7) (D&4) D∧ D≡ (D&1) (D&6) (D.4 D* D&8)
-  Dioph.ext this $ fun v => matiyasevic.symm
+  (Dioph.ext this) fun v => matiyasevic.symm
 
 theorem xn_dioph : dioph_pfun fun v : Vector3 ℕ 2 => ⟨1 < v (&0), fun h => xn h (v (&1))⟩ :=
   have : Dioph fun v : Vector3 ℕ 3 => ∃ y, ∃ h : 1 < v (&1), xn h (v (&2)) = v (&0) ∧ yn h (v (&2)) = y :=
     let D_pell := @reindex_dioph _ (Fin2 4) _ pell_dioph [&2, &3, &1, &0]
     (D∃) 3 D_pell
-  (dioph_pfun_vec _).2 $ Dioph.ext this $ fun v => ⟨fun ⟨y, h, xe, ye⟩ => ⟨h, xe⟩, fun ⟨h, xe⟩ => ⟨_, h, xe, rfl⟩⟩
+  (dioph_pfun_vec _).2 <| (Dioph.ext this) fun v => ⟨fun ⟨y, h, xe, ye⟩ => ⟨h, xe⟩, fun ⟨h, xe⟩ => ⟨_, h, xe, rfl⟩⟩
 
 include df dg
 
@@ -818,12 +818,12 @@ theorem pow_dioph : dioph_fn fun v => f v ^ g v :=
       D.0 D< D&2 D∧
         (D&1 D= D.0 D∧ D&0 D= D.0) D∨
           D.0 D< D&1 D∧
-            (D∃) 3 $
-              (D∃) 4 $
-                (D∃) 5 $
-                  (D∃) 6 $
-                    (D∃) 7 $
-                      (D∃) 8 $
+            (D∃) 3 <|
+              (D∃) 4 <|
+                (D∃) 5 <|
+                  (D∃) 6 <|
+                    (D∃) 7 <|
+                      (D∃) 8 <|
                         D_pell D∧
                           D≡ (D&1) (D&0 D* (D&4 D- D&7) D+ D&6) (D&3) D∧
                             D.2 D* D&4 D* D&7 D= D&3 D+ (D&7 D* D&7 D+ D.1) D∧
@@ -833,15 +833,15 @@ theorem pow_dioph : dioph_fn fun v => f v ^ g v :=
                                     D&4 D* D&4 D-
                                         ((D&5 D+ D.1) D* (D&5 D+ D.1) D- D.1) D* (D&5 D* D&2) D* (D&5 D* D&2) D=
                                       D.1
-  dioph_fn_comp2 df dg $
-    (dioph_fn_vec _).2 $
-      Dioph.ext this $ fun v =>
-        Iff.symm $
-          eq_pow_of_pell.trans $
-            or_congr Iff.rfl $
-              and_congr Iff.rfl $
-                or_congr Iff.rfl $
-                  and_congr Iff.rfl $
+  dioph_fn_comp2 df dg <|
+    (dioph_fn_vec _).2 <|
+      (Dioph.ext this) fun v =>
+        Iff.symm <|
+          eq_pow_of_pell.trans <|
+            or_congr Iff.rfl <|
+              and_congr Iff.rfl <|
+                or_congr Iff.rfl <|
+                  and_congr Iff.rfl <|
                     ⟨fun ⟨w, a, t, z, a1, h⟩ => ⟨w, a, t, z, _, _, ⟨a1, rfl, rfl⟩, h⟩,
                       fun ⟨w, a, t, z, _, _, ⟨a1, rfl, rfl⟩, h⟩ => ⟨w, a, t, z, a1, h⟩⟩
 

@@ -198,17 +198,17 @@ theorem partially_well_ordered_on.image_of_monotone_on {s : Set α} {r : α → 
 theorem _root_.is_antichain.finite_of_partially_well_ordered_on {s : Set α} {r : α → α → Prop} (ha : IsAntichain r s)
     (hp : s.partially_well_ordered_on r) : s.finite := by
   refine' finite_or_infinite.resolve_right fun hi => _
-  obtain ⟨m, n, hmn, h⟩ := hp (fun n => hi.nat_embedding _ n) (range_subset_iff.2 $ fun n => (hi.nat_embedding _ n).2)
+  obtain ⟨m, n, hmn, h⟩ := hp (fun n => hi.nat_embedding _ n) (range_subset_iff.2 fun n => (hi.nat_embedding _ n).2)
   exact
     hmn.ne
-      ((hi.nat_embedding _).Injective $
-        Subtype.val_injective $ ha.eq (hi.nat_embedding _ m).2 (hi.nat_embedding _ n).2 h)
+      ((hi.nat_embedding _).Injective <|
+        Subtype.val_injective <| ha.eq (hi.nat_embedding _ m).2 (hi.nat_embedding _ n).2 h)
 
 theorem finite.partially_well_ordered_on {s : Set α} {r : α → α → Prop} [IsRefl α r] (hs : s.finite) :
     s.partially_well_ordered_on r := by
   intro f hf
   obtain ⟨m, n, hmn, h⟩ := hs.exists_lt_map_eq_of_range_subset hf
-  exact ⟨m, n, hmn, h.subst $ refl (f m)⟩
+  exact ⟨m, n, hmn, h.subst <| refl (f m)⟩
 
 theorem _root_.is_antichain.partially_well_ordered_on_iff {s : Set α} {r : α → α → Prop} [IsRefl α r]
     (hs : IsAntichain r s) : s.partially_well_ordered_on r ↔ s.finite :=

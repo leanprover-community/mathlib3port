@@ -80,7 +80,7 @@ theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[�
   · rw [h, norm_zero]
     apply mul_nonneg <;> exact norm_nonneg _
     
-  let fx := lm x⁻¹
+  let fx := (lm x)⁻¹
   let t := fx / (abs𝕜 fx : 𝕜)
   have ht : abs𝕜 t = 1 := by
     field_simp [abs_of_real, of_real_inv, IsROrC.abs_inv, IsROrC.abs_div, IsROrC.abs_abs, h]
@@ -92,8 +92,8 @@ theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[�
       
     · symm
       calc im (lm (t • x)) = im (t * lm x) := by
-          rw [lm.map_smul, smul_eq_mul]_ = im (lm x⁻¹ / abs𝕜 (lm x⁻¹) * lm x) := rfl _ = im (1 / (abs𝕜 (lm x⁻¹) : 𝕜)) :=
-          by
+          rw [lm.map_smul, smul_eq_mul]_ = im ((lm x)⁻¹ / abs𝕜 (lm x)⁻¹ * lm x) :=
+          rfl _ = im (1 / (abs𝕜 (lm x)⁻¹ : 𝕜)) := by
           rw [div_mul_eq_mul_div, inv_mul_cancel h]_ = 0 := by
           rw [← of_real_one, ← of_real_div, of_real_im]_ = im (fr (t • x) : 𝕜) := by
           rw [of_real_im]

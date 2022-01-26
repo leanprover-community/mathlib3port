@@ -19,7 +19,7 @@ variable {α β : Type _} (e : Option α ≃ Option β)
 private def remove_none_aux (x : α) : β :=
   if h : (e (some x)).isSome then Option.getₓ h
   else
-    Option.getₓ $
+    Option.getₓ <|
       show (e none).isSome by
         rw [← Option.ne_none_iff_is_some]
         intro hn
@@ -89,8 +89,8 @@ theorem some_remove_none_iff {x : α} : some (remove_none e x) = e none ↔ e.sy
 
 @[simp]
 theorem remove_none_map_equiv {α β : Type _} (e : α ≃ β) : remove_none (EquivFunctor.mapEquiv Option e) = e :=
-  Equivₓ.ext $ fun x =>
-    Option.some_injective _ $
+  Equivₓ.ext fun x =>
+    Option.some_injective _ <|
       remove_none_some _
         ⟨e x, by
           simp [EquivFunctor.map]⟩

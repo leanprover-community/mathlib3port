@@ -136,7 +136,7 @@ ring operations on `𝕎 R`. For example, `witt_vector.witt_add` is such a `φ` 
 evaluating this at `(x₀, x₁)` gives us the sum of two Witt vectors `x₀ + x₁`.
 -/
 def eval {k : ℕ} (φ : ℕ → MvPolynomial (Finₓ k × ℕ) ℤ) (x : Finₓ k → 𝕎 R) : 𝕎 R :=
-  mk p $ fun n => peval (φ n) $ fun i => (x i).coeff
+  (mk p) fun n => (peval (φ n)) fun i => (x i).coeff
 
 variable (R) [Fact p.prime]
 

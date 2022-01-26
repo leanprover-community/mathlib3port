@@ -61,7 +61,7 @@ private theorem associator_naturality_aux {X₁ X₂ X₃ : Type _} [AddCommMono
     [AddCommMonoidₓ X₃] [Module R X₁] [Module R X₂] [Module R X₃] {Y₁ Y₂ Y₃ : Type _} [AddCommMonoidₓ Y₁]
     [AddCommMonoidₓ Y₂] [AddCommMonoidₓ Y₃] [Module R Y₁] [Module R Y₂] [Module R Y₃] (f₁ : X₁ →ₗ[R] Y₁)
     (f₂ : X₂ →ₗ[R] Y₂) (f₃ : X₃ →ₗ[R] Y₃) :
-    ↑assoc R Y₁ Y₂ Y₃ ∘ₗ map (map f₁ f₂) f₃ = map f₁ (map f₂ f₃) ∘ₗ ↑assoc R X₁ X₂ X₃ := by
+    ↑(assoc R Y₁ Y₂ Y₃) ∘ₗ map (map f₁ f₂) f₃ = map f₁ (map f₂ f₃) ∘ₗ ↑(assoc R X₁ X₂ X₃) := by
   apply TensorProduct.ext_threefold
   intro x y z
   rfl
@@ -71,7 +71,7 @@ variable (R)
 private theorem pentagon_aux (W X Y Z : Type _) [AddCommMonoidₓ W] [AddCommMonoidₓ X] [AddCommMonoidₓ Y]
     [AddCommMonoidₓ Z] [Module R W] [Module R X] [Module R Y] [Module R Z] :
     ((map (1 : W →ₗ[R] W) (assoc R X Y Z).toLinearMap).comp (assoc R W (X ⊗[R] Y) Z).toLinearMap).comp
-        (map (↑assoc R W X Y) (1 : Z →ₗ[R] Z)) =
+        (map ↑(assoc R W X Y) (1 : Z →ₗ[R] Z)) =
       (assoc R W X (Y ⊗[R] Z)).toLinearMap.comp (assoc R (W ⊗[R] X) Y Z).toLinearMap :=
   by
   apply TensorProduct.ext_fourfold

@@ -68,7 +68,7 @@ setup_tactic_parser
 
 /-- Solve goals of the form `continuous f`. `continuity?` reports back the proof term it found.
 -/
-unsafe def continuity (bang : parse $ optionalₓ (tk "!")) (trace : parse $ optionalₓ (tk "?"))
+unsafe def continuity (bang : parse <| optionalₓ (tk "!")) (trace : parse <| optionalₓ (tk "?"))
     (cfg : tidy.cfg := {  }) : tactic Unit :=
   let md := if bang.is_some then semireducible else reducible
   let continuity_core := tactic.tidy { cfg with tactics := continuity_tactics md }

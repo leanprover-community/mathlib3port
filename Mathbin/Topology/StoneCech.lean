@@ -22,7 +22,7 @@ section Ultrafilter
 
 /-- Basis for the topology on `ultrafilter α`. -/
 def UltrafilterBasis (α : Type u) : Set (Set (Ultrafilter α)) :=
-  range $ fun s : Set α => { u | s ∈ u }
+  range fun s : Set α => { u | s ∈ u }
 
 variable {α : Type u}
 
@@ -34,7 +34,7 @@ theorem ultrafilter_basis_is_basis : TopologicalSpace.IsTopologicalBasis (Ultraf
     rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ u ⟨ua, ub⟩
     refine' ⟨_, ⟨a ∩ b, rfl⟩, inter_mem ua ub, fun v hv => ⟨_, _⟩⟩ <;>
       apply mem_of_superset hv <;> simp [inter_subset_right a b],
-    eq_univ_of_univ_subset $ subset_sUnion_of_mem $ ⟨univ, eq_univ_of_forall fun u => univ_mem⟩, rfl⟩
+    eq_univ_of_univ_subset <| subset_sUnion_of_mem <| ⟨univ, eq_univ_of_forall fun u => univ_mem⟩, rfl⟩
 
 /-- The basic open sets for the topology on ultrafilters are open. -/
 theorem ultrafilter_is_open_basic (s : Set α) : IsOpen { u : Ultrafilter α | s ∈ u } :=
@@ -62,10 +62,10 @@ theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultraf
     
 
 instance ultrafilter_compact : CompactSpace (Ultrafilter α) :=
-  ⟨is_compact_iff_ultrafilter_le_nhds.mpr $ fun f _ => ⟨mjoin f, trivialₓ, ultrafilter_converges_iff.mpr rfl⟩⟩
+  ⟨is_compact_iff_ultrafilter_le_nhds.mpr fun f _ => ⟨mjoin f, trivialₓ, ultrafilter_converges_iff.mpr rfl⟩⟩
 
 instance Ultrafilter.t2_space : T2Space (Ultrafilter α) :=
-  t2_iff_ultrafilter.mpr $ fun x y f fx fy =>
+  t2_iff_ultrafilter.mpr fun x y f fx fy =>
     have hx : x = mjoin f := ultrafilter_converges_iff.mp fx
     have hy : y = mjoin f := ultrafilter_converges_iff.mp fy
     hx.trans hy.symm
@@ -155,14 +155,14 @@ theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.
 /-- The value of `ultrafilter.extend f` on an ultrafilter `b` is the
   unique limit of the ultrafilter `b.map f` in `γ`. -/
 theorem ultrafilter_extend_eq_iff {f : α → γ} {b : Ultrafilter α} {c : γ} :
-    Ultrafilter.extend f b = c ↔ ↑b.map f ≤ 𝓝 c :=
+    Ultrafilter.extend f b = c ↔ ↑(b.map f) ≤ 𝓝 c :=
   ⟨fun h => by
     let b' : Ultrafilter (Ultrafilter α) := b.map pure
     have t : ↑b' ≤ 𝓝 b := ultrafilter_converges_iff.mpr (bind_pureₓ _).symm
     rw [← h]
     have := (continuous_ultrafilter_extend f).Tendsto b
     refine' le_transₓ _ (le_transₓ (map_mono t) this)
-    change _ ≤ map (Ultrafilter.extend f ∘ pure) (↑b)
+    change _ ≤ map (Ultrafilter.extend f ∘ pure) ↑b
     rw [ultrafilter_extend_extends]
     exact le_reflₓ _, fun h => by
     let this' : TopologicalSpace α := ⊥ <;>
@@ -239,12 +239,12 @@ theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x)
     
 
 theorem continuous_stone_cech_unit : Continuous (stoneCechUnit : α → StoneCech α) :=
-  continuous_iff_ultrafilter.mpr $ fun x g gx => by
-    have : ↑g.map pure ≤ 𝓝 g := by
+  continuous_iff_ultrafilter.mpr fun x g gx => by
+    have : ↑(g.map pure) ≤ 𝓝 g := by
       rw [ultrafilter_converges_iff] <;> exact (bind_pureₓ _).symm
     have : (g.map stoneCechUnit : Filter (StoneCech α)) ≤ 𝓝 (⟦g⟧) :=
       continuous_at_iff_ultrafilter.mp (continuous_quotient_mk.Tendsto g) _ this
-    rwa [show ⟦g⟧ = ⟦pure x⟧ from Quotientₓ.sound $ convergent_eqv_pure gx] at this
+    rwa [show ⟦g⟧ = ⟦pure x⟧ from Quotientₓ.sound <| convergent_eqv_pure gx] at this
 
 instance StoneCech.t2_space : T2Space (StoneCech α) := by
   rw [t2_iff_ultrafilter]

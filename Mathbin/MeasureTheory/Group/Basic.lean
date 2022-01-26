@@ -21,7 +21,7 @@ noncomputable section
 
 open_locale Ennreal Pointwise BigOperators
 
-open HasInv Set Function MeasureTheory.Measure
+open Inv Set Function MeasureTheory.Measure
 
 namespace MeasureTheory
 
@@ -94,13 +94,13 @@ theorem map_mul_right_eq_self [TopologicalSpace G] [Mul G] [HasContinuousMul G] 
 
 /-- The measure `A ↦ μ (A⁻¹)`, where `A⁻¹` is the pointwise inverse of `A`. -/
 @[to_additive "The measure `A ↦ μ (- A)`, where `- A` is the pointwise negation of `A`."]
-protected def inv [HasInv G] (μ : Measureₓ G) : Measureₓ G :=
+protected def inv [Inv G] (μ : Measureₓ G) : Measureₓ G :=
   measure.map inv μ
 
 variable [Groupₓ G] [TopologicalSpace G] [TopologicalGroup G] [BorelSpace G]
 
 @[to_additive]
-theorem inv_apply (μ : Measureₓ G) (s : Set G) : μ.inv s = μ (s⁻¹) :=
+theorem inv_apply (μ : Measureₓ G) (s : Set G) : μ.inv s = μ s⁻¹ :=
   (MeasurableEquiv.inv G).map_apply s
 
 @[simp, to_additive]
@@ -134,7 +134,7 @@ theorem regular_inv_iff [T2Space G] : μ.inv.regular ↔ μ.regular := by
 theorem is_mul_left_invariant.inv (h : is_mul_left_invariant μ) : is_mul_right_invariant μ.inv := by
   intro g A hA
   rw [μ.inv_apply, μ.inv_apply]
-  convert h (g⁻¹) (measurable_inv hA) using 2
+  convert h g⁻¹ (measurable_inv hA) using 2
   simp only [← preimage_comp, ← inv_preimage]
   apply preimage_congr
   intro h
@@ -144,7 +144,7 @@ theorem is_mul_left_invariant.inv (h : is_mul_left_invariant μ) : is_mul_right_
 theorem is_mul_right_invariant.inv (h : is_mul_right_invariant μ) : is_mul_left_invariant μ.inv := by
   intro g A hA
   rw [μ.inv_apply, μ.inv_apply]
-  convert h (g⁻¹) (measurable_inv hA) using 2
+  convert h g⁻¹ (measurable_inv hA) using 2
   simp only [← preimage_comp, ← inv_preimage]
   apply preimage_congr
   intro h
@@ -215,7 +215,7 @@ theorem is_mul_left_invariant.measure_ne_zero_iff_nonempty [regular μ] (h2μ : 
 @[to_additive]
 theorem is_mul_left_invariant.measure_pos_iff_nonempty [regular μ] (h2μ : is_mul_left_invariant μ) (h3μ : μ ≠ 0)
     {s : Set G} (hs : IsOpen s) : 0 < μ s ↔ s.nonempty :=
-  pos_iff_ne_zero.trans $ h2μ.measure_ne_zero_iff_nonempty h3μ hs
+  pos_iff_ne_zero.trans <| h2μ.measure_ne_zero_iff_nonempty h3μ hs
 
 /-- If a left-invariant measure gives finite mass to a nonempty open set, then
 it gives finite mass to any compact set. -/
@@ -346,7 +346,7 @@ theorem haar_preimage_mul [TopologicalGroup G] [BorelSpace G] (g : G) (A : Set G
 
 @[simp, to_additive]
 theorem haar_singleton [TopologicalGroup G] [BorelSpace G] (g : G) : μ {g} = μ {(1 : G)} := by
-  convert haar_preimage_mul μ (g⁻¹) _
+  convert haar_preimage_mul μ g⁻¹ _
   simp only [mul_oneₓ, preimage_mul_left_singleton, inv_invₓ]
 
 @[simp, to_additive]
@@ -361,7 +361,7 @@ theorem is_haar_measure.smul {c : ℝ≥0∞} (cpos : c ≠ 0) (ctop : c ≠ ∞
       change c * μ K < ∞
       simp [lt_top_iff_ne_top, hK.measure_lt_top.ne, cpos, ctop],
     open_pos := fun U U_open U_ne =>
-      bot_lt_iff_ne_bot.2 $ by
+      bot_lt_iff_ne_bot.2 <| by
         change c * μ U ≠ 0
         simp [cpos, (_root_.is_open.haar_pos μ U_open U_ne).ne'] }
 
@@ -408,7 +408,7 @@ theorem is_haar_measure_map [BorelSpace G] [TopologicalGroup G] {H : Type _} [Gr
 instance (priority := 100) is_haar_measure.sigma_finite {G : Type _} [Groupₓ G] [MeasurableSpace G] [TopologicalSpace G]
     [SigmaCompactSpace G] (μ : Measureₓ G) [μ.is_haar_measure] : sigma_finite μ :=
   ⟨⟨{ Set := CompactCovering G, set_mem := fun n => mem_univ _,
-        Finite := fun n => IsCompact.measure_lt_top $ is_compact_compact_covering G n,
+        Finite := fun n => IsCompact.measure_lt_top <| is_compact_compact_covering G n,
         spanning := Union_compact_covering G }⟩⟩
 
 open_locale TopologicalSpace
@@ -438,7 +438,7 @@ instance (priority := 100) is_haar_measure.has_no_atoms {G : Type _} [Groupₓ G
     obtain ⟨t, tK, tn⟩ : ∃ t : Finset G, ↑t ⊆ K ∧ t.card = n := K_inf.exists_subset_card_eq n
     have A : μ t ≤ μ K := measure_mono tK
     have B : μ t = n * μ {(1 : G)} := by
-      rw [← bUnion_of_singleton (↑t)]
+      rw [← bUnion_of_singleton ↑t]
       change μ (⋃ x ∈ t, {x}) = n * μ {1}
       rw [@measure_bUnion_finset G G _ μ t fun i => {i}]
       · simp only [tn, Finset.sum_const, nsmul_eq_mul, haar_singleton]

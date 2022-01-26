@@ -70,9 +70,9 @@ noncomputable def nearest_pt_ind (e : ℕ → α) : ℕ → α →ₛ ℕ
   | 0 => const α 0
   | N + 1 =>
     piecewise (⋂ k ≤ N, { x | edist (e (N + 1)) x < edist (e k) x })
-      (MeasurableSet.Inter $ fun k =>
-        MeasurableSet.Inter_Prop $ fun hk => measurable_set_lt measurable_edist_right measurable_edist_right)
-      (const α $ N + 1) (nearest_pt_ind N)
+      (MeasurableSet.Inter fun k =>
+        MeasurableSet.Inter_Prop fun hk => measurable_set_lt measurable_edist_right measurable_edist_right)
+      (const α <| N + 1) (nearest_pt_ind N)
 
 /-- `nearest_pt e N x` is the nearest point to `x` among the points `e 0`, ..., `e N`. If more than
 one point are at the same distance from `x`, then `nearest_pt e N x` returns the point with the
@@ -157,7 +157,7 @@ theorem approx_on_comp {γ : Type _} [MeasurableSpace γ] {f : β → α} (hf : 
   rfl
 
 theorem tendsto_approx_on {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [separable_space s] {x : β}
-    (hx : f x ∈ Closure s) : tendsto (fun n => approx_on f hf s y₀ h₀ n x) at_top (𝓝 $ f x) := by
+    (hx : f x ∈ Closure s) : tendsto (fun n => approx_on f hf s y₀ h₀ n x) at_top (𝓝 <| f x) := by
   have : Nonempty s := ⟨⟨y₀, h₀⟩⟩
   rw [← @Subtype.range_coe _ s, ← image_univ, ← (dense_range_dense_seq s).closure_eq] at hx
   simp only [approx_on, coe_comp]
@@ -214,6 +214,7 @@ theorem norm_approx_on_zero_le [OpensMeasurableSpace E] {f : β → E} (hf : Mea
   simp [edist_comm (0 : E), edist_eq_coe_nnnorm] at this
   exact_mod_cast this
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem tendsto_approx_on_Lp_snorm [OpensMeasurableSpace E] {f : β → E} (hf : Measurable f) {s : Set E} {y₀ : E}
     (h₀ : y₀ ∈ s) [separable_space s] (hp_ne_top : p ≠ ∞) {μ : Measureₓ β} (hμ : ∀ᵐ x ∂μ, f x ∈ Closure s)
     (hi : snorm (fun x => f x - y₀) p μ < ∞) :
@@ -236,8 +237,7 @@ theorem tendsto_approx_on_Lp_snorm [OpensMeasurableSpace E] {f : β → E} (hf :
     (lintegral_rpow_nnnorm_lt_top_of_snorm_lt_top hp_zero hp_ne_top hi).Ne
   have h_lim : ∀ᵐ a : β ∂μ, tendsto (fun n => (∥approx_on f hf s y₀ h₀ n a - f a∥₊ : ℝ≥0∞) ^ p.to_real) at_top (𝓝 0) :=
     by
-    filter_upwards [hμ]
-    intro a ha
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     have : tendsto (fun n => (approx_on f hf s y₀ h₀ n) a - f a) at_top (𝓝 (f a - f a)) :=
       (tendsto_approx_on hf h₀ ha).sub tendsto_const_nhds
     convert continuous_rpow_const.continuous_at.tendsto.comp (tendsto_coe.mpr this.nnnorm)
@@ -359,7 +359,7 @@ theorem mem_ℒp_zero (f : α →ₛ E) (μ : Measureₓ α) : mem_ℒp f 0 μ :
 
 theorem mem_ℒp_top (f : α →ₛ E) (μ : Measureₓ α) : mem_ℒp f ∞ μ :=
   let ⟨C, hfC⟩ := f.exists_forall_norm_le
-  mem_ℒp_top_of_bound f.ae_measurable C $ eventually_of_forall hfC
+  mem_ℒp_top_of_bound f.ae_measurable C <| eventually_of_forall hfC
 
 protected theorem snorm'_eq {p : ℝ} (f : α →ₛ F) (μ : Measureₓ α) :
     snorm' f p μ = (∑ y in f.range, (nnnorm y : ℝ≥0∞) ^ p * μ (f ⁻¹' {y})) ^ (1 / p) := by
@@ -435,7 +435,7 @@ theorem mem_ℒp_iff {f : α →ₛ E} (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y «expr ≠ » 0)
 theorem integrable_iff {f : α →ₛ E} : integrable f μ ↔ ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞ :=
-  mem_ℒp_one_iff_integrable.symm.trans $ mem_ℒp_iff Ennreal.zero_lt_one.ne' Ennreal.coe_ne_top
+  mem_ℒp_one_iff_integrable.symm.trans <| mem_ℒp_iff Ennreal.zero_lt_one.ne' Ennreal.coe_ne_top
 
 theorem mem_ℒp_iff_integrable {f : α →ₛ E} (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) : mem_ℒp f p μ ↔ integrable f μ :=
   (mem_ℒp_iff hp_pos hp_ne_top).trans integrable_iff.symm
@@ -455,7 +455,7 @@ theorem integrable_pair [MeasurableSpace F] {f : α →ₛ E} {g : α →ₛ F} 
 
 theorem mem_ℒp_of_is_finite_measure (f : α →ₛ E) (p : ℝ≥0∞) (μ : Measureₓ α) [is_finite_measure μ] : mem_ℒp f p μ :=
   let ⟨C, hfC⟩ := f.exists_forall_norm_le
-  mem_ℒp.of_bound f.ae_measurable C $ eventually_of_forall hfC
+  mem_ℒp.of_bound f.ae_measurable C <| eventually_of_forall hfC
 
 theorem integrable_of_is_finite_measure [is_finite_measure μ] (f : α →ₛ E) : integrable f μ :=
   mem_ℒp_one_iff_integrable.mp (f.mem_ℒp_of_is_finite_measure 1 μ)
@@ -649,7 +649,7 @@ theorem to_simple_func_eq_to_fun (f : Lp.simple_func E p μ) : to_simple_func f 
 
 /-- `to_simple_func f` satisfies the predicate `mem_ℒp`. -/
 protected theorem mem_ℒp (f : Lp.simple_func E p μ) : mem_ℒp (to_simple_func f) p μ :=
-  mem_ℒp.ae_eq (to_simple_func_eq_to_fun f).symm $ mem_Lp_iff_mem_ℒp.mp (f : Lp E p μ).2
+  mem_ℒp.ae_eq (to_simple_func_eq_to_fun f).symm <| mem_Lp_iff_mem_ℒp.mp (f : Lp E p μ).2
 
 theorem to_Lp_to_simple_func (f : Lp.simple_func E p μ) : to_Lp (to_simple_func f) (simple_func.mem_ℒp f) = f :=
   simple_func.eq' (Classical.some_spec f.2)
@@ -660,36 +660,34 @@ theorem to_simple_func_to_Lp (f : α →ₛ E) (hfi : mem_ℒp f p μ) : to_simp
 
 variable (E μ)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem zero_to_simple_func : to_simple_func (0 : Lp.simple_func E p μ) =ᵐ[μ] 0 := by
-  filter_upwards [to_simple_func_eq_to_fun (0 : Lp.simple_func E p μ), Lp.coe_fn_zero E 1 μ]
-  intro a h₁ h₂
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rwa [h₁]
 
 variable {E μ}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem add_to_simple_func (f g : Lp.simple_func E p μ) :
     to_simple_func (f + g) =ᵐ[μ] to_simple_func f + to_simple_func g := by
-  filter_upwards [to_simple_func_eq_to_fun (f + g), to_simple_func_eq_to_fun f, to_simple_func_eq_to_fun g,
-    Lp.coe_fn_add (f : Lp E p μ) g]
-  intro a
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   simp only [← coe_coe, AddSubgroup.coe_add, Pi.add_apply]
   iterate 4 
     intro h
     rw [h]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem neg_to_simple_func (f : Lp.simple_func E p μ) : to_simple_func (-f) =ᵐ[μ] -to_simple_func f := by
-  filter_upwards [to_simple_func_eq_to_fun (-f), to_simple_func_eq_to_fun f, Lp.coe_fn_neg (f : Lp E p μ)]
-  intro a
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   simp only [Pi.neg_apply, AddSubgroup.coe_neg, ← coe_coe]
   repeat'
     intro h
     rw [h]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem sub_to_simple_func (f g : Lp.simple_func E p μ) :
     to_simple_func (f - g) =ᵐ[μ] to_simple_func f - to_simple_func g := by
-  filter_upwards [to_simple_func_eq_to_fun (f - g), to_simple_func_eq_to_fun f, to_simple_func_eq_to_fun g,
-    Lp.coe_fn_sub (f : Lp E p μ) g]
-  intro a
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   simp only [AddSubgroup.coe_sub, Pi.sub_apply, ← coe_coe]
   repeat'
     intro h
@@ -697,9 +695,9 @@ theorem sub_to_simple_func (f g : Lp.simple_func E p μ) :
 
 variable [NormedField 𝕜] [NormedSpace 𝕜 E] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem smul_to_simple_func (k : 𝕜) (f : Lp.simple_func E p μ) : to_simple_func (k • f) =ᵐ[μ] k • to_simple_func f := by
-  filter_upwards [to_simple_func_eq_to_fun (k • f), to_simple_func_eq_to_fun f, Lp.coe_fn_smul k (f : Lp E p μ)]
-  intro a
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   simp only [Pi.smul_apply, coe_smul, ← coe_coe]
   repeat'
     intro h
@@ -724,7 +722,7 @@ variable {p}
 
 @[simp]
 theorem coe_indicator_const {s : Set α} (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (c : E) :
-    (↑indicator_const p hs hμs c : Lp E p μ) = indicator_const_Lp p hs hμs c :=
+    (↑(indicator_const p hs hμs c) : Lp E p μ) = indicator_const_Lp p hs hμs c :=
   rfl
 
 theorem to_simple_func_indicator_const {s : Set α} (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (c : E) :
@@ -789,8 +787,8 @@ protected theorem DenseEmbedding (hp_ne_top : p ≠ ∞) : DenseEmbedding (coe :
   have hfi' : mem_ℒp f p μ := Lp.mem_ℒp f
   refine'
     ⟨fun n =>
-      ↑to_Lp (simple_func.approx_on f (Lp.measurable f) univ 0 trivialₓ n)
-          (simple_func.mem_ℒp_approx_on_univ (Lp.measurable f) hfi' n),
+      ↑(to_Lp (simple_func.approx_on f (Lp.measurable f) univ 0 trivialₓ n)
+          (simple_func.mem_ℒp_approx_on_univ (Lp.measurable f) hfi' n)),
       fun n => mem_range_self _, _⟩
   convert simple_func.tendsto_approx_on_univ_Lp hp_ne_top (Lp.measurable f) hfi'
   rw [to_Lp_coe_fn f (Lp.mem_ℒp f)]
@@ -821,13 +819,13 @@ variable {G : Type _} [NormedLatticeAddCommGroup G] [MeasurableSpace G] [BorelSp
 theorem coe_fn_le (f g : Lp.simple_func G p μ) : f ≤ᵐ[μ] g ↔ f ≤ g := by
   rw [← Subtype.coe_le_coe, ← Lp.coe_fn_le, coe_fn_coe_base', coe_fn_coe_base' g]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 instance : CovariantClass (Lp.simple_func G p μ) (Lp.simple_func G p μ) (· + ·) (· ≤ ·) := by
   refine' ⟨fun f g₁ g₂ hg₁₂ => _⟩
   rw [← Lp.simple_func.coe_fn_le] at hg₁₂⊢
   have h_add_1 : ⇑(f + g₁) =ᵐ[μ] f + g₁ := Lp.coe_fn_add _ _
   have h_add_2 : ⇑(f + g₂) =ᵐ[μ] f + g₂ := Lp.coe_fn_add _ _
-  filter_upwards [h_add_1, h_add_2, hg₁₂]
-  intro a h1 h2 h3
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [h1, h2, Pi.add_apply, Pi.add_apply]
   exact add_le_add le_rfl h3
 
@@ -838,21 +836,24 @@ theorem coe_fn_zero : (0 : Lp.simple_func G p μ) =ᵐ[μ] (0 : α → G) :=
 
 variable {p μ G}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem coe_fn_nonneg (f : Lp.simple_func G p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f := by
   rw [← Lp.simple_func.coe_fn_le]
   have h0 : (0 : Lp.simple_func G p μ) =ᵐ[μ] (0 : α → G) := Lp.simple_func.coe_fn_zero p μ G
-  constructor <;> intro h <;> filter_upwards [h, h0] <;> intro a h1 h2
+  constructor <;>
+    intro h <;>
+      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   · rwa [h2]
     
   · rwa [← h2]
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem exists_simple_func_nonneg_ae_eq {f : Lp.simple_func G p μ} (hf : 0 ≤ f) : ∃ f' : α →ₛ G, 0 ≤ f' ∧ f =ᵐ[μ] f' :=
   by
   rw [← Lp.simple_func.coe_fn_nonneg] at hf
   have hf_ae : 0 ≤ᵐ[μ] simple_func.to_simple_func f := by
-    filter_upwards [to_simple_func_eq_to_fun f, hf]
-    intro x h1 h2
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     rwa [h1]
   let s := to_measurable μ { x | ¬0 ≤ simple_func.to_simple_func f x }ᶜ
   have hs_zero : μ (sᶜ) = 0 := by
@@ -890,6 +891,7 @@ variable (p μ G)
 def coe_simple_func_nonneg_to_Lp_nonneg : { g : Lp.simple_func G p μ // 0 ≤ g } → { g : Lp G p μ // 0 ≤ g } := fun g =>
   ⟨g, g.2⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem dense_range_coe_simple_func_nonneg_to_Lp_nonneg [hp : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) :
     DenseRange (coe_simple_func_nonneg_to_Lp_nonneg p μ G) := by
   intro g
@@ -906,8 +908,7 @@ theorem dense_range_coe_simple_func_nonneg_to_Lp_nonneg [hp : Fact (1 ≤ p)] (h
     intro n
     rw [← Lp.simple_func.coe_fn_le, coe_fn_coe_base' (simple_func.to_Lp (x n) _), Lp.simple_func.to_Lp_eq_to_Lp]
     have h0 := Lp.simple_func.coe_fn_zero p μ G
-    filter_upwards [Lp.simple_func.coe_fn_zero p μ G, h_to_Lp n]
-    intro a ha0 ha_to_Lp
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     rw [ha0, ha_to_Lp]
     exact hx_nonneg n a
   have hx_tendsto : tendsto (fun n : ℕ => snorm (x n - g) p μ) at_top (𝓝 0) := by
@@ -923,7 +924,7 @@ theorem dense_range_coe_simple_func_nonneg_to_Lp_nonneg [hp : Fact (1 ≤ p)] (h
   refine'
     ⟨fun n => (coe_simple_func_nonneg_to_Lp_nonneg p μ G) ⟨to_Lp (x n) (hx_mem_ℒp n), hx_nonneg_Lp n⟩, fun n =>
       mem_range_self _, _⟩
-  suffices tendsto (fun n : ℕ => ↑to_Lp (x n) (hx_mem_ℒp n)) at_top (𝓝 (g : Lp G p μ)) by
+  suffices tendsto (fun n : ℕ => ↑(to_Lp (x n) (hx_mem_ℒp n))) at_top (𝓝 (g : Lp G p μ)) by
     rw [tendsto_iff_dist_tendsto_zero] at this⊢
     simp_rw [Subtype.pseudo_dist_eq]
     convert this

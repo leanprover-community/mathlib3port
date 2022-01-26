@@ -30,8 +30,8 @@ unsafe def congr_rule (congr : expr) (cs : List (List expr → old_conv Unit)) :
   let ((), meta_pr) ←
     solve_aux t do
         apply congr
-        focus $
-            cs.map $ fun c => do
+        focus <|
+            cs.map fun c => do
               let xs ← intros
               conversion (head_beta >> c xs)
         done
@@ -91,16 +91,16 @@ unsafe def binder_eq_elim.pull (b : binder_eq_elim) (x : expr) : old_conv Unit :
   let (β, f) ← lhs >>= lift_tactic ∘ b.match_binder
   guardₓ ¬x.occurs β <|>
       b.check_eq x β <|> do
-        b.apply_congr $ fun x => binder_eq_elim.pull
+        b.apply_congr fun x => binder_eq_elim.pull
         b.apply_comm
 
 unsafe def binder_eq_elim.push (b : binder_eq_elim) : old_conv Unit :=
   b.apply_elim_eq <|>
     (do
         b.apply_comm
-        b.apply_congr $ fun x => binder_eq_elim.push) <|>
+        b.apply_congr fun x => binder_eq_elim.push) <|>
       do
-      b.apply_congr $ b.pull
+      b.apply_congr <| b.pull
       binder_eq_elim.push
 
 unsafe def binder_eq_elim.check (b : binder_eq_elim) (x : expr) : expr → tactic Unit
@@ -109,7 +109,7 @@ unsafe def binder_eq_elim.check (b : binder_eq_elim) (x : expr) : expr → tacti
     b.check_eq x β <|> do
         let lam n bi d bd ← return f
         let x ← mk_local' n bi d
-        binder_eq_elim.check $ bd.instantiate_var x
+        binder_eq_elim.check <| bd.instantiate_var x
 
 unsafe def binder_eq_elim.old_conv (b : binder_eq_elim) : old_conv Unit := do
   let (β, f) ← lhs >>= lift_tactic ∘ b.match_binder

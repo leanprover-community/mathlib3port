@@ -112,7 +112,7 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ) (hw : ∀, ∀ i ∈
       
     
   · simp only [not_exists, not_and, Ne.def, not_not] at A
-    have := convex_on_exp.map_sum_le hw hw' fun i _ => Set.mem_univ $ log (z i)
+    have := convex_on_exp.map_sum_le hw hw' fun i _ => Set.mem_univ <| log (z i)
     simp only [exp_sum, · ∘ ·, smul_eq_mul, mul_comm (w _) (log _)] at this
     convert this using 1 <;> [apply prod_congr rfl, apply sum_congr rfl] <;> intro i hi
     · cases' eq_or_lt_of_le (hz i hi) with hz hz
@@ -189,22 +189,22 @@ namespace Real
 
 theorem geom_mean_le_arith_mean2_weighted {w₁ w₂ p₁ p₂ : ℝ} (hw₁ : 0 ≤ w₁) (hw₂ : 0 ≤ w₂) (hp₁ : 0 ≤ p₁) (hp₂ : 0 ≤ p₂)
     (hw : w₁ + w₂ = 1) : p₁ ^ w₁ * p₂ ^ w₂ ≤ w₁ * p₁ + w₂ * p₂ :=
-  Nnreal.geom_mean_le_arith_mean2_weighted ⟨w₁, hw₁⟩ ⟨w₂, hw₂⟩ ⟨p₁, hp₁⟩ ⟨p₂, hp₂⟩ $
-    Nnreal.coe_eq.1 $ by
+  Nnreal.geom_mean_le_arith_mean2_weighted ⟨w₁, hw₁⟩ ⟨w₂, hw₂⟩ ⟨p₁, hp₁⟩ ⟨p₂, hp₂⟩ <|
+    Nnreal.coe_eq.1 <| by
       assumption
 
 theorem geom_mean_le_arith_mean3_weighted {w₁ w₂ w₃ p₁ p₂ p₃ : ℝ} (hw₁ : 0 ≤ w₁) (hw₂ : 0 ≤ w₂) (hw₃ : 0 ≤ w₃)
     (hp₁ : 0 ≤ p₁) (hp₂ : 0 ≤ p₂) (hp₃ : 0 ≤ p₃) (hw : w₁ + w₂ + w₃ = 1) :
     p₁ ^ w₁ * p₂ ^ w₂ * p₃ ^ w₃ ≤ w₁ * p₁ + w₂ * p₂ + w₃ * p₃ :=
-  Nnreal.geom_mean_le_arith_mean3_weighted ⟨w₁, hw₁⟩ ⟨w₂, hw₂⟩ ⟨w₃, hw₃⟩ ⟨p₁, hp₁⟩ ⟨p₂, hp₂⟩ ⟨p₃, hp₃⟩ $
+  Nnreal.geom_mean_le_arith_mean3_weighted ⟨w₁, hw₁⟩ ⟨w₂, hw₂⟩ ⟨w₃, hw₃⟩ ⟨p₁, hp₁⟩ ⟨p₂, hp₂⟩ ⟨p₃, hp₃⟩ <|
     Nnreal.coe_eq.1 hw
 
 theorem geom_mean_le_arith_mean4_weighted {w₁ w₂ w₃ w₄ p₁ p₂ p₃ p₄ : ℝ} (hw₁ : 0 ≤ w₁) (hw₂ : 0 ≤ w₂) (hw₃ : 0 ≤ w₃)
     (hw₄ : 0 ≤ w₄) (hp₁ : 0 ≤ p₁) (hp₂ : 0 ≤ p₂) (hp₃ : 0 ≤ p₃) (hp₄ : 0 ≤ p₄) (hw : w₁ + w₂ + w₃ + w₄ = 1) :
     p₁ ^ w₁ * p₂ ^ w₂ * p₃ ^ w₃ * p₄ ^ w₄ ≤ w₁ * p₁ + w₂ * p₂ + w₃ * p₃ + w₄ * p₄ :=
   Nnreal.geom_mean_le_arith_mean4_weighted ⟨w₁, hw₁⟩ ⟨w₂, hw₂⟩ ⟨w₃, hw₃⟩ ⟨w₄, hw₄⟩ ⟨p₁, hp₁⟩ ⟨p₂, hp₂⟩ ⟨p₃, hp₃⟩
-      ⟨p₄, hp₄⟩ $
-    Nnreal.coe_eq.1 $ by
+      ⟨p₄, hp₄⟩ <|
+    Nnreal.coe_eq.1 <| by
       assumption
 
 end Real
@@ -226,11 +226,12 @@ theorem young_inequality_of_nonneg {a b p q : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b)
       (rpow_nonneg_of_nonneg hb q) hpq.inv_add_inv_conj
 
 /-- Young's inequality, a version for arbitrary real numbers. -/
-theorem young_inequality (a b : ℝ) {p q : ℝ} (hpq : p.is_conjugate_exponent q) : a * b ≤ |a| ^ p / p + |b| ^ q / q :=
+theorem young_inequality (a b : ℝ) {p q : ℝ} (hpq : p.is_conjugate_exponent q) :
+    a * b ≤ abs a ^ p / p + abs b ^ q / q :=
   calc
-    a * b ≤ |a * b| := le_abs_self (a * b)
-    _ = |a| * |b| := abs_mul a b
-    _ ≤ |a| ^ p / p + |b| ^ q / q := Real.young_inequality_of_nonneg (abs_nonneg a) (abs_nonneg b) hpq
+    a * b ≤ abs (a * b) := le_abs_self (a * b)
+    _ = abs a * abs b := abs_mul a b
+    _ ≤ abs a ^ p / p + abs b ^ q / q := Real.young_inequality_of_nonneg (abs_nonneg a) (abs_nonneg b) hpq
     
 
 end Real
@@ -521,18 +522,18 @@ variable (f g : ι → ℝ) {p q : ℝ}
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with real-valued functions. -/
 theorem inner_le_Lp_mul_Lq (hpq : is_conjugate_exponent p q) :
-    (∑ i in s, f i * g i) ≤ (∑ i in s, |f i| ^ p) ^ (1 / p) * (∑ i in s, |g i| ^ q) ^ (1 / q) := by
+    (∑ i in s, f i * g i) ≤ (∑ i in s, abs (f i) ^ p) ^ (1 / p) * (∑ i in s, abs (g i) ^ q) ^ (1 / q) := by
   have :=
     Nnreal.coe_le_coe.2
       (Nnreal.inner_le_Lp_mul_Lq s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩) hpq)
   push_cast  at this
-  refine' le_transₓ (sum_le_sum $ fun i hi => _) this
+  refine' le_transₓ (sum_le_sum fun i hi => _) this
   simp only [← abs_mul, le_abs_self]
 
 /-- For `1 ≤ p`, the `p`-th power of the sum of `f i` is bounded above by a constant times the
 sum of the `p`-th powers of `f i`. Version for sums over finite sets, with `ℝ`-valued functions. -/
-theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) : (∑ i in s, |f i|) ^ p ≤ card s ^ (p - 1) * ∑ i in s, |f i| ^ p :=
-  by
+theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) :
+    (∑ i in s, abs (f i)) ^ p ≤ card s ^ (p - 1) * ∑ i in s, abs (f i) ^ p := by
   have := Nnreal.coe_le_coe.2 (Nnreal.rpow_sum_le_const_mul_sum_rpow s (fun i => ⟨_, abs_nonneg (f i)⟩) hp)
   push_cast  at this
   exact this
@@ -540,10 +541,12 @@ theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) : (∑ i in s, |f i|) ^ p 
 /-- Minkowski inequality: the `L_p` seminorm of the sum of two vectors is less than or equal
 to the sum of the `L_p`-seminorms of the summands. A version for `real`-valued functions. -/
 theorem Lp_add_le (hp : 1 ≤ p) :
-    (∑ i in s, |f i + g i| ^ p) ^ (1 / p) ≤ (∑ i in s, |f i| ^ p) ^ (1 / p) + (∑ i in s, |g i| ^ p) ^ (1 / p) := by
+    (∑ i in s, abs (f i + g i) ^ p) ^ (1 / p) ≤
+      (∑ i in s, abs (f i) ^ p) ^ (1 / p) + (∑ i in s, abs (g i) ^ p) ^ (1 / p) :=
+  by
   have := Nnreal.coe_le_coe.2 (Nnreal.Lp_add_le s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩) hp)
   push_cast  at this
-  refine' le_transₓ (rpow_le_rpow _ (sum_le_sum $ fun i hi => _) _) this <;>
+  refine' le_transₓ (rpow_le_rpow _ (sum_le_sum fun i hi => _) _) this <;>
     simp [sum_nonneg, rpow_nonneg_of_nonneg, abs_nonneg, le_transₓ zero_le_one hp, abs_add, rpow_le_rpow]
 
 variable {f g}

@@ -122,7 +122,7 @@ theorem to_outer_measure_injective : injective (to_outer_measure : Measureₓ α
 
 @[ext]
 theorem ext (h : ∀ s, MeasurableSet s → μ₁ s = μ₂ s) : μ₁ = μ₂ :=
-  to_outer_measure_injective $ by
+  to_outer_measure_injective <| by
     rw [← trimmed, outer_measure.trim_congr h, trimmed]
 
 theorem ext_iff : μ₁ = μ₂ ↔ ∀ s, MeasurableSet s → μ₁ s = μ₂ s :=
@@ -166,16 +166,16 @@ theorem measure_empty : μ ∅ = 0 :=
   μ.empty
 
 theorem nonempty_of_measure_ne_zero (h : μ s ≠ 0) : s.nonempty :=
-  ne_empty_iff_nonempty.1 $ fun h' => h $ h'.symm ▸ measure_empty
+  ne_empty_iff_nonempty.1 fun h' => h <| h'.symm ▸ measure_empty
 
 theorem measure_mono (h : s₁ ⊆ s₂) : μ s₁ ≤ μ s₂ :=
   μ.mono h
 
 theorem measure_mono_null (h : s₁ ⊆ s₂) (h₂ : μ s₂ = 0) : μ s₁ = 0 :=
-  nonpos_iff_eq_zero.1 $ h₂ ▸ measure_mono h
+  nonpos_iff_eq_zero.1 <| h₂ ▸ measure_mono h
 
 theorem measure_mono_top (h : s₁ ⊆ s₂) (h₁ : μ s₁ = ∞) : μ s₂ = ∞ :=
-  top_unique $ h₁ ▸ measure_mono h
+  top_unique <| h₁ ▸ measure_mono h
 
 /-- For every set there exists a measurable superset of the same measure. -/
 theorem exists_measurable_superset (μ : Measureₓ α) (s : Set α) : ∃ t, s ⊆ t ∧ MeasurableSet t ∧ μ t = μ s := by
@@ -260,7 +260,7 @@ theorem measure_union_ne_top (hs : μ s ≠ ∞) (ht : μ t ≠ ∞) : μ (s ∪
 
 @[simp]
 theorem measure_union_eq_top_iff : μ (s ∪ t) = ∞ ↔ μ s = ∞ ∨ μ t = ∞ :=
-  not_iff_not.1 $ by
+  not_iff_not.1 <| by
     simp only [← lt_top_iff_ne_top, ← Ne.def, not_or_distrib, measure_union_lt_top_iff]
 
 theorem exists_measure_pos_of_not_measure_Union_null [Encodable β] {s : β → Set α} (hs : μ (⋃ n, s n) ≠ 0) :
@@ -357,7 +357,7 @@ theorem ae_le_of_ae_lt {f g : α → ℝ≥0∞} (h : ∀ᵐ x ∂μ, f x < g x)
 
 @[simp]
 theorem ae_eq_empty : s =ᵐ[μ] (∅ : Set α) ↔ μ s = 0 :=
-  eventually_eq_empty.trans $ by
+  eventually_eq_empty.trans <| by
     simp only [ae_iff, not_not, set_of_mem_eq]
 
 @[simp]
@@ -403,7 +403,7 @@ theorem _root_.set.mul_indicator_ae_eq_one {M : Type _} [One M] {f : α → M} {
 @[mono]
 theorem measure_mono_ae (H : s ≤ᵐ[μ] t) : μ s ≤ μ t :=
   calc
-    μ s ≤ μ (s ∪ t) := measure_mono $ subset_union_left s t
+    μ s ≤ μ (s ∪ t) := measure_mono <| subset_union_left s t
     _ = μ (t ∪ s \ t) := by
       rw [union_diff_self, Set.union_comm]
     _ ≤ μ t + μ (s \ t) := measure_union_le _ _
@@ -420,7 +420,7 @@ theorem measure_congr (H : s =ᵐ[μ] t) : μ s = μ t :=
 alias measure_congr ← Filter.EventuallyEq.measure_eq
 
 theorem measure_mono_null_ae (H : s ≤ᵐ[μ] t) (ht : μ t = 0) : μ s = 0 :=
-  nonpos_iff_eq_zero.1 $ ht ▸ H.measure_le
+  nonpos_iff_eq_zero.1 <| ht ▸ H.measure_le
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊇ » s)
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊇ » s)

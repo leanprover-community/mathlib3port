@@ -485,7 +485,7 @@ instance : Inhabited (Cycle α) :=
 /-- For `x : α`, `s : cycle α`, `x ∈ s` indicates that `x` occurs at least once in `s`.
 -/
 def mem (a : α) (s : Cycle α) : Prop :=
-  Quot.liftOn s (fun l => a ∈ l) fun l₁ l₂ e : l₁ ~r l₂ => propext $ e.mem_iff
+  Quot.liftOn s (fun l => a ∈ l) fun l₁ l₂ e : l₁ ~r l₂ => propext <| e.mem_iff
 
 instance : HasMem α (Cycle α) :=
   ⟨mem⟩
@@ -589,7 +589,7 @@ theorem length_nontrivial {s : Cycle α} (h : Nontrivial s) : 2 ≤ length s := 
 /-- The `s : cycle α` contains no duplicates.
 -/
 def nodup (s : Cycle α) : Prop :=
-  Quot.liftOn s nodup fun l₁ l₂ e : l₁ ~r l₂ => propext $ e.nodup_iff
+  Quot.liftOn s nodup fun l₁ l₂ e : l₁ ~r l₂ => propext <| e.nodup_iff
 
 @[simp]
 theorem nodup_coe_iff {l : List α} : nodup (l : Cycle α) ↔ l.nodup :=
@@ -623,12 +623,12 @@ def to_multiset (s : Cycle α) : Multiset α :=
 /-- The lift of `list.map`.
 -/
 def map {β : Type _} (f : α → β) : Cycle α → Cycle β :=
-  Quotientₓ.map' (List.map f) $ fun l₁ l₂ h => h.map _
+  (Quotientₓ.map' (List.map f)) fun l₁ l₂ h => h.map _
 
 /-- The `multiset` of lists that can make the cycle.
 -/
 def lists (s : Cycle α) : Multiset (List α) :=
-  (Quotientₓ.liftOn' s fun l => (l.cyclic_permutations : Multiset (List α))) $ fun l₁ l₂ h : l₁ ~r l₂ => by
+  (Quotientₓ.liftOn' s fun l => (l.cyclic_permutations : Multiset (List α))) fun l₁ l₂ h : l₁ ~r l₂ => by
     simpa using h.cyclic_permutations.perm
 
 @[simp]

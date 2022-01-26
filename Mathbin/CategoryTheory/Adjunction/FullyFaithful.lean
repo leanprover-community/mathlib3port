@@ -41,7 +41,7 @@ See
 * https://stacks.math.columbia.edu/tag/07RB (we only prove the forward direction!)
 -/
 instance unit_is_iso_of_L_fully_faithful [full L] [faithful L] : is_iso (adjunction.unit h) :=
-  @nat_iso.is_iso_of_is_iso_app _ _ _ _ _ _ (adjunction.unit h) $ fun X =>
+  (@nat_iso.is_iso_of_is_iso_app _ _ _ _ _ _ (adjunction.unit h)) fun X =>
     @yoneda.is_iso _ _ _ _ ((adjunction.unit h).app X)
       ⟨⟨{ app := fun Y f => L.preimage ((h.hom_equiv (unop Y) (L.obj X)).symm f) },
           ⟨by
@@ -60,8 +60,8 @@ instance unit_is_iso_of_L_fully_faithful [full L] [faithful L] : is_iso (adjunct
 See https://stacks.math.columbia.edu/tag/07RB (we only prove the forward direction!)
 -/
 instance counit_is_iso_of_R_fully_faithful [full R] [faithful R] : is_iso (adjunction.counit h) :=
-  @nat_iso.is_iso_of_is_iso_app _ _ _ _ _ _ (adjunction.counit h) $ fun X =>
-    @is_iso_of_op _ _ _ _ _ $
+  (@nat_iso.is_iso_of_is_iso_app _ _ _ _ _ _ (adjunction.counit h)) fun X =>
+    @is_iso_of_op _ _ _ _ _ <|
       @coyoneda.is_iso _ _ _ _ ((adjunction.counit h).app X).op
         ⟨⟨{ app := fun Y f => R.preimage ((h.hom_equiv (R.obj X) Y) f) },
             ⟨by

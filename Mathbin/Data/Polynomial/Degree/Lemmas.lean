@@ -32,9 +32,9 @@ theorem nat_degree_comp_le : nat_degree (p.comp q) ≤ nat_degree p * nat_degree
   if h0 : p.comp q = 0 then by
     rw [h0, nat_degree_zero] <;> exact Nat.zero_leₓ _
   else
-    WithBot.coe_le_coe.1 $
+    WithBot.coe_le_coe.1 <|
       calc
-        ↑nat_degree (p.comp q) = degree (p.comp q) := (degree_eq_nat_degree h0).symm
+        ↑(nat_degree (p.comp q)) = degree (p.comp q) := (degree_eq_nat_degree h0).symm
         _ = _ := congr_argₓ degree comp_eq_sum_left
         _ ≤ _ := degree_sum_le _ _
         _ ≤ _ :=
@@ -47,13 +47,13 @@ theorem nat_degree_comp_le : nat_degree (p.comp q) ≤ nat_degree p * nat_degree
               _ = (n * nat_degree q : ℕ) := by
                 rw [nat_degree_C, WithBot.coe_zero, zero_addₓ, ← WithBot.coe_nsmul, nsmul_eq_mul] <;> simp
               _ ≤ (nat_degree p * nat_degree q : ℕ) :=
-                WithBot.coe_le_coe.2 $
+                WithBot.coe_le_coe.2 <|
                   mul_le_mul_of_nonneg_right (le_nat_degree_of_ne_zero (mem_support_iff.1 hn)) (Nat.zero_leₓ _)
               
         
 
 theorem degree_pos_of_root {p : Polynomial R} (hp : p ≠ 0) (h : is_root p a) : 0 < degree p :=
-  lt_of_not_geₓ $ fun hlt => by
+  lt_of_not_geₓ fun hlt => by
     have := eq_C_of_degree_le_zero hlt
     rw [is_root, this, eval_C] at h
     simp only [h, RingHom.map_zero] at this
@@ -206,7 +206,7 @@ variable [Semiringₓ S]
 
 theorem nat_degree_pos_of_eval₂_root {p : Polynomial R} (hp : p ≠ 0) (f : R →+* S) {z : S} (hz : eval₂ f z p = 0)
     (inj : ∀ x : R, f x = 0 → x = 0) : 0 < nat_degree p :=
-  lt_of_not_geₓ $ fun hlt => by
+  lt_of_not_geₓ fun hlt => by
     have A : p = C (p.coeff 0) := eq_C_of_nat_degree_le_zero hlt
     rw [A, eval₂_C] at hz
     simp only [inj (p.coeff 0) hz, RingHom.map_zero] at A

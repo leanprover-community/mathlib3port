@@ -78,16 +78,16 @@ def PosTangentConeAt (s : Set E) (x : E) : Set E :=
 
 theorem pos_tangent_cone_at_mono : Monotone fun s => PosTangentConeAt s a := by
   rintro s t hst y ⟨c, d, hd, hc, hcd⟩
-  exact ⟨c, d, mem_of_superset hd $ fun h hn => hst hn, hc, hcd⟩
+  exact ⟨c, d, (mem_of_superset hd) fun h hn => hst hn, hc, hcd⟩
 
 theorem mem_pos_tangent_cone_at_of_segment_subset {s : Set E} {x y : E} (h : Segment ℝ x y ⊆ s) :
     y - x ∈ PosTangentConeAt s x := by
   let c := fun n : ℕ => (2 : ℝ) ^ n
-  let d := fun n : ℕ => c n⁻¹ • (y - x)
+  let d := fun n : ℕ => (c n)⁻¹ • (y - x)
   refine' ⟨c, d, Filter.univ_mem' fun n => h _, tendsto_pow_at_top_at_top_of_one_lt one_lt_two, _⟩
   show x + d n ∈ Segment ℝ x y
   · rw [segment_eq_image']
-    refine' ⟨c n⁻¹, ⟨_, _⟩, rfl⟩
+    refine' ⟨(c n)⁻¹, ⟨_, _⟩, rfl⟩
     exacts[inv_nonneg.2 (pow_nonneg zero_le_two _), inv_le_one (one_le_pow_of_one_le one_le_two _)]
     
   show tendsto (fun n => c n • d n) at_top (𝓝 (y - x))
@@ -103,8 +103,9 @@ theorem mem_pos_tangent_cone_at_of_segment_subset' {s : Set E} {x y : E} (h : Se
   simpa only [add_sub_cancel'] using mem_pos_tangent_cone_at_of_segment_subset h
 
 theorem pos_tangent_cone_at_univ : PosTangentConeAt univ a = univ :=
-  eq_univ_of_forall $ fun x => mem_pos_tangent_cone_at_of_segment_subset' (subset_univ _)
+  eq_univ_of_forall fun x => mem_pos_tangent_cone_at_of_segment_subset' (subset_univ _)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- If `f` has a local max on `s` at `a`, `f'` is the derivative of `f` at `a` within `s`, and
 `y` belongs to the positive tangent cone of `s` at `a`, then `f' y ≤ 0`. -/
 theorem IsLocalMaxOn.has_fderiv_within_at_nonpos {s : Set E} (h : IsLocalMaxOn f s a) (hf : HasFderivWithinAt f f' s a)
@@ -140,7 +141,7 @@ theorem IsLocalMaxOn.fderiv_within_nonpos {s : Set E} (h : IsLocalMaxOn f s a) {
 both `y` and `-y` belong to the positive tangent cone of `s` at `a`, then `f' y ≤ 0`. -/
 theorem IsLocalMaxOn.has_fderiv_within_at_eq_zero {s : Set E} (h : IsLocalMaxOn f s a) (hf : HasFderivWithinAt f f' s a)
     {y} (hy : y ∈ PosTangentConeAt s a) (hy' : -y ∈ PosTangentConeAt s a) : f' y = 0 :=
-  le_antisymmₓ (h.has_fderiv_within_at_nonpos hf hy) $ by
+  le_antisymmₓ (h.has_fderiv_within_at_nonpos hf hy) <| by
     simpa using h.has_fderiv_within_at_nonpos hf hy'
 
 /-- If `f` has a local max on `s` at `a` and both `y` and `-y` belong to the positive tangent cone
@@ -195,7 +196,7 @@ theorem IsLocalMin.fderiv_eq_zero (h : IsLocalMin f a) : fderiv ℝ f a = 0 :=
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.has_fderiv_at_eq_zero (h : IsLocalMax f a) (hf : HasFderivAt f f' a) : f' = 0 :=
-  neg_eq_zero.1 $ h.neg.has_fderiv_at_eq_zero hf.neg
+  neg_eq_zero.1 <| h.neg.has_fderiv_at_eq_zero hf.neg
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.fderiv_eq_zero (h : IsLocalMax f a) : fderiv ℝ f a = 0 :=
@@ -226,7 +227,7 @@ theorem IsLocalMin.deriv_eq_zero (h : IsLocalMin f a) : deriv f a = 0 :=
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.has_deriv_at_eq_zero (h : IsLocalMax f a) (hf : HasDerivAt f f' a) : f' = 0 :=
-  neg_eq_zero.1 $ h.neg.has_deriv_at_eq_zero hf.neg
+  neg_eq_zero.1 <| h.neg.has_deriv_at_eq_zero hf.neg
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.deriv_eq_zero (h : IsLocalMax f a) : deriv f a = 0 :=
@@ -264,13 +265,13 @@ theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (h
       rw [mem_set_of_eq, this x hx, ← hC]
       exact Cge c' ⟨le_of_ltₓ hc'.1, le_of_ltₓ hc'.2⟩
       
-    · refine' ⟨C, ⟨lt_of_le_of_neₓ Cmem.1 $ mt _ hC, lt_of_le_of_neₓ Cmem.2 $ mt _ hC⟩, Or.inr Cge⟩
+    · refine' ⟨C, ⟨lt_of_le_of_neₓ Cmem.1 <| mt _ hC, lt_of_le_of_neₓ Cmem.2 <| mt _ hC⟩, Or.inr Cge⟩
       exacts[fun h => by
         rw [h], fun h => by
         rw [h, hfI]]
       
     
-  · refine' ⟨c, ⟨lt_of_le_of_neₓ cmem.1 $ mt _ hc, lt_of_le_of_neₓ cmem.2 $ mt _ hc⟩, Or.inl cle⟩
+  · refine' ⟨c, ⟨lt_of_le_of_neₓ cmem.1 <| mt _ hc, lt_of_le_of_neₓ cmem.2 <| mt _ hc⟩, Or.inl cle⟩
     exacts[fun h => by
       rw [h], fun h => by
       rw [h, hfI]]
@@ -281,13 +282,13 @@ point of the corresponding open interval. -/
 theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
     ∃ c ∈ Ioo a b, IsLocalExtr f c :=
   let ⟨c, cmem, hc⟩ := exists_Ioo_extr_on_Icc f hab hfc hfI
-  ⟨c, cmem, hc.is_local_extr $ Icc_mem_nhds cmem.1 cmem.2⟩
+  ⟨c, cmem, hc.is_local_extr <| Icc_mem_nhds cmem.1 cmem.2⟩
 
 /-- **Rolle's Theorem** `has_deriv_at` version -/
 theorem exists_has_deriv_at_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b)
     (hff' : ∀, ∀ x ∈ Ioo a b, ∀, HasDerivAt f (f' x) x) : ∃ c ∈ Ioo a b, f' c = 0 :=
   let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
-  ⟨c, cmem, hc.has_deriv_at_eq_zero $ hff' c cmem⟩
+  ⟨c, cmem, hc.has_deriv_at_eq_zero <| hff' c cmem⟩
 
 /-- **Rolle's Theorem** `deriv` version -/
 theorem exists_deriv_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
@@ -303,7 +304,7 @@ for some `c ∈ (a, b)`.  -/
 theorem exists_has_deriv_at_eq_zero' (hab : a < b) (hfa : tendsto f (𝓝[>] a) (𝓝 l)) (hfb : tendsto f (𝓝[<] b) (𝓝 l))
     (hff' : ∀, ∀ x ∈ Ioo a b, ∀, HasDerivAt f (f' x) x) : ∃ c ∈ Ioo a b, f' c = 0 := by
   have : ContinuousOn f (Ioo a b) := fun x hx => (hff' x hx).ContinuousAt.ContinuousWithinAt
-  have hcont := continuous_on_Icc_extend_from_Ioo hab this hfa hfb
+  have hcont := continuous_on_Icc_extend_from_Ioo hab.ne this hfa hfb
   obtain ⟨c, hc, hcextr⟩ : ∃ c ∈ Ioo a b, IsLocalExtr (extendFrom (Ioo a b) f) c := by
     apply exists_local_extr_Ioo _ hab hcont
     rw [eq_lim_at_right_extend_from_Ioo hab hfb]

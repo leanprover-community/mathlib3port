@@ -95,7 +95,7 @@ theorem coe_fn_coe_trans {α β γ δ} [Coe α β] [HasCoeTAux β γ] [CoeFun γ
   rfl
 
 /-- Non-dependent version of `coe_fn_coe_trans`, helps `rw` figure out the argument. -/
-theorem coe_fn_coe_trans' {α β γ} {δ : outParam $ _} [Coe α β] [HasCoeTAux β γ] [CoeFun γ fun _ => δ] (x : α) :
+theorem coe_fn_coe_trans' {α β γ} {δ : outParam <| _} [Coe α β] [HasCoeTAux β γ] [CoeFun γ fun _ => δ] (x : α) :
     @coeFn α _ _ x = @coeFn β _ _ x :=
   rfl
 
@@ -104,7 +104,7 @@ theorem coe_fn_coe_base {α β γ} [Coe α β] [CoeFun β γ] (x : α) : @coeFn 
   rfl
 
 /-- Non-dependent version of `coe_fn_coe_base`, helps `rw` figure out the argument. -/
-theorem coe_fn_coe_base' {α β} {γ : outParam $ _} [Coe α β] [CoeFun β fun _ => γ] (x : α) :
+theorem coe_fn_coe_base' {α β} {γ : outParam <| _} [Coe α β] [CoeFun β fun _ => γ] (x : α) :
     @coeFn α _ _ x = @coeFn β _ _ x :=
   rfl
 
@@ -283,17 +283,17 @@ theorem iff_def' : (a ↔ b) ↔ (b → a) ∧ (a → b) :=
   iff_def.trans And.comm
 
 theorem imp_true_iff {α : Sort _} : α → True ↔ True :=
-  iff_true_intro $ fun _ => trivialₓ
+  iff_true_intro fun _ => trivialₓ
 
 theorem imp_iff_right (ha : a) : a → b ↔ b :=
   ⟨fun f => f ha, imp_intro⟩
 
 theorem imp_iff_not (hb : ¬b) : a → b ↔ ¬a :=
-  imp_congr_right $ fun _ => iff_false_intro hb
+  imp_congr_right fun _ => iff_false_intro hb
 
 theorem Decidable.imp_iff_right_iff [Decidable a] : (a → b ↔ b) ↔ a ∨ b :=
-  ⟨fun H => (Decidable.em a).imp_right $ fun ha' => H.1 $ fun ha => (ha' ha).elim, fun H =>
-    H.elim imp_iff_right $ fun hb => ⟨fun hab => hb, fun _ _ => hb⟩⟩
+  ⟨fun H => (Decidable.em a).imp_right fun ha' => H.1 fun ha => (ha' ha).elim, fun H =>
+    (H.elim imp_iff_right) fun hb => ⟨fun hab => hb, fun _ _ => hb⟩⟩
 
 @[simp]
 theorem imp_iff_right_iff : (a → b ↔ b) ↔ a ∨ b :=
@@ -347,16 +347,16 @@ section eq_or_ne
 variable {α : Sort _} (x y : α)
 
 theorem Decidable.eq_or_ne [Decidable (x = y)] : x = y ∨ x ≠ y :=
-  dec_em $ x = y
+  dec_em <| x = y
 
 theorem Decidable.ne_or_eq [Decidable (x = y)] : x ≠ y ∨ x = y :=
-  dec_em' $ x = y
+  dec_em' <| x = y
 
 theorem eq_or_ne : x = y ∨ x ≠ y :=
-  em $ x = y
+  em <| x = y
 
 theorem ne_or_eq : x ≠ y ∨ x = y :=
-  em' $ x = y
+  em' <| x = y
 
 end eq_or_ne
 
@@ -409,7 +409,7 @@ theorem of_not_imp : ¬(a → b) → a :=
   Decidable.of_not_imp
 
 protected theorem Decidable.not_imp_symm [Decidable a] (h : ¬a → b) (hb : ¬b) : a :=
-  Decidable.by_contradiction $ hb ∘ h
+  Decidable.by_contradiction <| hb ∘ h
 
 theorem Not.decidable_imp_symm [Decidable a] : (¬a → b) → ¬b → a :=
   Decidable.not_imp_symm
@@ -446,12 +446,12 @@ theorem imp_not_comm : a → ¬b ↔ b → ¬a :=
 
 @[simp]
 theorem xor_true : Xorₓ True = Not :=
-  funext $ fun a => by
+  funext fun a => by
     simp [Xorₓ]
 
 @[simp]
 theorem xor_false : Xorₓ False = id :=
-  funext $ fun a => by
+  funext fun a => by
     simp [Xorₓ]
 
 theorem xor_comm a b : Xorₓ a b = Xorₓ b a := by
@@ -468,7 +468,7 @@ theorem xor_self (a : Prop) : Xorₓ a a = False := by
 
 
 theorem and_congr_left (h : c → (a ↔ b)) : a ∧ c ↔ b ∧ c :=
-  And.comm.trans $ (and_congr_right h).trans And.comm
+  And.comm.trans <| (and_congr_right h).trans And.comm
 
 theorem and_congr_left' (h : a ↔ b) : a ∧ c ↔ b ∧ c :=
   and_congr h Iff.rfl
@@ -567,7 +567,7 @@ theorem Or.elim3 (h : a ∨ b ∨ c) (ha : a → d) (hb : b → d) (hc : c → d
   Or.elim h ha fun h₂ => Or.elim h₂ hb hc
 
 theorem Or.imp3 (had : a → d) (hbe : b → e) (hcf : c → f) : a ∨ b ∨ c → d ∨ e ∨ f :=
-  Or.imp had $ Or.imp hbe hcf
+  Or.imp had <| Or.imp hbe hcf
 
 theorem or_imp_distrib : a ∨ b → c ↔ (a → c) ∧ (b → c) :=
   ⟨fun h => ⟨fun ha => h (Or.inl ha), fun hb => h (Or.inr hb)⟩, fun ⟨ha, hb⟩ => Or.ndrec ha hb⟩
@@ -585,7 +585,7 @@ theorem or_iff_not_imp_right : a ∨ b ↔ ¬b → a :=
   Decidable.or_iff_not_imp_right
 
 protected theorem Decidable.not_imp_not [Decidable a] : ¬a → ¬b ↔ b → a :=
-  ⟨fun h hb => Decidable.by_contradiction $ fun na => h na hb, mt⟩
+  ⟨fun h hb => Decidable.by_contradiction fun na => h na hb, mt⟩
 
 theorem not_imp_not : ¬a → ¬b ↔ b → a :=
   Decidable.not_imp_not
@@ -618,7 +618,7 @@ theorem or_and_distrib_right : (a ∨ b) ∧ c ↔ a ∧ c ∨ b ∧ c :=
 /-- `∨` distributes over `∧` (on the left). -/
 theorem or_and_distrib_left : a ∨ b ∧ c ↔ (a ∨ b) ∧ (a ∨ c) :=
   ⟨Or.ndrec (fun ha => And.intro (Or.inl ha) (Or.inl ha)) (And.imp Or.inr Or.inr),
-    And.ndrec $ Or.ndrec (imp_intro ∘ Or.inl) (Or.imp_rightₓ ∘ And.intro)⟩
+    And.ndrec <| Or.ndrec (imp_intro ∘ Or.inl) (Or.imp_rightₓ ∘ And.intro)⟩
 
 /-- `∨` distributes over `∧` (on the right). -/
 theorem and_or_distrib_right : a ∧ b ∨ c ↔ (a ∨ c) ∧ (b ∨ c) :=
@@ -682,7 +682,7 @@ theorem imp_or_distrib' : a → b ∨ c ↔ (a → b) ∨ (a → c) :=
   Decidable.imp_or_distrib'
 
 theorem not_imp_of_and_not : a ∧ ¬b → ¬(a → b)
-  | ⟨ha, hb⟩, h => hb $ h ha
+  | ⟨ha, hb⟩, h => hb <| h ha
 
 protected theorem Decidable.not_imp [Decidable a] : ¬(a → b) ↔ a ∧ ¬b :=
   ⟨fun h => ⟨Decidable.of_not_imp h, not_of_not_imp h⟩, not_imp_of_and_not⟩
@@ -750,7 +750,7 @@ theorem iff_iff_not_or_and_or_not : (a ↔ b) ↔ (¬a ∨ b) ∧ (a ∨ ¬b) :=
   Decidable.iff_iff_not_or_and_or_not
 
 protected theorem Decidable.not_and_not_right [Decidable b] : ¬(a ∧ ¬b) ↔ a → b :=
-  ⟨fun h ha => h.decidable_imp_symm $ And.intro ha, fun h ⟨ha, hb⟩ => hb $ h ha⟩
+  ⟨fun h ha => h.decidable_imp_symm <| And.intro ha, fun h ⟨ha, hb⟩ => hb <| h ha⟩
 
 theorem not_and_not_right : ¬(a ∧ ¬b) ↔ a → b :=
   Decidable.not_and_not_right
@@ -841,7 +841,7 @@ theorem proof_irrel_heq {p q : Prop} (hp : p) (hq : q) : HEq hp hq := by
   subst q <;> rfl
 
 theorem ne_of_mem_of_not_mem {α β} [HasMem α β] {s : β} {a b : α} (h : a ∈ s) : b ∉ s → a ≠ b :=
-  mt $ fun e => e ▸ h
+  mt fun e => e ▸ h
 
 theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
     (∀ a, s a → ∀ b, s b → p a b) ↔ ∀ a b, s a → s b → p a b :=
@@ -938,34 +938,34 @@ section congr
 variable {β : α → Sort _} {γ : ∀ a, β a → Sort _} {δ : ∀ a b, γ a b → Sort _} {ε : ∀ a b c, δ a b c → Sort _}
 
 theorem forall₂_congrₓ {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b ↔ q a b) : (∀ a b, p a b) ↔ ∀ a b, q a b :=
-  forall_congrₓ $ fun a => forall_congrₓ $ h a
+  forall_congrₓ fun a => forall_congrₓ <| h a
 
 theorem forall₃_congrₓ {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c ↔ q a b c) :
     (∀ a b c, p a b c) ↔ ∀ a b c, q a b c :=
-  forall_congrₓ $ fun a => forall₂_congrₓ $ h a
+  forall_congrₓ fun a => forall₂_congrₓ <| h a
 
 theorem forall₄_congrₓ {p q : ∀ a b c, δ a b c → Prop} (h : ∀ a b c d, p a b c d ↔ q a b c d) :
     (∀ a b c d, p a b c d) ↔ ∀ a b c d, q a b c d :=
-  forall_congrₓ $ fun a => forall₃_congrₓ $ h a
+  forall_congrₓ fun a => forall₃_congrₓ <| h a
 
 theorem forall₅_congr {p q : ∀ a b c d, ε a b c d → Prop} (h : ∀ a b c d e, p a b c d e ↔ q a b c d e) :
     (∀ a b c d e, p a b c d e) ↔ ∀ a b c d e, q a b c d e :=
-  forall_congrₓ $ fun a => forall₄_congrₓ $ h a
+  forall_congrₓ fun a => forall₄_congrₓ <| h a
 
 theorem exists₂_congrₓ {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b ↔ q a b) : (∃ a b, p a b) ↔ ∃ a b, q a b :=
-  exists_congr $ fun a => exists_congr $ h a
+  exists_congr fun a => exists_congr <| h a
 
 theorem exists₃_congrₓ {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c ↔ q a b c) :
     (∃ a b c, p a b c) ↔ ∃ a b c, q a b c :=
-  exists_congr $ fun a => exists₂_congrₓ $ h a
+  exists_congr fun a => exists₂_congrₓ <| h a
 
 theorem exists₄_congrₓ {p q : ∀ a b c, δ a b c → Prop} (h : ∀ a b c d, p a b c d ↔ q a b c d) :
     (∃ a b c d, p a b c d) ↔ ∃ a b c d, q a b c d :=
-  exists_congr $ fun a => exists₃_congrₓ $ h a
+  exists_congr fun a => exists₃_congrₓ <| h a
 
 theorem exists₅_congr {p q : ∀ a b c d, ε a b c d → Prop} (h : ∀ a b c d e, p a b c d e ↔ q a b c d e) :
     (∃ a b c d e, p a b c d e) ↔ ∃ a b c d e, q a b c d e :=
-  exists_congr $ fun a => exists₄_congrₓ $ h a
+  exists_congr fun a => exists₄_congrₓ <| h a
 
 end congr
 
@@ -1021,7 +1021,7 @@ theorem not_forall_of_exists_not : (∃ x, ¬p x) → ¬∀ x, p x
 
 protected theorem Decidable.not_forall {p : α → Prop} [Decidable (∃ x, ¬p x)] [∀ x, Decidable (p x)] :
     (¬∀ x, p x) ↔ ∃ x, ¬p x :=
-  ⟨Not.decidable_imp_symm $ fun nx x => nx.decidable_imp_symm $ fun h => ⟨x, h⟩, not_forall_of_exists_not⟩
+  ⟨Not.decidable_imp_symm fun nx x => nx.decidable_imp_symm fun h => ⟨x, h⟩, not_forall_of_exists_not⟩
 
 @[simp]
 theorem not_forall {p : α → Prop} : (¬∀ x, p x) ↔ ∃ x, ¬p x :=
@@ -1043,8 +1043,8 @@ theorem not_exists_not : (¬∃ x, ¬p x) ↔ ∀ x, p x :=
 theorem forall_imp_iff_exists_imp [ha : Nonempty α] : (∀ x, p x) → b ↔ ∃ x, p x → b :=
   let ⟨a⟩ := ha
   ⟨fun h =>
-    not_forall_not.1 $ fun h' =>
-      Classical.by_cases (fun hb : b => h' a $ fun _ => hb) fun hb => hb $ h $ fun x => (not_imp.1 (h' x)).1,
+    not_forall_not.1 fun h' =>
+      Classical.by_cases (fun hb : b => (h' a) fun _ => hb) fun hb => hb <| h fun x => (not_imp.1 (h' x)).1,
     fun ⟨x, hx⟩ h => hx (h x)⟩
 
 theorem forall_true_iff : α → True ↔ True :=
@@ -1055,18 +1055,18 @@ theorem forall_true_iff' (h : ∀ a, p a ↔ True) : (∀ a, p a) ↔ True :=
 
 @[simp]
 theorem forall_2_true_iff {β : α → Sort _} : (∀ a, β a → True) ↔ True :=
-  forall_true_iff' $ fun _ => forall_true_iff
+  forall_true_iff' fun _ => forall_true_iff
 
 @[simp]
 theorem forall_3_true_iff {β : α → Sort _} {γ : ∀ a, β a → Sort _} : (∀ a b : β a, γ a b → True) ↔ True :=
-  forall_true_iff' $ fun _ => forall_2_true_iff
+  forall_true_iff' fun _ => forall_2_true_iff
 
 theorem ExistsUnique.exists {α : Sort _} {p : α → Prop} (h : ∃! x, p x) : ∃ x, p x :=
   Exists.elim h fun x hx => ⟨x, And.left hx⟩
 
 @[simp]
 theorem exists_unique_iff_exists {α : Sort _} [Subsingleton α] {p : α → Prop} : (∃! x, p x) ↔ ∃ x, p x :=
-  ⟨fun h => h.exists, Exists.impₓ $ fun x hx => ⟨hx, fun y _ => Subsingleton.elimₓ y x⟩⟩
+  ⟨fun h => h.exists, Exists.impₓ fun x hx => ⟨hx, fun y _ => Subsingleton.elimₓ y x⟩⟩
 
 @[simp]
 theorem forall_const (α : Sort _) [i : Nonempty α] : α → b ↔ b :=
@@ -1131,7 +1131,7 @@ theorem exists_eq_left {a' : α} : (∃ a, a = a' ∧ p a) ↔ p a' :=
 
 @[simp]
 theorem exists_eq_right {a' : α} : (∃ a, p a ∧ a = a') ↔ p a' :=
-  (exists_congr $ fun a => And.comm).trans exists_eq_left
+  (exists_congr fun a => And.comm).trans exists_eq_left
 
 @[simp]
 theorem exists_eq_right_right {a' : α} : (∃ a : α, p a ∧ b ∧ a = a') ↔ p a' ∧ b :=
@@ -1212,11 +1212,11 @@ theorem And.exists {p q : Prop} {f : p ∧ q → Prop} : (∃ h, f h) ↔ ∃ hp
   ⟨fun ⟨h, H⟩ => ⟨h.1, h.2, H⟩, fun ⟨hp, hq, H⟩ => ⟨⟨hp, hq⟩, H⟩⟩
 
 theorem forall_or_of_or_forall (h : b ∨ ∀ x, p x) x : b ∨ p x :=
-  h.imp_right $ fun h₂ => h₂ x
+  h.imp_right fun h₂ => h₂ x
 
 protected theorem Decidable.forall_or_distrib_left {q : Prop} {p : α → Prop} [Decidable q] :
     (∀ x, q ∨ p x) ↔ q ∨ ∀ x, p x :=
-  ⟨fun h => if hq : q then Or.inl hq else Or.inr $ fun x => (h x).resolve_left hq, forall_or_of_or_forall⟩
+  ⟨fun h => if hq : q then Or.inl hq else Or.inr fun x => (h x).resolve_left hq, forall_or_of_or_forall⟩
 
 theorem forall_or_distrib_left {q : Prop} {p : α → Prop} : (∀ x, q ∨ p x) ↔ q ∨ ∀ x, p x :=
   Decidable.forall_or_distrib_left
@@ -1260,7 +1260,7 @@ theorem exists_unique_prop_of_true {p : Prop} {q : p → Prop} (h : p) : (∃! h
   @exists_unique_const (q h) p ⟨h⟩ _
 
 theorem forall_prop_of_false {p : Prop} {q : p → Prop} (hn : ¬p) : (∀ h' : p, q h') ↔ True :=
-  iff_true_intro $ fun h => hn.elim h
+  iff_true_intro fun h => hn.elim h
 
 theorem exists_prop_of_false {p : Prop} {q : p → Prop} : ¬p → ¬∃ h' : p, q h' :=
   mt Exists.fst
@@ -1360,7 +1360,7 @@ noncomputable def exists_cases.{u} {C : Sort u} (H0 : C) (H : ∀ a, p a → C) 
   if h : ∃ a, p a then H (Classical.some h) (Classical.some_spec h) else H0
 
 theorem some_spec2 {α : Sort _} {p : α → Prop} {h : ∃ a, p a} (q : α → Prop) (hpq : ∀ a, p a → q a) : q (some h) :=
-  hpq _ $ some_spec _
+  hpq _ <| some_spec _
 
 /-- A version of classical.indefinite_description which is definitionally equal to a pair -/
 noncomputable def subtype_of_exists {α : Type _} {P : α → Prop} (h : ∃ x, P x) : { x // P x } :=
@@ -1368,7 +1368,7 @@ noncomputable def subtype_of_exists {α : Type _} {P : α → Prop} (h : ∃ x, 
 
 /-- A version of `by_contradiction` that uses types instead of propositions. -/
 protected noncomputable def by_contradiction' {α : Sort _} (H : ¬(α → False)) : α :=
-  Classical.choice $ peirce _ False $ fun h => (H $ fun a => h ⟨a⟩).elim
+  Classical.choice <| (peirce _ False) fun h => (H fun a => h ⟨a⟩).elim
 
 /-- `classical.by_contradiction'` is equivalent to lean's axiom `classical.choice`. -/
 def choice_of_by_contradiction' {α : Sort _} (contra : ¬(α → False) → α) : Nonempty α → α := fun H => contra H.elim
@@ -1399,22 +1399,22 @@ theorem Bex.intro (a : α) (h₁ : p a) (h₂ : P a h₁) : ∃ (x : _)(h : p x)
   ⟨a, h₁, h₂⟩
 
 theorem ball_congr (H : ∀ x h, P x h ↔ Q x h) : (∀ x h, P x h) ↔ ∀ x h, Q x h :=
-  forall_congrₓ $ fun x => forall_congrₓ (H x)
+  forall_congrₓ fun x => forall_congrₓ (H x)
 
 theorem bex_congr (H : ∀ x h, P x h ↔ Q x h) : (∃ x h, P x h) ↔ ∃ x h, Q x h :=
-  exists_congr $ fun x => exists_congr (H x)
+  exists_congr fun x => exists_congr (H x)
 
 theorem bex_eq_left {a : α} : (∃ (x : _)(_ : x = a), p x) ↔ p a := by
   simp only [exists_prop, exists_eq_left]
 
 theorem Ball.imp_right (H : ∀ x h, P x h → Q x h) (h₁ : ∀ x h, P x h) x h : Q x h :=
-  H _ _ $ h₁ _ _
+  H _ _ <| h₁ _ _
 
 theorem Bex.imp_right (H : ∀ x h, P x h → Q x h) : (∃ x h, P x h) → ∃ x h, Q x h
   | ⟨x, h, h'⟩ => ⟨_, _, H _ _ h'⟩
 
 theorem Ball.imp_left (H : ∀ x, p x → q x) (h₁ : ∀ x, q x → r x) x (h : p x) : r x :=
-  h₁ _ $ H _ h
+  h₁ _ <| H _ h
 
 theorem Bex.imp_left (H : ∀ x, p x → q x) : (∃ (x : _)(_ : p x), r x) → ∃ (x : _)(_ : q x), r x
   | ⟨x, hp, hr⟩ => ⟨x, H _ hp, hr⟩
@@ -1423,7 +1423,7 @@ theorem ball_of_forall (h : ∀ x, p x) x : p x :=
   h x
 
 theorem forall_of_ball (H : ∀ x, p x) (h : ∀ x, p x → q x) x : q x :=
-  h x $ H x
+  h x <| H x
 
 theorem bex_of_exists (H : ∀ x, p x) : (∃ x, q x) → ∃ (x : _)(_ : p x), q x
   | ⟨x, hq⟩ => ⟨x, H x, hq⟩
@@ -1439,11 +1439,11 @@ theorem not_bex : (¬∃ x h, P x h) ↔ ∀ x h, ¬P x h :=
   bex_imp_distrib
 
 theorem not_ball_of_bex_not : (∃ x h, ¬P x h) → ¬∀ x h, P x h
-  | ⟨x, h, hp⟩, al => hp $ al x h
+  | ⟨x, h, hp⟩, al => hp <| al x h
 
 protected theorem Decidable.not_ball [Decidable (∃ x h, ¬P x h)] [∀ x h, Decidable (P x h)] :
     (¬∀ x h, P x h) ↔ ∃ x h, ¬P x h :=
-  ⟨Not.decidable_imp_symm $ fun nx x h => nx.decidable_imp_symm $ fun h' => ⟨x, h, h'⟩, not_ball_of_bex_not⟩
+  ⟨Not.decidable_imp_symm fun nx x h => nx.decidable_imp_symm fun h' => ⟨x, h, h'⟩, not_ball_of_bex_not⟩
 
 theorem not_ball : (¬∀ x h, P x h) ↔ ∃ x h, ¬P x h :=
   Decidable.not_ball
@@ -1452,17 +1452,17 @@ theorem ball_true_iff (p : α → Prop) : (∀ x, p x → True) ↔ True :=
   iff_true_intro fun h hrx => trivialₓ
 
 theorem ball_and_distrib : (∀ x h, P x h ∧ Q x h) ↔ (∀ x h, P x h) ∧ ∀ x h, Q x h :=
-  Iff.trans (forall_congrₓ $ fun x => forall_and_distrib) forall_and_distrib
+  Iff.trans (forall_congrₓ fun x => forall_and_distrib) forall_and_distrib
 
 theorem bex_or_distrib : (∃ x h, P x h ∨ Q x h) ↔ (∃ x h, P x h) ∨ ∃ x h, Q x h :=
-  Iff.trans (exists_congr $ fun x => exists_or_distrib) exists_or_distrib
+  Iff.trans (exists_congr fun x => exists_or_distrib) exists_or_distrib
 
 theorem ball_or_left_distrib : (∀ x, p x ∨ q x → r x) ↔ (∀ x, p x → r x) ∧ ∀ x, q x → r x :=
-  Iff.trans (forall_congrₓ $ fun x => or_imp_distrib) forall_and_distrib
+  Iff.trans (forall_congrₓ fun x => or_imp_distrib) forall_and_distrib
 
 theorem bex_or_left_distrib : (∃ (x : _)(_ : p x ∨ q x), r x) ↔ (∃ (x : _)(_ : p x), r x) ∨ ∃ (x : _)(_ : q x), r x :=
   by
-  simp only [exists_prop] <;> exact Iff.trans (exists_congr $ fun x => or_and_distrib_right) exists_or_distrib
+  simp only [exists_prop] <;> exact Iff.trans (exists_congr fun x => or_and_distrib_right) exists_or_distrib
 
 end BoundedQuantifiers
 
@@ -1484,7 +1484,7 @@ theorem dite_eq_iff : dite P A B = c ↔ (∃ h, A h = c) ∨ ∃ h, B h = c := 
   by_cases' P <;> simp [*]
 
 theorem ite_eq_iff : ite P a b = c ↔ P ∧ a = c ∨ ¬P ∧ b = c :=
-  dite_eq_iff.trans $ by
+  dite_eq_iff.trans <| by
     rw [exists_prop, exists_prop]
 
 @[simp]
@@ -1513,36 +1513,36 @@ theorem dite_ne_right_iff : (dite P A fun _ => b) ≠ b ↔ ∃ h, A h ≠ b := 
   simp only [Ne.def, dite_eq_right_iff, not_forall]
 
 theorem ite_ne_left_iff : ite P a b ≠ a ↔ ¬P ∧ a ≠ b :=
-  dite_ne_left_iff.trans $ by
+  dite_ne_left_iff.trans <| by
     rw [exists_prop]
 
 theorem ite_ne_right_iff : ite P a b ≠ b ↔ P ∧ a ≠ b :=
-  dite_ne_right_iff.trans $ by
+  dite_ne_right_iff.trans <| by
     rw [exists_prop]
 
 protected theorem Ne.dite_eq_left_iff (h : ∀ h, a ≠ B h) : dite P (fun _ => a) B = a ↔ P :=
-  dite_eq_left_iff.trans $ ⟨fun H => of_not_not $ fun h' => h h' (H h').symm, fun h H => (H h).elim⟩
+  dite_eq_left_iff.trans <| ⟨fun H => of_not_not fun h' => h h' (H h').symm, fun h H => (H h).elim⟩
 
 protected theorem Ne.dite_eq_right_iff (h : ∀ h, A h ≠ b) : (dite P A fun _ => b) = b ↔ ¬P :=
-  dite_eq_right_iff.trans $ ⟨fun H h' => h h' (H h'), fun h' H => (h' H).elim⟩
+  dite_eq_right_iff.trans <| ⟨fun H h' => h h' (H h'), fun h' H => (h' H).elim⟩
 
 protected theorem Ne.ite_eq_left_iff (h : a ≠ b) : ite P a b = a ↔ P :=
-  Ne.dite_eq_left_iff $ fun _ => h
+  Ne.dite_eq_left_iff fun _ => h
 
 protected theorem Ne.ite_eq_right_iff (h : a ≠ b) : ite P a b = b ↔ ¬P :=
-  Ne.dite_eq_right_iff $ fun _ => h
+  Ne.dite_eq_right_iff fun _ => h
 
 protected theorem Ne.dite_ne_left_iff (h : ∀ h, a ≠ B h) : dite P (fun _ => a) B ≠ a ↔ ¬P :=
-  dite_ne_left_iff.trans $ exists_iff_of_forall h
+  dite_ne_left_iff.trans <| exists_iff_of_forall h
 
 protected theorem Ne.dite_ne_right_iff (h : ∀ h, A h ≠ b) : (dite P A fun _ => b) ≠ b ↔ P :=
-  dite_ne_right_iff.trans $ exists_iff_of_forall h
+  dite_ne_right_iff.trans <| exists_iff_of_forall h
 
 protected theorem Ne.ite_ne_left_iff (h : a ≠ b) : ite P a b ≠ a ↔ ¬P :=
-  Ne.dite_ne_left_iff $ fun _ => h
+  Ne.dite_ne_left_iff fun _ => h
 
 protected theorem Ne.ite_ne_right_iff (h : a ≠ b) : ite P a b ≠ b ↔ P :=
-  Ne.dite_ne_right_iff $ fun _ => h
+  Ne.dite_ne_right_iff fun _ => h
 
 variable (P Q) (a b)
 

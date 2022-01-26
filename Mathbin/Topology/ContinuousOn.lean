@@ -32,7 +32,7 @@ variable [TopologicalSpace α]
 
 @[simp]
 theorem nhds_bind_nhds_within {a : α} {s : Set α} : ((𝓝 a).bind fun x => 𝓝[s] x) = 𝓝[s] a :=
-  bind_inf_principal.trans $ congr_arg2ₓ _ nhds_bind_nhds rfl
+  bind_inf_principal.trans <| congr_arg2ₓ _ nhds_bind_nhds rfl
 
 @[simp]
 theorem eventually_nhds_nhds_within {a : α} {s : Set α} {p : α → Prop} :
@@ -118,14 +118,14 @@ theorem Filter.Eventually.self_of_nhds_within {p : α → Prop} {s : Set α} {x 
 
 theorem tendsto_const_nhds_within {l : Filter β} {s : Set α} {a : α} (ha : a ∈ s) :
     tendsto (fun x : β => a) l (𝓝[s] a) :=
-  tendsto_const_pure.mono_right $ pure_le_nhds_within ha
+  tendsto_const_pure.mono_right <| pure_le_nhds_within ha
 
 theorem nhds_within_restrict'' {a : α} (s : Set α) {t : Set α} (h : t ∈ 𝓝[s] a) : 𝓝[s] a = 𝓝[s ∩ t] a :=
   le_antisymmₓ (le_inf inf_le_left (le_principal_iff.mpr (inter_mem self_mem_nhds_within h)))
     (inf_le_inf_left _ (principal_mono.mpr (Set.inter_subset_left _ _)))
 
 theorem nhds_within_restrict' {a : α} (s : Set α) {t : Set α} (h : t ∈ 𝓝 a) : 𝓝[s] a = 𝓝[s ∩ t] a :=
-  nhds_within_restrict'' s $ mem_inf_of_left h
+  nhds_within_restrict'' s <| mem_inf_of_left h
 
 theorem nhds_within_restrict {a : α} (s : Set α) {t : Set α} (h₀ : a ∈ t) (h₁ : IsOpen t) : 𝓝[s] a = 𝓝[s ∩ t] a :=
   nhds_within_restrict' s (IsOpen.mem_nhds h₁ h₀)
@@ -149,7 +149,7 @@ theorem nhds_within_eq_nhds_within {a : α} {s t u : Set α} (h₀ : a ∈ s) (h
   rw [nhds_within_restrict t h₀ h₁, nhds_within_restrict u h₀ h₁, h₂]
 
 theorem IsOpen.nhds_within_eq {a : α} {s : Set α} (h : IsOpen s) (ha : a ∈ s) : 𝓝[s] a = 𝓝 a :=
-  inf_eq_left.2 $ le_principal_iff.2 $ IsOpen.mem_nhds h ha
+  inf_eq_left.2 <| le_principal_iff.2 <| IsOpen.mem_nhds h ha
 
 theorem preimage_nhds_within_coinduced {π : α → β} {s : Set β} {t : Set α} {a : α} (h : a ∈ t) (ht : IsOpen t)
     (hs : s ∈ @nhds β (TopologicalSpace.coinduced (fun x : t => π x) Subtype.topologicalSpace) (π a)) : π ⁻¹' s ∈ 𝓝 a :=
@@ -249,7 +249,7 @@ theorem map_nhds_within (f : α → β) (a : α) (s : Set α) :
 
 theorem tendsto_nhds_within_mono_left {f : α → β} {a : α} {s t : Set α} {l : Filter β} (hst : s ⊆ t)
     (h : tendsto f (𝓝[t] a) l) : tendsto f (𝓝[s] a) l :=
-  h.mono_left $ nhds_within_mono a hst
+  h.mono_left <| nhds_within_mono a hst
 
 theorem tendsto_nhds_within_mono_right {f : β → α} {l : Filter β} {a : α} {s t : Set α} (hst : s ⊆ t)
     (h : tendsto f l (𝓝[s] a)) : tendsto f l (𝓝[t] a) :=
@@ -264,9 +264,9 @@ theorem principal_subtype {α : Type _} (s : Set α) (t : Set { x // x ∈ s }) 
   rw [comap_principal, Set.preimage_image_eq _ Subtype.coe_injective]
 
 theorem nhds_within_ne_bot_of_mem {s : Set α} {x : α} (hx : x ∈ s) : ne_bot (𝓝[s] x) :=
-  mem_closure_iff_nhds_within_ne_bot.1 $ subset_closure hx
+  mem_closure_iff_nhds_within_ne_bot.1 <| subset_closure hx
 
-theorem IsClosed.mem_of_nhds_within_ne_bot {s : Set α} (hs : IsClosed s) {x : α} (hx : ne_bot $ 𝓝[s] x) : x ∈ s := by
+theorem IsClosed.mem_of_nhds_within_ne_bot {s : Set α} (hs : IsClosed s) {x : α} (hx : ne_bot <| 𝓝[s] x) : x ∈ s := by
   simpa only [hs.closure_eq] using mem_closure_iff_nhds_within_ne_bot.2 hx
 
 theorem DenseRange.nhds_within_ne_bot {ι : Type _} {f : ι → α} (h : DenseRange f) (x : α) : ne_bot (𝓝[range f] x) :=
@@ -278,7 +278,7 @@ theorem mem_closure_pi {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpa
 
 theorem closure_pi_set {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] (I : Set ι) (s : ∀ i, Set (α i)) :
     Closure (pi I s) = pi I fun i => Closure (s i) :=
-  Set.ext $ fun x => mem_closure_pi
+  Set.ext fun x => mem_closure_pi
 
 theorem dense_pi {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {s : ∀ i, Set (α i)} (I : Set ι)
     (hs : ∀, ∀ i ∈ I, ∀, Dense (s i)) : Dense (pi I s) := by
@@ -296,7 +296,7 @@ theorem Set.EqOn.eventually_eq_nhds_within {f g : α → β} {s : Set α} {a : �
 
 theorem tendsto_nhds_within_congr {f g : α → β} {s : Set α} {a : α} {l : Filter β} (hfg : ∀, ∀ x ∈ s, ∀, f x = g x)
     (hf : tendsto f (𝓝[s] a) l) : tendsto g (𝓝[s] a) l :=
-  (tendsto_congr' $ eventually_eq_nhds_within_of_eq_on hfg).1 hf
+  (tendsto_congr' <| eventually_eq_nhds_within_of_eq_on hfg).1 hf
 
 theorem eventually_nhds_within_of_forall {s : Set α} {a : α} {p : α → Prop} (h : ∀, ∀ x ∈ s, ∀, p x) :
     ∀ᶠ x in 𝓝[s] a, p x :=
@@ -309,7 +309,7 @@ theorem tendsto_nhds_within_of_tendsto_nhds_of_eventually_within {a : α} {l : F
 @[simp]
 theorem tendsto_nhds_within_range {a : α} {l : Filter β} {f : β → α} : tendsto f l (𝓝[range f] a) ↔ tendsto f l (𝓝 a) :=
   ⟨fun h => h.mono_right inf_le_left, fun h =>
-    tendsto_inf.2 ⟨h, tendsto_principal.2 $ eventually_of_forall mem_range_self⟩⟩
+    tendsto_inf.2 ⟨h, tendsto_principal.2 <| eventually_of_forall mem_range_self⟩⟩
 
 theorem Filter.EventuallyEq.eq_of_nhds_within {s : Set α} {f g : α → β} {a : α} (h : f =ᶠ[𝓝[s] a] g) (hmem : a ∈ s) :
     f a = g a :=
@@ -330,7 +330,7 @@ theorem mem_nhds_within_subtype {s : Set α} {a : { x // x ∈ s }} {t u : Set {
 
 theorem nhds_within_subtype (s : Set α) (a : { x // x ∈ s }) (t : Set { x // x ∈ s }) :
     𝓝[t] a = comap (coe : s → α) (𝓝[coe '' t] a) :=
-  Filter.ext $ fun u => mem_nhds_within_subtype
+  Filter.ext fun u => mem_nhds_within_subtype
 
 theorem nhds_within_eq_map_subtype_coe {s : Set α} {a : α} (h : a ∈ s) : 𝓝[s] a = map (coe : s → α) (𝓝 ⟨a, h⟩) := by
   simpa only [Subtype.range_coe] using (embedding_subtype_coe.map_nhds_eq ⟨a, h⟩).symm
@@ -378,7 +378,7 @@ theorem continuous_within_at_iff_continuous_at_restrict (f : α → β) {x : α}
 
 theorem ContinuousWithinAt.tendsto_nhds_within {f : α → β} {x : α} {s : Set α} {t : Set β}
     (h : ContinuousWithinAt f s x) (ht : maps_to f s t) : tendsto f (𝓝[s] x) (𝓝[t] f x) :=
-  tendsto_inf.2 ⟨h, tendsto_principal.2 $ mem_inf_of_right $ mem_principal.2 $ ht⟩
+  tendsto_inf.2 ⟨h, tendsto_principal.2 <| mem_inf_of_right <| mem_principal.2 <| ht⟩
 
 theorem ContinuousWithinAt.tendsto_nhds_within_image {f : α → β} {x : α} {s : Set α} (h : ContinuousWithinAt f s x) :
     tendsto f (𝓝[s] x) (𝓝[f '' s] f x) :=
@@ -488,7 +488,7 @@ theorem ContinuousWithinAt.union {f : α → β} {s t : Set α} {x : α} (hs : C
 theorem ContinuousWithinAt.mem_closure_image {f : α → β} {s : Set α} {x : α} (h : ContinuousWithinAt f s x)
     (hx : x ∈ Closure s) : f x ∈ Closure (f '' s) :=
   have := mem_closure_iff_nhds_within_ne_bot.1 hx
-  mem_closure_of_tendsto h $ mem_of_superset self_mem_nhds_within (subset_preimage_image f s)
+  mem_closure_of_tendsto h <| mem_of_superset self_mem_nhds_within (subset_preimage_image f s)
 
 theorem ContinuousWithinAt.mem_closure {f : α → β} {s : Set α} {x : α} {A : Set β} (h : ContinuousWithinAt f s x)
     (hx : x ∈ Closure s) (hA : s ⊆ f ⁻¹' A) : f x ∈ Closure A :=
@@ -501,7 +501,7 @@ theorem ContinuousWithinAt.image_closure {f : α → β} {s : Set α}
 
 theorem ContinuousOn.image_closure {f : α → β} {s : Set α} (hf : ContinuousOn f (Closure s)) :
     f '' Closure s ⊆ Closure (f '' s) :=
-  ContinuousWithinAt.image_closure $ fun x hx => (hf x hx).mono subset_closure
+  ContinuousWithinAt.image_closure fun x hx => (hf x hx).mono subset_closure
 
 @[simp]
 theorem continuous_within_at_singleton {f : α → β} {x : α} : ContinuousWithinAt f {x} x := by
@@ -517,7 +517,7 @@ alias continuous_within_at_insert_self ↔ _ ContinuousWithinAt.insert_self
 theorem ContinuousWithinAt.diff_iff {f : α → β} {s t : Set α} {x : α} (ht : ContinuousWithinAt f t x) :
     ContinuousWithinAt f (s \ t) x ↔ ContinuousWithinAt f s x :=
   ⟨fun h =>
-    (h.union ht).mono $ by
+    (h.union ht).mono <| by
       simp only [diff_union_self, subset_union_left],
     fun h => h.mono (diff_subset _ _)⟩
 
@@ -537,7 +537,7 @@ theorem continuous_within_at_update_same [DecidableEq α] {f : α → β} {s : S
     ContinuousWithinAt (update f x y) s x ↔ tendsto (update f x y) (𝓝[s \ {x}] x) (𝓝 y) := by
       rw [← continuous_within_at_diff_self, ContinuousWithinAt, Function.update_same]
     _ ↔ tendsto f (𝓝[s \ {x}] x) (𝓝 y) :=
-      tendsto_congr' $ eventually_nhds_within_iff.2 $ eventually_of_forall $ fun z hz => update_noteq hz.2 _ _
+      tendsto_congr' <| eventually_nhds_within_iff.2 <| eventually_of_forall fun z hz => update_noteq hz.2 _ _
     
 
 @[simp]
@@ -794,8 +794,8 @@ theorem continuous_within_at_of_not_mem_closure {f : α → β} {s : Set α} {x 
 
 theorem ContinuousOn.piecewise' {s t : Set α} {f g : α → β} [∀ a, Decidable (a ∈ t)]
     (hpf : ∀, ∀ a ∈ s ∩ Frontier t, ∀, tendsto f (𝓝[s ∩ t] a) (𝓝 (piecewise t f g a)))
-    (hpg : ∀, ∀ a ∈ s ∩ Frontier t, ∀, tendsto g (𝓝[s ∩ tᶜ] a) (𝓝 (piecewise t f g a))) (hf : ContinuousOn f $ s ∩ t)
-    (hg : ContinuousOn g $ s ∩ tᶜ) : ContinuousOn (piecewise t f g) s := by
+    (hpg : ∀, ∀ a ∈ s ∩ Frontier t, ∀, tendsto g (𝓝[s ∩ tᶜ] a) (𝓝 (piecewise t f g a))) (hf : ContinuousOn f <| s ∩ t)
+    (hg : ContinuousOn g <| s ∩ tᶜ) : ContinuousOn (piecewise t f g) s := by
   intro x hx
   by_cases' hx' : x ∈ Frontier t
   · exact (hpf x ⟨hx, hx'⟩).piecewise_nhds_within (hpg x ⟨hx, hx'⟩)
@@ -822,15 +822,15 @@ theorem ContinuousOn.piecewise' {s t : Set α} {f g : α → β} [∀ a, Decidab
     
 
 theorem ContinuousOn.if' {s : Set α} {p : α → Prop} {f g : α → β} [∀ a, Decidable (p a)]
-    (hpf : ∀, ∀ a ∈ s ∩ Frontier { a | p a }, ∀, tendsto f (𝓝[s ∩ { a | p a }] a) (𝓝 $ if p a then f a else g a))
-    (hpg : ∀, ∀ a ∈ s ∩ Frontier { a | p a }, ∀, tendsto g (𝓝[s ∩ { a | ¬p a }] a) (𝓝 $ if p a then f a else g a))
-    (hf : ContinuousOn f $ s ∩ { a | p a }) (hg : ContinuousOn g $ s ∩ { a | ¬p a }) :
+    (hpf : ∀, ∀ a ∈ s ∩ Frontier { a | p a }, ∀, tendsto f (𝓝[s ∩ { a | p a }] a) (𝓝 <| if p a then f a else g a))
+    (hpg : ∀, ∀ a ∈ s ∩ Frontier { a | p a }, ∀, tendsto g (𝓝[s ∩ { a | ¬p a }] a) (𝓝 <| if p a then f a else g a))
+    (hf : ContinuousOn f <| s ∩ { a | p a }) (hg : ContinuousOn g <| s ∩ { a | ¬p a }) :
     ContinuousOn (fun a => if p a then f a else g a) s :=
   hf.piecewise' hpf hpg hg
 
 theorem ContinuousOn.if {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {p : α → Prop} [∀ a, Decidable (p a)]
     {s : Set α} {f g : α → β} (hp : ∀, ∀ a ∈ s ∩ Frontier { a | p a }, ∀, f a = g a)
-    (hf : ContinuousOn f $ s ∩ Closure { a | p a }) (hg : ContinuousOn g $ s ∩ Closure { a | ¬p a }) :
+    (hf : ContinuousOn f <| s ∩ Closure { a | p a }) (hg : ContinuousOn g <| s ∩ Closure { a | ¬p a }) :
     ContinuousOn (fun a => if p a then f a else g a) s := by
   apply ContinuousOn.if'
   · rintro a ha
@@ -851,13 +851,13 @@ theorem ContinuousOn.if {α β : Type _} [TopologicalSpace α] [TopologicalSpace
     
 
 theorem ContinuousOn.piecewise {s t : Set α} {f g : α → β} [∀ a, Decidable (a ∈ t)]
-    (ht : ∀, ∀ a ∈ s ∩ Frontier t, ∀, f a = g a) (hf : ContinuousOn f $ s ∩ Closure t)
-    (hg : ContinuousOn g $ s ∩ Closure (tᶜ)) : ContinuousOn (piecewise t f g) s :=
+    (ht : ∀, ∀ a ∈ s ∩ Frontier t, ∀, f a = g a) (hf : ContinuousOn f <| s ∩ Closure t)
+    (hg : ContinuousOn g <| s ∩ Closure (tᶜ)) : ContinuousOn (piecewise t f g) s :=
   hf.if ht hg
 
 theorem continuous_if' {p : α → Prop} {f g : α → β} [∀ a, Decidable (p a)]
-    (hpf : ∀, ∀ a ∈ Frontier { x | p x }, ∀, tendsto f (𝓝[{ x | p x }] a) (𝓝 $ ite (p a) (f a) (g a)))
-    (hpg : ∀, ∀ a ∈ Frontier { x | p x }, ∀, tendsto g (𝓝[{ x | ¬p x }] a) (𝓝 $ ite (p a) (f a) (g a)))
+    (hpf : ∀, ∀ a ∈ Frontier { x | p x }, ∀, tendsto f (𝓝[{ x | p x }] a) (𝓝 <| ite (p a) (f a) (g a)))
+    (hpg : ∀, ∀ a ∈ Frontier { x | p x }, ∀, tendsto g (𝓝[{ x | ¬p x }] a) (𝓝 <| ite (p a) (f a) (g a)))
     (hf : ContinuousOn f { x | p x }) (hg : ContinuousOn g { x | ¬p x }) : Continuous fun a => ite (p a) (f a) (g a) :=
   by
   rw [continuous_iff_continuous_on_univ]
@@ -892,7 +892,7 @@ theorem IsOpen.ite' {s s' t : Set α} (hs : IsOpen s) (hs' : IsOpen s') (ht : �
 
 theorem IsOpen.ite {s s' t : Set α} (hs : IsOpen s) (hs' : IsOpen s') (ht : s ∩ Frontier t = s' ∩ Frontier t) :
     IsOpen (t.ite s s') :=
-  hs.ite' hs' $ fun x hx => by
+  (hs.ite' hs') fun x hx => by
     simpa [hx] using ext_iff.1 ht x
 
 theorem ite_inter_closure_eq_of_inter_frontier_eq {s s' t : Set α} (ht : s ∩ Frontier t = s' ∩ Frontier t) :

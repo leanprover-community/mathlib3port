@@ -98,7 +98,7 @@ variable (R)
 /-- Uniformisers exist in a DVR -/
 theorem exists_irreducible : ∃ ϖ : R, Irreducible ϖ := by
   simp_rw [irreducible_iff_uniformizer]
-  exact (IsPrincipalIdealRing.principal $ maximal_ideal R).principal
+  exact (IsPrincipalIdealRing.principal <| maximal_ideal R).principal
 
 /-- Uniformisers exist in a DVR -/
 theorem exists_prime : ∃ ϖ : R, Prime ϖ :=
@@ -198,7 +198,7 @@ See `discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization`. -/
 theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
   let p := Classical.some hR
   let spec := Classical.some_spec hR
-  UniqueFactorizationMonoid.of_exists_prime_factors $ fun x hx => by
+  UniqueFactorizationMonoid.of_exists_prime_factors fun x hx => by
     use Multiset.repeat p (Classical.some (spec.2 hx))
     constructor
     · intro q hq

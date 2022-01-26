@@ -94,11 +94,11 @@ theorem to_conj_act_one : to_conj_act (1 : G) = 1 :=
   rfl
 
 @[simp]
-theorem of_conj_act_inv (x : ConjAct G) : of_conj_act (x⁻¹) = of_conj_act x⁻¹ :=
+theorem of_conj_act_inv (x : ConjAct G) : of_conj_act x⁻¹ = (of_conj_act x)⁻¹ :=
   rfl
 
 @[simp]
-theorem to_conj_act_inv (x : G) : to_conj_act (x⁻¹) = to_conj_act x⁻¹ :=
+theorem to_conj_act_inv (x : G) : to_conj_act x⁻¹ = (to_conj_act x)⁻¹ :=
   rfl
 
 @[simp]
@@ -110,9 +110,9 @@ theorem to_conj_act_mul (x y : G) : to_conj_act (x * y) = to_conj_act x * to_con
   rfl
 
 instance : HasScalar (ConjAct G) G where
-  smul := fun g h => of_conj_act g * h * of_conj_act g⁻¹
+  smul := fun g h => of_conj_act g * h * (of_conj_act g)⁻¹
 
-theorem smul_def (g : ConjAct G) (h : G) : g • h = of_conj_act g * h * of_conj_act g⁻¹ :=
+theorem smul_def (g : ConjAct G) (h : G) : g • h = of_conj_act g * h * (of_conj_act g)⁻¹ :=
   rfl
 
 @[simp]
@@ -180,22 +180,22 @@ def _root_.mul_aut.conj_normal {H : Subgroup G} [hH : H.normal] : G →* MulAut 
 
 @[simp]
 theorem _root_.mul_aut.conj_normal_apply {H : Subgroup G} [H.normal] (g : G) (h : H) :
-    ↑MulAut.conjNormal g h = g * h * g⁻¹ :=
+    ↑(MulAut.conjNormal g h) = g * h * g⁻¹ :=
   rfl
 
 @[simp]
 theorem _root_.mul_aut.conj_normal_symm_apply {H : Subgroup G} [H.normal] (g : G) (h : H) :
-    ↑(MulAut.conjNormal g).symm h = g⁻¹ * h * g := by
+    ↑((MulAut.conjNormal g).symm h) = g⁻¹ * h * g := by
   change _ * _⁻¹⁻¹ = _
   rw [inv_invₓ]
   rfl
 
 @[simp]
 theorem _root_.mul_aut.conj_normal_inv_apply {H : Subgroup G} [H.normal] (g : G) (h : H) :
-    ↑(MulAut.conjNormal g⁻¹) h = g⁻¹ * h * g :=
+    ↑((MulAut.conjNormal g)⁻¹ h) = g⁻¹ * h * g :=
   MulAut.conj_normal_symm_apply g h
 
-theorem _root_.mul_aut.conj_normal_coe {H : Subgroup G} [H.normal] {h : H} : MulAut.conjNormal (↑h) = MulAut.conj h :=
+theorem _root_.mul_aut.conj_normal_coe {H : Subgroup G} [H.normal] {h : H} : MulAut.conjNormal ↑h = MulAut.conj h :=
   MulEquiv.ext fun x => rfl
 
 instance normal_of_characteristic_of_normal {H : Subgroup G} [hH : H.normal] {K : Subgroup H} [h : K.characteristic] :

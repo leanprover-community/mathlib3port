@@ -54,8 +54,8 @@ variable [NormedSpace ℝ E] {N : ℕ} {τ : ℝ} (a : satellite_config E N τ)
 /-- Rescaling a satellite configuration in a vector space, to put the basepoint at `0` and the base
 radius at `1`. -/
 def center_and_rescale : satellite_config E N τ where
-  c := fun i => a.r (last N)⁻¹ • (a.c i - a.c (last N))
-  R := fun i => a.r (last N)⁻¹ * a.r i
+  c := fun i => (a.r (last N))⁻¹ • (a.c i - a.c (last N))
+  R := fun i => (a.r (last N))⁻¹ * a.r i
   rpos := fun i => mul_pos (inv_pos.2 (a.rpos _)) (a.rpos _)
   h := fun i j hij => by
     rcases a.h i j hij with (H | H)

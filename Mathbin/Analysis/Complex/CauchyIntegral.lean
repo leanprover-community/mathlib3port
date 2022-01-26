@@ -167,7 +167,7 @@ theorem integral_boundary_rect_of_has_fderiv_at_real_off_countable (f : ℂ → 
           im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)"))
     (Hd :
       ∀,
-        ∀ x ∈ re ⁻¹' Ioo (min z.re w.re) (max z.re w.re) ∩ im ⁻¹' Ioo (min z.im w.im) (max z.im w.im) \ s,
+        ∀ x ∈ (re ⁻¹' Ioo (min z.re w.re) (max z.re w.re) ∩ im ⁻¹' Ioo (min z.im w.im) (max z.im w.im)) \ s,
           ∀, HasFderivAt f (f' x) x)
     (Hi :
       integrable_on (fun z => I • f' z 1 - f' z I)
@@ -268,7 +268,7 @@ theorem integral_boundary_rect_of_differentiable_on_real (f : ℂ → E) (z w : 
       ∫ x : ℝ in z.re..w.re, ∫ y : ℝ in z.im..w.im, I • fderiv ℝ f (x + y * I) 1 - fderiv ℝ f (x + y * I) I :=
   integral_boundary_rect_of_has_fderiv_at_real_off_countable f (fderiv ℝ f) z w ∅ countable_empty Hd.continuous_on
     (fun x hx =>
-      Hd.has_fderiv_at $ by
+      Hd.has_fderiv_at <| by
         simpa only [← mem_interior_iff_mem_nhds, interior_preimage_re_inter_preimage_im, interval, interior_Icc] using
           hx.1)
     Hi
@@ -287,7 +287,7 @@ theorem integral_boundary_rect_eq_zero_of_differentiable_on_off_countable (f : �
           im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)"))
     (Hd :
       ∀,
-        ∀ x ∈ re ⁻¹' Ioo (min z.re w.re) (max z.re w.re) ∩ im ⁻¹' Ioo (min z.im w.im) (max z.im w.im) \ s,
+        ∀ x ∈ (re ⁻¹' Ioo (min z.re w.re) (max z.re w.re) ∩ im ⁻¹' Ioo (min z.im w.im) (max z.im w.im)) \ s,
           ∀, DifferentiableAt ℂ f x) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
@@ -317,8 +317,8 @@ theorem integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on (f 
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
       0 :=
-  integral_boundary_rect_eq_zero_of_differentiable_on_off_countable f z w ∅ countable_empty Hc $ fun x hx =>
-    Hd.differentiable_at $ (is_open_Ioo.re_prod_im is_open_Ioo).mem_nhds hx.1
+  (integral_boundary_rect_eq_zero_of_differentiable_on_off_countable f z w ∅ countable_empty Hc) fun x hx =>
+    Hd.differentiable_at <| (is_open_Ioo.re_prod_im is_open_Ioo).mem_nhds hx.1
 
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
@@ -334,8 +334,8 @@ theorem integral_boundary_rect_eq_zero_of_differentiable_on (f : ℂ → E) (z w
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
       0 :=
-  integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on f z w H.continuous_on $
-    H.mono $ inter_subset_inter (preimage_mono Ioo_subset_Icc_self) (preimage_mono Ioo_subset_Icc_self)
+  integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on f z w H.continuous_on <|
+    H.mono <| inter_subset_inter (preimage_mono Ioo_subset_Icc_self) (preimage_mono Ioo_subset_Icc_self)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
@@ -345,7 +345,7 @@ differentiable at all but countably many points of its interior, then the integr
 equal to each other. -/
 theorem circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable {c : ℂ} {r R : ℝ} (h0 : 0 < r)
     (hle : r ≤ R) {f : ℂ → E} {s : Set ℂ} (hs : countable s) (hc : ContinuousOn f (closed_ball c R \ ball c r))
-    (hd : ∀, ∀ z ∈ ball c R \ closed_ball c r \ s, ∀, DifferentiableAt ℂ f z) :
+    (hd : ∀, ∀ z ∈ (ball c R \ closed_ball c r) \ s, ∀, DifferentiableAt ℂ f z) :
     (∮ z in C(c, R), (z - c)⁻¹ • f z) = ∮ z in C(c, r), (z - c)⁻¹ • f z := by
   set A := closed_ball c R \ ball c r
   obtain ⟨a, rfl⟩ : ∃ a, Real.exp a = r
@@ -370,7 +370,7 @@ theorem circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_
   exact hc.comp hdg.continuous.continuous_on h_maps
   replace hd :
     ∀,
-      ∀ z ∈ re ⁻¹' Ioo (min a b) (max a b) ∩ im ⁻¹' Ioo (min 0 (2 * π)) (max 0 (2 * π)) \ g ⁻¹' s,
+      ∀ z ∈ (re ⁻¹' Ioo (min a b) (max a b) ∩ im ⁻¹' Ioo (min 0 (2 * π)) (max 0 (2 * π))) \ g ⁻¹' s,
         ∀, DifferentiableAt ℂ (f ∘ g) z
   · refine' fun z hz => (hd (g z) ⟨_, hz.2⟩).comp z (hdg _)
     simpa [g, dist_eq, abs_exp, hle, And.comm] using hz.1.1
@@ -384,7 +384,7 @@ interior of this disc, and has a limit `y` at the center of the disc, then the i
 $\oint_{∥z-c∥=R} \frac{f(z)}{z-c}\,dz$ is equal to $2πiy`. -/
 theorem circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_of_tendsto {c : ℂ} {R : ℝ} (h0 : 0 < R)
     {f : ℂ → E} {y : E} {s : Set ℂ} (hs : countable s) (hc : ContinuousOn f (closed_ball c R \ {c}))
-    (hd : ∀, ∀ z ∈ ball c R \ {c} \ s, ∀, DifferentiableAt ℂ f z) (hy : tendsto f (𝓝[{c}ᶜ] c) (𝓝 y)) :
+    (hd : ∀, ∀ z ∈ (ball c R \ {c}) \ s, ∀, DifferentiableAt ℂ f z) (hy : tendsto f (𝓝[{c}ᶜ] c) (𝓝 y)) :
     (∮ z in C(c, R), (z - c)⁻¹ • f z) = (2 * π * I : ℂ) • y := by
   rw [← sub_eq_zero, ← norm_le_zero_iff]
   refine' le_of_forall_le_of_dense fun ε ε0 => _
@@ -394,11 +394,11 @@ theorem circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_o
   obtain ⟨r, hr0, hrδ, hrR⟩ : ∃ r, 0 < r ∧ r ≤ δ ∧ r ≤ R :=
     ⟨min δ R, lt_minₓ δ0 h0, min_le_leftₓ _ _, min_le_rightₓ _ _⟩
   have hsub : closed_ball c R \ ball c r ⊆ closed_ball c R \ {c} :=
-    diff_subset_diff_right (singleton_subset_iff.2 $ mem_ball_self hr0)
+    diff_subset_diff_right (singleton_subset_iff.2 <| mem_ball_self hr0)
   have hsub' : ball c R \ closed_ball c r ⊆ ball c R \ {c} :=
-    diff_subset_diff_right (singleton_subset_iff.2 $ mem_closed_ball_self hr0.le)
+    diff_subset_diff_right (singleton_subset_iff.2 <| mem_closed_ball_self hr0.le)
   have hzne : ∀, ∀ z ∈ sphere c r, ∀, z ≠ c := fun z hz =>
-    ne_of_mem_of_not_mem hz fun h => hr0.ne' $ dist_self c ▸ Eq.symm h
+    ne_of_mem_of_not_mem hz fun h => hr0.ne' <| dist_self c ▸ Eq.symm h
   calc
     ∥(∮ z in C(c, R), (z - c)⁻¹ • f z) - (2 * ↑π * I) • y∥ =
         ∥(∮ z in C(c, r), (z - c)⁻¹ • f z) - ∮ z in C(c, r), (z - c)⁻¹ • y∥ :=
@@ -413,9 +413,9 @@ theorem circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_o
       by
       simp only [smul_sub]
       have hc' : ContinuousOn (fun z => (z - c)⁻¹) (sphere c r) :=
-        (continuous_on_id.sub continuous_on_const).inv₀ fun z hz => sub_ne_zero.2 $ hzne _ hz
+        (continuous_on_id.sub continuous_on_const).inv₀ fun z hz => sub_ne_zero.2 <| hzne _ hz
       rw [circleIntegral.integral_sub] <;> refine' (hc'.smul _).CircleIntegrable hr0.le
-      · exact hc.mono (subset_inter (sphere_subset_closed_ball.trans $ closed_ball_subset_closed_ball hrR) hzne)
+      · exact hc.mono (subset_inter (sphere_subset_closed_ball.trans <| closed_ball_subset_closed_ball hrR) hzne)
         
       · exact continuous_on_const
         _ ≤ 2 * π * r * (r⁻¹ * (ε / (2 * π))) :=
@@ -436,8 +436,8 @@ theorem circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable {
     {s : Set ℂ} (hs : countable s) (hc : ContinuousOn f (closed_ball c R))
     (hd : ∀, ∀ z ∈ ball c R \ s, ∀, DifferentiableAt ℂ f z) :
     (∮ z in C(c, R), (z - c)⁻¹ • f z) = (2 * π * I : ℂ) • f c :=
-  circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_of_tendsto h0 hs (hc.mono $ diff_subset _ _)
-    (fun z hz => hd z ⟨hz.1.1, hz.2⟩) (hc.continuous_at $ closed_ball_mem_nhds _ h0).ContinuousWithinAt
+  circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_of_tendsto h0 hs (hc.mono <| diff_subset _ _)
+    (fun z hz => hd z ⟨hz.1.1, hz.2⟩) (hc.continuous_at <| closed_ball_mem_nhds _ h0).ContinuousWithinAt
 
 /-- **Cauchy theorem**: if `f : ℂ → E` is continuous on a closed ball `{z | ∥z - c∥ ≤ R}` and is
 complex differentiable at all but countably many points of its interior, then the integral
@@ -458,6 +458,7 @@ theorem circle_integral_eq_zero_of_differentiable_on_off_countable {R : ℝ} (h0
       by
       rw [sub_self, zero_smul, smul_zero]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- An auxiliary lemma for
 `complex.circle_integral_sub_inv_smul_of_differentiable_on_off_countable`. This lemma assumes
 `w ∉ s` while the main lemma drops this assumption. -/
@@ -472,8 +473,8 @@ theorem circle_integral_sub_inv_smul_of_differentiable_on_off_countable_aux {R :
   have hcF : ContinuousOn F (closed_ball c R) := by
     refine' continuous_on_update_iff.2 ⟨_, _⟩
     · refine'
-        ((continuous_on_id.sub continuous_on_const).inv₀ $ fun z hz => sub_ne_zero.2 _).smul
-          ((hc.mono $ diff_subset _ _).sub continuous_on_const)
+        ((continuous_on_id.sub continuous_on_const).inv₀ fun z hz => sub_ne_zero.2 _).smul
+          ((hc.mono <| diff_subset _ _).sub continuous_on_const)
       exact hz.2
       
     · have := has_deriv_at_iff_tendsto_slope.1 (hd _ hw).HasDerivAt
@@ -483,11 +484,10 @@ theorem circle_integral_sub_inv_smul_of_differentiable_on_off_countable_aux {R :
     rintro z ⟨hzR, hzws⟩
     rw [mem_insert_iff, not_or_distrib] at hzws
     refine'
-      (((differentiable_at_id.sub_const w).inv $ sub_ne_zero.2 hzws.1).smul
+      (((differentiable_at_id.sub_const w).inv <| sub_ne_zero.2 hzws.1).smul
             ((hd z ⟨hzR, hzws.2⟩).sub_const (f w))).congr_of_eventually_eq
         _
-    filter_upwards [is_open_ne.mem_nhds hzws.1]
-    exact fun x hx => update_noteq hx _ _
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   have HI := circle_integral_eq_zero_of_differentiable_on_off_countable hR.le hws hcF hdF
   have hne : ∀, ∀ z ∈ sphere c R, ∀, z ≠ w := fun z hz => ne_of_mem_of_not_mem hz (ne_of_ltₓ hw.1)
   have hFeq : eq_on F (fun z => (z - w)⁻¹ • f z - (z - w)⁻¹ • f w) (sphere c R) := by
@@ -495,7 +495,7 @@ theorem circle_integral_sub_inv_smul_of_differentiable_on_off_countable_aux {R :
     calc F z = (z - w)⁻¹ • (f z - f w) := update_noteq (hne z hz) _ _ _ = (z - w)⁻¹ • f z - (z - w)⁻¹ • f w :=
         smul_sub _ _ _
   have hc' : ContinuousOn (fun z => (z - w)⁻¹) (sphere c R) :=
-    (continuous_on_id.sub continuous_on_const).inv₀ fun z hz => sub_ne_zero.2 $ hne z hz
+    (continuous_on_id.sub continuous_on_const).inv₀ fun z hz => sub_ne_zero.2 <| hne z hz
   rw [← circleIntegral.integral_sub_inv_of_mem_ball hw.1, ← circleIntegral.integral_smul_const, ← sub_eq_zero, ←
     circleIntegral.integral_sub, ← circleIntegral.integral_congr hR.le hFeq, HI]
   exacts[(hc'.smul (hc.mono sphere_subset_closed_ball)).CircleIntegrable hR.le,
@@ -525,7 +525,7 @@ theorem two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_
   refine' mem_closure_iff_nhds.2 fun t ht => _
   set g : ℝ → ℂ := fun x => w + x
   have : tendsto g (𝓝 0) (𝓝 w) := (continuous_const.add continuous_of_real).tendsto' 0 w (add_zeroₓ _)
-  rcases mem_nhds_iff_exists_Ioo_subset.1 (this $ inter_mem ht $ is_open_ball.mem_nhds hw) with ⟨l, u, hlu₀, hlu_sub⟩
+  rcases mem_nhds_iff_exists_Ioo_subset.1 (this <| inter_mem ht <| is_open_ball.mem_nhds hw) with ⟨l, u, hlu₀, hlu_sub⟩
   obtain ⟨x, hx⟩ : (Ioo l u \ g ⁻¹' s).Nonempty := by
     refine' nonempty_diff.2 fun hsub => _
     have : countable (Ioo l u) := (hs.preimage ((add_right_injective w).comp of_real_injective)).mono hsub
@@ -551,15 +551,15 @@ $\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=2πif(w)$.
 theorem circle_integral_sub_inv_smul_of_continuous_on_of_differentiable_on {R : ℝ} {c w : ℂ} {f : ℂ → E}
     (hw : w ∈ ball c R) (hc : ContinuousOn f (closed_ball c R)) (hd : DifferentiableOn ℂ f (ball c R)) :
     (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w :=
-  circle_integral_sub_inv_smul_of_differentiable_on_off_countable countable_empty hw hc $ fun z hz =>
+  (circle_integral_sub_inv_smul_of_differentiable_on_off_countable countable_empty hw hc) fun z hz =>
     hd.differentiable_at (is_open_ball.mem_nhds hz.1)
 
 /-- **Cauchy integral formula**: if `f : ℂ → E` is complex differentiable on a closed disc of radius
 `R`, then for any `w` in its interior we have $\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=2πif(w)$. -/
 theorem circle_integral_sub_inv_smul_of_differentiable_on {R : ℝ} {c w : ℂ} {f : ℂ → E} (hw : w ∈ ball c R)
     (hd : DifferentiableOn ℂ f (closed_ball c R)) : (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w :=
-  circle_integral_sub_inv_smul_of_continuous_on_of_differentiable_on hw hd.continuous_on $
-    hd.mono $ ball_subset_closed_ball
+  circle_integral_sub_inv_smul_of_continuous_on_of_differentiable_on hw hd.continuous_on <|
+    hd.mono <| ball_subset_closed_ball
 
 /-- **Cauchy integral formula**: if `f : ℂ → ℂ` is continuous on a closed disc of radius `R` and is
 complex differentiable at all but countably many points of its interior, then for any `w` in this
@@ -593,7 +593,7 @@ theorem has_fpower_series_on_ball_of_continuous_on_of_differentiable_on {R : ℝ
     (hc : ContinuousOn f (closed_ball c R)) (hd : DifferentiableOn ℂ f (ball c R)) (hR : 0 < R) :
     HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
   has_fpower_series_on_ball_of_differentiable_off_countable countable_empty hc
-    (fun z hz => hd.differentiable_at $ is_open_ball.mem_nhds hz.1) hR
+    (fun z hz => hd.differentiable_at <| is_open_ball.mem_nhds hz.1) hR
 
 /-- If `f : ℂ → E` is complex differentiable on a closed disc of positive radius, then it is
 analytic on the corresponding open disc, and the coefficients of the power series are given by

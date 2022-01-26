@@ -51,7 +51,7 @@ It satisfies `k! * (hasse_deriv k f) = derivative^[k] f`. -/
 def hasse_deriv (k : ℕ) : Polynomial R →ₗ[R] Polynomial R :=
   lsum fun i => monomial (i - k) ∘ₗ DistribMulAction.toLinearMap R R (i.choose k)
 
-theorem hasse_deriv_apply : hasse_deriv k f = f.sum fun i r => monomial (i - k) (↑i.choose k * r) := by
+theorem hasse_deriv_apply : hasse_deriv k f = f.sum fun i r => monomial (i - k) (↑(i.choose k) * r) := by
   simpa only [← nsmul_eq_mul]
 
 theorem hasse_deriv_coeff (n : ℕ) : (hasse_deriv k f).coeff n = (n + k).choose k * f.coeff (n + k) := by
@@ -78,7 +78,7 @@ theorem hasse_deriv_zero' : hasse_deriv 0 f = f := by
 
 @[simp]
 theorem hasse_deriv_zero : @hasse_deriv R _ 0 = LinearMap.id :=
-  LinearMap.ext $ hasse_deriv_zero'
+  LinearMap.ext <| hasse_deriv_zero'
 
 theorem hasse_deriv_eq_zero_of_lt_nat_degree (p : Polynomial R) (n : ℕ) (h : p.nat_degree < n) : hasse_deriv n p = 0 :=
   by
@@ -91,10 +91,10 @@ theorem hasse_deriv_one' : hasse_deriv 1 f = derivative f := by
 
 @[simp]
 theorem hasse_deriv_one : @hasse_deriv R _ 1 = derivative :=
-  LinearMap.ext $ hasse_deriv_one'
+  LinearMap.ext <| hasse_deriv_one'
 
 @[simp]
-theorem hasse_deriv_monomial (n : ℕ) (r : R) : hasse_deriv k (monomial n r) = monomial (n - k) (↑n.choose k * r) := by
+theorem hasse_deriv_monomial (n : ℕ) (r : R) : hasse_deriv k (monomial n r) = monomial (n - k) (↑(n.choose k) * r) := by
   ext i
   simp only [hasse_deriv_coeff, coeff_monomial]
   by_cases' hnik : n = i + k
@@ -235,8 +235,8 @@ theorem hasse_deriv_mul (f g : Polynomial R) :
   have aux :
     ∀ x : ℕ × ℕ,
       x ∈ antidiagonal k →
-        monomial (m - x.1 + (n - x.2)) (↑m.choose x.1 * r * (↑n.choose x.2 * s)) =
-          monomial (m + n - k) (↑m.choose x.1 * ↑n.choose x.2 * (r * s)) :=
+        monomial (m - x.1 + (n - x.2)) (↑(m.choose x.1) * r * (↑(n.choose x.2) * s)) =
+          monomial (m + n - k) (↑(m.choose x.1) * ↑(n.choose x.2) * (r * s)) :=
     by
     intro x hx
     rw [Finset.Nat.mem_antidiagonal] at hx

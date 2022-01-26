@@ -118,7 +118,7 @@ theorem witt_polynomial_zero : wittPolynomial p R 0 = X 0 := by
   simp only [wittPolynomial, X, sum_singleton, range_one, pow_zeroₓ]
 
 @[simp]
-theorem witt_polynomial_one : wittPolynomial p R 1 = C (↑p) * X 1 + X 0 ^ p := by
+theorem witt_polynomial_one : wittPolynomial p R 1 = C ↑p * X 1 + X 0 ^ p := by
   simp only [witt_polynomial_eq_sum_C_mul_X_pow, sum_range_succ_comm, range_one, sum_singleton, one_mulₓ, pow_oneₓ, C_1,
     pow_zeroₓ]
 

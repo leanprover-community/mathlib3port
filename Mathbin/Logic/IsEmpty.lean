@@ -35,7 +35,7 @@ protected theorem Function.is_empty [IsEmpty β] (f : α → β) : IsEmpty α :=
   ⟨fun x => IsEmpty.false (f x)⟩
 
 instance {p : α → Sort _} [h : Nonempty α] [∀ x, IsEmpty (p x)] : IsEmpty (∀ x, p x) :=
-  h.elim $ fun x => Function.is_empty $ Function.eval x
+  h.elim fun x => Function.is_empty <| Function.eval x
 
 instance PProd.is_empty_left [IsEmpty α] : IsEmpty (PProd α β) :=
   Function.is_empty PProd.fst
@@ -100,7 +100,7 @@ theorem forall_iff {p : α → Prop} : (∀ a, p a) ↔ True :=
   iff_true_intro isEmptyElim
 
 theorem exists_iff {p : α → Prop} : (∃ a, p a) ↔ False :=
-  iff_false_intro $ fun ⟨x, hx⟩ => IsEmpty.false x
+  iff_false_intro fun ⟨x, hx⟩ => IsEmpty.false x
 
 instance (priority := 100) : Subsingleton α :=
   ⟨isEmptyElim⟩
@@ -138,7 +138,7 @@ theorem is_empty_psum {α β} : IsEmpty (Psum α β) ↔ IsEmpty α ∧ IsEmpty 
 variable (α)
 
 theorem is_empty_or_nonempty : IsEmpty α ∨ Nonempty α :=
-  (em $ IsEmpty α).elim Or.inl $ Or.inr ∘ not_is_empty_iff.mp
+  (em <| IsEmpty α).elim Or.inl <| Or.inr ∘ not_is_empty_iff.mp
 
 @[simp]
 theorem not_is_empty_of_nonempty [h : Nonempty α] : ¬IsEmpty α :=
@@ -147,5 +147,5 @@ theorem not_is_empty_of_nonempty [h : Nonempty α] : ¬IsEmpty α :=
 variable {α}
 
 theorem Function.extend_of_empty [IsEmpty α] (f : α → β) (g : α → γ) (h : β → γ) : Function.extendₓ f g h = h :=
-  funext $ fun x => Function.extend_apply' _ _ _ $ fun ⟨a, h⟩ => isEmptyElim a
+  funext fun x => (Function.extend_apply' _ _ _) fun ⟨a, h⟩ => isEmptyElim a
 

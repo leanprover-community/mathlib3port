@@ -182,7 +182,7 @@ theorem is_unit_det_transpose (h : IsUnit A.det) : IsUnit (A)ᵀ.det := by
 
 
 /-- The inverse of a square matrix, when it is invertible (and zero otherwise).-/
-noncomputable instance : HasInv (Matrix n n α) :=
+noncomputable instance : Inv (Matrix n n α) :=
   ⟨fun A => Ring.inverse A.det • A.adjugate⟩
 
 theorem inv_def (A : Matrix n n α) : A⁻¹ = Ring.inverse A.det • A.adjugate :=
@@ -360,7 +360,7 @@ theorem inv_smul' (k : (α)ˣ) (h : IsUnit A.det) : (k • A)⁻¹ = k⁻¹ • 
     (by
       simp [h, smul_smul])
 
-theorem inv_adjugate (A : Matrix n n α) (h : IsUnit A.det) : adjugate A⁻¹ = h.unit⁻¹ • A := by
+theorem inv_adjugate (A : Matrix n n α) (h : IsUnit A.det) : (adjugate A)⁻¹ = h.unit⁻¹ • A := by
   refine' inv_eq_left_inv _
   rw [smul_mul, mul_adjugate, Units.smul_def, smul_smul, h.coe_inv_mul, one_smul]
 

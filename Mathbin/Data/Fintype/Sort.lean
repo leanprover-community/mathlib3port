@@ -18,7 +18,7 @@ open Finset
 that the cardinality of `α` is `k`. We use this instead of an isomorphism `fin (card α) ≃o α` to
 avoid casting issues in further uses of this function. -/
 def monoEquivOfFin (α : Type _) [Fintype α] [LinearOrderₓ α] {k : ℕ} (h : Fintype.card α = k) : Finₓ k ≃o α :=
-  (univ.orderIsoOfFin h).trans $ (OrderIso.setCongr _ _ coe_univ).trans OrderIso.Set.univ
+  (univ.orderIsoOfFin h).trans <| (OrderIso.setCongr _ _ coe_univ).trans OrderIso.Set.univ
 
 variable {α : Type _} [DecidableEq α] [Fintype α] [LinearOrderₓ α] {m n : ℕ} {s : Finset α}
 
@@ -29,8 +29,8 @@ elements of `s` and elements of `fin n` to elements of `sᶜ` while preserving o
 def finSumEquivOfFinset (hm : s.card = m) (hn : sᶜ.card = n) : Sum (Finₓ m) (Finₓ n) ≃ α :=
   calc
     Sum (Finₓ m) (Finₓ n) ≃ Sum (s : Set α) (sᶜ : Set α) :=
-      Equivₓ.sumCongr (s.order_iso_of_fin hm).toEquiv $
-        (sᶜ.orderIsoOfFin hn).toEquiv.trans $ Equivₓ.Set.ofEq s.coe_compl
+      Equivₓ.sumCongr (s.order_iso_of_fin hm).toEquiv <|
+        (sᶜ.orderIsoOfFin hn).toEquiv.trans <| Equivₓ.Set.ofEq s.coe_compl
     _ ≃ α := Equivₓ.Set.sumCompl _
     
 

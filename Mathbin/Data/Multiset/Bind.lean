@@ -51,7 +51,7 @@ theorem singleton_join a : join ({a} : Multiset (Multiset α)) = a :=
 theorem mem_join {a S} : a ∈ @join α S ↔ ∃ s ∈ S, a ∈ s :=
   Multiset.induction_on S
       (by
-        simp ) $
+        simp ) <|
     by
     simp (config := { contextual := true })[or_and_distrib_right, exists_or_distrib]
 
@@ -167,7 +167,7 @@ theorem bind_assoc {s : Multiset α} {f : α → Multiset β} {g : β → Multis
       simp (config := { contextual := true }))
 
 theorem bind_bind (m : Multiset α) (n : Multiset β) {f : α → β → Multiset γ} :
-    (bind m $ fun a => bind n $ fun b => f a b) = (bind n $ fun b => bind m $ fun a => f a b) :=
+    ((bind m) fun a => (bind n) fun b => f a b) = (bind n) fun b => (bind m) fun a => f a b :=
   Multiset.induction_on m
     (by
       simp )
@@ -175,7 +175,7 @@ theorem bind_bind (m : Multiset α) (n : Multiset β) {f : α → β → Multise
       simp (config := { contextual := true }))
 
 theorem bind_map_comm (m : Multiset α) (n : Multiset β) {f : α → β → γ} :
-    (bind m $ fun a => n.map $ fun b => f a b) = (bind n $ fun b => m.map $ fun a => f a b) :=
+    ((bind m) fun a => n.map fun b => f a b) = (bind n) fun b => m.map fun a => f a b :=
   Multiset.induction_on m
     (by
       simp )
@@ -184,7 +184,7 @@ theorem bind_map_comm (m : Multiset α) (n : Multiset β) {f : α → β → γ}
 
 @[simp, to_additive]
 theorem prod_bind [CommMonoidₓ β] (s : Multiset α) (t : α → Multiset β) :
-    (s.bind t).Prod = (s.map $ fun a => (t a).Prod).Prod :=
+    (s.bind t).Prod = (s.map fun a => (t a).Prod).Prod :=
   Multiset.induction_on s
     (by
       simp )
@@ -198,7 +198,7 @@ theorem rel_bind {r : α → β → Prop} {p : γ → δ → Prop} {s t} {f : α
   exact hst.mono fun a ha b hb hr => h hr
 
 theorem count_sum [DecidableEq α] {m : Multiset β} {f : β → Multiset α} {a : α} :
-    count a (map f m).Sum = Sum (m.map $ fun b => count a $ f b) :=
+    count a (map f m).Sum = Sum (m.map fun b => count a <| f b) :=
   Multiset.induction_on m
     (by
       simp )
@@ -206,7 +206,7 @@ theorem count_sum [DecidableEq α] {m : Multiset β} {f : β → Multiset α} {a
       simp )
 
 theorem count_bind [DecidableEq α] {m : Multiset β} {f : β → Multiset α} {a : α} :
-    count a (bind m f) = Sum (m.map $ fun b => count a $ f b) :=
+    count a (bind m f) = Sum (m.map fun b => count a <| f b) :=
   count_sum
 
 end Bind
@@ -221,7 +221,7 @@ variable (a : α) (b : β) (s : Multiset α) (t : Multiset β)
 /-- The multiplicity of `(a, b)` in `s.product t` is
   the product of the multiplicity of `a` in `s` and `b` in `t`. -/
 def product (s : Multiset α) (t : Multiset β) : Multiset (α × β) :=
-  s.bind $ fun a => t.map $ Prod.mk a
+  s.bind fun a => t.map <| Prod.mk a
 
 @[simp]
 theorem coe_product (l₁ : List α) (l₂ : List β) : @product α β l₁ l₂ = l₁.product l₂ := by
@@ -246,7 +246,7 @@ theorem add_product (s t : Multiset α) (u : Multiset β) : (s + t).product u = 
 
 @[simp]
 theorem product_add (s : Multiset α) : ∀ t u : Multiset β, s.product (t + u) = s.product t + s.product u :=
-  (Multiset.induction_on s fun t u => rfl) $ fun a s IH t u => by
+  (Multiset.induction_on s fun t u => rfl) fun a s IH t u => by
     rw [cons_product, IH] <;> simp <;> cc
 
 @[simp]
@@ -270,7 +270,7 @@ variable {σ : α → Type _} (a : α) (s : Multiset α) (t : ∀ a, Multiset (�
 /-- `sigma s t` is the dependent version of `product`. It is the sum of
   `(a, b)` as `a` ranges over `s` and `b` ranges over `t a`. -/
 protected def Sigma (s : Multiset α) (t : ∀ a, Multiset (σ a)) : Multiset (Σ a, σ a) :=
-  s.bind $ fun a => (t a).map $ Sigma.mk a
+  s.bind fun a => (t a).map <| Sigma.mk a
 
 @[simp]
 theorem coe_sigma (l₁ : List α) (l₂ : ∀ a, List (σ a)) : (@Multiset.sigma α σ l₁ fun a => l₂ a) = l₁.sigma l₂ := by
@@ -294,7 +294,7 @@ theorem add_sigma (s t : Multiset α) (u : ∀ a, Multiset (σ a)) : (s + t).Sig
 
 @[simp]
 theorem sigma_add : ∀ t u : ∀ a, Multiset (σ a), (s.sigma fun a => t a + u a) = s.sigma t + s.sigma u :=
-  (Multiset.induction_on s fun t u => rfl) $ fun a s IH t u => by
+  (Multiset.induction_on s fun t u => rfl) fun a s IH t u => by
     rw [cons_sigma, IH] <;> simp <;> cc
 
 @[simp]

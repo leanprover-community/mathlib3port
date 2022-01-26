@@ -74,7 +74,7 @@ In other words: one knows nothing about the behavior of `x` in this limit beside
 -/
 theorem tendsto_uniformly_on_iff_tendsto {F : ι → α → β} {f : α → β} {p : Filter ι} {s : Set α} :
     TendstoUniformlyOn F f p s ↔ tendsto (fun q : ι × α => (f q.2, F q.1 q.2)) (p ×ᶠ 𝓟 s) (𝓤 β) :=
-  forall₂_congrₓ $ fun u u_in => by
+  forall₂_congrₓ fun u u_in => by
     simp [mem_map, Filter.Eventually, mem_prod_principal]
 
 /-- A sequence of functions `Fₙ` converges uniformly to a limiting function `f` with respect to a
@@ -85,7 +85,7 @@ def TendstoUniformly (F : ι → α → β) (f : α → β) (p : Filter ι) :=
 
 theorem tendsto_uniformly_on_iff_tendsto_uniformly_comp_coe :
     TendstoUniformlyOn F f p s ↔ TendstoUniformly (fun i x : s => F i x) (f ∘ coe) p :=
-  forall₂_congrₓ $ fun V hV => by
+  forall₂_congrₓ fun V hV => by
     simp
 
 /-- A sequence of functions `Fₙ` converges uniformly to a limiting function `f` w.r.t.
@@ -94,7 +94,7 @@ In other words: one knows nothing about the behavior of `x` in this limit.
 -/
 theorem tendsto_uniformly_iff_tendsto {F : ι → α → β} {f : α → β} {p : Filter ι} :
     TendstoUniformly F f p ↔ tendsto (fun q : ι × α => (f q.2, F q.1 q.2)) (p ×ᶠ ⊤) (𝓤 β) :=
-  forall₂_congrₓ $ fun u u_in => by
+  forall₂_congrₓ fun u u_in => by
     simp [mem_map, Filter.Eventually, mem_prod_top]
 
 theorem tendsto_uniformly_on_univ : TendstoUniformlyOn F f p univ ↔ TendstoUniformly F f p := by
@@ -187,7 +187,7 @@ theorem UniformContinuousOn.tendsto_uniformly [UniformSpace α] [UniformSpace γ
 
 theorem UniformContinuous₂.tendsto_uniformly [UniformSpace α] [UniformSpace γ] {f : α → β → γ}
     (h : UniformContinuous₂ f) {x : α} : TendstoUniformly f (f x) (𝓝 x) :=
-  UniformContinuousOn.tendsto_uniformly univ_mem $ by
+  UniformContinuousOn.tendsto_uniformly univ_mem <| by
     rwa [univ_prod_univ, uniform_continuous_on_univ]
 
 variable [TopologicalSpace α]
@@ -329,19 +329,19 @@ theorem continuous_on_of_locally_uniform_approx_of_continuous_within_at
 is continuous on this set. -/
 theorem continuous_on_of_uniform_approx_of_continuous_on
     (L : ∀, ∀ u ∈ 𝓤 β, ∀, ∃ F, ContinuousOn F s ∧ ∀, ∀ y ∈ s, ∀, (f y, F y) ∈ u) : ContinuousOn f s :=
-  continuous_on_of_locally_uniform_approx_of_continuous_within_at $ fun x hx u hu =>
-    ⟨s, self_mem_nhds_within, (L u hu).imp $ fun F hF => ⟨hF.1.ContinuousWithinAt hx, hF.2⟩⟩
+  continuous_on_of_locally_uniform_approx_of_continuous_within_at fun x hx u hu =>
+    ⟨s, self_mem_nhds_within, (L u hu).imp fun F hF => ⟨hF.1.ContinuousWithinAt hx, hF.2⟩⟩
 
 /-- A function which can be locally uniformly approximated by continuous functions is continuous. -/
 theorem continuous_of_locally_uniform_approx_of_continuous_at
     (L : ∀ x : α, ∀, ∀ u ∈ 𝓤 β, ∀, ∃ t ∈ 𝓝 x, ∃ F, ContinuousAt F x ∧ ∀, ∀ y ∈ t, ∀, (f y, F y) ∈ u) : Continuous f :=
-  continuous_iff_continuous_at.2 $ fun x => continuous_at_of_locally_uniform_approx_of_continuous_at (L x)
+  continuous_iff_continuous_at.2 fun x => continuous_at_of_locally_uniform_approx_of_continuous_at (L x)
 
 /-- A function which can be uniformly approximated by continuous functions is continuous. -/
 theorem continuous_of_uniform_approx_of_continuous (L : ∀, ∀ u ∈ 𝓤 β, ∀, ∃ F, Continuous F ∧ ∀ y, (f y, F y) ∈ u) :
     Continuous f :=
-  continuous_iff_continuous_on_univ.mpr $
-    continuous_on_of_uniform_approx_of_continuous_on $ by
+  continuous_iff_continuous_on_univ.mpr <|
+    continuous_on_of_uniform_approx_of_continuous_on <| by
       simpa [continuous_iff_continuous_on_univ] using L
 
 /-!
@@ -370,8 +370,8 @@ protected theorem TendstoUniformlyOn.continuous_on (h : TendstoUniformlyOn F f p
 /-- A locally uniform limit of continuous functions is continuous. -/
 protected theorem TendstoLocallyUniformly.continuous (h : TendstoLocallyUniformly F f p)
     (hc : ∀ᶠ n in p, Continuous (F n)) [ne_bot p] : Continuous f :=
-  continuous_iff_continuous_on_univ.mpr $
-    h.tendsto_locally_uniformly_on.continuous_on $ hc.mono $ fun n hn => hn.continuous_on
+  continuous_iff_continuous_on_univ.mpr <|
+    h.tendsto_locally_uniformly_on.continuous_on <| hc.mono fun n hn => hn.continuous_on
 
 /-- A uniform limit of continuous functions is continuous. -/
 protected theorem TendstoUniformly.continuous (h : TendstoUniformly F f p) (hc : ∀ᶠ n in p, Continuous (F n))

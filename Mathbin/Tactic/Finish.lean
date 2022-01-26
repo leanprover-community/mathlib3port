@@ -80,7 +80,7 @@ theorem by_contradiction_trick (p : Prop) (h : ∀ f : Prop, (p → f) → f) : 
 unsafe def preprocess_goal : tactic Unit := do
   repeat (intro1 >> skip)
   let tgt ← target >>= whnf_reducible
-  if ¬is_false tgt then mk_mapp `` Classical.by_contradiction [some tgt] >>= apply >> intro1 >> skip else skip
+  if ¬is_false tgt then ((mk_mapp `` Classical.by_contradiction [some tgt] >>= apply) >> intro1) >> skip else skip
 
 /-!
 ### Normalize hypotheses
@@ -214,8 +214,8 @@ unsafe def normalize_hyps (cfg : auto_config) : tactic Unit := do
 /-- eliminate an existential quantifier if there is one -/
 unsafe def eelim : tactic Unit := do
   let ctx ← local_context
-  first $
-      ctx.map $ fun h => do
+  first <|
+      ctx.map fun h => do
         let t ← infer_type h >>= whnf_reducible
         guardₓ (is_app_of t `` Exists)
         let tgt ← target
@@ -235,8 +235,8 @@ unsafe def eelims : tactic Unit :=
 /-- carries out a subst if there is one, fails otherwise -/
 unsafe def do_subst : tactic Unit := do
   let ctx ← local_context
-  first $
-      ctx.map $ fun h => do
+  first <|
+      ctx.map fun h => do
         let t ← infer_type h >>= whnf_reducible
         match t with
           | quote.1 ((%%ₓa) = %%ₓb) => subst h
@@ -336,18 +336,18 @@ private unsafe def add_hinst_lemma_from_name (md : transparency) (lhs_lemma : Bo
       (do
           let h ← hinst_lemma.mk_from_decl_core md n lhs_lemma
           tactic.save_const_type_info n ref
-          return $ hs.add h) <|>
+          return <| hs.add h) <|>
         (do
             let hs₁ ← smt_tactic.mk_ematch_eqn_lemmas_for_core md n
             tactic.save_const_type_info n ref
-            return $ hs.merge hs₁) <|>
+            return <| hs.merge hs₁) <|>
           report_invalid_em_lemma n
     | _ =>
       (do
           let e ← to_expr p
           let h ← hinst_lemma.mk_core md e lhs_lemma
           try (tactic.save_type_info e ref)
-          return $ hs.add h) <|>
+          return <| hs.add h) <|>
         report_invalid_em_lemma n
 
 private unsafe def add_hinst_lemma_from_pexpr (md : transparency) (lhs_lemma : Bool) (hs : hinst_lemmas) :
@@ -357,7 +357,7 @@ private unsafe def add_hinst_lemma_from_pexpr (md : transparency) (lhs_lemma : B
   | p => do
     let new_e ← to_expr p
     let h ← hinst_lemma.mk_core md new_e lhs_lemma
-    return $ hs.add h
+    return <| hs.add h
 
 private unsafe def add_hinst_lemmas_from_pexprs (md : transparency) (lhs_lemma : Bool) (ps : List pexpr)
     (hs : hinst_lemmas) : smt_tactic hinst_lemmas :=
@@ -370,7 +370,7 @@ universally quantified assumptions, and the supplied lemmas `ps`) and congruence
 unsafe def done (ps : List pexpr) (cfg : auto_config := {  }) : tactic Unit := do
   trace_state_if_enabled `auto.done "entering done"
   contradiction <|>
-      solve1 $ do
+      (solve1 <| do
         revert_all
         using_smt do
             smt_tactic.intros
@@ -378,7 +378,7 @@ unsafe def done (ps : List pexpr) (cfg : auto_config := {  }) : tactic Unit := d
             let hs ← mk_hinst_lemmas ctx
             let hs' ← add_hinst_lemmas_from_pexprs reducible ff ps hs
             smt_tactic.iterate_at_most cfg.max_ematch_rounds
-                (smt_tactic.ematch_using hs' >> smt_tactic.try smt_tactic.close)
+                (smt_tactic.ematch_using hs' >> smt_tactic.try smt_tactic.close))
 
 /-!
 ### Tactics that perform case splits
@@ -396,13 +396,13 @@ private unsafe def case_cont (s : case_option) (cont : case_option → tactic Un
     | case_option.force => cont case_option.force >> cont case_option.force
     | case_option.at_most_one =>
       mcond (cont case_option.force >> return tt) (cont case_option.at_most_one) skip <|>
-        swap >> cont case_option.force >> cont case_option.at_most_one
+        (swap >> cont case_option.force) >> cont case_option.at_most_one
     | case_option.accept => focus' [cont case_option.accept, cont case_option.accept]
 
 unsafe def case_hyp (h : expr) (s : case_option) (cont : case_option → tactic Unit) : tactic Bool := do
   let t ← infer_type h
   match t with
-    | quote.1 ((%%ₓa) ∨ %%ₓb) => cases h >> case_cont s cont >> return tt
+    | quote.1 ((%%ₓa) ∨ %%ₓb) => (cases h >> case_cont s cont) >> return tt
     | _ => return ff
 
 unsafe def case_some_hyp_aux (s : case_option) (cont : case_option → tactic Unit) : List expr → tactic Bool
@@ -434,7 +434,7 @@ it will:
 -/
 unsafe def safe_core (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : auto_config) : case_option → tactic Unit :=
   fun co =>
-  focus1 $ do
+  focus1 <| do
     trace_state_if_enabled `auto.finish "entering safe_core"
     if cfg.use_simp then do
         trace_if_enabled `auto.finish "simplifying hypotheses"

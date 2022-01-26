@@ -63,10 +63,10 @@ def map_fun (f : α → β) : 𝕎 α → 𝕎 β := fun x => mk _ (f ∘ x.coef
 namespace MapFun
 
 theorem injective (f : α → β) (hf : injective f) : injective (map_fun f : 𝕎 α → 𝕎 β) := fun x y h =>
-  ext $ fun n => hf (congr_argₓ (fun x => coeff x n) h : _)
+  ext fun n => hf (congr_argₓ (fun x => coeff x n) h : _)
 
 theorem surjective (f : α → β) (hf : surjective f) : surjective (map_fun f : 𝕎 α → 𝕎 β) := fun x =>
-  ⟨mk _ fun n => Classical.some $ hf $ x.coeff n, by
+  ⟨mk _ fun n => Classical.some <| hf <| x.coeff n, by
     ext n
     dsimp [map_fun]
     rw [Classical.some_spec (hf (x.coeff n))]⟩
@@ -193,7 +193,7 @@ variable (p) (R)
 In `witt_vector.ghost_equiv` we upgrade this to an isomorphism of rings. -/
 private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R) where
   toFun := ghost_fun
-  invFun := fun x => mk p $ fun n => aeval x (xInTermsOfW p R n)
+  invFun := fun x => (mk p) fun n => aeval x (xInTermsOfW p R n)
   left_inv := by
     intro x
     ext n
@@ -216,12 +216,12 @@ private def comm_ring_aux₁ : CommRingₓ (𝕎 (MvPolynomial R ℚ)) :=
 
 @[local instance]
 private def comm_ring_aux₂ : CommRingₓ (𝕎 (MvPolynomial R ℤ)) :=
-  (map_fun.injective _ $ map_injective (Int.castRingHom ℚ) Int.cast_injective).CommRing _ (map_fun.zero _)
+  (map_fun.injective _ <| map_injective (Int.castRingHom ℚ) Int.cast_injective).CommRing _ (map_fun.zero _)
     (map_fun.one _) (map_fun.add _) (map_fun.mul _) (map_fun.neg _) (map_fun.sub _)
 
 /-- The commutative ring structure on `𝕎 R`. -/
 instance : CommRingₓ (𝕎 R) :=
-  (map_fun.surjective _ $ counit_surjective _).CommRing (map_fun $ MvPolynomial.counit _) (map_fun.zero _)
+  (map_fun.surjective _ <| counit_surjective _).CommRing (map_fun <| MvPolynomial.counit _) (map_fun.zero _)
     (map_fun.one _) (map_fun.add _) (map_fun.mul _) (map_fun.neg _) (map_fun.sub _)
 
 variable {p R}

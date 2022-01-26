@@ -54,7 +54,7 @@ theorem mem_rev_list_aux :
   | i + 1, h =>
     let IH := mem_rev_list_aux (le_of_ltₓ h)
     ⟨fun ⟨j, ji1, e⟩ =>
-      Or.elim (lt_or_eq_of_leₓ $ Nat.le_of_succ_le_succₓ ji1) (fun ji => List.mem_cons_of_memₓ _ $ IH.1 ⟨j, ji, e⟩)
+      Or.elim (lt_or_eq_of_leₓ <| Nat.le_of_succ_le_succₓ ji1) (fun ji => List.mem_cons_of_memₓ _ <| IH.1 ⟨j, ji, e⟩)
         fun je => by
         simp [DArray.iterateAux] <;>
           apply Or.inl <;> unfold read  at e <;> have H : j = ⟨i, h⟩ := Finₓ.eq_of_veq je <;> rwa [← H, e],
@@ -68,8 +68,8 @@ theorem mem_rev_list_aux :
 
 @[simp]
 theorem mem_rev_list : v ∈ a.rev_list ↔ v ∈ a :=
-  Iff.symm $
-    Iff.trans (exists_congr $ fun j => Iff.symm $ show j.1 < n ∧ read a j = v ↔ read a j = v from and_iff_right j.2)
+  Iff.symm <|
+    Iff.trans (exists_congr fun j => Iff.symm <| show j.1 < n ∧ read a j = v ↔ read a j = v from and_iff_right j.2)
       (mem_rev_list_aux _)
 
 @[simp]
@@ -126,9 +126,9 @@ theorem to_list_nth_le_aux (i : ℕ) (ih : i < n) :
     ∀ j {jh t h'},
       (∀ k tl, j + k = i → List.nthLe t k tl = a.read ⟨i, ih⟩) →
         (a.rev_iterate_aux (fun _ => · :: ·) j jh t).nthLe i h' = a.read ⟨i, ih⟩
-  | 0, _, _, _, al => al i _ $ zero_addₓ _
+  | 0, _, _, _, al => al i _ <| zero_addₓ _
   | j + 1, jh, t, h', al =>
-    to_list_nth_le_aux j $ fun k tl hjk =>
+    (to_list_nth_le_aux j) fun k tl hjk =>
       show List.nthLe (a.read ⟨j, jh⟩ :: t) k tl = a.read ⟨i, ih⟩ from
         match k, hjk, tl with
         | 0, e, tl =>
@@ -158,9 +158,9 @@ theorem to_list_nth {i v} : List.nth a.to_list i = some v ↔ ∃ h, a.read ⟨i
     
 
 theorem write_to_list {i v} : (a.write i v).toList = a.to_list.update_nth i v :=
-  List.ext_le
+  (List.ext_le
       (by
-        simp ) $
+        simp ))
     fun j h₁ h₂ => by
     have h₃ : j < n := by
       simpa using h₁
@@ -198,13 +198,13 @@ theorem to_list_to_array (a : Arrayₓ n α) : HEq a.to_list.to_array a :=
       (@Eq.drecOn
         (fun m e : a.to_list.length = m =>
           HEq (DArray.mk fun v => a.to_list.nth_le v.1 v.2)
-            ((@DArray.mk m fun _ => α) $ fun v => a.to_list.nth_le v.1 $ e.symm ▸ v.2))
-        a.to_list_length HEq.rfl) $
-    DArray.ext $ fun ⟨i, h⟩ => to_list_nth_le i h _
+            ((@DArray.mk m fun _ => α) fun v => a.to_list.nth_le v.1 <| e.symm ▸ v.2))
+        a.to_list_length HEq.rfl) <|
+    DArray.ext fun ⟨i, h⟩ => to_list_nth_le i h _
 
 @[simp]
 theorem to_array_to_list (l : List α) : l.to_array.to_list = l :=
-  List.ext_le (to_list_length _) $ fun n h1 h2 => to_list_nth_le _ h2 _
+  (List.ext_le (to_list_length _)) fun n h1 h2 => to_list_nth_le _ h2 _
 
 end ToArray
 

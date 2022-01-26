@@ -117,7 +117,7 @@ theorem map_hom_comp {α : Type u} {β : Type v} [Monoidₓ α] [Monoidₓ β] (
 @[simps]
 def difference_functor {C G} [category C] [Groupₓ G] (f : C → G) : C ⥤ single_obj G where
   obj := fun _ => ()
-  map := fun x y _ => f y * f x⁻¹
+  map := fun x y _ => f y * (f x)⁻¹
   map_id' := by
     intro
     rw [single_obj.id_as_one, mul_right_invₓ]
@@ -157,7 +157,7 @@ variable (α : Type u) [Monoidₓ α]
 /-- The units in a monoid are (multiplicatively) equivalent to
 the automorphisms of `star` when we think of the monoid as a single-object category. -/
 def to_Aut : (α)ˣ ≃* Aut (single_obj.star α) :=
-  (Units.mapEquiv (single_obj.to_End α)).trans $ Aut.units_End_equiv_Aut _
+  (Units.mapEquiv (single_obj.to_End α)).trans <| Aut.units_End_equiv_Aut _
 
 @[simp]
 theorem to_Aut_hom (x : (α)ˣ) : (to_Aut α x).Hom = single_obj.to_End α x :=

@@ -38,8 +38,8 @@ instance [Mul α] : Mul (WithOne α) :=
   ⟨Option.liftOrGet (· * ·)⟩
 
 @[to_additive]
-instance [HasInv α] : HasInv (WithOne α) :=
-  ⟨fun a => Option.map HasInv.inv a⟩
+instance [Inv α] : Inv (WithOne α) :=
+  ⟨fun a => Option.map Inv.inv a⟩
 
 @[to_additive]
 instance : Inhabited (WithOne α) :=
@@ -121,19 +121,19 @@ def lift : MulHom α β ≃ (WithOne α →* β) where
   toFun := fun f =>
     { toFun := fun x => Option.casesOn x 1 f, map_one' := rfl,
       map_mul' := fun x y =>
-        WithOne.cases_on x
+        (WithOne.cases_on x
             (by
               rw [one_mulₓ]
-              exact (one_mulₓ _).symm) $
+              exact (one_mulₓ _).symm))
           fun x =>
-          WithOne.cases_on y
+          (WithOne.cases_on y
               (by
                 rw [mul_oneₓ]
-                exact (mul_oneₓ _).symm) $
+                exact (mul_oneₓ _).symm))
             fun y => f.map_mul x y }
   invFun := fun F => F.to_mul_hom.comp coe_mul_hom
-  left_inv := fun f => MulHom.ext $ fun x => rfl
-  right_inv := fun F => MonoidHom.ext $ fun x => WithOne.cases_on x F.map_one.symm $ fun x => rfl
+  left_inv := fun f => MulHom.ext fun x => rfl
+  right_inv := fun F => MonoidHom.ext fun x => (WithOne.cases_on x F.map_one.symm) fun x => rfl
 
 variable (f : MulHom α β)
 
@@ -179,7 +179,7 @@ theorem coe_mul [Mul α] (a b : α) : ((a * b : α) : WithOne α) = a * b :=
   rfl
 
 @[simp, norm_cast, to_additive]
-theorem coe_inv [HasInv α] (a : α) : ((a⁻¹ : α) : WithOne α) = a⁻¹ :=
+theorem coe_inv [Inv α] (a : α) : ((a⁻¹ : α) : WithOne α) = a⁻¹ :=
   rfl
 
 end WithOne
@@ -232,11 +232,11 @@ instance [MulOneClass α] : MulZeroOneClass (WithZero α) :=
     one_mul := fun a =>
       match a with
       | none => rfl
-      | some a => congr_argₓ some $ one_mulₓ _,
+      | some a => congr_argₓ some <| one_mulₓ _,
     mul_one := fun a =>
       match a with
       | none => rfl
-      | some a => congr_argₓ some $ mul_oneₓ _ }
+      | some a => congr_argₓ some <| mul_oneₓ _ }
 
 instance [One α] [Pow α ℕ] : Pow (WithZero α) ℕ :=
   ⟨fun x n =>
@@ -254,26 +254,26 @@ instance [Monoidₓ α] : MonoidWithZeroₓ (WithZero α) :=
     npow_zero' := fun x =>
       match x with
       | none => rfl
-      | some x => congr_argₓ some $ pow_zeroₓ _,
+      | some x => congr_argₓ some <| pow_zeroₓ _,
     npow_succ' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_argₓ some $ pow_succₓ _ _ }
+      | some x => congr_argₓ some <| pow_succₓ _ _ }
 
 instance [CommMonoidₓ α] : CommMonoidWithZero (WithZero α) :=
   { WithZero.monoidWithZero, WithZero.commSemigroup with }
 
 /-- Given an inverse operation on `α` there is an inverse operation
   on `with_zero α` sending `0` to `0`-/
-instance [HasInv α] : HasInv (WithZero α) :=
-  ⟨fun a => Option.map HasInv.inv a⟩
+instance [Inv α] : Inv (WithZero α) :=
+  ⟨fun a => Option.map Inv.inv a⟩
 
 @[simp, norm_cast]
-theorem coe_inv [HasInv α] (a : α) : ((a⁻¹ : α) : WithZero α) = a⁻¹ :=
+theorem coe_inv [Inv α] (a : α) : ((a⁻¹ : α) : WithZero α) = a⁻¹ :=
   rfl
 
 @[simp]
-theorem inv_zero [HasInv α] : (0 : WithZero α)⁻¹ = 0 :=
+theorem inv_zero [Inv α] : (0 : WithZero α)⁻¹ = 0 :=
   rfl
 
 instance [Div α] : Div (WithZero α) :=
@@ -306,15 +306,15 @@ instance [DivInvMonoidₓ α] : DivInvMonoidₓ (WithZero α) :=
     zpow_zero' := fun x =>
       match x with
       | none => rfl
-      | some x => congr_argₓ some $ zpow_zero _,
+      | some x => congr_argₓ some <| zpow_zero _,
     zpow_succ' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_argₓ some $ DivInvMonoidₓ.zpow_succ' _ _,
+      | some x => congr_argₓ some <| DivInvMonoidₓ.zpow_succ' _ _,
     zpow_neg' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_argₓ some $ DivInvMonoidₓ.zpow_neg' _ _ }
+      | some x => congr_argₓ some <| DivInvMonoidₓ.zpow_neg' _ _ }
 
 section Groupₓ
 

@@ -33,11 +33,11 @@ def conformalFactorAt {f : E → F} {x : E} (h : ConformalAt f x) : ℝ :=
   Classical.some (conformal_at_iff'.mp h)
 
 theorem conformal_factor_at_pos {f : E → F} {x : E} (h : ConformalAt f x) : 0 < conformalFactorAt h :=
-  (Classical.some_spec $ conformal_at_iff'.mp h).1
+  (Classical.some_spec <| conformal_at_iff'.mp h).1
 
 theorem conformal_factor_at_inner_eq_mul_inner' {f : E → F} {x : E} (h : ConformalAt f x) (u v : E) :
     ⟪(fderiv ℝ f x) u, (fderiv ℝ f x) v⟫ = (conformalFactorAt h : ℝ) * ⟪u, v⟫ :=
-  (Classical.some_spec $ conformal_at_iff'.mp h).2 u v
+  (Classical.some_spec <| conformal_at_iff'.mp h).2 u v
 
 theorem conformal_factor_at_inner_eq_mul_inner {f : E → F} {x : E} {f' : E →L[ℝ] F} (h : HasFderivAt f f' x)
     (H : ConformalAt f x) (u v : E) : ⟪f' u, f' v⟫ = (conformalFactorAt H : ℝ) * ⟪u, v⟫ :=

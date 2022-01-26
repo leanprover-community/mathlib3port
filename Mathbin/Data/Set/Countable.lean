@@ -37,8 +37,8 @@ theorem countable_iff_exists_inj_on {s : Set α} : countable s ↔ ∃ f : α �
   countable_iff_exists_injective.trans
     ⟨fun ⟨f, hf⟩ =>
       ⟨fun a => if h : a ∈ s then f ⟨a, h⟩ else 0, fun a as b bs h =>
-        congr_argₓ Subtype.val $
-          hf $ by
+        congr_argₓ Subtype.val <|
+          hf <| by
             simpa [as, bs] using h⟩,
       fun ⟨f, hf⟩ => ⟨_, inj_on_iff_injective.1 hf⟩⟩
 
@@ -204,7 +204,7 @@ theorem countable_set_of_finite_subset {s : Set α} : countable s → countable 
     refine' countable.mono _ (countable_range fun t : Finset s => { a | ∃ h : a ∈ s, Subtype.mk a h ∈ t })
     rintro t ⟨⟨ht⟩, ts⟩
     skip
-    refine' ⟨finset.univ.map (embedding_of_subset _ _ ts), Set.ext $ fun a => _⟩
+    refine' ⟨finset.univ.map (embedding_of_subset _ _ ts), Set.ext fun a => _⟩
     suffices a ∈ s ∧ a ∈ t ↔ a ∈ t by
       simpa
     exact ⟨And.right, fun h => ⟨ts h, h⟩⟩
@@ -213,9 +213,9 @@ theorem countable_pi {π : α → Type _} [Fintype α] {s : ∀ a, Set (π a)} (
     countable { f : ∀ a, π a | ∀ a, f a ∈ s a } :=
   countable.mono
       (show { f : ∀ a, π a | ∀ a, f a ∈ s a } ⊆ range fun f : ∀ a, s a => fun a => (f a).1 from fun f hf =>
-        ⟨fun a => ⟨f a, hf a⟩, funext $ fun a => rfl⟩) $
+        ⟨fun a => ⟨f a, hf a⟩, funext fun a => rfl⟩) <|
     have : Trunc (Encodable (∀ a : α, s a)) := @Encodable.fintypePi α _ _ _ fun a => (hs a).toEncodable
-    Trunc.induction_on this $ fun h => @countable_range _ _ h _
+    (Trunc.induction_on this) fun h => @countable_range _ _ h _
 
 protected theorem countable.prod {s : Set α} {t : Set β} (hs : countable s) (ht : countable t) : countable (s ×ˢ t) :=
   by

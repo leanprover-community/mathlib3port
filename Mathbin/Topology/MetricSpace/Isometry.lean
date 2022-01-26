@@ -51,7 +51,7 @@ variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
 variable {f : α → β} {x y z : α} {s : Set α}
 
 theorem Isometry.lipschitz (h : Isometry f) : LipschitzWith 1 f :=
-  LipschitzWith.of_edist_le $ fun x y => le_of_eqₓ (h x y)
+  LipschitzWith.of_edist_le fun x y => le_of_eqₓ (h x y)
 
 theorem Isometry.antilipschitz (h : Isometry f) : AntilipschitzWith 1 f := fun x y => by
   simp only [h x y, Ennreal.coe_one, one_mulₓ, le_reflₓ]
@@ -93,7 +93,7 @@ theorem Isometry.right_inv {f : α → β} {g : β → α} (h : Isometry f) (hg 
 
 /-- Isometries preserve the diameter in pseudoemetric spaces. -/
 theorem Isometry.ediam_image (hf : Isometry f) (s : Set α) : Emetric.diam (f '' s) = Emetric.diam s :=
-  eq_of_forall_ge_iff $ fun d => by
+  eq_of_forall_ge_iff fun d => by
     simp only [Emetric.diam_le_iff, ball_image_iff, hf.edist_eq]
 
 theorem Isometry.ediam_range (hf : Isometry f) : Emetric.diam (range f) = Emetric.diam (univ : Set α) := by
@@ -222,14 +222,14 @@ theorem to_equiv_inj : ∀ ⦃h₁ h₂ : α ≃ᵢ β⦄, h₁.to_equiv = h₂.
 
 @[ext]
 theorem ext ⦃h₁ h₂ : α ≃ᵢ β⦄ (H : ∀ x, h₁ x = h₂ x) : h₁ = h₂ :=
-  to_equiv_inj $ Equivₓ.ext H
+  to_equiv_inj <| Equivₓ.ext H
 
 /-- Alternative constructor for isometric bijections,
 taking as input an isometry, and a right inverse. -/
 def mk' {α : Type u} [EmetricSpace α] (f : α → β) (g : β → α) (hfg : ∀ x, f (g x) = x) (hf : Isometry f) : α ≃ᵢ β where
   toFun := f
   invFun := g
-  left_inv := fun x => hf.injective $ hfg _
+  left_inv := fun x => hf.injective <| hfg _
   right_inv := hfg
   isometry_to_fun := hf
 
@@ -280,10 +280,10 @@ theorem eq_symm_apply (h : α ≃ᵢ β) {x : α} {y : β} : x = h.symm y ↔ h 
   h.to_equiv.eq_symm_apply
 
 theorem symm_comp_self (h : α ≃ᵢ β) : ⇑h.symm ∘ ⇑h = id :=
-  funext $ fun a => h.to_equiv.left_inv a
+  funext fun a => h.to_equiv.left_inv a
 
 theorem self_comp_symm (h : α ≃ᵢ β) : ⇑h ∘ ⇑h.symm = id :=
-  funext $ fun a => h.to_equiv.right_inv a
+  funext fun a => h.to_equiv.right_inv a
 
 @[simp]
 theorem range_eq_univ (h : α ≃ᵢ β) : range h = univ :=
@@ -360,8 +360,8 @@ instance : Groupₓ (α ≃ᵢ α) where
   mul := fun e₁ e₂ => e₂.trans e₁
   inv := Isometric.symm
   mul_assoc := fun e₁ e₂ e₃ => rfl
-  one_mul := fun e => ext $ fun _ => rfl
-  mul_one := fun e => ext $ fun _ => rfl
+  one_mul := fun e => ext fun _ => rfl
+  mul_one := fun e => ext fun _ => rfl
   mul_left_inv := fun e => ext e.symm_apply_apply
 
 @[simp]
@@ -376,16 +376,16 @@ theorem mul_apply (e₁ e₂ : α ≃ᵢ α) (x : α) : (e₁ * e₂) x = e₁ (
   rfl
 
 @[simp]
-theorem inv_apply_self (e : α ≃ᵢ α) (x : α) : (e⁻¹) (e x) = x :=
+theorem inv_apply_self (e : α ≃ᵢ α) (x : α) : e⁻¹ (e x) = x :=
   e.symm_apply_apply x
 
 @[simp]
-theorem apply_inv_self (e : α ≃ᵢ α) (x : α) : e ((e⁻¹) x) = x :=
+theorem apply_inv_self (e : α ≃ᵢ α) (x : α) : e (e⁻¹ x) = x :=
   e.apply_symm_apply x
 
 protected theorem CompleteSpace [CompleteSpace β] (e : α ≃ᵢ β) : CompleteSpace α :=
-  complete_space_of_is_complete_univ $
-    is_complete_of_complete_image e.isometry.uniform_inducing $ by
+  complete_space_of_is_complete_univ <|
+    is_complete_of_complete_image e.isometry.uniform_inducing <| by
       rwa [Set.image_univ, Isometric.range_eq_univ, ← complete_space_iff_is_complete_univ]
 
 theorem complete_space_iff (e : α ≃ᵢ β) : CompleteSpace α ↔ CompleteSpace β := by

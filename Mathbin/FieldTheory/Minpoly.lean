@@ -254,7 +254,7 @@ then the degree of `p` is at least the degree of the minimal polynomial of `x`. 
 theorem degree_le_of_ne_zero {p : Polynomial A} (pnz : p ≠ 0) (hp : Polynomial.aeval x p = 0) :
     degree (minpoly A x) ≤ degree p :=
   calc
-    degree (minpoly A x) ≤ degree (p * C (leading_coeff p⁻¹)) :=
+    degree (minpoly A x) ≤ degree (p * C (leading_coeff p)⁻¹) :=
       min A x (monic_mul_leading_coeff_inv pnz)
         (by
           simp [hp])
@@ -318,17 +318,17 @@ variable {A x}
 theorem eq_of_irreducible_of_monic [Nontrivial B] {p : Polynomial A} (hp1 : _root_.irreducible p)
     (hp2 : Polynomial.aeval x p = 0) (hp3 : p.monic) : p = minpoly A x :=
   let ⟨q, hq⟩ := dvd A x hp2
-  eq_of_monic_of_associated hp3 (monic ⟨p, ⟨hp3, hp2⟩⟩) $
-    mul_oneₓ (minpoly A x) ▸ hq.symm ▸ Associated.mul_left _ $
-      associated_one_iff_is_unit.2 $ (hp1.is_unit_or_is_unit hq).resolve_left $ not_is_unit A x
+  eq_of_monic_of_associated hp3 (monic ⟨p, ⟨hp3, hp2⟩⟩) <|
+    mul_oneₓ (minpoly A x) ▸ hq.symm ▸ Associated.mul_left _ <|
+      associated_one_iff_is_unit.2 <| (hp1.is_unit_or_is_unit hq).resolve_left <| not_is_unit A x
 
 theorem eq_of_irreducible [Nontrivial B] {p : Polynomial A} (hp1 : _root_.irreducible p)
-    (hp2 : Polynomial.aeval x p = 0) : p * C (p.leading_coeff⁻¹) = minpoly A x := by
+    (hp2 : Polynomial.aeval x p = 0) : p * C p.leading_coeff⁻¹ = minpoly A x := by
   have : p.leading_coeff ≠ 0 := leading_coeff_ne_zero.mpr hp1.ne_zero
   apply eq_of_irreducible_of_monic
   · exact
       Associated.irreducible
-        ⟨⟨C (p.leading_coeff⁻¹), C p.leading_coeff, by
+        ⟨⟨C p.leading_coeff⁻¹, C p.leading_coeff, by
             rwa [← C_mul, inv_mul_cancel, C_1], by
             rwa [← C_mul, mul_inv_cancel, C_1]⟩,
           rfl⟩

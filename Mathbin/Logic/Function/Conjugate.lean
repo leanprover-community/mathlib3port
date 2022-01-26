@@ -96,7 +96,7 @@ protected theorem Eq (h : semiconj₂ f ga gb) (x y : α) : f (ga x y) = gb (f x
   h x y
 
 protected theorem comp_eq (h : semiconj₂ f ga gb) : bicompr f ga = bicompl gb f f :=
-  funext $ fun x => funext $ h x
+  funext fun x => funext <| h x
 
 theorem id_left (op : α → α → α) : semiconj₂ id op op := fun _ _ => rfl
 
@@ -106,21 +106,21 @@ theorem comp {f' : β → γ} {gc : γ → γ → γ} (hf' : semiconj₂ f' gb g
 
 theorem is_associative_right [IsAssociative α ga] (h : semiconj₂ f ga gb) (h_surj : surjective f) :
     IsAssociative β gb :=
-  ⟨h_surj.forall₃.2 $ fun x₁ x₂ x₃ => by
+  ⟨h_surj.forall₃.2 fun x₁ x₂ x₃ => by
       simp only [← h.eq, @IsAssociative.assoc _ ga]⟩
 
 theorem is_associative_left [IsAssociative β gb] (h : semiconj₂ f ga gb) (h_inj : injective f) : IsAssociative α ga :=
   ⟨fun x₁ x₂ x₃ =>
-    h_inj $ by
+    h_inj <| by
       simp only [h.eq, @IsAssociative.assoc _ gb]⟩
 
 theorem is_idempotent_right [IsIdempotent α ga] (h : semiconj₂ f ga gb) (h_surj : surjective f) : IsIdempotent β gb :=
-  ⟨h_surj.forall.2 $ fun x => by
+  ⟨h_surj.forall.2 fun x => by
       simp only [← h.eq, @IsIdempotent.idempotent _ ga]⟩
 
 theorem is_idempotent_left [IsIdempotent β gb] (h : semiconj₂ f ga gb) (h_inj : injective f) : IsIdempotent α ga :=
   ⟨fun x =>
-    h_inj $ by
+    h_inj <| by
       rw [h.eq, @IsIdempotent.idempotent _ gb]⟩
 
 end Semiconj₂

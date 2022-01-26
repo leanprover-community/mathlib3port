@@ -329,7 +329,7 @@ private theorem eq_of_pos_part_eq_pos_part {j₁ j₂ : jordan_decomposition α}
     
 
 /-- The Jordan decomposition of a signed measure is unique. -/
-theorem to_signed_measure_injective : injective $ @jordan_decomposition.to_signed_measure α _ := by
+theorem to_signed_measure_injective : injective <| @jordan_decomposition.to_signed_measure α _ := by
   intro j₁ j₂ hj
   obtain ⟨S, hS₁, hS₂, hS₃, hS₄, hS₅⟩ := j₁.exists_compl_positive_negative
   obtain ⟨T, hT₁, hT₂, hT₃, hT₄, hT₅⟩ := j₂.exists_compl_positive_negative

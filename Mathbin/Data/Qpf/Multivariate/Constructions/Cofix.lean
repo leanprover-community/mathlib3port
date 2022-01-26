@@ -136,7 +136,7 @@ def cofix.abs {α} : q.P.M α → cofix F α :=
 
 /-- Representation function for `cofix F α` -/
 def cofix.repr {α} : cofix F α → q.P.M α :=
-  M.corec _ $ reprₓ ∘ cofix.dest
+  M.corec _ <| reprₓ ∘ cofix.dest
 
 /-- Corecursor for `cofix F` -/
 def cofix.corec'₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (β → X) → F (α.append1 X)) (x : β) : cofix F α :=
@@ -162,7 +162,7 @@ theorem cofix.dest_corec {α : Typevec n} {β : Type u} (g : β → F (α.append
   rfl
 
 /-- constructor for `cofix F` -/
-def cofix.mk {α : Typevec n} : F (α.append1 $ cofix F α) → cofix F α :=
+def cofix.mk {α : Typevec n} : F (α.append1 <| cofix F α) → cofix F α :=
   cofix.corec fun x => (append_fun id fun i : cofix F α => cofix.dest.{u} i) <$$> x
 
 /-!
@@ -271,7 +271,7 @@ open Mvfunctor
 /-- Bisimulation principle using `liftr'` to match and relate children of two trees. -/
 theorem cofix.bisim₂ {α : Typevec n} (r : cofix F α → cofix F α → Prop)
     (h : ∀ x y, r x y → liftr' (rel_last' α r) (cofix.dest x) (cofix.dest y)) : ∀ x y, r x y → x = y :=
-  cofix.bisim _ $ by
+  cofix.bisim _ <| by
     intros <;> rw [← liftr_last_rel_iff] <;> apply h <;> assumption
 
 /-- Bisimulation principle the values `⟨a,f⟩` of the polynomial functor representing
@@ -312,7 +312,7 @@ theorem cofix.mk_dest {α : Typevec n} (x : cofix F α) : cofix.mk (cofix.dest x
   apply Quot.sound
   rfl
 
-theorem cofix.dest_mk {α : Typevec n} (x : F (α.append1 $ cofix F α)) : cofix.dest (cofix.mk x) = x := by
+theorem cofix.dest_mk {α : Typevec n} (x : F (α.append1 <| cofix F α)) : cofix.dest (cofix.mk x) = x := by
   have : cofix.mk ∘ cofix.dest = @_root_.id (cofix F α) := funext cofix.mk_dest
   rw [cofix.mk, cofix.dest_corec, ← comp_map, ← cofix.mk, ← append_fun_comp, this, id_comp, append_fun_id_id,
     Mvfunctor.id_map]
@@ -422,7 +422,7 @@ omit q
 unsafe def mv_bisim (e : parse texpr) (ids : parse with_ident_list) : tactic Unit := do
   let e ← to_expr e
   let expr.pi n bi d b ←
-    retrieve $ do
+    retrieve <| do
         generalize e
         target
   let quote.1 (@Eq (%%ₓt) (%%ₓl) (%%ₓr)) ← pure b
@@ -438,7 +438,7 @@ unsafe def mv_bisim (e : parse texpr) (ids : parse with_ident_list) : tactic Uni
   refine (pquote.1 (cofix.bisim₂ (%%ₓR) _ _ _ ⟨_, rfl, rfl⟩))
   let f (a b : Name) : Name := if a = `_ then b else a
   let ids := (ids ++ List.repeat `_ 5).zipWith f [`a, `b, `x, `Ha, `Hb]
-  let (ids₀, w :: ids₁) ← pure $ List.splitAtₓ 2 ids
+  let (ids₀, w :: ids₁) ← pure <| List.splitAtₓ 2 ids
   intro_lst ids₀
   let h ← intro1
   let [(_, [w, h], _)] ← cases_core h [w]

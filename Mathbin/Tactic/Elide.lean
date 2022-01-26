@@ -8,7 +8,7 @@ unsafe def replace : ℕ → expr → tactic expr
   | 0, e => do
     let t ← infer_type e
     let expr.sort u ← infer_type t
-    return $ (expr.const `` hidden [u]).app t e
+    return <| (expr.const `` hidden [u]).app t e
   | i + 1, expr.app f x => do
     let f' ← replace (i + 1) f
     let x' ← replace i x
@@ -32,7 +32,7 @@ unsafe def replace : ℕ → expr → tactic expr
   | i + 1, e => return e
 
 unsafe def unelide (e : expr) : expr :=
-  expr.replace e $ fun e n =>
+  (expr.replace e) fun e n =>
     match e with
     | expr.app (expr.app (expr.const n _) _) e' => if n = `` hidden then some e' else none
     | expr.app (expr.lam _ _ _ (expr.var 0)) e' => some e'

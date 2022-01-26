@@ -27,7 +27,7 @@ def Pnat.natPred (i : ℕ+) : ℕ :=
 
 @[simp]
 theorem Pnat.one_add_nat_pred (n : ℕ+) : 1 + n.nat_pred = n := by
-  rw [Pnat.natPred, add_tsub_cancel_iff_le.mpr $ show 1 ≤ (n : ℕ) from n.2]
+  rw [Pnat.natPred, add_tsub_cancel_iff_le.mpr <| show 1 ≤ (n : ℕ) from n.2]
 
 @[simp]
 theorem Pnat.nat_pred_add_one (n : ℕ+) : n.nat_pred + 1 = n :=
@@ -281,7 +281,7 @@ theorem sub_coe (a b : ℕ+) : ((a - b : ℕ+) : ℕ) = ite (b < a) (a - b : ℕ
     
 
 theorem add_sub_of_lt {a b : ℕ+} : a < b → a + (b - a) = b := fun h =>
-  Eq $ by
+  Eq <| by
     rw [add_coe, sub_coe, if_pos h]
     exact add_tsub_cancel_of_le h.le
 
@@ -294,7 +294,7 @@ def strong_induction_on {p : ℕ+ → Sort _} : ∀ n : ℕ+ h : ∀ k, (∀ m, 
 
 /-- If `n : ℕ+` is different from `1`, then it is the successor of some `k : ℕ+`. -/
 theorem exists_eq_succ_of_ne_one : ∀ {n : ℕ+} h1 : n ≠ 1, ∃ k : ℕ+, n = k + 1
-  | ⟨1, _⟩, h1 => False.elim $ h1 rfl
+  | ⟨1, _⟩, h1 => False.elim <| h1 rfl
   | ⟨n + 2, _⟩, _ =>
     ⟨⟨n + 1, by
         simp ⟩,

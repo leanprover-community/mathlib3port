@@ -125,7 +125,7 @@ attribute [local reducible, local instance] endofunctor_monoidal_category Discre
 
 instance has_shift {β : Type _} [AddCommGroupₓ β] (s : β) : has_shift (graded_object_with_shift s C) ℤ :=
   has_shift_mk _ _
-    { f := fun n => (comap fun _ => C) $ fun b : β => b + n • s,
+    { f := fun n => (comap fun _ => C) fun b : β => b + n • s,
       ε :=
         (comap_id β fun _ => C).symm ≪≫
           comap_eq C

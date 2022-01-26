@@ -54,13 +54,14 @@ theorem apply_mul_add_le k n r : u (k * n + r) ≤ k * u n + u r := by
       by
       ring
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n / n < L) : ∀ᶠ p in at_top, u p / p < L := by
   have I : ∀ i : ℕ, 0 < i → (i : ℝ) ≠ 0 := by
     intro i hi
     simp only [hi.ne', Ne.def, Nat.cast_eq_zero, not_false_iff]
   obtain ⟨w, nw, wL⟩ : ∃ w, u n / n < w ∧ w < L := exists_between hL
   obtain ⟨x, hx⟩ : ∃ x, ∀, ∀ i < n, ∀, u i - i * w ≤ x := by
-    obtain ⟨x, hx⟩ : BddAbove (↑Finset.image (fun i => u i - i * w) (Finset.range n)) := Finset.bdd_above _
+    obtain ⟨x, hx⟩ : BddAbove ↑(Finset.image (fun i => u i - i * w) (Finset.range n)) := Finset.bdd_above _
     refine' ⟨x, fun i hi => _⟩
     simp only [UpperBounds, mem_image, and_imp, forall_exists_index, mem_set_of_eq, forall_apply_eq_imp_iff₂,
       Finset.mem_range, Finset.mem_coe, Finset.coe_image] at hx
@@ -92,9 +93,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
       tendsto_const_nhds.add (tendsto_const_nhds.div_at_top tendsto_coe_nat_at_top_at_top)
     rw [add_zeroₓ] at this
     exact (tendsto_order.1 this).2 _ wL
-  filter_upwards [B, C]
-  intro p hp h'p
-  exact hp.trans_lt h'p
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
 
 /-- Fekete's lemma: a subadditive sequence which is bounded below converges. -/
 theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) : tendsto (fun n => u n / n) at_top (𝓝 h.lim) := by

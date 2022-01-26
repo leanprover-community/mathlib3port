@@ -49,13 +49,13 @@ theorem interval_integrable_pow : IntervalIntegrable (fun x => x ^ n) μ a b :=
 theorem interval_integrable_zpow {n : ℤ}
     (h : 0 ≤ n ∨ (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :
     IntervalIntegrable (fun x => x ^ n) μ a b :=
-  (continuous_on_id.zpow n $ fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
+  ((continuous_on_id.zpow n) fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
 
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 theorem interval_integrable_rpow {r : ℝ}
     (h : 0 ≤ r ∨ (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :
     IntervalIntegrable (fun x => x ^ r) μ a b :=
-  (continuous_on_id.rpow_const $ fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
+  (continuous_on_id.rpow_const fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
 
 @[simp]
 theorem interval_integrable_id : IntervalIntegrable (fun x => x) μ a b :=
@@ -77,7 +77,7 @@ theorem interval_integrable.mul_const (h : IntervalIntegrable f ν a b) : Interv
 
 @[simp]
 theorem interval_integrable.div (h : IntervalIntegrable f ν a b) : IntervalIntegrable (fun x => f x / c) ν a b :=
-  interval_integrable.mul_const (c⁻¹) h
+  interval_integrable.mul_const c⁻¹ h
 
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
@@ -93,7 +93,7 @@ theorem interval_integrable_one_div
 theorem interval_integrable_inv
     (h : ∀ x : ℝ, x ∈ "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" → f x ≠ 0)
     (hf : ContinuousOn f "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :
-    IntervalIntegrable (fun x => f x⁻¹) μ a b := by
+    IntervalIntegrable (fun x => (f x)⁻¹) μ a b := by
   simpa only [one_div] using interval_integrable_one_div h hf
 
 @[simp]
@@ -114,7 +114,7 @@ theorem interval_integrable.log
 theorem interval_integrable_log
     (h : (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :
     IntervalIntegrable log μ a b :=
-  interval_integrable.log continuous_on_id $ fun x hx => ne_of_mem_of_not_mem hx h
+  (interval_integrable.log continuous_on_id) fun x hx => ne_of_mem_of_not_mem hx h
 
 @[simp]
 theorem interval_integrable_sin : IntervalIntegrable sin μ a b :=
@@ -227,22 +227,22 @@ theorem integral_pow : (∫ x in a..b, x ^ n) = (b ^ (n + 1) - a ^ (n + 1)) / (n
 
 /-- Integral of `|x - a| ^ n` over `Ι a b`. This integral appears in the proof of the
 Picard-Lindelöf/Cauchy-Lipschitz theorem. -/
-theorem integral_pow_abs_sub_interval_oc : (∫ x in Ι a b, |x - a| ^ n) = |b - a| ^ (n + 1) / (n + 1) := by
+theorem integral_pow_abs_sub_interval_oc : (∫ x in Ι a b, abs (x - a) ^ n) = abs (b - a) ^ (n + 1) / (n + 1) := by
   cases' le_or_ltₓ a b with hab hab
-  · calc (∫ x in Ι a b, |x - a| ^ n) = ∫ x in a..b, |x - a| ^ n := by
+  · calc (∫ x in Ι a b, abs (x - a) ^ n) = ∫ x in a..b, abs (x - a) ^ n := by
         rw [interval_oc_of_le hab, ← integral_of_le hab]_ = ∫ x in 0 ..b - a, x ^ n := by
-        simp only [integral_comp_sub_right fun x => |x| ^ n, sub_self]
-        refine' integral_congr fun x hx => congr_arg2ₓ Pow.pow (abs_of_nonneg $ _) rfl
+        simp only [integral_comp_sub_right fun x => abs x ^ n, sub_self]
+        refine' integral_congr fun x hx => congr_arg2ₓ Pow.pow (abs_of_nonneg <| _) rfl
         rw [interval_of_le (sub_nonneg.2 hab)] at hx
-        exact hx.1_ = |b - a| ^ (n + 1) / (n + 1) := by
+        exact hx.1_ = abs (b - a) ^ (n + 1) / (n + 1) := by
         simp [abs_of_nonneg (sub_nonneg.2 hab)]
     
-  · calc (∫ x in Ι a b, |x - a| ^ n) = ∫ x in b..a, |x - a| ^ n := by
+  · calc (∫ x in Ι a b, abs (x - a) ^ n) = ∫ x in b..a, abs (x - a) ^ n := by
         rw [interval_oc_of_lt hab, ← integral_of_le hab.le]_ = ∫ x in b - a..0, -x ^ n := by
-        simp only [integral_comp_sub_right fun x => |x| ^ n, sub_self]
-        refine' integral_congr fun x hx => congr_arg2ₓ Pow.pow (abs_of_nonpos $ _) rfl
+        simp only [integral_comp_sub_right fun x => abs x ^ n, sub_self]
+        refine' integral_congr fun x hx => congr_arg2ₓ Pow.pow (abs_of_nonpos <| _) rfl
         rw [interval_of_le (sub_nonpos.2 hab.le)] at hx
-        exact hx.2_ = |b - a| ^ (n + 1) / (n + 1) := by
+        exact hx.2_ = abs (b - a) ^ (n + 1) / (n + 1) := by
         simp [integral_comp_neg fun x => x ^ n, abs_of_neg (sub_neg.2 hab)]
     
 
@@ -261,16 +261,16 @@ theorem integral_inv (h : (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lea
   have h' := fun x hx => ne_of_mem_of_not_mem hx h
   rw
     [integral_deriv_eq_sub' _ deriv_log' (fun x hx => differentiable_at_log (h' x hx))
-      (continuous_on_inv₀.mono $ subset_compl_singleton_iff.mpr h),
+      (continuous_on_inv₀.mono <| subset_compl_singleton_iff.mpr h),
     log_div (h' b right_mem_interval) (h' a left_mem_interval)]
 
 @[simp]
 theorem integral_inv_of_pos (ha : 0 < a) (hb : 0 < b) : (∫ x in a..b, x⁻¹) = log (b / a) :=
-  integral_inv $ not_mem_interval_of_lt ha hb
+  integral_inv <| not_mem_interval_of_lt ha hb
 
 @[simp]
 theorem integral_inv_of_neg (ha : a < 0) (hb : b < 0) : (∫ x in a..b, x⁻¹) = log (b / a) :=
-  integral_inv $ not_mem_interval_of_gt ha hb
+  integral_inv <| not_mem_interval_of_gt ha hb
 
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 theorem integral_one_div (h : (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :
@@ -294,18 +294,18 @@ theorem integral_log (h : (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lea
   obtain ⟨h', heq⟩ := fun x hx => ne_of_mem_of_not_mem hx h, fun x hx => mul_inv_cancel (h' x hx)
   convert
       integral_mul_deriv_eq_deriv_mul (fun x hx => has_deriv_at_log (h' x hx)) (fun x hx => has_deriv_at_id x)
-        (continuous_on_inv₀.mono $ subset_compl_singleton_iff.mpr h).IntervalIntegrable
+        (continuous_on_inv₀.mono <| subset_compl_singleton_iff.mpr h).IntervalIntegrable
         continuous_on_const.interval_integrable using
       1 <;>
     simp [integral_congr HEq, mul_comm, ← sub_add]
 
 @[simp]
 theorem integral_log_of_pos (ha : 0 < a) (hb : 0 < b) : (∫ x in a..b, log x) = b * log b - a * log a - b + a :=
-  integral_log $ not_mem_interval_of_lt ha hb
+  integral_log <| not_mem_interval_of_lt ha hb
 
 @[simp]
 theorem integral_log_of_neg (ha : a < 0) (hb : b < 0) : (∫ x in a..b, log x) = b * log b - a * log a - b + a :=
-  integral_log $ not_mem_interval_of_gt ha hb
+  integral_log <| not_mem_interval_of_gt ha hb
 
 @[simp]
 theorem integral_sin : (∫ x in a..b, sin x) = cos a - cos b := by

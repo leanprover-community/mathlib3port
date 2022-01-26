@@ -128,7 +128,7 @@ theorem AddMonoidHom.uniform_continuous_of_continuous_at_zero [UniformSpace β] 
 
 theorem uniform_continuous_of_continuous [UniformSpace β] [AddGroupₓ β] [UniformAddGroup β] {f : α →+ β}
     (h : Continuous f) : UniformContinuous f :=
-  uniform_continuous_of_tendsto_zero $
+  uniform_continuous_of_tendsto_zero <|
     suffices tendsto f (𝓝 0) (𝓝 (f 0)) by
       rwa [f.map_zero] at this
     h.tendsto 0
@@ -153,7 +153,7 @@ def TopologicalGroup.toUniformSpace : UniformSpace G where
     refine' map_le_iff_le_comap.1 (le_transₓ _ (pure_le_nhds 1)) <;>
       simp (config := { contextual := true })[Set.subset_def]
   symm := by
-    suffices tendsto (fun p : G × G => (p.2 / p.1)⁻¹) (comap (fun p : G × G => p.2 / p.1) (𝓝 1)) (𝓝 (1⁻¹)) by
+    suffices tendsto (fun p : G × G => (p.2 / p.1)⁻¹) (comap (fun p : G × G => p.2 / p.1) (𝓝 1)) (𝓝 1⁻¹) by
       simpa [tendsto_comap_iff]
     exact tendsto.comp (tendsto.inv tendsto_id) tendsto_comap
   comp := by
@@ -320,7 +320,7 @@ variable {e : β →+ α} (de : DenseInducing e)
 include de
 
 theorem tendsto_sub_comap_self (x₀ : α) :
-    tendsto (fun t : β × β => t.2 - t.1) ((comap fun p : β × β => (e p.1, e p.2)) $ 𝓝 (x₀, x₀)) (𝓝 0) := by
+    tendsto (fun t : β × β => t.2 - t.1) ((comap fun p : β × β => (e p.1, e p.2)) <| 𝓝 (x₀, x₀)) (𝓝 0) := by
   have comm : ((fun x : α × α => x.2 - x.1) ∘ fun t : β × β => (e t.1, e t.2)) = e ∘ fun t : β × β => t.2 - t.1 := by
     ext t
     change e t.2 - e t.1 = e (t.2 - t.1)
@@ -371,7 +371,7 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
   have lim1 : tendsto (fun a : β × β => (a.2 - a.1, y₁)) (comap e Nx ×ᶠ comap e Nx) (𝓝 (0, y₁)) := by
     have :=
       tendsto.prod_mk (tendsto_sub_comap_self de x₀)
-        (tendsto_const_nhds : tendsto (fun p : β × β => y₁) (comap ee $ 𝓝 (x₀, x₀)) (𝓝 y₁))
+        (tendsto_const_nhds : tendsto (fun p : β × β => y₁) (comap ee <| 𝓝 (x₀, x₀)) (𝓝 y₁))
     rw [nhds_prod_eq, prod_comap_comap_eq, ← nhds_prod_eq]
     exact (this : _)
   have lim2 : tendsto Φ (𝓝 (0, y₁)) (𝓝 0) := by
@@ -398,7 +398,7 @@ private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
     simpa using hφ.tendsto (0, 0)
   have lim_φ_sub_sub :
     tendsto (fun p : (β × β) × δ × δ => Φ (p.1.2 - p.1.1, p.2.2 - p.2.1))
-      ((comap ee $ 𝓝 (x₀, x₀)) ×ᶠ (comap ff $ 𝓝 (y₀, y₀))) (𝓝 0) :=
+      ((comap ee <| 𝓝 (x₀, x₀)) ×ᶠ (comap ff <| 𝓝 (y₀, y₀))) (𝓝 0) :=
     by
     have lim_sub_sub :
       tendsto (fun p : (β × β) × δ × δ => (p.1.2 - p.1.1, p.2.2 - p.2.1))

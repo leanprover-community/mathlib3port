@@ -96,10 +96,10 @@ def comp (r : α → β → Prop) (p : β → γ → Prop) (a : α) (c : γ) : P
 local infixr:80 " ∘r " => Relation.Comp
 
 theorem comp_eq : r ∘r (· = ·) = r :=
-  funext $ fun a => funext $ fun b => propext $ Iff.intro (fun ⟨c, h, Eq⟩ => Eq ▸ h) fun h => ⟨b, h, rfl⟩
+  funext fun a => funext fun b => propext <| Iff.intro (fun ⟨c, h, Eq⟩ => Eq ▸ h) fun h => ⟨b, h, rfl⟩
 
 theorem eq_comp : (· = ·) ∘r r = r :=
-  funext $ fun a => funext $ fun b => propext $ Iff.intro (fun ⟨c, Eq, h⟩ => Eq.symm ▸ h) fun h => ⟨a, rfl, h⟩
+  funext fun a => funext fun b => propext <| Iff.intro (fun ⟨c, Eq, h⟩ => Eq.symm ▸ h) fun h => ⟨a, rfl, h⟩
 
 theorem iff_comp {r : Prop → α → Prop} : (· ↔ ·) ∘r r = r := by
   have : (· ↔ ·) = (· = ·) := by
@@ -345,9 +345,9 @@ end TransGen
 section TransGen
 
 theorem trans_gen_eq_self (trans : Transitive r) : trans_gen r = r :=
-  funext $ fun a =>
-    funext $ fun b =>
-      propext $
+  funext fun a =>
+    funext fun b =>
+      propext <|
         ⟨fun h => by
           induction h
           case trans_gen.single c hc =>
@@ -409,9 +409,9 @@ theorem refl_trans_gen.mono {p : α → α → Prop} : (∀ a b, r a b → p a b
   refl_trans_gen.lift id
 
 theorem refl_trans_gen_eq_self (refl : Reflexive r) (trans : Transitive r) : refl_trans_gen r = r :=
-  funext $ fun a =>
-    funext $ fun b =>
-      propext $
+  funext fun a =>
+    funext fun b =>
+      propext <|
         ⟨fun h => by
           induction' h with b c h₁ h₂ IH
           · apply refl
@@ -498,7 +498,7 @@ theorem equivalence_join_refl_trans_gen (h : ∀ a b c, r a b → r a c → ∃ 
   equivalence_join reflexive_refl_trans_gen transitive_refl_trans_gen fun a b c => church_rosser h
 
 theorem join_of_equivalence {r' : α → α → Prop} (hr : Equivalenceₓ r) (h : ∀ a b, r' a b → r a b) : join r' a b → r a b
-  | ⟨c, hac, hbc⟩ => hr.2.2 (h _ _ hac) (hr.2.1 $ h _ _ hbc)
+  | ⟨c, hac, hbc⟩ => hr.2.2 (h _ _ hac) (hr.2.1 <| h _ _ hbc)
 
 theorem refl_trans_gen_of_transitive_reflexive {r' : α → α → Prop} (hr : Reflexive r) (ht : Transitive r)
     (h : ∀ a b, r' a b → r a b) (h' : refl_trans_gen r' a b) : r a b := by
@@ -537,7 +537,7 @@ theorem Equivalenceₓ.eqv_gen_iff (h : Equivalenceₓ r) : EqvGen r a b ↔ r a
     (EqvGen.rel a b)
 
 theorem Equivalenceₓ.eqv_gen_eq (h : Equivalenceₓ r) : EqvGen r = r :=
-  funext $ fun _ => funext $ fun _ => propext $ h.eqv_gen_iff
+  funext fun _ => funext fun _ => propext <| h.eqv_gen_iff
 
 theorem EqvGen.mono {r p : α → α → Prop} (hrp : ∀ a b, r a b → p a b) (h : EqvGen r a b) : EqvGen p a b := by
   induction h

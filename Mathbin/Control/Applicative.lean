@@ -82,20 +82,20 @@ variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 variable {α β γ : Type v}
 
 theorem map_pure (f : α → β) (x : α) : (f <$> pure x : comp F G β) = pure (f x) :=
-  comp.ext $ by
+  comp.ext <| by
     simp
 
 theorem seq_pure (f : comp F G (α → β)) (x : α) : f <*> pure x = (fun g : α → β => g x) <$> f :=
-  comp.ext $ by
+  comp.ext <| by
     simp' [· ∘ ·] with functor_norm
 
 theorem seq_assoc (x : comp F G α) (f : comp F G (α → β)) (g : comp F G (β → γ)) :
     g <*> (f <*> x) = @Function.comp α β γ <$> g <*> f <*> x :=
-  comp.ext $ by
+  comp.ext <| by
     simp' [· ∘ ·] with functor_norm
 
 theorem pure_seq_eq_map (f : α → β) (x : comp F G α) : pure f <*> x = f <$> x :=
-  comp.ext $ by
+  comp.ext <| by
     simp' [Applicativeₓ.pure_seq_eq_map'] with functor_norm
 
 instance : IsLawfulApplicative (comp F G) where

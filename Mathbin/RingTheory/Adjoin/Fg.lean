@@ -85,7 +85,7 @@ variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [Semiringₓ B] [Alge
 /-- A subalgebra `S` is finitely generated if there exists `t : finset A` such that
 `algebra.adjoin R t = S`. -/
 def fg (S : Subalgebra R A) : Prop :=
-  ∃ t : Finset A, Algebra.adjoin R (↑t) = S
+  ∃ t : Finset A, Algebra.adjoin R ↑t = S
 
 theorem fg_adjoin_finset (s : Finset A) : (Algebra.adjoin R (↑s : Set A)).Fg :=
   ⟨s, rfl⟩
@@ -100,10 +100,10 @@ theorem fg_bot : (⊥ : Subalgebra R A).Fg :=
 
 theorem fg_of_fg_to_submodule {S : Subalgebra R A} : S.to_submodule.fg → S.fg := fun ⟨t, ht⟩ =>
   ⟨t,
-    le_antisymmₓ (Algebra.adjoin_le fun x hx => show x ∈ S.to_submodule from ht ▸ subset_span hx) $
-      show S.to_submodule ≤ (Algebra.adjoin R (↑t)).toSubmodule from fun x hx =>
+    le_antisymmₓ (Algebra.adjoin_le fun x hx => show x ∈ S.to_submodule from ht ▸ subset_span hx) <|
+      show S.to_submodule ≤ (Algebra.adjoin R ↑t).toSubmodule from fun x hx =>
         span_le.mpr (fun x hx => Algebra.subset_adjoin hx)
-          (show x ∈ span R (↑t) by
+          (show x ∈ span R ↑t by
             rw [ht]
             exact hx)⟩
 
@@ -113,7 +113,7 @@ theorem fg_of_noetherian [IsNoetherian R A] (S : Subalgebra R A) : S.fg :=
 theorem fg_of_submodule_fg (h : (⊤ : Submodule R A).Fg) : (⊤ : Subalgebra R A).Fg :=
   let ⟨s, hs⟩ := h
   ⟨s,
-    to_submodule_injective $ by
+    to_submodule_injective <| by
       rw [Algebra.top_to_submodule, eq_top_iff, ← hs, span_le]
       exact Algebra.subset_adjoin⟩
 
@@ -141,8 +141,8 @@ end
 
 theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Injective f) (hs : (S.map f).Fg) : S.fg :=
   let ⟨s, hs⟩ := hs
-  ⟨s.preimage f $ fun _ _ _ _ h => hf h,
-    map_injective f hf $ by
+  ⟨(s.preimage f) fun _ _ _ _ h => hf h,
+    map_injective f hf <| by
       rw [← Algebra.adjoin_image, Finset.coe_preimage, Set.image_preimage_eq_of_subset, hs]
       rw [← AlgHom.coe_range, ← Algebra.adjoin_le_iff, hs, ← Algebra.map_top]
       exact map_mono le_top⟩
@@ -151,7 +151,7 @@ theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).Fg ↔ S.fg :=
   ⟨fun h => by
     rw [← S.range_val, ← Algebra.map_top]
     exact fg_map _ _ h, fun h =>
-    fg_of_fg_map _ S.val Subtype.val_injective $ by
+    fg_of_fg_map _ S.val Subtype.val_injective <| by
       rw [Algebra.map_top, range_val]
       exact h⟩
 

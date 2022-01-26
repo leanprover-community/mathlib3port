@@ -42,13 +42,13 @@ unsafe def mk_replacer₂ (ntac : Name) (v : expr × expr) : expr → Nat → Op
     let b' ← mk_replacer₂ b (i + 1)
     some (expr.lam n bi d b')
   | quote.1 (tactic (%%ₓβ)), i =>
-    some $
+    some <|
       (expr.const `` replacer []).mk_app
         [reflect ntac, β, reflect β, expr.lam `γ BinderInfo.default (quote.1 Type) v.1,
-          expr.lam `γ BinderInfo.default (quote.1 Type) $
+          expr.lam `γ BinderInfo.default (quote.1 Type) <|
             expr.lam `eγ BinderInfo.inst_implicit ((quote.1 (@reflected Type) : expr) β) v.2,
-          expr.lam `γ BinderInfo.default (quote.1 Type) $
-            expr.lam `f BinderInfo.default v.1 $ (List.range i).foldr (fun i e' => e' (expr.var (i + 2))) (expr.var 0)]
+          expr.lam `γ BinderInfo.default (quote.1 Type) <|
+            expr.lam `f BinderInfo.default v.1 <| (List.range i).foldr (fun i e' => e' (expr.var (i + 2))) (expr.var 0)]
   | _, i => none
 
 unsafe def mk_replacer (ntac : Name) (e : expr) : tactic expr :=
@@ -72,10 +72,10 @@ unsafe def replacer_attr (ntac : Name) : user_attribute where
         "can optionally have an argument of type `tactic unit` or " ++
       "`option (tactic unit)` which refers to the previous definition, if any."
   after_set :=
-    some $ fun n _ _ => do
+    some fun n _ _ => do
       let d ← get_decl n
       let base ← get_decl ntac
-      guardb ((valid_types base.type).any (· =ₐ d.type)) <|> fail f! "incorrect type for @[{ntac}]"
+      guardb ((valid_types base.type).any (expr.alpha_eqv · d.type)) <|> fail f! "incorrect type for @[{ntac}]"
 
 /-- Define a new replaceable tactic. -/
 unsafe def def_replacer (ntac : Name) (ty : expr) : tactic Unit :=
@@ -85,7 +85,7 @@ unsafe def def_replacer (ntac : Name) (ty : expr) : tactic Unit :=
   set_basic_attribute `user_attribute nattr tt
   let v ← mk_replacer ntac ty
   add_meta_definition ntac [] ty v
-  add_doc_string ntac $
+  add_doc_string ntac <|
       "The `" ++ toString ntac ++ "` tactic is a \"replaceable\" " ++
                 "tactic, which means that its meaning is defined by tactics that " ++
               "are defined later with the `@[" ++
@@ -110,7 +110,7 @@ same type, or the type `α → β → tactic γ → tactic γ` or
 `α → β → option (tactic γ) → tactic γ` analogously to the previous cases.
  -/
 @[user_command]
-unsafe def def_replacer_cmd (_ : parse $ tk "def_replacer") : lean.parser Unit := do
+unsafe def def_replacer_cmd (_ : parse <| tk "def_replacer") : lean.parser Unit := do
   let ntac ← ident
   let ty ← optionalₓ (tk ":" *> types.texpr)
   match ty with
@@ -134,7 +134,7 @@ unsafe def replaceable_attr : user_attribute where
   Name := `replaceable
   descr := "make definition replaceable in dependent modules"
   after_set :=
-    some $ fun n' _ _ => do
+    some fun n' _ _ => do
       let n ← unprime n'
       let d ← get_decl n'
       def_replacer n d.type

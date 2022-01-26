@@ -125,7 +125,7 @@ def canonize : preterm → term
   | _ -* _ => ⟨0, []⟩
 
 @[simp]
-theorem val_canonize {v : Nat → Nat} : ∀ {t : preterm}, t.sub_free → ((canonize t).val fun x => ↑v x) = t.val v
+theorem val_canonize {v : Nat → Nat} : ∀ {t : preterm}, t.sub_free → ((canonize t).val fun x => ↑(v x)) = t.val v
   | &i, h1 => by
     simp only [canonize, preterm.val_const, term.val, coeffs.val_nil, add_zeroₓ]
   | i ** n, h1 => by

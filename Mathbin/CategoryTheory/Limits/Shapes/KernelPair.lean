@@ -84,7 +84,7 @@ def cancel_right {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} (comm : a ≫ f₁ = b ≫ f�
     is_kernel_pair f₁ a b :=
   { comm,
     IsLimit :=
-      pullback_cone.is_limit_aux' _ $ fun s => by
+      (pullback_cone.is_limit_aux' _) fun s => by
         let s' : pullback_cone (f₁ ≫ f₂) (f₁ ≫ f₂) := pullback_cone.mk s.fst s.snd (s.condition_assoc _)
         refine'
           ⟨big_k.is_limit.lift s', big_k.is_limit.fac _ walking_cospan.left, big_k.is_limit.fac _ walking_cospan.right,
@@ -113,7 +113,7 @@ def comp_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [mono f₂] (small_k : is_ker
   comm := by
     rw [small_k.comm_assoc]
   IsLimit :=
-    pullback_cone.is_limit_aux' _ $ fun s => by
+    (pullback_cone.is_limit_aux' _) fun s => by
       refine' ⟨_, _, _, _⟩
       apply (pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).1
       rw [← cancel_mono f₂, assoc, s.condition, assoc]

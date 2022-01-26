@@ -103,13 +103,13 @@ theorem smul_nonpos_of_nonneg_of_nonpos (hc : 0 ≤ c) (ha : a ≤ 0) : c • a 
   @smul_nonneg R (OrderDual M) _ _ _ _ _ _ hc ha
 
 theorem eq_of_smul_eq_smul_of_pos_of_le (h₁ : c • a = c • b) (hc : 0 < c) (hle : a ≤ b) : a = b :=
-  hle.lt_or_eq.resolve_left $ fun hlt => (smul_lt_smul_of_pos hlt hc).Ne h₁
+  hle.lt_or_eq.resolve_left fun hlt => (smul_lt_smul_of_pos hlt hc).Ne h₁
 
 theorem lt_of_smul_lt_smul_of_nonneg (h : c • a < c • b) (hc : 0 ≤ c) : a < b :=
   hc.eq_or_lt.elim
     (fun hc =>
-      False.elim $
-        lt_irreflₓ (0 : M) $ by
+      False.elim <|
+        lt_irreflₓ (0 : M) <| by
           rwa [← hc, zero_smul, zero_smul] at h)
     (OrderedSmul.lt_of_smul_lt_smul_of_pos h)
 

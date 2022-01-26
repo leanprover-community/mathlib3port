@@ -138,7 +138,7 @@ theorem extreme_points_empty : (∅ : Set E).ExtremePoints 𝕜 = ∅ :=
 
 @[simp]
 theorem extreme_points_singleton : ({x} : Set E).ExtremePoints 𝕜 = {x} :=
-  extreme_points_subset.antisymm $ singleton_subset_iff.2 ⟨mem_singleton x, fun x₁ hx₁ x₂ hx₂ _ => ⟨hx₁, hx₂⟩⟩
+  extreme_points_subset.antisymm <| singleton_subset_iff.2 ⟨mem_singleton x, fun x₁ hx₁ x₂ hx₂ _ => ⟨hx₁, hx₂⟩⟩
 
 theorem inter_extreme_points_subset_extreme_points_of_subset (hBA : B ⊆ A) :
     B ∩ A.extreme_points 𝕜 ⊆ B.extreme_points 𝕜 := fun x ⟨hxB, hxA⟩ =>

@@ -36,7 +36,7 @@ theorem AddSubgroup.cyclic_of_min {H : AddSubgroup G} {a : G} (ha : IsLeast { g 
   obtain ⟨⟨a_in, a_pos⟩, a_min⟩ := ha
   refine'
     le_antisymmₓ _
-      (H.closure_le.mpr $ by
+      (H.closure_le.mpr <| by
         simp [a_in])
   intro g g_in
   obtain ⟨k, ⟨nonneg, lt⟩, _⟩ : ∃! k, 0 ≤ g - k • a ∧ g - k • a < a := exists_unique_zsmul_near_of_pos' a_pos g

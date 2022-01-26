@@ -127,8 +127,8 @@ def Profinite.toCompHausEquivalence (X : CompHaus.{u}) (Y : Profinite.{u}) :
   invFun := fun g =>
     { toFun := Continuous.connectedComponentsLift g.2,
       continuous_to_fun := Continuous.connected_components_lift_continuous g.2 }
-  left_inv := fun f => ContinuousMap.ext $ ConnectedComponents.surjective_coe.forall.2 $ fun a => rfl
-  right_inv := fun f => ContinuousMap.ext $ fun x => rfl
+  left_inv := fun f => ContinuousMap.ext <| ConnectedComponents.surjective_coe.forall.2 fun a => rfl
+  right_inv := fun f => ContinuousMap.ext fun x => rfl
 
 /-- The connected_components functor from compact Hausdorff spaces to profinite spaces,
 left adjoint to the inclusion functor.
@@ -274,8 +274,8 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : epi f ↔ Funct
     have hUy : U ∈ nhds y := hU.mem_nhds hyU
     obtain ⟨V, hV, hyV, hVU⟩ := is_topological_basis_clopen.mem_nhds_iff.mp hUy
     classical
-    let this' : TopologicalSpace (Ulift.{u} $ Finₓ 2) := ⊥
-    let Z := of (Ulift.{u} $ Finₓ 2)
+    let this' : TopologicalSpace (Ulift.{u} <| Finₓ 2) := ⊥
+    let Z := of (Ulift.{u} <| Finₓ 2)
     let g : Y ⟶ Z := ⟨(LocallyConstant.ofClopen hV).map Ulift.up, LocallyConstant.continuous _⟩
     let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
     have H : h = g := by

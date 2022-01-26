@@ -230,9 +230,9 @@ def colimit_cocone_is_colimit : is_colimit colimit_cocone where
   fac' := fun t j =>
     MonoidHom.coe_inj ((types.colimit_cocone_is_colimit (F ⋙ forget Mon)).fac ((forget Mon).mapCocone t) j)
   uniq' := fun t m h =>
-    MonoidHom.coe_inj $
+    MonoidHom.coe_inj <|
       (types.colimit_cocone_is_colimit (F ⋙ forget Mon)).uniq ((forget Mon).mapCocone t) m fun j =>
-        funext $ fun x => MonoidHom.congr_fun (h j) x
+        funext fun x => MonoidHom.congr_fun (h j) x
 
 @[to_additive]
 instance forget_preserves_filtered_colimits : preserves_filtered_colimits (forget Mon) where
@@ -292,11 +292,11 @@ def colimit_cocone_is_colimit : is_colimit colimit_cocone where
   desc := fun t =>
     Mon.FilteredColimits.colimitDesc (F ⋙ forget₂ CommMon Mon.{v}) ((forget₂ CommMon Mon.{v}).mapCocone t)
   fac' := fun t j =>
-    MonoidHom.coe_inj $ (types.colimit_cocone_is_colimit (F ⋙ forget CommMon)).fac ((forget CommMon).mapCocone t) j
+    MonoidHom.coe_inj <| (types.colimit_cocone_is_colimit (F ⋙ forget CommMon)).fac ((forget CommMon).mapCocone t) j
   uniq' := fun t m h =>
-    MonoidHom.coe_inj $
+    MonoidHom.coe_inj <|
       (types.colimit_cocone_is_colimit (F ⋙ forget CommMon)).uniq ((forget CommMon).mapCocone t) m fun j =>
-        funext $ fun x => MonoidHom.congr_fun (h j) x
+        funext fun x => MonoidHom.congr_fun (h j) x
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
 instance forget₂_Mon_preserves_filtered_colimits : preserves_filtered_colimits (forget₂ CommMon Mon.{v}) where

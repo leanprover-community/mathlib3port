@@ -50,11 +50,11 @@ theorem nth_of_fn_aux {n} (f : Finₓ n → α) i :
 /-- The `n`th element of a list -/
 @[simp]
 theorem nth_of_fn {n} (f : Finₓ n → α) i : nth (of_fn f) i = of_fn_nth_val f i :=
-  nth_of_fn_aux f _ _ _ _ $ fun i => by
+  (nth_of_fn_aux f _ _ _ _) fun i => by
     simp only [of_fn_nth_val, dif_neg (not_ltₓ.2 (Nat.le_add_leftₓ n i))] <;> rfl
 
 theorem nth_le_of_fn {n} (f : Finₓ n → α) (i : Finₓ n) : nth_le (of_fn f) i ((length_of_fn f).symm ▸ i.2) = f i :=
-  Option.some.injₓ $ by
+  Option.some.injₓ <| by
     rw [← nth_le_nth] <;> simp only [List.nth_of_fn, of_fn_nth_val, Finₓ.eta, dif_pos i.is_lt]
 
 @[simp]
@@ -116,9 +116,9 @@ theorem forall_mem_of_fn_iff {n : ℕ} {f : Finₓ n → α} {P : α → Prop} :
 
 @[simp]
 theorem of_fn_const (n : ℕ) (c : α) : (of_fn fun i : Finₓ n => c) = repeat c n :=
-  Nat.recOn n
+  (Nat.recOn n
       (by
-        simp ) $
+        simp ))
     fun n ihn => by
     simp [ihn]
 

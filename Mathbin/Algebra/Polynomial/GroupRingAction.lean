@@ -79,19 +79,19 @@ open_locale Classical
 
 /-- the product of `(X - g • x)` over distinct `g • x`. -/
 noncomputable def prodXSubSmul (x : R) : Polynomial R :=
-  (Finset.univ : Finset (G ⧸ MulAction.stabilizer G x)).Prod $ fun g =>
+  (Finset.univ : Finset (G ⧸ MulAction.stabilizer G x)).Prod fun g =>
     Polynomial.x - Polynomial.c (of_quotient_stabilizer G x g)
 
 theorem prodXSubSmul.monic (x : R) : (prodXSubSmul G R x).Monic :=
-  Polynomial.monic_prod_of_monic _ _ $ fun g _ => Polynomial.monic_X_sub_C _
+  (Polynomial.monic_prod_of_monic _ _) fun g _ => Polynomial.monic_X_sub_C _
 
 theorem prodXSubSmul.eval (x : R) : (prodXSubSmul G R x).eval x = 0 :=
-  (MonoidHom.map_prod ((Polynomial.aeval x).toRingHom.toMonoidHom : Polynomial R →* R) _ _).trans $
-    Finset.prod_eq_zero (Finset.mem_univ $ QuotientGroup.mk 1) $ by
+  (MonoidHom.map_prod ((Polynomial.aeval x).toRingHom.toMonoidHom : Polynomial R →* R) _ _).trans <|
+    Finset.prod_eq_zero (Finset.mem_univ <| QuotientGroup.mk 1) <| by
       simp
 
 theorem prodXSubSmul.smul (x : R) (g : G) : g • prodXSubSmul G R x = prodXSubSmul G R x :=
-  Finset.smul_prod.trans $
+  Finset.smul_prod.trans <|
     Fintype.prod_bijective _ (MulAction.bijective g) _ _ fun g' => by
       rw [of_quotient_stabilizer_smul, smul_sub, Polynomial.smul_X, Polynomial.smul_C]
 

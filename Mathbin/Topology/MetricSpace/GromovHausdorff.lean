@@ -90,29 +90,22 @@ def GH_space.rep (p : GH_space) : Type :=
 theorem eq_to_GH_space_iff {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X]
     {p : nonempty_compacts ℓ_infty_ℝ} : ⟦p⟧ = to_GH_space X ↔ ∃ Ψ : X → ℓ_infty_ℝ, Isometry Ψ ∧ range Ψ = p.val := by
   simp only [to_GH_space, Quotientₓ.eq]
-  constructor
-  · intro h
-    rcases Setoidₓ.symm h with ⟨e⟩
+  refine' ⟨fun h => _, _⟩
+  · rcases Setoidₓ.symm h with ⟨e⟩
     have f := (kuratowskiEmbedding.isometry X).isometricOnRange.trans e
-    use fun x => f x
-    constructor
-    · apply isometry_subtype_coe.comp f.isometry
-      
-    · rw [range_comp, f.range_eq_univ, Set.image_univ, Subtype.range_coe]
-      
+    use fun x => f x, isometry_subtype_coe.comp f.isometry
+    rw [range_comp, f.range_eq_univ, Set.image_univ, Subtype.range_coe]
     
   · rintro ⟨Ψ, ⟨isomΨ, rangeΨ⟩⟩
     have f := ((kuratowskiEmbedding.isometry X).isometricOnRange.symm.trans isomΨ.isometric_on_range).symm
     have E : (range Ψ ≃ᵢ (NonemptyCompacts.kuratowskiEmbedding X).val) = (p.val ≃ᵢ range (kuratowskiEmbedding X)) := by
       dunfold NonemptyCompacts.kuratowskiEmbedding
       rw [rangeΨ] <;> rfl
-    have g := cast E f
-    exact ⟨g⟩
+    exact ⟨cast E f⟩
     
 
-theorem eq_to_GH_space {p : nonempty_compacts ℓ_infty_ℝ} : ⟦p⟧ = to_GH_space p.val := by
-  refine' eq_to_GH_space_iff.2 ⟨(fun x => x : p.val → ℓ_infty_ℝ), _, Subtype.range_coe⟩
-  apply isometry_subtype_coe
+theorem eq_to_GH_space {p : nonempty_compacts ℓ_infty_ℝ} : ⟦p⟧ = to_GH_space p.val :=
+  eq_to_GH_space_iff.2 ⟨fun x => x, isometry_subtype_coe, Subtype.range_coe⟩
 
 section
 
@@ -140,39 +133,34 @@ theorem to_GH_space_eq_to_GH_space_iff_isometric {X : Type u} [MetricSpace X] [C
     [MetricSpace Y] [CompactSpace Y] [Nonempty Y] : to_GH_space X = to_GH_space Y ↔ Nonempty (X ≃ᵢ Y) :=
   ⟨by
     simp only [to_GH_space, Quotientₓ.eq]
-    intro h
-    rcases h with ⟨e⟩
+    rintro ⟨e⟩
     have I :
       ((NonemptyCompacts.kuratowskiEmbedding X).val ≃ᵢ (NonemptyCompacts.kuratowskiEmbedding Y).val) =
         (range (kuratowskiEmbedding X) ≃ᵢ range (kuratowskiEmbedding Y)) :=
       by
       dunfold NonemptyCompacts.kuratowskiEmbedding
       rfl
-    have e' := cast I e
     have f := (kuratowskiEmbedding.isometry X).isometricOnRange
     have g := (kuratowskiEmbedding.isometry Y).isometricOnRange.symm
-    have h := (f.trans e').trans g
-    exact ⟨h⟩, by
+    exact ⟨f.trans <| (cast I e).trans g⟩, by
     rintro ⟨e⟩
     simp only [to_GH_space, Quotientₓ.eq]
     have f := (kuratowskiEmbedding.isometry X).isometricOnRange.symm
     have g := (kuratowskiEmbedding.isometry Y).isometricOnRange
-    have h := (f.trans e).trans g
     have I :
       (range (kuratowskiEmbedding X) ≃ᵢ range (kuratowskiEmbedding Y)) =
         ((NonemptyCompacts.kuratowskiEmbedding X).val ≃ᵢ (NonemptyCompacts.kuratowskiEmbedding Y).val) :=
       by
       dunfold NonemptyCompacts.kuratowskiEmbedding
       rfl
-    have h' := cast I h
-    exact ⟨h'⟩⟩
+    exact ⟨cast I ((f.trans e).trans g)⟩⟩
 
 /-- Distance on `GH_space`: the distance between two nonempty compact spaces is the infimum
 Hausdorff distance between isometric copies of the two spaces in a metric space. For the definition,
 we only consider embeddings in `ℓ^∞(ℝ)`, but we will prove below that it works for all spaces. -/
 instance : HasDist GH_space where
   dist := fun x y =>
-    Inf $
+    Inf <|
       (fun p : nonempty_compacts ℓ_infty_ℝ × nonempty_compacts ℓ_infty_ℝ => Hausdorff_dist p.1.val p.2.val) ''
         ({ a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y })
 
@@ -578,7 +566,7 @@ attribute [local instance] Sum.topologicalSpace Sum.uniformSpace
 isometric up to `ε₂`, then the Gromov-Hausdorff distance between the spaces is bounded by
 `ε₁ + ε₂/2 + ε₃`. -/
 theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε₃ : ℝ} (hs : ∀ x : X, ∃ y ∈ s, dist x y ≤ ε₁)
-    (hs' : ∀ x : Y, ∃ y : s, dist x (Φ y) ≤ ε₃) (H : ∀ x y : s, |dist x y - dist (Φ x) (Φ y)| ≤ ε₂) :
+    (hs' : ∀ x : Y, ∃ y : s, dist x (Φ y) ≤ ε₃) (H : ∀ x y : s, abs (dist x y - dist (Φ x) (Φ y)) ≤ ε₂) :
     GH_dist X Y ≤ ε₁ + ε₂ / 2 + ε₃ := by
   refine' le_of_forall_pos_le_add fun δ δ0 => _
   rcases exists_mem_of_nonempty X with ⟨xX, _⟩
@@ -586,9 +574,9 @@ theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε�
   have sne : s.nonempty := ⟨xs, hxs⟩
   let this' : Nonempty s := sne.to_subtype
   have : 0 ≤ ε₂ := le_transₓ (abs_nonneg _) (H ⟨xs, hxs⟩ ⟨xs, hxs⟩)
-  have : ∀ p q : s, |dist p q - dist (Φ p) (Φ q)| ≤ 2 * (ε₂ / 2 + δ) := fun p q =>
+  have : ∀ p q : s, abs (dist p q - dist (Φ p) (Φ q)) ≤ 2 * (ε₂ / 2 + δ) := fun p q =>
     calc
-      |dist p q - dist (Φ p) (Φ q)| ≤ ε₂ := H p q
+      abs (dist p q - dist (Φ p) (Φ q)) ≤ ε₂ := H p q
       _ ≤ 2 * (ε₂ / 2 + δ) := by
         linarith
       
@@ -604,14 +592,14 @@ theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε�
   have : GH_dist X Y ≤ Hausdorff_dist (range Fl) (range Fr) := GH_dist_le_Hausdorff_dist Il Ir
   have :
     Hausdorff_dist (range Fl) (range Fr) ≤ Hausdorff_dist (range Fl) (Fl '' s) + Hausdorff_dist (Fl '' s) (range Fr) :=
-    have B : Bounded (range Fl) := (is_compact_range Il.continuous).Bounded
+    have B : bounded (range Fl) := (is_compact_range Il.continuous).Bounded
     Hausdorff_dist_triangle
       (Hausdorff_edist_ne_top_of_nonempty_of_bounded (range_nonempty _) (sne.image _) B
         (B.mono (image_subset_range _ _)))
   have :
     Hausdorff_dist (Fl '' s) (range Fr) ≤
       Hausdorff_dist (Fl '' s) (Fr '' range Φ) + Hausdorff_dist (Fr '' range Φ) (range Fr) :=
-    have B : Bounded (range Fr) := (is_compact_range Ir.continuous).Bounded
+    have B : bounded (range Fr) := (is_compact_range Ir.continuous).Bounded
     Hausdorff_dist_triangle'
       (Hausdorff_edist_ne_top_of_nonempty_of_bounded ((range_nonempty _).Image _) (range_nonempty _)
         (bounded.mono (image_subset_range _ _) B) B)
@@ -718,7 +706,7 @@ instance : second_countable_topology GH_space := by
       rw [this]
       exact le_of_ltₓ hy
       
-    show ∀ x y : s p, |dist x y - dist (Φ x) (Φ y)| ≤ ε
+    show ∀ x y : s p, abs (dist x y - dist (Φ x) (Φ y)) ≤ ε
     · intro x y
       have : dist (Φ x) (Φ y) = dist (Ψ x) (Ψ y) := rfl
       rw [this]
@@ -754,14 +742,14 @@ instance : second_countable_topology GH_space := by
       rw [Ap, Aq] at this
       have I :=
         calc
-          |ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)| = |ε⁻¹ * (dist x y - dist (Ψ x) (Ψ y))| := (abs_mul _ _).symm
-          _ = |ε⁻¹ * dist x y - ε⁻¹ * dist (Ψ x) (Ψ y)| := by
+          abs ε⁻¹ * abs (dist x y - dist (Ψ x) (Ψ y)) = abs (ε⁻¹ * (dist x y - dist (Ψ x) (Ψ y))) := (abs_mul _ _).symm
+          _ = abs (ε⁻¹ * dist x y - ε⁻¹ * dist (Ψ x) (Ψ y)) := by
             congr
             ring
           _ ≤ 1 := le_of_ltₓ (abs_sub_lt_one_of_floor_eq_floor this)
           
-      calc |dist x y - dist (Ψ x) (Ψ y)| = ε * ε⁻¹ * |dist x y - dist (Ψ x) (Ψ y)| := by
-          rw [mul_inv_cancel (ne_of_gtₓ εpos), one_mulₓ]_ = ε * (|ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)|) := by
+      calc abs (dist x y - dist (Ψ x) (Ψ y)) = ε * ε⁻¹ * abs (dist x y - dist (Ψ x) (Ψ y)) := by
+          rw [mul_inv_cancel (ne_of_gtₓ εpos), one_mulₓ]_ = ε * (abs ε⁻¹ * abs (dist x y - dist (Ψ x) (Ψ y))) := by
           rw [abs_of_nonneg (le_of_ltₓ (inv_pos.2 εpos)), mul_assoc]_ ≤ ε * 1 :=
           mul_le_mul_of_nonneg_left I (le_of_ltₓ εpos)_ = ε := mul_oneₓ _
       
@@ -850,7 +838,7 @@ theorem TotallyBounded {t : Set GH_space} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       rw [this]
       exact le_transₓ (le_of_ltₓ hy) u_le_ε
       
-    show ∀ x y : s p, |dist x y - dist (Φ x) (Φ y)| ≤ ε
+    show ∀ x y : s p, abs (dist x y - dist (Φ x) (Φ y)) ≤ ε
     · intro x y
       have : dist (Φ x) (Φ y) = dist (Ψ x) (Ψ y) := rfl
       rw [this]
@@ -906,14 +894,14 @@ theorem TotallyBounded {t : Set GH_space} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
         rw [← Int.to_nat_of_nonneg D, ← Int.to_nat_of_nonneg D', Int.floor_to_nat, Int.floor_to_nat, this]
       have I :=
         calc
-          |ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)| = |ε⁻¹ * (dist x y - dist (Ψ x) (Ψ y))| := (abs_mul _ _).symm
-          _ = |ε⁻¹ * dist x y - ε⁻¹ * dist (Ψ x) (Ψ y)| := by
+          abs ε⁻¹ * abs (dist x y - dist (Ψ x) (Ψ y)) = abs (ε⁻¹ * (dist x y - dist (Ψ x) (Ψ y))) := (abs_mul _ _).symm
+          _ = abs (ε⁻¹ * dist x y - ε⁻¹ * dist (Ψ x) (Ψ y)) := by
             congr
             ring
           _ ≤ 1 := le_of_ltₓ (abs_sub_lt_one_of_floor_eq_floor this)
           
-      calc |dist x y - dist (Ψ x) (Ψ y)| = ε * ε⁻¹ * |dist x y - dist (Ψ x) (Ψ y)| := by
-          rw [mul_inv_cancel (ne_of_gtₓ εpos), one_mulₓ]_ = ε * (|ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)|) := by
+      calc abs (dist x y - dist (Ψ x) (Ψ y)) = ε * ε⁻¹ * abs (dist x y - dist (Ψ x) (Ψ y)) := by
+          rw [mul_inv_cancel (ne_of_gtₓ εpos), one_mulₓ]_ = ε * (abs ε⁻¹ * abs (dist x y - dist (Ψ x) (Ψ y))) := by
           rw [abs_of_nonneg (le_of_ltₓ (inv_pos.2 εpos)), mul_assoc]_ ≤ ε * 1 :=
           mul_le_mul_of_nonneg_left I (le_of_ltₓ εpos)_ = ε := mul_oneₓ _
       

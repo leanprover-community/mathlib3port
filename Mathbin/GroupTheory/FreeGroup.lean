@@ -160,7 +160,7 @@ private theorem step.diamond_aux :
     let ⟨H1, H2⟩ := List.cons.injₓ H
     match step.diamond_aux H2 with
     | Or.inl H3 =>
-      Or.inl $ by
+      Or.inl <| by
         simp [H1, H3]
     | Or.inr ⟨L₅, H3, H4⟩ =>
       Or.inr
@@ -336,12 +336,12 @@ theorem antisymm (h₁₂ : red L₁ L₂) : red L₂ L₁ → L₁ = L₂ :=
     let ⟨n, Eq⟩ := length (h₃₂.trans h₂₁)
     have : List.length L₃ + 0 = List.length L₃ + (2 * n + 2) := by
       simpa [(step.length h₁₃).symm, add_commₓ, add_assocₓ] using Eq
-    Nat.noConfusion $ Nat.add_left_cancel this
+    Nat.noConfusion <| Nat.add_left_cancel this
 
 end Red
 
 theorem equivalence_join_red : Equivalenceₓ (join (@red α)) :=
-  equivalence_join_refl_trans_gen $ fun a b c hab hac =>
+  equivalence_join_refl_trans_gen fun a b c hab hac =>
     match b, c, red.step.diamond hab hac rfl with
     | b, _, Or.inl rfl =>
       ⟨b, by
@@ -357,7 +357,7 @@ theorem eqv_gen_step_iff_join_red : EqvGen red.step L₁ L₂ ↔ join red L₁ 
     (fun h =>
       have : EqvGen (join red) L₁ L₂ := h.mono fun a b => join_red_of_step
       equivalence_join_red.eqv_gen_iff.1 this)
-    (join_of_equivalence (EqvGen.is_equivalence _) $ fun a b =>
+    ((join_of_equivalence (EqvGen.is_equivalence _)) fun a b =>
       refl_trans_gen_of_equivalence (EqvGen.is_equivalence _) EqvGen.rel)
 
 end FreeGroup
@@ -365,7 +365,7 @@ end FreeGroup
 /-- The free group over a type, i.e. the words formed by the elements of the type and their formal
 inverses, quotient by one step reduction. -/
 def FreeGroup (α : Type u) : Type u :=
-  Quot $ @FreeGroup.Red.Step α
+  Quot <| @FreeGroup.Red.Step α
 
 namespace FreeGroup
 
@@ -405,27 +405,28 @@ instance : Inhabited (FreeGroup α) :=
 
 instance : Mul (FreeGroup α) :=
   ⟨fun x y =>
-    Quot.liftOn x (fun L₁ => Quot.liftOn y (fun L₂ => mk $ L₁ ++ L₂) fun L₂ L₃ H => Quot.sound $ red.step.append_left H)
-      fun L₁ L₂ H => Quot.induction_on y $ fun L₃ => Quot.sound $ red.step.append_right H⟩
+    Quot.liftOn x
+      (fun L₁ => Quot.liftOn y (fun L₂ => mk <| L₁ ++ L₂) fun L₂ L₃ H => Quot.sound <| red.step.append_left H)
+      fun L₁ L₂ H => (Quot.induction_on y) fun L₃ => Quot.sound <| red.step.append_right H⟩
 
 @[simp]
 theorem mul_mk : mk L₁ * mk L₂ = mk (L₁ ++ L₂) :=
   rfl
 
-instance : HasInv (FreeGroup α) :=
+instance : Inv (FreeGroup α) :=
   ⟨fun x =>
-    Quot.liftOn x (fun L => mk (L.map $ fun x : α × Bool => (x.1, bnot x.2)).reverse) fun a b h =>
-      Quot.sound $ by
+    Quot.liftOn x (fun L => mk (L.map fun x : α × Bool => (x.1, bnot x.2)).reverse) fun a b h =>
+      Quot.sound <| by
         cases h <;> simp ⟩
 
 @[simp]
-theorem inv_mk : mk L⁻¹ = mk (L.map $ fun x : α × Bool => (x.1, bnot x.2)).reverse :=
+theorem inv_mk : (mk L)⁻¹ = mk (L.map fun x : α × Bool => (x.1, bnot x.2)).reverse :=
   rfl
 
 instance : Groupₓ (FreeGroup α) where
   mul := · * ·
   one := 1
-  inv := HasInv.inv
+  inv := Inv.inv
   mul_assoc := by
     rintro ⟨L₁⟩ ⟨L₂⟩ ⟨L₃⟩ <;> simp
   one_mul := by
@@ -435,9 +436,9 @@ instance : Groupₓ (FreeGroup α) where
   mul_left_inv := by
     rintro ⟨L⟩ <;>
       exact
-        List.recOn L rfl $ fun ⟨x, b⟩ tl ih =>
+        (List.recOn L rfl) fun ⟨x, b⟩ tl ih =>
           Eq.trans
-            (Quot.sound $ by
+            (Quot.sound <| by
               simp [one_eq_mk])
             ih
 
@@ -462,7 +463,7 @@ section lift
 variable {β : Type v} [Groupₓ β] (f : α → β) {x y : FreeGroup α}
 
 /-- Given `f : α → β` with `β` a group, the canonical map `list (α × bool) → β` -/
-def lift.aux : List (α × Bool) → β := fun L => List.prod $ L.map $ fun x => cond x.2 (f x.1) (f x.1⁻¹)
+def lift.aux : List (α × Bool) → β := fun L => List.prod <| L.map fun x => cond x.2 (f x.1) (f x.1)⁻¹
 
 theorem red.step.lift {f : α → β} (H : red.step L₁ L₂) : lift.aux f L₁ = lift.aux f L₂ := by
   cases' H with _ _ _ b <;> cases b <;> simp [lift.aux]
@@ -473,19 +474,19 @@ the free group over `α` to `β` -/
 @[simps symmApply]
 def lift : (α → β) ≃ (FreeGroup α →* β) where
   toFun := fun f =>
-    MonoidHom.mk' (Quot.lift (lift.aux f) $ fun L₁ L₂ => red.step.lift) $ by
+    MonoidHom.mk' ((Quot.lift (lift.aux f)) fun L₁ L₂ => red.step.lift) <| by
       rintro ⟨L₁⟩ ⟨L₂⟩
       simp [lift.aux]
   invFun := fun g => g ∘ of
   left_inv := fun f => one_mulₓ _
   right_inv := fun g =>
-    MonoidHom.ext $ by
+    MonoidHom.ext <| by
       rintro ⟨L⟩
       apply List.recOn L
       · exact g.map_one.symm
         
       · rintro ⟨x, _ | _⟩ t (ih : _ = g (mk t))
-        · show _ = g (of x⁻¹ * mk t)
+        · show _ = g ((of x)⁻¹ * mk t)
           simpa [lift.aux] using ih
           
         · show _ = g (of x * mk t)
@@ -496,7 +497,7 @@ def lift : (α → β) ≃ (FreeGroup α →* β) where
 variable {f}
 
 @[simp]
-theorem lift.mk : lift f (mk L) = List.prod (L.map $ fun x => cond x.2 (f x.1) (f x.1⁻¹)) :=
+theorem lift.mk : lift f (mk L) = List.prod (L.map fun x => cond x.2 (f x.1) (f x.1)⁻¹) :=
   rfl
 
 @[simp]
@@ -504,14 +505,14 @@ theorem lift.of {x} : lift f (of x) = f x :=
   one_mulₓ _
 
 theorem lift.unique (g : FreeGroup α →* β) (hg : ∀ x, g (of x) = f x) : ∀ {x}, g x = lift f x :=
-  MonoidHom.congr_fun $ lift.symm_apply_eq.mp (funext hg : g ∘ of = f)
+  MonoidHom.congr_fun <| lift.symm_apply_eq.mp (funext hg : g ∘ of = f)
 
 /-- Two homomorphisms out of a free group are equal if they are equal on generators.
 
 See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem ext_hom {G : Type _} [Groupₓ G] (f g : FreeGroup α →* G) (h : ∀ a, f (of a) = g (of a)) : f = g :=
-  lift.symm.Injective $ funext h
+  lift.symm.Injective <| funext h
 
 theorem lift.of_eq (x : FreeGroup α) : lift of x = x :=
   MonoidHom.congr_fun (lift.apply_symm_apply (MonoidHom.id _)) x
@@ -522,7 +523,7 @@ theorem lift.range_subset {s : Subgroup β} (H : Set.Range f ⊆ s) : Set.Range 
       List.recOn L s.one_mem fun ⟨x, b⟩ tl ih =>
         Bool.recOn b
           (by
-            simp at ih⊢ <;> exact s.mul_mem (s.inv_mem $ H ⟨x, rfl⟩) ih)
+            simp at ih⊢ <;> exact s.mul_mem (s.inv_mem <| H ⟨x, rfl⟩) ih)
           (by
             simp at ih⊢ <;> exact s.mul_mem (H ⟨x, rfl⟩) ih)
 
@@ -551,7 +552,7 @@ to a group homomorphism from the free group
 ver `α` to the free group over `β`. -/
 def map : FreeGroup α →* FreeGroup β :=
   MonoidHom.mk'
-    (Quot.map (List.map $ fun x => (f x.1, x.2)) $ fun L₁ L₂ H => by
+    ((Quot.map (List.map fun x => (f x.1, x.2))) fun L₁ L₂ H => by
       cases H <;> simp )
     (by
       rintro ⟨L₁⟩ ⟨L₂⟩
@@ -583,14 +584,14 @@ theorem map.unique (g : FreeGroup α →* FreeGroup β) (hg : ∀ x, g (of x) = 
     exact
       List.recOn L g.map_one fun ⟨x, b⟩ t ih : g (mk t) = map f (mk t) =>
         Bool.recOn b
-          (show g (of x⁻¹ * mk t) = map f (of x⁻¹ * mk t) by
+          (show g ((of x)⁻¹ * mk t) = map f ((of x)⁻¹ * mk t) by
             simp [g.map_mul, g.map_inv, hg, ih])
           (show g (of x * mk t) = map f (of x * mk t) by
             simp [g.map_mul, hg, ih])
 
 theorem map_eq_lift : map f x = lift (of ∘ f) x :=
-  Eq.symm $
-    map.unique _ $ fun x => by
+  Eq.symm <|
+    (map.unique _) fun x => by
       simp
 
 /-- Equivalent types give rise to multiplicatively equivalent free groups. -/
@@ -614,7 +615,7 @@ theorem free_group_congr_symm {α β} (e : α ≃ β) : (free_group_congr e).sym
 
 theorem free_group_congr_trans {α β γ} (e : α ≃ β) (f : β ≃ γ) :
     (free_group_congr e).trans (free_group_congr f) = free_group_congr (e.trans f) :=
-  MulEquiv.ext $ map.comp _ _
+  MulEquiv.ext <| map.comp _ _
 
 end Map
 
@@ -632,7 +633,7 @@ def Prod : FreeGroup α →* α :=
 variable {x y}
 
 @[simp]
-theorem prod_mk : Prod (mk L) = List.prod (L.map $ fun x => cond x.2 x.1 (x.1⁻¹)) :=
+theorem prod_mk : Prod (mk L) = List.prod (L.map fun x => cond x.2 x.1 x.1⁻¹) :=
   rfl
 
 @[simp]
@@ -665,7 +666,7 @@ def Sum : α :=
 variable {x y}
 
 @[simp]
-theorem sum_mk : Sum (mk L) = List.sum (L.map $ fun x => cond x.2 x.1 (-x.1)) :=
+theorem sum_mk : Sum (mk L) = List.sum (L.map fun x => cond x.2 x.1 (-x.1)) :=
   rfl
 
 @[simp]
@@ -681,7 +682,7 @@ theorem sum.map_one : Sum (1 : FreeGroup α) = 0 :=
   (@Prod (Multiplicative _) _).map_one
 
 @[simp]
-theorem sum.map_inv : Sum (x⁻¹) = -Sum x :=
+theorem sum.map_inv : Sum x⁻¹ = -Sum x :=
   (@Prod (Multiplicative _) _).map_inv _
 
 end Sum
@@ -727,10 +728,10 @@ instance : Monadₓ FreeGroup.{u} where
   bind := fun α β x f => lift f x
 
 @[elab_as_eliminator]
-protected theorem induction_on {C : FreeGroup α → Prop} (z : FreeGroup α) (C1 : C 1) (Cp : ∀ x, C $ pure x)
-    (Ci : ∀ x, C (pure x) → C (pure x⁻¹)) (Cm : ∀ x y, C x → C y → C (x * y)) : C z :=
-  Quot.induction_on z $ fun L =>
-    List.recOn L C1 $ fun ⟨x, b⟩ tl ih => Bool.recOn b (Cm _ _ (Ci _ $ Cp x) ih) (Cm _ _ (Cp x) ih)
+protected theorem induction_on {C : FreeGroup α → Prop} (z : FreeGroup α) (C1 : C 1) (Cp : ∀ x, C <| pure x)
+    (Ci : ∀ x, C (pure x) → C (pure x)⁻¹) (Cm : ∀ x y, C x → C y → C (x * y)) : C z :=
+  (Quot.induction_on z) fun L =>
+    (List.recOn L C1) fun ⟨x, b⟩ tl ih => Bool.recOn b (Cm _ _ (Ci _ <| Cp x) ih) (Cm _ _ (Cp x) ih)
 
 @[simp]
 theorem map_pure (f : α → β) (x : α) : f <$> (pure x : FreeGroup α) = pure (f x) :=
@@ -808,8 +809,8 @@ variable [DecidableEq α]
 /-- The maximal reduction of a word. It is computable
 iff `α` has decidable equality. -/
 def reduce (L : List (α × Bool)) : List (α × Bool) :=
-  List.recOn L [] $ fun hd1 tl1 ih =>
-    List.casesOn ih [hd1] $ fun hd2 tl2 => if hd1.1 = hd2.1 ∧ hd1.2 = bnot hd2.2 then tl2 else hd1 :: hd2 :: tl2
+  (List.recOn L []) fun hd1 tl1 ih =>
+    (List.casesOn ih [hd1]) fun hd2 tl2 => if hd1.1 = hd2.1 ∧ hd1.2 = bnot hd2.2 then tl2 else hd1 :: hd2 :: tl2
 
 @[simp]
 theorem reduce.cons x :
@@ -897,7 +898,7 @@ theorem reduce.min (H : red (reduce L₁) L₂) : reduce L₁ = L₂ := by
 of the maximal reduction of a word is the maximal
 reduction of the word. -/
 theorem reduce.idem : reduce (reduce L) = reduce L :=
-  Eq.symm $ reduce.min reduce.red
+  Eq.symm <| reduce.min reduce.red
 
 theorem reduce.step.eq (H : red.step L₁ L₂) : reduce L₁ = reduce L₂ :=
   let ⟨L₃, HR13, HR23⟩ := red.church_rosser reduce.red (reduce.red.head H)
@@ -936,7 +937,7 @@ theorem reduce.rev (H : red L₁ L₂) : red L₂ (reduce L₁) :=
 /-- The function that sends an element of the free
 group to its maximal reduction. -/
 def to_word : FreeGroup α → List (α × Bool) :=
-  Quot.lift reduce $ fun L₁ L₂ H => reduce.step.eq H
+  (Quot.lift reduce) fun L₁ L₂ H => reduce.step.eq H
 
 theorem to_word.mk : ∀ {x : FreeGroup α}, mk (to_word x) = x := by
   rintro ⟨L⟩ <;> exact reduce.self
@@ -953,20 +954,20 @@ instance : DecidableEq (FreeGroup α) :=
 
 instance red.decidable_rel : DecidableRel (@red α)
   | [], [] => is_true red.refl
-  | [], hd2 :: tl2 => is_false $ fun H => List.noConfusion (red.nil_iff.1 H)
+  | [], hd2 :: tl2 => is_false fun H => List.noConfusion (red.nil_iff.1 H)
   | (x, b) :: tl, [] =>
     match red.decidable_rel tl [(x, bnot b)] with
-    | is_true H => is_true $ red.trans (red.cons_cons H) $ (@red.step.bnot _ [] [] _ _).to_red
-    | is_false H => is_false $ fun H2 => H $ red.cons_nil_iff_singleton.1 H2
+    | is_true H => is_true <| red.trans (red.cons_cons H) <| (@red.step.bnot _ [] [] _ _).to_red
+    | is_false H => is_false fun H2 => H <| red.cons_nil_iff_singleton.1 H2
   | (x1, b1) :: tl1, (x2, b2) :: tl2 =>
     if h : (x1, b1) = (x2, b2) then
       match red.decidable_rel tl1 tl2 with
-      | is_true H => is_true $ h ▸ red.cons_cons H
-      | is_false H => is_false $ fun H2 => H $ h ▸ (red.cons_cons_iff _).1 $ H2
+      | is_true H => is_true <| h ▸ red.cons_cons H
+      | is_false H => is_false fun H2 => H <| h ▸ (red.cons_cons_iff _).1 <| H2
     else
       match red.decidable_rel tl1 ((x1, bnot b1) :: (x2, b2) :: tl2) with
-      | is_true H => is_true $ (red.cons_cons H).tail red.step.cons_bnot
-      | is_false H => is_false $ fun H2 => H $ red.inv_of_red_of_ne h H2
+      | is_true H => is_true <| (red.cons_cons H).tail red.step.cons_bnot
+      | is_false H => is_false fun H2 => H <| red.inv_of_red_of_ne h H2
 
 /-- A list containing every word that `w₁` reduces to. -/
 def red.enum (L₁ : List (α × Bool)) : List (List (α × Bool)) :=
@@ -976,11 +977,11 @@ theorem red.enum.sound (H : L₂ ∈ red.enum L₁) : red L₁ L₂ :=
   List.of_mem_filter H
 
 theorem red.enum.complete (H : red L₁ L₂) : L₂ ∈ red.enum L₁ :=
-  List.mem_filter_of_mem (List.mem_sublists.2 $ red.sublist H) H
+  List.mem_filter_of_mem (List.mem_sublists.2 <| red.sublist H) H
 
 instance : Fintype { L₂ // red L₁ L₂ } :=
-  Fintype.subtype (List.toFinset $ red.enum L₁) $ fun L₂ =>
-    ⟨fun H => red.enum.sound $ List.mem_to_finset.1 H, fun H => List.mem_to_finset.2 $ red.enum.complete H⟩
+  (Fintype.subtype (List.toFinset <| red.enum L₁)) fun L₂ =>
+    ⟨fun H => red.enum.sound <| List.mem_to_finset.1 H, fun H => List.mem_to_finset.2 <| red.enum.complete H⟩
 
 end Reduce
 

@@ -81,22 +81,22 @@ instance nim_impartial : ∀ O : Ordinal, impartial (nim O)
       constructor
       · intro i
         let hwf : typein O.out.r i < O := nim_wf_lemma i
-        exact Or.inl ⟨i, (@impartial.neg_equiv_self _ $ nim_impartial $ typein O.out.r i).1⟩
+        exact Or.inl ⟨i, (@impartial.neg_equiv_self _ <| nim_impartial <| typein O.out.r i).1⟩
         
       · intro j
         let hwf : typein O.out.r j < O := nim_wf_lemma j
-        exact Or.inr ⟨j, (@impartial.neg_equiv_self _ $ nim_impartial $ typein O.out.r j).1⟩
+        exact Or.inr ⟨j, (@impartial.neg_equiv_self _ <| nim_impartial <| typein O.out.r j).1⟩
         
       
     · rw [Pgame.le_def]
       constructor
       · intro i
         let hwf : typein O.out.r i < O := nim_wf_lemma i
-        exact Or.inl ⟨i, (@impartial.neg_equiv_self _ $ nim_impartial $ typein O.out.r i).2⟩
+        exact Or.inl ⟨i, (@impartial.neg_equiv_self _ <| nim_impartial <| typein O.out.r i).2⟩
         
       · intro j
         let hwf : typein O.out.r j < O := nim_wf_lemma j
-        exact Or.inr ⟨j, (@impartial.neg_equiv_self _ $ nim_impartial $ typein O.out.r j).2⟩
+        exact Or.inr ⟨j, (@impartial.neg_equiv_self _ <| nim_impartial <| typein O.out.r j).2⟩
         
       
     constructor
@@ -166,7 +166,7 @@ theorem sum_first_wins_iff_neq (O₁ O₂ : Ordinal) : (nim O₁ + nim O₂).Fir
 
 theorem equiv_iff_eq (O₁ O₂ : Ordinal) : (nim O₁ ≈ nim O₂) ↔ O₁ = O₂ :=
   ⟨fun h =>
-    (sum_first_loses_iff_eq _ _).1 $ by
+    (sum_first_loses_iff_eq _ _).1 <| by
       rw [first_loses_of_equiv_iff (add_congr h (equiv_refl _)), sum_first_loses_iff_eq],
     by
     rintro rfl
@@ -272,7 +272,7 @@ theorem nim.grundy_value (O : Ordinal.{u}) : grundy_value (nim O) = O := by
 
 theorem equiv_iff_grundy_value_eq (G H : Pgame) [G.impartial] [H.impartial] :
     (G ≈ H) ↔ grundy_value G = grundy_value H :=
-  (equiv_congr_left.1 (equiv_nim_grundy_value H) _).trans $ equiv_nim_iff_grundy_value_eq _ _
+  (equiv_congr_left.1 (equiv_nim_grundy_value H) _).trans <| equiv_nim_iff_grundy_value_eq _ _
 
 theorem grundy_value_zero : grundy_value 0 = 0 := by
   rw [(equiv_iff_grundy_value_eq 0 (nim 0)).1 (equiv_symm nim.zero_first_loses), nim.grundy_value]

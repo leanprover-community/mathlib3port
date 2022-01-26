@@ -103,7 +103,7 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Finₓ n)] :
       UniqueDiffOn.pi (Finₓ n) (fun _ => ℝ) _ _ fun i _ : i ∈ ({0} : Set (Finₓ n)) => unique_diff_on_Ici 0
     simpa only [singleton_pi] using this
   continuous_to_fun := continuous_subtype_val
-  continuous_inv_fun := continuous_subtype_mk _ $ continuous_id.update 0 $ (continuous_apply 0).max continuous_const
+  continuous_inv_fun := continuous_subtype_mk _ <| continuous_id.update 0 <| (continuous_apply 0).max continuous_const
 
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_quadrant n)`, used as a
 model for manifolds with corners -/
@@ -130,7 +130,7 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
     simpa only [pi_univ_Ici] using this
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun :=
-    continuous_subtype_mk _ $ continuous_pi $ fun i => (continuous_id.max continuous_const).comp (continuous_apply i)
+    continuous_subtype_mk _ <| continuous_pi fun i => (continuous_id.max continuous_const).comp (continuous_apply i)
 
 localized [Manifold]
   notation "𝓡 " n =>
@@ -184,7 +184,7 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
     apply Continuous.continuous_on
     apply continuous_subtype_mk
     have : Continuous fun z : ℝ i : Finₓ 1 => z - x :=
-      Continuous.sub (continuous_pi $ fun i => continuous_id) continuous_const
+      Continuous.sub (continuous_pi fun i => continuous_id) continuous_const
     exact this.comp continuous_subtype_val
   continuous_inv_fun := by
     apply Continuous.continuous_on

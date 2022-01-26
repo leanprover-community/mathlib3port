@@ -101,7 +101,7 @@ theorem smul_invariant_measure_tfae :
   tfae_have 3 → 2
   · intro H c s hs
     rw [preimage_smul]
-    exact H (c⁻¹) s hs
+    exact H c⁻¹ s hs
     
   tfae_finish
 
@@ -152,10 +152,10 @@ positive on any nonempty open set. In case of a regular measure, one can assume 
 theorem measure_is_open_pos_of_smul_invariant_of_compact_ne_zero (hK : IsCompact K) (hμK : μ K ≠ 0) (hU : IsOpen U)
     (hne : U.nonempty) : 0 < μ U :=
   let ⟨t, ht⟩ := hK.exists_finite_cover_smul G hU hne
-  pos_iff_ne_zero.2 $ fun hμU =>
-    hμK $
-      measure_mono_null ht $
-        (measure_bUnion_null_iff t.countable_to_set).2 $ fun _ _ => by
+  pos_iff_ne_zero.2 fun hμU =>
+    hμK <|
+      measure_mono_null ht <|
+        (measure_bUnion_null_iff t.countable_to_set).2 fun _ _ => by
           rwa [measure_smul_set]
 
 /-- If measure `μ` is invariant under an additive group action and is nonzero on a compact set `K`,
@@ -169,7 +169,7 @@ theorem is_locally_finite_measure_of_smul_invariant (hU : IsOpen U) (hne : U.non
   ⟨fun x =>
     let ⟨g, hg⟩ := hU.exists_smul_mem G x hne
     ⟨(· • ·) g ⁻¹' U, (hU.preimage (continuous_id.const_smul _)).mem_nhds hg,
-      Ne.lt_top $ by
+      Ne.lt_top <| by
         rwa [measure_preimage_smul]⟩⟩
 
 variable [measure.regular μ]

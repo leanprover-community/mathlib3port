@@ -215,7 +215,7 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
       rwa [Ne.def, ← h_top_iff_rpow_top i hi]
     simp_rw [to_nnreal_sum h_top_rpow, ← to_nnreal_rpow, to_nnreal_sum h_top, to_nnreal_mul, ← to_nnreal_rpow]
     refine' Nnreal.rpow_arith_mean_le_arith_mean_rpow s (fun i => (w i).toNnreal) (fun i => (z i).toNnreal) _ hp
-    have h_sum_nnreal : (∑ i in s, w i) = ↑∑ i in s, (w i).toNnreal := by
+    have h_sum_nnreal : (∑ i in s, w i) = ↑(∑ i in s, (w i).toNnreal) := by
       rw [coe_finset_sum]
       refine' sum_congr rfl fun i hi => (coe_to_nnreal _).symm
       refine' (lt_top_of_sum_ne_top _ hi).Ne

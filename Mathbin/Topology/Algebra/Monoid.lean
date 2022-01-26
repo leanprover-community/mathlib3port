@@ -123,7 +123,7 @@ open Function
 
 @[to_additive]
 theorem HasContinuousMul.of_nhds_one {M : Type u} [Monoidₓ M] [TopologicalSpace M]
-    (hmul : tendsto (uncurry (· * · : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1) $ 𝓝 1)
+    (hmul : tendsto (uncurry (· * · : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1)
     (hleft : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1)) (hright : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x * x₀) (𝓝 1)) :
     HasContinuousMul M :=
   ⟨by
@@ -189,13 +189,13 @@ def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂) (hf : f ∈ Closure (range
       "Construct a bundled additive monoid homomorphism from a pointwise limit of additive\nmonoid homomorphisms",
   simps (config := { fullyApplied := ff })]
 def monoidHomOfTendsto (f : M₁ → M₂) (g : α → F) [l.ne_bot] (h : tendsto (fun a x => g a x) l (𝓝 f)) : M₁ →* M₂ :=
-  monoidHomOfMemClosureRangeCoe f $ mem_closure_of_tendsto h $ eventually_of_forall $ fun a => mem_range_self _
+  monoidHomOfMemClosureRangeCoe f <| mem_closure_of_tendsto h <| eventually_of_forall fun a => mem_range_self _
 
 variable (M₁ M₂)
 
 @[to_additive]
 theorem MonoidHom.is_closed_range_coe : IsClosed (range (coeFn : (M₁ →* M₂) → M₁ → M₂)) :=
-  is_closed_of_closure_subset $ fun f hf => ⟨monoidHomOfMemClosureRangeCoe f hf, rfl⟩
+  is_closed_of_closure_subset fun f hf => ⟨monoidHomOfMemClosureRangeCoe f hf, rfl⟩
 
 end PointwiseLimits
 
@@ -308,7 +308,7 @@ theorem tendsto_list_prod {f : ι → α → M} {x : Filter α} {a : ι → M} :
 @[to_additive]
 theorem continuous_list_prod {f : ι → X → M} (l : List ι) (h : ∀, ∀ i ∈ l, ∀, Continuous (f i)) :
     Continuous fun a => (l.map fun i => f i a).Prod :=
-  continuous_iff_continuous_at.2 $ fun x => tendsto_list_prod l $ fun c hc => continuous_iff_continuous_at.1 (h c hc) x
+  continuous_iff_continuous_at.2 fun x => (tendsto_list_prod l) fun c hc => continuous_iff_continuous_at.1 (h c hc) x
 
 @[continuity, to_additive continuous_nsmul]
 theorem continuous_pow : ∀ n : ℕ, Continuous fun a : M => a ^ n
@@ -372,7 +372,7 @@ variable [Monoidₓ α] [HasContinuousMul α]
 instance : HasContinuousMul (αᵐᵒᵖ) :=
   ⟨let h₁ := @continuous_mul α _ _ _
     let h₂ : Continuous fun p : α × α => _ := continuous_snd.prod_mk continuous_fst
-    continuous_induced_rng $ (h₁.comp h₂).comp (continuous_unop.prod_map continuous_unop)⟩
+    continuous_induced_rng <| (h₁.comp h₂).comp (continuous_unop.prod_map continuous_unop)⟩
 
 end Op
 
@@ -403,7 +403,7 @@ Inversion is also continuous, but we register this in a later file, `topology.al
 because the predicate `has_continuous_inv` has not yet been defined. -/
 instance : HasContinuousMul (α)ˣ :=
   ⟨let h := @continuous_mul (α × αᵐᵒᵖ) _ _ _
-    continuous_induced_rng $ h.comp $ continuous_embed_product.prod_map continuous_embed_product⟩
+    continuous_induced_rng <| h.comp <| continuous_embed_product.prod_map continuous_embed_product⟩
 
 end Units
 
@@ -448,7 +448,7 @@ theorem continuous_finprod {f : ι → X → M} (hc : ∀ i, Continuous (f i))
   refine' continuous_iff_continuous_at.2 fun x => _
   rcases hf x with ⟨U, hxU, hUf⟩
   have : ContinuousAt (fun x => ∏ i in hUf.to_finset, f i x) x := tendsto_finset_prod _ fun i hi => (hc i).ContinuousAt
-  refine' this.congr (mem_of_superset hxU $ fun y hy => _)
+  refine' this.congr ((mem_of_superset hxU) fun y hy => _)
   refine' (finprod_eq_prod_of_mul_support_subset _ fun i hi => _).symm
   rw [hUf.coe_to_finset]
   exact ⟨y, hi, hy⟩

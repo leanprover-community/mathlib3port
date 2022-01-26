@@ -123,7 +123,7 @@ theorem zpow_two_pos_of_ne_zero (a : K) (h : a ≠ 0) : 0 < a ^ 2 :=
 
 @[simp]
 theorem zpow_bit1_neg_iff : a ^ bit1 n < 0 ↔ a < 0 :=
-  ⟨fun h => not_leₓ.1 $ fun h' => not_leₓ.2 h $ zpow_nonneg h' _, fun h => by
+  ⟨fun h => not_leₓ.1 fun h' => not_leₓ.2 h <| zpow_nonneg h' _, fun h => by
     rw [bit1, zpow_add_one₀ h.ne] <;> exact mul_neg_of_pos_of_neg (zpow_bit0_pos h.ne _) h⟩
 
 @[simp]
@@ -174,25 +174,25 @@ theorem Odd.zpow_nonpos (hn : Odd n) (ha : a ≤ 0) : a ^ n ≤ 0 := by
 theorem Odd.zpow_neg (hn : Odd n) (ha : a < 0) : a ^ n < 0 := by
   cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_neg_iff.mpr ha
 
-theorem Even.zpow_abs {p : ℤ} (hp : Even p) (a : K) : |a| ^ p = a ^ p := by
+theorem Even.zpow_abs {p : ℤ} (hp : Even p) (a : K) : abs a ^ p = a ^ p := by
   cases' abs_choice a with h h <;> simp only [h, hp.zpow_neg _]
 
 @[simp]
-theorem zpow_bit0_abs (a : K) (p : ℤ) : |a| ^ bit0 p = a ^ bit0 p :=
+theorem zpow_bit0_abs (a : K) (p : ℤ) : abs a ^ bit0 p = a ^ bit0 p :=
   (even_bit0 _).zpow_abs _
 
-theorem Even.abs_zpow {p : ℤ} (hp : Even p) (a : K) : |a ^ p| = a ^ p := by
+theorem Even.abs_zpow {p : ℤ} (hp : Even p) (a : K) : abs (a ^ p) = a ^ p := by
   rw [abs_eq_self]
   exact hp.zpow_nonneg _
 
 @[simp]
-theorem abs_zpow_bit0 (a : K) (p : ℤ) : |a ^ bit0 p| = a ^ bit0 p :=
+theorem abs_zpow_bit0 (a : K) (p : ℤ) : abs (a ^ bit0 p) = a ^ bit0 p :=
   (even_bit0 _).abs_zpow _
 
 end OrderedFieldPower
 
 theorem one_lt_zpow {K} [LinearOrderedField K] {p : K} (hp : 1 < p) : ∀ z : ℤ, 0 < z → 1 < p ^ z
-  | (n : ℕ), h => (zpow_coe_nat p n).symm.subst (one_lt_pow hp $ Int.coe_nat_ne_zero.mp h.ne')
+  | (n : ℕ), h => (zpow_coe_nat p n).symm.subst (one_lt_pow hp <| Int.coe_nat_ne_zero.mp h.ne')
   | -[1+ n], h => ((Int.neg_succ_not_pos _).mp h).elim
 
 section Ordered
@@ -207,7 +207,7 @@ theorem Nat.zpow_ne_zero_of_pos {p : ℕ} (h : 0 < p) (n : ℤ) : (p : K) ^ n �
   ne_of_gtₓ (Nat.zpow_pos_of_pos h n)
 
 theorem zpow_strict_mono {x : K} (hx : 1 < x) : StrictMono fun n : ℤ => x ^ n :=
-  strict_mono_int_of_lt_succ $ fun n =>
+  strict_mono_int_of_lt_succ fun n =>
     have xpos : 0 < x := zero_lt_one.trans hx
     calc
       x ^ n < x ^ n * x := lt_mul_of_one_lt_right (zpow_pos_of_pos xpos _) hx
@@ -215,10 +215,10 @@ theorem zpow_strict_mono {x : K} (hx : 1 < x) : StrictMono fun n : ℤ => x ^ n 
       
 
 theorem zpow_strict_anti {x : K} (h₀ : 0 < x) (h₁ : x < 1) : StrictAnti fun n : ℤ => x ^ n :=
-  strict_anti_int_of_succ_lt $ fun n =>
+  strict_anti_int_of_succ_lt fun n =>
     calc
       x ^ (n + 1) = x ^ n * x := zpow_add_one₀ h₀.ne' _
-      _ < x ^ n * 1 := (mul_lt_mul_left $ zpow_pos_of_pos h₀ _).2 h₁
+      _ < x ^ n * 1 := (mul_lt_mul_left <| zpow_pos_of_pos h₀ _).2 h₁
       _ = x ^ n := mul_oneₓ _
       
 
@@ -236,10 +236,10 @@ theorem pos_div_pow_pos {a b : K} (ha : 0 < a) (hb : 0 < b) (k : ℕ) : 0 < a / 
 
 @[simp]
 theorem div_pow_le {a b : K} (ha : 0 < a) (hb : 1 ≤ b) (k : ℕ) : a / b ^ k ≤ a :=
-  (div_le_iff $ pow_pos (lt_of_lt_of_leₓ zero_lt_one hb) k).mpr
+  (div_le_iff <| pow_pos (lt_of_lt_of_leₓ zero_lt_one hb) k).mpr
     (calc
       a = a * 1 := (mul_oneₓ a).symm
-      _ ≤ a * b ^ k := (mul_le_mul_left ha).mpr $ one_le_pow_of_one_le hb _
+      _ ≤ a * b ^ k := (mul_le_mul_left ha).mpr <| one_le_pow_of_one_le hb _
       )
 
 theorem zpow_injective {x : K} (h₀ : 0 < x) (h₁ : x ≠ 1) : Function.Injective ((· ^ ·) x : ℤ → K) := by

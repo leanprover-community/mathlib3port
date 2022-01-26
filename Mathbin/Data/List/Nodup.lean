@@ -31,7 +31,7 @@ theorem nodup_cons {a : α} {l : List α} : nodup (a :: l) ↔ a ∉ l ∧ nodup
   simp only [nodup, pairwise_cons, forall_mem_ne]
 
 protected theorem pairwise.nodup {l : List α} {r : α → α → Prop} [IsIrrefl α r] (h : Pairwise r l) : nodup l :=
-  h.imp $ fun a b => ne_of_irrefl
+  h.imp fun a b => ne_of_irrefl
 
 theorem rel_nodup {r : α → β → Prop} (hr : Relator.BiUnique r) : (forall₂ r⇒(· ↔ ·)) nodup nodup
   | _, _, forall₂.nil => by
@@ -58,7 +58,7 @@ theorem nodup_of_sublist {l₁ l₂ : List α} : l₁ <+ l₂ → nodup l₂ →
   pairwise_of_sublist
 
 theorem not_nodup_pair (a : α) : ¬nodup [a, a] :=
-  not_nodup_cons_of_mem $ mem_singleton_self _
+  not_nodup_cons_of_mem <| mem_singleton_self _
 
 theorem nodup_iff_sublist {l : List α} : nodup l ↔ ∀ a, ¬[a, a] <+ l :=
   ⟨fun d a h => not_nodup_pair a (nodup_of_sublist h d), by
@@ -66,8 +66,8 @@ theorem nodup_iff_sublist {l : List α} : nodup l ↔ ∀ a, ¬[a, a] <+ l :=
     · exact nodup_nil
       
     exact
-      nodup_cons_of_nodup (fun al => h a $ (singleton_sublist.2 al).cons_cons _)
-        (IH $ fun a s => h a $ sublist_cons_of_sublist _ s)⟩
+      nodup_cons_of_nodup (fun al => h a <| (singleton_sublist.2 al).cons_cons _)
+        (IH fun a s => h a <| sublist_cons_of_sublist _ s)⟩
 
 theorem nodup_iff_nth_le_inj {l : List α} : nodup l ↔ ∀ i j h₁ h₂, nth_le l i h₁ = nth_le l j h₂ → i = j :=
   pairwise_iff_nth_le.trans
@@ -108,11 +108,11 @@ theorem nth_le_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.le
 
 @[simp]
 theorem nth_le_index_of [DecidableEq α] {l : List α} (H : nodup l) n h : index_of (nth_le l n h) l = n :=
-  nodup_iff_nth_le_inj.1 H _ _ _ h $ index_of_nth_le $ index_of_lt_length.2 $ nth_le_mem _ _ _
+  nodup_iff_nth_le_inj.1 H _ _ _ h <| index_of_nth_le <| index_of_lt_length.2 <| nth_le_mem _ _ _
 
 theorem nodup_iff_count_le_one [DecidableEq α] {l : List α} : nodup l ↔ ∀ a, count a l ≤ 1 :=
-  nodup_iff_sublist.trans $
-    forall_congrₓ $ fun a =>
+  nodup_iff_sublist.trans <|
+    forall_congrₓ fun a =>
       have : [a, a] <+ l ↔ 1 < count a l := (@le_count_iff_repeat_sublist _ _ a l 2).symm
       (not_congr this).trans not_ltₓ
 
@@ -123,7 +123,7 @@ theorem nodup_repeat (a : α) : ∀ {n : ℕ}, nodup (repeat a n) ↔ n ≤ 1
     simp
   | n + 2 =>
     iff_of_false (fun H => nodup_iff_sublist.1 H a ((repeat_sublist_repeat _).2 (Nat.le_add_leftₓ 2 n)))
-      (not_le_of_lt $ Nat.le_add_leftₓ 2 n)
+      (not_le_of_lt <| Nat.le_add_leftₓ 2 n)
 
 @[simp]
 theorem count_eq_one_of_mem [DecidableEq α] {a : α} {l : List α} (d : nodup l) (h : a ∈ l) : count a l = 1 :=
@@ -152,7 +152,7 @@ theorem nodup_middle {a : α} {l₁ l₂ : List α} : nodup (l₁ ++ a :: l₂) 
   simp only [nodup_append, not_or_distrib, And.left_comm, and_assoc, nodup_cons, mem_append, disjoint_cons_right]
 
 theorem nodup_of_nodup_map (f : α → β) {l : List α} : nodup (map f l) → nodup l :=
-  pairwise_of_pairwise_map f $ fun a b => mt $ congr_argₓ f
+  (pairwise_of_pairwise_map f) fun a b => mt <| congr_argₓ f
 
 theorem nodup_map_on {f : α → β} {l : List α} (H : ∀, ∀ x ∈ l, ∀, ∀, ∀ y ∈ l, ∀, f x = f y → x = y) (d : nodup l) :
     nodup (map f l) :=
@@ -204,7 +204,7 @@ theorem nodup_filter (p : α → Prop) [DecidablePred p] {l} : nodup l → nodup
 
 @[simp]
 theorem nodup_reverse {l : List α} : nodup (reverse l) ↔ nodup l :=
-  pairwise_reverse.trans $ by
+  pairwise_reverse.trans <| by
     simp only [nodup, Ne.def, eq_comm]
 
 theorem nodup_erase_eq_filter [DecidableEq α] (a : α) {l} (d : nodup l) : l.erase a = filter (· ≠ a) l := by
@@ -245,12 +245,12 @@ theorem nodup_bind {l₁ : List α} {f : α → List β} :
   simp only [List.bind, nodup_join, pairwise_map, and_comm, And.left_comm, mem_map, exists_imp_distrib, and_imp] <;>
     rw
       [show (∀ l : List β x : α, f x = l → x ∈ l₁ → nodup l) ↔ ∀ x : α, x ∈ l₁ → nodup (f x) from
-        forall_swap.trans $ forall_congrₓ $ fun _ => forall_eq']
+        forall_swap.trans <| forall_congrₓ fun _ => forall_eq']
 
 theorem nodup_product {l₁ : List α} {l₂ : List β} (d₁ : nodup l₁) (d₂ : nodup l₂) : nodup (product l₁ l₂) :=
   nodup_bind.2
     ⟨fun a ma => nodup_map (left_inverse.injective fun b => (rfl : (a, b).2 = b)) d₂,
-      d₁.imp $ fun a₁ a₂ n x h₁ h₂ => by
+      d₁.imp fun a₁ a₂ n x h₁ h₂ => by
         rcases mem_map.1 h₁ with ⟨b₁, mb₁, rfl⟩
         rcases mem_map.1 h₂ with ⟨b₂, mb₂, ⟨⟩⟩
         exact n rfl⟩
@@ -263,14 +263,14 @@ theorem nodup_sigma {σ : α → Type _} {l₁ : List α} {l₂ : ∀ a, List (�
         (fun b b' h => by
           injection h with _ h <;> exact eq_of_heq h)
         (d₂ a),
-      d₁.imp $ fun a₁ a₂ n x h₁ h₂ => by
+      d₁.imp fun a₁ a₂ n x h₁ h₂ => by
         rcases mem_map.1 h₁ with ⟨b₁, mb₁, rfl⟩
         rcases mem_map.1 h₂ with ⟨b₂, mb₂, ⟨⟩⟩
         exact n rfl⟩
 
 theorem nodup_filter_map {f : α → Option β} {l : List α} (H : ∀ a a' : α b : β, b ∈ f a → b ∈ f a' → a = a') :
     nodup l → nodup (filter_map f l) :=
-  pairwise_filter_map_of_pairwise f $ fun a a' n b bm b' bm' e => n $ H a a' b' (e ▸ bm) bm'
+  (pairwise_filter_map_of_pairwise f) fun a a' n b bm b' bm' e => n <| H a a' b' (e ▸ bm) bm'
 
 theorem nodup_concat {a : α} {l : List α} (h : a ∉ l) (h' : nodup l) : nodup (concat l a) := by
   rw [concat_eq_append] <;> exact nodup_append_of_nodup h' (nodup_singleton _) (disjoint_singleton.2 h)

@@ -98,7 +98,7 @@ instance Sylow.pointwiseMulAction {α : Type _} [Groupₓ α] [MulDistribMulActi
       inv_smul_eq_iff.mp
         (P.3 (hQ.map _) fun s hs =>
           (congr_argₓ (· ∈ g⁻¹ • Q) (inv_smul_smul g s)).mp
-            (smul_mem_pointwise_smul (g • s) (g⁻¹) Q (hS (smul_mem_pointwise_smul s g P hs))))⟩
+            (smul_mem_pointwise_smul (g • s) g⁻¹ Q (hS (smul_mem_pointwise_smul s g P hs))))⟩
   one_smul := fun P => Sylow.ext (one_smul α P)
   mul_smul := fun g h P => Sylow.ext (mul_smul g h P)
 
@@ -125,7 +125,7 @@ theorem Sylow.smul_eq_iff_mem_normalizer {g : G} {P : Sylow p G} : g • P = P �
       iff_congr Iff.rfl
         ⟨fun ⟨a, b, c⟩ =>
           (congr_argₓ _ c).mp ((congr_argₓ (· ∈ P.1) (MulAut.inv_apply_self G (MulAut.conj g) a)).mpr b), fun hh =>
-          ⟨(MulAut.conj g⁻¹) h, hh, MulAut.apply_inv_self G (MulAut.conj g) h⟩⟩
+          ⟨(MulAut.conj g)⁻¹ h, hh, MulAut.apply_inv_self G (MulAut.conj g) h⟩⟩
 
 theorem Subgroup.sylow_mem_fixed_points_iff (H : Subgroup G) {P : Sylow p G} :
     P ∈ fixed_points H (Sylow p G) ↔ H ≤ P.1.normalizer := by
@@ -279,14 +279,14 @@ theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fi
           convert this
           rw [inv_invₓ]),
     fun hx : ∀ n : G, n ∈ H ↔ x * n * x⁻¹ ∈ H =>
-    (mem_fixed_points' _).2 $ fun y =>
-      Quotientₓ.induction_on' y $ fun y hy =>
+    (mem_fixed_points' _).2 fun y =>
+      (Quotientₓ.induction_on' y) fun y hy =>
         QuotientGroup.eq.2
           (let ⟨⟨b, hb₁⟩, hb₂⟩ := hy
           have hb₂ : (b * x)⁻¹ * y ∈ H := QuotientGroup.eq.1 hb₂
-          (inv_mem_iff H).1 $
-            (hx _).2 $
-              (mul_mem_cancel_left H (H.inv_mem hb₁)).1 $ by
+          (inv_mem_iff H).1 <|
+            (hx _).2 <|
+              (mul_mem_cancel_left H (H.inv_mem hb₁)).1 <| by
                 rw [hx] at hb₂ <;> simpa [mul_inv_rev, mul_assoc] using hb₂)⟩
 
 def fixed_points_mul_left_cosets_equiv_quotient (H : Subgroup G) [Fintype (H : Set G)] :

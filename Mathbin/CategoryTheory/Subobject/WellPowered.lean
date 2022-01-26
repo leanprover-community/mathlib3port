@@ -66,8 +66,8 @@ section Equivalenceₓ
 variable {D : Type u₂} [category.{v} D]
 
 theorem well_powered_of_equiv (e : C ≌ D) [well_powered C] : well_powered D :=
-  well_powered_of_essentially_small_mono_over $ fun X =>
-    (essentially_small_congr (mono_over.congr X e.symm)).2 $ by
+  well_powered_of_essentially_small_mono_over fun X =>
+    (essentially_small_congr (mono_over.congr X e.symm)).2 <| by
       infer_instance
 
 /-- Being well-powered is preserved by equivalences, as long as the two categories involved have

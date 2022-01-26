@@ -88,7 +88,7 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
     rw [d0, zero_mul] at this
     contradiction
   rw [num_denom'] at e
-  have := congr_argₓ (coe : ℤ → α) ((mk_eq b0' $ ne_of_gtₓ $ Int.coe_nat_pos.2 h).1 e)
+  have := congr_argₓ (coe : ℤ → α) ((mk_eq b0' <| ne_of_gtₓ <| Int.coe_nat_pos.2 h).1 e)
   rw [Int.cast_mul, Int.cast_mul, Int.cast_coe_nat] at this
   symm
   change (a / b : α) = n / d
@@ -208,15 +208,15 @@ theorem cast_ne_zero [CharZero α] {n : ℚ} : (n : α) ≠ 0 ↔ n ≠ 0 :=
 
 @[simp, norm_cast]
 theorem cast_add [CharZero α] m n : ((m + n : ℚ) : α) = m + n :=
-  cast_add_of_ne_zero (Nat.cast_ne_zero.2 $ ne_of_gtₓ m.pos) (Nat.cast_ne_zero.2 $ ne_of_gtₓ n.pos)
+  cast_add_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.pos)
 
 @[simp, norm_cast]
 theorem cast_sub [CharZero α] m n : ((m - n : ℚ) : α) = m - n :=
-  cast_sub_of_ne_zero (Nat.cast_ne_zero.2 $ ne_of_gtₓ m.pos) (Nat.cast_ne_zero.2 $ ne_of_gtₓ n.pos)
+  cast_sub_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.pos)
 
 @[simp, norm_cast]
 theorem cast_mul [CharZero α] m n : ((m * n : ℚ) : α) = m * n :=
-  cast_mul_of_ne_zero (Nat.cast_ne_zero.2 $ ne_of_gtₓ m.pos) (Nat.cast_ne_zero.2 $ ne_of_gtₓ n.pos)
+  cast_mul_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.pos)
 
 @[simp, norm_cast]
 theorem cast_bit0 [CharZero α] (n : ℚ) : ((bit0 n : ℚ) : α) = bit0 n :=
@@ -288,15 +288,15 @@ theorem cast_id : ∀ n : ℚ, ↑n = n
     rw [num_denom', cast_mk, mk_eq_div]
 
 @[simp, norm_cast]
-theorem cast_min [LinearOrderedField α] {a b : ℚ} : (↑min a b : α) = min a b := by
+theorem cast_min [LinearOrderedField α] {a b : ℚ} : (↑(min a b) : α) = min a b := by
   by_cases' a ≤ b <;> simp [h, min_def]
 
 @[simp, norm_cast]
-theorem cast_max [LinearOrderedField α] {a b : ℚ} : (↑max a b : α) = max a b := by
+theorem cast_max [LinearOrderedField α] {a b : ℚ} : (↑(max a b) : α) = max a b := by
   by_cases' b ≤ a <;> simp [h, max_def]
 
 @[simp, norm_cast]
-theorem cast_abs [LinearOrderedField α] {q : ℚ} : ((|q| : ℚ) : α) = |q| := by
+theorem cast_abs [LinearOrderedField α] {q : ℚ} : ((abs q : ℚ) : α) = abs q := by
   simp [abs_eq_max_neg]
 
 end Rat
@@ -326,12 +326,12 @@ theorem RingHom.ext_rat {R : Type _} [Semiringₓ R] (f g : ℚ →+* R) : f = g
   have : ∀ n : ℤ, f n = g n := fun n =>
     show φ n = ψ n by
       rw [φ.ext_int ψ]
-  calc f (a * b⁻¹) = f a * f (b⁻¹) * (g (b : ℤ) * g (b⁻¹)) := by
+  calc f (a * b⁻¹) = f a * f b⁻¹ * (g (b : ℤ) * g b⁻¹) := by
       rw [Int.cast_coe_nat, ← g.map_mul, mul_inv_cancel b0', g.map_one, mul_oneₓ,
-        f.map_mul]_ = g a * f (b⁻¹) * (f (b : ℤ) * g (b⁻¹)) :=
+        f.map_mul]_ = g a * f b⁻¹ * (f (b : ℤ) * g b⁻¹) :=
       by
       rw [this a, ← this b]_ = g (a * b⁻¹) := by
-      rw [Int.cast_coe_nat, mul_assoc, ← mul_assoc (f (b⁻¹)), ← f.map_mul, inv_mul_cancel b0', f.map_one, one_mulₓ,
+      rw [Int.cast_coe_nat, mul_assoc, ← mul_assoc (f b⁻¹), ← f.map_mul, inv_mul_cancel b0', f.map_one, one_mulₓ,
         g.map_mul]
 
 instance Rat.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℚ →+* R) :=
@@ -345,7 +345,7 @@ variable {M : Type _} [GroupWithZeroₓ M]
 
 See note [partially-applied ext lemmas] for why `comp` is used here. -/
 @[ext]
-theorem ext_rat {f g : MonoidWithZeroHom ℚ M}
+theorem ext_rat {f g : ℚ →*₀ M}
     (same_on_int : f.comp (Int.castRingHom ℚ).toMonoidWithZeroHom = g.comp (Int.castRingHom ℚ).toMonoidWithZeroHom) :
     f = g := by
   have same_on_int' : ∀ k : ℤ, f k = g k := congr_funₓ same_on_int
@@ -353,9 +353,9 @@ theorem ext_rat {f g : MonoidWithZeroHom ℚ M}
   rw [← @Rat.num_denom x, Rat.mk_eq_div, f.map_div, g.map_div, same_on_int' x.num, same_on_int' x.denom]
 
 /-- Positive integer values of a morphism `φ` and its value on `-1` completely determine `φ`. -/
-theorem ext_rat_on_pnat {f g : MonoidWithZeroHom ℚ M} (same_on_neg_one : f (-1) = g (-1))
+theorem ext_rat_on_pnat {f g : ℚ →*₀ M} (same_on_neg_one : f (-1) = g (-1))
     (same_on_pnat : ∀ n : ℕ, 0 < n → f n = g n) : f = g :=
-  ext_rat $
+  ext_rat <|
     ext_int'
       (by
         simpa)

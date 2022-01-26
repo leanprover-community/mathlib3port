@@ -148,7 +148,7 @@ theorem comp_val_c {X Y Z : LocallyRingedSpace} (f : X ⟶ Y) (g : Y ⟶ Z) :
   rfl
 
 theorem comp_val_c_app {X Y Z : LocallyRingedSpace} (f : X ⟶ Y) (g : Y ⟶ Z) (U : opens Zᵒᵖ) :
-    (f ≫ g).val.c.app U = g.val.c.app U ≫ f.val.c.app (op $ (opens.map g.val.base).obj U.unop) :=
+    (f ≫ g).val.c.app U = g.val.c.app U ≫ f.val.c.app (op <| (opens.map g.val.base).obj U.unop) :=
   rfl
 
 /-- Given two locally ringed spaces `X` and `Y`, an isomorphism between `X` and `Y` as _sheafed_
@@ -159,7 +159,7 @@ See also `iso_of_SheafedSpace_iso`.
 @[simps]
 def hom_of_SheafedSpace_hom_of_is_iso {X Y : LocallyRingedSpace} (f : X.to_SheafedSpace ⟶ Y.to_SheafedSpace)
     [is_iso f] : X ⟶ Y :=
-  Subtype.mk f $ fun x =>
+  (Subtype.mk f) fun x =>
     show IsLocalRingHom (PresheafedSpace.stalk_map (SheafedSpace.forget_to_PresheafedSpace.map f) x) by
       infer_instance
 
@@ -246,7 +246,7 @@ theorem preimage_basic_open {X Y : LocallyRingedSpace} (f : X ⟶ Y) {U : opens 
 
 @[simp]
 theorem basic_open_zero (X : LocallyRingedSpace) (U : opens X.carrier) :
-    X.to_RingedSpace.basic_open (0 : X.presheaf.obj $ op U) = ∅ := by
+    X.to_RingedSpace.basic_open (0 : X.presheaf.obj <| op U) = ∅ := by
   ext
   simp only [Set.mem_empty_eq, TopologicalSpace.Opens.empty_eq, TopologicalSpace.Opens.mem_coe, opens.coe_bot,
     iff_falseₓ, RingedSpace.basic_open, is_unit_zero_iff, Set.mem_set_of_eq, map_zero]
@@ -254,7 +254,7 @@ theorem basic_open_zero (X : LocallyRingedSpace) (U : opens X.carrier) :
   exact @zero_ne_one (X.presheaf.stalk y) _ _ h
 
 instance component_nontrivial (X : LocallyRingedSpace) (U : opens X.carrier) [hU : Nonempty U] :
-    Nontrivial (X.presheaf.obj $ op U) :=
+    Nontrivial (X.presheaf.obj <| op U) :=
   (X.to_PresheafedSpace.presheaf.germ hU.some).domain_nontrivial
 
 end LocallyRingedSpace

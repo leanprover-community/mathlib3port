@@ -1,5 +1,5 @@
 import Mathbin.Algebra.BigOperators.Multiset
-import Mathbin.Data.FunLike
+import Mathbin.Data.FunLike.Basic
 
 /-!
 # Freiman homomorphisms
@@ -66,7 +66,7 @@ notation:25 A " →*[" n:25 "] " β:0 => FreimanHom A β n
 
 /-- `add_freiman_hom_class F s β n` states that `F` is a type of `n`-ary sums-preserving morphisms.
 You should extend this class when you extend `add_freiman_hom`. -/
-class AddFreimanHomClass (F : Type _) (A : outParam $ Set α) (β : outParam $ Type _) [AddCommMonoidₓ α]
+class AddFreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Type _) [AddCommMonoidₓ α]
   [AddCommMonoidₓ β] (n : ℕ) [FunLike F α fun _ => β] where
   map_sum_eq_map_sum' (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A) (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A)
     (hs : s.card = n) (ht : t.card = n) (h : s.sum = t.sum) : (s.map f).Sum = (t.map f).Sum
@@ -74,7 +74,7 @@ class AddFreimanHomClass (F : Type _) (A : outParam $ Set α) (β : outParam $ T
 /-- `freiman_hom_class F A β n` states that `F` is a type of `n`-ary products-preserving morphisms.
 You should extend this class when you extend `freiman_hom`. -/
 @[to_additive AddFreimanHomClass]
-class FreimanHomClass (F : Type _) (A : outParam $ Set α) (β : outParam $ Type _) [CommMonoidₓ α] [CommMonoidₓ β]
+class FreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Type _) [CommMonoidₓ α] [CommMonoidₓ β]
   (n : ℕ) [FunLike F α fun _ => β] where
   map_prod_eq_map_prod' (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A) (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A)
     (hs : s.card = n) (ht : t.card = n) (h : s.prod = t.prod) : (s.map f).Prod = (t.map f).Prod
@@ -131,7 +131,7 @@ theorem coe_mk (f : α → β)
 
 @[simp, to_additive]
 theorem mk_coe (f : A →*[n] β) h : mk f h = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 
 /-- The identity map from a commutative monoid to itself. -/
 @[to_additive "The identity map from an additive commutative monoid to itself.", simps]
@@ -170,7 +170,7 @@ theorem comp_assoc (f : A →*[n] β) (g : B →*[n] γ) (h : C →*[n] δ) {hf 
 @[to_additive]
 theorem cancel_right {g₁ g₂ : B →*[n] γ} {f : A →*[n] β} (hf : Function.Surjective f) {hg₁ hg₂} :
     g₁.comp f hg₁ = g₂.comp f hg₂ ↔ g₁ = g₂ :=
-  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, fun h => h ▸ rfl⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, fun h => h ▸ rfl⟩
 
 @[to_additive]
 theorem cancel_right_on {g₁ g₂ : B →*[n] γ} {f : A →*[n] β} (hf : A.surj_on f B) {hf'} :
@@ -184,11 +184,11 @@ theorem cancel_left_on {g : B →*[n] γ} {f₁ f₂ : A →*[n] β} (hg : B.inj
 
 @[simp, to_additive]
 theorem comp_id (f : A →*[n] β) {hf} : f.comp (FreimanHom.id A n) hf = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 @[simp, to_additive]
 theorem id_comp (f : A →*[n] β) {hf} : (FreimanHom.id B n).comp f hf = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 /-- `freiman_hom.const A n b` is the Freiman homomorphism sending everything to `b`. -/
 @[to_additive "`add_freiman_hom.const n b` is the Freiman homomorphism sending everything to `b`."]
@@ -243,19 +243,19 @@ theorem mul_comp (g₁ g₂ : B →*[n] γ) (f : A →*[n] β) {hg hg₁ hg₂} 
 /-- If `f` is a Freiman homomorphism to a commutative group, then `f⁻¹` is the Freiman homomorphism
 sending `x` to `(f x)⁻¹`. -/
 @[to_additive]
-instance : HasInv (A →*[n] G) :=
+instance : Inv (A →*[n] G) :=
   ⟨fun f =>
-    { toFun := fun x => f x⁻¹,
+    { toFun := fun x => (f x)⁻¹,
       map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
         rw [prod_map_inv', prod_map_inv', map_prod_eq_map_prod f hsA htA hs ht h] }⟩
 
 @[simp, to_additive]
-theorem inv_apply (f : A →*[n] G) (x : α) : (f⁻¹) x = f x⁻¹ :=
+theorem inv_apply (f : A →*[n] G) (x : α) : f⁻¹ x = (f x)⁻¹ :=
   rfl
 
 @[simp, to_additive]
-theorem inv_comp (f : B →*[n] G) (g : A →*[n] β) {hf hf'} : f⁻¹.comp g hf = f.comp g hf'⁻¹ :=
-  ext $ fun x => rfl
+theorem inv_comp (f : B →*[n] G) (g : A →*[n] β) {hf hf'} : f⁻¹.comp g hf = (f.comp g hf')⁻¹ :=
+  ext fun x => rfl
 
 /-- If `f` and `g` are Freiman homomorphisms to a commutative group, then `f / g` is the Freiman
 homomorphism sending `x` to `f x / g x`. -/
@@ -275,7 +275,7 @@ theorem div_apply (f g : A →*[n] G) (x : α) : (f / g) x = f x / g x :=
 @[simp, to_additive]
 theorem div_comp (f₁ f₂ : B →*[n] G) (g : A →*[n] β) {hf hf₁ hf₂} :
     (f₁ / f₂).comp g hf = f₁.comp g hf₁ / f₂.comp g hf₂ :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 
 /-! ### Instances -/
 
@@ -311,7 +311,7 @@ instance : CommMonoidₓ (A →*[n] β) where
 /-- If `β` is a commutative group, then `A →*[n] β` is a commutative group too. -/
 @[to_additive "If `β` is an additive commutative group, then `A →*[n] β` is an additive commutative\ngroup too."]
 instance {β} [CommGroupₓ β] : CommGroupₓ (A →*[n] β) :=
-  { FreimanHom.commMonoid with inv := HasInv.inv, div := Div.div,
+  { FreimanHom.commMonoid with inv := Inv.inv, div := Div.div,
     div_eq_mul_inv := by
       intros
       ext
@@ -362,7 +362,7 @@ theorem MonoidHom.to_freiman_hom_coe (f : α →* β) : (f.to_freiman_hom A n : 
 
 @[to_additive]
 theorem MonoidHom.to_freiman_hom_injective : Function.Injective (MonoidHom.toFreimanHom A n : (α →* β) → A →*[n] β) :=
-  fun f g h => MonoidHom.ext $ show _ from FunLike.ext_iff.mp h
+  fun f g h => MonoidHom.ext <| show _ from FunLike.ext_iff.mp h
 
 end CommMonoidₓ
 
@@ -421,7 +421,7 @@ theorem FreimanHom.to_freiman_hom_coe (h : m ≤ n) (f : A →*[n] β) : (f.to_f
 @[to_additive]
 theorem FreimanHom.to_freiman_hom_injective (h : m ≤ n) :
     Function.Injective (FreimanHom.toFreimanHom h : (A →*[n] β) → A →*[m] β) := fun f g hfg =>
-  FreimanHom.ext $ by
+  FreimanHom.ext <| by
     convert FunLike.ext_iff.1 hfg
 
 end CancelCommMonoid

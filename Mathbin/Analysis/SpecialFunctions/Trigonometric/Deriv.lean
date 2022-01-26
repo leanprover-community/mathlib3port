@@ -28,7 +28,7 @@ theorem has_strict_deriv_at_sin (x : ℂ) : HasStrictDerivAt sin (cos x) x := by
   convert
     ((((has_strict_deriv_at_id x).neg.mul_const I).cexp.sub ((has_strict_deriv_at_id x).mul_const I).cexp).mul_const
           I).mul_const
-      ((2 : ℂ)⁻¹)
+      (2 : ℂ)⁻¹
   simp only [Function.comp, id]
   rw [sub_mul, mul_assoc, mul_assoc, I_mul_I, neg_one_mul, neg_negₓ, mul_oneₓ, one_mulₓ, mul_assoc, I_mul_I,
     mul_neg_one, sub_neg_eq_add, add_commₓ]
@@ -48,7 +48,7 @@ theorem differentiable_at_sin {x : ℂ} : DifferentiableAt ℂ sin x :=
 
 @[simp]
 theorem deriv_sin : deriv sin = cos :=
-  funext $ fun x => (has_deriv_at_sin x).deriv
+  funext fun x => (has_deriv_at_sin x).deriv
 
 /-- The complex cosine function is everywhere strictly differentiable, with the derivative
 `-sin x`. -/
@@ -56,7 +56,7 @@ theorem has_strict_deriv_at_cos (x : ℂ) : HasStrictDerivAt cos (-sin x) x := b
   simp only [sin, div_eq_mul_inv, neg_mul_eq_neg_mul]
   convert
     (((has_strict_deriv_at_id x).mul_const I).cexp.add ((has_strict_deriv_at_id x).neg.mul_const I).cexp).mul_const
-      ((2 : ℂ)⁻¹)
+      (2 : ℂ)⁻¹
   simp only [Function.comp, id]
   ring
 
@@ -78,13 +78,13 @@ theorem deriv_cos {x : ℂ} : deriv cos x = -sin x :=
 
 @[simp]
 theorem deriv_cos' : deriv cos = fun x => -sin x :=
-  funext $ fun x => deriv_cos
+  funext fun x => deriv_cos
 
 /-- The complex hyperbolic sine function is everywhere strictly differentiable, with the derivative
 `cosh x`. -/
 theorem has_strict_deriv_at_sinh (x : ℂ) : HasStrictDerivAt sinh (cosh x) x := by
   simp only [cosh, div_eq_mul_inv]
-  convert ((has_strict_deriv_at_exp x).sub (has_strict_deriv_at_id x).neg.cexp).mul_const ((2 : ℂ)⁻¹)
+  convert ((has_strict_deriv_at_exp x).sub (has_strict_deriv_at_id x).neg.cexp).mul_const (2 : ℂ)⁻¹
   rw [id, mul_neg_one, sub_eq_add_neg, neg_negₓ]
 
 /-- The complex hyperbolic sine function is everywhere differentiable, with the derivative
@@ -102,13 +102,13 @@ theorem differentiable_at_sinh {x : ℂ} : DifferentiableAt ℂ sinh x :=
 
 @[simp]
 theorem deriv_sinh : deriv sinh = cosh :=
-  funext $ fun x => (has_deriv_at_sinh x).deriv
+  funext fun x => (has_deriv_at_sinh x).deriv
 
 /-- The complex hyperbolic cosine function is everywhere strictly differentiable, with the
 derivative `sinh x`. -/
 theorem has_strict_deriv_at_cosh (x : ℂ) : HasStrictDerivAt cosh (sinh x) x := by
   simp only [sinh, div_eq_mul_inv]
-  convert ((has_strict_deriv_at_exp x).add (has_strict_deriv_at_id x).neg.cexp).mul_const ((2 : ℂ)⁻¹)
+  convert ((has_strict_deriv_at_exp x).add (has_strict_deriv_at_id x).neg.cexp).mul_const (2 : ℂ)⁻¹
   rw [id, mul_neg_one, sub_eq_add_neg]
 
 /-- The complex hyperbolic cosine function is everywhere differentiable, with the derivative
@@ -126,7 +126,7 @@ theorem differentiable_at_cosh {x : ℂ} : DifferentiableAt ℂ cosh x :=
 
 @[simp]
 theorem deriv_cosh : deriv cosh = sinh :=
-  funext $ fun x => (has_deriv_at_cosh x).deriv
+  funext fun x => (has_deriv_at_cosh x).deriv
 
 end Complex
 
@@ -475,7 +475,7 @@ theorem differentiable_at_sin : DifferentiableAt ℝ sin x :=
 
 @[simp]
 theorem deriv_sin : deriv sin = cos :=
-  funext $ fun x => (has_deriv_at_sin x).deriv
+  funext fun x => (has_deriv_at_sin x).deriv
 
 theorem has_strict_deriv_at_cos (x : ℝ) : HasStrictDerivAt cos (-sin x) x :=
   (Complex.has_strict_deriv_at_cos x).real_of_complex
@@ -496,7 +496,7 @@ theorem deriv_cos : deriv cos x = -sin x :=
 
 @[simp]
 theorem deriv_cos' : deriv cos = fun x => -sin x :=
-  funext $ fun _ => deriv_cos
+  funext fun _ => deriv_cos
 
 theorem has_strict_deriv_at_sinh (x : ℝ) : HasStrictDerivAt sinh (cosh x) x :=
   (Complex.has_strict_deriv_at_sinh x).real_of_complex
@@ -514,7 +514,7 @@ theorem differentiable_at_sinh : DifferentiableAt ℝ sinh x :=
 
 @[simp]
 theorem deriv_sinh : deriv sinh = cosh :=
-  funext $ fun x => (has_deriv_at_sinh x).deriv
+  funext fun x => (has_deriv_at_sinh x).deriv
 
 theorem has_strict_deriv_at_cosh (x : ℝ) : HasStrictDerivAt cosh (sinh x) x :=
   (Complex.has_strict_deriv_at_cosh x).real_of_complex
@@ -532,11 +532,11 @@ theorem differentiable_at_cosh : DifferentiableAt ℝ cosh x :=
 
 @[simp]
 theorem deriv_cosh : deriv cosh = sinh :=
-  funext $ fun x => (has_deriv_at_cosh x).deriv
+  funext fun x => (has_deriv_at_cosh x).deriv
 
 /-- `sinh` is strictly monotone. -/
 theorem sinh_strict_mono : StrictMono sinh :=
-  strict_mono_of_deriv_pos $ by
+  strict_mono_of_deriv_pos <| by
     rw [Real.deriv_sinh]
     exact cosh_pos
 

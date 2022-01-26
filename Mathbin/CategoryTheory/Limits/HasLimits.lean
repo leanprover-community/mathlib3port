@@ -79,7 +79,7 @@ theorem has_limit.mk {F : J ⥤ C} (d : limit_cone F) : has_limit F :=
 
 /-- Use the axiom of choice to extract explicit `limit_cone F` from `has_limit F`. -/
 def get_limit_cone (F : J ⥤ C) [has_limit F] : limit_cone F :=
-  Classical.choice $ has_limit.exists_limit
+  Classical.choice <| has_limit.exists_limit
 
 variable (J C)
 
@@ -497,7 +497,7 @@ theorem has_colimit.mk {F : J ⥤ C} (d : colimit_cocone F) : has_colimit F :=
 
 /-- Use the axiom of choice to extract explicit `colimit_cocone F` from `has_colimit F`. -/
 def get_colimit_cocone (F : J ⥤ C) [has_colimit F] : colimit_cocone F :=
-  Classical.choice $ has_colimit.exists_colimit
+  Classical.choice <| has_colimit.exists_colimit
 
 variable (J C)
 

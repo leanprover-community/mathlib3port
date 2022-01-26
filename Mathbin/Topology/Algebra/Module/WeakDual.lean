@@ -122,7 +122,7 @@ theorem tendsto_iff_forall_eval_tendsto {γ : Type u} {F : Filter γ} {ψs : γ 
 
 /-- Addition in `weak_dual 𝕜 E` is continuous. -/
 instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakDual 𝕜 E) :=
-  ⟨continuous_induced_rng $
+  ⟨continuous_induced_rng <|
       ((coe_fn_continuous 𝕜 E).comp continuous_fst).add ((coe_fn_continuous 𝕜 E).comp continuous_snd)⟩
 
 /-- If a monoid `M` distributively continuously acts on `𝕜` and this action commutes with
@@ -147,7 +147,7 @@ instance (R : Type _) [Semiringₓ R] [Module R 𝕜] [SmulCommClass 𝕜 R 𝕜
 multiplication on `𝕜`, then it continuously acts on `weak_dual 𝕜 E`. -/
 instance (M : Type _) [Monoidₓ M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [TopologicalSpace M]
     [HasContinuousSmul M 𝕜] : HasContinuousSmul M (WeakDual 𝕜 E) :=
-  ⟨continuous_induced_rng $ continuous_fst.smul ((coe_fn_continuous 𝕜 E).comp continuous_snd)⟩
+  ⟨continuous_induced_rng <| continuous_fst.smul ((coe_fn_continuous 𝕜 E).comp continuous_snd)⟩
 
 end WeakDual
 

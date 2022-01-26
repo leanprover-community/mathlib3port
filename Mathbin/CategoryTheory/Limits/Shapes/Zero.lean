@@ -474,12 +474,12 @@ variable [has_zero_morphisms C]
 
 theorem image_ι_comp_eq_zero {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [has_image f] [epi (factor_thru_image f)]
     (h : f ≫ g = 0) : image.ι f ≫ g = 0 :=
-  zero_of_epi_comp (factor_thru_image f) $ by
+  zero_of_epi_comp (factor_thru_image f) <| by
     simp [h]
 
 theorem comp_factor_thru_image_eq_zero {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [has_image g] (h : f ≫ g = 0) :
     f ≫ factor_thru_image g = 0 :=
-  zero_of_comp_mono (image.ι g) $ by
+  zero_of_comp_mono (image.ι g) <| by
     simp [h]
 
 variable [has_zero_object C]
@@ -501,7 +501,7 @@ def image_factorisation_zero (X Y : C) : image_factorisation (0 : X ⟶ Y) where
   IsImage := { lift := fun F' => 0 }
 
 instance has_image_zero {X Y : C} : has_image (0 : X ⟶ Y) :=
-  has_image.mk $ image_factorisation_zero _ _
+  has_image.mk <| image_factorisation_zero _ _
 
 /-- The image of a zero morphism is the zero object. -/
 def image_zero {X Y : C} : image (0 : X ⟶ Y) ≅ 0 :=

@@ -133,7 +133,7 @@ theorem first_denominator_eq {gp : pair K} (zeroth_s_eq : g.s.nth 0 = some gp) :
   simp [denom_eq_conts_b, first_continuant_eq zeroth_s_eq]
 
 @[simp]
-theorem zeroth_convergent'_aux_eq_zero {s : Seqₓₓ $ pair K} : convergents'_aux s 0 = 0 :=
+theorem zeroth_convergent'_aux_eq_zero {s : Seqₓₓ <| pair K} : convergents'_aux s 0 = 0 :=
   rfl
 
 @[simp]

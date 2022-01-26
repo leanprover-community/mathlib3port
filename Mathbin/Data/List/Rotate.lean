@@ -165,7 +165,7 @@ theorem prod_rotate_eq_one_of_prod_eq_one [Groupₓ α] : ∀ {l : List α} hl :
             decide))
     rw [← List.take_append_dropₓ (n % List.length (a :: l)) (a :: l)] at hl <;>
       rw [← rotate_mod, rotate_eq_drop_append_take this, List.prod_append, mul_eq_one_iff_inv_eq, ←
-        one_mulₓ (List.prod _⁻¹), ← hl, List.prod_append, mul_assoc, mul_inv_selfₓ, mul_oneₓ]
+        one_mulₓ (List.prod _)⁻¹, ← hl, List.prod_append, mul_assoc, mul_inv_selfₓ, mul_oneₓ]
 
 theorem rotate_perm (l : List α) (n : ℕ) : l.rotate n ~ l := by
   rw [rotate_eq_rotate']

@@ -170,7 +170,7 @@ theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : (R)ˣ} : ↑r ∈ σ (a * b
     constructor
     repeat'
       apply is_unit_one_sub_mul_of_swap
-  rw [← smul_mul_assoc, ← mul_smul_comm (r⁻¹) b a, is_unit_one_sub_mul_iff_swap]
+  rw [← smul_mul_assoc, ← mul_smul_comm r⁻¹ b a, is_unit_one_sub_mul_iff_swap]
 
 theorem preimage_units_mul_eq_swap_mul {a b : A} : (coe : (R)ˣ → R) ⁻¹' σ (a * b) = coe ⁻¹' σ (b * a) := by
   ext
@@ -246,7 +246,7 @@ theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} 
   · exact Set.eq_of_subset_of_subset (h a b) (h b a)
     
   · rintro _ _ k ⟨k_mem, k_neq⟩
-    change k with ↑Units.mk0 k k_neq at k_mem
+    change k with ↑(Units.mk0 k k_neq) at k_mem
     exact ⟨unit_mem_mul_iff_mem_swap_mul.mp k_mem, k_neq⟩
     
 

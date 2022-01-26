@@ -2,6 +2,7 @@ import Mathbin.Topology.Algebra.Monoid
 import Mathbin.GroupTheory.GroupAction.Prod
 import Mathbin.GroupTheory.GroupAction.Basic
 import Mathbin.Topology.Homeomorph
+import Mathbin.Topology.Algebra.MulAction2
 
 /-!
 # Continuous monoid action
@@ -58,8 +59,12 @@ section HasScalar
 variable [HasScalar M α] [HasContinuousSmul M α]
 
 @[to_additive]
+instance (priority := 100) HasContinuousSmul.has_continuous_smul₂ : HasContinuousSmul₂ M α where
+  continuous_smul₂ := fun _ => continuous_smul.comp (continuous_const.prod_mk continuous_id)
+
+@[to_additive]
 theorem Filter.Tendsto.smul {f : β → M} {g : β → α} {l : Filter β} {c : M} {a : α} (hf : tendsto f l (𝓝 c))
-    (hg : tendsto g l (𝓝 a)) : tendsto (fun x => f x • g x) l (𝓝 $ c • a) :=
+    (hg : tendsto g l (𝓝 a)) : tendsto (fun x => f x • g x) l (𝓝 <| c • a) :=
   (continuous_smul.Tendsto _).comp (hf.prod_mk_nhds hg)
 
 @[to_additive]
@@ -128,11 +133,11 @@ instance Units.has_continuous_smul : HasContinuousSmul (M)ˣ α where
 
 @[to_additive]
 theorem smul_closure_subset (c : M) (s : Set α) : c • Closure s ⊆ Closure (c • s) :=
-  ((Set.maps_to_image _ _).closure $ continuous_id.const_smul c).image_subset
+  ((Set.maps_to_image _ _).closure <| continuous_id.const_smul c).image_subset
 
 @[to_additive]
 theorem smul_closure_orbit_subset (c : M) (x : α) : c • Closure (MulAction.Orbit M x) ⊆ Closure (MulAction.Orbit M x) :=
-  (smul_closure_subset c _).trans $ closure_mono $ MulAction.smul_orbit_subset _ _
+  (smul_closure_subset c _).trans <| closure_mono <| MulAction.smul_orbit_subset _ _
 
 end Monoidₓ
 
@@ -142,9 +147,9 @@ variable {G : Type _} [TopologicalSpace G] [Groupₓ G] [MulAction G α] [HasCon
 
 @[to_additive]
 theorem tendsto_const_smul_iff {f : β → α} {l : Filter β} {a : α} (c : G) :
-    tendsto (fun x => c • f x) l (𝓝 $ c • a) ↔ tendsto f l (𝓝 a) :=
+    tendsto (fun x => c • f x) l (𝓝 <| c • a) ↔ tendsto f l (𝓝 a) :=
   ⟨fun h => by
-    simpa only [inv_smul_smul] using h.const_smul (c⁻¹), fun h => h.const_smul _⟩
+    simpa only [inv_smul_smul] using h.const_smul c⁻¹, fun h => h.const_smul _⟩
 
 variable [TopologicalSpace β] {f : β → α} {b : β} {s : Set β}
 
@@ -155,7 +160,7 @@ theorem continuous_within_at_const_smul_iff (c : G) :
 
 @[to_additive]
 theorem continuous_on_const_smul_iff (c : G) : ContinuousOn (fun x => c • f x) s ↔ ContinuousOn f s :=
-  forall₂_congrₓ $ fun b hb => continuous_within_at_const_smul_iff c
+  forall₂_congrₓ fun b hb => continuous_within_at_const_smul_iff c
 
 @[to_additive]
 theorem continuous_at_const_smul_iff (c : G) : ContinuousAt (fun x => c • f x) b ↔ ContinuousAt f b :=
@@ -164,23 +169,6 @@ theorem continuous_at_const_smul_iff (c : G) : ContinuousAt (fun x => c • f x)
 @[to_additive]
 theorem continuous_const_smul_iff (c : G) : (Continuous fun x => c • f x) ↔ Continuous f := by
   simp only [continuous_iff_continuous_at, continuous_at_const_smul_iff]
-
-/-- Scalar multiplication by an element of a group `G` acting on `α` is a homeomorphism from `α`
-to itself. -/
-protected def Homeomorph.smul (c : G) : α ≃ₜ α where
-  toEquiv := MulAction.toPermHom G α c
-  continuous_to_fun := continuous_id.const_smul _
-  continuous_inv_fun := continuous_id.const_smul _
-
-/-- Affine-addition of an element of an additive group `G` acting on `α` is a homeomorphism
-from `α` to itself. -/
-protected def Homeomorph.vadd {G : Type _} [TopologicalSpace G] [AddGroupₓ G] [AddAction G α] [HasContinuousVadd G α]
-    (c : G) : α ≃ₜ α where
-  toEquiv := AddAction.toPermHom α G c
-  continuous_to_fun := continuous_id.const_vadd _
-  continuous_inv_fun := continuous_id.const_vadd _
-
-attribute [to_additive] Homeomorph.smul
 
 @[to_additive]
 theorem is_open_map_smul (c : G) : IsOpenMap fun x : α => c • x :=
@@ -205,7 +193,7 @@ section GroupWithZeroₓ
 variable {G₀ : Type _} [TopologicalSpace G₀] [GroupWithZeroₓ G₀] [MulAction G₀ α] [HasContinuousSmul G₀ α]
 
 theorem tendsto_const_smul_iff₀ {f : β → α} {l : Filter β} {a : α} {c : G₀} (hc : c ≠ 0) :
-    tendsto (fun x => c • f x) l (𝓝 $ c • a) ↔ tendsto f l (𝓝 a) :=
+    tendsto (fun x => c • f x) l (𝓝 <| c • a) ↔ tendsto f l (𝓝 a) :=
   tendsto_const_smul_iff (Units.mk0 c hc)
 
 variable [TopologicalSpace β] {f : β → α} {b : β} {c : G₀} {s : Set β}
@@ -264,7 +252,7 @@ namespace IsUnit
 variable [Monoidₓ M] [MulAction M α] [HasContinuousSmul M α]
 
 theorem tendsto_const_smul_iff {f : β → α} {l : Filter β} {a : α} {c : M} (hc : IsUnit c) :
-    tendsto (fun x => c • f x) l (𝓝 $ c • a) ↔ tendsto f l (𝓝 a) :=
+    tendsto (fun x => c • f x) l (𝓝 <| c • a) ↔ tendsto f l (𝓝 a) :=
   let ⟨u, hu⟩ := hc
   hu ▸ tendsto_const_smul_iff u
 
@@ -311,6 +299,6 @@ instance [TopologicalSpace β] [HasScalar M α] [HasScalar M β] [HasContinuousS
 @[to_additive]
 instance {ι : Type _} {γ : ι → Type _} [∀ i, TopologicalSpace (γ i)] [∀ i, HasScalar M (γ i)]
     [∀ i, HasContinuousSmul M (γ i)] : HasContinuousSmul M (∀ i, γ i) :=
-  ⟨continuous_pi $ fun i =>
-      (continuous_fst.smul continuous_snd).comp $ continuous_fst.prod_mk ((continuous_apply i).comp continuous_snd)⟩
+  ⟨continuous_pi fun i =>
+      (continuous_fst.smul continuous_snd).comp <| continuous_fst.prod_mk ((continuous_apply i).comp continuous_snd)⟩
 

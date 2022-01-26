@@ -161,9 +161,10 @@ private theorem ih_0 : ih 0 a :=
   ⟨rfl, by
     simp [T_def, mul_div_cancel' _ (ne_of_gtₓ (deriv_sq_norm_pos hnorm))]⟩
 
-private theorem calc_norm_le_one {n : ℕ} {z : ℤ_[p]} (hz : ih n z) : ∥(↑F.eval z : ℚ_[p]) / ↑F.derivative.eval z∥ ≤ 1 :=
+private theorem calc_norm_le_one {n : ℕ} {z : ℤ_[p]} (hz : ih n z) :
+    ∥(↑(F.eval z) : ℚ_[p]) / ↑(F.derivative.eval z)∥ ≤ 1 :=
   calc
-    ∥(↑F.eval z : ℚ_[p]) / ↑F.derivative.eval z∥ = ∥(↑F.eval z : ℚ_[p])∥ / ∥(↑F.derivative.eval z : ℚ_[p])∥ :=
+    ∥(↑(F.eval z) : ℚ_[p]) / ↑(F.derivative.eval z)∥ = ∥(↑(F.eval z) : ℚ_[p])∥ / ∥(↑(F.derivative.eval z) : ℚ_[p])∥ :=
       NormedField.norm_div _ _
     _ = ∥F.eval z∥ / ∥F.derivative.eval a∥ := by
       simp [hz.1]
@@ -191,26 +192,26 @@ private theorem calc_deriv_dist {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) (hz1 : �
     
 
 private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n z)
-    (h1 : ∥(↑F.eval z : ℚ_[p]) / ↑F.derivative.eval z∥ ≤ 1) (hzeq : z1 = ⟨_, h1⟩) :
+    (h1 : ∥(↑(F.eval z) : ℚ_[p]) / ↑(F.derivative.eval z)∥ ≤ 1) (hzeq : z1 = ⟨_, h1⟩) :
     { q : ℤ_[p] // F.eval z' = q * z1 ^ 2 } :=
-  have hdzne' : (↑F.derivative.eval z : ℚ_[p]) ≠ 0 :=
+  have hdzne' : (↑(F.derivative.eval z) : ℚ_[p]) ≠ 0 :=
     have hdzne : F.derivative.eval z ≠ 0 :=
       mt norm_eq_zero.2
         (by
           rw [hz.1] <;> apply deriv_norm_ne_zero <;> assumption)
-    fun h => hdzne $ Subtype.ext_iff_val.2 h
+    fun h => hdzne <| Subtype.ext_iff_val.2 h
   let ⟨q, hq⟩ := F.binom_expansion z (-z1)
-  have : ∥(↑F.derivative.eval z * (↑F.eval z / ↑F.derivative.eval z) : ℚ_[p])∥ ≤ 1 := by
+  have : ∥(↑(F.derivative.eval z) * (↑(F.eval z) / ↑(F.derivative.eval z)) : ℚ_[p])∥ ≤ 1 := by
     rw [padicNormE.mul]
     exact mul_le_one (PadicInt.norm_le_one _) (norm_nonneg _) h1
   have : F.derivative.eval z * -z1 = -F.eval z :=
     calc
-      F.derivative.eval z * -z1 = F.derivative.eval z * -⟨↑F.eval z / ↑F.derivative.eval z, h1⟩ := by
+      F.derivative.eval z * -z1 = F.derivative.eval z * -⟨↑(F.eval z) / ↑(F.derivative.eval z), h1⟩ := by
         rw [hzeq]
-      _ = -(F.derivative.eval z * ⟨↑F.eval z / ↑F.derivative.eval z, h1⟩) := by
+      _ = -(F.derivative.eval z * ⟨↑(F.eval z) / ↑(F.derivative.eval z), h1⟩) := by
         simp [Subtype.ext_iff_val]
-      _ = -⟨↑F.derivative.eval z * (↑F.eval z / ↑F.derivative.eval z), this⟩ :=
-        Subtype.ext $ by
+      _ = -⟨↑(F.derivative.eval z) * (↑(F.eval z) / ↑(F.derivative.eval z)), this⟩ :=
+        Subtype.ext <| by
           simp
       _ = -F.eval z := by
         simp [mul_div_cancel' _ hdzne']
@@ -220,7 +221,7 @@ private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n 
   ⟨q, HEq⟩
 
 private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F.eval z' = q * z1 ^ 2)
-    (h1 : ∥(↑F.eval z : ℚ_[p]) / ↑F.derivative.eval z∥ ≤ 1) (hzeq : z1 = ⟨_, h1⟩) :
+    (h1 : ∥(↑(F.eval z) : ℚ_[p]) / ↑(F.derivative.eval z)∥ ≤ 1) (hzeq : z1 = ⟨_, h1⟩) :
     ∥F.eval z'∥ ≤ ∥F.derivative.eval a∥ ^ 2 * T ^ 2 ^ (n + 1) :=
   calc
     ∥F.eval z'∥ = ∥q∥ * ∥z1∥ ^ 2 := by
@@ -243,7 +244,7 @@ set_option eqn_compiler.zeta true
 /-- Given `z : ℤ_[p]` satisfying `ih n z`, construct `z' : ℤ_[p]` satisfying `ih (n+1) z'`. We need
 the hypothesis `ih n z`, since otherwise `z'` is not necessarily an integer. -/
 private def ih_n {n : ℕ} {z : ℤ_[p]} (hz : ih n z) : { z' : ℤ_[p] // ih (n + 1) z' } :=
-  have h1 : ∥(↑F.eval z : ℚ_[p]) / ↑F.derivative.eval z∥ ≤ 1 := calc_norm_le_one hz
+  have h1 : ∥(↑(F.eval z) : ℚ_[p]) / ↑(F.derivative.eval z)∥ ≤ 1 := calc_norm_le_one hz
   let z1 : ℤ_[p] := ⟨_, h1⟩
   let z' : ℤ_[p] := z - z1
   ⟨z',
@@ -342,7 +343,7 @@ private theorem newton_seq_dist_aux (n : ℕ) :
       _ ≤ max (∥F.derivative.eval a∥ * T ^ 2 ^ (n + k)) (∥F.derivative.eval a∥ * T ^ 2 ^ n) :=
         max_le_max (newton_seq_succ_dist _) (newton_seq_dist_aux _)
       _ = ∥F.derivative.eval a∥ * T ^ 2 ^ n :=
-        max_eq_rightₓ $
+        max_eq_rightₓ <|
           mul_le_mul_of_nonneg_left (pow_le_pow_of_le_one (norm_nonneg _) (le_of_ltₓ T_lt_one) this) (norm_nonneg _)
       
 
@@ -428,7 +429,7 @@ private theorem newton_seq_norm_tendsto_zero : tendsto (fun i => ∥F.eval (newt
 
 private theorem newton_seq_dist_tendsto :
     tendsto (fun n => ∥newton_cau_seq n - a∥) at_top (𝓝 (∥F.eval a∥ / ∥F.derivative.eval a∥)) :=
-  tendsto_const_nhds.congr' $ eventually_at_top.2 ⟨1, fun _ hx => (newton_seq_dist_to_a _ hx).symm⟩
+  tendsto_const_nhds.congr' <| eventually_at_top.2 ⟨1, fun _ hx => (newton_seq_dist_to_a _ hx).symm⟩
 
 private theorem newton_seq_dist_tendsto' : tendsto (fun n => ∥newton_cau_seq n - a∥) at_top (𝓝 ∥soln - a∥) :=
   (continuous_norm.Tendsto _).comp (newton_cau_seq.tendsto_limit.sub tendsto_const_nhds)
@@ -468,7 +469,7 @@ private theorem soln_unique (z : ℤ_[p]) (hev : F.eval z = 0) (hnlt : ∥z - a�
           rw [sq, right_distrib, mul_assoc]
         )
   have : h = 0 :=
-    by_contradiction $ fun hne =>
+    by_contradiction fun hne =>
       have : F.derivative.eval soln + q * h = 0 := (eq_zero_or_eq_zero_of_mul_eq_zero this).resolve_right hne
       have : F.derivative.eval soln = -q * h := by
         simpa using eq_neg_of_add_eq_zero this
@@ -508,7 +509,7 @@ private theorem a_soln_is_unique (ha : F.eval a = 0) (z' : ℤ_[p]) (hz' : F.eva
           rw [sq, right_distrib, mul_assoc]
         )
   have : h = 0 :=
-    by_contradiction $ fun hne =>
+    by_contradiction fun hne =>
       have : F.derivative.eval a + q * h = 0 := (eq_zero_or_eq_zero_of_mul_eq_zero this).resolve_right hne
       have : F.derivative.eval a = -q * h := by
         simpa using eq_neg_of_add_eq_zero this

@@ -199,7 +199,7 @@ theorem sup_sdiff_right : x \ y⊔x = x := by
 
 @[simp]
 theorem sdiff_inf_sdiff : x \ y⊓y \ x = ⊥ :=
-  Eq.symm $
+  Eq.symm <|
     calc
       ⊥ = x⊓y⊓x \ y := by
         rw [inf_inf_sdiff]
@@ -260,7 +260,7 @@ theorem Disjoint.disjoint_sdiff_right (h : Disjoint x y) : Disjoint x (y \ z) :=
   h.mono_right sdiff_le
 
 theorem Disjoint.sdiff_eq_of_sup_eq (hi : Disjoint x z) (hs : x⊔z = y) : y \ x = z :=
-  have h : y⊓x = x := inf_eq_right.2 $ le_sup_left.trans hs.le
+  have h : y⊓x = x := inf_eq_right.2 <| le_sup_left.trans hs.le
   sdiff_unique
     (by
       rw [h, hs])
@@ -510,7 +510,7 @@ theorem sdiff_le_sdiff (h₁ : w ≤ y) (h₂ : z ≤ x) : w \ x ≤ y \ z :=
     
 
 theorem sdiff_lt_sdiff_right (h : x < y) (hz : z ≤ x) : x \ z < y \ z :=
-  (sdiff_le_sdiff_right h.le).lt_of_not_le $ fun h' => h.not_le $ le_sdiff_sup.trans $ sup_le_of_le_sdiff_right h' hz
+  (sdiff_le_sdiff_right h.le).lt_of_not_le fun h' => h.not_le <| le_sdiff_sup.trans <| sup_le_of_le_sdiff_right h' hz
 
 theorem sup_inf_inf_sdiff : x⊓y⊓z⊔y \ z = x⊓y⊔y \ z :=
   calc
@@ -568,7 +568,7 @@ theorem sdiff_sdiff_right_self : x \ (x \ y) = x⊓y := by
 theorem sdiff_sdiff_eq_self (h : y ≤ x) : x \ (x \ y) = y := by
   rw [sdiff_sdiff_right_self, inf_of_le_right h]
 
-theorem sdiff_sdiff_left : x \ y \ z = x \ (y⊔z) := by
+theorem sdiff_sdiff_left : (x \ y) \ z = x \ (y⊔z) := by
   rw [sdiff_sup]
   apply sdiff_unique
   · rw [← inf_sup_left, sup_sdiff_self_right, inf_sdiff_sup_right]
@@ -576,18 +576,18 @@ theorem sdiff_sdiff_left : x \ y \ z = x \ (y⊔z) := by
   · rw [inf_assoc, @inf_comm _ _ z, inf_assoc, inf_sdiff_self_left, inf_bot_eq, inf_bot_eq]
     
 
-theorem sdiff_sdiff_left' : x \ y \ z = x \ y⊓x \ z := by
+theorem sdiff_sdiff_left' : (x \ y) \ z = x \ y⊓x \ z := by
   rw [sdiff_sdiff_left, sdiff_sup]
 
-theorem sdiff_sdiff_comm : x \ y \ z = x \ z \ y := by
+theorem sdiff_sdiff_comm : (x \ y) \ z = (x \ z) \ y := by
   rw [sdiff_sdiff_left, sup_comm, sdiff_sdiff_left]
 
 @[simp]
-theorem sdiff_idem : x \ y \ y = x \ y := by
+theorem sdiff_idem : (x \ y) \ y = x \ y := by
   rw [sdiff_sdiff_left, sup_idem]
 
 @[simp]
-theorem sdiff_sdiff_self : x \ y \ x = ⊥ := by
+theorem sdiff_sdiff_self : (x \ y) \ x = ⊥ := by
   rw [sdiff_sdiff_comm, sdiff_self, bot_sdiff]
 
 theorem sdiff_sdiff_sup_sdiff : z \ (x \ y⊔y \ x) = z⊓(z \ x⊔y)⊓(z \ y⊔x) :=
@@ -688,7 +688,7 @@ theorem inf_sdiff_assoc : (x⊓y) \ z = x⊓y \ z :=
       )
 
 theorem sup_eq_sdiff_sup_sdiff_sup_inf : x⊔y = x \ y⊔y \ x⊔x⊓y :=
-  Eq.symm $
+  Eq.symm <|
     calc
       x \ y⊔y \ x⊔x⊓y = (x \ y⊔y \ x⊔x)⊓(x \ y⊔y \ x⊔y) := by
         rw [sup_inf_left]
@@ -764,7 +764,7 @@ variable [BooleanAlgebra.Core α]
 
 @[simp]
 theorem inf_compl_eq_bot : x⊓xᶜ = ⊥ :=
-  bot_unique $ BooleanAlgebra.Core.inf_compl_le_bot x
+  bot_unique <| BooleanAlgebra.Core.inf_compl_le_bot x
 
 @[simp]
 theorem compl_inf_eq_bot : xᶜ⊓x = ⊥ :=
@@ -772,7 +772,7 @@ theorem compl_inf_eq_bot : xᶜ⊓x = ⊥ :=
 
 @[simp]
 theorem sup_compl_eq_top : x⊔xᶜ = ⊤ :=
-  top_unique $ BooleanAlgebra.Core.top_le_sup_compl x
+  top_unique <| BooleanAlgebra.Core.top_le_sup_compl x
 
 @[simp]
 theorem compl_sup_eq_top : xᶜ⊔x = ⊤ :=
@@ -984,9 +984,9 @@ theorem Pi.compl_apply {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i
   rfl
 
 instance Pi.booleanAlgebra {ι : Type u} {α : ι → Type v} [∀ i, BooleanAlgebra (α i)] : BooleanAlgebra (∀ i, α i) :=
-  { Pi.hasSdiff, Pi.hasCompl, Pi.boundedOrder, Pi.distribLattice with sdiff_eq := fun x y => funext $ fun i => sdiff_eq,
-    sup_inf_sdiff := fun x y => funext $ fun i => sup_inf_sdiff (x i) (y i),
-    inf_inf_sdiff := fun x y => funext $ fun i => inf_inf_sdiff (x i) (y i),
+  { Pi.hasSdiff, Pi.hasCompl, Pi.boundedOrder, Pi.distribLattice with sdiff_eq := fun x y => funext fun i => sdiff_eq,
+    sup_inf_sdiff := fun x y => funext fun i => sup_inf_sdiff (x i) (y i),
+    inf_inf_sdiff := fun x y => funext fun i => inf_inf_sdiff (x i) (y i),
     inf_compl_le_bot := fun _ _ => BooleanAlgebra.inf_compl_le_bot _,
     top_le_sup_compl := fun _ _ => BooleanAlgebra.top_le_sup_compl _ }
 

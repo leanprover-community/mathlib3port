@@ -113,7 +113,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₁ (I : bo
     has_integral_bot_divergence_of_forall_has_deriv_within_at I f f' (s ∩ I.Icc) (hs.mono (inter_subset_left _ _))
       (fun x hx => Hc _ hx.2) fun x hx => Hd _ ⟨hx.1, fun h => hx.2 ⟨h, hx.1⟩⟩
   rw [continuous_on_pi] at Hc
-  refine' (A.unique B).trans (sum_congr rfl $ fun i hi => _)
+  refine' (A.unique B).trans ((sum_congr rfl) fun i hi => _)
   refine' congr_arg2ₓ Sub.sub _ _
   · have := box.continuous_on_face_Icc (Hc i) (Set.right_mem_Icc.2 (I.lower_le_upper i))
     have := (this.integrable_on_compact (box.is_compact_Icc _)).mono_set box.coe_subset_Icc
@@ -159,7 +159,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : bo
       (∀ k, c k ∈ Icc (I.lower i) (I.upper i)) →
         tendsto c at_top (𝓝 d) →
           tendsto (fun k => ∫ x in ((J k).face i).Icc, f (i.insert_nth (c k) x) i) at_top
-            (𝓝 $ ∫ x in (I.face i).Icc, f (i.insert_nth d x) i)
+            (𝓝 <| ∫ x in (I.face i).Icc, f (i.insert_nth d x) i)
     by
     rw [box.Icc_eq_pi] at hJ_sub'
     refine' tendsto_finset_sum _ fun i hi => (this _ _ _ _ (hJu _)).sub (this _ _ _ _ (hJl _))
@@ -172,7 +172,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : bo
     (box.continuous_on_face_Icc ((continuous_apply i).comp_continuous_on Hc) hd).integrable_on_Icc
   have H :
     tendsto (fun k => ∫ x in ((J k).face i).Icc, f (i.insert_nth d x) i) at_top
-      (𝓝 $ ∫ x in (I.face i).Icc, f (i.insert_nth d x) i) :=
+      (𝓝 <| ∫ x in (I.face i).Icc, f (i.insert_nth d x) i) :=
     by
     have hIoo : (⋃ k, ((J k).face i).Ioo) = (I.face i).Ioo :=
       box.Union_Ioo_of_tendsto ((box.monotone_face i).comp J.monotone) (tendsto_pi_nhds.2 fun _ => hJl _)
@@ -183,7 +183,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : bo
         (box.Ioo.monotone.comp ((box.monotone_face i).comp J.monotone)) Hid
   refine' H.congr_dist (metric.nhds_basis_closed_ball.tendsto_right_iff.2 fun ε εpos => _)
   have hvol_pos : ∀ J : box (Finₓ n), 0 < ∏ j, J.upper j - J.lower j := fun J =>
-    prod_pos $ fun j hj => sub_pos.2 $ J.lower_lt_upper _
+    prod_pos fun j hj => sub_pos.2 <| J.lower_lt_upper _
   rcases Metric.uniform_continuous_on_iff_le.1 (I.is_compact_Icc.uniform_continuous_on_of_continuous Hc)
       (ε / ∏ j, (I.face i).upper j - (I.face i).lower j) (div_pos εpos (hvol_pos (I.face i))) with
     ⟨δ, δpos, hδ⟩
@@ -204,7 +204,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : bo
             dist (f (i.insert_nth d x)) (f (i.insert_nth (c k) x)) :=
           dist_le_pi_dist (f (i.insert_nth d x)) (f (i.insert_nth (c k) x))
             i _ ≤ ε / ∏ j, (I.face i).upper j - (I.face i).lower j :=
-          hδ _ (I.maps_to_insert_nth_face_Icc hd $ Hsub hx) _ (I.maps_to_insert_nth_face_Icc (hc _) $ Hsub hx) _
+          hδ _ (I.maps_to_insert_nth_face_Icc hd <| Hsub hx) _ (I.maps_to_insert_nth_face_Icc (hc _) <| Hsub hx) _
       rw [Finₓ.dist_insert_nth_insert_nth, dist_self, dist_comm]
       exact max_leₓ hk.le δpos.lt.le _ ≤ ε := by
       rw [box.Icc_def, Real.volume_Icc_pi_to_real ((J k).face i).lower_le_upper, ← le_div_iff (hvol_pos _)]
@@ -252,7 +252,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable (hle : a ≤ b
     · simp [hi]
       
     · rcases Finₓ.exists_succ_above_eq hne with ⟨i, rfl⟩
-      have : (pi Set.Univ fun k : Finₓ n => Ioc (a $ j.succ_above k) (b $ j.succ_above k)) = ∅ := univ_pi_eq_empty hi'
+      have : (pi Set.Univ fun k : Finₓ n => Ioc (a <| j.succ_above k) (b <| j.succ_above k)) = ∅ := univ_pi_eq_empty hi'
       rw [this, integral_empty, integral_empty, sub_self]
       
     
@@ -282,11 +282,11 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv {F : 
     (he_ord : ∀ x y, eL x ≤ eL y ↔ x ≤ y) (he_vol : measure_preserving eL volume volume) (f : Finₓ (n + 1) → F → E)
     (f' : Finₓ (n + 1) → F → F →L[ℝ] E) (s : Set F) (hs : countable s) (a b : F) (hle : a ≤ b)
     (Hc : ∀ i, ContinuousOn (f i) (Icc a b)) (Hd : ∀, ∀ x ∈ Interior (Icc a b) \ s, ∀ i, HasFderivAt (f i) (f' i x) x)
-    (DF : F → E) (hDF : ∀ x, DF x = ∑ i, f' i x (eL.symm $ e i)) (Hi : integrable_on DF (Icc a b)) :
+    (DF : F → E) (hDF : ∀ x, DF x = ∑ i, f' i x (eL.symm <| e i)) (Hi : integrable_on DF (Icc a b)) :
     (∫ x in Icc a b, DF x) =
       ∑ i : Finₓ (n + 1),
-        (∫ x in Icc (eL a ∘ i.succ_above) (eL b ∘ i.succ_above), f i (eL.symm $ i.insert_nth (eL b i) x)) -
-          ∫ x in Icc (eL a ∘ i.succ_above) (eL b ∘ i.succ_above), f i (eL.symm $ i.insert_nth (eL a i) x) :=
+        (∫ x in Icc (eL a ∘ i.succ_above) (eL b ∘ i.succ_above), f i (eL.symm <| i.insert_nth (eL b i) x)) -
+          ∫ x in Icc (eL a ∘ i.succ_above) (eL b ∘ i.succ_above), f i (eL.symm <| i.insert_nth (eL a i) x) :=
   have he_emb : MeasurableEmbedding eL := eL.to_homeomorph.to_measurable_equiv.measurable_embedding
   have hIcc : eL ⁻¹' Icc (eL a) (eL b) = Icc a b := by
     ext1 x
@@ -294,15 +294,15 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv {F : 
   have hIcc' : Icc (eL a) (eL b) = eL.symm ⁻¹' Icc a b := by
     rw [← hIcc, eL.symm_preimage_preimage]
   calc
-    (∫ x in Icc a b, DF x) = ∫ x in Icc a b, ∑ i, f' i x (eL.symm $ e i) := by
+    (∫ x in Icc a b, DF x) = ∫ x in Icc a b, ∑ i, f' i x (eL.symm <| e i) := by
       simp only [hDF]
-    _ = ∫ x in Icc (eL a) (eL b), ∑ i, f' i (eL.symm x) (eL.symm $ e i) := by
+    _ = ∫ x in Icc (eL a) (eL b), ∑ i, f' i (eL.symm x) (eL.symm <| e i) := by
       rw [← he_vol.set_integral_preimage_emb he_emb]
       simp only [hIcc, eL.symm_apply_apply]
     _ =
         ∑ i : Finₓ (n + 1),
-          (∫ x in Icc (eL a ∘ i.succ_above) (eL b ∘ i.succ_above), f i (eL.symm $ i.insert_nth (eL b i) x)) -
-            ∫ x in Icc (eL a ∘ i.succ_above) (eL b ∘ i.succ_above), f i (eL.symm $ i.insert_nth (eL a i) x) :=
+          (∫ x in Icc (eL a ∘ i.succ_above) (eL b ∘ i.succ_above), f i (eL.symm <| i.insert_nth (eL b i) x)) -
+            ∫ x in Icc (eL a ∘ i.succ_above) (eL b ∘ i.succ_above), f i (eL.symm <| i.insert_nth (eL a i) x) :=
       by
       convert
         integral_divergence_of_has_fderiv_within_at_off_countable' (eL a) (eL b) ((he_ord _ _).2 hle)
@@ -359,8 +359,8 @@ theorem integral_eq_of_has_deriv_within_at_off_countable_of_le (f f' : ℝ → E
         set_integral_congr_set_ae
           Ioc_ae_eq_Icc]_ =
         ∑ i : Finₓ 1,
-          (∫ x in Icc (e a ∘ i.succ_above) (e b ∘ i.succ_above), f (e.symm $ i.insert_nth (e b i) x)) -
-            ∫ x in Icc (e a ∘ i.succ_above) (e b ∘ i.succ_above), f (e.symm $ i.insert_nth (e a i) x) :=
+          (∫ x in Icc (e a ∘ i.succ_above) (e b ∘ i.succ_above), f (e.symm <| i.insert_nth (e b i) x)) -
+            ∫ x in Icc (e a ∘ i.succ_above) (e b ∘ i.succ_above), f (e.symm <| i.insert_nth (e a i) x) :=
       by
       simp only [← interior_Icc] at Hd
       refine'
@@ -434,10 +434,10 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
         ∑ i : Finₓ 2,
           (∫ x in Icc (e a ∘ i.succ_above) (e b ∘ i.succ_above),
               («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") i
-                (e.symm $ i.insert_nth (e b i) x)) -
+                (e.symm <| i.insert_nth (e b i) x)) -
             ∫ x in Icc (e a ∘ i.succ_above) (e b ∘ i.succ_above),
               («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") i
-                (e.symm $ i.insert_nth (e a i) x) :=
+                (e.symm <| i.insert_nth (e a i) x) :=
       by
       refine'
         integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv e _ _

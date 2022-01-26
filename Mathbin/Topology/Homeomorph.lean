@@ -76,7 +76,7 @@ theorem to_equiv_injective : Function.Injective (to_equiv : α ≃ₜ β → α 
 
 @[ext]
 theorem ext {h h' : α ≃ₜ β} (H : ∀ x, h x = h' x) : h = h' :=
-  to_equiv_injective $ Equivₓ.ext H
+  to_equiv_injective <| Equivₓ.ext H
 
 /-- Identity map as a homeomorphism. -/
 @[simps (config := { fullyApplied := ff }) apply]
@@ -173,14 +173,14 @@ theorem preimage_image (h : α ≃ₜ β) (s : Set α) : h ⁻¹' (h '' s) = s :
   h.to_equiv.preimage_image s
 
 protected theorem Inducing (h : α ≃ₜ β) : Inducing h :=
-  inducing_of_inducing_compose h.continuous h.symm.continuous $ by
+  inducing_of_inducing_compose h.continuous h.symm.continuous <| by
     simp only [symm_comp_self, inducing_id]
 
 theorem induced_eq (h : α ≃ₜ β) : TopologicalSpace.induced h ‹_› = ‹_› :=
   h.inducing.1.symm
 
 protected theorem QuotientMap (h : α ≃ₜ β) : QuotientMap h :=
-  QuotientMap.of_quotient_map_compose h.symm.continuous h.continuous $ by
+  QuotientMap.of_quotient_map_compose h.symm.continuous h.continuous <| by
     simp only [self_comp_symm, QuotientMap.id]
 
 theorem coinduced_eq (h : α ≃ₜ β) : TopologicalSpace.coinduced h ‹_› = ‹_› :=
@@ -426,16 +426,16 @@ def sum_prod_distrib : Sum α β × γ ≃ₜ Sum (α × γ) (β × γ) := by
 
 /-- `α × (β ⊕ γ)` is homeomorphic to `α × β ⊕ α × γ`. -/
 def prod_sum_distrib : α × Sum β γ ≃ₜ Sum (α × β) (α × γ) :=
-  (prod_comm _ _).trans $ sum_prod_distrib.trans $ sum_congr (prod_comm _ _) (prod_comm _ _)
+  (prod_comm _ _).trans <| sum_prod_distrib.trans <| sum_congr (prod_comm _ _) (prod_comm _ _)
 
 variable {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)]
 
 /-- `(Σ i, σ i) × β` is homeomorphic to `Σ i, (σ i × β)`. -/
 def sigma_prod_distrib : (Σ i, σ i) × β ≃ₜ Σ i, σ i × β :=
-  Homeomorph.symm $
+  Homeomorph.symm <|
     homeomorph_of_continuous_open (Equivₓ.sigmaProdDistrib σ β).symm
-      (continuous_sigma $ fun i => (continuous_sigma_mk.comp continuous_fst).prod_mk continuous_snd)
-      (is_open_map_sigma $ fun i => (open_embedding_sigma_mk.Prod open_embedding_id).IsOpenMap)
+      (continuous_sigma fun i => (continuous_sigma_mk.comp continuous_fst).prod_mk continuous_snd)
+      (is_open_map_sigma fun i => (open_embedding_sigma_mk.Prod open_embedding_id).IsOpenMap)
 
 end Distrib
 
@@ -451,7 +451,7 @@ def fun_unique (ι α : Type _) [Unique ι] [TopologicalSpace α] : (ι → α) 
 def pi_fin_two.{u} (α : Finₓ 2 → Type u) [∀ i, TopologicalSpace (α i)] : (∀ i, α i) ≃ₜ α 0 × α 1 where
   toEquiv := piFinTwoEquiv α
   continuous_to_fun := (continuous_apply 0).prod_mk (continuous_apply 1)
-  continuous_inv_fun := continuous_pi $ Finₓ.forall_fin_two.2 ⟨continuous_fst, continuous_snd⟩
+  continuous_inv_fun := continuous_pi <| Finₓ.forall_fin_two.2 ⟨continuous_fst, continuous_snd⟩
 
 /-- Homeomorphism between `α² = fin 2 → α` and `α × α`. -/
 @[simps (config := { fullyApplied := ff })]

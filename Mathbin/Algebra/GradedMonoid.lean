@@ -127,7 +127,7 @@ variable {A} [AddMonoidₓ ι] [ghas_mul A] [ghas_one A]
 `gmonoid.gnpow` should be used instead. -/
 def gnpow_rec : ∀ n : ℕ {i}, A i → A (n • i)
   | 0, i, a => cast (congr_argₓ A (zero_nsmul i).symm) ghas_one.one
-  | n + 1, i, a => cast (congr_argₓ A (succ_nsmul i n).symm) (ghas_mul.mul a $ gnpow_rec _ a)
+  | n + 1, i, a => cast (congr_argₓ A (succ_nsmul i n).symm) (ghas_mul.mul a <| gnpow_rec _ a)
 
 @[simp]
 theorem gnpow_rec_zero (a : GradedMonoid A) : GradedMonoid.mk _ (gnpow_rec 0 a.snd) = 1 :=
@@ -141,7 +141,7 @@ unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
 
 @[simp]
 theorem gnpow_rec_succ (n : ℕ) (a : GradedMonoid A) :
-    (GradedMonoid.mk _ $ gnpow_rec n.succ a.snd) = a * ⟨_, gnpow_rec n a.snd⟩ :=
+    (GradedMonoid.mk _ <| gnpow_rec n.succ a.snd) = a * ⟨_, gnpow_rec n a.snd⟩ :=
   Sigma.ext (succ_nsmul _ _) (heq_of_cast_eq _ rfl).symm
 
 -- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
@@ -164,7 +164,7 @@ class gmonoid [AddMonoidₓ ι] extends ghas_mul A, ghas_one A where
   gnpow_zero' : ∀ a : GradedMonoid A, GradedMonoid.mk _ (gnpow 0 a.snd) = 1 := by
     run_tac
       gmonoid.apply_gnpow_rec_zero_tac
-  gnpow_succ' : ∀ n : ℕ a : GradedMonoid A, (GradedMonoid.mk _ $ gnpow n.succ a.snd) = a * ⟨_, gnpow n a.snd⟩ := by
+  gnpow_succ' : ∀ n : ℕ a : GradedMonoid A, (GradedMonoid.mk _ <| gnpow n.succ a.snd) = a * ⟨_, gnpow n a.snd⟩ := by
     run_tac
       gmonoid.apply_gnpow_rec_succ_tac
 
@@ -241,7 +241,7 @@ variable {A}
 
 @[simp]
 theorem mk_zero_smul {i} (a : A 0) (b : A i) : mk _ (a • b) = mk _ a * mk _ b :=
-  Sigma.ext (zero_addₓ _).symm $ eq_rec_heqₓ _ _
+  Sigma.ext (zero_addₓ _).symm <| eq_rec_heqₓ _ _
 
 @[simp]
 theorem grade_zero.smul_eq_mul (a b : A 0) : a • b = a * b :=
@@ -419,7 +419,7 @@ instance SetLike.ghasOne {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι �
 
 @[simp]
 theorem SetLike.coe_ghas_one {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι → S) [SetLike.HasGradedOne A] :
-    ↑@GradedMonoid.GhasOne.one _ (fun i => A i) _ _ = (1 : R) :=
+    ↑(@GradedMonoid.GhasOne.one _ (fun i => A i) _ _) = (1 : R) :=
   rfl
 
 /-- A version of `graded_monoid.ghas_one` for internally graded objects. -/
@@ -432,7 +432,7 @@ instance SetLike.ghasMul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι →
 
 @[simp]
 theorem SetLike.coe_ghas_mul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι → S) [SetLike.HasGradedMul A] {i j : ι}
-    (x : A i) (y : A j) : ↑@GradedMonoid.GhasMul.mul _ (fun i => A i) _ _ _ _ x y = (x * y : R) :=
+    (x : A i) (y : A j) : ↑(@GradedMonoid.GhasMul.mul _ (fun i => A i) _ _ _ _ x y) = (x * y : R) :=
   rfl
 
 /-- A version of `graded_monoid.gmonoid` for internally graded objects. -/
@@ -461,7 +461,7 @@ theorem list_prod_map_mem {ι'} (l : List ι') (i : ι' → ι) (r : ι' → R) 
     exact one_mem
     
   · rw [List.map_cons, List.map_cons, List.prod_cons, List.sum_cons]
-    exact mul_mem (h _ $ List.mem_cons_selfₓ _ _) (l_ih $ fun j hj => h _ $ List.mem_cons_of_memₓ _ hj)
+    exact mul_mem (h _ <| List.mem_cons_selfₓ _ _) (l_ih fun j hj => h _ <| List.mem_cons_of_memₓ _ hj)
     
 
 theorem list_prod_of_fn_mem {n} (i : Finₓ n → ι) (r : Finₓ n → R) (h : ∀ j, r j ∈ A (i j)) :
@@ -483,7 +483,7 @@ instance SetLike.gmonoid {S : Type _} [SetLike S R] [Monoidₓ R] [AddMonoidₓ 
 
 @[simp]
 theorem SetLike.coe_gnpow {S : Type _} [SetLike S R] [Monoidₓ R] [AddMonoidₓ ι] (A : ι → S) [SetLike.GradedMonoid A]
-    {i : ι} (x : A i) (n : ℕ) : ↑@GradedMonoid.Gmonoid.gnpow _ (fun i => A i) _ _ n _ x = (x ^ n : R) :=
+    {i : ι} (x : A i) (n : ℕ) : ↑(@GradedMonoid.Gmonoid.gnpow _ (fun i => A i) _ _ n _ x) = (x ^ n : R) :=
   rfl
 
 /-- Build a `gcomm_monoid` instance for a collection of subobjects. -/
@@ -515,7 +515,7 @@ theorem SetLike.list_dprod_eq (A : ι → S) [SetLike.GradedMonoid A] (fι : α 
     (l.dprod fι fA : (fun i => ↥A i) _) =
       ⟨List.prod (l.map fun a => fA a),
         (l.dprod_index_eq_map_sum fι).symm ▸ list_prod_map_mem l _ _ fun i hi => (fA i).Prop⟩ :=
-  Subtype.ext $ SetLike.coe_list_dprod _ _ _ _
+  Subtype.ext <| SetLike.coe_list_dprod _ _ _ _
 
 end Dprod
 

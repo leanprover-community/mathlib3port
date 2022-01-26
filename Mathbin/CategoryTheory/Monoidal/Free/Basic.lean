@@ -131,7 +131,7 @@ instance category_free_monoidal_category : category.{u} (F C) where
 instance : monoidal_category (F C) where
   tensorObj := fun X Y => free_monoidal_category.tensor X Y
   tensorHom := fun X₁ Y₁ X₂ Y₂ =>
-    Quotientₓ.map₂ hom.tensor $ by
+    Quotientₓ.map₂ hom.tensor <| by
       intro _ _ h _ _ h'
       exact hom_equiv.tensor h h'
   tensor_id' := fun X Y => Quotientₓ.sound tensor_id

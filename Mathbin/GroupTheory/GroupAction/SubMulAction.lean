@@ -132,7 +132,7 @@ instance has_scalar' : HasScalar S p where
   smul := fun c x => ⟨c • x.1, smul_of_tower_mem _ c x.2⟩
 
 instance : IsScalarTower S R p where
-  smul_assoc := fun s r x => Subtype.ext $ smul_assoc s r (↑x)
+  smul_assoc := fun s r x => Subtype.ext <| smul_assoc s r ↑x
 
 @[simp, norm_cast]
 theorem coe_smul_of_tower (s : S) (x : p) : ((s • x : p) : M) = s • ↑x :=
@@ -141,11 +141,11 @@ theorem coe_smul_of_tower (s : S) (x : p) : ((s • x : p) : M) = s • ↑x :=
 @[simp]
 theorem smul_mem_iff' {G} [Groupₓ G] [HasScalar G R] [MulAction G M] [IsScalarTower G R M] (g : G) {x : M} :
     g • x ∈ p ↔ x ∈ p :=
-  ⟨fun h => inv_smul_smul g x ▸ p.smul_of_tower_mem (g⁻¹) h, p.smul_of_tower_mem g⟩
+  ⟨fun h => inv_smul_smul g x ▸ p.smul_of_tower_mem g⁻¹ h, p.smul_of_tower_mem g⟩
 
 instance [HasScalar (Sᵐᵒᵖ) R] [HasScalar (Sᵐᵒᵖ) M] [IsScalarTower (Sᵐᵒᵖ) R M] [IsCentralScalar S M] :
     IsCentralScalar S p where
-  op_smul_eq_smul := fun r x => Subtype.ext $ op_smul_eq_smul r x
+  op_smul_eq_smul := fun r x => Subtype.ext <| op_smul_eq_smul r x
 
 end
 
@@ -158,8 +158,8 @@ variable (p : SubMulAction R M)
 /-- If the scalar product forms a `mul_action`, then the subset inherits this action -/
 instance mul_action' : MulAction S p where
   smul := · • ·
-  one_smul := fun x => Subtype.ext $ one_smul _ x
-  mul_smul := fun c₁ c₂ x => Subtype.ext $ mul_smul c₁ c₂ x
+  one_smul := fun x => Subtype.ext <| one_smul _ x
+  mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul c₁ c₂ x
 
 instance : MulAction R p :=
   p.mul_action'
@@ -183,7 +183,7 @@ theorem zero_mem (h : (p : Set M).Nonempty) : (0 : M) ∈ p :=
 /-- If the scalar product forms a `module`, and the `sub_mul_action` is not `⊥`, then the
 subset inherits the zero. -/
 instance [n_empty : Nonempty p] : Zero p where
-  zero := ⟨0, n_empty.elim $ fun x => p.zero_mem ⟨x, x.prop⟩⟩
+  zero := ⟨0, n_empty.elim fun x => p.zero_mem ⟨x, x.prop⟩⟩
 
 end Module
 

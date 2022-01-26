@@ -66,7 +66,7 @@ theorem coe_injective : @Function.Injective (LeftInvariantDerivation I G) (_ →
 
 @[ext]
 theorem ext (h : ∀ f, X f = Y f) : X = Y :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 
 variable (X Y f)
 
@@ -81,7 +81,7 @@ theorem coe_derivation_injective :
   exact h
 
 /-- Premature version of the lemma. Prefer using `left_invariant` instead. -/
-theorem left_invariant' : 𝒅ₕ (smooth_left_mul_one I g) (Derivation.evalAt (1 : G) (↑X)) = Derivation.evalAt g (↑X) :=
+theorem left_invariant' : 𝒅ₕ (smooth_left_mul_one I g) (Derivation.evalAt (1 : G) ↑X) = Derivation.evalAt g ↑X :=
   left_invariant'' X g
 
 @[simp]
@@ -187,7 +187,7 @@ instance : Module 𝕜 (LeftInvariantDerivation I G) :=
 /-- Evaluation at a point for left invariant derivation. Same thing as for generic global
 derivations (`derivation.eval_at`). -/
 def eval_at : LeftInvariantDerivation I G →ₗ[𝕜] PointDerivation I g where
-  toFun := fun X => Derivation.evalAt g (↑X)
+  toFun := fun X => Derivation.evalAt g ↑X
   map_add' := fun X Y => rfl
   map_smul' := fun k X => rfl
 
@@ -195,7 +195,7 @@ theorem eval_at_apply : eval_at g X f = (X f) g :=
   rfl
 
 @[simp]
-theorem eval_at_coe : Derivation.evalAt g (↑X) = eval_at g X :=
+theorem eval_at_coe : Derivation.evalAt g ↑X = eval_at g X :=
   rfl
 
 theorem left_invariant : 𝒅ₕ (smooth_left_mul_one I g) (eval_at (1 : G) X) = eval_at g X :=

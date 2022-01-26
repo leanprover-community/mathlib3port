@@ -37,16 +37,16 @@ private unsafe def has_opt_auto_param_inst_for_apply (ms : List (Name × expr)) 
     (fun r m => do
       let type ← infer_type m.2
       let b ← is_class type
-      return $ r || type.is_napp_of `opt_param 2 || type.is_napp_of `auto_param 2 || b)
+      return <| r || type.is_napp_of `opt_param 2 || type.is_napp_of `auto_param 2 || b)
     ff
 
 private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : apply_cfg) (ms : List (Name × expr)) :
     tactic Unit :=
-  mwhen (has_opt_auto_param_inst_for_apply ms) $ do
+  mwhen (has_opt_auto_param_inst_for_apply ms) <| do
     let gs ← get_goals
     ms.mmap' fun m =>
-        mwhen (bnot <$> is_assigned m.2) $
-          set_goals [m.2] >> try apply_instance >> when cfg.opt_param (try apply_opt_param) >>
+        mwhen (bnot <$> is_assigned m.2) <|
+          ((set_goals [m.2] >> try apply_instance) >> when cfg.opt_param (try apply_opt_param)) >>
             when cfg.auto_param (try apply_auto_param)
     set_goals gs
 
@@ -65,7 +65,7 @@ private unsafe def retry_apply_aux : ∀ e : expr cfg : apply_cfg, List (Bool ×
       let expr.pi n bi d b ← infer_type e >>= whnf | apply_core e cfg
       let v ← mk_meta_var d
       let b := b.has_var
-      let e ← head_beta $ e v
+      let e ← head_beta <| e v
       retry_apply_aux e cfg ((b, n, v) :: gs)
 
 private unsafe def retry_apply (e : expr) (cfg : apply_cfg) : tactic (List (Name × expr)) :=
@@ -102,7 +102,7 @@ private unsafe def relation_tactic (md : transparency) (op_for : environment →
       let r ← mk_const refl
       retry_apply r { md, NewGoals := new_goals.non_dep_only }
       return ()
-    | none => fail $ tac_name ++ " tactic failed, target is not a relation application with the expected property."
+    | none => fail <| tac_name ++ " tactic failed, target is not a relation application with the expected property."
 
 /-- Similar to `reflexivity` with the difference that `apply'` is used instead of `apply` -/
 unsafe def reflexivity' (md := semireducible) : tactic Unit :=

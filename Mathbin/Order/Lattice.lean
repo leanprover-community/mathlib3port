@@ -162,7 +162,7 @@ theorem sup_le_iff : a⊔b ≤ c ↔ a ≤ c ∧ b ≤ c :=
 
 @[simp]
 theorem sup_eq_left : a⊔b = a ↔ b ≤ a :=
-  le_antisymm_iffₓ.trans $ by
+  le_antisymm_iffₓ.trans <| by
     simp [le_reflₓ]
 
 theorem sup_of_le_left (h : b ≤ a) : a⊔b = a :=
@@ -174,7 +174,7 @@ theorem left_eq_sup : a = a⊔b ↔ b ≤ a :=
 
 @[simp]
 theorem sup_eq_right : a⊔b = b ↔ a ≤ b :=
-  le_antisymm_iffₓ.trans $ by
+  le_antisymm_iffₓ.trans <| by
     simp [le_reflₓ]
 
 theorem sup_of_le_right (h : a ≤ b) : a⊔b = b :=
@@ -271,7 +271,7 @@ theorem sup_sup_sup_comm (a b c d : α) : a⊔b⊔(c⊔d) = a⊔c⊔(b⊔d) := b
 theorem forall_le_or_exists_lt_sup (a : α) : (∀ b, b ≤ a) ∨ ∃ b, a < b :=
   suffices (∃ b, ¬b ≤ a) → ∃ b, a < b by
     rwa [or_iff_not_imp_left, not_forall]
-  fun ⟨b, hb⟩ => ⟨a⊔b, lt_of_le_of_neₓ le_sup_left $ mt left_eq_sup.1 hb⟩
+  fun ⟨b, hb⟩ => ⟨a⊔b, lt_of_le_of_neₓ le_sup_left <| mt left_eq_sup.1 hb⟩
 
 /-- If `f` is monotone, `g` is antitone, and `f ≤ g`, then for all `a`, `b` we have `f a ≤ g b`. -/
 theorem Monotone.forall_le_of_antitone {β : Type _} [Preorderₓ β] {f g : α → β} (hf : Monotone f) (hg : Antitone g)
@@ -292,7 +292,7 @@ theorem SemilatticeSup.ext_sup {α} {A B : SemilatticeSup α}
     (have := A
       x⊔y) =
       x⊔y :=
-  eq_of_forall_ge_iff $ fun c => by
+  eq_of_forall_ge_iff fun c => by
     simp only [sup_le_iff] <;> rw [← H, @sup_le_iff α A, H, H]
 
 theorem SemilatticeSup.ext {α} {A B : SemilatticeSup α}
@@ -303,7 +303,7 @@ theorem SemilatticeSup.ext {α} {A B : SemilatticeSup α}
           x ≤ y) :
     A = B := by
   have := PartialOrderₓ.ext H
-  have ss := funext fun x => funext $ SemilatticeSup.ext_sup H x
+  have ss := funext fun x => funext <| SemilatticeSup.ext_sup H x
   cases' A
   cases' B
   injection this <;> congr
@@ -341,7 +341,7 @@ instance α [SemilatticeSup α] : SemilatticeInf (OrderDual α) :=
     inf_le_right := @le_sup_right α _, le_inf := fun a b c hca hcb => @sup_le α _ _ _ _ hca hcb }
 
 theorem SemilatticeSup.dual_dual (α : Type _) [H : SemilatticeSup α] : OrderDual.semilatticeSup (OrderDual α) = H :=
-  SemilatticeSup.ext $ fun _ _ => Iff.rfl
+  SemilatticeSup.ext fun _ _ => Iff.rfl
 
 section SemilatticeInf
 
@@ -384,7 +384,7 @@ theorem le_inf_iff : a ≤ b⊓c ↔ a ≤ b ∧ a ≤ c :=
 
 @[simp]
 theorem inf_eq_left : a⊓b = a ↔ a ≤ b :=
-  le_antisymm_iffₓ.trans $ by
+  le_antisymm_iffₓ.trans <| by
     simp [le_reflₓ]
 
 theorem inf_of_le_left (h : a ≤ b) : a⊓b = a :=
@@ -396,7 +396,7 @@ theorem left_eq_inf : a = a⊓b ↔ a ≤ b :=
 
 @[simp]
 theorem inf_eq_right : a⊓b = b ↔ b ≤ a :=
-  le_antisymm_iffₓ.trans $ by
+  le_antisymm_iffₓ.trans <| by
     simp [le_reflₓ]
 
 theorem inf_of_le_right (h : b ≤ a) : a⊓b = b :=
@@ -482,7 +482,7 @@ theorem SemilatticeInf.ext_inf {α} {A B : SemilatticeInf α}
     (have := A
       x⊓y) =
       x⊓y :=
-  eq_of_forall_le_iff $ fun c => by
+  eq_of_forall_le_iff fun c => by
     simp only [le_inf_iff] <;> rw [← H, @le_inf_iff α A, H, H]
 
 theorem SemilatticeInf.ext {α} {A B : SemilatticeInf α}
@@ -493,13 +493,13 @@ theorem SemilatticeInf.ext {α} {A B : SemilatticeInf α}
           x ≤ y) :
     A = B := by
   have := PartialOrderₓ.ext H
-  have ss := funext fun x => funext $ SemilatticeInf.ext_inf H x
+  have ss := funext fun x => funext <| SemilatticeInf.ext_inf H x
   cases' A
   cases' B
   injection this <;> congr
 
 theorem SemilatticeInf.dual_dual (α : Type _) [H : SemilatticeInf α] : OrderDual.semilatticeInf (OrderDual α) = H :=
-  SemilatticeInf.ext $ fun _ _ => Iff.rfl
+  SemilatticeInf.ext fun _ _ => Iff.rfl
 
 theorem exists_lt_of_inf (α : Type _) [SemilatticeInf α] [Nontrivial α] : ∃ a b : α, a < b :=
   let ⟨a, b, h⟩ := exists_lt_of_sup (OrderDual α)
@@ -542,7 +542,7 @@ theorem semilattice_sup_mk'_partial_order_eq_semilattice_inf_mk'_partial_order {
     (sup_inf_self : ∀ a b : α, a⊔a⊓b = a) (inf_sup_self : ∀ a b : α, a⊓(a⊔b) = a) :
     @SemilatticeSup.toPartialOrder _ (SemilatticeSup.mk' sup_comm sup_assoc sup_idem) =
       @SemilatticeInf.toPartialOrder _ (SemilatticeInf.mk' inf_comm inf_assoc inf_idem) :=
-  PartialOrderₓ.ext $ fun a b =>
+  PartialOrderₓ.ext fun a b =>
     show a⊔b = b ↔ b⊓a = a from
       ⟨fun h => by
         rw [← h, inf_comm, inf_sup_self], fun h => by
@@ -728,7 +728,7 @@ theorem sup_eq_max_default [SemilatticeSup α] [DecidableRel (· ≤ · : α →
   ext x y
   dunfold maxDefault
   split_ifs with h'
-  exacts[sup_of_le_left h', sup_of_le_right $ (total_of (· ≤ ·) x y).resolve_right h']
+  exacts[sup_of_le_left h', sup_of_le_right <| (total_of (· ≤ ·) x y).resolve_right h']
 
 theorem inf_eq_min_default [SemilatticeInf α] [DecidableRel (· ≤ · : α → α → Prop)] [IsTotal α (· ≤ ·)] :
     ·⊓· = (minDefault : α → α → α) :=
@@ -747,8 +747,8 @@ instance (priority := 100) LinearOrderₓ.toDistribLattice {α : Type u} [o : Li
   { LinearOrderₓ.toLattice with
     le_sup_inf := fun a b c =>
       match le_totalₓ b c with
-      | Or.inl h => inf_le_of_left_le $ sup_le_sup_left (le_inf (le_reflₓ b) h) _
-      | Or.inr h => inf_le_of_right_le $ sup_le_sup_left (le_inf h (le_reflₓ c)) _ }
+      | Or.inl h => inf_le_of_left_le <| sup_le_sup_left (le_inf (le_reflₓ b) h) _
+      | Or.inr h => inf_le_of_right_le <| sup_le_sup_left (le_inf h (le_reflₓ c)) _ }
 
 instance Nat.distribLattice : DistribLattice ℕ := by
   infer_instance

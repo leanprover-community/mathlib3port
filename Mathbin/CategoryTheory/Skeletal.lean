@@ -124,7 +124,7 @@ instance thin_skeleton.preorder : Preorderₓ (thin_skeleton C) where
   le_refl := by
     refine' Quotientₓ.ind fun a => _
     exact ⟨𝟙 _⟩
-  le_trans := fun a b c => Quotientₓ.induction_on₃ a b c $ fun A B C => Nonempty.map2 (· ≫ ·)
+  le_trans := fun a b c => (Quotientₓ.induction_on₃ a b c) fun A B C => Nonempty.map2 (· ≫ ·)
 
 /-- The functor from a category to its thin skeleton. -/
 @[simps]
@@ -151,8 +151,8 @@ variable {C} {D}
 /-- A functor `C ⥤ D` computably lowers to a functor `thin_skeleton C ⥤ thin_skeleton D`. -/
 @[simps]
 def map (F : C ⥤ D) : thin_skeleton C ⥤ thin_skeleton D where
-  obj := Quotientₓ.map F.obj $ fun X₁ X₂ ⟨hX⟩ => ⟨F.map_iso hX⟩
-  map := fun X Y => Quotientₓ.recOnSubsingleton₂ X Y $ fun x y k => hom_of_le (k.le.elim fun t => ⟨F.map t⟩)
+  obj := (Quotientₓ.map F.obj) fun X₁ X₂ ⟨hX⟩ => ⟨F.map_iso hX⟩
+  map := fun X Y => (Quotientₓ.recOnSubsingleton₂ X Y) fun x y k => hom_of_le (k.le.elim fun t => ⟨F.map t⟩)
 
 theorem comp_to_thin_skeleton (F : C ⥤ D) : F ⋙ to_thin_skeleton D = to_thin_skeleton C ⋙ map F :=
   rfl
@@ -170,10 +170,10 @@ def map₂ (F : C ⥤ D ⥤ E) : thin_skeleton C ⥤ thin_skeleton D ⥤ thin_sk
         Quotientₓ.map₂ (fun X Y => (F.obj X).obj Y)
           (fun X₁ X₂ ⟨hX⟩ Y₁ Y₂ ⟨hY⟩ => ⟨(F.obj X₁).mapIso hY ≪≫ (F.map_iso hX).app Y₂⟩) x y,
       map := fun y₁ y₂ =>
-        Quotientₓ.recOnSubsingleton x $ fun X =>
-          Quotientₓ.recOnSubsingleton₂ y₁ y₂ $ fun Y₁ Y₂ hY => hom_of_le (hY.le.elim fun g => ⟨(F.obj X).map g⟩) }
+        (Quotientₓ.recOnSubsingleton x) fun X =>
+          (Quotientₓ.recOnSubsingleton₂ y₁ y₂) fun Y₁ Y₂ hY => hom_of_le (hY.le.elim fun g => ⟨(F.obj X).map g⟩) }
   map := fun x₁ x₂ =>
-    Quotientₓ.recOnSubsingleton₂ x₁ x₂ $ fun X₁ X₂ f =>
+    (Quotientₓ.recOnSubsingleton₂ x₁ x₂) fun X₁ X₂ f =>
       { app := fun y => Quotientₓ.recOnSubsingleton y fun Y => hom_of_le (f.le.elim fun f' => ⟨(F.map f').app Y⟩) }
 
 variable (C)
@@ -190,7 +190,7 @@ instance to_thin_skeleton_faithful : faithful (to_thin_skeleton C) :=
 noncomputable def from_thin_skeleton : thin_skeleton C ⥤ C where
   obj := Quotientₓ.out
   map := fun x y =>
-    Quotientₓ.recOnSubsingleton₂ x y $ fun X Y f =>
+    (Quotientₓ.recOnSubsingleton₂ x y) fun X Y f =>
       (Nonempty.some (Quotientₓ.mk_out X)).Hom ≫ f.le.some ≫ (Nonempty.some (Quotientₓ.mk_out Y)).inv
 
 noncomputable instance from_thin_skeleton_equivalence : is_equivalence (from_thin_skeleton C) where
@@ -224,16 +224,16 @@ instance thin_skeleton_partial_order : PartialOrderₓ (thin_skeleton C) :=
           apply Quotientₓ.sound (equiv_of_both_ways f g)) }
 
 theorem skeletal : skeletal (thin_skeleton C) := fun X Y =>
-  Quotientₓ.induction_on₂ X Y $ fun x y h => h.elim $ fun i => i.1.le.antisymm i.2.le
+  (Quotientₓ.induction_on₂ X Y) fun x y h => h.elim fun i => i.1.le.antisymm i.2.le
 
 theorem map_comp_eq (F : E ⥤ D) (G : D ⥤ C) : map (F ⋙ G) = map F ⋙ map G :=
-  functor.eq_of_iso skeletal $
+  functor.eq_of_iso skeletal <|
     nat_iso.of_components (fun X => Quotientₓ.recOnSubsingleton X fun x => iso.refl _)
       (by
         tidy)
 
 theorem map_id_eq : map (𝟭 C) = 𝟭 (thin_skeleton C) :=
-  functor.eq_of_iso skeletal $
+  functor.eq_of_iso skeletal <|
     nat_iso.of_components (fun X => Quotientₓ.recOnSubsingleton X fun x => iso.refl _)
       (by
         tidy)

@@ -188,7 +188,7 @@ def op_inv : (Cᵒᵖ ⥤ Dᵒᵖ) ⥤ (C ⥤ D)ᵒᵖ where
   obj := fun F => op F.unop
   map := fun F G α =>
     Quiver.Hom.op
-      { app := fun X => (α.app (op X)).unop, naturality' := fun X Y f => Quiver.Hom.op_inj $ (α.naturality f.op).symm }
+      { app := fun X => (α.app (op X)).unop, naturality' := fun X Y f => Quiver.Hom.op_inj <| (α.naturality f.op).symm }
 
 variable {C D}
 
@@ -213,7 +213,7 @@ instance {F : C ⥤ D} [full F] : full F.op where
 
 instance {F : C ⥤ D} [faithful F] : faithful F.op where
   map_injective' := fun X Y f g h =>
-    Quiver.Hom.unop_inj $ by
+    Quiver.Hom.unop_inj <| by
       simpa using map_injective F (Quiver.Hom.op_inj h)
 
 /-- If F is faithful then the right_op of F is also faithful. -/

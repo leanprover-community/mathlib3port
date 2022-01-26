@@ -28,7 +28,7 @@ private unsafe def dest_or : expr → tactic (List expr)
     let lb ← dest_or b
     return (a :: lb)
 
-private unsafe def match_perms (pat : pattern) : expr → tactic (List $ List expr)
+private unsafe def match_perms (pat : pattern) : expr → tactic (List <| List expr)
   | t =>
     (do
         let m ← match_pattern pat t
@@ -48,8 +48,8 @@ unsafe def wlog (vars' : List expr) (h_cases fst_case : expr) (perms : List (Lis
   let cases ← infer_type h_cases
   let h_fst_case ←
     mk_local_def h_cases.local_pp_name
-        (fst_case.instantiate_locals $ (vars'.zip vars).map $ fun ⟨o, n⟩ => (o.local_uniq_name, n))
-  let ((), pr) ← solve_aux cases (repeat $ (exact h_fst_case <|> left >> skip))
+        (fst_case.instantiate_locals <| (vars'.zip vars).map fun ⟨o, n⟩ => (o.local_uniq_name, n))
+  let ((), pr) ← solve_aux cases (repeat <| exact h_fst_case <|> left >> skip)
   let t ← target
   let fixed_vars ← vars.mmap update_type
   let t' := (instantiate_local h_cases.local_uniq_name pr t).pis (fixed_vars ++ [h_fst_case])
@@ -60,12 +60,12 @@ unsafe def wlog (vars' : List expr) (h_cases fst_case : expr) (perms : List (Lis
         intron nr
   let h₀ :: hs ← elim_or perms.length h_cases
   solve1 do
-      exact (h.mk_app $ vars ++ [h₀])
+      exact (h.mk_app <| vars ++ [h₀])
   focus
-      ((hs.zip perms.tail).map $ fun ⟨h_case, perm⟩ => do
+      ((hs.zip perms.tail).map fun ⟨h_case, perm⟩ => do
         let p_v := (vars'.zip vars).map fun ⟨p, v⟩ => (p.local_uniq_name, v)
         let p := perm.map fun p => p.instantiate_locals p_v
-        note `this none (h.mk_app $ p ++ [h_case])
+        note `this none (h.mk_app <| p ++ [h_case])
         clear h
         return ())
   let gs ← get_goals
@@ -80,7 +80,7 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
   | some [] => return []
   | some perms@(p₀ :: ps) => do
     guardₓ p₀.nodup <|> fail "No permutation `xs_i` in `using [xs_1, …, xs_n]` should contain the same variable twice."
-    guardₓ (perms.all $ fun p => p.perm p₀) <|>
+    guardₓ (perms.all fun p => p.perm p₀) <|>
         fail ("The permutations `xs_i` in `using [xs_1, …, xs_n]` must be permutations of the same" ++ " variables.")
     perms.mmap fun p => p.mmap get_local
 
@@ -141,7 +141,7 @@ unsafe def wlog (h : parse (ident)?) (pat : parse (tk ":" *> texpr)?) (cases : p
         let cases_pr ← to_expr r
         let cases_pr ←
           if cases_pr.is_local_constant then
-              return $
+              return <|
                 match h with
                 | some n => update_pp_name cases_pr n
                 | none => cases_pr
@@ -152,13 +152,13 @@ unsafe def wlog (h : parse (ident)?) (pat : parse (tk ":" *> texpr)?) (cases : p
           match pat with
             | some pat => do
               let pat ← to_expr pat
-              let vars' := vars.filter $ fun v => v.occurs pat
+              let vars' := vars.filter fun v => v.occurs pat
               let case_pat ← mk_pattern [] vars' pat [] vars'
               let perms' ← match_perms case_pat cases
               return (pat, perms')
             | none => do
               let p :: ps ← dest_or cases
-              let vars' := vars.filter $ fun v => v.occurs p
+              let vars' := vars.filter fun v => v.occurs p
               let case_pat ← mk_pattern [] vars' p [] vars'
               let perms' ←
                 (p :: ps).mmap fun p => do
@@ -166,13 +166,12 @@ unsafe def wlog (h : parse (ident)?) (pat : parse (tk ":" *> texpr)?) (cases : p
                     return m.2
               return (p, perms')
         let vars_name := vars.map local_uniq_name
-        guardₓ (perms'.all $ fun p => p.all $ fun v => v.is_local_constant ∧ v.local_uniq_name ∈ vars_name) <|>
+        guardₓ (perms'.all fun p => p.all fun v => v.is_local_constant ∧ v.local_uniq_name ∈ vars_name) <|>
             fail "Cases contains variables not declared in `using x y z`"
         let perms ←
           if perms.length = 1 then do
               return
-                  (perms'.map $ fun p =>
-                    p ++ vars.filter fun v => p.all fun v' => v'.local_uniq_name ≠ v.local_uniq_name)
+                  (perms'.map fun p => p ++ vars.filter fun v => p.all fun v' => v'.local_uniq_name ≠ v.local_uniq_name)
             else do
               guardₓ (perms.length = perms'.length) <|>
                   fail "The provided permutation list has a different length then the provided cases."
@@ -208,8 +207,8 @@ unsafe def wlog (h : parse (ident)?) (pat : parse (tk ":" *> texpr)?) (cases : p
             return (pat, cases_pr, some g, vars, perms)
   let name_fn :=
     if perms.length = 2 then fun _ => `invariant else fun i => mkSimpleName ("invariant_" ++ toString (i + 1))
-  with_enable_tags $
-      tactic.focus1 $ do
+  with_enable_tags <|
+      tactic.focus1 <| do
         let t ← get_main_tag
         tactic.wlog vars cases_pr pat perms
         tactic.focus

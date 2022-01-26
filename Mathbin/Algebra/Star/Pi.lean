@@ -29,20 +29,20 @@ theorem star_def [∀ i, HasStar (f i)] (x : ∀ i, f i) : star x = fun i => sta
   rfl
 
 instance [∀ i, HasInvolutiveStar (f i)] : HasInvolutiveStar (∀ i, f i) where
-  star_involutive := fun _ => funext $ fun _ => star_star _
+  star_involutive := fun _ => funext fun _ => star_star _
 
 instance [∀ i, Monoidₓ (f i)] [∀ i, StarMonoid (f i)] : StarMonoid (∀ i, f i) where
-  star_mul := fun _ _ => funext $ fun _ => star_mul _ _
+  star_mul := fun _ _ => funext fun _ => star_mul _ _
 
 instance [∀ i, AddMonoidₓ (f i)] [∀ i, StarAddMonoid (f i)] : StarAddMonoid (∀ i, f i) where
-  star_add := fun _ _ => funext $ fun _ => star_add _ _
+  star_add := fun _ _ => funext fun _ => star_add _ _
 
 instance [∀ i, Semiringₓ (f i)] [∀ i, StarRing (f i)] : StarRing (∀ i, f i) :=
   { Pi.starAddMonoid, (Pi.starMonoid : StarMonoid (∀ i, f i)) with }
 
 instance {R : Type w} [∀ i, HasScalar R (f i)] [HasStar R] [∀ i, HasStar (f i)] [∀ i, StarModule R (f i)] :
     StarModule R (∀ i, f i) where
-  star_smul := fun r x => funext $ fun i => star_smul r (x i)
+  star_smul := fun r x => funext fun i => star_smul r (x i)
 
 end Pi
 

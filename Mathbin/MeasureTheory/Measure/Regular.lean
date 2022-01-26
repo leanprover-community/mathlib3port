@@ -148,7 +148,7 @@ variable {α : Type _} {m : MeasurableSpace α} {μ : Measureₓ α} {p q : Set 
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (K «expr ⊆ » U)
 theorem measure_eq_supr (H : inner_regular μ p q) (hU : q U) : μ U = ⨆ (K) (_ : K ⊆ U) (hK : p K), μ K := by
-  refine' le_antisymmₓ (le_of_forall_lt fun r hr => _) (bsupr_le $ fun K hK => supr_le $ fun _ => μ.mono hK)
+  refine' le_antisymmₓ (le_of_forall_lt fun r hr => _) (bsupr_le fun K hK => supr_le fun _ => μ.mono hK)
   simpa only [lt_supr_iff, exists_prop] using H hU r hr
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (K «expr ⊆ » U)
@@ -170,7 +170,7 @@ theorem map {α β} [MeasurableSpace α] [MeasurableSpace β] {μ : Measureₓ �
   rw [map_apply hf (hB₂ _ hU)] at hr
   rcases H (hAB U hU) r hr with ⟨K, hKU, hKc, hK⟩
   refine' ⟨f '' K, image_subset_iff.2 hKU, hAB' _ hKc, _⟩
-  rwa [map_apply hf (hB₁ _ $ hAB' _ hKc), f.preimage_image]
+  rwa [map_apply hf (hB₁ _ <| hAB' _ hKc), f.preimage_image]
 
 theorem smul (H : inner_regular μ p q) (c : ℝ≥0∞) : inner_regular (c • μ) p q := by
   intro U hU r hr
@@ -239,7 +239,7 @@ theorem _root_.set.exists_is_open_lt_of_lt [outer_regular μ] (A : Set α) (r : 
 containing it. -/
 theorem _root_.set.measure_eq_infi_is_open (A : Set α) (μ : Measureₓ α) [outer_regular μ] :
     μ A = ⨅ (U : Set α) (h : A ⊆ U) (h2 : IsOpen U), μ U := by
-  refine' le_antisymmₓ (le_binfi $ fun s hs => le_infi $ fun h2s => μ.mono hs) _
+  refine' le_antisymmₓ (le_binfi fun s hs => le_infi fun h2s => μ.mono hs) _
   refine' le_of_forall_lt' fun r hr => _
   simpa only [infi_lt_iff, exists_prop] using A.exists_is_open_lt_of_lt r hr
 
@@ -311,7 +311,7 @@ protected theorem finite_spanning_sets_in.outer_regular [OpensMeasurableSpace α
     have H₁ : ∀ t, μ.restrict (s.set n) t = μ (t ∩ s.set n) := fun t => restrict_apply' (hm n)
     have Ht : μ.restrict (s.set n) (A n) ≠ ⊤ := by
       rw [H₁]
-      exact ((measure_mono $ inter_subset_right _ _).trans_lt (s.finite n)).Ne
+      exact ((measure_mono <| inter_subset_right _ _).trans_lt (s.finite n)).Ne
     rcases(A n).exists_is_open_lt_add Ht (δ0 n).ne' with ⟨U, hAU, hUo, hU⟩
     rw [H₁, H₁, inter_eq_self_of_subset_left (hAs _)] at hU
     exact ⟨U ∩ s.set n, subset_inter hAU (hAs _), hUo.inter (s.set_mem n).1, hU⟩
@@ -379,16 +379,16 @@ theorem weakly_regular_of_finite [BorelSpace α] (μ : Measureₓ α) [is_finite
     have ε0' : ε / 2 ≠ 0 := (Ennreal.half_pos ε0).ne'
     rcases Ennreal.exists_pos_sum_of_encodable' ε0' ℕ with ⟨δ, δ0, hδε⟩
     choose F hFs U hsU hFc hUo hF hU using fun n => H n (δ n) (δ0 n).ne'
-    have : tendsto (fun t => (∑ k in t, μ (s k)) + ε / 2) at_top (𝓝 $ μ (⋃ n, s n) + ε / 2) := by
+    have : tendsto (fun t => (∑ k in t, μ (s k)) + ε / 2) at_top (𝓝 <| μ (⋃ n, s n) + ε / 2) := by
       rw [measure_Union hsd hsm]
       exact tendsto.add ennreal.summable.has_sum tendsto_const_nhds
-    rcases(this.eventually $ lt_mem_nhds $ Ennreal.lt_add_right hfin ε0').exists with ⟨t, ht⟩
+    rcases(this.eventually <| lt_mem_nhds <| Ennreal.lt_add_right hfin ε0').exists with ⟨t, ht⟩
     refine'
-      ⟨⋃ k ∈ t, F k, Union_mono $ fun k => Union_subset $ fun _ => hFs _, ⋃ n, U n, Union_mono hsU,
-        is_closed_bUnion t.finite_to_set $ fun k _ => hFc k, is_open_Union hUo, ht.le.trans _, _⟩
+      ⟨⋃ k ∈ t, F k, Union_mono fun k => Union_subset fun _ => hFs _, ⋃ n, U n, Union_mono hsU,
+        (is_closed_bUnion t.finite_to_set) fun k _ => hFc k, is_open_Union hUo, ht.le.trans _, _⟩
     · calc (∑ k in t, μ (s k)) + ε / 2 ≤ ((∑ k in t, μ (F k)) + ∑ k in t, δ k) + ε / 2 := by
           rw [← sum_add_distrib]
-          exact add_le_add_right (sum_le_sum $ fun k hk => hF k) _ _ ≤ (∑ k in t, μ (F k)) + ε / 2 + ε / 2 :=
+          exact add_le_add_right (sum_le_sum fun k hk => hF k) _ _ ≤ (∑ k in t, μ (F k)) + ε / 2 + ε / 2 :=
           add_le_add_right (add_le_add_left ((Ennreal.sum_le_tsum _).trans hδε.le) _) _ _ = μ (⋃ k ∈ t, F k) + ε := _
       rw [measure_bUnion_finset, add_assocₓ, Ennreal.add_halves]
       exacts[fun k _ n _ hkn => (hsd k n hkn).mono (hFs k) (hFs n), fun k hk => (hFc k).MeasurableSet]
@@ -421,7 +421,7 @@ theorem is_compact_is_closed {X : Type _} [TopologicalSpace X] [T2Space X] [Sigm
   have : μ F = ⨆ n, μ (F ∩ B n) := by
     rw [← measure_Union_eq_supr, hBU]
     exacts[fun n => (hBc n).MeasurableSet,
-      Monotone.directed_le $ fun m n h => inter_subset_inter_right _ (compact_covering_subset _ h)]
+      Monotone.directed_le fun m n h => inter_subset_inter_right _ (compact_covering_subset _ h)]
   rw [this] at hr
   rcases lt_supr_iff.1 hr with ⟨n, hn⟩
   exact ⟨_, inter_subset_left _ _, hBc n, hn⟩
@@ -469,7 +469,7 @@ theorem _root_.measurable_set.exists_is_compact_diff_lt [OpensMeasurableSpace α
     (hA : MeasurableSet A) (h'A : μ A ≠ ∞) {ε : ℝ≥0∞} (hε : ε ≠ 0) :
     ∃ (K : _)(_ : K ⊆ A), IsCompact K ∧ μ (A \ K) < ε := by
   rcases hA.exists_is_compact_lt_add h'A hε with ⟨K, hKA, hKc, hK⟩
-  exact ⟨K, hKA, hKc, measure_diff_lt_of_lt_add hKc.measurable_set hKA (ne_top_of_le_ne_top h'A $ measure_mono hKA) hK⟩
+  exact ⟨K, hKA, hKc, measure_diff_lt_of_lt_add hKc.measurable_set hKA (ne_top_of_le_ne_top h'A <| measure_mono hKA) hK⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (K «expr ⊆ » A)
 /-- If `μ` is a regular measure, then any measurable set of finite measure can be approximated by a
@@ -534,7 +534,7 @@ theorem _root_.measurable_set.exists_is_closed_diff_lt [OpensMeasurableSpace α]
     (hA : MeasurableSet A) (h'A : μ A ≠ ∞) {ε : ℝ≥0∞} (hε : ε ≠ 0) : ∃ (F : _)(_ : F ⊆ A), IsClosed F ∧ μ (A \ F) < ε :=
   by
   rcases hA.exists_is_closed_lt_add h'A hε with ⟨F, hFA, hFc, hF⟩
-  exact ⟨F, hFA, hFc, measure_diff_lt_of_lt_add hFc.measurable_set hFA (ne_top_of_le_ne_top h'A $ measure_mono hFA) hF⟩
+  exact ⟨F, hFA, hFc, measure_diff_lt_of_lt_add hFc.measurable_set hFA (ne_top_of_le_ne_top h'A <| measure_mono hFA) hF⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (K «expr ⊆ » A)
 /-- Given a weakly regular measure, any measurable set of finite mass can be approximated from
@@ -558,10 +558,10 @@ theorem restrict_of_measurable_set [BorelSpace α] [weakly_regular μ] (A : Set 
   refine' inner_regular.weakly_regular_of_finite _ fun V V_open => _
   simp only [restrict_apply' hA]
   intro r hr
-  have : μ (V ∩ A) ≠ ∞ := ne_top_of_le_ne_top h'A (measure_mono $ inter_subset_right _ _)
+  have : μ (V ∩ A) ≠ ∞ := ne_top_of_le_ne_top h'A (measure_mono <| inter_subset_right _ _)
   rcases(V_open.measurable_set.inter hA).exists_lt_is_closed_of_ne_top this hr with ⟨F, hFVA, hFc, hF⟩
   refine' ⟨F, hFVA.trans (inter_subset_left _ _), hFc, _⟩
-  rwa [inter_eq_self_of_subset_left (hFVA.trans $ inter_subset_right _ _)]
+  rwa [inter_eq_self_of_subset_left (hFVA.trans <| inter_subset_right _ _)]
 
 /-- Any finite measure on a metric space (or even a pseudo emetric space) is weakly regular. -/
 instance (priority := 100) of_pseudo_emetric_space_of_is_finite_measure {X : Type _} [PseudoEmetricSpace X]
@@ -574,7 +574,7 @@ instance (priority := 100) of_pseudo_emetric_sigma_compact_space_of_locally_fini
     [SigmaCompactSpace X] [MeasurableSpace X] [BorelSpace X] (μ : Measureₓ X) [is_locally_finite_measure μ] :
     weakly_regular μ :=
   have : outer_regular μ := by
-    refine' (μ.finite_spanning_sets_in_open.mono' $ fun U hU => _).OuterRegular
+    refine' (μ.finite_spanning_sets_in_open.mono' fun U hU => _).OuterRegular
     have : Fact (μ U < ∞) := ⟨hU.2⟩
     exact ⟨hU.1, inferInstance⟩
   ⟨inner_regular.of_pseudo_emetric_space μ⟩

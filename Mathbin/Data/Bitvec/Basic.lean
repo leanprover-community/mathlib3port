@@ -9,14 +9,14 @@ instance (n : ℕ) : Preorderₓ (Bitvec n) :=
   Preorderₓ.lift Bitvec.toNat
 
 /-- convert `fin` to `bitvec` -/
-def of_fin {n : ℕ} (i : Finₓ $ 2 ^ n) : Bitvec n :=
+def of_fin {n : ℕ} (i : Finₓ <| 2 ^ n) : Bitvec n :=
   Bitvec.ofNat _ i.val
 
-theorem of_fin_val {n : ℕ} (i : Finₓ $ 2 ^ n) : (of_fin i).toNat = i.val := by
+theorem of_fin_val {n : ℕ} (i : Finₓ <| 2 ^ n) : (of_fin i).toNat = i.val := by
   rw [of_fin, to_nat_of_nat, Nat.mod_eq_of_ltₓ] <;> apply i.is_lt
 
 /-- convert `bitvec` to `fin` -/
-def to_fin {n : ℕ} (i : Bitvec n) : Finₓ $ 2 ^ n :=
+def to_fin {n : ℕ} (i : Bitvec n) : Finₓ <| 2 ^ n :=
   @Finₓ.ofNat' _
     ⟨pow_pos
         (by
@@ -105,7 +105,7 @@ theorem of_fin_le_of_fin_of_le {n : ℕ} {i j : Finₓ (2 ^ n)} (h : i ≤ j) : 
     simp only [to_nat_of_nat, Nat.mod_eq_of_ltₓ, Finₓ.is_lt]
     exact h
 
-theorem to_fin_of_fin {n} (i : Finₓ $ 2 ^ n) : (of_fin i).toFin = i :=
+theorem to_fin_of_fin {n} (i : Finₓ <| 2 ^ n) : (of_fin i).toFin = i :=
   Finₓ.eq_of_veq
     (by
       simp [to_fin_val, of_fin, to_nat_of_nat, Nat.mod_eq_of_ltₓ, i.is_lt])

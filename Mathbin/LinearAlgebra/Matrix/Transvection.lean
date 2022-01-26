@@ -333,12 +333,12 @@ open Sum Unit Finₓ TransvectionStruct
 /-- A list of transvections such that multiplying on the left with these transvections will replace
 the last column with zeroes. -/
 def list_transvec_col : List (Matrix (Sum (Finₓ r) Unit) (Sum (Finₓ r) Unit) 𝕜) :=
-  List.ofFnₓ $ fun i : Finₓ r => transvection (inl i) (inr star) $ -M (inl i) (inr star) / M (inr star) (inr star)
+  List.ofFnₓ fun i : Finₓ r => transvection (inl i) (inr star) <| -M (inl i) (inr star) / M (inr star) (inr star)
 
 /-- A list of transvections such that multiplying on the right with these transvections will replace
 the last row with zeroes. -/
 def list_transvec_row : List (Matrix (Sum (Finₓ r) Unit) (Sum (Finₓ r) Unit) 𝕜) :=
-  List.ofFnₓ $ fun i : Finₓ r => transvection (inr star) (inl i) $ -M (inr star) (inl i) / M (inr star) (inr star)
+  List.ofFnₓ fun i : Finₓ r => transvection (inr star) (inl i) <| -M (inr star) (inl i) / M (inr star) (inr star)
 
 /-- Multiplying by some of the matrices in `list_transvec_col M` does not change the last row. -/
 theorem list_transvec_col_mul_last_row_drop (i : Sum (Finₓ r) Unit) {k : ℕ} (hk : k ≤ r) :
@@ -420,7 +420,7 @@ theorem mul_list_transvec_row_last_col_take (i : Sum (Finₓ r) Unit) {k : ℕ} 
     let k' : Finₓ r := ⟨k, hkr⟩
     have :
       (list_transvec_row M).nth k =
-        ↑transvection (inr Unit.star) (inl k') (-M (inr Unit.star) (inl k') / M (inr Unit.star) (inr Unit.star)) :=
+        ↑(transvection (inr Unit.star) (inl k') (-M (inr Unit.star) (inl k') / M (inr Unit.star) (inr Unit.star))) :=
       by
       simp only [list_transvec_row, List.ofFnNthValₓ, hkr, dif_pos, List.nth_of_fn]
       rfl
@@ -460,7 +460,7 @@ theorem mul_list_transvec_row_last_row (hM : M (inr star) (inr star) ≠ 0) (i :
     let n' : Finₓ r := ⟨n, hnr⟩
     have A :
       (list_transvec_row M).nth n =
-        ↑transvection (inr Unit.star) (inl n') (-M (inr Unit.star) (inl n') / M (inr Unit.star) (inr Unit.star)) :=
+        ↑(transvection (inr Unit.star) (inl n') (-M (inr Unit.star) (inl n') / M (inr Unit.star) (inr Unit.star))) :=
       by
       simp only [list_transvec_row, List.ofFnNthValₓ, hnr, dif_pos, List.nth_of_fn]
       rfl

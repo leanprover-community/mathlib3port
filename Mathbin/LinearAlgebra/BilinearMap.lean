@@ -62,8 +62,8 @@ def mk₂'ₛₗ (f : M → N → P) (H1 : ∀ m₁ m₂ n, f (m₁ + m₂) n = 
     (H2 : ∀ c : R m n, f (c • m) n = ρ₁₂ c • f m n) (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂)
     (H4 : ∀ c : S m n, f m (c • n) = σ₁₂ c • f m n) : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P where
   toFun := fun m => { toFun := f m, map_add' := H3 m, map_smul' := fun c => H4 c m }
-  map_add' := fun m₁ m₂ => LinearMap.ext $ H1 m₁ m₂
-  map_smul' := fun c m => LinearMap.ext $ H2 c m
+  map_add' := fun m₁ m₂ => LinearMap.ext <| H1 m₁ m₂
+  map_smul' := fun c m => LinearMap.ext <| H2 c m
 
 variable {ρ₁₂ σ₁₂}
 
@@ -89,7 +89,7 @@ theorem mk₂'_apply (f : M → N → Pₗ) {H1 H2 H3 H4} (m : M) (n : N) :
   rfl
 
 theorem ext₂ {f g : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (H : ∀ m n, f m n = g m n) : f = g :=
-  LinearMap.ext fun m => LinearMap.ext $ fun n => H m n
+  LinearMap.ext fun m => LinearMap.ext fun n => H m n
 
 section
 
@@ -115,7 +115,7 @@ open_locale BigOperators
 variable {R}
 
 theorem flip_inj {f g : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (H : flip f = flip g) : f = g :=
-  ext₂ $ fun m n =>
+  ext₂ fun m n =>
     show flip f n m = flip g n m by
       rw [H]
 
@@ -203,7 +203,7 @@ variable (R Pₗ)
 
 /-- Composing a linear map `M → N` and a linear map `N → P` to form a linear map `M → P`. -/
 def lcomp (f : M →ₗ[R] Nₗ) : (Nₗ →ₗ[R] Pₗ) →ₗ[R] M →ₗ[R] Pₗ :=
-  flip $ LinearMap.comp (flip id) f
+  flip <| LinearMap.comp (flip id) f
 
 variable {R Pₗ}
 
@@ -216,7 +216,7 @@ variable (P σ₂₃)
 /-- Composing a semilinear map `M → N` and a semilinear map `N → P` to form a semilinear map
 `M → P` is itself a linear map. -/
 def lcompₛₗ (f : M →ₛₗ[σ₁₂] N) : (N →ₛₗ[σ₂₃] P) →ₗ[R₃] M →ₛₗ[σ₁₃] P :=
-  flip $ LinearMap.comp (flip id) f
+  flip <| LinearMap.comp (flip id) f
 
 variable {P σ₂₃}
 
@@ -233,8 +233,8 @@ variable (R M Nₗ Pₗ)
 /-- Composing a linear map `M → N` and a linear map `N → P` to form a linear map `M → P`. -/
 def llcomp : (Nₗ →ₗ[R] Pₗ) →ₗ[R] (M →ₗ[R] Nₗ) →ₗ[R] M →ₗ[R] Pₗ :=
   flip
-    { toFun := lcomp R Pₗ, map_add' := fun f f' => ext₂ $ fun g x => g.map_add _ _,
-      map_smul' := fun c : R f => ext₂ $ fun g x => g.map_smul _ _ }
+    { toFun := lcomp R Pₗ, map_add' := fun f f' => ext₂ fun g x => g.map_add _ _,
+      map_smul' := fun c : R f => ext₂ fun g x => g.map_smul _ _ }
 
 variable {R M Nₗ Pₗ}
 

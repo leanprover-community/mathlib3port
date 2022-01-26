@@ -57,24 +57,24 @@ n) (u₂ n)` is eventually included in `Iio a`.
 
 We mark `l₂` as an `out_param` so that Lean can automatically find an appropriate `l₂` based on
 `Ixx` and `l₁`. This way, e.g., `tendsto.Ico h₁ h₂` works without specifying explicitly `l₂`. -/
-class tendsto_Ixx_class (Ixx : α → α → Set α) (l₁ : Filter α) (l₂ : outParam $ Filter α) : Prop where
+class tendsto_Ixx_class (Ixx : α → α → Set α) (l₁ : Filter α) (l₂ : outParam <| Filter α) : Prop where
   tendsto_Ixx : tendsto (fun p : α × α => Ixx p.1 p.2) (l₁ ×ᶠ l₁) (l₂.lift' powerset)
 
 theorem tendsto.Icc {l₁ l₂ : Filter α} [tendsto_Ixx_class Icc l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
     (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) : tendsto (fun x => Icc (u₁ x) (u₂ x)) lb (l₂.lift' powerset) :=
-  tendsto_Ixx_class.tendsto_Ixx.comp $ h₁.prod_mk h₂
+  tendsto_Ixx_class.tendsto_Ixx.comp <| h₁.prod_mk h₂
 
 theorem tendsto.Ioc {l₁ l₂ : Filter α} [tendsto_Ixx_class Ioc l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
     (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) : tendsto (fun x => Ioc (u₁ x) (u₂ x)) lb (l₂.lift' powerset) :=
-  tendsto_Ixx_class.tendsto_Ixx.comp $ h₁.prod_mk h₂
+  tendsto_Ixx_class.tendsto_Ixx.comp <| h₁.prod_mk h₂
 
 theorem tendsto.Ico {l₁ l₂ : Filter α} [tendsto_Ixx_class Ico l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
     (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) : tendsto (fun x => Ico (u₁ x) (u₂ x)) lb (l₂.lift' powerset) :=
-  tendsto_Ixx_class.tendsto_Ixx.comp $ h₁.prod_mk h₂
+  tendsto_Ixx_class.tendsto_Ixx.comp <| h₁.prod_mk h₂
 
 theorem tendsto.Ioo {l₁ l₂ : Filter α} [tendsto_Ixx_class Ioo l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
     (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) : tendsto (fun x => Ioo (u₁ x) (u₂ x)) lb (l₂.lift' powerset) :=
-  tendsto_Ixx_class.tendsto_Ixx.comp $ h₁.prod_mk h₂
+  tendsto_Ixx_class.tendsto_Ixx.comp <| h₁.prod_mk h₂
 
 theorem tendsto_Ixx_class_principal {s t : Set α} {Ixx : α → α → Set α} :
     tendsto_Ixx_class Ixx (𝓟 s) (𝓟 t) ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, Ixx x y ⊆ t := by
@@ -88,15 +88,15 @@ theorem tendsto_Ixx_class_inf {l₁ l₁' l₂ l₂' : Filter α} {Ixx} [h : ten
 
 theorem tendsto_Ixx_class_of_subset {l₁ l₂ : Filter α} {Ixx Ixx' : α → α → Set α} (h : ∀ a b, Ixx a b ⊆ Ixx' a b)
     [h' : tendsto_Ixx_class Ixx' l₁ l₂] : tendsto_Ixx_class Ixx l₁ l₂ :=
-  ⟨tendsto_lift'_powerset_mono h'.1 $ eventually_of_forall $ Prod.forall.2 h⟩
+  ⟨tendsto_lift'_powerset_mono h'.1 <| eventually_of_forall <| Prod.forall.2 h⟩
 
 theorem has_basis.tendsto_Ixx_class {ι : Type _} {p : ι → Prop} {s} {l : Filter α} (hl : l.has_basis p s)
     {Ixx : α → α → Set α} (H : ∀ i, p i → ∀, ∀ x ∈ s i, ∀, ∀ y ∈ s i, ∀, Ixx x y ⊆ s i) : tendsto_Ixx_class Ixx l l :=
-  ⟨(hl.prod_self.tendsto_iff (hl.lift' monotone_powerset)).2 $ fun i hi => ⟨i, hi, fun x hx => H i hi _ hx.1 _ hx.2⟩⟩
+  ⟨(hl.prod_self.tendsto_iff (hl.lift' monotone_powerset)).2 fun i hi => ⟨i, hi, fun x hx => H i hi _ hx.1 _ hx.2⟩⟩
 
 instance tendsto_Icc_at_top_at_top : tendsto_Ixx_class Icc (at_top : Filter α) at_top :=
-  (has_basis_infi_principal_finite _).TendstoIxxClass $ fun s hs =>
-    Set.OrdConnected.out $ ord_connected_bInter $ fun i hi => ord_connected_Ici
+  (has_basis_infi_principal_finite _).TendstoIxxClass fun s hs =>
+    Set.OrdConnected.out <| ord_connected_bInter fun i hi => ord_connected_Ici
 
 instance tendsto_Ico_at_top_at_top : tendsto_Ixx_class Ico (at_top : Filter α) at_top :=
   tendsto_Ixx_class_of_subset fun _ _ => Ico_subset_Icc_self
@@ -108,8 +108,8 @@ instance tendsto_Ioo_at_top_at_top : tendsto_Ixx_class Ioo (at_top : Filter α) 
   tendsto_Ixx_class_of_subset fun _ _ => Ioo_subset_Icc_self
 
 instance tendsto_Icc_at_bot_at_bot : tendsto_Ixx_class Icc (at_bot : Filter α) at_bot :=
-  (has_basis_infi_principal_finite _).TendstoIxxClass $ fun s hs =>
-    Set.OrdConnected.out $ ord_connected_bInter $ fun i hi => ord_connected_Iic
+  (has_basis_infi_principal_finite _).TendstoIxxClass fun s hs =>
+    Set.OrdConnected.out <| ord_connected_bInter fun i hi => ord_connected_Iic
 
 instance tendsto_Ico_at_bot_at_bot : tendsto_Ixx_class Ico (at_bot : Filter α) at_bot :=
   tendsto_Ixx_class_of_subset fun _ _ => Ico_subset_Icc_self
@@ -130,13 +130,13 @@ instance tendsto_Ico_Ioi_Ioi {a : α} : tendsto_Ixx_class Ico (𝓟 (Ioi a)) (�
   tendsto_Ixx_class_of_subset fun _ _ => Ico_subset_Icc_self
 
 instance tendsto_Ico_Iic_Iio {a : α} : tendsto_Ixx_class Ico (𝓟 (Iic a)) (𝓟 (Iio a)) :=
-  tendsto_Ixx_class_principal.2 $ fun a ha b hb x hx => lt_of_lt_of_leₓ hx.2 hb
+  tendsto_Ixx_class_principal.2 fun a ha b hb x hx => lt_of_lt_of_leₓ hx.2 hb
 
 instance tendsto_Ico_Iio_Iio {a : α} : tendsto_Ixx_class Ico (𝓟 (Iio a)) (𝓟 (Iio a)) :=
   tendsto_Ixx_class_of_subset fun _ _ => Ico_subset_Icc_self
 
 instance tendsto_Ioc_Ici_Ioi {a : α} : tendsto_Ixx_class Ioc (𝓟 (Ici a)) (𝓟 (Ioi a)) :=
-  tendsto_Ixx_class_principal.2 $ fun x hx y hy t ht => lt_of_le_of_ltₓ hx ht.1
+  tendsto_Ixx_class_principal.2 fun x hx y hy t ht => lt_of_le_of_ltₓ hx ht.1
 
 instance tendsto_Ioc_Iic_Iic {a : α} : tendsto_Ixx_class Ioc (𝓟 (Iic a)) (𝓟 (Iic a)) :=
   tendsto_Ixx_class_of_subset fun _ _ => Ioc_subset_Icc_self
@@ -160,10 +160,10 @@ instance tendsto_Ioo_Iio_Iio {a : α} : tendsto_Ixx_class Ioo (𝓟 (Iio a)) (�
   tendsto_Ixx_class_of_subset fun _ _ => Ioo_subset_Ioc_self
 
 instance tendsto_Icc_Icc_Icc {a b : α} : tendsto_Ixx_class Icc (𝓟 (Icc a b)) (𝓟 (Icc a b)) :=
-  tendsto_Ixx_class_principal.mpr $ fun x hx y hy => Icc_subset_Icc hx.1 hy.2
+  tendsto_Ixx_class_principal.mpr fun x hx y hy => Icc_subset_Icc hx.1 hy.2
 
 instance tendsto_Ioc_Icc_Icc {a b : α} : tendsto_Ixx_class Ioc (𝓟 (Icc a b)) (𝓟 (Icc a b)) :=
-  tendsto_Ixx_class_of_subset $ fun _ _ => Ioc_subset_Icc_self
+  tendsto_Ixx_class_of_subset fun _ _ => Ioc_subset_Icc_self
 
 end Preorderₓ
 
@@ -207,7 +207,7 @@ instance tendsto_Ioc_interval_interval {a b : α} :
   Filter.tendsto_Ioc_Icc_Icc
 
 instance tendsto_interval_of_Icc {l : Filter α} [tendsto_Ixx_class Icc l l] : tendsto_Ixx_class interval l l := by
-  refine' ⟨fun s hs => mem_map.2 $ mem_prod_self_iff.2 _⟩
+  refine' ⟨fun s hs => mem_map.2 <| mem_prod_self_iff.2 _⟩
   obtain ⟨t, htl, hts⟩ : ∃ t ∈ l, ∀, ∀ p ∈ (t : Set α) ×ˢ t, ∀, Icc (p : α × α).1 p.2 ∈ s
   exact mem_prod_self_iff.1 (mem_map.1 (tendsto_fst.Icc tendsto_snd hs))
   refine' ⟨t, htl, fun p hp => _⟩
@@ -224,7 +224,7 @@ theorem tendsto.interval {l : Filter α} [tendsto_Ixx_class Icc l l] {f g : β �
     (hg : tendsto g lb l) :
     tendsto (fun x => "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") lb
       (l.lift' powerset) :=
-  tendsto_Ixx_class.tendsto_Ixx.comp $ hf.prod_mk hg
+  tendsto_Ixx_class.tendsto_Ixx.comp <| hf.prod_mk hg
 
 end LinearOrderₓ
 

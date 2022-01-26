@@ -77,7 +77,7 @@ theorem inv_pow_sub₀ (ha : a ≠ 0) (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ m)
   rw [pow_sub₀ _ (inv_ne_zero ha) h, inv_pow₀, inv_pow₀, inv_inv₀]
 
 theorem inv_pow_sub_of_lt (a : G₀) (h : n < m) : a⁻¹ ^ (m - n) = (a ^ m)⁻¹ * a ^ n := by
-  rw [pow_sub_of_lt (a⁻¹) h, inv_pow₀, inv_pow₀, inv_inv₀]
+  rw [pow_sub_of_lt a⁻¹ h, inv_pow₀, inv_pow₀, inv_inv₀]
 
 end NatPow
 
@@ -126,7 +126,7 @@ theorem mul_zpow_neg_one₀ (a b : G₀) : (a * b) ^ (-1 : ℤ) = b ^ (-1 : ℤ)
   simp only [mul_inv_rev₀, zpow_one, zpow_neg₀]
 
 theorem zpow_neg_one₀ (x : G₀) : x ^ (-1 : ℤ) = x⁻¹ := by
-  rw [← congr_argₓ HasInv.inv (pow_oneₓ x), zpow_neg₀, ← zpow_coe_nat]
+  rw [← congr_argₓ Inv.inv (pow_oneₓ x), zpow_neg₀, ← zpow_coe_nat]
   rfl
 
 theorem inv_zpow₀ (a : G₀) : ∀ n : ℤ, a⁻¹ ^ n = (a ^ n)⁻¹
@@ -269,7 +269,7 @@ theorem zpow_bit1' (a : G₀) (n : ℤ) : a ^ bit1 n = (a * a) ^ n * a := by
   rw [zpow_bit1₀, (Commute.refl a).mul_zpow₀]
 
 theorem zpow_eq_zero {x : G₀} {n : ℤ} (h : x ^ n = 0) : x = 0 :=
-  Classical.by_contradiction $ fun hx => zpow_ne_zero_of_ne_zero hx n h
+  Classical.by_contradiction fun hx => zpow_ne_zero_of_ne_zero hx n h
 
 theorem zpow_ne_zero {x : G₀} (n : ℤ) : x ≠ 0 → x ^ n ≠ 0 :=
   mt zpow_eq_zero
@@ -323,14 +323,14 @@ end
 
 /-- If a monoid homomorphism `f` between two `group_with_zero`s maps `0` to `0`, then it maps `x^n`,
 `n : ℤ`, to `(f x)^n`. -/
-theorem MonoidWithZeroHom.map_zpow {G₀ G₀' : Type _} [GroupWithZeroₓ G₀] [GroupWithZeroₓ G₀']
-    (f : MonoidWithZeroHom G₀ G₀') (x : G₀) : ∀ n : ℤ, f (x ^ n) = f x ^ n
+theorem MonoidWithZeroHom.map_zpow {G₀ G₀' : Type _} [GroupWithZeroₓ G₀] [GroupWithZeroₓ G₀'] (f : G₀ →*₀ G₀')
+    (x : G₀) : ∀ n : ℤ, f (x ^ n) = f x ^ n
   | (n : ℕ) => by
     rw [zpow_coe_nat, zpow_coe_nat]
     exact f.to_monoid_hom.map_pow x n
   | -[1+ n] => by
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat]
-    exact (f.map_inv _).trans $ congr_argₓ _ $ f.to_monoid_hom.map_pow x _
+    exact (f.map_inv _).trans <| congr_argₓ _ <| f.to_monoid_hom.map_pow x _
 
 section
 

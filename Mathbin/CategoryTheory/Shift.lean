@@ -328,7 +328,7 @@ theorem opaque_eq_to_iso_inv (h : i = j) : (opaque_eq_to_iso h).inv = (opaque_eq
 @[simp, reassoc]
 theorem map_opaque_eq_to_iso_comp_app (F : discrete ι ⥤ C ⥤ C) (h : i = j) (h' : j = k) (X : C) :
     (F.map (opaque_eq_to_iso h).Hom).app X ≫ (F.map (opaque_eq_to_iso h').Hom).app X =
-      (F.map (opaque_eq_to_iso $ h.trans h').Hom).app X :=
+      (F.map (opaque_eq_to_iso <| h.trans h').Hom).app X :=
   by
   delta' opaque_eq_to_iso
   simp
@@ -406,7 +406,7 @@ theorem shift_shift_neg_inv_shift (n : A) (X : C) : (shift_shift_neg X n).inv⟦
 @[simp]
 theorem shift_shift_neg_shift_eq (n : A) (X : C) :
     (shift_functor C n).mapIso (shift_shift_neg X n) = shift_neg_shift (X⟦n⟧) n :=
-  CategoryTheory.Iso.ext $ shift_shift_neg_hom_shift _ _
+  CategoryTheory.Iso.ext <| shift_shift_neg_hom_shift _ _
 
 variable (C)
 
@@ -436,7 +436,7 @@ variable (X Y : C) (f : X ⟶ Y)
 /-- When shifts are indexed by an additive commutative monoid, then shifts commute. -/
 def shift_comm (i j : A) : X⟦i⟧⟦j⟧ ≅ X⟦j⟧⟦i⟧ :=
   (shift_add X i j).symm ≪≫
-    ((shift_monoidal_functor C A).toFunctor.mapIso (opaque_eq_to_iso $ add_commₓ i j : _)).app X ≪≫ shift_add X j i
+    ((shift_monoidal_functor C A).toFunctor.mapIso (opaque_eq_to_iso <| add_commₓ i j : _)).app X ≪≫ shift_add X j i
 
 @[simp]
 theorem shift_comm_symm (i j : A) : (shift_comm X i j).symm = shift_comm X j i := by

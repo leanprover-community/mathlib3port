@@ -61,7 +61,7 @@ theorem fib_le_fib_succ {n : ℕ} : fib n ≤ fib (n + 1) := by
 
 @[mono]
 theorem fib_mono : Monotone fib :=
-  monotone_nat_of_le_succ $ fun _ => fib_le_fib_succ
+  monotone_nat_of_le_succ fun _ => fib_le_fib_succ
 
 theorem fib_pos {n : ℕ} (n_pos : 0 < n) : 0 < fib n :=
   calc

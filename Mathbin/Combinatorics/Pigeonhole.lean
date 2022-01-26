@@ -102,7 +102,7 @@ if the total weight of a finite set of pigeons is greater than `n • b`, and th
 greater than `b`. -/
 theorem exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) (hb : t.card • b < ∑ x in s, w x) :
     ∃ y ∈ t, b < ∑ x in s.filter fun x => f x = y, w x :=
-  exists_lt_of_sum_lt $ by
+  exists_lt_of_sum_lt <| by
     simpa only [sum_fiberwise_of_maps_to hf, sum_const]
 
 /-- The pigeonhole principle for finitely many pigeons counted by weight, strict inequality version:
@@ -122,7 +122,7 @@ is greater than `b`. -/
 theorem exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum
     (ht : ∀ y _ : y ∉ t, (∑ x in s.filter fun x => f x = y, w x) ≤ 0) (hb : t.card • b < ∑ x in s, w x) :
     ∃ y ∈ t, b < ∑ x in s.filter fun x => f x = y, w x :=
-  exists_lt_of_sum_lt $
+  exists_lt_of_sum_lt <|
     calc
       (∑ y in t, b) < ∑ x in s, w x := by
         simpa
@@ -151,7 +151,7 @@ they are sorted into `n > 0` pigeonholes, then for some pigeonhole, the total we
 in this pigeonhole is greater than or equal to `b`. -/
 theorem exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) (ht : t.nonempty)
     (hb : t.card • b ≤ ∑ x in s, w x) : ∃ y ∈ t, b ≤ ∑ x in s.filter fun x => f x = y, w x :=
-  exists_le_of_sum_le ht $ by
+  exists_le_of_sum_le ht <| by
     simpa only [sum_fiberwise_of_maps_to hf, sum_const]
 
 /-- The pigeonhole principle for finitely many pigeons counted by weight, non-strict inequality
@@ -171,7 +171,7 @@ the pigeons in this pigeonhole is greater than or equal to `b`. -/
 theorem exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum
     (hf : ∀ y _ : y ∉ t, (∑ x in s.filter fun x => f x = y, w x) ≤ 0) (ht : t.nonempty)
     (hb : t.card • b ≤ ∑ x in s, w x) : ∃ y ∈ t, b ≤ ∑ x in s.filter fun x => f x = y, w x :=
-  exists_le_of_sum_le ht $
+  exists_le_of_sum_le ht <|
     calc
       (∑ y in t, b) ≤ ∑ x in s, w x := by
         simpa
@@ -355,7 +355,7 @@ open Set
 that are equal mod `k`. -/
 theorem exists_lt_modeq_of_infinite {s : Set ℕ} (hs : s.infinite) {k : ℕ} (hk : 0 < k) :
     ∃ m ∈ s, ∃ n ∈ s, m < n ∧ m ≡ n [MOD k] :=
-  (hs.exists_lt_map_eq_of_maps_to fun n _ => show n % k ∈ Iio k from Nat.mod_ltₓ n hk) $ finite_lt_nat k
+  (hs.exists_lt_map_eq_of_maps_to fun n _ => show n % k ∈ Iio k from Nat.mod_ltₓ n hk) <| finite_lt_nat k
 
 end Nat
 

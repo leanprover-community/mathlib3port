@@ -44,12 +44,12 @@ theorem is_terminal.from_eq_lift_cone_morphism {F : J ⥤ C} {c : cone F} (hc : 
 /-- If `G : cone F ⥤ cone F'` preserves terminal objects, it preserves limit cones. -/
 def is_limit.of_preserves_cone_terminal {F : J ⥤ C} {F' : K ⥤ D} (G : cone F ⥤ cone F')
     [preserves_limit (functor.empty.{v₃} _) G] {c : cone F} (hc : is_limit c) : is_limit (G.obj c) :=
-  (cone.is_limit_equiv_is_terminal _).symm $ (cone.is_limit_equiv_is_terminal _ hc).isTerminalObj _ _
+  (cone.is_limit_equiv_is_terminal _).symm <| (cone.is_limit_equiv_is_terminal _ hc).isTerminalObj _ _
 
 /-- If `G : cone F ⥤ cone F'` reflects terminal objects, it reflects limit cones. -/
 def is_limit.of_reflects_cone_terminal {F : J ⥤ C} {F' : K ⥤ D} (G : cone F ⥤ cone F')
     [reflects_limit (functor.empty.{v₃} _) G] {c : cone F} (hc : is_limit (G.obj c)) : is_limit c :=
-  (cone.is_limit_equiv_is_terminal _).symm $ (cone.is_limit_equiv_is_terminal _ hc).isTerminalOfObj _ _
+  (cone.is_limit_equiv_is_terminal _).symm <| (cone.is_limit_equiv_is_terminal _ hc).isTerminalOfObj _ _
 
 /-- A cocone is a colimit cocone iff it is initial. -/
 def cocone.is_colimit_equiv_is_initial {F : J ⥤ C} (c : cocone F) : is_colimit c ≃ is_initial c :=
@@ -72,12 +72,12 @@ theorem is_initial.to_eq_desc_cocone_morphism {F : J ⥤ C} {c : cocone F} (hc :
 /-- If `G : cocone F ⥤ cocone F'` preserves initial objects, it preserves colimit cocones. -/
 def is_colimit.of_preserves_cocone_initial {F : J ⥤ C} {F' : K ⥤ D} (G : cocone F ⥤ cocone F')
     [preserves_colimit (functor.empty.{v₃} _) G] {c : cocone F} (hc : is_colimit c) : is_colimit (G.obj c) :=
-  (cocone.is_colimit_equiv_is_initial _).symm $ (cocone.is_colimit_equiv_is_initial _ hc).isInitialObj _ _
+  (cocone.is_colimit_equiv_is_initial _).symm <| (cocone.is_colimit_equiv_is_initial _ hc).isInitialObj _ _
 
 /-- If `G : cocone F ⥤ cocone F'` reflects initial objects, it reflects colimit cocones. -/
 def is_colimit.of_reflects_cocone_initial {F : J ⥤ C} {F' : K ⥤ D} (G : cocone F ⥤ cocone F')
     [reflects_colimit (functor.empty.{v₃} _) G] {c : cocone F} (hc : is_colimit (G.obj c)) : is_colimit c :=
-  (cocone.is_colimit_equiv_is_initial _).symm $ (cocone.is_colimit_equiv_is_initial _ hc).isInitialOfObj _ _
+  (cocone.is_colimit_equiv_is_initial _).symm <| (cocone.is_colimit_equiv_is_initial _ hc).isInitialOfObj _ _
 
 end CategoryTheory.Limits
 

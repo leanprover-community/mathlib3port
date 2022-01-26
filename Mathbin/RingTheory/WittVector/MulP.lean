@@ -41,7 +41,7 @@ noncomputable def witt_mul_n : ℕ → ℕ → MvPolynomial ℕ ℤ
   | 0 => 0
   | n + 1 => fun k =>
     bind₁
-      (Function.uncurry $
+      (Function.uncurry <|
         «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
       (witt_add p k)
 

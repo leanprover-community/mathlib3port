@@ -88,7 +88,7 @@ theorem coe_injective : injective (coe : OpenSubgroup G → Set G) := by
 
 @[ext, to_additive]
 theorem ext (h : ∀ x, x ∈ U ↔ x ∈ V) : U = V :=
-  coe_injective $ Set.ext h
+  coe_injective <| Set.ext h
 
 @[to_additive]
 theorem ext_iff : U = V ↔ ∀ x, x ∈ U ↔ x ∈ V :=
@@ -214,7 +214,7 @@ variable {G : Type _} [Groupₓ G] [TopologicalSpace G] [HasContinuousMul G] (H 
 theorem is_open_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : Set G) := by
   simp only [is_open_iff_mem_nhds, SetLike.mem_coe] at hg⊢
   intro x hx
-  have : Filter.Tendsto (fun y => y * (x⁻¹ * g)) (𝓝 x) (𝓝 $ x * (x⁻¹ * g)) :=
+  have : Filter.Tendsto (fun y => y * (x⁻¹ * g)) (𝓝 x) (𝓝 <| x * (x⁻¹ * g)) :=
     (continuous_id.mul continuous_const).Tendsto _
   rw [mul_inv_cancel_left] at this
   have := Filter.mem_map'.1 (this hg)

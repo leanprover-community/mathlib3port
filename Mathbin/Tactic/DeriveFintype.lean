@@ -279,7 +279,7 @@ unsafe def mk_finset (ls : List level) (args : List expr) : ℕ → List Name �
 
 /-- Prove the goal `|- Σ' (a:A) (b: B a) (c:C a b), unit` given a list of terms `a, b, c`. -/
 unsafe def mk_sigma_mem : List expr → tactic Unit
-  | x :: xs => fconstructor >> exact x >> mk_sigma_mem xs
+  | x :: xs => (fconstructor >> exact x) >> mk_sigma_mem xs
   | [] => fconstructor $> ()
 
 /-- This function is called to prove `a : T |- a ∈ S.1` where `S` is the `finset_above` constructed
@@ -317,7 +317,7 @@ unsafe def mk_fintype_instance : tactic Unit := do
   guardₓ ¬env.is_recursive I <|>
       fail ("@[derive fintype]: recursive inductive types are " ++ "not supported (they are also usually infinite)")
   applyc `` mk_fintype { NewGoals := new_goals.all }
-  intro1 >>= cases >>= fun gs => gs.enum.mmap' $ fun ⟨i, _⟩ => exact (reflect i)
+  intro1 >>= cases >>= fun gs => gs.enum.mmap' fun ⟨i, _⟩ => exact (reflect i)
   mk_finset ls args 0 cs
   intro1 >>= cases >>= mk_finset_total skip
 

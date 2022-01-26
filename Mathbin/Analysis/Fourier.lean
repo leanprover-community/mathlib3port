@@ -92,7 +92,7 @@ continuous maps from `circle` to `ℂ`. -/
 @[simps]
 def fourier (n : ℤ) : C(circle, ℂ) where
   toFun := fun z => z ^ n
-  continuous_to_fun := continuous_subtype_coe.zpow n $ fun z => Or.inl (nonzero_of_mem_circle z)
+  continuous_to_fun := (continuous_subtype_coe.zpow n) fun z => Or.inl (nonzero_of_mem_circle z)
 
 @[simp]
 theorem fourier_zero {z : circle} : fourier 0 z = 1 :=
@@ -227,6 +227,7 @@ def fourierSeries : HilbertBasis ℤ ℂ (Lp ℂ 2 haarCircle) :=
 theorem coe_fourier_series : ⇑fourierSeries = fourierLp 2 :=
   HilbertBasis.coe_mk _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Under the isometric isomorphism `fourier_series` from `Lp ℂ 2 haar_circle` to `ℓ²(ℤ, ℂ)`, the
 `i`-th coefficient is the integral over the circle of `λ t, t ^ (-i) * f t`. -/
 theorem fourier_series_repr (f : Lp ℂ 2 haarCircle) (i : ℤ) :
@@ -235,8 +236,7 @@ theorem fourier_series_repr (f : Lp ℂ 2 haarCircle) (i : ℤ) :
   · simp [fourier_series.repr_apply_apply f i, MeasureTheory.L2.inner_def]
     
   apply integral_congr_ae
-  filter_upwards [coe_fn_fourier_Lp 2 i]
-  intro t ht
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [ht, ← fourier_neg]
   simp [-fourier_neg]
 

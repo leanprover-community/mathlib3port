@@ -41,7 +41,7 @@ theorem exp_log {x : ℂ} (hx : x ≠ 0) : exp (log x) = x := by
 
 @[simp]
 theorem range_exp : range exp = {0}ᶜ :=
-  Set.ext $ fun x =>
+  Set.ext fun x =>
     ⟨by
       rintro ⟨x, rfl⟩
       exact exp_ne_zero x, fun hx => ⟨log x, exp_log hx⟩⟩
@@ -125,10 +125,10 @@ theorem countable_preimage_exp {s : Set ℂ} : countable (exp ⁻¹' s) ↔ coun
 alias countable_preimage_exp ↔ _ Set.Countable.preimage_cexp
 
 theorem tendsto_log_nhds_within_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
-    tendsto log (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 $ Real.log (abs z) - π * I) := by
+    tendsto log (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 <| Real.log (abs z) - π * I) := by
   have :=
     (continuous_of_real.continuous_at.comp_continuous_within_at (continuous_abs.continuous_within_at.log _)).Tendsto.add
-      (((continuous_of_real.tendsto _).comp $ tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero hre him).mul
+      (((continuous_of_real.tendsto _).comp <| tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero hre him).mul
         tendsto_const_nhds)
   convert this
   · simp [sub_eq_add_neg]
@@ -141,7 +141,7 @@ theorem continuous_within_at_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
     ContinuousWithinAt log { z : ℂ | 0 ≤ z.im } z := by
   have :=
     (continuous_of_real.continuous_at.comp_continuous_within_at (continuous_abs.continuous_within_at.log _)).Tendsto.add
-      ((continuous_of_real.continuous_at.comp_continuous_within_at $
+      ((continuous_of_real.continuous_at.comp_continuous_within_at <|
             continuous_within_at_arg_of_re_neg_of_im_zero hre him).mul
         tendsto_const_nhds)
   convert this
@@ -150,7 +150,7 @@ theorem continuous_within_at_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
     
 
 theorem tendsto_log_nhds_within_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
-    tendsto log (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 $ Real.log (abs z) + π * I) := by
+    tendsto log (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 <| Real.log (abs z) + π * I) := by
   simpa only [log, arg_eq_pi_iff.2 ⟨hre, him⟩] using (continuous_within_at_log_of_re_neg_of_im_zero hre him).Tendsto
 
 end Complex
@@ -177,7 +177,7 @@ theorem continuous_at_clog {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousA
     
 
 theorem Filter.Tendsto.clog {l : Filter α} {f : α → ℂ} {x : ℂ} (h : tendsto f l (𝓝 x)) (hx : 0 < x.re ∨ x.im ≠ 0) :
-    tendsto (fun t => log (f t)) l (𝓝 $ log x) :=
+    tendsto (fun t => log (f t)) l (𝓝 <| log x) :=
   (continuous_at_clog hx).Tendsto.comp h
 
 variable [TopologicalSpace α]
@@ -196,7 +196,7 @@ theorem ContinuousOn.clog {f : α → ℂ} {s : Set α} (h₁ : ContinuousOn f s
 
 theorem Continuous.clog {f : α → ℂ} (h₁ : Continuous f) (h₂ : ∀ x, 0 < (f x).re ∨ (f x).im ≠ 0) :
     Continuous fun t => log (f t) :=
-  continuous_iff_continuous_at.2 $ fun x => h₁.continuous_at.clog (h₂ x)
+  continuous_iff_continuous_at.2 fun x => h₁.continuous_at.clog (h₂ x)
 
 end LogDeriv
 

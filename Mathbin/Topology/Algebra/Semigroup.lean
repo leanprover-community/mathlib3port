@@ -47,7 +47,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     exact hm.2
   apply Zorn.zorn_superset
   intro c hcs hc
-  refine' ⟨⋂₀c, ⟨is_closed_sInter $ fun t ht => (hcs ht).1, _, _⟩, _⟩
+  refine' ⟨⋂₀c, ⟨is_closed_sInter fun t ht => (hcs ht).1, _, _⟩, _⟩
   · obtain rfl | hcnemp := c.eq_empty_or_nonempty
     · rw [Set.sInter_empty]
       apply Set.univ_nonempty

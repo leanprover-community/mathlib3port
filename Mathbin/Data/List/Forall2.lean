@@ -38,10 +38,10 @@ theorem forall₂.flip : ∀ {a b}, forall₂ (flip r) b a → forall₂ r a b
 
 theorem forall₂_same {r : α → α → Prop} : ∀ {l}, (∀, ∀ x ∈ l, ∀, r x x) → forall₂ r l l
   | [], _ => forall₂.nil
-  | a :: as, h => forall₂.cons (h _ (mem_cons_self _ _)) (forall₂_same $ fun a ha => h a $ mem_cons_of_mem _ ha)
+  | a :: as, h => forall₂.cons (h _ (mem_cons_self _ _)) (forall₂_same fun a ha => h a <| mem_cons_of_mem _ ha)
 
 theorem forall₂_refl {r} [IsRefl α r] (l : List α) : forall₂ r l l :=
-  forall₂_same $ fun a h => IsRefl.refl _
+  forall₂_same fun a h => IsRefl.refl _
 
 theorem forall₂_eq_eq_eq : forall₂ (· = · : α → α → Prop) = (· = ·) := by
   funext a b
@@ -146,7 +146,7 @@ theorem forall₂_iff_zip {R : α → β → Prop} {l₁ l₂} :
       constructor
       
     · cases' l₂ with b l₂ <;> injection h₁ with h₁
-      exact forall₂.cons (h₂ $ Or.inl rfl) (IH h₁ $ fun a b h => h₂ $ Or.inr h)
+      exact forall₂.cons (h₂ <| Or.inl rfl) ((IH h₁) fun a b h => h₂ <| Or.inr h)
       ⟩
 
 theorem forall₂_take {R : α → β → Prop} : ∀ n {l₁ l₂}, forall₂ R l₁ l₂ → forall₂ R (take n l₁) (take n l₂)

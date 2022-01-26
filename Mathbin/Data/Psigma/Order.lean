@@ -78,7 +78,7 @@ instance lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ
       · rintro ⟨⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩, hba⟩
         · exact lex.left _ _ hij
           
-        · exact lex.right _ (hab.lt_of_not_le $ fun h => hba $ lex.right _ h)
+        · exact lex.right _ (hab.lt_of_not_le fun h => hba <| lex.right _ h)
           
          }
 
@@ -87,7 +87,7 @@ instance lex.partial_order [PartialOrderₓ ι] [∀ i, PartialOrderₓ (α i)] 
   { lex.preorder with
     le_antisymm := by
       rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨_, _, _, _, hlt₁⟩ | ⟨_, _, _, hlt₁⟩) (⟨_, _, _, _, hlt₂⟩ | ⟨_, _, _, hlt₂⟩)
-      · exact (lt_irreflₓ a₁ $ hlt₁.trans hlt₂).elim
+      · exact (lt_irreflₓ a₁ <| hlt₁.trans hlt₂).elim
         
       · exact (lt_irreflₓ a₁ hlt₁).elim
         

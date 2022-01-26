@@ -32,8 +32,8 @@ theorem is_primitive_root_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.copr
   · use i
     field_simp [hn0, mul_comm (i : ℂ), mul_comm (n : ℂ)]
     
-  · simp' only [hn0, mul_right_commₓ _ _ (↑n), mul_left_inj' two_pi_I_ne_zero, Ne.def, not_false_iff,
-      mul_comm _ (i : ℂ), ← mul_assoc _ (i : ℂ), exists_imp_distrib] with field_simps
+  · simp' only [hn0, mul_right_commₓ _ _ ↑n, mul_left_inj' two_pi_I_ne_zero, Ne.def, not_false_iff, mul_comm _ (i : ℂ),
+      ← mul_assoc _ (i : ℂ), exists_imp_distrib] with field_simps
     norm_cast
     rintro l k hk
     have : n ∣ i * l := by

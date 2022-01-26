@@ -247,7 +247,7 @@ instance inhabited_tm2_evals_to : Inhabited (evals_to (fun _ : Unit => some ⟨�
 
 /-- A proof that the identity map on α is computable in time. -/
 def id_computable_in_time {α : Type} (ea : fin_encoding α) : @tm2_computable_in_time α α ea ea id :=
-  tm2_computable_in_poly_time.to_tm2_computable_in_time $ id_computable_in_poly_time ea
+  tm2_computable_in_poly_time.to_tm2_computable_in_time <| id_computable_in_poly_time ea
 
 instance inhabited_tm2_computable_in_time :
     Inhabited (tm2_computable_in_time fin_encoding_bool_bool fin_encoding_bool_bool id) :=
@@ -255,7 +255,7 @@ instance inhabited_tm2_computable_in_time :
 
 /-- A proof that the identity map on α is computable. -/
 def id_computable {α : Type} (ea : fin_encoding α) : @tm2_computable α α ea ea id :=
-  tm2_computable_in_time.to_tm2_computable $ id_computable_in_time ea
+  tm2_computable_in_time.to_tm2_computable <| id_computable_in_time ea
 
 instance inhabited_tm2_computable : Inhabited (tm2_computable fin_encoding_bool_bool fin_encoding_bool_bool id) :=
   ⟨id_computable Computability.inhabitedFinEncoding.default⟩

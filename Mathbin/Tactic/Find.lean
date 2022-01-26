@@ -52,7 +52,7 @@ private unsafe def match_sig (p : pexpr) (e : expr) : tactic Unit := do
   match_hyps p_pis [] pis
 
 private unsafe def trace_match (pat : pexpr) (ty : expr) (n : Name) : tactic Unit :=
-  try $ do
+  try <| do
     guardₓ ¬n.is_internal
     match_sig pat ty
     let ty ← pp ty
@@ -74,10 +74,10 @@ run_cmd tactic.skip
 The tactic `library_search` is an alternate way to find lemmas in the library.
 -/
 @[user_command]
-unsafe def find_cmd (_ : parse $ tk "#find") : lean.parser Unit := do
+unsafe def find_cmd (_ : parse <| tk "#find") : lean.parser Unit := do
   let pat ← lean.parser.pexpr 0
   let env ← get_env
-  env.mfold () $ fun d _ =>
+  (env.mfold ()) fun d _ =>
       match d with
       | declaration.thm n _ ty _ => trace_match pat ty n
       | declaration.defn n _ ty _ _ _ => trace_match pat ty n

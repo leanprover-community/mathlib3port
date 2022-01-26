@@ -28,12 +28,13 @@ noncomputable def isometry_sum_squares [DecidableEq ι] (w' : ι → ℂ) :
     exact (w i).ne_zero ((Complex.cpow_eq_zero_iff _ _).1 hi).1
   convert
     (weighted_sum_squares ℂ w').isometryBasisRepr
-      ((Pi.basisFun ℂ ι).units_smul fun i => (is_unit_iff_ne_zero.2 $ hw' i).Unit)
+      ((Pi.basisFun ℂ ι).units_smul fun i => (is_unit_iff_ne_zero.2 <| hw' i).Unit)
   ext1 v
   erw [basis_repr_apply, weighted_sum_squares_apply, weighted_sum_squares_apply]
   refine' sum_congr rfl fun j hj => _
   have hsum :
-    (∑ i : ι, v i • ((is_unit_iff_ne_zero.2 $ hw' i).Unit : ℂ) • (Pi.basisFun ℂ ι) i) j = v j • w j ^ -(1 / 2 : ℂ) := by
+    (∑ i : ι, v i • ((is_unit_iff_ne_zero.2 <| hw' i).Unit : ℂ) • (Pi.basisFun ℂ ι) i) j = v j • w j ^ -(1 / 2 : ℂ) :=
+    by
     rw [Finset.sum_apply, sum_eq_single j, Pi.basis_fun_apply, IsUnit.unit_spec, LinearMap.std_basis_apply,
       Pi.smul_apply, Pi.smul_apply, Function.update_same, smul_eq_mul, smul_eq_mul, smul_eq_mul, mul_oneₓ]
     intro i _ hij
@@ -49,7 +50,7 @@ noncomputable def isometry_sum_squares [DecidableEq ι] (w' : ι → ℂ) :
   have hww' : w' j = w j := by
     simp only [w, dif_neg h, Units.coe_mk0]
   simp only [hww', one_mulₓ]
-  change v j * v j = ↑w j * (v j * ↑w j ^ -(1 / 2 : ℂ) * (v j * ↑w j ^ -(1 / 2 : ℂ)))
+  change v j * v j = ↑(w j) * (v j * ↑(w j) ^ -(1 / 2 : ℂ) * (v j * ↑(w j) ^ -(1 / 2 : ℂ)))
   suffices v j * v j = w j ^ -(1 / 2 : ℂ) * w j ^ -(1 / 2 : ℂ) * w j * v j * v j by
     rw [this]
     ring

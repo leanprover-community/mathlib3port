@@ -65,7 +65,7 @@ def forget_to_Top : Scheme ⥤ Top :=
   Scheme.forget_to_LocallyRingedSpace ⋙ LocallyRingedSpace.forget_to_Top
 
 instance {X Y : Scheme} : HasLiftT (X ⟶ Y) (X.to_SheafedSpace ⟶ Y.to_SheafedSpace) :=
-  @coeToLift $ @coeBaseₓ coeSubtype
+  @coeToLift <| @coeBaseₓ coeSubtype
 
 @[reassoc]
 theorem comp_val {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).val = f.val ≫ g.val :=
@@ -195,18 +195,18 @@ theorem basic_open_res_eq (i : op U ⟶ op V) [is_iso i] : X.basic_open (X.presh
 theorem basic_open_subset : X.basic_open f ⊆ U :=
   RingedSpace.basic_open_subset _ _
 
-theorem preimage_basic_open {X Y : Scheme} (f : X ⟶ Y) {U : opens Y.carrier} (r : Y.presheaf.obj $ op U) :
+theorem preimage_basic_open {X Y : Scheme} (f : X ⟶ Y) {U : opens Y.carrier} (r : Y.presheaf.obj <| op U) :
     (opens.map f.1.base).obj (Y.basic_open r) = @Scheme.basic_open X ((opens.map f.1.base).obj U) (f.1.c.app _ r) :=
   LocallyRingedSpace.preimage_basic_open f r
 
 @[simp]
-theorem preimage_basic_open' {X Y : Scheme} (f : X ⟶ Y) {U : opens Y.carrier} (r : Y.presheaf.obj $ op U) :
+theorem preimage_basic_open' {X Y : Scheme} (f : X ⟶ Y) {U : opens Y.carrier} (r : Y.presheaf.obj <| op U) :
     (opens.map (↑f : X.to_SheafedSpace ⟶ Y.to_SheafedSpace).base).obj (Y.basic_open r) =
       @Scheme.basic_open X ((opens.map f.1.base).obj U) (f.1.c.app _ r) :=
   LocallyRingedSpace.preimage_basic_open f r
 
 @[simp]
-theorem basic_open_zero (U : opens X.carrier) : X.basic_open (0 : X.presheaf.obj $ op U) = ∅ :=
+theorem basic_open_zero (U : opens X.carrier) : X.basic_open (0 : X.presheaf.obj <| op U) = ∅ :=
   LocallyRingedSpace.basic_open_zero _ U
 
 @[simp]
@@ -222,7 +222,7 @@ end BasicOpen
 end Scheme
 
 theorem basic_open_eq_of_affine {R : CommRingₓₓ} (f : R) :
-    (Scheme.Spec.obj $ op R).basicOpen ((Spec_Γ_identity.app R).inv f) = PrimeSpectrum.basicOpen f := by
+    (Scheme.Spec.obj <| op R).basicOpen ((Spec_Γ_identity.app R).inv f) = PrimeSpectrum.basicOpen f := by
   ext
   erw [Scheme.mem_basic_open_top]
   suffices IsUnit (structure_sheaf.to_stalk R x f) ↔ f ∉ PrimeSpectrum.asIdeal x by
@@ -236,7 +236,7 @@ theorem basic_open_eq_of_affine {R : CommRingₓₓ} (f : R) :
 
 @[simp]
 theorem basic_open_eq_of_affine' {R : CommRingₓₓ} (f : (Spec.to_SheafedSpace.obj (op R)).Presheaf.obj (op ⊤)) :
-    (Scheme.Spec.obj $ op R).basicOpen f = PrimeSpectrum.basicOpen ((Spec_Γ_identity.app R).Hom f) := by
+    (Scheme.Spec.obj <| op R).basicOpen f = PrimeSpectrum.basicOpen ((Spec_Γ_identity.app R).Hom f) := by
   convert basic_open_eq_of_affine ((Spec_Γ_identity.app R).Hom f)
   exact (coe_hom_inv_id _ _).symm
 

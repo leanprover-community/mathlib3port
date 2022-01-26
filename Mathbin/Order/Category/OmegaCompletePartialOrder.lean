@@ -79,7 +79,7 @@ end HasProducts
 
 instance omega_complete_partial_order_equalizer {α β : Type _} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f g : α →𝒄 β) : OmegaCompletePartialOrder { a : α // f a = g a } :=
-  OmegaCompletePartialOrder.subtype _ $ fun c hc => by
+  (OmegaCompletePartialOrder.subtype _) fun c hc => by
     rw [f.continuous, g.continuous]
     congr 1
     ext
@@ -98,7 +98,7 @@ def equalizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : fork f g :=
 
 /-- The equalizer fork is a limit. -/
 def is_equalizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : is_limit (equalizer f g) :=
-  fork.is_limit.mk' _ $ fun s =>
+  (fork.is_limit.mk' _) fun s =>
     ⟨{ toFun := fun x =>
           ⟨s.ι x, by
             apply continuous_hom.congr_fun s.condition⟩,

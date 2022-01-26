@@ -83,7 +83,7 @@ theorem lift_comp_of (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A
 @[ext]
 theorem hom_ext {F₁ F₂ : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A} (h : ∀ x, F₁ (of R x) = F₂ (of R x)) :
     F₁ = F₂ :=
-  (lift R).symm.Injective $ funext h
+  (lift R).symm.Injective <| funext h
 
 end FreeNonUnitalNonAssocAlgebra
 

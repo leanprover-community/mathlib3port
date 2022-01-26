@@ -20,17 +20,17 @@ variable [∀ i, Preorderₓ (α i)] (x y : ∀ i, α i)
 
 @[simp]
 theorem pi_univ_Ici : (pi univ fun i => Ici (x i)) = Ici x :=
-  ext $ fun y => by
+  ext fun y => by
     simp [Pi.le_def]
 
 @[simp]
 theorem pi_univ_Iic : (pi univ fun i => Iic (x i)) = Iic x :=
-  ext $ fun y => by
+  ext fun y => by
     simp [Pi.le_def]
 
 @[simp]
 theorem pi_univ_Icc : (pi univ fun i => Icc (x i) (y i)) = Icc x y :=
-  ext $ fun y => by
+  ext fun y => by
     simp [Pi.le_def, forall_and_distrib]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∉ » s)
@@ -49,19 +49,19 @@ section Nonempty
 variable [Nonempty ι]
 
 theorem pi_univ_Ioi_subset : (pi univ fun i => Ioi (x i)) ⊆ Ioi x := fun z hz =>
-  ⟨fun i => le_of_ltₓ $ hz i trivialₓ, fun h => Nonempty.elimₓ ‹Nonempty ι› $ fun i => (h i).not_lt (hz i trivialₓ)⟩
+  ⟨fun i => le_of_ltₓ <| hz i trivialₓ, fun h => (Nonempty.elimₓ ‹Nonempty ι›) fun i => (h i).not_lt (hz i trivialₓ)⟩
 
 theorem pi_univ_Iio_subset : (pi univ fun i => Iio (x i)) ⊆ Iio x :=
   @pi_univ_Ioi_subset ι (fun i => OrderDual (α i)) _ x _
 
 theorem pi_univ_Ioo_subset : (pi univ fun i => Ioo (x i) (y i)) ⊆ Ioo x y := fun x hx =>
-  ⟨pi_univ_Ioi_subset _ $ fun i hi => (hx i hi).1, pi_univ_Iio_subset _ $ fun i hi => (hx i hi).2⟩
+  ⟨(pi_univ_Ioi_subset _) fun i hi => (hx i hi).1, (pi_univ_Iio_subset _) fun i hi => (hx i hi).2⟩
 
 theorem pi_univ_Ioc_subset : (pi univ fun i => Ioc (x i) (y i)) ⊆ Ioc x y := fun x hx =>
-  ⟨pi_univ_Ioi_subset _ $ fun i hi => (hx i hi).1, fun i => (hx i trivialₓ).2⟩
+  ⟨(pi_univ_Ioi_subset _) fun i hi => (hx i hi).1, fun i => (hx i trivialₓ).2⟩
 
 theorem pi_univ_Ico_subset : (pi univ fun i => Ico (x i) (y i)) ⊆ Ico x y := fun x hx =>
-  ⟨fun i => (hx i trivialₓ).1, pi_univ_Iio_subset _ $ fun i hi => (hx i hi).2⟩
+  ⟨fun i => (hx i trivialₓ).1, (pi_univ_Iio_subset _) fun i hi => (hx i hi).2⟩
 
 end Nonempty
 

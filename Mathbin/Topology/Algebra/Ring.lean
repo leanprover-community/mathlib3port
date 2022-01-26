@@ -91,9 +91,9 @@ section
 variable {R : Type _} [Ringₓ R] [TopologicalSpace R]
 
 theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
-    (hmul : tendsto (uncurry (· * · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) $ 𝓝 0)
-    (hmul_left : ∀ x₀ : R, tendsto (fun x : R => x₀ * x) (𝓝 0) $ 𝓝 0)
-    (hmul_right : ∀ x₀ : R, tendsto (fun x : R => x * x₀) (𝓝 0) $ 𝓝 0) : TopologicalRing R := by
+    (hmul : tendsto (uncurry (· * · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
+    (hmul_left : ∀ x₀ : R, tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
+    (hmul_right : ∀ x₀ : R, tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0) : TopologicalRing R := by
   refine' { ‹TopologicalAddGroup R› with .. }
   have hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0) := by
     simp
@@ -107,7 +107,7 @@ theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
   suffices
     tendsto
       ((fun x : R => x + x₀ * y₀) ∘ (fun p : R × R => p.1 + p.2) ∘ fun p : R × R => (p.1 * y₀ + x₀ * p.2, p.1 * p.2))
-      (𝓝 0 ×ᶠ 𝓝 0) ((map fun x : R => x + x₀ * y₀) $ 𝓝 0)
+      (𝓝 0 ×ᶠ 𝓝 0) ((map fun x : R => x + x₀ * y₀) <| 𝓝 0)
     by
     convert this using 1
     · ext
@@ -119,10 +119,11 @@ theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
   refine' tendsto_map.comp (hadd.comp (tendsto.prod_mk _ hmul))
   exact hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))
 
-theorem TopologicalRing.of_nhds_zero (hadd : tendsto (uncurry (· + · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) $ 𝓝 0)
-    (hneg : tendsto (fun x => -x : R → R) (𝓝 0) (𝓝 0)) (hmul : tendsto (uncurry (· * · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) $ 𝓝 0)
-    (hmul_left : ∀ x₀ : R, tendsto (fun x : R => x₀ * x) (𝓝 0) $ 𝓝 0)
-    (hmul_right : ∀ x₀ : R, tendsto (fun x : R => x * x₀) (𝓝 0) $ 𝓝 0)
+theorem TopologicalRing.of_nhds_zero (hadd : tendsto (uncurry (· + · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
+    (hneg : tendsto (fun x => -x : R → R) (𝓝 0) (𝓝 0))
+    (hmul : tendsto (uncurry (· * · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
+    (hmul_left : ∀ x₀ : R, tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
+    (hmul_right : ∀ x₀ : R, tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0)
     (hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0)) : TopologicalRing R :=
   have := TopologicalAddGroup.of_comm_of_nhds_zero hadd hneg hleft
   TopologicalRing.of_add_group_of_nhds_zero hmul hmul_left hmul_right
@@ -179,7 +180,7 @@ variable {α : Type _} [TopologicalSpace α] [CommRingₓ α] [TopologicalRing �
 /-- The closure of an ideal in a topological ring as an ideal. -/
 def Ideal.closure (S : Ideal α) : Ideal α :=
   { AddSubmonoid.topologicalClosure S.to_add_submonoid with Carrier := Closure S,
-    smul_mem' := fun c x hx => map_mem_closure (mul_left_continuous _) hx $ fun a => S.mul_mem_left c }
+    smul_mem' := fun c x hx => (map_mem_closure (mul_left_continuous _) hx) fun a => S.mul_mem_left c }
 
 @[simp]
 theorem Ideal.coe_closure (S : Ideal α) : (S.closure : Set α) = Closure S :=
@@ -254,7 +255,7 @@ theorem ext' {f g : RingTopology α} (h : f.is_open = g.is_open) : f = g := by
 /-- The ordering on ring topologies on the ring `α`.
   `t ≤ s` if every set open in `s` is also open in `t` (`t` is finer than `s`). -/
 instance : PartialOrderₓ (RingTopology α) :=
-  PartialOrderₓ.lift RingTopology.toTopologicalSpace $ ext
+  PartialOrderₓ.lift RingTopology.toTopologicalSpace <| ext
 
 local notation "cont" => @Continuous _ _
 

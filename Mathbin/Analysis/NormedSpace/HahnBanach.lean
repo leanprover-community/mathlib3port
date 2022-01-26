@@ -32,7 +32,7 @@ theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
         simp only [norm_smul c x, Real.norm_eq_abs, abs_of_pos hc, mul_left_commₓ])
       (fun x y => _) fun x => le_transₓ (le_abs_self _) (f.le_op_norm _) with
     ⟨g, g_eq, g_le⟩
-  set g' := g.mk_continuous ∥f∥ fun x => abs_le.2 ⟨neg_le.1 $ g.map_neg x ▸ norm_neg x ▸ g_le (-x), g_le x⟩
+  set g' := g.mk_continuous ∥f∥ fun x => abs_le.2 ⟨neg_le.1 <| g.map_neg x ▸ norm_neg x ▸ g_le (-x), g_le x⟩
   · refine' ⟨g', g_eq, _⟩
     · apply le_antisymmₓ (g.mk_continuous_norm_le (norm_nonneg f) _)
       refine' f.op_norm_le_bound (norm_nonneg _) fun x => _
@@ -68,7 +68,7 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
   have h : ∀ x : p, g.extend_to_𝕜 x = f x := by
     intro x
     rw [ContinuousLinearMap.extend_to_𝕜_apply, ← Submodule.coe_smul, hextends, hextends]
-    have : (fr x : 𝕜) - I * ↑fr (I • x) = (re (f x) : 𝕜) - (I : 𝕜) * re (f ((I : 𝕜) • x)) := by
+    have : (fr x : 𝕜) - I * ↑(fr (I • x)) = (re (f x) : 𝕜) - (I : 𝕜) * re (f ((I : 𝕜) • x)) := by
       rfl
     rw [this]
     apply ext

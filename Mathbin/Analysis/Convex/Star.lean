@@ -63,7 +63,7 @@ def StarConvex : Prop :=
 variable {𝕜 x s} {t : Set E}
 
 theorem convex_iff_forall_star_convex : Convex 𝕜 s ↔ ∀, ∀ x ∈ s, ∀, StarConvex 𝕜 x s :=
-  forall_congrₓ $ fun x => forall_swap
+  forall_congrₓ fun x => forall_swap
 
 alias convex_iff_forall_star_convex ↔ Convex.star_convex _
 
@@ -85,15 +85,9 @@ theorem StarConvex.open_segment_subset (h : StarConvex 𝕜 x s) {y : E} (hy : y
 /-- Alternative definition of star-convexity, in terms of pointwise set operations. -/
 theorem star_convex_iff_pointwise_add_subset :
     StarConvex 𝕜 x s ↔ ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → a • {x} + b • s ⊆ s := by
-  constructor
-  · rintro hA a b ha hb hab w ⟨au, bv, ⟨u, rfl : u = x, rfl⟩, ⟨v, hv, rfl⟩, rfl⟩
-    exact hA hv ha hb hab
-    
-  · rintro h y hy a b ha hb hab
-    refine' h ha hb hab (add_mem_add _ ⟨_, hy, rfl⟩)
-    rw [smul_singleton]
-    exact mem_singleton _
-    
+  refine' ⟨_, fun h y hy a b ha hb hab => h ha hb hab (add_mem_add (smul_mem_smul_set <| mem_singleton _) ⟨_, hy, rfl⟩)⟩
+  rintro hA a b ha hb hab w ⟨au, bv, ⟨u, rfl : u = x, rfl⟩, ⟨v, hv, rfl⟩, rfl⟩
+  exact hA hv ha hb hab
 
 theorem star_convex_empty (x : E) : StarConvex 𝕜 x ∅ := fun y hy => hy.elim
 
@@ -106,7 +100,7 @@ theorem star_convex_sInter {S : Set (Set E)} (h : ∀, ∀ s ∈ S, ∀, StarCon
   fun y hy a b ha hb hab s hs => h s hs (hy s hs) ha hb hab
 
 theorem star_convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i, StarConvex 𝕜 x (s i)) : StarConvex 𝕜 x (⋂ i, s i) :=
-  sInter_range s ▸ star_convex_sInter $ forall_range_iff.2 h
+  sInter_range s ▸ star_convex_sInter <| forall_range_iff.2 h
 
 theorem StarConvex.union (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 x t) : StarConvex 𝕜 x (s ∪ t) := by
   rintro y (hy | hy) a b ha hb hab
@@ -179,8 +173,7 @@ theorem star_convex_iff_forall_ne_pos (hx : x ∈ s) :
   exact h hy hxy ha' hb' hab
 
 theorem star_convex_iff_open_segment_subset (hx : x ∈ s) : StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s → OpenSegment 𝕜 x y ⊆ s :=
-  star_convex_iff_segment_subset.trans $
-    forall₂_congrₓ $ fun y hy => (open_segment_subset_iff_segment_subset hx hy).symm
+  star_convex_iff_segment_subset.trans <| forall₂_congrₓ fun y hy => (open_segment_subset_iff_segment_subset hx hy).symm
 
 theorem star_convex_singleton (x : E) : StarConvex 𝕜 x {x} := by
   rintro y (rfl : y = x) a b ha hb hab
@@ -195,7 +188,7 @@ theorem StarConvex.linear_image (hs : StarConvex 𝕜 x s) (f : E →ₗ[𝕜] F
 
 theorem StarConvex.is_linear_image (hs : StarConvex 𝕜 x s) {f : E → F} (hf : IsLinearMap 𝕜 f) :
     StarConvex 𝕜 (f x) (f '' s) :=
-  hs.linear_image $ hf.mk' f
+  hs.linear_image <| hf.mk' f
 
 theorem StarConvex.linear_preimage {s : Set F} (f : E →ₗ[𝕜] F) (hs : StarConvex 𝕜 (f x) s) :
     StarConvex 𝕜 x (s.preimage f) := by
@@ -205,7 +198,7 @@ theorem StarConvex.linear_preimage {s : Set F} (f : E →ₗ[𝕜] F) (hs : Star
 
 theorem StarConvex.is_linear_preimage {s : Set F} {f : E → F} (hs : StarConvex 𝕜 (f x) s) (hf : IsLinearMap 𝕜 f) :
     StarConvex 𝕜 x (preimage f s) :=
-  hs.linear_preimage $ hf.mk' f
+  hs.linear_preimage <| hf.mk' f
 
 theorem StarConvex.add {t : Set E} (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 y t) : StarConvex 𝕜 (x + y) (s + t) := by
   rw [← add_image_prod]
@@ -259,7 +252,7 @@ section AddCommMonoidₓ
 variable [AddCommMonoidₓ E] [AddCommMonoidₓ F] [Module 𝕜 E] [Module 𝕜 F] {x : E} {s : Set E}
 
 theorem StarConvex.smul (hs : StarConvex 𝕜 x s) (c : 𝕜) : StarConvex 𝕜 (c • x) (c • s) :=
-  hs.linear_image $ LinearMap.lsmul _ _ c
+  hs.linear_image <| LinearMap.lsmul _ _ c
 
 theorem StarConvex.preimage_smul {c : 𝕜} (hs : StarConvex 𝕜 (c • x) s) : StarConvex 𝕜 x ((fun z => c • z) ⁻¹' s) :=
   hs.linear_preimage (LinearMap.lsmul _ _ c)
@@ -354,7 +347,7 @@ theorem star_convex_iff_div :
 
 theorem StarConvex.mem_smul (hs : StarConvex 𝕜 0 s) (hx : x ∈ s) {t : 𝕜} (ht : 1 ≤ t) : x ∈ t • s := by
   rw [mem_smul_set_iff_inv_smul_mem₀ (zero_lt_one.trans_le ht).ne']
-  exact hs.smul_mem hx (inv_nonneg.2 $ zero_le_one.trans ht) (inv_le_one ht)
+  exact hs.smul_mem hx (inv_nonneg.2 <| zero_le_one.trans ht) (inv_le_one ht)
 
 end AddCommGroupₓ
 

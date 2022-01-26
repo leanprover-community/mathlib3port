@@ -83,10 +83,10 @@ protected def Function.Injective.module [AddCommMonoidₓ M₂] [HasScalar R M�
     (smul : ∀ c : R x, f (c • x) = c • f x) : Module R M₂ :=
   { hf.distrib_mul_action f smul with smul := · • ·,
     add_smul := fun c₁ c₂ x =>
-      hf $ by
+      hf <| by
         simp only [smul, f.map_add, add_smul],
     zero_smul := fun x =>
-      hf $ by
+      hf <| by
         simp only [smul, zero_smul, f.map_zero] }
 
 /-- Pushforward a `module` structure along a surjective additive monoid homomorphism. -/
@@ -135,10 +135,10 @@ This is a stronger version of `distrib_mul_action.to_add_monoid_End` -/
 def Module.toAddMonoidEnd : R →+* AddMonoidₓ.End M :=
   { DistribMulAction.toAddMonoidEnd R M with
     map_zero' :=
-      AddMonoidHom.ext $ fun r => by
+      AddMonoidHom.ext fun r => by
         simp ,
     map_add' := fun x y =>
-      AddMonoidHom.ext $ fun r => by
+      AddMonoidHom.ext fun r => by
         simp [add_smul] }
 
 /-- A convenience alias for `module.to_add_monoid_End` as an `add_monoid_hom`, usually to allow the
@@ -291,7 +291,7 @@ def RingHom.toModule [Semiringₓ R] [Semiringₓ S] (f : R →+* S) : Module R 
 
 This generalizes `function.End.apply_mul_action`. -/
 instance RingHom.applyDistribMulAction [Semiringₓ R] : DistribMulAction (R →+* R) R where
-  smul := · $ ·
+  smul := · <| ·
   smul_zero := RingHom.map_zero
   smul_add := RingHom.map_add
   one_smul := fun _ => rfl
@@ -334,7 +334,7 @@ should normally have exactly one `ℕ`-module structure by design. -/
 def AddCommMonoidₓ.natModule.unique : Unique (Module ℕ M) where
   default := by
     infer_instance
-  uniq := fun P => module_ext P _ $ fun n => nat_smul_eq_nsmul P n
+  uniq := fun P => (module_ext P _) fun n => nat_smul_eq_nsmul P n
 
 instance AddCommMonoidₓ.nat_is_scalar_tower : IsScalarTower ℕ R M where
   smul_assoc := fun n x y =>
@@ -384,7 +384,7 @@ should normally have exactly one `ℤ`-module structure by design. -/
 def AddCommGroupₓ.intModule.unique : Unique (Module ℤ M) where
   default := by
     infer_instance
-  uniq := fun P => module_ext P _ $ fun n => int_smul_eq_zsmul P n
+  uniq := fun P => (module_ext P _) fun n => int_smul_eq_zsmul P n
 
 end AddCommGroupₓ
 
@@ -446,7 +446,7 @@ end AddMonoidHom
 an instance because `simp` becomes very slow if we have many `subsingleton` instances,
 see [gh-6025]. -/
 theorem subsingleton_rat_module (E : Type _) [AddCommGroupₓ E] : Subsingleton (Module ℚ E) :=
-  ⟨fun P Q => module_ext P Q $ fun r x => @AddMonoidHom.map_rat_module_smul E ‹_› P E ‹_› Q (AddMonoidHom.id _) r x⟩
+  ⟨fun P Q => (module_ext P Q) fun r x => @AddMonoidHom.map_rat_module_smul E ‹_› P E ‹_› Q (AddMonoidHom.id _) r x⟩
 
 /-- If `E` is a vector space over two division rings `R` and `S`, then scalar multiplications
 agree on inverses of integer numbers in `R` and `S`. -/
@@ -517,7 +517,7 @@ theorem Function.Injective.no_zero_smul_divisors {R M N : Type _} [Zero R] [Zero
     [HasScalar R N] [NoZeroSmulDivisors R N] (f : M → N) (hf : Function.Injective f) (h0 : f 0 = 0)
     (hs : ∀ c : R x : M, f (c • x) = c • f x) : NoZeroSmulDivisors R M :=
   ⟨fun c m h =>
-    Or.imp_rightₓ (@hf _ _) $
+    Or.imp_rightₓ (@hf _ _) <|
       h0.symm ▸
         eq_zero_or_eq_zero_of_smul_eq_zero
           (by
@@ -638,7 +638,7 @@ section DivisionRing
 variable [DivisionRing R] [AddCommGroupₓ M] [Module R M]
 
 instance (priority := 100) NoZeroSmulDivisors.of_division_ring : NoZeroSmulDivisors R M :=
-  ⟨fun c x h => or_iff_not_imp_left.2 $ fun hc => (smul_eq_zero_iff_eq' hc).1 h⟩
+  ⟨fun c x h => or_iff_not_imp_left.2 fun hc => (smul_eq_zero_iff_eq' hc).1 h⟩
 
 end DivisionRing
 

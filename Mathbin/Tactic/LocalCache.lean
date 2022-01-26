@@ -12,7 +12,7 @@ unsafe def mk_full_namespace (ns : Name) : Name :=
   `local_cache ++ ns
 
 unsafe def save_data (dn : Name) (a : α) [reflected a] : tactic Unit :=
-  tactic.add_decl $ mk_definition dn [] (reflect α) (reflect a)
+  tactic.add_decl <| mk_definition dn [] (reflect α) (reflect a)
 
 unsafe def load_data (dn : Name) : tactic α := do
   let e ← tactic.get_env
@@ -43,16 +43,16 @@ private unsafe def get_name_aux (ns : Name) (mk_new : options → Name → tacti
   let opt := mk_full_namespace ns
   match o.get_string opt "" with
     | "" => mk_new o opt
-    | s => return $ Name.fromComponents $ s.split (· = '.')
+    | s => return <| Name.fromComponents <| s.split (· = '.')
 
 unsafe def get_name (ns : Name) : tactic Name :=
-  get_name_aux ns $ fun o opt => do
+  (get_name_aux ns) fun o opt => do
     let n ← mk_user_fresh_name
-    tactic.set_options $ o.set_string opt n.to_string
+    tactic.set_options <| o.set_string opt n.to_string
     return n
 
 unsafe def try_get_name (ns : Name) : tactic Name :=
-  get_name_aux ns $ fun o opt => fail f! "no cache for "{ns}""
+  (get_name_aux ns) fun o opt => fail f! "no cache for "{ns}""
 
 unsafe def present (ns : Name) : tactic Bool := do
   let o ← tactic.get_options
@@ -62,7 +62,7 @@ unsafe def present (ns : Name) : tactic Bool := do
 
 unsafe def clear (ns : Name) : tactic Unit := do
   let o ← tactic.get_options
-  set_options $ o.set_string (mk_full_namespace ns) ""
+  set_options <| o.set_string (mk_full_namespace ns) ""
 
 end BlockLocal
 
@@ -92,11 +92,11 @@ unsafe def hash_context : tactic Stringₓ := do
   let ns ← open_namespaces
   let dn ← decl_name
   let flat := ((List.cons dn ns).map toString).foldl Stringₓ.append ""
-  return $ toString dn ++ toString (hash_string flat)
+  return <| toString dn ++ toString (hash_string flat)
 
 unsafe def get_root_name (ns : Name) : tactic Name := do
   let hc ← hash_context
-  return $ mk_full_namespace $ hc ++ ns
+  return <| mk_full_namespace <| hc ++ ns
 
 unsafe def apply_tag (n : Name) (tag : ℕ) : Name :=
   n ++ toString f! "t{tag}"
@@ -109,7 +109,7 @@ unsafe def kill_name (n : Name) : tactic Unit :=
 
 unsafe def is_name_dead (n : Name) : tactic Bool :=
   (do
-      let witness : Unit ← load_data $ mk_dead_name n
+      let witness : Unit ← load_data <| mk_dead_name n
       return True) <|>
     return False
 
@@ -128,12 +128,12 @@ unsafe def get_tag_with_status (rn : Name) : tactic (ℕ × Bool) :=
 unsafe def get_name (ns : Name) : tactic Name := do
   let rn ← get_root_name ns
   let (tag, alive) ← get_tag_with_status rn <|> return (0, True)
-  return $ apply_tag rn $ if alive then tag else tag + 1
+  return <| apply_tag rn <| if alive then tag else tag + 1
 
 unsafe def try_get_name (ns : Name) : tactic Name := do
   let rn ← get_root_name ns
   let (tag, alive) ← get_tag_with_status rn
-  if alive then return $ apply_tag rn tag else fail f! "no cache for "{ns}""
+  if alive then return <| apply_tag rn tag else fail f! "no cache for "{ns}""
 
 unsafe def present (ns : Name) : tactic Bool := do
   let rn ← get_root_name ns

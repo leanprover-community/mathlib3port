@@ -224,7 +224,7 @@ theorem compl_to_measurable_compl_ae_eq (h : null_measurable_set s μ) : to_meas
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_measurable_subset_ae_eq (h : null_measurable_set s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
-  ⟨to_measurable μ (sᶜ)ᶜ, compl_subset_comm.2 $ subset_to_measurable _ _, (measurable_set_to_measurable _ _).Compl,
+  ⟨to_measurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _, (measurable_set_to_measurable _ _).Compl,
     h.compl_to_measurable_compl_ae_eq⟩
 
 end NullMeasurableSet
@@ -241,7 +241,7 @@ theorem exists_subordinate_pairwise_disjoint [Encodable ι] {s : ι → Set α} 
   exact
     ⟨fun i => t i \ u i, fun i => (diff_subset _ _).trans (ht_sub _), fun i =>
       (ht_eq _).symm.trans (diff_null_ae_eq_self (hu₀ i)).symm, fun i => (htm i).diff (hum i),
-      hud.mono $ fun i j h => h.mono (diff_subset_diff_left (ht_sub i)) (diff_subset_diff_left (ht_sub j))⟩
+      hud.mono fun i j h => h.mono (diff_subset_diff_left (ht_sub i)) (diff_subset_diff_left (ht_sub j))⟩
 
 theorem measure_Union {m0 : MeasurableSpace α} {μ : Measureₓ α} [Encodable ι] {f : ι → Set α}
     (hn : Pairwise (Disjoint on f)) (h : ∀ i, MeasurableSet (f i)) : μ (⋃ i, f i) = ∑' i, μ (f i) := by
@@ -271,9 +271,10 @@ theorem measure_inter_add_diff₀ (s : Set α) (ht : null_measurable_set t μ) :
   · rcases exists_measurable_superset μ s with ⟨s', hsub, hs'm, hs'⟩
     replace hs'm : null_measurable_set s' μ := hs'm.null_measurable_set
     calc μ (s ∩ t) + μ (s \ t) ≤ μ (s' ∩ t) + μ (s' \ t) :=
-        add_le_add (measure_mono $ inter_subset_inter_left _ hsub)
-          (measure_mono $ diff_subset_diff_left hsub)_ = μ (s' ∩ t ∪ s' \ t) :=
-        (measure_union₀_aux (hs'm.inter ht) (hs'm.diff ht) $ (@disjoint_inf_sdiff _ s' t _).AeDisjoint).symm _ = μ s' :=
+        add_le_add (measure_mono <| inter_subset_inter_left _ hsub)
+          (measure_mono <| diff_subset_diff_left hsub)_ = μ (s' ∩ t ∪ s' \ t) :=
+        (measure_union₀_aux (hs'm.inter ht) (hs'm.diff ht) <|
+            (@disjoint_inf_sdiff _ s' t _).AeDisjoint).symm _ = μ s' :=
         congr_argₓ μ (inter_union_diff _ _)_ = μ s := hs'
     
   · calc μ s = μ (s ∩ t ∪ s \ t) := by
@@ -370,9 +371,9 @@ theorem measurable.comp_null_measurable {g : β → γ} (hg : Measurable g) (hf 
 
 theorem null_measurable.congr {g : α → β} (hf : null_measurable f μ) (hg : f =ᵐ[μ] g) : null_measurable g μ :=
   fun s hs =>
-  (hf hs).congr $
-    eventually_eq_set.2 $
-      hg.mono $ fun x hx => by
+  (hf hs).congr <|
+    eventually_eq_set.2 <|
+      hg.mono fun x hx => by
         rw [mem_preimage, mem_preimage, hx]
 
 end NullMeasurable
@@ -413,7 +414,7 @@ namespace Measureₓ
 /-- Given a measure we can complete it to a (complete) measure on all null measurable sets. -/
 def completion {_ : MeasurableSpace α} (μ : Measureₓ α) : @MeasureTheory.Measure (null_measurable_space α μ) _ where
   toOuterMeasure := μ.to_outer_measure
-  m_Union := fun s hs hd => measure_Union₀ (hd.mono $ fun i j h => h.ae_disjoint) hs
+  m_Union := fun s hs hd => measure_Union₀ (hd.mono fun i j h => h.ae_disjoint) hs
   trimmed := by
     refine' le_antisymmₓ (fun s => _) (outer_measure.le_trim _)
     rw [outer_measure.trim_eq_infi]

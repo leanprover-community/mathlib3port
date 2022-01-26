@@ -145,7 +145,7 @@ theorem TimesContDiffOn.sqrt (hf : TimesContDiffOn ℝ n f s) (hs : ∀, ∀ x �
     TimesContDiffOn ℝ n (fun y => sqrt (f y)) s := fun x hx => (hf x hx).sqrt (hs x hx)
 
 theorem TimesContDiff.sqrt (hf : TimesContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : TimesContDiff ℝ n fun y => sqrt (f y) :=
-  times_cont_diff_iff_times_cont_diff_at.2 $ fun x => hf.times_cont_diff_at.sqrt (h x)
+  times_cont_diff_iff_times_cont_diff_at.2 fun x => hf.times_cont_diff_at.sqrt (h x)
 
 end fderiv
 

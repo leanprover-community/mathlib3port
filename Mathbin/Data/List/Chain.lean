@@ -62,7 +62,7 @@ theorem chain_of_chain_map {S : β → β → Prop} (f : α → β) (H : ∀ a b
 
 theorem chain_map_of_chain {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, R a b → S (f a) (f b)) {a : α} {l : List α}
     (p : chain R a l) : chain S (f a) (map f l) :=
-  (chain_map f).2 $ p.imp H
+  (chain_map f).2 <| p.imp H
 
 theorem chain_pmap_of_chain {S : β → β → Prop} {p : α → Prop} {f : ∀ a, p a → β}
     (H : ∀ a b ha hb, R a b → S (f a ha) (f b hb)) {a : α} {l : List α} (hl₁ : chain R a l) (ha : p a)
@@ -145,7 +145,7 @@ theorem chain'.iff {S : α → α → Prop} (H : ∀ a b, R a b ↔ S a b) {l : 
 theorem chain'.iff_mem : ∀ {l : List α}, chain' R l ↔ chain' (fun x y => x ∈ l ∧ y ∈ l ∧ R x y) l
   | [] => Iff.rfl
   | x :: l =>
-    ⟨fun h => (chain.iff_mem.1 h).imp $ fun a b ⟨h₁, h₂, h₃⟩ => ⟨h₁, Or.inr h₂, h₃⟩, chain'.imp $ fun a b h => h.2.2⟩
+    ⟨fun h => (chain.iff_mem.1 h).imp fun a b ⟨h₁, h₂, h₃⟩ => ⟨h₁, Or.inr h₂, h₃⟩, chain'.imp fun a b h => h.2.2⟩
 
 @[simp]
 theorem chain'_nil : chain' R [] :=
@@ -168,7 +168,7 @@ theorem chain'_of_chain'_map {S : β → β → Prop} (f : α → β) (H : ∀ a
 
 theorem chain'_map_of_chain' {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, R a b → S (f a) (f b)) {l : List α}
     (p : chain' R l) : chain' S (map f l) :=
-  (chain'_map f).2 $ p.imp H
+  (chain'_map f).2 <| p.imp H
 
 theorem pairwise.chain' : ∀ {l : List α}, Pairwise R l → chain' R l
   | [], _ => trivialₓ
@@ -199,7 +199,7 @@ theorem chain'.rel_head' {x l} (h : chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head'
 
 theorem chain'.cons' {x} : ∀ {l : List α}, chain' R l → (∀, ∀ y ∈ l.head', ∀, R x y) → chain' R (x :: l)
   | [], _, _ => chain'_singleton x
-  | a :: l, hl, H => hl.cons $ H _ rfl
+  | a :: l, hl, H => hl.cons <| H _ rfl
 
 theorem chain'_cons' {x l} : chain' R (x :: l) ↔ (∀, ∀ y ∈ head' l, ∀, R x y) ∧ chain' R l :=
   ⟨fun h => ⟨h.rel_head', h.tail⟩, fun ⟨h₁, h₂⟩ => h₂.cons' h₁⟩
@@ -219,7 +219,7 @@ theorem chain'.append :
     ∀ {l₁ l₂ : List α} h₁ : chain' R l₁ h₂ : chain' R l₂ h : ∀, ∀ x ∈ l₁.last', ∀, ∀ y ∈ l₂.head', ∀, R x y,
       chain' R (l₁ ++ l₂)
   | [], l₂, h₁, h₂, h => h₂
-  | [a], l₂, h₁, h₂, h => h₂.cons' $ h _ rfl
+  | [a], l₂, h₁, h₂, h => h₂.cons' <| h _ rfl
   | a :: b :: l, l₂, h₁, h₂, h => by
     simp only [last'] at h
     have : chain' R (b :: l) := h₁.tail
@@ -229,7 +229,7 @@ theorem chain'_pair {x y} : chain' R [x, y] ↔ R x y := by
   simp only [chain'_singleton, chain'_cons, and_trueₓ]
 
 theorem chain'.imp_head {x y} (h : ∀ {z}, R x z → R y z) {l} (hl : chain' R (x :: l)) : chain' R (y :: l) :=
-  hl.tail.cons' $ fun z hz => h $ hl.rel_head' hz
+  hl.tail.cons' fun z hz => h <| hl.rel_head' hz
 
 theorem chain'_reverse : ∀ {l}, chain' R (reverse l) ↔ chain' (flip R) l
   | [] => Iff.rfl

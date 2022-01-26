@@ -33,17 +33,17 @@ open Part Nat Nat.Upto
 
 section Basic
 
-variable (f : (∀ a, Part $ β a) → ∀ a, Part $ β a)
+variable (f : (∀ a, Part <| β a) → ∀ a, Part <| β a)
 
 /-- A series of successive, finite approximation of the fixed point of `f`, defined by
 `approx f n = f^[n] ⊥`. The limit of this chain is the fixed point of `f`. -/
-def fix.approx : Streamₓ $ ∀ a, Part $ β a
+def fix.approx : Streamₓ <| ∀ a, Part <| β a
   | 0 => ⊥
   | Nat.succ i => f (fix.approx i)
 
 /-- loop body for finding the fixed point of `f` -/
-def fix_aux {p : ℕ → Prop} (i : Nat.Upto p) (g : ∀ j : Nat.Upto p, i < j → ∀ a, Part $ β a) : ∀ a, Part $ β a :=
-  f $ fun x : α => assert ¬p i.val $ fun h : ¬p i.val => g (i.succ h) (Nat.lt_succ_selfₓ _) x
+def fix_aux {p : ℕ → Prop} (i : Nat.Upto p) (g : ∀ j : Nat.Upto p, i < j → ∀ a, Part <| β a) : ∀ a, Part <| β a :=
+  f fun x : α => (assert ¬p i.val) fun h : ¬p i.val => g (i.succ h) (Nat.lt_succ_selfₓ _) x
 
 /-- The least fixed point of `f`.
 
@@ -53,11 +53,11 @@ it satisfies the equations:
   1. `fix f = f (fix f)`          (is a fixed point)
   2. `∀ X, f X ≤ X → fix f ≤ X`   (least fixed point)
 -/
-protected def fix (x : α) : Part $ β x :=
-  Part.assert (∃ i, (fix.approx f i x).Dom) $ fun h => WellFounded.fix.{1} (Nat.Upto.wf h) (fix_aux f) Nat.Upto.zero x
+protected def fix (x : α) : Part <| β x :=
+  (Part.assert (∃ i, (fix.approx f i x).Dom)) fun h => WellFounded.fix.{1} (Nat.Upto.wf h) (fix_aux f) Nat.Upto.zero x
 
 protected theorem fix_def {x : α} (h' : ∃ i, (fix.approx f i x).Dom) :
-    Part.fix f x = fix.approx f (Nat.succ $ Nat.findₓ h') x := by
+    Part.fix f x = fix.approx f (Nat.succ <| Nat.findₓ h') x := by
   let p := fun i : ℕ => (fix.approx f i x).Dom
   have : p (Nat.findₓ h') := Nat.find_specₓ h'
   generalize hk : Nat.findₓ h' = k

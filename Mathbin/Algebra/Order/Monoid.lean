@@ -158,11 +158,11 @@ instance [Monoidₓ α] [LinearOrderₓ α] : LinearOrderₓ (α)ˣ :=
   LinearOrderₓ.lift coe Units.ext
 
 @[simp, norm_cast, to_additive]
-theorem max_coe [Monoidₓ α] [LinearOrderₓ α] {a b : (α)ˣ} : (↑max a b : α) = max a b := by
+theorem max_coe [Monoidₓ α] [LinearOrderₓ α] {a b : (α)ˣ} : (↑(max a b) : α) = max a b := by
   by_cases' b ≤ a <;> simp [max_def, h]
 
 @[simp, norm_cast, to_additive]
-theorem min_coe [Monoidₓ α] [LinearOrderₓ α] {a b : (α)ˣ} : (↑min a b : α) = min a b := by
+theorem min_coe [Monoidₓ α] [LinearOrderₓ α] {a b : (α)ˣ} : (↑(min a b) : α) = min a b := by
   by_cases' a ≤ b <;> simp [min_def, h]
 
 end Units
@@ -547,7 +547,7 @@ theorem le_one_iff_eq_one : a ≤ 1 ↔ a = 1 :=
 
 @[to_additive]
 theorem one_lt_iff_ne_one : 1 < a ↔ a ≠ 1 :=
-  Iff.intro ne_of_gtₓ $ fun hne => lt_of_le_of_neₓ (one_le _) hne.symm
+  (Iff.intro ne_of_gtₓ) fun hne => lt_of_le_of_neₓ (one_le _) hne.symm
 
 @[to_additive]
 theorem exists_pos_mul_of_lt (h : a < b) : ∃ c > 1, a * c = b := by
@@ -734,7 +734,7 @@ variable [OrderedCancelCommMonoid α] {a b c d : α}
 
 @[to_additive]
 theorem OrderedCancelCommMonoid.lt_of_mul_lt_mul_left : ∀ a b c : α, a * b < a * c → b < c := fun a b c h =>
-  lt_of_le_not_leₓ (OrderedCancelCommMonoid.le_of_mul_le_mul_left a b c h.le) $
+  lt_of_le_not_leₓ (OrderedCancelCommMonoid.le_of_mul_le_mul_left a b c h.le) <|
     mt (fun h => OrderedCancelCommMonoid.mul_le_mul_left _ _ h _) (not_le_of_gtₓ h)
 
 @[to_additive]
@@ -833,12 +833,12 @@ variable [Monoidₓ α]
 
 @[to_additive]
 theorem min_le_mul_of_one_le_right [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α} (hb : 1 ≤ b) : min a b ≤ a * b :=
-  min_le_iff.2 $ Or.inl $ le_mul_of_one_le_right' hb
+  min_le_iff.2 <| Or.inl <| le_mul_of_one_le_right' hb
 
 @[to_additive]
 theorem min_le_mul_of_one_le_left [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a b : α} (ha : 1 ≤ a) :
     min a b ≤ a * b :=
-  min_le_iff.2 $ Or.inr $ le_mul_of_one_le_left' ha
+  min_le_iff.2 <| Or.inr <| le_mul_of_one_le_left' ha
 
 @[to_additive]
 theorem max_le_mul_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)]
@@ -1000,7 +1000,7 @@ theorem add_lt_add_iff_right {a b c : WithBot α} (ha : a ≠ ⊥) : b + a < c +
   @WithTop.add_lt_add_iff_right (OrderDual α) _ _ _ _ ha
 
 instance contravariant_class_add_lt : ContravariantClass (WithBot α) (WithBot α) (· + ·) (· < ·) :=
-  @OrderDual.contravariant_class_add_lt (WithTop $ OrderDual α) _ _ _
+  @OrderDual.contravariant_class_add_lt (WithTop <| OrderDual α) _ _ _
 
 end WithBot
 

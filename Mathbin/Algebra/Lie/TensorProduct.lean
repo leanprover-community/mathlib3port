@@ -100,7 +100,7 @@ theorem lift_apply (f : M →ₗ[R] N →ₗ[R] P) (m : M) (n : N) : lift R L M 
 Note that maps `f` of type `M →ₗ⁅R,L⁆ N →ₗ[R] P` are exactly those `R`-bilinear maps satisfying
 `⁅x, f m n⁆ = f ⁅x, m⁆ n + f m ⁅x, n⁆` for all `x, m, n` (see e.g, `lie_module_hom.map_lie₂`). -/
 def lift_lie : (M →ₗ⁅R,L⁆ N →ₗ[R] P) ≃ₗ[R] M ⊗[R] N →ₗ⁅R,L⁆ P :=
-  max_triv_linear_map_equiv_lie_module_hom.symm ≪≫ₗ ↑max_triv_equiv (lift R L M N P) ≪≫ₗ
+  max_triv_linear_map_equiv_lie_module_hom.symm ≪≫ₗ ↑(max_triv_equiv (lift R L M N P)) ≪≫ₗ
     max_triv_linear_map_equiv_lie_module_hom
 
 @[simp]

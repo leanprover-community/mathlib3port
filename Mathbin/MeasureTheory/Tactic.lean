@@ -88,7 +88,7 @@ unsafe def goal_is_not_measurable : tactic Unit := do
 -- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 /-- List of tactics used by `measurability` internally. -/
 unsafe def measurability_tactics (md : transparency := semireducible) : List (tactic Stringₓ) :=
-  [propositional_goal >> apply_assumption >> pure "apply_assumption",
+  [(propositional_goal >> apply_assumption) >> pure "apply_assumption",
     goal_is_not_measurable >> intro1 >>= fun ns => pure ("intro " ++ ns.to_string),
     apply_rules [pquote.1 measurability] 50 { md } >> pure "apply_rules measurability",
     apply_measurable.comp >> pure "refine measurable.comp _ _",
@@ -102,7 +102,7 @@ setup_tactic_parser
 /-- Solve goals of the form `measurable f`, `ae_measurable f μ` or `measurable_set s`.
 `measurability?` reports back the proof term it found.
 -/
-unsafe def measurability (bang : parse $ optionalₓ (tk "!")) (trace : parse $ optionalₓ (tk "?"))
+unsafe def measurability (bang : parse <| optionalₓ (tk "!")) (trace : parse <| optionalₓ (tk "?"))
     (cfg : tidy.cfg := {  }) : tactic Unit :=
   let md := if bang.is_some then semireducible else reducible
   let measurability_core := tactic.tidy { cfg with tactics := measurability_tactics md }

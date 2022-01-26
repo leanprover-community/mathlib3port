@@ -32,9 +32,9 @@ unsafe def can_lift_attr : user_attribute (List Name) where
   cache_cfg :=
     { mk_cache := fun _ => do
         let ls ← attribute.get_instances `instance
-        ls.mfilter $ fun l => do
+        ls.mfilter fun l => do
             let (_, t) ← mk_const l >>= infer_type >>= open_pis
-            return $ t.is_app_of `can_lift,
+            return <| t.is_app_of `can_lift,
       dependencies := [`instance] }
 
 instance : CanLift ℤ ℕ :=
@@ -46,8 +46,7 @@ instance Pi.canLift (ι : Type _) (α : ∀ i : ι, Type _) (β : ∀ i : ι, Ty
   coe := fun f i => CanLift.coe (f i)
   cond := fun f => ∀ i, CanLift.Cond (β i) (f i)
   prf := fun f hf =>
-    ⟨fun i => Classical.some (CanLift.prf (f i) (hf i)),
-      funext $ fun i => Classical.some_spec (CanLift.prf (f i) (hf i))⟩
+    ⟨fun i => Classical.some (CanLift.prf (f i) (hf i)), funext fun i => Classical.some_spec (CanLift.prf (f i) (hf i))⟩
 
 instance PiSubtype.canLift (ι : Type _) (α : ∀ i : ι, Type _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
     CanLift (∀ i : Subtype p, α i) (∀ i, α i) where
@@ -83,7 +82,7 @@ unsafe def get_lift_prf (h : Option pexpr) (old_tp new_tp inst e : expr) (s : si
   let expected_prf_ty ← mk_app `can_lift.cond [old_tp, new_tp, inst, e]
   let expected_prf_ty ← s.dsimplify to_unfold expected_prf_ty
   if h_some : h.is_some then
-      decorate_error "lift tactic failed." $ i_to_expr (pquote.1 (%%ₓOption.getₓ h_some : %%ₓexpected_prf_ty))
+      decorate_error "lift tactic failed." <| i_to_expr (pquote.1 (%%ₓOption.getₓ h_some : %%ₓexpected_prf_ty))
     else do
       let prf_nm ← get_unused_name
       let prf ← assert prf_nm expected_prf_ty
@@ -106,7 +105,7 @@ unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tac
               {← inst_type}") >>=
           fail
   let can_lift_instances ← can_lift_attr.get_cache >>= fun l => l.mmap resolve_name
-  let (s, to_unfold) ← mk_simp_set tt [] $ can_lift_instances.map simp_arg_type.expr
+  let (s, to_unfold) ← mk_simp_set tt [] <| can_lift_instances.map simp_arg_type.expr
   let prf_cond ← get_lift_prf h old_tp new_tp inst e s to_unfold
   let prf_nm := if prf_cond.is_local_constant then some prf_cond.local_pp_name else none
   let prf_ex0 ← mk_mapp `can_lift.prf [old_tp, new_tp, inst, e]
@@ -118,7 +117,7 @@ unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tac
   let temp_nm ← get_unused_name
   let temp_e ← note temp_nm none prf_ex
   dsimp_hyp temp_e s to_unfold {  }
-  rcases none (pexpr.of_expr temp_e) $ rcases_patt.tuple ([new_nm, eq_nm].map rcases_patt.one)
+  rcases none (pexpr.of_expr temp_e) <| rcases_patt.tuple ([new_nm, eq_nm].map rcases_patt.one)
   when (¬e.is_local_constant)
       (get_local eq_nm >>= fun e => interactive.rw ⟨[⟨⟨0, 0⟩, tt, pexpr.of_expr e⟩], none⟩ Interactive.Loc.wildcard)
   if h_prf_nm : prf_nm.is_some ∧ n.nth 2 ≠ prf_nm then get_local (Option.getₓ h_prf_nm.1) >>= clear else skip

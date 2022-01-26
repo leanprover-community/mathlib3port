@@ -97,7 +97,7 @@ theorem last_append1 {α : Typevec n} {β : Type _} : last (append1 α β) = β 
 
 @[simp]
 theorem append1_drop_last (α : Typevec (n + 1)) : append1 (drop α) (last α) = α :=
-  funext $ fun i => by
+  funext fun i => by
     cases i <;> rfl
 
 /-- cases on `(n+1)-length` vectors -/
@@ -200,7 +200,7 @@ theorem append_fun_comp' {α₀ α₁ α₂ : Typevec n} {β₀ β₁ β₂ : Ty
   eq_of_drop_last_eq rfl rfl
 
 theorem nil_fun_comp {α₀ : Typevec 0} (f₀ : α₀ ⟹ Fin2.elim0) : nil_fun ⊚ f₀ = f₀ :=
-  funext $ fun x => Fin2.elim0 x
+  funext fun x => Fin2.elim0 x
 
 theorem append_fun_comp_id {α : Typevec n} {β₀ β₁ β₂ : Type _} (g₀ : β₀ → β₁) (g₁ : β₁ → β₂) :
     (@id _ α ::: g₁ ∘ g₀) = (id ::: g₁) ⊚ (id ::: g₀) :=
@@ -224,7 +224,7 @@ theorem append_fun_id_id {α : Typevec n} {β : Type _} : (@Typevec.id n α ::: 
   eq_of_drop_last_eq rfl rfl
 
 instance subsingleton0 : Subsingleton (Typevec 0) :=
-  ⟨fun a b => funext $ fun a => Fin2.elim0 a⟩
+  ⟨fun a b => funext fun a => Fin2.elim0 a⟩
 
 run_cmd
   do
@@ -372,7 +372,7 @@ def curry (F : Typevec.{u} (n + 1) → Type _) (α : Type u) (β : Typevec.{u} n
   F (β ::: α)
 
 instance curry.inhabited (F : Typevec.{u} (n + 1) → Type _) (α : Type u) (β : Typevec.{u} n)
-    [I : Inhabited (F $ (β ::: α))] : Inhabited (curry F α β) :=
+    [I : Inhabited (F <| (β ::: α))] : Inhabited (curry F α β) :=
   I
 
 /-- arrow to remove one element of a `repeat` vector -/
@@ -459,21 +459,21 @@ def subtype_val : ∀ {n} {α : Typevec.{u} n} p : α ⟹ repeat n Prop, subtype
 /-- arrow that rearranges the type of `subtype_` to turn a subtype of vector into
 a vector of subtypes -/
 def to_subtype :
-    ∀ {n} {α : Typevec.{u} n} p : α ⟹ repeat n Prop, (fun i : Fin2 n => { x // of_repeat $ p i x }) ⟹ subtype_ p
+    ∀ {n} {α : Typevec.{u} n} p : α ⟹ repeat n Prop, (fun i : Fin2 n => { x // of_repeat <| p i x }) ⟹ subtype_ p
   | succ n, α, p, Fin2.fs i, x => to_subtype (drop_fun p) i x
   | succ n, α, p, Fin2.fz, x => x
 
 /-- arrow that rearranges the type of `subtype_` to turn a vector of subtypes
 into a subtype of vector -/
 def of_subtype :
-    ∀ {n} {α : Typevec.{u} n} p : α ⟹ repeat n Prop, subtype_ p ⟹ fun i : Fin2 n => { x // of_repeat $ p i x }
+    ∀ {n} {α : Typevec.{u} n} p : α ⟹ repeat n Prop, subtype_ p ⟹ fun i : Fin2 n => { x // of_repeat <| p i x }
   | succ n, α, p, Fin2.fs i, x => of_subtype _ i x
   | succ n, α, p, Fin2.fz, x => x
 
 /-- similar to `to_subtype` adapted to relations (i.e. predicate on product) -/
 def to_subtype' :
     ∀ {n} {α : Typevec.{u} n} p : α ⊗ α ⟹ repeat n Prop,
-      (fun i : Fin2 n => { x : α i × α i // of_repeat $ p i (Prod.mk _ x.1 x.2) }) ⟹ subtype_ p
+      (fun i : Fin2 n => { x : α i × α i // of_repeat <| p i (Prod.mk _ x.1 x.2) }) ⟹ subtype_ p
   | succ n, α, p, Fin2.fs i, x => to_subtype' (drop_fun p) i x
   | succ n, α, p, Fin2.fz, x =>
     ⟨x.val,
@@ -485,7 +485,7 @@ def to_subtype' :
 /-- similar to `of_subtype` adapted to relations (i.e. predicate on product) -/
 def of_subtype' :
     ∀ {n} {α : Typevec.{u} n} p : α ⊗ α ⟹ repeat n Prop,
-      subtype_ p ⟹ fun i : Fin2 n => { x : α i × α i // of_repeat $ p i (Prod.mk _ x.1 x.2) }
+      subtype_ p ⟹ fun i : Fin2 n => { x : α i × α i // of_repeat <| p i (Prod.mk _ x.1 x.2) }
   | _, α, p, Fin2.fs i, x => of_subtype' _ i x
   | _, α, p, Fin2.fz, x =>
     ⟨x.val,
@@ -501,7 +501,7 @@ def diag_sub : ∀ {n} {α : Typevec.{u} n}, α ⟹ subtype_ (repeat_eq α)
   | succ n, α, Fin2.fz, x => ⟨(x, x), rfl⟩
 
 theorem subtype_val_nil {α : Typevec.{u} 0} (ps : α ⟹ repeat 0 Prop) : Typevec.subtypeVal ps = nil_fun :=
-  funext $ by
+  funext <| by
     rintro ⟨⟩ <;> rfl
 
 theorem diag_sub_val {n} {α : Typevec.{u} n} : subtype_val (repeat_eq α) ⊚ diag_sub = prod.diag := by

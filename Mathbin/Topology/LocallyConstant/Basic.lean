@@ -53,7 +53,7 @@ protected theorem tfae (f : X → Y) :
   · intro h s
     refine' is_open_iff_forall_mem_open.2 fun x hx => _
     rcases h x with ⟨U, hU, hxU, eq⟩
-    exact ⟨U, fun x' hx' => mem_preimage.2 $ (Eq x' hx').symm ▸ hx, hU, hxU⟩
+    exact ⟨U, fun x' hx' => mem_preimage.2 <| (Eq x' hx').symm ▸ hx, hU, hxU⟩
     
   tfae_finish
 
@@ -93,10 +93,10 @@ theorem iff_continuous_bot (f : X → Y) : IsLocallyConstant f ↔ @Continuous X
   iff_continuous f
 
 theorem of_constant (f : X → Y) (h : ∀ x y, f x = f y) : IsLocallyConstant f :=
-  (iff_eventually_eq f).2 $ fun x => eventually_of_forall $ fun x' => h _ _
+  (iff_eventually_eq f).2 fun x => eventually_of_forall fun x' => h _ _
 
 theorem const (y : Y) : IsLocallyConstant (Function.const X y) :=
-  of_constant _ $ fun _ _ => rfl
+  (of_constant _) fun _ _ => rfl
 
 theorem comp {f : X → Y} (hf : IsLocallyConstant f) (g : Y → Z) : IsLocallyConstant (g ∘ f) := fun s => by
   rw [Set.preimage_comp]
@@ -104,8 +104,8 @@ theorem comp {f : X → Y} (hf : IsLocallyConstant f) (g : Y → Z) : IsLocallyC
 
 theorem prod_mk {Y'} {f : X → Y} {f' : X → Y'} (hf : IsLocallyConstant f) (hf' : IsLocallyConstant f') :
     IsLocallyConstant fun x => (f x, f' x) :=
-  (iff_eventually_eq _).2 $ fun x =>
-    (hf.eventually_eq x).mp $ (hf'.eventually_eq x).mono $ fun x' hf' hf => Prod.extₓ hf hf'
+  (iff_eventually_eq _).2 fun x =>
+    (hf.eventually_eq x).mp <| (hf'.eventually_eq x).mono fun x' hf' hf => Prod.extₓ hf hf'
 
 theorem comp₂ {Y₁ Y₂ Z : Type _} {f : X → Y₁} {g : X → Y₂} (hf : IsLocallyConstant f) (hg : IsLocallyConstant g)
     (h : Y₁ → Y₂ → Z) : IsLocallyConstant fun x => h (f x) (g x) :=
@@ -143,7 +143,7 @@ theorem one [One Y] : IsLocallyConstant (1 : X → Y) :=
   const 1
 
 @[to_additive]
-theorem inv [HasInv Y] ⦃f : X → Y⦄ (hf : IsLocallyConstant f) : IsLocallyConstant (f⁻¹) :=
+theorem inv [Inv Y] ⦃f : X → Y⦄ (hf : IsLocallyConstant f) : IsLocallyConstant f⁻¹ :=
   hf.comp fun x => x⁻¹
 
 @[to_additive]
@@ -304,13 +304,13 @@ theorem apply_eq_of_preconnected_space [PreconnectedSpace X] (f : LocallyConstan
   f.is_locally_constant.apply_eq_of_is_preconnected is_preconnected_univ trivialₓ trivialₓ
 
 theorem eq_const [PreconnectedSpace X] (f : LocallyConstant X Y) (x : X) : f = const X (f x) :=
-  ext $ fun y => apply_eq_of_preconnected_space f _ _
+  ext fun y => apply_eq_of_preconnected_space f _ _
 
 theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] (f : LocallyConstant X Y) : ∃ y, f = const X y := by
   rcases Classical.em (Nonempty X) with (⟨⟨x⟩⟩ | hX)
   · exact ⟨f x, f.eq_const x⟩
     
-  · exact ⟨Classical.arbitrary Y, ext $ fun x => (hX ⟨x⟩).elim⟩
+  · exact ⟨Classical.arbitrary Y, ext fun x => (hX ⟨x⟩).elim⟩
     
 
 /-- Push forward of locally constant maps under any map, by post-composition. -/
@@ -381,7 +381,7 @@ noncomputable def comap (f : X → Y) : LocallyConstant Y Z → LocallyConstant 
   else by
     by_cases' H : Nonempty X
     · intros g
-      exact const X (g $ f $ Classical.arbitrary X)
+      exact const X (g <| f <| Classical.arbitrary X)
       
     · intro g
       refine' ⟨fun x => (H ⟨x⟩).elim, _⟩

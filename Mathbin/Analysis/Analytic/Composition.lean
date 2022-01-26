@@ -412,7 +412,7 @@ theorem id_comp (p : FormalMultilinearSeries 𝕜 E F) (h : p 0 = 0) : (id 𝕜 
     · ext v
       rw [comp_along_composition_apply, id_apply_one' _ _ (Composition.single_length n_pos)]
       dsimp [apply_composition]
-      refine' p.congr rfl fun i him hin => congr_argₓ v $ _
+      refine' p.congr rfl fun i him hin => congr_argₓ v <| _
       ext
       simp
       
@@ -586,8 +586,8 @@ theorem comp_partial_sum_target_subset_image_comp_partial_sum_source (m M N : �
 power series, here given a a finset.
 See also `comp_partial_sum`. -/
 def comp_partial_sum_target (m M N : ℕ) : Finset (Σ n, Composition n) :=
-  Set.Finite.toFinset $
-    ((Finset.finite_to_set _).dependent_image _).Subset $
+  Set.Finite.toFinset <|
+    ((Finset.finite_to_set _).dependent_image _).Subset <|
       comp_partial_sum_target_subset_image_comp_partial_sum_source m M N
 
 @[simp]
@@ -645,7 +645,7 @@ theorem comp_partial_sum_target_tendsto_at_top : tendsto (fun N => comp_partial_
     
   · rintro ⟨n, c⟩
     simp only [mem_comp_partial_sum_target_iff]
-    obtain ⟨n, hn⟩ : BddAbove (↑finset.univ.image fun i : Finₓ c.length => c.blocks_fun i) := Finset.bdd_above _
+    obtain ⟨n, hn⟩ : BddAbove ↑(finset.univ.image fun i : Finₓ c.length => c.blocks_fun i) := Finset.bdd_above _
     refine'
       ⟨max n c.length + 1, bot_le, lt_of_le_of_ltₓ (le_max_rightₓ n c.length) (lt_add_one _), fun j =>
         lt_of_le_of_ltₓ (le_transₓ _ (le_max_leftₓ _ _)) (lt_add_one _)⟩

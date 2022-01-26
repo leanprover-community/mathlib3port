@@ -221,8 +221,8 @@ multilinear map taking values in the space of functions `Π i, M' i`. -/
 def pi {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoidₓ (M' i)] [∀ i, Module R (M' i)]
     (f : ∀ i, MultilinearMap R M₁ (M' i)) : MultilinearMap R M₁ (∀ i, M' i) where
   toFun := fun m i => f i m
-  map_add' := fun m i x y => funext $ fun j => (f j).map_add _ _ _ _
-  map_smul' := fun m i c x => funext $ fun j => (f j).map_smul _ _ _ _
+  map_add' := fun m i x y => funext fun j => (f j).map_add _ _ _ _
+  map_smul' := fun m i c x => funext fun j => (f j).map_smul _ _ _ _
 
 section
 
@@ -306,7 +306,7 @@ variable {M₁'' : ι → Type _} [∀ i, AddCommMonoidₓ (M₁'' i)] [∀ i, M
 then `g (f₁ m₁, ..., fₙ mₙ)` is again a multilinear map, that we call
 `g.comp_linear_map f`. -/
 def comp_linear_map (g : MultilinearMap R M₁' M₂) (f : ∀ i, M₁ i →ₗ[R] M₁' i) : MultilinearMap R M₁ M₂ where
-  toFun := fun m => g $ fun i => f i (m i)
+  toFun := fun m => g fun i => f i (m i)
   map_add' := fun m i x y => by
     have : ∀ j z, f j (update m i z j) = update (fun k => f k (m k)) i (f i z) j := fun j z =>
       Function.apply_update (fun k => f k) _ _ _ _
@@ -330,17 +330,17 @@ theorem comp_linear_map_assoc (g : MultilinearMap R M₁'' M₂) (f₁ : ∀ i, 
 /-- Composing the zero multilinear map with a linear map in each argument. -/
 @[simp]
 theorem zero_comp_linear_map (f : ∀ i, M₁ i →ₗ[R] M₁' i) : (0 : MultilinearMap R M₁' M₂).compLinearMap f = 0 :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 
 /-- Composing a multilinear map with the identity linear map in each argument. -/
 @[simp]
 theorem comp_linear_map_id (g : MultilinearMap R M₁' M₂) : (g.comp_linear_map fun i => LinearMap.id) = g :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 
 /-- Composing with a family of surjective linear maps is injective. -/
 theorem comp_linear_map_injective (f : ∀ i, M₁ i →ₗ[R] M₁' i) (hf : ∀ i, surjective (f i)) :
     injective fun g : MultilinearMap R M₁' M₂ => g.comp_linear_map f := fun g₁ g₂ h =>
-  ext $ fun x => by
+  ext fun x => by
     simpa [fun i => surj_inv_eq (hf i)] using ext_iff.mp h fun i => surj_inv (hf i) (x i)
 
 theorem comp_linear_map_inj (f : ∀ i, M₁ i →ₗ[R] M₁' i) (hf : ∀ i, surjective (f i)) (g₁ g₂ : MultilinearMap R M₁' M₂) :
@@ -762,10 +762,10 @@ theorem coe_smul (c : R') (f : MultilinearMap A M₁ M₂) : ⇑(c • f) = c �
   rfl
 
 instance : DistribMulAction R' (MultilinearMap A M₁ M₂) where
-  one_smul := fun f => ext $ fun x => one_smul _ _
-  mul_smul := fun c₁ c₂ f => ext $ fun x => mul_smul _ _ _
-  smul_zero := fun r => ext $ fun x => smul_zero _
-  smul_add := fun r f₁ f₂ => ext $ fun x => smul_add _ _ _
+  one_smul := fun f => ext fun x => one_smul _ _
+  mul_smul := fun c₁ c₂ f => ext fun x => mul_smul _ _ _
+  smul_zero := fun r => ext fun x => smul_zero _
+  smul_add := fun r f₁ f₂ => ext fun x => smul_add _ _ _
 
 end DistribMulAction
 
@@ -777,8 +777,8 @@ variable {R' A : Type _} [Semiringₓ R'] [Semiringₓ A] [∀ i, Module A (M₁
 /-- The space of multilinear maps over an algebra over `R` is a module over `R`, for the pointwise
 addition and scalar multiplication. -/
 instance [Module R' M₂] [SmulCommClass A R' M₂] : Module R' (MultilinearMap A M₁ M₂) where
-  add_smul := fun r₁ r₂ f => ext $ fun x => add_smul _ _ _
-  zero_smul := fun f => ext $ fun x => zero_smul _ _
+  add_smul := fun r₁ r₂ f => ext fun x => add_smul _ _ _
+  zero_smul := fun f => ext fun x => zero_smul _ _
 
 instance [NoZeroSmulDivisors R' M₃] : NoZeroSmulDivisors R' (MultilinearMap A M₁ M₃) :=
   coe_injective.NoZeroSmulDivisors _ rfl coe_smul
@@ -842,7 +842,7 @@ def const_linear_equiv_of_is_empty [IsEmpty ι] : M₂ ≃ₗ[R] MultilinearMap 
   map_smul' := fun t x => rfl
   invFun := fun f => f 0
   left_inv := fun _ => rfl
-  right_inv := fun f => ext $ fun x => MultilinearMap.congr_arg f $ Subsingleton.elimₓ _ _
+  right_inv := fun f => ext fun x => MultilinearMap.congr_arg f <| Subsingleton.elimₓ _ _
 
 end Module
 
@@ -989,7 +989,7 @@ variable [Semiringₓ R] [∀ i, AddCommGroupₓ (M₁ i)] [AddCommGroupₓ M₂
 
 @[simp]
 theorem map_neg (m : ∀ i, M₁ i) (i : ι) (x : M₁ i) : f (update m i (-x)) = -f (update m i x) :=
-  eq_neg_of_add_eq_zero $ by
+  eq_neg_of_add_eq_zero <| by
     rw [← MultilinearMap.map_add, add_left_negₓ, f.map_coord_zero i (update_same i 0 m)]
 
 @[simp]
@@ -1262,10 +1262,10 @@ def curry_sum (f : MultilinearMap R (fun x : Sum ι ι' => M') M₂) :
       map_smul' := fun v i c x => by
         simp only [← Sum.update_elim_inr, f.map_smul] }
   map_add' := fun u i x y =>
-    ext $ fun v => by
+    ext fun v => by
       simp only [MultilinearMap.coe_mk, add_apply, ← Sum.update_elim_inl, f.map_add]
   map_smul' := fun u i c x =>
-    ext $ fun v => by
+    ext fun v => by
       simp only [MultilinearMap.coe_mk, smul_apply, ← Sum.update_elim_inl, f.map_smul]
 
 @[simp]
@@ -1303,7 +1303,7 @@ def curry_sum_equiv :
   toFun := curry_sum
   invFun := uncurry_sum
   left_inv := fun f =>
-    ext $ fun u => by
+    ext fun u => by
       simp
   right_inv := fun f => by
     ext
@@ -1349,7 +1349,7 @@ theorem curry_fin_finset_apply {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.car
 theorem curry_fin_finset_symm_apply {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : sᶜ.card = l)
     (f : MultilinearMap R (fun x : Finₓ k => M') (MultilinearMap R (fun x : Finₓ l => M') M₂)) (m : Finₓ n → M') :
     (curry_fin_finset R M₂ M' hk hl).symm f m =
-      f (fun i => m $ finSumEquivOfFinset hk hl (Sum.inl i)) fun i => m $ finSumEquivOfFinset hk hl (Sum.inr i) :=
+      f (fun i => m <| finSumEquivOfFinset hk hl (Sum.inl i)) fun i => m <| finSumEquivOfFinset hk hl (Sum.inr i) :=
   rfl
 
 @[simp]

@@ -79,7 +79,7 @@ theorem algebra_map_apply (r : R) : algebraMap R (⨁ i, A i) r = DirectSum.of A
   rfl
 
 theorem algebra_map_to_add_monoid_hom :
-    ↑algebraMap R (⨁ i, A i) = (DirectSum.of A 0).comp (galgebra.to_fun : R →+ A 0) :=
+    ↑(algebraMap R (⨁ i, A i)) = (DirectSum.of A 0).comp (galgebra.to_fun : R →+ A 0) :=
   rfl
 
 /-- A family of `linear_map`s preserving `direct_sum.ghas_one.one` and `direct_sum.ghas_mul.mul`
@@ -103,10 +103,10 @@ See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem alg_hom_ext' ⦃f g : (⨁ i, A i) →ₐ[R] B⦄
     (h : ∀ i, f.to_linear_map.comp (lof _ _ A i) = g.to_linear_map.comp (lof _ _ A i)) : f = g :=
-  AlgHom.to_linear_map_injective $ DirectSum.linear_map_ext _ h
+  AlgHom.to_linear_map_injective <| DirectSum.linear_map_ext _ h
 
 theorem alg_hom_ext ⦃f g : (⨁ i, A i) →ₐ[R] B⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=
-  alg_hom_ext' R A $ fun i => LinearMap.ext $ h i
+  (alg_hom_ext' R A) fun i => LinearMap.ext <| h i
 
 end DirectSum
 
@@ -121,9 +121,9 @@ instance Algebra.directSumGalgebra {R A : Type _} [DecidableEq ι] [AddMonoidₓ
     [Algebra R A] : DirectSum.Galgebra R fun i : ι => A where
   toFun := (algebraMap R A).toAddMonoidHom
   map_one := (algebraMap R A).map_one
-  map_mul := fun a b => Sigma.ext (zero_addₓ _).symm (heq_of_eq $ (algebraMap R A).map_mul a b)
-  commutes := fun r ⟨ai, a⟩ => Sigma.ext ((zero_addₓ _).trans (add_zeroₓ _).symm) (heq_of_eq $ Algebra.commutes _ _)
-  smul_def := fun r ⟨ai, a⟩ => Sigma.ext (zero_addₓ _).symm (heq_of_eq $ Algebra.smul_def _ _)
+  map_mul := fun a b => Sigma.ext (zero_addₓ _).symm (heq_of_eq <| (algebraMap R A).map_mul a b)
+  commutes := fun r ⟨ai, a⟩ => Sigma.ext ((zero_addₓ _).trans (add_zeroₓ _).symm) (heq_of_eq <| Algebra.commutes _ _)
+  smul_def := fun r ⟨ai, a⟩ => Sigma.ext (zero_addₓ _).symm (heq_of_eq <| Algebra.smul_def _ _)
 
 namespace Submodule
 

@@ -49,9 +49,9 @@ def add (x : (R)ˣ) (t : R) (h : ∥t∥ < ∥(↑x⁻¹ : R)∥⁻¹) : (R)ˣ :
       Units.oneSub (-(↑x⁻¹ * t))
         (by
           nontriviality R using zero_lt_one
-          have hpos : 0 < ∥(↑x⁻¹ : R)∥ := Units.norm_pos (x⁻¹)
+          have hpos : 0 < ∥(↑x⁻¹ : R)∥ := Units.norm_pos x⁻¹
           calc ∥-(↑x⁻¹ * t)∥ = ∥↑x⁻¹ * t∥ := by
-              rw [norm_neg]_ ≤ ∥(↑x⁻¹ : R)∥ * ∥t∥ := norm_mul_le (↑x⁻¹) _ _ < ∥(↑x⁻¹ : R)∥ * ∥(↑x⁻¹ : R)∥⁻¹ := by
+              rw [norm_neg]_ ≤ ∥(↑x⁻¹ : R)∥ * ∥t∥ := norm_mul_le ↑x⁻¹ _ _ < ∥(↑x⁻¹ : R)∥ * ∥(↑x⁻¹ : R)∥⁻¹ := by
               nlinarith only [h, hpos]_ = 1 := mul_inv_cancel (ne_of_gtₓ hpos)))
     (x + t)
     (by
@@ -72,7 +72,7 @@ protected theorem IsOpen : IsOpen { x : R | IsUnit x } := by
   nontriviality R
   apply metric.is_open_iff.mpr
   rintro x' ⟨x, rfl⟩
-  refine' ⟨∥(↑x⁻¹ : R)∥⁻¹, _root_.inv_pos.mpr (Units.norm_pos (x⁻¹)), _⟩
+  refine' ⟨∥(↑x⁻¹ : R)∥⁻¹, _root_.inv_pos.mpr (Units.norm_pos x⁻¹), _⟩
   intro y hy
   rw [Metric.mem_ball, dist_eq_norm] at hy
   exact (x.unit_of_nearby y hy).IsUnit
@@ -88,7 +88,7 @@ open_locale Classical BigOperators
 
 open Asymptotics Filter Metric Finset Ringₓ
 
-theorem inverse_one_sub (t : R) (h : ∥t∥ < 1) : inverse (1 - t) = ↑Units.oneSub t h⁻¹ := by
+theorem inverse_one_sub (t : R) (h : ∥t∥ < 1) : inverse (1 - t) = ↑(Units.oneSub t h)⁻¹ := by
   rw [← inverse_unit (Units.oneSub t h), Units.coe_one_sub]
 
 /-- The formula `inverse (x + t) = inverse (1 + x⁻¹ * t) * x⁻¹` holds for `t` sufficiently small. -/
@@ -123,7 +123,7 @@ theorem inverse_one_sub_nth_order (n : ℕ) :
     simp only [Units.coe_one_sub]
     rw [← geomSum, geom_sum_mul_neg]
     simp
-  rw [← one_mulₓ (↑Units.oneSub t ht⁻¹), h, add_mulₓ]
+  rw [← one_mulₓ ↑(Units.oneSub t ht)⁻¹, h, add_mulₓ]
   congr
   · rw [mul_assoc, (Units.oneSub t ht).mul_inv]
     simp
@@ -190,7 +190,7 @@ theorem inverse_add_norm (x : (R)ˣ) : is_O (fun t => inverse (↑x + t)) (fun t
   intro t bound iden
   rw [iden]
   simp at bound
-  have hmul := norm_mul_le (inverse (1 + ↑x⁻¹ * t)) (↑x⁻¹)
+  have hmul := norm_mul_le (inverse (1 + ↑x⁻¹ * t)) ↑x⁻¹
   nlinarith [norm_nonneg (↑x⁻¹ : R)]
 
 /-- The function
@@ -264,9 +264,9 @@ theorem is_open_map_coe : IsOpenMap (coe : (R)ˣ → R) := by
   intro x s
   rw [mem_map, mem_nhds_induced]
   rintro ⟨t, ht, hts⟩
-  obtain ⟨u, hu, v, hv, huvt⟩ : ∃ u : Set R, u ∈ 𝓝 (↑x) ∧ ∃ v : Set (Rᵐᵒᵖ), v ∈ 𝓝 (op (↑x⁻¹)) ∧ u ×ˢ v ⊆ t := by
+  obtain ⟨u, hu, v, hv, huvt⟩ : ∃ u : Set R, u ∈ 𝓝 ↑x ∧ ∃ v : Set (Rᵐᵒᵖ), v ∈ 𝓝 (op ↑x⁻¹) ∧ u ×ˢ v ⊆ t := by
     simpa [embedProduct, mem_nhds_prod_iff] using ht
-  have : u ∩ op ∘ Ring.inverse ⁻¹' v ∩ Set.Range (coe : (R)ˣ → R) ∈ 𝓝 (↑x) := by
+  have : u ∩ op ∘ Ring.inverse ⁻¹' v ∩ Set.Range (coe : (R)ˣ → R) ∈ 𝓝 ↑x := by
     refine' inter_mem (inter_mem hu _) (Units.nhds x)
     refine' (continuous_op.continuous_at.comp (inverse_continuous_at x)).preimage_mem_nhds _
     simpa using hv

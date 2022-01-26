@@ -22,18 +22,18 @@ open_locale BigOperators Classical
 
 theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.Coprime m n :=
   ⟨fun ⟨a, b, H⟩ =>
-    Nat.eq_one_of_dvd_one $
-      Int.coe_nat_dvd.1 $ by
+    Nat.eq_one_of_dvd_one <|
+      Int.coe_nat_dvd.1 <| by
         rw [Int.coe_nat_one, ← H]
         exact
-          dvd_add (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 $ Nat.gcd_dvd_leftₓ m n) _)
-            (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 $ Nat.gcd_dvd_rightₓ m n) _),
+          dvd_add (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 <| Nat.gcd_dvd_leftₓ m n) _)
+            (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 <| Nat.gcd_dvd_rightₓ m n) _),
     fun H =>
     ⟨Nat.gcdA m n, Nat.gcdB m n, by
       rw [mul_comm _ (m : ℤ), mul_comm _ (n : ℤ), ← Nat.gcd_eq_gcd_ab, show _ = _ from H, Int.coe_nat_one]⟩⟩
 
 theorem IsCoprime.prod_left : (∀, ∀ i ∈ t, ∀, IsCoprime (s i) x) → IsCoprime (∏ i in t, s i) x :=
-  (Finset.induction_on t fun _ => is_coprime_one_left) $ fun b t hbt ih H => by
+  (Finset.induction_on t fun _ => is_coprime_one_left) fun b t hbt ih H => by
     rw [Finset.prod_insert hbt]
     rw [Finset.forall_mem_insert] at H
     exact H.1.mul_left (ih H.2)
@@ -42,7 +42,7 @@ theorem IsCoprime.prod_right : (∀, ∀ i ∈ t, ∀, IsCoprime x (s i)) → Is
   simpa only [is_coprime_comm] using IsCoprime.prod_left
 
 theorem IsCoprime.prod_left_iff : IsCoprime (∏ i in t, s i) x ↔ ∀, ∀ i ∈ t, ∀, IsCoprime (s i) x :=
-  Finset.induction_on t (iff_of_true is_coprime_one_left $ fun _ => False.elim) $ fun b t hbt ih => by
+  (Finset.induction_on t ((iff_of_true is_coprime_one_left) fun _ => False.elim)) fun b t hbt ih => by
     rw [Finset.prod_insert hbt, IsCoprime.mul_left_iff, ih, Finset.forall_mem_insert]
 
 theorem IsCoprime.prod_right_iff : IsCoprime x (∏ i in t, s i) ↔ ∀, ∀ i ∈ t, ∀, IsCoprime x (s i) := by
@@ -60,13 +60,13 @@ theorem Finset.prod_dvd_of_coprime :
     (by
       intro a r har ih Hs Hs1
       rw [Finset.prod_insert har]
-      have aux1 : a ∈ (↑insert a r : Set I) := Finset.mem_insert_self a r
+      have aux1 : a ∈ (↑(insert a r) : Set I) := Finset.mem_insert_self a r
       refine'
-        (IsCoprime.prod_right $ fun i hir =>
-              Hs aux1 (Finset.mem_insert_of_mem hir) $ by
+        (IsCoprime.prod_right fun i hir =>
+              Hs aux1 (Finset.mem_insert_of_mem hir) <| by
                 rintro rfl
                 exact har hir).mul_dvd
-          (Hs1 a aux1) (ih (Hs.mono _) $ fun i hi => Hs1 i $ Finset.mem_insert_of_mem hi)
+          (Hs1 a aux1) ((ih (Hs.mono _)) fun i hi => Hs1 i <| Finset.mem_insert_of_mem hi)
       simp only [Finset.coe_insert, Set.subset_insert])
 
 theorem Fintype.prod_dvd_of_coprime [Fintype I] (Hs : Pairwise (IsCoprime on s)) (Hs1 : ∀ i, s i ∣ z) :
@@ -92,8 +92,8 @@ theorem IsCoprime.pow_left_iff (hm : 0 < m) : IsCoprime (x ^ m) y ↔ IsCoprime 
   exact h.of_prod_left 0 (finset.mem_range.mpr hm)
 
 theorem IsCoprime.pow_right_iff (hm : 0 < m) : IsCoprime x (y ^ m) ↔ IsCoprime x y :=
-  is_coprime_comm.trans $ (IsCoprime.pow_left_iff hm).trans $ is_coprime_comm
+  is_coprime_comm.trans <| (IsCoprime.pow_left_iff hm).trans <| is_coprime_comm
 
 theorem IsCoprime.pow_iff (hm : 0 < m) (hn : 0 < n) : IsCoprime (x ^ m) (y ^ n) ↔ IsCoprime x y :=
-  (IsCoprime.pow_left_iff hm).trans $ IsCoprime.pow_right_iff hn
+  (IsCoprime.pow_left_iff hm).trans <| IsCoprime.pow_right_iff hn
 

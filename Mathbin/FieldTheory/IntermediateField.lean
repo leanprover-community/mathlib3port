@@ -250,7 +250,7 @@ theorem coe_pow (x : S) (n : ℕ) : (↑(x ^ n) : L) = ↑x ^ n := by
     
 
 @[simp, norm_cast]
-theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑∑ i, f i : L) = ∑ i, (f i : L) := by
+theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
   classical
   induction' Finset.univ using Finset.induction_on with i s hi H
   · simp
@@ -259,7 +259,7 @@ theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑∑ i, f i : L) 
     
 
 @[simp, norm_cast]
-theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑∏ i, f i : L) = ∏ i, (f i : L) := by
+theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by
   classical
   induction' Finset.univ using Finset.induction_on with i s hi H
   · simp
@@ -318,7 +318,7 @@ def map (f : L →ₐ[K] L') : IntermediateField K L' :=
 theorem map_map {K L₁ L₂ L₃ : Type _} [Field K] [Field L₁] [Algebra K L₁] [Field L₂] [Algebra K L₂] [Field L₃]
     [Algebra K L₃] (E : IntermediateField K L₁) (f : L₁ →ₐ[K] L₂) (g : L₂ →ₐ[K] L₃) :
     (E.map f).map g = E.map (g.comp f) :=
-  SetLike.coe_injective $ Set.image_image _ _ _
+  SetLike.coe_injective <| Set.image_image _ _ _
 
 /-- The embedding from an intermediate field of `L / K` to `L`. -/
 def val : S →ₐ[K] L :=
@@ -456,7 +456,7 @@ theorem to_subalgebra_eq_iff : F.to_subalgebra = E.to_subalgebra ↔ F = E := by
   rfl
 
 theorem eq_of_le_of_finrank_le [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K E ≤ finrank K F) : F = E :=
-  to_subalgebra_injective $ Subalgebra.to_submodule_injective $ eq_of_le_of_finrank_le h_le h_finrank
+  to_subalgebra_injective <| Subalgebra.to_submodule_injective <| eq_of_le_of_finrank_le h_le h_finrank
 
 theorem eq_of_le_of_finrank_eq [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K F = finrank K E) : F = E :=
   eq_of_le_of_finrank_le h_le h_finrank.ge

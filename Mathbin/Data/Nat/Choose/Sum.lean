@@ -88,10 +88,10 @@ theorem sum_range_choose (n : ℕ) : (∑ m in range (n + 1), choose n m) = 2 ^ 
 
 theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 * m + 1) i) = 4 ^ m :=
   have : (∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i)) = ∑ i in range (m + 1), choose (2 * m + 1) i :=
-    sum_congr rfl $ fun i hi =>
-      choose_symm $ by
+    (sum_congr rfl) fun i hi =>
+      choose_symm <| by
         linarith [mem_range.1 hi]
-  (Nat.mul_right_inj zero_lt_two).1 $
+  (Nat.mul_right_inj zero_lt_two).1 <|
     calc
       (2 * ∑ i in range (m + 1), choose (2 * m + 1) i) =
           (∑ i in range (m + 1), choose (2 * m + 1) i) + ∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i) :=
@@ -141,7 +141,7 @@ theorem four_pow_le_two_mul_add_one_mul_central_binom (n : ℕ) : 4 ^ n ≤ (2 *
 end Nat
 
 theorem Int.alternating_sum_range_choose {n : ℕ} :
-    (∑ m in range (n + 1), (-1 ^ m * ↑choose n m : ℤ)) = if n = 0 then 1 else 0 := by
+    (∑ m in range (n + 1), (-1 ^ m * ↑(choose n m) : ℤ)) = if n = 0 then 1 else 0 := by
   cases n
   · simp
     
@@ -150,7 +150,7 @@ theorem Int.alternating_sum_range_choose {n : ℕ} :
   rw [← h, zero_pow (Nat.succ_posₓ n), if_neg (Nat.succ_ne_zero n)]
 
 theorem Int.alternating_sum_range_choose_of_ne {n : ℕ} (h0 : n ≠ 0) :
-    (∑ m in range (n + 1), (-1 ^ m * ↑choose n m : ℤ)) = 0 := by
+    (∑ m in range (n + 1), (-1 ^ m * ↑(choose n m) : ℤ)) = 0 := by
   rw [Int.alternating_sum_range_choose, if_neg h0]
 
 namespace Finset

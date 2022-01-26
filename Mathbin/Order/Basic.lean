@@ -132,13 +132,13 @@ theorem le_iff_eq [PartialOrderₓ α] {x y : α} (h : x ≤ y) : y ≤ x ↔ y 
   ⟨fun h' => h'.antisymm h, Eq.le⟩
 
 theorem lt_or_leₓ [LinearOrderₓ α] {a b : α} (h : a ≤ b) (c : α) : a < c ∨ c ≤ b :=
-  (lt_or_geₓ a c).imp id $ fun hc => le_transₓ hc h
+  ((lt_or_geₓ a c).imp id) fun hc => le_transₓ hc h
 
 theorem le_or_ltₓ [LinearOrderₓ α] {a b : α} (h : a ≤ b) (c : α) : a ≤ c ∨ c < b :=
-  (le_or_gtₓ a c).imp id $ fun hc => lt_of_lt_of_leₓ hc h
+  ((le_or_gtₓ a c).imp id) fun hc => lt_of_lt_of_leₓ hc h
 
 theorem le_or_le [LinearOrderₓ α] {a b : α} (h : a ≤ b) (c : α) : a ≤ c ∨ c ≤ b :=
-  (h.le_or_lt c).elim Or.inl fun h => Or.inr $ le_of_ltₓ h
+  (h.le_or_lt c).elim Or.inl fun h => Or.inr <| le_of_ltₓ h
 
 end LE.le
 
@@ -155,7 +155,7 @@ theorem ne' [Preorderₓ α] {x y : α} (h : x < y) : y ≠ x :=
   h.ne.symm
 
 theorem lt_or_lt [LinearOrderₓ α] {x y : α} (h : x < y) (z : α) : x < z ∨ z < y :=
-  (lt_or_geₓ z y).elim Or.inr fun hz => Or.inl $ h.trans_le hz
+  (lt_or_geₓ z y).elim Or.inr fun hz => Or.inl <| h.trans_le hz
 
 end LT.lt
 
@@ -203,7 +203,7 @@ theorem lt_iff_le_and_ne [PartialOrderₓ α] {a b : α} : a < b ↔ a ≤ b ∧
 protected theorem Decidable.eq_iff_le_not_lt [PartialOrderₓ α] [@DecidableRel α (· ≤ ·)] {a b : α} :
     a = b ↔ a ≤ b ∧ ¬a < b :=
   ⟨fun h => ⟨h.le, h ▸ lt_irreflₓ _⟩, fun ⟨h₁, h₂⟩ =>
-    h₁.antisymm $ Decidable.by_contradiction $ fun h₃ => h₂ (h₁.lt_of_not_le h₃)⟩
+    h₁.antisymm <| Decidable.by_contradiction fun h₃ => h₂ (h₁.lt_of_not_le h₃)⟩
 
 theorem eq_iff_le_not_lt [PartialOrderₓ α] {a b : α} : a = b ↔ a ≤ b ∧ ¬a < b :=
   have := Classical.dec
@@ -255,7 +255,7 @@ theorem lt_or_lt_iff_ne [LinearOrderₓ α] {x y : α} : x < y ∨ y < x ↔ x �
   ne_iff_lt_or_gtₓ.symm
 
 theorem not_lt_iff_eq_or_lt [LinearOrderₓ α] {a b : α} : ¬a < b ↔ a = b ∨ b < a :=
-  not_ltₓ.trans $ Decidable.le_iff_eq_or_lt.trans $ or_congr eq_comm Iff.rfl
+  not_ltₓ.trans <| Decidable.le_iff_eq_or_lt.trans <| or_congr eq_comm Iff.rfl
 
 theorem exists_ge_of_linear [LinearOrderₓ α] (a b : α) : ∃ c, a ≤ c ∧ b ≤ c :=
   match le_totalₓ a b with
@@ -264,7 +264,7 @@ theorem exists_ge_of_linear [LinearOrderₓ α] (a b : α) : ∃ c, a ≤ c ∧ 
 
 theorem lt_imp_lt_of_le_imp_le {β} [LinearOrderₓ α] [Preorderₓ β] {a b : α} {c d : β} (H : a ≤ b → c ≤ d) (h : d < c) :
     b < a :=
-  lt_of_not_ge' $ fun h' => (H h').not_lt h
+  lt_of_not_ge' fun h' => (H h').not_lt h
 
 theorem le_imp_le_iff_lt_imp_lt {β} [LinearOrderₓ α] [LinearOrderₓ β] {a b : α} {c d : β} :
     a ≤ b → c ≤ d ↔ d < c → b < a :=
@@ -272,15 +272,15 @@ theorem le_imp_le_iff_lt_imp_lt {β} [LinearOrderₓ α] [LinearOrderₓ β] {a 
 
 theorem lt_iff_lt_of_le_iff_le' {β} [Preorderₓ α] [Preorderₓ β] {a b : α} {c d : β} (H : a ≤ b ↔ c ≤ d)
     (H' : b ≤ a ↔ d ≤ c) : b < a ↔ d < c :=
-  lt_iff_le_not_leₓ.trans $ (and_congr H' (not_congr H)).trans lt_iff_le_not_leₓ.symm
+  lt_iff_le_not_leₓ.trans <| (and_congr H' (not_congr H)).trans lt_iff_le_not_leₓ.symm
 
 theorem lt_iff_lt_of_le_iff_le {β} [LinearOrderₓ α] [LinearOrderₓ β] {a b : α} {c d : β} (H : a ≤ b ↔ c ≤ d) :
     b < a ↔ d < c :=
-  not_leₓ.symm.trans $ (not_congr H).trans $ not_leₓ
+  not_leₓ.symm.trans <| (not_congr H).trans <| not_leₓ
 
 theorem le_iff_le_iff_lt_iff_lt {β} [LinearOrderₓ α] [LinearOrderₓ β] {a b : α} {c d : β} :
     (a ≤ b ↔ c ≤ d) ↔ (b < a ↔ d < c) :=
-  ⟨lt_iff_lt_of_le_iff_le, fun H => not_ltₓ.symm.trans $ (not_congr H).trans $ not_ltₓ⟩
+  ⟨lt_iff_lt_of_le_iff_le, fun H => not_ltₓ.symm.trans <| (not_congr H).trans <| not_ltₓ⟩
 
 theorem eq_of_forall_le_iff [PartialOrderₓ α] {a b : α} (H : ∀ c, c ≤ a ↔ c ≤ b) : a = b :=
   ((H _).1 le_rfl).antisymm ((H _).2 le_rfl)
@@ -292,13 +292,13 @@ theorem le_of_forall_le' [Preorderₓ α] {a b : α} (H : ∀ c, a ≤ c → b �
   H _ le_rfl
 
 theorem le_of_forall_lt [LinearOrderₓ α] {a b : α} (H : ∀ c, c < a → c < b) : a ≤ b :=
-  le_of_not_ltₓ $ fun h => lt_irreflₓ _ (H _ h)
+  le_of_not_ltₓ fun h => lt_irreflₓ _ (H _ h)
 
 theorem forall_lt_iff_le [LinearOrderₓ α] {a b : α} : (∀ ⦃c⦄, c < a → c < b) ↔ a ≤ b :=
   ⟨le_of_forall_lt, fun h c hca => lt_of_lt_of_leₓ hca h⟩
 
 theorem le_of_forall_lt' [LinearOrderₓ α] {a b : α} (H : ∀ c, a < c → b < c) : b ≤ a :=
-  le_of_not_ltₓ $ fun h => lt_irreflₓ _ (H _ h)
+  le_of_not_ltₓ fun h => lt_irreflₓ _ (H _ h)
 
 theorem forall_lt_iff_le' [LinearOrderₓ α] {a b : α} : (∀ ⦃c⦄, a < c → b < c) ↔ b ≤ a :=
   ⟨le_of_forall_lt', fun h c hac => lt_of_le_of_ltₓ h hac⟩
@@ -432,13 +432,13 @@ instance : ∀ [Inhabited α], Inhabited (OrderDual α) :=
   id
 
 theorem preorder.dual_dual (α : Type _) [H : Preorderₓ α] : OrderDual.preorder (OrderDual α) = H :=
-  Preorderₓ.ext $ fun _ _ => Iff.rfl
+  Preorderₓ.ext fun _ _ => Iff.rfl
 
 theorem partial_order.dual_dual (α : Type _) [H : PartialOrderₓ α] : OrderDual.partialOrder (OrderDual α) = H :=
-  PartialOrderₓ.ext $ fun _ _ => Iff.rfl
+  PartialOrderₓ.ext fun _ _ => Iff.rfl
 
 theorem linear_order.dual_dual (α : Type _) [H : LinearOrderₓ α] : OrderDual.linearOrder (OrderDual α) = H :=
-  LinearOrderₓ.ext $ fun _ _ => Iff.rfl
+  LinearOrderₓ.ext fun _ _ => Iff.rfl
 
 end OrderDual
 
@@ -561,7 +561,7 @@ instance (α : Type u) (β : Type v) [Preorderₓ α] [Preorderₓ β] : Preorde
 theorem lt_iff [Preorderₓ α] [Preorderₓ β] {a b : α × β} : a < b ↔ a.1 < b.1 ∧ a.2 ≤ b.2 ∨ a.1 ≤ b.1 ∧ a.2 < b.2 := by
   refine' ⟨fun h => _, _⟩
   · by_cases' h₁ : b.1 ≤ a.1
-    · exact Or.inr ⟨h.1.1, h.1.2.lt_of_not_le $ fun h₂ => h.2 ⟨h₁, h₂⟩⟩
+    · exact Or.inr ⟨h.1.1, h.1.2.lt_of_not_le fun h₂ => h.2 ⟨h₁, h₂⟩⟩
       
     · exact Or.inl ⟨h.1.1.lt_of_not_le h₁, h.1.2⟩
       
@@ -598,12 +598,12 @@ theorem exists_between [LT α] [DenselyOrdered α] : ∀ {a₁ a₂ : α}, a₁ 
   DenselyOrdered.dense
 
 instance OrderDual.densely_ordered (α : Type u) [LT α] [DenselyOrdered α] : DenselyOrdered (OrderDual α) :=
-  ⟨fun a₁ a₂ ha => (@exists_between α _ _ _ _ ha).imp $ fun a => And.symm⟩
+  ⟨fun a₁ a₂ ha => (@exists_between α _ _ _ _ ha).imp fun a => And.symm⟩
 
 theorem le_of_forall_le_of_dense [LinearOrderₓ α] [DenselyOrdered α] {a₁ a₂ : α} (h : ∀ a, a₂ < a → a₁ ≤ a) : a₁ ≤ a₂ :=
-  le_of_not_gtₓ $ fun ha =>
+  le_of_not_gtₓ fun ha =>
     let ⟨a, ha₁, ha₂⟩ := exists_between ha
-    lt_irreflₓ a $ lt_of_lt_of_leₓ ‹a < a₁› (h _ ‹a₂ < a›)
+    lt_irreflₓ a <| lt_of_lt_of_leₓ ‹a < a₁› (h _ ‹a₂ < a›)
 
 theorem eq_of_le_of_forall_le_of_dense [LinearOrderₓ α] [DenselyOrdered α] {a₁ a₂ : α} (h₁ : a₂ ≤ a₁)
     (h₂ : ∀ a, a₂ < a → a₁ ≤ a) : a₁ = a₂ :=
@@ -611,9 +611,9 @@ theorem eq_of_le_of_forall_le_of_dense [LinearOrderₓ α] [DenselyOrdered α] {
 
 theorem le_of_forall_ge_of_dense [LinearOrderₓ α] [DenselyOrdered α] {a₁ a₂ : α} (h : ∀, ∀ a₃ < a₁, ∀, a₃ ≤ a₂) :
     a₁ ≤ a₂ :=
-  le_of_not_gtₓ $ fun ha =>
+  le_of_not_gtₓ fun ha =>
     let ⟨a, ha₁, ha₂⟩ := exists_between ha
-    lt_irreflₓ a $ lt_of_le_of_ltₓ (h _ ‹a < a₁›) ‹a₂ < a›
+    lt_irreflₓ a <| lt_of_le_of_ltₓ (h _ ‹a < a₁›) ‹a₂ < a›
 
 theorem eq_of_le_of_forall_ge_of_dense [LinearOrderₓ α] [DenselyOrdered α] {a₁ a₂ : α} (h₁ : a₂ ≤ a₁)
     (h₂ : ∀, ∀ a₃ < a₁, ∀, a₃ ≤ a₂) : a₁ = a₂ :=
@@ -621,8 +621,8 @@ theorem eq_of_le_of_forall_ge_of_dense [LinearOrderₓ α] [DenselyOrdered α] {
 
 theorem dense_or_discrete [LinearOrderₓ α] (a₁ a₂ : α) :
     (∃ a, a₁ < a ∧ a < a₂) ∨ (∀ a, a₁ < a → a₂ ≤ a) ∧ ∀, ∀ a < a₂, ∀, a ≤ a₁ :=
-  or_iff_not_imp_left.2 $ fun h =>
-    ⟨fun a ha₁ => le_of_not_gtₓ $ fun ha₂ => h ⟨a, ha₁, ha₂⟩, fun a ha₂ => le_of_not_gtₓ $ fun ha₁ => h ⟨a, ha₁, ha₂⟩⟩
+  or_iff_not_imp_left.2 fun h =>
+    ⟨fun a ha₁ => le_of_not_gtₓ fun ha₂ => h ⟨a, ha₁, ha₂⟩, fun a ha₂ => le_of_not_gtₓ fun ha₁ => h ⟨a, ha₁, ha₂⟩⟩
 
 variable {s : β → β → Prop} {t : γ → γ → Prop}
 

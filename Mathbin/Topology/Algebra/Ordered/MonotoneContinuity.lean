@@ -26,6 +26,8 @@ variable {α β : Type _} [LinearOrderₓ α] [TopologicalSpace α] [OrderTopolo
 
 variable [LinearOrderₓ β] [TopologicalSpace β] [OrderTopology β]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- If `f` is a function strictly monotone on a right neighborhood of `a` and the
 image of this neighborhood under `f` meets every interval `(f a, b]`, `b > f a`, then `f` is
 continuous at `a` from the right.
@@ -38,9 +40,7 @@ theorem StrictMonoOn.continuous_at_right_of_exists_between {f : α → β} {s : 
   have ha : a ∈ Ici a := left_mem_Ici
   have has : a ∈ s := mem_of_mem_nhds_within ha hs
   refine' tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩
-  · filter_upwards [hs, self_mem_nhds_within]
-    intro x hxs hxa
-    exact hb.trans_le ((h_mono.le_iff_le has hxs).2 hxa)
+  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     
   · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
     rw [h_mono.lt_iff_lt has hcs] at hac
@@ -49,6 +49,8 @@ theorem StrictMonoOn.continuous_at_right_of_exists_between {f : α → β} {s : 
     exact ((h_mono.lt_iff_lt hx hcs).2 hxc).trans_le hcb
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- If `f` is a monotone function on a right neighborhood of `a` and the image of this neighborhood
 under `f` meets every interval `(f a, b)`, `b > f a`, then `f` is continuous at `a` from the right.
 
@@ -60,12 +62,10 @@ theorem continuous_at_right_of_monotone_on_of_exists_between {f : α → β} {s 
   have ha : a ∈ Ici a := left_mem_Ici
   have has : a ∈ s := mem_of_mem_nhds_within ha hs
   refine' tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩
-  · filter_upwards [hs, self_mem_nhds_within]
-    intro x hxs hxa
-    exact hb.trans_le (h_mono has hxs hxa)
+  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     
   · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
-    have : a < c := not_leₓ.1 fun h => hac.not_le $ h_mono hcs has h
+    have : a < c := not_leₓ.1 fun h => hac.not_le <| h_mono hcs has h
     filter_upwards [hs, Ico_mem_nhds_within_Ici (left_mem_Ico.2 this)]
     rintro x hx ⟨hax, hxc⟩
     exact (h_mono hx hcs hxc.le).trans_lt hcb
@@ -88,7 +88,7 @@ the image of this neighborhood under `f` is a right neighborhood of `f a`, then 
 `a` from the right. -/
 theorem continuous_at_right_of_monotone_on_of_image_mem_nhds_within [DenselyOrdered β] {f : α → β} {s : Set α} {a : α}
     (h_mono : MonotoneOn f s) (hs : s ∈ 𝓝[≥] a) (hfs : f '' s ∈ 𝓝[≥] f a) : ContinuousWithinAt f (Ici a) a :=
-  continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within h_mono hs $ mem_of_superset hfs subset_closure
+  continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within h_mono hs <| mem_of_superset hfs subset_closure
 
 /-- If a function `f` with a densely ordered codomain is strictly monotone on a right neighborhood
 of `a` and the closure of the image of this neighborhood under `f` is a right neighborhood of `f a`,
@@ -110,7 +110,7 @@ theorem StrictMonoOn.continuous_at_right_of_image_mem_nhds_within [DenselyOrdere
 neighborhood under `f` includes `Ioi (f a)`, then `f` is continuous at `a` from the right. -/
 theorem StrictMonoOn.continuous_at_right_of_surj_on {f : α → β} {s : Set α} {a : α} (h_mono : StrictMonoOn f s)
     (hs : s ∈ 𝓝[≥] a) (hfs : surj_on f s (Ioi (f a))) : ContinuousWithinAt f (Ici a) a :=
-  h_mono.continuous_at_right_of_exists_between hs $ fun b hb =>
+  (h_mono.continuous_at_right_of_exists_between hs) fun b hb =>
     let ⟨c, hcs, hcb⟩ := hfs hb
     ⟨c, hcs, hcb.symm ▸ hb, hcb.le⟩
 
@@ -123,7 +123,7 @@ function `f : ℝ → ℝ` given by `f x = if x < 0 then x else x + 1` would be 
 `a = 0`. -/
 theorem StrictMonoOn.continuous_at_left_of_exists_between {f : α → β} {s : Set α} {a : α} (h_mono : StrictMonoOn f s)
     (hs : s ∈ 𝓝[≤] a) (hfs : ∀, ∀ b < f a, ∀, ∃ c ∈ s, f c ∈ Ico b (f a)) : ContinuousWithinAt f (Iic a) a :=
-  h_mono.dual.continuous_at_right_of_exists_between hs $ fun b hb =>
+  (h_mono.dual.continuous_at_right_of_exists_between hs) fun b hb =>
     let ⟨c, hcs, hcb, hca⟩ := hfs b hb
     ⟨c, hcs, hca, hcb⟩
 
@@ -135,7 +135,7 @@ assumption `hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ico b (f a)` we use for stri
 because otherwise the function `floor : ℝ → ℤ` would be a counter-example at `a = 0`. -/
 theorem continuous_at_left_of_monotone_on_of_exists_between {f : α → β} {s : Set α} {a : α} (hf : MonotoneOn f s)
     (hs : s ∈ 𝓝[≤] a) (hfs : ∀, ∀ b < f a, ∀, ∃ c ∈ s, f c ∈ Ioo b (f a)) : ContinuousWithinAt f (Iic a) a :=
-  @continuous_at_right_of_monotone_on_of_exists_between (OrderDual α) (OrderDual β) _ _ _ _ _ _ f s a hf.dual hs $
+  (@continuous_at_right_of_monotone_on_of_exists_between (OrderDual α) (OrderDual β) _ _ _ _ _ _ f s a hf.dual hs)
     fun b hb =>
     let ⟨c, hcs, hcb, hca⟩ := hfs b hb
     ⟨c, hcs, hca, hcb⟩
@@ -234,8 +234,8 @@ theorem continuous_at_of_monotone_on_of_image_mem_nhds [DenselyOrdered β] {f : 
 /-- A monotone function with densely ordered codomain and a dense range is continuous. -/
 theorem Monotone.continuous_of_dense_range [DenselyOrdered β] {f : α → β} (h_mono : Monotone f)
     (h_dense : DenseRange f) : Continuous f :=
-  continuous_iff_continuous_at.mpr $ fun a =>
-    continuous_at_of_monotone_on_of_closure_image_mem_nhds (fun x hx y hy hxy => h_mono hxy) univ_mem $ by
+  continuous_iff_continuous_at.mpr fun a =>
+    continuous_at_of_monotone_on_of_closure_image_mem_nhds (fun x hx y hy hxy => h_mono hxy) univ_mem <| by
       simp only [image_univ, h_dense.closure_eq, univ_mem]
 
 /-- A monotone surjective function with a densely ordered codomain is continuous. -/

@@ -47,7 +47,7 @@ theorem rank_le_card_width : A.rank ≤ Fintype.card n := by
   exact (Module.Free.finrank_pi K).symm
 
 theorem rank_le_width {m n : ℕ} (A : Matrix (Finₓ m) (Finₓ n) K) : A.rank ≤ n :=
-  A.rank_le_card_width.trans $ (Fintype.card_fin n).le
+  A.rank_le_card_width.trans <| (Fintype.card_fin n).le
 
 theorem rank_mul_le (B : Matrix n o K) : (A ⬝ B).rank ≤ A.rank := by
   refine' LinearMap.finrank_le_finrank_of_injective (Submodule.of_le_injective _)
@@ -91,7 +91,7 @@ theorem rank_le_card_height : A.rank ≤ Fintype.card m :=
 omit m_fin
 
 theorem rank_le_height {m n : ℕ} (A : Matrix (Finₓ m) (Finₓ n) K) : A.rank ≤ m :=
-  A.rank_le_card_height.trans $ (Fintype.card_fin m).le
+  A.rank_le_card_height.trans <| (Fintype.card_fin m).le
 
 end Matrix
 

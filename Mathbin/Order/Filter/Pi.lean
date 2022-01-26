@@ -41,10 +41,10 @@ theorem le_pi {g : Filter (∀ i, α i)} : g ≤ pi f ↔ ∀ i, tendsto (eval i
 
 @[mono]
 theorem pi_mono (h : ∀ i, f₁ i ≤ f₂ i) : pi f₁ ≤ pi f₂ :=
-  infi_le_infi $ fun i => comap_mono $ h i
+  infi_le_infi fun i => comap_mono <| h i
 
 theorem mem_pi_of_mem (i : ι) {s : Set (α i)} (hs : s ∈ f i) : eval i ⁻¹' s ∈ pi f :=
-  mem_infi_of_mem i $ preimage_mem_comap hs
+  mem_infi_of_mem i <| preimage_mem_comap hs
 
 theorem pi_mem_pi {I : Set ι} (hI : finite I) (h : ∀, ∀ i ∈ I, ∀, s i ∈ f i) : I.pi s ∈ pi f := by
   rw [pi_def, bInter_eq_Inter]
@@ -60,7 +60,7 @@ theorem mem_pi {s : Set (∀ i, α i)} :
     exact ⟨I, If, t, htf, Inter₂_mono fun i _ => htV i⟩
     
   · rintro ⟨I, If, t, htf, hts⟩
-    exact mem_of_superset (pi_mem_pi If $ fun i _ => htf i) hts
+    exact mem_of_superset ((pi_mem_pi If) fun i _ => htf i) hts
     
 
 theorem mem_pi' {s : Set (∀ i, α i)} :
@@ -81,6 +81,7 @@ theorem mem_of_pi_mem_pi [∀ i, ne_bot (f i)] {I : Set ι} (h : I.pi s ∈ pi f
 theorem pi_mem_pi_iff [∀ i, ne_bot (f i)] {I : Set ι} (hI : finite I) : I.pi s ∈ pi f ↔ ∀, ∀ i ∈ I, ∀, s i ∈ f i :=
   ⟨fun h i hi => mem_of_pi_mem_pi h hi, pi_mem_pi hI⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 @[simp]
 theorem pi_inf_principal_univ_pi_eq_bot : pi f⊓𝓟 (Set.Pi univ s) = ⊥ ↔ ∃ i, f i⊓𝓟 (s i) = ⊥ := by
   constructor
@@ -93,8 +94,7 @@ theorem pi_inf_principal_univ_pi_eq_bot : pi f⊓𝓟 (Set.Pi univ s) = ⊥ ↔ 
     
   · simp only [inf_principal_eq_bot]
     rintro ⟨i, hi⟩
-    filter_upwards [mem_pi_of_mem i hi]
-    exact fun x => mt fun h => h i trivialₓ
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     
 
 @[simp]
@@ -114,7 +114,7 @@ theorem pi_inf_principal_pi_ne_bot [∀ i, ne_bot (f i)] {I : Set ι} :
   simp [ne_bot_iff]
 
 instance pi_inf_principal_pi.ne_bot [h : ∀ i, ne_bot (f i⊓𝓟 (s i))] {I : Set ι} : ne_bot (pi f⊓𝓟 (I.pi s)) :=
-  (pi_inf_principal_univ_pi_ne_bot.2 ‹_›).mono $ inf_le_inf_left _ $ principal_mono.2 $ fun x hx i hi => hx i trivialₓ
+  (pi_inf_principal_univ_pi_ne_bot.2 ‹_›).mono <| inf_le_inf_left _ <| principal_mono.2 fun x hx i hi => hx i trivialₓ
 
 @[simp]
 theorem pi_eq_bot : pi f = ⊥ ↔ ∃ i, f i = ⊥ := by
@@ -164,7 +164,7 @@ theorem Coprod_ne_bot [∀ i, Nonempty (α i)] [Nonempty ι] (f : ∀ i, Filter 
 
 @[mono]
 theorem Coprod_mono (hf : ∀ i, f₁ i ≤ f₂ i) : Filter.coprodₓ f₁ ≤ Filter.coprodₓ f₂ :=
-  supr_le_supr $ fun i => comap_mono (hf i)
+  supr_le_supr fun i => comap_mono (hf i)
 
 variable {β : ι → Type _} {m : ∀ i, α i → β i}
 

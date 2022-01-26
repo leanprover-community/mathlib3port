@@ -1,5 +1,7 @@
 import Mathbin.GroupTheory.FreeAbelianGroup
 import Mathbin.Data.Finsupp.Basic
+import Mathbin.Data.Equiv.Module
+import Mathbin.LinearAlgebra.Dimension
 
 /-!
 # Isomorphism between `free_abelian_group X` and `X →₀ ℤ`
@@ -24,11 +26,11 @@ variable {X : Type _}
 
 /-- The group homomorphism `free_abelian_group X →+ (X →₀ ℤ)`. -/
 def FreeAbelianGroup.toFinsupp : FreeAbelianGroup X →+ X →₀ ℤ :=
-  FreeAbelianGroup.lift $ fun x => Finsupp.single x (1 : ℤ)
+  FreeAbelianGroup.lift fun x => Finsupp.single x (1 : ℤ)
 
 /-- The group homomorphism `(X →₀ ℤ) →+ free_abelian_group X`. -/
 def Finsupp.toFreeAbelianGroup : (X →₀ ℤ) →+ FreeAbelianGroup X :=
-  Finsupp.liftAddHom $ fun x => (smulAddHom ℤ (FreeAbelianGroup X)).flip (FreeAbelianGroup.of x)
+  Finsupp.liftAddHom fun x => (smulAddHom ℤ (FreeAbelianGroup X)).flip (FreeAbelianGroup.of x)
 
 open Finsupp FreeAbelianGroup
 
@@ -84,6 +86,10 @@ def equiv_finsupp : FreeAbelianGroup X ≃+ (X →₀ ℤ) where
   left_inv := to_free_abelian_group_to_finsupp
   right_inv := to_finsupp_to_free_abelian_group
   map_add' := to_finsupp.map_add
+
+/-- `A` is a basis of the ℤ-module `free_abelian_group A`. -/
+noncomputable def Basis (α : Type _) : Basis α ℤ (FreeAbelianGroup α) :=
+  ⟨(FreeAbelianGroup.equivFinsupp α).toIntLinearEquiv⟩
 
 variable {X}
 

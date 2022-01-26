@@ -145,7 +145,7 @@ variable {R S : Type _} [CommRingₓ R] [CommRingₓ S] {I : Ideal R}
 
 variable (y : R) [Algebra R S] [IsLocalization.Away y S]
 
-theorem disjoint_powers_iff_not_mem (hI : I.radical = I) : Disjoint (Submonoid.powers y : Set R) (↑I) ↔ y ∉ I.1 := by
+theorem disjoint_powers_iff_not_mem (hI : I.radical = I) : Disjoint (Submonoid.powers y : Set R) ↑I ↔ y ∉ I.1 := by
   refine' ⟨fun h => Set.disjoint_left.1 h (mem_powers _), fun h => disjoint_iff.mpr (eq_bot_iff.mpr _)⟩
   rintro x ⟨⟨n, rfl⟩, hx'⟩
   rw [← hI] at hx'
@@ -319,7 +319,7 @@ theorem is_integral_is_localization_polynomial_quotient (P : Ideal (Polynomial R
     
   · obtain ⟨p, rfl⟩ := quotient.mk_surjective p'
     refine'
-      Polynomial.induction_on p (fun r => Subring.subset_closure $ Set.mem_image_of_mem _ (Or.inr degree_C_le))
+      Polynomial.induction_on p (fun r => Subring.subset_closure <| Set.mem_image_of_mem _ (Or.inr degree_C_le))
         (fun _ _ h1 h2 => _) fun n _ hr => _
     · convert Subring.add_mem _ h1 h2
       rw [RingHom.map_add, RingHom.map_add]
@@ -457,7 +457,7 @@ theorem is_maximal_comap_C_of_is_maximal [Nontrivial R] (hP' : ∀ x : R, C x �
     Submonoid.powers ((m : Polynomial R).map (Quotientₓ.mk (P.comap C : Ideal R))).leadingCoeff
   rw [← bot_quotient_is_maximal_iff]
   have hp0 : ((m : Polynomial R).map (Quotientₓ.mk (P.comap C : Ideal R))).leadingCoeff ≠ 0 := fun hp0' =>
-    this $
+    this <|
       map_injective (Quotientₓ.mk (P.comap C : Ideal R))
         ((Quotientₓ.mk (P.comap C : Ideal R)).injective_iff.2 fun x hx => by
           rwa [quotient.eq_zero_iff_mem,
@@ -503,7 +503,7 @@ private theorem quotient_mk_comp_C_is_integral_of_jacobson' [Nontrivial R] (hR :
   let M : Submonoid (R ⧸ P') := Submonoid.powers (pX.map (Quotientₓ.mk P')).leadingCoeff
   let φ : R ⧸ P' →+* Polynomial R ⧸ P := quotient_map P C le_rfl
   have hp'_prime : P'.is_prime := comap_is_prime C P
-  have hM : (0 : R ⧸ P') ∉ M := fun ⟨n, hn⟩ => hp0 $ leading_coeff_eq_zero.mp (pow_eq_zero hn)
+  have hM : (0 : R ⧸ P') ∉ M := fun ⟨n, hn⟩ => hp0 <| leading_coeff_eq_zero.mp (pow_eq_zero hn)
   let M' : Submonoid (Polynomial R ⧸ P) := M.map (quotient_map P C le_rfl)
   refine' (quotient_map P C le_rfl).is_integral_tower_bot_of_is_integral (algebraMap _ (Localization M')) _ _
   · refine'

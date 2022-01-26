@@ -34,7 +34,7 @@ for a version giving an equivalence when there is decidable equality. -/
 @[simps]
 def nth_le_bijection_of_forall_mem_list (l : List α) (nd : l.nodup) (h : ∀ x : α, x ∈ l) :
     { f : Finₓ l.length → α // Function.Bijective f } :=
-  ⟨fun i => l.nth_le i i.property, fun i j h => Finₓ.ext $ (nd.nth_le_inj_iff _ _).1 h, fun x =>
+  ⟨fun i => l.nth_le i i.property, fun i j h => Finₓ.ext <| (nd.nth_le_inj_iff _ _).1 h, fun x =>
     let ⟨i, hi, hl⟩ := List.mem_iff_nth_le.1 (h x)
     ⟨⟨i, hi⟩, hl⟩⟩
 

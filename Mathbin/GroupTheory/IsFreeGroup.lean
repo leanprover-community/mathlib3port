@@ -74,7 +74,7 @@ theorem of_eq_free_group_of {A : Type u} : @of (FreeGroup A) _ _ = FreeGroup.of 
 
 @[ext]
 theorem ext_hom' ⦃f g : G →* H⦄ (h : ∀ a, f (of a) = g (of a)) : f = g :=
-  lift'.symm.Injective $ funext h
+  lift'.symm.Injective <| funext h
 
 /-- Being a free group transports across group isomorphisms within a universe. -/
 def of_mul_equiv (h : G ≃* H) : IsFreeGroup H where
@@ -149,7 +149,7 @@ def lift : (generators G → X) ≃ (G →* X) where
 
 @[ext]
 theorem ext_hom ⦃f g : G →* X⦄ (h : ∀ a, f (of a) = g (of a)) : f = g :=
-  IsFreeGroup.lift.symm.Injective $ funext h
+  IsFreeGroup.lift.symm.Injective <| funext h
 
 @[simp]
 theorem lift_of (f : generators G → X) (a : generators G) : (lift f) (of a) = f a :=

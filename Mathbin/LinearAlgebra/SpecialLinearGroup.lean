@@ -79,7 +79,7 @@ theorem ext_iff (A B : special_linear_group n R) : A = B ↔ ∀ i j, ↑ₘA i 
 theorem ext (A B : special_linear_group n R) : (∀ i j, ↑ₘA i j = ↑ₘB i j) → A = B :=
   (special_linear_group.ext_iff A B).mpr
 
-instance HasInv : HasInv (special_linear_group n R) :=
+instance Inv : Inv (special_linear_group n R) :=
   ⟨fun A =>
     ⟨adjugate A, by
       rw [det_adjugate, A.prop, one_pow]⟩⟩
@@ -104,7 +104,7 @@ theorem coe_mk (A : Matrix n n R) (h : det A = 1) : ↑(⟨A, h⟩ : special_lin
   rfl
 
 @[simp]
-theorem coe_inv : ↑ₘ(A⁻¹) = adjugate A :=
+theorem coe_inv : ↑ₘA⁻¹ = adjugate A :=
   rfl
 
 @[simp]
@@ -124,8 +124,8 @@ theorem det_ne_zero [Nontrivial R] (g : special_linear_group n R) : det ↑ₘg 
   norm_num
 
 theorem row_ne_zero [Nontrivial R] (g : special_linear_group n R) (i : n) : ↑ₘg i ≠ 0 := fun h =>
-  g.det_ne_zero $
-    det_eq_zero_of_row_eq_zero i $ by
+  g.det_ne_zero <|
+    det_eq_zero_of_row_eq_zero i <| by
       simp [h]
 
 end CoeLemmas
@@ -142,29 +142,29 @@ instance : Groupₓ (special_linear_group n R) :=
 /-- A version of `matrix.to_lin' A` that produces linear equivalences. -/
 def to_lin' : special_linear_group n R →* (n → R) ≃ₗ[R] n → R where
   toFun := fun A =>
-    LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘ(A⁻¹))
+    LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘA⁻¹)
       (by
         rw [← to_lin'_mul, ← coe_mul, mul_right_invₓ, coe_one, to_lin'_one])
       (by
         rw [← to_lin'_mul, ← coe_mul, mul_left_invₓ, coe_one, to_lin'_one])
   map_one' := LinearEquiv.to_linear_map_injective Matrix.to_lin'_one
-  map_mul' := fun A B => LinearEquiv.to_linear_map_injective $ Matrix.to_lin'_mul A B
+  map_mul' := fun A B => LinearEquiv.to_linear_map_injective <| Matrix.to_lin'_mul A B
 
 theorem to_lin'_apply (A : special_linear_group n R) (v : n → R) :
     special_linear_group.to_lin' A v = Matrix.toLin' (↑ₘA) v :=
   rfl
 
-theorem to_lin'_to_linear_map (A : special_linear_group n R) : ↑special_linear_group.to_lin' A = Matrix.toLin' ↑ₘA :=
+theorem to_lin'_to_linear_map (A : special_linear_group n R) : ↑(special_linear_group.to_lin' A) = Matrix.toLin' ↑ₘA :=
   rfl
 
-theorem to_lin'_symm_apply (A : special_linear_group n R) (v : n → R) : A.to_lin'.symm v = Matrix.toLin' (↑ₘ(A⁻¹)) v :=
+theorem to_lin'_symm_apply (A : special_linear_group n R) (v : n → R) : A.to_lin'.symm v = Matrix.toLin' (↑ₘA⁻¹) v :=
   rfl
 
-theorem to_lin'_symm_to_linear_map (A : special_linear_group n R) : ↑A.to_lin'.symm = Matrix.toLin' ↑ₘ(A⁻¹) :=
+theorem to_lin'_symm_to_linear_map (A : special_linear_group n R) : ↑A.to_lin'.symm = Matrix.toLin' ↑ₘA⁻¹ :=
   rfl
 
 theorem to_lin'_injective : Function.Injective (⇑(to_lin' : special_linear_group n R →* (n → R) ≃ₗ[R] n → R)) :=
-  fun A B h => Subtype.coe_injective $ Matrix.toLin'.Injective $ LinearEquiv.to_linear_map_injective.eq_iff.mpr h
+  fun A B h => Subtype.coe_injective <| Matrix.toLin'.Injective <| LinearEquiv.to_linear_map_injective.eq_iff.mpr h
 
 /-- `to_GL` is the map from the special linear group to the general linear group -/
 def to_GL : special_linear_group n R →* general_linear_group R (n → R) :=
@@ -180,11 +180,11 @@ variable {S : Type _} [CommRingₓ S]
 @[simps]
 def map (f : R →+* S) : special_linear_group n R →* special_linear_group n S where
   toFun := fun g =>
-    ⟨f.map_matrix (↑g), by
+    ⟨f.map_matrix ↑g, by
       rw [← f.map_det]
       simp [g.2]⟩
-  map_one' := Subtype.ext $ f.map_matrix.map_one
-  map_mul' := fun x y => Subtype.ext $ f.map_matrix.map_mul x y
+  map_one' := Subtype.ext <| f.map_matrix.map_one
+  map_mul' := fun x y => Subtype.ext <| f.map_matrix.map_mul x y
 
 section cast
 
@@ -216,7 +216,7 @@ theorem coe_neg (g : special_linear_group n R) : ↑(-g) = -(↑g : Matrix n n R
 
 @[simp]
 theorem coe_int_neg (g : special_linear_group n ℤ) : ↑(-g) = (-↑g : special_linear_group n R) :=
-  Subtype.ext $ (@RingHom.mapMatrix n _ _ _ _ _ _ (Int.castRingHom R)).map_neg (↑g)
+  Subtype.ext <| (@RingHom.mapMatrix n _ _ _ _ _ _ (Int.castRingHom R)).map_neg ↑g
 
 end Neg
 

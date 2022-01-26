@@ -172,9 +172,9 @@ theorem splits_X_pow_sub_one_of_X_pow_sub_C {F : Type _} [Field F] {E : Type _} 
   have hs' : s.card = n := (nat_degree_eq_card_roots h).symm.trans nat_degree_X_pow_sub_C
   apply @splits_of_exists_multiset F E _ _ i (X ^ n - 1) (s.map fun c : E => c / b)
   rw [leading_coeff_X_pow_sub_one hn', RingHom.map_one, C_1, one_mulₓ, Multiset.map_map]
-  have C_mul_C : C (i (a⁻¹)) * C (i a) = 1 := by
+  have C_mul_C : C (i a⁻¹) * C (i a) = 1 := by
     rw [← C_mul, ← i.map_mul, inv_mul_cancel ha, i.map_one, C_1]
-  have key1 : (X ^ n - 1).map i = C (i (a⁻¹)) * ((X ^ n - C a).map i).comp (C b * X) := by
+  have key1 : (X ^ n - 1).map i = C (i a⁻¹) * ((X ^ n - C a).map i).comp (C b * X) := by
     rw [Polynomial.map_sub, Polynomial.map_sub, Polynomial.map_pow, map_X, map_C, Polynomial.map_one, sub_comp,
       pow_comp, X_comp, C_comp, mul_powₓ, ← C_pow, hb, mul_sub, ← mul_assoc, C_mul_C, one_mulₓ]
   have key2 :
@@ -213,7 +213,7 @@ inductive IsSolvableByRad : E → Prop
   | add (a b : E) : IsSolvableByRad a → IsSolvableByRad b → IsSolvableByRad (a + b)
   | neg (α : E) : IsSolvableByRad α → IsSolvableByRad (-α)
   | mul (α β : E) : IsSolvableByRad α → IsSolvableByRad β → IsSolvableByRad (α * β)
-  | inv (α : E) : IsSolvableByRad α → IsSolvableByRad (α⁻¹)
+  | inv (α : E) : IsSolvableByRad α → IsSolvableByRad α⁻¹
   | rad (α : E) (n : ℕ) (hn : n ≠ 0) : IsSolvableByRad (α ^ n) → IsSolvableByRad α
 
 variable (E)
@@ -239,7 +239,7 @@ variable {F} {E} {α : E}
 
 theorem induction (P : solvableByRad F E → Prop) (base : ∀ α : F, P (algebraMap F (solvableByRad F E) α))
     (add : ∀ α β : solvableByRad F E, P α → P β → P (α + β)) (neg : ∀ α : solvableByRad F E, P α → P (-α))
-    (mul : ∀ α β : solvableByRad F E, P α → P β → P (α * β)) (inv : ∀ α : solvableByRad F E, P α → P (α⁻¹))
+    (mul : ∀ α β : solvableByRad F E, P α → P β → P (α * β)) (inv : ∀ α : solvableByRad F E, P α → P α⁻¹)
     (rad : ∀ α : solvableByRad F E, ∀ n : ℕ, n ≠ 0 → P (α ^ n) → P α) (α : solvableByRad F E) : P α := by
   revert α
   suffices ∀ α : E, IsSolvableByRad F α → ∃ β : solvableByRad F E, ↑β = α ∧ P β by
@@ -298,7 +298,7 @@ theorem IsIntegral (α : solvableByRad F E) : IsIntegral F α := by
     
   · exact fun α hα =>
       Subalgebra.inv_mem_of_algebraic (integralClosure F (solvableByRad F E))
-        (show IsAlgebraic F (↑(⟨α, hα⟩ : integralClosure F (solvableByRad F E))) from
+        (show IsAlgebraic F ↑(⟨α, hα⟩ : integralClosure F (solvableByRad F E)) from
           (is_algebraic_iff_is_integral F).mpr hα)
     
   · intro α n hn hα
@@ -443,12 +443,12 @@ theorem IsSolvable (α : solvableByRad F E) : IsSolvable (minpoly F α).Gal := b
 `is_solvable_by_rad` root has solvable Galois group -/
 theorem is_solvable' {α : E} {q : Polynomial F} (q_irred : Irreducible q) (q_aeval : aeval α q = 0)
     (hα : IsSolvableByRad F α) : _root_.is_solvable q.gal := by
-  have : _root_.is_solvable (q * C (q.leading_coeff⁻¹)).Gal := by
+  have : _root_.is_solvable (q * C q.leading_coeff⁻¹).Gal := by
     rw [minpoly.eq_of_irreducible q_irred q_aeval, ←
       show minpoly F (⟨α, hα⟩ : solvableByRad F E) = minpoly F α from
         minpoly.eq_of_algebra_map_eq (RingHom.injective _) (IsIntegral ⟨α, hα⟩) rfl]
     exact IsSolvable ⟨α, hα⟩
-  refine' solvable_of_surjective (gal.restrict_dvd_surjective ⟨C (q.leading_coeff⁻¹), rfl⟩ _)
+  refine' solvable_of_surjective (gal.restrict_dvd_surjective ⟨C q.leading_coeff⁻¹, rfl⟩ _)
   rw [mul_ne_zero_iff, Ne, Ne, C_eq_zero, inv_eq_zero]
   exact ⟨q_irred.ne_zero, leading_coeff_ne_zero.mpr q_irred.ne_zero⟩
 

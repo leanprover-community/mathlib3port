@@ -131,11 +131,11 @@ theorem _root_.pow_succ' (a : M) (n : ℕ) : a ^ (n + 1) = a ^ n * a :=
   (pow_succₓ a n).trans (self_pow _ _)
 
 @[to_additive]
-theorem units_inv_right : Commute a u → Commute a (↑u⁻¹) :=
+theorem units_inv_right : Commute a u → Commute a ↑u⁻¹ :=
   SemiconjBy.units_inv_right
 
 @[simp, to_additive]
-theorem units_inv_right_iff : Commute a (↑u⁻¹) ↔ Commute a u :=
+theorem units_inv_right_iff : Commute a ↑u⁻¹ ↔ Commute a u :=
   SemiconjBy.units_inv_right_iff
 
 @[to_additive]
@@ -185,27 +185,27 @@ section Groupₓ
 variable {G : Type _} [Groupₓ G] {a b : G}
 
 @[to_additive]
-theorem inv_right : Commute a b → Commute a (b⁻¹) :=
+theorem inv_right : Commute a b → Commute a b⁻¹ :=
   SemiconjBy.inv_right
 
 @[simp, to_additive]
-theorem inv_right_iff : Commute a (b⁻¹) ↔ Commute a b :=
+theorem inv_right_iff : Commute a b⁻¹ ↔ Commute a b :=
   SemiconjBy.inv_right_iff
 
 @[to_additive]
-theorem inv_left : Commute a b → Commute (a⁻¹) b :=
+theorem inv_left : Commute a b → Commute a⁻¹ b :=
   SemiconjBy.inv_symm_left
 
 @[simp, to_additive]
-theorem inv_left_iff : Commute (a⁻¹) b ↔ Commute a b :=
+theorem inv_left_iff : Commute a⁻¹ b ↔ Commute a b :=
   SemiconjBy.inv_symm_left_iff
 
 @[to_additive]
-theorem inv_invₓ : Commute a b → Commute (a⁻¹) (b⁻¹) :=
+theorem inv_invₓ : Commute a b → Commute a⁻¹ b⁻¹ :=
   SemiconjBy.inv_inv_symm
 
 @[simp, to_additive]
-theorem inv_inv_iff : Commute (a⁻¹) (b⁻¹) ↔ Commute a b :=
+theorem inv_inv_iff : Commute a⁻¹ b⁻¹ ↔ Commute a b :=
   SemiconjBy.inv_inv_symm_iff
 
 @[to_additive]

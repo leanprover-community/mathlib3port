@@ -50,16 +50,16 @@ variable {M : Type _} [Fintype α] [CommMonoidₓ M]
 
 @[to_additive]
 theorem prod_eq_one (f : α → M) (h : ∀ a, f a = 1) : (∏ a, f a) = 1 :=
-  Finset.prod_eq_one $ fun a ha => h a
+  Finset.prod_eq_one fun a ha => h a
 
 @[to_additive]
 theorem prod_congr (f g : α → M) (h : ∀ a, f a = g a) : (∏ a, f a) = ∏ a, g a :=
-  Finset.prod_congr rfl $ fun a ha => h a
+  (Finset.prod_congr rfl) fun a ha => h a
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » a)
 @[to_additive]
 theorem prod_eq_single {f : α → M} (a : α) (h : ∀ x _ : x ≠ a, f x = 1) : (∏ x, f x) = f a :=
-  (Finset.prod_eq_single a fun x _ hx => h x hx) $ fun ha => (ha (Finset.mem_univ a)).elim
+  (Finset.prod_eq_single a fun x _ hx => h x hx) fun ha => (ha (Finset.mem_univ a)).elim
 
 @[to_additive]
 theorem prod_eq_mul {f : α → M} (a b : α) (h₁ : a ≠ b) (h₂ : ∀ x, x ≠ a ∧ x ≠ b → f x = 1) : (∏ x, f x) = f a * f b :=

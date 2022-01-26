@@ -24,19 +24,19 @@ unsafe def pi_instance_derive_field : tactic Unit := do
       let xv ← Option.iget <$> try_core (get_local xn)
       applyc field
       hs.mmap fun h =>
-          try $
-            (() <$ (to_expr (pquote.1 (congr_funₓ (%%ₓh) (%%ₓxv))) >>= apply) <|>
+          try <|
+            () <$ (to_expr (pquote.1 (congr_funₓ (%%ₓh) (%%ₓxv))) >>= apply) <|>
               () <$ apply (h xv) <|>
-                () <$ (to_expr (pquote.1 (Set.mem_image_of_mem _ (%%ₓh))) >>= apply) <|> () <$ solve_by_elim)
+                () <$ (to_expr (pquote.1 (Set.mem_image_of_mem _ (%%ₓh))) >>= apply) <|> () <$ solve_by_elim
       return ()
     else
-      focus1 $ do
+      focus1 <| do
         let expl_arity ← mk_const field >>= get_expl_arity
-        let xs ← (List.iota expl_arity).mmap $ fun _ => intro1
+        let xs ← (List.iota expl_arity).mmap fun _ => intro1
         let x ← intro1
         applyc field
         (xs.mmap' fun h =>
-              try $ (() <$ (apply (h x) <|> apply h) <|> refine (pquote.1 (Set.Image (· $ %%ₓx) (%%ₓh))))) <|>
+              try <| () <$ (apply (h x) <|> apply h) <|> refine (pquote.1 (Set.Image (· <| %%ₓx) (%%ₓh)))) <|>
             fail "args"
         return ()
 
@@ -46,7 +46,8 @@ it defaults to `pi.partial_order`. Any field of the instance that
 `pi_instance` cannot construct is left untouched and generated as a new goal.
 -/
 unsafe def pi_instance : tactic Unit :=
-  refine_struct (pquote.1 { Pi.partialOrder with .. }); propagate_tags (try $ pi_instance_derive_field >> done)
+  andthen (refine_struct (pquote.1 { Pi.partialOrder with .. }))
+    (propagate_tags (try <| pi_instance_derive_field >> done))
 
 run_cmd
   add_interactive [`pi_instance]

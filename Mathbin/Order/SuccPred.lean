@@ -93,7 +93,7 @@ theorem succ_le_succ {a b : α} (h : a ≤ b) : succ a ≤ succ b := by
     obtain ⟨c, hc⟩ := ha
     exact
       succ_le_of_lt
-        ((h.trans (le_succ b)).lt_of_not_le $ fun hba =>
+        ((h.trans (le_succ b)).lt_of_not_le fun hba =>
           maximal_of_succ_le (hba.trans h) (((le_succ b).trans hba).trans_lt hc))
     
 
@@ -116,17 +116,17 @@ section NoMaxOrder
 variable [NoMaxOrder α] {a b : α}
 
 theorem lt_succ (a : α) : a < succ a :=
-  (le_succ a).lt_of_not_le $ fun h => not_exists.2 (maximal_of_succ_le h) (exists_gt a)
+  (le_succ a).lt_of_not_le fun h => not_exists.2 (maximal_of_succ_le h) (exists_gt a)
 
 theorem lt_succ_iff : a < succ b ↔ a ≤ b :=
-  ⟨le_of_lt_succ, fun h => h.trans_lt $ lt_succ b⟩
+  ⟨le_of_lt_succ, fun h => h.trans_lt <| lt_succ b⟩
 
 theorem succ_le_iff : succ a ≤ b ↔ a < b :=
   ⟨(lt_succ a).trans_le, succ_le_of_lt⟩
 
 @[simp]
 theorem succ_le_succ_iff : succ a ≤ succ b ↔ a ≤ b :=
-  ⟨fun h => le_of_lt_succ $ (lt_succ a).trans_le h, fun h => succ_le_of_lt $ h.trans_lt $ lt_succ b⟩
+  ⟨fun h => le_of_lt_succ <| (lt_succ a).trans_le h, fun h => succ_le_of_lt <| h.trans_lt <| lt_succ b⟩
 
 alias succ_le_succ_iff ↔ le_of_succ_le_succ _
 
@@ -156,13 +156,13 @@ instance : Subsingleton (SuccOrder α) := by
   · refine' (ha.trans (@le_succ _ _ h₁ a)).antisymm _
     by_contra H
     exact
-      @maximal_of_succ_le _ _ h₀ _ ha _ ((@le_succ _ _ h₁ a).lt_of_not_le $ fun h => H $ h.trans $ @le_succ _ _ h₀ a)
+      @maximal_of_succ_le _ _ h₀ _ ha _ ((@le_succ _ _ h₁ a).lt_of_not_le fun h => H <| h.trans <| @le_succ _ _ h₀ a)
     
   · exact
-      (@succ_le_of_lt _ _ h₀ _ _ $
-            (@le_succ _ _ h₁ a).lt_of_not_le $ fun h =>
-              @maximal_of_succ_le _ _ h₁ _ h _ $ (@le_succ _ _ h₀ a).lt_of_not_le ha).antisymm
-        (@succ_le_of_lt _ _ h₁ _ _ $ (@le_succ _ _ h₀ a).lt_of_not_le ha)
+      (@succ_le_of_lt _ _ h₀ _ _ <|
+            (@le_succ _ _ h₁ a).lt_of_not_le fun h =>
+              @maximal_of_succ_le _ _ h₁ _ h _ <| (@le_succ _ _ h₀ a).lt_of_not_le ha).antisymm
+        (@succ_le_of_lt _ _ h₁ _ _ <| (@le_succ _ _ h₀ a).lt_of_not_le ha)
     
 
 variable [SuccOrder α]
@@ -171,7 +171,7 @@ theorem le_le_succ_iff {a b : α} : a ≤ b ∧ b ≤ succ a ↔ b = a ∨ b = s
   constructor
   · rintro h
     rw [or_iff_not_imp_left]
-    exact fun hba : b ≠ a => h.2.antisymm (succ_le_of_lt $ h.1.lt_of_ne $ hba.symm)
+    exact fun hba : b ≠ a => h.2.antisymm (succ_le_of_lt <| h.1.lt_of_ne <| hba.symm)
     
   rintro (rfl | rfl)
   · exact ⟨le_rfl, le_succ b⟩
@@ -180,7 +180,7 @@ theorem le_le_succ_iff {a b : α} : a ≤ b ∧ b ≤ succ a ↔ b = a ∨ b = s
     
 
 theorem _root_.covers.succ_eq {a b : α} (h : a ⋖ b) : succ a = b :=
-  (succ_le_of_lt h.lt).eq_of_not_lt $ fun h' => h.2 (lt_succ_of_not_maximal h.lt) h'
+  (succ_le_of_lt h.lt).eq_of_not_lt fun h' => h.2 (lt_succ_of_not_maximal h.lt) h'
 
 section NoMaxOrder
 
@@ -319,8 +319,8 @@ theorem pred_le_pred {a b : α} (h : a ≤ b) : pred a ≤ pred b := by
     obtain ⟨c, hc⟩ := hb
     exact
       le_pred_of_lt
-        (((pred_le a).trans h).lt_of_not_le $ fun hba =>
-          minimal_of_le_pred (h.trans hba) $ hc.trans_le $ hba.trans $ pred_le a)
+        (((pred_le a).trans h).lt_of_not_le fun hba =>
+          minimal_of_le_pred (h.trans hba) <| hc.trans_le <| hba.trans <| pred_le a)
     
 
 theorem pred_mono : Monotone (pred : α → α) := fun a b => pred_le_pred
@@ -342,7 +342,7 @@ section NoMinOrder
 variable [NoMinOrder α] {a b : α}
 
 theorem pred_lt (a : α) : pred a < a :=
-  (pred_le a).lt_of_not_le $ fun h => not_exists.2 (minimal_of_le_pred h) (exists_lt a)
+  (pred_le a).lt_of_not_le fun h => not_exists.2 (minimal_of_le_pred h) (exists_lt a)
 
 theorem pred_lt_iff : pred a < b ↔ a ≤ b :=
   ⟨le_of_pred_lt, (pred_lt a).trans_le⟩
@@ -352,7 +352,7 @@ theorem le_pred_iff : a ≤ pred b ↔ a < b :=
 
 @[simp]
 theorem pred_le_pred_iff : pred a ≤ pred b ↔ a ≤ b :=
-  ⟨fun h => le_of_pred_lt $ h.trans_lt (pred_lt b), fun h => le_pred_of_lt $ (pred_lt a).trans_le h⟩
+  ⟨fun h => le_of_pred_lt <| h.trans_lt (pred_lt b), fun h => le_pred_of_lt <| (pred_lt a).trans_le h⟩
 
 alias pred_le_pred_iff ↔ le_of_pred_le_pred _
 
@@ -382,14 +382,13 @@ instance : Subsingleton (PredOrder α) := by
   by_cases' ha : a ≤ @pred _ _ h₀ a
   · refine' le_antisymmₓ _ ((@pred_le _ _ h₁ a).trans ha)
     by_contra H
-    exact
-      @minimal_of_le_pred _ _ h₀ _ ha _ ((@pred_le _ _ h₁ a).lt_of_not_le $ fun h => H $ (@pred_le _ _ h₀ a).trans h)
+    exact @minimal_of_le_pred _ _ h₀ _ ha _ ((@pred_le _ _ h₁ a).lt_of_not_le fun h => H <| (@pred_le _ _ h₀ a).trans h)
     
   · exact
-      (@le_pred_of_lt _ _ h₁ _ _ $ (@pred_le _ _ h₀ a).lt_of_not_le ha).antisymm
-        (@le_pred_of_lt _ _ h₀ _ _ $
-          (@pred_le _ _ h₁ a).lt_of_not_le $ fun h =>
-            @minimal_of_le_pred _ _ h₁ _ h _ $ (@pred_le _ _ h₀ a).lt_of_not_le ha)
+      (@le_pred_of_lt _ _ h₁ _ _ <| (@pred_le _ _ h₀ a).lt_of_not_le ha).antisymm
+        (@le_pred_of_lt _ _ h₀ _ _ <|
+          (@pred_le _ _ h₁ a).lt_of_not_le fun h =>
+            @minimal_of_le_pred _ _ h₁ _ h _ <| (@pred_le _ _ h₀ a).lt_of_not_le ha)
     
 
 variable [PredOrder α]
@@ -398,7 +397,7 @@ theorem pred_le_le_iff {a b : α} : pred a ≤ b ∧ b ≤ a ↔ b = a ∨ b = p
   constructor
   · rintro h
     rw [or_iff_not_imp_left]
-    exact fun hba => (le_pred_of_lt $ h.2.lt_of_ne hba).antisymm h.1
+    exact fun hba => (le_pred_of_lt <| h.2.lt_of_ne hba).antisymm h.1
     
   rintro (rfl | rfl)
   · exact ⟨pred_le b, le_rfl⟩
@@ -407,7 +406,7 @@ theorem pred_le_le_iff {a b : α} : pred a ≤ b ∧ b ≤ a ↔ b = a ∨ b = p
     
 
 theorem _root_.covers.pred_eq {a b : α} (h : a ⋖ b) : pred b = a :=
-  (le_pred_of_lt h.lt).eq_of_not_gt $ fun h' => h.2 h' $ pred_lt_of_not_minimal h.lt
+  (le_pred_of_lt h.lt).eq_of_not_gt fun h' => h.2 h' <| pred_lt_of_not_minimal h.lt
 
 section NoMinOrder
 
@@ -663,15 +662,15 @@ instance [PartialOrderₓ α] [OrderTop α] [PredOrder α] : PredOrder (WithTop 
     cases b
     · exact some_le_some.2 le_top
       
-    exact some_le_some.2 (le_pred_of_lt $ some_lt_some.1 h)
+    exact some_le_some.2 (le_pred_of_lt <| some_lt_some.1 h)
   le_of_pred_lt := fun a b h => by
     cases b
     · exact le_top
       
     cases a
-    · exact (not_top_lt $ some_lt_some.1 h).elim
+    · exact (not_top_lt <| some_lt_some.1 h).elim
       
-    · exact some_le_some.2 (le_of_pred_lt $ some_lt_some.1 h)
+    · exact some_le_some.2 (le_of_pred_lt <| some_lt_some.1 h)
       
 
 /-! #### Adding a `⊤` to a `no_max_order` -/
@@ -701,7 +700,7 @@ instance WithTop.succOrderOfNoMaxOrder [PartialOrderₓ α] [NoMaxOrder α] [Suc
     cases b
     · exact le_top
       
-    · exact some_le_some.2 (succ_le_of_lt $ some_lt_some.1 h)
+    · exact some_le_some.2 (succ_le_of_lt <| some_lt_some.1 h)
       
   le_of_lt_succ := fun a b h => by
     cases a
@@ -710,7 +709,7 @@ instance WithTop.succOrderOfNoMaxOrder [PartialOrderₓ α] [NoMaxOrder α] [Suc
     cases b
     · exact le_top
       
-    · exact some_le_some.2 (le_of_lt_succ $ some_lt_some.1 h)
+    · exact some_le_some.2 (le_of_lt_succ <| some_lt_some.1 h)
       
 
 instance [PartialOrderₓ α] [NoMaxOrder α] [hα : Nonempty α] : IsEmpty (PredOrder (WithTop α)) :=
@@ -759,16 +758,16 @@ instance [Preorderₓ α] [OrderBot α] [SuccOrder α] : SuccOrder (WithBot α) 
     cases a
     · exact some_le_some.2 bot_le
       
-    · exact some_le_some.2 (succ_le_of_lt $ some_lt_some.1 h)
+    · exact some_le_some.2 (succ_le_of_lt <| some_lt_some.1 h)
       
   le_of_lt_succ := fun a b h => by
     cases a
     · exact bot_le
       
     cases b
-    · exact (not_lt_bot $ some_lt_some.1 h).elim
+    · exact (not_lt_bot <| some_lt_some.1 h).elim
       
-    · exact some_le_some.2 (le_of_lt_succ $ some_lt_some.1 h)
+    · exact some_le_some.2 (le_of_lt_succ <| some_lt_some.1 h)
       
 
 instance [DecidableEq α] [PartialOrderₓ α] [OrderBot α] [PredOrder α] : PredOrder (WithBot α) where
@@ -867,7 +866,7 @@ instance WithBot.predOrderOfNoMinOrder [PartialOrderₓ α] [NoMinOrder α] [Pre
     cases a
     · exact bot_le
       
-    · exact some_le_some.2 (le_pred_of_lt $ some_lt_some.1 h)
+    · exact some_le_some.2 (le_pred_of_lt <| some_lt_some.1 h)
       
   le_of_pred_lt := fun a b h => by
     cases b
@@ -876,7 +875,7 @@ instance WithBot.predOrderOfNoMinOrder [PartialOrderₓ α] [NoMinOrder α] [Pre
     cases a
     · exact bot_le
       
-    · exact some_le_some.2 (le_of_pred_lt $ some_lt_some.1 h)
+    · exact some_le_some.2 (le_of_pred_lt <| some_lt_some.1 h)
       
 
 end WithBot

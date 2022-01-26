@@ -142,7 +142,7 @@ theorem find_insert_of_ne [IsStrictTotalOrder α lt] {x y : α} (t : Rbtree α l
   assumption
 
 theorem not_mem_of_find_none [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} : t.find a = none → a ∉ t := fun h =>
-  Iff.mpr (not_iff_not_of_iff (find_correct a t)) $ by
+  Iff.mpr (not_iff_not_of_iff (find_correct a t)) <| by
     intro h
     cases' h with _ h
     cases' h with h₁ h₂

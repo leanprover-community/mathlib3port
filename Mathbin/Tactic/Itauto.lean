@@ -258,7 +258,7 @@ unsafe def context :=
 
 /-- Debug printer for the context. -/
 unsafe def context.to_format (Γ : context) : format :=
-  Γ.fold "" $ fun P p f => P.to_format ++ ",\n" ++ f
+  (Γ.fold "") fun P p f => P.to_format ++ ",\n" ++ f
 
 unsafe instance : has_to_format context :=
   ⟨context.to_format⟩
@@ -327,24 +327,24 @@ unsafe def search (prove : context → prop → ℕ → Bool × proof × ℕ) : 
     | some p => (tt, p, n)
     | none =>
       let search₁ :=
-        Γ.fold none $ fun A p r =>
+        (Γ.fold none) fun A p r =>
           match r with
           | some r => some r
           | none =>
             match A with
             | prop.imp A' C =>
               match Γ.find A' with
-              | some q => is_ok $ context.with_add (Γ.erase A) C (p.app q) B prove n
+              | some q => is_ok <| context.with_add (Γ.erase A) C (p.app q) B prove n
               | none =>
                 match A' with
                 | prop.imp A₁ A₂ => do
                   let Γ : context := Γ.erase A
                   let (a, n) := fresh_name n
                   let (p₁, n) ←
-                    is_ok $
+                    is_ok <|
                         Γ.with_add A₁ (proof.hyp a) A₂
                           (fun Γ_A₁ A₂ => Γ_A₁.with_add (prop.imp A₂ C) (proof.imp_imp_simp a p) A₂ prove) n
-                  is_ok $ Γ.with_add C (p.app (proof.intro a p₁)) B prove n
+                  is_ok <| Γ.with_add C (p.app (proof.intro a p₁)) B prove n
                 | _ => none
             | _ => none
       match search₁ with
@@ -376,11 +376,11 @@ unsafe def prove : context → prop → ℕ → Bool × proof × ℕ
   | Γ, prop.true, n => (tt, proof.triv, n)
   | Γ, prop.imp A B, n =>
     let (a, n) := fresh_name n
-    map_proof (proof.intro a) $ Γ.with_add A (proof.hyp a) B prove n
+    map_proof (proof.intro a) <| Γ.with_add A (proof.hyp a) B prove n
   | Γ, prop.and' ak A B, n =>
     let (A, B) := ak.sides A B
     let (b, p, n) := prove Γ A n
-    map_proof (p.and_intro ak) $ when_ok b (prove Γ B) n
+    map_proof (p.and_intro ak) <| when_ok b (prove Γ B) n
   | Γ, B, n =>
     Γ.fold (fun b Γ => cond b prove (search prove) Γ B)
       (fun A p IH b Γ n =>
@@ -389,7 +389,7 @@ unsafe def prove : context → prop → ℕ → Bool × proof × ℕ
           let Γ : context := Γ.erase A
           let (a, n) := fresh_name n
           let (b, p₁, n) := Γ.with_add A₁ (proof.hyp a) B (fun Γ _ => IH tt Γ) n
-          map_proof (proof.or_elim p a p₁) $ when_ok b (Γ.with_add A₂ (proof.hyp a) B fun Γ _ => IH tt Γ) n
+          map_proof (proof.or_elim p a p₁) <| when_ok b (Γ.with_add A₂ (proof.hyp a) B fun Γ _ => IH tt Γ) n
         | _ => IH b Γ n)
       ff Γ n
 
@@ -397,10 +397,10 @@ unsafe def prove : context → prop → ℕ → Bool × proof × ℕ
 have already allocated, we reuse it, otherwise we name it with a new index. -/
 unsafe def reify_atom (atoms : ref (Buffer expr)) (e : expr) : tactic prop := do
   let vec ← read_ref atoms
-  let o ← try_core $ vec.iterate failure fun i e' r => r <|> is_def_eq e e' >> pure i.1
+  let o ← try_core <| vec.iterate failure fun i e' r => r <|> is_def_eq e e' >> pure i.1
   match o with
     | none => write_ref atoms (vec.push_back e) $> prop.var vec.size
-    | some i => pure $ prop.var i
+    | some i => pure <| prop.var i
 
 /-- Reify an `expr` into a `prop`, allocating anything non-propositional as an atom in the
 `atoms` list. -/
@@ -508,7 +508,7 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
     let g₂ ← mk_meta_var A
     let g :: gs ← get_goals
     unify (g₁ g₂) g
-    set_goals (g₁ :: g₂ :: gs) >> apply_proof Γ p >> apply_proof Γ q
+    (set_goals (g₁ :: g₂ :: gs) >> apply_proof Γ p) >> apply_proof Γ q
   | Γ, proof.or_imp_left p => do
     let e ← intro_core `_
     let n := e.local_uniq_name
@@ -588,8 +588,8 @@ open Itauto
   propositions `a`.
 -/
 unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tactic Unit :=
-  using_new_ref mkBuffer $ fun atoms =>
-    using_new_ref mk_name_map $ fun hs => do
+  (using_new_ref mkBuffer) fun atoms =>
+    (using_new_ref mk_name_map) fun hs => do
       let t ← target
       let t ← mcond (is_prop t) (reify atoms t) (tactic.exfalso $> prop.false)
       let hyps ← local_context
@@ -619,7 +619,7 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
         if res.is_none ∧ ¬use_classical then
             if force then do
               let m ← mk_meta_var dec_e
-              set_goals [m] >> apply_instance >> failure
+              (set_goals [m] >> apply_instance) >> failure
             else pure decs
           else pure (native.rb_map.insert decs A (res.elim (tt, e) (Prod.mk ff)))
       let decs ← extra_dec.mfoldl (add_dec tt) decs
@@ -628,14 +628,14 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
             let decided :=
               match Γ with
               | Except.ok Γ =>
-                Γ.fold native.mk_rb_set $ fun p _ m =>
+                (Γ.fold native.mk_rb_set) fun p _ m =>
                   match p with
                   | prop.var i => m.insert i
                   | prop.not (prop.var i) => m.insert i
                   | _ => m
               | Except.error _ => native.mk_rb_set
             read_ref atoms >>= fun ats =>
-                ats.2.iterate (pure decs) $ fun i e r =>
+                (ats.2.iterate (pure decs)) fun i e r =>
                   if decided.contains i.1 then r else r >>= fun decs => add_dec ff decs e
           else pure decs
       let Γ ←

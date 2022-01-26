@@ -169,7 +169,7 @@ partition with `to_partition = π₁.to_partition ⊓ π₂` and tags coming fro
 
 Note that usually the result is not a Henstock partition. -/
 def inf_prepartition (π : tagged_prepartition I) (π' : prepartition I) : tagged_prepartition I :=
-  π.bUnion_prepartition $ fun J => π'.restrict J
+  π.bUnion_prepartition fun J => π'.restrict J
 
 @[simp]
 theorem inf_prepartition_to_prepartition (π : tagged_prepartition I) (π' : prepartition I) :
@@ -211,7 +211,7 @@ theorem is_Henstock.card_filter_tag_eq_le [Fintype ι] (h : π.is_Henstock) (x :
 /-- A tagged partition `π` is subordinate to `r : (ι → ℝ) → ℝ` if each box `J ∈ π` is included in
 the closed ball with center `π.tag J` and radius `r (π.tag J)`. -/
 def is_subordinate [Fintype ι] (π : tagged_prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) : Prop :=
-  ∀, ∀ J ∈ π, ∀, (J : _).Icc ⊆ closed_ball (π.tag J) (r $ π.tag J)
+  ∀, ∀ J ∈ π, ∀, (J : _).Icc ⊆ closed_ball (π.tag J) (r <| π.tag J)
 
 variable {r r₁ r₂ : (ι → ℝ) → Ioi (0 : ℝ)}
 
@@ -222,7 +222,8 @@ theorem is_subordinate_bUnion_tagged [Fintype ι] {π : prepartition I} {πi : �
 
 theorem is_subordinate.bUnion_prepartition [Fintype ι] (h : is_subordinate π r) (πi : ∀ J, prepartition J) :
     is_subordinate (π.bUnion_prepartition πi) r := fun J hJ =>
-  subset.trans (box.le_iff_Icc.1 $ π.to_prepartition.le_bUnion_index hJ) $ h _ $ π.to_prepartition.bUnion_index_mem hJ
+  subset.trans (box.le_iff_Icc.1 <| π.to_prepartition.le_bUnion_index hJ) <|
+    h _ <| π.to_prepartition.bUnion_index_mem hJ
 
 theorem is_subordinate.inf_prepartition [Fintype ι] (h : is_subordinate π r) (π' : prepartition I) :
     is_subordinate (π.inf_prepartition π') r :=
@@ -234,12 +235,12 @@ theorem is_subordinate.mono' [Fintype ι] {π : tagged_prepartition I} (hr₁ : 
 
 theorem is_subordinate.mono [Fintype ι] {π : tagged_prepartition I} (hr₁ : π.is_subordinate r₁)
     (h : ∀, ∀ x ∈ I.Icc, ∀, r₁ x ≤ r₂ x) : π.is_subordinate r₂ :=
-  hr₁.mono' $ fun J _ => h _ $ π.tag_mem_Icc J
+  hr₁.mono' fun J _ => h _ <| π.tag_mem_Icc J
 
 theorem is_subordinate.diam_le [Fintype ι] {π : tagged_prepartition I} (h : π.is_subordinate r) (hJ : J ∈ π.boxes) :
     diam J.Icc ≤ 2 * r (π.tag J) :=
   calc
-    diam J.Icc ≤ diam (closed_ball (π.tag J) (r $ π.tag J)) := diam_mono (h J hJ) bounded_closed_ball
+    diam J.Icc ≤ diam (closed_ball (π.tag J) (r <| π.tag J)) := diam_mono (h J hJ) bounded_closed_ball
     _ ≤ 2 * r (π.tag J) := diam_closed_ball (le_of_ltₓ (r _).2)
     
 
@@ -309,7 +310,7 @@ theorem disj_union_tag_of_mem_left (h : Disjoint π₁.Union π₂.Union) (hJ : 
 
 theorem disj_union_tag_of_mem_right (h : Disjoint π₁.Union π₂.Union) (hJ : J ∈ π₂) :
     (π₁.disj_union π₂ h).Tag J = π₂.tag J :=
-  dif_neg $ fun h₁ => h ⟨π₁.subset_Union h₁ J.upper_mem, π₂.subset_Union hJ J.upper_mem⟩
+  dif_neg fun h₁ => h ⟨π₁.subset_Union h₁ J.upper_mem, π₂.subset_Union hJ J.upper_mem⟩
 
 theorem is_subordinate.disj_union [Fintype ι] (h₁ : is_subordinate π₁ r) (h₂ : is_subordinate π₂ r)
     (h : Disjoint π₁.Union π₂.Union) : is_subordinate (π₁.disj_union π₂ h) r := by

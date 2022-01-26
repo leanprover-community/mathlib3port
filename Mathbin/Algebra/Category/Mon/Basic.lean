@@ -68,7 +68,7 @@ add_decl_doc AddMon.ofHom
 
 @[to_additive]
 instance : Inhabited Mon :=
-  ⟨@of PUnit $ @Groupₓ.toMonoid _ $ @CommGroupₓ.toGroup _ PUnit.commGroup⟩
+  ⟨@of PUnit <| @Groupₓ.toMonoid _ <| @CommGroupₓ.toGroup _ PUnit.commGroup⟩
 
 @[to_additive]
 instance (M : Mon) : Monoidₓ M :=
@@ -112,7 +112,7 @@ add_decl_doc AddCommMon.of
 
 @[to_additive]
 instance : Inhabited CommMon :=
-  ⟨@of PUnit $ @CommGroupₓ.toCommMonoid _ PUnit.commGroup⟩
+  ⟨@of PUnit <| @CommGroupₓ.toCommMonoid _ PUnit.commGroup⟩
 
 @[to_additive]
 instance (M : CommMon) : CommMonoidₓ M :=

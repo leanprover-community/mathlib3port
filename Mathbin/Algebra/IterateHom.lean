@@ -52,7 +52,7 @@ end
 variable [Monoidₓ M] [Monoidₓ N] [Groupₓ G] [Groupₓ H]
 
 @[simp, to_additive]
-theorem iterate_map_inv (f : G →* G) (n : ℕ) x : (f^[n]) (x⁻¹) = (f^[n]) x⁻¹ :=
+theorem iterate_map_inv (f : G →* G) (n : ℕ) x : (f^[n]) x⁻¹ = ((f^[n]) x)⁻¹ :=
   commute.iterate_left f.map_inv n x
 
 @[simp, to_additive]
@@ -143,11 +143,11 @@ variable [Monoidₓ G] (a : G) (n : ℕ)
 
 @[simp, to_additive]
 theorem mul_left_iterate : (· * ·) a^[n] = (· * ·) (a ^ n) :=
-  Nat.recOn n
-      (funext $ fun x => by
-        simp ) $
+  (Nat.recOn n
+      (funext fun x => by
+        simp ))
     fun n ihn =>
-    funext $ fun x => by
+    funext fun x => by
       simp [iterate_succ, ihn, pow_succ'ₓ, mul_assoc]
 
 @[simp, to_additive]

@@ -65,8 +65,8 @@ def rec_on {C : FreeMonoid α → Sort _} (xs : FreeMonoid α) (h0 : C 1) (ih : 
 
 @[ext, to_additive]
 theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x)) : f = g :=
-  MonoidHom.ext $ fun l =>
-    rec_on l (f.map_one.trans g.map_one.symm) $ fun x xs hxs => by
+  MonoidHom.ext fun l =>
+    (rec_on l (f.map_one.trans g.map_one.symm)) fun x xs hxs => by
       simp only [h, hxs, MonoidHom.map_mul]
 
 /-- Equivalence between maps `α → M` and monoid homomorphisms `free_monoid α →* M`. -/
@@ -76,8 +76,8 @@ def lift : (α → M) ≃ (FreeMonoid α →* M) where
     ⟨fun l => (l.map f).Prod, rfl, fun l₁ l₂ => by
       simp only [mul_def, List.map_append, List.prod_append]⟩
   invFun := fun f x => f (of x)
-  left_inv := fun f => funext $ fun x => one_mulₓ (f x)
-  right_inv := fun f => hom_eq $ fun x => one_mulₓ (f (of x))
+  left_inv := fun f => funext fun x => one_mulₓ (f x)
+  right_inv := fun f => hom_eq fun x => one_mulₓ (f (of x))
 
 @[simp, to_additive]
 theorem lift_symm_apply (f : FreeMonoid α →* M) : lift.symm f = f ∘ of :=
@@ -123,11 +123,11 @@ theorem map_of (f : α → β) (x : α) : map f (of x) = of (f x) :=
 
 @[to_additive]
 theorem lift_of_comp_eq_map (f : α → β) : (lift fun x => of (f x)) = map f :=
-  hom_eq $ fun x => rfl
+  hom_eq fun x => rfl
 
 @[to_additive]
 theorem map_comp (g : β → γ) (f : α → β) : map (g ∘ f) = (map g).comp (map f) :=
-  hom_eq $ fun x => rfl
+  hom_eq fun x => rfl
 
 instance : StarMonoid (FreeMonoid α) where
   star := List.reverse

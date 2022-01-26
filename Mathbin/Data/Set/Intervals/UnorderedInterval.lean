@@ -78,7 +78,7 @@ theorem interval_of_not_ge (h : ¬b ≤ a) :
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 @[simp]
 theorem interval_self : "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" = {a} :=
-  Set.ext $ by
+  Set.ext <| by
     simp [le_antisymm_iffₓ, and_comm]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
@@ -126,10 +126,10 @@ theorem mem_interval_of_ge (hb : b ≤ x) (ha : x ≤ a) :
   Icc_subset_interval' ⟨hb, ha⟩
 
 theorem not_mem_interval_of_lt (ha : c < a) (hb : c < b) : c ∉ interval a b :=
-  not_mem_Icc_of_lt $ lt_min_iff.mpr ⟨ha, hb⟩
+  not_mem_Icc_of_lt <| lt_min_iff.mpr ⟨ha, hb⟩
 
 theorem not_mem_interval_of_gt (ha : a < c) (hb : b < c) : c ∉ interval a b :=
-  not_mem_Icc_of_gt $ max_lt_iff.mpr ⟨ha, hb⟩
+  not_mem_Icc_of_gt <| max_lt_iff.mpr ⟨ha, hb⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
@@ -360,7 +360,7 @@ theorem abs_sub_le_of_subinterval
     (h :
       "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ⊆
         "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :
-    |y - x| ≤ |b - a| := by
+    abs (y - x) ≤ abs (b - a) := by
   rw [← max_sub_min_eq_abs, ← max_sub_min_eq_abs]
   rw [interval_subset_interval_iff_le] at h
   exact sub_le_sub h.2 h.1
@@ -369,14 +369,14 @@ theorem abs_sub_le_of_subinterval
 /-- If `x ∈ [a, b]`, then the distance between `a` and `x` is less than or equal to
 that of `a` and `b`  -/
 theorem abs_sub_left_of_mem_interval
-    (h : x ∈ "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") : |x - a| ≤ |b - a| :=
+    (h : x ∈ "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") : abs (x - a) ≤ abs (b - a) :=
   abs_sub_le_of_subinterval (interval_subset_interval_left h)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 /-- If `x ∈ [a, b]`, then the distance between `x` and `b` is less than or equal to
 that of `a` and `b`  -/
 theorem abs_sub_right_of_mem_interval
-    (h : x ∈ "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") : |b - x| ≤ |b - a| :=
+    (h : x ∈ "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") : abs (b - x) ≤ abs (b - a) :=
   abs_sub_le_of_subinterval (interval_subset_interval_right h)
 
 end OrderedAddCommGroup

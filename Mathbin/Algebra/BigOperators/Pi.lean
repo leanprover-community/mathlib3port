@@ -86,7 +86,7 @@ variable [∀ i, Semiringₓ (f i)]
 @[ext]
 theorem RingHom.functions_ext [Fintype I] (G : Type _) [Semiringₓ G] (g h : (∀ i, f i) →+* G)
     (w : ∀ i : I x : f i, g (single i x) = h (single i x)) : g = h :=
-  RingHom.coe_add_monoid_hom_injective $ AddMonoidHom.functions_ext G (g : (∀ i, f i) →+ G) h w
+  RingHom.coe_add_monoid_hom_injective <| AddMonoidHom.functions_ext G (g : (∀ i, f i) →+ G) h w
 
 end RingHom
 

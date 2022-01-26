@@ -178,7 +178,7 @@ for a self-adjoint operator `T` on `E`.
 
 TODO Postcompose with a permutation so that these eigenvalues are listed in increasing order. -/
 noncomputable def eigenvalues (i : Finₓ n) : ℝ :=
-  @IsROrC.re 𝕜 _ $ hT.direct_sum_submodule_is_internal.subordinate_orthonormal_basis_index hn i
+  @IsROrC.re 𝕜 _ <| hT.direct_sum_submodule_is_internal.subordinate_orthonormal_basis_index hn i
 
 theorem has_eigenvector_eigenvector_basis (i : Finₓ n) :
     has_eigenvector T (hT.eigenvalues hn i) (hT.eigenvector_basis hn i) := by
@@ -189,7 +189,7 @@ theorem has_eigenvector_eigenvector_basis (i : Finₓ n) :
     have H₁ : v ∈ eigenspace T μ := hT.direct_sum_submodule_is_internal.subordinate_orthonormal_basis_subordinate hn i
     have H₂ : v ≠ 0 := (hT.eigenvector_basis_orthonormal hn).ne_zero i
     exact ⟨H₁, H₂⟩
-  have re_μ : ↑IsROrC.re μ = μ := by
+  have re_μ : ↑(IsROrC.re μ) = μ := by
     rw [← IsROrC.eq_conj_iff_re]
     exact hT.conj_eigenvalue_eq_self (has_eigenvalue_of_has_eigenvector key)
   simpa [re_μ] using key

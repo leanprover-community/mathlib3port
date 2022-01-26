@@ -177,7 +177,7 @@ theorem sqrt_le_add (n : ℕ) : n ≤ sqrt n * sqrt n + sqrt n + sqrt n := by
 
 theorem le_sqrt {m n : ℕ} : m ≤ sqrt n ↔ m * m ≤ n :=
   ⟨fun h => le_transₓ (mul_self_le_mul_self h) (sqrt_le n), fun h =>
-    le_of_lt_succ $ mul_self_lt_mul_self_iff.2 $ lt_of_le_of_ltₓ h (lt_succ_sqrt n)⟩
+    le_of_lt_succ <| mul_self_lt_mul_self_iff.2 <| lt_of_le_of_ltₓ h (lt_succ_sqrt n)⟩
 
 theorem le_sqrt' {m n : ℕ} : m ≤ sqrt n ↔ m ^ 2 ≤ n := by
   simpa only [pow_two] using le_sqrt
@@ -200,9 +200,9 @@ theorem sqrt_zero : sqrt 0 = 0 := by
 
 theorem sqrt_eq_zero {n : ℕ} : sqrt n = 0 ↔ n = 0 :=
   ⟨fun h =>
-    Nat.eq_zero_of_le_zeroₓ $
-      le_of_lt_succ $
-        (@sqrt_lt n 1).1 $ by
+    Nat.eq_zero_of_le_zeroₓ <|
+      le_of_lt_succ <|
+        (@sqrt_lt n 1).1 <| by
           rw [h] <;>
             exact by
               decide,
@@ -211,20 +211,20 @@ theorem sqrt_eq_zero {n : ℕ} : sqrt n = 0 ↔ n = 0 :=
     simp ⟩
 
 theorem eq_sqrt {n q} : q = sqrt n ↔ q * q ≤ n ∧ n < (q + 1) * (q + 1) :=
-  ⟨fun e => e.symm ▸ sqrt_is_sqrt n, fun ⟨h₁, h₂⟩ => le_antisymmₓ (le_sqrt.2 h₁) (le_of_lt_succ $ sqrt_lt.2 h₂)⟩
+  ⟨fun e => e.symm ▸ sqrt_is_sqrt n, fun ⟨h₁, h₂⟩ => le_antisymmₓ (le_sqrt.2 h₁) (le_of_lt_succ <| sqrt_lt.2 h₂)⟩
 
 theorem eq_sqrt' {n q} : q = sqrt n ↔ q ^ 2 ≤ n ∧ n < (q + 1) ^ 2 := by
   simpa only [pow_two] using eq_sqrt
 
 theorem le_three_of_sqrt_eq_one {n : ℕ} (h : sqrt n = 1) : n ≤ 3 :=
-  le_of_lt_succ $
-    (@sqrt_lt n 2).1 $ by
+  le_of_lt_succ <|
+    (@sqrt_lt n 2).1 <| by
       rw [h] <;>
         exact by
           decide
 
 theorem sqrt_lt_self {n : ℕ} (h : 1 < n) : sqrt n < n :=
-  sqrt_lt.2 $ by
+  sqrt_lt.2 <| by
     have := Nat.mul_lt_mul_of_pos_leftₓ h (lt_of_succ_lt h) <;> rwa [mul_oneₓ] at this
 
 theorem sqrt_pos {n : ℕ} : 0 < sqrt n ↔ 0 < n :=
@@ -232,10 +232,10 @@ theorem sqrt_pos {n : ℕ} : 0 < sqrt n ↔ 0 < n :=
 
 theorem sqrt_add_eq (n : ℕ) {a : ℕ} (h : a ≤ n + n) : sqrt (n * n + a) = n :=
   le_antisymmₓ
-    (le_of_lt_succ $
-      sqrt_lt.2 $ by
+    (le_of_lt_succ <|
+      sqrt_lt.2 <| by
         rw [succ_mul, mul_succ, add_succ, add_assocₓ] <;> exact lt_succ_of_le (Nat.add_le_add_leftₓ h _))
-    (le_sqrt.2 $ Nat.le_add_rightₓ _ _)
+    (le_sqrt.2 <| Nat.le_add_rightₓ _ _)
 
 theorem sqrt_add_eq' (n : ℕ) {a : ℕ} (h : a ≤ n + n) : sqrt (n ^ 2 + a) = n :=
   (congr_argₓ (fun i => sqrt (i + a)) (sq n)).trans (sqrt_add_eq n h)
@@ -247,11 +247,11 @@ theorem sqrt_eq' (n : ℕ) : sqrt (n ^ 2) = n :=
   sqrt_add_eq' n (zero_le _)
 
 theorem sqrt_succ_le_succ_sqrt (n : ℕ) : sqrt n.succ ≤ n.sqrt.succ :=
-  le_of_lt_succ $
-    sqrt_lt.2 $
-      lt_succ_of_le $
-        succ_le_succ $
-          le_transₓ (sqrt_le_add n) $
+  le_of_lt_succ <|
+    sqrt_lt.2 <|
+      lt_succ_of_le <|
+        succ_le_succ <|
+          le_transₓ (sqrt_le_add n) <|
             add_le_add_right
               (by
                 refine' add_le_add (Nat.mul_le_mul_rightₓ _ _) _ <;> exact Nat.le_add_rightₓ _ 2)
@@ -281,7 +281,7 @@ theorem not_exists_sq {n m : ℕ} (hl : m * m < n) (hr : n < (m + 1) * (m + 1)) 
   rintro ⟨t, rfl⟩
   have h1 : m < t := nat.mul_self_lt_mul_self_iff.mpr hl
   have h2 : t < m + 1 := nat.mul_self_lt_mul_self_iff.mpr hr
-  exact (not_lt_of_geₓ $ le_of_lt_succ h2) h1
+  exact (not_lt_of_geₓ <| le_of_lt_succ h2) h1
 
 theorem not_exists_sq' {n m : ℕ} (hl : m ^ 2 < n) (hr : n < (m + 1) ^ 2) : ¬∃ t, t ^ 2 = n := by
   simpa only [pow_two] using

@@ -66,7 +66,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
   have Dcov : ∀ x, ∃ n i, x ∈ D n i := by
     intro x
     obtain ⟨n, hn⟩ : ∃ n : ℕ, ball x (3 * 2⁻¹ ^ n) ⊆ s (ind x) := by
-      rcases is_open_iff.1 (ho $ ind x) x (mem_ind x) with ⟨ε, ε0, hε⟩
+      rcases is_open_iff.1 (ho <| ind x) x (mem_ind x) with ⟨ε, ε0, hε⟩
       have : 0 < ε / 3 := Ennreal.div_pos_iff.2 ⟨ε0.lt.ne', Ennreal.coe_ne_top⟩
       rcases Ennreal.exists_inv_two_pow_lt this.ne' with ⟨n, hn⟩
       refine' ⟨n, subset.trans (ball_subset_ball _) hε⟩
@@ -116,9 +116,9 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       calc edist z x ≤ edist y z + edist y x := edist_triangle_left _ _ _ _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) :=
           Ennreal.add_lt_add hz hyx _ ≤ 2⁻¹ ^ (k + 1) + 2⁻¹ ^ (k + 1) :=
           add_le_add
-            (hpow_le $ by
+            (hpow_le <| by
               linarith)
-            (hpow_le $ by
+            (hpow_le <| by
               linarith)_ = 2⁻¹ ^ k :=
           by
           rw [← two_mul, h2pow]
@@ -137,7 +137,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
           by
           apply_rules [Ennreal.add_lt_add]_ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by
           simp only [two_mul, add_commₓ]_ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
-          Ennreal.mul_le_mul le_rfl $ add_le_add le_rfl $ hpow_le (add_le_add hm le_rfl)_ = 3 * 2⁻¹ ^ m := by
+          Ennreal.mul_le_mul le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)_ = 3 * 2⁻¹ ^ m := by
           rw [mul_addₓ, h2pow, bit1, add_mulₓ, one_mulₓ]
     have : (⋃ (m ≤ n + k) (i ∈ { i : ι | (D m i ∩ B).Nonempty }), {(m, i)}).Finite :=
       (finite_le_nat _).bUnion fun i hi => (Hle i hi).Finite.bUnion fun _ _ => finite_singleton _

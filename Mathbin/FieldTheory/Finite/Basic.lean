@@ -83,7 +83,7 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : Polynomial R} (hf2 : degree
           ⟨a, b, by
             rw [ha, ← hb, eval_neg, neg_add_selfₓ]⟩
       fun hd : Disjoint _ _ =>
-      lt_irreflₓ (2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card) $
+      lt_irreflₓ (2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card) <|
         calc
           2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card ≤ 2 * Fintype.card R :=
             Nat.mul_le_mul_leftₓ _ (Finset.card_le_univ _)
@@ -269,17 +269,17 @@ theorem X_pow_card_sub_X_nat_degree_eq (hp : 1 < p) : (X ^ p - X : Polynomial K'
 
 theorem X_pow_card_pow_sub_X_nat_degree_eq (hn : n ≠ 0) (hp : 1 < p) :
     (X ^ p ^ n - X : Polynomial K').natDegree = p ^ n :=
-  X_pow_card_sub_X_nat_degree_eq K' $ Nat.one_lt_pow _ _ (Nat.pos_of_ne_zeroₓ hn) hp
+  X_pow_card_sub_X_nat_degree_eq K' <| Nat.one_lt_pow _ _ (Nat.pos_of_ne_zeroₓ hn) hp
 
 theorem X_pow_card_sub_X_ne_zero (hp : 1 < p) : (X ^ p - X : Polynomial K') ≠ 0 :=
-  ne_zero_of_nat_degree_gt $
+  ne_zero_of_nat_degree_gt <|
     calc
       1 < _ := hp
       _ = _ := (X_pow_card_sub_X_nat_degree_eq K' hp).symm
       
 
 theorem X_pow_card_pow_sub_X_ne_zero (hn : n ≠ 0) (hp : 1 < p) : (X ^ p ^ n - X : Polynomial K') ≠ 0 :=
-  X_pow_card_sub_X_ne_zero K' $ Nat.one_lt_pow _ _ (Nat.pos_of_ne_zeroₓ hn) hp
+  X_pow_card_sub_X_ne_zero K' <| Nat.one_lt_pow _ _ (Nat.pos_of_ne_zeroₓ hn) hp
 
 end
 

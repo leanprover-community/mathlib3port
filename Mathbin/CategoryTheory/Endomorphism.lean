@@ -99,7 +99,7 @@ instance : Groupₓ (Aut X) := by
     intros <;>
       try
           rfl <;>
-        ext <;> simp [flip, · * ·, Monoidₓ.mul, MulOneClass.mul, MulOneClass.one, One.one, Monoidₓ.one, HasInv.inv]
+        ext <;> simp [flip, · * ·, Monoidₓ.mul, MulOneClass.mul, MulOneClass.one, One.one, Monoidₓ.one, Inv.inv]
 
 /-- Units in the monoid of endomorphisms of an object
 are (multiplicatively) equivalent to automorphisms of that object.

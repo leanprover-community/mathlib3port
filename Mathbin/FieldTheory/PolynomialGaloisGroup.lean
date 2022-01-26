@@ -170,7 +170,7 @@ variable {p E}
 theorem restrict_smul [Fact (p.splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x : root_set p E) :
     ↑(restrict p E ϕ • x) = ϕ x := by
   let ψ := AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F p.splitting_field E)
-  change ↑ψ (ψ.symm _) = ϕ x
+  change ↑(ψ (ψ.symm _)) = ϕ x
   rw [AlgEquiv.apply_symm_apply ψ]
   change ϕ (roots_equiv_roots p E ((roots_equiv_roots p E).symm x)) = ϕ x
   rw [Equivₓ.apply_symm_apply (roots_equiv_roots p E)]
@@ -189,7 +189,7 @@ def gal_action_hom [Fact (p.splits (algebraMap F E))] : p.gal →* Equivₓ.Perm
     exact MulAction.mul_smul x y z
 
 theorem gal_action_hom_restrict [Fact (p.splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x : root_set p E) :
-    ↑gal_action_hom p E (restrict p E ϕ) x = ϕ x :=
+    ↑(gal_action_hom p E (restrict p E ϕ) x) = ϕ x :=
   restrict_smul ϕ x
 
 /-- `gal p` embeds as a subgroup of permutations of the roots of `p` in `E`. -/

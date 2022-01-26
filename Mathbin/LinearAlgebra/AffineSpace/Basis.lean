@@ -73,8 +73,7 @@ noncomputable def basis_of (i : ι) : Basis { j : ι // j ≠ i } k V :=
   Basis.mk ((affine_independent_iff_linear_independent_vsub k b.points i).mp b.ind)
     (by
       suffices
-        Submodule.span k (range fun j : { x // x ≠ i } => b.points (↑j) -ᵥ b.points i) = vectorSpan k (range b.points)
-        by
+        Submodule.span k (range fun j : { x // x ≠ i } => b.points ↑j -ᵥ b.points i) = vectorSpan k (range b.points) by
         rw [this, ← direction_affine_span, b.tot, AffineSubspace.direction_top]
       conv_rhs => rw [← image_univ]
       rw [vector_span_image_eq_span_vsub_set_right_ne k b.points (mem_univ i)]
@@ -83,7 +82,7 @@ noncomputable def basis_of (i : ι) : Basis { j : ι // j ≠ i } k V :=
       simp )
 
 @[simp]
-theorem basis_of_apply (i : ι) (j : { j : ι // j ≠ i }) : b.basis_of i j = b.points (↑j) -ᵥ b.points i := by
+theorem basis_of_apply (i : ι) (j : { j : ι // j ≠ i }) : b.basis_of i j = b.points ↑j -ᵥ b.points i := by
   simp [basis_of]
 
 /-- The `i`th barycentric coordinate of a point. -/
@@ -167,7 +166,7 @@ theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.coord i
     simp
   rw [Pi.one_apply, hq, b.coord_apply_combination_of_mem hi hw]
 
-theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective $ b.coord i := by
+theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.coord i := by
   classical
   intro x
   obtain ⟨j, hij⟩ := exists_ne i
@@ -309,7 +308,7 @@ variable (b b₂ : AffineBasis ι k P)
 
 See also `affine_basis.to_matrix_vec_mul_coords`. -/
 @[simp]
-theorem to_matrix_inv_vec_mul_to_matrix (x : P) : b.to_matrix b₂.points⁻¹.vecMul (b.coords x) = b₂.coords x := by
+theorem to_matrix_inv_vec_mul_to_matrix (x : P) : (b.to_matrix b₂.points)⁻¹.vecMul (b.coords x) = b₂.coords x := by
   have hu := b.is_unit_to_matrix b₂
   rw [Matrix.is_unit_iff_is_unit_det] at hu
   rw [← b.to_matrix_vec_mul_coords b₂, Matrix.vec_mul_vec_mul, Matrix.mul_nonsing_inv _ hu, Matrix.vec_mul_one]

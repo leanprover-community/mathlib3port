@@ -99,7 +99,7 @@ def is_split_coequalizer.as_cofork {Z : C} {h : Y ⟶ Z} (t : is_split_coequaliz
 is more convenient to show a given cofork is a coequalizer by showing it is split.
 -/
 def is_split_coequalizer.is_coequalizer {Z : C} {h : Y ⟶ Z} (t : is_split_coequalizer f g h) : is_colimit t.as_cofork :=
-  cofork.is_colimit.mk' _ $ fun s =>
+  (cofork.is_colimit.mk' _) fun s =>
     ⟨t.right_section ≫ s.π, by
       dsimp
       rw [← t.left_section_top_assoc, s.condition, t.left_section_bottom_assoc], fun m hm => by

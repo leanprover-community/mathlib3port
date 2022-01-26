@@ -41,7 +41,7 @@ instance : One (completion α) :=
   ⟨(1 : α)⟩
 
 instance : Mul (completion α) :=
-  ⟨curry $ (dense_inducing_coe.Prod dense_inducing_coe).extend (coe ∘ uncurry (· * ·))⟩
+  ⟨curry <| (dense_inducing_coe.Prod dense_inducing_coe).extend (coe ∘ uncurry (· * ·))⟩
 
 @[norm_cast]
 theorem coe_one : ((1 : α) : completion α) = 1 :=
@@ -161,7 +161,7 @@ variable {α : Type _}
 
 theorem ring_sep_rel α [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     separation_setoid α = Submodule.quotientRel (Ideal.closure ⊥) :=
-  Setoidₓ.ext $ fun x y => group_separation_rel x y
+  Setoidₓ.ext fun x y => group_separation_rel x y
 
 theorem ring_sep_quot (α : Type u) [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     Quotientₓ (separation_setoid α) = (α ⧸ (⊥ : Ideal α).closure) := by
@@ -172,7 +172,7 @@ continuous, get an equivalence between the separated quotient of `α` and the qu
 corresponding to the closure of zero. -/
 def sep_quot_equiv_ring_quot α [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     Quotientₓ (separation_setoid α) ≃ α ⧸ (⊥ : Ideal α).closure :=
-  Quotientₓ.congrRight $ fun x y => group_separation_rel x y
+  Quotientₓ.congrRight fun x y => group_separation_rel x y
 
 instance CommRingₓ [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     CommRingₓ (Quotientₓ (separation_setoid α)) := by

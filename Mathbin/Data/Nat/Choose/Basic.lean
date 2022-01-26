@@ -211,7 +211,7 @@ theorem factorial_dvd_asc_factorial (n k : ℕ) : k ! ∣ n.asc_factorial k :=
 theorem choose_eq_asc_factorial_div_factorial (n k : ℕ) : (n + k).choose k = n.asc_factorial k / k ! := by
   apply mul_left_cancel₀ (factorial_ne_zero k)
   rw [← asc_factorial_eq_factorial_mul_choose]
-  exact (Nat.mul_div_cancel'ₓ $ factorial_dvd_asc_factorial _ _).symm
+  exact (Nat.mul_div_cancel'ₓ <| factorial_dvd_asc_factorial _ _).symm
 
 theorem desc_factorial_eq_factorial_mul_choose (n k : ℕ) : n.desc_factorial k = k ! * n.choose k := by
   obtain h | h := Nat.lt_or_geₓ n k
@@ -227,7 +227,7 @@ theorem factorial_dvd_desc_factorial (n k : ℕ) : k ! ∣ n.desc_factorial k :=
 theorem choose_eq_desc_factorial_div_factorial (n k : ℕ) : n.choose k = n.desc_factorial k / k ! := by
   apply mul_left_cancel₀ (factorial_ne_zero k)
   rw [← desc_factorial_eq_factorial_mul_choose]
-  exact (Nat.mul_div_cancel'ₓ $ factorial_dvd_desc_factorial _ _).symm
+  exact (Nat.mul_div_cancel'ₓ <| factorial_dvd_desc_factorial _ _).symm
 
 /-! ### Inequalities -/
 

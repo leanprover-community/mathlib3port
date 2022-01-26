@@ -49,7 +49,7 @@ unsafe def parse_list : expr → Option (List expr)
 notations are `tfae_have : i ← j` and `tfae_have : i ↔ j`. The user can
 also provide a label for the assertion, as with `have`: `tfae_have h : i ↔ j`.
 -/
-unsafe def tfae_have (h : parse $ optionalₓ ident <* tk ":") (i₁ : parse (with_desc "i" small_nat))
+unsafe def tfae_have (h : parse <| optionalₓ ident <* tk ":") (i₁ : parse (with_desc "i" small_nat))
     (re :
       parse
         ((tk "→" <|> tk "->") *> return arrow.right <|>

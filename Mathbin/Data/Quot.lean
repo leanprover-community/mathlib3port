@@ -17,7 +17,7 @@ namespace Setoidₓ
 
 theorem ext {α : Sort _} : ∀ {s t : Setoidₓ α}, (∀ a b, @Setoidₓ.R α s a b ↔ @Setoidₓ.R α t a b) → s = t
   | ⟨r, _⟩, ⟨p, _⟩, Eq => by
-    have : r = p := funext $ fun a => funext $ fun b => propext $ Eq a b
+    have : r = p := funext fun a => funext fun b => propext <| Eq a b
     subst this
 
 end Setoidₓ
@@ -36,8 +36,8 @@ instance [Inhabited α] : Inhabited (Quot ra) :=
 protected def hrec_on₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ (⟦a⟧) (⟦b⟧))
     (ca : ∀ {b a₁ a₂}, ra a₁ a₂ → HEq (f a₁ b) (f a₂ b)) (cb : ∀ {a b₁ b₂}, rb b₁ b₂ → HEq (f a b₁) (f a b₂)) :
     φ qa qb :=
-  (Quot.hrecOnₓ qa fun a => Quot.hrecOnₓ qb (f a) fun b₁ b₂ pb => cb pb) $ fun a₁ a₂ pa =>
-    Quot.induction_on qb $ fun b =>
+  (Quot.hrecOnₓ qa fun a => Quot.hrecOnₓ qb (f a) fun b₁ b₂ pb => cb pb) fun a₁ a₂ pa =>
+    (Quot.induction_on qb) fun b =>
       calc
         HEq (@Quot.hrecOnₓ _ _ (φ _) (⟦b⟧) (f a₁) (@cb _)) (f a₁ b) := by
           simp [heq_self_iff_true]
@@ -49,7 +49,7 @@ protected def hrec_on₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ (⟦a⟧
 /-- Map a function `f : α → β` such that `ra x y` implies `rb (f x) (f y)`
 to a map `quot ra → quot rb`. -/
 protected def map (f : α → β) (h : (ra⇒rb) f f) : Quot ra → Quot rb :=
-  (Quot.lift fun x => ⟦f x⟧) $ fun x y h₁ : ra x y => Quot.sound $ h h₁
+  (Quot.lift fun x => ⟦f x⟧) fun x y h₁ : ra x y => Quot.sound <| h h₁
 
 /-- If `ra` is a subrelation of `ra'`, then we have a natural map `quot ra → quot ra'`. -/
 protected def map_right {ra' : α → α → Prop} (h : ∀ a₁ a₂, ra a₁ a₂ → ra' a₁ a₂) : Quot ra → Quot ra' :=
@@ -102,7 +102,7 @@ variable {t : γ → γ → Prop}
 `γ`. -/
 protected def map₂ (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → t (f a b₁) (f a b₂))
     (hs : ∀ a₁ a₂ b, r a₁ a₂ → t (f a₁ b) (f a₂ b)) (q₁ : Quot r) (q₂ : Quot s) : Quot t :=
-  Quot.lift₂ (fun a b => Quot.mk t $ f a b) (fun a b₁ b₂ hb => Quot.sound (hr a b₁ b₂ hb))
+  Quot.lift₂ (fun a b => Quot.mk t <| f a b) (fun a b₁ b₂ hb => Quot.sound (hr a b₁ b₂ hb))
     (fun a₁ a₂ b ha => Quot.sound (hs a₁ a₂ b ha)) q₁ q₂
 
 @[simp]
@@ -153,7 +153,7 @@ variable {γ : Sort _} [sc : Setoidₓ γ]
 to a function `f : quotient sa → quotient sb → quotient sc`.
 Useful to define binary operations on quotients. -/
 protected def map₂ (f : α → β → γ) (h : (· ≈ ·⇒· ≈ ·⇒· ≈ ·) f f) : Quotientₓ sa → Quotientₓ sb → Quotientₓ sc :=
-  Quotientₓ.lift₂ (fun x y => ⟦f x y⟧) fun x₁ y₁ x₂ y₂ h₁ h₂ => Quot.sound $ h h₁ h₂
+  Quotientₓ.lift₂ (fun x y => ⟦f x y⟧) fun x₁ y₁ x₂ y₂ h₁ h₂ => Quot.sound <| h h₁ h₂
 
 @[simp]
 theorem map₂_mk (f : α → β → γ) (h : (· ≈ ·⇒· ≈ ·⇒· ≈ ·) f f) (x : α) (y : β) :
@@ -243,7 +243,7 @@ theorem Quotientₓ.out_equiv_out [s : Setoidₓ α] {x y : Quotientₓ s} : x.o
 
 @[simp]
 theorem Quotientₓ.out_inj [s : Setoidₓ α] {x y : Quotientₓ s} : x.out = y.out ↔ x = y :=
-  ⟨fun h => Quotientₓ.out_equiv_out.1 $ h ▸ Setoidₓ.refl _, fun h => h ▸ rfl⟩
+  ⟨fun h => Quotientₓ.out_equiv_out.1 <| h ▸ Setoidₓ.refl _, fun h => h ▸ rfl⟩
 
 section Pi
 
@@ -263,7 +263,7 @@ noncomputable def Quotientₓ.choice {ι : Type _} {α : ι → Type _} [S : ∀
 @[simp]
 theorem Quotientₓ.choice_eq {ι : Type _} {α : ι → Type _} [∀ i, Setoidₓ (α i)] (f : ∀ i, α i) :
     (Quotientₓ.choice fun i => ⟦f i⟧) = ⟦f⟧ :=
-  Quotientₓ.sound $ fun i => Quotientₓ.mk_out _
+  Quotientₓ.sound fun i => Quotientₓ.mk_out _
 
 @[elab_as_eliminator]
 theorem Quotientₓ.induction_on_pi {ι : Type _} {α : ι → Sort _} [s : ∀ i, Setoidₓ (α i)]
@@ -321,7 +321,7 @@ theorem exists_rep (q : Trunc α) : ∃ a : α, mk a = q :=
 @[elab_as_eliminator]
 protected theorem induction_on₂ {C : Trunc α → Trunc β → Prop} (q₁ : Trunc α) (q₂ : Trunc β)
     (h : ∀ a b, C (mk a) (mk b)) : C q₁ q₂ :=
-  Trunc.induction_on q₁ $ fun a₁ => Trunc.induction_on q₂ (h a₁)
+  (Trunc.induction_on q₁) fun a₁ => Trunc.induction_on q₂ (h a₁)
 
 protected theorem Eq (a b : Trunc α) : a = b :=
   Trunc.induction_on₂ a b fun x y => Quot.sound trivialₓ

@@ -103,7 +103,7 @@ theorem mem_shadow_iff_exists_mem_card_add_one : s ∈ (∂ ) 𝒜 ↔ ∃ t ∈
         (by
           rw [card_sdiff hst, h, add_tsub_cancel_left])
     exact
-      ⟨a, fun hat => not_mem_sdiff_of_mem_right hat ((ha.ge : _ ⊆ _) $ mem_singleton_self a), by
+      ⟨a, fun hat => not_mem_sdiff_of_mem_right hat ((ha.ge : _ ⊆ _) <| mem_singleton_self a), by
         rwa [insert_eq a s, ← ha, sdiff_union_of_subset hst]⟩
     
 
@@ -154,7 +154,7 @@ variable [DecidableEq α] [Fintype α] {𝒜 : Finset (Finset α)} {s t : Finset
 `𝒜`, and the (`k` times) iterated upper shadow (`up_shadow^[k]`) is all sets we can get by adding
 `k` elements from any set in `𝒜`. -/
 def up_shadow (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
-  𝒜.sup $ fun s => sᶜ.Image $ fun a => insert a s
+  𝒜.sup fun s => sᶜ.Image fun a => insert a s
 
 localized [FinsetFamily] notation:90 "∂⁺ " => Finset.upShadow
 
@@ -205,7 +205,7 @@ theorem mem_up_shadow_iff_exists_mem_card_add_one : s ∈ (∂⁺ ) 𝒜 ↔ ∃
       card_eq_one.1
         (by
           rw [card_sdiff hts, ← h, add_tsub_cancel_left])
-    refine' ⟨a, sdiff_subset _ _ ((ha.ge : _ ⊆ _) $ mem_singleton_self a), _⟩
+    refine' ⟨a, sdiff_subset _ _ ((ha.ge : _ ⊆ _) <| mem_singleton_self a), _⟩
     rwa [← sdiff_singleton_eq_erase, ← ha, sdiff_sdiff_eq_self hts]
     
 

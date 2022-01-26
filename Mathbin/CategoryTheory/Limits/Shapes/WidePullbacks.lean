@@ -98,8 +98,8 @@ def wide_cospan (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : wi
 def diagram_iso_wide_cospan (F : wide_pullback_shape J ⥤ C) :
     F ≅ wide_cospan (F.obj none) (fun j => F.obj (some j)) fun j => F.map (hom.term j) :=
   (nat_iso.of_components fun j =>
-      eq_to_iso $ by
-        tidy) $
+      eq_to_iso <| by
+        tidy) <|
     by
     tidy
 
@@ -179,8 +179,8 @@ def wide_span (B : C) (objs : J → C) (arrows : ∀ j : J, B ⟶ objs j) : wide
 def diagram_iso_wide_span (F : wide_pushout_shape J ⥤ C) :
     F ≅ wide_span (F.obj none) (fun j => F.obj (some j)) fun j => F.map (hom.init j) :=
   (nat_iso.of_components fun j =>
-      eq_to_iso $ by
-        tidy) $
+      eq_to_iso <| by
+        tidy) <|
     by
     tidy
 
@@ -254,7 +254,7 @@ variable {arrows}
 /-- Lift a collection of morphisms to a morphism to the pullback. -/
 noncomputable abbrev lift {X : C} (f : X ⟶ B) (fs : ∀ j : J, X ⟶ objs j) (w : ∀ j, fs j ≫ arrows j = f) :
     X ⟶ wide_pullback _ _ arrows :=
-  limit.lift (wide_pullback_shape.wide_cospan _ _ _) (wide_pullback_shape.mk_cone f fs $ w)
+  limit.lift (wide_pullback_shape.wide_cospan _ _ _) (wide_pullback_shape.mk_cone f fs <| w)
 
 variable (arrows)
 
@@ -273,7 +273,7 @@ theorem liftBase : lift f fs w ≫ base arrows = f := by
 theorem eq_lift_of_comp_eq (g : X ⟶ wide_pullback _ _ arrows) :
     (∀ j : J, g ≫ π arrows j = fs j) → g ≫ base arrows = f → g = lift f fs w := by
   intro h1 h2
-  apply (limit.is_limit (wide_pullback_shape.wide_cospan B objs arrows)).uniq (wide_pullback_shape.mk_cone f fs $ w)
+  apply (limit.is_limit (wide_pullback_shape.wide_cospan B objs arrows)).uniq (wide_pullback_shape.mk_cone f fs <| w)
   rintro (_ | _)
   · apply h2
     
@@ -325,7 +325,7 @@ variable {arrows}
 /-- Descend a collection of morphisms to a morphism from the pushout. -/
 noncomputable abbrev desc {X : C} (f : B ⟶ X) (fs : ∀ j : J, objs j ⟶ X) (w : ∀ j, arrows j ≫ fs j = f) :
     wide_pushout _ _ arrows ⟶ X :=
-  colimit.desc (wide_pushout_shape.wide_span B objs arrows) (wide_pushout_shape.mk_cocone f fs $ w)
+  colimit.desc (wide_pushout_shape.wide_span B objs arrows) (wide_pushout_shape.mk_cocone f fs <| w)
 
 variable (arrows)
 
@@ -344,7 +344,7 @@ theorem head_desc : head arrows ≫ desc f fs w = f := by
 theorem eq_desc_of_comp_eq (g : wide_pushout _ _ arrows ⟶ X) :
     (∀ j : J, ι arrows j ≫ g = fs j) → head arrows ≫ g = f → g = desc f fs w := by
   intro h1 h2
-  apply (colimit.is_colimit (wide_pushout_shape.wide_span B objs arrows)).uniq (wide_pushout_shape.mk_cocone f fs $ w)
+  apply (colimit.is_colimit (wide_pushout_shape.wide_span B objs arrows)).uniq (wide_pushout_shape.mk_cocone f fs <| w)
   rintro (_ | _)
   · apply h2
     

@@ -31,10 +31,10 @@ variable {C} {X Y : C} (f : X ⟶ Y) {A B : Cᵒᵖ} (g : A ⟶ B)
 @[simps]
 def kernel_op_unop : (kernel f.op).unop ≅ cokernel f where
   Hom :=
-    (kernel.lift f.op (cokernel.π f).op $ by
+    (kernel.lift f.op (cokernel.π f).op <| by
         simp [← op_comp]).unop
   inv :=
-    cokernel.desc f (kernel.ι f.op).unop $ by
+    cokernel.desc f (kernel.ι f.op).unop <| by
       rw [← f.unop_op, ← unop_comp, f.unop_op]
       simp
   hom_inv_id' := by
@@ -52,11 +52,11 @@ def kernel_op_unop : (kernel f.op).unop ≅ cokernel f where
 @[simps]
 def cokernel_op_unop : (cokernel f.op).unop ≅ kernel f where
   Hom :=
-    kernel.lift f (cokernel.π f.op).unop $ by
+    kernel.lift f (cokernel.π f.op).unop <| by
       rw [← f.unop_op, ← unop_comp, f.unop_op]
       simp
   inv :=
-    (cokernel.desc f.op (kernel.ι f).op $ by
+    (cokernel.desc f.op (kernel.ι f).op <| by
         simp [← op_comp]).unop
   hom_inv_id' := by
     rw [← unop_id, ← (kernel.lift f _ _).unop_op, ← unop_comp]

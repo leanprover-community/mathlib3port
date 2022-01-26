@@ -88,7 +88,7 @@ A' --f'-> B' --g'-> C' --h'-> D'
 ```
 -/
 theorem mono_of_epi_of_mono_of_mono (hα : epi α) (hβ : mono β) (hδ : mono δ) : mono γ :=
-  mono_of_zero_of_map_zero _ $ fun c hc =>
+  (mono_of_zero_of_map_zero _) fun c hc =>
     have : h c = 0 :=
       suffices δ (h c) = 0 from zero_of_map_zero _ (pseudo_injective_of_mono _) _ this
       calc
@@ -98,7 +98,7 @@ theorem mono_of_epi_of_mono_of_mono (hα : epi α) (hβ : mono β) (hδ : mono �
           rw [hc]
         _ = 0 := apply_zero _
         
-    Exists.elim (pseudo_exact_of_exact.2 _ this) $ fun b hb =>
+    (Exists.elim (pseudo_exact_of_exact.2 _ this)) fun b hb =>
       have : g' (β b) = 0 :=
         calc
           g' (β b) = γ (g b) := by
@@ -107,8 +107,8 @@ theorem mono_of_epi_of_mono_of_mono (hα : epi α) (hβ : mono β) (hδ : mono �
             rw [hb]
           _ = 0 := hc
           
-      Exists.elim (pseudo_exact_of_exact.2 _ this) $ fun a' ha' =>
-        Exists.elim (pseudo_surjective_of_epi α a') $ fun a ha =>
+      (Exists.elim (pseudo_exact_of_exact.2 _ this)) fun a' ha' =>
+        (Exists.elim (pseudo_surjective_of_epi α a')) fun a ha =>
           have : f a = b :=
             suffices β (f a) = β b from pseudo_injective_of_mono _ this
             calc
@@ -144,9 +144,9 @@ A' --f'-> B' --g'-> C' --h'-> D'
 ```
 -/
 theorem epi_of_epi_of_epi_of_mono (hα : epi α) (hγ : epi γ) (hδ : mono δ) : epi β :=
-  preadditive.epi_of_cancel_zero _ $ fun R r hβr =>
+  (preadditive.epi_of_cancel_zero _) fun R r hβr =>
     have hf'r : f' ≫ r = 0 :=
-      limits.zero_of_epi_comp α $
+      limits.zero_of_epi_comp α <|
         calc
           α ≫ f' ≫ r = f ≫ β ≫ r := by
             rw [reassoc_of comm₁]
@@ -192,7 +192,7 @@ theorem epi_of_epi_of_epi_of_mono (hα : epi α) (hγ : epi γ) (hδ : mono δ) 
           simp )
         _ (colimit.is_colimit _)
     have hzv : z ≫ v = h' ≫ w :=
-      (cancel_epi γ).1 $
+      (cancel_epi γ).1 <|
         calc
           γ ≫ z ≫ v = h ≫ δ ≫ w := by
             rw [← category.assoc, pushout.condition, category.assoc]

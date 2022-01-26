@@ -71,23 +71,23 @@ theorem omega_limit_mono_left {f₁ f₂ : Filter τ} (hf : f₁ ≤ f₂) : ω 
   omega_limit_subset_of_tendsto ϕ s (tendsto_id' hf)
 
 theorem omega_limit_mono_right {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) : ω f ϕ s₁ ⊆ ω f ϕ s₂ :=
-  Inter₂_mono $ fun u hu => closure_mono (image2_subset subset.rfl hs)
+  Inter₂_mono fun u hu => closure_mono (image2_subset subset.rfl hs)
 
 theorem is_closed_omega_limit : IsClosed (ω f ϕ s) :=
-  is_closed_Inter $ fun u => is_closed_Inter $ fun hu => is_closed_closure
+  is_closed_Inter fun u => is_closed_Inter fun hu => is_closed_closure
 
 theorem maps_to_omega_limit' {α' β' : Type _} [TopologicalSpace β'] {f : Filter τ} {ϕ : τ → α → β} {ϕ' : τ → α' → β'}
     {ga : α → α'} {s' : Set α'} (hs : maps_to ga s s') {gb : β → β'} (hg : ∀ᶠ t in f, eq_on (gb ∘ ϕ t) (ϕ' t ∘ ga) s)
     (hgc : Continuous gb) : maps_to gb (ω f ϕ s) (ω f ϕ' s') := by
   simp only [omega_limit_def, mem_Inter, maps_to]
   intro y hy u hu
-  refine' map_mem_closure hgc (hy _ (inter_mem hu hg)) (forall_image2_iff.2 $ fun t ht x hx => _)
+  refine' map_mem_closure hgc (hy _ (inter_mem hu hg)) (forall_image2_iff.2 fun t ht x hx => _)
   calc gb (ϕ t x) = ϕ' t (ga x) := ht.2 hx _ ∈ image2 ϕ' u s' := mem_image2_of_mem ht.1 (hs hx)
 
 theorem maps_to_omega_limit {α' β' : Type _} [TopologicalSpace β'] {f : Filter τ} {ϕ : τ → α → β} {ϕ' : τ → α' → β'}
     {ga : α → α'} {s' : Set α'} (hs : maps_to ga s s') {gb : β → β'} (hg : ∀ t x, gb (ϕ t x) = ϕ' t (ga x))
     (hgc : Continuous gb) : maps_to gb (ω f ϕ s) (ω f ϕ' s') :=
-  maps_to_omega_limit' _ hs (eventually_of_forall $ fun t x hx => hg t x) hgc
+  maps_to_omega_limit' _ hs (eventually_of_forall fun t x hx => hg t x) hgc
 
 theorem omega_limit_image_eq {α' : Type _} (ϕ : τ → α' → β) (f : Filter τ) (g : α → α') :
     ω f ϕ (g '' s) = ω f (fun t x => ϕ t (g x)) s := by
@@ -147,7 +147,7 @@ theorem omega_limit_inter : ω f ϕ (s₁ ∩ s₂) ⊆ ω f ϕ s₁ ∩ ω f ϕ
     (omega_limit_mono_right _ _ (inter_subset_right _ _))
 
 theorem omega_limit_Inter (p : ι → Set α) : ω f ϕ (⋂ i, p i) ⊆ ⋂ i, ω f ϕ (p i) :=
-  subset_Inter $ fun i => omega_limit_mono_right _ _ (Inter_subset _ _)
+  subset_Inter fun i => omega_limit_mono_right _ _ (Inter_subset _ _)
 
 theorem omega_limit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s₂ := by
   ext y
@@ -157,9 +157,9 @@ theorem omega_limit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s
     contrapose!
     simp only [not_frequently, not_nonempty_iff_eq_empty, ← subset_empty_iff]
     rintro ⟨⟨n₁, hn₁, h₁⟩, ⟨n₂, hn₂, h₂⟩⟩
-    refine' ⟨n₁ ∩ n₂, inter_mem hn₁ hn₂, h₁.mono $ fun t => _, h₂.mono $ fun t => _⟩
-    exacts[subset.trans $ inter_subset_inter_right _ $ preimage_mono $ inter_subset_left _ _,
-      subset.trans $ inter_subset_inter_right _ $ preimage_mono $ inter_subset_right _ _]
+    refine' ⟨n₁ ∩ n₂, inter_mem hn₁ hn₂, h₁.mono fun t => _, h₂.mono fun t => _⟩
+    exacts[subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_left _ _,
+      subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_right _ _]
     
   · rintro (hy | hy)
     exacts[omega_limit_mono_right _ _ (subset_union_left _ _) hy,
@@ -181,8 +181,8 @@ theorem omega_limit_eq_Inter : ω f ϕ s = ⋂ u : ↥f.sets, Closure (image2 ϕ
   bInter_eq_Inter _ _
 
 theorem omega_limit_eq_bInter_inter {v : Set τ} (hv : v ∈ f) : ω f ϕ s = ⋂ u ∈ f, Closure (image2 ϕ (u ∩ v) s) :=
-  subset.antisymm (Inter₂_mono' $ fun u hu => ⟨u ∩ v, inter_mem hu hv, subset.rfl⟩)
-    (Inter₂_mono $ fun u hu => closure_mono $ image2_subset (inter_subset_left _ _) subset.rfl)
+  subset.antisymm (Inter₂_mono' fun u hu => ⟨u ∩ v, inter_mem hu hv, subset.rfl⟩)
+    (Inter₂_mono fun u hu => closure_mono <| image2_subset (inter_subset_left _ _) subset.rfl)
 
 theorem omega_limit_eq_Inter_inter {v : Set τ} (hv : v ∈ f) : ω f ϕ s = ⋂ u : ↥f.sets, Closure (image2 ϕ (u ∩ v) s) :=
   by
@@ -256,7 +256,7 @@ theorem eventually_maps_to_of_is_compact_absorbing_of_is_open_of_omega_limit_sub
   rcases eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset f ϕ s hc₁ hc₂ hn₁ hn₂ with
     ⟨u, hu_mem, hu⟩
   refine' mem_of_superset hu_mem fun t ht x hx => _
-  exact hu (subset_closure $ mem_image2_of_mem ht hx)
+  exact hu (subset_closure <| mem_image2_of_mem ht hx)
 
 theorem eventually_closure_subset_of_is_open_of_omega_limit_subset [CompactSpace β] {v : Set β} (hv₁ : IsOpen v)
     (hv₂ : ω f ϕ s ⊆ v) : ∃ u ∈ f, Closure (image2 ϕ u s) ⊆ v :=
@@ -267,7 +267,7 @@ theorem eventually_maps_to_of_is_open_of_omega_limit_subset [CompactSpace β] {v
     (hv₂ : ω f ϕ s ⊆ v) : ∀ᶠ t in f, maps_to (ϕ t) s v := by
   rcases eventually_closure_subset_of_is_open_of_omega_limit_subset f ϕ s hv₁ hv₂ with ⟨u, hu_mem, hu⟩
   refine' mem_of_superset hu_mem fun t ht x hx => _
-  exact hu (subset_closure $ mem_image2_of_mem ht hx)
+  exact hu (subset_closure <| mem_image2_of_mem ht hx)
 
 /-- The ω-limit of a nonempty set w.r.t. a nontrivial filter is nonempty. -/
 theorem nonempty_omega_limit_of_is_compact_absorbing [ne_bot f] {c : Set β} (hc₁ : IsCompact c)
@@ -316,7 +316,7 @@ variable {τ : Type _} [TopologicalSpace τ] [AddMonoidₓ τ] [HasContinuousAdd
 open_locale OmegaLimit
 
 theorem is_invariant_omega_limit (hf : ∀ t, tendsto ((· + ·) t) f f) : IsInvariant ϕ (ω f ϕ s) := fun t =>
-  maps_to.mono (subset.refl _) (omega_limit_subset_of_tendsto ϕ s (hf t)) $
+  maps_to.mono (subset.refl _) (omega_limit_subset_of_tendsto ϕ s (hf t)) <|
     maps_to_omega_limit _ (maps_to_id _) (fun t' x => (ϕ.map_add _ _ _).symm) (continuous_const.Flow ϕ continuous_id)
 
 theorem omega_limit_image_subset (t : τ) (ht : tendsto (· + t) f f) : ω f ϕ (ϕ t '' s) ⊆ ω f ϕ s := by
@@ -340,7 +340,7 @@ open_locale OmegaLimit
 /-- the ω-limit of a forward image of `s` is the same as the ω-limit of `s`. -/
 @[simp]
 theorem omega_limit_image_eq (hf : ∀ t, tendsto (· + t) f f) (t : τ) : ω f ϕ (ϕ t '' s) = ω f ϕ s :=
-  subset.antisymm (omega_limit_image_subset _ _ _ _ (hf t)) $
+  subset.antisymm (omega_limit_image_subset _ _ _ _ (hf t)) <|
     calc
       ω f ϕ s = ω f ϕ (ϕ (-t) '' (ϕ t '' s)) := by
         simp [image_image, ← map_add]

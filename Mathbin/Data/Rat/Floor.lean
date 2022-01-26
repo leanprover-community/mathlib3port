@@ -32,7 +32,7 @@ protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z :
     exact Int.le_div_iff_mul_le h'
 
 instance : FloorRing ℚ :=
-  FloorRing.ofFloor ℚ Rat.floor $ fun a z => Rat.le_floor.symm
+  (FloorRing.ofFloor ℚ Rat.floor) fun a z => Rat.le_floor.symm
 
 protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.denom := by
   cases q
@@ -70,7 +70,7 @@ theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d :
 end Rat
 
 theorem Int.mod_nat_eq_sub_mul_floor_rat_div {n : ℤ} {d : ℕ} : n % d = n - d * ⌊(n : ℚ) / d⌋ := by
-  rw [eq_sub_of_add_eq $ Int.mod_add_div n d, Rat.floor_int_div_nat_eq_div]
+  rw [eq_sub_of_add_eq <| Int.mod_add_div n d, Rat.floor_int_div_nat_eq_div]
 
 theorem Nat.coprime_sub_mul_floor_rat_div_of_coprime {n d : ℕ} (n_coprime_d : n.coprime d) :
     ((n : ℤ) - d * ⌊(n : ℚ) / d⌋).natAbs.Coprime d := by
@@ -85,7 +85,7 @@ theorem num_lt_succ_floor_mul_denom (q : ℚ) : q.num < (⌊q⌋ + 1) * q.denom 
   suffices (q.num : ℚ) < (⌊q⌋ + 1) * q.denom by
     exact_mod_cast this
   suffices (q.num : ℚ) < (q - fract q + 1) * q.denom by
-    have : (⌊q⌋ : ℚ) = q - fract q := eq_sub_of_add_eq $ floor_add_fract q
+    have : (⌊q⌋ : ℚ) = q - fract q := eq_sub_of_add_eq <| floor_add_fract q
     rwa [this]
   suffices (q.num : ℚ) < q.num + (1 - fract q) * q.denom by
     have : (q - fract q + 1) * q.denom = q.num + (1 - fract q) * q.denom
@@ -107,7 +107,7 @@ theorem num_lt_succ_floor_mul_denom (q : ℚ) : q.num < (⌊q⌋ + 1) * q.denom 
       (by
         exact_mod_cast q.pos)
 
-theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract (q⁻¹)).num < q.num := by
+theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).num < q.num := by
   have q_num_pos : 0 < q.num := rat.num_pos_iff_pos.elim_right q_pos
   have q_num_abs_eq_q_num : (q.num.nat_abs : ℤ) = q.num := Int.nat_abs_of_nonneg q_num_pos.le
   set q_inv := (q.denom : ℚ) / q.num with q_inv_def
@@ -126,7 +126,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract (q⁻¹))
       simpa only [this, q_num_abs_eq_q_num] using tmp
     rwa [this]
   have q_inv_num_denom_ineq : q⁻¹.num - ⌊q⁻¹⌋ * q⁻¹.denom < q⁻¹.denom := by
-    have : q⁻¹.num < (⌊q⁻¹⌋ + 1) * q⁻¹.denom := Rat.num_lt_succ_floor_mul_denom (q⁻¹)
+    have : q⁻¹.num < (⌊q⁻¹⌋ + 1) * q⁻¹.denom := Rat.num_lt_succ_floor_mul_denom q⁻¹
     have : q⁻¹.num < ⌊q⁻¹⌋ * q⁻¹.denom + q⁻¹.denom := by
       rwa [right_distrib, one_mulₓ] at this
     rwa [← sub_lt_iff_lt_add'] at this

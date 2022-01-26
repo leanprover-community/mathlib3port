@@ -50,7 +50,7 @@ theorem IsLocalExtrOn.exists_linear_map_of_has_strict_fderiv_at (hextr : IsLocal
     (hf' : HasStrictFderivAt f f' x₀) (hφ' : HasStrictFderivAt φ φ' x₀) :
     ∃ (Λ : Module.Dual ℝ F)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ ∀ x, Λ (f' x) + Λ₀ • φ' x = 0 := by
   rcases Submodule.exists_le_ker_of_lt_top _
-      (lt_top_iff_ne_top.2 $ hextr.range_ne_top_of_has_strict_fderiv_at hf' hφ') with
+      (lt_top_iff_ne_top.2 <| hextr.range_ne_top_of_has_strict_fderiv_at hf' hφ') with
     ⟨Λ', h0, hΛ'⟩
   set e : ((F →ₗ[ℝ] ℝ) × ℝ) ≃ₗ[ℝ] F × ℝ →ₗ[ℝ] ℝ :=
     ((LinearEquiv.refl ℝ (F →ₗ[ℝ] ℝ)).Prod (LinearMap.ringLmapEquivSelf ℝ ℝ ℝ).symm).trans (LinearMap.coprodEquiv ℝ)

@@ -65,7 +65,7 @@ variable {J}
 def is_sheaf.amalgamate {A : Type u₂} [category.{max v₁ u₁} A] {E : A} {X : C} {P : Cᵒᵖ ⥤ A}
     (hP : presheaf.is_sheaf J P) (S : J.cover X) (x : ∀ I : S.arrow, E ⟶ P.obj (op I.Y))
     (hx : ∀ I : S.relation, x I.fst ≫ P.map I.g₁.op = x I.snd ≫ P.map I.g₂.op) : E ⟶ P.obj (op X) :=
-  ((hP _ _ S.condition).amalgamate fun Y f hf => x ⟨Y, f, hf⟩) $ fun Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ w =>
+  ((hP _ _ S.condition).amalgamate fun Y f hf => x ⟨Y, f, hf⟩) fun Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ w =>
     hx ⟨Y₁, Y₂, Z, g₁, g₂, f₁, f₂, h₁, h₂, w⟩
 
 @[simp, reassoc]
@@ -112,9 +112,9 @@ instance : category (Sheaf J A) where
   Hom := hom
   id := fun X => ⟨𝟙 _⟩
   comp := fun X Y Z f g => ⟨f.val ≫ g.val⟩
-  id_comp' := fun X Y f => hom.ext _ _ $ id_comp _
-  comp_id' := fun X Y f => hom.ext _ _ $ comp_id _
-  assoc' := fun X Y Z W f g h => hom.ext _ _ $ assoc _ _ _
+  id_comp' := fun X Y f => hom.ext _ _ <| id_comp _
+  comp_id' := fun X Y f => hom.ext _ _ <| comp_id _
+  assoc' := fun X Y Z W f g h => hom.ext _ _ <| assoc _ _ _
 
 instance (X : Sheaf J A) : Inhabited (hom X X) :=
   ⟨𝟙 X⟩

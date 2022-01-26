@@ -174,7 +174,7 @@ instance (priority := 100) is_prime.is_maximal [is_prime I] : is_maximal I := by
     
   exact
     sup_mem _ (J.mem_of_le inf_le_right hyJ) _
-      (hIJ.le $ I.mem_of_le inf_le_right $ is_prime.mem_compl_of_not_mem ‹_› hyI)
+      (hIJ.le <| I.mem_of_le inf_le_right <| is_prime.mem_compl_of_not_mem ‹_› hyI)
 
 end BooleanAlgebra
 

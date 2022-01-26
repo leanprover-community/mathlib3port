@@ -77,7 +77,7 @@ def limit_cone_infi_is_limit (F : J ⥤ Top.{u}) : is_limit (limit_cone_infi F) 
   refine' is_limit.of_faithful forget (types.limit_cone_is_limit _) (fun s => ⟨_, _⟩) fun s => rfl
   exact
     continuous_iff_coinduced_le.mpr
-      (le_infi $ fun j => coinduced_le_iff_le_induced.mp $ (continuous_iff_coinduced_le.mp (s.π.app j).Continuous : _))
+      (le_infi fun j => coinduced_le_iff_le_induced.mp <| (continuous_iff_coinduced_le.mp (s.π.app j).Continuous : _))
 
 instance Top_has_limits : has_limits.{u} Top.{u} where
   HasLimitsOfShape := fun J 𝒥 =>
@@ -107,7 +107,7 @@ def colimit_cocone_is_colimit (F : J ⥤ Top.{u}) : is_colimit (colimit_cocone F
   refine' is_colimit.of_faithful forget (types.colimit_cocone_is_colimit _) (fun s => ⟨_, _⟩) fun s => rfl
   exact
     continuous_iff_le_induced.mpr
-      (supr_le $ fun j => coinduced_le_iff_le_induced.mp $ (continuous_iff_coinduced_le.mp (s.ι.app j).Continuous : _))
+      (supr_le fun j => coinduced_le_iff_le_induced.mp <| (continuous_iff_coinduced_le.mp (s.ι.app j).Continuous : _))
 
 instance Top_has_colimits : has_colimits.{u} Top.{u} where
   HasColimitsOfShape := fun J 𝒥 =>

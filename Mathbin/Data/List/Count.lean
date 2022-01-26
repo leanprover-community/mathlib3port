@@ -130,7 +130,7 @@ theorem count_pos {a : α} {l : List α} : 0 < count a l ↔ a ∈ l := by
 
 @[simp]
 theorem count_eq_zero_of_not_mem {a : α} {l : List α} (h : a ∉ l) : count a l = 0 :=
-  Decidable.by_contradiction $ fun h' => h $ count_pos.1 (Nat.pos_of_ne_zeroₓ h')
+  Decidable.by_contradiction fun h' => h <| count_pos.1 (Nat.pos_of_ne_zeroₓ h')
 
 theorem not_mem_of_count_eq_zero {a : α} {l : List α} (h : count a l = 0) : a ∉ l := fun h' => (count_pos.2 h').ne' h
 
@@ -140,7 +140,7 @@ theorem count_repeat (a : α) (n : ℕ) : count a (repeat a n) = n := by
 
 theorem le_count_iff_repeat_sublist {a : α} {l : List α} {n : ℕ} : n ≤ count a l ↔ repeat a n <+ l :=
   ⟨fun h =>
-    ((repeat_sublist_repeat a).2 h).trans $ by
+    ((repeat_sublist_repeat a).2 h).trans <| by
       have : filter (Eq a) l = repeat a (count a l) :=
         eq_repeat.2
           ⟨by

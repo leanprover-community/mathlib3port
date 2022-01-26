@@ -72,7 +72,7 @@ instance has_coe_to_generalized_continued_fraction_pair : Coe (pair α) (pair β
   ⟨map coe⟩
 
 @[simp, norm_cast]
-theorem coe_to_generalized_continued_fraction_pair {a b : α} : (↑pair.mk a b : pair β) = pair.mk (a : β) (b : β) :=
+theorem coe_to_generalized_continued_fraction_pair {a b : α} : (↑(pair.mk a b) : pair β) = pair.mk (a : β) (b : β) :=
   rfl
 
 end coe
@@ -101,7 +101,7 @@ For convenience, one often writes `[h; (a₀, b₀), (a₁, b₁), (a₂, b₂),
 -/
 structure GeneralizedContinuedFraction where
   h : α
-  s : Seqₓₓ $ pair α
+  s : Seqₓₓ <| pair α
 
 variable {α}
 
@@ -145,12 +145,12 @@ variable {β : Type _} [Coe α β]
 /-- Coerce a gcf by elementwise coercion. -/
 instance has_coe_to_generalized_continued_fraction :
     Coe (GeneralizedContinuedFraction α) (GeneralizedContinuedFraction β) :=
-  ⟨fun g => ⟨(g.h : β), (g.s.map coe : Seqₓₓ $ pair β)⟩⟩
+  ⟨fun g => ⟨(g.h : β), (g.s.map coe : Seqₓₓ <| pair β)⟩⟩
 
 @[simp, norm_cast]
 theorem coe_to_generalized_continued_fraction {g : GeneralizedContinuedFraction α} :
     (↑(g : GeneralizedContinuedFraction α) : GeneralizedContinuedFraction β) =
-      ⟨(g.h : β), (g.s.map coe : Seqₓₓ $ pair β)⟩ :=
+      ⟨(g.h : β), (g.s.map coe : Seqₓₓ <| pair β)⟩ :=
   rfl
 
 end coe
@@ -321,7 +321,7 @@ def continuants_aux (g : GeneralizedContinuedFraction K) : Streamₓ (pair K)
   | n + 2 =>
     match g.s.nth n with
     | none => continuants_aux (n + 1)
-    | some gp => next_continuants gp.a gp.b (continuants_aux n) (continuants_aux $ n + 1)
+    | some gp => next_continuants gp.a gp.b (continuants_aux n) (continuants_aux <| n + 1)
 
 /-- Returns the continuants `⟨Aₙ, Bₙ⟩` of `g`. -/
 def continuants (g : GeneralizedContinuedFraction K) : Streamₓ (pair K) :=

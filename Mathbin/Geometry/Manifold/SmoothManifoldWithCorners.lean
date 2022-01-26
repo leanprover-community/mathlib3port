@@ -330,8 +330,8 @@ def ModelWithCorners.pi {𝕜 : Type u} [NondiscreteNormedField 𝕜] {ι : Type
   source_eq := by
     simp' only [Set.pi_univ] with mfld_simps
   unique_diff' := UniqueDiffOn.pi ι E _ _ fun i _ => (I i).unique_diff'
-  continuous_to_fun := continuous_pi $ fun i => (I i).Continuous.comp (continuous_apply i)
-  continuous_inv_fun := continuous_pi $ fun i => (I i).continuous_symm.comp (continuous_apply i)
+  continuous_to_fun := continuous_pi fun i => (I i).Continuous.comp (continuous_apply i)
+  continuous_inv_fun := continuous_pi fun i => (I i).continuous_symm.comp (continuous_apply i)
 
 /-- Special case of product model with corners, which is trivial on the second factor. This shows up
 as the model to tangent bundles. -/
@@ -608,7 +608,7 @@ theorem LocalHomeomorph.singleton_smooth_manifold_with_corners {𝕜 : Type _} [
     [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _}
     [TopologicalSpace M] (e : LocalHomeomorph M H) (h : e.source = Set.Univ) :
     @SmoothManifoldWithCorners 𝕜 _ E _ _ H _ I M _ (e.singleton_charted_space h) :=
-  @SmoothManifoldWithCorners.mk' _ _ _ _ _ _ _ _ _ _ (id _) $ e.singleton_has_groupoid h (timesContDiffGroupoid ∞ I)
+  @SmoothManifoldWithCorners.mk' _ _ _ _ _ _ _ _ _ _ (id _) <| e.singleton_has_groupoid h (timesContDiffGroupoid ∞ I)
 
 theorem OpenEmbedding.singleton_smooth_manifold_with_corners {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _}
     [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _}
@@ -693,7 +693,7 @@ theorem ext_chart_at_continuous_on : ContinuousOn (extChartAt I x) (extChartAt I
   exact (chart_at H x).ContinuousOn
 
 theorem ext_chart_at_continuous_at' {x' : M} (h : x' ∈ (extChartAt I x).Source) : ContinuousAt (extChartAt I x) x' :=
-  (ext_chart_at_continuous_on I x).ContinuousAt $ ext_chart_at_source_mem_nhds' I x h
+  (ext_chart_at_continuous_on I x).ContinuousAt <| ext_chart_at_source_mem_nhds' I x h
 
 theorem ext_chart_at_continuous_at : ContinuousAt (extChartAt I x) x :=
   ext_chart_at_continuous_at' _ _ (mem_ext_chart_source I x)
@@ -708,7 +708,7 @@ theorem ext_chart_at_map_nhds' {x y : M} (hy : y ∈ (extChartAt I x).Source) :
   rwa [ext_chart_at_source] at hy
 
 theorem ext_chart_at_map_nhds : map (extChartAt I x) (𝓝 x) = 𝓝[range I] extChartAt I x x :=
-  ext_chart_at_map_nhds' I $ mem_ext_chart_source I x
+  ext_chart_at_map_nhds' I <| mem_ext_chart_source I x
 
 theorem ext_chart_at_target_mem_nhds_within' {y : M} (hy : y ∈ (extChartAt I x).Source) :
     (extChartAt I x).Target ∈ 𝓝[range I] extChartAt I x y := by
@@ -723,7 +723,7 @@ theorem ext_chart_at_target_subset_range : (extChartAt I x).Target ⊆ range I :
 
 theorem nhds_within_ext_chart_target_eq' {y : M} (hy : y ∈ (extChartAt I x).Source) :
     𝓝[(extChartAt I x).Target] extChartAt I x y = 𝓝[range I] extChartAt I x y :=
-  (nhds_within_mono _ (ext_chart_at_target_subset_range _ _)).antisymm $
+  (nhds_within_mono _ (ext_chart_at_target_subset_range _ _)).antisymm <|
     nhds_within_le_of_mem (ext_chart_at_target_mem_nhds_within' _ _ hy)
 
 theorem nhds_within_ext_chart_target_eq :
@@ -736,7 +736,7 @@ theorem ext_chart_continuous_at_symm'' {y : E} (h : y ∈ (extChartAt I x).Targe
 
 theorem ext_chart_continuous_at_symm' {x' : M} (h : x' ∈ (extChartAt I x).Source) :
     ContinuousAt (extChartAt I x).symm (extChartAt I x x') :=
-  ext_chart_continuous_at_symm'' I _ $ (extChartAt I x).map_source h
+  ext_chart_continuous_at_symm'' I _ <| (extChartAt I x).map_source h
 
 theorem ext_chart_continuous_at_symm : ContinuousAt (extChartAt I x).symm ((extChartAt I x) x) :=
   ext_chart_continuous_at_symm' I x (mem_ext_chart_source I x)
@@ -760,7 +760,7 @@ theorem ext_chart_at_map_nhds_within_eq_image' {y : M} (hy : y ∈ (extChartAt I
         congr_argₓ (map e)
           (nhds_within_inter_of_mem
               (ext_chart_at_source_mem_nhds_within' I x hy)).symm _ = 𝓝[e '' (e.source ∩ s)] e y :=
-        ((extChartAt I x).LeftInvOn.mono $ inter_subset_left _ _).map_nhds_within_eq ((extChartAt I x).left_inv hy)
+        ((extChartAt I x).LeftInvOn.mono <| inter_subset_left _ _).map_nhds_within_eq ((extChartAt I x).left_inv hy)
           (ext_chart_continuous_at_symm' I x hy).ContinuousWithinAt
           (ext_chart_at_continuous_at' I x hy).ContinuousWithinAt
 

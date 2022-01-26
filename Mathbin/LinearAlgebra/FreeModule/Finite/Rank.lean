@@ -36,7 +36,7 @@ theorem rank_lt_omega : Module.rank R M < ω := by
 
 /-- If `M` is finite and free, `finrank M = rank M`. -/
 @[simp]
-theorem finrank_eq_rank : ↑finrank R M = Module.rank R M := by
+theorem finrank_eq_rank : ↑(finrank R M) = Module.rank R M := by
   rw [finrank, cast_to_nat_of_lt_omega (rank_lt_omega R M)]
 
 /-- The finrank of a free module `M` over `R` is the cardinality of `choose_basis_index R M`. -/

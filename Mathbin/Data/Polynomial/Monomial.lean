@@ -21,7 +21,7 @@ theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} : (monomial i 1 : Polynom
   simp [monomial, monomial_fun, Finsupp.single_eq_single_iff]
 
 instance [Nontrivial R] : Infinite (Polynomial R) :=
-  (Infinite.of_injective fun i => monomial i 1) $ fun m n h => by
+  (Infinite.of_injective fun i => monomial i 1) fun m n h => by
     simpa [monomial_one_eq_iff] using h
 
 theorem card_support_le_one_iff_monomial {f : Polynomial R} : Finset.card f.support ≤ 1 ↔ ∃ n a, f = monomial n a := by

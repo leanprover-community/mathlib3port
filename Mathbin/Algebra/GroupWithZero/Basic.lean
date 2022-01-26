@@ -55,10 +55,10 @@ protected def Function.Injective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M₀
   mul := · * ·
   zero := 0
   zero_mul := fun a =>
-    hf $ by
+    hf <| by
       simp only [mul, zero, zero_mul]
   mul_zero := fun a =>
-    hf $ by
+    hf <| by
       simp only [mul, zero, mul_zero]
 
 /-- Pushforward a `mul_zero_class` instance along an surjective function.
@@ -69,10 +69,10 @@ protected def Function.Surjective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M�
   mul := · * ·
   zero := 0
   mul_zero :=
-    hf.forall.2 $ fun x => by
+    hf.forall.2 fun x => by
       simp only [← zero, ← mul, mul_zero]
   zero_mul :=
-    hf.forall.2 $ fun x => by
+    hf.forall.2 fun x => by
       simp only [← zero, ← mul, zero_mul]
 
 theorem mul_eq_zero_of_left (h : a = 0) (b : M₀) : a * b = 0 :=
@@ -114,10 +114,10 @@ protected theorem Function.Injective.no_zero_divisors [Mul M₀] [Zero M₀] [Mu
         rw [← mul, H, zero]
       (eq_zero_or_eq_zero_of_mul_eq_zero this).imp
         (fun H =>
-          hf $ by
+          hf <| by
             rwa [zero])
         fun H =>
-        hf $ by
+        hf <| by
           rwa [zero] }
 
 theorem eq_zero_of_mul_self_eq_zero [Mul M₀] [Zero M₀] [NoZeroDivisors M₀] {a : M₀} (h : a * a = 0) : a = 0 :=
@@ -151,7 +151,7 @@ theorem mul_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a * b ≠ 0 :=
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` equals zero iff so is
 `b * a`. -/
 theorem mul_eq_zero_comm : a * b = 0 ↔ b * a = 0 :=
-  mul_eq_zero.trans $ (or_comm _ _).trans mul_eq_zero.symm
+  mul_eq_zero.trans <| (or_comm _ _).trans mul_eq_zero.symm
 
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` is nonzero iff so is
 `b * a`. -/
@@ -241,16 +241,16 @@ theorem ne_zero_of_eq_one {a : M₀} (h : a = 1) : a ≠ 0 :=
     
 
 theorem left_ne_zero_of_mul_eq_one (h : a * b = 1) : a ≠ 0 :=
-  left_ne_zero_of_mul $ ne_zero_of_eq_one h
+  left_ne_zero_of_mul <| ne_zero_of_eq_one h
 
 theorem right_ne_zero_of_mul_eq_one (h : a * b = 1) : b ≠ 0 :=
-  right_ne_zero_of_mul $ ne_zero_of_eq_one h
+  right_ne_zero_of_mul <| ne_zero_of_eq_one h
 
 /-- Pullback a `nontrivial` instance along a function sending `0` to `0` and `1` to `1`. -/
 protected theorem pullback_nonzero [Zero M₀'] [One M₀'] (f : M₀' → M₀) (zero : f 0 = 0) (one : f 1 = 1) :
     Nontrivial M₀' :=
   ⟨⟨0, 1,
-      mt (congr_argₓ f) $ by
+      mt (congr_argₓ f) <| by
         rw [zero, one]
         exact zero_ne_one⟩⟩
 
@@ -319,7 +319,7 @@ theorem ne_zero [Nontrivial M₀] (u : (M₀)ˣ) : (u : M₀) ≠ 0 :=
 @[simp]
 theorem mul_left_eq_zero (u : (M₀)ˣ) {a : M₀} : a * u = 0 ↔ a = 0 :=
   ⟨fun h => by
-    simpa using mul_eq_zero_of_left h (↑u⁻¹), fun h => mul_eq_zero_of_left h u⟩
+    simpa using mul_eq_zero_of_left h ↑u⁻¹, fun h => mul_eq_zero_of_left h u⟩
 
 @[simp]
 theorem mul_right_eq_zero (u : (M₀)ˣ) {a : M₀} : ↑u * a = 0 ↔ a = 0 :=
@@ -441,7 +441,7 @@ theorem is_unit_ring_inverse {a : M₀} : IsUnit (Ring.inverse a) ↔ IsUnit a :
     IsUnit.ring_inverse⟩
 
 theorem Commute.ring_inverse_ring_inverse {a b : M₀} (h : Commute a b) : Commute (Ring.inverse a) (Ring.inverse b) :=
-  (Ring.mul_inverse_rev' h.symm).symm.trans $ (congr_argₓ _ h.symm.eq).trans $ Ring.mul_inverse_rev' h
+  (Ring.mul_inverse_rev' h.symm).symm.trans <| (congr_argₓ _ h.symm.eq).trans <| Ring.mul_inverse_rev' h
 
 variable (M₀)
 
@@ -496,23 +496,23 @@ protected def Function.Injective.cancelMonoidWithZero [Zero M₀'] [Mul M₀'] [
     (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : CancelMonoidWithZero M₀' :=
   { hf.monoid f one mul, hf.mul_zero_class f zero mul with
     mul_left_cancel_of_ne_zero := fun x y z hx H =>
-      hf $
-        mul_left_cancel₀ ((hf.ne_iff' zero).2 hx) $ by
+      hf <|
+        mul_left_cancel₀ ((hf.ne_iff' zero).2 hx) <| by
           erw [← mul, ← mul, H] <;> rfl,
     mul_right_cancel_of_ne_zero := fun x y z hx H =>
-      hf $
-        mul_right_cancel₀ ((hf.ne_iff' zero).2 hx) $ by
+      hf <|
+        mul_right_cancel₀ ((hf.ne_iff' zero).2 hx) <| by
           erw [← mul, ← mul, H] <;> rfl }
 
 /-- An element of a `cancel_monoid_with_zero` fixed by right multiplication by an element other
 than one must be zero. -/
 theorem eq_zero_of_mul_eq_self_right (h₁ : b ≠ 1) (h₂ : a * b = a) : a = 0 :=
-  Classical.by_contradiction $ fun ha => h₁ $ mul_left_cancel₀ ha $ h₂.symm ▸ (mul_oneₓ a).symm
+  Classical.by_contradiction fun ha => h₁ <| mul_left_cancel₀ ha <| h₂.symm ▸ (mul_oneₓ a).symm
 
 /-- An element of a `cancel_monoid_with_zero` fixed by left multiplication by an element other
 than one must be zero. -/
 theorem eq_zero_of_mul_eq_self_left (h₁ : b ≠ 1) (h₂ : b * a = a) : a = 0 :=
-  Classical.by_contradiction $ fun ha => h₁ $ mul_right_cancel₀ ha $ h₂.symm ▸ (one_mulₓ a).symm
+  Classical.by_contradiction fun ha => h₁ <| mul_right_cancel₀ ha <| h₂.symm ▸ (one_mulₓ a).symm
 
 end CancelMonoidWithZero
 
@@ -539,30 +539,29 @@ alias div_eq_mul_inv ← division_def
 /-- Pullback a `group_with_zero` class along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.groupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [HasInv G₀'] [Div G₀'] (f : G₀' → G₀)
+protected def Function.Injective.groupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [Inv G₀'] [Div G₀'] (f : G₀' → G₀)
     (hf : injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : GroupWithZeroₓ G₀' :=
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : GroupWithZeroₓ G₀' :=
   { hf.monoid_with_zero f zero one mul, hf.div_inv_monoid f one mul inv div, pullback_nonzero f zero one with
     inv_zero :=
-      hf $ by
+      hf <| by
         erw [inv, zero, inv_zero],
     mul_inv_cancel := fun x hx =>
-      hf $ by
+      hf <| by
         erw [one, mul, inv, mul_inv_cancel ((hf.ne_iff' zero).2 hx)] }
 
 /-- Pushforward a `group_with_zero` class along an surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.groupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [HasInv G₀'] [Div G₀']
-    (h01 : (0 : G₀') ≠ 1) (f : G₀ → G₀') (hf : surjective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
-    GroupWithZeroₓ G₀' :=
+protected def Function.Surjective.groupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [Inv G₀'] [Div G₀'] (h01 : (0 : G₀') ≠ 1)
+    (f : G₀ → G₀') (hf : surjective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : GroupWithZeroₓ G₀' :=
   { hf.monoid_with_zero f zero one mul, hf.div_inv_monoid f one mul inv div with
     inv_zero := by
       erw [← zero, ← inv, inv_zero],
     mul_inv_cancel :=
-      hf.forall.2 $ fun x hx => by
-        erw [← inv, ← mul, mul_inv_cancel (mt (congr_argₓ f) $ trans_rel_left Ne hx zero.symm)] <;> exact one,
+      hf.forall.2 fun x hx => by
+        erw [← inv, ← mul, mul_inv_cancel (mt (congr_argₓ f) <| trans_rel_left Ne hx zero.symm)] <;> exact one,
     exists_pair_ne := ⟨0, 1, h01⟩ }
 
 @[simp]
@@ -677,7 +676,7 @@ theorem mul_self_div_self (a : G₀) : a * a / a = a := by
 theorem div_self_mul_self (a : G₀) : a / a * a = a := by
   rw [div_eq_mul_inv, mul_inv_mul_self a]
 
-theorem inv_involutive₀ : Function.Involutive (HasInv.inv : G₀ → G₀) :=
+theorem inv_involutive₀ : Function.Involutive (Inv.inv : G₀ → G₀) :=
   inv_inv₀
 
 theorem eq_inv_of_mul_right_eq_one (h : a * b = 1) : b = a⁻¹ := by
@@ -686,7 +685,7 @@ theorem eq_inv_of_mul_right_eq_one (h : a * b = 1) : b = a⁻¹ := by
 theorem eq_inv_of_mul_left_eq_one (h : a * b = 1) : a = b⁻¹ := by
   rw [← mul_inv_cancel_right₀ (right_ne_zero_of_mul_eq_one h) a, h, one_mulₓ]
 
-theorem inv_injective₀ : Function.Injective (@HasInv.inv G₀ _) :=
+theorem inv_injective₀ : Function.Injective (@Inv.inv G₀ _) :=
   inv_involutive₀.Injective
 
 @[simp]
@@ -918,7 +917,7 @@ theorem inv_eq_zero {a : G₀} : a⁻¹ = 0 ↔ a = 0 := by
 
 @[simp]
 theorem zero_eq_inv {a : G₀} : 0 = a⁻¹ ↔ 0 = a :=
-  eq_comm.trans $ inv_eq_zero.trans eq_comm
+  eq_comm.trans <| inv_eq_zero.trans eq_comm
 
 theorem one_div_mul_one_div_rev (a b : G₀) : 1 / a * (1 / b) = 1 / (b * a) := by
   simp only [div_eq_mul_inv, one_mulₓ, mul_inv_rev₀]
@@ -962,7 +961,7 @@ theorem div_eq_of_eq_mul {x : G₀} (hx : x ≠ 0) {y z : G₀} (h : y = z * x) 
   (div_eq_iff_mul_eq hx).2 h.symm
 
 theorem eq_div_of_mul_eq {x : G₀} (hx : x ≠ 0) {y z : G₀} (h : z * x = y) : z = y / x :=
-  Eq.symm $ div_eq_of_eq_mul hx h.symm
+  Eq.symm <| div_eq_of_eq_mul hx h.symm
 
 theorem eq_of_div_eq_one (h : a / b = 1) : a = b := by
   by_cases' hb : b = 0
@@ -992,7 +991,7 @@ theorem Ring.inverse_eq_inv (a : G₀) : Ring.inverse a = a⁻¹ := by
     
 
 @[simp]
-theorem Ring.inverse_eq_inv' : (Ring.inverse : G₀ → G₀) = HasInv.inv :=
+theorem Ring.inverse_eq_inv' : (Ring.inverse : G₀ → G₀) = Inv.inv :=
   funext Ring.inverse_eq_inv
 
 @[field_simps]
@@ -1039,15 +1038,15 @@ instance (priority := 10) CommGroupWithZero.cancelCommMonoidWithZero : CancelCom
 /-- Pullback a `comm_group_with_zero` class along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.commGroupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [HasInv G₀'] [Div G₀'] (f : G₀' → G₀)
+protected def Function.Injective.commGroupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [Inv G₀'] [Div G₀'] (f : G₀' → G₀)
     (hf : injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : CommGroupWithZero G₀' :=
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : CommGroupWithZero G₀' :=
   { hf.group_with_zero f zero one mul inv div, hf.comm_semigroup f mul with }
 
 /-- Pushforward a `comm_group_with_zero` class along a surjective function. -/
-protected def Function.Surjective.commGroupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [HasInv G₀'] [Div G₀']
+protected def Function.Surjective.commGroupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [Inv G₀'] [Div G₀']
     (h01 : (0 : G₀') ≠ 1) (f : G₀ → G₀') (hf : surjective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
+    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
     CommGroupWithZero G₀' :=
   { hf.group_with_zero h01 f zero one mul inv div, hf.comm_semigroup f mul with }
 
@@ -1064,7 +1063,7 @@ theorem mul_div_cancel_left_of_imp {a b : G₀} (h : a = 0 → b = 0) : a * b / 
   rw [mul_comm, mul_div_cancel_of_imp h]
 
 theorem mul_div_cancel_left {a : G₀} (b : G₀) (ha : a ≠ 0) : a * b / a = b :=
-  mul_div_cancel_left_of_imp $ fun h => (ha h).elim
+  mul_div_cancel_left_of_imp fun h => (ha h).elim
 
 theorem mul_div_cancel_of_imp' {a b : G₀} (h : b = 0 → a = 0) : b * (a / b) = a := by
   rw [mul_comm, div_mul_cancel_of_imp h]
@@ -1156,16 +1155,16 @@ theorem zero_left [MulZeroClass G₀] (x y : G₀) : SemiconjBy 0 x y := by
 variable [GroupWithZeroₓ G₀] {a x y x' y' : G₀}
 
 @[simp]
-theorem inv_symm_left_iff₀ : SemiconjBy (a⁻¹) x y ↔ SemiconjBy a y x :=
+theorem inv_symm_left_iff₀ : SemiconjBy a⁻¹ x y ↔ SemiconjBy a y x :=
   Classical.by_cases
     (fun ha : a = 0 => by
       simp only [ha, inv_zero, SemiconjBy.zero_left])
     fun ha => @units_inv_symm_left_iff _ _ (Units.mk0 a ha) _ _
 
-theorem inv_symm_left₀ (h : SemiconjBy a x y) : SemiconjBy (a⁻¹) y x :=
+theorem inv_symm_left₀ (h : SemiconjBy a x y) : SemiconjBy a⁻¹ y x :=
   SemiconjBy.inv_symm_left_iff₀.2 h
 
-theorem inv_right₀ (h : SemiconjBy a x y) : SemiconjBy a (x⁻¹) (y⁻¹) := by
+theorem inv_right₀ (h : SemiconjBy a x y) : SemiconjBy a x⁻¹ y⁻¹ := by
   by_cases' ha : a = 0
   · simp only [ha, zero_left]
     
@@ -1180,7 +1179,7 @@ theorem inv_right₀ (h : SemiconjBy a x y) : SemiconjBy a (x⁻¹) (y⁻¹) := 
     
 
 @[simp]
-theorem inv_right_iff₀ : SemiconjBy a (x⁻¹) (y⁻¹) ↔ SemiconjBy a x y :=
+theorem inv_right_iff₀ : SemiconjBy a x⁻¹ y⁻¹ ↔ SemiconjBy a x y :=
   ⟨fun h => inv_inv₀ x ▸ inv_inv₀ y ▸ h.inv_right₀, inv_right₀⟩
 
 theorem div_right (h : SemiconjBy a x y) (h' : SemiconjBy a x' y') : SemiconjBy a (x / x') (y / y') := by
@@ -1202,20 +1201,20 @@ theorem zero_left [MulZeroClass G₀] (a : G₀) : Commute 0 a :=
 variable [GroupWithZeroₓ G₀] {a b c : G₀}
 
 @[simp]
-theorem inv_left_iff₀ : Commute (a⁻¹) b ↔ Commute a b :=
+theorem inv_left_iff₀ : Commute a⁻¹ b ↔ Commute a b :=
   SemiconjBy.inv_symm_left_iff₀
 
-theorem inv_left₀ (h : Commute a b) : Commute (a⁻¹) b :=
+theorem inv_left₀ (h : Commute a b) : Commute a⁻¹ b :=
   inv_left_iff₀.2 h
 
 @[simp]
-theorem inv_right_iff₀ : Commute a (b⁻¹) ↔ Commute a b :=
+theorem inv_right_iff₀ : Commute a b⁻¹ ↔ Commute a b :=
   SemiconjBy.inv_right_iff₀
 
-theorem inv_right₀ (h : Commute a b) : Commute a (b⁻¹) :=
+theorem inv_right₀ (h : Commute a b) : Commute a b⁻¹ :=
   inv_right_iff₀.2 h
 
-theorem inv_inv₀ (h : Commute a b) : Commute (a⁻¹) (b⁻¹) :=
+theorem inv_inv₀ (h : Commute a b) : Commute a⁻¹ b⁻¹ :=
   h.inv_left₀.inv_right₀
 
 @[simp]
@@ -1235,10 +1234,10 @@ variable [GroupWithZeroₓ G₀] [GroupWithZeroₓ G₀'] [MonoidWithZeroₓ M�
 
 section MonoidWithZeroₓ
 
-variable (f : MonoidWithZeroHom G₀ M₀) {a : G₀}
+variable (f : G₀ →*₀ M₀) {a : G₀}
 
 theorem map_ne_zero : f a ≠ 0 ↔ a ≠ 0 :=
-  ⟨fun hfa ha => hfa $ ha.symm ▸ f.map_zero, fun ha => ((IsUnit.mk0 a ha).map f.to_monoid_hom).ne_zero⟩
+  ⟨fun hfa ha => hfa <| ha.symm ▸ f.map_zero, fun ha => ((IsUnit.mk0 a ha).map f.to_monoid_hom).ne_zero⟩
 
 @[simp]
 theorem map_eq_zero : f a = 0 ↔ a = 0 :=
@@ -1248,11 +1247,11 @@ end MonoidWithZeroₓ
 
 section GroupWithZeroₓ
 
-variable (f : MonoidWithZeroHom G₀ G₀') (a b : G₀)
+variable (f : G₀ →*₀ G₀') (a b : G₀)
 
 /-- A monoid homomorphism between groups with zeros sending `0` to `0` sends `a⁻¹` to `(f a)⁻¹`. -/
 @[simp]
-theorem map_inv : f (a⁻¹) = f a⁻¹ := by
+theorem map_inv : f a⁻¹ = (f a)⁻¹ := by
   by_cases' h : a = 0
   · simp [h]
     
@@ -1261,27 +1260,27 @@ theorem map_inv : f (a⁻¹) = f a⁻¹ := by
 
 @[simp]
 theorem map_div : f (a / b) = f a / f b := by
-  simpa only [div_eq_mul_inv] using (f.map_mul _ _).trans $ _root_.congr_arg _ $ f.map_inv b
+  simpa only [div_eq_mul_inv] using (f.map_mul _ _).trans <| _root_.congr_arg _ <| f.map_inv b
 
 end GroupWithZeroₓ
 
 end MonoidWithZeroHom
 
 /-- Inversion on a commutative group with zero, considered as a monoid with zero homomorphism. -/
-def invMonoidWithZeroHom {G₀ : Type _} [CommGroupWithZero G₀] : MonoidWithZeroHom G₀ G₀ where
-  toFun := HasInv.inv
+def invMonoidWithZeroHom {G₀ : Type _} [CommGroupWithZero G₀] : G₀ →*₀ G₀ where
+  toFun := Inv.inv
   map_zero' := inv_zero
   map_one' := inv_one
   map_mul' := fun _ _ => mul_inv₀
 
 @[simp]
 theorem MonoidHom.map_units_inv {M G₀ : Type _} [Monoidₓ M] [GroupWithZeroₓ G₀] (f : M →* G₀) (u : (M)ˣ) :
-    f (↑u⁻¹) = f u⁻¹ := by
+    f ↑u⁻¹ = (f u)⁻¹ := by
   rw [← Units.coe_map, ← Units.coe_map, ← Units.coe_inv', MonoidHom.map_inv]
 
 @[simp]
-theorem MonoidWithZeroHom.map_units_inv {M G₀ : Type _} [MonoidWithZeroₓ M] [GroupWithZeroₓ G₀]
-    (f : MonoidWithZeroHom M G₀) (u : (M)ˣ) : f (↑u⁻¹) = f u⁻¹ :=
+theorem MonoidWithZeroHom.map_units_inv {M G₀ : Type _} [MonoidWithZeroₓ M] [GroupWithZeroₓ G₀] (f : M →*₀ G₀)
+    (u : (M)ˣ) : f ↑u⁻¹ = (f u)⁻¹ :=
   f.to_monoid_hom.map_units_inv u
 
 section NoncomputableDefs

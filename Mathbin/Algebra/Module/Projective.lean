@@ -134,7 +134,7 @@ theorem projective_of_basis {ι : Type _} (b : Basis ι R P) : projective R P :=
   exact b.total_repr m
 
 instance (priority := 100) projective_of_free [Module.Free R P] : Module.Projective R P :=
-  projective_of_basis $ Module.Free.chooseBasis R P
+  projective_of_basis <| Module.Free.chooseBasis R P
 
 end Ringₓ
 

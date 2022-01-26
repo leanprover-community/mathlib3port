@@ -148,7 +148,7 @@ theorem test_bit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : test_bit (2 ^ n) m =
   · rw [Nat.div_eq_zero, bodd_zero]
     exact Nat.pow_lt_pow_of_lt_right one_lt_two hm
     
-  · rw [pow_div hm.le zero_lt_two, ← tsub_add_cancel_of_le (succ_le_of_lt $ tsub_pos_of_lt hm)]
+  · rw [pow_div hm.le zero_lt_two, ← tsub_add_cancel_of_le (succ_le_of_lt <| tsub_pos_of_lt hm)]
     simp [pow_succₓ]
     
 
@@ -168,7 +168,7 @@ theorem bitwise_comm {f : Bool → Bool → Bool} (hf : ∀ b b', f b b' = f b' 
   suffices bitwise f = swap (bitwise f) by
     conv_lhs => rw [this]
   calc
-    bitwise f = bitwise (swap f) := congr_argₓ _ $ funext $ fun _ => funext $ hf _
+    bitwise f = bitwise (swap f) := congr_argₓ _ <| funext fun _ => funext <| hf _
     _ = swap (bitwise f) := bitwise_swap hf'
     
 
@@ -225,7 +225,7 @@ theorem lor_assoc (n m k : ℕ) : lor (lor n m) k = lor n (lor m k) := by
 
 @[simp]
 theorem lxor_self (n : ℕ) : lxor n n = 0 :=
-  zero_of_test_bit_eq_ff $ fun i => by
+  zero_of_test_bit_eq_ff fun i => by
     simp
 
 theorem lxor_right_inj {n m m' : ℕ} (h : lxor n m = lxor n m') : m = m' :=

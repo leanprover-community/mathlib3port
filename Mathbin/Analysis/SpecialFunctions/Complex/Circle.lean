@@ -17,7 +17,7 @@ open_locale Real
 namespace circle
 
 theorem injective_arg : injective fun z : circle => arg z := fun z w h =>
-  Subtype.ext $ ext_abs_arg ((abs_coe_circle z).trans (abs_coe_circle w).symm) h
+  Subtype.ext <| ext_abs_arg ((abs_coe_circle z).trans (abs_coe_circle w).symm) h
 
 @[simp]
 theorem arg_eq_arg {z w : circle} : arg z = arg w ↔ z = w :=
@@ -30,7 +30,7 @@ theorem arg_exp_map_circle {x : ℝ} (h₁ : -π < x) (h₂ : x ≤ π) : arg (e
 
 @[simp]
 theorem exp_map_circle_arg (z : circle) : expMapCircle (arg z) = z :=
-  circle.injective_arg $ arg_exp_map_circle (neg_pi_lt_arg _) (arg_le_pi _)
+  circle.injective_arg <| arg_exp_map_circle (neg_pi_lt_arg _) (arg_le_pi _)
 
 namespace circle
 
@@ -53,7 +53,7 @@ noncomputable def arg_equiv : circle ≃ Ioc (-π) π where
   toFun := fun z => ⟨arg z, neg_pi_lt_arg _, arg_le_pi _⟩
   invFun := expMapCircle ∘ coe
   left_inv := fun z => arg_local_equiv.left_inv trivialₓ
-  right_inv := fun x => Subtype.ext $ arg_local_equiv.right_inv x.2
+  right_inv := fun x => Subtype.ext <| arg_local_equiv.right_inv x.2
 
 end circle
 
@@ -87,4 +87,12 @@ theorem exp_map_circle_sub_two_pi (x : ℝ) : expMapCircle (x - 2 * π) = expMap
 
 theorem exp_map_circle_add_two_pi (x : ℝ) : expMapCircle (x + 2 * π) = expMapCircle x :=
   periodic_exp_map_circle x
+
+/-- `exp_map_circle`, applied to a `real.angle`. -/
+noncomputable def Real.Angle.expMapCircle (θ : Real.Angle) : circle :=
+  periodic_exp_map_circle.lift θ
+
+@[simp]
+theorem Real.Angle.exp_map_circle_coe (x : ℝ) : Real.Angle.expMapCircle x = expMapCircle x :=
+  rfl
 

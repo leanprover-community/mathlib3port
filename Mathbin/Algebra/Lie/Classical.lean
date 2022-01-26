@@ -87,7 +87,7 @@ namespace SpecialLinear
 /-- The special linear Lie algebra: square matrices of trace zero. -/
 def sl [Fintype n] : LieSubalgebra R (Matrix n n R) :=
   { LinearMap.ker (Matrix.trace n R R) with
-    lie_mem' := fun X Y _ _ => LinearMap.mem_ker.2 $ matrix_trace_commutator_zero _ _ _ _ }
+    lie_mem' := fun X Y _ _ => LinearMap.mem_ker.2 <| matrix_trace_commutator_zero _ _ _ _ }
 
 theorem sl_bracket [Fintype n] (A B : sl n R) : ⁅A,B⁆.val = A.val ⬝ B.val - B.val ⬝ A.val :=
   rfl
@@ -148,17 +148,17 @@ theorem mem_so [Fintype n] (A : Matrix n n R) : A ∈ so n R ↔ (A)ᵀ = -A := 
 
 /-- The indefinite diagonal matrix with `p` 1s and `q` -1s. -/
 def indefinite_diagonal : Matrix (Sum p q) (Sum p q) R :=
-  Matrix.diagonalₓ $ Sum.elim (fun _ => 1) fun _ => -1
+  Matrix.diagonalₓ <| Sum.elim (fun _ => 1) fun _ => -1
 
 /-- The indefinite orthogonal Lie subalgebra: skew-adjoint matrices with respect to the symmetric
 bilinear form defined by the indefinite diagonal matrix. -/
 def so' [Fintype p] [Fintype q] : LieSubalgebra R (Matrix (Sum p q) (Sum p q) R) :=
-  skewAdjointMatricesLieSubalgebra $ indefinite_diagonal p q R
+  skewAdjointMatricesLieSubalgebra <| indefinite_diagonal p q R
 
 /-- A matrix for transforming the indefinite diagonal bilinear form into the definite one, provided
 the parameter `i` is a square root of -1. -/
 def Pso (i : R) : Matrix (Sum p q) (Sum p q) R :=
-  Matrix.diagonalₓ $ Sum.elim (fun _ => 1) fun _ => i
+  Matrix.diagonalₓ <| Sum.elim (fun _ => 1) fun _ => i
 
 variable [Fintype p] [Fintype q]
 
@@ -203,7 +203,7 @@ def so_indefinite_equiv {i : R} (hi : i * i = -1) : so' p q R ≃ₗ⁅R⁆ so (
 
 theorem so_indefinite_equiv_apply {i : R} (hi : i * i = -1) (A : so' p q R) :
     (so_indefinite_equiv p q R hi A : Matrix (Sum p q) (Sum p q) R) =
-      Pso p q R i⁻¹ ⬝ (A : Matrix (Sum p q) (Sum p q) R) ⬝ Pso p q R i :=
+      (Pso p q R i)⁻¹ ⬝ (A : Matrix (Sum p q) (Sum p q) R) ⬝ Pso p q R i :=
   by
   erw [LieEquiv.trans_apply, LieEquiv.of_eq_apply, skew_adjoint_matrices_lie_subalgebra_equiv_apply]
 

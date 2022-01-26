@@ -265,14 +265,14 @@ theorem test_against_nn_lipschitz (μ : finite_measure α) :
   constructor
   · have key' := μ.test_against_nn_lipschitz_estimate f₂ f₁
     rw [mul_comm] at key'
-    suffices ↑μ.test_against_nn f₂ ≤ ↑μ.test_against_nn f₁ + ↑μ.mass * dist f₁ f₂ by
+    suffices ↑(μ.test_against_nn f₂) ≤ ↑(μ.test_against_nn f₁) + ↑μ.mass * dist f₁ f₂ by
       linarith
     have key := Nnreal.coe_mono key'
     rwa [Nnreal.coe_add, Nnreal.coe_mul, nndist_comm] at key
     
   · have key' := μ.test_against_nn_lipschitz_estimate f₁ f₂
     rw [mul_comm] at key'
-    suffices ↑μ.test_against_nn f₁ ≤ ↑μ.test_against_nn f₂ + ↑μ.mass * dist f₁ f₂ by
+    suffices ↑(μ.test_against_nn f₁) ≤ ↑(μ.test_against_nn f₂) + ↑μ.mass * dist f₁ f₂ by
       linarith
     have key := Nnreal.coe_mono key'
     rwa [Nnreal.coe_add, Nnreal.coe_mul] at key

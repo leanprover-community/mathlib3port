@@ -42,7 +42,7 @@ theorem lcm_cons (a : α) (s : Multiset α) : (a ::ₘ s).lcm = GcdMonoid.lcm a 
 
 @[simp]
 theorem lcm_singleton {a : α} : ({a} : Multiset α).lcm = normalize a :=
-  (fold_singleton _ _ _).trans $ lcm_one_right _
+  (fold_singleton _ _ _).trans <| lcm_one_right _
 
 @[simp]
 theorem lcm_add (s₁ s₂ : Multiset α) : (s₁ + s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm :=
@@ -62,13 +62,13 @@ theorem dvd_lcm {s : Multiset α} {a : α} (h : a ∈ s) : a ∣ s.lcm :=
   lcm_dvd.1 dvd_rfl _ h
 
 theorem lcm_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₁.lcm ∣ s₂.lcm :=
-  lcm_dvd.2 $ fun b hb => dvd_lcm (h hb)
+  lcm_dvd.2 fun b hb => dvd_lcm (h hb)
 
 @[simp]
 theorem normalize_lcm (s : Multiset α) : normalize s.lcm = s.lcm :=
-  Multiset.induction_on s
+  (Multiset.induction_on s
       (by
-        simp ) $
+        simp ))
     fun a s IH => by
     simp
 
@@ -84,9 +84,9 @@ variable [DecidableEq α]
 
 @[simp]
 theorem lcm_erase_dup (s : Multiset α) : (erase_dup s).lcm = s.lcm :=
-  Multiset.induction_on s
+  (Multiset.induction_on s
       (by
-        simp ) $
+        simp ))
     fun a s IH => by
     by_cases' a ∈ s <;> simp [IH, h]
     unfold lcm
@@ -129,7 +129,7 @@ theorem gcd_cons (a : α) (s : Multiset α) : (a ::ₘ s).gcd = GcdMonoid.gcd a 
 
 @[simp]
 theorem gcd_singleton {a : α} : ({a} : Multiset α).gcd = normalize a :=
-  (fold_singleton _ _ _).trans $ gcd_zero_right _
+  (fold_singleton _ _ _).trans <| gcd_zero_right _
 
 @[simp]
 theorem gcd_add (s₁ s₂ : Multiset α) : (s₁ + s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd :=
@@ -149,13 +149,13 @@ theorem gcd_dvd {s : Multiset α} {a : α} (h : a ∈ s) : s.gcd ∣ a :=
   dvd_gcd.1 dvd_rfl _ h
 
 theorem gcd_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₂.gcd ∣ s₁.gcd :=
-  dvd_gcd.2 $ fun b hb => gcd_dvd (h hb)
+  dvd_gcd.2 fun b hb => gcd_dvd (h hb)
 
 @[simp]
 theorem normalize_gcd (s : Multiset α) : normalize s.gcd = s.gcd :=
-  Multiset.induction_on s
+  (Multiset.induction_on s
       (by
-        simp ) $
+        simp ))
     fun a s IH => by
     simp
 
@@ -177,9 +177,9 @@ variable [DecidableEq α]
 
 @[simp]
 theorem gcd_erase_dup (s : Multiset α) : (erase_dup s).gcd = s.gcd :=
-  Multiset.induction_on s
+  (Multiset.induction_on s
       (by
-        simp ) $
+        simp ))
     fun a s IH => by
     by_cases' a ∈ s <;> simp [IH, h]
     unfold gcd

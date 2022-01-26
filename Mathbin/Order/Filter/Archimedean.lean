@@ -28,13 +28,13 @@ theorem tendsto_coe_nat_at_top_at_top [OrderedSemiring R] [Archimedean R] : tend
 
 @[simp]
 theorem Int.comap_coe_at_top [OrderedRing R] [Nontrivial R] [Archimedean R] : comap (coe : ℤ → R) at_top = at_top :=
-  (comap_embedding_at_top fun _ _ => Int.cast_le) $ fun r =>
+  (comap_embedding_at_top fun _ _ => Int.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
     ⟨n, hn⟩
 
 @[simp]
 theorem Int.comap_coe_at_bot [OrderedRing R] [Nontrivial R] [Archimedean R] : comap (coe : ℤ → R) at_bot = at_bot :=
-  (comap_embedding_at_bot fun _ _ => Int.cast_le) $ fun r =>
+  (comap_embedding_at_bot fun _ _ => Int.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by
       simpa [neg_le] using hn⟩
@@ -48,20 +48,20 @@ theorem tendsto_coe_int_at_bot_iff [OrderedRing R] [Nontrivial R] [Archimedean R
   rw [← tendsto_comap_iff, Int.comap_coe_at_bot]
 
 theorem tendsto_coe_int_at_top_at_top [OrderedRing R] [Archimedean R] : tendsto (coe : ℤ → R) at_top at_top :=
-  Int.cast_mono.tendsto_at_top_at_top $ fun b =>
+  Int.cast_mono.tendsto_at_top_at_top fun b =>
     let ⟨n, hn⟩ := exists_nat_ge b
     ⟨n, hn⟩
 
 @[simp]
 theorem Rat.comap_coe_at_top [LinearOrderedField R] [Archimedean R] : comap (coe : ℚ → R) at_top = at_top :=
-  (comap_embedding_at_top fun _ _ => Rat.cast_le) $ fun r =>
+  (comap_embedding_at_top fun _ _ => Rat.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
     ⟨n, by
       simpa⟩
 
 @[simp]
 theorem Rat.comap_coe_at_bot [LinearOrderedField R] [Archimedean R] : comap (coe : ℚ → R) at_bot = at_bot :=
-  (comap_embedding_at_bot fun _ _ => Rat.cast_le) $ fun r =>
+  (comap_embedding_at_bot fun _ _ => Rat.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by
       simpa [neg_le]⟩
@@ -106,6 +106,7 @@ variable [LinearOrderedSemiring R] [Archimedean R]
 
 variable {l : Filter α} {f : α → R} {r : R}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- If a function tends to infinity along a filter, then this function multiplied by a positive
 constant (on the left) also tends to infinity. The archimedean assumption is convenient to get a
 statement that works on `ℕ`, `ℤ` and `ℝ`, although not necessary (a version in ordered fields is
@@ -115,14 +116,14 @@ theorem Filter.Tendsto.const_mul_at_top' (hr : 0 < r) (hf : tendsto f l at_top) 
   apply tendsto_at_top.2 fun b => _
   obtain ⟨n : ℕ, hn : 1 ≤ n • r⟩ := Archimedean.arch 1 hr
   rw [nsmul_eq_mul'] at hn
-  filter_upwards [tendsto_at_top.1 hf (n * max b 0)]
-  intro x hx
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   calc b ≤ 1 * max b 0 := by
       rw [one_mulₓ]
       exact le_max_leftₓ _ _ _ ≤ r * n * max b 0 :=
       mul_le_mul_of_nonneg_right hn (le_max_rightₓ _ _)_ = r * (n * max b 0) := by
       rw [mul_assoc]_ ≤ r * f x := mul_le_mul_of_nonneg_left hx (le_of_ltₓ hr)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- If a function tends to infinity along a filter, then this function multiplied by a positive
 constant (on the right) also tends to infinity. The archimedean assumption is convenient to get a
 statement that works on `ℕ`, `ℤ` and `ℝ`, although not necessary (a version in ordered fields is
@@ -133,8 +134,7 @@ theorem Filter.Tendsto.at_top_mul_const' (hr : 0 < r) (hf : tendsto f l at_top) 
   obtain ⟨n : ℕ, hn : 1 ≤ n • r⟩ := Archimedean.arch 1 hr
   have hn' : 1 ≤ (n : R) * r := by
     rwa [nsmul_eq_mul] at hn
-  filter_upwards [tendsto_at_top.1 hf (max b 0 * n)]
-  intro x hx
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   calc b ≤ max b 0 * 1 := by
       rw [mul_oneₓ]
       exact le_max_leftₓ _ _ _ ≤ max b 0 * (n * r) :=

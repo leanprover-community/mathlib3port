@@ -124,11 +124,11 @@ def colimit_cocone_is_colimit : is_colimit colimit_cocone where
       (AddCommMon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ SemiRing AddCommMon)).desc
         ((forget₂ SemiRing AddCommMon).mapCocone t) with }
   fac' := fun t j =>
-    RingHom.coe_inj $ (types.colimit_cocone_is_colimit (F ⋙ forget SemiRing)).fac ((forget SemiRing).mapCocone t) j
+    RingHom.coe_inj <| (types.colimit_cocone_is_colimit (F ⋙ forget SemiRing)).fac ((forget SemiRing).mapCocone t) j
   uniq' := fun t m h =>
-    RingHom.coe_inj $
+    RingHom.coe_inj <|
       (types.colimit_cocone_is_colimit (F ⋙ forget SemiRing)).uniq ((forget SemiRing).mapCocone t) m fun j =>
-        funext $ fun x => RingHom.congr_fun (h j) x
+        funext fun x => RingHom.congr_fun (h j) x
 
 instance forget₂_Mon_preserves_filtered_colimits : preserves_filtered_colimits (forget₂ SemiRing Mon.{v}) where
   PreservesFilteredColimits := fun J _ _ =>
@@ -173,12 +173,12 @@ def colimit_cocone_is_colimit : is_colimit colimit_cocone where
     (SemiRing.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommSemiRing SemiRing)).desc
       ((forget₂ CommSemiRing SemiRing).mapCocone t)
   fac' := fun t j =>
-    RingHom.coe_inj $
+    RingHom.coe_inj <|
       (types.colimit_cocone_is_colimit (F ⋙ forget CommSemiRing)).fac ((forget CommSemiRing).mapCocone t) j
   uniq' := fun t m h =>
-    RingHom.coe_inj $
+    RingHom.coe_inj <|
       (types.colimit_cocone_is_colimit (F ⋙ forget CommSemiRing)).uniq ((forget CommSemiRing).mapCocone t) m fun j =>
-        funext $ fun x => RingHom.congr_fun (h j) x
+        funext fun x => RingHom.congr_fun (h j) x
 
 instance forget₂_SemiRing_preserves_filtered_colimits :
     preserves_filtered_colimits (forget₂ CommSemiRing SemiRing.{v}) where
@@ -224,11 +224,11 @@ def colimit_cocone_is_colimit : is_colimit colimit_cocone where
     (SemiRing.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ Ringₓₓ SemiRing)).desc
       ((forget₂ Ringₓₓ SemiRing).mapCocone t)
   fac' := fun t j =>
-    RingHom.coe_inj $ (types.colimit_cocone_is_colimit (F ⋙ forget Ringₓₓ)).fac ((forget Ringₓₓ).mapCocone t) j
+    RingHom.coe_inj <| (types.colimit_cocone_is_colimit (F ⋙ forget Ringₓₓ)).fac ((forget Ringₓₓ).mapCocone t) j
   uniq' := fun t m h =>
-    RingHom.coe_inj $
+    RingHom.coe_inj <|
       (types.colimit_cocone_is_colimit (F ⋙ forget Ringₓₓ)).uniq ((forget Ringₓₓ).mapCocone t) m fun j =>
-        funext $ fun x => RingHom.congr_fun (h j) x
+        funext fun x => RingHom.congr_fun (h j) x
 
 instance forget₂_SemiRing_preserves_filtered_colimits : preserves_filtered_colimits (forget₂ Ringₓₓ SemiRing.{v}) where
   PreservesFilteredColimits := fun J _ _ =>
@@ -273,11 +273,11 @@ def colimit_cocone_is_colimit : is_colimit colimit_cocone where
     (Ringₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommRingₓₓ Ringₓₓ)).desc
       ((forget₂ CommRingₓₓ Ringₓₓ).mapCocone t)
   fac' := fun t j =>
-    RingHom.coe_inj $ (types.colimit_cocone_is_colimit (F ⋙ forget CommRingₓₓ)).fac ((forget CommRingₓₓ).mapCocone t) j
+    RingHom.coe_inj <| (types.colimit_cocone_is_colimit (F ⋙ forget CommRingₓₓ)).fac ((forget CommRingₓₓ).mapCocone t) j
   uniq' := fun t m h =>
-    RingHom.coe_inj $
+    RingHom.coe_inj <|
       (types.colimit_cocone_is_colimit (F ⋙ forget CommRingₓₓ)).uniq ((forget CommRingₓₓ).mapCocone t) m fun j =>
-        funext $ fun x => RingHom.congr_fun (h j) x
+        funext fun x => RingHom.congr_fun (h j) x
 
 instance forget₂_Ring_preserves_filtered_colimits : preserves_filtered_colimits (forget₂ CommRingₓₓ Ringₓₓ.{v}) where
   PreservesFilteredColimits := fun J _ _ =>

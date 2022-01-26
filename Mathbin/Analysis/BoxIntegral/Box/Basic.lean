@@ -77,10 +77,13 @@ instance : Inhabited (box ι) :=
 
 theorem lower_le_upper : I.lower ≤ I.upper := fun i => (I.lower_lt_upper i).le
 
+theorem lower_ne_upper i : I.lower i ≠ I.upper i :=
+  (I.lower_lt_upper i).Ne
+
 instance : HasMem (ι → ℝ) (box ι) :=
   ⟨fun x I => ∀ i, x i ∈ Ioc (I.lower i) (I.upper i)⟩
 
-instance : CoeTₓ (box ι) (Set $ ι → ℝ) :=
+instance : CoeTₓ (box ι) (Set <| ι → ℝ) :=
   ⟨fun I => { x | x ∈ I }⟩
 
 @[simp]
@@ -98,10 +101,10 @@ theorem mem_univ_Ioc {I : box ι} : (x ∈ pi univ fun i => Ioc (I.lower i) (I.u
   mem_univ_pi
 
 theorem coe_eq_pi : (I : Set (ι → ℝ)) = pi univ fun i => Ioc (I.lower i) (I.upper i) :=
-  Set.ext $ fun x => mem_univ_Ioc.symm
+  Set.ext fun x => mem_univ_Ioc.symm
 
 @[simp]
-theorem upper_mem : I.upper ∈ I := fun i => right_mem_Ioc.2 $ I.lower_lt_upper i
+theorem upper_mem : I.upper ∈ I := fun i => right_mem_Ioc.2 <| I.lower_lt_upper i
 
 theorem exists_mem : ∃ x, x ∈ I :=
   ⟨_, I.upper_mem⟩
@@ -131,8 +134,9 @@ theorem le_tfae :
   tfae_have 1 ↔ 2
   exact Iff.rfl
   tfae_have 2 → 3
-  exact fun h => by
-    simpa [coe_eq_pi, closure_pi_set] using closure_mono h
+  · intro h
+    simpa [coe_eq_pi, closure_pi_set, lower_ne_upper] using closure_mono h
+    
   tfae_have 3 ↔ 4
   exact Icc_subset_Icc_iff I.lower_le_upper
   tfae_have 4 → 2
@@ -160,10 +164,10 @@ theorem coe_inj : (I : Set (ι → ℝ)) = J ↔ I = J :=
 
 @[ext]
 theorem ext (H : ∀ x, x ∈ I ↔ x ∈ J) : I = J :=
-  injective_coe $ Set.ext H
+  injective_coe <| Set.ext H
 
 theorem ne_of_disjoint_coe (h : Disjoint (I : Set (ι → ℝ)) J) : I ≠ J :=
-  mt coe_inj.2 $ h.ne I.coe_ne_empty
+  mt coe_inj.2 <| h.ne I.coe_ne_empty
 
 instance : PartialOrderₓ (box ι) :=
   { PartialOrderₓ.lift (coe : box ι → Set (ι → ℝ)) injective_coe with le := · ≤ · }
@@ -208,7 +212,7 @@ theorem coe_subset_Icc : ↑I ⊆ I.Icc := fun x hx => ⟨fun i => (hx i).1.le, 
 instance : HasSup (box ι) :=
   ⟨fun I J =>
     ⟨I.lower⊓J.lower, I.upper⊔J.upper, fun i =>
-      (min_le_leftₓ _ _).trans_lt $ (I.lower_lt_upper i).trans_le (le_max_leftₓ _ _)⟩⟩
+      (min_le_leftₓ _ _).trans_lt <| (I.lower_lt_upper i).trans_le (le_max_leftₓ _ _)⟩⟩
 
 instance : SemilatticeSup (box ι) :=
   { box.partial_order, box.has_sup with le_sup_left := fun I J => le_iff_bounds.2 ⟨inf_le_left, le_sup_left⟩,
@@ -309,7 +313,7 @@ theorem coe_inf (I J : WithBot (box ι)) : (↑(I⊓J) : Set (ι → ℝ)) = I �
   · change ∅ = _
     simp
     
-  change ↑mk' _ _ = _
+  change ↑(mk' _ _) = _
   simp only [coe_eq_pi, ← pi_inter_distrib, Ioc_inter_Ioc, Pi.sup_apply, Pi.inf_apply, coe_mk', coe_coe]
 
 instance : Lattice (WithBot (box ι)) :=
@@ -379,7 +383,7 @@ theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Finₓ (n + 1)
 /-- The interior of a box. -/
 protected def Ioo : box ι →o Set (ι → ℝ) where
   toFun := fun I => pi univ fun i => Ioo (I.lower i) (I.upper i)
-  monotone' := fun I J h => pi_mono $ fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
+  monotone' := fun I J h => pi_mono fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
 
 theorem Ioo_subset_coe (I : box ι) : I.Ioo ⊆ I := fun x hx i => Ioo_subset_Ioc_self (hx i trivialₓ)
 
@@ -422,7 +426,7 @@ variable [Fintype ι]
 It is defined as the maximum of the ratios
 `nndist I.lower I.upper / nndist (I.lower i) (I.upper i)`. -/
 def distortion (I : box ι) : ℝ≥0 :=
-  Finset.univ.sup $ fun i : ι => nndist I.lower I.upper / nndist (I.lower i) (I.upper i)
+  Finset.univ.sup fun i : ι => nndist I.lower I.upper / nndist (I.lower i) (I.upper i)
 
 theorem distortion_eq_of_sub_eq_div {I J : box ι} {r : ℝ}
     (h : ∀ i, I.upper i - I.lower i = (J.upper i - J.lower i) / r) : distortion I = distortion J := by
@@ -430,17 +434,17 @@ theorem distortion_eq_of_sub_eq_div {I J : box ι} {r : ℝ}
   congr 1 with i
   have : 0 < r := by
     by_contra hr
-    have := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2 $ J.lower_le_upper i) (not_ltₓ.1 hr)
+    have := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2 <| J.lower_le_upper i) (not_ltₓ.1 hr)
     rw [← h] at this
-    exact this.not_lt (sub_pos.2 $ I.lower_lt_upper i)
+    exact this.not_lt (sub_pos.2 <| I.lower_lt_upper i)
   simp only [Nnreal.finset_sup_div, div_div_div_cancel_right _ (real.nnabs.map_ne_zero.2 this.ne')]
 
 theorem nndist_le_distortion_mul (I : box ι) (i : ι) :
     nndist I.lower I.upper ≤ I.distortion * nndist (I.lower i) (I.upper i) :=
   calc
     nndist I.lower I.upper = nndist I.lower I.upper / nndist (I.lower i) (I.upper i) * nndist (I.lower i) (I.upper i) :=
-      (div_mul_cancel _ $ mt nndist_eq_zero.1 (I.lower_lt_upper i).Ne).symm
-    _ ≤ I.distortion * nndist (I.lower i) (I.upper i) := mul_le_mul_right' (Finset.le_sup $ Finset.mem_univ i) _
+      (div_mul_cancel _ <| mt nndist_eq_zero.1 (I.lower_lt_upper i).Ne).symm
+    _ ≤ I.distortion * nndist (I.lower i) (I.upper i) := mul_le_mul_right' (Finset.le_sup <| Finset.mem_univ i) _
     
 
 theorem dist_le_distortion_mul (I : box ι) (i : ι) : dist I.lower I.upper ≤ I.distortion * (I.upper i - I.lower i) := by
@@ -450,8 +454,8 @@ theorem dist_le_distortion_mul (I : box ι) (i : ι) : dist I.lower I.upper ≤ 
 
 theorem diam_Icc_le_of_distortion_le (I : box ι) (i : ι) {c : ℝ≥0 } (h : I.distortion ≤ c) :
     diam I.Icc ≤ c * (I.upper i - I.lower i) :=
-  have : (0 : ℝ) ≤ c * (I.upper i - I.lower i) := mul_nonneg c.coe_nonneg (sub_nonneg.2 $ I.lower_le_upper _)
-  diam_le_of_forall_dist_le this $ fun x hx y hy =>
+  have : (0 : ℝ) ≤ c * (I.upper i - I.lower i) := mul_nonneg c.coe_nonneg (sub_nonneg.2 <| I.lower_le_upper _)
+  (diam_le_of_forall_dist_le this) fun x hx y hy =>
     calc
       dist x y ≤ dist I.lower I.upper := Real.dist_le_of_mem_pi_Icc hx hy
       _ ≤ I.distortion * (I.upper i - I.lower i) := I.dist_le_distortion_mul i

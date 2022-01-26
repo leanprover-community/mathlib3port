@@ -123,7 +123,7 @@ theorem cramer_one : cramer (1 : Matrix n n α) = 1 := by
     
 
 theorem cramer_smul (r : α) (A : Matrix n n α) : cramer (r • A) = r ^ (Fintype.card n - 1) • cramer A :=
-  LinearMap.ext $ fun b => funext $ fun _ => det_update_column_smul' _ _ _ _
+  LinearMap.ext fun b => funext fun _ => det_update_column_smul' _ _ _ _
 
 @[simp]
 theorem cramer_subsingleton_apply [Subsingleton n] (A : Matrix n n α) (b : n → α) (i : n) : cramer A b i = b i := by
@@ -202,7 +202,7 @@ theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate (A)�
       apply prod_eq_zero (mem_univ j)
       rw [update_column_self, Pi.single_eq_of_ne' h]
     rw [this]
-    apply prod_eq_zero (mem_univ ((σ⁻¹) i))
+    apply prod_eq_zero (mem_univ (σ⁻¹ i))
     erw [apply_symm_apply σ i, update_row_self]
     apply Pi.single_eq_of_ne
     intro h'
@@ -424,7 +424,7 @@ theorem adjugate_adjugate (A : Matrix n n α) (h : Fintype.card n ≠ 1) :
 /-- A weaker version of `matrix.adjugate_adjugate` that uses `nontrivial`. -/
 theorem adjugate_adjugate' (A : Matrix n n α) [Nontrivial n] :
     adjugate (adjugate A) = det A ^ (Fintype.card n - 2) • A :=
-  adjugate_adjugate _ $ Fintype.one_lt_card.ne'
+  adjugate_adjugate _ <| Fintype.one_lt_card.ne'
 
 end Adjugate
 

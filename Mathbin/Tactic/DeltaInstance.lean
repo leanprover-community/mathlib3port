@@ -6,7 +6,7 @@ namespace Tactic
 first unfolding the definitions in `ids`.
 -/
 unsafe def delta_instance (ids : List Name) : tactic Unit :=
-  dsimp_result (intros >> reset_instance_cache >> delta_target ids >> apply_instance >> done)
+  dsimp_result ((((intros >> reset_instance_cache) >> delta_target ids) >> apply_instance) >> done)
 
 namespace Interactive
 
@@ -54,15 +54,15 @@ unsafe def delta_instance_handler : derive_handler := fun cls new_decl_name => d
       let new_decl ← get_decl new_decl_name
       let new_decl_pexpr ← resolve_name new_decl_name
       let arity ← get_pexpr_arg_arity_with_tgt cls new_decl.type
-      let tgt ← to_expr $ apply_under_n_pis cls new_decl_pexpr new_decl.type (new_decl.type.pi_arity - arity)
+      let tgt ← to_expr <| apply_under_n_pis cls new_decl_pexpr new_decl.type (new_decl.type.pi_arity - arity)
       let (vs, tgt') ← open_pis tgt
       let tgt ← whnf tgt' transparency.none >>= pis vs
-      let (_, inst) ← solve_aux tgt $ tactic.delta_instance [new_decl_name]
+      let (_, inst) ← solve_aux tgt <| tactic.delta_instance [new_decl_name]
       let inst ← instantiate_mvars inst
       let inst ← replace_univ_metas_with_univ_params inst
       let tgt ← instantiate_mvars tgt
-      let nm ← get_unused_decl_name $ new_decl_name <.> delta_instance_name cls
-      add_protected_decl $
+      let nm ← get_unused_decl_name <| new_decl_name <.> delta_instance_name cls
+      add_protected_decl <|
           declaration.defn nm inst.collect_univ_params tgt inst new_decl.reducibility_hints new_decl.is_trusted
       set_basic_attribute `instance nm tt
       return tt

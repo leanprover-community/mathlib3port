@@ -225,7 +225,7 @@ theorem smooth_finprod {ι} {f : ι → M → G} (h : ∀ i, Smooth I' I (f i))
   intro x
   rcases hfin x with ⟨U, hxU, hUf⟩
   have : SmoothAt I' I (fun x => ∏ i in hUf.to_finset, f i x) x := smooth_finset_prod (fun i hi => h i) x
-  refine' this.congr_of_eventually_eq (mem_of_superset hxU $ fun y hy => _)
+  refine' this.congr_of_eventually_eq ((mem_of_superset hxU) fun y hy => _)
   refine' finprod_eq_prod_of_mul_support_subset _ fun i hi => _
   rw [hUf.coe_to_finset]
   exact ⟨y, hi, hy⟩

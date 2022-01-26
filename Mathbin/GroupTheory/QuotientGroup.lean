@@ -75,7 +75,7 @@ See note [partially-applied ext lemmas]. -/
   to_additive
       " Two `add_monoid_hom`s from an additive quotient group are equal if their\ncompositions with `add_quotient_group.mk'` are equal.\n\nSee note [partially-applied ext lemmas]. "]
 theorem monoid_hom_ext ⦃f g : G ⧸ N →* H⦄ (h : f.comp (mk' N) = g.comp (mk' N)) : f = g :=
-  MonoidHom.ext $ fun x => QuotientGroup.induction_on x $ (MonoidHom.congr_fun h : _)
+  MonoidHom.ext fun x => QuotientGroup.induction_on x <| (MonoidHom.congr_fun h : _)
 
 @[simp, to_additive QuotientAddGroup.eq_zero_iff]
 theorem eq_one_iff {N : Subgroup G} [nN : N.normal] (x : G) : (x : G ⧸ N) = 1 ↔ x ∈ N := by
@@ -131,7 +131,7 @@ group homomorphism `G/N →* H`. -/
 @[to_additive QuotientAddGroup.lift
       "An `add_group` homomorphism `φ : G →+ H` with `N ⊆ ker(φ)`\ndescends (i.e. `lift`s) to a group homomorphism `G/N →* H`."]
 def lift (φ : G →* H) (HN : ∀, ∀ x ∈ N, ∀, φ x = 1) : Q →* H :=
-  (QuotientGroup.con N).lift φ $ fun x y h : x⁻¹ * y ∈ N =>
+  ((QuotientGroup.con N).lift φ) fun x y h : x⁻¹ * y ∈ N =>
     calc
       φ x = φ (y * (x⁻¹ * y)⁻¹) := by
         rw [mul_inv_rev, inv_invₓ, mul_inv_cancel_left]
@@ -162,11 +162,11 @@ def map (M : Subgroup H) [M.normal] (f : G →* H) (h : N ≤ M.comap f) : G ⧸
   exact h hx
 
 @[simp, to_additive QuotientAddGroup.map_coe]
-theorem map_coe (M : Subgroup H) [M.normal] (f : G →* H) (h : N ≤ M.comap f) (x : G) : map N M f h (↑x) = ↑f x :=
+theorem map_coe (M : Subgroup H) [M.normal] (f : G →* H) (h : N ≤ M.comap f) (x : G) : map N M f h ↑x = ↑(f x) :=
   lift_mk' _ _ x
 
 @[to_additive QuotientAddGroup.map_mk']
-theorem map_mk' (M : Subgroup H) [M.normal] (f : G →* H) (h : N ≤ M.comap f) (x : G) : map N M f h (mk' _ x) = ↑f x :=
+theorem map_mk' (M : Subgroup H) [M.normal] (f : G →* H) (h : N ≤ M.comap f) (x : G) : map N M f h (mk' _ x) = ↑(f x) :=
   QuotientGroup.lift_mk' _ _ x
 
 omit nN
@@ -178,7 +178,7 @@ open Function MonoidHom
 /-- The induced map from the quotient by the kernel to the codomain. -/
 @[to_additive QuotientAddGroup.kerLift "The induced map from the quotient by the kernel to the\ncodomain."]
 def ker_lift : G ⧸ ker φ →* H :=
-  lift _ φ $ fun g => φ.mem_ker.mp
+  (lift _ φ) fun g => φ.mem_ker.mp
 
 @[simp, to_additive QuotientAddGroup.ker_lift_mk]
 theorem ker_lift_mk (g : G) : (ker_lift φ) g = φ g :=
@@ -190,22 +190,22 @@ theorem ker_lift_mk' (g : G) : (ker_lift φ) (mk g) = φ g :=
 
 @[to_additive QuotientAddGroup.ker_lift_injective]
 theorem ker_lift_injective : injective (ker_lift φ) := fun a b =>
-  Quotientₓ.induction_on₂' a b $ fun a b h : φ a = φ b =>
-    Quotientₓ.sound' $
+  (Quotientₓ.induction_on₂' a b) fun a b h : φ a = φ b =>
+    Quotientₓ.sound' <|
       show a⁻¹ * b ∈ ker φ by
         rw [mem_ker, φ.map_mul, ← h, φ.map_inv, inv_mul_selfₓ]
 
 /-- The induced map from the quotient by the kernel to the range. -/
 @[to_additive QuotientAddGroup.rangeKerLift "The induced map from the quotient by the kernel to\nthe range."]
 def range_ker_lift : G ⧸ ker φ →* φ.range :=
-  lift _ φ.range_restrict $ fun g hg =>
-    (mem_ker _).mp $ by
+  (lift _ φ.range_restrict) fun g hg =>
+    (mem_ker _).mp <| by
       rwa [range_restrict_ker]
 
 @[to_additive QuotientAddGroup.range_ker_lift_injective]
 theorem range_ker_lift_injective : injective (range_ker_lift φ) := fun a b =>
-  Quotientₓ.induction_on₂' a b $ fun a b h : φ.range_restrict a = φ.range_restrict b =>
-    Quotientₓ.sound' $
+  (Quotientₓ.induction_on₂' a b) fun a b h : φ.range_restrict a = φ.range_restrict b =>
+    Quotientₓ.sound' <|
       show a⁻¹ * b ∈ ker φ by
         rw [← range_restrict_ker, mem_ker, φ.range_restrict.map_mul, ← h, φ.range_restrict.map_inv, inv_mul_selfₓ]
 
@@ -264,11 +264,11 @@ def equiv_quotient_of_eq {M N : Subgroup G} [M.normal] [N.normal] (h : M = N) : 
         (by
           simpa [← h] using N.inv_mem hn)
   left_inv := fun x =>
-    x.induction_on' $ by
+    x.induction_on' <| by
       intro
       rfl
   right_inv := fun x =>
-    x.induction_on' $ by
+    x.induction_on' <| by
       intro
       rfl
   map_mul' := fun x y => by
@@ -285,7 +285,7 @@ then there is a map `A / (A' ⊓ A) →* B / (B' ⊓ B)` induced by the inclusio
       "Let `A', A, B', B` be subgroups of `G`. If `A' ≤ B'` and `A ≤ B`,\nthen there is a map `A / (A' ⊓ A) →+ B / (B' ⊓ B)` induced by the inclusions."]
 def quotient_map_subgroup_of_of_le {A' A B' B : Subgroup G} [hAN : (A'.subgroup_of A).Normal]
     [hBN : (B'.subgroup_of B).Normal] (h' : A' ≤ B') (h : A ≤ B) : A ⧸ A'.subgroup_of A →* B ⧸ B'.subgroup_of B :=
-  map _ _ (Subgroup.inclusion h) $ by
+  map _ _ (Subgroup.inclusion h) <| by
     simp [Subgroup.subgroupOf, Subgroup.comap_comap] <;> exact Subgroup.comap_mono h'
 
 @[simp, to_additive]
@@ -322,9 +322,9 @@ open _Root_.Subgroup
       "The second isomorphism theorem: given two subgroups `H` and `N` of a group `G`,\nwhere `N` is normal, defines an isomorphism between `H/(H ∩ N)` and `(H + N)/N`"]
 noncomputable def quotient_inf_equiv_prod_normal_quotient (H N : Subgroup G) [N.normal] :
     H ⧸ (H⊓N).comap H.subtype ≃* _ ⧸ N.comap (H⊔N).Subtype :=
-  let φ : H →* _ ⧸ N.comap (H⊔N).Subtype := (mk' $ N.comap (H⊔N).Subtype).comp (inclusion le_sup_left)
+  let φ : H →* _ ⧸ N.comap (H⊔N).Subtype := (mk' <| N.comap (H⊔N).Subtype).comp (inclusion le_sup_left)
   have φ_surjective : Function.Surjective φ := fun x =>
-    x.induction_on' $ by
+    x.induction_on' <| by
       rintro ⟨y, hy : y ∈ ↑(H⊔N)⟩
       rw [mul_normal H N] at hy
       rcases hy with ⟨h, n, hh, hn, rfl⟩
@@ -398,7 +398,7 @@ theorem subsingleton_quotient_top : Subsingleton (G ⧸ (⊤ : Subgroup G)) :=
 /-- If the quotient by a subgroup gives a singleton then the subgroup is the whole group. -/
 @[to_additive]
 theorem subgroup_eq_top_of_subsingleton (H : Subgroup G) (h : Subsingleton (G ⧸ H)) : H = ⊤ :=
-  top_unique $ fun x _ => by
+  top_unique fun x _ => by
     have this : 1⁻¹ * x ∈ H := QuotientGroup.eq.1 (Subsingleton.elimₓ _ _)
     rwa [one_inv, one_mulₓ] at this
 

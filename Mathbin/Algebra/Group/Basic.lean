@@ -206,15 +206,15 @@ theorem left_inverse_inv G [Groupₓ G] : Function.LeftInverse (fun a : G => a�
   inv_invₓ
 
 @[simp, to_additive]
-theorem inv_involutive : Function.Involutive (HasInv.inv : G → G) :=
+theorem inv_involutive : Function.Involutive (Inv.inv : G → G) :=
   inv_invₓ
 
 @[simp, to_additive]
-theorem inv_surjective : Function.Surjective (HasInv.inv : G → G) :=
+theorem inv_surjective : Function.Surjective (Inv.inv : G → G) :=
   inv_involutive.Surjective
 
 @[to_additive]
-theorem inv_injective : Function.Injective (HasInv.inv : G → G) :=
+theorem inv_injective : Function.Injective (Inv.inv : G → G) :=
   inv_involutive.Injective
 
 @[simp, to_additive]
@@ -250,7 +250,7 @@ theorem mul_right_surjective (a : G) : Function.Surjective fun x => x * a := fun
 
 @[simp, to_additive neg_add_rev]
 theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ :=
-  inv_eq_of_mul_eq_oneₓ $ by
+  inv_eq_of_mul_eq_oneₓ <| by
     simp
 
 @[to_additive]
@@ -300,7 +300,7 @@ theorem eq_inv_iff_eq_inv : a = b⁻¹ ↔ b = a⁻¹ :=
 
 @[to_additive]
 theorem inv_eq_iff_inv_eq : a⁻¹ = b ↔ b⁻¹ = a :=
-  eq_comm.trans $ eq_inv_iff_eq_inv.trans eq_comm
+  eq_comm.trans <| eq_inv_iff_eq_inv.trans eq_comm
 
 @[to_additive]
 theorem mul_eq_one_iff_eq_inv : a * b = 1 ↔ a = b⁻¹ :=
@@ -353,7 +353,7 @@ theorem inv_mul_eq_one : a⁻¹ * b = 1 ↔ a = b := by
 
 @[to_additive]
 theorem div_left_injective : Function.Injective fun a => a / b := by
-  simpa only [div_eq_mul_inv] using fun a a' h => mul_left_injective (b⁻¹) h
+  simpa only [div_eq_mul_inv] using fun a a' h => mul_left_injective b⁻¹ h
 
 @[to_additive]
 theorem div_right_injective : Function.Injective fun a => b / a := by

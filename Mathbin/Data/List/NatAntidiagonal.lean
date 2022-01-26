@@ -54,7 +54,7 @@ theorem antidiagonal_zero : antidiagonal 0 = [(0, 0)] :=
 
 /-- The antidiagonal of `n` does not contain duplicate entries. -/
 theorem nodup_antidiagonal (n : ℕ) : nodup (antidiagonal n) :=
-  nodup_map ((@left_inverse.injective ℕ (ℕ × ℕ) Prod.fst fun i => (i, n - i)) $ fun i => rfl) (nodup_range _)
+  nodup_map ((@left_inverse.injective ℕ (ℕ × ℕ) Prod.fst fun i => (i, n - i)) fun i => rfl) (nodup_range _)
 
 @[simp]
 theorem antidiagonal_succ {n : ℕ} : antidiagonal (n + 1) = (0, n + 1) :: (antidiagonal n).map (Prod.map Nat.succ id) :=

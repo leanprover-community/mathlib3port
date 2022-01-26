@@ -134,7 +134,7 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
     rcases(this.eventually (eventually_lt_at_bot 0)).exists with ⟨x, hx⟩
     exact
       False.elim
-        ((h x).not_lt $ by
+        ((h x).not_lt <| by
           rwa [← add_mulₓ])
     
   · rcases em (b = 0) with (rfl | hb)

@@ -78,17 +78,17 @@ well as a map from declaration name to warning.
 -/
 unsafe def lint_core (all_decls non_auto_decls : List declaration) (checks : List (Name × linter)) :
     tactic (List (Name × linter × rb_map Name Stringₓ)) := do
-  checks.mmap $ fun ⟨linter_name, linter⟩ => do
+  checks.mmap fun ⟨linter_name, linter⟩ => do
       let test_decls := if linter.auto_decls then all_decls else non_auto_decls
       let test_decls ← test_decls.mfilter fun decl => should_be_linted linter_name decl.to_name
       let s ← read
       let results :=
-        test_decls.map_async_chunked $ fun decl =>
-          Prod.mk decl.to_name $
+        test_decls.map_async_chunked fun decl =>
+          Prod.mk decl.to_name <|
             match linter.test decl s with
             | result.success w _ => w
             | result.exception msg _ _ =>
-              some $ "LINTER FAILED:\n" ++ msg.elim "(no message)" fun msg => toString $ msg ()
+              some <| "LINTER FAILED:\n" ++ msg.elim "(no message)" fun msg => toString <| msg ()
       let results :=
         results.foldl
           (fun results : rb_map Name Stringₓ warning =>
@@ -100,10 +100,10 @@ unsafe def lint_core (all_decls non_auto_decls : List declaration) (checks : Lis
 
 /-- Sorts a map with declaration keys as names by line number. -/
 unsafe def sort_results {α} (e : environment) (results : rb_map Name α) : List (Name × α) :=
-  List.reverse $
-    rb_lmap.values $
-      rb_lmap.of_list $
-        results.fold [] $ fun decl linter_warning results =>
+  List.reverse <|
+    rb_lmap.values <|
+      rb_lmap.of_list <|
+        (results.fold []) fun decl linter_warning results =>
           (((e.decl_pos decl).getOrElse ⟨0, 0⟩).line, (decl, linter_warning)) :: results
 
 /-- Formats a linter warning as `#check` command with comment. -/
@@ -119,7 +119,7 @@ private def workflow_command_replacements : Charₓ → Stringₓ
 https://github.com/actions/toolkit/blob/7257597d731b34d14090db516d9ea53439300e98/packages/core/src/command.ts#L92-L105
 -/
 def escapeWorkflowCommand (s : Stringₓ) : Stringₓ :=
-  "".intercalate $ s.to_list.map workflow_command_replacements
+  "".intercalate <| s.to_list.map workflow_command_replacements
 
 /-- Prints a workflow command to emit an error understood by github in an actions workflow.
 This enables CI to tag the parts of the file where linting failed with annotations, and makes it
@@ -130,17 +130,17 @@ unsafe def print_workflow_command (env : environment) (linter_name decl_name : N
     Option Stringₓ := do
   let po ← env.decl_pos decl_name
   let ol ← env.decl_olean decl_name
-  return $
+  return <|
       ((s! "
             ::error file={ol },line={po.line },col={po.column},title=") ++
           s! "Warning from {linter_name} linter::") ++
-        s!"{(escapeWorkflowCommand $ toString decl_name)} - {escapeWorkflowCommand warning}"
+        s!"{(escapeWorkflowCommand <| toString decl_name)} - {escapeWorkflowCommand warning}"
 
 /-- Formats a map of linter warnings using `print_warning`, sorted by line number. -/
 unsafe def print_warnings (env : environment) (emit_workflow_commands : Bool) (linter_name : Name)
     (results : rb_map Name Stringₓ) : format :=
-  format.intercalate format.line $
-    (sort_results env results).map $ fun ⟨decl_name, warning⟩ =>
+  format.intercalate format.line <|
+    (sort_results env results).map fun ⟨decl_name, warning⟩ =>
       let form := print_warning decl_name warning
       if emit_workflow_commands then form ++ (print_workflow_command env linter_name decl_name warning).getOrElse ""
       else form
@@ -151,7 +151,7 @@ The first `drop_fn_chars` characters are stripped from the filename.
 unsafe def grouped_by_filename (e : environment) (results : rb_map Name Stringₓ) (drop_fn_chars := 0)
     (formatter : rb_map Name Stringₓ → format) : format :=
   let results :=
-    results.fold (rb_map.mk Stringₓ (rb_map Name Stringₓ)) $ fun decl_name linter_warning results =>
+    (results.fold (rb_map.mk Stringₓ (rb_map Name Stringₓ))) fun decl_name linter_warning results =>
       let fn := (e.decl_olean decl_name).getOrElse ""
       results.insert fn (((results.find fn).getOrElse mk_rb_map).insert decl_name linter_warning)
   let l :=
@@ -165,7 +165,7 @@ unsafe def format_linter_results (env : environment) (results : List (Name × li
     (decls non_auto_decls : List declaration) (group_by_filename : Option ℕ) (where_desc : Stringₓ) (slow : Bool)
     (verbose : LintVerbosity) (num_linters : ℕ) (emit_workflow_commands : Bool := ff) : format := do
   let formatted_results :=
-    results.map $ fun ⟨linter_name, linter, results⟩ =>
+    results.map fun ⟨linter_name, linter, results⟩ =>
       let report_str : format := to_fmt "/- The `" ++ to_fmt linter_name ++ "` linter reports: -/\n"
       if ¬results.empty then
         let warnings :=
@@ -219,7 +219,7 @@ unsafe def lint (slow : Bool := tt) (verbose : LintVerbosity := LintVerbosity.me
 /-- Returns the declarations in the folder `proj_folder`. -/
 unsafe def lint_project_decls (proj_folder : Stringₓ) : tactic (List declaration) := do
   let e ← get_env
-  pure $ e.filter $ fun d => e.is_prefix_of_file proj_folder d.to_name
+  pure <| e.filter fun d => e.is_prefix_of_file proj_folder d.to_name
 
 /-- Returns the linter message by running the linter on all declarations in project `proj_name` in
 folder `proj_folder`. It also returns a `name_set` containing all declarations that fail.
@@ -272,9 +272,9 @@ unsafe def lint_cmd_aux (scope : Bool → LintVerbosity → List Name → Bool �
   let verbosity := verbosity.get_or_else LintVerbosity.medium
   let (use_only, extra) ← parse_lint_additions
   let (failed, s) ← scope fast_only.is_none verbosity extra use_only
-  when ¬s.is_nil $ trace s
-  when (verbosity = LintVerbosity.low ∧ ¬failed.empty) $ fail "Linting did not succeed"
-  when (verbosity = LintVerbosity.medium ∧ failed.empty) $ trace "/- All linting checks passed! -/"
+  when ¬s.is_nil <| trace s
+  when (verbosity = LintVerbosity.low ∧ ¬failed.empty) <| fail "Linting did not succeed"
+  when (verbosity = LintVerbosity.medium ∧ failed.empty) <| trace "/- All linting checks passed! -/"
 
 /-- The command `#lint` at the bottom of a file will warn you about some common mistakes
 in that file. Usage: `#lint`, `#lint linter_1 linter_2`, `#lint only linter_1 linter_2`.
@@ -283,7 +283,7 @@ in that file. Usage: `#lint`, `#lint linter_1 linter_2`, `#lint only linter_1 li
 
 Use the command `#list_linters` to see all available linters. -/
 @[user_command]
-unsafe def lint_cmd (_ : parse $ tk "#lint") : parser Unit :=
+unsafe def lint_cmd (_ : parse <| tk "#lint") : parser Unit :=
   lint_cmd_aux @lint
 
 /-- The command `#lint_mathlib` checks all of mathlib for certain mistakes.
@@ -293,7 +293,7 @@ Usage: `#lint_mathlib`, `#lint_mathlib linter_1 linter_2`, `#lint_mathlib only l
 
 Use the command `#list_linters` to see all available linters. -/
 @[user_command]
-unsafe def lint_mathlib_cmd (_ : parse $ tk "#lint_mathlib") : parser Unit := do
+unsafe def lint_mathlib_cmd (_ : parse <| tk "#lint_mathlib") : parser Unit := do
   let str ← get_mathlib_dir
   lint_cmd_aux (@lint_project str "mathlib")
 
@@ -304,20 +304,20 @@ Usage: `#lint_all`, `#lint_all linter_1 linter_2`, `#lint_all only linter_1 lint
 
 Use the command `#list_linters` to see all available linters. -/
 @[user_command]
-unsafe def lint_all_cmd (_ : parse $ tk "#lint_all") : parser Unit :=
+unsafe def lint_all_cmd (_ : parse <| tk "#lint_all") : parser Unit :=
   lint_cmd_aux @lint_all
 
 /-- The command `#list_linters` prints a list of all available linters. -/
 @[user_command]
-unsafe def list_linters (_ : parse $ tk "#list_linters") : parser Unit := do
+unsafe def list_linters (_ : parse <| tk "#list_linters") : parser Unit := do
   let env ← get_env
   let ns :=
-    env.decl_filter_map $ fun dcl =>
+    env.decl_filter_map fun dcl =>
       if dcl.to_name.get_prefix = `linter && dcl.type = quote.1 linter then some dcl.to_name else none
   trace "Available linters:\n  linters marked with (*) are in the default lint set\n"
-  ns.mmap' $ fun n => do
+  ns.mmap' fun n => do
       let b ← has_attribute' `linter n
-      trace $ n.pop_prefix.to_string ++ if b then " (*)" else ""
+      trace <| n.pop_prefix.to_string ++ if b then " (*)" else ""
 
 /-- Invoking the hole command `lint` ("Find common mistakes in current file") will print text that
 indicates mistakes made in the file above the command. It is equivalent to copying and pasting the

@@ -123,7 +123,7 @@ theorem divisor_le {m : ℕ} : n ∈ divisors m → n ≤ m := by
   exact Nat.le_of_dvdₓ (Nat.succ_posₓ m)
 
 theorem divisors_subset_of_dvd {m : ℕ} (hzero : n ≠ 0) (h : m ∣ n) : divisors m ⊆ divisors n :=
-  Finset.subset_iff.2 $ fun x hx => Nat.mem_divisors.mpr ⟨(Nat.mem_divisors.mp hx).1.trans h, hzero⟩
+  Finset.subset_iff.2 fun x hx => Nat.mem_divisors.mpr ⟨(Nat.mem_divisors.mp hx).1.trans h, hzero⟩
 
 theorem divisors_subset_proper_divisors {m : ℕ} (hzero : n ≠ 0) (h : m ∣ n) (hdiff : m ≠ n) :
     divisors m ⊆ proper_divisors n := by

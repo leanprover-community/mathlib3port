@@ -200,7 +200,7 @@ theorem from_to_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
   intro X Y f
   have :
     ∀ {a b : F.elements} H : a = b,
-      ↑eq_to_hom H =
+      ↑(eq_to_hom H) =
         eq_to_hom
           (show a.fst = b.fst by
             cases H
@@ -252,7 +252,7 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
 @[simps]
 def costructured_arrow_yoneda_equivalence (F : Cᵒᵖ ⥤ Type v) : F.elementsᵒᵖ ≌ costructured_arrow yoneda F :=
   equivalence.mk (to_costructured_arrow F) (from_costructured_arrow F).rightOp
-    (nat_iso.op (eq_to_iso (from_to_costructured_arrow_eq F))) (eq_to_iso $ to_from_costructured_arrow_eq F)
+    (nat_iso.op (eq_to_iso (from_to_costructured_arrow_eq F))) (eq_to_iso <| to_from_costructured_arrow_eq F)
 
 /-- The equivalence `(-.elements)ᵒᵖ ≅ (yoneda, -)` of is actually a natural isomorphism of functors.
 -/

@@ -36,7 +36,7 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
       | _ => throwError "failed to apply {(← e)} at {← hyp}"
   clear hyp
   let hyp ← note hyp.local_pp_name none prf
-  try $ tactic.dsimp_hyp hyp simp_lemmas.mk [] { eta := False, beta := True }
+  try <| tactic.dsimp_hyp hyp simp_lemmas.mk [] { eta := False, beta := True }
 
 /-- Attempt to "apply" a function `f` represented by the argument `e : pexpr` to the goal.
 
@@ -50,18 +50,18 @@ we obtain a new goal `f a ≤ f b`.
 unsafe def apply_fun_to_goal (e : pexpr) (lem : Option pexpr) : tactic Unit := do
   let t ← target
   match t with
-    | quote.1 ((%%ₓl) ≠ %%ₓr) => to_expr (pquote.1 (ne_of_apply_ne (%%ₓe))) >>= apply >> skip
-    | quote.1 ¬(%%ₓl) = %%ₓr => to_expr (pquote.1 (ne_of_apply_ne (%%ₓe))) >>= apply >> skip
-    | quote.1 ((%%ₓl) ≤ %%ₓr) => to_expr (pquote.1 (OrderIso.le_iff_le (%%ₓe)).mp) >>= apply >> skip
-    | quote.1 ((%%ₓl) < %%ₓr) => to_expr (pquote.1 (OrderIso.lt_iff_lt (%%ₓe)).mp) >>= apply >> skip
+    | quote.1 ((%%ₓl) ≠ %%ₓr) => (to_expr (pquote.1 (ne_of_apply_ne (%%ₓe))) >>= apply) >> skip
+    | quote.1 ¬(%%ₓl) = %%ₓr => (to_expr (pquote.1 (ne_of_apply_ne (%%ₓe))) >>= apply) >> skip
+    | quote.1 ((%%ₓl) ≤ %%ₓr) => (to_expr (pquote.1 (OrderIso.le_iff_le (%%ₓe)).mp) >>= apply) >> skip
+    | quote.1 ((%%ₓl) < %%ₓr) => (to_expr (pquote.1 (OrderIso.lt_iff_lt (%%ₓe)).mp) >>= apply) >> skip
     | quote.1 ((%%ₓl) = %%ₓr) =>
       focus1 do
         to_expr (pquote.1 ((%%ₓe) (%%ₓl)))
         let n ← get_unused_name `inj
         to_expr (pquote.1 (Function.Injective (%%ₓe))) >>= assert n
-        focus1 $
-              (assumption <|>
-                to_expr (pquote.1 Equivₓ.injective) >>= apply >> done <|>
+        (focus1 <|
+              assumption <|>
+                (to_expr (pquote.1 Equivₓ.injective) >>= apply) >> done <|>
                   (lem.mmap fun l => to_expr l >>= apply) >> done) <|>
             swap
         let n ← get_local n

@@ -79,8 +79,8 @@ variable {α : Type u} {β : Type v} [Mul β] (f : α → β)
 
 @[to_additive]
 theorem lift_aux_unique (F : MulHom (FreeMagma α) β) : ⇑F = lift_aux (F ∘ of) :=
-  funext $ fun x =>
-    (FreeMagma.recOn x fun x => rfl) $ fun x y ih1 ih2 => (F.map_mul x y).trans $ congr (congr_argₓ _ ih1) ih2
+  funext fun x =>
+    (FreeMagma.recOn x fun x => rfl) fun x y ih1 ih2 => (F.map_mul x y).trans <| congr (congr_argₓ _ ih1) ih2
 
 /-- The universal property of the free magma expressing its adjointness. -/
 @[to_additive "The universal property of the free additive magma expressing its adjointness."]
@@ -309,7 +309,7 @@ namespace Magma
 /-- Free semigroup over a magma. -/
 @[to_additive AddMagma.FreeAddSemigroup "Free additive semigroup over an additive magma."]
 def FreeSemigroup (α : Type u) [Mul α] : Type u :=
-  Quot $ free_semigroup.r α
+  Quot <| free_semigroup.r α
 
 namespace FreeSemigroup
 
@@ -330,11 +330,11 @@ protected theorem induction_on {C : FreeSemigroup α → Prop} (x : FreeSemigrou
 
 @[to_additive]
 theorem of_mul_assoc (x y z : α) : of (x * y * z) = of (x * (y * z)) :=
-  Quot.sound $ r.intro x y z
+  Quot.sound <| r.intro x y z
 
 @[to_additive]
 theorem of_mul_assoc_left (w x y z : α) : of (w * (x * y * z)) = of (w * (x * (y * z))) :=
-  Quot.sound $ r.left w x y z
+  Quot.sound <| r.left w x y z
 
 @[to_additive]
 theorem of_mul_assoc_right (w x y z : α) : of (w * x * y * z) = of (w * (x * y) * z) := by
@@ -343,7 +343,7 @@ theorem of_mul_assoc_right (w x y z : α) : of (w * x * y * z) = of (w * (x * y)
 @[to_additive]
 instance : Semigroupₓ (FreeSemigroup α) where
   mul := fun x y => by
-    refine' Quot.liftOn x (fun p => Quot.liftOn y (fun q => (Quot.mk _ $ p * q : FreeSemigroup α)) _) _
+    refine' Quot.liftOn x (fun p => Quot.liftOn y (fun q => (Quot.mk _ <| p * q : FreeSemigroup α)) _) _
     · rintro a b (⟨c, d, e⟩ | ⟨c, d, e, f⟩) <;> change of _ = of _
       · rw [of_mul_assoc_left]
         
@@ -359,7 +359,7 @@ instance : Semigroupₓ (FreeSemigroup α) where
         
       
   mul_assoc := fun x y z =>
-    Quot.induction_on x $ fun p => Quot.induction_on y $ fun q => Quot.induction_on z $ fun r => of_mul_assoc p q r
+    (Quot.induction_on x) fun p => (Quot.induction_on y) fun q => (Quot.induction_on z) fun r => of_mul_assoc p q r
 
 @[to_additive]
 theorem of_mul (x y : α) : of (x * y) = of x * of y :=
@@ -374,7 +374,7 @@ given a semigroup `β`. -/
 @[to_additive
       "Lifts an additive magma homomorphism `α → β` to an additive semigroup homomorphism\n`add_magma.free_add_semigroup α → β` given an additive semigroup `β`."]
 def lift (hf : ∀ x y, f (x * y) = f x * f y) : FreeSemigroup α → β :=
-  Quot.lift f $ by
+  Quot.lift f <| by
     rintro a b (⟨c, d, e⟩ | ⟨c, d, e, f⟩) <;> simp only [hf, mul_assoc]
 
 @[simp, to_additive]
@@ -383,12 +383,12 @@ theorem lift_of {hf} (x : α) : lift f hf (of x) = f x :=
 
 @[simp, to_additive]
 theorem lift_mul {hf} x y : lift f hf (x * y) = lift f hf x * lift f hf y :=
-  Quot.induction_on x $ fun p => Quot.induction_on y $ fun q => hf p q
+  (Quot.induction_on x) fun p => (Quot.induction_on y) fun q => hf p q
 
 @[to_additive]
 theorem lift_unique (f : FreeSemigroup α → β) (hf : ∀ x y, f (x * y) = f x * f y) :
     f = lift (f ∘ of) fun p q => hf (of p) (of q) :=
-  funext $ fun x => Quot.induction_on x $ fun p => rfl
+  funext fun x => (Quot.induction_on x) fun p => rfl
 
 end lift
 
@@ -399,7 +399,7 @@ variable {β : Type v} [Mul β] (f : α → β)
 @[to_additive
       "From an additive magma homomorphism `α → β` to an additive semigroup homomorphism\n`add_magma.free_add_semigroup α → add_magma.free_add_semigroup β`."]
 def map (hf : ∀ x y, f (x * y) = f x * f y) : FreeSemigroup α → FreeSemigroup β :=
-  lift (of ∘ f) fun x y => congr_argₓ of $ hf x y
+  lift (of ∘ f) fun x y => congr_argₓ of <| hf x y
 
 @[simp, to_additive]
 theorem map_of {hf} x : map f hf (of x) = of (f x) :=
@@ -426,7 +426,7 @@ variable {α : Type u}
 @[to_additive]
 instance : Semigroupₓ (FreeSemigroup α) where
   mul := fun L1 L2 => (L1.1, L1.2 ++ L2.1 :: L2.2)
-  mul_assoc := fun L1 L2 L3 => Prod.extₓ rfl $ List.append_assoc _ _ _
+  mul_assoc := fun L1 L2 L3 => Prod.extₓ rfl <| List.append_assoc _ _ _
 
 /-- The embedding `α → free_semigroup α`. -/
 @[to_additive "The embedding `α → free_add_semigroup α`."]
@@ -441,7 +441,7 @@ instance [Inhabited α] : Inhabited (FreeSemigroup α) :=
 @[elab_as_eliminator, to_additive "Recursor for free additive semigroup using `of` and `+`."]
 protected def rec_on {C : FreeSemigroup α → Sort l} x (ih1 : ∀ x, C (of x))
     (ih2 : ∀ x y, C (of x) → C y → C (of x * y)) : C x :=
-  Prod.recOn x $ fun f s => List.recOn s ih1 (fun hd tl ih f => ih2 f (hd, tl) (ih1 f) (ih hd)) f
+  (Prod.recOn x) fun f s => List.recOn s ih1 (fun hd tl ih f => ih2 f (hd, tl) (ih1 f) (ih hd)) f
 
 end FreeSemigroup
 
@@ -487,8 +487,8 @@ theorem lift_mul x y : lift f (x * y) = lift f x * lift f y :=
 
 @[to_additive]
 theorem lift_unique (f : FreeSemigroup α → β) (hf : ∀ x y, f (x * y) = f x * f y) : f = lift (f ∘ of) :=
-  funext $ fun ⟨x, L⟩ =>
-    List.recOn L (fun x => rfl) (fun hd tl ih x => (hf (of x) (hd, tl)).trans $ congr_argₓ _ $ ih _) x
+  funext fun ⟨x, L⟩ =>
+    List.recOn L (fun x => rfl) (fun hd tl ih x => (hf (of x) (hd, tl)).trans <| congr_argₓ _ <| ih _) x
 
 end lift
 
@@ -499,7 +499,7 @@ variable {β : Type v} (f : α → β)
 /-- The unique semigroup homomorphism that sends `of x` to `of (f x)`. -/
 @[to_additive "The unique additive semigroup homomorphism that sends `of x` to `of (f x)`."]
 def map : FreeSemigroup α → FreeSemigroup β :=
-  lift $ of ∘ f
+  lift <| of ∘ f
 
 @[simp, to_additive]
 theorem map_of x : map f (of x) = of (f x) :=
@@ -600,7 +600,7 @@ theorem traverse_mul (x y : FreeSemigroup α) : traverse F (x * y) = (· * ·) <
 @[simp, to_additive]
 theorem traverse_mul' :
     Function.comp (traverse F) ∘ @Mul.mul (FreeSemigroup α) _ = fun x y => (· * ·) <$> traverse F x <*> traverse F y :=
-  funext $ fun x => funext $ fun y => traverse_mul F x y
+  funext fun x => funext fun y => traverse_mul F x y
 
 end
 
@@ -649,7 +649,7 @@ def freeSemigroupFreeMagma (α : Type u) : Magma.FreeSemigroup (FreeMagma α) �
   toFun := Magma.FreeSemigroup.lift (FreeMagma.lift FreeSemigroup.of) (FreeMagma.lift _).map_mul
   invFun := FreeSemigroup.lift (Magma.FreeSemigroup.of ∘ FreeMagma.of)
   left_inv := fun x =>
-    Magma.FreeSemigroup.induction_on x $ fun p => by
+    (Magma.FreeSemigroup.induction_on x) fun p => by
       rw [Magma.FreeSemigroup.lift_of] <;>
         exact
           FreeMagma.recOnMul p

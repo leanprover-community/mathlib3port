@@ -47,7 +47,7 @@ theorem iterate_succ_apply (n : ℕ) (x : α) : (f^[n.succ]) x = (f^[n]) (f x) :
 
 @[simp]
 theorem iterate_id (n : ℕ) : (id : α → α)^[n] = id :=
-  Nat.recOn n rfl $ fun n ihn => by
+  (Nat.recOn n rfl) fun n ihn => by
     rw [iterate_succ, ihn, comp.left_id]
 
 theorem iterate_add : ∀ m n : ℕ, f^[m + n] = f^[m] ∘ f^[n]
@@ -60,7 +60,7 @@ theorem iterate_add_apply (m n : ℕ) (x : α) : (f^[m + n]) x = (f^[m]) ((f^[n]
 
 @[simp]
 theorem iterate_one : f^[1] = f :=
-  funext $ fun a => rfl
+  funext fun a => rfl
 
 theorem iterate_mul (m : ℕ) : ∀ n, f^[m * n] = f^[m]^[n]
   | 0 => by
@@ -71,14 +71,14 @@ theorem iterate_mul (m : ℕ) : ∀ n, f^[m * n] = f^[m]^[n]
 variable {f}
 
 theorem iterate_fixed {x} (h : f x = x) (n : ℕ) : (f^[n]) x = x :=
-  Nat.recOn n rfl $ fun n ihn => by
+  (Nat.recOn n rfl) fun n ihn => by
     rw [iterate_succ_apply, h, ihn]
 
 theorem injective.iterate (Hinj : injective f) (n : ℕ) : injective (f^[n]) :=
-  Nat.recOn n injective_id $ fun n ihn => ihn.comp Hinj
+  (Nat.recOn n injective_id) fun n ihn => ihn.comp Hinj
 
 theorem surjective.iterate (Hsurj : surjective f) (n : ℕ) : surjective (f^[n]) :=
-  Nat.recOn n surjective_id $ fun n ihn => ihn.comp Hsurj
+  (Nat.recOn n surjective_id) fun n ihn => ihn.comp Hsurj
 
 theorem bijective.iterate (Hbij : bijective f) (n : ℕ) : bijective (f^[n]) :=
   ⟨Hbij.1.iterate n, Hbij.2.iterate n⟩
@@ -87,10 +87,10 @@ namespace Semiconj
 
 theorem iterate_right {f : α → β} {ga : α → α} {gb : β → β} (h : semiconj f ga gb) (n : ℕ) :
     semiconj f (ga^[n]) (gb^[n]) :=
-  Nat.recOn n id_right $ fun n ihn => ihn.comp_right h
+  (Nat.recOn n id_right) fun n ihn => ihn.comp_right h
 
-theorem iterate_left {g : ℕ → α → α} (H : ∀ n, semiconj f (g n) (g $ n + 1)) (n k : ℕ) :
-    semiconj (f^[n]) (g k) (g $ n + k) := by
+theorem iterate_left {g : ℕ → α → α} (H : ∀ n, semiconj f (g n) (g <| n + 1)) (n k : ℕ) :
+    semiconj (f^[n]) (g k) (g <| n + k) := by
   induction' n with n ihn generalizing k
   · rw [Nat.zero_add]
     exact id_left
@@ -115,7 +115,7 @@ theorem iterate_iterate (h : commute f g) (m n : ℕ) : commute (f^[m]) (g^[n]) 
   (h.iterate_left m).iterate_right n
 
 theorem iterate_eq_of_map_eq (h : commute f g) (n : ℕ) {x} (hx : f x = g x) : (f^[n]) x = (g^[n]) x :=
-  Nat.recOn n rfl $ fun n ihn => by
+  (Nat.recOn n rfl) fun n ihn => by
     simp only [iterate_succ_apply, hx, (h.iterate_left n).Eq, ihn, ((refl g).iterate_right n).Eq]
 
 theorem comp_iterate (h : commute f g) (n : ℕ) : (f ∘ g)^[n] = f^[n] ∘ g^[n] := by
@@ -170,7 +170,7 @@ theorem iterate.rec_zero (p : α → Sort _) {f : α → α} (h : ∀ a, p a →
 variable {f}
 
 theorem left_inverse.iterate {g : α → α} (hg : left_inverse g f) (n : ℕ) : left_inverse (g^[n]) (f^[n]) :=
-  (Nat.recOn n fun _ => rfl) $ fun n ihn => by
+  (Nat.recOn n fun _ => rfl) fun n ihn => by
     rw [iterate_succ', iterate_succ]
     exact ihn.comp hg
 

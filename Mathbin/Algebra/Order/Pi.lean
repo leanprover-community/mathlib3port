@@ -46,7 +46,7 @@ instance {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i
          }
 
 @[to_additive]
-instance OrderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid $ f i] : OrderedCancelCommMonoid (∀ i : I, f i) := by
+instance OrderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid <| f i] : OrderedCancelCommMonoid (∀ i : I, f i) := by
   refine_struct
       { Pi.partialOrder, Pi.monoid with mul := · * ·, one := (1 : ∀ i, f i), le := · ≤ ·, lt := · < ·,
         npow := Monoidₓ.npow } <;>
@@ -54,7 +54,7 @@ instance OrderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid $ f i] : Ordere
       tactic.pi_instance_derive_field
 
 @[to_additive]
-instance OrderedCommGroup [∀ i, OrderedCommGroup $ f i] : OrderedCommGroup (∀ i : I, f i) :=
+instance OrderedCommGroup [∀ i, OrderedCommGroup <| f i] : OrderedCommGroup (∀ i : I, f i) :=
   { Pi.commGroup, Pi.orderedCommMonoid with mul := · * ·, one := (1 : ∀ i, f i), le := · ≤ ·, lt := · < ·,
     npow := Monoidₓ.npow }
 

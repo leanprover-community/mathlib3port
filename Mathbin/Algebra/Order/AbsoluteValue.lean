@@ -54,7 +54,7 @@ protected theorem map_mul (x y : R) : abv (x * y) = abv x * abv y :=
   abv.map_mul' x y
 
 protected theorem Pos {x : R} (hx : x ≠ 0) : 0 < abv x :=
-  lt_of_le_of_neₓ (abv.nonneg x) (Ne.symm $ mt abv.eq_zero.mp hx)
+  lt_of_le_of_neₓ (abv.nonneg x) (Ne.symm <| mt abv.eq_zero.mp hx)
 
 @[simp]
 protected theorem pos_iff {x : R} : 0 < abv x ↔ x ≠ 0 :=
@@ -77,7 +77,7 @@ protected theorem sub_le (a b c : R) : abv (a - c) ≤ abv (a - b) + abv (b - c)
   simpa [sub_eq_add_neg, add_assocₓ] using abv.add_le (a - b) (b - c)
 
 protected theorem le_sub (a b : R) : abv a - abv b ≤ abv (a - b) :=
-  sub_le_iff_le_add.2 $ by
+  sub_le_iff_le_add.2 <| by
     simpa using abv.add_le (a - b) b
 
 @[simp]
@@ -106,11 +106,11 @@ variable [Nontrivial R]
 
 @[simp]
 protected theorem map_one : abv 1 = 1 :=
-  (mul_right_inj' $ abv.ne_zero one_ne_zero).1 $ by
+  (mul_right_inj' <| abv.ne_zero one_ne_zero).1 <| by
     rw [← abv.map_mul, mul_oneₓ, mul_oneₓ]
 
 /-- Absolute values from a nontrivial `R` to a linear ordered ring preserve `*`, `0` and `1`. -/
-def to_monoid_with_zero_hom : MonoidWithZeroHom R S :=
+def to_monoid_with_zero_hom : R →*₀ S :=
   { abv with toFun := abv, map_zero' := abv.map_zero, map_one' := abv.map_one }
 
 @[simp]
@@ -168,7 +168,7 @@ section Field
 variable {R S : Type _} [DivisionRing R] [LinearOrderedField S] (abv : AbsoluteValue R S)
 
 @[simp]
-protected theorem map_inv (a : R) : abv (a⁻¹) = abv a⁻¹ :=
+protected theorem map_inv (a : R) : abv a⁻¹ = (abv a)⁻¹ :=
   abv.to_monoid_with_zero_hom.map_inv a
 
 @[simp]
@@ -249,11 +249,11 @@ section Semiringₓ
 variable {R : Type _} [Semiringₓ R] (abv : R → S) [IsAbsoluteValue abv]
 
 theorem abv_one [Nontrivial R] : abv 1 = 1 :=
-  (mul_right_inj' $ mt (abv_eq_zero abv).1 one_ne_zero).1 $ by
+  (mul_right_inj' <| mt (abv_eq_zero abv).1 one_ne_zero).1 <| by
     rw [← abv_mul abv, mul_oneₓ, mul_oneₓ]
 
 /-- `abv` as a `monoid_with_zero_hom`. -/
-def abv_hom [Nontrivial R] : MonoidWithZeroHom R S :=
+def abv_hom [Nontrivial R] : R →*₀ S :=
   ⟨abv, abv_zero abv, abv_one abv, abv_mul abv⟩
 
 theorem abv_pow [Nontrivial R] (abv : R → S) [IsAbsoluteValue abv] (a : R) (n : ℕ) : abv (a ^ n) = abv a ^ n :=
@@ -281,7 +281,7 @@ theorem abv_sub_le (a b c : R) : abv (a - c) ≤ abv (a - b) + abv (b - c) := by
   simpa [sub_eq_add_neg, add_assocₓ] using abv_add abv (a - b) (b - c)
 
 theorem sub_abv_le_abv_sub (a b : R) : abv a - abv b ≤ abv (a - b) :=
-  sub_le_iff_le_add.2 $ by
+  sub_le_iff_le_add.2 <| by
     simpa using abv_add abv (a - b) b
 
 theorem abs_abv_sub_le_abv_sub (a b : R) : abs (abv a - abv b) ≤ abv (a - b) :=
@@ -295,7 +295,7 @@ section Field
 
 variable {R : Type _} [DivisionRing R] (abv : R → S) [IsAbsoluteValue abv]
 
-theorem abv_inv (a : R) : abv (a⁻¹) = abv a⁻¹ :=
+theorem abv_inv (a : R) : abv a⁻¹ = (abv a)⁻¹ :=
   (abv_hom abv).map_inv a
 
 theorem abv_div (a b : R) : abv (a / b) = abv a / abv b :=

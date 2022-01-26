@@ -108,7 +108,7 @@ theorem pow_le_iff_le_log {b : ℕ} (hb : 1 < b) {x y : ℕ} (hy : 0 < y) : b ^ 
     
 
 theorem log_pow {b : ℕ} (hb : 1 < b) (x : ℕ) : log b (b ^ x) = x :=
-  eq_of_forall_le_iff $ fun z => by
+  eq_of_forall_le_iff fun z => by
     rw [← pow_le_iff_le_log hb (pow_pos (zero_lt_one.trans hb) _)]
     exact (pow_right_strict_mono hb).le_iff_le
 
@@ -116,7 +116,7 @@ theorem log_pos {b n : ℕ} (hb : 1 < b) (hn : b ≤ n) : 0 < log b n := by
   rwa [← succ_le_iff, ← pow_le_iff_le_log hb (hb.le.trans hn), pow_oneₓ]
 
 theorem log_mul_base (b n : ℕ) (hb : 1 < b) (hn : 0 < n) : log b (n * b) = log b n + 1 :=
-  eq_of_forall_le_iff $ fun z => by
+  eq_of_forall_le_iff fun z => by
     cases z
     · simp
       
@@ -152,7 +152,7 @@ theorem log_le_log_of_left_ge {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : log b 
     
   rw [← pow_le_iff_le_log hc (zero_lt_succ n)]
   calc c ^ log b n.succ ≤ b ^ log b n.succ :=
-      pow_le_pow_of_le_left (le_of_ltₓ $ zero_lt_one.trans hc) hb _ _ ≤ n.succ :=
+      pow_le_pow_of_le_left (le_of_ltₓ <| zero_lt_one.trans hc) hb _ _ ≤ n.succ :=
       pow_log_le_self (lt_of_lt_of_leₓ hc hb) (zero_lt_succ n)
 
 theorem log_monotone {b : ℕ} : Monotone fun n : ℕ => log b n := fun x y => log_le_log_of_le
@@ -281,11 +281,11 @@ theorem le_pow_iff_clog_le {b : ℕ} (hb : 1 < b) {x y : ℕ} : x ≤ b ^ y ↔ 
       Nat.div_le_iff_le_mul_add_pred b_pos, ← pow_succₓ, add_tsub_assoc_of_le (Nat.succ_le_of_ltₓ b_pos),
       add_le_add_iff_right]
     
-  · exact iff_of_true ((not_ltₓ.1 (not_and.1 h hb)).trans $ succ_le_of_lt $ pow_pos b_pos _) (zero_le _)
+  · exact iff_of_true ((not_ltₓ.1 (not_and.1 h hb)).trans <| succ_le_of_lt <| pow_pos b_pos _) (zero_le _)
     
 
 theorem clog_pow (b x : ℕ) (hb : 1 < b) : clog b (b ^ x) = x :=
-  eq_of_forall_ge_iff $ fun z => by
+  eq_of_forall_ge_iff fun z => by
     rw [← le_pow_iff_clog_le hb]
     exact (pow_right_strict_mono hb).le_iff_le
 
@@ -311,7 +311,7 @@ theorem clog_le_clog_of_left_ge {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : clog
     
   rw [← le_pow_iff_clog_le (lt_of_lt_of_leₓ hc hb)]
   calc n.succ ≤ c ^ clog c n.succ := le_pow_clog hc _ _ ≤ b ^ clog c n.succ :=
-      pow_le_pow_of_le_left (le_of_ltₓ $ zero_lt_one.trans hc) hb _
+      pow_le_pow_of_le_left (le_of_ltₓ <| zero_lt_one.trans hc) hb _
 
 theorem clog_monotone (b : ℕ) : Monotone (clog b) := fun x y => clog_le_clog_of_le _
 
@@ -327,7 +327,7 @@ theorem log_le_clog (b n : ℕ) : log b n ≤ clog b n := by
   · rw [log_zero_right]
     exact zero_le _
     
-  exact (pow_right_strict_mono hb).le_iff_le.1 ((pow_log_le_self hb $ succ_pos _).trans $ le_pow_clog hb _)
+  exact (pow_right_strict_mono hb).le_iff_le.1 ((pow_log_le_self hb <| succ_pos _).trans <| le_pow_clog hb _)
 
 end Nat
 

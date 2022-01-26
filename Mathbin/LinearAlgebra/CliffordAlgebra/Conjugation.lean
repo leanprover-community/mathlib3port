@@ -67,7 +67,7 @@ def reverse : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q :=
   (op_linear_equiv R).symm.toLinearMap.comp
     (CliffordAlgebra.lift Q
         ⟨(MulOpposite.opLinearEquiv R).toLinearMap.comp (ι Q), fun m =>
-          unop_injective $ by
+          unop_injective <| by
             simp ⟩).toLinearMap
 
 @[simp]
@@ -141,7 +141,7 @@ section List
 
 /-- Taking the reverse of the product a list of $n$ vectors lifted via `ι` is equivalent to
 taking the product of the reverse of that list. -/
-theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map $ ι Q).Prod = (l.map $ ι Q).reverse.Prod
+theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map <| ι Q).Prod = (l.map <| ι Q).reverse.Prod
   | [] => by
     simp
   | x :: xs => by
@@ -149,7 +149,7 @@ theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map $ ι Q).Prod = (l.m
 
 /-- Taking the involute of the product a list of $n$ vectors lifted via `ι` is equivalent to
 premultiplying by ${-1}^n$. -/
-theorem involute_prod_map_ι : ∀ l : List M, involute (l.map $ ι Q).Prod = (-1 : R) ^ l.length • (l.map $ ι Q).Prod
+theorem involute_prod_map_ι : ∀ l : List M, involute (l.map <| ι Q).Prod = (-1 : R) ^ l.length • (l.map <| ι Q).Prod
   | [] => by
     simp
   | x :: xs => by

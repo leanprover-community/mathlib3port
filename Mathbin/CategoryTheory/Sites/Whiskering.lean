@@ -123,8 +123,8 @@ between sheaf categories. -/
 def Sheaf_compose : Sheaf J A ⥤ Sheaf J B where
   obj := fun G => ⟨G.val ⋙ F, presheaf.is_sheaf.comp _ G.2⟩
   map := fun G H η => ⟨whisker_right η.val _⟩
-  map_id' := fun G => Sheaf.hom.ext _ _ $ whisker_right_id _
-  map_comp' := fun G H W f g => Sheaf.hom.ext _ _ $ whisker_right_comp _ _ _
+  map_id' := fun G => Sheaf.hom.ext _ _ <| whisker_right_id _
+  map_comp' := fun G H W f g => Sheaf.hom.ext _ _ <| whisker_right_comp _ _ _
 
 end CategoryTheory
 

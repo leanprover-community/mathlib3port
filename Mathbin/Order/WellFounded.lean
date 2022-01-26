@@ -20,8 +20,8 @@ namespace WellFounded
 with respect to `r`. -/
 theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) : s.nonempty → ∃ a ∈ s, ∀, ∀ x ∈ s, ∀, ¬r x a
   | ⟨a, ha⟩ =>
-    (Acc.recOnₓ (H.apply a) $ fun x _ IH =>
-        not_imp_not.1 $ fun hne hx => hne $ ⟨x, hx, fun y hy hyx => hne $ IH y hyx hy⟩)
+    ((Acc.recOnₓ (H.apply a)) fun x _ IH =>
+        not_imp_not.1 fun hne hx => hne <| ⟨x, hx, fun y hy hyx => hne <| IH y hyx hy⟩)
       ha
 
 /-- A minimal element of a nonempty set in a well-founded order -/
@@ -77,10 +77,10 @@ theorem well_founded_iff_has_min' [PartialOrderₓ α] :
 open Set
 
 /-- The supremum of a bounded, well-founded order -/
-protected noncomputable def sup {α} {r : α → α → Prop} (wf : WellFounded r) (s : Set α) (h : Bounded r s) : α :=
+protected noncomputable def sup {α} {r : α → α → Prop} (wf : WellFounded r) (s : Set α) (h : bounded r s) : α :=
   wf.min { x | ∀, ∀ a ∈ s, ∀, r a x } h
 
-protected theorem lt_sup {α} {r : α → α → Prop} (wf : WellFounded r) {s : Set α} (h : Bounded r s) {x} (hx : x ∈ s) :
+protected theorem lt_sup {α} {r : α → α → Prop} (wf : WellFounded r) {s : Set α} (h : bounded r s) {x} (hx : x ∈ s) :
     r x (wf.sup s h) :=
   min_mem wf { x | ∀, ∀ a ∈ s, ∀, r a x } h x hx
 
@@ -160,12 +160,12 @@ variable [LinearOrderₓ β] (h : WellFounded (· < · : β → β → Prop))
 
 @[simp]
 theorem argmin_le (a : α) [Nonempty α] : f (argmin f h) ≤ f a :=
-  not_ltₓ.mp $ not_lt_argmin f h a
+  not_ltₓ.mp <| not_lt_argmin f h a
 
 @[simp]
 theorem argmin_on_le (s : Set α) {a : α} (ha : a ∈ s) (hs : s.nonempty := Set.nonempty_of_mem ha) :
     f (argmin_on f h s hs) ≤ f a :=
-  not_ltₓ.mp $ not_lt_argmin_on f h s ha hs
+  not_ltₓ.mp <| not_lt_argmin_on f h s ha hs
 
 include h
 

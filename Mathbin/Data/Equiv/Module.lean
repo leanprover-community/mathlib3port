@@ -102,7 +102,7 @@ theorem to_equiv_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : e₁.to_equiv = e₂.t
   to_equiv_injective.eq_iff
 
 theorem to_linear_map_injective : injective (coe : (M ≃ₛₗ[σ] M₂) → M →ₛₗ[σ] M₂) := fun e₁ e₂ H =>
-  to_equiv_injective $ Equivₓ.ext $ LinearMap.congr_fun H
+  to_equiv_injective <| Equivₓ.ext <| LinearMap.congr_fun H
 
 @[simp, norm_cast]
 theorem to_linear_map_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : (e₁ : M →ₛₗ[σ] M₂) = e₂ ↔ e₁ = e₂ :=
@@ -331,7 +331,7 @@ theorem comp_coe [Module R M] [Module R M₂] [Module R M₃] (f : M ≃ₗ[R] M
 
 @[simp]
 theorem mk_coe h₁ h₂ f h₃ h₄ : (LinearEquiv.mk e h₁ h₂ f h₃ h₄ : M ≃ₛₗ[σ] M₂) = e :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 
 protected theorem map_add (a b : M) : e (a + b) = e a + e b :=
   map_add e a b
@@ -376,7 +376,7 @@ theorem symm_bijective [Module R M] [Module S M₂] [RingHomInvPair σ' σ] [Rin
 
 @[simp]
 theorem mk_coe' f h₁ h₂ h₃ h₄ : (LinearEquiv.mk f h₁ h₂ (⇑e) h₃ h₄ : M₂ ≃ₛₗ[σ'] M) = e.symm :=
-  symm_bijective.Injective $ ext $ fun x => rfl
+  symm_bijective.Injective <| ext fun x => rfl
 
 @[simp]
 theorem symm_mk f h₁ h₂ h₃ h₄ :
@@ -483,9 +483,9 @@ instance automorphism_group : Groupₓ (M ≃ₗ[R] M) where
   one := LinearEquiv.refl R M
   inv := fun f => f.symm
   mul_assoc := fun f g h => rfl
-  mul_one := fun f => ext $ fun x => rfl
-  one_mul := fun f => ext $ fun x => rfl
-  mul_left_inv := fun f => ext $ f.left_inv
+  mul_one := fun f => ext fun x => rfl
+  one_mul := fun f => ext fun x => rfl
+  mul_left_inv := fun f => ext <| f.left_inv
 
 /-- Restriction from `R`-linear automorphisms of `M` to `R`-linear endomorphisms of `M`,
 promoted to a monoid hom. -/
@@ -499,7 +499,7 @@ def automorphism_group.to_linear_map_monoid_hom : (M ≃ₗ[R] M) →* M →ₗ[
 
 This generalizes `function.End.apply_mul_action`. -/
 instance apply_distrib_mul_action : DistribMulAction (M ≃ₗ[R] M) M where
-  smul := · $ ·
+  smul := · <| ·
   smul_zero := LinearEquiv.map_zero
   smul_add := LinearEquiv.map_add
   one_smul := fun _ => rfl
@@ -555,8 +555,8 @@ This is a stronger version of `distrib_mul_action.to_add_aut`. -/
 @[simps]
 def to_module_aut : S →* M ≃ₗ[R] M where
   toFun := to_linear_equiv R M
-  map_one' := LinearEquiv.ext $ one_smul _
-  map_mul' := fun a b => LinearEquiv.ext $ mul_smul _ _
+  map_one' := LinearEquiv.ext <| one_smul _
+  map_mul' := fun a b => LinearEquiv.ext <| mul_smul _ _
 
 end DistribMulAction
 
@@ -585,7 +585,7 @@ theorem coe_to_linear_equiv_symm (h : ∀ c : R x, e (c • x) = c • e x) : �
 /-- An additive equivalence between commutative additive monoids is a linear equivalence between
 ℕ-modules -/
 def to_nat_linear_equiv : M ≃ₗ[ℕ] M₂ :=
-  e.to_linear_equiv $ fun c a => by
+  e.to_linear_equiv fun c a => by
     erw [e.to_add_monoid_hom.map_nsmul]
     rfl
 
@@ -627,7 +627,7 @@ variable (e : M ≃+ M₂)
 /-- An additive equivalence between commutative additive groups is a linear
 equivalence between ℤ-modules -/
 def to_int_linear_equiv : M ≃ₗ[ℤ] M₂ :=
-  e.to_linear_equiv $ fun c a => e.to_add_monoid_hom.map_zsmul a c
+  e.to_linear_equiv fun c a => e.to_add_monoid_hom.map_zsmul a c
 
 @[simp]
 theorem coe_to_int_linear_equiv : ⇑e.to_int_linear_equiv = e :=

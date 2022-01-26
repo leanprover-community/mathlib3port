@@ -127,7 +127,7 @@ theorem left_inv_comp (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F
     simp only [left_inv, ContinuousMultilinearMap.neg_apply, neg_inj, ContinuousMultilinearMap.sum_apply]
     convert
       (sum_to_finset_eq_subtype (fun c : Composition (n + 2) => c.length < n + 2) fun c : Composition (n + 2) =>
-              (ContinuousMultilinearMap.compAlongComposition (p.comp_continuous_linear_map (↑i.symm)) c
+              (ContinuousMultilinearMap.compAlongComposition (p.comp_continuous_linear_map ↑i.symm) c
                   (p.left_inv i c.length))
                 fun j : Finₓ (n + 2) => p 1 fun k : Finₓ 1 => v j).symm.trans
         _
@@ -504,6 +504,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1) (p 
       apply radius_right_inv_pos_of_radius_pos_aux1 n (fun k => ∥p.right_inv i k∥) (fun k => norm_nonneg _) hr ha
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- If a a formal multilinear series has a positive radius of convergence, then its right inverse
 also has a positive radius of convergence. -/
 theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) (hp : 0 < p.radius) :
@@ -523,8 +524,7 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
       apply (tendsto_order.1 this).2
       simp [zero_lt_one]
     have C : ∀ᶠ a in 𝓝[>] (0 : ℝ), (0 : ℝ) < a := by
-      filter_upwards [self_mem_nhds_within]
-      exact fun a ha => ha
+      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     rcases(C.and ((A.and B).filter_mono inf_le_left)).exists with ⟨a, ha⟩
     exact ⟨a, ha.1, ha.2.1.le, ha.2.2.le⟩
   let S := fun n => ∑ k in Ico 1 n, a ^ k * ∥p.right_inv i k∥

@@ -431,7 +431,7 @@ variable [affine_space V P] {ι : Type _} (s : Finset ι) {ι₂ : Type _} (s₂
 
 /-- The weights for the centroid of some points. -/
 def centroid_weights : ι → k :=
-  Function.const ι ((card s : k)⁻¹)
+  Function.const ι (card s : k)⁻¹
 
 /-- `centroid_weights` at any point. -/
 @[simp]
@@ -439,7 +439,7 @@ theorem centroid_weights_apply (i : ι) : s.centroid_weights k i = (card s : k)�
   rfl
 
 /-- `centroid_weights` equals a constant function. -/
-theorem centroid_weights_eq_const : s.centroid_weights k = Function.const ι ((card s : k)⁻¹) :=
+theorem centroid_weights_eq_const : s.centroid_weights k = Function.const ι (card s : k)⁻¹ :=
   rfl
 
 variable {k}
@@ -803,14 +803,15 @@ variable {k V}
 all other members of the set along the line joining them to this base point, the affine span is
 unchanged. -/
 theorem affine_span_eq_affine_span_line_map_units [Nontrivial k] {s : Set P} {p : P} (hp : p ∈ s) (w : s → Units k) :
-    affineSpan k (Set.Range fun q : s => AffineMap.lineMap p (↑q) (w q : k)) = affineSpan k s := by
+    affineSpan k (Set.Range fun q : s => AffineMap.lineMap p ↑q (w q : k)) = affineSpan k s := by
   have : s = Set.Range (coe : s → P) := by
     simp
   conv_rhs => rw [this]
   apply le_antisymmₓ <;>
     intro q hq <;>
       erw [mem_affine_span_iff_eq_weighted_vsub_of_point_vadd k V _ (⟨p, hp⟩ : s) q] at hq⊢ <;>
-        obtain ⟨t, μ, rfl⟩ := hq <;> use t <;> [use fun x => μ x * ↑w x, use fun x => μ x * ↑w x⁻¹] <;> simp [smul_smul]
+        obtain ⟨t, μ, rfl⟩ := hq <;>
+          use t <;> [use fun x => μ x * ↑(w x), use fun x => μ x * ↑(w x)⁻¹] <;> simp [smul_smul]
 
 end AffineSpace'
 

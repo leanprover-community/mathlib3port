@@ -370,7 +370,7 @@ theorem condition (S : J.cover X) : (S : sieve X) ∈ J X :=
 
 @[ext]
 theorem ext (S T : J.cover X) (h : ∀ ⦃Y⦄ f : Y ⟶ X, S f ↔ T f) : S = T :=
-  Subtype.ext $ sieve.ext h
+  Subtype.ext <| sieve.ext h
 
 instance : OrderTop (J.cover X) :=
   { (inferInstance : Preorderₓ _) with top := ⟨⊤, J.top_mem _⟩,
@@ -379,7 +379,7 @@ instance : OrderTop (J.cover X) :=
 
 instance : SemilatticeInf (J.cover X) :=
   { (inferInstance : Preorderₓ _) with inf := fun S T => ⟨S⊓T, J.intersection_covering S.condition T.condition⟩,
-    le_antisymm := fun S T h1 h2 => ext _ _ $ fun Y f => ⟨h1 _, h2 _⟩, inf_le_left := fun S T Y f hf => hf.1,
+    le_antisymm := fun S T h1 h2 => (ext _ _) fun Y f => ⟨h1 _, h2 _⟩, inf_le_left := fun S T Y f hf => hf.1,
     inf_le_right := fun S T Y f hf => hf.2, le_inf := fun S T W h1 h2 Y f h => ⟨h1 _ h, h2 _ h⟩ }
 
 instance : Inhabited (J.cover X) :=
@@ -463,15 +463,15 @@ theorem coe_pullback {Z : C} (f : Y ⟶ X) (g : Z ⟶ Y) (S : J.cover X) : (S.pu
 
 /-- The isomorphism between `S` and the pullback of `S` w.r.t. the identity. -/
 def pullback_id (S : J.cover X) : S.pullback (𝟙 X) ≅ S :=
-  eq_to_iso $
-    cover.ext _ _ $ fun Y f => by
+  eq_to_iso <|
+    (cover.ext _ _) fun Y f => by
       simp
 
 /-- Pulling back with respect to a composition is the composition of the pullbacks. -/
 def pullback_comp {X Y Z : C} (S : J.cover X) (f : Z ⟶ Y) (g : Y ⟶ X) :
     S.pullback (f ≫ g) ≅ (S.pullback g).pullback f :=
-  eq_to_iso $
-    cover.ext _ _ $ fun Y f => by
+  eq_to_iso <|
+    (cover.ext _ _) fun Y f => by
       simp
 
 /-- Combine a family of covers over a cover. -/
@@ -480,7 +480,7 @@ def bind {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.Y) : J.cover X 
 
 /-- The canonical moprhism from `S.bind T` to `T`. -/
 def bind_to_base {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.Y) : S.bind T ⟶ S :=
-  hom_of_le $ by
+  hom_of_le <| by
     rintro Y f ⟨Z, e1, e2, h1, h2, h3⟩
     rw [← h3]
     apply sieve.downward_closed
@@ -571,13 +571,13 @@ def pullback (f : Y ⟶ X) : J.cover X ⥤ J.cover Y where
 
 /-- Pulling back along the identity is naturally isomorphic to the identity functor. -/
 def pullback_id (X : C) : J.pullback (𝟙 X) ≅ 𝟭 _ :=
-  (nat_iso.of_components fun S => S.pullback_id) $ by
+  (nat_iso.of_components fun S => S.pullback_id) <| by
     tidy
 
 /-- Pulling back along a composition is naturally isomorphic to
 the composition of the pullbacks. -/
 def pullback_comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : J.pullback (f ≫ g) ≅ J.pullback g ⋙ J.pullback f :=
-  (nat_iso.of_components fun S => S.pullback_comp f g) $ by
+  (nat_iso.of_components fun S => S.pullback_comp f g) <| by
     tidy
 
 end GrothendieckTopology

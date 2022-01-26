@@ -75,12 +75,12 @@ constant. -/
 theorem stationary {f : CauSeq ℚ (padicNorm p)} (hf : ¬f ≈ 0) :
     ∃ N, ∀ m n, N ≤ m → N ≤ n → padicNorm p (f n) = padicNorm p (f m) :=
   have : ∃ ε > 0, ∃ N1, ∀, ∀ j ≥ N1, ∀, ε ≤ padicNorm p (f j) :=
-    CauSeq.abv_pos_of_not_lim_zero $ not_lim_zero_of_not_congr_zero hf
+    CauSeq.abv_pos_of_not_lim_zero <| not_lim_zero_of_not_congr_zero hf
   let ⟨ε, hε, N1, hN1⟩ := this
   let ⟨N2, hN2⟩ := CauSeq.cauchy₂ f hε
   ⟨max N1 N2, fun n m hn hm => by
     have : padicNorm p (f n - f m) < ε := hN2 _ (max_le_iff.1 hn).2 _ (max_le_iff.1 hm).2
-    have : padicNorm p (f n - f m) < padicNorm p (f n) := lt_of_lt_of_leₓ this $ hN1 _ (max_le_iff.1 hn).1
+    have : padicNorm p (f n - f m) < padicNorm p (f n) := lt_of_lt_of_leₓ this <| hN1 _ (max_le_iff.1 hn).1
     have : padicNorm p (f n - f m) < max (padicNorm p (f n)) (padicNorm p (f m)) := lt_max_iff.2 (Or.inl this)
     by_contra hne
     rw [← padicNorm.neg p (f m)] at hne
@@ -91,11 +91,11 @@ theorem stationary {f : CauSeq ℚ (padicNorm p)} (hf : ¬f ≈ 0) :
 
 /-- For all n ≥ stationary_point f hf, the p-adic norm of f n is the same. -/
 def stationary_point {f : PadicSeq p} (hf : ¬f ≈ 0) : ℕ :=
-  Classical.some $ stationary hf
+  Classical.some <| stationary hf
 
 theorem stationary_point_spec {f : PadicSeq p} (hf : ¬f ≈ 0) :
     ∀ {m n}, stationary_point hf ≤ m → stationary_point hf ≤ n → padicNorm p (f n) = padicNorm p (f m) :=
-  Classical.some_spec $ stationary hf
+  Classical.some_spec <| stationary hf
 
 /-- Since the norm of the entries of a Cauchy sequence is eventually stationary,
 we can lift the norm to sequences. -/
@@ -137,19 +137,19 @@ theorem norm_nonzero_of_not_equiv_zero {f : PadicSeq p} (hf : ¬f ≈ 0) : f.nor
   hf ∘ f.norm_zero_iff.1
 
 theorem norm_eq_norm_app_of_nonzero {f : PadicSeq p} (hf : ¬f ≈ 0) : ∃ k, f.norm = padicNorm p k ∧ k ≠ 0 :=
-  have heq : f.norm = padicNorm p (f $ stationary_point hf) := by
+  have heq : f.norm = padicNorm p (f <| stationary_point hf) := by
     simp [norm, hf]
-  ⟨f $ stationary_point hf, HEq, fun h =>
+  ⟨f <| stationary_point hf, HEq, fun h =>
     norm_nonzero_of_not_equiv_zero hf
       (by
         simpa [h] using HEq)⟩
 
 theorem not_lim_zero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬lim_zero (const (padicNorm p) q) := fun h' =>
-  hq $ const_lim_zero.1 h'
+  hq <| const_lim_zero.1 h'
 
 theorem not_equiv_zero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬const (padicNorm p) q ≈ 0 :=
   fun h : lim_zero (const (padicNorm p) q - 0) =>
-  not_lim_zero_const_of_nonzero hq $ by
+  not_lim_zero_const_of_nonzero hq <| by
     simpa using h
 
 theorem norm_nonneg (f : PadicSeq p) : 0 ≤ f.norm :=
@@ -390,7 +390,7 @@ theorem norm_eq {f g : PadicSeq p} (h : ∀ k, padicNorm p (f k) = padicNorm p (
     simp only [hf, hg, norm, dif_pos]
   else by
     have hg : ¬g ≈ 0 := fun hg =>
-      hf $
+      hf <|
         equiv_zero_of_val_eq_of_equiv_zero
           (by
             simp only [h, forall_const, eq_self_iff_true])
@@ -408,7 +408,7 @@ theorem norm_eq {f g : PadicSeq p} (h : ∀ k, padicNorm p (f k) = padicNorm p (
     rw [hpf, hpg, h]
 
 theorem norm_neg (a : PadicSeq p) : (-a).norm = a.norm :=
-  norm_eq $ by
+  norm_eq <| by
     simp
 
 theorem norm_eq_of_add_equiv_zero {f g : PadicSeq p} (h : f + g ≈ 0) : f.norm = g.norm := by
@@ -584,7 +584,7 @@ theorem coe_zero : (↑0 : ℚ_[p]) = 0 :=
   rfl
 
 theorem const_equiv {q r : ℚ} : const (padicNorm p) q ≈ const (padicNorm p) r ↔ q = r :=
-  ⟨fun heq : lim_zero (const (padicNorm p) (q - r)) => eq_of_sub_eq_zero $ const_lim_zero.1 HEq, fun heq => by
+  ⟨fun heq : lim_zero (const (padicNorm p) (q - r)) => eq_of_sub_eq_zero <| const_lim_zero.1 HEq, fun heq => by
     rw [HEq] <;> apply Setoidₓ.refl _⟩
 
 theorem of_rat_eq {q r : ℚ} : of_rat p q = of_rat p r ↔ q = r :=
@@ -608,7 +608,7 @@ end Padic
 /-- The rational-valued p-adic norm on `ℚ_p` is lifted from the norm on Cauchy sequences. The
 canonical form of this function is the normed space instance, with notation `∥ ∥`. -/
 def padicNormE {p : ℕ} [hp : Fact p.prime] : ℚ_[p] → ℚ :=
-  Quotientₓ.lift PadicSeq.norm $ @PadicSeq.norm_equiv _ _
+  Quotientₓ.lift PadicSeq.norm <| @PadicSeq.norm_equiv _ _
 
 namespace padicNormE
 
@@ -643,13 +643,13 @@ theorem defn (f : PadicSeq p) {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀, ∀ i ≥ 
     
 
 protected theorem nonneg (q : ℚ_[p]) : 0 ≤ padicNormE q :=
-  Quotientₓ.induction_on q $ norm_nonneg
+  Quotientₓ.induction_on q <| norm_nonneg
 
 theorem zero_def : (0 : ℚ_[p]) = ⟦0⟧ :=
   rfl
 
 theorem zero_iff (q : ℚ_[p]) : padicNormE q = 0 ↔ q = 0 :=
-  Quotientₓ.induction_on q $ by
+  Quotientₓ.induction_on q <| by
     simpa only [zero_def, Quotientₓ.eq] using norm_zero_iff
 
 @[simp]
@@ -664,18 +664,18 @@ protected theorem one' : padicNormE (1 : ℚ_[p]) = 1 :=
 
 @[simp]
 protected theorem neg (q : ℚ_[p]) : padicNormE (-q) = padicNormE q :=
-  Quotientₓ.induction_on q $ norm_neg
+  Quotientₓ.induction_on q <| norm_neg
 
 /-- Theorems about `padic_norm_e` are named with a `'` so the names do not conflict with the
 equivalent theorems about `norm` (`∥ ∥`). -/
 theorem nonarchimedean' (q r : ℚ_[p]) : padicNormE (q + r) ≤ max (padicNormE q) (padicNormE r) :=
-  Quotientₓ.induction_on₂ q r $ norm_nonarchimedean
+  Quotientₓ.induction_on₂ q r <| norm_nonarchimedean
 
 /-- Theorems about `padic_norm_e` are named with a `'` so the names do not conflict with the
 equivalent theorems about `norm` (`∥ ∥`). -/
 theorem add_eq_max_of_ne' {q r : ℚ_[p]} :
     padicNormE q ≠ padicNormE r → padicNormE (q + r) = max (padicNormE q) (padicNormE r) :=
-  Quotientₓ.induction_on₂ q r $ fun _ _ => PadicSeq.add_eq_max_of_ne
+  (Quotientₓ.induction_on₂ q r) fun _ _ => PadicSeq.add_eq_max_of_ne
 
 theorem triangle_ineq (x y z : ℚ_[p]) : padicNormE (x - z) ≤ padicNormE (x - y) + padicNormE (y - z) :=
   calc
@@ -692,7 +692,7 @@ protected theorem add (q r : ℚ_[p]) : padicNormE (q + r) ≤ padicNormE q + pa
     
 
 protected theorem mul' (q r : ℚ_[p]) : padicNormE (q * r) = padicNormE q * padicNormE r :=
-  Quotientₓ.induction_on₂ q r $ norm_mul
+  Quotientₓ.induction_on₂ q r <| norm_mul
 
 instance : IsAbsoluteValue (@padicNormE p _) where
   abv_nonneg := padicNormE.nonneg
@@ -705,7 +705,7 @@ theorem eq_padic_norm' (q : ℚ) : padicNormE (Padic.ofRat p q) = padicNorm p q 
   norm_const _
 
 protected theorem image' {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, padicNormE q = p ^ -n :=
-  Quotientₓ.induction_on q $ fun f hf =>
+  (Quotientₓ.induction_on q) fun f hf =>
     have : ¬f ≈ 0 := (ne_zero_iff_nequiv_zero f).1 hf
     norm_values_discrete f this
 
@@ -724,7 +724,7 @@ open PadicSeq Padic
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (m n «expr ≥ » N)
 theorem rat_dense' {p : ℕ} [Fact p.prime] (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
-  Quotientₓ.induction_on q $ fun q' =>
+  (Quotientₓ.induction_on q) fun q' =>
     have : ∃ N, ∀ m n _ : m ≥ N _ : n ≥ N, padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
     let ⟨N, hN⟩ := this
     ⟨q' N, by
@@ -767,7 +767,7 @@ theorem exi_rat_seq_conv {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀, ∀ i ≥ N, �
   have h := Classical.some_spec (rat_dense' (f i) (div_nat_pos i))
   refine'
     lt_of_lt_of_leₓ h
-      ((div_le_iff' $ by
+      ((div_le_iff' <| by
             exact_mod_cast succ_pos _).mpr
         _)
   rw [right_distrib]
@@ -791,7 +791,7 @@ theorem exi_rat_seq_conv_cauchy : IsCauSeq (padicNorm p) (lim_seq f) := fun ε h
   let ⟨N2, hN2⟩ := f.cauchy₂ hε3
   exists max N N2
   intro j hj
-  suffices padicNormE (↑lim_seq f j - f (max N N2) + (f (max N N2) - lim_seq f (max N N2))) < ε by
+  suffices padicNormE (↑(lim_seq f j) - f (max N N2) + (f (max N N2) - lim_seq f (max N N2))) < ε by
     ring_nf  at this⊢
     rw [← padicNormE.eq_padic_norm', ← Padic.cast_eq_of_rat]
     exact_mod_cast this
@@ -805,7 +805,7 @@ theorem exi_rat_seq_conv_cauchy : IsCauSeq (padicNorm p) (lim_seq f) := fun ε h
         simp only [bit0, bit1, mul_addₓ, mul_oneₓ]
       rw [this]
       apply add_lt_add
-      · suffices padicNormE (↑lim_seq f j - f j + (f j - f (max N N2))) < ε / 3 + ε / 3 by
+      · suffices padicNormE (↑(lim_seq f j) - f j + (f j - f (max N N2))) < ε / 3 + ε / 3 by
           simpa only [sub_add_sub_cancel]
         apply lt_of_le_of_ltₓ
         · apply padicNormE.add
@@ -936,7 +936,7 @@ include hp
 protected theorem mul (q r : ℚ_[p]) : ∥q * r∥ = ∥q∥ * ∥r∥ := by
   simp [HasNorm.norm, padicNormE.mul']
 
-protected theorem is_norm (q : ℚ_[p]) : ↑padicNormE q = ∥q∥ :=
+protected theorem is_norm (q : ℚ_[p]) : ↑(padicNormE q) = ∥q∥ :=
   rfl
 
 theorem nonarchimedean (q r : ℚ_[p]) : ∥q + r∥ ≤ max ∥q∥ ∥r∥ := by
@@ -978,7 +978,7 @@ instance : NondiscreteNormedField ℚ_[p] where
       exact_mod_cast hp.1.one_lt⟩
 
 protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ∥q∥ = ↑((↑p : ℚ) ^ -n) :=
-  Quotientₓ.induction_on q $ fun f hf =>
+  (Quotientₓ.induction_on q) fun f hf =>
     have : ¬f ≈ 0 := (PadicSeq.ne_zero_iff_nequiv_zero f).1 hf
     let ⟨n, hn⟩ := PadicSeq.norm_values_discrete f this
     ⟨n, congr_argₓ coe hn⟩
@@ -1026,7 +1026,7 @@ theorem norm_rat_le_one : ∀ {q : ℚ} hq : ¬p ∣ q.denom, ∥(q : ℚ_[p])�
 theorem norm_int_le_one (z : ℤ) : ∥(z : ℚ_[p])∥ ≤ 1 :=
   suffices ∥((z : ℚ) : ℚ_[p])∥ ≤ 1 by
     simpa
-  norm_rat_le_one $ by
+  norm_rat_le_one <| by
     simp [hp.1.ne_one]
 
 theorem norm_int_lt_one_iff_dvd (k : ℤ) : ∥(k : ℚ_[p])∥ < 1 ↔ ↑p ∣ k := by
@@ -1080,14 +1080,14 @@ theorem norm_int_le_pow_iff_dvd (k : ℤ) (n : ℕ) : ∥(k : ℚ_[p])∥ ≤ �
   rw [padicNorm.dvd_iff_norm_le]
 
 theorem eq_of_norm_add_lt_right {p : ℕ} {hp : Fact p.prime} {z1 z2 : ℚ_[p]} (h : ∥z1 + z2∥ < ∥z2∥) : ∥z1∥ = ∥z2∥ :=
-  by_contradiction $ fun hne =>
+  by_contradiction fun hne =>
     not_lt_of_geₓ
       (by
         rw [padicNormE.add_eq_max_of_ne hne] <;> apply le_max_rightₓ)
       h
 
 theorem eq_of_norm_add_lt_left {p : ℕ} {hp : Fact p.prime} {z1 z2 : ℚ_[p]} (h : ∥z1 + z2∥ < ∥z1∥) : ∥z1∥ = ∥z2∥ :=
-  by_contradiction $ fun hne =>
+  by_contradiction fun hne =>
     not_lt_of_geₓ
       (by
         rw [padicNormE.add_eq_max_of_ne hne] <;> apply le_max_leftₓ)

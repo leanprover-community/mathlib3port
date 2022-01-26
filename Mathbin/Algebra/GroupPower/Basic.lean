@@ -115,9 +115,9 @@ theorem pow_mul_commₓ (a : M) (m n : ℕ) : a ^ m * a ^ n = a ^ n * a ^ m :=
 
 @[to_additive]
 theorem Commute.mul_pow {a b : M} (h : Commute a b) (n : ℕ) : (a * b) ^ n = a ^ n * b ^ n :=
-  Nat.recOn n
+  (Nat.recOn n
       (by
-        simp only [pow_zeroₓ, one_mulₓ]) $
+        simp only [pow_zeroₓ, one_mulₓ]))
     fun n ihn => by
     simp only [pow_succₓ, ihn, ← mul_assoc, (h.pow_left n).right_comm]
 
@@ -184,7 +184,7 @@ theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a := by
 
 @[to_additive neg_one_zsmul]
 theorem zpow_neg_one (x : G) : x ^ (-1 : ℤ) = x⁻¹ :=
-  (zpow_neg_succ_of_nat x 0).trans $ congr_argₓ HasInv.inv (pow_oneₓ x)
+  (zpow_neg_succ_of_nat x 0).trans <| congr_argₓ Inv.inv (pow_oneₓ x)
 
 @[to_additive]
 theorem zpow_neg_coe_of_pos (a : G) : ∀ {n : ℕ}, 0 < n → a ^ -(n : ℤ) = (a ^ n)⁻¹
@@ -221,7 +221,7 @@ theorem pow_inv_comm (a : G) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^
 
 @[to_additive sub_nsmul_neg]
 theorem inv_pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ m)⁻¹ * a ^ n := by
-  rw [pow_sub (a⁻¹) h, inv_pow, inv_pow, inv_invₓ]
+  rw [pow_sub a⁻¹ h, inv_pow, inv_pow, inv_invₓ]
 
 end Nat
 

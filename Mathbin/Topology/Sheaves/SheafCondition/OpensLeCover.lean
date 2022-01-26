@@ -135,7 +135,7 @@ of all opens contained in some `U i`.
 -/
 instance : functor.final (pairwise_to_opens_le_cover U) :=
   ⟨fun V =>
-    is_connected_of_zigzag $ fun A B => by
+    is_connected_of_zigzag fun A B => by
       rcases A with ⟨⟨⟩, ⟨i⟩ | ⟨i, j⟩, a⟩ <;> rcases B with ⟨⟨⟩, ⟨i'⟩ | ⟨i', j'⟩, b⟩ <;> dsimp  at *
       · refine' ⟨[{ left := PUnit.unit, right := pair i i', Hom := (le_inf a.le b.le).Hom }, _], _, rfl⟩
         exact
@@ -207,8 +207,8 @@ in terms of a limit diagram over `U i` and `U i ⊓ U j`.
 -/
 theorem is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections (F : presheaf C X) :
     F.is_sheaf_opens_le_cover ↔ F.is_sheaf_pairwise_intersections :=
-  forall₂_congrₓ $ fun ι U =>
-    Equivₓ.nonempty_congr $
+  forall₂_congrₓ fun ι U =>
+    Equivₓ.nonempty_congr <|
       calc
         is_limit (F.map_cone (opens_le_cover_cocone U).op) ≃
             is_limit ((F.map_cone (opens_le_cover_cocone U).op).whisker (pairwise_to_opens_le_cover U).op) :=

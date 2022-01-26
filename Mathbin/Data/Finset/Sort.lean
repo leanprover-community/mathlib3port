@@ -30,7 +30,7 @@ theorem sort_sorted (s : Finset α) : List.Sorted r (sort r s) :=
   sort_sorted _ _
 
 @[simp]
-theorem sort_eq (s : Finset α) : ↑sort r s = s.1 :=
+theorem sort_eq (s : Finset α) : ↑(sort r s) = s.1 :=
   sort_eq _ _
 
 @[simp]
@@ -79,7 +79,7 @@ theorem sorted_zero_eq_min'_aux (s : Finset α) (h : 0 < (s.sort (· ≤ ·)).le
 theorem sorted_zero_eq_min' {s : Finset α} {h : 0 < (s.sort (· ≤ ·)).length} :
     (s.sort (· ≤ ·)).nthLe 0 h =
       s.min'
-        (card_pos.1 $ by
+        (card_pos.1 <| by
           rwa [length_sort] at h) :=
   sorted_zero_eq_min'_aux _ _ _
 
@@ -125,8 +125,8 @@ is the increasing bijection between `fin k` and `s` as an `order_iso`. Here, `h`
 the cardinality of `s` is `k`. We use this instead of an iso `fin s.card ≃o s` to avoid
 casting issues in further uses of this function. -/
 def order_iso_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Finₓ k ≃o s :=
-  OrderIso.trans (Finₓ.cast ((length_sort (· ≤ ·)).trans h).symm) $
-    (s.sort_sorted_lt.nth_le_iso _).trans $ OrderIso.setCongr _ _ $ Set.ext $ fun x => mem_sort _
+  OrderIso.trans (Finₓ.cast ((length_sort (· ≤ ·)).trans h).symm) <|
+    (s.sort_sorted_lt.nth_le_iso _).trans <| OrderIso.setCongr _ _ <| Set.ext fun x => mem_sort _
 
 /-- Given a finset `s` of cardinality `k` in a linear order `α`, the map `order_emb_of_fin s h` is
 the increasing bijection between `fin k` and `s` as an order embedding into `α`. Here, `h` is a
@@ -137,11 +137,11 @@ def order_emb_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Finₓ k ↪o 
 
 @[simp]
 theorem coe_order_iso_of_fin_apply (s : Finset α) {k : ℕ} (h : s.card = k) (i : Finₓ k) :
-    ↑order_iso_of_fin s h i = order_emb_of_fin s h i :=
+    ↑(order_iso_of_fin s h i) = order_emb_of_fin s h i :=
   rfl
 
 theorem order_iso_of_fin_symm_apply (s : Finset α) {k : ℕ} (h : s.card = k) (x : s) :
-    ↑(s.order_iso_of_fin h).symm x = (s.sort (· ≤ ·)).indexOf x :=
+    ↑((s.order_iso_of_fin h).symm x) = (s.sort (· ≤ ·)).indexOf x :=
   rfl
 
 theorem order_emb_of_fin_apply (s : Finset α) {k : ℕ} (h : s.card = k) (i : Finₓ k) :
@@ -192,7 +192,7 @@ theorem order_emb_of_fin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : 
 the increasing bijection `order_emb_of_fin s h`. -/
 theorem order_emb_of_fin_unique' {s : Finset α} {k : ℕ} (h : s.card = k) {f : Finₓ k ↪o α} (hfs : ∀ x, f x ∈ s) :
     f = s.order_emb_of_fin h :=
-  RelEmbedding.ext $ Function.funext_iffₓ.1 $ order_emb_of_fin_unique h hfs f.strict_mono
+  RelEmbedding.ext <| Function.funext_iffₓ.1 <| order_emb_of_fin_unique h hfs f.strict_mono
 
 /-- Two parametrizations `order_emb_of_fin` of the same set take the same value on `i` and `j` if
 and only if `i = j`. Since they can be defined on a priori not defeq types `fin k` and `fin l`

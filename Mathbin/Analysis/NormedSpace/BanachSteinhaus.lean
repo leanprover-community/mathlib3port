@@ -56,7 +56,7 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
         (real_norm_le x (Metric.mem_ball_self ε_pos) i)_ = (m + m : ℕ) :=
       (m.cast_add m).symm _ ≤ (m + m : ℕ) * (∥y∥ / (ε / ∥k∥)) :=
       le_mul_of_one_le_right (Nat.cast_nonneg _)
-        ((one_le_div $ div_pos ε_pos (zero_lt_one.trans hk)).2 le_y)_ = (m + m : ℕ) / (ε / ∥k∥) * ∥y∥ :=
+        ((one_le_div <| div_pos ε_pos (zero_lt_one.trans hk)).2 le_y)_ = (m + m : ℕ) / (ε / ∥k∥) * ∥y∥ :=
       (mul_comm_div' _ _ _).symm
 
 open_locale Ennreal
@@ -77,9 +77,9 @@ theorem banach_steinhaus_supr_nnnorm {ι : Type _} [CompleteSpace E] {g : ι →
         _ = p := hp₁
         
   cases' banach_steinhaus h' with C' hC'
-  refine' (supr_le $ fun i => _).trans_lt (@coe_lt_top C'.to_nnreal)
+  refine' (supr_le fun i => _).trans_lt (@coe_lt_top C'.to_nnreal)
   rw [← norm_to_nnreal]
-  exact coe_mono (Real.to_nnreal_le_to_nnreal $ hC' i)
+  exact coe_mono (Real.to_nnreal_le_to_nnreal <| hC' i)
 
 open_locale TopologicalSpace
 

@@ -98,7 +98,7 @@ theorem lift_symm_apply (F : UniversalEnvelopingAlgebra R L →ₐ[R] A) :
 
 @[simp]
 theorem ι_comp_lift : lift R f ∘ ι R = f :=
-  funext $ LieHom.ext_iff.mp $ (lift R).symm_apply_apply f
+  funext <| LieHom.ext_iff.mp <| (lift R).symm_apply_apply f
 
 @[simp]
 theorem lift_ι_apply (x : L) : lift R f (ι R x) = f x := by

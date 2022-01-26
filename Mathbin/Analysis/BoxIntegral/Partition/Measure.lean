@@ -37,7 +37,7 @@ theorem measure_Icc_lt_top (I : box ι) (μ : Measureₓ (ι → ℝ)) [is_local
   show μ (Icc I.lower I.upper) < ∞ from I.is_compact_Icc.measure_lt_top
 
 theorem measure_coe_lt_top (I : box ι) (μ : Measureₓ (ι → ℝ)) [is_locally_finite_measure μ] : μ I < ∞ :=
-  (measure_mono $ coe_subset_Icc).trans_lt (I.measure_Icc_lt_top μ)
+  (measure_mono <| coe_subset_Icc).trans_lt (I.measure_Icc_lt_top μ)
 
 variable [Fintype ι] (I : box ι)
 
@@ -50,7 +50,7 @@ theorem measurable_set_Icc : MeasurableSet I.Icc :=
   measurable_set_Icc
 
 theorem measurable_set_Ioo : MeasurableSet I.Ioo :=
-  (measurable_set_pi (finite.of_fintype _).Countable).2 $ Or.inl $ fun i hi => measurable_set_Ioo
+  (measurable_set_pi (finite.of_fintype _).Countable).2 <| Or.inl fun i hi => measurable_set_Ioo
 
 theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.Icc := by
   rw [coe_eq_pi]

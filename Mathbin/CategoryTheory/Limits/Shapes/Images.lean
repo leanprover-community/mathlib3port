@@ -171,7 +171,7 @@ namespace IsImage
 
 @[simp, reassoc]
 theorem fac_lift {F : mono_factorisation f} (hF : is_image F) (F' : mono_factorisation f) : F.e ≫ hF.lift F' = F'.e :=
-  (cancel_mono F'.m).1 $ by
+  (cancel_mono F'.m).1 <| by
     simp
 
 variable (f)
@@ -556,7 +556,7 @@ attribute [simp, reassoc] image_map.map_ι
 @[simp, reassoc]
 theorem image_map.factor_map {f g : arrow C} [has_image f.hom] [has_image g.hom] (sq : f ⟶ g) (m : image_map sq) :
     factor_thru_image f.hom ≫ m.map = sq.left ≫ factor_thru_image g.hom :=
-  (cancel_mono (image.ι g.hom)).1 $ by
+  (cancel_mono (image.ι g.hom)).1 <| by
     simp
 
 /-- To give an image map for a commutative square with `f` at the top and `g` at the bottom, it
@@ -580,12 +580,12 @@ theorem has_image_map.mk {f g : arrow C} [has_image f.hom] [has_image g.hom] {sq
 theorem has_image_map.transport {f g : arrow C} [has_image f.hom] [has_image g.hom] (sq : f ⟶ g)
     (F : mono_factorisation f.hom) {F' : mono_factorisation g.hom} (hF' : is_image F') (map : F.I ⟶ F'.I)
     (map_ι : map ≫ F'.m = F.m ≫ sq.right) : has_image_map sq :=
-  has_image_map.mk $ image_map.transport sq F hF' map_ι
+  has_image_map.mk <| image_map.transport sq F hF' map_ι
 
 /-- Obtain an `image_map` from a `has_image_map` instance. -/
 def has_image_map.image_map {f g : arrow C} [has_image f.hom] [has_image g.hom] (sq : f ⟶ g) [has_image_map sq] :
     image_map sq :=
-  Classical.choice $ @has_image_map.has_image_map _ _ _ _ _ _ sq _
+  Classical.choice <| @has_image_map.has_image_map _ _ _ _ _ _ sq _
 
 instance (priority := 100) has_image_map_of_is_iso {f g : arrow C} [has_image f.hom] [has_image g.hom] (sq : f ⟶ g)
     [is_iso sq] : has_image_map sq :=
@@ -609,9 +609,9 @@ section
 attribute [local ext] image_map
 
 instance : Subsingleton (image_map sq) :=
-  Subsingleton.intro $ fun a b =>
-    image_map.ext a b $
-      (cancel_mono (image.ι g.hom)).1 $ by
+  Subsingleton.intro fun a b =>
+    image_map.ext a b <|
+      (cancel_mono (image.ι g.hom)).1 <| by
         simp only [image_map.map_ι]
 
 end
@@ -712,8 +712,8 @@ instance strong_epi_mono_factorisation_inhabited {X Y : C} (f : X ⟶ Y) [strong
 def strong_epi_mono_factorisation.to_mono_is_image {X Y : C} {f : X ⟶ Y} (F : strong_epi_mono_factorisation f) :
     is_image F.to_mono_factorisation where
   lift := fun G =>
-    arrow.lift $
-      arrow.hom_mk' $
+    arrow.lift <|
+      arrow.hom_mk' <|
         show G.e ≫ G.m = F.e ≫ F.m by
           rw [F.to_mono_factorisation.fac, G.fac]
 
@@ -728,7 +728,7 @@ variable {C}
 
 theorem has_strong_epi_mono_factorisations.mk (d : ∀ {X Y : C} f : X ⟶ Y, strong_epi_mono_factorisation f) :
     has_strong_epi_mono_factorisations C :=
-  ⟨fun X Y f => Nonempty.intro $ d f⟩
+  ⟨fun X Y f => Nonempty.intro <| d f⟩
 
 instance (priority := 100) has_images_of_has_strong_epi_mono_factorisations [has_strong_epi_mono_factorisations C] :
     has_images C where
@@ -762,15 +762,15 @@ theorem strong_epi_of_strong_epi_mono_factorisation {X Y : C} {f : X ⟶ Y} (F :
 
 theorem strong_epi_factor_thru_image_of_strong_epi_mono_factorisation {X Y : C} {f : X ⟶ Y} [has_image f]
     (F : strong_epi_mono_factorisation f) : strong_epi (factor_thru_image f) :=
-  strong_epi_of_strong_epi_mono_factorisation F $ image.is_image f
+  strong_epi_of_strong_epi_mono_factorisation F <| image.is_image f
 
 /-- If we constructed our images from strong epi-mono factorisations, then these images are
     strong epi images. -/
 instance (priority := 100) has_strong_epi_images_of_has_strong_epi_mono_factorisations
     [has_strong_epi_mono_factorisations C] : has_strong_epi_images C where
   strong_factor_thru_image := fun X Y f =>
-    strong_epi_factor_thru_image_of_strong_epi_mono_factorisation $
-      Classical.choice $ has_strong_epi_mono_factorisations.has_fac f
+    strong_epi_factor_thru_image_of_strong_epi_mono_factorisation <|
+      Classical.choice <| has_strong_epi_mono_factorisations.has_fac f
 
 end HasStrongEpiImages
 
@@ -783,8 +783,8 @@ instance (priority := 100) has_image_maps_of_has_strong_epi_images [has_strong_e
   HasImageMap := fun f g st =>
     has_image_map.mk
       { map :=
-          arrow.lift $
-            arrow.hom_mk' $
+          arrow.lift <|
+            arrow.hom_mk' <|
               show
                 (st.left ≫ factor_thru_image g.hom) ≫ image.ι g.hom = factor_thru_image f.hom ≫ image.ι f.hom ≫ st.right
                 by
@@ -817,7 +817,7 @@ factorisation.
 -/
 def image.iso_strong_epi_mono {I' : C} (e : X ⟶ I') (m : I' ⟶ Y) (comm : e ≫ m = f) [strong_epi e] [mono m] :
     I' ≅ image f :=
-  is_image.iso_ext { i := I', m, e }.toMonoIsImage $ image.is_image f
+  is_image.iso_ext { i := I', m, e }.toMonoIsImage <| image.is_image f
 
 @[simp]
 theorem image.iso_strong_epi_mono_hom_comp_ι {I' : C} (e : X ⟶ I') (m : I' ⟶ Y) (comm : e ≫ m = f) [strong_epi e]

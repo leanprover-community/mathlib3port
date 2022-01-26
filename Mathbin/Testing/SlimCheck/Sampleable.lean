@@ -278,11 +278,11 @@ def sampleable.lift (α : Type u) {β : Type u} [sampleable α] (f : α → β) 
 
 instance nat.sampleable : sampleable ℕ where
   sample :=
-    sized $ fun sz =>
-      freq [(1, coe <$> choose_any (Finₓ $ succ (sz ^ 3))), (3, coe <$> choose_any (Finₓ $ succ sz))]
+    sized fun sz =>
+      freq [(1, coe <$> choose_any (Finₓ <| succ (sz ^ 3))), (3, coe <$> choose_any (Finₓ <| succ sz))]
         (by
           decide)
-  shrink := fun x => LazyList.ofList $ nat.shrink x
+  shrink := fun x => LazyList.ofList <| nat.shrink x
 
 /-- `iterate_shrink p x` takes a decidable predicate `p` and a
 value `x` of some sampleable type and recursively shrinks `x`.
@@ -290,19 +290,19 @@ It first calls `shrink x` to get a list of candidate sample,
 finds the first that satisfies `p` and recursively tries
 to shrink that one. -/
 def iterate_shrink {α} [HasToString α] [sampleable α] (p : α → Prop) [DecidablePred p] : α → Option α :=
-  WellFounded.fix HasWellFounded.wf $ fun x f_rec => do
-    (trace s! "{x} : {(shrink x).toList}") $ pure ()
+  (WellFounded.fix HasWellFounded.wf) fun x f_rec => do
+    (trace s! "{x} : {(shrink x).toList}") <| pure ()
     let y ← (shrink x).find fun a => p a
     f_rec y y.property <|> some y.val
 
-instance fin.sampleable {n} [Fact $ 0 < n] : sampleable (Finₓ n) :=
-  sampleable.lift ℕ Finₓ.ofNat' Subtype.val $ fun i => (mod_le _ _ : i % n ≤ i)
+instance fin.sampleable {n} [Fact <| 0 < n] : sampleable (Finₓ n) :=
+  (sampleable.lift ℕ Finₓ.ofNat' Subtype.val) fun i => (mod_le _ _ : i % n ≤ i)
 
 instance (priority := 100) fin.sampleable' {n} : sampleable (Finₓ (succ n)) :=
-  sampleable.lift ℕ Finₓ.ofNat Subtype.val $ fun i => (mod_le _ _ : i % succ n ≤ i)
+  (sampleable.lift ℕ Finₓ.ofNat Subtype.val) fun i => (mod_le _ _ : i % succ n ≤ i)
 
 instance pnat.sampleable : sampleable ℕ+ :=
-  sampleable.lift ℕ Nat.succPnat Pnat.natPred $ fun a => by
+  (sampleable.lift ℕ Nat.succPnat Pnat.natPred) fun a => by
     unfold_wf <;> simp only [Pnat.natPred, succ_pnat, Pnat.mk_coe, tsub_zero, succ_sub_succ_eq_sub]
 
 /-- Redefine `sizeof` for `int` to make it easier to use with `nat` -/
@@ -314,7 +314,7 @@ attribute [local instance] int.has_sizeof
 instance int.sampleable : sampleable ℤ where
   wf := _
   sample :=
-    sized $ fun sz =>
+    sized fun sz =>
       freq
         [(1,
             Subtype.val <$>
@@ -331,8 +331,8 @@ instance int.sampleable : sampleable ℤ where
         (by
           decide)
   shrink := fun x =>
-    LazyList.ofList $
-      (nat.shrink $ Int.natAbs x).bind $ fun ⟨y, h⟩ =>
+    LazyList.ofList <|
+      (nat.shrink <| Int.natAbs x).bind fun ⟨y, h⟩ =>
         [⟨y, h⟩,
           ⟨-y, by
             dsimp [sizeof, SizeOf.sizeof] <;> rw [Int.nat_abs_neg] <;> exact h⟩]
@@ -360,11 +360,11 @@ for `y` to get shrunken too.
 def prod.shrink {α β} [SizeOf α] [SizeOf β] (shr_a : shrink_fn α) (shr_b : shrink_fn β) : shrink_fn (α × β)
   | ⟨x₀, x₁⟩ =>
     let xs₀ : LazyList { y : α × β // sizeof_lt y (x₀, x₁) } :=
-      (shr_a x₀).map $
+      (shr_a x₀).map <|
         Subtype.map (fun a => (a, x₁)) fun x h => by
           dsimp [sizeof_lt] <;> unfold_wf <;> apply h
     let xs₁ : LazyList { y : α × β // sizeof_lt y (x₀, x₁) } :=
-      (shr_b x₁).map $
+      (shr_b x₁).map <|
         Subtype.map (fun a => (x₀, a)) fun x h => by
           dsimp [sizeof_lt] <;> unfold_wf <;> apply h
     xs₀.append xs₁
@@ -372,24 +372,24 @@ def prod.shrink {α β} [SizeOf α] [SizeOf β] (shr_a : shrink_fn α) (shr_b : 
 instance prod.sampleable : sampleable_bifunctor.{u, v} Prod where
   wf := _
   sample := fun α β sama samb => do
-    let ⟨x⟩ ← (Uliftable.up $ sama : gen (Ulift.{max u v} α))
-    let ⟨y⟩ ← (Uliftable.up $ samb : gen (Ulift.{max u v} β))
+    let ⟨x⟩ ← (Uliftable.up <| sama : gen (Ulift.{max u v} α))
+    let ⟨y⟩ ← (Uliftable.up <| samb : gen (Ulift.{max u v} β))
     pure (x, y)
   shrink := @prod.shrink
   pRepr := @Prod.hasRepr
 
 instance sigma.sampleable {α β} [sampleable α] [sampleable β] : sampleable (Σ _ : α, β) :=
-  (sampleable.lift (α × β) (fun ⟨x, y⟩ => ⟨x, y⟩) fun ⟨x, y⟩ => ⟨x, y⟩) $ fun ⟨x, y⟩ => le_reflₓ _
+  (sampleable.lift (α × β) (fun ⟨x, y⟩ => ⟨x, y⟩) fun ⟨x, y⟩ => ⟨x, y⟩) fun ⟨x, y⟩ => le_reflₓ _
 
 /-- shrinking function for sum types -/
 def sum.shrink {α β} [SizeOf α] [SizeOf β] (shrink_α : shrink_fn α) (shrink_β : shrink_fn β) : shrink_fn (Sum α β)
   | Sum.inr x =>
-    (shrink_β x).map $
-      Subtype.map Sum.inr $ fun a => by
+    (shrink_β x).map <|
+      (Subtype.map Sum.inr) fun a => by
         dsimp [sizeof_lt] <;> unfold_wf <;> solve_by_elim
   | Sum.inl x =>
-    (shrink_α x).map $
-      Subtype.map Sum.inl $ fun a => by
+    (shrink_α x).map <|
+      (Subtype.map Sum.inl) fun a => by
         dsimp [sizeof_lt] <;> unfold_wf <;> solve_by_elim
 
 instance sum.sampleable : sampleable_bifunctor.{u, v} Sum where
@@ -401,7 +401,7 @@ instance sum.sampleable : sampleable_bifunctor.{u, v} Sum where
   pRepr := @Sum.hasRepr
 
 instance rat.sampleable : sampleable ℚ :=
-  (sampleable.lift (ℤ × ℕ+) (fun x => Prod.casesOn x Rat.mkPnat) fun r => (r.num, ⟨r.denom, r.pos⟩)) $ by
+  (sampleable.lift (ℤ × ℕ+) (fun x => Prod.casesOn x Rat.mkPnat) fun r => (r.num, ⟨r.denom, r.pos⟩)) <| by
     intro i
     rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp [Rat.mkPnat]
     mono*
@@ -429,7 +429,7 @@ def sampleable_char (length : Nat) (characters : Stringₓ) : sampleable Charₓ
             decide)
     if x.val = 0 then do
         let n ← sample ℕ
-        pure $ Charₓ.ofNat n
+        pure <| Charₓ.ofNat n
       else do
         let i ←
           choose_nat 0 (characters.length - 1)
@@ -527,7 +527,7 @@ def list.shrink_removes (k : ℕ) (hk : 0 < k) :
             simp only [h₃, ← hn, List.length_dropₓ]
           have h₅ : ∀ a : List α, sizeof_lt a xs₂ → sizeof_lt (xs₁ ++ a) xs := by
             intro a h <;> rw [← List.take_append_dropₓ k xs, ← h₃, ← h₄] <;> solve_by_elim [list.sizeof_append_lt_left]
-          LazyList.cons ⟨xs₂, this⟩ $ Subtype.map ((· ++ ·) xs₁) h₅ <$> list.shrink_removes xs₂ (n - k) h₁
+          LazyList.cons ⟨xs₂, this⟩ <| Subtype.map ((· ++ ·) xs₁) h₅ <$> list.shrink_removes xs₂ (n - k) h₁
 
 /-- `list.shrink_one xs` shrinks list `xs` by shrinking only one item in
 the list.
@@ -547,7 +547,7 @@ This strategy is taken directly from Haskell's QuickCheck -/
 def list.shrink_with (xs : List α) : LazyList { ys : List α // sizeof_lt ys xs } :=
   let n := xs.length
   LazyList.append
-    ((LazyList.cons n $ (shrink n).reverse.map Subtype.val).bind fun k =>
+    ((LazyList.cons n <| (shrink n).reverse.map Subtype.val).bind fun k =>
       if hk : 0 < k then list.shrink_removes k hk xs n rfl else LazyList.nil)
     (list.shrink_one shr _)
 
@@ -588,7 +588,7 @@ instance no_shrink.sampleable {α} [sampleable α] : sampleable (no_shrink α) w
   sample := no_shrink.mk <$> sample α
 
 instance string.sampleable : sampleable Stringₓ :=
-  { sampleable.lift (List Charₓ) List.asStringₓ Stringₓ.toList $ fun _ => le_reflₓ _ with
+  { (sampleable.lift (List Charₓ) List.asStringₓ Stringₓ.toList) fun _ => le_reflₓ _ with
     sample := do
       let x ← list_of (sample Charₓ)
       pure x.as_string }
@@ -623,14 +623,14 @@ instance : Functor Tree where
 def rec_shrink_with [SizeOf α]
     (shrink_a : ∀ x : α, shrink_fn { y : α // sizeof_lt y x } → List (LazyList { y : α // sizeof_lt y x })) :
     shrink_fn α :=
-  WellFounded.fix (sizeof_measure_wf _) $ fun t f_rec =>
-    LazyList.join (LazyList.ofList $ shrink_a t $ fun ⟨t', h⟩ => rec_shrink _ f_rec _)
+  (WellFounded.fix (sizeof_measure_wf _)) fun t f_rec =>
+    LazyList.join (LazyList.ofList <| (shrink_a t) fun ⟨t', h⟩ => rec_shrink _ f_rec _)
 
 theorem rec_shrink_with_eq [SizeOf α]
     (shrink_a : ∀ x : α, shrink_fn { y : α // sizeof_lt y x } → List (LazyList { y : α // sizeof_lt y x })) (x : α) :
     rec_shrink_with shrink_a x =
       LazyList.join
-        (LazyList.ofList $ shrink_a x $ fun t' => rec_shrink _ (fun x h' => rec_shrink_with shrink_a x) _) :=
+        (LazyList.ofList <| (shrink_a x) fun t' => rec_shrink _ (fun x h' => rec_shrink_with shrink_a x) _) :=
   by
   conv_lhs => rw [rec_shrink_with, WellFounded.fix_eq]
   congr
@@ -642,7 +642,7 @@ each subtrees, and by shrinking the subtree to recombine them.
 
 This strategy is taken directly from Haskell's QuickCheck -/
 def tree.shrink_with [SizeOf α] (shrink_a : shrink_fn α) : shrink_fn (Tree α) :=
-  rec_shrink_with $ fun t =>
+  rec_shrink_with fun t =>
     match t with
     | Tree.nil => fun f_rec => []
     | Tree.node x t₀ t₁ => fun f_rec =>
@@ -654,14 +654,14 @@ def tree.shrink_with [SizeOf α] (shrink_a : shrink_fn α) : shrink_fn (Tree α)
       have h₁ : sizeof_lt t₁ (Tree.node x t₀ t₁) := by
         dsimp [sizeof_lt] <;> unfold_wf <;> linarith
       [LazyList.ofList [⟨Tree.nil, h₂⟩, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩],
-        (prod.shrink shrink_a (prod.shrink f_rec f_rec) (x, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩)).map $
+        (prod.shrink shrink_a (prod.shrink f_rec f_rec) (x, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩)).map
           fun ⟨⟨y, ⟨t'₀, _⟩, ⟨t'₁, _⟩⟩, hy⟩ =>
           ⟨Tree.node y t'₀ t'₁, by
             revert hy <;> dsimp [sizeof_lt] <;> unfold_wf <;> intro <;> linarith⟩]
 
 instance sampleable_tree : sampleable_functor Tree where
   wf := _
-  sample := fun α sam_α => sized $ tree.sample sam_α
+  sample := fun α sam_α => sized <| tree.sample sam_α
   shrink := fun α Iα shr_α => @tree.shrink_with _ Iα shr_α
   pRepr := @Tree.hasRepr
 
@@ -707,7 +707,7 @@ instance large.sampleable_functor : sampleable_functor large where
 
 instance ulift.sampleable_functor : sampleable_functor Ulift.{u, v} where
   wf := fun α h => ⟨fun ⟨x⟩ => @sizeof α h x⟩
-  sample := fun α samp => Uliftable.upMap Ulift.up $ samp
+  sample := fun α samp => Uliftable.upMap Ulift.up <| samp
   shrink := fun α _ shr ⟨x⟩ => (shr x).map (Subtype.map Ulift.up fun a h => h)
   pRepr := fun α h => ⟨@reprₓ α h ∘ Ulift.down⟩
 
@@ -736,7 +736,7 @@ instance nat_le.sampleable {y} : SlimCheck.Sampleable { x : ℕ // x ≤ y } whe
             decide)
     pure ⟨x, h.2⟩
   shrink := fun ⟨x, h⟩ =>
-    (fun a : Subtype _ => Subtype.recOn a $ fun x' h' => ⟨⟨x', le_transₓ (le_of_ltₓ h') h⟩, h'⟩) <$> shrink x
+    (fun a : Subtype _ => (Subtype.recOn a) fun x' h' => ⟨⟨x', le_transₓ (le_of_ltₓ h') h⟩, h'⟩) <$> shrink x
 
 instance nat_ge.sampleable {x} : SlimCheck.Sampleable { y : ℕ // x ≤ y } where
   sample := do
@@ -746,7 +746,7 @@ instance nat_ge.sampleable {x} : SlimCheck.Sampleable { y : ℕ // x ≤ y } whe
           norm_num⟩
   shrink := fun ⟨y, h⟩ =>
     (fun a : { y' // sizeof y' < sizeof (y - x) } =>
-        Subtype.recOn a $ fun δ h' => ⟨⟨x + δ, Nat.le_add_rightₓ _ _⟩, lt_tsub_iff_left.mp h'⟩) <$>
+        (Subtype.recOn a) fun δ h' => ⟨⟨x + δ, Nat.le_add_rightₓ _ _⟩, lt_tsub_iff_left.mp h'⟩) <$>
       shrink (y - x)
 
 instance nat_gt.sampleable {x} : SlimCheck.Sampleable { y : ℕ // x < y } where
@@ -764,7 +764,7 @@ instance le.sampleable {y : α} [sampleable α] [LinearOrderedAddCommGroup α] :
     SlimCheck.Sampleable { x : α // x ≤ y } where
   sample := do
     let x ← sample α
-    pure ⟨y - |x|, sub_le_self _ (abs_nonneg _)⟩
+    pure ⟨y - abs x, sub_le_self _ (abs_nonneg _)⟩
   shrink := fun _ => LazyList.nil
 
 instance ge.sampleable {x : α} [sampleable α] [LinearOrderedAddCommGroup α] :
@@ -772,7 +772,7 @@ instance ge.sampleable {x : α} [sampleable α] [LinearOrderedAddCommGroup α] :
   sample := do
     let y ← sample α
     pure
-        ⟨x + |y|, by
+        ⟨x + abs y, by
           norm_num [abs_nonneg]⟩
   shrink := fun _ => LazyList.nil
 
@@ -787,7 +787,7 @@ instance int_le.sampleable {y : ℤ} : SlimCheck.Sampleable { x : ℤ // x ≤ y
   sampleable.lift ℕ
     (fun n =>
       ⟨y - n,
-        Int.sub_left_le_of_le_addₓ $ by
+        Int.sub_left_le_of_le_addₓ <| by
           simp ⟩)
     (fun ⟨i, h⟩ => (y - i).natAbs) fun n => by
     unfold_wf <;> simp [int_le.sampleable._match_1] <;> ring
@@ -804,7 +804,7 @@ instance int_lt.sampleable {y} : SlimCheck.Sampleable { x : ℤ // x < y } :=
   sampleable.lift ℕ
     (fun n =>
       ⟨y - (n + 1),
-        Int.sub_left_lt_of_lt_addₓ $ by
+        Int.sub_left_lt_of_lt_addₓ <| by
           linarith [Int.coe_nat_nonneg n]⟩)
     (fun ⟨i, h⟩ => (y - i - 1).natAbs) fun n => by
     unfold_wf <;> simp [int_lt.sampleable._match_1] <;> ring
@@ -836,9 +836,9 @@ open Tactic
 -/
 def print_samples {t : Type u} [HasRepr t] (g : gen t) : Io Unit := do
   let xs ←
-    Io.runRand $
-        Uliftable.down $ do
-          let xs ← (List.range 10).mmap $ g.run ∘ Ulift.up
+    Io.runRand <|
+        Uliftable.down <| do
+          let xs ← (List.range 10).mmap <| g.run ∘ Ulift.up
           pure ⟨xs.map reprₓ⟩
   xs.mmap' Io.putStrLn
 
@@ -889,9 +889,9 @@ values of type `my_type` of using an increasing size parameter.
 ```
 -/
 @[user_command]
-unsafe def sample_cmd (_ : parse $ tk "#sample") : lean.parser Unit := do
+unsafe def sample_cmd (_ : parse <| tk "#sample") : lean.parser Unit := do
   let e ← texpr
-  of_tactic $ do
+  of_tactic <| do
       let e ← i_to_expr e
       let (repr_inst, gen) ← mk_generator e
       let print_samples ← mk_mapp `` print_samples [none, repr_inst, gen]

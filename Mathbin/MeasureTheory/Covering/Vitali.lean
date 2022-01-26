@@ -244,7 +244,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     have A : ∀ a : Set α, a ∈ t' → diam a ≤ 2 := by
       rintro a ⟨hat, ⟨x, hax⟩⟩
       calc diam a ≤ 2 * 1 :=
-          diam_le_of_subset_closed_ball zero_le_one (hax.trans $ closed_ball_subset_closed_ball $ hr1 x)_ = 2 :=
+          diam_le_of_subset_closed_ball zero_le_one (hax.trans <| closed_ball_subset_closed_ball <| hr1 x)_ = 2 :=
           mul_oneₓ _
     have B : ∀ a : Set α, a ∈ t' → a.nonempty := fun a hat' => Set.Nonempty.mono interior_subset (ht a hat'.1)
     exact exists_disjoint_subfamily_covering_enlargment t' diam 2 one_lt_two (fun a ha => diam_nonneg) 2 A B

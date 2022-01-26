@@ -31,9 +31,9 @@ to `log |x|` for `x < 0`, and to `0` for `0`. We use this unconventional extensi
 the derivative of `log` is `1/x` away from `0`. -/
 @[pp_nodot]
 noncomputable def log (x : ℝ) : ℝ :=
-  if hx : x = 0 then 0 else exp_order_iso.symm ⟨|x|, abs_pos.2 hx⟩
+  if hx : x = 0 then 0 else exp_order_iso.symm ⟨abs x, abs_pos.2 hx⟩
 
-theorem log_of_ne_zero (hx : x ≠ 0) : log x = exp_order_iso.symm ⟨|x|, abs_pos.2 hx⟩ :=
+theorem log_of_ne_zero (hx : x ≠ 0) : log x = exp_order_iso.symm ⟨abs x, abs_pos.2 hx⟩ :=
   dif_neg hx
 
 theorem log_of_pos (hx : 0 < x) : log x = exp_order_iso.symm ⟨x, hx⟩ := by
@@ -41,7 +41,7 @@ theorem log_of_pos (hx : 0 < x) : log x = exp_order_iso.symm ⟨x, hx⟩ := by
   congr
   exact abs_of_pos hx
 
-theorem exp_log_eq_abs (hx : x ≠ 0) : exp (log x) = |x| := by
+theorem exp_log_eq_abs (hx : x ≠ 0) : exp (log x) = abs x := by
   rw [log_of_ne_zero hx, ← coe_exp_order_iso_apply, OrderIso.apply_symm_apply, Subtype.coe_mk]
 
 theorem exp_log (hx : 0 < x) : exp (log x) = x := by
@@ -54,7 +54,7 @@ theorem exp_log_of_neg (hx : x < 0) : exp (log x) = -x := by
 
 @[simp]
 theorem log_exp (x : ℝ) : log (exp x) = x :=
-  exp_injective $ exp_log (exp_pos x)
+  exp_injective <| exp_log (exp_pos x)
 
 theorem surj_on_log : surj_on log (Ioi 0) univ := fun x _ => ⟨exp x, exp_pos x, log_exp x⟩
 
@@ -70,11 +70,11 @@ theorem log_zero : log 0 = 0 :=
 
 @[simp]
 theorem log_one : log 1 = 0 :=
-  exp_injective $ by
+  exp_injective <| by
     rw [exp_log zero_lt_one, exp_zero]
 
 @[simp]
-theorem log_abs (x : ℝ) : log |x| = log x := by
+theorem log_abs (x : ℝ) : log (abs x) = log x := by
   by_cases' h : x = 0
   · simp [h]
     
@@ -86,19 +86,19 @@ theorem log_neg_eq_log (x : ℝ) : log (-x) = log x := by
   rw [← log_abs x, ← log_abs (-x), abs_neg]
 
 theorem surj_on_log' : surj_on log (Iio 0) univ := fun x _ =>
-  ⟨-exp x, neg_lt_zero.2 $ exp_pos x, by
+  ⟨-exp x, neg_lt_zero.2 <| exp_pos x, by
     rw [log_neg_eq_log, log_exp]⟩
 
 theorem log_mul (hx : x ≠ 0) (hy : y ≠ 0) : log (x * y) = log x + log y :=
-  exp_injective $ by
+  exp_injective <| by
     rw [exp_log_eq_abs (mul_ne_zero hx hy), exp_add, exp_log_eq_abs hx, exp_log_eq_abs hy, abs_mul]
 
 theorem log_div (hx : x ≠ 0) (hy : y ≠ 0) : log (x / y) = log x - log y :=
-  exp_injective $ by
+  exp_injective <| by
     rw [exp_log_eq_abs (div_ne_zero hx hy), exp_sub, exp_log_eq_abs hx, exp_log_eq_abs hy, abs_div]
 
 @[simp]
-theorem log_inv (x : ℝ) : log (x⁻¹) = -log x := by
+theorem log_inv (x : ℝ) : log x⁻¹ = -log x := by
   by_cases' hx : x = 0
   · simp [hx]
     
@@ -215,7 +215,7 @@ theorem log_div_self_antitone_on : AntitoneOn (fun x : ℝ => log x / x) { x | e
 
 /-- The real logarithm function tends to `+∞` at `+∞`. -/
 theorem tendsto_log_at_top : tendsto log at_top at_top :=
-  tendsto_comp_exp_at_top.1 $ by
+  tendsto_comp_exp_at_top.1 <| by
     simpa only [log_exp] using tendsto_id
 
 theorem tendsto_log_nhds_within_zero : tendsto log (𝓝[≠] 0) at_bot := by
@@ -230,14 +230,14 @@ theorem continuous_on_log : ContinuousOn log ({0}ᶜ) := by
 
 @[continuity]
 theorem continuous_log : Continuous fun x : { x : ℝ // x ≠ 0 } => log x :=
-  continuous_on_iff_continuous_restrict.1 $ continuous_on_log.mono $ fun x hx => hx
+  continuous_on_iff_continuous_restrict.1 <| continuous_on_log.mono fun x hx => hx
 
 @[continuity]
 theorem continuous_log' : Continuous fun x : { x : ℝ // 0 < x } => log x :=
-  continuous_on_iff_continuous_restrict.1 $ continuous_on_log.mono $ fun x hx => ne_of_gtₓ hx
+  continuous_on_iff_continuous_restrict.1 <| continuous_on_log.mono fun x hx => ne_of_gtₓ hx
 
 theorem continuous_at_log (hx : x ≠ 0) : ContinuousAt log x :=
-  (continuous_on_log x hx).ContinuousAt $ IsOpen.mem_nhds is_open_compl_singleton hx
+  (continuous_on_log x hx).ContinuousAt <| IsOpen.mem_nhds is_open_compl_singleton hx
 
 @[simp]
 theorem continuous_at_log_iff : ContinuousAt log x ↔ x ≠ 0 := by

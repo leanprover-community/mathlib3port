@@ -295,7 +295,7 @@ structure mk_core where
   t_inter : ∀ ⦃i j⦄ k x : V i j, ↑x ∈ V i k → @coe (V j i) (U j) _ (t i j x) ∈ V j k
   cocycle :
     ∀ i j k x : V i j h : ↑x ∈ V i k,
-      @coe (V k j) (U k) _ (t j k ⟨↑t i j x, t_inter k x h⟩) = @coe (V k i) (U k) _ (t i k ⟨x, h⟩)
+      @coe (V k j) (U k) _ (t j k ⟨↑(t i j x), t_inter k x h⟩) = @coe (V k i) (U k) _ (t i k ⟨x, h⟩)
 
 theorem mk_core.t_inv (h : mk_core) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i) x) = x := by
   have := h.cocycle j i j x _
@@ -367,7 +367,7 @@ include U
 @[simps to_glue_data_J to_glue_data_U to_glue_data_V to_glue_data_t to_glue_data_f]
 def of_open_subsets : Top.GlueData.{u} :=
   mk'.{u}
-    { J, U := fun i => (opens.to_Top $ Top.of α).obj (U i), V := fun i j => (opens.map $ opens.inclusion _).obj (U j),
+    { J, U := fun i => (opens.to_Top <| Top.of α).obj (U i), V := fun i j => (opens.map <| opens.inclusion _).obj (U j),
       t := fun i j =>
         ⟨fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, by
           continuity⟩,

@@ -129,7 +129,7 @@ theorem card_modeq_card_fixed_points : card α ≡ card (fixed_points G α) [MOD
               rwa [pow_oneₓ, ← hk, ← Nat.modeq_zero_iff_dvd, ← Zmod.eq_iff_modeq_nat, ← key]))))
   exact
     ⟨⟨b,
-        mem_fixed_points_iff_card_orbit_eq_one.2 $ by
+        mem_fixed_points_iff_card_orbit_eq_one.2 <| by
           rw [hk, this, pow_zeroₓ]⟩,
       Finset.mem_univ _, ne_of_eq_of_ne Nat.cast_one one_ne_zero, rfl⟩
 

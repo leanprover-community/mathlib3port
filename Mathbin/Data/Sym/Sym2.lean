@@ -87,7 +87,7 @@ namespace Sym2
 
 @[elab_as_eliminator]
 protected theorem ind {f : Sym2 α → Prop} (h : ∀ x y, f (⟦(x, y)⟧)) : ∀ i, f i :=
-  Quotientₓ.ind $ Prod.rec $ h
+  Quotientₓ.ind <| Prod.rec <| h
 
 @[elab_as_eliminator]
 protected theorem induction_on {f : Sym2 α → Prop} (i : Sym2 α) (hf : ∀ x y, f (⟦(x, y)⟧)) : f i :=
@@ -131,12 +131,12 @@ functions from `sym2`. Note that when `β` is `Prop`, it can sometimes be more c
 `sym2.from_rel` instead. -/
 def lift : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ } ≃ (Sym2 α → β) where
   toFun := fun f =>
-    Quotientₓ.lift (uncurry (↑f)) $ by
+    Quotientₓ.lift (uncurry ↑f) <| by
       rintro _ _ ⟨⟩
       exacts[rfl, f.prop _ _]
   invFun := fun F => ⟨curry (F ∘ Quotientₓ.mk), fun a₁ a₂ => congr_argₓ F eq_swap⟩
   left_inv := fun f => Subtype.ext rfl
-  right_inv := fun F => funext $ Sym2.ind $ fun x y => rfl
+  right_inv := fun F => funext <| Sym2.ind fun x y => rfl
 
 @[simp]
 theorem lift_mk (f : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ }) (a₁ a₂ : α) :
@@ -200,7 +200,7 @@ theorem mem_mk_left (x y : α) : x ∈ ⟦(x, y)⟧ :=
   ⟨y, rfl⟩
 
 theorem mem_mk_right (x y : α) : y ∈ ⟦(x, y)⟧ :=
-  eq_swap.subst $ mem_mk_left y x
+  eq_swap.subst <| mem_mk_left y x
 
 @[simp]
 theorem mem_iff {a b c : α} : a ∈ ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
@@ -223,7 +223,7 @@ theorem out_snd_mem (e : Sym2 α) : e.out.2 ∈ e :=
     rw [eq_swap, Prod.mk.eta, e.out_eq]⟩
 
 theorem ball {p : α → Prop} {a b : α} : (∀, ∀ c ∈ ⟦(a, b)⟧, ∀, p c) ↔ p a ∧ p b := by
-  refine' ⟨fun h => ⟨h _ $ mem_mk_left _ _, h _ $ mem_mk_right _ _⟩, fun h c hc => _⟩
+  refine' ⟨fun h => ⟨h _ <| mem_mk_left _ _, h _ <| mem_mk_right _ _⟩, fun h c hc => _⟩
   obtain rfl | rfl := Sym2.mem_iff.1 hc
   · exact h.1
     
@@ -314,7 +314,7 @@ theorem mk_is_diag_iff {x y : α} : is_diag (⟦(x, y)⟧) ↔ x = y :=
 
 @[simp]
 theorem is_diag_iff_proj_eq (z : α × α) : is_diag (⟦z⟧) ↔ z.1 = z.2 :=
-  Prod.recOn z $ fun _ _ => mk_is_diag_iff
+  (Prod.recOn z) fun _ _ => mk_is_diag_iff
 
 @[simp]
 theorem diag_is_diag (a : α) : is_diag (diag a) :=
@@ -365,7 +365,7 @@ theorem from_rel_prop {sym : Symmetric r} {a b : α} : ⟦(a, b)⟧ ∈ from_rel
 
 theorem from_rel_irreflexive {sym : Symmetric r} : Irreflexive r ↔ ∀ {z}, z ∈ from_rel Sym → ¬is_diag z :=
   { mp := fun h =>
-      Sym2.ind $ by
+      Sym2.ind <| by
         rintro a b hr (rfl : a = b)
         exact h _ hr,
     mpr := fun h x hr => h (from_rel_prop.mpr hr) rfl }

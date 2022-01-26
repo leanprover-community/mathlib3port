@@ -37,11 +37,11 @@ noncomputable def gronwallBound (δ K ε x : ℝ) : ℝ :=
   if K = 0 then δ + ε * x else δ * exp (K * x) + ε / K * (exp (K * x) - 1)
 
 theorem gronwall_bound_K0 (δ ε : ℝ) : gronwallBound δ 0 ε = fun x => δ + ε * x :=
-  funext $ fun x => if_pos rfl
+  funext fun x => if_pos rfl
 
 theorem gronwall_bound_of_K_ne_0 {δ K ε : ℝ} (hK : K ≠ 0) :
     gronwallBound δ K ε = fun x => δ * exp (K * x) + ε / K * (exp (K * x) - 1) :=
-  funext $ fun x => if_neg hK
+  funext fun x => if_neg hK
 
 theorem has_deriv_at_gronwall_bound (δ K ε x : ℝ) :
     HasDerivAt (gronwallBound δ K ε) (K * gronwallBound δ K ε x + ε) x := by

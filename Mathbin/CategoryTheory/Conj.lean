@@ -93,7 +93,7 @@ theorem conj_pow (f : End X) (n : ℕ) : α.conj (f ^ n) = α.conj f ^ n :=
 
 /-- `conj` defines a group isomorphisms between groups of automorphisms -/
 def conj_Aut : Aut X ≃* Aut Y :=
-  (Aut.units_End_equiv_Aut X).symm.trans $ (Units.mapEquiv α.conj).trans $ Aut.units_End_equiv_Aut Y
+  (Aut.units_End_equiv_Aut X).symm.trans <| (Units.mapEquiv α.conj).trans <| Aut.units_End_equiv_Aut Y
 
 theorem conj_Aut_apply (f : Aut X) : α.conj_Aut f = α.symm ≪≫ f ≪≫ α := by
   cases f <;> cases α <;> ext <;> rfl

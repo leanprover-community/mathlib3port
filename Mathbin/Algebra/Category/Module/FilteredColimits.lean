@@ -159,12 +159,12 @@ def colimit_desc (t : cocone F) : colimit ⟶ t.X :=
 def colimit_cocone_is_colimit : is_colimit colimit_cocone where
   desc := colimit_desc
   fac' := fun t j =>
-    LinearMap.coe_injective $
+    LinearMap.coe_injective <|
       (types.colimit_cocone_is_colimit (F ⋙ forget (ModuleCat R))).fac ((forget (ModuleCat R)).mapCocone t) j
   uniq' := fun t m h =>
-    LinearMap.coe_injective $
+    LinearMap.coe_injective <|
       (types.colimit_cocone_is_colimit (F ⋙ forget (ModuleCat R))).uniq ((forget (ModuleCat R)).mapCocone t) m fun j =>
-        funext $ fun x => LinearMap.congr_fun (h j) x
+        funext fun x => LinearMap.congr_fun (h j) x
 
 instance forget₂_AddCommGroup_preserves_filtered_colimits :
     preserves_filtered_colimits (forget₂ (ModuleCat R) AddCommGroupₓₓ.{v}) where

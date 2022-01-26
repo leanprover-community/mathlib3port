@@ -274,12 +274,12 @@ theorem smul_coe : x • (y : ℍ[R,c₁,c₂]) = ↑(x * y) := by
 
 /-- Quaternion conjugate. -/
 def conj : ℍ[R,c₁,c₂] ≃ₗ[R] ℍ[R,c₁,c₂] :=
-  LinearEquiv.ofInvolutive
+  (LinearEquiv.ofInvolutive
       { toFun := fun a => ⟨a.1, -a.2, -a.3, -a.4⟩,
         map_add' := fun a b => by
           ext <;> simp [neg_add],
         map_smul' := fun r a => by
-          ext <;> simp } $
+          ext <;> simp })
     fun a => by
     simp
 
@@ -567,22 +567,22 @@ theorem coe_sub : ((x - y : R) : ℍ[R]) = x - y :=
 
 @[simp]
 theorem mul_re : (a * b).re = a.re * b.re - a.im_i * b.im_i - a.im_j * b.im_j - a.im_k * b.im_k :=
-  (QuaternionAlgebra.has_mul_mul_re a b).trans $ by
+  (QuaternionAlgebra.has_mul_mul_re a b).trans <| by
     simp only [one_mulₓ, ← neg_mul_eq_neg_mul, sub_eq_add_neg, neg_negₓ]
 
 @[simp]
 theorem mul_im_i : (a * b).imI = a.re * b.im_i + a.im_i * b.re + a.im_j * b.im_k - a.im_k * b.im_j :=
-  (QuaternionAlgebra.has_mul_mul_im_i a b).trans $ by
+  (QuaternionAlgebra.has_mul_mul_im_i a b).trans <| by
     simp only [one_mulₓ, ← neg_mul_eq_neg_mul, sub_eq_add_neg, neg_negₓ]
 
 @[simp]
 theorem mul_im_j : (a * b).imJ = a.re * b.im_j - a.im_i * b.im_k + a.im_j * b.re + a.im_k * b.im_i :=
-  (QuaternionAlgebra.has_mul_mul_im_j a b).trans $ by
+  (QuaternionAlgebra.has_mul_mul_im_j a b).trans <| by
     simp only [one_mulₓ, ← neg_mul_eq_neg_mul, sub_eq_add_neg, neg_negₓ]
 
 @[simp]
 theorem mul_im_k : (a * b).imK = a.re * b.im_k + a.im_i * b.im_j - a.im_j * b.im_i + a.im_k * b.re :=
-  (QuaternionAlgebra.has_mul_mul_im_k a b).trans $ by
+  (QuaternionAlgebra.has_mul_mul_im_k a b).trans <| by
     simp only [one_mulₓ, ← neg_mul_eq_neg_mul, sub_eq_add_neg, neg_negₓ]
 
 @[simp, norm_cast]
@@ -746,14 +746,14 @@ theorem coe_conj_ae : ⇑(conj_ae : ℍ[R] ≃ₐ[R] ℍ[R]ᵐᵒᵖ) = op ∘ c
   rfl
 
 /-- Square of the norm. -/
-def norm_sq : MonoidWithZeroHom ℍ[R] R where
+def norm_sq : ℍ[R] →*₀ R where
   toFun := fun a => (a * a.conj).re
   map_zero' := by
     rw [conj_zero, zero_mul, zero_re]
   map_one' := by
     rw [conj_one, one_mulₓ, one_re]
   map_mul' := fun x y =>
-    coe_injective $ by
+    coe_injective <| by
       conv_lhs =>
         rw [← mul_conj_eq_coe, conj_mul, mul_assoc, ← mul_assoc y, y.mul_conj_eq_coe, coe_commutes, ← mul_assoc,
           x.mul_conj_eq_coe, ← coe_mul]
@@ -827,18 +827,18 @@ section Field
 variable [LinearOrderedField R] (a b : ℍ[R])
 
 @[simps (config := { attrs := [] })]
-instance : HasInv ℍ[R] :=
-  ⟨fun a => norm_sq a⁻¹ • a.conj⟩
+instance : Inv ℍ[R] :=
+  ⟨fun a => (norm_sq a)⁻¹ • a.conj⟩
 
 instance : DivisionRing ℍ[R] :=
-  { Quaternion.nontrivial, Quaternion.ring with inv := HasInv.inv,
+  { Quaternion.nontrivial, Quaternion.ring with inv := Inv.inv,
     inv_zero := by
       rw [has_inv_inv, conj_zero, smul_zero],
     mul_inv_cancel := fun a ha => by
       rw [has_inv_inv, Algebra.mul_smul_comm, self_mul_conj, smul_coe, inv_mul_cancel (norm_sq_ne_zero.2 ha), coe_one] }
 
 @[simp]
-theorem norm_sq_inv : norm_sq (a⁻¹) = norm_sq a⁻¹ :=
+theorem norm_sq_inv : norm_sq a⁻¹ = (norm_sq a)⁻¹ :=
   MonoidWithZeroHom.map_inv norm_sq _
 
 @[simp]

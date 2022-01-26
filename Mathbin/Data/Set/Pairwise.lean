@@ -27,7 +27,7 @@ variable {f g : ι → α} {s t u : Set α} {a b : α}
 def Pairwise (r : α → α → Prop) :=
   ∀ i j, i ≠ j → r i j
 
-theorem Pairwise.mono (hr : Pairwise r) (h : ∀ ⦃i j⦄, r i j → p i j) : Pairwise p := fun i j hij => h $ hr i j hij
+theorem Pairwise.mono (hr : Pairwise r) (h : ∀ ⦃i j⦄, r i j → p i j) : Pairwise p := fun i j hij => h <| hr i j hij
 
 theorem pairwise_on_bool (hr : Symmetric r) {a b : α} : Pairwise (r on fun c => cond c a b) ↔ r a b := by
   simpa [Pairwise, Function.onFun] using @hr a b
@@ -62,10 +62,10 @@ protected def Pairwise (s : Set α) (r : α → α → Prop) :=
 theorem pairwise_of_forall (s : Set α) (r : α → α → Prop) (h : ∀ a b, r a b) : s.pairwise r := fun a _ b _ _ => h a b
 
 theorem pairwise.imp_on (h : s.pairwise r) (hrp : s.pairwise fun ⦃a b : α⦄ => r a b → p a b) : s.pairwise p :=
-  fun a ha b hb hab => hrp ha hb hab $ h ha hb hab
+  fun a ha b hb hab => hrp ha hb hab <| h ha hb hab
 
 theorem pairwise.imp (h : s.pairwise r) (hpq : ∀ ⦃a b : α⦄, r a b → p a b) : s.pairwise p :=
-  h.imp_on $ pairwise_of_forall s _ hpq
+  h.imp_on <| pairwise_of_forall s _ hpq
 
 theorem Pairwise.mono (h : t ⊆ s) (hs : s.pairwise r) : t.pairwise r := fun x xt y yt => hs (h xt) (h yt)
 
@@ -73,7 +73,7 @@ theorem pairwise.mono' (H : r ≤ p) (hr : s.pairwise r) : s.pairwise p :=
   hr.imp H
 
 protected theorem pairwise.eq (hs : s.pairwise r) (ha : a ∈ s) (hb : b ∈ s) (h : ¬r a b) : a = b :=
-  of_not_not $ fun hab => h $ hs ha hb hab
+  of_not_not fun hab => h <| hs ha hb hab
 
 theorem pairwise_top (s : Set α) : s.pairwise ⊤ :=
   pairwise_of_forall s _ fun a b => trivialₓ
@@ -101,7 +101,7 @@ theorem nonempty.pairwise_iff_exists_forall [IsEquiv α r] {s : Set ι} (hs : s.
       
     
   · rintro ⟨z, hz⟩ x hx y hy hne
-    exact @IsTrans.trans α r _ (f x) z (f y) (hz _ hx) (IsSymm.symm _ _ $ hz _ hy)
+    exact @IsTrans.trans α r _ (f x) z (f y) (hz _ hx) (IsSymm.symm _ _ <| hz _ hy)
     
 
 /-- For a nonempty set `s`, a function `f` takes pairwise equal values on `s` if and only if
@@ -137,7 +137,7 @@ theorem pairwise_union :
 
 theorem pairwise_union_of_symmetric (hr : Symmetric r) :
     (s ∪ t).Pairwise r ↔ s.pairwise r ∧ t.pairwise r ∧ ∀, ∀ a ∈ s, ∀, ∀ b ∈ t, ∀, a ≠ b → r a b :=
-  pairwise_union.trans $ by
+  pairwise_union.trans <| by
     simp only [hr.iff, and_selfₓ]
 
 theorem pairwise_insert : (insert a s).Pairwise r ↔ s.pairwise r ∧ ∀, ∀ b ∈ s, ∀, a ≠ b → r a b ∧ r b a := by
@@ -231,7 +231,7 @@ theorem pairwise_disjoint_singleton (i : ι) (f : ι → α) : pairwise_disjoint
 
 theorem pairwise_disjoint_insert {i : ι} :
     (insert i s).PairwiseDisjoint f ↔ s.pairwise_disjoint f ∧ ∀, ∀ j ∈ s, ∀, i ≠ j → Disjoint (f i) (f j) :=
-  Set.pairwise_insert_of_symmetric $ symmetric_disjoint.comap f
+  Set.pairwise_insert_of_symmetric <| symmetric_disjoint.comap f
 
 theorem pairwise_disjoint.insert (hs : s.pairwise_disjoint f) {i : ι}
     (h : ∀, ∀ j ∈ s, ∀, i ≠ j → Disjoint (f i) (f j)) : (insert i s).PairwiseDisjoint f :=
@@ -240,7 +240,7 @@ theorem pairwise_disjoint.insert (hs : s.pairwise_disjoint f) {i : ι}
 theorem pairwise_disjoint.image_of_le (hs : s.pairwise_disjoint f) {g : ι → ι} (hg : f ∘ g ≤ f) :
     (g '' s).PairwiseDisjoint f := by
   rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ h
-  exact (hs ha hb $ ne_of_apply_ne _ h).mono (hg a) (hg b)
+  exact (hs ha hb <| ne_of_apply_ne _ h).mono (hg a) (hg b)
 
 theorem inj_on.pairwise_disjoint_image {g : ι' → ι} {s : Set ι'} (h : s.inj_on g) :
     (g '' s).PairwiseDisjoint f ↔ s.pairwise_disjoint (f ∘ g) :=
@@ -249,12 +249,12 @@ theorem inj_on.pairwise_disjoint_image {g : ι' → ι} {s : Set ι'} (h : s.inj
 theorem pairwise_disjoint.range (g : s → ι) (hg : ∀ i : s, f (g i) ≤ f i) (ht : s.pairwise_disjoint f) :
     (range g).PairwiseDisjoint f := by
   rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hxy
-  exact (ht x.2 y.2 $ fun h => hxy $ congr_argₓ g $ Subtype.ext h).mono (hg x) (hg y)
+  exact ((ht x.2 y.2) fun h => hxy <| congr_argₓ g <| Subtype.ext h).mono (hg x) (hg y)
 
 theorem pairwise_disjoint_union :
     (s ∪ t).PairwiseDisjoint f ↔
       s.pairwise_disjoint f ∧ t.pairwise_disjoint f ∧ ∀ ⦃i⦄, i ∈ s → ∀ ⦃j⦄, j ∈ t → i ≠ j → Disjoint (f i) (f j) :=
-  pairwise_union_of_symmetric $ symmetric_disjoint.comap f
+  pairwise_union_of_symmetric <| symmetric_disjoint.comap f
 
 theorem pairwise_disjoint.union (hs : s.pairwise_disjoint f) (ht : t.pairwise_disjoint f)
     (h : ∀ ⦃i⦄, i ∈ s → ∀ ⦃j⦄, j ∈ t → i ≠ j → Disjoint (f i) (f j)) : (s ∪ t).PairwiseDisjoint f :=
@@ -274,7 +274,7 @@ theorem pairwise_disjoint.elim (hs : s.pairwise_disjoint f) {i j : ι} (hi : i �
 
 theorem pairwise_disjoint.elim' (hs : s.pairwise_disjoint f) {i j : ι} (hi : i ∈ s) (hj : j ∈ s) (h : f i⊓f j ≠ ⊥) :
     i = j :=
-  hs.elim hi hj $ fun hij => h hij.eq_bot
+  (hs.elim hi hj) fun hij => h hij.eq_bot
 
 end SemilatticeInfBot
 
@@ -307,16 +307,16 @@ theorem pairwise_disjoint_range_singleton : (Set.Range (singleton : ι → Set �
   exact disjoint_singleton.2 (ne_of_apply_ne _ h)
 
 theorem pairwise_disjoint_fiber (f : ι → α) (s : Set α) : s.pairwise_disjoint fun a => f ⁻¹' {a} :=
-  fun a _ b _ h i ⟨hia, hib⟩ => h $ (Eq.symm hia).trans hib
+  fun a _ b _ h i ⟨hia, hib⟩ => h <| (Eq.symm hia).trans hib
 
 theorem pairwise_disjoint.elim_set {s : Set ι} {f : ι → Set α} (hs : s.pairwise_disjoint f) {i j : ι} (hi : i ∈ s)
     (hj : j ∈ s) (a : α) (hai : a ∈ f i) (haj : a ∈ f j) : i = j :=
-  hs.elim hi hj $ not_disjoint_iff.2 ⟨a, hai, haj⟩
+  hs.elim hi hj <| not_disjoint_iff.2 ⟨a, hai, haj⟩
 
 theorem bUnion_diff_bUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).PairwiseDisjoint f) :
     ((⋃ i ∈ s, f i) \ ⋃ i ∈ t, f i) = ⋃ i ∈ s \ t, f i := by
   refine'
-    (bUnion_diff_bUnion_subset f s t).antisymm (Union₂_subset $ fun i hi a ha => (mem_diff _).2 ⟨mem_bUnion hi.1 ha, _⟩)
+    (bUnion_diff_bUnion_subset f s t).antisymm (Union₂_subset fun i hi a ha => (mem_diff _).2 ⟨mem_bUnion hi.1 ha, _⟩)
   rw [mem_Union₂]
   rintro ⟨j, hj, haj⟩
   exact h (Or.inl hi.1) (Or.inr hj) (ne_of_mem_of_not_mem hj hi.2).symm ⟨ha, haj⟩
@@ -324,11 +324,11 @@ theorem bUnion_diff_bUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).
 /-- Equivalence between a disjoint bounded union and a dependent sum. -/
 noncomputable def bUnion_eq_sigma_of_disjoint {s : Set ι} {f : ι → Set α} (h : s.pairwise (Disjoint on f)) :
     (⋃ i ∈ s, f i) ≃ Σ i : s, f i :=
-  (Equivₓ.setCongr (bUnion_eq_Union _ _)).trans $
-    Union_eq_sigma_of_disjoint $ fun ⟨i, hi⟩ ⟨j, hj⟩ ne => h hi hj $ fun eq => Ne $ Subtype.eq Eq
+  (Equivₓ.setCongr (bUnion_eq_Union _ _)).trans <|
+    Union_eq_sigma_of_disjoint fun ⟨i, hi⟩ ⟨j, hj⟩ ne => (h hi hj) fun eq => Ne <| Subtype.eq Eq
 
 end Set
 
 theorem pairwise_disjoint_fiber (f : ι → α) : Pairwise (Disjoint on fun a : α => f ⁻¹' {a}) :=
-  Set.pairwise_univ.1 $ Set.pairwise_disjoint_fiber f univ
+  Set.pairwise_univ.1 <| Set.pairwise_disjoint_fiber f univ
 

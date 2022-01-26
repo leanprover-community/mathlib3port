@@ -89,7 +89,7 @@ end
 unsafe def Groupₓ (locat : parse location) : tactic Unit := do
   when locat.include_goal sorry
   try (aux_group₁ locat)
-  repeat (aux_group₂ locat; aux_group₁ locat)
+  repeat (andthen (aux_group₂ locat) (aux_group₁ locat))
 
 end Tactic.Interactive
 

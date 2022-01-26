@@ -77,7 +77,7 @@ Note: if `set_like.coe` is a projection, implementers should create a simp lemma
 to normalize terms.
 -/
 @[protect_proj]
-class SetLike (A : Type _) (B : outParam $ Type _) where
+class SetLike (A : Type _) (B : outParam <| Type _) where
   coe : A → Set B
   coe_injective' : Function.Injective coe
 
@@ -125,7 +125,7 @@ theorem ext'_iff : p = q ↔ (p : Set B) = q :=
 
 /-- Note: implementers of `set_like` must copy this lemma in order to tag it with `@[ext]`. -/
 theorem ext (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
-  coe_injective $ Set.ext h
+  coe_injective <| Set.ext h
 
 theorem ext_iff : p = q ↔ ∀ x, x ∈ p ↔ x ∈ q :=
   coe_injective.eq_iff.symm.trans Set.ext_iff

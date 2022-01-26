@@ -105,7 +105,7 @@ def Random : RandG g α :=
 /-- generate an infinite series of random values of type `α` -/
 def random_series : RandG g (Streamₓ α) := do
   let gen ← Uliftable.up (split g)
-  pure $ Streamₓ.corecState (Random.random α g) gen
+  pure <| Streamₓ.corecState (Random.random α g) gen
 
 end Random
 
@@ -118,7 +118,7 @@ def random_r [Preorderₓ α] [BoundedRandom α] (x y : α) (h : x ≤ y) : Rand
 /-- generate an infinite series of random values of type `α` between `x` and `y` inclusive. -/
 def random_series_r [Preorderₓ α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g (Streamₓ (x .. y)) := do
   let gen ← Uliftable.up (split g)
-  pure $ corec_state (BoundedRandom.randomR g x y h) gen
+  pure <| corec_state (BoundedRandom.randomR g x y h) gen
 
 end Rand
 
@@ -130,18 +130,18 @@ private def accum_char (w : ℕ) (c : Charₓ) : ℕ :=
 /-- create and a seed a random number generator -/
 def mk_generator : Io StdGen := do
   let seed ← Io.rand 0 shift31Left
-  return $ mkStdGenₓ seed
+  return <| mkStdGenₓ seed
 
 variable {α : Type}
 
 /-- Run `cmd` using a randomly seeded random number generator -/
 def run_rand (cmd : _root_.rand α) : Io α := do
   let g ← Io.mkGenerator
-  return $ (cmd.run ⟨g⟩).1
+  return <| (cmd.run ⟨g⟩).1
 
 /-- Run `cmd` using the provided seed. -/
 def run_rand_with (seed : ℕ) (cmd : _root_.rand α) : Io α :=
-  return $ (cmd.run ⟨mkStdGenₓ seed⟩).1
+  return <| (cmd.run ⟨mkStdGenₓ seed⟩).1
 
 section Random
 
@@ -166,7 +166,7 @@ def random_r (x y : α) (p : x ≤ y) : Io (x .. y) :=
   Io.runRand (BoundedRandom.randomR _ x y p)
 
 /-- randomly generate an infinite series of value of type α between `x` and `y` -/
-def random_series_r (x y : α) (h : x ≤ y) : Io (Streamₓ $ x .. y) :=
+def random_series_r (x y : α) (h : x ≤ y) : Io (Streamₓ <| x .. y) :=
   Io.runRand (Rand.randomSeriesR x y h)
 
 end BoundedRandom
@@ -196,7 +196,7 @@ unsafe def random_r (x y : α) (h : x ≤ y) : tactic (x .. y) :=
   run_rand (Rand.randomR x y h)
 
 /-- Generate an infinite series of random values of type `α` between `x` and `y` inclusive. -/
-unsafe def random_series_r (x y : α) (h : x ≤ y) : tactic (Streamₓ $ x .. y) :=
+unsafe def random_series_r (x y : α) (h : x ≤ y) : tactic (Streamₓ <| x .. y) :=
   run_rand (Rand.randomSeriesR x y h)
 
 end BoundedRandom
@@ -229,7 +229,7 @@ variable {n : ℕ} [Fact (0 < n)]
 
 /-- generate a `fin` randomly -/
 protected def Random : RandG g (Finₓ n) :=
-  ⟨fun ⟨g⟩ => Prod.map of_nat' up $ randNatₓ g 0 n⟩
+  ⟨fun ⟨g⟩ => Prod.map of_nat' up <| randNatₓ g 0 n⟩
 
 end Finₓ
 
@@ -237,7 +237,7 @@ open Nat
 
 instance natBoundedRandom : BoundedRandom ℕ where
   randomR := fun g inst x y hxy => do
-    let z ← @Finₓ.random g inst (succ $ y - x) _
+    let z ← @Finₓ.random g inst (succ <| y - x) _
     pure
         ⟨z.val + x, Nat.le_add_leftₓ _ _, by
           rw [← le_tsub_iff_right hxy] <;> apply le_of_succ_le_succ z.is_lt⟩
@@ -248,14 +248,14 @@ shifting the result appropriately. -/
 instance intBoundedRandom : BoundedRandom ℤ where
   randomR := fun g inst x y hxy => do
     let ⟨z, h₀, h₁⟩ ←
-      @BoundedRandom.randomR ℕ _ _ g inst 0 (Int.natAbs $ y - x)
+      @BoundedRandom.randomR ℕ _ _ g inst 0 (Int.natAbs <| y - x)
           (by
             decide)
     pure
         ⟨z + x, Int.le_add_of_nonneg_leftₓ (Int.coe_nat_nonneg _),
-          Int.add_le_of_le_sub_rightₓ $
+          Int.add_le_of_le_sub_rightₓ <|
             le_transₓ (Int.coe_nat_le_coe_nat_of_le h₁)
-              (le_of_eqₓ $ Int.of_nat_nat_abs_eq_of_nonneg (Int.sub_nonneg_of_leₓ hxy))⟩
+              (le_of_eqₓ <| Int.of_nat_nat_abs_eq_of_nonneg (Int.sub_nonneg_of_leₓ hxy))⟩
 
 instance finRandom (n : ℕ) [Fact (0 < n)] : Random (Finₓ n) where
   Random := fun g inst => @Finₓ.random g inst _ _
@@ -290,7 +290,7 @@ open_locale FinFact
 
 /-- generate a random bit vector of length `n` -/
 def Bitvec.random (n : ℕ) : RandG g (Bitvec n) :=
-  Bitvec.ofFin <$> Rand.random (Finₓ $ 2 ^ n)
+  Bitvec.ofFin <$> Rand.random (Finₓ <| 2 ^ n)
 
 /-- generate a random bit vector of length `n` -/
 def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandG g (x .. y) :=

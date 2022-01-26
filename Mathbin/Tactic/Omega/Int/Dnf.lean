@@ -192,7 +192,7 @@ def dnf_core : preform → List clause
 
 /-- DNF transformation -/
 def dnf (p : preform) : List clause :=
-  dnf_core $ neg_elim $ nnf p
+  dnf_core <| neg_elim <| nnf p
 
 -- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 theorem exists_clause_holds {v : Nat → Int} :

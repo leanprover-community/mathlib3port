@@ -258,7 +258,7 @@ theorem form_perm_eq_of_is_rotated {l l' : List α} (hd : nodup l) (h : l ~r l')
   obtain ⟨n, rfl⟩ := h
   exact (form_perm_rotate l hd n).symm
 
-theorem form_perm_reverse (l : List α) (h : nodup l) : form_perm l.reverse = form_perm l⁻¹ := by
+theorem form_perm_reverse (l : List α) (h : nodup l) : form_perm l.reverse = (form_perm l)⁻¹ := by
   rw [eq_comm, inv_eq_iff_mul_eq_one]
   ext x
   rw [mul_apply, one_apply]
@@ -374,7 +374,7 @@ theorem mem_of_form_perm_ne_self (l : List α) (x : α) (h : form_perm l x ≠ x
   simpa using h
 
 theorem form_perm_eq_self_of_not_mem (l : List α) (x : α) (h : x ∉ l) : form_perm l x = x :=
-  by_contra fun H => h $ mem_of_form_perm_ne_self _ _ H
+  by_contra fun H => h <| mem_of_form_perm_ne_self _ _ H
 
 theorem form_perm_eq_one_iff (hl : nodup l) : form_perm l = 1 ↔ l.length ≤ 1 := by
   cases' l with hd tl

@@ -142,7 +142,7 @@ def equiv_ess_image_of_reflective [reflective i] : D ≌ i.ess_image where
   Functor := i.to_ess_image
   inverse := i.ess_image_inclusion ⋙ (left_adjoint i : _)
   unitIso :=
-    nat_iso.of_components (fun X => (as_iso $ (of_right_adjoint i).counit.app X).symm)
+    nat_iso.of_components (fun X => (as_iso <| (of_right_adjoint i).counit.app X).symm)
       (by
         intro X Y f
         dsimp
@@ -151,7 +151,7 @@ def equiv_ess_image_of_reflective [reflective i] : D ≌ i.ess_image where
   counitIso :=
     nat_iso.of_components
       (fun X => by
-        refine' iso.symm $ as_iso _
+        refine' iso.symm <| as_iso _
         exact (of_right_adjoint i).Unit.app X
         apply is_iso_of_reflects_iso _ i.ess_image_inclusion with { instances := ff }
         exact functor.ess_image.unit_is_iso X.prop)

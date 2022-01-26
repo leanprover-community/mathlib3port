@@ -21,8 +21,8 @@ open Int
 /-- We can partition a finite family into `partition_card ε` sets, such that the remainders
 in each set are close together. -/
 theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb : b ≠ 0) (A : Finₓ n → ℤ) :
-    ∃ t : Finₓ n → Finₓ ⌈1 / ε⌉₊, ∀ i₀ i₁, t i₀ = t i₁ → ↑abs (A i₁ % b - A i₀ % b) < abs b • ε := by
-  have hb' : (0 : ℝ) < ↑abs b := int.cast_pos.mpr (abs_pos.mpr hb)
+    ∃ t : Finₓ n → Finₓ ⌈1 / ε⌉₊, ∀ i₀ i₁, t i₀ = t i₁ → ↑(abs (A i₁ % b - A i₀ % b)) < abs b • ε := by
+  have hb' : (0 : ℝ) < ↑(abs b) := int.cast_pos.mpr (abs_pos.mpr hb)
   have hbε : 0 < abs b • ε := by
     rw [Algebra.smul_def]
     exact mul_pos hb' hε

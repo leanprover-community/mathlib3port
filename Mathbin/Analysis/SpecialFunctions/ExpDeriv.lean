@@ -21,6 +21,7 @@ open_locale Classical TopologicalSpace
 
 namespace Complex
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The complex exponential is everywhere differentiable, with the derivative `exp x`. -/
 theorem has_deriv_at_exp (x : ℂ) : HasDerivAt exp (exp x) x := by
   rw [has_deriv_at_iff_is_o_nhds_zero]
@@ -38,7 +39,7 @@ theorem differentiable_at_exp {x : ℂ} : DifferentiableAt ℂ exp x :=
 
 @[simp]
 theorem deriv_exp : deriv exp = exp :=
-  funext $ fun x => (has_deriv_at_exp x).deriv
+  funext fun x => (has_deriv_at_exp x).deriv
 
 @[simp]
 theorem iter_deriv_exp : ∀ n : ℕ, (deriv^[n]) exp = exp
@@ -126,7 +127,7 @@ theorem HasFderivWithinAt.cexp (hf : HasFderivWithinAt f f' s x) :
 
 theorem HasFderivAt.cexp (hf : HasFderivAt f f' x) :
     HasFderivAt (fun x => Complex.exp (f x)) (Complex.exp (f x) • f') x :=
-  has_fderiv_within_at_univ.1 $ hf.has_fderiv_within_at.cexp
+  has_fderiv_within_at_univ.1 <| hf.has_fderiv_within_at.cexp
 
 theorem DifferentiableWithinAt.cexp (hf : DifferentiableWithinAt ℂ f s x) :
     DifferentiableWithinAt ℂ (fun x => Complex.exp (f x)) s x :=
@@ -178,7 +179,7 @@ theorem differentiable_at_exp : DifferentiableAt ℝ exp x :=
 
 @[simp]
 theorem deriv_exp : deriv exp = exp :=
-  funext $ fun x => (has_deriv_at_exp x).deriv
+  funext fun x => (has_deriv_at_exp x).deriv
 
 @[simp]
 theorem iter_deriv_exp : ∀ n : ℕ, (deriv^[n]) exp = exp

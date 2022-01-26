@@ -29,7 +29,7 @@ namespace Nat
 def xgcd_aux : ℕ → ℤ → ℤ → ℕ → ℤ → ℤ → ℕ × ℤ × ℤ
   | 0, s, t, r', s', t' => (r', s', t')
   | r@(succ _), s, t, r', s', t' =>
-    have : r' % r < r := mod_lt _ $ succ_pos _
+    have : r' % r < r := mod_lt _ <| succ_pos _
     let q := r' / r
     xgcd_aux (r' % r) (s' - q * s) (t' - q * t) r s t
 
@@ -107,9 +107,9 @@ private def P : ℕ × ℤ × ℤ → Prop
   | (r, s, t) => (r : ℤ) = x * s + y * t
 
 theorem xgcd_aux_P {r r'} : ∀ {s t s' t'}, P (r, s, t) → P (r', s', t') → P (xgcd_aux r s t r' s' t') :=
-  gcd.induction r r'
+  (gcd.induction r r'
       (by
-        simp ) $
+        simp ))
     fun a b h IH s t s' t' p p' => by
     rw [xgcd_aux_rec h]
     refine' IH _ p
@@ -152,7 +152,7 @@ end Nat
 
 namespace Int
 
-protected theorem coe_nat_gcd (m n : ℕ) : Int.gcdₓ (↑m) (↑n) = Nat.gcdₓ m n :=
+protected theorem coe_nat_gcd (m n : ℕ) : Int.gcdₓ ↑m ↑n = Nat.gcdₓ m n :=
   rfl
 
 /-- The extended GCD `a` value in the equation `gcd x y = x * a + y * b`. -/
@@ -194,10 +194,10 @@ theorem nat_abs_div (a b : ℤ) (H : b ∣ a) : nat_abs (a / b) = nat_abs a / na
 theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Nat.Prime p) {m n : ℤ} {k l : ℕ}
     (hpm : ↑(p ^ k) ∣ m) (hpn : ↑(p ^ l) ∣ n) (hpmn : ↑(p ^ (k + l + 1)) ∣ m * n) :
     ↑(p ^ (k + 1)) ∣ m ∨ ↑(p ^ (l + 1)) ∣ n :=
-  have hpm' : p ^ k ∣ m.nat_abs := Int.coe_nat_dvd.1 $ Int.dvd_nat_abs.2 hpm
-  have hpn' : p ^ l ∣ n.nat_abs := Int.coe_nat_dvd.1 $ Int.dvd_nat_abs.2 hpn
+  have hpm' : p ^ k ∣ m.nat_abs := Int.coe_nat_dvd.1 <| Int.dvd_nat_abs.2 hpm
+  have hpn' : p ^ l ∣ n.nat_abs := Int.coe_nat_dvd.1 <| Int.dvd_nat_abs.2 hpn
   have hpmn' : p ^ (k + l + 1) ∣ m.nat_abs * n.nat_abs := by
-    rw [← Int.nat_abs_mul] <;> apply Int.coe_nat_dvd.1 $ Int.dvd_nat_abs.2 hpmn
+    rw [← Int.nat_abs_mul] <;> apply Int.coe_nat_dvd.1 <| Int.dvd_nat_abs.2 hpmn
   let hsd := Nat.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul p_prime hpm' hpn' hpmn'
   hsd.elim
     (fun hsd1 =>
@@ -229,17 +229,17 @@ def lcm (i j : ℤ) : ℕ :=
 theorem lcm_def (i j : ℤ) : lcm i j = Nat.lcmₓ (nat_abs i) (nat_abs j) :=
   rfl
 
-protected theorem coe_nat_lcm (m n : ℕ) : Int.lcm (↑m) (↑n) = Nat.lcmₓ m n :=
+protected theorem coe_nat_lcm (m n : ℕ) : Int.lcm ↑m ↑n = Nat.lcmₓ m n :=
   rfl
 
 theorem gcd_dvd_left (i j : ℤ) : (gcd i j : ℤ) ∣ i :=
-  dvd_nat_abs.mp $ coe_nat_dvd.mpr $ Nat.gcd_dvd_leftₓ _ _
+  dvd_nat_abs.mp <| coe_nat_dvd.mpr <| Nat.gcd_dvd_leftₓ _ _
 
 theorem gcd_dvd_right (i j : ℤ) : (gcd i j : ℤ) ∣ j :=
-  dvd_nat_abs.mp $ coe_nat_dvd.mpr $ Nat.gcd_dvd_rightₓ _ _
+  dvd_nat_abs.mp <| coe_nat_dvd.mpr <| Nat.gcd_dvd_rightₓ _ _
 
 theorem dvd_gcd {i j k : ℤ} (h1 : k ∣ i) (h2 : k ∣ j) : k ∣ gcd i j :=
-  nat_abs_dvd.1 $ coe_nat_dvd.2 $ Nat.dvd_gcdₓ (nat_abs_dvd_iff_dvd.2 h1) (nat_abs_dvd_iff_dvd.2 h2)
+  nat_abs_dvd.1 <| coe_nat_dvd.2 <| Nat.dvd_gcdₓ (nat_abs_dvd_iff_dvd.2 h1) (nat_abs_dvd_iff_dvd.2 h2)
 
 theorem gcd_mul_lcm (i j : ℤ) : gcd i j * lcm i j = nat_abs (i * j) := by
   rw [Int.gcdₓ, Int.lcm, Nat.gcd_mul_lcmₓ, nat_abs_mul]
@@ -306,10 +306,10 @@ theorem gcd_div_gcd_div_gcd {i j : ℤ} (H : 0 < gcd i j) : gcd (i / gcd i j) (j
   rw [nat_abs_of_nat, Nat.div_selfₓ H]
 
 theorem gcd_dvd_gcd_of_dvd_left {i k : ℤ} (j : ℤ) (H : i ∣ k) : gcd i j ∣ gcd k j :=
-  Int.coe_nat_dvd.1 $ dvd_gcd ((gcd_dvd_left i j).trans H) (gcd_dvd_right i j)
+  Int.coe_nat_dvd.1 <| dvd_gcd ((gcd_dvd_left i j).trans H) (gcd_dvd_right i j)
 
 theorem gcd_dvd_gcd_of_dvd_right {i k : ℤ} (j : ℤ) (H : i ∣ k) : gcd j i ∣ gcd j k :=
-  Int.coe_nat_dvd.1 $ dvd_gcd (gcd_dvd_left j i) ((gcd_dvd_right j i).trans H)
+  Int.coe_nat_dvd.1 <| dvd_gcd (gcd_dvd_left j i) ((gcd_dvd_right j i).trans H)
 
 theorem gcd_dvd_gcd_mul_left (i j k : ℤ) : gcd i j ∣ gcd (k * i) j :=
   gcd_dvd_gcd_of_dvd_left _ (dvd_mul_left _ _)
@@ -504,18 +504,18 @@ theorem nat_gcd_helper_2 (d x y a b u v tx ty : ℕ) (hu : d * u = x) (hv : d * 
 
 theorem nat_gcd_helper_1 (d x y a b u v tx ty : ℕ) (hu : d * u = x) (hv : d * v = y) (hx : x * a = tx) (hy : y * b = ty)
     (h : tx + d = ty) : Nat.gcdₓ x y = d :=
-  (Nat.gcd_commₓ _ _).trans $ nat_gcd_helper_2 _ _ _ _ _ _ _ _ _ hv hu hy hx h
+  (Nat.gcd_commₓ _ _).trans <| nat_gcd_helper_2 _ _ _ _ _ _ _ _ _ hv hu hy hx h
 
 theorem nat_lcm_helper (x y d m n : ℕ) (hd : Nat.gcdₓ x y = d) (d0 : 0 < d) (xy : x * y = n) (dm : d * m = n) :
     Nat.lcmₓ x y = m :=
-  (Nat.mul_right_inj d0).1 $ by
+  (Nat.mul_right_inj d0).1 <| by
     rw [dm, ← xy, ← hd, Nat.gcd_mul_lcmₓ]
 
 theorem nat_coprime_helper_zero_left (x : ℕ) (h : 1 < x) : ¬Nat.Coprime 0 x :=
-  mt (Nat.coprime_zero_leftₓ _).1 $ ne_of_gtₓ h
+  mt (Nat.coprime_zero_leftₓ _).1 <| ne_of_gtₓ h
 
 theorem nat_coprime_helper_zero_right (x : ℕ) (h : 1 < x) : ¬Nat.Coprime x 0 :=
-  mt (Nat.coprime_zero_rightₓ _).1 $ ne_of_gtₓ h
+  mt (Nat.coprime_zero_rightₓ _).1 <| ne_of_gtₓ h
 
 theorem nat_coprime_helper_1 (x y a b tx ty : ℕ) (hx : x * a = tx) (hy : y * b = ty) (h : tx + 1 = ty) :
     Nat.Coprime x y :=
@@ -641,17 +641,17 @@ unsafe def prove_coprime_nat (c : instance_cache) (ex ey : expr) : tactic (insta
   let x ← ex.to_nat
   let y ← ey.to_nat
   match x, y with
-    | 1, _ => pure (c, Sum.inl $ (quote.1 Nat.coprime_one_leftₓ).mk_app [ey])
-    | _, 1 => pure (c, Sum.inl $ (quote.1 Nat.coprime_one_rightₓ).mk_app [ex])
+    | 1, _ => pure (c, Sum.inl <| (quote.1 Nat.coprime_one_leftₓ).mk_app [ey])
+    | _, 1 => pure (c, Sum.inl <| (quote.1 Nat.coprime_one_rightₓ).mk_app [ex])
     | 0, 0 => pure (c, Sum.inr (quote.1 Nat.not_coprime_zero_zero))
     | 0, _ => do
       let c ← mk_instance_cache (quote.1 ℕ)
       let (c, p) ← prove_lt_nat c (quote.1 1) ey
-      pure (c, Sum.inr $ (quote.1 nat_coprime_helper_zero_left).mk_app [ey, p])
+      pure (c, Sum.inr <| (quote.1 nat_coprime_helper_zero_left).mk_app [ey, p])
     | _, 0 => do
       let c ← mk_instance_cache (quote.1 ℕ)
       let (c, p) ← prove_lt_nat c (quote.1 1) ex
-      pure (c, Sum.inr $ (quote.1 nat_coprime_helper_zero_right).mk_app [ex, p])
+      pure (c, Sum.inr <| (quote.1 nat_coprime_helper_zero_right).mk_app [ex, p])
     | _, _ => do
       let c ← mk_instance_cache (quote.1 ℕ)
       let (d, a, b) := Nat.xgcdAux x 1 0 y 0 1
@@ -662,7 +662,7 @@ unsafe def prove_coprime_nat (c : instance_cache) (ex ey : expr) : tactic (insta
           let (c, ety, py) ← prove_mul_nat c ey eb
           let (c, p) ← if a ≥ 0 then prove_add_nat c ety (quote.1 1) etx else prove_add_nat c etx (quote.1 1) ety
           let pf : expr := if a ≥ 0 then quote.1 nat_coprime_helper_2 else quote.1 nat_coprime_helper_1
-          pure (c, Sum.inl $ pf.mk_app [ex, ey, ea, eb, etx, ety, px, py, p])
+          pure (c, Sum.inl <| pf.mk_app [ex, ey, ea, eb, etx, ety, px, py, p])
         else do
           let (c, ed) ← c.of_nat d
           let (c, eu) ← c.of_nat (x / d)
@@ -670,7 +670,7 @@ unsafe def prove_coprime_nat (c : instance_cache) (ex ey : expr) : tactic (insta
           let (c, _, pu) ← prove_mul_nat c ed eu
           let (c, _, pv) ← prove_mul_nat c ed ev
           let (c, p) ← prove_lt_nat c (quote.1 1) ed
-          pure (c, Sum.inr $ (quote.1 nat_not_coprime_helper).mk_app [ed, ex, ey, eu, ev, pu, pv, p])
+          pure (c, Sum.inr <| (quote.1 nat_not_coprime_helper).mk_app [ed, ex, ey, eu, ev, pu, pv, p])
 
 /-- Evaluates the `gcd`, `lcm`, and `coprime` functions. -/
 @[norm_num]

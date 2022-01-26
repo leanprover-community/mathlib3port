@@ -41,13 +41,13 @@ instance : IsLawfulMonad Set where
   pure_bind := fun α β x f => by
     simp
   bind_assoc := fun α β γ s f g =>
-    Set.ext $ fun a => by
+    Set.ext fun a => by
       simp [exists_and_distrib_right.symm, -exists_and_distrib_right, exists_and_distrib_left.symm,
           -exists_and_distrib_left, and_assoc] <;>
         exact exists_swap
   id_map := fun α => id_map
   bind_pure_comp_eq_map := fun α β f s =>
-    Set.ext $ by
+    Set.ext <| by
       simp [Set.Image, eq_comm]
   bind_map_eq_seq := fun α β s t => by
     simp [seq_def]

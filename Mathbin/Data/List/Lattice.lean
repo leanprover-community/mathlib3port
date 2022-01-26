@@ -78,17 +78,17 @@ theorem disjoint_append_left : Disjoint (l₁ ++ l₂) l ↔ Disjoint l₁ l ∧
 
 @[simp]
 theorem disjoint_append_right : Disjoint l (l₁ ++ l₂) ↔ Disjoint l l₁ ∧ Disjoint l l₂ :=
-  disjoint_comm.trans $ by
+  disjoint_comm.trans <| by
     simp only [disjoint_comm, disjoint_append_left]
 
 @[simp]
 theorem disjoint_cons_left : Disjoint (a :: l₁) l₂ ↔ a ∉ l₂ ∧ Disjoint l₁ l₂ :=
-  (@disjoint_append_left _ l₂ [a] l₁).trans $ by
+  (@disjoint_append_left _ l₂ [a] l₁).trans <| by
     simp only [singleton_disjoint]
 
 @[simp]
 theorem disjoint_cons_right : Disjoint l₁ (a :: l₂) ↔ a ∉ l₁ ∧ Disjoint l₁ l₂ :=
-  disjoint_comm.trans $ by
+  disjoint_comm.trans <| by
     simp only [disjoint_comm, disjoint_cons_left]
 
 theorem disjoint_of_disjoint_append_left_left (d : Disjoint (l₁ ++ l₂) l) : Disjoint l₁ l :=

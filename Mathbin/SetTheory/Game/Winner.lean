@@ -111,7 +111,7 @@ theorem not_first_wins_of_first_loses {G : Pgame} : G.first_loses → ¬G.first_
   exact Pgame.lt_irrefl 0 (lt_of_lt_of_equiv h₀ h)
 
 theorem not_first_loses_of_first_wins {G : Pgame} : G.first_wins → ¬G.first_loses :=
-  imp_not_comm.1 $ not_first_wins_of_first_loses
+  imp_not_comm.1 <| not_first_wins_of_first_loses
 
 end Pgame
 

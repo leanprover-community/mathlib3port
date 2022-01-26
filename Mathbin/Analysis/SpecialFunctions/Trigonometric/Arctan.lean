@@ -99,7 +99,7 @@ theorem image_tan_Ioo : tan '' Ioo (-(π / 2)) (π / 2) = univ :=
 
 /-- `real.tan` as an `order_iso` between `(-(π / 2), π / 2)` and `ℝ`. -/
 def tan_order_iso : Ioo (-(π / 2)) (π / 2) ≃o ℝ :=
-  (strict_mono_on_tan.OrderIso _ _).trans $ (OrderIso.setCongr _ _ image_tan_Ioo).trans OrderIso.Set.univ
+  (strict_mono_on_tan.OrderIso _ _).trans <| (OrderIso.setCongr _ _ image_tan_Ioo).trans OrderIso.Set.univ
 
 /-- Inverse of the `tan` function, returns values in the range `-π / 2 < arctan x` and
 `arctan x < π / 2` -/
@@ -115,10 +115,10 @@ theorem arctan_mem_Ioo (x : ℝ) : arctan x ∈ Ioo (-(π / 2)) (π / 2) :=
   Subtype.coe_prop _
 
 theorem arctan_tan {x : ℝ} (hx₁ : -(π / 2) < x) (hx₂ : x < π / 2) : arctan (tan x) = x :=
-  Subtype.ext_iff.1 $ tan_order_iso.symm_apply_apply ⟨x, hx₁, hx₂⟩
+  Subtype.ext_iff.1 <| tan_order_iso.symm_apply_apply ⟨x, hx₁, hx₂⟩
 
 theorem cos_arctan_pos (x : ℝ) : 0 < cos (arctan x) :=
-  cos_pos_of_mem_Ioo $ arctan_mem_Ioo x
+  cos_pos_of_mem_Ioo <| arctan_mem_Ioo x
 
 theorem cos_sq_arctan (x : ℝ) : cos (arctan x) ^ 2 = 1 / (1 + x ^ 2) := by
   rw [one_div, ← inv_one_add_tan_sq (cos_arctan_pos x).ne', tan_arctan]
@@ -136,7 +136,7 @@ theorem neg_pi_div_two_lt_arctan (x : ℝ) : -(π / 2) < arctan x :=
   (arctan_mem_Ioo x).1
 
 theorem arctan_eq_arcsin (x : ℝ) : arctan x = arcsin (x / sqrt (1 + x ^ 2)) :=
-  Eq.symm $ arcsin_eq_of_sin_eq (sin_arctan x) (mem_Icc_of_Ioo $ arctan_mem_Ioo x)
+  Eq.symm <| arcsin_eq_of_sin_eq (sin_arctan x) (mem_Icc_of_Ioo <| arctan_mem_Ioo x)
 
 theorem arcsin_eq_arctan {x : ℝ} (h : x ∈ Ioo (-(1 : ℝ)) 1) : arcsin x = arctan (x / sqrt (1 - x ^ 2)) := by
   rw [arctan_eq_arcsin, div_pow, sq_sqrt, one_add_div, div_div_eq_div_mul, ← sqrt_mul, mul_div_cancel', sub_add_cancel,
@@ -154,7 +154,7 @@ theorem arctan_eq_of_tan_eq {x y : ℝ} (h : tan x = y) (hx : x ∈ Ioo (-(π / 
 
 @[simp]
 theorem arctan_one : arctan 1 = π / 4 :=
-  arctan_eq_of_tan_eq tan_pi_div_four $ by
+  arctan_eq_of_tan_eq tan_pi_div_four <| by
     constructor <;> linarith [pi_pos]
 
 @[simp]

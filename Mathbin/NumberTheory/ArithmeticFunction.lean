@@ -111,13 +111,13 @@ end Zero
 instance nat_coe [Zero R] [One R] [Add R] : Coe (arithmetic_function ℕ) (arithmetic_function R) :=
   ⟨fun f =>
     ⟨↑(f : ℕ → ℕ), by
-      trans ↑f 0
+      trans ↑(f 0)
       rfl
       simp ⟩⟩
 
 @[simp]
 theorem nat_coe_nat (f : arithmetic_function ℕ) : (↑f : arithmetic_function ℕ) = f :=
-  ext $ fun _ => cast_id _
+  ext fun _ => cast_id _
 
 @[simp]
 theorem nat_coe_apply [Zero R] [One R] [Add R] {f : arithmetic_function ℕ} {x : ℕ} :
@@ -127,13 +127,13 @@ theorem nat_coe_apply [Zero R] [One R] [Add R] {f : arithmetic_function ℕ} {x 
 instance int_coe [Zero R] [One R] [Add R] [Neg R] : Coe (arithmetic_function ℤ) (arithmetic_function R) :=
   ⟨fun f =>
     ⟨↑(f : ℕ → ℤ), by
-      trans ↑f 0
+      trans ↑(f 0)
       rfl
       simp ⟩⟩
 
 @[simp]
 theorem int_coe_int (f : arithmetic_function ℤ) : (↑f : arithmetic_function ℤ) = f :=
-  ext $ fun _ => Int.cast_id _
+  ext fun _ => Int.cast_id _
 
 @[simp]
 theorem int_coe_apply [Zero R] [One R] [Add R] [Neg R] {f : arithmetic_function ℤ} {x : ℕ} :
@@ -477,7 +477,7 @@ theorem pmul_comm [CommMonoidWithZero R] (f g : arithmetic_function R) : f.pmul 
 variable [Semiringₓ R]
 
 @[simp]
-theorem pmul_zeta (f : arithmetic_function R) : f.pmul (↑ζ) = f := by
+theorem pmul_zeta (f : arithmetic_function R) : f.pmul ↑ζ = f := by
   ext x
   cases x <;> simp [Nat.succ_ne_zero]
 

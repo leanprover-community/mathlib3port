@@ -42,7 +42,7 @@ theorem bot : x ≡ y [SMOD (⊥ : Submodule R M)] ↔ x = y := by
 
 @[mono]
 theorem mono (HU : U₁ ≤ U₂) (hxy : x ≡ y [SMOD U₁]) : x ≡ y [SMOD U₂] :=
-  (Submodule.Quotient.eq U₂).2 $ HU $ (Submodule.Quotient.eq U₁).1 hxy
+  (Submodule.Quotient.eq U₂).2 <| HU <| (Submodule.Quotient.eq U₁).1 hxy
 
 @[refl]
 theorem refl : x ≡ x [SMOD U] :=
@@ -68,10 +68,10 @@ theorem zero : x ≡ 0 [SMOD U] ↔ x ∈ U := by
   rw [Smodeq.def, Submodule.Quotient.eq, sub_zero]
 
 theorem map (hxy : x ≡ y [SMOD U]) (f : M →ₗ[R] N) : f x ≡ f y [SMOD U.map f] :=
-  (Submodule.Quotient.eq _).2 $ f.map_sub x y ▸ mem_map_of_mem $ (Submodule.Quotient.eq _).1 hxy
+  (Submodule.Quotient.eq _).2 <| f.map_sub x y ▸ mem_map_of_mem <| (Submodule.Quotient.eq _).1 hxy
 
 theorem comap {f : M →ₗ[R] N} (hxy : f x ≡ f y [SMOD V]) : x ≡ y [SMOD V.comap f] :=
-  (Submodule.Quotient.eq _).2 $ show f (x - y) ∈ V from (f.map_sub x y).symm ▸ (Submodule.Quotient.eq _).1 hxy
+  (Submodule.Quotient.eq _).2 <| show f (x - y) ∈ V from (f.map_sub x y).symm ▸ (Submodule.Quotient.eq _).1 hxy
 
 theorem eval {R : Type _} [CommRingₓ R] {I : Ideal R} {x y : R} (h : x ≡ y [SMOD I]) (f : Polynomial R) :
     f.eval x ≡ f.eval y [SMOD I] := by

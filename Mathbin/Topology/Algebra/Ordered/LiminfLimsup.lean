@@ -78,7 +78,7 @@ variable [ConditionallyCompleteLinearOrder α]
 
 theorem lt_mem_sets_of_Limsup_lt {f : Filter α} {b} (h : f.is_bounded (· ≤ ·)) (l : f.Limsup < b) : ∀ᶠ a in f, a < b :=
   let ⟨c, (h : ∀ᶠ a in f, a ≤ c), hcb⟩ := exists_lt_of_cInf_lt h l
-  mem_of_superset h $ fun a hac => lt_of_le_of_ltₓ hac hcb
+  (mem_of_superset h) fun a hac => lt_of_le_of_ltₓ hac hcb
 
 theorem gt_mem_sets_of_Liminf_gt : ∀ {f : Filter α} {b}, f.is_bounded (· ≥ ·) → b < f.Liminf → ∀ᶠ a in f, b < a :=
   @lt_mem_sets_of_Limsup_lt (OrderDual α) _
@@ -89,9 +89,9 @@ variable [TopologicalSpace α] [OrderTopology α]
 their common value, at least if the filter is eventually bounded above and below. -/
 theorem le_nhds_of_Limsup_eq_Liminf {f : Filter α} {a : α} (hl : f.is_bounded (· ≤ ·)) (hg : f.is_bounded (· ≥ ·))
     (hs : f.Limsup = a) (hi : f.Liminf = a) : f ≤ 𝓝 a :=
-  tendsto_order.2 $
-    And.intro (fun b hb => gt_mem_sets_of_Liminf_gt hg $ hi.symm ▸ hb) fun b hb =>
-      lt_mem_sets_of_Limsup_lt hl $ hs.symm ▸ hb
+  tendsto_order.2 <|
+    And.intro (fun b hb => gt_mem_sets_of_Liminf_gt hg <| hi.symm ▸ hb) fun b hb =>
+      lt_mem_sets_of_Limsup_lt hl <| hs.symm ▸ hb
 
 theorem Limsup_nhds (a : α) : Limsup (𝓝 a) = a :=
   cInf_eq_of_forall_ge_of_forall_gt_exists_lt (is_bounded_le_nhds a)

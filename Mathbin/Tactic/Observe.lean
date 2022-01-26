@@ -21,7 +21,7 @@ If `hp` is omitted, then the placeholder `this` is used.
 
 The variant `observe? hp : p` will emit a trace message of the form `have hp : p := proof_term`.
 This may be particularly useful to speed up proofs. -/
-unsafe def tactic.interactive.observe (trc : parse $ optionalₓ (tk "?")) (h : parse («expr ?» ident))
+unsafe def tactic.interactive.observe (trc : parse <| optionalₓ (tk "?")) (h : parse («expr ?» ident))
     (t : parse (tk ":" *> texpr)) : tactic Unit := do
   let h' := h.get_or_else `this
   let t ← to_expr (pquote.1 (%%ₓt : Prop))
@@ -30,7 +30,7 @@ unsafe def tactic.interactive.observe (trc : parse $ optionalₓ (tk "?")) (h : 
   let s ← s.get_rest "Try this: exact "
   let ppt ← pp t
   let pph : Stringₓ := (h.map fun n : Name => n.to_string ++ " ").getOrElse ""
-  when trc.is_some $
+  when trc.is_some <|
       ← do
         dbg_trace "Try this: have {(← pph)}: {(← ppt)} := {← s}"
 

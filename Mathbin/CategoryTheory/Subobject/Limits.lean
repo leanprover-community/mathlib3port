@@ -111,7 +111,7 @@ theorem factor_thru_kernel_subobject_comp_arrow {W : C} (h : W ⟶ X) (w : h ≫
 @[simp]
 theorem factor_thru_kernel_subobject_comp_kernel_subobject_iso {W : C} (h : W ⟶ X) (w : h ≫ f = 0) :
     factor_thru_kernel_subobject f h w ≫ (kernel_subobject_iso f).Hom = kernel.lift f h w :=
-  (cancel_mono (kernel.ι f)).1 $ by
+  (cancel_mono (kernel.ι f)).1 <| by
     simp
 
 section
@@ -240,7 +240,7 @@ theorem image_subobject_arrow_comp : factor_thru_image_subobject f ≫ (image_su
 
 theorem image_subobject_arrow_comp_eq_zero [has_zero_morphisms C] {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [has_image f]
     [epi (factor_thru_image_subobject f)] (h : f ≫ g = 0) : (image_subobject f).arrow ≫ g = 0 :=
-  zero_of_epi_comp (factor_thru_image_subobject f) $ by
+  zero_of_epi_comp (factor_thru_image_subobject f) <| by
     simp [h]
 
 theorem image_subobject_factors_comp_self {W : C} (k : W ⟶ X) : (image_subobject f).Factors (k ≫ f) :=

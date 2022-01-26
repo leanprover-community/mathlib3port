@@ -270,7 +270,7 @@ theorem deriv_rpow_const {x p : ℝ} (h : x ≠ 0 ∨ 1 ≤ p) : deriv (fun x : 
   (has_deriv_at_rpow_const h).deriv
 
 theorem deriv_rpow_const' {p : ℝ} (h : 1 ≤ p) : (deriv fun x : ℝ => x ^ p) = fun x => p * x ^ (p - 1) :=
-  funext $ fun x => deriv_rpow_const (Or.inr h)
+  funext fun x => deriv_rpow_const (Or.inr h)
 
 theorem times_cont_diff_at_rpow_const_of_ne {x p : ℝ} {n : WithTop ℕ} (h : x ≠ 0) :
     TimesContDiffAt ℝ n (fun x => x ^ p) x :=
@@ -396,7 +396,7 @@ theorem TimesContDiffOn.rpow (hf : TimesContDiffOn ℝ n f s) (hg : TimesContDif
 
 theorem TimesContDiff.rpow (hf : TimesContDiff ℝ n f) (hg : TimesContDiff ℝ n g) (h : ∀ x, f x ≠ 0) :
     TimesContDiff ℝ n fun x => f x ^ g x :=
-  times_cont_diff_iff_times_cont_diff_at.mpr $ fun x => hf.times_cont_diff_at.rpow hg.times_cont_diff_at (h x)
+  times_cont_diff_iff_times_cont_diff_at.mpr fun x => hf.times_cont_diff_at.rpow hg.times_cont_diff_at (h x)
 
 theorem TimesContDiffWithinAt.rpow_const_of_ne (hf : TimesContDiffWithinAt ℝ n f s x) (h : f x ≠ 0) :
     TimesContDiffWithinAt ℝ n (fun x => f x ^ p) s x :=
@@ -428,7 +428,7 @@ theorem TimesContDiffOn.rpow_const_of_le (hf : TimesContDiffOn ℝ m f s) (h : �
     TimesContDiffOn ℝ m (fun x => f x ^ p) s := fun x hx => (hf x hx).rpow_const_of_le h
 
 theorem TimesContDiff.rpow_const_of_le (hf : TimesContDiff ℝ m f) (h : ↑m ≤ p) : TimesContDiff ℝ m fun x => f x ^ p :=
-  times_cont_diff_iff_times_cont_diff_at.mpr $ fun x => hf.times_cont_diff_at.rpow_const_of_le h
+  times_cont_diff_iff_times_cont_diff_at.mpr fun x => hf.times_cont_diff_at.rpow_const_of_le h
 
 end fderiv
 

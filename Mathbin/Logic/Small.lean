@@ -112,7 +112,7 @@ instance small_image {α : Type v} {β : Type w} (f : α → β) (S : Set α) [S
 theorem not_small_type : ¬Small.{u} (Type max u v)
   | ⟨⟨S, ⟨e⟩⟩⟩ =>
     @Function.cantor_injective (Σ α, e.symm α) (fun a => ⟨_, cast (e.3 _).symm a⟩) fun a b e =>
-      (cast_inj _).1 $ eq_of_heq (Sigma.mk.inj e).2
+      (cast_inj _).1 <| eq_of_heq (Sigma.mk.inj e).2
 
 end
 

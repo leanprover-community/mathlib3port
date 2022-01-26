@@ -215,7 +215,7 @@ section Order
 variable [LinearOrderₓ β] (c : β)
 
 theorem le_fold_min : c ≤ s.fold min b f ↔ c ≤ b ∧ ∀, ∀ x ∈ s, ∀, c ≤ f x :=
-  fold_op_rel_iff_and $ fun x y z => le_min_iff
+  fold_op_rel_iff_and fun x y z => le_min_iff
 
 theorem fold_min_le : s.fold min b f ≤ c ↔ b ≤ c ∨ ∃ x ∈ s, f x ≤ c := by
   show _ ≥ _ ↔ _
@@ -225,7 +225,7 @@ theorem fold_min_le : s.fold min b f ≤ c ↔ b ≤ c ∨ ∃ x ∈ s, f x ≤ 
   exact min_le_iff
 
 theorem lt_fold_min : c < s.fold min b f ↔ c < b ∧ ∀, ∀ x ∈ s, ∀, c < f x :=
-  fold_op_rel_iff_and $ fun x y z => lt_min_iff
+  fold_op_rel_iff_and fun x y z => lt_min_iff
 
 theorem fold_min_lt : s.fold min b f < c ↔ b < c ∨ ∃ x ∈ s, f x < c := by
   show _ > _ ↔ _
@@ -242,7 +242,7 @@ theorem fold_max_le : s.fold max b f ≤ c ↔ b ≤ c ∧ ∀, ∀ x ∈ s, ∀
   exact max_le_iff
 
 theorem le_fold_max : c ≤ s.fold max b f ↔ c ≤ b ∨ ∃ x ∈ s, c ≤ f x :=
-  fold_op_rel_iff_or $ fun x y z => le_max_iff
+  fold_op_rel_iff_or fun x y z => le_max_iff
 
 theorem fold_max_lt : s.fold max b f < c ↔ b < c ∧ ∀, ∀ x ∈ s, ∀, f x < c := by
   show _ > _ ↔ _
@@ -252,7 +252,7 @@ theorem fold_max_lt : s.fold max b f < c ↔ b < c ∧ ∀, ∀ x ∈ s, ∀, f 
   exact max_lt_iff
 
 theorem lt_fold_max : c < s.fold max b f ↔ c < b ∨ ∃ x ∈ s, c < f x :=
-  fold_op_rel_iff_or $ fun x y z => lt_max_iff
+  fold_op_rel_iff_or fun x y z => lt_max_iff
 
 end Order
 

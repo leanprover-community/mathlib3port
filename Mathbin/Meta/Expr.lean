@@ -47,8 +47,8 @@ namespace Name
 with the value of `f n`. -/
 def map_prefix (f : Name → Option Name) : Name → Name
   | anonymous => anonymous
-  | mk_string s n' => (f (mk_string s n')).getOrElse (mk_string s $ map_prefix n')
-  | mk_numeral d n' => (f (mk_numeral d n')).getOrElse (mk_numeral d $ map_prefix n')
+  | mk_string s n' => (f (mk_string s n')).getOrElse (mk_string s <| map_prefix n')
+  | mk_numeral d n' => (f (mk_numeral d n')).getOrElse (mk_numeral d <| map_prefix n')
 
 /-- If `nm` is a simple name (having only one string component) starting with `_`, then
 `deinternalize_field nm` removes the underscore. Otherwise, it does nothing. -/
@@ -72,7 +72,7 @@ private unsafe def pop_nth_prefix_aux : Name → ℕ → Name × ℕ
 
 /-- Pops the top `n` prefixes from the given name. -/
 unsafe def pop_nth_prefix (nm : Name) (n : ℕ) : Name :=
-  Prod.fst $ pop_nth_prefix_aux nm n
+  Prod.fst <| pop_nth_prefix_aux nm n
 
 /-- Pop the prefix of a name -/
 unsafe def pop_prefix (n : Name) : Name :=
@@ -93,8 +93,8 @@ def from_components : List Stringₓ → Name :=
   name into a legal identifier name by turning the numbers to strings. -/
 unsafe def sanitize_name : Name → Name
   | Name.anonymous => Name.anonymous
-  | Name.mk_string s p => Name.mk_string s $ sanitize_name p
-  | Name.mk_numeral s p => (Name.mk_string s! "n{s}") $ sanitize_name p
+  | Name.mk_string s p => Name.mk_string s <| sanitize_name p
+  | Name.mk_numeral s p => (Name.mk_string s! "n{s}") <| sanitize_name p
 
 /-- Append a string to the last component of a name. -/
 def append_suffix : Name → Stringₓ → Name
@@ -110,7 +110,7 @@ def update_last (f : Stringₓ → Stringₓ) : Name → Name
   either as prefix or as suffix (specified by `is_prefix`), separated by `_`.
   Used by `simps_add_projections`. -/
 def append_to_last (nm : Name) (s : Stringₓ) (is_prefix : Bool) : Name :=
-  nm.update_last $ fun s' => if is_prefix then s ++ "_" ++ s' else s' ++ "_" ++ s
+  nm.update_last fun s' => if is_prefix then s ++ "_" ++ s' else s' ++ "_" ++ s
 
 /-- The first component of a name, turning a number to a string -/
 unsafe def head : Name → Stringₓ
@@ -160,7 +160,7 @@ def last_string : Name → Stringₓ
 Example: ``name.from_string "foo.bar" = `foo.bar``
 -/
 unsafe def from_string (s : Stringₓ) : Name :=
-  from_components $ s.split (· = '.')
+  from_components <| s.split (· = '.')
 
 /-- In surface Lean, we can write anonymous Π binders (i.e. binders where the
 argument is not named) using the function arrow notation:
@@ -245,7 +245,7 @@ unsafe def fold_mvar {α} : level → (Name → α → α) → α → α
 For example if `l = max 1 (max (u+1) (max v w))` then `l.params = {u, v, w}`.
 -/
 protected unsafe def params (u : level) : name_set :=
-  u.fold mk_name_set $ fun v l =>
+  (u.fold mk_name_set) fun v l =>
     match v with
     | param nm => l.insert nm
     | _ => l
@@ -387,7 +387,7 @@ unsafe def clean (e : expr) : expr :=
 
 /-- `replace_with e s s'` replaces ocurrences of `s` with `s'` in `e`. -/
 unsafe def replace_with (e : expr) (s : expr) (s' : expr) : expr :=
-  e.replace $ fun c d => if c = s then some (s'.lift_vars 0 d) else none
+  e.replace fun c d => if c = s then some (s'.lift_vars 0 d) else none
 
 /-- Implementation of `expr.mreplace`. -/
 unsafe def mreplace_aux {m : Type _ → Type _} [Monadₓ m] (R : expr → Nat → m (Option expr)) : expr → ℕ → m expr
@@ -395,24 +395,24 @@ unsafe def mreplace_aux {m : Type _ → Type _} [Monadₓ m] (R : expr → Nat �
     Option.mgetOrElse (R (app f x) n) do
       let Rf ← mreplace_aux f n
       let Rx ← mreplace_aux x n
-      return $ app Rf Rx
+      return <| app Rf Rx
   | lam nm bi ty bd, n =>
     Option.mgetOrElse (R (lam nm bi ty bd) n) do
       let Rty ← mreplace_aux ty n
       let Rbd ← mreplace_aux bd (n + 1)
-      return $ lam nm bi Rty Rbd
+      return <| lam nm bi Rty Rbd
   | pi nm bi ty bd, n =>
     Option.mgetOrElse (R (pi nm bi ty bd) n) do
       let Rty ← mreplace_aux ty n
       let Rbd ← mreplace_aux bd (n + 1)
-      return $ pi nm bi Rty Rbd
+      return <| pi nm bi Rty Rbd
   | elet nm ty a b, n =>
     Option.mgetOrElse (R (elet nm ty a b) n) do
       let Rty ← mreplace_aux ty n
       let Ra ← mreplace_aux a n
       let Rb ← mreplace_aux b n
-      return $ elet nm Rty Ra Rb
-  | macro c es, n => Option.mgetOrElse (R (macro c es) n) $ macro c <$> es.mmap fun e => mreplace_aux e n
+      return <| elet nm Rty Ra Rb
+  | macro c es, n => Option.mgetOrElse (R (macro c es) n) <| macro c <$> es.mmap fun e => mreplace_aux e n
   | e, n => Option.mgetOrElse (R e n) (return e)
 
 /-- Monadic analogue of `expr.replace`.
@@ -548,8 +548,8 @@ unsafe def list_meta_vars' (e : expr) : expr_set :=
 
 /-- Returns a list of all universe meta-variables in an expression (without duplicates). -/
 unsafe def list_univ_meta_vars (e : expr) : List Name :=
-  native.rb_set.to_list $
-    e.fold native.mk_rb_set $ fun e' i s =>
+  native.rb_set.to_list <|
+    (e.fold native.mk_rb_set) fun e' i s =>
       match e' with
       | sort u => u.fold_mvar (flip native.rb_set.insert) s
       | const _ ls => ls.foldl (fun s' l => l.fold_mvar (flip native.rb_set.insert) s') s
@@ -564,7 +564,7 @@ unsafe def contains_expr_or_mvar (t : expr) (e : expr) : Bool :=
 
 /-- Returns a name_set of all constants in an expression starting with a certain prefix. -/
 unsafe def list_names_with_prefix (pre : Name) (e : expr) : name_set :=
-  e.fold mk_name_set $ fun e' _ l =>
+  (e.fold mk_name_set) fun e' _ l =>
     match e' with
     | expr.const n _ => if n.get_prefix = pre then l.insert n else l
     | _ => l
@@ -592,9 +592,9 @@ unsafe def get_simp_args (e : expr) : tactic (List expr) :=
   if ¬e.is_app then pure []
   else do
     let cgr ← mk_specialized_congr_lemma_simp e
-    pure $ do
+    pure <| do
         let (arg_kind, arg) ← cgr.arg_kinds.zip e.get_app_args
-        guardₓ $ arg_kind = CongrArgKind.eq
+        guardₓ <| arg_kind = CongrArgKind.eq
         pure arg
 
 /-- Simplifies the expression `t` with the specified options.
@@ -625,7 +625,7 @@ unsafe def reduce_let : expr → expr
 
 /-- head-reduce all let expressions -/
 unsafe def reduce_lets : expr → expr
-  | elet _ _ v b => reduce_lets $ b.instantiate_var v
+  | elet _ _ v b => reduce_lets <| b.instantiate_var v
   | e => e
 
 /-- Instantiate lambdas in the second argument by expressions from the first. -/
@@ -644,8 +644,8 @@ Also reduces head let-expressions in `e`, including those after instantiating al
 
 This is very similar to `expr.substs`, but this also reduces head let-expressions. -/
 unsafe def instantiate_lambdas_or_apps : List expr → expr → expr
-  | v :: es, lam n bi t b => instantiate_lambdas_or_apps es $ b.instantiate_var v
-  | es, elet _ _ v b => instantiate_lambdas_or_apps es $ b.instantiate_var v
+  | v :: es, lam n bi t b => instantiate_lambdas_or_apps es <| b.instantiate_var v
+  | es, elet _ _ v b => instantiate_lambdas_or_apps es <| b.instantiate_var v
   | es, e => mk_app e es
 
 /-- Some declarations work with open expressions, i.e. an expr that has free variables.
@@ -700,7 +700,7 @@ unsafe def get_app_fn_args : expr → expr × List expr :=
 unsafe def drop_pis : List expr → expr → tactic expr
   | v :: vs, pi n bi d b => do
     let t ← infer_type v
-    guardₓ (t =ₐ d)
+    guardₓ (expr.alpha_eqv t d)
     drop_pis vs (b.instantiate_var v)
   | [], e => return e
   | _, _ => failed
@@ -716,7 +716,7 @@ unsafe def instantiate_pis : List expr → expr → expr
 unsafe def mk_op_lst (op : expr) (empty : expr) : List expr → expr
   | [] => Empty
   | [e] => e
-  | e :: es => op e $ mk_op_lst es
+  | e :: es => op e <| mk_op_lst es
 
 /-- `mk_and_lst [x1, x2, ...]` is defined as `x1 ∧ (x2 ∧ ...)`, or `true` if the list is empty. -/
 unsafe def mk_and_lst : List expr → expr :=
@@ -740,7 +740,7 @@ unsafe def is_default_local : expr → Bool
 
 /-- `has_local_constant e l` checks whether local constant `l` occurs in expression `e` -/
 unsafe def has_local_constant (e l : expr) : Bool :=
-  e.has_local_in $ mk_name_set.insert l.local_uniq_name
+  e.has_local_in <| mk_name_set.insert l.local_uniq_name
 
 /-- Turns a local constant into a binder -/
 unsafe def to_binder : expr → binder
@@ -771,8 +771,8 @@ unsafe def unsafe_cast {elab₁ elab₂ : Bool} : expr elab₁ → expr elab₂ 
 a collection of rules for variable replacements. A pair `(f, t)` encodes a rule which says "whenever
 `f` is encountered in `e` verbatim, replace it with `t`". -/
 unsafe def replace_subexprs {elab : Bool} (e : expr elab) (mappings : List (expr × expr)) : expr elab :=
-  unsafe_cast $
-    e.unsafe_cast.replace $ fun e n => (mappings.filter $ fun ent : expr × expr => ent.1 = e).head'.map Prod.snd
+  unsafe_cast <|
+    e.unsafe_cast.replace fun e n => (mappings.filter fun ent : expr × expr => ent.1 = e).head'.map Prod.snd
 
 /-- `is_implicitly_included_variable e vs` accepts `e`, an `expr.local_const`, and a list `vs` of
     other `expr.local_const`s. It determines whether `e` should be considered "available in context"
@@ -792,7 +792,7 @@ unsafe def replace_subexprs {elab : Bool} (e : expr elab) (mappings : List (expr
     Note that if `e ∈ vs` then `is_implicitly_included_variable e vs = tt`. -/
 unsafe def is_implicitly_included_variable (e : expr) (vs : List expr) : Bool :=
   if ¬e.local_pp_name.to_string.starts_with "_" then e ∈ vs
-  else e.local_type.fold tt $ fun se _ b => if ¬b then ff else if ¬se.is_local_constant then tt else se ∈ vs
+  else (e.local_type.fold tt) fun se _ b => if ¬b then ff else if ¬se.is_local_constant then tt else se ∈ vs
 
 /-- Private work function for `all_implicitly_included_variables`, performing the actual series of
     iterations, tracking with a boolean whether any updates occured this iteration. -/
@@ -818,33 +818,33 @@ protected unsafe def simple_infer_type (env : environment) (e : expr) : exceptio
   let (@const tt n ls, es) ← return e.get_app_fn_args |
     exceptional.fail "expression is not a constant applied to arguments"
   let d ← env.get n
-  return $ (d.type.instantiate_pis es).instantiate_univ_params $ d.univ_params.zip ls
+  return <| (d.type.instantiate_pis es).instantiate_univ_params <| d.univ_params.zip ls
 
 /-- Auxilliary function for `head_eta_expand`. -/
 unsafe def head_eta_expand_aux : ℕ → expr → expr → expr
-  | n + 1, e, pi x bi d b => lam x bi d $ head_eta_expand_aux n e b
+  | n + 1, e, pi x bi d b => lam x bi d <| head_eta_expand_aux n e b
   | _, e, _ => e
 
 /-- `head_eta_expand n e t` eta-expands `e` `n` times, with the binders info and domains obtained
   by its type `t`. -/
 unsafe def head_eta_expand (n : ℕ) (e t : expr) : expr :=
-  ((e.lift_vars 0 n).mk_app $ (List.range n).reverse.map var).head_eta_expand_aux n t
+  ((e.lift_vars 0 n).mk_app <| (List.range n).reverse.map var).head_eta_expand_aux n t
 
 /-- `e.eta_expand env dict` eta-expands all expressions that have as head a constant `n` in
 `dict`. They are expanded until they are applied to one more argument than the maximum in
 `dict.find n`. -/
-protected unsafe def eta_expand (env : environment) (dict : name_map $ List ℕ) : expr → expr
+protected unsafe def eta_expand (env : environment) (dict : name_map <| List ℕ) : expr → expr
   | e =>
-    e.replace $ fun e _ => do
+    e.replace fun e _ => do
       let (e0, es) := e.get_app_fn_args
       let ns := (dict.find e0.const_name).iget
       guardₓ (bnot ns.empty)
-      let e' := e0.mk_app $ es.map eta_expand
+      let e' := e0.mk_app <| es.map eta_expand
       let needed_n := ns.foldr max 0 + 1
       if needed_n ≤ es.length then some e'
         else do
           let e'_type ← (e'.simple_infer_type env).toOption
-          some $ head_eta_expand (needed_n - es.length) e' e'_type
+          some <| head_eta_expand (needed_n - es.length) e' e'_type
 
 /-- `e.apply_replacement_fun f test` applies `f` to each identifier
 (inductive type, defined function etc) in an expression, unless
@@ -859,20 +859,20 @@ We assume that all functions where we want to reorder arguments are fully applie
 This can be done by applying `expr.eta_expand` first.
 -/
 protected unsafe def apply_replacement_fun (f : Name → Name) (test : expr → Bool) (relevant : name_map ℕ)
-    (reorder : name_map $ List ℕ) : expr → expr
+    (reorder : name_map <| List ℕ) : expr → expr
   | e =>
-    e.replace $ fun e _ =>
+    e.replace fun e _ =>
       match e with
-      | const n ls => some $ const (f n) $ if 1 ∈ (reorder.find n).iget then ls.inth 1 :: ls.head :: ls.drop 2 else ls
+      | const n ls => some <| const (f n) <| if 1 ∈ (reorder.find n).iget then ls.inth 1 :: ls.head :: ls.drop 2 else ls
       | app g x =>
         let f := g.get_app_fn
         let nm := f.const_name
         let n_args := g.get_app_num_args
         if n_args ∈ (reorder.find nm).iget ∧ test g.get_app_args.head then
-          some $ apply_replacement_fun g.app_fn (apply_replacement_fun x) $ apply_replacement_fun g.app_arg
+          some <| apply_replacement_fun g.app_fn (apply_replacement_fun x) <| apply_replacement_fun g.app_arg
         else
           if n_args = (relevant.find nm).lhoare 0 ∧ f.is_constant ∧ ¬test x then
-            some $ (f.mk_app $ g.get_app_args.map apply_replacement_fun) (apply_replacement_fun x)
+            some <| (f.mk_app <| g.get_app_args.map apply_replacement_fun) (apply_replacement_fun x)
           else none
       | _ => none
 
@@ -890,7 +890,7 @@ unsafe def is_structure (env : environment) (n : Name) : Bool :=
 /-- Get the full names of all projections of the structure `n`. Returns `none` if `n` is not a
   structure. -/
 unsafe def structure_fields_full (env : environment) (n : Name) : Option (List Name) :=
-  (env.structure_fields n).map (List.map $ fun n' => n ++ n')
+  (env.structure_fields n).map (List.map fun n' => n ++ n')
 
 /-- Tests whether `nm` is a generalized inductive type that is not a normal inductive type.
   Note that `is_ginductive` returns `tt` even on regular inductive types.
@@ -901,14 +901,14 @@ unsafe def is_ginductive' (e : environment) (nm : Name) : Bool :=
 
 /-- For all declarations `d` where `f d = some x` this adds `x` to the returned list.  -/
 unsafe def decl_filter_map {α : Type} (e : environment) (f : declaration → Option α) : List α :=
-  e.fold [] $ fun d l =>
+  (e.fold []) fun d l =>
     match f d with
     | some r => r :: l
     | none => l
 
 /-- Maps `f` to all declarations in the environment. -/
 unsafe def decl_map {α : Type} (e : environment) (f : declaration → α) : List α :=
-  e.decl_filter_map $ fun d => some (f d)
+  e.decl_filter_map fun d => some (f d)
 
 /-- Lists all declarations in the environment -/
 unsafe def get_decls (e : environment) : List declaration :=
@@ -928,18 +928,18 @@ unsafe def mfold {α : Type} {m : Type → Type} [Monadₓ m] (e : environment) 
 
 /-- Filters all declarations in the environment. -/
 unsafe def filter (e : environment) (test : declaration → Bool) : List declaration :=
-  e.fold [] $ fun d ds => if test d then d :: ds else ds
+  (e.fold []) fun d ds => if test d then d :: ds else ds
 
 /-- Filters all declarations in the environment. -/
 unsafe def mfilter (e : environment) (test : declaration → tactic Bool) : tactic (List declaration) :=
-  e.mfold [] $ fun d ds => do
+  (e.mfold []) fun d ds => do
     let b ← test d
-    return $ if b then d :: ds else ds
+    return <| if b then d :: ds else ds
 
 /-- Checks whether `s` is a prefix of the file where `n` is declared.
   This is used to check whether `n` is declared in mathlib, where `s` is the mathlib directory. -/
 unsafe def is_prefix_of_file (e : environment) (s : Stringₓ) (n : Name) : Bool :=
-  s.is_prefix_of $ (e.decl_olean n).getOrElse ""
+  s.is_prefix_of <| (e.decl_olean n).getOrElse ""
 
 end Environment
 
@@ -959,7 +959,7 @@ namespace Expr
   Used in `is_eta_expansion`, where `l` consists of the projections and the fields of the value we
   want to eta-reduce. -/
 unsafe def is_eta_expansion_of (args : List expr) (univs : List level) (l : List (Name × expr)) : Bool :=
-  l.all $ fun ⟨proj, val⟩ => val = (const proj univs).mk_app args
+  l.all fun ⟨proj, val⟩ => val = (const proj univs).mk_app args
 
 /-- `is_eta_expansion_test l` checks whether there is a list of expresions `args` such that for all
   elements `(nm, pr)` in `l` we have `pr = nm args`. If so, returns the last element of `args`.
@@ -1017,17 +1017,17 @@ sets the name of the given `decl : declaration` to `tgt`, and applies both `expr
 `expr.apply_replacement_fun` to the value and type of `decl`.
 -/
 protected unsafe def update_with_fun (env : environment) (f : Name → Name) (test : expr → Bool) (relevant : name_map ℕ)
-    (reorder : name_map $ List ℕ) (tgt : Name) (decl : declaration) : declaration :=
-  let decl := decl.update_name $ tgt
-  let decl := decl.update_type $ (decl.type.eta_expand env reorder).apply_replacement_fun f test relevant reorder
-  decl.update_value $ (decl.value.eta_expand env reorder).apply_replacement_fun f test relevant reorder
+    (reorder : name_map <| List ℕ) (tgt : Name) (decl : declaration) : declaration :=
+  let decl := decl.update_name <| tgt
+  let decl := decl.update_type <| (decl.type.eta_expand env reorder).apply_replacement_fun f test relevant reorder
+  decl.update_value <| (decl.value.eta_expand env reorder).apply_replacement_fun f test relevant reorder
 
 /-- Checks whether the declaration is declared in the current file.
   This is a simple wrapper around `environment.in_current_file`
   Use `environment.in_current_file` instead if performance matters. -/
 unsafe def in_current_file (d : declaration) : tactic Bool := do
   let e ← get_env
-  return $ e.in_current_file d.to_name
+  return <| e.in_current_file d.to_name
 
 /-- Checks whether a declaration is a theorem -/
 unsafe def is_theorem : declaration → Bool
@@ -1076,23 +1076,23 @@ protected unsafe def ReducibilityHints : declaration → ReducibilityHints
 private unsafe def print_thm (nm : Name) (tp : expr) (body : task expr) : tactic format := do
   let tp ← pp tp
   let body ← pp body.get
-  return $ "<theorem " ++ to_fmt nm ++ " : " ++ tp ++ " := " ++ body ++ ">"
+  return <| "<theorem " ++ to_fmt nm ++ " : " ++ tp ++ " := " ++ body ++ ">"
 
 /-- formats the arguments of a `declaration.defn` -/
 private unsafe def print_defn (nm : Name) (tp : expr) (body : expr) (is_trusted : Bool) : tactic format := do
   let tp ← pp tp
   let body ← pp body
-  return $ ("<" ++ if is_trusted then "def " else "meta def ") ++ to_fmt nm ++ " : " ++ tp ++ " := " ++ body ++ ">"
+  return <| ("<" ++ if is_trusted then "def " else "meta def ") ++ to_fmt nm ++ " : " ++ tp ++ " := " ++ body ++ ">"
 
 /-- formats the arguments of a `declaration.cnst` -/
 private unsafe def print_cnst (nm : Name) (tp : expr) (is_trusted : Bool) : tactic format := do
   let tp ← pp tp
-  return $ ("<" ++ if is_trusted then "constant " else "meta constant ") ++ to_fmt nm ++ " : " ++ tp ++ ">"
+  return <| ("<" ++ if is_trusted then "constant " else "meta constant ") ++ to_fmt nm ++ " : " ++ tp ++ ">"
 
 /-- formats the arguments of a `declaration.ax` -/
 private unsafe def print_ax (nm : Name) (tp : expr) : tactic format := do
   let tp ← pp tp
-  return $ "<axiom " ++ to_fmt nm ++ " : " ++ tp ++ ">"
+  return <| "<axiom " ++ to_fmt nm ++ " : " ++ tp ++ ">"
 
 /-- pretty-prints a `declaration` object. -/
 unsafe def to_tactic_format : declaration → tactic format

@@ -160,12 +160,12 @@ instance finset.fin_enum [FinEnum α] : FinEnum (Finset α) :=
       intro <;> simp )
 
 instance subtype.fin_enum [FinEnum α] (p : α → Prop) [DecidablePred p] : FinEnum { x // p x } :=
-  of_list ((to_list α).filterMap $ fun x => if h : p x then some ⟨_, h⟩ else none)
+  of_list ((to_list α).filterMap fun x => if h : p x then some ⟨_, h⟩ else none)
     (by
       rintro ⟨x, h⟩ <;> simp <;> exists x <;> simp [*])
 
 instance (β : α → Type v) [FinEnum α] [∀ a, FinEnum (β a)] : FinEnum (Sigma β) :=
-  of_list ((to_list α).bind $ fun a => (to_list (β a)).map $ Sigma.mk a)
+  of_list ((to_list α).bind fun a => (to_list (β a)).map <| Sigma.mk a)
     (by
       intro x <;> cases x <;> simp )
 
@@ -175,7 +175,7 @@ instance psigma.fin_enum [FinEnum α] [∀ a, FinEnum (β a)] : FinEnum (Σ' a, 
 instance psigma.fin_enum_prop_left {α : Prop} {β : α → Type v} [∀ a, FinEnum (β a)] [Decidable α] :
     FinEnum (Σ' a, β a) :=
   if h : α then
-    of_list ((to_list (β h)).map $ Psigma.mk h) fun ⟨a, Ba⟩ => by
+    of_list ((to_list (β h)).map <| Psigma.mk h) fun ⟨a, Ba⟩ => by
       simp
   else of_list [] fun ⟨a, Ba⟩ => (h a).elim
 
@@ -249,7 +249,7 @@ instance pi.fin_enum {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β
 
 instance pfun_fin_enum (p : Prop) [Decidable p] (α : p → Type _) [∀ hp, FinEnum (α hp)] : FinEnum (∀ hp : p, α hp) :=
   if hp : p then
-    of_list ((to_list (α hp)).map $ fun x hp' => x)
+    of_list ((to_list (α hp)).map fun x hp' => x)
       (by
         intro <;> simp <;> exact ⟨x hp, rfl⟩)
   else

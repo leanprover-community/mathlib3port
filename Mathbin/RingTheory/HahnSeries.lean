@@ -945,7 +945,7 @@ theorem emb_domain_mul [NonUnitalNonAssocSemiring R] (f : Γ ↪o Γ') (hf : ∀
 
 theorem emb_domain_one [NonAssocSemiring R] (f : Γ ↪o Γ') (hf : f 0 = 0) :
     emb_domain f (1 : HahnSeries Γ R) = (1 : HahnSeries Γ' R) :=
-  emb_domain_single.trans $ hf.symm ▸ rfl
+  emb_domain_single.trans <| hf.symm ▸ rfl
 
 /-- Extending the domain of Hahn series is a ring homomorphism. -/
 @[simps]
@@ -1263,7 +1263,7 @@ theorem coe_injective : @Function.Injective (summable_family Γ R α) (α → Ha
 
 @[ext]
 theorem ext {s t : summable_family Γ R α} (h : ∀ a : α, s a = t a) : s = t :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 
 instance : Add (summable_family Γ R α) :=
   ⟨fun x y =>
@@ -1685,7 +1685,7 @@ instance [Field R] : Field (HahnSeries Γ R) :=
     inv := fun x =>
       if x0 : x = 0 then 0
       else
-        C (x.coeff x.order⁻¹) * (single (-x.order)) 1 *
+        C (x.coeff x.order)⁻¹ * (single (-x.order)) 1 *
           (summable_family.powers _ (unit_aux x (inv_mul_cancel (coeff_order_ne_zero x0)))).hsum,
     inv_zero := dif_pos rfl,
     mul_inv_cancel := fun x x0 => by

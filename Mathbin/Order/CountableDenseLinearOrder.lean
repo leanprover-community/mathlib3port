@@ -110,8 +110,8 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
 
 /-- A partial isomorphism between `α` and `β` is also a partial isomorphism between `β` and `α`. -/
 protected def comm : partial_iso α β → partial_iso β α :=
-  Subtype.map (Finset.image (Equivₓ.prodComm _ _)) $ fun f hf p hp q hq =>
-    Eq.symm $
+  (Subtype.map (Finset.image (Equivₓ.prodComm _ _))) fun f hf p hp q hq =>
+    Eq.symm <|
       hf ((Equivₓ.prodComm α β).symm p)
         (by
           rw [← Finset.mem_coe, Finset.coe_image, Equivₓ.image_eq_preimage] at hp
@@ -190,7 +190,7 @@ variable (α β)
 /-- Any countable linear order embeds in any nonempty dense linear order without endpoints. -/
 def embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] :
     α ↪o β :=
-  let our_ideal : ideal (partial_iso α β) := ideal_of_cofinals default $ defined_at_left β
+  let our_ideal : ideal (partial_iso α β) := ideal_of_cofinals default <| defined_at_left β
   let F := fun a => fun_of_ideal a our_ideal (cofinal_meets_ideal_of_cofinals _ _ a)
   OrderEmbedding.ofStrictMono (fun a => (F a).val)
     (by
@@ -198,7 +198,7 @@ def embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [NoMinO
       rcases(F a₁).property with ⟨f, hf, ha₁⟩
       rcases(F a₂).property with ⟨g, hg, ha₂⟩
       rcases our_ideal.directed _ hf _ hg with ⟨m, hm, fm, gm⟩
-      exact (lt_iff_lt_of_cmp_eq_cmp $ m.property (a₁, _) (fm ha₁) (a₂, _) (gm ha₂)).mp)
+      exact (lt_iff_lt_of_cmp_eq_cmp <| m.property (a₁, _) (fm ha₁) (a₂, _) (gm ha₂)).mp)
 
 /-- Any two countable dense, nonempty linear orders without endpoints are order isomorphic. -/
 def iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] [Encodable β]

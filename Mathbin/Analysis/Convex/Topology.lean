@@ -44,9 +44,9 @@ variable [Fintype ι]
 theorem std_simplex_subset_closed_ball : StdSimplex ℝ ι ⊆ Metric.ClosedBall 0 1 := by
   intro f hf
   rw [Metric.mem_closed_ball, dist_zero_right]
-  refine' Nnreal.coe_one ▸ Nnreal.coe_le_coe.2 $ Finset.sup_le $ fun x hx => _
-  change |f x| ≤ 1
-  rw [abs_of_nonneg $ hf.1 x]
+  refine' Nnreal.coe_one ▸ Nnreal.coe_le_coe.2 <| Finset.sup_le fun x hx => _
+  change abs (f x) ≤ 1
+  rw [abs_of_nonneg <| hf.1 x]
   exact (mem_Icc_of_mem_std_simplex hf x).2
 
 variable (ι)
@@ -58,8 +58,8 @@ theorem bounded_std_simplex : Metric.Bounded (StdSimplex ℝ ι) :=
 /-- `std_simplex ℝ ι` is closed. -/
 theorem is_closed_std_simplex : IsClosed (StdSimplex ℝ ι) :=
   (std_simplex_eq_inter ℝ ι).symm ▸
-    IsClosed.inter (is_closed_Inter $ fun i => is_closed_le continuous_const (continuous_apply i))
-      (is_closed_eq (continuous_finset_sum _ $ fun x _ => continuous_apply x) continuous_const)
+    IsClosed.inter (is_closed_Inter fun i => is_closed_le continuous_const (continuous_apply i))
+      (is_closed_eq ((continuous_finset_sum _) fun x _ => continuous_apply x) continuous_const)
 
 /-- `std_simplex ℝ ι` is compact. -/
 theorem compact_std_simplex : IsCompact (StdSimplex ℝ ι) :=
@@ -76,7 +76,7 @@ variable [AddCommGroupₓ E] [Module ℝ E] [TopologicalSpace E] [TopologicalAdd
 
 /-- In a topological vector space, the interior of a convex set is convex. -/
 theorem Convex.interior {s : Set E} (hs : Convex ℝ s) : Convex ℝ (Interior s) :=
-  convex_iff_pointwise_add_subset.mpr $ fun a b ha hb hab =>
+  convex_iff_pointwise_add_subset.mpr fun a b ha hb hab =>
     have h : IsOpen (a • Interior s + b • Interior s) :=
       Or.elim (Classical.em (a = 0))
         (fun heq => by
@@ -89,7 +89,7 @@ theorem Convex.interior {s : Set E} (hs : Convex ℝ s) : Convex ℝ (Interior s
         fun hne => by
         rw [← image_smul]
         exact (is_open_map_smul₀ hne _ is_open_interior).add_right
-    (subset_interior_iff_subset_of_open h).mpr $
+    (subset_interior_iff_subset_of_open h).mpr <|
       subset.trans
         (by
           simp only [← image_smul]
@@ -144,7 +144,7 @@ theorem Convex.subset_interior_image_homothety_of_one_lt {s : Set E} (hs : Conve
   have hI : I ⊆ Interior s := by
     rintro z ⟨u, hu, rfl⟩
     exact hs.add_smul_sub_mem_interior hy hx hu
-  let z := homothety x (t⁻¹) y
+  let z := homothety x t⁻¹ y
   have hz₁ : z ∈ Interior s := by
     suffices z ∈ I by
       exact hI this
@@ -176,7 +176,7 @@ theorem Convex.is_path_connected {s : Set E} (hconv : Convex ℝ s) (hne : s.non
     JoinedIn.of_line affine_map.line_map_continuous.continuous_on (line_map_apply_zero _ _) (line_map_apply_one _ _) H
 
 instance (priority := 100) TopologicalAddGroup.path_connected : PathConnectedSpace E :=
-  path_connected_space_iff_univ.mpr $ convex_univ.IsPathConnected ⟨(0 : E), trivialₓ⟩
+  path_connected_space_iff_univ.mpr <| convex_univ.IsPathConnected ⟨(0 : E), trivialₓ⟩
 
 end HasContinuousSmul
 
@@ -188,7 +188,7 @@ section NormedSpace
 variable [NormedGroup E] [NormedSpace ℝ E]
 
 theorem convex_on_dist (z : E) (s : Set E) (hs : Convex ℝ s) : ConvexOn ℝ s fun z' => dist z' z :=
-  And.intro hs $ fun x y hx hy a b ha hb hab =>
+  (And.intro hs) fun x y hx hy a b ha hb hab =>
     calc
       dist (a • x + b • y) z = ∥a • x + b • y - (a + b) • z∥ := by
         rw [hab, one_smul, NormedGroup.dist_eq]
@@ -225,7 +225,7 @@ theorem convex_hull_exists_dist_ge2 {s t : Set E} {x y : E} (hx : x ∈ convexHu
 /-- Emetric diameter of the convex hull of a set `s` equals the emetric diameter of `s. -/
 @[simp]
 theorem convex_hull_ediam (s : Set E) : Emetric.diam (convexHull ℝ s) = Emetric.diam s := by
-  refine' (Emetric.diam_le $ fun x hx y hy => _).antisymm (Emetric.diam_mono $ subset_convex_hull ℝ s)
+  refine' (Emetric.diam_le fun x hx y hy => _).antisymm (Emetric.diam_mono <| subset_convex_hull ℝ s)
   rcases convex_hull_exists_dist_ge2 hx hy with ⟨x', hx', y', hy', H⟩
   rw [edist_dist]
   apply le_transₓ (Ennreal.of_real_le_of_real H)
@@ -244,7 +244,7 @@ theorem bounded_convex_hull {s : Set E} : Metric.Bounded (convexHull ℝ s) ↔ 
 
 instance (priority := 100) NormedSpace.loc_path_connected : LocPathConnectedSpace E :=
   loc_path_connected_of_bases (fun x => Metric.nhds_basis_ball) fun x r r_pos =>
-    (convex_ball x r).IsPathConnected $ by
+    (convex_ball x r).IsPathConnected <| by
       simp [r_pos]
 
 end NormedSpace

@@ -44,17 +44,17 @@ theorem not_covers [DenselyOrdered α] : ¬a ⋖ b := fun h =>
   h.2 hc.1 hc.2
 
 theorem densely_ordered_iff_forall_not_covers : DenselyOrdered α ↔ ∀ a b : α, ¬a ⋖ b :=
-  ⟨fun h a b => @not_covers _ _ _ _ h, fun h => ⟨fun a b hab => exists_lt_lt_of_not_covers hab $ h _ _⟩⟩
+  ⟨fun h a b => @not_covers _ _ _ _ h, fun h => ⟨fun a b hab => exists_lt_lt_of_not_covers hab <| h _ _⟩⟩
 
 open OrderDual
 
 @[simp]
 theorem to_dual_covers_to_dual_iff : to_dual b ⋖ to_dual a ↔ a ⋖ b :=
-  and_congr_right' $ forall_congrₓ $ fun c => forall_swap
+  and_congr_right' <| forall_congrₓ fun c => forall_swap
 
 @[simp]
 theorem of_dual_covers_of_dual_iff {a b : OrderDual α} : of_dual a ⋖ of_dual b ↔ b ⋖ a :=
-  and_congr_right' $ forall_congrₓ $ fun c => forall_swap
+  and_congr_right' <| forall_congrₓ fun c => forall_swap
 
 alias to_dual_covers_to_dual_iff ↔ _ Covers.to_dual
 
@@ -79,7 +79,7 @@ instance Covers.is_irrefl : IsIrrefl α (· ⋖ ·) :=
   ⟨fun a ha => ha.ne rfl⟩
 
 theorem Covers.Ioo_eq (h : a ⋖ b) : Ioo a b = ∅ :=
-  eq_empty_iff_forall_not_mem.2 $ fun x hx => h.2 hx.1 hx.2
+  eq_empty_iff_forall_not_mem.2 fun x hx => h.2 hx.1 hx.2
 
 theorem Covers.of_image (h : f a ⋖ f b) : a ⋖ b := by
   refine' ⟨_, fun c hac hcb => _⟩

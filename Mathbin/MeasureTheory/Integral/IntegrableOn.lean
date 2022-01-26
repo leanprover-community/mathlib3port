@@ -41,7 +41,7 @@ theorem measurable_at_bot {f : α → β} : MeasurableAtFilter f ⊥ μ :=
 
 protected theorem MeasurableAtFilter.eventually (h : MeasurableAtFilter f l μ) :
     ∀ᶠ s in l.lift' powerset, AeMeasurable f (μ.restrict s) :=
-  (eventually_lift'_powerset' $ fun s t => AeMeasurable.mono_set).2 h
+  (eventually_lift'_powerset' fun s t => AeMeasurable.mono_set).2 h
 
 protected theorem MeasurableAtFilter.filter_mono (h : MeasurableAtFilter f l μ) (h' : l' ≤ l) :
     MeasurableAtFilter f l' μ :=
@@ -99,11 +99,11 @@ theorem integrable_on_zero : integrable_on (fun _ => (0 : E)) s μ :=
 
 @[simp]
 theorem integrable_on_const {C : E} : integrable_on (fun _ => C) s μ ↔ C = 0 ∨ μ s < ∞ :=
-  integrable_const_iff.trans $ by
+  integrable_const_iff.trans <| by
     rw [measure.restrict_apply_univ]
 
 theorem integrable_on.mono (h : integrable_on f t ν) (hs : s ⊆ t) (hμ : μ ≤ ν) : integrable_on f s μ :=
-  h.mono_measure $ measure.restrict_mono hs hμ
+  h.mono_measure <| measure.restrict_mono hs hμ
 
 theorem integrable_on.mono_set (h : integrable_on f t μ) (hst : s ⊆ t) : integrable_on f s μ :=
   h.mono hst (le_reflₓ _)
@@ -112,7 +112,7 @@ theorem integrable_on.mono_measure (h : integrable_on f s ν) (hμ : μ ≤ ν) 
   h.mono (subset.refl _) hμ
 
 theorem integrable_on.mono_set_ae (h : integrable_on f t μ) (hst : s ≤ᵐ[μ] t) : integrable_on f s μ :=
-  h.integrable.mono_measure $ measure.restrict_mono_ae hst
+  h.integrable.mono_measure <| measure.restrict_mono_ae hst
 
 theorem integrable_on.congr_set_ae (h : integrable_on f t μ) (hst : s =ᵐ[μ] t) : integrable_on f s μ :=
   h.mono_set_ae hst.le
@@ -125,7 +125,7 @@ theorem integrable_on.congr_fun (h : integrable_on f s μ) (hst : eq_on f g s) (
   h.congr_fun' ((ae_restrict_iff' hs).2 (eventually_of_forall hst))
 
 theorem integrable.integrable_on (h : integrable f μ) : integrable_on f s μ :=
-  h.mono_measure $ measure.restrict_le_self
+  h.mono_measure <| measure.restrict_le_self
 
 theorem integrable.integrable_on' (h : integrable f (μ.restrict s)) : integrable_on f s μ :=
   h
@@ -135,24 +135,24 @@ theorem integrable_on.restrict (h : integrable_on f s μ) (hs : MeasurableSet s)
   exact h.mono_set (inter_subset_left _ _)
 
 theorem integrable_on.left_of_union (h : integrable_on f (s ∪ t) μ) : integrable_on f s μ :=
-  h.mono_set $ subset_union_left _ _
+  h.mono_set <| subset_union_left _ _
 
 theorem integrable_on.right_of_union (h : integrable_on f (s ∪ t) μ) : integrable_on f t μ :=
-  h.mono_set $ subset_union_right _ _
+  h.mono_set <| subset_union_right _ _
 
 theorem integrable_on.union (hs : integrable_on f s μ) (ht : integrable_on f t μ) : integrable_on f (s ∪ t) μ :=
-  (hs.add_measure ht).mono_measure $ measure.restrict_union_le _ _
+  (hs.add_measure ht).mono_measure <| measure.restrict_union_le _ _
 
 @[simp]
 theorem integrable_on_union : integrable_on f (s ∪ t) μ ↔ integrable_on f s μ ∧ integrable_on f t μ :=
   ⟨fun h => ⟨h.left_of_union, h.right_of_union⟩, fun h => h.1.union h.2⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 @[simp]
 theorem integrable_on_singleton_iff {x : α} [MeasurableSingletonClass α] :
     integrable_on f {x} μ ↔ f x = 0 ∨ μ {x} < ∞ := by
   have : f =ᵐ[μ.restrict {x}] fun y => f x := by
-    filter_upwards [ae_restrict_mem (measurable_set_singleton x)]
-    intro a ha
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     simp only [mem_singleton_iff.1 ha]
   rw [integrable_on, integrable_congr this, integrable_const_iff]
   simp
@@ -245,7 +245,7 @@ variable {l l' : Filter α}
 
 protected theorem integrable_at_filter.eventually (h : integrable_at_filter f l μ) :
     ∀ᶠ s in l.lift' powerset, integrable_on f s μ := by
-  refine' (eventually_lift'_powerset' $ fun s t hst ht => _).2 h
+  refine' (eventually_lift'_powerset' fun s t hst ht => _).2 h
   exact ht.mono_set hst
 
 theorem integrable_at_filter.filter_mono (hl : l ≤ l') (hl' : integrable_at_filter f l' μ) :
@@ -267,7 +267,7 @@ theorem integrable_at_filter.inf_ae_iff {l : Filter α} :
   refine' ⟨t, ht, _⟩
   refine' hf.integrable.mono_measure fun v hv => _
   simp only [measure.restrict_apply hv]
-  refine' measure_mono_ae (mem_of_superset hu $ fun x hx => _)
+  refine' measure_mono_ae ((mem_of_superset hu) fun x hx => _)
   exact fun ⟨hv, ht⟩ => ⟨hv, ⟨ht, hx⟩⟩
 
 alias integrable_at_filter.inf_ae_iff ↔ MeasureTheory.IntegrableAtFilter.of_inf_ae _
@@ -351,7 +351,7 @@ locally finite measure. -/
 theorem ContinuousOn.integrable_on_compact [TopologicalSpace α] [OpensMeasurableSpace α] [BorelSpace E] [T2Space α]
     {μ : Measureₓ α} [is_locally_finite_measure μ] {s : Set α} (hs : IsCompact s) {f : α → E} (hf : ContinuousOn f s) :
     integrable_on f s μ :=
-  hs.integrable_on_of_nhds_within $ fun x hx => hf.integrable_at_nhds_within hs.measurable_set hx
+  hs.integrable_on_of_nhds_within fun x hx => hf.integrable_at_nhds_within hs.measurable_set hx
 
 theorem ContinuousOn.integrable_on_Icc [BorelSpace E] [Preorderₓ β] [TopologicalSpace β] [T2Space β] [CompactIccSpace β]
     [MeasurableSpace β] [OpensMeasurableSpace β] {μ : Measureₓ β} [is_locally_finite_measure μ] {a b : β} {f : β → E}
@@ -399,7 +399,7 @@ theorem Continuous.integrable_on_interval_oc [BorelSpace E] [ConditionallyComple
 /-- A continuous function with compact closure of the support is integrable on the whole space. -/
 theorem Continuous.integrable_of_compact_closure_support [TopologicalSpace α] [OpensMeasurableSpace α] [T2Space α]
     [BorelSpace E] {μ : Measureₓ α} [is_locally_finite_measure μ] {f : α → E} (hf : Continuous f)
-    (hfc : IsCompact (Closure $ support f)) : integrable f μ := by
+    (hfc : IsCompact (Closure <| support f)) : integrable f μ := by
   rw [← indicator_eq_self.2 (@subset_closure _ _ (support f)),
     integrable_indicator_iff is_closed_closure.measurable_set]
   · exact hf.integrable_on_compact hfc
@@ -411,13 +411,13 @@ section
 
 variable [TopologicalSpace α] [OpensMeasurableSpace α] {μ : Measureₓ α} {s t : Set α} {f g : α → ℝ}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem MeasureTheory.IntegrableOn.mul_continuous_on_of_subset (hf : integrable_on f s μ) (hg : ContinuousOn g t)
     (hs : MeasurableSet s) (ht : IsCompact t) (hst : s ⊆ t) : integrable_on (fun x => f x * g x) s μ := by
   rcases IsCompact.exists_bound_of_continuous_on ht hg with ⟨C, hC⟩
   rw [integrable_on, ← mem_ℒp_one_iff_integrable] at hf⊢
   have : ∀ᵐ x ∂μ.restrict s, ∥f x * g x∥ ≤ C * ∥f x∥ := by
-    filter_upwards [ae_restrict_mem hs]
-    intro x hx
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     rw [Real.norm_eq_abs, abs_mul, mul_comm, Real.norm_eq_abs]
     apply mul_le_mul_of_nonneg_right (hC x (hst hx)) (abs_nonneg _)
   exact mem_ℒp.of_le_mul hf (hf.ae_measurable.mul ((hg.mono hst).AeMeasurable hs)) this
@@ -457,7 +457,7 @@ theorem MonotoneOn.integrable_on_compact (hmono : MonotoneOn f s) : integrable_o
   exact
     integrable.mono' (continuous_const.integrable_on_compact hs)
       (ae_measurable_restrict_of_monotone_on hs.measurable_set hmono)
-      ((ae_restrict_iff' hs.measurable_set).mpr $ ae_of_all _ $ fun y hy => hC (f y) (mem_image_of_mem f hy))
+      ((ae_restrict_iff' hs.measurable_set).mpr <| (ae_of_all _) fun y hy => hC (f y) (mem_image_of_mem f hy))
 
 theorem AntitoneOn.integrable_on_compact (hanti : AntitoneOn f s) : integrable_on f s μ :=
   @MonotoneOn.integrable_on_compact α (OrderDual E) _ _ ‹_› _ _ ‹_› _ _ _ _ ‹_› _ _ _ hs _ hanti

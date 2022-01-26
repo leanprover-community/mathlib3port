@@ -181,14 +181,14 @@ theorem pseudo_apply_mk {P Q : C} (f : P ⟶ Q) (a : over P) : f (⟦a⟧) = ⟦
     with each morphism. Sadly, this is not a definitional equality, but at least it is
     true. -/
 theorem comp_apply {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) (a : P) : (f ≫ g) a = g (f a) :=
-  Quotientₓ.induction_on a $ fun x =>
-    Quotientₓ.sound $ by
+  (Quotientₓ.induction_on a) fun x =>
+    Quotientₓ.sound <| by
       unfold app
       rw [← category.assoc, over.coe_hom]
 
 /-- Composition of functions on pseudoelements is composition of morphisms. -/
 theorem comp_comp {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) : g ∘ f = f ≫ g :=
-  funext $ fun x => (comp_apply _ _ _).symm
+  funext fun x => (comp_apply _ _ _).symm
 
 section Zero
 
@@ -218,7 +218,7 @@ theorem pseudo_zero_aux {P : C} (Q : C) (f : over P) : f ≈ (0 : Q ⟶ P) ↔ f
 end
 
 theorem zero_eq_zero' {P Q R : C} : ⟦((0 : Q ⟶ P) : over P)⟧ = ⟦((0 : R ⟶ P) : over P)⟧ :=
-  Quotientₓ.sound $ (pseudo_zero_aux R _).2 rfl
+  Quotientₓ.sound <| (pseudo_zero_aux R _).2 rfl
 
 /-- The zero pseudoelement is the class of a zero morphism -/
 def pseudo_zero {P : C} : P :=
@@ -261,7 +261,7 @@ theorem apply_zero {P Q : C} (f : P ⟶ Q) : f 0 = 0 := by
 /-- The zero morphism maps every pseudoelement to 0. -/
 @[simp]
 theorem zero_apply {P : C} (Q : C) (a : P) : (0 : P ⟶ Q) a = 0 :=
-  Quotientₓ.induction_on a $ fun a' => by
+  (Quotientₓ.induction_on a) fun a' => by
     rw [pseudo_zero_def, pseudo_apply_mk]
     simp
 
@@ -283,14 +283,14 @@ theorem eq_zero_iff {P Q : C} (f : P ⟶ Q) : f = 0 ↔ ∀ a, f a = 0 :=
 
 /-- A monomorphism is injective on pseudoelements. -/
 theorem pseudo_injective_of_mono {P Q : C} (f : P ⟶ Q) [mono f] : Function.Injective f := fun abar abar' =>
-  Quotientₓ.induction_on₂ abar abar' $ fun a a' ha =>
-    Quotientₓ.sound $
+  (Quotientₓ.induction_on₂ abar abar') fun a a' ha =>
+    Quotientₓ.sound <|
       have : ⟦(a.hom ≫ f : over Q)⟧ = ⟦a'.hom ≫ f⟧ := by
         convert ha
       match Quotientₓ.exact this with
       | ⟨R, p, q, ep, Eq, comm⟩ =>
         ⟨R, p, q, ep, Eq,
-          (cancel_mono f).1 $ by
+          (cancel_mono f).1 <| by
             simp only [category.assoc]
             exact comm⟩
 
@@ -301,16 +301,16 @@ theorem zero_of_map_zero {P Q : C} (f : P ⟶ Q) : Function.Injective f → ∀ 
 
 /-- A morphism that only maps the zero pseudoelement to zero is a monomorphism. -/
 theorem mono_of_zero_of_map_zero {P Q : C} (f : P ⟶ Q) : (∀ a, f a = 0 → a = 0) → mono f := fun h =>
-  (mono_iff_cancel_zero _).2 $ fun R g hg =>
-    (pseudo_zero_iff (g : over P)).1 $ h _ $ show f g = 0 from (pseudo_zero_iff (g ≫ f : over Q)).2 hg
+  (mono_iff_cancel_zero _).2 fun R g hg =>
+    (pseudo_zero_iff (g : over P)).1 <| h _ <| show f g = 0 from (pseudo_zero_iff (g ≫ f : over Q)).2 hg
 
 section
 
 /-- An epimorphism is surjective on pseudoelements. -/
 theorem pseudo_surjective_of_epi {P Q : C} (f : P ⟶ Q) [epi f] : Function.Surjective f := fun qbar =>
-  Quotientₓ.induction_on qbar $ fun q =>
+  (Quotientₓ.induction_on qbar) fun q =>
     ⟨((pullback.fst : pullback f q.hom ⟶ P) : over P),
-      Quotientₓ.sound $
+      Quotientₓ.sound <|
         ⟨pullback f q.hom, 𝟙 (pullback f q.hom), pullback.snd, by
           infer_instance, by
           infer_instance, by
@@ -329,7 +329,7 @@ theorem epi_of_pseudo_surjective {P Q : C} (f : P ⟶ Q) : Function.Surjective f
         exact hpbar
       match Quotientₓ.exact this with
       | ⟨R, x, y, ex, ey, comm⟩ =>
-        @epi_of_epi_fac _ _ _ _ _ (x ≫ p.hom) f y ey $ by
+        @epi_of_epi_fac _ _ _ _ _ (x ≫ p.hom) f y ey <| by
           dsimp  at comm
           rw [category.assoc, comm]
           apply category.comp_id
@@ -342,7 +342,7 @@ theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} [exact f g
   ⟨fun a => by
     rw [← comp_apply, exact.w]
     exact zero_apply _ _, fun b' =>
-    Quotientₓ.induction_on b' $ fun b hb => by
+    (Quotientₓ.induction_on b') fun b hb => by
       have hb' : b.hom ≫ g = 0 := (pseudo_zero_iff _).1 hb
       obtain ⟨c, hc⟩ := kernel_fork.is_limit.lift' (is_limit_image f g) _ hb'
       use (pullback.fst : pullback (images.factor_thru_image f) c ⟶ P)
@@ -369,7 +369,7 @@ section
 theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
     ((∀ a, g (f a) = 0) ∧ ∀ b, g b = 0 → ∃ a, f a = b) → exact f g := fun ⟨h₁, h₂⟩ =>
   (abelian.exact_iff _ _).2
-    ⟨zero_morphism_ext _ $ fun a => by
+    ⟨(zero_morphism_ext _) fun a => by
         rw [comp_apply, h₁ a],
       by
       have : g (kernel.ι g) = 0 := apply_eq_zero_of_comp_eq_zero _ _ (kernel.condition _)
@@ -395,7 +395,7 @@ end
     morphisms `g`, if `g y = 0` then `g z = g x`. -/
 theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
     f x = f y → ∃ z, f z = 0 ∧ ∀ R : C g : P ⟶ R, (g : P ⟶ R) y = 0 → g z = g x :=
-  Quotientₓ.induction_on₂ x y $ fun a a' h =>
+  (Quotientₓ.induction_on₂ x y) fun a a' h =>
     match Quotientₓ.exact h with
     | ⟨R, p, q, ep, Eq, comm⟩ =>
       let a'' : R ⟶ P := p ≫ a.hom - q ≫ a'.hom
@@ -424,7 +424,7 @@ variable [limits.has_pullbacks C]
     a pen-and-paper proof of this fact, so naturally I was not able to formalize the proof. -/
 theorem pseudo_pullback {P Q R : C} {f : P ⟶ R} {g : Q ⟶ R} {p : P} {q : Q} :
     f p = g q → ∃ s, (pullback.fst : pullback f g ⟶ P) s = p ∧ (pullback.snd : pullback f g ⟶ Q) s = q :=
-  Quotientₓ.induction_on₂ p q $ fun x y h => by
+  (Quotientₓ.induction_on₂ p q) fun x y h => by
     obtain ⟨Z, a, b, ea, eb, comm⟩ := Quotientₓ.exact h
     obtain ⟨l, hl₁, hl₂⟩ :=
       @pullback.lift' _ _ _ _ _ _ f g _ (a ≫ x.hom) (b ≫ y.hom)

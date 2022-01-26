@@ -67,11 +67,11 @@ theorem jacobson_top : jacobson (⊤ : Ideal R) = ⊤ :=
 @[simp]
 theorem jacobson_eq_top_iff : jacobson I = ⊤ ↔ I = ⊤ :=
   ⟨fun H =>
-    Classical.by_contradiction $ fun hi =>
+    Classical.by_contradiction fun hi =>
       let ⟨M, hm, him⟩ := exists_le_maximal I hi
-      lt_top_iff_ne_top.1 (lt_of_le_of_ltₓ (show jacobson I ≤ M from Inf_le ⟨him, hm⟩) $ lt_top_iff_ne_top.2 hm.ne_top)
+      lt_top_iff_ne_top.1 (lt_of_le_of_ltₓ (show jacobson I ≤ M from Inf_le ⟨him, hm⟩) <| lt_top_iff_ne_top.2 hm.ne_top)
         H,
-    fun H => eq_top_iff.2 $ le_Inf $ fun J ⟨hij, hj⟩ => H ▸ hij⟩
+    fun H => eq_top_iff.2 <| le_Inf fun J ⟨hij, hj⟩ => H ▸ hij⟩
 
 theorem jacobson_eq_bot : jacobson I = ⊥ → I = ⊥ := fun h => eq_bot_iff.mpr (h ▸ le_jacobson)
 
@@ -92,19 +92,19 @@ theorem mem_jacobson_iff {x : R} : x ∈ jacobson I ↔ ∀ y, ∃ z, x * y * z 
             exact I.neg_mem hpi⟩)
       fun hxy : I⊔span {x * y + 1} ≠ ⊤ =>
       let ⟨M, hm1, hm2⟩ := exists_le_maximal _ hxy
-      suffices x ∉ M from (this $ mem_Inf.1 hx ⟨le_transₓ le_sup_left hm2, hm1⟩).elim
+      suffices x ∉ M from (this <| mem_Inf.1 hx ⟨le_transₓ le_sup_left hm2, hm1⟩).elim
       fun hxm =>
-      hm1.1.1 $
-        (eq_top_iff_one _).2 $
+      hm1.1.1 <|
+        (eq_top_iff_one _).2 <|
           add_sub_cancel' (x * y) 1 ▸
-            M.sub_mem (le_sup_right.trans hm2 $ mem_span_singleton.2 dvd_rfl) (M.mul_mem_right _ hxm),
+            M.sub_mem (le_sup_right.trans hm2 <| mem_span_singleton.2 dvd_rfl) (M.mul_mem_right _ hxm),
     fun hx =>
-    mem_Inf.2 $ fun M ⟨him, hm⟩ =>
-      Classical.by_contradiction $ fun hxm =>
+    mem_Inf.2 fun M ⟨him, hm⟩ =>
+      Classical.by_contradiction fun hxm =>
         let ⟨y, hy⟩ := hm.exists_inv hxm
         let ⟨z, hz⟩ := hx (-y)
-        hm.1.1 $
-          (eq_top_iff_one _).2 $
+        hm.1.1 <|
+          (eq_top_iff_one _).2 <|
             sub_sub_cancel (x * -y * z + z) 1 ▸
               M.sub_mem
                 (by
@@ -319,12 +319,12 @@ theorem is_local_iff {I : Ideal R} : is_local I ↔ is_maximal (jacobson I) :=
 
 theorem is_local_of_is_maximal_radical {I : Ideal R} (hi : is_maximal (radical I)) : is_local I :=
   ⟨have : radical I = jacobson I :=
-      le_antisymmₓ (le_Inf $ fun M ⟨him, hm⟩ => hm.is_prime.radical_le_iff.2 him) (Inf_le ⟨le_radical, hi⟩)
+      le_antisymmₓ (le_Inf fun M ⟨him, hm⟩ => hm.is_prime.radical_le_iff.2 him) (Inf_le ⟨le_radical, hi⟩)
     show is_maximal (jacobson I) from this ▸ hi⟩
 
 theorem is_local.le_jacobson {I J : Ideal R} (hi : is_local I) (hij : I ≤ J) (hj : J ≠ ⊤) : J ≤ jacobson I :=
   let ⟨M, hm, hjm⟩ := exists_le_maximal J hj
-  le_transₓ hjm $ le_of_eqₓ $ Eq.symm $ hi.1.eq_of_le hm.1.1 $ Inf_le ⟨le_transₓ hij hjm, hm⟩
+  le_transₓ hjm <| le_of_eqₓ <| Eq.symm <| hi.1.eq_of_le hm.1.1 <| Inf_le ⟨le_transₓ hij hjm, hm⟩
 
 theorem is_local.mem_jacobson_or_exists_inv {I : Ideal R} (hi : is_local I) (x : R) :
     x ∈ jacobson I ∨ ∃ y, y * x - 1 ∈ I :=
@@ -336,14 +336,14 @@ theorem is_local.mem_jacobson_or_exists_inv {I : Ideal R} (hi : is_local I) (x :
         ⟨r, by
           rw [← hpq, mul_comm, ← hr, ← neg_sub, add_sub_cancel] <;> exact I.neg_mem hpi⟩)
     fun h : I⊔span {x} ≠ ⊤ =>
-    Or.inl $ le_transₓ le_sup_right (hi.le_jacobson le_sup_left h) $ mem_span_singleton.2 $ dvd_refl x
+    Or.inl <| le_transₓ le_sup_right (hi.le_jacobson le_sup_left h) <| mem_span_singleton.2 <| dvd_refl x
 
 end IsLocal
 
 theorem is_primary_of_is_maximal_radical {I : Ideal R} (hi : is_maximal (radical I)) : is_primary I :=
   have : radical I = jacobson I :=
-    le_antisymmₓ (le_Inf $ fun M ⟨him, hm⟩ => hm.is_prime.radical_le_iff.2 him) (Inf_le ⟨le_radical, hi⟩)
-  ⟨ne_top_of_lt $ lt_of_le_of_ltₓ le_radical (lt_top_iff_ne_top.2 hi.1.1), fun x y hxy =>
+    le_antisymmₓ (le_Inf fun M ⟨him, hm⟩ => hm.is_prime.radical_le_iff.2 him) (Inf_le ⟨le_radical, hi⟩)
+  ⟨ne_top_of_lt <| lt_of_le_of_ltₓ le_radical (lt_top_iff_ne_top.2 hi.1.1), fun x y hxy =>
     ((is_local_of_is_maximal_radical hi).mem_jacobson_or_exists_inv y).symm.imp
       (fun ⟨z, hz⟩ => by
         rw [← mul_oneₓ x, ← sub_sub_cancel (z * y) 1, mul_sub, mul_left_commₓ] <;>

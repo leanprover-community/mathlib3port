@@ -22,13 +22,13 @@ namespace Real
 
 variable {x : ℝ}
 
-theorem has_strict_deriv_at_log_of_pos (hx : 0 < x) : HasStrictDerivAt log (x⁻¹) x := by
-  have : HasStrictDerivAt log ((exp $ log x)⁻¹) x :=
-    (has_strict_deriv_at_exp $ log x).of_local_left_inverse (continuous_at_log hx.ne') (ne_of_gtₓ $ exp_pos _) $
+theorem has_strict_deriv_at_log_of_pos (hx : 0 < x) : HasStrictDerivAt log x⁻¹ x := by
+  have : HasStrictDerivAt log (exp <| log x)⁻¹ x :=
+    (has_strict_deriv_at_exp <| log x).of_local_left_inverse (continuous_at_log hx.ne') (ne_of_gtₓ <| exp_pos _) <|
       eventually.mono (lt_mem_nhds hx) @exp_log
   rwa [exp_log hx] at this
 
-theorem has_strict_deriv_at_log (hx : x ≠ 0) : HasStrictDerivAt log (x⁻¹) x := by
+theorem has_strict_deriv_at_log (hx : x ≠ 0) : HasStrictDerivAt log x⁻¹ x := by
   cases' hx.lt_or_lt with hx hx
   · convert (has_strict_deriv_at_log_of_pos (neg_pos.mpr hx)).comp x (has_strict_deriv_at_neg x)
     · ext y
@@ -40,7 +40,7 @@ theorem has_strict_deriv_at_log (hx : x ≠ 0) : HasStrictDerivAt log (x⁻¹) x
   · exact has_strict_deriv_at_log_of_pos hx
     
 
-theorem has_deriv_at_log (hx : x ≠ 0) : HasDerivAt log (x⁻¹) x :=
+theorem has_deriv_at_log (hx : x ≠ 0) : HasDerivAt log x⁻¹ x :=
   (has_strict_deriv_at_log hx).HasDerivAt
 
 theorem differentiable_at_log (hx : x ≠ 0) : DifferentiableAt ℝ log x :=
@@ -59,7 +59,7 @@ theorem deriv_log (x : ℝ) : deriv log x = x⁻¹ :=
   else (has_deriv_at_log hx).deriv
 
 @[simp]
-theorem deriv_log' : deriv log = HasInv.inv :=
+theorem deriv_log' : deriv log = Inv.inv :=
   funext deriv_log
 
 theorem times_cont_diff_on_log {n : WithTop ℕ} : TimesContDiffOn ℝ n log ({0}ᶜ) := by
@@ -70,7 +70,7 @@ theorem times_cont_diff_on_log {n : WithTop ℕ} : TimesContDiffOn ℝ n log ({0
 
 theorem times_cont_diff_at_log {n : WithTop ℕ} : TimesContDiffAt ℝ n log x ↔ x ≠ 0 :=
   ⟨fun h => continuous_at_log_iff.1 h.continuous_at, fun hx =>
-    (times_cont_diff_on_log x hx).TimesContDiffAt $ IsOpen.mem_nhds is_open_compl_singleton hx⟩
+    (times_cont_diff_on_log x hx).TimesContDiffAt <| IsOpen.mem_nhds is_open_compl_singleton hx⟩
 
 end Real
 
@@ -111,14 +111,14 @@ section fderiv
 variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {x : E} {f' : E →L[ℝ] ℝ} {s : Set E}
 
 theorem HasFderivWithinAt.log (hf : HasFderivWithinAt f f' s x) (hx : f x ≠ 0) :
-    HasFderivWithinAt (fun x => log (f x)) (f x⁻¹ • f') s x :=
+    HasFderivWithinAt (fun x => log (f x)) ((f x)⁻¹ • f') s x :=
   (has_deriv_at_log hx).comp_has_fderiv_within_at x hf
 
-theorem HasFderivAt.log (hf : HasFderivAt f f' x) (hx : f x ≠ 0) : HasFderivAt (fun x => log (f x)) (f x⁻¹ • f') x :=
+theorem HasFderivAt.log (hf : HasFderivAt f f' x) (hx : f x ≠ 0) : HasFderivAt (fun x => log (f x)) ((f x)⁻¹ • f') x :=
   (has_deriv_at_log hx).comp_has_fderiv_at x hf
 
 theorem HasStrictFderivAt.log (hf : HasStrictFderivAt f f' x) (hx : f x ≠ 0) :
-    HasStrictFderivAt (fun x => log (f x)) (f x⁻¹ • f') x :=
+    HasStrictFderivAt (fun x => log (f x)) ((f x)⁻¹ • f') x :=
   (has_strict_deriv_at_log hx).comp_has_strict_fderiv_at x hf
 
 theorem DifferentiableWithinAt.log (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) :
@@ -141,7 +141,7 @@ theorem TimesContDiffOn.log {n} (hf : TimesContDiffOn ℝ n f s) (hs : ∀, ∀ 
     TimesContDiffOn ℝ n (fun x => log (f x)) s := fun x hx => (hf x hx).log (hs x hx)
 
 theorem TimesContDiff.log {n} (hf : TimesContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : TimesContDiff ℝ n fun x => log (f x) :=
-  times_cont_diff_iff_times_cont_diff_at.2 $ fun x => hf.times_cont_diff_at.log (h x)
+  times_cont_diff_iff_times_cont_diff_at.2 fun x => hf.times_cont_diff_at.log (h x)
 
 theorem DifferentiableOn.log (hf : DifferentiableOn ℝ f s) (hx : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
     DifferentiableOn ℝ (fun x => log (f x)) s := fun x h => (hf x h).log (hx x h)
@@ -151,12 +151,12 @@ theorem Differentiable.log (hf : Differentiable ℝ f) (hx : ∀ x, f x ≠ 0) :
   fun x => (hf x).log (hx x)
 
 theorem fderivWithin.log (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) (hxs : UniqueDiffWithinAt ℝ s x) :
-    fderivWithin ℝ (fun x => log (f x)) s x = f x⁻¹ • fderivWithin ℝ f s x :=
+    fderivWithin ℝ (fun x => log (f x)) s x = (f x)⁻¹ • fderivWithin ℝ f s x :=
   (hf.has_fderiv_within_at.log hx).fderivWithin hxs
 
 @[simp]
 theorem fderiv.log (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
-    fderiv ℝ (fun x => log (f x)) x = f x⁻¹ • fderiv ℝ f x :=
+    fderiv ℝ (fun x => log (f x)) x = (f x)⁻¹ • fderiv ℝ f x :=
   (hf.has_fderiv_at.log hx).fderiv
 
 end fderiv
@@ -182,8 +182,8 @@ open_locale BigOperators
 where the main point of the bound is that it tends to `0`. The goal is to deduce the series
 expansion of the logarithm, in `has_sum_pow_div_log_of_abs_lt_1`.
 -/
-theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
-    |(∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)| ≤ |x| ^ (n + 1) / (1 - |x|) := by
+theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
+    abs ((∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)) ≤ abs x ^ (n + 1) / (1 - abs x) := by
   let F : ℝ → ℝ := fun x => (∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)
   have A : ∀, ∀ y ∈ Ioo (-1 : ℝ) 1, ∀, deriv F y = -(y ^ n) / (1 - y) := by
     intro y hy
@@ -193,23 +193,23 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
     field_simp [F, this, ← geom_sum_def, geom_sum_eq (ne_of_ltₓ hy.2), sub_ne_zero_of_ne (ne_of_gtₓ hy.2),
       sub_ne_zero_of_ne (ne_of_ltₓ hy.2)]
     ring
-  have B : ∀, ∀ y ∈ Icc (-|x|) |x|, ∀, |deriv F y| ≤ |x| ^ n / (1 - |x|) := by
+  have B : ∀, ∀ y ∈ Icc (-abs x) (abs x), ∀, abs (deriv F y) ≤ abs x ^ n / (1 - abs x) := by
     intro y hy
     have : y ∈ Ioo (-(1 : ℝ)) 1 := ⟨lt_of_lt_of_leₓ (neg_lt_neg h) hy.1, lt_of_le_of_ltₓ hy.2 h⟩
-    calc |deriv F y| = |-(y ^ n) / (1 - y)| := by
-        rw [A y this]_ ≤ |x| ^ n / (1 - |x|) := by
-        have : |y| ≤ |x| := abs_le.2 hy
-        have : 0 < 1 - |x| := by
+    calc abs (deriv F y) = abs (-(y ^ n) / (1 - y)) := by
+        rw [A y this]_ ≤ abs x ^ n / (1 - abs x) := by
+        have : abs y ≤ abs x := abs_le.2 hy
+        have : 0 < 1 - abs x := by
           linarith
-        have : 1 - |x| ≤ |1 - y| :=
+        have : 1 - abs x ≤ abs (1 - y) :=
           le_transₓ
             (by
               linarith [hy.2])
             (le_abs_self _)
         simp only [← pow_abs, abs_div, abs_neg]
         apply_rules [div_le_div, pow_nonneg, abs_nonneg, pow_le_pow_of_le_left]
-  have C : ∥F x - F 0∥ ≤ |x| ^ n / (1 - |x|) * ∥x - 0∥ := by
-    have : ∀, ∀ y ∈ Icc (-|x|) |x|, ∀, DifferentiableAt ℝ F y := by
+  have C : ∥F x - F 0∥ ≤ abs x ^ n / (1 - abs x) * ∥x - 0∥ := by
+    have : ∀, ∀ y ∈ Icc (-abs x) (abs x), ∀, DifferentiableAt ℝ F y := by
       intro y hy
       have : 1 - y ≠ 0 := sub_ne_zero_of_ne (ne_of_gtₓ (lt_of_le_of_ltₓ hy.2 h))
       simp [F, this]
@@ -221,14 +221,14 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
   simpa [F, norm_eq_abs, div_mul_eq_mul_div, pow_succ'ₓ] using C
 
 /-- Power series expansion of the logarithm around `1`. -/
-theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
+theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : abs x < 1) :
     HasSum (fun n : ℕ => x ^ (n + 1) / (n + 1)) (-log (1 - x)) := by
   rw [Summable.has_sum_iff_tendsto_nat]
   show tendsto (fun n : ℕ => ∑ i : ℕ in range n, x ^ (i + 1) / (i + 1)) at_top (𝓝 (-log (1 - x)))
   · rw [tendsto_iff_norm_tendsto_zero]
     simp only [norm_eq_abs, sub_neg_eq_add]
     refine' squeeze_zero (fun n => abs_nonneg _) (abs_log_sub_add_sum_range_le h) _
-    suffices tendsto (fun t : ℕ => |x| ^ (t + 1) / (1 - |x|)) at_top (𝓝 (|x| * 0 / (1 - |x|))) by
+    suffices tendsto (fun t : ℕ => abs x ^ (t + 1) / (1 - abs x)) at_top (𝓝 (abs x * 0 / (1 - abs x))) by
       simpa
     simp only [pow_succₓ]
     refine' (tendsto_const_nhds.mul _).div_const
@@ -236,11 +236,11 @@ theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
     
   show Summable fun n : ℕ => x ^ (n + 1) / (n + 1)
   · refine' summable_of_norm_bounded _ (summable_geometric_of_lt_1 (abs_nonneg _) h) fun i => _
-    calc ∥x ^ (i + 1) / (i + 1)∥ = |x| ^ (i + 1) / (i + 1) := by
+    calc ∥x ^ (i + 1) / (i + 1)∥ = abs x ^ (i + 1) / (i + 1) := by
         have : (0 : ℝ) ≤ i + 1 := le_of_ltₓ (Nat.cast_add_one_pos i)
-        rw [norm_eq_abs, abs_div, ← pow_abs, abs_of_nonneg this]_ ≤ |x| ^ (i + 1) / (0 + 1) := by
+        rw [norm_eq_abs, abs_div, ← pow_abs, abs_of_nonneg this]_ ≤ abs x ^ (i + 1) / (0 + 1) := by
         apply_rules [div_le_div_of_le_left, pow_nonneg, abs_nonneg, add_le_add_right, i.cast_nonneg]
-        norm_num _ ≤ |x| ^ i := by
+        norm_num _ ≤ abs x ^ i := by
         simpa [pow_succ'ₓ] using mul_le_of_le_one_right (pow_nonneg (abs_nonneg x) i) (le_of_ltₓ h)
     
 

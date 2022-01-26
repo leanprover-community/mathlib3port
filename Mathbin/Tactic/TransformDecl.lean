@@ -8,7 +8,7 @@ namespace Tactic
    `tt`; if `p` is `none`, the copied attribute is made persistent iff it is persistent on `src`  -/
 unsafe def copy_attribute' (attr_name : Name) (src : Name) (tgt : Name) (p : Option Bool := none) : tactic Unit := do
   get_decl tgt <|> throwError "unknown declaration {← tgt}"
-  mwhen (succeeds (has_attribute attr_name src)) $ do
+  mwhen (succeeds (has_attribute attr_name src)) <| do
       let (p', prio) ← has_attribute attr_name src
       let p := p.get_or_else p'
       let s ← try_or_report_error (set_basic_attribute attr_name tgt p prio)
@@ -27,7 +27,7 @@ open Expr
 
 /-- Auxilliary function for `additive_test`. The bool argument *only* matters when applied
 to exactly a constant. -/
-unsafe def additive_test_aux (f : Name → Option Name) (ignore : name_map $ List ℕ) : Bool → expr → Bool
+unsafe def additive_test_aux (f : Name → Option Name) (ignore : name_map <| List ℕ) : Bool → expr → Bool
   | b, var n => tt
   | b, sort l => tt
   | b, const n ls => b || (f n).isSome
@@ -53,7 +53,8 @@ e.g. `ℕ` or `ℝ × α`.
 We ignore all arguments specified in the `name_map` `ignore`.
 If `replace_all` is `tt` the test always return `tt`.
 -/
-unsafe def additive_test (f : Name → Option Name) (replace_all : Bool) (ignore : name_map $ List ℕ) (e : expr) : Bool :=
+unsafe def additive_test (f : Name → Option Name) (replace_all : Bool) (ignore : name_map <| List ℕ) (e : expr) :
+    Bool :=
   if replace_all then tt else additive_test_aux f ignore ff e
 
 /-- transform the declaration `src` and all declarations `pre._proof_i` occurring in `src`
@@ -62,7 +63,8 @@ using the dictionary `f`.
 `pre` is the declaration that got the `@[to_additive]` attribute and `tgt_pre` is the target of this
 declaration. -/
 unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replace_all trace : Bool)
-    (relevant : name_map ℕ) (ignore reorder : name_map $ List ℕ) (pre tgt_pre : Name) : Name → command := fun src => do
+    (relevant : name_map ℕ) (ignore reorder : name_map <| List ℕ) (pre tgt_pre : Name) : Name → Tactic Unit :=
+  fun src => do
   let tt ← return (src = pre ∨ src.is_internal : Bool) |
     if (f src).isSome then skip
       else
@@ -74,13 +76,13 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
             src} to a different namespace."
   let env ← get_env
   let tgt := src.map_prefix fun n => if n = pre then some tgt_pre else none
-  let ff ← return $ env.contains tgt | skip
+  let ff ← return <| env.contains tgt | skip
   let decl ← get_decl src
   (decl.type.list_names_with_prefix pre).mfold () fun n _ => transform_decl_with_prefix_fun_aux n
   (decl.value.list_names_with_prefix pre).mfold () fun n _ => transform_decl_with_prefix_fun_aux n
   let decl := decl.update_with_fun env (Name.mapPrefix f) (additive_test f replace_all ignore) relevant reorder tgt
   let pp_decl ← pp decl
-  when trace $
+  when trace <|
       ← do
         dbg_trace "[to_additive] > generating
           {← pp_decl}"
@@ -91,20 +93,20 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
             {pp_decl}
             
             Nested error message:
-            ").toString $
+            ").toString <|
       do
       if env.is_protected src then add_protected_decl decl else add_decl decl
-      decorate_error "proof doesn't type-check. " $ type_check decl.value
+      decorate_error "proof doesn't type-check. " <| type_check decl.value
 
 /-- Make a new copy of a declaration,
 replacing fragments of the names of identifiers in the type and the body using the function `f`.
 This is used to implement `@[to_additive]`.
 -/
 unsafe def transform_decl_with_prefix_fun (f : Name → Option Name) (replace_all trace : Bool) (relevant : name_map ℕ)
-    (ignore reorder : name_map $ List ℕ) (src tgt : Name) (attrs : List Name) : command := do
+    (ignore reorder : name_map <| List ℕ) (src tgt : Name) (attrs : List Name) : Tactic Unit := do
   transform_decl_with_prefix_fun_aux f replace_all trace relevant ignore reorder src tgt src
   let ls ← get_eqn_lemmas_for tt src
-  ls.mmap' $ transform_decl_with_prefix_fun_aux f replace_all trace relevant ignore reorder src tgt
+  ls.mmap' <| transform_decl_with_prefix_fun_aux f replace_all trace relevant ignore reorder src tgt
   ls.mmap' fun src_eqn => do
       let tgt_eqn := src_eqn.map_prefix fun n => if n = src then some tgt else none
       attrs.mmap' fun n => copy_attribute' n src_eqn tgt_eqn
@@ -119,7 +121,7 @@ the body using the dictionary `dict`.
 This is used to implement `@[to_additive]`.
 -/
 unsafe def transform_decl_with_prefix_dict (dict : name_map Name) (replace_all trace : Bool) (relevant : name_map ℕ)
-    (ignore reorder : name_map $ List ℕ) (src tgt : Name) (attrs : List Name) : command :=
+    (ignore reorder : name_map <| List ℕ) (src tgt : Name) (attrs : List Name) : Tactic Unit :=
   transform_decl_with_prefix_fun dict.find replace_all trace relevant ignore reorder src tgt attrs
 
 end Tactic

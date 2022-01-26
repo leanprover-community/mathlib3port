@@ -53,7 +53,7 @@ private def mul_aux (a b : N ⋊[φ] G) : N ⋊[φ] G :=
 
 private def inv_aux (a : N ⋊[φ] G) : N ⋊[φ] G :=
   let i := a.2⁻¹
-  ⟨φ i (a.1⁻¹), i⟩
+  ⟨φ i a.1⁻¹, i⟩
 
 private theorem mul_assoc_aux (a b c : N ⋊[φ] G) : mul_aux (mul_aux a b) c = mul_aux a (mul_aux b c) := by
   simp [mul_aux, mul_assoc, MulEquiv.map_mul]
@@ -88,7 +88,7 @@ theorem one_right : (1 : N ⋊[φ] G).right = 1 :=
   rfl
 
 @[simp]
-theorem inv_left (a : N ⋊[φ] G) : a⁻¹.left = φ (a.right⁻¹) (a.left⁻¹) :=
+theorem inv_left (a : N ⋊[φ] G) : a⁻¹.left = φ a.right⁻¹ a.left⁻¹ :=
   rfl
 
 @[simp]
@@ -147,10 +147,10 @@ theorem inr_injective : Function.Injective (inr : G → N ⋊[φ] G) :=
 theorem inr_inj {g₁ g₂ : G} : (inr g₁ : N ⋊[φ] G) = inr g₂ ↔ g₁ = g₂ :=
   inr_injective.eq_iff
 
-theorem inl_aut (g : G) (n : N) : (inl (φ g n) : N ⋊[φ] G) = inr g * inl n * inr (g⁻¹) := by
+theorem inl_aut (g : G) (n : N) : (inl (φ g n) : N ⋊[φ] G) = inr g * inl n * inr g⁻¹ := by
   ext <;> simp
 
-theorem inl_aut_inv (g : G) (n : N) : (inl ((φ g⁻¹) n) : N ⋊[φ] G) = inr (g⁻¹) * inl n * inr g := by
+theorem inl_aut_inv (g : G) (n : N) : (inl ((φ g)⁻¹ n) : N ⋊[φ] G) = inr g⁻¹ * inl n * inr g := by
   rw [← MonoidHom.map_inv, inl_aut, inv_invₓ]
 
 @[simp]

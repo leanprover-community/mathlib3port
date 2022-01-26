@@ -131,15 +131,15 @@ theorem to_affine_map_inj {e e' : P₁ ≃ᵃ[k] P₂} : e.to_affine_map = e'.to
 
 @[ext]
 theorem ext {e e' : P₁ ≃ᵃ[k] P₂} (h : ∀ x, e x = e' x) : e = e' :=
-  to_affine_map_injective $ AffineMap.ext h
+  to_affine_map_injective <| AffineMap.ext h
 
-theorem coe_fn_injective : @injective (P₁ ≃ᵃ[k] P₂) (P₁ → P₂) coeFn := fun e e' H => ext $ congr_funₓ H
+theorem coe_fn_injective : @injective (P₁ ≃ᵃ[k] P₂) (P₁ → P₂) coeFn := fun e e' H => ext <| congr_funₓ H
 
 @[simp, norm_cast]
 theorem coe_fn_inj {e e' : P₁ ≃ᵃ[k] P₂} : (e : P₁ → P₂) = e' ↔ e = e' :=
   coe_fn_injective.eq_iff
 
-theorem to_equiv_injective : injective (to_equiv : (P₁ ≃ᵃ[k] P₂) → P₁ ≃ P₂) := fun e e' H => ext $ Equivₓ.ext_iff.1 H
+theorem to_equiv_injective : injective (to_equiv : (P₁ ≃ᵃ[k] P₂) → P₁ ≃ P₂) := fun e e' H => ext <| Equivₓ.ext_iff.1 H
 
 @[simp]
 theorem to_equiv_inj {e e' : P₁ ≃ᵃ[k] P₂} : e.to_equiv = e'.to_equiv ↔ e = e' :=
@@ -178,7 +178,7 @@ def symm (e : P₁ ≃ᵃ[k] P₂) : P₂ ≃ᵃ[k] P₁ where
   toEquiv := e.to_equiv.symm
   linear := e.linear.symm
   map_vadd' := fun v p =>
-    e.to_equiv.symm.apply_eq_iff_eq_symm_apply.2 $ by
+    e.to_equiv.symm.apply_eq_iff_eq_symm_apply.2 <| by
       simpa using (e.to_equiv.apply_symm_apply v).symm
 
 @[simp]
@@ -255,17 +255,17 @@ include V₄
 
 theorem trans_assoc (e₁ : P₁ ≃ᵃ[k] P₂) (e₂ : P₂ ≃ᵃ[k] P₃) (e₃ : P₃ ≃ᵃ[k] P₄) :
     (e₁.trans e₂).trans e₃ = e₁.trans (e₂.trans e₃) :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 
 omit V₃ V₄
 
 @[simp]
 theorem trans_refl (e : P₁ ≃ᵃ[k] P₂) : e.trans (refl k P₂) = e :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 
 @[simp]
 theorem refl_trans (e : P₁ ≃ᵃ[k] P₂) : (refl k P₁).trans e = e :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 
 @[simp]
 theorem self_trans_symm (e : P₁ ≃ᵃ[k] P₂) : e.trans e.symm = refl k P₁ :=
@@ -324,10 +324,10 @@ def equiv_units_affine_map : (P₁ ≃ᵃ[k] P₁) ≃* (P₁ →ᵃ[k] P₁)ˣ 
   invFun := fun u =>
     { toFun := (u : P₁ →ᵃ[k] P₁), invFun := (↑u⁻¹ : P₁ →ᵃ[k] P₁), left_inv := AffineMap.congr_fun u.inv_mul,
       right_inv := AffineMap.congr_fun u.mul_inv,
-      linear := LinearMap.GeneralLinearGroup.generalLinearEquiv _ _ $ Units.map AffineMap.linearHom u,
+      linear := LinearMap.GeneralLinearGroup.generalLinearEquiv _ _ <| Units.map AffineMap.linearHom u,
       map_vadd' := fun _ _ => (u : P₁ →ᵃ[k] P₁).map_vadd _ _ }
-  left_inv := fun e => AffineEquiv.ext $ fun x => rfl
-  right_inv := fun u => Units.ext $ AffineMap.ext $ fun x => rfl
+  left_inv := fun e => AffineEquiv.ext fun x => rfl
+  right_inv := fun u => Units.ext <| AffineMap.ext fun x => rfl
   map_mul' := fun e₁ e₂ => rfl
 
 variable (k)
@@ -375,7 +375,7 @@ include V
 /-- Fixing a point in affine space, homothety about this point gives a group homomorphism from (the
 centre of) the units of the scalars into the group of affine equivalences. -/
 def homothety_units_mul_hom (p : P) : (R)ˣ →* P ≃ᵃ[R] P :=
-  equiv_units_affine_map.symm.toMonoidHom.comp $ Units.map (AffineMap.homothetyHom p)
+  equiv_units_affine_map.symm.toMonoidHom.comp <| Units.map (AffineMap.homothetyHom p)
 
 @[simp]
 theorem coe_homothety_units_mul_hom_apply (p : P) (t : (R)ˣ) :
@@ -390,7 +390,7 @@ theorem coe_homothety_units_mul_hom_apply_symm (p : P) (t : (R)ˣ) :
 @[simp]
 theorem coe_homothety_units_mul_hom_eq_homothety_hom_coe (p : P) :
     (coe : (P ≃ᵃ[R] P) → P →ᵃ[R] P) ∘ homothety_units_mul_hom p = AffineMap.homothetyHom p ∘ (coe : (R)ˣ → R) :=
-  funext $ fun _ => rfl
+  funext fun _ => rfl
 
 end Homothety
 
@@ -407,7 +407,7 @@ theorem point_reflection_apply (x y : P₁) : point_reflection k x y = x -ᵥ y 
 
 @[simp]
 theorem point_reflection_symm (x : P₁) : (point_reflection k x).symm = point_reflection k x :=
-  to_equiv_injective $ Equivₓ.point_reflection_symm x
+  to_equiv_injective <| Equivₓ.point_reflection_symm x
 
 @[simp]
 theorem to_equiv_point_reflection (x : P₁) : (point_reflection k x).toEquiv = Equivₓ.pointReflection x :=
@@ -432,7 +432,7 @@ theorem injective_point_reflection_left_of_injective_bit0 (h : injective (bit0 :
 
 theorem injective_point_reflection_left_of_module [Invertible (2 : k)] :
     ∀ y, injective fun x : P₁ => point_reflection k x y :=
-  injective_point_reflection_left_of_injective_bit0 k $ fun x y h => by
+  (injective_point_reflection_left_of_injective_bit0 k) fun x y h => by
     rwa [bit0, bit0, ← two_smul k x, ← two_smul k y, (is_unit_of_invertible (2 : k)).smul_left_cancel] at h
 
 theorem point_reflection_fixed_iff_of_module [Invertible (2 : k)] {x y : P₁} : point_reflection k x y = y ↔ y = x :=

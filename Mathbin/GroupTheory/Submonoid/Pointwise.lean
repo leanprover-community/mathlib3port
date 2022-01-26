@@ -42,7 +42,7 @@ open_locale Pointwise
 
 /-- The submonoid with every element inverted. -/
 @[to_additive " The additive submonoid with every element negated. "]
-protected def HasInv : HasInv (Submonoid G) where
+protected def Inv : Inv (Submonoid G) where
   inv := fun S =>
     { Carrier := (S : Set G)⁻¹,
       one_mem' :=
@@ -81,14 +81,14 @@ theorem inv_le (S T : Submonoid G) : S⁻¹ ≤ T ↔ S ≤ T⁻¹ :=
 /-- `submonoid.has_inv` as an order isomorphism. -/
 @[to_additive " `add_submonoid.has_neg` as an order isomorphism ", simps]
 def inv_order_iso : Submonoid G ≃o Submonoid G where
-  toFun := HasInv.inv
-  invFun := HasInv.inv
+  toFun := Inv.inv
+  invFun := Inv.inv
   left_inv := Submonoid.inv_inv
   right_inv := Submonoid.inv_inv
   map_rel_iff' := inv_le_inv
 
 @[to_additive]
-theorem closure_inv (s : Set G) : closure (s⁻¹) = closure s⁻¹ := by
+theorem closure_inv (s : Set G) : closure s⁻¹ = (closure s)⁻¹ := by
   apply le_antisymmₓ
   · rw [closure_le, coe_inv, ← Set.inv_subset, Set.inv_inv]
     exact subset_closure
@@ -107,18 +107,18 @@ theorem inv_sup (S T : Submonoid G) : (S⊔T)⁻¹ = S⁻¹⊔T⁻¹ :=
 
 @[simp, to_additive]
 theorem inv_bot : (⊥ : Submonoid G)⁻¹ = ⊥ :=
-  SetLike.coe_injective $ (Set.inv_singleton 1).trans $ congr_argₓ _ one_inv
+  SetLike.coe_injective <| (Set.inv_singleton 1).trans <| congr_argₓ _ one_inv
 
 @[simp, to_additive]
 theorem inv_top : (⊤ : Submonoid G)⁻¹ = ⊤ :=
-  SetLike.coe_injective $ Set.inv_univ
+  SetLike.coe_injective <| Set.inv_univ
 
 @[simp, to_additive]
-theorem inv_infi {ι : Sort _} (S : ι → Submonoid G) : (⨅ i, S i)⁻¹ = ⨅ i, S i⁻¹ :=
+theorem inv_infi {ι : Sort _} (S : ι → Submonoid G) : (⨅ i, S i)⁻¹ = ⨅ i, (S i)⁻¹ :=
   (inv_order_iso : Submonoid G ≃o Submonoid G).map_infi _
 
 @[simp, to_additive]
-theorem inv_supr {ι : Sort _} (S : ι → Submonoid G) : (⨆ i, S i)⁻¹ = ⨆ i, S i⁻¹ :=
+theorem inv_supr {ι : Sort _} (S : ι → Submonoid G) : (⨆ i, S i)⁻¹ = ⨆ i, (S i)⁻¹ :=
   (inv_order_iso : Submonoid G ≃o Submonoid G).map_supr _
 
 end Submonoid
@@ -153,7 +153,7 @@ theorem mem_smul_pointwise_iff_exists (m : M) (a : α) (S : Submonoid M) : m ∈
 
 instance pointwise_central_scalar [MulDistribMulAction (αᵐᵒᵖ) M] [IsCentralScalar α M] :
     IsCentralScalar α (Submonoid M) :=
-  ⟨fun a S => (congr_argₓ fun f => S.map f) $ MonoidHom.ext $ op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_argₓ fun f => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ
 
@@ -217,7 +217,7 @@ open_locale Pointwise
 
 @[to_additive]
 theorem mem_closure_inv {G : Type _} [Groupₓ G] (S : Set G) (x : G) :
-    x ∈ Submonoid.closure (S⁻¹) ↔ x⁻¹ ∈ Submonoid.closure S := by
+    x ∈ Submonoid.closure S⁻¹ ↔ x⁻¹ ∈ Submonoid.closure S := by
   rw [closure_inv, mem_inv]
 
 end Submonoid
@@ -249,7 +249,7 @@ theorem smul_mem_pointwise_smul (m : A) (a : α) (S : AddSubmonoid A) : m ∈ S 
 
 instance pointwise_central_scalar [DistribMulAction (αᵐᵒᵖ) A] [IsCentralScalar α A] :
     IsCentralScalar α (AddSubmonoid A) :=
-  ⟨fun a S => (congr_argₓ fun f => S.map f) $ AddMonoidHom.ext $ op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_argₓ fun f => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ
 
@@ -330,14 +330,14 @@ variable [NonUnitalNonAssocSemiring R]
 /-- Multiplication of additive submonoids of a semiring R. The additive submonoid `S * T` is the
 smallest R-submodule of `R` containing the elements `s * t` for `s ∈ S` and `t ∈ T`. -/
 instance : Mul (AddSubmonoid R) :=
-  ⟨fun M N => ⨆ s : M, N.map $ AddMonoidHom.mul s.1⟩
+  ⟨fun M N => ⨆ s : M, N.map <| AddMonoidHom.mul s.1⟩
 
 theorem mul_mem_mul {M N : AddSubmonoid R} {m n : R} (hm : m ∈ M) (hn : n ∈ N) : m * n ∈ M * N :=
   (le_supr _ ⟨m, hm⟩ : _ ≤ M * N) ⟨n, hn, rfl⟩
 
 theorem mul_le {M N P : AddSubmonoid R} : M * N ≤ P ↔ ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, m * n ∈ P :=
-  ⟨fun H m hm n hn => H $ mul_mem_mul hm hn, fun H =>
-    supr_le $ fun ⟨m, hm⟩ => map_le_iff_le_comap.2 $ fun n hn => H m hm n hn⟩
+  ⟨fun H m hm n hn => H <| mul_mem_mul hm hn, fun H =>
+    supr_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
 
 @[elab_as_eliminator]
 protected theorem mul_induction_on {M N : AddSubmonoid R} {C : R → Prop} {r : R} (hr : r ∈ M * N)
@@ -380,19 +380,19 @@ variable {R}
 
 @[simp]
 theorem mul_bot (S : AddSubmonoid R) : S * ⊥ = ⊥ :=
-  eq_bot_iff.2 $
-    mul_le.2 $ fun m hm n hn => by
+  eq_bot_iff.2 <|
+    mul_le.2 fun m hm n hn => by
       rw [AddSubmonoid.mem_bot] at hn⊢ <;> rw [hn, mul_zero]
 
 @[simp]
 theorem bot_mul (S : AddSubmonoid R) : ⊥ * S = ⊥ :=
-  eq_bot_iff.2 $
-    mul_le.2 $ fun m hm n hn => by
+  eq_bot_iff.2 <|
+    mul_le.2 fun m hm n hn => by
       rw [AddSubmonoid.mem_bot] at hm⊢ <;> rw [hm, zero_mul]
 
 @[mono]
 theorem mul_le_mul {M N P Q : AddSubmonoid R} (hmp : M ≤ P) (hnq : N ≤ Q) : M * N ≤ P * Q :=
-  mul_le.2 $ fun m hm n hn => mul_mem_mul (hmp hm) (hnq hn)
+  mul_le.2 fun m hm n hn => mul_mem_mul (hmp hm) (hnq hn)
 
 theorem mul_le_mul_left {M N P : AddSubmonoid R} (h : M ≤ N) : M * P ≤ N * P :=
   mul_le_mul h (le_reflₓ P)

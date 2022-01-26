@@ -85,7 +85,7 @@ theorem mul_from_left_inv (x : S.left_inv) : (x : M) * S.from_left_inv x = 1 :=
 
 @[simp, to_additive]
 theorem from_left_inv_one : S.from_left_inv 1 = 1 :=
-  (one_mulₓ _).symm.trans (Subtype.eq $ S.mul_from_left_inv 1)
+  (one_mulₓ _).symm.trans (Subtype.eq <| S.mul_from_left_inv 1)
 
 end Monoidₓ
 
@@ -111,7 +111,7 @@ noncomputable def from_comm_left_inv : S.left_inv →* S where
   toFun := S.from_left_inv
   map_one' := S.from_left_inv_one
   map_mul' := fun x y =>
-    Subtype.ext $ by
+    Subtype.ext <| by
       rw [from_left_inv_eq_iff, mul_comm x, Submonoid.coe_mul, Submonoid.coe_mul, mul_assoc, ← mul_assoc (x : M),
         mul_from_left_inv, one_mulₓ, mul_from_left_inv]
 
@@ -127,7 +127,7 @@ noncomputable def left_inv_equiv : S.left_inv ≃* S :=
       choose x' hx using hS x.prop
       exact ⟨x'.inv, x, hx ▸ x'.inv_val⟩,
     left_inv := fun x =>
-      Subtype.eq $ by
+      Subtype.eq <| by
         dsimp
         generalize_proofs h
         rw [← h.some.mul_left_inj]
@@ -179,7 +179,7 @@ open_locale Pointwise
 
 @[to_additive]
 theorem left_inv_eq_inv : S.left_inv = S⁻¹ :=
-  Submonoid.ext $ fun x =>
+  Submonoid.ext fun x =>
     ⟨fun h => Submonoid.mem_inv.mpr ((inv_eq_of_mul_eq_oneₓ h.some_spec).symm ▸ h.some.prop), fun h =>
       ⟨⟨_, h⟩, mul_right_invₓ _⟩⟩
 

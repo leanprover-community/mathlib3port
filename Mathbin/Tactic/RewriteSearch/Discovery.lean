@@ -27,7 +27,7 @@ private unsafe def is_acceptable_rewrite : expr → Bool
 /-- Returns true if the expression is an equation or iff and has no metavariables. -/
 private unsafe def is_acceptable_hyp (r : expr) : tactic Bool := do
   let t ← infer_type r >>= whnf
-  return $ is_acceptable_rewrite t ∧ ¬t.has_meta_var
+  return <| is_acceptable_rewrite t ∧ ¬t.has_meta_var
 
 /-- Collect all hypotheses in the local context that are usable as rewrite rules. -/
 private unsafe def rules_from_hyps : tactic (List (expr × Bool)) := do
@@ -50,7 +50,7 @@ private unsafe def rules_from_rewrite_attr : tactic (List (expr × Bool)) := do
 unsafe def collect_rules : tactic (List (expr × Bool)) := do
   let from_attr ← rules_from_rewrite_attr
   let from_hyps ← rules_from_hyps
-  return $ from_attr ++ from_hyps
+  return <| from_attr ++ from_hyps
 
 open Tactic.NthRewrite Tactic.NthRewrite.Congr
 

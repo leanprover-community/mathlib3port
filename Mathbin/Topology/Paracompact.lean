@@ -65,7 +65,7 @@ one indexed on the same type with each open set contained in the corresponding o
 theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, IsOpen (u a)) (uc : (⋃ i, u i) = univ) :
     ∃ v : ι → Set X, (∀ a, IsOpen (v a)) ∧ (⋃ i, v i) = univ ∧ LocallyFinite v ∧ ∀ a, v a ⊆ u a := by
   have :=
-    ParacompactSpace.locally_finite_refinement (range u) coe (SetCoe.forall.2 $ forall_range_iff.2 uo)
+    ParacompactSpace.locally_finite_refinement (range u) coe (SetCoe.forall.2 <| forall_range_iff.2 uo)
       (by
         rwa [← sUnion_range, Subtype.range_coe])
   simp only [SetCoe.exists, Subtype.coe_mk, exists_range_iff', Union_eq_univ_iff, exists_prop] at this
@@ -73,7 +73,7 @@ theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, 
   choose t_inv ht_inv using hXt
   choose U hxU hU using htf
   refine' ⟨fun i => ⋃ (a : α) (ha : ind a = i), t a, _, _, _, _⟩
-  · exact fun a => is_open_Union fun a => is_open_Union $ fun ha => hto a
+  · exact fun a => is_open_Union fun a => is_open_Union fun ha => hto a
     
   · simp only [eq_univ_iff_forall, mem_Union]
     exact fun x => ⟨ind (t_inv x), _, rfl, ht_inv _⟩
@@ -97,7 +97,7 @@ theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s
     ⟨v, vo, vc, vf, vu⟩
   refine' ⟨v ∘ some, fun i => vo _, _, vf.comp_injective (Option.some_injective _), fun i => vu _⟩
   · simp only [Union_option, ← compl_subset_iff_union] at vc
-    exact subset.trans (subset_compl_comm.1 $ vu Option.none) vc
+    exact subset.trans (subset_compl_comm.1 <| vu Option.none) vc
     
   · simpa only [Union_option, Option.elim, ← compl_subset_iff_union, compl_compl]
     
@@ -147,7 +147,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
     simpa only [K'.find_shiftr] using diff_subset_diff_right interior_subset (K'.shiftr.mem_diff_shiftr_find x)
   have Kdiffc : ∀ n, IsCompact (Kdiff n ∩ s) := fun n => ((K.is_compact _).diff is_open_interior).inter_right hs
   have : ∀ n x : Kdiff (n + 1) ∩ s, K nᶜ ∈ 𝓝 (x : X) := fun n x =>
-    IsOpen.mem_nhds (K.is_closed n).is_open_compl fun hx' => x.2.1.2 $ K.subset_interior_succ _ hx'
+    IsOpen.mem_nhds (K.is_closed n).is_open_compl fun hx' => x.2.1.2 <| K.subset_interior_succ _ hx'
   have : ∀ n x : Kdiff n ∩ s, Nonempty (ι x) := fun n x => (hB x x.2.2).Nonempty
   choose! r hrp hr using fun n x : Kdiff (n + 1) ∩ s => (hB x x.2.2).mem_iff.1 (this n x)
   have hxr : ∀ n x hx : x ∈ Kdiff (n + 1) ∩ s, B x (r n ⟨x, hx⟩) ∈ 𝓝 x := fun n x hx =>
@@ -164,7 +164,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
     
   · intro x
     refine' ⟨Interior (K (K'.find x + 3)), IsOpen.mem_nhds is_open_interior (K.subset_interior_succ _ (hKcov x).1), _⟩
-    have : (⋃ k ≤ K'.find x + 2, range $ Sigma.mk k : Set (Σ n, T' n)).Finite :=
+    have : (⋃ k ≤ K'.find x + 2, range <| Sigma.mk k : Set (Σ n, T' n)).Finite :=
       (finite_le_nat _).bUnion fun k hk => finite_range _
     apply this.subset
     rintro ⟨k, c, hc⟩
@@ -212,7 +212,7 @@ instance (priority := 100) paracompact_of_locally_compact_sigma_compact [Locally
   have : ∀ x : X, (𝓝 x).HasBasis (fun t : Set X => (x ∈ t ∧ IsOpen t) ∧ t ⊆ s (i x)) id := fun x : X =>
     (nhds_basis_opens x).restrict_subset (IsOpen.mem_nhds (ho (i x)) (hi x))
   rcases refinement_of_locally_compact_sigma_compact_of_nhds_basis this with ⟨β, c, t, hto, htc, htf⟩
-  exact ⟨β, t, fun x => (hto x).1.2, htc, htf, fun b => ⟨i $ c b, (hto b).2⟩⟩
+  exact ⟨β, t, fun x => (hto x).1.2, htc, htf, fun b => ⟨i <| c b, (hto b).2⟩⟩
 
 theorem normal_of_paracompact_t2 [T2Space X] [ParacompactSpace X] : NormalSpace X := by
   have :
@@ -229,7 +229,7 @@ theorem normal_of_paracompact_t2 [T2Space X] [ParacompactSpace X] : NormalSpace 
       ⟨⋃ i, u' i, Closure (⋃ i, u' i)ᶜ, is_open_Union hu'o, is_closed_closure.is_open_compl, hcov', _,
         disjoint_compl_right.mono le_rfl (compl_le_compl subset_closure)⟩
     rw [hu'fin.closure_Union, compl_Union, subset_Inter_iff]
-    refine' fun i x hxt hxu => absurd (htv i hxt) (closure_minimal _ (is_closed_compl_iff.2 $ hv _) hxu)
+    refine' fun i x hxt hxu => absurd (htv i hxt) (closure_minimal _ (is_closed_compl_iff.2 <| hv _) hxu)
     exact fun y hyu hyv => huv i ⟨hsub _ hyu, hyv⟩
   refine' ⟨fun s t hs ht hst => this s t hs ht fun x hx => _⟩
   rcases this t {x} ht is_closed_singleton fun y hyt => _ with ⟨v, u, hv, hu, htv, hxu, huv⟩

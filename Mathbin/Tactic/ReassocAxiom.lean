@@ -71,7 +71,7 @@ unsafe def prove_reassoc (h : expr) : tactic (expr × expr) := do
           (@category_struct.comp _ (%%ₓstruct_inst) _ _ _ (%%ₓlhs) (%%ₓf') =
             @category_struct.comp _ (%%ₓstruct_inst) _ _ _ (%%ₓrhs) (%%ₓf')))
   let c' := h.mk_app vs
-  let (_, pr) ← solve_aux t' (rewrite_target c'; reflexivity)
+  let (_, pr) ← solve_aux t' (andthen (rewrite_target c') reflexivity)
   let pr ← instantiate_mvars pr
   let s := simp_lemmas.mk
   let s ← s.add_simp `` category.assoc
@@ -92,7 +92,7 @@ unsafe def reassoc_axiom (n : Name) (n' : Name := n.append_suffix "_assoc") : ta
   let ls := d.univ_params.map level.param
   let c := @expr.const tt n ls
   let (t'', pr') ← prove_reassoc c
-  add_decl $ declaration.thm n' d.univ_params t'' (pure pr')
+  add_decl <| declaration.thm n' d.univ_params t'' (pure pr')
   copy_attribute `simp n n'
 
 setup_tactic_parser
@@ -121,7 +121,7 @@ unsafe def reassoc_attr : user_attribute Unit (Option Name) where
   after_set :=
     some fun n _ _ => do
       let some n' ← reassoc_attr.get_param n | reassoc_axiom n (n.append_suffix "_assoc")
-      reassoc_axiom n $ n.get_prefix ++ n'
+      reassoc_axiom n <| n.get_prefix ++ n'
 
 add_tactic_doc
   { Name := "reassoc", category := DocCategory.attr, declNames := [`tactic.reassoc_attr], tags := ["category theory"] }
@@ -152,9 +152,9 @@ attribute [simp, reassoc] some_class.bar
 ```
 -/
 @[user_command]
-unsafe def reassoc_cmd (_ : parse $ tk "reassoc_axiom") : lean.parser Unit := do
+unsafe def reassoc_cmd (_ : parse <| tk "reassoc_axiom") : lean.parser Unit := do
   let n ← ident
-  of_tactic $ do
+  of_tactic <| do
       let n ← resolve_constant n
       reassoc_axiom n
 

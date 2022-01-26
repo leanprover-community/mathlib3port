@@ -62,7 +62,7 @@ theorem decode_list_succ (v : ℕ) :
 
 theorem length_le_encode : ∀ l : List α, length l ≤ encode l
   | [] => _root_.zero_le _
-  | a :: l => succ_le_succ $ (length_le_encode l).trans (right_le_mkpair _ _)
+  | a :: l => succ_le_succ <| (length_le_encode l).trans (right_le_mkpair _ _)
 
 end List
 
@@ -102,7 +102,7 @@ def encodable_of_list [DecidableEq α] (l : List α) (H : ∀ x, x ∈ l) : Enco
 
 def trunc_encodable_of_fintype (α : Type _) [DecidableEq α] [Fintype α] : Trunc (Encodable α) :=
   @Quot.recOnSubsingletonₓ _ (fun s : Multiset α => (∀ x : α, x ∈ s) → Trunc (Encodable α)) _ Finset.univ.1
-    (fun l H => Trunc.mk $ encodable_of_list l H) Finset.mem_univ
+    (fun l H => Trunc.mk <| encodable_of_list l H) Finset.mem_univ
 
 /-- A noncomputable way to arbitrarily choose an ordering on a finite type.
   It is not made into a global instance, since it involves an arbitrary choice.
@@ -133,14 +133,14 @@ instance Finset [Encodable α] : Encodable (Finset α) :=
     ⟨fun ⟨a, b⟩ => ⟨a, b⟩, fun ⟨a, b⟩ => ⟨a, b⟩, fun ⟨a, b⟩ => rfl, fun ⟨a, b⟩ => rfl⟩
 
 def fintype_arrow (α : Type _) (β : Type _) [DecidableEq α] [Fintype α] [Encodable β] : Trunc (Encodable (α → β)) :=
-  (Fintype.truncEquivFin α).map $ fun f =>
-    Encodable.ofEquiv (Finₓ (Fintype.card α) → β) $ Equivₓ.arrowCongr f (Equivₓ.refl _)
+  (Fintype.truncEquivFin α).map fun f =>
+    Encodable.ofEquiv (Finₓ (Fintype.card α) → β) <| Equivₓ.arrowCongr f (Equivₓ.refl _)
 
 def fintype_pi (α : Type _) (π : α → Type _) [DecidableEq α] [Fintype α] [∀ a, Encodable (π a)] :
     Trunc (Encodable (∀ a, π a)) :=
-  (Encodable.truncEncodableOfFintype α).bind $ fun a =>
-    (@fintype_arrow α (Σ a, π a) _ _ (@Encodable.sigma _ _ a _)).bind $ fun f =>
-      Trunc.mk $ @Encodable.ofEquiv _ _ (@Encodable.subtype _ _ f _) (Equivₓ.piEquivSubtypeSigma α π)
+  (Encodable.truncEncodableOfFintype α).bind fun a =>
+    (@fintype_arrow α (Σ a, π a) _ _ (@Encodable.sigma _ _ a _)).bind fun f =>
+      Trunc.mk <| @Encodable.ofEquiv _ _ (@Encodable.subtype _ _ f _) (Equivₓ.piEquivSubtypeSigma α π)
 
 /-- The elements of a `fintype` as a sorted list. -/
 def sorted_univ α [Fintype α] [Encodable α] : List α :=
@@ -172,7 +172,7 @@ def fintype_equiv_fin {α} [Fintype α] [Encodable α] : α ≃ Finₓ (Fintype.
 
 /-- If `α` and `β` are encodable and `α` is a fintype, then `α → β` is encodable as well. -/
 instance fintype_arrow_of_encodable {α β : Type _} [Encodable α] [Fintype α] [Encodable β] : Encodable (α → β) :=
-  of_equiv (Finₓ (Fintype.card α) → β) $ Equivₓ.arrowCongr fintype_equiv_fin (Equivₓ.refl _)
+  of_equiv (Finₓ (Fintype.card α) → β) <| Equivₓ.arrowCongr fintype_equiv_fin (Equivₓ.refl _)
 
 end Encodable
 
@@ -208,7 +208,7 @@ theorem list_of_nat_zero : of_nat (List α) 0 = [] := by
 
 @[simp]
 theorem list_of_nat_succ (v : ℕ) : of_nat (List α) (succ v) = of_nat α v.unpair.1 :: of_nat (List α) v.unpair.2 :=
-  of_nat_of_decode $
+  of_nat_of_decode <|
     show decode_list (succ v) = _ by
       cases' e : unpair v with v₁ v₂
       simp [decode_list, e]
@@ -254,7 +254,7 @@ theorem raise_sorted : ∀ l n, List.Sorted (· ≤ ·) (raise l n)
 in `encodable.multiset`. -/
 instance Multiset : Denumerable (Multiset α) :=
   mk'
-    ⟨fun s : Multiset α => encode $ lower ((s.map encode).sort (· ≤ ·)) 0, fun n =>
+    ⟨fun s : Multiset α => encode <| lower ((s.map encode).sort (· ≤ ·)) 0, fun n =>
       Multiset.map (of_nat α) (raise (of_nat (List ℕ) n) 0), fun s => by
       have := raise_lower (List.sorted_cons.2 ⟨fun n _ => zero_le n, (s.map encode).sort_sorted _⟩) <;>
         simp [-Multiset.coe_map, this],
@@ -307,9 +307,9 @@ def raise'_finset (l : List ℕ) (n : ℕ) : Finset ℕ :=
 in `encodable.finset`. -/
 instance Finset : Denumerable (Finset α) :=
   mk'
-    ⟨fun s : Finset α => encode $ lower' ((s.map (eqv α).toEmbedding).sort (· ≤ ·)) 0, fun n =>
+    ⟨fun s : Finset α => encode <| lower' ((s.map (eqv α).toEmbedding).sort (· ≤ ·)) 0, fun n =>
       Finset.map (eqv α).symm.toEmbedding (raise'_finset (of_nat (List ℕ) n) 0), fun s =>
-      Finset.eq_of_veq $ by
+      Finset.eq_of_veq <| by
         simp [-Multiset.coe_map, raise'_finset, raise_lower' (fun n _ => zero_le n) (Finset.sort_sorted_lt _)],
       fun n => by
       simp [-Multiset.coe_map, Finset.map, raise'_finset, Finset.sort,

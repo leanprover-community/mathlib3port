@@ -46,7 +46,7 @@ unsafe def intro_fresh : tactic Unit := do
 
 /-- Revert an expr if it passes the given test -/
 unsafe def revert_cond (t : expr → tactic Unit) (x : expr) : tactic Unit :=
-  t x >> revert x >> skip <|> skip
+  (t x >> revert x) >> skip <|> skip
 
 /-- Revert all exprs in the context that pass the given test -/
 unsafe def revert_cond_all (t : expr → tactic Unit) : tactic Unit := do

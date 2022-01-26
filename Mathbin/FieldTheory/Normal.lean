@@ -60,12 +60,12 @@ variable (K)
 theorem Normal.exists_is_splitting_field [h : Normal F K] [FiniteDimensional F K] :
     ∃ p : Polynomial F, is_splitting_field F K p := by
   let s := Basis.ofVectorSpace F K
-  refine' ⟨∏ x, minpoly F (s x), splits_prod _ $ fun x hx => h.splits (s x), Subalgebra.to_submodule_injective _⟩
+  refine' ⟨∏ x, minpoly F (s x), (splits_prod _) fun x hx => h.splits (s x), Subalgebra.to_submodule_injective _⟩
   rw [Algebra.top_to_submodule, eq_top_iff, ← s.span_eq, Submodule.span_le, Set.range_subset_iff]
   refine' fun x =>
     Algebra.subset_adjoin
-      (multiset.mem_to_finset.mpr $
-        (mem_roots $ mt (map_eq_zero $ algebraMap F K).1 $ Finset.prod_ne_zero_iff.2 $ fun x hx => _).2 _)
+      (multiset.mem_to_finset.mpr <|
+        (mem_roots <| mt (map_eq_zero <| algebraMap F K).1 <| Finset.prod_ne_zero_iff.2 fun x hx => _).2 _)
   · exact minpoly.ne_zero (h.is_integral (s x))
     
   rw [is_root.def, eval_map, ← aeval_def, AlgHom.map_prod]
@@ -76,7 +76,7 @@ section NormalTower
 variable (E : Type _) [Field E] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
 
 theorem Normal.tower_top_of_normal [h : Normal F E] : Normal K E :=
-  normal_iff.2 $ fun x => by
+  normal_iff.2 fun x => by
     cases' h.out x with hx hhx
     rw [algebra_map_eq F K E] at hhx
     exact
@@ -106,7 +106,7 @@ theorem AlgHom.normal_bijective [h : Normal F E] (ϕ : E →ₐ[F] K) : Function
 variable {F} {E} {E' : Type _} [Field E'] [Algebra F E']
 
 theorem Normal.of_alg_equiv [h : Normal F E] (f : E ≃ₐ[F] E') : Normal F E' :=
-  normal_iff.2 $ fun x => by
+  normal_iff.2 fun x => by
     cases' h.out (f.symm x) with hx hhx
     have H := is_integral_alg_hom f.to_alg_hom hx
     rw [AlgEquiv.to_alg_hom_eq_coe, AlgEquiv.coe_alg_hom, AlgEquiv.apply_symm_apply] at H
@@ -217,9 +217,9 @@ def AlgHom.restrictNormalAux [h : Normal F E] : (to_alg_hom F E K).range →ₐ[
       apply minpoly.mem_range_of_degree_eq_one E
       exact
         Or.resolve_left (h.splits z) (minpoly.ne_zero (h.is_integral z))
-          (minpoly.irreducible $
-            is_integral_of_is_scalar_tower _ $ is_integral_alg_hom ϕ $ is_integral_alg_hom _ $ h.is_integral z)
-          (minpoly.dvd E _ $ by
+          (minpoly.irreducible <|
+            is_integral_of_is_scalar_tower _ <| is_integral_alg_hom ϕ <| is_integral_alg_hom _ <| h.is_integral z)
+          (minpoly.dvd E _ <| by
             rw [aeval_map, aeval_alg_hom, aeval_alg_hom, AlgHom.comp_apply, AlgHom.comp_apply, minpoly.aeval,
               AlgHom.map_zero, AlgHom.map_zero])⟩
   map_zero' := Subtype.ext ϕ.map_zero
@@ -276,8 +276,8 @@ variable {F} {K} (E : Type _) [Field E] [Algebra F E] [Algebra K E] [IsScalarTow
 /-- If `E/K/F` is a tower of fields with `E/F` normal then we can lift
   an algebra homomorphism `ϕ : K →ₐ[F] K` to `ϕ.lift_normal E : E →ₐ[F] E`. -/
 noncomputable def AlgHom.liftNormal [h : Normal F E] : E →ₐ[F] E :=
-  @AlgHom.restrictScalars F K E E _ _ _ _ _ _ ((IsScalarTower.toAlgHom F K E).comp ϕ).toRingHom.toAlgebra _ _ _ _ $
-    Nonempty.some $
+  @AlgHom.restrictScalars F K E E _ _ _ _ _ _ ((IsScalarTower.toAlgHom F K E).comp ϕ).toRingHom.toAlgebra _ _ _ _ <|
+    Nonempty.some <|
       @IntermediateField.alg_hom_mk_adjoin_splits' _ _ _ _ _ _ _
         ((IsScalarTower.toAlgHom F K E).comp ϕ).toRingHom.toAlgebra _ (IntermediateField.adjoin_univ _ _) fun x hx =>
         ⟨is_integral_of_is_scalar_tower x (h.out x).1,

@@ -211,22 +211,22 @@ instance [CommMonoidₓ α] : AddCommMonoidₓ (Additive α) :=
 instance [AddCommMonoidₓ α] : CommMonoidₓ (Multiplicative α) :=
   { Multiplicative.monoid, Multiplicative.commSemigroup with one := 1, mul := · * · }
 
-instance [HasInv α] : Neg (Additive α) :=
-  ⟨fun x => Multiplicative.ofAdd (x.to_mul⁻¹)⟩
+instance [Inv α] : Neg (Additive α) :=
+  ⟨fun x => Multiplicative.ofAdd x.to_mul⁻¹⟩
 
 @[simp]
-theorem of_mul_inv [HasInv α] (x : α) : Additive.ofMul (x⁻¹) = -Additive.ofMul x :=
+theorem of_mul_inv [Inv α] (x : α) : Additive.ofMul x⁻¹ = -Additive.ofMul x :=
   rfl
 
 @[simp]
-theorem to_mul_neg [HasInv α] (x : Additive α) : (-x).toMul = x.to_mul⁻¹ :=
+theorem to_mul_neg [Inv α] (x : Additive α) : (-x).toMul = x.to_mul⁻¹ :=
   rfl
 
-instance [Neg α] : HasInv (Multiplicative α) :=
+instance [Neg α] : Inv (Multiplicative α) :=
   ⟨fun x => Additive.ofMul (-x.to_add)⟩
 
 @[simp]
-theorem of_add_neg [Neg α] (x : α) : Multiplicative.ofAdd (-x) = Multiplicative.ofAdd x⁻¹ :=
+theorem of_add_neg [Neg α] (x : α) : Multiplicative.ofAdd (-x) = (Multiplicative.ofAdd x)⁻¹ :=
   rfl
 
 @[simp]

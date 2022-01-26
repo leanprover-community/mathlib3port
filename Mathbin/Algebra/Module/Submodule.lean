@@ -256,7 +256,7 @@ theorem coeSubtype : (Submodule.subtype p : p → M) = coe :=
 
 /-- Note the `add_submonoid` version of this lemma is called `add_submonoid.coe_finset_sum`. -/
 @[simp]
-theorem coe_sum (x : ι → p) (s : Finset ι) : (↑∑ i in s, x i) = ∑ i in s, (x i : M) :=
+theorem coe_sum (x : ι → p) (s : Finset ι) : ↑(∑ i in s, x i) = ∑ i in s, (x i : M) :=
   p.subtype.map_sum
 
 section RestrictScalars
@@ -287,7 +287,7 @@ theorem restrict_scalars_self (V : Submodule R M) : V.restrict_scalars R = V :=
 variable (R S M)
 
 theorem restrict_scalars_injective : Function.Injective (restrict_scalars S : Submodule R M → Submodule S M) :=
-  fun V₁ V₂ h => ext $ Set.ext_iff.1 (SetLike.ext'_iff.1 h : _)
+  fun V₁ V₂ h => ext <| Set.ext_iff.1 (SetLike.ext'_iff.1 h : _)
 
 @[simp]
 theorem restrict_scalars_inj {V₁ V₂ : Submodule R M} : restrict_scalars S V₁ = restrict_scalars S V₂ ↔ V₁ = V₂ :=
@@ -299,7 +299,7 @@ instance restrict_scalars.orig_module (p : Submodule R M) : Module R (p.restrict
     infer_instance : Module R p)
 
 instance (p : Submodule R M) : IsScalarTower S R (p.restrict_scalars S) where
-  smul_assoc := fun r s x => Subtype.ext $ smul_assoc r s (x : M)
+  smul_assoc := fun r s x => Subtype.ext <| smul_assoc r s (x : M)
 
 /-- `restrict_scalars S` is an embedding of the lattice of `R`-submodules into
 the lattice of `S`-submodules. -/

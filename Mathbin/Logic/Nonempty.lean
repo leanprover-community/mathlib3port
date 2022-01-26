@@ -97,7 +97,7 @@ theorem Nonempty.exists {α} {p : Nonempty α → Prop} : (∃ h : Nonempty α, 
   Iff.intro (fun ⟨⟨a⟩, h⟩ => ⟨a, h⟩) fun ⟨a, h⟩ => ⟨⟨a⟩, h⟩
 
 theorem Classical.nonempty_piₓ {α} {β : α → Sort _} : Nonempty (∀ a : α, β a) ↔ ∀ a : α, Nonempty (β a) :=
-  Iff.intro (fun ⟨f⟩ a => ⟨f a⟩) fun f => ⟨fun a => Classical.choice $ f a⟩
+  Iff.intro (fun ⟨f⟩ a => ⟨f a⟩) fun f => ⟨fun a => Classical.choice <| f a⟩
 
 /-- Using `classical.choice`, lifts a (`Prop`-valued) `nonempty` instance to a (`Type`-valued)
   `inhabited` instance. `classical.inhabited_of_nonempty` already exists, in
@@ -128,11 +128,11 @@ protected theorem Nonempty.congr {α β} (f : α → β) (g : β → α) : Nonem
   ⟨Nonempty.map f, Nonempty.map g⟩
 
 theorem Nonempty.elim_to_inhabited {α : Sort _} [h : Nonempty α] {p : Prop} (f : Inhabited α → p) : p :=
-  h.elim $ f ∘ Inhabited.mk
+  h.elim <| f ∘ Inhabited.mk
 
 instance {α β} [h : Nonempty α] [h2 : Nonempty β] : Nonempty (α × β) :=
-  h.elim $ fun g => h2.elim $ fun g2 => ⟨⟨g, g2⟩⟩
+  h.elim fun g => h2.elim fun g2 => ⟨⟨g, g2⟩⟩
 
 theorem subsingleton_of_not_nonempty {α : Sort _} (h : ¬Nonempty α) : Subsingleton α :=
-  ⟨fun x => False.elim $ not_nonempty_iff_imp_false.mp h x⟩
+  ⟨fun x => False.elim <| not_nonempty_iff_imp_false.mp h x⟩
 

@@ -228,7 +228,7 @@ statement that `L = ⨁ i, I i`.
 More formally, the inclusions give a natural map from the (external) direct sum to the enclosing Lie
 algebra: `(⨁ i, I i) → L`, and this definition is the proposition that this map is bijective. -/
 def lie_algebra_is_internal [DecidableEq ι] : Prop :=
-  Function.Bijective $ to_module R ι L $ fun i => ((I i).incl : I i →ₗ[R] L)
+  Function.Bijective <| (to_module R ι L) fun i => ((I i).incl : I i →ₗ[R] L)
 
 /-- The fact that this instance is necessary seems to be a bug in typeclass inference. See
 [this Zulip thread](https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/

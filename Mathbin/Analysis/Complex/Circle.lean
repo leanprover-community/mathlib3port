@@ -47,7 +47,7 @@ theorem mem_circle_iff_abs {z : ℂ} : z ∈ circle ↔ abs z = 1 :=
   mem_sphere_zero_iff_norm
 
 theorem circle_def : ↑circle = { z : ℂ | abs z = 1 } :=
-  Set.ext $ fun z => mem_circle_iff_abs
+  Set.ext fun z => mem_circle_iff_abs
 
 @[simp]
 theorem abs_coe_circle (z : circle) : abs z = 1 :=
@@ -69,8 +69,8 @@ instance : CommGroupₓ circle :=
       ⟨conj (z : ℂ), by
         simp ⟩,
     mul_left_inv := fun z =>
-      Subtype.ext $ by
-        simp [HasInv.inv, ← norm_sq_eq_conj_mul_self, ← mul_self_abs] }
+      Subtype.ext <| by
+        simp [Inv.inv, ← norm_sq_eq_conj_mul_self, ← mul_self_abs] }
 
 theorem coe_inv_circle_eq_conj (z : circle) : ↑z⁻¹ = conj (z : ℂ) :=
   rfl
@@ -90,7 +90,7 @@ theorem coe_div_circle (z w : circle) : ↑(z / w) = (z : ℂ) / w :=
 /-- The elements of the circle embed into the units. -/
 @[simps]
 def circle.toUnits : circle →* Units ℂ where
-  toFun := fun x => Units.mk0 x $ nonzero_of_mem_circle _
+  toFun := fun x => Units.mk0 x <| nonzero_of_mem_circle _
   map_one' := Units.ext rfl
   map_mul' := fun x y => Units.ext rfl
 
@@ -101,7 +101,7 @@ instance : TopologicalGroup circle where
   continuous_mul :=
     let h : Continuous fun x : circle => (x : ℂ) := continuous_subtype_coe
     continuous_induced_rng (continuous_mul.comp (h.prod_map h))
-  continuous_inv := continuous_induced_rng $ Complex.conjCle.Continuous.comp continuous_subtype_coe
+  continuous_inv := continuous_induced_rng <| Complex.conjCle.Continuous.comp continuous_subtype_coe
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`. -/
 def expMapCircle : C(ℝ, circle) where
@@ -110,17 +110,17 @@ def expMapCircle : C(ℝ, circle) where
       simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
 
 @[simp]
-theorem exp_map_circle_apply (t : ℝ) : ↑expMapCircle t = Complex.exp (t * Complex.i) :=
+theorem exp_map_circle_apply (t : ℝ) : ↑(expMapCircle t) = Complex.exp (t * Complex.i) :=
   rfl
 
 @[simp]
 theorem exp_map_circle_zero : expMapCircle 0 = 1 :=
-  Subtype.ext $ by
+  Subtype.ext <| by
     rw [exp_map_circle_apply, of_real_zero, zero_mul, exp_zero, Submonoid.coe_one]
 
 @[simp]
 theorem exp_map_circle_add (x y : ℝ) : expMapCircle (x + y) = expMapCircle x * expMapCircle y :=
-  Subtype.ext $ by
+  Subtype.ext <| by
     simp only [exp_map_circle_apply, Submonoid.coe_mul, of_real_add, add_mulₓ, Complex.exp_add]
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`, considered as a homomorphism of

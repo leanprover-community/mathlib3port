@@ -46,10 +46,10 @@ namespace IsOrderRightAdjoint
 
 protected theorem Unique [PartialOrderₓ α] [Preorderₓ β] {f : α → β} {g₁ g₂ : β → α} (h₁ : IsOrderRightAdjoint f g₁)
     (h₂ : IsOrderRightAdjoint f g₂) : g₁ = g₂ :=
-  funext $ fun y => (h₁ y).unique (h₂ y)
+  funext fun y => (h₁ y).unique (h₂ y)
 
 theorem right_mono [Preorderₓ α] [Preorderₓ β] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g) : Monotone g :=
-  fun y₁ y₂ hy => (h y₁).mono (h y₂) $ fun x hx => le_transₓ hx hy
+  fun y₁ y₂ hy => ((h y₁).mono (h y₂)) fun x hx => le_transₓ hx hy
 
 theorem order_iso_comp [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g)
     (e : β ≃o γ) : IsOrderRightAdjoint (e ∘ f) (g ∘ e.symm) := fun y => by
@@ -81,7 +81,7 @@ theorem semiconj.symm_adjoint [PartialOrderₓ α] [Preorderₓ β] {fa : α ≃
 variable {G : Type _}
 
 theorem semiconj_of_is_lub [PartialOrderₓ α] [Groupₓ G] (f₁ f₂ : G →* α ≃o α) {h : α → α}
-    (H : ∀ x, IsLub (range fun g' => (f₁ g'⁻¹) (f₂ g' x)) (h x)) (g : G) : Function.Semiconj h (f₂ g) (f₁ g) := by
+    (H : ∀ x, IsLub (range fun g' => (f₁ g')⁻¹ (f₂ g' x)) (h x)) (g : G) : Function.Semiconj h (f₂ g) (f₁ g) := by
   refine' fun y => (H _).unique _
   have := (f₁ g).LeftOrdContinuous (H y)
   rw [← range_comp, ← (Equivₓ.mulRight g).Surjective.range_comp _] at this
@@ -93,7 +93,7 @@ isomorphisms. Then the map `x ↦ ⨆ g : G, (f₁ g)⁻¹ (f₂ g x)` semiconju
 This is a version of Proposition 5.4 from [Étienne Ghys, Groupes d'homeomorphismes du cercle et
 cohomologie bornee][ghys87:groupes]. -/
 theorem Sup_div_semiconj [CompleteLattice α] [Groupₓ G] (f₁ f₂ : G →* α ≃o α) (g : G) :
-    Function.Semiconj (fun x => ⨆ g' : G, (f₁ g'⁻¹) (f₂ g' x)) (f₂ g) (f₁ g) :=
+    Function.Semiconj (fun x => ⨆ g' : G, (f₁ g')⁻¹ (f₂ g' x)) (f₂ g) (f₁ g) :=
   semiconj_of_is_lub f₁ f₂ (fun x => is_lub_supr) _
 
 /-- Consider two actions `f₁ f₂ : G → α → α` of a group on a conditionally complete lattice by order
@@ -103,8 +103,8 @@ Then the map `x ↦ Sup s(x)` semiconjugates each `f₁ g'` to `f₂ g'`.
 This is a version of Proposition 5.4 from [Étienne Ghys, Groupes d'homeomorphismes du cercle et
 cohomologie bornee][ghys87:groupes]. -/
 theorem cSup_div_semiconj [ConditionallyCompleteLattice α] [Groupₓ G] (f₁ f₂ : G →* α ≃o α)
-    (hbdd : ∀ x, BddAbove (range $ fun g => (f₁ g⁻¹) (f₂ g x))) (g : G) :
-    Function.Semiconj (fun x => ⨆ g' : G, (f₁ g'⁻¹) (f₂ g' x)) (f₂ g) (f₁ g) :=
+    (hbdd : ∀ x, BddAbove (range fun g => (f₁ g)⁻¹ (f₂ g x))) (g : G) :
+    Function.Semiconj (fun x => ⨆ g' : G, (f₁ g')⁻¹ (f₂ g' x)) (f₂ g) (f₁ g) :=
   semiconj_of_is_lub f₁ f₂ (fun x => is_lub_cSup (range_nonempty _) (hbdd x)) _
 
 end Function

@@ -31,13 +31,13 @@ argument `inhabited α`, even if it is not used.  (This is due to the implementa
 -/
 @[derive_handler]
 unsafe def inhabited_instance : derive_handler :=
-  instance_derive_handler `` Inhabited $ do
+  instance_derive_handler `` Inhabited <| do
     applyc `` Inhabited.mk
     sorry <|> constructor >> skip
-    all_goals' $ do
+    all_goals' <| do
         applyc `` default <|> do
             let s ← read
-            fail $ to_fmt "could not find inhabited instance for:\n" ++ to_fmt s
+            fail <| to_fmt "could not find inhabited instance for:\n" ++ to_fmt s
 
 end Tactic
 

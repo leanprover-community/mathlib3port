@@ -352,17 +352,17 @@ theorem sin_pos_of_mem_Ioo {x : ℝ} (hx : x ∈ Ioo 0 π) : 0 < sin x :=
   sin_pos_of_pos_of_lt_pi hx.1 hx.2
 
 theorem sin_nonneg_of_mem_Icc {x : ℝ} (hx : x ∈ Icc 0 π) : 0 ≤ sin x := by
-  rw [← closure_Ioo pi_pos] at hx
+  rw [← closure_Ioo pi_ne_zero.symm] at hx
   exact closure_lt_subset_le continuous_const continuous_sin (closure_mono (fun y => sin_pos_of_mem_Ioo) hx)
 
 theorem sin_nonneg_of_nonneg_of_le_pi {x : ℝ} (h0x : 0 ≤ x) (hxp : x ≤ π) : 0 ≤ sin x :=
   sin_nonneg_of_mem_Icc ⟨h0x, hxp⟩
 
 theorem sin_neg_of_neg_of_neg_pi_lt {x : ℝ} (hx0 : x < 0) (hpx : -π < x) : sin x < 0 :=
-  neg_pos.1 $ sin_neg x ▸ sin_pos_of_pos_of_lt_pi (neg_pos.2 hx0) (neg_lt.1 hpx)
+  neg_pos.1 <| sin_neg x ▸ sin_pos_of_pos_of_lt_pi (neg_pos.2 hx0) (neg_lt.1 hpx)
 
 theorem sin_nonpos_of_nonnpos_of_neg_pi_le {x : ℝ} (hx0 : x ≤ 0) (hpx : -π ≤ x) : sin x ≤ 0 :=
-  neg_nonneg.1 $ sin_neg x ▸ sin_nonneg_of_nonneg_of_le_pi (neg_nonneg.2 hx0) (neg_le.1 hpx)
+  neg_nonneg.1 <| sin_neg x ▸ sin_nonneg_of_nonneg_of_le_pi (neg_nonneg.2 hx0) (neg_le.1 hpx)
 
 @[simp]
 theorem sin_pi_div_two : sin (π / 2) = 1 :=
@@ -370,7 +370,7 @@ theorem sin_pi_div_two : sin (π / 2) = 1 :=
     simpa [sq, mul_self_eq_one_iff] using sin_sq_add_cos_sq (π / 2)
   this.resolve_right fun h =>
     show ¬(0 : ℝ) < -1 by
-        norm_num $
+        norm_num <|
       h ▸ sin_pos_of_pos_of_lt_pi pi_div_two_pos (half_lt_self pi_pos)
 
 theorem sin_add_pi_div_two (x : ℝ) : sin (x + π / 2) = cos x := by
@@ -409,7 +409,7 @@ theorem cos_nonneg_of_neg_pi_div_two_le_of_le {x : ℝ} (hl : -(π / 2) ≤ x) (
   cos_nonneg_of_mem_Icc ⟨hl, hu⟩
 
 theorem cos_neg_of_pi_div_two_lt_of_lt {x : ℝ} (hx₁ : π / 2 < x) (hx₂ : x < π + π / 2) : cos x < 0 :=
-  neg_pos.1 $
+  neg_pos.1 <|
     cos_pi_sub x ▸
       cos_pos_of_mem_Ioo
         ⟨by
@@ -417,7 +417,7 @@ theorem cos_neg_of_pi_div_two_lt_of_lt {x : ℝ} (hx₁ : π / 2 < x) (hx₂ : x
           linarith⟩
 
 theorem cos_nonpos_of_pi_div_two_le_of_le {x : ℝ} (hx₁ : π / 2 ≤ x) (hx₂ : x ≤ π + π / 2) : cos x ≤ 0 :=
-  neg_nonneg.1 $
+  neg_nonneg.1 <|
     cos_pi_sub x ▸
       cos_nonneg_of_mem_Icc
         ⟨by
@@ -434,13 +434,13 @@ theorem sin_eq_zero_iff_of_lt_of_lt {x : ℝ} (hx₁ : -π < x) (hx₂ : x < π)
   ⟨fun h =>
     le_antisymmₓ
       (le_of_not_gtₓ fun h0 =>
-        lt_irreflₓ (0 : ℝ) $
+        lt_irreflₓ (0 : ℝ) <|
           calc
             0 < sin x := sin_pos_of_pos_of_lt_pi h0 hx₂
             _ = 0 := h
             )
       (le_of_not_gtₓ fun h0 =>
-        lt_irreflₓ (0 : ℝ) $
+        lt_irreflₓ (0 : ℝ) <|
           calc
             0 = sin x := h.symm
             _ < 0 := sin_neg_of_neg_of_neg_pi_lt h0 hx₁
@@ -452,8 +452,8 @@ theorem sin_eq_zero_iff {x : ℝ} : sin x = 0 ↔ ∃ n : ℤ, (n : ℝ) * π = 
   ⟨fun h =>
     ⟨⌊x / π⌋,
       le_antisymmₓ (sub_nonneg.1 (sub_floor_div_mul_nonneg _ pi_pos))
-        (sub_nonpos.1 $
-          le_of_not_gtₓ $ fun h₃ =>
+        (sub_nonpos.1 <|
+          le_of_not_gtₓ fun h₃ =>
             (sin_pos_of_pos_of_lt_pi h₃ (sub_floor_div_mul_lt _ pi_pos)).Ne
               (by
                 simp [sub_eq_add_neg, sin_add, h, sin_int_mul_pi]))⟩,
@@ -615,8 +615,8 @@ theorem range_sin_infinite : (range Real.sin).Infinite := by
 
 theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x := by
   cases' le_or_gtₓ x 1 with h' h'
-  · have hx : |x| = x := abs_of_nonneg (le_of_ltₓ h)
-    have : |x| ≤ 1
+  · have hx : abs x = x := abs_of_nonneg (le_of_ltₓ h)
+    have : abs x ≤ 1
     rwa [hx]
     have := sin_bound this
     rw [abs_le] at this
@@ -641,8 +641,8 @@ theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x := by
   exact lt_of_le_of_ltₓ (sin_le_one x) h'
 
 theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < sin x := by
-  have hx : |x| = x := abs_of_nonneg (le_of_ltₓ h)
-  have : |x| ≤ 1
+  have hx : abs x = x := abs_of_nonneg (le_of_ltₓ h)
+  have : abs x ≤ 1
   rwa [hx]
   have := sin_bound this
   rw [abs_le] at this
@@ -938,7 +938,7 @@ end CosDivSq
 
 /-- `real.sin` as an `order_iso` between `[-(π / 2), π / 2]` and `[-1, 1]`. -/
 def sin_order_iso : Icc (-(π / 2)) (π / 2) ≃o Icc (-1 : ℝ) 1 :=
-  (strict_mono_on_sin.OrderIso _ _).trans $ OrderIso.setCongr _ _ bij_on_sin.image_eq
+  (strict_mono_on_sin.OrderIso _ _).trans <| OrderIso.setCongr _ _ bij_on_sin.image_eq
 
 @[simp]
 theorem coe_sin_order_iso_apply (x : Icc (-(π / 2)) (π / 2)) : (sin_order_iso x : ℝ) = sin x :=
@@ -1021,7 +1021,7 @@ theorem tan_lt_tan_of_lt_of_lt_pi_div_two {x y : ℝ} (hx₁ : -(π / 2) < x) (h
     tan x < tan y :=
   match le_totalₓ x 0, le_totalₓ y 0 with
   | Or.inl hx0, Or.inl hy0 =>
-    neg_lt_neg_iff.1 $ by
+    neg_lt_neg_iff.1 <| by
       rw [← tan_neg, ← tan_neg] <;>
         exact tan_lt_tan_of_nonneg_of_lt_pi_div_two (neg_nonneg.2 hy0) (neg_lt.2 hx₁) (neg_lt_neg hxy)
   | Or.inl hx0, Or.inr hy0 =>
@@ -1087,13 +1087,13 @@ theorem tendsto_sin_pi_div_two : tendsto sin (𝓝[<] (π / 2)) (𝓝 1) := by
   convert continuous_sin.continuous_within_at
   simp
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem tendsto_cos_pi_div_two : tendsto cos (𝓝[<] (π / 2)) (𝓝[>] 0) := by
   apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
   · convert continuous_cos.continuous_within_at
     simp
     
-  · filter_upwards [Ioo_mem_nhds_within_Iio (right_mem_Ioc.mpr (NormNum.lt_neg_pos _ _ pi_div_two_pos pi_div_two_pos))]
-      fun x hx => cos_pos_of_mem_Ioo hx
+  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     
 
 theorem tendsto_tan_pi_div_two : tendsto tan (𝓝[<] (π / 2)) at_top := by
@@ -1104,13 +1104,13 @@ theorem tendsto_sin_neg_pi_div_two : tendsto sin (𝓝[>] -(π / 2)) (𝓝 (-1))
   convert continuous_sin.continuous_within_at
   simp
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem tendsto_cos_neg_pi_div_two : tendsto cos (𝓝[>] -(π / 2)) (𝓝[>] 0) := by
   apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
   · convert continuous_cos.continuous_within_at
     simp
     
-  · filter_upwards [Ioo_mem_nhds_within_Ioi (left_mem_Ico.mpr (NormNum.lt_neg_pos _ _ pi_div_two_pos pi_div_two_pos))]
-      fun x hx => cos_pos_of_mem_Ioo hx
+  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     
 
 theorem tendsto_tan_neg_pi_div_two : tendsto tan (𝓝[>] -(π / 2)) at_bot := by

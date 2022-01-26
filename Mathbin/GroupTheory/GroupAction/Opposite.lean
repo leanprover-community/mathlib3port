@@ -24,26 +24,26 @@ namespace MulOpposite
 
 @[to_additive]
 instance (R : Type _) [Monoidₓ R] [MulAction R α] : MulAction R (αᵐᵒᵖ) :=
-  { MulOpposite.hasScalar α R with one_smul := fun x => unop_injective $ one_smul R (unop x),
-    mul_smul := fun r₁ r₂ x => unop_injective $ mul_smul r₁ r₂ (unop x) }
+  { MulOpposite.hasScalar α R with one_smul := fun x => unop_injective <| one_smul R (unop x),
+    mul_smul := fun r₁ r₂ x => unop_injective <| mul_smul r₁ r₂ (unop x) }
 
 instance (R : Type _) [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] : DistribMulAction R (αᵐᵒᵖ) :=
-  { MulOpposite.mulAction α R with smul_add := fun r x₁ x₂ => unop_injective $ smul_add r (unop x₁) (unop x₂),
-    smul_zero := fun r => unop_injective $ smul_zero r }
+  { MulOpposite.mulAction α R with smul_add := fun r x₁ x₂ => unop_injective <| smul_add r (unop x₁) (unop x₂),
+    smul_zero := fun r => unop_injective <| smul_zero r }
 
 instance (R : Type _) [Monoidₓ R] [Monoidₓ α] [MulDistribMulAction R α] : MulDistribMulAction R (αᵐᵒᵖ) :=
-  { MulOpposite.mulAction α R with smul_mul := fun r x₁ x₂ => unop_injective $ smul_mul' r (unop x₂) (unop x₁),
-    smul_one := fun r => unop_injective $ smul_one r }
+  { MulOpposite.mulAction α R with smul_mul := fun r x₁ x₂ => unop_injective <| smul_mul' r (unop x₂) (unop x₁),
+    smul_one := fun r => unop_injective <| smul_one r }
 
 instance {M N} [HasScalar M N] [HasScalar M α] [HasScalar N α] [IsScalarTower M N α] : IsScalarTower M N (αᵐᵒᵖ) :=
-  ⟨fun x y z => unop_injective $ smul_assoc _ _ _⟩
+  ⟨fun x y z => unop_injective <| smul_assoc _ _ _⟩
 
 @[to_additive]
 instance {M N} [HasScalar M α] [HasScalar N α] [SmulCommClass M N α] : SmulCommClass M N (αᵐᵒᵖ) :=
-  ⟨fun x y z => unop_injective $ smul_comm _ _ _⟩
+  ⟨fun x y z => unop_injective <| smul_comm _ _ _⟩
 
 instance (R : Type _) [HasScalar R α] [HasScalar (Rᵐᵒᵖ) α] [IsCentralScalar R α] : IsCentralScalar R (αᵐᵒᵖ) :=
-  ⟨fun r m => unop_injective $ op_smul_eq_smul _ _⟩
+  ⟨fun r m => unop_injective <| op_smul_eq_smul _ _⟩
 
 theorem op_smul_eq_op_smul_op {R : Type _} [HasScalar R α] [HasScalar (Rᵐᵒᵖ) α] [IsCentralScalar R α] (r : R) (a : α) :
     op (r • a) = op r • op a :=
@@ -115,10 +115,10 @@ example [Monoidₓ α] : Monoidₓ.toMulAction (αᵐᵒᵖ) = MulOpposite.mulAc
 /-- `monoid.to_opposite_mul_action` is faithful on cancellative monoids. -/
 @[to_additive]
 instance LeftCancelMonoid.to_has_faithful_opposite_scalar [LeftCancelMonoid α] : HasFaithfulScalar (αᵐᵒᵖ) α :=
-  ⟨fun x y h => unop_injective $ mul_left_cancelₓ (h 1)⟩
+  ⟨fun x y h => unop_injective <| mul_left_cancelₓ (h 1)⟩
 
 /-- `monoid.to_opposite_mul_action` is faithful on nontrivial cancellative monoids with zero. -/
 instance CancelMonoidWithZero.to_has_faithful_opposite_scalar [CancelMonoidWithZero α] [Nontrivial α] :
     HasFaithfulScalar (αᵐᵒᵖ) α :=
-  ⟨fun x y h => unop_injective $ mul_left_cancel₀ one_ne_zero (h 1)⟩
+  ⟨fun x y h => unop_injective <| mul_left_cancel₀ one_ne_zero (h 1)⟩
 

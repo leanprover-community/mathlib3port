@@ -171,7 +171,7 @@ def S (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) (n : ℕ) (x : I) : Finset (Finₓ
 /-- If `k ∈ S`, then `f(k/n)` is close to `f x`.
 -/
 theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Finₓ (n + 1)} (m : k ∈ S f ε h n x) :
-    |f (k)/ₙ - f x| < ε / 2 := by
+    abs (f (k)/ₙ - f x) < ε / 2 := by
   apply f.dist_lt_of_dist_lt_modulus (ε / 2) (half_pos h)
   simpa [S] using m
 
@@ -198,6 +198,7 @@ open Filter
 
 open_locale TopologicalSpace
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The Bernstein approximations
 ```
 ∑ k : fin (n+1), f (k/n : ℝ) * n.choose k * x^k * (1-x)^(n-k)
@@ -213,8 +214,7 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) :
   intro ε h
   let δ := δ f ε h
   have nhds_zero := tendsto_const_div_at_top_nhds_0_nat (2 * ∥f∥ * δ ^ (-2 : ℤ))
-  filter_upwards [nhds_zero.eventually (gt_mem_nhds (half_pos h)), eventually_gt_at_top 0]
-  intro n nh npos'
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   have npos : 0 < (n : ℝ) := by
     exact_mod_cast npos'
   have w₁ : 0 ≤ 2 * ∥f∥ :=
@@ -226,19 +226,19 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) :
   rw [ContinuousMap.norm_lt_iff _ h]
   intro x
   let S := S f ε h n x
-  calc |(bernsteinApproximation n f - f) x| = |bernsteinApproximation n f x - f x| :=
-      rfl _ = |bernsteinApproximation n f x - f x * 1| := by
-      rw [mul_oneₓ]_ = |bernsteinApproximation n f x - f x * ∑ k : Finₓ (n + 1), bernstein n k x| := by
-      rw [bernstein.probability]_ = |∑ k : Finₓ (n + 1), (f (k)/ₙ - f x) * bernstein n k x| := by
+  calc abs ((bernsteinApproximation n f - f) x) = abs (bernsteinApproximation n f x - f x) :=
+      rfl _ = abs (bernsteinApproximation n f x - f x * 1) := by
+      rw [mul_oneₓ]_ = abs (bernsteinApproximation n f x - f x * ∑ k : Finₓ (n + 1), bernstein n k x) := by
+      rw [bernstein.probability]_ = abs (∑ k : Finₓ (n + 1), (f (k)/ₙ - f x) * bernstein n k x) := by
       simp [bernsteinApproximation, Finset.mul_sum,
-        sub_mul]_ ≤ ∑ k : Finₓ (n + 1), |(f (k)/ₙ - f x) * bernstein n k x| :=
-      Finset.abs_sum_le_sum_abs _ _ _ = ∑ k : Finₓ (n + 1), |f (k)/ₙ - f x| * bernstein n k x := by
+        sub_mul]_ ≤ ∑ k : Finₓ (n + 1), abs ((f (k)/ₙ - f x) * bernstein n k x) :=
+      Finset.abs_sum_le_sum_abs _ _ _ = ∑ k : Finₓ (n + 1), abs (f (k)/ₙ - f x) * bernstein n k x := by
       simp_rw [abs_mul,
         abs_eq_self.mpr
           bernstein_nonneg]_ =
-        (∑ k in S, |f (k)/ₙ - f x| * bernstein n k x) + ∑ k in Sᶜ, |f (k)/ₙ - f x| * bernstein n k x :=
+        (∑ k in S, abs (f (k)/ₙ - f x) * bernstein n k x) + ∑ k in Sᶜ, abs (f (k)/ₙ - f x) * bernstein n k x :=
       (S.sum_add_sum_compl _).symm _ < ε / 2 + ε / 2 := add_lt_add_of_le_of_lt _ _ _ = ε := add_halves ε
-  · calc (∑ k in S, |f (k)/ₙ - f x| * bernstein n k x) ≤ ∑ k in S, ε / 2 * bernstein n k x :=
+  · calc (∑ k in S, abs (f (k)/ₙ - f x) * bernstein n k x) ≤ ∑ k in S, ε / 2 * bernstein n k x :=
         Finset.sum_le_sum fun k m =>
           mul_le_mul_of_nonneg_right (le_of_ltₓ (lt_of_mem_S m))
             bernstein_nonneg _ = ε / 2 * ∑ k in S, bernstein n k x :=
@@ -249,7 +249,7 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) :
         by
         rw [bernstein.probability, mul_oneₓ]
     
-  · calc (∑ k in Sᶜ, |f (k)/ₙ - f x| * bernstein n k x) ≤ ∑ k in Sᶜ, 2 * ∥f∥ * bernstein n k x :=
+  · calc (∑ k in Sᶜ, abs (f (k)/ₙ - f x) * bernstein n k x) ≤ ∑ k in Sᶜ, 2 * ∥f∥ * bernstein n k x :=
         Finset.sum_le_sum fun k m =>
           mul_le_mul_of_nonneg_right (f.dist_le_two_norm _ _)
             bernstein_nonneg _ = 2 * ∥f∥ * ∑ k in Sᶜ, bernstein n k x :=

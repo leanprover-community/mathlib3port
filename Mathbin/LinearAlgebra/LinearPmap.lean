@@ -106,7 +106,7 @@ This version works for modules over division rings. -/
 @[reducible]
 noncomputable def mk_span_singleton {K E F : Type _} [DivisionRing K] [AddCommGroupₓ E] [Module K E] [AddCommGroupₓ F]
     [Module K F] (x : E) (y : F) (hx : x ≠ 0) : LinearPmap K E F :=
-  mk_span_singleton' x y $ fun c hc =>
+  (mk_span_singleton' x y) fun c hc =>
     (smul_eq_zero.1 hc).elim
       (fun hc => by
         rw [hc, zero_smul])
@@ -161,7 +161,7 @@ def eq_locus (f g : LinearPmap R E F) : Submodule R E where
       erw [f.map_smul c ⟨x, hfx⟩, g.map_smul c ⟨x, hgx⟩, hx]⟩
 
 instance : HasInf (LinearPmap R E F) :=
-  ⟨fun f g => ⟨f.eq_locus g, f.to_fun.comp $ of_le $ fun x hx => hx.fst⟩⟩
+  ⟨fun f g => ⟨f.eq_locus g, f.to_fun.comp <| of_le fun x hx => hx.fst⟩⟩
 
 instance : HasBot (LinearPmap R E F) :=
   ⟨⟨⊥, 0⟩⟩
@@ -175,7 +175,7 @@ instance : SemilatticeInf (LinearPmap R E F) where
   le_trans := fun f g h ⟨fg_le, fg_eq⟩ ⟨gh_le, gh_eq⟩ =>
     ⟨le_transₓ fg_le gh_le, fun x z hxz =>
       have hxy : (x : E) = of_le fg_le x := rfl
-      (fg_eq hxy).trans (gh_eq $ hxy.symm.trans hxz)⟩
+      (fg_eq hxy).trans (gh_eq <| hxy.symm.trans hxz)⟩
   le_antisymm := fun f g fg gf => eq_of_le_of_domain_eq fg (le_antisymmₓ fg.1 gf.1)
   inf := ·⊓·
   le_inf := fun f g h ⟨fg_le, fg_eq⟩ ⟨fh_le, fh_eq⟩ =>
@@ -185,9 +185,9 @@ instance : SemilatticeInf (LinearPmap R E F) where
       fun x ⟨y, yg, hy⟩ h => by
       apply fg_eq
       exact h⟩
-  inf_le_left := fun f g => ⟨fun x hx => hx.fst, fun x y h => congr_argₓ f $ Subtype.eq $ h⟩
+  inf_le_left := fun f g => ⟨fun x hx => hx.fst, fun x y h => congr_argₓ f <| Subtype.eq <| h⟩
   inf_le_right := fun f g =>
-    ⟨fun x hx => hx.snd.fst, fun ⟨x, xf, xg, hx⟩ y h => hx.trans $ congr_argₓ g $ Subtype.eq $ h⟩
+    ⟨fun x hx => hx.snd.fst, fun ⟨x, xf, xg, hx⟩ y h => hx.trans <| congr_argₓ g <| Subtype.eq <| h⟩
 
 instance : OrderBot (LinearPmap R E F) where
   bot := ⊥
@@ -202,7 +202,7 @@ theorem le_of_eq_locus_ge {f g : LinearPmap R E F} (H : f.domain ≤ f.eq_locus 
   ⟨H, fun x y hxy => ((inf_le_left : f⊓g ≤ f).2 hxy.symm).symm⟩
 
 theorem domain_mono : StrictMono (@domain R _ E _ _ F _ _) := fun f g hlt =>
-  lt_of_le_of_neₓ hlt.1.1 $ fun heq => ne_of_ltₓ hlt $ eq_of_le_of_domain_eq (le_of_ltₓ hlt) HEq
+  (lt_of_le_of_neₓ hlt.1.1) fun heq => ne_of_ltₓ hlt <| eq_of_le_of_domain_eq (le_of_ltₓ hlt) HEq
 
 private theorem sup_aux (f g : LinearPmap R E F) (h : ∀ x : f.domain y : g.domain, (x : E) = y → f x = g y) :
     ∃ fg : ↥(f.domain⊔g.domain) →ₗ[R] F, ∀ x : f.domain y : g.domain z, (x : E) + y = ↑z → fg z = f x + g y := by
@@ -263,14 +263,14 @@ protected theorem sup_le {f g h : LinearPmap R E F} (H : ∀ x : f.domain y : g.
     (fh : f ≤ h) (gh : g ≤ h) : f.sup g H ≤ h :=
   have Hf : f ≤ f.sup g H⊓h := le_inf (f.left_le_sup g H) fh
   have Hg : g ≤ f.sup g H⊓h := le_inf (f.right_le_sup g H) gh
-  le_of_eq_locus_ge $ sup_le Hf.1 Hg.1
+  le_of_eq_locus_ge <| sup_le Hf.1 Hg.1
 
 /-- Hypothesis for `linear_pmap.sup` holds, if `f.domain` is disjoint with `g.domain`. -/
 theorem sup_h_of_disjoint (f g : LinearPmap R E F) (h : Disjoint f.domain g.domain) (x : f.domain) (y : g.domain)
     (hxy : (x : E) = y) : f x = g y := by
   rw [disjoint_def] at h
   have hy : y = 0 := Subtype.eq (h y (hxy ▸ x.2) y.2)
-  have hx : x = 0 := Subtype.eq (hxy.trans $ congr_argₓ _ hy)
+  have hx : x = 0 := Subtype.eq (hxy.trans <| congr_argₓ _ hy)
   simp [*]
 
 section
@@ -279,8 +279,8 @@ variable {K : Type _} [DivisionRing K] [Module K E] [Module K F]
 
 /-- Extend a `linear_pmap` to `f.domain ⊔ K ∙ x`. -/
 noncomputable def sup_span_singleton (f : LinearPmap K E F) (x : E) (y : F) (hx : x ∉ f.domain) : LinearPmap K E F :=
-  f.sup (mk_span_singleton x y fun h₀ => hx $ h₀.symm ▸ f.domain.zero_mem) $
-    sup_h_of_disjoint _ _ $ by
+  f.sup (mk_span_singleton x y fun h₀ => hx <| h₀.symm ▸ f.domain.zero_mem) <|
+    sup_h_of_disjoint _ _ <| by
       simpa [disjoint_span_singleton]
 
 @[simp]
@@ -329,14 +329,14 @@ private theorem Sup_aux (c : Set (LinearPmap R E F)) (hc : DirectedOn (· ≤ ·
     simp [f_eq (P x).1 (c • x) (c • ⟨x, (P x).2⟩) rfl, ← map_smul]
     
   · intro p hpc
-    refine' ⟨le_Sup $ mem_image_of_mem domain hpc, fun x y hxy => Eq.symm _⟩
+    refine' ⟨le_Sup <| mem_image_of_mem domain hpc, fun x y hxy => Eq.symm _⟩
     exact f_eq ⟨p, hpc⟩ _ _ hxy.symm
     
 
 /-- Glue a collection of partially defined linear maps to a linear map defined on `Sup`
 of these submodules. -/
 protected noncomputable def Sup (c : Set (LinearPmap R E F)) (hc : DirectedOn (· ≤ ·) c) : LinearPmap R E F :=
-  ⟨_, Classical.some $ Sup_aux c hc⟩
+  ⟨_, Classical.some <| Sup_aux c hc⟩
 
 protected theorem le_Sup {c : Set (LinearPmap R E F)} (hc : DirectedOn (· ≤ ·) c) {f : LinearPmap R E F} (hf : f ∈ c) :
     f ≤ LinearPmap.supₓ c hc :=
@@ -344,8 +344,8 @@ protected theorem le_Sup {c : Set (LinearPmap R E F)} (hc : DirectedOn (· ≤ �
 
 protected theorem Sup_le {c : Set (LinearPmap R E F)} (hc : DirectedOn (· ≤ ·) c) {g : LinearPmap R E F}
     (hg : ∀, ∀ f ∈ c, ∀, f ≤ g) : LinearPmap.supₓ c hc ≤ g :=
-  le_of_eq_locus_ge $
-    Sup_le $ fun _ ⟨f, hf, Eq⟩ =>
+  le_of_eq_locus_ge <|
+    Sup_le fun _ ⟨f, hf, Eq⟩ =>
       Eq ▸
         have : f ≤ LinearPmap.supₓ c hc⊓g := le_inf (LinearPmap.le_Sup _ hf) (hg f hf)
         this.1
@@ -382,7 +382,7 @@ def cod_restrict (f : LinearPmap R E F) (p : Submodule R F) (H : ∀ x, f x ∈ 
 
 /-- Compose two `linear_pmap`s -/
 def comp (g : LinearPmap R F G) (f : LinearPmap R E F) (H : ∀ x : f.domain, f x ∈ g.domain) : LinearPmap R E G :=
-  g.to_fun.comp_pmap $ f.cod_restrict _ H
+  g.to_fun.comp_pmap <| f.cod_restrict _ H
 
 /-- `f.coprod g` is the partially defined linear map defined on `f.domain × g.domain`,
 and sending `p` to `f p.1 + g p.2`. -/

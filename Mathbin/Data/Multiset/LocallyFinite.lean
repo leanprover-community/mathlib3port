@@ -52,7 +52,7 @@ alias Ioc_eq_zero_iff ↔ _ Multiset.Ioc_eq_zero
 
 @[simp]
 theorem Ioo_eq_zero (h : ¬a < b) : Ioo a b = 0 :=
-  eq_zero_iff_forall_not_mem.2 $ fun x hx => h ((mem_Ioo.1 hx).1.trans (mem_Ioo.1 hx).2)
+  eq_zero_iff_forall_not_mem.2 fun x hx => h ((mem_Ioo.1 hx).1.trans (mem_Ioo.1 hx).2)
 
 @[simp]
 theorem Icc_eq_zero_of_lt (h : b < a) : Icc a b = 0 :=
@@ -166,7 +166,7 @@ theorem Ico_disjoint_Ico {a b c d : α} (h : b ≤ c) : (Ico a b).Disjoint (Ico 
 
 @[simp]
 theorem Ico_inter_Ico_of_le [DecidableEq α] {a b c d : α} (h : b ≤ c) : Ico a b ∩ Ico c d = 0 :=
-  Multiset.inter_eq_zero_iff_disjoint.2 $ Ico_disjoint_Ico h
+  Multiset.inter_eq_zero_iff_disjoint.2 <| Ico_disjoint_Ico h
 
 theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) : ((Ico a b).filter fun x => x ≤ a) = {a} :=
   by
@@ -226,22 +226,22 @@ variable [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrd
 theorem map_add_left_Icc (a b c : α) : (Icc a b).map ((· + ·) c) = Icc (c + a) (c + b) := by
   classical
   rw [Icc, Icc, ← Finset.image_add_left_Icc, Finset.image_val,
-    (Multiset.nodup_map (add_right_injective c) $ Finset.nodup _).eraseDup]
+    (Multiset.nodup_map (add_right_injective c) <| Finset.nodup _).eraseDup]
 
 theorem map_add_left_Ico (a b c : α) : (Ico a b).map ((· + ·) c) = Ico (c + a) (c + b) := by
   classical
   rw [Ico, Ico, ← Finset.image_add_left_Ico, Finset.image_val,
-    (Multiset.nodup_map (add_right_injective c) $ Finset.nodup _).eraseDup]
+    (Multiset.nodup_map (add_right_injective c) <| Finset.nodup _).eraseDup]
 
 theorem map_add_left_Ioc (a b c : α) : (Ioc a b).map ((· + ·) c) = Ioc (c + a) (c + b) := by
   classical
   rw [Ioc, Ioc, ← Finset.image_add_left_Ioc, Finset.image_val,
-    (Multiset.nodup_map (add_right_injective c) $ Finset.nodup _).eraseDup]
+    (Multiset.nodup_map (add_right_injective c) <| Finset.nodup _).eraseDup]
 
 theorem map_add_left_Ioo (a b c : α) : (Ioo a b).map ((· + ·) c) = Ioo (c + a) (c + b) := by
   classical
   rw [Ioo, Ioo, ← Finset.image_add_left_Ioo, Finset.image_val,
-    (Multiset.nodup_map (add_right_injective c) $ Finset.nodup _).eraseDup]
+    (Multiset.nodup_map (add_right_injective c) <| Finset.nodup _).eraseDup]
 
 theorem map_add_right_Icc (a b c : α) : ((Icc a b).map fun x => x + c) = Icc (a + c) (b + c) := by
   simp_rw [add_commₓ _ c]

@@ -39,14 +39,14 @@ variable (b : Basis ι R M) (c : Basis κ R M)
 
 /-- The trace of an endomorphism given a basis. -/
 def trace_aux : (M →ₗ[R] M) →ₗ[R] R :=
-  Matrix.trace ι R R ∘ₗ ↑LinearMap.toMatrix b b
+  Matrix.trace ι R R ∘ₗ ↑(LinearMap.toMatrix b b)
 
 theorem trace_aux_def (b : Basis ι R M) (f : M →ₗ[R] M) :
     trace_aux R b f = Matrix.trace ι R R (LinearMap.toMatrix b b f) :=
   rfl
 
 theorem trace_aux_eq : trace_aux R b = trace_aux R c :=
-  LinearMap.ext $ fun f =>
+  LinearMap.ext fun f =>
     calc
       Matrix.trace ι R R (LinearMap.toMatrix b b f) =
           Matrix.trace ι R R (LinearMap.toMatrix b b ((LinearMap.id.comp f).comp LinearMap.id)) :=

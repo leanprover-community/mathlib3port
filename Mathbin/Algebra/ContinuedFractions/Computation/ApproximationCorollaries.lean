@@ -72,7 +72,7 @@ variable [Archimedean K]
 
 open Nat
 
-theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, ∀ n ≥ N, ∀, |v - (of v).convergents n| < ε := by
+theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, ∀ n ≥ N, ∀, abs (v - (of v).convergents n) < ε := by
   intro ε ε_pos
   rcases(exists_nat_gt (1 / ε) : ∃ N' : ℕ, 1 / ε < N') with ⟨N', one_div_ε_lt_N'⟩
   let N := max N' 5
@@ -87,7 +87,7 @@ theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, �
     
   · let B := g.denominators n
     let nB := g.denominators (n + 1)
-    have abs_v_sub_conv_le : |v - g.convergents n| ≤ 1 / (B * nB) := abs_sub_convergents_le not_terminated_at_n
+    have abs_v_sub_conv_le : abs (v - g.convergents n) ≤ 1 / (B * nB) := abs_sub_convergents_le not_terminated_at_n
     suffices : 1 / (B * nB) < ε
     exact lt_of_le_of_ltₓ abs_v_sub_conv_le this
     have nB_ineq : (fib (n + 2) : K) ≤ nB :=
@@ -124,7 +124,7 @@ theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, �
     exact (mul_le_mul_left ε_pos).elim_right this
     show (n : K) ≤ B * nB
     calc (n : K) ≤ fib n := by
-        exact_mod_cast le_fib_self $ le_transₓ (le_max_rightₓ N' 5) n_ge_N _ ≤ fib (n + 1) := by
+        exact_mod_cast le_fib_self <| le_transₓ (le_max_rightₓ N' 5) n_ge_N _ ≤ fib (n + 1) := by
         exact_mod_cast fib_le_fib_succ _ ≤ fib (n + 1) * fib (n + 1) := by
         exact_mod_cast (fib (n + 1)).le_mul_self _ ≤ fib (n + 1) * fib (n + 2) :=
         mul_le_mul_of_nonneg_left
@@ -140,7 +140,7 @@ theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, �
 
 attribute [local instance] Preorderₓ.topology
 
-theorem of_convergence [OrderTopology K] : Filter.Tendsto (of v).convergents Filter.atTop $ nhds v := by
+theorem of_convergence [OrderTopology K] : Filter.Tendsto (of v).convergents Filter.atTop <| nhds v := by
   simpa [LinearOrderedAddCommGroup.tendsto_nhds, abs_sub_comm] using of_convergence_epsilon v
 
 end Convergence

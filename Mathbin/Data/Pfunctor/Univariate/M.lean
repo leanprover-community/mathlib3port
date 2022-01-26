@@ -36,7 +36,7 @@ inductive cofix_a : ℕ → Type u
 /-- default inhabitant of `cofix_a` -/
 protected def cofix_a.default [Inhabited F.A] : ∀ n, cofix_a F n
   | 0 => cofix_a.continue
-  | succ n => cofix_a.intro default $ fun _ => cofix_a.default n
+  | succ n => (cofix_a.intro default) fun _ => cofix_a.default n
 
 instance [Inhabited F.A] {n} : Inhabited (cofix_a F n) :=
   ⟨cofix_a.default F n⟩
@@ -85,7 +85,7 @@ theorem agree_children {n : ℕ} (x : cofix_a F (succ n)) (y : cofix_a F (succ n
 /-- `truncate a` turns `a` into a more limited approximation -/
 def truncate : ∀ {n : ℕ}, cofix_a F (n + 1) → cofix_a F n
   | 0, cofix_a.intro _ _ => cofix_a.continue
-  | succ n, cofix_a.intro i f => cofix_a.intro i $ truncate ∘ f
+  | succ n, cofix_a.intro i f => cofix_a.intro i <| truncate ∘ f
 
 theorem truncate_eq_of_agree {n : ℕ} (x : cofix_a F n) (y : cofix_a F (succ n)) (h : agree x y) : truncate y = x := by
   induction n generalizing x y <;> cases x <;> cases y
@@ -176,7 +176,7 @@ def M :=
 
 theorem M.default_consistent [Inhabited F.A] : ∀ n, agree (default : cofix_a F n) default
   | 0 => agree.continue _ _
-  | succ n => agree.intro _ _ $ fun _ => M.default_consistent n
+  | succ n => (agree.intro _ _) fun _ => M.default_consistent n
 
 instance M.inhabited [Inhabited F.A] : Inhabited (M F) :=
   ⟨{ approx := fun n => default, consistent := M.default_consistent _ }⟩
@@ -217,7 +217,7 @@ def children (x : M F) (i : F.B (head x)) : M F :=
   { approx := fun n =>
       children' (x.1 _)
         (cast
-          (congr_argₓ _ $ by
+          (congr_argₓ _ <| by
             simp only [head, H] <;> rfl)
           i),
     consistent := by
@@ -235,7 +235,7 @@ def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.Idx) (x : M F) : M F :=
   if H' : i.1 = head x then
     children x
       (cast
-        (congr_argₓ _ $ by
+        (congr_argₓ _ <| by
           simp only [head, H'] <;> rfl)
         i.2)
   else default
@@ -243,13 +243,13 @@ def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.Idx) (x : M F) : M F :=
 theorem head_succ (n m : ℕ) (x : M F) : head' (x.approx (succ n)) = head' (x.approx (succ m)) :=
   head_succ' n m _ x.consistent
 
-theorem head_eq_head' : ∀ x : M F n : ℕ, head x = head' (x.approx $ n + 1)
+theorem head_eq_head' : ∀ x : M F n : ℕ, head x = head' (x.approx <| n + 1)
   | ⟨x, h⟩, n => head_succ' _ _ _ h
 
-theorem head'_eq_head : ∀ x : M F n : ℕ, head' (x.approx $ n + 1) = head x
+theorem head'_eq_head : ∀ x : M F n : ℕ, head' (x.approx <| n + 1) = head x
   | ⟨x, h⟩, n => head_succ' _ _ _ h
 
-theorem truncate_approx (x : M F) (n : ℕ) : truncate (x.approx $ n + 1) = x.approx n :=
+theorem truncate_approx (x : M F) (n : ℕ) : truncate (x.approx <| n + 1) = x.approx n :=
   truncate_eq_of_agree _ _ (x.consistent _)
 
 /-- unfold an M-type -/
@@ -259,11 +259,11 @@ def dest : M F → F.obj (M F)
 namespace Approx
 
 /-- generates the approximations needed for `M.mk` -/
-protected def s_mk (x : F.obj $ M F) : ∀ n, cofix_a F n
+protected def s_mk (x : F.obj <| M F) : ∀ n, cofix_a F n
   | 0 => cofix_a.continue
   | succ n => cofix_a.intro x.1 fun i => (x.2 i).approx n
 
-protected theorem P_mk (x : F.obj $ M F) : all_agree (approx.s_mk x)
+protected theorem P_mk (x : F.obj <| M F) : all_agree (approx.s_mk x)
   | 0 => by
     constructor
   | succ n => by
@@ -274,7 +274,7 @@ protected theorem P_mk (x : F.obj $ M F) : all_agree (approx.s_mk x)
 end Approx
 
 /-- constructor for M-types -/
-protected def mk (x : F.obj $ M F) : M F where
+protected def mk (x : F.obj <| M F) : M F where
   approx := approx.s_mk x
   consistent := approx.P_mk x
 
@@ -286,7 +286,7 @@ inductive agree' : ℕ → M F → M F → Prop
     x' = M.mk ⟨a, x⟩ → y' = M.mk ⟨a, y⟩ → (∀ i, agree' n (x i) (y i)) → agree' (succ n) x' y'
 
 @[simp]
-theorem dest_mk (x : F.obj $ M F) : dest (M.mk x) = x := by
+theorem dest_mk (x : F.obj <| M F) : dest (M.mk x) = x := by
   funext i
   dsimp only [M.mk, dest]
   cases' x with x ch
@@ -323,11 +323,11 @@ theorem mk_dest (x : M F) : M.mk (dest x) = x := by
     rfl
     
 
-theorem mk_inj {x y : F.obj $ M F} (h : M.mk x = M.mk y) : x = y := by
+theorem mk_inj {x y : F.obj <| M F} (h : M.mk x = M.mk y) : x = y := by
   rw [← dest_mk x, h, dest_mk]
 
 /-- destructor for M-types -/
-protected def cases {r : M F → Sort w} (f : ∀ x : F.obj $ M F, r (M.mk x)) (x : M F) : r x :=
+protected def cases {r : M F → Sort w} (f : ∀ x : F.obj <| M F, r (M.mk x)) (x : M F) : r x :=
   suffices r (M.mk (dest x)) by
     have := Classical.propDecidable
     have := Inhabited.mk x
@@ -336,7 +336,7 @@ protected def cases {r : M F → Sort w} (f : ∀ x : F.obj $ M F, r (M.mk x)) (
   f _
 
 /-- destructor for M-types -/
-protected def cases_on {r : M F → Sort w} (x : M F) (f : ∀ x : F.obj $ M F, r (M.mk x)) : r x :=
+protected def cases_on {r : M F → Sort w} (x : M F) (f : ∀ x : F.obj <| M F, r (M.mk x)) : r x :=
   M.cases f x
 
 /-- destructor for M-types, similar to `cases_on` but also
@@ -358,7 +358,7 @@ theorem agree'_refl {n : ℕ} (x : M F) : agree' n x x := by
   intros
   apply n_ih
 
-theorem agree_iff_agree' {n : ℕ} (x y : M F) : agree (x.approx n) (y.approx $ n + 1) ↔ agree' n x y := by
+theorem agree_iff_agree' {n : ℕ} (x y : M F) : agree (x.approx n) (y.approx <| n + 1) ↔ agree' n x y := by
   constructor <;> intro h
   · induction n generalizing x y
     constructor
@@ -392,7 +392,7 @@ theorem agree_iff_agree' {n : ℕ} (x y : M F) : agree (x.approx n) (y.approx $ 
     
 
 @[simp]
-theorem cases_mk {r : M F → Sort _} (x : F.obj $ M F) (f : ∀ x : F.obj $ M F, r (M.mk x)) :
+theorem cases_mk {r : M F → Sort _} (x : F.obj <| M F) (f : ∀ x : F.obj <| M F, r (M.mk x)) :
     Pfunctor.M.cases f (M.mk x) = f x := by
   dsimp only [M.mk, Pfunctor.M.cases, dest, head, approx.s_mk, head']
   cases x
@@ -408,7 +408,7 @@ theorem cases_mk {r : M F → Sort _} (x : F.obj $ M F) (f : ∀ x : F.obj $ M F
   rw [h]
 
 @[simp]
-theorem cases_on_mk {r : M F → Sort _} (x : F.obj $ M F) (f : ∀ x : F.obj $ M F, r (M.mk x)) :
+theorem cases_on_mk {r : M F → Sort _} (x : F.obj <| M F) (f : ∀ x : F.obj <| M F, r (M.mk x)) :
     Pfunctor.M.casesOn (M.mk x) f = f x :=
   cases_mk x f
 
@@ -454,7 +454,7 @@ def isubtree [DecidableEq F.A] [Inhabited (M F)] : path F → M F → M F
     Pfunctor.M.casesOn' x fun a' f =>
       (if h : a = a' then
         isubtree ps
-          (f $
+          (f <|
             cast
               (by
                 rw [h])
@@ -464,7 +464,7 @@ def isubtree [DecidableEq F.A] [Inhabited (M F)] : path F → M F → M F
 
 /-- similar to `isubtree` but returns the data at the end of the path instead
 of the whole subtree -/
-def iselect [DecidableEq F.A] [Inhabited (M F)] (ps : path F) : M F → F.A := fun x : M F => head $ isubtree ps x
+def iselect [DecidableEq F.A] [Inhabited (M F)] (ps : path F) : M F → F.A := fun x : M F => head <| isubtree ps x
 
 theorem iselect_eq_default [DecidableEq F.A] [Inhabited (M F)] (ps : path F) (x : M F) (h : ¬is_path ps x) :
     iselect ps x = head default := by
@@ -493,7 +493,7 @@ theorem iselect_eq_default [DecidableEq F.A] [Inhabited (M F)] (ps : path F) (x 
 
 @[simp]
 theorem head_mk (x : F.obj (M F)) : head (M.mk x) = x.1 :=
-  Eq.symm $
+  Eq.symm <|
     calc
       x.1 = (dest (M.mk x)).1 := by
         rw [dest_mk]

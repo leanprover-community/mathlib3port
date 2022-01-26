@@ -104,7 +104,7 @@ theorem smul_aux'_im (g : SL(2,ℝ)) (z : ℍ) : (smul_aux' g z).im = z.im / (de
     simp only [denom_ne_zero g z, MonoidWithZeroHom.map_eq_zero, Ne.def, not_false_iff]
   field_simp [smul_aux']
   convert congr_argₓ (fun x => x * z.im * NsqBot ^ 2) g.det_coe using 1
-  · rw [det_fin_two (↑g)]
+  · rw [det_fin_two ↑g]
     ring
     
   · ring

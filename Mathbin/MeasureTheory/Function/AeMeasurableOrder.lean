@@ -20,6 +20,7 @@ open MeasureTheory Set TopologicalSpace
 
 open_locale Classical Ennreal Nnreal
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- If a function `f : α → β` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p < q`, then `f` is almost-everywhere
 measurable. It is even enough to have this for `p` and `q` in a countable dense set. -/
@@ -90,8 +91,7 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
       convert this
       ext y
       simp only [not_exists, exists_prop, mem_set_of_eq, mem_compl_eq, not_not_mem]
-    filter_upwards [this]
-    intro x hx
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     apply (infi_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
     · intro i
       by_cases' H : x ∈ u' i

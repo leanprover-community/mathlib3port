@@ -12,10 +12,10 @@ namespace CharP
 
 instance Subsemiring (R : Type u) [Semiringₓ R] (p : ℕ) [CharP R p] (S : Subsemiring R) : CharP S p :=
   ⟨fun x =>
-    Iff.symm $
+    Iff.symm <|
       (CharP.cast_eq_zero_iff R p x).symm.trans
         ⟨fun h =>
-          Subtype.eq $
+          Subtype.eq <|
             show S.subtype x = 0 by
               rw [map_nat_cast, h],
           fun h =>
@@ -24,10 +24,10 @@ instance Subsemiring (R : Type u) [Semiringₓ R] (p : ℕ) [CharP R p] (S : Sub
 
 instance Subring (R : Type u) [Ringₓ R] (p : ℕ) [CharP R p] (S : Subring R) : CharP S p :=
   ⟨fun x =>
-    Iff.symm $
+    Iff.symm <|
       (CharP.cast_eq_zero_iff R p x).symm.trans
         ⟨fun h =>
-          Subtype.eq $
+          Subtype.eq <|
             show S.subtype x = 0 by
               rw [map_nat_cast, h],
           fun h =>

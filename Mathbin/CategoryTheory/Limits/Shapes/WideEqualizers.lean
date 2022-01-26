@@ -132,8 +132,8 @@ theorem parallel_family_map_left {j : J} : (parallel_family f).map (line j) = f 
 @[simps]
 def diagram_iso_parallel_family (F : walking_parallel_family J ⥤ C) : F ≅ parallel_family fun j => F.map (line j) :=
   (nat_iso.of_components fun j =>
-      eq_to_iso $ by
-        cases j <;> tidy) $
+      eq_to_iso <| by
+        cases j <;> tidy) <|
     by
     tidy
 
@@ -264,25 +264,25 @@ theorem cotrident.coequalizer_ext [Nonempty J] (s : cotrident f) {W : C} {k l : 
 
 theorem trident.is_limit.hom_ext [Nonempty J] {s : trident f} (hs : is_limit s) {W : C} {k l : W ⟶ s.X}
     (h : k ≫ s.ι = l ≫ s.ι) : k = l :=
-  hs.hom_ext $ trident.equalizer_ext _ h
+  hs.hom_ext <| trident.equalizer_ext _ h
 
 theorem cotrident.is_colimit.hom_ext [Nonempty J] {s : cotrident f} (hs : is_colimit s) {W : C} {k l : s.X ⟶ W}
     (h : s.π ≫ k = s.π ≫ l) : k = l :=
-  hs.hom_ext $ cotrident.coequalizer_ext _ h
+  hs.hom_ext <| cotrident.coequalizer_ext _ h
 
 /-- If `s` is a limit trident over `f`, then a morphism `k : W ⟶ X` satisfying
     `∀ j₁ j₂, k ≫ f j₁ = k ≫ f j₂` induces a morphism `l : W ⟶ s.X` such that
     `l ≫ trident.ι s = k`. -/
 def trident.is_limit.lift' [Nonempty J] {s : trident f} (hs : is_limit s) {W : C} (k : W ⟶ X)
     (h : ∀ j₁ j₂, k ≫ f j₁ = k ≫ f j₂) : { l : W ⟶ s.X // l ≫ trident.ι s = k } :=
-  ⟨hs.lift $ trident.of_ι _ h, hs.fac _ _⟩
+  ⟨hs.lift <| trident.of_ι _ h, hs.fac _ _⟩
 
 /-- If `s` is a colimit cotrident over `f`, then a morphism `k : Y ⟶ W` satisfying
     `∀ j₁ j₂, f j₁ ≫ k = f j₂ ≫ k` induces a morphism `l : s.X ⟶ W` such that
     `cotrident.π s ≫ l = k`. -/
 def cotrident.is_colimit.desc' [Nonempty J] {s : cotrident f} (hs : is_colimit s) {W : C} (k : Y ⟶ W)
     (h : ∀ j₁ j₂, f j₁ ≫ k = f j₂ ≫ k) : { l : s.X ⟶ W // cotrident.π s ≫ l = k } :=
-  ⟨hs.desc $ cotrident.of_π _ h, hs.fac _ _⟩
+  ⟨hs.desc <| cotrident.of_π _ h, hs.fac _ _⟩
 
 /-- This is a slightly more convenient method to verify that a trident is a limit cone. It
     only asks for a proof of facts that carry any mathematical content -/
@@ -551,7 +551,7 @@ theorem wide_equalizer.trident_π_app_zero : (wide_equalizer.trident f).π.app z
 
 @[reassoc]
 theorem wide_equalizer.condition (j₁ j₂ : J) : wide_equalizer.ι f ≫ f j₁ = wide_equalizer.ι f ≫ f j₂ :=
-  trident.condition j₁ j₂ $ limit.cone $ parallel_family f
+  trident.condition j₁ j₂ <| limit.cone <| parallel_family f
 
 /-- The wide_equalizer built from `wide_equalizer.ι f` is limiting. -/
 def wide_equalizer_is_wide_equalizer [Nonempty J] :
@@ -638,7 +638,7 @@ theorem wide_coequalizer.cotrident_ι_app_one : (wide_coequalizer.cotrident f).�
 
 @[reassoc]
 theorem wide_coequalizer.condition (j₁ j₂ : J) : f j₁ ≫ wide_coequalizer.π f = f j₂ ≫ wide_coequalizer.π f :=
-  cotrident.condition j₁ j₂ $ colimit.cocone $ parallel_family f
+  cotrident.condition j₁ j₂ <| colimit.cocone <| parallel_family f
 
 /-- The cotrident built from `wide_coequalizer.π f` is colimiting. -/
 def wide_coequalizer_is_wide_coequalizer [Nonempty J] :

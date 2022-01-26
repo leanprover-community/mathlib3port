@@ -33,8 +33,8 @@ theorem mem_derangements_iff_fixed_points_eq_empty {f : perm α} : f ∈ Derange
 
 /-- If `α` is equivalent to `β`, then `derangements α` is equivalent to `derangements β`. -/
 def Equivₓ.derangementsCongr (e : α ≃ β) : Derangements α ≃ Derangements β :=
-  e.perm_congr.subtype_equiv $ fun f =>
-    e.forall_congr $ by
+  e.perm_congr.subtype_equiv fun f =>
+    e.forall_congr <| by
       simp
 
 namespace Derangements
@@ -83,7 +83,7 @@ def at_most_one_fixed_point_equiv_sum_derangements [DecidableEq α] (a : α) :
           rfl
           
     _ ≃ Sum { f : perm α // fixed_points f = {a} } { f : perm α // fixed_points f = ∅ } := by
-      refine' Equivₓ.sumCongr (subtype_equiv_right $ fun f => _) (subtype_equiv_right $ fun f => _)
+      refine' Equivₓ.sumCongr (subtype_equiv_right fun f => _) (subtype_equiv_right fun f => _)
       · rw [Set.eq_singleton_iff_unique_mem, and_comm]
         rfl
         
@@ -92,8 +92,8 @@ def at_most_one_fixed_point_equiv_sum_derangements [DecidableEq α] (a : α) :
         
     _ ≃ Sum (Derangements ({a}ᶜ : Set α)) (Derangements α) := by
       refine'
-        Equivₓ.sumCongr ((Derangements.subtypeEquiv _).trans $ subtype_equiv_right $ fun x => _).symm
-          (subtype_equiv_right $ fun f => mem_derangements_iff_fixed_points_eq_empty.symm)
+        Equivₓ.sumCongr ((Derangements.subtypeEquiv _).trans <| subtype_equiv_right fun x => _).symm
+          (subtype_equiv_right fun f => mem_derangements_iff_fixed_points_eq_empty.symm)
       rw [eq_comm, Set.ext_iff]
       simp_rw [Set.mem_compl_iff, not_not]
     

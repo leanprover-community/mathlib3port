@@ -163,7 +163,7 @@ theorem algebraic_independent_equiv' (e : ι ≃ ι') {f : ι' → A} {g : ι �
 
 theorem algebraic_independent_subtype_range {ι} {f : ι → A} (hf : injective f) :
     AlgebraicIndependent R (coe : range f → A) ↔ AlgebraicIndependent R f :=
-  Iff.symm $ algebraic_independent_equiv' (Equivₓ.ofInjective f hf) rfl
+  Iff.symm <| algebraic_independent_equiv' (Equivₓ.ofInjective f hf) rfl
 
 alias algebraic_independent_subtype_range ↔ AlgebraicIndependent.of_subtype_range _
 
@@ -267,7 +267,7 @@ theorem algebraic_independent_subtype {s : Set A} :
 theorem algebraic_independent_of_finite (s : Set A)
     (H : ∀ t _ : t ⊆ s, finite t → AlgebraicIndependent R (fun x => x : t → A)) :
     AlgebraicIndependent R (fun x => x : s → A) :=
-  algebraic_independent_subtype.2 $ fun p hp =>
+  algebraic_independent_subtype.2 fun p hp =>
     algebraic_independent_subtype.1 (H _ (mem_supported.1 hp) (Finset.finite_to_set _)) _
       (by
         simp )
@@ -288,7 +288,7 @@ theorem algebraic_independent_Union_of_directed {η : Type _} [Nonempty η] {s :
   refine' algebraic_independent_of_finite (⋃ i, s i) fun t ht ft => _
   rcases finite_subset_Union ft ht with ⟨I, fi, hI⟩
   rcases hs.finset_le fi.to_finset with ⟨i, hi⟩
-  exact (h i).mono (subset.trans hI $ Union₂_subset $ fun j hj => hi j (fi.mem_to_finset.2 hj))
+  exact (h i).mono (subset.trans hI <| Union₂_subset fun j hj => hi j (fi.mem_to_finset.2 hj))
 
 theorem algebraic_independent_sUnion_of_directed {s : Set (Set A)} (hsn : s.nonempty) (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀, ∀ a ∈ s, ∀, AlgebraicIndependent R (fun x => x : (a : Set A) → A)) :
@@ -365,7 +365,7 @@ theorem AlgebraicIndependent.aeval_repr p : aeval x (hx.repr p) = p :=
   Subtype.ext_iff.1 (AlgEquiv.apply_symm_apply hx.aeval_equiv p)
 
 theorem AlgebraicIndependent.aeval_comp_repr : (aeval x).comp hx.repr = Subalgebra.val _ :=
-  AlgHom.ext $ hx.aeval_repr
+  AlgHom.ext <| hx.aeval_repr
 
 theorem AlgebraicIndependent.repr_ker : (hx.repr : adjoin R (range x) →+* MvPolynomial ι R).ker = ⊥ :=
   (RingHom.injective_iff_ker_eq_bot _).1 (AlgEquiv.injective _)

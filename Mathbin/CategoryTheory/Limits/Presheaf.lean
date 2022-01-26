@@ -67,7 +67,7 @@ def restricted_yoneda_yoneda : restricted_yoneda (yoneda : C ⥤ Cᵒᵖ ⥤ Typ
   nat_iso.of_components
     (fun P =>
       nat_iso.of_components (fun X => yoneda_sections_small X.unop _) fun X Y f =>
-        funext $ fun x => by
+        funext fun x => by
           dsimp
           rw [← functor_to_types.naturality _ _ x f (𝟙 _)]
           dsimp
@@ -84,7 +84,7 @@ def restrict_yoneda_hom_equiv (P : Cᵒᵖ ⥤ Type u₁) (E : ℰ) {c : cocone 
     { toFun := fun k =>
         { app := fun c p => k.1 (Opposite.op ⟨_, p⟩),
           naturality' := fun c c' f =>
-            funext $ fun p =>
+            funext fun p =>
               (k.2 (Quiver.Hom.op ⟨f, rfl⟩ : (Opposite.op ⟨c', P.map f p⟩ : P.elementsᵒᵖ) ⟶ Opposite.op ⟨c, p⟩)).symm },
       invFun := fun τ =>
         { val := fun p => τ.app p.unop.1 p.unop.2,

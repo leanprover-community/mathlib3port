@@ -335,7 +335,7 @@ theorem from_glued_injective : Function.Injective 𝒰.from_glued.1.base := by
 instance from_glued_stalk_iso (x : 𝒰.glued_cover.glued.carrier) :
     is_iso (PresheafedSpace.stalk_map 𝒰.from_glued.val x) := by
   obtain ⟨i, x, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective x
-  have := PresheafedSpace.stalk_map.congr_hom _ _ (congr_argₓ Subtype.val $ 𝒰.ι_from_glued i) x
+  have := PresheafedSpace.stalk_map.congr_hom _ _ (congr_argₓ Subtype.val <| 𝒰.ι_from_glued i) x
   erw [PresheafedSpace.stalk_map.comp] at this
   rw [← is_iso.eq_comp_inv] at this
   rw [this]

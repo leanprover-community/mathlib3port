@@ -125,10 +125,10 @@ theorem act_rel_act_of_rel (m : M) {a b : N} (ab : r a b) : r (μ m a) (μ m b) 
 theorem Groupₓ.covariant_iff_contravariant [Groupₓ N] : Covariant N N (· * ·) r ↔ Contravariant N N (· * ·) r := by
   refine' ⟨fun h a b c bc => _, fun h a b c bc => _⟩
   · rw [← inv_mul_cancel_leftₓ a b, ← inv_mul_cancel_leftₓ a c]
-    exact h (a⁻¹) bc
+    exact h a⁻¹ bc
     
   · rw [← inv_mul_cancel_leftₓ a b, ← inv_mul_cancel_leftₓ a c] at bc
-    exact h (a⁻¹) bc
+    exact h a⁻¹ bc
     
 
 @[to_additive]

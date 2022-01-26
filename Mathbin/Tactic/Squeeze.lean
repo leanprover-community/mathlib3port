@@ -11,7 +11,7 @@ private unsafe def loc.to_string_aux : Option Name → Stringₓ
 unsafe def loc.to_string : loc → Stringₓ
   | loc.ns [] => ""
   | loc.ns [none] => ""
-  | loc.ns ls => Stringₓ.join $ List.intersperse " " (" at" :: ls.map loc.to_string_aux)
+  | loc.ns ls => Stringₓ.join <| List.intersperse " " (" at" :: ls.map loc.to_string_aux)
   | loc.wildcard => " at *"
 
 /-- shift `pos` `n` columns to the left -/
@@ -32,7 +32,7 @@ unsafe def struct_inst : lean.parser pexpr := do
   tk "}"
   let (srcs, fields) := partition_map id ls
   let (names, values) := unzip fields
-  pure $ pexpr.mk_structure_instance { field_names := names, field_values := values, sources := srcs }
+  pure <| pexpr.mk_structure_instance { field_names := names, field_values := values, sources := srcs }
 
 /-- pretty print structure instance -/
 unsafe def struct.to_tactic_format (e : pexpr) : tactic format := do
@@ -41,10 +41,10 @@ unsafe def struct.to_tactic_format (e : pexpr) : tactic format := do
     mzipWith
         (fun n v => do
           let v ← to_expr v >>= pp
-          pure $ f! "{n } := {v}")
+          pure <| f! "{n } := {v}")
         r.field_names r.field_values
   let ss := r.sources.map fun s => f! " .. {s}"
-  let x : format := format.join $ List.intersperse ", " (fs ++ ss)
+  let x : format := format.join <| List.intersperse ", " (fs ++ ss)
   pure f! " \{{x}}}"
 
 /-- Attribute containing a table that accumulates multiple `squeeze_simp` suggestions -/
@@ -79,7 +79,7 @@ unsafe def mk_suggestion (p : Pos) (pre post : Stringₓ) (args : List simp_arg_
     | none => do
       let args ← render_simp_arg_list args
       if at_pos then
-          @scopeTrace _ p.line p.column $ fun _ => _root_.trace (s! "{pre }{args }{post}") (pure () : tactic Unit)
+          (@scopeTrace _ p.line p.column) fun _ => _root_.trace (s! "{pre }{args }{post}") (pure () : tactic Unit)
         else trace s! "{pre }{args }{post}"
     | some xs => do
       squeeze_loc_attr `` squeeze_loc_attr_carrier ((p, pre, args, post) :: xs) ff
@@ -106,7 +106,7 @@ unsafe def parse_dsimp_config : Option pexpr → tactic (dsimp_config × format)
 produced by `tac` is equivalent to `proof`. -/
 unsafe def same_result (pr : proof_state) (tac : tactic Unit) : tactic Bool := do
   let s ← get_proof_state_after tac
-  pure $ some pr = s
+  pure <| some pr = s
 
 private unsafe def filter_simp_set_aux (tac : Bool → List simp_arg_type → tactic Unit) (args : List simp_arg_type)
     (pr : proof_state) :
@@ -137,7 +137,7 @@ unsafe def filter_simp_set (tac : Bool → List simp_arg_type → tactic Unit) (
 /-- make a `simp_arg_type` that references the name given as an argument -/
 unsafe def name.to_simp_args (n : Name) : tactic simp_arg_type := do
   let e ← resolve_name' n
-  pure $ simp_arg_type.expr e
+  pure <| simp_arg_type.expr e
 
 /-- tactic combinator to create a `simp`-like tactic that minimizes its
 argument list.
@@ -156,12 +156,12 @@ unsafe def squeeze_simp_core (slow no_dflt : Bool) (args : List simp_arg_type)
   let args ←
     if slow then do
         let simp_set ← attribute.get_instances `simp
-        let simp_set ← simp_set.mfilter $ has_attribute' `_refl_lemma
-        let simp_set ← simp_set.mmap $ resolve_name' >=> pure ∘ simp_arg_type.expr
-        pure $ args ++ simp_set
+        let simp_set ← simp_set.mfilter <| has_attribute' `_refl_lemma
+        let simp_set ← simp_set.mmap <| resolve_name' >=> pure ∘ simp_arg_type.expr
+        pure <| args ++ simp_set
       else pure args
   let g ←
-    retrieve $ do
+    retrieve <| do
         let g ← main_goal
         tac no_dflt args
         instantiate_mvars g
@@ -213,13 +213,13 @@ end
 unsafe def squeeze_scope (tac : itactic) : tactic Unit := do
   let none ← squeeze_loc_attr.get_param `` squeeze_loc_attr_carrier | pure ()
   squeeze_loc_attr `` squeeze_loc_attr_carrier (some []) ff
-  finally tac $ do
+  finally tac <| do
       let some xs ← squeeze_loc_attr `` squeeze_loc_attr_carrier | fail "invalid state"
       let m := native.rb_lmap.of_list xs
       squeeze_loc_attr `` squeeze_loc_attr_carrier none ff
-      m.to_list.reverse.mmap' $ fun ⟨p, suggs⟩ => do
+      m.to_list.reverse.mmap' fun ⟨p, suggs⟩ => do
           let ⟨pre, _, post⟩ := suggs.head
-          let suggs : List (List simp_arg_type) := suggs.map $ Prod.fst ∘ Prod.snd
+          let suggs : List (List simp_arg_type) := suggs.map <| Prod.fst ∘ Prod.snd
           mk_suggestion p pre post (suggs.foldl List.unionₓ []) tt
           pure ()
 

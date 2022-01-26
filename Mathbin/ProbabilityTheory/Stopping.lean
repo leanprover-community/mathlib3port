@@ -15,10 +15,10 @@ at a specific time and is the first step in formalizing stochastic processes.
   filtration `f` if at each point in time `i`, `u i` is `f i`-measurable
 * `measure_theory.filtration.natural`: the natural filtration with respect to a sequence of
   measurable functions is the smallest filtration to which it is adapted to
-* `measure_theory.stopping_time`: a stopping time with respect to some filtration `f` is a
+* `measure_theory.is_stopping_time`: a stopping time with respect to some filtration `f` is a
   function `τ` such that for all `i`, the preimage of `{j | j ≤ i}` along `τ` is
   `f i`-measurable
-* `measure_theory.stopping_time.measurable_space`: the σ-algebra associated with a stopping time
+* `measure_theory.is_stopping_time.measurable_space`: the σ-algebra associated with a stopping time
 
 ## Tags
 
@@ -105,7 +105,7 @@ of σ-algebras such that that sequence of functions is measurable with respect t
 the filtration. -/
 def natural (u : ι → α → β) (hum : ∀ i, Measurable (u i)) : filtration ι m where
   seq := fun i => ⨆ j ≤ i, MeasurableSpace.comap (u j) inferInstance
-  mono := fun i j hij => bsupr_le_bsupr' $ fun k hk => le_transₓ hk hij
+  mono := fun i j hij => bsupr_le_bsupr' fun k hk => le_transₓ hk hij
   le := fun i =>
     bsupr_le fun j hj s hs =>
       let ⟨t, ht, ht'⟩ := hs
@@ -123,7 +123,7 @@ with respect to `f i`.
 Intuitively, the stopping time `τ` describes some stopping rule such that at time
 `i`, we may determine it with the information we have at time `i`. -/
 def is_stopping_time (f : filtration ι m) (τ : α → ι) :=
-  ∀ i : ι, measurable_set[f i] $ { x | τ x ≤ i }
+  ∀ i : ι, measurable_set[f i] <| { x | τ x ≤ i }
 
 variable {f : filtration ℕ m} {τ : α → ℕ}
 
@@ -167,7 +167,7 @@ theorem is_stopping_time.measurable_set_ge (hτ : is_stopping_time f τ) (i : �
 
 theorem is_stopping_time.measurable_set_eq_le {f : filtration ℕ m} {τ : α → ℕ} (hτ : is_stopping_time f τ) {i j : ℕ}
     (hle : i ≤ j) : measurable_set[f j] { x | τ x = i } :=
-  f.mono hle _ $ hτ.measurable_set_eq i
+  f.mono hle _ <| hτ.measurable_set_eq i
 
 theorem is_stopping_time.measurable_set_lt (hτ : is_stopping_time f τ) (i : ℕ) : measurable_set[f i] { x | τ x < i } :=
   by
@@ -178,7 +178,7 @@ theorem is_stopping_time.measurable_set_lt (hτ : is_stopping_time f τ) (i : �
 
 theorem is_stopping_time.measurable_set_lt_le (hτ : is_stopping_time f τ) {i j : ℕ} (hle : i ≤ j) :
     measurable_set[f j] { x | τ x < i } :=
-  f.mono hle _ $ hτ.measurable_set_lt i
+  f.mono hle _ <| hτ.measurable_set_lt i
 
 theorem is_stopping_time_of_measurable_set_eq {f : filtration ℕ m} {τ : α → ℕ}
     (hτ : ∀ i, measurable_set[f i] { x | τ x = i }) : is_stopping_time f τ := by
@@ -368,7 +368,7 @@ theorem stopped_value_sub_eq_sum' [AddCommGroupₓ β] (hle : τ ≤ π) {N : �
   refine' Finset.sum_congr _ fun _ _ => rfl
   ext i
   simp only [Finset.mem_filter, Set.mem_set_of_eq, Finset.mem_range, Finset.mem_Ico]
-  exact ⟨fun h => ⟨lt_transₓ h.2 (Nat.lt_succ_iffₓ.2 $ hbdd _), h⟩, fun h => h.2⟩
+  exact ⟨fun h => ⟨lt_transₓ h.2 (Nat.lt_succ_iffₓ.2 <| hbdd _), h⟩, fun h => h.2⟩
 
 section AddCommMonoidₓ
 
@@ -385,7 +385,7 @@ theorem stopped_value_eq {N : ℕ} (hbdd : ∀ x, τ x ≤ N) :
     
   · intro hy
     rw [Set.indicator_of_not_mem]
-    exact fun _ => hy (Finset.mem_range.2 $ lt_of_le_of_ltₓ (hbdd _) (Nat.lt_succ_selfₓ _))
+    exact fun _ => hy (Finset.mem_range.2 <| lt_of_le_of_ltₓ (hbdd _) (Nat.lt_succ_selfₓ _))
     
 
 theorem stopped_process_eq (n : ℕ) :

@@ -169,10 +169,10 @@ theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] 
 /-- A module is Artinian iff every nonempty set of submodules has a minimal submodule among them.
 -/
 theorem set_has_minimal_iff_artinian :
-    (∀ a : Set $ Submodule R M, a.nonempty → ∃ M' ∈ a, ∀, ∀ I ∈ a, ∀, I ≤ M' → I = M') ↔ IsArtinian R M := by
+    (∀ a : Set <| Submodule R M, a.nonempty → ∃ M' ∈ a, ∀, ∀ I ∈ a, ∀, I ≤ M' → I = M') ↔ IsArtinian R M := by
   rw [is_artinian_iff_well_founded, WellFounded.well_founded_iff_has_min']
 
-theorem IsArtinian.set_has_minimal [IsArtinian R M] (a : Set $ Submodule R M) (ha : a.nonempty) :
+theorem IsArtinian.set_has_minimal [IsArtinian R M] (a : Set <| Submodule R M) (ha : a.nonempty) :
     ∃ M' ∈ a, ∀, ∀ I ∈ a, ∀, I ≤ M' → I = M' :=
   set_has_minimal_iff_artinian.mpr ‹_› a ha
 
@@ -294,7 +294,7 @@ theorem is_artinian_of_fg_of_artinian {R M} [Ringₓ R] [AddCommGroupₓ M] [Mod
   have : ∀, ∀ x ∈ s, ∀, x ∈ N := fun x hx => hs ▸ Submodule.subset_span hx
   refine' @is_artinian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ is_artinian_pi
   · fapply LinearMap.mk
-    · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ $ this _ c.2⟩
+    · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
       
     · intro f g
       apply Subtype.eq
@@ -311,7 +311,7 @@ theorem is_artinian_of_fg_of_artinian {R M} [Ringₓ R] [AddCommGroupₓ M] [Mod
     
   rintro ⟨n, hn⟩
   change n ∈ N at hn
-  rw [← hs, ← Set.image_id (↑s), Finsupp.mem_span_image_iff_total] at hn
+  rw [← hs, ← Set.image_id ↑s, Finsupp.mem_span_image_iff_total] at hn
   rcases hn with ⟨l, hl1, hl2⟩
   refine' ⟨fun x => l x, Subtype.ext _⟩
   change (∑ i in s.attach, l i • (i : M)) = n
@@ -375,7 +375,7 @@ theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R))
     classical
     by_contra H
     refine' H (smul_sup_le_of_le_smul_of_le_jacobson_bot (fg_span_singleton _) le_rfl (hJ' _ _ this).Ge)
-    exact lt_of_le_of_neₓ le_sup_left fun h => H $ h.symm ▸ le_sup_right
+    exact lt_of_le_of_neₓ le_sup_left fun h => H <| h.symm ▸ le_sup_right
   have : Ideal.span {x} * Jac ^ (n + 1) ≤ ⊥
   calc Ideal.span {x} * Jac ^ (n + 1) = Ideal.span {x} * Jac * Jac ^ n := by
       rw [pow_succₓ, ← mul_assoc]_ ≤ J * Jac ^ n :=

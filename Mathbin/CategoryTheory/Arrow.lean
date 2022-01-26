@@ -117,12 +117,12 @@ instance is_iso_right [is_iso sq] : is_iso sq.right where
 
 @[simp]
 theorem inv_left [is_iso sq] : (inv sq).left = inv sq.left :=
-  is_iso.eq_inv_of_hom_inv_id $ by
+  is_iso.eq_inv_of_hom_inv_id <| by
     rw [← comma.comp_left, is_iso.hom_inv_id, id_left]
 
 @[simp]
 theorem inv_right [is_iso sq] : (inv sq).right = inv sq.right :=
-  is_iso.eq_inv_of_hom_inv_id $ by
+  is_iso.eq_inv_of_hom_inv_id <| by
     rw [← comma.comp_right, is_iso.hom_inv_id, id_right]
 
 @[simp]
@@ -226,26 +226,26 @@ theorem lift.fac_left_of_from_mk {X Y : T} {f : X ⟶ Y} {g : arrow T} (sq : mk 
 
 @[simp, reassoc]
 theorem lift_mk'_left {X Y P Q : T} {f : X ⟶ Y} {g : P ⟶ Q} {u : X ⟶ P} {v : Y ⟶ Q} (h : u ≫ g = f ≫ v)
-    [HasLift $ arrow.hom_mk' h] : f ≫ lift (arrow.hom_mk' h) = u := by
+    [HasLift <| arrow.hom_mk' h] : f ≫ lift (arrow.hom_mk' h) = u := by
   simp only [← arrow.mk_hom f, lift.fac_left, arrow.hom_mk'_left]
 
 @[simp, reassoc]
 theorem lift_mk'_right {X Y P Q : T} {f : X ⟶ Y} {g : P ⟶ Q} {u : X ⟶ P} {v : Y ⟶ Q} (h : u ≫ g = f ≫ v)
-    [HasLift $ arrow.hom_mk' h] : lift (arrow.hom_mk' h) ≫ g = v := by
+    [HasLift <| arrow.hom_mk' h] : lift (arrow.hom_mk' h) ≫ g = v := by
   simp only [← arrow.mk_hom g, lift.fac_right, arrow.hom_mk'_right]
 
 section
 
 instance subsingleton_lift_struct_of_epi {f g : arrow T} (sq : f ⟶ g) [epi f.hom] : Subsingleton (lift_struct sq) :=
-  Subsingleton.intro $ fun a b =>
-    lift_struct.ext a b $
-      (cancel_epi f.hom).1 $ by
+  Subsingleton.intro fun a b =>
+    lift_struct.ext a b <|
+      (cancel_epi f.hom).1 <| by
         simp
 
 instance subsingleton_lift_struct_of_mono {f g : arrow T} (sq : f ⟶ g) [mono g.hom] : Subsingleton (lift_struct sq) :=
-  Subsingleton.intro $ fun a b =>
-    lift_struct.ext a b $
-      (cancel_mono g.hom).1 $ by
+  Subsingleton.intro fun a b =>
+    lift_struct.ext a b <|
+      (cancel_mono g.hom).1 <| by
         simp
 
 end

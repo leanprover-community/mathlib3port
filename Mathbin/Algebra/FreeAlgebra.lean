@@ -179,7 +179,7 @@ instance : Inhabited (FreeAlgebra R X) :=
   ⟨0⟩
 
 instance : HasScalar R (FreeAlgebra R X) where
-  smul := fun r => Quot.map ((· * ·) (↑r)) fun a b => rel.mul_compat_right
+  smul := fun r => Quot.map ((· * ·) ↑r) fun a b => rel.mul_compat_right
 
 instance : Algebra R (FreeAlgebra R X) where
   toFun := fun r => Quot.mk _ r
@@ -210,7 +210,7 @@ variable {A : Type _} [Semiringₓ A] [Algebra R A]
 /-- Internal definition used to define `lift` -/
 private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A where
   toFun := fun a =>
-    Quot.liftOn a (lift_fun _ _ f) $ fun a b h => by
+    (Quot.liftOn a (lift_fun _ _ f)) fun a b h => by
       induction h
       · exact (algebraMap R A).map_add h_r h_s
         
@@ -377,7 +377,7 @@ open_locale Classical
 def algebra_map_inv : FreeAlgebra R X →ₐ[R] R :=
   lift R (0 : X → R)
 
-theorem algebra_map_left_inverse : Function.LeftInverse algebra_map_inv (algebraMap R $ FreeAlgebra R X) := fun x => by
+theorem algebra_map_left_inverse : Function.LeftInverse algebra_map_inv (algebraMap R <| FreeAlgebra R X) := fun x => by
   simp [algebra_map_inv]
 
 @[simp]
@@ -393,12 +393,12 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
   map_eq_one_iff (algebraMap _ _) algebra_map_left_inverse.Injective
 
 theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgebra R X) := fun x y hoxy =>
-  Classical.by_contradiction $ fun hxy : x ≠ y =>
+  Classical.by_contradiction fun hxy : x ≠ y =>
     let f : FreeAlgebra R X →ₐ[R] R := lift R fun z => if x = z then (1 : R) else 0
-    have hfx1 : f (ι R x) = 1 := (lift_ι_apply _ _).trans $ if_pos rfl
+    have hfx1 : f (ι R x) = 1 := (lift_ι_apply _ _).trans <| if_pos rfl
     have hfy1 : f (ι R y) = 1 := hoxy ▸ hfx1
-    have hfy0 : f (ι R y) = 0 := (lift_ι_apply _ _).trans $ if_neg hxy
-    one_ne_zero $ hfy1.symm.trans hfy0
+    have hfy0 : f (ι R y) = 0 := (lift_ι_apply _ _).trans <| if_neg hxy
+    one_ne_zero <| hfy1.symm.trans hfy0
 
 @[simp]
 theorem ι_inj [Nontrivial R] (x y : X) : ι R x = ι R y ↔ x = y :=

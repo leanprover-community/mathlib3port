@@ -131,8 +131,8 @@ protected def _root_.monoid_hom.comp_left_continuous (α : Type _) {β : Type _}
     [TopologicalSpace β] [Monoidₓ β] [HasContinuousMul β] [TopologicalSpace γ] [Monoidₓ γ] [HasContinuousMul γ]
     (g : β →* γ) (hg : Continuous g) : C(α, β) →* C(α, γ) where
   toFun := fun f => (⟨g, hg⟩ : C(β, γ)).comp f
-  map_one' := ext $ fun x => g.map_one
-  map_mul' := fun f₁ f₂ => ext $ fun x => g.map_mul _ _
+  map_one' := ext fun x => g.map_one
+  map_mul' := fun f₁ f₂ => ext fun x => g.map_mul _ _
 
 /-- Composition on the right as a `monoid_hom`. Similar to `monoid_hom.comp_hom'`. -/
 @[to_additive "Composition on the right as an `add_monoid_hom`. Similar to\n`add_monoid_hom.comp_hom'`.", simps]
@@ -179,7 +179,7 @@ theorem prod_apply {α : Type _} {β : Type _} [CommMonoidₓ β] [TopologicalSp
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Groupₓ β] [TopologicalGroup β] :
     Groupₓ C(α, β) :=
-  { ContinuousMap.monoid with inv := fun f => ⟨fun x => f x⁻¹, continuous_inv.comp f.continuous⟩,
+  { ContinuousMap.monoid with inv := fun f => ⟨fun x => (f x)⁻¹, continuous_inv.comp f.continuous⟩,
     mul_left_inv := fun a => by
       ext <;> exact mul_left_invₓ _ }
 
@@ -196,7 +196,7 @@ theorem coe_div {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSp
 
 @[simp, to_additive]
 theorem inv_comp {α : Type _} {β : Type _} {γ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
-    [Groupₓ γ] [TopologicalGroup γ] (f : C(β, γ)) (g : C(α, β)) : f⁻¹.comp g = f.comp g⁻¹ := by
+    [Groupₓ γ] [TopologicalGroup γ] (f : C(β, γ)) (g : C(α, β)) : f⁻¹.comp g = (f.comp g)⁻¹ := by
   ext
   simp
 
@@ -362,7 +362,7 @@ Similar to `linear_map.comp_left`. -/
 protected def _root_.continuous_linear_map.comp_left_continuous (α : Type _) [TopologicalSpace α] (g : M →L[R] M₂) :
     C(α, M) →ₗ[R] C(α, M₂) :=
   { g.to_linear_map.to_add_monoid_hom.comp_left_continuous α g.continuous with
-    map_smul' := fun c f => ext $ fun x => g.map_smul' c _ }
+    map_smul' := fun c f => ext fun x => g.map_smul' c _ }
 
 /-- Coercion to a function as a `linear_map`. -/
 @[simps]
@@ -391,7 +391,7 @@ variable {α : Type _} [TopologicalSpace α] {R : Type _} [CommSemiringₓ R] {A
 /-- The `R`-subalgebra of continuous maps `α → A`. -/
 def continuousSubalgebra : Subalgebra R (α → A) :=
   { continuousSubsemiring α A with Carrier := { f : α → A | Continuous f },
-    algebra_map_mem' := fun r => (continuous_const : Continuous $ fun x : α => algebraMap R A r) }
+    algebra_map_mem' := fun r => (continuous_const : Continuous fun x : α => algebraMap R A r) }
 
 end Subtype
 
@@ -433,7 +433,7 @@ variable (R)
 @[simps]
 protected def AlgHom.compLeftContinuous {α : Type _} [TopologicalSpace α] (g : A →ₐ[R] A₂) (hg : Continuous g) :
     C(α, A) →ₐ[R] C(α, A₂) :=
-  { g.to_ring_hom.comp_left_continuous α hg with commutes' := fun c => ContinuousMap.ext $ fun _ => g.commutes' _ }
+  { g.to_ring_hom.comp_left_continuous α hg with commutes' := fun c => ContinuousMap.ext fun _ => g.commutes' _ }
 
 /-- Coercion to a function as an `alg_hom`. -/
 @[simps]
@@ -592,10 +592,10 @@ section
 
 variable {R : Type _} [LinearOrderedField R]
 
-theorem min_eq_half_add_sub_abs_sub {x y : R} : min x y = 2⁻¹ * (x + y - |x - y|) := by
+theorem min_eq_half_add_sub_abs_sub {x y : R} : min x y = 2⁻¹ * (x + y - abs (x - y)) := by
   cases' le_totalₓ x y with h h <;> field_simp [h, abs_of_nonneg, abs_of_nonpos, mul_two] <;> abel
 
-theorem max_eq_half_add_add_abs_sub {x y : R} : max x y = 2⁻¹ * (x + y + |x - y|) := by
+theorem max_eq_half_add_add_abs_sub {x y : R} : max x y = 2⁻¹ * (x + y + abs (x - y)) := by
   cases' le_totalₓ x y with h h <;> field_simp [h, abs_of_nonneg, abs_of_nonpos, mul_two] <;> abel
 
 end
@@ -608,11 +608,11 @@ variable {α : Type _} [TopologicalSpace α]
 
 variable {β : Type _} [LinearOrderedField β] [TopologicalSpace β] [OrderTopology β] [TopologicalRing β]
 
-theorem inf_eq (f g : C(α, β)) : f⊓g = (2⁻¹ : β) • (f + g - |f - g|) :=
+theorem inf_eq (f g : C(α, β)) : f⊓g = (2⁻¹ : β) • (f + g - abs (f - g)) :=
   ext fun x => by
     simpa using min_eq_half_add_sub_abs_sub
 
-theorem sup_eq (f g : C(α, β)) : f⊔g = (2⁻¹ : β) • (f + g + |f - g|) :=
+theorem sup_eq (f g : C(α, β)) : f⊔g = (2⁻¹ : β) • (f + g + abs (f - g)) :=
   ext fun x => by
     simpa [mul_addₓ] using @max_eq_half_add_add_abs_sub _ _ (f x) (g x)
 

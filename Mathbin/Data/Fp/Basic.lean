@@ -136,12 +136,12 @@ unsafe def next_dn_pos e m (v : valid_finite e m) : float :=
 
 unsafe def next_up : float → float
   | float.finite ff e m f => next_up_pos e m f
-  | float.finite tt e m f => float.neg $ next_dn_pos e m f
+  | float.finite tt e m f => float.neg <| next_dn_pos e m f
   | f => f
 
 unsafe def next_dn : float → float
   | float.finite ff e m f => next_dn_pos e m f
-  | float.finite tt e m f => float.neg $ next_up_pos e m f
+  | float.finite tt e m f => float.neg <| next_up_pos e m f
   | f => f
 
 unsafe def of_rat_up : ℚ → float
@@ -152,7 +152,7 @@ unsafe def of_rat_up : ℚ → float
   | ⟨-[1+ n], d, h, _⟩ => float.neg (of_pos_rat_dn n.succ_pnat ⟨d, h⟩).1
 
 unsafe def of_rat_dn (r : ℚ) : float :=
-  float.neg $ of_rat_up (-r)
+  float.neg <| of_rat_up (-r)
 
 unsafe def of_rat : rmode → ℚ → float
   | rmode.NE, r =>

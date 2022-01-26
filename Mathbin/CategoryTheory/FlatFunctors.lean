@@ -223,13 +223,13 @@ Given a limit cone `c : cone K` and a cone `s : cone (K ⋙ F)` with `F` represe
 noncomputable def lift : s.X ⟶ F.obj c.X :=
   let s' := is_cofiltered.cone (to_diagram s ⋙ structured_arrow.pre _ K F)
   s'.X.hom ≫
-    (F.map $
-      hc.lift $
+    (F.map <|
+      hc.lift <|
         (cones.postcompose
               ({ app := fun X => 𝟙 _,
                 naturality' := by
                   simp } :
-                (to_diagram s ⋙ pre s.X K F) ⋙ proj s.X F ⟶ K)).obj $
+                (to_diagram s ⋙ pre s.X K F) ⋙ proj s.X F ⟶ K)).obj <|
           (structured_arrow.proj s.X F).mapCone s')
 
 theorem fac (x : J) : lift F hc s ≫ (F.map_cone c).π.app x = s.π.app x := by

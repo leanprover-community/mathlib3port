@@ -199,7 +199,7 @@ noncomputable instance : reflective (forget₂ CpltSepUniformSpace UniformSpace�
 open CategoryTheory.Limits
 
 example [has_limits.{u} UniformSpaceₓ.{u}] : has_limits.{u} CpltSepUniformSpace.{u} :=
-  has_limits_of_reflective $ forget₂ CpltSepUniformSpace UniformSpaceₓ.{u}
+  has_limits_of_reflective <| forget₂ CpltSepUniformSpace UniformSpaceₓ.{u}
 
 end UniformSpaceₓ
 

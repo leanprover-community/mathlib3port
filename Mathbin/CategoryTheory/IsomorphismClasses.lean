@@ -34,7 +34,7 @@ end Category
 -/
 def isomorphism_classes : Cat.{v, u} ⥤ Type u where
   obj := fun C => Quotientₓ (is_isomorphic_setoid C.α)
-  map := fun C D F => Quot.map F.obj $ fun X Y ⟨f⟩ => ⟨F.map_iso f⟩
+  map := fun C D F => (Quot.map F.obj) fun X Y ⟨f⟩ => ⟨F.map_iso f⟩
 
 theorem groupoid.is_isomorphic_iff_nonempty_hom {C : Type u} [groupoid.{v} C] {X Y : C} :
     is_isomorphic X Y ↔ Nonempty (X ⟶ Y) :=

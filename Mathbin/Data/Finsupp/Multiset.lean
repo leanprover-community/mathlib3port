@@ -27,7 +27,7 @@ def to_multiset : (α →₀ ℕ) ≃+ Multiset α where
     ⟨s.to_finset, fun a => s.count a, fun a => by
       simp ⟩
   left_inv := fun f =>
-    ext $ fun a => by
+    ext fun a => by
       simp only [Sum, Multiset.count_sum', Multiset.count_singleton, mul_boole, coe_mk, mem_support_iff,
         Multiset.count_nsmul, Finset.sum_ite_eq, ite_not, ite_eq_right_iff]
       exact Eq.symm
@@ -146,7 +146,7 @@ theorem to_finsupp_add (s t : Multiset α) : to_finsupp (s + t) = to_finsupp s +
 
 @[simp]
 theorem to_finsupp_singleton (a : α) : to_finsupp ({a} : Multiset α) = Finsupp.single a 1 :=
-  Finsupp.toMultiset.symm_apply_eq.2 $ by
+  Finsupp.toMultiset.symm_apply_eq.2 <| by
     simp
 
 @[simp]
@@ -193,7 +193,7 @@ variable (ι)
 
 /-- The order on `ι →₀ ℕ` is well-founded. -/
 theorem lt_wf : WellFounded (@LT.lt (ι →₀ ℕ) _) :=
-  Subrelation.wfₓ sum_id_lt_of_lt $ InvImage.wfₓ _ Nat.lt_wf
+  Subrelation.wfₓ sum_id_lt_of_lt <| InvImage.wfₓ _ Nat.lt_wf
 
 end Finsupp
 

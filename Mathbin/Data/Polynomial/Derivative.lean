@@ -94,7 +94,7 @@ theorem derivative_C {a : R} : derivative (C a) = 0 := by
 
 @[simp]
 theorem derivative_X : derivative (X : Polynomial R) = 1 :=
-  (derivative_monomial _ _).trans $ by
+  (derivative_monomial _ _).trans <| by
     simp
 
 @[simp]
@@ -202,8 +202,8 @@ theorem derivative_mul {f g : Polynomial R} : derivative (f * g) = derivative f 
     _ =
         f.sum fun n a =>
           g.sum fun m b => C (a * n) * X ^ (n - 1) * (C b * X ^ m) + C a * X ^ n * (C (b * m) * X ^ (m - 1)) :=
-      sum_congr rfl $ fun n hn =>
-        sum_congr rfl $ fun m hm => by
+      (sum_congr rfl) fun n hn =>
+        (sum_congr rfl) fun m hm => by
           simp only [Nat.cast_add, mul_addₓ, add_mulₓ, C_add, C_mul] <;>
             cases n <;>
               simp only [Nat.succ_sub_succ, pow_zeroₓ] <;>
@@ -216,17 +216,17 @@ theorem derivative_mul {f g : Polynomial R} : derivative (f * g) = derivative f 
     
 
 theorem derivative_pow_succ (p : Polynomial R) (n : ℕ) : (p ^ (n + 1)).derivative = (n + 1) * p ^ n * p.derivative :=
-  Nat.recOn n
+  (Nat.recOn n
       (by
-        rw [pow_oneₓ, Nat.cast_zero, zero_addₓ, one_mulₓ, pow_zeroₓ, one_mulₓ]) $
+        rw [pow_oneₓ, Nat.cast_zero, zero_addₓ, one_mulₓ, pow_zeroₓ, one_mulₓ]))
     fun n ih => by
     rw [pow_succ'ₓ, derivative_mul, ih, mul_right_commₓ, ← add_mulₓ, add_mulₓ (n.succ : Polynomial R), one_mulₓ,
       pow_succ'ₓ, mul_assoc, n.cast_succ]
 
 theorem derivative_pow (p : Polynomial R) (n : ℕ) : (p ^ n).derivative = n * p ^ (n - 1) * p.derivative :=
-  Nat.casesOn n
+  (Nat.casesOn n
       (by
-        rw [pow_zeroₓ, derivative_one, Nat.cast_zero, zero_mul, zero_mul]) $
+        rw [pow_zeroₓ, derivative_one, Nat.cast_zero, zero_mul, zero_mul]))
     fun n => by
     rw [p.derivative_pow_succ n, n.succ_sub_one, n.cast_succ]
 
@@ -298,29 +298,29 @@ theorem derivative_prod {s : Multiset ι} {f : ι → Polynomial R} :
     
 
 theorem of_mem_support_derivative {p : Polynomial R} {n : ℕ} (h : n ∈ p.derivative.support) : n + 1 ∈ p.support :=
-  mem_support_iff.2 $ fun h1 : p.coeff (n + 1) = 0 =>
-    mem_support_iff.1 h $
+  mem_support_iff.2 fun h1 : p.coeff (n + 1) = 0 =>
+    mem_support_iff.1 h <|
       show p.derivative.coeff n = 0 by
         rw [coeff_derivative, h1, zero_mul]
 
 theorem degree_derivative_lt {p : Polynomial R} (hp : p ≠ 0) : p.derivative.degree < p.degree :=
-  (Finset.sup_lt_iff $ bot_lt_iff_ne_bot.2 $ mt degree_eq_bot.1 hp).2 $ fun n hp =>
-    lt_of_lt_of_leₓ (WithBot.some_lt_some.2 n.lt_succ_self) $ Finset.le_sup $ of_mem_support_derivative hp
+  (Finset.sup_lt_iff <| bot_lt_iff_ne_bot.2 <| mt degree_eq_bot.1 hp).2 fun n hp =>
+    lt_of_lt_of_leₓ (WithBot.some_lt_some.2 n.lt_succ_self) <| Finset.le_sup <| of_mem_support_derivative hp
 
 theorem nat_degree_derivative_lt {p : Polynomial R} (hp : p.derivative ≠ 0) : p.derivative.nat_degree < p.nat_degree :=
   have hp1 : p ≠ 0 := fun h =>
-    hp $ by
+    hp <| by
       rw [h, derivative_zero]
-  WithBot.some_lt_some.1 $ by
-    rw [nat_degree, Option.get_or_else_of_ne_none $ mt degree_eq_bot.1 hp, nat_degree,
-      Option.get_or_else_of_ne_none $ mt degree_eq_bot.1 hp1]
+  WithBot.some_lt_some.1 <| by
+    rw [nat_degree, Option.get_or_else_of_ne_none <| mt degree_eq_bot.1 hp, nat_degree,
+      Option.get_or_else_of_ne_none <| mt degree_eq_bot.1 hp1]
     exact degree_derivative_lt hp1
 
 theorem degree_derivative_le {p : Polynomial R} : p.derivative.degree ≤ p.degree :=
   if H : p = 0 then
-    le_of_eqₓ $ by
+    le_of_eqₓ <| by
       rw [H, derivative_zero]
-  else le_of_ltₓ $ degree_derivative_lt H
+  else le_of_ltₓ <| degree_derivative_lt H
 
 /-- The formal derivative of polynomials, as linear homomorphism. -/
 def derivative_lhom (R : Type _) [CommRingₓ R] : Polynomial R →ₗ[R] Polynomial R where

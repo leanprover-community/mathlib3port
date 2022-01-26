@@ -65,7 +65,7 @@ theorem disjoint_split_center_box (I : box ι) {s t : Set ι} (h : s ≠ t) :
   rw [← hs.2, ← ht.2]
 
 theorem injective_split_center_box (I : box ι) : injective I.split_center_box := fun s t H =>
-  by_contra $ fun Hne => (I.disjoint_split_center_box Hne).Ne (nonempty_coe _).ne_empty (H ▸ rfl)
+  by_contra fun Hne => (I.disjoint_split_center_box Hne).Ne (nonempty_coe _).ne_empty (H ▸ rfl)
 
 @[simp]
 theorem exists_mem_split_center_box {I : box ι} {x : ι → ℝ} : (∃ s, x ∈ I.split_center_box s) ↔ x ∈ I :=
@@ -120,7 +120,7 @@ theorem subbox_induction_on' {p : box ι → Prop} (I : box ι)
   simp only [exists_imp_distrib, not_forall] at H_ind
   choose! s hs using H_ind
   set J : ℕ → box ι := fun m => ((fun J => split_center_box J (s J))^[m]) I
-  have J_succ : ∀ m, J (m + 1) = split_center_box (J m) (s $ J m) := fun m => iterate_succ_apply' _ _ _
+  have J_succ : ∀ m, J (m + 1) = split_center_box (J m) (s <| J m) := fun m => iterate_succ_apply' _ _ _
   have hJmono : Antitone J :=
     antitone_nat_of_succ_le fun n => by
       simpa [J_succ] using split_center_box_le _ _

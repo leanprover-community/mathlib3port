@@ -55,10 +55,10 @@ instance : TopologicalSpace ℝ≥0 :=
 
 instance : TopologicalRing ℝ≥0 where
   continuous_mul :=
-    continuous_subtype_mk _ $
+    continuous_subtype_mk _ <|
       (continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
   continuous_add :=
-    continuous_subtype_mk _ $
+    continuous_subtype_mk _ <|
       (continuous_subtype_val.comp continuous_fst).add (continuous_subtype_val.comp continuous_snd)
 
 instance : second_countable_topology ℝ≥0 :=
@@ -74,7 +74,7 @@ variable {α : Type _}
 open Filter Finset
 
 theorem continuous_of_real : Continuous Real.toNnreal :=
-  continuous_subtype_mk _ $ continuous_id.max continuous_const
+  continuous_subtype_mk _ <| continuous_id.max continuous_const
 
 theorem continuous_coe : Continuous (coe : ℝ≥0 → ℝ) :=
   continuous_subtype_val
@@ -105,22 +105,22 @@ theorem tendsto_of_real {f : Filter α} {m : α → ℝ} {x : ℝ} (h : tendsto 
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ≠ » 0)
 theorem nhds_zero : 𝓝 (0 : ℝ≥0 ) = ⨅ (a) (_ : a ≠ 0), 𝓟 (Iio a) :=
-  nhds_bot_order.trans $ by
+  nhds_bot_order.trans <| by
     simp [bot_lt_iff_ne_bot]
 
 theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0 )).HasBasis (fun a : ℝ≥0 => 0 < a) fun a => Iio a :=
   nhds_bot_basis
 
 instance : HasContinuousSub ℝ≥0 :=
-  ⟨continuous_subtype_mk _ $
+  ⟨continuous_subtype_mk _ <|
       ((continuous_coe.comp continuous_fst).sub (continuous_coe.comp continuous_snd)).max continuous_const⟩
 
 instance : HasContinuousInv₀ ℝ≥0 :=
-  ⟨fun x hx => tendsto_coe.1 $ (Real.tendsto_inv $ Nnreal.coe_ne_zero.2 hx).comp continuous_coe.ContinuousAt⟩
+  ⟨fun x hx => tendsto_coe.1 <| (Real.tendsto_inv <| Nnreal.coe_ne_zero.2 hx).comp continuous_coe.ContinuousAt⟩
 
 instance : HasContinuousSmul ℝ≥0 ℝ where
   continuous_smul :=
-    Continuous.comp Real.continuous_mul $
+    Continuous.comp Real.continuous_mul <|
       Continuous.prod_mk (Continuous.comp continuous_subtype_val continuous_fst) continuous_snd
 
 @[norm_cast]
@@ -148,8 +148,8 @@ theorem summable_coe_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
 open_locale Classical
 
 @[norm_cast]
-theorem coe_tsum {f : α → ℝ≥0 } : (↑∑' a, f a) = ∑' a, (f a : ℝ) :=
-  if hf : Summable f then Eq.symm $ (has_sum_coe.2 $ hf.has_sum).tsum_eq
+theorem coe_tsum {f : α → ℝ≥0 } : ↑(∑' a, f a) = ∑' a, (f a : ℝ) :=
+  if hf : Summable f then Eq.symm <| (has_sum_coe.2 <| hf.has_sum).tsum_eq
   else by
     simp [tsum, hf, mt summable_coe.1 hf]
 
@@ -159,19 +159,19 @@ theorem coe_tsum_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
   simp_rw [← Nnreal.coe_tsum, Subtype.coe_eta]
 
 theorem tsum_mul_left (a : ℝ≥0 ) (f : α → ℝ≥0 ) : (∑' x, a * f x) = a * ∑' x, f x :=
-  Nnreal.eq $ by
+  Nnreal.eq <| by
     simp only [coe_tsum, Nnreal.coe_mul, tsum_mul_left]
 
 theorem tsum_mul_right (f : α → ℝ≥0 ) (a : ℝ≥0 ) : (∑' x, f x * a) = (∑' x, f x) * a :=
-  Nnreal.eq $ by
+  Nnreal.eq <| by
     simp only [coe_tsum, Nnreal.coe_mul, tsum_mul_right]
 
 theorem summable_comp_injective {β : Type _} {f : α → ℝ≥0 } (hf : Summable f) {i : β → α} (hi : Function.Injective i) :
     Summable (f ∘ i) :=
-  Nnreal.summable_coe.1 $ show Summable ((coe ∘ f) ∘ i) from (Nnreal.summable_coe.2 hf).comp_injective hi
+  Nnreal.summable_coe.1 <| show Summable ((coe ∘ f) ∘ i) from (Nnreal.summable_coe.2 hf).comp_injective hi
 
 theorem summable_nat_add (f : ℕ → ℝ≥0 ) (hf : Summable f) (k : ℕ) : Summable fun i => f (i + k) :=
-  summable_comp_injective hf $ add_left_injective k
+  summable_comp_injective hf <| add_left_injective k
 
 theorem summable_nat_add_iff {f : ℕ → ℝ≥0 } (k : ℕ) : (Summable fun i => f (i + k)) ↔ Summable f := by
   rw [← summable_coe, ← summable_coe]
@@ -187,8 +187,8 @@ theorem sum_add_tsum_nat_add {f : ℕ → ℝ≥0 } (k : ℕ) (hf : Summable f) 
 
 theorem infi_real_pos_eq_infi_nnreal_pos [CompleteLattice α] {f : ℝ → α} :
     (⨅ (n : ℝ) (h : 0 < n), f n) = ⨅ (n : ℝ≥0 ) (h : 0 < n), f n :=
-  le_antisymmₓ (infi_le_infi2 $ fun r => ⟨r, infi_le_infi $ fun hr => le_rfl⟩)
-    (le_infi $ fun r => le_infi $ fun hr => infi_le_of_le ⟨r, hr.le⟩ $ infi_le _ hr)
+  le_antisymmₓ (infi_le_infi2 fun r => ⟨r, infi_le_infi fun hr => le_rfl⟩)
+    (le_infi fun r => le_infi fun hr => infi_le_of_le ⟨r, hr.le⟩ <| infi_le _ hr)
 
 end coe
 

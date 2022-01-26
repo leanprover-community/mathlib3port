@@ -500,7 +500,7 @@ object and back is isomorphic to the given object. -/
 @[simps]
 def simplicial_object.augmented.right_op_left_op_iso (X : simplicial_object.augmented C) : X.right_op.left_op ≅ X :=
   comma.iso_mk X.left.right_op_left_op_iso
-    (eq_to_iso $ by
+    (eq_to_iso <| by
       simp )
     (by
       tidy)
@@ -511,7 +511,7 @@ object and back is isomorphic to the given object. -/
 def cosimplicial_object.augmented.left_op_right_op_iso (X : cosimplicial_object.augmented (Cᵒᵖ)) :
     X.left_op.right_op ≅ X :=
   comma.iso_mk
-    (eq_to_iso $ by
+    (eq_to_iso <| by
       simp )
     X.right.left_op_right_op_iso
     (by
@@ -537,7 +537,7 @@ def simplicial_to_cosimplicial_augmented : simplicial_object.augmented Cᵒᵖ �
 def cosimplicial_to_simplicial_augmented : cosimplicial_object.augmented (Cᵒᵖ) ⥤ simplicial_object.augmented Cᵒᵖ where
   obj := fun X => Opposite.op X.left_op
   map := fun X Y f =>
-    Quiver.Hom.op $
+    Quiver.Hom.op <|
       { left := f.right.left_op, right := f.left.unop,
         w' := by
           ext x

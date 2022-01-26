@@ -126,7 +126,7 @@ theorem smul_to_finsupp {S : Type _} [Monoidₓ S] [DistribMulAction S R] {a : S
 
 theorem _root_.is_smul_regular.polynomial {S : Type _} [Monoidₓ S] [DistribMulAction S R] {a : S}
     (ha : IsSmulRegular R a) : IsSmulRegular (Polynomial R) a
-  | ⟨x⟩, ⟨y⟩, h => congr_argₓ _ $ ha.finsupp (Polynomial.of_finsupp.inj h)
+  | ⟨x⟩, ⟨y⟩, h => congr_argₓ _ <| ha.finsupp (Polynomial.of_finsupp.inj h)
 
 instance : Inhabited (Polynomial R) :=
   ⟨0⟩
@@ -158,7 +158,7 @@ instance {S} [Monoidₓ S] [DistribMulAction S R] : DistribMulAction S (Polynomi
     simp [← zero_to_finsupp, smul_to_finsupp]
 
 instance {S} [Monoidₓ S] [DistribMulAction S R] [HasFaithfulScalar S R] : HasFaithfulScalar S (Polynomial R) where
-  eq_of_smul_eq_smul := fun s₁ s₂ h => eq_of_smul_eq_smul $ fun a : ℕ →₀ R => congr_argₓ to_finsupp (h ⟨a⟩)
+  eq_of_smul_eq_smul := fun s₁ s₂ h => eq_of_smul_eq_smul fun a : ℕ →₀ R => congr_argₓ to_finsupp (h ⟨a⟩)
 
 instance {S} [Semiringₓ S] [Module S R] : Module S (Polynomial R) :=
   { Polynomial.distribMulAction with smul := · • ·,
@@ -466,7 +466,7 @@ theorem coeff_C_ne_zero (h : n ≠ 0) : (C a).coeff n = 0 := by
 
 theorem nontrivial.of_polynomial_ne (h : p ≠ q) : Nontrivial R :=
   ⟨⟨0, 1, fun h01 : 0 = 1 =>
-      h $ by
+      h <| by
         rw [← mul_oneₓ p, ← mul_oneₓ q, ← C_1, ← h01, C_0, mul_zero, mul_zero]⟩⟩
 
 theorem monomial_eq_C_mul_X : ∀ {n}, monomial n a = C a * X ^ n
@@ -514,7 +514,7 @@ theorem add_submonoid_closure_set_of_eq_monomial :
 
 theorem add_hom_ext {M : Type _} [AddMonoidₓ M] {f g : Polynomial R →+ M}
     (h : ∀ n a, f (monomial n a) = g (monomial n a)) : f = g :=
-  AddMonoidHom.eq_of_eq_on_mdense add_submonoid_closure_set_of_eq_monomial $ by
+  AddMonoidHom.eq_of_eq_on_mdense add_submonoid_closure_set_of_eq_monomial <| by
     rintro p ⟨n, a, rfl⟩
     exact h n a
 
@@ -526,7 +526,7 @@ theorem add_hom_ext' {M : Type _} [AddMonoidₓ M] {f g : Polynomial R →+ M}
 @[ext]
 theorem lhom_ext' {M : Type _} [AddCommMonoidₓ M] [Module R M] {f g : Polynomial R →ₗ[R] M}
     (h : ∀ n, f.comp (monomial n) = g.comp (monomial n)) : f = g :=
-  LinearMap.to_add_monoid_hom_injective $ add_hom_ext $ fun n => LinearMap.congr_fun (h n)
+  LinearMap.to_add_monoid_hom_injective <| add_hom_ext fun n => LinearMap.congr_fun (h n)
 
 theorem eq_zero_of_eq_zero (h : (0 : R) = (1 : R)) (p : Polynomial R) : p = 0 := by
   rw [← one_smul R p, ← h, zero_smul]

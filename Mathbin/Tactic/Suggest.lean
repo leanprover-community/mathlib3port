@@ -114,7 +114,7 @@ unsafe def library_defs (hs : name_set) : tactic (List decl_data) := do
   let defs := env.decl_filter_map (process_declaration hs)
   let defs := defs.qsort fun d₁ d₂ => d₁.l ≤ d₂.l
   trace_if_enabled `suggest f! "Found {defs.length} relevant lemmas:"
-  trace_if_enabled `suggest $ defs.map fun ⟨d, n, m, l⟩ => (n, m.to_string)
+  trace_if_enabled `suggest <| defs.map fun ⟨d, n, m, l⟩ => (n, m.to_string)
   return defs
 
 /-- We unpack any element of a list of `decl_data` corresponding to an `↔` statement that could apply
@@ -145,7 +145,7 @@ use everything in `compulsory_hyps`.
 unsafe def suggest_opt.mk_accept (o : suggest_opt) : opt :=
   { o with
     accept := fun gs =>
-      o.accept gs >> (guardₓ $ o.compulsory_hyps.all fun h => gs.any fun g => g.contains_expr_or_mvar h) }
+      o.accept gs >> (guardₓ <| o.compulsory_hyps.all fun h => gs.any fun g => g.contains_expr_or_mvar h) }
 
 /-- Apply the lemma `e`, then attempt to close all goals using
 `solve_by_elim opt`, failing if `close_goals = tt`
@@ -204,11 +204,11 @@ initialize
 
 private unsafe def apply_declaration_script (g : expr) (hyps : List expr) (opt : suggest_opt := {  }) (d : decl_data) :
     tactic application :=
-  retrieve $
-    focus1 $ do
+  retrieve <|
+    focus1 <| do
       apply_declaration ff opt d
       let g ← instantiate_mvars g
-      guardₓ $ opt.compulsory_hyps.all fun h => h.occurs g
+      guardₓ <| opt.compulsory_hyps.all fun h => h.occurs g
       let ng ← num_goals
       let s ← read
       let m ← tactic_statement g
@@ -218,21 +218,21 @@ private unsafe def suggest_core' (opt : suggest_opt := {  }) : tactic (mllist ta
   let g :: _ ← get_goals
   let hyps ← local_context
   (retrieve do
-        focus1 $ solve_by_elim opt.mk_accept
+        focus1 <| solve_by_elim opt.mk_accept
         let s ← read
         let m ← tactic_statement g
         let g ← instantiate_mvars g
         guardₓ (opt.compulsory_hyps.all fun h => h.occurs g)
-        return $ mllist.of_list [⟨s, m, none, 0, hyps.filter fun h => h.occurs g⟩]) <|>
+        return <| mllist.of_list [⟨s, m, none, 0, hyps.filter fun h => h.occurs g⟩]) <|>
       do
       let t ← infer_type g
-      let defs ← unpack_iff_both <$> library_defs (name_set.of_list $ allowed_head_symbols t)
+      let defs ← unpack_iff_both <$> library_defs (name_set.of_list <| allowed_head_symbols t)
       let defs : mllist tactic _ := mllist.of_list defs
       let results := defs.mfilter_map (apply_declaration_script g hyps opt)
-      let symm_state ← retrieve $ try_core $ symmetry >> read
+      let symm_state ← retrieve <| try_core <| symmetry >> read
       let results_symm :=
         match symm_state with
-        | some s => defs.mfilter_map fun d => retrieve $ set_state s >> apply_declaration_script g hyps opt d
+        | some s => defs.mfilter_map fun d => retrieve <| set_state s >> apply_declaration_script g hyps opt d
         | none => mllist.nil
       return (results.append results_symm)
 
@@ -261,7 +261,7 @@ sorted by number of goals, and then (reverse) number of hypotheses used.
 unsafe def suggest (limit : Option ℕ := none) (opt : suggest_opt := {  }) : tactic (List application) := do
   let results := suggest_core opt
   let L ← if h : limit.is_some then results.take (Option.getₓ h) else results.force
-  return $
+  return <|
       L.qsort fun d₁ d₂ =>
         d₁.num_goals < d₂.num_goals ∨ d₁.num_goals = d₂.num_goals ∧ d₁.hyps_used.length ≥ d₂.hyps_used.length
 
@@ -271,7 +271,7 @@ from the library.
 -/
 unsafe def suggest_scripts (limit : Option ℕ := none) (opt : suggest_opt := {  }) : tactic (List Stringₓ) := do
   let L ← suggest limit opt
-  return $ L.map application.script
+  return <| L.map application.script
 
 /-- Returns a string of the form `Try this: exact ...`, which closes the current goal.
 -/
@@ -315,7 +315,7 @@ end
 You can also use `suggest with attr` to include all lemmas with the attribute `attr`.
 -/
 unsafe def suggest (n : parse («expr ?» (with_desc "n" small_nat))) (hs : parse simp_arg_list)
-    (attr_names : parse with_ident_list) (use : parse $ (tk "using" *> many ident_ <|> return []))
+    (attr_names : parse with_ident_list) (use : parse <| tk "using" *> many ident_ <|> return [])
     (opt : suggest_opt := {  }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set ff hs attr_names
   let use ← use.mmap get_local
@@ -397,8 +397,8 @@ end
 ```
 You can also use `library_search with attr` to include all lemmas with the attribute `attr`.
 -/
-unsafe def library_search (semireducible : parse $ optionalₓ (tk "!")) (hs : parse simp_arg_list)
-    (attr_names : parse with_ident_list) (use : parse $ (tk "using" *> many ident_ <|> return []))
+unsafe def library_search (semireducible : parse <| optionalₓ (tk "!")) (hs : parse simp_arg_list)
+    (attr_names : parse with_ident_list) (use : parse <| tk "using" *> many ident_ <|> return [])
     (opt : suggest_opt := {  }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set ff hs attr_names
   let use ← use.mmap get_local

@@ -52,7 +52,7 @@ def lsingle i : M i →ₗ[R] Π₀ i, M i :=
 
 /-- Two `R`-linear maps from `Π₀ i, M i` which agree on each `single i x` agree everywhere. -/
 theorem lhom_ext ⦃φ ψ : (Π₀ i, M i) →ₗ[R] N⦄ (h : ∀ i x, φ (single i x) = ψ (single i x)) : φ = ψ :=
-  LinearMap.to_add_monoid_hom_injective $ add_hom_ext h
+  LinearMap.to_add_monoid_hom_injective <| add_hom_ext h
 
 /-- Two `R`-linear maps from `Π₀ i, M i` which agree on each `single i x` agree everywhere.
 
@@ -60,7 +60,7 @@ See note [partially-applied ext lemmas].
 After apply this lemma, if `M = R` then it suffices to verify `φ (single a 1) = ψ (single a 1)`. -/
 @[ext]
 theorem lhom_ext' ⦃φ ψ : (Π₀ i, M i) →ₗ[R] N⦄ (h : ∀ i, φ.comp (lsingle i) = ψ.comp (lsingle i)) : φ = ψ :=
-  lhom_ext $ fun i => LinearMap.congr_fun (h i)
+  lhom_ext fun i => LinearMap.congr_fun (h i)
 
 omit dec_ι
 
@@ -178,7 +178,7 @@ theorem map_range.linear_map_id : (map_range.linear_map fun i => (LinearMap.id :
 
 theorem map_range.linear_map_comp (f : ∀ i, β₁ i →ₗ[R] β₂ i) (f₂ : ∀ i, β i →ₗ[R] β₁ i) :
     (map_range.linear_map fun i => (f i).comp (f₂ i)) = (map_range.linear_map f).comp (map_range.linear_map f₂) :=
-  LinearMap.ext $ map_range_comp (fun i x => f i x) (fun i x => f₂ i x) _ _ _
+  LinearMap.ext <| map_range_comp (fun i x => f i x) (fun i x => f₂ i x) _ _ _
 
 include dec_ι
 
@@ -203,13 +203,13 @@ def map_range.linear_equiv (e : ∀ i, β₁ i ≃ₗ[R] β₂ i) : (Π₀ i, β
 
 @[simp]
 theorem map_range.linear_equiv_refl :
-    (map_range.linear_equiv $ fun i => LinearEquiv.refl R (β₁ i)) = LinearEquiv.refl _ _ :=
+    (map_range.linear_equiv fun i => LinearEquiv.refl R (β₁ i)) = LinearEquiv.refl _ _ :=
   LinearEquiv.ext map_range_id
 
 theorem map_range.linear_equiv_trans (f : ∀ i, β i ≃ₗ[R] β₁ i) (f₂ : ∀ i, β₁ i ≃ₗ[R] β₂ i) :
     (map_range.linear_equiv fun i => (f i).trans (f₂ i)) =
       (map_range.linear_equiv f).trans (map_range.linear_equiv f₂) :=
-  LinearEquiv.ext $ map_range_comp (fun i x => f₂ i x) (fun i x => f i x) _ _ _
+  LinearEquiv.ext <| map_range_comp (fun i x => f₂ i x) (fun i x => f i x) _ _ _
 
 @[simp]
 theorem map_range.linear_equiv_symm (e : ∀ i, β₁ i ≃ₗ[R] β₂ i) :

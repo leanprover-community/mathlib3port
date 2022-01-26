@@ -47,8 +47,8 @@ theorem mk_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a 
     
 
 protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a + b) :=
-  num_denom_cases_on' a $ fun n₁ d₁ h₁ =>
-    num_denom_cases_on' b $ fun n₂ d₂ h₂ => by
+  (num_denom_cases_on' a) fun n₁ d₁ h₁ =>
+    (num_denom_cases_on' b) fun n₂ d₂ h₂ => by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₂)
       simp [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0]
@@ -61,14 +61,14 @@ protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
             
 
 protected theorem nonneg_mul {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a * b) :=
-  num_denom_cases_on' a $ fun n₁ d₁ h₁ =>
-    num_denom_cases_on' b $ fun n₂ d₂ h₂ => by
+  (num_denom_cases_on' a) fun n₁ d₁ h₁ =>
+    (num_denom_cases_on' b) fun n₂ d₂ h₂ => by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₂)
       simp (config := { contextual := true })[d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0, mul_nonneg]
 
 protected theorem nonneg_antisymm {a} : Rat.Nonneg a → Rat.Nonneg (-a) → a = 0 :=
-  num_denom_cases_on' a $ fun n d h => by
+  (num_denom_cases_on' a) fun n d h => by
     have d0 : 0 < (d : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h)
     simp [d0, h]
     exact fun h₁ h₂ => le_antisymmₓ h₂ h₁
@@ -107,7 +107,7 @@ protected theorem le_totalₓ : a ≤ b ∨ b ≤ a := by
 protected theorem le_antisymmₓ {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b := by
   have :=
     eq_neg_of_add_eq_zero
-      (Rat.nonneg_antisymm hba $ by
+      (Rat.nonneg_antisymm hba <| by
         rwa [← sub_eq_add_neg, neg_sub])
   rwa [neg_negₓ] at this
 
@@ -223,7 +223,7 @@ instance : OrderedAddCommMonoid ℚ := by
   infer_instance
 
 theorem num_pos_iff_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
-  lt_iff_lt_of_le_iff_le $ by
+  lt_iff_lt_of_le_iff_le <| by
     simpa [(by
         cases a <;> rfl : (-a).num = -a.num)] using
       @num_nonneg_iff_zero_le (-a)
@@ -241,7 +241,7 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
 theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.denom := by
   simp [Rat.lt_def]
 
-theorem abs_def (q : ℚ) : |q| = q.num.nat_abs /. q.denom := by
+theorem abs_def (q : ℚ) : abs q = q.num.nat_abs /. q.denom := by
   cases' le_totalₓ q 0 with hq hq
   · rw [abs_of_nonpos hq]
     rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one, mul_oneₓ, zero_mul] at hq

@@ -15,7 +15,7 @@ integer `r` such that `r * r ≤ n`. If it is negative, it returns `0`. For exam
 `sqrt 1 = 1`, `sqrt 2 = 1` -/
 @[pp_nodot]
 def sqrt (z : ℤ) : ℤ :=
-  Nat.sqrt $ Int.toNat z
+  Nat.sqrt <| Int.toNat z
 
 theorem sqrt_eq (n : ℤ) : sqrt (n * n) = n.nat_abs := by
   rw [sqrt, ← nat_abs_mul_self, to_nat_coe_nat, Nat.sqrt_eq]

@@ -48,10 +48,10 @@ theorem map_snd (f : α → γ) (g : β → δ) (p : α × β) : (map f g p).2 =
   rfl
 
 theorem map_fst' (f : α → γ) (g : β → δ) : Prod.fst ∘ map f g = f ∘ Prod.fst :=
-  funext $ map_fst f g
+  funext <| map_fst f g
 
 theorem map_snd' (f : α → γ) (g : β → δ) : Prod.snd ∘ map f g = g ∘ Prod.snd :=
-  funext $ map_snd f g
+  funext <| map_snd f g
 
 /-- Composing a `prod.map` with another `prod.map` is equal to
 a single `prod.map` of composed functions.
@@ -92,11 +92,11 @@ theorem map_def {f : α → γ} {g : β → δ} : Prod.map f g = fun p : α × �
   funext fun p => ext (map_fst f g p) (map_snd f g p)
 
 theorem id_prod : (fun p : α × α => (p.1, p.2)) = id :=
-  funext $ fun ⟨a, b⟩ => rfl
+  funext fun ⟨a, b⟩ => rfl
 
-theorem fst_surjective [h : Nonempty β] : Function.Surjective (@fst α β) := fun x => h.elim $ fun y => ⟨⟨x, y⟩, rfl⟩
+theorem fst_surjective [h : Nonempty β] : Function.Surjective (@fst α β) := fun x => h.elim fun y => ⟨⟨x, y⟩, rfl⟩
 
-theorem snd_surjective [h : Nonempty α] : Function.Surjective (@snd α β) := fun y => h.elim $ fun x => ⟨⟨x, y⟩, rfl⟩
+theorem snd_surjective [h : Nonempty α] : Function.Surjective (@snd α β) := fun y => h.elim fun x => ⟨⟨x, y⟩, rfl⟩
 
 theorem fst_injective [Subsingleton β] : Function.Injective (@fst α β) := fun x y h => ext h (Subsingleton.elimₓ _ _)
 
@@ -226,7 +226,7 @@ end Prod
 open Function
 
 theorem Function.Injective.prod_map {f : α → γ} {g : β → δ} (hf : injective f) (hg : injective g) :
-    injective (Prod.map f g) := fun x y h => Prod.extₓ (hf (Prod.ext_iff.1 h).1) (hg $ (Prod.ext_iff.1 h).2)
+    injective (Prod.map f g) := fun x y h => Prod.extₓ (hf (Prod.ext_iff.1 h).1) (hg <| (Prod.ext_iff.1 h).2)
 
 theorem Function.Surjective.prod_map {f : α → γ} {g : β → δ} (hf : surjective f) (hg : surjective g) :
     surjective (Prod.map f g) := fun p =>

@@ -136,7 +136,7 @@ theorem act_symm_apply (x y : R) : (act x).symm y = x ◃⁻¹ y :=
   rfl
 
 @[simp]
-theorem inv_act_apply (x y : R) : (act x⁻¹) y = x ◃⁻¹ y :=
+theorem inv_act_apply (x y : R) : (act x)⁻¹ y = x ◃⁻¹ y :=
   rfl
 
 @[simp]
@@ -171,7 +171,7 @@ of `x`. It is another way to understand the self-distributivity axiom.
 This is used in the natural rack homomorphism `to_conj` from `R` to
 `conj (R ≃ R)` defined by `op'`.
 -/
-theorem ad_conj {R : Type _} [Rack R] (x y : R) : act (x ◃ y) = act x * act y * act x⁻¹ := by
+theorem ad_conj {R : Type _} [Rack R] (x y : R) : act (x ◃ y) = act x * act y * (act x)⁻¹ := by
   apply @mul_right_cancelₓ _ _ _ (act x)
   ext z
   simp only [inv_mul_cancel_right]
@@ -182,19 +182,19 @@ theorem ad_conj {R : Type _} [Rack R] (x y : R) : act (x ◃ y) = act x * act y 
 instance opposite_rack : Rack (Rᵐᵒᵖ) where
   act := fun x y => op (inv_act (unop x) (unop y))
   self_distrib :=
-    MulOpposite.rec $ fun x =>
-      MulOpposite.rec $ fun y =>
-        MulOpposite.rec $ fun z => by
+    MulOpposite.rec fun x =>
+      MulOpposite.rec fun y =>
+        MulOpposite.rec fun z => by
           simp only [unop_op, op_inj]
           exact self_distrib_inv
   invAct := fun x y => op (Shelf.act (unop x) (unop y))
   left_inv :=
-    MulOpposite.rec $ fun x =>
-      MulOpposite.rec $ fun y => by
+    MulOpposite.rec fun x =>
+      MulOpposite.rec fun y => by
         simp
   right_inv :=
-    MulOpposite.rec $ fun x =>
-      MulOpposite.rec $ fun y => by
+    MulOpposite.rec fun x =>
+      MulOpposite.rec fun y => by
         simp
 
 @[simp]
@@ -588,7 +588,7 @@ def to_envel_group.map_aux {R : Type _} [Rack R] {G : Type _} [Groupₓ G] (f : 
   | Unit => 1
   | incl x => f x
   | mul a b => to_envel_group.map_aux a * to_envel_group.map_aux b
-  | inv a => to_envel_group.map_aux a⁻¹
+  | inv a => (to_envel_group.map_aux a)⁻¹
 
 namespace ToEnvelGroup.MapAux
 
@@ -638,8 +638,8 @@ def to_envel_group.map {R : Type _} [Rack R] {G : Type _} [Groupₓ G] :
     ext
     rfl
   right_inv := fun F =>
-    MonoidHom.ext $ fun x =>
-      Quotientₓ.induction_on x $ fun x => by
+    MonoidHom.ext fun x =>
+      (Quotientₓ.induction_on x) fun x => by
         induction x
         · exact F.map_one.symm
           
@@ -648,7 +648,7 @@ def to_envel_group.map {R : Type _} [Rack R] {G : Type _} [Groupₓ G] :
         · have hm : ⟦x_a.mul x_b⟧ = @Mul.mul (envel_group R) _ (⟦x_a⟧) (⟦x_b⟧) := rfl
           rw [hm, F.map_mul, MonoidHom.map_mul, ← x_ih_a, ← x_ih_b]
           
-        · have hm : ⟦x_a.inv⟧ = @HasInv.inv (envel_group R) _ (⟦x_a⟧) := rfl
+        · have hm : ⟦x_a.inv⟧ = @Inv.inv (envel_group R) _ (⟦x_a⟧) := rfl
           rw [hm, F.map_inv, MonoidHom.map_inv, x_ih]
           
 

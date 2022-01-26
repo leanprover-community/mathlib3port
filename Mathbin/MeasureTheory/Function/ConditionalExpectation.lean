@@ -643,7 +643,7 @@ theorem integrable_on_condexp_L2_of_measure_ne_top (hm : m ≤ m0) (hμs : μ s 
 
 theorem integrable_condexp_L2_of_is_finite_measure (hm : m ≤ m0) [is_finite_measure μ] {f : α →₂[μ] E} :
     integrable (condexp_L2 𝕜 hm f) μ :=
-  integrable_on_univ.mp $ integrable_on_condexp_L2_of_measure_ne_top hm (measure_ne_top _ _) f
+  integrable_on_univ.mp <| integrable_on_condexp_L2_of_measure_ne_top hm (measure_ne_top _ _) f
 
 theorem norm_condexp_L2_le_one (hm : m ≤ m0) : ∥@condexp_L2 α E 𝕜 _ _ _ _ _ _ _ _ μ hm∥ ≤ 1 :=
   have : Fact (m ≤ m0) := ⟨hm⟩
@@ -784,7 +784,7 @@ theorem condexp_L2_const_inner (hm : m ≤ m0) (f : Lp E 2 μ) (c : E) :
     
   · intro s hs hμs
     rw [← Lp_meas_coe, integral_condexp_L2_eq_of_fin_meas_real _ hs hμs.ne, integral_congr_ae (ae_restrict_of_ae h_eq),
-      Lp_meas_coe, ← L2.inner_indicator_const_Lp_eq_set_integral_inner 𝕜 (↑condexp_L2 𝕜 hm f) (hm s hs) c hμs.ne, ←
+      Lp_meas_coe, ← L2.inner_indicator_const_Lp_eq_set_integral_inner 𝕜 (↑(condexp_L2 𝕜 hm f)) (hm s hs) c hμs.ne, ←
       inner_condexp_L2_left_eq_right, condexp_L2_indicator_of_measurable,
       L2.inner_indicator_const_Lp_eq_set_integral_inner 𝕜 f (hm s hs) c hμs.ne,
       set_integral_congr_ae (hm s hs) ((mem_ℒp.coe_fn_to_Lp ((Lp.mem_ℒp f).const_inner c)).mono fun x hx hxs => hx)]
@@ -803,7 +803,7 @@ theorem integral_condexp_L2_eq (hm : m ≤ m0) (f : Lp E' 2 μ) (hs : measurable
     integral_sub' (integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs)
       (integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs)]
   refine' integral_eq_zero_of_forall_integral_inner_eq_zero _ _ _
-  · rw [integrable_congr (ae_restrict_of_ae (Lp.coe_fn_sub (↑condexp_L2 𝕜 hm f) f).symm)]
+  · rw [integrable_congr (ae_restrict_of_ae (Lp.coe_fn_sub (↑(condexp_L2 𝕜 hm f)) f).symm)]
     exact integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs
     
   intro c
@@ -948,7 +948,7 @@ theorem condexp_ind_smul_smul (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (c : 
 theorem condexp_ind_smul_smul' [NormedSpace ℝ F] [SmulCommClass ℝ 𝕜 F] (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (c : 𝕜)
     (x : F) : condexp_ind_smul hm hs hμs (c • x) = c • condexp_ind_smul hm hs hμs x := by
   rw [condexp_ind_smul, condexp_ind_smul, to_span_singleton_smul',
-    (to_span_singleton ℝ x).smul_comp_LpL_apply c (↑condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ)))]
+    (to_span_singleton ℝ x).smul_comp_LpL_apply c ↑(condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ)))]
 
 theorem condexp_ind_smul_ae_eq_smul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) :
     condexp_ind_smul hm hs hμs x =ᵐ[μ] fun a => condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ)) a • x :=
@@ -1312,7 +1312,7 @@ theorem condexp_L1_clm_indicator_const_Lp (hs : MeasurableSet s) (hμs : μ s �
   L1.set_to_L1_indicator_const_Lp (dominated_fin_meas_additive_condexp_ind F' hm μ) hs hμs x
 
 theorem condexp_L1_clm_indicator_const (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : F') :
-    (condexp_L1_clm hm μ) (↑simple_func.indicator_const 1 hs hμs x) = condexp_ind hm μ s x := by
+    (condexp_L1_clm hm μ) ↑(simple_func.indicator_const 1 hs hμs x) = condexp_ind hm μ s x := by
   rw [Lp.simple_func.coe_indicator_const]
   exact condexp_L1_clm_indicator_const_Lp hs hμs x
 
@@ -1421,7 +1421,7 @@ theorem condexp_L1_clm_Lp_meas (f : Lp_meas F' ℝ m 1 μ) : condexp_L1_clm hm �
     @Lp.induction α F' m _ _ _ _ 1 (μ.trim hm) _ Ennreal.coe_ne_top
       (fun g : α →₁[μ.trim hm] F' =>
         condexp_L1_clm hm μ ((Lp_meas_to_Lp_trim_lie F' ℝ 1 μ hm).symm g : α →₁[μ] F') =
-          ↑(Lp_meas_to_Lp_trim_lie F' ℝ 1 μ hm).symm g)
+          ↑((Lp_meas_to_Lp_trim_lie F' ℝ 1 μ hm).symm g))
       _ _ _ g
   · intro c s hs hμs
     rw [Lp.simple_func.coe_indicator_const, Lp_meas_to_Lp_trim_lie_symm_indicator hs hμs.ne c,

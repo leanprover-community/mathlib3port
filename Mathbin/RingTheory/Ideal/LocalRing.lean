@@ -65,7 +65,7 @@ variable (R)
 /-- The ideal of elements that are not units. -/
 def maximal_ideal : Ideal R where
   Carrier := Nonunits R
-  zero_mem' := zero_mem_nonunits.2 $ zero_ne_one
+  zero_mem' := zero_mem_nonunits.2 <| zero_ne_one
   add_mem' := fun x y hx hy => nonunits_add hx hy
   smul_mem' := fun a x => mul_mem_nonunits_right
 
@@ -84,12 +84,12 @@ instance maximal_ideal.is_maximal : (maximal_ideal R).IsMaximal := by
 
 theorem maximal_ideal_unique : ∃! I : Ideal R, I.is_maximal :=
   ⟨maximal_ideal R, maximal_ideal.is_maximal R, fun I hI =>
-    hI.eq_of_le (maximal_ideal.is_maximal R).1.1 $ fun x hx => hI.1.1 ∘ I.eq_top_of_is_unit_mem hx⟩
+    (hI.eq_of_le (maximal_ideal.is_maximal R).1.1) fun x hx => hI.1.1 ∘ I.eq_top_of_is_unit_mem hx⟩
 
 variable {R}
 
 theorem eq_maximal_ideal {I : Ideal R} (hI : I.is_maximal) : I = maximal_ideal R :=
-  unique_of_exists_unique (maximal_ideal_unique R) hI $ maximal_ideal.is_maximal R
+  unique_of_exists_unique (maximal_ideal_unique R) hI <| maximal_ideal.is_maximal R
 
 theorem le_maximal_ideal {J : Ideal R} (hJ : J ≠ ⊤) : J ≤ maximal_ideal R := by
   rcases Ideal.exists_le_maximal J hJ with ⟨M, hM1, hM2⟩
@@ -108,22 +108,22 @@ theorem local_of_nonunits_ideal [CommRingₓ R] (hnze : (0 : R) ≠ 1)
     (h : ∀ x y _ : x ∈ Nonunits R _ : y ∈ Nonunits R, x + y ∈ Nonunits R) : LocalRing R :=
   { exists_pair_ne := ⟨0, 1, hnze⟩,
     is_local := fun x =>
-      or_iff_not_imp_left.mpr $ fun hx => by
+      or_iff_not_imp_left.mpr fun hx => by
         by_contra H
         apply h _ hx _ H
         simp [-sub_eq_add_neg, add_sub_cancel'_right] }
 
 theorem local_of_unique_max_ideal [CommRingₓ R] (h : ∃! I : Ideal R, I.is_maximal) : LocalRing R :=
-  local_of_nonunits_ideal
+  (local_of_nonunits_ideal
       (let ⟨I, Imax, _⟩ := h
-      fun H : 0 = 1 => Imax.1.1 $ I.eq_top_iff_one.2 $ H ▸ I.zero_mem) $
+      fun H : 0 = 1 => Imax.1.1 <| I.eq_top_iff_one.2 <| H ▸ I.zero_mem))
     fun x hx y hy H =>
     let ⟨I, Imax, Iuniq⟩ := h
     let ⟨Ix, Ixmax, Hx⟩ := exists_max_ideal_of_mem_nonunits hx
     let ⟨Iy, Iymax, Hy⟩ := exists_max_ideal_of_mem_nonunits hy
     have xmemI : x ∈ I := Iuniq Ix Ixmax ▸ Hx
     have ymemI : y ∈ I := Iuniq Iy Iymax ▸ Hy
-    Imax.1.1 $ I.eq_top_of_is_unit_mem (I.add_mem xmemI ymemI) H
+    Imax.1.1 <| I.eq_top_of_is_unit_mem (I.add_mem xmemI ymemI) H
 
 theorem local_of_unique_nonzero_prime (R : Type u) [CommRingₓ R] (h : ∃! P : Ideal R, P ≠ ⊥ ∧ Ideal.IsPrime P) :
     LocalRing R :=
@@ -194,9 +194,9 @@ theorem is_unit_of_map_unit [Semiringₓ R] [Semiringₓ S] (f : R →+* S) [IsL
 
 theorem of_irreducible_map [Semiringₓ R] [Semiringₓ S] (f : R →+* S) [h : IsLocalRingHom f] {x : R}
     (hfx : Irreducible (f x)) : Irreducible x :=
-  ⟨fun h => hfx.not_unit $ IsUnit.map f.to_monoid_hom h, fun p q hx =>
+  ⟨fun h => hfx.not_unit <| IsUnit.map f.to_monoid_hom h, fun p q hx =>
     let ⟨H⟩ := h
-    Or.imp (H p) (H q) $ hfx.is_unit_or_is_unit $ f.map_mul p q ▸ congr_argₓ f hx⟩
+    Or.imp (H p) (H q) <| hfx.is_unit_or_is_unit <| f.map_mul p q ▸ congr_argₓ f hx⟩
 
 section
 
@@ -220,7 +220,7 @@ variable [CommRingₓ R] [LocalRing R] [CommRingₓ S] [LocalRing S]
 
 variable (f : R →+* S) [IsLocalRingHom f]
 
-theorem map_nonunit (a : R) (h : a ∈ maximal_ideal R) : f a ∈ maximal_ideal S := fun H => h $ is_unit_of_map_unit f a H
+theorem map_nonunit (a : R) (h : a ∈ maximal_ideal R) : f a ∈ maximal_ideal S := fun H => h <| is_unit_of_map_unit f a H
 
 end
 
@@ -282,7 +282,7 @@ variable {R S}
 
 /-- The map on residue fields induced by a local homomorphism between local rings -/
 noncomputable def map (f : R →+* S) [IsLocalRingHom f] : residue_field R →+* residue_field S :=
-  Ideal.Quotient.lift (maximal_ideal R) ((Ideal.Quotient.mk _).comp f) $ fun a ha => by
+  (Ideal.Quotient.lift (maximal_ideal R) ((Ideal.Quotient.mk _).comp f)) fun a ha => by
     erw [Ideal.Quotient.eq_zero_iff_mem]
     exact map_nonunit f a ha
 
@@ -292,7 +292,7 @@ variable {R}
 
 theorem ker_eq_maximal_ideal {K : Type _} [Field K] (φ : R →+* K) (hφ : Function.Surjective φ) :
     φ.ker = maximal_ideal R :=
-  LocalRing.eq_maximal_ideal $ φ.ker_is_maximal_of_surjective hφ
+  LocalRing.eq_maximal_ideal <| φ.ker_is_maximal_of_surjective hφ
 
 end LocalRing
 
@@ -308,7 +308,7 @@ instance (priority := 100) : LocalRing R where
       Or.inr
         (by
           rw [h, sub_zero] <;> exact is_unit_one)
-    else Or.inl $ IsUnit.mk0 a h
+    else Or.inl <| IsUnit.mk0 a h
 
 end Field
 

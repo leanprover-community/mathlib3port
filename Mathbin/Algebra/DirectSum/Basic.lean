@@ -130,7 +130,7 @@ See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem add_hom_ext' {γ : Type _} [AddMonoidₓ γ] ⦃f g : (⨁ i, β i) →+ γ⦄
     (H : ∀ i : ι, f.comp (of _ i) = g.comp (of _ i)) : f = g :=
-  add_hom_ext $ fun i => AddMonoidHom.congr_fun $ H i
+  add_hom_ext fun i => AddMonoidHom.congr_fun <| H i
 
 variable {γ : Type u₁} [AddCommMonoidₓ γ]
 
@@ -161,7 +161,7 @@ induced by a family `φ` of homomorphisms `γ → β i`.
 
 Note that this is not an isomorphism. Not every homomorphism `γ →+ ⨁ i, β i` arises in this way. -/
 def from_add_monoid : (⨁ i, γ →+ β i) →+ γ →+ ⨁ i, β i :=
-  to_add_monoid $ fun i => AddMonoidHom.compHom (of β i)
+  to_add_monoid fun i => AddMonoidHom.compHom (of β i)
 
 @[simp]
 theorem from_add_monoid_of (i : ι) (f : γ →+ β i) : from_add_monoid (of _ i f) = (of _ i).comp f := by
@@ -178,7 +178,7 @@ variable (β)
 /-- `set_to_set β S T h` is the natural homomorphism `⨁ (i : S), β i → ⨁ (i : T), β i`,
 where `h : S ⊆ T`. -/
 def set_to_set (S T : Set ι) (H : S ⊆ T) : (⨁ i : S, β i) →+ ⨁ i : T, β i :=
-  to_add_monoid $ fun i => of (fun i : Subtype T => β i) ⟨↑i, H i.prop⟩
+  to_add_monoid fun i => of (fun i : Subtype T => β i) ⟨↑i, H i.prop⟩
 
 variable {β}
 

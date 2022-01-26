@@ -327,7 +327,7 @@ theorem coe_injective : @Function.Injective (L₁ →ₗ⁅R⁆ L₂) (L₁ → 
 
 @[ext]
 theorem ext {f g : L₁ →ₗ⁅R⁆ L₂} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 
 theorem ext_iff {f g : L₁ →ₗ⁅R⁆ L₂} : f = g ↔ ∀ x, f x = g x :=
   ⟨by
@@ -452,7 +452,7 @@ theorem coe_injective : @injective (L₁ ≃ₗ⁅R⁆ L₂) (L₁ → L₂) coe
 
 @[ext]
 theorem ext {f g : L₁ ≃ₗ⁅R⁆ L₂} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 
 instance : One (L₁ ≃ₗ⁅R⁆ L₁) :=
   ⟨{ (1 : L₁ ≃ₗ[R] L₁) with map_lie' := fun x y => rfl }⟩
@@ -625,7 +625,7 @@ theorem coe_injective : @Function.Injective (M →ₗ⁅R,L⁆ N) (M → N) coeF
 
 @[ext]
 theorem ext {f g : M →ₗ⁅R,L⁆ N} (h : ∀ m, f m = g m) : f = g :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 
 theorem ext_iff {f g : M →ₗ⁅R,L⁆ N} : f = g ↔ ∀ m, f m = g m :=
   ⟨by

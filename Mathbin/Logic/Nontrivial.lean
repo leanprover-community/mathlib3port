@@ -91,7 +91,7 @@ theorem not_nontrivial_iff_subsingleton : ¬Nontrivial α ↔ Subsingleton α :=
 
 theorem not_subsingleton α [h : Nontrivial α] : ¬Subsingleton α :=
   let ⟨⟨x, y, hxy⟩⟩ := h
-  fun ⟨h'⟩ => hxy $ h' x y
+  fun ⟨h'⟩ => hxy <| h' x y
 
 /-- A type is either a subsingleton or nontrivial. -/
 theorem subsingleton_or_nontrivial (α : Type _) : Subsingleton α ∨ Nontrivial α := by
@@ -100,7 +100,7 @@ theorem subsingleton_or_nontrivial (α : Type _) : Subsingleton α ∨ Nontrivia
 
 theorem false_of_nontrivial_of_subsingleton (α : Type _) [Nontrivial α] [Subsingleton α] : False :=
   let ⟨x, y, h⟩ := exists_pair_ne α
-  h $ Subsingleton.elimₓ x y
+  h <| Subsingleton.elimₓ x y
 
 instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by
   inhabit α
@@ -157,7 +157,7 @@ instance Nontrivial [Inhabited I] [inst : ∀ i, Nonempty (f i)] [Nontrivial (f 
 end Pi
 
 instance Function.nontrivial [h : Nonempty α] [Nontrivial β] : Nontrivial (α → β) :=
-  h.elim $ fun a => Pi.nontrivial_at a
+  h.elim fun a => Pi.nontrivial_at a
 
 mk_simp_attribute nontriviality := "Simp lemmas for `nontriviality` tactic"
 
@@ -177,7 +177,7 @@ unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_
   let alternative ← to_expr (pquote.1 (subsingleton_or_nontrivial (%%ₓα)))
   let n ← get_unused_name "_inst"
   tactic.cases Alternativeₓ [n, n]
-  (solve1 $ do
+  (solve1 <| do
         reset_instance_cache
         apply_instance <|> interactive.simp none none ff lems [`nontriviality] (Interactive.Loc.ns [none])) <|>
       fail f! "Could not prove goal assuming `subsingleton {α}`"

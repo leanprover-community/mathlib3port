@@ -37,7 +37,7 @@ theorem pred_eq_ppred (n : ℕ) : pred n = (ppred n).getOrElse 0 := by
 theorem sub_eq_psub (m : ℕ) : ∀ n, m - n = (psub m n).getOrElse 0
   | 0 => rfl
   | n + 1 =>
-    (pred_eq_ppred (m - n)).trans $ by
+    (pred_eq_ppred (m - n)).trans <| by
       rw [sub_eq_psub, psub] <;> cases psub m n <;> rfl
 
 @[simp]
@@ -67,7 +67,7 @@ theorem psub_eq_none {m n : ℕ} : psub m n = none ↔ m < n := by
   · show m < n
     refine' lt_of_not_geₓ fun h => _
     cases' le.dest h with k e
-    injection s.symm.trans (psub_eq_some.2 $ (add_commₓ _ _).trans e)
+    injection s.symm.trans (psub_eq_some.2 <| (add_commₓ _ _).trans e)
     
   · show n ≤ m
     rw [← psub_eq_some.1 s]
@@ -75,10 +75,10 @@ theorem psub_eq_none {m n : ℕ} : psub m n = none ↔ m < n := by
     
 
 theorem ppred_eq_pred {n} (h : 0 < n) : ppred n = some (pred n) :=
-  ppred_eq_some.2 $ succ_pred_eq_of_pos h
+  ppred_eq_some.2 <| succ_pred_eq_of_pos h
 
 theorem psub_eq_sub {m n} (h : n ≤ m) : psub m n = some (m - n) :=
-  psub_eq_some.2 $ tsub_add_cancel_of_le h
+  psub_eq_some.2 <| tsub_add_cancel_of_le h
 
 theorem psub_add m n k :
     psub m (n + k) = do

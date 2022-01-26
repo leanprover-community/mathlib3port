@@ -129,7 +129,7 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [mono a
   let ⟨P, f, haf, i⟩ := non_preadditive_abelian.normal_mono a
   let ⟨Q, g, hbg, i'⟩ := non_preadditive_abelian.normal_mono b
   let ⟨a', ha'⟩ :=
-    kernel_fork.is_limit.lift' i (kernel.ι (prod.lift f g)) $
+    kernel_fork.is_limit.lift' i (kernel.ι (prod.lift f g)) <|
       calc
         kernel.ι (prod.lift f g) ≫ f = kernel.ι (prod.lift f g) ≫ prod.lift f g ≫ limits.prod.fst := by
           rw [prod.lift_fst]
@@ -138,7 +138,7 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [mono a
         _ = 0 := zero_comp
         
   let ⟨b', hb'⟩ :=
-    kernel_fork.is_limit.lift' i' (kernel.ι (prod.lift f g)) $
+    kernel_fork.is_limit.lift' i' (kernel.ι (prod.lift f g)) <|
       calc
         kernel.ι (prod.lift f g) ≫ g = kernel.ι (prod.lift f g) ≫ prod.lift f g ≫ limits.prod.snd := by
           rw [prod.lift_snd]
@@ -148,13 +148,13 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [mono a
         
   has_limit.mk
     { Cone :=
-        pullback_cone.mk a' b' $ by
+        pullback_cone.mk a' b' <| by
           simp at ha' hb'
           rw [ha', hb'],
       IsLimit :=
         pullback_cone.is_limit.mk _
           (fun s =>
-            kernel.lift (prod.lift f g) (pullback_cone.snd s ≫ b) $
+            kernel.lift (prod.lift f g) (pullback_cone.snd s ≫ b) <|
               prod.hom_ext
                 (calc
                   ((pullback_cone.snd s ≫ b) ≫ prod.lift f g) ≫ limits.prod.fst = pullback_cone.snd s ≫ b ≫ f := by
@@ -175,15 +175,15 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [mono a
                     rw [comp_zero, zero_comp]
                   ))
           (fun s =>
-            (cancel_mono a).1 $ by
+            (cancel_mono a).1 <| by
               rw [kernel_fork.ι_of_ι] at ha'
               simp [ha', pullback_cone.condition s])
           (fun s =>
-            (cancel_mono b).1 $ by
+            (cancel_mono b).1 <| by
               rw [kernel_fork.ι_of_ι] at hb'
               simp [hb'])
           fun s m h₁ h₂ =>
-          (cancel_mono (kernel.ι (prod.lift f g))).1 $
+          (cancel_mono (kernel.ι (prod.lift f g))).1 <|
             calc
               m ≫ kernel.ι (prod.lift f g) = m ≫ a' ≫ a := by
                 congr
@@ -201,7 +201,7 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [epi a] [
   let ⟨P, f, hfa, i⟩ := non_preadditive_abelian.normal_epi a
   let ⟨Q, g, hgb, i'⟩ := non_preadditive_abelian.normal_epi b
   let ⟨a', ha'⟩ :=
-    cokernel_cofork.is_colimit.desc' i (cokernel.π (coprod.desc f g)) $
+    cokernel_cofork.is_colimit.desc' i (cokernel.π (coprod.desc f g)) <|
       calc
         f ≫ cokernel.π (coprod.desc f g) = coprod.inl ≫ coprod.desc f g ≫ cokernel.π (coprod.desc f g) := by
           rw [coprod.inl_desc_assoc]
@@ -210,7 +210,7 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [epi a] [
         _ = 0 := has_zero_morphisms.comp_zero _ _
         
   let ⟨b', hb'⟩ :=
-    cokernel_cofork.is_colimit.desc' i' (cokernel.π (coprod.desc f g)) $
+    cokernel_cofork.is_colimit.desc' i' (cokernel.π (coprod.desc f g)) <|
       calc
         g ≫ cokernel.π (coprod.desc f g) = coprod.inr ≫ coprod.desc f g ≫ cokernel.π (coprod.desc f g) := by
           rw [coprod.inr_desc_assoc]
@@ -220,13 +220,13 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [epi a] [
         
   has_colimit.mk
     { Cocone :=
-        pushout_cocone.mk a' b' $ by
+        pushout_cocone.mk a' b' <| by
           simp only [cofork.π_of_π] at ha' hb'
           rw [ha', hb'],
       IsColimit :=
         pushout_cocone.is_colimit.mk _
           (fun s =>
-            cokernel.desc (coprod.desc f g) (b ≫ pushout_cocone.inr s) $
+            cokernel.desc (coprod.desc f g) (b ≫ pushout_cocone.inr s) <|
               coprod.hom_ext
                 (calc
                   coprod.inl ≫ coprod.desc f g ≫ b ≫ pushout_cocone.inr s = f ≫ b ≫ pushout_cocone.inr s := by
@@ -247,15 +247,15 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [epi a] [
                     rw [comp_zero, zero_comp]
                   ))
           (fun s =>
-            (cancel_epi a).1 $ by
+            (cancel_epi a).1 <| by
               rw [cokernel_cofork.π_of_π] at ha'
               simp [reassoc_of ha', pushout_cocone.condition s])
           (fun s =>
-            (cancel_epi b).1 $ by
+            (cancel_epi b).1 <| by
               rw [cokernel_cofork.π_of_π] at hb'
               simp [reassoc_of hb'])
           fun s m h₁ h₂ =>
-          (cancel_epi (cokernel.π (coprod.desc f g))).1 $
+          (cancel_epi (cokernel.π (coprod.desc f g))).1 <|
             calc
               cokernel.π (coprod.desc f g) ≫ m = (a ≫ a') ≫ m := by
                 congr
@@ -280,7 +280,7 @@ private abbrev P {X Y : C} (f g : X ⟶ Y) [mono (prod.lift (𝟙 X) f)] [mono (
 irreducible_def has_limit_parallel_pair {X Y : C} (f g : X ⟶ Y) : has_limit (parallel_pair f g) :=
   have huv : (pullback.fst : P f g ⟶ X) = pullback.snd :=
     calc
-      (pullback.fst : P f g ⟶ X) = pullback.fst ≫ 𝟙 _ := Eq.symm $ category.comp_id _
+      (pullback.fst : P f g ⟶ X) = pullback.fst ≫ 𝟙 _ := Eq.symm <| category.comp_id _
       _ = pullback.fst ≫ prod.lift (𝟙 X) f ≫ limits.prod.fst := by
         rw [prod.lift_fst]
       _ = pullback.snd ≫ prod.lift (𝟙 X) g ≫ limits.prod.fst := by
@@ -304,7 +304,7 @@ irreducible_def has_limit_parallel_pair {X Y : C} (f g : X ⟶ Y) : has_limit (p
       IsLimit :=
         fork.is_limit.mk _
           (fun s =>
-            pullback.lift (fork.ι s) (fork.ι s) $
+            pullback.lift (fork.ι s) (fork.ι s) <|
               prod.hom_ext
                 (by
                   simp only [prod.lift_fst, category.assoc])
@@ -334,7 +334,7 @@ private abbrev Q {X Y : C} (f g : X ⟶ Y) [epi (coprod.desc (𝟙 Y) f)] [epi (
 irreducible_def has_colimit_parallel_pair {X Y : C} (f g : X ⟶ Y) : has_colimit (parallel_pair f g) :=
   have huv : (pushout.inl : Y ⟶ Q f g) = pushout.inr :=
     calc
-      (pushout.inl : Y ⟶ Q f g) = 𝟙 _ ≫ pushout.inl := Eq.symm $ category.id_comp _
+      (pushout.inl : Y ⟶ Q f g) = 𝟙 _ ≫ pushout.inl := Eq.symm <| category.id_comp _
       _ = (coprod.inl ≫ coprod.desc (𝟙 Y) f) ≫ pushout.inl := by
         rw [coprod.inl_desc]
       _ = (coprod.inl ≫ coprod.desc (𝟙 Y) g) ≫ pushout.inr := by
@@ -358,7 +358,7 @@ irreducible_def has_colimit_parallel_pair {X Y : C} (f g : X ⟶ Y) : has_colimi
       IsColimit :=
         cofork.is_colimit.mk _
           (fun s =>
-            pushout.desc (cofork.π s) (cofork.π s) $
+            pushout.desc (cofork.π s) (cofork.π s) <|
               coprod.hom_ext
                 (by
                   simp only [coprod.inl_desc_assoc])
@@ -465,11 +465,11 @@ def zero_cokernel_of_zero_cancel {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Y �
 
 /-- If `g ≫ f = 0` implies `g = 0` for all `g`, then `f` is a monomorphism. -/
 theorem mono_of_cancel_zero {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Z ⟶ X hgf : g ≫ f = 0, g = 0) : mono f :=
-  mono_of_zero_kernel f 0 $ zero_kernel_of_cancel_zero f hf
+  mono_of_zero_kernel f 0 <| zero_kernel_of_cancel_zero f hf
 
 /-- If `f ≫ g = 0` implies `g = 0` for all `g`, then `g` is a monomorphism. -/
 theorem epi_of_zero_cancel {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Y ⟶ Z hgf : f ≫ g = 0, g = 0) : epi f :=
-  epi_of_zero_cokernel f 0 $ zero_cokernel_of_zero_cancel f hf
+  epi_of_zero_cokernel f 0 <| zero_cokernel_of_zero_cancel f hf
 
 end
 
@@ -487,7 +487,7 @@ protected abbrev image.ι : non_preadditive_abelian.image f ⟶ Q :=
 
 /-- There is a canonical epimorphism `p : P ⟶ image f` for every `f`. -/
 protected abbrev factor_thru_image : P ⟶ non_preadditive_abelian.image f :=
-  kernel.lift (cokernel.π f) f $ cokernel.condition f
+  kernel.lift (cokernel.π f) f <| cokernel.condition f
 
 /-- `f` factors through its image via the canonical morphism `p`. -/
 @[simp, reassoc]
@@ -499,7 +499,7 @@ instance : epi (non_preadditive_abelian.factor_thru_image f) :=
   let I := non_preadditive_abelian.image f
   let p := non_preadditive_abelian.factor_thru_image f
   let i := kernel.ι (cokernel.π f)
-  epi_of_zero_cancel _ $ fun R g : I ⟶ R hpg : p ≫ g = 0 => by
+  (epi_of_zero_cancel _) fun R g : I ⟶ R hpg : p ≫ g = 0 => by
     let u := kernel.ι g ≫ i
     have : mono u := mono_comp _ _
     have hu := non_preadditive_abelian.normal_mono u
@@ -520,7 +520,7 @@ instance : epi (non_preadditive_abelian.factor_thru_image f) :=
     exact zero_of_epi_comp _ (kernel.condition g)
 
 instance mono_factor_thru_image [mono f] : mono (non_preadditive_abelian.factor_thru_image f) :=
-  mono_of_mono_fac $ image.fac f
+  mono_of_mono_fac <| image.fac f
 
 instance is_iso_factor_thru_image [mono f] : is_iso (non_preadditive_abelian.factor_thru_image f) :=
   is_iso_of_mono_of_epi _
@@ -535,7 +535,7 @@ protected abbrev coimage.π : P ⟶ non_preadditive_abelian.coimage f :=
 
 /-- There is a canonical monomorphism `i : coimage f ⟶ Q`. -/
 protected abbrev factor_thru_coimage : non_preadditive_abelian.coimage f ⟶ Q :=
-  cokernel.desc (kernel.ι f) f $ kernel.condition f
+  cokernel.desc (kernel.ι f) f <| kernel.condition f
 
 /-- `f` factors through its coimage via the canonical morphism `p`. -/
 protected theorem coimage.fac : coimage.π f ≫ non_preadditive_abelian.factor_thru_coimage f = f :=
@@ -546,7 +546,7 @@ instance : mono (non_preadditive_abelian.factor_thru_coimage f) :=
   let I := non_preadditive_abelian.coimage f
   let i := non_preadditive_abelian.factor_thru_coimage f
   let p := cokernel.π (kernel.ι f)
-  mono_of_cancel_zero _ $ fun R g : R ⟶ I hgi : g ≫ i = 0 => by
+  (mono_of_cancel_zero _) fun R g : R ⟶ I hgi : g ≫ i = 0 => by
     let u := p ≫ cokernel.π g
     have : epi u := epi_comp _ _
     have hu := non_preadditive_abelian.normal_epi u
@@ -567,7 +567,7 @@ instance : mono (non_preadditive_abelian.factor_thru_coimage f) :=
     exact zero_of_comp_mono _ (cokernel.condition g)
 
 instance epi_factor_thru_coimage [epi f] : epi (non_preadditive_abelian.factor_thru_coimage f) :=
-  epi_of_epi_fac $ coimage.fac f
+  epi_of_epi_fac <| coimage.fac f
 
 instance is_iso_factor_thru_coimage [epi f] : is_iso (non_preadditive_abelian.factor_thru_coimage f) :=
   is_iso_of_mono_of_epi _
@@ -586,7 +586,7 @@ def epi_is_cokernel_of_kernel [epi f] (s : fork f 0) (h : is_limit s) :
   is_cokernel.cokernel_iso _ _
     (cokernel.of_iso_comp _ _ (limits.is_limit.cone_point_unique_up_to_iso (limit.is_limit _) h)
       (cone_morphism.w (limits.is_limit.unique_up_to_iso (limit.is_limit _) h).Hom _))
-    (as_iso $ non_preadditive_abelian.factor_thru_coimage f) (coimage.fac f)
+    (as_iso <| non_preadditive_abelian.factor_thru_coimage f) (coimage.fac f)
 
 /-- In a `non_preadditive_abelian` category, a mono is the kernel of its cokernel. More precisely:
     If `f` is a monomorphism and `s` is some colimit cokernel cocone on `f`, then `f` is a kernel
@@ -595,8 +595,8 @@ def mono_is_kernel_of_cokernel [mono f] (s : cofork f 0) (h : is_colimit s) :
     is_limit (kernel_fork.of_ι f (cokernel_cofork.condition s)) :=
   is_kernel.iso_kernel _ _
     (kernel.of_comp_iso _ _ (limits.is_colimit.cocone_point_unique_up_to_iso h (colimit.is_colimit _))
-      (cocone_morphism.w (limits.is_colimit.unique_up_to_iso h $ colimit.is_colimit _).Hom _))
-    (as_iso $ non_preadditive_abelian.factor_thru_image f) (image.fac f)
+      (cocone_morphism.w (limits.is_colimit.unique_up_to_iso h <| colimit.is_colimit _).Hom _))
+    (as_iso <| non_preadditive_abelian.factor_thru_image f) (image.fac f)
 
 end CokernelOfKernel
 
@@ -608,7 +608,7 @@ abbrev r (A : C) : A ⟶ cokernel (diag A) :=
   prod.lift (𝟙 A) 0 ≫ cokernel.π (diag A)
 
 instance mono_Δ {A : C} : mono (diag A) :=
-  mono_of_mono_fac $ prod.lift_fst _ _
+  mono_of_mono_fac <| prod.lift_fst _ _
 
 instance mono_r {A : C} : mono (r A) := by
   let hl : is_limit (kernel_fork.of_ι (diag A) (cokernel.condition (diag A))) :=

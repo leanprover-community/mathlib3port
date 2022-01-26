@@ -36,12 +36,18 @@ actions and register the following instances:
 class HasVadd (G : Type _) (P : Type _) where
   vadd : G → P → P
 
+/-- Type class for the `-ᵥ` notation. -/
+class HasVsub (G : outParam (Type _)) (P : Type _) where
+  vsub : P → P → G
+
 /-- Typeclass for types with a scalar multiplication operation, denoted `•` (`\bu`) -/
 @[to_additive HasVadd]
 class HasScalar (M : Type _) (α : Type _) where
   smul : M → α → α
 
 infixl:65 " +ᵥ " => HasVadd.vadd
+
+infixl:65 " -ᵥ " => HasVsub.vsub
 
 infixr:73 " • " => HasScalar.smul
 
@@ -471,16 +477,16 @@ class CancelCommMonoid (M : Type u) extends LeftCancelMonoid M, CommMonoidₓ M
 instance (priority := 100) CancelCommMonoid.toCancelMonoid (M : Type u) [CancelCommMonoid M] : CancelMonoid M :=
   { ‹CancelCommMonoid M› with
     mul_right_cancel := fun a b c h =>
-      mul_left_cancelₓ $ by
+      mul_left_cancelₓ <| by
         rw [mul_comm, h, mul_comm] }
 
 end CancelMonoid
 
 /-- The fundamental power operation in a group. `zpow_rec n a = a*a*...*a` n times, for integer `n`.
 Use instead `a ^ n`,  which has better definitional behavior. -/
-def zpowRec {M : Type _} [One M] [Mul M] [HasInv M] : ℤ → M → M
+def zpowRec {M : Type _} [One M] [Mul M] [Inv M] : ℤ → M → M
   | Int.ofNat n, a => npowRec n a
-  | -[1+ n], a => npowRec n.succ a⁻¹
+  | -[1+ n], a => (npowRec n.succ a)⁻¹
 
 /-- The fundamental scalar multiplication in an additive group. `zsmul_rec n a = a+a+...+a` n
 times, for integer `n`. Use instead `n • a`, which has better definitional behavior. -/
@@ -509,8 +515,8 @@ In the same way, adding a `zpow` field makes it possible to avoid definitional f
 in diamonds. See the definition of `monoid` and Note [forgetful inheritance] for more
 explanations on this.
 -/
-@[protect_proj, ancestor Monoidₓ HasInv Div]
-class DivInvMonoidₓ (G : Type u) extends Monoidₓ G, HasInv G, Div G where
+@[protect_proj, ancestor Monoidₓ Inv Div]
+class DivInvMonoidₓ (G : Type u) extends Monoidₓ G, Inv G, Div G where
   div := fun a b => a * b⁻¹
   div_eq_mul_inv : ∀ a b : G, a / b = a * b⁻¹ := by
     run_tac
@@ -522,7 +528,7 @@ class DivInvMonoidₓ (G : Type u) extends Monoidₓ G, HasInv G, Div G where
   zpow_succ' : ∀ n : ℕ a : G, zpow (Int.ofNat n.succ) a = a * zpow (Int.ofNat n) a := by
     run_tac
       try_refl_tac
-  zpow_neg' : ∀ n : ℕ a : G, zpow -[1+ n] a = zpow n.succ a⁻¹ := by
+  zpow_neg' : ∀ n : ℕ a : G, zpow -[1+ n] a = (zpow n.succ a)⁻¹ := by
     run_tac
       try_refl_tac
 
@@ -664,7 +670,7 @@ theorem inv_invₓ (a : G) : a⁻¹⁻¹ = a :=
 
 @[simp, to_additive]
 theorem mul_right_invₓ (a : G) : a * a⁻¹ = 1 := by
-  have : a⁻¹⁻¹ * a⁻¹ = 1 := mul_left_invₓ (a⁻¹)
+  have : a⁻¹⁻¹ * a⁻¹ = 1 := mul_left_invₓ a⁻¹
   rwa [inv_invₓ] at this
 
 @[to_additive]

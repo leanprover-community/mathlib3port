@@ -51,7 +51,7 @@ theorem restrict_apply (f : α → β) (s : Set α) (x : s) : restrict f s x = f
 
 @[simp]
 theorem range_restrict (f : α → β) (s : Set α) : Set.Range (restrict f s) = f '' s :=
-  (range_comp _ _).trans $ congr_argₓ ((· '' ·) f) Subtype.range_coe
+  (range_comp _ _).trans <| congr_argₓ ((· '' ·) f) Subtype.range_coe
 
 theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻¹' t) = f '' (t ∩ s) := by
   rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
@@ -60,13 +60,13 @@ theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻
 @[simp]
 theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ a _ : a ∉ s, β) :
     restrict (fun a => if h : a ∈ s then f a h else g a h) s = fun a => f a a.2 :=
-  funext $ fun a => dif_pos a.2
+  funext fun a => dif_pos a.2
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ a _ : a ∉ s, β) :
     restrict (fun a => if h : a ∈ s then f a h else g a h) (sᶜ) = fun a => g a a.2 :=
-  funext $ fun a => dif_neg a.2
+  funext fun a => dif_neg a.2
 
 @[simp]
 theorem restrict_ite (f g : α → β) (s : Set α) [∀ x, Decidable (x ∈ s)] :
@@ -155,16 +155,16 @@ theorem eq_on.image_eq (heq : eq_on f₁ f₂ s) : f₁ '' s = f₂ '' s :=
   image_congr HEq
 
 theorem eq_on.inter_preimage_eq (heq : eq_on f₁ f₂ s) (t : Set β) : s ∩ f₁ ⁻¹' t = s ∩ f₂ ⁻¹' t :=
-  ext $ fun x =>
-    And.congr_right_iff.2 $ fun hx => by
+  ext fun x =>
+    And.congr_right_iff.2 fun hx => by
       rw [mem_preimage, mem_preimage, HEq hx]
 
 theorem eq_on.mono (hs : s₁ ⊆ s₂) (hf : eq_on f₁ f₂ s₂) : eq_on f₁ f₂ s₁ := fun x hx => hf (hs hx)
 
-theorem eq_on.comp_left (h : s.eq_on f₁ f₂) : s.eq_on (g ∘ f₁) (g ∘ f₂) := fun a ha => congr_argₓ _ $ h ha
+theorem eq_on.comp_left (h : s.eq_on f₁ f₂) : s.eq_on (g ∘ f₁) (g ∘ f₂) := fun a ha => congr_argₓ _ <| h ha
 
 theorem comp_eq_of_eq_on_range {ι : Sort _} {f : ι → α} {g₁ g₂ : α → β} (h : eq_on g₁ g₂ (range f)) : g₁ ∘ f = g₂ ∘ f :=
-  funext $ fun x => h $ mem_range_self _
+  funext fun x => h <| mem_range_self _
 
 /-! ### Congruence lemmas -/
 
@@ -240,7 +240,8 @@ theorem maps_to.image_subset (h : maps_to f s t) : f '' s ⊆ t :=
 
 theorem maps_to.congr (h₁ : maps_to f₁ s t) (h : eq_on f₁ f₂ s) : maps_to f₂ s t := fun x hx => h hx ▸ h₁ hx
 
-theorem eq_on.comp_right (hg : t.eq_on g₁ g₂) (hf : s.maps_to f t) : s.eq_on (g₁ ∘ f) (g₂ ∘ f) := fun a ha => hg $ hf ha
+theorem eq_on.comp_right (hg : t.eq_on g₁ g₂) (hf : s.maps_to f t) : s.eq_on (g₁ ∘ f) (g₂ ∘ f) := fun a ha =>
+  hg <| hf ha
 
 theorem eq_on.maps_to_iff (H : eq_on f₁ f₂ s) : maps_to f₁ s t ↔ maps_to f₂ s t :=
   ⟨fun h => h.congr H, fun h => h.congr H.symm⟩
@@ -264,10 +265,10 @@ theorem maps_to.iterate_restrict {f : α → α} {s : Set α} (h : maps_to f s s
     
 
 theorem maps_to.mono (hs : s₂ ⊆ s₁) (ht : t₁ ⊆ t₂) (hf : maps_to f s₁ t₁) : maps_to f s₂ t₂ := fun x hx =>
-  ht (hf $ hs hx)
+  ht (hf <| hs hx)
 
 theorem maps_to.union_union (h₁ : maps_to f s₁ t₁) (h₂ : maps_to f s₂ t₂) : maps_to f (s₁ ∪ s₂) (t₁ ∪ t₂) := fun x hx =>
-  hx.elim (fun hx => Or.inl $ h₁ hx) fun hx => Or.inr $ h₂ hx
+  hx.elim (fun hx => Or.inl <| h₁ hx) fun hx => Or.inr <| h₂ hx
 
 theorem maps_to.union (h₁ : maps_to f s₁ t) (h₂ : maps_to f s₂ t) : maps_to f (s₁ ∪ s₂) t :=
   union_self t ▸ h₁.union_union h₂
@@ -314,7 +315,7 @@ theorem surjective_maps_to_image_restrict (f : α → β) (s : Set α) :
     surjective ((maps_to_image f s).restrict f s (f '' s)) := fun ⟨y, x, hs, hxy⟩ => ⟨⟨x, hs⟩, Subtype.ext hxy⟩
 
 theorem maps_to.mem_iff (h : maps_to f s t) (hc : maps_to f (sᶜ) (tᶜ)) {x} : f x ∈ t ↔ x ∈ s :=
-  ⟨fun ht => by_contra $ fun hs => hc hs ht, fun hx => h hx⟩
+  ⟨fun ht => by_contra fun hs => hc hs ht, fun hx => h hx⟩
 
 /-! ### Injectivity on a set -/
 
@@ -346,7 +347,7 @@ theorem inj_on.mono (h : s₁ ⊆ s₂) (ht : inj_on f s₂) : inj_on f s₁ := 
 
 theorem inj_on_union (h : Disjoint s₁ s₂) :
     inj_on f (s₁ ∪ s₂) ↔ inj_on f s₁ ∧ inj_on f s₂ ∧ ∀, ∀ x ∈ s₁, ∀, ∀ y ∈ s₂, ∀, f x ≠ f y := by
-  refine' ⟨fun H => ⟨H.mono $ subset_union_left _ _, H.mono $ subset_union_right _ _, _⟩, _⟩
+  refine' ⟨fun H => ⟨H.mono <| subset_union_left _ _, H.mono <| subset_union_right _ _, _⟩, _⟩
   · intro x hx y hy hxy
     obtain rfl : x = y
     exact H (Or.inl hx) (Or.inr hy) hxy
@@ -371,10 +372,10 @@ theorem inj_on_of_injective (h : injective f) (s : Set α) : inj_on f s := fun x
 alias inj_on_of_injective ← Function.Injective.inj_on
 
 theorem inj_on.comp (hg : inj_on g t) (hf : inj_on f s) (h : maps_to f s t) : inj_on (g ∘ f) s := fun x hx y hy heq =>
-  hf hx hy $ hg (h hx) (h hy) HEq
+  hf hx hy <| hg (h hx) (h hy) HEq
 
 theorem inj_on_iff_injective : inj_on f s ↔ injective (restrict f s) :=
-  ⟨fun H a b h => Subtype.eq $ H a.2 b.2 h, fun H a as b bs h => congr_argₓ Subtype.val $ @H ⟨a, as⟩ ⟨b, bs⟩ h⟩
+  ⟨fun H a b h => Subtype.eq <| H a.2 b.2 h, fun H a as b bs h => congr_argₓ Subtype.val <| @H ⟨a, as⟩ ⟨b, bs⟩ h⟩
 
 alias inj_on_iff_injective ↔ Set.InjOn.injective _
 
@@ -389,7 +390,7 @@ theorem inj_on.mem_image_iff {x} (hf : inj_on f s) (hs : s₁ ⊆ s) (hx : x ∈
   ⟨hf.mem_of_mem_image hs hx, mem_image_of_mem f⟩
 
 theorem inj_on.preimage_image_inter (hf : inj_on f s) (hs : s₁ ⊆ s) : f ⁻¹' (f '' s₁) ∩ s = s₁ :=
-  ext $ fun x => ⟨fun ⟨h₁, h₂⟩ => hf.mem_of_mem_image hs h₂ h₁, fun h => ⟨mem_image_of_mem _ h, hs h⟩⟩
+  ext fun x => ⟨fun ⟨h₁, h₂⟩ => hf.mem_of_mem_image hs h₂ h₁, fun h => ⟨mem_image_of_mem _ h, hs h⟩⟩
 
 theorem eq_on.cancel_left (h : s.eq_on (g ∘ f₁) (g ∘ f₂)) (hg : t.inj_on g) (hf₁ : s.maps_to f₁ t)
     (hf₂ : s.maps_to f₂ t) : s.eq_on f₁ f₂ := fun a ha => hg (hf₁ ha) (hf₂ ha) (h ha)
@@ -407,7 +408,7 @@ def surj_on (f : α → β) (s : Set α) (t : Set β) : Prop :=
   t ⊆ f '' s
 
 theorem surj_on.subset_range (h : surj_on f s t) : t ⊆ range f :=
-  subset.trans h $ image_subset_range f s
+  subset.trans h <| image_subset_range f s
 
 theorem surj_on_iff_exists_map_subtype :
     surj_on f s t ↔ ∃ (t' : Set β)(g : s → t'), t ⊆ t' ∧ surjective g ∧ ∀ x : s, f x = g x :=
@@ -433,7 +434,7 @@ theorem eq_on.surj_on_iff (h : eq_on f₁ f₂ s) : surj_on f₁ s t ↔ surj_on
   ⟨fun H => H.congr h, fun H => H.congr h.symm⟩
 
 theorem surj_on.mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) (hf : surj_on f s₁ t₂) : surj_on f s₂ t₁ :=
-  subset.trans ht $ subset.trans hf $ image_subset _ hs
+  subset.trans ht <| subset.trans hf <| image_subset _ hs
 
 theorem surj_on.union (h₁ : surj_on f s t₁) (h₂ : surj_on f s t₂) : surj_on f s (t₁ ∪ t₂) := fun x hx =>
   hx.elim (fun hx => h₁ hx) fun hx => h₂ hx
@@ -454,7 +455,7 @@ theorem surj_on.inter (h₁ : surj_on f s₁ t) (h₂ : surj_on f s₂ t) (h : i
   inter_self t ▸ h₁.inter_inter h₂ h
 
 theorem surj_on.comp (hg : surj_on g t p) (hf : surj_on f s t) : surj_on (g ∘ f) s p :=
-  subset.trans hg $ subset.trans (image_subset g hf) $ image_comp g f s ▸ subset.refl _
+  subset.trans hg <| subset.trans (image_subset g hf) <| image_comp g f s ▸ subset.refl _
 
 theorem surjective_iff_surj_on_univ : surjective f ↔ surj_on f univ univ := by
   simp [surjective, surj_on, subset_def]
@@ -477,10 +478,10 @@ theorem image_eq_iff_surj_on_maps_to : f '' s = t ↔ s.surj_on f t ∧ s.maps_t
 
 theorem surj_on.maps_to_compl (h : surj_on f s t) (h' : injective f) : maps_to f (sᶜ) (tᶜ) := fun x hs ht =>
   let ⟨x', hx', HEq⟩ := h ht
-  hs $ h' HEq ▸ hx'
+  hs <| h' HEq ▸ hx'
 
 theorem maps_to.surj_on_compl (h : maps_to f s t) (h' : surjective f) : surj_on f (sᶜ) (tᶜ) :=
-  h'.forall.2 $ fun x ht => mem_image_of_mem _ $ fun hs => ht (h hs)
+  h'.forall.2 fun x ht => (mem_image_of_mem _) fun hs => ht (h hs)
 
 theorem eq_on.cancel_right (hf : s.eq_on (g₁ ∘ f) (g₂ ∘ f)) (hf' : s.surj_on f t) : t.eq_on g₁ g₂ := by
   intro b hb
@@ -491,7 +492,7 @@ theorem surj_on.cancel_right (hf : s.surj_on f t) (hf' : s.maps_to f t) : s.eq_o
   ⟨fun h => h.cancel_right hf, fun h => h.comp_right hf'⟩
 
 theorem eq_on_comp_right_iff : s.eq_on (g₁ ∘ f) (g₂ ∘ f) ↔ (f '' s).EqOn g₁ g₂ :=
-  (s.surj_on_image f).cancel_right $ s.maps_to_image f
+  (s.surj_on_image f).cancel_right <| s.maps_to_image f
 
 /-! ### Bijectivity -/
 
@@ -518,7 +519,7 @@ theorem bij_on_empty (f : α → β) : bij_on f ∅ ∅ :=
 
 theorem bij_on.inter (h₁ : bij_on f s₁ t₁) (h₂ : bij_on f s₂ t₂) (h : inj_on f (s₁ ∪ s₂)) :
     bij_on f (s₁ ∩ s₂) (t₁ ∩ t₂) :=
-  ⟨h₁.maps_to.inter_inter h₂.maps_to, h₁.inj_on.mono $ inter_subset_left _ _, h₁.surj_on.inter_inter h₂.surj_on h⟩
+  ⟨h₁.maps_to.inter_inter h₂.maps_to, h₁.inj_on.mono <| inter_subset_left _ _, h₁.surj_on.inter_inter h₂.surj_on h⟩
 
 theorem bij_on.union (h₁ : bij_on f s₁ t₁) (h₂ : bij_on f s₂ t₂) (h : inj_on f (s₁ ∪ s₂)) :
     bij_on f (s₁ ∪ s₂) (t₁ ∪ t₂) :=
@@ -543,8 +544,8 @@ theorem bij_on.comp (hg : bij_on g t p) (hf : bij_on f s t) : bij_on (g ∘ f) s
   bij_on.mk (hg.maps_to.comp hf.maps_to) (hg.inj_on.comp hf.inj_on hf.maps_to) (hg.surj_on.comp hf.surj_on)
 
 theorem bij_on.bijective (h : bij_on f s t) :
-    bijective (t.cod_restrict (s.restrict f) $ fun x => h.maps_to x.val_prop) :=
-  ⟨fun x y h' => Subtype.ext $ h.inj_on x.2 y.2 $ Subtype.ext_iff.1 h', fun ⟨y, hy⟩ =>
+    bijective ((t.cod_restrict (s.restrict f)) fun x => h.maps_to x.val_prop) :=
+  ⟨fun x y h' => Subtype.ext <| h.inj_on x.2 y.2 <| Subtype.ext_iff.1 h', fun ⟨y, hy⟩ =>
     let ⟨x, hx, hxy⟩ := h.surj_on hy
     ⟨⟨x, hx⟩, Subtype.eq hxy⟩⟩
 
@@ -582,7 +583,7 @@ theorem left_inv_on.congr_right (h₁ : left_inv_on f₁' f₁ s) (heq : eq_on f
 
 theorem left_inv_on.inj_on (h : left_inv_on f₁' f s) : inj_on f s := fun x₁ h₁ x₂ h₂ heq =>
   calc
-    x₁ = f₁' (f x₁) := Eq.symm $ h h₁
+    x₁ = f₁' (f x₁) := Eq.symm <| h h₁
     _ = f₁' (f x₂) := congr_argₓ f₁' HEq
     _ = x₂ := h h₂
     
@@ -619,7 +620,7 @@ theorem left_inv_on.image_inter' (hf : left_inv_on f' f s) : f '' (s₁ ∩ s) =
 
 theorem left_inv_on.image_inter (hf : left_inv_on f' f s) : f '' (s₁ ∩ s) = f' ⁻¹' (s₁ ∩ s) ∩ f '' s := by
   rw [hf.image_inter']
-  refine' subset.antisymm _ (inter_subset_inter_left _ (preimage_mono $ inter_subset_left _ _))
+  refine' subset.antisymm _ (inter_subset_inter_left _ (preimage_mono <| inter_subset_left _ _))
   rintro _ ⟨h₁, x, hx, rfl⟩
   exact
     ⟨⟨h₁, by
@@ -647,7 +648,7 @@ theorem right_inv_on.eq (h : right_inv_on f' f t) {y} (hy : y ∈ t) : f (f' y) 
   h hy
 
 theorem left_inv_on.right_inv_on_image (h : left_inv_on f' f s) : right_inv_on f' f (f '' s) := fun y ⟨x, hx, Eq⟩ =>
-  Eq ▸ congr_argₓ f $ h.eq hx
+  Eq ▸ congr_argₓ f <| h.eq hx
 
 theorem right_inv_on.congr_left (h₁ : right_inv_on f₁' f t) (heq : eq_on f₁' f₂' t) : right_inv_on f₂' f t :=
   h₁.congr_right HEq
@@ -670,7 +671,7 @@ theorem right_inv_on.mono (hf : right_inv_on f' f t) (ht : t₁ ⊆ t) : right_i
   hf.mono ht
 
 theorem inj_on.right_inv_on_of_left_inv_on (hf : inj_on f s) (hf' : left_inv_on f f' t) (h₁ : maps_to f s t)
-    (h₂ : maps_to f' t s) : right_inv_on f f' s := fun x h => hf (h₂ $ h₁ h) h (hf' (h₁ h))
+    (h₂ : maps_to f' t s) : right_inv_on f f' s := fun x h => hf (h₂ <| h₁ h) h (hf' (h₁ h))
 
 theorem eq_on_of_left_inv_on_of_right_inv_on (h₁ : left_inv_on f₁' f s) (h₂ : right_inv_on f₂' f t)
     (h : maps_to f₂' t s) : eq_on f₁' f₂' t := fun y hy =>
@@ -748,7 +749,7 @@ theorem inj_on.inv_fun_on_image [Nonempty α] (h : inj_on f s₂) (ht : s₁ ⊆
   h.left_inv_on_inv_fun_on.image_image' ht
 
 theorem surj_on.right_inv_on_inv_fun_on [Nonempty α] (h : surj_on f s t) : right_inv_on (inv_fun_on f s) f t :=
-  fun y hy => inv_fun_on_eq $ mem_image_iff_bex.1 $ h hy
+  fun y hy => inv_fun_on_eq <| mem_image_iff_bex.1 <| h hy
 
 theorem bij_on.inv_on_inv_fun_on [Nonempty α] (h : bij_on f s t) : inv_on (inv_fun_on f s) f s t :=
   ⟨h.inj_on.left_inv_on_inv_fun_on, h.surj_on.right_inv_on_inv_fun_on⟩
@@ -760,7 +761,7 @@ theorem surj_on.inv_on_inv_fun_on [Nonempty α] (h : surj_on f s t) :
   rw [h.right_inv_on_inv_fun_on hy]
 
 theorem surj_on.maps_to_inv_fun_on [Nonempty α] (h : surj_on f s t) : maps_to (inv_fun_on f s) t s := fun y hy =>
-  mem_preimage.2 $ inv_fun_on_mem $ mem_image_iff_bex.1 $ h hy
+  mem_preimage.2 <| inv_fun_on_mem <| mem_image_iff_bex.1 <| h hy
 
 theorem surj_on.bij_on_subset [Nonempty α] (h : surj_on f s t) : bij_on f (inv_fun_on f s '' t) t := by
   refine' h.inv_on_inv_fun_on.bij_on _ (maps_to_image _ _)
@@ -905,7 +906,7 @@ theorem piecewise_insert_of_ne {i j : α} (h : i ≠ j) [∀ i, Decidable (i ∈
 
 @[simp]
 theorem piecewise_compl [∀ i, Decidable (i ∈ sᶜ)] : sᶜ.piecewise f g = s.piecewise g f :=
-  funext $ fun x =>
+  funext fun x =>
     if hx : x ∈ s then by
       simp [hx]
     else by
@@ -914,7 +915,7 @@ theorem piecewise_compl [∀ i, Decidable (i ∈ sᶜ)] : sᶜ.piecewise f g = s
 @[simp]
 theorem piecewise_range_comp {ι : Sort _} (f : ι → α) [∀ j, Decidable (j ∈ range f)] (g₁ g₂ : α → β) :
     (range f).piecewise g₁ g₂ ∘ f = g₁ ∘ f :=
-  comp_eq_of_eq_on_range $ piecewise_eq_on _ _ _
+  comp_eq_of_eq_on_range <| piecewise_eq_on _ _ _
 
 theorem maps_to.piecewise_ite {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {f₁ f₂ : α → β} [∀ i, Decidable (i ∈ s)]
     (h₁ : maps_to f₁ (s₁ ∩ s) (t₁ ∩ t)) (h₂ : maps_to f₂ (s₂ ∩ sᶜ) (t₂ ∩ tᶜ)) :
@@ -938,7 +939,7 @@ theorem eq_on.piecewise_ite {f f' g : α → β} {t t'} (h : eq_on f g t) (h' : 
   (h.mono (inter_subset_left _ _)).piecewise_ite' s (h'.mono (inter_subset_left _ _))
 
 theorem piecewise_preimage (f g : α → β) t : s.piecewise f g ⁻¹' t = s.ite (f ⁻¹' t) (g ⁻¹' t) :=
-  ext $ fun x => by
+  ext fun x => by
     by_cases' x ∈ s <;> simp [*, Set.Ite]
 
 theorem apply_piecewise {δ' : α → Sort _} (h : ∀ i, δ i → δ' i) {x : α} :
@@ -953,12 +954,12 @@ theorem apply_piecewise₂ {δ' δ'' : α → Sort _} (f' g' : ∀ i, δ' i) (h 
 
 theorem piecewise_op {δ' : α → Sort _} (h : ∀ i, δ i → δ' i) :
     (s.piecewise (fun x => h x (f x)) fun x => h x (g x)) = fun x => h x (s.piecewise f g x) :=
-  funext $ fun x => (apply_piecewise _ _ _ _).symm
+  funext fun x => (apply_piecewise _ _ _ _).symm
 
 theorem piecewise_op₂ {δ' δ'' : α → Sort _} (f' g' : ∀ i, δ' i) (h : ∀ i, δ i → δ' i → δ'' i) :
     (s.piecewise (fun x => h x (f x) (f' x)) fun x => h x (g x) (g' x)) = fun x =>
       h x (s.piecewise f g x) (s.piecewise f' g' x) :=
-  funext $ fun x => (apply_piecewise₂ _ _ _ _ _ _).symm
+  funext fun x => (apply_piecewise₂ _ _ _ _ _ _).symm
 
 @[simp]
 theorem piecewise_same : s.piecewise f f = f := by
@@ -979,7 +980,7 @@ theorem injective_piecewise_iff {f g : α → β} :
     injective (s.piecewise f g) ↔ inj_on f s ∧ inj_on g (sᶜ) ∧ ∀, ∀ x ∈ s, ∀ y _ : y ∉ s, f x ≠ g y := by
   rw [injective_iff_inj_on_univ, ← union_compl_self s, inj_on_union (@disjoint_compl_right _ s _),
     (piecewise_eq_on s f g).inj_on_iff, (piecewise_eq_on_compl s f g).inj_on_iff]
-  refine' and_congr Iff.rfl (and_congr Iff.rfl $ forall₄_congrₓ $ fun x hx y hy => _)
+  refine' and_congr Iff.rfl (and_congr Iff.rfl <| forall₄_congrₓ fun x hx y hy => _)
   rw [piecewise_eq_of_mem s f g hx, piecewise_eq_of_not_mem s f g hy]
 
 theorem piecewise_mem_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g} (hf : f ∈ pi t t')
@@ -1010,19 +1011,19 @@ theorem StrictAntiOn.inj_on [LinearOrderₓ α] [Preorderₓ β] {f : α → β}
 
 theorem StrictMonoOn.comp [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β} {s : Set α} {t : Set β}
     (hg : StrictMonoOn g t) (hf : StrictMonoOn f s) (hs : Set.MapsTo f s t) : StrictMonoOn (g ∘ f) s :=
-  fun x hx y hy hxy => hg (hs hx) (hs hy) $ hf hx hy hxy
+  fun x hx y hy hxy => hg (hs hx) (hs hy) <| hf hx hy hxy
 
 theorem StrictMonoOn.comp_strict_anti_on [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β} {s : Set α}
     {t : Set β} (hg : StrictMonoOn g t) (hf : StrictAntiOn f s) (hs : Set.MapsTo f s t) : StrictAntiOn (g ∘ f) s :=
-  fun x hx y hy hxy => hg (hs hy) (hs hx) $ hf hx hy hxy
+  fun x hx y hy hxy => hg (hs hy) (hs hx) <| hf hx hy hxy
 
 theorem StrictAntiOn.comp [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β} {s : Set α} {t : Set β}
     (hg : StrictAntiOn g t) (hf : StrictAntiOn f s) (hs : Set.MapsTo f s t) : StrictMonoOn (g ∘ f) s :=
-  fun x hx y hy hxy => hg (hs hy) (hs hx) $ hf hx hy hxy
+  fun x hx y hy hxy => hg (hs hy) (hs hx) <| hf hx hy hxy
 
 theorem StrictAntiOn.comp_strict_mono_on [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β} {s : Set α}
     {t : Set β} (hg : StrictAntiOn g t) (hf : StrictMonoOn f s) (hs : Set.MapsTo f s t) : StrictAntiOn (g ∘ f) s :=
-  fun x hx y hy hxy => hg (hs hx) (hs hy) $ hf hx hy hxy
+  fun x hx y hy hxy => hg (hs hx) (hs hy) <| hf hx hy hxy
 
 theorem StrictMono.cod_restrict [Preorderₓ α] [Preorderₓ β] {f : α → β} (hf : StrictMono f) {s : Set β}
     (hs : ∀ x, f x ∈ s) : StrictMono (Set.codRestrict f s hs) :=
@@ -1046,7 +1047,7 @@ theorem right_inverse.right_inv_on {g : β → α} (h : RightInverse f g) (s : S
   h x
 
 theorem left_inverse.right_inv_on_range {g : β → α} (h : left_inverse f g) : right_inv_on f g (range g) :=
-  forall_range_iff.2 $ fun i => congr_argₓ g (h i)
+  forall_range_iff.2 fun i => congr_argₓ g (h i)
 
 namespace Semiconj
 
@@ -1068,7 +1069,7 @@ theorem surj_on_range (h : semiconj f fa fb) (ha : surjective fa) : surj_on fb (
 theorem inj_on_image (h : semiconj f fa fb) (ha : inj_on fa s) (hf : inj_on f (fa '' s)) : inj_on fb (f '' s) := by
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ H
   simp only [← h.eq] at H
-  exact congr_argₓ f (ha hx hy $ hf (mem_image_of_mem fa hx) (mem_image_of_mem fa hy) H)
+  exact congr_argₓ f (ha hx hy <| hf (mem_image_of_mem fa hx) (mem_image_of_mem fa hy) H)
 
 theorem inj_on_range (h : semiconj f fa fb) (ha : injective fa) (hf : inj_on f (range fa)) : inj_on fb (range f) := by
   rw [← image_univ] at *
@@ -1096,7 +1097,7 @@ end Semiconj
 
 theorem update_comp_eq_of_not_mem_range' {α β : Sort _} {γ : β → Sort _} [DecidableEq β] (g : ∀ b, γ b) {f : α → β}
     {i : β} (a : γ i) (h : i ∉ Set.Range f) : (fun j => (Function.update g i a) (f j)) = fun j => g (f j) :=
-  update_comp_eq_of_forall_ne' _ _ $ fun x hx => h ⟨x, hx⟩
+  (update_comp_eq_of_forall_ne' _ _) fun x hx => h ⟨x, hx⟩
 
 /-- Non-dependent version of `function.update_comp_eq_of_not_mem_range'` -/
 theorem update_comp_eq_of_not_mem_range {α β γ : Sort _} [DecidableEq β] (g : β → γ) {f : α → β} {i : β} (a : γ)

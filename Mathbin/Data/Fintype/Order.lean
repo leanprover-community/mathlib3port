@@ -56,9 +56,9 @@ open_locale Classical
 noncomputable def Fintype.toCompleteLattice [hl : Lattice α] [hb : BoundedOrder α] : CompleteLattice α :=
   { hl, hb with sup := fun s => s.to_finset.sup id, inf := fun s => s.to_finset.inf id,
     le_Sup := fun _ _ ha => Finset.le_sup (Set.mem_to_finset.mpr ha),
-    Sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ $ Set.mem_to_finset.mp hb,
+    Sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ <| Set.mem_to_finset.mp hb,
     Inf_le := fun _ _ ha => Finset.inf_le (Set.mem_to_finset.mpr ha),
-    le_Inf := fun s _ ha => Finset.le_inf fun b hb => ha _ $ Set.mem_to_finset.mp hb }
+    le_Inf := fun s _ ha => Finset.le_inf fun b hb => ha _ <| Set.mem_to_finset.mp hb }
 
 /-- A finite bounded linear order is complete. -/
 @[reducible]
@@ -75,7 +75,7 @@ variable (α) [Nonempty α]
 `fintype.to_complete_lattice` instead, as this gives definitional equality for `⊥` and `⊤`. -/
 @[reducible]
 noncomputable def Fintype.toCompleteLatticeOfLattice [Lattice α] : CompleteLattice α :=
-  @Fintype.toCompleteLattice _ _ _ $ @Fintype.toBoundedOrder α _ ⟨Classical.arbitrary α⟩ _
+  @Fintype.toCompleteLattice _ _ _ <| @Fintype.toBoundedOrder α _ ⟨Classical.arbitrary α⟩ _
 
 /-- A nonempty finite linear order is complete. If the linear order is already a `bounded_order`,
 then use `fintype.to_complete_linear_order` instead, as this gives definitional equality for `⊥` and

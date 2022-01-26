@@ -174,7 +174,7 @@ theorem form_perm_apply_mem_eq_next (s : Cycle α) (h : nodup s) (x : α) (hx : 
   simpa using List.form_perm_apply_mem_eq_next h _ _
 
 theorem form_perm_reverse (s : Cycle α) (h : nodup s) :
-    form_perm s.reverse (nodup_reverse_iff.mpr h) = form_perm s h⁻¹ := by
+    form_perm s.reverse (nodup_reverse_iff.mpr h) = (form_perm s h)⁻¹ := by
   induction s using Quot.induction_on
   simpa using form_perm_reverse _ h
 

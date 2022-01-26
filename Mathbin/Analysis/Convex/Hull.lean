@@ -32,9 +32,9 @@ variable (𝕜) [AddCommMonoidₓ E] [AddCommMonoidₓ F] [Module 𝕜 E] [Modul
 /-- The convex hull of a set `s` is the minimal convex set that includes `s`. -/
 def convexHull : ClosureOperator (Set E) :=
   ClosureOperator.mk₃ (fun s => ⋂ (t : Set E) (hst : s ⊆ t) (ht : Convex 𝕜 t), t) (Convex 𝕜)
-    (fun s => Set.subset_Inter fun t => Set.subset_Inter $ fun hst => Set.subset_Inter $ fun ht => hst)
-    (fun s => convex_Inter $ fun t => convex_Inter $ fun ht => convex_Inter id) fun s t hst ht =>
-    Set.Inter_subset_of_subset t $ Set.Inter_subset_of_subset hst $ Set.Inter_subset _ ht
+    (fun s => Set.subset_Inter fun t => Set.subset_Inter fun hst => Set.subset_Inter fun ht => hst)
+    (fun s => convex_Inter fun t => convex_Inter fun ht => convex_Inter id) fun s t hst ht =>
+    Set.Inter_subset_of_subset t <| Set.Inter_subset_of_subset hst <| Set.Inter_subset _ ht
 
 variable (s : Set E)
 
@@ -106,10 +106,10 @@ theorem IsLinearMap.image_convex_hull {f : E → F} (hf : IsLinearMap 𝕜 f) :
   apply Set.Subset.antisymm
   · rw [Set.image_subset_iff]
     exact
-      convex_hull_min (Set.image_subset_iff.1 $ subset_convex_hull 𝕜 $ f '' s)
+      convex_hull_min (Set.image_subset_iff.1 <| subset_convex_hull 𝕜 <| f '' s)
         ((convex_convex_hull 𝕜 (f '' s)).is_linear_preimage hf)
     
-  · exact convex_hull_min (Set.image_subset _ $ subset_convex_hull 𝕜 s) ((convex_convex_hull 𝕜 s).is_linear_image hf)
+  · exact convex_hull_min (Set.image_subset _ <| subset_convex_hull 𝕜 s) ((convex_convex_hull 𝕜 s).is_linear_image hf)
     
 
 theorem LinearMap.image_convex_hull (f : E →ₗ[𝕜] F) : f '' convexHull 𝕜 s = convexHull 𝕜 (f '' s) :=
@@ -118,9 +118,9 @@ theorem LinearMap.image_convex_hull (f : E →ₗ[𝕜] F) : f '' convexHull �
 theorem IsLinearMap.convex_hull_image {f : E → F} (hf : IsLinearMap 𝕜 f) (s : Set E) :
     convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=
   Set.Subset.antisymm
-    (convex_hull_min (image_subset _ (subset_convex_hull 𝕜 s)) $ (convex_convex_hull 𝕜 s).is_linear_image hf)
-    (image_subset_iff.2 $
-      convex_hull_min (image_subset_iff.1 $ subset_convex_hull 𝕜 _) ((convex_convex_hull 𝕜 _).is_linear_preimage hf))
+    (convex_hull_min (image_subset _ (subset_convex_hull 𝕜 s)) <| (convex_convex_hull 𝕜 s).is_linear_image hf)
+    (image_subset_iff.2 <|
+      convex_hull_min (image_subset_iff.1 <| subset_convex_hull 𝕜 _) ((convex_convex_hull 𝕜 _).is_linear_preimage hf))
 
 theorem LinearMap.convex_hull_image (f : E →ₗ[𝕜] F) (s : Set E) : convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=
   f.is_linear.convex_hull_image s

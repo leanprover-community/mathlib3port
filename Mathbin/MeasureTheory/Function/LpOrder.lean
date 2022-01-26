@@ -35,20 +35,23 @@ variable [NormedLatticeAddCommGroup E] [MeasurableSpace E] [BorelSpace E] [secon
 theorem coe_fn_le (f g : Lp E p μ) : f ≤ᵐ[μ] g ↔ f ≤ g := by
   rw [← Subtype.coe_le_coe, ← ae_eq_fun.coe_fn_le, ← coe_fn_coe_base, ← coe_fn_coe_base]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem coe_fn_nonneg (f : Lp E p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f := by
   rw [← coe_fn_le]
   have h0 := Lp.coe_fn_zero E p μ
-  constructor <;> intro h <;> filter_upwards [h, h0] <;> intro a h1 h2
+  constructor <;>
+    intro h <;>
+      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   · rwa [h2]
     
   · rwa [← h2]
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 instance : CovariantClass (Lp E p μ) (Lp E p μ) (· + ·) (· ≤ ·) := by
   refine' ⟨fun f g₁ g₂ hg₁₂ => _⟩
   rw [← coe_fn_le] at hg₁₂⊢
-  filter_upwards [coe_fn_add f g₁, coe_fn_add f g₂, hg₁₂]
-  intro a h1 h2 h3
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [h1, h2, Pi.add_apply, Pi.add_apply]
   exact add_le_add le_rfl h3
 

@@ -106,7 +106,7 @@ protected theorem ext'_iff {S T : ConvexCone 𝕜 E} : (S : Set E) = T ↔ S = T
 /-- Two `convex_cone`s are equal if they have the same elements. -/
 @[ext]
 theorem ext {S T : ConvexCone 𝕜 E} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
-  ext' $ Set.ext h
+  ext' <| Set.ext h
 
 theorem smul_mem {c : 𝕜} {x : E} (hc : 0 < c) (hx : x ∈ S) : c • x ∈ S :=
   S.smul_mem' hc hx
@@ -127,8 +127,8 @@ theorem mem_inf {x} : x ∈ S⊓T ↔ x ∈ S ∧ x ∈ T :=
 
 instance : HasInfₓ (ConvexCone 𝕜 E) :=
   ⟨fun S =>
-    ⟨⋂ s ∈ S, ↑s, fun c hc x hx => mem_bInter $ fun s hs => s.smul_mem hc $ mem_Inter₂.1 hx s hs, fun x hx y hy =>
-      mem_bInter $ fun s hs => s.add_mem (mem_Inter₂.1 hx s hs) (mem_Inter₂.1 hy s hs)⟩⟩
+    ⟨⋂ s ∈ S, ↑s, fun c hc x hx => mem_bInter fun s hs => s.smul_mem hc <| mem_Inter₂.1 hx s hs, fun x hx y hy =>
+      mem_bInter fun s hs => s.add_mem (mem_Inter₂.1 hx s hs) (mem_Inter₂.1 hy s hs)⟩⟩
 
 theorem mem_Inf {x : E} {S : Set (ConvexCone 𝕜 E)} : x ∈ Inf S ↔ ∀, ∀ s ∈ S, ∀, x ∈ s :=
   mem_Inter₂
@@ -151,12 +151,12 @@ instance : CompleteLattice (ConvexCone 𝕜 E) :=
   { PartialOrderₓ.lift (coe : ConvexCone 𝕜 E → Set E) fun a b => ext' with le := · ≤ ·, lt := · < ·, bot := ⊥,
     bot_le := fun S x => False.elim, top := ⊤, le_top := fun S x hx => mem_top 𝕜 x, inf := ·⊓·, inf := HasInfₓ.inf,
     sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x }, sup := fun s => Inf { T | ∀, ∀ S ∈ s, ∀, S ≤ T },
-    le_sup_left := fun a b => fun x hx => mem_Inf.2 $ fun s hs => hs.1 hx,
-    le_sup_right := fun a b => fun x hx => mem_Inf.2 $ fun s hs => hs.2 hx,
+    le_sup_left := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.1 hx,
+    le_sup_right := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.2 hx,
     sup_le := fun a b c ha hb x hx => mem_Inf.1 hx c ⟨ha, hb⟩, le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩,
     inf_le_left := fun a b x => And.left, inf_le_right := fun a b x => And.right,
-    le_Sup := fun s p hs x hx => mem_Inf.2 $ fun t ht => ht p hs hx, Sup_le := fun s p hs x hx => mem_Inf.1 hx p hs,
-    le_Inf := fun s a ha x hx => mem_Inf.2 $ fun t ht => ha t ht hx, Inf_le := fun s a ha x hx => mem_Inf.1 hx _ ha }
+    le_Sup := fun s p hs x hx => mem_Inf.2 fun t ht => ht p hs hx, Sup_le := fun s p hs x hx => mem_Inf.1 hx p hs,
+    le_Inf := fun s a ha x hx => mem_Inf.2 fun t ht => ha t ht hx, Inf_le := fun s a ha x hx => mem_Inf.1 hx _ ha }
 
 instance : Inhabited (ConvexCone 𝕜 E) :=
   ⟨⊥⟩
@@ -168,7 +168,7 @@ section Module
 variable [Module 𝕜 E] (S : ConvexCone 𝕜 E)
 
 protected theorem Convex : Convex 𝕜 (S : Set E) :=
-  convex_iff_forall_pos.2 $ fun x y hx hy a b ha hb hab => S.add_mem (S.smul_mem ha hx) (S.smul_mem hb hy)
+  convex_iff_forall_pos.2 fun x y hx hy a b ha hb hab => S.add_mem (S.smul_mem ha hx) (S.smul_mem hb hy)
 
 end Module
 
@@ -203,11 +203,11 @@ def map (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 E) : ConvexCone 𝕜 F where
     hy₁ ▸ hy₂ ▸ f.map_add x₁ x₂ ▸ mem_image_of_mem f (S.add_mem hx₁ hx₂)
 
 theorem map_map (g : F →ₗ[𝕜] G) (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 E) : (S.map f).map g = S.map (g.comp f) :=
-  ext' $ image_image g f S
+  ext' <| image_image g f S
 
 @[simp]
 theorem map_id (S : ConvexCone 𝕜 E) : S.map LinearMap.id = S :=
-  ext' $ image_id _
+  ext' <| image_id _
 
 /-- The preimage of a convex cone under a `𝕜`-linear map is a convex cone. -/
 def comap (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 F) : ConvexCone 𝕜 E where
@@ -224,7 +224,7 @@ theorem comap_id (S : ConvexCone 𝕜 E) : S.comap LinearMap.id = S :=
   ext' preimage_id
 
 theorem comap_comap (g : F →ₗ[𝕜] G) (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 G) : (S.comap g).comap f = S.comap (g.comp f) :=
-  ext' $ preimage_comp.symm
+  ext' <| preimage_comp.symm
 
 @[simp]
 theorem mem_comap {f : E →ₗ[𝕜] F} {S : ConvexCone 𝕜 F} {x : E} : x ∈ S.comap f ↔ f x ∈ S :=

@@ -223,7 +223,7 @@ theorem differentiable_at_of_deriv_ne_zero (h : deriv f x ≠ 0) : Differentiabl
 
 theorem UniqueDiffWithinAt.eq_deriv (s : Set 𝕜) (H : UniqueDiffWithinAt 𝕜 s x) (h : HasDerivWithinAt f f' s x)
     (h₁ : HasDerivWithinAt f f₁' s x) : f' = f₁' :=
-  smul_right_one_eq_iff.mp $ UniqueDiffWithinAt.eq H h h₁
+  smul_right_one_eq_iff.mp <| UniqueDiffWithinAt.eq H h h₁
 
 theorem has_deriv_at_filter_iff_tendsto :
     HasDerivAtFilter f f' x L ↔ tendsto (fun x' : 𝕜 => ∥x' - x∥⁻¹ * ∥f x' - f x - (x' - x) • f'∥) L (𝓝 0) :=
@@ -250,10 +250,10 @@ theorem has_deriv_at_filter_iff_tendsto_slope {x : 𝕜} {L : Filter 𝕜} :
       tendsto_zero_iff_norm_tendsto_zero.symm]
   conv_rhs => rw [← nhds_translation_sub f', tendsto_comap_iff]
   refine'
-    (tendsto_inf_principal_nhds_iff_of_forall_eq $ by
+    (tendsto_inf_principal_nhds_iff_of_forall_eq <| by
             simp ).symm.trans
       (tendsto_congr' _)
-  refine' (eventually_principal.2 $ fun z hz => _).filter_mono inf_le_right
+  refine' (eventually_principal.2 fun z hz => _).filter_mono inf_le_right
   simp only [· ∘ ·]
   rw [smul_sub, ← mul_smul, inv_mul_cancel (sub_ne_zero.2 hz), one_smul, slope_def_module]
 
@@ -296,7 +296,7 @@ alias has_deriv_within_at_Iio_iff_Iic ↔ HasDerivWithinAt.Iic_of_Iio HasDerivWi
 
 theorem HasDerivWithinAt.Ioi_iff_Ioo [LinearOrderₓ 𝕜] [OrderClosedTopology 𝕜] {x y : 𝕜} (h : x < y) :
     HasDerivWithinAt f f' (Ioo x y) x ↔ HasDerivWithinAt f f' (Ioi x) x :=
-  has_deriv_within_at_congr_set (is_open_Iio.mem_nhds h) $ by
+  has_deriv_within_at_congr_set (is_open_Iio.mem_nhds h) <| by
     rw [Ioi_inter_Iio, inter_eq_left_iff_subset]
     exact Ioo_subset_Iio_self
 
@@ -329,7 +329,7 @@ theorem has_deriv_within_at_univ : HasDerivWithinAt f f' univ x ↔ HasDerivAt f
   has_fderiv_within_at_univ
 
 theorem HasDerivAt.unique (h₀ : HasDerivAt f f₀' x) (h₁ : HasDerivAt f f₁' x) : f₀' = f₁' :=
-  smul_right_one_eq_iff.mp $ h₀.has_fderiv_at.unique h₁
+  smul_right_one_eq_iff.mp <| h₀.has_fderiv_at.unique h₁
 
 theorem has_deriv_within_at_inter' (h : t ∈ 𝓝[s] x) : HasDerivWithinAt f f' (s ∩ t) x ↔ HasDerivWithinAt f f' s x :=
   has_fderiv_within_at_inter' h
@@ -460,7 +460,7 @@ theorem Filter.EventuallyEq.deriv_eq (hL : f₁ =ᶠ[𝓝 x] f) : deriv f₁ x =
   rwa [Filter.EventuallyEq.fderiv_eq]
 
 protected theorem Filter.EventuallyEq.deriv (h : f₁ =ᶠ[𝓝 x] f) : deriv f₁ =ᶠ[𝓝 x] deriv f :=
-  h.eventually_eq_nhds.mono $ fun x h => h.deriv_eq
+  h.eventually_eq_nhds.mono fun x h => h.deriv_eq
 
 end congr
 
@@ -640,7 +640,7 @@ theorem deriv_add_const (c : F) : deriv (fun y => f y + c) x = deriv f x := by
 
 @[simp]
 theorem deriv_add_const' (c : F) : (deriv fun y => f y + c) = deriv f :=
-  funext $ fun x => deriv_add_const c
+  funext fun x => deriv_add_const c
 
 theorem HasDerivAtFilter.const_add (c : F) (hf : HasDerivAtFilter f f' x L) :
     HasDerivAtFilter (fun y => c + f y) f' x L :=
@@ -662,7 +662,7 @@ theorem deriv_const_add (c : F) : deriv (fun y => c + f y) x = deriv f x := by
 
 @[simp]
 theorem deriv_const_add' (c : F) : (deriv fun y => c + f y) = deriv f :=
-  funext $ fun x => deriv_const_add c
+  funext fun x => deriv_const_add c
 
 end Add
 
@@ -834,7 +834,7 @@ theorem deriv.neg : deriv (fun y => -f y) x = -deriv f x := by
 
 @[simp]
 theorem deriv.neg' : (deriv fun y => -f y) = fun x => -deriv f x :=
-  funext $ fun x => deriv.neg
+  funext fun x => deriv.neg
 
 end Neg
 
@@ -846,7 +846,7 @@ section Neg2
 variable (s x L)
 
 theorem has_deriv_at_filter_neg : HasDerivAtFilter Neg.neg (-1) x L :=
-  HasDerivAtFilter.neg $ has_deriv_at_filter_id _ _
+  HasDerivAtFilter.neg <| has_deriv_at_filter_id _ _
 
 theorem has_deriv_within_at_neg : HasDerivWithinAt Neg.neg (-1) s x :=
   has_deriv_at_filter_neg _ _
@@ -858,7 +858,7 @@ theorem has_deriv_at_neg' : HasDerivAt (fun x => -x) (-1) x :=
   has_deriv_at_filter_neg _ _
 
 theorem has_strict_deriv_at_neg : HasStrictDerivAt Neg.neg (-1) x :=
-  HasStrictDerivAt.neg $ has_strict_deriv_at_id _
+  HasStrictDerivAt.neg <| has_strict_deriv_at_id _
 
 theorem deriv_neg : deriv Neg.neg x = -1 :=
   HasDerivAt.deriv (has_deriv_at_neg x)
@@ -918,8 +918,8 @@ theorem HasDerivAtFilter.is_O_sub (h : HasDerivAtFilter f f' x L) : is_O (fun x'
 
 theorem HasDerivAtFilter.is_O_sub_rev (hf : HasDerivAtFilter f f' x L) (hf' : f' ≠ 0) :
     is_O (fun x' => x' - x) (fun x' => f x' - f x) L :=
-  suffices AntilipschitzWith (∥f'∥₊⁻¹) (smul_right (1 : 𝕜 →L[𝕜] 𝕜) f') from hf.is_O_sub_rev this
-  (smul_right (1 : 𝕜 →L[𝕜] 𝕜) f').toLinearMap.antilipschitz_of_bound $ fun x => by
+  suffices AntilipschitzWith ∥f'∥₊⁻¹ (smul_right (1 : 𝕜 →L[𝕜] 𝕜) f') from hf.is_O_sub_rev this
+  (smul_right (1 : 𝕜 →L[𝕜] 𝕜) f').toLinearMap.antilipschitz_of_bound fun x => by
     simp [norm_smul, ← div_eq_inv_mul, mul_div_cancel _ (mt norm_eq_zero.1 hf')]
 
 theorem HasDerivAtFilter.sub_const (hf : HasDerivAtFilter f f' x L) (c : F) :
@@ -1033,11 +1033,11 @@ theorem HasDerivAtFilter.scomp (hg : HasDerivAtFilter g₁ g₁' (h x) L') (hh :
 
 theorem HasDerivWithinAt.scomp_has_deriv_at (hg : HasDerivWithinAt g₁ g₁' s' (h x)) (hh : HasDerivAt h h' x)
     (hs : ∀ x, h x ∈ s') : HasDerivAt (g₁ ∘ h) (h' • g₁') x :=
-  hg.scomp x hh $ tendsto_inf.2 ⟨hh.continuous_at, tendsto_principal.2 $ eventually_of_forall hs⟩
+  hg.scomp x hh <| tendsto_inf.2 ⟨hh.continuous_at, tendsto_principal.2 <| eventually_of_forall hs⟩
 
 theorem HasDerivWithinAt.scomp (hg : HasDerivWithinAt g₁ g₁' t' (h x)) (hh : HasDerivWithinAt h h' s x)
     (hst : maps_to h s t') : HasDerivWithinAt (g₁ ∘ h) (h' • g₁') s x :=
-  hg.scomp x hh $ hh.continuous_within_at.tendsto_nhds_within hst
+  hg.scomp x hh <| hh.continuous_within_at.tendsto_nhds_within hst
 
 /-- The chain rule. -/
 theorem HasDerivAt.scomp (hg : HasDerivAt g₁ g₁' (h x)) (hh : HasDerivAt h h' x) : HasDerivAt (g₁ ∘ h) (h' • g₁') x :=
@@ -1088,7 +1088,7 @@ theorem HasDerivAt.comp_has_fderiv_within_at {f : E → 𝕜} {f' : E →L[𝕜]
 theorem HasDerivWithinAt.comp_has_fderiv_within_at {f : E → 𝕜} {f' : E →L[𝕜] 𝕜} {s t} x
     (hh₁ : HasDerivWithinAt h₁ h₁' t (f x)) (hf : HasFderivWithinAt f f' s x) (hst : maps_to f s t) :
     HasFderivWithinAt (h₁ ∘ f) (h₁' • f') s x :=
-  hh₁.comp_has_fderiv_at_filter x hf $ hf.continuous_within_at.tendsto_nhds_within hst
+  hh₁.comp_has_fderiv_at_filter x hf <| hf.continuous_within_at.tendsto_nhds_within hst
 
 /-! ### Derivative of the composition of two scalar functions -/
 
@@ -1173,7 +1173,7 @@ theorem HasFderivAt.comp_has_deriv_within_at (hl : HasFderivAt l l' (f x)) (hf :
 Fréchet derivative of `l` applied to the derivative of `f`. -/
 theorem HasFderivAt.comp_has_deriv_at (hl : HasFderivAt l l' (f x)) (hf : HasDerivAt f f' x) :
     HasDerivAt (l ∘ f) (l' f') x :=
-  has_deriv_within_at_univ.mp $ hl.comp_has_deriv_within_at x hf.has_deriv_within_at
+  has_deriv_within_at_univ.mp <| hl.comp_has_deriv_within_at x hf.has_deriv_within_at
 
 theorem HasStrictFderivAt.comp_has_strict_deriv_at (hl : HasStrictFderivAt l l' (f x)) (hf : HasStrictDerivAt f f' x) :
     HasStrictDerivAt (l ∘ f) (l' f') x := by
@@ -1261,13 +1261,13 @@ theorem deriv_mul_const_field (v : 𝕜') : deriv (fun y => u y * v) x = deriv u
     · simp only [mul_zero, deriv_const]
       
     · refine' deriv_zero_of_not_differentiable_at (mt (fun H => _) hu)
-      simpa only [mul_inv_cancel_right₀ hd] using H.mul_const (v⁻¹)
+      simpa only [mul_inv_cancel_right₀ hd] using H.mul_const v⁻¹
       
     
 
 @[simp]
 theorem deriv_mul_const_field' (v : 𝕜') : (deriv fun x => u x * v) = fun x => deriv u x * v :=
-  funext $ fun _ => deriv_mul_const_field v
+  funext fun _ => deriv_mul_const_field v
 
 theorem HasDerivWithinAt.const_mul (c : 𝔸) (hd : HasDerivWithinAt d d' s x) :
     HasDerivWithinAt (fun y => c * d y) (c * d') s x := by
@@ -1304,18 +1304,18 @@ section Inverse
 /-! ### Derivative of `x ↦ x⁻¹` -/
 
 
-theorem has_strict_deriv_at_inv (hx : x ≠ 0) : HasStrictDerivAt HasInv.inv (-(x ^ 2)⁻¹) x := by
+theorem has_strict_deriv_at_inv (hx : x ≠ 0) : HasStrictDerivAt Inv.inv (-(x ^ 2)⁻¹) x := by
   suffices
     is_o (fun p : 𝕜 × 𝕜 => (p.1 - p.2) * ((x * x)⁻¹ - (p.1 * p.2)⁻¹)) (fun p : 𝕜 × 𝕜 => (p.1 - p.2) * 1) (𝓝 (x, x)) by
-    refine' this.congr' _ (eventually_of_forall $ fun _ => mul_oneₓ _)
+    refine' this.congr' _ (eventually_of_forall fun _ => mul_oneₓ _)
     refine' eventually.mono (IsOpen.mem_nhds (is_open_ne.prod is_open_ne) ⟨hx, hx⟩) _
     rintro ⟨y, z⟩ ⟨hy, hz⟩
     simp only [mem_set_of_eq] at hy hz
     field_simp [hx, hy, hz]
     ring
   refine' (is_O_refl (fun p : 𝕜 × 𝕜 => p.1 - p.2) _).mul_is_o ((is_o_one_iff _).2 _)
-  rw [← sub_self ((x * x)⁻¹)]
-  exact tendsto_const_nhds.sub ((continuous_mul.tendsto (x, x)).inv₀ $ mul_ne_zero hx hx)
+  rw [← sub_self (x * x)⁻¹]
+  exact tendsto_const_nhds.sub ((continuous_mul.tendsto (x, x)).inv₀ <| mul_ne_zero hx hx)
 
 theorem has_deriv_at_inv (x_ne_zero : x ≠ 0) : HasDerivAt (fun y => y⁻¹) (-(x ^ 2)⁻¹) x :=
   (has_strict_deriv_at_inv x_ne_zero).HasDerivAt
@@ -1367,35 +1367,35 @@ theorem fderiv_within_inv (x_ne_zero : x ≠ 0) (hxs : UniqueDiffWithinAt 𝕜 s
 variable {c : 𝕜 → 𝕜} {c' : 𝕜}
 
 theorem HasDerivWithinAt.inv (hc : HasDerivWithinAt c c' s x) (hx : c x ≠ 0) :
-    HasDerivWithinAt (fun y => c y⁻¹) (-c' / c x ^ 2) s x := by
+    HasDerivWithinAt (fun y => (c y)⁻¹) (-c' / c x ^ 2) s x := by
   convert (has_deriv_at_inv hx).comp_has_deriv_within_at x hc
   field_simp
 
-theorem HasDerivAt.inv (hc : HasDerivAt c c' x) (hx : c x ≠ 0) : HasDerivAt (fun y => c y⁻¹) (-c' / c x ^ 2) x := by
+theorem HasDerivAt.inv (hc : HasDerivAt c c' x) (hx : c x ≠ 0) : HasDerivAt (fun y => (c y)⁻¹) (-c' / c x ^ 2) x := by
   rw [← has_deriv_within_at_univ] at *
   exact hc.inv hx
 
 theorem DifferentiableWithinAt.inv (hc : DifferentiableWithinAt 𝕜 c s x) (hx : c x ≠ 0) :
-    DifferentiableWithinAt 𝕜 (fun x => c x⁻¹) s x :=
+    DifferentiableWithinAt 𝕜 (fun x => (c x)⁻¹) s x :=
   (hc.has_deriv_within_at.inv hx).DifferentiableWithinAt
 
 @[simp]
-theorem DifferentiableAt.inv (hc : DifferentiableAt 𝕜 c x) (hx : c x ≠ 0) : DifferentiableAt 𝕜 (fun x => c x⁻¹) x :=
+theorem DifferentiableAt.inv (hc : DifferentiableAt 𝕜 c x) (hx : c x ≠ 0) : DifferentiableAt 𝕜 (fun x => (c x)⁻¹) x :=
   (hc.has_deriv_at.inv hx).DifferentiableAt
 
 theorem DifferentiableOn.inv (hc : DifferentiableOn 𝕜 c s) (hx : ∀, ∀ x ∈ s, ∀, c x ≠ 0) :
-    DifferentiableOn 𝕜 (fun x => c x⁻¹) s := fun x h => (hc x h).inv (hx x h)
+    DifferentiableOn 𝕜 (fun x => (c x)⁻¹) s := fun x h => (hc x h).inv (hx x h)
 
 @[simp]
-theorem Differentiable.inv (hc : Differentiable 𝕜 c) (hx : ∀ x, c x ≠ 0) : Differentiable 𝕜 fun x => c x⁻¹ := fun x =>
+theorem Differentiable.inv (hc : Differentiable 𝕜 c) (hx : ∀ x, c x ≠ 0) : Differentiable 𝕜 fun x => (c x)⁻¹ := fun x =>
   (hc x).inv (hx x)
 
 theorem deriv_within_inv' (hc : DifferentiableWithinAt 𝕜 c s x) (hx : c x ≠ 0) (hxs : UniqueDiffWithinAt 𝕜 s x) :
-    derivWithin (fun x => c x⁻¹) s x = -derivWithin c s x / c x ^ 2 :=
+    derivWithin (fun x => (c x)⁻¹) s x = -derivWithin c s x / c x ^ 2 :=
   (hc.has_deriv_within_at.inv hx).derivWithin hxs
 
 @[simp]
-theorem deriv_inv'' (hc : DifferentiableAt 𝕜 c x) (hx : c x ≠ 0) : deriv (fun x => c x⁻¹) x = -deriv c x / c x ^ 2 :=
+theorem deriv_inv'' (hc : DifferentiableAt 𝕜 c x) (hx : c x ≠ 0) : deriv (fun x => (c x)⁻¹) x = -deriv c x / c x ^ 2 :=
   (hc.has_deriv_at.inv hx).deriv
 
 end Inverse
@@ -1457,15 +1457,15 @@ theorem deriv_div (hc : DifferentiableAt 𝕜 c x) (hd : DifferentiableAt 𝕜 d
   (hc.has_deriv_at.div hd.has_deriv_at hx).deriv
 
 theorem HasDerivAt.div_const (hc : HasDerivAt c c' x) (d : 𝕜') : HasDerivAt (fun x => c x / d) (c' / d) x := by
-  simpa only [div_eq_mul_inv] using hc.mul_const (d⁻¹)
+  simpa only [div_eq_mul_inv] using hc.mul_const d⁻¹
 
 theorem HasDerivWithinAt.div_const (hc : HasDerivWithinAt c c' s x) (d : 𝕜') :
     HasDerivWithinAt (fun x => c x / d) (c' / d) s x := by
-  simpa only [div_eq_mul_inv] using hc.mul_const (d⁻¹)
+  simpa only [div_eq_mul_inv] using hc.mul_const d⁻¹
 
 theorem HasStrictDerivAt.div_const (hc : HasStrictDerivAt c c' x) (d : 𝕜') :
     HasStrictDerivAt (fun x => c x / d) (c' / d) x := by
-  simpa only [div_eq_mul_inv] using hc.mul_const (d⁻¹)
+  simpa only [div_eq_mul_inv] using hc.mul_const d⁻¹
 
 theorem DifferentiableWithinAt.div_const (hc : DifferentiableWithinAt 𝕜 c s x) {d : 𝕜'} :
     DifferentiableWithinAt 𝕜 (fun x => c x / d) s x :=
@@ -1572,7 +1572,7 @@ in the strict sense.
 This is one of the easy parts of the inverse function theorem: it assumes that we already have an
 inverse function. -/
 theorem HasStrictDerivAt.of_local_left_inverse {f g : 𝕜 → 𝕜} {f' a : 𝕜} (hg : ContinuousAt g a)
-    (hf : HasStrictDerivAt f f' (g a)) (hf' : f' ≠ 0) (hfg : ∀ᶠ y in 𝓝 a, f (g y) = y) : HasStrictDerivAt g (f'⁻¹) a :=
+    (hf : HasStrictDerivAt f f' (g a)) (hf' : f' ≠ 0) (hfg : ∀ᶠ y in 𝓝 a, f (g y) = y) : HasStrictDerivAt g f'⁻¹ a :=
   (hf.has_strict_fderiv_at_equiv hf').of_local_left_inverse hg hfg
 
 /-- If `f` is a local homeomorphism defined on a neighbourhood of `f.symm a`, and `f` has a
@@ -1582,7 +1582,7 @@ at `a` in the strict sense.
 This is one of the easy parts of the inverse function theorem: it assumes that we already have
 an inverse function. -/
 theorem LocalHomeomorph.has_strict_deriv_at_symm (f : LocalHomeomorph 𝕜 𝕜) {a f' : 𝕜} (ha : a ∈ f.target) (hf' : f' ≠ 0)
-    (htff' : HasStrictDerivAt f f' (f.symm a)) : HasStrictDerivAt f.symm (f'⁻¹) a :=
+    (htff' : HasStrictDerivAt f f' (f.symm a)) : HasStrictDerivAt f.symm f'⁻¹ a :=
   htff'.of_local_left_inverse (f.symm.continuous_at ha) hf' (f.eventually_right_inverse ha)
 
 /-- If `f (g y) = y` for `y` in some neighborhood of `a`, `g` is continuous at `a`, and `f` has an
@@ -1591,7 +1591,7 @@ invertible derivative `f'` at `g a`, then `g` has the derivative `f'⁻¹` at `a
 This is one of the easy parts of the inverse function theorem: it assumes that we already have
 an inverse function. -/
 theorem HasDerivAt.of_local_left_inverse {f g : 𝕜 → 𝕜} {f' a : 𝕜} (hg : ContinuousAt g a) (hf : HasDerivAt f f' (g a))
-    (hf' : f' ≠ 0) (hfg : ∀ᶠ y in 𝓝 a, f (g y) = y) : HasDerivAt g (f'⁻¹) a :=
+    (hf' : f' ≠ 0) (hfg : ∀ᶠ y in 𝓝 a, f (g y) = y) : HasDerivAt g f'⁻¹ a :=
   (hf.has_fderiv_at_equiv hf').of_local_left_inverse hg hfg
 
 /-- If `f` is a local homeomorphism defined on a neighbourhood of `f.symm a`, and `f` has an
@@ -1600,7 +1600,7 @@ nonzero derivative `f'` at `f.symm a`, then `f.symm` has the derivative `f'⁻¹
 This is one of the easy parts of the inverse function theorem: it assumes that we already have
 an inverse function. -/
 theorem LocalHomeomorph.has_deriv_at_symm (f : LocalHomeomorph 𝕜 𝕜) {a f' : 𝕜} (ha : a ∈ f.target) (hf' : f' ≠ 0)
-    (htff' : HasDerivAt f f' (f.symm a)) : HasDerivAt f.symm (f'⁻¹) a :=
+    (htff' : HasDerivAt f f' (f.symm a)) : HasDerivAt f.symm f'⁻¹ a :=
   htff'.of_local_left_inverse (f.symm.continuous_at ha) hf' (f.eventually_right_inverse ha)
 
 theorem HasDerivAt.eventually_ne (h : HasDerivAt f f' x) (hf' : f' ≠ 0) : ∀ᶠ z in 𝓝[≠] x, f z ≠ f x :=
@@ -1739,7 +1739,7 @@ theorem deriv_pow : deriv (fun x => x ^ n) x = (n : 𝕜) * x ^ (n - 1) :=
 
 @[simp]
 theorem deriv_pow' : (deriv fun x => x ^ n) = fun x => (n : 𝕜) * x ^ (n - 1) :=
-  funext $ fun x => deriv_pow
+  funext fun x => deriv_pow
 
 theorem deriv_within_pow (hxs : UniqueDiffWithinAt 𝕜 s x) : derivWithin (fun x => x ^ n) s x = (n : 𝕜) * x ^ (n - 1) :=
   (has_deriv_within_at_pow n x s).derivWithin hxs
@@ -1824,7 +1824,7 @@ theorem differentiable_within_at_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 �
   (differentiable_at_zpow.mpr h).DifferentiableWithinAt
 
 theorem differentiable_on_zpow (m : ℤ) (s : Set 𝕜) (h : (0 : 𝕜) ∉ s ∨ 0 ≤ m) : DifferentiableOn 𝕜 (fun x => x ^ m) s :=
-  fun x hxs => differentiable_within_at_zpow m x $ h.imp_left $ ne_of_mem_of_not_mem hxs
+  fun x hxs => differentiable_within_at_zpow m x <| h.imp_left <| ne_of_mem_of_not_mem hxs
 
 theorem deriv_zpow (m : ℤ) (x : 𝕜) : deriv (fun x => x ^ m) x = m * x ^ (m - 1) := by
   by_cases' H : x ≠ 0 ∨ 0 ≤ m
@@ -1838,7 +1838,7 @@ theorem deriv_zpow (m : ℤ) (x : 𝕜) : deriv (fun x => x ^ m) x = m * x ^ (m 
 
 @[simp]
 theorem deriv_zpow' (m : ℤ) : (deriv fun x : 𝕜 => x ^ m) = fun x => m * x ^ (m - 1) :=
-  funext $ deriv_zpow m
+  funext <| deriv_zpow m
 
 theorem deriv_within_zpow (hxs : UniqueDiffWithinAt 𝕜 s x) (h : x ≠ 0 ∨ 0 ≤ m) :
     derivWithin (fun x => x ^ m) s x = (m : 𝕜) * x ^ (m - 1) :=
@@ -1871,15 +1871,15 @@ theorem iter_deriv_pow (n : ℕ) (x : 𝕜) (k : ℕ) :
 @[simp]
 theorem iter_deriv_pow' (n k : ℕ) :
     ((deriv^[k]) fun x : 𝕜 => x ^ n) = fun x => (∏ i in Finset.range k, n - i) * x ^ (n - k) :=
-  funext $ fun x => iter_deriv_pow n x k
+  funext fun x => iter_deriv_pow n x k
 
-theorem iter_deriv_inv (k : ℕ) (x : 𝕜) :
-    (deriv^[k]) HasInv.inv x = (∏ i in Finset.range k, -1 - i) * x ^ (-1 - k : ℤ) := by
+theorem iter_deriv_inv (k : ℕ) (x : 𝕜) : (deriv^[k]) Inv.inv x = (∏ i in Finset.range k, -1 - i) * x ^ (-1 - k : ℤ) :=
+  by
   simpa only [zpow_neg_one, Int.cast_neg, Int.cast_one] using iter_deriv_zpow (-1) x k
 
 @[simp]
 theorem iter_deriv_inv' (k : ℕ) :
-    (deriv^[k]) HasInv.inv = fun x : 𝕜 => (∏ i in Finset.range k, -1 - i) * x ^ (-1 - k : ℤ) :=
+    (deriv^[k]) Inv.inv = fun x : 𝕜 => (∏ i in Finset.range k, -1 - i) * x ^ (-1 - k : ℤ) :=
   funext (iter_deriv_inv k)
 
 end Zpow
@@ -1911,6 +1911,7 @@ open Metric
 
 variable {E : Type u} [NormedGroup E] [NormedSpace ℝ E] {f : ℝ → E} {f' : E} {s : Set ℝ} {x r : ℝ}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- If `f` has derivative `f'` within `s` at `x`, then for any `r > ∥f'∥` the ratio
 `∥f z - f x∥ / ∥z - x∥` is less than `r` in some neighborhood of `x` within `s`.
 In other words, the limit superior of this ratio as `z` tends to `x` along `s`
@@ -1922,7 +1923,7 @@ theorem HasDerivWithinAt.limsup_norm_slope_le (hf : HasDerivWithinAt f f' s x) (
     (has_deriv_within_at_iff_tendsto_slope.1 hf).norm (IsOpen.mem_nhds is_open_Iio hr)
   have B : ∀ᶠ z in 𝓝[{x}] x, ∥(z - x)⁻¹ • (f z - f x)∥ ∈ Iio r :=
     mem_of_superset self_mem_nhds_within
-      (singleton_subset_iff.2 $ by
+      (singleton_subset_iff.2 <| by
         simp [hr₀])
   have C := mem_sup.2 ⟨A, B⟩
   rw [← nhds_within_union, diff_union_self, nhds_within_union, mem_sup] at C

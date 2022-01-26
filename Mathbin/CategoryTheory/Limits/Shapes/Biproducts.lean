@@ -164,7 +164,7 @@ variable {J C}
 a functor with a bilimit.
 -/
 def biproduct_iso (F : J → C) [has_biproduct F] : limits.pi_obj F ≅ limits.sigma_obj F :=
-  (is_limit.cone_point_unique_up_to_iso (limit.is_limit _) (biproduct.is_limit F)).trans $
+  (is_limit.cone_point_unique_up_to_iso (limit.is_limit _) (biproduct.is_limit F)).trans <|
     is_colimit.cocone_point_unique_up_to_iso (biproduct.is_colimit F) (colimit.is_colimit _)
 
 end CategoryTheory.Limits
@@ -346,11 +346,11 @@ end
 
 instance biproduct.ι_mono (f : J → C) [has_biproduct f] (b : J) : split_mono (biproduct.ι f b) where
   retraction :=
-    biproduct.desc $ fun b' => if h : b' = b then eq_to_hom (congr_argₓ f h) else biproduct.ι f b' ≫ biproduct.π f b
+    biproduct.desc fun b' => if h : b' = b then eq_to_hom (congr_argₓ f h) else biproduct.ι f b' ≫ biproduct.π f b
 
 instance biproduct.π_epi (f : J → C) [has_biproduct f] (b : J) : split_epi (biproduct.π f b) where
   section_ :=
-    biproduct.lift $ fun b' => if h : b = b' then eq_to_hom (congr_argₓ f h) else biproduct.ι f b ≫ biproduct.π f b'
+    biproduct.lift fun b' => if h : b = b' then eq_to_hom (congr_argₓ f h) else biproduct.ι f b ≫ biproduct.π f b'
 
 variable {C}
 
@@ -558,7 +558,7 @@ instance (priority := 100) has_binary_coproducts_of_has_binary_biproducts [has_b
 a pair for a binary biproduct.
 -/
 def biprod_iso (X Y : C) [has_binary_biproduct X Y] : limits.prod X Y ≅ limits.coprod X Y :=
-  (is_limit.cone_point_unique_up_to_iso (limit.is_limit _) (binary_biproduct.is_limit X Y)).trans $
+  (is_limit.cone_point_unique_up_to_iso (limit.is_limit _) (binary_biproduct.is_limit X Y)).trans <|
     is_colimit.cocone_point_unique_up_to_iso (binary_biproduct.is_colimit X Y) (colimit.is_colimit _)
 
 /-- An arbitrary choice of biproduct of a pair of objects. -/
@@ -655,19 +655,19 @@ theorem biprod.inr_desc {W X Y : C} [has_binary_biproduct X Y] (f : X ⟶ W) (g 
 
 instance biprod.mono_lift_of_mono_left {W X Y : C} [has_binary_biproduct X Y] (f : W ⟶ X) (g : W ⟶ Y) [mono f] :
     mono (biprod.lift f g) :=
-  mono_of_mono_fac $ biprod.lift_fst _ _
+  mono_of_mono_fac <| biprod.lift_fst _ _
 
 instance biprod.mono_lift_of_mono_right {W X Y : C} [has_binary_biproduct X Y] (f : W ⟶ X) (g : W ⟶ Y) [mono g] :
     mono (biprod.lift f g) :=
-  mono_of_mono_fac $ biprod.lift_snd _ _
+  mono_of_mono_fac <| biprod.lift_snd _ _
 
 instance biprod.epi_desc_of_epi_left {W X Y : C} [has_binary_biproduct X Y] (f : X ⟶ W) (g : Y ⟶ W) [epi f] :
     epi (biprod.desc f g) :=
-  epi_of_epi_fac $ biprod.inl_desc _ _
+  epi_of_epi_fac <| biprod.inl_desc _ _
 
 instance biprod.epi_desc_of_epi_right {W X Y : C} [has_binary_biproduct X Y] (f : X ⟶ W) (g : Y ⟶ W) [epi g] :
     epi (biprod.desc f g) :=
-  epi_of_epi_fac $ biprod.inr_desc _ _
+  epi_of_epi_fac <| biprod.inr_desc _ _
 
 /-- Given a pair of maps between the summands of a pair of binary biproducts,
 we obtain a map between the binary biproducts. -/

@@ -30,15 +30,15 @@ noncomputable def isometry_sign_weighted_sum_squares [DecidableEq ι] (w : ι �
   let u := fun i => if h : w i = 0 then (1 : (ℝ)ˣ) else Units.mk0 (w i) h
   have hu' : ∀ i : ι, (sign (u i) * u i) ^ -(1 / 2 : ℝ) ≠ 0 := by
     intro i
-    refine' (ne_of_ltₓ (Real.rpow_pos_of_pos (sign_mul_pos_of_ne_zero _ $ Units.ne_zero _) _)).symm
+    refine' (ne_of_ltₓ (Real.rpow_pos_of_pos (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _) _)).symm
   convert
     (weighted_sum_squares ℝ w).isometryBasisRepr
-      ((Pi.basisFun ℝ ι).units_smul fun i => (is_unit_iff_ne_zero.2 $ hu' i).Unit)
+      ((Pi.basisFun ℝ ι).units_smul fun i => (is_unit_iff_ne_zero.2 <| hu' i).Unit)
   ext1 v
   rw [basis_repr_apply, weighted_sum_squares_apply, weighted_sum_squares_apply]
   refine' sum_congr rfl fun j hj => _
   have hsum :
-    (∑ i : ι, v i • ((is_unit_iff_ne_zero.2 $ hu' i).Unit : ℝ) • (Pi.basisFun ℝ ι) i) j =
+    (∑ i : ι, v i • ((is_unit_iff_ne_zero.2 <| hu' i).Unit : ℝ) • (Pi.basisFun ℝ ι) i) j =
       v j • (sign (u j) * u j) ^ -(1 / 2 : ℝ) :=
     by
     rw [Finset.sum_apply, sum_eq_single j, Pi.basis_fun_apply, IsUnit.unit_spec, LinearMap.std_basis_apply,
@@ -62,10 +62,10 @@ noncomputable def isometry_sign_weighted_sum_squares [DecidableEq ι] (w : ι �
     by
     erw [← mul_assoc, this]
     ring
-  rw [← Real.rpow_add (sign_mul_pos_of_ne_zero _ $ Units.ne_zero _),
+  rw [← Real.rpow_add (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _),
     show -(1 / 2 : ℝ) + -(1 / 2) = -1 by
       ring,
-    Real.rpow_neg_one, mul_inv₀, inv_sign, mul_assoc (sign (u j)) (u j⁻¹), inv_mul_cancel (Units.ne_zero _), mul_oneₓ]
+    Real.rpow_neg_one, mul_inv₀, inv_sign, mul_assoc (sign (u j)) (u j)⁻¹, inv_mul_cancel (Units.ne_zero _), mul_oneₓ]
   infer_instance
 
 /-- **Sylvester's law of inertia**: A nondegenerate real quadratic form is equivalent to a weighted

@@ -263,7 +263,7 @@ variable [LeftCancelMonoid G] (x y)
 
 @[to_additive nsmul_injective_aux]
 theorem pow_injective_aux (h : n ≤ m) (hm : m < orderOf x) (eq : x ^ n = x ^ m) : n = m :=
-  by_contradiction $ fun ne : n ≠ m =>
+  by_contradiction fun ne : n ≠ m =>
     have h₁ : m - n > 0 :=
       Nat.pos_of_ne_zeroₓ
         (by
@@ -275,7 +275,7 @@ theorem pow_injective_aux (h : n ≤ m) (hm : m < orderOf x) (eq : x ^ n = x ^ m
       convert Eq.symm
       exact mul_oneₓ (x ^ n)
     have le : orderOf x ≤ m - n := order_of_le_of_pow_eq_one h₁ h₃
-    have lt : m - n < orderOf x := (tsub_lt_iff_left h).mpr $ Nat.lt_add_left _ _ _ hm
+    have lt : m - n < orderOf x := (tsub_lt_iff_left h).mpr <| Nat.lt_add_left _ _ _ hm
     lt_irreflₓ _ (le.trans_lt lt)
 
 @[to_additive nsmul_injective_of_lt_add_order_of]
@@ -490,7 +490,7 @@ theorem mem_powers_iff_mem_zpowers : y ∈ Submonoid.powers x ↔ y ∈ zpowers 
 
 @[to_additive multiples_eq_zmultiples]
 theorem powers_eq_zpowers (x : G) : (Submonoid.powers x : Set G) = zpowers x :=
-  Set.ext $ fun x => mem_powers_iff_mem_zpowers
+  Set.ext fun x => mem_powers_iff_mem_zpowers
 
 @[to_additive mem_zmultiples_iff_mem_range_add_order_of]
 theorem mem_zpowers_iff_mem_range_order_of [DecidableEq G] :
@@ -549,13 +549,13 @@ theorem order_of_dvd_card_univ : orderOf x ∣ Fintype.card G := by
   have eq₁ : Fintype.card G = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s :=
     calc
       Fintype.card G = @Fintype.card _ ft_prod := @Fintype.card_congr _ _ _ ft_prod group_equiv_quotient_times_subgroup
-      _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) := congr_argₓ (@Fintype.card _) $ Subsingleton.elimₓ _ _
+      _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) := congr_argₓ (@Fintype.card _) <| Subsingleton.elimₓ _ _
       _ = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s := @Fintype.card_prod _ _ ft_cosets ft_s
       
   have eq₂ : orderOf x = @Fintype.card _ ft_s :=
     calc
       orderOf x = _ := order_eq_card_zpowers
-      _ = _ := congr_argₓ (@Fintype.card _) $ Subsingleton.elimₓ _ _
+      _ = _ := congr_argₓ (@Fintype.card _) <| Subsingleton.elimₓ _ _
       
   exact
     Dvd.intro (@Fintype.card (G ⧸ Subgroup.zpowers x) ft_cosets)
@@ -594,7 +594,7 @@ theorem pow_coprime_one (h : Nat.Coprime (Fintype.card G) n) : powCoprime h 1 = 
   one_pow n
 
 @[simp, to_additive]
-theorem pow_coprime_inv (h : Nat.Coprime (Fintype.card G) n) {g : G} : powCoprime h (g⁻¹) = powCoprime h g⁻¹ :=
+theorem pow_coprime_inv (h : Nat.Coprime (Fintype.card G) n) {g : G} : powCoprime h g⁻¹ = (powCoprime h g)⁻¹ :=
   inv_pow g n
 
 @[to_additive add_inf_eq_bot_of_coprime]
@@ -618,7 +618,7 @@ theorem image_range_order_of [DecidableEq G] :
 /-- TODO: Generalise to `finite_cancel_monoid`. -/
 @[to_additive gcd_nsmul_card_eq_zero_iff]
 theorem pow_gcd_card_eq_one_iff : x ^ n = 1 ↔ x ^ gcd n (Fintype.card G) = 1 :=
-  ⟨fun h => pow_gcd_eq_one _ h $ pow_card_eq_one, fun h => by
+  ⟨fun h => pow_gcd_eq_one _ h <| pow_card_eq_one, fun h => by
     let ⟨m, hm⟩ := gcd_dvd_left n (Fintype.card G)
     rw [hm, pow_mulₓ, h, one_pow]⟩
 
@@ -650,7 +650,7 @@ def subgroupOfIdempotent {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS1 
     Subgroup G :=
   { submonoidOfIdempotent S hS1 hS2 with Carrier := S,
     inv_mem' := fun a ha => by
-      rw [← one_mulₓ (a⁻¹), ← pow_oneₓ a, ← pow_order_of_eq_one a, ← pow_sub a (order_of_pos a)]
+      rw [← one_mulₓ a⁻¹, ← pow_oneₓ a, ← pow_order_of_eq_one a, ← pow_sub a (order_of_pos a)]
       exact (submonoidOfIdempotent S hS1 hS2).pow_mem ha (orderOf a - 1) }
 
 /-- If `S` is a nonempty subset of a finite group `G`, then `S ^ |G|` is a subgroup -/
@@ -678,10 +678,10 @@ section LinearOrderedRing
 
 variable [LinearOrderedRing G]
 
-theorem order_of_abs_ne_one (h : |x| ≠ 1) : orderOf x = 0 := by
+theorem order_of_abs_ne_one (h : abs x ≠ 1) : orderOf x = 0 := by
   rw [order_of_eq_zero_iff']
   intro n hn hx
-  replace hx : |x| ^ n = 1 := by
+  replace hx : abs x ^ n = 1 := by
     simpa only [abs_one, abs_pow] using congr_argₓ abs hx
   cases' h.lt_or_lt with h h
   · exact ((pow_lt_one (abs_nonneg x) h hn.ne').Ne hx).elim
@@ -690,7 +690,7 @@ theorem order_of_abs_ne_one (h : |x| ≠ 1) : orderOf x = 0 := by
     
 
 theorem LinearOrderedRing.order_of_le_two : orderOf x ≤ 2 := by
-  cases' ne_or_eq |x| 1 with h h
+  cases' ne_or_eq (abs x) 1 with h h
   · simp [order_of_abs_ne_one h]
     
   rcases eq_or_eq_neg_of_abs_eq h with (rfl | rfl)

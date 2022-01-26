@@ -290,8 +290,8 @@ Transferred version of `continuous_linear_map.comp_left_continuous_bounded`,
 upgraded version of `continuous_linear_map.comp_left_continuous`,
 similar to `linear_map.comp_left`. -/
 protected def ContinuousLinearMap.compLeftContinuousCompact (g : β →L[𝕜] γ) : C(X, β) →L[𝕜] C(X, γ) :=
-  (linear_isometry_bounded_of_compact X γ 𝕜).symm.toLinearIsometry.toContinuousLinearMap.comp $
-    (g.comp_left_continuous_bounded X).comp $
+  (linear_isometry_bounded_of_compact X γ 𝕜).symm.toLinearIsometry.toContinuousLinearMap.comp <|
+    (g.comp_left_continuous_bounded X).comp <|
       (linear_isometry_bounded_of_compact X β 𝕜).toLinearIsometry.toContinuousLinearMap
 
 @[simp]

@@ -133,7 +133,7 @@ instance {α β} [Inhabited α] : Inhabited (add_const α β) :=
     It prevents Lean's type class resolution mechanism from trying
     a `functor (comp F id)` when `functor F` would do. -/
 def comp (F : Type u → Type w) (G : Type v → Type u) (α : Type v) : Type w :=
-  F $ G α
+  F <| G α
 
 /-- Construct a term of `comp F G α` from a term of `F (G α)`, which is the same type.
 Can be used as a pattern to extract a term of `F (G α)`. -/
@@ -208,10 +208,10 @@ variable [Applicativeₓ F] [Applicativeₓ G]
 
 /-- The `<*>` operation for the composition of applicative functors. -/
 protected def seq {α β : Type v} : comp F G (α → β) → comp F G α → comp F G β
-  | comp.mk f, comp.mk x => comp.mk $ (· <*> ·) <$> f <*> x
+  | comp.mk f, comp.mk x => comp.mk <| (· <*> ·) <$> f <*> x
 
 instance : Pure (comp F G) :=
-  ⟨fun _ x => comp.mk $ pure $ pure x⟩
+  ⟨fun _ x => comp.mk <| pure <| pure x⟩
 
 instance : Seqₓ (comp F G) :=
   ⟨fun _ _ f x => comp.seq f x⟩

@@ -44,7 +44,7 @@ To show `polynomial.splits p f` for an arbitrary ring homomorphism `f`,
 see `is_alg_closed.splits_codomain` and `is_alg_closed.splits_domain`.
 -/
 class IsAlgClosed : Prop where
-  Splits : ∀ p : Polynomial k, p.splits $ RingHom.id k
+  Splits : ∀ p : Polynomial k, p.splits <| RingHom.id k
 
 /-- Every polynomial splits in the field extension `f : K →+* k` if `k` is algebraically closed.
 
@@ -61,7 +61,7 @@ See also `is_alg_closed.splits_codomain` for the case where `k` is algebraically
 -/
 theorem IsAlgClosed.splits_domain {k K : Type _} [Field k] [IsAlgClosed k] [Field K] {f : k →+* K} (p : Polynomial k) :
     p.splits f :=
-  Polynomial.splits_of_splits_id _ $ IsAlgClosed.splits _
+  Polynomial.splits_of_splits_id _ <| IsAlgClosed.splits _
 
 namespace IsAlgClosed
 
@@ -121,11 +121,11 @@ theorem exists_aeval_eq_zero {R : Type _} [Field R] [IsAlgClosed k] [Algebra R k
 
 theorem of_exists_root (H : ∀ p : Polynomial k, p.monic → Irreducible p → ∃ x, p.eval x = 0) : IsAlgClosed k :=
   ⟨fun p =>
-    Or.inr $ fun q hq hqp =>
-      have : Irreducible (q * C (leading_coeff q⁻¹)) := by
+    Or.inr fun q hq hqp =>
+      have : Irreducible (q * C (leading_coeff q)⁻¹) := by
         rw [← coe_norm_unit_of_ne_zero hq.ne_zero]
         exact (associated_normalize _).Irreducible hq
-      let ⟨x, hx⟩ := H (q * C (leading_coeff q⁻¹)) (monic_mul_leading_coeff_inv hq.ne_zero) this
+      let ⟨x, hx⟩ := H (q * C (leading_coeff q)⁻¹) (monic_mul_leading_coeff_inv hq.ne_zero) this
       degree_mul_leading_coeff_inv q hq.ne_zero ▸ degree_eq_one_of_irreducible_of_root this hx⟩
 
 theorem degree_eq_one_of_irreducible [IsAlgClosed k] {p : Polynomial k} (hp : Irreducible p) : p.degree = 1 :=
@@ -294,7 +294,7 @@ include hL
 
 /-- A (random) hom from an algebraic extension of K into an algebraically closed extension of K -/
 noncomputable irreducible_def lift : L →ₐ[K] M :=
-  (lift.SubfieldWithHom.maximalSubfieldWithHom M hL).emb.comp $
+  (lift.SubfieldWithHom.maximalSubfieldWithHom M hL).emb.comp <|
     Eq.recOnₓ (lift.SubfieldWithHom.maximal_subfield_with_hom_eq_top M hL).symm Algebra.toTop
 
 end IsAlgClosed
@@ -371,7 +371,7 @@ noncomputable def equiv_of_equiv (hJK : J ≃+* K) : L ≃+* M :=
 
 @[simp]
 theorem equiv_of_equiv_comp_algebra_map (hJK : J ≃+* K) :
-    (↑equiv_of_equiv L M hJK : L →+* M).comp (algebraMap J L) = (algebraMap K M).comp hJK :=
+    (↑(equiv_of_equiv L M hJK) : L →+* M).comp (algebraMap J L) = (algebraMap K M).comp hJK :=
   (equiv_of_equiv_aux L M hJK).2
 
 @[simp]

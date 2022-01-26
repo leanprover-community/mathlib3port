@@ -48,7 +48,7 @@ In fact, the proof is identical when we do this for dependent functions to a typ
 so we do the more general case.
 -/
 theorem to_Types_is_sheaf (T : X → Type u) : (presheaf_to_Types X T).IsSheaf :=
-  is_sheaf_of_is_sheaf_unique_gluing_types _ $ fun ι U sf hsf => by
+  (is_sheaf_of_is_sheaf_unique_gluing_types _) fun ι U sf hsf => by
     choose index index_spec using fun x : supr U => opens.mem_supr.mp x.2
     let s : ∀ x : supr U, T x := fun x => sf (index x) ⟨x.1, index_spec x⟩
     refine' ⟨s, _, _⟩

@@ -24,7 +24,7 @@ variable {α : Type _} {r : α → α → Prop} [IsStrictOrder α r]
 
 /-- If `f` is a strictly `r`-increasing sequence, then this returns `f` as an order embedding. -/
 def nat_lt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n + 1))) : (· < · : ℕ → ℕ → Prop) ↪r r :=
-  of_monotone f $ Nat.rel_of_forall_rel_succ_of_lt r H
+  of_monotone f <| Nat.rel_of_forall_rel_succ_of_lt r H
 
 @[simp]
 theorem nat_lt_apply {f : ℕ → α} {H : ∀ n : ℕ, r (f n) (f (n + 1))} {n : ℕ} : nat_lt f H n = f n :=
@@ -46,14 +46,14 @@ theorem well_founded_iff_no_descending_seq : WellFounded r ↔ IsEmpty ((· > ·
       exact IH (f (n + 1)) (o.2 (Nat.lt_succ_selfₓ _)) _ rfl⟩,
     fun E =>
     ⟨fun a =>
-      Classical.by_contradiction $ fun na =>
+      Classical.by_contradiction fun na =>
         let ⟨f, h⟩ :=
-          Classical.axiom_of_choice $
+          Classical.axiom_of_choice <|
             show ∀ x : { a // ¬Acc r a }, ∃ y : { a // ¬Acc r a }, r y.1 x.1 from fun ⟨x, h⟩ =>
-              Classical.by_contradiction $ fun hn =>
-                h $ ⟨_, fun y h => Classical.by_contradiction $ fun na => hn ⟨⟨y, na⟩, h⟩⟩
+              Classical.by_contradiction fun hn =>
+                h <| ⟨_, fun y h => Classical.by_contradiction fun na => hn ⟨⟨y, na⟩, h⟩⟩
         E.elim'
-          ((nat_gt fun n => ((f^[n]) ⟨a, na⟩).1) $ fun n => by
+          ((nat_gt fun n => ((f^[n]) ⟨a, na⟩).1) fun n => by
             rw [Function.iterate_succ']
             apply h)⟩⟩
 
@@ -102,8 +102,8 @@ theorem exists_subseq_of_forall_mem_union {α : Type _} {s t : Set α} (e : ℕ 
     simp only [Set.infinite_coe_iff, ← Set.infinite_union, ← Set.preimage_union,
       Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), Set.infinite_univ]
   cases' this
-  exacts[⟨Nat.orderEmbeddingOfSet (e ⁻¹' s), Or.inl $ fun n => (Nat.Subtype.ofNat (e ⁻¹' s) _).2⟩,
-    ⟨Nat.orderEmbeddingOfSet (e ⁻¹' t), Or.inr $ fun n => (Nat.Subtype.ofNat (e ⁻¹' t) _).2⟩]
+  exacts[⟨Nat.orderEmbeddingOfSet (e ⁻¹' s), Or.inl fun n => (Nat.Subtype.ofNat (e ⁻¹' s) _).2⟩,
+    ⟨Nat.orderEmbeddingOfSet (e ⁻¹' t), Or.inr fun n => (Nat.Subtype.ofNat (e ⁻¹' t) _).2⟩]
 
 end Nat
 

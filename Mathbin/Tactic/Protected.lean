@@ -57,8 +57,7 @@ unsafe def protect_proj_tac (n : Name) (l : List Name) : tactic Unit := do
   let env ← get_env
   match env.structure_fields_full n with
     | none => fail "protect_proj failed: declaration is not a structure"
-    | some fields =>
-      fields.mmap' $ fun field => when (l.all $ fun m => bnot $ m.is_suffix_of field) $ mk_protected field
+    | some fields => fields.mmap' fun field => when (l.all fun m => bnot <| m.is_suffix_of field) <| mk_protected field
 
 /-- Attribute to protect the projections of a structure.
 If a structure `foo` is marked with the `protect_proj` user attribute, then

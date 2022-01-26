@@ -42,7 +42,7 @@ noncomputable def card_pow_degree : AbsoluteValue (Polynomial Fq) ℤ :=
         
       exact pow_nonneg (Int.coe_zero_le _) _,
     eq_zero' := fun p =>
-      ite_eq_left_iff.trans $
+      ite_eq_left_iff.trans <|
         ⟨fun h => by
           contrapose! h
           exact ⟨h, (pow_pos _).ne'⟩, absurd⟩,

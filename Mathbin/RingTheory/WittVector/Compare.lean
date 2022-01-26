@@ -156,7 +156,7 @@ theorem to_zmod_pow_compat (m n : ℕ) (h : m ≤ n) :
 using `padic_int.lift`, the universal property of `ℤ_[p]`.
 -/
 def to_padic_int : 𝕎 (Zmod p) →+* ℤ_[p] :=
-  PadicInt.lift $ to_zmod_pow_compat p
+  PadicInt.lift <| to_zmod_pow_compat p
 
 theorem zmod_equiv_trunc_compat (k₁ k₂ : ℕ) (hk : k₁ ≤ k₂) :
     (TruncatedWittVector.truncate hk).comp ((zmod_equiv_trunc p k₂).toRingHom.comp (PadicInt.toZmodPow k₂)) =
@@ -168,7 +168,7 @@ theorem zmod_equiv_trunc_compat (k₁ k₂ : ℕ) (hk : k₁ ≤ k₂) :
 composed with `padic_int.to_zmod_pow` to a ring hom `ℤ_[p] →+* 𝕎 (zmod p)`.
 -/
 def from_padic_int : ℤ_[p] →+* 𝕎 (Zmod p) :=
-  (WittVector.lift fun k => (zmod_equiv_trunc p k).toRingHom.comp (PadicInt.toZmodPow k)) $ zmod_equiv_trunc_compat _
+  (WittVector.lift fun k => (zmod_equiv_trunc p k).toRingHom.comp (PadicInt.toZmodPow k)) <| zmod_equiv_trunc_compat _
 
 theorem to_padic_int_comp_from_padic_int : (to_padic_int p).comp (from_padic_int p) = RingHom.id ℤ_[p] := by
   rw [← PadicInt.to_zmod_pow_eq_iff_ext]

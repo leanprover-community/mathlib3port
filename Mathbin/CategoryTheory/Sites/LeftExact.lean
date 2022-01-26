@@ -67,7 +67,7 @@ abbrev lift_to_diagram_limit_obj {X : C} {K : Type max v u} [small_category K] [
 
 instance (X : C) (K : Type max v u) [small_category K] [has_limits_of_shape K D] (F : K ⥤ Cᵒᵖ ⥤ D) :
     preserves_limit F (J.diagram_functor D X) :=
-  preserves_limit_of_evaluation _ _ $ fun W =>
+  (preserves_limit_of_evaluation _ _) fun W =>
     preserves_limit_of_preserves_limit_cone (limit.is_limit _)
       { lift := fun E => lift_to_diagram_limit_obj F E,
         fac' := by

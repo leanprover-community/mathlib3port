@@ -45,12 +45,12 @@ non-dependent version and `prod_equiv_pi_fin_two` for a version with inputs `α 
 @[simps (config := { fullyApplied := ff })]
 def piFinTwoEquiv (α : Finₓ 2 → Type u) : (∀ i, α i) ≃ α 0 × α 1 where
   toFun := fun f => (f 0, f 1)
-  invFun := fun p => Finₓ.cons p.1 $ Finₓ.cons p.2 finZeroElim
-  left_inv := fun f => funext $ Finₓ.forall_fin_two.2 ⟨rfl, rfl⟩
+  invFun := fun p => Finₓ.cons p.1 <| Finₓ.cons p.2 finZeroElim
+  left_inv := fun f => funext <| Finₓ.forall_fin_two.2 ⟨rfl, rfl⟩
   right_inv := fun ⟨x, y⟩ => rfl
 
 theorem Finₓ.preimage_apply_01_prod {α : Finₓ 2 → Type u} (s : Set (α 0)) (t : Set (α 1)) :
-    (fun f : ∀ i, α i => (f 0, f 1)) ⁻¹' (s ×ˢ t) = Set.Pi Set.Univ (Finₓ.cons s $ Finₓ.cons t Finₓ.elim0) := by
+    (fun f : ∀ i, α i => (f 0, f 1)) ⁻¹' (s ×ˢ t) = Set.Pi Set.Univ (Finₓ.cons s <| Finₓ.cons t Finₓ.elim0) := by
   ext f
   have : (Finₓ.cons s (Finₓ.cons t Finₓ.elim0) : ∀ i, Set (α i)) 1 = t := rfl
   simp [Finₓ.forall_fin_two, this]
@@ -226,7 +226,7 @@ theorem fin_succ_equiv_last_symm_some {n : ℕ} (i : Finₓ n) : finSuccEquivLas
   fin_succ_equiv'_symm_some_below i.2
 
 @[simp]
-theorem fin_succ_equiv_last_symm_coe {n : ℕ} (i : Finₓ n) : finSuccEquivLast.symm (↑i) = i.cast_succ :=
+theorem fin_succ_equiv_last_symm_coe {n : ℕ} (i : Finₓ n) : finSuccEquivLast.symm ↑i = i.cast_succ :=
   fin_succ_equiv'_symm_some_below i.2
 
 @[simp]
@@ -277,7 +277,7 @@ theorem fin_add_flip_apply_mk_left {k : ℕ} (h : k < m) (hk : k < m + n := Nat.
 
 @[simp]
 theorem fin_add_flip_apply_mk_right {k : ℕ} (h₁ : m ≤ k) (h₂ : k < m + n) :
-    finAddFlip (⟨k, h₂⟩ : Finₓ (m + n)) = ⟨k - m, tsub_le_self.trans_lt $ add_commₓ m n ▸ h₂⟩ := by
+    finAddFlip (⟨k, h₂⟩ : Finₓ (m + n)) = ⟨k - m, tsub_le_self.trans_lt <| add_commₓ m n ▸ h₂⟩ := by
   convert fin_add_flip_apply_nat_add ⟨k - m, (tsub_lt_iff_right h₁).2 _⟩ m
   · simp [add_tsub_cancel_of_le h₁]
     
@@ -360,26 +360,26 @@ def finProdFinEquiv : Finₓ m × Finₓ n ≃ Finₓ (m * n) where
         x.2.1 + n * x.1.1 + 1 = x.1.1 * n + x.2.1 + 1 := by
           ac_rfl
         _ ≤ x.1.1 * n + n := Nat.add_le_add_leftₓ x.2.2 _
-        _ = (x.1.1 + 1) * n := Eq.symm $ Nat.succ_mul _ _
+        _ = (x.1.1 + 1) * n := Eq.symm <| Nat.succ_mul _ _
         _ ≤ m * n := Nat.mul_le_mul_rightₓ _ x.1.2
         ⟩
   invFun := fun x => (x.div_nat, x.mod_nat)
   left_inv := fun ⟨x, y⟩ =>
-    have H : 0 < n := Nat.pos_of_ne_zeroₓ $ fun H => Nat.not_lt_zeroₓ y.1 $ H ▸ y.2
+    have H : 0 < n := Nat.pos_of_ne_zeroₓ fun H => Nat.not_lt_zeroₓ y.1 <| H ▸ y.2
     Prod.extₓ
-      (Finₓ.eq_of_veq $
+      (Finₓ.eq_of_veq <|
         calc
           (y.1 + n * x.1) / n = y.1 / n + x.1 := Nat.add_mul_div_leftₓ _ _ H
           _ = 0 + x.1 := by
             rw [Nat.div_eq_of_ltₓ y.2]
           _ = x.1 := Nat.zero_add x.1
           )
-      (Finₓ.eq_of_veq $
+      (Finₓ.eq_of_veq <|
         calc
           (y.1 + n * x.1) % n = y.1 % n := Nat.add_mul_mod_self_leftₓ _ _ _
           _ = y.1 := Nat.mod_eq_of_ltₓ y.2
           )
-  right_inv := fun x => Finₓ.eq_of_veq $ Nat.mod_add_divₓ _ _
+  right_inv := fun x => Finₓ.eq_of_veq <| Nat.mod_add_divₓ _ _
 
 /-- Promote a `fin n` into a larger `fin m`, as a subtype where the underlying
 values are retained. This is the `order_iso` version of `fin.cast_le`. -/

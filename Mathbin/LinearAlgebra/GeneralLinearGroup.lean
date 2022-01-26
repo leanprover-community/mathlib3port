@@ -43,7 +43,7 @@ def det : GL n R →* (R)ˣ where
       inv_val := by
         rw [← det_mul, ← mul_eq_mul, A.inv_mul, det_one] }
   map_one' := Units.ext det_one
-  map_mul' := fun A B => Units.ext $ det_mul _ _
+  map_mul' := fun A B => Units.ext <| det_mul _ _
 
 /-- The `GL n R` and `general_linear_group R n` groups are multiplicatively equivalent-/
 def to_lin : GL n R ≃* LinearMap.GeneralLinearGroup R (n → R) :=
@@ -69,7 +69,7 @@ theorem ext_iff (A B : GL n R) : A = B ↔ ∀ i j, (A : Matrix n n R) i j = (B 
 
 /-- Not marked `@[ext]` as the `ext` tactic already solves this. -/
 theorem ext ⦃A B : GL n R⦄ (h : ∀ i j, (A : Matrix n n R) i j = (B : Matrix n n R) i j) : A = B :=
-  Units.ext $ Matrix.ext h
+  Units.ext <| Matrix.ext h
 
 section CoeLemmas
 
@@ -173,8 +173,8 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [LinearOrderedCom
 /-- `special_linear_group n R` embeds into `GL_pos n R` -/
 def to_GL_pos : special_linear_group n R →* GL_pos n R where
   toFun := fun A => ⟨(A : GL n R), show 0 < (↑A : Matrix n n R).det from A.prop.symm ▸ zero_lt_one⟩
-  map_one' := Subtype.ext $ Units.ext $ rfl
-  map_mul' := fun A₁ A₂ => Subtype.ext $ Units.ext $ rfl
+  map_one' := Subtype.ext <| Units.ext <| rfl
+  map_mul' := fun A₁ A₂ => Subtype.ext <| Units.ext <| rfl
 
 instance : Coe (special_linear_group n R) (GL_pos n R) :=
   ⟨to_GL_pos⟩

@@ -123,7 +123,7 @@ alias coe_eq ↔ _ Filter.EventuallyEq.germ_eq
 
 /-- Lift a function `β → γ` to a function `germ l β → germ l γ`. -/
 def map (op : β → γ) : germ l β → germ l γ :=
-  map' ((· ∘ ·) op) $ fun f g H => H.mono $ fun x H => congr_argₓ op H
+  (map' ((· ∘ ·) op)) fun f g H => H.mono fun x H => congr_argₓ op H
 
 @[simp]
 theorem map_coe (op : β → γ) (f : α → β) : map op (f : germ l β) = op ∘ f :=
@@ -135,13 +135,13 @@ theorem map_id : map id = (id : germ l β → germ l β) := by
   rfl
 
 theorem map_map (op₁ : γ → δ) (op₂ : β → γ) (f : germ l β) : map op₁ (map op₂ f) = map (op₁ ∘ op₂) f :=
-  induction_on f $ fun f => rfl
+  (induction_on f) fun f => rfl
 
 /-- Lift a binary function `β → γ → δ` to a function `germ l β → germ l γ → germ l δ`. -/
 def map₂ (op : β → γ → δ) : germ l β → germ l γ → germ l δ :=
-  (Quotientₓ.map₂' fun f g x => op (f x) (g x)) $ fun f f' Hf g g' Hg =>
-    Hg.mp $
-      Hf.mono $ fun x Hf Hg => by
+  (Quotientₓ.map₂' fun f g x => op (f x) (g x)) fun f f' Hf g g' Hg =>
+    Hg.mp <|
+      Hf.mono fun x Hf Hg => by
         simp only [Hf, Hg]
 
 @[simp]
@@ -151,7 +151,7 @@ theorem map₂_coe (op : β → γ → δ) (f : α → β) (g : α → γ) : map
 /-- A germ at `l` of maps from `α` to `β` tends to `lb : filter β` if it is represented by a map
 which tends to `lb` along `l`. -/
 protected def tendsto (f : germ l β) (lb : Filter β) : Prop :=
-  (lift_on f fun f => tendsto f l lb) $ fun f g H => propext (tendsto_congr' H)
+  (lift_on f fun f => tendsto f l lb) fun f g H => propext (tendsto_congr' H)
 
 @[simp, norm_cast]
 theorem coe_tendsto {f : α → β} {lb : Filter β} : (f : germ l β).Tendsto lb ↔ tendsto f l lb :=
@@ -162,7 +162,7 @@ alias coe_tendsto ↔ _ Filter.Tendsto.germ_tendsto
 /-- Given two germs `f : germ l β`, and `g : germ lc α`, where `l : filter α`, if `g` tends to `l`,
 then the composition `f ∘ g` is well-defined as a germ at `lc`. -/
 def comp_tendsto' (f : germ l β) {lc : Filter γ} (g : germ lc α) (hg : g.tendsto l) : germ lc β :=
-  (lift_on f fun f => g.map f) $ fun f₁ f₂ hF => (induction_on g $ fun g hg => coe_eq.2 $ hg.eventually hF) hg
+  (lift_on f fun f => g.map f) fun f₁ f₂ hF => ((induction_on g) fun g hg => coe_eq.2 <| hg.eventually hF) hg
 
 @[simp]
 theorem coe_comp_tendsto' (f : α → β) {lc : Filter γ} {g : germ lc α} (hg : g.tendsto l) :
@@ -186,14 +186,14 @@ theorem comp_tendsto'_coe (f : germ l β) {lc : Filter γ} {g : γ → α} (hg :
 
 @[simp, norm_cast]
 theorem const_inj [ne_bot l] {a b : β} : (↑a : germ l β) = ↑b ↔ a = b :=
-  coe_eq.trans $ const_eventually_eq
+  coe_eq.trans <| const_eventually_eq
 
 @[simp]
-theorem map_const (l : Filter α) (a : β) (f : β → γ) : (↑a : germ l β).map f = ↑f a :=
+theorem map_const (l : Filter α) (a : β) (f : β → γ) : (↑a : germ l β).map f = ↑(f a) :=
   rfl
 
 @[simp]
-theorem map₂_const (l : Filter α) (b : β) (c : γ) (f : β → γ → δ) : map₂ f (↑b : germ l β) (↑c) = ↑f b c :=
+theorem map₂_const (l : Filter α) (b : β) (c : γ) (f : β → γ → δ) : map₂ f (↑b : germ l β) ↑c = ↑(f b c) :=
   rfl
 
 @[simp]
@@ -208,14 +208,14 @@ theorem const_comp_tendsto' {l : Filter α} (b : β) {lc : Filter γ} {g : germ 
 
 /-- Lift a predicate on `β` to `germ l β`. -/
 def lift_pred (p : β → Prop) (f : germ l β) : Prop :=
-  (lift_on f fun f => ∀ᶠ x in l, p (f x)) $ fun f g H => propext $ eventually_congr $ H.mono $ fun x hx => hx ▸ Iff.rfl
+  (lift_on f fun f => ∀ᶠ x in l, p (f x)) fun f g H => propext <| eventually_congr <| H.mono fun x hx => hx ▸ Iff.rfl
 
 @[simp]
 theorem lift_pred_coe {p : β → Prop} {f : α → β} : lift_pred p (f : germ l β) ↔ ∀ᶠ x in l, p (f x) :=
   Iff.rfl
 
 theorem lift_pred_const {p : β → Prop} {x : β} (hx : p x) : lift_pred p (↑x : germ l β) :=
-  eventually_of_forall $ fun y => hx
+  eventually_of_forall fun y => hx
 
 @[simp]
 theorem lift_pred_const_iff [ne_bot l] {p : β → Prop} {x : β} : lift_pred p (↑x : germ l β) ↔ p x :=
@@ -223,19 +223,19 @@ theorem lift_pred_const_iff [ne_bot l] {p : β → Prop} {x : β} : lift_pred p 
 
 /-- Lift a relation `r : β → γ → Prop` to `germ l β → germ l γ → Prop`. -/
 def lift_rel (r : β → γ → Prop) (f : germ l β) (g : germ l γ) : Prop :=
-  (Quotientₓ.liftOn₂' f g fun f g => ∀ᶠ x in l, r (f x) (g x)) $ fun f g f' g' Hf Hg =>
-    propext $ eventually_congr $ Hg.mp $ Hf.mono $ fun x hf hg => hf ▸ hg ▸ Iff.rfl
+  (Quotientₓ.liftOn₂' f g fun f g => ∀ᶠ x in l, r (f x) (g x)) fun f g f' g' Hf Hg =>
+    propext <| eventually_congr <| Hg.mp <| Hf.mono fun x hf hg => hf ▸ hg ▸ Iff.rfl
 
 @[simp]
 theorem lift_rel_coe {r : β → γ → Prop} {f : α → β} {g : α → γ} :
     lift_rel r (f : germ l β) g ↔ ∀ᶠ x in l, r (f x) (g x) :=
   Iff.rfl
 
-theorem lift_rel_const {r : β → γ → Prop} {x : β} {y : γ} (h : r x y) : lift_rel r (↑x : germ l β) (↑y) :=
-  eventually_of_forall $ fun _ => h
+theorem lift_rel_const {r : β → γ → Prop} {x : β} {y : γ} (h : r x y) : lift_rel r (↑x : germ l β) ↑y :=
+  eventually_of_forall fun _ => h
 
 @[simp]
-theorem lift_rel_const_iff [ne_bot l] {r : β → γ → Prop} {x : β} {y : γ} : lift_rel r (↑x : germ l β) (↑y) ↔ r x y :=
+theorem lift_rel_const_iff [ne_bot l] {r : β → γ → Prop} {x : β} {y : γ} : lift_rel r (↑x : germ l β) ↑y ↔ r x y :=
   @eventually_const _ _ _ (r x y)
 
 instance [Inhabited β] : Inhabited (germ l β) :=
@@ -279,23 +279,23 @@ instance [CommSemigroupₓ M] : CommSemigroupₓ (germ l M) :=
 instance [LeftCancelSemigroup M] : LeftCancelSemigroup (germ l M) :=
   { germ.semigroup with mul := · * ·,
     mul_left_cancel := fun f₁ f₂ f₃ =>
-      induction_on₃ f₁ f₂ f₃ $ fun f₁ f₂ f₃ H => coe_eq.2 ((coe_eq.1 H).mono $ fun x => mul_left_cancelₓ) }
+      (induction_on₃ f₁ f₂ f₃) fun f₁ f₂ f₃ H => coe_eq.2 ((coe_eq.1 H).mono fun x => mul_left_cancelₓ) }
 
 @[to_additive AddRightCancelSemigroup]
 instance [RightCancelSemigroup M] : RightCancelSemigroup (germ l M) :=
   { germ.semigroup with mul := · * ·,
     mul_right_cancel := fun f₁ f₂ f₃ =>
-      induction_on₃ f₁ f₂ f₃ $ fun f₁ f₂ f₃ H => coe_eq.2 $ (coe_eq.1 H).mono $ fun x => mul_right_cancelₓ }
+      (induction_on₃ f₁ f₂ f₃) fun f₁ f₂ f₃ H => coe_eq.2 <| (coe_eq.1 H).mono fun x => mul_right_cancelₓ }
 
 @[to_additive]
 instance [Monoidₓ M] : Monoidₓ (germ l M) :=
   { germ.semigroup with mul := · * ·, one := 1,
     one_mul := fun f =>
-      induction_on f $ fun f => by
+      (induction_on f) fun f => by
         norm_cast
         rw [one_mulₓ],
     mul_one := fun f =>
-      induction_on f $ fun f => by
+      (induction_on f) fun f => by
         norm_cast
         rw [mul_oneₓ] }
 
@@ -316,11 +316,11 @@ instance [CommMonoidₓ M] : CommMonoidₓ (germ l M) :=
   { germ.comm_semigroup, germ.monoid with mul := · * ·, one := 1 }
 
 @[to_additive]
-instance [HasInv G] : HasInv (germ l G) :=
-  ⟨map HasInv.inv⟩
+instance [Inv G] : Inv (germ l G) :=
+  ⟨map Inv.inv⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_inv [HasInv G] (f : α → G) : ↑f⁻¹ = (f⁻¹ : germ l G) :=
+theorem coe_inv [Inv G] (f : α → G) : ↑f⁻¹ = (f⁻¹ : germ l G) :=
   rfl
 
 @[to_additive]
@@ -333,7 +333,7 @@ theorem coe_div [Div M] (f g : α → M) : ↑(f / g) = (f / g : germ l M) :=
 
 @[to_additive]
 instance [DivInvMonoidₓ G] : DivInvMonoidₓ (germ l G) :=
-  { germ.monoid with inv := HasInv.inv, div := Div.div,
+  { germ.monoid with inv := Inv.inv, div := Div.div,
     div_eq_mul_inv := by
       rintro ⟨f⟩ ⟨g⟩
       exact congr_argₓ (Quot.mk _) (div_eq_mul_inv f g) }
@@ -347,7 +347,7 @@ instance [Groupₓ G] : Groupₓ (germ l G) :=
 
 @[to_additive]
 instance [CommGroupₓ G] : CommGroupₓ (germ l G) :=
-  { germ.group, germ.comm_monoid with mul := · * ·, one := 1, inv := HasInv.inv }
+  { germ.group, germ.comm_monoid with mul := · * ·, one := 1, inv := Inv.inv }
 
 end Monoidₓ
 
@@ -363,11 +363,11 @@ instance [MulZeroClass R] : MulZeroClass (germ l R) where
   zero := 0
   mul := · * ·
   mul_zero := fun f =>
-    induction_on f $ fun f => by
+    (induction_on f) fun f => by
       norm_cast
       rw [mul_zero]
   zero_mul := fun f =>
-    induction_on f $ fun f => by
+    (induction_on f) fun f => by
       norm_cast
       rw [zero_mul]
 
@@ -375,11 +375,11 @@ instance [Distrib R] : Distrib (germ l R) where
   mul := · * ·
   add := · + ·
   left_distrib := fun f g h =>
-    induction_on₃ f g h $ fun f g h => by
+    (induction_on₃ f g h) fun f g h => by
       norm_cast
       rw [left_distrib]
   right_distrib := fun f g h =>
-    induction_on₃ f g h $ fun f g h => by
+    (induction_on₃ f g h) fun f g h => by
       norm_cast
       rw [right_distrib]
 
@@ -425,26 +425,26 @@ theorem coe_smul' [HasScalar M β] (c : α → M) (f : α → β) : ↑(c • f)
 
 instance [Monoidₓ M] [MulAction M β] : MulAction M (germ l β) where
   one_smul := fun f =>
-    induction_on f $ fun f => by
+    (induction_on f) fun f => by
       norm_cast
       simp only [one_smul]
   mul_smul := fun c₁ c₂ f =>
-    induction_on f $ fun f => by
+    (induction_on f) fun f => by
       norm_cast
       simp only [mul_smul]
 
 instance mul_action' [Monoidₓ M] [MulAction M β] : MulAction (germ l M) (germ l β) where
   one_smul := fun f =>
-    induction_on f $ fun f => by
+    (induction_on f) fun f => by
       simp only [← coe_one, ← coe_smul', one_smul]
   mul_smul := fun c₁ c₂ f =>
-    induction_on₃ c₁ c₂ f $ fun c₁ c₂ f => by
+    (induction_on₃ c₁ c₂ f) fun c₁ c₂ f => by
       norm_cast
       simp only [mul_smul]
 
 instance [Monoidₓ M] [AddMonoidₓ N] [DistribMulAction M N] : DistribMulAction M (germ l N) where
   smul_add := fun c f g =>
-    induction_on₂ f g $ fun f g => by
+    (induction_on₂ f g) fun f g => by
       norm_cast
       simp only [smul_add]
   smul_zero := fun c => by
@@ -453,30 +453,30 @@ instance [Monoidₓ M] [AddMonoidₓ N] [DistribMulAction M N] : DistribMulActio
 instance distrib_mul_action' [Monoidₓ M] [AddMonoidₓ N] [DistribMulAction M N] :
     DistribMulAction (germ l M) (germ l N) where
   smul_add := fun c f g =>
-    induction_on₃ c f g $ fun c f g => by
+    (induction_on₃ c f g) fun c f g => by
       norm_cast
       simp only [smul_add]
   smul_zero := fun c =>
-    induction_on c $ fun c => by
+    (induction_on c) fun c => by
       simp only [← coe_zero, ← coe_smul', smul_zero]
 
 instance [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (germ l M) where
   add_smul := fun c₁ c₂ f =>
-    induction_on f $ fun f => by
+    (induction_on f) fun f => by
       norm_cast
       simp only [add_smul]
   zero_smul := fun f =>
-    induction_on f $ fun f => by
+    (induction_on f) fun f => by
       norm_cast
       simp only [zero_smul, coe_zero]
 
 instance module' [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module (germ l R) (germ l M) where
   add_smul := fun c₁ c₂ f =>
-    induction_on₃ c₁ c₂ f $ fun c₁ c₂ f => by
+    (induction_on₃ c₁ c₂ f) fun c₁ c₂ f => by
       norm_cast
       simp only [add_smul]
   zero_smul := fun f =>
-    induction_on f $ fun f => by
+    (induction_on f) fun f => by
       simp only [← coe_zero, ← coe_smul', zero_smul]
 
 end Module
@@ -500,12 +500,12 @@ theorem const_le_iff [LE β] [ne_bot l] {x y : β} : (↑x : germ l β) ≤ ↑y
 
 instance [Preorderₓ β] : Preorderₓ (germ l β) where
   le := · ≤ ·
-  le_refl := fun f => induction_on f $ eventually_le.refl l
-  le_trans := fun f₁ f₂ f₃ => induction_on₃ f₁ f₂ f₃ $ fun f₁ f₂ f₃ => eventually_le.trans
+  le_refl := fun f => induction_on f <| eventually_le.refl l
+  le_trans := fun f₁ f₂ f₃ => (induction_on₃ f₁ f₂ f₃) fun f₁ f₂ f₃ => eventually_le.trans
 
 instance [PartialOrderₓ β] : PartialOrderₓ (germ l β) :=
   { germ.preorder with le := · ≤ ·,
-    le_antisymm := fun f g => induction_on₂ f g $ fun f g h₁ h₂ => (eventually_le.antisymm h₁ h₂).germ_eq }
+    le_antisymm := fun f g => (induction_on₂ f g) fun f g h₁ h₂ => (eventually_le.antisymm h₁ h₂).germ_eq }
 
 instance [HasBot β] : HasBot (germ l β) :=
   ⟨↑(⊥ : β)⟩
@@ -516,7 +516,7 @@ theorem const_bot [HasBot β] : (↑(⊥ : β) : germ l β) = ⊥ :=
 
 instance [LE β] [OrderBot β] : OrderBot (germ l β) where
   bot := ⊥
-  bot_le := fun f => induction_on f $ fun f => eventually_of_forall $ fun x => bot_le
+  bot_le := fun f => (induction_on f) fun f => eventually_of_forall fun x => bot_le
 
 instance [HasTop β] : HasTop (germ l β) :=
   ⟨↑(⊤ : β)⟩
@@ -527,7 +527,7 @@ theorem const_top [HasTop β] : (↑(⊤ : β) : germ l β) = ⊤ :=
 
 instance [LE β] [OrderTop β] : OrderTop (germ l β) where
   top := ⊤
-  le_top := fun f => induction_on f $ fun f => eventually_of_forall $ fun x => le_top
+  le_top := fun f => (induction_on f) fun f => eventually_of_forall fun x => le_top
 
 instance [HasSup β] : HasSup (germ l β) :=
   ⟨map₂ (·⊔·)⟩
@@ -545,15 +545,15 @@ theorem const_inf [HasInf β] (a b : β) : ↑(a⊓b) = (↑a⊓↑b : germ l β
 
 instance [SemilatticeSup β] : SemilatticeSup (germ l β) :=
   { germ.partial_order with sup := ·⊔·,
-    le_sup_left := fun f g => induction_on₂ f g $ fun f g => eventually_of_forall $ fun x => le_sup_left,
-    le_sup_right := fun f g => induction_on₂ f g $ fun f g => eventually_of_forall $ fun x => le_sup_right,
-    sup_le := fun f₁ f₂ g => induction_on₃ f₁ f₂ g $ fun f₁ f₂ g h₁ h₂ => h₂.mp $ h₁.mono $ fun x => sup_le }
+    le_sup_left := fun f g => (induction_on₂ f g) fun f g => eventually_of_forall fun x => le_sup_left,
+    le_sup_right := fun f g => (induction_on₂ f g) fun f g => eventually_of_forall fun x => le_sup_right,
+    sup_le := fun f₁ f₂ g => (induction_on₃ f₁ f₂ g) fun f₁ f₂ g h₁ h₂ => h₂.mp <| h₁.mono fun x => sup_le }
 
 instance [SemilatticeInf β] : SemilatticeInf (germ l β) :=
   { germ.partial_order with inf := ·⊓·,
-    inf_le_left := fun f g => induction_on₂ f g $ fun f g => eventually_of_forall $ fun x => inf_le_left,
-    inf_le_right := fun f g => induction_on₂ f g $ fun f g => eventually_of_forall $ fun x => inf_le_right,
-    le_inf := fun f₁ f₂ g => induction_on₃ f₁ f₂ g $ fun f₁ f₂ g h₁ h₂ => h₂.mp $ h₁.mono $ fun x => le_inf }
+    inf_le_left := fun f g => (induction_on₂ f g) fun f g => eventually_of_forall fun x => inf_le_left,
+    inf_le_right := fun f g => (induction_on₂ f g) fun f g => eventually_of_forall fun x => inf_le_right,
+    le_inf := fun f₁ f₂ g => (induction_on₃ f₁ f₂ g) fun f₁ f₂ g h₁ h₂ => h₂.mp <| h₁.mono fun x => le_inf }
 
 instance [Lattice β] : Lattice (germ l β) :=
   { germ.semilattice_sup, germ.semilattice_inf with }
@@ -565,15 +565,14 @@ instance [LE β] [BoundedOrder β] : BoundedOrder (germ l β) :=
 instance [OrderedCancelCommMonoid β] : OrderedCancelCommMonoid (germ l β) :=
   { germ.partial_order, germ.comm_monoid, germ.left_cancel_semigroup with
     mul_le_mul_left := fun f g =>
-      induction_on₂ f g $ fun f g H h => induction_on h $ fun h => H.mono $ fun x H => mul_le_mul_left' H _,
-    le_of_mul_le_mul_left := fun f g h =>
-      induction_on₃ f g h $ fun f g h H => H.mono $ fun x => le_of_mul_le_mul_left' }
+      (induction_on₂ f g) fun f g H h => (induction_on h) fun h => H.mono fun x H => mul_le_mul_left' H _,
+    le_of_mul_le_mul_left := fun f g h => (induction_on₃ f g h) fun f g h H => H.mono fun x => le_of_mul_le_mul_left' }
 
 @[to_additive]
 instance OrderedCommGroup [OrderedCommGroup β] : OrderedCommGroup (germ l β) :=
   { germ.partial_order, germ.comm_group with
     mul_le_mul_left := fun f g =>
-      induction_on₂ f g $ fun f g H h => induction_on h $ fun h => H.mono $ fun x H => mul_le_mul_left' H _ }
+      (induction_on₂ f g) fun f g H h => (induction_on h) fun h => H.mono fun x H => mul_le_mul_left' H _ }
 
 end Germ
 

@@ -598,11 +598,11 @@ theorem associated_to_quadratic_form (B : BilinForm R M) (x y : M) :
   simp only [associated_apply, ← polar_to_quadratic_form, polar, to_quadratic_form_apply]
 
 theorem associated_left_inverse (h : B₁.is_symm) : associated_hom S B₁.to_quadratic_form = B₁ :=
-  BilinForm.ext $ fun x y => by
+  BilinForm.ext fun x y => by
     rw [associated_to_quadratic_form, is_symm.eq h x y, ← two_mul, ← mul_assoc, inv_of_mul_self, one_mulₓ]
 
 theorem to_quadratic_form_associated : (associated_hom S Q).toQuadraticForm = Q :=
-  QuadraticForm.ext $ fun x =>
+  QuadraticForm.ext fun x =>
     calc
       (associated_hom S Q).toQuadraticForm x = ⅟ 2 * (Q x + Q x) := by
         simp only [add_assocₓ, add_sub_cancel', one_mulₓ, to_quadratic_form_apply, add_mulₓ, associated_apply,
@@ -704,14 +704,14 @@ theorem pos_def.nonneg {Q : QuadraticForm R₂ M} (hQ : pos_def Q) (x : M) : 0 �
   (eq_or_ne x 0).elim (fun h => h.symm ▸ map_zero.symm.le) fun h => (hQ _ h).le
 
 theorem pos_def.anisotropic {Q : QuadraticForm R₂ M} (hQ : Q.pos_def) : Q.anisotropic := fun x hQx =>
-  Classical.by_contradiction $ fun hx =>
-    lt_irreflₓ (0 : R₂) $ by
+  Classical.by_contradiction fun hx =>
+    lt_irreflₓ (0 : R₂) <| by
       have := hQ _ hx
       rw [hQx] at this
       exact this
 
 theorem pos_def_of_nonneg {Q : QuadraticForm R₂ M} (h : ∀ x, 0 ≤ Q x) (h0 : Q.anisotropic) : pos_def Q := fun x hx =>
-  lt_of_le_of_neₓ (h x) (Ne.symm $ fun hQx => hx $ h0 _ hQx)
+  lt_of_le_of_neₓ (h x) (Ne.symm fun hQx => hx <| h0 _ hQx)
 
 theorem pos_def_iff_nonneg {Q : QuadraticForm R₂ M} : pos_def Q ↔ (∀ x, 0 ≤ Q x) ∧ Q.anisotropic :=
   ⟨fun h => ⟨h.nonneg, h.anisotropic⟩, fun ⟨n, a⟩ => pos_def_of_nonneg n a⟩
@@ -875,11 +875,11 @@ theorem refl (Q : QuadraticForm R M) : Q.equivalent Q :=
 
 @[symm]
 theorem symm (h : Q₁.equivalent Q₂) : Q₂.equivalent Q₁ :=
-  h.elim $ fun f => ⟨f.symm⟩
+  h.elim fun f => ⟨f.symm⟩
 
 @[trans]
 theorem trans (h : Q₁.equivalent Q₂) (h' : Q₂.equivalent Q₃) : Q₁.equivalent Q₃ :=
-  h'.elim $ h.elim $ fun f g => ⟨f.trans g⟩
+  h'.elim <| h.elim fun f g => ⟨f.trans g⟩
 
 end Equivalent
 
@@ -922,7 +922,7 @@ theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (h
   obtain ⟨x, hx⟩ := exists_bilin_form_self_ne_zero hB₁ hB₂
   rw [← Submodule.finrank_add_eq_of_is_compl (is_compl_span_singleton_orthogonal hx).symm,
     finrank_span_singleton (ne_zero_of_not_is_ortho_self x hx)] at hd
-  let B' := B.restrict (B.orthogonal $ K∙x)
+  let B' := B.restrict (B.orthogonal <| K∙x)
   obtain ⟨v', hv₁⟩ := ih (B.restrict_symm hB₂ _ : B'.is_symm) (Nat.succ.injₓ hd)
   let b :=
     Basis.mkFinCons x v'
@@ -932,8 +932,8 @@ theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (h
         rw [← hc, Submodule.neg_mem_iff] at hy
         have := (is_compl_span_singleton_orthogonal hx).Disjoint
         rw [Submodule.disjoint_def] at this
-        have := this (c • x) (Submodule.smul_mem _ _ $ Submodule.mem_span_singleton_self _) hy
-        exact (smul_eq_zero.1 this).resolve_right fun h => hx $ h.symm ▸ zero_left _)
+        have := this (c • x) (Submodule.smul_mem _ _ <| Submodule.mem_span_singleton_self _) hy
+        exact (smul_eq_zero.1 this).resolve_right fun h => hx <| h.symm ▸ zero_left _)
       (by
         intro y
         refine' ⟨-B x y / B x x, fun z hz => _⟩

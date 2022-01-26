@@ -47,7 +47,7 @@ theorem std_basis_apply (i : ι) (b : φ i) : std_basis R φ i b = update 0 i b 
   rfl
 
 theorem coe_std_basis (i : ι) : ⇑std_basis R φ i = Pi.single i :=
-  funext $ std_basis_apply R φ i
+  funext <| std_basis_apply R φ i
 
 @[simp]
 theorem std_basis_same (i : ι) (b : φ i) : std_basis R φ i b i = b := by
@@ -62,7 +62,7 @@ theorem std_basis_eq_pi_diag (i : ι) : std_basis R φ i = pi (diag i) := by
   rfl
 
 theorem ker_std_basis (i : ι) : ker (std_basis R φ i) = ⊥ :=
-  ker_eq_bot_of_injective $ fun f g hfg => by
+  ker_eq_bot_of_injective fun f g hfg => by
     have : std_basis R φ i f i = std_basis R φ i g i := hfg ▸ rfl
     simpa only [std_basis_same]
 
@@ -77,7 +77,7 @@ theorem proj_std_basis_ne (i j : ι) (h : i ≠ j) : (proj i).comp (std_basis R 
 
 theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) :
     (⨆ i ∈ I, range (std_basis R φ i)) ≤ ⨅ i ∈ J, ker (proj i) := by
-  refine' supr_le $ fun i => supr_le $ fun hi => range_le_iff_comap.2 _
+  refine' supr_le fun i => supr_le fun hi => range_le_iff_comap.2 _
   simp only [(ker_comp _ _).symm, eq_top_iff, SetLike.le_def, mem_ker, comap_infi, mem_infi]
   rintro b - j hj
   rw [proj_std_basis_ne R φ j i, zero_apply]
@@ -98,14 +98,14 @@ theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu :
           intro hiI
           rw [std_basis_same]
           exact hb _ ((hu trivialₓ).resolve_left hiI)]
-      exact sum_mem _ fun i hiI => mem_supr_of_mem i $ mem_supr_of_mem hiI $ (std_basis R φ i).mem_range_self (b i))
+      exact sum_mem _ fun i hiI => mem_supr_of_mem i <| mem_supr_of_mem hiI <| (std_basis R φ i).mem_range_self (b i))
 
 theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J)
     (hI : Set.Finite I) : (⨆ i ∈ I, range (std_basis R φ i)) = ⨅ i ∈ J, ker (proj i) := by
   refine' le_antisymmₓ (supr_range_std_basis_le_infi_ker_proj _ _ _ _ hd) _
   have : Set.Univ ⊆ ↑hI.to_finset ∪ J := by
     rwa [hI.coe_to_finset]
-  refine' le_transₓ (infi_ker_proj_le_supr_range_std_basis R φ this) (supr_le_supr $ fun i => _)
+  refine' le_transₓ (infi_ker_proj_le_supr_range_std_basis R φ this) (supr_le_supr fun i => _)
   rw [Set.Finite.mem_to_finset]
   exact le_reflₓ _
 
@@ -115,13 +115,13 @@ theorem supr_range_std_basis [Fintype ι] : (⨆ i : ι, range (std_basis R φ i
   apply top_unique
   convert infi_ker_proj_le_supr_range_std_basis R φ this
   exact infi_emptyset.symm
-  exact funext $ fun i => ((@supr_pos _ _ _ fun h => range (std_basis R φ i)) $ Finset.mem_univ i).symm
+  exact funext fun i => ((@supr_pos _ _ _ fun h => range (std_basis R φ i)) <| Finset.mem_univ i).symm
 
 theorem disjoint_std_basis_std_basis (I J : Set ι) (h : Disjoint I J) :
     Disjoint (⨆ i ∈ I, range (std_basis R φ i)) (⨆ i ∈ J, range (std_basis R φ i)) := by
   refine'
-    Disjoint.mono (supr_range_std_basis_le_infi_ker_proj _ _ _ _ $ disjoint_compl_right)
-      (supr_range_std_basis_le_infi_ker_proj _ _ _ _ $ disjoint_compl_right) _
+    Disjoint.mono (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjoint_compl_right)
+      (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjoint_compl_right) _
   simp only [Disjoint, SetLike.le_def, mem_infi, mem_inf, mem_ker, mem_bot, proj_apply, funext_iff]
   rintro b ⟨hI, hJ⟩ i
   classical

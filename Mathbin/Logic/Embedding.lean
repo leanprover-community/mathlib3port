@@ -1,7 +1,8 @@
 import Mathbin.Data.Equiv.Basic
+import Mathbin.Data.FunLike.Embedding
+import Mathbin.Data.Pprod
 import Mathbin.Data.Set.Basic
 import Mathbin.Data.Sigma.Basic
-import Mathbin.Data.Pprod
 
 /-!
 # Injective functions
@@ -24,6 +25,14 @@ instance {α : Sort u} {β : Sort v} : CoeFun (α ↪ β) fun _ => α → β :=
   ⟨embedding.to_fun⟩
 
 initialize_simps_projections Embedding (toFun → apply)
+
+instance {α : Sort u} {β : Sort v} : EmbeddingLike (α ↪ β) α β where
+  coe := embedding.to_fun
+  injective' := embedding.inj'
+  coe_injective' := fun f g h => by
+    cases f
+    cases g
+    congr
 
 end Function
 
@@ -68,7 +77,7 @@ def Equivₓ.asEmbedding {p : β → Prop} (e : α ≃ Subtype p) : α ↪ β :=
 @[simp]
 theorem Equivₓ.as_embedding_range {α β : Sort _} {p : β → Prop} (e : α ≃ Subtype p) :
     Set.Range e.as_embedding = SetOf p :=
-  Set.ext $ fun x =>
+  Set.ext fun x =>
     ⟨fun ⟨y, h⟩ => h ▸ Subtype.coe_prop (e y), fun hs =>
       ⟨e.symm ⟨x, hs⟩, by
         simp ⟩⟩
@@ -79,16 +88,15 @@ namespace Function
 
 namespace Embedding
 
-theorem coe_injective {α β} : @Function.Injective (α ↪ β) (α → β) coeFn
-  | ⟨x, _⟩, ⟨y, _⟩, rfl => rfl
+theorem coe_injective {α β} : @Function.Injective (α ↪ β) (α → β) coeFn :=
+  FunLike.coe_injective
 
 @[ext]
 theorem ext {α β} {f g : embedding α β} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective (funext h)
+  FunLike.ext f g h
 
 theorem ext_iff {α β} {f g : embedding α β} : (∀ x, f x = g x) ↔ f = g :=
-  ⟨ext, fun h _ => by
-    rw [h]⟩
+  FunLike.ext_iff.symm
 
 @[simp]
 theorem to_fun_eq_coe {α β} (f : α ↪ β) : to_fun f = f :=
@@ -104,11 +112,10 @@ theorem mk_coe {α β : Type _} (f : α ↪ β) inj : (⟨f, inj⟩ : α ↪ β)
   simp
 
 protected theorem injective {α β} (f : α ↪ β) : injective f :=
-  f.inj'
+  EmbeddingLike.injective f
 
-@[simp]
 theorem apply_eq_iff_eq {α β} (f : α ↪ β) (x y : α) : f x = f y ↔ x = y :=
-  f.injective.eq_iff
+  EmbeddingLike.apply_eq_iff_eq f
 
 /-- The identity map as a `function.embedding`. -/
 @[refl, simps (config := { simpRhs := tt })]
@@ -237,8 +244,8 @@ open Sum
 def sum_map {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : Sum α γ ↪ Sum β δ :=
   ⟨Sum.map e₁ e₂, fun s₁ s₂ h =>
     match s₁, s₂, h with
-    | inl a₁, inl a₂, h => congr_argₓ inl $ e₁.injective $ inl.inj h
-    | inr b₁, inr b₂, h => congr_argₓ inr $ e₂.injective $ inr.inj h⟩
+    | inl a₁, inl a₂, h => congr_argₓ inl <| e₁.injective <| inl.inj h
+    | inr b₁, inr b₂, h => congr_argₓ inr <| e₂.injective <| inr.inj h⟩
 
 @[simp]
 theorem coe_sum_map {α β γ δ} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : ⇑sum_map e₁ e₂ = Sum.map e₁ e₂ :=
@@ -277,7 +284,7 @@ end Sigma
 `e : Π a, (β a ↪ γ a)`. This embedding sends `f` to `λ a, e a (f a)`. -/
 @[simps]
 def Pi_congr_right {α : Sort _} {β γ : α → Sort _} (e : ∀ a, β a ↪ γ a) : (∀ a, β a) ↪ ∀ a, γ a :=
-  ⟨fun f a => e a (f a), fun f₁ f₂ h => funext $ fun a => (e a).Injective (congr_funₓ h a)⟩
+  ⟨fun f a => e a (f a), fun f₁ f₂ h => funext fun a => (e a).Injective (congr_funₓ h a)⟩
 
 /-- An embedding `e : α ↪ β` defines an embedding `(γ → α) ↪ (γ → β)` that sends each `f`
 to `e ∘ f`. -/
@@ -294,7 +301,7 @@ This embedding sends each `f : α → γ` to a function `g : β → γ` such tha
 `g y = default` whenever `y ∉ range e`. -/
 noncomputable def arrow_congr_left {α : Sort u} {β : Sort v} {γ : Sort w} [Inhabited γ] (e : α ↪ β) : (α → γ) ↪ β → γ :=
   ⟨fun f => extend e f fun _ => default, fun f₁ f₂ h =>
-    funext $ fun x => by
+    funext fun x => by
       simpa only [extend_apply e.injective] using congr_funₓ h (e x)⟩
 
 /-- Restrict both domain and codomain of an embedding. -/

@@ -51,7 +51,7 @@ def dom_coprod (a : MultilinearMap R (fun _ : ι₁ => N) N₁) (b : Multilinear
 def dom_coprod' :
     MultilinearMap R (fun _ : ι₁ => N) N₁ ⊗[R] MultilinearMap R (fun _ : ι₂ => N) N₂ →ₗ[R]
       MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂) :=
-  TensorProduct.lift $
+  TensorProduct.lift <|
     LinearMap.mk₂ R dom_coprod
       (fun m₁ m₂ n => by
         ext

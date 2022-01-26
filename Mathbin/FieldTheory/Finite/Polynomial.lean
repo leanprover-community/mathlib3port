@@ -77,7 +77,7 @@ theorem eval_indicator_apply_eq_zero (a b : σ → K) (h : a ≠ b) : eval a (in
 
 theorem degrees_indicator (c : σ → K) : degrees (indicator c) ≤ ∑ s : σ, (Fintype.card K - 1) • {s} := by
   rw [indicator]
-  refine' le_transₓ (degrees_prod _ _) (Finset.sum_le_sum $ fun s hs => _)
+  refine' le_transₓ (degrees_prod _ _) (Finset.sum_le_sum fun s hs => _)
   refine' le_transₓ (degrees_sub _ _) _
   rw [degrees_one, ← bot_eq_zero, bot_sup_eq]
   refine' le_transₓ (degrees_pow _ _) (nsmul_le_nsmul_of_le_right _ _)
@@ -88,7 +88,7 @@ theorem degrees_indicator (c : σ → K) : degrees (indicator c) ≤ ∑ s : σ,
 theorem indicator_mem_restrict_degree (c : σ → K) : indicator c ∈ restrict_degree σ K (Fintype.card K - 1) := by
   rw [mem_restrict_degree_iff_sup, indicator]
   intro n
-  refine' le_transₓ (Multiset.count_le_of_le _ $ degrees_indicator _) (le_of_eqₓ _)
+  refine' le_transₓ (Multiset.count_le_of_le _ <| degrees_indicator _) (le_of_eqₓ _)
   simp_rw [← Multiset.coe_count_add_monoid_hom, (Multiset.countAddMonoidHom n).map_sum, AddMonoidHom.map_nsmul,
     Multiset.coe_count_add_monoid_hom, nsmul_eq_mul, Nat.cast_id]
   trans
@@ -97,7 +97,7 @@ theorem indicator_mem_restrict_degree (c : σ → K) : indicator c ∈ restrict_
     rw [Multiset.count_singleton, if_neg Ne.symm, mul_zero]
     
   · intro h
-    exact (h $ Finset.mem_univ _).elim
+    exact (h <| Finset.mem_univ _).elim
     
   · rw [Multiset.count_singleton_self, mul_oneₓ]
     
@@ -123,7 +123,7 @@ theorem evalₗ_apply (p : MvPolynomial σ K) (e : σ → K) : evalₗ K σ p e 
   rfl
 
 theorem map_restrict_dom_evalₗ : (restrict_degree σ K (Fintype.card K - 1)).map (evalₗ K σ) = ⊤ := by
-  refine' top_unique (SetLike.le_def.2 $ fun e _ => mem_map.2 _)
+  refine' top_unique (SetLike.le_def.2 fun e _ => mem_map.2 _)
   refine' ⟨∑ n : σ → K, e n • indicator n, _, _⟩
   · exact sum_mem _ fun c _ => smul_mem _ _ (indicator_mem_restrict_degree _)
     
@@ -136,7 +136,7 @@ theorem map_restrict_dom_evalₗ : (restrict_degree σ K (Fintype.card K - 1)).m
       rw [eval_indicator_apply_eq_zero _ _ h.symm, smul_zero]
       
     · intro h
-      exact (h $ Finset.mem_univ n).elim
+      exact (h <| Finset.mem_univ n).elim
       
     · rw [eval_indicator_apply_eq_one, smul_eq_mul, mul_oneₓ]
       
@@ -168,7 +168,7 @@ theorem dim_R : Module.rank K (R σ K) = Fintype.card (σ → K) :=
     _ = # { s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } := by
       rw [Finsupp.dim_eq, dim_self, mul_oneₓ]
     _ = # { s : σ → ℕ | ∀ n : σ, s n < Fintype.card K } := by
-      refine' Quotientₓ.sound ⟨Equivₓ.subtypeEquiv Finsupp.equivFunOnFintype $ fun f => _⟩
+      refine' Quotientₓ.sound ⟨(Equivₓ.subtypeEquiv Finsupp.equivFunOnFintype) fun f => _⟩
       refine' forall_congrₓ fun n => le_tsub_iff_right _
       exact Fintype.card_pos_iff.2 ⟨0⟩
     _ = # (σ → { n // n < Fintype.card K }) :=
@@ -179,7 +179,7 @@ theorem dim_R : Module.rank K (R σ K) = Fintype.card (σ → K) :=
     
 
 instance : FiniteDimensional K (R σ K) :=
-  IsNoetherian.iff_fg.1 $
+  IsNoetherian.iff_fg.1 <|
     IsNoetherian.iff_dim_lt_omega.mpr
       (by
         simpa only [dim_R] using Cardinal.nat_lt_omega (Fintype.card (σ → K)))

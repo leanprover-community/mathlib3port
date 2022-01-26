@@ -108,10 +108,10 @@ theorem hausdorff_measure_of_lt_dimH {s : Set X} {d : ℝ≥0 } (h : ↑d < dimH
   exact top_unique (hsd' ▸ hausdorff_measure_mono hdd'.le _)
 
 theorem dimH_le {s : Set X} {d : ℝ≥0∞} (H : ∀ d' : ℝ≥0 , μH[d'] s = ∞ → ↑d' ≤ d) : dimH s ≤ d :=
-  (dimH_def s).trans_le $ bsupr_le H
+  (dimH_def s).trans_le <| bsupr_le H
 
 theorem dimH_le_of_hausdorff_measure_ne_top {s : Set X} {d : ℝ≥0 } (h : μH[d] s ≠ ∞) : dimH s ≤ d :=
-  le_of_not_ltₓ $ mt hausdorff_measure_of_lt_dimH h
+  le_of_not_ltₓ <| mt hausdorff_measure_of_lt_dimH h
 
 theorem le_dimH_of_hausdorff_measure_eq_top {s : Set X} {d : ℝ≥0 } (h : μH[d] s = ∞) : ↑d ≤ dimH s := by
   rw [dimH_def]
@@ -124,10 +124,10 @@ theorem hausdorff_measure_of_dimH_lt {s : Set X} {d : ℝ≥0 } (h : dimH s < d)
   exact (hausdorff_measure_zero_or_top hd'd s).resolve_right fun h => hsd'.not_le (le_bsupr d' h)
 
 theorem measure_zero_of_dimH_lt {μ : Measureₓ X} {d : ℝ≥0 } (h : μ ≪ μH[d]) {s : Set X} (hd : dimH s < d) : μ s = 0 :=
-  h $ hausdorff_measure_of_dimH_lt hd
+  h <| hausdorff_measure_of_dimH_lt hd
 
 theorem le_dimH_of_hausdorff_measure_ne_zero {s : Set X} {d : ℝ≥0 } (h : μH[d] s ≠ 0) : ↑d ≤ dimH s :=
-  le_of_not_ltₓ $ mt hausdorff_measure_of_dimH_lt h
+  le_of_not_ltₓ <| mt hausdorff_measure_of_dimH_lt h
 
 theorem dimH_of_hausdorff_measure_ne_zero_ne_top {d : ℝ≥0 } {s : Set X} (h : μH[d] s ≠ 0) (h' : μH[d] s ≠ ∞) :
     dimH s = d :=
@@ -139,7 +139,7 @@ end Measurable
 theorem dimH_mono {s t : Set X} (h : s ⊆ t) : dimH s ≤ dimH t := by
   let this' := borel X
   have : BorelSpace X := ⟨rfl⟩
-  exact dimH_le fun d hd => le_dimH_of_hausdorff_measure_eq_top $ top_unique $ hd ▸ measure_mono h
+  exact dimH_le fun d hd => le_dimH_of_hausdorff_measure_eq_top <| top_unique <| hd ▸ measure_mono h
 
 theorem dimH_subsingleton {s : Set X} (h : s.subsingleton) : dimH s = 0 := by
   let this' := borel X
@@ -162,7 +162,7 @@ theorem dimH_singleton (x : X) : dimH ({x} : Set X) = 0 :=
 theorem dimH_Union [Encodable ι] (s : ι → Set X) : dimH (⋃ i, s i) = ⨆ i, dimH (s i) := by
   let this' := borel X
   have : BorelSpace X := ⟨rfl⟩
-  refine' le_antisymmₓ (dimH_le $ fun d hd => _) (supr_le $ fun i => dimH_mono $ subset_Union _ _)
+  refine' le_antisymmₓ (dimH_le fun d hd => _) (supr_le fun i => dimH_mono <| subset_Union _ _)
   contrapose! hd
   have : ∀ i, μH[d] (s i) = 0 := fun i => hausdorff_measure_of_dimH_lt ((le_supr (fun i => dimH (s i)) i).trans_lt hd)
   rw [measure_Union_null this]
@@ -222,7 +222,7 @@ theorem exists_mem_nhds_within_lt_dimH_of_lt_dimH {s : Set X} {r : ℝ≥0∞} (
 of a set `s` is the supremum over `x ∈ s` of the limit superiors of `dimH t` along
 `(𝓝[s] x).lift' powerset`. -/
 theorem bsupr_limsup_dimH (s : Set X) : (⨆ x ∈ s, limsup ((𝓝[s] x).lift' powerset) dimH) = dimH s := by
-  refine' le_antisymmₓ (bsupr_le $ fun x hx => _) _
+  refine' le_antisymmₓ (bsupr_le fun x hx => _) _
   · refine'
       Limsup_le_of_le
         (by
@@ -243,7 +243,7 @@ theorem bsupr_limsup_dimH (s : Set X) : (⨆ x ∈ s, limsup ((𝓝[s] x).lift' 
 of a set `s` is the supremum over all `x` of the limit superiors of `dimH t` along
 `(𝓝[s] x).lift' powerset`. -/
 theorem supr_limsup_dimH (s : Set X) : (⨆ x, limsup ((𝓝[s] x).lift' powerset) dimH) = dimH s := by
-  refine' le_antisymmₓ (supr_le $ fun x => _) _
+  refine' le_antisymmₓ (supr_le fun x => _) _
   · refine'
       Limsup_le_of_le
         (by
@@ -409,7 +409,7 @@ variable {𝕜 E F : Type _} [NondiscreteNormedField 𝕜] [NormedGroup E] [Norm
 
 @[simp]
 theorem dimH_image (e : E ≃L[𝕜] F) (s : Set E) : dimH (e '' s) = dimH s :=
-  le_antisymmₓ (e.lipschitz.dimH_image_le s) $ by
+  le_antisymmₓ (e.lipschitz.dimH_image_le s) <| by
     simpa only [e.symm_image_image] using e.symm.lipschitz.dimH_image_le (e '' s)
 
 @[simp]
@@ -485,7 +485,7 @@ end Real
 variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedGroup F] [NormedSpace ℝ F]
 
 theorem dense_compl_of_dimH_lt_finrank {s : Set E} (hs : dimH s < finrank ℝ E) : Dense (sᶜ) := by
-  refine' fun x => mem_closure_iff_nhds.2 fun t ht => ne_empty_iff_nonempty.1 $ fun he => hs.not_le _
+  refine' fun x => mem_closure_iff_nhds.2 fun t ht => ne_empty_iff_nonempty.1 fun he => hs.not_le _
   rw [← diff_eq, diff_eq_empty] at he
   rw [← Real.dimH_of_mem_nhds ht]
   exact dimH_mono he
@@ -505,7 +505,7 @@ dimension of `s`.
 TODO: do we actually need `convex ℝ s`? -/
 theorem TimesContDiffOn.dimH_image_le {f : E → F} {s t : Set E} (hf : TimesContDiffOn ℝ 1 f s) (hc : Convex ℝ s)
     (ht : t ⊆ s) : dimH (f '' t) ≤ dimH t :=
-  dimH_image_le_of_locally_lipschitz_on $ fun x hx =>
+  dimH_image_le_of_locally_lipschitz_on fun x hx =>
     let ⟨C, u, hu, hf⟩ := (hf x (ht hx)).exists_lipschitz_on_with hc
     ⟨C, u, nhds_within_mono _ ht hu, hf⟩
 
@@ -524,12 +524,12 @@ vector spaces. Suppose that `f` is `C¹` smooth on a convex set `s` of Hausdorff
 less than the dimension of `F`. Then the complement of the image `f '' s` is dense in `F`. -/
 theorem TimesContDiffOn.dense_compl_image_of_dimH_lt_finrank [FiniteDimensional ℝ F] {f : E → F} {s t : Set E}
     (h : TimesContDiffOn ℝ 1 f s) (hc : Convex ℝ s) (ht : t ⊆ s) (htF : dimH t < finrank ℝ F) : Dense ((f '' t)ᶜ) :=
-  dense_compl_of_dimH_lt_finrank $ (h.dimH_image_le hc ht).trans_lt htF
+  dense_compl_of_dimH_lt_finrank <| (h.dimH_image_le hc ht).trans_lt htF
 
 /-- A particular case of Sard's Theorem. If `f` is a `C¹` smooth map from a real vector space to a
 real vector space `F` of strictly larger dimension, then the complement of the range of `f` is dense
 in `F`. -/
 theorem TimesContDiff.dense_compl_range_of_finrank_lt_finrank [FiniteDimensional ℝ F] {f : E → F}
     (h : TimesContDiff ℝ 1 f) (hEF : finrank ℝ E < finrank ℝ F) : Dense (range fᶜ) :=
-  dense_compl_of_dimH_lt_finrank $ h.dimH_range_le.trans_lt $ Ennreal.coe_nat_lt_coe_nat.2 hEF
+  dense_compl_of_dimH_lt_finrank <| h.dimH_range_le.trans_lt <| Ennreal.coe_nat_lt_coe_nat.2 hEF
 

@@ -169,7 +169,7 @@ theorem coeff_X_mul (p : Polynomial R) (n : ℕ) : coeff (X * p) (n + 1) = coeff
   rw [(commute_X p).Eq, coeff_mul_X]
 
 theorem mul_X_pow_eq_zero {p : Polynomial R} {n : ℕ} (H : p * X ^ n = 0) : p = 0 :=
-  ext $ fun k => (coeff_mul_X_pow p n k).symm.trans $ ext_iff.1 H (k + n)
+  ext fun k => (coeff_mul_X_pow p n k).symm.trans <| ext_iff.1 H (k + n)
 
 theorem C_mul_X_pow_eq_monomial (c : R) (n : ℕ) : C c * X ^ n = monomial n c := by
   ext1

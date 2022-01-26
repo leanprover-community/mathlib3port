@@ -46,7 +46,7 @@ instance : NondiscreteNormedField ℂ where
       simp [norm] <;> norm_num⟩
 
 instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R ℂ where
-  norm_algebra_map_eq := fun x => (abs_of_real $ algebraMap R ℝ x).trans (norm_algebra_map_eq ℝ x)
+  norm_algebra_map_eq := fun x => (abs_of_real <| algebraMap R ℝ x).trans (norm_algebra_map_eq ℝ x)
   toAlgebra := Complex.algebra
 
 /-- The module structure from `module.complex_to_real` is a normed space. -/
@@ -66,8 +66,8 @@ theorem norm_real (r : ℝ) : ∥(r : ℂ)∥ = ∥r∥ :=
   abs_of_real _
 
 @[simp]
-theorem norm_rat (r : ℚ) : ∥(r : ℂ)∥ = |(r : ℝ)| := by
-  suffices ∥((r : ℝ) : ℂ)∥ = |r| by
+theorem norm_rat (r : ℚ) : ∥(r : ℂ)∥ = abs (r : ℝ) := by
+  suffices ∥((r : ℝ) : ℂ)∥ = abs r by
     simpa
   rw [norm_real, Real.norm_eq_abs]
 
@@ -76,8 +76,8 @@ theorem norm_nat (n : ℕ) : ∥(n : ℂ)∥ = n :=
   abs_of_nat _
 
 @[simp]
-theorem norm_int {n : ℤ} : ∥(n : ℂ)∥ = |n| := by
-  suffices ∥((n : ℝ) : ℂ)∥ = |n| by
+theorem norm_int {n : ℤ} : ∥(n : ℂ)∥ = abs n := by
+  suffices ∥((n : ℝ) : ℂ)∥ = abs n by
     simpa
   rw [norm_real, Real.norm_eq_abs]
 
@@ -121,7 +121,7 @@ theorem re_clm_apply (z : ℂ) : (re_clm : ℂ → ℝ) z = z.re :=
 
 @[simp]
 theorem re_clm_norm : ∥re_clm∥ = 1 :=
-  le_antisymmₓ (LinearMap.mk_continuous_norm_le _ zero_le_one _) $
+  le_antisymmₓ (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
     calc
       1 = ∥re_clm 1∥ := by
         simp
@@ -150,7 +150,7 @@ theorem im_clm_apply (z : ℂ) : (im_clm : ℂ → ℝ) z = z.im :=
 
 @[simp]
 theorem im_clm_norm : ∥im_clm∥ = 1 :=
-  le_antisymmₓ (LinearMap.mk_continuous_norm_le _ zero_le_one _) $
+  le_antisymmₓ (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
     calc
       1 = ∥im_clm I∥ := by
         simp

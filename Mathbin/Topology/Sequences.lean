@@ -36,7 +36,7 @@ variable [TopologicalSpace α] [TopologicalSpace β]
 holds. -/
 theorem TopologicalSpace.seq_tendsto_iff {x : ℕ → α} {limit : α} :
     tendsto x at_top (𝓝 limit) ↔ ∀ U : Set α, limit ∈ U → IsOpen U → ∃ N, ∀, ∀ n ≥ N, ∀, x n ∈ U :=
-  (at_top_basis.tendsto_iff (nhds_basis_opens limit)).trans $ by
+  (at_top_basis.tendsto_iff (nhds_basis_opens limit)).trans <| by
     simp only [and_imp, exists_prop, true_andₓ, Set.mem_Ici, ge_iff_le, id]
 
 /-- The sequential closure of a subset M ⊆ α of a topological space α is
@@ -128,9 +128,9 @@ theorem continuous_iff_sequentially_continuous {f : α → β} [SequentialSpace 
   Iff.intro (fun _ => ‹Continuous f›.to_sequentially_continuous) fun this : SequentiallyContinuous f =>
     show Continuous f from
       suffices h : ∀ {A : Set β}, IsClosed A → IsSeqClosed (f ⁻¹' A) from
-        continuous_iff_is_closed.mpr fun A _ => is_seq_closed_iff_is_closed.mp $ h ‹IsClosed A›
+        continuous_iff_is_closed.mpr fun A _ => is_seq_closed_iff_is_closed.mp <| h ‹IsClosed A›
       fun A _ : IsClosed A =>
-      is_seq_closed_of_def $ fun x : ℕ → α p _ : ∀ n, f (x n) ∈ A _ : x ⟶ p =>
+      is_seq_closed_of_def fun x : ℕ → α p _ : ∀ n, f (x n) ∈ A _ : x ⟶ p =>
         have : (f ∘ x) ⟶ f p := ‹SequentiallyContinuous f› x ‹x ⟶ p›
         show f p ∈ A from mem_of_is_closed_sequential ‹IsClosed A› ‹∀ n, f (x n) ∈ A› ‹(f ∘ x) ⟶ f p›
 
@@ -261,12 +261,12 @@ theorem lebesgue_number_lemma_seq {ι : Type _} [is_countably_generated (𝓤 β
     obtain ⟨N₂, h₂⟩ : ∃ N₂, V (φ N₂) ⊆ W := by
       rcases hV.to_has_basis.mem_iff.mp W_in with ⟨N, _, hN⟩
       use N
-      exact subset.trans (hV.antitone $ φ_mono.id_le _) hN
+      exact subset.trans (hV.antitone <| φ_mono.id_le _) hN
     have : φ N₂ ≤ φ (max N₁ N₂) := φ_mono.le_iff_le.mpr (le_max_rightₓ _ _)
     exact ⟨max N₁ N₂, h₁ _ (le_max_leftₓ _ _), trans (hV.antitone this) h₂⟩
   suffices : ball (x (φ N)) (V (φ N)) ⊆ c i₀
   exact hx (φ N) i₀ this
-  calc ball (x $ φ N) (V $ φ N) ⊆ ball (x $ φ N) W := preimage_mono hVNW _ ⊆ ball x₀ (V n₀) :=
+  calc ball (x <| φ N) (V <| φ N) ⊆ ball (x <| φ N) W := preimage_mono hVNW _ ⊆ ball x₀ (V n₀) :=
       ball_subset_of_comp_subset x_φ_N_in hWW _ ⊆ c i₀ := hn₀
 
 theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := by
@@ -295,10 +295,10 @@ theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := 
   obtain ⟨N, hN⟩ : ∃ N, ∀ p q, p ≥ N → q ≥ N → (u (φ p), u (φ q)) ∈ V
   exact huφ.cauchy_seq.mem_entourage V_in
   specialize hN N (N + 1) (le_reflₓ N) (Nat.le_succₓ N)
-  specialize hu (φ $ N + 1) (φ N) (hφ $ lt_add_one N)
+  specialize hu (φ <| N + 1) (φ N) (hφ <| lt_add_one N)
   exact hu hN
 
-protected theorem IsSeqCompact.is_compact [is_countably_generated $ 𝓤 β] (hs : IsSeqCompact s) : IsCompact s := by
+protected theorem IsSeqCompact.is_compact [is_countably_generated <| 𝓤 β] (hs : IsSeqCompact s) : IsCompact s := by
   classical
   rw [is_compact_iff_finite_subcover]
   intro ι U Uop s_sub
@@ -323,10 +323,10 @@ protected theorem IsSeqCompact.is_compact [is_countably_generated $ 𝓤 β] (hs
 
 /-- A version of Bolzano-Weistrass: in a uniform space with countably generated uniformity filter
 (e.g., in a metric space), a set is compact if and only if it is sequentially compact. -/
-protected theorem UniformSpace.compact_iff_seq_compact [is_countably_generated $ 𝓤 β] : IsCompact s ↔ IsSeqCompact s :=
+protected theorem UniformSpace.compact_iff_seq_compact [is_countably_generated <| 𝓤 β] : IsCompact s ↔ IsSeqCompact s :=
   ⟨fun H => H.is_seq_compact, fun H => H.is_compact⟩
 
-theorem UniformSpace.compact_space_iff_seq_compact_space [is_countably_generated $ 𝓤 β] :
+theorem UniformSpace.compact_space_iff_seq_compact_space [is_countably_generated <| 𝓤 β] :
     CompactSpace β ↔ SeqCompactSpace β :=
   have key : IsCompact (univ : Set β) ↔ IsSeqCompact univ := UniformSpace.compact_iff_seq_compact
   ⟨fun ⟨h⟩ => ⟨key.mp h⟩, fun ⟨h⟩ => ⟨key.mpr h⟩⟩
@@ -342,7 +342,7 @@ open Metric
 /-- A version of Bolzano-Weistrass: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. This version assumes only
 that the sequence is frequently in some bounded set. -/
-theorem tendsto_subseq_of_frequently_bounded [ProperSpace β] (hs : Bounded s) {u : ℕ → β}
+theorem tendsto_subseq_of_frequently_bounded [ProperSpace β] (hs : bounded s) {u : ℕ → β}
     (hu : ∃ᶠ n in at_top, u n ∈ s) : ∃ b ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 b) := by
   have hcs : IsCompact (Closure s) := compact_iff_closed_bounded.mpr ⟨is_closed_closure, bounded_closure_of_bounded hs⟩
   replace hcs : IsSeqCompact (Closure s)
@@ -355,9 +355,9 @@ theorem tendsto_subseq_of_frequently_bounded [ProperSpace β] (hs : Bounded s) {
 
 /-- A version of Bolzano-Weistrass: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. -/
-theorem tendsto_subseq_of_bounded [ProperSpace β] (hs : Bounded s) {u : ℕ → β} (hu : ∀ n, u n ∈ s) :
+theorem tendsto_subseq_of_bounded [ProperSpace β] (hs : bounded s) {u : ℕ → β} (hu : ∀ n, u n ∈ s) :
     ∃ b ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 b) :=
-  tendsto_subseq_of_frequently_bounded hs $ frequently_of_forall hu
+  tendsto_subseq_of_frequently_bounded hs <| frequently_of_forall hu
 
 theorem SeqCompact.lebesgue_number_lemma_of_metric {ι : Type _} {c : ι → Set β} (hs : IsSeqCompact s)
     (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ δ > 0, ∀, ∀ x ∈ s, ∀, ∃ i, ball x δ ⊆ c i := by

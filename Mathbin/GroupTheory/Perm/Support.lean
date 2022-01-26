@@ -43,7 +43,7 @@ theorem disjoint_comm : Disjoint f g ↔ Disjoint g f :=
   ⟨Disjoint.symm, Disjoint.symm⟩
 
 theorem disjoint.commute (h : Disjoint f g) : Commute f g :=
-  Equivₓ.ext $ fun x =>
+  Equivₓ.ext fun x =>
     (h x).elim
       (fun hf =>
         (h (g x)).elim
@@ -73,22 +73,22 @@ theorem disjoint_refl_iff : Disjoint f f ↔ f = 1 := by
   ext x
   cases' h x with hx hx <;> simp [hx]
 
-theorem disjoint.inv_left (h : Disjoint f g) : Disjoint (f⁻¹) g := by
+theorem disjoint.inv_left (h : Disjoint f g) : Disjoint f⁻¹ g := by
   intro x
   rw [inv_eq_iff_eq, eq_comm]
   exact h x
 
-theorem disjoint.inv_right (h : Disjoint f g) : Disjoint f (g⁻¹) :=
+theorem disjoint.inv_right (h : Disjoint f g) : Disjoint f g⁻¹ :=
   h.symm.inv_left.symm
 
 @[simp]
-theorem disjoint_inv_left_iff : Disjoint (f⁻¹) g ↔ Disjoint f g := by
+theorem disjoint_inv_left_iff : Disjoint f⁻¹ g ↔ Disjoint f g := by
   refine' ⟨fun h => _, disjoint.inv_left⟩
   convert h.inv_left
   exact (inv_invₓ _).symm
 
 @[simp]
-theorem disjoint_inv_right_iff : Disjoint f (g⁻¹) ↔ Disjoint f g := by
+theorem disjoint_inv_right_iff : Disjoint f g⁻¹ ↔ Disjoint f g := by
   rw [disjoint_comm, disjoint_inv_left_iff, disjoint_comm]
 
 theorem disjoint.mul_left (H1 : Disjoint f h) (H2 : Disjoint g h) : Disjoint (f * g) h := fun x => by
@@ -107,7 +107,7 @@ theorem disjoint_prod_right (l : List (perm α)) (h : ∀, ∀ g ∈ l, ∀, Dis
     
 
 theorem disjoint_prod_perm {l₁ l₂ : List (perm α)} (hl : l₁.pairwise Disjoint) (hp : l₁ ~ l₂) : l₁.prod = l₂.prod :=
-  hp.prod_eq' $ hl.imp $ fun f g => disjoint.commute
+  hp.prod_eq' <| hl.imp fun f g => disjoint.commute
 
 theorem nodup_of_pairwise_disjoint {l : List (perm α)} (h1 : (1 : perm α) ∉ l) (h2 : l.pairwise Disjoint) : l.nodup :=
   by
@@ -183,7 +183,7 @@ theorem is_swap.of_subtype_is_swap {p : α → Prop} [DecidablePred p] {f : perm
   ⟨x, y, by
     simp only [Ne.def] at hxy
     exact hxy.1,
-    Equivₓ.ext $ fun z => by
+    Equivₓ.ext fun z => by
       rw [hxy.2, of_subtype]
       simp only [swap_apply_def, coe_fn_mk, swap_inv, Subtype.mk_eq_mk, MonoidHom.coe_mk]
       split_ifs <;>
@@ -208,7 +208,7 @@ section Set
 
 variable (p q : perm α)
 
-theorem set_support_inv_eq : { x | (p⁻¹) x ≠ x } = { x | p x ≠ x } := by
+theorem set_support_inv_eq : { x | p⁻¹ x ≠ x } = { x | p x ≠ x } := by
   ext x
   simp only [Set.mem_set_of_eq, Ne.def]
   rw [inv_def, symm_apply_eq, eq_comm]
@@ -286,7 +286,7 @@ theorem support_pow_le (σ : perm α) (n : ℕ) : (σ ^ n).support ≤ σ.suppor
   mem_support.mpr fun h2 => mem_support.mp h1 (pow_apply_eq_self_of_apply_eq_self h2 n)
 
 @[simp]
-theorem support_inv (σ : perm α) : support (σ⁻¹) = σ.support := by
+theorem support_inv (σ : perm α) : support σ⁻¹ = σ.support := by
   simp_rw [Finset.ext_iff, mem_support, not_iff_not, inv_eq_iff_eq.trans eq_comm, iff_selfₓ, imp_true_iff]
 
 @[simp]
@@ -539,7 +539,7 @@ theorem card_support_swap {x y : α} (hxy : x ≠ y) : (swap x y).support.card =
         ⟨x ::ₘ y ::ₘ 0, by
           simp [hxy]⟩
     from
-    congr_argₓ card $ by
+    congr_argₓ card <| by
       simp [support_swap hxy, *, Finset.ext_iff]
 
 @[simp]

@@ -87,7 +87,7 @@ variable {β : Type _} [UniformSpace β]
 
 protected theorem funext [T2Space β] {f g : hatα → β} (hf : Continuous f) (hg : Continuous g)
     (h : ∀ a, f (ι a) = g (ι a)) : f = g :=
-  funext $ fun a => pkg.induction_on a (is_closed_eq hf hg) h
+  funext fun a => pkg.induction_on a (is_closed_eq hf hg) h
 
 section Extend
 
@@ -130,9 +130,9 @@ theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : Unifor
 
 @[simp]
 theorem extend_comp_coe {f : hatα → β} (hf : UniformContinuous f) : pkg.extend (f ∘ ι) = f :=
-  funext $ fun x =>
+  funext fun x =>
     pkg.induction_on x (is_closed_eq pkg.continuous_extend hf.continuous) fun y =>
-      pkg.extend_coe (hf.comp $ pkg.uniform_continuous_coe) y
+      pkg.extend_coe (hf.comp <| pkg.uniform_continuous_coe) y
 
 end Extend
 
@@ -165,7 +165,7 @@ theorem map_coe (hf : UniformContinuous f) (a : α) : map f (ι a) = ι' (f a) :
   pkg.extend_coe (pkg'.uniform_continuous_coe.comp hf) a
 
 theorem map_unique {f : α → β} {g : hatα → hatβ} (hg : UniformContinuous g) (h : ∀ a, ι' (f a) = g (ι a)) : map f = g :=
-  pkg.funext (pkg.continuous_map _ _) hg.continuous $ by
+  pkg.funext (pkg.continuous_map _ _) hg.continuous <| by
     intro a
     change pkg.extend (ι' ∘ f) _ = _
     simp only [· ∘ ·, h]
@@ -179,7 +179,7 @@ variable {γ : Type _} [UniformSpace γ]
 
 theorem extend_map [CompleteSpace γ] [SeparatedSpace γ] {f : β → γ} {g : α → β} (hf : UniformContinuous f)
     (hg : UniformContinuous g) : pkg'.extend f ∘ map g = pkg.extend (f ∘ g) :=
-  pkg.funext (pkg'.continuous_extend.comp (pkg.continuous_map pkg' _)) pkg.continuous_extend $ fun a => by
+  (pkg.funext (pkg'.continuous_extend.comp (pkg.continuous_map pkg' _)) pkg.continuous_extend) fun a => by
     rw [pkg.extend_coe (hf.comp hg), comp_app, pkg.map_coe pkg' hg, pkg'.extend_coe hf]
 
 variable (pkg'' : AbstractCompletion γ)
@@ -263,13 +263,13 @@ open Function
 
 /-- Extend two variable map to completions. -/
 protected def extend₂ (f : α → β → γ) : hatα → hatβ → γ :=
-  curry $ (pkg.prod pkg').extend (uncurry f)
+  curry <| (pkg.prod pkg').extend (uncurry f)
 
 section SeparatedSpace
 
 variable [SeparatedSpace γ] {f : α → β → γ}
 
-theorem extension₂_coe_coe (hf : UniformContinuous $ uncurry f) (a : α) (b : β) :
+theorem extension₂_coe_coe (hf : UniformContinuous <| uncurry f) (a : α) (b : β) :
     pkg.extend₂ pkg' f (ι a) (ι' b) = f a b :=
   show (pkg.prod pkg').extend (uncurry f) ((pkg.prod pkg').coe (a, b)) = uncurry f (a, b) from
     (pkg.prod pkg').extend_coe hf _

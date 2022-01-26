@@ -80,12 +80,12 @@ attribute [ext] partial_refinement
 instance : PartialOrderₓ (partial_refinement u s) where
   le := fun v₁ v₂ => v₁.carrier ⊆ v₂.carrier ∧ ∀, ∀ i ∈ v₁.carrier, ∀, v₁ i = v₂ i
   le_refl := fun v => ⟨subset.refl _, fun _ _ => rfl⟩
-  le_trans := fun v₁ v₂ v₃ h₁₂ h₂₃ => ⟨subset.trans h₁₂.1 h₂₃.1, fun i hi => (h₁₂.2 i hi).trans (h₂₃.2 i $ h₁₂.1 hi)⟩
+  le_trans := fun v₁ v₂ v₃ h₁₂ h₂₃ => ⟨subset.trans h₁₂.1 h₂₃.1, fun i hi => (h₁₂.2 i hi).trans (h₂₃.2 i <| h₁₂.1 hi)⟩
   le_antisymm := fun v₁ v₂ h₁₂ h₂₁ =>
     have hc : v₁.carrier = v₂.carrier := subset.antisymm h₁₂.1 h₂₁.1
     ext _ _
-      (funext $ fun x =>
-        if hx : x ∈ v₁.carrier then h₁₂.2 _ hx else (v₁.apply_eq hx).trans (Eq.symm $ v₂.apply_eq $ hc ▸ hx))
+      (funext fun x =>
+        if hx : x ∈ v₁.carrier then h₁₂.2 _ hx else (v₁.apply_eq hx).trans (Eq.symm <| v₂.apply_eq <| hc ▸ hx))
       hc
 
 /-- If two partial refinements `v₁`, `v₂` belong to a chain (hence, they are comparable)
@@ -123,7 +123,7 @@ theorem mem_find_carrier_iff {c : Set (partial_refinement u s)} {i : ι} (ne : c
 
 theorem find_apply_of_mem {c : Set (partial_refinement u s)} (hc : chain (· ≤ ·) c) (ne : c.nonempty) {i v} (hv : v ∈ c)
     (hi : i ∈ carrier v) : find c Ne i i = v i :=
-  apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 $ mem_Union₂.2 ⟨v, hv, hi⟩) hi
+  apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 <| mem_Union₂.2 ⟨v, hv, hi⟩) hi
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c)
 /-- Least upper bound of a nonempty chain of partial refinements. -/
@@ -146,7 +146,7 @@ def chain_Sup (c : Set (partial_refinement u s)) (hc : chain (· ≤ ·) c) (ne 
     use j
     have hj' : x ∈ u j := (v i).Subset _ hj
     have : v j ≤ v i := (hc.total_of_refl (hvc _ hxi) (hvc _ hj')).elim (fun h => (hmax j hj' h).Ge) id
-    rwa [find_apply_of_mem hc Ne (hvc _ hxi) (this.1 $ hiv _ hj')]
+    rwa [find_apply_of_mem hc Ne (hvc _ hxi) (this.1 <| hiv _ hj')]
     
 
 /-- `chain_Sup hu c hc ne hfin hU` is an upper bound of the chain `c`. -/
@@ -168,7 +168,7 @@ theorem exists_gt (v : partial_refinement u s) (hs : IsClosed s) (i : ι) (hi : 
     rcases mem_Union.1 (v.subset_Union hxs) with ⟨j, hj⟩
     exact (em (j = i)).elim (fun h => h ▸ hj) fun h => (H j h hj).elim
   have C : IsClosed (s ∩ ⋂ (j) (_ : j ≠ i), v jᶜ) :=
-    IsClosed.inter hs (is_closed_bInter $ fun _ _ => is_closed_compl_iff.2 $ v.is_open _)
+    IsClosed.inter hs (is_closed_bInter fun _ _ => is_closed_compl_iff.2 <| v.is_open _)
   rcases normal_exists_closure_subset C (v.is_open i) I with ⟨vi, ovi, hvi, cvi⟩
   refine' ⟨⟨update v i vi, insert i v.carrier, _, _, _, _⟩, _, _⟩
   · intro j
@@ -199,7 +199,7 @@ theorem exists_gt (v : partial_refinement u s) (hs : IsClosed s) (i : ι) (hi : 
   · refine' ⟨subset_insert _ _, fun j hj => _⟩
     exact (update_noteq (ne_of_mem_of_not_mem hj hi) _ _).symm
     
-  · exact fun hle => hi (hle.1 $ mem_insert _ _)
+  · exact fun hle => hi (hle.1 <| mem_insert _ _)
     
 
 end PartialRefinement
@@ -235,7 +235,7 @@ theorem exists_subset_Union_closed_subset (hs : IsClosed s) (uo : ∀ i, IsOpen 
     (uf : ∀, ∀ x ∈ s, ∀, finite { i | x ∈ u i }) (us : s ⊆ ⋃ i, u i) :
     ∃ v : ι → Set X, s ⊆ Union v ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
   let ⟨v, hsv, hvo, hv⟩ := exists_subset_Union_closure_subset hs uo uf us
-  ⟨fun i => Closure (v i), subset.trans hsv (Union_mono $ fun i => subset_closure), fun i => is_closed_closure, hv⟩
+  ⟨fun i => Closure (v i), subset.trans hsv (Union_mono fun i => subset_closure), fun i => is_closed_closure, hv⟩
 
 /-- Shrinking lemma. A point-finite open cover of a closed subset of a normal space can be "shrunk"
 to a new open cover so that the closure of each new open set is contained in the corresponding

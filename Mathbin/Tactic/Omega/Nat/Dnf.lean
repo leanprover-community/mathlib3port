@@ -23,7 +23,7 @@ def dnf_core : preform → List clause
 
 -- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
 theorem exists_clause_holds_core {v : Nat → Nat} :
-    ∀ {p : preform}, p.neg_free → p.sub_free → p.holds v → ∃ c ∈ dnf_core p, clause.holds (fun x => ↑v x) c := by
+    ∀ {p : preform}, p.neg_free → p.sub_free → p.holds v → ∃ c ∈ dnf_core p, clause.holds (fun x => ↑(v x)) c := by
   run_tac
     preform.induce sorry
   · apply List.exists_mem_cons_ofₓ
@@ -120,7 +120,7 @@ theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} :
     apply holds_nonneg_consts_core h1
 
 theorem exists_clause_holds {v : Nat → Nat} {p : preform} :
-    p.neg_free → p.sub_free → p.holds v → ∃ c ∈ dnf p, clause.holds (fun x => ↑v x) c := by
+    p.neg_free → p.sub_free → p.holds v → ∃ c ∈ dnf p, clause.holds (fun x => ↑(v x)) c := by
   intro h1 h2 h3
   rcases exists_clause_holds_core h1 h2 h3 with ⟨c, h4, h5⟩
   exists nonnegate c

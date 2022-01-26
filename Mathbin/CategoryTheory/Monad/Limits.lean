@@ -46,7 +46,7 @@ def γ : D ⋙ T.forget ⋙ ↑T ⟶ D ⋙ T.forget where
 @[simps π_app]
 def new_cone : cone (D ⋙ forget T) where
   x := T.obj c.X
-  π := (functor.const_comp _ _ (↑T)).inv ≫ whisker_right c.π T ≫ γ D
+  π := (functor.const_comp _ _ ↑T).inv ≫ whisker_right c.π T ≫ γ D
 
 /-- The algebra structure which will be the apex of the new limit cone for `D`. -/
 @[simps]
@@ -54,12 +54,12 @@ def cone_point : algebra T where
   a := c.X
   a := t.lift (new_cone D c)
   unit' :=
-    t.hom_ext $ fun j => by
+    t.hom_ext fun j => by
       rw [category.assoc, t.fac, new_cone_π_app, ← T.η.naturality_assoc, functor.id_map, (D.obj j).Unit]
       dsimp
       simp
   assoc' :=
-    t.hom_ext $ fun j => by
+    t.hom_ext fun j => by
       rw [category.assoc, category.assoc, t.fac (new_cone D c), new_cone_π_app, ← functor.map_comp_assoc,
         t.fac (new_cone D c), new_cone_π_app, ← T.μ.naturality_assoc, (D.obj j).assoc, functor.map_comp, category.assoc]
       rfl
@@ -82,7 +82,7 @@ def lifted_cone_is_limit : is_limit (lifted_cone D c t) where
   lift := fun s =>
     { f := t.lift ((forget T).mapCone s),
       h' :=
-        t.hom_ext $ fun j => by
+        t.hom_ext fun j => by
           dsimp
           rw [category.assoc, category.assoc, t.fac, new_cone_π_app, ← functor.map_comp_assoc, t.fac,
             functor.map_cone_π_app]
@@ -187,7 +187,7 @@ def lifted_cocone_is_colimit : is_colimit (lifted_cocone c t) where
   desc := fun s =>
     { f := t.desc ((forget T).mapCocone s),
       h' :=
-        (is_colimit_of_preserves (T : C ⥤ C) t).hom_ext $ fun j => by
+        (is_colimit_of_preserves (T : C ⥤ C) t).hom_ext fun j => by
           dsimp
           rw [← functor.map_comp_assoc, ← category.assoc, t.fac, commuting, category.assoc, t.fac]
           apply algebra.hom.h }
@@ -206,7 +206,7 @@ which the monad itself preserves.
 -/
 noncomputable instance forget_creates_colimit (D : J ⥤ algebra T) [preserves_colimit (D ⋙ forget T) (T : C ⥤ C)]
     [preserves_colimit ((D ⋙ forget T) ⋙ ↑T) (T : C ⥤ C)] : creates_colimit D (forget T) :=
-  creates_colimit_of_reflects_iso $ fun c t =>
+  creates_colimit_of_reflects_iso fun c t =>
     { liftedCocone :=
         { x := cocone_point c t,
           ι :=

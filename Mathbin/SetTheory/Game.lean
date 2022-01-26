@@ -295,7 +295,7 @@ theorem quot_mul_comm : ∀ x y : Pgame.{u}, ⟦x * y⟧ = ⟦y * x⟧
 
 /-- `x * y` is equivalent to `y * x`. -/
 theorem mul_comm_equiv (x y : Pgame) : x * y ≈ y * x :=
-  Quotientₓ.exact $ quot_mul_comm _ _
+  Quotientₓ.exact <| quot_mul_comm _ _
 
 /-- `x * 0` has exactly the same moves as `0`. -/
 def mul_zero_relabelling : ∀ x : Pgame, relabelling (x * 0) 0
@@ -440,7 +440,7 @@ theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
 
 /-- `x * (y + z)` is equivalent to `x * y + x * z.`-/
 theorem left_distrib_equiv (x y z : Pgame) : x * (y + z) ≈ x * y + x * z :=
-  Quotientₓ.exact $ quot_left_distrib _ _ _
+  Quotientₓ.exact <| quot_left_distrib _ _ _
 
 @[simp]
 theorem quot_left_distrib_sub (x y z : Pgame) : ⟦x * (y - z)⟧ = ⟦x * y⟧ - ⟦x * z⟧ := by
@@ -453,7 +453,7 @@ theorem quot_right_distrib (x y z : Pgame) : ⟦(x + y) * z⟧ = ⟦x * z⟧ + �
 
 /-- `(x + y) * z` is equivalent to `x * z + y * z.`-/
 theorem right_distrib_equiv (x y z : Pgame) : (x + y) * z ≈ x * z + y * z :=
-  Quotientₓ.exact $ quot_right_distrib _ _ _
+  Quotientₓ.exact <| quot_right_distrib _ _ _
 
 @[simp]
 theorem quot_right_distrib_sub (x y z : Pgame) : ⟦(y - z) * x⟧ = ⟦y * x⟧ - ⟦z * x⟧ := by
@@ -504,7 +504,7 @@ theorem quot_mul_one : ∀ x : Pgame, ⟦x * 1⟧ = ⟦x⟧
 
 /-- `x * 1` is equivalent to `x`. -/
 theorem mul_one_equiv (x : Pgame) : x * 1 ≈ x :=
-  Quotientₓ.exact $ quot_mul_one _
+  Quotientₓ.exact <| quot_mul_one _
 
 @[simp]
 theorem quot_one_mul (x : Pgame) : ⟦1 * x⟧ = ⟦x⟧ := by
@@ -512,7 +512,7 @@ theorem quot_one_mul (x : Pgame) : ⟦1 * x⟧ = ⟦x⟧ := by
 
 /-- `1 * x` is equivalent to `x`. -/
 theorem one_mul_equiv (x : Pgame) : 1 * x ≈ x :=
-  Quotientₓ.exact $ quot_one_mul _
+  Quotientₓ.exact <| quot_one_mul _
 
 theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
   | mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR => by
@@ -599,7 +599,7 @@ theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
 
 /-- `x * y * z` is equivalent to `x * (y * z).`-/
 theorem mul_assoc_equiv (x y z : Pgame) : x * y * z ≈ x * (y * z) :=
-  Quotientₓ.exact $ quot_mul_assoc _ _ _
+  Quotientₓ.exact <| quot_mul_assoc _ _ _
 
 /-- Because the two halves of the definition of `inv` produce more elements
 on each side, we have to define the two families inductively.
@@ -639,7 +639,7 @@ def inv' : Pgame → Pgame
 noncomputable def inv (x : Pgame) : Pgame := by
   classical <;> exact if x = 0 then 0 else if 0 < x then inv' x else inv' (-x)
 
-noncomputable instance : HasInv Pgame :=
+noncomputable instance : Inv Pgame :=
   ⟨inv⟩
 
 noncomputable instance : Div Pgame :=

@@ -53,7 +53,7 @@ theorem ess_image.of_nat_iso {F' : C ⥤ D} (h : F ≅ F') {Y : D} (hY : Y ∈ e
 
 /-- Isomorphic functors have equal essential images. -/
 theorem ess_image_eq_of_nat_iso {F' : C ⥤ D} (h : F ≅ F') : ess_image F = ess_image F' :=
-  Set.ext $ fun A => ⟨ess_image.of_nat_iso h, ess_image.of_nat_iso h.symm⟩
+  Set.ext fun A => ⟨ess_image.of_nat_iso h, ess_image.of_nat_iso h.symm⟩
 
 /-- An object in the image is in the essential image. -/
 theorem obj_mem_ess_image (F : D ⥤ C) (Y : D) : F.obj Y ∈ ess_image F :=

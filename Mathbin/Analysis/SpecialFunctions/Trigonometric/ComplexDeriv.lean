@@ -36,7 +36,7 @@ theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) : tendsto (fun
       (tendsto_norm_nhds_within_zero.comp B).inv_tendsto_zero
 
 theorem tendsto_abs_tan_at_top (k : ℤ) : tendsto (fun x => abs (tan x)) (𝓝[≠] ((2 * k + 1) * π / 2)) at_top :=
-  tendsto_abs_tan_of_cos_eq_zero $ cos_eq_zero_iff.2 ⟨k, rfl⟩
+  tendsto_abs_tan_of_cos_eq_zero <| cos_eq_zero_iff.2 ⟨k, rfl⟩
 
 @[simp]
 theorem continuous_at_tan {x : ℂ} : ContinuousAt tan x ↔ cos x ≠ 0 := by

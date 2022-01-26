@@ -27,7 +27,7 @@ open_locale BigOperators
   `a ^ n ∣ b`, as an `enat` or natural with infinity. If `∀ n, a ^ n ∣ b`,
   then it returns `⊤`-/
 def multiplicity [CommMonoidₓ α] [DecidableRel (· ∣ · : α → α → Prop)] (a b : α) : Enat :=
-  Enat.find $ fun n => ¬a ^ (n + 1) ∣ b
+  Enat.find fun n => ¬a ^ (n + 1) ∣ b
 
 namespace multiplicity
 
@@ -74,7 +74,7 @@ theorem not_finite_iff_forall {a b : α} : ¬finite a b ↔ ∀ n : ℕ, a ^ n �
 
 theorem not_unit_of_finite {a b : α} (h : finite a b) : ¬IsUnit a :=
   let ⟨n, hn⟩ := h
-  mt (is_unit_iff_forall_dvd.1 ∘ IsUnit.pow (n + 1)) $ fun h => hn (h b)
+  (mt (is_unit_iff_forall_dvd.1 ∘ IsUnit.pow (n + 1))) fun h => hn (h b)
 
 theorem finite_of_finite_mul_left {a b c : α} : finite a (b * c) → finite a c := fun ⟨n, hn⟩ =>
   ⟨n, fun h =>
@@ -115,7 +115,7 @@ theorem pos_of_dvd {a b : α} (hfin : finite a b) (hdiv : a ∣ b) : 0 < (multip
   simpa [hdiv] using is_greatest' hfin (lt_one_iff.mpr h)
 
 theorem Unique {a b : α} {k : ℕ} (hk : a ^ k ∣ b) (hsucc : ¬a ^ (k + 1) ∣ b) : (k : Enat) = multiplicity a b :=
-  le_antisymmₓ (le_of_not_gtₓ fun hk' => IsGreatest hk' hk) $ by
+  le_antisymmₓ (le_of_not_gtₓ fun hk' => IsGreatest hk' hk) <| by
     have : finite a b := ⟨k, hsucc⟩
     rw [Enat.le_coe_iff]
     exact ⟨this, Nat.find_min'ₓ _ hsucc⟩
@@ -125,7 +125,7 @@ theorem unique' {a b : α} {k : ℕ} (hk : a ^ k ∣ b) (hsucc : ¬a ^ (k + 1) �
   rw [← Enat.coe_inj, Enat.coe_get, Unique hk hsucc]
 
 theorem le_multiplicity_of_pow_dvd {a b : α} {k : ℕ} (hk : a ^ k ∣ b) : (k : Enat) ≤ multiplicity a b :=
-  le_of_not_gtₓ $ fun hk' => IsGreatest hk' hk
+  le_of_not_gtₓ fun hk' => IsGreatest hk' hk
 
 theorem pow_dvd_iff_le_multiplicity {a b : α} {k : ℕ} : a ^ k ∣ b ↔ (k : Enat) ≤ multiplicity a b :=
   ⟨le_multiplicity_of_pow_dvd, pow_dvd_of_le_multiplicity⟩
@@ -144,10 +144,10 @@ theorem eq_coe_iff {a b : α} {n : ℕ} : multiplicity a b = (n : Enat) ↔ a ^ 
             (by
               rw [Enat.lt_coe_iff]
               exact ⟨h₁, lt_succ_self _⟩)⟩,
-      fun h => eq_some_iff.2 ⟨⟨n, h.2⟩, Eq.symm $ unique' h.1 h.2⟩⟩
+      fun h => eq_some_iff.2 ⟨⟨n, h.2⟩, Eq.symm <| unique' h.1 h.2⟩⟩
 
 theorem eq_top_iff {a b : α} : multiplicity a b = ⊤ ↔ ∀ n : ℕ, a ^ n ∣ b :=
-  (Enat.find_eq_top_iff _).trans $ by
+  (Enat.find_eq_top_iff _).trans <| by
     simp only [not_not]
     exact
       ⟨fun h n =>
@@ -227,13 +227,13 @@ theorem multiplicity_le_multiplicity_iff {a b c d : α} :
       rw [eq_top_iff_not_finite.2 hab, eq_top_iff_not_finite.2 (not_finite_iff_forall.2 this)]⟩
 
 theorem multiplicity_le_multiplicity_of_dvd_left {a b c : α} (hdvd : a ∣ b) : multiplicity b c ≤ multiplicity a c :=
-  multiplicity_le_multiplicity_iff.2 $ fun n h => (pow_dvd_pow_of_dvd hdvd n).trans h
+  multiplicity_le_multiplicity_iff.2 fun n h => (pow_dvd_pow_of_dvd hdvd n).trans h
 
 theorem eq_of_associated_left {a b c : α} (h : Associated a b) : multiplicity b c = multiplicity a c :=
   le_antisymmₓ (multiplicity_le_multiplicity_of_dvd_left h.dvd) (multiplicity_le_multiplicity_of_dvd_left h.symm.dvd)
 
 theorem multiplicity_le_multiplicity_of_dvd_right {a b c : α} (h : b ∣ c) : multiplicity a b ≤ multiplicity a c :=
-  multiplicity_le_multiplicity_iff.2 $ fun n hb => hb.trans h
+  multiplicity_le_multiplicity_iff.2 fun n hb => hb.trans h
 
 theorem eq_of_associated_right {a b c : α} (h : Associated b c) : multiplicity a b = multiplicity a c :=
   le_antisymmₓ (multiplicity_le_multiplicity_of_dvd_right h.dvd) (multiplicity_le_multiplicity_of_dvd_right h.symm.dvd)
@@ -388,7 +388,7 @@ theorem finite_mul_aux {p : α} (hp : Prime p) :
           ha
             (hx.symm ▸
               ⟨y,
-                mul_right_cancel₀ hp.1 $ by
+                mul_right_cancel₀ hp.1 <| by
                   rw [tsub_add_cancel_of_le (succ_le_of_lt hn0)] at hy <;>
                     simp [hy, pow_addₓ, mul_comm, mul_assoc, mul_left_commₓ]⟩)
         have : 1 ≤ n + m := le_transₓ hn0 (Nat.le_add_rightₓ n m)
@@ -411,7 +411,7 @@ theorem finite_mul_aux {p : α} (hp : Prime p) :
         hb
           (hx.symm ▸
             ⟨y,
-              mul_right_cancel₀ hp.1 $ by
+              mul_right_cancel₀ hp.1 <| by
                 rw [tsub_add_cancel_of_le (succ_le_of_lt hm0)] at hy <;>
                   simp [hy, pow_addₓ, mul_comm, mul_assoc, mul_left_commₓ]⟩)
       finite_mul_aux ha hpx
@@ -447,7 +447,7 @@ theorem multiplicity_self {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : multiplic
         ha
           (is_unit_iff_dvd_one.2
             ⟨b,
-              mul_left_cancel₀ ha0 $ by
+              mul_left_cancel₀ ha0 <| by
                 clear _fun_match
                 simpa [pow_succₓ, mul_assoc] using hb⟩)⟩
 

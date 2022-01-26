@@ -285,7 +285,7 @@ protected theorem QuotientMap (surj : surjective f) : QuotientMap f :=
 
 theorem _root_.affine_map.is_open_map {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P] [MetricSpace Q]
     [NormedAddTorsor F Q] (f : P →ᵃ[𝕜] Q) (hf : Continuous f) (surj : surjective f) : IsOpenMap f :=
-  AffineMap.is_open_map_linear_iff.mp $
+  AffineMap.is_open_map_linear_iff.mp <|
     ContinuousLinearMap.is_open_map { f.linear with cont := AffineMap.continuous_linear_iff.mpr hf }
       (f.surjective_iff_linear_surjective.mpr surj)
 
@@ -368,7 +368,8 @@ noncomputable def of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj 
 theorem coe_fn_of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : ⇑of_bijective f hinj hsurj = f :=
   rfl
 
-theorem coe_of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : ↑of_bijective f hinj hsurj = f := by
+theorem coe_of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : ↑(of_bijective f hinj hsurj) = f :=
+  by
   ext
   rfl
 

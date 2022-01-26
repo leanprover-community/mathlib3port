@@ -43,14 +43,14 @@ automorphism of `α`. -/
 def smul (c : G) : α ≃ᵐ α where
   toEquiv := MulAction.toPerm c
   measurable_to_fun := measurable_const_smul c
-  measurable_inv_fun := measurable_const_smul (c⁻¹)
+  measurable_inv_fun := measurable_const_smul c⁻¹
 
 @[to_additive]
 theorem _root_.measurable_embedding_const_smul (c : G) : MeasurableEmbedding ((· • ·) c : α → α) :=
   (smul c).MeasurableEmbedding
 
 @[simp, to_additive]
-theorem symm_smul (c : G) : (smul c : α ≃ᵐ α).symm = smul (c⁻¹) :=
+theorem symm_smul (c : G) : (smul c : α ≃ᵐ α).symm = smul c⁻¹ :=
   ext rfl
 
 /-- If a group with zero `G₀` acts on `α` by measurable maps, then each nonzero element `c : G₀`
@@ -63,7 +63,7 @@ theorem coe_smul₀ {c : G₀} (hc : c ≠ 0) : ⇑(smul₀ c hc : α ≃ᵐ α)
   rfl
 
 @[simp]
-theorem symm_smul₀ {c : G₀} (hc : c ≠ 0) : (smul₀ c hc : α ≃ᵐ α).symm = smul₀ (c⁻¹) (inv_ne_zero hc) :=
+theorem symm_smul₀ {c : G₀} (hc : c ≠ 0) : (smul₀ c hc : α ≃ᵐ α).symm = smul₀ c⁻¹ (inv_ne_zero hc) :=
   ext rfl
 
 theorem _root_.measurable_embedding_const_smul₀ {c : G₀} (hc : c ≠ 0) : MeasurableEmbedding ((· • ·) c : α → α) :=
@@ -85,7 +85,7 @@ theorem coe_mul_left (g : G) : ⇑mul_left g = (· * ·) g :=
   rfl
 
 @[simp, to_additive]
-theorem symm_mul_left (g : G) : (mul_left g).symm = mul_left (g⁻¹) :=
+theorem symm_mul_left (g : G) : (mul_left g).symm = mul_left g⁻¹ :=
   ext rfl
 
 @[simp, to_additive]
@@ -103,7 +103,7 @@ measurable automorphism of `G`. -/
 def mul_right (g : G) : G ≃ᵐ G where
   toEquiv := Equivₓ.mulRight g
   measurable_to_fun := measurable_mul_const g
-  measurable_inv_fun := measurable_mul_const (g⁻¹)
+  measurable_inv_fun := measurable_mul_const g⁻¹
 
 @[to_additive]
 theorem _root_.measurable_embedding_mul_right (g : G) : MeasurableEmbedding fun x => x * g :=
@@ -114,7 +114,7 @@ theorem coe_mul_right (g : G) : ⇑mul_right g = fun x => x * g :=
   rfl
 
 @[simp, to_additive]
-theorem symm_mul_right (g : G) : (mul_right g).symm = mul_right (g⁻¹) :=
+theorem symm_mul_right (g : G) : (mul_right g).symm = mul_right g⁻¹ :=
   ext rfl
 
 @[simp, to_additive]
@@ -134,7 +134,7 @@ theorem coe_mul_left₀ {g : G₀} (hg : g ≠ 0) : ⇑mul_left₀ g hg = (· * 
   rfl
 
 @[simp]
-theorem symm_mul_left₀ {g : G₀} (hg : g ≠ 0) : (mul_left₀ g hg).symm = mul_left₀ (g⁻¹) (inv_ne_zero hg) :=
+theorem symm_mul_left₀ {g : G₀} (hg : g ≠ 0) : (mul_left₀ g hg).symm = mul_left₀ g⁻¹ (inv_ne_zero hg) :=
   ext rfl
 
 @[simp]
@@ -146,7 +146,7 @@ nonzero element `g : G₀` is a measurable automorphism of `G₀`. -/
 def mul_right₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀ where
   toEquiv := Equivₓ.mulRight₀ g hg
   measurable_to_fun := measurable_mul_const g
-  measurable_inv_fun := measurable_mul_const (g⁻¹)
+  measurable_inv_fun := measurable_mul_const g⁻¹
 
 theorem _root_.measurable_embedding_mul_right₀ {g : G₀} (hg : g ≠ 0) : MeasurableEmbedding fun x => x * g :=
   (mul_right₀ g hg).MeasurableEmbedding
@@ -156,7 +156,7 @@ theorem coe_mul_right₀ {g : G₀} (hg : g ≠ 0) : ⇑mul_right₀ g hg = fun 
   rfl
 
 @[simp]
-theorem symm_mul_right₀ {g : G₀} (hg : g ≠ 0) : (mul_right₀ g hg).symm = mul_right₀ (g⁻¹) (inv_ne_zero hg) :=
+theorem symm_mul_right₀ {g : G₀} (hg : g ≠ 0) : (mul_right₀ g hg).symm = mul_right₀ g⁻¹ (inv_ne_zero hg) :=
   ext rfl
 
 @[simp]

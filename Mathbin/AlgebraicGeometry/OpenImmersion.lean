@@ -831,7 +831,7 @@ instance sigma_ι_is_open_immersion [has_strict_terminal_objects C] :
         (limit.π
           (PresheafedSpace.componentwise_diagram (F ⋙ SheafedSpace.forget_to_PresheafedSpace)
             ((opens.map (preserves_colimit_iso SheafedSpace.forget_to_PresheafedSpace F).inv.base).obj
-              (unop $ op $ H.is_open_map.functor.obj U)))
+              (unop <| op <| H.is_open_map.functor.obj U)))
           (op i))
       by
       skip
@@ -900,7 +900,7 @@ instance : LocallyRingedSpace.is_open_immersion (pullback_cone_of_left f g).snd 
 
 /-- The constructed `pullback_cone_of_left` is indeed limiting. -/
 def pullback_cone_of_left_is_limit : is_limit (pullback_cone_of_left f g) :=
-  pullback_cone.is_limit_aux' _ $ fun s => by
+  (pullback_cone.is_limit_aux' _) fun s => by
     use
       PresheafedSpace.is_open_immersion.pullback_cone_of_left_lift f.1 g.1
         (pullback_cone.mk s.fst.1 s.snd.1 (congr_argₓ Subtype.val s.condition))
@@ -1121,7 +1121,7 @@ variable [∀ x, has_pullback (𝒰.map x ≫ f) g]
 /-- The affine cover of a scheme. -/
 def affine_cover (X : Scheme) : open_cover X where
   J := X.carrier
-  obj := fun x => Spec.obj $ Opposite.op (X.local_affine x).some_spec.some
+  obj := fun x => Spec.obj <| Opposite.op (X.local_affine x).some_spec.some
   map := fun x => ((X.local_affine x).some_spec.some_spec.some.inv ≫ X.to_LocallyRingedSpace.of_restrict _ : _)
   f := fun x => x
   IsOpen := fun x => by
@@ -1180,7 +1180,7 @@ instance basic_open_is_open_immersion {R : CommRingₓₓ} (f : R) :
 /-- The basic open sets form an affine open cover of `Spec R`. -/
 def affine_basis_cover_of_affine (R : CommRingₓₓ) : open_cover (Spec.obj (Opposite.op R)) where
   J := R
-  obj := fun r => Spec.obj (Opposite.op $ CommRingₓₓ.of $ Localization.Away r)
+  obj := fun r => Spec.obj (Opposite.op <| CommRingₓₓ.of <| Localization.Away r)
   map := fun r => Spec.map (Quiver.Hom.op (algebraMap R (Localization.Away r) : _))
   f := fun x => 1
   Covers := fun r => by
@@ -1198,10 +1198,10 @@ def affine_basis_cover (X : Scheme) : open_cover X :=
 
 /-- The coordinate ring of a component in the `affine_basis_cover`. -/
 def affine_basis_cover_ring (X : Scheme) (i : X.affine_basis_cover.J) : CommRingₓₓ :=
-  CommRingₓₓ.of $ @Localization.Away (X.local_affine i.1).some_spec.some _ i.2
+  CommRingₓₓ.of <| @Localization.Away (X.local_affine i.1).some_spec.some _ i.2
 
 theorem affine_basis_cover_obj (X : Scheme) (i : X.affine_basis_cover.J) :
-    X.affine_basis_cover.obj i = Spec.obj (op $ X.affine_basis_cover_ring i) :=
+    X.affine_basis_cover.obj i = Spec.obj (op <| X.affine_basis_cover_ring i) :=
   rfl
 
 theorem affine_basis_cover_map_range (X : Scheme) (x : X.carrier) (r : (X.local_affine x).some_spec.some) :

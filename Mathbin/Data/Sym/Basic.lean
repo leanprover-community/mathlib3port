@@ -65,14 +65,14 @@ def cons (a : α) (s : Sym α n) : Sym α (Nat.succ n) :=
 
 @[simp]
 theorem cons_inj_right (a : α) (s s' : Sym α n) : a :: s = a :: s' ↔ s = s' :=
-  Subtype.ext_iff.trans $ (Multiset.cons_inj_right _).trans Subtype.ext_iff.symm
+  Subtype.ext_iff.trans <| (Multiset.cons_inj_right _).trans Subtype.ext_iff.symm
 
 @[simp]
 theorem cons_inj_left (a a' : α) (s : Sym α n) : a :: s = a' :: s ↔ a = a' :=
-  Subtype.ext_iff.trans $ Multiset.cons_inj_left _
+  Subtype.ext_iff.trans <| Multiset.cons_inj_left _
 
 theorem cons_swap (a b : α) (s : Sym α n) : a :: b :: s = b :: a :: s :=
-  Subtype.ext $ Multiset.cons_swap a b s.1
+  Subtype.ext <| Multiset.cons_swap a b s.1
 
 /-- This is the quotient map that takes a list of n elements as an n-tuple and produces an nth
 symmetric power.
@@ -85,7 +85,7 @@ theorem of_vector_nil : ↑(Vector.nil : Vector α 0) = (Sym.nil : Sym α 0) :=
   rfl
 
 @[simp]
-theorem of_vector_cons (a : α) (v : Vector α n) : ↑Vector.cons a v = a :: (↑v : Sym α n) := by
+theorem of_vector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a :: (↑v : Sym α n) := by
   cases v
   rfl
 
@@ -109,21 +109,21 @@ theorem mem_cons_self (a : α) (s : Sym α n) : a ∈ a :: s :=
   Multiset.mem_cons_self a s.1
 
 theorem cons_of_coe_eq (a : α) (v : Vector α n) : a :: (↑v : Sym α n) = ↑(a::ᵥv) :=
-  Subtype.ext $ by
+  Subtype.ext <| by
     cases v
     rfl
 
 theorem sound {a b : Vector α n} (h : a.val ~ b.val) : (↑a : Sym α n) = ↑b :=
-  Subtype.ext $ Quotientₓ.sound h
+  Subtype.ext <| Quotientₓ.sound h
 
 /-- `erase s a h` is the sym that subtracts 1 from the
   multiplicity of `a` if a is present in the sym. -/
 def erase [DecidableEq α] (s : Sym α (n + 1)) (a : α) (h : a ∈ s) : Sym α n :=
-  ⟨s.val.erase a, (Multiset.card_erase_of_mem h).trans $ s.property.symm ▸ n.pred_succ⟩
+  ⟨s.val.erase a, (Multiset.card_erase_of_mem h).trans <| s.property.symm ▸ n.pred_succ⟩
 
 @[simp]
 theorem cons_erase [DecidableEq α] (s : Sym α (n + 1)) (a : α) (h : a ∈ s) : a :: s.erase a h = s :=
-  Subtype.ext $ Multiset.cons_erase h
+  Subtype.ext <| Multiset.cons_erase h
 
 /-- Another definition of the nth symmetric power, using vectors modulo permutations. (See `sym`.)
 -/
@@ -156,7 +156,7 @@ instance : HasEmptyc (Sym α 0) :=
   ⟨0⟩
 
 theorem eq_nil_of_card_zero (s : Sym α 0) : s = nil :=
-  Subtype.ext $ Multiset.card_eq_zero.1 s.2
+  Subtype.ext <| Multiset.card_eq_zero.1 s.2
 
 instance unique_zero : Unique (Sym α 0) :=
   ⟨⟨nil⟩, eq_nil_of_card_zero⟩
@@ -181,7 +181,7 @@ theorem eq_repeat_iff : s = repeat a n ↔ ∀, ∀ b ∈ s, ∀, b = a := by
   exact s.2.symm
 
 theorem exists_mem (s : Sym α n.succ) : ∃ a, a ∈ s :=
-  Multiset.card_pos_iff_exists_mem.1 $ s.2.symm ▸ n.succ_pos
+  Multiset.card_pos_iff_exists_mem.1 <| s.2.symm ▸ n.succ_pos
 
 theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α)(s' : Sym α n), s = a :: s' := by
   obtain ⟨a, ha⟩ := exists_mem s
@@ -189,10 +189,10 @@ theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α)(s' : Sym α n)
   exact ⟨a, s.erase a ha, (s.cons_erase _ _).symm⟩
 
 theorem eq_repeat {a : α} {n : ℕ} {s : Sym α n} : s = repeat a n ↔ ∀, ∀ b ∈ s, ∀, b = a :=
-  Subtype.ext_iff.trans $ Multiset.eq_repeat.trans $ and_iff_right s.prop
+  Subtype.ext_iff.trans <| Multiset.eq_repeat.trans <| and_iff_right s.prop
 
 theorem eq_repeat_of_subsingleton [Subsingleton α] (a : α) {n : ℕ} (s : Sym α n) : s = repeat a n :=
-  eq_repeat.2 $ fun b hb => Subsingleton.elimₓ _ _
+  eq_repeat.2 fun b hb => Subsingleton.elimₓ _ _
 
 instance [Subsingleton α] (n : ℕ) : Subsingleton (Sym α n) :=
   ⟨by

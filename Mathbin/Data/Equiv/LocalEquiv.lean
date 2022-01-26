@@ -217,8 +217,8 @@ theorem copy_eq_self (e : LocalEquiv α β) (f : α → β) (hf : ⇑e = f) (g :
 protected def to_equiv : Equivₓ e.source e.target where
   toFun := fun x => ⟨e x, e.map_source x.mem⟩
   invFun := fun y => ⟨e.symm y, e.map_target y.mem⟩
-  left_inv := fun ⟨x, hx⟩ => Subtype.eq $ e.left_inv hx
-  right_inv := fun ⟨y, hy⟩ => Subtype.eq $ e.right_inv hy
+  left_inv := fun ⟨x, hx⟩ => Subtype.eq <| e.left_inv hx
+  right_inv := fun ⟨y, hy⟩ => Subtype.eq <| e.right_inv hy
 
 @[simp, mfld_simps]
 theorem symm_source : e.symm.source = e.target :=
@@ -300,10 +300,10 @@ theorem iff_symm_preimage_eq : e.is_image s t ↔ e.target ∩ e.symm ⁻¹' s =
 alias iff_symm_preimage_eq ↔ LocalEquiv.IsImage.symm_preimage_eq LocalEquiv.IsImage.of_symm_preimage_eq
 
 theorem of_image_eq (h : e '' (e.source ∩ s) = e.target ∩ t) : e.is_image s t :=
-  of_symm_preimage_eq $ Eq.trans (of_symm_preimage_eq rfl).image_eq.symm h
+  of_symm_preimage_eq <| Eq.trans (of_symm_preimage_eq rfl).image_eq.symm h
 
 theorem of_symm_image_eq (h : e.symm '' (e.target ∩ t) = e.source ∩ s) : e.is_image s t :=
-  of_preimage_eq $ Eq.trans (of_preimage_eq rfl).symm_image_eq.symm h
+  of_preimage_eq <| Eq.trans (of_preimage_eq rfl).symm_image_eq.symm h
 
 protected theorem compl (h : e.is_image s t) : e.is_image (sᶜ) (tᶜ) := fun x hx => not_congr (h hx)
 
@@ -367,12 +367,12 @@ theorem symm_image_target_inter_eq' (s : Set β) : e.symm '' (e.target ∩ s) = 
   e.symm.image_source_inter_eq' _
 
 theorem source_inter_preimage_inv_preimage (s : Set α) : e.source ∩ e ⁻¹' (e.symm ⁻¹' s) = e.source ∩ s :=
-  Set.ext $ fun x =>
-    And.congr_right_iff.2 $ fun hx => by
+  Set.ext fun x =>
+    And.congr_right_iff.2 fun hx => by
       simp only [mem_preimage, e.left_inv hx]
 
 theorem source_inter_preimage_target_inter (s : Set β) : e.source ∩ e ⁻¹' (e.target ∩ s) = e.source ∩ e ⁻¹' s :=
-  ext $ fun x => ⟨fun hx => ⟨hx.1, hx.2.2⟩, fun hx => ⟨hx.1, e.map_source hx.1, hx.2⟩⟩
+  ext fun x => ⟨fun hx => ⟨hx.1, hx.2.2⟩, fun hx => ⟨hx.1, e.map_source hx.1, hx.2⟩⟩
 
 theorem target_inter_inv_preimage_preimage (s : Set β) : e.target ∩ e.symm ⁻¹' (e ⁻¹' s) = e.target ∩ s :=
   e.symm.source_inter_preimage_inv_preimage _
@@ -568,12 +568,12 @@ theorem trans_refl_restr (s : Set β) : e.trans ((LocalEquiv.refl β).restr s) =
       simp [trans_source])
 
 theorem trans_refl_restr' (s : Set β) : e.trans ((LocalEquiv.refl β).restr s) = e.restr (e.source ∩ e ⁻¹' s) :=
-  (LocalEquiv.ext (fun x => rfl) fun x => rfl) $ by
+  (LocalEquiv.ext (fun x => rfl) fun x => rfl) <| by
     simp [trans_source]
     rw [← inter_assoc, inter_self]
 
 theorem restr_trans (s : Set α) : (e.restr s).trans e' = (e.trans e').restr s :=
-  (LocalEquiv.ext (fun x => rfl) fun x => rfl) $ by
+  (LocalEquiv.ext (fun x => rfl) fun x => rfl) <| by
     simp [trans_source, inter_comm]
     rwa [inter_assoc]
 
@@ -625,7 +625,7 @@ theorem eq_on_source.trans' {e e' : LocalEquiv α β} {f f' : LocalEquiv β γ} 
     e.trans f ≈ e'.trans f' := by
   constructor
   · rw [trans_source'', trans_source'', ← he.target_eq, ← hf.1]
-    exact (he.symm'.eq_on.mono $ inter_subset_left _ _).image_eq
+    exact (he.symm'.eq_on.mono <| inter_subset_left _ _).image_eq
     
   · intro x hx
     rw [trans_source] at hx
@@ -752,7 +752,7 @@ equalities. -/
 @[simps]
 def disjoint_union (e e' : LocalEquiv α β) (hs : Disjoint e.source e'.source) (ht : Disjoint e.target e'.target)
     [∀ x, Decidable (x ∈ e.source)] [∀ y, Decidable (y ∈ e.target)] : LocalEquiv α β :=
-  (e.piecewise e' e.source e.target e.is_image_source_target $
+  (e.piecewise e' e.source e.target e.is_image_source_target <|
         e'.is_image_source_target_of_disjoint _ hs.symm ht.symm).copy
     _ rfl _ rfl (e.source ∪ e'.source) (ite_left _ _) (e.target ∪ e'.target) (ite_left _ _)
 
@@ -776,8 +776,8 @@ protected def pi : LocalEquiv (∀ i, αi i) (∀ i, βi i) where
   Target := pi univ fun i => (ei i).Target
   map_source' := fun f hf i hi => (ei i).map_source (hf i hi)
   map_target' := fun f hf i hi => (ei i).map_target (hf i hi)
-  left_inv' := fun f hf => funext $ fun i => (ei i).left_inv (hf i trivialₓ)
-  right_inv' := fun f hf => funext $ fun i => (ei i).right_inv (hf i trivialₓ)
+  left_inv' := fun f hf => funext fun i => (ei i).left_inv (hf i trivialₓ)
+  right_inv' := fun f hf => funext fun i => (ei i).right_inv (hf i trivialₓ)
 
 attribute [mfld_simps] pi_source pi_target
 

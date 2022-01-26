@@ -105,7 +105,7 @@ theorem is_bounded_under.bdd_above_range_of_cofinite [SemilatticeSup β] {f : α
   rcases hf with ⟨b, hb⟩
   have : Nonempty β := ⟨b⟩
   rw [← image_univ, ← union_compl_self { x | f x ≤ b }, image_union, bdd_above_union]
-  exact ⟨⟨b, ball_image_iff.2 $ fun x => id⟩, (hb.image f).BddAbove⟩
+  exact ⟨⟨b, ball_image_iff.2 fun x => id⟩, (hb.image f).BddAbove⟩
 
 theorem is_bounded_under.bdd_below_range_of_cofinite [SemilatticeInf β] {f : α → β}
     (hf : is_bounded_under (· ≥ ·) cofinite f) : BddBelow (range f) :=
@@ -183,24 +183,26 @@ theorem is_cobounded_ge_of_top [Preorderₓ α] [OrderTop α] {f : Filter α} : 
   ⟨⊤, fun a h => le_top⟩
 
 theorem is_bounded_le_of_top [Preorderₓ α] [OrderTop α] {f : Filter α} : f.is_bounded (· ≤ ·) :=
-  ⟨⊤, eventually_of_forall $ fun _ => le_top⟩
+  ⟨⊤, eventually_of_forall fun _ => le_top⟩
 
 theorem is_bounded_ge_of_bot [Preorderₓ α] [OrderBot α] {f : Filter α} : f.is_bounded (· ≥ ·) :=
-  ⟨⊥, eventually_of_forall $ fun _ => bot_le⟩
+  ⟨⊥, eventually_of_forall fun _ => bot_le⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_bounded_under_sup [SemilatticeSup α] {f : Filter β} {u v : β → α} :
     f.is_bounded_under (· ≤ ·) u → f.is_bounded_under (· ≤ ·) v → f.is_bounded_under (· ≤ ·) fun a => u a⊔v a
   | ⟨bu, (hu : ∀ᶠ x in f, u x ≤ bu)⟩, ⟨bv, (hv : ∀ᶠ x in f, v x ≤ bv)⟩ =>
     ⟨bu⊔bv,
       show ∀ᶠ x in f, u x⊔v x ≤ bu⊔bv by
-        filter_upwards [hu, hv] fun x => sup_le_sup⟩
+        "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_bounded_under_inf [SemilatticeInf α] {f : Filter β} {u v : β → α} :
     f.is_bounded_under (· ≥ ·) u → f.is_bounded_under (· ≥ ·) v → f.is_bounded_under (· ≥ ·) fun a => u a⊓v a
   | ⟨bu, (hu : ∀ᶠ x in f, u x ≥ bu)⟩, ⟨bv, (hv : ∀ᶠ x in f, v x ≥ bv)⟩ =>
     ⟨bu⊓bv,
       show ∀ᶠ x in f, u x⊓v x ≥ bu⊓bv by
-        filter_upwards [hu, hv] fun x => inf_le_inf⟩
+        "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"⟩
 
 /-- Filters are automatically bounded or cobounded in complete lattices. To use the same statements
 in complete and conditionally complete lattices but let automation fill automatically the
@@ -283,8 +285,8 @@ theorem Liminf_le_Limsup {f : Filter α} [ne_bot f]
       run_tac
         is_bounded_default) :
     f.Liminf ≤ f.Limsup :=
-  Liminf_le_of_le h₂ $ fun a₀ ha₀ =>
-    le_Limsup_of_le h₁ $ fun a₁ ha₁ =>
+  (Liminf_le_of_le h₂) fun a₀ ha₀ =>
+    (le_Limsup_of_le h₁) fun a₁ ha₁ =>
       show a₀ ≤ a₁ from
         let ⟨b, hb₀, hb₁⟩ := (ha₀.and ha₁).exists
         le_transₓ hb₀ hb₁
@@ -337,7 +339,7 @@ theorem limsup_le_limsup {α : Type _} [ConditionallyCompleteLattice β] {f : Fi
       run_tac
         is_bounded_default) :
     f.limsup u ≤ f.limsup v :=
-  Limsup_le_Limsup hu hv $ fun b => h.trans
+  (Limsup_le_Limsup hu hv) fun b => h.trans
 
 theorem liminf_le_liminf {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
     (h : ∀ᶠ a in f, u a ≤ v a)
@@ -382,7 +384,7 @@ theorem limsup_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter
   congr with b
   exact
     eventually_congr
-      (h.mono $ fun x hx => by
+      (h.mono fun x hx => by
         simp [hx])
 
 theorem liminf_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
@@ -415,27 +417,27 @@ variable [CompleteLattice α]
 
 @[simp]
 theorem Limsup_bot : (⊥ : Filter α).limsup = ⊥ :=
-  bot_unique $
-    Inf_le $ by
+  bot_unique <|
+    Inf_le <| by
       simp
 
 @[simp]
 theorem Liminf_bot : (⊥ : Filter α).liminf = ⊤ :=
-  top_unique $
-    le_Sup $ by
+  top_unique <|
+    le_Sup <| by
       simp
 
 @[simp]
 theorem Limsup_top : (⊤ : Filter α).limsup = ⊤ :=
-  top_unique $
-    le_Inf $ by
-      simp [eq_univ_iff_forall] <;> exact fun b hb => top_unique $ hb _
+  top_unique <|
+    le_Inf <| by
+      simp [eq_univ_iff_forall] <;> exact fun b hb => top_unique <| hb _
 
 @[simp]
 theorem Liminf_top : (⊤ : Filter α).liminf = ⊥ :=
-  bot_unique $
-    Sup_le $ by
-      simp [eq_univ_iff_forall] <;> exact fun b hb => bot_unique $ hb _
+  bot_unique <|
+    Sup_le <| by
+      simp [eq_univ_iff_forall] <;> exact fun b hb => bot_unique <| hb _
 
 /-- Same as limsup_const applied to `⊥` but without the `ne_bot f` assumption -/
 theorem limsup_const_bot {f : Filter β} : (limsup f fun x : β => (⊥ : α)) = (⊥ : α) := by
@@ -448,10 +450,10 @@ theorem liminf_const_top {f : Filter β} : (liminf f fun x : β => (⊤ : α)) =
 
 theorem has_basis.Limsup_eq_infi_Sup {ι} {p : ι → Prop} {s} {f : Filter α} (h : f.has_basis p s) :
     f.Limsup = ⨅ (i) (hi : p i), Sup (s i) :=
-  le_antisymmₓ (le_binfi $ fun i hi => Inf_le $ h.eventually_iff.2 ⟨i, hi, fun x => le_Sup⟩)
-    (le_Inf $ fun a ha =>
+  le_antisymmₓ (le_binfi fun i hi => Inf_le <| h.eventually_iff.2 ⟨i, hi, fun x => le_Sup⟩)
+    (le_Inf fun a ha =>
       let ⟨i, hi, ha⟩ := h.eventually_iff.1 ha
-      infi_le_of_le _ $ infi_le_of_le hi $ Sup_le ha)
+      infi_le_of_le _ <| infi_le_of_le hi <| Sup_le ha)
 
 theorem has_basis.Liminf_eq_supr_Inf {p : ι → Prop} {s : ι → Set α} {f : Filter α} (h : f.has_basis p s) :
     f.Liminf = ⨆ (i) (hi : p i), Inf (s i) :=
@@ -466,11 +468,11 @@ theorem Liminf_eq_supr_Inf {f : Filter α} : f.Liminf = ⨆ s ∈ f, Inf s :=
 /-- In a complete lattice, the limsup of a function is the infimum over sets `s` in the filter
 of the supremum of the function over `s` -/
 theorem limsup_eq_infi_supr {f : Filter β} {u : β → α} : f.limsup u = ⨅ s ∈ f, ⨆ a ∈ s, u a :=
-  (f.basis_sets.map u).Limsup_eq_infi_Sup.trans $ by
+  (f.basis_sets.map u).Limsup_eq_infi_Sup.trans <| by
     simp only [Sup_image, id]
 
 theorem limsup_eq_infi_supr_of_nat {u : ℕ → α} : limsup at_top u = ⨅ n : ℕ, ⨆ i ≥ n, u i :=
-  (at_top_basis.map u).Limsup_eq_infi_Sup.trans $ by
+  (at_top_basis.map u).Limsup_eq_infi_Sup.trans <| by
     simp only [Sup_image, infi_const] <;> rfl
 
 theorem limsup_eq_infi_supr_of_nat' {u : ℕ → α} : limsup at_top u = ⨅ n : ℕ, ⨆ i : ℕ, u (i + n) := by
@@ -478,7 +480,7 @@ theorem limsup_eq_infi_supr_of_nat' {u : ℕ → α} : limsup at_top u = ⨅ n :
 
 theorem has_basis.limsup_eq_infi_supr {p : ι → Prop} {s : ι → Set β} {f : Filter β} {u : β → α} (h : f.has_basis p s) :
     f.limsup u = ⨅ (i) (hi : p i), ⨆ a ∈ s i, u a :=
-  (h.map u).Limsup_eq_infi_Sup.trans $ by
+  (h.map u).Limsup_eq_infi_Sup.trans <| by
     simp only [Sup_image, id]
 
 /-- In a complete lattice, the liminf of a function is the infimum over sets `s` in the filter

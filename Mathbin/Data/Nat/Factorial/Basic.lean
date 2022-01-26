@@ -137,7 +137,7 @@ theorem factorial_inj (hn : 1 < n !) : n ! = m ! ↔ n = m := by
 
 theorem self_le_factorial : ∀ n : ℕ, n ≤ n !
   | 0 => zero_le_one
-  | k + 1 => le_mul_of_one_le_right k.zero_lt_succ.le (Nat.one_le_of_lt $ Nat.factorial_pos _)
+  | k + 1 => le_mul_of_one_le_right k.zero_lt_succ.le (Nat.one_le_of_lt <| Nat.factorial_pos _)
 
 theorem lt_factorial_self {n : ℕ} (hi : 3 ≤ n) : n < n ! := by
   rw [← succ_pred_eq_of_pos ((zero_lt_two.trans (lt.base 2)).trans_le hi), factorial_succ]
@@ -235,7 +235,7 @@ theorem factorial_mul_asc_factorial (n : ℕ) : ∀ k, n ! * n.asc_factorial k =
 theorem asc_factorial_eq_div (n k : ℕ) : n.asc_factorial k = (n + k)! / n ! := by
   apply mul_left_cancel₀ (factorial_ne_zero n)
   rw [factorial_mul_asc_factorial]
-  exact (Nat.mul_div_cancel'ₓ $ factorial_dvd_factorial $ le.intro rfl).symm
+  exact (Nat.mul_div_cancel'ₓ <| factorial_dvd_factorial <| le.intro rfl).symm
 
 theorem asc_factorial_of_sub {n k : ℕ} (h : k < n) :
     (n - k) * (n - k).ascFactorial k = (n - (k + 1)).ascFactorial (k + 1) := by
@@ -364,7 +364,7 @@ theorem factorial_mul_desc_factorial : ∀ {n k : ℕ}, k ≤ n → (n - k)! * n
 theorem desc_factorial_eq_div {n k : ℕ} (h : k ≤ n) : n.desc_factorial k = n ! / (n - k)! := by
   apply mul_left_cancel₀ (factorial_ne_zero (n - k))
   rw [factorial_mul_desc_factorial h]
-  exact (Nat.mul_div_cancel'ₓ $ factorial_dvd_factorial $ Nat.sub_leₓ n k).symm
+  exact (Nat.mul_div_cancel'ₓ <| factorial_dvd_factorial <| Nat.sub_leₓ n k).symm
 
 theorem pow_sub_le_desc_factorial (n : ℕ) : ∀ k : ℕ, (n + 1 - k) ^ k ≤ n.desc_factorial k
   | 0 => by

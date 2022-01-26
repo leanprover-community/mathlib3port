@@ -101,8 +101,8 @@ theorem basis_repr {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) (g : ι �
 @[simp]
 theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
     ⇑Finsupp.basis b = fun ix : Σ i, φ i => single ix.1 (b ix.1 ix.2) :=
-  funext $ fun ⟨i, x⟩ =>
-    Basis.apply_eq_iff.mpr $ by
+  funext fun ⟨i, x⟩ =>
+    Basis.apply_eq_iff.mpr <| by
       ext ⟨j, y⟩
       by_cases' h : i = j
       · cases h
@@ -117,7 +117,7 @@ protected def basis_single_one : Basis ι R (ι →₀ R) :=
 
 @[simp]
 theorem coe_basis_single_one : (Finsupp.basisSingleOne : ι → ι →₀ R) = fun i => Finsupp.single i 1 :=
-  funext $ fun i => Basis.apply_eq_iff.mpr rfl
+  funext fun i => Basis.apply_eq_iff.mpr rfl
 
 end Ringₓ
 

@@ -49,7 +49,7 @@ def terminated_at (s : Seqₓₓ α) (n : ℕ) : Prop :=
 
 /-- It is decidable whether a sequence terminates at a given position. -/
 instance terminated_at_decidable (s : Seqₓₓ α) (n : ℕ) : Decidable (s.terminated_at n) :=
-  decidableOfIff' (s.nth n).isNone $ by
+  decidableOfIff' (s.nth n).isNone <| by
     unfold terminated_at <;> cases s.nth n <;> simp
 
 /-- A sequence terminates if there is some position `n` at which it has terminated. -/
@@ -541,7 +541,7 @@ theorem nil_append (s : Seqₓₓ α) : append nil s = s := by
 
 @[simp]
 theorem cons_append (a : α) s t : append (cons a s) t = cons a (append s t) :=
-  destruct_eq_cons $ by
+  destruct_eq_cons <| by
     dsimp [append]
     rw [corec_eq]
     dsimp [append]
@@ -648,12 +648,12 @@ theorem join_nil : join nil = (nil : Seqₓₓ α) :=
 
 @[simp]
 theorem join_cons_nil (a : α) S : join (cons (a, nil) S) = cons a (join S) :=
-  destruct_eq_cons $ by
+  destruct_eq_cons <| by
     simp [join]
 
 @[simp]
 theorem join_cons_cons (a b : α) s S : join (cons (a, cons b s) S) = cons a (join (cons (b, s) S)) :=
-  destruct_eq_cons $ by
+  destruct_eq_cons <| by
     simp [join]
 
 @[simp]
@@ -664,7 +664,7 @@ theorem join_cons (a : α) s S : join (cons (a, s) S) = cons a (append s (join S
   intro s1 s2 h
   exact
     match s1, s2, h with
-    | _, _, Or.inl $ Eq.refl s => by
+    | _, _, Or.inl <| Eq.refl s => by
       apply cases_on s
       · trivial
         
@@ -765,7 +765,7 @@ protected theorem ext (s s' : Seqₓₓ α) (hyp : ∀ n : ℕ, s.nth n = s'.nth
   · suffices ext s.tail s'.tail by
       simpa
     intro n
-    simp only [Seqₓₓ.nth_tail _ n, hyp $ n + 1]
+    simp only [Seqₓₓ.nth_tail _ n, hyp <| n + 1]
     
 
 @[simp]

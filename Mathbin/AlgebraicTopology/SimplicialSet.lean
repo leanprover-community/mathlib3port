@@ -104,9 +104,9 @@ open_locale Simplicial
 
 /-- The simplicial circle. -/
 noncomputable def S1 : SSet :=
-  limits.colimit $
-    limits.parallel_pair (standard_simplex.map $ SimplexCategory.δ 0 : Δ[0] ⟶ Δ[1])
-      (standard_simplex.map $ SimplexCategory.δ 1)
+  limits.colimit <|
+    limits.parallel_pair (standard_simplex.map <| SimplexCategory.δ 0 : Δ[0] ⟶ Δ[1])
+      (standard_simplex.map <| SimplexCategory.δ 1)
 
 end Examples
 
@@ -119,7 +119,7 @@ def sk (n : ℕ) : SSet ⥤ SSet.Truncated n :=
   simplicial_object.sk n
 
 instance {n} : Inhabited (SSet.Truncated n) :=
-  ⟨(sk n).obj $ Δ[0]⟩
+  ⟨(sk n).obj <| Δ[0]⟩
 
 end SSet
 

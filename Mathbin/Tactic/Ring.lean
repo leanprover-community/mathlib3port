@@ -69,11 +69,11 @@ unsafe def ring_m.run' (red : transparency) (atoms : ref (Buffer expr)) (e : exp
   let ic ← mk_instance_cache α
   let (ic, c) ← ic.get `` CommSemiringₓ
   let nc ← mk_instance_cache (quote.1 ℕ)
-  using_new_ref ic $ fun r => using_new_ref nc $ fun nr => ReaderTₓ.run m ⟨α, u, c, red, r, nr, atoms⟩
+  (using_new_ref ic) fun r => (using_new_ref nc) fun nr => ReaderTₓ.run m ⟨α, u, c, red, r, nr, atoms⟩
 
 /-- Run a `ring_m` tactic in the tactic monad. -/
 unsafe def ring_m.run (red : transparency) (e : expr) {α} (m : ring_m α) : tactic α :=
-  using_new_ref mkBuffer $ fun atoms => ring_m.run' red atoms e m
+  (using_new_ref mkBuffer) fun atoms => ring_m.run' red atoms e m
 
 /-- Lift an instance cache tactic (probably from `norm_num`) to the `ring_m` monad. This version
 is abstract over the instance cache in question (either the ring `α`, or `ℕ` for exponents). -/
@@ -165,14 +165,14 @@ unsafe def horner_expr.pp : horner_expr → tactic format
     let pa ← a.pp
     let pb ← b.pp
     let px ← pp x.1
-    return $ "(" ++ pa ++ ") * (" ++ px ++ ")^" ++ toString n ++ " + " ++ pb
+    return <| "(" ++ pa ++ ") * (" ++ px ++ ")^" ++ toString n ++ " + " ++ pb
 
 unsafe instance : has_to_tactic_format horner_expr :=
   ⟨horner_expr.pp⟩
 
 /-- Reflexivity conversion for a `horner_expr`. -/
 unsafe def horner_expr.refl_conv (e : horner_expr) : ring_m (horner_expr × expr) := do
-  let p ← lift $ mk_eq_refl e
+  let p ← lift <| mk_eq_refl e
   return (e, p)
 
 theorem zero_horner {α} [CommSemiringₓ α] x n b : @horner α _ 0 x n b = b := by
@@ -190,7 +190,7 @@ unsafe def eval_horner : horner_expr → expr × ℕ → expr × ℕ → horner_
   | ha@(xadd a a₁ x₁ n₁ b₁), x, n, b => do
     let c ← get_cache
     if x₁.2 = x.2 ∧ b₁.e.to_nat = some 0 then do
-        let (n', h) ← nc_lift $ fun nc => norm_num.prove_add_nat' nc n₁.1 n.1
+        let (n', h) ← nc_lift fun nc => norm_num.prove_add_nat' nc n₁.1 n.1
         return (xadd' c a₁ x (n', n₁.2 + n.2) b, c.cs_app `` horner_horner [a₁, x.1, n₁.1, n.1, b, n', h])
       else (xadd' c ha x n b).refl_conv
 
@@ -219,7 +219,7 @@ theorem horner_add_horner_eq {α} [CommSemiringₓ α] a₁ x n b₁ a₂ b₂ a
 /-- Evaluate `a + b` where `a` and `b` are already in normal form. -/
 unsafe def eval_add : horner_expr → horner_expr → ring_m (horner_expr × expr)
   | const e₁ c₁, const e₂ c₂ =>
-    ic_lift $ fun ic => do
+    ic_lift fun ic => do
       let n := c₁ + c₂
       let (ic, e) ← ic.of_rat n
       let (ic, p) ← norm_num.prove_add_rat ic e₁ e₂ e c₁ c₂ n
@@ -227,7 +227,7 @@ unsafe def eval_add : horner_expr → horner_expr → ring_m (horner_expr × exp
   | he₁@(const e₁ c₁), he₂@(xadd e₂ a x n b) => do
     let c ← get_cache
     if c₁ = 0 then
-        ic_lift $ fun ic => do
+        ic_lift fun ic => do
           let (ic, p) ← ic.mk_app `` zero_addₓ [e₂]
           return (ic, he₂, p)
       else do
@@ -236,7 +236,7 @@ unsafe def eval_add : horner_expr → horner_expr → ring_m (horner_expr × exp
   | he₁@(xadd e₁ a x n b), he₂@(const e₂ c₂) => do
     let c ← get_cache
     if c₂ = 0 then
-        ic_lift $ fun ic => do
+        ic_lift fun ic => do
           let (ic, p) ← ic.mk_app `` add_zeroₓ [e₁]
           return (ic, he₁, p)
       else do
@@ -259,7 +259,7 @@ unsafe def eval_add : horner_expr → horner_expr → ring_m (horner_expr × exp
                   let (nc, ek) ← nc.of_nat k
                   let (nc, h₁) ← norm_num.prove_add_nat nc n₁.1 ek n₂.1
                   return (nc, ek, h₁)
-            let α0 ← ic_lift $ fun ic => ic.mk_app `` Zero.zero []
+            let α0 ← ic_lift fun ic => ic.mk_app `` Zero.zero []
             let (a', h₂) ← eval_add a₁ (xadd' c a₂ x₁ (ek, k) (const α0 0))
             let (b', h₃) ← eval_add b₁ b₂
             return
@@ -273,7 +273,7 @@ unsafe def eval_add : horner_expr → horner_expr → ring_m (horner_expr × exp
                     let (nc, ek) ← nc.of_nat k
                     let (nc, h₁) ← norm_num.prove_add_nat nc n₂.1 ek n₁.1
                     return (nc, ek, h₁)
-              let α0 ← ic_lift $ fun ic => ic.mk_app `` Zero.zero []
+              let α0 ← ic_lift fun ic => ic.mk_app `` Zero.zero []
               let (a', h₂) ← eval_add (xadd' c a₁ x₁ (ek, k) (const α0 0)) a₂
               let (b', h₃) ← eval_add b₁ b₂
               return
@@ -292,13 +292,13 @@ theorem horner_neg {α} [CommRingₓ α] a x n b a' b' (h₁ : -a = a') (h₂ : 
 /-- Evaluate `-a` where `a` is already in normal form. -/
 unsafe def eval_neg : horner_expr → ring_m (horner_expr × expr)
   | const e coeff => do
-    let (e', p) ← ic_lift $ fun ic => norm_num.prove_neg ic e
+    let (e', p) ← ic_lift fun ic => norm_num.prove_neg ic e
     return (const e' (-coeff), p)
   | xadd e a x n b => do
     let c ← get_cache
     let (a', h₁) ← eval_neg a
     let (b', h₂) ← eval_neg b
-    let p ← ic_lift $ fun ic => ic.mk_app `` horner_neg [a, x.1, n.1, b, a', b', h₁, h₂]
+    let p ← ic_lift fun ic => ic.mk_app `` horner_neg [a, x.1, n.1, b, a', b', h₁, h₂]
     return (xadd' c a' x n b', p)
 
 theorem horner_const_mul {α} [CommSemiringₓ α] c a x n b a' b' (h₁ : c * a = a') (h₂ : c * b = b') :
@@ -312,7 +312,7 @@ theorem horner_mul_const {α} [CommSemiringₓ α] a x n b c a' b' (h₁ : a * c
 /-- Evaluate `k * a` where `k` is a rational numeral and `a` is in normal form. -/
 unsafe def eval_const_mul (k : expr × ℚ) : horner_expr → ring_m (horner_expr × expr)
   | const e coeff => do
-    let (e', p) ← ic_lift $ fun ic => norm_num.prove_mul_rat ic k.1 e k.2 coeff
+    let (e', p) ← ic_lift fun ic => norm_num.prove_mul_rat ic k.1 e k.2 coeff
     return (const e' (k.2 * coeff), p)
   | xadd e a x n b => do
     let c ← get_cache
@@ -332,23 +332,23 @@ theorem horner_mul_horner {α} [CommSemiringₓ α] a₁ x n₁ b₁ a₂ n₂ b
 /-- Evaluate `a * b` where `a` and `b` are in normal form. -/
 unsafe def eval_mul : horner_expr → horner_expr → ring_m (horner_expr × expr)
   | const e₁ c₁, const e₂ c₂ => do
-    let (e', p) ← ic_lift $ fun ic => norm_num.prove_mul_rat ic e₁ e₂ c₁ c₂
+    let (e', p) ← ic_lift fun ic => norm_num.prove_mul_rat ic e₁ e₂ c₁ c₂
     return (const e' (c₁ * c₂), p)
   | const e₁ c₁, e₂ =>
     if c₁ = 0 then do
       let c ← get_cache
-      let α0 ← ic_lift $ fun ic => ic.mk_app `` Zero.zero []
-      let p ← ic_lift $ fun ic => ic.mk_app `` zero_mul [e₂]
+      let α0 ← ic_lift fun ic => ic.mk_app `` Zero.zero []
+      let p ← ic_lift fun ic => ic.mk_app `` zero_mul [e₂]
       return (const α0 0, p)
     else
       if c₁ = 1 then do
-        let p ← ic_lift $ fun ic => ic.mk_app `` one_mulₓ [e₂]
+        let p ← ic_lift fun ic => ic.mk_app `` one_mulₓ [e₂]
         return (e₂, p)
       else eval_const_mul (e₁, c₁) e₂
   | e₁, he₂@(const e₂ c₂) => do
-    let p₁ ← ic_lift $ fun ic => ic.mk_app `` mul_comm [e₁, e₂]
+    let p₁ ← ic_lift fun ic => ic.mk_app `` mul_comm [e₁, e₂]
     let (e', p₂) ← eval_mul he₂ e₁
-    let p ← lift $ mk_eq_trans p₁ p₂
+    let p ← lift <| mk_eq_trans p₁ p₂
     return (e', p)
   | he₁@(xadd e₁ a₁ x₁ n₁ b₁), he₂@(xadd e₂ a₂ x₂ n₂ b₂) => do
     let c ← get_cache
@@ -363,7 +363,7 @@ unsafe def eval_mul : horner_expr → horner_expr → ring_m (horner_expr × exp
           return (xadd' c a' x₂ n₂ b', c.cs_app `` horner_const_mul [e₁, a₂, x₂.1, n₂.1, b₂, a', b', h₁, h₂])
         else do
           let (aa, h₁) ← eval_mul he₁ a₂
-          let α0 ← ic_lift $ fun ic => ic.mk_app `` Zero.zero []
+          let α0 ← ic_lift fun ic => ic.mk_app `` Zero.zero []
           let (haa, h₂) ← eval_horner aa x₁ n₂ (const α0 0)
           if b₂.is_zero then
               return (haa, c.cs_app `` horner_mul_horner_zero [a₁, x₁.1, n₁.1, b₁, a₂, n₂.1, aa, haa, h₁, h₂])
@@ -387,26 +387,26 @@ theorem pow_succₓ {α} [CommSemiringₓ α] a n b c (h₁ : (a : α) ^ n = b) 
 unsafe def eval_pow : horner_expr → expr × ℕ → ring_m (horner_expr × expr)
   | e, (_, 0) => do
     let c ← get_cache
-    let α1 ← ic_lift $ fun ic => ic.mk_app `` One.one []
-    let p ← ic_lift $ fun ic => ic.mk_app `` pow_zeroₓ [e]
+    let α1 ← ic_lift fun ic => ic.mk_app `` One.one []
+    let p ← ic_lift fun ic => ic.mk_app `` pow_zeroₓ [e]
     return (const α1 1, p)
   | e, (_, 1) => do
-    let p ← ic_lift $ fun ic => ic.mk_app `` pow_oneₓ [e]
+    let p ← ic_lift fun ic => ic.mk_app `` pow_oneₓ [e]
     return (e, p)
   | const e coeff, (e₂, m) =>
-    ic_lift $ fun ic => do
+    ic_lift fun ic => do
       let (ic, e', p) ← norm_num.prove_pow e coeff ic e₂
       return (ic, const e' (coeff ^ m), p)
   | he@(xadd e a x n b), m => do
     let c ← get_cache
     match b.e.to_nat with
       | some 0 => do
-        let (n', h₁) ← nc_lift $ fun nc => norm_num.prove_mul_rat nc n.1 m.1 n.2 m.2
+        let (n', h₁) ← nc_lift fun nc => norm_num.prove_mul_rat nc n.1 m.1 n.2 m.2
         let (a', h₂) ← eval_pow a m
-        let α0 ← ic_lift $ fun ic => ic.mk_app `` Zero.zero []
+        let α0 ← ic_lift fun ic => ic.mk_app `` Zero.zero []
         return (xadd' c a' x (n', n.2 * m.2) (const α0 0), c.cs_app `` horner_pow [a, x.1, n.1, m.1, n', a', h₁, h₂])
       | _ => do
-        let e₂ ← nc_lift $ fun nc => nc.of_nat (m.2 - 1)
+        let e₂ ← nc_lift fun nc => nc.of_nat (m.2 - 1)
         let (tl, hl) ← eval_pow he (e₂, m.2 - 1)
         let (t, p₂) ← eval_mul tl he
         return (t, c.cs_app `` pow_succₓ [e, e₂, tl, t, hl, p₂])
@@ -418,8 +418,8 @@ theorem horner_atom {α} [CommSemiringₓ α] (x : α) : x = horner 1 x 1 0 := b
 unsafe def eval_atom (e : expr) : ring_m (horner_expr × expr) := do
   let c ← get_cache
   let i ← add_atom e
-  let α0 ← ic_lift $ fun ic => ic.mk_app `` Zero.zero []
-  let α1 ← ic_lift $ fun ic => ic.mk_app `` One.one []
+  let α0 ← ic_lift fun ic => ic.mk_app `` Zero.zero []
+  let α1 ← ic_lift fun ic => ic.mk_app `` One.one []
   return (xadd' c (const α1 1) (e, i) (quote.1 1, 1) (const α0 0), c.cs_app `` horner_atom [e])
 
 theorem subst_into_pow {α} [Monoidₓ α] l r tl tr t (prl : (l : α) = tl) (prr : (r : ℕ) = tr) (prt : tl ^ tr = t) :
@@ -439,53 +439,53 @@ unsafe def eval : expr → ring_m (horner_expr × expr)
     let (e₁', p₁) ← eval e₁
     let (e₂', p₂) ← eval e₂
     let (e', p') ← eval_add e₁' e₂'
-    let p ← ic_lift $ fun ic => ic.mk_app `` NormNum.subst_into_add [e₁, e₂, e₁', e₂', e', p₁, p₂, p']
+    let p ← ic_lift fun ic => ic.mk_app `` NormNum.subst_into_add [e₁, e₂, e₁', e₂', e', p₁, p₂, p']
     return (e', p)
   | e@(quote.1 (@Sub.sub (%%ₓα) (%%ₓinst) (%%ₓe₁) (%%ₓe₂))) =>
-    mcond (succeeds (lift $ mk_app `` CommRingₓ [α] >>= mk_instance))
+    mcond (succeeds (lift <| mk_app `` CommRingₓ [α] >>= mk_instance))
       (do
-        let e₂' ← ic_lift $ fun ic => ic.mk_app `` Neg.neg [e₂]
-        let e ← ic_lift $ fun ic => ic.mk_app `` Add.add [e₁, e₂']
+        let e₂' ← ic_lift fun ic => ic.mk_app `` Neg.neg [e₂]
+        let e ← ic_lift fun ic => ic.mk_app `` Add.add [e₁, e₂']
         let (e', p) ← eval e
-        let p' ← ic_lift $ fun ic => ic.mk_app `` unfold_sub [e₁, e₂, e', p]
+        let p' ← ic_lift fun ic => ic.mk_app `` unfold_sub [e₁, e₂, e', p]
         return (e', p'))
       (eval_atom e)
   | quote.1 (-%%ₓe) => do
     let (e₁, p₁) ← eval e
     let (e₂, p₂) ← eval_neg e₁
-    let p ← ic_lift $ fun ic => ic.mk_app `` NormNum.subst_into_neg [e, e₁, e₂, p₁, p₂]
+    let p ← ic_lift fun ic => ic.mk_app `` NormNum.subst_into_neg [e, e₁, e₂, p₁, p₂]
     return (e₂, p)
   | quote.1 ((%%ₓe₁) * %%ₓe₂) => do
     let (e₁', p₁) ← eval e₁
     let (e₂', p₂) ← eval e₂
     let (e', p') ← eval_mul e₁' e₂'
-    let p ← ic_lift $ fun ic => ic.mk_app `` NormNum.subst_into_mul [e₁, e₂, e₁', e₂', e', p₁, p₂, p']
+    let p ← ic_lift fun ic => ic.mk_app `` NormNum.subst_into_mul [e₁, e₂, e₁', e₂', e', p₁, p₂, p']
     return (e', p)
-  | e@(quote.1 (HasInv.inv (%%ₓ_))) =>
+  | e@(quote.1 (Inv.inv (%%ₓ_))) =>
     (do
-        let (e', p) ← lift $ (norm_num.derive e <|> refl_conv e)
-        let n ← lift $ e'.to_rat
+        let (e', p) ← lift <| norm_num.derive e <|> refl_conv e
+        let n ← lift <| e'.to_rat
         return (const e' n, p)) <|>
       eval_atom e
   | e@(quote.1 (@Div.div _ (%%ₓinst) (%%ₓe₁) (%%ₓe₂))) =>
     mcond
       (succeeds do
-        let inst' ← ic_lift $ fun ic => ic.mk_app `` DivInvMonoidₓ.toHasDiv []
-        lift $ is_def_eq inst inst')
+        let inst' ← ic_lift fun ic => ic.mk_app `` DivInvMonoidₓ.toHasDiv []
+        lift <| is_def_eq inst inst')
       (do
-        let e₂' ← ic_lift $ fun ic => ic.mk_app `` HasInv.inv [e₂]
-        let e ← ic_lift $ fun ic => ic.mk_app `` Mul.mul [e₁, e₂']
+        let e₂' ← ic_lift fun ic => ic.mk_app `` Inv.inv [e₂]
+        let e ← ic_lift fun ic => ic.mk_app `` Mul.mul [e₁, e₂']
         let (e', p) ← eval e
-        let p' ← ic_lift $ fun ic => ic.mk_app `` unfold_div [e₁, e₂, e', p]
+        let p' ← ic_lift fun ic => ic.mk_app `` unfold_div [e₁, e₂, e', p]
         return (e', p'))
       (eval_atom e)
   | e@(quote.1 (@Pow.pow _ _ (%%ₓP) (%%ₓe₁) (%%ₓe₂))) => do
-    let (e₂', p₂) ← lift $ (norm_num.derive e₂ <|> refl_conv e₂)
+    let (e₂', p₂) ← lift <| norm_num.derive e₂ <|> refl_conv e₂
     match e₂'.to_nat, P with
       | some k, quote.1 Monoidₓ.hasPow => do
         let (e₁', p₁) ← eval e₁
         let (e', p') ← eval_pow e₁' (e₂, k)
-        let p ← ic_lift $ fun ic => ic.mk_app `` subst_into_pow [e₁, e₂, e₁', e₂', e', p₁, p₂, p']
+        let p ← ic_lift fun ic => ic.mk_app `` subst_into_pow [e₁, e₂, e₁', e₂', e', p₁, p₂, p']
         return (e', p)
       | _, _ => eval_atom e
   | e =>
@@ -496,7 +496,7 @@ unsafe def eval : expr → ring_m (horner_expr × expr)
 /-- Evaluate a ring expression `e` recursively to normal form, together with a proof of
 equality. -/
 unsafe def eval' (red : transparency) (atoms : ref (Buffer expr)) (e : expr) : tactic (expr × expr) :=
-  ring_m.run' red atoms e $ do
+  ring_m.run' red atoms e <| do
     let (e', p) ← eval e
     return (e', p)
 
@@ -569,13 +569,13 @@ unsafe def normalize' (atoms : ref (Buffer expr)) (red : transparency) (mode := 
                           let (e', prf, _) ← simplify lemmas [] e
                           pure (e', prf)
                       | normalize_mode.SOP =>
-                        trans_conv (eval' red atoms) $
+                        trans_conv (eval' red atoms) <|
                           (trans_conv fun e => do
                               let (e', prf, _) ← simplify lemmas [] e
-                              pure (e', prf)) $
+                              pure (e', prf)) <|
                             simp_bottom_up' fun e => norm_num.derive e <|> pow_lemma.rewrite e)
                       e
-                guardₓ ¬new_e =ₐ e
+                guardₓ ¬expr.alpha_eqv new_e e
                 let a ← read_ref atoms
                 pure (a, new_e, some pr, ff))
               (fun _ _ _ _ _ => failed) `eq e
@@ -594,7 +594,7 @@ unsafe def normalize' (atoms : ref (Buffer expr)) (red : transparency) (mode := 
   * `SOP` means sum of products form, expanding everything to monomials.
     This results in terms like `3 * x ^ 3 * y + x + y`. -/
 unsafe def normalize (red : transparency) (mode := normalize_mode.horner) (e : expr) : tactic (expr × expr) :=
-  using_new_ref mkBuffer $ fun atoms => normalize' atoms red mode e
+  (using_new_ref mkBuffer) fun atoms => normalize' atoms red mode e
 
 end Ringₓ
 
@@ -611,7 +611,7 @@ unsafe def ring1 (red : parse (tk "!")?) : tactic Unit :=
   let transp := if red.is_some then semireducible else reducible
   do
   let quote.1 ((%%ₓe₁) = %%ₓe₂) ← target >>= instantiate_mvars
-  let ((e₁', p₁), (e₂', p₂)) ← ring_m.run transp e₁ $ Prod.mk <$> eval e₁ <*> eval e₂
+  let ((e₁', p₁), (e₂', p₂)) ← ring_m.run transp e₁ <| Prod.mk <$> eval e₁ <*> eval e₂
   is_def_eq e₁' e₂'
   let p ← mk_eq_symm p₂ >>= mk_eq_trans p₁
   tactic.exact p
@@ -620,7 +620,7 @@ unsafe def ring1 (red : parse (tk "!")?) : tactic Unit :=
 `SOP`. (Because these are not actually keywords we use a name parser and postprocess the result.)
 -/
 unsafe def ring.mode : lean.parser ring.normalize_mode :=
-  with_desc "(SOP|raw|horner)?" $ do
+  with_desc "(SOP|raw|horner)?" <| do
     let mode ← (ident)?
     match mode with
       | none => pure ring.normalize_mode.horner
@@ -637,9 +637,9 @@ which rewrites all ring expressions into a normal form. When writing a normal fo
 unsafe def ring_nf (red : parse (tk "!")?) (SOP : parse ring.mode) (loc : parse location) : tactic Unit := do
   let ns ← loc.get_locals
   let transp := if red.is_some then semireducible else reducible
-  let tt ← using_new_ref mkBuffer $ fun atoms => tactic.replace_at (normalize' atoms transp SOP) ns loc.include_goal |
+  let tt ← (using_new_ref mkBuffer) fun atoms => tactic.replace_at (normalize' atoms transp SOP) ns loc.include_goal |
     fail "ring_nf failed to simplify"
-  when loc.include_goal $ try tactic.reflexivity
+  when loc.include_goal <| try tactic.reflexivity
 
 /-- Tactic for solving equations in the language of *commutative* (semi)rings.
 `ring!` will use a more aggressive reducibility setting to identify atoms.

@@ -170,7 +170,7 @@ theorem binary_fan.π_app_right {X Y : C} (s : binary_fan X Y) : s.π.app walkin
 
 theorem binary_fan.is_limit.hom_ext {W X Y : C} {s : binary_fan X Y} (h : is_limit s) {f g : W ⟶ s.X}
     (h₁ : f ≫ s.fst = g ≫ s.fst) (h₂ : f ≫ s.snd = g ≫ s.snd) : f = g :=
-  h.hom_ext $ fun j => walking_pair.cases_on j h₁ h₂
+  h.hom_ext fun j => walking_pair.cases_on j h₁ h₂
 
 /-- A binary cofan is just a cocone on a diagram indexing a coproduct. -/
 abbrev binary_cofan (X Y : C) :=
@@ -194,7 +194,7 @@ theorem binary_cofan.ι_app_right {X Y : C} (s : binary_cofan X Y) : s.ι.app wa
 
 theorem binary_cofan.is_colimit.hom_ext {W X Y : C} {s : binary_cofan X Y} (h : is_colimit s) {f g : s.X ⟶ W}
     (h₁ : s.inl ≫ f = s.inl ≫ g) (h₂ : s.inr ≫ f = s.inr ≫ g) : f = g :=
-  h.hom_ext $ fun j => walking_pair.cases_on j h₁ h₂
+  h.hom_ext fun j => walking_pair.cases_on j h₁ h₂
 
 variable {X Y : C}
 
@@ -236,7 +236,7 @@ theorem binary_cofan.mk_ι_app_right {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P)
 @[simps]
 def binary_fan.is_limit.lift' {W X Y : C} {s : binary_fan X Y} (h : is_limit s) (f : W ⟶ X) (g : W ⟶ Y) :
     { l : W ⟶ s.X // l ≫ s.fst = f ∧ l ≫ s.snd = g } :=
-  ⟨h.lift $ binary_fan.mk f g, h.fac _ _, h.fac _ _⟩
+  ⟨h.lift <| binary_fan.mk f g, h.fac _ _, h.fac _ _⟩
 
 /-- If `s` is a colimit binary cofan over `X` and `Y`,, then every pair of morphisms `f : X ⟶ W` and
     `g : Y ⟶ W` induces a morphism `l : s.X ⟶ W` satisfying `s.inl ≫ l = f` and `s.inr ≫ l = g`.
@@ -244,7 +244,7 @@ def binary_fan.is_limit.lift' {W X Y : C} {s : binary_fan X Y} (h : is_limit s) 
 @[simps]
 def binary_cofan.is_colimit.desc' {W X Y : C} {s : binary_cofan X Y} (h : is_colimit s) (f : X ⟶ W) (g : Y ⟶ W) :
     { l : s.X ⟶ W // s.inl ≫ l = f ∧ s.inr ≫ l = g } :=
-  ⟨h.desc $ binary_cofan.mk f g, h.fac _ _, h.fac _ _⟩
+  ⟨h.desc <| binary_cofan.mk f g, h.fac _ _, h.fac _ _⟩
 
 /-- An abbreviation for `has_limit (pair X Y)`. -/
 abbrev has_binary_product (X Y : C) :=
@@ -349,19 +349,19 @@ theorem coprod.inr_desc {W X Y : C} [has_binary_coproduct X Y] (f : X ⟶ W) (g 
 
 instance prod.mono_lift_of_mono_left {W X Y : C} [has_binary_product X Y] (f : W ⟶ X) (g : W ⟶ Y) [mono f] :
     mono (prod.lift f g) :=
-  mono_of_mono_fac $ prod.lift_fst _ _
+  mono_of_mono_fac <| prod.lift_fst _ _
 
 instance prod.mono_lift_of_mono_right {W X Y : C} [has_binary_product X Y] (f : W ⟶ X) (g : W ⟶ Y) [mono g] :
     mono (prod.lift f g) :=
-  mono_of_mono_fac $ prod.lift_snd _ _
+  mono_of_mono_fac <| prod.lift_snd _ _
 
 instance coprod.epi_desc_of_epi_left {W X Y : C} [has_binary_coproduct X Y] (f : X ⟶ W) (g : Y ⟶ W) [epi f] :
     epi (coprod.desc f g) :=
-  epi_of_epi_fac $ coprod.inl_desc _ _
+  epi_of_epi_fac <| coprod.inl_desc _ _
 
 instance coprod.epi_desc_of_epi_right {W X Y : C} [has_binary_coproduct X Y] (f : X ⟶ W) (g : Y ⟶ W) [epi g] :
     epi (coprod.desc f g) :=
-  epi_of_epi_fac $ coprod.inr_desc _ _
+  epi_of_epi_fac <| coprod.inr_desc _ _
 
 /-- If the product of `X` and `Y` exists, then every pair of morphisms `f : W ⟶ X` and `g : W ⟶ Y`
     induces a morphism `l : W ⟶ X ⨯ Y` satisfying `l ≫ prod.fst = f` and `l ≫ prod.snd = g`. -/

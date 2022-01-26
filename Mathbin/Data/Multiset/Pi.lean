@@ -24,7 +24,7 @@ variable [DecidableEq α] {δ : α → Type _}
 function `f` such that `f a' : δ a'` for all `a'` in `m`, `pi.cons m a b f` is a function `g` such
 that `g a'' : δ a''` for all `a''` in `a ::ₘ m`. -/
 def pi.cons (m : Multiset α) (a : α) (b : δ a) (f : ∀, ∀ a ∈ m, ∀, δ a) : ∀, ∀ a' ∈ a ::ₘ m, ∀, δ a' := fun a' ha' =>
-  if h : a' = a then Eq.ndrec b h.symm else f a' $ (mem_cons.1 ha').resolve_left h
+  if h : a' = a then Eq.ndrec b h.symm else f a' <| (mem_cons.1 ha').resolve_left h
 
 theorem pi.cons_same {m : Multiset α} {a : α} {b : δ a} {f : ∀, ∀ a ∈ m, ∀, δ a} (h : a ∈ a ::ₘ m) :
     pi.cons m a b f a h = b :=
@@ -54,7 +54,7 @@ theorem pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
 
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
 def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀, ∀ a ∈ m, ∀, δ a) :=
-  m.rec_on {pi.empty δ} (fun a m p : Multiset (∀, ∀ a ∈ m, ∀, δ a) => (t a).bind $ fun b => p.map $ pi.cons m a b)
+  m.rec_on {pi.empty δ} (fun a m p : Multiset (∀, ∀ a ∈ m, ∀, δ a) => (t a).bind fun b => p.map <| pi.cons m a b)
     (by
       intro a a' m n
       by_cases' eq : a = a'
@@ -82,14 +82,14 @@ theorem pi_zero (t : ∀ a, Multiset (δ a)) : pi 0 t = {pi.empty δ} :=
 
 @[simp]
 theorem pi_cons (m : Multiset α) (t : ∀ a, Multiset (δ a)) (a : α) :
-    pi (a ::ₘ m) t = ((t a).bind $ fun b => (pi m t).map $ pi.cons m a b) :=
+    pi (a ::ₘ m) t = (t a).bind fun b => (pi m t).map <| pi.cons m a b :=
   rec_on_cons a m
 
 theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) : Function.Injective (pi.cons s a b) :=
   fun f₁ f₂ eq =>
-  funext $ fun a' =>
-    funext $ fun h' =>
-      have ne : a ≠ a' := fun h => hs $ h.symm ▸ h'
+  funext fun a' =>
+    funext fun h' =>
+      have ne : a ≠ a' := fun h => hs <| h.symm ▸ h'
       have : a' ∈ a ::ₘ s := mem_cons_of_mem h'
       calc
         f₁ a' h' = pi.cons s a b f₁ a' this := by
@@ -100,7 +100,7 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
           rw [pi.cons_ne this Ne.symm]
         
 
-theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : card (pi m t) = Prod (m.map $ fun a => card (t a)) :=
+theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : card (pi m t) = Prod (m.map fun a => card (t a)) :=
   Multiset.induction_on m
     (by
       simp )
@@ -118,14 +118,14 @@ theorem nodup_pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} : nodup s → (�
       simp
       constructor
       · intro b hb
-        exact nodup_map (pi_cons_injective has) (ih hs $ fun a' h' => ht a' $ mem_cons_of_mem h')
+        exact nodup_map (pi_cons_injective has) ((ih hs) fun a' h' => ht a' <| mem_cons_of_mem h')
         
-      · apply pairwise_of_nodup _ (ht a $ mem_cons_self _ _)
+      · apply pairwise_of_nodup _ (ht a <| mem_cons_self _ _)
         exact fun b₁ hb₁ b₂ hb₂ neb =>
           disjoint_map_map.2 fun f hf g hg eq =>
             have : pi.cons s a b₁ f a (mem_cons_self _ _) = pi.cons s a b₂ g a (mem_cons_self _ _) := by
               rw [Eq]
-            neb $
+            neb <|
               show b₁ = b₂ by
                 rwa [pi.cons_same, pi.cons_same] at this
         )

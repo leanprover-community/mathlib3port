@@ -71,6 +71,35 @@ theorem lie_apply {α : Type _} (f g : α → A) (a : α) : ⁅f,g⁆ a = ⁅f a
 
 end LieRing
 
+section AssociativeModule
+
+variable {M : Type w} [AddCommGroupₓ M] [Module A M]
+
+/-- We can regard a module over an associative ring `A` as a Lie ring module over `A` with Lie
+bracket equal to its ring commutator.
+
+Note that this cannot be a global instance because it would create a diamond when `M = A`,
+specifically we can build two mathematically-different `has_bracket A A`s:
+ 1. `@ring.has_bracket A _` which says `⁅a, b⁆ = a * b - b * a`
+ 2. `(@lie_ring_module.of_associative_module A _ A _ _).to_has_bracket` which says `⁅a, b⁆ = a • b`
+    (and thus `⁅a, b⁆ = a * b`)
+
+See note [reducible non-instances] -/
+@[reducible]
+def LieRingModule.ofAssociativeModule : LieRingModule A M where
+  bracket := · • ·
+  add_lie := add_smul
+  lie_add := smul_add
+  leibniz_lie := by
+    simp [LieRing.of_associative_ring_bracket, sub_smul, mul_smul, sub_add_cancel]
+
+attribute [local instance] LieRingModule.ofAssociativeModule
+
+theorem lie_eq_smul (a : A) (m : M) : ⁅a,m⁆ = a • m :=
+  rfl
+
+end AssociativeModule
+
 section LieAlgebra
 
 variable {R : Type u} [CommRingₓ R] [Algebra R A]
@@ -81,6 +110,29 @@ instance (priority := 100) LieAlgebra.ofAssociativeAlgebra : LieAlgebra R A wher
   lie_smul := fun t x y => by
     rw [LieRing.of_associative_ring_bracket, LieRing.of_associative_ring_bracket, Algebra.mul_smul_comm,
       Algebra.smul_mul_assoc, smul_sub]
+
+attribute [local instance] LieRingModule.ofAssociativeModule
+
+section AssociativeRepresentation
+
+variable {M : Type w} [AddCommGroupₓ M] [Module R M] [Module A M] [IsScalarTower R A M]
+
+/-- A representation of an associative algebra `A` is also a representation of `A`, regarded as a
+Lie algebra via the ring commutator.
+
+See the comment at `lie_ring_module.of_associative_module` for why the possibility `M = A` means
+this cannot be a global instance. -/
+def LieModule.ofAssociativeModule : LieModule R A M where
+  smul_lie := smul_assoc
+  lie_smul := smul_algebra_smul_comm
+
+instance Module.End.lieRingModule : LieRingModule (Module.End R M) M :=
+  LieRingModule.ofAssociativeModule
+
+instance Module.End.lieModule : LieModule R (Module.End R M) M :=
+  LieModule.ofAssociativeModule
+
+end AssociativeRepresentation
 
 namespace AlgHom
 
@@ -160,6 +212,11 @@ def LieAlgebra.ad : L →ₗ⁅R⁆ Module.End R L :=
 theorem LieAlgebra.ad_apply (x y : L) : LieAlgebra.ad R L x y = ⁅x,y⁆ :=
   rfl
 
+@[simp]
+theorem LieModule.to_endomorphism_module_End : LieModule.toEndomorphism R (Module.End R M) M = LieHom.id := by
+  ext g m
+  simp [lie_eq_smul]
+
 open LieAlgebra
 
 theorem LieAlgebra.ad_eq_lmul_left_sub_lmul_right (A : Type v) [Ringₓ A] [Algebra R A] :
@@ -170,7 +227,7 @@ theorem LieAlgebra.ad_eq_lmul_left_sub_lmul_right (A : Type v) [Ringₓ A] [Alge
 variable {R L}
 
 theorem LieSubalgebra.ad_comp_incl_eq (K : LieSubalgebra R L) (x : K) :
-    (ad R L (↑x)).comp (K.incl : K →ₗ[R] L) = (K.incl : K →ₗ[R] L).comp (ad R K x) := by
+    (ad R L ↑x).comp (K.incl : K →ₗ[R] L) = (K.incl : K →ₗ[R] L).comp (ad R K x) := by
   ext y
   simp only [ad_apply, LieHom.coe_to_linear_map, LieSubalgebra.coe_incl, LinearMap.coe_comp, LieSubalgebra.coe_bracket,
     Function.comp_app]

@@ -99,7 +99,7 @@ theorem tendsto_abv_eval₂_at_top {R S k α : Type _} [Semiringₓ R] [Ringₓ 
 theorem tendsto_abv_at_top {R k α : Type _} [Ringₓ R] [LinearOrderedField k] (abv : R → k) [IsAbsoluteValue abv]
     (p : Polynomial R) (h : 0 < degree p) {l : Filter α} {z : α → R} (hz : tendsto (abv ∘ z) l at_top) :
     tendsto (fun x => abv (p.eval (z x))) l at_top :=
-  tendsto_abv_eval₂_at_top _ _ _ h (mt leading_coeff_eq_zero.1 $ ne_zero_of_degree_gt h) hz
+  tendsto_abv_eval₂_at_top _ _ _ h (mt leading_coeff_eq_zero.1 <| ne_zero_of_degree_gt h) hz
 
 theorem tendsto_abv_aeval_at_top {R A k α : Type _} [CommSemiringₓ R] [Ringₓ A] [Algebra R A] [LinearOrderedField k]
     (abv : A → k) [IsAbsoluteValue abv] (p : Polynomial R) (hd : 0 < degree p) (h₀ : algebraMap R A p.leading_coeff ≠ 0)
@@ -114,7 +114,7 @@ theorem tendsto_norm_at_top (p : Polynomial R) (h : 0 < degree p) {l : Filter α
 
 theorem exists_forall_norm_le [ProperSpace R] (p : Polynomial R) : ∃ x, ∀ y, ∥p.eval x∥ ≤ ∥p.eval y∥ :=
   if hp0 : 0 < degree p then
-    p.continuous.norm.exists_forall_le $ p.tendsto_norm_at_top hp0 tendsto_norm_cocompact_at_top
+    p.continuous.norm.exists_forall_le <| p.tendsto_norm_at_top hp0 tendsto_norm_cocompact_at_top
   else
     ⟨p.coeff 0, by
       rw [eq_C_of_degree_le_zero (le_of_not_gtₓ hp0)] <;> simp ⟩

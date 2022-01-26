@@ -110,7 +110,7 @@ def id (a : SimplexCategory.{u}) : SimplexCategory.Hom a a :=
 @[simp]
 def comp {a b c : SimplexCategory.{u}} (f : SimplexCategory.Hom b c) (g : SimplexCategory.Hom a b) :
     SimplexCategory.Hom a c :=
-  mk $ f.to_order_hom.comp g.to_order_hom
+  mk <| f.to_order_hom.comp g.to_order_hom
 
 end Hom
 
@@ -122,7 +122,7 @@ instance small_category : small_category.{u} SimplexCategory where
 
 /-- The constant morphism from [0]. -/
 def const (x : SimplexCategory.{u}) (i : Finₓ (x.len + 1)) : [0] ⟶ x :=
-  hom.mk $
+  hom.mk <|
     ⟨fun _ => i, by
       tauto⟩
 
@@ -330,7 +330,7 @@ section Skeleton
 of `NonemptyFinLinOrd` -/
 @[simps obj map]
 def skeletal_functor : SimplexCategory.{u} ⥤ NonemptyFinLinOrdₓ.{v} where
-  obj := fun a => NonemptyFinLinOrdₓ.of $ Ulift (Finₓ (a.len + 1))
+  obj := fun a => NonemptyFinLinOrdₓ.of <| Ulift (Finₓ (a.len + 1))
   map := fun a b f => ⟨fun i => Ulift.up (f.to_order_hom i.down), fun i j h => f.to_order_hom.monotone h⟩
   map_id' := fun a => by
     ext
@@ -375,7 +375,7 @@ instance : ess_surj skeletal_functor.{u, v} where
     ⟨mk (Fintype.card X - 1 : ℕ),
       ⟨by
         have aux : Fintype.card X = Fintype.card X - 1 + 1 :=
-          (Nat.succ_pred_eq_of_posₓ $ fintype.card_pos_iff.mpr ⟨⊥⟩).symm
+          (Nat.succ_pred_eq_of_posₓ <| fintype.card_pos_iff.mpr ⟨⊥⟩).symm
         let f := monoEquivOfFin X aux
         have hf := (finset.univ.order_emb_of_fin aux).StrictMono
         refine' { Hom := ⟨fun i => f i.down, _⟩, inv := ⟨fun i => ⟨f.symm i⟩, _⟩, hom_inv_id' := _, inv_hom_id' := _ }

@@ -127,7 +127,7 @@ theorem ext {f g : P1 →ᵃ[k] P2} (h : ∀ p, f p = g p) : f = g := by
 theorem ext_iff {f g : P1 →ᵃ[k] P2} : f = g ↔ ∀ p, f p = g p :=
   ⟨fun h p => h ▸ rfl, ext⟩
 
-theorem coe_fn_injective : @Function.Injective (P1 →ᵃ[k] P2) (P1 → P2) coeFn := fun f g H => ext $ congr_funₓ H
+theorem coe_fn_injective : @Function.Injective (P1 →ᵃ[k] P2) (P1 → P2) coeFn := fun f g H => ext <| congr_funₓ H
 
 protected theorem congr_argₓ (f : P1 →ᵃ[k] P2) {x y : P1} (h : x = y) : f x = f y :=
   congr_argₓ _ h
@@ -165,7 +165,7 @@ theorem linear_eq_zero_iff_exists_const (f : P1 →ᵃ[k] P2) : f.linear = 0 ↔
     
 
 instance Nonempty : Nonempty (P1 →ᵃ[k] P2) :=
-  (AddTorsor.nonempty : Nonempty P2).elim $ fun p => ⟨const k P1 p⟩
+  (AddTorsor.nonempty : Nonempty P2).elim fun p => ⟨const k P1 p⟩
 
 /-- Construct an affine map by verifying the relation between the map and its linear part at one
 base point. Namely, this function takes a map `f : P₁ → P₂`, a linear map `f' : V₁ →ₗ[k] V₂`, and
@@ -193,15 +193,15 @@ instance : AddCommGroupₓ (P1 →ᵃ[k] V2) where
   sub := fun f g =>
     ⟨f - g, f.linear - g.linear, fun p v => by
       simp [sub_add_comm]⟩
-  sub_eq_add_neg := fun f g => ext $ fun p => sub_eq_add_neg _ _
+  sub_eq_add_neg := fun f g => ext fun p => sub_eq_add_neg _ _
   neg := fun f =>
     ⟨-f, -f.linear, fun p v => by
       simp [add_commₓ]⟩
-  add_assoc := fun f₁ f₂ f₃ => ext $ fun p => add_assocₓ _ _ _
-  zero_add := fun f => ext $ fun p => zero_addₓ (f p)
-  add_zero := fun f => ext $ fun p => add_zeroₓ (f p)
-  add_comm := fun f g => ext $ fun p => add_commₓ (f p) (g p)
-  add_left_neg := fun f => ext $ fun p => add_left_negₓ (f p)
+  add_assoc := fun f₁ f₂ f₃ => ext fun p => add_assocₓ _ _ _
+  zero_add := fun f => ext fun p => zero_addₓ (f p)
+  add_zero := fun f => ext fun p => add_zeroₓ (f p)
+  add_comm := fun f g => ext fun p => add_commₓ (f p) (g p)
+  add_left_neg := fun f => ext fun p => add_left_negₓ (f p)
 
 @[simp, norm_cast]
 theorem coe_zero : ⇑(0 : P1 →ᵃ[k] V2) = 0 :=
@@ -241,13 +241,13 @@ instance : affine_space (P1 →ᵃ[k] V2) (P1 →ᵃ[k] P2) where
   vadd := fun f g =>
     ⟨fun p => f p +ᵥ g p, f.linear + g.linear, fun p v => by
       simp [vadd_vadd, add_right_commₓ]⟩
-  zero_vadd := fun f => ext $ fun p => zero_vadd _ (f p)
-  add_vadd := fun f₁ f₂ f₃ => ext $ fun p => add_vadd (f₁ p) (f₂ p) (f₃ p)
+  zero_vadd := fun f => ext fun p => zero_vadd _ (f p)
+  add_vadd := fun f₁ f₂ f₃ => ext fun p => add_vadd (f₁ p) (f₂ p) (f₃ p)
   vsub := fun f g =>
     ⟨fun p => f p -ᵥ g p, f.linear - g.linear, fun p v => by
       simp [vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, add_sub, sub_add_eq_add_sub]⟩
-  vsub_vadd' := fun f g => ext $ fun p => vsub_vadd (f p) (g p)
-  vadd_vsub' := fun f g => ext $ fun p => vadd_vsub (f p) (g p)
+  vsub_vadd' := fun f g => ext fun p => vsub_vadd (f p) (g p)
+  vadd_vsub' := fun f g => ext fun p => vadd_vsub (f p) (g p)
 
 @[simp]
 theorem vadd_apply (f : P1 →ᵃ[k] V2) (g : P1 →ᵃ[k] P2) (p : P1) : (f +ᵥ g) p = f p +ᵥ g p :=
@@ -339,11 +339,11 @@ omit V3
 
 @[simp]
 theorem comp_id (f : P1 →ᵃ[k] P2) : f.comp (id k P1) = f :=
-  ext $ fun p => rfl
+  ext fun p => rfl
 
 @[simp]
 theorem id_comp (f : P1 →ᵃ[k] P2) : (id k P2).comp f = f :=
-  ext $ fun p => rfl
+  ext fun p => rfl
 
 include V3 V4
 
@@ -447,7 +447,7 @@ theorem line_map_same_apply (p : P1) (c : k) : line_map p p c = p := by
 
 @[simp]
 theorem line_map_same (p : P1) : line_map p p = const k k p :=
-  ext $ line_map_same_apply p
+  ext <| line_map_same_apply p
 
 @[simp]
 theorem line_map_apply_zero (p₀ p₁ : P1) : line_map p₀ p₁ (0 : k) = p₀ := by
@@ -465,7 +465,7 @@ theorem apply_line_map (f : P1 →ᵃ[k] P2) (p₀ p₁ : P1) (c : k) : f (line_
 
 @[simp]
 theorem comp_line_map (f : P1 →ᵃ[k] P2) (p₀ p₁ : P1) : f.comp (line_map p₀ p₁) = line_map (f p₀) (f p₁) :=
-  ext $ f.apply_line_map p₀ p₁
+  ext <| f.apply_line_map p₀ p₁
 
 @[simp]
 theorem fst_line_map (p₀ p₁ : P1 × P2) (c : k) : (line_map p₀ p₁ c).1 = line_map p₀.1 p₁.1 c :=
@@ -577,12 +577,12 @@ instance : Module k (P1 →ᵃ[k] V2) where
   smul := fun c f =>
     ⟨c • f, c • f.linear, fun p v => by
       simp [smul_add]⟩
-  one_smul := fun f => ext $ fun p => one_smul _ _
-  mul_smul := fun c₁ c₂ f => ext $ fun p => mul_smul _ _ _
-  smul_add := fun c f g => ext $ fun p => smul_add _ _ _
-  smul_zero := fun c => ext $ fun p => smul_zero _
-  add_smul := fun c₁ c₂ f => ext $ fun p => add_smul _ _ _
-  zero_smul := fun f => ext $ fun p => zero_smul _ _
+  one_smul := fun f => ext fun p => one_smul _ _
+  mul_smul := fun c₁ c₂ f => ext fun p => mul_smul _ _ _
+  smul_add := fun c f g => ext fun p => smul_add _ _ _
+  smul_zero := fun c => ext fun p => smul_zero _
+  add_smul := fun c₁ c₂ f => ext fun p => add_smul _ _ _
+  zero_smul := fun f => ext fun p => zero_smul _ _
 
 @[simp]
 theorem coe_smul (c : k) (f : P1 →ᵃ[k] V2) : ⇑(c • f) = c • f :=

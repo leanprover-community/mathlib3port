@@ -31,10 +31,10 @@ variable [enough_projectives C] [abelian C]
 /-- When `C` is abelian, `projective.d f` and `f` are exact.
 -/
 theorem exact_d_f {X Y : C} (f : X ⟶ Y) : exact (d f) f :=
-  (abelian.exact_iff _ _).2 $
+  (abelian.exact_iff _ _).2 <|
     ⟨by
       simp ,
-      zero_of_epi_comp (π _) $ by
+      zero_of_epi_comp (π _) <| by
         rw [← category.assoc, cokernel.condition]⟩
 
 end

@@ -78,8 +78,8 @@ open Format
 unsafe instance : has_to_tactic_format projection_data :=
   ⟨fun ⟨a, b, c, d, e⟩ =>
     (fun x =>
-        group $
-          nest 1 $
+        group <|
+          nest 1 <|
             to_fmt "⟨" ++ to_fmt a ++ to_fmt "," ++ line ++ x ++ to_fmt "," ++ line ++ to_fmt c ++ to_fmt "," ++ line ++
                       to_fmt d ++
                     to_fmt "," ++
@@ -90,8 +90,8 @@ unsafe instance : has_to_tactic_format projection_data :=
 
 unsafe instance : has_to_format parsed_projection_data :=
   ⟨fun ⟨a, b, c, d⟩ =>
-    group $
-      nest 1 $
+    group <|
+      nest 1 <|
         to_fmt "⟨" ++ to_fmt a ++ to_fmt "," ++ line ++ to_fmt b ++ to_fmt "," ++ line ++ to_fmt c ++ to_fmt "," ++
               line ++
             to_fmt d ++
@@ -135,7 +135,7 @@ unsafe def notation_class_attr : user_attribute Unit (Bool × Option Name) where
   parser := Prod.mk <$> Option.isNone <$> «expr ?» (tk "*") <*> «expr ?» ident
 
 attribute [notation_class]
-  Zero One Add Mul HasInv Neg Sub Div HasDvd Mod LE LT Append HasAndthen HasUnion HasInter HasSdiff HasEquivₓ HasSubset HasSsubset HasEmptyc HasInsert HasSingleton HasSep HasMem Pow
+  Zero One Add Mul Inv Neg Sub Div HasDvd Mod LE LT Append HasAndthen HasUnion HasInter HasSdiff HasEquivₓ HasSubset HasSsubset HasEmptyc HasInsert HasSingleton HasSep HasMem Pow
 
 attribute [notation_class* coeSort] CoeSort
 
@@ -143,17 +143,17 @@ attribute [notation_class* coeFn] CoeFun
 
 /-- Returns the projection information of a structure. -/
 unsafe def projections_info (l : List projection_data) (pref : Stringₓ) (str : Name) : tactic format := do
-  let ⟨defaults, nondefaults⟩ ← return $ l.partition_map $ fun s => if s.is_default then inl s else inr s
+  let ⟨defaults, nondefaults⟩ ← return <| l.partition_map fun s => if s.is_default then inl s else inr s
   let to_print ←
-    defaults.mmap $ fun s =>
+    defaults.mmap fun s =>
         toString <$>
           let prefix_str := if s.is_prefix then "(prefix) " else ""
           f!"Projection {(← prefix_str)}{(← s.name)}: {← s.expr}"
-  let print2 := Stringₓ.join $ (nondefaults.map fun nm : projection_data => toString nm.1).intersperse ", "
+  let print2 := Stringₓ.join <| (nondefaults.map fun nm : projection_data => toString nm.1).intersperse ", "
   let to_print :=
     to_print ++
       if nondefaults.length = 0 then [] else ["No lemmas are generated for the projections: " ++ print2 ++ "."]
-  let to_print := Stringₓ.join $ to_print.intersperse "\n        > "
+  let to_print := Stringₓ.join <| to_print.intersperse "\n        > "
   return
       f! "[simps] > {pref } {str }:
                 > {to_print}"
@@ -164,8 +164,8 @@ unsafe def get_composite_of_projections_aux :
   | str, proj, x, Pos, args => do
     let e ← get_env
     let projs ← e.structure_fields str
-    let proj_info := projs.map_with_index $ fun n p => (fun x => (x, n, p)) <$> proj.get_rest ("_" ++ p.last)
-    when (proj_info.filter_map id = []) $
+    let proj_info := projs.map_with_index fun n p => (fun x => (x, n, p)) <$> proj.get_rest ("_" ++ p.last)
+    when (proj_info.filter_map id = []) <|
         throwError "Failed to find constructor {(← proj.popn 1)} in structure {← str}."
     let (proj_rest, index, proj_nm) ← return (proj_info.filter_map id).ilast
     let str_d ← e.get str
@@ -174,7 +174,7 @@ unsafe def get_composite_of_projections_aux :
     let type ← infer_type x
     let params := get_app_args type
     let univs := proj_d.univ_params.zip type.get_app_fn.univ_levels
-    let new_x := (proj_e.instantiate_univ_params univs).mk_app $ params ++ [x]
+    let new_x := (proj_e.instantiate_univ_params univs).mk_app <| params ++ [x]
     let new_pos := Pos ++ [index]
     if proj_rest.is_empty then return (new_x.lambdas args, new_pos)
       else do
@@ -194,7 +194,7 @@ unsafe def get_composite_of_projections (str : Name) (proj : Stringₓ) : tactic
   let (type_args, tgt) ← open_pis_whnf type
   let str_ap := str_e.mk_app type_args
   let x ← mk_local' `x BinderInfo.default str_ap
-  get_composite_of_projections_aux str ("_" ++ proj) x [] $ type_args ++ [x]
+  get_composite_of_projections_aux str ("_" ++ proj) x [] <| type_args ++ [x]
 
 /-- Get the projections used by `simps` associated to a given structure `str`.
 
@@ -250,7 +250,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
   let has_attr ← has_attribute' `_simps_str str
   if has_attr then do
       let data ← simps_str_attr str
-      when (trace_if_exists || is_trace_enabled_for `simps.verbose) $
+      when (trace_if_exists || is_trace_enabled_for `simps.verbose) <|
           projections_info data.2 "Already found projection information for structure" str >>= trace
       return data
     else do
@@ -264,36 +264,36 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
       let raw_univs := d_str.univ_params
       let raw_levels := level.param <$> raw_univs
       let projs ← e.structure_fields str
-      let projs : List parsed_projection_data := projs.map $ fun nm => ⟨nm, nm, tt, ff⟩
+      let projs : List parsed_projection_data := projs.map fun nm => ⟨nm, nm, tt, ff⟩
       let projs : List parsed_projection_data :=
         rules.foldl
           (fun projs rule =>
             match rule with
             | (inl (old_nm, new_nm), is_prefix) =>
               if old_nm ∈ projs.map fun x => x.new_name then
-                projs.map $ fun proj =>
+                projs.map fun proj =>
                   if proj.new_name = old_nm then { proj with new_name := new_nm, IsPrefix } else proj
               else projs ++ [⟨old_nm, new_nm, tt, is_prefix⟩]
             | (inr nm, is_prefix) =>
               if nm ∈ projs.map fun x => x.new_name then
-                projs.map $ fun proj => if proj.new_name = nm then { proj with is_default := ff, IsPrefix } else proj
+                projs.map fun proj => if proj.new_name = nm then { proj with is_default := ff, IsPrefix } else proj
               else projs ++ [⟨nm, nm, ff, is_prefix⟩])
           projs
       when_tracing `simps.debug
           (← do
             dbg_trace "[simps] > Projection info after applying the rules: {← projs}.")
-      when ¬(projs.map $ fun x => x.new_name : List Name).Nodup $
-          fail $
+      when ¬(projs.map fun x => x.new_name : List Name).Nodup <|
+          fail <|
             "Invalid projection names. Two projections have the same name.\nThis is likely because a custom composition of projections was given the same name as an " ++
                 "existing projection. Solution: rename the existing projection (before renaming the custom " ++
               "projection)."
       let raw_exprs_and_nrs ←
-        projs.mmap $ fun ⟨orig_nm, new_nm, _, _⟩ => do
+        projs.mmap fun ⟨orig_nm, new_nm, _, _⟩ => do
             let (raw_expr, nrs) ← get_composite_of_projections str orig_nm.last
             let custom_proj ←
               (do
                     let decl ← e.get (str ++ `simps ++ new_nm.last)
-                    let custom_proj := decl.value.instantiate_univ_params $ decl.univ_params.zip raw_levels
+                    let custom_proj := decl.value.instantiate_univ_params <| decl.univ_params.zip raw_levels
                     when trc
                         (← do
                           dbg_trace "[simps] > found custom projection for {(← new_nm)}:
@@ -329,7 +329,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
                   let proj_nm ← proj_nm <|> (e.structure_fields_full class_nm).map List.headₓ
                   let (raw_expr, lambda_raw_expr) ←
                     if is_class then do
-                        guardₓ $ args.length = 1
+                        guardₓ <| args.length = 1
                         let e_inst_type := (const class_nm raw_levels).mk_app args
                         let (hyp, e_inst) ← try_for 1000 (mk_conditional_instance e_str e_inst_type)
                         let raw_expr ← mk_mapp proj_nm [args.head, e_inst]
@@ -343,8 +343,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
                         return (raw_expr, raw_expr.lambdas args)
                   let raw_expr_whnf ← whnf raw_expr
                   let relevant_proj := raw_expr_whnf.binding_body.get_app_fn.const_name
-                  guardₓ $
-                      projs.any $ fun x => x.1 = relevant_proj.last ∧ ¬e.contains (str ++ `simps ++ x.new_name.last)
+                  guardₓ <| projs.any fun x => x.1 = relevant_proj.last ∧ ¬e.contains (str ++ `simps ++ x.new_name.last)
                   let pos := projs.find_index fun x => x.1 = relevant_proj.last
                   when trc
                       (← do
@@ -354,7 +353,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
                       (← do
                         dbg_trace "[simps] > The raw projection is:
                             {← lambda_raw_expr}")
-                  return $ raw_exprs.update_nth Pos lambda_raw_expr) <|>
+                  return <| raw_exprs.update_nth Pos lambda_raw_expr) <|>
                 return raw_exprs)
             raw_exprs
       let positions := raw_exprs_and_nrs.map Prod.snd
@@ -363,9 +362,9 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
       let prefixes := projs.map fun x => x.is_prefix
       let projs := proj_names.zip_with5 projection_data.mk raw_exprs positions defaults prefixes
       let projs ←
-        projs.mmap $ fun proj =>
-            is_proof proj.expr >>= fun b => return $ if b then { proj with is_default := ff } else proj
-      when trc $ projections_info projs "generated projections for" str >>= trace
+        projs.mmap fun proj =>
+            is_proof proj.expr >>= fun b => return <| if b then { proj with is_default := ff } else proj
+      when trc <| projections_info projs "generated projections for" str >>= trace
       simps_str_attr str (raw_univs, projs) tt
       when_tracing `simps.debug
           (← do
@@ -478,11 +477,11 @@ Some common uses:
   ```
 -/
 @[user_command]
-unsafe def initialize_simps_projections_cmd (_ : parse $ tk "initialize_simps_projections") : parser Unit := do
+unsafe def initialize_simps_projections_cmd (_ : parse <| tk "initialize_simps_projections") : parser Unit := do
   let env ← get_env
   let trc ← is_some <$> «expr ?» (tk "?")
   let ns ← «expr *» (Prod.mk <$> ident <*> «expr ?» (tk "(" >> sep_by (tk ",") simps_parse_rule <* tk ")"))
-  ns.mmap' $ fun data => do
+  ns.mmap' fun data => do
       let nm ← resolve_constant data.1
       simps_get_raw_projections env nm tt (data.2.getOrElse []) trc
 
@@ -573,16 +572,16 @@ def lemmasOnly : SimpsCfg where
   ```
 -/
 unsafe def simps_get_projection_exprs (e : environment) (tgt : expr) (rhs : expr) (cfg : SimpsCfg) :
-    tactic $ List $ expr × projection_data := do
+    tactic <| List <| expr × projection_data := do
   let params := get_app_args tgt
-  ((params.zip $ (get_app_args rhs).take params.length).mmap' fun ⟨a, b⟩ => is_def_eq a b) <|>
+  ((params.zip <| (get_app_args rhs).take params.length).mmap' fun ⟨a, b⟩ => is_def_eq a b) <|>
       fail "unreachable code (1)"
   let str := tgt.get_app_fn.const_name
   let rhs_args := (get_app_args rhs).drop params.length
   let (raw_univs, proj_data) ← simps_get_raw_projections e str ff [] cfg.trace
   let univs := raw_univs.zip tgt.get_app_fn.univ_levels
-  let new_proj_data : List $ expr × projection_data :=
-    proj_data.map $ fun proj =>
+  let new_proj_data : List <| expr × projection_data :=
+    proj_data.map fun proj =>
       (rhs_args.inth proj.proj_nrs.head,
         { proj with expr := (proj.expr.instantiate_univ_params univs).instantiate_lambdas_or_apps params,
           proj_nrs := proj.proj_nrs.tail })
@@ -601,13 +600,13 @@ unsafe def simps_add_projection (nm : Name) (type lhs rhs : expr) (args : List e
     (do
           guardₓ cfg.simp_rhs
           let rhs' ← rhs.dsimp { failIfUnchanged := ff }
-          when_tracing `simps.debug $
+          when_tracing `simps.debug <|
               when (rhs ≠ rhs')
                 (← do
                   dbg_trace "[simps] > `dsimp` simplified rhs to
                             > {← rhs'}")
           let (rhsprf1, rhsprf2, ns) ← rhs'.simp { failIfUnchanged := ff }
-          when_tracing `simps.debug $
+          when_tracing `simps.debug <|
               when (rhs' ≠ rhsprf1)
                 (← do
                   dbg_trace "[simps] > `simp` simplified rhs to
@@ -623,11 +622,11 @@ unsafe def simps_add_projection (nm : Name) (type lhs rhs : expr) (args : List e
       (← do
         dbg_trace "[simps] > adding projection {(← decl_name)}:
                   > {← decl_type}")
-  decorate_error ("Failed to add projection lemma " ++ decl_name.to_string ++ ". Nested error:") $ add_decl decl
-  let b ← succeeds $ is_def_eq lhs rhs
+  decorate_error ("Failed to add projection lemma " ++ decl_name.to_string ++ ". Nested error:") <| add_decl decl
+  let b ← succeeds <| is_def_eq lhs rhs
   when (b ∧ `simp ∈ cfg.attrs) (set_basic_attribute `_refl_lemma decl_name tt)
-  cfg.attrs.mmap' $ fun nm => set_attribute nm decl_name tt
-  when cfg.add_additive.is_some $ to_additive.attr decl_name ⟨ff, cfg.trace, cfg.add_additive.iget, none, tt⟩ tt
+  cfg.attrs.mmap' fun nm => set_attribute nm decl_name tt
+  when cfg.add_additive.is_some <| to_additive.attr decl_name ⟨ff, cfg.trace, cfg.add_additive.iget, none, tt⟩ tt
 
 /-- Derive lemmas specifying the projections of the declaration.
   If `todo` is non-empty, it will generate exactly the names in `todo`.
@@ -654,7 +653,7 @@ unsafe def simps_add_projections :
     let str := tgt.get_app_fn.const_name
     let todo_next := todo.filter (· ≠ "")
     if e.is_structure str ∧ ¬(todo = [] ∧ str ∈ cfg.not_recursive ∧ ¬must_be_str) then do
-        let [intro] ← return $ e.constructors_of str | fail "unreachable code (3)"
+        let [intro] ← return <| e.constructors_of str | fail "unreachable code (3)"
         let rhs_whnf ← whnf rhs_ap cfg.rhs_md
         let (rhs_ap, todo_now) ←
           if ¬is_constant_of rhs_ap.get_app_fn intro ∧ is_constant_of rhs_whnf.get_app_fn intro then
@@ -671,22 +670,22 @@ unsafe def simps_add_projections :
                       {← proj_info}")
             let eta ← rhs_ap.is_eta_expansion
             let rhs_ap := eta.lhoare rhs_ap
-            when (todo_now ∨ todo = [] ∧ eta.is_some ∧ to_apply = []) $
+            when (todo_now ∨ todo = [] ∧ eta.is_some ∧ to_apply = []) <|
                 if cfg.fully_applied then simps_add_projection nm tgt lhs_ap rhs_ap new_args univs cfg
                 else simps_add_projection nm type lhs rhs args univs cfg
-            when (to_apply ≠ []) $ do
-                let ⟨new_rhs, proj, proj_expr, proj_nrs, is_default, is_prefix⟩ ← return $ proj_info.inth to_apply.head
+            when (to_apply ≠ []) <| do
+                let ⟨new_rhs, proj, proj_expr, proj_nrs, is_default, is_prefix⟩ ← return <| proj_info.inth to_apply.head
                 let new_type ← infer_type new_rhs
                 when_tracing `simps.debug
                     (← do
                       dbg_trace "[simps] > Applying a custom composite projection. Current lhs:
                                 >  {← lhs_ap}")
                 simps_add_projections e nm new_type lhs_ap new_rhs new_args univs ff cfg todo to_apply.tail
-            when ¬(to_apply ≠ [] ∨ todo = [""] ∨ eta.is_some ∧ todo = []) $ do
-                let projs : List Name := proj_info.map $ fun x => x.snd.name
+            when ¬(to_apply ≠ [] ∨ todo = [""] ∨ eta.is_some ∧ todo = []) <| do
+                let projs : List Name := proj_info.map fun x => x.snd.name
                 let todo := if to_apply = [] then todo_next else todo
-                guardₓ (todo.all $ fun x => projs.any $ fun proj => ("_" ++ proj.last).isPrefixOf x) <|>
-                    let x := (todo.find $ fun x => projs.all $ fun proj => ¬("_" ++ proj.last).isPrefixOf x).iget
+                guardₓ (todo.all fun x => projs.any fun proj => ("_" ++ proj.last).isPrefixOf x) <|>
+                    let x := (todo.find fun x => projs.all fun proj => ¬("_" ++ proj.last).isPrefixOf x).iget
                     let simp_lemma := nm.append_suffix x
                     let needed_proj := (x.split_on '_').tail.head
                     throwError
@@ -697,17 +696,16 @@ unsafe def simps_add_projections :
                       You can also see this information by running
                         `initialize_simps_projections? {← str}`.
                       Note: these projection names might not correspond to the projection names of the structure."
-                proj_info.mmap_with_index' $ fun proj_nr ⟨new_rhs, proj, proj_expr, proj_nrs, is_default, is_prefix⟩ =>
-                    do
+                proj_info.mmap_with_index' fun proj_nr ⟨new_rhs, proj, proj_expr, proj_nrs, is_default, is_prefix⟩ => do
                     let new_type ← infer_type new_rhs
-                    let new_todo := todo.filter_map $ fun x => x.get_rest ("_" ++ proj.last)
-                    when (is_default ∧ todo = [] ∨ new_todo ≠ []) $ do
+                    let new_todo := todo.filter_map fun x => x.get_rest ("_" ++ proj.last)
+                    when (is_default ∧ todo = [] ∨ new_todo ≠ []) <| do
                         let new_lhs := proj_expr.instantiate_lambdas_or_apps [lhs_ap]
                         let new_nm := nm.append_to_last proj.last is_prefix
                         let new_cfg :=
                           { cfg with
                             addAdditive :=
-                              cfg.add_additive.map $ fun nm =>
+                              cfg.add_additive.map fun nm =>
                                 nm.append_to_last (to_additive.guess_name proj.last) is_prefix }
                         when_tracing `simps.debug
                             (← do
@@ -725,22 +723,22 @@ unsafe def simps_add_projections :
               simps_add_projections e nm type lhs rhs args univs must_be_str
                   { cfg with rhsMd := semireducible, simpRhs := tt } todo to_apply
             else do
-              when (to_apply ≠ []) $
+              when (to_apply ≠ []) <|
                   throwError "Invalid simp lemma {(← nm)}.
                     The given definition is not a constructor application:
                       {← rhs_ap}"
-              when must_be_str $
+              when must_be_str <|
                   throwError "Invalid `simps` attribute. The body is not a constructor application:
                       {← rhs_ap}"
-              when (todo_next ≠ []) $
+              when (todo_next ≠ []) <|
                   throwError "Invalid simp lemma {(← nm.append_suffix todo_next.head)}.
                     The given definition is not a constructor application:
                       {← rhs_ap}"
               if cfg.fully_applied then simps_add_projection nm tgt lhs_ap rhs_ap new_args univs cfg
                 else simps_add_projection nm type lhs rhs args univs cfg
       else do
-        when must_be_str $ throwError "Invalid `simps` attribute. Target {← str} is not a structure"
-        when (todo_next ≠ [] ∧ str ∉ cfg.not_recursive) $
+        when must_be_str <| throwError "Invalid `simps` attribute. Target {← str} is not a structure"
+        when (todo_next ≠ [] ∧ str ∉ cfg.not_recursive) <|
             let first_todo := todo_next.head
             throwError "Invalid simp lemma {(← nm.append_suffix first_todo)}.
               Projection {← (first_todo.split_on '_').tail.head} doesn't exist, because target is not a structure."
@@ -755,7 +753,7 @@ unsafe def simps_tac (nm : Name) (cfg : SimpsCfg := {  }) (todo : List Stringₓ
   let e ← get_env
   let d ← e.get nm
   let lhs : expr := const d.to_name d.univ_levels
-  let todo := todo.erase_dup.map $ fun proj => "_" ++ proj
+  let todo := todo.erase_dup.map fun proj => "_" ++ proj
   let cfg := { cfg with trace := cfg.trace || is_trace_enabled_for `simps.verbose || trc }
   let b ← has_attribute' `to_additive nm
   let cfg ←
@@ -881,7 +879,7 @@ unsafe def simps_attr : user_attribute Unit (Bool × List Stringₓ × SimpsCfg)
   descr := "Automatically derive lemmas specifying the projections of this declaration."
   parser := simps_parser
   after_set :=
-    some $ fun n _ persistent => do
+    some fun n _ persistent => do
       guardₓ persistent <|> fail "`simps` currently cannot be used as a local attribute"
       let (trc, todo, cfg) ← simps_attr.get_param n
       simps_tac n cfg todo trc

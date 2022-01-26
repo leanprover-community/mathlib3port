@@ -43,17 +43,17 @@ theorem of_pos [Preorderₓ M] [Zero M] (h : 0 < x) : NeZero x :=
   ⟨h.ne'⟩
 
 theorem of_gt [CanonicallyOrderedAddMonoid M] (h : x < y) : NeZero y :=
-  of_pos $ pos_of_gt h
+  of_pos <| pos_of_gt h
 
 instance CharZero [NeZero n] [AddMonoidₓ M] [One M] [CharZero M] : NeZero (n : M) :=
-  ⟨Nat.cast_ne_zero.mpr $ NeZero.ne n⟩
+  ⟨Nat.cast_ne_zero.mpr <| NeZero.ne n⟩
 
 instance (priority := 100) Invertible [MonoidWithZeroₓ M] [Nontrivial M] [Invertible x] : NeZero x :=
   ⟨nonzero_of_invertible x⟩
 
 theorem of_map [Zero R] [Zero M] [ZeroHomClass F R M] (f : F) [NeZero (f r)] : NeZero r :=
   ⟨fun h =>
-    Ne (f r) $ by
+    Ne (f r) <| by
       convert map_zero f⟩
 
 theorem of_injective {r : R} [Zero R] [h : NeZero r] [Zero M] [ZeroHomClass F R M] {f : F} (hf : Function.Injective f) :
@@ -65,18 +65,18 @@ theorem of_injective {r : R} [Zero R] [h : NeZero r] [Zero M] [ZeroHomClass F R 
 theorem nat_of_injective [NonAssocSemiring M] [NonAssocSemiring R] [h : NeZero (n : R)] [RingHomClass F R M] {f : F}
     (hf : Function.Injective f) : NeZero (n : M) :=
   ⟨fun h =>
-    NeZero.ne' n R $
-      hf $ by
+    NeZero.ne' n R <|
+      hf <| by
         simpa⟩
 
 variable (R M)
 
 theorem of_not_dvd [AddMonoidₓ M] [One M] [CharP M p] (h : ¬p ∣ n) : NeZero (n : M) :=
-  ⟨(not_iff_not.mpr $ CharP.cast_eq_zero_iff M p n).mpr h⟩
+  ⟨(not_iff_not.mpr <| CharP.cast_eq_zero_iff M p n).mpr h⟩
 
 theorem of_no_zero_smul_divisors [CommRingₓ R] [NeZero (n : R)] [Ringₓ M] [Nontrivial M] [Algebra R M]
     [NoZeroSmulDivisors R M] : NeZero (n : M) :=
-  nat_of_injective $ NoZeroSmulDivisors.algebra_map_injective R M
+  nat_of_injective <| NoZeroSmulDivisors.algebra_map_injective R M
 
 theorem of_ne_zero_coe [Zero R] [One R] [Add R] [h : NeZero (n : R)] : NeZero n :=
   ⟨by
@@ -85,7 +85,7 @@ theorem of_ne_zero_coe [Zero R] [One R] [Add R] [h : NeZero (n : R)] : NeZero n 
     contradiction⟩
 
 theorem not_char_dvd [AddMonoidₓ R] [One R] (p : ℕ) [CharP R p] (k : ℕ) [h : NeZero (k : R)] : ¬p ∣ k := by
-  rwa [← not_iff_not.mpr $ CharP.cast_eq_zero_iff R p k, ← Ne.def, ← ne_zero_iff]
+  rwa [← not_iff_not.mpr <| CharP.cast_eq_zero_iff R p k, ← Ne.def, ← ne_zero_iff]
 
 theorem pos_of_ne_zero_coe [Zero R] [One R] [Add R] [NeZero (n : R)] : 0 < n :=
   (NeZero.of_ne_zero_coe R).out.bot_lt

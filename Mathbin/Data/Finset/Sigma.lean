@@ -54,21 +54,20 @@ theorem sigma_mono (hs : s₁ ⊆ s₂) (ht : ∀ i, t₁ i ⊆ t₂ i) : s₁.s
   mem_sigma.2 ⟨hs hi, ht i ha⟩
 
 theorem sigma_eq_bUnion [DecidableEq (Σ i, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
-    s.sigma t = s.bUnion fun i => (t i).map $ embedding.sigma_mk i := by
+    s.sigma t = s.bUnion fun i => (t i).map <| embedding.sigma_mk i := by
   ext ⟨x, y⟩
   simp [And.left_comm]
 
 variable (s t) (f : (Σ i, α i) → β)
 
-theorem sup_sigma [SemilatticeSup β] [OrderBot β] : (s.sigma t).sup f = s.sup fun i => (t i).sup $ fun b => f ⟨i, b⟩ :=
-  by
-  refine' (sup_le _).antisymm (sup_le $ fun i hi => sup_le $ fun b hb => le_sup $ mem_sigma.2 ⟨hi, hb⟩)
+theorem sup_sigma [SemilatticeSup β] [OrderBot β] : (s.sigma t).sup f = s.sup fun i => (t i).sup fun b => f ⟨i, b⟩ := by
+  refine' (sup_le _).antisymm (sup_le fun i hi => sup_le fun b hb => le_sup <| mem_sigma.2 ⟨hi, hb⟩)
   rintro ⟨i, b⟩ hb
   rw [mem_sigma] at hb
   refine' le_transₓ _ (le_sup hb.1)
   convert le_sup hb.2
 
-theorem inf_sigma [SemilatticeInf β] [OrderTop β] : (s.sigma t).inf f = s.inf fun i => (t i).inf $ fun b => f ⟨i, b⟩ :=
+theorem inf_sigma [SemilatticeInf β] [OrderTop β] : (s.sigma t).inf f = s.inf fun i => (t i).inf fun b => f ⟨i, b⟩ :=
   @sup_sigma _ _ (OrderDual β) _ _ _ _ _
 
 end Sigma
@@ -79,7 +78,7 @@ variable {α β γ : ι → Type _} [DecidableEq ι]
 
 /-- Lifts maps `α i → β i → finset (γ i)` to a map `Σ i, α i → Σ i, β i → finset (Σ i, γ i)`. -/
 def sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α) (b : Sigma β) : Finset (Sigma γ) :=
-  dite (a.1 = b.1) (fun h => (f (h.rec a.2) b.2).map $ embedding.sigma_mk _) fun _ => ∅
+  dite (a.1 = b.1) (fun h => (f (h.rec a.2) b.2).map <| embedding.sigma_mk _) fun _ => ∅
 
 theorem mem_sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α) (b : Sigma β) (x : Sigma γ) :
     x ∈ sigma_lift f a b ↔ ∃ (ha : a.1 = x.1)(hb : b.1 = x.1), x.2 ∈ f (ha.rec a.2) (hb.rec b.2) := by

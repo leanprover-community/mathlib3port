@@ -339,7 +339,7 @@ namespace Measureₓ
 /-- The binary product of measures. They are defined for arbitrary measures, but we basically
   prove all properties under the assumption that at least one of them is σ-finite. -/
 protected irreducible_def Prod (μ : Measureₓ α) (ν : Measureₓ β) : Measureₓ (α × β) :=
-  bind μ $ fun x : α => map (Prod.mk x) ν
+  (bind μ) fun x : α => map (Prod.mk x) ν
 
 instance prod.measure_space {α β} [measure_space α] [measure_space β] : measure_space (α × β) where
   volume := volume.Prod volume
@@ -361,7 +361,7 @@ theorem prod_prod (s : Set α) (t : Set β) : μ.prod ν (s ×ˢ t) = μ s * ν 
   · set ST := to_measurable μ s ×ˢ to_measurable ν t
     have hSTm : MeasurableSet ST := (measurable_set_to_measurable _ _).Prod (measurable_set_to_measurable _ _)
     calc μ.prod ν (s ×ˢ t) ≤ μ.prod ν ST :=
-        measure_mono $
+        measure_mono <|
           Set.prod_mono (subset_to_measurable _ _)
             (subset_to_measurable _ _)_ = μ (to_measurable μ s) * ν (to_measurable ν t) :=
         by
@@ -377,7 +377,7 @@ theorem prod_prod (s : Set α) (t : Set β) : μ.prod ν (s ×ˢ t) = μ s * ν 
     set f : α → ℝ≥0∞ := fun x => ν (Prod.mk x ⁻¹' ST)
     have hfm : Measurable f := measurable_measure_prod_mk_left hSTm
     set s' : Set α := { x | ν t ≤ f x }
-    have hss' : s ⊆ s' := fun x hx => measure_mono fun y hy => hST $ mk_mem_prod hx hy
+    have hss' : s ⊆ s' := fun x hx => measure_mono fun y hy => hST <| mk_mem_prod hx hy
     calc μ s * ν t ≤ μ s' * ν t := mul_le_mul_right' (measure_mono hss') _ _ = ∫⁻ x in s', ν t ∂μ := by
         rw [set_lintegral_const, mul_comm]_ ≤ ∫⁻ x in s', f x ∂μ :=
         set_lintegral_mono measurable_const hfm fun x => id _ ≤ ∫⁻ x, f x ∂μ :=
@@ -417,8 +417,8 @@ theorem measure_ae_null_of_prod_null {s : Set (α × β)} (h : μ.prod ν s = 0)
   simp_rw [measure_prod_null mt]  at ht
   rw [eventually_le_antisymm_iff]
   exact
-    ⟨eventually_le.trans_eq (eventually_of_forall $ fun x => (measure_mono (preimage_mono hst) : _)) ht,
-      eventually_of_forall $ fun x => zero_le _⟩
+    ⟨eventually_le.trans_eq (eventually_of_forall fun x => (measure_mono (preimage_mono hst) : _)) ht,
+      eventually_of_forall fun x => zero_le _⟩
 
 /-- Note: the converse is not true. For a counterexample, see
   Walter Rudin *Real and Complex Analysis*, example (c) in section 8.9. -/
@@ -573,9 +573,9 @@ theorem skew_product [sigma_finite μb] [sigma_finite μd] {f : α → β} (hf :
       sigma_finite.of_map _ hgm.of_uncurry_left
         (by
           rwa [hx])
-  refine' ⟨this, (prod_eq $ fun s t hs ht => _).symm⟩
+  refine' ⟨this, (prod_eq fun s t hs ht => _).symm⟩
   rw [map_apply this (hs.prod ht)]
-  refine' (prod_apply (this $ hs.prod ht)).trans _
+  refine' (prod_apply (this <| hs.prod ht)).trans _
   have : ∀ᵐ x ∂μa, μc ((fun y => (f x, g x y)) ⁻¹' (s ×ˢ t)) = indicator (f ⁻¹' s) (fun y => μd t) x := by
     refine' hg.mono fun x hx => _
     subst hx
@@ -589,8 +589,8 @@ theorem skew_product [sigma_finite μb] [sigma_finite μd] {f : α → β} (hf :
 then `prod.map f g` sends `μa.prod μc` to `μb.prod μd`. -/
 protected theorem Prod [sigma_finite μb] [sigma_finite μd] {f : α → β} {g : γ → δ} (hf : measure_preserving f μa μb)
     (hg : measure_preserving g μc μd) : measure_preserving (Prod.map f g) (μa.prod μc) (μb.prod μd) :=
-  have : Measurable (uncurry $ fun _ : α => g) := hg.1.comp measurable_snd
-  hf.skew_product this $ Filter.eventually_of_forall $ fun _ => hg.map_eq
+  have : Measurable (uncurry fun _ : α => g) := hg.1.comp measurable_snd
+  hf.skew_product this <| Filter.eventually_of_forall fun _ => hg.map_eq
 
 end MeasurePreserving
 
@@ -613,21 +613,19 @@ theorem AeMeasurable.snd [sigma_finite ν] {f : β → γ} (hf : AeMeasurable f 
     AeMeasurable (fun z : α × β => f z.2) (μ.prod ν) :=
   hf.comp_measurable' measurable_snd prod_snd_absolutely_continuous
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The Bochner integral is a.e.-measurable.
   This shows that the integrand of (the right-hand-side of) Fubini's theorem is a.e.-measurable. -/
 theorem AeMeasurable.integral_prod_right' [sigma_finite ν] [second_countable_topology E] [NormedSpace ℝ E]
     [BorelSpace E] [CompleteSpace E] ⦃f : α × β → E⦄ (hf : AeMeasurable f (μ.prod ν)) :
     AeMeasurable (fun x => ∫ y, f (x, y) ∂ν) μ :=
   ⟨fun x => ∫ y, hf.mk f (x, y) ∂ν, hf.measurable_mk.integral_prod_right', by
-    filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk]
-    intro x hx
-    exact integral_congr_ae hx⟩
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem AeMeasurable.prod_mk_left [sigma_finite ν] {f : α × β → γ} (hf : AeMeasurable f (μ.prod ν)) :
     ∀ᵐ x ∂μ, AeMeasurable (fun y => f (x, y)) ν := by
-  filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk]
-  intro x hx
-  exact ⟨fun y => hf.mk f (x, y), hf.measurable_mk.comp measurable_prod_mk_left, hx⟩
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
 
 end
 
@@ -664,6 +662,7 @@ theorem lintegral_prod_of_measurable :
     simp only [lintegral_supr hf h2f, lintegral_supr (kf _), k2f, lintegral_supr lf l2f, h3f]
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- **Tonelli's Theorem**: For `ℝ≥0∞`-valued almost everywhere measurable functions on `α × β`,
   the integral of `f` is equal to the iterated integral. -/
 theorem lintegral_prod (f : α × β → ℝ≥0∞) (hf : AeMeasurable f (μ.prod ν)) :
@@ -671,9 +670,7 @@ theorem lintegral_prod (f : α × β → ℝ≥0∞) (hf : AeMeasurable f (μ.pr
   have A : (∫⁻ z, f z ∂μ.prod ν) = ∫⁻ z, hf.mk f z ∂μ.prod ν := lintegral_congr_ae hf.ae_eq_mk
   have B : (∫⁻ x, ∫⁻ y, f (x, y) ∂ν ∂μ) = ∫⁻ x, ∫⁻ y, hf.mk f (x, y) ∂ν ∂μ := by
     apply lintegral_congr_ae
-    filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk]
-    intro a ha
-    exact lintegral_congr_ae ha
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   rw [A, B, lintegral_prod_of_measurable _ hf.measurable_mk]
   infer_instance
 
@@ -755,6 +752,8 @@ theorem has_finite_integral_prod_iff ⦃f : α × β → E⦄ (h1f : Measurable 
     exact h1f.ennnorm.lintegral_prod_right'
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem has_finite_integral_prod_iff' ⦃f : α × β → E⦄ (h1f : AeMeasurable f (μ.prod ν)) :
     has_finite_integral f (μ.prod ν) ↔
       (∀ᵐ x ∂μ, has_finite_integral (fun y => f (x, y)) ν) ∧ has_finite_integral (fun x => ∫ y, ∥f (x, y)∥ ∂ν) μ :=
@@ -767,9 +766,7 @@ theorem has_finite_integral_prod_iff' ⦃f : α × β → E⦄ (h1f : AeMeasurab
     exact has_finite_integral_congr hx
     
   · apply has_finite_integral_congr
-    filter_upwards [ae_ae_of_ae_prod h1f.ae_eq_mk.symm]
-    intro x hx
-    exact integral_congr_ae (eventually_eq.fun_comp hx _)
+    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     
   · infer_instance
     
@@ -813,10 +810,10 @@ variable [second_countable_topology E] [NormedSpace ℝ E] [CompleteSpace E] [Bo
 
 theorem integrable.integral_prod_left ⦃f : α × β → E⦄ (hf : integrable f (μ.prod ν)) :
     integrable (fun x => ∫ y, f (x, y) ∂ν) μ :=
-  integrable.mono hf.integral_norm_prod_left hf.ae_measurable.integral_prod_right' $
-    eventually_of_forall $ fun x =>
-      (norm_integral_le_integral_norm _).trans_eq $
-        (norm_of_nonneg $ integral_nonneg_of_ae $ eventually_of_forall $ fun y => (norm_nonneg (f (x, y)) : _)).symm
+  integrable.mono hf.integral_norm_prod_left hf.ae_measurable.integral_prod_right' <|
+    eventually_of_forall fun x =>
+      (norm_integral_le_integral_norm _).trans_eq <|
+        (norm_of_nonneg <| integral_nonneg_of_ae <| eventually_of_forall fun y => (norm_nonneg (f (x, y)) : _)).symm
 
 theorem integrable.integral_prod_right [sigma_finite μ] ⦃f : α × β → E⦄ (hf : integrable f (μ.prod ν)) :
     integrable (fun y => ∫ x, f (x, y) ∂μ) ν :=
@@ -839,39 +836,39 @@ variable {E' : Type _} [MeasurableSpace E'] [NormedGroup E'] [BorelSpace E'] [Co
   we separate them out as separate lemmas, because they involve quite some steps. -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Integrals commute with addition inside another integral. `F` can be any function. -/
 theorem integral_fn_integral_add ⦃f g : α × β → E⦄ (F : E → E') (hf : integrable f (μ.prod ν))
     (hg : integrable g (μ.prod ν)) :
     (∫ x, F (∫ y, f (x, y) + g (x, y) ∂ν) ∂μ) = ∫ x, F ((∫ y, f (x, y) ∂ν) + ∫ y, g (x, y) ∂ν) ∂μ := by
   refine' integral_congr_ae _
-  filter_upwards [hf.prod_right_ae, hg.prod_right_ae]
-  intro x h2f h2g
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   simp [integral_add h2f h2g]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Integrals commute with subtraction inside another integral.
   `F` can be any measurable function. -/
 theorem integral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → E') (hf : integrable f (μ.prod ν))
     (hg : integrable g (μ.prod ν)) :
     (∫ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ) = ∫ x, F ((∫ y, f (x, y) ∂ν) - ∫ y, g (x, y) ∂ν) ∂μ := by
   refine' integral_congr_ae _
-  filter_upwards [hf.prod_right_ae, hg.prod_right_ae]
-  intro x h2f h2g
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   simp [integral_sub h2f h2g]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Integrals commute with subtraction inside a lower Lebesgue integral.
   `F` can be any function. -/
 theorem lintegral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → ℝ≥0∞) (hf : integrable f (μ.prod ν))
     (hg : integrable g (μ.prod ν)) :
     (∫⁻ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ) = ∫⁻ x, F ((∫ y, f (x, y) ∂ν) - ∫ y, g (x, y) ∂ν) ∂μ := by
   refine' lintegral_congr_ae _
-  filter_upwards [hf.prod_right_ae, hg.prod_right_ae]
-  intro x h2f h2g
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
   simp [integral_sub h2f h2g]
 
 /-- Double integrals commute with addition. -/
 theorem integral_integral_add ⦃f g : α × β → E⦄ (hf : integrable f (μ.prod ν)) (hg : integrable g (μ.prod ν)) :
     (∫ x, ∫ y, f (x, y) + g (x, y) ∂ν ∂μ) = (∫ x, ∫ y, f (x, y) ∂ν ∂μ) + ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
-  (integral_fn_integral_add id hf hg).trans $ integral_add hf.integral_prod_left hg.integral_prod_left
+  (integral_fn_integral_add id hf hg).trans <| integral_add hf.integral_prod_left hg.integral_prod_left
 
 /-- Double integrals commute with addition. This is the version with `(f + g) (x, y)`
   (instead of `f (x, y) + g (x, y)`) in the LHS. -/
@@ -882,7 +879,7 @@ theorem integral_integral_add' ⦃f g : α × β → E⦄ (hf : integrable f (μ
 /-- Double integrals commute with subtraction. -/
 theorem integral_integral_sub ⦃f g : α × β → E⦄ (hf : integrable f (μ.prod ν)) (hg : integrable g (μ.prod ν)) :
     (∫ x, ∫ y, f (x, y) - g (x, y) ∂ν ∂μ) = (∫ x, ∫ y, f (x, y) ∂ν ∂μ) - ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
-  (integral_fn_integral_sub id hf hg).trans $ integral_sub hf.integral_prod_left hg.integral_prod_left
+  (integral_fn_integral_sub id hf hg).trans <| integral_sub hf.integral_prod_left hg.integral_prod_left
 
 /-- Double integrals commute with subtraction. This is the version with `(f - g) (x, y)`
   (instead of `f (x, y) - g (x, y)`) in the LHS. -/
@@ -896,7 +893,7 @@ theorem continuous_integral_integral : Continuous fun f : α × β →₁[μ.pro
   intro g
   refine'
     tendsto_integral_of_L1 _ (L1.integrable_coe_fn g).integral_prod_left
-      (eventually_of_forall $ fun h => (L1.integrable_coe_fn h).integral_prod_left) _
+      (eventually_of_forall fun h => (L1.integrable_coe_fn h).integral_prod_left) _
   simp_rw [← lintegral_fn_integral_sub (fun x => (nnnorm x : ℝ≥0∞)) (L1.integrable_coe_fn _) (L1.integrable_coe_fn g)]
   refine' tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds _ (fun i => zero_le _) _
   · exact fun i => ∫⁻ x, ∫⁻ y, nnnorm (i (x, y) - g (x, y)) ∂ν ∂μ

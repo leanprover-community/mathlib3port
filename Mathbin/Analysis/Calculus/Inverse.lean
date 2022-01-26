@@ -127,7 +127,7 @@ section
 variable {f' : E →L[𝕜] F} {s t : Set E} {c c' : ℝ≥0 }
 
 theorem mono_num (hc : c ≤ c') (hf : ApproximatesLinearOn f f' s c) : ApproximatesLinearOn f f' s c' := fun x hx y hy =>
-  le_transₓ (hf x hx y hy) (mul_le_mul_of_nonneg_right hc $ norm_nonneg _)
+  le_transₓ (hf x hx y hy) (mul_le_mul_of_nonneg_right hc <| norm_nonneg _)
 
 theorem mono_set (hst : s ⊆ t) (hf : ApproximatesLinearOn f f' t c) : ApproximatesLinearOn f f' s c := fun x hx y hy =>
   hf x (hst hx) y (hst hy)
@@ -181,7 +181,7 @@ theorem surj_on_closed_ball_of_nonlinear_right_inverse (hf : ApproximatesLinearO
     (f'symm : f'.nonlinear_right_inverse) {ε : ℝ} {b : E} (ε0 : 0 ≤ ε) (hε : closed_ball b ε ⊆ s) :
     surj_on f (closed_ball b ε) (closed_ball (f b) (((f'symm.nnnorm : ℝ)⁻¹ - c) * ε)) := by
   intro y hy
-  cases' le_or_ltₓ ((f'symm.nnnorm : ℝ)⁻¹) c with hc hc
+  cases' le_or_ltₓ (f'symm.nnnorm : ℝ)⁻¹ c with hc hc
   · refine'
       ⟨b, by
         simp [ε0], _⟩
@@ -347,9 +347,9 @@ variable {f' : E ≃L[𝕜] F} {s : Set E} {c : ℝ≥0 }
 local notation "N" => nnnorm (f'.symm : F →L[𝕜] E)
 
 protected theorem antilipschitz (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹) :
-    AntilipschitzWith ((N⁻¹ - c)⁻¹) (s.restrict f) := by
+    AntilipschitzWith (N⁻¹ - c)⁻¹ (s.restrict f) := by
   cases' hc with hE hc
-  · have : Subsingleton s := ⟨fun x y => Subtype.eq $ @Subsingleton.elimₓ _ hE _ _⟩
+  · have : Subsingleton s := ⟨fun x y => Subtype.eq <| @Subsingleton.elimₓ _ hE _ _⟩
     exact AntilipschitzWith.of_subsingleton
     
   convert (f'.antilipschitz.restrict s).add_lipschitz_with hf.lipschitz_sub hc
@@ -361,7 +361,7 @@ protected theorem injective (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s
 
 protected theorem inj_on (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹) :
     inj_on f s :=
-  inj_on_iff_injective.2 $ hf.injective hc
+  inj_on_iff_injective.2 <| hf.injective hc
 
 protected theorem surjective [CompleteSpace E] (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) univ c)
     (hc : Subsingleton E ∨ c < N⁻¹) : surjective f := by
@@ -534,13 +534,13 @@ variable [cs : CompleteSpace E] {f : E → F} {f' : E ≃L[𝕜] F} {a : E}
 
 theorem approximates_deriv_on_open_nhds (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) :
     ∃ (s : Set E)(hs : a ∈ s ∧ IsOpen s),
-      ApproximatesLinearOn f (f' : E →L[𝕜] F) s (nnnorm (f'.symm : F →L[𝕜] E)⁻¹ / 2) :=
+      ApproximatesLinearOn f (f' : E →L[𝕜] F) s ((nnnorm (f'.symm : F →L[𝕜] E))⁻¹ / 2) :=
   by
   refine' ((nhds_basis_opens a).exists_iff _).1 _
   exact fun s t => ApproximatesLinearOn.mono_set
   exact
-    hf.approximates_deriv_on_nhds $
-      f'.subsingleton_or_nnnorm_symm_pos.imp id $ fun hf' => Nnreal.half_pos $ Nnreal.inv_pos.2 $ hf'
+    hf.approximates_deriv_on_nhds <|
+      (f'.subsingleton_or_nnnorm_symm_pos.imp id) fun hf' => Nnreal.half_pos <| Nnreal.inv_pos.2 <| hf'
 
 include cs
 
@@ -553,7 +553,7 @@ of this `local_homeomorph` has derivative `f'.symm`. -/
 def to_local_homeomorph (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) : LocalHomeomorph E F :=
   ApproximatesLinearOn.toLocalHomeomorph f (Classical.some hf.approximates_deriv_on_open_nhds)
     (Classical.some_spec hf.approximates_deriv_on_open_nhds).snd
-    (f'.subsingleton_or_nnnorm_symm_pos.imp id $ fun hf' => Nnreal.half_lt_self $ ne_of_gtₓ $ Nnreal.inv_pos.2 $ hf')
+    ((f'.subsingleton_or_nnnorm_symm_pos.imp id) fun hf' => Nnreal.half_lt_self <| ne_of_gtₓ <| Nnreal.inv_pos.2 <| hf')
     (Classical.some_spec hf.approximates_deriv_on_open_nhds).fst.2
 
 variable {f}
@@ -604,19 +604,19 @@ theorem local_inverse_continuous_at (hf : HasStrictFderivAt f (f' : E →L[𝕜]
   (hf.to_local_homeomorph f).continuous_at_symm hf.image_mem_to_local_homeomorph_target
 
 theorem local_inverse_tendsto (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) :
-    tendsto (hf.local_inverse f f' a) (𝓝 $ f a) (𝓝 a) :=
+    tendsto (hf.local_inverse f f' a) (𝓝 <| f a) (𝓝 a) :=
   (hf.to_local_homeomorph f).tendsto_symm hf.mem_to_local_homeomorph_source
 
 theorem local_inverse_unique (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) {g : F → E} (hg : ∀ᶠ x in 𝓝 a, g (f x) = x) :
     ∀ᶠ y in 𝓝 (f a), g y = local_inverse f f' a hf y :=
-  eventually_eq_of_left_inv_of_right_inv hg hf.eventually_right_inverse $
+  eventually_eq_of_left_inv_of_right_inv hg hf.eventually_right_inverse <|
     (hf.to_local_homeomorph f).tendsto_symm hf.mem_to_local_homeomorph_source
 
 /-- If `f` has an invertible derivative `f'` at `a` in the sense of strict differentiability `(hf)`,
 then the inverse function `hf.local_inverse f` has derivative `f'.symm` at `f a`. -/
 theorem to_local_inverse (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) :
     HasStrictFderivAt (hf.local_inverse f f' a) (f'.symm : F →L[𝕜] E) (f a) :=
-  (hf.to_local_homeomorph f).has_strict_fderiv_at_symm hf.image_mem_to_local_homeomorph_target $ by
+  (hf.to_local_homeomorph f).has_strict_fderiv_at_symm hf.image_mem_to_local_homeomorph_target <| by
     simpa [← local_inverse_def] using hf
 
 /-- If `f : E → F` has an invertible derivative `f'` at `a` in the sense of strict differentiability
@@ -626,14 +626,14 @@ For a version assuming `f (g y) = y` and continuity of `g` at `f a` but not `[co
 see `of_local_left_inverse`.  -/
 theorem to_local_left_inverse (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) {g : F → E}
     (hg : ∀ᶠ x in 𝓝 a, g (f x) = x) : HasStrictFderivAt g (f'.symm : F →L[𝕜] E) (f a) :=
-  hf.to_local_inverse.congr_of_eventually_eq $ (hf.local_inverse_unique hg).mono $ fun _ => Eq.symm
+  hf.to_local_inverse.congr_of_eventually_eq <| (hf.local_inverse_unique hg).mono fun _ => Eq.symm
 
 end HasStrictFderivAt
 
 /-- If a function has an invertible strict derivative at all points, then it is an open map. -/
 theorem open_map_of_strict_fderiv_equiv [CompleteSpace E] {f : E → F} {f' : E → E ≃L[𝕜] F}
     (hf : ∀ x, HasStrictFderivAt f (f' x : E →L[𝕜] F) x) : IsOpenMap f :=
-  is_open_map_iff_nhds_le.2 $ fun x => (hf x).map_nhds_eq_of_equiv.Ge
+  is_open_map_iff_nhds_le.2 fun x => (hf x).map_nhds_eq_of_equiv.Ge
 
 /-!
 ### Inverse function theorem, 1D case
@@ -662,10 +662,10 @@ variable {f f' a}
 theorem map_nhds_eq : map f (𝓝 a) = 𝓝 (f a) :=
   (hf.has_strict_fderiv_at_equiv hf').map_nhds_eq_of_equiv
 
-theorem to_local_inverse : HasStrictDerivAt (hf.local_inverse f f' a hf') (f'⁻¹) (f a) :=
+theorem to_local_inverse : HasStrictDerivAt (hf.local_inverse f f' a hf') f'⁻¹ (f a) :=
   (hf.has_strict_fderiv_at_equiv hf').to_local_inverse
 
-theorem to_local_left_inverse {g : 𝕜 → 𝕜} (hg : ∀ᶠ x in 𝓝 a, g (f x) = x) : HasStrictDerivAt g (f'⁻¹) (f a) :=
+theorem to_local_left_inverse {g : 𝕜 → 𝕜} (hg : ∀ᶠ x in 𝓝 a, g (f x) = x) : HasStrictDerivAt g f'⁻¹ (f a) :=
   (hf.has_strict_fderiv_at_equiv hf').to_local_left_inverse hg
 
 end HasStrictDerivAt
@@ -673,7 +673,7 @@ end HasStrictDerivAt
 /-- If a function has a non-zero strict derivative at all points, then it is an open map. -/
 theorem open_map_of_strict_deriv [CompleteSpace 𝕜] {f f' : 𝕜 → 𝕜} (hf : ∀ x, HasStrictDerivAt f (f' x) x)
     (h0 : ∀ x, f' x ≠ 0) : IsOpenMap f :=
-  is_open_map_iff_nhds_le.2 $ fun x => ((hf x).map_nhds_eq (h0 x)).Ge
+  is_open_map_iff_nhds_le.2 fun x => ((hf x).map_nhds_eq (h0 x)).Ge
 
 /-!
 ### Inverse function theorem, smooth case

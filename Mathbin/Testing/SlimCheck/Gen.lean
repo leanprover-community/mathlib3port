@@ -83,7 +83,7 @@ instance : Uliftable gen.{u} gen.{v} :=
 
 instance : HasOrelse gen.{u} :=
   ⟨fun α x y => do
-    let b ← Uliftable.up $ choose_any Bool
+    let b ← Uliftable.up <| choose_any Bool
     if b.down then x else y⟩
 
 variable {α}
@@ -106,10 +106,10 @@ def vector_of : ∀ n : ℕ cmd : gen α, gen (Vector α n)
 /-- Create a list of examples using `cmd`. The size is controlled
 by the size parameter of `gen`. -/
 def list_of (cmd : gen α) : gen (List α) :=
-  sized $ fun sz => do
+  sized fun sz => do
     do
       let ⟨n⟩ ←
-        Uliftable.up $
+        Uliftable.up <|
             choose_nat 0 (sz + 1)
               (by
                 decide)
@@ -120,13 +120,13 @@ open Ulift
 
 /-- Given a list of example generators, choose one to create an example. -/
 def one_of (xs : List (gen α)) (pos : 0 < xs.length) : gen α := do
-  let ⟨⟨n, h, h'⟩⟩ ← Uliftable.up $ choose_nat' 0 xs.length Pos
+  let ⟨⟨n, h, h'⟩⟩ ← Uliftable.up <| choose_nat' 0 xs.length Pos
   List.nthLe xs n h'
 
 /-- Given a list of example generators, choose one to create an example. -/
 def elements (xs : List α) (pos : 0 < xs.length) : gen α := do
-  let ⟨⟨n, h₀, h₁⟩⟩ ← Uliftable.up $ choose_nat' 0 xs.length Pos
-  pure $ List.nthLe xs n h₁
+  let ⟨⟨n, h₀, h₁⟩⟩ ← Uliftable.up <| choose_nat' 0 xs.length Pos
+  pure <| List.nthLe xs n h₁
 
 /-- `freq_aux xs i _` takes a weighted list of generator and a number meant to select one of the
 generators.
@@ -153,25 +153,25 @@ and `genc` with probability 5/9.
 def freq (xs : List (ℕ+ × gen α)) (pos : 0 < xs.length) : gen α :=
   let s := (xs.map (Subtype.val ∘ Prod.fst)).Sum
   have ha : 1 ≤ s :=
-    le_transₓ Pos $
+    le_transₓ Pos <|
       List.length_map (Subtype.val ∘ Prod.fst) xs ▸
         List.length_le_sum_of_one_le _ fun i => by
           simp
           intros
           assumption
   have : 0 ≤ s - 1 := le_tsub_of_add_le_right ha
-  Uliftable.adaptUp gen.{0} gen.{u} (choose_nat 0 (s - 1) this) $ fun i =>
+  (Uliftable.adaptUp gen.{0} gen.{u} (choose_nat 0 (s - 1) this)) fun i =>
     freq_aux xs i.1
       (by
         rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁ <;> exact ha)
 
 /-- Generate a random permutation of a given list. -/
-def permutation_of {α : Type u} : ∀ xs : List α, gen (Subtype $ List.Perm xs)
+def permutation_of {α : Type u} : ∀ xs : List α, gen (Subtype <| List.Perm xs)
   | [] => pure ⟨[], List.Perm.nil⟩
   | x :: xs => do
     let ⟨xs', h⟩ ← permutation_of xs
     let ⟨⟨n, _, h'⟩⟩ ←
-      Uliftable.up $
+      Uliftable.up <|
           choose_nat 0 xs'.length
             (by
               decide)

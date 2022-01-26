@@ -23,7 +23,7 @@ variable {R S : Type _} [Ringₓ R] [Ringₓ S]
 
 /-- The power series for `1 / (u - x)`. -/
 def inv_units_sub (u : (R)ˣ) : PowerSeries R :=
-  mk $ fun n => 1 /ₚ u ^ (n + 1)
+  mk fun n => 1 /ₚ u ^ (n + 1)
 
 @[simp]
 theorem coeff_inv_units_sub (u : (R)ˣ) (n : ℕ) : coeff R n (inv_units_sub u) = 1 /ₚ u ^ (n + 1) :=
@@ -60,15 +60,15 @@ open_locale Nat
 
 /-- Power series for the exponential function at zero. -/
 def exp : PowerSeries A :=
-  mk $ fun n => algebraMap ℚ A (1 / n !)
+  mk fun n => algebraMap ℚ A (1 / n !)
 
 /-- Power series for the sine function at zero. -/
 def sin : PowerSeries A :=
-  mk $ fun n => if Even n then 0 else algebraMap ℚ A (-1 ^ (n / 2) / n !)
+  mk fun n => if Even n then 0 else algebraMap ℚ A (-1 ^ (n / 2) / n !)
 
 /-- Power series for the cosine function at zero. -/
 def cos : PowerSeries A :=
-  mk $ fun n => if Even n then algebraMap ℚ A (-1 ^ (n / 2) / n !) else 0
+  mk fun n => if Even n then algebraMap ℚ A (-1 ^ (n / 2) / n !) else 0
 
 variable {A A'} (n : ℕ) (f : A →+* A')
 
@@ -114,13 +114,13 @@ theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
   rintro x hx
   suffices
     a ^ x * b ^ (n - x) * (algebraMap ℚ A (1 / ↑x.factorial) * algebraMap ℚ A (1 / ↑(n - x).factorial)) =
-      a ^ x * b ^ (n - x) * (↑n.choose x * (algebraMap ℚ A) (1 / ↑n.factorial))
+      a ^ x * b ^ (n - x) * (↑(n.choose x) * (algebraMap ℚ A) (1 / ↑n.factorial))
     by
     convert this using 1 <;> ring
   congr 1
   rw [← map_nat_cast (algebraMap ℚ A) (n.choose x), ← map_mul, ← map_mul]
   refine' RingHom.congr_arg _ _
-  rw [mul_one_div (↑n.choose x) _, one_div_mul_one_div]
+  rw [mul_one_div ↑(n.choose x) _, one_div_mul_one_div]
   symm
   rw [div_eq_iff, div_mul_eq_mul_div, one_mulₓ, choose_eq_factorial_div_factorial]
   norm_cast
@@ -150,7 +150,7 @@ theorem exp_pow_eq_rescale_exp [Algebra ℚ A] (k : ℕ) : exp A ^ k = rescale (
 $\sum_{k = 0}^{n - 1} (e^{X})^k = \sum_{p = 0}^{\infty} \sum_{k = 0}^{n - 1} \frac{k^p}{p!}X^p$. -/
 theorem exp_pow_sum [Algebra ℚ A] (n : ℕ) :
     ((Finset.range n).Sum fun k => exp A ^ k) =
-      PowerSeries.mk fun p => (Finset.range n).Sum fun k => k ^ p * algebraMap ℚ A (p.factorial⁻¹) :=
+      PowerSeries.mk fun p => (Finset.range n).Sum fun k => k ^ p * algebraMap ℚ A p.factorial⁻¹ :=
   by
   simp only [exp_pow_eq_rescale_exp, rescale]
   ext

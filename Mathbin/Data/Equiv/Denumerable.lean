@@ -31,7 +31,7 @@ variable {α : Type _} {β : Type _} [Denumerable α] [Denumerable β]
 open Encodable
 
 theorem decode_is_some α [Denumerable α] (n : ℕ) : (decode α n).isSome :=
-  Option.is_some_iff_exists.2 $ (decode_inv n).imp $ fun a => Exists.fst
+  Option.is_some_iff_exists.2 <| (decode_inv n).imp fun a => Exists.fst
 
 /-- Returns the `n`-th element of `α` indexed by the decoding. -/
 def of_nat α [f : Denumerable α] (n : ℕ) : α :=
@@ -43,7 +43,7 @@ theorem decode_eq_of_nat α [Denumerable α] (n : ℕ) : decode α n = some (of_
 
 @[simp]
 theorem of_nat_of_decode {n b} (h : decode α n = some b) : of_nat α n = b :=
-  Option.some.injₓ $ (decode_eq_of_nat _ _).symm.trans h
+  Option.some.injₓ <| (decode_eq_of_nat _ _).symm.trans h
 
 @[simp]
 theorem encode_of_nat n : encode (of_nat α n) = n := by
@@ -123,7 +123,7 @@ instance Sigma : Denumerable (Sigma γ) :=
 
 @[simp]
 theorem sigma_of_nat_val (n : ℕ) : of_nat (Sigma γ) n = ⟨of_nat α (unpair n).1, of_nat (γ _) (unpair n).2⟩ :=
-  Option.some.injₓ $ by
+  Option.some.injₓ <| by
     rw [← decode_eq_of_nat, decode_sigma_val] <;> simp <;> rfl
 
 end Sigma
@@ -176,7 +176,7 @@ section Classical
 open_locale Classical
 
 theorem exists_succ (x : s) : ∃ n, ↑x + n + 1 ∈ s :=
-  Classical.by_contradiction $ fun h =>
+  Classical.by_contradiction fun h =>
     have : ∀ a : ℕ ha : a ∈ s, a < succ x := fun a ha =>
       lt_of_not_geₓ fun hax =>
         h
@@ -208,8 +208,8 @@ theorem succ_le_of_lt {x y : s} (h : y < x) : succ y ≤ x :=
 theorem le_succ_of_forall_lt_le {x y : s} (h : ∀, ∀ z < x, ∀, z ≤ y) : x ≤ succ y :=
   have hx : ∃ m, ↑y + m + 1 ∈ s := exists_succ _
   show ↑x ≤ ↑y + Nat.findₓ hx + 1 from
-    le_of_not_gtₓ $ fun hxy =>
-      (h ⟨_, Nat.find_specₓ hx⟩ hxy).not_lt $
+    le_of_not_gtₓ fun hxy =>
+      (h ⟨_, Nat.find_specₓ hx⟩ hxy).not_lt <|
         calc
           ↑y ≤ ↑y + Nat.findₓ hx := le_add_of_nonneg_right (Nat.zero_leₓ _)
           _ < ↑y + Nat.findₓ hx + 1 := Nat.lt_succ_selfₓ _
@@ -244,7 +244,7 @@ theorem of_nat_surjective_aux : ∀ {x : ℕ} hx : x ∈ s, ∃ n, of_nat s n = 
         ⟨0,
           le_antisymmₓ bot_le
             (le_of_not_gtₓ fun h =>
-              List.not_mem_nil (⊥ : s) $ by
+              List.not_mem_nil (⊥ : s) <| by
                 rw [← List.maximum_eq_none.1 hmax, hmt] <;> exact h)⟩
       
     cases' of_nat_surjective_aux m.2 with a ha
@@ -256,7 +256,7 @@ theorem of_nat_surjective_aux : ∀ {x : ℕ} hx : x ∈ s, ∃ n, of_nat s n = 
                 exact
                   succ_le_of_lt
                     (by
-                      rw [ha] <;> exact wf _ hmax)) $
+                      rw [ha] <;> exact wf _ hmax)) <|
           by
           rw [of_nat] <;>
             exact

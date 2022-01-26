@@ -122,17 +122,17 @@ end CoeLemmas
 
 /-- `to_linear_equiv A` is matrix multiplication of vectors by `A`, as a linear equivalence. -/
 def to_linear_equiv (A : unitary_group n α) : (n → α) ≃ₗ[α] n → α :=
-  { Matrix.toLin' A with invFun := to_lin' (A⁻¹),
+  { Matrix.toLin' A with invFun := to_lin' A⁻¹,
     left_inv := fun x =>
       calc
-        (to_lin' (A⁻¹)).comp (to_lin' A) x = (to_lin' (A⁻¹ * A)) x := by
+        (to_lin' A⁻¹).comp (to_lin' A) x = (to_lin' (A⁻¹ * A)) x := by
           rw [← to_lin'_mul]
         _ = x := by
           rw [mul_left_invₓ, to_lin'_one, id_apply]
         ,
     right_inv := fun x =>
       calc
-        (to_lin' A).comp (to_lin' (A⁻¹)) x = to_lin' (A * A⁻¹) x := by
+        (to_lin' A).comp (to_lin' A⁻¹) x = to_lin' (A * A⁻¹) x := by
           rw [← to_lin'_mul]
         _ = x := by
           rw [mul_right_invₓ, to_lin'_one, id_apply]
@@ -142,7 +142,7 @@ def to_linear_equiv (A : unitary_group n α) : (n → α) ≃ₗ[α] n → α :=
 def to_GL (A : unitary_group n α) : general_linear_group α (n → α) :=
   general_linear_group.of_linear_equiv (to_linear_equiv A)
 
-theorem coe_to_GL (A : unitary_group n α) : ↑to_GL A = to_lin' A :=
+theorem coe_to_GL (A : unitary_group n α) : ↑(to_GL A) = to_lin' A :=
   rfl
 
 @[simp]

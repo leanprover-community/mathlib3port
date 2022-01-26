@@ -111,19 +111,19 @@ instance (X : C) : Ringₓ (End X) :=
 
 /-- Composition by a fixed left argument as a group homomorphism -/
 def left_comp {P Q : C} (R : C) (f : P ⟶ Q) : (Q ⟶ R) →+ (P ⟶ R) :=
-  (mk' fun g => f ≫ g) $ fun g g' => by
+  (mk' fun g => f ≫ g) fun g g' => by
     simp
 
 /-- Composition by a fixed right argument as a group homomorphism -/
 def right_comp (P : C) {Q R : C} (g : Q ⟶ R) : (P ⟶ Q) →+ (P ⟶ R) :=
-  (mk' fun f => f ≫ g) $ fun f f' => by
+  (mk' fun f => f ≫ g) fun f f' => by
     simp
 
 variable {P Q R : C} (f f' : P ⟶ Q) (g g' : Q ⟶ R)
 
 /-- Composition as a bilinear group homomorphism -/
 def comp_hom : (P ⟶ Q) →+ (Q ⟶ R) →+ (P ⟶ R) :=
-  (AddMonoidHom.mk' fun f => left_comp _ f) $ fun f₁ f₂ => AddMonoidHom.ext $ fun g => (right_comp _ g).map_add f₁ f₂
+  (AddMonoidHom.mk' fun f => left_comp _ f) fun f₁ f₂ => AddMonoidHom.ext fun g => (right_comp _ g).map_add f₁ f₂
 
 @[simp, reassoc]
 theorem sub_comp : (f - f') ≫ g = f ≫ g - f' ≫ g :=
@@ -181,7 +181,7 @@ instance (priority := 100) preadditive_has_zero_morphisms : has_zero_morphisms C
   zero_comp' := fun P Q R f => show right_comp P f 0 = 0 from map_zero _
 
 theorem mono_of_cancel_zero {Q R : C} (f : Q ⟶ R) (h : ∀ {P : C} g : P ⟶ Q, g ≫ f = 0 → g = 0) : mono f :=
-  ⟨fun P g g' hg => sub_eq_zero.1 $ h _ $ (map_sub (right_comp P f) g g').trans $ sub_eq_zero.2 hg⟩
+  ⟨fun P g g' hg => sub_eq_zero.1 <| h _ <| (map_sub (right_comp P f) g g').trans <| sub_eq_zero.2 hg⟩
 
 theorem mono_iff_cancel_zero {Q R : C} (f : Q ⟶ R) : mono f ↔ ∀ P : C g : P ⟶ Q, g ≫ f = 0 → g = 0 :=
   ⟨fun m P g => zero_of_comp_mono _, mono_of_cancel_zero f⟩
@@ -191,7 +191,7 @@ theorem mono_of_kernel_zero {X Y : C} {f : X ⟶ Y} [has_limit (parallel_pair f 
     rw [← kernel.lift_ι f g h, w, limits.comp_zero]
 
 theorem epi_of_cancel_zero {P Q : C} (f : P ⟶ Q) (h : ∀ {R : C} g : Q ⟶ R, f ≫ g = 0 → g = 0) : epi f :=
-  ⟨fun R g g' hg => sub_eq_zero.1 $ h _ $ (map_sub (left_comp R f) g g').trans $ sub_eq_zero.2 hg⟩
+  ⟨fun R g g' hg => sub_eq_zero.1 <| h _ <| (map_sub (left_comp R f) g g').trans <| sub_eq_zero.2 hg⟩
 
 theorem epi_iff_cancel_zero {P Q : C} (f : P ⟶ Q) : epi f ↔ ∀ R : C g : Q ⟶ R, f ≫ g = 0 → g = 0 :=
   ⟨fun e R g => zero_of_epi_comp _, epi_of_cancel_zero f⟩
@@ -225,13 +225,13 @@ theorem has_limit_parallel_pair [has_kernel (f - g)] : has_limit (parallel_pair 
   has_limit.mk
     { Cone :=
         fork.of_ι (kernel.ι (f - g))
-          (sub_eq_zero.1 $ by
+          (sub_eq_zero.1 <| by
             rw [← comp_sub]
             exact kernel.condition _),
       IsLimit :=
         fork.is_limit.mk _
           (fun s =>
-            kernel.lift (f - g) (fork.ι s) $ by
+            kernel.lift (f - g) (fork.ι s) <| by
               rw [comp_sub]
               apply sub_eq_zero.2
               exact fork.condition _)
@@ -260,13 +260,13 @@ theorem has_colimit_parallel_pair [has_cokernel (f - g)] : has_colimit (parallel
   has_colimit.mk
     { Cocone :=
         cofork.of_π (cokernel.π (f - g))
-          (sub_eq_zero.1 $ by
+          (sub_eq_zero.1 <| by
             rw [← sub_comp]
             exact cokernel.condition _),
       IsColimit :=
         cofork.is_colimit.mk _
           (fun s =>
-            cokernel.desc (f - g) (cofork.π s) $ by
+            cokernel.desc (f - g) (cofork.π s) <| by
               rw [sub_comp]
               apply sub_eq_zero.2
               exact cofork.condition _)

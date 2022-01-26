@@ -173,11 +173,13 @@ private def basic {X : Compactum} (A : Set X) : Set (Ultrafilter X) :=
 private def cl {X : Compactum} (A : Set X) : Set X :=
   X.str '' basic A
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 private theorem basic_inter {X : Compactum} (A B : Set X) : basic (A ∩ B) = basic A ∩ basic B := by
   ext G
   constructor
   · intro hG
-    constructor <;> filter_upwards [hG] <;> intro x
+    constructor <;>
+      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
     exacts[And.left, And.right]
     
   · rintro ⟨h1, h2⟩
@@ -321,7 +323,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
 
 theorem le_nhds_of_str_eq {X : Compactum} (F : Ultrafilter X) (x : X) : X.str F = x → ↑F ≤ 𝓝 x := fun h =>
   le_nhds_iff.mpr fun s hx hs =>
-    hs _ $ by
+    hs _ <| by
       rwa [h]
 
 instance {X : Compactum} : T2Space X := by
@@ -367,7 +369,7 @@ noncomputable def of_topological_space (X : Type _) [TopologicalSpace X] [Compac
     have c2 : ∀ U : Set X F : Ultrafilter X, F.Lim ∈ U → IsOpen U → U ∈ F := by
       intro U F h1 hU
       exact c1 ▸ is_open_iff_ultrafilter.mp hU _ h1 _ (Ultrafilter.le_nhds_Lim _)
-    have c3 : ↑Ultrafilter.map Ultrafilter.lim FF ≤ 𝓝 x := by
+    have c3 : ↑(Ultrafilter.map Ultrafilter.lim FF) ≤ 𝓝 x := by
       rw [le_nhds_iff]
       intro U hx hU
       exact
@@ -420,13 +422,13 @@ noncomputable def iso_of_topological_space {D : CompHaus} :
   Hom :=
     { toFun := id,
       continuous_to_fun :=
-        continuous_def.2 $ fun _ h => by
+        continuous_def.2 fun _ h => by
           rw [is_open_iff_ultrafilter'] at h
           exact h }
   inv :=
     { toFun := id,
       continuous_to_fun :=
-        continuous_def.2 $ fun _ h1 => by
+        continuous_def.2 fun _ h1 => by
           rw [is_open_iff_ultrafilter']
           intro _ h2
           exact h1 _ h2 }

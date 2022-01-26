@@ -212,7 +212,7 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
             hf'.tendsto_cofinite_zero
       exact H.subset fun i hi => Real.one_le_rpow hi hq.le
       
-    · show ∀ i, ¬|∥f i∥ ^ p.to_real| ≤ ∥f i∥ ^ q.to_real → 1 ≤ ∥f i∥
+    · show ∀ i, ¬abs (∥f i∥ ^ p.to_real) ≤ ∥f i∥ ^ q.to_real → 1 ≤ ∥f i∥
       intro i hi
       have : 0 ≤ ∥f i∥ ^ p.to_real := Real.rpow_nonneg_of_nonneg (norm_nonneg _) p.to_real
       simp only [abs_of_nonneg, this] at hi
@@ -764,7 +764,7 @@ protected theorem has_sum_single [Fact (1 ≤ p)] (hp : p ≠ ⊤) (f : lp E p) 
     simpa using lp.norm_compl_sum_single hp' (-f) s
   rw [← H] at hs
   have :
-    |∥(∑ i in s, lp.single p i (f i : E i)) - f∥ ^ p.to_real| =
+    abs (∥(∑ i in s, lp.single p i (f i : E i)) - f∥ ^ p.to_real) =
       ∥(∑ i in s, lp.single p i (f i : E i)) - f∥ ^ p.to_real :=
     by
     simp [Real.abs_rpow_of_nonneg (norm_nonneg _)]

@@ -155,7 +155,7 @@ theorem polar_eq_Inter (s : Set E) : Polar 𝕜 s = ⋂ z ∈ s, { x' : dual �
 theorem polar_univ : Polar 𝕜 (univ : Set E) = {(0 : dual 𝕜 E)} := by
   refine' eq_singleton_iff_unique_mem.2 ⟨zero_mem_polar _ _, fun x' hx' => _⟩
   ext x
-  refine' norm_le_zero_iff.1 (le_of_forall_le_of_dense $ fun ε hε => _)
+  refine' norm_le_zero_iff.1 (le_of_forall_le_of_dense fun ε hε => _)
   rcases NormedField.exists_norm_lt 𝕜 hε with ⟨c, hc, hcε⟩
   calc ∥x' x∥ = ∥c∥ * ∥x' (c⁻¹ • x)∥ := by
       rw [x'.map_smul, norm_smul, NormedField.norm_inv, mul_inv_cancel_left₀ hc.ne']_ ≤ ε * 1 :=
@@ -175,7 +175,7 @@ operation `unpolar s := {x : E | ∀ x' ∈ s, ∥x' x∥ ≤ 1}` we apply `pola
 from the double dual space to the original space using `normed_space.inclusion_in_double_dual`. -/
 theorem polar_gc :
     GaloisConnection (OrderDual.toDual ∘ Polar 𝕜) fun s =>
-      inclusion_in_double_dual 𝕜 E ⁻¹' (Polar 𝕜 $ OrderDual.ofDual s) :=
+      inclusion_in_double_dual 𝕜 E ⁻¹' (Polar 𝕜 <| OrderDual.ofDual s) :=
   fun s t => ⟨fun H x hx x' hx' => H hx' x hx, fun H x' hx' x hx => H hx x' hx'⟩
 
 variable {E}
@@ -197,16 +197,16 @@ theorem polar_empty : Polar 𝕜 (∅ : Set E) = univ :=
 
 @[simp]
 theorem polar_zero : Polar 𝕜 ({0} : Set E) = univ :=
-  eq_univ_of_forall $ fun x' =>
-    forall_eq.2 $ by
+  eq_univ_of_forall fun x' =>
+    forall_eq.2 <| by
       rw [map_zero, norm_zero]
       exact zero_le_one
 
 @[simp]
 theorem polar_closure (s : Set E) : Polar 𝕜 (Closure s) = Polar 𝕜 s :=
-  (polar_antitone 𝕜 subset_closure).antisymm $
-    (polar_gc 𝕜 E).l_le $
-      closure_minimal ((polar_gc 𝕜 E).le_u_l s) $
+  (polar_antitone 𝕜 subset_closure).antisymm <|
+    (polar_gc 𝕜 E).l_le <|
+      closure_minimal ((polar_gc 𝕜 E).le_u_l s) <|
         (is_closed_polar _ _).Preimage (inclusion_in_double_dual 𝕜 E).Continuous
 
 variable {𝕜}
@@ -217,7 +217,7 @@ theorem smul_mem_polar {s : Set E} {x' : dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z 
   by_cases' c_zero : c = 0
   · simp [c_zero]
     
-  have eq : ∀ z, ∥c⁻¹ • x' z∥ = ∥c⁻¹∥ * ∥x' z∥ := fun z => norm_smul (c⁻¹) _
+  have eq : ∀ z, ∥c⁻¹ • x' z∥ = ∥c⁻¹∥ * ∥x' z∥ := fun z => norm_smul c⁻¹ _
   have le : ∀ z, z ∈ s → ∥c⁻¹ • x' z∥ ≤ ∥c⁻¹∥ * ∥c∥ := by
     intro z hzs
     rw [Eq z]
@@ -240,7 +240,7 @@ theorem polar_ball_subset_closed_ball_div {c : 𝕜} (hc : 1 < ∥c∥) {r : ℝ
 variable (𝕜)
 
 theorem closed_ball_inv_subset_polar_closed_ball {r : ℝ} :
-    closed_ball (0 : dual 𝕜 E) (r⁻¹) ⊆ Polar 𝕜 (closed_ball (0 : E) r) := fun x' hx' x hx =>
+    closed_ball (0 : dual 𝕜 E) r⁻¹ ⊆ Polar 𝕜 (closed_ball (0 : E) r) := fun x' hx' x hx =>
   calc
     ∥x' x∥ ≤ ∥x'∥ * ∥x∥ := x'.le_op_norm x
     _ ≤ r⁻¹ * r :=
@@ -253,7 +253,7 @@ theorem closed_ball_inv_subset_polar_closed_ball {r : ℝ} :
 /-- The `polar` of closed ball in a normed space `E` is the closed ball of the dual with
 inverse radius. -/
 theorem polar_closed_ball {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {r : ℝ} (hr : 0 < r) :
-    Polar 𝕜 (closed_ball (0 : E) r) = closed_ball (0 : dual 𝕜 E) (r⁻¹) := by
+    Polar 𝕜 (closed_ball (0 : E) r) = closed_ball (0 : dual 𝕜 E) r⁻¹ := by
   refine' subset.antisymm _ (closed_ball_inv_subset_polar_closed_ball _)
   intro x' h
   simp only [mem_closed_ball_zero_iff]
@@ -262,10 +262,10 @@ theorem polar_closed_ball {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGrou
 
 /-- Given a neighborhood `s` of the origin in a normed space `E`, the dual norms
 of all elements of the polar `polar 𝕜 s` are bounded by a constant. -/
-theorem bounded_polar_of_mem_nhds_zero {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) : Bounded (Polar 𝕜 s) := by
+theorem bounded_polar_of_mem_nhds_zero {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) : bounded (Polar 𝕜 s) := by
   obtain ⟨a, ha⟩ : ∃ a : 𝕜, 1 < ∥a∥ := NormedField.exists_one_lt_norm 𝕜
   obtain ⟨r, r_pos, r_ball⟩ : ∃ (r : ℝ)(hr : 0 < r), ball 0 r ⊆ s := Metric.mem_nhds_iff.1 s_nhd
-  exact bounded_closed_ball.mono ((polar_antitone 𝕜 r_ball).trans $ polar_ball_subset_closed_ball_div ha r_pos)
+  exact bounded_closed_ball.mono ((polar_antitone 𝕜 r_ball).trans <| polar_ball_subset_closed_ball_div ha r_pos)
 
 end PolarSets
 

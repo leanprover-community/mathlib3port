@@ -25,7 +25,7 @@ theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as := by
     case list.cons a l ih =>
       suffices List.cons <$> pure a <*> pure l ≤ List.cons <$> 𝓝 a <*> traverse 𝓝 l by
         simpa only with functor_norm using this
-      exact Filter.seq_mono (Filter.map_mono $ pure_le_nhds a) ih
+      exact Filter.seq_mono (Filter.map_mono <| pure_le_nhds a) ih
     
   · intro l s hs
     rcases(mem_traverse_iff _ _).1 hs with ⟨u, hu, hus⟩
@@ -51,7 +51,7 @@ theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as := by
         simp only [List.forall₂_and_left, flip] at hv⊢
         exact ⟨hv.1, hu.flip⟩
       refine' mem_of_superset _ hvs
-      exact mem_traverse _ _ (this.imp $ fun a s ⟨hs, ha⟩ => IsOpen.mem_nhds hs ha)
+      exact mem_traverse _ _ (this.imp fun a s ⟨hs, ha⟩ => IsOpen.mem_nhds hs ha)
       
     
 
@@ -80,7 +80,7 @@ theorem tendsto_cons_iff {β : Type _} {f : List α → β} {b : _root_.filter �
   rw [this, Filter.tendsto_map'_iff]
 
 theorem continuous_cons : Continuous fun x : α × List α => (x.1 :: x.2 : List α) :=
-  continuous_iff_continuous_at.mpr $ fun ⟨x, y⟩ => continuous_at_fst.cons continuous_at_snd
+  continuous_iff_continuous_at.mpr fun ⟨x, y⟩ => continuous_at_fst.cons continuous_at_snd
 
 theorem tendsto_nhds {β : Type _} {f : List α → β} {r : List α → _root_.filter β} (h_nil : tendsto f (pure []) (r []))
     (h_cons : ∀ l a, tendsto f (𝓝 l) (r l) → tendsto (fun p : α × List α => f (p.1 :: p.2)) (𝓝 a ×ᶠ 𝓝 l) (r (a :: l))) :
@@ -113,7 +113,7 @@ theorem tendsto_insert_nth' {a : α} :
     rw [this, tendsto_map'_iff]
     exact
       (tendsto_fst.comp tendsto_snd).cons
-        ((@tendsto_insert_nth' n l).comp $ tendsto_fst.prod_mk $ tendsto_snd.comp tendsto_snd)
+        ((@tendsto_insert_nth' n l).comp <| tendsto_fst.prod_mk <| tendsto_snd.comp tendsto_snd)
 
 theorem tendsto_insert_nth {β} {n : ℕ} {a : α} {l : List α} {f : β → α} {g : β → List α} {b : _root_.filter β}
     (hf : tendsto f b (𝓝 a)) (hg : tendsto g b (𝓝 l)) :
@@ -121,7 +121,7 @@ theorem tendsto_insert_nth {β} {n : ℕ} {a : α} {l : List α} {f : β → α}
   tendsto_insert_nth'.comp (tendsto.prod_mk hf hg)
 
 theorem continuous_insert_nth {n : ℕ} : Continuous fun p : α × List α => insert_nth n p.1 p.2 :=
-  continuous_iff_continuous_at.mpr $ fun ⟨a, l⟩ => by
+  continuous_iff_continuous_at.mpr fun ⟨a, l⟩ => by
     rw [ContinuousAt, nhds_prod_eq] <;> exact tendsto_insert_nth'
 
 theorem tendsto_remove_nth : ∀ {n : ℕ} {l : List α}, tendsto (fun l => remove_nth l n) (𝓝 l) (𝓝 (remove_nth l n))
@@ -135,7 +135,7 @@ theorem tendsto_remove_nth : ∀ {n : ℕ} {l : List α}, tendsto (fun l => remo
     exact tendsto_fst.cons ((@tendsto_remove_nth n l).comp tendsto_snd)
 
 theorem continuous_remove_nth {n : ℕ} : Continuous fun l : List α => remove_nth l n :=
-  continuous_iff_continuous_at.mpr $ fun a => tendsto_remove_nth
+  continuous_iff_continuous_at.mpr fun a => tendsto_remove_nth
 
 @[to_additive]
 theorem tendsto_prod [Monoidₓ α] [HasContinuousMul α] {l : List α} : tendsto List.prod (𝓝 l) (𝓝 l.prod) := by
@@ -149,7 +149,7 @@ theorem tendsto_prod [Monoidₓ α] [HasContinuousMul α] {l : List α} : tendst
 
 @[to_additive]
 theorem continuous_prod [Monoidₓ α] [HasContinuousMul α] : Continuous (Prod : List α → α) :=
-  continuous_iff_continuous_at.mpr $ fun l => tendsto_prod
+  continuous_iff_continuous_at.mpr fun l => tendsto_prod
 
 end List
 
@@ -173,7 +173,7 @@ theorem tendsto_insert_nth {n : ℕ} {i : Finₓ (n + 1)} {a : α} :
     exact List.tendsto_insert_nth tendsto_fst (tendsto.comp continuous_at_subtype_coe tendsto_snd : _)
 
 theorem continuous_insert_nth' {n : ℕ} {i : Finₓ (n + 1)} : Continuous fun p : α × Vector α n => insert_nth p.1 i p.2 :=
-  continuous_iff_continuous_at.mpr $ fun ⟨a, l⟩ => by
+  continuous_iff_continuous_at.mpr fun ⟨a, l⟩ => by
     rw [ContinuousAt, nhds_prod_eq] <;> exact tendsto_insert_nth
 
 theorem continuous_insert_nth {n : ℕ} {i : Finₓ (n + 1)} {f : β → α} {g : β → Vector α n} (hf : Continuous f)
@@ -187,7 +187,7 @@ theorem continuous_at_remove_nth {n : ℕ} {i : Finₓ (n + 1)} : ∀ {l : Vecto
     exact tendsto.comp List.tendsto_remove_nth continuous_at_subtype_coe
 
 theorem continuous_remove_nth {n : ℕ} {i : Finₓ (n + 1)} : Continuous (remove_nth i : Vector α (n + 1) → Vector α n) :=
-  continuous_iff_continuous_at.mpr $ fun ⟨a, l⟩ => continuous_at_remove_nth
+  continuous_iff_continuous_at.mpr fun ⟨a, l⟩ => continuous_at_remove_nth
 
 end Vector
 

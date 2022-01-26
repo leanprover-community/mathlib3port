@@ -248,7 +248,7 @@ a isometric isomorphism from E to `lp 2` of the subspaces.
 Note that this goes in the opposite direction from `orthogonal_family.linear_isometry`. -/
 noncomputable def LinearIsometryEquiv [∀ i, CompleteSpace (G i)]
     (hV' : (⨆ i, (V i).toLinearMap.range).topologicalClosure = ⊤) : E ≃ₗᵢ[𝕜] lp G 2 :=
-  LinearIsometryEquiv.symm $
+  LinearIsometryEquiv.symm <|
     LinearIsometryEquiv.ofSurjective hV.linear_isometry
       (by
         refine' linear_map.range_eq_top.mp _
@@ -382,7 +382,7 @@ include hv cplt
 
 /-- An orthonormal family of vectors whose span is dense in the whole module is a Hilbert basis. -/
 protected def mk (hsp : (span 𝕜 (Set.Range v)).topologicalClosure = ⊤) : HilbertBasis ι 𝕜 E :=
-  HilbertBasis.of_repr $
+  HilbertBasis.of_repr <|
     hv.orthogonal_family.linear_isometry_equiv
       (by
         convert hsp

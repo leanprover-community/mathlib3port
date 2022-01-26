@@ -76,7 +76,7 @@ theorem self_empty {n : ℕ} : Ico n n = [] :=
 theorem eq_empty_iff {n m : ℕ} : Ico n m = [] ↔ m ≤ n :=
   Iff.intro
     (fun h =>
-      tsub_eq_zero_iff_le.mp $ by
+      tsub_eq_zero_iff_le.mp <| by
         rw [← length, h, List.length])
     eq_nil_of_le
 
@@ -134,10 +134,10 @@ theorem not_mem_top {n m : ℕ} : m ∉ Ico n m := by
   simp
 
 theorem filter_lt_of_top_le {n m l : ℕ} (hml : m ≤ l) : ((Ico n m).filter fun x => x < l) = Ico n m :=
-  filter_eq_self.2 $ fun k hk => lt_of_lt_of_leₓ (mem.1 hk).2 hml
+  filter_eq_self.2 fun k hk => lt_of_lt_of_leₓ (mem.1 hk).2 hml
 
 theorem filter_lt_of_le_bot {n m l : ℕ} (hln : l ≤ n) : ((Ico n m).filter fun x => x < l) = [] :=
-  filter_eq_nil.2 $ fun k hk => not_lt_of_le $ le_transₓ hln $ (mem.1 hk).1
+  filter_eq_nil.2 fun k hk => not_lt_of_le <| le_transₓ hln <| (mem.1 hk).1
 
 theorem filter_lt_of_ge {n m l : ℕ} (hlm : l ≤ m) : ((Ico n m).filter fun x => x < l) = Ico n l := by
   cases' le_totalₓ n l with hnl hln
@@ -156,10 +156,10 @@ theorem filter_lt (n m l : ℕ) : ((Ico n m).filter fun x => x < l) = Ico n (min
     
 
 theorem filter_le_of_le_bot {n m l : ℕ} (hln : l ≤ n) : ((Ico n m).filter fun x => l ≤ x) = Ico n m :=
-  filter_eq_self.2 $ fun k hk => le_transₓ hln (mem.1 hk).1
+  filter_eq_self.2 fun k hk => le_transₓ hln (mem.1 hk).1
 
 theorem filter_le_of_top_le {n m l : ℕ} (hml : m ≤ l) : ((Ico n m).filter fun x => l ≤ x) = [] :=
-  filter_eq_nil.2 $ fun k hk => not_le_of_gtₓ (lt_of_lt_of_leₓ (mem.1 hk).2 hml)
+  filter_eq_nil.2 fun k hk => not_le_of_gtₓ (lt_of_lt_of_leₓ (mem.1 hk).2 hml)
 
 theorem filter_le_of_le {n m l : ℕ} (hnl : n ≤ l) : ((Ico n m).filter fun x => l ≤ x) = Ico l m := by
   cases' le_totalₓ l m with hlm hml

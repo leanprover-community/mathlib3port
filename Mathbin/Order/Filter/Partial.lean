@@ -52,7 +52,7 @@ def rmap (r : Rel α β) (l : Filter α) : Filter β where
   Sets := { s | r.core s ∈ l }
   univ_sets := by
     simp
-  sets_of_superset := fun s t hs st => mem_of_superset hs $ Rel.core_mono _ st
+  sets_of_superset := fun s t hs st => mem_of_superset hs <| Rel.core_mono _ st
   inter_sets := fun s t hs ht => by
     simp [Rel.core_inter, inter_mem hs ht]
 
@@ -65,12 +65,12 @@ theorem mem_rmap (r : Rel α β) (l : Filter α) (s : Set β) : s ∈ l.rmap r �
 
 @[simp]
 theorem rmap_rmap (r : Rel α β) (s : Rel β γ) (l : Filter α) : rmap s (rmap r l) = rmap (r.comp s) l :=
-  filter_eq $ by
+  filter_eq <| by
     simp [rmap_sets, Set.Preimage, Rel.core_comp]
 
 @[simp]
 theorem rmap_compose (r : Rel α β) (s : Rel β γ) : rmap s ∘ rmap r = rmap (r.comp s) :=
-  funext $ rmap_rmap _ _
+  funext <| rmap_rmap _ _
 
 /-- Generic "limit of a relation" predicate. `rtendsto r l₁ l₂` asserts that for every
 `l₂`-neighborhood `a`, the `r`-core of `a` is an `l₁`-neighborhood. One generalization of
@@ -94,7 +94,7 @@ theorem rcomap_sets (r : Rel α β) (f : Filter β) : (rcomap r f).Sets = Rel.Im
   rfl
 
 theorem rcomap_rcomap (r : Rel α β) (s : Rel β γ) (l : Filter γ) : rcomap r (rcomap s l) = rcomap (r.comp s) l :=
-  filter_eq $ by
+  filter_eq <| by
     ext t
     simp [rcomap_sets, Rel.Image, Rel.core_comp]
     constructor
@@ -106,7 +106,7 @@ theorem rcomap_rcomap (r : Rel α β) (s : Rel β γ) (l : Filter γ) : rcomap r
 
 @[simp]
 theorem rcomap_compose (r : Rel α β) (s : Rel β γ) : rcomap r ∘ rcomap s = rcomap (r.comp s) :=
-  funext $ rcomap_rcomap _ _
+  funext <| rcomap_rcomap _ _
 
 theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) : rtendsto r l₁ l₂ ↔ l₁ ≤ l₂.rcomap r := by
   rw [rtendsto_def]
@@ -137,7 +137,7 @@ theorem rcomap'_sets (r : Rel α β) (f : Filter β) :
 
 @[simp]
 theorem rcomap'_rcomap' (r : Rel α β) (s : Rel β γ) (l : Filter γ) : rcomap' r (rcomap' s l) = rcomap' (r.comp s) l :=
-  Filter.ext $ fun t => by
+  Filter.ext fun t => by
     simp [rcomap'_sets, Rel.Image, Rel.preimage_comp]
     constructor
     · rintro ⟨u, ⟨v, vsets, hv⟩, h⟩
@@ -148,7 +148,7 @@ theorem rcomap'_rcomap' (r : Rel α β) (s : Rel β γ) (l : Filter γ) : rcomap
 
 @[simp]
 theorem rcomap'_compose (r : Rel α β) (s : Rel β γ) : rcomap' r ∘ rcomap' s = rcomap' (r.comp s) :=
-  funext $ rcomap'_rcomap' _ _
+  funext <| rcomap'_rcomap' _ _
 
 /-- Generic "limit of a relation" predicate. `rtendsto' r l₁ l₂` asserts that for every
 `l₂`-neighborhood `a`, the `r`-preimage of `a` is an `l₁`-neighborhood. One generalization of

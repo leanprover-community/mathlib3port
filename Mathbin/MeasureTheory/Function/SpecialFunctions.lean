@@ -23,8 +23,8 @@ theorem measurable_exp : Measurable exp :=
 
 @[measurability]
 theorem measurable_log : Measurable log :=
-  measurable_of_measurable_on_compl_singleton 0 $
-    Continuous.measurable $ continuous_on_iff_continuous_restrict.1 continuous_on_log
+  measurable_of_measurable_on_compl_singleton 0 <|
+    Continuous.measurable <| continuous_on_iff_continuous_restrict.1 continuous_on_log
 
 @[measurability]
 theorem measurable_sin : Measurable sin :=
@@ -96,12 +96,12 @@ theorem measurable_arg : Measurable arg :=
     Real.measurable_arcsin.comp (measurable_im.div measurable_norm)
   have B : Measurable fun x : ℂ => Real.arcsin ((-x).im / x.abs) :=
     Real.measurable_arcsin.comp ((measurable_im.comp measurable_neg).div measurable_norm)
-  Measurable.ite (is_closed_le continuous_const continuous_re).MeasurableSet A $
+  Measurable.ite (is_closed_le continuous_const continuous_re).MeasurableSet A <|
     Measurable.ite (is_closed_le continuous_const continuous_im).MeasurableSet (B.add_const _) (B.sub_const _)
 
 @[measurability]
 theorem measurable_log : Measurable log :=
-  (measurable_of_real.comp $ Real.measurable_log.comp measurable_norm).add $
+  (measurable_of_real.comp <| Real.measurable_log.comp measurable_norm).add <|
     (measurable_of_real.comp measurable_arg).mul_const I
 
 end Complex
@@ -260,7 +260,7 @@ instance Complex.hasMeasurablePow : HasMeasurablePow ℂ ℂ :=
       (measurable_fst.clog.mul measurable_snd).cexp⟩
 
 instance Real.hasMeasurablePow : HasMeasurablePow ℝ ℝ :=
-  ⟨Complex.measurable_re.comp $
+  ⟨Complex.measurable_re.comp <|
       (Complex.measurable_of_real.comp measurable_fst).pow (Complex.measurable_of_real.comp measurable_snd)⟩
 
 instance Nnreal.hasMeasurablePow : HasMeasurablePow ℝ≥0 ℝ :=

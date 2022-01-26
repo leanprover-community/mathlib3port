@@ -163,7 +163,7 @@ instance ulift_functor_full : full.{u} ulift_functor where
 
 instance ulift_functor_faithful : faithful ulift_functor where
   map_injective' := fun X Y f g p =>
-    funext $ fun x => congr_argₓ Ulift.down (congr_funₓ p (Ulift.up x) : Ulift.up (f x) = Ulift.up (g x))
+    funext fun x => congr_argₓ Ulift.down (congr_funₓ p (Ulift.up x) : Ulift.up (f x) = Ulift.up (g x))
 
 /-- The functor embedding `Type u` into `Type u` via `ulift` is isomorphic to the identity functor.
  -/
@@ -217,7 +217,7 @@ def of_type_functor (m : Type u → Type v) [_root_.functor m] [IsLawfulFunctor 
   obj := m
   map := fun α β => _root_.functor.map
   map_id' := fun α => _root_.functor.map_id
-  map_comp' := fun α β γ f g => funext $ fun a => IsLawfulFunctor.comp_map f g _
+  map_comp' := fun α β γ f g => funext fun a => IsLawfulFunctor.comp_map f g _
 
 variable (m : Type u → Type v) [_root_.functor m] [IsLawfulFunctor m]
 

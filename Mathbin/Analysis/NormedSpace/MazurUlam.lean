@@ -41,8 +41,8 @@ theorem midpoint_fixed {x y : PE} : ∀ e : PE ≃ᵢ PE, e x = x → e y = y �
   set z := midpoint ℝ x y
   set s := { e : PE ≃ᵢ PE | e x = x ∧ e y = y }
   have : Nonempty s := ⟨⟨Isometric.refl PE, rfl, rfl⟩⟩
-  have h_bdd : BddAbove (range $ fun e : s => dist (e z) z) := by
-    refine' ⟨dist x z + dist x z, forall_range_iff.2 $ Subtype.forall.2 _⟩
+  have h_bdd : BddAbove (range fun e : s => dist (e z) z) := by
+    refine' ⟨dist x z + dist x z, forall_range_iff.2 <| Subtype.forall.2 _⟩
     rintro e ⟨hx, hy⟩
     calc dist (e z) z ≤ dist (e z) x + dist x z := dist_triangle (e z) x z _ = dist (e x) (e z) + dist x z := by
         rw [hx, dist_comm]_ = dist x z + dist x z := by
@@ -73,8 +73,8 @@ include F
 /-- A bijective isometry sends midpoints to midpoints. -/
 theorem map_midpoint (f : PE ≃ᵢ PF) (x y : PE) : f (midpoint ℝ x y) = midpoint ℝ (f x) (f y) := by
   set e : PE ≃ᵢ PE :=
-    ((f.trans $ (point_reflection ℝ $ midpoint ℝ (f x) (f y)).toIsometric).trans f.symm).trans
-      (point_reflection ℝ $ midpoint ℝ x y).toIsometric
+    ((f.trans <| (point_reflection ℝ <| midpoint ℝ (f x) (f y)).toIsometric).trans f.symm).trans
+      (point_reflection ℝ <| midpoint ℝ x y).toIsometric
   have hx : e x = x := by
     simp
   have hy : e y = y := by
@@ -128,8 +128,8 @@ theorem to_real_linear_isometry_equiv_symm_apply (f : E ≃ᵢ F) (y : F) :
 normed vector spaces over `ℝ`, then `f` is an affine isometry equivalence. -/
 def to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) : PE ≃ᵃⁱ[ℝ] PF :=
   AffineIsometryEquiv.mk' f
-    ((vadd_const (Classical.arbitrary PE)).trans $
-        f.trans (vadd_const (f $ Classical.arbitrary PE)).symm).toRealLinearIsometryEquiv
+    ((vadd_const (Classical.arbitrary PE)).trans <|
+        f.trans (vadd_const (f <| Classical.arbitrary PE)).symm).toRealLinearIsometryEquiv
     (Classical.arbitrary PE) fun p => by
     simp
 

@@ -112,12 +112,12 @@ variable [Monoidₓ α] (s : Set α)
 
 @[simp, to_additive zero_left_add_coset]
 theorem one_left_coset : 1 *l s = s :=
-  Set.ext $ by
+  Set.ext <| by
     simp [LeftCoset]
 
 @[simp, to_additive right_add_coset_zero]
 theorem right_coset_one : s *r 1 = s :=
-  Set.ext $ by
+  Set.ext <| by
     simp [RightCoset]
 
 end CosetMonoid
@@ -182,17 +182,17 @@ variable [Groupₓ α] (s : Subgroup α)
 
 @[to_additive left_add_coset_mem_left_add_coset]
 theorem left_coset_mem_left_coset {a : α} (ha : a ∈ s) : a *l s = s :=
-  Set.ext $ by
+  Set.ext <| by
     simp [mem_left_coset_iff, mul_mem_cancel_left s (s.inv_mem ha)]
 
 @[to_additive right_add_coset_mem_right_add_coset]
 theorem right_coset_mem_right_coset {a : α} (ha : a ∈ s) : (s : Set α) *r a = s :=
-  Set.ext $ fun b => by
+  Set.ext fun b => by
     simp [mem_right_coset_iff, mul_mem_cancel_right s (s.inv_mem ha)]
 
 @[to_additive eq_add_cosets_of_normal]
 theorem eq_cosets_of_normal (N : s.normal) (g : α) : g *l s = s *r g :=
-  Set.ext $ fun a => by
+  Set.ext fun a => by
     simp [mem_left_coset_iff, mem_right_coset_iff] <;> rw [N.mem_comm_iff]
 
 @[to_additive normal_of_eq_add_cosets]
@@ -216,7 +216,7 @@ theorem left_coset_eq_iff {x y : α} : LeftCoset x s = LeftCoset y s ↔ x⁻¹ 
     exact s.one_mem
     
   · intro h z
-    rw [← mul_inv_cancel_rightₓ (x⁻¹) y]
+    rw [← mul_inv_cancel_rightₓ x⁻¹ y]
     rw [mul_assoc]
     exact s.mul_mem_cancel_left h
     
@@ -232,7 +232,7 @@ theorem right_coset_eq_iff {x y : α} : RightCoset (↑s) x = RightCoset s y ↔
     exact s.one_mem
     
   · intro h z
-    rw [← inv_mul_cancel_leftₓ y (x⁻¹)]
+    rw [← inv_mul_cancel_leftₓ y x⁻¹]
     rw [← mul_assoc]
     exact s.mul_mem_cancel_right h
     
@@ -351,7 +351,7 @@ theorem mk_mul_of_mem (g₁ g₂ : α) (hg₂ : g₂ ∈ s) : (mk (g₁ * g₂) 
 
 @[to_additive]
 theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x : α | (x : α ⧸ s) = g } = LeftCoset g s :=
-  Set.ext $ fun z => by
+  Set.ext fun z => by
     rw [mem_left_coset_iff, Set.mem_set_of_eq, eq_comm, QuotientGroup.eq, SetLike.mem_coe]
 
 @[to_additive]
@@ -380,20 +380,20 @@ variable [Groupₓ α] {s : Subgroup α}
 @[to_additive "The natural bijection between the cosets `g + s` and `s`."]
 def left_coset_equiv_subgroup (g : α) : LeftCoset g s ≃ s :=
   ⟨fun x => ⟨g⁻¹ * x.1, (mem_left_coset_iff _).1 x.2⟩, fun x => ⟨g * x.1, x.1, x.2, rfl⟩, fun ⟨x, hx⟩ =>
-    Subtype.eq $ by
+    Subtype.eq <| by
       simp ,
     fun ⟨g, hg⟩ =>
-    Subtype.eq $ by
+    Subtype.eq <| by
       simp ⟩
 
 /-- The natural bijection between a right coset `s * g` and `s`. -/
 @[to_additive "The natural bijection between the cosets `s + g` and `s`."]
 def right_coset_equiv_subgroup (g : α) : RightCoset (↑s) g ≃ s :=
   ⟨fun x => ⟨x.1 * g⁻¹, (mem_right_coset_iff _).1 x.2⟩, fun x => ⟨x.1 * g, x.1, x.2, rfl⟩, fun ⟨x, hx⟩ =>
-    Subtype.eq $ by
+    Subtype.eq <| by
       simp ,
     fun ⟨g, hg⟩ =>
-    Subtype.eq $ by
+    Subtype.eq <| by
       simp ⟩
 
 /-- A (non-canonical) bijection between a group `α` and the product `(α/s) × s` -/
@@ -423,8 +423,8 @@ def quotient_equiv_prod_of_le' (h_le : s ≤ t) (f : α ⧸ t → α) (hf : Func
     α ⧸ s ≃ (α ⧸ t) × t ⧸ s.subgroup_of t where
   toFun := fun a =>
     ⟨a.map' id fun b c h => h_le h,
-      a.map' (fun g : α => ⟨f (Quotientₓ.mk' g)⁻¹ * g, Quotientₓ.exact' (hf g)⟩) fun b c h => by
-        change (f b⁻¹ * b)⁻¹ * (f c⁻¹ * c) ∈ s
+      a.map' (fun g : α => ⟨(f (Quotientₓ.mk' g))⁻¹ * g, Quotientₓ.exact' (hf g)⟩) fun b c h => by
+        change ((f b)⁻¹ * b)⁻¹ * ((f c)⁻¹ * c) ∈ s
         have key : f b = f c := congr_argₓ f (Quotientₓ.sound' (h_le h))
         rwa [key, mul_inv_rev, inv_invₓ, mul_assoc, mul_inv_cancel_left]⟩
   invFun := fun a =>
@@ -511,17 +511,17 @@ noncomputable def preimage_mk_equiv_subgroup_times_set (s : Subgroup α) (t : Se
     fun x a hx ha =>
     Quotientₓ.sound'
       (show (Quotientₓ.out' x * a)⁻¹ * Quotientₓ.out' x ∈ s from
-        s.inv_mem_iff.1 $ by
+        s.inv_mem_iff.1 <| by
           rwa [mul_inv_rev, inv_invₓ, ← mul_assoc, inv_mul_selfₓ, one_mulₓ])
   { toFun := fun ⟨a, ha⟩ =>
-      ⟨⟨Quotientₓ.out' (Quotientₓ.mk' a)⁻¹ * a, @Quotientₓ.exact' _ (left_rel s) _ _ $ Quotientₓ.out_eq' _⟩,
+      ⟨⟨(Quotientₓ.out' (Quotientₓ.mk' a))⁻¹ * a, @Quotientₓ.exact' _ (left_rel s) _ _ <| Quotientₓ.out_eq' _⟩,
         ⟨Quotientₓ.mk' a, ha⟩⟩,
     invFun := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ =>
       ⟨Quotientₓ.out' x * a,
         show Quotientₓ.mk' _ ∈ t by
           simp [h hx ha, hx]⟩,
     left_inv := fun ⟨a, ha⟩ =>
-      Subtype.eq $
+      Subtype.eq <|
         show _ * _ = a by
           simp ,
     right_inv := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ =>

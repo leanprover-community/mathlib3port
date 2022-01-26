@@ -32,9 +32,9 @@ section IsomorphismLaws
 /-- The first isomorphism law for modules. The quotient of `M` by the kernel of `f` is linearly
 equivalent to the range of `f`. -/
 noncomputable def quot_ker_equiv_range : (M ⧸ f.ker) ≃ₗ[R] f.range :=
-  (LinearEquiv.ofInjective (f.ker.liftq f $ le_reflₓ _) $
-        ker_eq_bot.mp $ Submodule.ker_liftq_eq_bot _ _ _ (le_reflₓ f.ker)).trans
-    (LinearEquiv.ofEq _ _ $ Submodule.range_liftq _ _ _)
+  (LinearEquiv.ofInjective (f.ker.liftq f <| le_reflₓ _) <|
+        ker_eq_bot.mp <| Submodule.ker_liftq_eq_bot _ _ _ (le_reflₓ f.ker)).trans
+    (LinearEquiv.ofEq _ _ <| Submodule.range_liftq _ _ _)
 
 /-- The first isomorphism theorem for surjective linear maps. -/
 noncomputable def quot_ker_equiv_of_surjective (f : M →ₗ[R] M₂) (hf : Function.Surjective f) : (M ⧸ f.ker) ≃ₗ[R] M₂ :=
@@ -90,13 +90,13 @@ theorem quotient_inf_equiv_sup_quotient_apply_mk (p p' : Submodule R M) (x : p) 
 
 theorem quotient_inf_equiv_sup_quotient_symm_apply_left (p p' : Submodule R M) (x : p⊔p') (hx : (x : M) ∈ p) :
     (quotient_inf_equiv_sup_quotient p p').symm (Submodule.Quotient.mk x) = Submodule.Quotient.mk ⟨x, hx⟩ :=
-  (LinearEquiv.symm_apply_eq _).2 $ by
+  (LinearEquiv.symm_apply_eq _).2 <| by
     simp [of_le_apply]
 
 @[simp]
 theorem quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff {p p' : Submodule R M} {x : p⊔p'} :
     (quotient_inf_equiv_sup_quotient p p').symm (Submodule.Quotient.mk x) = 0 ↔ (x : M) ∈ p' :=
-  (LinearEquiv.symm_apply_eq _).trans $ by
+  (LinearEquiv.symm_apply_eq _).trans <| by
     simp [of_le_apply]
 
 theorem quotient_inf_equiv_sup_quotient_symm_apply_right (p p' : Submodule R M) {x : p⊔p'} (hx : (x : M) ∈ p') :
@@ -137,11 +137,11 @@ def quotient_quotient_equiv_quotient : ((M ⧸ S) ⧸ T.map S.mkq) ≃ₗ[R] M �
   { quotient_quotient_equiv_quotient_aux S T h with toFun := quotient_quotient_equiv_quotient_aux S T h,
     invFun := mapq _ _ (mkq S) (le_comap_map _ _),
     left_inv := fun x =>
-      Quotientₓ.induction_on' x $ fun x =>
-        Quotientₓ.induction_on' x $ fun x => by
+      (Quotientₓ.induction_on' x) fun x =>
+        (Quotientₓ.induction_on' x) fun x => by
           simp ,
     right_inv := fun x =>
-      Quotientₓ.induction_on' x $ fun x => by
+      (Quotientₓ.induction_on' x) fun x => by
         simp }
 
 end Submodule

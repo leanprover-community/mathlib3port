@@ -77,7 +77,7 @@ theorem finrank [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional.finrank 
 theorem mem_span_pow' {x y : S} {d : ℕ} :
     y ∈ Submodule.span R (Set.Range fun i : Finₓ d => x ^ (i : ℕ)) ↔ ∃ f : Polynomial R, f.degree < d ∧ y = aeval x f :=
   by
-  have : (Set.Range fun i : Finₓ d => x ^ (i : ℕ)) = (fun i : ℕ => x ^ i) '' ↑Finset.range d := by
+  have : (Set.Range fun i : Finₓ d => x ^ (i : ℕ)) = (fun i : ℕ => x ^ i) '' ↑(Finset.range d) := by
     ext n
     simp_rw [Set.mem_range, Set.mem_image, Finset.mem_coe, Finset.mem_range]
     exact ⟨fun ⟨⟨i, hi⟩, hy⟩ => ⟨i, hi, hy⟩, fun ⟨i, hi, hy⟩ => ⟨⟨i, hi⟩, hy⟩⟩
@@ -296,8 +296,8 @@ noncomputable def lift_equiv (pb : PowerBasis A S) : (S →ₐ[A] S') ≃ { y : 
     ⟨f pb.gen, by
       rw [aeval_alg_hom_apply, minpoly.aeval, f.map_zero]⟩
   invFun := fun y => pb.lift y y.2
-  left_inv := fun f => pb.alg_hom_ext $ lift_gen _ _ _
-  right_inv := fun y => Subtype.ext $ lift_gen _ _ y.prop
+  left_inv := fun f => pb.alg_hom_ext <| lift_gen _ _ _
+  right_inv := fun y => Subtype.ext <| lift_gen _ _ y.prop
 
 /-- `pb.lift_equiv'` states that elements of the root set of the minimal
 polynomial of `pb.gen` correspond to maps sending `pb.gen` to that root. -/

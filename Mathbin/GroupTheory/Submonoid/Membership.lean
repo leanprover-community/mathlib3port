@@ -51,7 +51,7 @@ theorem coe_multiset_prod {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset 
 
 @[simp, norm_cast, to_additive]
 theorem coe_finset_prod {ι M} [CommMonoidₓ M] (S : Submonoid M) (f : ι → S) (s : Finset ι) :
-    (↑∏ i in s, f i) = (∏ i in s, f i : M) :=
+    ↑(∏ i in s, f i) = (∏ i in s, f i : M) :=
   S.subtype.map_prod f s
 
 /-- Product of a list of elements in a submonoid is in the submonoid. -/
@@ -75,7 +75,7 @@ theorem multiset_prod_mem {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset 
       "Sum of elements in an `add_submonoid` of an `add_comm_monoid` indexed by a `finset`\nis in the `add_submonoid`."]
 theorem prod_mem {M : Type _} [CommMonoidₓ M] (S : Submonoid M) {ι : Type _} {t : Finset ι} {f : ι → M}
     (h : ∀, ∀ c ∈ t, ∀, f c ∈ S) : (∏ c in t, f c) ∈ S :=
-  S.multiset_prod_mem (t.1.map f) $ fun x hx =>
+  (S.multiset_prod_mem (t.1.map f)) fun x hx =>
     let ⟨i, hi, hix⟩ := Multiset.mem_map.1 hx
     hix ▸ h i hi
 
@@ -94,7 +94,7 @@ open Set
 @[to_additive]
 theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M} (hS : Directed (· ≤ ·) S) {x : M} :
     (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i := by
-  refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 $ le_supr S i) hi⟩
+  refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supr S i) hi⟩
   suffices x ∈ closure (⋃ i, (S i : Set M)) → ∃ i, x ∈ S i by
     simpa only [closure_Union, closure_eq (S _)] using this
   refine' fun hx => closure_induction hx (fun _ => mem_Union.1) _ _
@@ -107,8 +107,8 @@ theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M} (
 
 @[to_additive]
 theorem coe_supr_of_directed {ι} [Nonempty ι] {S : ι → Submonoid M} (hS : Directed (· ≤ ·) S) :
-    ((⨆ i, S i : Submonoid M) : Set M) = ⋃ i, ↑S i :=
-  Set.ext $ fun x => by
+    ((⨆ i, S i : Submonoid M) : Set M) = ⋃ i, ↑(S i) :=
+  Set.ext fun x => by
     simp [mem_supr_of_directed hS]
 
 @[to_additive]
@@ -119,8 +119,8 @@ theorem mem_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.nonempty) (hS : 
 
 @[to_additive]
 theorem coe_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) :
-    (↑Sup S : Set M) = ⋃ s ∈ S, ↑s :=
-  Set.ext $ fun x => by
+    (↑(Sup S) : Set M) = ⋃ s ∈ S, ↑s :=
+  Set.ext fun x => by
     simp [mem_Sup_of_directed_on Sne hS]
 
 @[to_additive]
@@ -136,12 +136,40 @@ theorem mul_mem_sup {S T : Submonoid M} {x y : M} (hx : x ∈ S) (hy : y ∈ T) 
   (S⊔T).mul_mem (mem_sup_left hx) (mem_sup_right hy)
 
 @[to_additive]
-theorem mem_supr_of_mem {ι : Type _} {S : ι → Submonoid M} (i : ι) : ∀ {x : M}, x ∈ S i → x ∈ supr S :=
+theorem mem_supr_of_mem {ι : Sort _} {S : ι → Submonoid M} (i : ι) : ∀ {x : M}, x ∈ S i → x ∈ supr S :=
   show S i ≤ supr S from le_supr _ _
 
 @[to_additive]
 theorem mem_Sup_of_mem {S : Set (Submonoid M)} {s : Submonoid M} (hs : s ∈ S) : ∀ {x : M}, x ∈ s → x ∈ Sup S :=
   show s ≤ Sup S from le_Sup hs
+
+/-- An induction principle for elements of `⨆ i, S i`.
+If `C` holds for `1` and all elements of `S i` for all `i`, and is preserved under multiplication,
+then it holds for all elements of the supremum of `S`. -/
+@[elab_as_eliminator,
+  to_additive
+      " An induction principle for elements of `⨆ i, S i`.\nIf `C` holds for `0` and all elements of `S i` for all `i`, and is preserved under addition,\nthen it holds for all elements of the supremum of `S`. "]
+theorem supr_induction {ι : Sort _} (S : ι → Submonoid M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, S i)
+    (hp : ∀ i, ∀ x ∈ S i, ∀, C x) (h1 : C 1) (hmul : ∀ x y, C x → C y → C (x * y)) : C x := by
+  rw [supr_eq_closure] at hx
+  refine' closure_induction hx (fun x hx => _) h1 hmul
+  obtain ⟨i, hi⟩ := set.mem_Union.mp hx
+  exact hp _ _ hi
+
+/-- A dependent version of `submonoid.supr_induction`. -/
+@[elab_as_eliminator, to_additive "A dependent version of `add_submonoid.supr_induction`. "]
+theorem supr_induction' {ι : Sort _} (S : ι → Submonoid M) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
+    (hp : ∀ i, ∀ x ∈ S i, ∀, C x (mem_supr_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
+    (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem _ ‹_› ‹_›)) {x : M} (hx : x ∈ ⨆ i, S i) : C x hx := by
+  refine' Exists.elim _ fun hx : x ∈ ⨆ i, S i hc : C x hx => hc
+  refine' supr_induction S hx (fun i x hx => _) _ fun x y => _
+  · exact ⟨_, hp _ _ hx⟩
+    
+  · exact ⟨_, h1⟩
+    
+  · rintro ⟨_, Cx⟩ ⟨_, Cy⟩
+    refine' ⟨_, hmul _ _ _ _ Cx Cy⟩
+    
 
 end NonAssoc
 
@@ -154,9 +182,9 @@ variable {α : Type _}
 open Submonoid
 
 @[to_additive]
-theorem closure_range_of : closure (Set.Range $ @of α) = ⊤ :=
-  eq_top_iff.2 $ fun x hx =>
-    FreeMonoid.recOn x (one_mem _) $ fun x xs hxs => mul_mem _ (subset_closure $ Set.mem_range_self _) hxs
+theorem closure_range_of : closure (Set.Range <| @of α) = ⊤ :=
+  eq_top_iff.2 fun x hx =>
+    (FreeMonoid.recOn x (one_mem _)) fun x xs hxs => mul_mem _ (subset_closure <| Set.mem_range_self _) hxs
 
 end FreeMonoid
 
@@ -167,8 +195,8 @@ variable [Monoidₓ M]
 open MonoidHom
 
 theorem closure_singleton_eq (x : M) : closure ({x} : Set M) = (powersHom M x).mrange :=
-  closure_eq_of_le (Set.singleton_subset_iff.2 ⟨Multiplicative.ofAdd 1, pow_oneₓ x⟩) $ fun x ⟨n, hn⟩ =>
-    hn ▸ pow_mem _ (subset_closure $ Set.mem_singleton _) _
+  (closure_eq_of_le (Set.singleton_subset_iff.2 ⟨Multiplicative.ofAdd 1, pow_oneₓ x⟩)) fun x ⟨n, hn⟩ =>
+    hn ▸ pow_mem _ (subset_closure <| Set.mem_singleton _) _
 
 /-- The submonoid generated by an element of a monoid equals the set of natural number powers of
     the element. -/
@@ -205,9 +233,9 @@ theorem exists_multiset_of_mem_closure {M : Type _} [CommMonoidₓ M] {s : Set M
 
 /-- The submonoid generated by an element. -/
 def powers (n : M) : Submonoid M :=
-  Submonoid.copy (powersHom M n).mrange (Set.Range ((· ^ ·) n : ℕ → M)) $
+  Submonoid.copy (powersHom M n).mrange (Set.Range ((· ^ ·) n : ℕ → M)) <|
     Set.ext fun n =>
-      exists_congr $ fun i => by
+      exists_congr fun i => by
         simp <;> rfl
 
 @[simp]
@@ -235,11 +263,11 @@ theorem pow_apply (n : M) (m : ℕ) : Submonoid.pow n m = ⟨n ^ m, m, rfl⟩ :=
 
 /-- Logarithms from powers to natural numbers. -/
 def log [DecidableEq M] {n : M} (p : powers n) : ℕ :=
-  Nat.findₓ $ (mem_powers_iff p.val n).mp p.prop
+  Nat.findₓ <| (mem_powers_iff p.val n).mp p.prop
 
 @[simp]
 theorem pow_log_eq_self [DecidableEq M] {n : M} (p : powers n) : pow n (log p) = p :=
-  Subtype.ext $ Nat.find_specₓ p.prop
+  Subtype.ext <| Nat.find_specₓ p.prop
 
 theorem pow_right_injective_iff_pow_injective {n : M} :
     (Function.Injective fun m : ℕ => n ^ m) ↔ Function.Injective (pow n) :=
@@ -248,7 +276,7 @@ theorem pow_right_injective_iff_pow_injective {n : M} :
 @[simp]
 theorem log_pow_eq_self [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n ^ m) (m : ℕ) :
     log (pow n m) = m :=
-  pow_right_injective_iff_pow_injective.mp h $ pow_log_eq_self _
+  pow_right_injective_iff_pow_injective.mp h <| pow_log_eq_self _
 
 /-- The exponentiation map is an isomorphism from the additive monoid on natural numbers to powers
 when it is injective. The inverse is given by the logarithms. -/
@@ -299,8 +327,8 @@ variable [AddMonoidₓ A]
 open Set
 
 theorem closure_singleton_eq (x : A) : closure ({x} : Set A) = (multiplesHom A x).mrange :=
-  closure_eq_of_le (Set.singleton_subset_iff.2 ⟨1, one_nsmul x⟩) $ fun x ⟨n, hn⟩ =>
-    hn ▸ nsmul_mem _ (subset_closure $ Set.mem_singleton _) _
+  (closure_eq_of_le (Set.singleton_subset_iff.2 ⟨1, one_nsmul x⟩)) fun x ⟨n, hn⟩ =>
+    hn ▸ nsmul_mem _ (subset_closure <| Set.mem_singleton _) _
 
 /-- The `add_submonoid` generated by an element of an `add_monoid` equals the set of
 natural number multiples of the element. -/
@@ -312,9 +340,9 @@ theorem closure_singleton_zero : closure ({0} : Set A) = ⊥ := by
 
 /-- The additive submonoid generated by an element. -/
 def multiples (x : A) : AddSubmonoid A :=
-  AddSubmonoid.copy (multiplesHom A x).mrange (Set.Range (fun i => i • x : ℕ → A)) $
+  AddSubmonoid.copy (multiplesHom A x).mrange (Set.Range (fun i => i • x : ℕ → A)) <|
     Set.ext fun n =>
-      exists_congr $ fun i => by
+      exists_congr fun i => by
         simp <;> rfl
 
 @[simp]

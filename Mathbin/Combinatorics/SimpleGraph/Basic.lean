@@ -241,8 +241,8 @@ instance : BooleanAlgebra (SimpleGraph V) :=
     le_sup_left := fun x y v w h => Or.inl h, le_sup_right := fun x y v w h => Or.inr h,
     le_inf := fun x y z hxy hyz v w h => ⟨hxy h, hyz h⟩,
     le_sup_inf := fun a b c v w h =>
-      Or.dcases_on h.2 Or.inl $ (Or.dcases_on h.1 fun h _ => Or.inl h) $ fun hb hc => Or.inr ⟨hb, hc⟩,
-    inf_compl_le_bot := fun a v w h => False.elim $ h.2.2 h.1,
+      Or.dcases_on h.2 Or.inl <| (Or.dcases_on h.1 fun h _ => Or.inl h) fun hb hc => Or.inr ⟨hb, hc⟩,
+    inf_compl_le_bot := fun a v w h => False.elim <| h.2.2 h.1,
     top_le_sup_compl := fun a v w ne => by
       by_cases' a.adj v w
       exact Or.inl h
@@ -363,10 +363,10 @@ theorem mk_mem_incidence_set_iff : ⟦(b, c)⟧ ∈ G.incidence_set a ↔ G.adj 
   and_congr_right' Sym2.mem_iff
 
 theorem mk_mem_incidence_set_left_iff : ⟦(a, b)⟧ ∈ G.incidence_set a ↔ G.adj a b :=
-  and_iff_left $ Sym2.mem_mk_left _ _
+  and_iff_left <| Sym2.mem_mk_left _ _
 
 theorem mk_mem_incidence_set_right_iff : ⟦(a, b)⟧ ∈ G.incidence_set b ↔ G.adj a b :=
-  and_iff_left $ Sym2.mem_mk_right _ _
+  and_iff_left <| Sym2.mem_mk_right _ _
 
 theorem edge_mem_incidence_set_iff {e : G.edge_set} : ↑e ∈ G.incidence_set a ↔ a ∈ (e : Sym2 V) :=
   and_iff_right e.2
@@ -375,13 +375,13 @@ theorem incidence_set_inter_incidence_set_subset (h : a ≠ b) : G.incidence_set
   fun e he => (Sym2.mem_and_mem_iff h).1 ⟨he.1.2, he.2.2⟩
 
 theorem incidence_set_inter_incidence_set (h : G.adj a b) : G.incidence_set a ∩ G.incidence_set b = {⟦(a, b)⟧} := by
-  refine' (G.incidence_set_inter_incidence_set_subset $ h.ne).antisymm _
+  refine' (G.incidence_set_inter_incidence_set_subset <| h.ne).antisymm _
   rintro _ (rfl : _ = ⟦(a, b)⟧)
   exact ⟨G.mk_mem_incidence_set_left_iff.2 h, G.mk_mem_incidence_set_right_iff.2 h⟩
 
 theorem adj_of_mem_incidence_set (h : a ≠ b) (ha : e ∈ G.incidence_set a) (hb : e ∈ G.incidence_set b) : G.adj a b := by
   rwa [← mk_mem_incidence_set_left_iff, ←
-    Set.mem_singleton_iff.1 $ G.incidence_set_inter_incidence_set_subset h ⟨ha, hb⟩]
+    Set.mem_singleton_iff.1 <| G.incidence_set_inter_incidence_set_subset h ⟨ha, hb⟩]
 
 instance decidable_mem_incidence_set [DecidableEq V] [DecidableRel G.adj] (v : V) :
     DecidablePred (· ∈ G.incidence_set v) := fun e => And.decidable

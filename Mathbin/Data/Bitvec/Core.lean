@@ -55,7 +55,7 @@ If `x.length < i` then this will return the all-`ff`s bitvector. -/
 def shl (x : Bitvec n) (i : ℕ) : Bitvec n :=
   Bitvec.cong
       (by
-        simp ) $
+        simp ) <|
     drop i x++ₜrepeat ff (min n i)
 
 /-- `fill_shr x i fill` is the bitvector obtained by right-shifting `x` `i` times and then
@@ -71,7 +71,7 @@ def fill_shr (x : Bitvec n) (i : ℕ) (fill : Bool) : Bitvec n :=
           
         · have h₁ := le_of_not_geₓ h
           rw [min_eq_leftₓ h₁, tsub_eq_zero_iff_le.mpr h₁, zero_min, Nat.add_zero]
-          ) $
+          ) <|
     repeat fill (min n i)++ₜtake (n - i) x
 
 /-- unsigned shift right -/
@@ -303,7 +303,7 @@ theorem to_nat_of_nat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k 
 /-- Return the integer encoded by the input bitvector -/
 protected def to_int : ∀ {n : Nat}, Bitvec n → Int
   | 0, _ => 0
-  | succ n, v => cond (head v) (Int.negSucc $ Bitvec.toNat $ Not $ tail v) (Int.ofNat $ Bitvec.toNat $ tail v)
+  | succ n, v => cond (head v) (Int.negSucc <| Bitvec.toNat <| Not <| tail v) (Int.ofNat <| Bitvec.toNat <| tail v)
 
 end Conversion
 

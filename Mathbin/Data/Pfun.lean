@@ -76,10 +76,10 @@ def eval_opt (f : α →. β) [D : DecidablePred (· ∈ dom f)] (x : α) : Opti
 
 /-- Partial function extensionality -/
 theorem ext' {f g : α →. β} (H1 : ∀ a, a ∈ dom f ↔ a ∈ dom g) (H2 : ∀ a p q, f.fn a p = g.fn a q) : f = g :=
-  funext $ fun a => Part.ext' (H1 a) (H2 a)
+  funext fun a => Part.ext' (H1 a) (H2 a)
 
 theorem ext {f g : α →. β} (H : ∀ a b, b ∈ f a ↔ b ∈ g a) : f = g :=
-  funext $ fun a => Part.ext (H a)
+  funext fun a => Part.ext (H a)
 
 /-- Turns a partial function into a function out of its domain. -/
 def as_subtype (f : α →. β) (s : f.dom) : β :=
@@ -89,7 +89,7 @@ def as_subtype (f : α →. β) (s : f.dom) : β :=
 the type of pairs `(p : α → Prop, f : subtype p → β)`. -/
 def equiv_subtype : (α →. β) ≃ Σ p : α → Prop, Subtype p → β :=
   ⟨fun f => ⟨fun a => (f a).Dom, as_subtype f⟩, fun f x => ⟨f.1 x, fun h => f.2 ⟨x, h⟩⟩, fun f =>
-    funext $ fun a => Part.eta _, fun ⟨p, f⟩ => by
+    funext fun a => Part.eta _, fun ⟨p, f⟩ => by
     dsimp <;> congr <;> funext a <;> cases a <;> rfl⟩
 
 theorem as_subtype_eq_of_mem {f : α →. β} {x : α} {y : β} (fxy : y ∈ f x) (domx : x ∈ f.dom) :
@@ -164,11 +164,11 @@ instance : Monadₓ (Pfun α) where
   map := @Pfun.map _
 
 instance : IsLawfulMonad (Pfun α) where
-  bind_pure_comp_eq_map := fun β γ f x => funext $ fun a => Part.bind_some_eq_map _ _
+  bind_pure_comp_eq_map := fun β γ f x => funext fun a => Part.bind_some_eq_map _ _
   id_map := fun β f => by
     funext a <;> dsimp [Functor.map, Pfun.map] <;> cases f a <;> rfl
-  pure_bind := fun β γ x f => funext $ fun a => Part.bind_some.{u_1, u_2} _ (f x)
-  bind_assoc := fun β γ δ f g k => funext $ fun a => (f a).bind_assoc (fun b => g b a) fun b => k b a
+  pure_bind := fun β γ x f => funext fun a => Part.bind_some.{u_1, u_2} _ (f x)
+  bind_assoc := fun β γ δ f g k => funext fun a => (f a).bind_assoc (fun b => g b a) fun b => k b a
 
 theorem pure_defined (p : Set α) (x : β) : p ⊆ (@Pfun.pure α _ x).Dom :=
   p.subset_univ
@@ -183,10 +183,10 @@ case `f.fix a` returns `f a`), or it is undefined (in which case `f.fix a` is un
 it is in the `α` part of `β ⊕ α` (in which case we repeat the procedure, so `f.fix a` will return
 `f.fix (f a)`). -/
 def fix (f : α →. Sum β α) : α →. β := fun a =>
-  Part.assert (Acc (fun x y => Sum.inr x ∈ f y) a) $ fun h =>
+  (Part.assert (Acc (fun x y => Sum.inr x ∈ f y) a)) fun h =>
     @WellFounded.fixF _ (fun x y => Sum.inr x ∈ f y) _
       (fun a IH =>
-        Part.assert (f a).Dom $ fun hf => by
+        (Part.assert (f a).Dom) fun hf => by
           cases' e : (f a).get hf with b a' <;> [exact Part.some b, exact IH _ ⟨hf, e⟩])
       a h
 

@@ -67,7 +67,7 @@ theorem to_bool_or (p q : Prop) [Decidable p] [Decidable q] : to_bool (p ∨ q) 
 @[simp]
 theorem to_bool_eq {p q : Prop} [Decidable p] [Decidable q] : to_bool p = to_bool q ↔ (p ↔ q) :=
   ⟨fun h =>
-    (coe_to_bool p).symm.trans $ by
+    (coe_to_bool p).symm.trans <| by
       simp [h],
     to_bool_congr⟩
 

@@ -131,7 +131,7 @@ theorem tendsto_norm_sq_coprime_pair (z : ℍ) :
     dsimp only [LinearMap.coe_proj, real_smul, LinearMap.coe_smul_right, LinearMap.add_apply]
     rw [mul_oneₓ]
   have :
-    (fun p : Finₓ 2 → ℤ => norm_sq ((p 0 : ℂ) * ↑z + ↑p 1)) = norm_sq ∘ f ∘ fun p : Finₓ 2 → ℤ => (coe : ℤ → ℝ) ∘ p :=
+    (fun p : Finₓ 2 → ℤ => norm_sq ((p 0 : ℂ) * ↑z + ↑(p 1))) = norm_sq ∘ f ∘ fun p : Finₓ 2 → ℤ => (coe : ℤ → ℝ) ∘ p :=
     by
     ext1
     rw [f_def]
@@ -205,7 +205,7 @@ def lc_row0_extend {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
 /-- The map `lc_row0` is proper, that is, preimages of cocompact sets are finite in
 `[[* , *], [c, d]]`.-/
 theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
-    tendsto (fun g : { g : SL(2, ℤ) // g 1 = cd } => lc_row0 cd (↑(↑g : SL(2, ℝ)))) cofinite (cocompact ℝ) := by
+    tendsto (fun g : { g : SL(2, ℤ) // g 1 = cd } => lc_row0 cd ↑(↑g : SL(2, ℝ))) cofinite (cocompact ℝ) := by
   let mB : ℝ → Matrix (Finₓ 2) (Finₓ 2) ℝ := fun t =>
     «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»"
   have hmB : Continuous mB := by
@@ -241,7 +241,7 @@ theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) 
   which does not need to be decomposed depending on whether `c = 0`. -/
 theorem smul_eq_lc_row0_add {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) (z : ℍ) {g : SL(2, ℤ)} (hg : ↑ₘg 1 = p) :
     ↑(g • z) =
-      (lc_row0 p (↑(g : SL(2, ℝ))) : ℂ) / (p 0 ^ 2 + p 1 ^ 2) +
+      (lc_row0 p ↑(g : SL(2, ℝ)) : ℂ) / (p 0 ^ 2 + p 1 ^ 2) +
         ((p 1 : ℂ) * z - p 0) / ((p 0 ^ 2 + p 1 ^ 2) * (p 0 * z + p 1)) :=
   by
   have nonZ1 : (p 0 : ℂ) ^ 2 + p 1 ^ 2 ≠ 0 := by
@@ -252,14 +252,14 @@ theorem smul_eq_lc_row0_add {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) 
   field_simp [nonZ1, nonZ2, denom_ne_zero, -UpperHalfPlane.denom, -denom_apply]
   rw
     [(by
-      simp : (p 1 : ℂ) * z - p 0 = (p 1 * z - p 0) * ↑det (↑g : Matrix (Finₓ 2) (Finₓ 2) ℤ))]
+      simp : (p 1 : ℂ) * z - p 0 = (p 1 * z - p 0) * ↑(det (↑g : Matrix (Finₓ 2) (Finₓ 2) ℤ)))]
   rw [← hg, det_fin_two]
   simp only [Int.coe_cast_ring_hom, coe_matrix_coe, coe_fn_eq_coe, Int.cast_mul, of_real_int_cast, map_apply, denom,
     Int.cast_sub]
   ring
 
 theorem tendsto_abs_re_smul (z : ℍ) {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) :
-    tendsto (fun g : { g : SL(2, ℤ) // g 1 = p } => |((g : SL(2, ℤ)) • z).re|) cofinite at_top := by
+    tendsto (fun g : { g : SL(2, ℤ) // g 1 = p } => abs ((g : SL(2, ℤ)) • z).re) cofinite at_top := by
   suffices tendsto (fun g : (fun g : SL(2, ℤ) => g 1) ⁻¹' {p} => ((g : SL(2, ℤ)) • z).re) cofinite (cocompact ℝ) by
     exact tendsto_norm_cocompact_at_top.comp this
   have : ((p 0 : ℝ) ^ 2 + p 1 ^ 2)⁻¹ ≠ 0 := by
@@ -271,7 +271,7 @@ theorem tendsto_abs_re_smul (z : ℍ) {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 
   ext g
   change
     ((g : SL(2, ℤ)) • z).re =
-      lc_row0 p (↑(↑g : SL(2, ℝ))) / (p 0 ^ 2 + p 1 ^ 2) +
+      lc_row0 p ↑(↑g : SL(2, ℝ)) / (p 0 ^ 2 + p 1 ^ 2) +
         (((p 1 : ℂ) * z - p 0) / ((p 0 ^ 2 + p 1 ^ 2) * (p 0 * z + p 1))).re
   exact_mod_cast congr_argₓ Complex.re (smul_eq_lc_row0_add hp z g.2)
 
@@ -306,7 +306,7 @@ theorem exists_max_im (z : ℍ) : ∃ g : SL(2, ℤ), ∀ g' : SL(2, ℤ), (g' �
 /-- Given `z : ℍ` and a bottom row `(c,d)`, among the `g : SL(2,ℤ)` with this bottom row, minimize
   `|(g•z).re|`.  -/
 theorem exists_row_one_eq_and_min_re (z : ℍ) {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
-    ∃ g : SL(2, ℤ), ↑ₘg 1 = cd ∧ ∀ g' : SL(2, ℤ), ↑ₘg 1 = ↑ₘg' 1 → |(g • z).re| ≤ |(g' • z).re| := by
+    ∃ g : SL(2, ℤ), ↑ₘg 1 = cd ∧ ∀ g' : SL(2, ℤ), ↑ₘg 1 = ↑ₘg' 1 → abs (g • z).re ≤ abs (g' • z).re := by
   have : Nonempty { g : SL(2, ℤ) // g 1 = cd } :=
     let ⟨x, hx⟩ := bottom_row_surj hcd
     ⟨⟨x, hx.2⟩⟩
@@ -342,7 +342,7 @@ def S : SL(2, ℤ) :=
 
 /-- The standard (closed) fundamental domain of the action of `SL(2,ℤ)` on `ℍ` -/
 def fundamental_domain : Set ℍ :=
-  { z | 1 ≤ Complex.normSq z ∧ |z.re| ≤ (1 : ℝ) / 2 }
+  { z | 1 ≤ Complex.normSq z ∧ abs z.re ≤ (1 : ℝ) / 2 }
 
 localized [Modular] notation "𝒟" => ModularGroup.FundamentalDomain
 
@@ -371,7 +371,7 @@ theorem exists_smul_mem_fundamental_domain (z : ℍ) : ∃ g : SL(2, ℤ), g •
     rw [MulAction.mul_smul]
     exact im_lt_im_S_smul hg₀'
     
-  · show |(g • z).re| ≤ 1 / 2
+  · show abs (g • z).re ≤ 1 / 2
     rw [abs_le]
     constructor
     · contrapose! hg'
@@ -379,7 +379,7 @@ theorem exists_smul_mem_fundamental_domain (z : ℍ) : ∃ g : SL(2, ℤ), g •
         ⟨T * g, by
           simp [T, Matrix.mul, Matrix.dotProduct, Finₓ.sum_univ_succ], _⟩
       rw [MulAction.mul_smul]
-      have : |(g • z).re + 1| < |(g • z).re| := by
+      have : abs ((g • z).re + 1) < abs (g • z).re := by
         cases abs_cases ((g • z).re + 1) <;> cases abs_cases (g • z).re <;> linarith
       convert this
       simp [T]
@@ -389,7 +389,7 @@ theorem exists_smul_mem_fundamental_domain (z : ℍ) : ∃ g : SL(2, ℤ), g •
         ⟨T' * g, by
           simp [T', Matrix.mul, Matrix.dotProduct, Finₓ.sum_univ_succ], _⟩
       rw [MulAction.mul_smul]
-      have : |(g • z).re - 1| < |(g • z).re| := by
+      have : abs ((g • z).re - 1) < abs (g • z).re := by
         cases abs_cases ((g • z).re - 1) <;> cases abs_cases (g • z).re <;> linarith
       convert this
       simp [T', sub_eq_add_neg]

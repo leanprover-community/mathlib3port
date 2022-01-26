@@ -73,7 +73,7 @@ theorem mem_resolvent_of_norm_lt {a : A} {k : 𝕜} (h : ∥a∥ < ∥k∥) : k 
   simpa [ku, sub_eq_add_neg, Algebra.algebra_map_eq_smul_one] using (ku.add (-a) hku).IsUnit
 
 theorem norm_le_norm_of_mem {a : A} {k : 𝕜} (hk : k ∈ σ a) : ∥k∥ ≤ ∥a∥ :=
-  le_of_not_ltₓ $ mt mem_resolvent_of_norm_lt hk
+  le_of_not_ltₓ <| mt mem_resolvent_of_norm_lt hk
 
 theorem subset_closed_ball_norm (a : A) : σ a ⊆ Metric.ClosedBall (0 : 𝕜) ∥a∥ := fun k hk => by
   simp [norm_le_norm_of_mem hk]
@@ -136,7 +136,7 @@ local notation "↑ₐ" => algebraMap 𝕜 A
 automatically bounded). -/
 @[simps]
 def to_continuous_linear_map (φ : A →ₐ[𝕜] 𝕜) : A →L[𝕜] 𝕜 :=
-  φ.to_linear_map.mk_continuous_of_exists_bound $
+  φ.to_linear_map.mk_continuous_of_exists_bound <|
     ⟨1, fun a => (one_mulₓ ∥a∥).symm ▸ Spectrum.norm_le_norm_of_mem (φ.apply_mem_spectrum _)⟩
 
 theorem Continuous (φ : A →ₐ[𝕜] 𝕜) : Continuous φ :=

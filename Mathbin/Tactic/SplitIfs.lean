@@ -8,7 +8,7 @@ setup_tactic_parser
 
 unsafe def find_if_cond : expr → Option expr
   | e =>
-    e.fold none $ fun e _ acc =>
+    (e.fold none) fun e _ acc =>
       Acc <|> do
         let c ←
           match e with
@@ -23,7 +23,7 @@ unsafe def find_if_cond_at (at_ : loc) : tactic (Option expr) := do
   let lctx ← lctx.mmap infer_type
   let tgt ← target
   let es := if at_.include_goal then tgt :: lctx else lctx
-  return $ find_if_cond $ es.foldr app default
+  return <| find_if_cond <| es.foldr app default
 
 run_cmd
   mk_simp_attr `split_if_reduction
@@ -42,7 +42,7 @@ unsafe def reduce_ifs_at (at_ : loc) : tactic Unit := do
   when at_.include_goal (simp_target sls [] cfg discharger >> skip)
 
 unsafe def split_if1 (c : expr) (n : Name) (at_ : loc) : tactic Unit :=
-  by_cases c n; reduce_ifs_at at_
+  andthen (by_cases c n) (reduce_ifs_at at_)
 
 private unsafe def get_next_name (names : ref (List Name)) : tactic Name := do
   let ns ← read_ref names
@@ -55,7 +55,7 @@ private unsafe def get_next_name (names : ref (List Name)) : tactic Name := do
 private unsafe def value_known (c : expr) : tactic Bool := do
   let lctx ← local_context
   let lctx ← lctx.mmap infer_type
-  return $ c ∈ lctx ∨ (quote.1 ¬%%ₓc) ∈ lctx
+  return <| c ∈ lctx ∨ (quote.1 ¬%%ₓc) ∈ lctx
 
 private unsafe def split_ifs_core (at_ : loc) (names : ref (List Name)) : List expr → tactic Unit
   | done => do
@@ -67,13 +67,13 @@ private unsafe def split_ifs_core (at_ : loc) (names : ref (List Name)) : List e
     if cond ∈ done then skip
       else do
         let no_split ← value_known cond
-        if no_split then reduce_ifs_at at_; try (split_ifs_core (cond :: done))
+        if no_split then andthen (reduce_ifs_at at_) (try (split_ifs_core (cond :: done)))
           else do
             let n ← get_next_name names
-            split_if1 cond n at_; try (split_ifs_core (cond :: done))
+            andthen (split_if1 cond n at_) (try (split_ifs_core (cond :: done)))
 
 unsafe def split_ifs (names : List Name) (at_ : loc := loc.ns [none]) :=
-  using_new_ref names $ fun names => split_ifs_core at_ names []
+  (using_new_ref names) fun names => split_ifs_core at_ names []
 
 namespace Interactive
 

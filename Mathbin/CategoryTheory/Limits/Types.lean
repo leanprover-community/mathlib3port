@@ -128,7 +128,7 @@ implemented as a quotient of a sigma type
 def colimit_cocone (F : J ⥤ Type u) : cocone F where
   x := Quot F
   ι :=
-    { app := fun j x => Quot.mk _ ⟨j, x⟩, naturality' := fun j j' f => funext $ fun x => Eq.symm (Quot.sound ⟨f, rfl⟩) }
+    { app := fun j x => Quot.mk _ ⟨j, x⟩, naturality' := fun j j' f => funext fun x => Eq.symm (Quot.sound ⟨f, rfl⟩) }
 
 attribute [local elab_with_expected_type] Quot.lift
 

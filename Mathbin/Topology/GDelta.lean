@@ -145,7 +145,7 @@ theorem is_Gδ_singleton (a : α) : IsGδ ({a} : Set α) := by
   exact is_Gδ_bInter (countable_encodable _) fun n hn => (hU n).2.IsGδ
 
 theorem Set.Finite.is_Gδ {s : Set α} (hs : finite s) : IsGδ s :=
-  finite.induction_on hs is_Gδ_empty $ fun a s _ _ hs => (is_Gδ_singleton a).union hs
+  (finite.induction_on hs is_Gδ_empty) fun a s _ _ hs => (is_Gδ_singleton a).union hs
 
 end T1Space
 
@@ -159,17 +159,16 @@ open_locale uniformity
 
 variable [TopologicalSpace α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The set of points where a function is continuous is a Gδ set. -/
 theorem is_Gδ_set_of_continuous_at [UniformSpace β] [is_countably_generated (𝓤 β)] (f : α → β) :
     IsGδ { x | ContinuousAt f x } := by
   obtain ⟨U, hUo, hU⟩ := (@uniformity_has_basis_open_symmetric β _).exists_antitone_subbasis
   simp only [Uniform.continuous_at_iff_prod, nhds_prod_eq]
   simp only [(nhds_basis_opens _).prod_self.tendsto_iff hU.to_has_basis, forall_prop_of_true, set_of_forall, id]
-  refine' is_Gδ_Inter fun k => IsOpen.is_Gδ $ is_open_iff_mem_nhds.2 $ fun x => _
+  refine' is_Gδ_Inter fun k => IsOpen.is_Gδ <| is_open_iff_mem_nhds.2 fun x => _
   rintro ⟨s, ⟨hsx, hso⟩, hsU⟩
-  filter_upwards [IsOpen.mem_nhds hso hsx]
-  intro y hy
-  exact ⟨s, ⟨hy, hso⟩, hsU⟩
+  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
 
 end ContinuousAt
 

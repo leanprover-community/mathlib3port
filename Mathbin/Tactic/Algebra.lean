@@ -10,7 +10,7 @@ attribute [local semireducible] reflected
 
 @[local instance]
 private unsafe def reflect_name_list : has_reflect (List Name)
-  | ns => quote.1 (id (%%ₓexpr.mk_app (quote.1 Prop) $ ns.map (flip expr.const [])) : List Name)
+  | ns => quote.1 (id (%%ₓexpr.mk_app (quote.1 Prop) <| ns.map (flip expr.const [])) : List Name)
 
 private unsafe def parse_name_list (e : expr) : List Name :=
   e.app_arg.get_app_args.map expr.const_name
@@ -67,7 +67,7 @@ On failure, the empty list is returned.
 unsafe def find_ancestors : Name → expr → tactic (List expr)
   | cl, arg => do
     let cs ← get_ancestors cl
-    let r ← cs.mmap $ fun c => List.ret <$> (mk_app c [arg] >>= mk_instance) <|> find_ancestors c arg
+    let r ← cs.mmap fun c => List.ret <$> (mk_app c [arg] >>= mk_instance) <|> find_ancestors c arg
     return r.join
 
 end Tactic

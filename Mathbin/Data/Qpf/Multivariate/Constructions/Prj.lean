@@ -32,7 +32,7 @@ instance prj.mvfunctor : Mvfunctor (prj i) where
 /-- Polynomial representation of the projection functor -/
 def prj.P : Mvpfunctor.{u} n where
   A := PUnit
-  B := fun _ j => Ulift $ Plift $ i = j
+  B := fun _ j => Ulift <| Plift <| i = j
 
 /-- Abstraction function of the `qpf` instance -/
 def prj.abs ⦃α : Typevec n⦄ : (prj.P i).Obj α → prj i α

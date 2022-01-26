@@ -55,8 +55,8 @@ unsafe def intercept_result {α} (m : expr → tactic expr) (t : tactic α) : ta
   let a ← t
   (gs.zip gs').mmap fun ⟨g, g'⟩ => do
       let g' ← instantiate_mvars g'
-      let g'' ← with_local_goals' gs $ m g'
-      unsafe.type_context.run $ unsafe.type_context.assign g g''
+      let g'' ← with_local_goals' gs <| m g'
+      unsafe.type_context.run <| unsafe.type_context.assign g g''
   pure a
 
 /-- `dsimp_result t`

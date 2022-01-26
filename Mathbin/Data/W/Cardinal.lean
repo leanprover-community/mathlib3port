@@ -44,14 +44,14 @@ theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ 
 /-- If, for any `a : α`, `β a` is finite, then the cardinality of `W_type β`
   is at most the maximum of the cardinality of `α` and `ω`  -/
 theorem cardinal_mk_le_max_omega_of_fintype [∀ a, Fintype (β a)] : # (WType β) ≤ max (# α) ω :=
-  (is_empty_or_nonempty α).elim
+  ((is_empty_or_nonempty α).elim
       (by
         intro h
         rw [Cardinal.mk_eq_zero (WType β)]
-        exact zero_le _) $
+        exact zero_le _))
     fun hn =>
     let m := max (# α) ω
-    cardinal_mk_le_of_le $
+    cardinal_mk_le_of_le <|
       calc
         (Cardinal.sum fun a : α => m ^ # (β a)) ≤ # α * Cardinal.sup.{u, u} fun a : α => m ^ Cardinal.mk (β a) :=
           Cardinal.sum_le_sup _

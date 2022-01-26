@@ -213,7 +213,7 @@ noncomputable def matPolyEquiv : Matrix n n (Polynomial R) ≃ₐ[R] Polynomial 
 open Finset
 
 theorem mat_poly_equiv_coeff_apply_aux_1 (i j : n) (k : ℕ) (x : R) :
-    matPolyEquiv (std_basis_matrix i j $ monomial k x) = monomial k (std_basis_matrix i j x) := by
+    matPolyEquiv (std_basis_matrix i j <| monomial k x) = monomial k (std_basis_matrix i j x) := by
   simp only [matPolyEquiv, AlgEquiv.trans_apply, matrix_equiv_tensor_apply_std_basis]
   apply (polyEquivTensor R (Matrix n n R)).Injective
   simp only [AlgEquiv.apply_symm_apply]

@@ -617,8 +617,8 @@ instance : LocallyFiniteOrder (WithTop α) where
     | (a : α), (b : α) => (Ioo a b).map embedding.coe_option
   finset_mem_Icc := fun a b x =>
     match a, b, x with
-    | ⊤, ⊤, x => mem_singleton.trans (le_antisymm_iffₓ.trans $ and_comm _ _)
-    | ⊤, (b : α), x => iff_of_false (not_mem_empty _) fun h => (h.1.trans h.2).not_lt $ coe_lt_top _
+    | ⊤, ⊤, x => mem_singleton.trans (le_antisymm_iffₓ.trans <| and_comm _ _)
+    | ⊤, (b : α), x => iff_of_false (not_mem_empty _) fun h => (h.1.trans h.2).not_lt <| coe_lt_top _
     | (a : α), ⊤, ⊤ => by
       simp [WithTop.LocallyFiniteOrder._match1]
     | (a : α), ⊤, (x : α) => by
@@ -629,7 +629,7 @@ instance : LocallyFiniteOrder (WithTop α) where
       simp [WithTop.LocallyFiniteOrder._match1, coe_eq_coe]
   finset_mem_Ico := fun a b x =>
     match a, b, x with
-    | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt $ h.1.trans_lt h.2
+    | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt <| h.1.trans_lt h.2
     | (a : α), ⊤, ⊤ => by
       simp [WithTop.LocallyFiniteOrder._match2]
     | (a : α), ⊤, (x : α) => by
@@ -640,7 +640,7 @@ instance : LocallyFiniteOrder (WithTop α) where
       simp [WithTop.LocallyFiniteOrder._match2, coe_eq_coe, coe_lt_coe]
   finset_mem_Ioc := fun a b x =>
     match a, b, x with
-    | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt $ h.1.trans_le h.2
+    | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt <| h.1.trans_le h.2
     | (a : α), ⊤, ⊤ => by
       simp [WithTop.LocallyFiniteOrder._match3, coe_lt_top]
     | (a : α), ⊤, (x : α) => by
@@ -651,7 +651,7 @@ instance : LocallyFiniteOrder (WithTop α) where
       simp [WithTop.LocallyFiniteOrder._match3, coe_eq_coe, coe_lt_coe]
   finset_mem_Ioo := fun a b x =>
     match a, b, x with
-    | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt $ h.1.trans h.2
+    | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt <| h.1.trans h.2
     | (a : α), ⊤, ⊤ => by
       simp [WithTop.LocallyFiniteOrder._match4, coe_lt_top]
     | (a : α), ⊤, (x : α) => by

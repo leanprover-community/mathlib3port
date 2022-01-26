@@ -11,7 +11,7 @@ def lin_comb : List Nat → List term → term
   | [], [] => ⟨0, []⟩
   | [], _ :: _ => ⟨0, []⟩
   | _ :: _, [] => ⟨0, []⟩
-  | n :: ns, t :: ts => term.add (t.mul (↑n)) (lin_comb ns ts)
+  | n :: ns, t :: ts => term.add (t.mul ↑n) (lin_comb ns ts)
 
 theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} ns, (∀, ∀ t ∈ ts, ∀, 0 ≤ term.val v t) → 0 ≤ (lin_comb ns ts).val v
   | [], [], h => by

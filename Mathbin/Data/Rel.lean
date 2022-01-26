@@ -144,7 +144,7 @@ theorem mem_preimage (x : α) (s : Set β) : x ∈ r.preimage s ↔ ∃ y ∈ s,
   Iff.rfl
 
 theorem preimage_def (s : Set β) : preimage r s = { x | ∃ y ∈ s, r x y } :=
-  Set.ext $ fun x => mem_preimage _ _ _
+  Set.ext fun x => mem_preimage _ _ _
 
 theorem preimage_mono {s t : Set β} (h : s ⊆ t) : r.preimage s ⊆ r.preimage t :=
   image_mono _ h

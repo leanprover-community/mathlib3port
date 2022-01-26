@@ -17,8 +17,8 @@ variable (R : Type u) {M : Type v} [Semiringₓ R] [AddCommMonoidₓ M] [Module 
 
 /-- `mul_opposite.distrib_mul_action` extends to a `module` -/
 instance : Module R (MulOpposite M) :=
-  { MulOpposite.distribMulAction M R with add_smul := fun r₁ r₂ x => unop_injective $ add_smul r₁ r₂ (unop x),
-    zero_smul := fun x => unop_injective $ zero_smul _ (unop x) }
+  { MulOpposite.distribMulAction M R with add_smul := fun r₁ r₂ x => unop_injective <| add_smul r₁ r₂ (unop x),
+    zero_smul := fun x => unop_injective <| zero_smul _ (unop x) }
 
 /-- The function `op` is a linear equivalence. -/
 def op_linear_equiv : M ≃ₗ[R] Mᵐᵒᵖ :=

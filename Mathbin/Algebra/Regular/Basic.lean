@@ -113,11 +113,11 @@ variable [MulZeroClass R]
 
 /-- The element `0` is left-regular if and only if `R` is trivial. -/
 theorem IsLeftRegular.subsingleton (h : IsLeftRegular (0 : R)) : Subsingleton R :=
-  ⟨fun a b => h $ Eq.trans (zero_mul a) (zero_mul b).symm⟩
+  ⟨fun a b => h <| Eq.trans (zero_mul a) (zero_mul b).symm⟩
 
 /-- The element `0` is right-regular if and only if `R` is trivial. -/
 theorem IsRightRegular.subsingleton (h : IsRightRegular (0 : R)) : Subsingleton R :=
-  ⟨fun a b => h $ Eq.trans (mul_zero a) (mul_zero b).symm⟩
+  ⟨fun a b => h <| Eq.trans (mul_zero a) (mul_zero b).symm⟩
 
 /-- The element `0` is regular if and only if `R` is trivial. -/
 theorem IsRegular.subsingleton (h : IsRegular (0 : R)) : Subsingleton R :=

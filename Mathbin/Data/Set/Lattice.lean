@@ -142,10 +142,10 @@ instance : CompleteBooleanAlgebra (Set α) :=
     le_Sup := fun s t t_in a a_in => ⟨t, ⟨t_in, a_in⟩⟩, Sup_le := fun s t h a ⟨t', ⟨t'_in, a_in⟩⟩ => h t' t'_in a_in,
     le_Inf := fun s t h a a_in t' t'_in => h t' t'_in a_in, Inf_le := fun s t t_in a h => h _ t_in,
     infi_sup_le_sup_Inf := fun s S x =>
-      Iff.mp $ by
+      Iff.mp <| by
         simp [forall_or_distrib_left],
     inf_Sup_le_supr_inf := fun s S x =>
-      Iff.mp $ by
+      Iff.mp <| by
         simp [exists_and_distrib_left] }
 
 /-- `set.image` is monotone. See `set.image_image` for the statement in terms of `⊆`. -/
@@ -232,24 +232,24 @@ theorem nonempty_of_union_eq_top_of_nonempty {ι : Type _} (t : Set ι) (s : ι 
   exact ⟨x, m⟩
 
 theorem set_of_exists (p : ι → β → Prop) : { x | ∃ i, p i x } = ⋃ i, { x | p i x } :=
-  ext $ fun i => mem_Union.symm
+  ext fun i => mem_Union.symm
 
 theorem set_of_forall (p : ι → β → Prop) : { x | ∀ i, p i x } = ⋂ i, { x | p i x } :=
-  ext $ fun i => mem_Inter.symm
+  ext fun i => mem_Inter.symm
 
 theorem Union_subset {s : ι → Set α} {t : Set α} (h : ∀ i, s i ⊆ t) : (⋃ i, s i) ⊆ t :=
   @supr_le (Set α) _ _ _ _ h
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem Union₂_subset {s : ∀ i, κ i → Set α} {t : Set α} (h : ∀ i j, s i j ⊆ t) : (⋃ (i) (j), s i j) ⊆ t :=
-  Union_subset $ fun x => Union_subset (h x)
+  Union_subset fun x => Union_subset (h x)
 
 theorem subset_Inter {t : Set β} {s : ι → Set β} (h : ∀ i, t ⊆ s i) : t ⊆ ⋂ i, s i :=
   @le_infi (Set β) _ _ _ _ h
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem subset_Inter₂ {s : Set α} {t : ∀ i, κ i → Set α} (h : ∀ i j, s ⊆ t i j) : s ⊆ ⋂ (i) (j), t i j :=
-  subset_Inter $ fun x => subset_Inter $ h x
+  subset_Inter fun x => subset_Inter <| h x
 
 @[simp]
 theorem Union_subset_iff {s : ι → Set α} {t : Set α} : (⋃ i, s i) ⊆ t ↔ ∀ i, s i ⊆ t :=
@@ -274,7 +274,7 @@ theorem subset_Union : ∀ s : ι → Set β i : ι, s i ⊆ ⋃ i, s i :=
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem subset_Union₂ {s : ∀ i, κ i → Set α} (i : ι) (j : κ i) : s i j ⊆ ⋃ (i) (j), s i j :=
-  show s i j ≤ ⨆ (i) (j), s i j from le_supr_of_le i $ le_supr _ j
+  show s i j ≤ ⨆ (i) (j), s i j from le_supr_of_le i <| le_supr _ j
 
 /-- This rather trivial consequence of `subset_Union`is convenient with `apply`, and has `i`
 explicit for this purpose. -/
@@ -287,7 +287,7 @@ theorem Inter_subset : ∀ s : ι → Set β i : ι, (⋂ i, s i) ⊆ s i :=
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem Inter₂_subset {s : ∀ i, κ i → Set α} (i : ι) (j : κ i) : (⋂ (i) (j), s i j) ⊆ s i j :=
-  show (⨅ (i) (j), s i j) ≤ s i j from infi_le_of_le i $ infi_le _ j
+  show (⨅ (i) (j), s i j) ≤ s i j from infi_le_of_le i <| infi_le _ j
 
 /-- This rather trivial consequence of `Inter_subset`is convenient with `apply`, and has `i`
 explicit for this purpose. -/
@@ -300,7 +300,7 @@ theorem Union_mono {s t : ι → Set α} (h : ∀ i, s i ⊆ t i) : (⋃ i, s i)
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem Union₂_mono {s t : ∀ i, κ i → Set α} (h : ∀ i j, s i j ⊆ t i j) : (⋃ (i) (j), s i j) ⊆ ⋃ (i) (j), t i j :=
-  Union_mono $ fun i => Union_mono $ h i
+  Union_mono fun i => Union_mono <| h i
 
 theorem Inter_mono {s t : ι → Set α} (h : ∀ i, s i ⊆ t i) : (⋂ i, s i) ⊆ ⋂ i, t i :=
   @infi_le_infi (Set α) ι _ s t h
@@ -308,7 +308,7 @@ theorem Inter_mono {s t : ι → Set α} (h : ∀ i, s i ⊆ t i) : (⋂ i, s i)
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem Inter₂_mono {s t : ∀ i, κ i → Set α} (h : ∀ i j, s i j ⊆ t i j) : (⋂ (i) (j), s i j) ⊆ ⋂ (i) (j), t i j :=
-  Inter_mono $ fun i => Inter_mono $ h i
+  Inter_mono fun i => Inter_mono <| h i
 
 theorem Union_mono' {s : ι → Set α} {t : ι₂ → Set α} (h : ∀ i, ∃ j, s i ⊆ t j) : (⋃ i, s i) ⊆ ⋃ i, t i :=
   @supr_le_supr2 (Set α) ι ι₂ _ s t h
@@ -317,12 +317,12 @@ theorem Union_mono' {s : ι → Set α} {t : ι₂ → Set α} (h : ∀ i, ∃ j
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i' j')
 theorem Union₂_mono' {s : ∀ i, κ i → Set α} {t : ∀ i', κ' i' → Set α} (h : ∀ i j, ∃ i' j', s i j ⊆ t i' j') :
     (⋃ (i) (j), s i j) ⊆ ⋃ (i') (j'), t i' j' :=
-  Union₂_subset_iff.2 $ fun i j =>
+  Union₂_subset_iff.2 fun i j =>
     let ⟨i', j', hst⟩ := h i j
-    hst.trans $ subset_Union₂ _ _
+    hst.trans <| subset_Union₂ _ _
 
 theorem Inter_mono' {s : ι → Set α} {t : ι' → Set α} (h : ∀ j, ∃ i, s i ⊆ t j) : (⋂ i, s i) ⊆ ⋂ j, t j :=
-  Set.subset_Inter $ fun j =>
+  Set.subset_Inter fun j =>
     let ⟨i, hi⟩ := h j
     Inter_subset_of_subset i hi
 
@@ -330,18 +330,18 @@ theorem Inter_mono' {s : ι → Set α} {t : ι' → Set α} (h : ∀ j, ∃ i, 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i' j')
 theorem Inter₂_mono' {s : ∀ i, κ i → Set α} {t : ∀ i', κ' i' → Set α} (h : ∀ i' j', ∃ i j, s i j ⊆ t i' j') :
     (⋂ (i) (j), s i j) ⊆ ⋂ (i') (j'), t i' j' :=
-  subset_Inter₂_iff.2 $ fun i' j' =>
+  subset_Inter₂_iff.2 fun i' j' =>
     let ⟨i, j, hst⟩ := h i' j'
     (Inter₂_subset _ _).trans hst
 
 theorem Union₂_subset_Union (κ : ι → Sort _) (s : ι → Set α) : (⋃ (i) (j : κ i), s i) ⊆ ⋃ i, s i :=
-  Union_mono $ fun i =>
-    Union_subset $ fun h => by
+  Union_mono fun i =>
+    Union_subset fun h => by
       rfl
 
 theorem Inter_subset_Inter₂ (κ : ι → Sort _) (s : ι → Set α) : (⋂ i, s i) ⊆ ⋂ (i) (j : κ i), s i :=
-  Inter_mono $ fun i =>
-    subset_Inter $ fun h => by
+  Inter_mono fun i =>
+    subset_Inter fun h => by
       rfl
 
 theorem Union_set_of (P : ι → α → Prop) : (⋃ i, { x : α | P i x }) = { x : α | ∃ i, P i x } := by
@@ -642,18 +642,18 @@ theorem bInter_subset_of_mem {s : Set α} {t : α → Set β} {x : α} (xs : x �
   Inter₂_subset x xs
 
 theorem bUnion_subset_bUnion_left {s s' : Set α} {t : α → Set β} (h : s ⊆ s') : (⋃ x ∈ s, t x) ⊆ ⋃ x ∈ s', t x :=
-  Union₂_subset $ fun x hx => subset_bUnion_of_mem $ h hx
+  Union₂_subset fun x hx => subset_bUnion_of_mem <| h hx
 
 theorem bInter_subset_bInter_left {s s' : Set α} {t : α → Set β} (h : s' ⊆ s) : (⋂ x ∈ s, t x) ⊆ ⋂ x ∈ s', t x :=
-  subset_Inter₂ $ fun x hx => bInter_subset_of_mem $ h hx
+  subset_Inter₂ fun x hx => bInter_subset_of_mem <| h hx
 
 theorem bUnion_mono {s s' : Set α} {t t' : α → Set β} (hs : s' ⊆ s) (h : ∀, ∀ x ∈ s, ∀, t x ⊆ t' x) :
     (⋃ x ∈ s', t x) ⊆ ⋃ x ∈ s, t' x :=
-  (bUnion_subset_bUnion_left hs).trans $ Union₂_mono h
+  (bUnion_subset_bUnion_left hs).trans <| Union₂_mono h
 
 theorem bInter_mono {s s' : Set α} {t t' : α → Set β} (hs : s ⊆ s') (h : ∀, ∀ x ∈ s, ∀, t x ⊆ t' x) :
     (⋂ x ∈ s', t x) ⊆ ⋂ x ∈ s, t' x :=
-  (bInter_subset_bInter_left hs).trans $ Inter₂_mono h
+  (bInter_subset_bInter_left hs).trans <| Inter₂_mono h
 
 theorem Inter_congr {s t : ι → Set α} (h : ∀ i, s i = t i) : (⋂ i, s i) = ⋂ i, t i := by
   congr
@@ -663,7 +663,7 @@ theorem Inter_congr {s t : ι → Set α} (h : ∀ i, s i = t i) : (⋂ i, s i) 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem Inter₂_congr {s t : ∀ i, κ i → Set α} (h : ∀ i j, s i j = t i j) : (⋂ (i) (j), s i j) = ⋂ (i) (j), t i j :=
-  Inter_congr $ fun i => Inter_congr $ h i
+  Inter_congr fun i => Inter_congr <| h i
 
 theorem Union_congr {s t : ι → Set α} (h : ∀ i, s i = t i) : (⋃ i, s i) = ⋃ i, t i := by
   congr
@@ -673,7 +673,7 @@ theorem Union_congr {s t : ι → Set α} (h : ∀ i, s i = t i) : (⋃ i, s i) 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem Union₂_congr {s t : ∀ i, κ i → Set α} (h : ∀ i j, s i j = t i j) : (⋃ (i) (j), s i j) = ⋃ (i) (j), t i j :=
-  Union_congr $ fun i => Union_congr $ h i
+  Union_congr fun i => Union_congr <| h i
 
 theorem bUnion_eq_Union (s : Set α) (t : ∀, ∀ x ∈ s, ∀, Set β) : (⋃ x ∈ s, t x ‹_›) = ⋃ x : s, t x x.2 :=
   supr_subtype'
@@ -697,7 +697,7 @@ theorem bInter_univ (u : α → Set β) : (⋂ x ∈ @univ α, u x) = ⋂ x, u x
 
 @[simp]
 theorem bUnion_self (s : Set α) : (⋃ x ∈ s, s) = s :=
-  subset.antisymm (Union₂_subset $ fun x hx => subset.refl s) fun x hx => mem_bUnion hx hx
+  subset.antisymm (Union₂_subset fun x hx => subset.refl s) fun x hx => mem_bUnion hx hx
 
 @[simp]
 theorem Union_nonempty_self (s : Set α) : (⋃ h : s.nonempty, s) = s := by
@@ -736,7 +736,7 @@ theorem bUnion_singleton (a : α) (s : α → Set β) : (⋃ x ∈ ({a} : Set α
 
 @[simp]
 theorem bUnion_of_singleton (s : Set α) : (⋃ x ∈ s, {x}) = s :=
-  ext $ by
+  ext <| by
     simp
 
 theorem bUnion_union (s t : Set α) (u : α → Set β) : (⋃ x ∈ s ∪ t, u x) = (⋃ x ∈ s, u x) ∪ ⋃ x ∈ t, u x :=
@@ -796,10 +796,10 @@ theorem subset_sInter_iff {S : Set (Set α)} {t : Set α} : t ⊆ ⋂₀S ↔ �
   @le_Inf_iff (Set α) _ _ _
 
 theorem sUnion_subset_sUnion {S T : Set (Set α)} (h : S ⊆ T) : ⋃₀S ⊆ ⋃₀T :=
-  sUnion_subset $ fun s hs => subset_sUnion_of_mem (h hs)
+  sUnion_subset fun s hs => subset_sUnion_of_mem (h hs)
 
 theorem sInter_subset_sInter {S T : Set (Set α)} (h : S ⊆ T) : ⋂₀T ⊆ ⋂₀S :=
-  subset_sInter $ fun s hs => sInter_subset_of_mem (h hs)
+  subset_sInter fun s hs => sInter_subset_of_mem (h hs)
 
 @[simp]
 theorem sUnion_empty : ⋃₀∅ = (∅ : Set α) :=
@@ -834,7 +834,7 @@ theorem nonempty.of_sUnion {s : Set (Set α)} (h : (⋃₀s).Nonempty) : s.nonem
   ⟨s, hs⟩
 
 theorem nonempty.of_sUnion_eq_univ [Nonempty α] {s : Set (Set α)} (h : ⋃₀s = univ) : s.nonempty :=
-  nonempty.of_sUnion $ h.symm ▸ univ_nonempty
+  nonempty.of_sUnion <| h.symm ▸ univ_nonempty
 
 theorem sUnion_union (S T : Set (Set α)) : ⋃₀(S ∪ T) = ⋃₀S ∪ ⋃₀T :=
   Sup_union
@@ -911,7 +911,7 @@ theorem nonempty_sInter {c : Set (Set α)} : (⋂₀c).Nonempty ↔ ∃ a, ∀, 
   simp [← ne_empty_iff_nonempty, sInter_eq_empty_iff]
 
 theorem compl_sUnion (S : Set (Set α)) : (⋃₀S)ᶜ = ⋂₀(compl '' S) :=
-  ext $ fun x => by
+  ext fun x => by
     simp
 
 theorem sUnion_eq_compl_sInter_compl (S : Set (Set α)) : ⋃₀S = (⋂₀(compl '' S))ᶜ := by
@@ -924,11 +924,11 @@ theorem sInter_eq_compl_sUnion_compl (S : Set (Set α)) : ⋂₀S = (⋃₀(comp
   rw [← compl_compl (⋂₀S), compl_sInter]
 
 theorem inter_empty_of_inter_sUnion_empty {s t : Set α} {S : Set (Set α)} (hs : t ∈ S) (h : s ∩ ⋃₀S = ∅) : s ∩ t = ∅ :=
-  eq_empty_of_subset_empty $ by
+  eq_empty_of_subset_empty <| by
     rw [← h] <;> exact inter_subset_inter_right _ (subset_sUnion_of_mem hs)
 
 theorem range_sigma_eq_Union_range {γ : α → Type _} (f : Sigma γ → β) : range f = ⋃ a, range fun b => f ⟨a, b⟩ :=
-  Set.ext $ by
+  Set.ext <| by
     simp
 
 theorem Union_eq_range_sigma (s : α → Set β) : (⋃ i, s i) = range fun a : Σ i, s i => a.2 := by
@@ -948,10 +948,10 @@ theorem Union_image_preimage_sigma_mk_eq_self {ι : Type _} {σ : ι → Type _}
     
 
 theorem sigma.univ (X : α → Type _) : (Set.Univ : Set (Σ a, X a)) = ⋃ a, range (Sigma.mk a) :=
-  Set.ext $ fun x => iff_of_true trivialₓ ⟨range (Sigma.mk x.1), Set.mem_range_self _, x.2, Sigma.eta x⟩
+  Set.ext fun x => iff_of_true trivialₓ ⟨range (Sigma.mk x.1), Set.mem_range_self _, x.2, Sigma.eta x⟩
 
 theorem sUnion_mono {s t : Set (Set α)} (h : s ⊆ t) : ⋃₀s ⊆ ⋃₀t :=
-  sUnion_subset $ fun t' ht' => subset_sUnion_of_mem $ h ht'
+  sUnion_subset fun t' ht' => subset_sUnion_of_mem <| h ht'
 
 theorem Union_subset_Union_const {s : Set α} (h : ι → ι₂) : (⋃ i : ι, s) ⊆ ⋃ j : ι₂, s :=
   @supr_le_supr_const (Set α) ι ι₂ _ s h
@@ -1084,51 +1084,51 @@ theorem maps_to_sUnion {S : Set (Set α)} {t : Set β} {f : α → β} (H : ∀,
     maps_to f (⋃₀S) t := fun x ⟨s, hs, hx⟩ => H s hs hx
 
 theorem maps_to_Union {s : ι → Set α} {t : Set β} {f : α → β} (H : ∀ i, maps_to f (s i) t) : maps_to f (⋃ i, s i) t :=
-  maps_to_sUnion $ forall_range_iff.2 H
+  maps_to_sUnion <| forall_range_iff.2 H
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem maps_to_Union₂ {s : ∀ i, κ i → Set α} {t : Set β} {f : α → β} (H : ∀ i j, maps_to f (s i j) t) :
     maps_to f (⋃ (i) (j), s i j) t :=
-  maps_to_Union $ fun i => maps_to_Union (H i)
+  maps_to_Union fun i => maps_to_Union (H i)
 
 theorem maps_to_Union_Union {s : ι → Set α} {t : ι → Set β} {f : α → β} (H : ∀ i, maps_to f (s i) (t i)) :
     maps_to f (⋃ i, s i) (⋃ i, t i) :=
-  maps_to_Union $ fun i => (H i).mono (subset.refl _) (subset_Union t i)
+  maps_to_Union fun i => (H i).mono (subset.refl _) (subset_Union t i)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem maps_to_Union₂_Union₂ {s : ∀ i, κ i → Set α} {t : ∀ i, κ i → Set β} {f : α → β}
     (H : ∀ i j, maps_to f (s i j) (t i j)) : maps_to f (⋃ (i) (j), s i j) (⋃ (i) (j), t i j) :=
-  maps_to_Union_Union $ fun i => maps_to_Union_Union (H i)
+  maps_to_Union_Union fun i => maps_to_Union_Union (H i)
 
 theorem maps_to_sInter {s : Set α} {T : Set (Set β)} {f : α → β} (H : ∀, ∀ t ∈ T, ∀, maps_to f s t) :
     maps_to f s (⋂₀T) := fun x hx t ht => H t ht hx
 
 theorem maps_to_Inter {s : Set α} {t : ι → Set β} {f : α → β} (H : ∀ i, maps_to f s (t i)) : maps_to f s (⋂ i, t i) :=
-  fun x hx => mem_Inter.2 $ fun i => H i hx
+  fun x hx => mem_Inter.2 fun i => H i hx
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem maps_to_Inter₂ {s : Set α} {t : ∀ i, κ i → Set β} {f : α → β} (H : ∀ i j, maps_to f s (t i j)) :
     maps_to f s (⋂ (i) (j), t i j) :=
-  maps_to_Inter $ fun i => maps_to_Inter (H i)
+  maps_to_Inter fun i => maps_to_Inter (H i)
 
 theorem maps_to_Inter_Inter {s : ι → Set α} {t : ι → Set β} {f : α → β} (H : ∀ i, maps_to f (s i) (t i)) :
     maps_to f (⋂ i, s i) (⋂ i, t i) :=
-  maps_to_Inter $ fun i => (H i).mono (Inter_subset s i) (subset.refl _)
+  maps_to_Inter fun i => (H i).mono (Inter_subset s i) (subset.refl _)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem maps_to_Inter₂_Inter₂ {s : ∀ i, κ i → Set α} {t : ∀ i, κ i → Set β} {f : α → β}
     (H : ∀ i j, maps_to f (s i j) (t i j)) : maps_to f (⋂ (i) (j), s i j) (⋂ (i) (j), t i j) :=
-  maps_to_Inter_Inter $ fun i => maps_to_Inter_Inter (H i)
+  maps_to_Inter_Inter fun i => maps_to_Inter_Inter (H i)
 
 theorem image_Inter_subset (s : ι → Set α) (f : α → β) : (f '' ⋂ i, s i) ⊆ ⋂ i, f '' s i :=
-  (maps_to_Inter_Inter $ fun i => maps_to_image f (s i)).image_subset
+  (maps_to_Inter_Inter fun i => maps_to_image f (s i)).image_subset
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem image_Inter₂_subset (s : ∀ i, κ i → Set α) (f : α → β) : (f '' ⋂ (i) (j), s i j) ⊆ ⋂ (i) (j), f '' s i j :=
-  (maps_to_Inter₂_Inter₂ $ fun i hi => maps_to_image f (s i hi)).image_subset
+  (maps_to_Inter₂_Inter₂ fun i hi => maps_to_image f (s i hi)).image_subset
 
 theorem image_sInter_subset (S : Set (Set α)) (f : α → β) : f '' ⋂₀S ⊆ ⋂ s ∈ S, f '' s := by
   rw [sInter_eq_bInter]
@@ -1153,7 +1153,7 @@ theorem inj_on.image_Inter_eq [Nonempty ι] {s : ι → Set α} {f : α → β} 
   refine' subset.antisymm (image_Inter_subset s f) fun y hy => _
   simp only [mem_Inter, mem_image_iff_bex] at hy
   choose x hx hy using hy
-  refine' ⟨x default, mem_Inter.2 $ fun i => _, hy _⟩
+  refine' ⟨x default, mem_Inter.2 fun i => _, hy _⟩
   suffices x default = x i by
     rw [this]
     apply hx
@@ -1186,22 +1186,22 @@ theorem surj_on_sUnion {s : Set α} {T : Set (Set β)} {f : α → β} (H : ∀,
     surj_on f s (⋃₀T) := fun x ⟨t, ht, hx⟩ => H t ht hx
 
 theorem surj_on_Union {s : Set α} {t : ι → Set β} {f : α → β} (H : ∀ i, surj_on f s (t i)) : surj_on f s (⋃ i, t i) :=
-  surj_on_sUnion $ forall_range_iff.2 H
+  surj_on_sUnion <| forall_range_iff.2 H
 
 theorem surj_on_Union_Union {s : ι → Set α} {t : ι → Set β} {f : α → β} (H : ∀ i, surj_on f (s i) (t i)) :
     surj_on f (⋃ i, s i) (⋃ i, t i) :=
-  surj_on_Union $ fun i => (H i).mono (subset_Union _ _) (subset.refl _)
+  surj_on_Union fun i => (H i).mono (subset_Union _ _) (subset.refl _)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem surj_on_Union₂ {s : Set α} {t : ∀ i, κ i → Set β} {f : α → β} (H : ∀ i j, surj_on f s (t i j)) :
     surj_on f s (⋃ (i) (j), t i j) :=
-  surj_on_Union $ fun i => surj_on_Union (H i)
+  surj_on_Union fun i => surj_on_Union (H i)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
 theorem surj_on_Union₂_Union₂ {s : ∀ i, κ i → Set α} {t : ∀ i, κ i → Set β} {f : α → β}
     (H : ∀ i j, surj_on f (s i j) (t i j)) : surj_on f (⋃ (i) (j), s i j) (⋃ (i) (j), t i j) :=
-  surj_on_Union_Union $ fun i => surj_on_Union_Union (H i)
+  surj_on_Union_Union fun i => surj_on_Union_Union (H i)
 
 theorem surj_on_Inter [hi : Nonempty ι] {s : ι → Set α} {t : Set β} {f : α → β} (H : ∀ i, surj_on f (s i) t)
     (Hinj : inj_on f (⋃ i, s i)) : surj_on f (⋂ i, s i) t := by
@@ -1218,20 +1218,20 @@ theorem surj_on_Inter_Inter [hi : Nonempty ι] {s : ι → Set α} {t : ι → S
 
 theorem bij_on_Union {s : ι → Set α} {t : ι → Set β} {f : α → β} (H : ∀ i, bij_on f (s i) (t i))
     (Hinj : inj_on f (⋃ i, s i)) : bij_on f (⋃ i, s i) (⋃ i, t i) :=
-  ⟨maps_to_Union_Union $ fun i => (H i).MapsTo, Hinj, surj_on_Union_Union $ fun i => (H i).SurjOn⟩
+  ⟨maps_to_Union_Union fun i => (H i).MapsTo, Hinj, surj_on_Union_Union fun i => (H i).SurjOn⟩
 
 theorem bij_on_Inter [hi : Nonempty ι] {s : ι → Set α} {t : ι → Set β} {f : α → β} (H : ∀ i, bij_on f (s i) (t i))
     (Hinj : inj_on f (⋃ i, s i)) : bij_on f (⋂ i, s i) (⋂ i, t i) :=
-  ⟨maps_to_Inter_Inter $ fun i => (H i).MapsTo, hi.elim $ fun i => (H i).InjOn.mono (Inter_subset _ _),
+  ⟨maps_to_Inter_Inter fun i => (H i).MapsTo, hi.elim fun i => (H i).InjOn.mono (Inter_subset _ _),
     surj_on_Inter_Inter (fun i => (H i).SurjOn) Hinj⟩
 
 theorem bij_on_Union_of_directed {s : ι → Set α} (hs : Directed (· ⊆ ·) s) {t : ι → Set β} {f : α → β}
     (H : ∀ i, bij_on f (s i) (t i)) : bij_on f (⋃ i, s i) (⋃ i, t i) :=
-  bij_on_Union H $ inj_on_Union_of_directed hs fun i => (H i).InjOn
+  bij_on_Union H <| inj_on_Union_of_directed hs fun i => (H i).InjOn
 
 theorem bij_on_Inter_of_directed [Nonempty ι] {s : ι → Set α} (hs : Directed (· ⊆ ·) s) {t : ι → Set β} {f : α → β}
     (H : ∀ i, bij_on f (s i) (t i)) : bij_on f (⋂ i, s i) (⋂ i, t i) :=
-  bij_on_Inter H $ inj_on_Union_of_directed hs fun i => (H i).InjOn
+  bij_on_Inter H <| inj_on_Union_of_directed hs fun i => (H i).InjOn
 
 end Function
 
@@ -1250,15 +1250,15 @@ theorem image_Union₂ (f : α → β) (s : ∀ i, κ i → Set α) : (f '' ⋃ 
   simp_rw [image_Union]
 
 theorem univ_subtype {p : α → Prop} : (univ : Set (Subtype p)) = ⋃ (x) (h : p x), {⟨x, h⟩} :=
-  Set.ext $ fun ⟨x, h⟩ => by
+  Set.ext fun ⟨x, h⟩ => by
     simp [h]
 
 theorem range_eq_Union {ι} (f : ι → α) : range f = ⋃ i, {f i} :=
-  Set.ext $ fun a => by
+  Set.ext fun a => by
     simp [@eq_comm α a]
 
 theorem image_eq_Union (f : α → β) (s : Set α) : f '' s = ⋃ i ∈ s, {f i} :=
-  Set.ext $ fun b => by
+  Set.ext fun b => by
     simp [@eq_comm β b]
 
 theorem bUnion_range {f : ι → α} {g : α → Set β} : (⋃ x ∈ range f, g x) = ⋃ y, g (f y) :=
@@ -1293,7 +1293,7 @@ theorem monotone_preimage {f : α → β} : Monotone (preimage f) := fun a b h =
 
 @[simp]
 theorem preimage_Union {f : α → β} {s : ι → Set β} : (f ⁻¹' ⋃ i, s i) = ⋃ i, f ⁻¹' s i :=
-  Set.ext $ by
+  Set.ext <| by
     simp [preimage]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
@@ -1303,7 +1303,7 @@ theorem preimage_Union₂ {f : α → β} {s : ∀ i, κ i → Set β} : (f ⁻�
 
 @[simp]
 theorem preimage_sUnion {f : α → β} {s : Set (Set β)} : f ⁻¹' ⋃₀s = ⋃ t ∈ s, f ⁻¹' t :=
-  Set.ext $ by
+  Set.ext <| by
     simp [preimage]
 
 theorem preimage_Inter {f : α → β} {s : ι → Set β} : (f ⁻¹' ⋂ i, s i) = ⋂ i, f ⁻¹' s i := by
@@ -1437,7 +1437,7 @@ def seq (s : Set (α → β)) (t : Set α) : Set β :=
   { b | ∃ f ∈ s, ∃ a ∈ t, (f : α → β) a = b }
 
 theorem seq_def {s : Set (α → β)} {t : Set α} : seq s t = ⋃ f ∈ s, f '' t :=
-  Set.ext $ by
+  Set.ext <| by
     simp [seq]
 
 @[simp]
@@ -1452,11 +1452,11 @@ theorem seq_mono {s₀ s₁ : Set (α → β)} {t₀ t₁ : Set α} (hs : s₀ �
   fun b ⟨f, hf, a, ha, Eq⟩ => ⟨f, hs hf, a, ht ha, Eq⟩
 
 theorem singleton_seq {f : α → β} {t : Set α} : Set.Seq {f} t = f '' t :=
-  Set.ext $ by
+  Set.ext <| by
     simp
 
 theorem seq_singleton {s : Set (α → β)} {a : α} : Set.Seq s {a} = (fun f : α → β => f a) '' s :=
-  Set.ext $ by
+  Set.ext <| by
     simp
 
 theorem seq_seq {s : Set (β → γ)} {t : Set (α → β)} {u : Set α} : seq s (seq t u) = seq (seq (· ∘ · '' s) t) u := by
@@ -1580,7 +1580,7 @@ theorem disjoint_iff_inter_eq_empty : Disjoint s t ↔ s ∩ t = ∅ :=
   disjoint_iff
 
 theorem not_disjoint_iff : ¬Disjoint s t ↔ ∃ x, x ∈ s ∧ x ∈ t :=
-  not_forall.trans $ exists_congr $ fun x => not_not
+  not_forall.trans <| exists_congr fun x => not_not
 
 theorem not_disjoint_iff_nonempty_inter : ¬Disjoint s t ↔ (s ∩ t).Nonempty := by
   simp [Set.not_disjoint_iff, Set.nonempty_def]
@@ -1591,7 +1591,7 @@ theorem disjoint_or_nonempty_inter (s t : Set α) : Disjoint s t ∨ (s ∩ t).N
   (em _).imp_right not_disjoint_iff_nonempty_inter.mp
 
 theorem disjoint_left : Disjoint s t ↔ ∀ {a}, a ∈ s → a ∉ t :=
-  show (∀ x, ¬x ∈ s ∩ t) ↔ _ from ⟨fun h a => not_and.1 $ h a, fun h a => not_and.2 $ h a⟩
+  show (∀ x, ¬x ∈ s ∩ t) ↔ _ from ⟨fun h a => not_and.1 <| h a, fun h a => not_and.2 <| h a⟩
 
 theorem disjoint_right : Disjoint s t ↔ ∀ {a}, a ∈ t → a ∉ s := by
   rw [Disjoint.comm, disjoint_left]
@@ -1664,7 +1664,7 @@ theorem disjoint_image_image {f : β → α} {g : γ → α} {s : Set β} {t : S
 
 theorem disjoint_image_of_injective {f : α → β} (hf : injective f) {s t : Set α} (hd : Disjoint s t) :
     Disjoint (f '' s) (f '' t) :=
-  disjoint_image_image $ fun x hx y hy => hf.ne $ fun H => Set.disjoint_iff.1 hd ⟨hx, H.symm ▸ hy⟩
+  disjoint_image_image fun x hx y hy => hf.ne fun H => Set.disjoint_iff.1 hd ⟨hx, H.symm ▸ hy⟩
 
 theorem disjoint_preimage {s t : Set β} (hd : Disjoint s t) (f : α → β) : Disjoint (f ⁻¹' s) (f ⁻¹' t) := fun x hx =>
   hd hx
@@ -1725,11 +1725,11 @@ theorem sigma_to_Union_injective (h : ∀ i j, i ≠ j → Disjoint (t i) (t j))
   | ⟨a₁, b₁, h₁⟩, ⟨a₂, b₂, h₂⟩, Eq =>
     have b_eq : b₁ = b₂ := congr_argₓ Subtype.val Eq
     have a_eq : a₁ = a₂ :=
-      Classical.by_contradiction $ fun ne =>
+      Classical.by_contradiction fun ne =>
         have : b₁ ∈ t a₁ ∩ t a₂ := ⟨h₁, b_eq.symm ▸ h₂⟩
         h _ _ Ne this
-    Sigma.eq a_eq $
-      Subtype.eq $ by
+    Sigma.eq a_eq <|
+      Subtype.eq <| by
         subst b_eq <;> subst a_eq
 
 theorem sigma_to_Union_bijective (h : ∀ i j, i ≠ j → Disjoint (t i) (t j)) : bijective (sigma_to_Union t) :=
@@ -1738,7 +1738,7 @@ theorem sigma_to_Union_bijective (h : ∀ i j, i ≠ j → Disjoint (t i) (t j))
 /-- Equivalence between a disjoint union and a dependent sum. -/
 noncomputable def Union_eq_sigma_of_disjoint {t : α → Set β} (h : ∀ i j, i ≠ j → Disjoint (t i) (t j)) :
     (⋃ i, t i) ≃ Σ i, t i :=
-  (Equivₓ.ofBijective _ $ sigma_to_Union_bijective t h).symm
+  (Equivₓ.ofBijective _ <| sigma_to_Union_bijective t h).symm
 
 end Set
 

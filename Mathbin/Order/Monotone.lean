@@ -233,10 +233,10 @@ section PartialOrderₓ
 variable [PartialOrderₓ β] {f : α → β}
 
 theorem Monotone.strict_mono_of_injective (h₁ : Monotone f) (h₂ : injective f) : StrictMono f := fun a b h =>
-  (h₁ h.le).lt_of_ne fun H => h.ne $ h₂ H
+  (h₁ h.le).lt_of_ne fun H => h.ne <| h₂ H
 
 theorem Antitone.strict_anti_of_injective (h₁ : Antitone f) (h₂ : injective f) : StrictAnti f := fun a b h =>
-  (h₁ h.le).lt_of_ne fun H => h.ne $ h₂ H.symm
+  (h₁ h.le).lt_of_ne fun H => h.ne <| h₂ H.symm
 
 end PartialOrderₓ
 
@@ -247,10 +247,10 @@ section PartialOrderₓ
 variable [PartialOrderₓ α] [Preorderₓ β] {f : α → β} {s : Set α}
 
 theorem monotone_iff_forall_lt : Monotone f ↔ ∀ ⦃a b⦄, a < b → f a ≤ f b :=
-  forall₂_congrₓ $ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).le) hf⟩
+  forall₂_congrₓ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).le) hf⟩
 
 theorem antitone_iff_forall_lt : Antitone f ↔ ∀ ⦃a b⦄, a < b → f b ≤ f a :=
-  forall₂_congrₓ $ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).Ge) hf⟩
+  forall₂_congrₓ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).Ge) hf⟩
 
 theorem monotone_on_iff_forall_lt : MonotoneOn f s ↔ ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f a ≤ f b :=
   ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).le) (hf ha hb)⟩
@@ -259,16 +259,16 @@ theorem antitone_on_iff_forall_lt : AntitoneOn f s ↔ ∀ ⦃a⦄ ha : a ∈ s 
   ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).Ge) (hf ha hb)⟩
 
 protected theorem StrictMonoOn.monotone_on (hf : StrictMonoOn f s) : MonotoneOn f s :=
-  monotone_on_iff_forall_lt.2 $ fun a ha b hb h => (hf ha hb h).le
+  monotone_on_iff_forall_lt.2 fun a ha b hb h => (hf ha hb h).le
 
 protected theorem StrictAntiOn.antitone_on (hf : StrictAntiOn f s) : AntitoneOn f s :=
-  antitone_on_iff_forall_lt.2 $ fun a ha b hb h => (hf ha hb h).le
+  antitone_on_iff_forall_lt.2 fun a ha b hb h => (hf ha hb h).le
 
 protected theorem StrictMono.monotone (hf : StrictMono f) : Monotone f :=
-  monotone_iff_forall_lt.2 $ fun a b h => (hf h).le
+  monotone_iff_forall_lt.2 fun a b h => (hf h).le
 
 protected theorem StrictAnti.antitone (hf : StrictAnti f) : Antitone f :=
-  antitone_iff_forall_lt.2 $ fun a b h => (hf h).le
+  antitone_iff_forall_lt.2 fun a b h => (hf h).le
 
 end PartialOrderₓ
 
@@ -280,20 +280,20 @@ namespace Subsingleton
 variable [Preorderₓ α] [Preorderₓ β]
 
 protected theorem Monotone [Subsingleton α] (f : α → β) : Monotone f := fun a b _ =>
-  (congr_argₓ _ $ Subsingleton.elimₓ _ _).le
+  (congr_argₓ _ <| Subsingleton.elimₓ _ _).le
 
 protected theorem Antitone [Subsingleton α] (f : α → β) : Antitone f := fun a b _ =>
-  (congr_argₓ _ $ Subsingleton.elimₓ _ _).le
+  (congr_argₓ _ <| Subsingleton.elimₓ _ _).le
 
 theorem monotone' [Subsingleton β] (f : α → β) : Monotone f := fun a b _ => (Subsingleton.elimₓ _ _).le
 
 theorem antitone' [Subsingleton β] (f : α → β) : Antitone f := fun a b _ => (Subsingleton.elimₓ _ _).le
 
 protected theorem StrictMono [Subsingleton α] (f : α → β) : StrictMono f := fun a b h =>
-  (h.ne $ Subsingleton.elimₓ _ _).elim
+  (h.ne <| Subsingleton.elimₓ _ _).elim
 
 protected theorem StrictAnti [Subsingleton α] (f : α → β) : StrictAnti f := fun a b h =>
-  (h.ne $ Subsingleton.elimₓ _ _).elim
+  (h.ne <| Subsingleton.elimₓ _ _).elim
 
 end Subsingleton
 
@@ -340,7 +340,7 @@ protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : �
 
 protected theorem StrictMono.ite (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop} [DecidablePred p]
     (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, f x ≤ g x) : StrictMono fun x => if p x then f x else g x :=
-  hf.ite' hg hp $ fun x y hx hy h => (hf h).trans_le (hfg y)
+  (hf.ite' hg hp) fun x y hx hy h => (hf h).trans_le (hfg y)
 
 protected theorem StrictAnti.ite' (hf : StrictAnti f) (hg : StrictAnti g) {p : α → Prop} [DecidablePred p]
     (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ ⦃x y⦄, p x → ¬p y → x < y → g y < f x) :
@@ -349,7 +349,7 @@ protected theorem StrictAnti.ite' (hf : StrictAnti f) (hg : StrictAnti g) {p : �
 
 protected theorem StrictAnti.ite (hf : StrictAnti f) (hg : StrictAnti g) {p : α → Prop} [DecidablePred p]
     (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, g x ≤ f x) : StrictAnti fun x => if p x then f x else g x :=
-  hf.ite' hg hp $ fun x y hx hy h => (hfg y).trans_lt (hf h)
+  (hf.ite' hg hp) fun x y hx hy h => (hfg y).trans_lt (hf h)
 
 end Preorderₓ
 
@@ -430,13 +430,13 @@ theorem Antitone.reflect_lt (hf : Antitone f) {a b : α} (h : f a < f b) : b < a
   lt_of_not_geₓ fun h' => h.not_le (hf h')
 
 theorem MonotoneOn.reflect_lt (hf : MonotoneOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : f a < f b) : a < b :=
-  lt_of_not_geₓ $ fun h' => h.not_le $ hf hb ha h'
+  lt_of_not_geₓ fun h' => h.not_le <| hf hb ha h'
 
 theorem AntitoneOn.reflect_lt (hf : AntitoneOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : f a < f b) : b < a :=
-  lt_of_not_geₓ $ fun h' => h.not_le $ hf ha hb h'
+  lt_of_not_geₓ fun h' => h.not_le <| hf ha hb h'
 
 theorem StrictMonoOn.le_iff_le (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : f a ≤ f b ↔ a ≤ b :=
-  ⟨fun h => le_of_not_gtₓ $ fun h' => (hf hb ha h').not_le h, fun h =>
+  ⟨fun h => le_of_not_gtₓ fun h' => (hf hb ha h').not_le h, fun h =>
     h.lt_or_eq_dec.elim (fun h' => (hf ha hb h').le) fun h' => h' ▸ le_reflₓ _⟩
 
 theorem StrictAntiOn.le_iff_le (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : f a ≤ f b ↔ b ≤ a :=
@@ -468,7 +468,7 @@ protected theorem StrictMonoOn.compares (hf : StrictMonoOn f s) {a b : α} (ha :
 
 protected theorem StrictAntiOn.compares (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) {o : Ordering} :
     o.compares (f a) (f b) ↔ o.compares b a :=
-  OrderDual.dual_compares.trans $ hf.dual_right.compares hb ha
+  OrderDual.dual_compares.trans <| hf.dual_right.compares hb ha
 
 protected theorem StrictMono.compares (hf : StrictMono f) {a b : α} {o : Ordering} :
     o.compares (f a) (f b) ↔ o.compares a b :=
@@ -580,31 +580,31 @@ theorem strict_anti_int_of_succ_lt {f : ℤ → α} (hf : ∀ n, f (n + 1) < f n
 theorem Monotone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Monotone f) (n : ℕ) {x : α} (h1 : f n < x) (h2 : x < f (n + 1))
     (a : ℕ) : f a ≠ x := by
   rintro rfl
-  exact (hf.reflect_lt h1).not_le (Nat.le_of_lt_succₓ $ hf.reflect_lt h2)
+  exact (hf.reflect_lt h1).not_le (Nat.le_of_lt_succₓ <| hf.reflect_lt h2)
 
 /-- If `f` is an antitone function from `ℕ` to a preorder such that `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
 theorem Antitone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Antitone f) (n : ℕ) {x : α} (h1 : f (n + 1) < x) (h2 : x < f n)
     (a : ℕ) : f a ≠ x := by
   rintro rfl
-  exact (hf.reflect_lt h2).not_le (Nat.le_of_lt_succₓ $ hf.reflect_lt h1)
+  exact (hf.reflect_lt h2).not_le (Nat.le_of_lt_succₓ <| hf.reflect_lt h1)
 
 /-- If `f` is a monotone function from `ℤ` to a preorder and `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
 theorem Monotone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Monotone f) (n : ℤ) {x : α} (h1 : f n < x) (h2 : x < f (n + 1))
     (a : ℤ) : f a ≠ x := by
   rintro rfl
-  exact (hf.reflect_lt h1).not_le (Int.le_of_lt_add_oneₓ $ hf.reflect_lt h2)
+  exact (hf.reflect_lt h1).not_le (Int.le_of_lt_add_oneₓ <| hf.reflect_lt h2)
 
 /-- If `f` is an antitone function from `ℤ` to a preorder and `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
 theorem Antitone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Antitone f) (n : ℤ) {x : α} (h1 : f (n + 1) < x) (h2 : x < f n)
     (a : ℤ) : f a ≠ x := by
   rintro rfl
-  exact (hf.reflect_lt h2).not_le (Int.le_of_lt_add_oneₓ $ hf.reflect_lt h1)
+  exact (hf.reflect_lt h2).not_le (Int.le_of_lt_add_oneₓ <| hf.reflect_lt h1)
 
 theorem StrictMono.id_le {φ : ℕ → ℕ} (h : StrictMono φ) : ∀ n, n ≤ φ n := fun n =>
-  Nat.recOn n (Nat.zero_leₓ _) fun n hn => Nat.succ_le_of_ltₓ (hn.trans_lt $ h $ Nat.lt_succ_selfₓ n)
+  Nat.recOn n (Nat.zero_leₓ _) fun n hn => Nat.succ_le_of_ltₓ (hn.trans_lt <| h <| Nat.lt_succ_selfₓ n)
 
 end Preorderₓ
 

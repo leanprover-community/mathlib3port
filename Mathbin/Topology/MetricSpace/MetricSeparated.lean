@@ -44,7 +44,7 @@ theorem empty_right (s : Set X) : IsMetricSeparated s ∅ :=
 protected theorem Disjoint (h : IsMetricSeparated s t) : Disjoint s t :=
   let ⟨r, r0, hr⟩ := h
   fun x hx =>
-  r0 $ by
+  r0 <| by
     simpa using hr x hx.1 x hx.2
 
 theorem subset_compl_right (h : IsMetricSeparated s t) : s ⊆ tᶜ := fun x hs ht => h.disjoint ⟨hs, ht⟩
@@ -79,7 +79,7 @@ theorem union_right {t'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s t
 
 @[simp]
 theorem union_right_iff {t'} : IsMetricSeparated s (t ∪ t') ↔ IsMetricSeparated s t ∧ IsMetricSeparated s t' :=
-  comm.trans $ union_left_iff.trans $ and_congr comm comm
+  comm.trans <| union_left_iff.trans <| and_congr comm comm
 
 theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : finite I) {s : ι → Set X} {t : Set X} :
     IsMetricSeparated (⋃ i ∈ I, s i) t ↔ ∀, ∀ i ∈ I, ∀, IsMetricSeparated (s i) t := by

@@ -66,7 +66,7 @@ theorem ext_iff {a1 a2 : { x // p x }} : a1 = a2 ↔ (a1 : α) = (a2 : α) :=
   ⟨congr_argₓ _, Subtype.ext⟩
 
 theorem heq_iff_coe_eq (h : ∀ x, p x ↔ q x) {a1 : { x // p x }} {a2 : { x // q x }} : HEq a1 a2 ↔ (a1 : α) = (a2 : α) :=
-  Eq.ndrec (fun a2' => heq_iff_eq.trans ext_iff) (funext $ fun x => propext (h x)) a2
+  Eq.ndrec (fun a2' => heq_iff_eq.trans ext_iff) (funext fun x => propext (h x)) a2
 
 theorem heq_iff_coe_heq {α β : Sort _} {p : α → Prop} {q : β → Prop} {a : { x // p x }} {b : { y // q y }} (h : α = β)
     (h' : HEq p q) : HEq a b ↔ HEq (a : α) (b : β) := by
@@ -116,7 +116,7 @@ theorem restrict_injective {α β} {f : α → β} (p : α → Prop) (h : inject
 theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β a)] (p : α → Prop) :
     surjective fun f : ∀ x, β x => restrict f p := by
   let this' := Classical.decPred p
-  refine' fun f => ⟨fun x => if h : p x then f ⟨x, h⟩ else Nonempty.some (Ne x), funext $ _⟩
+  refine' fun f => ⟨fun x => if h : p x then f ⟨x, h⟩ else Nonempty.some (Ne x), funext <| _⟩
   rintro ⟨x, hx⟩
   exact dif_pos hx
 
@@ -126,7 +126,7 @@ def coind {α β} (f : α → β) {p : β → Prop} (h : ∀ a, p (f a)) : α �
 
 theorem coind_injective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : injective f) :
     injective (coind f h) := fun x y hxy =>
-  hf $ by
+  hf <| by
     apply congr_argₓ Subtype.val hxy
 
 theorem coind_surjective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : surjective f) :
@@ -144,15 +144,15 @@ def map {p : α → Prop} {q : β → Prop} (f : α → β) (h : ∀ a, p a → 
   ⟨f x, h x x.prop⟩
 
 theorem map_comp {p : α → Prop} {q : β → Prop} {r : γ → Prop} {x : Subtype p} (f : α → β) (h : ∀ a, p a → q (f a))
-    (g : β → γ) (l : ∀ a, q a → r (g a)) : map g l (map f h x) = map (g ∘ f) (fun a ha => l (f a) $ h a ha) x :=
+    (g : β → γ) (l : ∀ a, q a → r (g a)) : map g l (map f h x) = map (g ∘ f) (fun a ha => l (f a) <| h a ha) x :=
   rfl
 
 theorem map_id {p : α → Prop} {h : ∀ a, p a → p (id a)} : map (@id α) h = id :=
-  funext $ fun ⟨v, h⟩ => rfl
+  funext fun ⟨v, h⟩ => rfl
 
 theorem map_injective {p : α → Prop} {q : β → Prop} {f : α → β} (h : ∀ a, p a → q (f a)) (hf : injective f) :
     injective (map f h) :=
-  coind_injective _ $ hf.comp coe_injective
+  coind_injective _ <| hf.comp coe_injective
 
 theorem map_involutive {p : α → Prop} {f : α → α} (h : ∀ a, p a → p (f a)) (hf : involutive f) : involutive (map f h) :=
   fun x => Subtype.ext (hf x)
@@ -166,7 +166,7 @@ theorem equiv_iff [HasEquivₓ α] {p : α → Prop} {s t : Subtype p} : s ≈ t
 variable [Setoidₓ α]
 
 protected theorem refl (s : Subtype p) : s ≈ s :=
-  Setoidₓ.refl (↑s)
+  Setoidₓ.refl ↑s
 
 protected theorem symm {s t : Subtype p} (h : s ≈ t) : t ≈ s :=
   Setoidₓ.symm h

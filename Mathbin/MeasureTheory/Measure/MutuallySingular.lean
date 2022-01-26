@@ -38,7 +38,7 @@ namespace MutuallySingular
 
 theorem mk {s t : Set α} (hs : μ s = 0) (ht : ν t = 0) (hst : univ ⊆ s ∪ t) : mutually_singular μ ν := by
   use to_measurable μ s, measurable_set_to_measurable _ _, (measure_to_measurable _).trans hs
-  refine' measure_mono_null (fun x hx => (hst trivialₓ).resolve_left $ fun hxs => hx _) ht
+  refine' measure_mono_null (fun x hx => (hst trivialₓ).resolve_left fun hxs => hx _) ht
   exact subset_to_measurable _ _ hxs
 
 @[simp]
@@ -77,7 +77,7 @@ theorem sum_left {ι : Type _} [Encodable ι] {μ : ι → Measureₓ α} : Sum 
 
 @[simp]
 theorem sum_right {ι : Type _} [Encodable ι] {ν : ι → Measureₓ α} : μ ⊥ₘ Sum ν ↔ ∀ i, μ ⊥ₘ ν i :=
-  comm.trans $ sum_left.trans $ forall_congrₓ $ fun i => comm
+  comm.trans <| sum_left.trans <| forall_congrₓ fun i => comm
 
 @[simp]
 theorem add_left_iff : μ₁ + μ₂ ⊥ₘ ν ↔ μ₁ ⊥ₘ ν ∧ μ₂ ⊥ₘ ν := by
@@ -85,7 +85,7 @@ theorem add_left_iff : μ₁ + μ₂ ⊥ₘ ν ↔ μ₁ ⊥ₘ ν ∧ μ₂ ⊥
 
 @[simp]
 theorem add_right_iff : μ ⊥ₘ ν₁ + ν₂ ↔ μ ⊥ₘ ν₁ ∧ μ ⊥ₘ ν₂ :=
-  comm.trans $ add_left_iff.trans $ and_congr comm comm
+  comm.trans <| add_left_iff.trans <| and_congr comm comm
 
 theorem add_left (h₁ : ν₁ ⊥ₘ μ) (h₂ : ν₂ ⊥ₘ μ) : ν₁ + ν₂ ⊥ₘ μ :=
   add_left_iff.2 ⟨h₁, h₂⟩

@@ -111,7 +111,7 @@ unsafe def add_neg_eq_pfs : List expr → tactic (List expr)
       | ineq.eq => do
         let nep ← mk_neg_eq_zero_pf h
         let tl ← add_neg_eq_pfs t
-        return $ h :: nep :: tl
+        return <| h :: nep :: tl
       | _ => List.cons h <$> add_neg_eq_pfs t
 
 /-! #### The main method -/
@@ -152,12 +152,12 @@ unsafe def prove_false_by_linarith (cfg : linarith_config) : List expr → tacti
           fail "linarith failed to find a contradiction"
     linarith_trace "linarith has found a contradiction"
     let enum_inputs := inputs.enum
-    let zip := enum_inputs.filter_map $ fun ⟨n, e⟩ => Prod.mk e <$> certificate.find n
+    let zip := enum_inputs.filter_map fun ⟨n, e⟩ => Prod.mk e <$> certificate.find n
     let mls ←
       zip.mmap fun ⟨e, n⟩ => do
           let e ← term_of_ineq_prf e
           return (mul_expr n e)
-    let sm ← to_expr $ add_exprs mls
+    let sm ← to_expr <| add_exprs mls
     (f!"The expression
             {← sm}
           should be both 0 and negative") >>=

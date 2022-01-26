@@ -225,7 +225,7 @@ private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.prime] [Fact (p % 2 = 1)] {
     _ =
         ∏ x in Ico 1 (p / 2).succ,
           (if (a * x : Zmod p).val ≤ p / 2 then 1 else -1) * (a * x : Zmod p).valMinAbs.natAbs :=
-      prod_congr rfl $ fun _ _ => by
+      (prod_congr rfl) fun _ _ => by
         simp only [nat_cast_nat_abs_val_min_abs]
         split_ifs <;> simp
     _ =
@@ -258,7 +258,7 @@ private theorem gauss_lemma_aux₂ (p : ℕ) [hp : Fact p.prime] [Fact (p % 2 = 
             exact
               Nat.div_lt_selfₓ hp.1.Pos
                 (by
-                  decide))).1 $
+                  decide))).1 <|
     by
     simpa using gauss_lemma_aux₁ p hap
 
@@ -300,8 +300,8 @@ private theorem eisenstein_lemma_aux₂ (p : ℕ) [Fact p.prime] [Fact (p % 2 = 
     ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card ≡
       ∑ x in Ico 1 (p / 2).succ, x * a / p [MOD 2] :=
   have ha2 : (a : Zmod 2) = (1 : ℕ) := (eq_iff_modeq_nat _).2 ha2
-  (eq_iff_modeq_nat 2).1 $
-    sub_eq_zero.1 $ by
+  (eq_iff_modeq_nat 2).1 <|
+    sub_eq_zero.1 <| by
       simpa [add_left_commₓ, sub_eq_add_neg, finset.mul_sum.symm, mul_comm, ha2, Nat.cast_sum,
         add_neg_eq_iff_eq_add.symm, neg_eq_self_mod_two, add_assocₓ] using Eq.symm (eisenstein_lemma_aux₁ p hap)
 
@@ -311,8 +311,8 @@ theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
     a / b = (Ico 1 (a / b).succ).card := by
       simp
     _ = ((Ico 1 c.succ).filter fun x => x * b ≤ a).card :=
-      congr_argₓ _ $
-        Finset.ext $ fun x => by
+      congr_argₓ _ <|
+        Finset.ext fun x => by
           have : x * b ≤ a → x ≤ c := fun h =>
             le_transₓ
               (by
@@ -332,11 +332,11 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
     calc
       (∑ a in Ico 1 (p / 2).succ, a * q / p) =
           ∑ a in Ico 1 (p / 2).succ, ((Ico 1 (q / 2).succ).filter fun x => x * p ≤ a * q).card :=
-        Finset.sum_congr rfl $ fun x hx =>
+        (Finset.sum_congr rfl) fun x hx =>
           div_eq_filter_card (Nat.pos_of_ne_zeroₓ hp0)
             (calc
               x * q / p ≤ p / 2 * q / p :=
-                Nat.div_le_div_right (mul_le_mul_of_nonneg_right (le_of_lt_succ $ (mem_Ico.mp hx).2) (Nat.zero_leₓ _))
+                Nat.div_le_div_right (mul_le_mul_of_nonneg_right (le_of_lt_succ <| (mem_Ico.mp hx).2) (Nat.zero_leₓ _))
               _ ≤ _ := Nat.div_mul_div_le_div _ _ _
               )
       _ = _ := by
@@ -414,13 +414,13 @@ namespace Zmod
 * `-1` otherwise.
 
 -/
-def legendre_sym (a p : ℕ) : ℤ :=
+def legendre_sym (a : ℤ) (p : ℕ) : ℤ :=
   if (a : Zmod p) = 0 then 0 else if (a : Zmod p) ^ (p / 2) = 1 then 1 else -1
 
 theorem legendre_sym_eq_pow (a p : ℕ) [hp : Fact p.prime] : (legendre_sym a p : Zmod p) = a ^ (p / 2) := by
   rw [legendre_sym]
   by_cases' ha : (a : Zmod p) = 0
-  · simp only [if_pos, ha, zero_pow (Nat.div_pos hp.1.two_le (succ_pos 1)), Int.cast_zero]
+  · simp only [Int.cast_coe_nat, if_pos, ha, zero_pow (Nat.div_pos hp.1.two_le (succ_pos 1)), Int.cast_zero]
     
   cases' hp.1.eq_two_or_odd with hp2 hp_odd
   · subst p
@@ -429,7 +429,7 @@ theorem legendre_sym_eq_pow (a p : ℕ) [hp : Fact p.prime] : (legendre_sym a p 
     decide
     
   · have := Fact.mk hp_odd
-    rw [if_neg ha]
+    rw [Int.cast_coe_nat, if_neg ha]
     have : (-1 : Zmod p) ≠ 1 := (ne_neg_self p one_ne_zero).symm
     cases' pow_div_two_eq_neg_one_or_one p ha with h h
     · rw [if_pos h, h, Int.cast_one]
@@ -440,7 +440,8 @@ theorem legendre_sym_eq_pow (a p : ℕ) [hp : Fact p.prime] : (legendre_sym a p 
 
 theorem legendre_sym_eq_one_or_neg_one (a p : ℕ) (ha : (a : Zmod p) ≠ 0) :
     legendre_sym a p = -1 ∨ legendre_sym a p = 1 := by
-  unfold legendre_sym <;> split_ifs <;> simp_all only [eq_self_iff_true, or_trueₓ, true_orₓ]
+  unfold legendre_sym
+  split_ifs <;> simp_all only [eq_self_iff_true, or_trueₓ, true_orₓ, Int.cast_coe_nat]
 
 theorem legendre_sym_eq_zero_iff (a p : ℕ) : legendre_sym a p = 0 ↔ (a : Zmod p) = 0 := by
   constructor
@@ -453,7 +454,7 @@ theorem legendre_sym_eq_zero_iff (a p : ℕ) : legendre_sym a p = 0 ↔ (a : Zmo
       norm_num
     
   · intro ha
-    rw [legendre_sym, if_pos ha]
+    rw [legendre_sym, Int.cast_coe_nat, if_pos ha]
     
 
 /-- Gauss' lemma. The legendre symbol can be computed by considering the number of naturals less
@@ -470,7 +471,7 @@ theorem gauss_lemma {a : ℕ} [Fact (p % 2 = 1)] (ha0 : (a : Zmod p) ≠ 0) :
       simp_all [ne_neg_self p one_ne_zero, (ne_neg_self p one_ne_zero).symm]
 
 theorem legendre_sym_eq_one_iff {a : ℕ} (ha0 : (a : Zmod p) ≠ 0) : legendre_sym a p = 1 ↔ ∃ b : Zmod p, b ^ 2 = a := by
-  rw [euler_criterion p ha0, legendre_sym, if_neg ha0]
+  rw [euler_criterion p ha0, legendre_sym, Int.cast_coe_nat, if_neg ha0]
   split_ifs
   · simp only [h, eq_self_iff_true]
     
@@ -509,7 +510,7 @@ theorem legendre_sym_two [hp1 : Fact (p % 2 = 1)] : legendre_sym 2 p = -1 ^ (p /
     have h2xp : 2 * x < p :=
       calc
         2 * x ≤ 2 * (p / 2) :=
-          mul_le_mul_of_nonneg_left (le_of_lt_succ $ (mem_Ico.mp hx).2)
+          mul_le_mul_of_nonneg_left (le_of_lt_succ <| (mem_Ico.mp hx).2)
             (by
               decide)
         _ < _ := by
@@ -531,7 +532,7 @@ theorem legendre_sym_two [hp1 : Fact (p % 2 = 1)] : legendre_sym 2 p = -1 ^ (p /
     exact
       filter_congr fun x hx => by
         simp [hx2 _ hx, lt_or_leₓ, mul_comm]
-  rw [gauss_lemma p (prime_ne_zero p 2 hp2), neg_one_pow_eq_pow_mod_two,
+  erw [gauss_lemma p (prime_ne_zero p 2 hp2), neg_one_pow_eq_pow_mod_two,
     @neg_one_pow_eq_pow_mod_two _ _ (p / 4 + p / 2)]
   refine' congr_arg2ₓ _ rfl ((eq_iff_modeq_nat 2).1 _)
   rw [show 4 = 2 * 2 from rfl, ← Nat.div_div_eq_div_mulₓ, hp22, Nat.cast_add, ← sub_eq_iff_eq_add', sub_eq_add_neg,
@@ -546,7 +547,8 @@ theorem exists_sq_eq_two_iff [hp1 : Fact (p % 2 = 1)] : (∃ a : Zmod p, a ^ 2 =
   rw
     [show (2 : Zmod p) = (2 : ℕ) by
       simp ,
-    ← legendre_sym_eq_one_iff p hp2, legendre_sym_two p,
+    ← legendre_sym_eq_one_iff p hp2]
+  erw [legendre_sym_two p,
     neg_one_pow_eq_one_iff_even
       (show (-1 : ℤ) ≠ 1 by
         decide),
@@ -571,14 +573,15 @@ theorem exists_sq_eq_prime_iff_of_mod_four_eq_one (hp1 : p % 4 = 1) [hq1 : Fact 
     have h1 : p / 2 * (q / 2) % 2 = 0 :=
       (dvd_iff_mod_eq_zero _ _).1
         (dvd_mul_of_dvd_left
-          ((dvd_iff_mod_eq_zero _ _).2 $ by
+          ((dvd_iff_mod_eq_zero _ _).2 <| by
             rw [← mod_mul_right_div_self, show 2 * 2 = 4 from rfl, hp1] <;> rfl)
           _)
     have hp_odd : Fact (p % 2 = 1) := ⟨odd_of_mod_four_eq_one hp1⟩
     have hpq0 : (p : Zmod q) ≠ 0 := prime_ne_zero q p (Ne.symm hpq)
     have hqp0 : (q : Zmod p) ≠ 0 := prime_ne_zero p q hpq
     have := quadratic_reciprocity p q hpq
-    rw [neg_one_pow_eq_pow_mod_two, h1, legendre_sym, legendre_sym, if_neg hqp0, if_neg hpq0] at this
+    rw [neg_one_pow_eq_pow_mod_two, h1, legendre_sym, legendre_sym, Int.cast_coe_nat, Int.cast_coe_nat, if_neg hqp0,
+      if_neg hpq0] at this
     rw [euler_criterion q hpq0, euler_criterion p hqp0]
     split_ifs  at this <;> simp [*] <;> contradiction
 
@@ -595,7 +598,8 @@ theorem exists_sq_eq_prime_iff_of_mod_four_eq_three (hp3 : p % 4 = 3) (hq3 : q %
   have hpq0 : (p : Zmod q) ≠ 0 := prime_ne_zero q p (Ne.symm hpq)
   have hqp0 : (q : Zmod p) ≠ 0 := prime_ne_zero p q hpq
   have := quadratic_reciprocity p q hpq
-  rw [neg_one_pow_eq_pow_mod_two, h1, legendre_sym, legendre_sym, if_neg hpq0, if_neg hqp0] at this
+  rw [neg_one_pow_eq_pow_mod_two, h1, legendre_sym, legendre_sym, Int.cast_coe_nat, Int.cast_coe_nat, if_neg hpq0,
+    if_neg hqp0] at this
   rw [euler_criterion q hpq0, euler_criterion p hqp0]
   split_ifs  at this <;> simp [*] <;> contradiction
 
