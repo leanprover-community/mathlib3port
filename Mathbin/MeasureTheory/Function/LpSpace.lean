@@ -284,7 +284,7 @@ theorem snorm'_const' [is_finite_measure μ] (c : F) (hc_ne_zero : c ≠ 0) (hq_
       
     rw [one_div, mul_inv_cancel hq_ne_zero]
     
-  · rw [Ne.def, Ennreal.rpow_eq_top_iff, Auto.not_or_eq, Auto.not_and_eq, Auto.not_and_eq]
+  · rw [Ne.def, Ennreal.rpow_eq_top_iff, not_or_distrib, not_and_distrib, not_and_distrib]
     constructor
     · left
       rwa [Ennreal.coe_eq_zero, nnnorm_eq_zero]
@@ -1378,7 +1378,6 @@ theorem norm_eq_zero_iff {f : Lp E p μ} (hp : 0 < p) : ∥f∥ = 0 ↔ f = 0 :=
   · exact absurd hf (snorm_ne_top f)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem eq_zero_iff_ae_eq_zero {f : Lp E p μ} : f = 0 ↔ f =ᵐ[μ] 0 := by
   constructor
   · intro h
@@ -1387,7 +1386,7 @@ theorem eq_zero_iff_ae_eq_zero {f : Lp E p μ} : f = 0 ↔ f =ᵐ[μ] 0 := by
     
   · intro h
     ext1
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [h, ae_eq_fun.coe_fn_const α (0 : E)] with _ ha h'a
     rw [ha]
     exact h'a.symm
     
@@ -1785,14 +1784,13 @@ theorem mem_ℒp_comp_iff_of_antilipschitz {α E F} {K K'} [MeasurableSpace α] 
     mem_ℒp (g ∘ f) p μ ↔ mem_ℒp f p μ :=
   ⟨fun h => h.of_comp_antilipschitz_with hg.uniform_continuous hg' g0, fun h => hg.comp_mem_ℒp g0 h⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- When `g` is a Lipschitz function sending `0` to `0` and `f` is in `Lp`, then `g ∘ f` is well
 defined as an element of `Lp`. -/
 def comp_Lp (hg : LipschitzWith c g) (g0 : g 0 = 0) (f : Lp E p μ) : Lp F p μ :=
   ⟨ae_eq_fun.comp g hg.continuous.measurable (f : α →ₘ[μ] E), by
     suffices ∀ᵐ x ∂μ, ∥ae_eq_fun.comp g hg.continuous.measurable (f : α →ₘ[μ] E) x∥ ≤ c * ∥f x∥ by
       exact Lp.mem_Lp_of_ae_le_mul this
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [ae_eq_fun.coe_fn_comp g hg.continuous.measurable (f : α →ₘ[μ] E)] with a ha
     simp only [ha]
     rw [← dist_zero_right, ← dist_zero_right, ← g0]
     exact hg.dist_le_mul (f a) 0⟩
@@ -1800,19 +1798,18 @@ def comp_Lp (hg : LipschitzWith c g) (g0 : g 0 = 0) (f : Lp E p μ) : Lp F p μ 
 theorem coe_fn_comp_Lp (hg : LipschitzWith c g) (g0 : g 0 = 0) (f : Lp E p μ) : hg.comp_Lp g0 f =ᵐ[μ] g ∘ f :=
   ae_eq_fun.coe_fn_comp _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 @[simp]
 theorem comp_Lp_zero (hg : LipschitzWith c g) (g0 : g 0 = 0) : hg.comp_Lp g0 (0 : Lp E p μ) = 0 := by
   rw [Lp.eq_zero_iff_ae_eq_zero]
   apply (coe_fn_comp_Lp _ _ _).trans
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [Lp.coe_fn_zero E p μ] with _ ha
   simp [ha, g0]
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem norm_comp_Lp_sub_le (hg : LipschitzWith c g) (g0 : g 0 = 0) (f f' : Lp E p μ) :
     ∥hg.comp_Lp g0 f - hg.comp_Lp g0 f'∥ ≤ c * ∥f - f'∥ := by
   apply Lp.norm_le_mul_norm_of_ae_le_mul
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hg.coe_fn_comp_Lp g0 f, hg.coe_fn_comp_Lp g0 f', Lp.coe_fn_sub (hg.comp_Lp g0 f) (hg.comp_Lp g0 f'),
+    Lp.coe_fn_sub f f'] with a ha1 ha2 ha3 ha4
   simp [ha1, ha2, ha3, ha4, ← dist_eq_norm]
   exact hg.dist_le_mul (f a) (f' a)
 
@@ -1892,8 +1889,6 @@ theorem norm_comp_Lp_le (L : E →L[𝕜] F) (f : Lp E p μ) : ∥L.comp_Lp f∥
 
 variable (μ p) [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Composing `f : Lp E p μ` with `L : E →L[𝕜] F`, seen as a `𝕜`-linear map on `Lp E p μ`. -/
 def comp_Lpₗ (L : E →L[𝕜] F) : Lp E p μ →ₗ[𝕜] Lp F p μ where
   toFun := fun f => L.comp_Lp f
@@ -1908,7 +1903,8 @@ def comp_Lpₗ (L : E →L[𝕜] F) : Lp E p μ →ₗ[𝕜] Lp F p μ where
     intro c f
     dsimp
     ext1
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [Lp.coe_fn_smul c f, coe_fn_comp_Lp L (c • f), Lp.coe_fn_smul c (L.comp_Lp f),
+      coe_fn_comp_Lp L f] with _ ha1 ha2 ha3 ha4
     simp only [ha1, ha2, ha3, ha4, map_smul, Pi.smul_apply]
 
 /-- Composing `f : Lp E p μ` with `L : E →L[𝕜] F`, seen as a continuous `𝕜`-linear map on
@@ -1986,10 +1982,9 @@ theorem coe_pos_part (f : Lp ℝ p μ) : (pos_part f : α →ₘ[μ] ℝ) = (f :
 theorem coe_fn_pos_part (f : Lp ℝ p μ) : ⇑pos_part f =ᵐ[μ] fun a => max (f a) 0 :=
   ae_eq_fun.coe_fn_pos_part _
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem coe_fn_neg_part_eq_max (f : Lp ℝ p μ) : ∀ᵐ a ∂μ, neg_part f a = max (-f a) 0 := by
   rw [neg_part]
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [coe_fn_pos_part (-f), coe_fn_neg f] with _ h₁ h₂
   rw [h₁, h₂, Pi.neg_apply]
 
 theorem coe_fn_neg_part (f : Lp ℝ p μ) : ∀ᵐ a ∂μ, neg_part f a = -min (f a) 0 :=
@@ -2112,7 +2107,6 @@ theorem tendsto_Lp_iff_tendsto_ℒp {ι} {fi : Filter ι} [Fact (1 ≤ p)] (f : 
     
   exact funext fun n => snorm_congr_ae (eventually_eq.rfl.sub (mem_ℒp.coe_fn_to_Lp f_lim_ℒp))
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem tendsto_Lp_iff_tendsto_ℒp'' {ι} {fi : Filter ι} [Fact (1 ≤ p)] (f : ι → α → E) (f_ℒp : ∀ n, mem_ℒp (f n) p μ)
     (f_lim : α → E) (f_lim_ℒp : mem_ℒp f_lim p μ) :
     fi.tendsto (fun n => (f_ℒp n).toLp (f n)) (𝓝 (f_lim_ℒp.to_Lp f_lim)) ↔
@@ -2121,7 +2115,8 @@ theorem tendsto_Lp_iff_tendsto_ℒp'' {ι} {fi : Filter ι} [Fact (1 ≤ p)] (f 
   convert Lp.tendsto_Lp_iff_tendsto_ℒp' _ _
   ext1 n
   apply snorm_congr_ae
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [((f_ℒp n).sub f_lim_ℒp).coe_fn_to_Lp,
+    Lp.coe_fn_sub ((f_ℒp n).toLp (f n)) (f_lim_ℒp.to_Lp f_lim)] with _ hx₁ hx₂
   rw [← hx₂]
   exact hx₁.symm
 
@@ -2441,11 +2436,10 @@ namespace BoundedContinuousFunction
 
 variable [is_finite_measure μ]
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- A bounded continuous function on a finite-measure space is in `Lp`. -/
 theorem mem_Lp (f : α →ᵇ E) : f.to_continuous_map.to_ae_eq_fun μ ∈ Lp E p μ := by
   refine' Lp.mem_Lp_of_ae_bound ∥f∥ _
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [f.to_continuous_map.coe_fn_to_ae_eq_fun μ] with x _
   convert f.norm_coe_le_norm x
 
 /-- The `Lp`-norm of a bounded continuous function is at most a constant (depending on the measure

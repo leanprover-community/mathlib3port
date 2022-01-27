@@ -417,7 +417,7 @@ private theorem prod_multiset_X_sub_C_of_monic_of_roots_card_eq_of_field {p : Po
     simp only [nat_degree_mul (ne_zero_of_monic hprodmonic) qzero]
   have degq : q.nat_degree = 0 := by
     rw [hdegree] at degp
-    exact (add_right_injₓ p.nat_degree).mp (Tactic.RingExp.add_pf_sum_z degp rfl).symm
+    rw [← add_right_injₓ p.nat_degree, ← degp, add_zeroₓ]
   obtain ⟨u, hu⟩ := is_unit_iff_degree_eq_zero.2 ((degree_eq_iff_nat_degree_eq qzero).2 degq)
   have hassoc : Associated (Multiset.map (fun a : K => X - C a) p.roots).Prod p := by
     rw [Associated]

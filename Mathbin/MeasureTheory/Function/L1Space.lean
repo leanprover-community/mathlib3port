@@ -253,8 +253,6 @@ theorem has_finite_integral_of_dominated_convergence {F : ℕ → α → β} {f 
         
       exact (h_bound 0).mono fun a h => le_transₓ (norm_nonneg _) h
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem tendsto_lintegral_norm_of_dominated_convergence [MeasurableSpace β] [BorelSpace β] [second_countable_topology β]
     {F : ℕ → α → β} {f : α → β} {bound : α → ℝ} (F_measurable : ∀ n, AeMeasurable (F n) μ)
     (bound_has_finite_integral : has_finite_integral bound μ) (h_bound : ∀ n, ∀ᵐ a ∂μ, ∥F n a∥ ≤ bound a)
@@ -264,7 +262,7 @@ theorem tendsto_lintegral_norm_of_dominated_convergence [MeasurableSpace β] [Bo
   let b := fun a => 2 * Ennreal.ofReal (bound a)
   have hb : ∀ n, ∀ᵐ a ∂μ, Ennreal.ofReal ∥F n a - f a∥ ≤ b a := by
     intro n
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [all_ae_of_real_F_le_bound h_bound n, all_ae_of_real_f_le_bound h_bound h_lim] with a h₁ h₂
     calc Ennreal.ofReal ∥F n a - f a∥ ≤ Ennreal.ofReal ∥F n a∥ + Ennreal.ofReal ∥f a∥ := by
         rw [← Ennreal.of_real_add]
         apply of_real_le_of_real
@@ -291,7 +289,7 @@ theorem tendsto_lintegral_norm_of_dominated_convergence [MeasurableSpace β] [Bo
           rw [lintegral_const_mul']
           exact coe_ne_top _ ≠ ∞ := mul_ne_top coe_ne_top bound_has_finite_integral.ne
       
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [h_bound 0] with _ h using le_transₓ (norm_nonneg _) h
     
   · exact h
     
@@ -809,7 +807,6 @@ theorem dist_def (f g : α →₁[μ] β) : dist f g = (∫⁻ a, edist (f a) (g
 theorem norm_def (f : α →₁[μ] β) : ∥f∥ = (∫⁻ a, nnnorm (f a) ∂μ).toReal := by
   simp [Lp.norm_def, snorm, snorm']
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Computing the norm of a difference between two L¹-functions. Note that this is not a
   special case of `norm_def` since `(f - g) x` and `f x - g x` are not equal
   (but only a.e.-equal). -/
@@ -817,14 +814,13 @@ theorem norm_sub_eq_lintegral (f g : α →₁[μ] β) : ∥f - g∥ = (∫⁻ x
   rw [norm_def]
   congr 1
   rw [lintegral_congr_ae]
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [Lp.coe_fn_sub f g] with _ ha
   simp only [ha, Pi.sub_apply]
 
 theorem of_real_norm_eq_lintegral (f : α →₁[μ] β) : Ennreal.ofReal ∥f∥ = ∫⁻ x, (nnnorm (f x) : ℝ≥0∞) ∂μ := by
   rw [norm_def, Ennreal.of_real_to_real]
   exact ne_of_ltₓ (has_finite_integral_coe_fn f)
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Computing the norm of a difference between two L¹-functions. Note that this is not a
   special case of `of_real_norm_eq_lintegral` since `(f - g) x` and `f x - g x` are not equal
   (but only a.e.-equal). -/
@@ -832,7 +828,7 @@ theorem of_real_norm_sub_eq_lintegral (f g : α →₁[μ] β) :
     Ennreal.ofReal ∥f - g∥ = ∫⁻ x, (nnnorm (f x - g x) : ℝ≥0∞) ∂μ := by
   simp_rw [of_real_norm_eq_lintegral, ← edist_eq_coe_nnnorm]
   apply lintegral_congr_ae
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [Lp.coe_fn_sub f g] with _ ha
   simp only [ha, Pi.sub_apply]
 
 end L1

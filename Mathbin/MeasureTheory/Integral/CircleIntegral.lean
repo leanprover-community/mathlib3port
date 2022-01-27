@@ -226,7 +226,6 @@ theorem ContinuousOn.circle_integrable [BorelSpace E] {f : ℂ → E} {c : ℂ} 
   ContinuousOn.circle_integrable' <| (_root_.abs_of_nonneg hR).symm ▸ hf
 
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The function `λ z, (z - w) ^ n`, `n : ℤ`, is circle integrable on the circle with center `c` and
 radius `|R|` if and only if `R = 0` or `0 ≤ n`, or `w` does not belong to this circle. -/
 @[simp]

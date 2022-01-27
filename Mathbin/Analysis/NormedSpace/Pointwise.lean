@@ -63,7 +63,6 @@ theorem Metric.Bounded.smul {s : Set E} (hs : bounded s) (c : 𝕜) : bounded (c
   obtain ⟨y, ys, rfl⟩ : ∃ y : E, y ∈ s ∧ c • y = z := mem_smul_set.1 hz
   calc ∥c • y∥ = ∥c∥ * ∥y∥ := norm_smul _ _ _ ≤ ∥c∥ * R := mul_le_mul_of_nonneg_left (hR y ys) (norm_nonneg _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- If `s` is a bounded set, then for small enough `r`, the set `{x} + r • s` is contained in any
 fixed neighborhood of `x`. -/
 theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : bounded s) {u : Set E} (hu : u ∈ 𝓝 x) :
@@ -71,7 +70,7 @@ theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : bounded s
   obtain ⟨ε, εpos, hε⟩ : ∃ (ε : _)(hε : 0 < ε), closed_ball x ε ⊆ u := nhds_basis_closed_ball.mem_iff.1 hu
   obtain ⟨R, Rpos, hR⟩ : ∃ R : ℝ, 0 < R ∧ s ⊆ closed_ball 0 R := hs.subset_ball_lt 0 0
   have : Metric.ClosedBall (0 : 𝕜) (ε / R) ∈ 𝓝 (0 : 𝕜) := closed_ball_mem_nhds _ (div_pos εpos Rpos)
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [this] with r hr
   simp only [image_add_left, singleton_add]
   intro y hy
   obtain ⟨z, zs, hz⟩ : ∃ z : E, z ∈ s ∧ r • z = -x + y := by

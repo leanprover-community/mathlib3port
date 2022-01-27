@@ -48,7 +48,7 @@ In lemma names,
 -/
 
 
-open Function Tactic Set Auto
+open Function Tactic Set
 
 universe u
 

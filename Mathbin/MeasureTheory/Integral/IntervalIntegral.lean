@@ -1438,7 +1438,6 @@ attribute [local instance] FTC_filter.meas_gen
 
 variable [FTC_filter a la la'] [FTC_filter b lb lb'] [is_locally_finite_measure μ]
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Fundamental theorem of calculus-1, strict derivative in both limits for a locally finite
 measure.
 
@@ -1474,7 +1473,7 @@ theorem measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae (hab : Inter
   have B' : ∀ᶠ t in lt, IntervalIntegrable f μ b (ub t) :=
     hb_lim.eventually_interval_integrable_ae hmeas_b (FTC_filter.finite_at_inner lb)
       (tendsto_const_pure.mono_right FTC_filter.pure_le) hub
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [A, A', B, B'] with _ ua_va a_ua ub_vb b_ub
   rw [← integral_interval_sub_interval_comm']
   · dsimp only
     abel
@@ -1979,10 +1978,6 @@ this inequality to the right until the point `b`, where it gives the desired con
 
 variable {g' g : ℝ → ℝ}
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Hard part of FTC-2 for integrable derivatives, real-valued functions: one has
 `g b - g a ≤ ∫ y in a..b, g' y`.
 Auxiliary lemma in the proof of `integral_eq_sub_of_has_deriv_right_of_le`. -/
@@ -2013,7 +2008,7 @@ theorem sub_le_integral_of_has_deriv_right_of_le (hab : a ≤ b) (hcont : Contin
         mem_nhds_within_Ioi_iff_exists_Ioo_subset.2
           ⟨min M b, by
             simp only [hM, ht.right.right, lt_min_iff, mem_Ioi, and_selfₓ], subset.refl _⟩
-      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+      filter_upwards [this] with u hu
       have I : Icc t u ⊆ Icc a b := Icc_subset_Icc ht.2.1 (hu.2.le.trans (min_le_rightₓ _ _))
       calc (u - t) * y = ∫ v in Icc t u, y := by
           simp only [hu.left.le, MeasureTheory.integral_const, Algebra.id.smul_eq_mul, sub_nonneg, MeasurableSet.univ,
@@ -2029,7 +2024,7 @@ theorem sub_le_integral_of_has_deriv_right_of_le (hab : a ≤ b) (hcont : Contin
           · have C1 : ∀ᵐ x : ℝ ∂volume.restrict (Icc t u), G' x < ⊤ :=
               ae_mono (measure.restrict_mono I (le_reflₓ _)) G'lt_top
             have C2 : ∀ᵐ x : ℝ ∂volume.restrict (Icc t u), x ∈ Icc t u := ae_restrict_mem measurable_set_Icc
-            "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+            filter_upwards [C1, C2] with x G'x hx
             apply Ereal.coe_le_coe_iff.1
             have : x ∈ Ioo m M := by
               simp only [hm.trans_le hx.left, (hx.right.trans_lt hu.right).trans_le (min_le_leftₓ M b), mem_Ioo,
@@ -2039,11 +2034,12 @@ theorem sub_le_integral_of_has_deriv_right_of_le (hab : a ≤ b) (hcont : Contin
             
     have I2 : ∀ᶠ u in 𝓝[>] t, g u - g t ≤ (u - t) * y := by
       have g'_lt_y : g' t < y := Ereal.coe_lt_coe_iff.1 g'_lt_y'
-      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+      filter_upwards [(hderiv t ⟨ht.2.1, ht.2.2⟩).limsup_slope_le' (not_mem_Ioi.2 le_rfl) g'_lt_y,
+        self_mem_nhds_within] with u hu t_lt_u
       have := mul_le_mul_of_nonneg_left hu.le (sub_pos.2 t_lt_u).le
       rwa [← smul_eq_mul, sub_smul_slope] at this
     have I3 : ∀ᶠ u in 𝓝[>] t, g u - g t ≤ ∫ w in t..u, (G' w).toReal := by
-      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+      filter_upwards [I1, I2] with u hu1 hu2 using hu2.trans hu1
     have I4 : ∀ᶠ u in 𝓝[>] t, u ∈ Ioc t (min v b) := by
       refine' mem_nhds_within_Ioi_iff_exists_Ioc_subset.2 ⟨min v b, _, subset.refl _⟩
       simp only [lt_min_iff, mem_Ioi]
@@ -2155,15 +2151,13 @@ theorem integral_eq_sub_of_has_deriv_at (hderiv : ∀, ∀ x ∈ interval a b, �
   integral_eq_sub_of_has_deriv_right (HasDerivAt.continuous_on hderiv)
     (fun x hx => (hderiv _ (mem_Icc_of_Ioo hx)).HasDerivWithinAt) hint
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem integral_eq_sub_of_has_deriv_at_of_tendsto (hab : a < b) {fa fb}
     (hderiv : ∀, ∀ x ∈ Ioo a b, ∀, HasDerivAt f (f' x) x) (hint : IntervalIntegrable f' volume a b)
     (ha : tendsto f (𝓝[>] a) (𝓝 fa)) (hb : tendsto f (𝓝[<] b) (𝓝 fb)) : (∫ y in a..b, f' y) = fb - fa := by
   set F : ℝ → E := update (update f a fa) b fb
   have Fderiv : ∀, ∀ x ∈ Ioo a b, ∀, HasDerivAt F (f' x) x := by
     refine' fun x hx => (hderiv x hx).congr_of_eventually_eq _
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [Ioo_mem_nhds hx.1 hx.2] with _ hy
     simp only [F]
     rw [update_noteq hy.2.Ne, update_noteq hy.1.ne']
   have hcont : ContinuousOn F (Icc a b) := by
@@ -2173,7 +2167,7 @@ theorem integral_eq_sub_of_has_deriv_at_of_tendsto (hab : a < b) {fa fb}
       
     · rintro -
       refine' (hb.congr' _).mono_left (nhds_within_mono _ Ico_subset_Iio_self)
-      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+      filter_upwards [Ioo_mem_nhds_within_Iio (right_mem_Ioc.2 hab)] with _ hz using(update_noteq hz.1.ne' _ _).symm
       
   simpa [F, hab.ne, hab.ne'] using integral_eq_sub_of_has_deriv_at_of_le hab.le hcont Fderiv hint
 

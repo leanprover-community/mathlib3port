@@ -198,7 +198,6 @@ open Filter
 
 open_locale TopologicalSpace
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The Bernstein approximations
 ```
 ∑ k : fin (n+1), f (k/n : ℝ) * n.choose k * x^k * (1-x)^(n-k)
@@ -214,7 +213,7 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) :
   intro ε h
   let δ := δ f ε h
   have nhds_zero := tendsto_const_div_at_top_nhds_0_nat (2 * ∥f∥ * δ ^ (-2 : ℤ))
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [nhds_zero.eventually (gt_mem_nhds (half_pos h)), eventually_gt_at_top 0] with n nh npos'
   have npos : 0 < (n : ℝ) := by
     exact_mod_cast npos'
   have w₁ : 0 ≤ 2 * ∥f∥ :=

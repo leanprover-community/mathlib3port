@@ -189,13 +189,12 @@ theorem is_O_of_subsingleton [Subsingleton E'] : is_O f' g' l :=
 /-! ### Congruence -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_O_with_congr {c₁ c₂} {f₁ f₂ : α → E} {g₁ g₂ : α → F} {l : Filter α} (hc : c₁ = c₂) (hf : f₁ =ᶠ[l] f₂)
     (hg : g₁ =ᶠ[l] g₂) : is_O_with c₁ f₁ g₁ l ↔ is_O_with c₂ f₂ g₂ l := by
   unfold is_O_with
   subst c₂
   apply Filter.eventually_congr
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hf, hg] with _ e₁ e₂
   rw [e₁, e₂]
 
 theorem is_O_with.congr' {c₁ c₂} {f₁ f₂ : α → E} {g₁ g₂ : α → F} {l : Filter α} (hc : c₁ = c₂) (hf : f₁ =ᶠ[l] f₂)
@@ -290,11 +289,10 @@ theorem is_O.mono (h : is_O f g l') (hl : l ≤ l') : is_O f g l :=
 theorem is_o.mono (h : is_o f g l') (hl : l ≤ l') : is_o f g l :=
   is_o.of_is_O_with fun c cpos => (h.forall_is_O_with cpos).mono hl
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_O_with.trans (hfg : is_O_with c f g l) (hgk : is_O_with c' g k l) (hc : 0 ≤ c) : is_O_with (c * c') f k l :=
   by
   unfold is_O_with  at *
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hfg, hgk] with x hx hx'
   calc ∥f x∥ ≤ c * ∥g x∥ := hx _ ≤ c * (c' * ∥k x∥) := mul_le_mul_of_nonneg_left hx' hc _ = c * c' * ∥k x∥ :=
       (mul_assoc _ _ _).symm
 
@@ -544,11 +542,9 @@ theorem is_o.prod_rightr (h : is_o f g' l) : is_o f (fun x => (f' x, g' x)) l :=
 
 end
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_O_with.prod_left_same (hf : is_O_with c f' k' l) (hg : is_O_with c g' k' l) :
     is_O_with c (fun x => (f' x, g' x)) k' l := by
-  rw [is_O_with_iff] at * <;>
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  rw [is_O_with_iff] at * <;> filter_upwards [hf, hg] with x using max_leₓ
 
 theorem is_O_with.prod_left (hf : is_O_with c f' k' l) (hg : is_O_with c' g' k' l) :
     is_O_with (max c c') (fun x => (f' x, g' x)) k' l :=
@@ -607,11 +603,14 @@ section add_sub
 
 variable {c₁ c₂ : ℝ} {f₁ f₂ : α → E'}
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_O_with.add (h₁ : is_O_with c₁ f₁ g l) (h₂ : is_O_with c₂ f₂ g l) :
     is_O_with (c₁ + c₂) (fun x => f₁ x + f₂ x) g l := by
   rw [is_O_with] at * <;>
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [h₁,
+      h₂] with x hx₁ hx₂ using calc
+        ∥f₁ x + f₂ x∥ ≤ c₁ * ∥g x∥ + c₂ * ∥g x∥ := norm_add_le_of_le hx₁ hx₂
+        _ = (c₁ + c₂) * ∥g x∥ := (add_mulₓ _ _ _).symm
+        
 
 theorem is_O.add (h₁ : is_O f₁ g l) (h₂ : is_O f₂ g l) : is_O (fun x => f₁ x + f₂ x) g l :=
   let ⟨c₁, hc₁⟩ := h₁.is_O_with
@@ -949,11 +948,10 @@ theorem is_o_const_mul_right_iff {g : α → 𝕜} {c : 𝕜} (hc : c ≠ 0) : i
 /-! ### Multiplication -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_O_with.mul {f₁ f₂ : α → R} {g₁ g₂ : α → 𝕜} {c₁ c₂ : ℝ} (h₁ : is_O_with c₁ f₁ g₁ l)
     (h₂ : is_O_with c₂ f₂ g₂ l) : is_O_with (c₁ * c₂) (fun x => f₁ x * f₂ x) (fun x => g₁ x * g₂ x) l := by
   unfold is_O_with  at *
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [h₁, h₂] with _ hx₁ hx₂
   apply le_transₓ (norm_mul_le _ _)
   convert mul_le_mul hx₁ hx₂ (norm_nonneg _) (le_transₓ (norm_nonneg _) hx₁) using 1
   rw [NormedField.norm_mul]

@@ -151,13 +151,13 @@ theorem ae_cover.ae_tendsto_indicator {β : Type _} [Zero β] [TopologicalSpace 
     (hφ : ae_cover μ l φ) : ∀ᵐ x ∂μ, tendsto (fun i => (φ i).indicator f x) l (𝓝 <| f x) :=
   hφ.ae_eventually_mem.mono fun x hx => tendsto_const_nhds.congr' <| hx.mono fun n hn => (indicator_of_mem hn _).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem ae_cover.ae_measurable {β : Type _} [MeasurableSpace β] [l.is_countably_generated] [l.ne_bot] {f : α → β}
     {φ : ι → Set α} (hφ : ae_cover μ l φ) (hfm : ∀ i, AeMeasurable f (μ.restrict <| φ i)) : AeMeasurable f μ := by
   obtain ⟨u, hu⟩ := l.exists_seq_tendsto
   have := ae_measurable_Union_iff.mpr fun n : ℕ => hfm (u n)
   rwa [measure.restrict_eq_self_of_ae_mem] at this
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hφ.ae_eventually_mem] with x hx using let ⟨i, hi⟩ := (hu.eventually hx).exists
+    mem_Union.mpr ⟨i, hi⟩
 
 end AeCover
 
@@ -342,14 +342,13 @@ variable {α ι E : Type _} [TopologicalSpace α] [LinearOrderₓ α] [OrderClos
   [OpensMeasurableSpace α] {μ : Measureₓ α} {l : Filter ι} [Filter.NeBot l] [is_countably_generated l]
   [MeasurableSpace E] [NormedGroup E] [BorelSpace E] {a b : ι → α} {f : α → E}
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem integrable_of_interval_integral_norm_bounded [NoMinOrder α] [Nonempty α] (I : ℝ)
     (hfi : ∀ i, integrable_on f (Ioc (a i) (b i)) μ) (ha : tendsto a l at_bot) (hb : tendsto b l at_top)
     (h : ∀ᶠ i in l, (∫ x in a i..b i, ∥f x∥ ∂μ) ≤ I) : integrable f μ := by
   let c : α := Classical.choice ‹_›
   have hφ : ae_cover μ l _ := ae_cover_Ioc ha hb
   refine' hφ.integrable_of_integral_norm_bounded I hfi (h.mp _)
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [ha.eventually (eventually_le_at_bot c), hb.eventually (eventually_ge_at_top c)] with i hai hbi ht
   rwa [← intervalIntegral.integral_of_le (hai.trans hbi)]
 
 theorem integrable_of_interval_integral_norm_tendsto [NoMinOrder α] [Nonempty α] (I : ℝ)
@@ -358,7 +357,6 @@ theorem integrable_of_interval_integral_norm_tendsto [NoMinOrder α] [Nonempty �
   let ⟨I', hI'⟩ := h.is_bounded_under_le
   integrable_of_interval_integral_norm_bounded I' hfi ha hb hI'
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem integrable_on_Iic_of_interval_integral_norm_bounded [NoMinOrder α] (I : ℝ) (b : α)
     (hfi : ∀ i, integrable_on f (Ioc (a i) b) μ) (ha : tendsto a l at_bot)
     (h : ∀ᶠ i in l, (∫ x in a i..b, ∥f x∥ ∂μ) ≤ I) : integrable_on f (Iic b) μ := by
@@ -368,7 +366,7 @@ theorem integrable_on_Iic_of_interval_integral_norm_bounded [NoMinOrder α] (I :
     rw [integrable_on, measure.restrict_restrict (hφ.measurable i)]
     exact hfi i
   refine' hφ.integrable_of_integral_norm_bounded I hfi (h.mp _)
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [ha.eventually (eventually_le_at_bot b)] with i hai
   rw [intervalIntegral.integral_of_le hai, measure.restrict_restrict (hφ.measurable i)]
   exact id
 
@@ -378,7 +376,6 @@ theorem integrable_on_Iic_of_interval_integral_norm_tendsto [NoMinOrder α] (I :
   let ⟨I', hI'⟩ := h.is_bounded_under_le
   integrable_on_Iic_of_interval_integral_norm_bounded I' b hfi ha hI'
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem integrable_on_Ioi_of_interval_integral_norm_bounded (I : ℝ) (a : α) (hfi : ∀ i, integrable_on f (Ioc a (b i)) μ)
     (hb : tendsto b l at_top) (h : ∀ᶠ i in l, (∫ x in a..b i, ∥f x∥ ∂μ) ≤ I) : integrable_on f (Ioi a) μ := by
   have hφ : ae_cover (μ.restrict <| Ioi a) l _ := ae_cover_Iic hb
@@ -387,7 +384,7 @@ theorem integrable_on_Ioi_of_interval_integral_norm_bounded (I : ℝ) (a : α) (
     rw [integrable_on, measure.restrict_restrict (hφ.measurable i), inter_comm]
     exact hfi i
   refine' hφ.integrable_of_integral_norm_bounded I hfi (h.mp _)
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hb.eventually (eventually_ge_at_top a)] with i hbi
   rw [intervalIntegral.integral_of_le hbi, measure.restrict_restrict (hφ.measurable i), inter_comm]
   exact id
 
@@ -405,33 +402,30 @@ variable {α ι E : Type _} [TopologicalSpace α] [LinearOrderₓ α] [OrderClos
   [NormedGroup E] [NormedSpace ℝ E] [BorelSpace E] [CompleteSpace E] [second_countable_topology E] {a b : ι → α}
   {f : α → E}
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem interval_integral_tendsto_integral [NoMinOrder α] [Nonempty α] (hfi : integrable f μ) (ha : tendsto a l at_bot)
     (hb : tendsto b l at_top) : tendsto (fun i => ∫ x in a i..b i, f x ∂μ) l (𝓝 <| ∫ x, f x ∂μ) := by
   let φ := fun i => Ioc (a i) (b i)
   let c : α := Classical.choice ‹_›
   have hφ : ae_cover μ l φ := ae_cover_Ioc ha hb
   refine' (hφ.integral_tendsto_of_countably_generated hfi).congr' _
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [ha.eventually (eventually_le_at_bot c), hb.eventually (eventually_ge_at_top c)] with i hai hbi
   exact (intervalIntegral.integral_of_le (hai.trans hbi)).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem interval_integral_tendsto_integral_Iic [NoMinOrder α] (b : α) (hfi : integrable_on f (Iic b) μ)
     (ha : tendsto a l at_bot) : tendsto (fun i => ∫ x in a i..b, f x ∂μ) l (𝓝 <| ∫ x in Iic b, f x ∂μ) := by
   let φ := fun i => Ioi (a i)
   have hφ : ae_cover (μ.restrict <| Iic b) l φ := ae_cover_Ioi ha
   refine' (hφ.integral_tendsto_of_countably_generated hfi).congr' _
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [ha.eventually (eventually_le_at_bot <| b)] with i hai
   rw [intervalIntegral.integral_of_le hai, measure.restrict_restrict (hφ.measurable i)]
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem interval_integral_tendsto_integral_Ioi (a : α) (hfi : integrable_on f (Ioi a) μ) (hb : tendsto b l at_top) :
     tendsto (fun i => ∫ x in a..b i, f x ∂μ) l (𝓝 <| ∫ x in Ioi a, f x ∂μ) := by
   let φ := fun i => Iic (b i)
   have hφ : ae_cover (μ.restrict <| Ioi a) l φ := ae_cover_Iic hb
   refine' (hφ.integral_tendsto_of_countably_generated hfi).congr' _
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hb.eventually (eventually_ge_at_top <| a)] with i hbi
   rw [intervalIntegral.integral_of_le hbi, measure.restrict_restrict (hφ.measurable i), inter_comm]
   rfl
 

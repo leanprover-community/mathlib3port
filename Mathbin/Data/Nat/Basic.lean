@@ -1123,6 +1123,15 @@ theorem succ_div_of_dvd {a b : ℕ} (hba : b ∣ a + 1) : (a + 1) / b = a / b + 
 theorem succ_div_of_not_dvd {a b : ℕ} (hba : ¬b ∣ a + 1) : (a + 1) / b = a / b := by
   rw [succ_div, if_neg hba, add_zeroₓ]
 
+theorem dvd_iff_div_mul_eq (n d : ℕ) : d ∣ n ↔ n / d * d = n :=
+  ⟨fun h => Nat.div_mul_cancelₓ h, fun h => Dvd.intro_left (n / d) h⟩
+
+theorem dvd_iff_le_div_mul (n d : ℕ) : d ∣ n ↔ n ≤ n / d * d :=
+  ((dvd_iff_div_mul_eq _ _).trans le_antisymm_iffₓ).trans (and_iff_right (div_mul_le_self n d))
+
+theorem dvd_iff_dvd_dvd (n d : ℕ) : d ∣ n ↔ ∀ k : ℕ, k ∣ d → k ∣ n :=
+  ⟨fun h k hkd => dvd_trans hkd h, fun h => h _ dvd_rfl⟩
+
 @[simp]
 theorem mod_mod_of_dvd (n : Nat) {m k : Nat} (h : m ∣ k) : n % k % m = n % m := by
   conv => rhs rw [← mod_add_div n k]

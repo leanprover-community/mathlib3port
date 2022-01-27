@@ -532,11 +532,11 @@ variable [OrderedSemiring α] {l : Filter β} {f g : β → α}
 theorem tendsto_bit1_at_top : tendsto bit1 (at_top : Filter α) at_top :=
   tendsto_at_top_add_nonneg_right tendsto_bit0_at_top fun _ => zero_le_one
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem tendsto.at_top_mul_at_top (hf : tendsto f l at_top) (hg : tendsto g l at_top) :
     tendsto (fun x => f x * g x) l at_top := by
   refine' tendsto_at_top_mono' _ _ hg
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hg.eventually (eventually_ge_at_top 0),
+    hf.eventually (eventually_ge_at_top 1)] with _ using le_mul_of_one_le_left
 
 theorem tendsto_mul_self_at_top : tendsto (fun x : α => x * x) at_top at_top :=
   tendsto_id.at_top_mul_at_top tendsto_id
@@ -941,7 +941,6 @@ theorem map_at_bot_eq_of_gc [SemilatticeInf α] [SemilatticeInf β] {f : α → 
     (gc : ∀ a, ∀, ∀ b ≤ b', ∀, b ≤ f a ↔ g b ≤ a) (hgi : ∀, ∀ b ≤ b', ∀, f (g b) ≤ b) : map f at_bot = at_bot :=
   @map_at_top_eq_of_gc (OrderDual α) (OrderDual β) _ _ _ _ _ hf.dual gc hgi
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (h : Ici a ⊆ s) :
     map (coe : s → α) at_top = at_top := by
   have : Directed (· ≥ ·) fun x : s => 𝓟 (Ici x) := by
@@ -959,7 +958,7 @@ theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (
     exact le_transₓ le_sup_left (Subtype.coe_le_coe.2 hy)
     
   · intro x
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [mem_at_top (↑x⊔a)] with b hb
     exact ⟨⟨b, h <| le_sup_right.trans hb⟩, Subtype.coe_le_coe.1 (le_sup_left.trans hb), rfl⟩
     
 

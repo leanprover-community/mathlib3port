@@ -1120,7 +1120,6 @@ protected def VitaliFamily (μ : Measureₓ α) [sigma_finite μ] : VitaliFamily
       exists_disjoint_closed_ball_covering_ae μ g s A (fun _ => 1) fun _ _ => zero_lt_one
     exact ⟨t, fun x => closed_ball x (r x), ts, tdisj, fun x xt => (tg x xt).1.2, μt⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The main feature of the Besicovitch Vitali family is that its filter at a point `x` corresponds
 to convergence along closed balls. We record one of the two implications here, which will enable us
 to deduce specific statements on differentiation of measures in this context from the general
@@ -1133,7 +1132,7 @@ theorem tendsto_filter_at (μ : Measureₓ α) [sigma_finite μ] (x : α) :
     ∃ (ε : ℝ)(H : ε > 0), ∀ a : Set α, a ∈ (Besicovitch.vitaliFamily μ).SetsAt x → a ⊆ closed_ball x ε → a ∈ s :=
     (VitaliFamily.mem_filter_at_iff _).1 hs
   have : Ioc (0 : ℝ) ε ∈ 𝓝[>] (0 : ℝ) := Ioc_mem_nhds_within_Ioi ⟨le_rfl, εpos⟩
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [this] with _ hr
   apply hε
   · exact mem_image_of_mem _ hr.1
     
@@ -1142,16 +1141,14 @@ theorem tendsto_filter_at (μ : Measureₓ α) [sigma_finite μ] (x : α) :
 
 variable [MetricSpace β] [MeasurableSpace β] [BorelSpace β] [SigmaCompactSpace β] [HasBesicovitchCovering β]
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- In a space with the Besicovitch covering property, the ratio of the measure of balls converges
 almost surely to to the Radon-Nikodym derivative. -/
 theorem ae_tendsto_rn_deriv (ρ μ : Measureₓ β) [is_locally_finite_measure μ] [is_locally_finite_measure ρ] :
     ∀ᵐ x ∂μ, tendsto (fun r => ρ (closed_ball x r) / μ (closed_ball x r)) (𝓝[>] 0) (𝓝 (ρ.rn_deriv μ x)) := by
   have : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [VitaliFamily.ae_tendsto_rn_deriv (Besicovitch.vitaliFamily μ) ρ] with x hx
   exact hx.comp (tendsto_filter_at μ x)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- Given a measurable set `s`, then `μ (s ∩ closed_ball x r) / μ (closed_ball x r)` converges when
 `r` tends to `0`, for almost every `x`. The limit is `1` for `x ∈ s` and `0` for `x ∉ s`.
 This shows that almost every point of `s` is a Lebesgue density point for `s`.
@@ -1165,7 +1162,6 @@ theorem ae_tendsto_measure_inter_div_of_measurable_set (μ : Measureₓ β) [is_
   intro x hx
   exact hx.comp (tendsto_filter_at μ x)
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Given an arbitrary set `s`, then `μ (s ∩ closed_ball x r) / μ (closed_ball x r)` converges
 to `1` when `r` tends to `0`, for almost every `x` in `s`.
 This shows that almost every point of `s` is a Lebesgue density point for `s`.
@@ -1174,7 +1170,8 @@ A stronger version holds for measurable sets, see `ae_tendsto_measure_inter_div_
 theorem ae_tendsto_measure_inter_div (μ : Measureₓ β) [is_locally_finite_measure μ] (s : Set β) :
     ∀ᵐ x ∂μ.restrict s, tendsto (fun r => μ (s ∩ closed_ball x r) / μ (closed_ball x r)) (𝓝[>] 0) (𝓝 1) := by
   have : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [VitaliFamily.ae_tendsto_measure_inter_div
+      (Besicovitch.vitaliFamily μ)] with x hx using hx.comp (tendsto_filter_at μ x)
 
 end Besicovitch
 

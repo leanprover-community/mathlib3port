@@ -303,7 +303,6 @@ theorem trim_pre [MeasurableSpace X] [OpensMeasurableSpace X] (m : Set X → ℝ
 
 end MkMetric'
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- An outer measure constructed using `outer_measure.mk_metric'` is a metric outer measure. -/
 theorem mk_metric'_is_metric (m : Set X → ℝ≥0∞) : (mk_metric' m).IsMetric := by
   rintro s t ⟨r, r0, hr⟩
@@ -559,7 +558,6 @@ theorem hausdorff_measure_le_liminf_sum {β : Type _} {ι : β → Type _} [hι 
     μH[d] s ≤ liminf l fun n => ∑ i, diam (t n i) ^ d :=
   mk_metric_le_liminf_sum s r hr t ht hst _
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- If `d₁ < d₂`, then for any set `s` we have either `μH[d₂] s = 0`, or `μH[d₁] s = ∞`. -/
 theorem hausdorff_measure_zero_or_top {d₁ d₂ : ℝ} (h : d₁ < d₂) (s : Set X) : μH[d₂] s = 0 ∨ μH[d₁] s = ∞ := by
   by_contra H
@@ -684,7 +682,6 @@ open Measureₓ
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- In the space `ι → ℝ`, Hausdorff measure coincides exactly with Lebesgue measure. -/
 @[simp]
 theorem hausdorff_measure_pi_real {ι : Type _} [Fintype ι] : (μH[Fintype.card ι] : Measureₓ (ι → ℝ)) = volume := by
@@ -754,7 +751,7 @@ theorem hausdorff_measure_pi_real {ι : Type _} [Fintype ι] : (μH[Fintype.card
           (by
             run_tac
               is_bounded_default)
-      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+      filter_upwards [B] with _ hn
       apply Finset.sum_le_sum fun i _ => _
       rw [Ennreal.rpow_nat_cast]
       exact

@@ -241,7 +241,6 @@ theorem exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable [sigma_fini
 
 variable {μ}
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Given an integrable function `f` with values in `ℝ≥0` in a sigma-finite space, there exists a
 lower semicontinuous function `g > f` with integral arbitrarily close to that of `f`.
 Formulation in terms of `integral`.
@@ -271,7 +270,7 @@ theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [sigma_finite μ] (f :
   have g_lt_top : ∀ᵐ x : α ∂μ, g x < ∞ := ae_lt_top gcont.measurable gint_ne
   have Ig : (∫⁻ a : α, Ennreal.ofReal (g a).toReal ∂μ) = ∫⁻ a : α, g a ∂μ := by
     apply lintegral_congr_ae
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [g_lt_top] with _ hx
     simp only [hx.ne, Ennreal.of_real_to_real, Ne.def, not_false_iff]
   refine' ⟨g, f_lt_g, gcont, g_lt_top, _, _⟩
   · refine' ⟨gcont.measurable.ennreal_to_real.ae_measurable, _⟩
@@ -440,8 +439,6 @@ theorem exists_upper_semicontinuous_le_integral_le (f : α → ℝ≥0 ) (fint :
 /-! ### Vitali-Carathéodory theorem -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- **Vitali-Carathéodory Theorem**: given an integrable real function `f`, there exists an
 integrable function `g > f` which is lower semicontinuous, with integral arbitrarily close
 to that of `f`. This function has to be `ereal`-valued in general. -/
@@ -464,7 +461,7 @@ theorem exists_lt_lower_semicontinuous_integral_lt [sigma_finite μ] (f : α →
   rcases exists_upper_semicontinuous_le_integral_le fm int_fm δpos with ⟨gm, gm_le_fm, gmcont, gm_integrable, gmint⟩
   let g : α → Ereal := fun x => (gp x : Ereal) - gm x
   have ae_g : ∀ᵐ x ∂μ, (g x).toReal = (gp x : Ereal).toReal - (gm x : Ereal).toReal := by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [gp_lt_top] with _ hx
     rw [Ereal.to_real_sub] <;> simp [hx.ne]
   refine' ⟨g, _, _, _, _, _⟩
   show integrable (fun x => Ereal.toReal (g x)) μ
@@ -493,7 +490,7 @@ theorem exists_lt_lower_semicontinuous_integral_lt [sigma_finite μ] (f : α →
         field_simp [δ, mul_comm]
       
   show ∀ᵐ x : α ∂μ, g x < ⊤
-  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  · filter_upwards [gp_lt_top] with _ hx
     simp [g, Ereal.sub_eq_add_neg, lt_top_iff_ne_top, lt_top_iff_ne_top.1 hx]
     
   show ∀ x, (f x : Ereal) < g x

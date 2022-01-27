@@ -74,7 +74,7 @@ theorem image_rayleigh_eq_image_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
       
     
   · rintro ⟨x, hx, hxT⟩
-    exact ⟨x, nonzero_of_mem_sphere hr ⟨x, hx⟩, hxT⟩
+    exact ⟨x, ne_zero_of_mem_sphere hr.ne' ⟨x, hx⟩, hxT⟩
     
 
 theorem supr_rayleigh_eq_supr_rayleigh_sphere {r : ℝ} (hr : 0 < r) :

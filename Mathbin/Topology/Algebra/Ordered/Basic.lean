@@ -680,8 +680,6 @@ instance tendsto_Ioc_class_nhds (a : α) : tendsto_Ixx_class Ioc (𝓝 a) (𝓝 
 instance tendsto_Ioo_class_nhds (a : α) : tendsto_Ixx_class Ioo (𝓝 a) (𝓝 a) :=
   tendsto_Ixx_class_of_subset fun _ _ => Ioo_subset_Icc_self
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Also known as squeeze or sandwich theorem. This version assumes that inequalities hold
 eventually for the filter. -/
 theorem tendsto_of_tendsto_of_tendsto_of_le_of_le' {f g h : β → α} {b : Filter β} {a : α} (hg : tendsto g b (𝓝 a))
@@ -689,10 +687,9 @@ theorem tendsto_of_tendsto_of_tendsto_of_le_of_le' {f g h : β → α} {b : Filt
   tendsto_order.2
     ⟨fun a' h' => by
       have : ∀ᶠ b in b, a' < g b := (tendsto_order.1 hg).left a' h'
-      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args",
-      fun a' h' => by
+      filter_upwards [this, hgf] with _ using lt_of_lt_of_leₓ, fun a' h' => by
       have : ∀ᶠ b in b, h b < a' := (tendsto_order.1 hh).right a' h'
-      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"⟩
+      filter_upwards [this, hfh] with a h₁ h₂ using lt_of_le_of_ltₓ h₂ h₁⟩
 
 /-- Also known as squeeze or sandwich theorem. This version assumes that inequalities hold
 everywhere. -/
@@ -865,12 +862,11 @@ theorem nhds_bot_basis_Iic [TopologicalSpace α] [SemilatticeInf α] [OrderBot �
     [Nontrivial α] [DenselyOrdered α] : (𝓝 ⊥).HasBasis (fun a : α => ⊥ < a) Iic :=
   @nhds_top_basis_Ici (OrderDual α) _ _ _ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem tendsto_nhds_top_mono [TopologicalSpace β] [PartialOrderₓ β] [OrderTop β] [OrderTopology β] {l : Filter α}
     {f g : α → β} (hf : tendsto f l (𝓝 ⊤)) (hg : f ≤ᶠ[l] g) : tendsto g l (𝓝 ⊤) := by
   simp only [nhds_top_order, tendsto_infi, tendsto_principal] at hf⊢
   intro x hx
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hf x hx, hg] with _ using lt_of_lt_of_leₓ
 
 theorem tendsto_nhds_bot_mono [TopologicalSpace β] [PartialOrderₓ β] [OrderBot β] [OrderTopology β] {l : Filter α}
     {f g : α → β} (hf : tendsto f l (𝓝 ⊥)) (hg : g ≤ᶠ[l] f) : tendsto g l (𝓝 ⊥) :=
@@ -1453,8 +1449,6 @@ theorem eventually_abs_sub_lt (a : α) {ε : α} (hε : 0 < ε) : ∀ᶠ x in �
       (mem_infi_of_mem hε <| by
         simp only [abs_sub_comm, mem_principal_self])
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 instance (priority := 100) LinearOrderedAddCommGroup.topological_add_group : TopologicalAddGroup α where
   continuous_add := by
     refine' continuous_iff_continuous_at.2 _
@@ -1726,13 +1720,13 @@ instance (priority := 100) LinearOrderedField.has_continuous_mul : HasContinuous
 
 end continuous_mul
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- In a linearly ordered field with the order topology, if `f` tends to `at_top` and `g` tends to
 a positive constant `C` then `f * g` tends to `at_top`. -/
 theorem Filter.Tendsto.at_top_mul {C : α} (hC : 0 < C) (hf : tendsto f l at_top) (hg : tendsto g l (𝓝 C)) :
     tendsto (fun x => f x * g x) l at_top := by
   refine' tendsto_at_top_mono' _ _ (hf.at_top_mul_const (half_pos hC))
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hg.eventually (lt_mem_nhds (half_lt_self hC)),
+    hf.eventually (eventually_ge_at_top 0)] with x hg hf using mul_le_mul_of_nonneg_left hg.le hf
 
 /-- In a linearly ordered field with the order topology, if `f` tends to a positive constant `C` and
 `g` tends to `at_top` then `f * g` tends to `at_top`. -/
@@ -1777,12 +1771,11 @@ theorem Filter.Tendsto.neg_mul_at_bot {C : α} (hC : C < 0) (hf : tendsto f l (�
     tendsto (fun x => f x * g x) l at_top := by
   simpa only [mul_comm] using hg.at_bot_mul_neg hC hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The function `x ↦ x⁻¹` tends to `+∞` on the right of `0`. -/
 theorem tendsto_inv_zero_at_top : tendsto (fun x : α => x⁻¹) (𝓝[>] (0 : α)) at_top := by
   refine' (at_top_basis' 1).tendsto_right_iff.2 fun b hb => _
   have hb' : 0 < b := zero_lt_one.trans_le hb
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [Ioc_mem_nhds_within_Ioi ⟨le_rfl, inv_pos.2 hb'⟩] with x hx using(le_inv hx.1 hb').1 hx.2
 
 /-- The function `r ↦ r⁻¹` tends to `0` on the right as `r → +∞`. -/
 theorem tendsto_inv_at_top_zero' : tendsto (fun r : α => r⁻¹) at_top (𝓝[>] (0 : α)) := by
@@ -2592,7 +2585,6 @@ theorem map_cinfi_of_continuous_at_of_monotone {f : α → β} {g : γ → α} (
     (Mf : Monotone f) (H : BddBelow (range g)) : f (⨅ i, g i) = ⨅ i, f (g i) :=
   @map_csupr_of_continuous_at_of_monotone (OrderDual α) (OrderDual β) _ _ _ _ _ _ _ _ _ _ Cf Mf.dual H
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- A monotone map has a limit to the left of any point `x`, equal to `Sup (f '' (Iio x))`. -/
 theorem Monotone.tendsto_nhds_within_Iio {α : Type _} [LinearOrderₓ α] [TopologicalSpace α] [OrderTopology α]
     {f : α → β} (Mf : Monotone f) (x : α) : tendsto f (𝓝[<] x) (𝓝 (Sup (f '' Iio x))) := by
@@ -2605,7 +2597,7 @@ theorem Monotone.tendsto_nhds_within_Iio {α : Type _} [LinearOrderₓ α] [Topo
         exists_lt_of_lt_cSup (nonempty_image_iff.2 h) hl
     exact (mem_nhds_within_Iio_iff_exists_Ioo_subset' zx).2 ⟨z, zx, fun y hy => lz.trans_le (Mf hy.1.le)⟩
     
-  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  · filter_upwards [self_mem_nhds_within] with _ hy
     apply lt_of_le_of_ltₓ _ hm
     exact le_cSup (Mf.map_bdd_above bdd_above_Iio) (mem_image_of_mem _ hy)
     

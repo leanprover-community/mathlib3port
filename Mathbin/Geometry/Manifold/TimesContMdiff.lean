@@ -759,9 +759,6 @@ section Composition
 variable {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H'']
   {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M'']
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The composition of `C^n` functions within domains at points is `C^n`. -/
 theorem TimesContMdiffWithinAt.comp {t : Set M'} {g : M' → M''} (x : M) (hg : TimesContMdiffWithinAt I' I'' n g t (f x))
     (hf : TimesContMdiffWithinAt I I' n f s x) (st : maps_to f s t) : TimesContMdiffWithinAt I I'' n (g ∘ f) s x := by

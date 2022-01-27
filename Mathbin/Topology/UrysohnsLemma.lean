@@ -224,8 +224,6 @@ theorem lim_le_one (c : CU X) (x : X) : c.lim x ≤ 1 :=
 theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ Icc (0 : ℝ) 1 :=
   ⟨c.lim_nonneg x, c.lim_le_one x⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Continuity of `urysohns.CU.lim`. See module docstring for a sketch of the proofs. -/
 theorem continuous_lim (c : CU X) : Continuous c.lim := by
   obtain ⟨h0, h1234, h1⟩ : 0 < (2⁻¹ : ℝ) ∧ (2⁻¹ : ℝ) < 3 / 4 ∧ (3 / 4 : ℝ) < 1 := by
@@ -240,7 +238,7 @@ theorem continuous_lim (c : CU X) : Continuous c.lim := by
     exact Real.dist_le_of_mem_Icc_01 (c.lim_mem_Icc _) (c.lim_mem_Icc _)
     
   · by_cases' hxl : x ∈ c.left.U
-    · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    · filter_upwards [IsOpen.mem_nhds c.left.open_U hxl, ihn c.left] with _ hyl hyd
       rw [pow_succₓ, c.lim_eq_midpoint, c.lim_eq_midpoint, c.right.lim_of_mem_C _ (c.left_U_subset_right_C hyl),
         c.right.lim_of_mem_C _ (c.left_U_subset_right_C hxl)]
       refine' (dist_midpoint_midpoint_le _ _ _ _).trans _
@@ -249,7 +247,8 @@ theorem continuous_lim (c : CU X) : Continuous c.lim := by
       
     · replace hxl : x ∈ c.left.right.Cᶜ
       exact compl_subset_compl.2 c.left.right.subset hxl
-      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+      filter_upwards [IsOpen.mem_nhds (is_open_compl_iff.2 c.left.right.closed_C) hxl, ihn c.left.right,
+        ihn c.right] with y hyl hydl hydr
       replace hxl : x ∉ c.left.left.U
       exact compl_subset_compl.2 c.left.left_U_subset_right_C hxl
       replace hyl : y ∉ c.left.left.U

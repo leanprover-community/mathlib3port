@@ -79,12 +79,11 @@ theorem has_deriv_within_at_arcsin_Iic {x : ℝ} (h : x ≠ 1) : HasDerivWithinA
   · exact (has_deriv_at_arcsin h' h).HasDerivWithinAt
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem differentiable_within_at_arcsin_Ici {x : ℝ} : DifferentiableWithinAt ℝ arcsin (Ici x) x ↔ x ≠ -1 := by
   refine' ⟨_, fun h => (has_deriv_within_at_arcsin_Ici h).DifferentiableWithinAt⟩
   rintro h rfl
   have : sin ∘ arcsin =ᶠ[𝓝[≥] (-1 : ℝ)] id := by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [Icc_mem_nhds_within_Ici ⟨le_rfl, neg_lt_self (@zero_lt_one ℝ _ _)⟩] with x using sin_arcsin'
   have :=
     h.has_deriv_within_at.sin.congr_of_eventually_eq this.symm
       (by

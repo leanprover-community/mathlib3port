@@ -337,10 +337,10 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.is_conju
     simp_rw [f', g', div_mul_div, ← sum_div]  at this
     rwa [div_le_iff, one_mulₓ] at this
     refine' mul_ne_zero _ _
-    · rw [Ne.def, rpow_eq_zero_iff, Auto.not_and_eq]
+    · rw [Ne.def, rpow_eq_zero_iff, not_and_distrib]
       exact Or.inl hF_zero
       
-    · rw [Ne.def, rpow_eq_zero_iff, Auto.not_and_eq]
+    · rw [Ne.def, rpow_eq_zero_iff, not_and_distrib]
       exact Or.inl hG_zero
       
   refine' inner_le_Lp_mul_Lp_of_norm_le_one s f' g' hpq (le_of_eqₓ _) (le_of_eqₓ _)

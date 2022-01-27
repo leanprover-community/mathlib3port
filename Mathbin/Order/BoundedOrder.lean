@@ -1148,6 +1148,9 @@ theorem Disjoint.eq_bot_of_le {a b : α} (hab : Disjoint a b) (h : a ≤ b) : a 
     (by
       rwa [← inf_eq_left.2 h])
 
+theorem disjoint_assoc {a b c : α} : Disjoint (a⊓b) c ↔ Disjoint a (b⊓c) := by
+  rw [Disjoint, Disjoint, inf_assoc]
+
 theorem Disjoint.of_disjoint_inf_of_le {a b c : α} (h : Disjoint (a⊓b) c) (hle : a ≤ c) : Disjoint a b := by
   rw [disjoint_iff, h.eq_bot_of_le (inf_le_left.trans hle)]
 

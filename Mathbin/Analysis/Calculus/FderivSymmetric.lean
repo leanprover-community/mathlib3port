@@ -54,7 +54,6 @@ variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedGroup F] [Nor
 
 include s_conv xs hx hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Assume that `f` is differentiable inside a convex set `s`, and that its derivative `f'` is
 differentiable at a point `x`. Then, given two vectors `v` and `w` pointing inside `s`, one can
 Taylor-expand to order two the function `f` on the segment `[x + h v, x + h (v + w)]`, giving a
@@ -79,7 +78,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
     mem_nhds_within_Ioi_iff_exists_Ioo_subset.2
       ⟨(1 : ℝ), by
         simp only [mem_Ioi, zero_lt_one], fun x hx => hx.2⟩
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [E1, E2, self_mem_nhds_within] with h hδ h_lt_1 hpos
   replace hpos : 0 < h := hpos
   have xt_mem : ∀, ∀ t ∈ Icc (0 : ℝ) 1, ∀, x + h • v + (t * h) • w ∈ Interior s := by
     intro t ht
@@ -231,8 +230,6 @@ theorem Convex.is_o_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v �
     Pi.smul_apply, ContinuousLinearMap.coe_smul', ContinuousLinearMap.map_smul]
   abel
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Assume that `f` is differentiable inside a convex set `s`, and that its derivative `f'` is
 differentiable at a point `x`. Then, given two vectors `v` and `w` pointing inside `s`, one
 has `f'' v w = f'' w v`. Superseded by `convex.second_derivative_within_at_symmetric`, which
@@ -255,7 +252,7 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E} (
       congr 1
       field_simp [LT.lt.ne' hpos]
       
-    · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    · filter_upwards [self_mem_nhds_within] with _ hpos
       field_simp [LT.lt.ne' hpos, HasScalar.smul]
       
   simpa only [sub_eq_zero] using (is_o_const_const_iff (@one_ne_zero ℝ _ _)).1 B

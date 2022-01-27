@@ -70,7 +70,6 @@ private theorem convex.smul_integral_mem_of_measurable [is_finite_measure μ] {s
     exact simple_func.approx_on_mem hfm h₀ n x
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- If `μ` is a non-zero finite measure on `α`, `s` is a convex closed set in `E`, and `f` is an
 integrable function sending `μ`-a.e. points to `s`, then the average value of `f` belongs to `s`:
 `(μ univ).to_real⁻¹ • ∫ x, f x ∂μ ∈ s`. See also `convex.center_mass_mem` for a finite sum version
@@ -78,7 +77,7 @@ of this lemma. -/
 theorem Convex.smul_integral_mem [is_finite_measure μ] {s : Set E} (hs : Convex ℝ s) (hsc : IsClosed s) (hμ : μ ≠ 0)
     {f : α → E} (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : integrable f μ) : ((μ univ).toReal⁻¹ • ∫ x, f x ∂μ) ∈ s := by
   have : ∀ᵐ x : α ∂μ, hfi.ae_measurable.mk f x ∈ s := by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [hfs, hfi.ae_measurable.ae_eq_mk] with _ _ h
     rwa [← h]
   convert
     convex.smul_integral_mem_of_measurable hs hsc hμ this (hfi.congr hfi.ae_measurable.ae_eq_mk)

@@ -613,19 +613,18 @@ theorem AeMeasurable.snd [sigma_finite ν] {f : β → γ} (hf : AeMeasurable f 
     AeMeasurable (fun z : α × β => f z.2) (μ.prod ν) :=
   hf.comp_measurable' measurable_snd prod_snd_absolutely_continuous
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The Bochner integral is a.e.-measurable.
   This shows that the integrand of (the right-hand-side of) Fubini's theorem is a.e.-measurable. -/
 theorem AeMeasurable.integral_prod_right' [sigma_finite ν] [second_countable_topology E] [NormedSpace ℝ E]
     [BorelSpace E] [CompleteSpace E] ⦃f : α × β → E⦄ (hf : AeMeasurable f (μ.prod ν)) :
     AeMeasurable (fun x => ∫ y, f (x, y) ∂ν) μ :=
   ⟨fun x => ∫ y, hf.mk f (x, y) ∂ν, hf.measurable_mk.integral_prod_right', by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"⟩
+    filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk] with _ hx using integral_congr_ae hx⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem AeMeasurable.prod_mk_left [sigma_finite ν] {f : α × β → γ} (hf : AeMeasurable f (μ.prod ν)) :
     ∀ᵐ x ∂μ, AeMeasurable (fun y => f (x, y)) ν := by
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [ae_ae_of_ae_prod
+      hf.ae_eq_mk] with x hx using⟨fun y => hf.mk f (x, y), hf.measurable_mk.comp measurable_prod_mk_left, hx⟩
 
 end
 
@@ -662,7 +661,6 @@ theorem lintegral_prod_of_measurable :
     simp only [lintegral_supr hf h2f, lintegral_supr (kf _), k2f, lintegral_supr lf l2f, h3f]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- **Tonelli's Theorem**: For `ℝ≥0∞`-valued almost everywhere measurable functions on `α × β`,
   the integral of `f` is equal to the iterated integral. -/
 theorem lintegral_prod (f : α × β → ℝ≥0∞) (hf : AeMeasurable f (μ.prod ν)) :
@@ -670,7 +668,7 @@ theorem lintegral_prod (f : α × β → ℝ≥0∞) (hf : AeMeasurable f (μ.pr
   have A : (∫⁻ z, f z ∂μ.prod ν) = ∫⁻ z, hf.mk f z ∂μ.prod ν := lintegral_congr_ae hf.ae_eq_mk
   have B : (∫⁻ x, ∫⁻ y, f (x, y) ∂ν ∂μ) = ∫⁻ x, ∫⁻ y, hf.mk f (x, y) ∂ν ∂μ := by
     apply lintegral_congr_ae
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk] with _ ha using lintegral_congr_ae ha
   rw [A, B, lintegral_prod_of_measurable _ hf.measurable_mk]
   infer_instance
 
@@ -752,8 +750,6 @@ theorem has_finite_integral_prod_iff ⦃f : α × β → E⦄ (h1f : Measurable 
     exact h1f.ennnorm.lintegral_prod_right'
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem has_finite_integral_prod_iff' ⦃f : α × β → E⦄ (h1f : AeMeasurable f (μ.prod ν)) :
     has_finite_integral f (μ.prod ν) ↔
       (∀ᵐ x ∂μ, has_finite_integral (fun y => f (x, y)) ν) ∧ has_finite_integral (fun x => ∫ y, ∥f (x, y)∥ ∂ν) μ :=
@@ -766,7 +762,7 @@ theorem has_finite_integral_prod_iff' ⦃f : α × β → E⦄ (h1f : AeMeasurab
     exact has_finite_integral_congr hx
     
   · apply has_finite_integral_congr
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [ae_ae_of_ae_prod h1f.ae_eq_mk.symm] with _ hx using integral_congr_ae (eventually_eq.fun_comp hx _)
     
   · infer_instance
     
@@ -836,33 +832,30 @@ variable {E' : Type _} [MeasurableSpace E'] [NormedGroup E'] [BorelSpace E'] [Co
   we separate them out as separate lemmas, because they involve quite some steps. -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Integrals commute with addition inside another integral. `F` can be any function. -/
 theorem integral_fn_integral_add ⦃f g : α × β → E⦄ (F : E → E') (hf : integrable f (μ.prod ν))
     (hg : integrable g (μ.prod ν)) :
     (∫ x, F (∫ y, f (x, y) + g (x, y) ∂ν) ∂μ) = ∫ x, F ((∫ y, f (x, y) ∂ν) + ∫ y, g (x, y) ∂ν) ∂μ := by
   refine' integral_congr_ae _
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
   simp [integral_add h2f h2g]
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Integrals commute with subtraction inside another integral.
   `F` can be any measurable function. -/
 theorem integral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → E') (hf : integrable f (μ.prod ν))
     (hg : integrable g (μ.prod ν)) :
     (∫ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ) = ∫ x, F ((∫ y, f (x, y) ∂ν) - ∫ y, g (x, y) ∂ν) ∂μ := by
   refine' integral_congr_ae _
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
   simp [integral_sub h2f h2g]
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Integrals commute with subtraction inside a lower Lebesgue integral.
   `F` can be any function. -/
 theorem lintegral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → ℝ≥0∞) (hf : integrable f (μ.prod ν))
     (hg : integrable g (μ.prod ν)) :
     (∫⁻ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ) = ∫⁻ x, F ((∫ y, f (x, y) ∂ν) - ∫ y, g (x, y) ∂ν) ∂μ := by
   refine' lintegral_congr_ae _
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
   simp [integral_sub h2f h2g]
 
 /-- Double integrals commute with addition. -/

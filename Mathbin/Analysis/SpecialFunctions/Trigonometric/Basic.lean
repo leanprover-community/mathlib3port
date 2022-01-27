@@ -1087,13 +1087,13 @@ theorem tendsto_sin_pi_div_two : tendsto sin (𝓝[<] (π / 2)) (𝓝 1) := by
   convert continuous_sin.continuous_within_at
   simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem tendsto_cos_pi_div_two : tendsto cos (𝓝[<] (π / 2)) (𝓝[>] 0) := by
   apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
   · convert continuous_cos.continuous_within_at
     simp
     
-  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  · filter_upwards [Ioo_mem_nhds_within_Iio
+        (right_mem_Ioc.mpr (neg_lt_self pi_div_two_pos))] with x hx using cos_pos_of_mem_Ioo hx
     
 
 theorem tendsto_tan_pi_div_two : tendsto tan (𝓝[<] (π / 2)) at_top := by
@@ -1104,13 +1104,13 @@ theorem tendsto_sin_neg_pi_div_two : tendsto sin (𝓝[>] -(π / 2)) (𝓝 (-1))
   convert continuous_sin.continuous_within_at
   simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem tendsto_cos_neg_pi_div_two : tendsto cos (𝓝[>] -(π / 2)) (𝓝[>] 0) := by
   apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
   · convert continuous_cos.continuous_within_at
     simp
     
-  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  · filter_upwards [Ioo_mem_nhds_within_Ioi
+        (left_mem_Ico.mpr (neg_lt_self pi_div_two_pos))] with x hx using cos_pos_of_mem_Ioo hx
     
 
 theorem tendsto_tan_neg_pi_div_two : tendsto tan (𝓝[>] -(π / 2)) at_bot := by

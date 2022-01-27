@@ -64,7 +64,7 @@ theorem IsClosed (a : A) : IsClosed (σ a) :=
 theorem mem_resolvent_of_norm_lt {a : A} {k : 𝕜} (h : ∥a∥ < ∥k∥) : k ∈ ρ a := by
   rw [ResolventSet, Set.mem_set_of_eq, Algebra.algebra_map_eq_smul_one]
   have hk : k ≠ 0 :=
-    ne_zero_of_norm_pos
+    ne_zero_of_norm_ne_zero
       (by
         linarith [norm_nonneg a])
   let ku := Units.map ↑ₐ.toMonoidHom (Units.mk0 k hk)

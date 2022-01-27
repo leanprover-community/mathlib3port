@@ -108,8 +108,37 @@ section Basic
 
 variable [Zero M]
 
+instance FunLike : FunLike (α →₀ M) α fun _ => M :=
+  ⟨to_fun, by
+    rintro ⟨s, f, hf⟩ ⟨t, g, hg⟩ (rfl : f = g)
+    congr
+    ext a
+    exact (hf _).trans (hg _).symm⟩
+
+/-- Helper instance for when there are too many metavariables to apply `fun_like.has_coe_to_fun`
+directly. -/
 instance : CoeFun (α →₀ M) fun _ => α → M :=
-  ⟨to_fun⟩
+  FunLike.hasCoeToFun
+
+@[ext]
+theorem ext {f g : α →₀ M} (h : ∀ a, f a = g a) : f = g :=
+  FunLike.ext _ _ h
+
+/-- Deprecated. Use `fun_like.ext_iff` instead. -/
+theorem ext_iff {f g : α →₀ M} : f = g ↔ ∀ a, f a = g a :=
+  FunLike.ext_iff
+
+/-- Deprecated. Use `fun_like.coe_fn_eq` instead. -/
+theorem coe_fn_inj {f g : α →₀ M} : (f : α → M) = g ↔ f = g :=
+  FunLike.coe_fn_eq
+
+/-- Deprecated. Use `fun_like.coe_injective` instead. -/
+theorem coe_fn_injective : @Function.Injective (α →₀ M) (α → M) coeFn :=
+  FunLike.coe_injective
+
+/-- Deprecated. Use `fun_like.congr_fun` instead. -/
+theorem congr_funₓ {f g : α →₀ M} (h : f = g) (a : α) : f a = g a :=
+  FunLike.congr_fun h _
 
 @[simp]
 theorem coe_mk (f : α → M) (s : Finset α) (h : ∀ a, a ∈ s ↔ f a ≠ 0) : ⇑(⟨s, f, h⟩ : α →₀ M) = f :=
@@ -143,30 +172,9 @@ theorem fun_support_eq (f : α →₀ M) : Function.Support f = f.support :=
 theorem not_mem_support_iff {f : α →₀ M} {a} : a ∉ f.support ↔ f a = 0 :=
   not_iff_comm.1 mem_support_iff.symm
 
-theorem coe_fn_injective : @Function.Injective (α →₀ M) (α → M) coeFn
-  | ⟨s, f, hf⟩, ⟨t, g, hg⟩, h => by
-    change f = g at h
-    subst h
-    have : s = t := by
-      ext a
-      exact (hf a).trans (hg a).symm
-    subst this
-
-@[simp, norm_cast]
-theorem coe_fn_inj {f g : α →₀ M} : (f : α → M) = g ↔ f = g :=
-  coe_fn_injective.eq_iff
-
 @[simp, norm_cast]
 theorem coe_eq_zero {f : α →₀ M} : (f : α → M) = 0 ↔ f = 0 := by
   rw [← coe_zero, coe_fn_inj]
-
-@[ext]
-theorem ext {f g : α →₀ M} (h : ∀ a, f a = g a) : f = g :=
-  coe_fn_injective (funext h)
-
-theorem ext_iff {f g : α →₀ M} : f = g ↔ ∀ a : α, f a = g a :=
-  ⟨by
-    rintro rfl a <;> rfl, ext⟩
 
 theorem ext_iff' {f g : α →₀ M} : f = g ↔ f.support = g.support ∧ ∀, ∀ x ∈ f.support, ∀, f x = g x :=
   ⟨fun h => h ▸ ⟨rfl, fun _ _ => rfl⟩, fun ⟨h₁, h₂⟩ =>
@@ -177,9 +185,6 @@ theorem ext_iff' {f g : α →₀ M} : f = g ↔ f.support = g.support ∧ ∀, 
         have hg : g a = 0 := by
           rwa [h₁, not_mem_support_iff] at h
         rw [hf, hg]⟩
-
-theorem congr_funₓ {f g : α →₀ M} (h : f = g) (a : α) : f a = g a :=
-  congr_funₓ (congr_argₓ Finsupp.toFun h) a
 
 @[simp]
 theorem support_eq_empty {f : α →₀ M} : f.support = ∅ ↔ f = 0 := by

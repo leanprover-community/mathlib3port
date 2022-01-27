@@ -1,4 +1,5 @@
 import Mathbin.GroupTheory.FreeAbelianGroup
+import Mathbin.GroupTheory.IsFreeGroup
 import Mathbin.Data.Finsupp.Basic
 import Mathbin.Data.Equiv.Module
 import Mathbin.LinearAlgebra.Dimension
@@ -90,6 +91,26 @@ def equiv_finsupp : FreeAbelianGroup X ≃+ (X →₀ ℤ) where
 /-- `A` is a basis of the ℤ-module `free_abelian_group A`. -/
 noncomputable def Basis (α : Type _) : Basis α ℤ (FreeAbelianGroup α) :=
   ⟨(FreeAbelianGroup.equivFinsupp α).toIntLinearEquiv⟩
+
+/-- Isomorphic free ablian groups (as modules) have equivalent bases. -/
+def equiv.of_free_abelian_group_linear_equiv {α β : Type _} (e : FreeAbelianGroup α ≃ₗ[ℤ] FreeAbelianGroup β) : α ≃ β :=
+  let t : _root_.basis α ℤ (FreeAbelianGroup β) := (FreeAbelianGroup.basis α).map e
+  t.index_equiv <| FreeAbelianGroup.basis _
+
+/-- Isomorphic free abelian groups (as additive groups) have equivalent bases. -/
+def equiv.of_free_abelian_group_equiv {α β : Type _} (e : FreeAbelianGroup α ≃+ FreeAbelianGroup β) : α ≃ β :=
+  equiv.of_free_abelian_group_linear_equiv e.to_int_linear_equiv
+
+/-- Isomorphic free groups have equivalent bases. -/
+def equiv.of_free_group_equiv {α β : Type _} (e : FreeGroup α ≃* FreeGroup β) : α ≃ β :=
+  equiv.of_free_abelian_group_equiv e.abelianization_congr.to_additive
+
+open IsFreeGroup
+
+/-- Isomorphic free groups have equivalent bases (`is_free_group` variant`). -/
+def equiv.of_is_free_group_equiv {G H : Type _} [Groupₓ G] [Groupₓ H] [IsFreeGroup G] [IsFreeGroup H] (e : G ≃* H) :
+    generators G ≃ generators H :=
+  equiv.of_free_group_equiv <| MulEquiv.trans (to_free_group G).symm <| MulEquiv.trans e <| to_free_group H
 
 variable {X}
 

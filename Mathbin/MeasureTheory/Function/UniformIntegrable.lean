@@ -187,7 +187,6 @@ theorem tendsto_uniformly_on_of_ae_tendsto (hf : ∀ n, Measurable (f n)) (hg : 
     egorov.measure_Union_not_convergent_seq hε hf hg hsm hs hfg,
     egorov.tendsto_uniformly_on_diff_Union_not_convergent_seq hε hf hg hsm hs hfg⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Egorov's theorem for finite measure spaces. -/
 theorem tendsto_uniformly_on_of_ae_tendsto' [is_finite_measure μ] (hf : ∀ n, Measurable (f n)) (hg : Measurable g)
     (hfg : ∀ᵐ x ∂μ, tendsto (fun n => f n x) at_top (𝓝 (g x))) {ε : ℝ} (hε : 0 < ε) :
@@ -197,7 +196,7 @@ theorem tendsto_uniformly_on_of_ae_tendsto' [is_finite_measure μ] (hf : ∀ n, 
   · refine' ⟨_, ht, _⟩
     rwa [compl_eq_univ_diff]
     
-  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  · filter_upwards [hfg] with _ htendsto _ using htendsto
     
 
 end

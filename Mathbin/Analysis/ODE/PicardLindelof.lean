@@ -226,7 +226,6 @@ def next (f : fun_space v) : fun_space v where
 theorem next_apply (t : Icc v.t_min v.t_max) : f.next t = v.x₀ + ∫ τ : ℝ in v.t₀..t, f.v_comp τ :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem has_deriv_within_at_next (t : Icc v.t_min v.t_max) :
     HasDerivWithinAt (f.next ∘ v.proj) (v t (f t)) (Icc v.t_min v.t_max) t := by
   have : Fact ((t : ℝ) ∈ Icc v.t_min v.t_max) := ⟨t.2⟩
@@ -237,7 +236,7 @@ theorem has_deriv_within_at_next (t : Icc v.t_min v.t_max) :
       f.continuous_v_comp.continuous_within_at
   rw [v_comp_apply_coe] at this
   refine' this.congr_of_eventually_eq_of_mem _ t.coe_prop
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [self_mem_nhds_within] with _ ht'
   rw [v.proj_of_mem ht']
 
 theorem dist_next_apply_le_of_le {f₁ f₂ : fun_space v} {n : ℕ} {d : ℝ}

@@ -143,8 +143,6 @@ theorem extend_unique [T2Space γ] {f : α → γ} {g : β → γ} (di : DenseIn
     (hg : Continuous g) : di.extend f = g :=
   funext fun b => extend_unique_at di (eventually_of_forall hf) hg.continuous_at
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem continuous_at_extend [RegularSpace γ] {b : β} {f : α → γ} (di : DenseInducing i)
     (hf : ∀ᶠ x in 𝓝 b, ∃ c, tendsto f (comap i <| 𝓝 x) (𝓝 c)) : ContinuousAt (di.extend f) b := by
   set φ := di.extend f
@@ -162,7 +160,7 @@ theorem continuous_at_extend [RegularSpace γ] {b : β} {f : α → γ} (di : De
     simpa [and_assoc] using
       ((nhds_basis_opens' b).comap i).tendsto_left_iff.mp (mem_of_mem_nhds V₁_in : b ∈ V₁) V' V'_in
   suffices ∀, ∀ x ∈ V₁ ∩ V₂, ∀, φ x ∈ V' by
-    filter_upwards [inter_mem V₁_in V₂_in]
+    filter_upwards [inter_mem V₁_in V₂_in] using this
   rintro x ⟨x_in₁, x_in₂⟩
   have hV₂x : V₂ ∈ 𝓝 x := IsOpen.mem_nhds V₂_op x_in₂
   apply V'_closed.mem_of_tendsto x_in₁

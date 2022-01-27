@@ -1303,7 +1303,6 @@ theorem Measurable.nndist {f g : β → α} (hf : Measurable f) (hg : Measurable
 
 end
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- If a set has a closed thickening with finite measure, then the measure of its `r`-closed
 thickenings converges to the measure of its closure as `r` tends to `0`. -/
 theorem tendsto_measure_cthickening {μ : Measureₓ α} {s : Set α} (hs : ∃ R > 0, μ (cthickening R s) ≠ ∞) :
@@ -1315,7 +1314,7 @@ theorem tendsto_measure_cthickening {μ : Measureₓ α} {s : Set α} (hs : ∃ 
         (fun i j ipos ij => cthickening_mono ij _) hs
   have B : tendsto (fun r => μ (cthickening r s)) (𝓝[Iic 0] 0) (𝓝 (μ (Closure s))) := by
     apply tendsto.congr' _ tendsto_const_nhds
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [self_mem_nhds_within] with _ hr
     rw [cthickening_of_nonpos hr]
   convert B.sup A
   exact (nhds_left_sup_nhds_right' 0).symm

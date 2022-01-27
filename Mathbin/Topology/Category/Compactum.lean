@@ -173,13 +173,11 @@ private def basic {X : Compactum} (A : Set X) : Set (Ultrafilter X) :=
 private def cl {X : Compactum} (A : Set X) : Set X :=
   X.str '' basic A
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 private theorem basic_inter {X : Compactum} (A B : Set X) : basic (A ∩ B) = basic A ∩ basic B := by
   ext G
   constructor
   · intro hG
-    constructor <;>
-      "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    constructor <;> filter_upwards [hG] with _
     exacts[And.left, And.right]
     
   · rintro ⟨h1, h2⟩

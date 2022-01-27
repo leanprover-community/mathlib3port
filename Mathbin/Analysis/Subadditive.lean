@@ -54,7 +54,6 @@ theorem apply_mul_add_le k n r : u (k * n + r) ≤ k * u n + u r := by
       by
       ring
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n / n < L) : ∀ᶠ p in at_top, u p / p < L := by
   have I : ∀ i : ℕ, 0 < i → (i : ℝ) ≠ 0 := by
     intro i hi
@@ -93,7 +92,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
       tendsto_const_nhds.add (tendsto_const_nhds.div_at_top tendsto_coe_nat_at_top_at_top)
     rw [add_zeroₓ] at this
     exact (tendsto_order.1 this).2 _ wL
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [B, C] with _ hp h'p using hp.trans_lt h'p
 
 /-- Fekete's lemma: a subadditive sequence which is bounded below converges. -/
 theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) : tendsto (fun n => u n / n) at_top (𝓝 h.lim) := by

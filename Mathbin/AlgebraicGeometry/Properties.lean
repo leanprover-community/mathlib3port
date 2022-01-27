@@ -118,6 +118,13 @@ theorem affine_is_reduced_iff (R : CommRingₓₓ) : IsReduced (Scheme.Spec.obj 
     infer_instance
   exact is_reduced_of_injective (to_Spec_Γ R) (as_iso <| to_Spec_Γ R).commRingIsoToRingEquiv.Injective
 
+theorem is_reduced_of_is_affine_is_reduced [is_affine X] [h : _root_.is_reduced (X.presheaf.obj (op ⊤))] :
+    IsReduced X :=
+  have : IsReduced (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) := by
+    rw [affine_is_reduced_iff]
+    exact h
+  is_reduced_of_open_immersion X.iso_Spec.hom
+
 /-- To show that a statement `P` holds for all open subsets of all schemes, it suffices to show that
 1. In any scheme `X`, if `P` holds for an open cover of `U`, then `P` holds for `U`.
 2. For an open immerison `f : X ⟶ Y`, if `P` holds for the entire space of `X`, then `P` holds for
@@ -141,6 +148,17 @@ theorem reduce_to_affine_global (P : ∀ X : Scheme U : opens X.carrier, Prop)
   obtain ⟨_, _, rfl, rfl, h₂'⟩ := h₂ (X.affine_basis_cover.map j)
   apply h₂'
   apply h₃
+
+theorem reduce_to_affine_nbhd (P : ∀ X : Scheme x : X.carrier, Prop)
+    (h₁ : ∀ R : CommRingₓₓ x : PrimeSpectrum R, P (Scheme.Spec.obj <| op R) x)
+    (h₂ : ∀ {X Y} f : X ⟶ Y [is_open_immersion f] x : X.carrier, P X x → P Y (f.1.base x)) :
+    ∀ X : Scheme x : X.carrier, P X x := by
+  intro X x
+  obtain ⟨y, e⟩ := X.affine_cover.covers x
+  convert h₂ (X.affine_cover.map (X.affine_cover.f x)) y _
+  · rw [e]
+    
+  apply h₁
 
 theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : opens X.carrier} (s : X.presheaf.obj (op U))
     (hs : X.basic_open s = ∅) : s = 0 := by
@@ -314,6 +332,13 @@ theorem affine_is_integral_iff (R : CommRingₓₓ) : IsIntegral (Scheme.Spec.ob
   ⟨fun h =>
     RingEquiv.is_domain ((Scheme.Spec.obj <| op R).Presheaf.obj _) (as_iso <| to_Spec_Γ R).commRingIsoToRingEquiv,
     fun h => inferInstance⟩
+
+theorem is_integral_of_is_affine_is_domain [is_affine X] [Nonempty X.carrier] [h : IsDomain (X.presheaf.obj (op ⊤))] :
+    IsIntegral X :=
+  have : IsIntegral (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) := by
+    rw [affine_is_integral_iff]
+    exact h
+  is_integral_of_open_immersion X.iso_Spec.hom
 
 theorem map_injective_of_is_integral [IsIntegral X] {U V : opens X.carrier} (i : U ⟶ V) [H : Nonempty U] :
     Function.Injective (X.presheaf.map i.op) := by

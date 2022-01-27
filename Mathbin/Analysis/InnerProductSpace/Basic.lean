@@ -1114,7 +1114,11 @@ theorem inner_eq_sum_norm_sq_div_four (x y : E) :
 
 section
 
+variable {ι : Type _} {ι' : Type _} {ι'' : Type _}
+
 variable {E' : Type _} [InnerProductSpace 𝕜 E']
+
+variable {E'' : Type _} [InnerProductSpace 𝕜 E'']
 
 /-- A linear isometry preserves the inner product. -/
 @[simp]
@@ -1150,6 +1154,100 @@ theorem LinearEquiv.coe_isometry_of_inner (f : E ≃ₗ[𝕜] E') h : ⇑f.isome
 @[simp]
 theorem LinearEquiv.isometry_of_inner_to_linear_equiv (f : E ≃ₗ[𝕜] E') h : (f.isometry_of_inner h).toLinearEquiv = f :=
   rfl
+
+/-- A linear isometry preserves the property of being orthonormal. -/
+theorem Orthonormal.comp_linear_isometry {v : ι → E} (hv : Orthonormal 𝕜 v) (f : E →ₗᵢ[𝕜] E') : Orthonormal 𝕜 (f ∘ v) :=
+  by
+  classical
+  simp_rw [orthonormal_iff_ite, LinearIsometry.inner_map_map, ← orthonormal_iff_ite]
+  exact hv
+
+/-- A linear isometric equivalence preserves the property of being orthonormal. -/
+theorem Orthonormal.comp_linear_isometry_equiv {v : ι → E} (hv : Orthonormal 𝕜 v) (f : E ≃ₗᵢ[𝕜] E') :
+    Orthonormal 𝕜 (f ∘ v) :=
+  hv.comp_linear_isometry f.to_linear_isometry
+
+/-- A linear map that sends an orthonormal basis to orthonormal vectors is a linear isometry. -/
+def LinearMap.isometryOfOrthonormal (f : E →ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
+    (hf : Orthonormal 𝕜 (f ∘ v)) : E →ₗᵢ[𝕜] E' :=
+  f.isometry_of_inner fun x y => by
+    rw [← v.total_repr x, ← v.total_repr y, Finsupp.apply_total, Finsupp.apply_total, hv.inner_finsupp_eq_sum_left,
+      hf.inner_finsupp_eq_sum_left]
+
+@[simp]
+theorem LinearMap.coe_isometry_of_orthonormal (f : E →ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
+    (hf : Orthonormal 𝕜 (f ∘ v)) : ⇑f.isometry_of_orthonormal hv hf = f :=
+  rfl
+
+@[simp]
+theorem LinearMap.isometry_of_orthonormal_to_linear_map (f : E →ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
+    (hf : Orthonormal 𝕜 (f ∘ v)) : (f.isometry_of_orthonormal hv hf).toLinearMap = f :=
+  rfl
+
+/-- A linear equivalence that sends an orthonormal basis to orthonormal vectors is a linear
+isometric equivalence. -/
+def LinearEquiv.isometryOfOrthonormal (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
+    (hf : Orthonormal 𝕜 (f ∘ v)) : E ≃ₗᵢ[𝕜] E' :=
+  f.isometry_of_inner fun x y => by
+    rw [← LinearEquiv.coe_coe] at hf
+    rw [← v.total_repr x, ← v.total_repr y, ← LinearEquiv.coe_coe, Finsupp.apply_total, Finsupp.apply_total,
+      hv.inner_finsupp_eq_sum_left, hf.inner_finsupp_eq_sum_left]
+
+@[simp]
+theorem LinearEquiv.coe_isometry_of_orthonormal (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
+    (hf : Orthonormal 𝕜 (f ∘ v)) : ⇑f.isometry_of_orthonormal hv hf = f :=
+  rfl
+
+@[simp]
+theorem LinearEquiv.isometry_of_orthonormal_to_linear_equiv (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
+    (hf : Orthonormal 𝕜 (f ∘ v)) : (f.isometry_of_orthonormal hv hf).toLinearEquiv = f :=
+  rfl
+
+/-- A linear isometric equivalence that sends an orthonormal basis to a given orthonormal basis. -/
+def Orthonormal.equiv {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'} (hv' : Orthonormal 𝕜 v')
+    (e : ι ≃ ι') : E ≃ₗᵢ[𝕜] E' :=
+  (v.equiv v' e).isometryOfOrthonormal hv
+    (by
+      have h : v.equiv v' e ∘ v = v' ∘ e := by
+        ext i
+        simp
+      rw [h]
+      exact hv'.comp _ e.injective)
+
+@[simp]
+theorem Orthonormal.equiv_to_linear_equiv {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'}
+    (hv' : Orthonormal 𝕜 v') (e : ι ≃ ι') : (hv.equiv hv' e).toLinearEquiv = v.equiv v' e :=
+  rfl
+
+@[simp]
+theorem Orthonormal.equiv_apply {ι' : Type _} {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'}
+    (hv' : Orthonormal 𝕜 v') (e : ι ≃ ι') (i : ι) : hv.equiv hv' e (v i) = v' (e i) :=
+  Basis.equiv_apply _ _ _ _
+
+@[simp]
+theorem Orthonormal.equiv_refl {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) :
+    hv.equiv hv (Equivₓ.refl ι) = LinearIsometryEquiv.refl 𝕜 E :=
+  v.ext_linear_isometry_equiv fun i => by
+    simp
+
+@[simp]
+theorem Orthonormal.equiv_symm {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'} (hv' : Orthonormal 𝕜 v')
+    (e : ι ≃ ι') : (hv.equiv hv' e).symm = hv'.equiv hv e.symm :=
+  v'.ext_linear_isometry_equiv fun i =>
+    (hv.equiv hv' e).Injective
+      (by
+        simp )
+
+@[simp]
+theorem Orthonormal.equiv_trans {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'} (hv' : Orthonormal 𝕜 v')
+    (e : ι ≃ ι') {v'' : Basis ι'' 𝕜 E''} (hv'' : Orthonormal 𝕜 v'') (e' : ι' ≃ ι'') :
+    (hv.equiv hv' e).trans (hv'.equiv hv'' e') = hv.equiv hv'' (e.trans e') :=
+  v.ext_linear_isometry_equiv fun i => by
+    simp
+
+theorem Orthonormal.map_equiv {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'} (hv' : Orthonormal 𝕜 v')
+    (e : ι ≃ ι') : v.map (hv.equiv hv' e).toLinearEquiv = v'.reindex e.symm :=
+  v.map_equiv _ _
 
 end
 

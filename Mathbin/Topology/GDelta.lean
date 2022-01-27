@@ -159,7 +159,6 @@ open_locale uniformity
 
 variable [TopologicalSpace α]
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The set of points where a function is continuous is a Gδ set. -/
 theorem is_Gδ_set_of_continuous_at [UniformSpace β] [is_countably_generated (𝓤 β)] (f : α → β) :
     IsGδ { x | ContinuousAt f x } := by
@@ -168,7 +167,7 @@ theorem is_Gδ_set_of_continuous_at [UniformSpace β] [is_countably_generated (�
   simp only [(nhds_basis_opens _).prod_self.tendsto_iff hU.to_has_basis, forall_prop_of_true, set_of_forall, id]
   refine' is_Gδ_Inter fun k => IsOpen.is_Gδ <| is_open_iff_mem_nhds.2 fun x => _
   rintro ⟨s, ⟨hsx, hso⟩, hsU⟩
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [IsOpen.mem_nhds hso hsx] with _ hy using⟨s, ⟨hy, hso⟩, hsU⟩
 
 end ContinuousAt
 

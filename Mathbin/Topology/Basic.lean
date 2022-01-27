@@ -1220,7 +1220,6 @@ theorem LocallyFinite.closure {f : β → Set α} (hf : LocallyFinite f) : Local
   refine' ⟨Interior s, interior_mem_nhds.2 hsx, hsf.subset fun i hi => _⟩
   exact (hi.mono (closure_inter_open' is_open_interior)).of_closure.mono (inter_subset_inter_right _ interior_subset)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem LocallyFinite.is_closed_Union {f : β → Set α} (h₁ : LocallyFinite f) (h₂ : ∀ i, IsClosed (f i)) :
     IsClosed (⋃ i, f i) := by
   simp only [← is_open_compl_iff, compl_Union, is_open_iff_mem_nhds, mem_Inter]

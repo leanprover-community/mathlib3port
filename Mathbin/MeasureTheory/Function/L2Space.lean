@@ -203,7 +203,6 @@ attribute [local instance] fact_one_le_two_ennreal
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 (α →₂[μ] 𝕜) _ x y
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- For bounded continuous functions `f`, `g` on a finite-measure topological space `α`, the L^2
 inner product is the integral of their pointwise inner product. -/
 theorem bounded_continuous_function.inner_to_Lp (f g : α →ᵇ 𝕜) :
@@ -211,13 +210,12 @@ theorem bounded_continuous_function.inner_to_Lp (f g : α →ᵇ 𝕜) :
   apply integral_congr_ae
   have hf_ae := f.coe_fn_to_Lp μ
   have hg_ae := g.coe_fn_to_Lp μ
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hf_ae, hg_ae] with _ hf hg
   rw [hf, hg]
   simp
 
 variable [CompactSpace α]
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- For continuous functions `f`, `g` on a compact, finite-measure topological space `α`, the L^2
 inner product is the integral of their pointwise inner product. -/
 theorem continuous_map.inner_to_Lp (f g : C(α, 𝕜)) :
@@ -225,7 +223,7 @@ theorem continuous_map.inner_to_Lp (f g : C(α, 𝕜)) :
   apply integral_congr_ae
   have hf_ae := f.coe_fn_to_Lp μ
   have hg_ae := g.coe_fn_to_Lp μ
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hf_ae, hg_ae] with _ hf hg
   rw [hf, hg]
   simp
 

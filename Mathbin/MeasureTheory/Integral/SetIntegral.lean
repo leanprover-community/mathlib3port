@@ -294,17 +294,15 @@ theorem norm_set_integral_le_of_norm_le_const_ae {C : ℝ} (hs : μ s < ∞) (hC
   have : is_finite_measure (μ.restrict s) := ⟨‹_›⟩
   exact norm_integral_le_of_norm_le_const hC
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem norm_set_integral_le_of_norm_le_const_ae' {C : ℝ} (hs : μ s < ∞) (hC : ∀ᵐ x ∂μ, x ∈ s → ∥f x∥ ≤ C)
     (hfm : AeMeasurable f (μ.restrict s)) : ∥∫ x in s, f x ∂μ∥ ≤ C * (μ s).toReal := by
   apply norm_set_integral_le_of_norm_le_const_ae hs
   have A : ∀ᵐ x : α ∂μ, x ∈ s → ∥AeMeasurable.mk f hfm x∥ ≤ C := by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [hC, hfm.ae_mem_imp_eq_mk] with _ h1 h2 h3
     rw [← h2 h3]
     exact h1 h3
   have B : MeasurableSet { x | ∥(hfm.mk f) x∥ ≤ C } := hfm.measurable_mk.norm measurable_set_Iic
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hfm.ae_eq_mk, (ae_restrict_iff B).2 A] with _ h1 _
   rwa [h1]
 
 theorem norm_set_integral_le_of_norm_le_const_ae'' {C : ℝ} (hs : μ s < ∞) (hsm : MeasurableSet s)
@@ -553,7 +551,6 @@ open MeasureTheory Asymptotics Metric
 
 variable {ι : Type _} [MeasurableSpace E] [NormedGroup E]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- Fundamental theorem of calculus for set integrals: if `μ` is a measure that is finite at a
 filter `l` and `f` is a measurable function that has a finite limit `b` at `l ⊓ μ.ae`, then `∫ x in
 s i, f x ∂μ = μ (s i) • b + o(μ (s i))` at a filter `li` provided that `s i` tends to `l.lift'

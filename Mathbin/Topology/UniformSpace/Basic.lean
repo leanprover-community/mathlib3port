@@ -217,8 +217,6 @@ def UniformSpace.Core.mk' {α : Type u} (U : Filter (α × α)) (refl : ∀, ∀
     exact comp _ ru
     apply monotone_comp_rel <;> exact monotone_id⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- A uniform space generates a topological space -/
 def UniformSpace.Core.toTopologicalSpace {α : Type u} (u : UniformSpace.Core α) : TopologicalSpace α where
   IsOpen := fun s => ∀, ∀ x ∈ s, ∀, { p : α × α | p.1 = x → p.2 ∈ s } ∈ u.uniformity
@@ -227,7 +225,7 @@ def UniformSpace.Core.toTopologicalSpace {α : Type u} (u : UniformSpace.Core α
   is_open_inter := fun s t hs ht x ⟨xs, xt⟩ => by
     filter_upwards [hs x xs, ht x xt] <;> simp (config := { contextual := true })
   is_open_sUnion := fun s hs x ⟨t, ts, xt⟩ => by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [hs t ts x xt] with p ph h using⟨t, ts, ph h⟩
 
 theorem UniformSpace.core_eq : ∀ {u₁ u₂ : UniformSpace.Core α}, u₁.uniformity = u₂.uniformity → u₁ = u₂
   | ⟨u₁, _, _, _⟩, ⟨u₂, _, _, _⟩, h => by
@@ -331,13 +329,12 @@ theorem comp_mem_uniformity_sets {s : Set (α × α)} (hs : s ∈ 𝓤 α) : ∃
   have : s ∈ (𝓤 α).lift' fun t : Set (α × α) => t ○ t := comp_le_uniformity hs
   (mem_lift'_sets <| monotone_comp_rel monotone_id monotone_id).mp this
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Relation `λ f g, tendsto (λ x, (f x, g x)) l (𝓤 α)` is transitive. -/
 theorem Filter.Tendsto.uniformity_trans {l : Filter β} {f₁ f₂ f₃ : β → α}
     (h₁₂ : tendsto (fun x => (f₁ x, f₂ x)) l (𝓤 α)) (h₂₃ : tendsto (fun x => (f₂ x, f₃ x)) l (𝓤 α)) :
     tendsto (fun x => (f₁ x, f₃ x)) l (𝓤 α) := by
   refine' le_transₓ (le_lift' fun s hs => mem_map.2 _) comp_le_uniformity
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [h₁₂ hs, h₂₃ hs] with x hx₁₂ hx₂₃ using⟨_, hx₁₂, hx₂₃⟩
 
 /-- Relation `λ f g, tendsto (λ x, (f x, g x)) l (𝓤 α)` is symmetric -/
 theorem Filter.Tendsto.uniformity_symm {l : Filter β} {f : β → α × α} (h : tendsto f l (𝓤 α)) :
@@ -499,19 +496,22 @@ theorem mem_comp_comp {V W M : Set (β × β)} (hW' : SymmetricRel W) {p : β ×
 -/
 
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem mem_nhds_uniformity_iff_right {x : α} {s : Set α} : s ∈ 𝓝 x ↔ { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α :=
   ⟨by
     simp only [mem_nhds_iff, is_open_uniformity, and_imp, exists_imp_distrib]
     exact fun t ts ht xt => by
-      filter_upwards [ht x xt],
+      filter_upwards [ht x xt] using fun ⟨x', y⟩ h eq => ts <| h Eq,
     fun hs =>
     mem_nhds_iff.mpr
       ⟨{ x | { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α }, fun x' hx' => refl_mem_uniformity hx' rfl,
         is_open_uniformity.mpr fun x' hx' => by
           let ⟨t, ht, tr⟩ := comp_mem_uniformity_sets hx'
-          filter_upwards [ht],
+          filter_upwards [ht] using fun ⟨a, b⟩ hp' hax' : a = x' => by
+            filter_upwards [ht] using fun ⟨a, b'⟩ hp'' hab : a = b =>
+              have hp : (x', b) ∈ t := hax' ▸ hp'
+              have : (b, b') ∈ t := hab ▸ hp''
+              have : (x', b') ∈ t ○ t := ⟨b, hp, this⟩
+              show b' ∈ s from tr this rfl,
         hs⟩⟩
 
 theorem mem_nhds_uniformity_iff_left {x : α} {s : Set α} : s ∈ 𝓝 x ↔ { p : α × α | p.2 = x → p.1 ∈ s } ∈ 𝓤 α := by
@@ -752,12 +752,11 @@ theorem closure_eq_inter_uniformity {t : Set (α × α)} : Closure t = ⋂ d ∈
         simp
       
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem uniformity_eq_uniformity_closure : 𝓤 α = (𝓤 α).lift' Closure :=
   le_antisymmₓ
     (le_infi fun s =>
       le_infi fun hs => by
-        simp <;> filter_upwards [hs])
+        simp <;> filter_upwards [hs] using subset_closure)
     (calc
       (𝓤 α).lift' Closure ≤ (𝓤 α).lift' fun d => d ○ (d ○ d) :=
         lift'_mono'
@@ -766,7 +765,6 @@ theorem uniformity_eq_uniformity_closure : 𝓤 α = (𝓤 α).lift' Closure :=
       _ ≤ 𝓤 α := comp_le_uniformity3
       )
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem uniformity_eq_uniformity_interior : 𝓤 α = (𝓤 α).lift' Interior :=
   le_antisymmₓ
     (le_infi fun d =>
@@ -784,7 +782,7 @@ theorem uniformity_eq_uniformity_interior : 𝓤 α = (𝓤 α).lift' Interior :
                 hs_comp ⟨x, h₁, y, h₂, h₃⟩
             
         have : Interior d ∈ 𝓤 α := by
-          filter_upwards [hs]
+          filter_upwards [hs] using this
         simp [this])
     fun s hs => ((𝓤 α).lift' Interior).sets_of_superset (mem_lift' hs) interior_subset
 

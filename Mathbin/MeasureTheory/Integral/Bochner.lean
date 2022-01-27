@@ -527,16 +527,15 @@ theorem norm_Integral_le_one : ∥Integral∥ ≤ 1 :=
 
 section PosPart
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem pos_part_to_simple_func (f : α →₁ₛ[μ] ℝ) : to_simple_func (pos_part f) =ᵐ[μ] (to_simple_func f).posPart := by
   have eq : ∀ a, (to_simple_func f).posPart a = max ((to_simple_func f) a) 0 := fun a => rfl
   have ae_eq : ∀ᵐ a ∂μ, to_simple_func (pos_part f) a = max ((to_simple_func f) a) 0 := by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [to_simple_func_eq_to_fun (pos_part f), Lp.coe_fn_pos_part (f : α →₁[μ] ℝ),
+      to_simple_func_eq_to_fun f] with _ _ h₂ _
     convert h₂
   refine' ae_eq.mono fun a h => _
   rw [h, Eq]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem neg_part_to_simple_func (f : α →₁ₛ[μ] ℝ) : to_simple_func (neg_part f) =ᵐ[μ] (to_simple_func f).negPart := by
   rw [simple_func.neg_part, MeasureTheory.SimpleFunc.negPart]
   filter_upwards [pos_part_to_simple_func (-f), neg_to_simple_func f]
@@ -546,17 +545,13 @@ theorem neg_part_to_simple_func (f : α →₁ₛ[μ] ℝ) : to_simple_func (neg
   rw [h₂]
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem integral_eq_norm_pos_part_sub (f : α →₁ₛ[μ] ℝ) : integral f = ∥pos_part f∥ - ∥neg_part f∥ := by
   have ae_eq₁ : (to_simple_func f).posPart =ᵐ[μ] (to_simple_func (pos_part f)).map norm := by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [pos_part_to_simple_func f] with _ h
     rw [simple_func.map_apply, h]
     conv_lhs => rw [← simple_func.pos_part_map_norm, simple_func.map_apply]
   have ae_eq₂ : (to_simple_func f).negPart =ᵐ[μ] (to_simple_func (neg_part f)).map norm := by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [neg_part_to_simple_func f] with _ h
     rw [simple_func.map_apply, h]
     conv_lhs => rw [← simple_func.neg_part_map_norm, simple_func.map_apply]
   have ae_eq :
@@ -564,14 +559,14 @@ theorem integral_eq_norm_pos_part_sub (f : α →₁ₛ[μ] ℝ) : integral f = 
       (to_simple_func f).posPart a - (to_simple_func f).negPart a =
         (to_simple_func (pos_part f)).map norm a - (to_simple_func (neg_part f)).map norm a :=
     by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [ae_eq₁, ae_eq₂] with _ h₁ h₂
     rw [h₁, h₂]
   rw [integral, norm_eq_integral, norm_eq_integral, ← simple_func.integral_sub]
   · show
       (to_simple_func f).integral μ =
         ((to_simple_func (pos_part f)).map norm - (to_simple_func (neg_part f)).map norm).integral μ
     apply MeasureTheory.SimpleFunc.integral_congr (simple_func.integrable f)
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [ae_eq₁, ae_eq₂] with _ h₁ h₂
     show _ = _ - _
     rw [← h₁, ← h₂]
     have := (to_simple_func f).pos_part_sub_neg_part
@@ -869,8 +864,6 @@ theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l
   tendsto_set_to_fun_filter_of_dominated_convergence (dominated_fin_meas_additive_weighted_smul μ) bound hF_meas h_bound
     bound_integrable h_lim
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Lebesgue dominated convergence theorem for series. -/
 theorem has_sum_integral_of_dominated_convergence {ι} [Encodable ι] {F : ι → α → E} {f : α → E} (bound : ι → α → ℝ)
     (hF_meas : ∀ n, AeMeasurable (F n) μ) (h_bound : ∀ n, ∀ᵐ a ∂μ, ∥F n a∥ ≤ bound n a)
@@ -880,7 +873,7 @@ theorem has_sum_integral_of_dominated_convergence {ι} [Encodable ι] {F : ι �
     eventually_countable_forall.2 fun n => (h_bound n).mono fun a => (norm_nonneg _).trans
   have hb_le_tsum : ∀ n, bound n ≤ᵐ[μ] fun a => ∑' n, bound n a := by
     intro n
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [hb_nonneg, bound_summable] with _ ha0 ha_sum using le_tsum ha_sum _ fun i _ => ha0 i
   have hF_integrable : ∀ n, integrable (F n) μ := by
     refine' fun n => bound_integrable.mono' (hF_meas n) _
     exact eventually_le.trans (h_bound n) (hb_le_tsum n)
@@ -889,7 +882,7 @@ theorem has_sum_integral_of_dominated_convergence {ι} [Encodable ι] {F : ι �
   · exact eventually_of_forall fun s => s.ae_measurable_sum fun n hn => hF_meas n
     
   · refine' eventually_of_forall fun s => _
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [eventually_countable_forall.2 h_bound, hb_nonneg, bound_summable] with a hFa ha0 has
     calc ∥∑ n in s, F n a∥ ≤ ∑ n in s, bound n a := norm_sum_le_of_le _ fun n hn => hFa n _ ≤ ∑' n, bound n a :=
         sum_le_tsum _ (fun n hn => ha0 n) has
     
@@ -909,8 +902,6 @@ theorem continuous_of_dominated {F : X → α → E} {bound : α → ℝ} (hF_me
   continuous_set_to_fun_of_dominated (dominated_fin_meas_additive_weighted_smul μ) hF_meas h_bound bound_integrable
     h_cont
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The Bochner integral of a real-valued function `f : α → ℝ` is the difference between the
   integral of the positive part of `f` and the integral of the negative part of `f`.  -/
 theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (hf : integrable f μ) :
@@ -922,7 +913,7 @@ theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (
     rw [L1.norm_def]
     congr 1
     apply lintegral_congr_ae
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [Lp.coe_fn_pos_part f₁, hf.coe_fn_to_L1] with _ h₁ h₂
     rw [h₁, h₂, Ennreal.ofReal]
     congr 1
     apply Nnreal.eq
@@ -932,7 +923,7 @@ theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (
     rw [L1.norm_def]
     congr 1
     apply lintegral_congr_ae
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [Lp.coe_fn_neg_part f₁, hf.coe_fn_to_L1] with _ h₁ h₂
     rw [h₁, h₂, Ennreal.ofReal]
     congr 1
     apply Nnreal.eq

@@ -31,17 +31,17 @@ Some properties of the operations are also used to discuss general tools on ordi
 * `is_limit o`: an ordinal is a limit ordinal if it is neither `0` nor a successor.
 * `limit_rec_on` is the main induction principle of ordinals: if one can prove a property by
   induction at successor ordinals and at limit ordinals, then it holds for all ordinals.
-
 * `is_normal`: a function `f : ordinal → ordinal` satisfies `is_normal` if it is strictly increasing
   and order-continuous, i.e., the image `f o` of a limit ordinal `o` is the sup of `f a` for
   `a < o`.
+* `enum_ord`: enumerates an unbounded set of ordinals by the ordinals themselves.
 * `nfp f a`: the next fixed point of a function `f` on ordinals, above `a`. It behaves well
   for normal functions.
-
 * `CNF b o` is the Cantor normal form of the ordinal `o` in base `b`.
-
-* `sup`: the supremum of an indexed family of ordinals in `Type u`, as an ordinal in `Type u`.
-* `bsup`: the supremum of a set of ordinals indexed by ordinals less than a given ordinal `o`.
+* `sup`, `lsub`: the supremum / least strict upper bound of an indexed family of ordinals in
+  `Type u`, as an ordinal in `Type u`.
+* `bsup`, `blsub`: the supremum / least strict upper bound of a set of ordinals indexed by ordinals
+  less than a given ordinal `o`.
 -/
 
 
@@ -1239,7 +1239,7 @@ theorem sup_succ_eq_lsub {ι} (f : ι → Ordinal) : (sup f).succ = lsub f ↔ �
   exact sup_succ_le_lsub f
 
 -- ././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'
-theorem sup_eq_lsub {ι} (f : ι → Ordinal) : sup f = lsub f ↔ ∀, ∀ a < lsub f, ∀, succ a < lsub f := by
+theorem sup_eq_lsub_iff_succ {ι} (f : ι → Ordinal) : sup f = lsub f ↔ ∀, ∀ a < lsub f, ∀, succ a < lsub f := by
   refine' ⟨fun h => _, fun hf => le_antisymmₓ (sup_le_lsub f) _⟩
   · rw [← h]
     exact fun a => sup_not_succ_of_ne_sup fun i => ne_of_ltₓ (lsub_le.1 (le_of_eqₓ h.symm) i)
@@ -1255,6 +1255,11 @@ theorem sup_eq_lsub {ι} (f : ι → Ordinal) : sup f = lsub f ↔ ∀, ∀ a < 
         exact lt_succ_self _)
   rw [HEq] at this
   exact lt_irreflₓ _ this
+
+theorem sup_eq_lsub_iff_lt_sup {ι} (f : ι → Ordinal) : sup f = lsub f ↔ ∀ i, f i < sup f :=
+  ⟨fun h i => by
+    rw [h]
+    apply lt_lsub, fun h => le_antisymmₓ (sup_le_lsub f) (lsub_le.2 h)⟩
 
 theorem lsub_eq_zero {ι} [h : IsEmpty ι] (f : ι → Ordinal) : lsub f = 0 := by
   rw [← Ordinal.le_zero, lsub_le]
@@ -1327,10 +1332,15 @@ theorem bsup_succ_eq_blsub {o} (f : ∀, ∀ a < o, ∀, Ordinal) : (bsup o f).s
   rw [Iff.intro le_of_eqₓ fun h => le_antisymmₓ h (blsub_le_bsup_succ f)]
   exact bsup_succ_le_blsub f
 
-theorem bsup_eq_blsub {o} (f : ∀, ∀ a < o, ∀, Ordinal) :
+theorem bsup_eq_blsub_iff_succ {o} (f : ∀, ∀ a < o, ∀, Ordinal) :
     bsup o f = blsub o f ↔ ∀, ∀ a < blsub o f, ∀, succ a < blsub o f := by
   rw [bsup_eq_sup, blsub_eq_lsub]
-  exact sup_eq_lsub _
+  apply sup_eq_lsub_iff_succ
+
+theorem bsup_eq_blsub_iff_lt_bsup {o} (f : ∀, ∀ a < o, ∀, Ordinal) : bsup o f = blsub o f ↔ ∀ i hi, f i hi < bsup o f :=
+  ⟨fun h i => by
+    rw [h]
+    apply lt_blsub, fun h => le_antisymmₓ (bsup_le_blsub f) (blsub_le.2 h)⟩
 
 @[simp]
 theorem blsub_eq_zero_iff {o} {f : ∀, ∀ a < o, ∀, Ordinal} : blsub o f = 0 ↔ o = 0 := by

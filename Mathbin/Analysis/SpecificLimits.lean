@@ -759,7 +759,6 @@ end NormedRingGeometric
 /-! ### Summability tests based on comparison with geometric series -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem summable_of_ratio_norm_eventually_le {α : Type _} [SemiNormedGroup α] [CompleteSpace α] {f : ℕ → α} {r : ℝ}
     (hr₁ : r < 1) (h : ∀ᶠ n in at_top, ∥f (n + 1)∥ ≤ r * ∥f n∥) : Summable f := by
   by_cases' hr₀ : 0 ≤ r
@@ -777,19 +776,18 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SemiNormedGroup α] 
   · push_neg  at hr₀
     refine' summable_of_norm_bounded_eventually 0 summable_zero _
     rw [Nat.cofinite_eq_at_top]
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [h] with _ hn
     by_contra h
     push_neg  at h
     exact not_lt.mpr (norm_nonneg _) (lt_of_le_of_ltₓ hn <| mul_neg_of_neg_of_pos hr₀ h)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem summable_of_ratio_test_tendsto_lt_one {α : Type _} [NormedGroup α] [CompleteSpace α] {f : ℕ → α} {l : ℝ}
     (hl₁ : l < 1) (hf : ∀ᶠ n in at_top, f n ≠ 0) (h : tendsto (fun n => ∥f (n + 1)∥ / ∥f n∥) at_top (𝓝 l)) :
     Summable f := by
   rcases exists_between hl₁ with ⟨r, hr₀, hr₁⟩
   refine' summable_of_ratio_norm_eventually_le hr₁ _
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [eventually_le_of_tendsto_lt hr₀ h, hf] with _ _ h₁
   rwa [← div_le_iff (norm_pos_iff.mpr h₁)]
 
 theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SemiNormedGroup α] {f : ℕ → α} {r : ℝ} (hr : 1 < r)
@@ -813,17 +811,15 @@ theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SemiNormedGroup 
     ac_rfl
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem not_summable_of_ratio_test_tendsto_gt_one {α : Type _} [SemiNormedGroup α] {f : ℕ → α} {l : ℝ} (hl : 1 < l)
     (h : tendsto (fun n => ∥f (n + 1)∥ / ∥f n∥) at_top (𝓝 l)) : ¬Summable f := by
   have key : ∀ᶠ n in at_top, ∥f n∥ ≠ 0 := by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [eventually_ge_of_tendsto_gt hl h] with _ hn hc
     rw [hc, div_zero] at hn
     linarith
   rcases exists_between hl with ⟨r, hr₀, hr₁⟩
   refine' not_summable_of_ratio_norm_eventually_ge hr₀ key.frequently _
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [eventually_ge_of_tendsto_gt hr₁ h, key] with _ _ h₁
   rwa [← le_div_iff (lt_of_le_of_neₓ (norm_nonneg _) h₁.symm)]
 
 /-- A series whose terms are bounded by the terms of a converging geometric series converges. -/

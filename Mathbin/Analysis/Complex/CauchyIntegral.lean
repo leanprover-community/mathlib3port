@@ -1,6 +1,7 @@
 import Mathbin.MeasureTheory.Measure.ComplexLebesgue
 import Mathbin.MeasureTheory.Integral.DivergenceTheorem
 import Mathbin.MeasureTheory.Integral.CircleIntegral
+import Mathbin.Analysis.Calculus.Dslope
 import Mathbin.Analysis.Analytic.Basic
 import Mathbin.Analysis.Complex.ReImTopology
 import Mathbin.Data.Real.Cardinality
@@ -458,7 +459,6 @@ theorem circle_integral_eq_zero_of_differentiable_on_off_countable {R : ℝ} (h0
       by
       rw [sub_self, zero_smul, smul_zero]
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- An auxiliary lemma for
 `complex.circle_integral_sub_inv_smul_of_differentiable_on_off_countable`. This lemma assumes
 `w ∉ s` while the main lemma drops this assumption. -/
@@ -467,27 +467,14 @@ theorem circle_integral_sub_inv_smul_of_differentiable_on_off_countable_aux {R :
     (hd : ∀, ∀ x ∈ ball c R \ s, ∀, DifferentiableAt ℂ f x) :
     (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w := by
   have hR : 0 < R := dist_nonneg.trans_lt hw.1
-  set F : ℂ → E := update (fun z => (z - w)⁻¹ • (f z - f w)) w (deriv f w)
+  set F : ℂ → E := dslope f w
   have hws : countable (insert w s) := hs.insert _
   have hnhds : closed_ball c R ∈ 𝓝 w := closed_ball_mem_nhds_of_mem hw.1
-  have hcF : ContinuousOn F (closed_ball c R) := by
-    refine' continuous_on_update_iff.2 ⟨_, _⟩
-    · refine'
-        ((continuous_on_id.sub continuous_on_const).inv₀ fun z hz => sub_ne_zero.2 _).smul
-          ((hc.mono <| diff_subset _ _).sub continuous_on_const)
-      exact hz.2
-      
-    · have := has_deriv_at_iff_tendsto_slope.1 (hd _ hw).HasDerivAt
-      exact fun _ => this.mono_left (nhds_within_mono _ (inter_subset_right _ _))
-      
-  have hdF : ∀, ∀ z ∈ ball (c : ℂ) R \ insert w s, ∀, DifferentiableAt ℂ F z := by
-    rintro z ⟨hzR, hzws⟩
-    rw [mem_insert_iff, not_or_distrib] at hzws
-    refine'
-      (((differentiable_at_id.sub_const w).inv <| sub_ne_zero.2 hzws.1).smul
-            ((hd z ⟨hzR, hzws.2⟩).sub_const (f w))).congr_of_eventually_eq
-        _
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  have hcF : ContinuousOn F (closed_ball c R) :=
+    (continuous_on_dslope <| closed_ball_mem_nhds_of_mem hw.1).2 ⟨hc, hd _ hw⟩
+  have hdF : ∀, ∀ z ∈ ball (c : ℂ) R \ insert w s, ∀, DifferentiableAt ℂ F z := fun z hz =>
+    (differentiable_at_dslope_of_ne (ne_of_mem_of_not_mem (mem_insert _ _) hz.2).symm).2
+      (hd _ (diff_subset_diff_right (subset_insert _ _) hz))
   have HI := circle_integral_eq_zero_of_differentiable_on_off_countable hR.le hws hcF hdF
   have hne : ∀, ∀ z ∈ sphere c R, ∀, z ≠ w := fun z hz => ne_of_mem_of_not_mem hz (ne_of_ltₓ hw.1)
   have hFeq : eq_on F (fun z => (z - w)⁻¹ • f z - (z - w)⁻¹ • f w) (sphere c R) := by

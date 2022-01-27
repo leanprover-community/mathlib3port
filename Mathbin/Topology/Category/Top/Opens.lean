@@ -304,6 +304,15 @@ theorem inclusion_map_eq_top {X : Top} (U : opens X) : (opens.map U.inclusion).o
   ext1
   exact Subtype.coe_preimage_self _
 
+@[simp]
+theorem adjunction_counit_app_self {X : Top} (U : opens X) :
+    U.open_embedding.is_open_map.adjunction.counit.app U =
+      eq_to_hom
+        (by
+          simp ) :=
+  by
+  ext
+
 theorem inclusion_top_functor (X : Top) :
     (@opens.open_embedding X ⊤).IsOpenMap.Functor = map (inclusion_top_iso X).inv := by
   apply functor.hext

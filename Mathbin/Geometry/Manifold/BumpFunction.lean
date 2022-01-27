@@ -139,7 +139,6 @@ theorem nonneg : 0 ≤ f x :=
 theorem le_one : f x ≤ 1 :=
   f.mem_Icc.2
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem eventually_eq_one_of_dist_lt (hs : x ∈ (chart_at H c).Source)
     (hd : eudist (extChartAt I c x) (extChartAt I c c) < f.r) : f =ᶠ[𝓝 x] 1 := by
   filter_upwards [IsOpen.mem_nhds (ext_chart_preimage_open_of_open I c is_open_ball) ⟨hs, hd⟩]

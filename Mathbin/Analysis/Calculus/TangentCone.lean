@@ -126,7 +126,6 @@ theorem tangent_cone_congr (h : 𝓝[s] x = 𝓝[t] x) : TangentConeAt 𝕜 s x 
 theorem tangent_cone_inter_nhds (ht : t ∈ 𝓝 x) : TangentConeAt 𝕜 (s ∩ t) x = TangentConeAt 𝕜 s x :=
   tangent_cone_congr (nhds_within_restrict' _ ht).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The tangent cone of a product contains the tangent cone of its left factor. -/
 theorem subset_tangent_cone_prod_left {t : Set F} {y : F} (ht : y ∈ Closure t) :
     LinearMap.inl 𝕜 E F '' TangentConeAt 𝕜 s x ⊆ TangentConeAt 𝕜 (s ×ˢ t) (x, y) := by
@@ -142,7 +141,7 @@ theorem subset_tangent_cone_prod_left {t : Set F} {y : F} (ht : y ∈ Closure t)
   choose d' hd' using this
   refine' ⟨c, fun n => (d n, d' n), _, hc, _⟩
   show ∀ᶠ n in at_top, (x, y) + (d n, d' n) ∈ s ×ˢ t
-  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  · filter_upwards [hd] with n hn
     simp [hn, (hd' n).1]
     
   · apply tendsto.prod_mk_nhds hy _
@@ -150,7 +149,6 @@ theorem subset_tangent_cone_prod_left {t : Set F} {y : F} (ht : y ∈ Closure t)
     exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The tangent cone of a product contains the tangent cone of its right factor. -/
 theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ Closure s) :
     LinearMap.inr 𝕜 E F '' TangentConeAt 𝕜 t y ⊆ TangentConeAt 𝕜 (s ×ˢ t) (x, y) := by
@@ -166,7 +164,7 @@ theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ Closure s
   choose d' hd' using this
   refine' ⟨c, fun n => (d' n, d n), _, hc, _⟩
   show ∀ᶠ n in at_top, (x, y) + (d' n, d n) ∈ s ×ˢ t
-  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  · filter_upwards [hd] with n hn
     simp [hn, (hd' n).1]
     
   · apply tendsto.prod_mk_nhds _ hy

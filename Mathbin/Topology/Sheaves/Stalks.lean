@@ -6,6 +6,7 @@ import Mathbin.CategoryTheory.Limits.Preserves.Filtered
 import Mathbin.CategoryTheory.Limits.Final
 import Mathbin.Topology.Sober
 import Mathbin.Tactic.Elementwise
+import Mathbin.Algebra.Category.CommRing.Default
 
 /-!
 # Stalks
@@ -472,6 +473,14 @@ theorem is_iso_iff_stalk_functor_map_iso {F G : sheaf C X} (f : F ⟶ G) :
     
 
 end Concrete
+
+instance (F : X.presheaf CommRingₓₓ) {U : opens X} (x : U) : Algebra (F.obj <| op U) (F.stalk x) :=
+  (F.germ x).toAlgebra
+
+@[simp]
+theorem stalk_open_algebra_map {X : Top} (F : X.presheaf CommRingₓₓ) {U : opens X} (x : U) :
+    algebraMap (F.obj <| op U) (F.stalk x) = F.germ x :=
+  rfl
 
 end Top.Presheaf
 

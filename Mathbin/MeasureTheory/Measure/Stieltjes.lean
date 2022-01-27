@@ -59,10 +59,9 @@ theorem tendsto_left_lim (x : ℝ) : tendsto f (𝓝[<] x) (𝓝 (f.left_lim x))
   rw [left_lim]
   exact f.mono.tendsto_nhds_within_Iio x
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem left_lim_le {x y : ℝ} (h : x ≤ y) : f.left_lim x ≤ f y := by
   apply le_of_tendsto (f.tendsto_left_lim x)
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [self_mem_nhds_within] with _ hz using(f.mono (le_of_ltₓ hz)).trans (f.mono h)
 
 theorem le_left_lim {x y : ℝ} (h : x < y) : f x ≤ f.left_lim y := by
   apply ge_of_tendsto (f.tendsto_left_lim y)

@@ -118,7 +118,7 @@ theorem Sylow.coe_subgroup_smul {g : G} {P : Sylow p G} : ↑(g • P) = MulAut.
 theorem Sylow.coe_smul {g : G} {P : Sylow p G} : ↑(g • P) = MulAut.conj g • (P : Set G) :=
   rfl
 
-theorem Sylow.smul_eq_iff_mem_normalizer {g : G} {P : Sylow p G} : g • P = P ↔ g ∈ P.1.normalizer := by
+theorem Sylow.smul_eq_iff_mem_normalizer {g : G} {P : Sylow p G} : g • P = P ↔ g ∈ (P : Subgroup G).normalizer := by
   rw [eq_comm, SetLike.ext_iff, ← inv_mem_iff, mem_normalizer_iff, inv_invₓ]
   exact
     forall_congrₓ fun h =>
@@ -127,11 +127,15 @@ theorem Sylow.smul_eq_iff_mem_normalizer {g : G} {P : Sylow p G} : g • P = P �
           (congr_argₓ _ c).mp ((congr_argₓ (· ∈ P.1) (MulAut.inv_apply_self G (MulAut.conj g) a)).mpr b), fun hh =>
           ⟨(MulAut.conj g)⁻¹ h, hh, MulAut.apply_inv_self G (MulAut.conj g) h⟩⟩
 
+theorem Sylow.smul_eq_of_normal {g : G} {P : Sylow p G} [h : (P : Subgroup G).Normal] : g • P = P := by
+  simp only [Sylow.smul_eq_iff_mem_normalizer, normalizer_eq_top.mpr h, mem_top]
+
 theorem Subgroup.sylow_mem_fixed_points_iff (H : Subgroup G) {P : Sylow p G} :
-    P ∈ fixed_points H (Sylow p G) ↔ H ≤ P.1.normalizer := by
+    P ∈ fixed_points H (Sylow p G) ↔ H ≤ (P : Subgroup G).normalizer := by
   simp_rw [SetLike.le_def, ← Sylow.smul_eq_iff_mem_normalizer] <;> exact Subtype.forall
 
-theorem IsPGroup.inf_normalizer_sylow {P : Subgroup G} (hP : IsPGroup p P) (Q : Sylow p G) : P⊓Q.1.normalizer = P⊓Q :=
+theorem IsPGroup.inf_normalizer_sylow {P : Subgroup G} (hP : IsPGroup p P) (Q : Sylow p G) :
+    P⊓(Q : Subgroup G).normalizer = P⊓Q :=
   le_antisymmₓ
     (le_inf inf_le_left (sup_eq_right.mp (Q.3 (hP.to_inf_left.to_sup_of_normal_right' Q.2 inf_le_right) le_sup_right)))
     (inf_le_inf_left P le_normalizer)
@@ -429,6 +433,29 @@ theorem ne_bot_of_dvd_card [Fintype G] {p : ℕ} [hp : Fact p.prime] (P : Sylow 
   refine' fun h => hp.out.not_dvd_one _
   have key : p ∣ card (P : Subgroup G) := P.dvd_card_of_dvd_card hdvd
   rwa [h, card_bot] at key
+
+theorem subsingleton_of_normal {p : ℕ} [Fact p.prime] [Fintype (Sylow p G)] (P : Sylow p G)
+    (h : (P : Subgroup G).Normal) : Subsingleton (Sylow p G) := by
+  apply Subsingleton.intro
+  intro Q R
+  obtain ⟨x, h1⟩ := exists_smul_eq G P Q
+  obtain ⟨x, h2⟩ := exists_smul_eq G P R
+  rw [Sylow.smul_eq_of_normal] at h1 h2
+  rw [← h1, ← h2]
+
+section Pointwise
+
+open_locale Pointwise
+
+theorem characteristic_of_normal {p : ℕ} [Fact p.prime] [Fintype (Sylow p G)] (P : Sylow p G)
+    (h : (P : Subgroup G).Normal) : (P : Subgroup G).Characteristic := by
+  have := Sylow.subsingleton_of_normal P h
+  rw [characteristic_iff_map_eq]
+  intro Φ
+  show (Φ • P).toSubgroup = P.to_subgroup
+  congr
+
+end Pointwise
 
 end Sylow
 

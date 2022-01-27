@@ -299,5 +299,96 @@ theorem is_basis_basic_open (X : Scheme) [is_affine X] :
     exact congr_argₓ Subtype.val (X.map_prime_spectrum_basic_open_of_affine x).symm
     
 
+/-- The prime ideal of `𝒪ₓ(U)` corresponding to a point `x : U`. -/
+noncomputable def is_affine_open.prime_ideal_of {X : Scheme} {U : opens X.carrier} (hU : is_affine_open U) (x : U) :
+    PrimeSpectrum (X.presheaf.obj <| op U) :=
+  (Scheme.Spec.map
+          (X.presheaf.map
+              (eq_to_hom <|
+                  show U.open_embedding.is_open_map.functor.obj ⊤ = U from
+                    opens.ext (Set.image_univ.trans Subtype.range_coe)).op).op).1.base
+    ((@Scheme.iso_Spec (X.restrict U.open_embedding) hU).Hom.1.base x)
+
+theorem is_affine_open.from_Spec_prime_ideal_of {X : Scheme} {U : opens X.carrier} (hU : is_affine_open U) (x : U) :
+    hU.from_Spec.val.base (hU.prime_ideal_of x) = x.1 := by
+  dsimp only [is_affine_open.from_Spec, Subtype.coe_mk]
+  erw [← Scheme.comp_val_base_apply, ← Scheme.comp_val_base_apply]
+  simpa only [← functor.map_comp_assoc, ← functor.map_comp, ← op_comp, eq_to_hom_trans, op_id, eq_to_hom_refl,
+    CategoryTheory.Functor.map_id, category.id_comp, iso.hom_inv_id_assoc]
+
+theorem is_affine_open.is_localization_stalk_aux {X : Scheme} (U : opens X.carrier)
+    [is_affine (X.restrict U.open_embedding)] :
+    (inv (Γ_Spec.adjunction.Unit.app (X.restrict U.open_embedding))).1.c.app (op ((opens.map U.inclusion).obj U)) =
+      X.presheaf.map
+          (eq_to_hom <| by
+              rw [opens.inclusion_map_eq_top] :
+              U.open_embedding.is_open_map.functor.obj ⊤ ⟶
+                U.open_embedding.is_open_map.functor.obj ((opens.map U.inclusion).obj U)).op ≫
+        to_Spec_Γ (X.presheaf.obj <| op (U.open_embedding.is_open_map.functor.obj ⊤)) ≫
+          (Scheme.Spec.obj <| op <| X.presheaf.obj <| _).Presheaf.map
+            (eq_to_hom
+                (by
+                  rw [opens.inclusion_map_eq_top]
+                  rfl) :
+                unop _ ⟶ ⊤).op :=
+  by
+  have e :
+    (opens.map (inv (Γ_Spec.adjunction.unit.app (X.restrict U.open_embedding))).1.base).obj
+        ((opens.map U.inclusion).obj U) =
+      ⊤ :=
+    by
+    rw [opens.inclusion_map_eq_top]
+    rfl
+  rw [Scheme.inv_val_c_app, is_iso.comp_inv_eq, Scheme.app_eq _ e, Γ_Spec.adjunction_unit_app_app_top]
+  simp only [category.assoc, eq_to_hom_op]
+  erw [← functor.map_comp_assoc]
+  rw [eq_to_hom_trans, eq_to_hom_refl, CategoryTheory.Functor.map_id, category.id_comp]
+  erw [Spec_Γ_identity.inv_hom_id_app_assoc]
+  simp only [eq_to_hom_map, eq_to_hom_trans]
+
+theorem is_affine_open.is_localization_stalk {X : Scheme} {U : opens X.carrier} (hU : is_affine_open U) (x : U) :
+    IsLocalization.AtPrime (X.presheaf.stalk x) (hU.prime_ideal_of x).asIdeal := by
+  have : is_affine _ := hU
+  have : Nonempty U := ⟨x⟩
+  rcases x with ⟨x, hx⟩
+  let y := hU.prime_ideal_of ⟨x, hx⟩
+  have : hU.from_Spec.val.base y = x := hU.from_Spec_prime_ideal_of ⟨x, hx⟩
+  change IsLocalization y.as_ideal.prime_compl _
+  clear_value y
+  subst this
+  apply
+    (IsLocalization.is_localization_iff_of_ring_equiv _
+        (as_iso <| PresheafedSpace.stalk_map hU.from_Spec.1 y).commRingIsoToRingEquiv).mpr
+  convert structure_sheaf.is_localization.to_stalk _ _ using 1
+  delta' structure_sheaf.stalk_algebra
+  congr 1
+  rw [RingHom.algebra_map_to_algebra]
+  refine' (PresheafedSpace.stalk_map_germ hU.from_Spec.1 _ ⟨_, _⟩).trans _
+  delta' is_affine_open.from_Spec Scheme.iso_Spec structure_sheaf.to_stalk
+  simp only [Scheme.comp_val_c_app, category.assoc]
+  dsimp only [functor.op, as_iso_inv, unop_op]
+  erw [is_affine_open.is_localization_stalk_aux]
+  simp only [category.assoc]
+  conv_lhs => rw [← category.assoc]
+  erw [← X.presheaf.map_comp, Spec_Γ_naturality_assoc]
+  congr 1
+  simp only [← category.assoc]
+  trans _ ≫ (structure_sheaf (X.presheaf.obj <| op U)).1.germ ⟨_, _⟩
+  · rfl
+    
+  convert (structure_sheaf (X.presheaf.obj <| op U)).1.germ_res (hom_of_le le_top) ⟨_, _⟩ using 2
+  rw [category.assoc]
+  erw [nat_trans.naturality]
+  rw [← LocallyRingedSpace.Γ_map_op, ← LocallyRingedSpace.Γ.map_comp_assoc, ← op_comp]
+  erw [← Scheme.Spec.map_comp]
+  rw [← op_comp, ← X.presheaf.map_comp]
+  trans LocallyRingedSpace.Γ.map (Quiver.Hom.op <| Scheme.Spec.map (X.presheaf.map (𝟙 (op U))).op) ≫ _
+  · congr
+    
+  simp only [CategoryTheory.Functor.map_id, op_id]
+  erw [CategoryTheory.Functor.map_id]
+  rw [category.id_comp]
+  rfl
+
 end AlgebraicGeometry
 

@@ -60,8 +60,8 @@ theorem mem_circle_iff_norm_sq {z : ℂ} : z ∈ circle ↔ norm_sq z = 1 := by
 theorem norm_sq_eq_of_mem_circle (z : circle) : norm_sq z = 1 := by
   simp [norm_sq_eq_abs]
 
-theorem nonzero_of_mem_circle (z : circle) : (z : ℂ) ≠ 0 :=
-  nonzero_of_mem_unit_sphere z
+theorem ne_zero_of_mem_circle (z : circle) : (z : ℂ) ≠ 0 :=
+  ne_zero_of_mem_unit_sphere z
 
 instance : CommGroupₓ circle :=
   { circle.toCommMonoid with
@@ -90,7 +90,7 @@ theorem coe_div_circle (z w : circle) : ↑(z / w) = (z : ℂ) / w :=
 /-- The elements of the circle embed into the units. -/
 @[simps]
 def circle.toUnits : circle →* Units ℂ where
-  toFun := fun x => Units.mk0 x <| nonzero_of_mem_circle _
+  toFun := fun x => Units.mk0 x <| ne_zero_of_mem_circle _
   map_one' := Units.ext rfl
   map_mul' := fun x y => Units.ext rfl
 

@@ -255,7 +255,7 @@ theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.pr
       
     
   rw [totient_eq_card_coprime, range_eq_Ico, ← Ico_insert_succ_left hp.le, Finset.filter_insert,
-    if_neg (Tactic.NormNum.nat_coprime_helper_zero_right p hp), ← Nat.card_Ico 1 p] at h
+    if_neg (not_coprime_of_dvd_of_dvd hp (dvd_refl p) (dvd_zero p)), ← Nat.card_Ico 1 p] at h
   refine' p.prime_of_coprime hp fun n hn hnz => Finset.filter_card_eq h n <| finset.mem_Ico.mpr ⟨_, hn⟩
   rwa [succ_le_iff, pos_iff_ne_zero]
 

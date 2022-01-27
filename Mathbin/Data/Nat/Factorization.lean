@@ -73,6 +73,9 @@ theorem prime_of_mem_factorization {n p : ℕ} : p ∈ n.factorization.support �
 theorem pos_of_mem_factorization {n p : ℕ} : p ∈ n.factorization.support → 0 < p :=
   @prime.pos p ∘ @prime_of_mem_factorization n p
 
+theorem factorization_eq_zero_of_non_prime (n p : ℕ) (hp : ¬p.prime) : n.factorization p = 0 :=
+  not_mem_support_iff.1 (mt prime_of_mem_factorization hp)
+
 /-- The only numbers with empty prime factorization are `0` and `1` -/
 theorem factorization_eq_zero_iff (n : ℕ) : n.factorization = 0 ↔ n = 0 ∨ n = 1 := by
   simp [factorization, AddEquiv.map_eq_zero_iff, Multiset.coe_eq_zero]
@@ -197,6 +200,70 @@ theorem factorization_le_iff_dvd {d n : ℕ} (hd : d ≠ 0) (hn : n ≠ 0) : d.f
   · rintro ⟨c, rfl⟩
     rw [factorization_mul hd (right_ne_zero_of_mul hn)]
     simp
+    
+
+theorem prime_pow_dvd_iff_le_factorization (p k n : ℕ) (pp : Prime p) (hn : n ≠ 0) :
+    p ^ k ∣ n ↔ k ≤ n.factorization p := by
+  rw [← factorization_le_iff_dvd (pow_pos pp.pos k).ne' hn, pp.factorization_pow, single_le_iff]
+
+theorem exists_factorization_lt_of_lt {a b : ℕ} (ha : a ≠ 0) (hab : a < b) :
+    ∃ p : ℕ, a.factorization p < b.factorization p := by
+  have hb : b ≠ 0 := (ha.bot_lt.trans hab).ne'
+  contrapose! hab
+  rw [← Finsupp.le_def, factorization_le_iff_dvd hb ha] at hab
+  exact le_of_dvd ha.bot_lt hab
+
+@[simp]
+theorem div_factorization_eq_tsub_of_dvd {d n : ℕ} (hn : n ≠ 0) (h : d ∣ n) :
+    (n / d).factorization = n.factorization - d.factorization := by
+  have hd : d ≠ 0 := ne_zero_of_dvd_ne_zero hn h
+  cases' dvd_iff_exists_eq_mul_left.mp h with c hc
+  have hc_pos : c ≠ 0 := by
+    subst hc
+    exact left_ne_zero_of_mul hn
+  rw [hc, Nat.mul_div_cancelₓ c hd.bot_lt, factorization_mul hc_pos hd, add_tsub_cancel_right]
+
+theorem dvd_iff_div_factorization_eq_tsub (d n : ℕ) (hd : d ≠ 0) (hdn : d ≤ n) :
+    d ∣ n ↔ (n / d).factorization = n.factorization - d.factorization := by
+  have hn : n ≠ 0 := (lt_of_lt_of_leₓ hd.bot_lt hdn).Ne.symm
+  refine' ⟨div_factorization_eq_tsub_of_dvd hn, _⟩
+  · rcases eq_or_lt_of_le hdn with (rfl | hd_lt_n)
+    · simp
+      
+    have h1 : n / d ≠ 0 := fun H => Nat.lt_asymmₓ hd_lt_n ((Nat.div_eq_zero_iff hd.bot_lt).mp H)
+    intro h
+    rw [dvd_iff_le_div_mul n d]
+    by_contra h2
+    cases' exists_factorization_lt_of_lt (mul_ne_zero h1 hd) (not_le.mp h2) with p hp
+    rwa [factorization_mul h1 hd, add_apply, ← lt_tsub_iff_right, h, tsub_apply, lt_self_iff_false] at hp
+    
+
+theorem pow_factorization_dvd (p d : ℕ) : p ^ d.factorization p ∣ d := by
+  rcases eq_or_ne d 0 with (rfl | hd)
+  · simp
+    
+  by_cases' pp : Prime p
+  · rw [prime_pow_dvd_iff_le_factorization p _ d pp hd]
+    
+  · rw [factorization_eq_zero_of_non_prime d p pp]
+    simp
+    
+
+theorem dvd_iff_prime_pow_dvd_dvd {n d : ℕ} (hd : d ≠ 0) (hn : n ≠ 0) :
+    d ∣ n ↔ ∀ p k : ℕ, Prime p → p ^ k ∣ d → p ^ k ∣ n := by
+  constructor
+  · exact fun h p k pp hpkd => dvd_trans hpkd h
+    
+  · intro h
+    rw [← factorization_le_iff_dvd hd hn, Finsupp.le_def]
+    intro p
+    by_cases' pp : Prime p
+    swap
+    · rw [factorization_eq_zero_of_non_prime d p pp]
+      exact zero_le'
+      
+    rw [← prime_pow_dvd_iff_le_factorization p _ n pp hn]
+    exact h p _ pp (pow_factorization_dvd p _)
     
 
 end Nat

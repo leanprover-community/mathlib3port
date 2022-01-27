@@ -1422,7 +1422,6 @@ theorem set_to_fun_mono_left {T T' : Set α → E →L[ℝ] G''} {C C' : ℝ} (h
     set_to_fun μ T hT f ≤ set_to_fun μ T' hT' f :=
   set_to_fun_mono_left' hT hT' (fun s _ _ x => hTT' s x) f
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem set_to_fun_nonneg {T : Set α → G' →L[ℝ] G''} {C : ℝ} (hT : dominated_fin_meas_additive μ T C)
     (hT_nonneg : ∀ s, MeasurableSet s → μ s < ∞ → ∀ x, 0 ≤ x → 0 ≤ T s x) {f : α → G'} (hf : 0 ≤ᵐ[μ] f) :
     0 ≤ set_to_fun μ T hT f := by
@@ -1432,7 +1431,7 @@ theorem set_to_fun_nonneg {T : Set α → G' →L[ℝ] G''} {C : ℝ} (hT : domi
     rw [← Lp.coe_fn_le]
     have h0 := Lp.coe_fn_zero G' 1 μ
     have h := integrable.coe_fn_to_L1 hfi
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [h0, h, hf] with _ h0a ha hfa
     rw [h0a, ha]
     exact hfa
     
@@ -1564,7 +1563,7 @@ theorem set_to_fun_top_smul_measure (hT : dominated_fin_meas_additive (∞ • �
   refine' set_to_fun_measure_zero' hT fun s hs hμs => _
   rw [lt_top_iff_ne_top] at hμs
   simp only [true_andₓ, measure.smul_apply, WithTop.mul_eq_top_iff, eq_self_iff_true, top_ne_zero, Ne.def,
-    not_false_iff, Auto.not_or_eq, not_not] at hμs
+    not_false_iff, not_or_distrib, not_not] at hμs
   simp only [hμs.right, measure.smul_apply, mul_zero]
 
 theorem set_to_fun_congr_smul_measure (c : ℝ≥0∞) (hc_ne_top : c ≠ ∞) (hT : dominated_fin_meas_additive μ T C)
@@ -1639,7 +1638,6 @@ theorem tendsto_set_to_fun_of_dominated_convergence (hT : dominated_fin_meas_add
   dsimp only
   rw [hx, of_real_norm_eq_coe_nnnorm, Pi.sub_apply]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- Lebesgue dominated convergence theorem for filters with a countable basis -/
 theorem tendsto_set_to_fun_filter_of_dominated_convergence (hT : dominated_fin_meas_additive μ T C) {ι}
     {l : _root_.filter ι} [l.is_countably_generated] {fs : ι → α → E} {f : α → E} (bound : α → ℝ)

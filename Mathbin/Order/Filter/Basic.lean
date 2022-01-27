@@ -859,9 +859,12 @@ theorem is_compl_principal (s : Set α) : IsCompl (𝓟 s) (𝓟 (sᶜ)) :=
     simp only [inf_principal, inter_compl_self, principal_empty, le_reflₓ], by
     simp only [sup_principal, union_compl_self, principal_univ, le_reflₓ]⟩
 
+theorem mem_inf_principal' {f : Filter α} {s t : Set α} : s ∈ f⊓𝓟 t ↔ tᶜ ∪ s ∈ f := by
+  simp only [← le_principal_iff, (is_compl_principal s).le_left_iff, disjoint_assoc, inf_principal, ←
+    (is_compl_principal (t ∩ sᶜ)).le_right_iff, compl_inter, compl_compl]
+
 theorem mem_inf_principal {f : Filter α} {s t : Set α} : s ∈ f⊓𝓟 t ↔ { x | x ∈ t → x ∈ s } ∈ f := by
-  simp only [← le_principal_iff, (is_compl_principal s).le_left_iff, Disjoint, inf_assoc, inf_principal, imp_iff_not_or]
-  rw [← Disjoint, ← (is_compl_principal (t ∩ sᶜ)).le_right_iff, compl_inter, compl_compl]
+  simp only [mem_inf_principal', imp_iff_not_or]
   rfl
 
 theorem supr_inf_principal (f : ι → Filter α) (s : Set α) : (⨆ i, f i⊓𝓟 s) = (⨆ i, f i)⊓𝓟 s := by
@@ -1838,10 +1841,9 @@ theorem mem_comap_iff {f : Filter β} {m : α → β} (inj : injective m) (large
     S ∈ comap m f ↔ m '' S ∈ f := by
   rw [← image_mem_map_iff inj, map_comap_of_mem large]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem le_of_map_le_map_inj' {f g : Filter α} {m : α → β} {s : Set α} (hsf : s ∈ f) (hsg : s ∈ g)
     (hm : ∀, ∀ x ∈ s, ∀, ∀, ∀ y ∈ s, ∀, m x = m y → x = y) (h : map m f ≤ map m g) : f ≤ g := fun t ht => by
-  filter_upwards [hsf, h <| image_mem_map (inter_mem hsg ht)]
+  filter_upwards [hsf, h <| image_mem_map (inter_mem hsg ht)] using fun _ has ⟨_, ⟨hbs, hb⟩, h⟩ => hm _ hbs _ has h ▸ hb
 
 theorem le_of_map_le_map_inj_iff {f g : Filter α} {m : α → β} {s : Set α} (hsf : s ∈ f) (hsg : s ∈ g)
     (hm : ∀, ∀ x ∈ s, ∀, ∀, ∀ y ∈ s, ∀, m x = m y → x = y) : map m f ≤ map m g ↔ f ≤ g :=
@@ -2189,13 +2191,12 @@ theorem mem_bind {s : Set β} {f : Filter α} {m : α → Filter β} : s ∈ bin
 theorem bind_le {f : Filter α} {g : α → Filter β} {l : Filter β} (h : ∀ᶠ x in f, g x ≤ l) : f.bind g ≤ l :=
   join_le <| eventually_map.2 h
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 @[mono]
 theorem bind_mono {f₁ f₂ : Filter α} {g₁ g₂ : α → Filter β} (hf : f₁ ≤ f₂) (hg : g₁ ≤ᶠ[f₁] g₂) :
     bind f₁ g₁ ≤ bind f₂ g₂ := by
   refine' le_transₓ (fun s hs => _) (join_mono <| map_mono hf)
   simp only [mem_join, mem_bind', mem_map] at hs⊢
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hg, hs] with _ hx hs using hx hs
 
 theorem bind_inf_principal {f : Filter α} {g : α → Filter β} {s : Set β} : (f.bind fun x => g x⊓𝓟 s) = f.bind g⊓𝓟 s :=
   Filter.ext fun s => by
@@ -2461,7 +2462,6 @@ filter. -/
 theorem tendsto.not_tendsto {f : α → β} {a : Filter α} {b₁ b₂ : Filter β} (hf : tendsto f a b₁) [ne_bot a]
     (hb : Disjoint b₁ b₂) : ¬tendsto f a b₂ := fun hf' => (tendsto_inf.2 ⟨hf, hf'⟩).ne_bot.Ne hb.eq_bot
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem tendsto.if {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {p : α → Prop} [∀ x, Decidable (p x)]
     (h₀ : tendsto f (l₁⊓𝓟 { x | p x }) l₂) (h₁ : tendsto g (l₁⊓𝓟 { x | ¬p x }) l₂) :
     tendsto (fun x => if p x then f x else g x) l₁ l₂ := by

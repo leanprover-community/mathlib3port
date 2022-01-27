@@ -123,8 +123,6 @@ section
 variable [SigmaCompactSpace α] [BorelSpace α] [is_locally_finite_measure μ] {ρ : Measureₓ α}
   [is_locally_finite_measure ρ]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- If a measure `ρ` is singular with respect to `μ`, then for `μ` almost every `x`, the ratio
 `ρ a / μ a` tends to zero when `a` shrinks to `x` along the Vitali family. This makes sense
 as `μ a` is eventually positive by `ae_eventually_measure_pos`. -/
@@ -186,7 +184,6 @@ theorem null_of_frequently_le_of_frequently_ge {c d : ℝ≥0 } (hcd : c < d) (s
       exact (lt_of_le_of_ltₓ (measure_mono (inter_subset_right _ _)) μo).Ne _ ≤ ρ s' :=
       v.measure_le_of_frequently_le ρ ((measure.absolutely_continuous.refl μ).smul d) s' fun x hx => hd x hx.1
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- If `ρ` is absolutely continuous with respect to `μ`, then for almost every `x`,
 the ratio `ρ a / μ a` converges as `a` shrinks to `x` along a Vitali family for `μ`. -/
 theorem ae_tendsto_div : ∀ᵐ x ∂μ, ∃ c, tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 c) := by
@@ -228,7 +225,6 @@ theorem ae_tendsto_div : ∀ᵐ x ∂μ, ∃ c, tendsto (fun a => ρ a / μ a) (
   intro x hx
   exact tendsto_of_no_upcrossings w_dense hx
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem ae_tendsto_lim_ratio : ∀ᵐ x ∂μ, tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 (v.lim_ratio ρ x)) := by
   filter_upwards [v.ae_tendsto_div hρ]
   intro x hx
@@ -376,7 +372,6 @@ noncomputable def lim_ratio_meas : α → ℝ≥0∞ :=
 theorem lim_ratio_meas_measurable : Measurable (v.lim_ratio_meas hρ) :=
   AeMeasurable.measurable_mk _
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem ae_tendsto_lim_ratio_meas : ∀ᵐ x ∂μ, tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 (v.lim_ratio_meas hρ x)) :=
   by
   filter_upwards [v.ae_tendsto_lim_ratio hρ, AeMeasurable.ae_eq_mk (v.ae_measurable_lim_ratio hρ)]
@@ -460,7 +455,6 @@ theorem measure_lim_ratio_meas_top : μ { x | v.lim_ratio_meas hρ x = ∞ } = 0
   apply ge_of_tendsto B
   exact eventually_at_top.2 ⟨1, A⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The points with `v.lim_ratio_meas hρ x = 0` have measure `0` for `ρ`. -/
 theorem measure_lim_ratio_meas_zero : ρ { x | v.lim_ratio_meas hρ x = 0 } = 0 := by
   refine' null_of_locally_null _ fun x hx => _
@@ -480,7 +474,7 @@ theorem measure_lim_ratio_meas_zero : ρ { x | v.lim_ratio_meas hρ x = 0 } = 0 
     exact nhds_within_le_nhds
   simp only [zero_mul, Ennreal.coe_zero] at B
   apply ge_of_tendsto B
-  filter_upwards [self_mem_nhds_within]
+  filter_upwards [self_mem_nhds_within] using A
 
 /-- As an intermediate step to show that `μ.with_density (v.lim_ratio_meas hρ) = ρ`, we show here
 that `μ.with_density (v.lim_ratio_meas hρ) ≤ t^2 ρ` for any `t > 1`. -/
@@ -579,8 +573,6 @@ theorem le_mul_with_density {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0 } (
       add_le_add (add_le_add A B) (Ennreal.tsum_le_tsum C)_ = (t • ν) s :=
       (measure_eq_measure_preimage_add_measure_tsum_Ico_zpow (t • ν) f_meas hs ht).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem with_density_lim_ratio_meas_eq : μ.with_density (v.lim_ratio_meas hρ) = ρ := by
   ext1 s hs
   refine' le_antisymmₓ _ _
@@ -594,7 +586,7 @@ theorem with_density_lim_ratio_meas_eq : μ.with_density (v.lim_ratio_meas hρ) 
         
     simp only [one_pow, one_mulₓ, Ennreal.coe_one] at this
     refine' ge_of_tendsto this _
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [self_mem_nhds_within] with _ ht
     exact v.with_density_le_mul hρ hs ht
     
   · have :
@@ -605,11 +597,10 @@ theorem with_density_lim_ratio_meas_eq : μ.with_density (v.lim_ratio_meas hρ) 
       simp only [Ennreal.coe_one, true_orₓ, Ne.def, not_false_iff, one_ne_zero]
     simp only [one_mulₓ, Ennreal.coe_one] at this
     refine' ge_of_tendsto this _
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [self_mem_nhds_within] with _ ht
     exact v.le_mul_with_density hρ hs ht
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Weak version of the main theorem on differentiation of measures: given a Vitali family `v`
 for a locally finite measure `μ`, and another locally finite measure `ρ`, then for `μ`-almost
 every `x` the ratio `ρ a / μ a` converges, when `a` shrinks to `x` along the Vitali family,
@@ -623,14 +614,13 @@ theorem ae_tendsto_rn_deriv_of_absolutely_continuous :
   have A : (μ.with_density (v.lim_ratio_meas hρ)).rnDeriv μ =ᵐ[μ] v.lim_ratio_meas hρ :=
     rn_deriv_with_density μ (v.lim_ratio_meas_measurable hρ)
   rw [v.with_density_lim_ratio_meas_eq hρ] at A
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [v.ae_tendsto_lim_ratio_meas hρ, A] with _ _ h'x
   rwa [h'x]
 
 end AbsolutelyContinuous
 
 variable (ρ)
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Main theorem on differentiation of measures: given a Vitali family `v` for a locally finite
 measure `μ`, and another locally finite measure `ρ`, then for `μ`-almost every `x` the
 ratio `ρ a / μ a` converges, when `a` shrinks to `x` along the Vitali family, towards the
@@ -643,7 +633,7 @@ theorem ae_tendsto_rn_deriv : ∀ᵐ x ∂μ, tendsto (fun a => ρ a / μ a) (v.
   have B : ∀ᵐ x ∂μ, t.rn_deriv μ x = ρ.rn_deriv μ x := rn_deriv_with_density μ (measurable_rn_deriv ρ μ)
   have C : ∀ᵐ x ∂μ, tendsto (fun a => t a / μ a) (v.filter_at x) (𝓝 (t.rn_deriv μ x)) :=
     v.ae_tendsto_rn_deriv_of_absolutely_continuous (with_density_absolutely_continuous _ _)
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [A, B, C] with _ Ax Bx Cx
   convert Ax.add Cx
   · ext1 a
     conv_lhs => rw [eq_add]
@@ -652,7 +642,6 @@ theorem ae_tendsto_rn_deriv : ∀ᵐ x ∂μ, tendsto (fun a => ρ a / μ a) (v.
   · simp only [Bx, zero_addₓ]
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- Given a measurable set `s`, then `μ (s ∩ a) / μ a` converges when `a` shrinks to a typical
 point `x` along a Vitali family. The limit is `1` for `x ∈ s` and `0` for `x ∉ s`. This shows that
 almost every point of `s` is a Lebesgue density point for `s`. A version for non-measurable sets
@@ -664,9 +653,6 @@ theorem ae_tendsto_measure_inter_div_of_measurable_set {s : Set α} (hs : Measur
   intro x hx h'x
   simpa only [h'x, restrict_apply' hs, inter_comm] using hx
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Given an arbitrary set `s`, then `μ (s ∩ a) / μ a` converges to `1` when `a` shrinks to a
 typical point of `s` along a Vitali family. This shows that almost every point of `s` is a
 Lebesgue density point for `s`. A stronger version for measurable sets is given
@@ -680,12 +666,12 @@ theorem ae_tendsto_measure_inter_div (s : Set α) :
     exact measurable_set_to_measurable _ _
   have B : ∀ᵐ x ∂μ.restrict s, t.indicator 1 x = (1 : ℝ≥0∞) := by
     refine' ae_restrict_of_ae_restrict_of_subset (subset_to_measurable μ s) _
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [ae_restrict_mem (measurable_set_to_measurable μ s)] with _ hx
     simp only [hx, Pi.one_apply, indicator_of_mem]
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [A, B] with x hx h'x
   rw [h'x] at hx
   apply hx.congr' _
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [v.eventually_filter_at_measurable_set x] with _ ha
   congr 1
   exact measure_to_measurable_inter_of_sigma_finite ha _
 

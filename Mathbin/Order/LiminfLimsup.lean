@@ -188,21 +188,19 @@ theorem is_bounded_le_of_top [Preorderₓ α] [OrderTop α] {f : Filter α} : f.
 theorem is_bounded_ge_of_bot [Preorderₓ α] [OrderBot α] {f : Filter α} : f.is_bounded (· ≥ ·) :=
   ⟨⊥, eventually_of_forall fun _ => bot_le⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_bounded_under_sup [SemilatticeSup α] {f : Filter β} {u v : β → α} :
     f.is_bounded_under (· ≤ ·) u → f.is_bounded_under (· ≤ ·) v → f.is_bounded_under (· ≤ ·) fun a => u a⊔v a
   | ⟨bu, (hu : ∀ᶠ x in f, u x ≤ bu)⟩, ⟨bv, (hv : ∀ᶠ x in f, v x ≤ bv)⟩ =>
     ⟨bu⊔bv,
       show ∀ᶠ x in f, u x⊔v x ≤ bu⊔bv by
-        "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"⟩
+        filter_upwards [hu, hv] with _ using sup_le_sup⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem is_bounded_under_inf [SemilatticeInf α] {f : Filter β} {u v : β → α} :
     f.is_bounded_under (· ≥ ·) u → f.is_bounded_under (· ≥ ·) v → f.is_bounded_under (· ≥ ·) fun a => u a⊓v a
   | ⟨bu, (hu : ∀ᶠ x in f, u x ≥ bu)⟩, ⟨bv, (hv : ∀ᶠ x in f, v x ≥ bv)⟩ =>
     ⟨bu⊓bv,
       show ∀ᶠ x in f, u x⊓v x ≥ bu⊓bv by
-        "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"⟩
+        filter_upwards [hu, hv] with _ using inf_le_inf⟩
 
 /-- Filters are automatically bounded or cobounded in complete lattices. To use the same statements
 in complete and conditionally complete lattices but let automation fill automatically the

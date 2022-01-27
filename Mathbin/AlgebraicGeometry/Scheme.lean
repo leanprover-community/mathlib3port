@@ -67,6 +67,24 @@ def forget_to_Top : Scheme ⥤ Top :=
 instance {X Y : Scheme} : HasLiftT (X ⟶ Y) (X.to_SheafedSpace ⟶ Y.to_SheafedSpace) :=
   @coeToLift <| @coeBaseₓ coeSubtype
 
+theorem id_val_base (X : Scheme) : (Subtype.val (𝟙 X)).base = 𝟙 _ :=
+  rfl
+
+@[simp]
+theorem id_coe_base (X : Scheme) : (↑(𝟙 X) : X.to_SheafedSpace ⟶ X.to_SheafedSpace).base = 𝟙 _ :=
+  rfl
+
+@[simp]
+theorem id_app {X : Scheme} (U : opens X.carrierᵒᵖ) :
+    (Subtype.val (𝟙 X)).c.app U =
+      X.presheaf.map
+        (eq_to_hom
+          (by
+            induction U using Opposite.rec
+            cases U
+            rfl)) :=
+  PresheafedSpace.id_c_app X.to_PresheafedSpace U
+
 @[reassoc]
 theorem comp_val {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).val = f.val ≫ g.val :=
   rfl
@@ -76,7 +94,7 @@ theorem comp_coe_base {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) :
     (↑(f ≫ g) : X.to_SheafedSpace ⟶ Z.to_SheafedSpace).base = f.val.base ≫ g.val.base :=
   rfl
 
-@[reassoc]
+@[reassoc, elementwise]
 theorem comp_val_base {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).val.base = f.val.base ≫ g.val.base :=
   rfl
 
@@ -97,8 +115,32 @@ theorem congr_app {X Y : Scheme} {f g : X ⟶ Y} (e : f = g) U :
   dsimp
   simp
 
+theorem app_eq {X Y : Scheme} (f : X ⟶ Y) {U V : opens Y.carrier} (e : U = V) :
+    f.val.c.app (op U) =
+      Y.presheaf.map (eq_to_hom e.symm).op ≫
+        f.val.c.app (op V) ≫ X.presheaf.map (eq_to_hom (congr_argₓ (opens.map f.val.base).obj e)).op :=
+  by
+  rw [← is_iso.inv_comp_eq, ← functor.map_inv, f.val.c.naturality, presheaf.pushforward_obj_map]
+  congr
+
 instance is_LocallyRingedSpace_iso {X Y : Scheme} (f : X ⟶ Y) [is_iso f] : @is_iso LocallyRingedSpace _ _ _ f :=
   forget_to_LocallyRingedSpace.map_is_iso f
+
+@[simp]
+theorem inv_val_c_app {X Y : Scheme} (f : X ⟶ Y) [is_iso f] (U : opens X.carrier) :
+    (inv f).val.c.app (op U) =
+      X.presheaf.map
+          (eq_to_hom <| by
+              rw [is_iso.hom_inv_id]
+              ext1
+              rfl :
+              (opens.map (f ≫ inv f).1.base).obj U ⟶ U).op ≫
+        inv (f.val.c.app (op <| (opens.map _).obj U)) :=
+  by
+  rw [is_iso.eq_comp_inv]
+  erw [← Scheme.comp_val_c_app]
+  rw [Scheme.congr_app (is_iso.hom_inv_id f), Scheme.id_app, ← functor.map_comp, eq_to_hom_trans, eq_to_hom_op]
+  rfl
 
 /-- The spectrum of a commutative ring, as a scheme.
 -/

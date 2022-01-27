@@ -1,5 +1,7 @@
 import Mathbin.Analysis.Convex.Function
+import Mathbin.Analysis.Convex.Star
 import Mathbin.Analysis.NormedSpace.Ordered
+import Mathbin.Analysis.NormedSpace.Pointwise
 import Mathbin.Data.Real.Pointwise
 
 /-!
@@ -31,6 +33,7 @@ For a vector space over a normed field:
 * `balanced`: A set `s` is balanced if `a • s ⊆ s` for all `a` of norm less than `1`.
 * `seminorm`: A function to the reals that is positive-semidefinite, absolutely homogeneous, and
   subadditive.
+* `norm_seminorm 𝕜 E`: The norm on `E` as a seminorm.
 * `gauge`: Aka Minkowksi functional. `gauge s x` is the least (actually, an infimum) `r` such
   that `x ∈ r • s`.
 * `gauge_seminorm`: The Minkowski functional as a seminorm, when `s` is symmetric, convex and
@@ -66,7 +69,7 @@ open NormedField Set
 
 open_locale Pointwise TopologicalSpace Nnreal
 
-variable {R 𝕜 E F G ι : Type _}
+variable {R 𝕜 𝕝 E F G ι : Type _}
 
 section SemiNormedRing
 
@@ -92,7 +95,7 @@ def Balanced (A : Set E) :=
 
 variable {𝕜} {A B : Set E}
 
-theorem Balanced.univ : Balanced 𝕜 (univ : Set E) := fun a ha => subset_univ _
+theorem balanced_univ : Balanced 𝕜 (univ : Set E) := fun a ha => subset_univ _
 
 theorem Balanced.union (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 𝕜 (A ∪ B) := by
   intro a ha t ht
@@ -103,7 +106,7 @@ end HasScalar
 
 section AddCommGroupₓ
 
-variable [AddCommGroupₓ E] [Module 𝕜 E] {A B : Set E}
+variable [AddCommGroupₓ E] [Module 𝕜 E] {s t u v A B : Set E}
 
 theorem Balanced.inter (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 𝕜 (A ∩ B) := by
   rintro a ha _ ⟨x, ⟨hx₁, hx₂⟩, rfl⟩
@@ -114,6 +117,27 @@ theorem Balanced.add (hA₁ : Balanced 𝕜 A) (hA₂ : Balanced 𝕜 B) : Balan
   rw [smul_add]
   exact ⟨_, _, hA₁ _ ha ⟨_, hx, rfl⟩, hA₂ _ ha ⟨_, hy, rfl⟩, rfl⟩
 
+theorem Absorbs.mono (hs : Absorbs 𝕜 s u) (hst : s ⊆ t) (hvu : v ⊆ u) : Absorbs 𝕜 t v :=
+  let ⟨r, hr, h⟩ := hs
+  ⟨r, hr, fun a ha => hvu.trans <| (h _ ha).trans <| smul_set_mono hst⟩
+
+theorem Absorbs.mono_left (hs : Absorbs 𝕜 s u) (h : s ⊆ t) : Absorbs 𝕜 t u :=
+  hs.mono h subset.rfl
+
+theorem Absorbs.mono_right (hs : Absorbs 𝕜 s u) (h : v ⊆ u) : Absorbs 𝕜 s v :=
+  hs.mono subset.rfl h
+
+theorem Absorbs.union (hu : Absorbs 𝕜 s u) (hv : Absorbs 𝕜 s v) : Absorbs 𝕜 s (u ∪ v) := by
+  obtain ⟨a, ha, hu⟩ := hu
+  obtain ⟨b, hb, hv⟩ := hv
+  exact
+    ⟨max a b, lt_max_of_lt_left ha, fun c hc =>
+      union_subset (hu _ <| le_of_max_le_left hc) (hv _ <| le_of_max_le_right hc)⟩
+
+@[simp]
+theorem absorbs_union : Absorbs 𝕜 s (u ∪ v) ↔ Absorbs 𝕜 s u ∧ Absorbs 𝕜 s v :=
+  ⟨fun h => ⟨h.mono_right <| subset_union_left _ _, h.mono_right <| subset_union_right _ _⟩, fun h => h.1.union h.2⟩
+
 theorem Absorbent.subset (hA : Absorbent 𝕜 A) (hAB : A ⊆ B) : Absorbent 𝕜 B := by
   rintro x
   obtain ⟨r, hr, hx⟩ := hA x
@@ -121,6 +145,9 @@ theorem Absorbent.subset (hA : Absorbent 𝕜 A) (hAB : A ⊆ B) : Absorbent �
 
 theorem absorbent_iff_forall_absorbs_singleton : Absorbent 𝕜 A ↔ ∀ x, Absorbs 𝕜 A {x} := by
   simp_rw [Absorbs, Absorbent, singleton_subset_iff]
+
+theorem Absorbent.absorbs (hs : Absorbent 𝕜 s) {x : E} : Absorbs 𝕜 s {x} :=
+  absorbent_iff_forall_absorbs_singleton.1 hs _
 
 theorem absorbent_iff_nonneg_lt : Absorbent 𝕜 A ↔ ∀ x, ∃ r, 0 ≤ r ∧ ∀ a : 𝕜, r < ∥a∥ → x ∈ a • A := by
   constructor
@@ -151,7 +178,26 @@ end NormedCommRing
 
 section NormedField
 
-variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {A B : Set E} {a : 𝕜}
+variable [NormedField 𝕜] [NormedRing 𝕝] [NormedSpace 𝕜 𝕝] [AddCommGroupₓ E] [Module 𝕜 E] [SmulWithZero 𝕝 E]
+  [IsScalarTower 𝕜 𝕝 E] {s t u v A B : Set E} {a b : 𝕜}
+
+/-- Scalar multiplication (by possibly different types) of a balanced set is monotone. -/
+theorem Balanced.smul_mono (hs : Balanced 𝕝 s) {a : 𝕝} {b : 𝕜} (h : ∥a∥ ≤ ∥b∥) : a • s ⊆ b • s := by
+  obtain rfl | hb := eq_or_ne b 0
+  · rw [norm_zero] at h
+    rw [norm_eq_zero.1 (h.antisymm <| norm_nonneg _)]
+    obtain rfl | h := s.eq_empty_or_nonempty
+    · simp_rw [smul_set_empty]
+      
+    · simp_rw [zero_smul_set h]
+      
+    
+  rintro _ ⟨x, hx, rfl⟩
+  refine' ⟨b⁻¹ • a • x, _, smul_inv_smul₀ hb _⟩
+  rw [← smul_assoc]
+  refine' hs _ _ (smul_mem_smul_set hx)
+  rw [norm_smul, norm_inv, ← div_eq_inv_mul]
+  exact div_le_one_of_le h (norm_nonneg _)
 
 /-- A balanced set absorbs itself. -/
 theorem Balanced.absorbs_self (hA : Balanced 𝕜 A) : Absorbs 𝕜 A A := by
@@ -183,6 +229,23 @@ theorem Balanced.subset_smul (hA : Balanced 𝕜 A) (ha : 1 ≤ ∥a∥) : A ⊆
 theorem Balanced.smul_eq (hA : Balanced 𝕜 A) (ha : ∥a∥ = 1) : a • A = A :=
   (hA _ ha.le).antisymm <| hA.subset_smul ha.ge
 
+theorem Absorbs.inter (hs : Absorbs 𝕜 s u) (ht : Absorbs 𝕜 t u) : Absorbs 𝕜 (s ∩ t) u := by
+  obtain ⟨a, ha, hs⟩ := hs
+  obtain ⟨b, hb, ht⟩ := ht
+  have h : 0 < max a b := lt_max_of_lt_left ha
+  refine' ⟨max a b, lt_max_of_lt_left ha, fun c hc => _⟩
+  rw [smul_set_inter₀ (norm_pos_iff.1 <| h.trans_le hc)]
+  exact subset_inter (hs _ <| le_of_max_le_left hc) (ht _ <| le_of_max_le_right hc)
+
+@[simp]
+theorem absorbs_inter : Absorbs 𝕜 (s ∩ t) u ↔ Absorbs 𝕜 s u ∧ Absorbs 𝕜 t u :=
+  ⟨fun h => ⟨h.mono_left <| inter_subset_left _ _, h.mono_left <| inter_subset_right _ _⟩, fun h => h.1.inter h.2⟩
+
+theorem absorbent_univ : Absorbent 𝕜 (univ : Set E) := by
+  refine' fun x => ⟨1, zero_lt_one, fun a ha => _⟩
+  rw [smul_set_univ₀ (norm_pos_iff.1 <| zero_lt_one.trans_le ha)]
+  exact trivialₓ
+
 /-! #### Topological vector space -/
 
 
@@ -207,7 +270,7 @@ theorem absorbent_nhds_zero (hA : A ∈ 𝓝 (0 : E)) : Absorbent 𝕜 A := by
   calc ∥a∥⁻¹ ≤ r / 2 := (inv_le (half_pos hr₁) ha₂).mp ha₁ _ < r := half_lt_self hr₁
 
 /-- The union of `{0}` with the interior of a balanced set is balanced. -/
-theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ({(0 : E)} ∪ Interior A) := by
+theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 : Set E) ∪ Interior A) := by
   intro a ha
   by_cases' a = 0
   · rw [h, zero_smul_set]
@@ -215,7 +278,8 @@ theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ({(0
     
   · rw [← image_smul, image_union]
     apply union_subset_union
-    · rw [image_singleton, smul_zero]
+    · rw [image_zero, smul_zero]
+      rfl
       
     · calc a • Interior A ⊆ Interior (a • A) := (is_open_map_smul₀ h).image_interior_subset A _ ⊆ Interior A :=
           interior_mono (hA _ ha)
@@ -236,6 +300,23 @@ theorem Balanced.closure (hA : Balanced 𝕜 A) : Balanced 𝕜 (Closure A) := f
     
 
 end NormedField
+
+section NondiscreteNormedField
+
+variable [NondiscreteNormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {s : Set E}
+
+theorem absorbs_zero_iff : Absorbs 𝕜 s 0 ↔ (0 : E) ∈ s := by
+  refine' ⟨_, fun h => ⟨1, zero_lt_one, fun a _ => zero_subset.2 <| zero_mem_smul_set h⟩⟩
+  rintro ⟨r, hr, h⟩
+  obtain ⟨a, ha⟩ := NormedSpace.exists_lt_norm 𝕜 𝕜 r
+  have := h _ ha.le
+  rwa [zero_subset, zero_mem_smul_set_iff] at this
+  exact norm_ne_zero_iff.1 (hr.trans ha).ne'
+
+theorem Absorbent.zero_mem (hs : Absorbent 𝕜 s) : (0 : E) ∈ s :=
+  absorbs_zero_iff.1 <| absorbent_iff_forall_absorbs_singleton.1 hs _
+
+end NondiscreteNormedField
 
 /-!
 ### Seminorms
@@ -553,6 +634,7 @@ def ball (x : E) (r : ℝ) :=
 
 variable {x y : E} {r : ℝ}
 
+@[simp]
 theorem mem_ball : y ∈ ball p x r ↔ p (y - x) < r :=
   Iff.rfl
 
@@ -578,6 +660,17 @@ theorem ball_finset_sup' (p : ι → Seminorm 𝕜 E) (s : Finset ι) (H : s.non
     
   · rw [Finset.sup'_cons hs, Finset.inf'_cons hs, ball_sup, inf_eq_inter, ih]
     
+
+theorem ball_mono {p : Seminorm 𝕜 E} {r₁ r₂ : ℝ} (h : r₁ ≤ r₂) : p.ball x r₁ ⊆ p.ball x r₂ := fun _ hx : _ < _ =>
+  hx.trans_le h
+
+theorem ball_antitone {p q : Seminorm 𝕜 E} (h : q ≤ p) : p.ball x r ⊆ q.ball x r := fun _ => (h _).trans_lt
+
+theorem ball_add_ball_subset (p : Seminorm 𝕜 E) (r₁ r₂ : ℝ) (x₁ x₂ : E) :
+    p.ball (x₁ : E) r₁ + p.ball (x₂ : E) r₂ ⊆ p.ball (x₁ + x₂) (r₁ + r₂) := by
+  rintro x ⟨y₁, y₂, hy₁, hy₂, rfl⟩
+  rw [mem_ball, add_sub_comm]
+  exact (p.triangle _ _).trans_lt (add_lt_add hy₁ hy₂)
 
 end HasScalar
 
@@ -617,6 +710,14 @@ theorem ball_finset_sup (p : ι → Seminorm 𝕜 E) (s : Finset ι) (e : E) {r 
   rw [Finset.inf_eq_infi]
   exact ball_finset_sup_eq_Inter _ _ _ hr
 
+theorem ball_smul_ball (p : Seminorm 𝕜 E) (r₁ r₂ : ℝ) : Metric.Ball (0 : 𝕜) r₁ • p.ball 0 r₂ ⊆ p.ball 0 (r₁ * r₂) := by
+  rw [Set.subset_def]
+  intro x hx
+  rw [Set.mem_smul] at hx
+  rcases hx with ⟨a, y, ha, hy, hx⟩
+  rw [← hx, mem_ball_zero, Seminorm.smul]
+  exact mul_lt_mul'' (mem_ball_zero_iff.mp ha) (p.mem_ball_zero.mp hy) (norm_nonneg a) (p.nonneg y)
+
 end NormOneClass
 
 end Module
@@ -630,7 +731,7 @@ section NormedField
 variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] (p : Seminorm 𝕜 E) {A B : Set E} {a : 𝕜} {r : ℝ} {x : E}
 
 /-- Seminorm-balls at the origin are absorbent. -/
-theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (ball p (0 : E) r) := by
+protected theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (ball p (0 : E) r) := by
   rw [absorbent_iff_nonneg_lt]
   rintro x
   have hxr : 0 ≤ p x / r := div_nonneg (p.nonneg _) hr.le
@@ -640,7 +741,7 @@ theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (ball p (0 : E) r) := 
   rwa [mem_ball_zero, p.smul, norm_inv, inv_mul_lt_iff ha₀, ← div_lt_iff hr]
 
 /-- Seminorm-balls containing the origin are absorbent. -/
-theorem absorbent_ball (hpr : p x < r) : Absorbent 𝕜 (ball p x r) := by
+protected theorem absorbent_ball (hpr : p x < r) : Absorbent 𝕜 (ball p x r) := by
   refine' (p.absorbent_ball_zero <| sub_pos.2 hpr).Subset fun y hy => _
   rw [p.mem_ball_zero] at hy
   exact p.mem_ball.2 ((p.sub_le _ _).trans_lt <| add_lt_of_lt_sub_right hy)
@@ -651,6 +752,18 @@ theorem symmetric_ball_zero (r : ℝ) (hx : x ∈ ball p 0 r) : -x ∈ ball p 0 
       rw [norm_neg, norm_one])
     ⟨x, hx, by
       rw [neg_smul, one_smul]⟩
+
+@[simp]
+theorem neg_ball (p : Seminorm 𝕜 E) (r : ℝ) (x : E) : -ball p x r = ball p (-x) r := by
+  ext
+  rw [mem_neg, mem_ball, mem_ball, ← neg_add', sub_neg_eq_add, p.neg]
+
+@[simp]
+theorem smul_ball_preimage (p : Seminorm 𝕜 E) (y : E) (r : ℝ) (a : 𝕜) (ha : a ≠ 0) :
+    (· • ·) a ⁻¹' p.ball y r = p.ball (a⁻¹ • y) (r / ∥a∥) :=
+  Set.ext fun _ => by
+    rw [mem_preimage, mem_ball, mem_ball, lt_div_iff (norm_pos_iff.mpr ha), mul_comm, ← p.smul, smul_sub,
+      smul_inv_smul₀ ha]
 
 end NormedField
 
@@ -688,9 +801,53 @@ end NormedLinearOrderedField
 
 end Seminorm
 
+/-! ### The norm as a seminorm -/
+
+
+section normSeminorm
+
+variable (𝕜 E) [NormedField 𝕜] [SemiNormedGroup E] [NormedSpace 𝕜 E] {r : ℝ}
+
+/-- The norm of a seminormed group as a seminorm. -/
+def normSeminorm : Seminorm 𝕜 E :=
+  ⟨norm, norm_smul, norm_add_le⟩
+
+@[simp]
+theorem coe_norm_seminorm : ⇑normSeminorm 𝕜 E = norm :=
+  rfl
+
+@[simp]
+theorem ball_norm_seminorm : (normSeminorm 𝕜 E).Ball = Metric.Ball := by
+  ext x r y
+  simp only [Seminorm.mem_ball, Metric.mem_ball, coe_norm_seminorm, dist_eq_norm]
+
+variable {𝕜 E} {x : E}
+
+/-- Balls at the origin are absorbent. -/
+theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (Metric.Ball (0 : E) r) := by
+  rw [← ball_norm_seminorm 𝕜]
+  exact (normSeminorm _ _).absorbent_ball_zero hr
+
+/-- Balls containing the origin are absorbent. -/
+theorem absorbent_ball (hx : ∥x∥ < r) : Absorbent 𝕜 (Metric.Ball x r) := by
+  rw [← ball_norm_seminorm 𝕜]
+  exact (normSeminorm _ _).absorbent_ball hx
+
+/-- Balls at the origin are balanced. -/
+theorem balanced_ball_zero [NormOneClass 𝕜] : Balanced 𝕜 (Metric.Ball (0 : E) r) := by
+  rw [← ball_norm_seminorm 𝕜]
+  exact (normSeminorm _ _).balanced_ball_zero r
+
+end normSeminorm
+
+/-! ### Minkowksi functional -/
+
+
 section gauge
 
 noncomputable section
+
+section AddCommGroupₓ
 
 variable [AddCommGroupₓ E] [Module ℝ E]
 
@@ -699,7 +856,7 @@ which sends `x : E` to the smallest `r : ℝ` such that `x` is in `s` scaled by 
 def gauge (s : Set E) (x : E) : ℝ :=
   Inf { r : ℝ | 0 < r ∧ x ∈ r • s }
 
-variable {s : Set E} {x : E}
+variable {s t : Set E} {a : ℝ} {x : E}
 
 theorem gauge_def : gauge s x = Inf { r ∈ Set.Ioi 0 | x ∈ r • s } :=
   rfl
@@ -721,8 +878,10 @@ theorem Absorbent.gauge_set_nonempty (absorbs : Absorbent ℝ s) : { r : ℝ | 0
   let ⟨r, hr₁, hr₂⟩ := Absorbs x
   ⟨r, hr₁, hr₂ r (Real.norm_of_nonneg hr₁.le).Ge⟩
 
-theorem exists_lt_of_gauge_lt (absorbs : Absorbent ℝ s) {x : E} {a : ℝ} (h : gauge s x < a) :
-    ∃ b, 0 < b ∧ b < a ∧ x ∈ b • s := by
+theorem gauge_mono (hs : Absorbent ℝ s) (h : s ⊆ t) : gauge t ≤ gauge s := fun x =>
+  (cInf_le_cInf gauge_set_bdd_below hs.gauge_set_nonempty) fun r hr => ⟨hr.1, smul_set_mono h hr.2⟩
+
+theorem exists_lt_of_gauge_lt (absorbs : Absorbent ℝ s) (h : gauge s x < a) : ∃ b, 0 < b ∧ b < a ∧ x ∈ b • s := by
   obtain ⟨b, ⟨hb, hx⟩, hba⟩ := exists_lt_of_cInf_lt absorbs.gauge_set_nonempty h
   exact ⟨b, hb, hba, hx⟩
 
@@ -737,6 +896,27 @@ theorem gauge_zero : gauge s 0 = 0 := by
   · simp only [smul_zero, sep_false, h, Real.Inf_empty]
     
 
+@[simp]
+theorem gauge_zero' : gauge (0 : Set E) = 0 := by
+  ext
+  rw [gauge_def']
+  obtain rfl | hx := eq_or_ne x 0
+  · simp only [cInf_Ioi, mem_zero, Pi.zero_apply, eq_self_iff_true, sep_true, smul_zero]
+    
+  · simp only [mem_zero, Pi.zero_apply, inv_eq_zero, smul_eq_zero]
+    convert Real.Inf_empty
+    exact eq_empty_iff_forall_not_mem.2 fun r hr => hr.2.elim (ne_of_gtₓ hr.1) hx
+    
+
+@[simp]
+theorem gauge_empty : gauge (∅ : Set E) = 0 := by
+  ext
+  simp only [gauge_def', Real.Inf_empty, mem_empty_eq, Pi.zero_apply, sep_false]
+
+theorem gauge_of_subset_zero (h : s ⊆ 0) : gauge s = 0 := by
+  obtain rfl | rfl := subset_singleton_iff_eq.1 h
+  exacts[gauge_empty, gauge_zero']
+
 /-- The gauge is always nonnegative. -/
 theorem gauge_nonneg (x : E) : 0 ≤ gauge s x :=
   (Real.Inf_nonneg _) fun x hx => hx.1.le
@@ -748,64 +928,48 @@ theorem gauge_neg (symmetric : ∀, ∀ x ∈ s, ∀, -x ∈ s) (x : E) : gauge 
   rw [gauge_def', gauge_def']
   simp_rw [smul_neg, this]
 
-theorem gauge_le_of_mem {r : ℝ} (hr : 0 ≤ r) {x : E} (hx : x ∈ r • s) : gauge s x ≤ r := by
-  obtain rfl | hr' := hr.eq_or_lt
+theorem gauge_le_of_mem (ha : 0 ≤ a) (hx : x ∈ a • s) : gauge s x ≤ a := by
+  obtain rfl | ha' := ha.eq_or_lt
   · rw [mem_singleton_iff.1 (zero_smul_subset _ hx), gauge_zero]
     
-  · exact cInf_le gauge_set_bdd_below ⟨hr', hx⟩
+  · exact cInf_le gauge_set_bdd_below ⟨ha', hx⟩
     
 
-theorem gauge_le_one_eq' (hs : Convex ℝ s) (zero_mem : (0 : E) ∈ s) (absorbs : Absorbent ℝ s) :
-    { x | gauge s x ≤ 1 } = ⋂ (r : ℝ) (H : 1 < r), r • s := by
+theorem gauge_le_eq (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : Absorbent ℝ s) (ha : 0 ≤ a) :
+    { x | gauge s x ≤ a } = ⋂ (r : ℝ) (H : a < r), r • s := by
   ext
   simp_rw [Set.mem_Inter, Set.mem_set_of_eq]
   constructor
   · intro h r hr
-    have hr' := zero_lt_one.trans hr
+    have hr' := ha.trans_lt hr
     rw [mem_smul_set_iff_inv_smul_mem₀ hr'.ne']
-    obtain ⟨δ, δ_pos, hδr, hδ⟩ := exists_lt_of_gauge_lt Absorbs (h.trans_lt hr)
+    obtain ⟨δ, δ_pos, hδr, hδ⟩ := exists_lt_of_gauge_lt hs₂ (h.trans_lt hr)
     suffices (r⁻¹ * δ) • δ⁻¹ • x ∈ s by
       rwa [smul_smul, mul_inv_cancel_right₀ δ_pos.ne'] at this
     rw [mem_smul_set_iff_inv_smul_mem₀ δ_pos.ne'] at hδ
-    refine' hs.smul_mem_of_zero_mem zero_mem hδ ⟨mul_nonneg (inv_nonneg.2 hr'.le) δ_pos.le, _⟩
+    refine' hs₁.smul_mem_of_zero_mem hs₀ hδ ⟨mul_nonneg (inv_nonneg.2 hr'.le) δ_pos.le, _⟩
     rw [inv_mul_le_iff hr', mul_oneₓ]
     exact hδr.le
     
   · refine' fun h => le_of_forall_pos_lt_add fun ε hε => _
-    have hε' := (lt_add_iff_pos_right 1).2 (half_pos hε)
-    exact (gauge_le_of_mem (zero_le_one.trans hε'.le) <| h _ hε').trans_lt (add_lt_add_left (half_lt_self hε) _)
+    have hε' := (lt_add_iff_pos_right a).2 (half_pos hε)
+    exact (gauge_le_of_mem (ha.trans hε'.le) <| h _ hε').trans_lt (add_lt_add_left (half_lt_self hε) _)
     
 
-theorem gauge_le_one_eq (hs : Convex ℝ s) (zero_mem : (0 : E) ∈ s) (absorbs : Absorbent ℝ s) :
-    { x | gauge s x ≤ 1 } = ⋂ r ∈ Set.Ioi (1 : ℝ), r • s :=
-  gauge_le_one_eq' hs zero_mem Absorbs
-
-theorem gauge_lt_one_eq' (absorbs : Absorbent ℝ s) : { x | gauge s x < 1 } = ⋃ (r : ℝ) (H : 0 < r) (H : r < 1), r • s :=
-  by
+theorem gauge_lt_eq' (absorbs : Absorbent ℝ s) (a : ℝ) :
+    { x | gauge s x < a } = ⋃ (r : ℝ) (H : 0 < r) (H : r < a), r • s := by
   ext
-  simp_rw [Set.mem_set_of_eq, Set.mem_Union]
-  constructor
-  · intro h
-    obtain ⟨r, hr₀, hr₁, hx⟩ := exists_lt_of_gauge_lt Absorbs h
-    exact ⟨r, hr₀, hr₁, hx⟩
-    
-  · exact fun ⟨r, hr₀, hr₁, hx⟩ => (gauge_le_of_mem hr₀.le hx).trans_lt hr₁
-    
+  simp_rw [mem_set_of_eq, mem_Union, exists_prop]
+  exact ⟨exists_lt_of_gauge_lt Absorbs, fun ⟨r, hr₀, hr₁, hx⟩ => (gauge_le_of_mem hr₀.le hx).trans_lt hr₁⟩
 
-theorem gauge_lt_one_eq (absorbs : Absorbent ℝ s) : { x | gauge s x < 1 } = ⋃ r ∈ Set.Ioo 0 (1 : ℝ), r • s := by
+theorem gauge_lt_eq (absorbs : Absorbent ℝ s) (a : ℝ) : { x | gauge s x < a } = ⋃ r ∈ Set.Ioo 0 (a : ℝ), r • s := by
   ext
-  simp_rw [Set.mem_set_of_eq, Set.mem_Union]
-  constructor
-  · intro h
-    obtain ⟨r, hr₀, hr₁, hx⟩ := exists_lt_of_gauge_lt Absorbs h
-    exact ⟨r, ⟨hr₀, hr₁⟩, hx⟩
-    
-  · exact fun ⟨r, ⟨hr₀, hr₁⟩, hx⟩ => (gauge_le_of_mem hr₀.le hx).trans_lt hr₁
-    
+  simp_rw [mem_set_of_eq, mem_Union, exists_prop, mem_Ioo, and_assoc]
+  exact ⟨exists_lt_of_gauge_lt Absorbs, fun ⟨r, hr₀, hr₁, hx⟩ => (gauge_le_of_mem hr₀.le hx).trans_lt hr₁⟩
 
 theorem gauge_lt_one_subset_self (hs : Convex ℝ s) (h₀ : (0 : E) ∈ s) (absorbs : Absorbent ℝ s) :
     { x | gauge s x < 1 } ⊆ s := by
-  rw [gauge_lt_one_eq Absorbs]
+  rw [gauge_lt_eq Absorbs]
   apply Set.Union₂_subset
   rintro r hr _ ⟨y, hy, rfl⟩
   exact hs.smul_mem_of_zero_mem h₀ hy (Ioo_subset_Icc_self hr)
@@ -816,51 +980,42 @@ theorem gauge_le_one_of_mem {x : E} (hx : x ∈ s) : gauge s x ≤ 1 :=
 
 theorem self_subset_gauge_le_one : s ⊆ { x | gauge s x ≤ 1 } := fun x => gauge_le_one_of_mem
 
-theorem Convex.gauge_le_one (hs : Convex ℝ s) (h₀ : (0 : E) ∈ s) (absorbs : Absorbent ℝ s) :
-    Convex ℝ { x | gauge s x ≤ 1 } := by
-  rw [gauge_le_one_eq hs h₀ Absorbs]
-  exact convex_Inter fun i => convex_Inter fun hi : _ < _ => hs.smul _
+theorem Convex.gauge_le (hs : Convex ℝ s) (h₀ : (0 : E) ∈ s) (absorbs : Absorbent ℝ s) (a : ℝ) :
+    Convex ℝ { x | gauge s x ≤ a } := by
+  by_cases' ha : 0 ≤ a
+  · rw [gauge_le_eq hs h₀ Absorbs ha]
+    exact convex_Inter fun i => convex_Inter fun hi => hs.smul _
+    
+  · convert convex_empty
+    exact eq_empty_iff_forall_not_mem.2 fun x hx => ha <| (gauge_nonneg _).trans hx
+    
 
-section TopologicalSpace
+theorem Balanced.star_convex (hs : Balanced ℝ s) : StarConvex ℝ 0 s :=
+  star_convex_zero_iff.2 fun x hx a ha₀ ha₁ =>
+    hs _
+      (by
+        rwa [Real.norm_of_nonneg ha₀])
+      (smul_mem_smul_set hx)
 
-variable [TopologicalSpace E] [HasContinuousSmul ℝ E]
+theorem le_gauge_of_not_mem (hs₀ : StarConvex ℝ 0 s) (hs₂ : Absorbs ℝ s {x}) (hx : x ∉ a • s) : a ≤ gauge s x := by
+  rw [star_convex_zero_iff] at hs₀
+  obtain ⟨r, hr, h⟩ := hs₂
+  refine' le_cInf ⟨r, hr, singleton_subset_iff.1 <| h _ (Real.norm_of_nonneg hr.le).Ge⟩ _
+  rintro b ⟨hb, x, hx', rfl⟩
+  refine' not_ltₓ.1 fun hba => hx _
+  have ha := hb.trans hba
+  refine' ⟨(a⁻¹ * b) • x, hs₀ hx' (mul_nonneg (inv_nonneg.2 ha.le) hb.le) _, _⟩
+  · rw [← div_eq_inv_mul]
+    exact div_le_one_of_le hba.le ha.le
+    
+  · rw [← mul_smul, mul_inv_cancel_left₀ ha.ne']
+    
 
-theorem interior_subset_gauge_lt_one (s : Set E) : Interior s ⊆ { x | gauge s x < 1 } := by
-  intro x hx
-  let f : ℝ → E := fun t => t • x
-  have hf : Continuous f := by
-    continuity
-  let s' := f ⁻¹' Interior s
-  have hs' : IsOpen s' := hf.is_open_preimage _ is_open_interior
-  have one_mem : (1 : ℝ) ∈ s' := by
-    simpa only [s', f, Set.mem_preimage, one_smul]
-  obtain ⟨ε, hε₀, hε⟩ := (Metric.nhds_basis_closed_ball.1 _).1 (is_open_iff_mem_nhds.1 hs' 1 one_mem)
-  rw [Real.closed_ball_eq_Icc] at hε
-  have hε₁ : 0 < 1 + ε := hε₀.trans (lt_one_add ε)
-  have : (1 + ε)⁻¹ < 1 := by
-    rw [inv_lt_one_iff]
-    right
-    linarith
-  refine' (gauge_le_of_mem (inv_nonneg.2 hε₁.le) _).trans_lt this
-  rw [mem_inv_smul_set_iff₀ hε₁.ne']
-  exact interior_subset (hε ⟨(sub_le_self _ hε₀.le).trans ((le_add_iff_nonneg_right _).2 hε₀.le), le_rfl⟩)
+theorem one_le_gauge_of_not_mem (hs₁ : StarConvex ℝ 0 s) (hs₂ : Absorbs ℝ s {x}) (hx : x ∉ s) : 1 ≤ gauge s x :=
+  le_gauge_of_not_mem hs₁ hs₂ <| by
+    rwa [one_smul]
 
-theorem gauge_lt_one_eq_self_of_open {s : Set E} (hs : Convex ℝ s) (zero_mem : (0 : E) ∈ s) (hs₂ : IsOpen s) :
-    { x | gauge s x < 1 } = s := by
-  apply (gauge_lt_one_subset_self hs ‹_› <| absorbent_nhds_zero <| hs₂.mem_nhds zero_mem).antisymm
-  convert interior_subset_gauge_lt_one s
-  exact hs₂.interior_eq.symm
-
-theorem gauge_lt_one_of_mem_of_open {s : Set E} (hs : Convex ℝ s) (zero_mem : (0 : E) ∈ s) (hs₂ : IsOpen s) (x : E)
-    (hx : x ∈ s) : gauge s x < 1 := by
-  rwa [← gauge_lt_one_eq_self_of_open hs zero_mem hs₂] at hx
-
-theorem one_le_gauge_of_not_mem {s : Set E} (hs : Convex ℝ s) (zero_mem : (0 : E) ∈ s) (hs₂ : IsOpen s) {x : E}
-    (hx : x ∉ s) : 1 ≤ gauge s x := by
-  rw [← gauge_lt_one_eq_self_of_open hs zero_mem hs₂] at hx
-  exact le_of_not_ltₓ hx
-
-end TopologicalSpace
+section LinearOrderedField
 
 variable {α : Type _} [LinearOrderedField α] [MulActionWithZero α ℝ] [OrderedSmul α ℝ]
 
@@ -910,6 +1065,91 @@ theorem gauge_smul [Module α E] [IsScalarTower α ℝ (Set E)] {s : Set E} (sym
   · infer_instance
     
 
+theorem gauge_smul_left_of_nonneg [MulActionWithZero α E] [SmulCommClass α ℝ ℝ] [IsScalarTower α ℝ ℝ]
+    [IsScalarTower α ℝ E] {s : Set E} {a : α} (ha : 0 ≤ a) : gauge (a • s) = a⁻¹ • gauge s := by
+  obtain rfl | ha' := ha.eq_or_lt
+  · rw [inv_zero, zero_smul, gauge_of_subset_zero (zero_smul_subset _)]
+    
+  ext
+  rw [gauge_def', Pi.smul_apply, gauge_def', ← Real.Inf_smul_of_nonneg (inv_nonneg.2 ha)]
+  congr 1
+  ext r
+  simp_rw [Set.mem_smul_set, Set.mem_sep_eq]
+  constructor
+  · rintro ⟨hr, y, hy, h⟩
+    simp_rw [mem_Ioi]  at hr⊢
+    refine' ⟨a • r, ⟨smul_pos ha' hr, _⟩, inv_smul_smul₀ ha'.ne' _⟩
+    rwa [smul_inv₀, smul_assoc, ← h, inv_smul_smul₀ ha'.ne']
+    
+  · rintro ⟨r, ⟨hr, hx⟩, rfl⟩
+    rw [mem_Ioi] at hr⊢
+    have := smul_pos ha' hr
+    refine' ⟨smul_pos (inv_pos.2 ha') hr, r⁻¹ • x, hx, _⟩
+    rw [smul_inv₀, smul_assoc, inv_inv₀]
+    
+
+theorem gauge_smul_left [Module α E] [SmulCommClass α ℝ ℝ] [IsScalarTower α ℝ ℝ] [IsScalarTower α ℝ E] {s : Set E}
+    (symmetric : ∀, ∀ x ∈ s, ∀, -x ∈ s) (a : α) : gauge (a • s) = (abs a)⁻¹ • gauge s := by
+  rw [← gauge_smul_left_of_nonneg (abs_nonneg a)]
+  obtain h | h := abs_choice a
+  · rw [h]
+    
+  · rw [h, Set.neg_smul_set, ← Set.smul_set_neg]
+    congr
+    ext y
+    refine' ⟨Symmetric _, fun hy => _⟩
+    rw [← neg_negₓ y]
+    exact Symmetric _ hy
+    
+  · infer_instance
+    
+
+end LinearOrderedField
+
+section TopologicalSpace
+
+variable [TopologicalSpace E] [HasContinuousSmul ℝ E]
+
+theorem interior_subset_gauge_lt_one (s : Set E) : Interior s ⊆ { x | gauge s x < 1 } := by
+  intro x hx
+  let f : ℝ → E := fun t => t • x
+  have hf : Continuous f := by
+    continuity
+  let s' := f ⁻¹' Interior s
+  have hs' : IsOpen s' := hf.is_open_preimage _ is_open_interior
+  have one_mem : (1 : ℝ) ∈ s' := by
+    simpa only [s', f, Set.mem_preimage, one_smul]
+  obtain ⟨ε, hε₀, hε⟩ := (Metric.nhds_basis_closed_ball.1 _).1 (is_open_iff_mem_nhds.1 hs' 1 one_mem)
+  rw [Real.closed_ball_eq_Icc] at hε
+  have hε₁ : 0 < 1 + ε := hε₀.trans (lt_one_add ε)
+  have : (1 + ε)⁻¹ < 1 := by
+    rw [inv_lt_one_iff]
+    right
+    linarith
+  refine' (gauge_le_of_mem (inv_nonneg.2 hε₁.le) _).trans_lt this
+  rw [mem_inv_smul_set_iff₀ hε₁.ne']
+  exact interior_subset (hε ⟨(sub_le_self _ hε₀.le).trans ((le_add_iff_nonneg_right _).2 hε₀.le), le_rfl⟩)
+
+theorem gauge_lt_one_eq_self_of_open (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : IsOpen s) :
+    { x | gauge s x < 1 } = s := by
+  apply (gauge_lt_one_subset_self hs₁ ‹_› <| absorbent_nhds_zero <| hs₂.mem_nhds hs₀).antisymm
+  convert interior_subset_gauge_lt_one s
+  exact hs₂.interior_eq.symm
+
+theorem gauge_lt_one_of_mem_of_open (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : IsOpen s) {x : E} (hx : x ∈ s) :
+    gauge s x < 1 := by
+  rwa [← gauge_lt_one_eq_self_of_open hs₁ hs₀ hs₂] at hx
+
+theorem gauge_lt_of_mem_smul (x : E) (ε : ℝ) (hε : 0 < ε) (hs₀ : (0 : E) ∈ s) (hs₁ : Convex ℝ s) (hs₂ : IsOpen s)
+    (hx : x ∈ ε • s) : gauge s x < ε := by
+  have : ε⁻¹ • x ∈ s := by
+    rwa [← mem_smul_set_iff_inv_smul_mem₀ hε.ne']
+  have h_gauge_lt := gauge_lt_one_of_mem_of_open hs₁ hs₀ hs₂ this
+  rwa [gauge_smul_of_nonneg (inv_nonneg.2 hε.le), smul_eq_mul, inv_mul_lt_iff hε, mul_oneₓ] at h_gauge_lt
+  infer_instance
+
+end TopologicalSpace
+
 theorem gauge_add_le (hs : Convex ℝ s) (absorbs : Absorbent ℝ s) (x y : E) : gauge s (x + y) ≤ gauge s x + gauge s y :=
   by
   refine' le_of_forall_pos_lt_add fun ε hε => _
@@ -927,14 +1167,30 @@ theorem gauge_add_le (hs : Convex ℝ s) (absorbs : Absorbent ℝ s) (x y : E) :
 
 /-- `gauge s` as a seminorm when `s` is symmetric, convex and absorbent. -/
 @[simps]
-def gaugeSeminorm (symmetric : ∀, ∀ x ∈ s, ∀, -x ∈ s) (hs : Convex ℝ s) (hs' : Absorbent ℝ s) : Seminorm ℝ E where
+def gaugeSeminorm (hs₀ : ∀, ∀ x ∈ s, ∀, -x ∈ s) (hs₁ : Convex ℝ s) (hs₂ : Absorbent ℝ s) : Seminorm ℝ E where
   toFun := gauge s
   smul' := fun r x => by
-    rw [gauge_smul Symmetric, Real.norm_eq_abs, smul_eq_mul] <;> infer_instance
-  triangle' := gauge_add_le hs hs'
+    rw [gauge_smul hs₀, Real.norm_eq_abs, smul_eq_mul] <;> infer_instance
+  triangle' := gauge_add_le hs₁ hs₂
 
-/-- Any seminorm arises a the gauge of its unit ball. -/
-theorem Seminorm.gauge_ball (p : Seminorm ℝ E) : gauge (p.ball 0 1) = p := by
+section gaugeSeminorm
+
+variable {hs₀ : ∀, ∀ x ∈ s, ∀, -x ∈ s} {hs₁ : Convex ℝ s} {hs₂ : Absorbent ℝ s}
+
+section TopologicalSpace
+
+variable [TopologicalSpace E] [HasContinuousSmul ℝ E]
+
+theorem gauge_seminorm_lt_one_of_open (hs : IsOpen s) {x : E} (hx : x ∈ s) : gaugeSeminorm hs₀ hs₁ hs₂ x < 1 :=
+  gauge_lt_one_of_mem_of_open hs₁ hs₂.zero_mem hs hx
+
+end TopologicalSpace
+
+end gaugeSeminorm
+
+/-- Any seminorm arises as the gauge of its unit ball. -/
+@[simp]
+protected theorem Seminorm.gauge_ball (p : Seminorm ℝ E) : gauge (p.ball 0 1) = p := by
   ext
   obtain hp | hp := { r : ℝ | 0 < r ∧ x ∈ r • p.ball 0 1 }.eq_empty_or_nonempty
   · rw [gauge, hp, Real.Inf_empty]
@@ -960,6 +1216,49 @@ theorem Seminorm.gauge_ball (p : Seminorm ℝ E) : gauge (p.ball 0 1) = p := by
 theorem Seminorm.gauge_seminorm_ball (p : Seminorm ℝ E) :
     gaugeSeminorm (fun x => p.symmetric_ball_zero 1) (p.convex_ball 0 1) (p.absorbent_ball_zero zero_lt_one) = p :=
   FunLike.coe_injective p.gauge_ball
+
+end AddCommGroupₓ
+
+section Norm
+
+variable [SemiNormedGroup E] [NormedSpace ℝ E] {s : Set E} {r : ℝ} {x : E}
+
+theorem gauge_unit_ball (x : E) : gauge (Metric.Ball (0 : E) 1) x = ∥x∥ := by
+  obtain rfl | hx := eq_or_ne x 0
+  · rw [norm_zero, gauge_zero]
+    
+  refine' (le_of_forall_pos_le_add fun ε hε => _).antisymm _
+  · have := add_pos_of_nonneg_of_pos (norm_nonneg x) hε
+    refine' gauge_le_of_mem this.le _
+    rw [smul_ball this.ne', smul_zero, Real.norm_of_nonneg this.le, mul_oneₓ, mem_ball_zero_iff]
+    exact lt_add_of_pos_right _ hε
+    
+  refine' le_gauge_of_not_mem balanced_ball_zero.star_convex (absorbent_ball_zero zero_lt_one).Absorbs fun h => _
+  obtain hx' | hx' := eq_or_ne ∥x∥ 0
+  · rw [hx'] at h
+    exact hx (zero_smul_subset _ h)
+    
+  · rw [mem_smul_set_iff_inv_smul_mem₀ hx', mem_ball_zero_iff, norm_smul, norm_inv, norm_norm, inv_mul_cancel hx'] at h
+    exact lt_irreflₓ _ h
+    
+
+theorem smul_unit_ball {r : ℝ} (hr : 0 < r) : r • Metric.Ball (0 : E) 1 = Metric.Ball (0 : E) r := by
+  rw [smul_ball hr.ne', smul_zero, mul_oneₓ, Real.norm_of_nonneg hr.le]
+
+theorem gauge_ball (hr : 0 < r) (x : E) : gauge (Metric.Ball (0 : E) r) x = ∥x∥ / r := by
+  rw [← smul_unit_ball hr, gauge_smul_left, Pi.smul_apply, gauge_unit_ball, smul_eq_mul, abs_of_nonneg hr.le,
+    div_eq_inv_mul]
+  simp_rw [mem_ball_zero_iff, norm_neg]
+  exact fun _ => id
+
+theorem mul_gauge_le_norm (hs : Metric.Ball (0 : E) r ⊆ s) : r * gauge s x ≤ ∥x∥ := by
+  obtain hr | hr := le_or_ltₓ r 0
+  · exact (mul_nonpos_of_nonpos_of_nonneg hr <| gauge_nonneg _).trans (norm_nonneg _)
+    
+  rw [mul_comm, ← le_div_iff hr, ← gauge_ball hr]
+  exact gauge_mono (absorbent_ball_zero hr) hs x
+
+end Norm
 
 end gauge
 

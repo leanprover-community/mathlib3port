@@ -413,6 +413,35 @@ variable (P) {L}
 theorem two_lt_point_count [projective_plane P L] (l : L) : 2 < point_count P l := by
   simpa only [point_count_eq P l, Nat.succ_lt_succ_iff] using one_lt_order P L
 
+variable (P) (L)
+
+theorem card_points [projective_plane P L] : Fintype.card P = order P L ^ 2 + order P L + 1 := by
+  let p : P := Classical.some (@exists_config P L _ _)
+  let ϕ : { q // q ≠ p } ≃ Σ l : { l : L // p ∈ l }, { q // q ∈ l.1 ∧ q ≠ p } :=
+    { toFun := fun q => ⟨⟨mk_line q.2, (mk_line_ax q.2).2⟩, q, (mk_line_ax q.2).1, q.2⟩,
+      invFun := fun lq => ⟨lq.2, lq.2.2.2⟩, left_inv := fun q => Subtype.ext rfl,
+      right_inv := fun lq =>
+        Sigma.subtype_ext
+          (Subtype.ext
+            ((eq_or_eq (mk_line_ax lq.2.2.2).1 (mk_line_ax lq.2.2.2).2 lq.2.2.1 lq.1.2).resolve_left lq.2.2.2))
+          rfl }
+  classical
+  have h1 : Fintype.card { q // q ≠ p } + 1 = Fintype.card P := by
+    apply (eq_tsub_iff_add_eq_of_le (Nat.succ_le_of_ltₓ (fintype.card_pos_iff.mpr ⟨p⟩))).mp
+    convert Fintype.card_subtype_compl.trans (congr_argₓ _ (Fintype.card_subtype_eq p))
+  have h2 : ∀ l : { l : L // p ∈ l }, Fintype.card { q // q ∈ l.1 ∧ q ≠ p } = order P L := by
+    intro l
+    rw [← Fintype.card_congr (Equivₓ.subtypeSubtypeEquivSubtypeInter _ _), Fintype.card_subtype_compl, ←
+      Nat.card_eq_fintype_card]
+    refine' tsub_eq_of_eq_add ((point_count_eq P l.1).trans _)
+    rw [← Fintype.card_subtype_eq (⟨p, l.2⟩ : { q : P // q ∈ l.1 })]
+    simp_rw [Subtype.ext_iff_val]
+  simp_rw [← h1, Fintype.card_congr ϕ, Fintype.card_sigma, h2, Finset.sum_const, Finset.card_univ]
+  rw [← Nat.card_eq_fintype_card, ← line_count, line_count_eq, smul_eq_mul, Nat.succ_mul, sq]
+
+theorem card_lines [projective_plane P L] : Fintype.card L = order P L ^ 2 + order P L + 1 :=
+  (card_points (dual L) (dual P)).trans (congr_argₓ (fun n => n ^ 2 + n + 1) (dual.order P L))
+
 end ProjectivePlane
 
 end Configuration

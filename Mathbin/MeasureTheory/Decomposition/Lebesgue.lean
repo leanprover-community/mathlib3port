@@ -187,12 +187,11 @@ theorem lintegral_rn_deriv_lt_top (μ ν : Measureₓ α) [is_finite_measure μ]
   rw [← set_lintegral_univ]
   exact lintegral_rn_deriv_lt_top_of_measure_ne_top _ (measure_lt_top _ _).Ne
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The Radon-Nikodym derivative of a sigma-finite measure `μ` with respect to another
 measure `ν` is `ν`-almost everywhere finite. -/
 theorem rn_deriv_lt_top (μ ν : Measureₓ α) [sigma_finite μ] : ∀ᵐ x ∂ν, μ.rn_deriv ν x < ∞ := by
   suffices ∀ n, ∀ᵐ x ∂ν, x ∈ spanning_sets μ n → μ.rn_deriv ν x < ∞ by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [ae_all_iff.2 this] with _ hx using hx _ (mem_spanning_sets_index _ _)
   intro n
   rw [← ae_restrict_iff' (measurable_spanning_sets _ _)]
   apply ae_lt_top (measurable_rn_deriv _ _)

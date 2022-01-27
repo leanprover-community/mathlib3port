@@ -81,7 +81,6 @@ theorem mem_of_pi_mem_pi [∀ i, ne_bot (f i)] {I : Set ι} (h : I.pi s ∈ pi f
 theorem pi_mem_pi_iff [∀ i, ne_bot (f i)] {I : Set ι} (hI : finite I) : I.pi s ∈ pi f ↔ ∀, ∀ i ∈ I, ∀, s i ∈ f i :=
   ⟨fun h i hi => mem_of_pi_mem_pi h hi, pi_mem_pi hI⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 @[simp]
 theorem pi_inf_principal_univ_pi_eq_bot : pi f⊓𝓟 (Set.Pi univ s) = ⊥ ↔ ∃ i, f i⊓𝓟 (s i) = ⊥ := by
   constructor
@@ -94,7 +93,7 @@ theorem pi_inf_principal_univ_pi_eq_bot : pi f⊓𝓟 (Set.Pi univ s) = ⊥ ↔ 
     
   · simp only [inf_principal_eq_bot]
     rintro ⟨i, hi⟩
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [mem_pi_of_mem i hi] with x using mt fun h => h i trivialₓ
     
 
 @[simp]

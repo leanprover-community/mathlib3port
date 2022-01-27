@@ -176,7 +176,6 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_punctured {
   not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_within_diff_singleton hne hc (h_deriv.filter_mono this)
     (h_infty.mono_left this) (hg.mono this)
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
 /-- If `f` grows in the punctured neighborhood of `c : ℝ` at least as fast as `1 / (x - c)`,
 then it is not interval integrable on any nontrivial interval `a..b`, `c ∈ [a, b]`. -/
@@ -185,7 +184,7 @@ theorem not_interval_integrable_of_sub_inv_is_O_punctured {f : ℝ → F} {a b c
     (hc : c ∈ "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") :
     ¬IntervalIntegrable f volume a b := by
   have A : ∀ᶠ x in 𝓝[≠] c, HasDerivAt (fun x => Real.log (x - c)) (x - c)⁻¹ x := by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [self_mem_nhds_within] with x hx
     simpa using ((has_deriv_at_id x).sub_const c).log (sub_ne_zero.2 hx)
   have B : tendsto (fun x => ∥Real.log (x - c)∥) (𝓝[≠] c) at_top := by
     refine' tendsto_abs_at_bot_at_top.comp (real.tendsto_log_nhds_within_zero.comp _)

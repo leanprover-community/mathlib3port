@@ -316,12 +316,11 @@ theorem sum_to_pou_fun_eq (x : X) : (∑ᶠ i, f.to_pou_fun i x) = 1 - ∏ᶠ i,
   convert f.to_pou_fun_eq_mul_prod _ _ _ fun j hji hj => _
   rwa [finite.mem_to_finset]
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem exists_finset_to_pou_fun_eventually_eq (i : ι) (x : X) :
     ∃ t : Finset ι, f.to_pou_fun i =ᶠ[𝓝 x] f i * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j := by
   rcases f.locally_finite x with ⟨U, hU, hf⟩
   use hf.to_finset
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [hU] with y hyU
   simp only [Pi.mul_apply, Finset.prod_apply]
   apply to_pou_fun_eq_mul_prod
   intro j hji hj

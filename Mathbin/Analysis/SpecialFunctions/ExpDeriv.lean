@@ -21,7 +21,6 @@ open_locale Classical TopologicalSpace
 
 namespace Complex
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The complex exponential is everywhere differentiable, with the derivative `exp x`. -/
 theorem has_deriv_at_exp (x : ℂ) : HasDerivAt exp (exp x) x := by
   rw [has_deriv_at_iff_is_o_nhds_zero]

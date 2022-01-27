@@ -509,6 +509,9 @@ theorem dist_lt_add_of_nonempty_ball_inter_ball (h : (ball x ε₁ ∩ ball y ε
 theorem Union_closed_ball_nat (x : α) : (⋃ n : ℕ, closed_ball x n) = univ :=
   Union_eq_univ_iff.2 fun y => exists_nat_ge (dist y x)
 
+theorem Union_inter_closed_ball_nat (s : Set α) (x : α) : (⋃ n : ℕ, s ∩ closed_ball x n) = s := by
+  rw [← inter_Union, Union_closed_ball_nat, inter_univ]
+
 theorem ball_subset (h : dist x y ≤ ε₂ - ε₁) : ball x ε₁ ⊆ ball y ε₂ := fun z zx => by
   rw [← add_sub_cancel'_right ε₁ ε₂] <;> exact lt_of_le_of_ltₓ (dist_triangle z x y) (add_lt_add_of_lt_of_le zx h)
 
@@ -1128,13 +1131,12 @@ theorem tendsto_iff_of_dist {ι : Type _} {f₁ f₂ : ι → α} {p : Filter ι
     (h : tendsto (fun x => dist (f₁ x) (f₂ x)) p (𝓝 0)) : tendsto f₁ p (𝓝 a) ↔ tendsto f₂ p (𝓝 a) :=
   Uniform.tendsto_congr <| tendsto_uniformity_iff_dist_tendsto_zero.2 h
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- If `u` is a neighborhood of `x`, then for small enough `r`, the closed ball
 `closed_ball x r` is contained in `u`. -/
 theorem eventually_closed_ball_subset {x : α} {u : Set α} (hu : u ∈ 𝓝 x) : ∀ᶠ r in 𝓝 (0 : ℝ), closed_ball x r ⊆ u := by
   obtain ⟨ε, εpos, hε⟩ : ∃ (ε : _)(hε : 0 < ε), closed_ball x ε ⊆ u := nhds_basis_closed_ball.mem_iff.1 hu
   have : Iic ε ∈ 𝓝 (0 : ℝ) := Iic_mem_nhds εpos
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [this] with _ hr using subset.trans (closed_ball_subset_closed_ball hr) hε
 
 end Real
 

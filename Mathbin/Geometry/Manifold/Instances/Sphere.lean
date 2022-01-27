@@ -307,7 +307,7 @@ from `(ℝ ∙ v)ᗮ` to the Euclidean space. -/
 def stereographic' (n : ℕ) [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
     LocalHomeomorph (sphere (0 : E) 1) (EuclideanSpace ℝ (Finₓ n)) :=
   stereographic (norm_eq_of_mem_sphere v) ≫ₕ
-    (LinearIsometryEquiv.fromOrthogonalSpanSingleton n (nonzero_of_mem_unit_sphere v)).toHomeomorph.toLocalHomeomorph
+    (LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere v)).toHomeomorph.toLocalHomeomorph
 
 @[simp]
 theorem stereographic'_source {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
@@ -342,9 +342,9 @@ instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : SmoothManifoldWithCorners (�
     (by
       rintro _ _ ⟨v, rfl⟩ ⟨v', rfl⟩
       let U : (ℝ∙(v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
-        LinearIsometryEquiv.fromOrthogonalSpanSingleton n (nonzero_of_mem_unit_sphere v)
+        LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere v)
       let U' : (ℝ∙(v' : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
-        LinearIsometryEquiv.fromOrthogonalSpanSingleton n (nonzero_of_mem_unit_sphere v')
+        LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere v')
       have hUv : stereographic' n v = stereographic (norm_eq_of_mem_sphere v) ≫ₕ U.to_homeomorph.to_local_homeomorph :=
         rfl
       have hU'v' :
@@ -368,7 +368,7 @@ theorem times_cont_mdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
     
   · intro v _
     let U : (ℝ∙(-v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
-      LinearIsometryEquiv.fromOrthogonalSpanSingleton n (nonzero_of_mem_unit_sphere (-v))
+      LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere (-v))
     exact
       ((times_cont_diff_stereo_inv_fun_aux.comp (ℝ∙(-v : E))ᗮ.subtypeL.TimesContDiff).comp
           U.symm.times_cont_diff).TimesContDiffOn
@@ -389,7 +389,7 @@ theorem TimesContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 
   refine' ⟨continuous_induced_rng hf.continuous, _⟩
   intro v
   let U : (ℝ∙(-v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
-    LinearIsometryEquiv.fromOrthogonalSpanSingleton n (nonzero_of_mem_unit_sphere (-v))
+    LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere (-v))
   have h : TimesContDiffOn ℝ ⊤ U Set.Univ := U.times_cont_diff.times_cont_diff_on
   have H₁ := (h.comp' times_cont_diff_on_stereo_to_fun).TimesContMdiffOn
   have H₂ : TimesContMdiffOn _ _ _ _ Set.Univ := hf.times_cont_mdiff_on

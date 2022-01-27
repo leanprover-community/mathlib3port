@@ -65,7 +65,8 @@ variable {𝕜 x s} {t : Set E}
 theorem convex_iff_forall_star_convex : Convex 𝕜 s ↔ ∀, ∀ x ∈ s, ∀, StarConvex 𝕜 x s :=
   forall_congrₓ fun x => forall_swap
 
-alias convex_iff_forall_star_convex ↔ Convex.star_convex _
+theorem Convex.star_convex (h : Convex 𝕜 s) (hx : x ∈ s) : StarConvex 𝕜 x s :=
+  convex_iff_forall_star_convex.1 h _ hx
 
 theorem star_convex_iff_segment_subset : StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s → [x -[𝕜] y] ⊆ s := by
   constructor
@@ -139,7 +140,7 @@ theorem StarConvex.mem (hs : StarConvex 𝕜 x s) (h : s.nonempty) : x ∈ s := 
   rw [one_smul, zero_smul, add_zeroₓ]
 
 theorem Convex.star_convex_iff (hs : Convex 𝕜 s) (h : s.nonempty) : StarConvex 𝕜 x s ↔ x ∈ s :=
-  ⟨fun hxs => hxs.mem h, hs.star_convex _⟩
+  ⟨fun hxs => hxs.mem h, hs.star_convex⟩
 
 theorem star_convex_iff_forall_pos (hx : x ∈ s) :
     StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • x + b • y ∈ s := by
@@ -270,6 +271,25 @@ section OrderedRing
 
 variable [OrderedRing 𝕜]
 
+section AddCommMonoidₓ
+
+variable [AddCommMonoidₓ E] [SmulWithZero 𝕜 E] {s : Set E}
+
+theorem star_convex_zero_iff : StarConvex 𝕜 0 s ↔ ∀ ⦃x : E⦄, x ∈ s → ∀ ⦃a : 𝕜⦄, 0 ≤ a → a ≤ 1 → a • x ∈ s := by
+  refine' forall_congrₓ fun x => forall_congrₓ fun hx => ⟨fun h a ha₀ ha₁ => _, fun h a b ha hb hab => _⟩
+  · simpa only [sub_add_cancel, eq_self_iff_true, forall_true_left, zero_addₓ, smul_zero'] using
+      h (sub_nonneg_of_le ha₁) ha₀
+    
+  · rw [smul_zero', zero_addₓ]
+    exact
+      h hb
+        (by
+          rw [← hab]
+          exact le_add_of_nonneg_left ha)
+    
+
+end AddCommMonoidₓ
+
 section AddCommGroupₓ
 
 variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {x y : E} {s : Set E}
@@ -396,11 +416,11 @@ open Submodule
 
 theorem Submodule.star_convex [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [Module 𝕜 E] (K : Submodule 𝕜 E) :
     StarConvex 𝕜 (0 : E) K :=
-  K.convex.star_convex _ K.zero_mem
+  K.convex.star_convex K.zero_mem
 
 theorem Subspace.star_convex [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] (K : Subspace 𝕜 E) :
     StarConvex 𝕜 (0 : E) K :=
-  K.convex.star_convex _ K.zero_mem
+  K.convex.star_convex K.zero_mem
 
 end Submodule
 

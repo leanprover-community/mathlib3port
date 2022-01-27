@@ -249,6 +249,7 @@ instance is_iso_to_Spec_Γ (R : CommRingₓₓ) : is_iso (to_Spec_Γ R) := by
   cases R
   apply structure_sheaf.is_iso_to_global
 
+@[reassoc]
 theorem Spec_Γ_naturality {R S : CommRingₓₓ} (f : R ⟶ S) :
     f ≫ to_Spec_Γ S = to_Spec_Γ R ≫ Γ.map (Spec.to_LocallyRingedSpace.map f.op).op := by
   ext

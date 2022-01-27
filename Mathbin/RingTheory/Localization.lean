@@ -376,6 +376,9 @@ theorem mk'_mem_iff {x} {y : M} {I : Ideal S} : mk' S x y ∈ I ↔ algebraMap R
 protected theorem Eq {a₁ b₁} {a₂ b₂ : M} : mk' S a₁ a₂ = mk' S b₁ b₂ ↔ ∃ c : M, a₁ * b₂ * c = b₁ * a₂ * c :=
   (to_localization_map M S).Eq
 
+theorem mk'_eq_zero_iff (x : R) (s : M) : mk' S x s = 0 ↔ ∃ m : M, x * m = 0 := by
+  rw [← (map_units S s).mul_left_inj, mk'_spec, zero_mul, map_eq_zero_iff M]
+
 section Ext
 
 variable [Algebra R P] [IsLocalization M P]
@@ -861,6 +864,24 @@ theorem finite_type_of_monoid_fg [Monoidₓ.Fg M] : Algebra.FiniteType R S := by
   trivial
 
 end InvSubmonoid
+
+variable (M S)
+
+include M
+
+theorem non_zero_divisors_le_comap [IsLocalization M S] :
+    nonZeroDivisors R ≤ (nonZeroDivisors S).comap (algebraMap R S) := by
+  rintro a ha b (e : b * algebraMap R S a = 0)
+  obtain ⟨x, s, rfl⟩ := mk'_surjective M b
+  rw [← @mk'_one R _ M, ← mk'_mul, ← (algebraMap R S).map_zero, ← @mk'_one R _ M, IsLocalization.eq] at e
+  obtain ⟨c, e⟩ := e
+  rw [zero_mul, zero_mul, Submonoid.coe_one, mul_oneₓ, mul_comm x a, mul_assoc, mul_comm] at e
+  rw [mk'_eq_zero_iff]
+  exact ⟨c, ha _ e⟩
+
+theorem map_non_zero_divisors_le [IsLocalization M S] :
+    (nonZeroDivisors R).map (algebraMap R S).toMonoidHom ≤ nonZeroDivisors S :=
+  Submonoid.map_le_iff_le_comap.mpr (non_zero_divisors_le_comap M S)
 
 end IsLocalization
 
@@ -2316,6 +2337,50 @@ theorem is_fraction_ring_iff_of_base_ring_equiv (h : R ≃+* P) :
     apply hx
     rw [← h.symm.map_mul, hz, h.symm.map_zero]
     
+
+variable (M)
+
+theorem is_fraction_ring_of_is_localization (S T : Type _) [CommRingₓ S] [CommRingₓ T] [Algebra R S] [Algebra R T]
+    [Algebra S T] [IsScalarTower R S T] [IsLocalization M S] [IsFractionRing R T] (hM : M ≤ nonZeroDivisors R) :
+    IsFractionRing S T := by
+  have := is_localization_of_submonoid_le S T M (nonZeroDivisors R) _
+  refine' @is_localization_of_is_exists_mul_mem _ _ _ _ _ _ this _ _
+  · exact map_non_zero_divisors_le M S
+    
+  · rintro ⟨x, hx⟩
+    obtain ⟨⟨y, s⟩, e⟩ := IsLocalization.surj M x
+    use algebraMap R S s
+    rw [mul_comm, Subtype.coe_mk, e]
+    refine' Set.mem_image_of_mem (algebraMap R S) _
+    intro z hz
+    apply IsLocalization.injective S hM
+    rw [map_zero]
+    apply hx
+    rw [← (map_units S s).mul_left_inj, mul_assoc, e, ← map_mul, hz, map_zero, zero_mul]
+    
+  · exact hM
+    
+
+protected theorem Nontrivial (R S : Type _) [CommRingₓ R] [Nontrivial R] [CommRingₓ S] [Algebra R S]
+    [IsFractionRing R S] : Nontrivial S := by
+  apply nontrivial_of_ne
+  intro h
+  apply @zero_ne_one R
+  exact
+    IsLocalization.injective S (le_of_eqₓ rfl) (((algebraMap R S).map_zero.trans h).trans (algebraMap R S).map_one.symm)
+
+theorem is_fraction_ring_of_is_domain_of_is_localization [IsDomain R] (S T : Type _) [CommRingₓ S] [CommRingₓ T]
+    [Algebra R S] [Algebra R T] [Algebra S T] [IsScalarTower R S T] [IsLocalization M S] [IsFractionRing R T] :
+    IsFractionRing S T := by
+  have := IsFractionRing.nontrivial R T
+  have := (algebraMap S T).domain_nontrivial
+  apply is_fraction_ring_of_is_localization M S T
+  intro x hx
+  rw [mem_non_zero_divisors_iff_ne_zero]
+  intro hx'
+  apply @zero_ne_one S
+  rw [← (algebraMap R S).map_one, ← @mk'_one R _ M, @comm _ Eq, mk'_eq_zero_iff]
+  exact ⟨⟨_, hx⟩, (one_mulₓ x).symm ▸ hx'⟩
 
 end IsFractionRing
 

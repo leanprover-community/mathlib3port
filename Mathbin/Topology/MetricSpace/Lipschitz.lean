@@ -394,7 +394,6 @@ end Metric
 
 end LipschitzOnWith
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- Consider a function `f : α × β → γ`. Suppose that it is continuous on each “vertical fiber”
 `{a} × t`, `a ∈ s`, and is Lipschitz continuous on each “horizontal fiber” `s × {b}`, `b ∈ t`
 with the same Lipschitz constant `K`. Then it is continuous on `s × t`.

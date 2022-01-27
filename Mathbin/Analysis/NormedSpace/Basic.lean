@@ -311,13 +311,12 @@ theorem norm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥ = ∥a∥ ^ n :=
 theorem nnnorm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
   (nnnorm_hom : α →*₀ ℝ≥0 ).map_zpow
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 instance (priority := 100) : HasContinuousInv₀ α := by
   refine' ⟨fun r r0 => tendsto_iff_norm_tendsto_zero.2 _⟩
   have r0' : 0 < ∥r∥ := norm_pos_iff.2 r0
   rcases exists_between r0' with ⟨ε, ε0, εr⟩
   have : ∀ᶠ e in 𝓝 r, ∥e⁻¹ - r⁻¹∥ ≤ ∥r - e∥ / ∥r∥ / ε := by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [(is_open_lt continuous_const continuous_norm).eventually_mem εr] with e he
     have e0 : e ≠ 0 := norm_pos_iff.1 (ε0.trans he)
     calc ∥e⁻¹ - r⁻¹∥ = ∥r - e∥ / ∥r∥ / ∥e∥ := by
         field_simp [mul_comm]_ ≤ ∥r - e∥ / ∥r∥ / ε :=
@@ -694,18 +693,15 @@ def homeomorphUnitBall {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E] : E 
 
 variable (α)
 
-theorem ne_neg_of_mem_sphere [CharZero α] {r : ℝ} (hr : 0 < r) (x : sphere (0 : E) r) : x ≠ -x := fun h =>
-  nonzero_of_mem_sphere hr x
+theorem ne_neg_of_mem_sphere [CharZero α] {r : ℝ} (hr : r ≠ 0) (x : sphere (0 : E) r) : x ≠ -x := fun h =>
+  ne_zero_of_mem_sphere hr x
     (eq_zero_of_eq_neg α
       (by
         conv_lhs => rw [h]
         simp ))
 
 theorem ne_neg_of_mem_unit_sphere [CharZero α] (x : sphere (0 : E) 1) : x ≠ -x :=
-  ne_neg_of_mem_sphere α
-    (by
-      norm_num)
-    x
+  ne_neg_of_mem_sphere α one_ne_zero x
 
 variable {α}
 
@@ -931,7 +927,7 @@ theorem NormedAlgebra.norm_one_class : NormOneClass 𝕜' :=
   ⟨NormedAlgebra.norm_one 𝕜 𝕜'⟩
 
 theorem NormedAlgebra.zero_ne_one : (0 : 𝕜') ≠ 1 := by
-  refine' (ne_zero_of_norm_pos _).symm
+  refine' (ne_zero_of_norm_ne_zero _).symm
   rw [NormedAlgebra.norm_one 𝕜 𝕜']
   norm_num
 

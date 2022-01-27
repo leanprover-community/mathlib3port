@@ -242,6 +242,18 @@ def CommRing_iso_to_ring_equiv {X Y : CommRingₓₓ} (i : X ≅ Y) : X ≃+* Y 
   map_mul' := by
     tidy
 
+@[simp]
+theorem CommRing_iso_to_ring_equiv_to_ring_hom {X Y : CommRingₓₓ} (i : X ≅ Y) :
+    i.CommRing_iso_to_ring_equiv.to_ring_hom = i.hom := by
+  ext
+  rfl
+
+@[simp]
+theorem CommRing_iso_to_ring_equiv_symm_to_ring_hom {X Y : CommRingₓₓ} (i : X ≅ Y) :
+    i.CommRing_iso_to_ring_equiv.symm.to_ring_hom = i.inv := by
+  ext
+  rfl
+
 end CategoryTheory.Iso
 
 /-- Ring equivalences between `ring`s are the same as (isomorphic to) isomorphisms in `Ring`. -/

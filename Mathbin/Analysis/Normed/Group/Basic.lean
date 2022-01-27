@@ -209,6 +209,11 @@ theorem norm_nonneg (g : E) : 0 ≤ ∥g∥ := by
 theorem norm_zero : ∥(0 : E)∥ = 0 := by
   rw [← dist_zero_right, dist_self]
 
+theorem ne_zero_of_norm_ne_zero {g : E} : ∥g∥ ≠ 0 → g ≠ 0 :=
+  mt <| by
+    rintro rfl
+    exact norm_zero
+
 @[nontriviality]
 theorem norm_of_subsingleton [Subsingleton E] (x : E) : ∥x∥ = 0 := by
   rw [Subsingleton.elimₓ x 0, norm_zero]
@@ -356,18 +361,12 @@ theorem preimage_add_sphere (x y : E) (r : ℝ) : (· + ·) y ⁻¹' sphere x r 
   simp only [Set.mem_preimage, mem_sphere_iff_norm]
   abel
 
-theorem ne_zero_of_norm_pos {g : E} : 0 < ∥g∥ → g ≠ 0 := by
-  intro hpos hzero
-  rw [hzero, norm_zero] at hpos
-  exact lt_irreflₓ 0 hpos
+theorem ne_zero_of_mem_sphere {r : ℝ} (hr : r ≠ 0) (x : sphere (0 : E) r) : (x : E) ≠ 0 :=
+  ne_zero_of_norm_ne_zero <| by
+    rwa [norm_eq_of_mem_sphere x]
 
-theorem nonzero_of_mem_sphere {r : ℝ} (hr : 0 < r) (x : sphere (0 : E) r) : (x : E) ≠ 0 := by
-  refine' ne_zero_of_norm_pos _
-  rwa [norm_eq_of_mem_sphere x]
-
-theorem nonzero_of_mem_unit_sphere (x : sphere (0 : E) 1) : (x : E) ≠ 0 := by
-  apply nonzero_of_mem_sphere
-  norm_num
+theorem ne_zero_of_mem_unit_sphere (x : sphere (0 : E) 1) : (x : E) ≠ 0 :=
+  ne_zero_of_mem_sphere one_ne_zero _
 
 /-- We equip the sphere, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
@@ -587,6 +586,11 @@ theorem nndist_eq_nnnorm (a b : E) : nndist a b = ∥a - b∥₊ :=
 @[simp]
 theorem nnnorm_zero : ∥(0 : E)∥₊ = 0 :=
   Nnreal.eq norm_zero
+
+theorem ne_zero_of_nnnorm_ne_zero {g : E} : ∥g∥₊ ≠ 0 → g ≠ 0 :=
+  mt <| by
+    rintro rfl
+    exact nnnorm_zero
 
 theorem nnnorm_add_le (g h : E) : ∥g + h∥₊ ≤ ∥g∥₊ + ∥h∥₊ :=
   Nnreal.coe_le_coe.1 <| norm_add_le g h
@@ -966,6 +970,9 @@ variable [NormedGroup E] [NormedGroup F]
 theorem norm_eq_zero {g : E} : ∥g∥ = 0 ↔ g = 0 :=
   norm_eq_zero_iff'
 
+theorem norm_ne_zero_iff {g : E} : ∥g∥ ≠ 0 ↔ g ≠ 0 :=
+  not_congr norm_eq_zero
+
 @[simp]
 theorem norm_pos_iff {g : E} : 0 < ∥g∥ ↔ g ≠ 0 :=
   norm_pos_iff'
@@ -986,6 +993,9 @@ theorem eq_of_norm_sub_eq_zero {u v : E} (h : ∥u - v∥ = 0) : u = v :=
 @[simp]
 theorem nnnorm_eq_zero {a : E} : ∥a∥₊ = 0 ↔ a = 0 := by
   rw [← Nnreal.coe_eq_zero, coe_nnnorm, norm_eq_zero]
+
+theorem nnnorm_ne_zero_iff {g : E} : ∥g∥₊ ≠ 0 ↔ g ≠ 0 :=
+  not_congr nnnorm_eq_zero
 
 /-- An injective group homomorphism from an `add_comm_group` to a `normed_group` induces a
 `normed_group` structure on the domain.

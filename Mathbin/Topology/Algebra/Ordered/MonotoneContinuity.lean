@@ -26,8 +26,6 @@ variable {α β : Type _} [LinearOrderₓ α] [TopologicalSpace α] [OrderTopolo
 
 variable [LinearOrderₓ β] [TopologicalSpace β] [OrderTopology β]
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- If `f` is a function strictly monotone on a right neighborhood of `a` and the
 image of this neighborhood under `f` meets every interval `(f a, b]`, `b > f a`, then `f` is
 continuous at `a` from the right.
@@ -40,7 +38,7 @@ theorem StrictMonoOn.continuous_at_right_of_exists_between {f : α → β} {s : 
   have ha : a ∈ Ici a := left_mem_Ici
   have has : a ∈ s := mem_of_mem_nhds_within ha hs
   refine' tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩
-  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  · filter_upwards [hs, self_mem_nhds_within] with _ hxs hxa using hb.trans_le ((h_mono.le_iff_le has hxs).2 hxa)
     
   · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
     rw [h_mono.lt_iff_lt has hcs] at hac
@@ -49,8 +47,6 @@ theorem StrictMonoOn.continuous_at_right_of_exists_between {f : α → β} {s : 
     exact ((h_mono.lt_iff_lt hx hcs).2 hxc).trans_le hcb
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- If `f` is a monotone function on a right neighborhood of `a` and the image of this neighborhood
 under `f` meets every interval `(f a, b)`, `b > f a`, then `f` is continuous at `a` from the right.
 
@@ -62,7 +58,7 @@ theorem continuous_at_right_of_monotone_on_of_exists_between {f : α → β} {s 
   have ha : a ∈ Ici a := left_mem_Ici
   have has : a ∈ s := mem_of_mem_nhds_within ha hs
   refine' tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩
-  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  · filter_upwards [hs, self_mem_nhds_within] with _ hxs hxa using hb.trans_le (h_mono has hxs hxa)
     
   · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
     have : a < c := not_leₓ.1 fun h => hac.not_le <| h_mono hcs has h

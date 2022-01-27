@@ -208,6 +208,9 @@ theorem comap_of_injective {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} [Gr
   rw [ϕ.ker_eq_bot_iff.mpr hϕ]
   exact IsPGroup.of_bot
 
+theorem comap_subtype {H : Subgroup G} (hH : IsPGroup p H) {K : Subgroup G} : IsPGroup p (H.comap K.subtype) :=
+  hH.comap_of_injective K.subtype Subtype.coe_injective
+
 theorem to_sup_of_normal_right {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K) [K.normal] :
     IsPGroup p (H⊔K : Subgroup G) := by
   rw [← QuotientGroup.ker_mk K, ← Subgroup.comap_map_eq]

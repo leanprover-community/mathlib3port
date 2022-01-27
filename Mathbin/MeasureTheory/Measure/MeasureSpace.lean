@@ -331,8 +331,6 @@ theorem tendsto_measure_Inter [Encodable ι] [SemilatticeSup ι] {s : ι → Set
   rw [measure_Inter_eq_infi hs (directed_of_sup hm) hf]
   exact tendsto_at_top_infi fun n m hnm => measure_mono <| hm hnm
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- The measure of the intersection of a decreasing sequence of measurable
 sets indexed by a linear order with first countable topology is the limit of the measures. -/
 theorem tendsto_measure_bInter_gt {ι : Type _} [LinearOrderₓ ι] [TopologicalSpace ι] [OrderTopology ι]
@@ -340,7 +338,7 @@ theorem tendsto_measure_bInter_gt {ι : Type _} [LinearOrderₓ ι] [Topological
     (hs : ∀, ∀ r > a, ∀, MeasurableSet (s r)) (hm : ∀ i j, a < i → i ≤ j → s i ⊆ s j) (hf : ∃ r > a, μ (s r) ≠ ∞) :
     tendsto (μ ∘ s) (𝓝[Ioi a] a) (𝓝 (μ (⋂ r > a, s r))) := by
   refine' tendsto_order.2 ⟨fun l hl => _, fun L hL => _⟩
-  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  · filter_upwards [self_mem_nhds_within] with r hr using hl.trans_le (measure_mono (bInter_subset_of_mem hr))
     
   obtain ⟨u, u_anti, u_pos, u_lim⟩ : ∃ u : ℕ → ι, StrictAnti u ∧ (∀ n : ℕ, a < u n) ∧ tendsto u at_top (𝓝 a) := by
     rcases hf with ⟨r, ar, hr⟩
@@ -371,7 +369,7 @@ theorem tendsto_measure_bInter_gt {ι : Type _} [LinearOrderₓ ι] [Topological
   rw [B] at A
   obtain ⟨n, hn⟩ : ∃ n, μ (s (u n)) < L := ((tendsto_order.1 A).2 _ hL).exists
   have : Ioc a (u n) ∈ 𝓝[>] a := Ioc_mem_nhds_within_Ioi ⟨le_rfl, u_pos n⟩
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [this] with r hr using lt_of_le_of_ltₓ (measure_mono (hm _ _ hr.1 hr.2)) hn
 
 /-- One direction of the **Borel-Cantelli lemma**: if (sᵢ) is a sequence of sets such
 that `∑ μ sᵢ` is finite, then the limit superior of the `sᵢ` is a null set. -/
@@ -1948,7 +1946,6 @@ theorem ite_ae_eq_of_measure_zero {γ} (f : α → γ) (g : α → γ) (s : Set 
   nth_rw 0[← compl_compl s]
   rwa [Set.compl_subset_compl]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem ite_ae_eq_of_measure_compl_zero {γ} (f : α → γ) (g : α → γ) (s : Set α) (hs_zero : μ (sᶜ) = 0) :
     (fun x => ite (x ∈ s) (f x) (g x)) =ᵐ[μ] f := by
   filter_upwards [hs_zero]
@@ -2067,14 +2064,13 @@ theorem eventually_mem_spanning_sets (μ : Measureₓ α) [sigma_finite μ] (x :
     ∀ᶠ n in at_top, x ∈ spanning_sets μ n :=
   eventually_at_top.2 ⟨spanning_sets_index μ x, fun b => mem_spanning_sets_of_index_le μ x⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem ae_of_forall_measure_lt_top_ae_restrict {μ : Measureₓ α} [sigma_finite μ] (P : α → Prop)
     (h : ∀ s, MeasurableSet s → μ s < ∞ → ∀ᵐ x ∂μ.restrict s, P x) : ∀ᵐ x ∂μ, P x := by
   have : ∀ n, ∀ᵐ x ∂μ, x ∈ spanning_sets μ n → P x := by
     intro n
     have := h (spanning_sets μ n) (measurable_spanning_sets _ _) (measure_spanning_sets_lt_top _ _)
     rwa [ae_restrict_iff' (measurable_spanning_sets _ _)] at this
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [ae_all_iff.2 this] with _ hx using hx _ (mem_spanning_sets_index _ _)
 
 omit m0
 

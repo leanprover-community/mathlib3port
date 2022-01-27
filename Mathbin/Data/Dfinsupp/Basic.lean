@@ -56,8 +56,26 @@ section Basic
 
 variable [∀ i, Zero (β i)] [∀ i, Zero (β₁ i)] [∀ i, Zero (β₂ i)]
 
+instance FunLike : FunLike (Π₀ i, β i) ι β :=
+  ⟨fun f => (Quotientₓ.liftOn f pre.to_fun) fun _ _ => funext, fun f g H =>
+    Quotientₓ.induction_on₂ f g (fun _ _ H => Quotientₓ.sound H) (congr_funₓ H)⟩
+
+/-- Helper instance for when there are too many metavariables to apply `fun_like.has_coe_to_fun`
+directly. -/
 instance : CoeFun (Π₀ i, β i) fun _ => ∀ i, β i :=
-  ⟨fun f => (Quotientₓ.liftOn f pre.to_fun) fun _ _ => funext⟩
+  FunLike.hasCoeToFun
+
+@[ext]
+theorem ext {f g : Π₀ i, β i} (h : ∀ i, f i = g i) : f = g :=
+  FunLike.ext _ _ h
+
+/-- Deprecated. Use `fun_like.ext_iff` instead. -/
+theorem ext_iff {f g : Π₀ i, β i} : f = g ↔ ∀ i, f i = g i :=
+  FunLike.ext_iff
+
+/-- Deprecated. Use `fun_like.coe_injective` instead. -/
+theorem coe_fn_injective : @Function.Injective (Π₀ i, β i) (∀ i, β i) coeFn :=
+  FunLike.coe_injective
 
 instance : Zero (Π₀ i, β i) :=
   ⟨⟦⟨0, ∅, fun i => Or.inr rfl⟩⟧⟩
@@ -75,16 +93,6 @@ theorem coe_zero : ⇑(0 : Π₀ i, β i) = 0 :=
 
 theorem zero_apply (i : ι) : (0 : Π₀ i, β i) i = 0 :=
   rfl
-
-theorem coe_fn_injective : @Function.Injective (Π₀ i, β i) (∀ i, β i) coeFn := fun f g H =>
-  Quotientₓ.induction_on₂ f g (fun _ _ H => Quotientₓ.sound H) (congr_funₓ H)
-
-@[ext]
-theorem ext {f g : Π₀ i, β i} (H : ∀ i, f i = g i) : f = g :=
-  coe_fn_injective (funext H)
-
-theorem ext_iff {f g : Π₀ i, β i} : f = g ↔ ∀ i, f i = g i :=
-  coe_fn_injective.eq_iff.symm.trans Function.funext_iffₓ
 
 /-- The composition of `f : β₁ → β₂` and `g : Π₀ i, β₁ i` is
   `map_range f hf g : Π₀ i, β₂ i`, well defined when `f 0 = 0`.

@@ -1911,7 +1911,6 @@ open Metric
 
 variable {E : Type u} [NormedGroup E] [NormedSpace ℝ E] {f : ℝ → E} {f' : E} {s : Set ℝ} {x r : ℝ}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- If `f` has derivative `f'` within `s` at `x`, then for any `r > ∥f'∥` the ratio
 `∥f z - f x∥ / ∥z - x∥` is less than `r` in some neighborhood of `x` within `s`.
 In other words, the limit superior of this ratio as `z` tends to `x` along `s`

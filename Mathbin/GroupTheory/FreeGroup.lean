@@ -594,7 +594,11 @@ theorem map_eq_lift : map f x = lift (of ∘ f) x :=
     (map.unique _) fun x => by
       simp
 
-/-- Equivalent types give rise to multiplicatively equivalent free groups. -/
+/-- Equivalent types give rise to multiplicatively equivalent free groups.
+
+The converse can be found in `group_theory.free_abelian_group_finsupp`,
+as `equiv.of_free_group_equiv`
+ -/
 @[simps apply]
 def free_group_congr {α β} (e : α ≃ β) : FreeGroup α ≃* FreeGroup β where
   toFun := map e

@@ -394,7 +394,6 @@ theorem Ultrafilter.cauchy_of_totally_bounded {s : Set α} (f : Ultrafilter α) 
       fun ⟨x₁, x₂⟩ ⟨(h₁ : (x₁, y) ∈ t'), (h₂ : (x₂, y) ∈ t')⟩ => ⟨y, h₁, ht'_symm h₂⟩
     mem_of_superset (prod_mem_prod hif hif) (subset.trans this ht'_t)⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem totally_bounded_iff_filter {s : Set α} : TotallyBounded s ↔ ∀ f, ne_bot f → f ≤ 𝓟 s → ∃ c ≤ f, Cauchy c := by
   constructor
   · intros H f hf hfs

@@ -93,13 +93,12 @@ theorem f_aux_deriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
   field_simp [hx, P_aux]
   cases n <;> simp [Nat.succ_eq_add_one, A, -mul_eq_mul_right_iff] <;> ring_exp
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- For positive values, the derivative of the `n`-th auxiliary function `f_aux n`
 is the `n+1`-th auxiliary function. -/
 theorem f_aux_deriv_pos (n : ℕ) (x : ℝ) (hx : 0 < x) :
     HasDerivAt (f_aux n) ((P_aux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1))) x := by
   apply (f_aux_deriv n x (ne_of_gtₓ hx)).congr_of_eventually_eq
-  "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  filter_upwards [lt_mem_nhds hx] with _ hy
   simp [f_aux, hy.not_le]
 
 /-- To get differentiability at `0` of the auxiliary functions, we need to know that their limit
@@ -144,7 +143,6 @@ theorem f_aux_deriv_zero (n : ℕ) : HasDerivAt (f_aux n) 0 0 := by
       
   simpa using A.union B
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- At every point, the auxiliary function `f_aux n` has a derivative which is
 equal to `f_aux (n+1)`. -/
 theorem f_aux_has_deriv_at (n : ℕ) (x : ℝ) : HasDerivAt (f_aux n) (f_aux (n + 1) x) x := by
@@ -153,7 +151,7 @@ theorem f_aux_has_deriv_at (n : ℕ) (x : ℝ) : HasDerivAt (f_aux n) (f_aux (n 
       simp [f_aux, le_of_ltₓ hx]
     rw [this]
     apply (has_deriv_at_const x (0 : ℝ)).congr_of_eventually_eq
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [gt_mem_nhds hx] with _ hy
     simp [f_aux, hy.le]
     
   · have : f_aux (n + 1) 0 = 0 := by

@@ -57,7 +57,6 @@ variable {α : Type _} [MeasurableSpace α] {μ : Measureₓ α} {𝕜 : Type _}
   [NormedSpace ℝ E] [NormedSpace 𝕜 E] [CompleteSpace E] [second_countable_topology E] [MeasurableSpace E] [BorelSpace E]
   {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H] [second_countable_topology <| H →L[𝕜] E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming `F x₀` is
 integrable, `∥F x a - F x₀ a∥ ≤ bound a * ∥x - x₀∥` for `x` in a ball around `x₀` for ae `a` with
 integrable Lipschitz bound `bound` (with a ball radius independent of `a`), and `F x` is
@@ -108,7 +107,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     show (∫ a : α, ∥x₀ - x₀∥⁻¹ • (F x₀ a - F x₀ a - (F' a) (x₀ - x₀)) ∂μ) = 0 by
       simp ]
   apply tendsto_integral_filter_of_dominated_convergence
-  · "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+  · filter_upwards [h_ball] with _ x_in
     apply AeMeasurable.const_smul
     exact ((hF_meas _ x_in).sub (hF_meas _ x₀_in)).sub (hF'_meas.apply_continuous_linear_map _)
     

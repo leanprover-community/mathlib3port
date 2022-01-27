@@ -147,12 +147,11 @@ theorem integrable_on.union (hs : integrable_on f s μ) (ht : integrable_on f t 
 theorem integrable_on_union : integrable_on f (s ∪ t) μ ↔ integrable_on f s μ ∧ integrable_on f t μ :=
   ⟨fun h => ⟨h.left_of_union, h.right_of_union⟩, fun h => h.1.union h.2⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 @[simp]
 theorem integrable_on_singleton_iff {x : α} [MeasurableSingletonClass α] :
     integrable_on f {x} μ ↔ f x = 0 ∨ μ {x} < ∞ := by
   have : f =ᵐ[μ.restrict {x}] fun y => f x := by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [ae_restrict_mem (measurable_set_singleton x)] with _ ha
     simp only [mem_singleton_iff.1 ha]
   rw [integrable_on, integrable_congr this, integrable_const_iff]
   simp
@@ -411,13 +410,12 @@ section
 
 variable [TopologicalSpace α] [OpensMeasurableSpace α] {μ : Measureₓ α} {s t : Set α} {f g : α → ℝ}
 
--- ././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args
 theorem MeasureTheory.IntegrableOn.mul_continuous_on_of_subset (hf : integrable_on f s μ) (hg : ContinuousOn g t)
     (hs : MeasurableSet s) (ht : IsCompact t) (hst : s ⊆ t) : integrable_on (fun x => f x * g x) s μ := by
   rcases IsCompact.exists_bound_of_continuous_on ht hg with ⟨C, hC⟩
   rw [integrable_on, ← mem_ℒp_one_iff_integrable] at hf⊢
   have : ∀ᵐ x ∂μ.restrict s, ∥f x * g x∥ ≤ C * ∥f x∥ := by
-    "././Mathport/Syntax/Translate/Basic.lean:416:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:180:22: unsupported: too many args"
+    filter_upwards [ae_restrict_mem hs] with x hx
     rw [Real.norm_eq_abs, abs_mul, mul_comm, Real.norm_eq_abs]
     apply mul_le_mul_of_nonneg_right (hC x (hst hx)) (abs_nonneg _)
   exact mem_ℒp.of_le_mul hf (hf.ae_measurable.mul ((hg.mono hst).AeMeasurable hs)) this
